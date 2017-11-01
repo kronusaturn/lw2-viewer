@@ -1,0 +1,229 @@
+
+@import url('https://fonts.obormot.net?fonts=Charter,Geometric415'); 
+
+html {
+	box-sizing: border-box;
+}
+*, *::before, *::after {
+	box-sizing: inherit;
+}
+body {
+	background-color: #d8d8d8;
+	padding: 0;
+	margin: 0;
+	font-family: 'Geometric 415';
+}
+#content {
+	background-color: #fff;
+	box-shadow: 0px 0px 10px #555;
+	margin: 0 auto;
+	padding: 0 30px 20px 30px;
+	overflow: auto;
+	max-width: 900px;
+	line-height: 1.55;
+}
+#content > a:first-child {
+	margin: 0 -30px;
+	padding: 12px 20px;
+	display: block;
+	font-weight: 500;
+}
+#content > a:first-child:hover {
+	text-decoration: none;
+	background-color: #ddd;
+	text-shadow:
+		0 0 1px #fff,
+		0 0 3px #fff,
+		0 0 5px #fff;
+}
+  #content > h1:first-child {
+	margin-top: 2em;
+}
+.post > h1:first-child {
+	margin-top: 0.5em;
+}
+
+/************/
+/* LISTINGS */
+/************/
+
+h1.listing {
+	margin-bottom: 0;
+	font-family: 'Geometric 415';
+	font-weight: 500;
+	line-height: 1.1;
+	margin-bottom: 0.2em;
+}
+h1.listing a {
+	color: #00c;
+}
+h1.listing a[href^="/"] {
+	color: #000;
+}
+h1.listing a:hover {
+	color: #00f;
+	border-bottom: 1px dotted #00f;
+	text-decoration: none;
+}
+h1.listing a[href^="/"]:hover {
+	color: #777;
+	border-bottom: 1px dotted #777;
+}
+
+/********************/
+/* POSTS & COMMENTS */
+/********************/
+
+.post, .comment {
+	position: relative;
+}
+.post-meta *, .comment-meta * {
+	display: inline-block;
+	margin-right: 1em;
+}
+.post-body, .comment-body {
+	text-align: justify;
+	hyphens: auto;
+}
+
+/*********/
+/* POSTS */
+/*********/
+
+.post-meta {
+	text-align: center;
+}
+.post-meta:last-child {
+	margin-bottom: 40px;
+}
+.author {
+	color: #090;
+}
+.post-body {
+	min-height: 8em;
+	font-family: Charter;
+	padding: 0 2.5%;
+	line-height: 1.55;
+	font-size: 1.25rem;
+}
+
+/************/
+/* COMMENTS */
+/************/
+
+#comments > ul,
+.comment > ul {
+	list-style-type: none;
+	padding-left: 0;
+}
+.comment {
+	margin: 1em 0 2em 0;
+	border: 1px solid #ccc;
+}
+.comment .comment {
+	margin: 1em 8px 8px 16px;
+}
+.comment .comment .comment .comment .comment .comment .comment,
+.comment .comment .comment .comment .comment,
+.comment .comment .comment,
+.comment {
+	background-color: #eee;
+}
+.comment .comment .comment .comment .comment .comment .comment .comment,
+.comment .comment .comment .comment .comment .comment,
+.comment .comment .comment .comment,
+.comment .comment {
+	background-color: #fff;
+}
+.comment-meta {
+	padding: 1px 10px 2px 10px;
+	margin: 0 -1px;
+	border: none;
+}
+.comment-meta div:first-child {
+	font-weight: bold;
+	font-size: 1.2em;
+}
+.comment-body {
+	font-family: Charter;
+	line-height: 1.45;
+	font-size: 1.2rem;
+	padding: 10px;
+}
+.comment-body ul {
+	list-style-type: circle;
+}
+.comment-body p:first-child {
+	margin-top: 0.5em;
+}
+.comment-body p:last-child {
+	margin-bottom: 0;
+}
+
+/*********/
+/* LINKS */
+/*********/
+
+a {
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: underline;
+}
+
+/************/
+/* HEADINGS */
+/************/
+
+h1 {
+	margin: 1em 0;
+	text-align: center;
+}
+.post h1 {
+	font-size: 2.5em;
+	line-height: 1.1;
+}
+.post-body h1,
+.post-body h2,
+.post-body h3,
+.post-body h4 {
+	font-family: 'Geometric 415';
+}
+
+/********/
+/* MISC */
+/********/
+
+blockquote {
+	font-size: 0.9em;
+	margin: 0;
+	padding-left: 0.5em;
+	border-left: 5px solid #ccc;
+	margin-left: 1px;
+	padding-bottom: 3px;
+}
+
+/*************/
+/* FOOTNOTES */
+/*************/
+
+ol {
+	counter-reset: ordered-list;
+}
+.footnote-definition {
+	font-size: 0.9em;
+	list-style-type: none;
+	counter-increment: ordered-list;
+	position: relative;
+}
+.footnote-definition p {
+	font-size: inherit !important;
+}
+.footnote-definition::before {
+	content: counter(ordered-list) ".";
+	position: absolute;
+	left: -2.5em;
+	font-weight: bold;
+	text-align: right;
+	width: 2em;
+}
