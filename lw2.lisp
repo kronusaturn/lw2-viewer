@@ -4,6 +4,34 @@
 ;(defvar *lw2-stream* nil) 
 (defvar *username-cache* (make-hash-table :test 'equal)) 
 
+(defparameter *cache-db* "./cache/") 
+
+(defun cache-put (db key value)
+  (let ((env (lmdb:make-environment *cache-db*))) 
+    (lmdb:with-environment (env)
+			   (let ((txn (lmdb:make-transaction env)))
+			     (lmdb:begin-transaction txn)
+			     (let ((db (lmdb:make-database txn db)))
+			       (lmdb:with-database (db)
+						   (prog1 (if (lmdb:put db (string-to-octets key :external-format :utf-8)
+									(string-to-octets value :external-format :utf-8))
+							    value
+							    nil) 
+						     (lmdb:commit-transaction txn)))))))) 
+
+(defun cache-get (db key)
+  (let ((env (lmdb:make-environment *cache-db*))) 
+    (lmdb:with-environment (env)
+			   (let ((txn (lmdb:make-transaction env)))
+			     (lmdb:begin-transaction txn)
+			     (let ((db (lmdb:make-database txn db)))
+			       (lmdb:with-database (db)
+						   (let ((result (lmdb:get db (string-to-octets key :external-format :utf-8)))) 
+						     (prog1 (if result
+							      (octets-to-string result :external-format :utf-8)
+							      nil)
+						       (lmdb:commit-transaction txn))))))))) 
+
 (defun lw2-graphql-query (query)
   (multiple-value-bind (req-stream status-code headers final-uri reuse-stream)
     (drakma:http-request "https://www.lesserwrong.com/graphql" :parameters (list (cons "query" query))
@@ -25,10 +53,10 @@
   (lw2-graphql-query (format nil "{UsersSingle (documentId:\"~A\") {username}}" user-id))) 
 
 (defun get-username (user-id)
-  (let ((username (gethash user-id *username-cache*)))
+  (let ((username (cache-get "userid-to-username" user-id)))
     (if username username
       (let ((data (get-username-real user-id)))
-	(setf (gethash user-id *username-cache*) (cdr (first data))))))) 
+	(cache-put "userid-to-username" user-id (cdr (first data))))))) 
 
 (defun post-headline-to-html (post)
   (format nil "<h1 class=\"listing\"><a href=\"~A\">~A</a></h1><div class=\"post-meta\"><div class=\"author\">~A</div><div class=\"date\">~A</div><div class=\"karma\">~A points</div><a class=\"comment-count\" href=\"/post?id=~A#comments\">~A comments</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a>~A</div>"
