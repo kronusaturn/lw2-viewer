@@ -17,17 +17,22 @@ body {
 	background-color: #fff;
 	box-shadow: 0px 0px 10px #555;
 	margin: 0 auto;
-	padding: 0 30px 20px 30px;
+	padding: 0 30px;
 	overflow: auto;
 	max-width: 900px;
 	line-height: 1.55;
 }
+#content > a:last-child,
 #content > a:first-child {
 	margin: 0 -30px;
 	padding: 12px 20px;
 	display: block;
 	font-weight: 500;
 }
+#content > a:last-child {
+	text-align:center;
+}
+#content > a:last-child:hover,
 #content > a:first-child:hover {
 	text-decoration: none;
 	background-color: #ddd;
@@ -36,11 +41,14 @@ body {
 		0 0 3px #fff,
 		0 0 5px #fff;
 }
-  #content > h1:first-child {
+#content > h1:first-child {
 	margin-top: 2em;
 }
 .post > h1:first-child {
 	margin-top: 0.5em;
+}
+#content > .post-meta:nth-last-child(2) {
+	margin-bottom: 20px;
 }
 
 /************/
@@ -102,7 +110,7 @@ h1.listing a[href^="/"]:hover {
 .post-body {
 	min-height: 8em;
 	font-family: Charter;
-	padding: 0 2.5%;
+	padding: 0 4.44%;
 	line-height: 1.55;
 	font-size: 1.25rem;
 }
@@ -111,6 +119,9 @@ h1.listing a[href^="/"]:hover {
 /* COMMENTS */
 /************/
 
+#comments > ul {
+	margin-bottom: 0;
+}
 #comments > ul,
 .comment > ul {
 	list-style-type: none;
@@ -119,6 +130,9 @@ h1.listing a[href^="/"]:hover {
 .comment {
 	margin: 1em 0 2em 0;
 	border: 1px solid #ccc;
+}
+#comments > ul > li:last-child > .comment {
+	margin-bottom: 1em;
 }
 .comment .comment {
 	margin: 1em 8px 8px 16px;
