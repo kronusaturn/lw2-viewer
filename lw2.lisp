@@ -60,7 +60,30 @@
   (lw2-graphql-query (format nil "{PostsSingle(documentId:\"~A\") {title, _id, userId, postedAt, baseScore, commentCount, pageUrl, url, htmlBody}}" post-id)))
 
 (defun get-post-comments (post-id)
-  (lw2-graphql-query (format nil "{CommentsList (terms:{view:\"postCommentsTop\",limit:100,postId:\"~A\"}) {_id, userId, postedAt, parentCommentId, baseScore, pageUrl, htmlBody}}" post-id)))
+  (lw2-graphql-query (format nil "{CommentsList (terms:{view:\"postCommentsTop\",limit:100,postId:\"~A\"}) {_id, userId, postId, postedAt, parentCommentId, baseScore, pageUrl, htmlBody}}" post-id)))
+
+(defun get-recent-comments ()
+  (let ((cached-result (and *background-loader-thread* (cache-get "index-json" "recent-comments"))))
+    (if cached-result
+      (rest (cadar (json:decode-json-from-string cached-result))) 
+      (lw2-graphql-query (format nil "{CommentsList (terms:{view:\"postCommentsNew\",limit:20}) {_id, userId, postId, postedAt, parentCommentId, baseScore, pageUrl, htmlBody}}")))))
+
+(defun get-recent-comments-json ()
+  (lw2-graphql-query-noparse (format nil "{CommentsList (terms:{view:\"postCommentsNew\",limit:20}) {_id, userId, postId, postedAt, parentCommentId, baseScore, pageUrl, htmlBody}}")))
+
+(defun get-post-title-real (post-id)
+  (lw2-graphql-query (format nil "{PostsSingle(documentId:\"~A\") {title}}" post-id))) 
+
+(defun cache-post-title (post-id title)
+  (cache-put "postid-to-title" post-id title))
+
+(defun get-post-title (post-id)
+  (let ((post-title (cache-get "postid-to-title" post-id)))
+    (if post-title post-title
+      (let ((data (get-post-title-real post-id)))
+	(if data 
+	  (cache-post-title post-id (cdr (first data)))
+	  "[Error communicating with LW2 server]"))))) 
 
 (defun get-username-real (user-id)
   (lw2-graphql-query (format nil "{UsersSingle (documentId:\"~A\") {username}}" user-id))) 
@@ -69,13 +92,18 @@
   (let ((username (cache-get "userid-to-username" user-id)))
     (if username username
       (let ((data (get-username-real user-id)))
-	(cache-put "userid-to-username" user-id (cdr (first data))))))) 
+	(if data 
+	  (cache-put "userid-to-username" user-id (cdr (first data)))
+	  "[Error communicating with LW2 server]"))))) 
 
 (defun background-loader ()
   (loop
     (let ((posts-json (get-posts-json)))
       (if (and posts-json (ignore-errors (json:decode-json-from-string posts-json)))
 	(cache-put "index-json" "new-not-meta" posts-json)))
+    (let ((recent-comments-json (get-recent-comments-json)))
+      (if (and recent-comments-json (ignore-errors (json:decode-json-from-string recent-comments-json)))
+	(cache-put "index-json" "recent-comments" recent-comments-json))) 
     (sleep 60))) 
 
 (defun start-background-loader ()
@@ -87,6 +115,9 @@
   (setf *background-loader-thread* nil)) 
 
 (defun post-headline-to-html (post)
+  (let ((id (cdr (assoc :--id post)))
+	(title (cdr (assoc :title post))))
+    (if (and id title) (cache-post-title (cdr (assoc :--id post)) (cdr (assoc :title post))))) 
   (format nil "<h1 class=\"listing\"><a href=\"~A\">~A</a></h1><div class=\"post-meta\"><div class=\"author\">~A</div><div class=\"date\">~A</div><div class=\"karma\">~A points</div><a class=\"comment-count\" href=\"/post?id=~A#comments\">~A comments</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a>~A</div>"
 	  (or (cdr (assoc :url post)) (format nil "/post?id=~A" (url-rewrite:url-encode (cdr (assoc :--id post))))) 
 	  (cdr (assoc :title post))
@@ -99,6 +130,9 @@
 	  (if (cdr (assoc :url post)) (format nil "<div class=\"link-post\">(~A)</div>" (puri:uri-host (puri:parse-uri (cdr (assoc :url post))))) ""))) 
 
 (defun post-body-to-html (post)
+  (let ((id (cdr (assoc :--id post)))
+	(title (cdr (assoc :title post))))
+    (if (and id title) (cache-post-title (cdr (assoc :--id post)) (cdr (assoc :title post))))) 
   (format nil "<div class=\"post\"><h1>~A</h1><div class=\"post-meta\"><div class=\"author\">~A</div><div class=\"date\">~A</div><div class=\"karma\">~A points</div><a class=\"comment-count\" href=\"#comments\">~A comments</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a></div><div class=\"post-body\">~A</div></div>"
 	  (cdr (assoc :title post))
 	  (get-username (cdr (assoc :user-id post)))
@@ -110,13 +144,18 @@
 		  (if (cdr (assoc :url post)) (format nil "<p><a href=\"~A\">Link post</a></p>" (cdr (assoc :url post))) "")
 		  (or (cdr (assoc :html-body post)) "")))) 
 
-(defun comment-to-html (comment)
-  (format nil "<div class=\"comment\"><div class=\"comment-meta\"><div>~A</div><div>~A</div><div>~A points</div><a href=\"~A#~A\">LW2 link</a></em></div><div class=\"comment-body\">~A</div>"
+(defun comment-to-html (comment &key with-post-title)
+  (format nil "<div class=\"comment\"><div class=\"comment-meta\"><div>~A</div><a id=\"~A\" href=\"~A\">~A</a><div>~A points</div><a href=\"~A#~A\">LW2 link</a>~A</div><div class=\"comment-body\">~A</div></div>"
 	  (get-username (cdr (assoc :user-id comment))) 
+	  (cdr (assoc :--id comment)) 
+	  (format nil "/post?id=~A#~A" (cdr (assoc :post-id comment)) (cdr (assoc :--id comment))) 
 	  (cdr (assoc :posted-at comment))
 	  (cdr (assoc :base-score comment))
 	  (cdr (assoc :page-url comment)) 
 	  (cdr (assoc :--id comment)) 
+	  (if with-post-title
+	    (format nil "<div>on: <a href=\"/post?id=~A\">~A</a></div>" (cdr (assoc :post-id comment)) (get-post-title (cdr (assoc :post-id comment))))
+	    "") 
 	  (cdr (assoc :html-body comment)))) 
 
 (defun make-comment-parent-hash (comments)
@@ -133,7 +172,7 @@
 (defun comment-tree-to-html (comment-hash &optional (target nil))
   (let ((comments (gethash target comment-hash)))
     (if comments 
-      (format nil "<ul>~{<li>~A</li>~}</ul>"
+      (format nil "<ul class=\"comment-thread\">~{<li class=\"comment-item\">~A</li>~}</ul>"
 	      (map 'list (lambda (c)
 			   (format nil "~A~A"
 				   (comment-to-html c)
@@ -155,9 +194,17 @@
 (hunchentoot:define-easy-handler (view-post :uri "/post") (id)
 				 (setf (hunchentoot:content-type*) "text/html")
 				 (let ((post (get-post-body id))) 
-				   (format nil "<html lang=\"en-US\"><head><title>~A - LessWrong 2 viewer</title>~A</head><body><div id=\"content\"><a href=\"/\">Home</a>~A<hr><a name=\"comments\"></a><div id=\"comments\">~A</div><a href=\"#top\">Back to top</a></div></body></html>"
+				   (format nil "<html lang=\"en-US\"><head><title>~A - LessWrong 2 viewer</title>~A</head><body><div id=\"content\"><a href=\"/\">Home</a>~A<hr><div id=\"comments\">~A</div><a href=\"#top\">Back to top</a></div></body></html>"
 					   (cdr (assoc :title post)) 
 					   *html-head*
 					   (post-body-to-html post) 
 					   (let ((comments (get-post-comments id)))
 					     (comment-tree-to-html (make-comment-parent-hash comments)))))) 
+ 
+(hunchentoot:define-easy-handler (view-recent-comments :uri "/recentcomments") ()
+				 (setf (hunchentoot:content-type*) "text/html")
+				 (let ((recent-comments (get-recent-comments)))
+				   (format nil "<html lang=\"en-US\"><head><title>Recent comments - LessWrong 2 viewer</title>~A</head><body><div id=\"content\"><a href=\"/\">Home</a><ul class=\"comment-thread\">~{<li class=\"comment-item\">~A</li>~}</ul><a href=\"#top\">Back to top</a></div></body></html>"
+					   *html-head*
+					   (map 'list (lambda (c) (comment-to-html c :with-post-title t)) recent-comments))))
+
