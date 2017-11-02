@@ -184,19 +184,24 @@
 "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
 <link rel=\"stylesheet\" href=\"/style.css\">")
 
+(defparameter *nav-bar*
+"<div class=\"nav-bar\"><a href=\"/\">Home</a><a href=\"/recentcomments\">Comments</a></div>") 
+
 (hunchentoot:define-easy-handler (say-yo :uri "/") ()
 				 (setf (hunchentoot:content-type*) "text/html")
 				 (let ((posts (get-posts)))
-				   (format nil "<html lang=\"en-US\"><head><title>LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~{~A~}<a href=\"#top\">Back to top</a></div></body></html>"
+				   (format nil "<html lang=\"en-US\"><head><title>LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~A~{~A~}<a href=\"#top\">Back to top</a></div></body></html>"
 					   *html-head*
+					   *nav-bar*
 					   (map 'list #'post-headline-to-html posts))))
 
 (hunchentoot:define-easy-handler (view-post :uri "/post") (id)
 				 (setf (hunchentoot:content-type*) "text/html")
 				 (let ((post (get-post-body id))) 
-				   (format nil "<html lang=\"en-US\"><head><title>~A - LessWrong 2 viewer</title>~A</head><body><div id=\"content\"><a href=\"/\">Home</a>~A<hr><div id=\"comments\">~A</div><a href=\"#top\">Back to top</a></div></body></html>"
+				   (format nil "<html lang=\"en-US\"><head><title>~A - LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~A~A<hr><div id=\"comments\">~A</div><a href=\"#top\">Back to top</a></div></body></html>"
 					   (cdr (assoc :title post)) 
 					   *html-head*
+					   *nav-bar*
 					   (post-body-to-html post) 
 					   (let ((comments (get-post-comments id)))
 					     (comment-tree-to-html (make-comment-parent-hash comments)))))) 
@@ -204,7 +209,8 @@
 (hunchentoot:define-easy-handler (view-recent-comments :uri "/recentcomments") ()
 				 (setf (hunchentoot:content-type*) "text/html")
 				 (let ((recent-comments (get-recent-comments)))
-				   (format nil "<html lang=\"en-US\"><head><title>Recent comments - LessWrong 2 viewer</title>~A</head><body><div id=\"content\"><a href=\"/\">Home</a><ul class=\"comment-thread\">~{<li class=\"comment-item\">~A</li>~}</ul><a href=\"#top\">Back to top</a></div></body></html>"
+				   (format nil "<html lang=\"en-US\"><head><title>Recent comments - LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~A<ul class=\"comment-thread\">~{<li class=\"comment-item\">~A</li>~}</ul><a href=\"#top\">Back to top</a></div></body></html>"
 					   *html-head*
+					   *nav-bar*
 					   (map 'list (lambda (c) (comment-to-html c :with-post-title t)) recent-comments))))
 
