@@ -76,7 +76,7 @@
     (let ((posts-json (get-posts-json)))
       (if (and posts-json (ignore-errors (json:decode-json-from-string posts-json)))
 	(cache-put "index-json" "new-not-meta" posts-json)))
-    (sleep 30))) 
+    (sleep 60))) 
 
 (defun start-background-loader ()
   (assert (not *background-loader-thread*))
