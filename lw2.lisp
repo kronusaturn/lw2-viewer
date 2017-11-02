@@ -74,7 +74,7 @@
 (defun background-loader ()
   (loop
     (let ((posts-json (get-posts-json)))
-      (if posts-json
+      (if (and posts-json (ignore-errors (json:decode-json-from-string posts-json)))
 	(cache-put "index-json" "new-not-meta" posts-json)))
     (sleep 30))) 
 
