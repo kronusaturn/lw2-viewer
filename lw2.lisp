@@ -154,7 +154,7 @@
 	  (cdr (assoc :page-url comment)) 
 	  (cdr (assoc :--id comment)) 
 	  (if with-post-title
-	    (format nil "<div>on: <a href=\"/post?id=~A\">~A</a></div>" (cdr (assoc :post-id comment)) (get-post-title (cdr (assoc :post-id comment))))
+	    (format nil "<div class=\"comment-post-title\">on: <a href=\"/post?id=~A\">~A</a></div>" (cdr (assoc :post-id comment)) (get-post-title (cdr (assoc :post-id comment))))
 	    "") 
 	  (cdr (assoc :html-body comment)))) 
 

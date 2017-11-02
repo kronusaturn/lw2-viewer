@@ -101,9 +101,13 @@ h1.listing a[href^="/"]::after {
 /* POSTS & COMMENTS */
 /********************/
 
-.post-meta *, .comment-meta * {
+.post-meta *,
+.comment-meta * {
 	display: inline-block;
 	margin-right: 1em;
+}
+.comment-meta .comment-post-title {
+	display: block;
 }
 .post-body, .comment-body {
 	text-align: justify;
