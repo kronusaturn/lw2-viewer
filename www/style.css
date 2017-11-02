@@ -69,8 +69,8 @@ h1.listing a[href^="/"] {
 	color: #000;
 }
 h1.listing a:hover {
-	color: #00f;
-	border-bottom: 1px dotted #00f;
+	color: #4879ec;
+	border-bottom: 1px dotted #4879ec;
 	text-decoration: none;
 }
 h1.listing a[href^="/"]:hover {
@@ -101,6 +101,7 @@ h1.listing a[href^="/"]::after {
 }
 .post-body, .comment-body {
 	text-align: justify;
+	-webkit-hyphens: auto;
 	hyphens: auto;
 }
 
@@ -212,6 +213,7 @@ h1 {
 .post-body h3,
 .post-body h4 {
 	font-family: 'Geometric 415';
+	line-height: 1.1;
 }
 
 /********/
