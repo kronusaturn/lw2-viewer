@@ -185,32 +185,38 @@
 <link rel=\"stylesheet\" href=\"/style.css\">")
 
 (defparameter *nav-bar*
-"<div class=\"nav-bar\"><a href=\"/\">Home</a><a href=\"/recentcomments\">Comments</a></div>") 
+"<div id=\"nav-bar\"><a href=\"/\">Home</a><a href=\"/recentcomments\">Recent Comments</a></div>") 
+
+(defparameter *bottom-bar*
+"<div id=\"bottom-bar\"><a href=\"#top\">Back to top</a></div>") 
 
 (hunchentoot:define-easy-handler (say-yo :uri "/") ()
 				 (setf (hunchentoot:content-type*) "text/html")
 				 (let ((posts (get-posts)))
-				   (format nil "<html lang=\"en-US\"><head><title>LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~A~{~A~}<a href=\"#top\">Back to top</a></div></body></html>"
+				   (format nil "<html lang=\"en-US\"><head><title>LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~A~{~A~}~A</div></body></html>"
 					   *html-head*
 					   *nav-bar*
-					   (map 'list #'post-headline-to-html posts))))
+					   (map 'list #'post-headline-to-html posts)
+					   *bottom-bar*)))
 
 (hunchentoot:define-easy-handler (view-post :uri "/post") (id)
 				 (setf (hunchentoot:content-type*) "text/html")
 				 (let ((post (get-post-body id))) 
-				   (format nil "<html lang=\"en-US\"><head><title>~A - LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~A~A<hr><div id=\"comments\">~A</div><a href=\"#top\">Back to top</a></div></body></html>"
+				   (format nil "<html lang=\"en-US\"><head><title>~A - LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~A~A<div id=\"comments\">~A</div>~A</div></body></html>"
 					   (cdr (assoc :title post)) 
 					   *html-head*
 					   *nav-bar*
 					   (post-body-to-html post) 
 					   (let ((comments (get-post-comments id)))
-					     (comment-tree-to-html (make-comment-parent-hash comments)))))) 
+					     (comment-tree-to-html (make-comment-parent-hash comments)))
+					   *bottom-bar*))) 
  
 (hunchentoot:define-easy-handler (view-recent-comments :uri "/recentcomments") ()
 				 (setf (hunchentoot:content-type*) "text/html")
 				 (let ((recent-comments (get-recent-comments)))
-				   (format nil "<html lang=\"en-US\"><head><title>Recent comments - LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~A<ul class=\"comment-thread\">~{<li class=\"comment-item\">~A</li>~}</ul><a href=\"#top\">Back to top</a></div></body></html>"
+				   (format nil "<html lang=\"en-US\"><head><title>Recent comments - LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~A<ul class=\"comment-thread\">~{<li class=\"comment-item\">~A</li>~}</ul>~A</div></body></html>"
 					   *html-head*
 					   *nav-bar*
-					   (map 'list (lambda (c) (comment-to-html c :with-post-title t)) recent-comments))))
+					   (map 'list (lambda (c) (comment-to-html c :with-post-title t)) recent-comments)
+					   *bottom-bar*)))
 
