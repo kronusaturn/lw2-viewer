@@ -40,7 +40,7 @@
 	  (url-rewrite:url-encode (cdr (assoc :--id post))) 
 	  (or (cdr (assoc :comment-count post)) 0) 
 	  (cdr (assoc :page-url post))
-	  (if (cdr (assoc :url post)) "<div class=\"link-post\">(Link post)</div>" ""))) 
+	  (if (cdr (assoc :url post)) (format nil "<div class=\"link-post\">(~A)</div>" (puri:uri-host (puri:parse-uri (cdr (assoc :url post))))) ""))) 
 
 (defun post-body-to-html (post)
   (format nil "<div class=\"post\"><h1>~A</h1><div class=\"post-meta\"><div class=\"author\">~A</div><div class=\"date\">~A</div><div class=\"karma\">~A points</div><a class=\"comment-count\" href=\"#comments\">~A comments</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a></div><div class=\"post-body\">~A</div></div>"
@@ -92,14 +92,14 @@
 (hunchentoot:define-easy-handler (say-yo :uri "/") ()
 				 (setf (hunchentoot:content-type*) "text/html")
 				 (let ((posts (get-posts)))
-				   (format nil "<html lang=en><head><title>LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~{~A~}<a href=\"#top\">Back to top</a></div></body></html>"
+				   (format nil "<html lang=\"en-US\"><head><title>LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~{~A~}<a href=\"#top\">Back to top</a></div></body></html>"
 					   *html-head*
 					   (map 'list #'post-headline-to-html posts))))
 
 (hunchentoot:define-easy-handler (view-post :uri "/post") (id)
 				 (setf (hunchentoot:content-type*) "text/html")
 				 (let ((post (get-post-body id))) 
-				   (format nil "<html lang=en><head><title>~A - LessWrong 2 viewer</title>~A</head><body><div id=\"content\"><a href=\"/\">Home</a>~A<hr><a name=\"comments\"></a><div id=\"comments\">~A</div><a href=\"#top\">Back to top</a></div></body></html>"
+				   (format nil "<html lang=\"en-US\"><head><title>~A - LessWrong 2 viewer</title>~A</head><body><div id=\"content\"><a href=\"/\">Home</a>~A<hr><a name=\"comments\"></a><div id=\"comments\">~A</div><a href=\"#top\">Back to top</a></div></body></html>"
 					   (cdr (assoc :title post)) 
 					   *html-head*
 					   (post-body-to-html post) 
