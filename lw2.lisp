@@ -68,15 +68,13 @@
 	 (new-result 
 	   (if cached-result
 	     (let ((thread (sb-thread:make-thread
-			     (lambda () (lw2-graphql-query-noparse query)))))
+			     (lambda () (cache-put cache-db cache-key (lw2-graphql-query-noparse query))))))
 	       (handler-case
 		 (sb-thread:join-thread thread :timeout 1)
 		 (t () cached-result)))
-	     (lw2-graphql-query-noparse query))))
-    (prog1
-      (decode-graphql-json new-result)
-      (cache-put cache-db cache-key new-result)))) 
- 
+	     (cache-put cache-db cache-key (lw2-graphql-query-noparse query)))))
+    (decode-graphql-json new-result)))
+
 (defun get-posts ()
   (let ((cached-result (and *background-loader-thread* (cache-get "index-json" "new-not-meta")))) 
     (if cached-result
@@ -157,6 +155,10 @@
   (sb-thread:terminate-thread *background-loader-thread*)
   (setf *background-loader-thread* nil)) 
 
+(defun pretty-time (timestring)
+  (local-time:format-timestring nil (local-time:parse-timestring timestring)
+				:format '(:day #\  :short-month #\  :year #\  :hour #\: (:min 2) #\  :timezone))) 
+
 (defun post-headline-to-html (post)
   (let ((id (cdr (assoc :--id post)))
 	(title (cdr (assoc :title post))))
@@ -165,7 +167,7 @@
 	  (or (cdr (assoc :url post)) (format nil "/post?id=~A" (url-rewrite:url-encode (cdr (assoc :--id post))))) 
 	  (cdr (assoc :title post))
 	  (get-username (cdr (assoc :user-id post)))
-	  (cdr (assoc :posted-at post)) 
+	  (pretty-time (cdr (assoc :posted-at post))) 
 	  (cdr (assoc :base-score post))
 	  (url-rewrite:url-encode (cdr (assoc :--id post))) 
 	  (or (cdr (assoc :comment-count post)) 0) 
@@ -179,7 +181,7 @@
   (format nil "<div class=\"post\"><h1>~A</h1><div class=\"post-meta\"><div class=\"author\">~A</div><div class=\"date\">~A</div><div class=\"karma\">~A points</div><a class=\"comment-count\" href=\"#comments\">~A comments</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a></div><div class=\"post-body\">~A</div></div>"
 	  (cdr (assoc :title post))
 	  (get-username (cdr (assoc :user-id post)))
-	  (cdr (assoc :posted-at post)) 
+	  (pretty-time (cdr (assoc :posted-at post))) 
 	  (cdr (assoc :base-score post))
 	  (or (cdr (assoc :comment-count post)) 0) 
 	  (cdr (assoc :page-url post)) 
@@ -188,41 +190,18 @@
 		  (or (cdr (assoc :html-body post)) "")))) 
 
 (defun comment-to-html (comment &key with-post-title)
-  (format nil "<div class=\"comment\"><div class=\"comment-meta\"><div>~A</div><a id=\"~A\" href=\"~A\">~A</a><div>~A points</div><a href=\"~A#~A\">LW2 link</a>~A~A</div><div class=\"comment-body\">~A</div></div>"
+  (format nil "<div class=\"comment\"><div class=\"comment-meta\"><div>~A</div><a id=\"~A\" href=\"~A\">~A</a><div>~A points</div><a href=\"~A#~A\">LW2 link</a>~A</div><div class=\"comment-body\">~A</div></div>"
 	  (get-username (cdr (assoc :user-id comment))) 
 	  (cdr (assoc :--id comment)) 
 	  (format nil "/post?id=~A#~A" (cdr (assoc :post-id comment)) (cdr (assoc :--id comment))) 
-	  (cdr (assoc :posted-at comment))
+	  (pretty-time (cdr (assoc :posted-at comment)))
 	  (cdr (assoc :base-score comment))
 	  (cdr (assoc :page-url comment)) 
 	  (cdr (assoc :--id comment)) 
-	  (let ((prev (cdr (assoc :chrono-prev comment)))
-		(next (cdr (assoc :chrono-next comment))))
-	    (if (or prev next)
-	      (format nil "<div>Chronological: ~A~A</div>"
-		      (if prev (format nil "<a href=\"/post?id=~A#~A\">prev</a>" (cdr (assoc :post-id comment)) prev) "")
-		      (if next (format nil "<a href=\"/post?id=~A#~A\">next</a>" (cdr (assoc :post-id comment)) next) ""))
-	      "")) 
 	  (if with-post-title
 	    (format nil "<div class=\"comment-post-title\">on: <a href=\"/post?id=~A\">~A</a></div>" (cdr (assoc :post-id comment)) (get-post-title (cdr (assoc :post-id comment))))
 	    "") 
 	  (cdr (assoc :html-body comment)))) 
-
-(defun add-comment-chrono-keys (comments)
-  (let ((sorted (sort (copy-list comments) #'local-time:timestamp<
-		      :key (lambda (c) (local-time:parse-timestring (cdr (assoc :posted-at c)))))))
-    (mapl
-      (lambda (clist)
-	(if (rest clist)
-	  (nconc (first clist) (list (cons :chrono-next
-					   (cdr (assoc :--id (first (rest clist)))))))))
-      sorted)
-    (mapl
-      (lambda (clist-prev clist-next)
-	(nconc (first clist-next) (list (cons :chrono-prev
-					      (cdr (assoc :--id (first clist-prev)))))))
-      sorted (rest sorted))
-    comments)) 
 
 (defun make-comment-parent-hash (comments)
   (let ((hash (make-hash-table :test 'equal)))
@@ -277,7 +256,6 @@
 					       *nav-bar*
 					       (post-body-to-html post) 
 					       (let ((comments (get-post-comments id)))
-						 (add-comment-chrono-keys comments) 
 						 (comment-tree-to-html (make-comment-parent-hash comments)))
 					       *bottom-bar*))) 
 				   (t (condition)
