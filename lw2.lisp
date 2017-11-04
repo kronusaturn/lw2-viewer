@@ -110,10 +110,11 @@
 (defun get-post-title (post-id)
   (let ((post-title (cache-get "postid-to-title" post-id)))
     (if post-title post-title
-      (let ((data (get-post-title-real post-id)))
-	(if data 
-	  (cache-post-title post-id (cdr (first data)))
-	  "[Error communicating with LW2 server]"))))) 
+      (handler-case
+	(let ((data (get-post-title-real post-id)))
+	  (assert data)
+	  (cache-post-title post-id (cdr (first data))))
+	(t () "[Error communicating with LW2 server]"))))) 
 
 (defun get-username-real (user-id)
   (lw2-graphql-query (format nil "{UsersSingle (documentId:\"~A\") {username}}" user-id))) 
@@ -121,10 +122,11 @@
 (defun get-username (user-id)
   (let ((username (cache-get "userid-to-username" user-id)))
     (if username username
-      (let ((data (get-username-real user-id)))
-	(if data 
-	  (cache-put "userid-to-username" user-id (cdr (first data)))
-	  "[Error communicating with LW2 server]"))))) 
+      (handler-case
+	(let ((data (get-username-real user-id)))
+	  (assert data)
+	  (cache-put "userid-to-username" user-id (cdr (first data))))
+	(t () "[Error communicating with LW2 server]"))))) 
 
 (defun log-condition (condition)
   (with-open-file (outstream "./logs/error.log" :direction :output :if-exists :append :if-does-not-exist :create)
