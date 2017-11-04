@@ -6,35 +6,36 @@
 
 (defparameter *cache-db* "./cache/") 
 
+(defmacro with-db ((db) &body body)
+  (alexandria:with-gensyms (env txn)
+			   `(let ((,env (lmdb:make-environment *cache-db*)))
+			      (lmdb:with-environment (,env)
+						     (let ((,txn (lmdb:make-transaction ,env)))
+						       (lmdb:begin-transaction ,txn)
+						       (let ((db (lmdb:make-database ,txn ,db)))
+							 (lmdb:with-database (,db)
+									     (prog1
+									       (progn
+										 ,@body)
+									       (lmdb:commit-transaction ,txn)))))))))
+
 (defun cache-put (db key value)
-  (let ((env (lmdb:make-environment *cache-db*))) 
-    (lmdb:with-environment (env)
-			   (let ((txn (lmdb:make-transaction env)))
-			     (lmdb:begin-transaction txn)
-			     (let ((db (lmdb:make-database txn db)))
-			       (lmdb:with-database (db)
-						   (prog1 (if (lmdb:put db (string-to-octets key :external-format :utf-8)
-									(string-to-octets value :external-format :utf-8))
-							    value
-							    nil) 
-						     (lmdb:commit-transaction txn)))))))) 
+  (with-db (db) 
+	   (if (lmdb:put db (string-to-octets key :external-format :utf-8)
+			 (string-to-octets value :external-format :utf-8))
+	     value
+	     nil))) 
 
 (defun cache-get (db key)
-  (let ((env (lmdb:make-environment *cache-db*))) 
-    (lmdb:with-environment (env)
-			   (let ((txn (lmdb:make-transaction env)))
-			     (lmdb:begin-transaction txn)
-			     (let ((db (lmdb:make-database txn db)))
-			       (lmdb:with-database (db)
-						   (let ((result (lmdb:get db (string-to-octets key :external-format :utf-8)))) 
-						     (prog1 (if result
-							      (octets-to-string result :external-format :utf-8)
-							      nil)
-						       (lmdb:commit-transaction txn))))))))) 
+  (with-db (db) 
+	   (let ((result (lmdb:get db (string-to-octets key :external-format :utf-8)))) 
+	     (if result
+	       (octets-to-string result :external-format :utf-8)
+	       nil)))) 
 
 (defvar *background-loader-thread* nil) 
 
-(defun lw2-graphql-query (query)
+(defun lw2-graphql-query-streamparse (query)
   (multiple-value-bind (req-stream status-code headers final-uri reuse-stream)
     (drakma:http-request "https://www.lesserwrong.com/graphql" :parameters (list (cons "query" query))
 			 :cookie-jar *cookie-jar* :want-stream t)
@@ -47,6 +48,23 @@
 			 :cookie-jar *cookie-jar* :want-stream nil)
 		      :external-format :utf-8)) 
 
+(defun decode-graphql-json (json-string)
+  (rest (cadar (json:decode-json-from-string json-string))))  
+
+(defun lw2-graphql-query (query)
+  (decode-graphql-json (lw2-graphql-query-noparse query))) 
+
+(defun lw2-graphql-query-timeout-cached (query cache-db cache-key)
+  (decode-graphql-json 
+    (let ((cached-result (cache-get cache-db cache-key)))
+      (if cached-result
+	(let ((thread (sb-thread:make-thread
+			(lambda () (lw2-graphql-query-noparse query)))))
+	  (handler-case
+	    (cache-put cache-db cache-key (sb-thread:join-thread thread :timeout 1))
+	    (t () cached-result)))
+	(cache-put cache-db cache-key (lw2-graphql-query-noparse query)))))) 
+ 
 (defun get-posts ()
   (let ((cached-result (and *background-loader-thread* (cache-get "index-json" "new-not-meta")))) 
     (if cached-result
@@ -57,10 +75,10 @@
   (lw2-graphql-query-noparse "{PostsList (terms:{view:\"new\",limit:20,meta:false}) {title, _id, userId, postedAt, baseScore, commentCount, pageUrl, url}}"))
 
 (defun get-post-body (post-id)
-  (lw2-graphql-query (format nil "{PostsSingle(documentId:\"~A\") {title, _id, userId, postedAt, baseScore, commentCount, pageUrl, url, htmlBody}}" post-id)))
+  (lw2-graphql-query-timeout-cached (format nil "{PostsSingle(documentId:\"~A\") {title, _id, userId, postedAt, baseScore, commentCount, pageUrl, url, htmlBody}}" post-id) "post-body-json" post-id))
 
 (defun get-post-comments (post-id)
-  (lw2-graphql-query (format nil "{CommentsList (terms:{view:\"postCommentsTop\",limit:100,postId:\"~A\"}) {_id, userId, postId, postedAt, parentCommentId, baseScore, pageUrl, htmlBody}}" post-id)))
+  (lw2-graphql-query-timeout-cached (format nil "{CommentsList (terms:{view:\"postCommentsTop\",limit:100,postId:\"~A\"}) {_id, userId, postId, postedAt, parentCommentId, baseScore, pageUrl, htmlBody}}" post-id) "post-comments-json" post-id))
 
 (defun get-recent-comments ()
   (let ((cached-result (and *background-loader-thread* (cache-get "index-json" "recent-comments"))))
@@ -96,14 +114,25 @@
 	  (cache-put "userid-to-username" user-id (cdr (first data)))
 	  "[Error communicating with LW2 server]"))))) 
 
+(defun log-condition (condition)
+  (with-open-file (outstream "./logs/error.log" :direction :output :if-exists :append :if-does-not-exist :create)
+    (format outstream "~%~A: ~S ~A~%" (local-time:format-timestring nil (local-time:now)) condition condition)
+    (sb-debug:print-backtrace :stream outstream :from :interrupted-frame :print-frame-source t))) 
+
+(defmacro log-conditions (&body body)
+  `(handler-case (progn ,@body)
+     (t (c) (log-condition c)))) 
+
 (defun background-loader ()
   (loop
-    (let ((posts-json (get-posts-json)))
-      (if (and posts-json (ignore-errors (json:decode-json-from-string posts-json)))
-	(cache-put "index-json" "new-not-meta" posts-json)))
-    (let ((recent-comments-json (get-recent-comments-json)))
-      (if (and recent-comments-json (ignore-errors (json:decode-json-from-string recent-comments-json)))
-	(cache-put "index-json" "recent-comments" recent-comments-json))) 
+    (log-conditions 
+      (let ((posts-json (get-posts-json)))
+	(if (and posts-json (ignore-errors (json:decode-json-from-string posts-json)))
+	  (cache-put "index-json" "new-not-meta" posts-json))))
+    (log-conditions
+      (let ((recent-comments-json (get-recent-comments-json)))
+	(if (and recent-comments-json (ignore-errors (json:decode-json-from-string recent-comments-json)))
+	  (cache-put "index-json" "recent-comments" recent-comments-json)))) 
     (sleep 60))) 
 
 (defun start-background-loader ()
