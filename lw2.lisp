@@ -49,21 +49,33 @@
 		      :external-format :utf-8)) 
 
 (defun decode-graphql-json (json-string)
-  (rest (cadar (json:decode-json-from-string json-string))))  
+  (let* ((decoded (json:decode-json-from-string json-string))
+	 (errors (cadr (assoc :errors decoded)))
+	 (data (cdadr (assoc :data decoded))))
+    (if errors
+      (let ((message (cdr (assoc :message errors))))
+	(cond 
+	  ((search "document_not_found" message) (error "LW2 server reports: document not found."))
+	  ((search "not_allowed" message) (error "LW2 server reports: not allowed."))
+	  (t (error "LW2 server reports: ~A" message))))
+      data)))  
 
 (defun lw2-graphql-query (query)
   (decode-graphql-json (lw2-graphql-query-noparse query))) 
 
 (defun lw2-graphql-query-timeout-cached (query cache-db cache-key)
-  (decode-graphql-json 
-    (let ((cached-result (cache-get cache-db cache-key)))
-      (if cached-result
-	(let ((thread (sb-thread:make-thread
-			(lambda () (lw2-graphql-query-noparse query)))))
-	  (handler-case
-	    (cache-put cache-db cache-key (sb-thread:join-thread thread :timeout 1))
-	    (t () cached-result)))
-	(cache-put cache-db cache-key (lw2-graphql-query-noparse query)))))) 
+  (let* ((cached-result (cache-get cache-db cache-key))
+	 (new-result 
+	   (if cached-result
+	     (let ((thread (sb-thread:make-thread
+			     (lambda () (lw2-graphql-query-noparse query)))))
+	       (handler-case
+		 (sb-thread:join-thread thread :timeout 1)
+		 (t () cached-result)))
+	     (lw2-graphql-query-noparse query))))
+    (prog1
+      (decode-graphql-json new-result)
+      (cache-put cache-db cache-key new-result)))) 
  
 (defun get-posts ()
   (let ((cached-result (and *background-loader-thread* (cache-get "index-json" "new-not-meta")))) 
@@ -98,10 +110,11 @@
 (defun get-post-title (post-id)
   (let ((post-title (cache-get "postid-to-title" post-id)))
     (if post-title post-title
-      (let ((data (get-post-title-real post-id)))
-	(if data 
-	  (cache-post-title post-id (cdr (first data)))
-	  "[Error communicating with LW2 server]"))))) 
+      (handler-case
+	(let ((data (get-post-title-real post-id)))
+	  (assert data)
+	  (cache-post-title post-id (cdr (first data))))
+	(t () "[Error communicating with LW2 server]"))))) 
 
 (defun get-username-real (user-id)
   (lw2-graphql-query (format nil "{UsersSingle (documentId:\"~A\") {username}}" user-id))) 
@@ -109,10 +122,11 @@
 (defun get-username (user-id)
   (let ((username (cache-get "userid-to-username" user-id)))
     (if username username
-      (let ((data (get-username-real user-id)))
-	(if data 
-	  (cache-put "userid-to-username" user-id (cdr (first data)))
-	  "[Error communicating with LW2 server]"))))) 
+      (handler-case
+	(let ((data (get-username-real user-id)))
+	  (assert data)
+	  (cache-put "userid-to-username" user-id (cdr (first data))))
+	(t () "[Error communicating with LW2 server]"))))) 
 
 (defun log-condition (condition)
   (with-open-file (outstream "./logs/error.log" :direction :output :if-exists :append :if-does-not-exist :create)
@@ -174,7 +188,7 @@
 		  (or (cdr (assoc :html-body post)) "")))) 
 
 (defun comment-to-html (comment &key with-post-title)
-  (format nil "<div class=\"comment\"><div class=\"comment-meta\"><div>~A</div><a id=\"~A\" href=\"~A\">~A</a><div>~A points</div><a href=\"~A#~A\">LW2 link</a>~A</div><div class=\"comment-body\">~A</div></div>"
+  (format nil "<div class=\"comment\"><div class=\"comment-meta\"><div>~A</div><a id=\"~A\" href=\"~A\">~A</a><div>~A points</div><a href=\"~A#~A\">LW2 link</a>~A~A</div><div class=\"comment-body\">~A</div></div>"
 	  (get-username (cdr (assoc :user-id comment))) 
 	  (cdr (assoc :--id comment)) 
 	  (format nil "/post?id=~A#~A" (cdr (assoc :post-id comment)) (cdr (assoc :--id comment))) 
@@ -182,10 +196,33 @@
 	  (cdr (assoc :base-score comment))
 	  (cdr (assoc :page-url comment)) 
 	  (cdr (assoc :--id comment)) 
+	  (let ((prev (cdr (assoc :chrono-prev comment)))
+		(next (cdr (assoc :chrono-next comment))))
+	    (if (or prev next)
+	      (format nil "<div>Chronological: ~A~A</div>"
+		      (if prev (format nil "<a href=\"/post?id=~A#~A\">prev</a>" (cdr (assoc :post-id comment)) prev) "")
+		      (if next (format nil "<a href=\"/post?id=~A#~A\">next</a>" (cdr (assoc :post-id comment)) next) ""))
+	      "")) 
 	  (if with-post-title
 	    (format nil "<div class=\"comment-post-title\">on: <a href=\"/post?id=~A\">~A</a></div>" (cdr (assoc :post-id comment)) (get-post-title (cdr (assoc :post-id comment))))
 	    "") 
 	  (cdr (assoc :html-body comment)))) 
+
+(defun add-comment-chrono-keys (comments)
+  (let ((sorted (sort (copy-list comments) #'local-time:timestamp<
+		      :key (lambda (c) (local-time:parse-timestring (cdr (assoc :posted-at c)))))))
+    (mapl
+      (lambda (clist)
+	(if (rest clist)
+	  (nconc (first clist) (list (cons :chrono-next
+					   (cdr (assoc :--id (first (rest clist)))))))))
+      sorted)
+    (mapl
+      (lambda (clist-prev clist-next)
+	(nconc (first clist-next) (list (cons :chrono-prev
+					      (cdr (assoc :--id (first clist-prev)))))))
+      sorted (rest sorted))
+    comments)) 
 
 (defun make-comment-parent-hash (comments)
   (let ((hash (make-hash-table :test 'equal)))
@@ -230,15 +267,25 @@
 
 (hunchentoot:define-easy-handler (view-post :uri "/post") (id)
 				 (setf (hunchentoot:content-type*) "text/html")
-				 (let ((post (get-post-body id))) 
-				   (format nil "<html lang=\"en-US\"><head><title>~A - LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~A~A<div id=\"comments\">~A</div>~A</div></body></html>"
-					   (cdr (assoc :title post)) 
-					   *html-head*
-					   *nav-bar*
-					   (post-body-to-html post) 
-					   (let ((comments (get-post-comments id)))
-					     (comment-tree-to-html (make-comment-parent-hash comments)))
-					   *bottom-bar*))) 
+				 (handler-case 
+				   (progn
+				     (unless (and id (not (equal id ""))) (error "No post ID.")) 
+				     (let ((post (get-post-body id))) 
+				       (format nil "<html lang=\"en-US\"><head><title>~A - LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~A~A<div id=\"comments\">~A</div>~A</div></body></html>"
+					       (cdr (assoc :title post)) 
+					       *html-head*
+					       *nav-bar*
+					       (post-body-to-html post) 
+					       (let ((comments (get-post-comments id)))
+						 (add-comment-chrono-keys comments) 
+						 (comment-tree-to-html (make-comment-parent-hash comments)))
+					       *bottom-bar*))) 
+				   (t (condition)
+				      (setf (hunchentoot:return-code*) 500)
+				      (format nil "<html lang=\"en-US\"><head><title>Error - LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~A<h1>Error</h1><p>~A</p></div></body></html>"
+					      *html-head*
+					      *nav-bar*
+					      condition)))) 
  
 (hunchentoot:define-easy-handler (view-recent-comments :uri "/recentcomments") ()
 				 (setf (hunchentoot:content-type*) "text/html")
