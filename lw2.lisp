@@ -155,6 +155,10 @@
   (sb-thread:terminate-thread *background-loader-thread*)
   (setf *background-loader-thread* nil)) 
 
+(defun pretty-time (timestring)
+  (local-time:format-timestring nil (local-time:parse-timestring timestring)
+				:format '(:day #\  :short-month #\  :year #\  :hour #\: (:min 2) #\  :timezone))) 
+
 (defun post-headline-to-html (post)
   (let ((id (cdr (assoc :--id post)))
 	(title (cdr (assoc :title post))))
@@ -163,7 +167,7 @@
 	  (or (cdr (assoc :url post)) (format nil "/post?id=~A" (url-rewrite:url-encode (cdr (assoc :--id post))))) 
 	  (cdr (assoc :title post))
 	  (get-username (cdr (assoc :user-id post)))
-	  (cdr (assoc :posted-at post)) 
+	  (pretty-time (cdr (assoc :posted-at post))) 
 	  (cdr (assoc :base-score post))
 	  (url-rewrite:url-encode (cdr (assoc :--id post))) 
 	  (or (cdr (assoc :comment-count post)) 0) 
@@ -177,7 +181,7 @@
   (format nil "<div class=\"post\"><h1>~A</h1><div class=\"post-meta\"><div class=\"author\">~A</div><div class=\"date\">~A</div><div class=\"karma\">~A points</div><a class=\"comment-count\" href=\"#comments\">~A comments</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a></div><div class=\"post-body\">~A</div></div>"
 	  (cdr (assoc :title post))
 	  (get-username (cdr (assoc :user-id post)))
-	  (cdr (assoc :posted-at post)) 
+	  (pretty-time (cdr (assoc :posted-at post))) 
 	  (cdr (assoc :base-score post))
 	  (or (cdr (assoc :comment-count post)) 0) 
 	  (cdr (assoc :page-url post)) 
@@ -190,7 +194,7 @@
 	  (get-username (cdr (assoc :user-id comment))) 
 	  (cdr (assoc :--id comment)) 
 	  (format nil "/post?id=~A#~A" (cdr (assoc :post-id comment)) (cdr (assoc :--id comment))) 
-	  (cdr (assoc :posted-at comment))
+	  (pretty-time (cdr (assoc :posted-at comment)))
 	  (cdr (assoc :base-score comment))
 	  (cdr (assoc :page-url comment)) 
 	  (cdr (assoc :--id comment)) 
