@@ -6,31 +6,32 @@
 
 (defparameter *cache-db* "./cache/") 
 
+(defmacro with-db ((db) &body body)
+  (alexandria:with-gensyms (env txn)
+			   `(let ((,env (lmdb:make-environment *cache-db*)))
+			      (lmdb:with-environment (,env)
+						     (let ((,txn (lmdb:make-transaction ,env)))
+						       (lmdb:begin-transaction ,txn)
+						       (let ((db (lmdb:make-database ,txn ,db)))
+							 (lmdb:with-database (,db)
+									     (prog1
+									       (progn
+										 ,@body)
+									       (lmdb:commit-transaction ,txn)))))))))
+
 (defun cache-put (db key value)
-  (let ((env (lmdb:make-environment *cache-db*))) 
-    (lmdb:with-environment (env)
-			   (let ((txn (lmdb:make-transaction env)))
-			     (lmdb:begin-transaction txn)
-			     (let ((db (lmdb:make-database txn db)))
-			       (lmdb:with-database (db)
-						   (prog1 (if (lmdb:put db (string-to-octets key :external-format :utf-8)
-									(string-to-octets value :external-format :utf-8))
-							    value
-							    nil) 
-						     (lmdb:commit-transaction txn)))))))) 
+  (with-db (db) 
+	   (if (lmdb:put db (string-to-octets key :external-format :utf-8)
+			 (string-to-octets value :external-format :utf-8))
+	     value
+	     nil))) 
 
 (defun cache-get (db key)
-  (let ((env (lmdb:make-environment *cache-db*))) 
-    (lmdb:with-environment (env)
-			   (let ((txn (lmdb:make-transaction env)))
-			     (lmdb:begin-transaction txn)
-			     (let ((db (lmdb:make-database txn db)))
-			       (lmdb:with-database (db)
-						   (let ((result (lmdb:get db (string-to-octets key :external-format :utf-8)))) 
-						     (prog1 (if result
-							      (octets-to-string result :external-format :utf-8)
-							      nil)
-						       (lmdb:commit-transaction txn))))))))) 
+  (with-db (db) 
+	   (let ((result (lmdb:get db (string-to-octets key :external-format :utf-8)))) 
+	     (if result
+	       (octets-to-string result :external-format :utf-8)
+	       nil)))) 
 
 (defvar *background-loader-thread* nil) 
 
