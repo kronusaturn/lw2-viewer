@@ -130,8 +130,8 @@ h1.listing a[href^="/"]::after {
 	min-height: 8em;
 	font-family: Charter;
 	padding: 0 30px;
-	line-height: 1.55;
-	font-size: 1.25rem;
+	line-height: 1.5;
+	font-size: 1.2rem;
 }
 
 /************/
@@ -226,6 +226,7 @@ h1 {
 .post-body h4 {
 	font-family: 'Geometric 415';
 	line-height: 1.1;
+	margin: 1em 0 0.75em 0;
 }
 
 /********/
