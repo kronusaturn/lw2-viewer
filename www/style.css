@@ -250,6 +250,17 @@ li {
 	margin-bottom: 0.5em;
 }
 
+sup, sub {
+	vertical-align: baseline;
+	position: relative;
+	top: -0.5em;
+	left: 0.05em;
+	font-size: 0.8em;
+}
+sub {
+	top: 0.3em;
+}
+
 /*************/
 /* FOOTNOTES */
 /*************/
