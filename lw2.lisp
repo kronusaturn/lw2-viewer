@@ -49,21 +49,33 @@
 		      :external-format :utf-8)) 
 
 (defun decode-graphql-json (json-string)
-  (rest (cadar (json:decode-json-from-string json-string))))  
+  (let* ((decoded (json:decode-json-from-string json-string))
+	 (errors (cadr (assoc :errors decoded)))
+	 (data (cdadr (assoc :data decoded))))
+    (if errors
+      (let ((message (cdr (assoc :message errors))))
+	(cond 
+	  ((search "document_not_found" message) (error "LW2 server reports: document not found."))
+	  ((search "not_allowed" message) (error "LW2 server reports: not allowed."))
+	  (t (error "LW2 server reports: ~A" message))))
+      data)))  
 
 (defun lw2-graphql-query (query)
   (decode-graphql-json (lw2-graphql-query-noparse query))) 
 
 (defun lw2-graphql-query-timeout-cached (query cache-db cache-key)
-  (decode-graphql-json 
-    (let ((cached-result (cache-get cache-db cache-key)))
-      (if cached-result
-	(let ((thread (sb-thread:make-thread
-			(lambda () (lw2-graphql-query-noparse query)))))
-	  (handler-case
-	    (cache-put cache-db cache-key (sb-thread:join-thread thread :timeout 1))
-	    (t () cached-result)))
-	(cache-put cache-db cache-key (lw2-graphql-query-noparse query)))))) 
+  (let* ((cached-result (cache-get cache-db cache-key))
+	 (new-result 
+	   (if cached-result
+	     (let ((thread (sb-thread:make-thread
+			     (lambda () (lw2-graphql-query-noparse query)))))
+	       (handler-case
+		 (sb-thread:join-thread thread :timeout 1)
+		 (t () cached-result)))
+	     (lw2-graphql-query-noparse query))))
+    (prog1
+      (decode-graphql-json new-result)
+      (cache-put cache-db cache-key new-result)))) 
  
 (defun get-posts ()
   (let ((cached-result (and *background-loader-thread* (cache-get "index-json" "new-not-meta")))) 
@@ -230,15 +242,22 @@
 
 (hunchentoot:define-easy-handler (view-post :uri "/post") (id)
 				 (setf (hunchentoot:content-type*) "text/html")
-				 (let ((post (get-post-body id))) 
-				   (format nil "<html lang=\"en-US\"><head><title>~A - LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~A~A<div id=\"comments\">~A</div>~A</div></body></html>"
-					   (cdr (assoc :title post)) 
-					   *html-head*
-					   *nav-bar*
-					   (post-body-to-html post) 
-					   (let ((comments (get-post-comments id)))
-					     (comment-tree-to-html (make-comment-parent-hash comments)))
-					   *bottom-bar*))) 
+				 (handler-case 
+				   (let ((post (get-post-body id))) 
+				     (format nil "<html lang=\"en-US\"><head><title>~A - LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~A~A<div id=\"comments\">~A</div>~A</div></body></html>"
+					     (cdr (assoc :title post)) 
+					     *html-head*
+					     *nav-bar*
+					     (post-body-to-html post) 
+					     (let ((comments (get-post-comments id)))
+					       (comment-tree-to-html (make-comment-parent-hash comments)))
+					     *bottom-bar*))
+				   (t (condition)
+				      (setf (hunchentoot:return-code*) 500)
+				      (format nil "<html lang=\"en-US\"><head><title>Error - LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~A<h1>Error</h1><p>~A</p></div></body></html>"
+					      *html-head*
+					      *nav-bar*
+					      condition)))) 
  
 (hunchentoot:define-easy-handler (view-recent-comments :uri "/recentcomments") ()
 				 (setf (hunchentoot:content-type*) "text/html")
