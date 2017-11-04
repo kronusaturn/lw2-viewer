@@ -68,15 +68,13 @@
 	 (new-result 
 	   (if cached-result
 	     (let ((thread (sb-thread:make-thread
-			     (lambda () (lw2-graphql-query-noparse query)))))
+			     (lambda () (cache-put cache-db cache-key (lw2-graphql-query-noparse query))))))
 	       (handler-case
 		 (sb-thread:join-thread thread :timeout 1)
 		 (t () cached-result)))
-	     (lw2-graphql-query-noparse query))))
-    (prog1
-      (decode-graphql-json new-result)
-      (cache-put cache-db cache-key new-result)))) 
- 
+	     (cache-put cache-db cache-key (lw2-graphql-query-noparse query)))))
+    (decode-graphql-json new-result)))
+
 (defun get-posts ()
   (let ((cached-result (and *background-loader-thread* (cache-get "index-json" "new-not-meta")))) 
     (if cached-result
