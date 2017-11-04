@@ -96,14 +96,25 @@
 	  (cache-put "userid-to-username" user-id (cdr (first data)))
 	  "[Error communicating with LW2 server]"))))) 
 
+(defun log-condition (condition)
+  (with-open-file (outstream "./logs/error.log" :direction :output :if-exists :append :if-does-not-exist :create)
+    (format outstream "~%~A: ~S ~A~%" (local-time:format-timestring nil (local-time:now)) condition condition)
+    (sb-debug:print-backtrace :stream outstream :from :interrupted-frame :print-frame-source t))) 
+
+(defmacro log-conditions (&body body)
+  `(handler-case (progn ,@body)
+     (t (c) (log-condition c)))) 
+
 (defun background-loader ()
   (loop
-    (let ((posts-json (get-posts-json)))
-      (if (and posts-json (ignore-errors (json:decode-json-from-string posts-json)))
-	(cache-put "index-json" "new-not-meta" posts-json)))
-    (let ((recent-comments-json (get-recent-comments-json)))
-      (if (and recent-comments-json (ignore-errors (json:decode-json-from-string recent-comments-json)))
-	(cache-put "index-json" "recent-comments" recent-comments-json))) 
+    (log-conditions 
+      (let ((posts-json (get-posts-json)))
+	(if (and posts-json (ignore-errors (json:decode-json-from-string posts-json)))
+	  (cache-put "index-json" "new-not-meta" posts-json))))
+    (log-conditions
+      (let ((recent-comments-json (get-recent-comments-json)))
+	(if (and recent-comments-json (ignore-errors (json:decode-json-from-string recent-comments-json)))
+	  (cache-put "index-json" "recent-comments" recent-comments-json)))) 
     (sleep 60))) 
 
 (defun start-background-loader ()
