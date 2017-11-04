@@ -35,7 +35,7 @@
 
 (defvar *background-loader-thread* nil) 
 
-(defun lw2-graphql-query (query)
+(defun lw2-graphql-query-streamparse (query)
   (multiple-value-bind (req-stream status-code headers final-uri reuse-stream)
     (drakma:http-request "https://www.lesserwrong.com/graphql" :parameters (list (cons "query" query))
 			 :cookie-jar *cookie-jar* :want-stream t)
@@ -48,6 +48,23 @@
 			 :cookie-jar *cookie-jar* :want-stream nil)
 		      :external-format :utf-8)) 
 
+(defun decode-graphql-json (json-string)
+  (rest (cadar (json:decode-json-from-string json-string))))  
+
+(defun lw2-graphql-query (query)
+  (decode-graphql-json (lw2-graphql-query-noparse query))) 
+
+(defun lw2-graphql-query-timeout-cached (query cache-db cache-key)
+  (decode-graphql-json 
+    (let ((cached-result (cache-get cache-db cache-key)))
+      (if cached-result
+	(let ((thread (sb-thread:make-thread
+			(lambda () (lw2-graphql-query-noparse query)))))
+	  (handler-case
+	    (cache-put cache-db cache-key (sb-thread:join-thread thread :timeout 1))
+	    (t () cached-result)))
+	(cache-put cache-db cache-key (lw2-graphql-query-noparse query)))))) 
+ 
 (defun get-posts ()
   (let ((cached-result (and *background-loader-thread* (cache-get "index-json" "new-not-meta")))) 
     (if cached-result
@@ -58,10 +75,10 @@
   (lw2-graphql-query-noparse "{PostsList (terms:{view:\"new\",limit:20,meta:false}) {title, _id, userId, postedAt, baseScore, commentCount, pageUrl, url}}"))
 
 (defun get-post-body (post-id)
-  (lw2-graphql-query (format nil "{PostsSingle(documentId:\"~A\") {title, _id, userId, postedAt, baseScore, commentCount, pageUrl, url, htmlBody}}" post-id)))
+  (lw2-graphql-query-timeout-cached (format nil "{PostsSingle(documentId:\"~A\") {title, _id, userId, postedAt, baseScore, commentCount, pageUrl, url, htmlBody}}" post-id) "post-body-json" post-id))
 
 (defun get-post-comments (post-id)
-  (lw2-graphql-query (format nil "{CommentsList (terms:{view:\"postCommentsTop\",limit:100,postId:\"~A\"}) {_id, userId, postId, postedAt, parentCommentId, baseScore, pageUrl, htmlBody}}" post-id)))
+  (lw2-graphql-query-timeout-cached (format nil "{CommentsList (terms:{view:\"postCommentsTop\",limit:100,postId:\"~A\"}) {_id, userId, postId, postedAt, parentCommentId, baseScore, pageUrl, htmlBody}}" post-id) "post-comments-json" post-id))
 
 (defun get-recent-comments ()
   (let ((cached-result (and *background-loader-thread* (cache-get "index-json" "recent-comments"))))
