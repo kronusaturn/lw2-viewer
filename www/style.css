@@ -64,11 +64,10 @@ body {
 /************/
 
 h1.listing {
-	margin-bottom: 0;
 	font-family: 'Geometric 415';
 	font-weight: 500;
 	line-height: 1.1;
-	margin-bottom: 0.2em;
+	margin: 1em 0.5em 0.2em 0.5em;
 }
 h1.listing a {
 	color: #00c;
