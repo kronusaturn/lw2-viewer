@@ -245,15 +245,17 @@
 (hunchentoot:define-easy-handler (view-post :uri "/post") (id)
 				 (setf (hunchentoot:content-type*) "text/html")
 				 (handler-case 
-				   (let ((post (get-post-body id))) 
-				     (format nil "<html lang=\"en-US\"><head><title>~A - LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~A~A<div id=\"comments\">~A</div>~A</div></body></html>"
-					     (cdr (assoc :title post)) 
-					     *html-head*
-					     *nav-bar*
-					     (post-body-to-html post) 
-					     (let ((comments (get-post-comments id)))
-					       (comment-tree-to-html (make-comment-parent-hash comments)))
-					     *bottom-bar*))
+				   (progn
+				     (unless (and id (not (equal id ""))) (error "No post ID.")) 
+				     (let ((post (get-post-body id))) 
+				       (format nil "<html lang=\"en-US\"><head><title>~A - LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~A~A<div id=\"comments\">~A</div>~A</div></body></html>"
+					       (cdr (assoc :title post)) 
+					       *html-head*
+					       *nav-bar*
+					       (post-body-to-html post) 
+					       (let ((comments (get-post-comments id)))
+						 (comment-tree-to-html (make-comment-parent-hash comments)))
+					       *bottom-bar*))) 
 				   (t (condition)
 				      (setf (hunchentoot:return-code*) 500)
 				      (format nil "<html lang=\"en-US\"><head><title>Error - LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~A<h1>Error</h1><p>~A</p></div></body></html>"
