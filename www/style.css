@@ -258,6 +258,11 @@ sub {
 	top: 0.3em;
 }
 
+hr {
+	border: none;
+	border-bottom: 1px solid #999;
+}
+
 /*************/
 /* FOOTNOTES */
 /*************/
