@@ -1,4 +1,7 @@
-(use-package :flexi-streams) 
+(defpackage lw2-viewer
+  (:use #:cl #:flexi-streams))
+
+(in-package #:lw2-viewer) 
 
 (defvar *cookie-jar* (make-instance 'drakma:cookie-jar))
 ;(defvar *lw2-stream* nil) 
