@@ -5,19 +5,21 @@
 (defvar *username-cache* (make-hash-table :test 'equal)) 
 
 (defparameter *cache-db* "./cache/") 
+(defvar *db-mutex* (sb-thread:make-mutex :name "lmdb")) 
 
 (defmacro with-db ((db) &body body)
   (alexandria:with-gensyms (env txn)
-			   `(let ((,env (lmdb:make-environment *cache-db*)))
-			      (lmdb:with-environment (,env)
-						     (let ((,txn (lmdb:make-transaction ,env)))
-						       (lmdb:begin-transaction ,txn)
-						       (let ((db (lmdb:make-database ,txn ,db)))
-							 (lmdb:with-database (,db)
-									     (prog1
-									       (progn
-										 ,@body)
-									       (lmdb:commit-transaction ,txn)))))))))
+			   `(sb-thread:with-mutex (*db-mutex*)
+						  (let ((,env (lmdb:make-environment *cache-db*)))
+						    (lmdb:with-environment (,env)
+									   (let ((,txn (lmdb:make-transaction ,env)))
+									     (lmdb:begin-transaction ,txn)
+									     (let ((db (lmdb:make-database ,txn ,db)))
+									       (lmdb:with-database (,db)
+												   (prog1
+												     (progn
+												       ,@body)
+												     (lmdb:commit-transaction ,txn))))))))))
 
 (defun cache-put (db key value)
   (with-db (db) 
