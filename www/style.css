@@ -34,6 +34,7 @@ body {
 	display: table-cell;
 }
 #nav-bar a,
+.nav-current,
 #bottom-bar a {
 	padding: 12px 30px;
 	font-weight: 500;
@@ -338,6 +339,10 @@ ol {
 	}
 	#nav-bar {
 		width: calc(100% + 8px);
+	}
+	#nav-bar a,
+	.nav-current {
+		padding: 8px 4px;
 	}
 	#nav-bar,
 	#bottom-bar {
