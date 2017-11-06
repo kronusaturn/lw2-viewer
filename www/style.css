@@ -27,17 +27,22 @@ body {
 }
 #nav-bar {
 	overflow: auto;
+	display: table;
+	width: calc(100% + 60px);
+}
+.nav-item {
+	display: table-cell;
 }
 #nav-bar a,
 #bottom-bar a {
 	padding: 12px 20px;
-	float: left;
-	width: 50%;
 	font-weight: 500;
 	font-size: 1.1em;
 	text-align:center;
+	display: block;
 }
 #bottom-bar a {
+	float: left;
 	width: 100%;
 }
 #nav-bar a:hover,
