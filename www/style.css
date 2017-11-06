@@ -32,7 +32,6 @@ body {
 }
 .nav-item {
 	display: table-cell;
-	border-left: 1px solid #fff;
 }
 #nav-bar a,
 #bottom-bar a {
@@ -66,6 +65,28 @@ body {
 }
 #content > .post-meta:nth-last-child(2) {
 	margin-bottom: 20px;
+}
+
+/* This makes the navbar items look like tabs: */
+
+.nav-item a {
+	box-shadow: 
+		 0 -1px #d8d8d8 inset,
+		 1px 0 #fff inset;
+}
+.nav-current {
+	border-right: 1px solid #d8d8d8;
+	border-left: 1px solid #d8d8d8;
+}
+.nav-current:first-child {
+	border-left: none;
+}
+.nav-current:last-child {
+	border-right: none;
+}
+.nav-current + .nav-item a,
+.nav-item:first-child a  {
+	box-shadow: 0 -1px #d8d8d8 inset;
 }
 
 /************/
