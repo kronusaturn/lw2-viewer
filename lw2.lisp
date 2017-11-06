@@ -75,7 +75,7 @@
 	     (let ((thread (sb-thread:make-thread
 			     (lambda () (cache-put cache-db cache-key (lw2-graphql-query-noparse query))))))
 	       (handler-case
-		 (sb-thread:join-thread thread :timeout 1)
+		 (sb-thread:join-thread thread :timeout 2)
 		 (t () cached-result)))
 	     (cache-put cache-db cache-key (lw2-graphql-query-noparse query)))))
     (decode-graphql-json new-result)))
