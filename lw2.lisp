@@ -81,15 +81,16 @@
     (decode-graphql-json new-result)))
 
 (declaim (inline make-posts-list-query)) 
-(defun make-posts-list-query (&key (view "new") (limit 20) (meta nil) (before nil) (after nil))
+(defun make-posts-list-query (&key (view "new") (limit 20) (meta nil) (frontpage t) (before nil) (after nil))
   (declare (type string view)
 	   (type (integer 1) limit)
 	   (type boolean meta)
 	   (type (or string null) before after))
-  (format nil "{PostsList (terms:{view:\"~A\",limit:~A,meta:~A~A~A}) {title, _id, userId, postedAt, baseScore, commentCount, pageUrl, url}}"
+  (format nil "{PostsList (terms:{view:\"~A\",limit:~A,meta:~A,frontpage:~A~A~A}) {title, _id, userId, postedAt, baseScore, commentCount, pageUrl, url}}"
 	  view
 	  limit
 	  (if meta "true" "false")
+	  (if frontpage "true" "false") 
 	  (if before (format nil ",before:\"~A\"" before) "")
 	  (if after (format nil ",after:\"~A\"" after) ""))) 
 
@@ -247,8 +248,20 @@
 "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
 <link rel=\"stylesheet\" href=\"/style.css\">")
 
-(defparameter *nav-bar*
-"<div id=\"nav-bar\"><a href=\"/\">Home</a><a href=\"/index?view=top\">Top</a><a href=\"/recentcomments\">Recent Comments</a></div>") 
+(defparameter *nav-items* '(("home" "/" "Home" "Latest frontpage posts")
+			    ("featured" "/index?view=featured" "Featured" "Latest featured posts")
+			    ("all" "/index?view=new&all=t" "All" "Latest frontpage posts and userpage posts") 
+			    ("meta" "/index?view=meta&all=t" "Meta" "Latest meta posts")
+			    ("recent-comments" "/recentcomments" "Recent Comments" "Latest comments"))) 
+
+(defun nav-bar-to-html (&optional current-uri)
+  (format nil "<div id=\"nav-bar\">~{~A~}</div>"
+	  (map 'list (lambda (item)
+		       (destructuring-bind (id uri name description) item
+			 (if (string= uri current-uri)
+			   (format nil "<span id=\"nav-item-~A\" class=\"nav-item nav-current\" title=\"~A\">~A</span>" id description name) 
+			   (format nil "<span id=\"nav-item-~A\" class=\"nav-item\" title=\"~A\"><a href=\"~A\">~A</a></span>" id description uri name))))
+	       *nav-items*))) 
 
 (defparameter *bottom-bar*
 "<div id=\"bottom-bar\"><a href=\"#top\">Back to top</a></div>") 
@@ -258,16 +271,16 @@
 				 (let ((posts (get-posts)))
 				   (format nil "<html lang=\"en-US\"><head><title>LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~A~{~A~}~A</div></body></html>"
 					   *html-head*
-					   *nav-bar*
+					   (nav-bar-to-html (hunchentoot:request-uri*)) 
 					   (map 'list #'post-headline-to-html posts)
 					   *bottom-bar*)))
 
-(hunchentoot:define-easy-handler (view-index :uri "/index") (view before after)
+(hunchentoot:define-easy-handler (view-index :uri "/index") (view all meta before after)
 				 (setf (hunchentoot:content-type*) "text/html")
-				 (let ((posts (lw2-graphql-query (make-posts-list-query :view (or view "new") :before before :after after))))
+				 (let ((posts (lw2-graphql-query (make-posts-list-query :view (or view "new") :frontpage (not all) :meta (not (not meta)) :before before :after after))))
 				   (format nil "<html lang=\"en-US\"><head><title>LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~A~{~A~}~A</div></body></html>"
 					   *html-head*
-					   *nav-bar*
+					   (nav-bar-to-html (hunchentoot:request-uri*)) 
 					   (map 'list #'post-headline-to-html posts)
 					   *bottom-bar*))) 
 
@@ -280,7 +293,7 @@
 				       (format nil "<html lang=\"en-US\"><head><title>~A - LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~A~A<div id=\"comments\">~A</div>~A</div></body></html>"
 					       (cdr (assoc :title post)) 
 					       *html-head*
-					       *nav-bar*
+					       (nav-bar-to-html (hunchentoot:request-uri*)) 
 					       (post-body-to-html post) 
 					       (let ((comments (get-post-comments id)))
 						 (comment-tree-to-html (make-comment-parent-hash comments)))
@@ -289,7 +302,7 @@
 				      (setf (hunchentoot:return-code*) 500)
 				      (format nil "<html lang=\"en-US\"><head><title>Error - LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~A<h1>Error</h1><p>~A</p></div></body></html>"
 					      *html-head*
-					      *nav-bar*
+					      (nav-bar-to-html (hunchentoot:request-uri*)) 
 					      condition)))) 
  
 (hunchentoot:define-easy-handler (view-recent-comments :uri "/recentcomments") ()
@@ -297,7 +310,7 @@
 				 (let ((recent-comments (get-recent-comments)))
 				   (format nil "<html lang=\"en-US\"><head><title>Recent comments - LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~A<ul class=\"comment-thread\">~{<li class=\"comment-item\">~A</li>~}</ul>~A</div></body></html>"
 					   *html-head*
-					   *nav-bar*
+					   (nav-bar-to-html (hunchentoot:request-uri*)) 
 					   (map 'list (lambda (c) (comment-to-html c :with-post-title t)) recent-comments)
 					   *bottom-bar*)))
 

@@ -41,6 +41,9 @@ body {
 	text-align: center;
 	display: block;
 }
+#nav-bar a {
+	background-color: #eee;
+}
 #bottom-bar a {
 	float: left;
 	width: 100%;
