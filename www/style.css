@@ -35,10 +35,10 @@ body {
 }
 #nav-bar a,
 #bottom-bar a {
-	padding: 12px 20px;
+	padding: 12px 30px;
 	font-weight: 500;
 	font-size: 1.1em;
-	text-align:center;
+	text-align: center;
 	display: block;
 }
 #bottom-bar a {
@@ -335,6 +335,10 @@ ol {
 	}
 	#nav-bar {
 		width: calc(100% + 8px);
+	}
+	#nav-bar,
+	#bottom-bar {
+		margin: 0 -4px;
 	}
 	.post-body {
 		padding: 0 6px;
