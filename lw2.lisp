@@ -80,14 +80,27 @@
 	     (cache-put cache-db cache-key (lw2-graphql-query-noparse query)))))
     (decode-graphql-json new-result)))
 
+(declaim (inline make-posts-list-query)) 
+(defun make-posts-list-query (&key (view "new") (limit 20) (meta nil) (before nil) (after nil))
+  (declare (type string view)
+	   (type (integer 1) limit)
+	   (type boolean meta)
+	   (type (or string null) before after))
+  (format nil "{PostsList (terms:{view:\"~A\",limit:~A,meta:~A~A~A}) {title, _id, userId, postedAt, baseScore, commentCount, pageUrl, url}}"
+	  view
+	  limit
+	  (if meta "true" "false")
+	  (if before (format nil ",before:\"~A\"" before) "")
+	  (if after (format nil ",after:\"~A\"" after) ""))) 
+
 (defun get-posts ()
   (let ((cached-result (and *background-loader-thread* (cache-get "index-json" "new-not-meta")))) 
     (if cached-result
       (rest (cadar (json:decode-json-from-string cached-result)))
-      (lw2-graphql-query "{PostsList (terms:{view:\"new\",limit:20,meta:false}) {title, _id, userId, postedAt, baseScore, commentCount, pageUrl, url}}"))))
+      (lw2-graphql-query (make-posts-list-query)))))
 
 (defun get-posts-json ()
-  (lw2-graphql-query-noparse "{PostsList (terms:{view:\"new\",limit:20,meta:false}) {title, _id, userId, postedAt, baseScore, commentCount, pageUrl, url}}"))
+  (lw2-graphql-query-noparse (make-posts-list-query)))
 
 (defun get-post-body (post-id)
   (lw2-graphql-query-timeout-cached (format nil "{PostsSingle(documentId:\"~A\") {title, _id, userId, postedAt, baseScore, commentCount, pageUrl, url, htmlBody}}" post-id) "post-body-json" post-id))
@@ -235,7 +248,7 @@
 <link rel=\"stylesheet\" href=\"/style.css\">")
 
 (defparameter *nav-bar*
-"<div id=\"nav-bar\"><a href=\"/\">Home</a><a href=\"/recentcomments\">Recent Comments</a></div>") 
+"<div id=\"nav-bar\"><a href=\"/\">Home</a><a href=\"/index?view=top\">Top</a><a href=\"/recentcomments\">Recent Comments</a></div>") 
 
 (defparameter *bottom-bar*
 "<div id=\"bottom-bar\"><a href=\"#top\">Back to top</a></div>") 
@@ -248,6 +261,15 @@
 					   *nav-bar*
 					   (map 'list #'post-headline-to-html posts)
 					   *bottom-bar*)))
+
+(hunchentoot:define-easy-handler (view-index :uri "/index") (view before after)
+				 (setf (hunchentoot:content-type*) "text/html")
+				 (let ((posts (lw2-graphql-query (make-posts-list-query :view (or view "new") :before before :after after))))
+				   (format nil "<html lang=\"en-US\"><head><title>LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~A~{~A~}~A</div></body></html>"
+					   *html-head*
+					   *nav-bar*
+					   (map 'list #'post-headline-to-html posts)
+					   *bottom-bar*))) 
 
 (hunchentoot:define-easy-handler (view-post :uri "/post") (id)
 				 (setf (hunchentoot:content-type*) "text/html")
