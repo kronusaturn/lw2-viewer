@@ -32,6 +32,7 @@ body {
 }
 .nav-item {
 	display: table-cell;
+	border-left: 1px solid #fff;
 }
 #nav-bar a,
 #bottom-bar a {
