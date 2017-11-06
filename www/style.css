@@ -47,13 +47,19 @@ body {
 	width: 100%;
 }
 #nav-bar a:hover,
-#bottom-bar a:hover {
+#bottom-bar a:hover,
+#nav-bar a:focus,
+#bottom-bar a:focus {
 	text-decoration: none;
-	background-color: #ddd;
 	text-shadow:
 		0 0 1px #fff,
 		0 0 3px #fff,
 		0 0 5px #fff;
+	outline: none;
+}
+#nav-bar a:hover,
+#bottom-bar a:hover {
+	background-color: #ddd;
 }
 #content > h1:first-child {
 	margin-top: 2em;
