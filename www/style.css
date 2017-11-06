@@ -304,7 +304,10 @@ ol {
 	#content > a:last-child,
 	#content > a:first-child {
 		margin: 0 -4px;
-	} 
+	}
+	#nav-bar {
+		width: calc(100% + 8px);
+	}
 	.post-body {
 		padding: 0 6px;
 	}
