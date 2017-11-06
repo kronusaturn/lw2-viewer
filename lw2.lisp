@@ -86,11 +86,11 @@
 	   (type (integer 1) limit)
 	   (type boolean meta)
 	   (type (or string null) before after))
-  (format nil "{PostsList (terms:{view:\"~A\",limit:~A,meta:~A,frontpage:~A~A~A}) {title, _id, userId, postedAt, baseScore, commentCount, pageUrl, url}}"
+  (format nil "{PostsList (terms:{view:\"~A\",limit:~A,meta:~A~A~A~A}) {title, _id, userId, postedAt, baseScore, commentCount, pageUrl, url}}"
 	  view
 	  limit
 	  (if meta "true" "false")
-	  (if frontpage "true" "false") 
+	  (if frontpage ",frontpage:true" "") 
 	  (if before (format nil ",before:\"~A\"" before) "")
 	  (if after (format nil ",after:\"~A\"" after) ""))) 
 
