@@ -1,5 +1,5 @@
 (defpackage lw2-viewer
-  (:use #:cl #:flexi-streams))
+  (:use #:cl #:sb-thread #:flexi-streams))
 
 (in-package #:lw2-viewer) 
 
@@ -9,20 +9,21 @@
 
 (defparameter *cache-db* "./cache/") 
 (defvar *db-mutex* (sb-thread:make-mutex :name "lmdb")) 
+(defvar *db-environment* (lmdb:make-environment *cache-db*)) 
+
+(lmdb:open-environment *db-environment*) 
 
 (defmacro with-db ((db) &body body)
-  (alexandria:with-gensyms (env txn)
-			   `(sb-thread:with-mutex (*db-mutex*)
-						  (let ((,env (lmdb:make-environment *cache-db*)))
-						    (lmdb:with-environment (,env)
-									   (let ((,txn (lmdb:make-transaction ,env)))
-									     (lmdb:begin-transaction ,txn)
-									     (let ((db (lmdb:make-database ,txn ,db)))
-									       (lmdb:with-database (,db)
-												   (prog1
-												     (progn
-												       ,@body)
-												     (lmdb:commit-transaction ,txn))))))))))
+  (alexandria:with-gensyms (txn)
+			   `(with-mutex (*db-mutex*)
+					(let ((,txn (lmdb:make-transaction *db-environment*)))
+					  (lmdb:begin-transaction ,txn)
+					  (let ((db (lmdb:make-database ,txn ,db)))
+					    (lmdb:with-database (,db)
+								(prog1
+								  (progn
+								    ,@body)
+								  (lmdb:commit-transaction ,txn))))))))
 
 (defun cache-put (db key value)
   (with-db (db) 
