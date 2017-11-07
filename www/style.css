@@ -171,7 +171,7 @@ h1.listing a[href^="/"]::after {
 	overflow: auto;
 }
 .post > h1:first-child {
-	margin: 0.5em 0;
+	margin: 1em 0 0.5em 0;
 	text-align: center;
 	font-size: 2.5em;
 	line-height: 1.1;
