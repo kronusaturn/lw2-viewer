@@ -209,9 +209,8 @@
 		  (or (cdr (assoc :html-body post)) "")))) 
 
 (defun comment-to-html (comment &key with-post-title)
-  (format nil "<div class=\"comment\"><div class=\"comment-meta\"><div>~A</div><a id=\"~A\" href=\"~A\">~A</a><div>~A points</div><a href=\"~A#~A\">LW2 link</a>~A</div><div class=\"comment-body\">~A</div></div>"
+  (format nil "<div class=\"comment\"><div class=\"comment-meta\"><div>~A</div><a href=\"~A\">~A</a><div>~A points</div><a href=\"~A#~A\">LW2 link</a>~A</div><div class=\"comment-body\">~A</div></div>"
 	  (get-username (cdr (assoc :user-id comment))) 
-	  (cdr (assoc :--id comment)) 
 	  (format nil "/post?id=~A#~A" (cdr (assoc :post-id comment)) (cdr (assoc :--id comment))) 
 	  (pretty-time (cdr (assoc :posted-at comment)))
 	  (cdr (assoc :base-score comment))
@@ -236,9 +235,10 @@
 (defun comment-tree-to-html (comment-hash &optional (target nil))
   (let ((comments (gethash target comment-hash)))
     (if comments 
-      (format nil "<ul class=\"comment-thread\">~{<li class=\"comment-item\">~A</li>~}</ul>"
+      (format nil "<ul class=\"comment-thread\">~{~A~}</ul>"
 	      (map 'list (lambda (c)
-			   (format nil "~A~A"
+			   (format nil "<li id=\"~A\" class=\"comment-item\">~A~A</li>"
+				   (cdr (assoc :--id c)) 
 				   (comment-to-html c)
 				   (comment-tree-to-html comment-hash (cdr (assoc :--id c)))))
 		   comments))
