@@ -68,17 +68,36 @@
 (defun lw2-graphql-query (query)
   (decode-graphql-json (lw2-graphql-query-noparse query))) 
 
+(defvar *background-cache-update-threads* (make-hash-table :test 'equal
+							   :weakness :value
+							   :synchronized t)) 
+ 
+(defun ensure-cache-update-thread (query cache-db cache-key)
+  (let ((key (format nil "~A-~A" cache-db cache-key))) 
+    (labels ((background-fn ()
+			    (handler-case 
+			      (prog1
+				(cache-put cache-db cache-key (lw2-graphql-query-noparse query))
+				(remhash key *background-cache-update-threads*))
+			      (t (c)
+				 (remhash key *background-cache-update-threads*)
+				 (log-condition c)
+				 (sb-thread:abort-thread))))) 
+      (sb-ext:with-locked-hash-table (*background-cache-update-threads*)
+				     (let ((thread (gethash key *background-cache-update-threads*)))
+				       (if thread thread
+					 (setf (gethash key *background-cache-update-threads*)
+					       (sb-thread:make-thread #'background-fn)))))))) 
+
 (defun lw2-graphql-query-timeout-cached (query cache-db cache-key)
-  (let* ((cached-result (cache-get cache-db cache-key))
-	 (new-result 
-	   (if cached-result
-	     (let ((thread (sb-thread:make-thread
-			     (lambda () (cache-put cache-db cache-key (lw2-graphql-query-noparse query))))))
-	       (handler-case
-		 (sb-thread:join-thread thread :timeout 2)
-		 (t () cached-result)))
-	     (cache-put cache-db cache-key (lw2-graphql-query-noparse query)))))
-    (decode-graphql-json new-result)))
+  (let* ((cached-result (cache-get cache-db cache-key)) 
+	 (timeout nil) ;(if cached-result 2 nil) 
+	 (thread (ensure-cache-update-thread query cache-db cache-key))) 
+    (decode-graphql-json
+      (handler-case
+	(sb-thread:join-thread thread :timeout timeout)
+	(t () (or cached-result
+		  (error "Failed to load ~A ~A and no cached version available." cache-db cache-key)))))))
 
 (declaim (inline make-posts-list-query)) 
 (defun make-posts-list-query (&key (view "new") (limit 20) (meta nil) (frontpage t) (before nil) (after nil))
@@ -300,6 +319,7 @@
 					       *bottom-bar*))) 
 				   (t (condition)
 				      (setf (hunchentoot:return-code*) 500)
+				      (log-condition condition)
 				      (format nil "<html lang=\"en-US\"><head><title>Error - LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~A<h1>Error</h1><p>~A</p></div></body></html>"
 					      *html-head*
 					      (nav-bar-to-html (hunchentoot:request-uri*)) 
