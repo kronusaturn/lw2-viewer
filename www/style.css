@@ -199,6 +199,17 @@ h1.listing a[href^="/"]::after {
 	background-color: #fff;
 }
 
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item:target,
+.comment-item .comment-item:target,
+.comment-item:target {
+	background-color: #ffd;
+}
+
 ul.comment-thread {
 	list-style-type: none;
 	padding: 0;
