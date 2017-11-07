@@ -9,9 +9,11 @@
 
 (defparameter *cache-db* "./cache/") 
 (defvar *db-mutex* (sb-thread:make-mutex :name "lmdb")) 
-(defvar *db-environment* (lmdb:make-environment *cache-db*)) 
+(defvar *db-environment*) 
 
-(lmdb:open-environment *db-environment*) 
+(when (not (boundp '*db-environment*))
+  (setq *db-environment* (lmdb:make-environment *cache-db*)) 
+  (lmdb:open-environment *db-environment*)) 
 
 (defmacro with-db ((db) &body body)
   (alexandria:with-gensyms (txn)
