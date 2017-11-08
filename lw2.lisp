@@ -196,6 +196,16 @@
   (sb-thread:terminate-thread *background-loader-thread*)
   (setf *background-loader-thread* nil)) 
 
+(defun clean-html (in-html)
+  (let ((root (plump:parse in-html)))
+    (dolist (n (plump:get-elements-by-tag-name root "a"))
+      (let ((href (plump:attribute n "href")))
+	(when href
+	  (multiple-value-bind (match? strings) (ppcre:scan-to-strings "(^https?://(www.)?lesserwrong.com|^)/posts/([^/]+)/[^/]*(/([^/]+))?$" href)
+	    (when match?
+	      (setf (plump:attribute n "href") (format nil "/post?id=~A~@[#~A~]" (elt strings 2) (elt strings 4))))))))
+    (plump:serialize root nil)))
+
 (defun pretty-time (timestring)
   (local-time:format-timestring nil (local-time:parse-timestring timestring)
 				:format '(:day #\  :short-month #\  :year #\  :hour #\: (:min 2) #\  :timezone))) 
@@ -228,7 +238,7 @@
 	  (cdr (assoc :page-url post)) 
 	  (format nil "~A~A"
 		  (if (cdr (assoc :url post)) (format nil "<p><a href=\"~A\">Link post</a></p>" (cdr (assoc :url post))) "")
-		  (or (cdr (assoc :html-body post)) "")))) 
+		  (clean-html (or (cdr (assoc :html-body post)) ""))))) 
 
 (defun comment-to-html (comment &key with-post-title)
   (format nil "<div class=\"comment\"><div class=\"comment-meta\"><div>~A</div><a href=\"~A\">~A</a><div>~A points</div><a href=\"~A#~A\">LW2 link</a>~A</div><div class=\"comment-body\">~A</div></div>"
@@ -241,7 +251,7 @@
 	  (if with-post-title
 	    (format nil "<div class=\"comment-post-title\">on: <a href=\"/post?id=~A\">~A</a></div>" (cdr (assoc :post-id comment)) (get-post-title (cdr (assoc :post-id comment))))
 	    "") 
-	  (cdr (assoc :html-body comment)))) 
+	  (clean-html (cdr (assoc :html-body comment))))) 
 
 (defun make-comment-parent-hash (comments)
   (let ((hash (make-hash-table :test 'equal)))
