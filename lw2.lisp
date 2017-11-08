@@ -196,14 +196,22 @@
   (sb-thread:terminate-thread *background-loader-thread*)
   (setf *background-loader-thread* nil)) 
 
+(defun match-lw2-link (link)
+  (multiple-value-bind (match? strings) (ppcre:scan-to-strings "(^https?://(www.)?lesserwrong.com|^)/posts/([^/]+)/[^/]*(/([^/]+))?$" link)
+    (when match?
+      (values (elt strings 2) (elt strings 4))))) 
+
+(defun generate-post-link (story-id comment-id)
+  (format nil "/post?id=~A~@[#~A~]" story-id comment-id)) 
+
 (defun clean-html (in-html)
   (let ((root (plump:parse in-html)))
     (dolist (n (plump:get-elements-by-tag-name root "a"))
       (let ((href (plump:attribute n "href")))
 	(when href
-	  (multiple-value-bind (match? strings) (ppcre:scan-to-strings "(^https?://(www.)?lesserwrong.com|^)/posts/([^/]+)/[^/]*(/([^/]+))?$" href)
-	    (when match?
-	      (setf (plump:attribute n "href") (format nil "/post?id=~A~@[#~A~]" (elt strings 2) (elt strings 4))))))))
+	  (multiple-value-bind (story-id comment-id) (match-lw2-link href)
+	    (when story-id
+	      (setf (plump:attribute n "href") (generate-post-link story-id comment-id)))))))
     (plump:serialize root nil)))
 
 (defun pretty-time (timestring)
@@ -337,7 +345,12 @@
 					      *html-head*
 					      (nav-bar-to-html (hunchentoot:request-uri*)) 
 					      condition)))) 
- 
+
+(hunchentoot:define-easy-handler (view-post-lw2-link :uri (lambda (r) (match-lw2-link (hunchentoot:request-uri*)))) ()
+				 (multiple-value-bind (post-id comment-id) (match-lw2-link (hunchentoot:request-uri*))
+				   (setf (hunchentoot:return-code*) 303
+					 (hunchentoot:header-out "Location") (generate-post-link post-id comment-id)))) 
+
 (hunchentoot:define-easy-handler (view-recent-comments :uri "/recentcomments") ()
 				 (setf (hunchentoot:content-type*) "text/html")
 				 (let ((recent-comments (get-recent-comments)))
