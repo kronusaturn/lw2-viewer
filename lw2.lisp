@@ -103,18 +103,19 @@
 		  (error "Failed to load ~A ~A and no cached version available." cache-db cache-key)))))))
 
 (declaim (inline make-posts-list-query)) 
-(defun make-posts-list-query (&key (view "new") (limit 20) (meta nil) (frontpage t) (before nil) (after nil))
+(defun make-posts-list-query (&key (view "new") (limit 20) (meta nil) (frontpage t) (before nil) (after nil) (with-body nil))
   (declare (type string view)
 	   (type (integer 1) limit)
 	   (type boolean meta)
 	   (type (or string null) before after))
-  (format nil "{PostsList (terms:{view:\"~A\",limit:~A,meta:~A~A~A~A}) {title, _id, userId, postedAt, baseScore, commentCount, pageUrl, url}}"
+  (format nil "{PostsList (terms:{view:\"~A\",limit:~A,meta:~A~A~A~A}) {title, _id, userId, postedAt, baseScore, commentCount, pageUrl, url~A}}"
 	  view
 	  limit
 	  (if meta "true" "false")
 	  (if frontpage ",frontpage:true" "") 
 	  (if before (format nil ",before:\"~A\"" before) "")
-	  (if after (format nil ",after:\"~A\"" after) ""))) 
+	  (if after (format nil ",after:\"~A\"" after) "")
+	  (if with-body ", htmlBody" ""))) 
 
 (defun get-posts ()
   (let ((cached-result (and *background-loader-thread* (cache-get "index-json" "new-not-meta")))) 
@@ -200,9 +201,9 @@
   (multiple-value-bind (match? strings) (ppcre:scan-to-strings "(^https?://(www.)?lesserwrong.com|^)/posts/([^/]+)/[^/]*(/([^/]+))?$" link)
     (when match?
       (values (elt strings 2) (elt strings 4))))) 
-
-(defun generate-post-link (story-id comment-id)
-  (format nil "/post?id=~A~@[#~A~]" story-id comment-id)) 
+ 
+(defun generate-post-link (story-id &optional comment-id absolute-uri)
+  (format nil "~Apost?id=~A~@[#~A~]" (if absolute-uri *site-uri* "/") story-id comment-id)) 
 
 (defun clean-html (in-html)
   (let ((root (plump:parse in-html)))
@@ -214,9 +215,9 @@
 	      (setf (plump:attribute n "href") (generate-post-link story-id comment-id)))))))
     (plump:serialize root nil)))
 
-(defun pretty-time (timestring)
+(defun pretty-time (timestring &key format)
   (local-time:format-timestring nil (local-time:parse-timestring timestring)
-				:format '(:day #\  :short-month #\  :year #\  :hour #\: (:min 2) #\  :timezone))) 
+				:format (or format '(:day #\  :short-month #\  :year #\  :hour #\: (:min 2) #\  :timezone)))) 
 
 (defun post-headline-to-html (post)
   (let ((id (cdr (assoc :--id post)))
@@ -232,6 +233,18 @@
 	  (or (cdr (assoc :comment-count post)) 0) 
 	  (cdr (assoc :page-url post))
 	  (if (cdr (assoc :url post)) (format nil "<div class=\"link-post\">(~A)</div>" (puri:uri-host (puri:parse-uri (cdr (assoc :url post))))) ""))) 
+
+(defun posts-to-rss (posts out-stream)
+  (xml-emitter:with-rss2 (out-stream :encoding "UTF-8")
+			 (xml-emitter:rss-channel-header "LessWrong 2 viewer" *site-uri*
+							 :description "LessWrong 2 viewer") 
+			 (dolist (post posts)
+			   (xml-emitter:rss-item
+			     (cdr (assoc :title post))
+			     :link (generate-post-link (cdr (assoc :--id post)) nil t)
+			     :author (get-username (cdr (assoc :user-id post)))
+			     :pubDate (pretty-time (cdr (assoc :posted-at post)) :format local-time:+rfc-1123-format+)
+			     :description (clean-html (or (cdr (assoc :html-body post)) "")))))) 
 
 (defun post-body-to-html (post)
   (let ((id (cdr (assoc :--id post)))
@@ -345,6 +358,12 @@
 					      *html-head*
 					      (nav-bar-to-html (hunchentoot:request-uri*)) 
 					      condition)))) 
+
+(hunchentoot:define-easy-handler (view-feed :uri "/feed") ()
+				 (setf (hunchentoot:content-type*) "application/rss+xml")
+				 (let ((posts (lw2-graphql-query (make-posts-list-query :with-body t)))
+				       (out-stream (hunchentoot:send-headers)))
+				   (posts-to-rss posts (make-flexi-stream out-stream :external-format :utf-8)))) 
 
 (hunchentoot:define-easy-handler (view-post-lw2-link :uri (lambda (r) (match-lw2-link (hunchentoot:request-uri*)))) ()
 				 (multiple-value-bind (post-id comment-id) (match-lw2-link (hunchentoot:request-uri*))
