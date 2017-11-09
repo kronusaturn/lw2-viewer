@@ -360,7 +360,7 @@
 					      condition)))) 
 
 (hunchentoot:define-easy-handler (view-feed :uri "/feed") ()
-				 (setf (hunchentoot:content-type*) "application/rss+xml")
+				 (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
 				 (let ((posts (lw2-graphql-query (make-posts-list-query :with-body t)))
 				       (out-stream (hunchentoot:send-headers)))
 				   (posts-to-rss posts (make-flexi-stream out-stream :external-format :utf-8)))) 
