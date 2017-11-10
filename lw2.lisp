@@ -141,32 +141,32 @@
 (defun get-recent-comments-json ()
   (lw2-graphql-query-noparse (format nil "{CommentsList (terms:{view:\"postCommentsNew\",limit:20}) {_id, userId, postId, postedAt, parentCommentId, baseScore, pageUrl, htmlBody}}")))
 
-(defun get-post-title-real (post-id)
+(defun make-simple-cache (cache-db)
+  (lambda (key value) (cache-put cache-db key value))) 
+
+(defun make-simple-get (cache-db cache-fn get-real-fn)
+  (lambda (key) 
+    (let ((val (cache-get cache-db key)))
+      (if val val
+	(handler-case
+	  (let ((data (funcall get-real-fn key)))
+	    (assert data)
+	    (funcall cache-fn key (cdr (first data))))
+	  (t () "[Error communicating with LW2 server]")))))) 
+
+(defmacro simple-cacheable ((base-name cache-db key) &body body)
+  (let ((get-real (intern (format nil "~:@(get-~A-real~)" base-name)))
+	(cache (intern (format nil "~:@(cache-~A~)" base-name)))
+	(get (intern (format nil "~:@(get-~A~)" base-name))))
+    `(setf (fdefinition (quote ,get-real)) (lambda (,key) ,@body)
+	   (fdefinition (quote ,cache)) (make-simple-cache ,cache-db)
+	   (fdefinition (quote ,get)) (make-simple-get ,cache-db (fdefinition (quote ,cache)) (fdefinition (quote ,get-real)))))) 
+
+(simple-cacheable ("post-title" "postid-to-title" post-id)
   (lw2-graphql-query (format nil "{PostsSingle(documentId:\"~A\") {title}}" post-id))) 
 
-(defun cache-post-title (post-id title)
-  (cache-put "postid-to-title" post-id title))
-
-(defun get-post-title (post-id)
-  (let ((post-title (cache-get "postid-to-title" post-id)))
-    (if post-title post-title
-      (handler-case
-	(let ((data (get-post-title-real post-id)))
-	  (assert data)
-	  (cache-post-title post-id (cdr (first data))))
-	(t () "[Error communicating with LW2 server]"))))) 
-
-(defun get-username-real (user-id)
+(simple-cacheable ("username" "userid-to-username" user-id)
   (lw2-graphql-query (format nil "{UsersSingle (documentId:\"~A\") {username}}" user-id))) 
-
-(defun get-username (user-id)
-  (let ((username (cache-get "userid-to-username" user-id)))
-    (if username username
-      (handler-case
-	(let ((data (get-username-real user-id)))
-	  (assert data)
-	  (cache-put "userid-to-username" user-id (cdr (first data))))
-	(t () "[Error communicating with LW2 server]"))))) 
 
 (defun log-condition (condition)
   (with-open-file (outstream "./logs/error.log" :direction :output :if-exists :append :if-does-not-exist :create)
