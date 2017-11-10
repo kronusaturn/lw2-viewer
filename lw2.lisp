@@ -15,27 +15,27 @@
   (setq *db-environment* (lmdb:make-environment *cache-db*)) 
   (lmdb:open-environment *db-environment*)) 
 
-(defmacro with-db ((db) &body body)
+(defmacro with-db ((db db-name) &body body)
   (alexandria:with-gensyms (txn)
 			   `(with-mutex (*db-mutex*)
 					(let ((,txn (lmdb:make-transaction *db-environment*)))
 					  (lmdb:begin-transaction ,txn)
-					  (let ((db (lmdb:make-database ,txn ,db)))
+					  (let ((,db (lmdb:make-database ,txn ,db-name)))
 					    (lmdb:with-database (,db)
 								(prog1
 								  (progn
 								    ,@body)
 								  (lmdb:commit-transaction ,txn))))))))
 
-(defun cache-put (db key value)
-  (with-db (db) 
+(defun cache-put (db-name key value)
+  (with-db (db db-name) 
 	   (if (lmdb:put db (string-to-octets key :external-format :utf-8)
 			 (string-to-octets value :external-format :utf-8))
 	     value
 	     nil))) 
 
-(defun cache-get (db key)
-  (with-db (db) 
+(defun cache-get (db-name key)
+  (with-db (db db-name) 
 	   (let ((result (lmdb:get db (string-to-octets key :external-format :utf-8)))) 
 	     (if result
 	       (octets-to-string result :external-format :utf-8)
