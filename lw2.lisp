@@ -165,8 +165,8 @@
 (simple-cacheable ("post-title" "postid-to-title" post-id)
   (lw2-graphql-query (format nil "{PostsSingle(documentId:\"~A\") {title}}" post-id))) 
 
-(simple-cacheable ("username" "userid-to-username" user-id)
-  (lw2-graphql-query (format nil "{UsersSingle (documentId:\"~A\") {username}}" user-id))) 
+(simple-cacheable ("username" "userid-to-displayname" user-id)
+  (lw2-graphql-query (format nil "{UsersSingle(documentId:\"~A\") {displayName}}" user-id))) 
 
 (defun log-condition (condition)
   (with-open-file (outstream "./logs/error.log" :direction :output :if-exists :append :if-does-not-exist :create)
