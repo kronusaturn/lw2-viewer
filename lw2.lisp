@@ -319,45 +319,62 @@
 (defparameter *bottom-bar*
 "<div id=\"bottom-bar\"><a href=\"#top\">Back to top</a></div>") 
 
+(defun begin-html (out-stream &key title description)
+  (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A</head><body><div id=\"content\">~A"
+	  title description
+	  *html-head* (nav-bar-to-html (hunchentoot:request-uri*)))) 
+
+(defun end-html (out-stream)
+  (format out-stream "</div></body></html>")) 
+
+(defun map-output (out-stream fn list)
+  (loop for item in list do (write-string (funcall fn item) out-stream))) 
+
+(defmacro with-outputs ((out-stream) &body body) 
+  (alexandria:with-gensyms (stream-sym) 
+			   (let ((out-body (map 'list (lambda (x) `(princ ,x ,stream-sym)) body)))
+			     `(let ((,stream-sym ,out-stream)) 
+				,.out-body)))) 
+
+(defmacro emit-page ((out-stream &key title description (return-code 200)) &body body)
+  `(log-conditions
+     (setf (hunchentoot:content-type*) "text/html; charset=utf-8"
+	   (hunchentoot:return-code*) ,return-code) 
+     (let ((,out-stream (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8))) 
+       (begin-html ,out-stream :title ,title :description ,description)
+       ,@body
+       (end-html ,out-stream)))) 
+
+(defmacro with-error-page (&body body)
+  `(handler-case
+     (progn ,@body)
+     (t (condition)
+	(log-condition condition)
+	(emit-page (out-stream :title "Error" :return-code 500) 
+		   (format nil "<h1>Error</h1><p>~A</p>"
+			   condition))))) 
+
 (hunchentoot:define-easy-handler (say-yo :uri "/") ()
-				 (setf (hunchentoot:content-type*) "text/html")
-				 (let ((posts (get-posts)))
-				   (format nil "<html lang=\"en-US\"><head><title>LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~A~{~A~}~A</div></body></html>"
-					   *html-head*
-					   (nav-bar-to-html (hunchentoot:request-uri*)) 
-					   (map 'list #'post-headline-to-html posts)
-					   *bottom-bar*)))
+				 (with-error-page 
+				   (let ((posts (get-posts)))
+				     (emit-page (out-stream :description "A faster way to browse LessWrong 2.0") 
+						(map-output out-stream #'post-headline-to-html posts)))))
 
 (hunchentoot:define-easy-handler (view-index :uri "/index") (view all meta before after)
-				 (setf (hunchentoot:content-type*) "text/html")
-				 (let ((posts (lw2-graphql-query (make-posts-list-query :view (or view "new") :frontpage (not all) :meta (not (not meta)) :before before :after after))))
-				   (format nil "<html lang=\"en-US\"><head><title>LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~A~{~A~}~A</div></body></html>"
-					   *html-head*
-					   (nav-bar-to-html (hunchentoot:request-uri*)) 
-					   (map 'list #'post-headline-to-html posts)
-					   *bottom-bar*))) 
+				 (with-error-page 
+				   (let ((posts (lw2-graphql-query (make-posts-list-query :view (or view "new") :frontpage (not all) :meta (not (not meta)) :before before :after after))))
+				     (emit-page (out-stream :description "A faster way to browse LessWrong 2.0") 
+						(map-output out-stream #'post-headline-to-html posts))))) 
 
 (hunchentoot:define-easy-handler (view-post :uri "/post") (id)
-				 (setf (hunchentoot:content-type*) "text/html")
-				 (handler-case 
-				   (progn
-				     (unless (and id (not (equal id ""))) (error "No post ID.")) 
-				     (let ((post (get-post-body id))) 
-				       (format nil "<html lang=\"en-US\"><head><title>~A - LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~A~A<div id=\"comments\">~A</div>~A</div></body></html>"
-					       (cdr (assoc :title post)) 
-					       *html-head*
-					       (nav-bar-to-html (hunchentoot:request-uri*)) 
-					       (post-body-to-html post) 
-					       (let ((comments (get-post-comments id)))
-						 (comment-tree-to-html (make-comment-parent-hash comments)))
-					       *bottom-bar*))) 
-				   (t (condition)
-				      (setf (hunchentoot:return-code*) 500)
-				      (log-condition condition)
-				      (format nil "<html lang=\"en-US\"><head><title>Error - LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~A<h1>Error</h1><p>~A</p></div></body></html>"
-					      *html-head*
-					      (nav-bar-to-html (hunchentoot:request-uri*)) 
-					      condition)))) 
+				 (with-error-page
+				   (unless (and id (not (equal id ""))) (error "No post ID.")) 
+				   (let ((post (get-post-body id))) 
+				     (emit-page (out-stream :title (cdr (assoc :title post))) 
+						(with-outputs (out-stream) (post-body-to-html post)) 
+						(format out-stream "<div id=\"comments\">~A</div>"
+							(let ((comments (get-post-comments id)))
+							  (comment-tree-to-html (make-comment-parent-hash comments)))))))) 
 
 (hunchentoot:define-easy-handler (view-feed :uri "/feed") ()
 				 (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
@@ -365,17 +382,16 @@
 				       (out-stream (hunchentoot:send-headers)))
 				   (posts-to-rss posts (make-flexi-stream out-stream :external-format :utf-8)))) 
 
-(hunchentoot:define-easy-handler (view-post-lw2-link :uri (lambda (r) (match-lw2-link (hunchentoot:request-uri*)))) ()
+(hunchentoot:define-easy-handler (view-post-lw2-link :uri (lambda (r) (declare (ignore r)) (match-lw2-link (hunchentoot:request-uri*)))) ()
 				 (multiple-value-bind (post-id comment-id) (match-lw2-link (hunchentoot:request-uri*))
 				   (setf (hunchentoot:return-code*) 303
 					 (hunchentoot:header-out "Location") (generate-post-link post-id comment-id)))) 
 
 (hunchentoot:define-easy-handler (view-recent-comments :uri "/recentcomments") ()
-				 (setf (hunchentoot:content-type*) "text/html")
-				 (let ((recent-comments (get-recent-comments)))
-				   (format nil "<html lang=\"en-US\"><head><title>Recent comments - LessWrong 2 viewer</title>~A</head><body><div id=\"content\">~A<ul class=\"comment-thread\">~{<li class=\"comment-item\">~A</li>~}</ul>~A</div></body></html>"
-					   *html-head*
-					   (nav-bar-to-html (hunchentoot:request-uri*)) 
-					   (map 'list (lambda (c) (comment-to-html c :with-post-title t)) recent-comments)
-					   *bottom-bar*)))
+				 (with-error-page
+				   (let ((recent-comments (get-recent-comments)))
+				     (emit-page (out-stream :title "Recent comments" :description "A faster way to browse LessWrong 2.0") 
+						(with-outputs (out-stream) "<ul class=\"comment-thread\">") 
+						(map-output out-stream (lambda (c) (format nil "<li class=\"comment-item\">~A</li>" (comment-to-html c :with-post-title t))) recent-comments)
+						(with-outputs (out-stream) "</ul>")))))
 
