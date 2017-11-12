@@ -218,14 +218,29 @@
   (format nil "~Apost?id=~A~@[#~A~]" (if absolute-uri *site-uri* "/") story-id comment-id)) 
 
 (defun clean-html (in-html)
-  (let ((root (plump:parse in-html)))
-    (dolist (n (plump:get-elements-by-tag-name root "a"))
-      (let ((href (plump:attribute n "href")))
-	(when href
-	  (multiple-value-bind (story-id comment-id) (match-lw2-link href)
-	    (when story-id
-	      (setf (plump:attribute n "href") (generate-post-link story-id comment-id)))))))
-    (plump:serialize root nil)))
+  (labels ((scan-for-urls (text-node)
+			  (let ((text (plump:text text-node)))
+			    (multiple-value-bind (url-start url-end) (ppcre:scan "(https?://[-a-zA-Z0-9]+\\.[-a-zA-Z0-9.]+|[-a-zA-Z0-9.]+\\.(com|edu|gov|mil|net|org|biz|info|name|museum|us|ca|uk))(\\:[0-9]+){0,1}(/[-a-zA-Z0-9.,;?'\\\\+&%$#=~_/]*)?" text)
+			      (when url-start
+				(let* ((url-raw (subseq text url-start url-end))
+				       (url (if (mismatch "http" url-raw :end2 4) (concatenate 'string "http://" url-raw) url-raw)) 
+				       (temp-root (plump:make-root))
+				       (new-a (plump:make-element (plump:make-root) "a"))
+				       (new-text (if (= url-end (length text)) nil (plump:make-text-node temp-root (subseq text url-end))))) 
+				  (setf (plump:text text-node) (subseq text 0 url-start)
+					(plump:attribute new-a "href") url)
+				  (plump:make-text-node new-a url-raw)
+				  (if new-text (plump:insert-after text-node new-text))
+				  (plump:insert-after text-node new-a)))))))
+    (let ((root (plump:parse in-html)))
+      (plump:traverse root #'scan-for-urls :test (lambda (node) (and (plump:text-node-p node) (string/= (plump:tag-name (plump:parent node)) "a")))) 
+      (dolist (n (plump:get-elements-by-tag-name root "a"))
+	(let ((href (plump:attribute n "href")))
+	  (when href
+	    (multiple-value-bind (story-id comment-id) (match-lw2-link href)
+	      (when story-id
+		(setf (plump:attribute n "href") (generate-post-link story-id comment-id)))))))
+      (plump:serialize root nil))))
 
 (defun pretty-time (timestring &key format)
   (local-time:format-timestring nil (local-time:parse-timestring timestring)
