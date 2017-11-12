@@ -240,6 +240,9 @@
 	    (multiple-value-bind (story-id comment-id) (match-lw2-link href)
 	      (when story-id
 		(setf (plump:attribute n "href") (generate-post-link story-id comment-id)))))))
+      (dolist (n (plump:get-elements-by-tag-name root "p"))
+	(unless (plump:has-child-nodes n)
+	  (plump:remove-child n))) 
       (plump:serialize root nil))))
 
 (defun pretty-time (timestring &key format)
