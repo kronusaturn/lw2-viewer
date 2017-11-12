@@ -19,20 +19,29 @@
   (alexandria:with-gensyms (txn)
 			   `(with-mutex (*db-mutex*)
 					(let ((,txn (lmdb:make-transaction *db-environment*)))
-					  (lmdb:begin-transaction ,txn)
-					  (let ((,db (lmdb:make-database ,txn ,db-name)))
-					    (lmdb:with-database (,db)
-								(prog1
-								  (progn
-								    ,@body)
-								  (lmdb:commit-transaction ,txn))))))))
+					  (unwind-protect
+					    (progn 
+					      (lmdb:begin-transaction ,txn)
+					      (let ((,db (lmdb:make-database ,txn ,db-name)))
+						(lmdb:with-database (,db)
+								    (prog1
+								      (progn
+									,@body)
+								      (lmdb:commit-transaction ,txn)
+								      (setf ,txn nil)))))
+					    (when ,txn (lmdb:abort-transaction ,txn)))))))
+
+(defun lmdb-put-string (db key value)
+  (if 
+    (lmdb:put db
+	      (string-to-octets key :external-format :utf-8)
+	      (string-to-octets value :external-format :utf-8))
+    value
+    nil)) 
 
 (defun cache-put (db-name key value)
   (with-db (db db-name) 
-	   (if (lmdb:put db (string-to-octets key :external-format :utf-8)
-			 (string-to-octets value :external-format :utf-8))
-	     value
-	     nil))) 
+	   (lmdb-put-string db key value))) 
 
 (defun cache-get (db-name key)
   (with-db (db db-name) 
@@ -120,7 +129,7 @@
 (defun get-posts ()
   (let ((cached-result (and *background-loader-thread* (cache-get "index-json" "new-not-meta")))) 
     (if cached-result
-      (rest (cadar (json:decode-json-from-string cached-result)))
+      (decode-graphql-json cached-result)
       (lw2-graphql-query (make-posts-list-query)))))
 
 (defun get-posts-json ()
@@ -181,8 +190,11 @@
   (loop
     (log-conditions 
       (let ((posts-json (get-posts-json)))
-	(if (and posts-json (ignore-errors (json:decode-json-from-string posts-json)))
-	  (cache-put "index-json" "new-not-meta" posts-json))))
+	(when (and posts-json (ignore-errors (json:decode-json-from-string posts-json)))
+	  (cache-put "index-json" "new-not-meta" posts-json)
+	  (with-db (db "postid-to-title")
+		   (dolist (post (decode-graphql-json posts-json))
+		     (lmdb-put-string db (cdr (assoc :--id post)) (cdr (assoc :title post))))))))
     (log-conditions
       (let ((recent-comments-json (get-recent-comments-json)))
 	(if (and recent-comments-json (ignore-errors (json:decode-json-from-string recent-comments-json)))
@@ -220,9 +232,6 @@
 				:format (or format '(:day #\  :short-month #\  :year #\  :hour #\: (:min 2) #\  :timezone)))) 
 
 (defun post-headline-to-html (post)
-  (let ((id (cdr (assoc :--id post)))
-	(title (cdr (assoc :title post))))
-    (if (and id title) (cache-post-title (cdr (assoc :--id post)) (cdr (assoc :title post))))) 
   (format nil "<h1 class=\"listing\"><a href=\"~A\">~A</a></h1><div class=\"post-meta\"><div class=\"author\">~A</div><div class=\"date\">~A</div><div class=\"karma\">~A points</div><a class=\"comment-count\" href=\"/post?id=~A#comments\">~A comments</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a>~A</div>"
 	  (or (cdr (assoc :url post)) (format nil "/post?id=~A" (url-rewrite:url-encode (cdr (assoc :--id post))))) 
 	  (cdr (assoc :title post))
