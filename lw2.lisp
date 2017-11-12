@@ -360,7 +360,7 @@
      (t (condition)
 	(log-condition condition)
 	(emit-page (out-stream :title "Error" :return-code 500) 
-		   (format nil "<h1>Error</h1><p>~A</p>"
+		   (format out-stream "<h1>Error</h1><p>~A</p>"
 			   condition))))) 
 
 (hunchentoot:define-easy-handler (say-yo :uri "/") ()
