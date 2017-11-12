@@ -334,7 +334,7 @@
 	  *html-head* (nav-bar-to-html (hunchentoot:request-uri*)))) 
 
 (defun end-html (out-stream)
-  (format out-stream "</div></body></html>")) 
+  (format out-stream "~A</div></body></html>" *bottom-bar*)) 
 
 (defun map-output (out-stream fn list)
   (loop for item in list do (write-string (funcall fn item) out-stream))) 
