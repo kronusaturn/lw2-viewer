@@ -233,7 +233,7 @@
 				  (if new-text (plump:insert-after text-node new-text))
 				  (plump:insert-after text-node new-a)))))))
     (let ((root (plump:parse in-html)))
-      (plump:traverse root #'scan-for-urls :test (lambda (node) (and (plump:text-node-p node) (string/= (plump:tag-name (plump:parent node)) "a")))) 
+      (plump:traverse root #'scan-for-urls :test (lambda (node) (and (plump:text-node-p node) (or (typep (plump:parent node) 'plump:root) (string/= (plump:tag-name (plump:parent node)) "a"))))) 
       (dolist (n (plump:get-elements-by-tag-name root "a"))
 	(let ((href (plump:attribute n "href")))
 	  (when href
