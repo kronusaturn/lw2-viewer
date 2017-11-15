@@ -233,16 +233,21 @@
 				  (if new-text (plump:insert-after text-node new-text))
 				  (plump:insert-after text-node new-a)))))))
     (let ((root (plump:parse in-html)))
-      (plump:traverse root #'scan-for-urls :test (lambda (node) (and (plump:text-node-p node) (or (typep (plump:parent node) 'plump:root) (string/= (plump:tag-name (plump:parent node)) "a"))))) 
-      (dolist (n (plump:get-elements-by-tag-name root "a"))
-	(let ((href (plump:attribute n "href")))
-	  (when href
-	    (multiple-value-bind (story-id comment-id) (match-lw2-link href)
-	      (when story-id
-		(setf (plump:attribute n "href") (generate-post-link story-id comment-id)))))))
-      (dolist (n (plump:get-elements-by-tag-name root "p"))
-	(unless (plump:has-child-nodes n)
-	  (plump:remove-child n))) 
+      (plump:traverse root (lambda (node)
+			     (typecase node
+			       (plump:text-node 
+				(when (and (plump:text-node-p node) (or (typep (plump:parent node) 'plump:root) (string/= (plump:tag-name (plump:parent node)) "a")))
+				  (scan-for-urls node)))
+			       (plump:element 
+				(when (string= (plump:tag-name node) "a")
+				  (let ((href (plump:attribute node "href")))
+				    (when href
+				      (multiple-value-bind (story-id comment-id) (match-lw2-link href)
+					(when story-id
+					  (setf (plump:attribute node "href") (generate-post-link story-id comment-id)))))))
+				(when (or (string= (plump:tag-name node) "p") (string= (plump:tag-name node) "blockquote"))
+				  (unless (plump:has-child-nodes node)
+				    (plump:remove-child node))))))) 
       (plump:serialize root nil))))
 
 (defun pretty-time (timestring &key format)
