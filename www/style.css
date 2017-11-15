@@ -224,6 +224,10 @@ ul.comment-thread {
 	margin: 1em 8px 8px 16px;
 }
 
+.comment-item .comment-item + .comment-item {
+	margin: 2em 8px 8px 16px;
+}
+
 .comment-meta {
 	padding: 2px 10px;
 	margin: 0 -1px;
