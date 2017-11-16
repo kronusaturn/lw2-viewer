@@ -185,6 +185,8 @@ h1.listing a[href^="/"]::after {
 	border-top: 1px solid #000;
 }
 
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
 .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
 .comment-item .comment-item .comment-item .comment-item .comment-item,
 .comment-item .comment-item .comment-item,
@@ -192,6 +194,8 @@ h1.listing a[href^="/"]::after {
 	background-color: #eee;
 }
 
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
 .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
 .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
 .comment-item .comment-item .comment-item .comment-item,
@@ -199,6 +203,8 @@ h1.listing a[href^="/"]::after {
 	background-color: #fff;
 }
 
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
 .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
 .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
 .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
