@@ -233,16 +233,21 @@
 				  (if new-text (plump:insert-after text-node new-text))
 				  (plump:insert-after text-node new-a)))))))
     (let ((root (plump:parse in-html)))
-      (plump:traverse root #'scan-for-urls :test (lambda (node) (and (plump:text-node-p node) (or (typep (plump:parent node) 'plump:root) (string/= (plump:tag-name (plump:parent node)) "a"))))) 
-      (dolist (n (plump:get-elements-by-tag-name root "a"))
-	(let ((href (plump:attribute n "href")))
-	  (when href
-	    (multiple-value-bind (story-id comment-id) (match-lw2-link href)
-	      (when story-id
-		(setf (plump:attribute n "href") (generate-post-link story-id comment-id)))))))
-      (dolist (n (plump:get-elements-by-tag-name root "p"))
-	(unless (plump:has-child-nodes n)
-	  (plump:remove-child n))) 
+      (plump:traverse root (lambda (node)
+			     (typecase node
+			       (plump:text-node 
+				(when (and (plump:text-node-p node) (or (typep (plump:parent node) 'plump:root) (string/= (plump:tag-name (plump:parent node)) "a")))
+				  (scan-for-urls node)))
+			       (plump:element 
+				(when (string= (plump:tag-name node) "a")
+				  (let ((href (plump:attribute node "href")))
+				    (when href
+				      (multiple-value-bind (story-id comment-id) (match-lw2-link href)
+					(when story-id
+					  (setf (plump:attribute node "href") (generate-post-link story-id comment-id)))))))
+				(when (or (string= (plump:tag-name node) "p") (string= (plump:tag-name node) "blockquote"))
+				  (unless (plump:has-child-nodes node)
+				    (plump:remove-child node))))))) 
       (plump:serialize root nil))))
 
 (defun pretty-time (timestring &key format)
@@ -250,7 +255,7 @@
 				:format (or format '(:day #\  :short-month #\  :year #\  :hour #\: (:min 2) #\  :timezone)))) 
 
 (defun post-headline-to-html (post)
-  (format nil "<h1 class=\"listing\"><a href=\"~A\">~A</a></h1><div class=\"post-meta\"><div class=\"author\">~A</div><div class=\"date\">~A</div><div class=\"karma\">~A points</div><a class=\"comment-count\" href=\"/post?id=~A#comments\">~A comments</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a>~A</div>"
+  (format nil "<h1 class=\"listing\"><a href=\"~A\">~A</a></h1><div class=\"post-meta\"><div class=\"author\">~A</div><div class=\"date\">~A</div><div class=\"karma\">~A point~:P</div><a class=\"comment-count\" href=\"/post?id=~A#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a>~A</div>"
 	  (or (cdr (assoc :url post)) (format nil "/post?id=~A" (url-rewrite:url-encode (cdr (assoc :--id post))))) 
 	  (cdr (assoc :title post))
 	  (get-username (cdr (assoc :user-id post)))
@@ -277,7 +282,7 @@
   (let ((id (cdr (assoc :--id post)))
 	(title (cdr (assoc :title post))))
     (if (and id title) (cache-post-title (cdr (assoc :--id post)) (cdr (assoc :title post))))) 
-  (format nil "<div class=\"post\"><h1>~A</h1><div class=\"post-meta\"><div class=\"author\">~A</div><div class=\"date\">~A</div><div class=\"karma\">~A points</div><a class=\"comment-count\" href=\"#comments\">~A comments</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a></div><div class=\"post-body\">~A</div></div>"
+  (format nil "<div class=\"post\"><h1>~A</h1><div class=\"post-meta\"><div class=\"author\">~A</div><div class=\"date\">~A</div><div class=\"karma\">~A point~:P</div><a class=\"comment-count\" href=\"#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a></div><div class=\"post-body\">~A</div></div>"
 	  (cdr (assoc :title post))
 	  (get-username (cdr (assoc :user-id post)))
 	  (pretty-time (cdr (assoc :posted-at post))) 
@@ -289,7 +294,7 @@
 		  (clean-html (or (cdr (assoc :html-body post)) ""))))) 
 
 (defun comment-to-html (comment &key with-post-title)
-  (format nil "<div class=\"comment\"><div class=\"comment-meta\"><div>~A</div><a href=\"~A\">~A</a><div>~A points</div><a href=\"~A#~A\">LW2 link</a>~A</div><div class=\"comment-body\">~A</div></div>"
+  (format nil "<div class=\"comment\"><div class=\"comment-meta\"><div>~A</div><a href=\"~A\">~A</a><div>~A point~:P</div><a href=\"~A#~A\">LW2 link</a>~A</div><div class=\"comment-body\">~A</div></div>"
 	  (get-username (cdr (assoc :user-id comment))) 
 	  (format nil "/post?id=~A#~A" (cdr (assoc :post-id comment)) (cdr (assoc :--id comment))) 
 	  (pretty-time (cdr (assoc :posted-at comment)))
