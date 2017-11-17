@@ -279,9 +279,6 @@
 			     :description (clean-html (or (cdr (assoc :html-body post)) "")))))) 
 
 (defun post-body-to-html (post)
-  (let ((id (cdr (assoc :--id post)))
-	(title (cdr (assoc :title post))))
-    (if (and id title) (cache-post-title (cdr (assoc :--id post)) (cdr (assoc :title post))))) 
   (format nil "<div class=\"post\"><h1>~A</h1><div class=\"post-meta\"><div class=\"author\">~A</div><div class=\"date\">~A</div><div class=\"karma\">~A point~:P</div><a class=\"comment-count\" href=\"#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a></div><div class=\"post-body\">~A</div></div>"
 	  (cdr (assoc :title post))
 	  (get-username (cdr (assoc :user-id post)))
