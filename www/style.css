@@ -22,11 +22,10 @@ body {
 	max-width: 900px;
 	line-height: 1.55;
 }
-#nav-bar,
-#bottom-bar {
+.nav-bar {
 	margin: 0 -30px;
 }
-#nav-bar {
+.nav-bar {
 	overflow: auto;
 	display: table;
 	width: calc(100% + 60px);
@@ -34,26 +33,32 @@ body {
 .nav-item {
 	display: table-cell;
 }
-#nav-bar a,
-.nav-current,
-#bottom-bar a {
+.nav-bar a,
+.nav-current {
 	padding: 12px 30px;
 	font-weight: 500;
 	font-size: 1.1em;
 	text-align: center;
 	display: block;
 }
-#nav-bar a {
+#secondary-bar a,
+#secondary-bar .nav-current {
+	font-size: 0.9em;
+	padding: 4px 30px;
+}
+.inactive-bar a {
+	background-color: #e4e4e4;
+	box-shadow: 0 -4px 4px -4px #ccc inset, 1px 0 #fff inset !important;
+}
+.active-bar a {
 	background-color: #eee;
 }
 #bottom-bar a {
 	float: left;
 	width: 100%;
 }
-#nav-bar a:hover,
-#bottom-bar a:hover,
-#nav-bar a:focus,
-#bottom-bar a:focus {
+.nav-bar a:hover,
+.nav-bar a:focus {
 	text-decoration: none;
 	text-shadow:
 		0 0 1px #fff,
@@ -61,9 +66,11 @@ body {
 		0 0 5px #fff;
 	outline: none;
 }
-#nav-bar a:hover,
-#bottom-bar a:hover {
+.nav-bar a:hover {
 	background-color: #ddd;
+}
+.inactive-bar a:hover {
+	background-color: #d8d8d8;
 }
 #content > h1:first-child {
 	margin-top: 2em;
@@ -360,15 +367,14 @@ ol {
 	#content > a:first-child {
 		margin: 0 -4px;
 	}
-	#nav-bar {
+	.nav-bar {
 		width: calc(100% + 8px);
 	}
-	#nav-bar a,
+	.nav-bar a,
 	.nav-current {
 		padding: 8px 4px;
 	}
-	#nav-bar,
-	#bottom-bar {
+	.nav-bar {
 		margin: 0 -4px;
 	}
 	.post-body {

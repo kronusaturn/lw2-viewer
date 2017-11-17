@@ -330,23 +330,39 @@
 "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
 <link rel=\"stylesheet\" href=\"/style.css\">")
 
-(defparameter *nav-items* '(("home" "/" "Home" "Latest frontpage posts")
-			    ("featured" "/index?view=featured" "Featured" "Latest featured posts")
-			    ("all" "/index?view=new&all=t" "All" "Latest frontpage posts and userpage posts") 
-			    ("meta" "/index?view=meta&all=t" "Meta" "Latest meta posts")
-			    ("recent-comments" "/recentcomments" "Recent Comments" "Latest comments"))) 
+(defparameter *primary-nav* '(("home" "/" "Home" :description "Latest frontpage posts")
+			      ("featured" "/index?view=featured" "Featured" :description "Latest featured posts")
+			      ("all" "/index?view=new&all=t" "All" :description "Latest frontpage posts and userpage posts") 
+			      ("meta" "/index?view=meta&all=t" "Meta" :description "Latest meta posts")
+			      ("recent-comments" "/recentcomments" "Recent Comments" :description "Latest comments"))) 
+
+(defparameter *secondary-nav* '(("search" "/search" "Search")
+				("rss" "/feed" "RSS")
+				("about" "/about" "About"))) 
 
 (defun nav-bar-to-html (&optional current-uri)
-  (format nil "<div id=\"nav-bar\">~{~A~}</div>"
-	  (map 'list (lambda (item)
-		       (destructuring-bind (id uri name description) item
-			 (if (string= uri current-uri)
-			   (format nil "<span id=\"nav-item-~A\" class=\"nav-item nav-current\" title=\"~A\">~A</span>" id description name) 
-			   (format nil "<span id=\"nav-item-~A\" class=\"nav-item\" title=\"~A\"><a href=\"~A\">~A</a></span>" id description uri name))))
-	       *nav-items*))) 
+  (let ((primary-bar "primary-bar")
+	(secondary-bar "secondary-bar")
+	active-bar) 
+    (labels ((nav-bar-inner (bar-id items) 
+			    (format nil "~{~A~}"
+				    (map 'list (lambda (item)
+						 (destructuring-bind (id uri name &key description) item
+						   (if (string= uri current-uri)
+						     (progn (setf active-bar bar-id) 
+							    (format nil "<span id=\"nav-item-~A\" class=\"nav-item nav-current\" ~@[title=\"~A\"~]>~A</span>" id description name)) 
+						     (format nil "<span id=\"nav-item-~A\" class=\"nav-item\" ~@[title=\"~A\"~]><a href=\"~A\">~A</a></span>" id description uri name))))
+					 items)))
+	     (nav-bar-outer (id class html)
+			    (format nil "<div id=\"~A\" class=\"nav-bar ~A\">~A</div>" id class html)))
+      (let ((primary-html (nav-bar-inner primary-bar *primary-nav*))
+	    (secondary-html (nav-bar-inner secondary-bar *secondary-nav*)))
+	(if (eq active-bar secondary-bar) 
+	  (format nil "~A~A" (nav-bar-outer primary-bar "inactive-bar" primary-html) (nav-bar-outer secondary-bar "active-bar" secondary-html))
+	  (format nil "~A~A" (nav-bar-outer secondary-bar "inactive-bar" secondary-html) (nav-bar-outer primary-bar "active-bar" primary-html))))))) 
 
 (defparameter *bottom-bar*
-"<div id=\"bottom-bar\"><a href=\"#top\">Back to top</a></div>") 
+"<div id=\"bottom-bar\" class=\"nav-bar\"><a href=\"#top\">Back to top</a></div>") 
 
 (defun begin-html (out-stream &key title description)
   (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A</head><body><div id=\"content\">~A"
