@@ -13,6 +13,12 @@ body {
 	margin: 0;
 	font-family: 'Geometric 415';
 }
+input {
+	font-family: inherit;
+	font-size: inherit;
+	font-weight: inherit;
+	border: 1px solid #aaa;
+}
 #content {
 	background-color: #fff;
 	box-shadow: 0px 0px 10px #555;
@@ -33,24 +39,22 @@ body {
 .nav-item {
 	display: table-cell;
 }
-.nav-bar a,
-.nav-current {
+.nav-inner {
 	padding: 12px 30px;
 	font-weight: 500;
 	font-size: 1.1em;
 	text-align: center;
 	display: block;
 }
-#secondary-bar a,
-#secondary-bar .nav-current {
+#secondary-bar .nav-inner {
 	font-size: 0.9em;
 	padding: 4px 30px;
 }
-.inactive-bar a {
+.inactive-bar .nav-inactive {
 	background-color: #e4e4e4;
 	box-shadow: 0 -4px 4px -4px #ccc inset, 1px 0 #fff inset !important;
 }
-.active-bar a {
+.active-bar .nav-inactive {
 	background-color: #eee;
 }
 #bottom-bar a {
@@ -81,7 +85,7 @@ body {
 
 /* This makes the navbar items look like tabs: */
 
-.nav-item a {
+.nav-inactive {
 	box-shadow: 
 		 0 -1px #d8d8d8 inset,
 		 1px 0 #fff inset;
@@ -96,8 +100,8 @@ body {
 .nav-current:last-child {
 	border-right: none;
 }
-.nav-current + .nav-item a,
-.nav-item:first-child a  {
+.nav-current + .nav-inactive,
+.nav-item:first-child .nav-inactive  {
 	box-shadow: 0 -1px #d8d8d8 inset;
 }
 
@@ -370,8 +374,7 @@ ol {
 	.nav-bar {
 		width: calc(100% + 8px);
 	}
-	.nav-bar a,
-	.nav-current {
+	.nav-bar .nav-inner {
 		padding: 8px 4px;
 	}
 	.nav-bar {

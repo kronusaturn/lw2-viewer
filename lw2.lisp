@@ -150,6 +150,14 @@
 (defun get-recent-comments-json ()
   (lw2-graphql-query-noparse (format nil "{CommentsList (terms:{view:\"postCommentsNew\",limit:20}) {_id, userId, postId, postedAt, parentCommentId, baseScore, pageUrl, htmlBody}}")))
 
+(defun lw2-search-query (query)
+  (let ((req-stream (drakma:http-request "https://z0gr6exqhd-dsn.algolia.net/1/indexes/*/queries?x-algolia-agent=Algolia%20for%20vanilla%20JavaScript%203.24.5%3Breact-instantsearch%204.1.3%3BJS%20Helper%202.23.0&x-algolia-application-id=Z0GR6EXQHD&x-algolia-api-key=0b1d20b957917dbb5e1c2f3ad1d04ee2"
+					 :method :post :additional-headers '(("Origin" . "https://www.greaterwrong.com") ("Referer" . "https://www.greaterwrong.com/"))
+					 :content (format nil "{\"requests\":[{\"indexName\":\"test_posts\",\"params\":\"query=~A&hitsPerPage=20&page=0\"}]}" (url-rewrite:url-encode query))
+					 :want-stream t)))
+    (setf (flexi-stream-external-format req-stream) :utf-8)
+    (cdr (assoc :hits (first (cdr (assoc :results (json:decode-json req-stream))))))))
+
 (defun make-simple-cache (cache-db)
   (lambda (key value) (cache-put cache-db key value))) 
 
@@ -330,15 +338,20 @@
 "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
 <link rel=\"stylesheet\" href=\"/style.css\">")
 
+(defun search-bar-to-html ()
+  (declare (special *current-search-query*))
+  (let ((query (and (boundp '*current-search-query*) (hunchentoot:escape-for-html *current-search-query*))))
+    (format nil "<form action=\"/search\" class=\"nav-inner\"><input name=\"q\" type=\"text\" ~@[value=\"~A\"~] placeholder=\"Search\"></form>" query))) 
+
 (defparameter *primary-nav* '(("home" "/" "Home" :description "Latest frontpage posts")
 			      ("featured" "/index?view=featured" "Featured" :description "Latest featured posts")
 			      ("all" "/index?view=new&all=t" "All" :description "Latest frontpage posts and userpage posts") 
 			      ("meta" "/index?view=meta&all=t" "Meta" :description "Latest meta posts")
 			      ("recent-comments" "/recentcomments" "Recent Comments" :description "Latest comments"))) 
 
-(defparameter *secondary-nav* '(("search" "/search" "Search")
+(defparameter *secondary-nav* `(("about" "/about" "About")
 				("rss" "/feed" "RSS")
-				("about" "/about" "About"))) 
+				("search" "/search" "Search" :html ,#'search-bar-to-html))) 
 
 (defun nav-bar-to-html (&optional current-uri)
   (let ((primary-bar "primary-bar")
@@ -347,11 +360,13 @@
     (labels ((nav-bar-inner (bar-id items) 
 			    (format nil "~{~A~}"
 				    (map 'list (lambda (item)
-						 (destructuring-bind (id uri name &key description) item
+						 (destructuring-bind (id uri name &key description html) item
 						   (if (string= uri current-uri)
 						     (progn (setf active-bar bar-id) 
-							    (format nil "<span id=\"nav-item-~A\" class=\"nav-item nav-current\" ~@[title=\"~A\"~]>~A</span>" id description name)) 
-						     (format nil "<span id=\"nav-item-~A\" class=\"nav-item\" ~@[title=\"~A\"~]><a href=\"~A\">~A</a></span>" id description uri name))))
+							    (format nil "<span id=\"nav-item-~A\" class=\"nav-item nav-current\" ~@[title=\"~A\"~]>~:[<span class=\"nav-inner\">~A</span>~;~:*~A~]</span>"
+								    id description (and html (funcall html)) name)) 
+						     (format nil "<span id=\"nav-item-~A\" class=\"nav-item nav-inactive\" ~@[title=\"~A\"~]>~:[<a href=\"~A\" class=\"nav-inner\">~A</a>~;~:*~A~]</span>"
+							     id description (and html (funcall html)) uri name))))
 					 items)))
 	     (nav-bar-outer (id class html)
 			    (format nil "<div id=\"~A\" class=\"nav-bar ~A\">~A</div>" id class html)))
@@ -362,12 +377,12 @@
 	  (format nil "~A~A" (nav-bar-outer secondary-bar "inactive-bar" secondary-html) (nav-bar-outer primary-bar "active-bar" primary-html))))))) 
 
 (defparameter *bottom-bar*
-"<div id=\"bottom-bar\" class=\"nav-bar\"><a href=\"#top\">Back to top</a></div>") 
+"<div id=\"bottom-bar\" class=\"nav-bar\"><a class=\"nav-item nav-current nav-inner\" href=\"#top\">Back to top</a></div>") 
 
-(defun begin-html (out-stream &key title description)
+(defun begin-html (out-stream &key title description current-uri)
   (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A</head><body><div id=\"content\">~A"
 	  title description
-	  *html-head* (nav-bar-to-html (hunchentoot:request-uri*)))) 
+	  *html-head* (nav-bar-to-html (or current-uri (hunchentoot:request-uri*))))) 
 
 (defun end-html (out-stream)
   (format out-stream "~A</div></body></html>" *bottom-bar*)) 
@@ -381,12 +396,12 @@
 			     `(let ((,stream-sym ,out-stream)) 
 				,.out-body)))) 
 
-(defmacro emit-page ((out-stream &key title description (return-code 200)) &body body)
+(defmacro emit-page ((out-stream &key title description current-uri (return-code 200)) &body body)
   `(log-conditions
      (setf (hunchentoot:content-type*) "text/html; charset=utf-8"
 	   (hunchentoot:return-code*) ,return-code) 
      (let ((,out-stream (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8))) 
-       (begin-html ,out-stream :title ,title :description ,description)
+       (begin-html ,out-stream :title ,title :description ,description :current-uri ,current-uri)
        ,@body
        (end-html ,out-stream)))) 
 
@@ -440,3 +455,15 @@
 						(map-output out-stream (lambda (c) (format nil "<li class=\"comment-item\">~A</li>" (comment-to-html c :with-post-title t))) recent-comments)
 						(with-outputs (out-stream) "</ul>")))))
 
+(hunchentoot:define-easy-handler (view-search :uri "/search") (q)
+				 (with-error-page
+				   (let ((posts (lw2-search-query q))
+					 (*current-search-query* q)) 
+				     (declare (special *current-search-query*)) 
+				     (emit-page (out-stream :title "Search" :current-uri "/search")
+						(map-output out-stream #'post-headline-to-html posts))))) 
+
+(hunchentoot:define-easy-handler (view-about :uri "/about") ()
+				 (with-error-page
+				   (emit-page (out-stream :title "About")
+					      (with-outputs (out-stream) "<h1>About</h1><p>About page goes here.</p>")))) 
