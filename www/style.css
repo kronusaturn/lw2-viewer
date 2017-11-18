@@ -13,6 +13,12 @@ body {
 	margin: 0;
 	font-family: 'Geometric 415';
 }
+input {
+	font-family: inherit;
+	font-size: inherit;
+	font-weight: inherit;
+	border: 1px solid #ddd;
+}
 #content {
 	background-color: #fff;
 	box-shadow: 0px 0px 10px #555;
@@ -22,11 +28,15 @@ body {
 	max-width: 900px;
 	line-height: 1.55;
 }
-#nav-bar,
-#bottom-bar {
+
+/***********/
+/* NAV BAR */
+/***********/
+
+.nav-bar {
 	margin: 0 -30px;
 }
-#nav-bar {
+.nav-bar {
 	overflow: auto;
 	display: table;
 	width: calc(100% + 60px);
@@ -34,26 +44,30 @@ body {
 .nav-item {
 	display: table-cell;
 }
-#nav-bar a,
-.nav-current,
-#bottom-bar a {
+.nav-inner {
 	padding: 12px 30px;
 	font-weight: 500;
 	font-size: 1.1em;
 	text-align: center;
 	display: block;
 }
-#nav-bar a {
+#secondary-bar .nav-inner {
+	font-size: 0.9em;
+	padding: 4px 30px;
+}
+.inactive-bar .nav-inactive {
+	background-color: #e4e4e4;
+	box-shadow: 0 -4px 4px -4px #ccc inset, 1px 0 #fff inset !important;
+}
+.active-bar .nav-inactive {
 	background-color: #eee;
 }
 #bottom-bar a {
 	float: left;
 	width: 100%;
 }
-#nav-bar a:hover,
-#bottom-bar a:hover,
-#nav-bar a:focus,
-#bottom-bar a:focus {
+.nav-bar a:hover,
+.nav-bar a:focus {
 	text-decoration: none;
 	text-shadow:
 		0 0 1px #fff,
@@ -61,9 +75,11 @@ body {
 		0 0 5px #fff;
 	outline: none;
 }
-#nav-bar a:hover,
-#bottom-bar a:hover {
+.nav-bar a:hover {
 	background-color: #ddd;
+}
+.inactive-bar a:hover {
+	background-color: #d8d8d8;
 }
 #content > h1:first-child {
 	margin-top: 2em;
@@ -74,7 +90,7 @@ body {
 
 /* This makes the navbar items look like tabs: */
 
-.nav-item a {
+.nav-inactive {
 	box-shadow: 
 		 0 -1px #d8d8d8 inset,
 		 1px 0 #fff inset;
@@ -89,9 +105,57 @@ body {
 .nav-current:last-child {
 	border-right: none;
 }
-.nav-current + .nav-item a,
-.nav-item:first-child a  {
+.nav-current + .nav-inactive,
+.nav-item:first-child .nav-inactive  {
 	box-shadow: 0 -1px #d8d8d8 inset;
+}
+
+/* Secondary nav bar */
+
+#secondary-bar {
+	table-layout: fixed;
+}
+
+/* Search tab */
+
+#nav-item-search {
+	width: 60%;
+}
+#nav-item-search form {
+	padding: 2px 30px;
+}
+#nav-item-search form::before {
+	content: "Search:\2004";
+}
+#nav-item-search input {
+	height: 23px;
+	width: calc(100% - 120px);
+	padding: 1px 4px;
+}
+#nav-item-search input:focus {
+	outline: none;
+	background-color: #ffd;
+	border: 1px solid #bbb;
+}
+#nav-item-search:focus-within {
+	background-color: #ddd;
+}
+#nav-item-search.nav-current:focus-within {
+	background-color: #fff;
+}
+#nav-item-search button {
+	border: none;
+	background-color: transparent;
+	vertical-align: top;
+	height: 23px;
+    width: 23px;
+    padding: 4px 3px 2px 3px;
+    margin-left: 2px;
+    color: transparent;
+    overflow: hidden;
+    background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiIHZpZXdCb3g9IjAgMCAxMDAwIDEwMDAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDEwMDAgMTAwMCIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8Zz48cGF0aCBkPSJNOTYzLjEsODMzLjZMNzA0LjgsNTc1LjNjMCwwLDAsMC02LjEsMGMzMC43LTYxLjUsNDkuMi0xMjMsNDkuMi0xOTAuNmMwLTIwMi45LTE2Ni0zNjguOS0zNjguOS0zNjguOVMxMCwxODEuOCwxMCwzODQuN2MwLDIwMi45LDE2NiwzNjguOSwzNjguOSwzNjguOWM2Ny42LDAsMTM1LjMtMTguNCwxOTAuNi01NS4zbDAsMGwyNTguMiwyNTguMmMzNi45LDM2LjksOTIuMiwzNi45LDEyOS4xLDBDOTk5LjksOTI1LjgsOTk5LjksODcwLjUsOTYzLjEsODMzLjZ6IE0xMzMsMzg0LjdjMC0xMzUuMywxMTAuNy0yNDUuOSwyNDUuOS0yNDUuOWMxMzUuMywwLDI0NS45LDExMC43LDI0NS45LDI0NS45YzAsMTM1LjMtMTEwLjcsMjQ2LTI0NS45LDI0NkMyNDMuNyw2MzAuNywxMzMsNTIwLDEzMywzODQuN3oiLz48L2c+DQo8L3N2Zz4NCg==');
+    background-repeat: no-repeat;
+    background-origin: content-box;
 }
 
 /************/
@@ -131,6 +195,41 @@ h1.listing a::after {
 }
 h1.listing a[href^="/"]::after {
 	 content: none;
+}
+
+/*********************/
+/* TABLE OF CONTENTS */
+/*********************/
+
+.contents {
+	font-family: 'Geometric 415';
+	font-size: 0.8em;
+	border: 1px solid #ddd;
+	background-color: #eee;
+	float: left;
+	min-width: 12em;
+	max-width: 33.3%;
+	margin: 1.625em 1.75em 0.75em -0.75em;
+	padding: 0.5em 0 0.5em 0.5em;
+}
+
+.contents-head {
+	text-align: center;
+	font-weight: bold;
+	margin-bottom: 0.25em;
+}
+
+.contents ul {
+	padding: 0;
+	margin: 0 0.25em;
+	list-style-type: none;
+}
+
+.contents li {
+	margin: 0.15em 0 0.15em 1em;
+	text-align: left;
+	text-indent: -1em;
+	line-height: 1.3;
 }
 
 /********************/
@@ -284,6 +383,7 @@ a:hover {
 	font-family: 'Geometric 415';
 	line-height: 1.1;
 	margin: 1em 0 0.75em 0;
+	text-align: left;
 }
 
 /********/
@@ -360,15 +460,13 @@ ol {
 	#content > a:first-child {
 		margin: 0 -4px;
 	}
-	#nav-bar {
+	.nav-bar {
 		width: calc(100% + 8px);
 	}
-	#nav-bar a,
-	.nav-current {
+	.nav-bar .nav-inner {
 		padding: 8px 4px;
 	}
-	#nav-bar,
-	#bottom-bar {
+	.nav-bar {
 		margin: 0 -4px;
 	}
 	.post-body {
