@@ -17,7 +17,7 @@ input {
 	font-family: inherit;
 	font-size: inherit;
 	font-weight: inherit;
-	border: 1px solid #aaa;
+	border: 1px solid #ddd;
 }
 #content {
 	background-color: #fff;
@@ -28,6 +28,11 @@ input {
 	max-width: 900px;
 	line-height: 1.55;
 }
+
+/***********/
+/* NAV BAR */
+/***********/
+
 .nav-bar {
 	margin: 0 -30px;
 }
@@ -103,6 +108,50 @@ input {
 .nav-current + .nav-inactive,
 .nav-item:first-child .nav-inactive  {
 	box-shadow: 0 -1px #d8d8d8 inset;
+}
+
+/* Secondary nav bar */
+
+#secondary-bar {
+	table-layout: fixed;
+}
+
+/* Search tab */
+
+#nav-item-search {
+	width: 60%;
+}
+#nav-item-search form {
+	padding: 2px 30px;
+}
+#nav-item-search form::before {
+	content: "Search:\2004";
+}
+#nav-item-search input {
+	height: 23px;
+	width: calc(100% - 120px);
+}
+#nav-item-search input:focus {
+	outline: none;
+	background-color: #ffd;
+	border: 1px solid #bbb;
+}
+#nav-item-search:focus-within {
+	background-color: #ddd;
+}
+#nav-item-search button {
+	border: none;
+	background-color: transparent;
+	vertical-align: top;
+	height: 23px;
+    width: 23px;
+    padding: 4px 3px 2px 3px;
+    margin-left: 2px;
+    color: transparent;
+    overflow: hidden;
+    background-image: url('http://lw2-test.glxl.net/search.svg');
+    background-repeat: no-repeat;
+    background-origin: content-box;
 }
 
 /************/
