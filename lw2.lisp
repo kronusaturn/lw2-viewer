@@ -236,7 +236,7 @@
       (plump:traverse root (lambda (node)
 			     (typecase node
 			       (plump:text-node 
-				(when (and (plump:text-node-p node) (or (typep (plump:parent node) 'plump:root) (string/= (plump:tag-name (plump:parent node)) "a")))
+				(when (and (plump:text-node-p node) (or (typep (plump:parent node) 'plump:root) (every (lambda (x) (string/= (plump:tag-name (plump:parent node)) x)) '("a" "style"))))
 				  (scan-for-urls node)))
 			       (plump:element 
 				(when (string= (plump:tag-name node) "a")
