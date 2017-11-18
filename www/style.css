@@ -140,6 +140,9 @@ input {
 #nav-item-search:focus-within {
 	background-color: #ddd;
 }
+#nav-item-search.nav-current:focus-within {
+	background-color: #fff;
+}
 #nav-item-search button {
 	border: none;
 	background-color: transparent;
