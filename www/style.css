@@ -469,6 +469,13 @@ ol {
 	.nav-bar {
 		margin: 0 -4px;
 	}
+	.contents {
+		float: none;
+		display: table;
+		max-width: none;
+		margin-left: auto;
+		margin-right: auto;
+	}
 	.post-body {
 		padding: 0 6px;
 	}
