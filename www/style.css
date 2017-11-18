@@ -197,6 +197,41 @@ h1.listing a[href^="/"]::after {
 	 content: none;
 }
 
+/*********************/
+/* TABLE OF CONTENTS */
+/*********************/
+
+.contents {
+	font-family: 'Geometric 415';
+	font-size: 0.8em;
+	border: 1px solid #ddd;
+	background-color: #eee;
+	float: left;
+	min-width: 12em;
+	max-width: 33.3%;
+	margin: 1.625em 1.75em 0.75em -0.75em;
+	padding: 0.5em 0 0.5em 0.5em;
+}
+
+.contents-head {
+	text-align: center;
+	font-weight: bold;
+	margin-bottom: 0.25em;
+}
+
+.contents ul {
+	padding: 0;
+	margin: 0 0.25em;
+	list-style-type: none;
+}
+
+.contents li {
+	margin: 0.15em 0 0.15em 1em;
+	text-align: left;
+	text-indent: -1em;
+	line-height: 1.3;
+}
+
 /********************/
 /* POSTS & COMMENTS */
 /********************/
@@ -348,6 +383,7 @@ a:hover {
 	font-family: 'Geometric 415';
 	line-height: 1.1;
 	margin: 1em 0 0.75em 0;
+	text-align: left;
 }
 
 /********/
