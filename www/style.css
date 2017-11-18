@@ -55,13 +55,6 @@ input {
 	font-size: 0.9em;
 	padding: 4px 30px;
 }
-.inactive-bar .nav-inactive {
-	background-color: #e4e4e4;
-	box-shadow: 0 -4px 4px -4px #ccc inset, 1px 0 #fff inset !important;
-}
-.active-bar .nav-inactive {
-	background-color: #eee;
-}
 #bottom-bar a {
 	float: left;
 	width: 100%;
@@ -75,10 +68,10 @@ input {
 		0 0 5px #fff;
 	outline: none;
 }
-.nav-bar a:hover {
+.nav-bar .nav-item:not(.nav-current):not(#nav-item-search):hover {
 	background-color: #ddd;
 }
-.inactive-bar a:hover {
+.inactive-bar .nav-item:not(.nav-current):not(#nav-item-search):hover {
 	background-color: #d8d8d8;
 }
 #content > h1:first-child {
@@ -106,10 +99,17 @@ input {
 	border-right: none;
 }
 .nav-current + .nav-inactive,
-.nav-item:first-child .nav-inactive  {
+.nav-inactive:first-child  {
 	box-shadow: 0 -1px #d8d8d8 inset;
 }
 
+.inactive-bar .nav-inactive {
+	background-color: #e4e4e4;
+	box-shadow: 0 -4px 4px -4px #ccc inset, 1px 0 #fff inset !important;
+}
+.active-bar .nav-inactive {
+	background-color: #eee;
+}
 /* Secondary nav bar */
 
 #secondary-bar {
@@ -139,6 +139,9 @@ input {
 }
 #nav-item-search:focus-within {
 	background-color: #ddd;
+}
+.inactive-bar #nav-item-search:focus-within {
+	background-color: #d8d8d8;
 }
 #nav-item-search.nav-current:focus-within {
 	background-color: #fff;
