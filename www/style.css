@@ -74,6 +74,9 @@ input {
 .inactive-bar .nav-item:not(.nav-current):not(#nav-item-search):hover {
 	background-color: #d8d8d8;
 }
+#bottom-bar a:hover {
+	background-color: #ddd;
+}
 #content > h1:first-child {
 	margin-top: 2em;
 }
