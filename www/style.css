@@ -53,14 +53,7 @@ input {
 }
 #secondary-bar .nav-inner {
 	font-size: 0.9em;
-	padding: 4px 30px;
-}
-.inactive-bar .nav-inactive {
-	background-color: #e4e4e4;
-	box-shadow: 0 -4px 4px -4px #ccc inset, 1px 0 #fff inset !important;
-}
-.active-bar .nav-inactive {
-	background-color: #eee;
+	padding: 3px 30px 4px 30px;
 }
 #bottom-bar a {
 	float: left;
@@ -75,10 +68,10 @@ input {
 		0 0 5px #fff;
 	outline: none;
 }
-.nav-bar a:hover {
+.nav-bar .nav-item:not(.nav-current):not(#nav-item-search):hover {
 	background-color: #ddd;
 }
-.inactive-bar a:hover {
+.inactive-bar .nav-item:not(.nav-current):not(#nav-item-search):hover {
 	background-color: #d8d8d8;
 }
 #content > h1:first-child {
@@ -106,11 +99,72 @@ input {
 	border-right: none;
 }
 .nav-current + .nav-inactive,
-.nav-item:first-child .nav-inactive  {
+.nav-inactive:first-child  {
 	box-shadow: 0 -1px #d8d8d8 inset;
 }
 
-/* Secondary nav bar */
+.inactive-bar .nav-inactive {
+	background-color: #e4e4e4;
+}
+.active-bar .nav-inactive {
+	background-color: #eee;
+}
+/* For Webkit: */
+.active-bar {
+	box-shadow: 0 -3px 8px -2px #ccc;
+}
+
+.active-bar .nav-inactive {
+	box-shadow: 
+		0 -4px 8px -4px #bbb inset,
+		1px 0 #fff inset;
+}
+.active-bar .nav-inactive:first-child {
+	box-shadow: 
+		0 -4px 8px -4px #bbb inset;
+}
+.active-bar .nav-current + .nav-inactive {
+	box-shadow: 
+		4px -4px 8px -4px #bbb inset;
+}
+.active-bar .nav-item-last-before-current {
+	box-shadow: 
+		-4px -4px 8px -4px #bbb inset,
+		1px 0 #fff inset;
+}
+.active-bar .nav-item-last-before-current:first-child {
+	box-shadow: 
+		-4px -4px 8px -4px #bbb inset;
+}
+/* And for Gecko: */
+@-moz-document url-prefix() {
+	.active-bar {
+		box-shadow: 0 -3px 4px -2px #ccc;
+	}
+
+	.active-bar .nav-inactive {
+		box-shadow: 
+			0 -4px 4px -4px #bbb inset,
+			1px 0 #fff inset;
+	}
+	.active-bar .nav-inactive:first-child {
+		box-shadow: 
+			0 -4px 4px -4px #bbb inset;
+	}
+	.active-bar .nav-current + .nav-inactive {
+		box-shadow: 
+			4px -4px 4px -4px #bbb inset;
+	}
+	.active-bar .nav-item-last-before-current {
+		box-shadow: 
+			-4px -4px 4px -4px #bbb inset,
+			1px 0 #fff inset;
+	}
+	.active-bar .nav-item-last-before-current:first-child {
+		box-shadow: 
+			-4px -4px 4px -4px #bbb inset;
+	}
+}
 
 #secondary-bar {
 	table-layout: fixed;
@@ -125,7 +179,15 @@ input {
 	padding: 2px 30px;
 }
 #nav-item-search form::before {
-	content: "Search:\2004";
+	content: "";
+	display: inline-block;
+	vertical-align: top;
+	background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiIHZpZXdCb3g9IjAgMCAxMDAwIDEwMDAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDEwMDAgMTAwMCIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8Zz48cGF0aCBkPSJNOTYzLjEsODMzLjZMNzA0LjgsNTc1LjNjMCwwLDAsMC02LjEsMGMzMC43LTYxLjUsNDkuMi0xMjMsNDkuMi0xOTAuNmMwLTIwMi45LTE2Ni0zNjguOS0zNjguOS0zNjguOVMxMCwxODEuOCwxMCwzODQuN2MwLDIwMi45LDE2NiwzNjguOSwzNjguOSwzNjguOWM2Ny42LDAsMTM1LjMtMTguNCwxOTAuNi01NS4zbDAsMGwyNTguMiwyNTguMmMzNi45LDM2LjksOTIuMiwzNi45LDEyOS4xLDBDOTk5LjksOTI1LjgsOTk5LjksODcwLjUsOTYzLjEsODMzLjZ6IE0xMzMsMzg0LjdjMC0xMzUuMywxMTAuNy0yNDUuOSwyNDUuOS0yNDUuOWMxMzUuMywwLDI0NS45LDExMC43LDI0NS45LDI0NS45YzAsMTM1LjMtMTEwLjcsMjQ2LTI0NS45LDI0NkMyNDMuNyw2MzAuNywxMzMsNTIwLDEzMywzODQuN3oiLz48L2c+DQo8L3N2Zz4NCg==');
+	height: 23px;
+	width: 23px;
+	padding: 3px 3px 3px 3px;
+	background-repeat: no-repeat;
+	background-origin: content-box;
 }
 #nav-item-search input {
 	height: 23px;
@@ -140,22 +202,36 @@ input {
 #nav-item-search:focus-within {
 	background-color: #ddd;
 }
+.inactive-bar #nav-item-search:focus-within {
+	background-color: #d8d8d8;
+}
 #nav-item-search.nav-current:focus-within {
 	background-color: #fff;
 }
 #nav-item-search button {
+	color: #00e;
 	border: none;
 	background-color: transparent;
-	vertical-align: top;
-	height: 23px;
-    width: 23px;
-    padding: 4px 3px 2px 3px;
-    margin-left: 2px;
-    color: transparent;
-    overflow: hidden;
-    background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiIHZpZXdCb3g9IjAgMCAxMDAwIDEwMDAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDEwMDAgMTAwMCIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8Zz48cGF0aCBkPSJNOTYzLjEsODMzLjZMNzA0LjgsNTc1LjNjMCwwLDAsMC02LjEsMGMzMC43LTYxLjUsNDkuMi0xMjMsNDkuMi0xOTAuNmMwLTIwMi45LTE2Ni0zNjguOS0zNjguOS0zNjguOVMxMCwxODEuOCwxMCwzODQuN2MwLDIwMi45LDE2NiwzNjguOSwzNjguOSwzNjguOWM2Ny42LDAsMTM1LjMtMTguNCwxOTAuNi01NS4zbDAsMGwyNTguMiwyNTguMmMzNi45LDM2LjksOTIuMiwzNi45LDEyOS4xLDBDOTk5LjksOTI1LjgsOTk5LjksODcwLjUsOTYzLjEsODMzLjZ6IE0xMzMsMzg0LjdjMC0xMzUuMywxMTAuNy0yNDUuOSwyNDUuOS0yNDUuOWMxMzUuMywwLDI0NS45LDExMC43LDI0NS45LDI0NS45YzAsMTM1LjMtMTEwLjcsMjQ2LTI0NS45LDI0NkMyNDMuNyw2MzAuNywxMzMsNTIwLDEzMywzODQuN3oiLz48L2c+DQo8L3N2Zz4NCg==');
-    background-repeat: no-repeat;
-    background-origin: content-box;
+	font-family: inherit;
+	font-size: inherit;
+	font-weight: inherit;
+	height: 21px;
+}
+#nav-item-search button:hover {
+	text-shadow:
+			0 0 1px #fff,
+			0 0 3px #fff,
+			0 0 5px #fff;
+}
+#nav-item-search.nav-current button:hover {
+	text-shadow:
+			0 0 1px #ddd,
+			0 0 3px #ddd,
+			0 0 5px #ddd;
+}
+#nav-item-search button:active,
+#nav-item-search button:focus {
+	color: #f00;
 }
 
 /************/
@@ -195,6 +271,27 @@ h1.listing a::after {
 }
 h1.listing a[href^="/"]::after {
 	 content: none;
+}
+
+/******************/
+/* SEARCH RESULTS */
+/******************/
+
+#content.search-results-page h1.listing,
+#content.search-results-page .post-meta {
+	text-align: left;
+}
+#content.search-results-page h1.listing {
+	margin-left: 0;
+	font-size: 1.5em;
+}
+#content.search-results-page .post-meta {
+	margin-left: 2px;
+	font-size: 0.875rem;
+	opacity: 0.7;
+}
+#content.search-results-page .post-meta .author {
+  font-weight: 500;
 }
 
 /*********************/
