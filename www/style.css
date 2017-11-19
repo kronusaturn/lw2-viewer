@@ -112,24 +112,50 @@ input {
 .active-bar {
 	box-shadow: 0 -3px 4px -2px #ccc;
 }
+
+/* For Webkit: */
 .active-bar .nav-inactive {
 	box-shadow: 
-		0 -4px 4px -4px #bbb inset,
+		0 -4px 8px -4px #bbb inset,
 		1px 0 #fff inset;
 }
 .active-bar .nav-inactive:first-child {
 	box-shadow: 
-		0 -4px 4px -4px #bbb inset;
+		0 -4px 8px -4px #bbb inset;
 }
 .active-bar .nav-current + .nav-inactive {
 	box-shadow: 
-		4px -4px 4px -4px #bbb inset;
+		4px -4px 8px -4px #bbb inset;
 }
-.active-bar .nav-item-last-before-current {
+.active-bar .nav-item-last-before-current,
+.active-bar .nav-item-last-before-current:first-child {
 	box-shadow: 
-		4px 4px 4px -4px #bbb inset,
+		-4px -4px 8px -4px #bbb inset,
 		1px 0 #fff inset;
 }
+/* And for Gecko: */
+@-moz-document url-prefix() {
+	.active-bar .nav-inactive {
+		box-shadow: 
+			0 -4px 4px -4px #bbb inset,
+			1px 0 #fff inset;
+	}
+	.active-bar .nav-inactive:first-child {
+		box-shadow: 
+			0 -4px 4px -4px #bbb inset;
+	}
+	.active-bar .nav-current + .nav-inactive {
+		box-shadow: 
+			4px -4px 4px -4px #bbb inset;
+	}
+	.active-bar .nav-item-last-before-current,
+	.active-bar .nav-item-last-before-current:first-child {
+		box-shadow: 
+			-4px -4px 4px -4px #bbb inset,
+			1px 0 #fff inset;
+	}
+}
+
 #secondary-bar {
 	table-layout: fixed;
 }
@@ -186,6 +212,12 @@ input {
 			0 0 1px #fff,
 			0 0 3px #fff,
 			0 0 5px #fff;
+}
+#nav-item-search.nav-current button:hover {
+	text-shadow:
+			0 0 1px #ddd,
+			0 0 3px #ddd,
+			0 0 5px #ddd;
 }
 #nav-item-search button:active,
 #nav-item-search button:focus {
