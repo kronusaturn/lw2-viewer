@@ -466,12 +466,14 @@
 				 (with-error-page 
 				   (let ((posts (get-posts)))
 				     (emit-page (out-stream :description "A faster way to browse LessWrong 2.0") 
+						(format out-stream "<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" href=\"/feed\">RSS</a>") 
 						(map-output out-stream #'post-headline-to-html posts)))))
 
 (hunchentoot:define-easy-handler (view-index :uri "/index") (view all meta before after)
 				 (with-error-page 
 				   (let ((posts (lw2-graphql-query (make-posts-list-query :view (or view "new") :frontpage (not all) :meta (not (not meta)) :before before :after after))))
 				     (emit-page (out-stream :description "A faster way to browse LessWrong 2.0") 
+						(format out-stream "<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" href=\"/feed?~A\">RSS</a>" (hunchentoot:query-string*)) 
 						(map-output out-stream #'post-headline-to-html posts))))) 
 
 (hunchentoot:define-easy-handler (view-post :uri "/post") (id)
@@ -480,9 +482,9 @@
 				   (setf (hunchentoot:return-code*) 301
 					 (hunchentoot:header-out "Location") (generate-post-link id)))) 
 
-(hunchentoot:define-easy-handler (view-feed :uri "/feed") ()
+(hunchentoot:define-easy-handler (view-feed :uri "/feed") (view all meta before after)
 				 (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
-				 (let ((posts (lw2-graphql-query (make-posts-list-query :with-body t)))
+				 (let ((posts (lw2-graphql-query (make-posts-list-query :with-body t :view (or view "new") :frontpage (not all) :meta (not (not meta)) :before before :after after)))
 				       (out-stream (hunchentoot:send-headers)))
 				   (posts-to-rss posts (make-flexi-stream out-stream :external-format :utf-8)))) 
 
