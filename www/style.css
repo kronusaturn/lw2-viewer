@@ -109,11 +109,11 @@ input {
 .active-bar .nav-inactive {
 	background-color: #eee;
 }
+/* For Webkit: */
 .active-bar {
-	box-shadow: 0 -3px 4px -2px #ccc;
+	box-shadow: 0 -3px 8px -2px #ccc;
 }
 
-/* For Webkit: */
 .active-bar .nav-inactive {
 	box-shadow: 
 		0 -4px 8px -4px #bbb inset,
@@ -138,6 +138,10 @@ input {
 }
 /* And for Gecko: */
 @-moz-document url-prefix() {
+	.active-bar {
+		box-shadow: 0 -3px 4px -2px #ccc;
+	}
+
 	.active-bar .nav-inactive {
 		box-shadow: 
 			0 -4px 4px -4px #bbb inset,
