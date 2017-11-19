@@ -267,9 +267,8 @@
 	   (contents-to-html (contents)
 			     (format nil "<div class=\"contents\"><div class=\"contents-head\">Contents</div><ul>~{~A~}</ul></div>"
 				     (map 'list (lambda (x) (destructuring-bind (elem-level text id) x
-							      (declare (ignore elem-level)) 
-							      (format nil "<li><a href=\"#~A\">~A</a></li>"
-								      id text)))
+							      (format nil "<li class=\"toc-item-~A\"><a href=\"#~A\">~A</a></li>"
+								      elem-level id text)))
 					  contents))))
     (let ((root (plump:parse in-html))
 	  (contents nil)
