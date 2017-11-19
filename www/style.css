@@ -382,6 +382,14 @@ h1.listing a[href^="/"]::after {
 	border-top: 1px solid #000;
 }
 
+.comment-item input[type=checkbox] ~ ul {
+	display: none;
+}
+
+.comment-item input[type=checkbox]:checked ~ ul {
+	display: unset;
+}
+
 .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
 .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
 .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,

@@ -339,15 +339,20 @@
 	     hash) 
     hash)) 
 
-(defun comment-tree-to-html (comment-hash &optional (target nil))
+(defun comment-tree-to-html (comment-hash &optional (target nil) (level 0))
   (let ((comments (gethash target comment-hash)))
     (if comments 
       (format nil "<ul class=\"comment-thread\">~{~A~}</ul>"
 	      (map 'list (lambda (c)
-			   (format nil "<li id=\"~A\" class=\"comment-item\">~A~A</li>"
-				   (cdr (assoc :--id c)) 
+			   (let ((c-id (cdr (assoc :--id c)))) 
+			   (format nil "<li id=\"~A\" class=\"comment-item\">~A~A~A</li>"
+				   c-id
 				   (comment-to-html c)
-				   (comment-tree-to-html comment-hash (cdr (assoc :--id c)))))
+				   (if (and (= level 4) (gethash c-id comment-hash))
+				     (format nil "<input type=\"checkbox\" id=\"expand-~A\"><label for=\"expand-~:*~A\">Expand this thread</label>"
+					     c-id)
+				     "") 
+				   (comment-tree-to-html comment-hash c-id (1+ level)))))
 		   comments))
       ""))) 
 
