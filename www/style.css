@@ -53,7 +53,7 @@ input {
 }
 #secondary-bar .nav-inner {
 	font-size: 0.9em;
-	padding: 4px 30px;
+	padding: 3px 30px 4px 30px;
 }
 #bottom-bar a {
 	float: left;
@@ -127,11 +127,14 @@ input {
 	box-shadow: 
 		4px -4px 8px -4px #bbb inset;
 }
-.active-bar .nav-item-last-before-current,
-.active-bar .nav-item-last-before-current:first-child {
+.active-bar .nav-item-last-before-current {
 	box-shadow: 
 		-4px -4px 8px -4px #bbb inset,
 		1px 0 #fff inset;
+}
+.active-bar .nav-item-last-before-current:first-child {
+	box-shadow: 
+		-4px -4px 8px -4px #bbb inset;
 }
 /* And for Gecko: */
 @-moz-document url-prefix() {
@@ -148,11 +151,14 @@ input {
 		box-shadow: 
 			4px -4px 4px -4px #bbb inset;
 	}
-	.active-bar .nav-item-last-before-current,
-	.active-bar .nav-item-last-before-current:first-child {
+	.active-bar .nav-item-last-before-current {
 		box-shadow: 
 			-4px -4px 4px -4px #bbb inset,
 			1px 0 #fff inset;
+	}
+	.active-bar .nav-item-last-before-current:first-child {
+		box-shadow: 
+			-4px -4px 4px -4px #bbb inset;
 	}
 }
 
@@ -261,6 +267,27 @@ h1.listing a::after {
 }
 h1.listing a[href^="/"]::after {
 	 content: none;
+}
+
+/******************/
+/* SEARCH RESULTS */
+/******************/
+
+#content.search-results-page h1.listing,
+#content.search-results-page .post-meta {
+	text-align: left;
+}
+#content.search-results-page h1.listing {
+	margin-left: 0;
+	font-size: 1.5em;
+}
+#content.search-results-page .post-meta {
+	margin-left: 2px;
+	font-size: 0.875rem;
+	opacity: 0.7;
+}
+#content.search-results-page .post-meta .author {
+  font-weight: 500;
 }
 
 /*********************/

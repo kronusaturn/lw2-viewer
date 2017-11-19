@@ -397,10 +397,11 @@
 (defparameter *bottom-bar*
 "<div id=\"bottom-bar\" class=\"nav-bar\"><a class=\"nav-item nav-current nav-inner\" href=\"#top\">Back to top</a></div>") 
 
-(defun begin-html (out-stream &key title description current-uri)
-  (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A</head><body><div id=\"content\">~A"
+(defun begin-html (out-stream &key title description current-uri content-class)
+  (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A</head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
 	  title description
-	  *html-head* (nav-bar-to-html (or current-uri (hunchentoot:request-uri*))))) 
+	  *html-head* content-class
+	  (nav-bar-to-html (or current-uri (hunchentoot:request-uri*))))) 
 
 (defun end-html (out-stream)
   (format out-stream "~A</div></body></html>" *bottom-bar*)) 
@@ -414,12 +415,12 @@
 			     `(let ((,stream-sym ,out-stream)) 
 				,.out-body)))) 
 
-(defmacro emit-page ((out-stream &key title description current-uri (return-code 200)) &body body)
+(defmacro emit-page ((out-stream &key title description current-uri content-class (return-code 200)) &body body)
   `(log-conditions
      (setf (hunchentoot:content-type*) "text/html; charset=utf-8"
 	   (hunchentoot:return-code*) ,return-code) 
      (let ((,out-stream (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8))) 
-       (begin-html ,out-stream :title ,title :description ,description :current-uri ,current-uri)
+       (begin-html ,out-stream :title ,title :description ,description :current-uri ,current-uri :content-class ,content-class)
        ,@body
        (end-html ,out-stream)))) 
 
@@ -478,7 +479,7 @@
 				   (let ((posts (lw2-search-query q))
 					 (*current-search-query* q)) 
 				     (declare (special *current-search-query*)) 
-				     (emit-page (out-stream :title "Search" :current-uri "/search")
+				     (emit-page (out-stream :title "Search" :current-uri "/search" :content-class "search-results-page")
 						(map-output out-stream #'post-headline-to-html posts))))) 
 
 (hunchentoot:define-easy-handler (view-about :uri "/about") ()
