@@ -223,6 +223,7 @@ input {
 	font-size: inherit;
 	font-weight: inherit;
 	height: 21px;
+	cursor: pointer;
 }
 #nav-item-search button:hover {
 	text-shadow:
