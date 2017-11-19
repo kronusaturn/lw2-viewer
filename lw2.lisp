@@ -352,8 +352,10 @@
       ""))) 
 
 (defparameter *html-head*
-"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
-<link rel=\"stylesheet\" href=\"/style.css\">")
+"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">")
+
+(defun generate-versioned-link (file)
+  (format nil "~A?v=~A" file (sb-posix:stat-mtime (sb-posix:stat (format nil "www~A" file))))) 
 
 (defun search-bar-to-html ()
   (declare (special *current-search-query*))
@@ -398,9 +400,9 @@
 "<div id=\"bottom-bar\" class=\"nav-bar\"><a class=\"nav-item nav-current nav-inner\" href=\"#top\">Back to top</a></div>") 
 
 (defun begin-html (out-stream &key title description current-uri content-class)
-  (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A</head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
+  (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A<link rel=\"stylesheet\" href=\"~A\"></head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
 	  title description
-	  *html-head* content-class
+	  *html-head* (generate-versioned-link "/style.css") content-class
 	  (nav-bar-to-html (or current-uri (hunchentoot:request-uri*))))) 
 
 (defun end-html (out-stream)
@@ -486,3 +488,7 @@
 				 (with-error-page
 				   (emit-page (out-stream :title "About")
 					      (with-outputs (out-stream) "<h1>About</h1><p>About page goes here.</p>")))) 
+
+(hunchentoot:define-easy-handler (view-css :uri "/style.css") (v)
+				 (when v (setf (hunchentoot:header-out "Cache-Control") (format nil "public, max-age=~A, immutable" (- (expt 2 31) 1)))) 
+				 (hunchentoot:handle-static-file "www/style.css" "text/css")) 
