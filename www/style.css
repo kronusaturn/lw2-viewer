@@ -59,6 +59,10 @@ input {
 	float: left;
 	width: 100%;
 }
+.nav-bar a:link,
+.nav-bar a:visited {
+	color: #00e;
+}
 .nav-bar a:hover,
 .nav-bar a:focus {
 	text-decoration: none;
