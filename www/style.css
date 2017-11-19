@@ -382,12 +382,40 @@ h1.listing a[href^="/"]::after {
 	border-top: 1px solid #000;
 }
 
-.comment-item input[type=checkbox] ~ ul {
+.comment-item input[id^="expand"] {
 	display: none;
 }
-
-.comment-item input[type=checkbox]:checked ~ ul {
-	display: unset;
+.comment-item input[id^="expand"] + label {
+	display: block;
+	visibility: hidden;
+	position: relative;
+	margin: 8px 9px;
+}
+.comment-item input[id^="expand"] + label::after {
+	content: "(Expand comments below)";
+	visibility: visible;
+	position: absolute;
+	left: 0;
+	white-space: nowrap;
+	color: #00e;
+	font-weight: 500;
+}
+.comment-item input[id^="expand"]:checked + label::after {
+	content: "(Collapse comments below)";
+}
+.comment-item input[id^="expand"] + label:hover::after {
+	color: #c00;
+}
+.comment-item input[id^="expand"] + label:active::after,
+.comment-item input[id^="expand"] + label:focus::after{
+	color: #c00;
+}
+.comment-item input[id^="expand"] ~ .comment-thread {
+	max-height: 50px;
+	overflow: hidden;
+}
+.comment-item input[id^="expand"]:checked ~ .comment-thread {
+	max-height: 1000000px;
 }
 
 .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
@@ -459,10 +487,10 @@ ul.comment-thread {
 .comment-body ul {
 	list-style-type: circle;
 }
-.comment-body p:first-child {
+.comment-body *:first-child {
 	margin-top: 0;
 }
-.comment-body p:last-child {
+.comment-body *:last-child {
 	margin-bottom: 0;
 }
 
