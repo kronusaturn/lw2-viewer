@@ -348,7 +348,7 @@
 			   (format nil "<li id=\"~A\" class=\"comment-item\">~A~A~A</li>"
 				   c-id
 				   (comment-to-html c)
-				   (if (and (= level 4) (gethash c-id comment-hash))
+				   (if (and (= level 10) (gethash c-id comment-hash))
 				     (format nil "<input type=\"checkbox\" id=\"expand-~A\"><label for=\"expand-~:*~A\">Expand this thread</label>"
 					     c-id)
 				     "") 
