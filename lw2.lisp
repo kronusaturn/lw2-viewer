@@ -280,13 +280,13 @@
 				:format (or format '(:day #\  :short-month #\  :year #\  :hour #\: (:min 2) #\  :timezone)))) 
 
 (defun post-headline-to-html (post)
-  (format nil "<h1 class=\"listing\"><a href=\"~A\">~A</a></h1><div class=\"post-meta\"><div class=\"author\">~A</div><div class=\"date\">~A</div><div class=\"karma\">~A point~:P</div><a class=\"comment-count\" href=\"/post?id=~A#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a>~A</div>"
-	  (or (cdr (assoc :url post)) (format nil "/post?id=~A" (url-rewrite:url-encode (cdr (assoc :--id post))))) 
+  (format nil "<h1 class=\"listing\"><a href=\"~A\">~A</a></h1><div class=\"post-meta\"><div class=\"author\">~A</div><div class=\"date\">~A</div><div class=\"karma\">~A point~:P</div><a class=\"comment-count\" href=\"~A#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a>~A</div>"
+	  (or (cdr (assoc :url post)) (generate-post-link (cdr (assoc :--id post)))) 
 	  (cdr (assoc :title post))
 	  (get-username (cdr (assoc :user-id post)))
 	  (pretty-time (cdr (assoc :posted-at post))) 
 	  (cdr (assoc :base-score post))
-	  (url-rewrite:url-encode (cdr (assoc :--id post))) 
+	  (generate-post-link (cdr (assoc :--id post))) 
 	  (or (cdr (assoc :comment-count post)) 0) 
 	  (cdr (assoc :page-url post))
 	  (if (cdr (assoc :url post)) (format nil "<div class=\"link-post\">(~A)</div>" (puri:uri-host (puri:parse-uri (cdr (assoc :url post))))) ""))) 
@@ -318,13 +318,13 @@
 (defun comment-to-html (comment &key with-post-title)
   (format nil "<div class=\"comment\"><div class=\"comment-meta\"><div>~A</div><a href=\"~A\">~A</a><div>~A point~:P</div><a href=\"~A#~A\">LW2 link</a>~A</div><div class=\"comment-body\">~A</div></div>"
 	  (get-username (cdr (assoc :user-id comment))) 
-	  (format nil "/post?id=~A#~A" (cdr (assoc :post-id comment)) (cdr (assoc :--id comment))) 
+	  (generate-post-link (cdr (assoc :post-id comment)) (cdr (assoc :--id comment))) 
 	  (pretty-time (cdr (assoc :posted-at comment)))
 	  (cdr (assoc :base-score comment))
 	  (cdr (assoc :page-url comment)) 
 	  (cdr (assoc :--id comment)) 
 	  (if with-post-title
-	    (format nil "<div class=\"comment-post-title\">on: <a href=\"/post?id=~A\">~A</a></div>" (cdr (assoc :post-id comment)) (get-post-title (cdr (assoc :post-id comment))))
+	    (format nil "<div class=\"comment-post-title\">on: <a href=\"~A\">~A</a></div>" (generate-post-link (cdr (assoc :post-id comment))) (get-post-title (cdr (assoc :post-id comment))))
 	    "") 
 	  (clean-html (cdr (assoc :html-body comment))))) 
 
