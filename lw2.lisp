@@ -117,7 +117,7 @@
 	   (type (integer 1) limit)
 	   (type boolean meta)
 	   (type (or string null) before after))
-  (format nil "{PostsList (terms:{view:\"~A\",limit:~A,meta:~A~A~A~A}) {title, _id, userId, postedAt, baseScore, commentCount, pageUrl, url~A}}"
+  (format nil "{PostsList (terms:{view:\"~A\",limit:~A,meta:~A~A~A~A}) {title, _id, slug, userId, postedAt, baseScore, commentCount, pageUrl, url~A}}"
 	  view
 	  limit
 	  (if meta "true" "false")
@@ -136,7 +136,7 @@
   (lw2-graphql-query-noparse (make-posts-list-query)))
 
 (defun get-post-body (post-id)
-  (lw2-graphql-query-timeout-cached (format nil "{PostsSingle(documentId:\"~A\") {title, _id, userId, postedAt, baseScore, commentCount, pageUrl, url, htmlBody}}" post-id) "post-body-json" post-id))
+  (lw2-graphql-query-timeout-cached (format nil "{PostsSingle(documentId:\"~A\") {title, _id, slug, userId, postedAt, baseScore, commentCount, pageUrl, url, htmlBody}}" post-id) "post-body-json" post-id))
 
 (defun get-post-comments (post-id)
   (lw2-graphql-query-timeout-cached (format nil "{CommentsList (terms:{view:\"postCommentsTop\",limit:100,postId:\"~A\"}) {_id, userId, postId, postedAt, parentCommentId, baseScore, pageUrl, htmlBody}}" post-id) "post-comments-json" post-id))
@@ -182,6 +182,9 @@
 (simple-cacheable ("post-title" "postid-to-title" post-id)
   (lw2-graphql-query (format nil "{PostsSingle(documentId:\"~A\") {title}}" post-id))) 
 
+(simple-cacheable ("post-slug" "postid-to-slug" post-id)
+  (lw2-graphql-query (format nil "{PostsSingle(documentId:\"~A\") {slug}}" post-id)))
+
 (simple-cacheable ("username" "userid-to-displayname" user-id)
   (lw2-graphql-query (format nil "{UsersSingle(documentId:\"~A\") {displayName}}" user-id))) 
 
@@ -200,9 +203,13 @@
       (let ((posts-json (get-posts-json)))
 	(when (and posts-json (ignore-errors (json:decode-json-from-string posts-json)))
 	  (cache-put "index-json" "new-not-meta" posts-json)
-	  (with-db (db "postid-to-title")
-		   (dolist (post (decode-graphql-json posts-json))
-		     (lmdb-put-string db (cdr (assoc :--id post)) (cdr (assoc :title post))))))))
+	  (let ((posts-list (decode-graphql-json posts-json))) 
+	    (with-db (db "postid-to-title")
+		     (dolist (post posts-list)
+		       (lmdb-put-string db (cdr (assoc :--id post)) (cdr (assoc :title post)))))
+	    (with-db (db "postid-to-slug")
+		     (dolist (post posts-list)
+		       (lmdb-put-string db (cdr (assoc :--id post)) (cdr (assoc :slug post)))))))))
     (log-conditions
       (let ((recent-comments-json (get-recent-comments-json)))
 	(if (and recent-comments-json (ignore-errors (json:decode-json-from-string recent-comments-json)))
@@ -218,12 +225,25 @@
   (setf *background-loader-thread* nil)) 
 
 (defun match-lw2-link (link)
-  (multiple-value-bind (match? strings) (ppcre:scan-to-strings "(^https?://(www.)?lesserwrong.com|^)/posts/([^/]+)/[^/]*(/([^/]+))?$" link)
+  (multiple-value-bind (match? strings) (ppcre:scan-to-strings "(^https?://(www.)?lesserwrong.com|^)/posts/([^/]+)/([^/]*)(/([^/#]+))?(#|$)" link)
     (when match?
-      (values (elt strings 2) (elt strings 4))))) 
- 
-(defun generate-post-link (story-id &optional comment-id absolute-uri)
-  (format nil "~Apost?id=~A~@[#~A~]" (if absolute-uri *site-uri* "/") story-id comment-id)) 
+      (values (elt strings 2) (elt strings 5) (elt strings 3))))) 
+
+(labels
+  ((gen-internal (post-id slug comment-id &optional absolute-uri)
+		 (format nil "~Aposts/~A/~A~@[#~A~]" (if absolute-uri *site-uri* "/") post-id (or slug "-") comment-id))) 
+
+(defun convert-lw2-link (link)
+  (multiple-value-bind (post-id comment-id slug) (match-lw2-link link)
+    (when post-id 
+      (gen-internal post-id slug comment-id)))) 
+
+(defun generate-post-link (story &optional comment-id absolute-uri) 
+  (typecase story
+    (string 
+      (gen-internal story (get-post-slug story) comment-id absolute-uri))
+    (cons
+      (gen-internal (cdr (assoc :--id story)) (or (cdr (assoc :slug story)) (get-post-slug story)) comment-id absolute-uri))))) 
 
 (defun clean-html (in-html)
   (labels ((scan-for-urls (text-node)
@@ -259,9 +279,9 @@
 				 (when (string= (plump:tag-name node) "a")
 				   (let ((href (plump:attribute node "href")))
 				     (when href
-				       (multiple-value-bind (story-id comment-id) (match-lw2-link href)
-					 (when story-id
-					   (setf (plump:attribute node "href") (generate-post-link story-id comment-id)))))))
+				       (let ((new-link (convert-lw2-link href)))
+					 (when new-link
+					   (setf (plump:attribute node "href") new-link))))))
 				 (when (or (string= (plump:tag-name node) "p") (string= (plump:tag-name node) "blockquote"))
 				   (unless (plump:has-child-nodes node)
 				     (plump:remove-child node)))
@@ -280,13 +300,13 @@
 				:format (or format '(:day #\  :short-month #\  :year #\  :hour #\: (:min 2) #\  :timezone)))) 
 
 (defun post-headline-to-html (post)
-  (format nil "<h1 class=\"listing\"><a href=\"~A\">~A</a></h1><div class=\"post-meta\"><div class=\"author\">~A</div><div class=\"date\">~A</div><div class=\"karma\">~A point~:P</div><a class=\"comment-count\" href=\"/post?id=~A#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a>~A</div>"
-	  (or (cdr (assoc :url post)) (format nil "/post?id=~A" (url-rewrite:url-encode (cdr (assoc :--id post))))) 
+  (format nil "<h1 class=\"listing\"><a href=\"~A\">~A</a></h1><div class=\"post-meta\"><div class=\"author\">~A</div><div class=\"date\">~A</div><div class=\"karma\">~A point~:P</div><a class=\"comment-count\" href=\"~A#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a>~A</div>"
+	  (or (cdr (assoc :url post)) (generate-post-link post)) 
 	  (cdr (assoc :title post))
 	  (get-username (cdr (assoc :user-id post)))
 	  (pretty-time (cdr (assoc :posted-at post))) 
 	  (cdr (assoc :base-score post))
-	  (url-rewrite:url-encode (cdr (assoc :--id post))) 
+	  (generate-post-link post) 
 	  (or (cdr (assoc :comment-count post)) 0) 
 	  (cdr (assoc :page-url post))
 	  (if (cdr (assoc :url post)) (format nil "<div class=\"link-post\">(~A)</div>" (puri:uri-host (puri:parse-uri (cdr (assoc :url post))))) ""))) 
@@ -298,7 +318,7 @@
 			 (dolist (post posts)
 			   (xml-emitter:rss-item
 			     (cdr (assoc :title post))
-			     :link (generate-post-link (cdr (assoc :--id post)) nil t)
+			     :link (generate-post-link post nil t)
 			     :author (get-username (cdr (assoc :user-id post)))
 			     :pubDate (pretty-time (cdr (assoc :posted-at post)) :format local-time:+rfc-1123-format+)
 			     :description (clean-html (or (cdr (assoc :html-body post)) "")))))) 
@@ -318,13 +338,13 @@
 (defun comment-to-html (comment &key with-post-title)
   (format nil "<div class=\"comment\"><div class=\"comment-meta\"><div>~A</div><a href=\"~A\">~A</a><div>~A point~:P</div><a href=\"~A#~A\">LW2 link</a>~A</div><div class=\"comment-body\">~A</div></div>"
 	  (get-username (cdr (assoc :user-id comment))) 
-	  (format nil "/post?id=~A#~A" (cdr (assoc :post-id comment)) (cdr (assoc :--id comment))) 
+	  (generate-post-link (cdr (assoc :post-id comment)) (cdr (assoc :--id comment))) 
 	  (pretty-time (cdr (assoc :posted-at comment)))
 	  (cdr (assoc :base-score comment))
 	  (cdr (assoc :page-url comment)) 
 	  (cdr (assoc :--id comment)) 
 	  (if with-post-title
-	    (format nil "<div class=\"comment-post-title\">on: <a href=\"/post?id=~A\">~A</a></div>" (cdr (assoc :post-id comment)) (get-post-title (cdr (assoc :post-id comment))))
+	    (format nil "<div class=\"comment-post-title\">on: <a href=\"~A\">~A</a></div>" (generate-post-link (cdr (assoc :post-id comment))) (get-post-title (cdr (assoc :post-id comment))))
 	    "") 
 	  (clean-html (cdr (assoc :html-body comment))))) 
 
@@ -453,12 +473,8 @@
 (hunchentoot:define-easy-handler (view-post :uri "/post") (id)
 				 (with-error-page
 				   (unless (and id (not (equal id ""))) (error "No post ID.")) 
-				   (let ((post (get-post-body id))) 
-				     (emit-page (out-stream :title (cdr (assoc :title post))) 
-						(with-outputs (out-stream) (post-body-to-html post)) 
-						(format out-stream "<div id=\"comments\">~A</div>"
-							(let ((comments (get-post-comments id)))
-							  (comment-tree-to-html (make-comment-parent-hash comments)))))))) 
+				   (setf (hunchentoot:return-code*) 301
+					 (hunchentoot:header-out "Location") (generate-post-link id)))) 
 
 (hunchentoot:define-easy-handler (view-feed :uri "/feed") ()
 				 (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
@@ -468,8 +484,15 @@
 
 (hunchentoot:define-easy-handler (view-post-lw2-link :uri (lambda (r) (declare (ignore r)) (match-lw2-link (hunchentoot:request-uri*)))) ()
 				 (multiple-value-bind (post-id comment-id) (match-lw2-link (hunchentoot:request-uri*))
-				   (setf (hunchentoot:return-code*) 303
-					 (hunchentoot:header-out "Location") (generate-post-link post-id comment-id)))) 
+				   (if comment-id 
+				     (setf (hunchentoot:return-code*) 303
+					   (hunchentoot:header-out "Location") (generate-post-link post-id comment-id))
+				     (let ((post (get-post-body post-id))) 
+				       (emit-page (out-stream :title (cdr (assoc :title post))) 
+						  (with-outputs (out-stream) (post-body-to-html post)) 
+						  (format out-stream "<div id=\"comments\">~A</div>"
+							  (let ((comments (get-post-comments post-id)))
+							    (comment-tree-to-html (make-comment-parent-hash comments))))))))) 
 
 (hunchentoot:define-easy-handler (view-recent-comments :uri "/recentcomments") ()
 				 (with-error-page
