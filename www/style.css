@@ -331,22 +331,18 @@ h1.listing a[href^="/"]::after {
 	float: left;
 	min-width: 12em;
 	max-width: 33.3%;
-	margin: 1.625em 1.75em 0.75em -0.75em;
 	padding: 0.5em 0 0.5em 0.5em;
 }
-
 .contents-head {
 	text-align: center;
 	font-weight: bold;
 	margin-bottom: 0.25em;
 }
-
 .contents ul {
 	padding: 0;
 	margin: 0 0.25em;
 	list-style-type: none;
 }
-
 .contents li {
 	margin: 0.15em 0 0.15em 1em;
 	text-align: left;
@@ -371,7 +367,7 @@ h1.listing a[href^="/"]::after {
 	hyphens: auto;
 }
 
-.post-body p, .comment-body p, .post-body div, .comment-body div {
+.post-body p, .comment-body p {
 	margin: 1em 0;
 }
 
