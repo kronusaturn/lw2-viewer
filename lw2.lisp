@@ -246,7 +246,11 @@
       (gen-internal (cdr (assoc :--id story)) (or (cdr (assoc :slug story)) (get-post-slug story)) comment-id absolute-uri))))) 
 
 (defun clean-html (in-html)
-  (labels ((scan-for-urls (text-node)
+  (labels ((tag-is (node &rest args)
+		   (let ((tag (plump:tag-name node)))
+		     (some (lambda (x) (string= tag x))
+			   args))) 
+	   (scan-for-urls (text-node)
 			  (let ((text (plump:text text-node)))
 			    (multiple-value-bind (url-start url-end) (ppcre:scan "(https?://[-a-zA-Z0-9]+\\.[-a-zA-Z0-9.]+|[-a-zA-Z0-9.]+\\.(com|edu|gov|mil|net|org|biz|info|name|museum|us|ca|uk))(\\:[0-9]+){0,1}(/[-a-zA-Z0-9.,;?'\\\\+&%$#=~_/]*)?" text)
 			      (when url-start
@@ -282,8 +286,8 @@
 				       (let ((new-link (convert-lw2-link href)))
 					 (when new-link
 					   (setf (plump:attribute node "href") new-link))))))
-				 (when (or (string= (plump:tag-name node) "p") (string= (plump:tag-name node) "blockquote"))
-				   (unless (plump:has-child-nodes node)
+				 (when (tag-is node "p" "blockquote" "div")
+				   (when (string= (plump:text node) "") 
 				     (plump:remove-child node)))
 				 (when (ppcre:scan "^h[1-6]$" (plump:tag-name node))
 				   (incf section-count) 
