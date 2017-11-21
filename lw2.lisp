@@ -245,7 +245,7 @@
     (cons
       (gen-internal (cdr (assoc :--id story)) (or (cdr (assoc :slug story)) (get-post-slug story)) comment-id absolute-uri))))) 
 
-(defun clean-html (in-html)
+(defun clean-html (in-html &key with-toc)
   (labels ((tag-is (node &rest args)
 		   (let ((tag (plump:tag-name node)))
 		     (some (lambda (x) (string= tag x))
@@ -289,7 +289,7 @@
 				 (when (tag-is node "p" "blockquote" "div")
 				   (when (string= (plump:text node) "") 
 				     (plump:remove-child node)))
-				 (when (ppcre:scan "^h[1-6]$" (plump:tag-name node))
+				 (when (and with-toc (ppcre:scan "^h[1-6]$" (plump:tag-name node)))
 				   (incf section-count) 
 				   (unless (plump:attribute node "id") (setf (plump:attribute node "id") (format nil "section-~A" section-count))) 
 				   (push (list (parse-integer (subseq (plump:tag-name node) 1))
@@ -337,7 +337,7 @@
 	  (cdr (assoc :page-url post)) 
 	  (format nil "~A~A"
 		  (if (cdr (assoc :url post)) (format nil "<p><a href=\"~A\">Link post</a></p>" (cdr (assoc :url post))) "")
-		  (clean-html (or (cdr (assoc :html-body post)) ""))))) 
+		  (clean-html (or (cdr (assoc :html-body post)) "") :with-toc t)))) 
 
 (defun comment-to-html (comment &key with-post-title)
   (format nil "<div class=\"comment\"><div class=\"comment-meta\"><div>~A</div><a href=\"~A\">~A</a><div>~A point~:P</div><a href=\"~A#~A\">LW2 link</a>~A</div><div class=\"comment-body\">~A</div></div>"
