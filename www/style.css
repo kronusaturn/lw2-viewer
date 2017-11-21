@@ -354,6 +354,10 @@ h1.listing a[href^="/"]::after {
 	hyphens: auto;
 }
 
+.post-body p, .comment-body p, .post-body div, .comment-body div {
+	margin: 1em 0;
+}
+
 /*********/
 /* POSTS */
 /*********/
