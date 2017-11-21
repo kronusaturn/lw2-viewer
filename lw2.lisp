@@ -260,7 +260,7 @@
 				       (new-a (plump:make-element (plump:make-root) "a"))
 				       (new-text (if (= url-end (length text)) nil (plump:make-text-node temp-root (subseq text url-end))))) 
 				  (setf (plump:text text-node) (subseq text 0 url-start)
-					(plump:attribute new-a "href") url)
+					(plump:attribute new-a "href") (let ((new-url (convert-lw2-link url))) (or new-url url)))
 				  (plump:make-text-node new-a url-raw)
 				  (if new-text (plump:insert-after text-node new-text))
 				  (plump:insert-after text-node new-a)))))) 
