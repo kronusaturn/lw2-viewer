@@ -486,34 +486,26 @@ h1.listing a[href^="/"]::after {
 	max-height: 1000000px;
 }
 
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
-.comment-item .comment-item .comment-item .comment-item .comment-item,
-.comment-item .comment-item .comment-item,
-.comment-item {
+<?php
+	function nested_stuff($segment, $tip, $last_tip, $nesting_levels) {
+		for ($i = $nesting_levels; $i > 0; $i--) {
+			for ($j = $i; $j > 0; $j--)
+				echo $segment;
+			echo $tip;
+		}
+		echo $last_tip;
+	}
+?>
+
+<?php nested_stuff(".comment-item .comment-item ", ".comment-item,\n", ".comment-item", 5); ?> {
 	background-color: #eee;
 }
 
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
-.comment-item .comment-item .comment-item .comment-item,
-.comment-item .comment-item {
+<?php nested_stuff(".comment-item .comment-item ", ".comment-item .comment-item,\n", ".comment-item .comment-item", 5); ?> {
 	background-color: #fff;
 }
 
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
-.comment-item .comment-item .comment-item .comment-item .comment-item:target,
-.comment-item .comment-item .comment-item .comment-item:target,
-.comment-item .comment-item .comment-item:target,
-.comment-item .comment-item:target,
-.comment-item:target {
+<?php nested_stuff(".comment-item ", ".comment-item:target,\n", ".comment-item:target", 9); ?> {
 	background-color: #ffd;
 }
 
