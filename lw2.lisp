@@ -31,6 +31,10 @@
 								      (setf ,txn nil)))))
 					    (when ,txn (lmdb:abort-transaction ,txn)))))))
 
+(defun lmdb-clear-db (db)
+  (lmdb:do-pairs (db key value)
+		 (lmdb:del db key))) 
+
 (defun lmdb-put-string (db key value)
   (if 
     (lmdb:put db
