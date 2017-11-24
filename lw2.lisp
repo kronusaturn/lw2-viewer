@@ -294,13 +294,11 @@
 				(when url-start
 				  (let* ((url-raw (subseq text url-start url-end))
 					 (url (if (mismatch "http" url-raw :end2 4) (concatenate 'string "http://" url-raw) url-raw)) 
-					 (temp-root (plump:make-root))
-					 (new-a (plump:make-element (plump:make-root) "a"))
-					 (new-text (if (= url-end (length text)) nil (plump:make-text-node temp-root (subseq text url-end))))) 
+					 (new-a (plump:make-element (plump:make-root) "a")))
+				    (unless (= url-end (length text)) (scan-for-urls (plump:make-text-node (plump:parent text-node) (subseq text url-end)))) 
 				    (setf (plump:text text-node) (subseq text 0 url-start)
 					  (plump:attribute new-a "href") (let ((new-url (convert-lw2-link url))) (or new-url url)))
 				    (plump:make-text-node new-a url-raw)
-				    (if new-text (plump:insert-after text-node new-text))
 				    (plump:insert-after text-node new-a)))))) 
 	     (contents-to-html (contents)
 			       (format nil "<div class=\"contents\"><div class=\"contents-head\">Contents</div><ul>~{~A~}</ul></div>"
