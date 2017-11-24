@@ -31,9 +31,10 @@
 								      (setf ,txn nil)))))
 					    (when ,txn (lmdb:abort-transaction ,txn)))))))
 
-(defun lmdb-clear-db (db)
-  (lmdb:do-pairs (db key value)
-		 (lmdb:del db key))) 
+(eval-when (:compile-toplevel :load-toplevel :execute) 
+  (defun lmdb-clear-db (db)
+    (lmdb:do-pairs (db key value)
+		   (lmdb:del db key)))) 
 
 (defun lmdb-put-string (db key value)
   (if 
@@ -249,59 +250,92 @@
     (cons
       (gen-internal (cdr (assoc :--id story)) (or (cdr (assoc :slug story)) (get-post-slug story)) comment-id absolute-uri))))) 
 
-(defun clean-html (in-html &key with-toc)
-  (labels ((tag-is (node &rest args)
-		   (let ((tag (plump:tag-name node)))
-		     (some (lambda (x) (string= tag x))
-			   args))) 
-	   (scan-for-urls (text-node)
-			  (let ((text (plump:text text-node)))
-			    (multiple-value-bind (url-start url-end) (ppcre:scan "(https?://[-a-zA-Z0-9]+\\.[-a-zA-Z0-9.]+|[-a-zA-Z0-9.]+\\.(com|edu|gov|mil|net|org|biz|info|name|museum|us|ca|uk))(\\:[0-9]+){0,1}(/[-a-zA-Z0-9.,;?'\\\\+&%$#=~_/]*)?" text)
-			      (when url-start
-				(let* ((url-raw (subseq text url-start url-end))
-				       (url (if (mismatch "http" url-raw :end2 4) (concatenate 'string "http://" url-raw) url-raw)) 
-				       (temp-root (plump:make-root))
-				       (new-a (plump:make-element (plump:make-root) "a"))
-				       (new-text (if (= url-end (length text)) nil (plump:make-text-node temp-root (subseq text url-end))))) 
-				  (setf (plump:text text-node) (subseq text 0 url-start)
-					(plump:attribute new-a "href") (let ((new-url (convert-lw2-link url))) (or new-url url)))
-				  (plump:make-text-node new-a url-raw)
-				  (if new-text (plump:insert-after text-node new-text))
-				  (plump:insert-after text-node new-a)))))) 
-	   (contents-to-html (contents)
-			     (format nil "<div class=\"contents\"><div class=\"contents-head\">Contents</div><ul>~{~A~}</ul></div>"
-				     (map 'list (lambda (x) (destructuring-bind (elem-level text id) x
-							      (declare (ignore elem-level)) 
-							      (format nil "<li><a href=\"#~A\">~A</a></li>"
-								      id text)))
-					  contents))))
-    (let ((root (plump:parse in-html))
-	  (contents nil)
-	  (section-count 0))
-      (plump:traverse root (lambda (node)
-			     (typecase node
-			       (plump:text-node 
-				 (when (and (plump:text-node-p node) (or (typep (plump:parent node) 'plump:root) (every (lambda (x) (string/= (plump:tag-name (plump:parent node)) x)) '("a" "style"))))
-				   (scan-for-urls node)))
-			       (plump:element 
-				 (when (string= (plump:tag-name node) "a")
-				   (let ((href (plump:attribute node "href")))
-				     (when href
-				       (let ((new-link (convert-lw2-link href)))
-					 (when new-link
-					   (setf (plump:attribute node "href") new-link))))))
-				 (when (tag-is node "p" "blockquote" "div")
-				   (when (string= (plump:text node) "") 
-				     (plump:remove-child node)))
-				 (when (and with-toc (ppcre:scan "^h[1-6]$" (plump:tag-name node)))
-				   (incf section-count) 
-				   (unless (plump:attribute node "id") (setf (plump:attribute node "id") (format nil "section-~A" section-count))) 
-				   (push (list (parse-integer (subseq (plump:tag-name node) 1))
-					       (plump:text node)
-					       (plump:attribute node "id"))
-					 contents)))))) 
-      (concatenate 'string (if (> section-count 3) (contents-to-html (nreverse contents)) "") 
-		   (plump:serialize root nil)))))
+(eval-when (:compile-toplevel :load-toplevel :execute) 
+  (defun city-hash-128-vector (data)
+    (apply #'concatenate
+	   (cons 'vector (map 'list #'bit-smasher:int->octets
+			      (multiple-value-list
+				(city-hash:city-hash-128 data)))))) 
+
+  (defun hash-printable-object (object)
+    (city-hash-128-vector (string-to-octets (prin1-to-string object) :external-format :utf-8))))
+
+(defmacro define-lmdb-memoized (&whole whole name lambda &body body)
+  (let ((db-name (concatenate 'string (string-downcase (symbol-name name)) "-memo")))
+    (let* ((version-octets (string-to-octets "version" :external-format :utf-8)) 
+	   (now-hash (hash-printable-object whole))
+	   (old-hash (with-db (db db-name) (lmdb:get db version-octets))))
+      (unless (equalp now-hash old-hash)
+	(with-db (db db-name)
+		 (lmdb-clear-db db)
+		 (lmdb:put db version-octets now-hash))))
+    (alexandria:once-only (db-name)
+			  `(defun ,name (&rest args)
+			     (labels ((real-fn ,lambda ,@body))
+			       (let* ((hash (hash-printable-object args))
+				      (cached-value (with-db (db ,db-name) (lmdb:get db hash))))
+				 (if cached-value
+				   (octets-to-string cached-value :external-format :utf-8)
+				   (let ((new-value (apply #'real-fn args)))
+				     (with-db (db ,db-name) (lmdb:put db hash (string-to-octets new-value :external-format :utf-8)))
+				     new-value)))))))) 
+
+(defvar *clean-html-mutex* (sb-thread:make-mutex :name "clean-html")) 
+
+(define-lmdb-memoized clean-html (in-html &key with-toc)
+  (with-mutex (*clean-html-mutex*) ; this is actually thread-safe, but running it concurrently risks running out of memory
+    (labels ((tag-is (node &rest args)
+		     (let ((tag (plump:tag-name node)))
+		       (some (lambda (x) (string= tag x))
+			     args))) 
+	     (scan-for-urls (text-node)
+			    (let ((text (plump:text text-node)))
+			      (multiple-value-bind (url-start url-end) (ppcre:scan "(https?://[-a-zA-Z0-9]+\\.[-a-zA-Z0-9.]+|[-a-zA-Z0-9.]+\\.(com|edu|gov|mil|net|org|biz|info|name|museum|us|ca|uk))(\\:[0-9]+){0,1}(/[-a-zA-Z0-9.,;?'\\\\+&%$#=~_/]*)?" text)
+				(when url-start
+				  (let* ((url-raw (subseq text url-start url-end))
+					 (url (if (mismatch "http" url-raw :end2 4) (concatenate 'string "http://" url-raw) url-raw)) 
+					 (temp-root (plump:make-root))
+					 (new-a (plump:make-element (plump:make-root) "a"))
+					 (new-text (if (= url-end (length text)) nil (plump:make-text-node temp-root (subseq text url-end))))) 
+				    (setf (plump:text text-node) (subseq text 0 url-start)
+					  (plump:attribute new-a "href") (let ((new-url (convert-lw2-link url))) (or new-url url)))
+				    (plump:make-text-node new-a url-raw)
+				    (if new-text (plump:insert-after text-node new-text))
+				    (plump:insert-after text-node new-a)))))) 
+	     (contents-to-html (contents)
+			       (format nil "<div class=\"contents\"><div class=\"contents-head\">Contents</div><ul>~{~A~}</ul></div>"
+				       (map 'list (lambda (x) (destructuring-bind (elem-level text id) x
+								(declare (ignore elem-level)) 
+								(format nil "<li><a href=\"#~A\">~A</a></li>"
+									id text)))
+					    contents))))
+      (let ((root (plump:parse in-html))
+	    (contents nil)
+	    (section-count 0))
+	(plump:traverse root (lambda (node)
+			       (typecase node
+				 (plump:text-node 
+				   (when (and (plump:text-node-p node) (or (typep (plump:parent node) 'plump:root) (every (lambda (x) (string/= (plump:tag-name (plump:parent node)) x)) '("a" "style"))))
+				     (scan-for-urls node)))
+				 (plump:element 
+				   (when (string= (plump:tag-name node) "a")
+				     (let ((href (plump:attribute node "href")))
+				       (when href
+					 (let ((new-link (convert-lw2-link href)))
+					   (when new-link
+					     (setf (plump:attribute node "href") new-link))))))
+				   (when (tag-is node "p" "blockquote" "div")
+				     (when (string= (plump:text node) "") 
+				       (plump:remove-child node)))
+				   (when (and with-toc (ppcre:scan "^h[1-6]$" (plump:tag-name node)))
+				     (incf section-count) 
+				     (unless (plump:attribute node "id") (setf (plump:attribute node "id") (format nil "section-~A" section-count))) 
+				     (push (list (parse-integer (subseq (plump:tag-name node) 1))
+						 (plump:text node)
+						 (plump:attribute node "id"))
+					   contents)))))) 
+	(concatenate 'string (if (> section-count 3) (contents-to-html (nreverse contents)) "") 
+		     (plump:serialize root nil))))))
 
 (defun pretty-time (timestring &key format)
   (local-time:format-timestring nil (local-time:parse-timestring timestring)
