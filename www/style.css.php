@@ -339,6 +339,7 @@ h1.listing a[href^="/"]::after {
 	max-width: 35%;
 	margin: 1.625em 1.75em 0.75em -0.75em;
 	padding: 0.5em;
+	-webkit-hyphens: none;
 	hyphens: none;
 }
 
@@ -407,6 +408,7 @@ h1.listing a[href^="/"]::after {
 }
 .post-body, .comment-body {
 	text-align: justify;
+	-webkit-hyphens: auto;
 	hyphens: auto;
 }
 
@@ -680,11 +682,13 @@ ol {
 	}
 	.post-body, .comment-body {
 		text-align: left;
+		-webkit-hyphens: none;
 		hyphens: none;
 	}
 	@-moz-document url-prefix() {
 		.post-body, .comment-body {
 			text-align: justify;
+			-webkit-hyphens: auto;
 			hyphens: auto;
 		}
 	}
