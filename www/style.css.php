@@ -596,7 +596,7 @@ blockquote {
 blockquote *:first-child {
 	margin-top: 0;
 }
-blockquote *:last-child: {
+blockquote *:last-child {
 	margin-bottom: 0;
 }
 
