@@ -106,15 +106,17 @@
 					 (setf (gethash key *background-cache-update-threads*)
 					       (sb-thread:make-thread #'background-fn)))))))) 
 
-(defun lw2-graphql-query-timeout-cached (query cache-db cache-key)
-  (let* ((cached-result (cache-get cache-db cache-key)) 
-	 (timeout nil) ;(if cached-result 2 nil) 
-	 (thread (ensure-cache-update-thread query cache-db cache-key))) 
-    (decode-graphql-json
-      (handler-case
-	(sb-thread:join-thread thread :timeout timeout)
-	(t () (or cached-result
-		  (error "Failed to load ~A ~A and no cached version available." cache-db cache-key)))))))
+(defun lw2-graphql-query-timeout-cached (query cache-db cache-key &key (revalidate t))
+  (let ((cached-result (cache-get cache-db cache-key))) 
+    (if (and cached-result (not revalidate))
+      (decode-graphql-json cached-result)
+      (let ((timeout nil) ;(if cached-result 2 nil) 
+	    (thread (ensure-cache-update-thread query cache-db cache-key))) 
+	(decode-graphql-json
+	  (handler-case
+	    (sb-thread:join-thread thread :timeout timeout)
+	    (t () (or cached-result
+		      (error "Failed to load ~A ~A and no cached version available." cache-db cache-key)))))))))
 
 (declaim (inline make-posts-list-query)) 
 (defun make-posts-list-query (&key (view "new") (limit 20) (meta nil) (frontpage t) (before nil) (after nil) (with-body nil))
@@ -140,8 +142,8 @@
 (defun get-posts-json ()
   (lw2-graphql-query-noparse (make-posts-list-query)))
 
-(defun get-post-body (post-id)
-  (lw2-graphql-query-timeout-cached (format nil "{PostsSingle(documentId:\"~A\") {title, _id, slug, userId, postedAt, baseScore, commentCount, pageUrl, url, htmlBody}}" post-id) "post-body-json" post-id))
+(defun get-post-body (post-id &key (revalidate t))
+  (lw2-graphql-query-timeout-cached (format nil "{PostsSingle(documentId:\"~A\") {title, _id, slug, userId, postedAt, baseScore, commentCount, pageUrl, url, htmlBody}}" post-id) "post-body-json" post-id :revalidate revalidate))
 
 (defun get-post-comments (post-id)
   (lw2-graphql-query-timeout-cached (format nil "{CommentsList (terms:{view:\"postCommentsTop\",limit:100,postId:\"~A\"}) {_id, userId, postId, postedAt, parentCommentId, baseScore, pageUrl, htmlBody}}" post-id) "post-comments-json" post-id))
@@ -367,7 +369,7 @@
 			     :link (generate-post-link post nil t)
 			     :author (get-username (cdr (assoc :user-id post)))
 			     :pubDate (pretty-time (cdr (assoc :posted-at post)) :format local-time:+rfc-1123-format+)
-			     :description (clean-html (or (cdr (assoc :html-body post)) "")))))) 
+			     :description (clean-html (or (cdr (assoc :html-body (get-post-body (cdr (assoc :--id post)) :revalidate nil))) "")))))) 
 
 (defun post-body-to-html (post)
   (format nil "<div class=\"post\"><h1>~A</h1><div class=\"post-meta\"><div class=\"author\">~A</div><div class=\"date\">~A</div><div class=\"karma\">~A point~:P</div><a class=\"comment-count\" href=\"#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a></div><div class=\"post-body\">~A</div></div>"
@@ -526,7 +528,7 @@
 
 (hunchentoot:define-easy-handler (view-feed :uri "/feed") (view all meta before after)
 				 (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
-				 (let ((posts (lw2-graphql-query (make-posts-list-query :with-body t :view (or view "new") :frontpage (not all) :meta (not (not meta)) :before before :after after)))
+				 (let ((posts (lw2-graphql-query (make-posts-list-query :view (or view "new") :frontpage (not all) :meta (not (not meta)) :before before :after after)))
 				       (out-stream (hunchentoot:send-headers)))
 				   (posts-to-rss posts (make-flexi-stream out-stream :external-format :utf-8)))) 
 
