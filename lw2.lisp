@@ -330,7 +330,7 @@
 					   (when new-link
 					     (setf (plump:attribute node "href") new-link))))))
 				   (when (tag-is node "p" "blockquote" "div")
-				     (when (string= (plump:text node) "") 
+				     (when (every (lambda (c) (find c '(#\Space #\Newline #\Tab #\Return #\Linefeed #\Page))) (plump:text node)) 
 				       (plump:remove-child node)))
 				   (when (and with-toc (ppcre:scan "^h[1-6]$" (plump:tag-name node)))
 				     (incf section-count) 
