@@ -292,7 +292,7 @@ h1.listing a[href^="/"]:hover {
 	border-bottom: 1px dotted #777;
 }
 h1.listing a::after { 
-	content: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("search.svg")) ?>');
+	content: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("chain-link.svg")) ?>');
 	width: 30px;
 	position: absolute;
 	bottom: 4px;
