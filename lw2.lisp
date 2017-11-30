@@ -519,7 +519,7 @@
 				  (map-output out-stream #'post-headline-to-html posts))))) 
 
 (hunchentoot:define-easy-handler (say-yo :uri "/") ()
-				 (view-posts-index (get-posts)))
+				 (with-error-page (view-posts-index (get-posts))))
 
 (hunchentoot:define-easy-handler (view-index :uri "/index") (view all meta before after)
 				 (with-error-page
