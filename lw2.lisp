@@ -433,7 +433,7 @@
 (defun search-bar-to-html ()
   (declare (special *current-search-query*))
   (let ((query (and (boundp '*current-search-query*) (hunchentoot:escape-for-html *current-search-query*))))
-    (format nil "<form action=\"/search\" class=\"nav-inner\"><input name=\"q\" type=\"search\" ~@[value=\"~A\"~] autocomplete=\"off\"><button>Search</button></form>" query))) 
+    (format nil "<form action=\"/search\" class=\"nav-inner\"><input name=\"q\" type=\"search\" ~@[value=\"~A\"~] autocomplete=\"off\"><button>Search</button></form>" query)))  
 
 (defparameter *primary-nav* '(("home" "/" "Home" :description "Latest frontpage posts")
 			      ("featured" "/index?view=featured" "Featured" :description "Latest featured posts")
@@ -506,19 +506,25 @@
 		   (format out-stream "<h1>Error</h1><p>~A</p>"
 			   condition))))) 
 
+(defun view-posts-index (posts)
+  (alexandria:switch ((hunchentoot:get-parameter "format") :test #'string=)
+		     ("rss" 
+		      (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
+		      (let ((out-stream (hunchentoot:send-headers)))
+			(posts-to-rss posts (make-flexi-stream out-stream :external-format :utf-8))))
+		     (t
+		       (emit-page (out-stream :description "A faster way to browse LessWrong 2.0") 
+				  (format out-stream "<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" href=\"~A?~@[~A&~]format=rss\">RSS</a>"
+					  (hunchentoot:script-name*) (hunchentoot:query-string*)) 
+				  (map-output out-stream #'post-headline-to-html posts))))) 
+
 (hunchentoot:define-easy-handler (say-yo :uri "/") ()
-				 (with-error-page 
-				   (let ((posts (get-posts)))
-				     (emit-page (out-stream :description "A faster way to browse LessWrong 2.0") 
-						(format out-stream "<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" href=\"/feed\">RSS</a>") 
-						(map-output out-stream #'post-headline-to-html posts)))))
+				 (view-posts-index (get-posts)))
 
 (hunchentoot:define-easy-handler (view-index :uri "/index") (view all meta before after)
-				 (with-error-page 
+				 (with-error-page
 				   (let ((posts (lw2-graphql-query (make-posts-list-query :view (or view "new") :frontpage (not all) :meta (not (not meta)) :before before :after after))))
-				     (emit-page (out-stream :description "A faster way to browse LessWrong 2.0") 
-						(format out-stream "<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" href=\"/feed?~A\">RSS</a>" (hunchentoot:query-string*)) 
-						(map-output out-stream #'post-headline-to-html posts))))) 
+				     (view-posts-index posts)))) 
 
 (hunchentoot:define-easy-handler (view-post :uri "/post") (id)
 				 (with-error-page
