@@ -68,6 +68,19 @@ input {
 	font-size: 1.1em;
 	text-align: center;
 	display: block;
+	position: relative;
+}
+.nav-inner::after {
+	position: absolute;
+	left: 5px;
+	top: -2px;
+	content: attr(accesskey);
+	font-weight: 400;
+	font-size: 0.8em;
+	color: #d6d6d6;
+}
+.nav-inner:hover::after {
+	color: #bbb;
 }
 #secondary-bar .nav-inner {
 	font-size: 0.9em;
