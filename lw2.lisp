@@ -435,11 +435,11 @@
   (let ((query (and (boundp '*current-search-query*) (hunchentoot:escape-for-html *current-search-query*))))
     (format nil "<form action=\"/search\" class=\"nav-inner\"><input name=\"q\" type=\"search\" ~@[value=\"~A\"~] autocomplete=\"off\"><button>Search</button></form>" query)))  
 
-(defparameter *primary-nav* '(("home" "/" "Home" :description "Latest frontpage posts")
-			      ("featured" "/index?view=featured" "Featured" :description "Latest featured posts")
-			      ("all" "/index?view=new&all=t" "All" :description "Latest frontpage posts and userpage posts") 
-			      ("meta" "/index?view=meta&all=t" "Meta" :description "Latest meta posts")
-			      ("recent-comments" "/recentcomments" "Recent Comments" :description "Latest comments"))) 
+(defparameter *primary-nav* '(("home" "/" "Home" :description "Latest frontpage posts" :accesskey "h")
+			      ("featured" "/index?view=featured" "Featured" :description "Latest featured posts" :accesskey "f")
+			      ("all" "/index?view=new&all=t" "All" :description "Latest frontpage posts and userpage posts" :accesskey "a") 
+			      ("meta" "/index?view=meta&all=t" "Meta" :description "Latest meta posts" :accesskey "m")
+			      ("recent-comments" "/recentcomments" "Recent Comments" :description "Latest comments" :accesskey "c"))) 
 
 (defparameter *secondary-nav* `(("search" "/search" "Search" :html ,#'search-bar-to-html))) 
 
@@ -451,13 +451,13 @@
 			    (format nil "~{~A~}"
 				    (maplist (lambda (items)
 					       (let ((item (first items))) 
-						 (destructuring-bind (id uri name &key description html) item
+						 (destructuring-bind (id uri name &key description html accesskey) item
 						   (if (string= uri current-uri)
 						     (progn (setf active-bar bar-id) 
 							    (format nil "<span id=\"nav-item-~A\" class=\"nav-item nav-current\" ~@[title=\"~A\"~]>~:[<span class=\"nav-inner\">~A</span>~;~:*~A~]</span>"
 								    id description (and html (funcall html)) name)) 
-						     (format nil "<span id=\"nav-item-~A\" class=\"nav-item nav-inactive~:[~; nav-item-last-before-current~]\" ~@[title=\"~A\"~]>~:[<a href=\"~A\" class=\"nav-inner\">~A</a>~;~:*~A~]</span>"
-							     id (string= (nth 1 (cadr items)) current-uri) description (and html (funcall html)) uri name)))))
+						     (format nil "<span id=\"nav-item-~A\" class=\"nav-item nav-inactive~:[~; nav-item-last-before-current~]\" ~@[title=\"~A\"~]>~:[<a href=\"~A\" class=\"nav-inner\" ~@[accesskey=\"~A\"~]>~A</a>~;~:*~A~]</span>"
+							     id (string= (nth 1 (cadr items)) current-uri) (if accesskey (format nil "~A [~A]" description accesskey) description) (and html (funcall html)) uri accesskey name)))))
 					 items)))
 	     (nav-bar-outer (id class html)
 			    (format nil "<div id=\"~A\" class=\"nav-bar ~A\">~A</div>" id class html)))
