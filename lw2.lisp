@@ -322,7 +322,8 @@
 			       (typecase node
 				 (plump:text-node 
 				   (when (and (plump:text-node-p node) (or (typep (plump:parent node) 'plump:root) (every (lambda (x) (string/= (plump:tag-name (plump:parent node)) x)) '("a" "style"))))
-				     (scan-for-urls node)))
+				     (scan-for-urls node))
+				   (setf (plump:text node) (ppcre:regex-replace-all "/+" (plump:text node) (coerce '(#\\ #\& #\ZERO_WIDTH_SPACE) 'string))))
 				 (plump:element 
 				   (when (string= (plump:tag-name node) "a")
 				     (let ((href (plump:attribute node "href")))

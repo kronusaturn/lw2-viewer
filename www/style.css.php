@@ -576,10 +576,6 @@ a {
 a:hover {
 	text-decoration: underline;
 }
-.post-body a,
-.comment-body a {
-	word-break: break-all;
-}
 
 /************/
 /* HEADINGS */
