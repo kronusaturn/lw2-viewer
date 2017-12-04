@@ -343,7 +343,7 @@ h1.listing a[href^="/"]::after {
 	background-color: #eee;
 	float: left;
 	min-width: 12em;
-	max-width: 35%;
+	max-width: 40%;
 	margin: 1.625em 1.75em 0.75em -0.75em;
 	padding: 0.5em;
 	-webkit-hyphens: none;
@@ -389,6 +389,7 @@ h1.listing a[href^="/"]::after {
 	counter-increment: toc-item-2;
 	counter-reset: toc-item-3;
 	margin-left: 3em;
+	font-size: 0.95em;
 }
 .contents .toc-item-2::before {
 	content: counter(toc-item-1) "." counter(toc-item-2);
@@ -399,6 +400,7 @@ h1.listing a[href^="/"]::after {
 .contents .toc-item-3 {
 	counter-increment: toc-item-3;
 	margin-left: 6em;
+	font-size: 0.9em;
 }
 .contents .toc-item-3::before {
 	content: counter(toc-item-1) "." counter(toc-item-2) "." counter(toc-item-3);
@@ -669,6 +671,30 @@ ol {
 	font-weight: bold;
 	text-align: right;
 	width: 2em;
+}
+
+/*********/
+/* LISTS */
+/*********/
+
+.post-body ol {
+	list-style: none;
+	padding: 0;
+	counter-reset: ol;
+}
+.post-body ol li {
+	position: relative;
+	counter-increment: ol;
+	overflow: hidden;
+	padding-left: 2.5em;
+	text-indent: -2.5em;
+}
+.post-body ol li::before {
+	content: counter(ol) ".";
+	display: inline-block;
+	width: 2.5em;
+	padding-right: 0.5em;
+	text-align: right;
 }
 
 /**********************/
