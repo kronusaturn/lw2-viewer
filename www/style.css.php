@@ -396,6 +396,9 @@ h1.listing a[href^="/"]::after {
 .contents .toc-item-2::before {
 	content: counter(toc-item-1) "." counter(toc-item-2);
 }
+.contents .toc-item-1 + .toc-item-3 {
+	counter-increment: toc-item-2 toc-item-3;
+}
 .contents .toc-item-3 {
 	counter-increment: toc-item-3;
 	margin-left: 6em;
