@@ -491,8 +491,11 @@ h1.listing a[href^="/"]::after {
 	color: #c00;
 }
 .comment-item input[id^="expand"] ~ .comment-thread {
-	max-height: 50px;
+	max-height: 34px;
 	overflow: hidden;
+}
+.comment-item input[id^="expand"] ~ .comment-thread li:first-child {
+	margin-top: 0;
 }
 .comment-item input[id^="expand"]:checked ~ .comment-thread {
 	max-height: 1000000px;
