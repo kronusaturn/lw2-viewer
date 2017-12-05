@@ -385,25 +385,42 @@ h1.listing a[href^="/"]::after {
 .contents .toc-item-1::before {
 	content: counter(toc-item-1);
 }
+.contents .toc-item-1 ~ .toc-item-2 {
+	margin-left: 3em;
+}
 .contents .toc-item-2 {
 	counter-increment: toc-item-2;
 	counter-reset: toc-item-3;
-	margin-left: 3em;
-	font-size: 0.95em;
+}
+.contents .toc-item-1 ~ .toc-item-2::before {
+	content: counter(toc-item-1) "." counter(toc-item-2);
 }
 .contents .toc-item-2::before {
-	content: counter(toc-item-1) "." counter(toc-item-2);
+	content: counter(toc-item-2);
 }
 .contents .toc-item-1 + .toc-item-3 {
 	counter-increment: toc-item-2 toc-item-3;
 }
+.contents .toc-item-2 ~ .toc-item-3 {
+	margin-left: 3em;
+}
+.contents .toc-item-1 ~ .toc-item-3 {
+	margin-left: 6em;
+}
 .contents .toc-item-3 {
 	counter-increment: toc-item-3;
 	margin-left: 6em;
-	font-size: 0.9em;
+}
+.contents .toc-item-1 ~ .toc-item-2 ~ .toc-item-3::before {
+	content: counter(toc-item-1) "." counter(toc-item-2) "." counter(toc-item-3);
+}
+.contents .toc-item-1 ~ .toc-item-3::before {
+	content: counter(toc-item-1) "." counter(toc-item-3);
+}
+.contents .toc-item-2 ~ .toc-item-3::before {
+	content: counter(toc-item-2) "." counter(toc-item-3);
 }
 .contents .toc-item-3::before {
-	content: counter(toc-item-1) "." counter(toc-item-2) "." counter(toc-item-3);
 }
 
 /********************/
