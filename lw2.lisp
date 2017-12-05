@@ -31,10 +31,10 @@
 								      (setf ,txn nil)))))
 					    (when ,txn (lmdb:abort-transaction ,txn)))))))
 
-(eval-when (:compile-toplevel :load-toplevel :execute) 
-  (defun lmdb-clear-db (db)
-    (lmdb:do-pairs (db key value)
-		   (lmdb:del db key)))) 
+
+(defun lmdb-clear-db (db)
+  (lmdb:do-pairs (db key value)
+		 (lmdb:del db key))) 
 
 (defun lmdb-put-string (db key value)
   (if 
@@ -263,24 +263,24 @@
     (city-hash-128-vector (string-to-octets (prin1-to-string object) :external-format :utf-8))))
 
 (defmacro define-lmdb-memoized (&whole whole name lambda &body body)
-  (let ((db-name (concatenate 'string (string-downcase (symbol-name name)) "-memo")))
-    (let* ((version-octets (string-to-octets "version" :external-format :utf-8)) 
-	   (now-hash (hash-printable-object whole))
-	   (old-hash (with-db (db db-name) (lmdb:get db version-octets))))
-      (unless (equalp now-hash old-hash)
-	(with-db (db db-name)
-		 (lmdb-clear-db db)
-		 (lmdb:put db version-octets now-hash))))
-    (alexandria:once-only (db-name)
-			  `(defun ,name (&rest args)
-			     (labels ((real-fn ,lambda ,@body))
-			       (let* ((hash (hash-printable-object args))
-				      (cached-value (with-db (db ,db-name) (lmdb:get db hash))))
-				 (if cached-value
-				   (octets-to-string cached-value :external-format :utf-8)
-				   (let ((new-value (apply #'real-fn args)))
-				     (with-db (db ,db-name) (lmdb:put db hash (string-to-octets new-value :external-format :utf-8)))
-				     new-value)))))))) 
+  (let ((db-name (concatenate 'string (string-downcase (symbol-name name)) "-memo"))
+	(version-octets (string-to-octets "version" :external-format :utf-8))
+	(now-hash (hash-printable-object whole)))
+    (alexandria:once-only (db-name version-octets now-hash)
+			  `(progn
+			     (unless (equalp ,now-hash (with-db (db ,db-name) (lmdb:get db ,version-octets)))
+			       (with-db (db ,db-name)
+					(lmdb-clear-db db)
+					(lmdb:put db ,version-octets ,now-hash)))
+			     (defun ,name (&rest args)
+			       (labels ((real-fn ,lambda ,@body))
+				 (let* ((hash (hash-printable-object args))
+					(cached-value (with-db (db ,db-name) (lmdb:get db hash))))
+				   (if cached-value
+				     (octets-to-string cached-value :external-format :utf-8)
+				     (let ((new-value (apply #'real-fn args)))
+				       (with-db (db ,db-name) (lmdb:put db hash (string-to-octets new-value :external-format :utf-8)))
+				       new-value))))))))) 
 
 (defvar *clean-html-mutex* (sb-thread:make-mutex :name "clean-html")) 
 
