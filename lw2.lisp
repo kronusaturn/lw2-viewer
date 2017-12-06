@@ -240,17 +240,17 @@
   ((gen-internal (post-id slug comment-id &optional absolute-uri)
 		 (format nil "~Aposts/~A/~A~@[#~A~]" (if absolute-uri *site-uri* "/") post-id (or slug "-") comment-id))) 
 
-(defun convert-lw2-link (link)
-  (multiple-value-bind (post-id comment-id slug) (match-lw2-link link)
-    (when post-id 
-      (gen-internal post-id slug comment-id)))) 
+  (defun convert-lw2-link (link)
+    (multiple-value-bind (post-id comment-id slug) (match-lw2-link link)
+      (when post-id 
+	(gen-internal post-id slug comment-id)))) 
 
-(defun generate-post-link (story &optional comment-id absolute-uri) 
-  (typecase story
-    (string 
-      (gen-internal story (get-post-slug story) comment-id absolute-uri))
-    (cons
-      (gen-internal (cdr (assoc :--id story)) (or (cdr (assoc :slug story)) (get-post-slug story)) comment-id absolute-uri))))) 
+  (defun generate-post-link (story &optional comment-id absolute-uri) 
+    (typecase story
+      (string 
+	(gen-internal story (get-post-slug story) comment-id absolute-uri))
+      (cons
+	(gen-internal (cdr (assoc :--id story)) (or (cdr (assoc :slug story)) (get-post-slug story)) comment-id absolute-uri))))) 
 
 (eval-when (:compile-toplevel :load-toplevel :execute) 
   (defun city-hash-128-vector (data)
