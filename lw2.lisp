@@ -324,10 +324,17 @@
 				       (map 'list (lambda (x) (destructuring-bind (elem-level text id) x
 								(format nil "<li class=\"toc-item-~A\"><a href=\"#~A\">~A</a></li>"
 									elem-level id text)))
-					    contents))))
+					    contents)))
+	     (style-hash-to-html (style-hash)
+				 (declare (type hash-table style-hash))
+				 (let ((style-list (alexandria:hash-table-keys style-hash)))
+				   (if style-list
+				     (format nil "<style>~{~A~}</style>" style-list)
+				     ""))))
       (let ((root (plump:parse in-html))
 	    (contents nil)
-	    (section-count 0))
+	    (section-count 0)
+	    (style-hash (make-hash-table :test 'equal)))
 	(plump:traverse root (lambda (node)
 			       (typecase node
 				 (plump:text-node 
@@ -336,7 +343,7 @@
 				   (when (text-node-is-not node "style")
 				     (setf (plump:text node) (ppcre:regex-replace-all "/+" (plump:text node) (coerce '(#\\ #\& #\ZERO_WIDTH_SPACE) 'string)))))
 				 (plump:element 
-				   (when (string= (plump:tag-name node) "a")
+				   (when (tag-is node "a")
 				     (let ((href (plump:attribute node "href")))
 				       (when href
 					 (let ((new-link (convert-lw2-link href)))
@@ -351,8 +358,12 @@
 				     (push (list (parse-integer (subseq (plump:tag-name node) 1))
 						 (plump:text node)
 						 (plump:attribute node "id"))
-					   contents)))))) 
+					   contents))
+				   (when (tag-is node "style")
+				     (setf (gethash (plump:text node) style-hash) t)
+				     (plump:remove-child node)))))) 
 	(concatenate 'string (if (> section-count 3) (contents-to-html (nreverse contents)) "") 
+		     (style-hash-to-html style-hash) 
 		     (plump:serialize root nil))))))
 
 (defun pretty-time (timestring &key format)
