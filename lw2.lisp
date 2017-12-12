@@ -287,16 +287,19 @@
 (define-lmdb-memoized clean-html (in-html &key with-toc)
   (with-mutex (*clean-html-mutex*) ; this is actually thread-safe, but running it concurrently risks running out of memory
     (labels ((tag-is (node &rest args)
-		     (declare (dynamic-extent args))
+		     (declare (type plump:node node)
+			      (dynamic-extent args))
 		     (let ((tag (plump:tag-name node)))
 		       (some (lambda (x) (string= tag x))
 			     args))) 
 	     (text-node-is-not (node &rest args)
-			       (declare (dynamic-extent args)) 
+			       (declare (type plump:node node) 
+					(dynamic-extent args)) 
 			       (or
 				 (typep (plump:parent node) 'plump:root)
 				 (every (lambda (x) (string/= (plump:tag-name (plump:parent node)) x)) args))) 
 	     (scan-for-urls (text-node)
+			    (declare (type plump:text-node text-node)) 
 			    (let ((text (plump:text text-node)))
 			      (multiple-value-bind (url-start url-end) (ppcre:scan "(https?://[-a-zA-Z0-9]+\\.[-a-zA-Z0-9.]+|[-a-zA-Z0-9.]+\\.(com|edu|gov|mil|net|org|biz|info|name|museum|us|ca|uk))(\\:[0-9]+){0,1}(/[-a-zA-Z0-9.,;?'\\\\+&%$#=~_/]*)?" text)
 				(when url-start
@@ -316,6 +319,7 @@
 				    (loop for item across other-children
 					  do (plump:append-child (plump:parent text-node) item)))))))
 	     (contents-to-html (contents)
+			       (declare (type cons contents)) 
 			       (format nil "<div class=\"contents\"><div class=\"contents-head\">Contents</div><ul>~{~A~}</ul></div>"
 				       (map 'list (lambda (x) (destructuring-bind (elem-level text id) x
 								(format nil "<li class=\"toc-item-~A\"><a href=\"#~A\">~A</a></li>"
