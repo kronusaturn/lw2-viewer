@@ -110,7 +110,7 @@
   (let ((cached-result (cache-get cache-db cache-key))) 
     (if (and cached-result (not revalidate))
       (decode-graphql-json cached-result)
-      (let ((timeout nil) ;(if cached-result 2 nil) 
+      (let ((timeout (if cached-result 3 nil)) 
 	    (thread (ensure-cache-update-thread query cache-db cache-key))) 
 	(decode-graphql-json
 	  (handler-case
