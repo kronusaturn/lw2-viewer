@@ -344,11 +344,11 @@ h1.listing a[href^="/"]::after {
 	font-family: 'Geometric 415';
 	border: 1px solid #ddd;
 	background-color: #eee;
-	float: left;
+	float: right;
 	min-width: 12em;
 	max-width: 40%;
-	margin: 1.625em 1.75em 0.75em -0.75em;
-	padding: 0.5em;
+	margin: 1.5em 0 0.75em 1.25em;
+	padding: 0.35em 0.35em 0.5em 0.5em;;
 	-webkit-hyphens: none;
 	hyphens: none;
 }
@@ -390,6 +390,7 @@ h1.listing a[href^="/"]::after {
 }
 .contents .toc-item-1 ~ .toc-item-2 {
 	margin-left: 3em;
+	font-size: 0.95em;
 }
 .contents .toc-item-2 {
 	counter-increment: toc-item-2;
@@ -406,9 +407,11 @@ h1.listing a[href^="/"]::after {
 }
 .contents .toc-item-2 ~ .toc-item-3 {
 	margin-left: 3em;
+	font-size: 0.95em;
 }
 .contents .toc-item-1 ~ .toc-item-3 {
 	margin-left: 6em;
+	font-size: 0.9em;
 }
 .contents .toc-item-3 {
 	counter-increment: toc-item-3;
@@ -443,7 +446,6 @@ h1.listing a[href^="/"]::after {
 	-webkit-hyphens: auto;
 	hyphens: auto;
 }
-
 .post-body p, .comment-body p {
 	margin: 1em 0;
 }
@@ -468,9 +470,10 @@ h1.listing a[href^="/"]::after {
 	line-height: 1.5;
 	font-size: 1.3rem;
 	overflow: auto;
+	margin: 0.5em 0 0 0;
 }
 .post > h1:first-child {
-	margin: 1em 0 0.5em 0;
+	margin: 1em 0 0.25em 0;
 	text-align: center;
 	font-size: 2.5em;
 	line-height: 1.1;
