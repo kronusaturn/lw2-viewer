@@ -483,7 +483,8 @@
 			      ("meta" "/index?view=meta&all=t" "Meta" :description "Latest meta posts" :accesskey "m")
 			      ("recent-comments" "/recentcomments" "<span>Recent </span>Comments" :description "Latest comments" :accesskey "c"))) 
 
-(defparameter *secondary-nav* `(("search" "/search" "Search" :html ,#'search-bar-to-html))) 
+(defparameter *secondary-nav* `(("archive" "/archive" "Archive")
+				("search" "/search" "Search" :html ,#'search-bar-to-html))) 
 
 (defun nav-bar-to-html (&optional current-uri)
   (let ((primary-bar "primary-bar")
@@ -610,6 +611,48 @@
 				     (declare (special *current-search-query*)) 
 				     (emit-page (out-stream :title "Search" :current-uri "/search" :content-class "search-results-page")
 						(map-output out-stream #'post-headline-to-html posts))))) 
+
+(defparameter *earliest-post* (local-time:parse-timestring "2017-09-22")) 
+
+(hunchentoot:define-easy-handler (view-archive :uri (lambda (r) (ppcre:scan "^/archive(/|$)" (hunchentoot:request-uri r)))) () 
+				 (with-error-page
+				   (destructuring-bind (year month day) (map 'list (lambda (x) (if x (parse-integer x)))
+									     (nth-value 1 (ppcre:scan-to-strings "^/archive(?:/(\\d{4})|/?$)(?:/(\\d{1,2})|/?$)(?:/(\\d{1,2})|/?$)"
+														 (hunchentoot:request-uri*)))) 
+				     (labels ((link-if-not (stream linkp url-elements class text)
+						       (declare (dynamic-extent linkp url-elements text)) 
+						       (if (not linkp)
+							 (format stream "<a href=\"/~{~A~^/~}\" class=\"~A\">~A</a>" url-elements class text)
+							 (format stream "<span class=\"~A\">~A</span>" class text)))) 
+				       (local-time:with-decoded-timestamp (:day current-day :month current-month :year current-year) (local-time:now)
+				         (local-time:with-decoded-timestamp (:day earliest-day :month earliest-month :year earliest-year) *earliest-post* 
+					   (let ((posts (lw2-graphql-query (make-posts-list-query :limit 50
+												  :view "best"
+												  :after (if year (format nil "~A-~A-~A" (or year earliest-year) (or month 1) (or day 1)))
+												  :before (if year (format nil "~A-~A-~A" (or year current-year) (or month 12) (or day (local-time:days-in-month (or month 12) (or year current-year))))))))) 
+					     (emit-page (out-stream :title "Archive" :current-uri "/archive" :content-class "archive-page")
+							(with-outputs (out-stream) "<div class=\"archive-nav\"><div class=\"archive-nav-years\">")
+							(link-if-not out-stream (not (or year month day)) '("archive") "archive-nav-item-year" "All") 
+							(loop for y from earliest-year to current-year
+							      do (link-if-not out-stream (eq y year) (list "archive" y) "archive-nav-item-year" y))
+							(format out-stream "</div><div class=\"archive-nav-months\">")
+							(link-if-not out-stream (not month) (list "archive" year) "archive-nav-item-month" "All") 
+							(loop for m from (if (= (or year current-year) earliest-year) earliest-month 1) to (if (= (or year current-year) current-year) current-month 12)
+							      do (link-if-not out-stream (eq m month) (list "archive" (or year current-year) m) "archive-nav-item-month" (elt local-time:+short-month-names+ m)))
+							(format out-stream "</div>")
+							(when month
+							  (format out-stream "<div class=\"archive-nav-days\">")
+							  (link-if-not out-stream (not day) (list "archive" year month) "archive-nav-item-day" "All")
+							  (loop for d from (if (and (= (or year current-year) earliest-year) (= (or month current-month) earliest-month)) earliest-day 1)
+								to (if (and (= (or year current-year) current-year) (= (or month current-month) current-month)) current-day (local-time:days-in-month (or month current-month) (or year current-year)))
+								do (link-if-not out-stream (eq d day) (list "archive" (or year current-year) (or month current-month) d) "archive-nav-item-day" d))
+							  (format out-stream "</div>")) 
+							(format out-stream "</div>") 
+							(map-output out-stream #'post-headline-to-html posts))))))))) 
+
+(hunchentoot:define-easy-handler (view-css :uri "/style.css") (v)
+				 (when v (setf (hunchentoot:header-out "Cache-Control") (format nil "public, max-age=~A, immutable" (- (expt 2 31) 1)))) 
+				 (hunchentoot:handle-static-file "www/style.css" "text/css")) 
 
 (defmacro define-versioned-resource (uri content-type)
   `(hunchentoot:define-easy-handler (,(alexandria:symbolicate "versioned-resource-" uri) :uri ,uri) (v)

@@ -274,6 +274,33 @@ input {
 	color: #f00;
 }
 
+#nav-item-archive {
+	width: 10%;
+}
+
+/************/
+/* ARCHIVES */
+/************/
+
+.archive-nav {
+	margin: 1.25em 0.75em -1.25em;
+	padding: 0.25em;
+	border: 1px solid #aaa;
+}
+
+.archive-nav a,
+.archive-nav span {
+	border: 1px solid #ddd;
+	background-color: #eee;
+	display: inline-block;
+	margin: 3px;
+	padding: 3px;
+	line-height: 1;
+}
+.archive-nav span {
+	font-weight: bold;
+}
+
 /************/
 /* LISTINGS */
 /************/
