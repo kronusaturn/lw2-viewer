@@ -298,6 +298,8 @@
 			       (or
 				 (typep (plump:parent node) 'plump:root)
 				 (every (lambda (x) (string/= (plump:tag-name (plump:parent node)) x)) args))) 
+	     (replace-slashes (text)
+			      (ppcre:regex-replace-all "/+" text (coerce '(#\\ #\& #\ZERO_WIDTH_SPACE) 'string)))
 	     (scan-for-urls (text-node)
 			    (declare (type plump:text-node text-node)) 
 			    (let ((text (plump:text text-node)))
@@ -313,7 +315,7 @@
 					 (new-text (unless (= url-end (length text)) (plump:make-text-node (plump:parent text-node) (subseq text url-end))))) 
 				    (setf (plump:text text-node) (subseq text 0 url-start)
 					  (plump:attribute new-a "href") (let ((new-url (convert-lw2-link url))) (or new-url url)))
-				    (plump:make-text-node new-a url-raw)
+				    (plump:make-text-node new-a (replace-slashes url-raw))
 				    (when new-text
 				      (scan-for-urls new-text))
 				    (loop for item across other-children
@@ -341,7 +343,7 @@
 				   (when (text-node-is-not node "a" "style")
 				     (scan-for-urls node))
 				   (when (text-node-is-not node "style")
-				     (setf (plump:text node) (ppcre:regex-replace-all "/+" (plump:text node) (coerce '(#\\ #\& #\ZERO_WIDTH_SPACE) 'string)))))
+				     (setf (plump:text node) (replace-slashes (plump:text node)))))
 				 (plump:element 
 				   (when (tag-is node "a")
 				     (let ((href (plump:attribute node "href")))
