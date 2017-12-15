@@ -464,6 +464,9 @@ h1.listing a[href^="/"]::after {
 .post-body p, .comment-body p {
 	margin: 1em 0;
 }
+.post-meta .date {
+	color: #888;
+}
 
 /*********/
 /* POSTS */
