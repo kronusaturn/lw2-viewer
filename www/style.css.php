@@ -286,6 +286,8 @@ h1.listing {
 	line-height: 1.2;
 	margin: 0.75em 20px 0.1em 20px;
 	padding-bottom: 1px;
+}
+@media only screen and (min-width: 901px) {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
