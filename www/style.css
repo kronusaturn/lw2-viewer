@@ -321,7 +321,17 @@ h1.listing a:hover {
 	color: #4879ec;
 	text-decoration: dotted underline;
 	white-space: initial;
+	overflow: visible;
 	background-color: rgba(255,255,255,0.85);
+}
+h1.listing a:hover::before {
+	content: "";
+	position: absolute;
+	top: -10px;
+	right: -10px;
+	bottom: -10px;
+	left: -10px;
+	z-index: -1;
 }
 h1.listing a[href^="/"]:hover {
 	color: #777;

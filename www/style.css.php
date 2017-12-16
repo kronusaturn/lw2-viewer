@@ -324,7 +324,18 @@ h1.listing a:hover {
 	color: #4879ec;
 	text-decoration: dotted underline;
 	white-space: initial;
+	overflow: visible;
 	background-color: rgba(255,255,255,0.85);
+}
+<?php $margin_of_hover_error = '10px'; ?>
+h1.listing a:hover::before {
+	content: "";
+	position: absolute;
+	top: -<?php echo $margin_of_hover_error; ?>;
+	right: -<?php echo $margin_of_hover_error; ?>;
+	bottom: -<?php echo $margin_of_hover_error; ?>;
+	left: -<?php echo $margin_of_hover_error; ?>;
+	z-index: -1;
 }
 h1.listing a[href^="/"]:hover {
 	color: #777;
