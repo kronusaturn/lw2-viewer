@@ -305,14 +305,15 @@ h1.listing a {
 }
 @media only screen and (min-width: 901px) {
 	h1.listing a {
-    max-width: 100%;
-    display: inline-block;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    border-bottom: 1px solid transparent;
+		max-width: 100%;
+		display: inline-block;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		border-bottom: 1px solid transparent;
 		-moz-hyphens: auto;
 		hyphens: auto;
+		z-index: 1;
 	}
 }
 h1.listing a[href^="/"] {
