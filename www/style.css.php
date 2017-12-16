@@ -2,7 +2,7 @@
 	header ('Content-type: text/css; charset=utf-8');
 ?>
 
-@import url('https://fonts.obormot.net?fonts=Charter,Geometric415&base64encode=1'); 
+@import url('https://fonts.obormot.net?fonts=Charter,Geometric415'); 
 
 html {
 	box-sizing: border-box;
