@@ -450,7 +450,8 @@
       ""))) 
 
 (defparameter *html-head*
-"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">")
+"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
+<link rel=\"stylesheet\" href=\"https://fonts.obormot.net?fonts=Charter,Geometric415\">")
 
 (defun generate-versioned-link (file)
   (format nil "~A?v=~A" file (sb-posix:stat-mtime (sb-posix:stat (format nil "www~A" file))))) 
