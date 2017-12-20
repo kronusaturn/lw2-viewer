@@ -500,7 +500,8 @@
   (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A<link rel=\"stylesheet\" href=\"~A\"></head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
 	  title description
 	  *html-head* (generate-versioned-link "/style.css") content-class
-	  (nav-bar-to-html (or current-uri (hunchentoot:request-uri*))))) 
+	  (nav-bar-to-html (or current-uri (hunchentoot:request-uri*))))
+  (force-output out-stream)) 
 
 (defun end-html (out-stream)
   (format out-stream "~A</div></body></html>" *bottom-bar*)) 
@@ -572,6 +573,7 @@
 				     (let ((post (get-post-body post-id))) 
 				       (emit-page (out-stream :title (cdr (assoc :title post))) 
 						  (with-outputs (out-stream) (post-body-to-html post)) 
+						  (force-output out-stream) 
 						  (format out-stream "<div id=\"comments\">~A</div>"
 							  (let ((comments (get-post-comments post-id)))
 							    (comment-tree-to-html (make-comment-parent-hash comments))))))))) 
