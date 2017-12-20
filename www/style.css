@@ -211,8 +211,8 @@ input {
 #nav-item-search {
 	width: 60%;
 }
-#nav-item-search form {
-	padding: 2px 30px;
+#secondary-bar #nav-item-search form {
+	padding: 3px 30px 4px 30px;
 }
 #nav-item-search form::before {
 	content: "";
@@ -769,7 +769,7 @@ ol {
 		width: calc(100% + 8px);
 	}
 	.nav-bar .nav-inner {
-		padding: 8px 4px;
+		padding: 8px 12px;
 	}
 	.nav-bar {
 		margin: 0 -4px;
@@ -795,5 +795,37 @@ ol {
 			-webkit-hyphens: auto;
 			hyphens: auto;
 		}
+	}
+  .nav-inner::after {
+		display: none;
+	}
+}
+@media only screen and (max-width: 520px) {
+	.nav-inner {
+		font-size: 0.85em;
+		padding: 12px 20px;
+	}
+	h1.listing {
+		font-size: 1.3rem;
+		line-height: 1.1;
+		margin: 0.5em 6px 0 6px;
+	}
+	h1.listing a {
+		display: inline-block;
+		padding: 0.4em 0 0.1em 0;
+		text-indent: 33px;
+	}
+	h1.listing a[href^='/'] {
+		text-indent: 0;
+	}
+	h1.listing a::after {
+    left: -33px;
+		top: 8px;
+	}
+	h1.listing + .post-meta {
+		margin: 0 6px 0 7px;
+	}
+	#secondary-bar #nav-item-search form {
+		padding: 3px 4px 4px 4px;
 	}
 }
