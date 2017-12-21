@@ -798,7 +798,6 @@ ol {
 @media only screen and (max-width: 520px) {
 	.nav-inner {
 		font-size: 0.85em;
-		padding: 12px 20px;
 	}
 	h1.listing {
 		font-size: 1.3rem;
@@ -849,5 +848,35 @@ ol {
 	}
 	.contents ul {
 		font-size: 1em;
+	}
+}
+@media only screen and (max-width: 367px) {
+	.nav-item {
+		line-height: 1.6;
+	}
+	.nav-bar .nav-inner {
+		padding: 6px 12px;
+		max-height: calc(1.6em + 12px);
+	}
+	#nav-item-recent-comments a {
+		top: -1.6em;
+	}
+	#nav-item-recent-comments .nav-inner::before {
+		content: "";
+		display: block;
+		position: absolute;
+		width: calc(100% - 4px);
+		height: 100%;
+		left: 4px;
+		top: -0.5em;
+	}
+	#nav-item-recent-comments.nav-inactive .nav-inner::before {	
+		background-color: #eee;
+	}
+	#nav-item-recent-comments.nav-inactive .nav-inner::before {	
+		background-color: #eee;
+	}
+	#secondary-bar #nav-item-recent-comments.nav-inactive .nav-inner::before {	
+		background-color: #e4e4e4;
 	}
 }
