@@ -465,7 +465,7 @@
 			      ("featured" "/index?view=featured" "Featured" :description "Latest featured posts" :accesskey "f")
 			      ("all" "/index?view=new&all=t" "All" :description "Latest frontpage posts and userpage posts" :accesskey "a") 
 			      ("meta" "/index?view=meta&all=t" "Meta" :description "Latest meta posts" :accesskey "m")
-			      ("recent-comments" "/recentcomments" "Recent Comments" :description "Latest comments" :accesskey "c"))) 
+			      ("recent-comments" "/recentcomments" "<span>Recent </span>Comments" :description "Latest comments" :accesskey "c"))) 
 
 (defparameter *secondary-nav* `(("search" "/search" "Search" :html ,#'search-bar-to-html))) 
 
