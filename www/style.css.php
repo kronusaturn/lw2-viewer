@@ -823,4 +823,12 @@ ol {
 	#secondary-bar #nav-item-search form {
 		padding: 3px 4px 4px 4px;
 	}
+	.post-body {
+		font-size: 1.2rem;
+		line-height: 1.45;
+	}
+	.post > h1:first-child {
+		margin: 1em 0.25em 0.25em 0.25em;
+		font-size: 2em;
+	}
 }
