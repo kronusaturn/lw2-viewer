@@ -819,7 +819,7 @@ ol {
 		text-indent: 0;
 	}
 	h1.listing a::after {
-    left: -33px;
+		left: -33px;
 		top: 8px;
 	}
 	h1.listing + .post-meta {
@@ -835,5 +835,24 @@ ol {
 	.post > h1:first-child {
 		margin: 1em 0.25em 0.25em 0.25em;
 		font-size: 2em;
+	}
+	.comment-item .comment-item {
+		margin: 0.75em 4px 4px 12px;
+	}
+	.comment-item .comment-item + .comment-item {
+		margin: 1.5em 4px 4px 12px;
+	}
+	.comment-body ul {
+		padding-left: 30px;
+	}
+	.contents {
+		max-width: 100%;
+		margin: 1em 0 1.5em 0;
+	}
+	.contents-head {
+		font-size: 1.2em;
+	}
+	.contents ul {
+		font-size: 1em;
 	}
 }
