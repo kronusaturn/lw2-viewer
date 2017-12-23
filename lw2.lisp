@@ -497,9 +497,9 @@
 "<div id=\"bottom-bar\" class=\"nav-bar\"><a class=\"nav-item nav-current nav-inner\" href=\"#top\">Back to top</a></div>") 
 
 (defun begin-html (out-stream &key title description current-uri content-class)
-  (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A<link rel=\"stylesheet\" href=\"~A\"></head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
+  (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"shortcut icon\" href=\"~A\"></head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
 	  title description
-	  *html-head* (generate-versioned-link "/style.css") content-class
+	  *html-head* (generate-versioned-link "/style.css") (generate-versioned-link "/favicon.ico") content-class
 	  (nav-bar-to-html (or current-uri (hunchentoot:request-uri*))))
   (force-output out-stream)) 
 
@@ -594,6 +594,10 @@
 				     (emit-page (out-stream :title "Search" :current-uri "/search" :content-class "search-results-page")
 						(map-output out-stream #'post-headline-to-html posts))))) 
 
-(hunchentoot:define-easy-handler (view-css :uri "/style.css") (v)
-				 (when v (setf (hunchentoot:header-out "Cache-Control") (format nil "public, max-age=~A, immutable" (- (expt 2 31) 1)))) 
-				 (hunchentoot:handle-static-file "www/style.css" "text/css")) 
+(defmacro define-versioned-resource (uri content-type)
+  `(hunchentoot:define-easy-handler (,(alexandria:symbolicate "versioned-resource-" uri) :uri ,uri) (v)
+				    (when v (setf (hunchentoot:header-out "Cache-Control") (format nil "public, max-age=~A, immutable" (- (expt 2 31) 1)))) 
+				    (hunchentoot:handle-static-file ,(concatenate 'string "www" uri) ,content-type))) 
+
+(define-versioned-resource "/style.css" "text/css") 
+(define-versioned-resource "/favicon.ico" "image/x-icon") 
