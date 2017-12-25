@@ -377,8 +377,8 @@ h1.listing a[href^="/"]::after {
 	float: right;
 	min-width: 12em;
 	max-width: 40%;
-	margin: 1.5em 0 0.75em 1.25em;
-	padding: 0.35em 0.35em 0.5em 0.5em;;
+	margin: 1.25em 0 0.75em 1.25em;
+	padding: 0.35em 0.35em 0.4em 0.85em;
 	-webkit-hyphens: none;
 	hyphens: none;
 }
