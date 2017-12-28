@@ -307,7 +307,7 @@
 				 (typep (plump:parent node) 'plump:root)
 				 (every (lambda (x) (string/= (plump:tag-name (plump:parent node)) x)) args))) 
 	     (replace-slashes (text)
-			      (ppcre:regex-replace-all "/+" text (coerce '(#\\ #\& #\ZERO_WIDTH_SPACE) 'string)))
+			      (ppcre:regex-replace-all "/+" text (load-time-value `(:match ,(string #\ZERO_WIDTH_SPACE)))))
 	     (scan-for-urls (text-node)
 			    (declare (type plump:text-node text-node)) 
 			    (let ((text (plump:text text-node)))
