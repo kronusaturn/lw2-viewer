@@ -580,17 +580,18 @@
 				   (posts-to-rss posts (make-flexi-stream out-stream :external-format :utf-8)))) 
 
 (hunchentoot:define-easy-handler (view-post-lw2-link :uri (lambda (r) (declare (ignore r)) (match-lw2-link (hunchentoot:request-uri*)))) ()
-				 (multiple-value-bind (post-id comment-id) (match-lw2-link (hunchentoot:request-uri*))
-				   (if comment-id 
-				     (setf (hunchentoot:return-code*) 303
-					   (hunchentoot:header-out "Location") (generate-post-link post-id comment-id))
-				     (let ((post (get-post-body post-id))) 
-				       (emit-page (out-stream :title (cdr (assoc :title post))) 
-						  (with-outputs (out-stream) (post-body-to-html post)) 
-						  (force-output out-stream) 
-						  (format out-stream "<div id=\"comments\">~A</div>"
-							  (let ((comments (get-post-comments post-id)))
-							    (comment-tree-to-html (make-comment-parent-hash comments))))))))) 
+				 (with-error-page 
+				   (multiple-value-bind (post-id comment-id) (match-lw2-link (hunchentoot:request-uri*))
+				     (if comment-id 
+				       (setf (hunchentoot:return-code*) 303
+					     (hunchentoot:header-out "Location") (generate-post-link post-id comment-id))
+				       (let ((post (get-post-body post-id))) 
+					 (emit-page (out-stream :title (cdr (assoc :title post))) 
+						    (with-outputs (out-stream) (post-body-to-html post)) 
+						    (force-output out-stream) 
+						    (format out-stream "<div id=\"comments\">~A</div>"
+							    (let ((comments (get-post-comments post-id)))
+							      (comment-tree-to-html (make-comment-parent-hash comments)))))))))) 
 
 (hunchentoot:define-easy-handler (view-recent-comments :uri "/recentcomments") ()
 				 (with-error-page
