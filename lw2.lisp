@@ -282,10 +282,10 @@
 				       (with-db (db ,db-name) (lmdb:put db hash (string-to-octets new-value :external-format :utf-8)))
 				       new-value))))))))) 
 
-(defvar *clean-html-mutex* (sb-thread:make-mutex :name "clean-html")) 
+(defvar *memory-intensive-mutex* (sb-thread:make-mutex :name "memory-intensive-mutex")) 
 
 (define-lmdb-memoized clean-html (in-html &key with-toc)
-  (with-mutex (*clean-html-mutex*) ; this is actually thread-safe, but running it concurrently risks running out of memory
+  (with-recursive-lock (*memory-intensive-mutex*) ; this is actually thread-safe, but running it concurrently risks running out of memory
     (labels ((tag-is (node &rest args)
 		     (declare (type plump:node node)
 			      (dynamic-extent args))
@@ -398,16 +398,17 @@
 	  (if (cdr (assoc :url post)) (format nil "<div class=\"link-post\">(~A)</div>" (puri:uri-host (puri:parse-uri (cdr (assoc :url post))))) ""))) 
 
 (defun posts-to-rss (posts out-stream)
-  (xml-emitter:with-rss2 (out-stream :encoding "UTF-8")
-			 (xml-emitter:rss-channel-header "LessWrong 2 viewer" *site-uri*
-							 :description "LessWrong 2 viewer") 
-			 (dolist (post posts)
-			   (xml-emitter:rss-item
-			     (cdr (assoc :title post))
-			     :link (generate-post-link post nil t)
-			     :author (get-username (cdr (assoc :user-id post)))
-			     :pubDate (pretty-time (cdr (assoc :posted-at post)) :format local-time:+rfc-1123-format+)
-			     :description (clean-html (or (cdr (assoc :html-body (get-post-body (cdr (assoc :--id post)) :revalidate nil))) "")))))) 
+  (with-recursive-lock (*memory-intensive-mutex*) 
+    (xml-emitter:with-rss2 (out-stream :encoding "UTF-8")
+      (xml-emitter:rss-channel-header "LessWrong 2 viewer" *site-uri*
+				      :description "LessWrong 2 viewer") 
+      (dolist (post posts)
+	(xml-emitter:rss-item
+	  (cdr (assoc :title post))
+	  :link (generate-post-link post nil t)
+	  :author (get-username (cdr (assoc :user-id post)))
+	  :pubDate (pretty-time (cdr (assoc :posted-at post)) :format local-time:+rfc-1123-format+)
+	  :description (clean-html (or (cdr (assoc :html-body (get-post-body (cdr (assoc :--id post)) :revalidate nil))) ""))))))) 
 
 (defun post-body-to-html (post)
   (format nil "<div class=\"post\"><h1>~A</h1><div class=\"post-meta\"><div class=\"author\">~A</div><div class=\"date\">~A</div><div class=\"karma\">~A point~:P</div><a class=\"comment-count\" href=\"#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a></div><div class=\"post-body\">~A</div></div>"
