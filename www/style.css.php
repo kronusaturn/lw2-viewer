@@ -66,7 +66,7 @@ input {
 .nav-inner {
 	padding: 12px 30px;
 	font-weight: 500;
-	font-size: 1.1em;
+	font-size: 1.15em;
 	text-align: center;
 	display: block;
 	position: relative;
