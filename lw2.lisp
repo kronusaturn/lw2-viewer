@@ -511,7 +511,8 @@
 	  (format nil "~A~A" (nav-bar-outer secondary-bar "inactive-bar" secondary-html) (nav-bar-outer primary-bar "active-bar" primary-html))))))) 
 
 (defparameter *bottom-bar*
-"<div id=\"bottom-bar\" class=\"nav-bar\"><a class=\"nav-item nav-current nav-inner\" href=\"#top\">Back to top</a></div>") 
+"<div id=\"bottom-bar\" class=\"nav-bar\"><a class=\"nav-item nav-current nav-inner\" href=\"#top\">Back to top</a></div>
+<script>if(document.getElementById(\"content\").clientHeight <= window.innerHeight + 30) {var e = document.getElementById(\"bottom-bar\"); e.parentNode.removeChild(e)}</script>") 
 
 (defun begin-html (out-stream &key title description current-uri content-class)
   (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"shortcut icon\" href=\"~A\"></head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
