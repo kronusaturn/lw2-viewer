@@ -627,7 +627,7 @@
 							 (format stream "<span class=\"~A\">~A</span>" class text)))) 
 				       (local-time:with-decoded-timestamp (:day current-day :month current-month :year current-year) (local-time:now)
 				         (local-time:with-decoded-timestamp (:day earliest-day :month earliest-month :year earliest-year) *earliest-post* 
-					   (let ((posts (lw2-graphql-query (format nil "{PostsList (terms:{view:\"~A\",limit:~A,after:\"~A\",before:\"~A\"}) {title, _id, slug, userId, postedAt, baseScore, commentCount, pageUrl, url}}"
+					   (let ((posts (lw2-graphql-query (format nil "{PostsList (terms:{view:\"~A\",limit:~A~@[,after:\"~A\"~]~@[,before:\"~A\"~]}) {title, _id, slug, userId, postedAt, baseScore, commentCount, pageUrl, url}}"
 										   "best" 50
 										   (if year (format nil "~A-~A-~A" (or year earliest-year) (or month 1) (or day 1)))
 										   (if year (format nil "~A-~A-~A" (or year current-year) (or month 12) (or day (local-time:days-in-month (or month 12) (or year current-year))))))))) 
