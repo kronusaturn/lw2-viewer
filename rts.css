@@ -1,4 +1,119 @@
-
+#wikitext p em {
+	font-variant-ligatures: discretionary-ligatures;
+	-moz-font-feature-settings: "dlig";
+	-webkit-font-feature-settings: "dlig";
+	font-feature-settings: "dlig";
+}
+#wikitext ol {
+	-webkit-hyphens: auto;
+	-moz-hyphens: auto;
+	-ms-hyphens: auto;
+	hyphens: auto;
+	padding-left: 2.9em;
+	margin: 0px auto 0px auto;
+}
+#wikitext ol li {
+	margin-bottom: 1em;
+}
+#wikitext .toc ol {
+	list-style-type: none;
+	display: table;
+	padding-left: 0;
+	text-align: center;
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+}
+#wikitext .toc li {
+	margin-top: 0;
+	margin-bottom: 0;
+	padding-left: 0;
+	line-height: 1.4;
+}
+#wikitext .toc h3 {
+	text-align: center;
+	font-style: normal;
+	line-height: 1.1;
+	margin-top: 0.5em;
+	margin-bottom: 0;
+}
+#wikitext .toc h3 .chapter_letter {
+	color: #BBB;
+	font-size: 170%;
+}
+#wikitext ul {
+	-webkit-hyphens: auto;
+	-moz-hyphens: auto;
+	-ms-hyphens: auto;
+	hyphens: auto;
+	padding-left: 2.9em;
+	margin: 0px auto 0px auto;
+}
+#wikitext blockquote ul, #wikitext blockquote ol {
+	padding-left: 40px;
+}
+#wikitext ul li {
+	margin-bottom: 1em;
+}
+#wikitext ul ul {
+	margin-top: 1em;
+}
+#wikitext a {
+	text-decoration: none;
+	color: inherit;
+}
+#wikitext a:hover {
+	color: #999;
+	border-bottom: 1px dotted #999;
+}
+#wikitext a:active {
+	color: #777;
+}
+#wikitext a:link::after, #wikitext a:visited::after {
+	position: relative;
+	content: "﻿°";
+	margin-left: 2px;
+	margin-right: 1px;
+/* 	font-size: 90%; */
+/* 	top: -0.05em; */
+	color: #933;
+}
+#wikitext .toc a {
+	color: #690010;
+}
+#wikitext .toc a:hover {
+	border: none;
+/* 	text-shadow: 0px 0px 1.5px #c05651; */
+	text-shadow: 0px 0px 0.5px #ff987b, 0px 0px 1px #c05651;
+}
+#wikitext .toc h3 a:hover {
+	border: none;
+/* 	text-shadow: 0px 0px 1.5px #c05651; */
+	text-shadow: 0px 0px 0.5px #ff987b, 0px 0px 1.5px #c05651;
+}
+#wikitext .toc a:link::after, a:visited::after {
+	content: none;
+}
+#wikiedit {
+	width: 90%;
+	max-width: 1000px;
+	margin-bottom: 0px;
+}
+#wikitext > div:nth-last-child(2)#wikiedit {
+	margin-bottom: 0px;
+}
+#wikiedit textarea {
+	font-size: 18px;
+	max-width: 940px;
+	height: 720px;
+}
+#wikiedit form {
+	margin-left: 20px;
+}
+.quickref {
+	display: none;
+}
 .citation {
 	vertical-align: baseline;
 	position: relative;
@@ -22,7 +137,6 @@
 	font-size: 75%;
 	margin: 3em auto 0px auto;
 	padding-left: 2em;
-	max-width: 620px;
 	font-variant-ligatures: no-contextual;
     -moz-font-feature-settings: "calt" 0;
     -webkit-font-feature-settings: "calt" 0;
@@ -155,6 +269,130 @@ sub {
 	font-feature-settings: "subs";
 	font-weight: 500;
 }
+h2 {
+	font-weight: 500;
+	font-size: 150%;
+	color: #aaa;
+	text-align: center;
+	margin: 80px auto 0px auto;
+}
+h2 + h1 {
+	margin-top: 0px;
+	font-variant: small-caps;
+	line-height: 1.1;
+	max-width: 100%;
+	font-size: 225%;
+}
+h3 {
+	font-weight: 500;
+	font-size: 160%;
+	font-style: italic;
+	text-align: left;
+	margin: 1em auto 0.6em auto
+}
+#wikitext h3 + p {
+	margin-top: 6px;
+}
+h4 {
+	font-size: 115%;
+	margin: 16px auto 0px auto;
+}
+#wikitext h4 + p {
+	margin-top: 9px;
+}
+#wikitext .toc blockquote ul {
+	margin-top: 1em;
+}
+#wikitext .toc blockquote ul li {
+	margin-bottom: 0.6em;
+	line-height: 1.3;
+}
+#wikitext p.blockquote_byline {
+	margin-top: 8px;
+	text-align: right;
+}
+.semibold {
+	font-weight: 600;
+}
+.monospaced {
+	font-size: 83%;
+}
+#wikitext p.monospaced,
+#wikitext .monospaced p {
+	line-height: 1.5;
+}
+.smallcaps {
+	font-variant: small-caps;
+}
+.boxed {
+	font-weight: normal;
+	font-size: 80%;
+	color: #0a0a0a;
+	border: 1px solid black;
+	padding: 2px 0px 2px 0px;
+}
+.diagram .boxed {
+	font-size: 90%;
+	padding: 3px 1px 4px 1px;
+}
+.boxed::before {
+	content: "\2005";
+}
+.boxed::after {
+	content: "\2005";
+}
+.question {
+	padding-left: 3em;
+	padding-right: 2em;
+	position: relative;
+	font-weight: bold;
+}
+.question + p {
+	padding-left: 3em;
+	padding-right: 2em;
+	position: relative;
+}
+.question::before {
+	content: "Q: ";
+	position: absolute;
+	left: 1.5em;
+	font-weight: bold;
+}
+.question + p::before {
+	content: "A: ";
+	position: absolute;
+	left: 1.5em;
+}
+#wikitext .original_lesswrong_link {
+	text-align: center;
+	margin: 2em auto;
+}
+#wikitext .original_lesswrong_link {
+	position: relative;
+	height: 35px;
+}
+.original_lesswrong_link img {
+	display: none;
+}
+
+.nohyphens,
+#wikitext .nohyphens p {
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+}
+#wikitext .original_lesswrong_link a:link::after {
+/* 	content: none; */
+	content: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjwhLS0KVW5pY29kZSByZXF1ZXN0ZWQ6IDQyIChkZWNpbWFsOiA0MiBoZXg6IDB4MmEpCkdseXBoIGluZGV4IGZvciB1bmljb2RlOiAxMwpMb2FkIEdseXBoIGludG8gRmFjZSdzIGdseXBoIHNsb3QuIGVycm9yIGNvZGU6IDAKR2x5cGggTmFtZTogYXN0ZXJpc2sKR2x5cGggV2lkdGg6IDAgSGVpZ2h0OiAwIEhvci4gQWR2YW5jZTogMCBWZXJ0LiBBZHZhbmNlOiAwCk51bSBwb2ludHM6IDY0Ck51bSBjb250b3VyczogMQpDb250b3VyIGVuZHBvaW50IGluZGV4IHZhbHVlczogNjMKLS0+Cgo8c3ZnCiAgIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIKICAgeG1sbnM6Y2M9Imh0dHA6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL25zIyIKICAgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIgogICB4bWxuczpzdmc9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIgogICB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiAgIHhtbG5zOnNvZGlwb2RpPSJodHRwOi8vc29kaXBvZGkuc291cmNlZm9yZ2UubmV0L0RURC9zb2RpcG9kaS0wLmR0ZCIKICAgeG1sbnM6aW5rc2NhcGU9Imh0dHA6Ly93d3cuaW5rc2NhcGUub3JnL25hbWVzcGFjZXMvaW5rc2NhcGUiCiAgIHdpZHRoPSIzMCIKICAgaGVpZ2h0PSIzNS4wNDUwNCIKICAgdmVyc2lvbj0iMS4xIgogICBpZD0ic3ZnMiIKICAgaW5rc2NhcGU6dmVyc2lvbj0iMC45MSByMTM3MjUiCiAgIHNvZGlwb2RpOmRvY25hbWU9InN0YXIuc3ZnIj4KICA8bWV0YWRhdGEKICAgICBpZD0ibWV0YWRhdGE1NjEiPgogICAgPHJkZjpSREY+CiAgICAgIDxjYzpXb3JrCiAgICAgICAgIHJkZjphYm91dD0iIj4KICAgICAgICA8ZGM6Zm9ybWF0PmltYWdlL3N2Zyt4bWw8L2RjOmZvcm1hdD4KICAgICAgICA8ZGM6dHlwZQogICAgICAgICAgIHJkZjpyZXNvdXJjZT0iaHR0cDovL3B1cmwub3JnL2RjL2RjbWl0eXBlL1N0aWxsSW1hZ2UiIC8+CiAgICAgICAgPGRjOnRpdGxlPjwvZGM6dGl0bGU+CiAgICAgIDwvY2M6V29yaz4KICAgIDwvcmRmOlJERj4KICA8L21ldGFkYXRhPgogIDxkZWZzCiAgICAgaWQ9ImRlZnM1NTkiIC8+CiAgPHNvZGlwb2RpOm5hbWVkdmlldwogICAgIHBhZ2Vjb2xvcj0iI2ZmZmZmZiIKICAgICBib3JkZXJjb2xvcj0iIzY2NjY2NiIKICAgICBib3JkZXJvcGFjaXR5PSIxIgogICAgIG9iamVjdHRvbGVyYW5jZT0iMTAiCiAgICAgZ3JpZHRvbGVyYW5jZT0iMTAiCiAgICAgZ3VpZGV0b2xlcmFuY2U9IjEwIgogICAgIGlua3NjYXBlOnBhZ2VvcGFjaXR5PSIwIgogICAgIGlua3NjYXBlOnBhZ2VzaGFkb3c9IjIiCiAgICAgaW5rc2NhcGU6d2luZG93LXdpZHRoPSIxODgxIgogICAgIGlua3NjYXBlOndpbmRvdy1oZWlnaHQ9IjEwMzYiCiAgICAgaWQ9Im5hbWVkdmlldzU1NyIKICAgICBzaG93Z3JpZD0iZmFsc2UiCiAgICAgaW5rc2NhcGU6em9vbT0iNy42ODc0Mjk5IgogICAgIGlua3NjYXBlOmN4PSI2NC43ODUyMSIKICAgICBpbmtzY2FwZTpjeT0iNDQuNTQ4ODIyIgogICAgIGlua3NjYXBlOndpbmRvdy14PSIwIgogICAgIGlua3NjYXBlOndpbmRvdy15PSIwIgogICAgIGlua3NjYXBlOndpbmRvdy1tYXhpbWl6ZWQ9IjAiCiAgICAgaW5rc2NhcGU6Y3VycmVudC1sYXllcj0ic3ZnMiIKICAgICBmaXQtbWFyZ2luLXRvcD0iMCIKICAgICBmaXQtbWFyZ2luLWxlZnQ9IjAiCiAgICAgZml0LW1hcmdpbi1yaWdodD0iMCIKICAgICBmaXQtbWFyZ2luLWJvdHRvbT0iMCIgLz4KICA8IS0tIGRyYXcgYm9yZGVyIC0tPgogIDwhLS0gbWFrZSBzdXJlIGdseXBoIGlzIHZpc2libGUgd2l0aGluIHN2ZyB3aW5kb3cgLS0+CiAgPHBhdGgKICAgICBzdHlsZT0iZmlsbDojMGQ0MDAwO2ZpbGwtb3BhY2l0eToxO2ZpbGwtcnVsZTpub256ZXJvO3N0cm9rZTpub25lO3N0cm9rZS13aWR0aDoyIgogICAgIGlua3NjYXBlOmNvbm5lY3Rvci1jdXJ2YXR1cmU9IjAiCiAgICAgaWQ9InBhdGgzMDAiCiAgICAgZD0ibSAxNC45NTQ5NTUsMCA1LjYzMDYzLDMuMjg4MjkgcSAtMS44MDE4MDIsMi45Mjc5MiAtMi43OTI3OTMsNS4wOTAwOSAtMC45OTA5OTEsMi4xNjIxNiAtMC45OTA5OTEsMy4yNDMyNCAwLDAuNjMwNjMgMC4yMjUyMjYsMS4wMzYwMyAwLjI3MDI3LDAuNDA1NDEgMC42NzU2NzUsMC40MDU0MSAxLjI2MTI2MSwwIDIuNjU3NjU4LC0xLjU3NjU4IDEuMzk2Mzk2LC0xLjU3NjU3IDMuODI4ODI5LC02LjA4MTA4IEwgMzAsOC43Mzg3NCBsIDAsNi40NDE0NCAtMi4wMjcwMjcsMCBxIC00LjQxNDQxNCwwIC02LjEyNjEyNywwLjU0MDU0IC0xLjcxMTcxMSwwLjU0MDU0IC0xLjcxMTcxMSwxLjgwMTggMCwxLjI2MTI2IDEuNjY2NjY2LDEuODAxOCAxLjcxMTcxMywwLjQ5NTUgNi41MzE1MzIsMC40OTU1IGwgMS42NjY2NjcsMCAwLDYuNDQxNDQgLTUuODEwODExLDMuMzMzMzMgcSAtMi4xNjIxNjMsLTQuMDU0MDUgLTMuNjQ4NjQ5LC01Ljg1NTg2IC0xLjQ0MTQ0MSwtMS44MDE4IC0yLjYxMjYxMywtMS44MDE4IC0wLjQ5NTQ5NSwwIC0wLjgxMDgxLDAuNDUwNDUgLTAuMzE1MzE2LDAuNDA1NDEgLTAuMzE1MzE2LDEuMTI2MTMgMCwxLjAzNjAzIDAuOTkwOTkxLDMuMTk4MiAwLjk5MDk5MSwyLjE2MjE2IDIuNzkyNzkzLDUgbCAtNS42MzA2MywzLjMzMzMzIC01LjU0MDU0MDksLTMuMzMzMzMgcSAxLjgwMTgwMTksLTIuODM3ODQgMi43OTI3OTI5LC01IDAuOTkwOTkxLC0yLjE2MjE3IDAuOTkwOTkxLC0zLjE5ODIgMCwtMC43MjA3MiAtMC4zMTUzMTYsLTEuMTI2MTMgLTAuMzE1MzE1LC0wLjQ1MDQ1IC0wLjgxMDgxLC0wLjQ1MDQ1IC0xLjA4MTA4MSwwIC0yLjU2NzU2NzgsMS44NDY4NSAtMS40ODY0ODY0LDEuODAxOCAtMy42MDM2MDM1LDUuODEwODEgTCAwLDI2LjI2MTI2IGwgMCwtNi40NDE0NCAyLjAyNzAyNywwIHEgNC40MTQ0MTQyLDAgNi4xMjYxMjU5LC0wLjQ5NTUgMS43MTE3MTE3LC0wLjU0MDU0IDEuNzExNzExNywtMS44MDE4IDAsLTEuMjYxMjYgLTEuNzExNzExNywtMS44MDE4IFEgNi40ODY0ODYzLDE1LjE4MDE4IDIuMDI3MDI3LDE1LjE4MDE4IEwgMCwxNS4xODAxOCAwLDguNzM4NzQgNS44MTA4MTA2LDUuNDA1NCBxIDIuMzg3Mzg3NCw0LjM2OTM3IDMuNzM4NzM4Nyw1Ljk5MDk5IDEuMzk2Mzk2NywxLjU3NjU4IDIuNjU3NjU3NywxLjU3NjU4IDAuNDUwNDUsMCAwLjcyMDcyMSwtMC4zNjAzNiAwLjI3MDI3LC0wLjM2MDM2IDAuMjcwMjcsLTAuOTkwOTkgMCwtMS4xMjYxMyAtMC45OTA5OTEsLTMuMjg4MjkgUSAxMS4yMTYyMTYsNi4xMjYxMiA5LjQxNDQxNDEsMy4yODgyOSBMIDE0Ljk1NDk1NSwwIFoiIC8+Cjwvc3ZnPgo=');
+	position: absolute;
+	top: 0px;
+	margin: 0px;
+	left: calc((100% - 30px) / 2);
+}
+#wikitext .original_lesswrong_link a:hover {
+	border: 0px;
+}
 .back_to_citation_link {
 	vertical-align: baseline;
 	position: relative;
@@ -173,7 +411,6 @@ sub {
 	padding: 8px;
 }
 .wrapper {
-	max-width: 620px;
 	margin: auto;
 }
 hr {
@@ -252,7 +489,7 @@ img {
 	margin: -1px 0px 0px 13.5px;
 }
 .sqrt::before {
-	content: "âˆš";
+	content: "√";
 	font-style: italic;
 	font-size: 105%;
 	border: none;
@@ -331,4 +568,234 @@ table.equation td.denominator {
 table.spaced_table td {
 	padding-left: 1em;
 	padding-right: 1em;
+}
+.title, .subtitle, .author_line {
+	text-align: center;
+}	
+#wikitext .title {
+/* 
+	font-size: 365%;
+	border: 7px solid black;
+	padding: 0.09em 0em 0.05em 0.1em;
+	font-weight: 800;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+ */
+	line-height: 1;
+	margin: 80px auto 10px auto;
+}
+#wikitext .subtitle {
+/* 
+	font-size: 130%;
+	text-transform: uppercase;
+	font-weight: 300;
+	letter-spacing: 0.25em;
+ */
+	line-height: 1;
+	margin: 0 auto 40px auto;
+}
+#wikitext .author_line {
+	font-size: 110%;
+	line-height: 1;
+	font-style: normal;
+	letter-spacing: 0.05em;
+	margin: 40px auto 48px auto;
+}
+#wikitext .main_toc p {
+	font-size: 130%;
+	line-height: 1;
+	text-align: center;
+}
+#wikitext .main_toc a {
+	color: #690010;
+}
+#wikitext .main_toc a:hover {
+	border: none;
+/* 	text-shadow: 0px 0px 1.5px #c05651; */
+	text-shadow: 0px 0px 0.5px #ff987b, 0px 0px 1.5px #c05651;
+}
+#wikitext .main_toc a:link::after, a:visited::after {
+	content: none;
+}
+strong, b {
+	font-weight: bold;
+}
+body, html, #bodywrap {
+	background-color: #fffffa;
+}
+body {
+	text-rendering: optimizeLegibility; 
+}	
+#wikibody {
+	background-color: inherit;
+	padding: 0;
+}
+.dropcaps::first-letter {
+	float: left;
+	font-size: 680%;
+	line-height: 0.9em;
+	padding: 8px 10px 0 0;
+	margin-bottom: -20px;
+}
+#wikitext .spoiler a:link,
+#wikitext .spoiler a:visited {
+	color: rgba(0,0,0,0);
+}
+#wikitext .spoiler a:link::after,
+#wikitext .spoiler a:visited::after {
+	content: none;
+}
+#wikitext .spoiler a:hover {
+	color: inherit;
+	border: none;
+}
+
+#bodywrap {
+	position: relative;
+}
+#wikimid {
+	position: relative;
+	min-height: 100vh;
+}
+#wikibody {
+	position: absolute;
+	min-height: 100vh;
+	width: 100%;
+}
+#wikitext > div:nth-last-child(2),
+#wikitext > p.original_lesswrong_link:nth-last-child(2) {
+	margin-bottom: 130px;
+}
+#wikitext > p:nth-last-child(2) {
+	margin-bottom: 105px;
+}
+
+#wikitext .big_toc > ul > li:first-of-type > a,
+#wikitext .big_toc > ul > li:last-of-type > a {
+	font-variant: normal;
+}
+#wikitext .big_toc ul ul {
+	padding-left: 50px;
+	margin-top: 0;
+}
+#wikitext .big_toc ul ul li {
+	margin-top: 0.3em;
+}
+
+#wikileft-toggle, #wikileft-toggle-label, #wikicmds-toggle, #wikicmds-toggle-label  {
+	display: none;
+}
+
+#wikicmds {
+	position: fixed;
+	margin-top: 2em;
+}
+
+#wikimove input[type="text"] {
+	width: 600px;
+	font-size: 18px;
+}
+#wikimove input[name="copy"] {
+	display: none;
+}
+#wikimove input[name="move"] {
+	width: 150px;
+	font-size: 17px;
+	border: 1px solid black;
+	background-color: white;
+	border-radius: 4px;
+	position: relative;
+	top: -1px;
+}
+#wikimove input[name="move"]:hover {
+	background-color: #aaa;
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) { 
+	#wikitext .diagram {
+		font-weight: 400;
+	}
+	#wikitext .boxed {
+		font-weight: 400;
+	}
+}
+
+@media all and (max-width:1560px) {
+	#wikicmds {
+		text-align: right;
+	}
+	#wikicmds li {
+		display: block;
+	}
+}
+
+@media all and (max-width:1020px) {
+	#wikicmds {
+		margin-top: 7em;
+	}
+}
+
+@media all and (max-width:790px) {
+	#wikicmds {
+		position: absolute;
+		margin-top: 2em;
+	}
+	#wikicmds li {
+		display: inline-block;
+	}
+}
+
+@media all and (max-width:520px) {
+	table.spaced_table td {
+		padding-left: 0.5em;
+		padding-right: 0.5em;
+		font-size: 90%;
+	}
+	#wikitext ul {
+		padding-left: 1.75em;
+	}
+	#wikitext ol {
+		padding-left: 1.75em;
+	}
+	p.indent {
+		padding-left: 1.75em;
+	}
+	#wikitext > div:nth-last-child(2) {
+		margin-bottom: 250px;
+	}
+	#wikitext > p:nth-last-child(2),
+	#wikitext > p.original_lesswrong_link:nth-last-child(2) {
+		margin-bottom: 250px;
+	}
+	#wikitext > p:nth-last-child(2).main_page_diamond {
+		margin-bottom: 100px;
+	}
+	.toc {
+		margin-top: 3em;
+	}
+	#wikitext .big_toc {
+		padding-left: 0.5em;
+	}
+	#wikitext .big_toc li {
+		line-height: 1.2;
+		padding-top: 0.3em;
+	}
+	#wikitext .big_toc ol,
+	#wikitext .big_toc ul {
+		padding-left: 40px;
+		-webkit-hyphens: none;
+		-moz-hyphens: none;
+		-ms-hyphens: none;
+		hyphens: none;
+	}
+	#wikitext .big_toc ol ol {
+		padding-left: 30px;
+	}
+	#wikitext .big_toc > ul {
+		padding-left: 0px;
+	}
+	#wikitext .big_toc ul ul {
+		padding-left: 23px;
+	}
+
 }

@@ -306,11 +306,11 @@
 (defun grab-from-rts (url)
   (let* ((root (plump:parse (drakma:http-request url)))
 	 (post-body (plump:get-element-by-id root "wikitext")))
-    (plump:remove-child (elt (clss:select "div.nav_menu" root) 0))
-    (plump:remove-child (elt (clss:select "h1" root) 0))
-    (plump:remove-child (elt (clss:select "p" root) 0))
-    (plump:remove-child (elt (clss:select "a.urllink" root) 0))
-    (plump:remove-child (elt (clss:select "div.bottom_nav" root) 0)) 
+    (loop for cls in '("div.nav_menu" "div.imgonly" "div.bottom_nav") do
+	  (loop for e across (clss:select cls post-body)
+		do (plump:remove-child e))) 
+    (plump:remove-child (elt (clss:select "h1" post-body) 0))
+    (plump:remove-child (elt (clss:select "p" post-body) 0))
     (concatenate 'string
 		 "<style>"
 		 (file-get-contents "rts.css")
@@ -318,7 +318,8 @@
 		 (plump:serialize post-body nil))))
 
 (defparameter *html-overrides* (make-hash-table :test 'equal))
-(loop for (id url) in '(("afmj8TKAqH6F2QMfZ" "https://www.readthesequences.com/A-Technical-Explanation-Of-Technical-Explanation")
+(loop for (id url) in '(("XTXWPQSEgoMkAupKt" "https://www.readthesequences.com/An-Intuitive-Explanation-Of-Bayess-Theorem") 
+			("afmj8TKAqH6F2QMfZ" "https://www.readthesequences.com/A-Technical-Explanation-Of-Technical-Explanation")
 			("7ZqGiPHTpiDMwqMN2" "https://www.readthesequences.com/The-Twelve-Virtues-Of-Rationality")
 			("aiQabnugDhcrFtr9n" "https://www.readthesequences.com/The-Power-Of-Intelligence"))
       do (let ((url* url)) (setf (gethash id *html-overrides*) (lambda () (grab-from-rts url*)))))
