@@ -520,6 +520,7 @@ img {
 	top: 12px;
 	display: inline-block;
 	width: 2.5em;
+	left: initial;
 }
 table.equation .bigsigma sub {
 	left: initial;
