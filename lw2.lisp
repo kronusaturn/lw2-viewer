@@ -175,7 +175,7 @@
 	(handler-case
 	  (let ((data (funcall get-real-fn key)))
 	    (assert data)
-	    (funcall cache-fn key (cdr (first data))))
+	    (funcall cache-fn key data))
 	  (t () "[Error communicating with LW2 server]")))))) 
 
 (defmacro simple-cacheable ((base-name cache-db key) &body body)
@@ -187,13 +187,13 @@
 	   (fdefinition (quote ,get)) (make-simple-get ,cache-db (fdefinition (quote ,cache)) (fdefinition (quote ,get-real)))))) 
 
 (simple-cacheable ("post-title" "postid-to-title" post-id)
-  (lw2-graphql-query (format nil "{PostsSingle(documentId:\"~A\") {title}}" post-id))) 
+  (cdr (first (lw2-graphql-query (format nil "{PostsSingle(documentId:\"~A\") {title}}" post-id))))) 
 
 (simple-cacheable ("post-slug" "postid-to-slug" post-id)
-  (lw2-graphql-query (format nil "{PostsSingle(documentId:\"~A\") {slug}}" post-id)))
+  (cdr (first (lw2-graphql-query (format nil "{PostsSingle(documentId:\"~A\") {slug}}" post-id)))))
 
 (simple-cacheable ("username" "userid-to-displayname" user-id)
-  (lw2-graphql-query (format nil "{UsersSingle(documentId:\"~A\") {displayName}}" user-id))) 
+  (cdr (first (lw2-graphql-query (format nil "{UsersSingle(documentId:\"~A\") {displayName}}" user-id))))) 
 
 (defun log-condition (condition)
   (with-open-file (outstream "./logs/error.log" :direction :output :if-exists :append :if-does-not-exist :create)
@@ -230,6 +230,19 @@
 (defun stop-background-loader ()
   (sb-thread:terminate-thread *background-loader-thread*)
   (setf *background-loader-thread* nil)) 
+
+(defun match-lw1-link (link)
+  (multiple-value-bind (match? strings) (ppcre:scan-to-strings "(?:^https?://(?:www.)?lesswrong.com|^)(/lw/.*)" link)
+    (when match?
+      (values (elt strings 0))))) 
+
+(simple-cacheable ("lw1-link" "lw1-link" link)
+  (let ((out (nth-value 3 (drakma:http-request (concatenate 'string "https://www.lesserwrong.com" link) :method :head))))
+    (format nil "~A~@[#~A~]" (puri:uri-path out) (puri:uri-fragment out)))) 
+
+(defun convert-lw1-link (link)
+  (alexandria:if-let (canonical-link (match-lw1-link link))
+		     (get-lw1-link canonical-link))) 
 
 (defun match-lw2-link (link)
   (multiple-value-bind (match? strings) (ppcre:scan-to-strings "(^https?://(www.)?lesserwrong.com|^)/posts/([^/]+)/([^/]*)(/$|/([^/#]+))?(#|$)" link)
@@ -348,7 +361,7 @@
 					 (new-a (plump:make-element (plump:parent text-node) "a"))
 					 (new-text (unless (= url-end (length text)) (plump:make-text-node (plump:parent text-node) (subseq text url-end))))) 
 				    (setf (plump:text text-node) (subseq text 0 url-start)
-					  (plump:attribute new-a "href") (let ((new-url (convert-lw2-link url))) (or new-url url)))
+					  (plump:attribute new-a "href") (or (convert-lw2-link url) (convert-lw1-link url) url))
 				    (plump:make-text-node new-a (replace-slashes url-raw))
 				    (when new-text
 				      (scan-for-urls new-text))
@@ -387,7 +400,7 @@
 				       (when (tag-is node "a")
 					 (let ((href (plump:attribute node "href")))
 					   (when href
-					     (let ((new-link (convert-lw2-link href)))
+					     (let ((new-link (or (convert-lw2-link href) (convert-lw1-link href))))
 					       (when new-link
 						 (setf (plump:attribute node "href") new-link)))))
 					 (when (only-child-is node "u")
@@ -605,6 +618,12 @@
 				   (unless (and id (not (equal id ""))) (error "No post ID.")) 
 				   (setf (hunchentoot:return-code*) 301
 					 (hunchentoot:header-out "Location") (generate-post-link id)))) 
+
+(hunchentoot:define-easy-handler (view-post-lw1-link :uri (lambda (r) (match-lw1-link (hunchentoot:request-uri r)))) ()
+				 (with-error-page
+				   (let ((location (convert-lw1-link (hunchentoot:request-uri*)))) 
+				     (setf (hunchentoot:return-code*) 301
+					   (hunchentoot:header-out "Location") location)))) 
 
 (hunchentoot:define-easy-handler (view-feed :uri "/feed") (view all meta before after)
 				 (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
