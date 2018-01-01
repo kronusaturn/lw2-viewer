@@ -311,18 +311,21 @@
 		do (plump:remove-child e))) 
     (plump:remove-child (elt (clss:select "h1" post-body) 0))
     (plump:remove-child (elt (clss:select "p" post-body) 0))
-    (concatenate 'string
-		 "<style>"
-		 (file-get-contents "rts.css")
-		 "</style>"
-		 (plump:serialize post-body nil))))
+    (with-open-file (stream (merge-pathnames "./rts-content/" (subseq (puri:uri-path (puri:parse-uri url)) 1)) :direction :output :if-does-not-exist :create :external-format :utf-8) 
+		 (plump:serialize post-body stream))))
+
+(defun rts-to-html (file)
+  (concatenate 'string
+	       "<style>"
+	       (file-get-contents "./rts-content/rts.css")
+	       "</style>"
+	       (file-get-contents (merge-pathnames "./rts-content/" file)))) 
 
 (defparameter *html-overrides* (make-hash-table :test 'equal))
-(loop for (id url) in '(("XTXWPQSEgoMkAupKt" "https://www.readthesequences.com/An-Intuitive-Explanation-Of-Bayess-Theorem") 
-			("afmj8TKAqH6F2QMfZ" "https://www.readthesequences.com/A-Technical-Explanation-Of-Technical-Explanation")
-			("7ZqGiPHTpiDMwqMN2" "https://www.readthesequences.com/The-Twelve-Virtues-Of-Rationality")
-			("aiQabnugDhcrFtr9n" "https://www.readthesequences.com/The-Power-Of-Intelligence"))
-      do (let ((url* url)) (setf (gethash id *html-overrides*) (lambda () (grab-from-rts url*)))))
+(loop for (id file) in '(("XTXWPQSEgoMkAupKt" "An-Intuitive-Explanation-Of-Bayess-Theorem") 
+			 ("afmj8TKAqH6F2QMfZ" "A-Technical-Explanation-Of-Technical-Explanation")
+			 ("7ZqGiPHTpiDMwqMN2" "The-Twelve-Virtues-Of-Rationality"))
+      do (let ((file* file)) (setf (gethash id *html-overrides*) (lambda () (rts-to-html file*)))))
 
 (define-lmdb-memoized clean-html (in-html &key with-toc post-id)
   (with-recursive-lock (*memory-intensive-mutex*) ; this is actually thread-safe, but running it concurrently risks running out of memory

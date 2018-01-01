@@ -1,0 +1,401 @@
+<div id="wikitext">
+
+
+
+<div style="max-width:620px; margin:auto; margin-bottom:2em; ">
+<p style="width: 80%; padding: 1em; background-color: #f1f1f1; font-size: 75%;"> [<strong>Editor’s Note:</strong> This is an abridgement of the <a class="urllink" href="http://yudkowsky.net/rational/bayes" rel="nofollow">original</a> version of this essay, which contained many interactive elements.]
+</p></div>
+<p>Your friends and colleagues are talking about something called “Bayes’s Theorem” or “Bayes’s Rule,” or something called Bayesian reasoning. They sound really enthusiastic about it, too, so you google and find a web page about Bayes’s Theorem and…
+</p>
+<p>It’s this equation. That’s all. Just one equation. The page you found gives a definition of it, but it doesn’t say what it is, or why it’s useful, or why your friends would be interested in it. It looks like this random statistics thing.
+</p>
+<p>Why does a mathematical concept generate this strange enthusiasm in its students? What is the so-called Bayesian Revolution now sweeping through the sciences, which claims to subsume even the experimental method itself as a special case? What is the secret that the adherents of Bayes know? What is the light that they have seen?
+</p>
+<p>Soon you will know. Soon you will be one of us.
+</p>
+<p>While there are a few existing online explanations of Bayes’s Theorem, my experience with trying to introduce people to Bayesian reasoning is that the existing online explanations are too abstract. Bayesian reasoning is very <em>counterintuitive</em>. People do not employ Bayesian reasoning intuitively, find it very difficult to learn Bayesian reasoning when tutored, and rapidly forget Bayesian methods once the tutoring is over. This holds equally true for novice students and highly trained professionals in a field. Bayesian reasoning is apparently one of those things which, like quantum mechanics or the Wason Selection Test, is inherently difficult for humans to grasp with our built-in mental faculties.
+</p>
+<p>Or so they claim. Here you will find an attempt to offer an <em>intuitive</em> explanation of Bayesian reasoning—an excruciatingly gentle introduction that invokes all the human ways of grasping numbers, from natural frequencies to spatial visualization. The intent is to convey, not abstract rules for manipulating numbers, but what the numbers mean, and why the rules are what they are (and cannot possibly be anything else). When you are finished reading this, you will see Bayesian problems in your dreams.
+</p>
+<p>And let’s begin.
+</p>
+<div class="wrapper">
+<hr></hr>
+</div>
+<p>Here’s a story problem about a situation that doctors often encounter:
+</p>
+<blockquote>
+<p>1% of women at age forty who participate in routine screening have breast cancer. 80% of women with breast cancer will get positive mammographies. 9.6% of women without breast cancer will also get positive mammographies. A woman in this age group had a positive mammography in a routine screening. What is the probability that she actually has breast cancer?
+</p></blockquote>
+<p>What do you think the answer is? If you haven’t encountered this kind of problem before, please take a moment to come up with your own answer before continuing.
+</p>
+<div class="wrapper">
+<hr></hr>
+</div>
+<p>Next, suppose I told you that most doctors get the same wrong answer on this problem—usually, only around 15% of doctors get it right. (“Really? 15%? Is that a real number, or an urban legend based on an Internet poll?” It’s a real number. See Casscells, Schoenberger, and Graboys <span class="year">1978</span>;<span class="citation"><a id="citation1"></a><a href="#footnote1">1</a></span> Eddy <span class="year">1982</span>;<span class="citation"><a id="citation2"></a><a href="#footnote2">2</a></span> Gigerenzer and Hoffrage <span class="year">1995</span>;<span class="citation"><a id="citation3"></a><a href="#footnote3">3</a></span> and many other studies. It’s a surprising result which is easy to replicate, so it’s been extensively replicated.)
+</p>
+<p>On the story problem above, most doctors estimate the probability to be between 70% and 80%, which is wildly incorrect.
+</p>
+<p>Here’s an alternate version of the problem on which doctors fare somewhat better:
+</p>
+<blockquote>
+<p>10 out of 1,000 women at age forty who participate in routine screening have breast cancer. 800 out of 1,000 women with breast cancer will get positive mammographies. 96 out of 1,000 women without breast cancer will also get positive mammographies. If 1,000 women in this age group undergo a routine screening, about what fraction of women with positive mammographies will actually have breast cancer?
+</p></blockquote>
+<p>And finally, here’s the problem on which doctors fare best of all, with 46%— nearly half—arriving at the correct answer:
+</p>
+<blockquote>
+<p>100 out of 10,000 women at age forty who participate in routine screening have breast cancer. 80 of every 100 women with breast cancer will get a positive mammography. 950 out of 9,900 women without breast cancer will also get a positive mammography. If 10,000 women in this age group undergo a routine screening, about what fraction of women with positive mammographies will actually have breast cancer?
+</p></blockquote>
+<div class="wrapper">
+<hr></hr>
+</div>
+<p>The correct answer is 7.8%, obtained as follows: Out of 10,000 women, 100 have breast cancer; 80 of those 100 have positive mammographies. From the same 10,000 women, 9,900 will not have breast cancer and of those 9,900 women, 950 will also get positive mammographies. This makes the total number of women with positive mammographies 950 + 80 or 1,030. Of those 1,030 women with positive mammographies, 80 will have cancer. Expressed as a proportion, this is 80/1,030 or 0.07767 or 7.8%.
+</p>
+<p>To put it another way, before the mammography screening, the 10,000 women can be divided into two groups:
+</p>
+<ul><li>Group 1: 100 women <em>with</em> breast cancer.
+</li><li>Group 2: 9,900 women <em>without</em> breast cancer.
+</li></ul><p>Summing these two groups gives a total of 10,000 patients, confirming that none have been lost in the math. After the mammography, the women can be divided into four groups:
+</p>
+<ul><li>Group <em>A</em>: 80 women <em>with</em> breast cancer and a <em>positive</em> mammo graphy.
+</li><li>Group <em>B</em>: 20 women <em>with</em> breast cancer and a <em>negative</em> mammo graphy.
+</li><li>Group <em>C</em>: 950 women <em>without</em> breast cancer and a <em>positive</em> mammo graphy.
+</li><li>Group <em>D</em>: 8,950 women <em>without</em> breast cancer and a <em>negative</em> mammo graphy.
+</li></ul><p>The sum of groups <em>A</em> and <em>B</em>, the groups with breast cancer, corresponds to group 1; and the sum of groups <em>C</em> and <em>D</em>, the groups without breast cancer, corresponds to group 2. If you administer a mammography to 10,000 patients, then out of the 1,030 with positive mammographies, eighty of those positive-mammography patients will have cancer. This is the correct answer, the answer a doctor should give a positive-mammography patient if she asks about the chance she has breast cancer; if thirteen patients ask this question, roughly one out of those thirteen will have cancer.
+</p>
+<div class="wrapper">
+<hr></hr>
+</div>
+<p>The most common mistake is to ignore the original fraction of women with breast cancer, and the fraction of women without breast cancer who receive false positives, and focus only on the fraction of women with breast cancer who get positive results. For example, the vast majority of doctors in these studies seem to have thought that if around 80% of women with breast cancer have positive mammographies, then the probability of a woman with a positive mammography having breast cancer must be around 80%.
+</p>
+<p>Figuring out the final answer always requires <em>all three</em> pieces of information—the percentage of women with breast cancer, the percentage of women without breast cancer who receive false positives, and the percentage of women with breast cancer who receive (correct) positives.
+</p>
+<p>The original proportion of patients with breast cancer is known as the <em>prior probability</em>. The chance that a patient with breast cancer gets a positive mammography, and the chance that a patient without breast cancer gets a positive mammography, are known as the two <em>conditional probabilities</em>. Collectively, this initial information is known as <em>the priors</em>. The final answer—the estimated probability that a patient has breast cancer, given that we know she has a positive result on her mammography—is known as the <em>revised probability</em> or the <em>posterior probability</em>. What we’ve just seen is that the posterior probability depends in part on the prior probability.
+</p>
+<p>To see that the final answer always depends on the original fraction of women with breast cancer, consider an alternate universe in which only one woman out of a million has breast cancer. Even if mammography in this world detects breast cancer in 8 out of 10 cases, while returning a false positive on a woman without breast cancer in only 1 out of 10 cases, there will still be a hundred thousand false positives for every real case of cancer detected. The original probability that a woman has cancer is so extremely low that, although a positive result on the mammography does <em>increase</em> the estimated probability, the probability isn’t increased to certainty or even “a noticeable chance”; the probability goes from 1:1,000,000 to 1:100,000.
+</p>
+<p>What this demonstrates is that the mammography result doesn’t <em>replace</em> your old information about the patient’s chance of having cancer; the mammography <em>slides</em> the estimated probability in the direction of the result. A positive result slides the original probability upward; a negative result slides the probability downward. For example, in the original problem where 1% of the women have cancer, 80% of women with cancer get positive mammographies, and 9.6% of women without cancer get positive mammographies, a positive result on the mammography <em>slides</em> the 1% chance upward to 7.8%.
+</p>
+<p>Most people encountering problems of this type for the first time carry out the mental operation of <em>replacing</em> the original 1% probability with the 80% probability that a woman with cancer gets a positive mammography. It may seem like a good idea, but it just doesn’t work. “The probability that a woman with a positive mammography has breast cancer” is not at all the same thing as “the probability that a woman with breast cancer has a positive mammography”; they are as unlike as apples and cheese.
+</p>
+<div class="wrapper">
+<hr></hr>
+</div>
+<p class="question"> Why did the Bayesian reasoner cross the road?</p>
+<p> You need more information to answer this question.
+</p>
+<div class="wrapper">
+<hr></hr>
+</div>
+<p>Suppose that a barrel contains many small plastic eggs. Some eggs are painted red and some are painted blue. 40% of the eggs in the bin contain pearls, and 60% contain nothing. 30% of eggs containing pearls are painted blue, and 10% of eggs containing nothing are painted blue. What is the probability that a blue egg contains a pearl? For this example the arithmetic is simple enough that you may be able to do it in your head, and I would suggest trying to do so.
+</p>
+<p>A more compact way of specifying the problem:
+</p>
+<table border="0" class="equation"><tr><td align="right" style="letter-spacing:normal; " valign="top"> <em>P</em>(pearl)
+</td><td align="center" class="equal_sign" valign="top"> =
+</td><td valign="top"> 40%
+</td></tr><tr><td align="right" style="letter-spacing:normal; " valign="top"> <em>P</em>(blue|pearl)
+</td><td align="center" class="equal_sign" valign="top"> =
+</td><td valign="top"> 30%
+</td></tr><tr><td align="right" style="letter-spacing:normal; " valign="top"> <em>P</em>(blue|¬pearl)
+</td><td align="center" class="equal_sign" valign="top"> =
+</td><td valign="top"> 10%
+</td></tr><tr><td align="right" style="letter-spacing:normal; " valign="top"> <em>P</em>(pearl|blue)
+</td><td align="center" class="equal_sign" valign="top"> =
+</td><td valign="top"> ?
+</td></tr></table>
+<p>The symbol “¬” is shorthand for “not,” so ¬pearl reads “not pearl.”
+</p>
+<p>The notation <span class="equation"><em>P</em>(</span>blue|pearl) is shorthand for “the probability of blue given pearl” or “the probability that an egg is painted blue, given that the egg contains a pearl.” The item on the right side is what you <em>already know</em> or the <em>premise</em>, and the item on the left side is the <em>implication</em> or <em>conclusion</em>. If we have <span class="equation"><em>P</em>(</span>blue|pearl) = 30%, and we <em>already know</em> that some egg contains a pearl, then we can <em>conclude</em> there is a 30% chance that the egg is painted blue. Thus, the final fact we’re looking for—“the chance that a blue egg contains a pearl” or “the probability that an egg contains a pearl, if we know the egg is painted blue”—reads <span class="equation"><em>P</em>(</span>pearl|blue).
+</p>
+<p>40% of the eggs contain pearls, and 60% of the eggs contain nothing. 30% of the eggs containing pearls are painted blue, so 12% of the eggs altogether contain pearls and are painted blue. 10% of the eggs containing nothing are painted blue, so altogether 6% of the eggs contain nothing and are painted blue. A total of 18% of the eggs are painted blue, and a total of 12% of the eggs are painted blue and contain pearls, so the chance a blue egg contains a pearl is <span class="fraction">12/18</span> or <span class="fraction">2/3</span> or around 67%.
+</p>
+<p>As before, we can see the necessity of all three pieces of information by considering extreme cases. In a (large) barrel in which only one egg out of a thousand contains a pearl, knowing that an egg is painted blue slides the probability from 0.1% to 0.3% (instead of sliding the probability from 40% to 67%). Similarly, if 999 out of 1,000 eggs contain pearls, knowing that an egg is blue slides the probability from 99.9% to 99.966%; the probability that the egg does <em>not</em> contain a pearl goes from <span class="fraction">1/1,000</span> to around <span class="fraction">1/3,000</span>.
+</p>
+<p>On the pearl-egg problem, most respondents unfamiliar with Bayesian reasoning would probably respond that the probability a blue egg contains a pearl is 30%, or perhaps 20% (the 30% chance of a true positive minus the 10% chance of a false positive). Even if this mental operation seems like a good idea at the time, it makes no sense in terms of the question asked. It’s like the experiment in which you ask a second-grader: “If eighteen people get on a bus, and then seven more people get on the bus, how old is the bus driver?” Many second-graders will respond: “Twenty-five.” They understand when they’re being prompted to carry out a particular mental procedure, but they haven’t quite connected the procedure to reality. Similarly, to find the probability that a woman with a positive mammography has breast cancer, it makes no sense whatsoever to <em>replace</em> the original probability that the woman has cancer with the probability that a woman with breast cancer gets a positive mammography. Neither can you subtract the probability of a false positive from the probability of the true positive. These operations are as wildly irrelevant as adding the number of people on the bus to find the age of the bus driver.
+</p>
+<div class="wrapper">
+<hr></hr>
+</div>
+<p>A study by Gigerenzer and Hoffrage in <span class="year">1995</span> showed that some ways of phrasing story problems are much more evocative of correct Bayesian reasoning.<span class="citation"><a id="citation4"></a><a href="#footnote4">4</a></span> The least evocative phrasing used probabilities. A slightly more evocative phrasing used frequencies instead of probabilities; the problem remained the same, but instead of saying that 1% of women had breast cancer, one would say that 1 out of 100 women had breast cancer, that 80 out of 100 women with breast cancer would get a positive mammography, and so on. Why did a higher proportion of subjects display Bayesian reasoning on this problem? Probably because saying “1 out of 100 women” encourages you to concretely visualize <em>X</em> women with cancer, leading you to visualize <em>X</em> women with cancer and a positive mammography, etc.
+</p>
+<p>The most effective presentation found so far is what’s known as <em>natural frequencies</em>—saying that 40 out of 100 eggs contain pearls, 12 out of 40 eggs containing pearls are painted blue, and 6 out of 60 eggs containing nothing are painted blue. A <em>natural frequencies</em> presentation is one in which the information about the prior probability is included in presenting the conditional probabilities. If you were just learning about the eggs’ conditional probabilities through natural experimentation, you would—in the course of cracking open a hundred eggs—crack open around 40 eggs containing pearls, of which 12 eggs would be painted blue, while cracking open 60 eggs containing nothing, of which about 6 would be painted blue. In the course of learning the conditional probabilities, you’d see examples of blue eggs containing pearls about twice as often as you saw examples of blue eggs containing nothing.
+</p>
+<p>Unfortunately, while natural frequencies are a step in the right direction, it probably won’t be enough. When problems are presented in natural frequencies, the proportion of people using Bayesian reasoning rises to around half. A big improvement, but not big enough when you’re talking about real doctors and real patients.
+</p>
+<div class="wrapper">
+<hr></hr>
+</div>
+<p class="question"> How can I find the priors for a problem?</p>
+<p> Many commonly used priors are listed in the <em>Handbook of Chemistry and Physics</em>.
+</p>
+<p class="question"> Where do priors <em>originally</em> come from?</p>
+<p> Never ask that question.
+</p>
+<p class="question"> Uh huh. Then where do scientists get their priors?</p>
+<p> Priors for scientific problems are established by annual vote of the AAAS. In recent years the vote has become fractious and controversial, with widespread acrimony, factional polarization, and several outright assassinations. This may be a front for infighting within the Bayes Council, or it may be that the disputants have too much spare time. No one is really sure.
+</p>
+<p class="question"> I see. And where does everyone else get their priors?</p>
+<p> They download their priors from Kazaa.
+</p>
+<p class="question"> What if the priors I want aren’t available on Kazaa?</p>
+<p> There’s a small, cluttered antique shop in a back alley of San Francisco’s Chinatown. <em>Don’t ask about the bronze rat.</em>
+</p>
+<p>Actually, priors are true or false just like the final answer—they reflect reality and can be judged by comparing them against reality. For example, if you think that 920 out of 10,000 women in a sample have breast cancer, and the actual number is 100 out of 10,000, then your priors are wrong. For our particular problem, the priors might have been established by three studies—a study on the case histories of women with breast cancer to see how many of them tested positive on a mammography, a study on women without breast cancer to see how many of them test positive on a mammography, and an epidemiological study on the prevalence of breast cancer in some specific demographic.
+</p>
+<div class="wrapper">
+<hr></hr>
+</div>
+<p>The probability <span class="equation"><em>P</em>(<em>A</em>,<em>B</em>)</span> is the same as <span class="equation"><em>P</em>(<em>B</em>,<em>A</em>)</span>, but <span class="equation"><em>P</em>(<em>A</em>|<em>B</em>)</span> is not the same thing as <span class="equation"><em>P</em>(<em>B</em>|<em>A</em>)</span>, and <span class="equation"><em>P</em>(<em>A</em>,<em>B</em>)</span> is completely different from <span class="equation"><em>P</em>(<em>A</em>|<em>B</em>)</span>. It’s a common confusion to mix up some or all of these quantities.
+</p>
+<p>To get acquainted with all the relationships between them, we’ll play “follow the degrees of freedom.” For example, the two quantities <span class="equation"><em>P</em>(</span>cancer) and <span class="equation"><em>P</em>(</span>¬cancer) have one degree of freedom between them, because of the general law <span class="equation"><em>P</em>(<em>A</em>) + <em>P</em>(¬<em>A</em>) = 1</span>. If you know that <span class="equation"><em>P</em>(¬cancer) = 0.99</span>, you can obtain <span class="equation"><em>P</em>(cancer) = 1 − <em>P</em>(¬cancer) = 0.01</span>.
+</p>
+<p>The quantities <span class="equation"><em>P</em>(</span>positive|cancer) and <span class="equation"><em>P</em>(</span>¬positive|cancer) also have only one degree of freedom between them; either a woman with breast cancer gets a positive mammography or she doesn’t. On the other hand, <span class="equation"><em>P</em>(</span>positive|cancer) and <span class="equation"><em>P</em>(</span>positive|¬cancer) have two degrees of freedom. You can have a mammography test that returns positive for 80% of cancer patients and 9.6% of healthy patients, or that returns positive for 70% of cancer patients and 2% of healthy patients, or even a health test that returns “positive” for 30% of cancer patients and 92% of healthy patients. The two quantities, the output of the mammography test for cancer patients and the output of the mammography test for healthy patients, are in mathematical terms independent; one cannot be obtained from the other in any way, and so they have two degrees of freedom between them.
+</p>
+<p>What about <span class="equation"><em>P</em>(</span>positive, cancer), <span class="equation"><em>P</em>(</span>positive|cancer), and <span class="equation"><em>P</em>(</span>cancer)? Here we have three quantities; how many degrees of freedom are there? In this case the equation that must hold is
+</p>
+<p style="text-align: center;"> <em>P</em>(positive, cancer) = <em>P</em>(positive|cancer) × <em>P</em>(cancer).
+</p>
+<p>This equality reduces the degrees of freedom by one. If we know the fraction of patients with cancer, and the chance that a cancer patient has a positive mammography, we can deduce the fraction of patients who have breast cancer <em>and</em> a positive mammography by multiplying.
+</p>
+<p>Similarly, if we know the number of patients with breast cancer and positive mammographies, and also the number of patients with breast cancer, we can estimate the chance that a woman with breast cancer gets a positive mammography by dividing: <span class="equation"><em>P</em>(</span>positive|cancer) = <span class="equation"><em>P</em>(</span>positive, cancer<span class="equation">)/<em>P</em>(</span>cancer). In fact, this is exactly how such medical diagnostic tests are calibrated; you do a study on 8,520 women with breast cancer and see that there are 6,816 (or thereabouts) women with breast cancer and positive mammographies, then divide 6,816 by 8,520 to find that 80% of women with breast cancer had positive mammographies. (Incidentally, if you accidentally divide 8,520 by 6,816 instead of the other way around, your calculations will start doing strange things, such as insisting that 125% of women with breast cancer and positive mammographies have breast cancer. This is a common mistake in carrying out Bayesian arithmetic, in my experience.) And finally, if you know <span class="equation"><em>P</em>(</span>positive, cancer) and <span class="equation"><em>P</em>(</span>positive|cancer), you can deduce how many cancer patients there must have been originally. There are two degrees of freedom shared out among the three quantities; if we know any two, we can deduce the third.
+</p>
+<p>How about <span class="equation"><em>P</em>(</span>positive), <span class="equation"><em>P</em>(</span>positive, cancer), and <span class="equation"><em>P</em>(</span>positive, ¬cancer)? Again there are only two degrees of freedom among these three variables. The equation occupying the extra degree of freedom is
+</p>
+<p style="text-align: center;"> <em>P</em>(positive) = <em>P</em>(positive, cancer) + <em>P</em>(positive, ¬cancer) .
+</p>
+<p>This is how <span class="equation"><em>P</em>(</span>positive) is computed to begin with; we figure out the number of women with breast cancer who have positive mammographies, and the number of women without breast cancer who have positive mammographies, then add them together to get the total number of women with positive mammographies. It would be very strange to go out and conduct a study to determine the number of women with positive mammographies— just that one number and nothing else—but in theory you could do so. And if you then conducted another study and found the number of those women who had positive mammographies <em>and</em> breast cancer, you would also know the number of women with positive mammographies and no breast cancer—either a woman with a positive mammography has breast cancer or she doesn’t. In general, <span class="equation"><em>P</em>(<em>A</em>,<em>B</em>) + <em>P</em>(<em>A</em>,¬<em>B</em>) = <em>P</em>(<em>A</em>)</span>. Symmetrically, <span class="equation"><em>P</em>(<em>A</em>,<em>B</em>) + <em>P</em>(¬<em>A</em>,<em>B</em>) = <em>P</em>(<em>B</em>)</span>.
+</p>
+<p>What about <span class="equation"><em>P</em>(</span>positive, cancer), <span class="equation"><em>P</em>(</span>positive, ¬cancer), <span class="equation"><em>P</em>(</span>¬positive, cancer), and <span class="equation"><em>P</em>(</span>¬positive, ¬cancer)? You might at first be tempted to think that there are only two degrees of freedom for these four quantities—that you can, for example, get <span class="equation"><em>P</em>(</span>positive, ¬cancer) by multiplying <span class="equation"><em>P</em>(</span>positive) × <span class="equation"><em>P</em>(</span>¬cancer), and thus that all four quantities can be found given only the two quantities <span class="equation"><em>P</em>(</span>positive) and <span class="equation"><em>P</em>(</span>cancer). This is not the case! <span class="equation"><em>P</em>(positive, ¬cancer) = </span><span class="equation"><em>P</em>(</span>positive) × <span class="equation"><em>P</em>(</span>¬cancer) only if the two probabilities are <em>statistically independent</em>—if the chance that a woman has breast cancer has no bearing on whether she has a positive mammography. This amounts to requiring that the two conditional probabilities be equal to each other—a requirement which would eliminate one degree of freedom. If you remember that these four quantities are the groups <em>A</em>, <em>B</em>, <em>C</em>, and <em>D</em>, you can look over those four groups and realize that, in theory, you can put any number of people into the four groups. If you start with a group of 80 women with breast cancer and positive mammographies, there’s no reason why you can’t add another group of 500 women with breast cancer and negative mammographies, followed by a group of 3 women without breast cancer and negative mammographies, and so on. So now it seems like the four quantities have four degrees of freedom. And they would, except that in expressing them as <em>probabilities</em>, we need to normalize them to <em>fractions</em> of the complete group, which adds the constraint that <span class="equation"><em>P</em>(positive, cancer) + <em>P</em>(positive, ¬cancer) + <em>P</em>(¬positive, cancer) + <em>P</em>(¬positive, ¬cancer) = 1</span>. This equation takes up one degree of freedom, leaving three degrees of freedom among the four quantities. If you specify the <em>fractions</em> of women in groups <em>A</em>, <em>B</em>, and <em>D</em>, you can deduce the fraction of women in group <em>C</em>.
+</p>
+<p>Given the four groups <em>A</em>, <em>B</em>, <em>C</em>, and <em>D</em>, it is very straightforward to compute everything else:
+</p>
+<table class="equation" border="0"><tr><td align="right" valign="middle" rowspan="2" style="letter-spacing:normal; "> <em>P</em>(cancer)
+</td><td valign="middle" rowspan="2" class="equal_sign"> =
+</td><td colspan="2" valign="bottom" class="numerator"> <em>A</em> + <em>B</em>
+</td></tr><tr><td colspan="2" valign="top" class="denominator" style="width:130px;"> <em>A</em> + <em>B</em> + <em>C</em> + <em>D</em>
+</td></tr><tr><td align="right" valign="middle" rowspan="2" style="letter-spacing:normal; "> <em>P</em>(¬positive|cancer)
+</td><td valign="middle" rowspan="2" class="equal_sign"> =
+</td><td valign="bottom" class="numerator" style="width:85px;"> <em>B</em>
+</td><td rowspan="2" style="width:60px;" valign="top">  
+</td></tr><tr><td valign="top" class="denominator"> <em>A</em> + <em>B</em> ,
+</td></tr></table>
+<p>and so on. Since <span class="equation">{ <em>A</em>, <em>B</em>, <em>C</em>, <em>D</em>}</span> contains three degrees of freedom, it follows that the entire set of probabilities relating cancer rates to test results contains only three degrees of freedom. Remember that in our problems we always needed <em>three</em> pieces of information—the prior probability and the two conditional probabilities—which, indeed, have three degrees of freedom among them. Actually, for Bayesian problems, any three quantities with three degrees of freedom between them should logically specify the entire problem.
+</p>
+<div class="wrapper">
+<hr></hr>
+</div>
+<p><em>The probability that a test gives a true positive</em> divided by <em>the probability that a test gives a false positive</em> is known as the <em>likelihood ratio</em> of that test. The likelihood ratio for a positive result summarizes how much a positive result will slide the prior probability. Does the likelihood ratio of a medical test then sum up everything there is to know about the usefulness of the test?
+</p>
+<p>No, it does not! The likelihood ratio sums up everything there is to know about the <em>meaning</em> of a <em>positive</em> result on the medical test, but the meaning of a <em>negative</em> result on the test is not specified, nor is the frequency with which the test is useful. For example, a mammography with a hit rate of 80% for patients with breast cancer and a false positive rate of 9.6% for healthy patients has the same likelihood ratio as a test with an 8% hit rate and a false positive rate of 0.96%. Although these two tests have the same likelihood ratio, the first test is more useful in every way—it detects disease more often, and a negative result is stronger evidence of health.
+</p>
+<div class="wrapper">
+<hr></hr>
+</div>
+<p>Suppose that you apply <em>two</em> tests for breast cancer in succession—say, a standard mammography and also some other test which is <em>independent</em> of mammography. Since I don’t know of any such test that is independent of mammography, I’ll invent one for the purpose of this problem, and call it the Tams-Braylor Division Test, which checks to see if any cells are dividing more rapidly than other cells. We’ll suppose that the Tams-Braylor gives a true positive for 90% of patients with breast cancer, and gives a false positive for 5% of patients without cancer. Let’s say the prior prevalence of breast cancer is 1%. If a patient gets a positive result on her mammography <em>and</em> her Tams-Braylor, what is the revised probability she has breast cancer?
+</p>
+<p>One way to solve this problem would be to take the revised probability for a positive mammography, which we already calculated as 7.8%, and plug that into the Tams-Braylor test as the new prior probability. If we do this, we find that the result comes out to 60%.
+</p>
+<p>Suppose that the prior prevalence of breast cancer in a demographic is 1%. Suppose that we, as doctors, have a repertoire of three independent tests for breast cancer. Our first test, test <em>A</em>, a mammography, has a likelihood ratio of <span class="equation">80%/9.6% = 8.33</span>. The second test, test <em>B</em>, has a likelihood ratio of 18.0 (for example, from 90% versus 5%); and the third test, test <em>C</em>, has a likelihood ratio of 3.5 (which could be from 70% versus 20%, or from 35% versus 10%; it makes no difference). Suppose a patient gets a positive result on all three tests. What is the probability the patient has breast cancer?
+</p>
+<p>Here’s a fun trick for simplifying the bookkeeping. If the prior prevalence of breast cancer in a demographic is 1%, then 1 out of 100 women have breast cancer, and 99 out of 100 women do not have breast cancer. So if we rewrite the <em>probability</em> of 1% as an <em>odds ratio</em>, the odds are 1:99.
+</p>
+<p>And the likelihood ratios of the three tests <em>A</em>, <em>B</em>, and <em>C</em> are:
+</p>
+<table class="equation" border="0" style="letter-spacing:normal; "><tr><td align="right" valign="top"> 8.33 : 1
+</td><td class="equal_sign" valign="top"> =
+</td><td valign="top"> 25 : 3
+</td></tr><tr><td align="right" valign="top"> 18.0 : 1
+</td><td class="equal_sign" valign="top"> =
+</td><td valign="top"> 18 : 1
+</td></tr><tr><td align="right" valign="top"> 3.5 : 1
+</td><td class="equal_sign" valign="top"> =
+</td><td valign="top"> 7 : 2 .
+</td></tr></table>
+<p>The <em>odds</em> for women with breast cancer who score positive on all three tests, versus women without breast cancer who score positive on all three tests, will equal:
+</p>
+<p style="text-align: center;"> 1 × 25 × 18 × 7 : 99 × 3 × 1 × 2 = 3,150 : 594 .
+</p>
+<p>To recover the probability from the odds, we just write:
+</p>
+<p style="text-align: center;"> 3,150/(3,150 + 594) = 84% .
+</p>
+<p>This always works regardless of how the odds ratios are written; i.e., 8.33:1 is just the same as 25:3 or 75:9. It doesn’t matter in what order the tests are administered, or in what order the results are computed. The proof is left as an exercise for the reader.
+</p>
+<div class="wrapper">
+<hr></hr>
+</div>
+<p>E. T. Jaynes, in <em>Probability Theory With Applications in Science and Engi neer ing</em>, suggests that credibility and evidence should be measured in decibels.<span class="citation"><a id="citation5"></a><a href="#footnote5">5</a></span>
+</p>
+<p>Decibels?
+</p>
+<p>Decibels are used for measuring exponential differences of intensity. For example, if the sound from an automobile horn carries 10,000 times as much energy (per square meter per second) as the sound from an alarm clock, the automobile horn would be 40 decibels louder. The sound of a bird singing might carry 1,000 times less energy than an alarm clock, and hence would be 30 decibels softer. To get the number of decibels, you take the logarithm base 10 and multiply by 10:
+</p>
+<p style="text-align: center;"> decibels = 10 log<sub>10</sub> (intensity)
+</p>
+<p>or
+</p>
+<p style="text-align: center;"> intensity = 10<sup>decibels/10</sup> .
+</p>
+<p>Suppose we start with a prior probability of 1% that a woman has breast cancer, corresponding to an odds ratio of 1:99. And then we administer three tests of likelihood ratios 25:3, 18:1, and 7:2. You could multiply those numbers… or you <em>could</em> just add their logarithms:
+</p>
+<table class="equation" border="0"><tr><td align="right" valign="top"> 10 log<sub>10</sub>(<span class="fraction">1/99</span>)
+</td><td class="equal_sign" valign="top"> ≈
+</td><td valign="top"> −20
+</td></tr><tr><td align="right" valign="top"> 10 log<sub>10</sub>(<span class="fraction">25/3</span>)
+</td><td class="equal_sign" valign="top"> ≈
+</td><td valign="top"> 9
+</td></tr><tr><td align="right" valign="top"> 10 log<sub>10</sub>(<span class="fraction">18/1</span>)
+</td><td class="equal_sign" valign="top"> ≈
+</td><td valign="top"> 13
+</td></tr><tr><td align="right" valign="top"> 10 log<sub>10</sub>(<span class="fraction">7/2</span>)
+</td><td class="equal_sign" valign="top"> ≈
+</td><td valign="top"> 5 .
+</td></tr></table>
+<p>It starts out as fairly unlikely that a woman has breast cancer—our credibility level is at −20 decibels. Then three test results come in, corresponding to 9, 13, and 5 decibels of evidence. This raises the credibility level by a total of 27 decibels, meaning that the prior credibility of −20 decibels goes to a posterior credibility of 7 decibels. So the odds go from 1:99 to 5:1, and the probability goes from 1% to around 83%.
+</p>
+<div class="wrapper">
+<hr></hr>
+</div>
+<blockquote>
+<p>You are a mechanic for gizmos. When a gizmo stops working, it is due to a blocked hose 30% of the time. If a gizmo’s hose is blocked, there is a 45% probability that prodding the gizmo will produce sparks. If a gizmo’s hose is unblocked, there is only a 5% chance that prodding the gizmo will produce sparks. A customer brings you a malfunctioning gizmo. You prod the gizmo and find that it produces sparks. What is the probability that a spark-producing gizmo has a blocked hose?
+</p></blockquote>
+<p>What is the sequence of arithmetical operations that you performed to solve this problem?
+</p>
+<p style="text-align: center;"> (45% × 30%)/(45% × 30% + 5% × 70%)
+</p>
+<p>or
+</p>
+<p>Similarly, to find the chance that a woman with positive mammography has breast cancer, we computed:
+</p>
+<table border="0" class="equation"><tr><td colspan="4" class="numerator" style="padding-bottom:0.1em; letter-spacing:normal; " valign="top"> <em>P</em>(positive|cancer) × <em>P</em>(cancer)
+</td></tr><tr><td rowspan="2" style="padding-bottom:0; vertical-align:top; " valign="top"> <img src="//www.readthesequences.com/wiki/uploads/big_left_parens.svg" alt="" title=""></img>
+</td><td style="padding-bottom:0; " valign="top">  
+</td><td style="padding-bottom:0; padding-top:0.3em; letter-spacing:normal; " valign="top"> <em>P</em>(positive|cancer)×<em>P</em>(cancer)
+</td><td rowspan="2" style="padding-bottom:0; vertical-align:top; " valign="top"> <img src="//www.readthesequences.com/wiki/uploads/big_right_parens.svg" alt="" title=""></img>
+</td></tr><tr><td style="padding-top:0.5em; width:2em; " valign="top"> +
+</td><td style="padding-top:0.5em; letter-spacing:normal; " valign="top"> <em>P</em>(positive|¬cancer) × <em>P</em>(¬cancer)
+</td></tr></table>
+<p><em>which is</em>
+</p>
+<table class="equation" border="0"><tr><td class="numerator" style="letter-spacing:normal; " valign="top"> <em>P</em>(positive, cancer)
+</td></tr><tr><td class="denominator" style="letter-spacing:normal; " valign="top"> <em>P</em>(positive, cancer) + <em>P</em>(positive, ¬cancer)
+</td></tr></table>
+<p><em>which is</em>
+</p>
+<table class="equation" border="0"><tr><td class="numerator" style="letter-spacing:normal; " valign="top"> <em>P</em>(positive, cancer)
+</td></tr><tr><td class="denominator" style="letter-spacing:normal; " valign="top">  <em>P</em>(positive)
+</td></tr></table>
+<p><em>which is</em>
+</p>
+<p style="text-align: center;"> <em>P</em>(cancer|positive) .
+</p>
+<p>The fully general form of this calculation is known as <em>Bayes’s Theorem</em> or <em>Bayes’s Rule</em>.
+</p>
+<div style="text-align:center; font-weight:bold; font-size:350%; color:#777; text-shadow:2px 2px 1px #000, 0.5px 0.5px #000, 0.5px -0.5px #000, -0.5px -0.5px #000, -0.5px 0.5px #000; line-height:1.1; ">
+<p style="margin-top: 0.5em; margin-bottom: 0.3em;"> Bayes’s Theorem:
+</p></div>
+<table class="equation" style="font-size:110%; margin-bottom:0em; "><tr><td rowspan="2" valign="top"> <em>P</em>(<em>A</em>|<em>X</em>)
+</td><td rowspan="2" class="equal_sign" valign="top"> =
+</td><td class="numerator" valign="top"> <em>P</em>(<em>X</em>|<em>A</em>) × <em>P</em>(<em>A</em>)
+</td></tr><tr><td class="denominator" valign="top"> <em>P</em>(<em>X</em>|<em>A</em>) × <em>P</em>(<em>A</em>) + <em>P</em>(<em>X</em>|¬<em>A</em>) × <em>P</em>(¬<em>A</em>)
+</td></tr></table>
+<p>When there is some phenomenon <em>A</em> that we want to investigate, and an observation <em>X</em> that is evidence about <em>A</em>—for example, in the previous example, <em>A</em> is breast cancer and <em>X</em> is a positive mammography—Bayes’s Theorem tells us how we should <em>update</em> our probability of <em>A</em>, given the <em>new evidence</em> <em>X</em>.
+</p>
+<p>By this point, Bayes’s Theorem may seem blatantly obvious or even tautological, rather than exciting and new. If so, this introduction has <em>entirely succeeded</em> in its purpose.
+</p>
+<div class="wrapper">
+<hr></hr>
+</div>
+<p>Bayes’s Theorem describes what makes something “evidence” and how much evidence it is. Statistical models are judged by comparison to the <em>Bayesian method</em> because, in statistics, the Bayesian method is as good as it gets—the Bayesian method defines the maximum amount of mileage you can get out of a given piece of evidence, in the same way that thermodynamics defines the maximum amount of work you can get out of a temperature differential. This is why you hear cognitive scientists talking about <em>Bayesian reasoners</em>. In cognitive science, <em>Bayesian reasoner</em> is the technically precise code word that we use to mean <em>rational mind</em>.
+</p>
+<p>There are also a number of general heuristics about human reasoning that you can learn from looking at Bayes’s Theorem.
+</p>
+<p>For example, in many discussions of Bayes’s Theorem, you may hear cognitive psychologists saying that people <em>do not take prior frequencies sufficiently into account</em>, meaning that when people approach a problem where there’s some evidence <em>X</em> indicating that condition <em>A</em> might hold true, they tend to judge <em>A</em>’s likelihood solely by how well the evidence <em>X</em> seems to match <em>A</em>, without taking into account the prior frequency of <em>A</em>. If you think, for example, that under the mammography example, the woman’s chance of having breast cancer is in the range of 70%–80%, then this kind of reasoning is insensitive to the prior frequency given in the problem; it doesn’t notice whether 1% of women or 10% of women start out having breast cancer. “Pay more attention to the prior frequency!” is one of the many things that humans need to bear in mind to partially compensate for our built-in inadequacies.
+</p>
+<p>A related error is to pay too much attention to <span class="equation"><em>P</em>(<em>X</em>|<em>A</em>)</span> and not enough to <span class="equation"><em>P</em>(<em>X</em>|¬<em>A</em>)</span> when determining how much evidence <em>X</em> is for <em>A</em>. The degree to which a result <em>X</em> is <em>evidence for</em> <em>A</em> depends not only on the strength of the statement <em>we’d expect to see result X if A were true</em>, but also on the strength of the statement <em>we <strong>wouldn’t</strong> expect to see result X if A weren’t true</em>. For example, if it is raining, this very strongly implies the grass is wet—<span class="equation"><em>P</em>(</span>wetgrass|rain) ≈ 1— but seeing that the grass is wet doesn’t necessarily mean that it has just rained; perhaps the sprinkler was turned on, or you’re looking at the early morning dew. Since <span class="equation"><em>P</em>(</span>wetgrass|¬rain) is substantially greater than zero, <span class="equation"><em>P</em>(</span>rain|wetgrass) is substantially less than one. On the other hand, if the grass was <em>never</em> wet when it wasn’t raining, then knowing that the grass was wet would <em>always</em> show that it was raining, <span class="equation"><em>P</em>(</span>rain|wetgrass) ≈ 1, even if <span class="equation"><em>P</em>(</span>wetgrass|rain) = 50%; that is, even if the grass only got wet 50% of the times it rained. Evidence is always the result of the <em>differential</em> between the two conditional probabilities. <em>Strong</em> evidence is not the product of a very high probability that A leads to <em>X</em>, but the product of a very <em>low</em> probability that <em>not-A</em> could have led to <em>X</em>.
+</p>
+<p>The <em>Bayesian revolution in the sciences</em> is fueled, not only by more and more cognitive scientists suddenly noticing that mental phenomena have Bayesian structure in them; not only by scientists in every field learning to judge their statistical methods by comparison with the Bayesian method; but also by the idea that <em>science itself is a special case of Bayes’s Theorem; experimental evidence is Bayesian evidence</em>. The Bayesian revolutionaries hold that when you perform an experiment and get evidence that “confirms” or “disconfirms” your theory, this confirmation and disconfirmation is governed by the Bayesian rules. For example, you have to take into account not only whether your theory predicts the phenomenon, but whether other possible explanations also predict the phenomenon.
+</p>
+<p>Previously, the most popular philosophy of science was probably Karl Popper’s <em>falsificationism</em>—this is the old philosophy that the Bayesian revolution is currently dethroning. Karl Popper’s idea that theories can be definitely falsified, but never definitely confirmed, is yet another special case of the Bayesian rules; if <span class="equation"><em>P</em>(<em>X</em>|<em>A</em>) ≈ 1</span>—if the theory makes a definite prediction—then observing ¬<em>X</em> very strongly falsifies <em>A</em>. On the other hand, if <span class="equation"><em>P</em>(<em>X</em>|<em>A</em>) ≈ 1</span>, and we observe <em>X</em>, this doesn’t definitely confirm the theory; there might be some other condition <em>B</em> such that <span class="equation"><em>P</em>(<em>X</em>|<em>B</em>) ≈ 1</span>, in which case observing <em>X</em> doesn’t favor <em>A</em> over <em>B</em>. For observing <em>X</em> to definitely confirm A, we would have to know, not that <span class="equation"><em>P</em>(<em>X</em>|<em>A</em>) ≈ 1</span>, but that <span class="equation"><em>P</em>(<em>X</em>|¬<em>A</em>) ≈ 0</span>, which is something that we can’t know because we can’t range over all possible alternative explanations. For example, when Einstein’s theory of General Relativity toppled Newton’s incredibly well-confirmed theory of gravity, it turned out that all of Newton’s predictions were just a special case of Einstein’s predictions.
+</p>
+<p>You can even formalize Popper’s philosophy mathematically. The likelihood ratio for <em>X</em>, the quantity <span class="equation"><em>P</em>(<em>X</em>|<em>A</em>)/<em>P</em>(<em>X</em>|¬<em>A</em>)</span>, determines how much observing <em>X</em> slides the probability for <em>A</em>; the likelihood ratio is what says how strong <em>X</em> is as evidence. Well, in your theory <em>A</em>, you can predict <em>X</em> with probability 1, if you like; but you can’t control the denominator of the likelihood ratio, <span class="equation"><em>P</em>(<em>X</em>|¬<em>A</em>)</span>—there will always be some alternative theories that also predict <em>X</em>, and while we go with the simplest theory that fits the current evidence, you may someday encounter some evidence that an alternative theory predicts but your theory does not. That’s the hidden gotcha that toppled Newton’s theory of gravity. So there’s a limit on how much mileage you can get from successful predictions; there’s a limit on how high the likelihood ratio goes for <em>confirmatory</em> evidence.
+</p>
+<p>On the other hand, if you encounter some piece of evidence <em>Y</em> that is definitely <em>not</em> predicted by your theory, this is <em>enormously</em> strong evidence against your theory. If <span class="equation"><em>P</em>(<em>Y</em>|<em>A</em>)</span> is infinitesimal, then the likelihood ratio will also be infinitesimal. For example, if <span class="equation"><em>P</em>(<em>Y</em>|<em>A</em>)</span> is 0.0001%, and <span class="equation"><em>P</em>(<em>Y</em>|¬<em>A</em>)</span> is 1%, then the likelihood ratio <span class="equation"><em>P</em>(<em>Y</em>|<em>A</em>)/<em>P</em>(<em>Y</em>|¬<em>A</em>)</span> will be 1:10,000. That’s −40 decibels of evidence! Or, flipping the likelihood ratio, if <span class="equation"><em>P</em>(<em>Y</em>|<em>A</em>)</span> is <em>very small</em>, then <span class="equation"><em>P</em>(<em>Y</em>|¬<em>A</em>)/<em>P</em>(<em>Y</em>|<em>A</em>)</span> will be very large, meaning that observing <em>Y</em> greatly favors ¬<em>A</em> over <em>A</em>. Falsification is much stronger than confirmation. This is a consequence of the earlier point that <em>very strong</em> evidence is not the product of a very high probability that <em>A</em> leads to <em>X</em>, but the product of a very <em>low</em> probability that <em>not-A</em> could have led to <em>X</em>. This is the precise Bayesian rule that underlies the heuristic value of Popper’s falsificationism.
+</p>
+<p>Similarly, Popper’s dictum that an idea must be falsifiable can be interpreted as a manifestation of the Bayesian conservation-of-probability rule; if a result <em>X</em> is positive evidence for the theory, then the result ¬<em>X</em> would have disconfirmed the theory to some extent. If you try to interpret both <em>X</em> and ¬<em>X</em> as “confirming” the theory, the Bayesian rules say this is impossible! To increase the probability of a theory you <em>must</em> expose it to tests that can potentially decrease its probability; this is not just a rule for detecting would-be cheaters in the social process of science, but a consequence of Bayesian probability theory. On the other hand, Popper’s idea that there is <em>only</em> falsification and <em>no such thing</em> as confirmation turns out to be incorrect. Bayes’s Theorem shows that falsification is <em>very</em> strong evidence compared to confirmation, but falsification is still probabilistic in nature; it is not governed by fundamentally different rules from confirmation, as Popper argued.
+</p>
+<p>So we find that many phenomena in the cognitive sciences, plus the statistical methods used by scientists, plus the scientific method itself, are all turning out to be special cases of Bayes’s Theorem. Hence the Bayesian revolution.
+</p>
+<div class="wrapper">
+<hr></hr>
+</div>
+<p>Having introduced Bayes’s Theorem explicitly, we can explicitly discuss its components.
+</p>
+<table class="equation"><tr><td rowspan="2" valign="top"> <em>P</em>(<em>A</em>|<em>X</em>)
+</td><td rowspan="2" class="equal_sign" valign="top"> =
+</td><td class="numerator" valign="top"> <em>P</em>(<em>X</em>|<em>A</em>) × <em>P</em>(<em>A</em>)
+</td></tr><tr><td class="denominator" valign="top"> <em>P</em>(<em>X</em>|<em>A</em>) × <em>P</em>(<em>A</em>) + <em>P</em>(<em>X</em>|¬<em>A</em>) × <em>P</em>(¬<em>A</em>)
+</td></tr></table>
+<p>We’ll start with <span class="equation"><em>P</em>(<em>A</em>|<em>X</em>)</span>. If you ever find yourself getting confused about what’s <em>A</em> and what’s <em>X</em> in Bayes’s Theorem, start with <span class="equation"><em>P</em>(<em>A</em>|<em>X</em>)</span> on the left side of the equation; that’s the simplest part to interpret. In <span class="equation"><em>P</em>(<em>A</em>|<em>X</em>)</span>, <em>A</em> is the thing we want to know about. <em>X</em> is how we’re observing it; <em>X</em> is the evidence we’re using to make inferences about <em>A</em>. Remember that for every expression <span class="equation"><em>P</em>(<em>Q</em>|<em>P</em>)</span>, we want to know about the probability for <em>Q</em> given <em>P</em>, the degree to which <em>P</em> implies <em>Q</em>—a more sensible notation, which it is now too late to adopt, would be <span class="equation"><em>P</em>(<em>Q</em> ← <em>P</em>)</span>.
+</p>
+<p><span class="equation"><em>P</em>(<em>Q</em>|<em>P</em>)</span> is closely related to <span class="equation"><em>P</em>(<em>Q</em>,<em>P</em>)</span>, but they are not identical. Expressed as a probability or a fraction, <span class="equation"><em>P</em>(<em>Q</em>,<em>P</em>)</span> is the proportion of things that have property <em>Q</em> and property <em>P</em> among all things; e.g., the proportion of “women with breast cancer and a positive mammography” within the group of all women. If the total number of women is 10,000, and 80 women have breast cancer and a positive mammography, then <span class="equation"><em>P</em>(<em>Q</em>,<em>P</em>)</span> is 80/10,000 = 0.8%. You might say that the absolute quantity, 80, is being normalized to a probability relative to the group of all women. Or to make it clearer, suppose that there’s a group of 641 women with breast cancer and a positive mammography within a total sample group of 89,031 women. Six hundred and forty-one is the absolute quantity. If you pick out a random woman from the entire sample, then the probability you’ll pick a woman with breast cancer and a positive mammography is <span class="equation"><em>P</em>(<em>Q</em>,<em>P</em>)</span>, or 0.72% (in this example).
+</p>
+<p>On the other hand, <span class="equation"><em>P</em>(<em>Q</em>|<em>P</em>)</span> is the proportion of things that have property <em>Q</em> and property <em>P</em> among <em>all things that have P</em>; e.g., the proportion of women with breast cancer and a positive mammography within the group of <em>all women with positive mammographies</em>. If there are 641 women with breast cancer and positive mammographies, 7,915 women with positive mammographies, and 89,031 women, then <span class="equation"><em>P</em>(<em>Q</em>,<em>P</em>)</span> is the probability of getting one of those 641 women if you’re picking at random from the entire group of 89,031, while <span class="equation"><em>P</em>(<em>Q</em>|<em>P</em>)</span> is the probability of getting one of those 641 women if you’re picking at random from the smaller group of 7,915.
+</p>
+<p>In a sense, <span class="equation"><em>P</em>(<em>Q</em>|<em>P</em>)</span> really means <span class="equation"><em>P</em>(<em>Q</em>,<em>P</em>|<em>P</em>)</span>, but specifying the extra <em>P</em> all the time would be redundant. You already <em>know</em> it has property <em>P</em>, so the property you’re <em>investigating</em> is <em>Q</em>—even though you’re looking at the size of group <span class="equation">(<em>Q</em>,<em>P</em>)</span> within group <em>P</em>, not the size of group <em>Q</em> within group <em>P</em>(which would be nonsense). This is what it means to take the property on the right-hand side as <em>given</em>; it means you know you’re working only within the group of things that have property <em>P</em>. When you constrict your focus of attention to see only this smaller group, many other probabilities change. If you’re taking <em>P</em> as <em>given</em>, then <span class="equation"><em>P</em>(<em>Q</em>,<em>P</em>)</span> equals just <span class="equation"><em>P</em>(<em>Q</em>)</span>—at least, <em>relative to the group P</em> . The <em>old</em> <span class="equation"><em>P</em>(<em>Q</em>)</span>, the frequency of “things that have property <em>Q</em> within the entire sample,” is revised to the new frequency of “things that have property <em>Q</em> within the subsample of things that have property <em>P</em>.” If <em>P</em> is <em>given</em>, if <em>P</em> is our entire world, then looking for <span class="equation">(<em>Q</em>,<em>P</em>)</span> is the same as looking for just <em>Q</em>.
+</p>
+<p>If you constrict your focus of attention to only the population of eggs that are painted blue, then suddenly “the probability that an egg contains a pearl” becomes a different number; this proportion is different for the population of blue eggs than the population of all eggs. The <em>given</em>, the property that constricts our focus of attention, is always on the <em>right</em> side of <span class="equation"><em>P</em>(<em>Q</em>|<em>P</em>)</span>; the <em>P</em> becomes our world, the entire thing we see, and on the other side of the “given” <em>P</em> always has probability 1—that is what it means to take <em>P</em> as given. So <span class="equation"><em>P</em>(<em>Q</em>|<em>P</em>)</span> means “If <em>P</em> has probability 1, what is the probability of <em>Q</em>?” or “If we constrict our attention to only things or events where <em>P</em> is true, what is the probability of <em>Q</em>?” The statement <em>Q</em>, on the other side of the given, is <em>not</em> certain—its probability may be 10% or 90% or any other number. So when you use Bayes’s Theorem, and you write the part on the left side as <span class="equation"><em>P</em>(<em>A</em>|<em>X</em>)</span>—how to <em>update</em> the probability of <em>A</em> after seeing <em>X</em>, the new probability of <em>A</em> <em>given</em> that we know <em>X</em>, the degree to which <em>X implies A</em>—you can tell that <em>X</em> is always the <em>observation</em> or the <em>evidence</em>, and <em>A</em> is the property being investigated, the thing you want to know about.
+</p>
+<div class="wrapper">
+<hr></hr>
+</div>
+<p>The right side of Bayes’s Theorem is derived from the left side through these steps:
+</p>
+<div style="margin:auto; display:table; ">
+<table class="equation" border="0" style="margin-left:0px; margin-bottom:0.1em; "><tr><td valign="top"> <em>P</em>(<em>A</em>|<em>X</em>)
+</td><td class="equal_sign" valign="top"> =
+</td><td valign="top"> <em>P</em>(<em>A</em>|<em>X</em>)
+</td></tr></table>
+<table class="equation" border="0" style="margin-left:0px; margin-bottom:0.1em; "><tr><td rowspan="2" valign="top"> <em>P</em>(<em>A</em>|<em>X</em>)
+</td><td rowspan="2" class="equal_sign" valign="top"> =
+</td><td class="numerator" valign="top"> <em>P</em>(<em>X</em>,<em>A</em>)
+</td></tr><tr><td class="denominator" valign="top"> <em>P</em>(<em>X</em>)
+</td></tr></table>
+<table class="equation" border="0" style="margin-left:0px; margin-bottom:0.1em; "><tr><td rowspan="2" valign="top"> <em>P</em>(<em>A</em>|<em>X</em>)
+</td><td rowspan="2" class="equal_sign" valign="top"> =
+</td><td class="numerator" valign="top"> <em>P</em>(<em>X</em>,<em>A</em>)
+</td></tr><tr><td class="denominator" valign="top"> <em>P</em>(<em>X</em>,<em>A</em>) + <em>P</em>(<em>X</em>,¬<em>A</em>)
+</td></tr></table>
+<table class="equation" border="0" style="margin-left:0px; "><tr><td rowspan="2" valign="top"> <em>P</em>(<em>A</em>|<em>X</em>)
+</td><td rowspan="2" class="equal_sign" valign="top"> =
+</td><td colspan="2" class="numerator" valign="top"> <em>P</em>(<em>X</em>|<em>A</em>) × <em>P</em>(<em>A</em>)
+</td></tr><tr><td colspan="2" class="denominator" valign="top"> <em>P</em>(<em>X</em>|<em>A</em>) × <em>P</em>(<em>A</em>) + <em>P</em>(<em>X</em>|¬<em>A</em>) × <em>P</em>(¬<em>A</em>)
+</td></tr></table>
+</div>
+<p>Once the derivation is finished, all the implications on the right side of the equation are of the form <span class="equation"><em>P</em>(<em>X</em>|<em>A</em>)</span> or <span class="equation"><em>P</em>(<em>X</em>|¬<em>A</em>)</span>, while the implication on the left side is <span class="equation"><em>P</em>(<em>A</em>|<em>X</em>)</span>. The symmetry arises because the elementary <em>causal relations</em> are generally implications from facts to observations, e.g., from breast cancer to positive mammography. The elementary <em>steps in reasoning</em> are generally implications from observations to facts, e.g., from a positive mammography to breast cancer. The left side of Bayes’s Theorem is an elementary <em>inferential</em> step from the observation of positive mammography to the conclusion of an increased probability of breast cancer. Implication is written right-to-left, so we write <span class="equation"><em>P</em>(</span>cancer|positive) on the left side of the equation. The right side of Bayes’s Theorem describes the elementary <em>causal</em> steps—for example, from breast cancer to a positive mammography—and so the implications on the right side of Bayes’s Theorem take the form <span class="equation"><em>P</em>(</span>positive|cancer) or <span class="equation"><em>P</em>(</span>positive|¬cancer).
+</p>
+<p>And that’s Bayes’s Theorem. Rational inference on the left end, physical causality on the right end; an equation with mind on one side and reality on the other. Remember how the scientific method turned out to be a special case of Bayes’s Theorem? If you wanted to put it poetically, you could say that Bayes’s Theorem binds reasoning into the physical universe.
+</p>
+<p>Okay, we’re done.
+</p>
+
+<p style="text-align: center;"> Reverend Bayes says:
+</p>
+<p style="text-align: center;">   <img src="//www.readthesequences.com/wiki/uploads/Bayes-mugshot.png" alt="portrait of Reverend Thomas Bayes" title="portrait of Reverend Thomas Bayes"></img>  
+</p>
+<p style="text-align: center;"> You are now an initiate of the Bayesian Conspiracy.
+</p>
+<div class="footnotes">
+<p><a id="footnote1"></a> <span class="footnote"> Ward Casscells, Arno Schoenberger, and Thomas Graboys, “Interpretation by Physicians of Clinical Laboratory Results,” <em>New England Journal of Medicine</em> 299 (1978): 999–1001. </span><span class="back_to_citation_link"><a href="#citation1">↩︎</a></span>
+</p>
+<p><a id="footnote2"></a> <span class="footnote"> David M. Eddy, “Probabilistic Reasoning in Clinical Medicine: Problems and Opportunities,” in <em>Judgement Under Uncertainty: Heuristics and Biases</em>, ed. Daniel Kahneman, Paul Slovic, and Amos Tversky (Cambridge University Press, 1982). </span><span class="back_to_citation_link"><a href="#citation2">↩︎</a></span>
+</p>
+<p><a id="footnote3"></a> <span class="footnote"> Gerd Gigerenzer and Ulrich Hoffrage, “How to Improve Bayesian Reasoning without Instruction: Frequency Formats,” <em>Psychological Review</em> 102 (1995): 684–704. </span><span class="back_to_citation_link"><a href="#citation3">↩︎</a></span>
+</p>
+<p><a id="footnote4"></a> <span class="footnote"> Ibid. </span><span class="back_to_citation_link"><a href="#citation4">↩︎</a></span>
+</p>
+<p><a id="footnote5"></a> <span class="footnote"> Edwin T. Jaynes, “Probability Theory, with Applications in Science and Engineering,” Unpublished manuscript (1974). </span><span class="back_to_citation_link"><a href="#citation5">↩︎</a></span>
+</p></div>
+
+</div>
