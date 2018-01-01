@@ -613,7 +613,7 @@
 				     (emit-page (out-stream :title "Search" :current-uri "/search" :content-class "search-results-page")
 						(map-output out-stream #'post-headline-to-html posts))))) 
 
-(defparameter *earliest-post* (local-time:parse-timestring "2017-09-22")) 
+(defparameter *earliest-post* (local-time:parse-timestring "2005-01-01")) 
 
 (hunchentoot:define-easy-handler (view-archive :uri (lambda (r) (ppcre:scan "^/archive(/|$)" (hunchentoot:request-uri r)))) () 
 				 (with-error-page
@@ -627,10 +627,10 @@
 							 (format stream "<span class=\"~A\">~A</span>" class text)))) 
 				       (local-time:with-decoded-timestamp (:day current-day :month current-month :year current-year) (local-time:now)
 				         (local-time:with-decoded-timestamp (:day earliest-day :month earliest-month :year earliest-year) *earliest-post* 
-					   (let ((posts (lw2-graphql-query (make-posts-list-query :limit 50
-												  :view "best"
-												  :after (if year (format nil "~A-~A-~A" (or year earliest-year) (or month 1) (or day 1)))
-												  :before (if year (format nil "~A-~A-~A" (or year current-year) (or month 12) (or day (local-time:days-in-month (or month 12) (or year current-year))))))))) 
+					   (let ((posts (lw2-graphql-query (format nil "{PostsList (terms:{view:\"~A\",limit:~A,after:\"~A\",before:\"~A\"}) {title, _id, slug, userId, postedAt, baseScore, commentCount, pageUrl, url}}"
+										   "best" 50
+										   (if year (format nil "~A-~A-~A" (or year earliest-year) (or month 1) (or day 1)))
+										   (if year (format nil "~A-~A-~A" (or year current-year) (or month 12) (or day (local-time:days-in-month (or month 12) (or year current-year))))))))) 
 					     (emit-page (out-stream :title "Archive" :current-uri "/archive" :content-class "archive-page")
 							(with-outputs (out-stream) "<div class=\"archive-nav\"><div class=\"archive-nav-years\">")
 							(link-if-not out-stream (not (or year month day)) '("archive") "archive-nav-item-year" "All") 
