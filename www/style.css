@@ -330,7 +330,10 @@ div[class^='archive-nav-'] {
 .archive-nav a:hover {
 	text-decoration: none;
 	color: #00e;
-	background-color: #d8d8d8;
+	background-color: #e0e0e0;
+}
+.archive-nav a.archive-nav-item-day:hover {
+	background-color: #ddd;
 }
 
 /************/
