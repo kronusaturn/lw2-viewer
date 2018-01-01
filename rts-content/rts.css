@@ -621,12 +621,6 @@ table.spaced_table td {
 strong, b {
 	font-weight: bold;
 }
-body, html, #bodywrap {
-	background-color: #fffffa;
-}
-body {
-	text-rendering: optimizeLegibility; 
-}	
 #wikibody {
 	background-color: inherit;
 	padding: 0;
