@@ -284,22 +284,56 @@ input {
 /************/
 
 .archive-nav {
-	margin: 1.25em 0.75em -1.25em;
+	margin: 1.25em 0.5em -1.25em;
 	padding: 0.25em;
 	border: 1px solid #aaa;
 }
 
-.archive-nav a,
-.archive-nav span {
-	border: 1px solid #ddd;
+div[class^='archive-nav-'] {
+	display: table;
+	table-layout: fixed;
+	width: 100%;
+}
+
+.archive-nav *[class^='archive-nav-item'] {
+	border-style: solid;
+	border-color: #ddd;
+	border-width: 1px 0 1px 1px;
 	background-color: #eee;
-	display: inline-block;
-	margin: 3px;
-	padding: 3px;
+	display: table-cell;
+	text-align: center;
+	padding: 5px 4px;
 	line-height: 1;
 }
-.archive-nav span {
+.archive-nav div[class^='archive-nav-']:nth-of-type(n+2) *[class^='archive-nav-item'] {
+  border-top-width: 0;
+}
+.archive-nav *[class^='archive-nav-item']:last-child {
+	border-right-width: 1px;
+}
+.archive-nav span[class^='archive-nav-item'] {
 	font-weight: bold;
+	background-color: #e0e0e0;
+}
+.archive-nav span[class^='archive-nav-item-day'] {
+	background-color: #ddd;
+}
+.archive-nav-days .archive-nav-item-day {
+	font-size: 0.8em;
+	padding: 5px 3px 4px 3px;
+}
+.archive-nav-days .archive-nav-item-day:first-child {
+	padding: 5px 7px 4px 6px;
+	width: 3.5%;
+}
+
+.archive-nav a:link, .archive-nav a:visited {
+	color: rgba(0, 0, 238, 0.7);
+}
+.archive-nav a:hover {
+	text-decoration: none;
+	color: #00e;
+	background-color: #d8d8d8;
 }
 
 /************/
