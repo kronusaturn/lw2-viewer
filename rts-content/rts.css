@@ -357,11 +357,11 @@ img {
 	font-size: 43%;
 }
 .bigsigma {
-	font-size: 200%;
+	font-size: 2.1em;
 	vertical-align: middle;
 	position: relative;
-    top: 2px;
-    margin-right: -64px;
+	top: -5px;
+	margin-right: -68px;
 }
 .bigsigma sub {
 	font-size: 30%;
