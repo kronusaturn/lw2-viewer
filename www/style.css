@@ -299,8 +299,13 @@ div[class^='archive-nav-'] {
 	background-color: #eee;
 	display: table-cell;
 	text-align: center;
-	padding: 5px 4px;
+	padding: 6px 4px 4px 4px;
 	line-height: 1;
+}
+@-moz-document url-prefix() {
+	.archive-nav *[class^='archive-nav-item'] {
+		padding: 5px 4px;
+	}
 }
 .archive-nav div[class^='archive-nav-']:nth-of-type(n+2) *[class^='archive-nav-item'] {
   border-top-width: 0;
