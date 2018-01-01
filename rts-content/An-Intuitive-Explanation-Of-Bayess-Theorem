@@ -108,9 +108,9 @@
 </p>
 <p>The notation <span class="equation"><em>P</em>(</span>blue|pearl) is shorthand for “the probability of blue given pearl” or “the probability that an egg is painted blue, given that the egg contains a pearl.” The item on the right side is what you <em>already know</em> or the <em>premise</em>, and the item on the left side is the <em>implication</em> or <em>conclusion</em>. If we have <span class="equation"><em>P</em>(</span>blue|pearl) = 30%, and we <em>already know</em> that some egg contains a pearl, then we can <em>conclude</em> there is a 30% chance that the egg is painted blue. Thus, the final fact we’re looking for—“the chance that a blue egg contains a pearl” or “the probability that an egg contains a pearl, if we know the egg is painted blue”—reads <span class="equation"><em>P</em>(</span>pearl|blue).
 </p>
-<p>40% of the eggs contain pearls, and 60% of the eggs contain nothing. 30% of the eggs containing pearls are painted blue, so 12% of the eggs altogether contain pearls and are painted blue. 10% of the eggs containing nothing are painted blue, so altogether 6% of the eggs contain nothing and are painted blue. A total of 18% of the eggs are painted blue, and a total of 12% of the eggs are painted blue and contain pearls, so the chance a blue egg contains a pearl is <span class="fraction">12/18</span> or <span class="fraction">2/3</span> or around 67%.
+<p>40% of the eggs contain pearls, and 60% of the eggs contain nothing. 30% of the eggs containing pearls are painted blue, so 12% of the eggs altogether contain pearls and are painted blue. 10% of the eggs containing nothing are painted blue, so altogether 6% of the eggs contain nothing and are painted blue. A total of 18% of the eggs are painted blue, and a total of 12% of the eggs are painted blue and contain pearls, so the chance a blue egg contains a pearl is <span class="num">12</span><span class="frasl">&frasl;</span><span class="denom">18</span> or <span class="num">2</span><span class="frasl">&frasl;</span><span class="denom">3</span> or around 67%.
 </p>
-<p>As before, we can see the necessity of all three pieces of information by considering extreme cases. In a (large) barrel in which only one egg out of a thousand contains a pearl, knowing that an egg is painted blue slides the probability from 0.1% to 0.3% (instead of sliding the probability from 40% to 67%). Similarly, if 999 out of 1,000 eggs contain pearls, knowing that an egg is blue slides the probability from 99.9% to 99.966%; the probability that the egg does <em>not</em> contain a pearl goes from <span class="fraction">1/1,000</span> to around <span class="fraction">1/3,000</span>.
+<p>As before, we can see the necessity of all three pieces of information by considering extreme cases. In a (large) barrel in which only one egg out of a thousand contains a pearl, knowing that an egg is painted blue slides the probability from 0.1% to 0.3% (instead of sliding the probability from 40% to 67%). Similarly, if 999 out of 1,000 eggs contain pearls, knowing that an egg is blue slides the probability from 99.9% to 99.966%; the probability that the egg does <em>not</em> contain a pearl goes from <span class="num">1/1,000</span> to around <span class="fraction">1</span><span class="frasl">&frasl;</span><span class="denom">3,000</span>.
 </p>
 <p>On the pearl-egg problem, most respondents unfamiliar with Bayesian reasoning would probably respond that the probability a blue egg contains a pearl is 30%, or perhaps 20% (the 30% chance of a true positive minus the 10% chance of a false positive). Even if this mental operation seems like a good idea at the time, it makes no sense in terms of the question asked. It’s like the experiment in which you ask a second-grader: “If eighteen people get on a bus, and then seven more people get on the bus, how old is the bus driver?” Many second-graders will respond: “Twenty-five.” They understand when they’re being prompted to carry out a particular mental procedure, but they haven’t quite connected the procedure to reality. Similarly, to find the probability that a woman with a positive mammography has breast cancer, it makes no sense whatsoever to <em>replace</em> the original probability that the woman has cancer with the probability that a woman with breast cancer gets a positive mammography. Neither can you subtract the probability of a false positive from the probability of the true positive. These operations are as wildly irrelevant as adding the number of people on the bus to find the age of the bus driver.
 </p>
@@ -239,16 +239,16 @@
 </p>
 <p>Suppose we start with a prior probability of 1% that a woman has breast cancer, corresponding to an odds ratio of 1:99. And then we administer three tests of likelihood ratios 25:3, 18:1, and 7:2. You could multiply those numbers… or you <em>could</em> just add their logarithms:
 </p>
-<table class="equation" border="0"><tr><td align="right" valign="top"> 10 log<sub>10</sub>(<span class="fraction">1/99</span>)
+<table class="equation" border="0"><tr><td align="right" valign="top"> 10 log<sub>10</sub>(<span class="num">1</span><span class="frasl">&frasl;</span><span class="denom">99</span>)
 </td><td class="equal_sign" valign="top"> ≈
 </td><td valign="top"> −20
-</td></tr><tr><td align="right" valign="top"> 10 log<sub>10</sub>(<span class="fraction">25/3</span>)
+</td></tr><tr><td align="right" valign="top"> 10 log<sub>10</sub>(<span class="num">25</span><span class="frasl">&frasl;</span><span class="denom">3</span>)
 </td><td class="equal_sign" valign="top"> ≈
 </td><td valign="top"> 9
-</td></tr><tr><td align="right" valign="top"> 10 log<sub>10</sub>(<span class="fraction">18/1</span>)
+</td></tr><tr><td align="right" valign="top"> 10 log<sub>10</sub>(<span class="num">18</span><span class="frasl">&frasl;</span><span class="denom">1</span>)
 </td><td class="equal_sign" valign="top"> ≈
 </td><td valign="top"> 13
-</td></tr><tr><td align="right" valign="top"> 10 log<sub>10</sub>(<span class="fraction">7/2</span>)
+</td></tr><tr><td align="right" valign="top"> 10 log<sub>10</sub>(<span class="num">7</span><span class="frasl">&frasl;</span><span class="denom">2</span>)
 </td><td class="equal_sign" valign="top"> ≈
 </td><td valign="top"> 5 .
 </td></tr></table>
