@@ -305,7 +305,10 @@
 		 (plump:serialize post-body nil))))
 
 (defparameter *html-overrides* (make-hash-table :test 'equal))
-(setf (gethash "afmj8TKAqH6F2QMfZ" *html-overrides*) (lambda () (grab-from-rts "https://www.readthesequences.com/A-Technical-Explanation-Of-Technical-Explanation")))
+(loop for (id url) in '(("afmj8TKAqH6F2QMfZ" "https://www.readthesequences.com/A-Technical-Explanation-Of-Technical-Explanation")
+			("7ZqGiPHTpiDMwqMN2" "https://www.readthesequences.com/The-Twelve-Virtues-Of-Rationality")
+			("aiQabnugDhcrFtr9n" "https://www.readthesequences.com/The-Power-Of-Intelligence"))
+      do (setf (gethash id *html-overrides*) (lambda () (grab-from-rts url))))
 
 (define-lmdb-memoized clean-html (in-html &key with-toc post-id)
   (with-recursive-lock (*memory-intensive-mutex*) ; this is actually thread-safe, but running it concurrently risks running out of memory
