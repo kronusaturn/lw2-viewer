@@ -318,6 +318,9 @@ div[class^='archive-nav-'] {
 .archive-nav span[class^='archive-nav-item-day'] {
 	background-color: #ddd;
 }
+.archive-nav-years .archive-nav-item-year:first-child {
+	width: 6.5%;
+}
 .archive-nav-days .archive-nav-item-day {
 	font-size: 0.8em;
 	padding: 5px 3px 4px 3px;
