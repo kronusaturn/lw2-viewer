@@ -636,11 +636,13 @@
 							(link-if-not out-stream (not (or year month day)) '("archive") "archive-nav-item-year" "All") 
 							(loop for y from earliest-year to current-year
 							      do (link-if-not out-stream (eq y year) (list "archive" y) "archive-nav-item-year" y))
-							(format out-stream "</div><div class=\"archive-nav-months\">")
-							(link-if-not out-stream (not month) (list "archive" year) "archive-nav-item-month" "All") 
-							(loop for m from (if (= (or year current-year) earliest-year) earliest-month 1) to (if (= (or year current-year) current-year) current-month 12)
-							      do (link-if-not out-stream (eq m month) (list "archive" (or year current-year) m) "archive-nav-item-month" (elt local-time:+short-month-names+ m)))
 							(format out-stream "</div>")
+							(when year
+							  (format out-stream "<div class=\"archive-nav-months\">")
+							  (link-if-not out-stream (not month) (list "archive" year) "archive-nav-item-month" "All") 
+							  (loop for m from (if (= (or year current-year) earliest-year) earliest-month 1) to (if (= (or year current-year) current-year) current-month 12)
+								do (link-if-not out-stream (eq m month) (list "archive" (or year current-year) m) "archive-nav-item-month" (elt local-time:+short-month-names+ m)))
+							  (format out-stream "</div>"))
 							(when month
 							  (format out-stream "<div class=\"archive-nav-days\">")
 							  (link-if-not out-stream (not day) (list "archive" year month) "archive-nav-item-day" "All")
