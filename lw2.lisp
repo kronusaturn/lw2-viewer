@@ -284,7 +284,30 @@
 
 (defvar *memory-intensive-mutex* (sb-thread:make-mutex :name "memory-intensive-mutex")) 
 
-(define-lmdb-memoized clean-html (in-html &key with-toc)
+(defun file-get-contents (filename)
+  (with-open-file (stream filename)
+    (let ((contents (make-string (file-length stream))))
+      (read-sequence contents stream)
+      contents)))
+
+(defun grab-from-rts (url)
+  (let* ((root (plump:parse (drakma:http-request url)))
+	 (post-body (plump:get-element-by-id root "wikitext")))
+    (plump:remove-child (elt (clss:select "div.nav_menu" root) 0))
+    (plump:remove-child (elt (clss:select "h1" root) 0))
+    (plump:remove-child (elt (clss:select "p" root) 0))
+    (plump:remove-child (elt (clss:select "a.urllink" root) 0))
+    (plump:remove-child (elt (clss:select "div.bottom_nav" root) 0)) 
+    (concatenate 'string
+		 "<style>"
+		 (file-get-contents "rts.css")
+		 "</style>"
+		 (plump:serialize post-body nil))))
+
+(defparameter *html-overrides* (make-hash-table :test 'equal))
+(setf (gethash "afmj8TKAqH6F2QMfZ" *html-overrides*) (lambda () (grab-from-rts "https://www.readthesequences.com/A-Technical-Explanation-Of-Technical-Explanation")))
+
+(define-lmdb-memoized clean-html (in-html &key with-toc post-id)
   (with-recursive-lock (*memory-intensive-mutex*) ; this is actually thread-safe, but running it concurrently risks running out of memory
     (labels ((tag-is (node &rest args)
 		     (declare (type plump:node node)
@@ -342,46 +365,49 @@
 				     (format nil "<style>~{~A~}</style>" style-list)
 				     ""))))
       (handler-bind
-	(((or plump:invalid-xml-character plump:discouraged-xml-character) #'abort)) 
-	(let ((root (plump:parse in-html))
-	      (contents nil)
-	      (section-count 0)
-	      (style-hash (make-hash-table :test 'equal)))
-	  (plump:traverse root (lambda (node)
-				 (typecase node
-				   (plump:text-node 
-				     (when (text-node-is-not node "a" "style")
-				       (scan-for-urls node))
-				     (when (text-node-is-not node "style")
-				       (setf (plump:text node) (replace-slashes (plump:text node)))))
-				   (plump:element 
-				     (when (tag-is node "a")
-				       (let ((href (plump:attribute node "href")))
-					 (when href
-					   (let ((new-link (convert-lw2-link href)))
-					     (when new-link
-					       (setf (plump:attribute node "href") new-link)))))
-				       (when (only-child-is node "u")
-					 (setf (plump:children node) (plump:children (plump:first-child node)))))
-				     (when (tag-is node "p" "blockquote" "div")
-				       (when (every (lambda (c) (cl-unicode:has-binary-property c "White_Space")) (plump:text node)) 
-					 (plump:remove-child node)))
-				     (when (tag-is node "u")
-				       (when (only-child-is node "a")
-					 (plump:replace-child node (plump:first-child node)))) 
-				     (when (and with-toc (ppcre:scan "^h[1-6]$" (plump:tag-name node)))
-				       (incf section-count) 
-				       (unless (plump:attribute node "id") (setf (plump:attribute node "id") (format nil "section-~A" section-count))) 
-				       (push (list (parse-integer (subseq (plump:tag-name node) 1))
-						   (plump:text node)
-						   (plump:attribute node "id"))
-					     contents))
-				     (when (tag-is node "style")
-				       (setf (gethash (plump:text node) style-hash) t)
-				       (plump:remove-child node)))))) 
-	  (concatenate 'string (if (> section-count 3) (contents-to-html (nreverse contents)) "") 
-		       (style-hash-to-html style-hash) 
-		       (plump:serialize root nil)))))))
+	(((or plump:invalid-xml-character plump:discouraged-xml-character) #'abort))
+	(alexandria:if-let
+	  (override (gethash post-id *html-overrides*))
+	  (funcall override) 
+	  (let ((root (plump:parse in-html))
+		(contents nil)
+		(section-count 0)
+		(style-hash (make-hash-table :test 'equal)))
+	    (plump:traverse root (lambda (node)
+				   (typecase node
+				     (plump:text-node 
+				       (when (text-node-is-not node "a" "style")
+					 (scan-for-urls node))
+				       (when (text-node-is-not node "style")
+					 (setf (plump:text node) (replace-slashes (plump:text node)))))
+				     (plump:element 
+				       (when (tag-is node "a")
+					 (let ((href (plump:attribute node "href")))
+					   (when href
+					     (let ((new-link (convert-lw2-link href)))
+					       (when new-link
+						 (setf (plump:attribute node "href") new-link)))))
+					 (when (only-child-is node "u")
+					   (setf (plump:children node) (plump:children (plump:first-child node)))))
+				       (when (tag-is node "p" "blockquote" "div")
+					 (when (every (lambda (c) (cl-unicode:has-binary-property c "White_Space")) (plump:text node)) 
+					   (plump:remove-child node)))
+				       (when (tag-is node "u")
+					 (when (only-child-is node "a")
+					   (plump:replace-child node (plump:first-child node)))) 
+				       (when (and with-toc (ppcre:scan "^h[1-6]$" (plump:tag-name node)))
+					 (incf section-count) 
+					 (unless (plump:attribute node "id") (setf (plump:attribute node "id") (format nil "section-~A" section-count))) 
+					 (push (list (parse-integer (subseq (plump:tag-name node) 1))
+						     (plump:text node)
+						     (plump:attribute node "id"))
+					       contents))
+				       (when (tag-is node "style")
+					 (setf (gethash (plump:text node) style-hash) t)
+					 (plump:remove-child node)))))) 
+	    (concatenate 'string (if (> section-count 3) (contents-to-html (nreverse contents)) "") 
+			 (style-hash-to-html style-hash) 
+			 (plump:serialize root nil))))))))
 
 (defun pretty-time (timestring &key format)
   (local-time:format-timestring nil (local-time:parse-timestring timestring)
@@ -410,7 +436,7 @@
 	  :link (generate-post-link post nil t)
 	  :author (get-username (cdr (assoc :user-id post)))
 	  :pubDate (pretty-time (cdr (assoc :posted-at post)) :format local-time:+rfc-1123-format+)
-	  :description (clean-html (or (cdr (assoc :html-body (get-post-body (cdr (assoc :--id post)) :revalidate nil))) ""))))))) 
+	  :description (clean-html (or (cdr (assoc :html-body (get-post-body (cdr (assoc :--id post)) :revalidate nil))) "") :post-id (cdr (assoc :--id post)))))))) 
 
 (defun post-body-to-html (post)
   (format nil "<div class=\"post\"><h1>~A</h1><div class=\"post-meta\"><div class=\"author\">~A</div><div class=\"date\">~A</div><div class=\"karma\">~A point~:P</div><a class=\"comment-count\" href=\"#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a></div><div class=\"post-body\">~A</div></div>"
@@ -422,7 +448,7 @@
 	  (cdr (assoc :page-url post)) 
 	  (format nil "~A~A"
 		  (if (cdr (assoc :url post)) (format nil "<p><a href=\"~A\">Link post</a></p>" (cdr (assoc :url post))) "")
-		  (clean-html (or (cdr (assoc :html-body post)) "") :with-toc t)))) 
+		  (clean-html (or (cdr (assoc :html-body post)) "") :with-toc t :post-id (cdr (assoc :--id post)))))) 
 
 (defun comment-to-html (comment &key with-post-title)
   (format nil "<div class=\"comment\"><div class=\"comment-meta\"><div>~A</div><a href=\"~A\">~A</a><div>~A point~:P</div><a href=\"~A#~A\">LW2 link</a>~A</div><div class=\"comment-body\">~A</div></div>"

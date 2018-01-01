@@ -1,0 +1,334 @@
+
+.citation {
+	vertical-align: baseline;
+	position: relative;
+	top: -0.6em;
+	font-size: 65%;
+	font-weight: 600;
+	color: #933;
+}
+#wikitext .citation a:link::before, 
+#wikitext .citation a:visited::before {
+	content: "\200A";
+	margin: 0;
+}
+#wikitext .citation a:link::after, 
+#wikitext .citation a:visited::after {
+	content: "\200A";
+	margin: 0;
+}
+.footnotes {
+	counter-reset: footnotes;
+	font-size: 75%;
+	margin: 3em auto 0px auto;
+	padding-left: 2em;
+	max-width: 620px;
+	font-variant-ligatures: no-contextual;
+    -moz-font-feature-settings: "calt" 0;
+    -webkit-font-feature-settings: "calt" 0;
+    font-feature-settings: "calt" 0;
+	font-variant-ligatures: no-discretionary-ligatures;
+	-moz-font-feature-settings: "dlig" 0;
+	-webkit-font-feature-settings: "dlig" 0;
+	font-feature-settings: "dlig" 0;
+}
+#wikitext .footnotes p em {
+	font-variant-ligatures: no-contextual no-discretionary-ligatures;
+    -moz-font-feature-settings: "calt" 0, "dlig" 0;
+    -webkit-font-feature-settings: "calt" 0, "dlig" 0;
+    font-feature-settings: "calt" 0, "dlig" 0;
+}
+.bibliography {
+	font-size: 90%;
+	text-indent: -2em;
+	margin-top: 1em;
+	text-align: left;
+	font-variant-ligatures: no-contextual;
+    -moz-font-feature-settings: "calt" 0;
+    -webkit-font-feature-settings: "calt" 0;
+    font-feature-settings: "calt" 0;
+}
+#wikitext .bibliography p em {
+	font-variant-ligatures: no-contextual no-discretionary-ligatures;
+    -moz-font-feature-settings: "calt" 0, "dlig" 0;
+    -webkit-font-feature-settings: "calt" 0, "dlig" 0;
+    font-feature-settings: "calt" 0, "dlig" 0;
+}
+#wikitext .noalternates {
+	font-variant-ligatures: no-contextual;
+    -moz-font-feature-settings: "calt" 0;
+    -webkit-font-feature-settings: "calt" 0;
+    font-feature-settings: "calt" 0;
+}
+#wikitext p .noalternates em {
+	font-variant-ligatures: no-contextual;
+    -moz-font-feature-settings: "calt" 0;
+    -webkit-font-feature-settings: "calt" 0;
+    font-feature-settings: "calt" 0;
+}
+.osf {
+	font-variant-numeric: oldstyle-nums;
+	-moz-font-feature-settings: "onum";
+	-webkit-font-feature-settings: "onum";
+	font-feature-settings: "onum";
+}
+.year {
+	font-variant-numeric: oldstyle-nums, proportional-nums;
+	-moz-font-feature-settings: "onum", "pnum";
+	-webkit-font-feature-settings: "onum", "pnum";
+	font-feature-settings: "onum", "pnum";
+}
+#wikitext .footnotes p {
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+.footnote {
+	position: relative;
+}
+.footnote::before {
+	counter-increment: footnotes;
+	content: counter(footnotes) ".";
+/* 
+	font-variant-numeric: oldstyle-nums;
+	-moz-font-feature-settings: "onum";
+	-webkit-font-feature-settings: "onum";
+	font-feature-settings: "onum";
+ */
+	position: absolute;
+	width: 2em;
+	left: -2.5em;
+	text-align: right;
+}
+#wikitext ol {
+	counter-reset: numeric_list;
+	list-style-type: none;
+}
+#wikitext ol li {
+	position: relative;
+}
+#wikitext ol li::before {
+	counter-increment: numeric_list;
+	content: counter(numeric_list) ".";
+	position: absolute;
+	width: 2em;
+	left: -2.5em;
+	text-align: right;
+	font-variant-numeric: oldstyle-nums;
+	-moz-font-feature-settings: "onum";
+	-webkit-font-feature-settings: "onum";
+	font-feature-settings: "onum";
+}
+#wikitext .big_toc ul > li > ol > li, #wikitext .toc ol li {
+	position: initial;
+}
+#wikitext .big_toc ol li::before, #wikitext .toc ol li::before {
+	content: none;
+}
+p.indent {
+	padding-left: 2.9em;
+}
+sup, sub {
+	vertical-align: baseline;
+	position: relative;
+	top: -0.6em;
+	font-size: 65%;
+	font-weight: 500;
+}
+sub {
+	top: 0.3em;
+}
+.equation em + sub, .equation em sub {
+	left: -0.15em;
+	letter-spacing: -0.5px;
+}
+.sup {
+	font-variant-position: super;
+	-moz-font-feature-settings: "sups";
+	-webkit-font-feature-settings: "sups";
+	font-feature-settings: "sups";
+	font-weight: 500;
+}
+.sub {
+	font-variant-position: sub;
+	-moz-font-feature-settings: "subs";
+	-webkit-font-feature-settings: "subs";
+	font-feature-settings: "subs";
+	font-weight: 500;
+}
+.back_to_citation_link {
+	vertical-align: baseline;
+	position: relative;
+	top: 0.1em;
+}
+#wikitext .back_to_citation_link a:link::before {
+	content: "\2005";
+}
+#wikitext .back_to_citation_link a:link::after {
+	content: "\2005";
+}
+.diagram {
+	font-weight: normal;
+	color: #0a0a0a;
+	text-align: center;
+	padding: 8px;
+}
+.wrapper {
+	max-width: 620px;
+	margin: auto;
+}
+hr {
+	height: 0px;
+	text-align: center;
+	width: 40%;
+	border: none;
+	border-bottom: 1px solid black;
+	max-width: 300px;
+	margin-top: 36px;
+	margin-bottom: 36px;
+	box-shadow: 0px 0px 0.5px black;
+}
+.toc hr {
+	border: 0;
+    height: 1px;
+	width: 50%;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+    box-shadow: none;
+    margin: 0.4em auto 0.6em auto;
+}
+#wikitext .spoiler_space {
+	margin-top: 6em;
+	margin-bottom: 6em;
+}
+#wikitext .noli {
+	font-variant-ligatures: no-common-ligatures;
+	-moz-font-feature-settings: "liga" 0, "clig" 0;
+	-webkit-font-feature-settings: "liga" 0, "clig" 0;
+	font-feature-settings: "liga" 0, "clig" 0;
+}
+#wikitext .dlig {
+	font-variant-ligatures: discretionary-ligatures;
+	-moz-font-feature-settings: "dlig";
+	-webkit-font-feature-settings: "dlig";
+	font-feature-settings: "dlig";
+}
+img {
+	vertical-align: middle;
+}
+.fraction {
+	font-variant-numeric: diagonal-fractions;
+	-moz-font-feature-settings: "frac";
+	-webkit-font-feature-settings: "frac";
+	font-feature-settings: "frac";
+	font-size: 120%;
+	line-height: 1;
+	vertical-align: baseline;
+	position: relative;
+	top: 0.05em;
+}
+.equation {
+	letter-spacing: 1px;
+}
+.equation em {
+	letter-spacing: 2px;
+}
+.equation .fraction {
+	letter-spacing: normal;
+}
+.ordinal {
+	font-variant-numeric: ordinal;
+	-moz-font-feature-settings: "ordn";
+	-webkit-font-feature-settings: "ordn";
+	font-feature-settings: "ordn";
+}
+.overline {
+	border-top: 1px solid black;
+	padding-top: 2px;
+	margin-left: -1px;
+}
+.sqrt {
+	display: inline-block;
+	border-top: 1px solid black;
+	padding: 0px 3px 0px 1px;
+	margin: -1px 0px 0px 13.5px;
+}
+.sqrt::before {
+	content: "âˆš";
+	font-style: italic;
+	font-size: 105%;
+	border: none;
+	margin: -2px 0 0 -15px;
+	padding: 0;
+	position: absolute;
+}
+.sigma {
+	font-size: 150%;
+	line-height: 0.75;
+	vertical-align: middle;
+	position: relative;
+    top: 1px;
+}
+.sigma sub {
+	font-size: 43%;
+}
+.bigsigma {
+	font-size: 200%;
+	vertical-align: middle;
+	position: relative;
+    top: 2px;
+    margin-right: -64px;
+}
+.bigsigma sub {
+	font-size: 30%;
+	right: 29px;
+	top: 12px;
+	display: inline-block;
+	width: 2.5em;
+}
+table.equation .bigsigma sub {
+	left: initial;
+	letter-spacing: normal;
+	right: 27px;
+}
+.bigsigma sup {
+	font-size: 30%;
+	right: 60px;
+	top: -33px;
+	display: inline-block;
+	width: 2.5em;
+}
+#wikitext table {
+	margin-left: auto;
+	margin-right: auto;
+}
+table.equation {
+	line-height: 1;
+	margin-bottom: -0.8em;
+	border-collapse: collapse;
+}
+table.equation td {
+	padding-bottom: 0.8em;
+	vertical-align: middle;
+	padding-top: 0px;
+}
+table.equation td.equal_sign {
+	text-align: center; 
+	padding-left: 0.3em;
+	padding-right: 0.3em;
+    position: relative;
+    top: -1px;
+}
+table.equation td.numerator {
+	text-align: center; 
+	border-bottom: 1px solid black;
+	padding-bottom: 0em;
+	vertical-align: bottom;
+}
+table.equation td.denominator {
+	text-align: center; 
+	vertical-align: top;
+	padding-top: 0.2em;
+}
+table.spaced_table td {
+	padding-left: 1em;
+	padding-right: 1em;
+}
