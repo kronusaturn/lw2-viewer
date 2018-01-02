@@ -454,7 +454,7 @@
 (defun post-headline-to-html (post)
   (format nil "<h1 class=\"listing\"><a href=\"~A\">~A</a></h1><div class=\"post-meta\"><div class=\"author\">~A</div><div class=\"date\">~A</div><div class=\"karma\">~A point~:P</div><a class=\"comment-count\" href=\"~A#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a>~A</div>"
 	  (or (cdr (assoc :url post)) (generate-post-link post)) 
-	  (cdr (clean-text (assoc :title post)))
+	  (clean-text (cdr (assoc :title post)))
 	  (get-username (cdr (assoc :user-id post)))
 	  (pretty-time (cdr (assoc :posted-at post))) 
 	  (cdr (assoc :base-score post))
@@ -660,7 +660,7 @@
 				       (setf (hunchentoot:return-code*) 303
 					     (hunchentoot:header-out "Location") (generate-post-link post-id comment-id))
 				       (let ((post (get-post-body post-id))) 
-					 (emit-page (out-stream :title (cdr (clean-text (assoc :title post)))) 
+					 (emit-page (out-stream :title (clean-text (cdr (assoc :title post)))) 
 						    (with-outputs (out-stream) (post-body-to-html post)) 
 						    (force-output out-stream) 
 						    (format out-stream "<div id=\"comments\">~A</div>"
