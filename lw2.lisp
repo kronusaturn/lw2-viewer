@@ -568,9 +568,9 @@
 <script>if(document.getElementById(\"content\").clientHeight <= window.innerHeight + 30) {var e = document.getElementById(\"bottom-bar\"); e.parentNode.removeChild(e)}</script>") 
 
 (defun begin-html (out-stream &key title description current-uri content-class)
-  (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"shortcut icon\" href=\"~A\"></head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
+  (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"shortcut icon\" href=\"~A\"><script src=\"~A\"></script><script>smartquotes();</script></head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
 	  title description
-	  *html-head* (generate-versioned-link "/style.css") (generate-versioned-link "/favicon.ico") content-class
+	  *html-head* (generate-versioned-link "/style.css") (generate-versioned-link "/favicon.ico") (generate-versioned-link "/smartquotes.js") content-class
 	  (nav-bar-to-html (or current-uri (hunchentoot:request-uri*))))
   (force-output out-stream)) 
 
@@ -723,3 +723,4 @@
 
 (define-versioned-resource "/style.css" "text/css") 
 (define-versioned-resource "/favicon.ico" "image/x-icon") 
+(define-versioned-resource "/smartquotes.js" "text/javascript") 
