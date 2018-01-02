@@ -392,6 +392,7 @@
 	  (let ((root (plump:parse in-html))
 		(contents nil)
 		(section-count 0)
+		(aggressive-deformat nil) 
 		(style-hash (make-hash-table :test 'equal)))
 	    (plump:traverse root (lambda (node)
 				   (typecase node
@@ -400,7 +401,13 @@
 					 (scan-for-urls node))
 				       (when (text-node-is-not node "style")
 					 (setf (plump:text node) (replace-slashes (plump:text node)))))
-				     (plump:element 
+				     (plump:element
+				       (alexandria:when-let (style (plump:attribute node "style"))
+					 (when (or aggressive-deformat (search "font-family" style))
+					   (setf aggressive-deformat t) 
+					   (plump:remove-attribute node "style"))) 
+				       (when (and aggressive-deformat (tag-is node "div"))
+					 (setf (plump:tag-name node) "p")) 
 				       (when (tag-is node "a")
 					 (let ((href (plump:attribute node "href")))
 					   (when href
