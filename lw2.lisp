@@ -333,11 +333,20 @@
 		  (with-open-file (stream "text-clean-regexps.js") (parse-js:parse-js stream))
 		  inner)))
       (loop for input in data
-	    collecting (destructuring-bind (* ((* regex *) (* replacement))) input (list regex (ppcre:regex-replace-all "\\$(\\d)" replacement "\\\\\\1"))))))) 
+	    collecting (destructuring-bind (* ((* regex flags) (* replacement))) input
+			 (list regex flags (ppcre:regex-replace-all "\\$(\\d)" replacement "\\\\\\1"))))))) 
 
 (defun clean-text (text)
-  (macrolet ((inner () `(progn ,@(loop for (pattern replacement) in *text-clean-regexps*
-				       collecting `(setf text (ppcre:regex-replace-all ,pattern text ,replacement))))))
+  (macrolet ((inner () `(progn ,@(loop for (regex flags replacement) in *text-clean-regexps*
+				       collecting `(setf text (ppcre:regex-replace-all
+								(ppcre:create-scanner ,regex
+										      ,@(loop for (flag sym) in '((#\i :case-insensitive-mode)
+														  (#\m :multi-line-mode)
+														  (#\s :single-line-mode)
+														  (#\x :extended-mode))
+											      when (find flag flags)
+											      append (list sym t)))
+								text ,replacement))))))
     (inner)))
 
 (define-lmdb-memoized clean-html (in-html &key with-toc post-id)
