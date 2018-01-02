@@ -29,10 +29,8 @@
   
   // turn a hyphen surrounded by spaces, between words, into an em-dash
   [/([a-z]) - ([a-z])/ig, '$1\u2014$2'],
-  // turn a double hyphen surrounded by spaces, between words, into an em-dash
-  [/([a-z]) -- ([a-z])/ig, '$1\u2014$2'],
-  // turn a double hyphen, between words, into an em-dash
-  [/([a-z])--([a-z])/ig, '$1\u2014$2'],
+  // turn a double hyphen, optionally surrounded by spaces, between words, into an em-dash
+  [/([a-z]) ?-- ?([a-z])/ig, '$1\u2014$2'],
   
   // ellipsis rectification
   [/(\s)\.\.\./g, '$1…'],
