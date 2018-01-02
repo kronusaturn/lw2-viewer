@@ -388,7 +388,8 @@
 					  (plump:attribute new-a "href") (or (convert-lw2-link url) (convert-lw1-link url) url))
 				    (plump:make-text-node new-a (clean-text url-raw))
 				    (when new-text
-				      (scan-for-urls new-text))
+				      (scan-for-urls new-text)
+				      (setf (plump:text new-text) (clean-text (plump:text new-text))))
 				    (loop for item across other-children
 					  do (plump:append-child (plump:parent text-node) item)))))))
 	     (contents-to-html (contents)
