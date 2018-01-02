@@ -334,11 +334,23 @@ div[class^='archive-nav-'] {
 }
 .archive-nav-days .archive-nav-item-day {
 	font-size: 0.8em;
-	padding: 5px 3px 4px 3px;
+	padding: 7px 0 5px 0;
 }
 .archive-nav-days .archive-nav-item-day:first-child {
-	padding: 5px 7px 4px 6px;
-	width: 3.5%;
+	width: 4%;
+}
+a.archive-nav-item-day:nth-of-type(n+10) {
+	letter-spacing: -1px;
+	padding-right: 2px;
+}
+a.archive-nav-item-day:nth-of-type(n+20) {
+	letter-spacing: normal;
+	padding-right: 0;
+	padding-left: 1px;
+}
+a.archive-nav-item-day:nth-of-type(21),
+a.archive-nav-item-day:nth-of-type(31) {
+	letter-spacing: -1px;
 }
 
 .archive-nav a:link, .archive-nav a:visited {
