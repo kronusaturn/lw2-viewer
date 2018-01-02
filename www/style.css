@@ -82,8 +82,11 @@ input {
 	color: #bbb;
 }
 #secondary-bar .nav-inner {
-	font-size: 0.9em;
+	font-size: 0.95em;
 	padding: 3px 30px 4px 30px;
+}
+#secondary-bar.active-bar .nav-inner {
+	padding: 4px 30px;
 }
 #bottom-bar a {
 	float: left;
