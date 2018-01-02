@@ -779,6 +779,7 @@ sup, sub {
 }
 sub {
 	top: 0.3em;
+	hyphens: none;
 }
 
 hr {
