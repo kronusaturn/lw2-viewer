@@ -327,6 +327,19 @@
 			 ("7ZqGiPHTpiDMwqMN2" "The-Twelve-Virtues-Of-Rationality"))
       do (let ((file* file)) (setf (gethash id *html-overrides*) (lambda () (rts-to-html file*)))))
 
+(eval-when (:compile-toplevel :load-toplevel :execute) 
+  (defparameter *text-clean-regexps*
+    (let ((data (destructuring-bind (* ((* (* inner))))
+		  (with-open-file (stream "text-clean-regexps.js") (parse-js:parse-js stream))
+		  inner)))
+      (loop for input in data
+	    collecting (destructuring-bind (* ((* regex *) (* replacement))) input (list regex (ppcre:regex-replace-all "\\$(\\d)" replacement "\\\\\\1"))))))) 
+
+(defun clean-text (text)
+  (macrolet ((inner () `(progn ,@(loop for (pattern replacement) in *text-clean-regexps*
+				       collecting `(setf text (ppcre:regex-replace-all ,pattern text ,replacement))))))
+    (inner)))
+
 (define-lmdb-memoized clean-html (in-html &key with-toc post-id)
   (with-recursive-lock (*memory-intensive-mutex*) ; this is actually thread-safe, but running it concurrently risks running out of memory
     (labels ((tag-is (node &rest args)
@@ -349,8 +362,6 @@
 			       (or
 				 (typep (plump:parent node) 'plump:root)
 				 (every (lambda (x) (string/= (plump:tag-name (plump:parent node)) x)) args))) 
-	     (replace-slashes (text)
-			      (ppcre:regex-replace-all "/+" text (load-time-value `(:match ,(string #\ZERO_WIDTH_SPACE)))))
 	     (scan-for-urls (text-node)
 			    (declare (type plump:text-node text-node)) 
 			    (let ((text (plump:text text-node)))
@@ -366,7 +377,7 @@
 					 (new-text (unless (= url-end (length text)) (plump:make-text-node (plump:parent text-node) (subseq text url-end))))) 
 				    (setf (plump:text text-node) (subseq text 0 url-start)
 					  (plump:attribute new-a "href") (or (convert-lw2-link url) (convert-lw1-link url) url))
-				    (plump:make-text-node new-a (replace-slashes url-raw))
+				    (plump:make-text-node new-a (clean-text url-raw))
 				    (when new-text
 				      (scan-for-urls new-text))
 				    (loop for item across other-children
@@ -392,15 +403,22 @@
 	  (let ((root (plump:parse in-html))
 		(contents nil)
 		(section-count 0)
+		(aggressive-deformat nil) 
 		(style-hash (make-hash-table :test 'equal)))
 	    (plump:traverse root (lambda (node)
 				   (typecase node
 				     (plump:text-node 
-				       (when (text-node-is-not node "a" "style")
+				       (when (text-node-is-not node "a" "style" "pre")
 					 (scan-for-urls node))
-				       (when (text-node-is-not node "style")
-					 (setf (plump:text node) (replace-slashes (plump:text node)))))
-				     (plump:element 
+				       (when (text-node-is-not node "style" "pre" "code")
+					 (setf (plump:text node) (clean-text (plump:text node)))))
+				     (plump:element
+				       (alexandria:when-let (style (plump:attribute node "style"))
+					 (when (or aggressive-deformat (search "font-family" style))
+					   (setf aggressive-deformat t) 
+					   (plump:remove-attribute node "style"))) 
+				       (when (and aggressive-deformat (tag-is node "div"))
+					 (setf (plump:tag-name node) "p")) 
 				       (when (tag-is node "a")
 					 (let ((href (plump:attribute node "href")))
 					   (when href
@@ -436,7 +454,7 @@
 (defun post-headline-to-html (post)
   (format nil "<h1 class=\"listing\"><a href=\"~A\">~A</a></h1><div class=\"post-meta\"><div class=\"author\">~A</div><div class=\"date\">~A</div><div class=\"karma\">~A point~:P</div><a class=\"comment-count\" href=\"~A#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a>~A</div>"
 	  (or (cdr (assoc :url post)) (generate-post-link post)) 
-	  (cdr (assoc :title post))
+	  (clean-text (cdr (assoc :title post)))
 	  (get-username (cdr (assoc :user-id post)))
 	  (pretty-time (cdr (assoc :posted-at post))) 
 	  (cdr (assoc :base-score post))
@@ -452,7 +470,7 @@
 				      :description "LessWrong 2 viewer") 
       (dolist (post posts)
 	(xml-emitter:rss-item
-	  (cdr (assoc :title post))
+	  (clean-text (cdr (assoc :title post)))
 	  :link (generate-post-link post nil t)
 	  :author (get-username (cdr (assoc :user-id post)))
 	  :pubDate (pretty-time (cdr (assoc :posted-at post)) :format local-time:+rfc-1123-format+)
@@ -460,7 +478,7 @@
 
 (defun post-body-to-html (post)
   (format nil "<div class=\"post\"><h1>~A</h1><div class=\"post-meta\"><div class=\"author\">~A</div><div class=\"date\">~A</div><div class=\"karma\">~A point~:P</div><a class=\"comment-count\" href=\"#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a></div><div class=\"post-body\">~A</div></div>"
-	  (cdr (assoc :title post))
+	  (clean-text (cdr (assoc :title post)))
 	  (get-username (cdr (assoc :user-id post)))
 	  (pretty-time (cdr (assoc :posted-at post))) 
 	  (cdr (assoc :base-score post))
@@ -479,7 +497,7 @@
 	  (cdr (assoc :page-url comment)) 
 	  (cdr (assoc :--id comment)) 
 	  (if with-post-title
-	    (format nil "<div class=\"comment-post-title\">on: <a href=\"~A\">~A</a></div>" (generate-post-link (cdr (assoc :post-id comment))) (get-post-title (cdr (assoc :post-id comment))))
+	    (format nil "<div class=\"comment-post-title\">on: <a href=\"~A\">~A</a></div>" (generate-post-link (cdr (assoc :post-id comment))) (clean-text (get-post-title (cdr (assoc :post-id comment)))))
 	    "") 
 	  (clean-html (cdr (assoc :html-body comment))))) 
 
@@ -642,7 +660,7 @@
 				       (setf (hunchentoot:return-code*) 303
 					     (hunchentoot:header-out "Location") (generate-post-link post-id comment-id))
 				       (let ((post (get-post-body post-id))) 
-					 (emit-page (out-stream :title (cdr (assoc :title post))) 
+					 (emit-page (out-stream :title (clean-text (cdr (assoc :title post)))) 
 						    (with-outputs (out-stream) (post-body-to-html post)) 
 						    (force-output out-stream) 
 						    (format out-stream "<div id=\"comments\">~A</div>"
