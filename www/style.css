@@ -25,7 +25,7 @@ input {
 	padding: 0 30px;
 	overflow: auto;
 	max-width: 900px;
-	min-height: 100vh;
+/* 	min-height: 100vh; */
 	line-height: 1.55;
 	position: relative;
 }
@@ -612,6 +612,14 @@ h1.listing a[href^="/"]::after {
 
 #comments {
 	border-top: 1px solid #000;
+}
+#comments:empty::before {
+	content: "No comments.";
+	display: block;
+	width: 100%;
+	text-align: center;
+	padding: 0.75em 0 0.9em 0;
+	font-size: 1.2em;
 }
 
 .comment-item input[id^="expand"] {
