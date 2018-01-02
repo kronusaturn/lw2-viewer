@@ -25,5 +25,12 @@
   // double prime
   [/"/g, '\u2033'],
   // prime
-  [/'/g, '\u2032']
+  [/'/g, '\u2032'],
+  
+  // turn a hyphen surrounded by spaces, between words, into an em-dash
+  [/([a-z]) - ([a-z])/ig, '$1\u2014$2'],
+  
+  // ellipsis rectification
+  [/(\s)\.\.\./g, '$1…'],
+  [/\.\.\.(\s)/g, '…$1']
 ]
