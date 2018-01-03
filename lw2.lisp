@@ -195,6 +195,11 @@
 (simple-cacheable ("username" "userid-to-displayname" user-id)
   (cdr (first (lw2-graphql-query (format nil "{UsersSingle(documentId:\"~A\") {displayName}}" user-id))))) 
 
+(defun preload-username-cache ()
+  (let ((user-list (lw2-graphql-query "{UsersList(terms:{}) {_id, displayName}}")))
+    (loop for user in user-list
+	  do (cache-username (cdr (assoc :--id user)) (cdr (assoc :display-name user)))))) 
+
 (defun log-condition (condition)
   (with-open-file (outstream "./logs/error.log" :direction :output :if-exists :append :if-does-not-exist :create)
     (format outstream "~%~A: ~S ~A~%" (local-time:format-timestring nil (local-time:now)) condition condition)
