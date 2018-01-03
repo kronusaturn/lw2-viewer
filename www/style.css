@@ -988,17 +988,17 @@ ol {
 	padding-right: 0.5em;
 	text-align: right;
 }
-.post-body ul {
+.post-body > ul {
 	list-style: none;
 	padding: 0;
 }
-.post-body ul li {
+.post-body > ul li {
 	position: relative;
 /* 	overflow: hidden; */
 	padding-left: 2.5em;
 	text-indent: -2.5em;
 }
-.post-body ul li::before {
+.post-body > ul li::before {
 	content: "•";
 	display: inline-block;
 	width: 2.5em;
