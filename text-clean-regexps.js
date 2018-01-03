@@ -5,7 +5,7 @@
   // triple prime
   [/'''/g, '\u2034'],
   // beginning "
-  [/(\W|^)"(\w)/g, '$1\u201c$2'],
+  [/(\W|^)"(\S)/g, '$1\u201c$2'],
   // ending "
   [/(\u201c[^"]*)"([^"]*$|[^\u201c"]*\u201c)/g, '$1\u201d$2'],
   // remaining " at end of word
@@ -34,5 +34,8 @@
   
   // ellipsis rectification
   [/(\s)\.\.\./g, '$1…'],
-  [/\.\.\.(\s)/g, '…$1']
+  [/\.\.\.(\s)/g, '…$1'],
+  
+  // Hyphen followed by a numeral (with an optional space first), becomes an actual minus sign
+  [/(\s)-( ?)([0-9])/g, '$1\u2212$2$3']
 ]
