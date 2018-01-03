@@ -772,11 +772,18 @@ ul.comment-thread {
 	left: 10px;
 }
 #comments > .comment-thread > li > .comment > .comment-meta a:first-of-type:hover::before {
-	text-decoration: underline;
+	background-color: #fff02a;
+	box-shadow: 
+		0 0 2px #ccc inset,
+		0 0 4px #ccc inset;
 }
 #comments > .comment-thread > li:last-child > .comment > .comment-meta a:first-of-type::before {
 	border-width: 0 1px 1px 1px;
 	padding-bottom: 2px;
+}
+#comments > .comment-thread > li:target > .comment > .comment-meta a:first-of-type::before {
+	background-color: #ffb;
+	box-shadow: 0 0 4px #ccc inset;
 }
 #comments > .comment-thread > li:nth-child(1) > .comment > .comment-meta a:first-of-type::before {
 	top: 2.1em;
@@ -837,6 +844,30 @@ ul.comment-thread {
 }
 #comments > .comment-thread > li:nth-child(20) > .comment > .comment-meta a:first-of-type::before {
 	top: 30.6em;
+}
+#comments .comment-thread > li {
+	position: relative;
+}
+#comments .comment-meta a:first-of-type::after {
+	content: "";
+}
+#comments .comment-meta a:first-of-type:hover::after {
+	content: "";
+	background-color: transparent;
+	box-shadow: 
+		  0 0 0 1px #ccc,
+		  0 0 3px #ffde00,
+		  0 0 5px #ffde00,
+		  0 0 7px #ffde00,
+		  0 0 10px #ffde00,
+		  0 0 15px #ffde00;
+	pointer-events: none;
+	display: block;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
 }
 
 /*********/
