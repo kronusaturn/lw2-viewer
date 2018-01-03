@@ -766,7 +766,8 @@ ul.comment-thread {
 	overflow: hidden;
 	left: 10px;
 }
-#comments > .comment-thread > li > .comment > .comment-meta a:first-of-type:hover::before {
+#comments > .comment-thread > li > .comment > .comment-meta a:first-of-type:hover::before,
+#comments > .comment-thread > li:target > .comment > .comment-meta a:first-of-type:hover::before {
 	background-color: #fff02a;
 	box-shadow: 
 		0 0 2px #ccc inset,
