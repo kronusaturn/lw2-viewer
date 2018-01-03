@@ -733,6 +733,64 @@ ul.comment-thread {
 	margin-bottom: 0;
 }
 
+/*******************************/
+/* COMMENT OVERVIEW/NAVIGATION */
+/*******************************/
+
+#comments:not(:empty)::before {
+	content: "Comment threads";
+	display: block;
+	position: fixed;
+	width: calc((100% - 950px) / 2);
+	top: 0.5em;
+	left: 10px;
+	font-weight: bold;
+	border-color: #aaa;
+	border-style: solid;
+	border-width: 1px 1px 0 1px;
+	padding: 2px 6px 0 6px;
+	background-color: #fff;
+}
+#comments > .comment-thread > li > .comment > .comment-meta a:first-of-type::before {
+	content: attr(title);
+	display: block;
+	position: fixed;
+	width: calc((100% - 950px) / 2);
+	border-color: #aaa;
+	border-style: solid;
+	border-width: 0 1px;
+	padding: 0 6px;
+	background-color: #fff;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	left: 10px;
+}
+#comments > .comment-thread > li > .comment > .comment-meta a:first-of-type:hover::before {
+	text-decoration: underline;
+}
+#comments > .comment-thread > li:last-child > .comment > .comment-meta a:first-of-type::before {
+	border-width: 0 1px 1px 1px;
+	padding-bottom: 2px;
+}
+<?php
+	$num_comment_threads = 20;
+	$comment_links_offset = 0.6;
+	$comment_link_height = 1.5;
+	$comment_link_height_unit = 'em';
+	
+	$out = '';
+	for ($i = 1; $i <= $num_comment_threads; $i++) {
+		$out .= "#comments > .comment-thread > li:nth-child($i) > .comment > .comment-meta a:first-of-type::before {\n";
+		$out .= "\ttop: ";
+		$out .= $comment_links_offset + $i * $comment_link_height;
+		$out .= $comment_link_height_unit;
+		$out .= ";\n}\n";
+	}
+	
+	echo $out;
+?>
+
 /*********/
 /* LINKS */
 /*********/
