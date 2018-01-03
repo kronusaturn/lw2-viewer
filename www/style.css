@@ -731,10 +731,10 @@ ul.comment-thread {
 .comment-body ul {
 	list-style-type: circle;
 }
-.comment-body *:first-child {
+.comment-body > *:first-child {
 	margin-top: 0;
 }
-.comment-body *:last-child {
+.comment-body > *:last-child {
 	margin-bottom: 0;
 }
 
