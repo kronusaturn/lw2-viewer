@@ -286,7 +286,8 @@ input {
 	color: #f00;
 }
 
-#nav-item-archive {
+#nav-item-archive,
+#nav-item-login {
 	width: 10%;
 }
 
@@ -515,6 +516,64 @@ h1.listing a[href^="/"]::after {
 }
 #content.search-results-page .post-meta .author {
   font-weight: 500;
+}
+
+/**************/
+/* LOGIN FORM */
+/**************/
+
+.login-container {
+	display: table;
+	table-layout: fixed;
+	width: 100%;
+	margin: 1em 0 5em;
+}
+.login-container > div {
+	display: table-cell;
+}
+.login-container > div > h1 {
+	text-align: center;
+}
+
+.aligned-form > div {
+	display: table;
+	table-layout: fixed;
+	margin: 1em auto 1.5em;
+	width: 100%;
+	padding: 0;
+}
+.aligned-form > div > div {
+	display: table-row;
+	width: 100%;
+	padding: 0;
+}
+.aligned-form > div > div > label,
+.aligned-form > div > div > input {
+	display: table-cell;
+	margin: 0.25em 1em;
+	padding: 0;
+}
+.aligned-form > div > div > label {
+	width: 9em;
+}
+.aligned-form > div > div > input {
+	width: calc(100% - 2em);
+}
+.aligned-form label {
+	text-align: right;
+}
+.aligned-form > input {
+	display: block;
+	margin: auto;
+	padding: 0.25em 0.5em;
+	width: 50%;
+}
+.error-box {
+	margin-top: 1.5em;
+	margin-bottom: -1.5em;
+	text-align: center;
+	border: 1px solid red;
+	background-color: #faa;
 }
 
 /*********************/
@@ -1020,6 +1079,12 @@ ol {
 	}
 	.nav-bar {
 		margin: 0 -4px;
+	}
+	.login-container, .login-container > div {
+		display: block;
+	}
+	.aligned-form > div > div > input {
+		margin-right: 8vw;
 	}
 	.contents {
 		float: none;

@@ -1,5 +1,5 @@
 (defpackage lw2-viewer
-  (:use #:cl #:sb-thread #:flexi-streams))
+  (:use #:cl #:sb-thread #:flexi-streams #:lw2-viewer.config #:lw2.login))
 
 (in-package #:lw2-viewer) 
 
@@ -59,14 +59,14 @@
 
 (defun lw2-graphql-query-streamparse (query)
   (multiple-value-bind (req-stream status-code headers final-uri reuse-stream)
-    (drakma:http-request "https://www.lesserwrong.com/graphql" :parameters (list (cons "query" query))
+    (drakma:http-request *graphql-uri* :parameters (list (cons "query" query))
 			 :cookie-jar *cookie-jar* :want-stream t)
     (declare (ignore status-code headers final-uri reuse-stream))
     (setf (flexi-stream-external-format req-stream) :utf-8)
     (rest (cadar (json:decode-json req-stream))))) 
 
 (defun lw2-graphql-query-noparse (query)
-    (octets-to-string (drakma:http-request "https://www.lesserwrong.com/graphql" :parameters (list (cons "query" query))
+    (octets-to-string (drakma:http-request *graphql-uri* :parameters (list (cons "query" query))
 			 :cookie-jar *cookie-jar* :want-stream nil)
 		      :external-format :utf-8)) 
 
@@ -578,7 +578,8 @@
 			      ("recent-comments" "/recentcomments" "<span>Recent </span>Comments" :description "Latest comments" :accesskey "c"))) 
 
 (defparameter *secondary-nav* `(("archive" "/archive" "Archive")
-				("search" "/search" "Search" :html ,#'search-bar-to-html))) 
+				("search" "/search" "Search" :html ,#'search-bar-to-html)
+				("login" "/login" "Log In"))) 
 
 (defun nav-bar-to-html (&optional current-uri)
   (let ((primary-bar "primary-bar")
@@ -718,6 +719,68 @@
 						  (with-outputs (out-stream) "<ul class=\"comment-thread\">") 
 						  (map-output out-stream (lambda (c) (format nil "<li class=\"comment-item\">~A</li>" (comment-to-html (search-result-markdown-to-html c) :with-post-title t))) comments)
 						  (with-outputs (out-stream) "</ul>")))))) 
+
+(defun output-form (out-stream method action id class csrf-token fields button-label)
+  (format out-stream "<form method=\"~A\" action=\"~A\" id=\"~A\" class=\"~A\"><div>" method action id class)
+  (loop for (id label type) in fields
+	do (format out-stream "<div><label for=\"~A\">~A:</label><input type=\"~A\" name=\"~@*~A\"></div>" id label type))
+  (format out-stream "<div><input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><input type=\"submit\" value=\"~A\"></div></div></form>" csrf-token button-label)) 
+
+(defun make-csrf-token (session-token &optional (nonce (ironclad:make-random-salt)))
+  (if (typep session-token 'string) (setf session-token (base64:base64-string-to-usb8-array session-token)))
+  (let ((csrf-token (concatenate '(vector (unsigned-byte 8)) nonce (ironclad:digest-sequence :sha256 (concatenate '(vector (unsigned-byte 8)) nonce session-token)))))
+    (values (base64:usb8-array-to-base64-string csrf-token) csrf-token))) 
+
+(defun check-csrf-token (session-token csrf-token)
+  (let* ((session-token (base64:base64-string-to-usb8-array session-token))
+	 (csrf-token (base64:base64-string-to-usb8-array csrf-token))
+	 (correct-token (nth-value 1 (make-csrf-token session-token (subseq csrf-token 0 16)))))
+    (assert (ironclad:constant-time-equal csrf-token correct-token) nil "CSRF check failed.")
+    t)) 
+
+(hunchentoot:define-easy-handler (view-login :uri "/login") (return cookie-check (csrf-token :request-type :post) (login-username :request-type :post) (login-password :request-type :post))
+				 (with-error-page
+				   (labels
+				     ((emit-login-page (&key error-message)
+					(let ((csrf-token (make-csrf-token (hunchentoot:cookie-in "session-token"))))
+					  (emit-page (out-stream :title "Log in" :current-uri "/login" :content-class "login-page")
+						     (when error-message
+						       (format out-stream "<div class=\"error-box\">~A</div>" error-message)) 
+						     (with-outputs (out-stream) "<div class=\"login-container\"><div id=\"login-form-container\"><h1>Log in</h1>")
+						     (output-form out-stream "post" (format nil "/login~@[?return=~A~]" (if return (url-rewrite:url-encode return))) "login-form" "aligned-form" csrf-token
+								  '(("login-username" "Username" "text")
+								    ("login-password" "Password" "password"))
+								  "Log in")
+						     (with-outputs (out-stream) "</div><div id=\"create-account-form-container\"><h1>Create account</h1>")
+						     (output-form out-stream "post" (format nil "/login~@[?return=~A~]" (if return (url-rewrite:url-encode return))) "signup-form" "aligned-form" csrf-token
+								  '(("signup-username" "Username" "text")
+								    ("signup-email" "Email" "text")
+								    ("signup-password" "Password" "password")
+								    ("signup-password2" "Confirm password" "password"))
+								  "Create account")
+						     (with-outputs (out-stream) "</div></div>"))))) 
+				     (cond
+				       ((not (or cookie-check (hunchentoot:cookie-in "session-token")))
+					(hunchentoot:set-cookie "session-token" :value (base64:usb8-array-to-base64-string (ironclad:make-random-salt)))
+					(setf (hunchentoot:return-code*) 303
+					      (hunchentoot:header-out "Location") (format nil "/login?~@[return=~A&~]cookie-check=y" (if return (url-rewrite:url-encode return))))) 
+				       (cookie-check
+					 (if (hunchentoot:cookie-in "session-token")
+					   (setf (hunchentoot:return-code*) 303
+						 (hunchentoot:header-out "Location") (format nil "/login~@[?return=~A~]" (if return (url-rewrite:url-encode return))))
+					   (emit-page (out-stream :title "Log in" :current-uri "/login")
+						      (format out-stream "<h1>Enable cookies</h1><p>Please enable cookies in your browser and <a href=\"/login~@[?return=~A~]\">try again</a>.</p>" (if return (url-rewrite:url-encode return)))))) 
+				       (login-username
+					 (check-csrf-token (hunchentoot:cookie-in "session-token") csrf-token)
+					 (multiple-value-bind (auth-token error-message) (do-lw2-login "username" login-username login-password) 
+					   (cond (auth-token
+						   (hunchentoot:set-cookie "lw2-auth-token" :value auth-token) 
+						   (setf (hunchentoot:return-code*) 303
+							 (hunchentoot:header-out "Location") (if (and return (ppcre:scan "^/[^/]" return)) return "/")))
+						 (t
+						   (emit-login-page :error-message error-message))))) 
+				       (t
+					 (emit-login-page)))))) 
 
 (defparameter *earliest-post* (local-time:parse-timestring "2005-01-01")) 
 
