@@ -771,6 +771,12 @@ ul.comment-thread {
 	overflow: hidden;
 	left: 10px;
 }
+#comments > .comment-thread > li:hover > .comment > .comment-meta a:first-of-type::before {
+	background-color: #ffd;
+	box-shadow: 
+		0 0 2px #ccc inset,
+		0 0 4px #ccc inset;
+}
 #comments > .comment-thread > li > .comment > .comment-meta a:first-of-type:hover::before,
 #comments > .comment-thread > li:target > .comment > .comment-meta a:first-of-type:hover::before {
 	background-color: #fff02a;
@@ -869,6 +875,28 @@ ul.comment-thread {
 	height: 100%;
 	top: 0;
 	left: 0;
+}
+
+#comments::after {
+	content: "";
+	background-color: #d8d8d8;
+	display: block;
+	position: fixed;
+	height: 500px;
+	height: calc(100vh - 1em);
+	width: calc((100% - 950px) / 2);
+	top: 0.5em;
+	left: 10px;
+	opacity: 0.8;
+	pointer-events: none;
+}
+#comments:hover::after {
+	opacity: 0;
+}
+#comments:active::after,
+#comments:target::after,
+#comments:focus-within::after {
+	display: none;
 }
 
 /*********/
