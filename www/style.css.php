@@ -100,26 +100,6 @@ input {
 	float: left;
 	width: 100%;
 }
-#bottom-bar a[href='#top']::after {
-	content: '\21E1';
-	color: #777;
-	background-color: #e4e4e4;
-	font-size: 1.5rem;
-	line-height: 1.7;
-	display: block;
-	position: fixed;
-	top: unset;
-	left: unset;
-	bottom: 20px;
-	right: calc((100vw - 900px) / 2 - 75px);
-	width: 40px;
-	height: 40px;
-	border-radius: 4px;
-}
-#bottom-bar a[href='#top']:hover::after {
-	color: #000;
-	background-color: #eee;
-}
 .nav-bar a:link,
 .nav-bar a:visited {
 	color: #00e;
@@ -307,6 +287,48 @@ input {
 #nav-item-archive {
 	width: 10%;
 }
+
+/*******************/
+/* QUICKNAV WIDGET */
+/*******************/
+
+#bottom-bar a[href='#top']::after,
+.post-meta a[href='#comments']::after,
+.post-meta a[href='#bottom-bar']::after {
+	color: #777;
+	background-color: #e4e4e4;
+	font-size: 1.5rem;
+	line-height: 1.7;
+	display: block;
+	position: fixed;
+	top: unset;
+	left: unset;
+	right: calc((100vw - 900px) / 2 - 75px);
+	width: 40px;
+	height: 40px;
+	border-radius: 4px;
+}
+
+#bottom-bar a[href='#top']::after {
+	content: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("arrow-up.svg")) ?>');
+	bottom: 120px;
+}
+.post-meta a[href='#comments']::after {
+	content: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("align-left.svg")) ?>');
+	bottom: 70px;
+}
+.post-meta a[href='#bottom-bar']::after {
+	content: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("arrow-down.svg")) ?>');
+	bottom: 20px;
+}
+
+#bottom-bar a[href='#top']:hover::after,
+.post-meta a[href='#comments']:hover::after,
+.post-meta a[href='#bottom-bar']:hover::after  {
+	color: #000;
+	background-color: #eee;
+}
+
 
 /************/
 /* ARCHIVES */
