@@ -1,0 +1,18 @@
+/****************/
+/* FONT AWESOME */
+/****************/
+
+@font-face {
+  font-family: 'Font Awesome';
+  src: url('fa-regular-400.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Font Awesome';
+  src: url('fa-solid-900.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+}
+
