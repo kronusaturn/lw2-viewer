@@ -519,7 +519,7 @@
 	  (cdr (assoc :--id comment)) 
 	  (if with-post-title
 	    (format nil "<div class=\"comment-post-title\">on: <a href=\"~A\">~A</a></div>" (generate-post-link (cdr (assoc :post-id comment))) (clean-text (get-post-title (cdr (assoc :post-id comment)))))
-	    "") 
+	    (format nil "~@[<a class=\"comment-parent-link\" href=\"#~A\">Parent</a>~]" (cdr (assoc :parent-comment-id comment)))) 
 	  (clean-html (cdr (assoc :html-body comment))))) 
 
 (defun make-comment-parent-hash (comments)
