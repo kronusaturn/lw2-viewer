@@ -2,6 +2,8 @@
 	header ('Content-type: text/css; charset=utf-8');
 ?>
 
+<?php echo file_get_contents('fa-custom.css'); ?>
+
 html {
 	box-sizing: border-box;
 	font-size: 16px;
@@ -294,6 +296,8 @@ input {
 .post-meta a[href='#bottom-bar']::after {
 	color: #777;
 	background-color: #e4e4e4;
+	font-family: 'Font Awesome';
+	font-weight: 900;
 	font-size: 1.5rem;
 	line-height: 1.7;
 	display: block;
@@ -307,15 +311,15 @@ input {
 }
 
 #bottom-bar a[href='#top']::after {
-	content: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("arrow-up.svg")) ?>');
+	content: '\F106';
 	bottom: 120px;
 }
 .post-meta a[href='#comments']::after {
-	content: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("align-left.svg")) ?>');
+	content: '\F036';
 	bottom: 70px;
 }
 .post-meta a[href='#bottom-bar']::after {
-	content: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("arrow-down.svg")) ?>');
+	content: '\F107';
 	bottom: 20px;
 }
 
@@ -326,6 +330,9 @@ input {
 	background-color: #eee;
 }
 
+.listing ~ #bottom-bar a[href='#top']::after {
+	display: none;
+}
 
 /************/
 /* ARCHIVES */
@@ -475,7 +482,7 @@ h1.listing a[href^="/"]:hover {
 	color: #777;
 }
 h1.listing a::after { 
-	content: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNDIzIDI5OCI+Cgk8ZGVmcyBpZD0iZGVmczQ4IiAvPgoJPGcgaWQ9IkxheWVyXzVfOTFfIiB0cmFuc2Zvcm09Im1hdHJpeCgwLDEsMSwwLC0yLjY0NzM4NzJlLTQsLTYyLjg2MjE0OSkiPgoJCTxwYXRoIGQ9Im0gMjYzLjY4MiwxMjIuMTI4IC0xMy45OTEsLTYuODA4IGMgLTQuNjkyLC0yLjI4NCAtMTAuMzYzLC0wLjMyNiAtMTIuNjQ3LDQuMzY2IEwgMTU0Ljk5NiwyODguMjggYyAtMi4yODIsNC42ODggLTAuMzI0LDEwLjM1OCA0LjM2OSwxMi42NDUgbCAxMy45ODksNi44MSBjIDQuNjg5LDIuMjggMTAuMzYxLDAuMzIyIDEyLjY0MywtNC4zNjQgbCA4Mi4wNDksLTE2OC41OTUgYyAyLjI4MywtNC42OTMgMC4zMjUsLTEwLjM2NCAtNC4zNjQsLTEyLjY0OCB6IiBpZD0icGF0aDEwIiAvPgoJCTxwYXRoIGQ9Im0gMTgwLjQ1LDE3OC45MzEgYyAxLjY4MywyLjUyMyA2LjYzNSw0LjU1IDguNTQ0LDAuNjE4IDMuOTQ5LC04LjEzMyAxMC40NjIsLTIxLjUzOCAxMy4yNjMsLTI3LjIzMyAyLjUwNSwtNS4wOTUgMC42NzMsLTEzLjM3IDAuMDY5LC0xNi44ODMgLTEuMDUxLC02LjEyMSAtMC43MTcsLTEyLjEyNCAxLjgwMSwtMTcuMjk4IGwgMjkuNzUsLTYxLjEyOSBjIDkuNywtMTkuOTMzIDQwLjg4NCwtMjQuNjExIDYwLjIzMywtMTUuMTkzIDAuMjMzLDAuMTEzIDAuNDYyLDAuMjQxIDAuNjk0LDAuMzU5IDAuMjM0LDAuMTExIDAuNDc5LDAuMjE1IDAuNzA5LDAuMzMgMTkuMjcxLDkuNTc4IDM0LjYwNCwzNy4xMzEgMjQuNzM2LDU2Ljk4MiBsIC0zMC4yNTQsNjAuODgxIGMgLTIuNTYsNS4xNTIgLTcuMTA4LDkuMDgyIC0xMi42MDEsMTEuOTg2IC0zLjE1LDEuNjY3IC0xMC44MjMsNS4yNjggLTEzLjMyOSwxMC4zNjIgLTIuODAxLDUuNjk1IC05LjQ0MSwxOS4wMzggLTEzLjQ3NSwyNy4xMyAtMS45NDcsMy45MTMgMi42ODIsNi42IDUuNzA1LDYuMzkxIDI2LjUyMSwtMS44MjMgNTQuNTQsLTE0LjM4IDY2Ljk0NSwtMzkuMzQ3IGwgMzAuMjU0LC02MC44OCBDIDM3MS40NjMsNzkuODUgMzUxLjY5OSwyOC45NjYgMzEyLjAzLDkuMjUzIDMxMS43NTEsOS4xMTQgMzExLjQ2OCw4Ljk4MyAzMTEuMTg3LDguODQ5IDMxMC45MDgsOC43MDggMzEwLjYzMiw4LjU2NSAzMTAuMzUxLDguNDI4IDI3MC41MjEsLTEwLjk1NiAyMTguMTU0LDQuNDU1IDIwMC40ODMsNDAuNzU5IGwgLTI5Ljc1LDYxLjEyOSBjIC0xMi4xOSwyNS4wNyAtNS4wMjgsNTQuOTI1IDkuNzE3LDc3LjA0MyB6IiBpZD0icGF0aDEyIiAvPgoJCTxwYXRoIGQ9Im0gMjQyLjU5NiwyNDQuMTA4IGMgLTEuNjg1LC0yLjUyMiAtNi42MzgsLTQuNTUxIC04LjU0NywtMC42MTYgLTMuOTQ2LDguMTMzIC0xMC40NjEsMjEuNTM3IC0xMy4yNjIsMjcuMjMxIC0yLjUwNiw1LjA5NiAtMC42NzQsMTMuMzY5IC0wLjA3LDE2Ljg4NCAxLjA1Myw2LjEyIDAuNzE5LDEyLjEyNCAtMS44MDEsMTcuMjk3IGwgLTI5Ljc1LDYxLjEyOSBjIC05LjcwMSwxOS45MzQgLTQwLjg4MywyNC42MTEgLTYwLjIzNCwxNS4xOTMgLTAuMjMzLC0wLjExMiAtMC40NjMsLTAuMjQgLTAuNjk1LC0wLjM1OCAtMC4yMzUsLTAuMTEgLTAuNDc4LC0wLjIxNiAtMC43MDksLTAuMzMgLTE5LjI3MywtOS41NzcgLTM0LjYwNCwtMzcuMTMgLTI0LjczOCwtNTYuOTgyIGwgMzAuMjU0LC02MC44ODEgYyAyLjU2MSwtNS4xNTEgNy4xMTEsLTkuMDgxIDEyLjYwMSwtMTEuOTg1IDMuMTUxLC0xLjY2NyAxMC44MjMsLTUuMjY4IDEzLjMyOSwtMTAuMzYgMi44MDEsLTUuNjk1IDkuNDQxLC0xOS4wMzcgMTMuNDczLC0yNy4xMzIgMS45NDksLTMuOTEzIC0yLjY4LC02LjU5OSAtNS43MDUsLTYuMzkxIC0yNi41MiwxLjgyNSAtNTQuNTM5LDE0LjM4IC02Ni45NDUsMzkuMzQ4IGwgLTMwLjI1NCw2MC44ODEgYyAtMTcuOTY4LDM2LjE1NSAxLjc5Niw4Ny4wNCA0MS40NjUsMTA2Ljc1MyAwLjI3OSwwLjE0IDAuNTYzLDAuMjcxIDAuODQzLDAuNDA0IDAuMjc4LDAuMTQxIDAuNTU1LDAuMjgzIDAuODM2LDAuNDIxIDM5LjgyOSwxOS4zODQgOTIuMTk4LDMuOTc0IDEwOS44NjgsLTMyLjMzMSBsIDI5Ljc0OCwtNjEuMTI5IGMgMTIuMTk4LC0yNS4wNzEgNS4wMzYsLTU0LjkyOCAtOS43MDcsLTc3LjA0NiB6IiBpZD0icGF0aDE0IiAvPgoJPC9nPgo8L3N2Zz4=');
+	content: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("chain-link.svg")) ?>');
 	width: 30px;
 	position: absolute;
 	top: 0px;
