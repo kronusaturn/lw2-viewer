@@ -711,7 +711,7 @@ h1.listing a[href^="/"]::after {
 	max-height: 34px;
 	overflow: hidden;
 }
-.comment-item input[id^="expand"] ~ .comment-thread li:first-child {
+.comment-item input[id^="expand"] ~ .comment-thread > li:first-child {
 	margin-top: 0;
 }
 .comment-item input[id^="expand"]:checked ~ .comment-thread {
