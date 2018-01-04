@@ -722,15 +722,15 @@ h1.listing a[href^="/"]::after {
 	}
 ?>
 
-<?php nested_stuff(".comment-item .comment-item ", ".comment-item,\n", ".comment-item", 5); ?> {
+<?php nested_stuff(".comment-item .comment-item ", ".comment-item,\n", ".comment-item", 7); ?> {
 	background-color: #eee;
 }
 
-<?php nested_stuff(".comment-item .comment-item ", ".comment-item .comment-item,\n", ".comment-item .comment-item", 5); ?> {
+<?php nested_stuff(".comment-item .comment-item ", ".comment-item .comment-item,\n", ".comment-item .comment-item", 7); ?> {
 	background-color: #fff;
 }
 
-<?php nested_stuff(".comment-item ", ".comment-item:target,\n", ".comment-item:target", 9); ?> {
+<?php nested_stuff(".comment-item ", ".comment-item:target,\n", ".comment-item:target", 13); ?> {
 	background-color: #ffd;
 }
 
