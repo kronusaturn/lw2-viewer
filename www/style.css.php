@@ -685,7 +685,7 @@ h1.listing a[href^="/"]::after {
 	margin: 8px 9px;
 }
 .comment-item input[id^="expand"] + label::after {
-	content: "(Expand comments below)";
+	content: "(Expand " attr(data-child-count) "  below)";
 	visibility: visible;
 	position: absolute;
 	left: 0;
@@ -694,7 +694,7 @@ h1.listing a[href^="/"]::after {
 	font-weight: 500;
 }
 .comment-item input[id^="expand"]:checked + label::after {
-	content: "(Collapse comments below)";
+	content: "(Collapse " attr(data-child-count) "  below)";
 }
 .comment-item input[id^="expand"] + label:hover::after {
 	color: #c00;
