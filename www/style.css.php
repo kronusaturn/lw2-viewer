@@ -782,6 +782,32 @@ ul.comment-thread {
 	margin-bottom: 0;
 }
 
+a.comment-parent-link {
+	opacity: 0.5;
+}
+a.comment-parent-link:hover {
+	opacity: 1.0;
+}
+
+a.comment-parent-link::before {
+	content: "";
+	position: absolute;
+	display: block;
+	background-origin: content-box;
+	background-repeat: repeat-y;
+	background-position: top center;
+	padding: 0 4px 0 3px;
+	width: 16px;
+	height: calc(100% + 2px);
+	top: calc(-1 * (1px));
+	left: -16px;
+}
+a.comment-parent-link:hover::before {
+	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("angle-up.svg")) ?>');
+	background-color: #ff0;
+	opacity: 0.15;
+}
+
 /*******************************/
 /* COMMENT OVERVIEW/NAVIGATION */
 /*******************************/
