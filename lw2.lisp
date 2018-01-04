@@ -524,7 +524,17 @@
 	(setf (gethash parent-id hash) (cons c old))))
     (maphash (lambda (k old)
 	       (setf (gethash k hash) (nreverse old)))
-	     hash) 
+	     hash)
+    (labels
+      ((count-children (parent)
+	(let ((children (gethash (cdr (assoc :--id parent)) hash)))
+	  (+ (length children) (apply #'+ (map 'list #'count-children children))))) 
+       (add-child-counts (comment-list) 
+	(loop for c in comment-list
+	      as id = (cdr (assoc :--id c)) 
+	      do (setf (gethash id hash) (add-child-counts (gethash id hash))) 
+	      collecting (cons (cons :child-count (count-children c)) c))))
+      (setf (gethash nil hash) (add-child-counts (gethash nil hash)))) 
     hash)) 
 
 (defun comment-tree-to-html (comment-hash &optional (target nil) (level 0))
@@ -537,8 +547,9 @@
 				   c-id
 				   (comment-to-html c)
 				   (if (and (= level 10) (gethash c-id comment-hash))
-				     (format nil "<input type=\"checkbox\" id=\"expand-~A\"><label for=\"expand-~:*~A\">Expand this thread</label>"
-					     c-id)
+				     (format nil "<input type=\"checkbox\" id=\"expand-~A\"><label for=\"expand-~:*~A\" data-child-count=\"~A comment~:P\">Expand this thread</label>"
+					     c-id
+					     (cdr (assoc :child-count c)))
 				     "") 
 				   (comment-tree-to-html comment-hash c-id (1+ level)))))
 		   comments))
