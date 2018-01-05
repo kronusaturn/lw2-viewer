@@ -294,7 +294,7 @@ input {
 #bottom-bar a[href='#top']::after,
 .post-meta a[href='#comments']::after,
 .post-meta a[href='#bottom-bar']::after {
-	color: #777;
+	color: #999;
 	background-color: #e4e4e4;
 	font-family: 'Font Awesome';
 	font-weight: 900;
