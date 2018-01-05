@@ -791,21 +791,46 @@ a.comment-parent-link:hover {
 
 a.comment-parent-link::before {
 	content: "";
+	font-family: "Font Awesome";
+	font-weight: 900;
+	font-size: 0.75rem;
+	color: #bbb;
+	line-height: 1;
 	position: absolute;
+	z-index: 1;
 	display: block;
 	background-origin: content-box;
 	background-repeat: repeat-y;
 	background-position: top center;
-	padding: 0 4px 0 3px;
+	padding: 3px 3px 0 3px;
 	width: 16px;
 	height: calc(100% + 2px);
-	top: calc(-1 * (1px));
-	left: -16px;
+	top: -1px;
+	left: -17px;
+	content: "\F062";
 }
 a.comment-parent-link:hover::before {
-	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("angle-up.svg")) ?>');
-	background-color: #ff0;
-	opacity: 0.15;
+	background-color: #ffd;
+	color: #999;
+}
+a.comment-parent-link::after {
+	content: "";
+	position: absolute;
+	z-index: 0;
+	display: block;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	pointer-events: none;
+	box-shadow: 
+		0 0 0 1px #ccc,
+		-4px -4px 0 13px #ffd;
+	overflow: hidden;
+	visibility: hidden;
+}
+a.comment-parent-link:hover::after {
+	visibility: visible;
 }
 
 /*******************************/
