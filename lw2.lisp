@@ -160,10 +160,14 @@
 (defun lw2-search-query (query)
   (let ((req-stream (drakma:http-request "https://z0gr6exqhd-dsn.algolia.net/1/indexes/*/queries?x-algolia-agent=Algolia%20for%20vanilla%20JavaScript%203.24.5%3Breact-instantsearch%204.1.3%3BJS%20Helper%202.23.0&x-algolia-application-id=Z0GR6EXQHD&x-algolia-api-key=0b1d20b957917dbb5e1c2f3ad1d04ee2"
 					 :method :post :additional-headers '(("Origin" . "https://www.greaterwrong.com") ("Referer" . "https://www.greaterwrong.com/"))
-					 :content (format nil "{\"requests\":[{\"indexName\":\"test_posts\",\"params\":\"query=~A&hitsPerPage=20&page=0\"}]}" (url-rewrite:url-encode query))
+					 :content (json:encode-json-alist-to-string `(("requests" . ,(loop for index in '("test_posts" "test_comments")
+													   collect `(("indexName" . ,index)
+														     ("params" . ,(format nil "query=~A&hitsPerPage=20&page=0"
+																	  (url-rewrite:url-encode query)))))))) 
 					 :want-stream t)))
     (setf (flexi-stream-external-format req-stream) :utf-8)
-    (cdr (assoc :hits (first (cdr (assoc :results (json:decode-json req-stream))))))))
+    (values-list (loop for r in (cdr (assoc :results (json:decode-json req-stream)))
+		       collect (cdr (assoc :hits r))))))
 
 (defun make-simple-cache (cache-db)
   (lambda (key value) (cache-put cache-db key value))) 
@@ -692,13 +696,19 @@
 						(map-output out-stream (lambda (c) (format nil "<li class=\"comment-item\">~A</li>" (comment-to-html c :with-post-title t))) recent-comments)
 						(with-outputs (out-stream) "</ul>")))))
 
+(defun search-result-markdown-to-html (item)
+  (cons (cons :html-body (markdown:parse (cdr (assoc :body item)))) item)) 
+
 (hunchentoot:define-easy-handler (view-search :uri "/search") (q)
 				 (with-error-page
-				   (let ((posts (lw2-search-query q))
-					 (*current-search-query* q)) 
+				   (let ((*current-search-query* q)) 
 				     (declare (special *current-search-query*)) 
-				     (emit-page (out-stream :title "Search" :current-uri "/search" :content-class "search-results-page")
-						(map-output out-stream #'post-headline-to-html posts))))) 
+				     (multiple-value-bind (posts comments) (lw2-search-query q)
+				       (emit-page (out-stream :title "Search" :current-uri "/search" :content-class "search-results-page")
+						  (map-output out-stream #'post-headline-to-html posts)
+						  (with-outputs (out-stream) "<ul class=\"comment-thread\">") 
+						  (map-output out-stream (lambda (c) (format nil "<li class=\"comment-item\">~A</li>" (comment-to-html (search-result-markdown-to-html c) :with-post-title t))) comments)
+						  (with-outputs (out-stream) "</ul>")))))) 
 
 (defparameter *earliest-post* (local-time:parse-timestring "2005-01-01")) 
 
