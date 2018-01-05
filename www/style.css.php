@@ -799,9 +799,6 @@ a.comment-parent-link::before {
 	position: absolute;
 	z-index: 1;
 	display: block;
-	background-origin: content-box;
-	background-repeat: repeat-y;
-	background-position: top center;
 	padding: 3px 3px 0 3px;
 	width: 16px;
 	height: calc(100% + 2px);
