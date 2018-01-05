@@ -277,13 +277,21 @@
 			      (multiple-value-list
 				(city-hash:city-hash-128 data)))))) 
 
-  (defun hash-printable-object (object)
-    (city-hash-128-vector (string-to-octets (prin1-to-string object) :external-format :utf-8))))
+  (defun file-get-contents (filename)
+    (with-open-file (stream filename)
+      (let ((contents (make-string (file-length stream))))
+	(read-sequence contents stream)
+	contents)))
 
-(defmacro define-lmdb-memoized (&whole whole name lambda &body body)
+  (defun hash-printable-object (object &key files)
+    (city-hash-128-vector (apply #'concatenate `(vector
+						 ,(string-to-octets (prin1-to-string object) :external-format :utf-8)
+						 ,@(map 'list (lambda (f) (string-to-octets (file-get-contents f) :external-format :utf-8)) files))))))
+
+(defmacro define-lmdb-memoized (&whole whole name (&key with-files) lambda &body body)
   (let ((db-name (concatenate 'string (string-downcase (symbol-name name)) "-memo"))
 	(version-octets (string-to-octets "version" :external-format :utf-8))
-	(now-hash (hash-printable-object whole)))
+	(now-hash (hash-printable-object whole :files with-files)))
     (alexandria:once-only (db-name version-octets now-hash)
 			  `(progn
 			     (unless (equalp ,now-hash (with-db (db ,db-name) (lmdb:get db ,version-octets)))
@@ -301,12 +309,6 @@
 				       new-value))))))))) 
 
 (defvar *memory-intensive-mutex* (sb-thread:make-mutex :name "memory-intensive-mutex")) 
-
-(defun file-get-contents (filename)
-  (with-open-file (stream filename)
-    (let ((contents (make-string (file-length stream))))
-      (read-sequence contents stream)
-      contents)))
 
 (defun grab-from-rts (url)
   (let* ((root (plump:parse (drakma:http-request url)))
@@ -354,7 +356,7 @@
 								text ,replacement))))))
     (inner)))
 
-(define-lmdb-memoized clean-html (in-html &key with-toc post-id)
+(define-lmdb-memoized clean-html (:with-files ("text-clean-regexps.js")) (in-html &key with-toc post-id)
   (with-recursive-lock (*memory-intensive-mutex*) ; this is actually thread-safe, but running it concurrently risks running out of memory
     (labels ((tag-is (node &rest args)
 		     (declare (type plump:node node)
