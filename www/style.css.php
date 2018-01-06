@@ -605,6 +605,7 @@ h1.listing a[href^="/"]::after {
 }
 .post > h1:first-child {
 	margin: 1em 0 0.25em 0;
+	padding: 0 30px;
 	text-align: center;
 	font-size: 2.5em;
 	line-height: 1.1;
@@ -879,7 +880,8 @@ ol {
 		margin-left: auto;
 		margin-right: auto;
 	}
-	.post-body {
+	.post-body,
+	.post > h1:first-child {
 		padding: 0 6px;
 	}
 	.post-body, .comment-body {
