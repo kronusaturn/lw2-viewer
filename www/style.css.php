@@ -715,6 +715,16 @@ h1.listing a[href^="/"]::after {
 	max-height: 1000000px;
 }
 
+.comment-item input[id^="expand"]:checked ~ .comment-thread {
+	font-size: 0.95em;
+}
+.comment-item input[id^="expand"]:checked ~ .comment-thread .comment-thread {
+	font-size: 0.975em;
+}
+.comment-item input[id^="expand"]:checked ~ .comment-thread .comment-body {
+	font-size: 1.2em;
+}
+
 <?php
 	function nested_stuff($segment, $tip, $last_tip, $nesting_levels) {
 		for ($i = $nesting_levels; $i > 0; $i--) {
@@ -726,7 +736,7 @@ h1.listing a[href^="/"]::after {
 	}
 ?>
 
-<?php nested_stuff(".comment-item .comment-item ", ".comment-item,\n", ".comment-item", 7); ?> {
+<?php nested_stuff(".comment-item .comment-item ", ".comment-item,\n", ".comment-item", 10); ?> {
 	background-color: #eee;
 }
 
@@ -734,7 +744,7 @@ h1.listing a[href^="/"]::after {
 	background-color: #fff;
 }
 
-<?php nested_stuff(".comment-item ", ".comment-item:target,\n", ".comment-item:target", 13); ?> {
+<?php nested_stuff(".comment-item ", ".comment-item:target,\n", ".comment-item:target", 19); ?> {
 	background-color: #ffd;
 }
 
