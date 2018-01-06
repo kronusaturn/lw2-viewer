@@ -73,7 +73,8 @@ input {
 	position: relative;
 }
 #primary-bar.inactive-bar .nav-inner {
-	padding: 11px 30px 13px 30px;
+	padding-top: 11px;
+	padding-bottom: 13px;
 }
 .nav-inner::after {
 	position: absolute;
@@ -89,10 +90,11 @@ input {
 }
 #secondary-bar .nav-inner {
 	font-size: 0.95em;
-	padding: 3px 30px 4px 30px;
+	padding: 3px 0 4px 0;
 }
 #secondary-bar.active-bar .nav-inner {
-	padding: 4px 30px;
+	padding-top: 4px;
+	padding-bottom: 4px;
 }
 #bottom-bar a {
 	float: left;
@@ -222,7 +224,8 @@ input {
 	width: 60%;
 }
 #secondary-bar #nav-item-search form {
-	padding: 3px 30px 4px 30px;
+	padding-top: 3px;
+	padding-bottom: 4px;
 }
 #nav-item-search form::before {
 	content: "";
@@ -237,7 +240,7 @@ input {
 }
 #nav-item-search input {
 	height: 23px;
-	width: calc(100% - 120px);
+	width: calc(95% - 96px);
 	padding: 1px 4px;
 }
 #nav-item-search input:focus {
@@ -868,7 +871,7 @@ ol {
 		width: calc(100% + 8px);
 	}
 	.nav-bar .nav-inner {
-		padding: 8px 12px;
+		padding: 8px 3.33vw;
 	}
 	.nav-bar {
 		margin: 0 -4px;
@@ -901,7 +904,8 @@ ol {
 	}
 }
 @media only screen and (max-width: 520px) {
-	.nav-inner {
+	.nav-inner,
+	#secondary-bar .nav-inner {
 		font-size: 0.85em;
 	}
 	h1.listing {
@@ -957,9 +961,9 @@ ol {
 }
 @media only screen and (max-width: 374px) {
 	.nav-bar .nav-inner {
-		padding: 6px 10px;
+		padding: 6px 3.33vw;
 	}
-	#nav-item-recent-comments a span {
+	#nav-item-recent-comments > * > span {
 		display: none;
 	}
 }
