@@ -1282,6 +1282,26 @@ ol {
 	.contents ul {
 		font-size: 1em;
 	}
+	div[class^='archive-nav-'] {
+		display: block;
+		text-align: justify;
+	}
+	.archive-nav *[class^='archive-nav-item'],
+	.archive-nav *[class^='archive-nav-item']:first-child {
+		display: inline-block;
+		width: auto;
+		padding: 6px 10px;
+		width: 4em;
+		margin: 2px;
+	}
+	.archive-nav *[class^='archive-nav-item'],
+	.archive-nav *[class^='archive-nav-item-'],
+	.archive-nav div[class^='archive-nav-']:nth-of-type(n+2) *[class^='archive-nav-item'] {
+		border: 1px solid #ddd;
+	}
+	.archive-nav > *[class^='archive-nav-'] +  *[class^='archive-nav-'] {
+		margin-top: 0.5em;
+	}
 }
 @media only screen and (max-width: 374px) {
 	.nav-bar .nav-inner {
