@@ -12,7 +12,7 @@
 (defvar *db-environment*) 
 
 (when (not (boundp '*db-environment*))
-  (setq *db-environment* (lmdb:make-environment *cache-db* :mapsize (expt 2 31)))
+  (setq *db-environment* (lmdb:make-environment *cache-db* :max-databases 1024 :mapsize (expt 2 31)))
   (lmdb:open-environment *db-environment*)) 
 
 (defmacro with-db ((db db-name) &body body)
