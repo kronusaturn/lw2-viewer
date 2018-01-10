@@ -573,6 +573,7 @@ h1.listing a[href^="/"]::after {
 	padding: 0.35em;
 	font-weight: bold;
 	color: #00e;
+	line-height: 1;
 	background-color: #eee;
 	border: 1px solid #ccc;
 }
@@ -602,6 +603,7 @@ h1.listing a[href^="/"]::after {
 }
 #signup-form input[type='submit'] {
 	margin: 0.75em 4em 0.5em 4em;
+	padding: 0.4em 0.5em 0.5em 0.5em;
 	background-color: #e4e4e4;
 	border: 1px solid #ccc;
 }
