@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
 	if(document.getElementById("content").clientHeight <= window.innerHeight + 30) {
-		document.getElementById("bottom-bar").parentNode.removeChild(e)
+		let e = document.getElementById("bottom-bar");
+		e.parentNode.removeChild(e);
 	}
 	let urlParts = document.URL.split('#');
 	if (urlParts.length > 1) {
