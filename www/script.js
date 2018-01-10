@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	} 	
 	if (content.clientHeight <= window.innerHeight + 30 || 
 		document.querySelector("#comments").childNodes.length == 0) {
-		window.document.styleSheets[1].insertRule('.post .post-meta .comment-count::after { display: none; }', window.document.styleSheets[1].cssRules.length);
+		document.styleSheets[1].insertRule('.post .post-meta .comment-count::after { display: none; }', document.styleSheets[1].cssRules.length);
 	}
 
 	let urlParts = document.URL.split('#');
