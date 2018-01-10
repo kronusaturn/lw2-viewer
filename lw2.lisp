@@ -607,6 +607,16 @@
 	  (format nil "~A~A" (nav-bar-outer primary-bar "inactive-bar" primary-html) (nav-bar-outer secondary-bar "active-bar" secondary-html))
 	  (format nil "~A~A" (nav-bar-outer secondary-bar "inactive-bar" secondary-html) (nav-bar-outer primary-bar "active-bar" primary-html))))))) 
 
+(defun user-nav-bar (&optional current-uri)
+  (let* ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token"))
+	 (username (and lw2-auth-token (cache-get "auth-token-to-username" lw2-auth-token))))
+    (if username
+      (let ((*secondary-nav* `(("archive" "/archive" "Archive")
+			       ("search" "/search" "Search" :html ,#'search-bar-to-html)
+			       ("login" "/login" ,username))))
+	(nav-bar-to-html current-uri))
+      (nav-bar-to-html current-uri)))) 
+
 (defparameter *bottom-bar*
 "<div id=\"bottom-bar\" class=\"nav-bar\"><a class=\"nav-item nav-current nav-inner\" href=\"#top\">Back to top</a></div>
 <script>if(document.getElementById(\"content\").clientHeight <= window.innerHeight + 30) {var e = document.getElementById(\"bottom-bar\"); e.parentNode.removeChild(e)}</script>") 
@@ -615,7 +625,7 @@
   (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"shortcut icon\" href=\"~A\"></head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
 	  title description
 	  *html-head* (generate-versioned-link "/style.css") (generate-versioned-link "/favicon.ico") content-class
-	  (nav-bar-to-html (or current-uri (hunchentoot:request-uri*))))
+	  (user-nav-bar (or current-uri (hunchentoot:request-uri*))))
   (force-output out-stream)) 
 
 (defun end-html (out-stream)
@@ -779,6 +789,7 @@
 					   (t (multiple-value-bind (auth-token error-message) (do-lw2-login "username" login-username login-password) 
 						(cond (auth-token
 							(hunchentoot:set-cookie "lw2-auth-token" :value auth-token) 
+							(cache-put "auth-token-to-username" auth-token login-username)
 							(setf (hunchentoot:return-code*) 303
 							      (hunchentoot:header-out "Location") (if (and return (ppcre:scan "^/[^/]" return)) return "/")))
 						      (t
