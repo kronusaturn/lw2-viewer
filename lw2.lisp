@@ -766,13 +766,15 @@
 						      (format out-stream "<h1>Enable cookies</h1><p>Please enable cookies in your browser and <a href=\"/login~@[?return=~A~]\">try again</a>.</p>" (if return (url-rewrite:url-encode return)))))) 
 				       (login-username
 					 (check-csrf-token (hunchentoot:cookie-in "session-token") csrf-token)
-					 (multiple-value-bind (auth-token error-message) (do-lw2-login "username" login-username login-password) 
-					   (cond (auth-token
-						   (hunchentoot:set-cookie "lw2-auth-token" :value auth-token) 
-						   (setf (hunchentoot:return-code*) 303
-							 (hunchentoot:header-out "Location") (if (and return (ppcre:scan "^/[^/]" return)) return "/")))
-						 (t
-						   (emit-login-page :error-message error-message))))) 
+					 (cond
+					   ((or (string= login-username "") (string= login-password "")) (emit-login-page :error-message "Please enter a username and password")) 
+					   (t (multiple-value-bind (auth-token error-message) (do-lw2-login "username" login-username login-password) 
+						(cond (auth-token
+							(hunchentoot:set-cookie "lw2-auth-token" :value auth-token) 
+							(setf (hunchentoot:return-code*) 303
+							      (hunchentoot:header-out "Location") (if (and return (ppcre:scan "^/[^/]" return)) return "/")))
+						      (t
+							(emit-login-page :error-message error-message))))))) 
 				       (t
 					 (emit-login-page)))))) 
 
