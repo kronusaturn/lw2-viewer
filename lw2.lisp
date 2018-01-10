@@ -9,28 +9,22 @@
 
 (defparameter *cache-db* "./cache/") 
 (defvar *db-mutex* (sb-thread:make-mutex :name "lmdb")) 
-(defvar *db-environment*) 
-
-(when (not (boundp '*db-environment*))
-  (setq *db-environment* (lmdb:make-environment *cache-db* :max-databases 1024 :mapsize (expt 2 31)))
-  (lmdb:open-environment *db-environment*)) 
+(defvar *db-environment* (let ((x (lmdb:make-environment *cache-db* :max-dbs 1024 :mapsize (expt 2 31))))
+			   (lmdb:open-environment x)
+			   x))
+(defvar *open-databases* (make-hash-table :test 'equal))
 
 (defmacro with-db ((db db-name) &body body)
   (alexandria:with-gensyms (txn)
 			   `(with-mutex (*db-mutex*)
-					(let ((,txn (lmdb:make-transaction *db-environment* :flags 0)))
-					  (unwind-protect
-					    (progn 
-					      (lmdb:begin-transaction ,txn)
-					      (let ((,db (lmdb:make-database ,db-name))
-						    (lmdb:*transaction* ,txn))
-						(lmdb:with-database (,db)
-								    (prog1
-								      (progn
-									,@body)
-								      (lmdb:commit-transaction ,txn)
-								      (setf ,txn nil)))))
-					    (when ,txn (lmdb:abort-transaction ,txn)))))))
+					(let ((,db (gethash ,db-name *open-databases*)))
+					  (unless ,db
+					    (setf ,db (lmdb:with-transaction ((lmdb:make-transaction *db-environment*) :normal-disposition :commit)
+									     (lmdb:open-database (lmdb:make-database ,db-name) :if-does-not-exist :create))
+						  (gethash ,db-name *open-databases*) ,db)) 
+					(lmdb:with-transaction ((lmdb:make-transaction *db-environment* :flags 0) :normal-disposition :commit)
+							       (lmdb:with-database (,db)
+										   ,@body))))))
 
 (defun lmdb-clear-db (db)
   (lmdb:do-pairs (db key value)
