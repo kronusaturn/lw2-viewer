@@ -1312,6 +1312,36 @@ ol {
 	#create-account-form-container {
 		width: 50%;
 	}
+	#primary-bar {
+		table-layout: fixed;
+		font-size: 0.55em;
+	}
+	#primary-bar .nav-inner {
+		text-transform: uppercase;
+		padding: 6px;
+		font-weight: 700;
+	}
+	#primary-bar .nav-inner::before {
+		display: block;
+		font-family: "Font Awesome";
+    font-size: 1.25rem;
+		font-weight: 900;
+	}
+	#primary-bar #nav-item-home .nav-inner::before {
+		content: "\F015";
+	}
+	#primary-bar #nav-item-featured .nav-inner::before {
+		content: "\F005";
+	}
+	#primary-bar #nav-item-all .nav-inner::before {
+		content: "\F069";
+	}
+	#primary-bar #nav-item-meta .nav-inner::before {
+		content: "\F077";
+	}
+	#primary-bar #nav-item-recent-comments .nav-inner::before {
+		content: "\F036";
+	}
 }
 @media only screen and (max-width: 374px) {
 	.nav-bar .nav-inner {
