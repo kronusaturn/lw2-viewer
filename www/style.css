@@ -623,8 +623,8 @@ h1.listing a[href^="/"]::after {
 	border: 1px solid #aaa;
 }
 .error-box {
-	margin-top: 1.5em;
-	margin-bottom: -1.5em;
+	margin: 1.5em 0.875em -1.5em 0.875em;
+	padding: 0.25em;
 	text-align: center;
 	border: 1px solid red;
 	background-color: #faa;
