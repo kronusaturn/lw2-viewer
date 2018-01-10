@@ -536,50 +536,58 @@ h1.listing a[href^="/"]::after {
 /**************/
 
 .login-container {
-	display: table;
-	table-layout: fixed;
-	width: 100%;
-	margin: 1em 0 5em;
+	margin: 2em 0 2em;
+	padding: 0 0 1em 0;
+	overflow: auto;
 }
 .login-container > div {
-	display: table-cell;
+	float: left;
+	width: 50%;
 }
-.login-container > div > h1 {
+#create-account-form-container {
+	background-color: #f3f3f3;
+	padding: 0 0 0.75em 1em;
+	border: 1px solid #ddd;
+}
+.login-container h1 {
 	text-align: center;
+	margin: 0.5em 0;
 }
-
-.aligned-form > div {
-	display: table;
-	table-layout: fixed;
-	margin: 1em auto 1.5em;
-	width: 100%;
-	padding: 0;
+.login-container form > div > div {
+	overflow: auto;
+	margin: 0.25em 0;
 }
-.aligned-form > div > div {
-	display: table-row;
-	width: 100%;
-	padding: 0;
+.login-container form label,
+.login-container form input {
+	float: left;
 }
-.aligned-form > div > div > label,
-.aligned-form > div > div > input {
-	display: table-cell;
-	margin: 0.25em 1em;
-	padding: 0;
+.login-container form label {
+	clear: left;
+	text-align: right;
+	padding: 0.25em 0.5em;
+	white-space: nowrap;
 }
-.aligned-form > div > div > label {
+.login-container form input {
+	width: calc(100% - 11em);
+	padding: 0.25em;
+}
+.login-container form input[type='submit'] {
+	float: right;
+	width: calc(100% - 15em);
+	padding: 0.35em;
+	font-weight: bold;
+}
+#login-form label {
+	width: 7em;
+}
+#login-form input[type='submit'] {
+	margin: 0.5em 6em;
+}
+#signup-form label {
 	width: 9em;
 }
-.aligned-form > div > div > input {
-	width: calc(100% - 2em);
-}
-.aligned-form label {
-	text-align: right;
-}
-.aligned-form > input {
-	display: block;
-	margin: auto;
-	padding: 0.25em 0.5em;
-	width: 50%;
+#signup-form input[type='submit'] {
+	margin: 0.5em 4em;
 }
 .error-box {
 	margin-top: 1.5em;
