@@ -536,7 +536,7 @@ h1.listing a[href^="/"]::after {
 /**************/
 
 .login-container {
-	margin: 2em 0 2em;
+	margin: 3em 0 3em;
 	padding: 0 0 1em 0;
 	overflow: auto;
 }
@@ -544,14 +544,23 @@ h1.listing a[href^="/"]::after {
 	float: left;
 	width: 50%;
 }
-#create-account-form-container {
-	background-color: #f3f3f3;
-	padding: 0 0 0.75em 1em;
-	border: 1px solid #ddd;
-}
 .login-container h1 {
 	text-align: center;
 	margin: 0.5em 0;
+}
+#login-form-container h1 {
+	padding-left: 2rem;
+}
+#create-account-form-container {
+	background-color: #f3f3f3;
+	padding: 0 0 0.5em 1em;
+	border: 1px solid #ddd;
+	font-size: 0.9em;
+	width: calc(50% - 1em);
+	margin-right: 1em;
+}
+#create-account-form-container h1 {
+	font-size: 1.7em;
 }
 .login-container form > div > div {
 	overflow: auto;
@@ -576,6 +585,22 @@ h1.listing a[href^="/"]::after {
 	width: calc(100% - 15em);
 	padding: 0.35em;
 	font-weight: bold;
+	color: #00e;
+	border: er: 1px solid #ccc;
+}
+.login-container form input[type='submit']:hover,
+.login-container form input[type='submit']:focus {
+	background-color: #ddd;
+	border: 1px solid #aaa;
+	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+}
+.login-container form input[type='submit']:active {
+	color: #f00;
+}
+.login-container form label + input:focus {
+	background-color: #ffb;
+	border: 1px solid #bbb;
+	box-shadow: 0 0 1px #bbb;
 }
 #login-form label {
 	width: 7em;
@@ -587,7 +612,13 @@ h1.listing a[href^="/"]::after {
 	width: 9em;
 }
 #signup-form input[type='submit'] {
-	margin: 0.5em 4em;
+	margin: 0.75em 4em 0.5em 4em;
+	background-color: #e4e4e4;
+	border: 1px solid #ccc;
+}
+#signup-form input[type='submit']:hover {
+	background-color: #d8d8d8;
+	border: 1px solid #aaa;
 }
 .error-box {
 	margin-top: 1.5em;
@@ -1272,6 +1303,10 @@ ol {
 	}
 	.archive-nav > *[class^='archive-nav-'] +  *[class^='archive-nav-'] {
 		margin-top: 0.5em;
+	}
+	#login-form-container,
+	#create-account-form-container {
+		width: 50%;
 	}
 }
 @media only screen and (max-width: 374px) {
