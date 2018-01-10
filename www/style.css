@@ -600,7 +600,7 @@ h1.listing a[href^="/"]::after {
 	color: #f00;
 }
 .login-container form label + input:focus {
-	background-color: #ffb;
+	background-color: #ffd;
 	border: 1px solid #bbb;
 	box-shadow: 0 0 1px #bbb;
 }
