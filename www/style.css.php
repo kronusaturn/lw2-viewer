@@ -1083,9 +1083,6 @@ ol {
 	.login-container, .login-container > div {
 		display: block;
 	}
-	.aligned-form > div > div > input {
-		margin-right: 8vw;
-	}
 	.contents {
 		float: none;
 		display: table;
