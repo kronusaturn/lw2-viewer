@@ -738,18 +738,37 @@ h1.listing a[href^="/"]::after {
 		}
 		echo $last_tip;
 	}
+	$comment_nesting_depth = 10;
 ?>
 
-<?php nested_stuff(".comment-item .comment-item ", ".comment-item,\n", ".comment-item", 10); ?> {
+<?php nested_stuff(".comment-item .comment-item ", ".comment-item,\n", ".comment-item", $comment_nesting_depth); ?> {
 	background-color: #eee;
 }
-
-<?php nested_stuff(".comment-item .comment-item ", ".comment-item .comment-item,\n", ".comment-item .comment-item", 7); ?> {
-	background-color: #fff;
+<?php nested_stuff(".comment-item .comment-item ", ".comment-item a.comment-parent-link::after,\n", ".comment-item a.comment-parent-link::after", $comment_nesting_depth); ?> {
+	box-shadow: 
+		0 28px 16px -16px #fff inset,
+		4px 16px 0 12px #ffd inset,
+		4px  4px 0 12px #ffd inset;
 }
 
-<?php nested_stuff(".comment-item ", ".comment-item:target,\n", ".comment-item:target", 19); ?> {
+<?php nested_stuff(".comment-item .comment-item ", ".comment-item .comment-item,\n", ".comment-item .comment-item", $comment_nesting_depth); ?> {
+	background-color: #fff;
+}
+<?php nested_stuff(".comment-item .comment-item ", ".comment-item .comment-item a.comment-parent-link::after,\n", ".comment-item .comment-item a.comment-parent-link::after", $comment_nesting_depth); ?> {
+	box-shadow: 
+		0 28px 16px -16px #eee inset,
+		4px 16px 0 12px #ffd inset,
+		4px  4px 0 12px #ffd inset;
+}
+
+<?php nested_stuff(".comment-item ", ".comment-item:target,\n", ".comment-item:target", (2 * $comment_nesting_depth) - 1); ?> {
 	background-color: #ffd;
+}
+<?php nested_stuff(".comment-item ", ".comment-item:target .comment-item a.comment-parent-link::after,\n", ".comment-item:target .comment-item a.comment-parent-link::after", (2 * $comment_nesting_depth) - 1); ?> {
+	box-shadow: 
+		0 28px 16px -16px #ffd inset,
+		4px 16px 0 12px #ffd inset,
+		4px  4px 0 12px #ffd inset;
 }
 
 ul.comment-thread {
@@ -830,14 +849,11 @@ a.comment-parent-link::after {
 	position: absolute;
 	z-index: 0;
 	display: block;
-	width: 100%;
-	height: 100%;
-	top: 0;
-	left: 0;
+	width: calc(100% + 26px);
+	height: calc(100% + 38px);
+	top: -29px;
+	left: -17px;
 	pointer-events: none;
-	box-shadow: 
-		0 0 0 1px #ccc,
-		-4px -4px 0 13px #ffd;
 	overflow: hidden;
 	visibility: hidden;
 }
