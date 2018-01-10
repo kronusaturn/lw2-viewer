@@ -18,11 +18,12 @@
 (defmacro with-db ((db db-name) &body body)
   (alexandria:with-gensyms (txn)
 			   `(with-mutex (*db-mutex*)
-					(let ((,txn (lmdb:make-transaction *db-environment*)))
+					(let ((,txn (lmdb:make-transaction *db-environment* :flags 0)))
 					  (unwind-protect
 					    (progn 
 					      (lmdb:begin-transaction ,txn)
-					      (let ((,db (lmdb:make-database ,txn ,db-name)))
+					      (let ((,db (lmdb:make-database ,db-name))
+						    (lmdb:*transaction* ,txn))
 						(lmdb:with-database (,db)
 								    (prog1
 								      (progn
@@ -31,10 +32,9 @@
 								      (setf ,txn nil)))))
 					    (when ,txn (lmdb:abort-transaction ,txn)))))))
 
-
 (defun lmdb-clear-db (db)
   (lmdb:do-pairs (db key value)
-		 (lmdb:del db key))) 
+		 (lmdb:del db key value))) 
 
 (defun lmdb-put-string (db key value)
   (if 
