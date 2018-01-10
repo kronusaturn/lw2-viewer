@@ -590,6 +590,7 @@ h1.listing a[href^="/"]::after {
 }
 .login-container form input[type='submit']:hover,
 .login-container form input[type='submit']:focus {
+	outline: none;
 	background-color: #ddd;
 	border: 1px solid #aaa;
 	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
