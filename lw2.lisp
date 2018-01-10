@@ -14,13 +14,21 @@
 			   x))
 (defvar *open-databases* (make-hash-table :test 'equal))
 
+(defun ensure-database (db-name)
+  (let ((db (lmdb:with-transaction ((lmdb:make-transaction *db-environment*) :normal-disposition :commit)
+				   (lmdb:open-database (lmdb:make-database db-name) :if-does-not-exist nil))))
+    (if db
+      db
+      (progn (lmdb:with-transaction ((lmdb:make-transaction *db-environment* :flags 0) :normal-disposition :commit)
+				    (lmdb:open-database (lmdb:make-database db-name) :create t))
+	     (ensure-database db-name))))) 
+
 (defmacro with-db ((db db-name) &body body)
   (alexandria:with-gensyms (txn)
 			   `(with-mutex (*db-mutex*)
 					(let ((,db (gethash ,db-name *open-databases*)))
 					  (unless ,db
-					    (setf ,db (lmdb:with-transaction ((lmdb:make-transaction *db-environment*) :normal-disposition :commit)
-									     (lmdb:open-database (lmdb:make-database ,db-name) :if-does-not-exist :create))
+					    (setf ,db (ensure-database ,db-name) 
 						  (gethash ,db-name *open-databases*) ,db)) 
 					(lmdb:with-transaction ((lmdb:make-transaction *db-environment* :flags 0) :normal-disposition :commit)
 							       (lmdb:with-database (,db)
@@ -599,15 +607,25 @@
 	  (format nil "~A~A" (nav-bar-outer primary-bar "inactive-bar" primary-html) (nav-bar-outer secondary-bar "active-bar" secondary-html))
 	  (format nil "~A~A" (nav-bar-outer secondary-bar "inactive-bar" secondary-html) (nav-bar-outer primary-bar "active-bar" primary-html))))))) 
 
+(defun user-nav-bar (&optional current-uri)
+  (let* ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token"))
+	 (username (and lw2-auth-token (cache-get "auth-token-to-username" lw2-auth-token))))
+    (if username
+      (let ((*secondary-nav* `(("archive" "/archive" "Archive")
+			       ("search" "/search" "Search" :html ,#'search-bar-to-html)
+			       ("login" "/login" ,username))))
+	(nav-bar-to-html current-uri))
+      (nav-bar-to-html current-uri)))) 
+
 (defparameter *bottom-bar*
 "<div id=\"bottom-bar\" class=\"nav-bar\"><a class=\"nav-item nav-current nav-inner\" href=\"#top\">Back to top</a></div>
 <script>if(document.getElementById(\"content\").clientHeight <= window.innerHeight + 30) {var e = document.getElementById(\"bottom-bar\"); e.parentNode.removeChild(e)}</script>") 
 
 (defun begin-html (out-stream &key title description current-uri content-class)
-  (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"shortcut icon\" href=\"~A\"></head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
+  (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"shortcut icon\" href=\"~A\"><script src=\"~A\" async></script></head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
 	  title description
-	  *html-head* (generate-versioned-link "/style.css") (generate-versioned-link "/favicon.ico") content-class
-	  (nav-bar-to-html (or current-uri (hunchentoot:request-uri*))))
+	  *html-head* (generate-versioned-link "/style.css") (generate-versioned-link "/favicon.ico") (generate-versioned-link "/script.js") content-class
+	  (user-nav-bar (or current-uri (hunchentoot:request-uri*))))
   (force-output out-stream)) 
 
 (defun end-html (out-stream)
@@ -766,13 +784,16 @@
 						      (format out-stream "<h1>Enable cookies</h1><p>Please enable cookies in your browser and <a href=\"/login~@[?return=~A~]\">try again</a>.</p>" (if return (url-rewrite:url-encode return)))))) 
 				       (login-username
 					 (check-csrf-token (hunchentoot:cookie-in "session-token") csrf-token)
-					 (multiple-value-bind (auth-token error-message) (do-lw2-login "username" login-username login-password) 
-					   (cond (auth-token
-						   (hunchentoot:set-cookie "lw2-auth-token" :value auth-token) 
-						   (setf (hunchentoot:return-code*) 303
-							 (hunchentoot:header-out "Location") (if (and return (ppcre:scan "^/[^/]" return)) return "/")))
-						 (t
-						   (emit-login-page :error-message error-message))))) 
+					 (cond
+					   ((or (string= login-username "") (string= login-password "")) (emit-login-page :error-message "Please enter a username and password")) 
+					   (t (multiple-value-bind (auth-token error-message) (do-lw2-login "username" login-username login-password) 
+						(cond (auth-token
+							(hunchentoot:set-cookie "lw2-auth-token" :value auth-token) 
+							(cache-put "auth-token-to-username" auth-token login-username)
+							(setf (hunchentoot:return-code*) 303
+							      (hunchentoot:header-out "Location") (if (and return (ppcre:scan "^/[^/]" return)) return "/")))
+						      (t
+							(emit-login-page :error-message error-message))))))) 
 				       (t
 					 (emit-login-page)))))) 
 
@@ -826,4 +847,5 @@
 				    (hunchentoot:handle-static-file ,(concatenate 'string "www" uri) ,content-type))) 
 
 (define-versioned-resource "/style.css" "text/css") 
+(define-versioned-resource "/script.js" "text/javascript") 
 (define-versioned-resource "/favicon.ico" "image/x-icon") 
