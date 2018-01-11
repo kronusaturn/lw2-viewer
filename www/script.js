@@ -35,12 +35,13 @@ document.addEventListener("DOMContentLoaded", function() {
 			document.styleSheets[1].insertRule('.post .post-meta .comment-count::after { display: none; }', document.styleSheets[1].cssRules.length);
 		}
 
+		let needHashRealignment = false;
+
 		let urlParts = document.URL.split('#');
 		if (urlParts.length > 1) {
 			try { document.querySelector('#'+urlParts[1]).closest("label[for^='expand'] + .comment-thread").parentElement.querySelector("input[id^='expand']").checked = true; }
 			catch (e) { }
-			location.hash = '';
-			location.hash = urlParts[1];
+			needHashRealignment = true;
 		}
 
 		if(readCookie("lw2-auth-token")) {
@@ -56,6 +57,13 @@ document.addEventListener("DOMContentLoaded", function() {
 			r.className = "comment-reply-container";
 			document.querySelector("#comments").insertAdjacentElement("afterbegin", r);
 			injectReplyForm(r, false);
+			needHashRealignment = true;
+		}
+
+		let h = location.hash;
+		if(needHashRealignment && h) {
+			location.hash = '';
+			location.hash = h;
 		}
 	})
 }, {once: true});
