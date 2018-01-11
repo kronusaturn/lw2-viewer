@@ -333,6 +333,11 @@ input {
 	color: #000;
 	background-color: #eee;
 }
+#bottom-bar a[href='#top']:active::after,
+.post-meta a[href='#comments']:active::after,
+.post-meta a[href='#bottom-bar']:active::after {
+	transform: scale(0.9);
+}
 
 .comment-thread ~ #bottom-bar a[href='#top']::after,
 .listing ~ #bottom-bar a[href='#top']::after {
