@@ -57,4 +57,4 @@ document.addEventListener("DOMContentLoaded", function() {
 			injectReplyForm(r, false);
 		}
 	})
-});
+}, {once: true});
