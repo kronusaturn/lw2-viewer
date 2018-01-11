@@ -589,6 +589,7 @@ h1.listing a[href^="/"]::after {
 	line-height: 1;
 	background-color: #eee;
 	border: 1px solid #ccc;
+	cursor: pointer;
 }
 .login-container form input[type='submit']:hover,
 .login-container form input[type='submit']:focus {
