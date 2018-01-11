@@ -1054,7 +1054,7 @@ a.comment-parent-link:hover::after {
 
 .comment-controls {
 	text-align: right;
-	margin: 0 8px 0 16px;
+	margin: 0 8px 8px 16px;
 }
 .comment-reply-container textarea {
 	display: block;
