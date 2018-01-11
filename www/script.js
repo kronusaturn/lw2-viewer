@@ -13,7 +13,9 @@ function injectReplyForm(e, withparent) {
 	e.innerHTML = '<form method="post"><textarea name="text"></textarea>' +
 		(withparent ? '<input type="hidden" name="parent-comment-id" value="'+e.parentElement.parentElement.id+'">':'') +
 		'<input type="hidden" name="csrf-token" value="'+window.csrfToken+'"><input type="submit" value="Submit"></form>';
-	e.querySelector("textarea").focus();
+	if(withparent) {
+		e.querySelector("textarea").focus();
+	}
 }
 
 function showReplyForm(event) {

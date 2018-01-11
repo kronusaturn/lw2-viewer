@@ -618,8 +618,7 @@
       (nav-bar-to-html current-uri)))) 
 
 (defparameter *bottom-bar*
-"<div id=\"bottom-bar\" class=\"nav-bar\"><a class=\"nav-item nav-current nav-inner\" href=\"#top\">Back to top</a></div>
-<script>if(document.getElementById(\"content\").clientHeight <= window.innerHeight + 30) {var e = document.getElementById(\"bottom-bar\"); e.parentNode.removeChild(e)}</script>") 
+"<div id=\"bottom-bar\" class=\"nav-bar\"><a class=\"nav-item nav-current nav-inner\" href=\"#top\">Back to top</a></div>") 
 
 (defun make-csrf-token (session-token &optional (nonce (ironclad:make-random-salt)))
   (if (typep session-token 'string) (setf session-token (base64:base64-string-to-usb8-array session-token)))
