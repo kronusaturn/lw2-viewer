@@ -12,7 +12,8 @@ function readCookie(name) {
 function injectReplyForm(e, withparent) {
 	e.innerHTML = '<form method="post"><textarea name="text"></textarea>' +
 		(withparent ? '<input type="hidden" name="parent-comment-id" value="'+e.parentElement.parentElement.id+'">':'') +
-		'<input type="hidden" name="csrf-token" value="'+window.csrfToken+'"><input type="submit" value="Submit"></form>';
+		'<input type="hidden" name="csrf-token" value="'+window.csrfToken+'">' +
+		'<span>You can use <a href="http://commonmark.org/help/" target="_blank">Markdown</a> here.</span><input type="submit" value="Submit"></form>';
 	if(withparent) {
 		e.querySelector("textarea").focus();
 	}
