@@ -902,17 +902,6 @@ ul.comment-thread {
 	font-size: 1.2em;
 }
 
-.comment-controls {
-	padding: 2px 10px;
-	text-align: right;
-}
-.comment-reply-container textarea {
-	display: block;
-	width: 100%;
-	height: 15em;
-	font-family: Charter;
-}
-
 .comment-body {
 	font-family: Charter;
 	line-height: 1.45;
@@ -977,6 +966,88 @@ a.comment-parent-link:hover::after {
 
 #comments .comment-thread > li {
 	position: relative;
+}
+
+/*****************/
+/* COMMENTING UI */
+/*****************/
+
+.comment-controls {
+	text-align: right;
+	margin: 0 8px 0 16px;
+}
+.comment-reply-container textarea {
+	display: block;
+	width: 100%;
+	height: 15em;
+	padding: 4px 5px;
+	font-family: Charter, serif;
+	font-size: 1.2rem;
+	border: 1px solid #aaa;
+	box-shadow: 
+		0 0 0 1px #eee inset;
+	resize: none;
+}
+.comment-reply-container textarea:focus {
+	outline: none;
+	background-color: #ffd;
+	border: 1px solid #00e;
+	box-shadow: 
+		0 0 0 1px #ddf inset,
+		0 0 0 1px #fff,
+		0 0 0 2px #00e;
+}
+.comment-reply-container form span {
+	float: left;
+	padding: 0 0 0 4px;
+}
+.comment-reply-container input[type='submit'] {
+	margin: 6px;
+	background-color: #fff;
+	padding: 4px 10px;
+	border: 1px solid #aaa;
+	font-weight: bold;
+	font-size: 1.125rem;
+	color: #00e;
+	cursor: pointer;
+}
+.comment-reply-container input[type='submit']:hover,
+.comment-reply-container input[type='submit']:focus {
+	background-color: #ddd;
+	border: 1px solid #999;
+	text-shadow:
+		0 0 1px #fff,
+		0 0 3px #fff,
+		0 0 5px #fff;
+}
+.comment-reply-container input[type='submit']:active,
+.comment-reply-container input[type='submit']:focus {
+	color: #f00;
+}
+.comment-reply-container input[type='submit']:active {
+	transform: scale(0.9);
+}
+.comment-reply-container .reply-button {
+	font-family: inherit;
+	border: none;
+	font-size: inherit;
+	background-color: inherit;
+	color: #00e;
+	font-weight: bold;
+	margin: 0 0 4px 0;
+	padding: 1px 6px 2px 6px;
+	cursor: pointer;
+}
+.comment-reply-container .reply-button:hover {
+	color: #d00;
+	text-shadow:
+		0 0 1px #fff,
+		0 0 3px #fff,
+		0 0 5px #fff;
+}
+.comment-reply-container .reply-button:active {
+	color: #f00;
+	transform: scale(0.9);
 }
 
 /*********/
