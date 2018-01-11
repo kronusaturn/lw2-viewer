@@ -685,7 +685,7 @@
 					  (hunchentoot:script-name*) (hunchentoot:query-string*)) 
 				  (map-output out-stream #'post-headline-to-html posts))))) 
 
-(hunchentoot:define-easy-handler (say-yo :uri "/") ()
+(hunchentoot:define-easy-handler (view-root :uri "/") ()
 				 (with-error-page (view-posts-index (get-posts))))
 
 (hunchentoot:define-easy-handler (view-index :uri "/index") (view all meta before after)
