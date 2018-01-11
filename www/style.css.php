@@ -902,6 +902,17 @@ ul.comment-thread {
 	font-size: 1.2em;
 }
 
+.comment-controls {
+	padding: 2px 10px;
+	text-align: right;
+}
+.comment-reply-container textarea {
+	display: block;
+	width: 100%;
+	height: 15em;
+	font-family: Charter;
+}
+
 .comment-body {
 	font-family: Charter;
 	line-height: 1.45;
