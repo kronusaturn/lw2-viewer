@@ -621,11 +621,27 @@
 "<div id=\"bottom-bar\" class=\"nav-bar\"><a class=\"nav-item nav-current nav-inner\" href=\"#top\">Back to top</a></div>
 <script>if(document.getElementById(\"content\").clientHeight <= window.innerHeight + 30) {var e = document.getElementById(\"bottom-bar\"); e.parentNode.removeChild(e)}</script>") 
 
+(defun make-csrf-token (session-token &optional (nonce (ironclad:make-random-salt)))
+  (if (typep session-token 'string) (setf session-token (base64:base64-string-to-usb8-array session-token)))
+  (let ((csrf-token (concatenate '(vector (unsigned-byte 8)) nonce (ironclad:digest-sequence :sha256 (concatenate '(vector (unsigned-byte 8)) nonce session-token)))))
+    (values (base64:usb8-array-to-base64-string csrf-token) csrf-token))) 
+
+(defun check-csrf-token (session-token csrf-token)
+  (let* ((session-token (base64:base64-string-to-usb8-array session-token))
+	 (csrf-token (base64:base64-string-to-usb8-array csrf-token))
+	 (correct-token (nth-value 1 (make-csrf-token session-token (subseq csrf-token 0 16)))))
+    (assert (ironclad:constant-time-equal csrf-token correct-token) nil "CSRF check failed.")
+    t)) 
+
 (defun begin-html (out-stream &key title description current-uri content-class)
-  (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"shortcut icon\" href=\"~A\"><script src=\"~A\" async></script></head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
-	  title description
-	  *html-head* (generate-versioned-link "/style.css") (generate-versioned-link "/favicon.ico") (generate-versioned-link "/script.js") content-class
-	  (user-nav-bar (or current-uri (hunchentoot:request-uri*))))
+  (let* ((session-token (hunchentoot:cookie-in "session-token"))
+	 (csrf-token (and session-token (make-csrf-token session-token)))) 
+    (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"shortcut icon\" href=\"~A\"><script src=\"~A\" async></script>~@[<script>var csrfToken=\"~A\"</script>~]</head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
+	    title description
+	    *html-head* (generate-versioned-link "/style.css") (generate-versioned-link "/favicon.ico") (generate-versioned-link "/script.js")
+	    csrf-token
+	    content-class
+	    (user-nav-bar (or current-uri (hunchentoot:request-uri*)))))
   (force-output out-stream)) 
 
 (defun end-html (out-stream)
@@ -696,19 +712,33 @@
 				       (out-stream (hunchentoot:send-headers)))
 				   (posts-to-rss posts (make-flexi-stream out-stream :external-format :utf-8)))) 
 
-(hunchentoot:define-easy-handler (view-post-lw2-link :uri (lambda (r) (declare (ignore r)) (match-lw2-link (hunchentoot:request-uri*)))) ()
-				 (with-error-page 
-				   (multiple-value-bind (post-id comment-id) (match-lw2-link (hunchentoot:request-uri*))
-				     (if comment-id 
-				       (setf (hunchentoot:return-code*) 303
-					     (hunchentoot:header-out "Location") (generate-post-link post-id comment-id))
-				       (let ((post (get-post-body post-id))) 
-					 (emit-page (out-stream :title (clean-text (cdr (assoc :title post)))) 
-						    (with-outputs (out-stream) (post-body-to-html post)) 
-						    (force-output out-stream) 
-						    (format out-stream "<div id=\"comments\">~A</div>"
-							    (let ((comments (get-post-comments post-id)))
-							      (comment-tree-to-html (make-comment-parent-hash comments)))))))))) 
+(hunchentoot:define-easy-handler (view-post-lw2-link :uri (lambda (r) (declare (ignore r)) (match-lw2-link (hunchentoot:request-uri*)))) ((csrf-token :request-type :post) (text :request-type :post) (parent-comment-id :request-type :post))
+				 (with-error-page
+				   (cond
+				     (text
+				       (check-csrf-token (hunchentoot:cookie-in "session-token") csrf-token)
+				       (let ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token"))
+					     (post-id (match-lw2-link (hunchentoot:request-uri*)))) 
+					 (assert (and lw2-auth-token (not (string= text ""))))
+					 (let ((retval (do-lw2-comment lw2-auth-token
+								       `(("body" . ,text) ("postId" . ,post-id) ,(if parent-comment-id `("parentCommentId" . ,parent-comment-id)) ("content" . ("blocks" . nil))))))
+					   (destructuring-bind (((status ret-data) &rest *)) (json:decode-json-from-string retval)
+					     (if (not (eq status :data))
+					       (error "LW2 server said: ~A" retval)) 
+					     (setf (hunchentoot:return-code*) 303
+						   (hunchentoot:header-out "Location") (concatenate 'string (hunchentoot:request-uri*) "#" (cdr (assoc :--id (cdr ret-data)))))))))
+				     (t 
+				       (multiple-value-bind (post-id comment-id) (match-lw2-link (hunchentoot:request-uri*))
+					 (if comment-id 
+					   (setf (hunchentoot:return-code*) 303
+						 (hunchentoot:header-out "Location") (generate-post-link post-id comment-id))
+					   (let ((post (get-post-body post-id))) 
+					     (emit-page (out-stream :title (clean-text (cdr (assoc :title post)))) 
+							(with-outputs (out-stream) (post-body-to-html post)) 
+							(force-output out-stream) 
+							(format out-stream "<div id=\"comments\">~A</div>"
+								(let ((comments (get-post-comments post-id)))
+								  (comment-tree-to-html (make-comment-parent-hash comments)))))))))))) 
 
 (hunchentoot:define-easy-handler (view-recent-comments :uri "/recentcomments") ()
 				 (with-error-page
@@ -737,18 +767,6 @@
   (loop for (id label type) in fields
 	do (format out-stream "<div><label for=\"~A\">~A:</label><input type=\"~A\" name=\"~@*~A\"></div>" id label type))
   (format out-stream "<div><input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><input type=\"submit\" value=\"~A\"></div></div></form>" csrf-token button-label)) 
-
-(defun make-csrf-token (session-token &optional (nonce (ironclad:make-random-salt)))
-  (if (typep session-token 'string) (setf session-token (base64:base64-string-to-usb8-array session-token)))
-  (let ((csrf-token (concatenate '(vector (unsigned-byte 8)) nonce (ironclad:digest-sequence :sha256 (concatenate '(vector (unsigned-byte 8)) nonce session-token)))))
-    (values (base64:usb8-array-to-base64-string csrf-token) csrf-token))) 
-
-(defun check-csrf-token (session-token csrf-token)
-  (let* ((session-token (base64:base64-string-to-usb8-array session-token))
-	 (csrf-token (base64:base64-string-to-usb8-array csrf-token))
-	 (correct-token (nth-value 1 (make-csrf-token session-token (subseq csrf-token 0 16)))))
-    (assert (ironclad:constant-time-equal csrf-token correct-token) nil "CSRF check failed.")
-    t)) 
 
 (hunchentoot:define-easy-handler (view-login :uri "/login") (return cookie-check (csrf-token :request-type :post) (login-username :request-type :post) (login-password :request-type :post))
 				 (with-error-page

@@ -1,3 +1,25 @@
+function readCookie(name) {
+	var nameEQ = name + "=";
+	var ca = document.cookie.split(';');
+	for(var i=0;i < ca.length;i++) {
+		var c = ca[i];
+		while (c.charAt(0)==' ') c = c.substring(1,c.length);
+		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+	}
+	return null;
+}
+
+function injectReplyForm(e, withparent) {
+	e.innerHTML = '<form method="post"><textarea name="text"></textarea>' +
+		(withparent ? '<input type="hidden" name="parent-comment-id" value="'+e.parentElement.parentElement.id+'">':'') +
+		'<input type="hidden" name="csrf-token" value="'+window.csrfToken+'"><input type="submit" value="Submit"></form>';
+	e.querySelector("textarea").focus();
+}
+
+function showReplyForm(event) {
+	injectReplyForm(event.target.parentElement, true);
+}
+
 document.addEventListener("DOMContentLoaded", function() {
 	window.requestAnimationFrame(function() {
 		var content = document.querySelector("#content");
@@ -16,6 +38,21 @@ document.addEventListener("DOMContentLoaded", function() {
 			catch (e) { }
 			location.hash = '';
 			location.hash = urlParts[1];
+		}
+
+		if(readCookie("lw2-auth-token")) {
+			document.querySelectorAll("#comments .comment").forEach(function(e) {
+				let r = document.createElement("div");
+				r.className = "comment-controls";
+				r.innerHTML = '<div class="comment-reply-container"><button class="reply-button">Reply</button></div>';
+				e.insertAdjacentElement("afterend", r);
+				r.querySelector(".reply-button").addEventListener("mouseup", window.showReplyForm);
+				r.querySelector(".reply-button").addEventListener("keyup", window.showReplyForm);
+			});
+			let r = document.createElement("div");
+			r.className = "comment-reply-container";
+			document.querySelector("#comments").insertAdjacentElement("afterbegin", r);
+			injectReplyForm(r, false);
 		}
 	})
 });
