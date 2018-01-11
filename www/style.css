@@ -605,6 +605,7 @@ h1.listing a[href^="/"]::after {
 }
 .login-container form input[type='submit']:active {
 	color: #f00;
+	transform: scale(0.9);
 }
 .login-container form label + input:focus {
 	background-color: #ffd;
