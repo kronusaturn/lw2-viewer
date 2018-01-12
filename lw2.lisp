@@ -876,3 +876,5 @@
 (define-versioned-resource "/style.css" "text/css") 
 (define-versioned-resource "/script.js" "text/javascript") 
 (define-versioned-resource "/favicon.ico" "image/x-icon") 
+(define-versioned-resource "/fa-regular-400.ttf" "application/x-font-ttf; charset=binary") 
+(define-versioned-resource "/fa-solid-900.ttf" "application/x-font-ttf; charset=binary") 
