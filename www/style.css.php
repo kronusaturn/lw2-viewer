@@ -1022,6 +1022,7 @@ a.comment-parent-link:hover::after {
 }
 .comment-meta .vote:active {
 	transform: scale(0.9);
+	outline: none;
 }
 
 /*****************/
