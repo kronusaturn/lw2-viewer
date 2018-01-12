@@ -598,22 +598,14 @@ h1.listing a[href^="/"]::after {
 	width: calc(100% - 15em);
 	padding: 0.35em;
 	font-weight: bold;
-	color: #00e;
 	line-height: 1;
 	background-color: #eee;
 	border: 1px solid #ccc;
-	cursor: pointer;
 }
 .login-container form input[type='submit']:hover,
 .login-container form input[type='submit']:focus {
-	outline: none;
 	background-color: #ddd;
 	border: 1px solid #aaa;
-	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
-}
-.login-container form input[type='submit']:active {
-	color: #f00;
-	transform: scale(0.9);
 }
 .login-container form label + input:focus {
 	background-color: #ffd;
@@ -1076,10 +1068,7 @@ a.comment-parent-link:hover::after {
 .comment-meta .vote {
 	font-family: Font Awesome;
 	font-weight: 900;
-	font-size: inherit;
 	border: none;
-	background-color: inherit;
-	cursor: pointer;
 }
 .comment-meta .vote-up {
 	color: #c8c8c8;	
@@ -1100,10 +1089,6 @@ a.comment-parent-link:hover::after {
 .comment-meta .vote-down::before {
 	content: '\F056';
 }
-.comment-meta .vote:active {
-	transform: scale(0.9);
-	outline: none;
-}
 
 /*****************/
 /* COMMENTING UI */
@@ -1112,6 +1097,9 @@ a.comment-parent-link:hover::after {
 .comment-controls {
 	text-align: right;
 	margin: 8px 8px 8px 16px;
+}
+#comments > .comment-controls {
+	margin: 0;
 }
 .comment-controls textarea {
 	display: block;
@@ -1145,49 +1133,16 @@ a.comment-parent-link:hover::after {
 	border: 1px solid #aaa;
 	font-weight: bold;
 	font-size: 1.125rem;
-	color: #00e;
-	cursor: pointer;
 }
 .comment-controls input[type='submit']:hover,
 .comment-controls input[type='submit']:focus {
 	background-color: #ddd;
 	border: 1px solid #999;
-	text-shadow:
-		0 0 1px #fff,
-		0 0 3px #fff,
-		0 0 5px #fff;
-}
-.comment-controls input[type='submit']:active,
-.comment-controls input[type='submit']:focus {
-	color: #f00;
-	outline: none;
-}
-.comment-controls input[type='submit']:active {
-	transform: scale(0.9);
 }
 .comment-controls .reply-button {
-	font-family: inherit;
 	border: none;
-	font-size: inherit;
-	background-color: inherit;
-	color: #00e;
 	font-weight: 500;
 	padding: 1px 6px;
-	cursor: pointer;
-}
-.comment-controls .reply-button:hover {
-	color: #d00;
-	text-shadow:
-		0 0 1px #fff,
-		0 0 3px #fff,
-		0 0 5px #fff;
-}
-.comment-controls .reply-button:active {
-	color: #f00;
-	transform: scale(0.9);
-}
-.comment-controls .reply-button:focus {
-	outline: none;
 }
 
 /*********/
@@ -1199,6 +1154,36 @@ a {
 }
 a:hover {
 	text-decoration: underline;
+}
+
+/***********/
+/* BUTTONS */
+/***********/
+
+button,
+input[type='submit'] {
+	font-family: inherit;
+	font-size: inherit;
+	color: #00e;
+	background-color: inherit;
+	cursor: pointer;
+}
+button:hover,
+input[type='submit']:hover {
+	color: #d00;
+	text-shadow:
+		0 0 1px #fff,
+		0 0 3px #fff,
+		0 0 5px #fff;
+}
+button:active,
+input[type='submit']:active {
+	color: #f00;
+	transform: scale(0.9);
+}
+button:focus,
+input[type='submit']:focus {
+	outline: none;
 }
 
 /************/
