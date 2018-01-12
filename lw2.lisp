@@ -35,7 +35,7 @@
 
 (defun lmdb-clear-db (db)
   (lmdb:do-pairs (db key value)
-		 (lmdb:del db key value))) 
+		 (lmdb:del db key nil))) 
 
 (defun lmdb-put-string (db key value)
   (if 
