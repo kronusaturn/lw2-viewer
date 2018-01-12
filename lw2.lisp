@@ -4,8 +4,6 @@
 (in-package #:lw2-viewer) 
 
 (defvar *cookie-jar* (make-instance 'drakma:cookie-jar))
-;(defvar *lw2-stream* nil) 
-(defvar *username-cache* (make-hash-table :test 'equal)) 
 
 (defparameter *cache-db* "./cache/")
 
