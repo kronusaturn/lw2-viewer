@@ -25,11 +25,6 @@ function showReplyForm(event) {
 
 document.addEventListener("DOMContentLoaded", function() {
 	window.requestAnimationFrame(function() {
-		document.querySelectorAll(".comment-meta .karma").forEach(function (e) {
-			e.insertAdjacentHTML('beforebegin', "<button type='button' class='vote vote-up'></button>");
-			e.insertAdjacentHTML('afterend', "<button type='button' class='vote vote-down'></button>");
-		});
-	
 		var content = document.querySelector("#content");
 		if (content.clientHeight <= window.innerHeight + 30) {
 			content.removeChild(document.querySelector("#bottom-bar"));
@@ -50,6 +45,11 @@ document.addEventListener("DOMContentLoaded", function() {
 		}
 
 		if(readCookie("lw2-auth-token")) {
+			document.querySelectorAll(".comment-meta .karma").forEach(function (e) {
+				e.insertAdjacentHTML('beforebegin', "<button type='button' class='vote vote-up'></button>");
+				e.insertAdjacentHTML('afterend', "<button type='button' class='vote vote-down'></button>");
+			});
+	
 			document.querySelectorAll("#comments .comment").forEach(function(e) {
 				let r = document.createElement("div");
 				r.className = "comment-controls";
