@@ -24,15 +24,14 @@
 	     (ensure-database db-name))))) 
 
 (defmacro with-db ((db db-name) &body body)
-  (alexandria:with-gensyms (txn)
-			   `(with-mutex (*db-mutex*)
-					(let ((,db (gethash ,db-name *open-databases*)))
-					  (unless ,db
-					    (setf ,db (ensure-database ,db-name) 
-						  (gethash ,db-name *open-databases*) ,db)) 
-					(lmdb:with-transaction ((lmdb:make-transaction *db-environment* :flags 0) :normal-disposition :commit)
-							       (lmdb:with-database (,db)
-										   ,@body))))))
+  `(with-mutex (*db-mutex*)
+	       (let ((,db (gethash ,db-name *open-databases*)))
+		 (unless ,db
+		   (setf ,db (ensure-database ,db-name) 
+			 (gethash ,db-name *open-databases*) ,db)) 
+		 (lmdb:with-transaction ((lmdb:make-transaction *db-environment* :flags 0) :normal-disposition :commit)
+					(lmdb:with-database (,db)
+							    ,@body)))))
 
 (defun lmdb-clear-db (db)
   (lmdb:do-pairs (db key value)
@@ -239,7 +238,8 @@
   (setf *background-loader-thread* (sb-thread:make-thread #'background-loader))) 
 
 (defun stop-background-loader ()
-  (sb-thread:terminate-thread *background-loader-thread*)
+  (with-mutex (*db-mutex*) 
+    (sb-thread:terminate-thread *background-loader-thread*))
   (setf *background-loader-thread* nil)) 
 
 (defun match-lw1-link (link)
@@ -563,7 +563,7 @@
 
 (defparameter *html-head*
 "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
-<link rel=\"stylesheet\" href=\"//fonts.greaterwrong.com/?fonts=Charter,Geometric415\">")
+<link rel=\"stylesheet\" href=\"//fonts.greaterwrong.com/?fonts=Charter,Geometric415,a_Avante\">")
 
 (defun generate-versioned-link (file)
   (format nil "~A?v=~A" file (sb-posix:stat-mtime (sb-posix:stat (format nil "www~A" file))))) 
