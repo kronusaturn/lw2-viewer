@@ -421,11 +421,13 @@
 	(alexandria:if-let
 	  (override (gethash post-id *html-overrides*))
 	  (funcall override) 
-	  (let ((root (plump:parse in-html))
+	  (let ((root (plump:parse (string-trim '(#\Space #\Newline #\Tab #\Return #\Linefeed #\Page) in-html)))
 		(contents nil)
 		(section-count 0)
 		(aggressive-deformat nil) 
 		(style-hash (make-hash-table :test 'equal)))
+	    (loop while (and (= 1 (length (plump:children root))) (tag-is (plump:first-child root) "div"))
+		  do (setf (plump:children root) (plump:children (plump:first-child root)))) 
 	    (plump:traverse root (lambda (node)
 				   (typecase node
 				     (plump:text-node 
