@@ -1109,6 +1109,7 @@ a.comment-parent-link:hover::after {
 .comment-reply-container input[type='submit']:active,
 .comment-reply-container input[type='submit']:focus {
 	color: #f00;
+	outline: none;
 }
 .comment-reply-container input[type='submit']:active {
 	transform: scale(0.9);
