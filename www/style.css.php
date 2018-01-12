@@ -1033,7 +1033,7 @@ a.comment-parent-link:hover::after {
 	text-align: right;
 	margin: 8px 8px 8px 16px;
 }
-.comment-reply-container textarea {
+.comment-controls textarea {
 	display: block;
 	width: 100%;
 	height: 15em;
@@ -1045,7 +1045,7 @@ a.comment-parent-link:hover::after {
 		0 0 0 1px #eee inset;
 	resize: none;
 }
-.comment-reply-container textarea:focus {
+.comment-controls textarea:focus {
 	outline: none;
 	background-color: #ffd;
 	border: 1px solid #00e;
@@ -1054,11 +1054,11 @@ a.comment-parent-link:hover::after {
 		0 0 0 1px #fff,
 		0 0 0 2px #00e;
 }
-.comment-reply-container form span {
+.comment-controls form span {
 	float: left;
 	padding: 4px 0 0 6px;
 }
-.comment-reply-container input[type='submit'] {
+.comment-controls input[type='submit'] {
 	margin: 6px;
 	background-color: #fff;
 	padding: 4px 10px;
@@ -1068,8 +1068,8 @@ a.comment-parent-link:hover::after {
 	color: #00e;
 	cursor: pointer;
 }
-.comment-reply-container input[type='submit']:hover,
-.comment-reply-container input[type='submit']:focus {
+.comment-controls input[type='submit']:hover,
+.comment-controls input[type='submit']:focus {
 	background-color: #ddd;
 	border: 1px solid #999;
 	text-shadow:
@@ -1077,15 +1077,15 @@ a.comment-parent-link:hover::after {
 		0 0 3px #fff,
 		0 0 5px #fff;
 }
-.comment-reply-container input[type='submit']:active,
-.comment-reply-container input[type='submit']:focus {
+.comment-controls input[type='submit']:active,
+.comment-controls input[type='submit']:focus {
 	color: #f00;
 	outline: none;
 }
-.comment-reply-container input[type='submit']:active {
+.comment-controls input[type='submit']:active {
 	transform: scale(0.9);
 }
-.comment-reply-container .reply-button {
+.comment-controls .reply-button {
 	font-family: inherit;
 	border: none;
 	font-size: inherit;
@@ -1095,18 +1095,18 @@ a.comment-parent-link:hover::after {
 	padding: 1px 6px;
 	cursor: pointer;
 }
-.comment-reply-container .reply-button:hover {
+.comment-controls .reply-button:hover {
 	color: #d00;
 	text-shadow:
 		0 0 1px #fff,
 		0 0 3px #fff,
 		0 0 5px #fff;
 }
-.comment-reply-container .reply-button:active {
+.comment-controls .reply-button:active {
 	color: #f00;
 	transform: scale(0.9);
 }
-.comment-reply-container .reply-button:focus {
+.comment-controls .reply-button:focus {
 	outline: none;
 }
 

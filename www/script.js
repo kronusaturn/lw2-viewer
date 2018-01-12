@@ -10,17 +10,23 @@ function readCookie(name) {
 }
 
 function injectReplyForm(e, withparent) {
-	e.innerHTML = '<form method="post"><textarea name="text"></textarea>' +
-		(withparent ? '<input type="hidden" name="parent-comment-id" value="'+e.parentElement.parentElement.id+'">':'') +
+	e.innerHTML = '<button class="cancel-comment-button">Cancel</button> <form method="post"><textarea name="text"></textarea>' +
+		(withparent ? '<input type="hidden" name="parent-comment-id" value="'+e.parentElement.id+'">':'') +
 		'<input type="hidden" name="csrf-token" value="'+window.csrfToken+'">' +
 		'<span>You can use <a href="http://commonmark.org/help/" target="_blank">Markdown</a> here.</span><input type="submit" value="Submit"></form>';
 	if(withparent) {
 		e.querySelector("textarea").focus();
 	}
+	e.querySelector(".cancel-comment-button").addEventListener("mouseup", window.hideReplyForm);
+	e.querySelector(".cancel-comment-button").addEventListener("keyup", window.hideReplyForm);
 }
 
 function showReplyForm(event) {
-	injectReplyForm(event.target.parentElement, true);
+	injectReplyForm(event.target.parentElement, (event.target.parentElement.parentElement.id == 'comments' ? false : true));
+}
+
+function hideReplyForm(event) {
+	// TODO: ADD CODE
 }
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -45,23 +51,25 @@ document.addEventListener("DOMContentLoaded", function() {
 		}
 
 		if(readCookie("lw2-auth-token")) {
+			// Add upvote/downvote buttons.
 			document.querySelectorAll(".comment-meta .karma").forEach(function (e) {
 				e.insertAdjacentHTML('beforebegin', "<button type='button' class='vote vote-up'></button>");
 				e.insertAdjacentHTML('afterend', "<button type='button' class='vote vote-down'></button>");
 			});
-	
-			document.querySelectorAll("#comments .comment").forEach(function(e) {
-				let r = document.createElement("div");
-				r.className = "comment-controls";
-				r.innerHTML = '<div class="comment-reply-container"><button class="reply-button">Reply</button></div>';
-				e.insertAdjacentElement("afterend", r);
-				r.querySelector(".reply-button").addEventListener("mouseup", window.showReplyForm);
-				r.querySelector(".reply-button").addEventListener("keyup", window.showReplyForm);
+			
+			// Add reply buttons.
+			document.querySelectorAll("#comments .comment").forEach(function (e) {
+				e.insertAdjacentHTML("afterend", "<div class='comment-controls'><button class='reply-button'>Reply</button></div>");				
+
+				e.parentElement.querySelector(".reply-button").addEventListener("mouseup", window.showReplyForm);
+				e.parentElement.querySelector(".reply-button").addEventListener("keyup", window.showReplyForm);
 			});
-			let r = document.createElement("div");
-			r.className = "comment-reply-container";
-			document.querySelector("#comments").insertAdjacentElement("afterbegin", r);
-			injectReplyForm(r, false);
+			
+			// Add top-level new comment form.
+			document.querySelector("#comments").insertAdjacentHTML("afterbegin", "<div class='comment-controls'><button class='new-comment-button'>Post new comment</button></div>");
+			document.querySelector("#comments .new-comment-button").addEventListener("mouseup", window.showReplyForm);
+			document.querySelector("#comments .new-comment-button").addEventListener("keyup", window.showReplyForm);
+
 			needHashRealignment = true;
 		}
 
