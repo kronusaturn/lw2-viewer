@@ -239,7 +239,8 @@
   (setf *background-loader-thread* (sb-thread:make-thread #'background-loader))) 
 
 (defun stop-background-loader ()
-  (sb-thread:terminate-thread *background-loader-thread*)
+  (with-mutex (*db-mutex*) 
+    (sb-thread:terminate-thread *background-loader-thread*))
   (setf *background-loader-thread* nil)) 
 
 (defun match-lw1-link (link)
