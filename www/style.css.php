@@ -980,7 +980,7 @@ a.comment-parent-link:hover::after {
 
 .comment-controls {
 	text-align: right;
-	margin: 0 8px 8px 16px;
+	margin: 8px 8px 8px 16px;
 }
 .comment-reply-container textarea {
 	display: block;
@@ -1005,7 +1005,7 @@ a.comment-parent-link:hover::after {
 }
 .comment-reply-container form span {
 	float: left;
-	padding: 0 0 0 4px;
+	padding: 4px 0 0 6px;
 }
 .comment-reply-container input[type='submit'] {
 	margin: 6px;
@@ -1039,9 +1039,8 @@ a.comment-parent-link:hover::after {
 	font-size: inherit;
 	background-color: inherit;
 	color: #00e;
-	font-weight: bold;
-	margin: 0 0 4px 0;
-	padding: 1px 6px 2px 6px;
+	font-weight: 500;
+	padding: 1px 6px;
 	cursor: pointer;
 }
 .comment-reply-container .reply-button:hover {
@@ -1054,6 +1053,9 @@ a.comment-parent-link:hover::after {
 .comment-reply-container .reply-button:active {
 	color: #f00;
 	transform: scale(0.9);
+}
+.comment-reply-container .reply-button:focus {
+	outline: none;
 }
 
 /*********/
