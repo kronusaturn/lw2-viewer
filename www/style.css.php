@@ -1002,7 +1002,7 @@ a.comment-parent-link:hover::after {
 	cursor: pointer;
 }
 .comment-meta .vote-up {
-	color: #bbb;	
+	color: #c8c8c8;	
 }
 .comment-meta .vote-up:hover {
 	color: #00d800;
@@ -1011,7 +1011,7 @@ a.comment-parent-link:hover::after {
 	content: '\F055';
 }
 .comment-meta .vote-down {
-	color: #c4c4c4;
+	color: #cacaca;
 	margin-left: -1px;
 }
 .comment-meta .vote-down:hover {
