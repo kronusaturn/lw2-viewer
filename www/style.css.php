@@ -477,6 +477,7 @@ h1.listing a:hover {
 	white-space: initial;
 	overflow: visible;
 	background-color: rgba(255,255,255,0.85);
+	z-index: 2;
 }
 <?php $margin_of_hover_error = '10px'; ?>
 h1.listing a:hover::before {
