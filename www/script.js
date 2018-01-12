@@ -25,13 +25,18 @@ function showReplyForm(event) {
 
 document.addEventListener("DOMContentLoaded", function() {
 	window.requestAnimationFrame(function() {
+		document.querySelectorAll(".comment-meta .karma").forEach(function (e) {
+			e.insertAdjacentHTML('beforebegin', "<button type='button' class='vote vote-up'></button>");
+			e.insertAdjacentHTML('afterend', "<button type='button' class='vote vote-down'></button>");
+		});
+	
 		var content = document.querySelector("#content");
 		if (content.clientHeight <= window.innerHeight + 30) {
 			content.removeChild(document.querySelector("#bottom-bar"));
 			document.querySelector(".post .post-meta").removeChild(document.querySelector(".post .post-meta a[href='#bottom-bar']"));
 		} 	
 		if (content.clientHeight <= window.innerHeight + 30 || 
-			document.querySelector("#comments").childNodes.length == 0) {
+			(document.querySelector("#comments") && document.querySelector("#comments").childNodes.length == 0)) {
 			document.styleSheets[1].insertRule('.post .post-meta .comment-count::after { display: none; }', document.styleSheets[1].cssRules.length);
 		}
 

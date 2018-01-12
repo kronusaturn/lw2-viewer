@@ -904,9 +904,12 @@ ul.comment-thread {
 	margin: 0 -1px;
 	border: none;
 }
-.comment-meta div:first-child {
+.comment-meta .author {
 	font-weight: bold;
 	font-size: 1.2em;
+}
+.comment-meta .lw2-link {
+	margin-left: 1.5em;
 }
 
 .comment-body {
@@ -973,6 +976,45 @@ a.comment-parent-link:hover::after {
 
 #comments .comment-thread > li {
 	position: relative;
+}
+
+/****************/
+/* VOTE BUTTONS */
+/****************/
+
+.comment-meta .vote,
+.comment-meta .karma {
+	margin: 0;
+}
+.comment-meta .vote {
+	font-family: Font Awesome;
+	font-weight: 900;
+	font-size: inherit;
+	border: none;
+	background-color: inherit;
+	cursor: pointer;
+}
+.comment-meta .vote-up {
+	color: #bbb;	
+}
+.comment-meta .vote-up:hover {
+	color: #00d800;
+}
+.comment-meta .vote-up::before {
+	content: '\F055';
+}
+.comment-meta .vote-down {
+	color: #c4c4c4;
+	margin-left: -1px;
+}
+.comment-meta .vote-down:hover {
+	color: #eb4c2a;
+}
+.comment-meta .vote-down::before {
+	content: '\F056';
+}
+.comment-meta .vote:active {
+	transform: scale(0.9);
 }
 
 /*****************/
