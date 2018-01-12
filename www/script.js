@@ -24,13 +24,21 @@ function injectReplyForm(e, withparent) {
 	e.addEventListener("keyup", window.hideReplyForm);
 }
 
+function removeReplyForm(e) {
+	e.parentElement.removeChild(event.target.parentElement.querySelector("form"));
+	e.outerHTML = "<button class='reply-button'>Reply</button>";
+}
+
 function showReplyForm(event) {
+	document.querySelectorAll(".reply-button").forEach(function (e) {
+		removeReplyForm(e);
+	});
+
 	injectReplyForm(event.target, (event.target.parentElement.parentElement.id == 'comments' ? false : true));
 }
 
 function hideReplyForm(event) {
-	event.target.parentElement.removeChild(event.target.parentElement.querySelector("form"));
-	event.target.outerHTML = "<button class='reply-button'>Reply</button>";
+	removeReplyForm(event.target);
 }
 
 document.addEventListener("DOMContentLoaded", function() {
