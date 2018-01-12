@@ -754,7 +754,7 @@ h1.listing a[href^="/"]::after {
 .post-meta:last-child {
 	margin-bottom: 40px;
 }
-.author {
+.post-meta .author {
 	color: #090;
 }
 .post-body {
