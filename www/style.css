@@ -1101,6 +1101,12 @@ a.comment-parent-link:hover::after {
 #comments > .comment-controls {
 	margin: 0;
 }
+#comments > .comment-controls > button {
+	font-weight: 500;
+	font-size: 1.25rem;
+	padding: 0;
+	margin: 0.25em 0.5em;
+}
 .comment-controls textarea {
 	display: block;
 	width: 100%;
@@ -1139,7 +1145,7 @@ a.comment-parent-link:hover::after {
 	background-color: #ddd;
 	border: 1px solid #999;
 }
-.comment-controls .reply-button {
+.comment-controls button {
 	border: none;
 	font-weight: 500;
 	padding: 1px 6px;
