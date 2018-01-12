@@ -1087,6 +1087,7 @@ input[type='submit'] {
 	color: #00e;
 	background-color: inherit;
 	cursor: pointer;
+	border: none;
 }
 button:hover,
 input[type='submit']:hover {
