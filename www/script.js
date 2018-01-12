@@ -10,23 +10,27 @@ function readCookie(name) {
 }
 
 function injectReplyForm(e, withparent) {
-	e.innerHTML = '<button class="cancel-comment-button">Cancel</button> <form method="post"><textarea name="text"></textarea>' +
-		(withparent ? '<input type="hidden" name="parent-comment-id" value="'+e.parentElement.id+'">':'') +
-		'<input type="hidden" name="csrf-token" value="'+window.csrfToken+'">' +
-		'<span>You can use <a href="http://commonmark.org/help/" target="_blank">Markdown</a> here.</span><input type="submit" value="Submit"></form>';
+	e.outerHTML = "<button class='cancel-comment-button'>Cancel</button>";
+	e.insertAdjacentHTML(
+		"<form method='post'><textarea name='text'></textarea>" +
+		(withparent ? "<input type='hidden' name='parent-comment-id' value='" + e.parentElement.parentElement.id + "'>" : "") +
+		"<input type='hidden' name='csrf-token' value='" + window.csrfToken + "'>" +
+		"<span>You can use <a href='http://commonmark.org/help/' target='_blank'>Markdown</a> here.</span><input type='submit' value='Submit'></form>"
+		);
 	if(withparent) {
-		e.querySelector("textarea").focus();
+		e.parentElement.querySelector("textarea").focus();
 	}
-	e.querySelector(".cancel-comment-button").addEventListener("mouseup", window.hideReplyForm);
-	e.querySelector(".cancel-comment-button").addEventListener("keyup", window.hideReplyForm);
+	e.addEventListener("mouseup", window.hideReplyForm);
+	e.addEventListener("keyup", window.hideReplyForm);
 }
 
 function showReplyForm(event) {
-	injectReplyForm(event.target.parentElement, (event.target.parentElement.parentElement.id == 'comments' ? false : true));
+	injectReplyForm(event.target, (event.target.parentElement.parentElement.id == 'comments' ? false : true));
 }
 
 function hideReplyForm(event) {
-	// TODO: ADD CODE
+	event.target.parentElement.removeChild(event.target.parentElement.querySelector("form"));
+	event.target.outerHTML = "<button class='reply-button'>Reply</button>";
 }
 
 document.addEventListener("DOMContentLoaded", function() {
