@@ -36,7 +36,7 @@ Element.prototype.injectReplyForm = function() {
 			"<button type='button' class='guiedit guiedit-" 
 			+ button[0]
 			+ "' title='"
-			+ button[1] + ((button[2] != "") ? ("[accesskey: " + button[2] + "]") : "")
+			+ button[1] + ((button[2] != "") ? (" [accesskey: " + button[2] + "]") : "")
 			+ "' accesskey='"
 			+ button[2]
 			+ "' onclick='insMarkup(\""

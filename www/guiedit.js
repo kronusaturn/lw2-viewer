@@ -31,5 +31,6 @@ var guiEditButtons = [
 	[ 'numbered-list', 'Numbered list', '', '1. ', '', 'List item', '&#xf0cb' ],
 	[ 'horizontal-rule', 'Horizontal rule', '', '---', '', '', '&#xf068' ],
 	[ 'inline-code', 'Inline code', '', '`', '`', 'Code', '&#xf121' ],
-	[ 'code-block', 'Code block', '', '```\n', '\n```', 'Code', '&#xf1c9' ]
+	[ 'code-block', 'Code block', '', '```\n', '\n```', 'Code', '&#xf1c9' ],
+	[ 'formula', 'LaTeX', '', '$', '$', 'LaTeX formula', '&#xf155' ]
 ];
