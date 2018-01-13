@@ -434,7 +434,7 @@
 		(section-count 0)
 		(aggressive-deformat nil) 
 		(style-hash (make-hash-table :test 'equal)))
-	    (loop while (and (= 1 (length (plump:children root))) (tag-is (plump:first-child root) "div"))
+	    (loop while (and (= 1 (length (plump:children root))) (typep (plump:first-child root) 'plump:element) (tag-is (plump:first-child root) "div"))
 		  do (setf (plump:children root) (plump:children (plump:first-child root)))) 
 	    (plump:traverse root (lambda (node)
 				   (typecase node
