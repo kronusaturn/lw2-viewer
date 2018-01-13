@@ -9,36 +9,49 @@ function readCookie(name) {
 	return null;
 }
 
-function injectReplyForm(e, withparent) {
-	e.outerHTML = "<button class='cancel-comment-button'>Cancel</button>";
-	e.insertAdjacentHTML(
-		"<form method='post'><textarea name='text'></textarea>" +
-		(withparent ? "<input type='hidden' name='parent-comment-id' value='" + e.parentElement.parentElement.id + "'>" : "") +
-		"<input type='hidden' name='csrf-token' value='" + window.csrfToken + "'>" +
-		"<span>You can use <a href='http://commonmark.org/help/' target='_blank'>Markdown</a> here.</span><input type='submit' value='Submit'></form>"
-		);
-	if(withparent) {
-		e.parentElement.querySelector("textarea").focus();
-	}
-	e.addEventListener("mouseup", window.hideReplyForm);
-	e.addEventListener("keyup", window.hideReplyForm);
+Element.prototype.addActivateEvent = function(func) {
+	this.addEventListener("mouseup", func);
+	this.addEventListener("keyup", func);
 }
 
-function removeReplyForm(e) {
-	e.parentElement.removeChild(e.parentElement.querySelector("form"));
-	e.outerHTML = "<button class='reply-button'>Reply</button>";
+Element.prototype.injectReplyForm = function() {
+	let e = this;
+	let withparent = (e.parentElement.id != 'comments');
+	e.innerHTML = "<button class='cancel-comment-button'>Cancel</button>" +
+		"<form method='post'><textarea name='text'></textarea>" +
+		(withparent ? "<input type='hidden' name='parent-comment-id' value='" + e.parentElement.id + "'>" : "") +
+		"<input type='hidden' name='csrf-token' value='" + window.csrfToken + "'>" +
+		"<span>You can use <a href='http://commonmark.org/help/' target='_blank'>Markdown</a> here.</span><input type='submit' value='Submit'></form>";
+	
+	e.querySelector(".cancel-comment-button").addActivateEvent(window.hideReplyForm);
+	e.querySelector("textarea").focus();
+}
+
+Element.prototype.injectReplyButton = function() {
+	let e = this;
+	e.innerHTML = "";
+	let button = e.appendChild(document.createElement("button"));
+	if(e.parentElement.id == 'comments') {
+		button.className="new-comment-button";
+		button.innerHTML="Post new comment";
+	} else {
+		button.className="reply-button";
+		button.innerHTML="Reply";
+	}
+	button.addActivateEvent(window.showReplyForm);
 }
 
 function showReplyForm(event) {
-	document.querySelectorAll(".reply-button").forEach(function (e) {
-		removeReplyForm(e);
+	let commentControls = event.target.parentElement;
+	document.querySelectorAll(".comment-controls").forEach(function (e) {
+		e.injectReplyButton();
 	});
 
-	injectReplyForm(event.target, (event.target.parentElement.parentElement.id == 'comments' ? false : true));
+	commentControls.injectReplyForm();
 }
 
 function hideReplyForm(event) {
-	removeReplyForm(event.target);
+	event.target.parentElement.injectReplyButton();
 }
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -71,16 +84,13 @@ document.addEventListener("DOMContentLoaded", function() {
 			
 			// Add reply buttons.
 			document.querySelectorAll("#comments .comment").forEach(function (e) {
-				e.insertAdjacentHTML("afterend", "<div class='comment-controls'><button class='reply-button'>Reply</button></div>");				
-
-				e.parentElement.querySelector(".reply-button").addEventListener("mouseup", window.showReplyForm);
-				e.parentElement.querySelector(".reply-button").addEventListener("keyup", window.showReplyForm);
+				e.insertAdjacentHTML("afterend", "<div class='comment-controls'></div>");
+				e.parentElement.querySelector(".comment-controls").injectReplyButton();
 			});
 			
 			// Add top-level new comment form.
-			document.querySelector("#comments").insertAdjacentHTML("afterbegin", "<div class='comment-controls'><button class='new-comment-button'>Post new comment</button></div>");
-			document.querySelector("#comments .new-comment-button").addEventListener("mouseup", window.showReplyForm);
-			document.querySelector("#comments .new-comment-button").addEventListener("keyup", window.showReplyForm);
+			document.querySelector("#comments").insertAdjacentHTML("afterbegin", "<div class='comment-controls'></div>");
+			document.querySelector("#comments .comment-controls").injectReplyButton();
 
 			needHashRealignment = true;
 		}
