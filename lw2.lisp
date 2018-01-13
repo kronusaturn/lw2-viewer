@@ -813,7 +813,8 @@
 					 (check-csrf-token (hunchentoot:cookie-in "session-token") csrf-token)
 					 (cond
 					   ((or (string= login-username "") (string= login-password "")) (emit-login-page :error-message "Please enter a username and password")) 
-					   (t (multiple-value-bind (auth-token error-message) (do-lw2-login "username" login-username login-password) 
+					   (t (multiple-value-bind (user-id auth-token error-message) (do-lw2-login "username" login-username login-password) 
+						(declare (ignore user-id)) 
 						(cond (auth-token
 							(hunchentoot:set-cookie "lw2-auth-token" :value auth-token) 
 							(cache-put "auth-token-to-username" auth-token login-username)

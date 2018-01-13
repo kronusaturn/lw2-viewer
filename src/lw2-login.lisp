@@ -1,9 +1,16 @@
 (defpackage lw2.login
   (:use #:cl #:lw2-viewer.config #:alexandria #:cl-json #:flexi-streams #:websocket-driver-client)
   (:import-from #:ironclad #:byte-array-to-hex-string #:digest-sequence)
-  (:export #:do-lw2-login #:do-lw2-post #:do-lw2-post-edit #:do-lw2-post-remove #:do-lw2-comment #:do-lw2-comment-edit #:do-lw2-comment-remove))
+  (:export #:do-lw2-login #:do-lw2-create-user #:do-lw2-post #:do-lw2-post-edit #:do-lw2-post-remove #:do-lw2-comment #:do-lw2-comment-edit #:do-lw2-comment-remove))
 
 (in-package #:lw2.login) 
+
+(defparameter *sockjs-debug-output* nil)
+
+(declaim (inline maybe-output))
+(defun maybe-output (stream prefix message)
+  (if stream (format stream "~&~A: ~A~%" prefix message))
+  message)
 
 (defun sockjs-encode-alist (alist)
   (encode-json-to-string (list (encode-json-alist-to-string alist)))) 
@@ -13,32 +20,43 @@
     (let ((response (map 'list #'decode-json-from-string (decode-json-from-string (subseq msg 1)))))
       (if (= (length response) 1)
 	(first response)
-	(error "Unsupported sockjs message."))))) 
+	(error "Unsupported sockjs message.")))))
 
 (defun password-digest (password)
   (byte-array-to-hex-string
     (digest-sequence :sha256
       (string-to-octets password :external-format :utf8)))) 
 
-(defun do-lw2-sockjs-operation (operation)
+(defun do-lw2-sockjs-operation (operation &optional session)
   (let ((client (wsd:make-client "ws://198.74.48.181:3000/sockjs/329/lwwyhlgw/websocket"))
+	(debug-output *sockjs-debug-output*) 
 	(result-semaphore (sb-thread:make-semaphore))
 	result)
     (unwind-protect
       (progn
 	(wsd:start-connection client) 
 	(wsd:on :message client (lambda (encoded-message)
+				  (maybe-output debug-output "sockjs recd" encoded-message)
 				  (let ((message (sockjs-decode encoded-message)))
-				    (format t "~&Got: ~A~%" message)
 				    (switch ((cdr (assoc :msg message)) :test 'equal)
-					    ("connected" (wsd:send client (sockjs-encode-alist operation)))
+					    ("connected" (wsd:send client (maybe-output debug-output "sockjs sent" (sockjs-encode-alist operation))))
 					    ("result"
 					     (setf result message)
 					     (sb-thread:signal-semaphore result-semaphore)))))) 
-	(wsd:send client (sockjs-encode-alist '(("msg" . "connect") ("version" . "1") ("support" . ("1")))))
+	(wsd:send client (maybe-output debug-output "sockjs sent" (sockjs-encode-alist `(("msg" . "connect") ,@(if session `(("session" . ,session))) ("version" . "1") ("support" . ("1"))))))
 	(sb-thread:wait-on-semaphore result-semaphore :timeout 10))
       (wsd:close-connection client))
     result)) 
+
+(defun parse-login-result (result)
+  (let* ((result-inner (cdr (assoc :result result)))
+	 (userid (cdr (assoc :id result-inner))) 
+	 (token (cdr (assoc :token result-inner))))
+    (if (and userid token) 
+      (values userid token) 
+      (if-let (error-message (cdr (assoc :reason (cdr (assoc :error result)))))
+	      (values nil nil error-message)
+	      (error "Unknown response from LW2: ~A" result))))) 
 
 (defun do-lw2-login (user-designator-type user-designator password)
   (let ((result (do-lw2-sockjs-operation `(("msg" . "method")
@@ -49,11 +67,19 @@
 					      (digest . ,(password-digest password))
 					      ("algorithm" . "sha-256"))))
 					   ("id" . "3")))))
-    (if-let (auth-token (cdr (assoc :token (cdr (assoc :result result)))))
-	    auth-token
-	    (if-let (error-message (cdr (assoc :reason (cdr (assoc :error result)))))
-		    (values nil error-message)
-		    (error "Unknown response from LW2: ~A" result))))) 
+    (parse-login-result result)))
+
+(defun do-lw2-create-user (username email password)
+  (let ((result (do-lw2-sockjs-operation `(("msg" . "method")
+					   ("method" . "createUser")
+					   ("params"
+					    (("username" . ,username)
+					     ("email" . ,email)
+					     ("password"
+					      (digest . , (password-digest password))
+					      ("algorithm" . "sha-256"))))
+					   ("id" . "3")))))
+    (parse-login-result result))) 
 
 ; resume session ["{\"msg\":\"connect\",\"session\":\"mKvhev8p2f4WfKd6k\",\"version\":\"1\",\"support\":[\"1\",\"pre2\",\"pre1\"]}"]
 ;
