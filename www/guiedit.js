@@ -13,6 +13,6 @@ function insMarkup() {
 }
 
 var guiEditButtons = [
-	[ 'strong', '**', '**', 'B' ],
-	[ 'em', '*', '*', 'I' ]
+	[ 'strong', '**', '**', '&#xf032;' ],
+	[ 'em', '*', '*', '&#xf033;' ]
 ];

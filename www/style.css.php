@@ -1011,7 +1011,7 @@ a.comment-parent-link:hover::after {
 	display: block;
 	width: 100%;
 	height: 15em;
-	padding: 30px 5px 4px 5px;
+	padding: 32px 5px 4px 5px;
 	font-family: Charter, serif;
 	font-size: 1.2rem;
 	border: 1px solid #aaa;
@@ -1055,7 +1055,7 @@ a.comment-parent-link:hover::after {
 	position: relative;
 }
 .guiedit-buttons-container {
-	background-image: linear-gradient(to bottom, #fff 0%, #ddf 50%, #aaf 100%);
+	background-image: linear-gradient(to bottom, #fff 0%, #ddf 50%, #ccf 75%, #aaf 100%);
 	position: absolute;
 	left: 1px;
 	top: 2px;
@@ -1067,6 +1067,7 @@ a.comment-parent-link:hover::after {
 .guiedit-buttons-container button {
 	width: 26px;
 	height: 26px;
+	color: #000;
 }
 
 /*********/

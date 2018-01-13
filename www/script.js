@@ -35,11 +35,11 @@ Element.prototype.injectReplyForm = function() {
 		buttons_container.insertAdjacentHTML("beforeend", 
 			"<button type='button' class='guiedit guiedit-" 
 			+ button[0] 
-			+ "' onclick='insMarkup("
+			+ "' onclick='insMarkup(\""
 			+ button[1]
-			+ ","
+			+ "\",\""
 			+ button[2]
-			+ ");'>"
+			+ "\");'>"
 			+ button[3]
 			+ "</button>"
 		);
