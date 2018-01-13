@@ -645,9 +645,9 @@
 (defun begin-html (out-stream &key title description current-uri content-class)
   (let* ((session-token (hunchentoot:cookie-in "session-token"))
 	 (csrf-token (and session-token (make-csrf-token session-token)))) 
-    (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"shortcut icon\" href=\"~A\"><script src=\"~A\" async></script>~@[<script>var csrfToken=\"~A\"</script>~]</head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
+    (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"shortcut icon\" href=\"~A\"><script src=\"~A\" async></script><script src=\"~A\" async></script>~@[<script>var csrfToken=\"~A\"</script>~]</head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
 	    title description
-	    *html-head* (generate-versioned-link "/style.css") (generate-versioned-link "/favicon.ico") (generate-versioned-link "/script.js")
+	    *html-head* (generate-versioned-link "/style.css") (generate-versioned-link "/favicon.ico") (generate-versioned-link "/script.js") (generate-versioned-link "/guiedit.js")
 	    csrf-token
 	    content-class
 	    (user-nav-bar (or current-uri (hunchentoot:request-uri*)))))
@@ -872,6 +872,7 @@
 
 (define-versioned-resource "/style.css" "text/css") 
 (define-versioned-resource "/script.js" "text/javascript") 
+(define-versioned-resource "/guiedit.js" "text/javascript") 
 (define-versioned-resource "/favicon.ico" "image/x-icon") 
 (define-versioned-resource "/fa-regular-400.ttf" "application/x-font-ttf; charset=binary") 
 (define-versioned-resource "/fa-solid-900.ttf" "application/x-font-ttf; charset=binary") 
