@@ -25,7 +25,7 @@ function injectReplyForm(e, withparent) {
 }
 
 function removeReplyForm(e) {
-	e.parentElement.removeChild(event.target.parentElement.querySelector("form"));
+	e.parentElement.removeChild(e.parentElement.querySelector("form"));
 	e.outerHTML = "<button class='reply-button'>Reply</button>";
 }
 
