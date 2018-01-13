@@ -1090,22 +1090,23 @@ a.comment-parent-link:hover::after {
 .comment-controls {
 	text-align: right;
 	margin: 8px 8px 8px 16px;
+	position: relative;
 }
 #comments > .comment-controls {
-	margin: 0;
+	margin: 8px 0 0 0;
 }
 #comments > .comment-controls > button {
 	font-weight: 500;
 	font-size: 1.25rem;
 	padding: 0;
-	margin: 0.25em 0.5em;
+	margin: 0 0.25em;
 }
 .comment-controls textarea {
 	display: block;
 	width: 100%;
 	height: 15em;
 	margin: 2px 0;
-	padding: 33px 5px 4px 5px;
+	padding: 32px 5px 4px 5px;
 	font-family: Charter, serif;
 	font-size: 1.2rem;
 	border: 1px solid #aaa;
@@ -1146,7 +1147,30 @@ a.comment-parent-link:hover::after {
 	position: relative;
 	z-index: 1;
 }
-
+.comment-controls .cancel-comment-button,
+#comments > .comment-controls .cancel-comment-button {
+	position: absolute;
+	right: 0;
+	margin: 0;
+	height: 26px;
+	font-size: inherit;
+	color: #c00;
+	text-shadow: 
+		0 0 1px #fff,
+		0 0 2px #fff;
+	padding: 3px 7px 2px 4px;
+}
+.comment-controls .cancel-comment-button:hover,
+#comments > .comment-controls .cancel-comment-button:hover {
+	color: #f00;
+	text-shadow:
+		0 0 1px #fff,
+		0 0 3px #fff,
+		0 0 5px #fff;
+}
+.comment + .comment-controls .reply-button {
+	font-weight: normal;
+}
 .comment-controls form {
 	position: relative;
 }
@@ -1156,22 +1180,16 @@ a.comment-parent-link:hover::after {
 	left: 1px;
 	top: 2px;
 	width: calc(100% - 2px);
-	height: 27px;
+	height: 26px;
 	text-align: left;
 	padding: 0 4px;
 }
 .guiedit-buttons-container button {
-	padding: 0 8px;
+	width: 26px;
 	height: 26px;
 	font-family: Font Awesome;
 	font-weight: 900;
 	font-size: 0.875rem;
-}
-.guiedit-buttons-container .guiedit-heading2 {
-	font-size: 0.75rem;
-}
-.guiedit-buttons-container .guiedit-heading3 {
-	font-size: 0.6125rem;
 }
 
 /*********/
