@@ -58,9 +58,17 @@
 ; new user ["{\"msg\":\"method\",\"method\":\"createUser\",\"params\":[{\"username\":\"test2\",\"email\":\"test@example.com\",\"password\":{\"digest\":\"37268335dd6931045bdcdf92623ff819a64244b53d0e746d438797349d4da578\",\"algorithm\":\"sha-256\"}}],\"id\":\"8\"}"]
 
 (defun do-lw2-post-query (auth-token data)
-  (octets-to-string
-    (drakma:http-request *graphql-uri* :method :post :additional-headers `(("authorization" . ,auth-token)) :content-type "application/json"
-			 :content (encode-json-to-string data)))) 
+  (let* ((response-json (octets-to-string
+			  (drakma:http-request *graphql-uri* :method :post :additional-headers `(("authorization" . ,auth-token)) :content-type "application/json"
+					       :content (encode-json-to-string data))))
+	 (response-alist (first (json:decode-json-from-string response-json)))
+	 (res-error (first (cdr (assoc :errors response-alist))))
+	 (res-data (rest (first (cdr (assoc :data response-alist)))))) 
+    (cond
+      (res-error (if (search "not_allowed" (cdr (assoc :message res-error))) (error "LW2 server reports: not allowed.")
+		   (error "Unknown LW2 error: ~A" res-error)))
+      (res-data (cdr (assoc :--id res-data))) 
+      (t (error "Unknown response from LW2 server: ~A" response-json))))) 
 
 (defun do-lw2-post (auth-token data)
   (do-lw2-post-query auth-token `((("query" . "mutation PostsNew($document: PostsInput) { PostsNew(document: $document) { __typename, _id, htmlBody } }")

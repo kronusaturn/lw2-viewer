@@ -729,13 +729,10 @@
 				       (let ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token"))
 					     (post-id (match-lw2-link (hunchentoot:request-uri*)))) 
 					 (assert (and lw2-auth-token (not (string= text ""))))
-					 (let ((retval (do-lw2-comment lw2-auth-token
-								       `(("body" . ,text) ("postId" . ,post-id) ,(if parent-comment-id `("parentCommentId" . ,parent-comment-id)) ("content" . ("blocks" . nil))))))
-					   (destructuring-bind (((status ret-data) &rest *)) (json:decode-json-from-string retval)
-					     (if (not (eq status :data))
-					       (error "LW2 server said: ~A" retval)) 
-					     (setf (hunchentoot:return-code*) 303
-						   (hunchentoot:header-out "Location") (concatenate 'string (hunchentoot:request-uri*) "#" (cdr (assoc :--id (cdr ret-data)))))))))
+					 (let ((new-comment-id (do-lw2-comment lw2-auth-token
+									       `(("body" . ,text) ("postId" . ,post-id) ,(if parent-comment-id `("parentCommentId" . ,parent-comment-id)) ("content" . ("blocks" . nil))))))
+					   (setf (hunchentoot:return-code*) 303
+						 (hunchentoot:header-out "Location") (concatenate 'string (hunchentoot:request-uri*) "#" new-comment-id)))))
 				     (t 
 				       (multiple-value-bind (post-id comment-id) (match-lw2-link (hunchentoot:request-uri*))
 					 (if comment-id 
