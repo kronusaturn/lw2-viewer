@@ -25,6 +25,22 @@ Element.prototype.injectReplyForm = function() {
 	
 	e.querySelector(".cancel-comment-button").addActivateEvent(window.hideReplyForm);
 	e.querySelector("textarea").focus();
+	
+	e.querySelector(".cancel-comment-button + form").insertAdjacentHTML("afterbegin", "<div class='guiedit-buttons-container'></div>")
+	var buttons_container = e.querySelector(".guiedit-buttons-container");
+	for (var button of guiEditButtons) {
+		buttons_container.insertAdjacentHTML("beforend", 
+			"<button class='guiedit guiedit-" 
+			+ button[0] 
+			+ "' onclick='insMarkup("
+			+ button[1]
+			+ ","
+			+ button[2]
+			+ ");'>"
+			+ button[3]
+			+ "</button>"
+		);
+	}
 }
 
 Element.prototype.injectReplyButton = function() {
