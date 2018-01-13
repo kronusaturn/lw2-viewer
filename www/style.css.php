@@ -1011,6 +1011,7 @@ a.comment-parent-link:hover::after {
 	display: block;
 	width: 100%;
 	height: 15em;
+	margin: 2px 0;
 	padding: 32px 5px 4px 5px;
 	font-family: Charter, serif;
 	font-size: 1.2rem;
@@ -1030,7 +1031,7 @@ a.comment-parent-link:hover::after {
 }
 .comment-controls form span {
 	float: left;
-	padding: 4px 0 0 6px;
+	padding: 2px 0 0 6px;
 }
 .comment-controls input[type='submit'] {
 	margin: 6px;
@@ -1049,6 +1050,8 @@ a.comment-parent-link:hover::after {
 	border: none;
 	font-weight: 500;
 	padding: 1px 6px;
+	position: relative;
+	z-index: 1;
 }
 
 .comment-controls form {
@@ -1067,7 +1070,6 @@ a.comment-parent-link:hover::after {
 .guiedit-buttons-container button {
 	width: 26px;
 	height: 26px;
-	color: #000;
 }
 
 /*********/
