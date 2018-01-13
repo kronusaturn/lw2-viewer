@@ -30,8 +30,8 @@ function removeReplyForm(e) {
 }
 
 function showReplyForm(event) {
-	document.querySelectorAll(".reply-button").forEach(function (e) {
-		removeReplyForm(e);
+	document.querySelectorAll(".comment-controls form").forEach(function (e) {
+		removeReplyForm(e.parentElement.querySelector(".cancel-comment-button"));
 	});
 
 	injectReplyForm(event.target, (event.target.parentElement.parentElement.id == 'comments' ? false : true));
