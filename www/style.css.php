@@ -1012,7 +1012,7 @@ a.comment-parent-link:hover::after {
 	width: 100%;
 	height: 15em;
 	margin: 2px 0;
-	padding: 32px 5px 4px 5px;
+	padding: 33px 5px 4px 5px;
 	font-family: Charter, serif;
 	font-size: 1.2rem;
 	border: 1px solid #aaa;
@@ -1063,16 +1063,22 @@ a.comment-parent-link:hover::after {
 	left: 1px;
 	top: 2px;
 	width: calc(100% - 2px);
-	height: 26px;
+	height: 27px;
 	text-align: left;
 	padding: 0 4px;
 }
 .guiedit-buttons-container button {
-	width: 26px;
+	padding: 0 8px;
 	height: 26px;
 	font-family: Font Awesome;
 	font-weight: 900;
 	font-size: 0.875rem;
+}
+.guiedit-buttons-container .guiedit-heading2 {
+	font-size: 0.75rem;
+}
+.guiedit-buttons-container .guiedit-heading3 {
+	font-size: 0.6125rem;
 }
 
 /*********/
