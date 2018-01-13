@@ -24,6 +24,9 @@ Element.prototype.injectReplyForm = function() {
 		"<span>You can use <a href='http://commonmark.org/help/' target='_blank'>Markdown</a> here.</span><input type='submit' value='Submit'></form>";
 	
 	e.querySelector(".cancel-comment-button").addActivateEvent(window.hideReplyForm);
+	if(e.getBoundingClientRect().bottom > window.innerHeight) {
+		e.scrollIntoView(false);
+	}
 	e.querySelector("textarea").focus();
 }
 
