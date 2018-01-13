@@ -17,7 +17,7 @@ Element.prototype.addActivateEvent = function(func) {
 Element.prototype.injectReplyForm = function() {
 	let e = this;
 	let withparent = (e.parentElement.id != 'comments');
-	e.innerHTML = "<button class='cancel-comment-button'>Cancel</button>" +
+	e.innerHTML = "<button class='cancel-comment-button' tabindex='-1'>Cancel</button>" +
 		"<form method='post'><textarea name='text'></textarea>" +
 		(withparent ? "<input type='hidden' name='parent-comment-id' value='" + e.parentElement.id + "'>" : "") +
 		"<input type='hidden' name='csrf-token' value='" + window.csrfToken + "'>" +
@@ -35,7 +35,7 @@ Element.prototype.injectReplyForm = function() {
 		buttons_container.insertAdjacentHTML("beforeend", 
 			"<button type='button' class='guiedit guiedit-" 
 			+ button[0]
-			+ "' title='"
+			+ "' tabindex='-1' title='"
 			+ button[1] + ((button[2] != "") ? (" [accesskey: " + button[2] + "]") : "")
 			+ "' accesskey='"
 			+ button[2]
@@ -63,6 +63,7 @@ Element.prototype.injectReplyButton = function() {
 		button.className="reply-button";
 		button.innerHTML="Reply";
 	}
+	button.tabIndex = '-1';
 	button.addActivateEvent(window.showReplyForm);
 }
 
@@ -103,8 +104,8 @@ document.addEventListener("DOMContentLoaded", function() {
 		if(readCookie("lw2-auth-token")) {
 			// Add upvote/downvote buttons.
 			document.querySelectorAll(".comment-meta .karma").forEach(function (e) {
-				e.insertAdjacentHTML('beforebegin', "<button type='button' class='vote vote-up'></button>");
-				e.insertAdjacentHTML('afterend', "<button type='button' class='vote vote-down'></button>");
+				e.insertAdjacentHTML('beforebegin', "<button type='button' class='vote vote-up' tabindex='-1'></button>");
+				e.insertAdjacentHTML('afterend', "<button type='button' class='vote vote-down' tabindex='-1'></button>");
 			});
 			
 			// Add reply buttons.
