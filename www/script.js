@@ -43,8 +43,10 @@ Element.prototype.injectReplyForm = function() {
 			+ button[3]
 			+ "\",\""
 			+ button[4]
-			+ "\");'>"
+			+ "\",\""
 			+ button[5]
+			+ "\");'>"
+			+ button[6]
 			+ "</button>"
 		);
 	}
