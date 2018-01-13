@@ -32,7 +32,7 @@ Element.prototype.injectReplyForm = function() {
 	e.querySelector(".cancel-comment-button + form").insertAdjacentHTML("afterbegin", "<div class='guiedit-buttons-container'></div>")
 	var buttons_container = e.querySelector(".guiedit-buttons-container");
 	for (var button of guiEditButtons) {
-		buttons_container.insertAdjacentHTML("beforend", 
+		buttons_container.insertAdjacentHTML("beforeend", 
 			"<button class='guiedit guiedit-" 
 			+ button[0] 
 			+ "' onclick='insMarkup("
