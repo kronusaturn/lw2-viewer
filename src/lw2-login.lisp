@@ -20,7 +20,7 @@
     (digest-sequence :sha256
       (string-to-octets password :external-format :utf8)))) 
 
-(defun do-lw2-login (user-designator-type user-designator password)
+(defun do-lw2-sockjs-operation (operation)
   (let ((client (wsd:make-client "ws://198.74.48.181:3000/sockjs/329/lwwyhlgw/websocket"))
 	(result-semaphore (sb-thread:make-semaphore))
 	result)
@@ -31,20 +31,24 @@
 				  (let ((message (sockjs-decode encoded-message)))
 				    (format t "~&Got: ~A~%" message)
 				    (switch ((cdr (assoc :msg message)) :test 'equal)
-					    ("connected" (wsd:send client (sockjs-encode-alist `(("msg" . "method")
-												 ("method" . "login")
-												 ("params"
-												  (("user" (,user-designator-type . ,user-designator))
-												   ("password"
-												    (digest . ,(password-digest password))
-												    ("algorithm" . "sha-256"))))
-												 ("id" . "3")))))
+					    ("connected" (wsd:send client (sockjs-encode-alist operation)))
 					    ("result"
 					     (setf result message)
 					     (sb-thread:signal-semaphore result-semaphore)))))) 
 	(wsd:send client (sockjs-encode-alist '(("msg" . "connect") ("version" . "1") ("support" . ("1")))))
 	(sb-thread:wait-on-semaphore result-semaphore :timeout 10))
       (wsd:close-connection client))
+    result)) 
+
+(defun do-lw2-login (user-designator-type user-designator password)
+  (let ((result (do-lw2-sockjs-operation `(("msg" . "method")
+					   ("method" . "login")
+					   ("params"
+					    (("user" (,user-designator-type . ,user-designator))
+					     ("password"
+					      (digest . ,(password-digest password))
+					      ("algorithm" . "sha-256"))))
+					   ("id" . "3")))))
     (if-let (auth-token (cdr (assoc :token (cdr (assoc :result result)))))
 	    auth-token
 	    (if-let (error-message (cdr (assoc :reason (cdr (assoc :error result)))))
