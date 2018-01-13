@@ -13,6 +13,11 @@ function insMarkup() {
 }
 
 var guiEditButtons = [
-	[ 'strong', '**', '**', '&#xf032;' ],
-	[ 'em', '*', '*', '&#xf033;' ]
+	[ 'strong', 'Strong (bold)', 'k', '**', '**', '&#xf032;' ],
+	[ 'em', 'Emphasized (italic)', 'i', '*', '*', '&#xf033;' ],
+	[ 'link', 'Hyperlink', 'l', '[', '](link_url_goes_here)', '&#xf0c1;' ],
+	[ 'heading1', 'Heading level 1', '', '# ', '', '&#xf1dc;' ],
+	[ 'heading2', 'Heading level 2', '', '## ', '', '&#xf1dc;' ],
+	[ 'heading3', 'Heading level 3', '', '### ', '', '&#xf1dc;' ],
+	[ 'blockquote', 'Blockquote', '', '> ', '', '&#xf10e;' ]
 ];
