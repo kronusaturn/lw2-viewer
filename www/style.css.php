@@ -317,12 +317,10 @@ input {
 .post-meta a[href='#bottom-bar']:active::after {
 	transform: scale(0.9);
 }
-@-moz-document url-prefix() {
-	#bottom-bar a[href='#top']:active::after,
-	.post-meta a[href='#comments']:active::after,
-	.post-meta a[href='#bottom-bar']:active::after {
-		transform: none;
-	}
+#bottom-bar a[href='#top']:focus:not(:hover)::after,
+.post-meta a[href='#comments']:focus:not(:hover)::after,
+.post-meta a[href='#bottom-bar']:focus:not(:hover)::after {
+	transform: none;
 }
 
 .comment-thread ~ #bottom-bar a[href='#top']::after,
@@ -377,8 +375,14 @@ div[class^='archive-nav-'] {
 .archive-nav-years .archive-nav-item-year:first-child {
 	width: 6.5%;
 }
-.archive-nav-months .archive-nav-item-month:first-child {
-	width: 7.5%;
+.archive-nav-months::after {
+	content: "";
+}
+.archive-nav-item-month {
+	width: 7.75%;
+}
+.archive-nav-item-month:first-child {
+	width: 7%;
 }
 .archive-nav-days .archive-nav-item-day {
 	font-size: 0.8em;
@@ -406,8 +410,17 @@ a.archive-nav-item-day:nth-of-type(31) {
 }
 .archive-nav a:hover {
 	text-decoration: none;
-	color: #00e;
+	color: #c00;
 	background-color: #e0e0e0;
+	text-shadow: 
+		0 0 1px #fff,
+		0 0 3px #fff;
+}
+.archive-nav a:active {
+	transform: scale(0.9);
+}
+.archive-nav a:focus:not(:hover) {
+	transform: none;
 }
 .archive-nav a.archive-nav-item-day:hover {
 	background-color: #ddd;
