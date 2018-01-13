@@ -577,6 +577,7 @@ h1.listing a[href^="/"]::after {
 	background-color: #ffd;
 	border: 1px solid #bbb;
 	box-shadow: 0 0 1px #bbb;
+	outline: none;
 }
 #login-form label {
 	width: 7em;
@@ -979,7 +980,7 @@ a.comment-parent-link:hover::after {
 	content: '\F055';
 }
 .comment-meta .vote-down {
-	color: #cacaca;
+	color: #ccc;
 	margin-left: -1px;
 }
 .comment-meta .vote-down:hover {
