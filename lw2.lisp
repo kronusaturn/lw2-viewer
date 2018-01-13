@@ -219,8 +219,11 @@
     (sb-debug:print-backtrace :stream outstream :from :interrupted-frame :print-frame-source t))) 
 
 (defmacro log-conditions (&body body)
-  `(handler-case (progn ,@body)
-     (t (c) (log-condition c)))) 
+  `(block log-conditions
+     (handler-bind
+       (((or warning serious-condition) (lambda (c) (log-condition c)))
+	(serious-condition (lambda (c) (declare (ignore c)) (return-from log-conditions))))
+       (progn ,@body))))
 
 (defun background-loader ()
   (loop
