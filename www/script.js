@@ -40,9 +40,9 @@ Element.prototype.injectReplyForm = function() {
 			+ "' accesskey='"
 			+ button[2]
 			+ "' onclick='insMarkup("
-			+ (typeof button[3] == 'function') ?
+			+ ((typeof button[3] == 'function') ?
 				button[3].name : 
-				("\"" + button[3]  + "\",\"" + button[4] + "\",\"" + button[5] + "\"")
+				("\"" + button[3]  + "\",\"" + button[4] + "\",\"" + button[5] + "\""))
 			+ ");'>"
 			+ button[6]
 			+ "</button>"
@@ -106,7 +106,7 @@ document.addEventListener("DOMContentLoaded", function() {
 				e.insertAdjacentHTML('afterend', "<button type='button' class='vote vote-down' tabindex='-1'></button>");
 			});
 			
-			var comments_container = document.querySelectorAll("#comments");
+			var comments_container = document.querySelector("#comments");
 			if (comments_container) {
 				// Add reply buttons.
 				comments_container.querySelectorAll(".comment").forEach(function (e) {
