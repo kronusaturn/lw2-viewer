@@ -39,6 +39,6 @@ function blockquote(text) {
 	if (text == '') {
 		return "> Quoted text";
 	} else {
-		return "> " + text;
+		return "> " + text.split("\n").join("\n> ");
 	}
 }
