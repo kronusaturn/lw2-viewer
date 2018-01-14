@@ -777,7 +777,8 @@
 	do (format out-stream "<div><label for=\"~A\">~A:</label><input type=\"~A\" name=\"~@*~A\"></div>" id label type))
   (format out-stream "<div><input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><input type=\"submit\" value=\"~A\"></div></div></form>" csrf-token button-label)) 
 
-(hunchentoot:define-easy-handler (view-login :uri "/login") (return cookie-check (csrf-token :request-type :post) (login-username :request-type :post) (login-password :request-type :post))
+(hunchentoot:define-easy-handler (view-login :uri "/login") (return cookie-check (csrf-token :request-type :post) (login-username :request-type :post) (login-password :request-type :post)
+								    (signup-username :request-type :post) (signup-email :request-type :post) (signup-password :request-type :post) (signup-password2 :request-type :post))
 				 (with-error-page
 				   (labels
 				     ((emit-login-page (&key error-message)
@@ -814,14 +815,31 @@
 					 (cond
 					   ((or (string= login-username "") (string= login-password "")) (emit-login-page :error-message "Please enter a username and password")) 
 					   (t (multiple-value-bind (user-id auth-token error-message) (do-lw2-login "username" login-username login-password) 
-						(declare (ignore user-id)) 
-						(cond (auth-token
-							(hunchentoot:set-cookie "lw2-auth-token" :value auth-token) 
-							(cache-put "auth-token-to-username" auth-token login-username)
-							(setf (hunchentoot:return-code*) 303
-							      (hunchentoot:header-out "Location") (if (and return (ppcre:scan "^/[^/]" return)) return "/")))
-						      (t
-							(emit-login-page :error-message error-message))))))) 
+						(cond
+						  (auth-token
+						    (hunchentoot:set-cookie "lw2-auth-token" :value auth-token) 
+						    (cache-put "auth-token-to-userid" auth-token user-id)
+						    (cache-put "auth-token-to-username" auth-token login-username)
+						    (setf (hunchentoot:return-code*) 303
+							  (hunchentoot:header-out "Location") (if (and return (ppcre:scan "^/[^/]" return)) return "/")))
+						  (t
+						    (emit-login-page :error-message error-message))))))) 
+				       (signup-username
+					 (check-csrf-token (hunchentoot:cookie-in "session-token") csrf-token)
+					 (cond
+					   ((not (every (lambda (x) (not (string= x ""))) (list signup-username signup-email signup-password signup-password2)))
+					    (emit-login-page :error-message "Please fill in all fields"))
+					   ((not (string= signup-password signup-password2))
+					    (emit-login-page :error-message "Passwords do not match"))
+					   (t (multiple-value-bind (user-id auth-token error-message) (do-lw2-create-user signup-username signup-email signup-password)
+						(cond
+						  (error-message (emit-login-page :error-message error-message))
+						  (t
+						    (hunchentoot:set-cookie "lw2-auth-token" :value auth-token)
+						    (cache-put "auth-token-to-userid" auth-token user-id)
+						    (cache-put "auth-token-to-username" auth-token signup-username)
+						    (setf (hunchentoot:return-code*) 303
+							  (hunchentoot:header-out "Location") (if (and return (ppcre:scan "^/[~/]" return)) return "/"))))))))
 				       (t
 					 (emit-login-page)))))) 
 
