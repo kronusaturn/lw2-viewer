@@ -28,7 +28,7 @@ function insMarkup() {
 var guiEditButtons = [
 	[ 'strong', 'Strong (bold)', 'k', '**', '**', 'Bold text', '&#xf032;' ],
 	[ 'em', 'Emphasized (italic)', 'i', '*', '*', 'Italicized text', '&#xf033;' ],
-	[ 'link', 'Hyperlink', 'l', '[', '](link url)', 'link text', '&#xf0c1;' ],
+	[ 'link', 'Hyperlink', 'l', hyperlink, '', '', '&#xf0c1;' ],
 // 	[ 'image', 'Image', '', '![', '](image url)', 'Image alt-text', '&#xf03e;' ],
 	[ 'heading1', 'Heading level 1', '', '\\n# ', '', 'Heading', '&#xf1dc;<sup>1</sup>' ],
 	[ 'heading2', 'Heading level 2', '', '\\n## ', '', 'Heading', '&#xf1dc;<sup>2</sup>' ],
@@ -48,4 +48,16 @@ function blockquote(text) {
 	} else {
 		return "> " + text.split("\n").join("\n> ");
 	}
+}
+
+function hyperlink(text) {
+	var url = '', link_text = text;
+	if (text.search(/^https?/) != -1) {
+		url = text;
+		link_text = "link text";
+	} else {
+		url = prompt("Link address (URL):") || "";
+	}	
+	
+	return "[" + link_text + "](" + url + ")";
 }
