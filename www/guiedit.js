@@ -46,7 +46,7 @@ function blockquote(text) {
 	if (text == '') {
 		return "> Quoted text";
 	} else {
-		return "> " + text.split("\n").join("\n> ");
+		return "> " + text.split("\n").join("\n> ") + "\n";
 	}
 }
 
