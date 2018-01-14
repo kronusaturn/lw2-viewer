@@ -254,7 +254,7 @@
   (setf *background-loader-thread* nil)) 
 
 (defun match-lw1-link (link)
-  (multiple-value-bind (match? strings) (ppcre:scan-to-strings "(?:^https?://(?:www.)?lesswrong.com|^)(?:/r/discussion)?(/lw/.*)" link)
+  (multiple-value-bind (match? strings) (ppcre:scan-to-strings "(?:^https?://(?:www.)?less(?:er)?wrong.com|^)(?:/r/discussion)?(/lw/.*)" link)
     (when match?
       (values (elt strings 0))))) 
 
