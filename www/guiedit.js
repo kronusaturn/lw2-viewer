@@ -22,15 +22,15 @@ var guiEditButtons = [
 	[ 'strong', 'Strong (bold)', 'k', '**', '**', 'Bold text', '&#xf032;' ],
 	[ 'em', 'Emphasized (italic)', 'i', '*', '*', 'Italicized text', '&#xf033;' ],
 	[ 'link', 'Hyperlink', 'l', '[', '](link url)', 'link text', '&#xf0c1;' ],
-	[ 'image', 'Image', '', '![', '](image url)', 'Image alt-text', '&#xf03e;' ],
+// 	[ 'image', 'Image', '', '![', '](image url)', 'Image alt-text', '&#xf03e;' ],
 	[ 'heading1', 'Heading level 1', '', '# ', '', 'Heading', '&#xf1dc;' ],
 	[ 'heading2', 'Heading level 2', '', '## ', '', 'Heading', '&#xf1dc;' ],
 	[ 'heading3', 'Heading level 3', '', '### ', '', 'Heading', '&#xf1dc;' ],
 	[ 'blockquote', 'Blockquote', '', '> ', '', 'Quoted text', '&#xf10e;' ],
 	[ 'bulleted-list', 'Bulleted list', '', '* ', '', 'List item', '&#xf0ca' ],
 	[ 'numbered-list', 'Numbered list', '', '1. ', '', 'List item', '&#xf0cb' ],
-	[ 'horizontal-rule', 'Horizontal rule', '', '---', '', '', '&#xf068' ],
+	[ 'horizontal-rule', 'Horizontal rule', '', '', '\\n---\\n', '', '&#xf068' ],
 	[ 'inline-code', 'Inline code', '', '`', '`', 'Code', '&#xf121' ],
-	[ 'code-block', 'Code block', '', '```\n', '\n```', 'Code', '&#xf1c9' ],
-	[ 'formula', 'LaTeX', '', '$', '$', 'LaTeX formula', '&#xf155' ]
+	[ 'code-block', 'Code block', '', '```\\n', '\\n```', 'Code', '&#xf1c9' ]
+// 	[ 'formula', 'LaTeX', '', '$', '$', 'LaTeX formula', '&#xf155' ]
 ];

@@ -1105,8 +1105,8 @@ a.comment-parent-link:hover::after {
 	padding: 0 4px;
 }
 .guiedit-buttons-container button {
-	width: 26px;
 	height: 26px;
+	padding: 0 7px;
 	font-family: Font Awesome;
 	font-weight: 900;
 	font-size: 0.875rem;
