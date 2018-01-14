@@ -34,8 +34,8 @@ var guiEditButtons = [
 	[ 'heading2', 'Heading level 2', '', '\\n## ', '', 'Heading', '&#xf1dc;<sup>2</sup>' ],
 	[ 'heading3', 'Heading level 3', '', '\\n### ', '', 'Heading', '&#xf1dc;<sup>3</sup>' ],
 	[ 'blockquote', 'Blockquote', '', blockquote, '', '', '&#xf10e;' ],
-	[ 'bulleted-list', 'Bulleted list', '', '* ', '', 'List item', '&#xf0ca' ],
-	[ 'numbered-list', 'Numbered list', '', '1. ', '', 'List item', '&#xf0cb' ],
+	[ 'bulleted-list', 'Bulleted list', '', '\\n* ', '', 'List item', '&#xf0ca' ],
+	[ 'numbered-list', 'Numbered list', '', '\\n1. ', '', 'List item', '&#xf0cb' ],
 	[ 'horizontal-rule', 'Horizontal rule', '', '\\n\\n---\\n\\n', '', '', '&#xf068' ],
 	[ 'inline-code', 'Inline code', '', '`', '`', 'Code', '&#xf121' ],
 	[ 'code-block', 'Code block', '', '```\\n', '\\n```', 'Code', '&#xf1c9' ]
