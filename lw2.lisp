@@ -817,7 +817,7 @@
 					   (t (multiple-value-bind (user-id auth-token error-message) (do-lw2-login "username" login-username login-password) 
 						(cond
 						  (auth-token
-						    (hunchentoot:set-cookie "lw2-auth-token" :value auth-token) 
+						    (hunchentoot:set-cookie "lw2-auth-token" :value auth-token :max-age (- (expt 2 31) 1)) 
 						    (cache-put "auth-token-to-userid" auth-token user-id)
 						    (cache-put "auth-token-to-username" auth-token login-username)
 						    (setf (hunchentoot:return-code*) 303
@@ -835,7 +835,7 @@
 						(cond
 						  (error-message (emit-login-page :error-message error-message))
 						  (t
-						    (hunchentoot:set-cookie "lw2-auth-token" :value auth-token)
+						    (hunchentoot:set-cookie "lw2-auth-token" :value auth-token :max-age (- (expt 2 31) 1))
 						    (cache-put "auth-token-to-userid" auth-token user-id)
 						    (cache-put "auth-token-to-username" auth-token signup-username)
 						    (setf (hunchentoot:return-code*) 303
