@@ -15,7 +15,7 @@ body {
 	background-color: #d8d8d8;
 	padding: 0;
 	margin: 0;
-	font-family: 'Concourse', 'Geometric 415', 'a_Avante';
+	font-family: 'Concourse', 'a_Avante';
 }
 input {
 	font-family: inherit;
@@ -74,7 +74,7 @@ input {
 .nav-inner {
 	padding: 12px 30px;
 	font-weight: 600;
-	font-size: 1.15em;
+	font-size: 1.375em;
 	text-align: center;
 	display: block;
 	position: relative;
@@ -89,14 +89,14 @@ input {
 	top: -2px;
 	content: attr(accesskey);
 	font-weight: 400;
-	font-size: 0.8em;
+	font-size: 0.7em;
 	color: #d6d6d6;
 }
 .nav-inner:hover::after {
 	color: #bbb;
 }
 #secondary-bar .nav-inner {
-	font-size: 0.95em;
+	font-size: 1em;
 	padding: 3px 0 4px 0;
 }
 #secondary-bar.active-bar .nav-inner {
@@ -398,19 +398,6 @@ div[class^='archive-nav-'] {
 .archive-nav-days .archive-nav-item-day:first-child {
 	width: 4%;
 }
-a.archive-nav-item-day:nth-of-type(n+10) {
-	letter-spacing: -1px;
-	padding-right: 2px;
-}
-a.archive-nav-item-day:nth-of-type(n+20) {
-	letter-spacing: normal;
-	padding-right: 0;
-	padding-left: 1px;
-}
-a.archive-nav-item-day:nth-of-type(21),
-a.archive-nav-item-day:nth-of-type(31) {
-	letter-spacing: -1px;
-}
 
 .archive-nav a:link, .archive-nav a:visited {
 	color: rgba(0, 0, 238, 0.7);
@@ -438,8 +425,8 @@ a.archive-nav-item-day:nth-of-type(31) {
 /************/
 
 h1.listing {
-	font-family: 'Concourse', 'Geometric 415';
-	font-size: 1.75rem;
+	font-family: 'Concourse';
+	font-size: 1.875rem;
 	line-height: 1.15;
 	margin: 0.8em 20px 0.1em 20px;
 }
@@ -519,11 +506,11 @@ h1.listing a[href^="/"]::after {
 }
 #content.search-results-page h1.listing {
 	margin-left: 0;
-	font-size: 1.5em;
+	font-size: 1.625em;
 }
 #content.search-results-page .post-meta {
 	margin-left: 2px;
-	font-size: 0.875rem;
+	font-size: 1rem;
 	opacity: 0.7;
 }
 #content.search-results-page .post-meta .author {
@@ -631,7 +618,7 @@ h1.listing a[href^="/"]::after {
 /*********************/
 
 .contents {
-	font-family: 'Concourse', 'Geometric 415';
+	font-family: 'Concourse';
 	border: 1px solid #ddd;
 	background-color: #eee;
 	float: right;
@@ -727,6 +714,7 @@ h1.listing a[href^="/"]::after {
 .comment-meta * {
 	display: inline-block;
 	margin-right: 1em;
+	font-size: 1.0625em;
 }
 .comment-meta .comment-post-title {
 	display: block;
@@ -786,7 +774,7 @@ h1.listing a[href^="/"]::after {
 	width: 100%;
 	text-align: center;
 	padding: 0.75em 0 0.9em 0;
-	font-size: 1.2em;
+	font-size: 1.375em;
 }
 
 .comment-item input[id^="expand"] {
@@ -905,7 +893,7 @@ ul.comment-thread {
 }
 .comment-meta .author {
 	font-weight: bold;
-	font-size: 1.2em;
+	font-size: 1.3125em;
 }
 .comment-meta .lw2-link {
 	margin-left: 1.5em;
@@ -1001,7 +989,6 @@ a.comment-parent-link:hover::after {
 }
 .comment-meta .vote-down {
 	color: #ccc;
-	margin-left: -1px;
 }
 .comment-meta .vote-down:hover {
 	color: #eb4c2a;
@@ -1170,7 +1157,7 @@ input[type='submit']:focus {
 .post-body h2,
 .post-body h3,
 .post-body h4 {
-	font-family: 'Concourse', 'Geometric 415';
+	font-family: 'Concourse';
 	line-height: 1.1;
 	margin: 1em 0 0.75em 0;
 	text-align: left;

@@ -15,14 +15,20 @@ function insMarkup() {
 	var cur0 = cur1 = p0;
 	
 	var str = (p0 == p1) ? mtext : tarea.value.substring(p0, p1);
-	str = func ? func(str) : (mopen + str + mclose);
-	tarea.value = tarea.value.substring(0, p0) + str + tarea.value.substring(p1);
+	str = func ? func(str, p0) : (mopen + str + mclose);
 	
-	// Determine selection, if a markup function has not already set it.
+	// Determine selection.
 	if (!func) {
 		cur0 += (p0 == p1) ? mopen.length : str.length;
 		cur1 = (p0 == p1) ? (cur0 + mtext.length) : cur0;
+	} else {
+		cur0 = str[1];
+		cur1 = str[2];
+		str = str[0];
 	}
+
+	// Update textarea contents.
+	tarea.value = tarea.value.substring(0, p0) + str + tarea.value.substring(p1);
 	
 	// Set selection.
 	tarea.selectionStart = cur0;
@@ -48,7 +54,7 @@ var guiEditButtons = [
 // 	[ 'formula', 'LaTeX', '', '$', '$', 'LaTeX formula', '&#xf155' ]
 ];
 
-function blockquote(text) {
+function blockquote(text, startpos) {
 	if (text == '') {
 		return "> Quoted text";
 	} else {
@@ -56,7 +62,7 @@ function blockquote(text) {
 	}
 }
 
-function hyperlink(text) {
+function hyperlink(text, startpos) {
 	var url = '', link_text = text;
 	if (text.search(/^https?/) != -1) {
 		url = text;
