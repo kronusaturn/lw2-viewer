@@ -623,11 +623,11 @@
 (defun user-nav-bar (&optional current-uri)
   (let* ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token"))
 	 (username (and lw2-auth-token (cache-get "auth-token-to-username" lw2-auth-token))))
-    (if username
-      (let ((*secondary-nav* `(("archive" "/archive" "Archive")
-			       ("search" "/search" "Search" :html ,#'search-bar-to-html)
-			       ("login" "/login" ,username))))
-	(nav-bar-to-html current-uri))
+    (let ((*secondary-nav* `(("archive" "/archive" "Archive")
+			     ("search" "/search" "Search" :html ,#'search-bar-to-html)
+			     ,(if username
+				`("login" "/login" ,username)
+				`("login" ,(format nil "/login?return=~A" (url-rewrite:url-encode current-uri)) "Log In")))))
       (nav-bar-to-html current-uri)))) 
 
 (defparameter *bottom-bar*
