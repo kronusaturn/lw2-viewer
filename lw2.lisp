@@ -12,21 +12,13 @@
 			   x))
 (defvar *open-databases* (make-hash-table :test 'equal))
 
-(defun ensure-database (db-name)
-  (let ((db (lmdb:with-transaction ((lmdb:make-transaction *db-environment*) :normal-disposition :commit)
-				   (lmdb:open-database (lmdb:make-database db-name) :if-does-not-exist nil))))
-    (if db
-      db
-      (progn (lmdb:with-transaction ((lmdb:make-transaction *db-environment* :flags 0) :normal-disposition :commit)
-				    (lmdb:open-database (lmdb:make-database db-name) :create t))
-	     (ensure-database db-name))))) 
-
 (defmacro with-db ((db db-name) &body body)
   (alexandria:with-gensyms (txn)
 			   `(with-mutex (*db-mutex*)
 					(let ((,db (gethash ,db-name *open-databases*)))
 					  (unless ,db
-					    (setf ,db (ensure-database ,db-name) 
+					    (setf ,db (lmdb:with-transaction ((lmdb:make-transaction *db-environment*) :normal-disposition :commit)
+									     (lmdb:open-database (lmdb:make-database ,db-name) :if-does-not-exist :create))
 						  (gethash ,db-name *open-databases*) ,db)) 
 					(lmdb:with-transaction ((lmdb:make-transaction *db-environment* :flags 0) :normal-disposition :commit)
 							       (lmdb:with-database (,db)
