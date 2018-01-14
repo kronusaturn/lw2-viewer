@@ -108,15 +108,18 @@ document.addEventListener("DOMContentLoaded", function() {
 				e.insertAdjacentHTML('afterend', "<button type='button' class='vote vote-down' tabindex='-1'></button>");
 			});
 			
-			// Add reply buttons.
-			document.querySelectorAll("#comments .comment").forEach(function (e) {
-				e.insertAdjacentHTML("afterend", "<div class='comment-controls'></div>");
-				e.parentElement.querySelector(".comment-controls").injectReplyButton();
-			});
+			var comments_container = document.querySelectorAll("#comments");
+			if (comments_container) {
+				// Add reply buttons.
+				comments_container.querySelectorAll(".comment").forEach(function (e) {
+					e.insertAdjacentHTML("afterend", "<div class='comment-controls'></div>");
+					e.parentElement.querySelector(".comment-controls").injectReplyButton();
+				});
 			
-			// Add top-level new comment form.
-			document.querySelector("#comments").insertAdjacentHTML("afterbegin", "<div class='comment-controls'></div>");
-			document.querySelector("#comments .comment-controls").injectReplyButton();
+				// Add top-level new comment form.
+				comments_container.insertAdjacentHTML("afterbegin", "<div class='comment-controls'></div>");
+				comments_container.querySelector(".comment-controls").injectReplyButton();
+			}			
 
 			needHashRealignment = true;
 		}
