@@ -29,7 +29,7 @@ var guiEditButtons = [
 	[ 'blockquote', 'Blockquote', '', blockquote, '', '', '&#xf10e;' ],
 	[ 'bulleted-list', 'Bulleted list', '', '* ', '', 'List item', '&#xf0ca' ],
 	[ 'numbered-list', 'Numbered list', '', '1. ', '', 'List item', '&#xf0cb' ],
-	[ 'horizontal-rule', 'Horizontal rule', '', '', '\\n---\\n', '', '&#xf068' ],
+	[ 'horizontal-rule', 'Horizontal rule', '', '', '\\n\\n---\\n\\n', '', '&#xf068' ],
 	[ 'inline-code', 'Inline code', '', '`', '`', 'Code', '&#xf121' ],
 	[ 'code-block', 'Code block', '', '```\\n', '\\n```', 'Code', '&#xf1c9' ]
 // 	[ 'formula', 'LaTeX', '', '$', '$', 'LaTeX formula', '&#xf155' ]
