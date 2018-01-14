@@ -39,13 +39,11 @@ Element.prototype.injectReplyForm = function() {
 			+ button[1] + ((button[2] != "") ? (" [accesskey: " + button[2] + "]") : "")
 			+ "' accesskey='"
 			+ button[2]
-			+ "' onclick='insMarkup(\""
-			+ button[3]
-			+ "\",\""
-			+ button[4]
-			+ "\",\""
-			+ button[5]
-			+ "\");'>"
+			+ "' onclick='insMarkup("
+			+ (typeof button[3] == 'function') ?
+				button[3].name : 
+				("\"" + button[3]  + "\",\"" + button[4] + "\",\"" + button[5] + "\"")
+			+ ");'>"
 			+ button[6]
 			+ "</button>"
 		);

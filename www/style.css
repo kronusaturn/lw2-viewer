@@ -1152,13 +1152,13 @@ a.comment-parent-link:hover::after {
 	position: absolute;
 	right: 0;
 	margin: 0;
-	height: 26px;
+	height: 27px;
 	font-size: inherit;
 	color: #c00;
 	text-shadow: 
 		0 0 1px #fff,
 		0 0 2px #fff;
-	padding: 3px 7px 2px 4px;
+	padding: 4px 7px 2px 4px;
 }
 .comment-controls .cancel-comment-button:hover,
 #comments > .comment-controls .cancel-comment-button:hover {

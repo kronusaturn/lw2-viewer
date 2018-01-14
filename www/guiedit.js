@@ -26,7 +26,7 @@ var guiEditButtons = [
 	[ 'heading1', 'Heading level 1', '', '# ', '', 'Heading', '&#xf1dc;<sup>1</sup>' ],
 	[ 'heading2', 'Heading level 2', '', '## ', '', 'Heading', '&#xf1dc;<sup>2</sup>' ],
 	[ 'heading3', 'Heading level 3', '', '### ', '', 'Heading', '&#xf1dc;<sup>3</sup>' ],
-	[ 'blockquote', 'Blockquote', '', '> ', '', 'Quoted text', '&#xf10e;' ],
+	[ 'blockquote', 'Blockquote', '', blockquote, '', '', '&#xf10e;' ],
 	[ 'bulleted-list', 'Bulleted list', '', '* ', '', 'List item', '&#xf0ca' ],
 	[ 'numbered-list', 'Numbered list', '', '1. ', '', 'List item', '&#xf0cb' ],
 	[ 'horizontal-rule', 'Horizontal rule', '', '', '\\n---\\n', '', '&#xf068' ],
@@ -34,3 +34,11 @@ var guiEditButtons = [
 	[ 'code-block', 'Code block', '', '```\\n', '\\n```', 'Code', '&#xf1c9' ]
 // 	[ 'formula', 'LaTeX', '', '$', '$', 'LaTeX formula', '&#xf155' ]
 ];
+
+function blockquote(text) {
+	if (text == '') {
+		return "> Quoted text";
+	} else {
+		return "> " + text;
+	}
+}
