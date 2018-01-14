@@ -56,20 +56,26 @@ var guiEditButtons = [
 
 function blockquote(text, startpos) {
 	if (text == '') {
-		return "> Quoted text";
+		text = "> Quoted text";
+		return [ text, startpos + 2, startpos + text.length ];
 	} else {
-		return "> " + text.split("\n").join("\n> ") + "\n";
+		text = "> " + text.split("\n").join("\n> ") + "\n";
+		return [ text, startpos + text.length, startpos + text.length ];
 	}
 }
 
 function hyperlink(text, startpos) {
-	var url = '', link_text = text;
+	var url = '', link_text = text, endpos = startpos;
 	if (text.search(/^https?/) != -1) {
 		url = text;
 		link_text = "link text";
+		startpos = startpos + 1;
+		endpos = startpos + link_text.length;
 	} else {
 		url = prompt("Link address (URL):") || "";
+		startpos = startpos + text.length + url.length + 4;
+		endpos = startpos;
 	}	
 	
-	return "[" + link_text + "](" + url + ")";
+	return [ "[" + link_text + "](" + url + ")", startpos, endpos ];
 }
