@@ -1219,6 +1219,20 @@ hr {
 	border-bottom: 1px solid #999;
 }
 
+code {
+	font-family: Inconsolata, Menlo, monospace;
+	display: inline-block;
+	background-color: #f6f6ff;
+	border: 1px solid #ddf;
+	padding: 0 4px 1px 5px;
+	border-radius: 4px;
+}
+pre > code {
+	display: block;
+	border-radius: 0;
+	padding: 3px 4px 5px 8px;
+}
+
 /*************/
 /* FOOTNOTES */
 /*************/
