@@ -5,22 +5,12 @@
 
 (defvar *cookie-jar* (make-instance 'drakma:cookie-jar))
 
-(defparameter *cache-db* "./cache/")
-
+(defparameter *cache-db* "./cache/") 
 (defvar *db-mutex* (sb-thread:make-mutex :name "lmdb")) 
-(defvar *db-environment* (let ((x (lmdb:make-environment *cache-db* :max-dbs 1024 :mapsize (expt 2 34))))
+(defvar *db-environment* (let ((x (lmdb:make-environment *cache-db* :max-dbs 1024 :mapsize (expt 2 31))))
 			   (lmdb:open-environment x)
 			   x))
 (defvar *open-databases* (make-hash-table :test 'equal))
-
-(defun reopen-lmdb ()
-  (with-mutex (*db-mutex*)
-	      (lmdb:with-transaction ((lmdb:make-transaction *db-environment*) :normal-disposition :commit)
-				     (maphash (lambda (k v) (lmdb:close-database v)) *open-databases*))
-	      (setq *open-databases* (make-hash-table :test 'equal))
-	      (lmdb:close-environment *db-environment*)
-	      (setq *db-environment* (lmdb:make-environment *cache-db* :max-dbs 1024 :mapsize (expt 2 34)))
-	      (lmdb:open-environment *db-environment*)))
 
 (defun ensure-database (db-name)
   (let ((db (lmdb:with-transaction ((lmdb:make-transaction *db-environment*) :normal-disposition :commit)
