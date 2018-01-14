@@ -1033,10 +1033,11 @@ a.comment-parent-link:hover::after {
 	width: 100%;
 	height: 15em;
 	margin: 2px 0;
-	padding: 33px 5px 4px 5px;
+	padding: 4px 5px;
 	font-family: Charter, serif;
 	font-size: 1.2rem;
 	border: 1px solid #aaa;
+	border-top-width: 29px;
 	box-shadow: 
 		0 0 0 1px #eee inset;
 	resize: none;
@@ -1044,7 +1045,7 @@ a.comment-parent-link:hover::after {
 .comment-controls textarea:focus {
 	outline: none;
 	background-color: #ffd;
-	border: 1px solid #00e;
+	border-color: #00e;
 	box-shadow: 
 		0 0 0 1px #ddf inset,
 		0 0 0 1px #fff,
@@ -1085,7 +1086,7 @@ a.comment-parent-link:hover::after {
 	text-shadow: 
 		0 0 1px #fff,
 		0 0 2px #fff;
-	padding: 4px 7px 2px 4px;
+	padding: 4px 8px 2px 4px;
 }
 .comment-controls .cancel-comment-button:hover,
 #comments > .comment-controls .cancel-comment-button:hover {
@@ -1105,16 +1106,16 @@ a.comment-parent-link:hover::after {
 	background-image: linear-gradient(to bottom, #fff 0%, #ddf 50%, #ccf 75%, #aaf 100%);
 	position: absolute;
 	left: 1px;
-	top: 2px;
+	top: 1px;
 	width: calc(100% - 2px);
-	height: 27px;
+	height: 28px;
 	text-align: left;
-	padding: 0 4px;
+	padding: 1px 4px 0 4px;
 }
 .guiedit-buttons-container button {
 	height: 26px;
 	padding: 0 7px;
-	font-family: Font Awesome;
+	font-family: Font Awesome, Charter;
 	font-weight: 900;
 	font-size: 0.875rem;
 }
