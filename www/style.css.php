@@ -66,6 +66,11 @@ input {
 .nav-item {
 	display: table-cell;
 }
+.nav-item * {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
 .nav-inner {
 	padding: 12px 30px;
 	font-weight: 500;
@@ -265,9 +270,11 @@ input {
 	height: 21px;
 }
 
-#nav-item-archive,
-#nav-item-login {
+#nav-item-archive {
 	width: 10%;
+}
+#nav-item-login {
+	width: 15%;
 }
 
 /*******************/
@@ -1408,6 +1415,9 @@ ol {
 	#create-account-form-container {
 		width: 50%;
 	}
+	#nav-item-recent-comments > * > span {
+		display: none;
+	}
 	#primary-bar {
 		table-layout: fixed;
 		font-size: 0.55em;
@@ -1442,8 +1452,5 @@ ol {
 @media only screen and (max-width: 374px) {
 	.nav-bar .nav-inner {
 		padding: 6px 3.33vw;
-	}
-	#nav-item-recent-comments > * > span {
-		display: none;
 	}
 }
