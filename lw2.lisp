@@ -22,14 +22,15 @@
 	     (ensure-database db-name))))) 
 
 (defmacro with-db ((db db-name) &body body)
-  `(with-mutex (*db-mutex*)
-	       (let ((,db (gethash ,db-name *open-databases*)))
-		 (unless ,db
-		   (setf ,db (ensure-database ,db-name) 
-			 (gethash ,db-name *open-databases*) ,db)) 
-		 (lmdb:with-transaction ((lmdb:make-transaction *db-environment* :flags 0) :normal-disposition :commit)
-					(lmdb:with-database (,db)
-							    ,@body)))))
+  (alexandria:with-gensyms (txn)
+			   `(with-mutex (*db-mutex*)
+					(let ((,db (gethash ,db-name *open-databases*)))
+					  (unless ,db
+					    (setf ,db (ensure-database ,db-name) 
+						  (gethash ,db-name *open-databases*) ,db)) 
+					(lmdb:with-transaction ((lmdb:make-transaction *db-environment* :flags 0) :normal-disposition :commit)
+							       (lmdb:with-database (,db)
+										   ,@body))))))
 
 (defun lmdb-clear-db (db)
   (lmdb:do-pairs (db key value)
