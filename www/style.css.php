@@ -1105,6 +1105,25 @@ a.comment-parent-link:hover::after {
 	font-family: Font Awesome, Charter;
 	font-weight: 900;
 	font-size: 0.875rem;
+	position: static;
+}
+.guiedit::after {
+	content: attr(title);
+	position: absolute;
+	font-weight: normal;
+	font-family: Concourse;
+	font-size: 1rem;
+	top: 0;
+	left: 50%;
+	color: #777;
+	text-shadow: none;
+	height: 27px;
+	padding: 2px 0;
+	white-space: nowrap;
+	visibility: hidden;
+}
+.guiedit:hover::after {
+	visibility: visible;
 }
 
 /*********/
