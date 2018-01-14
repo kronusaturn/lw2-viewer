@@ -12,16 +12,22 @@ function insMarkup() {
 	tarea.focus();
 	var p0 = tarea.selectionStart;
 	var p1 = tarea.selectionEnd;
+	var cur0 = cur1 = p0;
+	
 	var str = (p0 == p1) ? mtext : tarea.value.substring(p0, p1);
 	str = func ? func(str) : (mopen + str + mclose);
 	tarea.value = tarea.value.substring(0, p0) + str + tarea.value.substring(p1);
-	if (p0 == p1) {
-		tarea.selectionStart = p0 + mopen.length;
-		tarea.selectionEnd = tarea.selectionStart + mtext.length;
-	} else {
-		tarea.selectionStart = p0 + str.length;
-		tarea.selectionEnd = tarea.selectionStart;
+	
+	// Determine selection, if a markup function has not already set it.
+	if (!func) {
+		cur0 += (p0 == p1) ? mopen.length : str.length;
+		cur1 = (p0 == p1) ? (cur0 + mtext.length) : cur0;
 	}
+	
+	// Set selection.
+	tarea.selectionStart = cur0;
+	tarea.selectionEnd = cur1;
+	
 	return;
 }
 

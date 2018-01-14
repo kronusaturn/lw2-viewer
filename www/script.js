@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", function() {
 		var content = document.querySelector("#content");
 		if (content.clientHeight <= window.innerHeight + 30) {
 			content.removeChild(document.querySelector("#bottom-bar"));
-			document.querySelector(".post .post-meta").removeChild(document.querySelector(".post .post-meta a[href='#bottom-bar']"));
+			if (content.querySelector(".post")) content.removeChild(content.querySelector(".post .post-meta a[href='#bottom-bar']"));
 		} 	
 		if (content.clientHeight <= window.innerHeight + 30 || 
 			(document.querySelector("#comments") && document.querySelector("#comments").childNodes.length == 0)) {
