@@ -817,6 +817,7 @@ h1.listing a[href^="/"]::after {
 	white-space: nowrap;
 	color: #00e;
 	font-weight: 600;
+	cursor: pointer;
 }
 .comment-item input[id^="expand"]:checked + label::after {
 	content: "(Collapse " attr(data-child-count) "  below)";
@@ -1028,6 +1029,9 @@ a.comment-parent-link:hover::after {
 	text-align: right;
 	margin: 0 8px 8px 16px;
 /* 	position: relative; */
+}
+.comment-controls + .comment-thread li {
+	margin-top: 8px;
 }
 #comments > .comment-controls {
 	margin: 8px 0 0 0;
