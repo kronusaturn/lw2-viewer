@@ -1104,6 +1104,7 @@ a.comment-parent-link:hover::after {
 }
 .comment + .comment-controls .action-button {
 	font-weight: normal;
+	font-size: 1.0625em;
 }
 .comment-controls .edit-button {
 	position: absolute;
@@ -1137,8 +1138,8 @@ a.comment-parent-link:hover::after {
 	font-weight: normal;
 	font-family: Concourse;
 	font-size: 1rem;
-	top: 0;
-	left: 50%;
+	top: 2px;
+	left: 400px;
 	color: #777;
 	text-shadow: none;
 	height: 27px;
