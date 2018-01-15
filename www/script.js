@@ -99,7 +99,8 @@ function showReplyForm(event) {
 }
 
 function hideReplyForm(event) {
-	event.target.parentElement.parentElement.querySelector(".comment-body").removeAttribute("style");
+	try { event.target.parentElement.parentElement.querySelector(".comment-body").removeAttribute("style"); }
+	catch (e) { }
 	event.target.parentElement.injectCommentButtons();
 }
 
