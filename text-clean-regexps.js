@@ -5,7 +5,7 @@
   // triple prime
   [/'''/g, '\u2034'],
   // beginning "
-  [/(\W|^)"(\S)/g, '$1\u201c$2'],
+  [/([^A-Za-z0-9_\)]|^)"(\S)/g, '$1\u201c$2'],
   // ending "
   [/(\u201c[^"]*)"([^"]*$|[^\u201c"]*\u201c)/g, '$1\u201d$2'],
   // remaining " at end of word
