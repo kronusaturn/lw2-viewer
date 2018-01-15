@@ -788,8 +788,8 @@
 
 (defun output-form (out-stream method action id class csrf-token fields button-label)
   (format out-stream "<form method=\"~A\" action=\"~A\" id=\"~A\" class=\"~A\"><div>" method action id class)
-  (loop for (id label type) in fields
-	do (format out-stream "<div><label for=\"~A\">~A:</label><input type=\"~A\" name=\"~@*~A\"></div>" id label type))
+  (loop for (id label type autocomplete) in fields
+	do (format out-stream "<div><label for=\"~A\">~A:</label><input type=\"~A\" name=\"~A\" autocomplete=\"~A\"></div>" id label type id autocomplete))
   (format out-stream "<div><input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><input type=\"submit\" value=\"~A\"></div></div></form>" csrf-token button-label)) 
 
 (hunchentoot:define-easy-handler (view-login :uri "/login") (return cookie-check (csrf-token :request-type :post) (login-username :request-type :post) (login-password :request-type :post)
@@ -803,15 +803,15 @@
 						       (format out-stream "<div class=\"error-box\">~A</div>" error-message)) 
 						     (with-outputs (out-stream) "<div class=\"login-container\"><div id=\"login-form-container\"><h1>Log in</h1>")
 						     (output-form out-stream "post" (format nil "/login~@[?return=~A~]" (if return (url-rewrite:url-encode return))) "login-form" "aligned-form" csrf-token
-								  '(("login-username" "Username" "text")
-								    ("login-password" "Password" "password"))
+								  '(("login-username" "Username" "text" "username")
+								    ("login-password" "Password" "password" "current-password"))
 								  "Log in")
 						     (with-outputs (out-stream) "</div><div id=\"create-account-form-container\"><h1>Create account</h1>")
 						     (output-form out-stream "post" (format nil "/login~@[?return=~A~]" (if return (url-rewrite:url-encode return))) "signup-form" "aligned-form" csrf-token
-								  '(("signup-username" "Username" "text")
-								    ("signup-email" "Email" "text")
-								    ("signup-password" "Password" "password")
-								    ("signup-password2" "Confirm password" "password"))
+								  '(("signup-username" "Username" "text" "username")
+								    ("signup-email" "Email" "text" "email")
+								    ("signup-password" "Password" "password" "new-password")
+								    ("signup-password2" "Confirm password" "password" "new-password"))
 								  "Create account")
 						     (with-outputs (out-stream) "</div></div>"))))) 
 				     (cond
