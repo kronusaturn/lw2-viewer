@@ -1203,6 +1203,7 @@ a.comment-parent-link:hover::after {
 	position: absolute;
 	right: 8px;
 	top: 8px;
+	color: #0b0;
 }
 .comment-controls form {
 	position: relative;
