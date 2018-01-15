@@ -413,7 +413,8 @@ div[class^='archive-nav-'] {
 .archive-nav-years .archive-nav-item-year:first-child {
 	width: 6.5%;
 }
-.archive-nav-months::after {
+.archive-nav-months::after,
+.archive-nav-days::after {
 	content: "";
 }
 .archive-nav-item-month {
@@ -425,6 +426,7 @@ div[class^='archive-nav-'] {
 .archive-nav-days .archive-nav-item-day {
 	font-size: 0.8em;
 	padding: 7px 0 5px 0;
+	width: 3.5%;
 }
 .archive-nav-days .archive-nav-item-day:first-child {
 	width: 4%;
