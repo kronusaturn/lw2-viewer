@@ -981,7 +981,7 @@ ul.comment-thread {
 }
 
 .comment-meta {
-	padding: 2px 10px;
+	padding: 2px 48px 2px 10px;
 	margin: 0 -1px;
 	border: none;
 }
@@ -1098,7 +1098,7 @@ a.comment-parent-link:hover::after {
 .comment-controls {
 	text-align: right;
 	margin: 8px 8px 8px 16px;
-	position: relative;
+/* 	position: relative; */
 }
 #comments > .comment-controls {
 	margin: 8px 0 0 0;
@@ -1161,7 +1161,7 @@ a.comment-parent-link:hover::after {
 .comment-controls .cancel-comment-button,
 #comments > .comment-controls .cancel-comment-button {
 	position: absolute;
-	right: 0;
+	right: 8px;
 	margin: 0;
 	height: 27px;
 	font-size: inherit;
@@ -1181,6 +1181,11 @@ a.comment-parent-link:hover::after {
 }
 .comment + .comment-controls .reply-button {
 	font-weight: normal;
+}
+.comment-controls .edit-button {
+	position: absolute;
+	right: 8px;
+	top: 8px;
 }
 .comment-controls form {
 	position: relative;
