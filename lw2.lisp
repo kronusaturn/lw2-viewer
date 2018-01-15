@@ -388,6 +388,8 @@
 			       (or
 				 (typep (plump:parent node) 'plump:root)
 				 (every (lambda (x) (string/= (plump:tag-name (plump:parent node)) x)) args))) 
+	     (string-is-whitespace (string)
+				   (every (lambda (c) (cl-unicode:has-binary-property c "White_Space")) string))
 	     (scan-for-urls (text-node)
 			    (declare (type plump:text-node text-node)) 
 			    (let ((text (plump:text text-node)))
@@ -458,7 +460,7 @@
 					 (when (only-child-is node "u")
 					   (setf (plump:children node) (plump:children (plump:first-child node)))))
 				       (when (tag-is node "p" "blockquote" "div")
-					 (when (every (lambda (c) (cl-unicode:has-binary-property c "White_Space")) (plump:text node)) 
+					 (when (string-is-whitespace (plump:text node))
 					   (plump:remove-child node)))
 				       (when (tag-is node "u")
 					 (when (only-child-is node "a")
@@ -466,9 +468,18 @@
 				       (when (tag-is node "ul" "ol")
 					 (loop for n across (plump:child-elements node)
 					       when (tag-is n "ul" "ol")
-					       do (let ((ps (or (plump:previous-sibling n) (let ((ps (plump:make-element node "li"))) (plump:insert-before (plump:first-child node) ps) ps)))) 
+					       do (let ((ps (or (plump:previous-sibling n) (let ((ps (plump:make-element node "li")))
+											     (plump:remove-child ps)
+											     (plump:insert-before (plump:first-child node) ps)
+											     ps))))
 						    (plump:remove-child n)
 						    (plump:append-child ps n))))
+				       (when (and (tag-is node "li") (let ((c (plump:first-child node))) (or (if (plump:text-node-p c) (not (string-is-whitespace (plump:text c))) (not (tag-is c "p" "ul" "ol"))))))
+					 (let ((p (plump:make-element node "p")))
+					   (plump:remove-child p)
+					   (setf (plump:children p) (plump:clone-children node t p)
+						 (plump:children node) (plump:ensure-child-array (vector)))
+					   (plump:append-child node p)))
 				       (when (and with-toc (ppcre:scan "^h[1-6]$" (plump:tag-name node)))
 					 (incf section-count) 
 					 (unless (plump:attribute node "id") (setf (plump:attribute node "id") (format nil "section-~A" section-count))) 
@@ -685,12 +696,13 @@
 
 (defmacro emit-page ((out-stream &key title description current-uri content-class (return-code 200)) &body body)
   `(ignore-errors
-     (setf (hunchentoot:content-type*) "text/html; charset=utf-8"
-	   (hunchentoot:return-code*) ,return-code) 
-     (let ((,out-stream (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8))) 
-       (begin-html ,out-stream :title ,title :description ,description :current-uri ,current-uri :content-class ,content-class)
-       ,@body
-       (end-html ,out-stream)))) 
+     (log-conditions
+       (setf (hunchentoot:content-type*) "text/html; charset=utf-8"
+	     (hunchentoot:return-code*) ,return-code)
+       (let ((,out-stream (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8)))
+	 (begin-html ,out-stream :title ,title :description ,description :current-uri ,current-uri :content-class ,content-class)
+	 ,@body
+	 (end-html ,out-stream)))))
 
 (defmacro with-error-page (&body body)
   `(let ((*current-auth-token* (hunchentoot:cookie-in "lw2-auth-token")))
