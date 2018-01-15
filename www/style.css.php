@@ -1147,6 +1147,14 @@ a.comment-parent-link:hover::after {
 	position: relative;
 	top: -1px;
 }
+.comment-controls .cancel-comment-button::before {
+	font-family: Font Awesome;
+	margin-right: 3px;
+	content: '\F00D';
+	font-weight: 900;
+	font-size: 0.9em;
+	opacity: 0.7;
+}
 .comment-controls form {
 	position: relative;
 }
