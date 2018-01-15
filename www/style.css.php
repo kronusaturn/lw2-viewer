@@ -1456,35 +1456,78 @@ ol {
 	#nav-item-recent-comments > * > span {
 		display: none;
 	}
-	#primary-bar {
+	#primary-bar,
+	#secondary-bar {
 		table-layout: fixed;
 		font-size: 0.55em;
 	}
-	#primary-bar .nav-inner {
+	#secondary-bar {
+		font-size: 0.5em;
+	}
+	#primary-bar .nav-inner,
+	#secondary-bar .nav-inner {
 		text-transform: uppercase;
 		padding: 6px;
-		font-weight: 700;
+		font-weight: 600;
 	}
-	#primary-bar .nav-inner::before {
+	#secondary-bar .nav-inner {
+		padding: 4px;
+	}
+	#primary-bar .nav-inner::before, 
+	#secondary-bar .nav-inner::before {
 		display: block;
 		font-family: "Font Awesome";
     font-size: 1.25rem;
 		font-weight: 900;
 	}
-	#primary-bar #nav-item-home .nav-inner::before {
+	#secondary-bar .nav-inner::before {
+    font-size: 0.875rem;
+	}
+	#nav-item-home .nav-inner::before {
 		content: "\F015";
 	}
-	#primary-bar #nav-item-featured .nav-inner::before {
+	#nav-item-featured .nav-inner::before {
 		content: "\F005";
 	}
-	#primary-bar #nav-item-all .nav-inner::before {
+	#nav-item-all .nav-inner::before {
 		content: "\F069";
 	}
-	#primary-bar #nav-item-meta .nav-inner::before {
+	#nav-item-meta .nav-inner::before {
 		content: "\F077";
 	}
-	#primary-bar #nav-item-recent-comments .nav-inner::before {
+	#nav-item-recent-comments .nav-inner::before {
 		content: "\F036";
+	}
+	#nav-item-archive {
+		width: auto;
+	}
+	#nav-item-archive .nav-inner::before {
+		content: "\F187";
+	}
+	#nav-item-search .nav-inner::before {
+		content: none;
+	}
+	#nav-item-search input {
+		width: calc(100% - 28px);
+	}
+	#nav-item-search button {
+		width: 22px;
+		color: transparent;
+		vertical-align: middle;
+		padding-left: 4px;
+	}
+	#nav-item-search button::before {
+		content: "\F002";
+		color: #00e;
+		font-family: Font Awesome;
+		font-weight: 900;
+		font-size: 1rem;
+	}
+	#nav-item-login {
+		width: auto;
+	}
+	#nav-item-login .nav-inner::before {
+		content: "\F007";
 	}
 }
 @media only screen and (max-width: 374px) {
