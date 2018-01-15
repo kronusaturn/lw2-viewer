@@ -28,6 +28,7 @@ Element.prototype.injectReplyForm = function() {
 		e.scrollIntoView(false);
 	}
 	e.querySelector("textarea").focus();
+	e.querySelector("textarea").addEventListener("input", OnInputExpandTextarea, false);
 	
 	e.querySelector(".cancel-comment-button + form").insertAdjacentHTML("afterbegin", "<div class='guiedit-buttons-container'></div>")
 	var buttons_container = e.querySelector(".guiedit-buttons-container");
@@ -76,6 +77,11 @@ function showReplyForm(event) {
 
 function hideReplyForm(event) {
 	event.target.parentElement.injectReplyButton();
+}
+
+function OnInputExpandTextarea() {
+  this.style.height = 'auto';
+  this.style.height = this.scrollHeight + 30 + 'px';
 }
 
 document.addEventListener("DOMContentLoaded", function() {
