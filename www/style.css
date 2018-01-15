@@ -357,6 +357,19 @@ input {
 	margin: 1.25em 0.5em -1.25em;
 	padding: 0.25em;
 	border: 1px solid #aaa;
+	position: relative;
+}
+.archive-nav:last-child {
+	margin-bottom: 5em;
+}
+.archive-nav:last-child::after {
+	content: "No posts for the selected period.";
+	display: block;
+	position: absolute;
+	width: 100%;
+	text-align: center;
+	padding: 1.25em 0 1.25em 0;
+	font-size: 1.25em;
 }
 
 div[class^='archive-nav-'] {
@@ -380,8 +393,9 @@ div[class^='archive-nav-'] {
 		padding: 5px 4px;
 	}
 }
-.archive-nav div[class^='archive-nav-']:nth-of-type(n+2) *[class^='archive-nav-item'] {
+.archive-nav div[class^='archive-nav-']:nth-of-type(2) *[class^='archive-nav-item'] {
   border-top-width: 0;
+  border-bottom-width: 0;
 }
 .archive-nav *[class^='archive-nav-item']:last-child {
 	border-right-width: 1px;
