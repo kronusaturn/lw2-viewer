@@ -1099,7 +1099,7 @@ a.comment-parent-link:hover::after {
 		0 0 3px #fff,
 		0 0 5px #fff;
 }
-.comment + .comment-controls .reply-button {
+.comment + .comment-controls .action-button {
 	font-weight: normal;
 }
 .comment-controls .edit-button {

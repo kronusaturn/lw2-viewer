@@ -14,12 +14,14 @@ Element.prototype.addActivateEvent = function(func) {
 	this.addEventListener("keyup", func);
 }
 
-Element.prototype.injectReplyForm = function() {
+Element.prototype.injectReplyForm = function(editMarkdownSource) {
 	let e = this;
-	let withparent = (e.parentElement.id != 'comments');
+	let editCommentId = (editMarkdownSource ? e.parentElement.id : false);
+	let withparent = (!editMarkdownSource && e.parentElement.id != 'comments');
 	e.innerHTML = "<button class='cancel-comment-button' tabindex='-1'>Cancel</button>" +
 		"<form method='post'><textarea name='text'></textarea>" +
 		(withparent ? "<input type='hidden' name='parent-comment-id' value='" + e.parentElement.id + "'>" : "") +
+		(editCommentId ? "<input type='hidden' name='edit-comment-id' value='" + editCommentId + "'>" : "") +
 		"<input type='hidden' name='csrf-token' value='" + window.csrfToken + "'>" +
 		"<span>You can use <a href='http://commonmark.org/help/' target='_blank'>Markdown</a> here.</span><input type='submit' value='Submit'></form>";
 	
@@ -27,6 +29,7 @@ Element.prototype.injectReplyForm = function() {
 	if(e.getBoundingClientRect().bottom > window.innerHeight) {
 		e.scrollIntoView(false);
 	}
+	e.querySelector("textarea").value = (editMarkdownSource ? editMarkdownSource : "");
 	e.querySelector("textarea").focus();
 	e.querySelector("textarea").addEventListener("input", OnInputExpandTextarea, false);
 	
@@ -51,32 +54,47 @@ Element.prototype.injectReplyForm = function() {
 	}
 }
 
-Element.prototype.injectReplyButton = function() {
+Element.prototype.injectCommentButtons = function() {
 	let e = this;
 	e.innerHTML = "";
-	let button = e.appendChild(document.createElement("button"));
+	let replyButton = document.createElement("button");
 	if(e.parentElement.id == 'comments') {
-		button.className="new-comment-button";
-		button.innerHTML="Post new comment";
+		replyButton.className="new-comment-button action-button";
+		replyButton.innerHTML="Post new comment";
 	} else {
-		button.className="reply-button";
-		button.innerHTML="Reply";
+		if(e.parentElement.querySelector(".comment-body").hasAttribute("data-markdown-source")) {
+			let editButton = e.appendChild(document.createElement("button"));
+			editButton.className="edit-button action-button";
+			editButton.innerHTML="Edit";
+			editButton.addActivateEvent(window.showCommentEditForm);
+		}
+		replyButton.className="reply-button action-button";
+		replyButton.innerHTML="Reply";
 	}
-	button.tabIndex = '-1';
-	button.addActivateEvent(window.showReplyForm);
+	e.appendChild(replyButton);
+	replyButton.tabIndex = '-1';
+	replyButton.addActivateEvent(window.showReplyForm);
+}
+
+function showCommentEditForm(event) {
+	let commentControls = event.target.parentElement;
+	let commentBody = commentControls.parentElement.querySelector(".comment-body");
+	commentBody.setAttribute("style", "display: none;");
+	commentControls.injectReplyForm(commentBody.getAttribute("data-markdown-source"));
 }
 
 function showReplyForm(event) {
 	let commentControls = event.target.parentElement;
 	document.querySelectorAll(".comment-controls").forEach(function (e) {
-		e.injectReplyButton();
+		e.injectCommentButtons();
 	});
 
 	commentControls.injectReplyForm();
 }
 
 function hideReplyForm(event) {
-	event.target.parentElement.injectReplyButton();
+	event.target.parentElement.parentElement.querySelector(".comment-body").removeAttribute("style");
+	event.target.parentElement.injectCommentButtons();
 }
 
 function OnInputExpandTextarea() {
@@ -117,12 +135,12 @@ document.addEventListener("DOMContentLoaded", function() {
 				// Add reply buttons.
 				comments_container.querySelectorAll(".comment").forEach(function (e) {
 					e.insertAdjacentHTML("afterend", "<div class='comment-controls'></div>");
-					e.parentElement.querySelector(".comment-controls").injectReplyButton();
+					e.parentElement.querySelector(".comment-controls").injectCommentButtons();
 				});
 			
 				// Add top-level new comment form.
 				comments_container.insertAdjacentHTML("afterbegin", "<div class='comment-controls'></div>");
-				comments_container.querySelector(".comment-controls").injectReplyButton();
+				comments_container.querySelector(".comment-controls").injectCommentButtons();
 			}			
 
 			needHashRealignment = true;

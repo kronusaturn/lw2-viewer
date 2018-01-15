@@ -5,6 +5,8 @@
 
 (defvar *cookie-jar* (make-instance 'drakma:cookie-jar))
 
+(defvar *current-auth-token*) 
+
 (defparameter *cache-db* "./cache/") 
 (defvar *db-mutex* (sb-thread:make-mutex :name "lmdb")) 
 (defvar *db-environment*) 
@@ -213,27 +215,28 @@
 (defmacro log-conditions (&body body)
   `(block log-conditions
      (handler-bind
-       (((or warning serious-condition) (lambda (c) (log-condition c)))
-	(serious-condition (lambda (c) (declare (ignore c)) (return-from log-conditions))))
+       (((or warning serious-condition) (lambda (c) (log-condition c))))
        (progn ,@body))))
 
 (defun background-loader ()
   (loop
-    (log-conditions 
-      (let ((posts-json (get-posts-json)))
-	(when (and posts-json (ignore-errors (json:decode-json-from-string posts-json)))
-	  (cache-put "index-json" "new-not-meta" posts-json)
-	  (let ((posts-list (decode-graphql-json posts-json))) 
-	    (with-db (db "postid-to-title")
-		     (dolist (post posts-list)
-		       (lmdb-put-string db (cdr (assoc :--id post)) (cdr (assoc :title post)))))
-	    (with-db (db "postid-to-slug")
-		     (dolist (post posts-list)
-		       (lmdb-put-string db (cdr (assoc :--id post)) (cdr (assoc :slug post)))))))))
-    (log-conditions
-      (let ((recent-comments-json (get-recent-comments-json)))
-	(if (and recent-comments-json (ignore-errors (json:decode-json-from-string recent-comments-json)))
-	  (cache-put "index-json" "recent-comments" recent-comments-json)))) 
+    (ignore-errors 
+      (log-conditions 
+	(let ((posts-json (get-posts-json)))
+	  (when (and posts-json (ignore-errors (json:decode-json-from-string posts-json)))
+	    (cache-put "index-json" "new-not-meta" posts-json)
+	    (let ((posts-list (decode-graphql-json posts-json))) 
+	      (with-db (db "postid-to-title")
+		       (dolist (post posts-list)
+			 (lmdb-put-string db (cdr (assoc :--id post)) (cdr (assoc :title post)))))
+	      (with-db (db "postid-to-slug")
+		       (dolist (post posts-list)
+			 (lmdb-put-string db (cdr (assoc :--id post)) (cdr (assoc :slug post))))))))))
+    (ignore-errors
+      (log-conditions
+	(let ((recent-comments-json (get-recent-comments-json)))
+	  (if (and recent-comments-json (ignore-errors (json:decode-json-from-string recent-comments-json)))
+	    (cache-put "index-json" "recent-comments" recent-comments-json))))) 
     (sleep 60))) 
 
 (defun start-background-loader ()
@@ -473,6 +476,14 @@
 			 (style-hash-to-html style-hash) 
 			 (plump:serialize root nil))))))))
 
+(defun logged-in-userid (&optional is-userid)
+  (let ((current-userid (and *current-auth-token* (cache-get "auth-token-to-userid" *current-auth-token*))))
+    (if is-userid
+      (string= current-userid is-userid)
+      current-userid))) 
+(defun logged-in-username ()
+  (and *current-auth-token* (cache-get "auth-token-to-username" *current-auth-token*))) 
+
 (defun pretty-time (timestring &key format)
   (local-time:format-timestring nil (local-time:parse-timestring timestring)
 				:format (or format '(:day #\  :short-month #\  :year #\  :hour #\: (:min 2) #\  :timezone)))) 
@@ -515,7 +526,7 @@
 		  (clean-html (or (cdr (assoc :html-body post)) "") :with-toc t :post-id (cdr (assoc :--id post)))))) 
 
 (defun comment-to-html (comment &key with-post-title)
-  (format nil "<div class=\"comment\"><div class=\"comment-meta\"><div class=\"author\">~A</div> <a class=\"date\" title=\"~:*~A at ~*~A~2:*\" href=\"~A\">~A</a><div class=\"karma\">~A point~:P</div><a class=\"lw2-link\" href=\"~A#~A\">LW2 link</a>~A</div><div class=\"comment-body\">~A</div></div>"
+  (format nil "<div class=\"comment\"><div class=\"comment-meta\"><div class=\"author\">~A</div> <a class=\"date\" title=\"~:*~A at ~*~A~2:*\" href=\"~A\">~A</a><div class=\"karma\">~A point~:P</div><a class=\"lw2-link\" href=\"~A#~A\">LW2 link</a>~A</div><div class=\"comment-body\"~@[ data-markdown-source=\"~A\"~]>~A</div></div>"
 	  (get-username (cdr (assoc :user-id comment))) 
 	  (generate-post-link (cdr (assoc :post-id comment)) (cdr (assoc :--id comment))) 
 	  (pretty-time (cdr (assoc :posted-at comment)))
@@ -525,6 +536,10 @@
 	  (if with-post-title
 	    (format nil "<div class=\"comment-post-title\">on: <a href=\"~A\">~A</a></div>" (generate-post-link (cdr (assoc :post-id comment))) (clean-text (get-post-title (cdr (assoc :post-id comment)))))
 	    (format nil "~@[<a class=\"comment-parent-link\" href=\"#~A\">Parent</a>~]" (cdr (assoc :parent-comment-id comment)))) 
+	  (if (logged-in-userid (cdr (assoc :user-id comment)))
+	    (plump:encode-entities
+	      (or (cache-get "comment-markdown-source" (cdr (assoc :--id comment))) 
+		  (cdr (assoc :html-body comment)))))
 	  (clean-html (cdr (assoc :html-body comment))))) 
 
 (defun make-comment-parent-hash (comments)
@@ -613,8 +628,7 @@
 	  (format nil "~A~A" (nav-bar-outer secondary-bar "inactive-bar" secondary-html) (nav-bar-outer primary-bar "active-bar" primary-html))))))) 
 
 (defun user-nav-bar (&optional current-uri)
-  (let* ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token"))
-	 (username (and lw2-auth-token (cache-get "auth-token-to-username" lw2-auth-token))))
+  (let* ((username (logged-in-username)))
     (let ((*secondary-nav* `(("archive" "/archive" "Archive")
 			     ("search" "/search" "Search" :html ,#'search-bar-to-html)
 			     ,(if username
@@ -661,7 +675,7 @@
 				,.out-body)))) 
 
 (defmacro emit-page ((out-stream &key title description current-uri content-class (return-code 200)) &body body)
-  `(log-conditions
+  `(ignore-errors
      (setf (hunchentoot:content-type*) "text/html; charset=utf-8"
 	   (hunchentoot:return-code*) ,return-code) 
      (let ((,out-stream (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8))) 
@@ -670,13 +684,14 @@
        (end-html ,out-stream)))) 
 
 (defmacro with-error-page (&body body)
-  `(handler-case
-     (progn ,@body)
-     (t (condition)
-	(log-condition condition)
-	(emit-page (out-stream :title "Error" :return-code 500) 
-		   (format out-stream "<h1>Error</h1><p>~A</p>"
-			   condition))))) 
+  `(let ((*current-auth-token* (hunchentoot:cookie-in "lw2-auth-token")))
+     (handler-case
+       (log-conditions 
+	 (progn ,@body))
+       (serious-condition (condition)
+			  (emit-page (out-stream :title "Error" :return-code 500) 
+				     (format out-stream "<h1>Error</h1><p>~A</p>"
+					     condition)))))) 
 
 (defun view-posts-index (posts)
   (alexandria:switch ((hunchentoot:get-parameter "format") :test #'string=)
@@ -716,7 +731,7 @@
 				       (out-stream (hunchentoot:send-headers)))
 				   (posts-to-rss posts (make-flexi-stream out-stream :external-format :utf-8)))) 
 
-(hunchentoot:define-easy-handler (view-post-lw2-link :uri (lambda (r) (declare (ignore r)) (match-lw2-link (hunchentoot:request-uri*)))) ((csrf-token :request-type :post) (text :request-type :post) (parent-comment-id :request-type :post))
+(hunchentoot:define-easy-handler (view-post-lw2-link :uri (lambda (r) (declare (ignore r)) (match-lw2-link (hunchentoot:request-uri*)))) ((csrf-token :request-type :post) (text :request-type :post) (parent-comment-id :request-type :post) (edit-comment-id :request-type :post))
 				 (with-error-page
 				   (cond
 				     (text
@@ -724,8 +739,13 @@
 				       (let ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token"))
 					     (post-id (match-lw2-link (hunchentoot:request-uri*)))) 
 					 (assert (and lw2-auth-token (not (string= text ""))))
-					 (let ((new-comment-id (do-lw2-comment lw2-auth-token
-									       `(("body" . ,text) ("postId" . ,post-id) ,(if parent-comment-id `("parentCommentId" . ,parent-comment-id)) ("content" . ("blocks" . nil))))))
+					 (let* ((comment-data `(("body" . ,text) ,(if (not edit-comment-id) `("postId" . ,post-id)) ,(if parent-comment-id `("parentCommentId" . ,parent-comment-id)) ("content" . ("blocks" . nil)))) 
+						(new-comment-id
+						  (if edit-comment-id
+						    (prog1 edit-comment-id
+						      (do-lw2-comment-edit lw2-auth-token edit-comment-id comment-data))
+						    (do-lw2-comment lw2-auth-token comment-data))))
+					   (cache-put "comment-markdown-source" new-comment-id text)
 					   (setf (hunchentoot:return-code*) 303
 						 (hunchentoot:header-out "Location") (concatenate 'string (hunchentoot:request-uri*) "#" new-comment-id)))))
 				     (t 
