@@ -47,6 +47,7 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 			+ button[0]
 			+ "' tabindex='-1' title='"
 			+ button[1] + ((button[2] != "") ? (" [accesskey: " + button[2] + "]") : "")
+			+ "' data-tooltip='" + button[1]
 			+ "' accesskey='"
 			+ button[2]
 			+ "' onclick='insMarkup("

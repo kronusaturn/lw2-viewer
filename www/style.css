@@ -1260,7 +1260,7 @@ a.comment-parent-link:hover::after {
 	font-weight: bold;
 }
 .guiedit::after {
-	content: attr(title);
+	content: attr(data-tooltip);
 	position: absolute;
 	font-weight: normal;
 	font-family: Concourse;
