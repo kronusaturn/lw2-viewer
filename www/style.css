@@ -394,8 +394,11 @@ div[class^='archive-nav-'] {
 	}
 }
 .archive-nav div[class^='archive-nav-']:nth-of-type(2) *[class^='archive-nav-item'] {
-  border-top-width: 0;
-  border-bottom-width: 0;
+	border-top-width: 0;
+	border-bottom-width: 0;
+}
+.archive-nav div[class^='archive-nav-']:last-of-type *[class^='archive-nav-item'] {
+	border-bottom-width: 1px;
 }
 .archive-nav *[class^='archive-nav-item']:last-child {
 	border-right-width: 1px;
@@ -417,7 +420,7 @@ div[class^='archive-nav-'] {
 	width: 7.75%;
 }
 .archive-nav-item-month:first-child {
-	width: 7%;
+	width: 7.25%;
 }
 .archive-nav-days .archive-nav-item-day {
 	font-size: 0.8em;
