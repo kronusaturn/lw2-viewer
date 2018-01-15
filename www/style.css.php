@@ -1032,7 +1032,7 @@ a.comment-parent-link:hover::after {
 	margin: 0 8px 8px 16px;
 /* 	position: relative; */
 }
-.comment-controls + .comment-thread li {
+.comment-thread .comment-controls + .comment-thread li {
 	margin-top: 8px;
 }
 #comments > .comment-controls {
