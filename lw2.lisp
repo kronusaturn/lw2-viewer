@@ -411,7 +411,7 @@
 					  do (plump:append-child (plump:parent text-node) item)))))))
 	     (contents-to-html (contents min-header-level)
 			       (declare (type cons contents)) 
-			       (format nil "<div class=\"contents\"><div class=\"contents-head\">Contents</div><ul>~{~A~}</ul></div>"
+			       (format nil "<div class=\"contents\"><div class=\"contents-head\">Contents</div><ul class=\"contents-list\">~{~A~}</ul></div>"
 				       (map 'list (lambda (x) (destructuring-bind (elem-level text id) x
 								(format nil "<li class=\"toc-item-~A\"><a href=\"#~A\">~A</a></li>"
 									(- elem-level (- min-header-level 1)) id text)))
