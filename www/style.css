@@ -1324,6 +1324,7 @@ hr {
 
 code {
 	font-family: Inconsolata, Menlo, monospace;
+	font-size: 0.95em;
 	display: inline-block;
 	background-color: #f6f6ff;
 	border: 1px solid #ddf;
