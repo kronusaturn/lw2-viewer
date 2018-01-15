@@ -1411,12 +1411,12 @@ ol {
 	list-style: none;
 	padding: 0;
 }
-.post-body ul li {
+.post-body ul:not(.contents-list) li {
 	position: relative;
 	padding: 0 0 0 2.5em;
 	margin: 0.25em 0 0 0;
 }
-.post-body ul li::before {
+.post-body ul:not(.contents-list) li::before {
 	content: "•";
 	position: absolute;
 	width: 2em;
