@@ -1171,6 +1171,9 @@ a.comment-parent-link:hover::after {
 		0 0 2px #fff;
 	padding: 4px 8px 2px 4px;
 }
+#comments > .comment-controls .cancel-comment-button {
+	right: 30px;
+}
 .comment-controls .cancel-comment-button:hover,
 #comments > .comment-controls .cancel-comment-button:hover {
 	color: #f00;
