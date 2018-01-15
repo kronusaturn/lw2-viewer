@@ -1248,6 +1248,9 @@ a.comment-parent-link:hover::after {
 	font-size: 0.875rem;
 	position: static;
 }
+.guiedit-buttons-container button sup {
+	font-weight: bold;
+}
 .guiedit::after {
 	content: attr(title);
 	position: absolute;
