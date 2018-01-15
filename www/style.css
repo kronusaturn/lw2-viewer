@@ -1202,8 +1202,28 @@ a.comment-parent-link:hover::after {
 .comment-controls .edit-button {
 	position: absolute;
 	right: 8px;
-	top: 8px;
+	top: 9px;
 	color: #0b0;
+}
+.comment-controls .edit-button:hover {
+	color: #f00;
+}
+.comment-controls .action-button::before {
+	font-family: Font Awesome;
+	margin-right: 3px;
+}
+.comment-controls .reply-button::before {
+	content: '\F3E5';
+	font-weight: 900;
+	font-size: 0.9em;
+	opacity: 0.6;
+}
+.comment-controls .edit-button::before {
+	content: '\F303';
+	font-weight: 900;
+	font-size: 0.75em;
+	position: relative;
+	top: -1px;
 }
 .comment-controls form {
 	position: relative;
