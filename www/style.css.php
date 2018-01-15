@@ -1073,6 +1073,12 @@ a.comment-parent-link:hover::after {
 	float: left;
 	padding: 2px 0 0 6px;
 }
+.comment-controls form span a::before {
+	content: url('data:image/png;base64,<?php echo base64_encode(file_get_contents("markdown.png")) ?>');
+	width: 2em;
+	display: inline-block;
+	margin-right: 2px;
+}
 .comment-controls input[type='submit'] {
 	margin: 6px;
 	background-color: #fff;
