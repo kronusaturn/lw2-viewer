@@ -1314,7 +1314,7 @@ ol {
 	padding-right: 0.5em;
 	text-align: right;
 }
-.post-body > ul {
+.post-body ul {
 	list-style: none;
 	padding: 0;
 }
