@@ -1337,16 +1337,15 @@ ol {
 .post-body ol li {
 	position: relative;
 	counter-increment: ol;
-	overflow: hidden;
-	padding-left: 2.5em;
-	text-indent: -2.5em;
+	padding: 0 0 0 2.5em;
+	margin: 0.25em 0 0 0;
 }
 .post-body ol li::before {
 	content: counter(ol) ".";
-	display: inline-block;
-	width: 2.5em;
-	padding-right: 0.5em;
+	position: absolute;
+	width: 2em;
 	text-align: right;
+	left: 0;
 }
 .post-body ul {
 	list-style: none;
