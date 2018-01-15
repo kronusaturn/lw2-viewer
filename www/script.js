@@ -29,6 +29,12 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 	if(e.getBoundingClientRect().bottom > window.innerHeight) {
 		e.scrollIntoView(false);
 	}
+	e.querySelector("form").onsubmit = function(event) {
+		if(!event.target.text.value) {
+			alert("Please enter a comment.");
+			return false;
+		}
+	}
 	e.querySelector("textarea").value = (editMarkdownSource ? editMarkdownSource : "");
 	e.querySelector("textarea").focus();
 	e.querySelector("textarea").addEventListener("input", OnInputExpandTextarea, false);
