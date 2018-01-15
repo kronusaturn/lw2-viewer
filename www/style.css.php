@@ -1343,6 +1343,12 @@ ol {
 	text-align: right;
 	left: 0;
 }
+.post-body li > ul:first-child > li {
+	padding-left: 0;
+}
+.post-body li > ul:first-child > li::before {
+	content: none;
+}
 
 /**********************/
 /* FOR NARROW SCREENS */
