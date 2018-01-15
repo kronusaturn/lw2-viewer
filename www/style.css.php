@@ -1026,7 +1026,7 @@ a.comment-parent-link:hover::after {
 
 .comment-controls {
 	text-align: right;
-	margin: 8px 8px 8px 16px;
+	margin: 0 8px 8px 16px;
 /* 	position: relative; */
 }
 #comments > .comment-controls {

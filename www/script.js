@@ -87,6 +87,7 @@ function showCommentEditForm(event) {
 	let commentBody = commentControls.parentElement.querySelector(".comment-body");
 	commentBody.setAttribute("style", "display: none;");
 	commentControls.injectReplyForm(commentBody.getAttribute("data-markdown-source"));
+	ExpandTextarea(commentControls.querySelector("textarea"));
 }
 
 function showReplyForm(event) {
@@ -105,8 +106,11 @@ function hideReplyForm(event) {
 }
 
 function OnInputExpandTextarea() {
-  this.style.height = 'auto';
-  this.style.height = this.scrollHeight + 30 + 'px';
+	ExpandTextarea(this);
+}
+function ExpandTextarea(textarea) {
+	textarea.style.height = 'auto';
+	textarea.style.height = textarea.scrollHeight + 30 + 'px';
 }
 
 document.addEventListener("DOMContentLoaded", function() {
