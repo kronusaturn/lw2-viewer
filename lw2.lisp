@@ -693,12 +693,13 @@
 
 (defmacro emit-page ((out-stream &key title description current-uri content-class (return-code 200)) &body body)
   `(ignore-errors
-     (setf (hunchentoot:content-type*) "text/html; charset=utf-8"
-	   (hunchentoot:return-code*) ,return-code) 
-     (let ((,out-stream (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8))) 
-       (begin-html ,out-stream :title ,title :description ,description :current-uri ,current-uri :content-class ,content-class)
-       ,@body
-       (end-html ,out-stream)))) 
+     (log-conditions
+       (setf (hunchentoot:content-type*) "text/html; charset=utf-8"
+	     (hunchentoot:return-code*) ,return-code)
+       (let ((,out-stream (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8)))
+	 (begin-html ,out-stream :title ,title :description ,description :current-uri ,current-uri :content-class ,content-class)
+	 ,@body
+	 (end-html ,out-stream)))))
 
 (defmacro with-error-page (&body body)
   `(let ((*current-auth-token* (hunchentoot:cookie-in "lw2-auth-token")))
