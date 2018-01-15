@@ -25,10 +25,13 @@
 (defun password-digest (password)
   (byte-array-to-hex-string
     (digest-sequence :sha256
-      (string-to-octets password :external-format :utf8)))) 
+      (string-to-octets password :external-format :utf8))))
+
+(defun random-string (length)
+  (coerce (loop repeat length collecting (code-char (+ (char-code #\a) (ironclad:strong-random 26)))) 'string)) 
 
 (defun do-lw2-sockjs-operation (operation &optional session)
-  (let ((client (wsd:make-client "ws://198.74.48.181:3000/sockjs/329/lwwyhlgw/websocket"))
+  (let ((client (wsd:make-client (concatenate 'string *websocket-uri* "sockjs/329/" (random-string 8) "/websocket")))
 	(debug-output *sockjs-debug-output*) 
 	(result-semaphore (sb-thread:make-semaphore))
 	result)
@@ -87,9 +90,17 @@
 ;
 ; new user ["{\"msg\":\"method\",\"method\":\"createUser\",\"params\":[{\"username\":\"test2\",\"email\":\"test@example.com\",\"password\":{\"digest\":\"37268335dd6931045bdcdf92623ff819a64244b53d0e746d438797349d4da578\",\"algorithm\":\"sha-256\"}}],\"id\":\"8\"}"]
 
+(defun forwarded-header ()
+  (let ((addr (and (boundp 'hunchentoot:*request*) (hunchentoot:real-remote-addr))))
+    (if addr
+      (list (cons "X-Forwarded-For" addr))
+      nil))) 
+
 (defun do-lw2-post-query (auth-token data)
   (let* ((response-json (octets-to-string
-			  (drakma:http-request *graphql-uri* :method :post :additional-headers `(("authorization" . ,auth-token)) :content-type "application/json"
+			  (drakma:http-request *graphql-uri* :method :post :additional-headers `(("authorization" . ,auth-token)
+												 ,@(forwarded-header))
+					       :content-type "application/json"
 					       :content (encode-json-to-string data))))
 	 (response-alist (first (json:decode-json-from-string response-json)))
 	 (res-error (first (cdr (assoc :errors response-alist))))
