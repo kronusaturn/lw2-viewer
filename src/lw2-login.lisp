@@ -12,6 +12,12 @@
   (if stream (format stream "~&~A: ~A~%" prefix message))
   message)
 
+(defun forwarded-header ()
+  (let ((addr (and (boundp 'hunchentoot:*request*) (hunchentoot:real-remote-addr))))
+    (if addr
+      (list (cons "X-Forwarded-For" addr))
+      nil))) 
+
 (defun sockjs-encode-alist (alist)
   (encode-json-to-string (list (encode-json-alist-to-string alist)))) 
 
@@ -31,7 +37,8 @@
   (coerce (loop repeat length collecting (code-char (+ (char-code #\a) (ironclad:strong-random 26)))) 'string)) 
 
 (defun do-lw2-sockjs-operation (operation &optional session)
-  (let ((client (wsd:make-client (concatenate 'string *websocket-uri* "sockjs/329/" (random-string 8) "/websocket")))
+  (let ((client (wsd:make-client (concatenate 'string *websocket-uri* "sockjs/329/" (random-string 8) "/websocket")
+				 :additional-headers (forwarded-header)))
 	(debug-output *sockjs-debug-output*) 
 	(result-semaphore (sb-thread:make-semaphore))
 	result)
@@ -89,12 +96,6 @@
 ; logout ["{\"msg\":\"method\",\"method\":\"logout\",\"params\":[],\"id\":\"7\"}"]
 ;
 ; new user ["{\"msg\":\"method\",\"method\":\"createUser\",\"params\":[{\"username\":\"test2\",\"email\":\"test@example.com\",\"password\":{\"digest\":\"37268335dd6931045bdcdf92623ff819a64244b53d0e746d438797349d4da578\",\"algorithm\":\"sha-256\"}}],\"id\":\"8\"}"]
-
-(defun forwarded-header ()
-  (let ((addr (and (boundp 'hunchentoot:*request*) (hunchentoot:real-remote-addr))))
-    (if addr
-      (list (cons "X-Forwarded-For" addr))
-      nil))) 
 
 (defun do-lw2-post-query (auth-token data)
   (let* ((response-json (octets-to-string
