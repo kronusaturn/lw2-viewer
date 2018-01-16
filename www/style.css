@@ -1362,13 +1362,39 @@ input[type='submit']:focus {
 .post-body h1,
 .post-body h2,
 .post-body h3,
-.post-body h4 {
+.post-body h4,
+.post-body h5,
+.post-body h6 {
 	font-family: 'Concourse';
 	line-height: 1.1;
 	margin: 1em 0 0.75em 0;
 	text-align: left;
 }
 
+.post-body h5,
+.post-body h6 {
+	font-size: 1em;
+	font-weight: 600;
+	font-family: 'Concourse SmallCaps';
+}
+.post-body h6 {
+	color: #555;
+}
+.post-body h4 {
+	font-size: 1.2em;
+}
+.post-body h3 {
+	font-size: 1.4em;
+	font-family: 'Concourse SmallCaps';
+	font-weight: 
+}
+.post-body h2 {
+	font-size: 1.75em;
+}
+.post-body h1 {
+	font-size: 2.1em;
+	border-bottom: 1px solid #aaa;
+}
 /********/
 /* MISC */
 /********/
