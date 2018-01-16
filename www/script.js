@@ -59,6 +59,8 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 			+ "</button>"
 		);
 	}
+	
+	e.querySelector("form span").insertAdjacentHTML("afterend", "<input type='checkbox' id='markdown-hints-checkbox'><label for='markdown-hints-checkbox'></label>");
 }
 
 Element.prototype.injectCommentButtons = function() {

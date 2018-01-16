@@ -1079,6 +1079,31 @@ a.comment-parent-link:hover::after {
 	display: inline-block;
 	margin-right: 2px;
 }
+#markdown-hints-checkbox + label {
+	float: left;
+	padding: 2px 0 0 0;
+	margin: 0 0 0 1em;
+	color: #00e;
+	cursor: pointer;
+}
+#markdown-hints-checkbox + label::after {
+	content: "(Show commenting help)";
+}
+#markdown-hints-checkbox:checked + label::after {
+	content: "(Hide commenting help)";
+}
+#markdown-hints-checkbox + label::before {
+	content: '\F059';
+	font-family: Font Awesome;
+	font-weight: 900;
+	margin-right: 3px;
+}
+#markdown-hints-checkbox + label:hover {
+	color: #e00;
+	text-shadow:
+		0 0 1px #fff,
+		0 0 3px #fff;
+}
 .comment-controls input[type='submit'] {
 	margin: 6px;
 	background-color: #fff;
