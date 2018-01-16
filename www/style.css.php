@@ -888,11 +888,11 @@ h1.listing a[href^="/"]::after {
 <?php nested_stuff(".comment-item ", ".comment-item:target:not(:focus-within),\n", ".comment-item:target:not(:focus-within)", (2 * $comment_nesting_depth) - 1); ?> {
 	background-color: #ffd;
 }
-<?php nested_stuff(".comment-item ", ".comment-item:target > .comment-thread > .comment-item > .comment > .comment-meta > a.comment-parent-link::after,\n", ".comment-item:target > .comment-thread > .comment-item > .comment > .comment-meta > a.comment-parent-link::after", (2 * $comment_nesting_depth) - 1); ?> {
+.comment-item:target > .comment-thread > .comment-item > .comment > .comment-meta > a.comment-parent-link::after {
 	box-shadow: 
 		0 28px 16px -16px #ffd inset,
 		4px 16px 0 12px #ffd inset,
-		4px  4px 0 12px #ffd inset;
+		4px  4px 0 12px #ffd inset !important;
 }
 
 ul.comment-thread {
