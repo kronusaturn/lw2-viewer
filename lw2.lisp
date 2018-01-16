@@ -61,16 +61,18 @@
 (defvar *background-loader-thread* nil) 
 
 (defun lw2-graphql-query-streamparse (query)
-  (multiple-value-bind (req-stream status-code headers final-uri reuse-stream)
+  (multiple-value-bind (req-stream status-code headers final-uri reuse-stream want-close)
     (drakma:http-request *graphql-uri* :parameters (list (cons "query" query))
-			 :cookie-jar *cookie-jar* :want-stream t)
+			 :cookie-jar *cookie-jar* :want-stream t :close t)
     (declare (ignore status-code headers final-uri reuse-stream))
     (setf (flexi-stream-external-format req-stream) :utf-8)
-    (rest (cadar (json:decode-json req-stream))))) 
+    (unwind-protect
+      (rest (cadar (json:decode-json req-stream)))
+      (if want-close (close req-stream)))))
 
 (defun lw2-graphql-query-noparse (query)
     (octets-to-string (drakma:http-request *graphql-uri* :parameters (list (cons "query" query))
-			 :cookie-jar *cookie-jar* :want-stream nil)
+			 :cookie-jar *cookie-jar* :want-stream nil :close t)
 		      :external-format :utf-8)) 
 
 (defun decode-graphql-json (json-string)
@@ -161,16 +163,20 @@
   (lw2-graphql-query-noparse (format nil "{CommentsList (terms:{view:\"postCommentsNew\",limit:20}) {_id, userId, postId, postedAt, parentCommentId, baseScore, pageUrl, htmlBody}}")))
 
 (defun lw2-search-query (query)
-  (let ((req-stream (drakma:http-request "https://z0gr6exqhd-dsn.algolia.net/1/indexes/*/queries?x-algolia-agent=Algolia%20for%20vanilla%20JavaScript%203.24.5%3Breact-instantsearch%204.1.3%3BJS%20Helper%202.23.0&x-algolia-application-id=Z0GR6EXQHD&x-algolia-api-key=0b1d20b957917dbb5e1c2f3ad1d04ee2"
-					 :method :post :additional-headers '(("Origin" . "https://www.greaterwrong.com") ("Referer" . "https://www.greaterwrong.com/"))
-					 :content (json:encode-json-alist-to-string `(("requests" . ,(loop for index in '("test_posts" "test_comments")
-													   collect `(("indexName" . ,index)
-														     ("params" . ,(format nil "query=~A&hitsPerPage=20&page=0"
-																	  (url-rewrite:url-encode query)))))))) 
-					 :want-stream t)))
+  (multiple-value-bind (req-stream req-status req-headers req-uri req-reuse-stream want-close)
+    (drakma:http-request "https://z0gr6exqhd-dsn.algolia.net/1/indexes/*/queries?x-algolia-agent=Algolia%20for%20vanilla%20JavaScript%203.24.5%3Breact-instantsearch%204.1.3%3BJS%20Helper%202.23.0&x-algolia-application-id=Z0GR6EXQHD&x-algolia-api-key=0b1d20b957917dbb5e1c2f3ad1d04ee2"
+			 :method :post :additional-headers '(("Origin" . "https://www.greaterwrong.com") ("Referer" . "https://www.greaterwrong.com/"))
+			 :content (json:encode-json-alist-to-string `(("requests" . ,(loop for index in '("test_posts" "test_comments")
+											   collect `(("indexName" . ,index)
+												     ("params" . ,(format nil "query=~A&hitsPerPage=20&page=0"
+															  (url-rewrite:url-encode query)))))))) 
+			 :want-stream t :close t)
+    (declare (ignore req-status req-headers req-uri req-reuse-stream))
     (setf (flexi-stream-external-format req-stream) :utf-8)
-    (values-list (loop for r in (cdr (assoc :results (json:decode-json req-stream)))
-		       collect (cdr (assoc :hits r))))))
+    (unwind-protect
+      (values-list (loop for r in (cdr (assoc :results (json:decode-json req-stream)))
+			 collect (cdr (assoc :hits r))))
+      (if want-close (close req-stream)))))
 
 (defun make-simple-cache (cache-db)
   (lambda (key value) (cache-put cache-db key value))) 
@@ -254,7 +260,7 @@
       (values (elt strings 0))))) 
 
 (simple-cacheable ("lw1-link" "lw1-link" link)
-  (let ((out (nth-value 3 (drakma:http-request (concatenate 'string "https://www.lesserwrong.com" link) :method :head))))
+  (let ((out (nth-value 3 (drakma:http-request (concatenate 'string "https://www.lesserwrong.com" link) :method :head :close t))))
     (format nil "~A~@[#~A~]" (puri:uri-path out) (puri:uri-fragment out)))) 
 
 (defun convert-lw1-link (link)
@@ -321,7 +327,7 @@
       contents)))
 
 (defun grab-from-rts (url)
-  (let* ((root (plump:parse (drakma:http-request url)))
+  (let* ((root (plump:parse (drakma:http-request url :close t)))
 	 (post-body (plump:get-element-by-id root "wikitext")))
     (loop for cls in '("div.nav_menu" "div.imgonly" "div.bottom_nav") do
 	  (loop for e across (clss:select cls post-body)
