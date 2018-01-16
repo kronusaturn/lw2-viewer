@@ -30,6 +30,7 @@ body {
 	padding: 0;
 	margin: 0;
 	font-family: 'Concourse', 'a_Avante';
+	font-feature-settings: 'ss07';
 }
 input {
 	font-family: inherit;
@@ -1177,6 +1178,9 @@ a.comment-parent-link:hover::after {
 	font-family: Font Awesome;
 	font-weight: 900;
 	margin-right: 3px;
+}
+#markdown-hints-checkbox:checked + label::before {
+	font-weight: normal;
 }
 #markdown-hints-checkbox + label:hover {
 	color: #e00;
