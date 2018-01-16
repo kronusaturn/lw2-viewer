@@ -23,7 +23,7 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 		(withparent ? "<input type='hidden' name='parent-comment-id' value='" + e.parentElement.id + "'>" : "") +
 		(editCommentId ? "<input type='hidden' name='edit-comment-id' value='" + editCommentId + "'>" : "") +
 		"<input type='hidden' name='csrf-token' value='" + window.csrfToken + "'>" +
-		"<span>You can use <a href='http://commonmark.org/help/' target='_blank'>Markdown</a> here.</span><input type='submit' value='Submit'></form>";
+		"<span class='markdown-reference-link'>You can use <a href='http://commonmark.org/help/' target='_blank'>Markdown</a> here.</span><input type='submit' value='Submit'></form>";
 	
 	e.querySelector(".cancel-comment-button").addActivateEvent(window.hideReplyForm);
 	if(e.getBoundingClientRect().bottom > window.innerHeight) {
