@@ -1031,9 +1031,8 @@ a.comment-parent-link:hover::after {
 .comment-controls {
 	text-align: right;
 	margin: 0 8px 8px 16px;
-/* 	position: relative; */
 }
-.comment-thread .comment-controls + .comment-thread li {
+.comment-thread .comment-controls + .comment-thread > li:first-child {
 	margin-top: 8px;
 }
 #comments > .comment-controls {
@@ -1237,12 +1236,12 @@ a.comment-parent-link:hover::after {
 	font-weight: normal;
 	font-family: Concourse;
 	font-size: 1rem;
-	top: 2px;
+	top: 0;
 	left: 400px;
 	color: #777;
 	text-shadow: none;
 	height: 27px;
-	padding: 2px 0;
+	padding: 4px 0;
 	white-space: nowrap;
 	visibility: hidden;
 }
