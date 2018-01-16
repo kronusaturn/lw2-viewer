@@ -856,14 +856,12 @@ h1.listing a[href^="/"]::after {
 	max-height: 1000000px;
 }
 
-.comment-item input[id^="expand"]:checked ~ .comment-thread {
-	font-size: 0.95em;
+.comment-item input[id^="expand"]:checked ~ .comment-thread .comment-thread .comment-item {
+  margin: 0;
+	border-width: 1px 0 0 0;
 }
-.comment-item input[id^="expand"]:checked ~ .comment-thread .comment-thread {
-	font-size: 0.975em;
-}
-.comment-item input[id^="expand"]:checked ~ .comment-thread .comment-body {
-	font-size: 1.2em;
+.comment-item input[id^="expand"]:checked ~ .comment-thread .comment-thread .comment-item a.comment-parent-link:hover::after {
+	display: none;
 }
 
 
