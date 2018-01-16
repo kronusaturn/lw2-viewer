@@ -1193,6 +1193,18 @@ a.comment-parent-link:hover::after {
 		0 0 1px #fff,
 		0 0 3px #fff;
 }
+.comment-controls .markdown-hints {
+	float: left;
+	clear: left;
+	margin: 4px 0 0 4px;
+	padding: 4px 8px;
+	border: 1px solid #c00;
+	background-color: #ffa;
+	display: none;
+}
+.comment-controls #markdown-hints-checkbox:checked ~ .markdown-hints {
+	display: block;
+}
 .comment-controls input[type='submit'] {
 	margin: 6px;
 	background-color: #fff;
