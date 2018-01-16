@@ -1193,16 +1193,29 @@ a.comment-parent-link:hover::after {
 		0 0 3px #fff;
 }
 .comment-controls .markdown-hints {
-	float: left;
-	clear: left;
 	margin: 4px 0 0 4px;
 	padding: 4px 8px;
 	border: 1px solid #c00;
 	background-color: #ffa;
+	position: absolute;
+	text-align: left;
+	top: calc(100% - 1em);
+	z-index: 1;
 	display: none;
 }
 .comment-controls #markdown-hints-checkbox:checked ~ .markdown-hints {
-	display: block;
+	display: table;
+}
+.comment-controls .markdown-hints-row {
+	display: table-row;
+}
+.comment-controls .markdown-hints-row span,
+.comment-controls .markdown-hints-row code {
+	float: none;
+	display: table-cell;
+	border: none;
+	background-color: inherit;
+	padding: 0 4px 0 0;
 }
 .comment-controls input[type='submit'] {
 	margin: 6px;

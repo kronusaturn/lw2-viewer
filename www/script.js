@@ -63,7 +63,7 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 	var markdown_hints = "<input type='checkbox' id='markdown-hints-checkbox'><label for='markdown-hints-checkbox'></label>";
 	markdown_hints += "<div class='markdown-hints'>";
 	markdown_hints += "<div class='markdown-hints-row'><span style='font-weight: bold;'>Bold</span><code>**Bold**</code></div>";
-	markdown_hints += "<div class='markdown-hints-row'><span style='font-style: italic;'>Bold</span><code>*Italic*</code></div>";
+	markdown_hints += "<div class='markdown-hints-row'><span style='font-style: italic;'>Italic</span><code>*Italic*</code></div>";
 	markdown_hints += "<div class='markdown-hints-row'><span><a href=#>Link</a></span><code>[Link](http://example.com)</code></div>";
 	markdown_hints += "</div>";
 	e.querySelector("form span").insertAdjacentHTML("afterend", markdown_hints);
