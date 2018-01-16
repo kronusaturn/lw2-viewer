@@ -195,9 +195,12 @@
   (let ((get-real (intern (format nil "~:@(get-~A-real~)" base-name)))
 	(cache (intern (format nil "~:@(cache-~A~)" base-name)))
 	(get (intern (format nil "~:@(get-~A~)" base-name))))
-    `(setf (fdefinition (quote ,get-real)) (lambda (,key) ,@body)
-	   (fdefinition (quote ,cache)) (make-simple-cache ,cache-db)
-	   (fdefinition (quote ,get)) (make-simple-get ,cache-db (fdefinition (quote ,cache)) (fdefinition (quote ,get-real)))))) 
+    `(progn
+       (declaim (ftype (function (string) string) ,get-real ,get)
+		(ftype (function (string string) string) ,cache))
+       (setf (fdefinition (quote ,get-real)) (lambda (,key) ,@body)
+	     (fdefinition (quote ,cache)) (make-simple-cache ,cache-db)
+	     (fdefinition (quote ,get)) (make-simple-get ,cache-db (fdefinition (quote ,cache)) (fdefinition (quote ,get-real))))))) 
 
 (simple-cacheable ("post-title" "postid-to-title" post-id)
   (cdr (first (lw2-graphql-query (format nil "{PostsSingle(documentId:\"~A\") {title}}" post-id))))) 
@@ -286,7 +289,8 @@
       (string 
 	(gen-internal story (get-post-slug story) comment-id absolute-uri))
       (cons
-	(gen-internal (cdr (assoc :--id story)) (or (cdr (assoc :slug story)) (get-post-slug story)) comment-id absolute-uri))))) 
+	(let ((story-id (cdr (assoc :--id story)))) 
+	  (gen-internal story-id (or (cdr (assoc :slug story)) (get-post-slug story-id)) comment-id absolute-uri))))))
 
 (eval-when (:compile-toplevel :load-toplevel :execute) 
   (defun city-hash-128-vector (data)
