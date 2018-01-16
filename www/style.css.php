@@ -1038,6 +1038,9 @@ a.comment-parent-link:hover::after {
 #comments > .comment-controls {
 	margin: 8px 0 0 0;
 }
+#comments > .comment-controls:last-child {
+	margin: 8px 0 16px 0;
+}
 #comments > .comment-controls > button {
 	font-weight: 600;
 	font-size: 1.25rem;
