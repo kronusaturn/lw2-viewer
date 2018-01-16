@@ -1089,6 +1089,9 @@ a.comment-parent-link:hover::after {
 	color: #00e;
 	cursor: pointer;
 }
+#markdown-hints-checkbox {
+	visibility: hidden;
+}
 #markdown-hints-checkbox + label::after {
 	content: "(Show commenting help)";
 }
