@@ -120,11 +120,11 @@ document.addEventListener("DOMContentLoaded", function() {
 	window.requestAnimationFrame(function() {
 		var content = document.querySelector("#content");
 		if (content.clientHeight <= window.innerHeight + 30) {
-			content.removeChild(document.querySelector("#bottom-bar"));
-			if (content.querySelector(".post")) content.removeChild(content.querySelector(".post .post-meta a[href='#bottom-bar']"));
+			removeElement("#bottom-bar", content);
+			removeElement(".post .post-meta a[href='#bottom-bar']", content);
 		} 	
 		if (content.clientHeight <= window.innerHeight + 30 || 
-			(document.querySelector("#comments") && document.querySelector("#comments").childNodes.length == 0)) {
+			(content.querySelector("#comments") && content.querySelector("#comments").childNodes.length == 0)) {
 			document.styleSheets[1].insertRule('.post .post-meta .comment-count::after { display: none; }', document.styleSheets[1].cssRules.length);
 		}
 
@@ -167,3 +167,8 @@ document.addEventListener("DOMContentLoaded", function() {
 		}
 	})
 }, {once: true});
+
+function removeElement(selector, ancestor = document) {
+	var element = ancestor.querySelector(selector);
+	if (element) element.parentElement.removeChild(element);
+}
