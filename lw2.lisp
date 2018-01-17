@@ -16,20 +16,23 @@
   (and *current-auth-token* (cache-get "auth-token-to-username" *current-auth-token*))) 
 
 (defun pretty-time (timestring &key format)
-  (local-time:format-timestring nil (local-time:parse-timestring timestring)
-				:format (or format '(:day #\  :short-month #\  :year #\  :hour #\: (:min 2) #\  :timezone)))) 
+  (let ((time (local-time:parse-timestring timestring)))
+  (values (local-time:format-timestring nil time :timezone local-time:+utc-zone+ :format (or format '(:day #\  :short-month #\  :year #\  :hour #\: (:min 2) #\  :timezone)))
+	  (* (local-time:timestamp-to-unix time) 1000))))
 
 (defun post-headline-to-html (post)
-  (format nil "<h1 class=\"listing\"><a href=\"~A\">~A</a></h1><div class=\"post-meta\"><div class=\"author\">~A</div> <div class=\"date\">~A</div><div class=\"karma\">~A point~:P</div><a class=\"comment-count\" href=\"~A#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a>~A</div>"
-	  (or (cdr (assoc :url post)) (generate-post-link post)) 
-	  (clean-text (cdr (assoc :title post)))
-	  (get-username (cdr (assoc :user-id post)))
-	  (pretty-time (cdr (assoc :posted-at post))) 
-	  (cdr (assoc :base-score post))
-	  (generate-post-link post) 
-	  (or (cdr (assoc :comment-count post)) 0) 
-	  (cdr (assoc :page-url post))
-	  (if (cdr (assoc :url post)) (format nil "<div class=\"link-post\">(~A)</div>" (puri:uri-host (puri:parse-uri (cdr (assoc :url post))))) ""))) 
+  (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :posted-at post))) 
+    (format nil "<h1 class=\"listing\"><a href=\"~A\">~A</a></h1><div class=\"post-meta\"><div class=\"author\">~A</div> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\">~A point~:P</div><a class=\"comment-count\" href=\"~A#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a>~A</div>"
+	    (or (cdr (assoc :url post)) (generate-post-link post)) 
+	    (clean-text (cdr (assoc :title post)))
+	    (get-username (cdr (assoc :user-id post)))
+	    js-time
+	    pretty-time
+	    (cdr (assoc :base-score post))
+	    (generate-post-link post) 
+	    (or (cdr (assoc :comment-count post)) 0) 
+	    (cdr (assoc :page-url post))
+	    (if (cdr (assoc :url post)) (format nil "<div class=\"link-post\">(~A)</div>" (puri:uri-host (puri:parse-uri (cdr (assoc :url post))))) "")))) 
 
 (defun posts-to-rss (posts out-stream)
   (with-recursive-lock (*memory-intensive-mutex*) 
@@ -45,33 +48,37 @@
 	  :description (clean-html (or (cdr (assoc :html-body (get-post-body (cdr (assoc :--id post)) :revalidate nil))) "") :post-id (cdr (assoc :--id post)))))))) 
 
 (defun post-body-to-html (post)
-  (format nil "<div class=\"post\"><h1>~A</h1><div class=\"post-meta\"><div class=\"author\">~A</div> <div class=\"date\">~A</div><div class=\"karma\">~A point~:P</div><a class=\"comment-count\" href=\"#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a><a href=\"#bottom-bar\"></a></div><div class=\"post-body\">~A</div></div>"
-	  (clean-text (cdr (assoc :title post)))
-	  (get-username (cdr (assoc :user-id post)))
-	  (pretty-time (cdr (assoc :posted-at post))) 
-	  (cdr (assoc :base-score post))
-	  (or (cdr (assoc :comment-count post)) 0) 
-	  (cdr (assoc :page-url post)) 
-	  (format nil "~A~A"
-		  (if (cdr (assoc :url post)) (format nil "<p><a href=\"~A\">Link post</a></p>" (cdr (assoc :url post))) "")
-		  (clean-html (or (cdr (assoc :html-body post)) "") :with-toc t :post-id (cdr (assoc :--id post)))))) 
+  (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :posted-at post))) 
+    (format nil "<div class=\"post\"><h1>~A</h1><div class=\"post-meta\"><div class=\"author\">~A</div> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\">~A point~:P</div><a class=\"comment-count\" href=\"#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a><a href=\"#bottom-bar\"></a></div><div class=\"post-body\">~A</div></div>"
+	    (clean-text (cdr (assoc :title post)))
+	    (get-username (cdr (assoc :user-id post)))
+	    js-time
+	    pretty-time
+	    (cdr (assoc :base-score post))
+	    (or (cdr (assoc :comment-count post)) 0) 
+	    (cdr (assoc :page-url post)) 
+	    (format nil "~A~A"
+		    (if (cdr (assoc :url post)) (format nil "<p><a href=\"~A\">Link post</a></p>" (cdr (assoc :url post))) "")
+		    (clean-html (or (cdr (assoc :html-body post)) "") :with-toc t :post-id (cdr (assoc :--id post))))))) 
 
 (defun comment-to-html (comment &key with-post-title)
-  (format nil "<div class=\"comment\"><div class=\"comment-meta\"><div class=\"author\">~A</div> <a class=\"date\" title=\"~:*~A at ~*~A~2:*\" href=\"~A\">~A</a><div class=\"karma\">~A point~:P</div><a class=\"lw2-link\" href=\"~A#~A\">LW2 link</a>~A</div><div class=\"comment-body\"~@[ data-markdown-source=\"~A\"~]>~A</div></div>"
-	  (get-username (cdr (assoc :user-id comment))) 
-	  (generate-post-link (cdr (assoc :post-id comment)) (cdr (assoc :--id comment))) 
-	  (pretty-time (cdr (assoc :posted-at comment)))
-	  (cdr (assoc :base-score comment))
-	  (cdr (assoc :page-url comment)) 
-	  (cdr (assoc :--id comment)) 
-	  (if with-post-title
-	    (format nil "<div class=\"comment-post-title\">on: <a href=\"~A\">~A</a></div>" (generate-post-link (cdr (assoc :post-id comment))) (clean-text (get-post-title (cdr (assoc :post-id comment)))))
-	    (format nil "~@[<a class=\"comment-parent-link\" href=\"#~A\">Parent</a>~]" (cdr (assoc :parent-comment-id comment)))) 
-	  (if (logged-in-userid (cdr (assoc :user-id comment)))
-	    (plump:encode-entities
-	      (or (cache-get "comment-markdown-source" (cdr (assoc :--id comment))) 
-		  (cdr (assoc :html-body comment)))))
-	  (clean-html (cdr (assoc :html-body comment))))) 
+  (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :posted-at comment))) 
+    (format nil "<div class=\"comment\"><div class=\"comment-meta\"><div class=\"author\">~A</div> <a class=\"date\" href=\"~A\" data-js-date=\"~A\">~A</a><div class=\"karma\">~A point~:P</div><a class=\"lw2-link\" href=\"~A#~A\">LW2 link</a>~A</div><div class=\"comment-body\"~@[ data-markdown-source=\"~A\"~]>~A</div></div>"
+	    (get-username (cdr (assoc :user-id comment))) 
+	    (generate-post-link (cdr (assoc :post-id comment)) (cdr (assoc :--id comment)))
+	    js-time
+	    pretty-time
+	    (cdr (assoc :base-score comment))
+	    (cdr (assoc :page-url comment)) 
+	    (cdr (assoc :--id comment)) 
+	    (if with-post-title
+	      (format nil "<div class=\"comment-post-title\">on: <a href=\"~A\">~A</a></div>" (generate-post-link (cdr (assoc :post-id comment))) (clean-text (get-post-title (cdr (assoc :post-id comment)))))
+	      (format nil "~@[<a class=\"comment-parent-link\" href=\"#~A\">Parent</a>~]" (cdr (assoc :parent-comment-id comment)))) 
+	    (if (logged-in-userid (cdr (assoc :user-id comment)))
+	      (plump:encode-entities
+		(or (cache-get "comment-markdown-source" (cdr (assoc :--id comment))) 
+		    (cdr (assoc :html-body comment)))))
+	    (clean-html (cdr (assoc :html-body comment)))))) 
 
 (defun make-comment-parent-hash (comments)
   (let ((hash (make-hash-table :test 'equal)))
