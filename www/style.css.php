@@ -918,10 +918,10 @@ ul.comment-thread {
 }
 .comment-meta .author {
 	font-weight: bold;
-	font-size: 1.3125em;
+	font-size: 1.25em;
 }
 .comment-meta .lw2-link {
-	margin-left: 1.5em;
+	margin-left: 1em;
 }
 
 .comment-body {
