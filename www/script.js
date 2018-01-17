@@ -153,6 +153,29 @@ document.addEventListener("DOMContentLoaded", function() {
 			needHashRealignment = true;
 		}
 
+		document.querySelectorAll(".comment-meta .comment-parent-link").forEach(function (cpl) {
+			cpl.addEventListener("mouseover", function(e) {
+				let parent = document.getElementById(cpl.getAttribute("href").substring(1)).firstChild;
+				if(parent.getBoundingClientRect().bottom < 10) {
+					parent = parent.cloneNode(true);
+					parent.className = parent.className + " comment-popup";
+					cpl.style.opacity = "0";
+					cpl.style.zIndex = "1001";
+					cpl.addEventListener("mouseout", function(e) {
+						parent.parentNode.removeChild(parent);
+						cpl.style.opacity = "1";
+						cpl.style.zIndex = "0";
+					}, {once: true});
+					cpl.parentNode.parentNode.appendChild(parent);
+				} else {
+					let parentCI = parent.parentNode;
+					let cn = parentCI.className;
+					parentCI.className = cn + " comment-item-highlight";
+					cpl.addEventListener("mouseout", function(e) { parentCI.className = cn; }, {once: true});
+				}
+			});
+		});
+
 		if(readCookie("lw2-auth-token")) {
 			// Add upvote/downvote buttons.
 			document.querySelectorAll(".comment-meta .karma").forEach(function (e) {

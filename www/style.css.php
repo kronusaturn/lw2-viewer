@@ -990,6 +990,25 @@ a.comment-parent-link:hover::after {
 	position: relative;
 }
 
+.comment-item-highlight,
+.comment-item-highlight * {
+	background-color: #ffd;
+}
+.comment-popup {
+	position: fixed;
+	background-color: #fff;
+	border: 1px solid #888;
+	box-shadow: 0px 0px 10px #555;
+	top: 10%;
+	right: 10%;
+	max-width: 700px;
+	z-index: 1000;
+	font-size: 1rem;
+}
+.comment-popup .comment-body {
+	font-size: 1rem;
+}
+
 /****************/
 /* VOTE BUTTONS */
 /****************/
