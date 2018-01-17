@@ -28,7 +28,7 @@
   [/'/g, '\u2032'],
   
   // turn a hyphen surrounded by spaces, between words, into an em-dash
-  [/([a-z]) - ([a-z])/ig, '$1\u2014$2'],
+  [/([a-z\u201d]) - ([a-z\u201c])/ig, '$1\u2014$2'],
   // turn a double hyphen, optionally surrounded by spaces, between words, into an em-dash
   [/([a-z]) ?-- ?([a-z])/ig, '$1\u2014$2'],
   
