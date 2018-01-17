@@ -991,7 +991,8 @@ a.comment-parent-link:hover::after {
 }
 
 .comment-item-highlight,
-.comment-item-highlight * {
+.comment-item-highlight > *,
+.comment-item-highlight > .comment * {
 	background-color: #ffd;
 }
 .comment-popup {

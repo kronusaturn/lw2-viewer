@@ -156,6 +156,7 @@ document.addEventListener("DOMContentLoaded", function() {
 		document.querySelectorAll(".comment-meta .comment-parent-link").forEach(function (cpl) {
 			cpl.addEventListener("mouseover", function(e) {
 				let parent = document.getElementById(cpl.getAttribute("href").substring(1)).firstChild;
+				let parentCI = parent.parentNode;
 				if(parent.getBoundingClientRect().bottom < 10) {
 					parent = parent.cloneNode(true);
 					parent.className = parent.className + " comment-popup";
@@ -167,12 +168,10 @@ document.addEventListener("DOMContentLoaded", function() {
 						cpl.style.zIndex = "0";
 					}, {once: true});
 					cpl.parentNode.parentNode.appendChild(parent);
-				} else {
-					let parentCI = parent.parentNode;
-					let cn = parentCI.className;
-					parentCI.className = cn + " comment-item-highlight";
-					cpl.addEventListener("mouseout", function(e) { parentCI.className = cn; }, {once: true});
 				}
+				let cn = parentCI.className;
+				parentCI.className = cn + " comment-item-highlight";
+				cpl.addEventListener("mouseout", function(e) { parentCI.className = cn; }, {once: true});
 			});
 		});
 
