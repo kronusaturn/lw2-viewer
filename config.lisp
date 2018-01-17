@@ -5,5 +5,5 @@
 
 (defparameter *site-uri* "http://www.example.com/") 
 
-(defparameter *graphql-uri* "http://198.74.48.181:3000/graphql") 
-(defparameter *websocket-uri* "ws://198.74.48.181:3000/") 
+(defparameter *graphql-uri* "https://www.lesserwrong.com/graphql")
+(defparameter *websocket-uri* "wss://www.lesserwrong.com/")
