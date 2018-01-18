@@ -14,7 +14,7 @@
   (lmdb:open-environment *db-environment*))
 
 (defmacro with-cache-mutex (&body body)
-  `(with-mutex (*cache-db*)
+  `(with-mutex (*db-mutex*)
 	       ,@body)) 
 
 (defmacro with-db ((db db-name) &body body)
