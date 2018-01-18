@@ -1453,6 +1453,11 @@ ol {
 /* LISTS */
 /*********/
 
+.comment-body ol p,
+.comment-body ul p {
+	margin: 0.5em 0;
+}
+
 .post-body ol {
 	list-style: none;
 	padding: 0;
