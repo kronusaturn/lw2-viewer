@@ -1270,7 +1270,7 @@ a.comment-parent-link:hover::after {
 .comment-controls .edit-button {
 	position: absolute;
 	right: 8px;
-	top: 9px;
+	top: 7px;
 	color: #0b0;
 }
 .comment-controls .edit-button:hover {
