@@ -14,6 +14,12 @@ Element.prototype.addActivateEvent = function(func) {
 	this.addEventListener("keyup", func);
 }
 
+Element.prototype.scrollIntoViewIfNeeded = function() {
+	if(this.getBoundingClientRect().bottom > window.innerHeight) {
+		this.scrollIntoView(false);
+	}
+}
+
 Element.prototype.injectReplyForm = function(editMarkdownSource) {
 	let e = this;
 	let editCommentId = (editMarkdownSource ? e.parentElement.id : false);
@@ -26,18 +32,18 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 		"<span class='markdown-reference-link'>You can use <a href='http://commonmark.org/help/' target='_blank'>Markdown</a> here.</span><input type='submit' value='Submit'></form>";
 	
 	e.querySelector(".cancel-comment-button").addActivateEvent(window.hideReplyForm);
-	if(e.getBoundingClientRect().bottom > window.innerHeight) {
-		e.scrollIntoView(false);
-	}
+	e.scrollIntoViewIfNeeded();
 	e.querySelector("form").onsubmit = function(event) {
 		if(!event.target.text.value) {
 			alert("Please enter a comment.");
 			return false;
 		}
 	}
-	e.querySelector("textarea").value = (editMarkdownSource ? editMarkdownSource : "");
-	e.querySelector("textarea").focus();
-	e.querySelector("textarea").addEventListener("input", OnInputExpandTextarea, false);
+	let textarea = e.querySelector("textarea");
+	textarea.value = (editMarkdownSource ? editMarkdownSource : "");
+	textarea.focus();
+	textarea.addEventListener("focus", function(e){e.target.parentElement.parentElement.scrollIntoViewIfNeeded()});
+	textarea.addEventListener("input", OnInputExpandTextarea, false);
 	
 	e.querySelector(".cancel-comment-button + form").insertAdjacentHTML("afterbegin", "<div class='guiedit-buttons-container'></div>")
 	var buttons_container = e.querySelector(".guiedit-buttons-container");
@@ -122,8 +128,11 @@ function OnInputExpandTextarea() {
 	ExpandTextarea(this);
 }
 function ExpandTextarea(textarea) {
-	textarea.style.height = 'auto';
-	textarea.style.height = textarea.scrollHeight + 30 + 'px';
+	window.requestAnimationFrame(function() {
+		textarea.style.height = 'auto';
+		textarea.style.height = textarea.scrollHeight + 30 + 'px';
+		textarea.parentElement.parentElement.scrollIntoViewIfNeeded();
+	});
 }
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -200,8 +209,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 		let h = location.hash;
 		if(needHashRealignment && h) {
-			location.hash = '';
-			location.hash = h;
+			document.getElementById(cpl.getAttribute("href").substring(1)).scrollIntoView(true);
 		}
 	})
 }, {once: true});
