@@ -658,7 +658,7 @@ h1.listing a[href^="/"]::after {
 	min-width: 12em;
 	max-width: 40%;
 	margin: 1.25em 0 0.75em 1.25em;
-	padding: 0.35em 0.35em 0.4em 0.85em;
+	padding: 0.35em 0.35em 0.4em 0.35em;
 	-webkit-hyphens: none;
 	hyphens: none;
 }
@@ -671,7 +671,7 @@ h1.listing a[href^="/"]::after {
 
 .post-body .contents ul {
 	list-style-type: none;
-	margin: 0;
+	margin: 0 0 0 0.5em;
 	counter-reset: toc-item-1 toc-item-2 toc-item-3;
 	padding-left: 1em;
 	font-size: 0.75em;
@@ -715,17 +715,17 @@ h1.listing a[href^="/"]::after {
 .contents .toc-item-1 + .toc-item-3 {
 	counter-increment: toc-item-2 toc-item-3;
 }
-.contents .toc-item-2 ~ .toc-item-3 {
+.contents .toc-item-2 ~ .toc-item-3,
+.contents .toc-item-1 ~ .toc-item-3 {
 	margin-left: 3em;
 	font-size: 0.95em;
 }
-.contents .toc-item-1 ~ .toc-item-3 {
+.contents .toc-item-1 ~ .toc-item-2 ~ .toc-item-3 {
 	margin-left: 6em;
 	font-size: 0.9em;
 }
 .contents .toc-item-3 {
 	counter-increment: toc-item-3;
-	margin-left: 6em;
 }
 .contents .toc-item-1 ~ .toc-item-2 ~ .toc-item-3::before {
 	content: counter(toc-item-1) "." counter(toc-item-2) "." counter(toc-item-3);
