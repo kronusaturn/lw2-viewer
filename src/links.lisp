@@ -24,7 +24,7 @@
 
 (labels
   ((gen-internal (post-id slug comment-id &optional absolute-uri)
-		 (format nil "~Aposts/~A/~A~@[#~A~]" (if absolute-uri *site-uri* "/") post-id (or slug "-") comment-id))) 
+		 (format nil "~Aposts/~A/~A~@[#comment-~A~]" (if absolute-uri *site-uri* "/") post-id (or slug "-") comment-id))) 
 
   (defun convert-lw2-link (link)
     (multiple-value-bind (post-id comment-id slug) (match-lw2-link link)

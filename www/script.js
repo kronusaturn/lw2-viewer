@@ -20,13 +20,22 @@ Element.prototype.scrollIntoViewIfNeeded = function() {
 	}
 }
 
+Element.prototype.getCommentId = function() {
+	let item = (this.className == "comment-item" ? this : this.closest(".comment-item"));
+	if(item) {
+		return /^comment-(.*)/.exec(item.id)[1];
+	} else {
+		return false;
+	}
+}
+
 Element.prototype.injectReplyForm = function(editMarkdownSource) {
 	let e = this;
-	let editCommentId = (editMarkdownSource ? e.parentElement.id : false);
-	let withparent = (!editMarkdownSource && e.parentElement.id != 'comments');
+	let editCommentId = (editMarkdownSource ? e.getCommentId() : false);
+	let withparent = (!editMarkdownSource && e.getCommentId());
 	e.innerHTML = "<button class='cancel-comment-button' tabindex='-1'>Cancel</button>" +
 		"<form method='post'><textarea name='text'></textarea>" +
-		(withparent ? "<input type='hidden' name='parent-comment-id' value='" + e.parentElement.id + "'>" : "") +
+		(withparent ? "<input type='hidden' name='parent-comment-id' value='" + e.getCommentId() + "'>" : "") +
 		(editCommentId ? "<input type='hidden' name='edit-comment-id' value='" + editCommentId + "'>" : "") +
 		"<input type='hidden' name='csrf-token' value='" + window.csrfToken + "'>" +
 		"<span class='markdown-reference-link'>You can use <a href='http://commonmark.org/help/' target='_blank'>Markdown</a> here.</span><input type='submit' value='Submit'></form>";
@@ -137,6 +146,9 @@ function ExpandTextarea(textarea) {
 
 document.addEventListener("DOMContentLoaded", function() {
 	window.requestAnimationFrame(function() {
+		if(location.hash.length == 18) {
+			location.hash = "#comment-" + location.hash.substring(1);
+		}
 		var content = document.querySelector("#content");
 		if (content.clientHeight <= window.innerHeight + 30) {
 			removeElement("#bottom-bar", content);
@@ -164,7 +176,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 		document.querySelectorAll(".comment-meta .comment-parent-link").forEach(function (cpl) {
 			cpl.addEventListener("mouseover", function(e) {
-				let parent = document.getElementById(cpl.getAttribute("href").substring(1)).firstChild;
+				let parent = document.querySelector(cpl.getAttribute("href")).firstChild;
 				let parentCI = parent.parentNode;
 				var highlight_cn;
 				if (parent.getBoundingClientRect().bottom < 10) {
@@ -213,7 +225,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 		let h = location.hash;
 		if(needHashRealignment && h) {
-			document.getElementById(cpl.getAttribute("href").substring(1)).scrollIntoView(true);
+			document.querySelector(h).scrollIntoView(true);
 		}
 	})
 }, {once: true});

@@ -73,7 +73,7 @@
 	    (cdr (assoc :--id comment)) 
 	    (if with-post-title
 	      (format nil "<div class=\"comment-post-title\">on: <a href=\"~A\">~A</a></div>" (generate-post-link (cdr (assoc :post-id comment))) (clean-text (get-post-title (cdr (assoc :post-id comment)))))
-	      (format nil "~@[<a class=\"comment-parent-link\" href=\"#~A\">Parent</a>~]" (cdr (assoc :parent-comment-id comment)))) 
+	      (format nil "~@[<a class=\"comment-parent-link\" href=\"#comment-~A\">Parent</a>~]" (cdr (assoc :parent-comment-id comment)))) 
 	    (if (logged-in-userid (cdr (assoc :user-id comment)))
 	      (plump:encode-entities
 		(or (cache-get "comment-markdown-source" (cdr (assoc :--id comment))) 
@@ -107,7 +107,7 @@
       (format nil "<ul class=\"comment-thread\">~{~A~}</ul>"
 	      (map 'list (lambda (c)
 			   (let ((c-id (cdr (assoc :--id c)))) 
-			   (format nil "<li id=\"~A\" class=\"comment-item\">~A~A~A</li>"
+			   (format nil "<li id=\"comment-~A\" class=\"comment-item\">~A~A~A</li>"
 				   c-id
 				   (comment-to-html c)
 				   (if (and (= level 10) (gethash c-id comment-hash))
