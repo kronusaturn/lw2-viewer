@@ -159,11 +159,14 @@ document.addEventListener("DOMContentLoaded", function() {
 			document.styleSheets[1].insertRule('.post .post-meta .comment-count::after { display: none; }', document.styleSheets[1].cssRules.length);
 		}
 
-		let dtf = new Intl.DateTimeFormat([], {month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'});
-		document.querySelectorAll(".date").forEach(function (e) {
-			let d = e.getAttribute("data-js-date");
-			if(d) { e.innerHTML = dtf.format(new Date(+ d)); }
-		});
+		try {
+			let dtf = new Intl.DateTimeFormat([], {month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'});
+			document.querySelectorAll(".date").forEach(function (e) {
+				let d = e.getAttribute("data-js-date");
+				if(d) { e.innerHTML = dtf.format(new Date(+ d)); }
+			});
+		}
+		catch(e) { }
 
 		let needHashRealignment = false;
 
