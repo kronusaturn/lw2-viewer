@@ -144,7 +144,7 @@ function ExpandTextarea(textarea) {
 	});
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+function initialize() {
 	window.requestAnimationFrame(function() {
 		if(location.hash.length == 18) {
 			location.hash = "#comment-" + location.hash.substring(1);
@@ -229,9 +229,15 @@ document.addEventListener("DOMContentLoaded", function() {
 			document.querySelector(h).scrollIntoView(true);
 		}
 	})
-}, {once: true});
+}
 
 function removeElement(selector, ancestor = document) {
 	var element = ancestor.querySelector(selector);
 	if (element) element.parentElement.removeChild(element);
+}
+
+if(document.readyState == "loading") {
+	document.addEventListener("DOMContentLoaded", initialize, {once: true});
+} else {
+	initialize();
 }
