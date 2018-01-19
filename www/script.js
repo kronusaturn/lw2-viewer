@@ -248,7 +248,8 @@ function initialize() {
 
 		let h = location.hash;
 		if(needHashRealignment && h) {
-			document.querySelector(h).scrollIntoView(true);
+			let e = document.querySelector(h);
+			if (e) e.scrollIntoView(true);
 		}
 	})
 }
