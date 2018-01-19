@@ -1443,6 +1443,10 @@ figure {
 	margin: 1.5em auto;
 }
 
+figure img {
+	border: 1px solid #000;
+}
+
 /*************/
 /* FOOTNOTES */
 /*************/
