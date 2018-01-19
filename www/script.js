@@ -251,6 +251,12 @@ function initialize() {
 			let e = document.querySelector(h);
 			if (e) e.scrollIntoView(true);
 		}
+		
+		// Clean up ToC
+		document.querySelectorAll(".contents-list li a").forEach(function (a) {
+			a.innerText = a.innerText.replace(/^[0-9]+\. /, '');
+			a.innerText = a.innerText.replace(/^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})\. /i, '');
+		});
 	})
 }
 
