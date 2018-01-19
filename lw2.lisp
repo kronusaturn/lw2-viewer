@@ -302,6 +302,11 @@
 								(let ((comments (get-post-comments post-id)))
 								  (comment-tree-to-html (make-comment-parent-hash comments)))))))))))) 
 
+(hunchentoot:define-easy-handler (view-karma-vote :uri "/karma-vote") ((csrf-token :request-type :post) (target :request-type :post) (target-type :request-type :post) (vote-type :request-type :post))
+				 (check-csrf-token (hunchentoot:cookie-in "session-token") csrf-token)
+				 (let ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token")))
+				   (format nil "~A point~:P" (do-lw2-vote lw2-auth-token target target-type vote-type))))
+
 (hunchentoot:define-easy-handler (view-recent-comments :uri "/recentcomments") ()
 				 (with-error-page
 				   (let ((recent-comments (get-recent-comments)))

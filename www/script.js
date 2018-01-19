@@ -144,6 +144,23 @@ function ExpandTextarea(textarea) {
 	});
 }
 
+function makeVoteCompleteEvent(target) {
+	return function(e) {
+		target.innerHTML = e.target.responseText;
+	}
+}
+
+function voteEvent(e) {
+	var cid = e.target.getCommentId();
+	var targetType = e.target.getAttribute("data-target-type");
+	var voteType = e.target.getAttribute("data-vote-type");
+	var req = new XMLHttpRequest();
+	req.addEventListener("load", makeVoteCompleteEvent(e.target.parentNode.querySelector(".karma")));
+	req.open("POST", "/karma-vote");
+	req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	req.send("csrf-token="+csrfToken+"&target="+cid+"&target-type="+targetType+"&vote-type="+voteType);
+}
+
 function initialize() {
 	window.requestAnimationFrame(function() {
 		if(location.hash.length == 18) {
@@ -204,10 +221,13 @@ function initialize() {
 		if(readCookie("lw2-auth-token")) {
 			// Add upvote/downvote buttons.
 			document.querySelectorAll(".comment-meta .karma").forEach(function (e) {
-				e.insertAdjacentHTML('beforebegin', "<button type='button' class='vote vote-up' tabindex='-1'></button>");
-				e.insertAdjacentHTML('afterend', "<button type='button' class='vote vote-down' tabindex='-1'></button>");
+				e.insertAdjacentHTML('beforebegin', "<button type='button' class='vote vote-up' data-vote-type='upvote' data-target-type='Comments' tabindex='-1'></button>");
+				e.insertAdjacentHTML('afterend', "<button type='button' class='vote vote-down' data-vote-type='downvote' data-target-type='Comments' tabindex='-1'></button>");
 			});
-			
+			document.querySelectorAll("button.vote").forEach(function(e) {
+				e.addActivateEvent(voteEvent);
+			});
+
 			var comments_container = document.querySelector("#comments");
 			if (comments_container) {
 				// Add reply buttons.

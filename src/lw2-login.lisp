@@ -1,7 +1,7 @@
 (defpackage #:lw2.login
   (:use #:cl #:lw2-viewer.config #:alexandria #:cl-json #:flexi-streams #:websocket-driver-client)
   (:import-from #:ironclad #:byte-array-to-hex-string #:digest-sequence)
-  (:export #:do-lw2-login #:do-lw2-create-user #:do-lw2-post #:do-lw2-post-edit #:do-lw2-post-remove #:do-lw2-comment #:do-lw2-comment-edit #:do-lw2-comment-remove))
+  (:export #:do-lw2-login #:do-lw2-create-user #:do-lw2-post #:do-lw2-post-edit #:do-lw2-post-remove #:do-lw2-comment #:do-lw2-comment-edit #:do-lw2-comment-remove #:do-lw2-vote))
 
 (in-package #:lw2.login) 
 
@@ -111,21 +111,24 @@
     (cond
       (res-error (if (search "not_allowed" (cdr (assoc :message res-error))) (error "LW2 server reports: not allowed.")
 		   (error "Unknown LW2 error: ~A" res-error)))
-      (res-data (cdr (assoc :--id res-data))) 
+      (res-data res-data) 
       (t (error "Unknown response from LW2 server: ~A" response-json))))) 
 
+(defun do-lw2-post-query* (auth-token data)
+  (cdr (assoc :--id (do-lw2-post-query auth-token data))))
+
 (defun do-lw2-post (auth-token data)
-  (do-lw2-post-query auth-token `((("query" . "mutation PostsNew($document: PostsInput) { PostsNew(document: $document) { __typename, _id, htmlBody } }")
-				   ("variables" .
-				    (("document" . ,data)))
-				   ("operationName" . "PostsNew")))))
+  (do-lw2-post-query* auth-token `((("query" . "mutation PostsNew($document: PostsInput) { PostsNew(document: $document) { __typename, _id, htmlBody } }")
+				    ("variables" .
+				     (("document" . ,data)))
+				    ("operationName" . "PostsNew")))))
 
 (defun do-lw2-post-edit (auth-token post-id set)
-  (do-lw2-post-query auth-token `((("query" . "mutation PostsEdit($documentId: String, $set: PostsInput) { PostsEdit(documentId: $documentId, set: $set) { htmlBody } }") ; $unset: PostsUnset
-				   ("variables" .
-				    (("documentId" . ,post-id)
-				     ("set" . ,set)))
-				   ("operationName" . "PostsEdit"))))) 
+  (do-lw2-post-query* auth-token `((("query" . "mutation PostsEdit($documentId: String, $set: PostsInput) { PostsEdit(documentId: $documentId, set: $set) { _id } }") ; $unset: PostsUnset
+				    ("variables" .
+				     (("documentId" . ,post-id)
+				      ("set" . ,set)))
+				    ("operationName" . "PostsEdit"))))) 
 
 (defun do-lw2-post-remove (auth-token post-id)
   (do-lw2-post-query auth-token `((("query" . "mutation PostsRemove($documentId: String) { PostsRemove(documentId: $documentId) { __typename } }")
@@ -134,20 +137,26 @@
 				   ("operationName" . "PostsRemove")))))
 
 (defun do-lw2-comment (auth-token data)
-  (do-lw2-post-query auth-token `((("query" . "mutation CommentsNew ($document: CommentsInput) { CommentsNew (document: $document) { __typename, _id, htmlBody } }")
-				   ("variables" .
-				    (("document" . ,data)))
-				   ("operationName" . "CommentsNew")))))
+  (do-lw2-post-query* auth-token `((("query" . "mutation CommentsNew ($document: CommentsInput) { CommentsNew (document: $document) { _id } }")
+				    ("variables" .
+				     (("document" . ,data)))
+				    ("operationName" . "CommentsNew")))))
 
 (defun do-lw2-comment-edit (auth-token comment-id set)
-  (do-lw2-post-query auth-token `((("query" . "mutation CommentsEdit($documentId: String, $set: CommentsInput) { CommentsEdit(documentId: $documentId, set: $set) { htmlBody } }")
-				   ("variables" .
-				    (("documentId" . ,comment-id)
-				     ("set" . ,set)))
-				   ("operationName" . "CommentsEdit"))))) 
+  (do-lw2-post-query* auth-token `((("query" . "mutation CommentsEdit($documentId: String, $set: CommentsInput) { CommentsEdit(documentId: $documentId, set: $set) { _id } }")
+				    ("variables" .
+				     (("documentId" . ,comment-id)
+				      ("set" . ,set)))
+				    ("operationName" . "CommentsEdit"))))) 
 
 (defun do-lw2-comment-remove (auth-token comment-id)
   (do-lw2-post-query auth-token `((("query" . "mutation CommentsRemove($documentId: String) { CommentsRemove(documentId: $documentId) { __typename } }")
 				   ("variables" .
 				    (("documentId" . ,comment-id)))
 				   ("operationName" . "CommentsRemove")))))
+
+(defun do-lw2-vote (auth-token target target-type vote-type)
+  (let ((ret (do-lw2-post-query auth-token
+	       `((("query" . "mutation vote($documentId: String, $voteType: String, $collectionName: String) { vote(documentId: $documentId, voteType: $voteType, collectionName: $collectionName) { ... on Post { baseScore, currentUserVotes { _id, voteType, power } } ... on Comment { baseScore, currentUserVotes { _id, voteType, power } } } }")
+		  ("variables" ("documentId" . ,target) ("voteType" . ,vote-type) ("collectionName" . ,target-type)) ("operationName" . "vote"))))))
+    (values (cdr (assoc :base-score ret)) ret)))
