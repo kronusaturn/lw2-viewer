@@ -186,11 +186,9 @@ document.addEventListener("DOMContentLoaded", function() {
 					highlight_cn = "comment-item-highlight-faint";
 					parent = parent.cloneNode(true);
 					parent.className += " comment-popup comment-item-highlight";
-					cpl.style.opacity = "0";
 					cpl.style.zIndex = "1001";
 					cpl.addEventListener("mouseout", function(e) {
 						parent.parentNode.removeChild(parent);
-						cpl.style.opacity = "1";
 						cpl.style.zIndex = "0";
 					}, {once: true});
 					cpl.parentNode.parentNode.appendChild(parent);
