@@ -23,16 +23,16 @@
 (defun post-headline-to-html (post)
   (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :posted-at post))) 
     (format nil "<h1 class=\"listing\"><a href=\"~A\">~A</a></h1><div class=\"post-meta\"><div class=\"author\">~A</div> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\">~A point~:P</div><a class=\"comment-count\" href=\"~A#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a>~A</div>"
-	    (or (cdr (assoc :url post)) (generate-post-link post)) 
-	    (clean-text (cdr (assoc :title post)))
-	    (get-username (cdr (assoc :user-id post)))
+	    (plump:encode-entities (or (cdr (assoc :url post)) (generate-post-link post))) 
+	    (plump:encode-entities (clean-text (cdr (assoc :title post))))
+	    (plump:encode-entities (get-username (cdr (assoc :user-id post))))
 	    js-time
 	    pretty-time
 	    (cdr (assoc :base-score post))
 	    (generate-post-link post) 
 	    (or (cdr (assoc :comment-count post)) 0) 
 	    (cdr (assoc :page-url post))
-	    (if (cdr (assoc :url post)) (format nil "<div class=\"link-post\">(~A)</div>" (puri:uri-host (puri:parse-uri (cdr (assoc :url post))))) "")))) 
+	    (if (cdr (assoc :url post)) (format nil "<div class=\"link-post\">(~A)</div>" (plump:encode-entities (puri:uri-host (puri:parse-uri (cdr (assoc :url post)))))) "")))) 
 
 (defun posts-to-rss (posts out-stream)
   (with-recursive-lock (*memory-intensive-mutex*) 
@@ -50,15 +50,15 @@
 (defun post-body-to-html (post)
   (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :posted-at post))) 
     (format nil "<div class=\"post\"><h1>~A</h1><div class=\"post-meta\"><div class=\"author\">~A</div> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\">~A point~:P</div><a class=\"comment-count\" href=\"#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a><a href=\"#bottom-bar\"></a></div><div class=\"post-body\">~A</div></div>"
-	    (clean-text (cdr (assoc :title post)))
-	    (get-username (cdr (assoc :user-id post)))
+	    (plump:encode-entities (clean-text (cdr (assoc :title post))))
+	    (plump:encode-entities (get-username (cdr (assoc :user-id post))))
 	    js-time
 	    pretty-time
 	    (cdr (assoc :base-score post))
 	    (or (cdr (assoc :comment-count post)) 0) 
 	    (cdr (assoc :page-url post)) 
 	    (format nil "~A~A"
-		    (if (cdr (assoc :url post)) (format nil "<p><a href=\"~A\">Link post</a></p>" (cdr (assoc :url post))) "")
+		    (if (cdr (assoc :url post)) (format nil "<p><a href=\"~A\">Link post</a></p>" (plump:encode-entities (cdr (assoc :url post)))) "")
 		    (clean-html (or (cdr (assoc :html-body post)) "") :with-toc t :post-id (cdr (assoc :--id post))))))) 
 
 (defun comment-to-html (comment &key with-post-title)
@@ -170,7 +170,7 @@
     (let ((*secondary-nav* `(("archive" "/archive" "Archive")
 			     ("search" "/search" "Search" :html ,#'search-bar-to-html)
 			     ,(if username
-				`("login" "/login" ,username)
+				`("login" "/login" ,(plump:encode-entities username))
 				`("login" ,(format nil "/login?return=~A" (url-rewrite:url-encode current-uri)) "Log In")))))
       (nav-bar-to-html current-uri)))) 
 
