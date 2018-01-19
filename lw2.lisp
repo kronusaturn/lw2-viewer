@@ -72,7 +72,9 @@
 	    (cdr (assoc :page-url comment)) 
 	    (cdr (assoc :--id comment)) 
 	    (if with-post-title
-	      (format nil "<div class=\"comment-post-title\">on: <a href=\"~A\">~A</a></div>" (generate-post-link (cdr (assoc :post-id comment))) (clean-text (get-post-title (cdr (assoc :post-id comment)))))
+	      (format nil "<div class=\"comment-post-title\">on: <a href=\"~A\">~A</a></div>"
+		      (generate-post-link (cdr (assoc :post-id comment)))
+		      (plump:encode-entities (clean-text (get-post-title (cdr (assoc :post-id comment))))))
 	      (format nil "~@[<a class=\"comment-parent-link\" href=\"#comment-~A\">Parent</a>~]" (cdr (assoc :parent-comment-id comment)))) 
 	    (if (logged-in-userid (cdr (assoc :user-id comment)))
 	      (plump:encode-entities
