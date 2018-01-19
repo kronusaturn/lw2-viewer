@@ -146,7 +146,9 @@ function ExpandTextarea(textarea) {
 
 function makeVoteCompleteEvent(target) {
 	return function(e) {
-		target.innerHTML = e.target.responseText;
+		if(e.target.status == 200) {
+			target.innerHTML = e.target.responseText;
+		}
 	}
 }
 
@@ -158,7 +160,7 @@ function voteEvent(e) {
 	req.addEventListener("load", makeVoteCompleteEvent(e.target.parentNode.querySelector(".karma")));
 	req.open("POST", "/karma-vote");
 	req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	req.send("csrf-token="+csrfToken+"&target="+cid+"&target-type="+targetType+"&vote-type="+voteType);
+	req.send("csrf-token="+encodeURIComponent(csrfToken)+"&target="+encodeURIComponent(cid)+"&target-type="+encodeURIComponent(targetType)+"&vote-type="+encodeURIComponent(voteType));
 }
 
 function initialize() {

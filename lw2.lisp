@@ -312,7 +312,8 @@
 				   (let ((recent-comments (get-recent-comments)))
 				     (emit-page (out-stream :title "Recent comments" :description "A faster way to browse LessWrong 2.0") 
 						(with-outputs (out-stream) "<ul class=\"comment-thread\">") 
-						(map-output out-stream (lambda (c) (format nil "<li class=\"comment-item\">~A</li>" (comment-to-html c :with-post-title t))) recent-comments)
+						(map-output out-stream (lambda (c) (format nil "<li class=\"comment-item\" id=\"comment-~A\">~A</li>"
+											   (cdr (assoc :--id c)) (comment-to-html c :with-post-title t))) recent-comments)
 						(with-outputs (out-stream) "</ul>")))))
 
 (defun search-result-markdown-to-html (item)
@@ -359,7 +360,7 @@
 						     (with-outputs (out-stream) "</div></div>"))))) 
 				     (cond
 				       ((not (or cookie-check (hunchentoot:cookie-in "session-token")))
-					(hunchentoot:set-cookie "session-token" :value (base64:usb8-array-to-base64-string (ironclad:make-random-salt)))
+					(hunchentoot:set-cookie "session-token" :max-age (- (expt 2 31) 1) :value (base64:usb8-array-to-base64-string (ironclad:make-random-salt)))
 					(setf (hunchentoot:return-code*) 303
 					      (hunchentoot:header-out "Location") (format nil "/login?~@[return=~A&~]cookie-check=y" (if return (url-rewrite:url-encode return))))) 
 				       (cookie-check
