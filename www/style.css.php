@@ -1469,6 +1469,8 @@ ol {
 /* LISTS */
 /*********/
 
+.post-body ol p,
+.post-body ul p,
 .comment-body ol p,
 .comment-body ul p {
 	margin: 0.5em 0;
