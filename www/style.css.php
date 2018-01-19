@@ -1438,6 +1438,11 @@ pre > code {
 	padding: 3px 4px 5px 8px;
 }
 
+figure {
+	text-align: center;
+	margin: 1.5em auto;
+}
+
 /*************/
 /* FOOTNOTES */
 /*************/
