@@ -1067,7 +1067,7 @@ a.comment-parent-link:hover::after {
 		0 0  5px #ffe850,
 		0 0  7px #ffe850,
 		0 0 10px #ffe850;
-	border: 1px solid #ffcc30;
+	border: 1px solid #ffe850;
 }
 .comment-popup {
 	position: fixed;
