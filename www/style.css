@@ -1051,10 +1051,23 @@ a.comment-parent-link:hover::after {
 	position: relative;
 }
 
-.comment-item-highlight,
-.comment-item-highlight > *,
-.comment-item-highlight > .comment * {
-	background-color: #ffd;
+.comment-item-highlight {
+	box-shadow:
+		0 0  2px #e7b200,
+		0 0  3px #e7b200,
+		0 0  5px #e7b200,
+		0 0  7px #e7b200,
+		0 0 10px #e7b200;
+	border: 1px solid #e7b200;
+}
+.comment-item-highlight-faint {
+	box-shadow:
+		0 0  2px #ffe850,
+		0 0  3px #ffe850,
+		0 0  5px #ffe850,
+		0 0  7px #ffe850,
+		0 0 10px #ffe850;
+	border: 1px solid #ffcc30;
 }
 .comment-popup {
 	position: fixed;
@@ -1066,6 +1079,9 @@ a.comment-parent-link:hover::after {
 	max-width: 700px;
 	z-index: 1000;
 	font-size: 1rem;
+}
+.comment-popup .comment-parent-link {
+	display: none;
 }
 .comment-popup .comment-body {
 	font-size: 1rem;

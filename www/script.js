@@ -166,9 +166,11 @@ document.addEventListener("DOMContentLoaded", function() {
 			cpl.addEventListener("mouseover", function(e) {
 				let parent = document.getElementById(cpl.getAttribute("href").substring(1)).firstChild;
 				let parentCI = parent.parentNode;
-				if(parent.getBoundingClientRect().bottom < 10) {
+				var highlight_cn;
+				if (parent.getBoundingClientRect().bottom < 10) {
+					highlight_cn = "comment-item-highlight-faint";
 					parent = parent.cloneNode(true);
-					parent.className = parent.className + " comment-popup";
+					parent.className += " comment-popup comment-item-highlight";
 					cpl.style.opacity = "0";
 					cpl.style.zIndex = "1001";
 					cpl.addEventListener("mouseout", function(e) {
@@ -177,9 +179,11 @@ document.addEventListener("DOMContentLoaded", function() {
 						cpl.style.zIndex = "0";
 					}, {once: true});
 					cpl.parentNode.parentNode.appendChild(parent);
+				} else {
+					highlight_cn = "comment-item-highlight";
 				}
 				let cn = parentCI.className;
-				parentCI.className = cn + " comment-item-highlight";
+				parentCI.className = cn + " " + highlight_cn;
 				cpl.addEventListener("mouseout", function(e) { parentCI.className = cn; }, {once: true});
 			});
 		});
