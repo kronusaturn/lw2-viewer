@@ -164,17 +164,34 @@ function makeVoteCompleteEvent(buttonTarget, karmaTarget) {
 	}
 }
 
-function voteEvent(e) {
-	e.target.parentNode.querySelectorAll("button.vote").forEach(function(b) { b.style.pointerEvents = "none" });
-	e.target.parentNode.querySelectorAll("button.vote, .karma").forEach(function(x) { x.style.opacity = "0.5" });
-	var targetType = e.target.getAttribute("data-target-type");
-	var targetId = ((targetType == 'Comments') ? e.target.getCommentId() : e.target.parentNode.querySelector(".karma").getAttribute("data-post-id"));
-	var voteType = e.target.getAttribute("data-vote-type");
-	var req = new XMLHttpRequest();
-	req.addEventListener("load", makeVoteCompleteEvent(e.target, e.target.parentNode.querySelector(".karma")));
+function sendVoteRequest(targetId, targetType, voteType, onFinish) {
+	let req = new XMLHttpRequest();
+	req.addEventListener("load", onFinish);
 	req.open("POST", "/karma-vote");
 	req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	req.send("csrf-token="+encodeURIComponent(csrfToken)+"&target="+encodeURIComponent(targetId)+"&target-type="+encodeURIComponent(targetType)+"&vote-type="+encodeURIComponent(voteType));
+}
+
+function voteEvent(e) {
+	e.target.parentNode.querySelectorAll("button.vote").forEach(function(b) { b.style.pointerEvents = "none" });
+	e.target.parentNode.querySelectorAll("button.vote, .karma").forEach(function(x) { x.style.opacity = "0.5" });
+	let targetType = e.target.getAttribute("data-target-type");
+	let targetId = ((targetType == 'Comments') ? e.target.getCommentId() : e.target.parentNode.querySelector(".karma").getAttribute("data-post-id"));
+	let voteType = e.target.getAttribute("data-vote-type");
+	let oldVoteType;
+	if(targetType == "Posts") {
+		oldVoteType = postVote;
+		postVote = ((voteType == oldVoteType) ? null : voteType);
+	} else {
+		oldVoteType = commentVotes[targetId];
+		commentVotes[targetId] = ((voteType == oldVoteType) ? null : voteType);
+	}
+	let f = function() { sendVoteRequest(targetId, targetType, voteType, makeVoteCompleteEvent(e.target, e.target.parentNode.querySelector(".karma"))) };
+	if(oldVoteType && (oldVoteType != voteType)) {
+		sendVoteRequest(targetId, targetType, oldVoteType, f);
+	} else {
+		f();
+	}
 }
 
 function initialize() {
