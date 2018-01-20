@@ -14,6 +14,11 @@ Element.prototype.addActivateEvent = function(func) {
 	this.addEventListener("keyup", func);
 }
 
+Element.prototype.removeActivateEvent = function(func) {
+	this.removeEventListener("mouseup", func);
+	this.removeEventListener("keyup", func);
+}
+
 Element.prototype.scrollIntoViewIfNeeded = function() {
 	if(this.getBoundingClientRect().bottom > window.innerHeight) {
 		this.scrollIntoView(false);
@@ -146,6 +151,8 @@ function ExpandTextarea(textarea) {
 
 function makeVoteCompleteEvent(buttonTarget, karmaTarget) {
 	return function(e) {
+		buttonTarget.parentNode.querySelectorAll("button.vote").forEach(function(b) { b.style.pointerEvents = "" });
+		buttonTarget.parentNode.querySelectorAll("button.vote, .karma").forEach(function(x) { x.style.opacity = "" });
 		if(e.target.status == 200) {
 			let res = JSON.parse(e.target.responseText);
 			let karmaText = res[0], voteType = res[1];
@@ -158,6 +165,8 @@ function makeVoteCompleteEvent(buttonTarget, karmaTarget) {
 }
 
 function voteEvent(e) {
+	e.target.parentNode.querySelectorAll("button.vote").forEach(function(b) { b.style.pointerEvents = "none" });
+	e.target.parentNode.querySelectorAll("button.vote, .karma").forEach(function(x) { x.style.opacity = "0.5" });
 	var cid = e.target.getCommentId();
 	var targetType = e.target.getAttribute("data-target-type");
 	var voteType = e.target.getAttribute("data-vote-type");
