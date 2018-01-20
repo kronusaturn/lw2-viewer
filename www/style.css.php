@@ -1001,12 +1001,12 @@ a.comment-parent-link:hover::after {
 }
 .comment-item-highlight-faint {
 	box-shadow:
-		0 0  2px #ffe850,
-		0 0  3px #ffe850,
-		0 0  5px #ffe850,
-		0 0  7px #ffe850,
-		0 0 10px #ffe850;
-	border: 1px solid #ffe850;
+		0 0  2px #f8e7b5,
+		0 0  3px #f8e7b5,
+		0 0  5px #f8e7b5,
+		0 0  7px #f8e7b5,
+		0 0 10px #f8e7b5;
+	border: 1px solid #f8e7b5;
 }
 .comment-popup {
 	position: fixed;
