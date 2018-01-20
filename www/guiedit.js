@@ -72,7 +72,8 @@ function hyperlink(text, startpos) {
 		startpos = startpos + 1;
 		endpos = startpos + link_text.length;
 	} else {
-		url = prompt("Link address (URL):") || "";
+		url = prompt("Link address (URL):");
+		if (!url) return text;
 		startpos = startpos + text.length + url.length + 4;
 		endpos = startpos;
 	}	
