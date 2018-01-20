@@ -105,6 +105,7 @@ Element.prototype.injectCommentButtons = function() {
 			let editButton = e.appendChild(document.createElement("button"));
 			editButton.className="edit-button action-button";
 			editButton.innerHTML="Edit";
+			editButton.tabIndex = '-1';
 			editButton.addActivateEvent(window.showCommentEditForm);
 		}
 		replyButton.className="reply-button action-button";
