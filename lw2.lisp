@@ -21,7 +21,7 @@
 	  (* (local-time:timestamp-to-unix time) 1000))))
 
 (defun pretty-number (number object)
-  (let ((str (format nil "~A ~A~P" number object number)))
+  (let ((str (coerce (format nil "~A ~A~P" number object number) '(vector character))))
     (if (eq (aref str 0) #\-)
       (setf (aref str 0) #\MINUS_SIGN))
     str))
