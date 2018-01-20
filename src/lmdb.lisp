@@ -26,15 +26,12 @@
 					    (progn 
 					      (lmdb:begin-transaction ,txn)
 					      (let ((lmdb:*transaction* ,txn))
-						(unwind-protect
-						  (progn 
-						    (lmdb:open-database ,db :create t) 
-						    (prog1
-						      (progn
-							,@body)
-						      (lmdb:commit-transaction ,txn)
-						      (setf ,txn nil)))
-						  (lmdb:close-database ,db)))) 
+						(lmdb:open-database ,db :create t) 
+						(prog1
+						  (progn
+						    ,@body)
+						  (lmdb:commit-transaction ,txn)
+						  (setf ,txn nil)))) 
 					    (when ,txn (lmdb:abort-transaction ,txn)))))))
 
 (defun lmdb-clear-db (db)
