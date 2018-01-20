@@ -173,6 +173,7 @@ function sendVoteRequest(targetId, targetType, voteType, onFinish) {
 }
 
 function voteEvent(e) {
+	e.target.blur();
 	e.target.parentNode.querySelectorAll("button.vote").forEach(function(b) { b.style.pointerEvents = "none" });
 	e.target.parentNode.querySelectorAll("button.vote, .karma").forEach(function(x) { x.style.opacity = "0.5" });
 	let targetType = e.target.getAttribute("data-target-type");
