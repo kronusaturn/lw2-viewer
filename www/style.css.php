@@ -1019,6 +1019,7 @@ a.comment-parent-link:hover::after {
 	max-width: 700px;
 	z-index: 1000;
 	font-size: 1rem;
+	pointer-events: none;
 }
 .comment-popup .comment-parent-link {
 	display: none;
