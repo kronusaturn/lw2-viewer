@@ -2,7 +2,7 @@
   (:use #:cl #:sb-thread #:flexi-streams #:lw2-viewer.config #:lw2.lmdb)
   (:export #:log-condition #:log-conditions #:start-background-loader #:stop-background-loader
 	   #:lw2-graphql-query-streamparse #:lw2-graphql-query-noparse #:decode-graphql-json #:lw2-graphql-query #:make-posts-list-query
-	   #:get-posts #:get-posts-json #:get-post-body #:get-post-comments #:get-recent-comments #:get-recent-comments-json
+	   #:get-posts #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
 	   #:lw2-search-query #:get-post-title #:get-post-slug #:get-username))
 
 (in-package #:lw2.backend)
@@ -52,19 +52,21 @@
     (sb-thread:terminate-thread *background-loader-thread*))
   (setf *background-loader-thread* nil)) 
 
-(defun lw2-graphql-query-streamparse (query)
+(defun lw2-graphql-query-streamparse (query &key auth-token)
   (multiple-value-bind (req-stream status-code headers final-uri reuse-stream want-close)
     (drakma:http-request *graphql-uri* :parameters (list (cons "query" query))
-			 :cookie-jar *cookie-jar* :want-stream t :close t)
+			 :cookie-jar *cookie-jar* :additional-headers (if auth-token `(("authorization" . ,auth-token)) nil)
+			 :want-stream t :close t)
     (declare (ignore status-code headers final-uri reuse-stream))
     (setf (flexi-stream-external-format req-stream) :utf-8)
     (unwind-protect
       (rest (cadar (json:decode-json req-stream)))
       (if want-close (close req-stream)))))
 
-(defun lw2-graphql-query-noparse (query)
+(defun lw2-graphql-query-noparse (query &key auth-token)
     (octets-to-string (drakma:http-request *graphql-uri* :parameters (list (cons "query" query))
-			 :cookie-jar *cookie-jar* :want-stream nil :close t)
+			 :cookie-jar *cookie-jar* :additional-headers (if auth-token `(("authorization" . ,auth-token)) nil)
+			 :want-stream nil :close t)
 		      :external-format :utf-8)) 
 
 (defun decode-graphql-json (json-string)
@@ -79,8 +81,8 @@
 	  (t (error "LW2 server reports: ~A" message))))
       data)))  
 
-(defun lw2-graphql-query (query)
-  (decode-graphql-json (lw2-graphql-query-noparse query))) 
+(defun lw2-graphql-query (query &key auth-token)
+  (decode-graphql-json (lw2-graphql-query-noparse query :auth-token auth-token))) 
 
 (defvar *background-cache-update-threads* (make-hash-table :test 'equal
 							   :weakness :value
@@ -136,14 +138,29 @@
       (decode-graphql-json cached-result)
       (lw2-graphql-query (make-posts-list-query)))))
 
+(defun process-vote-result (res)
+  (let ((id (cdr (assoc :--id res)))
+	(votetype (cdr (assoc :vote-type (first (cdr (assoc :current-user-votes res)))))))
+    (values votetype id)))
+
+(defun process-votes-result (res)
+  (loop for v in res
+	collect (multiple-value-bind (votetype id) (process-vote-result v) (cons id votetype))))
+
 (defun get-posts-json ()
   (lw2-graphql-query-noparse (make-posts-list-query)))
+
+(defun get-post-vote (post-id auth-token)
+  (process-vote-result (lw2-graphql-query (format nil "{PostsSingle(documentId:\"~A\") {_id, currentUserVotes{voteType}}}" post-id) :auth-token auth-token))) 
 
 (defun get-post-body (post-id &key (revalidate t))
   (lw2-graphql-query-timeout-cached (format nil "{PostsSingle(documentId:\"~A\") {title, _id, slug, userId, postedAt, baseScore, commentCount, pageUrl, url, htmlBody}}" post-id) "post-body-json" post-id :revalidate revalidate))
 
+(defun get-post-comments-votes (post-id auth-token)
+  (process-votes-result (lw2-graphql-query (format nil "{CommentsList(terms:{view:\"postCommentsTop\",limit:10000,postId:\"~A\"}) {_id, currentUserVotes{voteType}}}" post-id) :auth-token auth-token)))
+
 (defun get-post-comments (post-id)
-  (lw2-graphql-query-timeout-cached (format nil "{CommentsList (terms:{view:\"postCommentsTop\",limit:10000,postId:\"~A\"}) {_id, userId, postId, postedAt, parentCommentId, baseScore, pageUrl, htmlBody}}" post-id) "post-comments-json" post-id))
+  (lw2-graphql-query-timeout-cached (format nil "{CommentsList(terms:{view:\"postCommentsTop\",limit:10000,postId:\"~A\"}) {_id, userId, postId, postedAt, parentCommentId, baseScore, pageUrl, htmlBody}}" post-id) "post-comments-json" post-id))
 
 (defun get-recent-comments ()
   (let ((cached-result (and *background-loader-thread* (cache-get "index-json" "recent-comments"))))

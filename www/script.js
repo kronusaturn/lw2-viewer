@@ -144,10 +144,15 @@ function ExpandTextarea(textarea) {
 	});
 }
 
-function makeVoteCompleteEvent(target) {
+function makeVoteCompleteEvent(buttonTarget, karmaTarget) {
 	return function(e) {
 		if(e.target.status == 200) {
-			target.innerHTML = e.target.responseText;
+			let res = JSON.parse(e.target.responseText);
+			let karmaText = res[0], voteType = res[1];
+			karmaTarget.innerHTML = karmaText;
+			buttonTarget.parentNode.querySelectorAll("button.vote").forEach(function(b) {
+				b.className = 'vote ' + b.getAttribute("data-vote-type") + ((b.getAttribute('data-vote-type') == voteType) ? ' selected' : '');
+			});
 		}
 	}
 }
@@ -157,7 +162,7 @@ function voteEvent(e) {
 	var targetType = e.target.getAttribute("data-target-type");
 	var voteType = e.target.getAttribute("data-vote-type");
 	var req = new XMLHttpRequest();
-	req.addEventListener("load", makeVoteCompleteEvent(e.target.parentNode.querySelector(".karma")));
+	req.addEventListener("load", makeVoteCompleteEvent(e.target, e.target.parentNode.querySelector(".karma")));
 	req.open("POST", "/karma-vote");
 	req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	req.send("csrf-token="+encodeURIComponent(csrfToken)+"&target="+encodeURIComponent(cid)+"&target-type="+encodeURIComponent(targetType)+"&vote-type="+encodeURIComponent(voteType));
@@ -223,8 +228,10 @@ function initialize() {
 		if(readCookie("lw2-auth-token")) {
 			// Add upvote/downvote buttons.
 			document.querySelectorAll(".comment-meta .karma").forEach(function (e) {
-				e.insertAdjacentHTML('beforebegin', "<button type='button' class='vote vote-up' data-vote-type='upvote' data-target-type='Comments' tabindex='-1'></button>");
-				e.insertAdjacentHTML('afterend', "<button type='button' class='vote vote-down' data-vote-type='downvote' data-target-type='Comments' tabindex='-1'></button>");
+				let cid = e.getCommentId();
+				let voteType = commentVotes[cid];
+				e.insertAdjacentHTML('beforebegin', "<button type='button' class='vote upvote"+(voteType=='upvote'?' selected':'')+"' data-vote-type='upvote' data-target-type='Comments' tabindex='-1'></button>");
+				e.insertAdjacentHTML('afterend', "<button type='button' class='vote downvote"+(voteType=='downvote'?' selected':'')+"' data-vote-type='downvote' data-target-type='Comments' tabindex='-1'></button>");
 			});
 			document.querySelectorAll("button.vote").forEach(function(e) {
 				e.addActivateEvent(voteEvent);

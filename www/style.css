@@ -1098,22 +1098,24 @@ a.comment-parent-link:hover::after {
 	font-weight: 900;
 	border: none;
 }
-.comment-meta .vote-up {
+.comment-meta .upvote {
 	color: #c8c8c8;	
 }
-.comment-meta .vote-up:hover {
+.comment-meta .upvote:hover,
+.comment-meta .upvote.selected {
 	color: #00d800;
 }
-.comment-meta .vote-up::before {
+.comment-meta .upvote::before {
 	content: '\F055';
 }
-.comment-meta .vote-down {
+.comment-meta .downvote {
 	color: #ccc;
 }
-.comment-meta .vote-down:hover {
+.comment-meta .downvote:hover,
+.comment-meta .downvote.selected {
 	color: #eb4c2a;
 }
-.comment-meta .vote-down::before {
+.comment-meta .downvote::before {
 	content: '\F056';
 }
 

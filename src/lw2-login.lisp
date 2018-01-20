@@ -159,4 +159,4 @@
   (let ((ret (do-lw2-post-query auth-token
 	       `((("query" . "mutation vote($documentId: String, $voteType: String, $collectionName: String) { vote(documentId: $documentId, voteType: $voteType, collectionName: $collectionName) { ... on Post { baseScore, currentUserVotes { _id, voteType, power } } ... on Comment { baseScore, currentUserVotes { _id, voteType, power } } } }")
 		  ("variables" ("documentId" . ,target) ("voteType" . ,vote-type) ("collectionName" . ,target-type)) ("operationName" . "vote"))))))
-    (values (cdr (assoc :base-score ret)) ret)))
+    (values (cdr (assoc :base-score ret)) (cdr (assoc :vote-type (first (cdr (assoc :current-user-votes ret))))) ret)))

@@ -294,18 +294,24 @@
 					 (if comment-id 
 					   (setf (hunchentoot:return-code*) 303
 						 (hunchentoot:header-out "Location") (generate-post-link post-id comment-id))
-					   (let ((post (get-post-body post-id))) 
+					   (let ((post (get-post-body post-id))
+						 (lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token")))
 					     (emit-page (out-stream :title (clean-text (cdr (assoc :title post)))) 
-							(with-outputs (out-stream) (post-body-to-html post)) 
+							(with-outputs (out-stream) (post-body-to-html post))
+							(if lw2-auth-token
+							  (format out-stream "<script>postVote=~A</script>" (json:encode-json-to-string (get-post-vote post-id lw2-auth-token)))) 
 							(force-output out-stream) 
 							(format out-stream "<div id=\"comments\">~A</div>"
 								(let ((comments (get-post-comments post-id)))
-								  (comment-tree-to-html (make-comment-parent-hash comments)))))))))))) 
+								  (comment-tree-to-html (make-comment-parent-hash comments))))
+							(if lw2-auth-token
+							  (format out-stream "<script>commentVotes=~A</script>" (json:encode-json-to-string (get-post-comments-votes post-id lw2-auth-token)))))))))))) 
 
 (hunchentoot:define-easy-handler (view-karma-vote :uri "/karma-vote") ((csrf-token :request-type :post) (target :request-type :post) (target-type :request-type :post) (vote-type :request-type :post))
 				 (check-csrf-token (hunchentoot:cookie-in "session-token") csrf-token)
 				 (let ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token")))
-				   (format nil "~A point~:P" (do-lw2-vote lw2-auth-token target target-type vote-type))))
+				   (multiple-value-bind (points vote-type) (do-lw2-vote lw2-auth-token target target-type vote-type)
+				     (json:encode-json-to-string (list (format nil "~A point~:P" points) vote-type)))))
 
 (hunchentoot:define-easy-handler (view-recent-comments :uri "/recentcomments") ()
 				 (with-error-page
