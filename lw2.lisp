@@ -20,15 +20,21 @@
   (values (local-time:format-timestring nil time :timezone local-time:+utc-zone+ :format (or format '(:day #\  :short-month #\  :year #\  :hour #\: (:min 2) #\  :timezone)))
 	  (* (local-time:timestamp-to-unix time) 1000))))
 
+(defun pretty-number (number object)
+  (let ((str (format nil "~A ~A~P" number object number)))
+    (if (eq (aref str 0) #\-)
+      (setf (aref str 0) #\MINUS_SIGN))
+    str))
+
 (defun post-headline-to-html (post)
   (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :posted-at post))) 
-    (format nil "<h1 class=\"listing\"><a href=\"~A\">~A</a></h1><div class=\"post-meta\"><div class=\"author\">~A</div> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\">~A point~:P</div><a class=\"comment-count\" href=\"~A#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a>~A</div>"
+    (format nil "<h1 class=\"listing\"><a href=\"~A\">~A</a></h1><div class=\"post-meta\"><div class=\"author\">~A</div> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\">~A</div><a class=\"comment-count\" href=\"~A#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a>~A</div>"
 	    (plump:encode-entities (or (cdr (assoc :url post)) (generate-post-link post))) 
 	    (plump:encode-entities (clean-text (cdr (assoc :title post))))
 	    (plump:encode-entities (get-username (cdr (assoc :user-id post))))
 	    js-time
 	    pretty-time
-	    (cdr (assoc :base-score post))
+	    (pretty-number (cdr (assoc :base-score post)) "point")
 	    (generate-post-link post) 
 	    (or (cdr (assoc :comment-count post)) 0) 
 	    (cdr (assoc :page-url post))
@@ -49,13 +55,13 @@
 
 (defun post-body-to-html (post)
   (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :posted-at post))) 
-    (format nil "<div class=\"post\"><h1>~A</h1><div class=\"post-meta\"><div class=\"author\">~A</div> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\">~A point~:P</div><a class=\"comment-count\" href=\"#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a><a href=\"#bottom-bar\"></a></div><div class=\"post-body\">~A</div></div>"
+    (format nil "<div class=\"post\"><h1>~A</h1><div class=\"post-meta\"><div class=\"author\">~A</div> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\">~A</div><a class=\"comment-count\" href=\"#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a><a href=\"#bottom-bar\"></a></div><div class=\"post-body\">~A</div></div>"
 	    (plump:encode-entities (clean-text (cdr (assoc :title post))))
 	    (plump:encode-entities (get-username (cdr (assoc :user-id post))))
 	    js-time
 	    pretty-time
 	    (cdr (assoc :--id post)) 
-	    (cdr (assoc :base-score post))
+	    (pretty-number (cdr (assoc :base-score post)) "point")
 	    (or (cdr (assoc :comment-count post)) 0) 
 	    (cdr (assoc :page-url post)) 
 	    (format nil "~A~A"
@@ -64,12 +70,12 @@
 
 (defun comment-to-html (comment &key with-post-title)
   (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :posted-at comment))) 
-    (format nil "<div class=\"comment\"><div class=\"comment-meta\"><div class=\"author\">~A</div> <a class=\"date\" href=\"~A\" data-js-date=\"~A\">~A</a><div class=\"karma\">~A point~:P</div><a class=\"lw2-link\" href=\"~A#~A\">LW2 link</a>~A</div><div class=\"comment-body\"~@[ data-markdown-source=\"~A\"~]>~A</div></div>"
+    (format nil "<div class=\"comment\"><div class=\"comment-meta\"><div class=\"author\">~A</div> <a class=\"date\" href=\"~A\" data-js-date=\"~A\">~A</a><div class=\"karma\">~A</div><a class=\"lw2-link\" href=\"~A#~A\">LW2 link</a>~A</div><div class=\"comment-body\"~@[ data-markdown-source=\"~A\"~]>~A</div></div>"
 	    (get-username (cdr (assoc :user-id comment))) 
 	    (generate-post-link (cdr (assoc :post-id comment)) (cdr (assoc :--id comment)))
 	    js-time
 	    pretty-time
-	    (cdr (assoc :base-score comment))
+	    (pretty-number (cdr (assoc :base-score comment)) "point")
 	    (cdr (assoc :page-url comment)) 
 	    (cdr (assoc :--id comment)) 
 	    (if with-post-title
@@ -312,7 +318,7 @@
 				 (check-csrf-token (hunchentoot:cookie-in "session-token") csrf-token)
 				 (let ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token")))
 				   (multiple-value-bind (points vote-type) (do-lw2-vote lw2-auth-token target target-type vote-type)
-				     (json:encode-json-to-string (list (format nil "~A point~:P" points) vote-type)))))
+				     (json:encode-json-to-string (list (pretty-number points "point") vote-type)))))
 
 (hunchentoot:define-easy-handler (view-recent-comments :uri "/recentcomments") ()
 				 (with-error-page
