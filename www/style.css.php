@@ -770,6 +770,9 @@ h1.listing a[href^="/"]::after {
 .post-meta .author {
 	color: #090;
 }
+.post-meta .comment-count {
+	margin-left: 1em;
+}
 .post-body {
 	min-height: 8em;
 	font-family: Charter;
@@ -1028,33 +1031,33 @@ a.comment-parent-link:hover::after {
 /* VOTE BUTTONS */
 /****************/
 
-.comment-meta .vote,
-.comment-meta .karma {
+.vote,
+.karma {
 	margin: 0;
 }
-.comment-meta .vote {
+.vote {
 	font-family: Font Awesome;
 	font-weight: 900;
 	border: none;
 }
-.comment-meta .upvote {
+.upvote {
 	color: #c8c8c8;	
 }
-.comment-meta .upvote:hover,
-.comment-meta .upvote.selected {
+.upvote:hover,
+.upvote.selected {
 	color: #00d800;
 }
-.comment-meta .upvote::before {
+.upvote::before {
 	content: '\F055';
 }
-.comment-meta .downvote {
+.downvote {
 	color: #ccc;
 }
-.comment-meta .downvote:hover,
-.comment-meta .downvote.selected {
+.downvote:hover,
+.downvote.selected {
 	color: #eb4c2a;
 }
-.comment-meta .downvote::before {
+.downvote::before {
 	content: '\F056';
 }
 

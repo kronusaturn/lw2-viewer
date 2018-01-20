@@ -167,14 +167,14 @@ function makeVoteCompleteEvent(buttonTarget, karmaTarget) {
 function voteEvent(e) {
 	e.target.parentNode.querySelectorAll("button.vote").forEach(function(b) { b.style.pointerEvents = "none" });
 	e.target.parentNode.querySelectorAll("button.vote, .karma").forEach(function(x) { x.style.opacity = "0.5" });
-	var cid = e.target.getCommentId();
 	var targetType = e.target.getAttribute("data-target-type");
+	var targetId = ((targetType == 'Comments') ? e.target.getCommentId() : e.target.parentNode.querySelector(".karma").getAttribute("data-post-id"));
 	var voteType = e.target.getAttribute("data-vote-type");
 	var req = new XMLHttpRequest();
 	req.addEventListener("load", makeVoteCompleteEvent(e.target, e.target.parentNode.querySelector(".karma")));
 	req.open("POST", "/karma-vote");
 	req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	req.send("csrf-token="+encodeURIComponent(csrfToken)+"&target="+encodeURIComponent(cid)+"&target-type="+encodeURIComponent(targetType)+"&vote-type="+encodeURIComponent(voteType));
+	req.send("csrf-token="+encodeURIComponent(csrfToken)+"&target="+encodeURIComponent(targetId)+"&target-type="+encodeURIComponent(targetType)+"&vote-type="+encodeURIComponent(voteType));
 }
 
 function initialize() {
@@ -236,12 +236,20 @@ function initialize() {
 
 		if(readCookie("lw2-auth-token")) {
 			// Add upvote/downvote buttons.
-			document.querySelectorAll(".comment-meta .karma").forEach(function (e) {
-				let cid = e.getCommentId();
-				let voteType = commentVotes[cid];
-				e.insertAdjacentHTML('beforebegin', "<button type='button' class='vote upvote"+(voteType=='upvote'?' selected':'')+"' data-vote-type='upvote' data-target-type='Comments' tabindex='-1'></button>");
-				e.insertAdjacentHTML('afterend', "<button type='button' class='vote downvote"+(voteType=='downvote'?' selected':'')+"' data-vote-type='downvote' data-target-type='Comments' tabindex='-1'></button>");
-			});
+			if(typeof(postVote) != 'undefined') {
+				let e = document.querySelector(".post-meta .karma");
+				let voteType = postVote;
+				e.insertAdjacentHTML('beforebegin', "<button type='button' class='vote upvote"+(voteType=='upvote'?' selected':'')+"' data-vote-type='upvote' data-target-type='Posts' tabindex='-1'></button>");
+				e.insertAdjacentHTML('afterend', "<button type='button' class='vote downvote"+(voteType=='downvote'?' selected':'')+"' data-vote-type='downvote' data-target-type='Posts' tabindex='-1'></button>");
+			}
+			if(typeof(commentVotes) != 'undefined') {
+				document.querySelectorAll(".comment-meta .karma").forEach(function (e) {
+					let cid = e.getCommentId();
+					let voteType = commentVotes[cid];
+					e.insertAdjacentHTML('beforebegin', "<button type='button' class='vote upvote"+(voteType=='upvote'?' selected':'')+"' data-vote-type='upvote' data-target-type='Comments' tabindex='-1'></button>");
+					e.insertAdjacentHTML('afterend', "<button type='button' class='vote downvote"+(voteType=='downvote'?' selected':'')+"' data-vote-type='downvote' data-target-type='Comments' tabindex='-1'></button>");
+				});
+			}
 			document.querySelectorAll("button.vote").forEach(function(e) {
 				e.addActivateEvent(voteEvent);
 			});
