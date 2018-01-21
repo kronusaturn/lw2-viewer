@@ -300,6 +300,9 @@ input {
 	height: 40px;
 	border-radius: 4px;
 }
+#nav-item-about {
+	width: 10%;
+}
 
 #bottom-bar a[href='#top']::after {
 	content: '\F106';
@@ -1548,6 +1551,9 @@ ol {
 	.nav-bar .nav-inner {
 		padding: 8px 3.33vw;
 	}
+	#secondary-bar .nav-inner {
+		padding: 2px 0 3px 0;
+	}
 	.nav-bar {
 		margin: 0 -4px;
 	}
@@ -1710,6 +1716,12 @@ ol {
 	}
 	#nav-item-archive .nav-inner::before {
 		content: "\F187";
+	}
+	#nav-item-about {
+		width: auto;
+	}
+	#nav-item-about .nav-inner::before {
+		content: "\F129";
 	}
 	#nav-item-search .nav-inner::before {
 		content: none;

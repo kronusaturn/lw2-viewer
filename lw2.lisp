@@ -147,6 +147,7 @@
 			      ("recent-comments" "/recentcomments" "<span>Recent </span>Comments" :description "Latest comments" :accesskey "c"))) 
 
 (defparameter *secondary-nav* `(("archive" "/archive" "Archive")
+				("about" "/about" "About")
 				("search" "/search" "Search" :html ,#'search-bar-to-html)
 				("login" "/login" "Log In"))) 
 
@@ -177,6 +178,7 @@
 (defun user-nav-bar (&optional current-uri)
   (let* ((username (logged-in-username)))
     (let ((*secondary-nav* `(("archive" "/archive" "Archive")
+			     ("about" "/about" "About")
 			     ("search" "/search" "Search" :html ,#'search-bar-to-html)
 			     ,(if username
 				`("login" "/login" ,(plump:encode-entities username))
@@ -454,6 +456,12 @@
 							  (format out-stream "</div>")) 
 							(format out-stream "</div>") 
 							(map-output out-stream #'post-headline-to-html posts))))))))) 
+
+(hunchentoot:define-easy-handler (view-about :uri "/about") ()
+				 (with-error-page
+				   (emit-page (out-stream :title "About" :current-uri "/about" :content-class "about-page")
+					      (alexandria:with-input-from-file (in-stream "www/about.html" :element-type '(unsigned-byte 8))
+									       (alexandria:copy-stream in-stream out-stream))))) 
 
 (hunchentoot:define-easy-handler (view-css :uri "/style.css") (v)
 				 (when v (setf (hunchentoot:header-out "Cache-Control") (format nil "public, max-age=~A, immutable" (- (expt 2 31) 1)))) 
