@@ -9,13 +9,19 @@
     (when match?
       (values (elt strings 0))))) 
 
-(simple-cacheable ("lw1-link" "lw1-link" link)
-  (let ((out (nth-value 3 (drakma:http-request (concatenate 'string "https://www.lesserwrong.com" link) :method :head :close t))))
-    (format nil "~A~@[#~A~]" (puri:uri-path out) (puri:uri-fragment out)))) 
+(simple-cacheable ("lw1-link" "lw1-link" link :catch-errors nil)
+  (multiple-value-bind (body status headers uri)
+    (ignore-errors (drakma:http-request (concatenate 'string "https://www.lesserwrong.com" link) :method :head :close t))
+    (declare (ignore body headers)) 
+    (if (and (typep status 'integer) (< 300 status 400))
+      (format nil "~A~@[#~A~]" (puri:uri-path uri) (puri:uri-fragment uri))
+      (error "<p>Could not retrieve LW1 link.</p><p>You may wish to try <a href='~A'>~:*~A</a>" (concatenate 'string "http://lesswrong.com" link))))) 
 
-(defun convert-lw1-link (link)
+(defun convert-lw1-link (link &key (if-error :signal))
   (alexandria:if-let (canonical-link (match-lw1-link link))
-		     (get-lw1-link canonical-link))) 
+		     (ecase if-error
+		       (:direct-link (or (ignore-errors (get-lw1-link canonical-link)) (concatenate 'string "http://lesswrong.com" canonical-link))) 
+		       (:signal (get-lw1-link canonical-link))))) 
 
 (defun match-lw2-link (link)
   (multiple-value-bind (match? strings) (ppcre:scan-to-strings "(^https?://(www.)?lesserwrong.com|^)/posts/([^/]+)/([^/]*)(/$|/([^/#]+))?(#|$)" link)

@@ -60,17 +60,21 @@
 (defun make-simple-cache (cache-db)
   (lambda (key value) (cache-put cache-db key value))) 
 
+(defun wrap-handler (fn)
+  (lambda (key)
+    (handler-case
+      (funcall fn key)
+      (t () "[Error communicating with LW2 server]"))))
+
 (defun make-simple-get (cache-db cache-fn get-real-fn)
   (lambda (key) 
     (let ((val (cache-get cache-db key)))
       (if val val
-	(handler-case
-	  (let ((data (funcall get-real-fn key)))
-	    (assert data)
-	    (funcall cache-fn key data))
-	  (t () "[Error communicating with LW2 server]")))))) 
+	(let ((data (funcall get-real-fn key)))
+	  (assert data)
+	  (funcall cache-fn key data)))))) 
 
-(defmacro simple-cacheable ((base-name cache-db key) &body body)
+(defmacro simple-cacheable ((base-name cache-db key &key (catch-errors t)) &body body)
   (let ((get-real (intern (format nil "~:@(get-~A-real~)" base-name)))
 	(cache (intern (format nil "~:@(cache-~A~)" base-name)))
 	(get (intern (format nil "~:@(get-~A~)" base-name))))
@@ -79,7 +83,7 @@
 		(ftype (function (string string) string) ,cache))
        (setf (fdefinition (quote ,get-real)) (lambda (,key) ,@body)
 	     (fdefinition (quote ,cache)) (make-simple-cache ,cache-db)
-	     (fdefinition (quote ,get)) (make-simple-get ,cache-db (fdefinition (quote ,cache)) (fdefinition (quote ,get-real))))))) 
+	     (fdefinition (quote ,get)) (,(if catch-errors 'wrap-handler 'identity) (make-simple-get ,cache-db (fdefinition (quote ,cache)) (fdefinition (quote ,get-real)))))))) 
 
 (eval-when (:compile-toplevel :load-toplevel :execute) 
   (defun city-hash-128-vector (data)
