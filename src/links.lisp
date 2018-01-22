@@ -5,7 +5,7 @@
 (in-package #:lw2.links)
 
 (defun match-lw1-link (link)
-  (multiple-value-bind (match? strings) (ppcre:scan-to-strings "(?:^https?://(?:www.)?less(?:er)?wrong.com|^)(?:/r/discussion)?(/lw/.*)" link)
+  (multiple-value-bind (match? strings) (ppcre:scan-to-strings "(?:^https?://(?:www.)?less(?:er)?wrong.com|^)(?:/r/discussion|/r/lesswrong)?(/lw/.*)" link)
     (when match?
       (values (elt strings 0))))) 
 
