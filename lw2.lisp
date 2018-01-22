@@ -82,7 +82,9 @@
 	      (format nil "<div class=\"comment-post-title\">on: <a href=\"~A\">~A</a></div>"
 		      (generate-post-link (cdr (assoc :post-id comment)))
 		      (plump:encode-entities (clean-text (get-post-title (cdr (assoc :post-id comment))))))
-	      (format nil "~@[<a class=\"comment-parent-link\" href=\"#comment-~A\">Parent</a>~]" (cdr (assoc :parent-comment-id comment)))) 
+	      (format nil "~@[<a class=\"comment-parent-link\" href=\"#comment-~A\">Parent</a>~]~@[<div class=\"comment-child-links\">Replies: ~:{<a href=\"#comment-~A\">&gt;~A</a>~}</div>~]"
+		      (cdr (assoc :parent-comment-id comment))
+		      (map 'list (lambda (c) (list (cdr (assoc :--id c)) (get-username (cdr (assoc :user-id c))))) (cdr (assoc :children comment)))))
 	    (if (logged-in-userid (cdr (assoc :user-id comment)))
 	      (plump:encode-entities
 		(or (cache-get "comment-markdown-source" (cdr (assoc :--id comment))) 
@@ -127,6 +129,18 @@
 				   (comment-tree-to-html comment-hash c-id (1+ level)))))
 		   comments))
       ""))) 
+
+(defun comment-chrono-to-html (comments)
+  (let ((comment-hash (make-comment-parent-hash comments)) 
+	(comments-sorted (sort comments #'local-time:timestamp< :key (lambda (c) (local-time:parse-timestring (cdr (assoc :posted-at c)))))))
+    (format nil "<ul class=\"comment-thread\">~{~A~}</ul>"
+	    (map 'list (lambda (c)
+			 (let* ((c-id (cdr (assoc :--id c)))
+				(new-c (acons :children (gethash c-id comment-hash) c)))
+			   (format nil "<li id=\"comment-~A\" class=\"comment-item\">~A</li>"
+				   c-id
+				   (comment-to-html new-c))))
+		 comments-sorted))))
 
 (defparameter *html-head*
 "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
@@ -281,7 +295,7 @@
 				       (out-stream (hunchentoot:send-headers)))
 				   (posts-to-rss posts (make-flexi-stream out-stream :external-format :utf-8)))) 
 
-(hunchentoot:define-easy-handler (view-post-lw2-link :uri (lambda (r) (declare (ignore r)) (match-lw2-link (hunchentoot:request-uri*)))) ((csrf-token :request-type :post) (text :request-type :post) (parent-comment-id :request-type :post) (edit-comment-id :request-type :post))
+(hunchentoot:define-easy-handler (view-post-lw2-link :uri (lambda (r) (declare (ignore r)) (match-lw2-link (hunchentoot:request-uri*)))) ((csrf-token :request-type :post) (text :request-type :post) (parent-comment-id :request-type :post) (edit-comment-id :request-type :post) chrono)
 				 (with-error-page
 				   (cond
 				     (text
@@ -312,7 +326,9 @@
 							(force-output out-stream) 
 							(format out-stream "<div id=\"comments\">~A</div>"
 								(let ((comments (get-post-comments post-id)))
-								  (comment-tree-to-html (make-comment-parent-hash comments))))
+								  (if chrono
+								    (comment-chrono-to-html comments) 
+								    (comment-tree-to-html (make-comment-parent-hash comments)))))
 							(if lw2-auth-token
 							  (format out-stream "<script>commentVotes=~A</script>" (json:encode-json-to-string (get-post-comments-votes post-id lw2-auth-token)))))))))))) 
 

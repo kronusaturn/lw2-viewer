@@ -229,12 +229,12 @@ function initialize() {
 			needHashRealignment = true;
 		}
 
-		document.querySelectorAll(".comment-meta .comment-parent-link").forEach(function (cpl) {
+		document.querySelectorAll(".comment-meta .comment-parent-link, .comment-meta .comment-child-links a").forEach(function (cpl) {
 			cpl.addEventListener("mouseover", function(e) {
 				let parent = document.querySelector(cpl.getAttribute("href")).firstChild;
 				let parentCI = parent.parentNode;
 				var highlight_cn;
-				if (parent.getBoundingClientRect().bottom < 10) {
+				if(parent.getBoundingClientRect().bottom < 10 || parent.getBoundingClientRect().top > window.innerHeight + 10) {
 					highlight_cn = "comment-item-highlight-faint";
 					parent = parent.cloneNode(true);
 					parent.className += " comment-popup comment-item-highlight";
