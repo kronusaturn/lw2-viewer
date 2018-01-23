@@ -57,7 +57,7 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 	textarea.value = (editMarkdownSource ? editMarkdownSource : "");
 	textarea.focus();
 	textarea.addEventListener("focus", function(e){e.target.parentElement.parentElement.scrollIntoViewIfNeeded()});
-	textarea.addEventListener("input", OnInputExpandTextarea, false);
+	textarea.addEventListener("scroll", OnInputExpandTextarea, false);
 	
 	e.querySelector(".cancel-comment-button + form").insertAdjacentHTML("afterbegin", "<div class='guiedit-buttons-container'></div>")
 	var buttons_container = e.querySelector(".guiedit-buttons-container");
