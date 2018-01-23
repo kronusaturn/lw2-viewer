@@ -220,13 +220,13 @@ function initialize() {
 		}
 		catch(e) { }
 
-		let needHashRealignment = false;
+		window.needHashRealignment = false;
 
 		let urlParts = document.URL.split('#');
 		if (urlParts.length > 1) {
 			try { document.querySelector('#'+urlParts[1]).closest("label[for^='expand'] + .comment-thread").parentElement.querySelector("input[id^='expand']").checked = true; }
 			catch (e) { }
-			needHashRealignment = true;
+			window.needHashRealignment = true;
 		}
 
 		document.querySelectorAll(".comment-meta .comment-parent-link, .comment-meta .comment-child-links a").forEach(function (cpl) {
@@ -284,21 +284,31 @@ function initialize() {
 				comments_container.querySelector(".comment-controls").injectCommentButtons();
 			}			
 
-			needHashRealignment = true;
+			window.needHashRealignment = true;
 		}
 
-		let h = location.hash;
-		if(needHashRealignment && h) {
-			let e = document.querySelector(h);
-			if (e) e.scrollIntoView(true);
-		}
-		
 		// Clean up ToC
 		document.querySelectorAll(".contents-list li a").forEach(function (a) {
 			a.innerText = a.innerText.replace(/^[0-9]+\. /, '');
 			a.innerText = a.innerText.replace(/^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})\. /i, '');
 		});
+
+		if(document.readyState != "complete") {
+			document.addEventListener("load", whenLoaded, {once: true});
+		} else {
+			whenLoaded();
+		}
 	})
+}
+
+function whenLoaded() {
+	window.requestAnimationFrame(function() {
+		let h = location.hash;
+		if(window.needHashRealignment && h) {
+			let e = document.querySelector(h);
+			e.scrollIntoView(true);
+		}
+	});
 }
 
 function removeElement(selector, ancestor = document) {
