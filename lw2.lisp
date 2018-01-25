@@ -20,8 +20,8 @@
   (values (local-time:format-timestring nil time :timezone local-time:+utc-zone+ :format (or format '(:day #\  :short-month #\  :year #\  :hour #\: (:min 2) #\  :timezone)))
 	  (* (local-time:timestamp-to-unix time) 1000))))
 
-(defun pretty-number (number object)
-  (let ((str (coerce (format nil "~A ~A~P" number object number) '(vector character))))
+(defun pretty-number (number &optional object)
+  (let ((str (coerce (format nil "~A~@[ ~A~P~]" number object number) '(vector character))))
     (if (eq (aref str 0) #\-)
       (setf (aref str 0) #\MINUS_SIGN))
     str))
@@ -375,7 +375,9 @@
 			  (let ((user-posts (lw2-graphql-query (format nil "{PostsList(terms:{view:\"new\",limit:20,userId:\"~A\"}){title, _id, slug, userId, postedAt, baseScore, commentCount, pageUrl, url}}" (cdr (assoc :--id user-info)))))
 				(user-comments (lw2-graphql-query (format nil "{CommentsList(terms:{view:\"postCommentsNew\",limit:20,userId:\"~A\"}){_id, userId, postId, postedAt, parentCommentId, baseScore, pageUrl, htmlBody}}" (cdr (assoc :--id user-info))))))
 			    (emit-page (out-stream :title (cdr (assoc :display-name user-info)) :content-class "user-page")
-				       (format out-stream "<h1 class=\"page-main-heading\">~A</h1><div class=\"user-stats\">Karma: <span class=\"karma-total\">~A</span></div>" (cdr (assoc :display-name user-info)) (cdr (assoc :karma user-info)))
+				       (format out-stream "<h1 class=\"page-main-heading\">~A</h1><div class=\"user-stats\">Karma: <span class=\"karma-total\">~A</span></div>"
+					       (cdr (assoc :display-name user-info))
+					       (pretty-number (or (cdr (assoc :karma user-info)) 0)))
 				       (comment-post-interleave-output out-stream (concatenate 'list user-posts user-comments)))))))
 
 (defun search-result-markdown-to-html (item)
