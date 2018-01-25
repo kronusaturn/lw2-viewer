@@ -209,7 +209,7 @@ Element.prototype.setCommentThreadMaximized = function(maximized = true) {
 	ci.style.overflow = maximized ? 'visible' : 'hidden';
 	
 	let minimize_button = ci.querySelector(".comment-minimize-button");
-	minimize_button.className = ".comment-minimize-button " + (maximized ? "maximized" : "minimized");
+	minimize_button.className = "comment-minimize-button " + (maximized ? "maximized" : "minimized");
 	minimize_button.innerHTML = maximized ? "&#xf146;" : "&#xf0fe;";
 	minimize_button.title = (maximized ? "Collapse" : "Expand") + 
 							" comment thread (" + 
