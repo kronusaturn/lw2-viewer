@@ -85,10 +85,11 @@
 	      (format nil "<div class=\"comment-post-title\">on: <a href=\"~A\">~A</a></div>"
 		      (generate-post-link (cdr (assoc :post-id comment)))
 		      (plump:encode-entities (clean-text (get-post-title (cdr (assoc :post-id comment))))))
-	      (format nil "~@[<a class=\"comment-parent-link\" href=\"#comment-~A\">Parent</a>~]~@[<div class=\"comment-child-links\">Replies: ~:{<a href=\"#comment-~A\">&gt;~A</a>~}</div>~]~:[~;<div class=\"comment-minimize-button\"></div>~]"
+	      (format nil "~@[<a class=\"comment-parent-link\" href=\"#comment-~A\">Parent</a>~]~@[<div class=\"comment-child-links\">Replies: ~:{<a href=\"#comment-~A\">&gt;~A</a>~}</div>~]~:[~;<div class=\"comment-minimize-button\" data-child-count=\"~A\"></div>~]"
 		      (cdr (assoc :parent-comment-id comment))
 		      (map 'list (lambda (c) (list (cdr (assoc :--id c)) (get-username (cdr (assoc :user-id c))))) (cdr (assoc :children comment)))
-		      (not (cdr (assoc :parent-comment-id comment)))))
+		      (not (cdr (assoc :parent-comment-id comment)))
+		      (cdr (assoc :child-count comment))))
 	    (if (logged-in-userid (cdr (assoc :user-id comment)))
 	      (plump:encode-entities
 		(or (cache-get "comment-markdown-source" (cdr (assoc :--id comment))) 
