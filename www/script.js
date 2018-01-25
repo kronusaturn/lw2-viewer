@@ -15,6 +15,7 @@ Element.prototype.addActivateEvent = function(func, waitForMouseUp = true) {
 }
 
 Element.prototype.removeActivateEvent = function(func) {
+	this.removeEventListener("mousedown", func);
 	this.removeEventListener("mouseup", func);
 	this.removeEventListener("keyup", func);
 }
