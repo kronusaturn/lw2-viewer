@@ -318,7 +318,7 @@ function initialize() {
 		
 		// Format and activate comment-minimize buttons.
 		document.querySelectorAll(".comment-minimize-button").forEach(function (b) {
-			b.setCommentThreadMaximized(true);
+			b.closest(".comment-item").setCommentThreadMaximized(true);
 		});
 	})
 }
