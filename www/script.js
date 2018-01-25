@@ -10,7 +10,7 @@ function readCookie(name) {
 }
 
 Element.prototype.addActivateEvent = function(func, waitForMouseUp = true) {
-	this.addEventListener(waitForMouseUp ? "mouseup" : "mousedown", func);
+	this.addEventListener((waitForMouseUp ? "mouseup" : "mousedown"), func);
 	this.addEventListener("keyup", func);
 }
 
