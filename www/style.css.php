@@ -1578,6 +1578,14 @@ ol {
 	content: none;
 }
 
+/**************/
+/* ABOUT PAGE */
+/**************/
+
+#content.about-page {
+	padding-bottom: 3em;
+}
+
 /**********************/
 /* FOR NARROW SCREENS */
 /**********************/
