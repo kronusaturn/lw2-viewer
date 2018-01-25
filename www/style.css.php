@@ -1089,7 +1089,7 @@ a.comment-parent-link:hover::after {
 	color: #777;
 }
 .comment-minimize-button.maximized::after {
-	visibility: hidden;
+	color: #ccc;
 }
 
 /****************/

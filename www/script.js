@@ -211,6 +211,10 @@ Element.prototype.setCommentThreadMaximized = function(maximized = true) {
 	let minimize_button = ci.querySelector(".comment-minimize-button");
 	minimize_button.className = ".comment-minimize-button " + (maximized ? "maximized" : "minimized");
 	minimize_button.innerHTML = maximized ? "&#xf146;" : "&#xf0fe;";
+	minimize_button.title = (maximized ? "Collapse" : "Expand") + 
+							" comment thread (" + 
+							minimize_button.dataset["childCount"] + 
+							" child comments)";
 	minimize_button.removeActivateEvent(maximized ? commentMaximizeButtonClicked : commentMinimizeButtonClicked);
 	minimize_button.addActivateEvent(maximized ? commentMinimizeButtonClicked : commentMaximizeButtonClicked, false);
 }
