@@ -9,8 +9,8 @@ function readCookie(name) {
 	return null;
 }
 
-Element.prototype.addActivateEvent = function(func) {
-	this.addEventListener("mouseup", func);
+Element.prototype.addActivateEvent = function(func, waitForMouseUp = true) {
+	this.addEventListener(waitForMouseUp ? "mouseup" : "mousedown", func);
 	this.addEventListener("keyup", func);
 }
 
@@ -210,7 +210,7 @@ Element.prototype.setCommentThreadMaximized = function(maximized = true) {
 	let minimize_button = ci.querySelector(".comment-minimize-button");
 	minimize_button.innerHTML = maximized ? "&#xf146;" : "&#xf0fe;";
 	minimize_button.removeActivateEvent(maximized ? commentMaximizeButtonClicked : commentMinimizeButtonClicked);
-	minimize_button.addActivateEvent(maximized ? commentMinimizeButtonClicked : commentMaximizeButtonClicked);
+	minimize_button.addActivateEvent(maximized ? commentMinimizeButtonClicked : commentMaximizeButtonClicked, false);
 }
 
 function initialize() {
