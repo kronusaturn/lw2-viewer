@@ -199,7 +199,7 @@
 			     ("about" "/about" "About")
 			     ("search" "/search" "Search" :html ,#'search-bar-to-html)
 			     ,(if username
-				`("login" "/login" ,(plump:encode-entities username))
+				`("login" ,(format nil "/users/~A" (plump:encode-entities (get-user-slug (logged-in-userid)))) ,(plump:encode-entities username))
 				`("login" ,(format nil "/login?return=~A" (url-rewrite:url-encode current-uri)) "Log In")))))
       (nav-bar-to-html current-uri)))) 
 
