@@ -1647,6 +1647,14 @@ ol {
 	padding-bottom: 3em;
 }
 
+/*******************/
+/* USER STATS PAGE */
+/*******************/
+
+.user-stats .karma-total {
+	font-weight: bold;
+}
+
 /**********************/
 /* FOR NARROW SCREENS */
 /**********************/
