@@ -196,6 +196,23 @@ function voteEvent(e) {
 	}
 }
 
+function commentMinimizeButtonClicked(event) {
+	event.target.closest(".comment-item").setCommentThreadMaximized(false);
+}
+function commentMaximizeButtonClicked(event) {
+	event.target.closest(".comment-item").setCommentThreadMaximized(true);
+}
+Element.prototype.setCommentThreadMaximized = function(maximized = true) {
+	let ci = this;
+	ci.style.height = maximized ? 'auto' : '38px';
+	ci.style.overflow = maximized ? 'visible' : 'hidden';
+	
+	let minimize_button = ci.querySelector(".comment-minimize-button");
+	minimize_button.innertHTML = maximized ? "&#xf146;" : "&#xf0fe;";
+	minimize_button.removeActivateEvent(maximized ? commentMaximizeButtonClicked : commentMinimizeButtonClicked);
+	minimize_button.addActivateEvent(maximized ? commentMinimizeButtonClicked : commentMaximizeButtonClicked);
+}
+
 function initialize() {
 	window.requestAnimationFrame(function() {
 		if(location.hash.length == 18) {
@@ -298,6 +315,11 @@ function initialize() {
 		} else {
 			whenLoaded();
 		}
+		
+		// Format and activate comment-minimize buttons.
+		document.querySelectorAll(".comment-minimize-button").forEach(function (b) {
+			b.setCommentThreadMaximized(true);
+		});
 	})
 }
 

@@ -1049,6 +1049,33 @@ a.comment-parent-link:hover::after {
 	font-size: 1rem;
 }
 
+/***********************************/
+/* COMMENT THREAD MINIMIZE BUTTONS */
+/***********************************/
+
+.comment-minimize-button {
+	font-family: Font Awesome;
+	font-weight: 900;
+	font-size: 1.25rem;
+	color: #ccc;
+	line-height: 1;
+	position: absolute;
+	right: 1px;
+	top: 1px;
+	margin: 0;
+	cursor: pointer;
+}
+.comment-minimize-button:hover {
+	color: #aaa;
+	text-shadow:
+		0 0 1px #fff,
+		0 0 3px #fff,
+		0 0 5px #fff;
+}
+.comment-minimize-button:active {
+	transform: scale(0.9);
+}
+
 /****************/
 /* VOTE BUTTONS */
 /****************/
