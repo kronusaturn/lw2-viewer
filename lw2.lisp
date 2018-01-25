@@ -28,9 +28,10 @@
 
 (defun post-headline-to-html (post)
   (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :posted-at post))) 
-    (format nil "<h1 class=\"listing\"><a href=\"~A\">~A</a></h1><div class=\"post-meta\"><div class=\"author\">~A</div> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\">~A</div><a class=\"comment-count\" href=\"~A#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a>~A</div>"
+    (format nil "<h1 class=\"listing\"><a href=\"~A\">~A</a></h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\">~A</div><a class=\"comment-count\" href=\"~A#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a>~A</div>"
 	    (plump:encode-entities (or (cdr (assoc :url post)) (generate-post-link post))) 
 	    (plump:encode-entities (clean-text (cdr (assoc :title post))))
+	    (plump:encode-entities (get-user-slug (cdr (assoc :user-id post)))) 
 	    (plump:encode-entities (get-username (cdr (assoc :user-id post))))
 	    js-time
 	    pretty-time
@@ -55,8 +56,9 @@
 
 (defun post-body-to-html (post)
   (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :posted-at post))) 
-    (format nil "<div class=\"post\"><h1>~A</h1><div class=\"post-meta\"><div class=\"author\">~A</div> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\">~A</div><a class=\"comment-count\" href=\"#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a><a href=\"#bottom-bar\"></a></div><div class=\"post-body\">~A</div></div>"
+    (format nil "<div class=\"post\"><h1>~A</h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\">~A</div><a class=\"comment-count\" href=\"#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a><a href=\"#bottom-bar\"></a></div><div class=\"post-body\">~A</div></div>"
 	    (plump:encode-entities (clean-text (cdr (assoc :title post))))
+	    (plump:encode-entities (get-user-slug (cdr (assoc :user-id post)))) 
 	    (plump:encode-entities (get-username (cdr (assoc :user-id post))))
 	    js-time
 	    pretty-time
@@ -70,8 +72,9 @@
 
 (defun comment-to-html (comment &key with-post-title)
   (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :posted-at comment))) 
-    (format nil "<div class=\"comment\"><div class=\"comment-meta\"><div class=\"author\">~A</div> <a class=\"date\" href=\"~A\" data-js-date=\"~A\">~A</a><div class=\"karma\">~A</div><a class=\"lw2-link\" href=\"~A#~A\">LW2 link</a>~A</div><div class=\"comment-body\"~@[ data-markdown-source=\"~A\"~]>~A</div></div>"
-	    (get-username (cdr (assoc :user-id comment))) 
+    (format nil "<div class=\"comment\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <a class=\"date\" href=\"~A\" data-js-date=\"~A\">~A</a><div class=\"karma\">~A</div><a class=\"lw2-link\" href=\"~A#~A\">LW2 link</a>~A</div><div class=\"comment-body\"~@[ data-markdown-source=\"~A\"~]>~A</div></div>"
+	    (plump:encode-entities (get-user-slug (cdr (assoc :user-id comment)))) 
+	    (plump:encode-entities (get-username (cdr (assoc :user-id comment)))) 
 	    (generate-post-link (cdr (assoc :post-id comment)) (cdr (assoc :--id comment)))
 	    js-time
 	    pretty-time
@@ -346,6 +349,33 @@
 						(map-output out-stream (lambda (c) (format nil "<li class=\"comment-item\" id=\"comment-~A\">~A</li>"
 											   (cdr (assoc :--id c)) (comment-to-html c :with-post-title t))) recent-comments)
 						(with-outputs (out-stream) "</ul>")))))
+
+(defun comment-post-interleave-output (stream list)
+  (let ((sorted (sort list #'local-time:timestamp> :key (lambda (x) (local-time:parse-timestring (cdr (assoc :posted-at x)))))))
+    (loop for x in sorted do
+	  (if (cdr (assoc :comment-count x))
+	    (write-string (post-headline-to-html x) stream)
+	    (format stream (format nil "<ul class=\"comment-thread\"><li class=\"comment-item\" id=\"comment-~A\">~A</li></ul>"
+				   (cdr (assoc :--id x)) (comment-to-html x :with-post-title t)))))))
+
+(defmacro define-regex-handler (name (regex &rest vars) additional-vars &body body)
+  (alexandria:with-gensyms (fn result-vector)
+    `(let ((,fn (lambda (r) (ppcre:scan-to-strings ,regex (hunchentoot:request-uri r)))))
+       (hunchentoot:define-easy-handler (,name :uri ,fn) ,additional-vars
+	 (let ((,result-vector (nth-value 1 (funcall ,fn hunchentoot:*request*))))
+	   (declare (type vector ,result-vector)) 
+	   (symbol-macrolet
+	     ,(loop for v in vars as x from 0 collecting `(,v (if (> (length ,result-vector) ,x) (aref ,result-vector ,x)))) 
+	     ,@body))))))
+
+(define-regex-handler view-user ("^/users/(.*)" user-slug) ()
+		      (with-error-page
+			(let ((user-info (lw2-graphql-query (format nil "{UsersSingle(slug:\"~A\"){_id, displayName, karma}}" user-slug))))
+			  (let ((user-posts (lw2-graphql-query (format nil "{PostsList(terms:{view:\"new\",limit:20,userId:\"~A\"}){title, _id, slug, userId, postedAt, baseScore, commentCount, pageUrl, url}}" (cdr (assoc :--id user-info)))))
+				(user-comments (lw2-graphql-query (format nil "{CommentsList(terms:{view:\"postCommentsNew\",limit:20,userId:\"~A\"}){_id, userId, postId, postedAt, parentCommentId, baseScore, pageUrl, htmlBody}}" (cdr (assoc :--id user-info))))))
+			    (emit-page (out-stream :title (cdr (assoc :display-name user-info)) :content-class "user-page")
+				       (format out-stream "<h1 class=\"page-main-heading\">~A</h1><div class=\"user-stats\">Karma: <span class=\"karma-total\">~A</span></div>" (cdr (assoc :display-name user-info)) (cdr (assoc :karma user-info)))
+				       (comment-post-interleave-output out-stream (concatenate 'list user-posts user-comments)))))))
 
 (defun search-result-markdown-to-html (item)
   (cons (cons :html-body (markdown:parse (cdr (assoc :body item)))) item)) 

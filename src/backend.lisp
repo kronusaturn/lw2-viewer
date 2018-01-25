@@ -3,7 +3,7 @@
   (:export #:log-condition #:log-conditions #:start-background-loader #:stop-background-loader
 	   #:lw2-graphql-query-streamparse #:lw2-graphql-query-noparse #:decode-graphql-json #:lw2-graphql-query #:make-posts-list-query
 	   #:get-posts #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
-	   #:lw2-search-query #:get-post-title #:get-post-slug #:get-username))
+	   #:lw2-search-query #:get-post-title #:get-post-slug #:get-username #:get-user-slug))
 
 (in-package #:lw2.backend)
 
@@ -195,6 +195,9 @@
 
 (simple-cacheable ("username" "userid-to-displayname" user-id)
   (cdr (first (lw2-graphql-query (format nil "{UsersSingle(documentId:\"~A\") {displayName}}" user-id))))) 
+
+(simple-cacheable ("user-slug" "userid-to-slug" user-id)
+  (cdr (first (lw2-graphql-query (format nil "{UsersSingle(documentId:\"~A\") {slug}}" user-id)))))
 
 (defun preload-username-cache ()
   (let ((user-list (lw2-graphql-query "{UsersList(terms:{}) {_id, displayName}}")))
