@@ -356,8 +356,8 @@
     (loop for x in sorted do
 	  (if (cdr (assoc :comment-count x))
 	    (write-string (post-headline-to-html x) stream)
-	    (format stream (format nil "<ul class=\"comment-thread\"><li class=\"comment-item\" id=\"comment-~A\">~A</li></ul>"
-				   (cdr (assoc :--id x)) (comment-to-html x :with-post-title t)))))))
+	    (format stream "<ul class=\"comment-thread\"><li class=\"comment-item\" id=\"comment-~A\">~A</li></ul>"
+		    (cdr (assoc :--id x)) (comment-to-html x :with-post-title t))))))
 
 (defmacro define-regex-handler (name (regex &rest vars) additional-vars &body body)
   (alexandria:with-gensyms (fn result-vector)
