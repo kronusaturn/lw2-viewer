@@ -1076,6 +1076,22 @@ a.comment-parent-link:hover::after {
 	transform: scale(0.9);
 }
 
+.comment-minimize-button::after {
+	content: attr(data-child-count);
+	font-weight: normal;
+	font-family: Concourse;
+	font-size: 0.8125rem;
+	position: absolute;
+	left: 0;
+	width: 100%;
+	text-align: center;
+	top: 21px;
+	color: #777;
+}
+.comment-minimize-button.maximized::after {
+	visibility: hidden;
+}
+
 /****************/
 /* VOTE BUTTONS */
 /****************/
