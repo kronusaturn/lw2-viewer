@@ -198,25 +198,28 @@ function voteEvent(e) {
 }
 
 function commentMinimizeButtonClicked(event) {
-	event.target.closest(".comment-item").setCommentThreadMaximized(false);
-}
-function commentMaximizeButtonClicked(event) {
 	event.target.closest(".comment-item").setCommentThreadMaximized(true);
 }
-Element.prototype.setCommentThreadMaximized = function(maximized = true) {
+Element.prototype.setCommentThreadMaximized = function(toggle) {
 	let ci = this;
-	ci.style.height = maximized ? 'auto' : '38px';
-	ci.style.overflow = maximized ? 'visible' : 'hidden';
-	
+	let storageName = "thread-minimized-" + ci.getCommentId();
 	let minimize_button = ci.querySelector(".comment-minimize-button");
-	minimize_button.className = "comment-minimize-button " + (maximized ? "maximized" : "minimized");
-	minimize_button.innerHTML = maximized ? "&#xf146;" : "&#xf0fe;";
-	minimize_button.title = (maximized ? "Collapse" : "Expand") + 
+	let maximize = (toggle ? /minimized/.test(minimize_button.className) : !window.localStorage.getItem(storageName));
+	if(maximize) {
+		window.localStorage.removeItem(storageName);
+	} else {
+		window.localStorage.setItem(storageName, true);
+	}
+
+	ci.style.height = maximize ? 'auto' : '38px';
+	ci.style.overflow = maximize ? 'visible' : 'hidden';
+
+	minimize_button.className = "comment-minimize-button " + (maximize ? "maximized" : "minimized");
+	minimize_button.innerHTML = maximize ? "&#xf146;" : "&#xf0fe;";
+	minimize_button.title = (maximize ? "Collapse" : "Expand") + 
 							" comment thread (" + 
 							minimize_button.dataset["childCount"] + 
 							" child comments)";
-	minimize_button.removeActivateEvent(maximized ? commentMaximizeButtonClicked : commentMinimizeButtonClicked);
-	minimize_button.addActivateEvent(maximized ? commentMinimizeButtonClicked : commentMaximizeButtonClicked, false);
 }
 
 function initialize() {
@@ -324,7 +327,8 @@ function initialize() {
 		
 		// Format and activate comment-minimize buttons.
 		document.querySelectorAll(".comment-minimize-button").forEach(function (b) {
-			b.closest(".comment-item").setCommentThreadMaximized(true);
+			b.closest(".comment-item").setCommentThreadMaximized(false);
+			b.addActivateEvent(commentMinimizeButtonClicked);
 		});
 	})
 }
