@@ -935,7 +935,7 @@ ul.comment-thread {
 }
 
 .comment-meta {
-	padding: 2px 64px 2px 10px;
+	padding: 2px 80px 2px 10px;
 	margin: 0 -1px;
 	border: none;
 }
@@ -1292,9 +1292,12 @@ a.comment-parent-link:hover::after {
 }
 .comment-controls .edit-button {
 	position: absolute;
-	right: 8px;
+	right: 24px;
 	top: 7px;
 	color: #0b0;
+}
+.comment-thread .comment-thread .edit-button {
+	right: 8px;
 }
 .comment-controls .edit-button:hover {
 	color: #f00;
