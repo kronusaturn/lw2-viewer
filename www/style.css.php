@@ -1062,6 +1062,7 @@ a.comment-parent-link:hover::after {
 	position: absolute;
 	right: 1px;
 	top: 1px;
+	width: 18px;
 	margin: 0;
 	cursor: pointer;
 }
