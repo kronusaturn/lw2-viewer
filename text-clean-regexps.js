@@ -37,5 +37,9 @@
   [/\.\.\.(\s)/g, '…$1'],
   
   // Hyphen followed by a numeral (with an optional space first), becomes an actual minus sign
-  [/(\s)-( ?)([0-9])/g, '$1\u2212$2$3']
+  [/(\s)-( ?)([0-9])/g, '$1\u2212$2$3'],
+  
+  // Arrows
+  [/(\s)->(\s)/g, '$1\u2192$2'],
+  [/(\s)<-(\s)/g, '$1\u2190$2']
 ]
