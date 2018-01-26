@@ -202,8 +202,14 @@ function commentMinimizeButtonClicked(event) {
 }
 Element.prototype.setCommentThreadMaximized = function(toggle) {
 	let ci = this;
+	let storageName = "thread-minimized-" + ci.getCommentId();
 	let minimize_button = ci.querySelector(".comment-minimize-button");
-	let maximize = (toggle ? /minimized/.test(minimize_button.className) : true);
+	let maximize = (toggle ? /minimized/.test(minimize_button.className) : !window.localStorage.getItem(storageName));
+	if(maximize) {
+		window.localStorage.removeItem(storageName);
+	} else {
+		window.localStorage.setItem(storageName, true);
+	}
 
 	ci.style.height = maximize ? 'auto' : '38px';
 	ci.style.overflow = maximize ? 'visible' : 'hidden';
