@@ -15,7 +15,7 @@
     (declare (ignore body uri))
     (let ((location (cdr (assoc :location headers)))) 
       (if (and (typep status 'integer) (< 300 status 400) location)
-	location
+	(let ((loc-uri (puri:parse-uri location))) (format nil "~A~@[#comment-~A~]" (puri:uri-path loc-uri) (puri:uri-fragment loc-uri)))
 	(error "<p>Could not retrieve LW1 link.</p><p>You may wish to try <a href='~A'>~:*~A</a>" (concatenate 'string "http://lesswrong.com" link))))))
 
 (defun convert-lw1-link (link &key (if-error :signal))
