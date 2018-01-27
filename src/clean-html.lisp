@@ -149,7 +149,7 @@
 				       (when (only-child-is node "u")
 					 (setf (plump:children node) (plump:children (plump:first-child node)))))
 				     (when (tag-is node "p" "blockquote" "div")
-				       (when (string-is-whitespace (plump:text node))
+				       (when (and (string-is-whitespace (plump:text node)) (not (plump:get-elements-by-tag-name node "img")))
 					 (plump:remove-child node)))
 				     (when (tag-is node "u")
 				       (when (only-child-is node "a")
