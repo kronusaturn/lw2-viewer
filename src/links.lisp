@@ -11,11 +11,12 @@
 
 (simple-cacheable ("lw1-link" "lw1-link" link :catch-errors nil)
   (multiple-value-bind (body status headers uri)
-    (ignore-errors (drakma:http-request (concatenate 'string "https://www.lesserwrong.com" link) :method :head :close t))
-    (declare (ignore body headers)) 
-    (if (and (typep status 'integer) (< 300 status 400))
-      (format nil "~A~@[#~A~]" (puri:uri-path uri) (puri:uri-fragment uri))
-      (error "<p>Could not retrieve LW1 link.</p><p>You may wish to try <a href='~A'>~:*~A</a>" (concatenate 'string "http://lesswrong.com" link))))) 
+    (ignore-errors (drakma:http-request (concatenate 'string "https://www.lesserwrong.com" link) :method :head :close t :redirect nil))
+    (declare (ignore body uri))
+    (let ((location (cdr (assoc :location headers)))) 
+      (if (and (typep status 'integer) (< 300 status 400) location)
+	location
+	(error "<p>Could not retrieve LW1 link.</p><p>You may wish to try <a href='~A'>~:*~A</a>" (concatenate 'string "http://lesswrong.com" link))))))
 
 (defun convert-lw1-link (link &key (if-error :signal))
   (alexandria:if-let (canonical-link (match-lw1-link link))
