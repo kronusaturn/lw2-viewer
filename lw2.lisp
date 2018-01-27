@@ -352,10 +352,13 @@
 											   (cdr (assoc :--id c)) (comment-to-html c :with-post-title t))) recent-comments)
 						(with-outputs (out-stream) "</ul>")))))
 
-(defun comment-post-interleave-output (stream list)
+(defun comment-post-interleave-output (stream list &key limit)
   (let ((sorted (sort list #'local-time:timestamp> :key (lambda (x) (local-time:parse-timestring (cdr (assoc :posted-at x)))))))
-    (loop for x in sorted do
-	  (if (cdr (assoc :comment-count x))
+    (loop for x in sorted
+	  for count from 0
+	  until (and limit (>= count limit))
+	  do
+	  (if (assoc :comment-count x)
 	    (write-string (post-headline-to-html x) stream)
 	    (format stream "<ul class=\"comment-thread\"><li class=\"comment-item\" id=\"comment-~A\">~A</li></ul>"
 		    (cdr (assoc :--id x)) (comment-to-html x :with-post-title t))))))
@@ -379,7 +382,7 @@
 				       (format out-stream "<h1 class=\"page-main-heading\">~A</h1><div class=\"user-stats\">Karma: <span class=\"karma-total\">~A</span></div>"
 					       (cdr (assoc :display-name user-info))
 					       (pretty-number (or (cdr (assoc :karma user-info)) 0)))
-				       (comment-post-interleave-output out-stream (concatenate 'list user-posts user-comments)))))))
+				       (comment-post-interleave-output out-stream (concatenate 'list user-posts user-comments) :limit 20))))))
 
 (defun search-result-markdown-to-html (item)
   (cons (cons :html-body (markdown:parse (cdr (assoc :body item)))) item)) 
