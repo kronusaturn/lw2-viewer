@@ -389,14 +389,18 @@
 
 (hunchentoot:define-easy-handler (view-search :uri "/search") (q)
 				 (with-error-page
-				   (let ((*current-search-query* q)) 
-				     (declare (special *current-search-query*)) 
-				     (multiple-value-bind (posts comments) (lw2-search-query q)
-				       (emit-page (out-stream :title "Search" :current-uri "/search" :content-class "search-results-page")
-						  (map-output out-stream #'post-headline-to-html posts)
-						  (with-outputs (out-stream) "<ul class=\"comment-thread\">") 
-						  (map-output out-stream (lambda (c) (format nil "<li class=\"comment-item\">~A</li>" (comment-to-html (search-result-markdown-to-html c) :with-post-title t))) comments)
-						  (with-outputs (out-stream) "</ul>")))))) 
+				   (let ((*current-search-query* q)
+					 (link (or (convert-lw2-link q) (convert-lw1-link q))))
+				     (declare (special *current-search-query*))
+				     (if link
+				       (setf (hunchentoot:return-code*) 301
+					     (hunchentoot:header-out "Location") link)
+				       (multiple-value-bind (posts comments) (lw2-search-query q)
+					 (emit-page (out-stream :title "Search" :current-uri "/search" :content-class "search-results-page")
+						    (map-output out-stream #'post-headline-to-html posts)
+						    (with-outputs (out-stream) "<ul class=\"comment-thread\">") 
+						    (map-output out-stream (lambda (c) (format nil "<li class=\"comment-item\">~A</li>" (comment-to-html (search-result-markdown-to-html c) :with-post-title t))) comments)
+						    (with-outputs (out-stream) "</ul>"))))))) 
 
 (defun output-form (out-stream method action id class csrf-token fields button-label)
   (format out-stream "<form method=\"~A\" action=\"~A\" id=\"~A\" class=\"~A\"><div>" method action id class)
