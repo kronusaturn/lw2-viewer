@@ -235,6 +235,19 @@ function highlightCommentsSince(date) {
 	});
 }
 
+function getPostHash() {
+
+	return /^\/posts\/([^\/]+)/.exec(location.pathname)[1];
+}
+function getLastVisitedDate() {
+	let storageName = "last-visited-date_" + getPostHash();
+	return window.localStroage.getItem(storageName);
+}
+function setLastVisitedDate(date) {
+	let storageName = "last-visited-date_" + getPostHash();
+	window.localStorage.setItem(storageName, date);
+}
+
 function initialize() {
 	window.requestAnimationFrame(function() {
 		if(location.hash.length == 18) {
@@ -343,6 +356,13 @@ function initialize() {
 			b.closest(".comment-item").setCommentThreadMaximized(false);
 			b.addActivateEvent(commentMinimizeButtonClicked);
 		});
+		
+		// Read and update last-visited-date.
+		let lastVisitedDate = getLastVisitedDate();
+		setLastVisitedDate(Date.now());
+		
+		// Highlight new comments.
+		highlightCommentsSince(lastVisitedDate);
 	})
 }
 
