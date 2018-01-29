@@ -1058,7 +1058,7 @@ a.comment-parent-link:hover::after {
 	position: absolute;
 	width: 100%;
 	height: 100%;
-	outline: 2px solid #0c0;
+	outline: 2px solid #5a5;
 	z-index: 5000;
 	pointer-events: none;
 }
