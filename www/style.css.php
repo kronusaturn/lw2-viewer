@@ -557,6 +557,52 @@ h1.listing a[href^="/"]::after {
   font-weight: 600;
 }
 
+/****************/
+/* ALIGNED FORM */
+/****************/
+
+.aligned-form > div > div {
+	overflow: auto;
+	margin: 0.25em 0;
+}
+.aligned-form label,
+.aligned-form input {
+	float: left;
+}
+.aligned-form label {
+	clear: left;
+	text-align: right;
+	padding: 0.25em 0.5em;
+	white-space: nowrap;
+}
+.aligned-form input {
+	width: calc(100% - 11em);
+	padding: 0.25em;
+}
+.aligned-form input[type='submit'] {
+	float: right;
+	width: calc(100% - 15em);
+	padding: 0.35em;
+	font-weight: bold;
+	line-height: 1;
+	background-color: #eee;
+	border: 1px solid #ccc;
+}
+.aligned-form input[type='submit']:hover,
+.aligned-form input[type='submit']:focus {
+	background-color: #ddd;
+	border: 1px solid #aaa;
+}
+.aligned-form label + input:focus {
+	background-color: #ffd;
+	border: 1px solid #bbb;
+	box-shadow: 0 0 1px #bbb;
+	outline: none;
+}
+.aligned-form label {
+	width: 9em;
+}
+
 /**************/
 /* LOGIN FORM */
 /**************/
@@ -588,44 +634,14 @@ h1.listing a[href^="/"]::after {
 #create-account-form-container h1 {
 	font-size: 1.7em;
 }
-.login-container form > div > div {
-	overflow: auto;
-	margin: 0.25em 0;
+.textarea-container {
+	position: relative;
 }
-.login-container form label,
-.login-container form input {
-	float: left;
+
+#edit-post-form {
+	padding: 1em 1em 3em;
 }
-.login-container form label {
-	clear: left;
-	text-align: right;
-	padding: 0.25em 0.5em;
-	white-space: nowrap;
-}
-.login-container form input {
-	width: calc(100% - 11em);
-	padding: 0.25em;
-}
-.login-container form input[type='submit'] {
-	float: right;
-	width: calc(100% - 15em);
-	padding: 0.35em;
-	font-weight: bold;
-	line-height: 1;
-	background-color: #eee;
-	border: 1px solid #ccc;
-}
-.login-container form input[type='submit']:hover,
-.login-container form input[type='submit']:focus {
-	background-color: #ddd;
-	border: 1px solid #aaa;
-}
-.login-container form label + input:focus {
-	background-color: #ffd;
-	border: 1px solid #bbb;
-	box-shadow: 0 0 1px #bbb;
-	outline: none;
-}
+
 #login-form label {
 	width: 7em;
 }
@@ -1141,11 +1157,11 @@ a.comment-parent-link:hover::after {
 	content: '\F056';
 }
 
-/*****************/
-/* COMMENTING UI */
-/*****************/
+/*****************************/
+/* COMMENTING AND POSTING UI */
+/*****************************/
 
-.comment-controls {
+.posting-controls {
 	text-align: right;
 	margin: 0 8px 8px 16px;
 }
@@ -1164,7 +1180,7 @@ a.comment-parent-link:hover::after {
 	padding: 0;
 	margin: 0 0.25em;
 }
-.comment-controls textarea {
+.posting-controls textarea {
 	display: block;
 	width: 100%;
 	height: 15em;
@@ -1180,7 +1196,7 @@ a.comment-parent-link:hover::after {
 		0 0 0 1px #eee inset;
 	resize: none;
 }
-.comment-controls textarea:focus {
+.posting-controls textarea:focus {
 	outline: none;
 	background-color: #ffd;
 	border-color: #00e;
@@ -1189,11 +1205,11 @@ a.comment-parent-link:hover::after {
 		0 0 0 1px #fff,
 		0 0 0 2px #00e;
 }
-.comment-controls form span {
+.posting-controls form span {
 	float: left;
 	padding: 2px 0 0 6px;
 }
-.comment-controls .markdown-reference-link a {
+.markdown-reference-link a {
 	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJAAAACQCAQAAABNTyozAAAEDklEQVR4Ae3cY3QDjRaG0V1e27Zt27Zt27Ztf7Zt27Zt10jOdZtZzbSN2q41533+tsFO4zRi0TKRJVACJdDiJVACJVACJVACZQmUQAmUQAmUQAmUQFkCJVACJVACJVACJVDWuD7P8icnGRcVbdyJ/uRZ+jTZYxwq/lN2qMcozvtMibmySe/TsPeqi0JZ3XsAHm1SZAua9CjgoMQo6UB4uiim5gbXV7Ab1EQxT+P3RRw/dHtV3e39UL3g8XuOEw39QNX3g4LHcYwU/n5uo+q7beGKNqLwJ3U1cteKuepEQ1cid03BJIESKIESKIESKIESaIkl0I3dv7Q7a293c//ShrWym7l/abdbGaCnidJGPFzre6opUdqDtLJXitJ+svpA4Uy30dru6hJRHaCws37L37CDRbWAwvctf38S1QOqe43l7f2iikDheg+x9J5ksqpA4TS3svju5CJRXaCwvX7lG3KAqDZQ+Jby/U4kUM0rNN+7hAQSrvNAC/c4Ewn0/052C8Xd0fkigebbRp/5DdpHJFCxr5nfr4QEUqzmJYC3iQRq1jXuj8cYT6CyTnAv54oEKm9EJFBnJVAC7eoS0XJn2r8qQP/wNFOipUY8wvbVAeIjooXq3ki1gPhHC0A/oWWgQZ/37ZI2FaUdVPpb33LHlQS6scPFstrDQBtAvEpNdLEfsZJA3N3lYsnOcTvaAuKzomttqW+lgXimabFoYx5N20D8SXSlw9yElQfiE0J5dW+lI6BBu4uOO8+dWB0g1hel/YIOgbiVE0VHXefhrB7QTRwtmra3gS4AcW+Xibab8SJWE4h7uaLpn/Ud6AoQTzIu2uzDrDYQzzUjCo17HF0D4g3qoo1+yWoCld8hv5OuAvFl0XLb6V8rQGws5votXQfqs45oqaPdjLUDdNO5f7Xa32APgBhu6b2SC92VtQTEfVwlXOhO9ASI2zhNLKsRj2atAfFCo55Iz4C4nyvFks16OWsRiPvQUyCeblIs0adYq0B6DsTb1EV5fk+1gfiWKG0XAwnUZyPRtOPdggTiRg4UC7rEPUkg4PbOFIXGPIEEmt+DCmeu5rUkUHHPaXj76Qsk0MK9R/ynv5FAzfdDYS9Da+n/xe6ovd2lS/8vVlyfH7o1vQLKJVACJVACJVACJVACIYGW/A6z/A6zG8RcNbdT9d1eTcx1A8eKhn6s6vtxweNYfisaqvupu+jXV8H63cXP1Asev+Wpopi6aVMVbFpdFPMUlP6jdrY/8AgTYkHZhEcAvFNdFMpq3qFh78y/okIT3qk4j8zborn290hN91S/c6zrzapVsFnXO9bvPFXjYtEykSVQAnVUAiVQAiVQAiVQAiVQlkAJlEAJlEAJlEAJlCVQAiVQAiVQAiVQAmX/BMHb3CdNrgcrAAAAAElFTkSuQmCC');
 	background-size: 1.25em;
 	background-repeat: no-repeat;
@@ -1212,10 +1228,10 @@ a.comment-parent-link:hover::after {
 	visibility: hidden;
 }
 #markdown-hints-checkbox + label::after {
-	content: "(Show commenting help)";
+	content: "(Show Markdown help)";
 }
 #markdown-hints-checkbox:checked + label::after {
-	content: "(Hide commenting help)";
+	content: "(Hide Markdown help)";
 }
 #markdown-hints-checkbox + label::before {
 	content: '\F059';
@@ -1232,7 +1248,7 @@ a.comment-parent-link:hover::after {
 		0 0 1px #fff,
 		0 0 3px #fff;
 }
-.comment-controls .markdown-hints {
+.markdown-hints {
 	margin: 4px 0 0 4px;
 	padding: 4px 8px;
 	border: 1px solid #c00;
@@ -1243,21 +1259,21 @@ a.comment-parent-link:hover::after {
 	z-index: 1;
 	display: none;
 }
-.comment-controls #markdown-hints-checkbox:checked ~ .markdown-hints {
+#markdown-hints-checkbox:checked ~ .markdown-hints {
 	display: table;
 }
-.comment-controls .markdown-hints-row {
+.markdown-hints-row {
 	display: table-row;
 }
-.comment-controls .markdown-hints-row span,
-.comment-controls .markdown-hints-row code {
+.markdown-hints-row span,
+.markdown-hints-row code {
 	float: none;
 	display: table-cell;
 	border: none;
 	background-color: inherit;
 	padding: 0 12px 0 0;
 }
-.comment-controls input[type='submit'] {
+.posting-controls input[type='submit'] {
 	margin: 6px;
 	background-color: #fff;
 	padding: 4px 10px;
@@ -1265,12 +1281,12 @@ a.comment-parent-link:hover::after {
 	font-weight: bold;
 	font-size: 1.125rem;
 }
-.comment-controls input[type='submit']:hover,
-.comment-controls input[type='submit']:focus {
+.posting-controls input[type='submit']:hover,
+.posting-controls input[type='submit']:focus {
 	background-color: #ddd;
 	border: 1px solid #999;
 }
-.comment-controls button {
+.posting-controls button {
 	border: none;
 	font-weight: 600;
 	padding: 1px 6px;

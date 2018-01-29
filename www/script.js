@@ -35,6 +35,46 @@ Element.prototype.getCommentId = function() {
 	}
 }
 
+Element.prototype.addTextareaFeatures = function() {
+	let textarea = this;
+
+	textarea.addEventListener("focus", function(e){e.target.parentElement.parentElement.scrollIntoViewIfNeeded()});
+	textarea.addEventListener("scroll", OnInputExpandTextarea, false);
+	
+	textarea.insertAdjacentHTML("beforebegin", "<div class='guiedit-buttons-container'></div>");
+	var buttons_container = textarea.parentElement.querySelector(".guiedit-buttons-container");
+	for (var button of guiEditButtons) {
+		buttons_container.insertAdjacentHTML("beforeend", 
+			"<button type='button' class='guiedit guiedit-" 
+			+ button[0]
+			+ "' tabindex='-1' title='"
+			+ button[1] + ((button[2] != "") ? (" [accesskey: " + button[2] + "]") : "")
+			+ "' data-tooltip='" + button[1]
+			+ "' accesskey='"
+			+ button[2]
+			+ "' onclick='insMarkup(event,"
+			+ ((typeof button[3] == 'function') ?
+				button[3].name : 
+				("\"" + button[3]  + "\",\"" + button[4] + "\",\"" + button[5] + "\""))
+			+ ");'>"
+			+ button[6]
+			+ "</button>"
+		);
+	}
+	
+	var markdown_hints = "<input type='checkbox' id='markdown-hints-checkbox'><label for='markdown-hints-checkbox'></label>";
+	markdown_hints += "<div class='markdown-hints'>";
+	markdown_hints += "<div class='markdown-hints-row'><span style='font-weight: bold;'>Bold</span><code>**Bold**</code></div>";
+	markdown_hints += "<div class='markdown-hints-row'><span style='font-style: italic;'>Italic</span><code>*Italic*</code></div>";
+	markdown_hints += "<div class='markdown-hints-row'><span><a href=#>Link</a></span><code>[Link](http://example.com)</code></div>";
+	markdown_hints += "<div class='markdown-hints-row'><span>Heading 1</span><code># Heading 1</code></div>";
+	markdown_hints += "<div class='markdown-hints-row'><span>Heading 2</span><code>## Heading 1</code></div>";
+	markdown_hints += "<div class='markdown-hints-row'><span>Heading 3</span><code>### Heading 1</code></div>";
+	markdown_hints += "<div class='markdown-hints-row'><span>Blockquote</span><code>&gt; Blockquote</code></div>";
+	markdown_hints += "</div>";
+	textarea.parentElement.querySelector("span").insertAdjacentHTML("afterend", markdown_hints);
+}
+
 Element.prototype.injectReplyForm = function(editMarkdownSource) {
 	let e = this;
 	let editCommentId = (editMarkdownSource ? e.getCommentId() : false);
@@ -56,42 +96,8 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 	}
 	let textarea = e.querySelector("textarea");
 	textarea.value = (editMarkdownSource ? editMarkdownSource : "");
+	textarea.addTextareaFeatures();
 	textarea.focus();
-	textarea.addEventListener("focus", function(e){e.target.parentElement.parentElement.scrollIntoViewIfNeeded()});
-	textarea.addEventListener("scroll", OnInputExpandTextarea, false);
-	
-	e.querySelector(".cancel-comment-button + form").insertAdjacentHTML("afterbegin", "<div class='guiedit-buttons-container'></div>")
-	var buttons_container = e.querySelector(".guiedit-buttons-container");
-	for (var button of guiEditButtons) {
-		buttons_container.insertAdjacentHTML("beforeend", 
-			"<button type='button' class='guiedit guiedit-" 
-			+ button[0]
-			+ "' tabindex='-1' title='"
-			+ button[1] + ((button[2] != "") ? (" [accesskey: " + button[2] + "]") : "")
-			+ "' data-tooltip='" + button[1]
-			+ "' accesskey='"
-			+ button[2]
-			+ "' onclick='insMarkup("
-			+ ((typeof button[3] == 'function') ?
-				button[3].name : 
-				("\"" + button[3]  + "\",\"" + button[4] + "\",\"" + button[5] + "\""))
-			+ ");'>"
-			+ button[6]
-			+ "</button>"
-		);
-	}
-	
-	var markdown_hints = "<input type='checkbox' id='markdown-hints-checkbox'><label for='markdown-hints-checkbox'></label>";
-	markdown_hints += "<div class='markdown-hints'>";
-	markdown_hints += "<div class='markdown-hints-row'><span style='font-weight: bold;'>Bold</span><code>**Bold**</code></div>";
-	markdown_hints += "<div class='markdown-hints-row'><span style='font-style: italic;'>Italic</span><code>*Italic*</code></div>";
-	markdown_hints += "<div class='markdown-hints-row'><span><a href=#>Link</a></span><code>[Link](http://example.com)</code></div>";
-	markdown_hints += "<div class='markdown-hints-row'><span>Heading 1</span><code># Heading 1</code></div>";
-	markdown_hints += "<div class='markdown-hints-row'><span>Heading 2</span><code>## Heading 1</code></div>";
-	markdown_hints += "<div class='markdown-hints-row'><span>Heading 3</span><code>### Heading 1</code></div>";
-	markdown_hints += "<div class='markdown-hints-row'><span>Blockquote</span><code>&gt; Blockquote</code></div>";
-	markdown_hints += "</div>";
-	e.querySelector("form span").insertAdjacentHTML("afterend", markdown_hints);
 }
 
 Element.prototype.injectCommentButtons = function() {
@@ -303,6 +309,8 @@ function initialize() {
 			});
 		});
 
+		document.querySelectorAll("#edit-post-form textarea").forEach(function (textarea) { textarea.addTextareaFeatures(); });
+
 		if(readCookie("lw2-auth-token")) {
 			// Add upvote/downvote buttons.
 			if(typeof(postVote) != 'undefined') {
@@ -327,12 +335,12 @@ function initialize() {
 			if (comments_container) {
 				// Add reply buttons.
 				comments_container.querySelectorAll(".comment").forEach(function (e) {
-					e.insertAdjacentHTML("afterend", "<div class='comment-controls'></div>");
+					e.insertAdjacentHTML("afterend", "<div class='comment-controls posting-controls'></div>");
 					e.parentElement.querySelector(".comment-controls").injectCommentButtons();
 				});
 			
 				// Add top-level new comment form.
-				comments_container.insertAdjacentHTML("afterbegin", "<div class='comment-controls'></div>");
+				comments_container.insertAdjacentHTML("afterbegin", "<div class='comment-controls posting-controls'></div>");
 				comments_container.querySelector(".comment-controls").injectCommentButtons();
 			}			
 

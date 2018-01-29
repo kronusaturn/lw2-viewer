@@ -262,6 +262,13 @@
 				     (format out-stream "<h1>Error</h1><p>~A</p>"
 					     condition)))))) 
 
+(defun output-form (out-stream method action id class csrf-token fields button-label &key textarea)
+  (format out-stream "<form method=\"~A\" action=\"~A\" id=\"~A\" class=\"~A\"><div>" method action id class)
+  (loop for (id label type autocomplete) in fields
+	do (format out-stream "<div><label for=\"~A\">~A:</label><input type=\"~A\" name=\"~A\" autocomplete=\"~A\"></div>" id label type id autocomplete))
+  (format out-stream "~1{<div class=\"textarea-container\"><textarea name=\"~A\">~A</textarea><span class='markdown-reference-link'>You can use <a href='http://commonmark.org/help/' target='_blank'>Markdown</a> here.</span></div>~}<div><input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><input type=\"submit\" value=\"~A\"></div></div></form>"
+	  textarea csrf-token button-label)) 
+
 (defun view-posts-index (posts)
   (alexandria:switch ((hunchentoot:get-parameter "format") :test #'string=)
 		     ("rss" 
@@ -337,6 +344,20 @@
 							(if lw2-auth-token
 							  (format out-stream "<script>commentVotes=~A</script>" (json:encode-json-to-string (get-post-comments-votes post-id lw2-auth-token)))))))))))) 
 
+(hunchentoot:define-easy-handler (view-edit-post :uri "/edit-post") ((csrf-token :request-type :post) (text :request-type :post) title url section post-id)
+				 (with-error-page
+				   (cond
+				     (text "ok")
+				     (t
+				       (let ((csrf-token (make-csrf-token (hunchentoot:cookie-in "session-token")))) 
+					 (emit-page (out-stream :title "Edit Post" :content-class "edit-post-page")
+						    (format out-stream "<div class=\"posting-controls\">")
+						    (output-form out-stream "post" "" "edit-post-form" "aligned-form" csrf-token
+								 '(("title" "Title" "text" "off")
+								   ("url" "URL (optional)" "text" "off"))
+								 "Submit" :textarea `("text" ""))
+						    (format out-stream "</div>")))))))
+
 (hunchentoot:define-easy-handler (view-karma-vote :uri "/karma-vote") ((csrf-token :request-type :post) (target :request-type :post) (target-type :request-type :post) (vote-type :request-type :post))
 				 (check-csrf-token (hunchentoot:cookie-in "session-token") csrf-token)
 				 (let ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token")))
@@ -401,12 +422,6 @@
 						    (with-outputs (out-stream) "<ul class=\"comment-thread\">") 
 						    (map-output out-stream (lambda (c) (format nil "<li class=\"comment-item\">~A</li>" (comment-to-html (search-result-markdown-to-html c) :with-post-title t))) comments)
 						    (with-outputs (out-stream) "</ul>"))))))) 
-
-(defun output-form (out-stream method action id class csrf-token fields button-label)
-  (format out-stream "<form method=\"~A\" action=\"~A\" id=\"~A\" class=\"~A\"><div>" method action id class)
-  (loop for (id label type autocomplete) in fields
-	do (format out-stream "<div><label for=\"~A\">~A:</label><input type=\"~A\" name=\"~A\" autocomplete=\"~A\"></div>" id label type id autocomplete))
-  (format out-stream "<div><input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><input type=\"submit\" value=\"~A\"></div></div></form>" csrf-token button-label)) 
 
 (hunchentoot:define-easy-handler (view-login :uri "/login") (return cookie-check (csrf-token :request-type :post) (login-username :request-type :post) (login-password :request-type :post)
 								    (signup-username :request-type :post) (signup-email :request-type :post) (signup-password :request-type :post) (signup-password2 :request-type :post))
