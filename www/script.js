@@ -230,6 +230,8 @@ function highlightCommentsSince(date) {
 	document.querySelectorAll(".comment-item").forEach(function (ci) {
 		if (ci.getCommentDate > date)
 			ci.className += " new-comment";
+		else
+			ci.className.replace(/ new-comment/, '');
 	});
 }
 
