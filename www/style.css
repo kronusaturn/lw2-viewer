@@ -1110,6 +1110,20 @@ a.comment-parent-link:hover::after {
 	font-size: 1rem;
 }
 
+/*****************************/
+/* HIGHLIGHTING NEW COMMENTS */
+/*****************************/
+
+.new-comment::before {
+	content: "";
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	outline: 2px solid #0c0;
+	z-index: 5000;
+	pointer-events: none;
+}
+
 /***********************************/
 /* COMMENT THREAD MINIMIZE BUTTONS */
 /***********************************/

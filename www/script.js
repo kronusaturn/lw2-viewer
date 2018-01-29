@@ -222,6 +222,17 @@ Element.prototype.setCommentThreadMaximized = function(toggle) {
 							" child comments)";
 }
 
+Element.prototype.getCommentDate = function() {
+	let item = (this.className == "comment-item") ? this : this.closest(".comment-item");
+	return (item ? parseInt(item.querySelector(".date").dataset["jsDate"]) : false);
+}
+function highlightCommentsSince(date) {
+	document.querySelectorAll(".comment-item").forEach(function (ci) {
+		if (ci.getCommentDate > date)
+			ci.className += " new-comment";
+	});
+}
+
 function initialize() {
 	window.requestAnimationFrame(function() {
 		if(location.hash.length == 18) {
