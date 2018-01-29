@@ -28,8 +28,9 @@
 
 (defun post-headline-to-html (post)
   (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :posted-at post))) 
-    (format nil "<h1 class=\"listing\"><a href=\"~A\">~A</a></h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\">~A</div><a class=\"comment-count\" href=\"~A#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a>~A</div>"
-	    (plump:encode-entities (or (cdr (assoc :url post)) (generate-post-link post))) 
+    (format nil "<h1 class=\"listing\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~A</a></h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\">~A</div><a class=\"comment-count\" href=\"~A#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a>~A</div>"
+	    (if (cdr (assoc :url post)) (plump:encode-entities (cdr (assoc :url post))))
+	    (generate-post-link post)
 	    (plump:encode-entities (clean-text (cdr (assoc :title post))))
 	    (plump:encode-entities (get-user-slug (cdr (assoc :user-id post)))) 
 	    (plump:encode-entities (get-username (cdr (assoc :user-id post))))
