@@ -1,14 +1,14 @@
-function insMarkup() {
+function insMarkup(event) {
 	var mopen = '', mclose = '', mtext = '', func = false;
-	if (typeof arguments[0] == 'function') {
-		func = arguments[0];
+	if (typeof arguments[1] == 'function') {
+		func = arguments[1];
 	} else {
-		mopen = arguments[0];
-		mclose = arguments[1];
-		mtext = arguments[2];
+		mopen = arguments[1];
+		mclose = arguments[2];
+		mtext = arguments[3];
 	}
 
-	var tarea = document.querySelector(".cancel-comment-button ~ form textarea");
+	var tarea = event.target.closest("form").querySelector("textarea");
 	tarea.focus();
 	var p0 = tarea.selectionStart;
 	var p1 = tarea.selectionEnd;
