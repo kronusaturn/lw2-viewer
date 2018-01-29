@@ -241,7 +241,7 @@ function getPostHash() {
 }
 function getLastVisitedDate() {
 	let storageName = "last-visited-date_" + getPostHash();
-	return window.localStroage.getItem(storageName);
+	return window.localStorage.getItem(storageName);
 }
 function setLastVisitedDate(date) {
 	let storageName = "last-visited-date_" + getPostHash();
