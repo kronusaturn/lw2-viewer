@@ -231,7 +231,7 @@ function highlightCommentsSince(date) {
 		if (ci.getCommentDate > date)
 			ci.className += " new-comment";
 		else
-			ci.className.replace(/ new-comment/, '');
+			ci.className = ci.className.replace(/ new-comment/, '');
 	});
 }
 
