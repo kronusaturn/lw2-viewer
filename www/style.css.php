@@ -715,6 +715,7 @@ h1.listing a[href^="http"]:hover {
 	text-align: right;
 	left: -4.5em;
 	color: #999;
+	font-feature-settings: "tnum";
 }
 .contents .toc-item-1 {
 	counter-increment: toc-item-1;
@@ -746,7 +747,7 @@ h1.listing a[href^="http"]:hover {
 	font-size: 0.95em;
 }
 .contents .toc-item-1 ~ .toc-item-2 ~ .toc-item-3 {
-	margin-left: 6em;
+	margin-left: 5.75em;
 	font-size: 0.9em;
 }
 .contents .toc-item-3 {
