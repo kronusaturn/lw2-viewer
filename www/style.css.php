@@ -36,12 +36,27 @@ input {
 	position: relative;
 }
 
-.rss {
+.page-toolbar {
 	position: absolute;
 	vertical-align: top;
 	font-size: 0.9em;
 	right: 0.4em;
 	line-height: 1.8;
+}
+.page-toolbar a {
+	display: inline-block;
+	margin-left: 1em;
+}
+.new-post {
+	color: #090;
+}
+.new-post::before {
+	content: '\F067';
+	font-family: "Font Awesome";
+	font-weight: 900;
+	padding-right: 0.2em;
+/*	display: inline-block;
+	position: relative;*/
 }
 .rss::before {
 	content: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("rss.svg")) ?>');
@@ -1357,8 +1372,19 @@ a.comment-parent-link:hover::after {
 	font-size: 0.9em;
 	opacity: 0.6;
 }
-.comment-controls .edit-button::before {
+.post-controls {
+	text-align: right;
+}
+.edit-post-link {
+	color: #090;
+}
+.edit-post-link::before {
+	margin-right: 0.2em;
+}
+.comment-controls .edit-button::before,
+.edit-post-link::before {
 	content: '\F303';
+	font-family: "Font Awesome";
 	font-weight: 900;
 	font-size: 0.75em;
 	position: relative;

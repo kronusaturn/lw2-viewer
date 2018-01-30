@@ -265,12 +265,23 @@
 
 (defun output-form (out-stream method action id class csrf-token fields button-label &key textarea)
   (format out-stream "<form method=\"~A\" action=\"~A\" id=\"~A\" class=\"~A\"><div>" method action id class)
-  (loop for (id label type autocomplete) in fields
-	do (format out-stream "<div><label for=\"~A\">~A:</label><input type=\"~A\" name=\"~A\" autocomplete=\"~A\"></div>" id label type id autocomplete))
+  (loop for (id label type . params) in fields
+	do (format out-stream "<div><label for=\"~A\">~A:</label>" id label)
+	do (cond
+	     ((string= type "select")
+	      (destructuring-bind (option-list &optional default) params
+		(format out-stream "<select name=\"~A\">" id)
+		(loop for (value label) in option-list
+		      do (format out-stream "<option value=\"~A\"~:[~; selected~]>~A</option>" value (string= default value) label))
+		(format out-stream "</select>")))
+	     (t
+	       (destructuring-bind (&optional (autocomplete "off") default) params
+		 (format out-stream "<input type=\"~A\" name=\"~A\" autocomplete=\"~A\"~@[ value=\"~A\"~]>" type id autocomplete default))))
+	do (format out-stream "</div>"))
   (format out-stream "~1{<div class=\"textarea-container\"><textarea name=\"~A\">~A</textarea><span class='markdown-reference-link'>You can use <a href='http://commonmark.org/help/' target='_blank'>Markdown</a> here.</span></div>~}<div><input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><input type=\"submit\" value=\"~A\"></div></div></form>"
 	  textarea csrf-token button-label)) 
 
-(defun view-posts-index (posts)
+(defun view-posts-index (posts &optional section)
   (alexandria:switch ((hunchentoot:get-parameter "format") :test #'string=)
 		     ("rss" 
 		      (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
@@ -278,17 +289,19 @@
 			(posts-to-rss posts (make-flexi-stream out-stream :external-format :utf-8))))
 		     (t
 		       (emit-page (out-stream :description "A faster way to browse LessWrong 2.0") 
-				  (format out-stream "<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" href=\"~A?~@[~A&~]format=rss\">RSS</a>"
+				  (format out-stream "<div class=\"page-toolbar\">~@[<a class=\"new-post\" href=\"/edit-post?section=~A\">New post</a>~]<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" href=\"~A?~@[~A&~]format=rss\">RSS</a></div>"
+					  (if (logged-in-userid) section)
 					  (hunchentoot:script-name*) (hunchentoot:query-string*)) 
 				  (map-output out-stream #'post-headline-to-html posts))))) 
 
 (hunchentoot:define-easy-handler (view-root :uri "/") ()
-				 (with-error-page (view-posts-index (get-posts))))
+				 (with-error-page (view-posts-index (get-posts) "frontpage")))
 
 (hunchentoot:define-easy-handler (view-index :uri "/index") (view all meta before after)
 				 (with-error-page
-				   (let ((posts (lw2-graphql-query (make-posts-list-query :view (or view "new") :frontpage (not all) :meta (not (not meta)) :before before :after after))))
-				     (view-posts-index posts)))) 
+				   (let ((posts (lw2-graphql-query (make-posts-list-query :view (or view "new") :frontpage (not all) :meta (not (not meta)) :before before :after after)))
+					 (section (cond ((string= view "meta") "meta") ((string= view "featured") nil) ((not all) "frontpage") (t "all"))))
+				     (view-posts-index posts section))))
 
 (hunchentoot:define-easy-handler (view-post :uri "/post") (id)
 				 (with-error-page
@@ -335,7 +348,9 @@
 					     (emit-page (out-stream :title (clean-text (cdr (assoc :title post)))) 
 							(with-outputs (out-stream) (post-body-to-html post))
 							(if lw2-auth-token
-							  (format out-stream "<script>postVote=~A</script>" (json:encode-json-to-string (get-post-vote post-id lw2-auth-token)))) 
+							  (format out-stream "<script>postVote=~A</script><div class=\"post-controls\"><a class=\"edit-post-link\" href=\"/edit-post?post-id=~A\">Edit post</a></div>"
+								  (json:encode-json-to-string (get-post-vote post-id lw2-auth-token))
+								  (cdr (assoc :--id post)))) 
 							(force-output out-stream) 
 							(format out-stream "<div id=\"comments\">~A</div>"
 								(let ((comments (get-post-comments post-id)))
@@ -348,15 +363,37 @@
 (hunchentoot:define-easy-handler (view-edit-post :uri "/edit-post") ((csrf-token :request-type :post) (text :request-type :post) title url section post-id)
 				 (with-error-page
 				   (cond
-				     (text "ok")
+				     (text
+				       (check-csrf-token (hunchentoot:cookie-in "session-token") csrf-token)
+				       (let ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token"))
+					     (url (if (string= url "") nil url)))
+					 (assert (and lw2-auth-token (not (string= text ""))))
+					 (let* ((post-data `(("body" . ,text) ("title" . ,title) ("url" . ,url) ("frontpage" . ,(string= section "frontpage")) ("meta" . ,(string= section "meta"))
+							     ("draft" . ,(string= section "drafts")) ("content" . ("blocks" . nil))))
+						(post-set (loop for item in post-data when (cdr item) collect item))
+						(post-unset (loop for item in post-data when (not (cdr item)) collect (cons (car item) t))))
+					   (let* ((new-post-data
+						    (if post-id
+						      (do-lw2-post-edit lw2-auth-token post-id post-set post-unset)
+						      (do-lw2-post lw2-auth-token post-set)))
+						  (new-post-id (cdr (assoc :--id new-post-data))))
+					     (assert new-post-id)
+					     (cache-put "post-markdown-source" new-post-id text)
+					     (setf (hunchentoot:return-code*) 303
+						   (hunchentoot:header-out "Location") (generate-post-link new-post-data))))))
 				     (t
-				       (let ((csrf-token (make-csrf-token (hunchentoot:cookie-in "session-token")))) 
+				       (let* ((csrf-token (make-csrf-token (hunchentoot:cookie-in "session-token")))
+					      (post-body (if post-id (get-post-body post-id)))
+					      (section (or section (loop for (sym . sec) in '((:draft . "drafts") (:meta . "meta") (:frontpage . "frontpage"))
+									 if (cdr (assoc sym post-body)) return sec
+									 finally (return "all")))))
 					 (emit-page (out-stream :title "Edit Post" :content-class "edit-post-page")
 						    (format out-stream "<div class=\"posting-controls\">")
 						    (output-form out-stream "post" "" "edit-post-form" "aligned-form" csrf-token
-								 '(("title" "Title" "text" "off")
-								   ("url" "URL (optional)" "text" "off"))
-								 "Submit" :textarea `("text" ""))
+								 `(("title" "Title" "text" "off" ,(cdr (assoc :title post-body)))
+								   ("url" "URL (optional)" "text" "off" ,(cdr (assoc :url post-body)))
+								   ("section" "Section" "select" (("frontpage" "Frontpage") ("all" "All") ("meta" "Meta") ("drafts" "Drafts")) ,section))
+								 "Submit" :textarea `("text" ,(or (and post-id (cache-get "post-markdown-source" post-id)) (cdr (assoc :html-body post-body)) "")))
 						    (format out-stream "</div>")))))))
 
 (hunchentoot:define-easy-handler (view-karma-vote :uri "/karma-vote") ((csrf-token :request-type :post) (target :request-type :post) (target-type :request-type :post) (vote-type :request-type :post))
