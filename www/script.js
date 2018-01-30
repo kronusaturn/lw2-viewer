@@ -242,7 +242,6 @@ function highlightCommentsSince(date) {
 }
 
 function getPostHash() {
-
 	return /^\/posts\/([^\/]+)/.exec(location.pathname)[1];
 }
 function getLastVisitedDate() {
@@ -252,6 +251,19 @@ function getLastVisitedDate() {
 function setLastVisitedDate(date) {
 	let storageName = "last-visited-date_" + getPostHash();
 	window.localStorage.setItem(storageName, date);
+}
+
+function getQueryVariable(variable)
+{
+	var query = window.location.search.substring(1);
+	var vars = query.split("&");
+	for (var i = 0; i < vars.length; i++) {
+		var pair = vars[i].split("=");
+		if(pair[0] == variable)
+			return pair[1];
+	}
+	
+	return false;
 }
 
 function initialize() {
@@ -369,8 +381,10 @@ function initialize() {
 		let lastVisitedDate = getLastVisitedDate();
 		setLastVisitedDate(Date.now());
 		
-		// Highlight new comments.
-		highlightCommentsSince(lastVisitedDate);
+		// Highlight new comments (as specified by URL parameter, if present, or otherwise
+		// all the new ones since last visit).
+		let hns = parseInt(getQueryVariable("hns"));
+		highlightCommentsSince(hns || lastVisitedDate);
 	})
 }
 
