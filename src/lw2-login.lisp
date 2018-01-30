@@ -118,17 +118,18 @@
   (cdr (assoc :--id (do-lw2-post-query auth-token data))))
 
 (defun do-lw2-post (auth-token data)
-  (do-lw2-post-query* auth-token `((("query" . "mutation PostsNew($document: PostsInput) { PostsNew(document: $document) { __typename, _id, htmlBody } }")
-				    ("variables" .
-				     (("document" . ,data)))
-				    ("operationName" . "PostsNew")))))
+  (do-lw2-post-query auth-token `((("query" . "mutation PostsNew($document: PostsInput) { PostsNew(document: $document) { _id, slug } }")
+				   ("variables" .
+				    (("document" . ,data)))
+				   ("operationName" . "PostsNew")))))
 
-(defun do-lw2-post-edit (auth-token post-id set)
-  (do-lw2-post-query* auth-token `((("query" . "mutation PostsEdit($documentId: String, $set: PostsInput) { PostsEdit(documentId: $documentId, set: $set) { _id } }") ; $unset: PostsUnset
-				    ("variables" .
-				     (("documentId" . ,post-id)
-				      ("set" . ,set)))
-				    ("operationName" . "PostsEdit"))))) 
+(defun do-lw2-post-edit (auth-token post-id set &optional unset)
+  (do-lw2-post-query auth-token `((("query" . , (format nil "mutation PostsEdit($documentId: String, $set: PostsInput~@[, $unset: PostsUnset~]~@*) { PostsEdit(documentId: $documentId, set: $set~@[, unset: $unset~]~@*) { _id, slug } }" unset)) ; $unset: PostsUnset
+				   ("variables" .
+				    (("documentId" . ,post-id)
+				     ("set" . ,set)
+				     ,@(if unset `(("unset" . ,unset)))))
+				   ("operationName" . "PostsEdit"))))) 
 
 (defun do-lw2-post-remove (auth-token post-id)
   (do-lw2-post-query auth-token `((("query" . "mutation PostsRemove($documentId: String) { PostsRemove(documentId: $documentId) { __typename } }")
