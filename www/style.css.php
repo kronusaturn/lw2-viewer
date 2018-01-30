@@ -1175,7 +1175,7 @@ a.comment-parent-link:hover::after {
 /* COMMENTING AND POSTING UI */
 /*****************************/
 
-.posting-controls {
+.comment-controls {
 	text-align: right;
 	margin: 0 8px 8px 16px;
 }
@@ -1413,6 +1413,57 @@ a.comment-parent-link:hover::after {
 }
 .guiedit:hover::after {
 	visibility: visible;
+}
+
+/******************/
+/* EDIT POST FORM */
+/******************/
+
+#edit-post-form {
+	padding-bottom: 4em;
+}
+#edit-post-form input[type='text'] {
+	width: calc(100% - 9em);
+}
+#edit-post-form input {
+	width: auto;
+}
+#edit-post-form input[type='submit'] {
+  padding: 6px 12px;
+	margin-top: 0;
+}
+#edit-post-form label {
+	clear: none;
+}
+#edit-post-form > div > div:last-of-type {
+	display: inline-block;
+	float: right;
+}
+#edit-post-form .textarea-container {
+	overflow: visible;
+	margin-top: 0.5em;
+}
+#edit-post-form textarea {
+	min-height: 24em;
+}
+#edit-post-form .markdown-hints {
+	top: calc(100% + 2em);
+}
+#edit-post-form select {
+	border: 1px solid #ddd;
+	background-color: inherit;
+	font-family: inherit;
+	font-size: inherit;
+	font-weight: 600;
+	vertical-align: top;
+	height: 33px;
+	padding: 4px;
+}
+#edit-post-form select:focus {
+	outline: none;
+}
+#content {
+	overflow: visible;
 }
 
 /*********/
