@@ -848,6 +848,7 @@ h1.listing a[href^="http"]:hover {
 
 #comments {
 	border-top: 1px solid #000;
+	box-shadow: 0 3px 4px -4px #000 inset;
 }
 #comments:empty::before {
 	content: "No comments.";
@@ -1244,7 +1245,7 @@ a.comment-parent-link:hover::after {
 }
 #comments > .comment-controls > button {
 	font-weight: 600;
-	font-size: 1.25rem;
+	font-size: 1.5rem;
 	padding: 0;
 	margin: 0 0.25em;
 }
