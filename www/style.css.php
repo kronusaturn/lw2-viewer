@@ -725,7 +725,7 @@ h1.listing a[href^="http"]:hover {
 	content: counter(toc-item-1);
 }
 .contents .toc-item-1 ~ .toc-item-2 {
-	margin-left: 3em;
+	margin-left: 2.9em;
 	font-size: 0.95em;
 }
 .contents .toc-item-2 {
@@ -743,11 +743,11 @@ h1.listing a[href^="http"]:hover {
 }
 .contents .toc-item-2 ~ .toc-item-3,
 .contents .toc-item-1 ~ .toc-item-3 {
-	margin-left: 3em;
+	margin-left: 2.9em;
 	font-size: 0.95em;
 }
 .contents .toc-item-1 ~ .toc-item-2 ~ .toc-item-3 {
-	margin-left: 5.75em;
+	margin-left: 5.7em;
 	font-size: 0.9em;
 }
 .contents .toc-item-3 {
