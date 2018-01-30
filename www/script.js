@@ -233,12 +233,16 @@ Element.prototype.getCommentDate = function() {
 	return (item ? parseInt(item.querySelector(".date").dataset["jsDate"]) : false);
 }
 function highlightCommentsSince(date) {
+	var newCommentsCount = 0;
 	document.querySelectorAll(".comment-item").forEach(function (ci) {
-		if (ci.getCommentDate() > date)
+		if (ci.getCommentDate() > date) {
 			ci.className += " new-comment";
-		else
+			newCommentsCount++;
+		} else {
 			ci.className = ci.className.replace(/ new-comment/, '');
+		}
 	});
+	return newCommentsCount;
 }
 
 function getPostHash() {
@@ -385,7 +389,13 @@ function initialize() {
 		// Highlight new comments (as specified by URL parameter, if present, or otherwise
 		// all the new ones since last visit).
 		let hns = parseInt(getQueryVariable("hns"));
-		highlightCommentsSince(hns || lastVisitedDate);
+		let newCommentsCount = highlightCommentsSince(hns || lastVisitedDate);
+		
+		// Add the new comments count & navigator.
+		document.querySelector(".post .post-meta").insertAdjacentHTML("beforeend", 
+			("<button type='button' class='new-comment-sequential-nav-button new-comment-previous' title='Previous new comment'>&lt;</button> " + 
+			 "<span class='new-comments-count' title='" + newCommentsCount + " new comments'>" + newCommentsCount + "</span> " +
+			 "<button type='button' class='new-comment-sequential-nav-button new-comment-next' title='Next new comment'>&gt;</button>"));
 	})
 }
 
