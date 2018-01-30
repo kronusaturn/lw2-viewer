@@ -448,7 +448,7 @@ div[class^='archive-nav-'] {
 /************/
 
 h1.listing {
-	font-family: 'Concourse';
+	font-family: 'Concourse', 'Font Awesome';
 	font-size: 1.875rem;
 	line-height: 1.15;
 	margin: 0.8em 20px 0.1em 20px;
@@ -466,9 +466,11 @@ h1.listing:first-of-type {
 	margin: 0 20px 0 21px;
 }
 h1.listing a {
-	color: #00c;
+	color: #000;
 	position: relative;
-	padding-left: 38px;
+}
+h1.listing a:nth-of-type(2) {
+	margin-left: 0.25em;
 }
 @media only screen and (min-width: 901px) {
 	h1.listing a {
@@ -483,12 +485,16 @@ h1.listing a {
 		z-index: 1;
 	}
 }
-h1.listing a[href^="/"] {
-	color: #000;
-	padding-left: 0;
+h1.listing a[href^="http"] {
+	color: #00c;
+	font-size: 0.8em;
+	display: inline;
+	vertical-align: top;
+	position: relative;
+	top: 4px;
 }
 h1.listing a:hover {
-	color: #4879ec;
+	color: #777;
 	text-decoration: dotted underline;
 	white-space: initial;
 	overflow: visible;
@@ -505,18 +511,14 @@ h1.listing a:hover::before {
 	left: -<?php echo $margin_of_hover_error; ?>;
 	z-index: -1;
 }
-h1.listing a[href^="/"]:hover {
-	color: #777;
-}
-h1.listing a::after { 
-	content: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("chain-link.svg")) ?>');
-	width: 30px;
-	position: absolute;
-	top: 0px;
-	left: 0px;
-}
-h1.listing a[href^="/"]::after {
-	 content: none;
+h1.listing a[href^="http"]:hover {
+	color: #4879ec;
+	text-decoration: none;
+	text-shadow: 
+		 0.5px 0.5px 0 #fff,
+		 -0.5px -0.5px 0 #fff,
+		 0 0 2px #fff,
+		 0 0 3px #00c;
 }
 
 /**************/
