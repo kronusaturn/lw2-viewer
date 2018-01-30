@@ -270,6 +270,12 @@ input {
 	font-weight: inherit;
 	height: 21px;
 }
+#nav-item-search button:focus {
+	text-shadow:
+		0 0 1px #fff,
+		0 0 3px #fff,
+		0 0 5px #fff;
+}
 
 #nav-item-archive {
 	width: 10%;
