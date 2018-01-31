@@ -545,7 +545,7 @@ h1.listing a:nth-of-type(2) {
 }
 @media only screen and (min-width: 901px) {
 	h1.listing a {
-		max-width: calc(100% - 32px);
+		max-width: 100%;
 		display: inline-block;
 		white-space: nowrap;
 		text-overflow: ellipsis;
@@ -555,6 +555,9 @@ h1.listing a:nth-of-type(2) {
 		-ms-hyphens: auto;
 		hyphens: auto;
 		z-index: 1;
+	}
+	h1.listing a:nth-of-type(2) {
+		max-width: calc(100% - 32px);
 	}
 }
 h1.listing a[href^="http"] {
