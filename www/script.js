@@ -508,6 +508,9 @@ function initialize() {
 
 			document.addEventListener("keyup", function(e) { if(e.key == ",") scrollToNewComment(false); if(e.key == ".") scrollToNewComment(true)});
 		}
+		
+		// Add the content width selector.
+		injectContentWidthSelector();
 	})
 }
 
