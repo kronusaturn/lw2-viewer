@@ -40,6 +40,7 @@ Element.prototype.addTextareaFeatures = function() {
 
 	textarea.addEventListener("focus", function(e){e.target.parentElement.parentElement.scrollIntoViewIfNeeded()});
 	textarea.addEventListener("scroll", OnInputExpandTextarea, false);
+	textarea.addEventListener("keyup", function(e){e.stopPropagation()});
 	
 	textarea.insertAdjacentHTML("beforebegin", "<div class='guiedit-buttons-container'></div>");
 	var buttons_container = textarea.parentElement.querySelector(".guiedit-buttons-container");
@@ -283,14 +284,19 @@ function highlightCommentsSince(date) {
 	return newCommentsCount;
 }
 
-function commentQuicknavButtonClicked(event) {
+function scrollToNewComment(next) {
 	let ci = getCurrentVisibleComment();
 	if(ci) {
-		location.hash = "comment-" + (/next/.test(event.target.className) ? ci.nextNewComment.getCommentId() : ci.prevNewComment.getCommentId());
+		let targetComment = (next ? ci.nextNewComment : ci.prevNewComment);
+		if(targetComment) location.hash = "comment-" + targetComment.getCommentId();
 	} else {
-		location.hash = "comment-" + window.newComments[0];
+		if(window.newComments[0]) location.hash = "comment-" + window.newComments[0];
 	}
 	scrollListener();
+}
+
+function commentQuicknavButtonClicked(event) {
+	scrollToNewComment(/next/.test(event.target.className));
 }
 
 function getPostHash() {
@@ -442,9 +448,9 @@ function initialize() {
 		
 		// Add the new comments count & navigator.
 		document.querySelector(".post .post-meta").insertAdjacentHTML("beforeend", 
-			("<button type='button' class='new-comment-sequential-nav-button new-comment-previous' title='Previous new comment' tabindex='-1' accesskey=',' disabled>&#xf0d8;</button> " + 
+			("<button type='button' class='new-comment-sequential-nav-button new-comment-previous' title='Previous new comment [,]' tabindex='-1' accesskey=',' disabled>&#xf0d8;</button> " + 
 			 "<span class='new-comments-count' title='" + newCommentsCount + " new comments'>" + newCommentsCount + "</span> " +
-			 "<button type='button' class='new-comment-sequential-nav-button new-comment-next' title='Next new comment' tabindex='-1' accesskey='.'" + 
+			 "<button type='button' class='new-comment-sequential-nav-button new-comment-next' title='Next new comment [.]' tabindex='-1' accesskey='.'" + 
 			 (newCommentsCount == 0 ? " disabled" : "") + 
 			 ">&#xf0d7;</button>"));
 		if (newCommentsCount > 0) {
@@ -452,6 +458,8 @@ function initialize() {
 			document.querySelector(".post-meta .new-comment-next").addActivateEvent(commentQuicknavButtonClicked);
 			document.querySelector(".post-meta .new-comment-previous").dataset['targetComment'] = -2;
 			document.querySelector(".post-meta .new-comment-next").dataset['targetComment'] = 0;
+
+			document.addEventListener("keyup", function(e) { if(e.key == ",") scrollToNewComment(false); if(e.key == ".") scrollToNewComment(true)});
 		}
 	})
 }
