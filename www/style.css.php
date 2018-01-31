@@ -1034,7 +1034,7 @@ h1.listing a[href^="http"]:hover {
 		4px  4px 0 12px #ffd inset;
 }
 
-<?php nested_stuff(".comment-item ", ".comment-item:target:not(:focus-within),\n", ".comment-item:target:not(:focus-within)", (2 * $comment_nesting_depth) - 1); ?> {
+<?php nested_stuff(".comment-item ", ".comment-item:target,\n", ".comment-item:target", (2 * $comment_nesting_depth) - 1); ?> {
 	background-color: #ffd;
 }
 .comment-item:target > .comment-thread > .comment-item > .comment > .comment-meta > a.comment-parent-link::after {
