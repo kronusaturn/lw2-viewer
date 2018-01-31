@@ -367,6 +367,7 @@ input {
 .post-meta a[href='#comments']:focus:not(:hover)::after,
 .post-meta a[href='#bottom-bar']:focus:not(:hover)::after {
 	transform: none;
+	text-shadow: none;
 }
 
 .comment-thread ~ #bottom-bar a[href='#top']::after,
