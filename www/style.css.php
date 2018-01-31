@@ -1300,7 +1300,7 @@ a.comment-parent-link:hover::after {
 	background-size: 1.25em;
 	background-repeat: no-repeat;
 	padding-right: 1.5em;
-	background-position: center right;
+	background-position: right 45%;
 	margin-right: 0.15em;
 }
 #markdown-hints-checkbox + label {
