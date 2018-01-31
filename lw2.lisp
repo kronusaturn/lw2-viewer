@@ -297,10 +297,11 @@
 (hunchentoot:define-easy-handler (view-root :uri "/") ()
 				 (with-error-page (view-posts-index (get-posts) "frontpage")))
 
-(hunchentoot:define-easy-handler (view-index :uri "/index") (view all meta before after)
+(hunchentoot:define-easy-handler (view-index :uri "/index") (view meta before after)
 				 (with-error-page
-				   (let ((posts (lw2-graphql-query (make-posts-list-query :view (or view "new") :frontpage (not all) :meta (not (not meta)) :before before :after after)))
-					 (section (cond ((string= view "meta") "meta") ((string= view "featured") nil) ((not all) "frontpage") (t "all"))))
+				   (if (string= view "featured") (setf view "curated")) 
+				   (let ((posts (lw2-graphql-query (make-posts-list-query :view (or view "new") :meta (not (not meta)) :before before :after after)))
+					 (section (cond ((string= view "meta") "meta") ((string= view "curated") nil) ((string= view "frontpage") "frontpage") (t "all"))))
 				     (view-posts-index posts section))))
 
 (hunchentoot:define-easy-handler (view-post :uri "/post") (id)
@@ -315,9 +316,9 @@
 				     (setf (hunchentoot:return-code*) 301
 					   (hunchentoot:header-out "Location") location)))) 
 
-(hunchentoot:define-easy-handler (view-feed :uri "/feed") (view all meta before after)
+(hunchentoot:define-easy-handler (view-feed :uri "/feed") (view meta before after)
 				 (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
-				 (let ((posts (lw2-graphql-query (make-posts-list-query :view (or view "new") :frontpage (not all) :meta (not (not meta)) :before before :after after)))
+				 (let ((posts (lw2-graphql-query (make-posts-list-query :view (or view "new") :meta (not (not meta)) :before before :after after)))
 				       (out-stream (hunchentoot:send-headers)))
 				   (posts-to-rss posts (make-flexi-stream out-stream :external-format :utf-8)))) 
 

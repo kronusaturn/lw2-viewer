@@ -118,13 +118,13 @@
 		      (error "Failed to load ~A ~A and no cached version available." cache-db cache-key)))))))))
 
 (declaim (inline make-posts-list-query)) 
-(defun make-posts-list-query (&key (view "new") (limit 20) (meta nil) (frontpage t) (before nil) (after nil) (with-body nil))
+(defun make-posts-list-query (&key (view "frontpage") (limit 20) (meta nil) (before nil) (after nil) (with-body nil))
   (declare (type string view)
 	   (type (integer 1) limit)
 	   (type boolean meta)
 	   (type (or string null) before after))
   (format nil "{PostsList (terms:{view:\"~A\",limit:~A,meta:~A~A~A}) {title, _id, slug, userId, postedAt, baseScore, commentCount, pageUrl, url~A}}"
-	  (if frontpage "frontpage" view)
+	  view
 	  limit
 	  (if meta "true" "false")
 	  (if before (format nil ",before:\"~A\"" before) "")
