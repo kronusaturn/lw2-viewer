@@ -299,6 +299,36 @@ input {
 	width: 15%;
 }
 
+/******************/
+/* WIDTH SELECTOR */
+/******************/
+
+#width-selector {
+	position: fixed;
+	top: 4px;
+	right: calc((100vw - 900px) / 2 - 58px);
+}
+#width-selector button {
+	color: transparent;
+	width: 12px;
+	height: 12px;
+	padding: 0;
+	border: 1px solid #bbb;
+	margin: 5px;
+	overflow: hidden;
+}
+#width-selector button:hover,
+#width-selector button.selected {
+	text-shadow: none;
+	outline: 4px solid #bbb;
+}
+#width-selector button.select-width-normal {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("fixed.gif")) ?>');
+}
+#width-selector button.select-width-wide {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("fluid.gif")) ?>');
+}
+
 /*******************/
 /* QUICKNAV WIDGET */
 /*******************/

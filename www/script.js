@@ -319,6 +319,44 @@ function setLastVisitedDate(date) {
 	window.localStorage.setItem(storageName, date);
 }
 
+function injectContentWidthSelector() {
+	document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='width-adjust'></style>");
+	document.querySelector("#bottom-bar").insertAdjacentHTML("beforeend", 
+		"<div id='width-selector'>" + 
+		"<button type='button' class='select-width-normal selected' title='Normal (narrow) content column'>N</button>" + 
+		"<button type='button' class='select-width-wide' title='Wide content column'>W</button>" + 
+		"</div>");
+	document.querySelectorAll("#width-selector button").forEach(function (button) {
+		button.addActivateEvent(widthAdjustButtonClicked);
+	});
+}
+function widthAdjustButtonClicked(event) {
+	setContentWidth((event.target.className == "select-width-normal" ? "900px" : "(100vw - 300px)"));
+	event.target.parentElement.childNodes.forEach(function (button) { button.removeClass("selected"); });
+	event.target.addClass("selected");
+}
+function setContentWidth(widthString) {
+	let widthAdjustStyle = document.querySelector("#width-adjust");
+	widthAdjustStyle.innerHTML = 
+		`#content { 
+			max-width: calc(${widthString});
+		}
+		#bottom-bar a[href='#top']::after, 
+		.post-meta a[href='#comments']::after, 
+		.post-meta a[href='#bottom-bar']::after {
+			right: calc((100vw - ${widthString}) / 2 - 75px);
+		}
+		.post-meta .new-comments-count {
+			right: calc((100vw - ${widthString}) / 2 - 139px);
+		}
+		.post-meta .new-comment-sequential-nav-button {
+			right: calc((100vw - ${widthString}) / 2 - 148px);
+		}
+		#width-selector {
+			right: calc((100vw - ${widthString}) / 2 - 64px);
+		}`;
+}
+
 function getQueryVariable(variable)
 {
 	var query = window.location.search.substring(1);
