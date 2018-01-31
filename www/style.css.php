@@ -396,6 +396,11 @@ input {
 .post-meta .new-comment-next {
 	bottom: 48px;
 }
+.post-meta .new-comment-sequential-nav-button:disabled {
+	color: #bbb;
+	text-shadow: none;
+	cursor: auto;
+}
 
 /************/
 /* ARCHIVES */
