@@ -516,6 +516,7 @@ h1.listing a:nth-of-type(2) {
 		overflow: hidden;
 		border-bottom: 1px solid transparent;
 		-moz-hyphens: auto;
+		-ms-hyphens: auto;
 		hyphens: auto;
 		z-index: 1;
 	}
@@ -719,6 +720,7 @@ h1.listing a[href^="http"]:hover {
 	margin: 1.25em 0 0.75em 1.25em;
 	padding: 0.35em 0.35em 0.4em 0.35em;
 	-webkit-hyphens: none;
+	-ms-hyphens: none;
 	hyphens: none;
 }
 
@@ -821,6 +823,7 @@ h1.listing a[href^="http"]:hover {
 .post-body, .comment-body {
 	text-align: justify;
 	-webkit-hyphens: auto;
+	-ms-hyphens: auto;
 	hyphens: auto;
 }
 .post-body p, .comment-body p {
@@ -1671,6 +1674,8 @@ sup, sub {
 }
 sub {
 	top: 0.3em;
+	-webkit-hyphens: none;
+	-ms-hyphens: none;
 	hyphens: none;
 }
 
@@ -1837,12 +1842,14 @@ ol {
 	.post-body, .comment-body {
 		text-align: left;
 		-webkit-hyphens: none;
+		-ms-hyphens: none;
 		hyphens: none;
 	}
 	@-moz-document url-prefix() {
 		.post-body, .comment-body {
 			text-align: justify;
 			-webkit-hyphens: auto;
+			-ms-hyphens: auto;
 			hyphens: auto;
 		}
 	}
