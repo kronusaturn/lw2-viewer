@@ -380,8 +380,9 @@ input {
 
 .post-meta .new-comments-count {
 	position: fixed;
+	width: 2em;
 	bottom: 74px;
-	right: calc((100vw - 900px) / 2 - 130px);
+	right: calc((100vw - 900px) / 2 - 139px);
 	font-weight: 600;
 	font-size: 1.25rem;
 	line-height: 1.1;
@@ -398,7 +399,7 @@ input {
 .post-meta .new-comment-sequential-nav-button {
 	position: fixed;
 	font-size: 1.75rem;
-	right: calc((100vw - 900px) / 2 - 149px);
+	right: calc((100vw - 900px) / 2 - 148px);
 	font-family: 'Font Awesome';
 	font-weight: 900;
 	width: 1.5em;
