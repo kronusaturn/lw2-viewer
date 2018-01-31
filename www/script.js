@@ -326,6 +326,7 @@ function initialize() {
 		});
 
 		document.querySelectorAll("#edit-post-form textarea").forEach(function (textarea) { textarea.addTextareaFeatures(); });
+		document.querySelectorAll((getQueryVariable("post-id")) ? "#edit-post-form textarea" : "#edit-post-form input[name='title']").forEach(function (field) { field.focus(); });
 
 		if(readCookie("lw2-auth-token")) {
 			// Add upvote/downvote buttons.
