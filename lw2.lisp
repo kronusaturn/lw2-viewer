@@ -385,7 +385,7 @@
 				     (t
 				       (let* ((csrf-token (make-csrf-token (hunchentoot:cookie-in "session-token")))
 					      (post-body (if post-id (get-post-body post-id)))
-					      (section (or section (loop for (sym . sec) in '((:draft . "drafts") (:meta . "meta") (:frontpageDate . "frontpage"))
+					      (section (or section (loop for (sym . sec) in '((:draft . "drafts") (:meta . "meta") (:frontpage-date . "frontpage"))
 									 if (cdr (assoc sym post-body)) return sec
 									 finally (return "all")))))
 					 (emit-page (out-stream :title "Edit Post" :content-class "edit-post-page")
