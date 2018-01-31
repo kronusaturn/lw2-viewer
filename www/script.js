@@ -323,8 +323,8 @@ function injectContentWidthSelector() {
 	document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='width-adjust'></style>");
 	document.querySelector("#bottom-bar").insertAdjacentHTML("beforeend", 
 		"<div id='width-selector'>" + 
-		"<button type='button' class='select-width-normal selected' title='Normal (narrow) content column'>N</button>" + 
-		"<button type='button' class='select-width-wide' title='Wide content column'>W</button>" + 
+		"<button type='button' class='select-width-normal selected' title='Narrow (fixed-width) content column'>N</button>" + 
+		"<button type='button' class='select-width-wide' title='Wide (fluid) content column'>W</button>" + 
 		"</div>");
 	document.querySelectorAll("#width-selector button").forEach(function (button) {
 		button.addActivateEvent(widthAdjustButtonClicked);
