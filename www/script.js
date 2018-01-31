@@ -353,7 +353,7 @@ function setContentWidth(widthString) {
 			right: calc((100vw - ${widthString}) / 2 - 148px);
 		}
 		#width-selector {
-			right: calc((100vw - ${widthString}) / 2 - 64px);
+			right: calc((100vw - ${widthString}) / 2 - 58px);
 		}`;
 }
 
