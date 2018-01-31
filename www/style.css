@@ -559,7 +559,7 @@ h1.listing a:nth-of-type(2) {
 }
 @media only screen and (min-width: 901px) {
 	h1.listing a {
-		max-width: 100%;
+		max-width: calc(100% - 32px);
 		display: inline-block;
 		white-space: nowrap;
 		text-overflow: ellipsis;
