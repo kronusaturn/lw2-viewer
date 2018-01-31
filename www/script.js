@@ -9,6 +9,14 @@ function readCookie(name) {
 	return null;
 }
 
+Element.prototype.addClass = function(className) {
+	if (!this.className.match(new RegExp("(^|\\s)" + className + "(\\s|$)")))
+		this.className += " " + className;
+}
+Element.prototype.removeClass = function(className) {
+	this.className = this.className.replace(new RegExp("(^|\\s)" + className + "(\\s|$)"), "");
+}
+
 Element.prototype.addActivateEvent = function(func, waitForMouseUp = true) {
 	this.addEventListener((waitForMouseUp ? "mouseup" : "mousedown"), func);
 	this.addEventListener("keyup", func);
@@ -105,19 +113,19 @@ Element.prototype.injectCommentButtons = function() {
 	let e = this;
 	e.innerHTML = "";
 	let replyButton = document.createElement("button");
-	if(e.parentElement.id == 'comments') {
-		replyButton.className="new-comment-button action-button";
-		replyButton.innerHTML="Post new comment";
+	if (e.parentElement.id == 'comments') {
+		replyButton.className = "new-comment-button action-button";
+		replyButton.innerHTML = "Post new comment";
 	} else {
-		if(e.parentElement.querySelector(".comment-body").hasAttribute("data-markdown-source")) {
+		if (e.parentElement.querySelector(".comment-body").hasAttribute("data-markdown-source")) {
 			let editButton = e.appendChild(document.createElement("button"));
-			editButton.className="edit-button action-button";
-			editButton.innerHTML="Edit";
+			editButton.className = "edit-button action-button";
+			editButton.innerHTML = "Edit";
 			editButton.tabIndex = '-1';
 			editButton.addActivateEvent(window.showCommentEditForm);
 		}
-		replyButton.className="reply-button action-button";
-		replyButton.innerHTML="Reply";
+		replyButton.className = "reply-button action-button";
+		replyButton.innerHTML = "Reply";
 	}
 	e.appendChild(replyButton);
 	replyButton.tabIndex = '-1';
@@ -254,14 +262,14 @@ function highlightCommentsSince(date) {
 	document.querySelectorAll(".comment-item").forEach(function (ci) {
 		ci.prevNewComment = prevNewComment;
 		if (ci.getCommentDate() > date) {
-			ci.className += " new-comment";
+			ci.addClass("new-comment");
 			newCommentsCount++;
 			window.newComments.push(ci.getCommentId());
 			oldCommentsStack.forEach(function (oldci) { oldci.nextNewComment = ci });
 			oldCommentsStack = [ ci ];
 			prevNewComment = ci;
 		} else {
-			ci.className = ci.className.replace(/ new-comment/, '');
+			ci.removeClass("new-comment");
 			oldCommentsStack.push(ci);
 		}
 	});
@@ -365,7 +373,8 @@ function initialize() {
 				if(parent.getBoundingClientRect().bottom < 10 || parent.getBoundingClientRect().top > window.innerHeight + 10) {
 					highlight_cn = "comment-item-highlight-faint";
 					parent = parent.cloneNode(true);
-					parent.className += " comment-popup comment-item-highlight";
+					parent.addClass("comment-popup")
+					parent.addClass("comment-item-highlight");
 					cpl.addEventListener("mouseout", function(e) {
 						parent.parentNode.removeChild(parent);
 					}, {once: true});
