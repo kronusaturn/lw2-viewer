@@ -368,8 +368,9 @@
 				       (let ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token"))
 					     (url (if (string= url "") nil url)))
 					 (assert (and lw2-auth-token (not (string= text ""))))
-					 (let* ((post-data `(("body" . ,text) ("title" . ,title) ("url" . ,url) ("frontpage" . ,(string= section "frontpage")) ("meta" . ,(string= section "meta"))
-							     ("draft" . ,(string= section "drafts")) ("content" . ("blocks" . nil))))
+					 (let* ((post-data `(("body" . ,text) ("title" . ,title) ("url" . ,url)
+							     ("frontpageDate" . ,(if (string= section "frontpage") (local-time:format-timestring nil (local-time:now))))
+							     ("meta" . ,(string= section "meta")) ("draft" . ,(string= section "drafts")) ("content" . ("blocks" . nil))))
 						(post-set (loop for item in post-data when (cdr item) collect item))
 						(post-unset (loop for item in post-data when (not (cdr item)) collect (cons (car item) t))))
 					   (let* ((new-post-data
@@ -384,7 +385,7 @@
 				     (t
 				       (let* ((csrf-token (make-csrf-token (hunchentoot:cookie-in "session-token")))
 					      (post-body (if post-id (get-post-body post-id)))
-					      (section (or section (loop for (sym . sec) in '((:draft . "drafts") (:meta . "meta") (:frontpage . "frontpage"))
+					      (section (or section (loop for (sym . sec) in '((:draft . "drafts") (:meta . "meta") (:frontpageDate . "frontpage"))
 									 if (cdr (assoc sym post-body)) return sec
 									 finally (return "all")))))
 					 (emit-page (out-stream :title "Edit Post" :content-class "edit-post-page")

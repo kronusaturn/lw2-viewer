@@ -123,11 +123,10 @@
 	   (type (integer 1) limit)
 	   (type boolean meta)
 	   (type (or string null) before after))
-  (format nil "{PostsList (terms:{view:\"~A\",limit:~A,meta:~A~A~A~A}) {title, _id, slug, userId, postedAt, baseScore, commentCount, pageUrl, url~A}}"
-	  view
+  (format nil "{PostsList (terms:{view:\"~A\",limit:~A,meta:~A~A~A}) {title, _id, slug, userId, postedAt, baseScore, commentCount, pageUrl, url~A}}"
+	  (if frontpage "frontpage" view)
 	  limit
 	  (if meta "true" "false")
-	  (if frontpage ",frontpage:true" "") 
 	  (if before (format nil ",before:\"~A\"" before) "")
 	  (if after (format nil ",after:\"~A\"" after) "")
 	  (if with-body ", htmlBody" ""))) 
@@ -154,7 +153,7 @@
   (process-vote-result (lw2-graphql-query (format nil "{PostsSingle(documentId:\"~A\") {_id, currentUserVotes{voteType}}}" post-id) :auth-token auth-token))) 
 
 (defun get-post-body (post-id &key (revalidate t))
-  (lw2-graphql-query-timeout-cached (format nil "{PostsSingle(documentId:\"~A\") {title, _id, slug, userId, postedAt, baseScore, commentCount, pageUrl, url, frontpage, meta, draft, htmlBody}}" post-id) "post-body-json" post-id :revalidate revalidate))
+  (lw2-graphql-query-timeout-cached (format nil "{PostsSingle(documentId:\"~A\") {title, _id, slug, userId, postedAt, baseScore, commentCount, pageUrl, url, frontpageDate, meta, draft, htmlBody}}" post-id) "post-body-json" post-id :revalidate revalidate))
 
 (defun get-post-comments-votes (post-id auth-token)
   (process-votes-result (lw2-graphql-query (format nil "{CommentsList(terms:{view:\"postCommentsTop\",limit:10000,postId:\"~A\"}) {_id, currentUserVotes{voteType}}}" post-id) :auth-token auth-token)))
