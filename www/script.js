@@ -321,12 +321,12 @@ function setLastVisitedDate(date) {
 
 function injectContentWidthSelector() {
 	document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='width-adjust'></style>");
-	document.querySelector("#bottom-bar").insertAdjacentHTML("beforeend", 
+	let widthSelector = addUIElement(
 		"<div id='width-selector'>" + 
 		"<button type='button' class='select-width-normal selected' title='Narrow (fixed-width) content column'>N</button>" + 
 		"<button type='button' class='select-width-wide' title='Wide (fluid) content column'>W</button>" + 
 		"</div>");
-	document.querySelectorAll("#width-selector button").forEach(function (button) {
+	widthSelector.querySelectorAll("button").forEach(function (button) {
 		button.addActivateEvent(widthAdjustButtonClicked);
 	});
 }
@@ -368,6 +368,18 @@ function getQueryVariable(variable)
 	}
 	
 	return false;
+}
+
+function addUIElement(element_html) {
+	var ui_elements_container = document.querySelector("#ui-elements-container");
+	if (!ui_elements_container) {
+		ui_elements_container = document.createElement("div");
+		ui_elements_container.id = "ui-elements-container";
+		document.querySelector("body").appendChild(ui_elements_container);
+	}
+	
+	ui_elements_container.insertAdjacentHTML("beforeend", element_html);
+	return ui_elements_container.lastElementChild;
 }
 
 function initialize() {
