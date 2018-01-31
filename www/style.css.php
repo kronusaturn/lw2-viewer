@@ -1136,7 +1136,7 @@ a.comment-parent-link:hover::after {
 	top: 10%;
 	right: 10%;
 	max-width: 700px;
-	z-index: 1000;
+	z-index: 10000;
 	font-size: 1rem;
 	pointer-events: none;
 }
