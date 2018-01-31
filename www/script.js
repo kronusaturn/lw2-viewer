@@ -232,27 +232,65 @@ Element.prototype.getCommentDate = function() {
 	let item = (this.className == "comment-item") ? this : this.closest(".comment-item");
 	return (item ? parseInt(item.querySelector(".date").dataset["jsDate"]) : false);
 }
+function getCurrentVisibleComment() {
+	let px = window.innerWidth/2, py = window.innerHeight/10;
+	let ci = document.elementFromPoint(px, py).closest(".comment-item") || document.elementFromPoint(px, py+60).closest(".comment-item"); // Mind the gap between threads
+	let atbottom = document.querySelector("#comments").getBoundingClientRect().bottom < window.innerHeight;
+	if(atbottom) {
+		let hashci = document.querySelector(location.hash);
+		if(hashci && /comment-item/.test(hashci.className) && hashci.getBoundingClientRect().top > 0) {
+			ci = hashci;
+		}
+	}
+	return ci;
+}
+
 function highlightCommentsSince(date) {
 	var newCommentsCount = 0;
 	window.newComments = [ ];
+	let oldCommentsStack = [ ];
+	let prevNewComment;
 	document.querySelectorAll(".comment-item").forEach(function (ci) {
+		ci.prevNewComment = prevNewComment;
 		if (ci.getCommentDate() > date) {
 			ci.className += " new-comment";
 			newCommentsCount++;
 			window.newComments.push(ci.getCommentId());
+			oldCommentsStack.forEach(function (oldci) { oldci.nextNewComment = ci });
+			oldCommentsStack = [ ci ];
+			prevNewComment = ci;
 		} else {
 			ci.className = ci.className.replace(/ new-comment/, '');
+			oldCommentsStack.push(ci);
 		}
 	});
+	window.scrollListener = function(e) {
+		window.requestAnimationFrame(function () {
+			let ci = getCurrentVisibleComment();
+			if(ci) {
+				document.querySelector(".post-meta .new-comment-previous").disabled = !ci.prevNewComment;
+				document.querySelector(".post-meta .new-comment-next").disabled = !ci.nextNewComment;
+			} else {
+				document.querySelector(".post-meta .new-comment-previous").disabled = true;
+				document.querySelector(".post-meta .new-comment-next").disabled = (window.newComments.length == 0);
+			}
+			document.addEventListener("scroll", scrollListener, {once: true, passive: true});
+		});
+	}
+
+	scrollListener();
+
 	return newCommentsCount;
 }
 
 function commentQuicknavButtonClicked(event) {
-	location.hash = "comment-" + window.newComments[event.target.dataset["targetComment"]];
-	document.querySelector(".post-meta .new-comment-sequential-nav-button").forEach(function (button) {
-		button.dataset["targetComment"] = parseInt(button.dataset["targetComment"]) + (/next/.test(event.target.className) ? 1 : -1);
-		button.disabled = (button.dataset["targetComment"] < 0 || button.dataset["targetComment"] >= window.newComments.length);
-	});
+	let ci = getCurrentVisibleComment();
+	if(ci) {
+		location.hash = "comment-" + (/next/.test(event.target.className) ? ci.nextNewComment.getCommentId() : ci.prevNewComment.getCommentId());
+	} else {
+		location.hash = "comment-" + window.newComments[0];
+	}
+	scrollListener();
 }
 
 function getPostHash() {
