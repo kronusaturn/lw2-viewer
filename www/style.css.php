@@ -360,6 +360,42 @@ input {
 	display: none;
 }
 
+/************************/
+/* NEW COMMENT QUICKNAV */
+/************************/
+
+.post-meta .new-comments-count {
+	position: fixed;
+	bottom: 74px;
+	right: calc((100vw - 900px) / 2 - 130px);
+	font-weight: 600;
+	font-size: 1.25rem;
+	line-height: 1.1;
+	color: #666;
+	text-shadow: 0.5px 0.5px 0 #fff;
+}
+.post-meta .new-comments-count::after {
+	content: "NEW";
+	display: block;
+	font-size: 0.625rem;
+	font-weight: 600;
+	color: #777;
+}
+.post-meta .new-comment-sequential-nav-button {
+	position: fixed;
+	font-size: 1.75rem;
+	right: calc((100vw - 900px) / 2 - 149px);
+	font-family: 'Font Awesome';
+	font-weight: 900;
+	width: 1.5em;
+}
+.post-meta .new-comment-previous {
+	bottom: 99px;
+}
+.post-meta .new-comment-next {
+	bottom: 48px;
+}
+
 /************/
 /* ARCHIVES */
 /************/
