@@ -250,7 +250,7 @@ function highlightCommentsSince(date) {
 function commentQuicknavButtonClicked(event) {
 	location.hash = "comment-" + window.newComments[event.target.dataset["targetComment"]];
 	document.querySelector(".post-meta .new-comment-sequential-nav-button").forEach(function (button) {
-		button.dataset["targetComment"] += /next/.test(event.target.className) ? 1 : -1;
+		button.dataset["targetComment"] = parseInt(button.dataset["targetComment"]) + (/next/.test(event.target.className) ? 1 : -1);
 		button.disabled = (button.dataset["targetComment"] < 0 || button.dataset["targetComment"] >= window.newComments.length);
 	});
 }
