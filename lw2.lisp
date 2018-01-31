@@ -349,9 +349,9 @@
 					     (emit-page (out-stream :title (clean-text (cdr (assoc :title post)))) 
 							(with-outputs (out-stream) (post-body-to-html post))
 							(if lw2-auth-token
-							  (format out-stream "<script>postVote=~A</script><div class=\"post-controls\"><a class=\"edit-post-link\" href=\"/edit-post?post-id=~A\">Edit post</a></div>"
+							  (format out-stream "<script>postVote=~A</script>~@[<div class=\"post-controls\"><a class=\"edit-post-link\" href=\"/edit-post?post-id=~A\">Edit post</a></div>~]"
 								  (json:encode-json-to-string (get-post-vote post-id lw2-auth-token))
-								  (cdr (assoc :--id post)))) 
+								  (if (equal (logged-in-userid) (cdr (assoc :user-id post))) (cdr (assoc :--id post)))))
 							(force-output out-stream) 
 							(format out-stream "<div id=\"comments\">~A</div>"
 								(let ((comments (get-post-comments post-id)))
@@ -389,7 +389,7 @@
 					      (section (or section (loop for (sym . sec) in '((:draft . "drafts") (:meta . "meta") (:frontpage-date . "frontpage"))
 									 if (cdr (assoc sym post-body)) return sec
 									 finally (return "all")))))
-					 (emit-page (out-stream :title "Edit Post" :content-class "edit-post-page")
+					 (emit-page (out-stream :title (if post-id "Edit Post" "New Post") :content-class "edit-post-page")
 						    (format out-stream "<div class=\"posting-controls\">")
 						    (output-form out-stream "post" "" "edit-post-form" "aligned-form" csrf-token
 								 `(("title" "Title" "text" "off" ,(cdr (assoc :title post-body)))
