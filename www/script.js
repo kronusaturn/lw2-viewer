@@ -404,9 +404,9 @@ function initialize() {
 		
 		// Add the new comments count & navigator.
 		document.querySelector(".post .post-meta").insertAdjacentHTML("beforeend", 
-			("<button type='button' class='new-comment-sequential-nav-button new-comment-previous' title='Previous new comment' accesskey=',' disabled>&#xf0d8;</button> " + 
+			("<button type='button' class='new-comment-sequential-nav-button new-comment-previous' title='Previous new comment' tabindex='-1' accesskey=',' disabled>&#xf0d8;</button> " + 
 			 "<span class='new-comments-count' title='" + newCommentsCount + " new comments'>" + newCommentsCount + "</span> " +
-			 "<button type='button' class='new-comment-sequential-nav-button new-comment-next' title='Next new comment' accesskey='.'" + 
+			 "<button type='button' class='new-comment-sequential-nav-button new-comment-next' title='Next new comment' tabindex='-1' accesskey='.'" + 
 			 (newCommentsCount == 0 ? " disabled" : "") + 
 			 ">&#xf0d7;</button>"));
 		if (newCommentsCount > 0) {

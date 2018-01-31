@@ -397,6 +397,13 @@ input {
 .post-meta .new-comment-next {
 	bottom: 48px;
 }
+.post-meta .new-comment-sequential-nav-button:focus {
+	color: #d00;
+	text-shadow:
+		0 0 1px #fff,
+		0 0 3px #fff,
+		0 0 5px #fff;
+}
 .post-meta .new-comment-sequential-nav-button:disabled {
 	color: #bbb;
 	text-shadow: none;
