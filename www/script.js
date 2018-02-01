@@ -299,6 +299,7 @@ function scrollToNewComment(next) {
 		if(targetComment) location.hash = "comment-" + targetComment.getCommentId();
 	} else {
 		if(window.newComments[0]) location.hash = "comment-" + window.newComments[0];
+		realignHash();
 	}
 	scrollListener();
 }
@@ -527,13 +528,15 @@ function initialize() {
 }
 
 function whenLoaded() {
-	window.requestAnimationFrame(function() {
-		let h = location.hash;
-		if(window.needHashRealignment && h) {
-			let e = document.querySelector(h);
-			e.scrollIntoView(true);
-		}
+	window.requestAnimationFrame(function () {
+		if (window.needHashRealignment)
+			realignHash();
 	});
+}
+function realignHash() {
+	let h = location.hash;
+	if (h)
+		document.querySelector(h).scrollIntoView(true);
 }
 
 function removeElement(selector, ancestor = document) {
