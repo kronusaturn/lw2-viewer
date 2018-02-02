@@ -170,28 +170,32 @@
 				("about" "/about" "About")
 				("search" "/search" "Search" :html ,#'search-bar-to-html)
 				("login" "/login" "Log In"))) 
+(defun nav-bar-inner (items &optional current-uri)
+  (let ((active-bar nil)) 
+    (values
+      (format nil "~{~A~}"
+	      (maplist (lambda (items)
+			 (let ((item (first items))) 
+			   (destructuring-bind (id uri name &key description html accesskey nofollow) item
+			     (if (string= uri current-uri)
+			       (progn (setf active-bar t)
+				      (format nil "<span id=\"nav-item-~A\" class=\"nav-item nav-current\" ~@[title=\"~A\"~]>~:[<span class=\"nav-inner\">~A</span>~;~:*~A~]</span>"
+					      id description (and html (funcall html)) name)) 
+			       (format nil "<span id=\"nav-item-~A\" class=\"nav-item nav-inactive~:[~; nav-item-last-before-current~]\" ~@[title=\"~A\"~]>~:[<a href=\"~A\" class=\"nav-inner\"~@[ accesskey=\"~A\"~]~:[~; rel=\"nofollow\"~]>~A</a>~;~:*~A~]</span>"
+				       id (string= (nth 1 (cadr items)) current-uri) (if accesskey (format nil "~A [~A]" description accesskey) description) (and html (funcall html)) uri accesskey nofollow name)))))
+		       items))
+      active-bar)))
+
+(defun nav-bar-outer (id class html)
+  (format nil "<div id=\"~A\" class=\"nav-bar~@[ ~A~]\">~A</div>" id class html))
 
 (defun nav-bar-to-html (&optional current-uri)
   (let ((primary-bar "primary-bar")
-	(secondary-bar "secondary-bar")
-	active-bar) 
-    (labels ((nav-bar-inner (bar-id items) 
-			    (format nil "~{~A~}"
-				    (maplist (lambda (items)
-					       (let ((item (first items))) 
-						 (destructuring-bind (id uri name &key description html accesskey) item
-						   (if (string= uri current-uri)
-						     (progn (setf active-bar bar-id) 
-							    (format nil "<span id=\"nav-item-~A\" class=\"nav-item nav-current\" ~@[title=\"~A\"~]>~:[<span class=\"nav-inner\">~A</span>~;~:*~A~]</span>"
-								    id description (and html (funcall html)) name)) 
-						     (format nil "<span id=\"nav-item-~A\" class=\"nav-item nav-inactive~:[~; nav-item-last-before-current~]\" ~@[title=\"~A\"~]>~:[<a href=\"~A\" class=\"nav-inner\" ~@[accesskey=\"~A\"~]>~A</a>~;~:*~A~]</span>"
-							     id (string= (nth 1 (cadr items)) current-uri) (if accesskey (format nil "~A [~A]" description accesskey) description) (and html (funcall html)) uri accesskey name)))))
-					 items)))
-	     (nav-bar-outer (id class html)
-			    (format nil "<div id=\"~A\" class=\"nav-bar ~A\">~A</div>" id class html)))
-      (let ((primary-html (nav-bar-inner primary-bar *primary-nav*))
-	    (secondary-html (nav-bar-inner secondary-bar *secondary-nav*)))
-	(if (eq active-bar secondary-bar) 
+	(secondary-bar "secondary-bar")) 
+    (let ((primary-html (nav-bar-inner *primary-nav* current-uri)))
+      (multiple-value-bind (secondary-html secondary-active)
+	(nav-bar-inner *secondary-nav* current-uri)
+	(if secondary-active
 	  (format nil "~A~A" (nav-bar-outer primary-bar "inactive-bar" primary-html) (nav-bar-outer secondary-bar "active-bar" secondary-html))
 	  (format nil "~A~A" (nav-bar-outer secondary-bar "inactive-bar" secondary-html) (nav-bar-outer primary-bar "active-bar" primary-html))))))) 
 
@@ -204,9 +208,6 @@
 				`("login" ,(format nil "/users/~A" (plump:encode-entities (get-user-slug (logged-in-userid)))) ,(plump:encode-entities username))
 				`("login" ,(format nil "/login?return=~A" (url-rewrite:url-encode current-uri)) "Log In")))))
       (nav-bar-to-html current-uri)))) 
-
-(defparameter *bottom-bar*
-"<div id=\"bottom-bar\" class=\"nav-bar\"><a class=\"nav-item nav-current nav-inner\" href=\"#top\">Back to top</a></div>") 
 
 (defun make-csrf-token (session-token &optional (nonce (ironclad:make-random-salt)))
   (if (typep session-token 'string) (setf session-token (base64:base64-string-to-usb8-array session-token)))
@@ -231,8 +232,29 @@
 	    (user-nav-bar (or current-uri (hunchentoot:request-uri*)))))
   (force-output out-stream)) 
 
-(defun end-html (out-stream)
-  (format out-stream "~A</div></body></html>" *bottom-bar*)) 
+(defun replace-query-param (uri param &optional value)
+  (let* ((quri (quri:uri uri))
+	 (old-params (quri:uri-query-params quri))
+	 (new-params (if value
+		       (progn (setf (alexandria:assoc-value old-params param :test #'equal) value) old-params)
+		       (remove-if (lambda (x) (equal (car x) param)) old-params))))
+    (if new-params 
+      (setf (quri:uri-query-params quri) new-params)
+      (setf (quri:uri-query quri) nil))
+    (quri:render-uri quri)))
+
+(defun end-html (out-stream &key next prev)
+  (let ((request-uri (hunchentoot:request-uri*)))
+    #|(format out-stream "<div id=\"bottom-bar\" class=\"nav-bar\">~@[<a class=\"nav-item nav-inner\" href=\"~A\">Previous</a>~]<a class=\"nav-item nav-inner\" href=\"#top\">Back to top</a>~@[<a class=\"nav-item nav-inner\" href=\"~A\">Next</a>~]</div></div></body></html>"
+	      (if prev )
+	      (if next ))|#
+    (write-string
+      (nav-bar-outer "bottom-bar" nil (nav-bar-inner
+					`(,@(if (and prev (> prev 0)) `(("first" ,(replace-query-param request-uri "offset" nil) "⇤ Back to first")))
+					  ,@(if prev `(("prev" ,(replace-query-param request-uri "offset" (if (= prev 0) nil prev)) "← Previous" :nofollow t)))
+					   ("top" "#top" "↑ Back to top")
+					   ,@(if next `(("next" ,(replace-query-param request-uri "offset" next) "Next →" :nofollow t))))))
+      out-stream)))
 
 (defun map-output (out-stream fn list)
   (loop for item in list do (write-string (funcall fn item) out-stream))) 
@@ -243,7 +265,7 @@
 			     `(let ((,stream-sym ,out-stream)) 
 				,.out-body)))) 
 
-(defmacro emit-page ((out-stream &key title description current-uri content-class (return-code 200)) &body body)
+(defmacro emit-page ((out-stream &key title description current-uri content-class (return-code 200) with-offset with-next) &body body)
   `(ignore-errors
      (log-conditions
        (setf (hunchentoot:content-type*) "text/html; charset=utf-8"
@@ -251,7 +273,7 @@
        (let ((,out-stream (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8)))
 	 (begin-html ,out-stream :title ,title :description ,description :current-uri ,current-uri :content-class ,content-class)
 	 ,@body
-	 (end-html ,out-stream)))))
+	 (end-html ,out-stream :next (if (and ,with-offset ,with-next) (+ ,with-offset 20)) :prev (if (and ,with-offset (>= ,with-offset 20)) (- ,with-offset 20)))))))
 
 (defmacro with-error-page (&body body)
   `(let ((*current-auth-token* (hunchentoot:cookie-in "lw2-auth-token")))
@@ -281,28 +303,45 @@
   (format out-stream "~1{<div class=\"textarea-container\"><textarea name=\"~A\">~A</textarea><span class='markdown-reference-link'>You can use <a href='http://commonmark.org/help/' target='_blank'>Markdown</a> here.</span></div>~}<div><input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><input type=\"submit\" value=\"~A\"></div></div></form>"
 	  textarea csrf-token button-label)) 
 
-(defun view-posts-index (posts &optional section)
+(defun view-posts-index (posts &optional section offset)
   (alexandria:switch ((hunchentoot:get-parameter "format") :test #'string=)
 		     ("rss" 
 		      (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
 		      (let ((out-stream (hunchentoot:send-headers)))
 			(posts-to-rss posts (make-flexi-stream out-stream :external-format :utf-8))))
 		     (t
-		       (emit-page (out-stream :description "A faster way to browse LessWrong 2.0") 
+		       (emit-page (out-stream :description "A faster way to browse LessWrong 2.0" :with-offset offset :with-next t)
 				  (format out-stream "<div class=\"page-toolbar\">~@[<a class=\"new-post\" href=\"/edit-post?section=~A\">New post</a>~]<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" href=\"~A?~@[~A&~]format=rss\">RSS</a></div>"
-					  (if (logged-in-userid) section)
+					  (if (and section (logged-in-userid)) section)
 					  (hunchentoot:script-name*) (hunchentoot:query-string*)) 
 				  (map-output out-stream #'post-headline-to-html posts))))) 
 
-(hunchentoot:define-easy-handler (view-root :uri "/") ()
-				 (with-error-page (view-posts-index (get-posts) "frontpage")))
+(declaim (inline alist)) 
+(defun alist (&rest parms) (alexandria:plist-alist parms))
 
-(hunchentoot:define-easy-handler (view-index :uri "/index") (view meta before after)
+(defparameter *posts-index-fields* '(:title :--id :slug :user-id :posted-at :base-score :comment-count :page-url :url))
+(defparameter *comments-index-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id :base-score :page-url :html-body)) 
+
+(hunchentoot:define-easy-handler (view-root :uri "/") (offset)
+				 (with-error-page
+				   (let* ((offset (and offset (parse-integer offset)))
+					  (posts (if offset
+						   (lw2-graphql-query (graphql-query-string "PostsList"
+											    (alist :terms (alist :view "frontpage" :limit 20 :offset offset))
+											    *posts-index-fields*))
+						   (get-posts))))
+				     (view-posts-index posts "frontpage" (or offset 0)))))
+
+(hunchentoot:define-easy-handler (view-index :uri "/index") (view meta before after offset)
 				 (with-error-page
 				   (if (string= view "featured") (setf view "curated")) 
-				   (let ((posts (lw2-graphql-query (make-posts-list-query :view (or view "new") :meta (not (not meta)) :before before :after after)))
-					 (section (cond ((string= view "meta") "meta") ((string= view "curated") nil) ((string= view "frontpage") "frontpage") (t "all"))))
-				     (view-posts-index posts section))))
+				   (let* ((offset (and offset (parse-integer offset))) 
+					  (posts (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms
+													     (remove-if (lambda (x) (null (cdr x)))
+															(alist :view (or view "new") :meta (not (not meta)) :before before :after after :limit 20 :offset offset)))
+											  *posts-index-fields*)))
+					  (section (cond ((string= view "meta") "meta") ((string= view "curated") nil) ((string= view "frontpage") "frontpage") (t "all"))))
+				     (view-posts-index posts section (or offset 0)))))
 
 (hunchentoot:define-easy-handler (view-post :uri "/post") (id)
 				 (with-error-page
@@ -404,20 +443,27 @@
 				   (multiple-value-bind (points vote-type) (do-lw2-vote lw2-auth-token target target-type vote-type)
 				     (json:encode-json-to-string (list (pretty-number points "point") vote-type)))))
 
-(hunchentoot:define-easy-handler (view-recent-comments :uri "/recentcomments") ()
+(hunchentoot:define-easy-handler (view-recent-comments :uri "/recentcomments") (offset)
 				 (with-error-page
-				   (let ((recent-comments (get-recent-comments)))
-				     (emit-page (out-stream :title "Recent comments" :description "A faster way to browse LessWrong 2.0") 
+				   (let* ((offset (and offset (parse-integer offset))) 
+					  (recent-comments (if offset
+							     (lw2-graphql-query (graphql-query-string "CommentsList"
+												      (alist :terms (alist :view "postCommentsNew" :limit 20 :offset offset))
+												      *comments-index-fields*))
+							     (get-recent-comments))))
+				     (emit-page (out-stream :title "Recent comments" :description "A faster way to browse LessWrong 2.0" :with-offset (or offset 0) :with-next t)
 						(with-outputs (out-stream) "<ul class=\"comment-thread\">") 
 						(map-output out-stream (lambda (c) (format nil "<li class=\"comment-item\" id=\"comment-~A\">~A</li>"
 											   (cdr (assoc :--id c)) (comment-to-html c :with-post-title t))) recent-comments)
 						(with-outputs (out-stream) "</ul>")))))
 
-(defun comment-post-interleave-output (stream list &key limit)
+(defun comment-post-interleave-output (stream list &key limit offset)
   (let ((sorted (sort list #'local-time:timestamp> :key (lambda (x) (local-time:parse-timestring (cdr (assoc :posted-at x)))))))
-    (loop for x in sorted
+    (loop for end = (if (or limit offset) (+ (or limit 0) (or offset 0)))
+	  for x in sorted
 	  for count from 0
-	  until (and limit (>= count limit))
+	  until (and end (>= count end))
+	  when (or (not offset) (>= count offset))
 	  do
 	  (if (assoc :comment-count x)
 	    (write-string (post-headline-to-html x) stream)
@@ -434,16 +480,17 @@
 	     ,(loop for v in vars as x from 0 collecting `(,v (if (> (length ,result-vector) ,x) (aref ,result-vector ,x)))) 
 	     ,@body))))))
 
-(define-regex-handler view-user ("^/users/(.*)" user-slug) ()
+(define-regex-handler view-user ("^/users/(.*?)(?:$|\\?)" user-slug) (offset)
 		      (with-error-page
-			(let ((user-info (lw2-graphql-query (format nil "{UsersSingle(slug:\"~A\"){_id, displayName, karma}}" user-slug))))
-			  (let ((user-posts (lw2-graphql-query (format nil "{PostsList(terms:{view:\"new\",limit:20,userId:\"~A\"}){title, _id, slug, userId, postedAt, baseScore, commentCount, pageUrl, url}}" (cdr (assoc :--id user-info)))))
-				(user-comments (lw2-graphql-query (format nil "{CommentsList(terms:{view:\"postCommentsNew\",limit:20,userId:\"~A\"}){_id, userId, postId, postedAt, parentCommentId, baseScore, pageUrl, htmlBody}}" (cdr (assoc :--id user-info))))))
-			    (emit-page (out-stream :title (cdr (assoc :display-name user-info)) :content-class "user-page")
+			(let* ((offset (if offset (parse-integer offset) 0)) 
+			       (user-info (lw2-graphql-query (format nil "{UsersSingle(slug:\"~A\"){_id, displayName, karma}}" user-slug))))
+			  (let ((user-posts (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (alist :view "new" :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info)))) *posts-index-fields*)))
+				(user-comments (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (alist :view "postCommentsNew" :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info)))) *comments-index-fields*))))
+			    (emit-page (out-stream :title (cdr (assoc :display-name user-info)) :content-class "user-page" :with-offset offset :with-next (> (+ (length user-posts) (length user-comments)) (+ offset 20)))
 				       (format out-stream "<h1 class=\"page-main-heading\">~A</h1><div class=\"user-stats\">Karma: <span class=\"karma-total\">~A</span></div>"
 					       (cdr (assoc :display-name user-info))
 					       (pretty-number (or (cdr (assoc :karma user-info)) 0)))
-				       (comment-post-interleave-output out-stream (concatenate 'list user-posts user-comments) :limit 20))))))
+				       (comment-post-interleave-output out-stream (concatenate 'list user-posts user-comments) :limit 20 :offset offset))))))
 
 (defun search-result-markdown-to-html (item)
   (cons (cons :html-body (markdown:parse (cdr (assoc :body item)))) item)) 

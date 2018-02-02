@@ -1,7 +1,7 @@
 (defpackage #:lw2.backend
   (:use #:cl #:sb-thread #:flexi-streams #:lw2-viewer.config #:lw2.lmdb)
   (:export #:log-condition #:log-conditions #:start-background-loader #:stop-background-loader
-	   #:lw2-graphql-query-streamparse #:lw2-graphql-query-noparse #:decode-graphql-json #:lw2-graphql-query #:make-posts-list-query
+	   #:lw2-graphql-query-streamparse #:lw2-graphql-query-noparse #:decode-graphql-json #:lw2-graphql-query #:graphql-query-string #:make-posts-list-query
 	   #:get-posts #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
 	   #:lw2-search-query #:get-post-title #:get-post-slug #:get-username #:get-user-slug))
 
@@ -116,6 +116,22 @@
 	    (sb-thread:join-thread thread :timeout timeout)
 	    (t () (or cached-result
 		      (error "Failed to load ~A ~A and no cached version available." cache-db cache-key)))))))))
+
+(defun graphql-query-string (query-type terms fields)
+  (format nil "{~A(~{~A~^,~}){~{~A~^,~}}}"
+	  query-type
+	  (labels ((terms (tlist)
+			  (loop for (k . v) in tlist
+				when k
+				collect (format nil "~A:~A"
+						(json:lisp-to-camel-case (string k))
+						(typecase v
+						  ((member t) "true") 
+						  ((member nil) "false")
+						  (list (format nil "{~{~A~^,~}}" (terms v)))
+						  (t (format nil "~S" v)))))))
+	    (terms terms))
+	  (map 'list (lambda (x) (json:lisp-to-camel-case (string x))) fields)))
 
 (declaim (inline make-posts-list-query)) 
 (defun make-posts-list-query (&key (view "frontpage") (limit 20) (meta nil) (before nil) (after nil) (with-body nil))
