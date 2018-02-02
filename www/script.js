@@ -215,15 +215,17 @@ function voteEvent(e) {
 function commentMinimizeButtonClicked(event) {
 	event.target.closest(".comment-item").setCommentThreadMaximized(true);
 }
-Element.prototype.setCommentThreadMaximized = function(toggle) {
+Element.prototype.setCommentThreadMaximized = function(toggle, userOriginated = true) {
 	let ci = this;
 	let storageName = "thread-minimized-" + ci.getCommentId();
 	let minimize_button = ci.querySelector(".comment-minimize-button");
 	let maximize = (toggle ? /minimized/.test(minimize_button.className) : !window.localStorage.getItem(storageName));
-	if(maximize) {
-		window.localStorage.removeItem(storageName);
-	} else {
-		window.localStorage.setItem(storageName, true);
+	if (userOriginated) {
+		if (maximize) {
+			window.localStorage.removeItem(storageName);
+		} else {
+			window.localStorage.setItem(storageName, true);
+		}
 	}
 
 	ci.style.height = maximize ? 'auto' : '38px';
@@ -413,6 +415,8 @@ function initialize() {
 		let urlParts = document.URL.split('#');
 		if (urlParts.length > 1) {
 			try { document.querySelector('#'+urlParts[1]).closest("label[for^='expand'] + .comment-thread").parentElement.querySelector("input[id^='expand']").checked = true; }
+			catch (e) { }
+			try { document.querySelector('#'+urlParts[1]).closest("#comments > ul > li").setCommentThreadMaximized(true, false); }
 			catch (e) { }
 			window.needHashRealignment = true;
 		}
