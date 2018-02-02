@@ -435,7 +435,7 @@
 						    (output-form out-stream "post" "" "edit-post-form" "aligned-form" csrf-token
 								 `(("title" "Title" "text" "off" ,(cdr (assoc :title post-body)))
 								   ("url" "URL (optional)" "text" "off" ,(cdr (assoc :url post-body)))
-								   ("section" "Section" "select" (("frontpage" "Frontpage") ("all" "All") ("meta" "Meta") ("drafts" "Drafts")) ,section))
+								   ("section" "Section" "select" (("frontpage" "Frontpage") ("all" "All") ("meta" "Meta") #|("drafts" "Drafts")|#) ,section))
 								 "Submit" :textarea `("text" ,(or (and post-id (cache-get "post-markdown-source" post-id)) (cdr (assoc :html-body post-body)) "")))
 						    (format out-stream "</div>")))))))
 
