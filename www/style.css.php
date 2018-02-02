@@ -1174,7 +1174,7 @@ a.comment-parent-link:hover::after {
 	display: none;
 }
 .comment-popup .comment-body {
-	font-size: 1rem;
+	font-size: 1.0625rem;
 }
 
 /*****************************/
