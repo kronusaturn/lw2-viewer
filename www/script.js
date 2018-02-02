@@ -248,7 +248,7 @@ function getCurrentVisibleComment() {
 	let ci = document.elementFromPoint(px, py).closest(".comment-item") || document.elementFromPoint(px, py+60).closest(".comment-item"); // Mind the gap between threads
 	let atbottom = document.querySelector("#comments").getBoundingClientRect().bottom < window.innerHeight;
 	if(atbottom) {
-		let hashci = document.querySelector(location.hash);
+		let hashci = location.hash && document.querySelector(location.hash);
 		if(hashci && /comment-item/.test(hashci.className) && hashci.getBoundingClientRect().top > 0) {
 			ci = hashci;
 		}
