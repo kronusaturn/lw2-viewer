@@ -48,18 +48,19 @@ input {
 }
 .page-toolbar a {
 	display: inline-block;
-	margin-left: 1em;
+	margin-left: 1.5em;
 }
 .new-post {
 	color: #090;
+	text-shadow:
+		0.5px 0px 0 #0c0,
+		0.5px 0px 0.5px #3de42c;
 }
 .new-post::before {
 	content: '\F067';
 	font-family: "Font Awesome";
 	font-weight: 900;
 	padding-right: 0.2em;
-/*	display: inline-block;
-	position: relative;*/
 }
 .rss::before {
 	content: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("rss.svg")) ?>');
@@ -1467,9 +1468,15 @@ a.comment-parent-link:hover::after {
 }
 .edit-post-link {
 	color: #090;
+	text-shadow:
+		0.5px 0px 0 #0c0,
+		0.5px 0px 0.5px #3de42c;
+	display: inline-block;
+	margin-bottom: 0.25em;
+	font-size: 1.125rem;
 }
 .edit-post-link::before {
-	margin-right: 0.2em;
+	margin-right: 0.3em;
 }
 .comment-controls .edit-button::before,
 .edit-post-link::before {
@@ -1622,6 +1629,28 @@ input[type='submit']:active {
 button:focus,
 input[type='submit']:focus {
 	outline: none;
+}
+.button:hover {
+	color: #d00;
+	text-shadow:
+		0 0 1px #fff,
+		0.5px 0px 0 #c00,
+		0.5px 0px 0.5px #ff8860,
+		0 0 2px #fff,
+		0 0 4px #fff,
+		0 0 2px #f00;
+	text-decoration: none;
+}
+.button:active {
+	transform: scale(0.9);
+}
+.button:focus:not(:hover) {
+	transform: none;
+}
+@-moz-document url-prefix() {
+	.button:active {
+		transform: none;
+	}
 }
 
 /************/
