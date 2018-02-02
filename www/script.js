@@ -309,7 +309,8 @@ function commentQuicknavButtonClicked(event) {
 }
 
 function getPostHash() {
-	return /^\/posts\/([^\/]+)/.exec(location.pathname)[1];
+	let postHash = /^\/posts\/([^\/]+)/.exec(location.pathname);
+	return (postHash ? postHash[1] : false);
 }
 function getLastVisitedDate() {
 	let storageName = "last-visited-date_" + getPostHash();
@@ -498,28 +499,30 @@ function initialize() {
 		});
 		
 		// Read and update last-visited-date.
-		let lastVisitedDate = getLastVisitedDate();
-		setLastVisitedDate(Date.now());
-		
-		// Highlight new comments (as specified by URL parameter, if present, or otherwise
-		// all the new ones since last visit).
-		let hns = parseInt(getQueryVariable("hns"));
-		let newCommentsCount = highlightCommentsSince(hns || lastVisitedDate);
-		
-		// Add the new comments count & navigator.
-		document.querySelector(".post .post-meta").insertAdjacentHTML("beforeend", 
-			("<button type='button' class='new-comment-sequential-nav-button new-comment-previous' title='Previous new comment [,]' tabindex='-1' accesskey=',' disabled>&#xf0d8;</button> " + 
-			 "<span class='new-comments-count' title='" + newCommentsCount + " new comments'>" + newCommentsCount + "</span> " +
-			 "<button type='button' class='new-comment-sequential-nav-button new-comment-next' title='Next new comment [.]' tabindex='-1' accesskey='.'" + 
-			 (newCommentsCount == 0 ? " disabled" : "") + 
-			 ">&#xf0d7;</button>"));
-		if (newCommentsCount > 0) {
-			document.querySelector(".post-meta .new-comment-previous").addActivateEvent(commentQuicknavButtonClicked);
-			document.querySelector(".post-meta .new-comment-next").addActivateEvent(commentQuicknavButtonClicked);
-			document.querySelector(".post-meta .new-comment-previous").dataset['targetComment'] = -2;
-			document.querySelector(".post-meta .new-comment-next").dataset['targetComment'] = 0;
+		if(getPostHash()) {
+			let lastVisitedDate = getLastVisitedDate();
+			setLastVisitedDate(Date.now());
 
-			document.addEventListener("keyup", function(e) { if(e.key == ",") scrollToNewComment(false); if(e.key == ".") scrollToNewComment(true)});
+			// Highlight new comments (as specified by URL parameter, if present, or otherwise
+			// all the new ones since last visit).
+			let hns = parseInt(getQueryVariable("hns"));
+			let newCommentsCount = highlightCommentsSince(hns || lastVisitedDate);
+
+			// Add the new comments count & navigator.
+			document.querySelector(".post .post-meta").insertAdjacentHTML("beforeend", 
+				("<button type='button' class='new-comment-sequential-nav-button new-comment-previous' title='Previous new comment [,]' tabindex='-1' accesskey=',' disabled>&#xf0d8;</button> " + 
+				 "<span class='new-comments-count' title='" + newCommentsCount + " new comments'>" + newCommentsCount + "</span> " +
+				 "<button type='button' class='new-comment-sequential-nav-button new-comment-next' title='Next new comment [.]' tabindex='-1' accesskey='.'" + 
+				 (newCommentsCount == 0 ? " disabled" : "") + 
+				 ">&#xf0d7;</button>"));
+			if (newCommentsCount > 0) {
+				document.querySelector(".post-meta .new-comment-previous").addActivateEvent(commentQuicknavButtonClicked);
+				document.querySelector(".post-meta .new-comment-next").addActivateEvent(commentQuicknavButtonClicked);
+				document.querySelector(".post-meta .new-comment-previous").dataset['targetComment'] = -2;
+				document.querySelector(".post-meta .new-comment-next").dataset['targetComment'] = 0;
+
+				document.addEventListener("keyup", function(e) { if(e.key == ",") scrollToNewComment(false); if(e.key == ".") scrollToNewComment(true)});
+			}
 		}
 		
 		// Add the content width selector.
