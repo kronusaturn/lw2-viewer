@@ -313,7 +313,7 @@
 			(posts-to-rss posts (make-flexi-stream out-stream :external-format :utf-8))))
 		     (t
 		       (emit-page (out-stream :description "A faster way to browse LessWrong 2.0" :with-offset offset :with-next t)
-				  (format out-stream "<div class=\"page-toolbar\">~@[<a class=\"new-post\" href=\"/edit-post?section=~A\">New post</a>~]<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" href=\"~A?~@[~A&~]format=rss\">RSS</a></div>"
+				  (format out-stream "<div class=\"page-toolbar\">~@[<a class=\"new-post button\" href=\"/edit-post?section=~A\">New post</a>~]<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" href=\"~A?~@[~A&~]format=rss\">RSS</a></div>"
 					  (if (and section (logged-in-userid)) section)
 					  (hunchentoot:script-name*) (hunchentoot:query-string*)) 
 				  (map-output out-stream #'post-headline-to-html posts))))) 
@@ -390,7 +390,7 @@
 					     (emit-page (out-stream :title (clean-text (cdr (assoc :title post)))) 
 							(with-outputs (out-stream) (post-body-to-html post))
 							(if lw2-auth-token
-							  (format out-stream "<script>postVote=~A</script>~@[<div class=\"post-controls\"><a class=\"edit-post-link\" href=\"/edit-post?post-id=~A\">Edit post</a></div>~]"
+							  (format out-stream "<script>postVote=~A</script>~@[<div class=\"post-controls\"><a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\">Edit post</a></div>~]"
 								  (json:encode-json-to-string (get-post-vote post-id lw2-auth-token))
 								  (if (equal (logged-in-userid) (cdr (assoc :user-id post))) (cdr (assoc :--id post)))))
 							(force-output out-stream) 
