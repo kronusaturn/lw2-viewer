@@ -576,12 +576,17 @@
 				       (t
 					 (emit-login-page)))))) 
 
+(defun firstn (list n)
+  (loop for x in list
+	for i from 1 to n
+	collect x)) 
+
 (defparameter *earliest-post* (local-time:parse-timestring "2005-01-01")) 
 
-(hunchentoot:define-easy-handler (view-archive :uri (lambda (r) (ppcre:scan "^/archive(/|$)" (hunchentoot:request-uri r)))) () 
+(hunchentoot:define-easy-handler (view-archive :uri (lambda (r) (ppcre:scan "^/archive([/?]|$)" (hunchentoot:request-uri r)))) (offset)
 				 (with-error-page
 				   (destructuring-bind (year month day) (map 'list (lambda (x) (if x (parse-integer x)))
-									     (nth-value 1 (ppcre:scan-to-strings "^/archive(?:/(\\d{4})|/?$)(?:/(\\d{1,2})|/?$)(?:/(\\d{1,2})|/?$)"
+									     (nth-value 1 (ppcre:scan-to-strings "^/archive(?:/(\\d{4})|/?(?:$|\\?.*$))(?:/(\\d{1,2})|/?(?:$|\\?.*$))(?:/(\\d{1,2})|/?(?:$|\\?.*$))"
 														 (hunchentoot:request-uri*)))) 
 				     (labels ((link-if-not (stream linkp url-elements class text)
 						       (declare (dynamic-extent linkp url-elements text)) 
@@ -590,11 +595,14 @@
 							 (format stream "<span class=\"~A\">~A</span>" class text)))) 
 				       (local-time:with-decoded-timestamp (:day current-day :month current-month :year current-year) (local-time:now)
 				         (local-time:with-decoded-timestamp (:day earliest-day :month earliest-month :year earliest-year) *earliest-post* 
-					   (let ((posts (lw2-graphql-query (format nil "{PostsList (terms:{view:\"~A\",limit:~A~@[,after:\"~A\"~]~@[,before:\"~A\"~]}) {title, _id, slug, userId, postedAt, baseScore, commentCount, pageUrl, url}}"
-										   "best" 50
-										   (if year (format nil "~A-~A-~A" (or year earliest-year) (or month 1) (or day 1)))
-										   (if year (format nil "~A-~A-~A" (or year current-year) (or month 12) (or day (local-time:days-in-month (or month 12) (or year current-year))))))))) 
-					     (emit-page (out-stream :title "Archive" :current-uri "/archive" :content-class "archive-page")
+					   (let* ((offset (if offset (parse-integer offset) 0))
+						  (posts (lw2-graphql-query (graphql-query-string "PostsList"
+												 (alist :terms (alist :view "best" :limit 51 :offset offset
+														      :after (if year (format nil "~A-~A-~A" (or year earliest-year) (or month 1) (or day 1)))
+														      :before (if year (format nil "~A-~A-~A" (or year current-year) (or month 12)
+																	       (or day (local-time:days-in-month (or month 12) (or year current-year)))))))
+												 *posts-index-fields*))))
+					     (emit-page (out-stream :title "Archive" :current-uri "/archive" :content-class "archive-page" :with-offset offset :with-next (> (length posts) 50))
 							(with-outputs (out-stream) "<div class=\"archive-nav\"><div class=\"archive-nav-years\">")
 							(link-if-not out-stream (not (or year month day)) '("archive") "archive-nav-item-year" "All") 
 							(loop for y from earliest-year to current-year
@@ -614,7 +622,7 @@
 								do (link-if-not out-stream (eq d day) (list "archive" (or year current-year) (or month current-month) d) "archive-nav-item-day" d))
 							  (format out-stream "</div>")) 
 							(format out-stream "</div>") 
-							(map-output out-stream #'post-headline-to-html posts))))))))) 
+							(map-output out-stream #'post-headline-to-html (firstn posts 50))))))))))
 
 (hunchentoot:define-easy-handler (view-about :uri "/about") ()
 				 (with-error-page
