@@ -563,7 +563,7 @@ div[class^='archive-nav-'] {
 /************/
 
 h1.listing {
-	font-family: 'Concourse', 'Font Awesome';
+	font-family: 'Concourse', 'a_Avante', 'Font Awesome';
 	font-size: 1.875rem;
 	line-height: 1.15;
 	margin: 0.8em 20px 0.1em 20px;
@@ -794,7 +794,7 @@ h1.listing a[href^="http"]:hover {
 /*********************/
 
 .contents {
-	font-family: 'Concourse';
+	font-family: 'Concourse', 'a_Avante';
 	border: 1px solid #ddd;
 	background-color: #eee;
 	float: right;
@@ -1287,7 +1287,7 @@ a.comment-parent-link:hover::after {
 .comment-minimize-button::after {
 	content: attr(data-child-count);
 	font-weight: normal;
-	font-family: Concourse;
+	font-family: 'Concourse', 'a_Avante';
 	font-size: 0.8125rem;
 	position: absolute;
 	left: 0;
@@ -1574,7 +1574,7 @@ a.comment-parent-link:hover::after {
 	content: attr(data-tooltip);
 	position: absolute;
 	font-weight: normal;
-	font-family: Concourse;
+	font-family: 'Concourse', 'a_Avante';
 	font-size: 1rem;
 	top: 0;
 	left: 400px;
@@ -1686,13 +1686,17 @@ input[type='submit']:focus {
 /* HEADINGS */
 /************/
 
+h1 {
+	font-weight: 700;
+}
+
 .post-body h1,
 .post-body h2,
 .post-body h3,
 .post-body h4,
 .post-body h5,
 .post-body h6 {
-	font-family: 'Concourse';
+	font-family: 'Concourse', 'a_Avante';
 	line-height: 1.1;
 	margin: 1em 0 0.75em 0;
 	text-align: left;

@@ -1,5 +1,8 @@
 <?php
 	header ('Content-type: text/css; charset=utf-8');
+	
+	$platform = $argv[1] ?: 'Mac';
+	$UI_font = ($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Whitney', 'a_Avante'";
 ?>
 
 <?php echo file_get_contents('fa-custom.css'); ?>
@@ -15,7 +18,7 @@ body {
 	background-color: #d8d8d8;
 	padding: 0;
 	margin: 0;
-	font-family: 'Concourse', 'a_Avante';
+	font-family: <?php echo $UI_font; ?>;
 	font-feature-settings: 'ss07';
 }
 input {
@@ -549,7 +552,7 @@ div[class^='archive-nav-'] {
 /************/
 
 h1.listing {
-	font-family: 'Concourse', 'Font Awesome';
+	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
 	font-size: 1.875rem;
 	line-height: 1.15;
 	margin: 0.8em 20px 0.1em 20px;
@@ -781,7 +784,7 @@ h1.listing a[href^="http"]:hover {
 /*********************/
 
 .contents {
-	font-family: 'Concourse';
+	font-family: <?php echo $UI_font; ?>;
 	border: 1px solid #ddd;
 	background-color: #eee;
 	float: right;
@@ -1226,7 +1229,7 @@ a.comment-parent-link:hover::after {
 .comment-minimize-button::after {
 	content: attr(data-child-count);
 	font-weight: normal;
-	font-family: Concourse;
+	font-family: <?php echo $UI_font; ?>;
 	font-size: 0.8125rem;
 	position: absolute;
 	left: 0;
@@ -1513,7 +1516,7 @@ a.comment-parent-link:hover::after {
 	content: attr(data-tooltip);
 	position: absolute;
 	font-weight: normal;
-	font-family: Concourse;
+	font-family: <?php echo $UI_font; ?>;
 	font-size: 1rem;
 	top: 0;
 	left: 400px;
@@ -1625,13 +1628,17 @@ input[type='submit']:focus {
 /* HEADINGS */
 /************/
 
+h1 {
+	font-weight: <?php echo ($platform == 'Mac') ? "700" : "800"; ?>;
+}
+
 .post-body h1,
 .post-body h2,
 .post-body h3,
 .post-body h4,
 .post-body h5,
 .post-body h6 {
-	font-family: 'Concourse';
+	font-family: <?php echo $UI_font; ?>;
 	line-height: 1.1;
 	margin: 1em 0 0.75em 0;
 	text-align: left;
@@ -1641,7 +1648,7 @@ input[type='submit']:focus {
 .post-body h6 {
 	font-size: 1em;
 	font-weight: 600;
-	font-family: 'Concourse SmallCaps';
+	font-family: <?php echo ($platform == 'Mac') ? "'Concourse SmallCaps'" : "'Whitney SmallCaps'"; ?>;
 }
 .post-body h6 {
 	color: #555;
@@ -1651,7 +1658,7 @@ input[type='submit']:focus {
 }
 .post-body h3 {
 	font-size: 1.4em;
-	font-family: 'Concourse SmallCaps';
+	font-family: <?php echo ($platform == 'Mac') ? "'Concourse SmallCaps'" : "'Whitney SmallCaps'"; ?>;
 	font-weight: 
 }
 .post-body h2 {
