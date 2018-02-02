@@ -296,11 +296,17 @@ function highlightCommentsSince(date) {
 
 function scrollToNewComment(next) {
 	let ci = getCurrentVisibleComment();
-	if(ci) {
+	if (ci) {
 		let targetComment = (next ? ci.nextNewComment : ci.prevNewComment);
-		if(targetComment) location.hash = "comment-" + targetComment.getCommentId();
+		if (targetComment) {
+			location.hash = "comment-" + targetComment.getCommentId();
+			expandAncestorsOf(location.hash);
+		}
 	} else {
-		if(window.newComments[0]) location.hash = "comment-" + window.newComments[0];
+		if (window.newComments[0]) {
+			location.hash = "comment-" + window.newComments[0];
+			expandAncestorsOf(location.hash);
+		}
 		realignHash();
 	}
 	scrollListener();
@@ -361,6 +367,13 @@ function setContentWidth(widthString) {
 		}`;
 }
 
+function expandAncestorsOf(commentId) {
+	try { document.querySelector('#'+commentId).closest("label[for^='expand'] + .comment-thread").parentElement.querySelector("input[id^='expand']").checked = true; }
+	catch (e) { }
+	try { document.querySelector('#'+commentId).closest("#comments > ul > li").setCommentThreadMaximized(true, false); }
+	catch (e) { }
+}
+
 function getQueryVariable(variable)
 {
 	var query = window.location.search.substring(1);
@@ -414,10 +427,7 @@ function initialize() {
 
 		let urlParts = document.URL.split('#');
 		if (urlParts.length > 1) {
-			try { document.querySelector('#'+urlParts[1]).closest("label[for^='expand'] + .comment-thread").parentElement.querySelector("input[id^='expand']").checked = true; }
-			catch (e) { }
-			try { document.querySelector('#'+urlParts[1]).closest("#comments > ul > li").setCommentThreadMaximized(true, false); }
-			catch (e) { }
+			expandAncestorsOf(urlParts[1]);
 			window.needHashRealignment = true;
 		}
 
