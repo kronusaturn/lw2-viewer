@@ -226,7 +226,9 @@
 	 (csrf-token (and session-token (make-csrf-token session-token)))) 
     (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"shortcut icon\" href=\"~A\"><script src=\"~A\" async></script><script src=\"~A\" async></script>~@[<script>var csrfToken=\"~A\"</script>~]</head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
 	    title description
-	    *html-head* (generate-versioned-link "/style.css") (generate-versioned-link "/favicon.ico") (generate-versioned-link "/script.js") (generate-versioned-link "/guiedit.js")
+	    *html-head*
+	    (generate-versioned-link (if (search "Windows" (hunchentoot:header-in* :user-agent)) "/style.windows.css" "/style.css"))
+	    (generate-versioned-link "/favicon.ico") (generate-versioned-link "/script.js") (generate-versioned-link "/guiedit.js")
 	    csrf-token
 	    content-class
 	    (user-nav-bar (or current-uri (hunchentoot:request-uri*)))))
@@ -630,16 +632,13 @@
 					      (alexandria:with-input-from-file (in-stream "www/about.html" :element-type '(unsigned-byte 8))
 									       (alexandria:copy-stream in-stream out-stream))))) 
 
-(hunchentoot:define-easy-handler (view-css :uri "/style.css") (v)
-				 (when v (setf (hunchentoot:header-out "Cache-Control") (format nil "public, max-age=~A, immutable" (- (expt 2 31) 1)))) 
-				 (hunchentoot:handle-static-file "www/style.css" "text/css")) 
-
 (defmacro define-versioned-resource (uri content-type)
   `(hunchentoot:define-easy-handler (,(alexandria:symbolicate "versioned-resource-" uri) :uri ,uri) (v)
 				    (when v (setf (hunchentoot:header-out "Cache-Control") (format nil "public, max-age=~A, immutable" (- (expt 2 31) 1)))) 
 				    (hunchentoot:handle-static-file ,(concatenate 'string "www" uri) ,content-type))) 
 
-(define-versioned-resource "/style.css" "text/css") 
+(define-versioned-resource "/style.css" "text/css")
+(define-versioned-resource "/style.windows.css" "text/css")
 (define-versioned-resource "/script.js" "text/javascript") 
 (define-versioned-resource "/guiedit.js" "text/javascript") 
 (define-versioned-resource "/favicon.ico" "image/x-icon") 

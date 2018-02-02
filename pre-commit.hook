@@ -3,6 +3,7 @@
 set -e
 
 if ! git diff-index --quiet --cached HEAD -- www/style.css.php; then
-	git show :www/style.css.php | (cd www; php >style.css)
-	git add www/style.css
+	git show :www/style.css.php | (cd www; php -- Mac >style.css)
+	git show :www/style.css.php | (cd www; php -- Windows >style.windows.css)
+	git add www/style.css www/style.windows.css
 fi
