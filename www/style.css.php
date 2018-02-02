@@ -1076,6 +1076,10 @@ ul.comment-thread {
 	font-size: 1.25em;
 	color: #000;
 }
+.comment-meta .author:hover {
+	text-decoration: none;
+	color: #090;
+}
 .comment-meta .lw2-link {
 	margin-left: 1em;
 }
