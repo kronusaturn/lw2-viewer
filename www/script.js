@@ -400,7 +400,7 @@ function themeSelectButtonClicked(event) {
 function setTheme(themeName) {
 	let styleSheetNameSuffix = (themeName == 'default') ? '' : '-dark';
 	let currentStyleSheetNameComponents = /style[^\.]*(\..+)$/.exec(document.querySelector("head link[href*='.css']").href);
-	document.querySelector("head link[href*='.css']").href = "/style" + styleSheetNameSuffix + currentStyleSheetNameComponents[2];
+	document.querySelector("head link[href*='.css']").href = "/style" + styleSheetNameSuffix + currentStyleSheetNameComponents[1];
 }
 
 function expandAncestorsOf(commentId) {
@@ -577,6 +577,7 @@ function initialize() {
 		
 		// Add the content width selector.
 		injectContentWidthSelector();
+		injectThemeSelector();
 	})
 }
 
