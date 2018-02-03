@@ -369,6 +369,38 @@ function setContentWidth(widthString) {
 		#width-selector {
 			right: calc((100% - ${widthString}) / 2 - 50px);
 		}`;
+		
+	let themeSelectStyle = document.querySelector("#theme-select");
+	themeSelectStyle.innerHTML = 
+		`#width-selector {
+			left: calc((100% - 900px) / 2 - 41px);
+		}`;
+}
+
+function injectThemeSelector() {
+	document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='theme-select'></style>");
+	let themeSelector = addUIElement(
+		"<div id='theme-selector'>" + 
+		"<button type='button' class='select-theme-default selected' title='Default theme (dark text on light background)' tabindex='-1'>A</button>" + 
+		"<button type='button' class='select-theme-dark' title='Dark theme (light text on dark background)' tabindex='-1'>A</button>" + 
+		"</div>");
+	themeSelector.querySelectorAll("button").forEach(function (button) {
+		button.addActivateEvent(themeSelectButtonClicked);
+	});
+}
+function themeSelectButtonClicked(event) {
+	setTheme(/select-theme-([^\s]+)/.exec(event.target.className)[1]);
+	event.target.parentElement.childNodes.forEach(function (button) {
+		button.removeClass("selected");
+		button.disabled = false;
+	});
+	event.target.addClass("selected");
+	event.target.disabled = true;
+}
+function setTheme(themeName) {
+	let styleSheetNameSuffix = (themeName == 'default') ? '' : '-dark';
+	let currentStyleSheetNameComponents = /style[^\.]*(\..+)$/.exec(document.querySelector("head link[href*='.css']").href);
+	document.querySelector("head link[href*='.css']").href = "/style" + styleSheetNameSuffix + currentStyleSheetNameComponents[2];
 }
 
 function expandAncestorsOf(commentId) {
