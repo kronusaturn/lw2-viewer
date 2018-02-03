@@ -373,7 +373,7 @@ function setContentWidth(widthString) {
 	let themeSelectStyle = document.querySelector("#theme-select");
 	themeSelectStyle.innerHTML = 
 		`#theme-selector {
-			left: calc((100% - 900px) / 2 - 41px);
+			left: calc((100% - ${widthString}) / 2 - 41px);
 		}`;
 }
 
