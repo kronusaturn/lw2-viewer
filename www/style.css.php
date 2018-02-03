@@ -1629,8 +1629,6 @@ a.comment-parent-link:hover::after {
 
 a {
 	text-decoration: none;
-}
-a:link {
 	color: #00e;
 }
 a:visited {
