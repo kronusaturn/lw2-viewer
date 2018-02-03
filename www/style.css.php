@@ -1812,7 +1812,6 @@ figure {
 	text-align: center;
 	margin: 1.5em auto;
 }
-
 figure img {
 	border: 1px solid #000;
 }
