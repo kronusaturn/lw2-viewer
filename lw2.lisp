@@ -387,7 +387,7 @@
 						 (hunchentoot:header-out "Location") (generate-post-link post-id comment-id))
 					   (let ((post (get-post-body post-id))
 						 (lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token")))
-					     (emit-page (out-stream :title (clean-text (cdr (assoc :title post)))) 
+					     (emit-page (out-stream :title (clean-text (cdr (assoc :title post))) :content-class "post-page") 
 							(with-outputs (out-stream) (post-body-to-html post))
 							(if lw2-auth-token
 							  (format out-stream "<script>postVote=~A</script>~@[<div class=\"post-controls\"><a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\">Edit post</a></div>~]"

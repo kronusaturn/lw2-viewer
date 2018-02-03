@@ -1569,6 +1569,10 @@ a.comment-parent-link:hover::after {
 	height: 28px;
 	text-align: left;
 	padding: 1px 4px 0 4px;
+	overflow: hidden;
+}
+.post-page .guiedit-buttons-container {
+	padding-right: 60px;
 }
 .guiedit-buttons-container button {
 	height: 26px;
