@@ -322,7 +322,7 @@ input {
 #width-selector {
 	position: fixed;
 	top: 4px;
-	right: calc((100vw - 900px) / 2 - 58px);
+	right: calc((100% - 900px) / 2 - 58px);
 }
 #width-selector button {
 	color: transparent;
@@ -343,6 +343,41 @@ input {
 }
 #width-selector button.select-width-wide {
 	background-image: url('data:image/gif;base64,R0lGODlhCgAKAIABAJqamtPT0yH5BAEAAAEALAAAAAAKAAoAAAISjI+pBpzQAjywVmYv3ijGBSoFADs=');
+}
+
+/******************/
+/* THEME SELECTOR */
+/******************/
+
+#theme-selector {
+	position: fixed;
+	top: -2px;
+	left: calc((100% - 900px) / 2 - 41px);
+}
+#theme-selector button {
+	display: block;
+	width: 16px;
+	height: 16px;
+	padding: 0 0 0 1px;
+	text-align: center;
+	margin: 12px;
+	font-size: 0.75rem;
+	font-weight: bold;
+}
+#theme-selector button:hover,
+#theme-selector button.selected {
+	text-shadow: none;
+	outline: 5px solid #393939;
+}
+#theme-selector button.select-theme-default,
+#theme-selector button.select-theme-default:hover {
+	color: #fff;
+	background-color: #000;
+}
+#theme-selector button.select-theme-dark,
+#theme-selector button.select-theme-dark:hover {
+	color: #000;
+	background-color: #fff;
 }
 
 /*******************/
@@ -1835,7 +1870,6 @@ figure {
 	text-align: center;
 	margin: 1.5em auto;
 }
-
 figure img {
 	border: 1px solid #fff;
 }
