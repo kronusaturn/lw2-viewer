@@ -1920,6 +1920,13 @@ ol {
 		display: none;
 	}
 }
+@media only screen and (max-width: 768px) {
+	#login-form-container,
+	#create-account-form-container {
+		width: unset;
+		float: unset;
+	}
+}
 @media only screen and (max-width: 520px) {
 	.nav-inner,
 	#secondary-bar .nav-inner {
@@ -1994,10 +2001,6 @@ ol {
 	}
 	.archive-nav > *[class^='archive-nav-'] +  *[class^='archive-nav-'] {
 		margin-top: 0.5em;
-	}
-	#login-form-container,
-	#create-account-form-container {
-		width: 50%;
 	}
 	#nav-item-recent-comments > * > span {
 		display: none;
