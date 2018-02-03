@@ -322,7 +322,7 @@ input {
 #width-selector {
 	position: fixed;
 	top: 4px;
-	right: calc((100% - 900px) / 2 - 58px);
+	right: calc((100% - 900px) / 2 - 50px);
 }
 #width-selector button {
 	color: transparent;
@@ -353,6 +353,10 @@ input {
 	position: fixed;
 	top: -2px;
 	left: calc((100% - 900px) / 2 - 41px);
+	opacity: 0.4;
+}
+#theme-selector:hover {
+	opacity: 1.0;
 }
 #theme-selector button {
 	display: block;
@@ -565,7 +569,7 @@ div[class^='archive-nav-'] {
 }
 
 .archive-nav a:link, .archive-nav a:visited {
-	color: rgba(0, 0, 238, 0.7);
+	color: rgba(186, 124, 255, 0.7);
 }
 .archive-nav a:hover {
 	text-decoration: none;
@@ -644,7 +648,7 @@ h1.listing a:hover {
 	text-decoration: dotted underline;
 	white-space: initial;
 	overflow: visible;
-	background-color: rgba(255,255,255,0.85);
+	background-color: rgba(0, 0, 0, 0.85);
 	z-index: 2;
 }
 h1.listing a:hover::before {
