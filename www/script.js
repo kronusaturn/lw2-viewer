@@ -342,8 +342,12 @@ function injectContentWidthSelector() {
 }
 function widthAdjustButtonClicked(event) {
 	setContentWidth((event.target.className == "select-width-normal" ? "900px" : "(100vw - 300px)"));
-	event.target.parentElement.childNodes.forEach(function (button) { button.removeClass("selected"); });
+	event.target.parentElement.childNodes.forEach(function (button) {
+		button.removeClass("selected");
+		button.disabled = false;
+	});
 	event.target.addClass("selected");
+	event.target.disabled = true;
 }
 function setContentWidth(widthString) {
 	let widthAdjustStyle = document.querySelector("#width-adjust");
