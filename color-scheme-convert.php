@@ -6,13 +6,24 @@ if (!isset($argv[1]))
 $debug_enabled = false;
 
 $stylesheet = file_get_contents($argv[1]);
-echo preg_replace_callback("/(#[0-9abcdef]+)([,; ])/i", 'ProcessColorValue', $stylesheet);
+$stylesheet = preg_replace_callback("/(#[0-9abcdef]+)([,; ])/i", 'ProcessColorValue', $stylesheet);
+$stylesheet = preg_replace_callback("/rgba\\(\\s*([0-9]+),\\s*([0-9]+),\\s*([0-9]+),\\s*([0-9\.]+)\\s*\\)/i", 'ProcessColorValue_RGBA', $stylesheet);
+echo $stylesheet;
 function ProcessColorValue($m) {
 	debug_log($m[1]);
 	$m[1] = RGBToHex(XYZToRGB(LabToXYZ(CVT(XYZToLab(RGBToXYZ(HexToRGB($m[1])))))));
 	debug_log("\n");
 
 	return implode(array_slice($m,1));
+}
+function ProcessColorValue_RGBA($m) {
+	$rgba = XYZToRGB(LabToXYZ(CVT(XYZToLab(RGBToXYZ(array_slice($m, 1, 3))))));
+	foreach ($rgba as $k => $v) {
+		$rgba[$k] = round($v);
+	}
+	$rgba[] = $m[4];
+	
+	return "rgba(" . implode(", ", $rgba) . ")";
 }
 
 /***********/
