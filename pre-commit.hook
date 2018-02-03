@@ -5,5 +5,7 @@ set -e
 if ! git diff-index --quiet --cached HEAD -- www/style.css.php; then
 	git show :www/style.css.php | (cd www; php -- Mac >style.css)
 	git show :www/style.css.php | (cd www; php -- Windows >style.windows.css)
+	php color-scheme-convert.php www/style.css >www/style-dark.css
+	php color-scheme-convert.php www/style.windows.css >www/style-dark.windows.css
 	git add www/style.css www/style.windows.css
 fi
