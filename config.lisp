@@ -8,4 +8,4 @@
 (defparameter *graphql-uri* "https://www.lesserwrong.com/graphql")
 (defparameter *websocket-uri* "wss://www.lesserwrong.com/")
 
-(defparameter *secure-cookies* t)
+(defparameter *secure-cookies* nil)
