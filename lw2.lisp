@@ -26,21 +26,26 @@
       (setf (aref str 0) #\MINUS_SIGN))
     str))
 
+(defun encode-entities (text)
+  (handler-bind
+    (((or plump:invalid-xml-character plump:discouraged-xml-character) #'abort))
+    (plump:encode-entities text)))
+
 (defun post-headline-to-html (post)
   (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :posted-at post))) 
     (format nil "<h1 class=\"listing\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~A</a></h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\"><span class=\"karma-value\">~A</span></div><a class=\"comment-count\" href=\"~A#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a>~A</div>"
-	    (if (cdr (assoc :url post)) (plump:encode-entities (cdr (assoc :url post))))
+	    (if (cdr (assoc :url post)) (encode-entities (cdr (assoc :url post))))
 	    (generate-post-link post)
-	    (plump:encode-entities (clean-text (cdr (assoc :title post))))
-	    (plump:encode-entities (get-user-slug (cdr (assoc :user-id post)))) 
-	    (plump:encode-entities (get-username (cdr (assoc :user-id post))))
+	    (encode-entities (clean-text (cdr (assoc :title post))))
+	    (encode-entities (get-user-slug (cdr (assoc :user-id post)))) 
+	    (encode-entities (get-username (cdr (assoc :user-id post))))
 	    js-time
 	    pretty-time
 	    (pretty-number (cdr (assoc :base-score post)) "point")
 	    (generate-post-link post) 
 	    (or (cdr (assoc :comment-count post)) 0) 
 	    (cdr (assoc :page-url post))
-	    (if (cdr (assoc :url post)) (format nil "<div class=\"link-post\">(~A)</div>" (plump:encode-entities (puri:uri-host (puri:parse-uri (cdr (assoc :url post)))))) "")))) 
+	    (if (cdr (assoc :url post)) (format nil "<div class=\"link-post\">(~A)</div>" (encode-entities (puri:uri-host (puri:parse-uri (cdr (assoc :url post)))))) "")))) 
 
 (defun posts-to-rss (posts out-stream)
   (with-recursive-lock (*memory-intensive-mutex*) 
@@ -58,9 +63,9 @@
 (defun post-body-to-html (post)
   (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :posted-at post))) 
     (format nil "<div class=\"post\"><h1>~A</h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a><a href=\"#bottom-bar\"></a></div><div class=\"post-body\">~A</div></div>"
-	    (plump:encode-entities (clean-text (cdr (assoc :title post))))
-	    (plump:encode-entities (get-user-slug (cdr (assoc :user-id post)))) 
-	    (plump:encode-entities (get-username (cdr (assoc :user-id post))))
+	    (encode-entities (clean-text (cdr (assoc :title post))))
+	    (encode-entities (get-user-slug (cdr (assoc :user-id post)))) 
+	    (encode-entities (get-username (cdr (assoc :user-id post))))
 	    js-time
 	    pretty-time
 	    (cdr (assoc :--id post)) 
@@ -68,14 +73,14 @@
 	    (or (cdr (assoc :comment-count post)) 0) 
 	    (cdr (assoc :page-url post)) 
 	    (format nil "~A~A"
-		    (if (cdr (assoc :url post)) (format nil "<p><a href=\"~A\">Link post</a></p>" (plump:encode-entities (cdr (assoc :url post)))) "")
+		    (if (cdr (assoc :url post)) (format nil "<p><a href=\"~A\">Link post</a></p>" (encode-entities (cdr (assoc :url post)))) "")
 		    (clean-html (or (cdr (assoc :html-body post)) "") :with-toc t :post-id (cdr (assoc :--id post))))))) 
 
 (defun comment-to-html (comment &key with-post-title)
   (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :posted-at comment))) 
     (format nil "<div class=\"comment\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <a class=\"date\" href=\"~A\" data-js-date=\"~A\">~A</a><div class=\"karma\"><span class=\"karma-value\">~A</span></div><a class=\"lw2-link\" href=\"~A#~A\">LW2 link</a>~A</div><div class=\"comment-body\"~@[ data-markdown-source=\"~A\"~]>~A</div></div>"
-	    (plump:encode-entities (get-user-slug (cdr (assoc :user-id comment)))) 
-	    (plump:encode-entities (get-username (cdr (assoc :user-id comment)))) 
+	    (encode-entities (get-user-slug (cdr (assoc :user-id comment)))) 
+	    (encode-entities (get-username (cdr (assoc :user-id comment)))) 
 	    (generate-post-link (cdr (assoc :post-id comment)) (cdr (assoc :--id comment)))
 	    js-time
 	    pretty-time
@@ -85,14 +90,14 @@
 	    (if with-post-title
 	      (format nil "<div class=\"comment-post-title\">on: <a href=\"~A\">~A</a></div>"
 		      (generate-post-link (cdr (assoc :post-id comment)))
-		      (plump:encode-entities (clean-text (get-post-title (cdr (assoc :post-id comment))))))
+		      (encode-entities (clean-text (get-post-title (cdr (assoc :post-id comment))))))
 	      (format nil "~@[<a class=\"comment-parent-link\" href=\"#comment-~A\">Parent</a>~]~@[<div class=\"comment-child-links\">Replies: ~:{<a href=\"#comment-~A\">&gt;~A</a>~}</div>~]~:[~;<div class=\"comment-minimize-button\" data-child-count=\"~A\"></div>~]"
 		      (cdr (assoc :parent-comment-id comment))
 		      (map 'list (lambda (c) (list (cdr (assoc :--id c)) (get-username (cdr (assoc :user-id c))))) (cdr (assoc :children comment)))
 		      (not (cdr (assoc :parent-comment-id comment)))
 		      (cdr (assoc :child-count comment))))
 	    (if (logged-in-userid (cdr (assoc :user-id comment)))
-	      (plump:encode-entities
+	      (encode-entities
 		(or (cache-get "comment-markdown-source" (cdr (assoc :--id comment))) 
 		    (cdr (assoc :html-body comment)))))
 	    (clean-html (cdr (assoc :html-body comment)))))) 
@@ -205,7 +210,7 @@
 			     ("about" "/about" "About")
 			     ("search" "/search" "Search" :html ,#'search-bar-to-html)
 			     ,(if username
-				`("login" ,(format nil "/users/~A" (plump:encode-entities (get-user-slug (logged-in-userid)))) ,(plump:encode-entities username))
+				`("login" ,(format nil "/users/~A" (encode-entities (get-user-slug (logged-in-userid)))) ,(plump:encode-entities username))
 				`("login" ,(format nil "/login?return=~A" (url-rewrite:url-encode current-uri)) "Log In")))))
       (nav-bar-to-html current-uri)))) 
 
