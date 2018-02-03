@@ -16,6 +16,7 @@ html {
 }
 body {
 	background-color: #d8d8d8;
+	color: #000;
 	padding: 0;
 	margin: 0;
 	font-family: <?php echo $UI_font; ?>;
@@ -1769,6 +1770,11 @@ figure {
 
 figure img {
 	border: 1px solid #000;
+}
+
+input[type='text'],
+input[type='search'] {
+	background-color: #fff;
 }
 
 /*************/
