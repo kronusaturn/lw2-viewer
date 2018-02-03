@@ -895,8 +895,8 @@ h1.listing a[href^="http"]:hover {
 /* POSTS & COMMENTS */
 /********************/
 
-.post-meta *,
-.comment-meta * {
+.post-meta > *,
+.comment-meta > * {
 	display: inline-block;
 	margin-right: 1em;
 	font-size: 1.0625em;
