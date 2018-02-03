@@ -358,16 +358,6 @@ input {
 	text-shadow: none;
 	outline: 5px solid #bbb;
 }
-#theme-selector button.select-theme-default,
-#theme-selector button.select-theme-default:hover {
-	color: #000;
-	background-color: #fff;
-}
-#theme-selector button.select-theme-dark,
-#theme-selector button.select-theme-dark:hover {
-	color: #fff;
-	background-color: #000;
-}
 
 /*******************/
 /* QUICKNAV WIDGET */

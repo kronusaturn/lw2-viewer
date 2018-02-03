@@ -379,6 +379,18 @@ function setContentWidth(widthString) {
 
 function injectThemeSelector() {
 	document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='theme-select'></style>");
+	document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='theme-select-buttons'>" + 
+		`#theme-selector button.select-theme-default,
+		#theme-selector button.select-theme-default:hover {
+			color: #000;
+			background-color: #fff;
+		}
+		#theme-selector button.select-theme-dark,
+		#theme-selector button.select-theme-dark:hover {
+			color: #fff;
+			background-color: #000;
+		}` + "</style>");
+
 	let themeSelector = addUIElement(
 		"<div id='theme-selector'>" + 
 		"<button type='button' class='select-theme-default selected' title='Default theme (dark text on light background)' tabindex='-1'>A</button>" + 
