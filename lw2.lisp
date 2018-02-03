@@ -28,7 +28,7 @@
 
 (defun post-headline-to-html (post)
   (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :posted-at post))) 
-    (format nil "<h1 class=\"listing\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~A</a></h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\">~A</div><a class=\"comment-count\" href=\"~A#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a>~A</div>"
+    (format nil "<h1 class=\"listing\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~A</a></h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\"><span class=\"karma-value\">~A</span></div><a class=\"comment-count\" href=\"~A#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a>~A</div>"
 	    (if (cdr (assoc :url post)) (plump:encode-entities (cdr (assoc :url post))))
 	    (generate-post-link post)
 	    (plump:encode-entities (clean-text (cdr (assoc :title post))))
@@ -57,7 +57,7 @@
 
 (defun post-body-to-html (post)
   (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :posted-at post))) 
-    (format nil "<div class=\"post\"><h1>~A</h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\">~A</div><a class=\"comment-count\" href=\"#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a><a href=\"#bottom-bar\"></a></div><div class=\"post-body\">~A</div></div>"
+    (format nil "<div class=\"post\"><h1>~A</h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a><a href=\"#bottom-bar\"></a></div><div class=\"post-body\">~A</div></div>"
 	    (plump:encode-entities (clean-text (cdr (assoc :title post))))
 	    (plump:encode-entities (get-user-slug (cdr (assoc :user-id post)))) 
 	    (plump:encode-entities (get-username (cdr (assoc :user-id post))))
@@ -73,7 +73,7 @@
 
 (defun comment-to-html (comment &key with-post-title)
   (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :posted-at comment))) 
-    (format nil "<div class=\"comment\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <a class=\"date\" href=\"~A\" data-js-date=\"~A\">~A</a><div class=\"karma\">~A</div><a class=\"lw2-link\" href=\"~A#~A\">LW2 link</a>~A</div><div class=\"comment-body\"~@[ data-markdown-source=\"~A\"~]>~A</div></div>"
+    (format nil "<div class=\"comment\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <a class=\"date\" href=\"~A\" data-js-date=\"~A\">~A</a><div class=\"karma\"><span class=\"karma-value\">~A</span></div><a class=\"lw2-link\" href=\"~A#~A\">LW2 link</a>~A</div><div class=\"comment-body\"~@[ data-markdown-source=\"~A\"~]>~A</div></div>"
 	    (plump:encode-entities (get-user-slug (cdr (assoc :user-id comment)))) 
 	    (plump:encode-entities (get-username (cdr (assoc :user-id comment)))) 
 	    (generate-post-link (cdr (assoc :post-id comment)) (cdr (assoc :--id comment)))
@@ -387,7 +387,7 @@
 						 (hunchentoot:header-out "Location") (generate-post-link post-id comment-id))
 					   (let ((post (get-post-body post-id))
 						 (lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token")))
-					     (emit-page (out-stream :title (clean-text (cdr (assoc :title post)))) 
+					     (emit-page (out-stream :title (clean-text (cdr (assoc :title post))) :content-class "post-page") 
 							(with-outputs (out-stream) (post-body-to-html post))
 							(if lw2-auth-token
 							  (format out-stream "<script>postVote=~A</script>~@[<div class=\"post-controls\"><a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\">Edit post</a></div>~]"
@@ -536,7 +536,7 @@
 						     (with-outputs (out-stream) "</div></div>"))))) 
 				     (cond
 				       ((not (or cookie-check (hunchentoot:cookie-in "session-token")))
-					(hunchentoot:set-cookie "session-token" :max-age (- (expt 2 31) 1) :value (base64:usb8-array-to-base64-string (ironclad:make-random-salt)))
+					(hunchentoot:set-cookie "session-token" :max-age (- (expt 2 31) 1) :secure *secure-cookies* :value (base64:usb8-array-to-base64-string (ironclad:make-random-salt)))
 					(setf (hunchentoot:return-code*) 303
 					      (hunchentoot:header-out "Location") (format nil "/login?~@[return=~A&~]cookie-check=y" (if return (url-rewrite:url-encode return))))) 
 				       (cookie-check
@@ -552,7 +552,7 @@
 					   (t (multiple-value-bind (user-id auth-token error-message) (do-lw2-login "username" login-username login-password) 
 						(cond
 						  (auth-token
-						    (hunchentoot:set-cookie "lw2-auth-token" :value auth-token :max-age (- (expt 2 31) 1)) 
+						    (hunchentoot:set-cookie "lw2-auth-token" :value auth-token :secure *secure-cookies* :max-age (- (expt 2 31) 1)) 
 						    (cache-put "auth-token-to-userid" auth-token user-id)
 						    (cache-put "auth-token-to-username" auth-token login-username)
 						    (setf (hunchentoot:return-code*) 303
@@ -570,7 +570,7 @@
 						(cond
 						  (error-message (emit-login-page :error-message error-message))
 						  (t
-						    (hunchentoot:set-cookie "lw2-auth-token" :value auth-token :max-age (- (expt 2 31) 1))
+						    (hunchentoot:set-cookie "lw2-auth-token" :value auth-token :secure *secure-cookies* :max-age (- (expt 2 31) 1))
 						    (cache-put "auth-token-to-userid" auth-token user-id)
 						    (cache-put "auth-token-to-username" auth-token signup-username)
 						    (setf (hunchentoot:return-code*) 303

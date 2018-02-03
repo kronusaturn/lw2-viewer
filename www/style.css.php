@@ -886,8 +886,8 @@ h1.listing a[href^="http"]:hover {
 /* POSTS & COMMENTS */
 /********************/
 
-.post-meta *,
-.comment-meta * {
+.post-meta > *,
+.comment-meta > * {
 	display: inline-block;
 	margin-right: 1em;
 	font-size: 1.0625em;
@@ -1512,6 +1512,10 @@ a.comment-parent-link:hover::after {
 	height: 28px;
 	text-align: left;
 	padding: 1px 4px 0 4px;
+	overflow: hidden;
+}
+.post-page .guiedit-buttons-container {
+	padding-right: 60px;
 }
 .guiedit-buttons-container button {
 	height: 26px;
@@ -1932,6 +1936,13 @@ ol {
 		display: none;
 	}
 }
+@media only screen and (max-width: 768px) {
+	#login-form-container,
+	#create-account-form-container {
+		width: unset;
+		float: unset;
+	}
+}
 @media only screen and (max-width: 520px) {
 	.nav-inner,
 	#secondary-bar .nav-inner {
@@ -2006,10 +2017,6 @@ ol {
 	}
 	.archive-nav > *[class^='archive-nav-'] +  *[class^='archive-nav-'] {
 		margin-top: 0.5em;
-	}
-	#login-form-container,
-	#create-account-form-container {
-		width: 50%;
 	}
 	#nav-item-recent-comments > * > span {
 		display: none;
