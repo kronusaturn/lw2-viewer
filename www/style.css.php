@@ -1,7 +1,7 @@
 <?php
 	header ('Content-type: text/css; charset=utf-8');
 	
-	$platform = $argv[1] ?: 'Mac';
+	$platform = @$argv[1] ?: 'Mac';
 	$UI_font = ($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Whitney', 'a_Avante'";
 ?>
 
@@ -1600,6 +1600,12 @@ a.comment-parent-link:hover::after {
 
 a {
 	text-decoration: none;
+}
+a:link {
+	color: #00e;
+}
+a:visited {
+	color: #551a8b;
 }
 a:hover {
 	text-decoration: underline;
