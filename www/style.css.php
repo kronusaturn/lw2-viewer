@@ -311,7 +311,7 @@ input {
 #width-selector {
 	position: fixed;
 	top: 4px;
-	right: calc((100% - 900px) / 2 - 58px);
+	right: calc((100% - 900px) / 2 - 50px);
 }
 #width-selector button {
 	color: transparent;
@@ -342,6 +342,10 @@ input {
 	position: fixed;
 	top: -2px;
 	left: calc((100% - 900px) / 2 - 41px);
+	opacity: 0.4;
+}
+#theme-selector:hover {
+	opacity: 1.0;
 }
 #theme-selector button {
 	display: block;
