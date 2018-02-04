@@ -6,9 +6,7 @@
 
 (defun file-get-contents (filename)
   (with-open-file (stream filename)
-    (let ((contents (make-string (file-length stream))))
-      (read-sequence contents stream)
-      contents)))
+    (uiop:slurp-stream-string stream)))
 
 (defun grab-from-rts (url)
   (let* ((root (plump:parse (drakma:http-request url :close t)))
