@@ -424,7 +424,7 @@ function setTheme(themeName) {
 	newStyle.setAttribute("href", "/style" + styleSheetNameSuffix + currentStyleSheetNameComponents[1]);
 	let oldStyle = document.querySelector("head link[href*='.css']");
 	newStyle.addEventListener("load", function() {oldStyle.parentElement.removeChild(oldStyle)});
-	document.querySelector("head").appendChild(newStyle);
+	document.querySelector("head").insertBefore(newStyle, oldStyle.nextSibling);
 }
 
 function expandAncestorsOf(commentId) {
