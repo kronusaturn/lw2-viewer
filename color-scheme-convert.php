@@ -20,13 +20,13 @@ echo $stylesheet;
 
 function ProcessColorValue($m) {
 	debug_log($m[1]);
-	$m[1] = HexFromRGB(RGBFromHSV(CVT(HSVFromRGB(RGBFromXYZ(XYZFromLab(CVT(LabFromXYZ(XYZFromRGB(RGBFromHex($m[1]))),"Lab")))),"HSV")));
+	$m[1] = HexFromRGB(RGBFromXYZ(XYZFromLab(CVT(LabFromXYZ(XYZFromRGB(RGBFromHex($m[1]))),"Lab"))));
 
 	return implode(array_slice($m,1));
 }
 function ProcessColorValue_RGBA($m) {
 	debug_log(PCC(array_slice($m, 1, 3)));
-	$rgba = RGBFromHSV(CVT(HSVFromRGB(RGBFromXYZ(XYZFromLab(CVT(LabFromXYZ(XYZFromRGB(array_slice($m, 1, 3))),"Lab")))),"HSV"));
+	$rgba = RGBFromXYZ(XYZFromLab(CVT(LabFromXYZ(XYZFromRGB(array_slice($m, 1, 3))),"Lab")));
 	foreach ($rgba as $k => $v) {
 		$rgba[$k] = round($v);
 	}
@@ -53,27 +53,18 @@ function debug_log($string) {
 function CVT($value, $color_space) {
 	global $mode;
 	## Mode 1 is a lightness inversion (in Lab) only.
-	## Mode 2 is mode 1 plus a 180° hue rotation (in HSV).
+	## Mode 2 is mode 1 plus a 180° hue rotation (in Lab).
 	
-	if ($color_space == "Lab") {
-		switch ($mode) {
-			case 2:
-			case 1:
-			default:
-				$value[0] = 100 - $value[0];
-				break;
-		}
-	}
-	else if ($color_space == "HSV") {
-		switch ($mode) {
-			case 2:
-				$value[0] += 0.5;
-				$value[0] -= ($value[0] > 1.0) ? 1.0 : 0.0;
-				break;
-			case 1:
-			default:
-				break;
-		}
+	switch ($mode) {
+		case 2:
+			$value[0] = 100 - $value[0];
+			$value[1] *= -1;
+			$value[2] *= -1;
+			break;
+		case 1:
+		default:
+			$value[0] = 100 - $value[0];
+			break;
 	}
 	debug_log("  →  {$color_space} ".PCC($value));
 
