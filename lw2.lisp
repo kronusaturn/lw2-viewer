@@ -33,7 +33,8 @@
 
 (defun post-headline-to-html (post)
   (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :posted-at post))) 
-    (format nil "<h1 class=\"listing\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~A</a></h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\"><span class=\"karma-value\">~A</span></div><a class=\"comment-count\" href=\"~A#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a>~A</div>"
+    (format nil "<h1 class=\"listing~:[~; link-post-listing~]\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~A</a></h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\"><span class=\"karma-value\">~A</span></div><a class=\"comment-count\" href=\"~A#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a>~A</div>"
+	    (cdr (assoc :url post))
 	    (if (cdr (assoc :url post)) (encode-entities (string-trim " " (cdr (assoc :url post)))))
 	    (generate-post-link post)
 	    (encode-entities (clean-text (cdr (assoc :title post))))
@@ -45,7 +46,7 @@
 	    (generate-post-link post) 
 	    (or (cdr (assoc :comment-count post)) 0) 
 	    (cdr (assoc :page-url post))
-	    (if (cdr (assoc :url post)) (format nil "<div class=\"link-post\">(~A)</div>" (encode-entities (puri:uri-host (puri:parse-uri (string-trim " " (cdr (assoc :url post))))))) "")))) 
+	    (if (cdr (assoc :url post)) (format nil "<div class=\"link-post-domain\">(~A)</div>" (encode-entities (puri:uri-host (puri:parse-uri (string-trim " " (cdr (assoc :url post))))))) "")))) 
 
 (defun posts-to-rss (posts out-stream)
   (with-recursive-lock (*memory-intensive-mutex*) 
@@ -62,7 +63,8 @@
 
 (defun post-body-to-html (post)
   (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :posted-at post))) 
-    (format nil "<div class=\"post\"><h1>~A</h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a><a href=\"#bottom-bar\"></a></div><div class=\"post-body\">~A</div></div>"
+    (format nil "<div class=\"post~:[~; link-post~]\"><h1>~A</h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A comment~:P</a><a class=\"lw2-link\" href=\"~A\">LW2 link</a><a href=\"#bottom-bar\"></a></div><div class=\"post-body\">~A</div></div>"
+	    (cdr (assoc :url post))
 	    (encode-entities (clean-text (cdr (assoc :title post))))
 	    (encode-entities (get-user-slug (cdr (assoc :user-id post)))) 
 	    (encode-entities (get-username (cdr (assoc :user-id post))))
@@ -73,7 +75,7 @@
 	    (or (cdr (assoc :comment-count post)) 0) 
 	    (cdr (assoc :page-url post)) 
 	    (format nil "~A~A"
-		    (if (cdr (assoc :url post)) (format nil "<p><a href=\"~A\">Link post</a></p>" (encode-entities (string-trim " " (cdr (assoc :url post))))) "")
+		    (if (cdr (assoc :url post)) (format nil "<p><a href=\"~A\" class=\"link-post-link\">Link post</a></p>" (encode-entities (string-trim " " (cdr (assoc :url post))))) "")
 		    (clean-html (or (cdr (assoc :html-body post)) "") :with-toc t :post-id (cdr (assoc :--id post))))))) 
 
 (defun comment-to-html (comment &key with-post-title)
