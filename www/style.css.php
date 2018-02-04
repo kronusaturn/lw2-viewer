@@ -1804,6 +1804,7 @@ figure img {
 input[type='text'],
 input[type='search'] {
 	background-color: #fff;
+	color: #000;
 }
 
 /*************/
