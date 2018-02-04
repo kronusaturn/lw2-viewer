@@ -156,8 +156,7 @@ function hideReplyForm(event) {
 }
 
 function OnInputExpandTextarea() {
-	let currentHeight = this.style.height ? (parseInt(/^([0-9]+)/.exec(this.style.height)[1]) - 30) : this.scrollHeight;
-	if (currentHeight < this.scrollHeight)
+	if ((this.offsetHeight - 30) < this.scrollHeight)
 		ExpandTextarea(this);
 }
 function ExpandTextarea(textarea) {
