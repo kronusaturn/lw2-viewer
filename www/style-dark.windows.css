@@ -986,6 +986,40 @@ h1.listing a[href^="http"]:hover {
 	line-height: 1.1;
 }
 
+/**************/
+/* LINK POSTS */
+/**************/
+
+.post.link-post .post-body p:only-child {
+	text-align: center;
+	font-weight: 600;
+	font-size: 1.5em;
+	font-family: 'Whitney', 'a_Avante';
+}
+.post.link-post .post-body p:only-child a:only-child {
+	text-decoration: none;
+}
+.post.link-post .post-body p:only-child a:only-child:hover {
+	color: #00a9ed;
+}
+.post.link-post .post-body p:only-child a:only-child::before {
+	content: "\F0C1";
+	font-family: Font Awesome;
+	font-weight: 900;
+	font-size: 0.75em;
+	position: relative;
+	top: -2px;
+	margin-right: 0.25em;
+}
+.post.link-post .post-body p:only-child a:only-child:hover::before {
+	color: #670;
+	text-shadow: 
+		0.5px 0.5px 0 #000,
+		-0.5px -0.5px 0 #000,
+		0 0 2px #000,
+		0 0 3px #54d400;
+}
+
 /************/
 /* COMMENTS */
 /************/
