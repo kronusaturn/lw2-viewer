@@ -187,6 +187,6 @@
 				     (when (tag-is node "style")
 				       (setf (gethash (plump:text node) style-hash) t)
 				       (plump:remove-child node)))))) 
-	  (concatenate 'string (if (> section-count 3) (contents-to-html (nreverse contents) min-header-level) "") 
+	  (concatenate 'string (if (>= section-count 3) (contents-to-html (nreverse contents) min-header-level) "") 
 		       (style-hash-to-html style-hash) 
 		       (plump:serialize root nil)))))))
