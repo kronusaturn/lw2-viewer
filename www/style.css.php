@@ -1460,8 +1460,8 @@ a.comment-parent-link:hover::after {
 .markdown-hints-row {
 	display: table-row;
 }
-.markdown-hints-row span,
-.markdown-hints-row code {
+.markdown-hints .markdown-hints-row span,
+.markdown-hints .markdown-hints-row code {
 	float: none;
 	display: table-cell;
 	border: none;
