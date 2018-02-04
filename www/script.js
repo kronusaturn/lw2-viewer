@@ -410,9 +410,21 @@ function themeSelectButtonClicked(event) {
 	event.target.disabled = true;
 }
 function setTheme(themeName) {
+	if(typeof(themeName) == 'undefined') {
+		themeName = window.localStorage.getItem("selected-theme");
+		if(!themeName) return;
+	} else {
+		if(themeName == "default") window.localStorage.removeItem("selected-theme");
+		else window.localStorage.setItem("selected-theme", themeName);
+	}
 	let styleSheetNameSuffix = (themeName == 'default') ? '' : '-dark';
 	let currentStyleSheetNameComponents = /style[^\.]*(\..+)$/.exec(document.querySelector("head link[href*='.css']").href);
-	document.querySelector("head link[href*='.css']").href = "/style" + styleSheetNameSuffix + currentStyleSheetNameComponents[1];
+	let newStyle = document.createElement("link");
+	newStyle.setAttribute("rel", "stylesheet");
+	newStyle.setAttribute("href", "/style" + styleSheetNameSuffix + currentStyleSheetNameComponents[1]);
+	let oldStyle = document.querySelector("head link[href*='.css']");
+	newStyle.addEventListener("load", function() {oldStyle.parentElement.removeChild(oldStyle)});
+	document.querySelector("head").appendChild(newStyle);
 }
 
 function expandAncestorsOf(commentId) {

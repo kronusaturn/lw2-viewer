@@ -229,11 +229,16 @@
 (defun begin-html (out-stream &key title description current-uri content-class)
   (let* ((session-token (hunchentoot:cookie-in "session-token"))
 	 (csrf-token (and session-token (make-csrf-token session-token)))) 
-    (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"shortcut icon\" href=\"~A\"><script src=\"~A\" async></script><script src=\"~A\" async></script>~@[<script>var csrfToken=\"~A\"</script>~]</head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
+    (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"shortcut icon\" href=\"~A\"><script src=\"~A\" async></script><script src=\"~A\" async></script><script>~A</script>~@[<script>var csrfToken=\"~A\"</script>~]</head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
 	    title description
 	    *html-head*
 	    (generate-versioned-link (if (search "Windows" (hunchentoot:header-in* :user-agent)) "/style.windows.css" "/style.css"))
 	    (generate-versioned-link "/favicon.ico") (generate-versioned-link "/script.js") (generate-versioned-link "/guiedit.js")
+	    "function setThemeInitial() {let themeName = window.localStorage.getItem('selected-theme'); if(!themeName) return;
+let styleSheetNameSuffix = (themeName == 'default') ? '' : '-dark';
+let currentStyleSheetNameComponents = /style[^\.]*(\..+)$/.exec(document.querySelector(\"head link[href*='.css']\").href);
+document.querySelector(\"head link[href*='.css']\").href = \"/style\" + styleSheetNameSuffix + currentStyleSheetNameComponents[1];}
+setThemeInitial();"
 	    csrf-token
 	    content-class
 	    (user-nav-bar (or current-uri (hunchentoot:request-uri*)))))
