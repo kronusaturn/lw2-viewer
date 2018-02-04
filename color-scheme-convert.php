@@ -9,10 +9,6 @@ $debug_enabled = false;
 $stylesheet = file_get_contents($argv[1]);
 $mode = @$argv[2] ?: 1;
 
-$color_schemer_path = $mode;
-// if (strlen($mode) > 1)
-// 	$mode = 'r';
-
 ## Process and print.
 $stylesheet = preg_replace_callback("/(#[0-9abcdef]+)([,; ])/i", 'ProcessColorValue', $stylesheet);
 $stylesheet = preg_replace_callback("/rgba\\(\\s*([0-9]+),\\s*([0-9]+),\\s*([0-9]+),\\s*([0-9\.]+)\\s*\\)/i", 'ProcessColorValue_RGBA', $stylesheet);
@@ -22,17 +18,9 @@ echo $stylesheet;
 /* CSS PROCESSING */
 /******************/
 
-`$color_schemer_path #ff0000 --src-bg light --dst-bg dark`;
-
 function ProcessColorValue($m) {
-	global $mode, $color_schemer_path;
-
-	if ($mode == 'r') {
-		$m[1] = `$color_schemer_path $m[1] --src-bg light --dst-bg dark`;
-	} else {
-		debug_log($m[1]);
-		$m[1] = HexFromRGB(RGBFromXYZ(XYZFromLab(CVT(LabFromXYZ(XYZFromRGB(RGBFromHex($m[1]))),"Lab"))));
-	}
+	debug_log($m[1]);
+	$m[1] = HexFromRGB(RGBFromXYZ(XYZFromLab(CVT(LabFromXYZ(XYZFromRGB(RGBFromHex($m[1]))),"Lab"))));
 
 	return implode(array_slice($m,1));
 }
