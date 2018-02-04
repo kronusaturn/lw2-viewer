@@ -330,18 +330,25 @@ function setLastVisitedDate(date) {
 }
 
 function injectContentWidthSelector() {
-	document.querySelector("head").insertAdjacentHTML("beforeend", "");
+	let widthOptions = [
+		['normal', 'Narrow (fixed-width) content column', 'N', '900px'],
+		['wide', 'Wide (fluid) content column', 'W', '(100vw - 300px)']
+	];
+	let currentWidth = window.localStorage.getItem("selected-width") || '900px';
 	let widthSelector = addUIElement(
-		"<div id='width-selector'>" + 
-		"<button type='button' class='select-width-normal selected' title='Narrow (fixed-width) content column' tabindex='-1'>N</button>" + 
-		"<button type='button' class='select-width-wide' title='Wide (fluid) content column' tabindex='-1'>W</button>" + 
+		"<div id='width-selector'>" +
+		String.prototype.concat.apply("", widthOptions.map(function (wo) {
+			let [name, desc, abbr, width] = wo;
+			let selected = (width == currentWidth ? ' selected' : '');
+			let disabled = (width == currentWidth ? ' disabled' : '');
+			return `<button type='button' class='select-width-${name}${selected}'${disabled} title='${desc}' tabindex='-1' data-width='${width}'>${abbr}</button>`})) +
 		"</div>");
 	widthSelector.querySelectorAll("button").forEach(function (button) {
 		button.addActivateEvent(widthAdjustButtonClicked);
 	});
 }
 function widthAdjustButtonClicked(event) {
-	let selectedWidth = (event.target.className == "select-width-normal" ? "900px" : "(100vw - 300px)");
+	let selectedWidth = event.target.getAttribute("data-width");
 	if(selectedWidth == "900px") window.localStorage.removeItem("selected-width"); else window.localStorage.setItem("selected-width", selectedWidth);
 	setContentWidth(selectedWidth);
 	event.target.parentElement.childNodes.forEach(function (button) {
@@ -365,10 +372,18 @@ function injectThemeSelector() {
 			background-color: #000;
 		}` + "</style>");
 
+	let currentTheme = window.localStorage.getItem("selected-theme") || "default";
+	let themeOptions = [
+		['default', 'Default theme (dark text on light background)'],
+		['dark', 'Dark theme (light text on dark background)']
+	];
 	let themeSelector = addUIElement(
-		"<div id='theme-selector'>" + 
-		"<button type='button' class='select-theme-default selected' title='Default theme (dark text on light background)' tabindex='-1'>A</button>" + 
-		"<button type='button' class='select-theme-dark' title='Dark theme (light text on dark background)' tabindex='-1'>A</button>" + 
+		"<div id='theme-selector'>" +
+		String.prototype.concat.apply("", themeOptions.map(function (to) {
+			let [name, desc] = to;
+			let selected = (name == currentTheme ? ' selected' : '');
+			let disabled = (name == currentTheme ? ' disabled' : '');
+			return `<button type='button' class='select-theme-${name}${selected}'${disabled} title='${desc}' tabindex='-1'>A</button>`;})) +
 		"</div>");
 	themeSelector.querySelectorAll("button").forEach(function (button) {
 		button.addActivateEvent(themeSelectButtonClicked);
