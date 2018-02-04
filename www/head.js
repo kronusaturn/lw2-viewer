@@ -14,6 +14,11 @@ function setTheme(themeName) {
 	let oldStyle = document.querySelector("head link[href*='.css']");
 	newStyle.addEventListener('load', function() {oldStyle.parentElement.removeChild(oldStyle)});
 	document.querySelector('head').insertBefore(newStyle, oldStyle.nextSibling);
+	
+	if (themeName == 'dark') {
+		document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='dark-theme-adjustments'>" + 
+		`.markdown-reference-link a::before { filter: invert(100%); }` + "</style>");
+	}
 }
 setTheme();
 function setContentWidth(widthString) {
