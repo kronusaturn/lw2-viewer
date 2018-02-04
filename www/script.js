@@ -504,6 +504,15 @@ function initialize() {
 					e.insertAdjacentHTML('afterend', "<button type='button' class='vote downvote"+(voteType=='downvote'?' selected':'')+"' data-vote-type='downvote' data-target-type='Comments' tabindex='-1'></button>");
 				});
 			}
+			document.querySelector("head").insertAdjacentHTML("beforeend","<style id='vote-buttons'>" + 
+			`.upvote:hover,
+			.upvote.selected {
+				color: #00d800;
+			}
+			.downvote:hover,
+			.downvote.selected {
+				color: #eb4c2a;
+			}` + "</style>");
 			document.querySelectorAll("button.vote").forEach(function(e) {
 				e.addActivateEvent(voteEvent);
 			});

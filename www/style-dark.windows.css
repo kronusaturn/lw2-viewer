@@ -1352,19 +1352,11 @@ a.comment-parent-link:hover::after {
 .upvote {
 	color: #2f2f2f;	
 }
-.upvote:hover,
-.upvote.selected {
-	color: #6200ad;
-}
 .upvote::before {
 	content: '\F055';
 }
 .downvote {
 	color: #2c2c2c;
-}
-.downvote:hover,
-.downvote.selected {
-	color: #0084c2;
 }
 .downvote::before {
 	content: '\F056';
