@@ -321,6 +321,9 @@ input {
 	text-shadow: none;
 	outline: 4px solid #bbb;
 }
+#width-selector button:disabled {
+	cursor: auto;
+}
 #width-selector button.select-width-normal {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("fixed.gif")) ?>');
 }
@@ -355,6 +358,9 @@ input {
 #theme-selector button.selected {
 	text-shadow: none;
 	outline: 5px solid #bbb;
+}
+#theme-selector button:disabled {
+	cursor: auto;
 }
 
 /*******************/
