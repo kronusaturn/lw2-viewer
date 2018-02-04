@@ -51,7 +51,8 @@ input {
 	display: inline-block;
 	margin-left: 1.5em;
 }
-.new-post {
+.new-post,
+.new-post:visited {
 	color: #090;
 }
 .new-post::before {
@@ -1501,10 +1502,13 @@ a.comment-parent-link:hover::after {
 	text-align: right;
 }
 .edit-post-link {
-	color: #090;
 	display: inline-block;
 	margin-bottom: 0.25em;
 	font-size: 1.125rem;
+}
+.edit-post-link,
+.edit-post-link:visited {
+	color: #090;
 }
 .edit-post-link::before {
 	margin-right: 0.3em;
