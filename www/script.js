@@ -215,11 +215,11 @@ function voteEvent(e) {
 function commentMinimizeButtonClicked(event) {
 	event.target.closest(".comment-item").setCommentThreadMaximized(true);
 }
-Element.prototype.setCommentThreadMaximized = function(toggle, userOriginated = true) {
+Element.prototype.setCommentThreadMaximized = function(toggle, userOriginated = true, force) {
 	let ci = this;
 	let storageName = "thread-minimized-" + ci.getCommentId();
 	let minimize_button = ci.querySelector(".comment-minimize-button");
-	let maximize = (toggle ? /minimized/.test(minimize_button.className) : !window.localStorage.getItem(storageName));
+	let maximize = force || (toggle ? /minimized/.test(minimize_button.className) : !window.localStorage.getItem(storageName));
 	if (userOriginated) {
 		if (maximize) {
 			window.localStorage.removeItem(storageName);
@@ -296,18 +296,23 @@ function highlightCommentsSince(date) {
 
 function scrollToNewComment(next) {
 	let ci = getCurrentVisibleComment();
+	let targetComment = null;
+	let tcid = null;
 	if (ci) {
-		let targetComment = (next ? ci.nextNewComment : ci.prevNewComment);
+		targetComment = (next ? ci.nextNewComment : ci.prevNewComment);
 		if (targetComment) {
-			location.hash = "comment-" + targetComment.getCommentId();
-			expandAncestorsOf(location.hash);
+			tcid = targetComment.getCommentId();
 		}
 	} else {
 		if (window.newComments[0]) {
-			location.hash = "comment-" + window.newComments[0];
-			expandAncestorsOf(location.hash);
+			tcid = window.newComments[0];
+			targetComment = document.querySelector("#comment-" + tcid);
 		}
-		realignHash();
+	}
+	if(targetComment) {
+		expandAncestorsOf(tcid);
+		history.replaceState(null, null, "#comment-" + tcid);
+		targetComment.scrollIntoView();
 	}
 	scrollListener();
 }
@@ -417,9 +422,9 @@ function setTheme(themeName) {
 }
 
 function expandAncestorsOf(commentId) {
-	try { document.querySelector('#'+commentId).closest("label[for^='expand'] + .comment-thread").parentElement.querySelector("input[id^='expand']").checked = true; }
+	try { document.querySelector('#comment-'+commentId).closest("label[for^='expand'] + .comment-thread").parentElement.querySelector("input[id^='expand']").checked = true; }
 	catch (e) { }
-	try { document.querySelector('#'+commentId).closest("#comments > ul > li").setCommentThreadMaximized(true, false); }
+	try { document.querySelector('#comment-'+commentId).closest("#comments > ul > li").setCommentThreadMaximized(true, false, true); }
 	catch (e) { }
 }
 
@@ -473,12 +478,6 @@ function initialize() {
 		catch(e) { }
 
 		window.needHashRealignment = false;
-
-		let urlParts = document.URL.split('#');
-		if (urlParts.length > 1) {
-			expandAncestorsOf(urlParts[1]);
-			window.needHashRealignment = true;
-		}
 
 		document.querySelectorAll(".comment-meta .comment-parent-link, .comment-meta .comment-child-links a").forEach(function (cpl) {
 			cpl.addEventListener("mouseover", function(e) {
@@ -554,6 +553,11 @@ function initialize() {
 			b.closest(".comment-item").setCommentThreadMaximized(false);
 			b.addActivateEvent(commentMinimizeButtonClicked);
 		});
+		let urlParts = document.URL.split('#comment-');
+		if (urlParts.length > 1) {
+			expandAncestorsOf(urlParts[1]);
+			window.needHashRealignment = true;
+		}
 		
 		// Read and update last-visited-date.
 		if(getPostHash()) {
