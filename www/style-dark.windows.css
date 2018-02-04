@@ -964,6 +964,11 @@ h1.listing a[href^="http"]:hover {
 .post-meta .comment-count {
 	margin-left: 1em;
 }
+.post .post-meta .comment-count.no-comments::after {
+	opacity: 0.4;
+	color: #393939;
+	pointer-events: none;
+}
 .post-body {
 	min-height: 8em;
 	font-family: Charter;
