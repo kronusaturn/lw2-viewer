@@ -171,6 +171,8 @@
 					 (plump:append-child node p)))
 				     (when (ppcre:scan "^h[1-6]$" (plump:tag-name node))
 				       (cond
+					 ((string-is-whitespace (plump:text node))
+					  (plump:remove-child node))
 					 ((plump:get-elements-by-tag-name node "p")
 					  (loop for c across (reverse (plump:children node))
 						do (plump:insert-after node c))

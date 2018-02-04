@@ -336,10 +336,13 @@ setContentWidth(window.localStorage.getItem('selected-width'));"
 		(format out-stream "</select>")))
 	     (t
 	       (destructuring-bind (&optional (autocomplete "off") default) params
-		 (format out-stream "<input type=\"~A\" name=\"~A\" autocomplete=\"~A\"~@[ value=\"~A\"~]>" type id autocomplete default))))
+		 (format out-stream "<input type=\"~A\" name=\"~A\" autocomplete=\"~A\"~@[ value=\"~A\"~]>" type id autocomplete (and default (encode-entities default))))))
 	do (format out-stream "</div>"))
-  (format out-stream "~1{<div class=\"textarea-container\"><textarea name=\"~A\">~A</textarea><span class='markdown-reference-link'>You can use <a href='http://commonmark.org/help/' target='_blank'>Markdown</a> here.</span></div>~}<div><input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><input type=\"submit\" value=\"~A\"></div></div></form>"
-	  textarea csrf-token button-label)) 
+  (if textarea
+    (destructuring-bind (ta-name ta-contents) textarea
+      (format out-stream "<div class=\"textarea-container\"><textarea name=\"~A\">~A</textarea><span class='markdown-reference-link'>You can use <a href='http://commonmark.org/help/' target='_blank'>Markdown</a> here.</span></div>" ta-name (encode-entities ta-contents))))
+  (format out-stream "<div><input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><input type=\"submit\" value=\"~A\"></div></div></form>"
+	  csrf-token button-label)) 
 
 (defun view-posts-index (posts &optional section offset)
   (alexandria:switch ((hunchentoot:get-parameter "format") :test #'string=)
