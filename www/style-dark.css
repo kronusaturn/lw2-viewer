@@ -64,9 +64,6 @@ input {
 }
 .new-post {
 	color: #007f00;
-	text-shadow:
-		0.5px 0px 0 #050,
-		0.5px 0px 0.5px #004000;
 }
 .new-post::before {
 	content: '\F067';
@@ -1560,9 +1557,6 @@ a.comment-parent-link:hover::after {
 }
 .edit-post-link {
 	color: #007f00;
-	text-shadow:
-		0.5px 0px 0 #050,
-		0.5px 0px 0.5px #004000;
 	display: inline-block;
 	margin-bottom: 0.25em;
 	font-size: 1.125rem;
@@ -1734,8 +1728,6 @@ input[type='submit']:focus {
 	color: #f72f17;
 	text-shadow:
 		0 0 1px #000,
-		0.5px 0px 0 #fd4528,
-		0.5px 0px 0.5px #892304,
 		0 0 2px #000,
 		0 0 4px #000,
 		0 0 2px #e90000;

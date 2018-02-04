@@ -3,21 +3,30 @@
 if (!isset($argv[1]))
 	die;
 	
-$debug_enabled = false;
+$debug_enabled = true;
 
+## Get command line arguments.
 $stylesheet = file_get_contents($argv[1]);
+$mode = @$argv[2] ?: 1;
+
+## Process and print.
 $stylesheet = preg_replace_callback("/(#[0-9abcdef]+)([,; ])/i", 'ProcessColorValue', $stylesheet);
 $stylesheet = preg_replace_callback("/rgba\\(\\s*([0-9]+),\\s*([0-9]+),\\s*([0-9]+),\\s*([0-9\.]+)\\s*\\)/i", 'ProcessColorValue_RGBA', $stylesheet);
 echo $stylesheet;
+
+/******************/
+/* CSS PROCESSING */
+/******************/
+
 function ProcessColorValue($m) {
 	debug_log($m[1]);
-	$m[1] = RGBToHex(XYZToRGB(LabToXYZ(CVT(XYZToLab(RGBToXYZ(HexToRGB($m[1])))))));
-	debug_log("\n");
+	$m[1] = HexFromRGB(RGBFromHSV(CVT(HSVFromRGB(RGBFromXYZ(XYZFromLab(CVT(LabFromXYZ(XYZFromRGB(RGBFromHex($m[1]))),"Lab")))),"HSV")));
 
 	return implode(array_slice($m,1));
 }
 function ProcessColorValue_RGBA($m) {
-	$rgba = XYZToRGB(LabToXYZ(CVT(XYZToLab(RGBToXYZ(array_slice($m, 1, 3))))));
+	debug_log(PCC(array_slice($m, 1, 3)));
+	$rgba = RGBFromHSV(CVT(HSVFromRGB(RGBFromXYZ(XYZFromLab(CVT(LabFromXYZ(XYZFromRGB(array_slice($m, 1, 3))),"Lab")))),"HSV"));
 	foreach ($rgba as $k => $v) {
 		$rgba[$k] = round($v);
 	}
@@ -33,7 +42,7 @@ function ProcessColorValue_RGBA($m) {
 function debug_log($string) {
 	global $debug_enabled;
 	if ($debug_enabled)
-		echo $string;
+		error_log($string);
 }
 
 /******************/
@@ -41,18 +50,41 @@ function debug_log($string) {
 /******************/
 
 ## CVT = "Color Value Transform"
-function CVT($Lab_value, $color_space = "Lab") {
-	$Lab_value[0] = 100 - $Lab_value[0];
-	debug_log("  →  Lab ".PCC($Lab_value));
+function CVT($value, $color_space) {
+	global $mode;
+	## Mode 1 is a lightness inversion (in Lab) only.
+	## Mode 2 is mode 1 plus a 180° hue rotation (in HSV).
+	
+	if ($color_space == "Lab") {
+		switch ($mode) {
+			case 2:
+			case 1:
+			default:
+				$value[0] = 100 - $value[0];
+				break;
+		}
+	}
+	else if ($color_space == "HSV") {
+		switch ($mode) {
+			case 2:
+				$value[0] += 0.5;
+				$value[0] -= ($value[0] > 1.0) ? 1.0 : 0.0;
+				break;
+			case 1:
+			default:
+				break;
+		}
+	}
+	debug_log("  →  {$color_space} ".PCC($value));
 
-	return $Lab_value;
+	return $value;
 }
 
 /*********************/
 /* FORMAT CONVERSION */
 /*********************/
 
-function HexToRGB($hexColorString) {
+function RGBFromHex($hexColorString) {
 	if ($hexColorString[0] == '#')
 		$hexColorString = substr($hexColorString,1);
 	if (strlen($hexColorString) == 3)
@@ -64,7 +96,7 @@ function HexToRGB($hexColorString) {
 	return $components;
 }
 
-function RGBToHex($rgb_components) {
+function HexFromRGB($rgb_components) {
 	foreach ($rgb_components as $i => $component) {
 		$hex_value = dechex(round($component));
 		if (strlen($hex_value) == 1)
@@ -89,7 +121,73 @@ function PCC($components) {
 /* COLOR SPACE CONVERSION */
 /**************************/
 
-function RGBToXYZ($rgb_components) {
+function HSVFromRGB($rgb_components) {
+	$var_R = $rgb_components[0] / 255.0;
+	$var_G = $rgb_components[1] / 255.0;
+	$var_B = $rgb_components[2] / 255.0;
+
+	$var_Min = min($var_R, $var_G, $var_B);
+	$var_Max = max($var_R, $var_G, $var_B);
+	$del_Max = $var_Max - $var_Min;
+
+	$V = $var_Max;
+	$H = 0;
+	$S = 0;
+
+	if ($del_Max != 0) {
+		$S = $del_Max / $var_Max;
+
+		$del_R = ((($var_Max - $var_R) / 6) + ($del_Max / 2)) / $del_Max;
+		$del_G = ((($var_Max - $var_G) / 6) + ($del_Max / 2)) / $del_Max;
+		$del_B = ((($var_Max - $var_B) / 6) + ($del_Max / 2)) / $del_Max;
+
+		if ($var_R == $var_Max) $H = $del_B - $del_G;
+		else if ($var_G == $var_Max) $H = (1.0/3.0) + $del_R - $del_B;
+		else if ($var_B == $var_Max) $H = (2.0/3.0) + $del_G - $del_R;
+
+		if ($H < 0) $H += 1;
+    	else if ($H > 1) $H -= 1;
+	}
+	
+	debug_log("  →  HSV ".PCC([ $H, $S, $V ]));
+	return [ $H, $S, $V ];
+}
+
+function RGBFromHSV($hsv_components) {
+	$H = $hsv_components[0];
+	$S = $hsv_components[1];
+	$V = $hsv_components[2];
+
+	$R = $G = $B = $V * 255.0;
+	
+	if ($S != 0) {
+		$var_h = $H * 6.0;
+		if ($var_h == 6.0)
+			$var_h = 0;
+		$var_i = floor($var_h);
+		$var_1 = $V * (1 - $S);
+		$var_2 = $V * (1 - $S * ($var_h - $var_i));
+		$var_3 = $V * (1 - $S * (1 - ($var_h - $var_i)));
+		
+		$var_r = $var_g = $var_b = 0.0;
+
+		if ($var_i == 0) { $var_r = $V; $var_g = $var_3; $var_b = $var_1; }
+		else if ($var_i == 1) { $var_r = $var_2; $var_g = $V; $var_b = $var_1; }
+		else if ($var_i == 2) { $var_r = $var_1; $var_g = $V; $var_b = $var_3; }
+		else if ($var_i == 3) { $var_r = $var_1; $var_g = $var_2; $var_b = $V; }
+		else if ($var_i == 4) { $var_r = $var_3; $var_g = $var_1; $var_b = $V ; }
+		else { $var_r = $V; $var_g = $var_1 ; $var_b = $var_2; }
+
+		$R = $var_r * 255.0;
+		$G = $var_g * 255.0;
+		$B = $var_b * 255.0;
+	}
+	
+	debug_log("  →  RGB ".PCC([ $R, $G, $B ]));
+	return [ $R, $G, $B ];
+}
+
+function XYZFromRGB($rgb_components) {
 	foreach ($rgb_components as $i => $component) {
 		$component /= 255.0;
 		$rgb_components[$i] = ($component > 0.04045) ?
@@ -109,7 +207,7 @@ function RGBToXYZ($rgb_components) {
 	return [ $X, $Y, $Z ];
 }
 
-function XYZToLab($xyz_components) {
+function LabFromXYZ($xyz_components) {
 	$xyz_components[0] /= 95.047;
 	$xyz_components[1] /= 100.000;
 	$xyz_components[2] /= 108.883;
@@ -132,7 +230,7 @@ function XYZToLab($xyz_components) {
 	return [ $L, $a, $b ];
 }
 
-function LabToXYZ($lab_components) {
+function XYZFromLab($lab_components) {
 	
 	$var_Y = ($lab_components[0] + 16.0) / 116.0;
 	$var_X = $lab_components[1] / 500.0 + $var_Y;
@@ -153,7 +251,7 @@ function LabToXYZ($lab_components) {
 	return $xyz_components;
 }
 
-function XYZToRGB($xyz_components) {
+function RGBFromXYZ($xyz_components) {
 	$var_X = $xyz_components[0] / 100.0;
 	$var_Y = $xyz_components[1] / 100.0;
 	$var_Z = $xyz_components[2] / 100.0;
