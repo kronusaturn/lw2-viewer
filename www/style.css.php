@@ -1809,6 +1809,10 @@ textarea {
 	color: #000;
 }
 
+select {
+	color: #000;
+}
+
 /*************/
 /* FOOTNOTES */
 /*************/
