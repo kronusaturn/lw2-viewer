@@ -229,7 +229,7 @@
 (defun begin-html (out-stream &key title description current-uri content-class)
   (let* ((session-token (hunchentoot:cookie-in "session-token"))
 	 (csrf-token (and session-token (make-csrf-token session-token)))) 
-    (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"shortcut icon\" href=\"~A\"><script src=\"~A\" async></script><script src=\"~A\" async></script><script>~A</script>~@[<script>var csrfToken=\"~A\"</script>~]</head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
+    (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A<link rel=\"stylesheet\" href=\"~A\"><style id='width-adjust'></style><link rel=\"shortcut icon\" href=\"~A\"><script src=\"~A\" async></script><script src=\"~A\" async></script><script>~A</script>~@[<script>var csrfToken=\"~A\"</script>~]</head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
 	    title description
 	    *html-head*
 	    (generate-versioned-link (if (search "Windows" (hunchentoot:header-in* :user-agent)) "/style.windows.css" "/style.css"))
@@ -238,7 +238,33 @@
 let styleSheetNameSuffix = (themeName == 'default') ? '' : '-dark';
 let currentStyleSheetNameComponents = /style[^\.]*(\..+)$/.exec(document.querySelector(\"head link[href*='.css']\").href);
 document.querySelector(\"head link[href*='.css']\").href = \"/style\" + styleSheetNameSuffix + currentStyleSheetNameComponents[1];}
-setThemeInitial();"
+setThemeInitial();
+function setContentWidth(widthString) {
+	if(!widthString) return;
+	let widthAdjustStyle = document.querySelector('#width-adjust');
+	widthAdjustStyle.innerHTML = 
+		`#content { 
+			max-width: calc(${widthString});
+		}
+		#bottom-bar a[href='#top']::after, 
+		.post-meta a[href='#comments']::after, 
+		.post-meta a[href='#bottom-bar']::after {
+			right: calc((100vw - ${widthString}) / 2 - 75px);
+		}
+		.post-meta .new-comments-count {
+			right: calc((100vw - ${widthString}) / 2 - 139px);
+		}
+		.post-meta .new-comment-sequential-nav-button {
+			right: calc((100vw - ${widthString}) / 2 - 148px);
+		}
+		#width-selector {
+			right: calc((100% - ${widthString}) / 2 - 50px);
+		}
+		#theme-selector {
+			left: calc((100% - ${widthString}) / 2 - 41px);
+		}`;
+}
+setContentWidth(window.localStorage.getItem('selected-width'));"
 	    csrf-token
 	    content-class
 	    (user-nav-bar (or current-uri (hunchentoot:request-uri*)))))

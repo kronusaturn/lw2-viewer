@@ -330,7 +330,7 @@ function setLastVisitedDate(date) {
 }
 
 function injectContentWidthSelector() {
-	document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='width-adjust'></style>");
+	document.querySelector("head").insertAdjacentHTML("beforeend", "");
 	let widthSelector = addUIElement(
 		"<div id='width-selector'>" + 
 		"<button type='button' class='select-width-normal selected' title='Narrow (fixed-width) content column' tabindex='-1'>N</button>" + 
@@ -341,7 +341,9 @@ function injectContentWidthSelector() {
 	});
 }
 function widthAdjustButtonClicked(event) {
-	setContentWidth((event.target.className == "select-width-normal" ? "900px" : "(100vw - 300px)"));
+	let selectedWidth = (event.target.className == "select-width-normal" ? "900px" : "(100vw - 300px)");
+	if(selectedWidth == "900px") window.localStorage.removeItem("selected-width"); else window.localStorage.setItem("selected-width", selectedWidth);
+	setContentWidth(selectedWidth);
 	event.target.parentElement.childNodes.forEach(function (button) {
 		button.removeClass("selected");
 		button.disabled = false;
@@ -349,36 +351,8 @@ function widthAdjustButtonClicked(event) {
 	event.target.addClass("selected");
 	event.target.disabled = true;
 }
-function setContentWidth(widthString) {
-	let widthAdjustStyle = document.querySelector("#width-adjust");
-	widthAdjustStyle.innerHTML = 
-		`#content { 
-			max-width: calc(${widthString});
-		}
-		#bottom-bar a[href='#top']::after, 
-		.post-meta a[href='#comments']::after, 
-		.post-meta a[href='#bottom-bar']::after {
-			right: calc((100vw - ${widthString}) / 2 - 75px);
-		}
-		.post-meta .new-comments-count {
-			right: calc((100vw - ${widthString}) / 2 - 139px);
-		}
-		.post-meta .new-comment-sequential-nav-button {
-			right: calc((100vw - ${widthString}) / 2 - 148px);
-		}
-		#width-selector {
-			right: calc((100% - ${widthString}) / 2 - 50px);
-		}`;
-		
-	let themeSelectStyle = document.querySelector("#theme-select");
-	themeSelectStyle.innerHTML = 
-		`#theme-selector {
-			left: calc((100% - ${widthString}) / 2 - 41px);
-		}`;
-}
 
 function injectThemeSelector() {
-	document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='theme-select'></style>");
 	document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='theme-select-buttons'>" + 
 		`#theme-selector button.select-theme-default,
 		#theme-selector button.select-theme-default:hover {
