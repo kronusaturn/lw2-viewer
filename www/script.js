@@ -547,12 +547,6 @@ function initialize() {
 			a.innerText = a.innerText.replace(/^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})\. /i, '');
 			a.innerText = a.innerText.replace(/^[A-Z]\. /, '');
 		});
-
-		if(document.readyState != "complete") {
-			document.addEventListener("load", whenLoaded, {once: true});
-		} else {
-			whenLoaded();
-		}
 		
 		// Format and activate comment-minimize buttons.
 		document.querySelectorAll(".comment-minimize-button").forEach(function (b) {
@@ -590,10 +584,17 @@ function initialize() {
 		// Add the content width selector.
 		injectContentWidthSelector();
 		injectThemeSelector();
+
+		// Call pageLayoutFinished() once all activity that can affect the page layout has finished.
+		if(document.readyState != "complete") {
+			document.addEventListener("load", pageLayoutFinished, {once: true});
+		} else {
+			pageLayoutFinished();
+		}
 	})
 }
 
-function whenLoaded() {
+function pageLayoutFinished() {
 	window.requestAnimationFrame(function () {
 		if (window.needHashRealignment)
 			realignHash();
