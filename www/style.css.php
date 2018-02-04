@@ -253,15 +253,12 @@ input {
 	padding-bottom: 4px;
 }
 #nav-item-search form::before {
-	content: "";
+	content: "\F002";
+	font-family: Font Awesome;
 	display: inline-block;
 	vertical-align: top;
-	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("search.svg")) ?>');
 	height: 23px;
 	width: 23px;
-	padding: 3px 3px 3px 3px;
-	background-repeat: no-repeat;
-	background-origin: content-box;
 }
 #nav-item-search input {
 	height: 23px;
