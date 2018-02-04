@@ -46,9 +46,9 @@ Element.prototype.getCommentId = function() {
 Element.prototype.addTextareaFeatures = function() {
 	let textarea = this;
 
-	textarea.addEventListener("focus", function(e){e.target.parentElement.parentElement.scrollIntoViewIfNeeded()});
-	textarea.addEventListener("scroll", OnInputExpandTextarea, false);
-	textarea.addEventListener("keyup", function(e){e.stopPropagation()});
+	textarea.addEventListener("focus", function(e) { e.target.parentElement.parentElement.scrollIntoViewIfNeeded(); });
+	textarea.addEventListener("input", OnInputExpandTextarea, false);
+	textarea.addEventListener("keyup", function(e) { e.stopPropagation(); });
 	
 	textarea.insertAdjacentHTML("beforebegin", "<div class='guiedit-buttons-container'></div>");
 	var buttons_container = textarea.parentElement.querySelector(".guiedit-buttons-container");
@@ -156,7 +156,9 @@ function hideReplyForm(event) {
 }
 
 function OnInputExpandTextarea() {
-	ExpandTextarea(this);
+	let currentHeight = this.style.height ? (parseInt(/^([0-9]+)/.exec(this.style.height)[1]) - 30) : this.scrollHeight;
+	if (currentHeight < this.scrollHeight)
+		ExpandTextarea(this);
 }
 function ExpandTextarea(textarea) {
 	window.requestAnimationFrame(function() {
