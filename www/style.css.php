@@ -1802,7 +1802,8 @@ figure img {
 }
 
 input[type='text'],
-input[type='search'] {
+input[type='search'],
+textarea {
 	background-color: #fff;
 	color: #000;
 }
