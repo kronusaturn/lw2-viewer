@@ -234,11 +234,24 @@
 	    *html-head*
 	    (generate-versioned-link (if (search "Windows" (hunchentoot:header-in* :user-agent)) "/style.windows.css" "/style.css"))
 	    (generate-versioned-link "/favicon.ico") (generate-versioned-link "/script.js") (generate-versioned-link "/guiedit.js")
-	    "function setThemeInitial() {let themeName = window.localStorage.getItem('selected-theme'); if(!themeName) return;
-let styleSheetNameSuffix = (themeName == 'default') ? '' : '-dark';
-let currentStyleSheetNameComponents = /style[^\.]*(\..+)$/.exec(document.querySelector(\"head link[href*='.css']\").href);
-document.querySelector(\"head link[href*='.css']\").href = \"/style\" + styleSheetNameSuffix + currentStyleSheetNameComponents[1];}
-setThemeInitial();
+	    "function setTheme(themeName) {
+	if(typeof(themeName) == 'undefined') {
+		themeName = window.localStorage.getItem('selected-theme');
+		if(!themeName) return;
+	} else {
+		if(themeName == 'default') window.localStorage.removeItem('selected-theme');
+		else window.localStorage.setItem('selected-theme', themeName);
+	}
+	let styleSheetNameSuffix = (themeName == 'default') ? '' : '-dark';
+	let currentStyleSheetNameComponents = /style[^\.]*(\..+)$/.exec(document.querySelector(\"head link[href*='.css']\").href);
+	let newStyle = document.createElement('link');
+	newStyle.setAttribute('rel', 'stylesheet');
+	newStyle.setAttribute('href', '/style' + styleSheetNameSuffix + currentStyleSheetNameComponents[1]);
+	let oldStyle = document.querySelector(\"head link[href*='.css']\");
+	newStyle.addEventListener('load', function() {oldStyle.parentElement.removeChild(oldStyle)});
+	document.querySelector('head').insertBefore(newStyle, oldStyle.nextSibling);
+}
+setTheme();
 function setContentWidth(widthString) {
 	if(!widthString) return;
 	let widthAdjustStyle = document.querySelector('#width-adjust');
