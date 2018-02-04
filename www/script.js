@@ -448,7 +448,8 @@ function initialize() {
 		} 	
 		if (content.clientHeight <= window.innerHeight + 30 || 
 			(content.querySelector("#comments") && content.querySelector("#comments").childNodes.length == 0)) {
-			document.styleSheets[1].insertRule('.post .post-meta .comment-count::after { display: none; }', document.styleSheets[1].cssRules.length);
+			document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='comments-quicknav'>" + 
+			`.post .post-meta .comment-count::after { opacity: 0.4; color: #bbb; pointer-events: none; }` + "</style>");
 		}
 
 		try {
