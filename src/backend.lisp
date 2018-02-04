@@ -131,7 +131,10 @@
 						  (list (format nil "{~{~A~^,~}}" (terms v)))
 						  (t (format nil "~S" v)))))))
 	    (terms terms))
-	  (map 'list (lambda (x) (json:lisp-to-camel-case (string x))) fields)))
+	  (map 'list (lambda (x) (typecase x
+				   (string x)
+				   (symbol (json:lisp-to-camel-case (string x)))))
+	       fields)))
 
 (declaim (inline make-posts-list-query)) 
 (defun make-posts-list-query (&key (view "frontpage") (limit 20) (meta nil) (before nil) (after nil) (with-body nil))
