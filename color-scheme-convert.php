@@ -3,7 +3,7 @@
 if (!isset($argv[1]))
 	die;
 	
-$debug_enabled = true;
+$debug_enabled = false;
 
 ## Get command line arguments.
 $stylesheet = file_get_contents($argv[1]);

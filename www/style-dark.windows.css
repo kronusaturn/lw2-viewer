@@ -63,7 +63,7 @@ input {
 	margin-left: 1.5em;
 }
 .new-post {
-	color: #007f00;
+	color: #7f007f;
 }
 .new-post::before {
 	content: '\F067';
@@ -138,7 +138,7 @@ input {
 }
 .nav-bar a:link,
 .nav-bar a:visited {
-	color: #ba7cff;
+	color: #c1ff7c;
 }
 .nav-bar a:hover,
 .nav-bar a:focus {
@@ -281,7 +281,7 @@ input {
 }
 #nav-item-search input:focus {
 	outline: none;
-	background-color: #070600;
+	background-color: #000107;
 	border: 1px solid #393939;
 }
 #nav-item-search:focus-within {
@@ -470,7 +470,7 @@ input {
 	bottom: 48px;
 }
 .post-meta .new-comment-sequential-nav-button:focus {
-	color: #f72f17;
+	color: #17dff7;
 	text-shadow:
 		0 0 1px #000,
 		0 0 3px #000,
@@ -566,11 +566,11 @@ div[class^='archive-nav-'] {
 }
 
 .archive-nav a:link, .archive-nav a:visited {
-	color: rgba(186, 124, 255, 0.7);
+	color: rgba(193, 255, 124, 0.7);
 }
 .archive-nav a:hover {
 	text-decoration: none;
-	color: #fd4528;
+	color: #28e0fd;
 	background-color: #1d1d1d;
 	text-shadow: 
 		0 0 1px #000,
@@ -633,7 +633,7 @@ h1.listing a:nth-of-type(2) {
 	}
 }
 h1.listing a[href^="http"] {
-	color: #cd90ff;
+	color: #c2ff90;
 	font-size: 0.8em;
 	display: inline;
 	vertical-align: top;
@@ -658,13 +658,13 @@ h1.listing a:hover::before {
 	z-index: -1;
 }
 h1.listing a[href^="http"]:hover {
-	color: #2f6ada;
+	color: #da9f2f;
 	text-decoration: none;
 	text-shadow: 
 		 0.5px 0.5px 0 #000,
 		 -0.5px -0.5px 0 #000,
 		 0 0 2px #000,
-		 0 0 3px #cd90ff;
+		 0 0 3px #c2ff90;
 }
 
 /**************/
@@ -742,7 +742,7 @@ h1.listing a[href^="http"]:hover {
 	border: 1px solid #484848;
 }
 .aligned-form label + input:focus {
-	background-color: #070600;
+	background-color: #000107;
 	border: 1px solid #393939;
 	box-shadow: 0 0 1px #393939;
 	outline: none;
@@ -814,7 +814,7 @@ h1.listing a[href^="http"]:hover {
 	padding: 0.25em;
 	text-align: center;
 	border: 1px solid red;
-	background-color: #611d24;
+	background-color: #1d615b;
 }
 
 /*********************/
@@ -955,7 +955,7 @@ h1.listing a[href^="http"]:hover {
 	margin-bottom: 40px;
 }
 .post-meta .author {
-	color: #007f00;
+	color: #7f007f;
 }
 .post-meta .comment-count {
 	margin-left: 1em;
@@ -1010,7 +1010,7 @@ h1.listing a[href^="http"]:hover {
 	position: absolute;
 	left: 0;
 	white-space: nowrap;
-	color: #ba7cff;
+	color: #c1ff7c;
 	font-weight: 600;
 	cursor: pointer;
 }
@@ -1018,11 +1018,11 @@ h1.listing a[href^="http"]:hover {
 	content: "(Collapse " attr(data-child-count) "  below)";
 }
 .comment-item input[id^="expand"] + label:hover::after {
-	color: #fd4528;
+	color: #28e0fd;
 }
 .comment-item input[id^="expand"] + label:active::after,
 .comment-item input[id^="expand"] + label:focus::after{
-	color: #fd4528;
+	color: #28e0fd;
 }
 .comment-item input[id^="expand"] ~ .comment-thread {
 	max-height: 34px;
@@ -1070,8 +1070,8 @@ h1.listing a[href^="http"]:hover {
 .comment-item a.comment-parent-link::after {
 	box-shadow: 
 		0 28px 16px -16px #000 inset,
-		4px 16px 0 12px #070600 inset,
-		4px  4px 0 12px #070600 inset;
+		4px 16px 0 12px #000107 inset,
+		4px  4px 0 12px #000107 inset;
 }
 
 .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
@@ -1100,8 +1100,8 @@ h1.listing a[href^="http"]:hover {
 .comment-item .comment-item a.comment-parent-link::after {
 	box-shadow: 
 		0 28px 16px -16px #131313 inset,
-		4px 16px 0 12px #070600 inset,
-		4px  4px 0 12px #070600 inset;
+		4px 16px 0 12px #000107 inset,
+		4px  4px 0 12px #000107 inset;
 }
 
 .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
@@ -1124,13 +1124,13 @@ h1.listing a[href^="http"]:hover {
 .comment-item .comment-item .comment-item:target,
 .comment-item .comment-item:target,
 .comment-item:target {
-	background-color: #070600;
+	background-color: #000107;
 }
 .comment-item:target > .comment-thread > .comment-item > .comment > .comment-meta > a.comment-parent-link::after {
 	box-shadow: 
-		0 28px 16px -16px #070600 inset,
-		4px 16px 0 12px #070600 inset,
-		4px  4px 0 12px #070600 inset !important;
+		0 28px 16px -16px #000107 inset,
+		4px 16px 0 12px #000107 inset,
+		4px  4px 0 12px #000107 inset !important;
 }
 
 ul.comment-thread {
@@ -1163,7 +1163,7 @@ ul.comment-thread {
 }
 .comment-meta .author:hover {
 	text-decoration: none;
-	color: #007f00;
+	color: #7f007f;
 }
 .comment-meta .lw2-link {
 	margin-left: 1em;
@@ -1211,7 +1211,7 @@ a.comment-parent-link::before {
 	content: "\F062";
 }
 a.comment-parent-link:hover::before {
-	background-color: #070600;
+	background-color: #000107;
 	color: #575757;
 }
 a.comment-parent-link::after {
@@ -1237,21 +1237,21 @@ a.comment-parent-link:hover::after {
 
 .comment-item-highlight {
 	box-shadow:
-		0 0  2px #573500,
-		0 0  3px #573500,
-		0 0  5px #573500,
-		0 0  7px #573500,
-		0 0 10px #573500;
-	border: 1px solid #573500;
+		0 0  2px #002257,
+		0 0  3px #002257,
+		0 0  5px #002257,
+		0 0  7px #002257,
+		0 0 10px #002257;
+	border: 1px solid #002257;
 }
 .comment-item-highlight-faint {
 	box-shadow:
-		0 0  2px #231700,
-		0 0  3px #231700,
-		0 0  5px #231700,
-		0 0  7px #231700,
-		0 0 10px #231700;
-	border: 1px solid #231700;
+		0 0  2px #000c23,
+		0 0  3px #000c23,
+		0 0  5px #000c23,
+		0 0  7px #000c23,
+		0 0 10px #000c23;
+	border: 1px solid #000c23;
 }
 .comment-popup {
 	position: fixed;
@@ -1279,11 +1279,11 @@ a.comment-parent-link:hover::after {
 	position: absolute;
 	width: 100%;
 	height: 100%;
-	outline: 2px solid #006716;
+	outline: 2px solid #670050;
 	box-shadow:
-		0 0 6px -2px #006716 inset, 
-		0 0 4px #006716, 
-		0 0 6px #006716;
+		0 0 6px -2px #670050 inset, 
+		0 0 4px #670050, 
+		0 0 6px #670050;
 	z-index: 5000;
 	pointer-events: none;
 }
@@ -1350,7 +1350,7 @@ a.comment-parent-link:hover::after {
 }
 .upvote:hover,
 .upvote.selected {
-	color: #004c00;
+	color: #4c004c;
 }
 .upvote::before {
 	content: '\F055';
@@ -1360,7 +1360,7 @@ a.comment-parent-link:hover::after {
 }
 .downvote:hover,
 .downvote.selected {
-	color: #ca2d11;
+	color: #11aeca;
 }
 .downvote::before {
 	content: '\F056';
@@ -1407,12 +1407,12 @@ a.comment-parent-link:hover::after {
 }
 .posting-controls textarea:focus {
 	outline: none;
-	background-color: #070600;
-	border-color: #ba7cff;
+	background-color: #000107;
+	border-color: #c1ff7c;
 	box-shadow: 
-		0 0 0 1px #181c34 inset,
+		0 0 0 1px #343118 inset,
 		0 0 0 1px #000,
-		0 0 0 2px #ba7cff;
+		0 0 0 2px #c1ff7c;
 }
 .posting-controls form span {
 	float: left;
@@ -1430,7 +1430,7 @@ a.comment-parent-link:hover::after {
 	float: left;
 	padding: 2px 0 0 0;
 	margin: 0 0 0 1em;
-	color: #ba7cff;
+	color: #c1ff7c;
 	cursor: pointer;
 }
 #markdown-hints-checkbox {
@@ -1452,7 +1452,7 @@ a.comment-parent-link:hover::after {
 	font-weight: normal;
 }
 #markdown-hints-checkbox + label:hover {
-	color: #f00702;
+	color: #02ebf0;
 	text-shadow:
 		0 0 1px #000,
 		0 0 3px #000;
@@ -1460,8 +1460,8 @@ a.comment-parent-link:hover::after {
 .markdown-hints {
 	margin: 4px 0 0 4px;
 	padding: 4px 8px;
-	border: 1px solid #fd4528;
-	background-color: #120c00;
+	border: 1px solid #28e0fd;
+	background-color: #000712;
 	position: absolute;
 	text-align: left;
 	top: calc(100% - 1em);
@@ -1509,7 +1509,7 @@ a.comment-parent-link:hover::after {
 	margin: 0;
 	height: 27px;
 	font-size: inherit;
-	color: #fd4528;
+	color: #28e0fd;
 	text-shadow: 
 		0 0 1px #000,
 		0 0 2px #000;
@@ -1520,7 +1520,7 @@ a.comment-parent-link:hover::after {
 }
 .comment-controls .cancel-comment-button:hover,
 #comments > .comment-controls .cancel-comment-button:hover {
-	color: #e90000;
+	color: #00e9e9;
 	text-shadow:
 		0 0 1px #000,
 		0 0 3px #000,
@@ -1534,13 +1534,13 @@ a.comment-parent-link:hover::after {
 	position: absolute;
 	right: 24px;
 	top: 7px;
-	color: #006300;
+	color: #630063;
 }
 .comment-thread .comment-thread .edit-button {
 	right: 8px;
 }
 .comment-controls .edit-button:hover {
-	color: #e90000;
+	color: #00e9e9;
 }
 .comment-controls .action-button::before {
 	font-family: Font Awesome;
@@ -1556,7 +1556,7 @@ a.comment-parent-link:hover::after {
 	text-align: right;
 }
 .edit-post-link {
-	color: #007f00;
+	color: #7f007f;
 	display: inline-block;
 	margin-bottom: 0.25em;
 	font-size: 1.125rem;
@@ -1585,7 +1585,7 @@ a.comment-parent-link:hover::after {
 	position: relative;
 }
 .guiedit-buttons-container {
-	background-image: linear-gradient(to bottom, #000 0%, #181c34 50%, #1f264c 75%, #2e3a82 100%);
+	background-image: linear-gradient(to bottom, #000 0%, #343118 50%, #4c461f 75%, #82762e 100%);
 	position: absolute;
 	left: 1px;
 	top: 1px;
@@ -1685,10 +1685,10 @@ a.comment-parent-link:hover::after {
 
 a {
 	text-decoration: none;
-	color: #ba7cff;
+	color: #c1ff7c;
 }
 a:visited {
-	color: #df9aff;
+	color: #baff9a;
 }
 a:hover {
 	text-decoration: underline;
@@ -1702,14 +1702,14 @@ button,
 input[type='submit'] {
 	font-family: inherit;
 	font-size: inherit;
-	color: #ba7cff;
+	color: #c1ff7c;
 	background-color: inherit;
 	cursor: pointer;
 	border: none;
 }
 button:hover,
 input[type='submit']:hover {
-	color: #f72f17;
+	color: #17dff7;
 	text-shadow:
 		0 0 1px #000,
 		0 0 3px #000,
@@ -1717,7 +1717,7 @@ input[type='submit']:hover {
 }
 button:active,
 input[type='submit']:active {
-	color: #e90000;
+	color: #00e9e9;
 	transform: scale(0.9);
 }
 button:focus,
@@ -1725,12 +1725,12 @@ input[type='submit']:focus {
 	outline: none;
 }
 .button:hover {
-	color: #f72f17;
+	color: #17dff7;
 	text-shadow:
 		0 0 1px #000,
 		0 0 2px #000,
 		0 0 4px #000,
-		0 0 2px #e90000;
+		0 0 2px #00e9e9;
 	text-decoration: none;
 }
 .button:active {
@@ -1789,6 +1789,7 @@ h1 {
 	font-size: 2.1em;
 	border-bottom: 1px solid #484848;
 }
+
 /********/
 /* MISC */
 /********/
@@ -1839,8 +1840,8 @@ code {
 	font-family: Inconsolata, Menlo, monospace;
 	font-size: 0.95em;
 	display: inline-block;
-	background-color: #0a0a13;
-	border: 1px solid #181c34;
+	background-color: #13130a;
+	border: 1px solid #343118;
 	padding: 0 4px 1px 5px;
 	border-radius: 4px;
 }
@@ -2165,7 +2166,7 @@ ol {
 	}
 	#nav-item-search button::before {
 		content: "\F002";
-		color: #ba7cff;
+		color: #c1ff7c;
 		font-family: Font Awesome;
 		font-weight: 900;
 		font-size: 1rem;
