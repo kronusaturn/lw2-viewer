@@ -951,6 +951,10 @@ h1.listing a[href^="http"]:hover {
 	margin-right: 1em;
 	font-size: 1.0625em;
 }
+.post-meta .lw2-link,
+.post-meta a[href='#bottom-bar'] {
+	margin: 0;
+}
 .comment-meta .comment-post-title {
 	display: block;
 }
