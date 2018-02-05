@@ -316,8 +316,8 @@ input {
 	margin: 1px;
 	overflow: hidden;
 	box-shadow:
-		0 0 0 4px #eee inset,
-		0 0 0 5px #ccc inset;
+		0 0 0 4px #d8d8d8 inset,
+		0 0 0 5px #bbb inset;
 	background-repeat: no-repeat;
 	background-size: 50%;
 	background-origin: content-box;
@@ -326,7 +326,7 @@ input {
 #width-selector button.selected {
 	text-shadow: none;
 	box-shadow:
-		0 0 0 5px #ccc inset;
+		0 0 0 5px #bbb inset;
 }
 #width-selector button:disabled {
 	cursor: auto;
@@ -365,8 +365,8 @@ input {
 	font-weight: bold;
 	position: relative;
 	box-shadow:
-		0 0 0 4px #eee inset,
-		0 0 0 5px #ccc inset;
+		0 0 0 4px #d8d8d8 inset,
+		0 0 0 5px #bbb inset;
 }
 @-moz-document url-prefix() {
 	#theme-selector button {
@@ -377,7 +377,7 @@ input {
 #theme-selector button.selected {
 	text-shadow: none;
 	box-shadow:
-		0 0 0 5px #ccc inset;
+		0 0 0 5px #bbb inset;
 }
 #theme-selector button:disabled {
 	cursor: auto;

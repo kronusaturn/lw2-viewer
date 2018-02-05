@@ -97,3 +97,16 @@ h1.listing + .post-meta .lw2-link {
 a:hover {
     text-shadow: none;
 }
+#theme-selector button,
+#width-selector button {
+	box-shadow:
+		0 0 0 4px #eee inset,
+		0 0 0 5px #ccc inset;
+}
+#theme-selector button:hover,
+#theme-selector button.selected,
+#width-selector button:hover,
+#width-selector button.selected {
+	box-shadow:
+		0 0 0 5px #ccc inset;
+}
