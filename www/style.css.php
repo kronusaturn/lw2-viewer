@@ -354,6 +354,7 @@ input {
 	margin: 12px;
 	font-size: 0.75rem;
 	font-weight: bold;
+	outline: 1px solid #ccc;
 }
 #theme-selector button:hover,
 #theme-selector button.selected {

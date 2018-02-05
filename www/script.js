@@ -380,7 +380,7 @@ function injectThemeSelector() {
 		#theme-selector button.select-theme-grey,
 		#theme-selector button.select-theme-grey:hover {
 			color: #f60;
-			background-color: #999;
+			background-color: #ddd;
 			font-weight: 600;
 		}` + "</style>");
 
