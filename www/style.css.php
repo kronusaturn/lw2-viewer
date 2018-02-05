@@ -306,21 +306,26 @@ input {
 #width-selector {
 	position: fixed;
 	top: 4px;
-	right: calc((100% - 900px) / 2 - 50px);
+	right: calc((100% - 900px) / 2 - 54px);
 }
 #width-selector button {
 	color: transparent;
-	width: 12px;
-	height: 12px;
-	padding: 0;
-	border: 1px solid #bbb;
-	margin: 5px;
+	width: 22px;
+	height: 22px;
+	padding: 6px;
+	margin: 1px;
 	overflow: hidden;
+	box-shadow:
+		0 0 0 4px #eee inset,
+		0 0 0 5px #ccc inset;
+	background-repeat: no-repeat;
+	background-origin: content-box;
 }
 #width-selector button:hover,
 #width-selector button.selected {
 	text-shadow: none;
-	outline: 4px solid #bbb;
+	box-shadow:
+		0 0 0 5px #ccc inset;
 }
 #width-selector button:disabled {
 	cursor: auto;
