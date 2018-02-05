@@ -1,0 +1,97 @@
+body {
+    background: #eee;
+}
+
+#content {
+    box-shadow: 0px 0px 10px #bbb;
+}
+
+h1.listing a {
+    font-size: 1.5rem;
+    color: #f60;
+}
+.listing a[href^='/'] {
+	font-weight: normal;
+	display: inline;
+}
+h1.listing a[href^='http'] {
+	font-size: 1.125rem;
+	top: 10px;
+	color: #999;
+	opacity: 0.7;
+}
+
+h1.listing + .post-meta * {
+    color: #222;
+    font-size: 1em;
+}
+
+h1.listing + .post-meta .karma {
+    float: left;
+    margin-right: 3px;
+}
+
+h1.listing + .post-meta .karma::after {
+    content: " by";
+}
+
+h1.listing + .post-meta .author {
+    margin-right: 0;
+}
+
+h1.listing + .post-meta .date::before {
+    content: "on ";
+}
+
+h1.listing + .post-meta .date::after {
+    content: " — ";
+	opacity: 0.5;
+}
+
+h1.listing + .post-meta .date {
+    margin-right: 5px;
+}
+
+h1.listing + .post-meta .comment-count {
+    margin-left: 0;
+    margin-right: 4px;
+}
+
+h1.listing + .post-meta .lw2-link {
+	margin-left: 10px;
+	opacity: 0.5;
+}
+
+.nav-item a:link,
+.nav-item a:visited {
+    font-weight: normal;
+    color: #888;
+}
+
+.nav-inner::after {
+    display: none;
+}
+
+#secondary-bar .nav-item {
+    font-size: 0.875rem;
+}
+
+#primary-bar .nav-item {
+    font-size: 0.875rem;
+}
+
+#nav-item-search form::before {
+    opacity: 0.4;
+}
+
+.nav-bar a, 
+#nav-item-search button, 
+.button, 
+.button:visited, 
+.rss {
+    color: #999;
+}
+
+a:hover {
+    text-shadow: none;
+}

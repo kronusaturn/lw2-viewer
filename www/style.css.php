@@ -2179,3 +2179,5 @@ ol {
 		padding: 6px 3.33vw;
 	}
 }
+
+<?php if (isset($argv[2]) && preg_match("/\\.css$/", $argv[2]) echo file_get_contents($argv[2]); ?>
