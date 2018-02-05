@@ -2337,6 +2337,7 @@ h1.listing + .post-meta .lw2-link {
 
 #nav-item-search form::before {
     opacity: 0.4;
+	font-size: 0.9375rem;
 }
 
 .nav-bar a, 
