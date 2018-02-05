@@ -306,7 +306,7 @@ input {
 #width-selector {
 	position: fixed;
 	top: 4px;
-	right: calc((100% - 900px) / 2 - 54px);
+	right: calc((100% - 900px) / 2 - 76px);
 }
 #width-selector button {
 	color: transparent;
@@ -319,6 +319,7 @@ input {
 		0 0 0 4px #eee inset,
 		0 0 0 5px #ccc inset;
 	background-repeat: no-repeat;
+	background-size: 50%;
 	background-origin: content-box;
 }
 #width-selector button:hover,
@@ -331,9 +332,12 @@ input {
 	cursor: auto;
 }
 #width-selector button.select-width-normal {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("fixed.gif")) ?>');
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("normal.gif")) ?>');
 }
 #width-selector button.select-width-wide {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("wide.gif")) ?>');
+}
+#width-selector button.select-width-fluid {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("fluid.gif")) ?>');
 }
 

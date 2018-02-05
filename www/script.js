@@ -338,7 +338,8 @@ function setLastVisitedDate(date) {
 function injectContentWidthSelector() {
 	let widthOptions = [
 		['normal', 'Narrow (fixed-width) content column', 'N', '900px'],
-		['wide', 'Wide (fluid) content column', 'W', '(100vw - 300px)']
+		['wide', 'Wide (fixed-width) content column', 'W', '1150px'],
+		['fluid', 'Full-width (fluid) content column', 'F', '(100vw - 300px)']
 	];
 	let currentWidth = window.localStorage.getItem("selected-width") || '900px';
 	let widthSelector = addUIElement(
