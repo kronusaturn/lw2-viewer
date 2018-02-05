@@ -89,7 +89,8 @@ h1.listing + .post-meta .lw2-link {
 #nav-item-search button, 
 .button, 
 .button:visited, 
-.rss {
+.rss,
+.rss:visited {
     color: #999;
 }
 
