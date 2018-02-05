@@ -59,7 +59,6 @@ h1.listing + .post-meta .comment-count {
 
 h1.listing + .post-meta .lw2-link {
 	margin-left: 10px;
-	opacity: 0.5;
 }
 
 .nav-item a:link,
@@ -96,6 +95,34 @@ h1.listing + .post-meta .lw2-link {
 
 a:hover {
     text-shadow: none;
+}
+
+.post > h1:first-child {
+	font-weight: 400;
+	color: #888;
+}
+.post-meta a,
+.post-meta .author,
+.post-meta .date {
+	color: #222;
+}
+.post-meta .upvote::before {
+	content: "\F077";
+}
+.post-meta .downvote::before {
+	content: "\F078";
+	position: relative;
+	left: -2px;
+	top: 1px;
+}
+.post-meta .lw2-link {
+	opacity: 0.5;
+}
+.post-body a:link {
+	color: #f60;
+}
+.post-body a:visited {
+	color: #ff943b;
 }
 #theme-selector button,
 #width-selector button {
