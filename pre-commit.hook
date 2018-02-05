@@ -2,10 +2,18 @@
 
 set -e
 
-if ! git diff-index --quiet --cached HEAD -- www/style.css.php color-scheme-convert.php; then
+if [[ "$1" = "--force" ]] || ! git diff-index --quiet --cached HEAD -- www/style.css.php color-scheme-convert.php www/theme\* ; then
+	git ls-files --cached HEAD 'www/theme-*' |while read F; do
+		IN=${F#www/}
+		OUT=style${IN#theme}
+		WINOUT="${OUT%.css}.windows.css"
+		git show :www/style.css.php | (cd www; php -- Mac "$IN" >"$OUT")
+		git show :www/style.css.php | (cd www; php -- Windows "$IN" >"$WINOUT")
+		git add www/"$OUT" www/"$WINOUT"
+	done
 	git show :www/style.css.php | (cd www; php -- Mac >style.css)
 	git show :www/style.css.php | (cd www; php -- Windows >style.windows.css)
 	php color-scheme-convert.php www/style.css 2 >www/style-dark.css
 	php color-scheme-convert.php www/style.windows.css 2 >www/style-dark.windows.css
-	git add www/style*.css
+	git add www/style.css www/style.windows.css www/style-dark.css www/style-dark.windows.css
 fi
