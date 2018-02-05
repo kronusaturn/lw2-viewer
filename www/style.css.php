@@ -2180,4 +2180,4 @@ ol {
 	}
 }
 
-<?php if (isset($argv[2]) && preg_match("/\\.css$/", $argv[2]) echo file_get_contents($argv[2]); ?>
+<?php if (isset($argv[2]) && preg_match("/\\.css$/", $argv[2])) echo file_get_contents($argv[2]); ?>
