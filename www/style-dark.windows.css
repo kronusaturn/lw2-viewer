@@ -349,7 +349,7 @@ input {
 
 #theme-selector {
 	position: fixed;
-	top: -2px;
+	top: 3px;
 	left: calc((100% - 900px) / 2 - 41px);
 	opacity: 0.4;
 }
@@ -358,19 +358,28 @@ input {
 }
 #theme-selector button {
 	display: block;
-	width: 16px;
-	height: 16px;
+	width: 26px;
+	height: 26px;
 	padding: 0 0 0 1px;
 	text-align: center;
-	margin: 12px;
+	margin: 2px 7px;
 	font-size: 0.75rem;
 	font-weight: bold;
-	outline: 1px solid #2c2c2c;
+	position: relative;
+	box-shadow:
+		0 0 0 4px #131313 inset,
+		0 0 0 5px #2c2c2c inset;
+}
+@-moz-document url-prefix() {
+	#theme-selector button {
+		padding: 0;
+	}
 }
 #theme-selector button:hover,
 #theme-selector button.selected {
 	text-shadow: none;
-	outline: 5px solid #393939;
+	box-shadow:
+		0 0 0 5px #2c2c2c inset;
 }
 #theme-selector button:disabled {
 	cursor: auto;
