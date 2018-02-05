@@ -376,12 +376,19 @@ function injectThemeSelector() {
 		#theme-selector button.select-theme-dark:hover {
 			color: #fff;
 			background-color: #000;
+		}
+		#theme-selector button.select-theme-grey,
+		#theme-selector button.select-theme-grey:hover {
+			color: #f60;
+			background-color: #999;
+			font-weight: 600;
 		}` + "</style>");
 
 	let currentTheme = window.localStorage.getItem("selected-theme") || "default";
 	let themeOptions = [
 		['default', 'Default theme (dark text on light background)'],
-		['dark', 'Dark theme (light text on dark background)']
+		['dark', 'Dark theme (light text on dark background)'],
+		['grey', 'Grey theme (more subdued than default theme)']
 	];
 	let themeSelector = addUIElement(
 		"<div id='theme-selector'>" +
