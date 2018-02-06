@@ -997,11 +997,11 @@ h1.listing a[href^="http"]:hover {
 	margin: 0.5em 0 0 0;
 }
 .post > h1:first-child {
-	margin: 1em 0 0.25em 0;
+	margin: 1.1em 0 0.35em 0;
 	padding: 0 30px;
 	text-align: center;
 	font-size: 2.5em;
-	line-height: 1.1;
+	line-height: 1;
 }
 
 /**************/
