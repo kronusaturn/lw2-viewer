@@ -2273,6 +2273,9 @@ body {
     box-shadow: 0px 0px 10px #bbb;
 }
 
+h1.listing {
+	margin: 0.6em 20px 0.1em 20px;
+}
 h1.listing a {
     font-size: 1.5rem;
     color: #f60;
