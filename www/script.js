@@ -381,7 +381,7 @@ function injectThemeSelector() {
 		#theme-selector button.select-theme-grey,
 		#theme-selector button.select-theme-grey:hover {
 			color: #f60;
-			background-color: #ddd;
+			background-color: #eee;
 			font-weight: 600;
 		}` + "</style>");
 
