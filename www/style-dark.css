@@ -330,7 +330,7 @@ input {
 		0 0 0 4px #232323 inset,
 		0 0 0 5px #393939 inset;
 	background-repeat: no-repeat;
-	background-size: 50%;
+	background-size: 100%;
 	background-origin: content-box;
 }
 #width-selector button:hover,
