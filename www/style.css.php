@@ -941,6 +941,7 @@ h1.listing a[href^="http"]:hover {
 	display: inline-block;
 	margin-right: 1em;
 	font-size: 1.0625em;
+	white-space: nowrap;
 }
 .post-meta .lw2-link,
 .post-meta a[href='#bottom-bar'] {
@@ -1207,7 +1208,7 @@ a.comment-parent-link:hover {
 }
 
 a.comment-parent-link::before {
-	content: "";
+	content: "\F062";
 	font-family: "Font Awesome";
 	font-weight: 900;
 	font-size: 0.75rem;
@@ -1221,7 +1222,6 @@ a.comment-parent-link::before {
 	height: calc(100% + 2px);
 	top: -1px;
 	left: -17px;
-	content: "\F062";
 }
 a.comment-parent-link:hover::before {
 	background-color: #ffd;
@@ -2048,6 +2048,9 @@ ol {
 	#secondary-bar .nav-inner {
 		font-size: 0.85em;
 	}
+	#bottom-bar .nav-inner {
+		font-size: 1em;
+	}
 	h1.listing {
 		font-size: 1.3rem;
 		line-height: 1.1;
@@ -2061,9 +2064,8 @@ ol {
 	h1.listing a[href^='/'] {
 		text-indent: 0;
 	}
-	h1.listing a::after {
-		left: -33px;
-		top: 8px;
+	h1.listing a[href^="http"] {
+		top: 10px;
 	}
 	h1.listing + .post-meta {
 		margin: 0 6px 0 7px;
@@ -2175,6 +2177,10 @@ ol {
 	#nav-item-about .nav-inner::before {
 		content: "\F129";
 	}
+	#nav-item-search {
+		font-size: 2em;
+		vertical-align: middle;
+	}
 	#nav-item-search .nav-inner::before {
 		content: none;
 	}
@@ -2184,8 +2190,9 @@ ol {
 	#nav-item-search button {
 		width: 22px;
 		color: transparent;
-		vertical-align: middle;
+		vertical-align: bottom;
 		padding-left: 4px;
+		overflow: visible;
 	}
 	#nav-item-search button::before {
 		content: "\F002";
@@ -2199,6 +2206,60 @@ ol {
 	}
 	#nav-item-login .nav-inner::before {
 		content: "\F007";
+	}
+	.post-meta > *,
+	.post-meta .lw2-link {
+		margin: 0 0.5em;
+	}
+	a.comment-parent-link {
+		position: relative;
+		width: 0;
+		visibility: hidden;
+	}
+	a.comment-parent-link::before {
+		display: inline-block;
+		width: unset;
+		height: unset;
+		padding: 0;
+		font-size: 1em;
+		left: 0;
+		top: 0;
+		line-height: inherit;
+		visibility: visible;
+		color: #000;
+		content: "\F3BF";
+		transform: scaleX(-1);
+	}
+	a.comment-parent-link::after {
+		display: none;
+	}
+	.page-toolbar {
+		font-size: 1rem;
+		margin: 0.25em;
+	}
+	.comment-minimize-button::after {
+		height: 100%;
+		top: 0;
+		left: -2em;
+		width: 1.5em;
+		line-height: 1.6;
+		text-align: right;
+    }
+    form:focus-within textarea {
+		position: fixed;
+		top: 0;
+		left: 3px;
+		width: calc(100vw - 6px);
+		height: calc(100vh - 6px);
+		max-height: unset;
+		z-index: 11001;
+	}
+	form:focus-within .guiedit-buttons-container {
+		position: fixed;
+		z-index: 11002;
+		top: 3px;
+		left: 4px;
+		width: calc(100vw - 8px);
 	}
 }
 @media only screen and (max-width: 374px) {
