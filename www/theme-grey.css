@@ -150,7 +150,12 @@ a:hover {
 	font-family: Fira Sans, Trebuchet MS, Helvetica, Arial, Verdana, sans-serif;
 }
 .post-body {
-	font-size: 1.25rem;
+	font-size: 1.1875rem;
+}
+@media (-webkit-max-device-pixel-ratio: 1), (max-resolution: 191dpi) { 
+	.post-body {
+		font-size: 1.125rem;
+	}
 }
 .comment-body {
 	font-size: 1.125rem;
