@@ -177,3 +177,11 @@ input[type='submit'] {
 	color: #000;
 	background-color: #d8d8d8;
 }
+
+.new-comment::before {
+	outline: 2px solid #9037ff;
+	box-shadow:
+		0 0 6px -2px #9037ff inset, 
+		0 0 4px #9037ff, 
+		0 0 6px #9037ff;
+}
