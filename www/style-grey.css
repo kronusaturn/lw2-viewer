@@ -2606,3 +2606,7 @@ input[type='submit'] {
 #content.user-page .post-meta .author {
 	font-weight: normal;
 }
+#content.search-results-page h1.listing a[href^='http'],
+#content.user-page h1.listing a[href^='http'] {
+	top: 6px;
+}
