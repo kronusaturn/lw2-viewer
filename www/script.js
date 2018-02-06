@@ -457,7 +457,8 @@ function initialize() {
 		} 	
 		if (content.clientHeight <= window.innerHeight + 30 || 
 			(content.querySelector("#comments") && content.querySelector("#comments").childNodes.length == 0)) {
-			document.querySelector(".post .post-meta .comment-count").addClass("no-comments");
+			try { document.querySelector(".post .post-meta .comment-count").addClass("no-comments"); }
+			catch (e) { }
 		}
 
 		try {
