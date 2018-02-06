@@ -59,7 +59,8 @@ input {
 	content: '\F067';
 	font-family: "Font Awesome";
 	font-weight: 900;
-	padding-right: 0.2em;
+	font-size: 0.9em;
+	padding-right: 0.3em;
 }
 .rss::before {
 	content: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("rss.svg")) ?>');
