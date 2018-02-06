@@ -185,3 +185,8 @@ input[type='submit'] {
 		0 0 4px #9037ff, 
 		0 0 6px #9037ff;
 }
+
+.archive-nav a:link,
+.archive-nav a:visited {
+	color: #888;
+}
