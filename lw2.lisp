@@ -156,7 +156,7 @@
 
 (defparameter *html-head*
 "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
-<link rel=\"stylesheet\" href=\"//fonts.greaterwrong.com/?fonts=Charter,Concourse,a_Avante,Whitney\">")
+<link rel=\"stylesheet\" href=\"//fonts.greaterwrong.com/?fonts=Charter,Concourse,a_Avante,Whitney,FiraSans\">")
 
 (defun generate-versioned-link (file)
   (format nil "~A?v=~A" file (sb-posix:stat-mtime (sb-posix:stat (format nil "www~A" file))))) 
