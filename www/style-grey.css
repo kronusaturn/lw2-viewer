@@ -2369,24 +2369,58 @@ a:hover {
 .post-meta .date {
 	color: #222;
 }
-.post-meta .upvote::before {
+.post-meta .upvote::before,
+.comment-meta .upvote::before {
 	content: "\F077";
 }
-.post-meta .downvote::before {
+.post-meta .downvote::before,
+.comment-meta .downvote::before {
 	content: "\F078";
 	position: relative;
 	left: -2px;
 	top: 1px;
 }
-.post-meta .lw2-link {
+.post-meta .lw2-link,
+.comment-meta .lw2-link {
 	opacity: 0.5;
 }
-.post-body a:link {
+.post-body a:link,
+.comment-body a:link {
 	color: #f60;
 }
-.post-body a:visited {
+.post-body a:visited,
+.comment-body a:visited {
 	color: #ff943b;
 }
+.post-body,
+.comment-body {
+	font-family: Fira Sans, Trebuchet MS, Helvetica, Arial, Verdana, sans-serif;
+}
+.post-body {
+	font-size: 1.25rem;
+}
+.comment-body {
+	font-size: 1.125rem;
+}
+.comment-meta a {
+	color: #222;
+}
+.comment-meta .author {
+	color: #999;
+	font-weight: 600;
+}
+
+button,
+input[type='submit'] {
+	color: #f60;
+}
+.guiedit-buttons-container button {
+	color: #00e;
+}
+#markdown-hints-checkbox + label {
+	color: #999;
+}
+
 #theme-selector button,
 #width-selector button {
 	box-shadow:
@@ -2399,4 +2433,10 @@ a:hover {
 #width-selector button.selected {
 	box-shadow:
 		0 0 0 5px #ccc inset;
+}
+#bottom-bar a[href='#top']:hover::after,
+.post-meta a[href='#comments']:hover::after,
+.post-meta a[href='#bottom-bar']:hover::after  {
+	color: #000;
+	background-color: #d8d8d8;
 }
