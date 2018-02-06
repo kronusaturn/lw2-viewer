@@ -2602,3 +2602,7 @@ input[type='submit'] {
 .archive-nav a:visited {
 	color: #888;
 }
+#content.search-results-page .post-meta .author, 
+#content.user-page .post-meta .author {
+	font-weight: normal;
+}
