@@ -2493,7 +2493,8 @@ a:hover {
 
 .post > h1:first-child {
 	font-weight: 400;
-	color: #888;
+	color: #222;
+	font-size: 3em;
 }
 .post-meta a,
 .post-meta .author,
