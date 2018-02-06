@@ -317,7 +317,7 @@ input {
 #width-selector {
 	position: fixed;
 	top: 4px;
-	right: calc((100% - 900px) / 2 - 76px);
+	right: calc((100% - 900px) / 2 - 78px);
 }
 #width-selector button {
 	color: transparent;
