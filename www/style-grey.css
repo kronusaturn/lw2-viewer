@@ -2387,6 +2387,18 @@ a:hover {
 	left: -2px;
 	top: 1px;
 }
+.upvote:hover,
+.upvote.selected {
+	text-shadow:
+		0 0 0.5px #fff, 
+		0 0 8px #0f0;
+}
+.downvote:hover,
+.downvote.selected {
+	text-shadow:
+		0 0 0.5px #fff, 
+		0 0 8px #f00;
+}
 .post-meta .lw2-link,
 .comment-meta .lw2-link {
 	opacity: 0.5;
