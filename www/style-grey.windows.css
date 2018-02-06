@@ -955,6 +955,9 @@ h1.listing a[href^="http"]:hover {
 .post-meta a[href='#bottom-bar'] {
 	margin: 0;
 }
+.post-meta .link-post-domain {
+	margin-left: 1em;
+}
 .comment-meta .comment-post-title {
 	display: block;
 }
@@ -2383,9 +2386,6 @@ a:hover {
 .post-meta .lw2-link,
 .comment-meta .lw2-link {
 	opacity: 0.5;
-}
-.post-meta .link-post-domain {
-	margin-left: 1em;
 }
 .post-body a:link,
 .comment-body a:link {

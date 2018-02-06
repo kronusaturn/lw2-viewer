@@ -121,9 +121,6 @@ a:hover {
 .comment-meta .lw2-link {
 	opacity: 0.5;
 }
-.post-meta .link-post-domain {
-	margin-left: 1em;
-}
 .post-body a:link,
 .comment-body a:link {
 	color: #f60;
