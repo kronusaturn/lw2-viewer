@@ -2610,3 +2610,10 @@ input[type='submit'] {
 #content.user-page h1.listing a[href^='http'] {
 	top: 6px;
 }
+
+.contents {
+	padding-right: 0.5em;
+}
+.post-body .contents ul {
+	font-size: 0.85em;
+}	
