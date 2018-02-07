@@ -9,7 +9,7 @@ e.g. `sudo apt install sbcl liblmdb0`
 
 * Install [quicklisp](https://beta.quicklisp.org/)  
 `curl -O https://beta.quicklisp.org/quicklisp.lisp`  
-`sbcl --load quicklisp.lisp`  
+`sbcl --load quicklisp.lisp --eval '(quicklisp-quickstart:install)' --eval '(ql:add-to-init-file)' --eval '(exit)'`  
 
 * Clone required git repositories to the quicklisp `local-projects` directory. (You can also use symlinks if you want to put them elsewhere.)  
 `cd ~/quicklisp/local-projects`  
@@ -21,6 +21,7 @@ e.g. `sudo apt install sbcl liblmdb0`
 ** On Mac OS, or other platforms that don't support sparse files, you may want to reduce \*lmdb-mapsize\*
 
 * Start the server  
+** On Mac OS, you may need `export DYLD_LIBRARY_PATH=/opt/local/lib/` or similar, depending on where libraries are installed.
 `cd ~/quicklisp/local-projects/lw2-viewer`  
 `sbcl --eval '(ql:quickload :lw2-viewer)' --eval '(hunchentoot:start (make-instance (quote hunchentoot:easy-acceptor) :port 4242 :document-root "./www/"))'`  
 
