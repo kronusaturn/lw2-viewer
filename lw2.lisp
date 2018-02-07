@@ -416,7 +416,7 @@
 
 (defparameter *edit-post-template* (compile-template* "edit-post.html"))
 
-(hunchentoot:define-easy-handler (view-edit-post :uri "/edit-post") ((csrf-token :request-type :post) (text :request-type :post) title url section post-id)
+(hunchentoot:define-easy-handler (view-edit-post :uri "/edit-post") ((csrf-token :request-type :post) (text :request-type :post) title url section post-id link-post)
                                  (with-error-page
                                    (cond
                                      (text
@@ -424,7 +424,7 @@
                                        (let ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token"))
                                              (url (if (string= url "") nil url)))
                                          (assert (and lw2-auth-token (not (string= text ""))))
-                                         (let* ((post-data `(("body" . ,text) ("title" . ,title) ("url" . ,url)
+                                         (let* ((post-data `(("body" . ,text) ("title" . ,title) ("url" . ,(if link-post url))
                                                                               ("frontpageDate" . ,(if (string= section "frontpage") (local-time:format-timestring nil (local-time:now))))
                                                                               ("meta" . ,(string= section "meta")) ("draft" . ,(string= section "drafts")) ("content" . ("blocks" . nil))))
                                                 (post-set (loop for item in post-data when (cdr item) collect item))
