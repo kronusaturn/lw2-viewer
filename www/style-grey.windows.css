@@ -1721,8 +1721,7 @@ a.comment-parent-link:hover::after {
 	width: auto;
 }
 #edit-post-form input[type='submit'] {
-  padding: 6px 12px;
-	margin-top: 0;
+	padding: 6px 12px;
 }
 #edit-post-form .link-post-checkbox {
 	margin: 0.8em 0 0.75em 0.75em;
