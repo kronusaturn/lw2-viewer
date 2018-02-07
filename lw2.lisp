@@ -1,7 +1,9 @@
 (defpackage #:lw2-viewer
-  (:use #:cl #:sb-thread #:flexi-streams #:lw2-viewer.config #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login))
+  (:use #:cl #:sb-thread #:flexi-streams #:djula #:lw2-viewer.config #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login))
 
 (in-package #:lw2-viewer) 
+
+(add-template-directory (asdf:system-relative-pathname "lw2-viewer" "templates/"))
 
 (defvar *current-auth-token*) 
 
@@ -412,42 +414,44 @@
 							(if lw2-auth-token
 							  (format out-stream "<script>commentVotes=~A</script>" (json:encode-json-to-string (get-post-comments-votes post-id lw2-auth-token)))))))))))) 
 
+(defparameter *edit-post-template* (compile-template* "edit-post.html"))
+
 (hunchentoot:define-easy-handler (view-edit-post :uri "/edit-post") ((csrf-token :request-type :post) (text :request-type :post) title url section post-id)
-				 (with-error-page
-				   (cond
-				     (text
-				       (check-csrf-token (hunchentoot:cookie-in "session-token") csrf-token)
-				       (let ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token"))
-					     (url (if (string= url "") nil url)))
-					 (assert (and lw2-auth-token (not (string= text ""))))
-					 (let* ((post-data `(("body" . ,text) ("title" . ,title) ("url" . ,url)
-							     ("frontpageDate" . ,(if (string= section "frontpage") (local-time:format-timestring nil (local-time:now))))
-							     ("meta" . ,(string= section "meta")) ("draft" . ,(string= section "drafts")) ("content" . ("blocks" . nil))))
-						(post-set (loop for item in post-data when (cdr item) collect item))
-						(post-unset (loop for item in post-data when (not (cdr item)) collect (cons (car item) t))))
-					   (let* ((new-post-data
-						    (if post-id
-						      (do-lw2-post-edit lw2-auth-token post-id post-set post-unset)
-						      (do-lw2-post lw2-auth-token post-set)))
-						  (new-post-id (cdr (assoc :--id new-post-data))))
-					     (assert new-post-id)
-					     (cache-put "post-markdown-source" new-post-id text)
-					     (setf (hunchentoot:return-code*) 303
-						   (hunchentoot:header-out "Location") (generate-post-link new-post-data))))))
-				     (t
-				       (let* ((csrf-token (make-csrf-token (hunchentoot:cookie-in "session-token")))
-					      (post-body (if post-id (get-post-body post-id)))
-					      (section (or section (loop for (sym . sec) in '((:draft . "drafts") (:meta . "meta") (:frontpage-date . "frontpage"))
-									 if (cdr (assoc sym post-body)) return sec
-									 finally (return "all")))))
-					 (emit-page (out-stream :title (if post-id "Edit Post" "New Post") :content-class "edit-post-page")
-						    (format out-stream "<div class=\"posting-controls\">")
-						    (output-form out-stream "post" "" "edit-post-form" "aligned-form" csrf-token
-								 `(("title" "Title" "text" "off" ,(cdr (assoc :title post-body)))
-								   ("url" "URL (optional)" "text" "off" ,(cdr (assoc :url post-body)))
-								   ("section" "Section" "select" (("frontpage" "Frontpage") ("all" "All") ("meta" "Meta") #|("drafts" "Drafts")|#) ,section))
-								 "Submit" :textarea `("text" ,(or (and post-id (cache-get "post-markdown-source" post-id)) (cdr (assoc :html-body post-body)) "")))
-						    (format out-stream "</div>")))))))
+                                 (with-error-page
+                                   (cond
+                                     (text
+                                       (check-csrf-token (hunchentoot:cookie-in "session-token") csrf-token)
+                                       (let ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token"))
+                                             (url (if (string= url "") nil url)))
+                                         (assert (and lw2-auth-token (not (string= text ""))))
+                                         (let* ((post-data `(("body" . ,text) ("title" . ,title) ("url" . ,url)
+                                                                              ("frontpageDate" . ,(if (string= section "frontpage") (local-time:format-timestring nil (local-time:now))))
+                                                                              ("meta" . ,(string= section "meta")) ("draft" . ,(string= section "drafts")) ("content" . ("blocks" . nil))))
+                                                (post-set (loop for item in post-data when (cdr item) collect item))
+                                                (post-unset (loop for item in post-data when (not (cdr item)) collect (cons (car item) t))))
+                                           (let* ((new-post-data
+                                                    (if post-id
+                                                        (do-lw2-post-edit lw2-auth-token post-id post-set post-unset)
+                                                        (do-lw2-post lw2-auth-token post-set)))
+                                                  (new-post-id (cdr (assoc :--id new-post-data))))
+                                             (assert new-post-id)
+                                             (cache-put "post-markdown-source" new-post-id text)
+                                             (setf (hunchentoot:return-code*) 303
+                                                   (hunchentoot:header-out "Location") (generate-post-link new-post-data))))))
+                                     (t
+                                      (let* ((csrf-token (make-csrf-token (hunchentoot:cookie-in "session-token")))
+                                             (post-body (if post-id (get-post-body post-id)))
+                                             (section (or section (loop for (sym . sec) in '((:draft . "drafts") (:meta . "meta") (:frontpage-date . "frontpage"))
+                                                                        if (cdr (assoc sym post-body)) return sec
+                                                                        finally (return "all")))))
+                                        (emit-page (out-stream :title (if post-id "Edit Post" "New Post") :content-class "edit-post-page")
+                                                   (render-template* *edit-post-template* out-stream
+                                                                     :csrf-token csrf-token
+                                                                     :title (cdr (assoc :title post-body))
+                                                                     :url (cdr (assoc :url post-body))
+                                                                     :section-list (loop for (name desc) in '(("frontpage" "Frontpage") ("all" "All") ("meta" "Meta") #|("drafts" "Drafts")|#)
+                                                                                         collect (alist :name name :desc desc :selected (string= name section)))
+                                                                     :markdown-source (or (and post-id (cache-get "post-markdown-source" post-id)) (cdr (assoc :html-body post-body)) ""))))))))
 
 (hunchentoot:define-easy-handler (view-karma-vote :uri "/karma-vote") ((csrf-token :request-type :post) (target :request-type :post) (target-type :request-type :post) (vote-type :request-type :post))
 				 (check-csrf-token (hunchentoot:cookie-in "session-token") csrf-token)

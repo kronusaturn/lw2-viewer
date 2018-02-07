@@ -1,0 +1,24 @@
+<div class="posting-controls">
+<form method="post" action="" id="edit-post-form" class="aligned-form">
+	<div class="post-meta-fields">
+		<label for="title">Title:</label>
+		<input name="title" autocomplete="off" type="text" value="{{ title }}">
+		<input type="checkbox" class="link-post-checkbox" name="link-post"{% if url %} checked{% endif %}>
+		<label for="link-post">Link post</label>
+		<label for="url">URL (optional):</label>
+		<input name="url" autocomplete="off" type="text" value="{{ url }}">
+		<label for="section">Section:</label>
+		{% for section in section-list %}
+		<input type="radio" name="section" id="{{ section.name }}" value="{{ section.name }}"{% if section.selected %} checked{% endif %}><label for="{{ section.name }}">{{ section.desc }}</label>
+		{% endfor %}
+	</div>
+	<div class="textarea-container">
+		<textarea name="text">{{ markdown-source }}</textarea>
+		<span class="markdown-reference-link">You can use <a href="http://commonmark.org/help/" target="_blank">Markdown</a> here.</span>
+	</div>
+	<div>
+		<input name="csrf-token" value="{{ csrf-token }}" type="hidden">
+		<input value="Submit" type="submit">
+	</div>
+</form>
+</div>
