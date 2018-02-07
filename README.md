@@ -17,6 +17,9 @@ e.g. `sudo apt install sbcl liblmdb0`
 `git clone https://github.com/kronusaturn/plump.git`  
 `git clone https://github.com/kronusaturn/lw2-viewer.git`
 
+* Adjust configuration options in `config.lisp`
+** On Mac OS, or other platforms that don't support sparse files, you may want to reduce \*lmdb-mapsize\*
+
 * Start the server  
 `cd ~/quicklisp/local-projects/lw2-viewer`  
 `sbcl --eval '(ql:quickload :lw2-viewer)' --eval '(hunchentoot:start (make-instance (quote hunchentoot:easy-acceptor) :port 4242 :document-root "./www/"))'`  

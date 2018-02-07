@@ -1,16 +1,15 @@
 (defpackage #:lw2.lmdb
-  (:use #:cl #:sb-thread)
+  (:use #:cl #:sb-thread #:lw2-viewer.config)
   (:import-from #:flexi-streams #:string-to-octets #:octets-to-string) 
   (:export #:with-cache-mutex #:with-db #:lmdb-clear-db #:lmdb-put-string #:cache-put #:cache-get #:simple-cacheable #:define-lmdb-memoized))
 
 (in-package #:lw2.lmdb) 
 
-(defparameter *cache-db* "./cache/")
 (defvar *db-mutex* (sb-thread:make-mutex :name "lmdb"))
 (defvar *db-environment*)
 
 (when (not (boundp '*db-environment*))
-  (setq *db-environment* (lmdb:make-environment *cache-db* :max-databases 1024 :mapsize (expt 2 34)))
+  (setq *db-environment* (lmdb:make-environment *cache-db* :max-databases 1024 :mapsize *lmdb-mapsize*))
   (lmdb:open-environment *db-environment*))
 
 (defmacro with-cache-mutex (&body body)
