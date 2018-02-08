@@ -2859,12 +2859,12 @@ body {
 		0.5px 0.5px 1px #aaa,
 		0.5px 0.5px 1px #bbb;
 }
-.post-body h1, 
-.post-body h2, 
-.post-body h3, 
-.post-body h4, 
-.post-body h5, 
-.post-body h6 {
+h1, 
+h2, 
+h3, 
+h4, 
+h5, 
+h6 {
 	font-family: Raleway;
 	font-weight: 100;
 	text-shadow: 
@@ -2880,13 +2880,14 @@ h5 strong,
 h6 strong {
 	font-weight: normal;
 }
+.post-body h1 {
+	padding-bottom: 2px;
+	border-bottom-color: #777;
+}
 .contents {
 	font-family: Raleway;
 	border: none;
 	background-color: transparent;
-}
-.post-body .contents a:link {
-	color: #f60;
 }
 #primary-bar > *,
 #secondary-bar > *,
@@ -3044,4 +3045,50 @@ a.comment-parent-link:hover::before {
 .post-body strong,
 .comment-body strong {
 	font-weight: 500;
+}
+
+.post-body a:link,
+.comment-body a:link {
+	color: inherit;
+	text-shadow: 
+		0px 0px 1px #bd5984, 
+		0.5px 0.5px 1px #f68a84, 
+		0.5px 0.5px 1px #ff9b8c;
+}
+.post-body a:visited,
+.comment-body a:visited {
+	color: inherit;
+	text-shadow:
+		0px 0px 1px #a766dd, 
+		0.5px 0.5px 1px #d9f, 
+		0.5px 0.5px 1px #efa9ff;
+}
+.post-body a:hover,
+.comment-body a:hover {
+	color: #f60;
+	text-shadow:
+		0px 0px 1px #bd5984, 
+		0.5px 0.5px 1px #f68a84, 
+		0.5px 0.5px 1px #ff9b8c,
+		0px 0px 5px #f60;
+	text-decoration: none;
+}
+
+blockquote {
+	border-left-color: #777;
+}
+
+.comment-minimize-button {
+	color: #777;
+}
+
+.new-comment-sequential-nav-button {
+	color: #bbb;
+}
+.post-meta .new-comment-sequential-nav-button:disabled {
+	color: #929292;
+}
+
+.comment-popup {
+	background-color: #949494;
 }

@@ -402,7 +402,7 @@ function injectThemeSelector() {
 		['default', 'Default theme (dark text on light background)'],
 		['dark', 'Dark theme (light text on dark background)'],
 		['grey', 'Grey theme (more subdued than default theme)'],
-		['ultramodern', 'Very hip'],
+		['ultramodern', 'Ultramodern theme (very hip)'],
 		['zero', 'Simple theme with no custom fonts']
 	];
 	let themeSelector = addUIElement(
