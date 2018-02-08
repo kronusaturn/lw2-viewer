@@ -77,9 +77,13 @@ body {
 	box-shadow: none;
 }
 .nav-item a:link,
-.nav-item a:visited {
+.nav-item a:visited,
+.nav-inner {
 	color: #444;
 	font-weight: 300;
+}
+.nav-current .nav-inner {
+	color: #ccc;
 }
 .nav-item a:hover {
 	text-shadow: none;
