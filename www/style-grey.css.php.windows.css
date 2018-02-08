@@ -1,11 +1,22 @@
-<?php
-	header ('Content-type: text/css; charset=utf-8');
-	
-	$platform = @$argv[1] ?: 'Mac';
-	$UI_font = ($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Whitney', 'a_Avante'";
-?>
 
-<?php echo file_get_contents('fa-custom.css'); ?>
+/****************/
+/* FONT AWESOME */
+/****************/
+
+@font-face {
+  font-family: 'Font Awesome';
+  src: url('fa-regular-400.ttf?v=1') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Font Awesome';
+  src: url('fa-solid-900.ttf?v=1') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+}
+
 
 html {
 	box-sizing: border-box;
@@ -19,7 +30,7 @@ body {
 	color: #000;
 	padding: 0;
 	margin: 0;
-	font-family: <?php echo $UI_font; ?>;
+	font-family: 'Whitney', 'a_Avante';
 	font-feature-settings: 'ss07';
 }
 input {
@@ -63,7 +74,7 @@ input {
 	padding-right: 0.3em;
 }
 .rss::before {
-	content: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("rss.svg")) ?>');
+	content: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIj8+DQo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPiANCjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiIGlkPSJSU1NpY29uIiB2aWV3Qm94PSIwIDAgMjU2IDI1NiI+DQo8ZGVmcz4NCjxsaW5lYXJHcmFkaWVudCB4MT0iMC4wODUiIHkxPSIwLjA4NSIgeDI9IjAuOTE1IiB5Mj0iMC45MTUiIGlkPSJSU1NnIj4NCjxzdG9wICBvZmZzZXQ9IjAuMCIgc3RvcC1jb2xvcj0iI0UzNzAyRCIvPjxzdG9wICBvZmZzZXQ9IjAuMTA3MSIgc3RvcC1jb2xvcj0iI0VBN0QzMSIvPg0KPHN0b3AgIG9mZnNldD0iMC4zNTAzIiBzdG9wLWNvbG9yPSIjRjY5NTM3Ii8+PHN0b3AgIG9mZnNldD0iMC41IiBzdG9wLWNvbG9yPSIjRkI5RTNBIi8+DQo8c3RvcCAgb2Zmc2V0PSIwLjcwMTYiIHN0b3AtY29sb3I9IiNFQTdDMzEiLz48c3RvcCAgb2Zmc2V0PSIwLjg4NjYiIHN0b3AtY29sb3I9IiNERTY0MkIiLz4NCjxzdG9wICBvZmZzZXQ9IjEuMCIgc3RvcC1jb2xvcj0iI0Q5NUIyOSIvPg0KPC9saW5lYXJHcmFkaWVudD4NCjwvZGVmcz4NCjxyZWN0IHdpZHRoPSIyNTYiIGhlaWdodD0iMjU2IiByeD0iNTUiIHJ5PSI1NSIgeD0iMCIgIHk9IjAiICBmaWxsPSIjQ0M1RDE1Ii8+DQo8cmVjdCB3aWR0aD0iMjQ2IiBoZWlnaHQ9IjI0NiIgcng9IjUwIiByeT0iNTAiIHg9IjUiICB5PSI1IiAgZmlsbD0iI0Y0OUM1MiIvPg0KPHJlY3Qgd2lkdGg9IjIzNiIgaGVpZ2h0PSIyMzYiIHJ4PSI0NyIgcnk9IjQ3IiB4PSIxMCIgeT0iMTAiIGZpbGw9InVybCgjUlNTZykiLz4NCjxjaXJjbGUgY3g9IjY4IiBjeT0iMTg5IiByPSIyNCIgZmlsbD0iI0ZGRiIvPg0KPHBhdGggZD0iTTE2MCAyMTNoLTM0YTgyIDgyIDAgMCAwIC04MiAtODJ2LTM0YTExNiAxMTYgMCAwIDEgMTE2IDExNnoiIGZpbGw9IiNGRkYiLz4NCjxwYXRoIGQ9Ik0xODQgMjEzQTE0MCAxNDAgMCAwIDAgNDQgNzMgViAzOGExNzUgMTc1IDAgMCAxIDE3NSAxNzV6IiBmaWxsPSIjRkZGIi8+DQo8L3N2Zz4NCg==');
 	display: inline-block;
 	width: 1em;
 	padding-right: 0.2em;
@@ -333,13 +344,13 @@ input {
 	cursor: auto;
 }
 #width-selector button.select-width-normal {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("normal.gif")) ?>');
+	background-image: url('data:image/gif;base64,R0lGODdhFAAUAJEAAAAAAKqqqv///wAAACH5BAkAAAMALAAAAAAUABQAAAIqnI+py+0PU5hB0Sqp1Xlu32HI9YkHGZZqyo6cC8Kmgcqr3Z5vxPf+nygAADs=');
 }
 #width-selector button.select-width-wide {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("wide.gif")) ?>');
+	background-image: url('data:image/gif;base64,R0lGODdhFAAUAJEAAAAAAKqqqv///wAAACH5BAkAAAMALAAAAAAUABQAAAIrnI+py+0PT5jB0TqupUY37zEg95HhMk6bmpGi6aIw+7KnkmK1HvX+DzwUAAA7');
 }
 #width-selector button.select-width-fluid {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("fluid.gif")) ?>');
+	background-image: url('data:image/gif;base64,R0lGODdhFAAUAJEAAAAAAKqqqv///wAAACH5BAkAAAMALAAAAAAUABQAAAIwnI+py+0/ApIwUGOfvTGzzYELGIoTiZpdylJte7xoQp7beMc5XnL4CYlMgsSisVEAADs=');
 }
 
 /******************/
@@ -604,7 +615,7 @@ div[class^='archive-nav-'] {
 /************/
 
 h1.listing {
-	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
+	font-family: 'Whitney', 'a_Avante', 'Font Awesome';
 	font-size: 1.875rem;
 	line-height: 1.15;
 	margin: 0.8em 20px 0.1em 20px;
@@ -661,14 +672,13 @@ h1.listing a:hover {
 	background-color: rgba(255,255,255,0.85);
 	z-index: 2;
 }
-<?php $margin_of_hover_error = '10px'; ?>
 h1.listing a:hover::before {
 	content: "";
 	position: absolute;
-	top: -<?php echo $margin_of_hover_error; ?>;
-	right: -<?php echo $margin_of_hover_error; ?>;
-	bottom: -<?php echo $margin_of_hover_error; ?>;
-	left: -<?php echo $margin_of_hover_error; ?>;
+	top: -10px;
+	right: -10px;
+	bottom: -10px;
+	left: -10px;
 	z-index: -1;
 }
 h1.listing a[href^="http"]:hover {
@@ -836,7 +846,7 @@ h1.listing a[href^="http"]:hover {
 /*********************/
 
 .contents {
-	font-family: <?php echo $UI_font; ?>;
+	font-family: 'Whitney', 'a_Avante';
 	border: 1px solid #ddd;
 	background-color: #eee;
 	float: right;
@@ -1012,7 +1022,7 @@ h1.listing a[href^="http"]:hover {
 	text-align: center;
 	font-weight: 600;
 	font-size: 1.5em;
-	font-family: <?php echo $UI_font; ?>;
+	font-family: 'Whitney', 'a_Avante';
 }
 .post.link-post .post-body p:only-child a:only-child {
 	text-decoration: none;
@@ -1105,39 +1115,87 @@ h1.listing a[href^="http"]:hover {
 	display: none;
 }
 
-<?php
-	function nested_stuff($segment, $tip, $last_tip, $nesting_levels) {
-		for ($i = $nesting_levels; $i > 0; $i--) {
-			for ($j = $i; $j > 0; $j--)
-				echo $segment;
-			echo $tip;
-		}
-		echo $last_tip;
-	}
-	$comment_nesting_depth = 10;
-?>
 
-<?php nested_stuff(".comment-item .comment-item ", ".comment-item,\n", ".comment-item", $comment_nesting_depth); ?> {
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item,
+.comment-item {
 	background-color: #eee;
 }
-<?php nested_stuff(".comment-item .comment-item ", ".comment-item a.comment-parent-link::after,\n", ".comment-item a.comment-parent-link::after", $comment_nesting_depth); ?> {
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item a.comment-parent-link::after {
 	box-shadow: 
 		0 28px 16px -16px #fff inset,
 		4px 16px 0 12px #ffd inset,
 		4px  4px 0 12px #ffd inset;
 }
 
-<?php nested_stuff(".comment-item .comment-item ", ".comment-item .comment-item,\n", ".comment-item .comment-item", $comment_nesting_depth); ?> {
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item {
 	background-color: #fff;
 }
-<?php nested_stuff(".comment-item .comment-item ", ".comment-item .comment-item a.comment-parent-link::after,\n", ".comment-item .comment-item a.comment-parent-link::after", $comment_nesting_depth); ?> {
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item a.comment-parent-link::after {
 	box-shadow: 
 		0 28px 16px -16px #eee inset,
 		4px 16px 0 12px #ffd inset,
 		4px  4px 0 12px #ffd inset;
 }
 
-<?php nested_stuff(".comment-item ", ".comment-item:target,\n", ".comment-item:target", (2 * $comment_nesting_depth) - 1); ?> {
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item:target,
+.comment-item .comment-item:target,
+.comment-item:target {
 	background-color: #ffd;
 }
 .comment-item:target > .comment-thread > .comment-item > .comment > .comment-meta > a.comment-parent-link::after {
@@ -1332,7 +1390,7 @@ a.comment-parent-link:hover::after {
 .comment-minimize-button::after {
 	content: attr(data-child-count);
 	font-weight: normal;
-	font-family: <?php echo $UI_font; ?>;
+	font-family: 'Whitney', 'a_Avante';
 	font-size: 0.8125rem;
 	position: absolute;
 	left: 0;
@@ -1629,7 +1687,7 @@ a.comment-parent-link:hover::after {
 	content: attr(data-tooltip);
 	position: absolute;
 	font-weight: normal;
-	font-family: <?php echo $UI_font; ?>;
+	font-family: 'Whitney', 'a_Avante';
 	font-size: 1rem;
 	top: 0;
 	left: 400px;
@@ -1878,7 +1936,7 @@ input[type='submit']:focus {
 /************/
 
 h1 {
-	font-weight: <?php echo ($platform == 'Mac') ? "700" : "800"; ?>;
+	font-weight: 800;
 }
 
 .post-body h1,
@@ -1887,7 +1945,7 @@ h1 {
 .post-body h4,
 .post-body h5,
 .post-body h6 {
-	font-family: <?php echo $UI_font; ?>;
+	font-family: 'Whitney', 'a_Avante';
 	line-height: 1.1;
 	margin: 1em 0 0.75em 0;
 	text-align: left;
@@ -1897,7 +1955,7 @@ h1 {
 .post-body h6 {
 	font-size: 1em;
 	font-weight: 600;
-	font-family: <?php echo ($platform == 'Mac') ? "'Concourse SmallCaps'" : "'Whitney SmallCaps'"; ?>;
+	font-family: 'Whitney SmallCaps';
 }
 .post-body h6 {
 	color: #555;
@@ -1907,7 +1965,7 @@ h1 {
 }
 .post-body h3 {
 	font-size: 1.4em;
-	font-family: <?php echo ($platform == 'Mac') ? "'Concourse SmallCaps'" : "'Whitney SmallCaps'"; ?>;
+	font-family: 'Whitney SmallCaps';
 	font-weight: 
 }
 .post-body h2 {
@@ -2514,4 +2572,242 @@ ol {
 	}
 }
 
-<?php if (isset($argv[2]) && preg_match("/\\.css(.php)?$/", $argv[2])) include($argv[2]); ?>
+body {
+    background: #eee;
+}
+
+#content {
+    box-shadow: 0px 0px 10px #bbb;
+}
+
+h1.listing {
+	margin: 0.6em 20px 0.1em 20px;
+}
+h1.listing a {
+    font-size: 1.5rem;
+    color: #f60;
+}
+.listing a[href^='/'] {
+	font-weight: normal;
+	display: inline;
+}
+h1.listing a[href^='http'] {
+	font-size: 1.125rem;
+	top: 10px;
+	color: #999;
+	opacity: 0.7;
+}
+
+h1.listing + .post-meta * {
+    color: #222;
+    font-size: 1em;
+}
+
+h1.listing + .post-meta .karma {
+    float: left;
+    margin-right: 3px;
+}
+
+h1.listing + .post-meta .karma::after {
+    content: " by";
+}
+
+h1.listing + .post-meta .author {
+    margin-right: 0;
+}
+
+h1.listing + .post-meta .date::before {
+    content: "on ";
+}
+
+h1.listing + .post-meta .date::after {
+    content: " — ";
+	opacity: 0.5;
+}
+
+h1.listing + .post-meta .date {
+    margin-right: 5px;
+}
+
+h1.listing + .post-meta .comment-count {
+    margin-left: 0;
+    margin-right: 4px;
+}
+
+h1.listing + .post-meta .lw2-link {
+	margin-left: 10px;
+}
+
+.nav-item a:link,
+.nav-item a:visited {
+    font-weight: normal;
+    color: #888;
+}
+
+.nav-inner::after {
+    display: none;
+}
+
+#secondary-bar .nav-item {
+    font-size: 0.875rem;
+}
+
+#primary-bar .nav-item {
+    font-size: 0.875rem;
+}
+
+#nav-item-search form::before {
+    opacity: 0.4;
+	font-size: 0.9375rem;
+}
+
+.nav-bar a, 
+#nav-item-search button, 
+.button, 
+.button:visited, 
+.rss,
+.rss:visited {
+    color: #999;
+}
+
+a:hover {
+    text-shadow: none;
+}
+
+.post > h1:first-child {
+	margin: 1.1em 0 0.25em 0;
+	font-weight: 400;
+	color: #222;
+	font-size: 3em;
+}
+.post-meta a,
+.post-meta .author,
+.post-meta .date {
+	color: #222;
+}
+.post-meta .upvote::before,
+.comment-meta .upvote::before {
+	content: "\F077";
+}
+.post-meta .downvote::before,
+.comment-meta .downvote::before {
+	content: "\F078";
+	position: relative;
+	left: -2px;
+	top: 1px;
+}
+.upvote:hover,
+.upvote.selected {
+	text-shadow:
+		0 0 0.5px #fff, 
+		0 0 8px #0f0;
+}
+.downvote:hover,
+.downvote.selected {
+	text-shadow:
+		0 0 0.5px #fff, 
+		0 0 8px #f00;
+}
+.post-meta .lw2-link,
+.comment-meta .lw2-link {
+	opacity: 0.5;
+}
+.post-body a:link,
+.comment-body a:link {
+	color: #f60;
+}
+.post-body a:visited,
+.comment-body a:visited {
+	color: #ff943b;
+}
+.post-body,
+.comment-body {
+	font-family: Source Sans Pro, Trebuchet MS, Helvetica, Arial, Verdana, sans-serif;
+	font-weight: 400;
+}
+@-moz-document url-prefix() {
+	.post-body, .comment-body {
+		font-weight: 300;
+	}
+}
+.post-body {
+	font-size: 1.1875rem;
+	line-height: 1.6;
+}
+@media (-webkit-max-device-pixel-ratio: 1), (max-resolution: 191dpi) { 
+	.post-body {
+		font-size: 1.125rem;
+	}
+}
+.comment-body {
+	font-size: 1.125rem;
+}
+.comment-meta a {
+	color: #222;
+}
+.comment-meta .author {
+	color: #999;
+	font-weight: 600;
+}
+
+button,
+input[type='submit'] {
+	color: #f60;
+}
+.guiedit-buttons-container button {
+	color: #00e;
+}
+#markdown-hints-checkbox + label {
+	color: #999;
+}
+
+#theme-selector button,
+#width-selector button {
+	box-shadow:
+		0 0 0 4px #eee inset,
+		0 0 0 5px #ccc inset;
+}
+#theme-selector button:hover,
+#theme-selector button.selected,
+#width-selector button:hover,
+#width-selector button.selected {
+	box-shadow:
+		0 0 0 5px #ccc inset;
+}
+#bottom-bar a[href='#top']:hover::after,
+.post-meta a[href='#comments']:hover::after,
+.post-meta a[href='#bottom-bar']:hover::after  {
+	color: #000;
+	background-color: #d8d8d8;
+}
+
+.new-comment::before {
+	outline: 2px solid #9037ff;
+	box-shadow:
+		0 0 6px -2px #9037ff inset, 
+		0 0 4px #9037ff, 
+		0 0 6px #9037ff;
+}
+
+.archive-nav a:link,
+.archive-nav a:visited {
+	color: #888;
+}
+#content.search-results-page .post-meta .author, 
+#content.user-page .post-meta .author {
+	font-weight: normal;
+}
+#content.search-results-page h1.listing a[href^='http'],
+#content.user-page h1.listing a[href^='http'] {
+	top: 6px;
+}
+
+.contents {
+	padding-right: 0.5em;
+}
+.post-body .contents a:link {
+	color: #d64400;
+}
+.post-body .contents ul {
+	font-size: 0.85em;
+}	

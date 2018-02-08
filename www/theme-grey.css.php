@@ -149,6 +149,12 @@ a:hover {
 .post-body,
 .comment-body {
 	font-family: Source Sans Pro, Trebuchet MS, Helvetica, Arial, Verdana, sans-serif;
+	font-weight: 400;
+}
+@-moz-document url-prefix() {
+	.post-body, .comment-body {
+		font-weight: <?php global $platform; echo ($platform == 'Windows' ? '300' : '400'); ?>;
+	}
 }
 .post-body {
 	font-size: 1.1875rem;
