@@ -1803,7 +1803,7 @@ a.comment-parent-link:hover::after {
 #edit-post-form select:focus {
 	outline: none;
 }
-#content {
+#content.edit-post-page {
 	overflow: visible;
 }
 
