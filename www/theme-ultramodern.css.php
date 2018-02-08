@@ -58,6 +58,14 @@ body {
 		0.5px 0.5px 1px #aaa,
 		0.5px 0.5px 1px #bbb;
 }
+h1 strong,
+h2 strong,
+h3 strong,
+h4 strong,
+h5 strong,
+h6 strong {
+	font-weight: normal;
+}
 .contents {
 	font-family: Raleway;
 	border: none;
@@ -191,4 +199,23 @@ h1.listing a:hover {
 		0 0 1px #f60,
 		0 0 2px #f60,
 		0 0 3px #f60;
+}
+
+.comment-item {
+	border: none;
+}
+.new-comment::before {
+	display: none;
+}
+.new-comment {
+	border: 1px solid #e00;
+	box-shadow: 
+		0 0 1px #f00, 
+		0 0 1px #f00 inset;
+}
+a.comment-parent-link::after {
+	display: none;
+}
+a.comment-parent-link:hover::before {
+	background-color: transparent;
 }
