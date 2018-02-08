@@ -1666,7 +1666,8 @@ a.comment-parent-link:hover::after {
 	padding: 6px 12px;
 }
 #edit-post-form .link-post-checkbox {
-	visibility: hidden;
+  height: 0;
+	opacity: 0;
 }
 #edit-post-form .link-post-checkbox + label {
 	padding-left: 6px;
@@ -1690,13 +1691,15 @@ a.comment-parent-link:hover::after {
 	left: -20px;
 	top: 4px;
 }
-#edit-post-form .link-post-checkbox + label:hover {
+#edit-post-form .link-post-checkbox + label:hover,
+#edit-post-form .link-post-checkbox:focus + label {
 	text-shadow: 
 		0 0 1px #fff,
 		0 0 2px #fff,
 		0 0 2.5px #aaa;
 }
-#edit-post-form .link-post-checkbox + label:hover::before {
+#edit-post-form .link-post-checkbox + label:hover::before,
+#edit-post-form .link-post-checkbox:focus + label::before {
 	border-color: #aaa;
 }
 #edit-post-form .link-post-checkbox:checked + label::before {
@@ -1789,7 +1792,7 @@ a.comment-parent-link:hover::after {
 #edit-post-form select:focus {
 	outline: none;
 }
-#content.edit-post-page {
+#content {
 	overflow: visible;
 }
 
