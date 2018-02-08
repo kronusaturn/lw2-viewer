@@ -1,3 +1,7 @@
+/**************/
+/* GREY THEME */
+/**************/
+
 body {
     background: #eee;
 }

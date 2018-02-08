@@ -2571,6 +2571,10 @@ ol {
 	}
 }
 
+/**************/
+/* GREY THEME */
+/**************/
+
 body {
     background: #eee;
 }
@@ -2810,6 +2814,10 @@ input[type='submit'] {
 .post-body .contents ul {
 	font-size: 0.85em;
 }	
+/*********************/
+/* ULTRAMODERN THEME */
+/*********************/
+
 body {
 	font-family: Proxima Nova;
 	font-weight: 300;
