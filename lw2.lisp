@@ -369,6 +369,12 @@
 				     (setf (hunchentoot:return-code*) 301
 					   (hunchentoot:header-out "Location") location)))) 
 
+(hunchentoot:define-easy-handler (view-post-lw2-slug-link :uri (lambda (r) (match-lw2-slug-link (hunchentoot:request-uri r)))) ()
+                                 (with-error-page
+                                   (let ((location (convert-lw2-slug-link (hunchentoot:request-uri*))))
+                                     (setf (hunchentoot:return-code*) 303
+                                           (hunchentoot:header-out "Location") location))))
+
 (hunchentoot:define-easy-handler (view-feed :uri "/feed") (view meta before after)
 				 (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
 				 (let ((posts (lw2-graphql-query (make-posts-list-query :view (or view "new") :meta (not (not meta)) :before before :after after)))
@@ -514,7 +520,7 @@
 (hunchentoot:define-easy-handler (view-search :uri "/search") (q)
 				 (with-error-page
 				   (let ((*current-search-query* q)
-					 (link (or (convert-lw2-link q) (convert-lw1-link q))))
+					 (link (or (convert-lw2-link q) (convert-lw2-slug-link q) (convert-lw1-link q))))
 				     (declare (special *current-search-query*))
 				     (if link
 				       (setf (hunchentoot:return-code*) 301
