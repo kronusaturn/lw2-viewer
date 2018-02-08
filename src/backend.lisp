@@ -64,10 +64,14 @@
       (if want-close (close req-stream)))))
 
 (defun lw2-graphql-query-noparse (query &key auth-token)
-    (octets-to-string (drakma:http-request *graphql-uri* :parameters (list (cons "query" query))
-			 :cookie-jar *cookie-jar* :additional-headers (if auth-token `(("authorization" . ,auth-token)) nil)
-			 :want-stream nil :close t)
-		      :external-format :utf-8)) 
+  (multiple-value-bind (response-body status-code headers final-uri reuse-stream want-close status-string)
+    (drakma:http-request *graphql-uri* :parameters (list (cons "query" query))
+                         :cookie-jar *cookie-jar* :additional-headers (if auth-token `(("authorization" . ,auth-token)) nil)
+                         :want-stream nil :close t)
+    (declare (ignore headers final-uri reuse-stream want-close))
+    (if (= status-code 200)
+        (octets-to-string response-body :external-format :utf-8)
+        (error "Error while contacting LW2: ~A ~A" status-code status-string))))
 
 (defun decode-graphql-json (json-string)
   (let* ((decoded (json:decode-json-from-string json-string))
