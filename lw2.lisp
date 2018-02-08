@@ -659,6 +659,10 @@
 
 (define-versioned-resource "/style.css" "text/css")
 (define-versioned-resource "/style.windows.css" "text/css")
+(define-versioned-resource "/style-dark.css" "text/css")
+(define-versioned-resource "/style-dark.windows.css" "text/css")
+(define-versioned-resource "/style-grey.css" "text/css")
+(define-versioned-resource "/style-grey.windows.css" "text/css")
 (define-versioned-resource "/script.js" "text/javascript") 
 (define-versioned-resource "/guiedit.js" "text/javascript") 
 (define-versioned-resource "/favicon.ico" "image/x-icon") 
