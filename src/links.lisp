@@ -1,6 +1,6 @@
 (defpackage #:lw2.links
   (:use #:cl #:lw2.lmdb #:lw2.backend #:lw2-viewer.config)
-  (:export #:match-lw1-link #:convert-lw1-link #:match-lw2-link #:convert-lw2-link #:generate-post-link))
+  (:export #:match-lw1-link #:convert-lw1-link #:match-lw2-link #:match-lw2-slug-link #:convert-lw2-link #:convert-lw2-slug-link #:generate-post-link))
 
 (in-package #:lw2.links)
 
@@ -29,9 +29,19 @@
     (when match?
       (values (elt strings 0) (elt strings 2) (elt strings 1))))) 
 
+(defun match-lw2-slug-link (link)
+  (multiple-value-bind (match? strings) (ppcre:scan-to-strings "^(?:https?://(?:www.)?lesserwrong.com)?/(?:codex|hpmor)/([^/#]+)(?:/?#?([^/#]+)?)?" link)
+    (when match?
+      (values (elt strings 0) (elt strings 1)))))
+
 (labels
   ((gen-internal (post-id slug comment-id &optional absolute-uri)
 		 (format nil "~Aposts/~A/~A~@[#comment-~A~]" (if absolute-uri *site-uri* "/") post-id (or slug "-") comment-id))) 
+
+  (defun convert-lw2-slug-link (link)
+    (multiple-value-bind (slug comment-id) (match-lw2-slug-link link)
+      (when slug
+        (gen-internal (get-slug-postid slug) slug comment-id))))
 
   (defun convert-lw2-link (link)
     (multiple-value-bind (post-id comment-id slug) (match-lw2-link link)

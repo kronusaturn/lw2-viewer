@@ -3,7 +3,7 @@
   (:export #:log-condition #:log-conditions #:start-background-loader #:stop-background-loader
 	   #:lw2-graphql-query-streamparse #:lw2-graphql-query-noparse #:decode-graphql-json #:lw2-graphql-query #:graphql-query-string #:make-posts-list-query
 	   #:get-posts #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
-	   #:lw2-search-query #:get-post-title #:get-post-slug #:get-username #:get-user-slug))
+	   #:lw2-search-query #:get-post-title #:get-post-slug #:get-slug-postid #:get-username #:get-user-slug))
 
 (in-package #:lw2.backend)
 
@@ -214,6 +214,9 @@
 
 (simple-cacheable ("post-slug" "postid-to-slug" post-id)
   (cdr (first (lw2-graphql-query (format nil "{PostsSingle(documentId:\"~A\") {slug}}" post-id)))))
+
+(simple-cacheable ("slug-postid" "slug-to-postid" slug)
+  (cdr (first (lw2-graphql-query (format nil "{PostsSingle(slug:\"~A\") {_id}}" slug)))))
 
 (simple-cacheable ("username" "userid-to-displayname" user-id)
   (cdr (first (lw2-graphql-query (format nil "{UsersSingle(documentId:\"~A\") {displayName}}" user-id))))) 
