@@ -1668,6 +1668,7 @@ a.comment-parent-link:hover::after {
 #edit-post-form .link-post-checkbox {
   height: 0;
 	opacity: 0;
+	pointer-events: none;
 }
 #edit-post-form .link-post-checkbox + label {
 	padding-left: 6px;
@@ -1737,7 +1738,10 @@ a.comment-parent-link:hover::after {
 	margin: 0.35em 0;
 }
 #edit-post-form input[type='radio'] {
-	display: none;
+	width: 0;
+	margin: -5px;
+	opacity: 0;
+	pointer-events: none;
 }
 #edit-post-form input[type='radio'] + label {
 	margin: 0.35em 0;
@@ -1757,9 +1761,16 @@ a.comment-parent-link:hover::after {
 	border-radius: 0 8px 8px 0;
 	border-width: 1px;
 }
-#edit-post-form input[type='radio'] + label:hover {
+#edit-post-form input[type='radio'] + label:hover,
+#edit-post-form input[type='radio']:focus + label {
 	background-color: #ddd;
 	color: #000;
+}
+#edit-post-form input[type='radio']:focus + label {
+	color: #000;
+	position: relative;
+	box-shadow: 
+		0 0 0 1px #aaa;
 }
 #edit-post-form input[type='radio']:checked + label {
 	background-color: #ddd;
