@@ -383,13 +383,20 @@ function injectThemeSelector() {
 			color: #f60;
 			background-color: #eee;
 			font-weight: 600;
+		}
+		#theme-selector button.select-theme-ultramodern,
+		#theme-selector button.select-theme-ultramodern:hover {
+			color: #f60;
+			background-color: #888;
+			font-weight: 400;
 		}` + "</style>");
 
 	let currentTheme = window.localStorage.getItem("selected-theme") || "default";
 	let themeOptions = [
 		['default', 'Default theme (dark text on light background)'],
 		['dark', 'Dark theme (light text on dark background)'],
-		['grey', 'Grey theme (more subdued than default theme)']
+		['grey', 'Grey theme (more subdued than default theme)'],
+		['ultramodern', 'Very hip']
 	];
 	let themeSelector = addUIElement(
 		"<div id='theme-selector'>" +
