@@ -1758,30 +1758,46 @@ a.comment-parent-link:hover::after {
 	width: 4em;
 }
 #edit-post-form label[for='section'] {
-	margin: 0.25em 0;
-}
-#edit-post-form label[for='section'] ~ label {
-	width: auto;
-	margin: 0.3em 0.5em 0 -0.85em;
-	text-align: left;
-	padding-left: 1.6em;
+	margin: 0.35em 0;
 }
 #edit-post-form input[type='radio'] {
-	margin: 0.85em 0 0 0;
-	position: relative;
-	left: 0.4em;
-	pointer-events: none;
+	display: none;
+}
+#edit-post-form input[type='radio'] + label {
+	margin: 0.35em 0;
+	width: auto;
+	color: #000;
+	padding: 0.25em 0.75em;
+	text-align: center;
+	border-color: #ddd;
+	border-style: solid;
+	border-width: 1px 0;
+}
+#edit-post-form input[type='radio'][value='frontpage'] + label {
+	border-radius: 8px 0 0 8px;
+	border-width: 1px;
+}
+#edit-post-form input[type='radio'][value='meta'] + label {
+	border-radius: 0 8px 8px 0;
+	border-width: 1px;
 }
 #edit-post-form input[type='radio'] + label:hover {
-	border: 1px solid #bbb;
-	border-radius: 6px;
+	background-color: #ddd;
+	text-shadow: 
+		0 0 1px #fff,
+		0 0 3px #fff,
+		0 0 5px #fff;
 }
 #edit-post-form input[type='radio']:checked + label {
-	border: 1px solid #777;
-	border-radius: 6px;
+	background-color: #ddd;
+	border-color: #ddd;
+	text-shadow: 
+		0 -1px 0 #fff,
+		0 0.5px 0.5px #000;
 }
 #edit-post-form textarea {
 	min-height: 24em;
+	margin-top: 4px;
 }
 #edit-post-form .guiedit-buttons-container {
 	top: -3px;
