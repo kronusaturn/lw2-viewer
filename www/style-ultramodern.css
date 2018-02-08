@@ -3033,3 +3033,10 @@ a.comment-parent-link::after {
 a.comment-parent-link:hover::before {
 	background-color: transparent;
 }
+
+.post-meta .new-comments-count {
+	text-shadow: none;
+}
+.post-meta .new-comments-count::after {
+	color: #666;
+}
