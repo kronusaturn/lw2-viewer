@@ -226,3 +226,8 @@ a.comment-parent-link:hover::before {
 .post-meta .new-comments-count::after {
 	color: #666;
 }
+
+.post-body strong,
+.comment-body strong {
+	font-weight: 500;
+}
