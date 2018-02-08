@@ -32,6 +32,9 @@ body {
 .nav-bar {
 	box-shadow: none;
 }
+a:hover {
+	text-decoration: dotted underline;
+}
 #primary-bar .nav-item,
 #primary-bar .nav-item:hover,
 #secondary-bar .nav-item,
@@ -55,6 +58,12 @@ body {
 }
 .nav-bar:nth-of-type(2) {
 	border-bottom: 2px solid #000;
+}
+
+.nav-current .nav-inner {
+	box-shadow: 
+		0 0 0 4px #fff inset,
+		0 0 0 6px #000 inset;
 }
 
 .contents {
