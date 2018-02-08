@@ -225,6 +225,9 @@ input[type='submit'] {
 .contents {
 	padding-right: 0.5em;
 }
+.post-body .contents a:link {
+	color: #d64400;
+}
 .post-body .contents ul {
 	font-size: 0.85em;
 }	
