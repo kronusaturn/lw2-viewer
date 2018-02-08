@@ -32,6 +32,9 @@
   // turn a double hyphen, optionally surrounded by spaces, between words, into an em-dash
   [/([a-z]) ?-- ?([a-z])/ig, '$1\u2014$2'],
   
+  // Two spaces after a period is INCORRECT.
+  [ /(\w[\.\?\!])  (\w)/g, '$1 $2'],
+  
   // ellipsis rectification
   [/(\s)\.\.\./g, '$1…'],
   [/\.\.\.(\s)/g, '…$1'],
