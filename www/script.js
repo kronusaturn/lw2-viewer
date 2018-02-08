@@ -401,7 +401,6 @@ function injectThemeSelector() {
 			color: #000;
 			background-color: #fff;
 			font-weight: 400;
-			border: 1px dotted #000;
 		}` + "</style>");
 
 	let currentTheme = window.localStorage.getItem("selected-theme") || "default";
