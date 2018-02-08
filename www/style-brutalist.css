@@ -2706,8 +2706,17 @@ button,
 .button,
 input[type='submit'],
 .rss,
-.rss:visited {
+.rss:visited,
+.new-post,
+.new-post:visited,
+.edit-post,
+.edit-post:visited {
 	color: inherit;
+}
+.button:hover {
+	color: inherit;
+	text-shadow: none;
+	text-decoration: dotted underline;
 }
 .rss::before {
 	filter: grayscale(100%);
