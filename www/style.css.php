@@ -2098,7 +2098,18 @@ ol {
 
 @media only screen and (max-width: 1020px) {
 	.post-meta .new-comment-sequential-nav-button {
+		right: calc((100vw - 900px) / 2 - 80px);
 		z-index: 3;
+	}
+	.post-meta .new-comment-previous {
+		bottom: 249px;
+	}
+	.post-meta .new-comments-count {
+		right: calc((100vw - 900px) / 2 - 71px);
+		bottom: 224px;
+	}
+	.post-meta .new-comment-next {
+		bottom: 198px;
 	}
 	.post-meta .new-comments-count::before {
 		content: "";
@@ -2111,6 +2122,14 @@ ol {
 		top: -22px;
 		box-shadow: 0 0 2px #eee;
 		border-radius: 8px;
+	}
+	#bottom-bar a[href='#top']::after, 
+	.post-meta a[href='#comments']::after, 
+	.post-meta a[href='#bottom-bar']::after {
+		right: calc((100vw - 900px) / 2 - 51px);
+	}
+	#width-selector {
+		display: none;
 	}
 }
 @media only screen and (max-width: 900px) {
@@ -2170,6 +2189,15 @@ ol {
 	.post-meta .new-comments-count {
 		right: 4px;
 		z-index: 2;
+	}
+	.post-meta .new-comment-previous {
+		bottom: 99px;
+	}
+	.post-meta .new-comments-count {
+		bottom: 74px;
+	}
+	.post-meta .new-comment-next {
+		bottom: 48px;
 	}
 }
 @media only screen and (max-width: 768px) {
