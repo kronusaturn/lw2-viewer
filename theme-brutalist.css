@@ -1,0 +1,169 @@
+body {
+	background-color: #fff;
+	font-family: Anonymous Pro;
+}
+#content {
+	box-shadow: none;
+	border-style: solid;
+	border-color: #000;
+	border-width: 0 2px;
+}
+.post-body,
+.comment-body {
+	font-family: Input Sans;
+	font-weight: 200;
+}
+.post-body {
+	font-size: 1.125rem;
+}
+.post-body a,
+.comment-body a {
+	color: inherit;
+	border-bottom: 2px dotted #000;
+}
+.post-body a:hover,
+.comment-body a:hover {
+	text-decoration: none;
+	color: #999;
+}
+.comment-body {
+	font-size: 1rem;
+}
+.nav-bar {
+	box-shadow: none;
+}
+#primary-bar .nav-item,
+#primary-bar .nav-item:hover,
+#secondary-bar .nav-item,
+#secondary-bar .nav-item:hover,
+.nav-bar a:link,
+.nav-bar a:visited,
+.nav-bar a:hover {
+	box-shadow: none;
+	border: none;
+	background-color: transparent !important;
+	color: #000;
+}
+.nav-bar a:hover,
+.rss:hover {
+	box-shadow: none;
+	border: none;
+	text-decoration: dotted underline;
+}
+.nav-inner::after {
+	display: none;
+}
+.nav-bar:nth-of-type(2) {
+	border-bottom: 2px solid #000;
+}
+
+.contents {
+	border: 2px solid #000;
+	background-color: transparent;
+	font-family: Anonymous Pro;
+}
+.post-body .contents ul {
+	font-size: 0.9375em;
+}
+.contents-head {
+	font-size: 1.125em;
+}
+.contents ul a {
+	border-bottom: 2px dotted #999;
+}
+
+.post-body h1, 
+.post-body h2, 
+.post-body h3, 
+.post-body h4, 
+.post-body h5, 
+.post-body h6 {
+	font-family: Anonymous Pro;
+}
+.post h1:first-child {
+	font-family: Anonymous Pro;
+	font-size: 2.25rem;
+}
+.post-body h1 {
+	border-bottom: 2px solid #000;
+}
+
+h1.listing {
+	font-family: Anonymous Pro;
+	font-size: 1.75rem;
+}
+
+#comments {
+	border-top: 2px solid #000;
+	box-shadow: none;
+}
+
+.post-meta > *,
+.post-meta .author,
+.post-meta .date,
+.post-meta .comment-count,
+.post-meta .lw2-link,
+.comment-meta .date,
+.comment-meta .lw2-link,
+.comment-meta .comment-parent-link {
+	color: inherit;
+}
+
+.comment-item {
+	background-color: transparent;
+	border: 2px solid #000;
+}
+.new-comment::before {
+	display: none;
+}
+.new-comment {
+	border: 2px dotted #000;
+}
+
+button,
+.button,
+input[type='submit'],
+.rss,
+.rss:visited {
+	color: inherit;
+}
+.rss::before {
+	filter: grayscale(100%);
+}
+
+#nav-item-search input {
+	border: 1px solid #000;
+}
+#nav-item-search input:focus {
+	border: 1px dashed #000;
+	background-color: transparent;
+}
+#nav-item-search button:hover {
+	color: #000;
+	text-decoration: dotted underline;
+}
+
+#theme-selector button {
+	box-shadow:
+		0 0 0 5px #fff inset;
+}
+#theme-selector button:hover,
+#theme-selector button.selected {
+	box-shadow:
+		0 0 0 2px #fff inset,
+		0 0 0 3px #000 inset,
+		0 0 0 5px #fff inset;
+}
+#width-selector button {
+	box-shadow:
+		0 0 0 4px #fff inset,
+		0 0 0 5px #000 inset;
+}
+#width-selector button:hover,
+#width-selector button.selected {
+	box-shadow:
+		0 0 0 1px #fff inset,
+		0 0 0 2px #000 inset,
+		0 0 0 4px #fff inset,
+		0 0 0 5px #000 inset;
+}

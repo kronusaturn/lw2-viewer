@@ -395,6 +395,13 @@ function injectThemeSelector() {
 			color: #00e;
 			background-color: #eee;
 			font-weight: 400;
+		}
+		#theme-selector button.select-theme-brutalist,
+		#theme-selector button.select-theme-brutalist:hover {
+			color: #000;
+			background-color: #fff;
+			font-weight: 400;
+			border: 1px dotted #000;
 		}` + "</style>");
 
 	let currentTheme = window.localStorage.getItem("selected-theme") || "default";
@@ -403,7 +410,8 @@ function injectThemeSelector() {
 		['dark', 'Dark theme (light text on dark background)'],
 		['grey', 'Grey theme (more subdued than default theme)'],
 		['ultramodern', 'Ultramodern theme (very hip)'],
-		['zero', 'Simple theme with no custom fonts']
+		['zero', 'Simple theme with no custom fonts'],
+		['brutalist', 'Brutalist theme (the Motherland calls!)']
 	];
 	let themeSelector = addUIElement(
 		"<div id='theme-selector'>" +
