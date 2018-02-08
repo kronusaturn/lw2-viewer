@@ -35,7 +35,6 @@ input {
 	padding: 0 30px;
 	overflow: auto;
 	max-width: 900px;
-/* 	min-height: 100vh; */
 	line-height: 1.55;
 	position: relative;
 }
