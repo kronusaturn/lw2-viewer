@@ -2943,6 +2943,9 @@ body {
 #nav-item-search.nav-current:focus-within {
 	background-color: transparent;
 }
+#nav-item-search form::before {
+	font-weight: 900;
+}
 .nav-bar a, 
 #nav-item-search button, 
 .button, 
