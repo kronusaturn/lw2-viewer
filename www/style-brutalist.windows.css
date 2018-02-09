@@ -2735,6 +2735,10 @@ h1.listing a {
 .comment-meta .comment-parent-link {
 	color: inherit;
 }
+.comment-meta .author:hover {
+	color: inherit;
+	text-decoration: dotted underline;
+}
 
 .comment-item {
 	background-color: transparent !important;
