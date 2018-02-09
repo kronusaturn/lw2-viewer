@@ -126,7 +126,33 @@ input {
 	float: left;
 	width: 100%;
 }
-.nav-bar a:link,
+#bottom-bar #nav-item-top a::before,
+#bottom-bar #nav-item-prev a::before,
+#bottom-bar #nav-item-next a::before {
+	font-family: Font Awesome;
+	font-weight: 900;
+	font-size: 0.8em;
+	position: relative;
+	bottom: 1px;
+}
+#bottom-bar #nav-item-top a::before {
+	content: "\F062";
+	margin-right: 0.5em;
+}
+#bottom-bar #nav-item-prev a::before {
+	content: "\F060";
+	margin-right: 0.5em;
+	bottom: 1px;
+}
+#bottom-bar #nav-item-next a::before {
+	content: "\F061";
+	margin-left: -1em;
+	left: 4em;
+}
+#bottom-bar .nav-item:first-child,
+#bottom-bar .nav-item:last-child {
+	width: 30%;
+}.nav-bar a:link,
 .nav-bar a:visited {
 	color: #00e;
 }
