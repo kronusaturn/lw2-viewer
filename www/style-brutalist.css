@@ -2680,6 +2680,9 @@ h1.listing {
 	font-family: Anonymous Pro;
 	font-size: 1.75rem;
 }
+h1.listing a {
+	padding: 0 0 0 1.5px;
+}
 
 #comments {
 	border-top: 2px solid #000;
