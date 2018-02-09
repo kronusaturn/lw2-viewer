@@ -3,7 +3,7 @@ body {
 	font-family: Anonymous Pro;
 }
 #content {
-	box-shadow: none;
+	box-shadow: 0 2px 0 #000;
 	border-style: solid;
 	border-color: #000;
 	border-width: 0 2px;
@@ -118,6 +118,7 @@ h1.listing {
 .post-meta .date,
 .post-meta .comment-count,
 .post-meta .lw2-link,
+.comment-meta a,
 .comment-meta .date,
 .comment-meta .lw2-link,
 .comment-meta .comment-parent-link {
@@ -248,4 +249,34 @@ a.comment-parent-link:hover::before {
 .comment-controls .cancel-comment-button {
 	color: #fff;
 	text-shadow: none;
+}
+
+.archive-nav {
+	border: 2px solid #000;
+}
+.archive-nav *[class^='archive-nav-item'] {
+  background-color: transparent;
+	border: none;
+}
+.archive-nav a:link,
+.archive-nav a:visited {
+	color: inherit;
+}
+.archive-nav span[class^="archive-nav-item"],
+.archive-nav a:hover {
+	background-color: transparent;
+	box-shadow: 
+		0 0 0 1px #fff inset,
+		0 0 0 3px #000 inset;
+}
+.archive-nav span.archive-nav-item-day,
+.archive-nav a.archive-nav-item-day:hover {
+	box-shadow: 
+		0 1px 0 1px #fff inset,
+		0 1px 0 3px #000 inset;
+	background-color: transparent;
+} 
+.archive-nav .archive-nav-item-day:first-child,
+.archive-nav a.archive-nav-item-day:first-child:hover {
+	padding-left: 2px;
 }
