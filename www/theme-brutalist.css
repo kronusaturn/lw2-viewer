@@ -56,9 +56,11 @@ a:hover {
 .rss:hover {
 	box-shadow: none;
 	border: none;
+}
+.rss:hover {
 	text-decoration: dotted underline;
 }
-.nav-inner::after {
+#primary-bar .nav-inner::after {
 	display: none;
 }
 .nav-bar:nth-of-type(2) {
@@ -104,8 +106,10 @@ a:hover {
 }
 
 h1.listing {
-	font-family: Anonymous Pro;
 	font-size: 1.75rem;
+}
+h1.listing a[href^='/'] {
+	font-family: Anonymous Pro;
 }
 h1.listing a {
 	padding: 0 0 0 1.5px;
