@@ -45,12 +45,18 @@ body {
 		0.5px 0.5px 1px #aaa,
 		0.5px 0.5px 1px #bbb;
 }
-h1, 
-h2, 
-h3, 
-h4, 
-h5, 
-h6 {
+.post-body h1, 
+.post-body h2, 
+.post-body h3, 
+.post-body h4, 
+.post-body h5, 
+.post-body h6,
+.comment-body h1, 
+.comment-body h2, 
+.comment-body h3, 
+.comment-body h4, 
+.comment-body h5, 
+.comment-body h6 {
 	font-family: Raleway;
 	font-weight: 100;
 	text-shadow: 
