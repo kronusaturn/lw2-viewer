@@ -2868,8 +2868,9 @@ a.comment-parent-link:hover::before {
 	border: 2px solid #000;
 }
 .archive-nav *[class^='archive-nav-item'] {
-  background-color: transparent;
+	background-color: transparent;
 	border: none;
+	padding: 6px 4px 5px 7px;
 }
 .archive-nav a:link,
 .archive-nav a:visited {
@@ -2884,14 +2885,11 @@ a.comment-parent-link:hover::before {
 }
 .archive-nav span.archive-nav-item-day,
 .archive-nav a.archive-nav-item-day:hover {
-	box-shadow: 
-		0 1px 0 1px #fff inset,
-		0 1px 0 3px #000 inset;
 	background-color: transparent;
 } 
 .archive-nav .archive-nav-item-day:first-child,
 .archive-nav a.archive-nav-item-day:first-child:hover {
-	padding-left: 2px;
+	padding-left: 6px;
 }
 
 .vote {
