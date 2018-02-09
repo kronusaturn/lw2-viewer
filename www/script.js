@@ -393,7 +393,7 @@ function injectThemeSelector() {
 		#theme-selector button.select-theme-zero,
 		#theme-selector button.select-theme-zero:hover {
 			color: #00e;
-			background-color: #eee;
+			background-color: #ccc;
 			font-weight: 400;
 		}
 		#theme-selector button.select-theme-brutalist,
