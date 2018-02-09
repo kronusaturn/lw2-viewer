@@ -3128,3 +3128,28 @@ blockquote {
 .comment-popup {
 	background-color: #949494;
 }
+
+.archive-nav {
+	border: 1px solid #ccc;
+}
+.archive-nav *[class^='archive-nav-item'] {
+	background-color: transparent;
+	border: none;
+}
+.archive-nav a:link,
+.archive-nav a:visited {
+	color: inherit;
+}
+.archive-nav span[class^="archive-nav-item"],
+.archive-nav a:hover {
+	font-weight: normal;
+	background-color: transparent;
+	box-shadow: 
+		0 0 0 1px #ccc inset,
+		0 0 0 2px #888 inset;
+	text-shadow: none;
+}
+.archive-nav span.archive-nav-item-day,
+.archive-nav a.archive-nav-item-day:hover {
+	background-color: transparent;
+}
