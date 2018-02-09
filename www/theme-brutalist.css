@@ -213,9 +213,11 @@ button:hover,
 a.comment-parent-link::after {
 	display: none;
 }
+a.comment-parent-link::before {
+	padding: 4px 3px 0 2px;
+}
 a.comment-parent-link:hover::before {
 	background-color: transparent;
-	padding: 4px 3px 0 2px;
 }
 
 #bottom-bar a[href='#top']::after, 
