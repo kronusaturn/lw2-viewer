@@ -261,10 +261,10 @@
 	      (if next ))|#
     (write-string
       (nav-bar-outer "bottom-bar" nil (nav-bar-inner
-					`(,@(if (and prev (> prev 0)) `(("first" ,(replace-query-param request-uri "offset" nil) "⇤ Back to first")))
-					  ,@(if prev `(("prev" ,(replace-query-param request-uri "offset" (if (= prev 0) nil prev)) "← Previous" :nofollow t)))
-					   ("top" "#top" "↑ Back to top")
-					   ,@(if next `(("next" ,(replace-query-param request-uri "offset" next) "Next →" :nofollow t))))))
+					`(,@(if (and prev (> prev 0)) `(("first" ,(replace-query-param request-uri "offset" nil) "Back to first")))
+					  ,@(if prev `(("prev" ,(replace-query-param request-uri "offset" (if (= prev 0) nil prev)) "Previous" :nofollow t)))
+					   ("top" "#top" "Back to top")
+					   ,@(if next `(("next" ,(replace-query-param request-uri "offset" next) "Next" :nofollow t))))))
       out-stream)))
 
 (defun map-output (out-stream fn list)
