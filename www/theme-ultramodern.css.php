@@ -211,10 +211,8 @@ button:hover {
 	background-color: transparent;
 	box-shadow: 0 0 0 1px #ccc;
 }
-h1.listing {
-	font-family: Raleway;
-}
 h1.listing a[href^='/'] {
+	font-family: Raleway;
 	font-weight: 100;
 	text-shadow: 
 		0px 0px 1px #777,
