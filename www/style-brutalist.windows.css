@@ -2672,6 +2672,11 @@ a:hover {
 		0 0 0 4px #fff inset,
 		0 0 0 6px #000 inset;
 }
+.nav-bar .nav-item:not(#nav-item-search) .nav-inner:active {
+	box-shadow: 
+		0 0 0 8px #fff inset,
+		0 0 0 10px #000 inset;
+}
 
 .contents {
 	border: 2px solid #000;
