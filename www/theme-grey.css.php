@@ -17,9 +17,11 @@ h1.listing a {
     font-size: 1.5rem;
     color: #f60;
 }
+h1.listing a:hover {
+	overflow: hidden;
+}
 .listing a[href^='/'] {
 	font-weight: normal;
-	display: inline;
 }
 h1.listing a[href^='http'] {
 	font-size: 1.125rem;
