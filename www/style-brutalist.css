@@ -2612,6 +2612,8 @@ a:hover {
 #primary-bar .nav-item:hover,
 #secondary-bar .nav-item,
 #secondary-bar .nav-item:hover,
+#bottom-bar .nav-item,
+#bottom-bar .nav-item:hover,
 .nav-bar a:link,
 .nav-bar a:visited,
 .nav-bar a:hover {
@@ -2633,7 +2635,8 @@ a:hover {
 	border-bottom: 2px solid #000;
 }
 
-.nav-current .nav-inner {
+.nav-current .nav-inner,
+.nav-bar .nav-item:not(#nav-item-search) .nav-inner:hover {
 	box-shadow: 
 		0 0 0 4px #fff inset,
 		0 0 0 6px #000 inset;
@@ -2692,7 +2695,7 @@ h1.listing {
 }
 
 .comment-item {
-	background-color: transparent;
+	background-color: transparent !important;
 	border: 2px solid #000;
 }
 .new-comment::before {
@@ -2757,4 +2760,33 @@ input[type='submit'],
 		0 0 0 2px #000 inset,
 		0 0 0 4px #fff inset,
 		0 0 0 5px #000 inset;
+}
+
+a.comment-parent-link::after {
+	display: none;
+}
+a.comment-parent-link:hover::before {
+	background-color: transparent;
+	padding: 4px 3px 0 2px;
+}
+
+#bottom-bar a[href='#top']::after, 
+.post-meta a[href='#comments']::after, 
+.post-meta a[href='#bottom-bar']::after {
+	border-radius: 0;
+	color: #000;
+	background-color: transparent;
+	box-shadow: 
+		0 0 0 1px #fff,
+		0 0 0 3px #000;
+}
+#bottom-bar a[href='#top']:hover::after, 
+.post-meta a[href='#comments']:hover::after, 
+.post-meta a[href='#bottom-bar']:hover::after {
+	background-color: transparent;
+	box-shadow: 
+		0 0 0 1px #fff inset,
+		0 0 0 3px #000 inset,
+		0 0 0 1px #fff,
+		0 0 0 3px #000;
 }
