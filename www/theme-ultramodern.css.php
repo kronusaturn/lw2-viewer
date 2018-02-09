@@ -81,6 +81,10 @@ h6 strong {
 	border: none;
 	background-color: transparent;
 }
+.post-body .contents a:link,
+.post-body .contents a:visited {
+	color: inherit;
+}
 #primary-bar > *,
 #secondary-bar > *,
 #bottom-bar > * {
