@@ -3055,7 +3055,11 @@ h1.listing a:hover {
 }
 
 .comment-item {
-	border: none;
+	border-width: 0 0 0 1px;
+	border-color: #666;
+	box-shadow:
+		1.5px 0 1.5px -1.5px #bbb inset, 
+		1px 0 1px -1px #777 inset;
 }
 .new-comment::before {
 	display: none;
@@ -3068,6 +3072,9 @@ h1.listing a:hover {
 }
 a.comment-parent-link::after {
 	display: none;
+}
+a.comment-parent-link::before {
+	padding: 2px 3px 0 4px;
 }
 a.comment-parent-link:hover::before {
 	background-color: transparent;
