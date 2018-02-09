@@ -3010,6 +3010,27 @@ h6 strong {
 	color: #444;
 	font-weight: 300;
 }
+.nav-bar a:hover,
+.nav-bar a:focus {
+	text-shadow: none;
+}
+.button:hover {
+	text-shadow: none;
+	text-decoration: underline;
+}
+
+button:hover {
+	text-shadow: none;
+	color: unset;
+	text-decoration: underline;
+}
+
+#comments > .comment-controls > button,
+.comment + .comment-controls .action-button {
+	font-weight: normal;
+	color: #444;
+}
+
 #comments {
 	border-top: 1px solid transparent;
 	box-shadow: none;
@@ -3161,4 +3182,8 @@ blockquote {
 .archive-nav span.archive-nav-item-day,
 .archive-nav a.archive-nav-item-day:hover {
 	background-color: transparent;
+}
+
+.new-post::before {
+	color: #555;
 }
