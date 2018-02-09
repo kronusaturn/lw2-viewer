@@ -2589,9 +2589,12 @@ body {
 .post-body {
 	font-size: 1.125rem;
 }
+a:link,
+a:visited {
+	color: inherit;
+}
 .post-body a,
 .comment-body a {
-	color: inherit;
 	border-bottom: 2px dotted #000;
 }
 .post-body a:hover,
@@ -2713,10 +2716,15 @@ input[type='submit'],
 .new-post,
 .new-post:visited,
 .edit-post,
-.edit-post:visited {
+.edit-post:visited,
+#comments > .comment-controls .cancel-comment-button,
+#markdown-hints-checkbox + label {
 	color: inherit;
+	text-shadow: none;
 }
-.button:hover {
+button:hover,
+.button:hover,
+#markdown-hints-checkbox + label:hover {
 	color: inherit;
 	text-shadow: none;
 	text-decoration: dotted underline;
@@ -2789,4 +2797,28 @@ a.comment-parent-link:hover::before {
 		0 0 0 3px #000 inset,
 		0 0 0 1px #fff,
 		0 0 0 3px #000;
+}
+
+.guiedit-buttons-container {
+	background-image: none;
+	background-color: #000;
+	color: #fff;
+	box-shadow: 0 0 0 1px #000;
+}
+.posting-controls textarea {
+	border: 2px solid #000;
+	padding-top: 31px;
+	box-shadow: none;
+	font-family: Input Sans;
+	font-weight: 200;
+	font-size: 1rem;
+}
+.posting-controls textarea:focus {
+	background-color: transparent;
+	border: 2px dotted #000;
+	box-shadow: none;
+}
+.comment-controls .cancel-comment-button {
+	color: #fff;
+	text-shadow: none;
 }
