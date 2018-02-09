@@ -294,3 +294,18 @@ a.comment-parent-link:hover::before {
 .archive-nav a.archive-nav-item-day:first-child:hover {
 	padding-left: 2px;
 }
+
+.vote {
+	color: #ddd;
+}
+.post-meta .vote:hover,
+.comment-meta .vote:hover {
+	text-decoration: none;
+	color: inherit;
+}
+.upvote::before {
+	content: "\F0FE";
+}
+.downvote::before {
+	content: "\F146";
+}
