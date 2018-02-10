@@ -3042,6 +3042,11 @@ button.guiedit::after {
 	height: 25px;
 }
 
+.comment-controls .edit-button,
+.comment-controls .edit-button:hover {
+	color: inherit;
+}
+
 .post-meta .new-comment-sequential-nav-button:hover {
 	text-decoration: none;
 }
