@@ -208,6 +208,9 @@ input[type='submit']:active {
 		0 0 0 6px #000 inset;
 }
 
+.button:active {
+	transform: none;
+}
 #nav-item-search button:hover {
 	color: #000;
 	text-decoration: dotted underline;
@@ -223,6 +226,7 @@ input[type='submit']:active {
 		0 0 0 2px #fff inset,
 		0 0 0 3px #000 inset,
 		0 0 0 5px #fff inset;
+	text-decoration: none;
 }
 #width-selector button {
 	box-shadow:
@@ -425,4 +429,13 @@ a.comment-parent-link:hover::before {
 .markdown-hints {
 	border: 2px solid #000;
 	background-color: #fff;
+}
+button.guiedit:hover {
+	text-decoration: none;
+}
+button.guiedit::after {
+	font-family: Anonymous Pro;
+	color: #fff;
+	top: 2px;
+	height: 25px;
 }

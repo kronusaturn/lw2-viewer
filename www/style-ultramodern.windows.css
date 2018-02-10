@@ -3185,3 +3185,7 @@ blockquote {
 .new-post::before {
 	color: #555;
 }
+
+#content.user-page h1.page-main-heading {
+	border-bottom: 1px solid #777;
+}
