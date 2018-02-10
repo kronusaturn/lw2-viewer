@@ -2632,6 +2632,7 @@ a:visited {
 }
 .comment-body {
 	font-size: 1rem;
+	line-height: 1.5;
 }
 .nav-bar {
 	box-shadow: none;
@@ -3039,4 +3040,8 @@ button.guiedit::after {
 	color: #fff;
 	top: 2px;
 	height: 25px;
+}
+
+.post-meta .new-comment-sequential-nav-button:hover {
+	text-decoration: none;
 }
