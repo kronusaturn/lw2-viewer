@@ -26,7 +26,7 @@
   (loop
     (ignore-errors 
       (log-conditions 
-	(let ((posts-json (get-posts-json)))
+	(let ((posts-json (sb-ext:with-timeout 120 (get-posts-json))))
 	  (when (and posts-json (ignore-errors (json:decode-json-from-string posts-json)))
 	    (cache-put "index-json" "new-not-meta" posts-json)
 	    (let ((posts-list (decode-graphql-json posts-json))) 
@@ -38,7 +38,7 @@
 			 (lmdb-put-string db (cdr (assoc :--id post)) (cdr (assoc :slug post))))))))))
     (ignore-errors
       (log-conditions
-	(let ((recent-comments-json (get-recent-comments-json)))
+	(let ((recent-comments-json (sb-ext:with-timeout 120 (get-recent-comments-json))))
 	  (if (and recent-comments-json (ignore-errors (json:decode-json-from-string recent-comments-json)))
 	    (cache-put "index-json" "recent-comments" recent-comments-json))))) 
     (sleep 60))) 
