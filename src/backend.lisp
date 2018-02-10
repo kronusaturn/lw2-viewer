@@ -141,7 +141,7 @@
 	       fields)))
 
 (declaim (inline make-posts-list-query)) 
-(defun make-posts-list-query (&key (view "frontpage") (limit 20) (meta nil) (before nil) (after nil) (with-body nil))
+(defun make-posts-list-query (&key (view "frontpage-rss") (limit 20) (meta nil) (before nil) (after nil) (with-body nil))
   (declare (type string view)
 	   (type (integer 1) limit)
 	   (type boolean meta)
