@@ -1700,6 +1700,7 @@ a.comment-parent-link:hover::after {
 	margin-left: 0.5em;
 	white-space: nowrap;
 	position: relative;
+	cursor: pointer;
 }
 #edit-post-form .link-post-checkbox + label::before {
 	content: "";
@@ -1777,6 +1778,7 @@ a.comment-parent-link:hover::after {
 	border-color: #ddd;
 	border-style: solid;
 	border-width: 1px 0;
+	cursor: pointer;
 }
 #edit-post-form input[type='radio'][value='frontpage'] + label {
 	border-radius: 8px 0 0 8px;
