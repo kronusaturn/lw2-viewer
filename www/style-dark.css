@@ -676,6 +676,7 @@ h1.listing a:nth-of-type(2) {
 		-ms-hyphens: auto;
 		hyphens: auto;
 		z-index: 1;
+		padding: 0 0 0 1px;
 	}
 	h1.listing a:nth-of-type(2) {
 		max-width: calc(100% - 32px);
@@ -693,7 +694,6 @@ h1.listing a:hover {
 	color: #777;
 	text-decoration: dotted underline;
 	white-space: initial;
-	overflow: visible;
 	background-color: rgba(0, 0, 0, 0.85);
 	z-index: 2;
 }
