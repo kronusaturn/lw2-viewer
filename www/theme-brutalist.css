@@ -114,15 +114,28 @@ a:hover {
 h1.listing {
 	font-size: 1.75rem;
 }
+h1.listing a {
+	padding: 0 0 0 1.5px;
+}
 h1.listing a[href^='/'] {
 	font-family: Anonymous Pro;
 }
 h1.listing a[href^="http"] {
 	font-size: 0.7em;
 	top: 5px;
+    color: #fff;
+    text-shadow: 
+         0.5px 0.5px 0 #000, 
+        -0.5px -0.5px 0 #000,
+         0 0 2px #000;
 }
-h1.listing a {
-	padding: 0 0 0 1.5px;
+h1.listing a[href^="http"]:hover {
+    color: #fff;
+    text-shadow: 
+         0.5px 0.5px 0 #000, 
+        -0.5px -0.5px 0 #000,
+         0 0 2px #000,
+         0 0 3px #000;
 }
 
 #comments {
