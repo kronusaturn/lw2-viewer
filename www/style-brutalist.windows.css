@@ -679,7 +679,7 @@ h1.listing a:nth-of-type(2) {
 		padding: 0 0 0 1px;
 	}
 	h1.listing a:nth-of-type(2) {
-		max-width: calc(100% - 32px);
+		max-width: calc(100% - 33px);
 	}
 }
 h1.listing a[href^="http"] {
