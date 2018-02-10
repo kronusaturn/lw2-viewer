@@ -341,7 +341,7 @@
 				   (let* ((offset (and offset (parse-integer offset)))
 					  (posts (if offset
 						   (lw2-graphql-query (graphql-query-string "PostsList"
-											    (alist :terms (alist :view "frontpage" :limit 20 :offset offset))
+											    (alist :terms (alist :view "frontpage-rss" :limit 20 :offset offset))
 											    *posts-index-fields*))
 						   (get-posts))))
 				     (view-posts-index posts "frontpage" (or offset 0)))))
