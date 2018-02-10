@@ -143,13 +143,114 @@ h6 strong {
 		0 0 0 4px #888 inset,
 		0 0 0 5px #ccc inset;
 }
-#nav-item-search input {
+
+input[type='text'], 
+input[type='search'], 
+input[type='password'], 
+.posting-controls textarea {
 	border: 1px solid #999;
-	background-color: transparent;
+    background-color: transparent;
+    box-shadow: none;
 }
-#nav-item-search input:focus {
+input[type='text']:focus, 
+input[type='search']:focus, 
+input[type='password']:focus, 
+.posting-controls textarea:focus,
+.aligned-form label + input:focus {
 	border: 1px solid #ccc;
+    background-color: transparent;
+    box-shadow: none;
+}
+.posting-controls textarea,
+.posting-controls textarea:focus {
+	border-top-width: 29px;
+}
+.guiedit-buttons-container {
+    background-image: none;
+    background-color: #888;
+    box-shadow: 0 -1px 0 0 #999 inset;
+}
+.textarea-container:focus-within .guiedit-buttons-container {
+    box-shadow: 0 -1px 0 0 #ccc inset;
+}
+button.guiedit {
+    color: #444;
+}
+button.guiedit:hover {
+    text-decoration: none;
+    color: #ccc;
+}
+button.guiedit::after {
+    font-family: Proxima Nova;
+    font-weight: 300;
+    color: #444;
+    top: 2px;
+    height: 25px;
+}
+#edit-post-form .link-post-checkbox + label::before {
+    border: 1px solid #999;
+}
+#edit-post-form .link-post-checkbox + label:hover, 
+#edit-post-form .link-post-checkbox:focus + label {
+    text-shadow: none;
+    text-decoration: underline;
+}
+#edit-post-form .link-post-checkbox + label:hover::before, 
+#edit-post-form .link-post-checkbox:focus + label::before {
+    border: 1px solid #ccc;
+}
+
+#edit-post-form input[type='radio'] + label {
+	border-color: #999;
+	color: #444;
+}
+#edit-post-form input[type='radio'] + label:hover,
+#edit-post-form input[type='radio']:focus + label {
+	background-color: #999;
+	color: #000;
+	box-shadow: none;
+}
+#edit-post-form input[type='radio']:focus + label {
+	box-shadow: none;
+}
+#edit-post-form input[type='radio']:checked + label {
 	background-color: transparent;
+	border-color: #000;
+	box-shadow: none;
+	text-shadow: none;
+}
+#edit-post-form input[type='radio'][value='all']:checked + label {
+    border: none;
+    position: relative;
+    top: 1px;
+    box-shadow: 0 0 0 1px #000;
+}
+
+#edit-post-form input[type='submit'] {
+    color: #444;
+    border: none;
+    background-color: transparent;
+}
+#edit-post-form input[type='submit']:hover {
+    text-shadow: none;
+    text-decoration: underline;
+}
+
+.posting-controls form span {
+    padding: 5px 0 0 6px;
+}
+
+#markdown-hints-checkbox + label {
+    color: #444;
+}
+#markdown-hints-checkbox + label:hover {
+    color: #444;
+    text-shadow: none;
+    text-decoration: underline;
+}
+.markdown-hints {
+    background-color: #888;
+    border: 1px solid #ccc;
 }
 #nav-item-search:focus-within,
 .inactive-bar #nav-item-search:focus-within,
