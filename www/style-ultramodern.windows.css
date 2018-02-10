@@ -1703,6 +1703,7 @@ a.comment-parent-link:hover::after {
 	font-family: Font Awesome, Charter;
 	font-weight: 900;
 	font-size: 0.875rem;
+	line-height: 1;
 	position: static;
 }
 .guiedit-buttons-container button sup {
@@ -2987,13 +2988,39 @@ h6 strong {
 		0 0 0 4px #888 inset,
 		0 0 0 5px #ccc inset;
 }
-#nav-item-search input {
+input[type='text'], 
+input[type='search'], 
+input[type='password'], 
+.posting-controls textarea {
 	border: 1px solid #999;
-	background-color: transparent;
+    background-color: transparent;
+    box-shadow: none;
 }
-#nav-item-search input:focus {
+input[type='text']:focus, 
+input[type='search']:focus, 
+input[type='password']:focus, 
+.posting-controls textarea:focus {
 	border: 1px solid #ccc;
-	background-color: transparent;
+    background-color: transparent;
+    box-shadow: none;
+}
+.posting-controls textarea,
+.posting-controls textarea:focus {
+	border-top-width: 29px;
+}
+.guiedit-buttons-container {
+    background-image: none;
+    background-color: #888;
+    box-shadow: 0 -1px 0 0 #999 inset;
+}
+.textarea-container:focus-within .guiedit-buttons-container {
+    box-shadow: 0 -1px 0 0 #ccc inset;
+}
+button.guiedit {
+    color: #444;
+}
+button.guiedit:hover {
+    text-decoration: none;
 }
 #nav-item-search:focus-within,
 .inactive-bar #nav-item-search:focus-within,

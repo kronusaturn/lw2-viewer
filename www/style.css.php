@@ -1645,6 +1645,7 @@ a.comment-parent-link:hover::after {
 	font-family: Font Awesome, Charter;
 	font-weight: 900;
 	font-size: 0.875rem;
+	line-height: 1;
 	position: static;
 }
 .guiedit-buttons-container button sup {
