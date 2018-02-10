@@ -2718,6 +2718,10 @@ h1.listing {
 h1.listing a[href^='/'] {
 	font-family: Anonymous Pro;
 }
+h1.listing a[href^="http"] {
+	font-size: 0.7em;
+	top: 5px;
+}
 h1.listing a {
 	padding: 0 0 0 1.5px;
 }
