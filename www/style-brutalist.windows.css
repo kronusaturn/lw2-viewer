@@ -2961,7 +2961,9 @@ a.comment-parent-link:hover::before {
 	color: #ddd;
 }
 .post-meta .vote:hover,
-.comment-meta .vote:hover {
+.post-meta .vote.selected,
+.comment-meta .vote:hover,
+.comment-meta .vote.selected {
 	text-decoration: none;
 	color: inherit;
 }
