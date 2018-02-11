@@ -479,3 +479,9 @@ button.guiedit::after {
     border: 2px solid #000;
     box-shadow: none;
 }
+
+code {
+    border: 1px dotted #000;
+    background-color: transparent;
+    border-radius: 0;
+}
