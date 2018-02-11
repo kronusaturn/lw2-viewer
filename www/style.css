@@ -645,7 +645,7 @@ h1.listing {
 	line-height: 1.15;
 	margin: 0.8em 20px 0.1em 20px;
 }
-@media only screen and (min-width: 901px) {
+@media only screen and (min-width: 901px) and (hover) {
 	h1.listing {
 		max-height: 1.15em;
 	}
@@ -664,7 +664,7 @@ h1.listing a {
 h1.listing a:nth-of-type(2) {
 	margin-left: 0.25em;
 }
-@media only screen and (min-width: 901px) {
+@media only screen and (min-width: 901px) and (hover: hover) {
 	h1.listing a {
 		max-width: 100%;
 		display: inline-block;
@@ -690,30 +690,33 @@ h1.listing a[href^="http"] {
 	position: relative;
 	top: 4px;
 }
-h1.listing a:hover {
-	color: #777;
-	text-decoration: dotted underline;
-	white-space: initial;
-	background-color: rgba(255,255,255,0.85);
-	z-index: 2;
-}
-h1.listing a:hover::before {
-	content: "";
-	position: absolute;
-	top: -10px;
-	right: -10px;
-	bottom: -10px;
-	left: -10px;
-	z-index: -1;
-}
-h1.listing a[href^="http"]:hover {
-	color: #4879ec;
-	text-decoration: none;
-	text-shadow: 
-		 0.5px 0.5px 0 #fff,
-		 -0.5px -0.5px 0 #fff,
-		 0 0 2px #fff,
-		 0 0 3px #00c;
+@media only screen and (hover: hover) {
+	h1.listing a:hover {
+		color: #777;
+		text-decoration: dotted underline;
+		white-space: initial;
+		background-color: rgba(255,255,255,0.85);
+		z-index: 2;
+	}
+
+		h1.listing a:hover::before {
+		content: "";
+		position: absolute;
+		top: -10px;
+		right: -10px;
+		bottom: -10px;
+		left: -10px;
+		z-index: -1;
+	}
+	h1.listing a[href^="http"]:hover {
+		color: #4879ec;
+		text-decoration: none;
+		text-shadow: 
+			 0.5px 0.5px 0 #fff,
+			 -0.5px -0.5px 0 #fff,
+			 0 0 2px #fff,
+			 0 0 3px #00c;
+	}
 }
 
 /**************/
