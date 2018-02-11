@@ -2911,7 +2911,7 @@ a.comment-parent-link:hover::before {
 }
 .posting-controls textarea {
 	border: 2px solid #000;
-	border-top-width: 29px;
+	border-top-width: 28px;
 	box-shadow: none;
 	font-family: Input Sans;
 	font-weight: 200;
@@ -2921,10 +2921,11 @@ a.comment-parent-link:hover::before {
 .posting-controls textarea:focus {
 	background-color: transparent;
 	border: 2px dotted #000;
-	border-top-width: 29px;
+	border-top-width: 28px;
 	box-shadow: none;
 }
-.comment-controls .cancel-comment-button {
+.comment-controls .cancel-comment-button,
+.comment-controls .cancel-comment-button:hover {
 	color: #fff;
 	text-shadow: none;
 }
