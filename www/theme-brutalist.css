@@ -483,6 +483,13 @@ button.guiedit::after {
     box-shadow: none;
 }
 
+.comment-minimize-button::after {
+	font-family: Anonymous Pro;
+	font-size: 0.8125rem;
+	top: 20px;
+	left: 0.5px;
+}
+
 code {
     border: 1px dotted #000;
     background-color: transparent;
