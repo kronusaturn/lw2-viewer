@@ -1660,11 +1660,11 @@ a.comment-parent-link:hover::after {
 	font-weight: normal;
 	font-family: <?php echo $UI_font; ?>;
 	font-size: 1rem;
-	top: 0;
-	left: 400px;
+	top: 2px;
+	left: 440px;
 	color: #777;
 	text-shadow: none;
-	height: 27px;
+	height: 25px;
 	padding: 4px 0;
 	white-space: nowrap;
 	visibility: hidden;
