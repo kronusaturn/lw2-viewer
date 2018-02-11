@@ -343,16 +343,17 @@
   (format out-stream "<div><input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><input type=\"submit\" value=\"~A\"></div></div></form>"
 	  csrf-token button-label)) 
 
-(defun view-items-index (items &key section with-offset (with-next t) title extra-html (content-class "index-page"))
+(defun view-items-index (items &key section with-offset (with-next t) title hide-title extra-html (content-class "index-page"))
   (alexandria:switch ((hunchentoot:get-parameter "format") :test #'string=)
                      ("rss" 
                       (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
                       (let ((out-stream (hunchentoot:send-headers)))
                         (write-index-items-to-rss (make-flexi-stream out-stream :external-format :utf-8) items title)))
                      (t
-                       (emit-page (out-stream :title title :description "A faster way to browse LessWrong 2.0" :content-class content-class :with-offset with-offset :with-next with-next)
-                                  (format out-stream "<div class=\"page-toolbar\">~@[<a class=\"new-post button\" href=\"/edit-post?section=~A\">New post</a>~]<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" href=\"~A?~@[~A&~]format=rss\">RSS</a></div>~@[~A~]"
+                       (emit-page (out-stream :title (if hide-title nil title) :description "A faster way to browse LessWrong 2.0" :content-class content-class :with-offset with-offset :with-next with-next)
+                                  (format out-stream "<div class=\"page-toolbar\">~@[<a class=\"new-post button\" href=\"/edit-post?section=~A\">New post</a>~]<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" title=\"~A RSS feed\" href=\"~A?~@[~A&~]format=rss\">RSS</a></div>~@[~A~]"
                                           (if (and section (logged-in-userid)) section)
+                                          title
                                           (hunchentoot:script-name*) (hunchentoot:query-string*)
                                           extra-html)
                                   (write-index-items-to-html out-stream items)))))
@@ -371,7 +372,7 @@
 											    (alist :terms (alist :view "frontpage-rss" :limit 20 :offset offset))
 											    *posts-index-fields*))
 						   (get-posts))))
-				     (view-items-index posts :section "frontpage" :with-offset (or offset 0)))))
+				     (view-items-index posts :section "frontpage" :title "Frontpage posts" :hide-title t :with-offset (or offset 0)))))
 
 (hunchentoot:define-easy-handler (view-index :uri "/index") (view meta before after offset)
                                  (with-error-page
