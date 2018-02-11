@@ -50,19 +50,6 @@
 	    (cdr (assoc :page-url post))
 	    (if (cdr (assoc :url post)) (format nil "<div class=\"link-post-domain\">(~A)</div>" (encode-entities (puri:uri-host (puri:parse-uri (string-trim " " (cdr (assoc :url post))))))) "")))) 
 
-(defun posts-to-rss (posts out-stream)
-  (with-recursive-lock (*memory-intensive-mutex*) 
-    (xml-emitter:with-rss2 (out-stream :encoding "UTF-8")
-      (xml-emitter:rss-channel-header "LessWrong 2 viewer" *site-uri*
-				      :description "LessWrong 2 viewer") 
-      (dolist (post posts)
-	(xml-emitter:rss-item
-	  (clean-text (cdr (assoc :title post)))
-	  :link (generate-post-link post nil t)
-	  :author (get-username (cdr (assoc :user-id post)))
-	  :pubDate (pretty-time (cdr (assoc :posted-at post)) :format local-time:+rfc-1123-format+)
-	  :description (clean-html (or (cdr (assoc :html-body (get-post-body (cdr (assoc :--id post)) :revalidate nil))) "") :post-id (cdr (assoc :--id post)))))))) 
-
 (defun post-body-to-html (post)
   (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :posted-at post))) 
     (format nil "<div class=\"post~:[~; link-post~]\"><h1>~A</h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A comment~:P</a>~@[<a class=\"lw2-link\" href=\"~A\">LW2 link</a>~]<a href=\"#bottom-bar\"></a></div><div class=\"post-body\">~A</div></div>"
@@ -156,6 +143,45 @@
 				   (comment-to-html new-c))))
 		 comments-sorted))))
 
+(defun comment-post-interleave (list &key limit offset)
+  (let ((sorted (sort list #'local-time:timestamp> :key (lambda (x) (local-time:parse-timestring (cdr (assoc :posted-at x)))))))
+    (loop for end = (if (or limit offset) (+ (or limit 0) (or offset 0)))
+	  for x in sorted
+	  for count from 0
+	  until (and end (>= count end))
+	  when (or (not offset) (>= count offset))
+	  collect x)))
+
+(defun write-index-items-to-html (out-stream items)
+  (dolist (x items)
+    (if (assoc :comment-count x)
+        (write-string (post-headline-to-html x) out-stream)
+        (format out-stream "<ul class=\"comment-thread\"><li class=\"comment-item\" id=\"comment-~A\">~A</li></ul>"
+                (cdr (assoc :--id x)) (comment-to-html x :with-post-title t)))))
+
+(defun write-index-items-to-rss (out-stream items &optional title)
+  (let ((full-title (format nil "~@[~A - ~]LessWrong 2 viewer" title)))
+    (with-recursive-lock (*memory-intensive-mutex*)
+      (xml-emitter:with-rss2 (out-stream :encoding "UTF-8")
+        (xml-emitter:rss-channel-header full-title *site-uri* :description full-title)
+        (labels ((emit-item (item &key title link (author (get-username (cdr (assoc :user-id item)))) (date (pretty-time (cdr (assoc :posted-at item)) :format local-time:+rfc-1123-format+)) body)
+                   (xml-emitter:rss-item
+                     title
+                     :link link
+                     :author author
+                     :pubDate date
+                     :description body)))
+          (dolist (item items)
+            (if (assoc :comment-count item)
+              (emit-item item
+                         :title (clean-text (cdr (assoc :title item)))
+                         :link (generate-post-link item nil t)
+                         :body (clean-html (or (cdr (assoc :html-body (get-post-body (cdr (assoc :--id item)) :revalidate nil))) "") :post-id (cdr (assoc :--id item))))
+              (emit-item item
+                         :title (format nil "Comment by ~A on ~A" (get-username (cdr (assoc :user-id item))) (get-post-title (cdr (assoc :post-id item))))
+                         :link (generate-post-link (cdr (assoc :post-id item)) (cdr (assoc :--id item)) t)
+                         :body (clean-html (cdr (assoc :html-body item)))))))))))
+
 (defparameter *html-head*
 "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
 <link rel=\"stylesheet\" href=\"//fonts.greaterwrong.com/?fonts=Charter,Concourse,a_Avante,Whitney,SourceSansPro,Raleway,ProximaNova,AnonymousPro,InputSans\">")
@@ -229,16 +255,17 @@
     (assert (ironclad:constant-time-equal csrf-token correct-token) nil "CSRF check failed.")
     t)) 
 
-(defun begin-html (out-stream &key title description current-uri content-class)
+(defun begin-html (out-stream &key title description current-uri content-class robots)
   (let* ((session-token (hunchentoot:cookie-in "session-token"))
 	 (csrf-token (and session-token (make-csrf-token session-token)))) 
-    (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A<link rel=\"stylesheet\" href=\"~A\"><style id='width-adjust'></style><link rel=\"shortcut icon\" href=\"~A\"><script src=\"~A\" async></script><script src=\"~A\" async></script><script>~A</script>~@[<script>var csrfToken=\"~A\"</script>~]</head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
+    (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A<link rel=\"stylesheet\" href=\"~A\"><style id='width-adjust'></style><link rel=\"shortcut icon\" href=\"~A\"><script src=\"~A\" async></script><script src=\"~A\" async></script><script>~A</script>~@[<script>var csrfToken=\"~A\"</script>~]~@[<meta name=\"robots\" content=\"~A\">~]</head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
 	    title description
 	    *html-head*
 	    (generate-versioned-link (if (search "Windows" (hunchentoot:header-in* :user-agent)) "/style.windows.css" "/style.css"))
 	    (generate-versioned-link "/favicon.ico") (generate-versioned-link "/script.js") (generate-versioned-link "/guiedit.js")
 	    (load-time-value (with-open-file (s "www/head.js") (uiop:slurp-stream-string s)) t)
 	    csrf-token
+            robots
 	    content-class
 	    (user-nav-bar (or current-uri (hunchentoot:request-uri*)))))
   (force-output out-stream)) 
@@ -276,13 +303,13 @@
 			     `(let ((,stream-sym ,out-stream)) 
 				,.out-body)))) 
 
-(defmacro emit-page ((out-stream &key title description current-uri content-class (return-code 200) with-offset with-next) &body body)
+(defmacro emit-page ((out-stream &key title description current-uri content-class (return-code 200) with-offset with-next robots) &body body)
   `(ignore-errors
      (log-conditions
        (setf (hunchentoot:content-type*) "text/html; charset=utf-8"
 	     (hunchentoot:return-code*) ,return-code)
        (let ((,out-stream (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8)))
-	 (begin-html ,out-stream :title ,title :description ,description :current-uri ,current-uri :content-class ,content-class)
+	 (begin-html ,out-stream :title ,title :description ,description :current-uri ,current-uri :content-class ,content-class :robots ,robots)
 	 ,@body
 	 (end-html ,out-stream :next (if (and ,with-offset ,with-next) (+ ,with-offset 20)) :prev (if (and ,with-offset (>= ,with-offset 20)) (- ,with-offset 20)))))))
 
@@ -317,18 +344,21 @@
   (format out-stream "<div><input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><input type=\"submit\" value=\"~A\"></div></div></form>"
 	  csrf-token button-label)) 
 
-(defun view-posts-index (posts &optional section offset)
+(defun view-items-index (items &key section with-offset (with-next t) title hide-title extra-html (content-class "index-page"))
   (alexandria:switch ((hunchentoot:get-parameter "format") :test #'string=)
-		     ("rss" 
-		      (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
-		      (let ((out-stream (hunchentoot:send-headers)))
-			(posts-to-rss posts (make-flexi-stream out-stream :external-format :utf-8))))
-		     (t
-		       (emit-page (out-stream :description "A faster way to browse LessWrong 2.0" :with-offset offset :with-next t)
-				  (format out-stream "<div class=\"page-toolbar\">~@[<a class=\"new-post button\" href=\"/edit-post?section=~A\">New post</a>~]<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" href=\"~A?~@[~A&~]format=rss\">RSS</a></div>"
-					  (if (and section (logged-in-userid)) section)
-					  (hunchentoot:script-name*) (hunchentoot:query-string*)) 
-				  (map-output out-stream #'post-headline-to-html posts))))) 
+                     ("rss" 
+                      (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
+                      (let ((out-stream (hunchentoot:send-headers)))
+                        (write-index-items-to-rss (make-flexi-stream out-stream :external-format :utf-8) items title)))
+                     (t
+                       (emit-page (out-stream :title (if hide-title nil title) :description "A faster way to browse LessWrong 2.0" :content-class content-class :with-offset with-offset :with-next with-next
+                                              :robots (if (and with-offset (> with-offset 0)) "noindex, nofollow"))
+                                  (format out-stream "<div class=\"page-toolbar\">~@[<a class=\"new-post button\" href=\"/edit-post?section=~A\">New post</a>~]<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" title=\"~A RSS feed\" href=\"~A?~@[~A&~]format=rss\">RSS</a></div>~@[~A~]"
+                                          (if (and section (logged-in-userid)) section)
+                                          title
+                                          (hunchentoot:script-name*) (hunchentoot:query-string*)
+                                          extra-html)
+                                  (write-index-items-to-html out-stream items)))))
 
 (declaim (inline alist)) 
 (defun alist (&rest parms) (alexandria:plist-alist parms))
@@ -344,18 +374,18 @@
 											    (alist :terms (alist :view "frontpage-rss" :limit 20 :offset offset))
 											    *posts-index-fields*))
 						   (get-posts))))
-				     (view-posts-index posts "frontpage" (or offset 0)))))
+				     (view-items-index posts :section "frontpage" :title "Frontpage posts" :hide-title t :with-offset (or offset 0)))))
 
 (hunchentoot:define-easy-handler (view-index :uri "/index") (view meta before after offset)
-				 (with-error-page
-				   (if (string= view "featured") (setf view "curated")) 
-				   (let* ((offset (and offset (parse-integer offset))) 
-					  (posts (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms
-													     (remove-if (lambda (x) (null (cdr x)))
-															(alist :view (or view "new") :meta (not (not meta)) :before before :after after :limit 20 :offset offset)))
-											  *posts-index-fields*)))
-					  (section (cond ((string= view "meta") "meta") ((string= view "curated") nil) ((string= view "frontpage") "frontpage") (t "all"))))
-				     (view-posts-index posts section (or offset 0)))))
+                                 (with-error-page
+                                   (let* ((offset (and offset (parse-integer offset))) 
+                                          (posts (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms
+                                                                                                             (remove-if (lambda (x) (null (cdr x)))
+                                                                                                                        (alist :view (if (string= view "featured") "curated" (or view "new"))
+                                                                                                                               :meta (not (not meta)) :before before :after after :limit 20 :offset offset)))
+                                                                                          *posts-index-fields*)))
+                                          (section (or view "all")))
+                                     (view-items-index posts :section section :title (format nil "~@(~A posts~)" section) :with-offset (or offset 0)))))
 
 (hunchentoot:define-easy-handler (view-post :uri "/post") (id)
 				 (with-error-page
@@ -379,7 +409,7 @@
 				 (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
 				 (let ((posts (lw2-graphql-query (make-posts-list-query :view (or view "new") :meta (not (not meta)) :before before :after after)))
 				       (out-stream (hunchentoot:send-headers)))
-				   (posts-to-rss posts (make-flexi-stream out-stream :external-format :utf-8)))) 
+				   (write-index-items-to-rss (make-flexi-stream out-stream :external-format :utf-8) posts))) 
 
 (hunchentoot:define-easy-handler (view-post-lw2-link :uri (lambda (r) (declare (ignore r)) (match-lw2-link (hunchentoot:request-uri*)))) ((csrf-token :request-type :post) (text :request-type :post) (parent-comment-id :request-type :post) (edit-comment-id :request-type :post) chrono)
 				 (with-error-page
@@ -473,24 +503,7 @@
 												      (alist :terms (alist :view "postCommentsNew" :limit 20 :offset offset))
 												      *comments-index-fields*))
 							     (get-recent-comments))))
-				     (emit-page (out-stream :title "Recent comments" :description "A faster way to browse LessWrong 2.0" :with-offset (or offset 0) :with-next t)
-						(with-outputs (out-stream) "<ul class=\"comment-thread\">") 
-						(map-output out-stream (lambda (c) (format nil "<li class=\"comment-item\" id=\"comment-~A\">~A</li>"
-											   (cdr (assoc :--id c)) (comment-to-html c :with-post-title t))) recent-comments)
-						(with-outputs (out-stream) "</ul>")))))
-
-(defun comment-post-interleave-output (stream list &key limit offset)
-  (let ((sorted (sort list #'local-time:timestamp> :key (lambda (x) (local-time:parse-timestring (cdr (assoc :posted-at x)))))))
-    (loop for end = (if (or limit offset) (+ (or limit 0) (or offset 0)))
-	  for x in sorted
-	  for count from 0
-	  until (and end (>= count end))
-	  when (or (not offset) (>= count offset))
-	  do
-	  (if (assoc :comment-count x)
-	    (write-string (post-headline-to-html x) stream)
-	    (format stream "<ul class=\"comment-thread\"><li class=\"comment-item\" id=\"comment-~A\">~A</li></ul>"
-		    (cdr (assoc :--id x)) (comment-to-html x :with-post-title t))))))
+                                     (view-items-index recent-comments :title "Recent comments" :with-offset (or offset 0) :with-next t))))
 
 (defmacro define-regex-handler (name (regex &rest vars) additional-vars &body body)
   (alexandria:with-gensyms (fn result-vector)
@@ -503,17 +516,18 @@
 	     ,@body))))))
 
 (define-regex-handler view-user ("^/users/(.*?)(?:$|\\?)" user-slug) (offset)
-		      (with-error-page
-			(let* ((offset (if offset (parse-integer offset) 0)) 
-			       (user-info (lw2-graphql-query (format nil "{UsersSingle(slug:\"~A\"){_id, displayName, karma}}" user-slug))))
-			  (let ((user-posts (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (alist :view "new" :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info)))) *posts-index-fields*)))
-				(user-comments (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (alist :view "postCommentsNew" :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info))))
-                                                                                        (remove :page-url *comments-index-fields*))))) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
-			    (emit-page (out-stream :title (cdr (assoc :display-name user-info)) :content-class "user-page" :with-offset offset :with-next (> (+ (length user-posts) (length user-comments)) (+ offset 20)))
-				       (format out-stream "<h1 class=\"page-main-heading\">~A</h1><div class=\"user-stats\">Karma: <span class=\"karma-total\">~A</span></div>"
-					       (cdr (assoc :display-name user-info))
-					       (pretty-number (or (cdr (assoc :karma user-info)) 0)))
-				       (comment-post-interleave-output out-stream (concatenate 'list user-posts user-comments) :limit 20 :offset offset))))))
+                      (with-error-page
+                        (let* ((offset (if offset (parse-integer offset) 0)) 
+                               (user-info (lw2-graphql-query (format nil "{UsersSingle(slug:\"~A\"){_id, displayName, karma}}" user-slug)))
+                               (user-posts (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (alist :view "new" :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info)))) *posts-index-fields*)))
+                               (user-comments (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (alist :view "postCommentsNew" :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info))))
+                                                                                       (remove :page-url *comments-index-fields*)))) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
+                               (interleave (comment-post-interleave (concatenate 'list user-posts user-comments) :limit 20 :offset offset)))
+                          (view-items-index interleave :with-offset offset :title (cdr (assoc :display-name user-info)) :content-class "user-page"
+                                            :with-offset offset :with-next (> (+ (length user-posts) (length user-comments)) (+ offset 20))
+                                            :extra-html (format nil "<h1 class=\"page-main-heading\">~A</h1><div class=\"user-stats\">Karma: <span class=\"karma-total\">~A</span></div>"
+                                                                (cdr (assoc :display-name user-info))
+                                                                (pretty-number (or (cdr (assoc :karma user-info)) 0)))))))
 
 (defun search-result-markdown-to-html (item)
   (cons (cons :html-body (markdown:parse (cdr (assoc :body item)))) item)) 
