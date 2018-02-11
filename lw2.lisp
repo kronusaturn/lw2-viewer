@@ -255,16 +255,17 @@
     (assert (ironclad:constant-time-equal csrf-token correct-token) nil "CSRF check failed.")
     t)) 
 
-(defun begin-html (out-stream &key title description current-uri content-class)
+(defun begin-html (out-stream &key title description current-uri content-class robots)
   (let* ((session-token (hunchentoot:cookie-in "session-token"))
 	 (csrf-token (and session-token (make-csrf-token session-token)))) 
-    (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A<link rel=\"stylesheet\" href=\"~A\"><style id='width-adjust'></style><link rel=\"shortcut icon\" href=\"~A\"><script src=\"~A\" async></script><script src=\"~A\" async></script><script>~A</script>~@[<script>var csrfToken=\"~A\"</script>~]</head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
+    (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A<link rel=\"stylesheet\" href=\"~A\"><style id='width-adjust'></style><link rel=\"shortcut icon\" href=\"~A\"><script src=\"~A\" async></script><script src=\"~A\" async></script><script>~A</script>~@[<script>var csrfToken=\"~A\"</script>~]~@[<meta name=\"robots\" content=\"~A\">~]</head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
 	    title description
 	    *html-head*
 	    (generate-versioned-link (if (search "Windows" (hunchentoot:header-in* :user-agent)) "/style.windows.css" "/style.css"))
 	    (generate-versioned-link "/favicon.ico") (generate-versioned-link "/script.js") (generate-versioned-link "/guiedit.js")
 	    (load-time-value (with-open-file (s "www/head.js") (uiop:slurp-stream-string s)) t)
 	    csrf-token
+            robots
 	    content-class
 	    (user-nav-bar (or current-uri (hunchentoot:request-uri*)))))
   (force-output out-stream)) 
@@ -302,13 +303,13 @@
 			     `(let ((,stream-sym ,out-stream)) 
 				,.out-body)))) 
 
-(defmacro emit-page ((out-stream &key title description current-uri content-class (return-code 200) with-offset with-next) &body body)
+(defmacro emit-page ((out-stream &key title description current-uri content-class (return-code 200) with-offset with-next robots) &body body)
   `(ignore-errors
      (log-conditions
        (setf (hunchentoot:content-type*) "text/html; charset=utf-8"
 	     (hunchentoot:return-code*) ,return-code)
        (let ((,out-stream (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8)))
-	 (begin-html ,out-stream :title ,title :description ,description :current-uri ,current-uri :content-class ,content-class)
+	 (begin-html ,out-stream :title ,title :description ,description :current-uri ,current-uri :content-class ,content-class :robots ,robots)
 	 ,@body
 	 (end-html ,out-stream :next (if (and ,with-offset ,with-next) (+ ,with-offset 20)) :prev (if (and ,with-offset (>= ,with-offset 20)) (- ,with-offset 20)))))))
 
@@ -350,7 +351,8 @@
                       (let ((out-stream (hunchentoot:send-headers)))
                         (write-index-items-to-rss (make-flexi-stream out-stream :external-format :utf-8) items title)))
                      (t
-                       (emit-page (out-stream :title (if hide-title nil title) :description "A faster way to browse LessWrong 2.0" :content-class content-class :with-offset with-offset :with-next with-next)
+                       (emit-page (out-stream :title (if hide-title nil title) :description "A faster way to browse LessWrong 2.0" :content-class content-class :with-offset with-offset :with-next with-next
+                                              :robots (if (and with-offset (> with-offset 0)) "noindex, nofollow"))
                                   (format out-stream "<div class=\"page-toolbar\">~@[<a class=\"new-post button\" href=\"/edit-post?section=~A\">New post</a>~]<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" title=\"~A RSS feed\" href=\"~A?~@[~A&~]format=rss\">RSS</a></div>~@[~A~]"
                                           (if (and section (logged-in-userid)) section)
                                           title
