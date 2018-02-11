@@ -50,8 +50,8 @@ var guiEditButtons = [
 	[ 'numbered-list', 'Numbered list', '', '\\n1. ', '', 'List item', '&#xf0cb' ],
 	[ 'horizontal-rule', 'Horizontal rule', '', '\\n\\n---\\n\\n', '', '', '&#xf068' ],
 	[ 'inline-code', 'Inline code', '', '`', '`', 'Code', '&#xf121' ],
-	[ 'code-block', 'Code block', '', '```\\n', '\\n```', 'Code', '&#xf1c9' ]
-// 	[ 'formula', 'LaTeX', '', '$', '$', 'LaTeX formula', '&#xf155' ]
+	[ 'code-block', 'Code block', '', '```\\n', '\\n```', 'Code', '&#xf1c9' ],
+	[ 'formula', 'LaTeX', '', '$', '$', 'LaTeX formula', '&#xf155' ]
 ];
 
 function blockquote(text, startpos) {
