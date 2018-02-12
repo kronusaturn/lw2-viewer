@@ -541,6 +541,9 @@ input {
 	left: 1em;
 	padding: 0 4px;
 }
+#theme-tweaker-ui div.section#theme-tweak-section-invert {
+	padding: 23px 10px 15px 14px;
+}
 
 #theme-tweaker-ui input[type='checkbox'] {
 	display: none;
