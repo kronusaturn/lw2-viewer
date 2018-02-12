@@ -707,11 +707,11 @@ input[type=range]::-ms-thumb {
 }
 #theme-tweaker-ui #theme-tweak-control-hue-rotate::before {
 	content: "0°";
-	left: 0;
+	left: 0.6em;
 }
 #theme-tweaker-ui #theme-tweak-control-hue-rotate::after {
 	content: "360°";
-	right: 0;
+	right: 0.4em;
 }
 .theme-tweak-control-label {
 	margin: 0.5em 0 0 0;

@@ -473,7 +473,7 @@ function injectThemeTweaker() {
 	themeTweakerUI.querySelector("div").addActivateEvent(clickInterceptor, true);
 	
 	themeTweakerUI.querySelectorAll("input").forEach(function (field) {
-		field.addEventListener("change", themeTweakerFieldInputReceived);
+		field.addEventListener((field.type == "checkbox" ? "change" : "input"), themeTweakerFieldInputReceived);
 	});
 }
 function toggleThemeTweakerUI() {
@@ -484,6 +484,13 @@ function toggleThemeTweakerUI() {
 	});
 }
 function themeTweakerToggleButtonClicked(event) {
+	document.querySelector("#theme-tweaker-ui .current-theme strong").innerText = (window.localStorage.getItem("selected-theme") || "default");
+	document.querySelector("#theme-tweak-control-invert").checked = (window.currentFilters.invert == "100%");
+	document.querySelector("#theme-tweak-control-saturate").value = /^[0-9]+/.exec(window.currentFilters.saturate);
+	document.querySelector("#theme-tweak-control-brightness").value = /^[0-9]+/.exec(window.currentFilters.brightness);
+	document.querySelector("#theme-tweak-control-contrast").value = /^[0-9]+/.exec(window.currentFilters.contrast);
+	document.querySelector("#theme-tweak-control-hue-rotate").value = /^[0-9]+/.exec(window.currentFilters.hueRotate);
+
 	toggleThemeTweakerUI();
 }
 function themeTweakerUIOverlayClicked(event) {
