@@ -2772,6 +2772,12 @@ ol {
 		height: auto;
 		width: calc(100% / 7);
 		padding: 10px;
+		position: relative;
+	}
+	.textarea-container:focus-within button.guiedit sup {
+		position: absolute;
+		left: calc(50% + 0.65em);
+		top: calc(50% - 1.3em);
 	}
 	#edit-post-form input[type='submit'] {
 		margin-top: -6px;
