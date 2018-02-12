@@ -676,25 +676,32 @@ input[type=range]::-ms-thumb {
 	cursor: pointer;
 }
 
+#theme-tweaker-ui input[type='range']::before,
+#theme-tweaker-ui input[type='range']::after {
+	position: absolute;
+	top: -0.45em;
+	color: #666;
+}
 #theme-tweaker-ui #theme-tweak-control-saturate::before,
 #theme-tweaker-ui #theme-tweak-control-brightness::before,
 #theme-tweaker-ui #theme-tweak-control-contrast::before {
 	content: "0%";
-	position: absolute;
 	left: 0;
-	top: -0.45em;
-	color: #666;
 }
 #theme-tweaker-ui #theme-tweak-control-saturate::after,
 #theme-tweaker-ui #theme-tweak-control-brightness::after,
 #theme-tweaker-ui #theme-tweak-control-contrast::after {
 	content: "100%";
-	position: absolute;
 	right: 0;
-	top: -0.45em;
-	color: #666;
 }
-
+#theme-tweaker-ui #theme-tweak-control-hue-rotate::before {
+	content: "0°";
+	left: 0;
+}
+#theme-tweaker-ui #theme-tweak-control-hue-rotate::after {
+	content: "360°";
+	right: 0;
+}
 .theme-tweak-control-label {
 	margin: 0.5em 0 0 0;
 	text-align: center;

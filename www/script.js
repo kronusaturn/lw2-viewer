@@ -504,13 +504,13 @@ function themeTweakerFieldInputReceived(event) {
 	if (event.target.id == 'theme-tweak-control-invert') {
 		window.currentFilters.invert = event.target.checked ? '100%' : '0%';
 	} else if (event.target.id == 'theme-tweak-control-saturate') {
-		document.querySelector("#theme-tweak-label-saturate").innerText = event.target.value;
+		document.querySelector("#theme-tweak-label-saturate").innerText = event.target.value + "%";
 		window.currentFilters.saturate = event.target.value + "%";
 	} else if (event.target.id == 'theme-tweak-control-brightness') {
-		document.querySelector("#theme-tweak-label-brightness").innerText = event.target.value;
+		document.querySelector("#theme-tweak-label-brightness").innerText = event.target.value + "%";
 		window.currentFilters.brightness = event.target.value + "%";
 	} else if (event.target.id == 'theme-tweak-control-contrast') {
-		document.querySelector("#theme-tweak-label-contrast").innerText = event.target.value;
+		document.querySelector("#theme-tweak-label-contrast").innerText = event.target.value + "%";
 		window.currentFilters.contrast = event.target.value + "%";
 	} else if (event.target.id == 'theme-tweak-control-hue-rotate') {
 		document.querySelector("#theme-tweak-label-hue-rotate").innerText = event.target.value + "°";

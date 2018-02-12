@@ -64,7 +64,8 @@ function applyFilters(filters) {
 	if (filters.isEmpty()) return;
 	
 	var filterString = "";
-	for (const [ key, value ] of filters.entries()) {
+	for (key of Object.keys(filters)) {
+		let value = filters[key];
 		filterString += ` ${key}(${value})`;
 	}
 	var fullStyleString = "#content, #ui-elements-container > div:not(#theme-tweaker-ui) { filter:" + filterString + "; }";
