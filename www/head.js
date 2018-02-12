@@ -1,3 +1,4 @@
+document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='hide-bottom-bar'>#bottom-bar { display: none }</style>");
 function setTheme(themeName) {
 	if (typeof(themeName) == 'undefined') {
 		themeName = window.localStorage.getItem('selected-theme');
