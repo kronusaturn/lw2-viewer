@@ -719,8 +719,9 @@ function pageLayoutFinished() {
 
 		let content = document.querySelector("#content");
 		if (content.clientHeight <= window.innerHeight + 30) {
-			removeElement("#bottom-bar", content);
 			removeElement(".post .post-meta a[href='#bottom-bar']", content);
+		} else {
+			removeElement("#hide-bottom-bar", document.querySelector("head"));
 		}
 	});
 }
