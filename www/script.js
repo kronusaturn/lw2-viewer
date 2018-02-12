@@ -551,16 +551,16 @@ function addUIElement(element_html) {
 	return ui_elements_container.lastElementChild;
 }
 
+var initializeDone = false;
 function initialize() {
+	if(initializeDone || (document.readyState == "loading")) return;
+	initializeDone = true;
+
 	window.requestAnimationFrame(function() {
 		if(location.hash.length == 18) {
 			location.hash = "#comment-" + location.hash.substring(1);
 		}
 		var content = document.querySelector("#content");
-		if (content.clientHeight <= window.innerHeight + 30) {
-			removeElement("#bottom-bar", content);
-			removeElement(".post .post-meta a[href='#bottom-bar']", content);
-		} 	
 		if (content.clientHeight <= window.innerHeight + 30 || 
 			(content.querySelector("#comments") && content.querySelector("#comments").childNodes.length == 0)) {
 			try { document.querySelector(".post .post-meta .comment-count").addClass("no-comments"); }
@@ -703,18 +703,25 @@ function initialize() {
 		injectThemeTweaker();
 
 		// Call pageLayoutFinished() once all activity that can affect the page layout has finished.
-		if(document.readyState != "complete") {
-			document.addEventListener("load", pageLayoutFinished, {once: true});
-		} else {
-			pageLayoutFinished();
-		}
+		document.addEventListener("load", pageLayoutFinished, {once: true});
+		window.setTimeout(pageLayoutFinished);
 	})
 }
 
+var pageLayoutFinishedDone = false;
 function pageLayoutFinished() {
+	if(pageLayoutFinishedDone || (document.readyState != "complete")) return;
+	pageLayoutFinishedDone = true;
+
 	window.requestAnimationFrame(function () {
 		if (window.needHashRealignment)
 			realignHash();
+
+		let content = document.querySelector("#content");
+		if (content.clientHeight <= window.innerHeight + 30) {
+			removeElement("#bottom-bar", content);
+			removeElement(".post .post-meta a[href='#bottom-bar']", content);
+		}
 	});
 }
 function realignHash() {
@@ -728,8 +735,5 @@ function removeElement(selector, ancestor = document) {
 	if (element) element.parentElement.removeChild(element);
 }
 
-if(document.readyState == "loading") {
-	document.addEventListener("DOMContentLoaded", initialize, {once: true});
-} else {
-	initialize();
-}
+document.addEventListener("DOMContentLoaded", initialize, {once: true});
+window.setTimeout(initialize);
