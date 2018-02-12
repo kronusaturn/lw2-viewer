@@ -445,9 +445,21 @@ function injectThemeTweaker() {
 	<p class='current-theme'>Current theme: <strong>` + 
 	(window.localStorage.getItem("selected-theme") || "default") + 
 	`</strong></p>
-	<div class='section' data-label='Invert (photo-negative)'>
-	<input type='checkbox' name='invert' id='invert'></input>
-	<label for='invert'>Invert colors</label>
+	<div id='theme-tweak-section-invert' class='section' data-label='Invert (photo-negative)'>
+		<input type='checkbox' id='theme-tweak-control-invert'></input>
+		<label for='theme-tweak-control-invert'>Invert colors</label>
+	</div>
+	<div id='theme-tweak-section-saturate' class='section' data-label='Saturation'>
+		<input type="range" id="theme-tweak-control-saturate" min="0" max="300" defaultValue="100">
+		<p class="theme-tweak-control-label" id="theme-tweak-label-saturate">100%</p>
+	</div>
+	<div id='theme-tweak-section-brightness' class='section' data-label='Brightness'>
+		<input type="range" id="theme-tweak-control-brightness" min="0" max="300" defaultValue="100">
+		<p class="theme-tweak-control-label" id="theme-tweak-label-brightness">100%</p>
+	</div>
+	<div id='theme-tweak-section-contrast' class='section' data-label='Contrast'>
+		<input type="range" id="theme-tweak-control-contrast" min="0" max="300" defaultValue="100">
+		<p class="theme-tweak-control-label" id="theme-tweak-label-contrast">100%</p>
 	</div>
 	` + "</div></div>");
 	themeTweakerUI.addActivateEvent(themeTweakerUIOverlayClicked, false);
@@ -476,17 +488,28 @@ function themeTweakerUIOverlayClicked(event) {
 	} else {
 		toggleThemeTweakerUI();	
 		document.querySelector("#theme-tweaker-ui").style.opacity = "1.0";
+		
+		window.currentFilters = JSON.parse(window.localStorage.getItem("theme-tweaks") || "{ }");
+		applyFilters(window.currentFilters);
 	}
 }
 function clickInterceptor(event) {
 	event.stopPropagation();
 }
 function themeTweakerFieldInputReceived(event) {
-	if (event.target.id == 'invert') {
-		document.querySelector("#theme-tweak").innerHTML = event.target.checked ?
-		`body { background-color: #000; }
-		#content, #ui-elements-container > div:not(#theme-tweaker-ui) { filter: invert(100%); }` : "";
+	if (event.target.id == 'theme-tweak-control-invert') {
+		window.currentFilters.invert = event.target.checked ? '100%' : '0%';
+	} else if (event.target.id == 'theme-tweak-control-saturate') {
+		window.currentFilters.saturate = event.target.value + "%";
+		document.querySelector("#theme-tweak-label-saturate").innerText = window.currentFilters.saturate;
+	} else if (event.target.id == 'theme-tweak-control-brightness') {
+		window.currentFilters.brightness = event.target.value + "%";
+		document.querySelector("#theme-tweak-label-brightness").innerText = window.currentFilters.brightness;
+	} else if (event.target.id == 'theme-tweak-control-contrast') {
+		window.currentFilters.contrast = event.target.value + "%";
+		document.querySelector("#theme-tweak-label-contrast").innerText = window.currentFilters.contrast;
 	}
+	applyFilters(window.currentFilters);
 }
 
 function expandAncestorsOf(commentId) {

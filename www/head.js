@@ -54,3 +54,28 @@ function setContentWidth(widthString) {
 		}`;
 }
 setContentWidth(window.localStorage.getItem('selected-width'));
+
+Object.prototype.isEmpty = function() {
+    for (var prop in this) if (this.hasOwnProperty(prop)) return false;
+    return true;
+};
+
+function applyFilters(filters) {
+	if (filters.isEmpty()) return;
+	
+	var filterString = "";
+	for (const [ key, value ] of filters.entries()) {
+		filterString += ` ${key}(${value})`;
+	}
+	var fullStyleString = "#content, #ui-elements-container > div:not(#theme-tweaker-ui) { filter:" + filterString + "; }";
+	
+	// Special cases require additional stuff.
+	if (filters.invert == '100%') {
+		fullStyleString += "\nbody { background-color: #000; }";
+	}
+	
+	// Update the style tag.
+	document.querySelector("#theme-tweak").innerHTML = fullStyleString;
+}
+window.currentFilters = JSON.parse(window.localStorage.getItem("theme-tweaks") || "{ }");
+applyFilters(window.currentFilters);
