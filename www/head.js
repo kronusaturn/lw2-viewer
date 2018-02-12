@@ -48,6 +48,9 @@ function setContentWidth(widthString) {
 		}
 		#theme-selector {
 			left: calc((100% - ${widthString}) / 2 - 41px);
+		}
+		#theme-tweaker-toggle {
+			left: calc((100% - ${widthString}) / 2 - 75px);
 		}`;
 }
 setContentWidth(window.localStorage.getItem('selected-width'));

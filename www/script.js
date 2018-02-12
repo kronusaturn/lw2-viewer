@@ -434,6 +434,61 @@ function themeSelectButtonClicked(event) {
 	event.target.disabled = true;
 }
 
+function injectThemeTweaker() {
+	let themeTweakerToggle = addUIElement("<div id='theme-tweaker-toggle'><button type='button' tabindex='-1' title='Customize appearance'>&#xf1de;</button></div>");
+	themeTweakerToggle.querySelector("button").addActivateEvent(themeTweakerToggleButtonClicked);
+	
+	document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='theme-tweaker'></style>");
+	
+	let themeTweakerUI = addUIElement("<div id='theme-tweaker-ui' style='display: none;'><div>" + 
+	`<h1>Customize appearance</h1>
+	<p class='current-theme'>Current theme: <strong>` + 
+	(window.localStorage.getItem("selected-theme") || "default") + 
+	`</strong></p>
+	<div class='section' data-label='Invert (photo-negative)'>
+	<input type='checkbox' name='invert' id='invert'></input>
+	<label for='invert'>Invert colors</label>
+	</div>
+	` + "</div></div>");
+	themeTweakerUI.addActivateEvent(themeTweakerUIOverlayClicked, false);
+	themeTweakerUI.addActivateEvent(themeTweakerUIOverlayClicked, true);
+	
+	themeTweakerUI.querySelector("div").addActivateEvent(clickInterceptor, false);
+	themeTweakerUI.querySelector("div").addActivateEvent(clickInterceptor, true);
+	
+	themeTweakerUI.querySelectorAll("input").forEach(function (field) {
+		field.addEventListener("change", themeTweakerFieldInputReceived);
+	});
+}
+function toggleThemeTweakerUI() {
+	let themeTweakerUI = document.querySelector("#theme-tweaker-ui");
+	themeTweakerUI.style.display = (themeTweakerUI.style.display == "none") ? "block" : "none";
+	document.querySelectorAll("h1.listing a").forEach(function (link) { 
+		link.style.pointerEvents = (themeTweakerUI.style.display == "none") ? "auto" : "none";
+	});
+}
+function themeTweakerToggleButtonClicked(event) {
+	toggleThemeTweakerUI();
+}
+function themeTweakerUIOverlayClicked(event) {
+	if (event.type == 'mousedown') {
+		document.querySelector("#theme-tweaker-ui").style.opacity = "0.01";
+	} else {
+		toggleThemeTweakerUI();	
+		document.querySelector("#theme-tweaker-ui").style.opacity = "1.0";
+	}
+}
+function clickInterceptor(event) {
+	event.stopPropagation();
+}
+function themeTweakerFieldInputReceived(event) {
+	if (event.target.id == 'invert') {
+		document.querySelector("#theme-tweaker").innerHTML = event.target.checked ?
+		`body { background-color: #000; }
+		#content, #ui-elements-container > div:not(#theme-tweaker-ui) { filter: invert(100%); }` : "";
+	}
+}
+
 function expandAncestorsOf(commentId) {
 	try { document.querySelector('#comment-'+commentId).closest("label[for^='expand'] + .comment-thread").parentElement.querySelector("input[id^='expand']").checked = true; }
 	catch (e) { }
@@ -612,7 +667,10 @@ function initialize() {
 		
 		// Add the content width selector.
 		injectContentWidthSelector();
+		// Add the theme selector.
 		injectThemeSelector();
+		// Add the theme tweaker.
+		injectThemeTweaker();
 
 		// Call pageLayoutFinished() once all activity that can affect the page layout has finished.
 		if(document.readyState != "complete") {
