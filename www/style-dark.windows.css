@@ -578,11 +578,15 @@ input {
 
 #theme-tweaker-ui input[type='range'] {
 	width: 100%;
+	position: relative;
 }
 input[type=range] {
 	-webkit-appearance: none;
 	width: 100%;
 	margin: 17px 0;
+	padding: 0 3.15em 0 2em;
+	background-color: transparent;
+	border: none;
 }
 input[type=range]:focus {
 	outline: none;
@@ -681,6 +685,25 @@ input[type=range]::-ms-thumb {
 	border-radius: 0px;
 	background: #363c36;
 	cursor: pointer;
+}
+
+#theme-tweaker-ui #theme-tweak-control-saturate::before,
+#theme-tweaker-ui #theme-tweak-control-brightness::before,
+#theme-tweaker-ui #theme-tweak-control-contrast::before {
+	content: "0%";
+	position: absolute;
+	left: 0;
+	top: -0.45em;
+	color: #888;
+}
+#theme-tweaker-ui #theme-tweak-control-saturate::after,
+#theme-tweaker-ui #theme-tweak-control-brightness::after,
+#theme-tweaker-ui #theme-tweak-control-contrast::after {
+	content: "100%";
+	position: absolute;
+	right: 0;
+	top: -0.45em;
+	color: #888;
 }
 
 .theme-tweak-control-label {
