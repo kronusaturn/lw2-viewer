@@ -438,7 +438,7 @@ function injectThemeTweaker() {
 	let themeTweakerToggle = addUIElement("<div id='theme-tweaker-toggle'><button type='button' tabindex='-1' title='Customize appearance'>&#xf1de;</button></div>");
 	themeTweakerToggle.querySelector("button").addActivateEvent(themeTweakerToggleButtonClicked);
 	
-	document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='theme-tweaker'></style>");
+	document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='theme-tweak'></style>");
 	
 	let themeTweakerUI = addUIElement("<div id='theme-tweaker-ui' style='display: none;'><div>" + 
 	`<h1>Customize appearance</h1>
@@ -483,7 +483,7 @@ function clickInterceptor(event) {
 }
 function themeTweakerFieldInputReceived(event) {
 	if (event.target.id == 'invert') {
-		document.querySelector("#theme-tweaker").innerHTML = event.target.checked ?
+		document.querySelector("#theme-tweak").innerHTML = event.target.checked ?
 		`body { background-color: #000; }
 		#content, #ui-elements-container > div:not(#theme-tweaker-ui) { filter: invert(100%); }` : "";
 	}
