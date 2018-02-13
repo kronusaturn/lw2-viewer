@@ -485,11 +485,12 @@ function toggleThemeTweakerUI() {
 }
 function themeTweakerToggleButtonClicked(event) {
 	document.querySelector("#theme-tweaker-ui .current-theme strong").innerText = (window.localStorage.getItem("selected-theme") || "default");
+	
 	document.querySelector("#theme-tweak-control-invert").checked = (window.currentFilters.invert == "100%");
-	document.querySelector("#theme-tweak-control-saturate").value = /^[0-9]+/.exec(window.currentFilters.saturate);
-	document.querySelector("#theme-tweak-control-brightness").value = /^[0-9]+/.exec(window.currentFilters.brightness);
-	document.querySelector("#theme-tweak-control-contrast").value = /^[0-9]+/.exec(window.currentFilters.contrast);
-	document.querySelector("#theme-tweak-control-hue-rotate").value = /^[0-9]+/.exec(window.currentFilters.hueRotate);
+	document.querySelector("#theme-tweak-control-saturate").value = /^[0-9]+/.exec(window.currentFilters.saturate) || '100';
+	document.querySelector("#theme-tweak-control-brightness").value = /^[0-9]+/.exec(window.currentFilters.brightness) || '100';
+	document.querySelector("#theme-tweak-control-contrast").value = /^[0-9]+/.exec(window.currentFilters.contrast) || '100';
+	document.querySelector("#theme-tweak-control-hue-rotate").value = /^[0-9]+/.exec(window.currentFilters.hueRotate) || '0';
 
 	toggleThemeTweakerUI();
 }
