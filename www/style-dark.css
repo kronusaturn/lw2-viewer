@@ -702,7 +702,7 @@ input[type=range]::-ms-thumb {
 #theme-tweaker-ui #theme-tweak-control-saturate::after,
 #theme-tweaker-ui #theme-tweak-control-brightness::after,
 #theme-tweaker-ui #theme-tweak-control-contrast::after {
-	content: "100%";
+	content: "300%";
 	right: 0;
 }
 #theme-tweaker-ui #theme-tweak-control-hue-rotate::before {
@@ -714,8 +714,33 @@ input[type=range]::-ms-thumb {
 	right: 0.4em;
 }
 .theme-tweak-control-label {
-	margin: 0.5em 0 0 0;
+	font-weight: bold;
+	margin: 1.5em 3.15em 0 2em;
+	padding: 0 2em 0 3.15em;
 	text-align: center;
+	position: relative;
+}
+#theme-tweak-label-saturate::before,
+#theme-tweak-label-brightness::before,
+#theme-tweak-label-contrast::before,
+#theme-tweak-label-hue-rotate::before {
+	content: "";
+	display: block;
+	position: absolute;
+	box-shadow:
+		-0.5px -0.5px 0 #1e231e inset,
+		0.5px 0.5px 0 #fdfdfd inset,
+		0 -0.5px 0 #6f766f,
+		-1px 0 0 #6f766f,
+		-1px -0.5px 0 #6f766f,
+		0 0 0 0.5px #000900;
+	width: 1px;
+	height: 1em;
+	top: -100%;
+	left: calc(100% / 3 + 2px);
+}
+#theme-tweak-label-hue-rotate::before {
+	left: 7px;
 }
 
 /*******************/
