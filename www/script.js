@@ -735,7 +735,7 @@ function pageLayoutFinished() {
 function realignHash() {
 	let h = location.hash;
 	if (h)
-		document.querySelector(h).scrollIntoView(true);
+		document.querySelectorAll(h).forEach(function (e) { e.scrollIntoView(true); });
 }
 
 function removeElement(selector, ancestor = document) {
