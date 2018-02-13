@@ -1369,19 +1369,19 @@ h1.listing a[href^="http"] {
 /* LINK POSTS */
 /**************/
 
-.post.link-post .post-body p:only-child {
+.post.link-post > .post-body > p:only-child {
 	text-align: center;
 	font-weight: 600;
 	font-size: 1.5em;
 	font-family: 'Whitney', 'a_Avante';
 }
-.post.link-post .post-body p:only-child a:only-child {
+.post.link-post > .post-body > p:only-child a:only-child {
 	text-decoration: none;
 }
-.post.link-post .post-body p:only-child a:only-child:hover {
+.post.link-post > .post-body > p:only-child a:only-child:hover {
 	color: #c00;
 }
-.post.link-post .post-body p:only-child a:only-child::before {
+.post.link-post > .post-body > p:only-child a:only-child::before {
 	content: "\F0C1";
 	font-family: Font Awesome;
 	font-weight: 900;
@@ -1390,7 +1390,7 @@ h1.listing a[href^="http"] {
 	top: -2px;
 	margin-right: 0.25em;
 }
-.post.link-post .post-body p:only-child a:only-child:hover::before {
+.post.link-post > .post-body > p:only-child a:only-child:hover::before {
 	color: #4879ec;
 	text-shadow: 
 		0.5px 0.5px 0 #fff,
