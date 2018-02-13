@@ -173,10 +173,12 @@
                      :description body)))
           (dolist (item items)
             (if (assoc :comment-count item)
-              (emit-item item
-                         :title (clean-text (cdr (assoc :title item)))
-                         :link (generate-post-link item nil t)
-                         :body (clean-html (or (cdr (assoc :html-body (get-post-body (cdr (assoc :--id item)) :revalidate nil))) "") :post-id (cdr (assoc :--id item))))
+              (let ((author (get-username (cdr (assoc :user-id item)))))
+                (emit-item item
+                           :title (clean-text (format nil "~A by ~A" (cdr (assoc :title item)) author))
+                           :author author
+                           :link (generate-post-link item nil t)
+                           :body (clean-html (or (cdr (assoc :html-body (get-post-body (cdr (assoc :--id item)) :revalidate nil))) "") :post-id (cdr (assoc :--id item)))))
               (emit-item item
                          :title (format nil "Comment by ~A on ~A" (get-username (cdr (assoc :user-id item))) (get-post-title (cdr (assoc :post-id item))))
                          :link (generate-post-link (cdr (assoc :post-id item)) (cdr (assoc :--id item)) t)
