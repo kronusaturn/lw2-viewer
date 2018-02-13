@@ -486,11 +486,11 @@ function toggleThemeTweakerUI() {
 function themeTweakerToggleButtonClicked(event) {
 	document.querySelector("#theme-tweaker-ui .current-theme strong").innerText = (window.localStorage.getItem("selected-theme") || "default");
 	
-	document.querySelector("#theme-tweak-control-invert").checked = (window.currentFilters.invert == "100%");
-	document.querySelector("#theme-tweak-control-saturate").value = /^[0-9]+/.exec(window.currentFilters.saturate) || '100';
-	document.querySelector("#theme-tweak-control-brightness").value = /^[0-9]+/.exec(window.currentFilters.brightness) || '100';
-	document.querySelector("#theme-tweak-control-contrast").value = /^[0-9]+/.exec(window.currentFilters.contrast) || '100';
-	document.querySelector("#theme-tweak-control-hue-rotate").value = /^[0-9]+/.exec(window.currentFilters.hueRotate) || '0';
+	document.querySelector("#theme-tweak-control-invert").checked = (window.currentFilters['invert'] == "100%");
+	document.querySelector("#theme-tweak-control-saturate").value = /^[0-9]+/.exec(window.currentFilters['saturate']) || '100';
+	document.querySelector("#theme-tweak-control-brightness").value = /^[0-9]+/.exec(window.currentFilters['brightness']) || '100';
+	document.querySelector("#theme-tweak-control-contrast").value = /^[0-9]+/.exec(window.currentFilters['contrast']) || '100';
+	document.querySelector("#theme-tweak-control-hue-rotate").value = /^[0-9]+/.exec(window.currentFilters['hue-rotate']) || '0';
 
 	toggleThemeTweakerUI();
 }
@@ -510,19 +510,19 @@ function clickInterceptor(event) {
 }
 function themeTweakerFieldInputReceived(event) {
 	if (event.target.id == 'theme-tweak-control-invert') {
-		window.currentFilters.invert = event.target.checked ? '100%' : '0%';
+		window.currentFilters['invert'] = event.target.checked ? '100%' : '0%';
 	} else if (event.target.id == 'theme-tweak-control-saturate') {
 		document.querySelector("#theme-tweak-label-saturate").innerText = event.target.value + "%";
-		window.currentFilters.saturate = event.target.value + "%";
+		window.currentFilters['saturate'] = event.target.value + "%";
 	} else if (event.target.id == 'theme-tweak-control-brightness') {
 		document.querySelector("#theme-tweak-label-brightness").innerText = event.target.value + "%";
-		window.currentFilters.brightness = event.target.value + "%";
+		window.currentFilters['brightness'] = event.target.value + "%";
 	} else if (event.target.id == 'theme-tweak-control-contrast') {
 		document.querySelector("#theme-tweak-label-contrast").innerText = event.target.value + "%";
-		window.currentFilters.contrast = event.target.value + "%";
+		window.currentFilters['contrast'] = event.target.value + "%";
 	} else if (event.target.id == 'theme-tweak-control-hue-rotate') {
 		document.querySelector("#theme-tweak-label-hue-rotate").innerText = event.target.value + "°";
-		window.currentFilters.hueRotate = event.target.value + "deg";
+		window.currentFilters['hue-rotate'] = event.target.value + "deg";
 	}
 	applyFilters(window.currentFilters);
 }
