@@ -62,18 +62,20 @@ Object.prototype.isEmpty = function() {
 };
 
 function applyFilters(filters) {
-	if (filters.isEmpty()) return;
+	var fullStyleString = "";
 	
-	var filterString = "";
-	for (key of Object.keys(filters)) {
-		let value = filters[key];
-		filterString += ` ${key}(${value})`;
-	}
-	var fullStyleString = "#content, #ui-elements-container > div:not(#theme-tweaker-ui) { filter:" + filterString + "; }";
+	if (!filters.isEmpty()) {
+		var filterString = "";
+		for (key of Object.keys(filters)) {
+			let value = filters[key];
+			filterString += ` ${key}(${value})`;
+		}
+		fullStyleString = "#content, #ui-elements-container > div:not(#theme-tweaker-ui) { filter:" + filterString + "; }";
 	
-	// Special cases require additional stuff.
-	if (filters.invert == '100%') {
-		fullStyleString += "\nbody { background-color: #000; }";
+		// Special cases require additional stuff.
+		if (filters.invert == '100%') {
+			fullStyleString += "\nbody { background-color: #000; }";
+		}
 	}
 	
 	// Update the style tag.
