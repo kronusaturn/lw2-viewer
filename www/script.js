@@ -710,7 +710,7 @@ function initialize() {
 		injectThemeTweaker();
 
 		// Call pageLayoutFinished() once all activity that can affect the page layout has finished.
-		document.addEventListener("readystatechange", pageLayoutFinished, {once: true});
+		document.addEventListener("readystatechange", pageLayoutFinished);
 		window.setTimeout(pageLayoutFinished);
 	})
 }
