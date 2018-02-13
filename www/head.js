@@ -78,8 +78,8 @@ function applyFilters(filters) {
 		}
 	}
 	
-	// Update the style tag.
-	document.querySelector("#theme-tweak").innerHTML = fullStyleString;
+	// Update the style tag (if it’s already been loaded).
+	document.querySelectorAll("#theme-tweak").forEach(function (styleBlock) { styleBlock.innerHTML = fullStyleString; });
 }
 window.currentFilters = JSON.parse(window.localStorage.getItem("theme-tweaks") || "{ }");
 applyFilters(window.currentFilters);
