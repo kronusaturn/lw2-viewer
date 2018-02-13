@@ -270,12 +270,17 @@
 	    (user-nav-bar (or current-uri (hunchentoot:request-uri*)))))
   (force-output out-stream)) 
 
-(defun replace-query-param (uri param &optional value)
+(defun replace-query-params (uri &rest params)
   (let* ((quri (quri:uri uri))
 	 (old-params (quri:uri-query-params quri))
-	 (new-params (if value
-		       (progn (setf (alexandria:assoc-value old-params param :test #'equal) value) old-params)
-		       (remove-if (lambda (x) (equal (car x) param)) old-params))))
+         (new-params (loop with out = old-params
+                           for (param value) on params by #'cddr
+                           do (if value
+                                  (alexandria:if-let (old-cons (assoc param out :test #'equal))
+                                                     (setf (cdr old-cons) value)
+                                                     (setf out (nconc out (list (cons param value)))))
+                                  (setf out (remove-if (lambda (x) (equal (car x) param)) old-params)))
+                           finally (return out))))
     (if new-params 
       (setf (quri:uri-query-params quri) new-params)
       (setf (quri:uri-query quri) nil))
@@ -288,10 +293,10 @@
 	      (if next ))|#
     (write-string
       (nav-bar-outer "bottom-bar" nil (nav-bar-inner
-					`(,@(if (and prev (> prev 0)) `(("first" ,(replace-query-param request-uri "offset" nil) "Back to first")))
-					  ,@(if prev `(("prev" ,(replace-query-param request-uri "offset" (if (= prev 0) nil prev)) "Previous" :nofollow t)))
+					`(,@(if (and prev (> prev 0)) `(("first" ,(replace-query-params request-uri "offset" nil) "Back to first")))
+					  ,@(if prev `(("prev" ,(replace-query-params request-uri "offset" (if (= prev 0) nil prev)) "Previous" :nofollow t)))
 					   ("top" "#top" "Back to top")
-					   ,@(if next `(("next" ,(replace-query-param request-uri "offset" next) "Next" :nofollow t))))))
+					   ,@(if next `(("next" ,(replace-query-params request-uri "offset" next) "Next" :nofollow t))))))
       out-stream)))
 
 (defun map-output (out-stream fn list)
@@ -353,10 +358,10 @@
                      (t
                        (emit-page (out-stream :title (if hide-title nil title) :description "A faster way to browse LessWrong 2.0" :content-class content-class :with-offset with-offset :with-next with-next
                                               :robots (if (and with-offset (> with-offset 0)) "noindex, nofollow"))
-                                  (format out-stream "<div class=\"page-toolbar\">~@[<a class=\"new-post button\" href=\"/edit-post?section=~A\">New post</a>~]<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" title=\"~A RSS feed\" href=\"~A?~@[~A&~]format=rss\">RSS</a></div>~@[~A~]"
+                                  (format out-stream "<div class=\"page-toolbar\">~@[<a class=\"new-post button\" href=\"/edit-post?section=~A\">New post</a>~]<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" title=\"~A RSS feed\" href=\"~A\">RSS</a></div>~@[~A~]"
                                           (if (and section (logged-in-userid)) section)
                                           title
-                                          (hunchentoot:script-name*) (hunchentoot:query-string*)
+                                          (replace-query-params (hunchentoot:request-uri*) "offset" nil "format" "rss")
                                           extra-html)
                                   (write-index-items-to-html out-stream items)))))
 
