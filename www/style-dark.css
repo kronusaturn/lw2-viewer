@@ -524,13 +524,13 @@ input {
 	left: calc((100% - 900px) / 2 + 20px);
 	padding: 30px 10px 10px 10px;
 	font-family: Vgasys;
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	font-weight: normal;
 	line-height: 1.15;
 }
 
 #theme-tweaker-ui h1 {
-	font-size: 1rem;
+	font-size: 0.875rem;
 	margin: 0;
 	position: absolute;
 	background-color: #a4ed57;
@@ -554,6 +554,7 @@ input {
 }
 #theme-tweaker-ui .current-theme span {
 	font-weight: bold;
+	font-size: 0.875rem;
 }
 
 #theme-tweaker-ui div.section {
@@ -566,6 +567,7 @@ input {
 	padding: 18px 10px 10px 12px;
 	position: relative;
 	margin: 1.5em 0;
+	font-size: 0.8125rem;
 }
 #theme-tweaker-ui div.section::before {
 	content: attr(data-label);
