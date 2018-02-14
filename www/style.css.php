@@ -674,7 +674,7 @@ h1.listing a:nth-of-type(2) {
 		-ms-hyphens: auto;
 		hyphens: auto;
 		z-index: 1;
-		padding: 0 0 0 1px;
+		padding: 0 0 1px 1px;
 	}
 	h1.listing a:nth-of-type(2) {
 		max-width: calc(100% - 33px);
