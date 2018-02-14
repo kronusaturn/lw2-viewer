@@ -561,7 +561,7 @@ input {
 	position: absolute;
 	display: block;
 	background-color: #bfb8bf;
-	top: -0.55em;
+	top: -0.65em;
 	left: 1em;
 	padding: 0 4px;
 }
@@ -739,7 +739,7 @@ input[type=range]::-ms-thumb {
 }
 .theme-tweak-control-label {
 	font-weight: bold;
-	margin: 1.5em 3.15em 0 2em;
+	margin: 1.75em 3.15em 0 2em;
 	padding: 0 2em 0 3.15em;
 	text-align: center;
 	position: relative;
@@ -761,7 +761,7 @@ input[type=range]::-ms-thumb {
 	width: 1px;
 	height: 1em;
 	top: -100%;
-	left: calc(100% / 3 + 2px);
+	left: calc(100% / 3 + 2.5px);
 }
 #theme-tweak-label-hue-rotate::before {
 	left: 7px;
