@@ -458,7 +458,7 @@ input {
 #theme-tweaker-ui::after {
 	content: "";
 	position: fixed;
-	top: calc((100vh - 770px) / 2 + 7px);
+	top: 87px;
 	right: calc((100% - 900px) / 2 + 26px);
 	background-color: #bfb8bf;
 	width: 18px;
@@ -494,13 +494,14 @@ input {
 		0 0 0 2px #030303;
 	width: calc(900px - 40px);
 	max-width: calc(100vw - 20px);
-	max-height: 770px;
-	top: calc((100vh - 770px) / 2);
+	max-height: calc(100vh - 160px);
+	top: 80px;
 	left: calc((100% - 900px) / 2 + 20px);
 	padding: 30px 10px 10px 10px;
 	font-family: MS Sans Serif;
 	font-size: 1rem;
 	line-height: 1.15;
+	overflow-y: scroll;
 }
 
 #theme-tweaker-ui h1 {
