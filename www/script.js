@@ -444,25 +444,27 @@ function injectThemeTweaker() {
 	<p class='current-theme'>Current theme: <span>` + 
 	(window.localStorage.getItem("selected-theme") || "default") + 
 	`</span></p>
-	<div id='theme-tweak-section-invert' class='section' data-label='Invert (photo-negative)'>
-		<input type='checkbox' id='theme-tweak-control-invert'></input>
-		<label for='theme-tweak-control-invert'>Invert colors</label>
-	</div>
-	<div id='theme-tweak-section-saturate' class='section' data-label='Saturation'>
-		<input type="range" id="theme-tweak-control-saturate" min="0" max="300" value="100">
-		<p class="theme-tweak-control-label" id="theme-tweak-label-saturate">100%</p>
-	</div>
-	<div id='theme-tweak-section-brightness' class='section' data-label='Brightness'>
-		<input type="range" id="theme-tweak-control-brightness" min="0" max="300" value="100">
-		<p class="theme-tweak-control-label" id="theme-tweak-label-brightness">100%</p>
-	</div>
-	<div id='theme-tweak-section-contrast' class='section' data-label='Contrast'>
-		<input type="range" id="theme-tweak-control-contrast" min="0" max="300" value="100">
-		<p class="theme-tweak-control-label" id="theme-tweak-label-contrast">100%</p>
-	</div>
-	<div id='theme-tweak-section-hue-rotate' class='section' data-label='Hue rotation'>
-		<input type="range" id="theme-tweak-control-hue-rotate" min="0" max="360" value="0">
-		<p class="theme-tweak-control-label" id="theme-tweak-label-hue-rotate">0°</p>
+	<div class='controls-container'>
+		<div id='theme-tweak-section-invert' class='section' data-label='Invert (photo-negative)'>
+			<input type='checkbox' id='theme-tweak-control-invert'></input>
+			<label for='theme-tweak-control-invert'>Invert colors</label>
+		</div>
+		<div id='theme-tweak-section-saturate' class='section' data-label='Saturation'>
+			<input type="range" id="theme-tweak-control-saturate" min="0" max="300" value="100">
+			<p class="theme-tweak-control-label" id="theme-tweak-label-saturate">100%</p>
+		</div>
+		<div id='theme-tweak-section-brightness' class='section' data-label='Brightness'>
+			<input type="range" id="theme-tweak-control-brightness" min="0" max="300" value="100">
+			<p class="theme-tweak-control-label" id="theme-tweak-label-brightness">100%</p>
+		</div>
+		<div id='theme-tweak-section-contrast' class='section' data-label='Contrast'>
+			<input type="range" id="theme-tweak-control-contrast" min="0" max="300" value="100">
+			<p class="theme-tweak-control-label" id="theme-tweak-label-contrast">100%</p>
+		</div>
+		<div id='theme-tweak-section-hue-rotate' class='section' data-label='Hue rotation'>
+			<input type="range" id="theme-tweak-control-hue-rotate" min="0" max="360" value="0">
+			<p class="theme-tweak-control-label" id="theme-tweak-label-hue-rotate">0°</p>
+		</div>
 	</div>
 	<div class='buttons-container'>
 		<button type='button' class='ok-button default-button'>OK</button>

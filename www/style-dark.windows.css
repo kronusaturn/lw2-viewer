@@ -512,7 +512,21 @@ input {
 	font-family: MS Sans Serif;
 	font-size: 1rem;
 	line-height: 1.15;
+}
+#theme-tweaker-ui .controls-container {
 	overflow-y: scroll;
+	max-height: calc(100vh - 320px);
+	box-shadow: 
+		0 -1px 0 0 #000900,
+		-1px 0 0 0 #000900,
+		-1px -1px 0 0 #000900,
+		0 0 0 1px #6f766f,
+		0 -1px 0 1px #1e231e,
+		-1px 0 0 1px #1e231e,
+		-1px -1px 0 1px #1e231e,
+		0 0 0 2px #fdfdfd;
+	padding: 16px;
+	margin: 4px;
 }
 
 #theme-tweaker-ui h1 {
@@ -535,8 +549,8 @@ input {
 	letter-spacing: 1px;
 }
 #theme-tweaker-ui .current-theme {
-	margin: 1em -8px 1.75em -8px;
-	padding: 0 8px 1em 8px;
+	margin: 1em -8px 1.25em -8px;
+	padding: 0 12px 1em 12px;
 	box-shadow: 
 		0 1px 0 #6f766f,
 		0 2px 0 #000900;
@@ -555,7 +569,10 @@ input {
 		1px 1px 0 #000900;
 	padding: 18px 10px 10px 12px;
 	position: relative;
-	margin: 1.5em 0;
+	margin: 0.5em 0 0.5em 0;
+}
+#theme-tweaker-ui div.section + div.section {
+	margin: 1.5em 0 0.5em 0;
 }
 #theme-tweaker-ui div.section::before {
 	content: attr(data-label);
@@ -770,6 +787,7 @@ input[type=range]::-ms-thumb {
 
 #theme-tweaker-ui .buttons-container {
 	text-align: right;
+	margin: 7px 3px 0 0;
 }
 #theme-tweaker-ui button {
 	box-shadow: 
@@ -825,7 +843,6 @@ input[type=range]::-ms-thumb {
 	background-repeat: no-repeat;
 	background-position: center center;
 }
-
 /*******************/
 /* QUICKNAV WIDGET */
 /*******************/
