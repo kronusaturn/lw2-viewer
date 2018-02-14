@@ -53,31 +53,49 @@ function debug_log($string) {
 function CVT($value, $color_space) {
 	global $mode;
 	## The mode is a bit field; set binary flags indicate specific transformations.
-	## Flags are applied in order from lowest bit position to highest.
+	## Flags are checked, and applied, in order from lowest bit position to highest.
 	##
 	## 0x0001: lightness inversion (in Lab).
 	## 0x0002: hue inversion (in Lab).
 	##
 	## The following six flags are mutually exclusive:
 	##
-	## 0x0004: maps whites to reds (in HSV; keeps V constant, sets H to 0, S to maximum)
-	## 0x0008: maps whites to yellows (in HSV; keeps V constant, sets H to 60, S to maximum)
-	## 0x0010: maps whites to greens (in HSV; keeps V constant, sets H to 120, S to maximum)
-	## 0x0020: maps whites to teal/turquoise (in HSV; keeps V constant, sets H to 180, S to maximum)
-	## 0x0040: maps whites to blue (in HSV; keeps V constant, sets H to 240, S to maximum)
-	## 0x0080: maps whites to magenta (in HSV; keeps V constant, sets H to 300, S to maximum)
+	## 0x0004: maps whites to reds (in HSV; keeps V constant, sets H to 0°, S to maximum)
+	## 0x0008: maps whites to yellows (in HSV; keeps V constant, sets H to 60°, S to maximum)
+	## 0x0010: maps whites to greens (in HSV; keeps V constant, sets H to 120°, S to maximum)
+	## 0x0020: maps whites to teal/turquoise (in HSV; keeps V constant, sets H to 180°, S to maximum)
+	## 0x0040: maps whites to blue (in HSV; keeps V constant, sets H to 240°, S to maximum)
+	## 0x0080: maps whites to magenta (in HSV; keeps V constant, sets H to 300°, S to maximum)
 	
-	switch ($mode) {
-		case 2:
-			$value[0] = 100 - $value[0];
+	if ($mode & 0x0001) {
+		$value[0] = 100 - $value[0];
+	}
+	if ($mode & 0x0002) {
 			$value[1] *= -1;
 			$value[2] *= -1;
-			break;
-		case 1:
-		default:
-			$value[0] = 100 - $value[0];
-			break;
 	}
+
+	$hsv_value = HSVFromRGB(RGBFromXYZ(XYZFromLab($value)));
+	if ($mode & 0x0004) {
+		$hsv_value[0] = 0.0 / 360.0;
+		$hsv_value[1] = 1.0;
+	} else if ($mode & 0x0008) {
+		$hsv_value[0] = 60.0 / 360.0;
+		$hsv_value[1] = 1.0;
+	} else if ($mode & 0x0010) {
+		$hsv_value[0] = 120.0 / 360.0;
+		$hsv_value[1] = 1.0;
+	} else if ($mode & 0x0020) {
+		$hsv_value[0] = 180.0 / 360.0;
+		$hsv_value[1] = 1.0;
+	} else if ($mode & 0x0040) {
+		$hsv_value[0] = 240.0 / 360.0;
+		$hsv_value[1] = 1.0;
+	} else if ($mode & 0x0080) {
+		$hsv_value[0] = 300.0 / 360.0;
+		$hsv_value[1] = 1.0;	
+	}
+	$value = LabFromXYZ(XYZFromRGB(RGBFromHSV($hsv_value)));
 	debug_log("  →  {$color_space} ".PCC($value));
 
 	return $value;
