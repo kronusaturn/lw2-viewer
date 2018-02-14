@@ -373,12 +373,12 @@ input[type=range]::-ms-thumb {
 		-1px -1px 0 1px #dfd8df,
 		0 0 0 2px #030303;
 	margin: 0.5em 1px 0.5em 1em;
-	width: 6em;
-	padding: 5px 0 4px 0;
+	width: 7em;
+	padding: 7px 0 6px 0;
 	color: inherit;
 }
 #theme-tweaker-ui button.default-button {
-	padding: 4px 0 3px 0;
+	padding: 6px 0 6px 0;
 	box-shadow: 
 		0 -1px 0 0 #fff8ff,
 		-1px 0 0 0 #fff8ff,
@@ -402,7 +402,7 @@ input[type=range]::-ms-thumb {
 		-1px 0 0 #7f787f,
 		-1px -1px 0 #7f787f,
 		0 0 0 1px #fff8ff;
-	padding: 5px 0 4px 0;
+	padding: 7px 0 6px 0;
 }
 
 #theme-tweaker-ui .minimize-button {
