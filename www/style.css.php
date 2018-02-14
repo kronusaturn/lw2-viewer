@@ -22,6 +22,13 @@ body {
 	font-family: <?php echo $UI_font; ?>;
 	font-feature-settings: 'ss07';
 }
+body::before {
+	content: "";
+	background-color: inherit;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+}
 input {
 	font-family: inherit;
 	font-size: inherit;

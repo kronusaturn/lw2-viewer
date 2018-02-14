@@ -71,12 +71,7 @@ function applyFilters(filters) {
 			let value = filters[key];
 			filterString += ` ${key}(${value})`;
 		}
-		fullStyleString = "#content, #ui-elements-container > div:not(#theme-tweaker-ui) { filter:" + filterString + "; }";
-	
-		// Special cases require additional stuff.
-		if (filters.invert == '100%') {
-			fullStyleString += "\nbody { background-color: #000; }";
-		}
+		fullStyleString = "body::before, #content, #ui-elements-container > div:not(#theme-tweaker-ui) { filter:" + filterString + "; }";
 	}
 	
 	// Update the style tag (if it’s already been loaded).
