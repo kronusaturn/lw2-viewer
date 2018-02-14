@@ -3542,3 +3542,7 @@ code {
     background-color: transparent;
     border-radius: 0;
 }
+
+#theme-tweaker-toggle button:hover {
+	text-decoration: none;
+}
