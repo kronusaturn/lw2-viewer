@@ -16,7 +16,7 @@
 
 @font-face {
   font-family: 'Vgasys';
-  src: url('sserife.ttf?v=1') format('truetype');
+  src: url('sseriff.ttf?v=1') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -513,13 +513,13 @@ input {
 	left: calc((100% - 900px) / 2 + 20px);
 	padding: 30px 10px 10px 10px;
 	font-family: Vgasys;
-	font-size: 0.6875rem;
+	font-size: 0.875rem;
 	font-weight: normal;
 	line-height: 1.15;
 }
 
 #theme-tweaker-ui h1 {
-	font-size: 0.875rem;
+	font-size: 1rem;
 	margin: 0;
 	position: absolute;
 	background-color: #03037f;
@@ -543,7 +543,6 @@ input {
 }
 #theme-tweaker-ui .current-theme span {
 	font-weight: bold;
-	font-size: 0.875rem;
 }
 
 #theme-tweaker-ui div.section {
@@ -745,7 +744,6 @@ input[type=range]::-ms-thumb {
 	text-align: center;
 	position: relative;
 	font-weight: bold;
-	font-size: 0.8725rem;
 }
 #theme-tweak-label-saturate::before,
 #theme-tweak-label-brightness::before,
