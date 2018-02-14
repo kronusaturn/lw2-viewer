@@ -465,6 +465,10 @@ function injectThemeTweaker() {
 		<input type="range" id="theme-tweak-control-hue-rotate" min="0" max="360" value="0">
 		<p class="theme-tweak-control-label" id="theme-tweak-label-hue-rotate">0°</p>
 	</div>
+	<div class='buttons-container'>
+		<button type='button' class='ok-button default-button'>OK</button>
+		<button type='button' class='cancel-button'>Cancel</button>
+	</div>
 	` + "</div></div>");
 	themeTweakerUI.addActivateEvent(themeTweakerUIOverlayClicked, false);
 	themeTweakerUI.addActivateEvent(themeTweakerUIOverlayClicked, true);
@@ -475,6 +479,9 @@ function injectThemeTweaker() {
 	themeTweakerUI.querySelectorAll("input").forEach(function (field) {
 		field.addEventListener((field.type == "checkbox" ? "change" : "input"), themeTweakerFieldInputReceived);
 	});
+	
+	themeTweakerUI.querySelector(".cancel-button").addActivateEvent(themeTweakerCancelButtonClicked);
+	themeTweakerUI.querySelector(".ok-button").addActivateEvent(themeTweakerOKButtonClicked);
 }
 function toggleThemeTweakerUI() {
 	let themeTweakerUI = document.querySelector("#theme-tweaker-ui");
@@ -500,10 +507,23 @@ function themeTweakerUIOverlayClicked(event) {
 	} else {
 		toggleThemeTweakerUI();	
 		document.querySelector("#theme-tweaker-ui").style.opacity = "1.0";
-		
-		window.currentFilters = JSON.parse(window.localStorage.getItem("theme-tweaks") || "{ }");
-		applyFilters(window.currentFilters);
+		themeTweakReset();
 	}
+}
+function themeTweakerCancelButtonClicked(event) {
+	toggleThemeTweakerUI();
+	themeTweakReset();
+}
+themeTweakerOKButtonClicked(event) {
+	toggleThemeTweakerUI();
+	themeTweakSave();
+}
+function themeTweakReset() {
+	window.currentFilters = JSON.parse(window.localStorage.getItem("theme-tweaks") || "{ }");
+	applyFilters(window.currentFilters);
+}
+function themeTweakSave() {
+	window.localStorage.setItem("theme-tweaks", JSON.stringify(window.currentFilters));
 }
 function clickInterceptor(event) {
 	event.stopPropagation();
