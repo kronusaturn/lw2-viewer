@@ -492,7 +492,7 @@ function toggleThemeTweakerUI() {
 	});
 	// Focus first slider.
 	if (themeTweakerUI.style.display != "none")
-		document.querySelector("#theme-tweaker-ui div.section:first-of-type input[type='range']").focus();
+		document.querySelector("#theme-tweaker-ui div.section:first-child input[type='range']").focus();
 }
 function themeTweakerToggleButtonClicked(event) {
 	document.querySelector("#theme-tweaker-ui .current-theme span").innerText = (window.localStorage.getItem("selected-theme") || "default");
