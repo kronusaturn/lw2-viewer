@@ -761,6 +761,8 @@ input[type=range]::-ms-thumb {
 	padding: 0 2em 0 3.15em;
 	text-align: center;
 	position: relative;
+	text-shadow: 1px 0 0 #000;
+	letter-spacing: 1px;
 }
 #theme-tweak-label-saturate::before,
 #theme-tweak-label-brightness::before,
@@ -3428,6 +3430,8 @@ input[type=range]::-ms-thumb {
 	padding: 0 2em 0 3.15em;
 	text-align: center;
 	position: relative;
+	text-shadow: 1px 0 0 #000;
+	letter-spacing: 1px;
 }
 #theme-tweak-label-saturate::before,
 #theme-tweak-label-brightness::before,

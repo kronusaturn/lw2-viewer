@@ -490,6 +490,9 @@ function toggleThemeTweakerUI() {
 	document.querySelectorAll("h1.listing a").forEach(function (link) { 
 		link.style.pointerEvents = (themeTweakerUI.style.display == "none") ? "auto" : "none";
 	});
+	// Focus first slider.
+	if (themeTweakerUI.style.display != "none")
+		document.querySelector("#theme-tweaker-ui div.section:first-of-type input[type='range']").focus();
 }
 function themeTweakerToggleButtonClicked(event) {
 	document.querySelector("#theme-tweaker-ui .current-theme span").innerText = (window.localStorage.getItem("selected-theme") || "default");
