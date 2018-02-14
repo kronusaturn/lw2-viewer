@@ -512,7 +512,7 @@ input {
 		0 0 0 2px #fdfdfd;
 	width: calc(900px - 40px);
 	max-width: calc(100vw - 20px);
-	height: 770px;
+	max-height: 770px;
 	top: calc((100vh - 770px) / 2);
 	left: calc((100% - 900px) / 2 + 20px);
 	padding: 30px 10px 10px 10px;
