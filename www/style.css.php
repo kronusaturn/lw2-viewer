@@ -7,6 +7,13 @@
 
 <?php echo file_get_contents('fa-custom.css'); ?>
 
+@font-face {
+  font-family: 'Vgasys';
+  src: url('vgasys.otf?v=1') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
 html {
 	box-sizing: border-box;
 	font-size: 16px;
@@ -498,7 +505,9 @@ input {
 	top: calc((100vh - 770px) / 2);
 	left: calc((100% - 900px) / 2 + 20px);
 	padding: 30px 10px 10px 10px;
-	font-family: Arial;
+	font-family: Vgasys;
+	font-size: 0.875rem;
+	line-height: 1.15;
 }
 
 #theme-tweaker-ui h1 {
