@@ -441,26 +441,13 @@ input {
 	opacity: 1.0;
 }
 
-#theme-tweaker-ui > div {
+#theme-tweaker-ui {
 	position: fixed;
+	width: 100vw;
+	height: 100vh;
+	top: 0;
+	left: 0;
 	z-index: 1;
-	background-color: #363c36;
-	box-shadow: 
-		0 -1px 0 0 #000900,
-		-1px 0 0 0 #000900,
-		-1px -1px 0 0 #000900,
-		0 0 0 1px #6f766f,
-		0 -1px 0 1px #1e231e,
-		-1px 0 0 1px #1e231e,
-		-1px -1px 0 1px #1e231e,
-		0 0 0 2px #fdfdfd;
-	width: calc(900px - 40px);
-	max-width: calc(100vw - 20px);
-	height: calc(100vh - 40px);
-	top: 20px;
-	left: calc((100% - 900px) / 2 + 20px);
-	padding: 30px 10px 10px 10px;
-	font-family: Arial;
 }
 #theme-tweaker-ui::before {
 	content: "";
@@ -475,7 +462,7 @@ input {
 #theme-tweaker-ui::after {
 	content: "";
 	position: fixed;
-	top: 26px;
+	top: calc((100vh - 770px) / 2 + 6px);
 	right: calc((100% - 900px) / 2 + 26px);
 	background-color: #363c36;
 	width: 18px;
@@ -495,6 +482,27 @@ input {
 		-1px -1px 0 1px #1e231e,
 		0 0 0 2px #fdfdfd;
 	cursor: pointer;
+}
+#theme-tweaker-ui > div {
+	position: fixed;
+	z-index: 1;
+	background-color: #363c36;
+	box-shadow: 
+		0 -1px 0 0 #000900,
+		-1px 0 0 0 #000900,
+		-1px -1px 0 0 #000900,
+		0 0 0 1px #6f766f,
+		0 -1px 0 1px #1e231e,
+		-1px 0 0 1px #1e231e,
+		-1px -1px 0 1px #1e231e,
+		0 0 0 2px #fdfdfd;
+	width: calc(900px - 40px);
+	max-width: calc(100vw - 20px);
+	height: 770px;
+	top: calc((100vh - 770px) / 2);
+	left: calc((100% - 900px) / 2 + 20px);
+	padding: 30px 10px 10px 10px;
+	font-family: Arial;
 }
 
 #theme-tweaker-ui h1 {

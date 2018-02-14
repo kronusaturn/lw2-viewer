@@ -430,6 +430,48 @@ input {
 	opacity: 1.0;
 }
 
+#theme-tweaker-ui {
+	position: fixed;
+	width: 100vw;
+	height: 100vh;
+	top: 0;
+	left: 0;
+	z-index: 1;
+}
+#theme-tweaker-ui::before {
+	content: "";
+	position: fixed;
+	width: 100vw;
+	height: 100vh;
+	top: 0;
+	left: 0;
+	background-color: #000;
+	opacity: 0.6;
+}
+#theme-tweaker-ui::after {
+	content: "";
+	position: fixed;
+	top: calc((100vh - 770px) / 2 + 6px);
+	right: calc((100% - 900px) / 2 + 26px);
+	background-color: #bfb8bf;
+	width: 18px;
+	height: 16px;
+	z-index: 2;
+	background-image: url('data:image/gif;base64,R0lGODlhGAAUAPEAMQMDAwQEBLGpsc/iOywAAAAAGAAUAAACPJSPqcu9AR0MbNI3G8hpAidYiAgKWxRCX2lYJGucKtxxdOveqXuxXmyTBF+VWULWII6CCIDT4VzpptRqAQA7');
+	background-size: 100%;
+	background-repeat: no-repeat;
+	background-position: center center;
+	box-shadow: 
+		0 -1px 0 0 #fff8ff,
+		-1px 0 0 0 #fff8ff,
+		-1px -1px 0 0 #fff8ff,
+		0 0 0 1px #7f787f,
+		0 -1px 0 1px #dfd8df,
+		-1px 0 0 1px #dfd8df,
+		-1px -1px 0 1px #dfd8df,
+		0 0 0 2px #030303;
+	cursor: pointer;
+}
 #theme-tweaker-ui > div {
 	position: fixed;
 	z-index: 1;
@@ -445,45 +487,11 @@ input {
 		0 0 0 2px #030303;
 	width: calc(900px - 40px);
 	max-width: calc(100vw - 20px);
-	height: calc(100vh - 40px);
-	top: 20px;
+	height: 770px;
+	top: calc((100vh - 770px) / 2);
 	left: calc((100% - 900px) / 2 + 20px);
 	padding: 30px 10px 10px 10px;
 	font-family: Arial;
-}
-#theme-tweaker-ui::before {
-	content: "";
-	position: fixed;
-	width: 100vw;
-	height: 100vh;
-	top: 0;
-	left: 0;
-	background-color: #000;
-	opacity: 0.6;
-}
-#theme-tweaker-ui::after {
-	content: "";
-	position: fixed;
-	top: 26px;
-	right: calc((100% - 900px) / 2 + 26px);
-	background-color: #bfb8bf;
-	width: 18px;
-	height: 16px;
-	z-index: 2;
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_close_widget.gif")) ?>');
-	background-size: 100%;
-	background-repeat: no-repeat;
-	background-position: center center;
-	box-shadow: 
-		0 -1px 0 0 #fff8ff,
-		-1px 0 0 0 #fff8ff,
-		-1px -1px 0 0 #fff8ff,
-		0 0 0 1px #7f787f,
-		0 -1px 0 1px #dfd8df,
-		-1px 0 0 1px #dfd8df,
-		-1px -1px 0 1px #dfd8df,
-		0 0 0 2px #030303;
-	cursor: pointer;
 }
 
 #theme-tweaker-ui h1 {
@@ -491,7 +499,7 @@ input {
 	margin: 0;
 	position: absolute;
 	background-color: #03037f;
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_themes_icon.gif")) ?>');
+	background-image: url('data:image/gif;base64,R0lGODdhIAAgAOYAAAAAAAMDCwMD9AQDqwQDsgUDpAoDBAoDoqsDVKsDWq4DT7ADVrIDXf4DC/8D/QQEnAUE/qQET6QEUqQEW7AESvUEA/0EBAUFEPAFCPcF/wMImgMI/gMJBZsJWvIJBJCBmIuElH2Fj4WFlIiFfImFhoOGi4qGjI6GmpKGjoKHm5OHk4mIhoWKkoqKjIqKk4SLjIeLfY2LmX2NhYSOmoeOhoKQkQOkWKOkaqWlXaulXKSmTqSmUqqmYQqnYKmnVQWoXaWocZ+pbAiqVaOqVKSqTKmqVKyqWwOrVJ+rU6WrWrCuWcS+2Mi/wMy/082/zsrCzMrDxcLE1cXExLzFy77FxMTFzMzF1bfGwbzGvrfH18vIw7/J08HJu8PJxMPJzLTKyL3KzL7Kw73Lvs3Lyr3Mt8HM0LPRuf/2A/j38//3+fz+Cv3+9P7+BO//A/T/BPT/Cfb//vf/9///7P///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAAHQALAAAAAAgACAAAAf/gHSCg4SFQ0NJOTqFjI2ORXNzaZEAjpaNRnBVbA4OV0oBl4w0KS4iLjI5c11unRlsOQYgLyUutS2VjSEHBQQDDz5zb1icGVo4AATKDwO/F441vgXNQ3BSPWFsUmxURgAFAHMBcwC5jC4azb2qP0c22WBqUkMAAfXl5oUmTV5cVGBG5hxpx0YMmypJUCCjUgWLlHyEWJiJFGnHHDZCtJ0Zo4NcmR0ArMypAnGQiCUU1yCZ84WNBQxb2HgB8IINFHpzooRqZGLMnDWRcFy0QJQbGzIH2/AwsOahoxdMJDAAOseiy6IQIESxidNpoxMdiIabg0STGi9sNkAQAOGJEWQ5/0sKYoGgQYUALSKp6sLGCZusbFbgXDNFLh0FRMVSBOBjh5EdRYrswBmJy05GExJboDknDjl7+Mql9HKZUIQGmy1U2AxnTuufFGN3/iC3roUAiQGwAEpVNtUdIMoVQiD2RQQLqMP1jk2VhxsAJkzkk6AawInjyV2klD1niJsSJrxgMbdALAgZcySg3sx9Dpo1RNjMMSCltbnTm0FESpBbhGw5QCShhjAAeEGJIJltlgACCUygAHHIjUVREWs8cRE5Y+VCgWqoeaDZegDMQAUVYYDhAxtZuHERAFSEUwl1FlwQWmi5GYBPDmyEcaEBLrhIR4IAuODCCCKw4AIICd5WwlEgAOQAg3xqiEbOBKgFUAIKjcBogQGEcADADfIVSImN5bzgCABkWlkIY89NcaApKpBgyS0tyMBIkzH4R44ofDJJBABR9NjnoAAEEaRhg94pXCAAOw==');
 	background-repeat: no-repeat;
 	background-size: 20px;
 	color: #fff8ff;
@@ -559,7 +567,7 @@ input {
 	cursor: pointer;
 }
 #theme-tweaker-ui input[type='checkbox']:checked + label::before {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_checkmark.gif")) ?>');	
+	background-image: url('data:image/gif;base64,R0lGODdhEgASAJEAAAAAAP/2/////wAAACH5BAkAAAMALAAAAAASABIAAAIvjI+py50C3ANRGkiRYDgfsE2UZ1DhNY7IGHbq+qbkJ8tLnTZ4pdtWbinxgsRioAAAOw==');	
 	background-size: 14px;
 	background-repeat: no-repeat;
 	background-position: center center;
