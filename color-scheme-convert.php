@@ -52,8 +52,20 @@ function debug_log($string) {
 ## CVT = "Color Value Transform"
 function CVT($value, $color_space) {
 	global $mode;
-	## Mode 1 is a lightness inversion (in Lab) only.
-	## Mode 2 is mode 1 plus a 180° hue rotation (in Lab).
+	## The mode is a bit field; set binary flags indicate specific transformations.
+	## Flags are applied in order from lowest bit position to highest.
+	##
+	## 0x0001: lightness inversion (in Lab).
+	## 0x0002: hue inversion (in Lab).
+	##
+	## The following six flags are mutually exclusive:
+	##
+	## 0x0004: maps whites to reds (in HSV; keeps V constant, sets H to 0, S to maximum)
+	## 0x0008: maps whites to yellows (in HSV; keeps V constant, sets H to 60, S to maximum)
+	## 0x0010: maps whites to greens (in HSV; keeps V constant, sets H to 120, S to maximum)
+	## 0x0020: maps whites to teal/turquoise (in HSV; keeps V constant, sets H to 180, S to maximum)
+	## 0x0040: maps whites to blue (in HSV; keeps V constant, sets H to 240, S to maximum)
+	## 0x0080: maps whites to magenta (in HSV; keeps V constant, sets H to 300, S to maximum)
 	
 	switch ($mode) {
 		case 2:

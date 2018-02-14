@@ -7,20 +7,6 @@
 
 <?php echo file_get_contents('fa-custom.css'); ?>
 
-@font-face {
-  font-family: 'Vgasys';
-  src: url('vgasys.otf?v=1') format('opentype');
-  font-weight: bold;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Vgasys';
-  src: url('sseriff.ttf?v=1') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
 html {
 	box-sizing: border-box;
 	font-size: 16px;
@@ -512,14 +498,13 @@ input {
 	top: calc((100vh - 770px) / 2);
 	left: calc((100% - 900px) / 2 + 20px);
 	padding: 30px 10px 10px 10px;
-	font-family: Vgasys;
-	font-size: 0.8125rem;
-	font-weight: normal;
+	font-family: MS Sans Serif;
+	font-size: 1rem;
 	line-height: 1.15;
 }
 
 #theme-tweaker-ui h1 {
-	font-size: 0.875rem;
+	font-weight: normal;
 	margin: 0;
 	position: absolute;
 	background-color: #03037f;
@@ -542,8 +527,6 @@ input {
 		0 2px 0 #fff8ff;
 }
 #theme-tweaker-ui .current-theme span {
-	font-weight: bold;
-	font-size: 0.875rem;
 }
 
 #theme-tweaker-ui div.section {
@@ -556,7 +539,6 @@ input {
 	padding: 18px 10px 10px 12px;
 	position: relative;
 	margin: 1.5em 0;
-	font-size: 0.8125rem;
 }
 #theme-tweaker-ui div.section::before {
 	content: attr(data-label);
@@ -745,7 +727,6 @@ input[type=range]::-ms-thumb {
 	padding: 0 2em 0 3.15em;
 	text-align: center;
 	position: relative;
-	font-weight: bold;
 }
 #theme-tweak-label-saturate::before,
 #theme-tweak-label-brightness::before,
