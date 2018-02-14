@@ -14,7 +14,7 @@ if [[ "$1" = "--force" ]] || ! git diff-index --quiet --cached HEAD -- www/style
 	done
 	git show :www/style.css.php | (cd www; php -- Mac >style.css)
 	git show :www/style.css.php | (cd www; php -- Windows >style.windows.css)
-	php color-scheme-convert.php www/style.css 2 >www/style-dark.css
-	php color-scheme-convert.php www/style.windows.css 2 >www/style-dark.windows.css
+	php color-scheme-convert.php www/style.css 3 >www/style-dark.css
+	php color-scheme-convert.php www/style.windows.css 3 >www/style-dark.windows.css
 	git add www/style.css www/style.windows.css www/style-dark.css www/style-dark.windows.css
 fi
