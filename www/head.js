@@ -82,5 +82,6 @@ function applyFilters(filters) {
 	// Update the style tag (if it’s already been loaded).
 	document.querySelectorAll("#theme-tweak").forEach(function (styleBlock) { styleBlock.innerHTML = fullStyleString; });
 }
+document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='theme-tweak'></style>");	
 window.currentFilters = JSON.parse(window.localStorage.getItem("theme-tweaks") || "{ }");
 applyFilters(window.currentFilters);

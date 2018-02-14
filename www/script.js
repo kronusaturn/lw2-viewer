@@ -438,8 +438,6 @@ function injectThemeTweaker() {
 	let themeTweakerToggle = addUIElement("<div id='theme-tweaker-toggle'><button type='button' tabindex='-1' title='Customize appearance'>&#xf1de;</button></div>");
 	themeTweakerToggle.querySelector("button").addActivateEvent(themeTweakerToggleButtonClicked);
 	
-	document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='theme-tweak'></style>");
-	
 	let themeTweakerUI = addUIElement("<div id='theme-tweaker-ui' style='display: none;'><div>" + 
 	`<h1>Customize appearance</h1>
 	<p class='current-theme'>Current theme: <strong>` + 
