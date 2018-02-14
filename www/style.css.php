@@ -559,9 +559,9 @@ input {
 }
 #theme-tweaker-ui input[type='checkbox'] + label {
 	position: relative;
-	padding: 0 0 0 1.75em;
+	padding: 0 0 0 1.5em;
 	cursor: pointer;
-	line-height: 1.4;
+	line-height: 1.2;
 }
 #theme-tweaker-ui input[type='checkbox'] + label::before {
 	content: "";
