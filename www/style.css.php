@@ -504,6 +504,7 @@ input {
 }
 
 #theme-tweaker-ui h1 {
+	font-size: inherit;
 	font-weight: normal;
 	margin: 0;
 	position: absolute;
