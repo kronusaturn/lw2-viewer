@@ -3,6 +3,7 @@ body {
 	font-family: Anonymous Pro;
 }
 #content {
+	background-color: #fff;
 	box-shadow: 0 2px 0 #000;
 	border-style: solid;
 	border-color: #000;
@@ -116,6 +117,7 @@ h1.listing {
 }
 h1.listing a {
 	padding: 0 0 0 1.5px;
+	color: #000;
 }
 h1.listing a[href^='/'] {
 	font-family: Anonymous Pro;
@@ -204,6 +206,13 @@ input[type='search']:focus {
 	border: 1px dashed #000 !important;
 	background-color: transparent !important;
 	box-shadow: none !important;
+}
+input[type='text'], 
+input[type='search'], 
+input[type='password'], 
+textarea {
+	background-color: #fff;
+	color: #000;
 }
 
 input[type='submit'] {
