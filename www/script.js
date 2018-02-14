@@ -521,7 +521,7 @@ function themeTweakerCancelButtonClicked(event) {
 	toggleThemeTweakerUI();
 	themeTweakReset();
 }
-themeTweakerOKButtonClicked(event) {
+function themeTweakerOKButtonClicked(event) {
 	toggleThemeTweakerUI();
 	themeTweakSave();
 }
