@@ -471,7 +471,7 @@ input {
 	width: 18px;
 	height: 16px;
 	z-index: 2;
-	background-image: url('data:image/gif;base64,R0lGODlhGAAUAPEAMQMDAwQEBLGpsc/iOywAAAAAGAAUAAACPJSPqcu9AR0MbNI3G8hpAidYiAgKWxRCX2lYJGucKtxxdOveqXuxXmyTBF+VWULWII6CCIDT4VzpptRqAQA7');
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_close_widget.gif")) ?>');
 	background-size: 100%;
 	background-repeat: no-repeat;
 	background-position: center center;
@@ -512,10 +512,11 @@ input {
 
 #theme-tweaker-ui h1 {
 	font-size: 1rem;
+	font-weight: normal;
 	margin: 0;
 	position: absolute;
 	background-color: #03037f;
-	background-image: url('data:image/gif;base64,R0lGODdhIAAgAOYAAAAAAAMDCwMD9AQDqwQDsgUDpAoDBAoDoqsDVKsDWq4DT7ADVrIDXf4DC/8D/QQEnAUE/qQET6QEUqQEW7AESvUEA/0EBAUFEPAFCPcF/wMImgMI/gMJBZsJWvIJBJCBmIuElH2Fj4WFlIiFfImFhoOGi4qGjI6GmpKGjoKHm5OHk4mIhoWKkoqKjIqKk4SLjIeLfY2LmX2NhYSOmoeOhoKQkQOkWKOkaqWlXaulXKSmTqSmUqqmYQqnYKmnVQWoXaWocZ+pbAiqVaOqVKSqTKmqVKyqWwOrVJ+rU6WrWrCuWcS+2Mi/wMy/082/zsrCzMrDxcLE1cXExLzFy77FxMTFzMzF1bfGwbzGvrfH18vIw7/J08HJu8PJxMPJzLTKyL3KzL7Kw73Lvs3Lyr3Mt8HM0LPRuf/2A/j38//3+fz+Cv3+9P7+BO//A/T/BPT/Cfb//vf/9///7P///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAAHQALAAAAAAgACAAAAf/gHSCg4SFQ0NJOTqFjI2ORXNzaZEAjpaNRnBVbA4OV0oBl4w0KS4iLjI5c11unRlsOQYgLyUutS2VjSEHBQQDDz5zb1icGVo4AATKDwO/F441vgXNQ3BSPWFsUmxURgAFAHMBcwC5jC4azb2qP0c22WBqUkMAAfXl5oUmTV5cVGBG5hxpx0YMmypJUCCjUgWLlHyEWJiJFGnHHDZCtJ0Zo4NcmR0ArMypAnGQiCUU1yCZ84WNBQxb2HgB8IINFHpzooRqZGLMnDWRcFy0QJQbGzIH2/AwsOahoxdMJDAAOseiy6IQIESxidNpoxMdiIabg0STGi9sNkAQAOGJEWQ5/0sKYoGgQYUALSKp6sLGCZusbFbgXDNFLh0FRMVSBOBjh5EdRYrswBmJy05GExJboDknDjl7+Mql9HKZUIQGmy1U2AxnTuufFGN3/iC3roUAiQGwAEpVNtUdIMoVQiD2RQQLqMP1jk2VhxsAJkzkk6AawInjyV2klD1niJsSJrxgMbdALAgZcySg3sx9Dpo1RNjMMSCltbnTm0FESpBbhGw5QCShhjAAeEGJIJltlgACCUygAHHIjUVREWs8cRE5Y+VCgWqoeaDZegDMQAUVYYDhAxtZuHERAFSEUwl1FlwQWmi5GYBPDmyEcaEBLrhIR4IAuODCCCKw4AIICd5WwlEgAOQAg3xqiEbOBKgFUAIKjcBogQGEcADADfIVSImN5bzgCABkWlkIY89NcaApKpBgyS0tyMBIkzH4R44ofDJJBABR9NjnoAAEEaRhg94pXCAAOw==');
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_themes_icon.gif")) ?>');
 	background-repeat: no-repeat;
 	background-size: 20px;
 	color: #fff8ff;
@@ -583,7 +584,7 @@ input {
 	cursor: pointer;
 }
 #theme-tweaker-ui input[type='checkbox']:checked + label::before {
-	background-image: url('data:image/gif;base64,R0lGODdhEgASAJEAAAAAAP/2/////wAAACH5BAkAAAMALAAAAAASABIAAAIvjI+py50C3ANRGkiRYDgfsE2UZ1DhNY7IGHbq+qbkJ8tLnTZ4pdtWbinxgsRioAAAOw==');	
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_checkmark.gif")) ?>');	
 	background-size: 14px;
 	background-repeat: no-repeat;
 	background-position: center center;
@@ -727,7 +728,6 @@ input[type=range]::-ms-thumb {
 	right: 0.4em;
 }
 .theme-tweak-control-label {
-	font-weight: bold;
 	margin: 1.75em 3.15em 0 2em;
 	padding: 0 2em 0 3.15em;
 	text-align: center;
@@ -800,6 +800,18 @@ input[type=range]::-ms-thumb {
 		-1px -1px 0 #7f787f,
 		0 0 0 1px #fff8ff;
 	padding: 5px 0 4px 0;
+}
+
+#theme-tweaker-ui .minimize-button {
+	width: 18px;
+	height: 16px;
+	position: absolute;
+	top: -1px;
+	right: 30px;
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_minimize_widget.gif")) ?>');	
+	background-size: 14px;
+	background-repeat: no-repeat;
+	background-position: center center;
 }
 
 /*******************/

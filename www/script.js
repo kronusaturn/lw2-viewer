@@ -440,9 +440,10 @@ function injectThemeTweaker() {
 	
 	let themeTweakerUI = addUIElement("<div id='theme-tweaker-ui' style='display: none;'><div>" + 
 	`<h1>Customize appearance</h1>
-	<p class='current-theme'>Current theme: <strong>` + 
+	<button type='button' class='minimize-button' tabindex='-1'></button>
+	<p class='current-theme'>Current theme: <span>` + 
 	(window.localStorage.getItem("selected-theme") || "default") + 
-	`</strong></p>
+	`</span></p>
 	<div id='theme-tweak-section-invert' class='section' data-label='Invert (photo-negative)'>
 		<input type='checkbox' id='theme-tweak-control-invert'></input>
 		<label for='theme-tweak-control-invert'>Invert colors</label>
@@ -489,13 +490,21 @@ function toggleThemeTweakerUI() {
 	});
 }
 function themeTweakerToggleButtonClicked(event) {
-	document.querySelector("#theme-tweaker-ui .current-theme strong").innerText = (window.localStorage.getItem("selected-theme") || "default");
+	document.querySelector("#theme-tweaker-ui .current-theme span").innerText = (window.localStorage.getItem("selected-theme") || "default");
 	
 	document.querySelector("#theme-tweak-control-invert").checked = (window.currentFilters['invert'] == "100%");
+	
 	document.querySelector("#theme-tweak-control-saturate").value = /^[0-9]+/.exec(window.currentFilters['saturate']) || '100';
+	document.querySelector("#theme-tweak-label-saturate").innerText = document.querySelector("#theme-tweak-control-saturate").value + "%";
+	
 	document.querySelector("#theme-tweak-control-brightness").value = /^[0-9]+/.exec(window.currentFilters['brightness']) || '100';
+	document.querySelector("#theme-tweak-label-brightness").innerText = document.querySelector("#theme-tweak-control-brightness").value + "%";
+	
 	document.querySelector("#theme-tweak-control-contrast").value = /^[0-9]+/.exec(window.currentFilters['contrast']) || '100';
+	document.querySelector("#theme-tweak-label-contrast").innerText = document.querySelector("#theme-tweak-control-contrast").value + "%";
+	
 	document.querySelector("#theme-tweak-control-hue-rotate").value = /^[0-9]+/.exec(window.currentFilters['hue-rotate']) || '0';
+	document.querySelector("#theme-tweak-label-hue-rotate").innerText = document.querySelector("#theme-tweak-control-hue-rotate").value + "°";
 
 	toggleThemeTweakerUI();
 }

@@ -523,6 +523,7 @@ input {
 
 #theme-tweaker-ui h1 {
 	font-size: 1rem;
+	font-weight: normal;
 	margin: 0;
 	position: absolute;
 	background-color: #03037f;
@@ -738,7 +739,6 @@ input[type=range]::-ms-thumb {
 	right: 0.4em;
 }
 .theme-tweak-control-label {
-	font-weight: bold;
 	margin: 1.75em 3.15em 0 2em;
 	padding: 0 2em 0 3.15em;
 	text-align: center;
@@ -811,6 +811,18 @@ input[type=range]::-ms-thumb {
 		-1px -1px 0 #7f787f,
 		0 0 0 1px #fff8ff;
 	padding: 5px 0 4px 0;
+}
+
+#theme-tweaker-ui .minimize-button {
+	width: 18px;
+	height: 16px;
+	position: absolute;
+	top: -1px;
+	right: 30px;
+	background-image: url('data:image/gif;base64,R0lGODdhGAAUAKIAAAAAALGnsbGpsf///wAAAAAAAAAAAAAAACH5BAkAAAQALAAAAAAYABQAAAM+KLrc/jDKSat9IOfL9OaKB1RBuYikEJzetYatZQoo+dKxDWtM6f9AHG8BLPqEH6IxWFMuj03F85dSrWYgUAIAOw==');	
+	background-size: 14px;
+	background-repeat: no-repeat;
+	background-position: center center;
 }
 
 /*******************/
