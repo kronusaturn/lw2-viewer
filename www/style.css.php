@@ -10,14 +10,14 @@
 @font-face {
   font-family: 'Vgasys';
   src: url('vgasys.otf?v=1') format('opentype');
-  font-weight: 900;
+  font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Vgasys';
   src: url('sseriff.ttf?v=1') format('truetype');
-  font-weight: 400;
+  font-weight: normal;
   font-style: normal;
 }
 
@@ -514,13 +514,13 @@ input {
 	padding: 30px 10px 10px 10px;
 	font-family: Vgasys;
 	font-size: 0.8125rem;
-	font-weight: 400;
+	font-weight: normal;
 	line-height: 1.15;
 }
 
 #theme-tweaker-ui h1 {
 	font-size: 0.875rem;
-	font-weight: 900;
+	font-weight: bold;
 	margin: 0;
 	position: absolute;
 	background-color: #03037f;

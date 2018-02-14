@@ -21,14 +21,14 @@
 @font-face {
   font-family: 'Vgasys';
   src: url('vgasys.otf?v=1') format('opentype');
-  font-weight: 900;
+  font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Vgasys';
   src: url('sseriff.ttf?v=1') format('truetype');
-  font-weight: 400;
+  font-weight: normal;
   font-style: normal;
 }
 
@@ -525,13 +525,13 @@ input {
 	padding: 30px 10px 10px 10px;
 	font-family: Vgasys;
 	font-size: 0.8125rem;
-	font-weight: 400;
+	font-weight: normal;
 	line-height: 1.15;
 }
 
 #theme-tweaker-ui h1 {
 	font-size: 0.875rem;
-	font-weight: 900;
+	font-weight: bold;
 	margin: 0;
 	position: absolute;
 	background-color: #03037f;
@@ -827,7 +827,7 @@ input[type=range]::-ms-thumb {
 	position: absolute;
 	top: -1px;
 	right: 30px;
-	background-image: url('data:image/gif;base64,R0lGODdhGAAUAKIAAAAAALGnsbGpsf///wAAAAAAAAAAAAAAACH5BAkAAAQALAAAAAAYABQAAAM+KLrc/jDKSat9IOfL9OaKB1RBuYikEJzetYatZQoo+dKxDWtM6f9AHG8BLPqEH6IxWFMuj03F85dSrWYgUAIAOw==');	
+	background-image: url('data:image/gif;base64,R0lGODdhGAAUAJEAAAAAAP///wAAAAAAACH5BAkAAAIALAAAAAAYABQAAAImlI+py+0NYnxMTqoswNnypH1IKBpkeYrpt3It9lLxMzs15JX6VwAAOw==');	
 	background-size: 14px;
 	background-repeat: no-repeat;
 	background-position: center center;
