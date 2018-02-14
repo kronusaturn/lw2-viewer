@@ -88,14 +88,14 @@
 	overflow-y: scroll;
 	max-height: calc(100vh - 320px);
 	box-shadow: 
-		0 -1px 0 0 #fff8ff,
-		-1px 0 0 0 #fff8ff,
-		-1px -1px 0 0 #fff8ff,
-		0 0 0 1px #7f787f,
-		0 -1px 0 1px #dfd8df,
-		-1px 0 0 1px #dfd8df,
-		-1px -1px 0 1px #dfd8df,
-		0 0 0 2px #030303;
+		0 -1px 0 0 #030303,
+		-1px 0 0 0 #030303,
+		-1px -1px 0 0 #030303,
+		0 0 0 1px #dfd8df,
+		0 -1px 0 1px #7f787f,
+		-1px 0 0 1px #7f787f,
+		-1px -1px 0 1px #7f787f,
+		0 0 0 2px #fff8ff;
 	padding: 16px;
 	margin: 4px;
 }
@@ -413,4 +413,22 @@ input[type=range]::-ms-thumb {
 	background-size: 14px;
 	background-repeat: no-repeat;
 	background-position: center center;
+}
+
+#theme-tweaker-ui .controls-container::-webkit-scrollbar {
+	width: 20px;
+	background-color: #bfb8bf;
+}
+#theme-tweaker-ui .controls-container::-webkit-scrollbar-track {
+	background-color: #fff8ff;
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_scrollbar_track.gif")) ?>');	
+}
+ 
+#theme-tweaker-ui .controls-container::-webkit-scrollbar-thumb {
+	background-color: #bfb8bf;
+	box-shadow:
+		-1px -1px 0 0 #030303 inset,
+		1px 1px 0 0 #dfd8df inset,
+		-1px -1px 0 1px #7f787f inset,
+		0 0 0 2px #fff8ff inset;	
 }
