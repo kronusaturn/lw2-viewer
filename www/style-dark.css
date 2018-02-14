@@ -469,7 +469,7 @@ input {
 #theme-tweaker-ui::after {
 	content: "";
 	position: fixed;
-	top: calc((100vh - 770px) / 2 + 6px);
+	top: calc((100vh - 770px) / 2 + 7px);
 	right: calc((100% - 900px) / 2 + 26px);
 	background-color: #363c36;
 	width: 18px;
@@ -524,12 +524,14 @@ input {
 	background-repeat: no-repeat;
 	background-size: 20px;
 	color: #000900;
-	padding: 3px 6px 3px 30px;
+	padding: 4px 6px 3px 30px;
 	background-position: 4px 50%;
 	left: 2px;
 	top: 2px;
 	width: calc(100% - 4px);
 	cursor: default;
+	text-shadow: 1px 0 0 #000;
+	letter-spacing: 1px;
 }
 #theme-tweaker-ui .current-theme {
 	margin: 1em -8px 1.75em -8px;
@@ -539,6 +541,8 @@ input {
 		0 2px 0 #000900;
 }
 #theme-tweaker-ui .current-theme span {
+	text-shadow: 1px 0 0 #fff;
+	letter-spacing: 1px;
 }
 
 #theme-tweaker-ui div.section {
