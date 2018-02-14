@@ -513,14 +513,13 @@ input {
 	left: calc((100% - 900px) / 2 + 20px);
 	padding: 30px 10px 10px 10px;
 	font-family: Vgasys;
-	font-size: 0.8125rem;
+	font-size: 0.875rem;
 	font-weight: normal;
 	line-height: 1.15;
 }
 
 #theme-tweaker-ui h1 {
-	font-size: 0.875rem;
-	font-weight: bold;
+	font-size: 1rem;
 	margin: 0;
 	position: absolute;
 	background-color: #03037f;
@@ -542,6 +541,9 @@ input {
 		0 1px 0 #7f787f,
 		0 2px 0 #fff8ff;
 }
+#theme-tweaker-ui .current-theme span {
+	font-weight: bold;
+}
 
 #theme-tweaker-ui div.section {
 	border: 1px solid #7f787f;
@@ -559,7 +561,7 @@ input {
 	position: absolute;
 	display: block;
 	background-color: #bfb8bf;
-	top: -0.65em;
+	top: -0.5em;
 	left: 1em;
 	padding: 0 4px;
 }
@@ -572,13 +574,14 @@ input {
 }
 #theme-tweaker-ui input[type='checkbox'] + label {
 	position: relative;
-	padding: 0 0 0 1.5em;
+	padding: 0 0 0 1.75em;
 	cursor: pointer;
+	line-height: 1.4;
 }
 #theme-tweaker-ui input[type='checkbox'] + label::before {
 	content: "";
-	width: 1em;
-	height: 1em;
+	width: 1rem;
+	height: 1rem;
 	position: absolute;
 	left: 0;
 	background-color: #fff8ff;
@@ -712,7 +715,7 @@ input[type=range]::-ms-thumb {
 #theme-tweaker-ui input[type='range']::before,
 #theme-tweaker-ui input[type='range']::after {
 	position: absolute;
-	top: -0.45em;
+	top: -0.35em;
 	color: #666;
 }
 #theme-tweaker-ui #theme-tweak-control-saturate::before,
@@ -736,10 +739,11 @@ input[type=range]::-ms-thumb {
 	right: 0.4em;
 }
 .theme-tweak-control-label {
-	margin: 1.75em 3.15em 0 2em;
+	margin: 1.55em 3.15em 0 2em;
 	padding: 0 2em 0 3.15em;
 	text-align: center;
 	position: relative;
+	font-weight: bold;
 }
 #theme-tweak-label-saturate::before,
 #theme-tweak-label-brightness::before,
