@@ -530,7 +530,7 @@ function themeTweakerUIOverlayClicked(event) {
 function themeTweakerMinimizeButtonClicked(event) {
 	let themeTweakerStyle = document.querySelector("#theme-tweaker-style");
 
-	if (event.target.hasClass("minimize") {
+	if (event.target.hasClass("minimize")) {
 		event.target.removeClass("minimize");
 		themeTweakerStyle.innerHTML = 
 			`#theme-tweak-ui > div {
