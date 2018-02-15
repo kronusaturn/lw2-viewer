@@ -915,6 +915,9 @@ input[type=range]::-ms-thumb {
 #theme-tweaker-ui .clippy-container:hover {
 	opacity: 1.0;
 }
+#theme-tweaker-ui .clippy-container .hint {
+	line-height: 1.3;
+}
 #theme-tweaker-ui .clippy-container .hint img {
 	vertical-align: text-bottom;
 }

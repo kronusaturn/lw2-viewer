@@ -580,6 +580,8 @@ function themeTweakerResetDefaultsButtonClicked(event) {
 		slider.value = slider.dataset['defaultValue'];
 		document.querySelector("#theme-tweak-label-" + sliderName).innerText = slider.value + slider.dataset['labelSuffix'];
 	});
+	window.currentFilters = { };
+	applyFilters(window.currentFilters);
 }
 function themeTweakerCancelButtonClicked(event) {
 	toggleThemeTweakerUI();
