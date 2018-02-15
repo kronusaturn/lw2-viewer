@@ -176,7 +176,7 @@ function ExpandTextarea(textarea) {
 function makeVoteCompleteEvent(buttonTarget, karmaTarget) {
 	return function(e) {
 		buttonTarget.parentNode.querySelectorAll("button.vote").forEach(function(b) { b.style.pointerEvents = "" });
-		buttonTarget.parentNode.querySelectorAll(".karma").forEach(function(x) { x.style.opacity = "" });
+		buttonTarget.parentNode.style.opacity = "";
 		if(e.target.status == 200) {
 			let res = JSON.parse(e.target.responseText);
 			let karmaText = res[0], voteType = res[1];
@@ -199,7 +199,7 @@ function sendVoteRequest(targetId, targetType, voteType, onFinish) {
 function voteEvent(e) {
 	e.target.blur();
 	e.target.parentNode.querySelectorAll("button.vote").forEach(function(b) { b.style.pointerEvents = "none" });
-	e.target.parentNode.querySelectorAll(".karma").forEach(function(x) { x.style.opacity = "0.5" });
+	e.target.parentNode.style.opacity = "0.5";
 	let targetType = e.target.getAttribute("data-target-type");
 	let targetId = ((targetType == 'Comments') ? e.target.getCommentId() : e.target.parentNode.getAttribute("data-post-id"));
 	let voteType = e.target.getAttribute("data-vote-type");
