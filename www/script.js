@@ -444,7 +444,7 @@ function injectThemeTweaker() {
 	let themeTweakerToggle = addUIElement("<div id='theme-tweaker-toggle'><button type='button' tabindex='-1' title='Customize appearance'>&#xf1de;</button></div>");
 	themeTweakerToggle.querySelector("button").addActivateEvent(themeTweakerToggleButtonClicked);
 	
-	let themeTweakerUI = addUIElement("<div id='theme-tweaker-ui' style='display: none;'><div>" + 
+	let themeTweakerUI = addUIElement("<div id='theme-tweaker-ui' style='display: none;'><div class='main-theme-tweaker-window'>" + 
 	`<h1>Customize appearance</h1>
 	<button type='button' class='minimize-button minimize' tabindex='-1'></button>
 	<button type='button' class='help-button' tabindex='-1'></button>
@@ -536,7 +536,7 @@ function themeTweakerMinimizeButtonClicked(event) {
 	if (event.target.hasClass("minimize")) {
 		event.target.removeClass("minimize");
 		themeTweakerStyle.innerHTML = 
-			`#theme-tweaker-ui > div {
+			`#theme-tweaker-ui .main-theme-tweaker-window {
 				width: 320px;
 				height: 31px;
 				overflow: hidden;

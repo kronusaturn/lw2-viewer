@@ -26,6 +26,9 @@
 	top: 0;
 	left: 0;
 	z-index: 1;
+	font-family: MS Sans Serif;
+	font-size: 1rem;
+	line-height: 1.15;
 }
 #theme-tweaker-ui::before {
 	content: "";
@@ -61,7 +64,7 @@
 		0 0 0 2px #030303;
 	cursor: pointer;
 }
-#theme-tweaker-ui > div {
+#theme-tweaker-ui .main-theme-tweaker-window {
 	position: fixed;
 	z-index: 1;
 	background-color: #bfb8bf;
@@ -80,9 +83,6 @@
 	top: 80px;
 	left: calc((100% - 900px) / 2 + 20px);
 	padding: 30px 10px 10px 10px;
-	font-family: MS Sans Serif;
-	font-size: 1rem;
-	line-height: 1.15;
 }
 #theme-tweaker-ui .controls-container {
 	overflow-y: scroll;
@@ -465,6 +465,7 @@ input[type='range']::-ms-thumb {
 
 #theme-tweaker-ui .clippy-container {
 	position: fixed;
+	z-index: 1;
 	background-color: #ffa;
 	width: 13em;
 	left: 2em;
