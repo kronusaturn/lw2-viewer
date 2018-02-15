@@ -554,6 +554,7 @@ input {
 	box-shadow: 
 		0 1px 0 #6f766f,
 		0 2px 0 #000900;
+	cursor: default;
 }
 #theme-tweaker-ui .current-theme span {
 	text-shadow: 1px 0 0 #fff;
@@ -567,7 +568,7 @@ input {
 		0 1px 0 #000900,
 		1px 0 0 #000900,
 		1px 1px 0 #000900;
-	padding: 18px 10px 10px 12px;
+	padding: 15px 10px 10px 12px;
 	position: relative;
 	margin: 0.5em 0 0.5em 0;
 }
@@ -622,22 +623,20 @@ input {
 #theme-tweaker-ui input[type='range'] {
 	width: 100%;
 	position: relative;
-}
-input[type=range] {
 	-webkit-appearance: none;
 	width: 100%;
-	margin: 17px 0;
-	padding: 0 3.15em 0 2em;
+	margin: 0;
+	padding: 24px 3.45em 24px 2.3em;
 	background-color: transparent;
 	border: none;
+	cursor: pointer;
 }
-input[type=range]:focus {
-	outline: none;
+input[type='range']:focus {
+	outline: 1px dotted #fff;
 }
-input[type=range]::-webkit-slider-runnable-track {
+input[type='range']::-webkit-slider-runnable-track {
 	width: 100%;
 	height: 2px;
-	cursor: pointer;
 	box-shadow:
 		-1px -1px 0 #1e231e inset,
 		1px 1px 0 #fdfdfd inset,
@@ -648,7 +647,7 @@ input[type=range]::-webkit-slider-runnable-track {
 	border-radius: 0px;
 	border: none;
 }
-input[type=range]::-webkit-slider-thumb {
+input[type='range']::-webkit-slider-thumb {
 	box-shadow: 
 		0 -1px 0 0 #000900,
 		-1px 0 0 0 #000900,
@@ -663,14 +662,12 @@ input[type=range]::-webkit-slider-thumb {
 	width: 14px;
 	border-radius: 0px;
 	background: #363c36;
-	cursor: pointer;
 	-webkit-appearance: none;
 	margin-top: -16px;
 }
-input[type=range]::-moz-range-track {
+input[type='range']::-moz-range-track {
 	width: 100%;
 	height: 2px;
-	cursor: pointer;
 	box-shadow:
 		-1px -1px 0 #1e231e inset,
 		1px 1px 0 #fdfdfd inset,
@@ -681,7 +678,7 @@ input[type=range]::-moz-range-track {
 	border-radius: 0px;
 	border: none;
 }
-input[type=range]::-moz-range-thumb {
+input[type='range']::-moz-range-thumb {
 	box-shadow: 
 		0 -1px 0 0 #000900,
 		-1px 0 0 0 #000900,
@@ -696,12 +693,10 @@ input[type=range]::-moz-range-thumb {
 	width: 14px;
 	border-radius: 0px;
 	background: #363c36;
-	cursor: pointer;
 }
-input[type=range]::-ms-track {
+input[type='range']::-ms-track {
 	width: 100%;
 	height: 2px;
-	cursor: pointer;
 	border: none;
 	color: transparent;
 	box-shadow:
@@ -712,7 +707,7 @@ input[type=range]::-ms-track {
 		-1px -1px 0 #6f766f,
 		0 0 0 1px #000900;
 }
-input[type=range]::-ms-thumb {
+input[type='range']::-ms-thumb {
 	box-shadow: 
 		0 -1px 0 0 #000900,
 		-1px 0 0 0 #000900,
@@ -727,37 +722,36 @@ input[type=range]::-ms-thumb {
 	width: 14px;
 	border-radius: 0px;
 	background: #363c36;
-	cursor: pointer;
 }
 
 #theme-tweaker-ui input[type='range']::before,
 #theme-tweaker-ui input[type='range']::after {
 	position: absolute;
-	top: -0.35em;
+	top: 1.05em;
 	color: #888;
 }
 #theme-tweaker-ui #theme-tweak-control-saturate::before,
 #theme-tweaker-ui #theme-tweak-control-brightness::before,
 #theme-tweaker-ui #theme-tweak-control-contrast::before {
 	content: "0%";
-	left: 0;
+	left: 0.3em;
 }
 #theme-tweaker-ui #theme-tweak-control-saturate::after,
 #theme-tweaker-ui #theme-tweak-control-brightness::after,
 #theme-tweaker-ui #theme-tweak-control-contrast::after {
 	content: "300%";
-	right: 0;
+	right: 0.3em;
 }
 #theme-tweaker-ui #theme-tweak-control-hue-rotate::before {
 	content: "0°";
-	left: 0.6em;
+	left: 0.9em;
 }
 #theme-tweaker-ui #theme-tweak-control-hue-rotate::after {
 	content: "360°";
-	right: 0.4em;
+	right: 0.7em;
 }
 .theme-tweak-control-label {
-	margin: 1.55em 3.15em 0 2em;
+	margin: 1em 3.45em 0 2.3em;
 	padding: 0 2em 0 3.15em;
 	text-align: center;
 	position: relative;
@@ -832,6 +826,11 @@ input[type=range]::-ms-thumb {
 		-1px -1px 0 #6f766f,
 		0 0 0 1px #000900;
 	padding: 7px 0 6px 0;
+}
+#theme-tweaker-ui .reset-defaults-button:focus,
+#theme-tweaker-ui .ok-button:focus,
+#theme-tweaker-ui .cancel-button:focus {
+	outline: 1px dotted #fff;
 }
 
 #theme-tweaker-ui .minimize-button {
