@@ -2,7 +2,7 @@
 
 set -e
 
-if [[ "$1" = "--force" ]] || ! git diff-index --quiet --cached HEAD -- www/style.css.php color-scheme-convert.php www/theme-\* ; then
+if [[ "$1" = "--force" ]] || ! git diff-index --quiet --cached HEAD -- www/style.css.php color-scheme-convert.php www/theme\* ; then
 	git ls-files --cached HEAD 'www/theme-*' |while read F; do
 		IN="${F#www/}"
 		OUT="style${IN#theme}"
