@@ -452,7 +452,6 @@ input[type=range]::-ms-thumb {
 #theme-tweaker-ui .clippy-container {
 	position: fixed;
 	background-color: #ffa;
-/* 	opacity: 0.6; */
 	width: 13em;
 	left: 2em;
 	bottom: 12em;
@@ -460,6 +459,11 @@ input[type=range]::-ms-thumb {
 	border-radius: 8px;
 	border: 1px solid #000;
 	cursor: default;
+}
+@media only screen and (max-width: 1305px) {
+	#theme-tweaker-ui .clippy-container {
+		opacity: 0.6;
+	}
 }
 #theme-tweaker-ui .clippy-container::after {
 	content: "";
