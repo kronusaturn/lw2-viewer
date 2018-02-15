@@ -20,15 +20,18 @@ Element.prototype.hasClass = function(className) {
 	return this.className.match(new RegExp("(^|\\s)" + className + "(\\s|$)"));
 }
 
-Element.prototype.addActivateEvent = function(func, waitForMouseUp = true) {
-	this.addEventListener((waitForMouseUp ? "mouseup" : "mousedown"), func);
-	this.addEventListener("keyup", func);
+Element.prototype.addActivateEvent = function(func, includeMouseDown) {
+	let ael = this.activateEventListener = function(e) { if(e.button === 0 || e.key === ' ') func(e) };
+	if(includeMouseDown) this.addEventListener("mousedown", ael);
+	this.addEventListener("mouseup", ael);
+	this.addEventListener("keyup", ael);
 }
 
-Element.prototype.removeActivateEvent = function(func) {
-	this.removeEventListener("mousedown", func);
-	this.removeEventListener("mouseup", func);
-	this.removeEventListener("keyup", func);
+Element.prototype.removeActivateEvent = function() {
+	let ael = this.activateEventListener;
+	this.removeEventListener("mousedown", ael);
+	this.removeEventListener("mouseup", ael);
+	this.removeEventListener("keyup", ael);
 }
 
 Element.prototype.scrollIntoViewIfNeeded = function() {
@@ -480,10 +483,8 @@ function injectThemeTweaker() {
         <img class='clippy' src='basilisk.png' />
     </div>
 	` + "</div></div>");
-	themeTweakerUI.addActivateEvent(themeTweakerUIOverlayClicked, false);
 	themeTweakerUI.addActivateEvent(themeTweakerUIOverlayClicked, true);
 	
-	themeTweakerUI.querySelector("div").addActivateEvent(clickInterceptor, false);
 	themeTweakerUI.querySelector("div").addActivateEvent(clickInterceptor, true);
 	
 	themeTweakerUI.querySelectorAll("input").forEach(function (field) {
