@@ -781,7 +781,7 @@ input[type=range]::-ms-thumb {
 	width: 1px;
 	height: 1em;
 	top: -100%;
-	left: calc(100% / 3 + 2.5px);
+	left: calc(100% / 3 + 2px);
 }
 #theme-tweak-label-hue-rotate::before {
 	left: 7px;

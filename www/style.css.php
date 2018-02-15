@@ -416,7 +416,7 @@ input {
 	cursor: auto;
 }
 
-<?php include("theme-tweaker.css.php"); ?>
+<?php include("theme_tweaker.css.php"); ?>
 
 /*******************/
 /* QUICKNAV WIDGET */
