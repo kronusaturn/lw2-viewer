@@ -490,6 +490,7 @@ function injectThemeTweaker() {
 		field.addEventListener((field.type == "checkbox" ? "change" : "input"), themeTweakerFieldInputReceived);
 	});
 	
+	themeTweakerUI.querySelector(".minimize-button").addActuvateEvent(themeTweakerMinimizeButtonClicked);
 	themeTweakerUI.querySelector(".reset-defaults-button").addActivateEvent(themeTweakerResetDefaultsButtonClicked);
 	themeTweakerUI.querySelector(".cancel-button").addActivateEvent(themeTweakerCancelButtonClicked);
 	themeTweakerUI.querySelector(".ok-button").addActivateEvent(themeTweakerOKButtonClicked);
@@ -513,8 +514,8 @@ function themeTweakerToggleButtonClicked(event) {
 	document.querySelector("#theme-tweak-control-invert").checked = (window.currentFilters['invert'] == "100%");	
 	[ "saturate", "brightness", "contrast", "hue-rotate" ].forEach(function (sliderName) {
 		let slider = document.querySelector("#theme-tweak-control-" + sliderName);
-		slider.value = /^[0-9]+/.exec(window.currentFilters[sliderName]) || slider.dataset['default-value'];
-		document.querySelector("#theme-tweak-label-" + sliderName).innerText = slider.value + slider.dataset['label-suffix'];
+		slider.value = /^[0-9]+/.exec(window.currentFilters[sliderName]) || slider.dataset['defaultValue'];
+		document.querySelector("#theme-tweak-label-" + sliderName).innerText = slider.value + slider.dataset['labelSuffix'];
 	});
 
 	toggleThemeTweakerUI();
@@ -576,8 +577,8 @@ function themeTweakerResetDefaultsButtonClicked(event) {
 	document.querySelector("#theme-tweak-control-invert").checked = false;
 	[ "saturate", "brightness", "contrast", "hue-rotate" ].forEach(function (sliderName) {
 		let slider = document.querySelector("#theme-tweak-control-" + sliderName);
-		slider.value = slider.dataset['default-value'];
-		document.querySelector("#theme-tweak-label-" + sliderName).innerText = slider.value + slider.dataset['label-suffix'];
+		slider.value = slider.dataset['defaultValue'];
+		document.querySelector("#theme-tweak-label-" + sliderName).innerText = slider.value + slider.dataset['labelSuffix'];
 	});
 }
 function themeTweakerCancelButtonClicked(event) {
@@ -603,8 +604,8 @@ function themeTweakerFieldInputReceived(event) {
 		window.currentFilters['invert'] = event.target.checked ? '100%' : '0%';
 	} else {
 		let sliderName = /^theme-tweak-control-(.+)$/.exec(event.target.id)[1];
-		document.querySelector("#theme-tweak-label-" + sliderName).innerText = event.target.value + event.target.dataset["label-suffix"];
-		window.currentFilters[sliderName] = event.target.value + event.target.dataset["value-suffix"];
+		document.querySelector("#theme-tweak-label-" + sliderName).innerText = event.target.value + event.target.dataset["labelSuffix"];
+		window.currentFilters[sliderName] = event.target.value + event.target.dataset["valueSuffix"];
 	}
 	applyFilters(window.currentFilters);
 }
