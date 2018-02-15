@@ -490,7 +490,9 @@ function injectThemeTweaker() {
 	` + "</div>");
 	themeTweakerUI.addActivateEvent(themeTweakerUIOverlayClicked, true);
 	
-	themeTweakerUI.querySelector("div").addActivateEvent(clickInterceptor, true);
+	document.querySelectorAll("#theme-tweaker-ui > div").forEach(function (themeTweakerUIWindow) {
+		themeTweakerUIWindow.addActivateEvent(clickInterceptor, true);
+	});
 	
 	themeTweakerUI.querySelectorAll("input").forEach(function (field) {
 		field.addEventListener((field.type == "checkbox" ? "change" : "input"), themeTweakerFieldInputReceived);

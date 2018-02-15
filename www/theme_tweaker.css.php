@@ -517,5 +517,22 @@ input[type='range']::-ms-thumb {
 }
 
 #theme-tweaker-ui .help-window {
+	width: 300px;
+	height: 200px;
+	background-color: #bfb8bf;
+	position: fixed;
+	z-index: 1;
+	box-shadow: 
+		0 -1px 0 0 #fff8ff,
+		-1px 0 0 0 #fff8ff,
+		-1px -1px 0 0 #fff8ff,
+		0 0 0 1px #7f787f,
+		0 -1px 0 1px #dfd8df,
+		-1px 0 0 1px #dfd8df,
+		-1px -1px 0 1px #dfd8df,
+		0 0 0 2px #030303;
+	top: 200px;
+	left: calc((100% - 300px) / 2);
+
 	display: none;
 }

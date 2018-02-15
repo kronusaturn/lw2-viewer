@@ -946,8 +946,26 @@ input[type='range']::-ms-thumb {
 }
 
 #theme-tweaker-ui .help-window {
+	width: 300px;
+	height: 200px;
+	background-color: #363c36;
+	position: fixed;
+	z-index: 1;
+	box-shadow: 
+		0 -1px 0 0 #000900,
+		-1px 0 0 0 #000900,
+		-1px -1px 0 0 #000900,
+		0 0 0 1px #6f766f,
+		0 -1px 0 1px #1e231e,
+		-1px 0 0 1px #1e231e,
+		-1px -1px 0 1px #1e231e,
+		0 0 0 2px #fdfdfd;
+	top: 200px;
+	left: calc((100% - 300px) / 2);
+
 	display: none;
 }
+
 /*******************/
 /* QUICKNAV WIDGET */
 /*******************/
