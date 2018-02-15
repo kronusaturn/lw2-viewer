@@ -473,6 +473,16 @@ input[type=range]::-ms-thumb {
 		opacity: 0.6;
 	}
 }
+#theme-tweaker-ui .clippy-container::before {
+	content: "";
+	width: 0;
+	height: 0;
+	border-top: 42px solid #000;
+	border-right: 42px solid transparent;
+	position: absolute;
+	bottom: -42px;
+	right: 69px;
+}
 #theme-tweaker-ui .clippy-container::after {
 	content: "";
 	width: 0;
