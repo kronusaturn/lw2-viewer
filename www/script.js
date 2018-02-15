@@ -490,7 +490,7 @@ function injectThemeTweaker() {
 		field.addEventListener((field.type == "checkbox" ? "change" : "input"), themeTweakerFieldInputReceived);
 	});
 	
-	themeTweakerUI.querySelector(".minimize-button").addActuvateEvent(themeTweakerMinimizeButtonClicked);
+	themeTweakerUI.querySelector(".minimize-button").addActivateEvent(themeTweakerMinimizeButtonClicked);
 	themeTweakerUI.querySelector(".reset-defaults-button").addActivateEvent(themeTweakerResetDefaultsButtonClicked);
 	themeTweakerUI.querySelector(".cancel-button").addActivateEvent(themeTweakerCancelButtonClicked);
 	themeTweakerUI.querySelector(".ok-button").addActivateEvent(themeTweakerOKButtonClicked);
