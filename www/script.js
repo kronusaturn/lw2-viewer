@@ -535,7 +535,7 @@ function themeTweakerMinimizeButtonClicked(event) {
 	if (event.target.hasClass("minimize")) {
 		event.target.removeClass("minimize");
 		themeTweakerStyle.innerHTML = 
-			`#theme-tweak-ui > div {
+			`#theme-tweaker-ui > div {
 				width: 320px;
 				height: 31px;
 				overflow: hidden;
