@@ -505,9 +505,9 @@ function toggleThemeTweakerUI() {
 		`#content, #ui-elements-container > div:not(#theme-tweaker-ui) {
 			pointer-events: none;
 		}`;
-	// Focus first slider.
+	// Focus invert checkbox.
 	if (themeTweakerUI.style.display != "none")
-		document.querySelector("#theme-tweaker-ui #theme-tweak-control-saturate").focus();
+		document.querySelector("#theme-tweaker-ui #theme-tweak-control-invert").focus();
 }
 function themeTweakerToggleButtonClicked(event) {
 	document.querySelector("#theme-tweaker-ui .current-theme span").innerText = (window.localStorage.getItem("selected-theme") || "default");
