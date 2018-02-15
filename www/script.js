@@ -550,6 +550,7 @@ function themeTweakerMinimizeButtonClicked(event) {
 			}
 			#theme-tweaker-ui::before {
 				opacity: 0.0;
+				height: 0;
 			}
 			#theme-tweaker-ui .clippy-container {
 				opacity: 1.0;
