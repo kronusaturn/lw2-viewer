@@ -471,6 +471,10 @@ function injectThemeTweaker() {
 		<button type='button' class='ok-button default-button'>OK</button>
 		<button type='button' class='cancel-button'>Cancel</button>
 	</div>
+	<div class="clippy-container">
+        <span class="hint">Click on the minimize button (<img src='minimize_button_icon.gif' />) to minimize the theme tweaker window, so that you can see what the page looks like with the current tweaked values. (But remember, you have to click “OK” for the changes to actually take effect!)
+        <img class='clippy' src='basilisk.png' />
+    </div>
 	` + "</div></div>");
 	themeTweakerUI.addActivateEvent(themeTweakerUIOverlayClicked, false);
 	themeTweakerUI.addActivateEvent(themeTweakerUIOverlayClicked, true);

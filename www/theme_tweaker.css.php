@@ -439,3 +439,34 @@ input[type=range]::-ms-thumb {
 		-1px -1px 0 1px #7f787f inset,
 		0 0 0 2px #fff8ff inset;	
 }
+
+#theme-tweaker-ui .clippy-container {
+	position: fixed;
+	background-color: #ffa;
+	opacity: 0.6;
+	width: 13em;
+	left: 2em;
+	bottom: 12em;
+	padding: 1em;
+	border-radius: 8px;
+	border: 1px solid #000;
+	cursor: default;
+}
+#theme-tweaker-ui .clippy-container::after {
+	content: "";
+	width: 0;
+	height: 0;
+	border-top: 40px solid #ffa;
+	border-right: 40px solid transparent;
+	position: absolute;
+	bottom: -40px;
+	right: 90px;
+}
+#theme-tweaker-ui .clippy-container:hover {
+	opacity: 1.0;
+}
+#theme-tweaker-ui .clippy-container .clippy {
+	width: 200px;
+	position: absolute;
+	bottom: -50px;
+}
