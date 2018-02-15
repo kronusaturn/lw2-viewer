@@ -881,7 +881,7 @@ input[type=range]::-ms-thumb {
 #theme-tweaker-ui .clippy-container {
 	position: fixed;
 	background-color: #ffa;
-	opacity: 0.6;
+/* 	opacity: 0.6; */
 	width: 13em;
 	left: 2em;
 	bottom: 12em;
