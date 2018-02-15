@@ -444,6 +444,7 @@ function injectThemeTweaker() {
 	let themeTweakerUI = addUIElement("<div id='theme-tweaker-ui' style='display: none;'><div>" + 
 	`<h1>Customize appearance</h1>
 	<button type='button' class='minimize-button minimize' tabindex='-1'></button>
+	<button type='button' class='help-button' tabindex='-1'></button>
 	<p class='current-theme'>Current theme: <span>` + 
 	(window.localStorage.getItem("selected-theme") || "default") + 
 	`</span></p>
@@ -504,7 +505,7 @@ function toggleThemeTweakerUI() {
 		}`;
 	// Focus first slider.
 	if (themeTweakerUI.style.display != "none")
-		document.querySelector("#theme-tweaker-ui div.section:first-child input[type='range']").focus();
+		document.querySelector("#theme-tweaker-ui #theme-tweak-control-saturate").focus();
 }
 function themeTweakerToggleButtonClicked(event) {
 	document.querySelector("#theme-tweaker-ui .current-theme span").innerText = (window.localStorage.getItem("selected-theme") || "default");
