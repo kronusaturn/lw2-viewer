@@ -422,6 +422,10 @@ input[type=range]::-ms-thumb {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_maximize_widget.gif")) ?>');	
 }
 
+#theme-tweaker-ui .help-button {
+	display: none;
+}
+
 #theme-tweaker-ui .reset-defaults-button {
 	width: 10em;
 	float: left;
@@ -465,13 +469,17 @@ input[type=range]::-ms-thumb {
 	border-right: 40px solid transparent;
 	position: absolute;
 	bottom: -40px;
-	right: 90px;
+	right: 70px;
 }
 #theme-tweaker-ui .clippy-container:hover {
 	opacity: 1.0;
 }
+#theme-tweaker-ui .clippy-container .hint img {
+	vertical-align: text-bottom;
+}
 #theme-tweaker-ui .clippy-container .clippy {
 	width: 200px;
 	position: absolute;
-	bottom: -50px;
+	bottom: -150px;
+	left: 0;
 }
