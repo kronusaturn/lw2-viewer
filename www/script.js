@@ -493,7 +493,7 @@ function injectThemeTweaker() {
 	themeTweakerUI.querySelector(".cancel-button").addActivateEvent(themeTweakerCancelButtonClicked);
 	themeTweakerUI.querySelector(".ok-button").addActivateEvent(themeTweakerOKButtonClicked);
 	
-	document.querySelector("#head").insertAdjacentHTML("beforeend","<style id='theme-tweaker-style'></style>");
+	document.querySelector("head").insertAdjacentHTML("beforeend","<style id='theme-tweaker-style'></style>");
 }
 function toggleThemeTweakerUI() {
 	let themeTweakerUI = document.querySelector("#theme-tweaker-ui");
