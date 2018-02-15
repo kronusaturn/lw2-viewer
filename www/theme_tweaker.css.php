@@ -417,6 +417,11 @@ input[type=range]::-ms-thumb {
 	background-position: center center;
 }
 
+#theme-tweaker-ui .reset-defaults-button {
+	width: 10em;
+	float: left;
+}
+
 #theme-tweaker-ui .controls-container::-webkit-scrollbar {
 	width: 20px;
 	background-color: #bfb8bf;

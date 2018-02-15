@@ -450,23 +450,24 @@ function injectThemeTweaker() {
 			<label for='theme-tweak-control-invert'>Invert colors</label>
 		</div>
 		<div id='theme-tweak-section-saturate' class='section' data-label='Saturation'>
-			<input type="range" id="theme-tweak-control-saturate" min="0" max="300" value="100">
-			<p class="theme-tweak-control-label" id="theme-tweak-label-saturate">100%</p>
+			<input type="range" id="theme-tweak-control-saturate" min="0" max="300" data-default-value="100" data-value-suffix="%" data-label-suffix="%">
+			<p class="theme-tweak-control-label" id="theme-tweak-label-saturate"></p>
 		</div>
 		<div id='theme-tweak-section-brightness' class='section' data-label='Brightness'>
-			<input type="range" id="theme-tweak-control-brightness" min="0" max="300" value="100">
-			<p class="theme-tweak-control-label" id="theme-tweak-label-brightness">100%</p>
+			<input type="range" id="theme-tweak-control-brightness" min="0" max="300" data-default-value="100" data-value-suffix="%" data-label-suffix="%">
+			<p class="theme-tweak-control-label" id="theme-tweak-label-brightness"></p>
 		</div>
 		<div id='theme-tweak-section-contrast' class='section' data-label='Contrast'>
-			<input type="range" id="theme-tweak-control-contrast" min="0" max="300" value="100">
-			<p class="theme-tweak-control-label" id="theme-tweak-label-contrast">100%</p>
+			<input type="range" id="theme-tweak-control-contrast" min="0" max="300" data-default-value="100" data-value-suffix="%" data-label-suffix="%">
+			<p class="theme-tweak-control-label" id="theme-tweak-label-contrast"></p>
 		</div>
 		<div id='theme-tweak-section-hue-rotate' class='section' data-label='Hue rotation'>
-			<input type="range" id="theme-tweak-control-hue-rotate" min="0" max="360" value="0">
-			<p class="theme-tweak-control-label" id="theme-tweak-label-hue-rotate">0°</p>
+			<input type="range" id="theme-tweak-control-hue-rotate" min="0" max="360" data-default-value="0" data-value-suffix="deg" data-label-suffix="°">
+			<p class="theme-tweak-control-label" id="theme-tweak-label-hue-rotate"></p>
 		</div>
 	</div>
 	<div class='buttons-container'>
+		<button type="button" class="reset-defaults-button">Reset to defaults</button>
 		<button type='button' class='ok-button default-button'>OK</button>
 		<button type='button' class='cancel-button'>Cancel</button>
 	</div>
@@ -481,6 +482,7 @@ function injectThemeTweaker() {
 		field.addEventListener((field.type == "checkbox" ? "change" : "input"), themeTweakerFieldInputReceived);
 	});
 	
+	themeTweakerUI.querySelector(".reset-defaults-button").addActivateEvent(themeTweakerResetDefaultsButtonClicked);
 	themeTweakerUI.querySelector(".cancel-button").addActivateEvent(themeTweakerCancelButtonClicked);
 	themeTweakerUI.querySelector(".ok-button").addActivateEvent(themeTweakerOKButtonClicked);
 }
@@ -497,19 +499,12 @@ function toggleThemeTweakerUI() {
 function themeTweakerToggleButtonClicked(event) {
 	document.querySelector("#theme-tweaker-ui .current-theme span").innerText = (window.localStorage.getItem("selected-theme") || "default");
 	
-	document.querySelector("#theme-tweak-control-invert").checked = (window.currentFilters['invert'] == "100%");
-	
-	document.querySelector("#theme-tweak-control-saturate").value = /^[0-9]+/.exec(window.currentFilters['saturate']) || '100';
-	document.querySelector("#theme-tweak-label-saturate").innerText = document.querySelector("#theme-tweak-control-saturate").value + "%";
-	
-	document.querySelector("#theme-tweak-control-brightness").value = /^[0-9]+/.exec(window.currentFilters['brightness']) || '100';
-	document.querySelector("#theme-tweak-label-brightness").innerText = document.querySelector("#theme-tweak-control-brightness").value + "%";
-	
-	document.querySelector("#theme-tweak-control-contrast").value = /^[0-9]+/.exec(window.currentFilters['contrast']) || '100';
-	document.querySelector("#theme-tweak-label-contrast").innerText = document.querySelector("#theme-tweak-control-contrast").value + "%";
-	
-	document.querySelector("#theme-tweak-control-hue-rotate").value = /^[0-9]+/.exec(window.currentFilters['hue-rotate']) || '0';
-	document.querySelector("#theme-tweak-label-hue-rotate").innerText = document.querySelector("#theme-tweak-control-hue-rotate").value + "°";
+	document.querySelector("#theme-tweak-control-invert").checked = (window.currentFilters['invert'] == "100%");	
+	[ "saturate", "brightness", "contrast", "hue-rotate" ].forEach(function (sliderName) {
+		let slider = document.querySelector("#theme-tweak-control-" + sliderName);
+		slider.value = /^[0-9]+/.exec(window.currentFilters[sliderName]) || slider.dataset['default-value'];
+		document.querySelector("#theme-tweak-label-" + sliderName).innerText = slider.value + slider.dataset['label-suffix'];
+	});
 
 	toggleThemeTweakerUI();
 }
@@ -521,6 +516,14 @@ function themeTweakerUIOverlayClicked(event) {
 		document.querySelector("#theme-tweaker-ui").style.opacity = "1.0";
 		themeTweakReset();
 	}
+}
+function themeTweakerResetDefaultsButtonClicked(event) {
+	document.querySelector("#theme-tweak-control-invert").checked = false;
+	[ "saturate", "brightness", "contrast", "hue-rotate" ].forEach(function (sliderName) {
+		let slider = document.querySelector("#theme-tweak-control-" + sliderName);
+		slider.value = slider.dataset['default-value'];
+		document.querySelector("#theme-tweak-label-" + sliderName).innerText = slider.value + slider.dataset['label-suffix'];
+	});
 }
 function themeTweakerCancelButtonClicked(event) {
 	toggleThemeTweakerUI();
@@ -543,18 +546,10 @@ function clickInterceptor(event) {
 function themeTweakerFieldInputReceived(event) {
 	if (event.target.id == 'theme-tweak-control-invert') {
 		window.currentFilters['invert'] = event.target.checked ? '100%' : '0%';
-	} else if (event.target.id == 'theme-tweak-control-saturate') {
-		document.querySelector("#theme-tweak-label-saturate").innerText = event.target.value + "%";
-		window.currentFilters['saturate'] = event.target.value + "%";
-	} else if (event.target.id == 'theme-tweak-control-brightness') {
-		document.querySelector("#theme-tweak-label-brightness").innerText = event.target.value + "%";
-		window.currentFilters['brightness'] = event.target.value + "%";
-	} else if (event.target.id == 'theme-tweak-control-contrast') {
-		document.querySelector("#theme-tweak-label-contrast").innerText = event.target.value + "%";
-		window.currentFilters['contrast'] = event.target.value + "%";
-	} else if (event.target.id == 'theme-tweak-control-hue-rotate') {
-		document.querySelector("#theme-tweak-label-hue-rotate").innerText = event.target.value + "°";
-		window.currentFilters['hue-rotate'] = event.target.value + "deg";
+	} else {
+		let sliderName = /^theme-tweak-control-(.+)$/.exec(event.target.id)[1];
+		document.querySelector("#theme-tweak-label-" + sliderName).innerText = event.target.value + event.target.dataset["label-suffix"];
+		window.currentFilters[sliderName] = event.target.value + event.target.dataset["value-suffix"];
 	}
 	applyFilters(window.currentFilters);
 }
