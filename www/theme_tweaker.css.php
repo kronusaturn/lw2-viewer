@@ -423,7 +423,15 @@ input[type=range]::-ms-thumb {
 }
 
 #theme-tweaker-ui .help-button {
-	display: none;
+	width: 18px;
+	height: 16px;
+	position: absolute;
+	top: -1px;
+	right: 55px;
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_help_widget.gif")) ?>');	
+	background-size: 14px;
+	background-repeat: no-repeat;
+	background-position: center center;
 }
 
 #theme-tweaker-ui .reset-defaults-button {
