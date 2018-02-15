@@ -444,45 +444,50 @@ function injectThemeTweaker() {
 	let themeTweakerToggle = addUIElement("<div id='theme-tweaker-toggle'><button type='button' tabindex='-1' title='Customize appearance'>&#xf1de;</button></div>");
 	themeTweakerToggle.querySelector("button").addActivateEvent(themeTweakerToggleButtonClicked);
 	
-	let themeTweakerUI = addUIElement("<div id='theme-tweaker-ui' style='display: none;'><div class='main-theme-tweaker-window'>" + 
-	`<h1>Customize appearance</h1>
-	<button type='button' class='minimize-button minimize' tabindex='-1'></button>
-	<button type='button' class='help-button' tabindex='-1'></button>
-	<p class='current-theme'>Current theme: <span>` + 
-	(window.localStorage.getItem("selected-theme") || "default") + 
-	`</span></p>
-	<div class='controls-container'>
-		<div id='theme-tweak-section-invert' class='section' data-label='Invert (photo-negative)'>
-			<input type='checkbox' id='theme-tweak-control-invert'></input>
-			<label for='theme-tweak-control-invert'>Invert colors</label>
+	let themeTweakerUI = addUIElement("<div id='theme-tweaker-ui' style='display: none;'>" + 
+	`<div class='main-theme-tweaker-window'>
+		<h1>Customize appearance</h1>
+		<button type='button' class='minimize-button minimize' tabindex='-1'></button>
+		<button type='button' class='help-button' tabindex='-1'></button>
+		<p class='current-theme'>Current theme: <span>` + 
+		(window.localStorage.getItem("selected-theme") || "default") + 
+		`</span></p>
+		<div class='controls-container'>
+			<div id='theme-tweak-section-invert' class='section' data-label='Invert (photo-negative)'>
+				<input type='checkbox' id='theme-tweak-control-invert'></input>
+				<label for='theme-tweak-control-invert'>Invert colors</label>
+			</div>
+			<div id='theme-tweak-section-saturate' class='section' data-label='Saturation'>
+				<input type="range" id="theme-tweak-control-saturate" min="0" max="300" data-default-value="100" data-value-suffix="%" data-label-suffix="%">
+				<p class="theme-tweak-control-label" id="theme-tweak-label-saturate"></p>
+			</div>
+			<div id='theme-tweak-section-brightness' class='section' data-label='Brightness'>
+				<input type="range" id="theme-tweak-control-brightness" min="0" max="300" data-default-value="100" data-value-suffix="%" data-label-suffix="%">
+				<p class="theme-tweak-control-label" id="theme-tweak-label-brightness"></p>
+			</div>
+			<div id='theme-tweak-section-contrast' class='section' data-label='Contrast'>
+				<input type="range" id="theme-tweak-control-contrast" min="0" max="300" data-default-value="100" data-value-suffix="%" data-label-suffix="%">
+				<p class="theme-tweak-control-label" id="theme-tweak-label-contrast"></p>
+			</div>
+			<div id='theme-tweak-section-hue-rotate' class='section' data-label='Hue rotation'>
+				<input type="range" id="theme-tweak-control-hue-rotate" min="0" max="360" data-default-value="0" data-value-suffix="deg" data-label-suffix="°">
+				<p class="theme-tweak-control-label" id="theme-tweak-label-hue-rotate"></p>
+			</div>
 		</div>
-		<div id='theme-tweak-section-saturate' class='section' data-label='Saturation'>
-			<input type="range" id="theme-tweak-control-saturate" min="0" max="300" data-default-value="100" data-value-suffix="%" data-label-suffix="%">
-			<p class="theme-tweak-control-label" id="theme-tweak-label-saturate"></p>
+		<div class='buttons-container'>
+			<button type="button" class="reset-defaults-button">Reset to defaults</button>
+			<button type='button' class='ok-button default-button'>OK</button>
+			<button type='button' class='cancel-button'>Cancel</button>
 		</div>
-		<div id='theme-tweak-section-brightness' class='section' data-label='Brightness'>
-			<input type="range" id="theme-tweak-control-brightness" min="0" max="300" data-default-value="100" data-value-suffix="%" data-label-suffix="%">
-			<p class="theme-tweak-control-label" id="theme-tweak-label-brightness"></p>
-		</div>
-		<div id='theme-tweak-section-contrast' class='section' data-label='Contrast'>
-			<input type="range" id="theme-tweak-control-contrast" min="0" max="300" data-default-value="100" data-value-suffix="%" data-label-suffix="%">
-			<p class="theme-tweak-control-label" id="theme-tweak-label-contrast"></p>
-		</div>
-		<div id='theme-tweak-section-hue-rotate' class='section' data-label='Hue rotation'>
-			<input type="range" id="theme-tweak-control-hue-rotate" min="0" max="360" data-default-value="0" data-value-suffix="deg" data-label-suffix="°">
-			<p class="theme-tweak-control-label" id="theme-tweak-label-hue-rotate"></p>
-		</div>
-	</div>
-	<div class='buttons-container'>
-		<button type="button" class="reset-defaults-button">Reset to defaults</button>
-		<button type='button' class='ok-button default-button'>OK</button>
-		<button type='button' class='cancel-button'>Cancel</button>
 	</div>
 	<div class="clippy-container">
         <span class="hint">Hi, I'm Bobby the Basilisk! Click on the minimize button (<img src='/minimize_button_icon.gif' />) to minimize the theme tweaker window, so that you can see what the page looks like with the current tweaked values. (But remember, <span>the changes won't be saved until you click "OK"!</span>)
         <img class='clippy' src='/basilisk.png' />
     </div>
-	` + "</div></div>");
+	<div class='help-window'>
+		<h1>Theme tweaker help</h1>
+    </div>
+	` + "</div>");
 	themeTweakerUI.addActivateEvent(themeTweakerUIOverlayClicked, true);
 	
 	themeTweakerUI.querySelector("div").addActivateEvent(clickInterceptor, true);

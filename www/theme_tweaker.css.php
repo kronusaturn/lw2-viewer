@@ -515,3 +515,7 @@ input[type='range']::-ms-thumb {
 	bottom: -150px;
 	left: 0;
 }
+
+#theme-tweaker-ui .help-window {
+	display: none;
+}

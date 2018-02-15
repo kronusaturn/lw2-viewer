@@ -945,6 +945,9 @@ input[type='range']::-ms-thumb {
 	left: 0;
 }
 
+#theme-tweaker-ui .help-window {
+	display: none;
+}
 /*******************/
 /* QUICKNAV WIDGET */
 /*******************/
