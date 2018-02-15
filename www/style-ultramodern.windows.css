@@ -3187,7 +3187,7 @@ h1.listing a:hover {
 }
 h1.listing a[href^='http'] {
 	font-size: 1.125rem;
-	top: 10px;
+	top: 5px;
 	color: #999;
 	opacity: 0.7;
 }
