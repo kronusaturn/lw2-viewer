@@ -16,6 +16,9 @@ Element.prototype.addClass = function(className) {
 Element.prototype.removeClass = function(className) {
 	this.className = this.className.replace(new RegExp("(^|\\s)" + className + "(\\s|$)"), "");
 }
+Element.prototype.hasClass = function(className) {
+	return this.className.match(new RegExp("(^|\\s)" + className + "(\\s|$)"));
+}
 
 Element.prototype.addActivateEvent = function(func, waitForMouseUp = true) {
 	this.addEventListener((waitForMouseUp ? "mouseup" : "mousedown"), func);
@@ -440,7 +443,7 @@ function injectThemeTweaker() {
 	
 	let themeTweakerUI = addUIElement("<div id='theme-tweaker-ui' style='display: none;'><div>" + 
 	`<h1>Customize appearance</h1>
-	<button type='button' class='minimize-button' tabindex='-1'></button>
+	<button type='button' class='minimize-button minimize' tabindex='-1'></button>
 	<p class='current-theme'>Current theme: <span>` + 
 	(window.localStorage.getItem("selected-theme") || "default") + 
 	`</span></p>
@@ -472,7 +475,7 @@ function injectThemeTweaker() {
 		<button type='button' class='cancel-button'>Cancel</button>
 	</div>
 	<div class="clippy-container">
-        <span class="hint">Click on the minimize button (<img src='minimize_button_icon.gif' />) to minimize the theme tweaker window, so that you can see what the page looks like with the current tweaked values. (But remember, you have to click “OK” for the changes to actually take effect!)
+        <span class="hint">Click on the minimize button (<img src='minimize_button_icon.gif' />) to minimize the theme tweaker window, so that you can see what the page looks like with the current tweaked values. (But remember, <span>you have to click “OK” for the changes to actually take effect!</span>)
         <img class='clippy' src='basilisk.png' />
     </div>
 	` + "</div></div>");
@@ -489,13 +492,16 @@ function injectThemeTweaker() {
 	themeTweakerUI.querySelector(".reset-defaults-button").addActivateEvent(themeTweakerResetDefaultsButtonClicked);
 	themeTweakerUI.querySelector(".cancel-button").addActivateEvent(themeTweakerCancelButtonClicked);
 	themeTweakerUI.querySelector(".ok-button").addActivateEvent(themeTweakerOKButtonClicked);
+	
+	document.querySelector("#head").insertAdjacentHTML("beforeend","<style id='theme-tweaker-style'></style>");
 }
 function toggleThemeTweakerUI() {
 	let themeTweakerUI = document.querySelector("#theme-tweaker-ui");
 	themeTweakerUI.style.display = (themeTweakerUI.style.display == "none") ? "block" : "none";
-	document.querySelectorAll("h1.listing a").forEach(function (link) { 
-		link.style.pointerEvents = (themeTweakerUI.style.display == "none") ? "auto" : "none";
-	});
+	document.querySelector("#theme-tweaker-style").innerHTML = (themeTweakerUI.style.display == "none") ? "" : 
+		`#content, #ui-elements-container > div:not(#theme-tweaker-ui) {
+			pointer-events: none;
+		}`;
 	// Focus first slider.
 	if (themeTweakerUI.style.display != "none")
 		document.querySelector("#theme-tweaker-ui div.section:first-child input[type='range']").focus();
@@ -519,6 +525,50 @@ function themeTweakerUIOverlayClicked(event) {
 		toggleThemeTweakerUI();	
 		document.querySelector("#theme-tweaker-ui").style.opacity = "1.0";
 		themeTweakReset();
+	}
+}
+function themeTweakerMinimizeButtonClicked(event) {
+	let themeTweakerStyle = document.querySelector("#theme-tweaker-style");
+
+	if (event.target.hasClass("minimize") {
+		event.target.removeClass("minimize");
+		themeTweakerStyle.innerHTML = 
+			`#theme-tweak-ui > div {
+				width: 320px;
+				height: 31px;
+				overflow: hidden;
+				padding: 30px 0 0 0;
+				top: 20px;
+				right: 20px;
+				left: auto;
+			}
+			#theme-tweaker-ui::after {
+				top: 27px;
+				right: 27px;
+			}
+			#theme-tweaker-ui::before {
+				opacity: 0.0;
+			}
+			#theme-tweaker-ui .clippy-container {
+				opacity: 1.0;
+			}
+			#theme-tweaker-ui .clippy-container .hint span {
+				color: #c00;
+			}
+			#theme-tweaker-ui {
+				height: 0;
+			}
+			#content, #ui-elements-container > div:not(#theme-tweaker-ui) {
+				pointer-events: none;
+			}`;
+		event.target.addClass("maximize");
+	} else {
+		event.target.removeClass("maximize");
+		themeTweakerStyle.innerHTML = 
+			`#content, #ui-elements-container > div:not(#theme-tweaker-ui) {
+				pointer-events: none;
+			}`;
+		event.target.addClass("minimize");
 	}
 }
 function themeTweakerResetDefaultsButtonClicked(event) {
