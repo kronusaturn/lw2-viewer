@@ -966,8 +966,6 @@ input[type='range']::-ms-thumb {
 	left: calc((100% - 300px) / 2);
 	padding: 40px 10px 10px 10px;
 	pointer-events: auto;
-
-	display: none;
 }
 #theme-tweaker-ui .help-window h1 {
 	background-image: url('data:image/gif;base64,R0lGODdhIAAgAKIAAAAAAAAA/2xsbLKysv//DP///wAAAAAAACH5BAkAAAYALAAAAAAgACAAAAPGaGrS/jCuOaO9gtJWuieE9xGQtnBiAaZqWJromsoeYN+w0NFjeuMalIi3C3UGwI1uFmg6W54BEpArdpzYwFBqq0Kz2Q+XGlxesefncepNaz3odbdcjIPsY+9dvW/u8nQzRm5RbIFDg2FyZEpWKYoqgI1QIpCRhpOIYTSSFWYjdoOdJ0tElFuYno6ILASjCkKgfKKppK0EoYVzkzxxqLuqpwW+YrWwn6s9i23KrMtlUtHS09TGDALV2dTACz/e3+BJE+Hk4QsJADs=');

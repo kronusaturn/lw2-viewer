@@ -484,7 +484,7 @@ function injectThemeTweaker() {
         <span class="hint">Hi, I'm Bobby the Basilisk! Click on the minimize button (<img src='/minimize_button_icon.gif' />) to minimize the theme tweaker window, so that you can see what the page looks like with the current tweaked values. (But remember, <span>the changes won't be saved until you click "OK"!</span>)
         <img class='clippy' src='/basilisk.png' />
     </div>
-	<div class='help-window'>
+	<div class='help-window' style='display: none;'>
 		<h1>Theme tweaker help</h1>
 		<div id='theme-tweak-section-clippy' class='section' data-label='Theme Tweaker Assistant'>
 			<input type='checkbox' id='theme-tweak-control-clippy' checked='checked'></input>

@@ -537,8 +537,6 @@ input[type='range']::-ms-thumb {
 	left: calc((100% - 300px) / 2);
 	padding: 40px 10px 10px 10px;
 	pointer-events: auto;
-
-	display: none;
 }
 #theme-tweaker-ui .help-window h1 {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_help_icon.gif")) ?>');
