@@ -520,7 +520,7 @@ input[type='range']::-ms-thumb {
 }
 
 #theme-tweaker-ui .help-window {
-	width: 300px;
+	width: 333px;
 	background-color: #bfb8bf;
 	position: fixed;
 	z-index: 1;
@@ -536,7 +536,6 @@ input[type='range']::-ms-thumb {
 	top: 200px;
 	left: calc((100% - 300px) / 2);
 	padding: 40px 10px 10px 10px;
-	pointer-events: auto;
 
 	display: none;
 }
@@ -544,5 +543,21 @@ input[type='range']::-ms-thumb {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_help_icon.gif")) ?>');
 }
 #theme-tweaker-ui div.section#theme-tweak-section-clippy {
-	padding: 23px 10px 15px 10px;
+	padding: 23px 0 15px 10px;
+}
+#theme-tweaker-ui div.section#theme-tweak-section-clippy::before {
+	z-index: 1;
+}
+#theme-tweaker-ui #theme-tweak-control-clippy + label::after {
+	content: "";
+	background-image: url('/basilisk.png');
+	background-size: 75px;
+	background-repeat: no-repeat;
+	background-position: center right;
+	padding: 40px 85px 0 0;
+	position: absolute;
+	bottom: -2px;
+	right: -86px;
+	transform: scaleX(-1);
+	display: inline-block;
 }

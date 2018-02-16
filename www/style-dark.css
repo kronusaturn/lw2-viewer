@@ -949,7 +949,7 @@ input[type='range']::-ms-thumb {
 }
 
 #theme-tweaker-ui .help-window {
-	width: 300px;
+	width: 333px;
 	background-color: #363c36;
 	position: fixed;
 	z-index: 1;
@@ -965,7 +965,6 @@ input[type='range']::-ms-thumb {
 	top: 200px;
 	left: calc((100% - 300px) / 2);
 	padding: 40px 10px 10px 10px;
-	pointer-events: auto;
 
 	display: none;
 }
@@ -973,7 +972,23 @@ input[type='range']::-ms-thumb {
 	background-image: url('data:image/gif;base64,R0lGODdhIAAgAKIAAAAAAAAA/2xsbLKysv//DP///wAAAAAAACH5BAkAAAYALAAAAAAgACAAAAO8WFrS/jCuOaO9gtKmCekEpC0c5YHMM6bKaX4TIM9j6U63MtNaicO/xYC3yZgCyGThNhgCakZXchrANWXQ1odKXRCuz55R0S2UC+DsYjphK9JirdszhxflyiWh7lQH13lofXEvgIF2FVFAhkheiCSKFGdLjwo+XntsTIN3L3NAlSx6KCahNotaHaZjmJ9CnIkgrm+wkKmMqrWWkbiluqJ/waukwr8NTcjJysvGAszPy1gaO9TV1kQx19rWCwkAOw==');
 }
 #theme-tweaker-ui div.section#theme-tweak-section-clippy {
-	padding: 23px 10px 15px 10px;
+	padding: 23px 0 15px 10px;
+}
+#theme-tweaker-ui div.section#theme-tweak-section-clippy::before {
+	z-index: 1;
+}
+#theme-tweaker-ui #theme-tweak-control-clippy + label::after {
+	content: "";
+	background-image: url('/basilisk.png');
+	background-size: 75px;
+	background-repeat: no-repeat;
+	background-position: center right;
+	padding: 40px 85px 0 0;
+	position: absolute;
+	bottom: -2px;
+	right: -86px;
+	transform: scaleX(-1);
+	display: inline-block;
 }
 
 /*******************/
