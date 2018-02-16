@@ -3,7 +3,11 @@ An alternative frontend for [LessWrong 2.0](https://www.lesserwrong.com/), with 
 
 * [Issue tracker](https://saturn.obormot.net/LW2Reader/Issues)
 
-## Installation (Linux)
+## Installation
+### Linux/Unix
+
+*This is the bare minimum to get the server running. To set up a full Common Lisp development environment, see [here](http://lisp-lang.org/learn/getting-started/)*
+
 * Install `sbcl` and `lmdb` from apt or using your favorite method.  
 e.g. `sudo apt install sbcl liblmdb0`
 
@@ -13,6 +17,7 @@ e.g. `sudo apt install sbcl liblmdb0`
 
 * Clone required git repositories to the quicklisp `local-projects` directory. (You can also use symlinks if you want to put them elsewhere.)  
 `cd ~/quicklisp/local-projects`  
+`git clone https://github.com/kronusaturn/liblmdb.git`  
 `git clone https://github.com/kronusaturn/lmdb.git`  
 `git clone https://github.com/kronusaturn/plump.git`  
 `git clone https://github.com/kronusaturn/lw2-viewer.git`
@@ -22,3 +27,14 @@ e.g. `sudo apt install sbcl liblmdb0`
 `sbcl --eval '(ql:quickload :lw2-viewer)' --eval '(hunchentoot:start (make-instance (quote hunchentoot:easy-acceptor) :port 4242 :document-root "./www/"))'`  
 
 * Open `http://localhost:4242` in your browser
+
+### Mac
+Similar to above, but:
+* `sbcl` and `lmdb` are available from MacPorts.
+
+* Make sure to run system updates, using an outdated OS version can cause installation errors.
+
+* As Mac OS does not support sparse files, the system will create an empty 16 GB file on startup.
+If you want to reduce disk space usage, before starting the server, edit config.lisp and change the line `(defparameter *lmdb-mapsize* (expt 2 34))` to, for example, `(defparameter *lmdb-mapsize* (expt 2 28))`
+
+* You will need to set the `DYLD\_LIBRARY\_PATH` environment variable to the location where `liblmdb.dylib` is installed, for example `export DYLD\_LIBRARY\_PATH=/opt/local/lib/`

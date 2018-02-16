@@ -10,7 +10,7 @@
 
 (defparameter *secure-cookies* nil)
 
-; Location of the cache database.
+; Location of the cache database. Be sure to include the trailing slash.
 (defparameter *cache-db* "./cache/")
 
 ; Maximum size of the cache database.

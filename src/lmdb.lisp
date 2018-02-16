@@ -8,6 +8,9 @@
 (defvar *db-mutex* (sb-thread:make-mutex :name "lmdb"))
 (defvar *db-environment*)
 
+(uiop:chdir (asdf:system-source-directory "lw2-viewer"))
+(uiop:ensure-all-directories-exist (list *cache-db*))
+
 (when (not (boundp '*db-environment*))
   (setq *db-environment* (lmdb:make-environment *cache-db* :max-databases 1024 :mapsize *lmdb-mapsize*))
   (lmdb:open-environment *db-environment*))
