@@ -487,7 +487,7 @@ function injectThemeTweaker() {
 	<div class='help-window'>
 		<h1>Theme tweaker help</h1>
 		<div id='theme-tweak-section-clippy' class='section' data-label='Theme Tweaker Assistant'>
-			<input type='checkbox' id='theme-tweak-control-clippy'></input>
+			<input type='checkbox' id='theme-tweak-control-clippy' checked='checked'></input>
 			<label for='theme-tweak-control-clippy'>Show Bobby the Basilisk</label>
 		</div>
 		<div class='buttons-container'>
@@ -611,6 +611,7 @@ function toggleThemeTweakerHelpWindow() {
 	}
 }
 function themeTweakerHelpButtonClicked(event) {
+	document.querySelector("#theme-tweak-control-clippy").checked = JSON.parse(window.localStorage.getItem("theme-tweaker-settings") || "{ }")["showClippy"];
 	toggleThemeTweakerHelpWindow();
 }
 function themeTweakerResetDefaultsButtonClicked(event) {
