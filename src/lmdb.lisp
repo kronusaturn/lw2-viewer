@@ -13,7 +13,7 @@
 
 (when (not (boundp '*db-environment*))
   (setq *db-environment* (lmdb:make-environment *cache-db* :max-databases 1024 :mapsize *lmdb-mapsize*))
-  (lmdb:open-environment *db-environment*))
+  (lmdb:open-environment *db-environment* :create t))
 
 (defmacro with-cache-mutex (&body body)
   `(with-mutex (*db-mutex*)
