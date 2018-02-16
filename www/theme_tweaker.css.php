@@ -536,6 +536,7 @@ input[type='range']::-ms-thumb {
 	top: 200px;
 	left: calc((100% - 300px) / 2);
 	padding: 40px 10px 10px 10px;
+	pointer-events: auto;
 
 	display: none;
 }
