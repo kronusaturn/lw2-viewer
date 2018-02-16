@@ -521,7 +521,6 @@ input[type='range']::-ms-thumb {
 
 #theme-tweaker-ui .help-window {
 	width: 300px;
-	height: 200px;
 	background-color: #bfb8bf;
 	position: fixed;
 	z-index: 1;
@@ -536,9 +535,14 @@ input[type='range']::-ms-thumb {
 		0 0 0 2px #030303;
 	top: 200px;
 	left: calc((100% - 300px) / 2);
+	padding: 40px 10px 10px 10px;
+	pointer-events: auto;
 
 	display: none;
 }
 #theme-tweaker-ui .help-window h1 {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_help_icon.gif")) ?>');
+}
+#theme-tweaker-ui div.section#theme-tweak-section-clippy {
+	padding: 23px 10px 15px 10px;
 }

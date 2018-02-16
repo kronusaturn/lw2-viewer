@@ -526,6 +526,8 @@ function toggleThemeTweakerUI() {
 	// Focus invert checkbox.
 	if (themeTweakerUI.style.display != "none")
 		document.querySelector("#theme-tweaker-ui #theme-tweak-control-invert").focus();
+	// Set theme tweaker assistant visibility.
+	document.querySelector(".clippy-container").style.display = JSON.parse(window.localStorage.getItem("theme-tweaker-settings"))["showClippy"] ? "block" : "none";
 }
 function themeTweakerToggleButtonClicked(event) {
 	document.querySelector("#theme-tweaker-ui .current-theme span").innerText = (window.localStorage.getItem("selected-theme") || "default");
@@ -596,9 +598,17 @@ function themeTweakerMinimizeButtonClicked(event) {
 function toggleThemeTweakerHelpWindow() {
 	let themeTweakerHelpWindow = document.querySelector("#theme-tweaker-ui .help-window");
 	themeTweakerHelpWindow.style.display = (themeTweakerHelpWindow.style.display == "none") ? "block" : "none";
-	// Focus theme tweaker assistant checkbox.
-	if (themeTweakerHelpWindow.style.display != "none")
+	if (themeTweakerHelpWindow.style.display != "none") {
+		// Focus theme tweaker assistant checkbox.
 		document.querySelector("#theme-tweaker-ui #theme-tweak-control-clippy").focus();
+		// Disable interaction on main theme tweaker window.
+		document.querySelector("#theme-tweaker-ui").style.pointerEvents = "none";
+		document.querySelector("#theme-tweaker-ui .main-theme-tweaker-window").style.pointerEvents = "none";
+	} else {
+		// Re-enable interaction on main theme tweaker window.
+		document.querySelector("#theme-tweaker-ui").style.pointerEvents = "auto";
+		document.querySelector("#theme-tweaker-ui .main-theme-tweaker-window").style.pointerEvents = "auto";
+	}
 }
 function themeTweakerHelpButtonClicked(event) {
 	toggleThemeTweakerHelpWindow();
@@ -634,10 +644,12 @@ function clickInterceptor(event) {
 function themeTweakerFieldInputReceived(event) {
 	if (event.target.id == 'theme-tweak-control-invert') {
 		window.currentFilters['invert'] = event.target.checked ? '100%' : '0%';
-	} else {
+	} else if (event.target.type == 'range') {
 		let sliderName = /^theme-tweak-control-(.+)$/.exec(event.target.id)[1];
 		document.querySelector("#theme-tweak-label-" + sliderName).innerText = event.target.value + event.target.dataset["labelSuffix"];
 		window.currentFilters[sliderName] = event.target.value + event.target.dataset["valueSuffix"];
+	} else if (event.target.id == 'theme-tweak-control-clippy') {
+		document.querySelector(".clippy-container").style.display = event.target.checked ? "block" : "none";
 	}
 	applyFilters(window.currentFilters);
 }
