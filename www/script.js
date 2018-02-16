@@ -527,7 +527,7 @@ function toggleThemeTweakerUI() {
 	if (themeTweakerUI.style.display != "none")
 		document.querySelector("#theme-tweaker-ui #theme-tweak-control-invert").focus();
 	// Set theme tweaker assistant visibility.
-	document.querySelector(".clippy-container").style.display = JSON.parse(window.localStorage.getItem("theme-tweaker-settings"))["showClippy"] ? "block" : "none";
+	document.querySelector(".clippy-container").style.display = JSON.parse(window.localStorage.getItem("theme-tweaker-settings") || '{ "showClippy": true }')["showClippy"] ? "block" : "none";
 }
 function themeTweakerToggleButtonClicked(event) {
 	document.querySelector("#theme-tweaker-ui .current-theme span").innerText = (window.localStorage.getItem("selected-theme") || "default");
@@ -611,7 +611,7 @@ function toggleThemeTweakerHelpWindow() {
 	}
 }
 function themeTweakerHelpButtonClicked(event) {
-	document.querySelector("#theme-tweak-control-clippy").checked = JSON.parse(window.localStorage.getItem("theme-tweaker-settings") || "{ }")["showClippy"];
+	document.querySelector("#theme-tweak-control-clippy").checked = JSON.parse(window.localStorage.getItem("theme-tweaker-settings") || '{ "showClippy": true }')["showClippy"];
 	toggleThemeTweakerHelpWindow();
 }
 function themeTweakerResetDefaultsButtonClicked(event) {
@@ -663,7 +663,7 @@ function themeTweakerHelpWindowOKButtonClicked(event) {
 	themeTweakerSaveSettings();
 }
 function themeTweakerResetSettings() {
-	document.querySelector("#theme-tweak-control-clippy").checked = JSON.parse(window.localStorage.getItem("theme-tweaker-settings") || "{ }")['showClippy'];
+	document.querySelector("#theme-tweak-control-clippy").checked = JSON.parse(window.localStorage.getItem("theme-tweaker-settings") || '{ "showClippy": true }')['showClippy'];
 }
 function themeTweakerSaveSettings() {
 	window.localStorage.setItem("theme-tweaker-settings", JSON.stringify({ 'showClippy': document.querySelector("#theme-tweak-control-clippy").checked }));
