@@ -486,6 +486,14 @@ function injectThemeTweaker() {
     </div>
 	<div class='help-window'>
 		<h1>Theme tweaker help</h1>
+		<div id='theme-tweak-section-clippy' class='section' data-label='Theme Tweaker Assistant'>
+			<input type='checkbox' id='theme-tweak-control-clippy'></input>
+			<label for='theme-tweak-control-clippy'>Show Bobby the Basilisk</label>
+		</div>
+		<div class='buttons-container'>
+			<button type='button' class='ok-button default-button'>OK</button>
+			<button type='button' class='cancel-button'>Cancel</button>
+		</div>
     </div>
 	` + "</div>");
 	themeTweakerUI.addActivateEvent(themeTweakerUIOverlayClicked, true);
@@ -499,9 +507,12 @@ function injectThemeTweaker() {
 	});
 	
 	themeTweakerUI.querySelector(".minimize-button").addActivateEvent(themeTweakerMinimizeButtonClicked);
+	themeTweakerUI.querySelector(".help-button").addActivateEvent(themeTweakerHelpButtonClicked);
 	themeTweakerUI.querySelector(".reset-defaults-button").addActivateEvent(themeTweakerResetDefaultsButtonClicked);
-	themeTweakerUI.querySelector(".cancel-button").addActivateEvent(themeTweakerCancelButtonClicked);
-	themeTweakerUI.querySelector(".ok-button").addActivateEvent(themeTweakerOKButtonClicked);
+	themeTweakerUI.querySelector(".main-theme-tweaker-window .cancel-button").addActivateEvent(themeTweakerCancelButtonClicked);
+	themeTweakerUI.querySelector(".main-theme-tweaker-window .ok-button").addActivateEvent(themeTweakerOKButtonClicked);
+	themeTweakerUI.querySelector(".help-window .cancel-button").addActivateEvent(themeTweakerHelpWindowCancelButtonClicked);
+	themeTweakerUI.querySelector(".help-window .ok-button").addActivateEvent(themeTweakerHelpWindowOKButtonClicked);
 	
 	document.querySelector("head").insertAdjacentHTML("beforeend","<style id='theme-tweaker-style'></style>");
 }
@@ -582,6 +593,16 @@ function themeTweakerMinimizeButtonClicked(event) {
 		event.target.addClass("minimize");
 	}
 }
+function toggleThemeTweakerHelpWindow() {
+	let themeTweakerHelpWindow = document.querySelector("#theme-tweaker-ui .help-window");
+	themeTweakerHelpWindow.style.display = (themeTweakerHelpWindow.style.display == "none") ? "block" : "none";
+	// Focus theme tweaker assistant checkbox.
+	if (themeTweakerHelpWindow.style.display != "none")
+		document.querySelector("#theme-tweaker-ui #theme-tweak-control-clippy").focus();
+}
+function themeTweakerHelpButtonClicked(event) {
+	toggleThemeTweakerHelpWindow();
+}
 function themeTweakerResetDefaultsButtonClicked(event) {
 	document.querySelector("#theme-tweak-control-invert").checked = false;
 	[ "saturate", "brightness", "contrast", "hue-rotate" ].forEach(function (sliderName) {
@@ -619,6 +640,20 @@ function themeTweakerFieldInputReceived(event) {
 		window.currentFilters[sliderName] = event.target.value + event.target.dataset["valueSuffix"];
 	}
 	applyFilters(window.currentFilters);
+}
+function themeTweakerHelpWindowCancelButtonClicked(event) {
+	toggleThemeTweakerHelpWindow();
+	themeTweakerResetSettings();
+}
+function themeTweakerHelpWindowOKButtonClicked(event) {
+	toggleThemeTweakerHelpWindow();
+	themeTweakerSaveSettings();
+}
+function themeTweakerResetSettings() {
+	document.querySelector("#theme-tweak-control-clippy").checked = JSON.parse(window.localStorage.getItem("theme-tweaker-settings") || "{ }")['showClippy'];
+}
+function themeTweakerSaveSettings() {
+	window.localStorage.setItem("theme-tweaker-settings", JSON.stringify({ 'showClippy': document.querySelector("#theme-tweak-control-clippy").checked }));
 }
 
 function expandAncestorsOf(commentId) {

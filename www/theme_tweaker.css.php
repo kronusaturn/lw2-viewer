@@ -106,7 +106,6 @@
 	margin: 0;
 	position: absolute;
 	background-color: #03037f;
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_themes_icon.gif")) ?>');
 	background-repeat: no-repeat;
 	background-size: 20px;
 	color: #fff8ff;
@@ -119,6 +118,10 @@
 	text-shadow: 1px 0 0 #fff;
 	letter-spacing: 1px;
 }
+#theme-tweaker-ui .main-theme-tweaker-window h1 {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_themes_icon.gif")) ?>');
+}
+
 #theme-tweaker-ui .current-theme {
 	margin: 1em -8px 1.25em -8px;
 	padding: 0 12px 1em 12px;
@@ -535,4 +538,7 @@ input[type='range']::-ms-thumb {
 	left: calc((100% - 300px) / 2);
 
 	display: none;
+}
+#theme-tweaker-ui .help-window h1 {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_help_icon.gif")) ?>');
 }
