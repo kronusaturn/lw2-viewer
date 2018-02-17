@@ -1025,6 +1025,30 @@ input[type='range']::-ms-thumb {
 	display: inline-block;
 }
 
+#theme-tweaker-ui .clippy-close-button {
+	position: absolute;
+	top: 5px;
+	right: 11px;
+	width: 16px;
+	height: 16px;
+	border-radius: 8px;
+	color: inherit;
+	padding: 1px 0;
+	box-shadow: 
+		-1px -1px 0 #1e231e inset,
+		0 -1px 0 #6f766f,
+		-1px 0 0 #6f766f,
+		-1px -1px 0 #6f766f,
+		0 0 0 1px #000900,
+		0 -1px 0 0 #000900,
+		-1px 0 0 0 #000900,
+		-1px -1px 0 0 #000900,
+		0 0 0 2px #6f766f,
+		0 -2px 0 1px #1e231e,
+		-2px 0 0 1px #1e231e,
+		-1px -2px 0 1px #1e231e,
+		0 0 0 3px #fdfdfd;
+}
 
 /*******************/
 /* QUICKNAV WIDGET */

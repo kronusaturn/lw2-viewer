@@ -495,6 +495,7 @@ function injectThemeTweaker() {
 	<div class="clippy-container">
         <span class="hint">Hi, I'm Bobby the Basilisk! Click on the minimize button (<img src='/minimize_button_icon.gif' />) to minimize the theme tweaker window, so that you can see what the page looks like with the current tweaked values. (But remember, <span>the changes won't be saved until you click "OK"!</span>)
         <img class='clippy' src='/basilisk.png' />
+        <button type='button' class='clippy-close-button' tabindex='-1' title='Hide theme tweaker assistant (you can bring him back by clicking the ? button in the title bar)'></button>
     </div>
 	<div class='help-window' style='display: none;'>
 		<h1>Theme tweaker help</h1>
@@ -535,6 +536,8 @@ function injectThemeTweaker() {
 			applyFilters(window.currentFilters);
 		});
 	});
+	
+	themeTweakerUI.querySelector(".clippy-close-button").addActivateEvent(themeTweakerClippyCloseButtonClicked);
 	
 	document.querySelector("head").insertAdjacentHTML("beforeend","<style id='theme-tweaker-style'></style>");
 	
@@ -656,7 +659,6 @@ function themeTweakerResetDefaultsButtonClicked(event) {
 	applyFilters(window.currentFilters);
 	
 	setSelectedTheme("default");
-	window.currentTheme = "default";
 }
 function themeTweakerCancelButtonClicked(event) {
 	toggleThemeTweakerUI();
@@ -704,6 +706,11 @@ function themeTweakerResetSettings() {
 }
 function themeTweakerSaveSettings() {
 	window.localStorage.setItem("theme-tweaker-settings", JSON.stringify({ 'showClippy': document.querySelector("#theme-tweak-control-clippy").checked }));
+}
+function themeTweakerClippyCloseButtonClicked() {
+	document.querySelector(".clippy-container").style.display = "none";
+	window.localStorage.setItem("theme-tweaker-settings", JSON.stringify({ 'showClippy': false }));
+	document.querySelector("#theme-tweak-control-clippy").checked = false;
 }
 
 function expandAncestorsOf(commentId) {
