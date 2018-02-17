@@ -374,36 +374,36 @@ function widthAdjustButtonClicked(event) {
 
 function injectThemeSelector() {
 	document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='theme-select-buttons'>" + 
-		`#theme-selector button.select-theme-default,
-		#theme-selector button.select-theme-default:hover {
+		`.theme-selector button.select-theme-default,
+		.theme-selector button.select-theme-default:hover {
 			color: #000;
 			background-color: #fff;
 		}
-		#theme-selector button.select-theme-dark,
-		#theme-selector button.select-theme-dark:hover {
+		.theme-selector button.select-theme-dark,
+		.theme-selector button.select-theme-dark:hover {
 			color: #fff;
 			background-color: #000;
 		}
-		#theme-selector button.select-theme-grey,
-		#theme-selector button.select-theme-grey:hover {
+		.theme-selector button.select-theme-grey,
+		.theme-selector button.select-theme-grey:hover {
 			color: #f60;
 			background-color: #eee;
 			font-weight: 600;
 		}
-		#theme-selector button.select-theme-ultramodern,
-		#theme-selector button.select-theme-ultramodern:hover {
+		.theme-selector button.select-theme-ultramodern,
+		.theme-selector button.select-theme-ultramodern:hover {
 			color: #f60;
 			background-color: #888;
 			font-weight: 400;
 		}
-		#theme-selector button.select-theme-zero,
-		#theme-selector button.select-theme-zero:hover {
+		.theme-selector button.select-theme-zero,
+		.theme-selector button.select-theme-zero:hover {
 			color: #00e;
 			background-color: #ccc;
 			font-weight: 400;
 		}
-		#theme-selector button.select-theme-brutalist,
-		#theme-selector button.select-theme-brutalist:hover {
+		.theme-selector button.select-theme-brutalist,
+		.theme-selector button.select-theme-brutalist:hover {
 			color: #000;
 			background-color: #fff;
 			font-weight: 400;
@@ -419,7 +419,7 @@ function injectThemeSelector() {
 		['brutalist', 'Brutalist theme (the Motherland calls!)']
 	];
 	let themeSelector = addUIElement(
-		"<div id='theme-selector'>" +
+		"<div id='theme-selector' class='theme-selector'>" +
 		String.prototype.concat.apply("", themeOptions.map(function (to) {
 			let [name, desc] = to;
 			let selected = (name == currentTheme ? ' selected' : '');

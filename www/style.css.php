@@ -387,7 +387,7 @@ input {
 #theme-selector:hover {
 	opacity: 1.0;
 }
-#theme-selector button {
+.theme-selector button {
 	display: block;
 	width: 26px;
 	height: 26px;
@@ -402,17 +402,17 @@ input {
 		0 0 0 5px #bbb inset;
 }
 @-moz-document url-prefix() {
-	#theme-selector button {
+	.theme-selector button {
 		padding: 0;
 	}
 }
-#theme-selector button:hover,
-#theme-selector button.selected {
+.theme-selector button:hover,
+.theme-selector button.selected {
 	text-shadow: none;
 	box-shadow:
 		0 0 0 5px #bbb inset;
 }
-#theme-selector button:disabled {
+.theme-selector button:disabled {
 	cursor: auto;
 }
 
