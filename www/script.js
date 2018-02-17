@@ -460,18 +460,22 @@ function injectThemeTweaker() {
 			<div id='theme-tweak-section-saturate' class='section' data-label='Saturation'>
 				<input type="range" id="theme-tweak-control-saturate" min="0" max="300" data-default-value="100" data-value-suffix="%" data-label-suffix="%">
 				<p class="theme-tweak-control-label" id="theme-tweak-label-saturate"></p>
+				<div class='notch theme-tweak-slider-notch-saturate' title='Reset saturation to default value (100%)'></div>
 			</div>
 			<div id='theme-tweak-section-brightness' class='section' data-label='Brightness'>
 				<input type="range" id="theme-tweak-control-brightness" min="0" max="300" data-default-value="100" data-value-suffix="%" data-label-suffix="%">
 				<p class="theme-tweak-control-label" id="theme-tweak-label-brightness"></p>
+				<div class='notch theme-tweak-slider-notch-brightness' title='Reset brightness to default value (100%)'></div>
 			</div>
 			<div id='theme-tweak-section-contrast' class='section' data-label='Contrast'>
 				<input type="range" id="theme-tweak-control-contrast" min="0" max="300" data-default-value="100" data-value-suffix="%" data-label-suffix="%">
 				<p class="theme-tweak-control-label" id="theme-tweak-label-contrast"></p>
+				<div class='notch theme-tweak-slider-notch-contrast' title='Reset contrast to default value (100%)'></div>
 			</div>
 			<div id='theme-tweak-section-hue-rotate' class='section' data-label='Hue rotation'>
 				<input type="range" id="theme-tweak-control-hue-rotate" min="0" max="360" data-default-value="0" data-value-suffix="deg" data-label-suffix="°">
 				<p class="theme-tweak-control-label" id="theme-tweak-label-hue-rotate"></p>
+				<div class='notch theme-tweak-slider-notch-hue-rotate' title='Reset hue to default (0° away from standard colors for theme)'></div>
 			</div>
 		</div>
 		<div class='buttons-container'>
@@ -513,6 +517,14 @@ function injectThemeTweaker() {
 	themeTweakerUI.querySelector(".main-theme-tweaker-window .ok-button").addActivateEvent(themeTweakerOKButtonClicked);
 	themeTweakerUI.querySelector(".help-window .cancel-button").addActivateEvent(themeTweakerHelpWindowCancelButtonClicked);
 	themeTweakerUI.querySelector(".help-window .ok-button").addActivateEvent(themeTweakerHelpWindowOKButtonClicked);
+	
+	themeTweakerUI.querySelectorAll(".notch").forEach(function (notch) {
+		notch.addActivateEvent(function (event) {
+			let slider = event.target.parentElement.querySelector("input[type='range']");
+			slider.value = slider.dataset['defaultValue'];
+			event.target.parentElement.querySelector("label").innerText = slider.value + slider.dataset['labelSuffix'];
+		});
+	});
 	
 	document.querySelector("head").insertAdjacentHTML("beforeend","<style id='theme-tweaker-style'></style>");
 }
