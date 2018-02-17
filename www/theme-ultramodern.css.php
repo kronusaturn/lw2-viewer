@@ -298,16 +298,12 @@ button:hover {
 	font-weight: 300;
 	font-size: 1.125em;
 }
-#bottom-bar a[href='#top']::after,
-.post-meta a[href='#comments']::after,
-.post-meta a[href='#bottom-bar']::after  {
+#quick-nav-ui a  {
 	color: #666;
 	background-color: transparent;
 	box-shadow: 0 0 0 1px #999;
 }
-#bottom-bar a[href='#top']:hover::after,
-.post-meta a[href='#comments']:hover::after,
-.post-meta a[href='#bottom-bar']:hover::after  {
+#quick-nav-ui a:hover  {
 	color: #444;
 	background-color: transparent;
 	box-shadow: 0 0 0 1px #ccc;

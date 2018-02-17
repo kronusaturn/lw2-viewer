@@ -34,9 +34,7 @@ function setContentWidth(widthString) {
 		`#content { 
 			max-width: calc(${widthString});
 		}
-		#bottom-bar a[href='#top']::after, 
-		.post-meta a[href='#comments']::after, 
-		.post-meta a[href='#bottom-bar']::after {
+		#quick-nav-ui a {
 			right: calc((100vw - ${widthString}) / 2 - 75px);
 		}
 		.post-meta .new-comments-count {

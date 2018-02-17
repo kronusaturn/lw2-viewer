@@ -206,9 +206,7 @@ input[type='submit'] {
 	box-shadow:
 		0 0 0 5px #ccc inset;
 }
-#bottom-bar a[href='#top']:hover::after,
-.post-meta a[href='#comments']:hover::after,
-.post-meta a[href='#bottom-bar']:hover::after  {
+#quick-nav-ui a:hover  {
 	color: #000;
 	background-color: #d8d8d8;
 }

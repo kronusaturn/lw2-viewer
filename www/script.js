@@ -1,3 +1,7 @@
+/***********/
+/* COOKIES */
+/***********/
+
 function readCookie(name) {
 	var nameEQ = name + "=";
 	var ca = document.cookie.split(';');
@@ -9,6 +13,10 @@ function readCookie(name) {
 	return null;
 }
 
+/****************************************************/
+/* CSS CLASS MANIPULATION (polyfill for .classList) */
+/****************************************************/
+
 Element.prototype.addClass = function(className) {
 	if (!this.className.match(new RegExp("(^|\\s)" + className + "(\\s|$)")))
 		this.className += " " + className;
@@ -19,6 +27,10 @@ Element.prototype.removeClass = function(className) {
 Element.prototype.hasClass = function(className) {
 	return this.className.match(new RegExp("(^|\\s)" + className + "(\\s|$)"));
 }
+
+/*******************************/
+/* EVENT LISTENER MANIPULATION */
+/*******************************/
 
 Element.prototype.addActivateEvent = function(func, includeMouseDown) {
 	let ael = this.activateEventListener = function(e) { if(e.button === 0 || e.key === ' ') func(e) };
@@ -34,6 +46,10 @@ Element.prototype.removeActivateEvent = function() {
 	this.removeEventListener("keyup", ael);
 }
 
+/****************/
+/* MISC HELPERS */
+/****************/
+
 Element.prototype.scrollIntoViewIfNeeded = function() {
 	if(this.getBoundingClientRect().bottom > window.innerHeight) {
 		this.scrollIntoView(false);
@@ -48,6 +64,10 @@ Element.prototype.getCommentId = function() {
 		return false;
 	}
 }
+
+/**************/
+/* COMMENTING */
+/**************/
 
 Element.prototype.addTextareaFeatures = function() {
 	let textarea = this;
@@ -173,6 +193,10 @@ function ExpandTextarea(textarea) {
 	});
 }
 
+/**********/
+/* VOTING */
+/**********/
+
 function makeVoteCompleteEvent(buttonTarget, karmaTarget) {
 	return function(e) {
 		buttonTarget.parentNode.querySelectorAll("button.vote").forEach(function(b) { b.style.pointerEvents = "" });
@@ -219,6 +243,10 @@ function voteEvent(e) {
 	}
 }
 
+/***********************************/
+/* COMMENT THREAD MINIMIZE BUTTONS */
+/***********************************/
+
 function commentMinimizeButtonClicked(event) {
 	event.target.closest(".comment-item").setCommentThreadMaximized(true);
 }
@@ -245,6 +273,10 @@ Element.prototype.setCommentThreadMaximized = function(toggle, userOriginated = 
 							minimize_button.dataset["childCount"] + 
 							" child comments)";
 }
+
+/*****************************************/
+/* NEW COMMENT HIGHLIGHTING & NAVIGATION */
+/*****************************************/
 
 Element.prototype.getCommentDate = function() {
 	let item = (this.className == "comment-item") ? this : this.closest(".comment-item");
@@ -341,6 +373,10 @@ function setLastVisitedDate(date) {
 	window.localStorage.setItem(storageName, date);
 }
 
+/***********************************/
+/* CONTENT COLUMN WIDTH ADJUSTMENT */
+/***********************************/
+
 function injectContentWidthSelector() {
 	let widthOptions = [
 		['normal', 'Narrow (fixed-width) content column', 'N', '900px'],
@@ -371,6 +407,10 @@ function widthAdjustButtonClicked(event) {
 	event.target.addClass("selected");
 	event.target.disabled = true;
 }
+
+/*******************/
+/* THEME SELECTION */
+/*******************/
 
 function injectThemeSelector() {
 	document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='theme-select-buttons'>" + 
@@ -446,6 +486,10 @@ function setSelectedTheme(themeName) {
 	setTheme(themeName);
 	document.querySelector("#theme-tweaker-ui .current-theme span").innerText = themeName;
 }
+
+/********************************************/
+/* APPEARANCE CUSTOMIZATION (THEME TWEAKER) */
+/********************************************/
 
 function injectThemeTweaker() {
 	let themeTweakerToggle = addUIElement("<div id='theme-tweaker-toggle'><button type='button' tabindex='-1' title='Customize appearance'>&#xf1de;</button></div>");
@@ -713,12 +757,32 @@ function themeTweakerClippyCloseButtonClicked() {
 	document.querySelector("#theme-tweak-control-clippy").checked = false;
 }
 
+/*********************/
+/* PAGE QUICK-NAV UI */
+/*********************/
+
+function injectQuickNavUI() {
+	let quickNavContainer = addUIElement("<div id='quick-nav-ui'>" +
+	`<a href='#top'>&#xf106;</a>
+	<a href='#comments'>&#xf036;</a>
+	<a href='#bottom-bar'>&#xf107;</a>
+	` + "</div>");
+}
+
+/*****************************/
+/* MINIMIZED THREAD HANDLING */
+/*****************************/
+
 function expandAncestorsOf(commentId) {
 	try { document.querySelector('#comment-'+commentId).closest("label[for^='expand'] + .comment-thread").parentElement.querySelector("input[id^='expand']").checked = true; }
 	catch (e) { }
 	try { document.querySelector('#comment-'+commentId).closest("#comments > ul > li").setCommentThreadMaximized(true, false, true); }
 	catch (e) { }
 }
+
+/*********************/
+/* MORE MISC HELPERS */
+/*********************/
 
 function getQueryVariable(variable)
 {
@@ -744,6 +808,15 @@ function addUIElement(element_html) {
 	ui_elements_container.insertAdjacentHTML("beforeend", element_html);
 	return ui_elements_container.lastElementChild;
 }
+
+function removeElement(selector, ancestor = document) {
+	var element = ancestor.querySelector(selector);
+	if (element) element.parentElement.removeChild(element);
+}
+
+/******************/
+/* INITIALIZATION */
+/******************/
 
 var initializeDone = false;
 function initialize() {
@@ -895,6 +968,8 @@ function initialize() {
 		injectThemeSelector();
 		// Add the theme tweaker.
 		injectThemeTweaker();
+		// Add the quick-nav UI.
+		injectQuickNavUI();
 
 		// Call pageLayoutFinished() once all activity that can affect the page layout has finished.
 		document.addEventListener("readystatechange", pageLayoutFinished);
@@ -925,6 +1000,10 @@ function initialize() {
 	})
 }
 
+/*************************/
+/* POST-LOAD ADJUSTMENTS */
+/*************************/
+
 var pageLayoutFinishedDone = false;
 function pageLayoutFinished() {
 	if(pageLayoutFinishedDone || (document.readyState != "complete")) return;
@@ -936,7 +1015,7 @@ function pageLayoutFinished() {
 
 		let content = document.querySelector("#content");
 		if (content.clientHeight <= window.innerHeight + 30) {
-			removeElement(".post .post-meta a[href='#bottom-bar']", content);
+			removeElement("#quick-nav-ui a[href='#bottom-bar']", content);
 		} else {
 			removeElement("#hide-bottom-bar", document.querySelector("head"));
 		}
@@ -948,10 +1027,9 @@ function realignHash() {
 		document.querySelectorAll(h).forEach(function (e) { e.scrollIntoView(true); });
 }
 
-function removeElement(selector, ancestor = document) {
-	var element = ancestor.querySelector(selector);
-	if (element) element.parentElement.removeChild(element);
-}
+/*******/
+/* =*= */
+/*******/
 
 document.addEventListener("DOMContentLoaded", initialize, {once: true});
 window.setTimeout(initialize);
