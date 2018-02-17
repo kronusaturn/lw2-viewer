@@ -767,6 +767,13 @@ function injectQuickNavUI() {
 	<a href='#comments'>&#xf036;</a>
 	<a href='#bottom-bar'>&#xf107;</a>
 	` + "</div>");
+	
+	var content = document.querySelector("#content");
+	if (content.clientHeight <= window.innerHeight + 30 || 
+		(content.querySelector("#comments") && content.querySelector("#comments").childNodes.length == 0)) {
+		try { document.querySelector("#quick-nav-ui a[href='#comments']").addClass("no-comments"); }
+		catch (e) { }
+	}
 }
 
 /*****************************/
@@ -826,12 +833,6 @@ function initialize() {
 	window.requestAnimationFrame(function() {
 		if(location.hash.length == 18) {
 			location.hash = "#comment-" + location.hash.substring(1);
-		}
-		var content = document.querySelector("#content");
-		if (content.clientHeight <= window.innerHeight + 30 || 
-			(content.querySelector("#comments") && content.querySelector("#comments").childNodes.length == 0)) {
-			try { document.querySelector("#quick-nav-ui a[href='#comments']").addClass("no-comments"); }
-			catch (e) { }
 		}
 
 		try {
