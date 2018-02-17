@@ -351,7 +351,7 @@
   (format out-stream "<div><input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><input type=\"submit\" value=\"~A\"></div></div></form>"
 	  csrf-token button-label)) 
 
-(defun view-items-index (items &key section with-offset (with-next t) title hide-title extra-html (content-class "index-page"))
+(defun view-items-index (items &key section with-offset (with-next t) title hide-title extra-html (content-class "index-page") trailing-fn)
   (alexandria:switch ((hunchentoot:get-parameter "format") :test #'string=)
                      ("rss" 
                       (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
@@ -365,7 +365,8 @@
                                           title
                                           (replace-query-params (hunchentoot:request-uri*) "offset" nil "format" "rss")
                                           extra-html)
-                                  (write-index-items-to-html out-stream items)))))
+                                  (write-index-items-to-html out-stream items)
+                                  (if trailing-fn (funcall trailing-fn out-stream))))))
 
 (declaim (inline alist)) 
 (defun alist (&rest parms) (alexandria:plist-alist parms))
@@ -503,14 +504,25 @@
 				     (json:encode-json-to-string (list (pretty-number points "point") vote-type)))))
 
 (hunchentoot:define-easy-handler (view-recent-comments :uri "/recentcomments") (offset)
-				 (with-error-page
-				   (let* ((offset (and offset (parse-integer offset))) 
-					  (recent-comments (if offset
-							     (lw2-graphql-query (graphql-query-string "CommentsList"
-												      (alist :terms (alist :view "postCommentsNew" :limit 20 :offset offset))
-												      *comments-index-fields*))
-							     (get-recent-comments))))
-                                     (view-items-index recent-comments :title "Recent comments" :with-offset (or offset 0) :with-next t))))
+                                 (with-error-page
+                                   (let* ((offset (and offset (parse-integer offset)))
+                                          (graphql-terms (alist :terms (loop for x in (alist :view "postCommentsNew" :limit 20 :offset offset)
+                                                                             when (cdr x) collect x)))
+                                          (recent-comments (if offset
+                                                               (lw2-graphql-query (graphql-query-string "CommentsList"
+                                                                                                        graphql-terms
+                                                                                                        *comments-index-fields*))
+                                                               (get-recent-comments)))
+                                          (lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token")))
+                                     (view-items-index recent-comments :title "Recent comments" :with-offset (or offset 0) :with-next t
+                                                       :trailing-fn (lambda (out-stream)
+                                                                      (if lw2-auth-token
+                                                                          (format out-stream "<script>commentVotes=~A</script>"
+                                                                                  (json:encode-json-to-string
+                                                                                    (process-votes-result
+                                                                                      (lw2-graphql-query (graphql-query-string "CommentsList" graphql-terms
+                                                                                                                               '(:--id (:current-user-votes :vote-type)))
+                                                                                                         :auth-token lw2-auth-token))))))))))
 
 (defmacro define-regex-handler (name (regex &rest vars) additional-vars &body body)
   (alexandria:with-gensyms (fn result-vector)
