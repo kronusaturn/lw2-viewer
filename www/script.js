@@ -1013,9 +1013,8 @@ function pageLayoutFinished() {
 		if (window.needHashRealignment)
 			realignHash();
 
-		let content = document.querySelector("#content");
-		if (content.clientHeight <= window.innerHeight + 30) {
-			removeElement("#quick-nav-ui a[href='#bottom-bar']", content);
+		if (document.querySelector("#content").clientHeight <= window.innerHeight + 30) {
+			document.querySelector("#quick-nav-ui a[href='#bottom-bar']").style.visibility = "hidden";
 		} else {
 			removeElement("#hide-bottom-bar", document.querySelector("head"));
 		}

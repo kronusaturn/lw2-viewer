@@ -1057,34 +1057,29 @@ input[type='range']::-ms-thumb {
 /* QUICKNAV WIDGET */
 /*******************/
 
+#quick-nav-ui {
+	position: fixed;
+	right: calc((100vw - 900px) / 2 - 75px);
+	bottom: 20px;
+}
+
 #quick-nav-ui a {
 	color: #999;
 	background-color: #e4e4e4;
 	font-family: 'Font Awesome';
 	font-weight: 900;
 	font-size: 1.5rem;
+	line-height: 1.7;
 	text-align: center;
 	display: block;
-	position: fixed;
-	right: calc((100vw - 900px) / 2 - 75px);
 	width: 40px;
 	height: 40px;
 	border-radius: 4px;
-}
-
-#quick-nav-ui a[href='#top'] {
-	bottom: 120px;
-	line-height: 1.7;
-}
-#quick-nav-ui a[href='#comments'] {
-	bottom: 70px;
-	line-height: 1.7;
+	margin: 10px 0 0 0;
 }
 #quick-nav-ui a[href='#bottom-bar'] {
-	bottom: 20px;
 	line-height: 1.8;
 }
-
 #quick-nav-ui a:hover {
 	color: #000;
 	background-color: #eee;
