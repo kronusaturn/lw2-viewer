@@ -318,11 +318,11 @@ function highlightCommentsSince(date) {
 		window.requestAnimationFrame(function () {
 			let ci = getCurrentVisibleComment();
 			if(ci) {
-				document.querySelector(".post-meta .new-comment-previous").disabled = !ci.prevNewComment;
-				document.querySelector(".post-meta .new-comment-next").disabled = !ci.nextNewComment;
+				document.querySelector("#new-comment-nav-ui .new-comment-previous").disabled = !ci.prevNewComment;
+				document.querySelector("#new-comment-nav-ui .new-comment-next").disabled = !ci.nextNewComment;
 			} else {
-				document.querySelector(".post-meta .new-comment-previous").disabled = true;
-				document.querySelector(".post-meta .new-comment-next").disabled = (window.newComments.length == 0);
+				document.querySelector("#new-comment-nav-ui .new-comment-previous").disabled = true;
+				document.querySelector("#new-comment-nav-ui .new-comment-next").disabled = (window.newComments.length == 0);
 			}
 			document.addEventListener("scroll", scrollListener, {once: true, passive: true});
 		});
@@ -776,6 +776,25 @@ function injectQuickNavUI() {
 	}
 }
 
+/**********************/
+/* NEW COMMENT NAV UI */
+/**********************/
+
+function injectNewCommentNavUI(newCommentsCount) {
+	let newCommentUIContainer = addUIElement("<div id='new-comment-nav-ui'>" + 
+	`<button type='button' class='new-comment-sequential-nav-button new-comment-previous' title='Previous new comment [,]' tabindex='-1' accesskey=',' disabled>&#xf0d8;</button>
+	<span class='new-comments-count' title='${newCommentsCount} new comments'>${newCommentsCount}</span>
+	<button type='button' class='new-comment-sequential-nav-button new-comment-next' title='Next new comment [.]' tabindex='-1' accesskey='.'${(newCommentsCount == 0 ? " disabled" : "")}>&#xf0d7;</button>`
+	+ "</div>");
+	
+	if (newCommentsCount > 0) {
+		newCommentUIContainer.querySelector(".new-comment-previous").addActivateEvent(commentQuicknavButtonClicked);
+		newCommentUIContainer.querySelector(".new-comment-next").addActivateEvent(commentQuicknavButtonClicked);
+
+		document.addEventListener("keyup", function(e) { if(e.key == ",") scrollToNewComment(false); if(e.key == ".") scrollToNewComment(true)});
+	}
+}
+
 /*****************************/
 /* MINIMIZED THREAD HANDLING */
 /*****************************/
@@ -947,20 +966,7 @@ function initialize() {
 			let newCommentsCount = highlightCommentsSince(hns || lastVisitedDate);
 
 			// Add the new comments count & navigator.
-			document.querySelector(".post .post-meta").insertAdjacentHTML("beforeend", 
-				("<button type='button' class='new-comment-sequential-nav-button new-comment-previous' title='Previous new comment [,]' tabindex='-1' accesskey=',' disabled>&#xf0d8;</button> " + 
-				 "<span class='new-comments-count' title='" + newCommentsCount + " new comments'>" + newCommentsCount + "</span> " +
-				 "<button type='button' class='new-comment-sequential-nav-button new-comment-next' title='Next new comment [.]' tabindex='-1' accesskey='.'" + 
-				 (newCommentsCount == 0 ? " disabled" : "") + 
-				 ">&#xf0d7;</button>"));
-			if (newCommentsCount > 0) {
-				document.querySelector(".post-meta .new-comment-previous").addActivateEvent(commentQuicknavButtonClicked);
-				document.querySelector(".post-meta .new-comment-next").addActivateEvent(commentQuicknavButtonClicked);
-				document.querySelector(".post-meta .new-comment-previous").dataset['targetComment'] = -2;
-				document.querySelector(".post-meta .new-comment-next").dataset['targetComment'] = 0;
-
-				document.addEventListener("keyup", function(e) { if(e.key == ",") scrollToNewComment(false); if(e.key == ".") scrollToNewComment(true)});
-			}
+			injectNewCommentNavUI(newCommentsCount);
 		}
 		
 		// Add the content width selector.

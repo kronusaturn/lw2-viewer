@@ -37,11 +37,8 @@ function setContentWidth(widthString) {
 		#quick-nav-ui {
 			right: calc((100vw - ${widthString}) / 2 - 75px);
 		}
-		.post-meta .new-comments-count {
-			right: calc((100vw - ${widthString}) / 2 - 139px);
-		}
-		.post-meta .new-comment-sequential-nav-button {
-			right: calc((100vw - ${widthString}) / 2 - 148px);
+		#new-comment-nav-ui {
+			right: calc((100vw - ${widthString}) / 2 - 120px);
 		}
 		#width-selector {
 			right: calc((100% - ${widthString}) / 2 - 78px);

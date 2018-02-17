@@ -1103,46 +1103,53 @@ input[type='range']::-ms-thumb {
 /* NEW COMMENT QUICKNAV */
 /************************/
 
-.post-meta .new-comments-count {
+#new-comment-nav-ui {
 	position: fixed;
+	right: calc((100vw - 900px) / 2 - 120px);
+	bottom: 42px;
+}
+#new-comment-nav-ui > * {
+	display: block;
+	position: relative;
+}
+#new-comment-nav-ui .new-comments-count {
 	width: 2em;
-	bottom: 74px;
-	right: calc((100vw - 900px) / 2 - 139px);
 	font-weight: 600;
 	font-size: 1.25rem;
 	line-height: 1.1;
 	color: #666;
 	text-shadow: 0.5px 0.5px 0 #fff;
+	text-align: center;
+	left: 1px;
 }
-.post-meta .new-comments-count::after {
+#new-comment-nav-ui .new-comments-count::after {
 	content: "NEW";
 	display: block;
 	font-size: 0.625rem;
 	font-weight: 600;
 	color: #777;
 }
-.post-meta .new-comment-sequential-nav-button {
-	position: fixed;
+#new-comment-nav-ui .new-comment-sequential-nav-button {
 	font-size: 1.75rem;
-	right: calc((100vw - 900px) / 2 - 148px);
 	font-family: 'Font Awesome';
 	font-weight: 900;
 	width: 1.5em;
+	z-index: 1;	
 }
-.post-meta .new-comment-previous {
-	bottom: 99px;
+#new-comment-nav-ui .new-comment-previous {
+	top: 8px;
 }
-.post-meta .new-comment-next {
-	bottom: 48px;
+#new-comment-nav-ui .new-comment-next {
+	bottom: 6px;
 }
-.post-meta .new-comment-sequential-nav-button:focus {
+#new-comment-nav-ui .new-comment-sequential-nav-button:focus {
 	color: #d00;
 	text-shadow:
 		0 0 1px #fff,
 		0 0 3px #fff,
 		0 0 5px #fff;
 }
-.post-meta .new-comment-sequential-nav-button:disabled {
+#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
 	color: #bbb;
 	text-shadow: none;
 	cursor: auto;
@@ -2798,19 +2805,9 @@ ol {
 /**********************/
 
 @media only screen and (max-width: 1020px) {
-	.post-meta .new-comment-sequential-nav-button {
-		right: calc((100vw - 900px) / 2 - 80px);
+	#new-comment-nav-ui {
+		right: calc((100vw - 900px) / 2 - 61px);
 		z-index: 3;
-	}
-	.post-meta .new-comment-previous {
-		bottom: 249px;
-	}
-	.post-meta .new-comments-count {
-		right: calc((100vw - 900px) / 2 - 71px);
-		bottom: 224px;
-	}
-	.post-meta .new-comment-next {
-		bottom: 198px;
 	}
 	.post-meta .new-comments-count::before {
 		content: "";
@@ -2882,21 +2879,11 @@ ol {
 	.nav-inner::after {
 		display: none;
 	}
-	.post-meta .new-comment-sequential-nav-button {
+	#new-comment-nav-ui {
 		right: -5px;
 	}
 	.post-meta .new-comments-count {
-		right: 4px;
 		z-index: 2;
-	}
-	.post-meta .new-comment-previous {
-		bottom: 99px;
-	}
-	.post-meta .new-comments-count {
-		bottom: 74px;
-	}
-	.post-meta .new-comment-next {
-		bottom: 48px;
 	}
 }
 @media only screen and (max-width: 768px) {
