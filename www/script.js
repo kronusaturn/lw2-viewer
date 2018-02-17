@@ -431,13 +431,16 @@ function injectThemeSelector() {
 	});
 }
 function themeSelectButtonClicked(event) {
-	setTheme(/select-theme-([^\s]+)/.exec(event.target.className)[1]);
-	event.target.parentElement.childNodes.forEach(function (button) {
+	let themeName = /select-theme-([^\s]+)/.exec(event.target.className)[1];
+	document.querySelectorAll(".theme-selector button").forEach(function (button) {
 		button.removeClass("selected");
 		button.disabled = false;
 	});
-	event.target.addClass("selected");
-	event.target.disabled = true;
+	document.querySelectorAll(".theme-selector button.select-theme-" + themeName).forEach(function (button) {
+		button.addClass("selected");
+		button.disabled = true;
+	});
+	setTheme(themeName);
 }
 
 function injectThemeTweaker() {
@@ -532,6 +535,10 @@ function injectThemeTweaker() {
 	document.querySelector("head").insertAdjacentHTML("beforeend","<style id='theme-tweaker-style'></style>");
 	
 	document.querySelector("#theme-tweaker-ui .theme-selector").innerHTML = document.querySelector("#theme-selector").innerHTML;
+	document.querySelectorAll("#theme-tweaker-ui .theme-selector button").forEach(function (button) {
+		button.addActivateEvent(themeSelectButtonClicked);
+	});
+
 }
 function toggleThemeTweakerUI() {
 	let themeTweakerUI = document.querySelector("#theme-tweaker-ui");

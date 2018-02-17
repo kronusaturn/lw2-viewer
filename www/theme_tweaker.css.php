@@ -137,7 +137,7 @@
 
 #theme-tweaker-ui .theme-selector {
 	position: absolute;
-	top: 20px;
+	top: 19px;
 	left: 240px;
 }
 #theme-tweaker-ui .theme-selector button {
