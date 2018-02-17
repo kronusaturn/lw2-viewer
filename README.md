@@ -35,6 +35,6 @@ Similar to above, but:
 * Make sure to run system updates, using an outdated OS version can cause installation errors.
 
 * As Mac OS does not support sparse files, the system will create an empty 16 GB file on startup.
-If you want to reduce disk space usage, before starting the server, edit config.lisp and change the line `(defparameter *lmdb-mapsize* (expt 2 34))` to, for example, `(defparameter *lmdb-mapsize* (expt 2 28))`
+If you want to reduce disk space usage, before starting the server, copy config-example.lisp to config.lisp and change the line `(defparameter *lmdb-mapsize* (expt 2 34))` to, for example, `(defparameter *lmdb-mapsize* (expt 2 28))`
 
 * You will need to set the `DYLD_LIBRARY_PATH` environment variable to the location where `liblmdb.dylib` is installed, for example `export DYLD_LIBRARY_PATH=/opt/local/lib/`
