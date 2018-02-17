@@ -2,7 +2,7 @@
   (:use #:cl #:sb-thread #:flexi-streams #:lw2-viewer.config #:lw2.lmdb)
   (:export #:log-condition #:log-conditions #:start-background-loader #:stop-background-loader
 	   #:lw2-graphql-query-streamparse #:lw2-graphql-query-noparse #:decode-graphql-json #:lw2-graphql-query #:graphql-query-string #:make-posts-list-query
-	   #:get-posts #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:process-votes-result #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
+	   #:get-posts #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
 	   #:lw2-search-query #:get-post-title #:get-post-slug #:get-slug-postid #:get-username #:get-user-slug))
 
 (in-package #:lw2.backend)
@@ -122,27 +122,23 @@
 		      (error "Failed to load ~A ~A and no cached version available." cache-db cache-key)))))))))
 
 (defun graphql-query-string (query-type terms fields)
-  (labels ((terms (tlist)
-             (loop for (k . v) in tlist
-                   when k
-                   collect (format nil "~A:~A"
-                                   (json:lisp-to-camel-case (string k))
-                                   (typecase v
-                                     ((member t) "true") 
-                                     ((member nil) "false")
-                                     (list (format nil "{~{~A~^,~}}" (terms v)))
-                                     (t (format nil "~S" v))))))
-           (fieldspec-to-string (x)
-             (typecase x
-               (string x)
-               (list (format nil "~A{~{~A~^,~}}" (fieldspec-to-string (first x)) (fields (rest x))))
-               (symbol (json:lisp-to-camel-case (string x)))))
-           (fields (flist)
-             (map 'list #'fieldspec-to-string flist)))
-    (format nil "{~A(~{~A~^,~}){~{~A~^,~}}}"
-            query-type
-            (terms terms)
-            (fields fields))))
+  (format nil "{~A(~{~A~^,~}){~{~A~^,~}}}"
+	  query-type
+	  (labels ((terms (tlist)
+			  (loop for (k . v) in tlist
+				when k
+				collect (format nil "~A:~A"
+						(json:lisp-to-camel-case (string k))
+						(typecase v
+						  ((member t) "true") 
+						  ((member nil) "false")
+						  (list (format nil "{~{~A~^,~}}" (terms v)))
+						  (t (format nil "~S" v)))))))
+	    (terms terms))
+	  (map 'list (lambda (x) (typecase x
+				   (string x)
+				   (symbol (json:lisp-to-camel-case (string x)))))
+	       fields)))
 
 (declaim (inline make-posts-list-query)) 
 (defun make-posts-list-query (&key (view "frontpage-rss") (limit 20) (meta nil) (before nil) (after nil) (with-body nil))
