@@ -461,6 +461,12 @@ input {
 	text-shadow: none;
 }
 
+#quick-nav-ui a[href='#comments'].no-comments {
+	opacity: 0.4;
+	color: #bbb;
+	pointer-events: none;
+}
+
 /************************/
 /* NEW COMMENT QUICKNAV */
 /************************/
@@ -999,11 +1005,6 @@ h1.listing a[href^="http"] {
 }
 .post-meta .comment-count {
 	margin-left: 1em;
-}
-.post .post-meta .comment-count.no-comments::after {
-	opacity: 0.4;
-	color: #bbb;
-	pointer-events: none;
 }
 .post-body {
 	min-height: 8em;
@@ -2144,7 +2145,7 @@ ol {
 		box-shadow: 0 0 2px #eee;
 		border-radius: 8px;
 	}
-	#quick-nav-ui a {
+	#quick-nav-ui {
 		right: calc((100vw - 900px) / 2 - 51px);
 	}
 	#width-selector {

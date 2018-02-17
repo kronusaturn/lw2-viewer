@@ -830,7 +830,7 @@ function initialize() {
 		var content = document.querySelector("#content");
 		if (content.clientHeight <= window.innerHeight + 30 || 
 			(content.querySelector("#comments") && content.querySelector("#comments").childNodes.length == 0)) {
-			try { document.querySelector(".post .post-meta .comment-count").addClass("no-comments"); }
+			try { document.querySelector("#quick-nav-ui a[href='#comments']").addClass("no-comments"); }
 			catch (e) { }
 		}
 
