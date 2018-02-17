@@ -654,7 +654,9 @@ function themeTweakerResetDefaultsButtonClicked(event) {
 	});
 	window.currentFilters = { };
 	applyFilters(window.currentFilters);
+	
 	setSelectedTheme("default");
+	window.currentTheme = "default";
 }
 function themeTweakerCancelButtonClicked(event) {
 	toggleThemeTweakerUI();
