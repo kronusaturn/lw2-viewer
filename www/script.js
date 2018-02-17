@@ -856,6 +856,29 @@ function initialize() {
 		// Call pageLayoutFinished() once all activity that can affect the page layout has finished.
 		document.addEventListener("readystatechange", pageLayoutFinished);
 		window.setTimeout(pageLayoutFinished);
+		
+		// Add event listeners for Escape and Enter, for the theme tweaker.
+		document.addEventListener("keyup", function(event) {
+			if (event.keyCode == 27) {
+			// Escape key.
+				if (document.querySelector("#theme-tweaker-ui .help-window").style.display != "none") {
+					toggleThemeTweakerHelpWindow();
+					themeTweakerResetSettings();
+				} else if (document.querySelector("#theme-tweaker-ui").style.display != "none") {
+					toggleThemeTweakerUI();
+					themeTweakReset();
+				}
+			} else if (event.keyCode == 13) {
+			// Enter key.
+				if (document.querySelector("#theme-tweaker-ui .help-window").style.display != "none") {
+					toggleThemeTweakerHelpWindow();
+					themeTweakerSaveSettings();
+				} else if (document.querySelector("#theme-tweaker-ui").style.display != "none") {
+					toggleThemeTweakerUI();
+					themeTweakSave();
+				}
+			}
+		});
 	})
 }
 
