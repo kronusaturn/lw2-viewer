@@ -664,6 +664,7 @@ function themeTweakerHelpWindowOKButtonClicked(event) {
 }
 function themeTweakerResetSettings() {
 	document.querySelector("#theme-tweak-control-clippy").checked = JSON.parse(window.localStorage.getItem("theme-tweaker-settings") || '{ "showClippy": true }')['showClippy'];
+	document.querySelector(".clippy-container").style.display = document.querySelector("#theme-tweak-control-clippy").checked ? "block" : "none";
 }
 function themeTweakerSaveSettings() {
 	window.localStorage.setItem("theme-tweaker-settings", JSON.stringify({ 'showClippy': document.querySelector("#theme-tweak-control-clippy").checked }));
