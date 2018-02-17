@@ -868,7 +868,6 @@ input[type='range']::-ms-thumb {
 		-1px 0 0 #7f787f,
 		-1px -1px 0 #7f787f,
 		0 0 0 1px #fff8ff;
-	padding: 7px 0 6px 0;
 }
 #theme-tweaker-ui .buttons-container button:active {
 	padding: 7px 0 6px 0;
