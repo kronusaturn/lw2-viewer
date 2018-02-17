@@ -135,6 +135,12 @@
 	letter-spacing: 1px;
 }
 
+#theme-tweaker-ui .theme-selector {
+	position: absolute;
+	top: 16px;
+	left: 240px;
+}
+
 #theme-tweaker-ui div.section {
 	border: 1px solid #7f787f;
 	box-shadow:

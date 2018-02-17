@@ -452,6 +452,7 @@ function injectThemeTweaker() {
 		<p class='current-theme'>Current theme: <span>` + 
 		(window.localStorage.getItem("selected-theme") || "default") + 
 		`</span></p>
+		<p class='theme-selector'></p>
 		<div class='controls-container'>
 			<div id='theme-tweak-section-invert' class='section' data-label='Invert (photo-negative)'>
 				<input type='checkbox' id='theme-tweak-control-invert'></input>
@@ -529,6 +530,8 @@ function injectThemeTweaker() {
 	});
 	
 	document.querySelector("head").insertAdjacentHTML("beforeend","<style id='theme-tweaker-style'></style>");
+	
+	document.querySelector("#theme-tweaker-ui .theme-selector").innerHTML = document.querySelector("#theme-selector").innerHTML;
 }
 function toggleThemeTweakerUI() {
 	let themeTweakerUI = document.querySelector("#theme-tweaker-ui");
