@@ -441,6 +441,7 @@ function themeSelectButtonClicked(event) {
 		button.disabled = true;
 	});
 	setTheme(themeName);
+	document.querySelector("#theme-tweaker-ui .current-theme span").innerText = themeName;
 }
 
 function injectThemeTweaker() {
