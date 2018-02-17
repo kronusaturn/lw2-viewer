@@ -522,7 +522,9 @@ function injectThemeTweaker() {
 		notch.addActivateEvent(function (event) {
 			let slider = event.target.parentElement.querySelector("input[type='range']");
 			slider.value = slider.dataset['defaultValue'];
-			event.target.parentElement.querySelector("label").innerText = slider.value + slider.dataset['labelSuffix'];
+			event.target.parentElement.querySelector(".theme-tweak-control-label").innerText = slider.value + slider.dataset['labelSuffix'];
+			window.currentFilters[/^theme-tweak-control-(.+)$/.exec(slider.id)[1]] = slider.value + slider.dataset['valueSuffix'];
+			applyFilters(window.currentFilters);
 		});
 	});
 	
