@@ -137,8 +137,27 @@
 
 #theme-tweaker-ui .theme-selector {
 	position: absolute;
-	top: 16px;
+	top: 20px;
 	left: 240px;
+}
+#theme-tweaker-ui .theme-selector button {
+	width: 26px;
+	height: 26px;
+	display: inline-block;
+	padding: 1px 0 0 1px;
+	border: 4px solid #bfb8bf;
+}
+#theme-tweaker-ui .theme-selector button:active,
+#theme-tweaker-ui .theme-selector button.selected {
+	box-shadow: 
+		0 -1px 0 0 #030303,
+		-1px 0 0 0 #030303,
+		-1px -1px 0 0 #030303,
+		0 0 0 1px #dfd8df,
+		0 -1px 0 1px #7f787f,
+		-1px 0 0 1px #7f787f,
+		-1px -1px 0 1px #7f787f,
+		0 0 0 2px #fff8ff;
 }
 
 #theme-tweaker-ui div.section {
@@ -391,6 +410,8 @@ input[type='range']::-ms-thumb {
 	margin: 0.5em 1px 0.5em 1em;
 	width: 7em;
 	padding: 7px 0 6px 0;
+}
+#theme-tweaker-ui .buttons-container button {
 	color: inherit;
 }
 #theme-tweaker-ui button.default-button {
@@ -418,6 +439,9 @@ input[type='range']::-ms-thumb {
 		-1px 0 0 #7f787f,
 		-1px -1px 0 #7f787f,
 		0 0 0 1px #fff8ff;
+	padding: 7px 0 6px 0;
+}
+#theme-tweaker-ui .buttons-container button:active {
 	padding: 7px 0 6px 0;
 }
 #theme-tweaker-ui .reset-defaults-button:focus,
