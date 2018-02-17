@@ -1,3 +1,4 @@
 cache
 .DS_Store
 post-commit.hook
+config.lisp
