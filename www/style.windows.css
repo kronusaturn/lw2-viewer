@@ -768,12 +768,7 @@ input[type='range']::-ms-thumb {
 	text-shadow: 1px 0 0 #000;
 	letter-spacing: 1px;
 }
-#theme-tweak-label-saturate::before,
-#theme-tweak-label-brightness::before,
-#theme-tweak-label-contrast::before,
-#theme-tweak-label-hue-rotate::before {
-	content: "";
-	display: block;
+.theme-tweak-control-label + .notch {
 	position: absolute;
 	box-shadow:
 		-0.5px -0.5px 0 #dfd8df inset,
@@ -784,11 +779,22 @@ input[type='range']::-ms-thumb {
 		0 0 0 0.5px #fff8ff;
 	width: 1px;
 	height: 1em;
-	top: -100%;
-	left: calc(100% / 3 + 2px);
+	top: 4em;
+	left: calc((100% - 5.8em) / 3 + 2.3em + 7px);
+	cursor: pointer;
 }
-#theme-tweak-label-hue-rotate::before {
-	left: 7px;
+#theme-tweak-label-hue-rotate + .notch {
+	left: calc(3.45em);
+}
+.theme-tweak-control-label + .notch::before {
+	content: "";
+	display: block;
+	position: absolute;
+	height: 100%;
+	width: 1em;
+	top: 0;
+	left: -0.5em;
+	background-color: transparent;
 }
 
 #theme-tweaker-ui .buttons-container {
@@ -989,6 +995,7 @@ input[type='range']::-ms-thumb {
 	transform: scaleX(-1);
 	display: inline-block;
 }
+
 
 /*******************/
 /* QUICKNAV WIDGET */

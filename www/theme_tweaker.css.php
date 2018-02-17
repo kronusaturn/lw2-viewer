@@ -566,3 +566,4 @@ input[type='range']::-ms-thumb {
 	transform: scaleX(-1);
 	display: inline-block;
 }
+
