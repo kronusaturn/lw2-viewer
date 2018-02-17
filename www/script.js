@@ -432,6 +432,9 @@ function injectThemeSelector() {
 }
 function themeSelectButtonClicked(event) {
 	let themeName = /select-theme-([^\s]+)/.exec(event.target.className)[1];
+	setSelectedTheme(themeName);
+}
+function setSelectedTheme(themeName) {
 	document.querySelectorAll(".theme-selector button").forEach(function (button) {
 		button.removeClass("selected");
 		button.disabled = false;
@@ -548,9 +551,12 @@ function toggleThemeTweakerUI() {
 		`#content, #ui-elements-container > div:not(#theme-tweaker-ui) {
 			pointer-events: none;
 		}`;
-	// Focus invert checkbox.
-	if (themeTweakerUI.style.display != "none")
+	if (themeTweakerUI.style.display != "none") {
+		// Save selected theme.
+		window.currentTheme = (window.localStorage.getItem("selected-theme") || "default");
+		// Focus invert checkbox.
 		document.querySelector("#theme-tweaker-ui #theme-tweak-control-invert").focus();
+	}
 	// Set theme tweaker assistant visibility.
 	document.querySelector(".clippy-container").style.display = JSON.parse(window.localStorage.getItem("theme-tweaker-settings") || '{ "showClippy": true }')["showClippy"] ? "block" : "none";
 }
@@ -658,10 +664,12 @@ function themeTweakerOKButtonClicked(event) {
 	themeTweakSave();
 }
 function themeTweakReset() {
+	setSelectedTheme(window.currentTheme);
 	window.currentFilters = JSON.parse(window.localStorage.getItem("theme-tweaks") || "{ }");
 	applyFilters(window.currentFilters);
 }
 function themeTweakSave() {
+	window.currentTheme = (window.localStorage.getItem("selected-theme") || "default");
 	window.localStorage.setItem("theme-tweaks", JSON.stringify(window.currentFilters));
 }
 function clickInterceptor(event) {
