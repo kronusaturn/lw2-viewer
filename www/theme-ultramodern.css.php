@@ -354,10 +354,10 @@ a.comment-parent-link:hover::before {
 	background-color: transparent;
 }
 
-.post-meta .new-comments-count {
+#new-comment-nav-ui .new-comments-count {
 	text-shadow: none;
 }
-.post-meta .new-comments-count::after {
+#new-comment-nav-ui .new-comments-count::after {
 	color: #666;
 }
 

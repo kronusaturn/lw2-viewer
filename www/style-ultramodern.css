@@ -2809,7 +2809,7 @@ ol {
 		right: calc((100vw - 900px) / 2 - 61px);
 		z-index: 3;
 	}
-	.post-meta .new-comments-count::before {
+	#new-comment-nav-ui .new-comments-count::before {
 		content: "";
 		background-color: #efe;
 		position: absolute;
@@ -2882,7 +2882,7 @@ ol {
 	#new-comment-nav-ui {
 		right: -5px;
 	}
-	.post-meta .new-comments-count {
+	#new-comment-nav-ui .new-comments-count {
 		z-index: 2;
 	}
 }
@@ -3846,10 +3846,10 @@ a.comment-parent-link:hover::before {
 	background-color: transparent;
 }
 
-.post-meta .new-comments-count {
+#new-comment-nav-ui .new-comments-count {
 	text-shadow: none;
 }
-.post-meta .new-comments-count::after {
+#new-comment-nav-ui .new-comments-count::after {
 	color: #666;
 }
 

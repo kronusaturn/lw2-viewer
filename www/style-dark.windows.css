@@ -2809,7 +2809,7 @@ ol {
 		right: calc((100vw - 900px) / 2 - 61px);
 		z-index: 3;
 	}
-	.post-meta .new-comments-count::before {
+	#new-comment-nav-ui .new-comments-count::before {
 		content: "";
 		background-color: #130013;
 		position: absolute;
@@ -2882,7 +2882,7 @@ ol {
 	#new-comment-nav-ui {
 		right: -5px;
 	}
-	.post-meta .new-comments-count {
+	#new-comment-nav-ui .new-comments-count {
 		z-index: 2;
 	}
 }
