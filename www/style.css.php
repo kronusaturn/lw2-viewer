@@ -2201,7 +2201,7 @@ ol {
 		display: none;
 	}
 	#new-comment-nav-ui {
-		right: -5px;
+		right: 12px;
 	}
 	#new-comment-nav-ui .new-comments-count {
 		z-index: 2;
