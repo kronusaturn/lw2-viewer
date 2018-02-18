@@ -763,9 +763,9 @@ function themeTweakerClippyCloseButtonClicked() {
 
 function injectQuickNavUI() {
 	let quickNavContainer = addUIElement("<div id='quick-nav-ui'>" +
-	`<a href='#top'>&#xf106;</a>
-	<a href='#comments'>&#xf036;</a>
-	<a href='#bottom-bar'>&#xf107;</a>
+	`<a href='#top' title='Up to top'>&#xf106;</a>
+	<a href='#comments' title='Comments'>&#xf036;</a>
+	<a href='#bottom-bar' title='Down to bottom'>&#xf107;</a>
 	` + "</div>");
 	
 	var content = document.querySelector("#content");
