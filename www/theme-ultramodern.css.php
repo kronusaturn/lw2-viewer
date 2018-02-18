@@ -308,6 +308,10 @@ button:hover {
 	background-color: transparent;
 	box-shadow: 0 0 0 1px #ccc;
 }
+#quick-nav-ui a[href='#comments'].no-comments {
+	color: #777;
+}
+
 h1.listing a[href^='/'] {
 	font-family: Raleway;
 	font-weight: 100;
@@ -443,4 +447,29 @@ blockquote {
 
 #content.user-page h1.page-main-heading {
 	border-bottom: 1px solid #777;
+}
+
+#content.user-page h1.page-main-heading {
+	border-bottom: 1px solid #777;
+}
+
+#create-account-form-container {
+	background-color: transparent;
+	border: 1px solid #aaa;
+}
+.aligned-form input[type='submit'],
+.aligned-form input[type='submit']:hover,
+#signup-form input[type='submit'],
+#signup-form input[type='submit']:hover {
+	background-color: transparent;
+	border: none;
+	color: #444;
+	text-shadow: none;
+	font-weight: normal;
+}
+.aligned-form input[type='submit']:hover {
+	text-decoration: underline;
+}
+.login-container h1 {
+	font-weight: 300;
 }
