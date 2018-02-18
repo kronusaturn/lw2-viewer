@@ -3450,11 +3450,13 @@ button:hover,
 }
 
 input[type='text'],
-input[type='search'] {
+input[type='search'], 
+input[type='password'] {
 	border: 1px solid #000;
 }
 input[type='text']:focus,
-input[type='search']:focus {
+input[type='search']:focus, 
+input[type='password']:focus {
 	border: 1px dashed #000 !important;
 	background-color: transparent !important;
 	box-shadow: none !important;
@@ -3753,4 +3755,20 @@ code {
 
 #theme-tweaker-toggle button:hover {
 	text-decoration: none;
+}
+
+#create-account-form-container {
+	background-color: transparent;
+	border: 2px solid #000;
+}
+.aligned-form input[type='submit'],
+#signup-form input[type='submit'] {
+	background-color: transparent;
+}
+#signup-form label {
+	width: 10em;
+}
+#signup-form input[type='text'],
+#signup-form input[type='password'] {
+	width: calc(100% - 12em);
 }
