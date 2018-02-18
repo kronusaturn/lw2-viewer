@@ -1863,6 +1863,7 @@ input[type='submit'] {
 	background-color: inherit;
 	cursor: pointer;
 	border: none;
+	border-radius: 0;
 }
 button:hover,
 input[type='submit']:hover {
