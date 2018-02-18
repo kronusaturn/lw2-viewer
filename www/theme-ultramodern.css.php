@@ -252,6 +252,10 @@ button.guiedit::after {
     background-color: #888;
     border: 1px solid #ccc;
 }
+#nav-item-search input:focus {
+	background-color: transparent;
+	border: 1px solid #ccc;
+}
 #nav-item-search:focus-within,
 .inactive-bar #nav-item-search:focus-within,
 #nav-item-search.nav-current:focus-within {
