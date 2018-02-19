@@ -391,7 +391,7 @@
                                                                                                                         (alist :view (if (string= view "featured") "curated" (or view "new"))
                                                                                                                                :meta (not (not meta)) :before before :after after :limit 20 :offset offset)))
                                                                                           *posts-index-fields*)))
-                                          (section (or view "all")))
+                                          (section (or (if (string= view "new") "all" view) "all")))
                                      (view-items-index posts :section section :title (format nil "~@(~A posts~)" section) :with-offset (or offset 0)))))
 
 (hunchentoot:define-easy-handler (view-post :uri "/post") (id)
