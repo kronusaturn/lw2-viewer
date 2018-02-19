@@ -2004,7 +2004,8 @@ blockquote *:last-child {
 	margin-bottom: 0;
 }
 
-.post-body img {
+.post-body img,
+.comment-body img {
 	max-width: 100%;
 }
 
