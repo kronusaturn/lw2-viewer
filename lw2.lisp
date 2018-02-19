@@ -368,6 +368,12 @@
                                           extra-html)
                                   (write-index-items-to-html out-stream items)))))
 
+(defun link-if-not (stream linkp url class text)
+  (declare (dynamic-extent linkp url text))
+  (if (not linkp)
+      (format stream "<a href=\"~A\" class=\"~A\">~A</a>" url class text)
+      (format stream "<span class=\"~A\">~A</span>" class text)))
+
 (declaim (inline alist)) 
 (defun alist (&rest parms) (alexandria:plist-alist parms))
 
@@ -523,19 +529,32 @@
 	     ,(loop for v in vars as x from 0 collecting `(,v (if (> (length ,result-vector) ,x) (aref ,result-vector ,x)))) 
 	     ,@body))))))
 
-(define-regex-handler view-user ("^/users/(.*?)(?:$|\\?)" user-slug) (offset)
+(define-regex-handler view-user ("^/users/(.*?)(?:$|\\?)" user-slug) (offset show)
                       (with-error-page
                         (let* ((offset (if offset (parse-integer offset) 0)) 
                                (user-info (lw2-graphql-query (format nil "{UsersSingle(slug:\"~A\"){_id, displayName, karma}}" user-slug)))
-                               (user-posts (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (alist :view "new" :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info)))) *posts-index-fields*)))
-                               (user-comments (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (alist :view "postCommentsNew" :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info))))
-                                                                                       (remove :page-url *comments-index-fields*)))) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
-                               (interleave (comment-post-interleave (concatenate 'list user-posts user-comments) :limit 20 :offset offset)))
-                          (view-items-index interleave :with-offset offset :title (cdr (assoc :display-name user-info)) :content-class "user-page"
-                                            :with-offset offset :with-next (> (+ (length user-posts) (length user-comments)) (+ offset 20))
-                                            :extra-html (format nil "<h1 class=\"page-main-heading\">~A</h1><div class=\"user-stats\">Karma: <span class=\"karma-total\">~A</span></div>"
+                               (comments-index-fields (remove :page-url *comments-index-fields*)) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
+                               (title (format nil "~A~@['s ~A~]" (cdr (assoc :display-name user-info)) (if (member show '(nil "posts" "comments") :test #'equal) show)))
+                               (interleave (alexandria:switch (show :test #'string=)
+                                                              ("posts"
+                                                               (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (alist :view "new" :limit 21 :offset offset :user-id (cdr (assoc :--id user-info)))) *posts-index-fields*)))
+                                                              ("comments"
+                                                               (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (alist :view "postCommentsNew" :limit 21 :offset offset :user-id (cdr (assoc :--id user-info))))
+                                                                                                                       comments-index-fields)))
+                                                              (t
+                                                                (let ((user-posts (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (alist :view "new" :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info)))) *posts-index-fields*)))
+                                                                      (user-comments (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (alist :view "postCommentsNew" :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info))))
+                                                                                                                              comments-index-fields))))
+                                                                  (comment-post-interleave (concatenate 'list user-posts user-comments) :limit 20 :offset offset))))))
+                          (view-items-index interleave :with-offset offset :title title :content-class "user-page"
+                                            :with-offset offset :with-next (> (length interleave) (+ offset 20))
+                                            :extra-html (format nil "<h1 class=\"page-main-heading\">~A</h1><div class=\"user-stats\">Karma: <span class=\"karma-total\">~A</span></div><div class=\"sublevel-nav\">~A</div>"
                                                                 (cdr (assoc :display-name user-info))
-                                                                (pretty-number (or (cdr (assoc :karma user-info)) 0)))))))
+                                                                (pretty-number (or (cdr (assoc :karma user-info)) 0))
+                                                                (with-output-to-string (stream)
+                                                                  (loop for (l-show text) in '((nil "All") ("posts" "Posts") ("comments" "Comments"))
+                                                                        do (link-if-not stream (string= show l-show) (format nil "~A~@[?show=~A~]" (hunchentoot:script-name*) l-show)
+                                                                                        "sublevel-item" text))))))))
 
 (defun search-result-markdown-to-html (item)
   (cons (cons :html-body (markdown:parse (cdr (assoc :body item)))) item)) 
@@ -633,41 +652,39 @@
 				   (destructuring-bind (year month day) (map 'list (lambda (x) (if x (parse-integer x)))
 									     (nth-value 1 (ppcre:scan-to-strings "^/archive(?:/(\\d{4})|/?(?:$|\\?.*$))(?:/(\\d{1,2})|/?(?:$|\\?.*$))(?:/(\\d{1,2})|/?(?:$|\\?.*$))"
 														 (hunchentoot:request-uri*)))) 
-				     (labels ((link-if-not (stream linkp url-elements class text)
-						       (declare (dynamic-extent linkp url-elements text)) 
-						       (if (not linkp)
-							 (format stream "<a href=\"/~{~A~^/~}\" class=\"~A\">~A</a>" url-elements class text)
-							 (format stream "<span class=\"~A\">~A</span>" class text)))) 
-				       (local-time:with-decoded-timestamp (:day current-day :month current-month :year current-year) (local-time:now)
-				         (local-time:with-decoded-timestamp (:day earliest-day :month earliest-month :year earliest-year) *earliest-post* 
-					   (let* ((offset (if offset (parse-integer offset) 0))
-						  (posts (lw2-graphql-query (graphql-query-string "PostsList"
-												 (alist :terms (alist :view (if day "new" "best") :limit 51 :offset offset
-														      :after (if (and year (not day)) (format nil "~A-~A-~A" (or year earliest-year) (or month 1) (or day 1)))
-														      :before (if year (format nil "~A-~A-~A" (or year current-year) (or month 12)
-																	       (or day (local-time:days-in-month (or month 12) (or year current-year)))))))
-												 *posts-index-fields*))))
-					     (emit-page (out-stream :title "Archive" :current-uri "/archive" :content-class "archive-page" :with-offset offset :with-next (> (length posts) 50))
-							(with-outputs (out-stream) "<div class=\"archive-nav\"><div class=\"archive-nav-years\">")
-							(link-if-not out-stream (not (or year month day)) '("archive") "archive-nav-item-year" "All") 
-							(loop for y from earliest-year to current-year
-							      do (link-if-not out-stream (eq y year) (list "archive" y) "archive-nav-item-year" y))
-							(format out-stream "</div>")
-							(when year
-							  (format out-stream "<div class=\"archive-nav-months\">")
-							  (link-if-not out-stream (not month) (list "archive" year) "archive-nav-item-month" "All") 
-							  (loop for m from (if (= (or year current-year) earliest-year) earliest-month 1) to (if (= (or year current-year) current-year) current-month 12)
-								do (link-if-not out-stream (eq m month) (list "archive" (or year current-year) m) "archive-nav-item-month" (elt local-time:+short-month-names+ m)))
-							  (format out-stream "</div>"))
-							(when month
-							  (format out-stream "<div class=\"archive-nav-days\">")
-							  (link-if-not out-stream (not day) (list "archive" year month) "archive-nav-item-day" "All")
-							  (loop for d from (if (and (= (or year current-year) earliest-year) (= (or month current-month) earliest-month)) earliest-day 1)
-								to (if (and (= (or year current-year) current-year) (= (or month current-month) current-month)) current-day (local-time:days-in-month (or month current-month) (or year current-year)))
-								do (link-if-not out-stream (eq d day) (list "archive" (or year current-year) (or month current-month) d) "archive-nav-item-day" d))
-							  (format out-stream "</div>")) 
-							(format out-stream "</div>") 
-							(map-output out-stream #'post-headline-to-html (firstn posts 50))))))))))
+				     (local-time:with-decoded-timestamp (:day current-day :month current-month :year current-year) (local-time:now)
+		                       (local-time:with-decoded-timestamp (:day earliest-day :month earliest-month :year earliest-year) *earliest-post*
+                                         (labels ((url-elements (&rest url-elements)
+                                                    (declare (dynamic-extend url-elements))
+                                                    (format nil "/~{~A~^/~}" url-elements)))
+                                            (let* ((offset (if offset (parse-integer offset) 0))
+                                                   (posts (lw2-graphql-query (graphql-query-string "PostsList"
+                                                                                                   (alist :terms (alist :view (if day "new" "best") :limit 51 :offset offset
+                                                                                                                        :after (if (and year (not day)) (format nil "~A-~A-~A" (or year earliest-year) (or month 1) (or day 1)))
+                                                                                                                        :before (if year (format nil "~A-~A-~A" (or year current-year) (or month 12)
+                                                                                                                                                 (or day (local-time:days-in-month (or month 12) (or year current-year)))))))
+                                                                                                   *posts-index-fields*))))
+                                              (emit-page (out-stream :title "Archive" :current-uri "/archive" :content-class "archive-page" :with-offset offset :with-next (> (length posts) 50))
+                                                (with-outputs (out-stream) "<div class=\"archive-nav\"><div class=\"archive-nav-years\">")
+                                                (link-if-not out-stream (not (or year month day)) (url-elements "archive") "archive-nav-item-year" "All") 
+                                                (loop for y from earliest-year to current-year
+                                                      do (link-if-not out-stream (eq y year) (url-elements "archive" y) "archive-nav-item-year" y))
+                                                (format out-stream "</div>")
+                                                (when year
+                                                  (format out-stream "<div class=\"archive-nav-months\">")
+                                                  (link-if-not out-stream (not month) (url-elements "archive" year) "archive-nav-item-month" "All") 
+                                                  (loop for m from (if (= (or year current-year) earliest-year) earliest-month 1) to (if (= (or year current-year) current-year) current-month 12)
+                                                        do (link-if-not out-stream (eq m month) (url-elements "archive" (or year current-year) m) "archive-nav-item-month" (elt local-time:+short-month-names+ m)))
+                                                  (format out-stream "</div>"))
+                                                (when month
+                                                  (format out-stream "<div class=\"archive-nav-days\">")
+                                                  (link-if-not out-stream (not day) (url-elements "archive" year month) "archive-nav-item-day" "All")
+                                                  (loop for d from (if (and (= (or year current-year) earliest-year) (= (or month current-month) earliest-month)) earliest-day 1)
+                                                        to (if (and (= (or year current-year) current-year) (= (or month current-month) current-month)) current-day (local-time:days-in-month (or month current-month) (or year current-year)))
+                                                        do (link-if-not out-stream (eq d day) (url-elements "archive" (or year current-year) (or month current-month) d) "archive-nav-item-day" d))
+                                                  (format out-stream "</div>")) 
+                                                (format out-stream "</div>") 
+                                                (map-output out-stream #'post-headline-to-html (firstn posts 50))))))))))
 
 (hunchentoot:define-easy-handler (view-about :uri "/about") ()
 				 (with-error-page
