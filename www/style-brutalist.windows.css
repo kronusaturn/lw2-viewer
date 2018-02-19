@@ -140,37 +140,37 @@ input {
 	padding-top: 4px;
 	padding-bottom: 4px;
 }
+#bottom-bar {
+	table-layout: fixed;
+}
 #bottom-bar a {
 	float: left;
 	width: 100%;
 }
-#bottom-bar #nav-item-top a::before,
-#bottom-bar #nav-item-prev a::before,
-#bottom-bar #nav-item-next a::before {
+#bottom-bar .nav-item a::before {
 	font-family: Font Awesome;
 	font-weight: 900;
 	font-size: 0.8em;
 	position: relative;
 	bottom: 1px;
+	margin-right: 0.5em;
+}
+#bottom-bar #nav-item-first a::before {
+	content: "\F100";
 }
 #bottom-bar #nav-item-top a::before {
 	content: "\F062";
-	margin-right: 0.5em;
 }
 #bottom-bar #nav-item-prev a::before {
 	content: "\F060";
-	margin-right: 0.5em;
-	bottom: 1px;
 }
 #bottom-bar #nav-item-next a::before {
 	content: "\F061";
-	margin-left: -1em;
-	left: 4em;
+	margin-left: -2em;
+	margin-right: 0;
+	left: 3.8em;
 }
-#bottom-bar .nav-item:first-child,
-#bottom-bar .nav-item:last-child {
-	width: 30%;
-}.nav-bar a:link,
+.nav-bar a:link,
 .nav-bar a:visited {
 	color: #00e;
 }
