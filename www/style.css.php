@@ -752,6 +752,7 @@ h1.listing a[href^="http"] {
 	color: #000;
 	text-decoration: none;
 }
+.user-page .sublevel-nav a.sublevel-item:active,
 .user-page .sublevel-nav span.sublevel-item {
 	background-color: #ddd;
 	border-color: #ddd;
