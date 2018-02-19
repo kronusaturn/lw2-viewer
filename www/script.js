@@ -365,12 +365,22 @@ function getPostHash() {
 	return (postHash ? postHash[1] : false);
 }
 function getLastVisitedDate() {
-	let storageName = "last-visited-date_" + getPostHash();
+	// Get the last visited date (or, if posting a comment, the previous last visited date).
+	let aCommentHasJustBeenPosted = (document.querySelector(".just-posted-comment") != null);
+	let storageName = (aCommentHasJustBeenPosted ? "previous-last-visited-date_" : "last-visited-date_") + getPostHash();
 	return window.localStorage.getItem(storageName);
 }
 function setLastVisitedDate(date) {
-	let storageName = "last-visited-date_" + getPostHash();
-	window.localStorage.setItem(storageName, date);
+	// If NOT posting a comment, save the previous value for the last-visited-date 
+	// (to recover it in case of posting a comment).
+	let aCommentHasJustBeenPosted = (document.querySelector(".just-posted-comment") != null);
+	if (!aCommentHasJustBeenPosted) {
+		let previousLastVisitedDate = (window.localStorage.getItem("last-visited-date_" + getPostHash()) || 0);
+		window.localStorage.setItem("previous-last-visited-date_" + getPostHash(), previousLastVisitedDate);
+	}
+	
+	// Set the new value.
+	window.localStorage.setItem("last-visited-date_" + getPostHash(), date);
 }
 
 /***********************************/
