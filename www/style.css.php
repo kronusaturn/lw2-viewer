@@ -761,6 +761,10 @@ h1.listing a[href^="http"] {
 		0 -1px 0 #fff,
 		0 0.5px 0.5px #000;
 }
+.user-page .sublevel-nav span.sublevel-item {
+	cursor: default;
+}
+
 /*********************************/
 /* SEARCH RESULTS AND USER PAGES */
 /*********************************/
@@ -1845,6 +1849,7 @@ a.comment-parent-link:hover::after {
 	text-shadow: 
 		0 -1px 0 #fff,
 		0 0.5px 0.5px #000;
+	cursor: default;
 }
 #edit-post-form textarea {
 	min-height: 24em;

@@ -452,7 +452,21 @@ blockquote {
 #content.user-page h1.page-main-heading {
 	border-bottom: 1px solid #777;
 }
-
+.user-page .sublevel-nav a.sublevel-item,
+.user-page .sublevel-nav span.sublevel-item {
+	background-color: transparent;
+	border-color: #999;
+	color: #444;
+	text-shadow: none;
+}
+.user-page .sublevel-nav a.sublevel-item:hover {
+	background-color: #999;
+	color: #000;
+}
+.user-page .sublevel-nav span.sublevel-item {
+	border-color: #000;
+	color: #000;
+}
 #content.user-page h1.page-main-heading {
 	border-bottom: 1px solid #777;
 }
@@ -477,3 +491,4 @@ blockquote {
 .login-container h1 {
 	font-weight: 300;
 }
+

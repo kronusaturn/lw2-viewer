@@ -1392,6 +1392,10 @@ h1.listing a[href^="http"] {
 		0 -1px 0 #fff,
 		0 0.5px 0.5px #000;
 }
+.user-page .sublevel-nav span.sublevel-item {
+	cursor: default;
+}
+
 /*********************************/
 /* SEARCH RESULTS AND USER PAGES */
 /*********************************/
@@ -2524,6 +2528,7 @@ a.comment-parent-link:hover::after {
 	text-shadow: 
 		0 -1px 0 #fff,
 		0 0.5px 0.5px #000;
+	cursor: default;
 }
 #edit-post-form textarea {
 	min-height: 24em;
@@ -3695,6 +3700,11 @@ a.comment-parent-link:hover::before {
 		0 0 0 1px #fff inset,
 		0 0 0 2px #000 inset;
 }
+#edit-post-form input[type='radio']:active + label {
+	box-shadow: 
+		0 0 0 2px #fff inset,
+		0 0 0 3px #000 inset;
+}
 #edit-post-form input[type='radio']:focus + label {
 	box-shadow: 
 		0 0 0 1px #000;
@@ -3809,4 +3819,35 @@ code {
 #signup-form input[type='text'],
 #signup-form input[type='password'] {
 	width: calc(100% - 12em);
+}
+
+.user-page .sublevel-nav .sublevel-item {
+	border-color: #000;
+	color: #000;
+}
+.user-page .sublevel-nav .sublevel-item:first-child,
+.user-page .sublevel-nav .sublevel-item:last-child {
+	border-radius: 0;
+}
+.user-page .sublevel-nav a.sublevel-item:hover {
+	background-color: transparent;
+	box-shadow: 
+		0 0 0 2px #fff inset,
+		0 0 0 3px #000 inset;
+}
+.user-page .sublevel-nav a.sublevel-item:active,
+.user-page .sublevel-nav span.sublevel-item {
+	background-color: transparent;
+	border-color: #000;
+	box-shadow: 
+		0 0 0 2px #fff inset,
+		0 0 0 3px #000 inset;
+	text-shadow: none;
+	font-weight: bold;
+}
+.user-page .sublevel-nav a.sublevel-item:active {
+	box-shadow: 
+		0 0 0 4px #fff inset,
+		0 0 0 5px #000 inset;
+	font-weight: normal;
 }
