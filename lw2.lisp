@@ -269,7 +269,7 @@
 	    csrf-token
             robots
 	    content-class
-	    (user-nav-bar (or current-uri (hunchentoot:request-uri*)))))
+            (user-nav-bar (or current-uri (replace-query-params (hunchentoot:request-uri*) "offset" nil)))))
   (force-output out-stream)) 
 
 (defun replace-query-params (uri &rest params)
