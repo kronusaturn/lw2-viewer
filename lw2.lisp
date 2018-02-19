@@ -655,7 +655,7 @@
 				     (local-time:with-decoded-timestamp (:day current-day :month current-month :year current-year) (local-time:now)
 		                       (local-time:with-decoded-timestamp (:day earliest-day :month earliest-month :year earliest-year) *earliest-post*
                                          (labels ((url-elements (&rest url-elements)
-                                                    (declare (dynamic-extend url-elements))
+                                                    (declare (dynamic-extent url-elements))
                                                     (format nil "/~{~A~^/~}" url-elements)))
                                             (let* ((offset (if offset (parse-integer offset) 0))
                                                    (posts (lw2-graphql-query (graphql-query-string "PostsList"
