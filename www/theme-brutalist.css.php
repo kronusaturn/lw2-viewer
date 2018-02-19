@@ -526,6 +526,10 @@ code {
 	width: calc(100% - 12em);
 }
 
+#content.user-page h1.page-main-heading {
+	border-bottom: 1px dotted #000;
+}
+
 .user-page .sublevel-nav .sublevel-item {
 	border-color: #000;
 	color: #000;
@@ -555,4 +559,13 @@ code {
 		0 0 0 4px #fff inset,
 		0 0 0 5px #000 inset;
 	font-weight: normal;
+}
+
+blockquote {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("checkerboard_1px.gif")) ?>');
+	background-size: 5px 2px;
+	background-repeat: repeat-y;
+	background-position: top left;
+	padding-left: calc(0.5em + 5px);
+	border-left-width: 0;
 }
