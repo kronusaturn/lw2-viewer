@@ -535,19 +535,20 @@
                                (user-info (lw2-graphql-query (format nil "{UsersSingle(slug:\"~A\"){_id, displayName, karma}}" user-slug)))
                                (comments-index-fields (remove :page-url *comments-index-fields*)) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
                                (title (format nil "~A~@['s ~A~]" (cdr (assoc :display-name user-info)) (if (member show '(nil "posts" "comments") :test #'equal) show)))
-                               (interleave (alexandria:switch (show :test #'string=)
-                                                              ("posts"
-                                                               (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (alist :view "new" :limit 21 :offset offset :user-id (cdr (assoc :--id user-info)))) *posts-index-fields*)))
-                                                              ("comments"
-                                                               (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (alist :view "postCommentsNew" :limit 21 :offset offset :user-id (cdr (assoc :--id user-info))))
-                                                                                                                       comments-index-fields)))
-                                                              (t
-                                                                (let ((user-posts (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (alist :view "new" :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info)))) *posts-index-fields*)))
-                                                                      (user-comments (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (alist :view "postCommentsNew" :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info))))
-                                                                                                                              comments-index-fields))))
-                                                                  (comment-post-interleave (concatenate 'list user-posts user-comments) :limit 20 :offset offset))))))
+                               (items (alexandria:switch (show :test #'string=)
+                                                         ("posts"
+                                                          (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (alist :view "new" :limit 21 :offset offset :user-id (cdr (assoc :--id user-info)))) *posts-index-fields*)))
+                                                         ("comments"
+                                                          (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (alist :view "postCommentsNew" :limit 21 :offset offset :user-id (cdr (assoc :--id user-info))))
+                                                                                                   comments-index-fields)))
+                                                         (t
+                                                           (let ((user-posts (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (alist :view "new" :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info)))) *posts-index-fields*)))
+                                                                 (user-comments (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (alist :view "postCommentsNew" :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info))))
+                                                                                                                         comments-index-fields))))
+                                                             (concatenate 'list user-posts user-comments)))))
+                               (interleave (comment-post-interleave items :limit 20 :offset (if show nil offset))))
                           (view-items-index interleave :with-offset offset :title title :content-class "user-page"
-                                            :with-offset offset :with-next (> (length interleave) (+ offset 20))
+                                            :with-offset offset :with-next (> (length items) (+ (if show 0 offset) 20))
                                             :extra-html (format nil "<h1 class=\"page-main-heading\">~A</h1><div class=\"user-stats\">Karma: <span class=\"karma-total\">~A</span></div><div class=\"sublevel-nav\">~A</div>"
                                                                 (cdr (assoc :display-name user-info))
                                                                 (pretty-number (or (cdr (assoc :karma user-info)) 0))
