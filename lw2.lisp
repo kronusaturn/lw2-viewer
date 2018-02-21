@@ -374,6 +374,11 @@
       (format stream "<a href=\"~A\" class=\"~A\">~A</a>" url class text)
       (format stream "<span class=\"~A\">~A</span>" class text)))
 
+(defun postprocess-markdown (markdown)
+  (ppcre:regex-replace-all (load-time-value (concatenate 'string (ppcre:regex-replace-all "\\." *site-uri* "\\.") "posts/([^/ ]{17})/([^/# ]*)(?:(#)comment-([^/ ]{17}))?"))
+                           markdown
+                           "https://www.lesserwrong.com/posts/\\1/\\2\\3\\4"))
+
 (declaim (inline alist)) 
 (defun alist (&rest parms) (alexandria:plist-alist parms))
 
@@ -433,7 +438,7 @@
 				       (let ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token"))
 					     (post-id (match-lw2-link (hunchentoot:request-uri*)))) 
 					 (assert (and lw2-auth-token (not (string= text ""))))
-					 (let* ((comment-data `(("body" . ,text) ,(if (not edit-comment-id) `("postId" . ,post-id)) ,(if parent-comment-id `("parentCommentId" . ,parent-comment-id)) ("content" . ("blocks" . nil)))) 
+                                         (let* ((comment-data `(("body" . ,(postprocess-markdown text)) ,(if (not edit-comment-id) `("postId" . ,post-id)) ,(if parent-comment-id `("parentCommentId" . ,parent-comment-id)) ("content" . ("blocks" . nil)))) 
 						(new-comment-id
 						  (if edit-comment-id
 						    (prog1 edit-comment-id
@@ -474,7 +479,7 @@
                                        (let ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token"))
                                              (url (if (string= url "") nil url)))
                                          (assert (and lw2-auth-token (not (string= text ""))))
-                                         (let* ((post-data `(("body" . ,text) ("title" . ,title) ("url" . ,(if link-post url))
+                                         (let* ((post-data `(("body" . ,(postprocess-markdown text)) ("title" . ,title) ("url" . ,(if link-post url))
                                                                               ("frontpageDate" . ,(if (string= section "frontpage") (local-time:format-timestring nil (local-time:now))))
                                                                               ("meta" . ,(string= section "meta")) ("draft" . ,(string= section "drafts")) ("content" . ("blocks" . nil))))
                                                 (post-set (loop for item in post-data when (cdr item) collect item))
