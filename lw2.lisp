@@ -430,7 +430,7 @@
 				       (out-stream (hunchentoot:send-headers)))
 				   (write-index-items-to-rss (make-flexi-stream out-stream :external-format :utf-8) posts))) 
 
-(hunchentoot:define-easy-handler (view-post-lw2-link :uri (lambda (r) (declare (ignore r)) (match-lw2-link (hunchentoot:request-uri*)))) ((csrf-token :request-type :post) (text :request-type :post) (parent-comment-id :request-type :post) (edit-comment-id :request-type :post) chrono)
+(hunchentoot:define-easy-handler (view-post-lw2-link :uri (lambda (r) (declare (ignore r)) (match-lw2-link (hunchentoot:request-uri*)))) ((csrf-token :request-type :post) (text :request-type :post) (parent-comment-id :request-type :post) (edit-comment-id :request-type :post) need-auth chrono)
 				 (with-error-page
 				   (cond
 				     (text
@@ -452,8 +452,8 @@
 					 (if comment-id 
 					   (setf (hunchentoot:return-code*) 303
 						 (hunchentoot:header-out "Location") (generate-post-link post-id comment-id))
-					   (let ((post (get-post-body post-id))
-						 (lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token")))
+					   (let* ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token"))
+                                                  (post (get-post-body post-id :auth-token (and need-auth lw2-auth-token))))
 					     (emit-page (out-stream :title (clean-text (cdr (assoc :title post))) :content-class "post-page") 
 							(with-outputs (out-stream) (post-body-to-html post))
 							(if lw2-auth-token
@@ -492,10 +492,12 @@
                                              (assert new-post-id)
                                              (cache-put "post-markdown-source" new-post-id text)
                                              (setf (hunchentoot:return-code*) 303
-                                                   (hunchentoot:header-out "Location") (generate-post-link new-post-data))))))
+                                                   (hunchentoot:header-out "Location") (if (cdr (assoc "draft" post-data :test #'equal))
+                                                                                           (concatenate 'string (generate-post-link new-post-data) "?need-auth=y")
+                                                                                           (generate-post-link new-post-data)))))))
                                      (t
                                       (let* ((csrf-token (make-csrf-token (hunchentoot:cookie-in "session-token")))
-                                             (post-body (if post-id (get-post-body post-id)))
+                                             (post-body (if post-id (get-post-body post-id :auth-token (hunchentoot:cookie-in "lw2-auth-token"))))
                                              (section (or section (loop for (sym . sec) in '((:draft . "drafts") (:meta . "meta") (:frontpage-date . "frontpage"))
                                                                         if (cdr (assoc sym post-body)) return sec
                                                                         finally (return "all")))))
@@ -504,7 +506,7 @@
                                                                      :csrf-token csrf-token
                                                                      :title (cdr (assoc :title post-body))
                                                                      :url (cdr (assoc :url post-body))
-                                                                     :section-list (loop for (name desc) in '(("frontpage" "Frontpage") ("all" "All") ("meta" "Meta") #|("drafts" "Drafts")|#)
+                                                                     :section-list (loop for (name desc) in '(("frontpage" "Frontpage") ("all" "All") ("meta" "Meta") ("drafts" "Drafts"))
                                                                                          collect (alist :name name :desc desc :selected (string= name section)))
                                                                      :markdown-source (or (and post-id (cache-get "post-markdown-source" post-id)) (cdr (assoc :html-body post-body)) ""))))))))
 

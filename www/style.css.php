@@ -1827,7 +1827,7 @@ a.comment-parent-link:hover::after {
 	border-radius: 8px 0 0 8px;
 	border-width: 1px;
 }
-#edit-post-form input[type='radio'][value='meta'] + label {
+#edit-post-form input[type='radio'][value='drafts'] + label {
 	border-radius: 0 8px 8px 0;
 	border-width: 1px;
 }
