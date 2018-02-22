@@ -374,6 +374,11 @@
       (format stream "<a href=\"~A\" class=\"~A\">~A</a>" url class text)
       (format stream "<span class=\"~A\">~A</span>" class text)))
 
+(defun postprocess-markdown (markdown)
+  (ppcre:regex-replace-all (load-time-value (concatenate 'string (ppcre:regex-replace-all "\\." *site-uri* "\\.") "posts/([^/ ]{17})/([^/# ]*)(?:(#)comment-([^/ ]{17}))?"))
+                           markdown
+                           "https://www.lesserwrong.com/posts/\\1/\\2\\3\\4"))
+
 (declaim (inline alist)) 
 (defun alist (&rest parms) (alexandria:plist-alist parms))
 
@@ -433,7 +438,7 @@
 				       (let ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token"))
 					     (post-id (match-lw2-link (hunchentoot:request-uri*)))) 
 					 (assert (and lw2-auth-token (not (string= text ""))))
-					 (let* ((comment-data `(("body" . ,text) ,(if (not edit-comment-id) `("postId" . ,post-id)) ,(if parent-comment-id `("parentCommentId" . ,parent-comment-id)) ("content" . ("blocks" . nil)))) 
+                                         (let* ((comment-data `(("body" . ,(postprocess-markdown text)) ,(if (not edit-comment-id) `("postId" . ,post-id)) ,(if parent-comment-id `("parentCommentId" . ,parent-comment-id)) ("content" . ("blocks" . nil)))) 
 						(new-comment-id
 						  (if edit-comment-id
 						    (prog1 edit-comment-id
@@ -474,7 +479,7 @@
                                        (let ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token"))
                                              (url (if (string= url "") nil url)))
                                          (assert (and lw2-auth-token (not (string= text ""))))
-                                         (let* ((post-data `(("body" . ,text) ("title" . ,title) ("url" . ,(if link-post url))
+                                         (let* ((post-data `(("body" . ,(postprocess-markdown text)) ("title" . ,title) ("url" . ,(if link-post url))
                                                                               ("frontpageDate" . ,(if (string= section "frontpage") (local-time:format-timestring nil (local-time:now))))
                                                                               ("meta" . ,(string= section "meta")) ("draft" . ,(string= section "drafts")) ("content" . ("blocks" . nil))))
                                                 (post-set (loop for item in post-data when (cdr item) collect item))
@@ -535,19 +540,20 @@
                                (user-info (lw2-graphql-query (format nil "{UsersSingle(slug:\"~A\"){_id, displayName, karma}}" user-slug)))
                                (comments-index-fields (remove :page-url *comments-index-fields*)) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
                                (title (format nil "~A~@['s ~A~]" (cdr (assoc :display-name user-info)) (if (member show '(nil "posts" "comments") :test #'equal) show)))
-                               (interleave (alexandria:switch (show :test #'string=)
-                                                              ("posts"
-                                                               (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (alist :view "new" :limit 21 :offset offset :user-id (cdr (assoc :--id user-info)))) *posts-index-fields*)))
-                                                              ("comments"
-                                                               (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (alist :view "postCommentsNew" :limit 21 :offset offset :user-id (cdr (assoc :--id user-info))))
-                                                                                                                       comments-index-fields)))
-                                                              (t
-                                                                (let ((user-posts (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (alist :view "new" :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info)))) *posts-index-fields*)))
-                                                                      (user-comments (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (alist :view "postCommentsNew" :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info))))
-                                                                                                                              comments-index-fields))))
-                                                                  (comment-post-interleave (concatenate 'list user-posts user-comments) :limit 20 :offset offset))))))
+                               (items (alexandria:switch (show :test #'string=)
+                                                         ("posts"
+                                                          (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (alist :view "new" :limit 21 :offset offset :user-id (cdr (assoc :--id user-info)))) *posts-index-fields*)))
+                                                         ("comments"
+                                                          (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (alist :view "postCommentsNew" :limit 21 :offset offset :user-id (cdr (assoc :--id user-info))))
+                                                                                                   comments-index-fields)))
+                                                         (t
+                                                           (let ((user-posts (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (alist :view "new" :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info)))) *posts-index-fields*)))
+                                                                 (user-comments (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (alist :view "postCommentsNew" :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info))))
+                                                                                                                         comments-index-fields))))
+                                                             (concatenate 'list user-posts user-comments)))))
+                               (interleave (comment-post-interleave items :limit 20 :offset (if show nil offset))))
                           (view-items-index interleave :with-offset offset :title title :content-class "user-page"
-                                            :with-offset offset :with-next (> (length interleave) (+ offset 20))
+                                            :with-offset offset :with-next (> (length items) (+ (if show 0 offset) 20))
                                             :extra-html (format nil "<h1 class=\"page-main-heading\">~A</h1><div class=\"user-stats\">Karma: <span class=\"karma-total\">~A</span></div><div class=\"sublevel-nav\">~A</div>"
                                                                 (cdr (assoc :display-name user-info))
                                                                 (pretty-number (or (cdr (assoc :karma user-info)) 0))
