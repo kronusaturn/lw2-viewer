@@ -49,7 +49,7 @@
 	width: 18px;
 	height: 16px;
 	z-index: 2;
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_close_widget.gif")) ?>');
+	background-image: url('data:image/gif;base64,R0lGODlhGAAUAPEAMQMDAwQEBLGpsc/iOywAAAAAGAAUAAACPJSPqcu9AR0MbNI3G8hpAidYiAgKWxRCX2lYJGucKtxxdOveqXuxXmyTBF+VWULWII6CCIDT4VzpptRqAQA7');
 	background-size: 100%;
 	background-repeat: no-repeat;
 	background-position: center center;
@@ -120,7 +120,7 @@
 	letter-spacing: 1px;
 }
 #theme-tweaker-ui .main-theme-tweaker-window h1 {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_themes_icon.gif")) ?>');
+	background-image: url('data:image/gif;base64,R0lGODdhIAAgAOYAAAAAAAMDCwMD9AQDqwQDsgUDpAoDBAoDoqsDVKsDWq4DT7ADVrIDXf4DC/8D/QQEnAUE/qQET6QEUqQEW7AESvUEA/0EBAUFEPAFCPcF/wMImgMI/gMJBZsJWvIJBJCBmIuElH2Fj4WFlIiFfImFhoOGi4qGjI6GmpKGjoKHm5OHk4mIhoWKkoqKjIqKk4SLjIeLfY2LmX2NhYSOmoeOhoKQkQOkWKOkaqWlXaulXKSmTqSmUqqmYQqnYKmnVQWoXaWocZ+pbAiqVaOqVKSqTKmqVKyqWwOrVJ+rU6WrWrCuWcS+2Mi/wMy/082/zsrCzMrDxcLE1cXExLzFy77FxMTFzMzF1bfGwbzGvrfH18vIw7/J08HJu8PJxMPJzLTKyL3KzL7Kw73Lvs3Lyr3Mt8HM0LPRuf/2A/j38//3+fz+Cv3+9P7+BO//A/T/BPT/Cfb//vf/9///7P///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAAHQALAAAAAAgACAAAAf/gHSCg4SFQ0NJOTqFjI2ORXNzaZEAjpaNRnBVbA4OV0oBl4w0KS4iLjI5c11unRlsOQYgLyUutS2VjSEHBQQDDz5zb1icGVo4AATKDwO/F441vgXNQ3BSPWFsUmxURgAFAHMBcwC5jC4azb2qP0c22WBqUkMAAfXl5oUmTV5cVGBG5hxpx0YMmypJUCCjUgWLlHyEWJiJFGnHHDZCtJ0Zo4NcmR0ArMypAnGQiCUU1yCZ84WNBQxb2HgB8IINFHpzooRqZGLMnDWRcFy0QJQbGzIH2/AwsOahoxdMJDAAOseiy6IQIESxidNpoxMdiIabg0STGi9sNkAQAOGJEWQ5/0sKYoGgQYUALSKp6sLGCZusbFbgXDNFLh0FRMVSBOBjh5EdRYrswBmJy05GExJboDknDjl7+Mql9HKZUIQGmy1U2AxnTuufFGN3/iC3roUAiQGwAEpVNtUdIMoVQiD2RQQLqMP1jk2VhxsAJkzkk6AawInjyV2klD1niJsSJrxgMbdALAgZcySg3sx9Dpo1RNjMMSCltbnTm0FESpBbhGw5QCShhjAAeEGJIJltlgACCUygAHHIjUVREWs8cRE5Y+VCgWqoeaDZegDMQAUVYYDhAxtZuHERAFSEUwl1FlwQWmi5GYBPDmyEcaEBLrhIR4IAuODCCCKw4AIICd5WwlEgAOQAg3xqiEbOBKgFUAIKjcBogQGEcADADfIVSImN5bzgCABkWlkIY89NcaApKpBgyS0tyMBIkzH4R44ofDJJBABR9NjnoAAEEaRhg94pXCAAOw==');
 }
 
 #theme-tweaker-ui .current-theme {
@@ -221,7 +221,7 @@
 	cursor: pointer;
 }
 #theme-tweaker-ui input[type='checkbox']:checked + label::before {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_checkmark.gif")) ?>');	
+	background-image: url('data:image/gif;base64,R0lGODdhEgASAJEAAAAAAP/2/////wAAACH5BAkAAAMALAAAAAASABIAAAIvjI+py50C3ANRGkiRYDgfsE2UZ1DhNY7IGHbq+qbkJ8tLnTZ4pdtWbinxgsRioAAAOw==');	
 	background-size: 14px;
 	background-repeat: no-repeat;
 	background-position: center center;
@@ -461,10 +461,10 @@ input[type='range']::-ms-thumb {
 	background-position: center center;
 }
 #theme-tweaker-ui .minimize-button.minimize {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_minimize_widget.gif")) ?>');	
+	background-image: url('data:image/gif;base64,R0lGODdhGAAUAJEAAAAAAP///wAAAAAAACH5BAkAAAIALAAAAAAYABQAAAIflI+py+0Po5y02ouz3pyCD4YiwIwmWJ5mqopsi3ZyAQA7');	
 }
 #theme-tweaker-ui .minimize-button.maximize {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_maximize_widget.gif")) ?>');	
+	background-image: url('data:image/gif;base64,R0lGODdhGAAUAJEAAAAAAP///wAAAAAAACH5BAkAAAIALAAAAAAYABQAAAI3lI+pCu0PHYv0zVovjnOt1nkJOAJiGZ4GibCqu5pqnL5ye9v1CQu91/t9crSZj3jccEpKiPFZAAA7');	
 }
 
 #theme-tweaker-ui .help-button {
@@ -473,7 +473,7 @@ input[type='range']::-ms-thumb {
 	position: absolute;
 	top: -1px;
 	right: 55px;
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_help_widget.gif")) ?>');	
+	background-image: url('data:image/gif;base64,R0lGODdhGAAUAJEAAAAAAP///wAAAAAAACH5BAkAAAIALAAAAAAYABQAAAIvlH+gi+22InhUStqu0Hiz9HURMnaeAoYmWa6s6p5o/E50feP5zrtt/rsFacMepQAAOw==');	
 	background-size: 14px;
 	background-repeat: no-repeat;
 	background-position: center center;
@@ -490,7 +490,7 @@ input[type='range']::-ms-thumb {
 }
 #theme-tweaker-ui .controls-container::-webkit-scrollbar-track {
 	background-color: #fff8ff;
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_scrollbar_track.gif")) ?>');	
+	background-image: url('data:image/gif;base64,R0lGODdhFAACAKIAAAAAALGpsf/2/////wAAAAAAAAAAAAAAACH5BAkAAAQALAAAAAAUAAIAAAMIGKK83u1JOBMAOw==');	
 }
  
 #theme-tweaker-ui .controls-container::-webkit-scrollbar-thumb {
@@ -576,7 +576,7 @@ input[type='range']::-ms-thumb {
 	pointer-events: auto;
 }
 #theme-tweaker-ui .help-window h1 {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_help_icon.gif")) ?>');
+	background-image: url('data:image/gif;base64,R0lGODdhIAAgAKIAAAAAAAAA/2xsbLKysv//DP///wAAAAAAACH5BAkAAAYALAAAAAAgACAAAAPGaGrS/jCuOaO9gtJWuieE9xGQtnBiAaZqWJromsoeYN+w0NFjeuMalIi3C3UGwI1uFmg6W54BEpArdpzYwFBqq0Kz2Q+XGlxesefncepNaz3odbdcjIPsY+9dvW/u8nQzRm5RbIFDg2FyZEpWKYoqgI1QIpCRhpOIYTSSFWYjdoOdJ0tElFuYno6ILASjCkKgfKKppK0EoYVzkzxxqLuqpwW+YrWwn6s9i23KrMtlUtHS09TGDALV2dTACz/e3+BJE+Hk4QsJADs=');
 }
 #theme-tweaker-ui div.section#theme-tweak-section-clippy {
 	padding: 23px 0 15px 10px;

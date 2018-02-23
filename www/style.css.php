@@ -420,8 +420,6 @@ input {
 	cursor: auto;
 }
 
-<?php include("theme_tweaker.css.php"); ?>
-
 /*******************/
 /* QUICKNAV WIDGET */
 /*******************/
