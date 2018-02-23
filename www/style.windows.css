@@ -512,7 +512,7 @@ input {
 	font-family: 'Font Awesome';
 	font-weight: 900;
 	width: 1.5em;
-	z-index: 1;	
+	z-index: 5001;
 }
 #new-comment-nav-ui .new-comment-previous {
 	top: 8px;
@@ -2233,7 +2233,7 @@ ol {
 @media only screen and (max-width: 1020px) {
 	#new-comment-nav-ui {
 		right: calc((100vw - 900px) / 2 - 61px);
-		z-index: 3;
+		z-index: 5001;
 	}
 	#new-comment-nav-ui .new-comments-count::before {
 		content: "";
