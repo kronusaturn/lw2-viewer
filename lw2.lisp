@@ -366,10 +366,10 @@
                      (t
                        (emit-page (out-stream :title (if hide-title nil title) :description "A faster way to browse LessWrong 2.0" :content-class content-class :with-offset with-offset :with-next with-next
                                               :robots (if (and with-offset (> with-offset 0)) "noindex, nofollow"))
-                                  (format out-stream "<div class=\"page-toolbar\">~@[<a class=\"new-post button\" href=\"/edit-post?section=~A\">New post</a>~]<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" title=\"~A RSS feed\" href=\"~A\">RSS</a></div>~@[~A~]"
+                                  (format out-stream "<div class=\"page-toolbar\">~@[<a class=\"new-post button\" href=\"/edit-post?section=~A\">New post</a>~]~{~@[<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" title=\"~A RSS feed\" href=\"~A\">RSS</a>~]~}</div>~@[~A~]"
                                           (if (and section (logged-in-userid)) section)
-                                          title
-                                          (replace-query-params (hunchentoot:request-uri*) "offset" nil "format" "rss")
+                                          (unless need-auth
+                                            (list title (replace-query-params (hunchentoot:request-uri*) "offset" nil "format" "rss")))
                                           extra-html)
                                   (write-index-items-to-html out-stream items :need-auth need-auth)))))
 
@@ -565,7 +565,7 @@
                                (interleave (comment-post-interleave items :limit 20 :offset (if show nil offset))))
                           (view-items-index interleave :with-offset offset :title title :content-class "user-page"
                                             :with-offset offset :with-next (> (length items) (+ (if show 0 offset) 20))
-                                            :need-auth (string= show "drafts")
+                                            :need-auth (string= show "drafts") :section (if (string= show "drafts") "drafts" nil)
                                             :extra-html (format nil "<h1 class=\"page-main-heading\">~A</h1><div class=\"user-stats\">Karma: <span class=\"karma-total\">~A</span></div><div class=\"sublevel-nav\">~A</div>"
                                                                 (cdr (assoc :display-name user-info))
                                                                 (pretty-number (or (cdr (assoc :karma user-info)) 0))
