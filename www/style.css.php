@@ -394,7 +394,8 @@ input {
 	display: block;
 	width: 26px;
 	height: 26px;
-	padding: 0 0 0 1px;
+/* 	This was to fix the alignment in some browser. Check to see if still needed. */
+/* 	padding: 0 0 0 1px; */
 	text-align: center;
 	margin: 2px 7px;
 	font-size: 0.75rem;
@@ -1878,7 +1879,7 @@ a.comment-parent-link:hover::after {
 	overflow: visible;
 }
 
-.guiedit-mobile-help-button {
+.guiedit-mobile-auxiliary-button {
 	display: none;
 }
 
@@ -2548,7 +2549,6 @@ ol {
 		background-color: #ccc;
 	}
 	.textarea-container .guiedit-mobile-auxiliary-button {
-		display: block;
 		z-index: 11011;
 		position: fixed;
 		bottom: 8px;
@@ -2558,6 +2558,9 @@ ol {
 		background-color: #eee;
 		border: 1px solid #ddd;
 		border-radius: 6px;
+	}
+	.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
+		display: block;
 	}
 	.textarea-container .guiedit-mobile-help-button {
 		left: 8px;

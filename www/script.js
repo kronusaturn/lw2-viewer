@@ -478,20 +478,20 @@ function injectThemeSelector() {
 
 	let currentTheme = window.localStorage.getItem("selected-theme") || "default";
 	let themeOptions = [
-		['default', 'Default theme (dark text on light background)'],
-		['dark', 'Dark theme (light text on dark background)'],
-		['grey', 'Grey theme (more subdued than default theme)'],
-		['ultramodern', 'Ultramodern theme (very hip)'],
-		['zero', 'Simple theme with no custom fonts'],
-		['brutalist', 'Brutalist theme (the Motherland calls!)']
+		['default', 'Default theme (dark text on light background)', 'A'],
+		['dark', 'Dark theme (light text on dark background)', 'B'],
+		['grey', 'Grey theme (more subdued than default theme)', 'C'],
+		['ultramodern', 'Ultramodern theme (very hip)', 'D'],
+		['zero', 'Simple theme with no custom fonts', 'E'],
+		['brutalist', 'Brutalist theme (the Motherland calls!)', 'F']
 	];
 	let themeSelector = addUIElement(
 		"<div id='theme-selector' class='theme-selector'>" +
 		String.prototype.concat.apply("", themeOptions.map(function (to) {
-			let [name, desc] = to;
+			let [name, desc, letter] = to;
 			let selected = (name == currentTheme ? ' selected' : '');
 			let disabled = (name == currentTheme ? ' disabled' : '');
-			return `<button type='button' class='select-theme-${name}${selected}'${disabled} title='${desc}' tabindex='-1'>A</button>`;})) +
+			return `<button type='button' class='select-theme-${name}${selected}'${disabled} title='${desc}' tabindex='-1'>${letter}</button>`;})) +
 		"</div>");
 	themeSelector.querySelectorAll("button").forEach(function (button) {
 		button.addActivateEvent(themeSelectButtonClicked);
