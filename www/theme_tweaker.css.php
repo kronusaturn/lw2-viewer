@@ -68,7 +68,7 @@
 	position: fixed;
 	z-index: 1;
 	background-color: #bfb8bf;
-	color: black;
+	color: #000;
 	box-shadow: 
 		0 -1px 0 0 #fff8ff,
 		-1px 0 0 0 #fff8ff,
@@ -544,7 +544,7 @@ input[type='range']::-ms-thumb {
 }
 #theme-tweaker-ui .clippy-container .hint {
 	line-height: 1.3;
-	color: black;
+	color: #000;
 }
 #theme-tweaker-ui .clippy-container .hint img {
 	vertical-align: text-bottom;
