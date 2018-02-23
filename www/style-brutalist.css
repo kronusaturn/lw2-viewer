@@ -3037,6 +3037,10 @@ a.comment-parent-link:hover::before {
 	box-shadow: none;
 }
 .comment-controls .cancel-comment-button,
+#comments > .comment-controls .cancel-comment-button {
+	height: 28px;
+}
+.comment-controls .cancel-comment-button,
 .comment-controls .cancel-comment-button:hover {
 	color: #fff;
 	text-shadow: none;
