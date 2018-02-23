@@ -108,6 +108,23 @@ Element.prototype.addTextareaFeatures = function() {
 	markdown_hints += "<div class='markdown-hints-row'><span>Blockquote</span><code>&gt; Blockquote</code></div>";
 	markdown_hints += "</div>";
 	textarea.parentElement.querySelector("span").insertAdjacentHTML("afterend", markdown_hints);
+	
+	let guiEditMobileHelpButton = document.querySelector(".guiedit-mobile-help-button");
+	if (guiEditMobileHelpButton) {
+		guiEditMobileHelpButton.addActivateEvent(GUIEditMobileHelpButtonClicked);
+	}
+	
+	let guiEditMobileExitButton = document.querySelector(".guiedit-mobile-exit-button");
+	if (guiEditMobileExitButton) {
+		guiEditMobileExitButton.addActivateEvent(GUIEditMobileExitButtonClicked);
+	}
+}
+
+function GUIEditMobileHelpButtonClicked(event) {
+	console.log("Help button clicked");
+}
+function GUIEditMobileExitButtonClicked(event) {
+	console.log("Exit button clicked");
 }
 
 Element.prototype.injectReplyForm = function(editMarkdownSource) {

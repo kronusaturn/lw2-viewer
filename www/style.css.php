@@ -1878,6 +1878,10 @@ a.comment-parent-link:hover::after {
 	overflow: visible;
 }
 
+.guiedit-mobile-help-button {
+	display: none;
+}
+
 /*********/
 /* LINKS */
 /*********/
@@ -2471,18 +2475,18 @@ ol {
 		width: 1.5em;
 		line-height: 1.6;
 		text-align: right;
-		}
+	}
 	#edit-post-form label[for='title'] {
 		width: 2.5em;
 	}
-		#edit-post-form label[for='url'] {
+	#edit-post-form label[for='url'] {
 		width: 2.5em;
-		}
-		#edit-post-form label[for='section'] {
+	}
+	#edit-post-form label[for='section'] {
 		width: 3.6em;
-		}
-		#edit-post-form label[for='url'], 
-		#edit-post-form label[for='section'],
+	}
+	#edit-post-form label[for='url'], 
+	#edit-post-form label[for='section'],
 	#edit-post-form label[for='title'] {
 		clear: left;
 		text-align: left;
@@ -2490,14 +2494,14 @@ ol {
 	}
 	#edit-post-form input[name='title'],
 	#edit-post-form input[name='url'] {
-			max-width: calc(100% - 6.5em);
-		}
-		#edit-post-form label[for='link-post'] {
-			white-space: normal;
-			width: 2em;
-			height: 1em;
-		}
-		.textarea-container:focus-within textarea {
+		max-width: calc(100% - 6.5em);
+	}
+	#edit-post-form label[for='link-post'] {
+		white-space: normal;
+		width: 2em;
+		height: 1em;
+	}
+	.textarea-container:focus-within textarea {
 		position: fixed;
 		top: -1px;
 		left: 2px;
@@ -2516,23 +2520,53 @@ ol {
 		background-image: none;
 		background-color: transparent;
 		border-top: 1px solid #ddf;
+		padding: 1px;
+		text-align: center;
 	}
 	#edit-post-form .textarea-container:focus-within .guiedit-buttons-container {
 		top: auto;
-		bottom: -1px;
+		bottom: 0;
 	}
 	.textarea-container:focus-within button.guiedit {
-		font-size: 1.25rem;
+		font-size: 0.9375rem;
 		line-height: 1.5;
 		height: auto;
-		width: calc(100% / 7);
-		padding: 10px;
+		width: calc((100% / 10) - 2px);
+		padding: 10px 1px 8px 0;
 		position: relative;
+		background-color: #eee;
+		border: 1px solid #ddd;
+		border-radius: 6px;
+		margin: 1px;
 	}
 	.textarea-container:focus-within button.guiedit sup {
 		position: absolute;
 		left: calc(50% + 0.65em);
 		top: calc(50% - 1.3em);
+	}
+	.textarea-container button:active {
+		background-color: #ccc;
+	}
+	.textarea-container .guiedit-mobile-auxiliary-button {
+		display: block;
+		z-index: 11011;
+		position: fixed;
+		bottom: 8px;
+		width: calc(((100% - 16px) / 10) * 3 - 7px);
+		font-size: 1.25rem;
+		padding: 5px;
+		background-color: #eee;
+		border: 1px solid #ddd;
+		border-radius: 6px;
+	}
+	.textarea-container .guiedit-mobile-help-button {
+		left: 8px;
+	}
+	.textarea-container .guiedit-mobile-exit-button {
+		right: 8px;
+	}
+	.guiedit::after {
+		display: none;
 	}
 	#edit-post-form input[type='submit'] {
 		margin-top: -6px;
