@@ -17,6 +17,7 @@
 		<span class="markdown-reference-link">You can use <a href="http://commonmark.org/help/" target="_blank">Markdown</a> here.</span>
 	</div>
 	<div>
+		{% if post-id %}<input name="post-id" value="{{ post-id }}" type="hidden">{% endif %}
 		<input name="csrf-token" value="{{ csrf-token }}" type="hidden">
 		<input value="Submit" type="submit">
 	</div>
