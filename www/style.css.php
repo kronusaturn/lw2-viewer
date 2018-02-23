@@ -1818,7 +1818,7 @@ a.comment-parent-link:hover::after {
 	text-align: center;
 	border-color: #ddd;
 	border-style: solid;
-	border-width: 1px 0;
+	border-width: 1px 1px 1px 0;
 	cursor: pointer;
 }
 #edit-post-form input[type='radio'][value='frontpage'] + label {
@@ -1827,7 +1827,6 @@ a.comment-parent-link:hover::after {
 }
 #edit-post-form input[type='radio'][value='drafts'] + label {
 	border-radius: 0 8px 8px 0;
-	border-width: 1px;
 }
 #edit-post-form input[type='radio'] + label:hover,
 #edit-post-form input[type='radio']:focus + label {
