@@ -1022,6 +1022,8 @@ h1.listing a[href^="http"] {
 }
 .comment-meta .comment-post-title {
 	display: block;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 .post-body, .comment-body {
 	text-align: justify;
