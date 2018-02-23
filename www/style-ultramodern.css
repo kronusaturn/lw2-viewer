@@ -744,7 +744,7 @@ h1.listing a[href^="http"] {
 	text-align: center;
 	border-color: #ddd;
 	border-style: solid;
-	border-width: 1px 0;
+	border-width: 1px 1px 1px 0;
 	font-size: 1.125rem;
 	color: #777;
 }
@@ -754,7 +754,6 @@ h1.listing a[href^="http"] {
 }
 .user-page .sublevel-nav .sublevel-item:last-child {
 	border-radius: 0 8px 8px 0;
-	border-width: 1px;
 }
 .user-page .sublevel-nav a.sublevel-item:hover {
 	background-color: #ddd;
