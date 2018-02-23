@@ -24,7 +24,7 @@ function setTheme(themeName) {
 		document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='dark-theme-adjustments'>" + 
 		`.markdown-reference-link a::before { filter: invert(100%); }` + "</style>");
 	} else {
-		removeElement("#dark-theme-adjustments");
+		document.querySelectorAll("#dark-theme-adjustments").forEach(function(e) {e.parentNode.removeChild(e)});
 	}
 }
 setTheme();
