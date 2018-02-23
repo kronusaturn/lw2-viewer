@@ -33,12 +33,17 @@
     (((or plump:invalid-xml-character plump:discouraged-xml-character) #'abort))
     (plump:encode-entities text)))
 
-(defun post-headline-to-html (post)
+(defun generate-post-auth-link (post &optional comment-id absolute need-auth)
+  (if need-auth
+      (concatenate 'string (generate-post-link post comment-id absolute) "?need-auth=y")
+      (generate-post-link post comment-id absolute)))
+
+(defun post-headline-to-html (post &key need-auth)
   (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :posted-at post))) 
     (format nil "<h1 class=\"listing~:[~; link-post-listing~]\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~A</a></h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\"><span class=\"karma-value\">~A</span></div><a class=\"comment-count\" href=\"~A#comments\">~A comment~:P</a>~@[<a class=\"lw2-link\" href=\"~A\">LW2 link</a>~]~A</div>"
 	    (cdr (assoc :url post))
 	    (if (cdr (assoc :url post)) (encode-entities (string-trim " " (cdr (assoc :url post)))))
-	    (generate-post-link post)
+            (generate-post-auth-link post nil nil need-auth)
 	    (encode-entities (clean-text (cdr (assoc :title post))))
 	    (encode-entities (get-user-slug (cdr (assoc :user-id post)))) 
 	    (encode-entities (get-username (cdr (assoc :user-id post))))
@@ -153,14 +158,14 @@
 	  when (or (not offset) (>= count offset))
 	  collect x)))
 
-(defun write-index-items-to-html (out-stream items)
+(defun write-index-items-to-html (out-stream items &key need-auth)
   (dolist (x items)
     (if (assoc :comment-count x)
-        (write-string (post-headline-to-html x) out-stream)
+        (write-string (post-headline-to-html x :need-auth need-auth) out-stream)
         (format out-stream "<ul class=\"comment-thread\"><li class=\"comment-item\" id=\"comment-~A\">~A</li></ul>"
                 (cdr (assoc :--id x)) (comment-to-html x :with-post-title t)))))
 
-(defun write-index-items-to-rss (out-stream items &optional title)
+(defun write-index-items-to-rss (out-stream items &key title need-auth)
   (let ((full-title (format nil "~@[~A - ~]LessWrong 2 viewer" title)))
     (with-recursive-lock (*memory-intensive-mutex*)
       (xml-emitter:with-rss2 (out-stream :encoding "UTF-8")
@@ -178,7 +183,7 @@
                 (emit-item item
                            :title (clean-text (format nil "~A by ~A" (cdr (assoc :title item)) author))
                            :author author
-                           :link (generate-post-link item nil t)
+                           :link (generate-post-auth-link item nil t need-auth)
                            :body (clean-html (or (cdr (assoc :html-body (get-post-body (cdr (assoc :--id item)) :revalidate nil))) "") :post-id (cdr (assoc :--id item)))))
               (emit-item item
                          :title (format nil "Comment by ~A on ~A" (get-username (cdr (assoc :user-id item))) (get-post-title (cdr (assoc :post-id item))))
@@ -352,21 +357,21 @@
   (format out-stream "<div><input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><input type=\"submit\" value=\"~A\"></div></div></form>"
 	  csrf-token button-label)) 
 
-(defun view-items-index (items &key section with-offset (with-next t) title hide-title extra-html (content-class "index-page"))
+(defun view-items-index (items &key section with-offset (with-next t) title hide-title need-auth extra-html (content-class "index-page"))
   (alexandria:switch ((hunchentoot:get-parameter "format") :test #'string=)
                      ("rss" 
                       (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
                       (let ((out-stream (hunchentoot:send-headers)))
-                        (write-index-items-to-rss (make-flexi-stream out-stream :external-format :utf-8) items title)))
+                        (write-index-items-to-rss (make-flexi-stream out-stream :external-format :utf-8) items :title title)))
                      (t
                        (emit-page (out-stream :title (if hide-title nil title) :description "A faster way to browse LessWrong 2.0" :content-class content-class :with-offset with-offset :with-next with-next
                                               :robots (if (and with-offset (> with-offset 0)) "noindex, nofollow"))
-                                  (format out-stream "<div class=\"page-toolbar\">~@[<a class=\"new-post button\" href=\"/edit-post?section=~A\">New post</a>~]<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" title=\"~A RSS feed\" href=\"~A\">RSS</a></div>~@[~A~]"
+                                  (format out-stream "<div class=\"page-toolbar\">~@[<a class=\"new-post button\" href=\"/edit-post?section=~A\">New post</a>~]~{~@[<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" title=\"~A RSS feed\" href=\"~A\">RSS</a>~]~}</div>~@[~A~]"
                                           (if (and section (logged-in-userid)) section)
-                                          title
-                                          (replace-query-params (hunchentoot:request-uri*) "offset" nil "format" "rss")
+                                          (unless need-auth
+                                            (list title (replace-query-params (hunchentoot:request-uri*) "offset" nil "format" "rss")))
                                           extra-html)
-                                  (write-index-items-to-html out-stream items)))))
+                                  (write-index-items-to-html out-stream items :need-auth need-auth)))))
 
 (defun link-if-not (stream linkp url class text)
   (declare (dynamic-extent linkp url text))
@@ -506,6 +511,7 @@
                                                                      :csrf-token csrf-token
                                                                      :title (cdr (assoc :title post-body))
                                                                      :url (cdr (assoc :url post-body))
+                                                                     :post-id post-id
                                                                      :section-list (loop for (name desc) in '(("frontpage" "Frontpage") ("all" "All") ("meta" "Meta") ("drafts" "Drafts"))
                                                                                          collect (alist :name name :desc desc :selected (string= name section)))
                                                                      :markdown-source (or (and post-id (cache-get "post-markdown-source" post-id)) (cdr (assoc :html-body post-body)) ""))))))))
@@ -538,7 +544,7 @@
 
 (define-regex-handler view-user ("^/users/(.*?)(?:$|\\?)" user-slug) (offset show)
                       (with-error-page
-                        (let* ((offset (if offset (parse-integer offset) 0)) 
+                        (let* ((offset (if offset (parse-integer offset) 0))
                                (user-info (lw2-graphql-query (format nil "{UsersSingle(slug:\"~A\"){_id, displayName, karma}}" user-slug)))
                                (comments-index-fields (remove :page-url *comments-index-fields*)) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
                                (title (format nil "~A~@['s ~A~]" (cdr (assoc :display-name user-info)) (if (member show '(nil "posts" "comments") :test #'equal) show)))
@@ -548,6 +554,9 @@
                                                          ("comments"
                                                           (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (alist :view "postCommentsNew" :limit 21 :offset offset :user-id (cdr (assoc :--id user-info))))
                                                                                                    comments-index-fields)))
+                                                         ("drafts"
+                                                          (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (alist :view "drafts" :limit 21 :offset offset :user-id (cdr (assoc :--id user-info)))) *posts-index-fields*)
+                                                                             :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
                                                          (t
                                                            (let ((user-posts (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (alist :view "new" :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info)))) *posts-index-fields*)))
                                                                  (user-comments (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (alist :view "postCommentsNew" :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info))))
@@ -556,11 +565,13 @@
                                (interleave (comment-post-interleave items :limit 20 :offset (if show nil offset))))
                           (view-items-index interleave :with-offset offset :title title :content-class "user-page"
                                             :with-offset offset :with-next (> (length items) (+ (if show 0 offset) 20))
+                                            :need-auth (string= show "drafts") :section (if (string= show "drafts") "drafts" nil)
                                             :extra-html (format nil "<h1 class=\"page-main-heading\">~A</h1><div class=\"user-stats\">Karma: <span class=\"karma-total\">~A</span></div><div class=\"sublevel-nav\">~A</div>"
                                                                 (cdr (assoc :display-name user-info))
                                                                 (pretty-number (or (cdr (assoc :karma user-info)) 0))
                                                                 (with-output-to-string (stream)
-                                                                  (loop for (l-show text) in '((nil "All") ("posts" "Posts") ("comments" "Comments"))
+                                                                  (loop for (l-show text) in `((nil "All") ("posts" "Posts") ("comments" "Comments")
+                                                                                               ,@(if (logged-in-userid (cdr (assoc :--id user-info))) '(("drafts" "Drafts"))))
                                                                         do (link-if-not stream (string= show l-show) (format nil "~A~@[?show=~A~]" (hunchentoot:script-name*) l-show)
                                                                                         "sublevel-item" text))))))))
 
