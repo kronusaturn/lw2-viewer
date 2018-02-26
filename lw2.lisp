@@ -170,12 +170,14 @@
     (with-recursive-lock (*memory-intensive-mutex*)
       (xml-emitter:with-rss2 (out-stream :encoding "UTF-8")
         (xml-emitter:rss-channel-header full-title *site-uri* :description full-title)
-        (labels ((emit-item (item &key title link (author (get-username (cdr (assoc :user-id item)))) (date (pretty-time (cdr (assoc :posted-at item)) :format local-time:+rfc-1123-format+)) body)
+        (labels ((emit-item (item &key title link (guid (cdr (assoc :--id item))) (author (get-username (cdr (assoc :user-id item))))
+                                  (date (pretty-time (cdr (assoc :posted-at item)) :format local-time:+rfc-1123-format+)) body)
                    (xml-emitter:rss-item
                      title
                      :link link
                      :author author
                      :pubDate date
+                     :guid guid
                      :description body)))
           (dolist (item items)
             (if (assoc :comment-count item)
