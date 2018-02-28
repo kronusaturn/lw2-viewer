@@ -565,9 +565,10 @@
                                                                  (user-comments (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (alist :view "postCommentsNew" :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info))))
                                                                                                                          comments-index-fields))))
                                                              (concatenate 'list user-posts user-comments)))))
-                               (interleave (comment-post-interleave items :limit 20 :offset (if show nil offset))))
+                               (with-next (> (length items) (+ (if show 0 offset) 20)))
+                               (interleave (comment-post-interleave items :limit 20 :offset (if show nil offset)))) ; this destructively sorts items
                           (view-items-index interleave :with-offset offset :title title :content-class "user-page"
-                                            :with-offset offset :with-next (> (length items) (+ (if show 0 offset) 20))
+                                            :with-offset offset :with-next with-next
                                             :need-auth (string= show "drafts") :section (if (string= show "drafts") "drafts" nil)
                                             :extra-html (format nil "<h1 class=\"page-main-heading\">~A</h1><div class=\"user-stats\">Karma: <span class=\"karma-total\">~A</span></div><div class=\"sublevel-nav\">~A</div>"
                                                                 (cdr (assoc :display-name user-info))
