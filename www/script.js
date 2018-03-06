@@ -124,7 +124,7 @@ function GUIEditMobileHelpButtonClicked(event) {
 	console.log("Help button clicked");
 }
 function GUIEditMobileExitButtonClicked(event) {
-	console.log("Exit button clicked");
+	event.target.blur();
 }
 
 Element.prototype.injectReplyForm = function(editMarkdownSource) {
