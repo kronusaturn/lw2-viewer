@@ -2200,6 +2200,9 @@ ol {
 	#content {
 		padding: 0 4px;
 	}
+	#content.post-page {
+		padding-bottom: 112px;
+	}
 	#content > a:last-child,
 	#content > a:first-child {
 		margin: 0 -4px;
@@ -2249,6 +2252,7 @@ ol {
 	}
 	#new-comment-nav-ui {
 		right: 12px;
+		bottom: 12px;
 	}
 	#new-comment-nav-ui .new-comments-count {
 		z-index: 2;
