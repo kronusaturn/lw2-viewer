@@ -1237,6 +1237,15 @@ ul.comment-thread {
 	margin: 0 -1px;
 	border: none;
 }
+.comment-meta::before {
+	content: "";
+	float: right;
+	height: 20px;
+	width: 66px;
+}
+.comment-item .comment-item .comment-meta::before {
+	width: 48px;
+}
 .comment-meta .author {
 	font-weight: bold;
 	font-size: 1.25em;
