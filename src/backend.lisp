@@ -24,7 +24,7 @@
 
 (defun background-loader ()
   (loop
-    (ignore-errors 
+    (handler-case
       (log-conditions 
 	(let ((posts-json (sb-ext:with-timeout 120 (get-posts-json))))
 	  (when (and posts-json (ignore-errors (json:decode-json-from-string posts-json)))
@@ -35,12 +35,14 @@
 			 (lmdb-put-string db (cdr (assoc :--id post)) (cdr (assoc :title post)))))
 	      (with-db (db "postid-to-slug")
 		       (dolist (post posts-list)
-			 (lmdb-put-string db (cdr (assoc :--id post)) (cdr (assoc :slug post))))))))))
-    (ignore-errors
+			 (lmdb-put-string db (cdr (assoc :--id post)) (cdr (assoc :slug post)))))))))
+      (t (condition) (values nil condition)))
+    (handler-case
       (log-conditions
 	(let ((recent-comments-json (sb-ext:with-timeout 120 (get-recent-comments-json))))
 	  (if (and recent-comments-json (ignore-errors (json:decode-json-from-string recent-comments-json)))
-	    (cache-put "index-json" "recent-comments" recent-comments-json))))) 
+	    (cache-put "index-json" "recent-comments" recent-comments-json))))
+      (t (condition) (values nil condition)))
     (sleep 60))) 
 
 (defun start-background-loader ()
