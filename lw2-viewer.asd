@@ -11,6 +11,7 @@
                 :depends-on ("config"))
                (:static-file "www/head.js")
                (:static-file "templates/edit-post.html")
+               (:static-file "templates/reset-password.html")
                (module "config-copy"
                        :pathname ""
                        :output-files (compile-op (o c) (list "config.lisp"))
@@ -19,5 +20,5 @@
                        :perform (compile-op :before (o c)
                                             (if (not (uiop:file-exists-p "config.lisp"))
                                                 (uiop:copy-file "config-example.lisp" "config.lisp"))))
-               (:file "lw2" :depends-on ("src" "config" "www/head.js" "templates/edit-post.html"))
+               (:file "lw2" :depends-on ("src" "config" "www/head.js" "templates/edit-post.html" "templates/reset-password.html"))
                (:file "config" :depends-on ("config-copy"))))

@@ -1,7 +1,8 @@
 (defpackage #:lw2.login
   (:use #:cl #:lw2-viewer.config #:alexandria #:cl-json #:flexi-streams #:websocket-driver-client)
   (:import-from #:ironclad #:byte-array-to-hex-string #:digest-sequence)
-  (:export #:do-lw2-login #:do-lw2-create-user #:do-lw2-post #:do-lw2-post-edit #:do-lw2-post-remove #:do-lw2-comment #:do-lw2-comment-edit #:do-lw2-comment-remove #:do-lw2-vote))
+  (:export #:do-lw2-login #:do-lw2-create-user #:do-lw2-forgot-password #:do-lw2-reset-password
+           #:do-lw2-post #:do-lw2-post-edit #:do-lw2-post-remove #:do-lw2-comment #:do-lw2-comment-edit #:do-lw2-comment-remove #:do-lw2-vote))
 
 (in-package #:lw2.login) 
 
@@ -54,9 +55,16 @@
 					     (setf result message)
 					     (sb-thread:signal-semaphore result-semaphore)))))) 
 	(wsd:send client (maybe-output debug-output "sockjs sent" (sockjs-encode-alist `(("msg" . "connect") ,@(if session `(("session" . ,session))) ("version" . "1") ("support" . ("1"))))))
-	(sb-thread:wait-on-semaphore result-semaphore :timeout 10))
+        (unless (sb-thread:wait-on-semaphore result-semaphore :timeout 10)
+          (error "Timeout while waiting for LW2 server.")))
       (wsd:close-connection client))
     result)) 
+
+(defun do-lw2-sockjs-method (method params)
+  (do-lw2-sockjs-operation `(("msg" . "method")
+                             ("method" . ,method)
+                             ("params" . ,params)
+                             ("id" . "3"))))
 
 (defun parse-login-result (result)
   (let* ((result-inner (cdr (assoc :result result)))
@@ -69,27 +77,35 @@
 	      (error "Unknown response from LW2: ~A" result))))) 
 
 (defun do-lw2-login (user-designator-type user-designator password)
-  (let ((result (do-lw2-sockjs-operation `(("msg" . "method")
-					   ("method" . "login")
-					   ("params"
-					    (("user" (,user-designator-type . ,user-designator))
-					     ("password"
-					      (digest . ,(password-digest password))
-					      ("algorithm" . "sha-256"))))
-					   ("id" . "3")))))
+  (let ((result (do-lw2-sockjs-method "login"
+                                      `((("user" (,user-designator-type . ,user-designator))
+                                         ("password"
+                                          (digest . ,(password-digest password))
+                                          ("algorithm" . "sha-256")))))))
     (parse-login-result result)))
 
 (defun do-lw2-create-user (username email password)
-  (let ((result (do-lw2-sockjs-operation `(("msg" . "method")
-					   ("method" . "createUser")
-					   ("params"
-					    (("username" . ,username)
-					     ("email" . ,email)
-					     ("password"
-					      (digest . , (password-digest password))
-					      ("algorithm" . "sha-256"))))
-					   ("id" . "3")))))
+  (let ((result (do-lw2-sockjs-method "createUser"
+                                      `((("username" . ,username)
+                                         ("email" . ,email)
+                                         ("password"
+                                          (digest . ,(password-digest password))
+                                          ("algorithm" . "sha-256")))))))
     (parse-login-result result))) 
+
+(defun do-lw2-forgot-password (email)
+  (let ((result (do-lw2-sockjs-method "forgotPassword"
+                                      `((("email" . ,email))))))
+    (if-let (error-data (cdr (assoc :error result)))
+            (values nil (cdr (assoc :reason error-data)))
+            t)))
+
+(defun do-lw2-reset-password (auth-token password)
+  (let ((result (do-lw2-sockjs-method "resetPassword"
+                                      `(,auth-token
+                                         ((digest . ,(password-digest password))
+                                          ("algorithm" . "sha-256"))))))
+    (parse-login-result result)))
 
 ; resume session ["{\"msg\":\"connect\",\"session\":\"mKvhev8p2f4WfKd6k\",\"version\":\"1\",\"support\":[\"1\",\"pre2\",\"pre1\"]}"]
 ;

@@ -811,9 +811,17 @@ h1.listing a[href^="http"] {
 	width: calc(100% - 11em);
 	padding: 0.25em;
 }
+.aligned-form .action-container {
+	padding-left: 2.75em;
+}
+.aligned-form .action-container > * {
+	float: unset;
+	display: block;
+	margin: 0.5em auto;
+	text-align: center;
+}
 .aligned-form input[type='submit'] {
-	float: right;
-	width: calc(100% - 15em);
+	width: 11em;
 	padding: 0.35em;
 	font-weight: bold;
 	line-height: 1;
@@ -877,14 +885,14 @@ h1.listing a[href^="http"] {
 #login-form label {
 	width: 7em;
 }
-#login-form input[type='submit'] {
-	margin: 0.5em 6em;
-}
 #signup-form label {
 	width: 9em;
 }
+#signup-form .action-container {
+	padding-left: 7em;
+}
 #signup-form input[type='submit'] {
-	margin: 0.75em 4em 0.5em 4em;
+	margin: 0.75em auto 0.5em auto;
 	padding: 0.4em 0.5em 0.5em 0.5em;
 	background-color: #e4e4e4;
 	border: 1px solid #ccc;
@@ -893,12 +901,45 @@ h1.listing a[href^="http"] {
 	background-color: #d8d8d8;
 	border: 1px solid #aaa;
 }
-.error-box {
+#content.login-page .error-box {
 	margin: 1.5em 0.875em -1.5em 0.875em;
+}
+.error-box, .success-box {
 	padding: 0.25em;
 	text-align: center;
+}
+.error-box {
 	border: 1px solid red;
 	background-color: #faa;
+}
+.success-box {
+	border: 1px solid green;
+	background-color: #afa;
+}
+#content.reset-password input[type='submit'] {
+	background-color: #e4e4e4;
+	border: 1px solid #ccc;
+	padding: 0.2em 0.5em;
+	font-weight: bold;
+	width: unset;
+}
+#content.reset-password input {
+	margin-left: 0.5em;
+	width: 12em;
+}
+#content.reset-password label {
+	display: inline-block;
+	width: 9em;
+}
+#content.reset-password form > div {
+	margin: 0.2em;
+}
+#content.reset-password .action-container {
+	padding-left: 11em;
+	padding-top: 0.2em;
+}
+#content.reset-password .error-box {
+	margin: unset;
 }
 
 /*********************/
