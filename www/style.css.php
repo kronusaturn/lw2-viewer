@@ -916,29 +916,32 @@ h1.listing a[href^="http"] {
 	border: 1px solid green;
 	background-color: #afa;
 }
-#content.reset-password input[type='submit'] {
+.reset-password-container {
+	margin-bottom: 2em;
+}
+.reset-password-container input[type='submit'] {
 	background-color: #e4e4e4;
 	border: 1px solid #ccc;
 	padding: 0.2em 0.5em;
 	font-weight: bold;
 	width: unset;
 }
-#content.reset-password input {
+.reset-password-container input {
 	margin-left: 0.5em;
 	width: 12em;
 }
-#content.reset-password label {
+.reset-password-container label {
 	display: inline-block;
 	width: 9em;
 }
-#content.reset-password form > div {
+.reset-password-container form > div {
 	margin: 0.2em;
 }
-#content.reset-password .action-container {
+.reset-password-container .action-container {
 	padding-left: 11em;
 	padding-top: 0.2em;
 }
-#content.reset-password .error-box {
+.reset-password-container .error-box {
 	margin: unset;
 }
 
