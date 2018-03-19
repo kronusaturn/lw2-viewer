@@ -2116,13 +2116,13 @@ ol {
 	padding: 0;
 	counter-reset: ol;
 }
-.post-body ol li {
+.post-body ol > li {
 	position: relative;
 	counter-increment: ol;
 	padding: 0 0 0 2.5em;
 	margin: 0.25em 0 0 0;
 }
-.post-body ol li::before {
+.post-body ol > li::before {
 	content: counter(ol) ".";
 	position: absolute;
 	width: 2em;
