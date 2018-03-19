@@ -339,7 +339,7 @@
 				     (format out-stream "<h1>Error</h1><p>~A</p>"
 					     condition)))))) 
 
-(defun output-form (out-stream method action id class csrf-token fields button-label &key textarea)
+(defun output-form (out-stream method action id class csrf-token fields button-label &key textarea end-html)
   (format out-stream "<form method=\"~A\" action=\"~A\" id=\"~A\" class=\"~A\"><div>" method action id class)
   (loop for (id label type . params) in fields
 	do (format out-stream "<div><label for=\"~A\">~A:</label>" id label)
@@ -357,8 +357,8 @@
   (if textarea
     (destructuring-bind (ta-name ta-contents) textarea
       (format out-stream "<div class=\"textarea-container\"><textarea name=\"~A\">~A</textarea><span class='markdown-reference-link'>You can use <a href='http://commonmark.org/help/' target='_blank'>Markdown</a> here.</span></div>" ta-name (encode-entities ta-contents))))
-  (format out-stream "<div><input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><input type=\"submit\" value=\"~A\"></div></div></form>"
-	  csrf-token button-label)) 
+  (format out-stream "<div class=\"action-container\"><input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><input type=\"submit\" value=\"~A\">~@[~A~]</div></div></form>"
+	  csrf-token button-label end-html))
 
 (defun view-items-index (items &key section with-offset (with-next t) title hide-title need-auth extra-html (content-class "index-page"))
   (alexandria:switch ((hunchentoot:get-parameter "format") :test #'string=)
@@ -565,9 +565,10 @@
                                                                  (user-comments (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (alist :view "postCommentsNew" :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info))))
                                                                                                                          comments-index-fields))))
                                                              (concatenate 'list user-posts user-comments)))))
-                               (interleave (comment-post-interleave items :limit 20 :offset (if show nil offset))))
+                               (with-next (> (length items) (+ (if show 0 offset) 20)))
+                               (interleave (comment-post-interleave items :limit 20 :offset (if show nil offset)))) ; this destructively sorts items
                           (view-items-index interleave :with-offset offset :title title :content-class "user-page"
-                                            :with-offset offset :with-next (> (length items) (+ (if show 0 offset) 20))
+                                            :with-offset offset :with-next with-next
                                             :need-auth (string= show "drafts") :section (if (string= show "drafts") "drafts" nil)
                                             :extra-html (format nil "<h1 class=\"page-main-heading\">~A</h1><div class=\"user-stats\">Karma: <span class=\"karma-total\">~A</span></div><div class=\"sublevel-nav\">~A</div>"
                                                                 (cdr (assoc :display-name user-info))
@@ -609,7 +610,8 @@
 						     (output-form out-stream "post" (format nil "/login~@[?return=~A~]" (if return (url-rewrite:url-encode return))) "login-form" "aligned-form" csrf-token
 								  '(("login-username" "Username" "text" "username")
 								    ("login-password" "Password" "password" "current-password"))
-								  "Log in")
+								  "Log in"
+                                                                  :end-html "<a href=\"/reset-password\">Forgot password</a>")
 						     (with-outputs (out-stream) "</div><div id=\"create-account-form-container\"><h1>Create account</h1>")
 						     (output-form out-stream "post" (format nil "/login~@[?return=~A~]" (if return (url-rewrite:url-encode return))) "signup-form" "aligned-form" csrf-token
 								  '(("signup-username" "Username" "text" "username")
@@ -661,6 +663,47 @@
 							  (hunchentoot:header-out "Location") (if (and return (ppcre:scan "^/[~/]" return)) return "/"))))))))
 				       (t
 					 (emit-login-page)))))) 
+
+(defparameter *reset-password-template* (compile-template* "reset-password.html"))
+
+(hunchentoot:define-easy-handler (view-reset-password :uri "/reset-password") ((csrf-token :request-type :post) (email :request-type :post) (reset-link :request-type :post) (password :request-type :post) (password2 :request-type :post))
+                                 (labels ((emit-rpw-page (&key message message-type step)
+                                            (with-error-page
+                                              (let ((csrf-token (make-csrf-token (hunchentoot:cookie-in "session-token"))))
+                                                (emit-page (out-stream :title "Reset password" :content-class "reset-password")
+                                                           (render-template* *reset-password-template* out-stream
+                                                                             :csrf-token csrf-token
+                                                                             :reset-link reset-link
+                                                                             :message message
+                                                                             :message-type message-type
+                                                                             :step step))))))
+                                   (cond
+                                     (email
+                                       (check-csrf-token (hunchentoot:cookie-in "session-token") csrf-token)
+                                       (multiple-value-bind (ret error)
+                                         (do-lw2-forgot-password email)
+                                         (declare (ignore ret))
+                                         (if error
+                                             (emit-rpw-page :step 1 :message error :message-type "error")
+                                             (emit-rpw-page :step 1 :message "Password reset email sent." :message-type "success"))))
+                                     (reset-link
+                                       (ppcre:register-groups-bind (reset-token) ("(?:reset-password/|^)([^/#]+)$" reset-link)
+                                         (cond
+                                           ((not reset-token)
+                                            (emit-rpw-page :step 2 :message "Invalid password reset link." :message-type "error"))
+                                           ((not (string= password password2))
+                                            (emit-rpw-page :step 2 :message "Passwords do not match." :message-type "error"))
+                                           (t
+                                            (check-csrf-token (hunchentoot:cookie-in "session-token") csrf-token)
+                                            (multiple-value-bind (user-id auth-token error-message) (do-lw2-reset-password reset-token password)
+                                                (declare (ignore user-id auth-token))
+                                                (cond
+                                                  (error-message (emit-rpw-page :step 2 :message error-message :message-type "error"))
+                                                  (t
+                                                   (with-error-page (emit-page (out-stream :title "Reset password" :content-class "reset-password")
+                                                                               (format out-stream "<h1>Password reset complete</h1><p>You can now <a href=\"/login\">log in</a> with your new password.</p>"))))))))))
+                                     (t
+                                      (emit-rpw-page)))))
 
 (defun firstn (list n)
   (loop for x in list

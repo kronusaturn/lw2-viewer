@@ -124,7 +124,7 @@ function GUIEditMobileHelpButtonClicked(event) {
 	console.log("Help button clicked");
 }
 function GUIEditMobileExitButtonClicked(event) {
-	console.log("Exit button clicked");
+	event.target.blur();
 }
 
 Element.prototype.injectReplyForm = function(editMarkdownSource) {
@@ -206,7 +206,9 @@ function ExpandTextarea(textarea) {
 	window.requestAnimationFrame(function() {
 		textarea.style.height = 'auto';
 		textarea.style.height = textarea.scrollHeight + 30 + 'px';
-		textarea.parentElement.parentElement.scrollIntoViewIfNeeded();
+		if(textarea.clientHeight < window.innerHeight) {
+			textarea.parentElement.parentElement.scrollIntoViewIfNeeded();
+		}
 	});
 }
 

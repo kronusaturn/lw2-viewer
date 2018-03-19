@@ -821,9 +821,17 @@ h1.listing a[href^="http"] {
 	width: calc(100% - 11em);
 	padding: 0.25em;
 }
+.aligned-form .action-container {
+	padding-left: 2.75em;
+}
+.aligned-form .action-container > * {
+	float: unset;
+	display: block;
+	margin: 0.5em auto;
+	text-align: center;
+}
 .aligned-form input[type='submit'] {
-	float: right;
-	width: calc(100% - 15em);
+	width: 11em;
 	padding: 0.35em;
 	font-weight: bold;
 	line-height: 1;
@@ -887,14 +895,14 @@ h1.listing a[href^="http"] {
 #login-form label {
 	width: 7em;
 }
-#login-form input[type='submit'] {
-	margin: 0.5em 6em;
-}
 #signup-form label {
 	width: 9em;
 }
+#signup-form .action-container {
+	padding-left: 7em;
+}
 #signup-form input[type='submit'] {
-	margin: 0.75em 4em 0.5em 4em;
+	margin: 0.75em auto 0.5em auto;
 	padding: 0.4em 0.5em 0.5em 0.5em;
 	background-color: #e4e4e4;
 	border: 1px solid #ccc;
@@ -903,12 +911,48 @@ h1.listing a[href^="http"] {
 	background-color: #d8d8d8;
 	border: 1px solid #aaa;
 }
-.error-box {
+#content.login-page .error-box {
 	margin: 1.5em 0.875em -1.5em 0.875em;
+}
+.error-box, .success-box {
 	padding: 0.25em;
 	text-align: center;
+}
+.error-box {
 	border: 1px solid red;
 	background-color: #faa;
+}
+.success-box {
+	border: 1px solid green;
+	background-color: #afa;
+}
+.reset-password-container {
+	margin-bottom: 2em;
+}
+.reset-password-container input[type='submit'] {
+	background-color: #e4e4e4;
+	border: 1px solid #ccc;
+	padding: 0.2em 0.5em;
+	font-weight: bold;
+	width: unset;
+}
+.reset-password-container input {
+	margin-left: 0.5em;
+	width: 12em;
+}
+.reset-password-container label {
+	display: inline-block;
+	width: 9em;
+}
+.reset-password-container form > div {
+	margin: 0.2em;
+}
+.reset-password-container .action-container {
+	padding-left: 11em;
+	padding-top: 0.2em;
+}
+.reset-password-container .error-box {
+	margin: unset;
 }
 
 /*********************/
@@ -1294,6 +1338,15 @@ ul.comment-thread {
 	padding: 2px 80px 2px 10px;
 	margin: 0 -1px;
 	border: none;
+}
+.comment-meta::before {
+	content: "";
+	float: right;
+	height: 20px;
+	width: 66px;
+}
+.comment-item .comment-item .comment-meta::before {
+	width: 48px;
 }
 .comment-meta .author {
 	font-weight: bold;
@@ -2258,6 +2311,9 @@ ol {
 	#content {
 		padding: 0 4px;
 	}
+	#content.post-page {
+		padding-bottom: 112px;
+	}
 	#content > a:last-child,
 	#content > a:first-child {
 		margin: 0 -4px;
@@ -2307,6 +2363,7 @@ ol {
 	}
 	#new-comment-nav-ui {
 		right: 12px;
+		bottom: 12px;
 	}
 	#new-comment-nav-ui .new-comments-count {
 		z-index: 2;
