@@ -1785,6 +1785,7 @@ a.comment-parent-link:hover::after {
 }
 #edit-post-form input[type='submit'] {
 	padding: 6px 12px;
+	float: right;
 }
 #edit-post-form .link-post-checkbox {
 	height: 0;
