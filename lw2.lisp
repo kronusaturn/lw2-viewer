@@ -460,22 +460,32 @@
 					 (if comment-id 
 					   (setf (hunchentoot:return-code*) 303
 						 (hunchentoot:header-out "Location") (generate-post-link post-id comment-id))
-					   (let* ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token"))
-                                                  (post (get-post-body post-id :auth-token (and need-auth lw2-auth-token))))
-					     (emit-page (out-stream :title (clean-text (cdr (assoc :title post))) :content-class "post-page") 
-							(with-outputs (out-stream) (post-body-to-html post))
-							(if lw2-auth-token
-							  (format out-stream "<script>postVote=~A</script>~@[<div class=\"post-controls\"><a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\">Edit post</a></div>~]"
-								  (json:encode-json-to-string (get-post-vote post-id lw2-auth-token))
-								  (if (equal (logged-in-userid) (cdr (assoc :user-id post))) (cdr (assoc :--id post)))))
-							(force-output out-stream) 
-							(format out-stream "<div id=\"comments\">~A</div>"
-								(let ((comments (get-post-comments post-id)))
-								  (if chrono
-								    (comment-chrono-to-html comments) 
-								    (comment-tree-to-html (make-comment-parent-hash comments)))))
-							(if lw2-auth-token
-							  (format out-stream "<script>commentVotes=~A</script>" (json:encode-json-to-string (get-post-comments-votes post-id lw2-auth-token)))))))))))) 
+                                           (let ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token")))
+                                             (multiple-value-bind (post title condition)
+                                               (handler-case (get-post-body post-id :auth-token (and need-auth lw2-auth-token))
+                                                 (serious-condition (c) (values nil "Error" c))
+                                                 (:no-error (post) (values post (cdr (assoc :title post)) nil)))
+                                               (emit-page (out-stream :title title :content-class "post-page")
+                                                          (cond
+                                                            (condition
+                                                              (format out-stream "<h1>Error</h1><p>~A</p>" condition))
+                                                            (t
+                                                              (with-outputs (out-stream) (post-body-to-html post))
+                                                              (if lw2-auth-token
+                                                                  (format out-stream "<script>postVote=~A</script>~@[<div class=\"post-controls\"><a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\">Edit post</a></div>~]"
+                                                                          (json:encode-json-to-string (get-post-vote post-id lw2-auth-token))
+                                                                          (if (equal (logged-in-userid) (cdr (assoc :user-id post))) (cdr (assoc :--id post)))))))
+                                                          (force-output out-stream)
+                                                          (handler-case
+                                                            (progn
+                                                              (format out-stream "<div id=\"comments\">~A</div>"
+                                                                      (let ((comments (get-post-comments post-id)))
+                                                                        (if chrono
+                                                                            (comment-chrono-to-html comments)
+                                                                            (comment-tree-to-html (make-comment-parent-hash comments)))))
+                                                              (if lw2-auth-token
+                                                                  (format out-stream "<script>commentVotes=~A</script>" (json:encode-json-to-string (get-post-comments-votes post-id lw2-auth-token)))))
+                                                            (serious-condition (c) (format out-stream "<h1>Error</h1><p>~A</p>" c))))))))))))
 
 (defparameter *edit-post-template* (compile-template* "edit-post.html"))
 
