@@ -1064,6 +1064,7 @@ function pageLayoutFinished() {
 		clonedImage.style.top = image.getBoundingClientRect().top + window.scrollY + "px";
 		clonedImage.style.width = image.getBoundingClientRect().width + "px";
 		clonedImage.style.height = image.getBoundingClientRect().height + "px";
+		clonedImage.style.border = window.getComputedStyle(image).border;
 		imagesOverlay.appendChild(clonedImage);
 	});
 }
