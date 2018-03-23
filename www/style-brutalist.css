@@ -1101,6 +1101,11 @@ h1.listing a[href^="http"] {
 .post-meta .date {
 	color: #888;
 }
+.bottom-post-meta {
+	margin: 0;
+	padding: 20px 0 22px 0;
+	border-top: 1px solid #ddd;
+}
 
 /*********/
 /* POSTS */

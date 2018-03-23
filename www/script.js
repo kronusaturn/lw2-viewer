@@ -1033,6 +1033,15 @@ function initialize() {
 				}
 			}
 		});
+		
+		// Replicate .post-meta at bottom of post.
+		let postMeta = document.querySelector(".post .post-meta");
+		if (postMeta) {
+			let clonedPostMeta = postMeta.cloneNode(true);
+			postMeta.addClass("top-post-meta");
+			clonedPostMeta.addClass("bottom-post-meta");
+			document.querySelector(".post").appendChild(clonedPostMeta);
+		}
 	})
 }
 
