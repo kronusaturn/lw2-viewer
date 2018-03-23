@@ -3123,6 +3123,12 @@ a.comment-parent-link:hover::before {
 		0 0 0 1px #fff inset,
 		0 0 0 3px #000 inset;
 }
+.archive-nav a:active {
+	transform: none;
+	box-shadow: 
+		0 0 0 3px #fff inset,
+		0 0 0 5px #000 inset;
+}
 .archive-nav span.archive-nav-item-day,
 .archive-nav a.archive-nav-item-day:hover {
 	background-color: transparent;
