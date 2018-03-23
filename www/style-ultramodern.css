@@ -736,6 +736,13 @@ h1.listing a[href^="http"] {
 
 .user-page .sublevel-nav {
 	text-align: center;
+	margin: 0 0 24px 0;
+}
+.user-page .sublevel-nav:nth-last-child(2)::after {
+	content: "No entries.";
+	display: block;
+	margin: 1.25em;
+	font-size: 1.375em;
 }
 .user-page .sublevel-nav .sublevel-item {
 	display: inline-block;
