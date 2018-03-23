@@ -388,6 +388,10 @@ a.comment-parent-link:hover::before {
 	content: "\F146";
 }
 
+.bottom-post-meta {
+	border-top: 1px dotted #000;
+}
+
 #edit-post-form input[name='title'] {
 	max-width: calc(100% - 14em);
 }

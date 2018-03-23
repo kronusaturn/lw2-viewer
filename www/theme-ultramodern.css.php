@@ -19,6 +19,9 @@ body {
 .comment-meta .date { 
 	color: #444;
 }
+.bottom-post-meta {
+	border: none;
+}
 .vote {
 	color: #666;
 }
