@@ -3017,4 +3017,25 @@ input[type='submit'] {
 }
 .post-body .contents ul {
 	font-size: 0.85em;
-}	
+}
+
+
+.post-body h1 {
+	font-weight: 400;
+}
+.post-body h2 {
+	font-weight: 400;
+	border-bottom: 1px dotted #ccc;
+}
+.post-body h3 {
+	font-weight: 400;
+}
+.post-body h4 {
+	font-weight: 400;
+}
+.post-body h5 {
+	font-weight: 400;
+}
+.post-body h6 {
+	font-weight: 400;
+}
