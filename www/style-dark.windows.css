@@ -2290,6 +2290,21 @@ ol {
 	font-weight: bold;
 }
 
+/******************/
+/* IMAGES OVERLAY */
+/******************/
+
+#images-overlay {
+	position: absolute;
+	z-index: 1;
+	width: 100%;
+	padding-left: calc((100% - 900px) / 2 + 60px);
+	padding-right: calc((100% - 900px) / 2 + 60px);
+}
+#images-overlay img {
+	position: absolute;
+}
+
 /**********************/
 /* FOR NARROW SCREENS */
 /**********************/

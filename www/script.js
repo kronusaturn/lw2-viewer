@@ -1033,6 +1033,18 @@ function initialize() {
 				}
 			}
 		});
+		
+		// Add overlay of images in post (for avoidance of theme tweaks).		
+		document.querySelector("body").insertAdjacentHTML("afterbegin", "<div id='images-overlay'></div>");
+		let imagesOverlay = document.querySelector("#images-overlay");
+		document.querySelectorAll(".post-body img").forEach(function (image) {
+			let clonedImage = image.cloneNode(true);
+			clonedImage.style.top = image.getBoundingClientRect().top + "px";
+			clonedImage.style.left = image.getBoundingClientRect().left + "px";
+			clonedImage.style.width = image.getBoundingClientRect().width + "px";
+			clonedImage.style.height = image.getBoundingClientRect().height + "px";
+			imagesOverlay.appendChild(clonedImage);
+		});
 	})
 }
 
