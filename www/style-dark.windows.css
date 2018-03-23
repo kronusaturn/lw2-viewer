@@ -543,17 +543,19 @@ input {
 	border: 1px solid #484848;
 	position: relative;
 }
-.archive-nav:last-child {
-	margin-bottom: 5em;
+.archive-nav:last-child,
+.archive-nav:nth-last-child(2) {
+	margin-bottom: 5.25em;
 }
-.archive-nav:last-child::after {
+.archive-nav:last-child::after,
+.archive-nav:nth-last-child(2)::after {
 	content: "No posts for the selected period.";
 	display: block;
 	position: absolute;
 	width: 100%;
 	text-align: center;
 	padding: 1.25em 0 1.25em 0;
-	font-size: 1.25em;
+	font-size: 1.375em;
 }
 
 div[class^='archive-nav-'] {
