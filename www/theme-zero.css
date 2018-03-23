@@ -66,6 +66,7 @@ body {
 #primary-bar, 
 #secondary-bar {
 	box-shadow: none;
+	background-color: #e4e4e4;
 }
 #nav-item-top {
 	box-shadow: none;
@@ -162,4 +163,7 @@ h1.listing a[href^='/'] {
 }
 h1.listing + .post-meta {
 	font-size: 0.875rem;
+}
+h1.listing:first-of-type {
+	margin-top: 2em;
 }
