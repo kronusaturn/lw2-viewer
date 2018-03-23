@@ -51,8 +51,17 @@ body {
 	box-shadow: none;
 	border: none;
 }
+.active-bar {
+	border-top: 2px solid #eee;
+}
 .nav-bar a {
 	font-weight: normal;
+}
+#primary-bar a {
+	font-weight: bold;
+}
+.nav-current span {
+	background-color: #eee;
 }
 .nav-inner {
 	font-size: 1.125em;
