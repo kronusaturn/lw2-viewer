@@ -407,6 +407,7 @@ input {
 	height: 26px;
 /* 	This was to fix the alignment in some browser. Check to see if still needed. */
 /* 	padding: 0 0 0 1px; */
+	padding: 0;
 	text-align: center;
 	margin: 2px 7px;
 	font-size: 0.75rem;
@@ -3146,6 +3147,7 @@ h6 strong {
 		0 0 0 2px #888 inset,
 		0 0 0 3px #ccc inset,
 		0 0 0 5px #888 inset;
+	text-decoration: none;
 }
 #width-selector button {
 	box-shadow:
@@ -3159,6 +3161,9 @@ h6 strong {
 		0 0 0 2px #ccc inset,
 		0 0 0 4px #888 inset,
 		0 0 0 5px #ccc inset;
+}
+#theme-tweaker-toggle button:hover {
+	text-decoration: none;
 }
 
 input[type='text'], 

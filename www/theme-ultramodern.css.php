@@ -129,6 +129,7 @@ h6 strong {
 		0 0 0 2px #888 inset,
 		0 0 0 3px #ccc inset,
 		0 0 0 5px #888 inset;
+	text-decoration: none;
 }
 #width-selector button {
 	box-shadow:
@@ -142,6 +143,9 @@ h6 strong {
 		0 0 0 2px #ccc inset,
 		0 0 0 4px #888 inset,
 		0 0 0 5px #ccc inset;
+}
+#theme-tweaker-toggle button:hover {
+	text-decoration: none;
 }
 
 input[type='text'], 
