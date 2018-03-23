@@ -565,14 +565,14 @@
                                                          ("posts"
                                                           (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (alist :view "new" :limit 21 :offset offset :user-id (cdr (assoc :--id user-info)))) *posts-index-fields*)))
                                                          ("comments"
-                                                          (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (alist :view "postCommentsNew" :limit 21 :offset offset :user-id (cdr (assoc :--id user-info))))
+                                                          (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (alist :view "allRecentComments" :limit 21 :offset offset :user-id (cdr (assoc :--id user-info))))
                                                                                                    comments-index-fields)))
                                                          ("drafts"
                                                           (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (alist :view "drafts" :limit 21 :offset offset :user-id (cdr (assoc :--id user-info)))) *posts-index-fields*)
                                                                              :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
                                                          (t
                                                            (let ((user-posts (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (alist :view "new" :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info)))) *posts-index-fields*)))
-                                                                 (user-comments (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (alist :view "postCommentsNew" :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info))))
+                                                                 (user-comments (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (alist :view "allRecentComments" :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info))))
                                                                                                                          comments-index-fields))))
                                                              (concatenate 'list user-posts user-comments)))))
                                (with-next (> (length items) (+ (if show 0 offset) 20)))
