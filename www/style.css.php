@@ -1091,11 +1091,6 @@ h1.listing a[href^="http"] {
 .post-meta .date {
 	color: #888;
 }
-.bottom-post-meta {
-	margin: 0;
-	padding: 20px 0 22px 0;
-	border-top: 1px solid #ddd;
-}
 
 /*********/
 /* POSTS */
@@ -1103,9 +1098,6 @@ h1.listing a[href^="http"] {
 
 .post-meta {
 	text-align: center;
-}
-.post-meta:last-child {
-	margin-bottom: 40px;
 }
 .post-meta .author {
 	color: #090;
@@ -1128,6 +1120,14 @@ h1.listing a[href^="http"] {
 	text-align: center;
 	font-size: 2.5em;
 	line-height: 1;
+}
+.top-post-meta:last-child {
+	margin-bottom: 40px;
+}
+.bottom-post-meta {
+	margin: 0;
+	padding: 20px 0 22px 0;
+	border-top: 1px solid #ddd;
 }
 
 /**************/
