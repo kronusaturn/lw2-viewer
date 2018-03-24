@@ -87,4 +87,5 @@ function setTextZoom(zoomFactor) {
 			zoom: ${zoomFactor};
 		}`;
 }
-setTextZoom(window.localStorage.getItem('text-zoom'));
+window.currentTextZoom = window.localStorage.getItem('text-zoom');
+setTextZoom(window.currentTextZoom);

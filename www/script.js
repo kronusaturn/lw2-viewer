@@ -531,9 +531,9 @@ function injectThemeTweaker() {
 		<button type='button' class='help-button' tabindex='-1'></button>
 		<p class='text-size-adjust'>
 			<span class='label'>Text size:</span>
-			<button type='button' class='text-size-adjust-button decrease' tabindex='-1'></button>
-			<button type='button' class='text-size-adjust-button default' tabindex='-1'></button>
-			<button type='button' class='text-size-adjust-button increase' tabindex='-1'></button>
+			<button type='button' class='text-size-adjust-button decrease' title='Decrease text size' tabindex='-1'></button>
+			<button type='button' class='text-size-adjust-button default' title='Reset to default text size' tabindex='-1'></button>
+			<button type='button' class='text-size-adjust-button increase' title='Increase text size' tabindex='-1'></button>
 			<span class='sample-text-container'><span class='sample-text'>Less Wrong</span></span>
 		</p>
 		<p class='current-theme'>Current theme: <span>` + 
@@ -743,6 +743,9 @@ function themeTweakerResetDefaultsButtonClicked(event) {
 	window.currentFilters = { };
 	applyFilters(window.currentFilters);
 	
+	window.currentTextZoom = 1;
+	setTextZoom(window.currentTextZoom);
+	
 	setSelectedTheme("default");
 }
 function themeTweakerCancelButtonClicked(event) {
@@ -757,10 +760,13 @@ function themeTweakReset() {
 	setSelectedTheme(window.currentTheme);
 	window.currentFilters = JSON.parse(window.localStorage.getItem("theme-tweaks") || "{ }");
 	applyFilters(window.currentFilters);
+	window.currentTextZoom = window.localStorage.getItem("text-zoom");
+	setTextZoom(window.currentTextZoom);
 }
 function themeTweakSave() {
 	window.currentTheme = (window.localStorage.getItem("selected-theme") || "default");
 	window.localStorage.setItem("theme-tweaks", JSON.stringify(window.currentFilters));
+	window.localStorage.setItem("text-zoom", window.currentTextZoom);
 }
 function clickInterceptor(event) {
 	event.stopPropagation();
@@ -800,7 +806,7 @@ function themeTweakerClippyCloseButtonClicked() {
 function themeTweakerTextSizeAdjustButtonClicked(event) {
 	let textZoomStyle = document.querySelector("#text-zoom");
 	
-	var zoomFactor = parseFloat(window.localStorage.getItem("text-zoom")) || 1.0;
+	var zoomFactor = parseFloat(window.currentTextZoom) || 1.0;
 	console.log("Zoom factor is " + zoomFactor);
 	if (event.target.hasClass("decrease")) {
 		zoomFactor = Math.max(zoomFactor - 0.1, 0.5).toFixed(1);
@@ -809,13 +815,8 @@ function themeTweakerTextSizeAdjustButtonClicked(event) {
 	} else {
 		zoomFactor = 1.0;
 	}	
-	console.log("New zoom factor is " + zoomFactor);
 	setTextZoom(zoomFactor);
-	if (zoomFactor == 1.0) {
-		window.localStorage.removeItem("text-zoom");
-	} else {
-		window.localStorage.setItem("text-zoom", `${zoomFactor}`);
-	}
+	window.currentTextZoom = `${zoomFactor}`;
 }
 
 /*********************/
