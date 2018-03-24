@@ -1758,6 +1758,12 @@ a.comment-parent-link:hover::after {
 	line-height: 1;
 	position: static;
 }
+.guiedit-buttons-container button:active {
+	transform: none;
+}
+.guiedit-buttons-container button:active div {
+	transform: scale(0.9);
+}
 .guiedit-buttons-container button sup {
 	font-weight: bold;
 }
