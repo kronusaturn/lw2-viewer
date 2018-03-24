@@ -529,6 +529,12 @@ function injectThemeTweaker() {
 		<h1>Customize appearance</h1>
 		<button type='button' class='minimize-button minimize' tabindex='-1'></button>
 		<button type='button' class='help-button' tabindex='-1'></button>
+		<p class='text-size-adjust'>
+			<span class='label'>Text size:</span>
+			<button type='button' class='text-size-adjust-button text-size-decrease' tabindex='-1'></button>
+			<button type='button' class='text-size-adjust-button text-size-increase' tabindex='-1'></button>
+			<span class='sample-text-container'><span class='sample-text'>Less Wrong</span></span>
+		</p>
 		<p class='current-theme'>Current theme: <span>` + 
 		(window.localStorage.getItem("selected-theme") || "default") + 
 		`</span></p>
@@ -618,7 +624,9 @@ function injectThemeTweaker() {
 	document.querySelectorAll("#theme-tweaker-ui .theme-selector button").forEach(function (button) {
 		button.addActivateEvent(themeSelectButtonClicked);
 	});
-
+	
+	// TODO: Make this dynamically get the font…
+	document.querySelector("#theme-tweaker-ui .text-size-adjust .sample-text").style.fontFamily = "Charter";
 }
 function toggleThemeTweakerUI() {
 	let themeTweakerUI = document.querySelector("#theme-tweaker-ui");

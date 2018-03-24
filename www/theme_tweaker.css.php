@@ -161,6 +161,50 @@
 		0 0 0 2px #fff8ff;
 }
 
+#theme-tweaker-ui .text-size-adjust {
+	position: absolute;
+	top: 19px;
+	right: 12px;
+}
+#theme-tweaker-ui .text-size-adjust .label {
+	position: relative;
+	display: inline-block;
+	top: -6px;
+	margin: 0 3px 0 0;
+}
+#theme-tweaker-ui .text-size-adjust button {
+	margin: 6px 3px;
+	padding: 0;
+	height: 26px;
+	width: 26px;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+#theme-tweaker-ui .text-size-adjust button.text-size-decrease {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("A_minus.gif")) ?>');
+}
+#theme-tweaker-ui .text-size-adjust button.text-size-increase {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("A_plus.gif")) ?>');
+}
+#theme-tweaker-ui .text-size-adjust .sample-text-container {
+	display: inline-table;
+	background-color: #fff;
+	height: 30px;
+	vertical-align: top;
+	position: relative;
+	top: 4px;
+	border: 1px solid #000;
+	width: 9em;	
+	padding: 1px;
+	margin: 0 0 0 6px;
+}
+#theme-tweaker-ui .text-size-adjust .sample-text {
+	display: table-cell;
+	width: 100%;
+	text-align: center;
+	vertical-align: middle;
+}
+
 #theme-tweaker-ui div.section {
 	border: 1px solid #7f787f;
 	box-shadow:
@@ -233,7 +277,7 @@
 	-webkit-appearance: none;
 	width: 100%;
 	margin: 0;
-	padding: 24px 3.45em 24px 2.3em;
+	padding: 24px 3.5em 24px 2.3em;
 	background-color: transparent;
 	border: none;
 	cursor: pointer;
