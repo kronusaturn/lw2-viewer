@@ -30,7 +30,7 @@ function setTheme(themeName) {
 setTheme();
 
 function setContentWidth(widthString) {
-	if(!widthString) return;
+	if (!widthString) return;
 	let widthAdjustStyle = document.querySelector('#width-adjust');
 	widthAdjustStyle.innerHTML = 
 		`#content { 
@@ -77,3 +77,14 @@ function applyFilters(filters) {
 document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='theme-tweak'></style>");	
 window.currentFilters = JSON.parse(window.localStorage.getItem("theme-tweaks") || "{ }");
 applyFilters(window.currentFilters);
+
+document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='text-zoom'></style>");
+function setTextZoom(zoomFactor) {
+	if (!zoomFactor) return;
+	let textZoomStyle = document.querySelector("#text-zoom");
+	textZoomStyle.innerHTML = 
+		`.post-body, .comment-body, #theme-tweaker-ui .text-size-adust .sample-text {
+			zoom: ${zoomFactor};
+		}`;
+}
+setTextZoom(window.localStorage.getItem('text-zoom'));

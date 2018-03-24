@@ -180,21 +180,24 @@
 	background-repeat: no-repeat;
 	background-position: center center;
 }
-#theme-tweaker-ui .text-size-adjust button.text-size-decrease {
+#theme-tweaker-ui .text-size-adjust .text-size-adjust-button.decrease {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("A_minus.gif")) ?>');
 }
-#theme-tweaker-ui .text-size-adjust button.text-size-increase {
+#theme-tweaker-ui .text-size-adjust .text-size-adjust-button.default {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("A.gif")) ?>');
+}
+#theme-tweaker-ui .text-size-adjust .text-size-adjust-button.increase {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("A_plus.gif")) ?>');
 }
 #theme-tweaker-ui .text-size-adjust .sample-text-container {
 	display: inline-table;
 	background-color: #fff;
-	height: 30px;
+	height: 49px;
 	vertical-align: top;
 	position: relative;
-	top: 4px;
+	top: -6px;
 	border: 1px solid #000;
-	width: 9em;	
+	width: 10em;	
 	padding: 1px;
 	margin: 0 0 0 6px;
 }

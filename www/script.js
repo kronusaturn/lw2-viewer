@@ -531,8 +531,9 @@ function injectThemeTweaker() {
 		<button type='button' class='help-button' tabindex='-1'></button>
 		<p class='text-size-adjust'>
 			<span class='label'>Text size:</span>
-			<button type='button' class='text-size-adjust-button text-size-decrease' tabindex='-1'></button>
-			<button type='button' class='text-size-adjust-button text-size-increase' tabindex='-1'></button>
+			<button type='button' class='text-size-adjust-button decrease' tabindex='-1'></button>
+			<button type='button' class='text-size-adjust-button default' tabindex='-1'></button>
+			<button type='button' class='text-size-adjust-button increase' tabindex='-1'></button>
 			<span class='sample-text-container'><span class='sample-text'>Less Wrong</span></span>
 		</p>
 		<p class='current-theme'>Current theme: <span>` + 
@@ -627,6 +628,9 @@ function injectThemeTweaker() {
 	
 	// TODO: Make this dynamically get the font…
 	document.querySelector("#theme-tweaker-ui .text-size-adjust .sample-text").style.fontFamily = "Charter";
+	document.querySelectorAll("#theme-tweaker-ui .text-size-adjust button").forEach(function (button) {
+		button.addActivateEvent(themeTweakerTextSizeAdjustButtonClicked);
+	});
 }
 function toggleThemeTweakerUI() {
 	let themeTweakerUI = document.querySelector("#theme-tweaker-ui");
@@ -792,6 +796,26 @@ function themeTweakerClippyCloseButtonClicked() {
 	document.querySelector(".clippy-container").style.display = "none";
 	window.localStorage.setItem("theme-tweaker-settings", JSON.stringify({ 'showClippy': false }));
 	document.querySelector("#theme-tweak-control-clippy").checked = false;
+}
+function themeTweakerTextSizeAdjustButtonClicked(event) {
+	let textZoomStyle = document.querySelector("#text-zoom");
+	
+	var zoomFactor = parseFloat(window.localStorage.getItem("text-zoom")) || 1.0;
+	console.log("Zoom factor is " + zoomFactor);
+	if (event.target.hasClass("decrease")) {
+		zoomFactor = Math.max(zoomFactor - 0.1, 0.5).toFixed(1);
+	} else if (event.target.hasClass("increase")) {
+		zoomFactor = Math.min(zoomFactor + 0.1, 2.0).toFixed(1);
+	} else {
+		zoomFactor = 1.0;
+	}	
+	console.log("New zoom factor is " + zoomFactor);
+	setTextZoom(zoomFactor);
+	if (zoomFactor == 1.0) {
+		window.localStorage.removeItem("text-zoom");
+	} else {
+		window.localStorage.setItem("text-zoom", `${zoomFactor}`);
+	}
 }
 
 /*********************/
