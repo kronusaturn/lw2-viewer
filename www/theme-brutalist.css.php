@@ -162,8 +162,13 @@ h1.listing a[href^="http"]:hover {
 }
 
 .comment-item {
-	background-color: transparent !important;
 	border: 2px solid #000;
+}
+.comment-item:not(:target) {
+	background-color: #fff !important;
+}
+.comment-item:target {
+	background-color: #eee !important;
 }
 .new-comment::before {
 	display: none;
