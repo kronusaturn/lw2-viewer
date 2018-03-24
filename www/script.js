@@ -1042,6 +1042,24 @@ function initialize() {
 			clonedPostMeta.addClass("bottom-post-meta");
 			document.querySelector(".post").appendChild(clonedPostMeta);
 		}
+		
+		// Add page navigation at top of pages.
+		let bottomBar = document.querySelector("#bottom-bar");
+		if (bottomBar && bottomBar.querySelector("#nav-item-next") != null) {
+			let topNavBar = "<div id='top-nav-bar'>";
+			bottomBar.querySelectorAll("a").forEach(function (link) {
+				if (link.parentElement.id == 'nav-item-next') {
+					let offset = parseInt(/offset=([0-9]+)/.exec(link.href)[1]) / 20;
+					topNavBar += "<span>Page " + offset + "</span>";
+				}
+				if (link.getAttribute("href") != "#top")
+					topNavBar += "<a href='" + link.getAttribute("href") + "' class='button " + link.parentElement.id + "' title='" + link.textContent + "'></a>";
+			});
+			topNavBar += "</div>";
+			
+			let elementToInsertAfter = document.querySelector(".sublevel-nav") || document.querySelector(".archive-nav") || document.querySelector(".page-toolbar");
+			elementToInsertAfter.insertAdjacentHTML("afterend", topNavBar);
+		}
 	})
 }
 

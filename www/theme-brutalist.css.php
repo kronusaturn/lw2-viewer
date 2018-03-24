@@ -59,6 +59,9 @@ a:hover {
 	box-shadow: none;
 	border: none;
 }
+#top-nav-bar a:hover {
+	color: #777;
+}
 .rss:hover {
 	text-decoration: dotted underline;
 }

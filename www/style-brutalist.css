@@ -147,7 +147,13 @@ input {
 	float: left;
 	width: 100%;
 }
-#bottom-bar .nav-item a::before {
+#top-nav-bar {
+	margin: 1em 0 -1.5em 0;
+	text-align: center;
+	font-size: 1.25em;
+}
+#bottom-bar .nav-item a::before,
+#top-nav-bar a::before {
 	font-family: Font Awesome;
 	font-weight: 900;
 	font-size: 0.8em;
@@ -155,20 +161,35 @@ input {
 	bottom: 1px;
 	margin-right: 0.5em;
 }
-#bottom-bar #nav-item-first a::before {
+#bottom-bar #nav-item-first a::before,
+#top-nav-bar a.nav-item-first::before {
 	content: "\F100";
 }
 #bottom-bar #nav-item-top a::before {
 	content: "\F062";
 }
-#bottom-bar #nav-item-prev a::before {
+#bottom-bar #nav-item-prev a::before,
+#top-nav-bar a.nav-item-prev::before {
 	content: "\F060";
 }
-#bottom-bar #nav-item-next a::before {
+#bottom-bar #nav-item-next a::before,
+#top-nav-bar a.nav-item-next::before {
 	content: "\F061";
+}
+#bottom-bar #nav-item-next a::before {
 	margin-left: -2em;
 	margin-right: 0;
 	left: 3.8em;
+}
+#top-nav-bar span {
+	margin: 0 0.25em;
+	font-size: 0.875em;
+	position: relative;
+	bottom: 1px;
+}
+#top-nav-bar a::before {
+	margin: 0.5em;
+	display: inline-block;
 }
 .nav-bar a:link,
 .nav-bar a:visited {
@@ -2861,6 +2882,9 @@ a:hover {
 .rss:hover {
 	box-shadow: none;
 	border: none;
+}
+#top-nav-bar a:hover {
+	color: #777;
 }
 .rss:hover {
 	text-decoration: dotted underline;
