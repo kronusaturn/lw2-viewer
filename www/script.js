@@ -1045,13 +1045,9 @@ function initialize() {
 		
 		// Add page navigation at top of pages.
 		let bottomBar = document.querySelector("#bottom-bar");
-		if (bottomBar && bottomBar.querySelector("#nav-item-next") != null) {
+		if (bottomBar && (bottomBar.querySelector("#nav-item-next") != null || bottomBar.querySelector("#nav-item-prev") != null)) {
 			let topNavBar = "<div id='top-nav-bar'>";
 			bottomBar.querySelectorAll("a").forEach(function (link) {
-				if (link.parentElement.id == 'nav-item-next') {
-					let offset = parseInt(/offset=([0-9]+)/.exec(link.href)[1]) / 20;
-					topNavBar += "<span>Page " + offset + "</span>";
-				}
 				if (link.getAttribute("href") != "#top") {
 					var accessKey;
 					switch (link.parentElement.id) {
@@ -1072,6 +1068,10 @@ function initialize() {
 			
 			let elementToInsertAfter = document.querySelector(".sublevel-nav") || document.querySelector(".archive-nav") || document.querySelector(".page-toolbar");
 			elementToInsertAfter.insertAdjacentHTML("afterend", topNavBar);
+			
+			let offset = parseInt(getQueryVariable("offset") || "0") / 20;
+			let nextOrPrevious = document.querySelector("#top-nav-bar .nav-item-next") || document.querySelector("#top-nav-bar .nav-item-prev");
+			nextOrPrevious.insertAdjacentHTML((nextOrPrevious.hasClass("nav-item-next") ? "beforebegin" : "afterend"), "<span class='page-number'><span class='page-number-label'>Page</span> " + (offset + 1) + "</span>");
 		}
 	})
 }
