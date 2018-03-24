@@ -138,6 +138,7 @@ input {
 }
 #top-nav-bar {
 	margin: 1em 0 -1.5em 0;
+	padding: 0.75em 0 0 0;
 	text-align: center;
 	font-size: 1.25em;
 }
@@ -170,11 +171,18 @@ input {
 	margin-right: 0;
 	left: 3.8em;
 }
-#top-nav-bar span {
-	margin: 0 0.25em;
-	font-size: 0.875em;
+#top-nav-bar .page-number {
 	position: relative;
-	bottom: 1px;
+	display: inline-block;
+	width: 1.5em;
+}
+#top-nav-bar .page-number-label {
+	position: absolute;
+	font-size: 0.5em;
+	text-transform: uppercase;
+	width: 100%;
+	bottom: 90%;
+	left: 0;
 }
 #top-nav-bar a::before {
 	margin: 0.5em;
