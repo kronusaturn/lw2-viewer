@@ -71,9 +71,13 @@
                          :cookie-jar *cookie-jar* :additional-headers (if auth-token `(("authorization" . ,auth-token)) nil)
                          :want-stream nil :close t)
     (declare (ignore headers final-uri reuse-stream want-close))
-    (if (= status-code 200)
-        (octets-to-string response-body :external-format :utf-8)
-        (error "Error while contacting LW2: ~A ~A" status-code status-string))))
+    (cond
+      ((= status-code 200)
+       (octets-to-string response-body :external-format :utf-8))
+      ((= status-code 400)
+       (decode-graphql-json (octets-to-string response-body :external-format :utf-8)))
+      (t
+	(error "Error while contacting LW2: ~A ~A" status-code status-string)))))
 
 (defun decode-graphql-json (json-string)
   (let* ((decoded (json:decode-json-from-string json-string))
