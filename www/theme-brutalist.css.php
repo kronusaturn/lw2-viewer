@@ -253,6 +253,7 @@ input[type='submit']:active {
 #theme-selector button {
 	box-shadow:
 		0 0 0 5px #fff inset;
+	padding: 0 0 0 1px;
 }
 #theme-selector button:hover,
 #theme-selector button.selected {
