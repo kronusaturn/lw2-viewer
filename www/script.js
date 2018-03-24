@@ -1080,31 +1080,26 @@ function initialize() {
 		let bottomBar = document.querySelector("#bottom-bar");
 		if (bottomBar && (bottomBar.querySelector("#nav-item-next") != null || bottomBar.querySelector("#nav-item-prev") != null)) {
 			let topNavBar = "<div id='top-nav-bar'>";
-			bottomBar.querySelectorAll("a").forEach(function (link) {
-				if (link.getAttribute("href") != "#top") {
-					var accessKey;
-					switch (link.parentElement.id) {
-						case "nav-item-next":
-							accessKey = ']';
-							break;
-						case "nav-item-prev":
-							accessKey = '[';
-							break;
-						case "nav-item-first":
-							accessKey = '\\';
-							break;
-					}
-					topNavBar += `<a href="${link.getAttribute('href')}" class="button ${link.parentElement.id}" title="${link.textContent} (accesskey: '${accessKey}')" accesskey="${accessKey}"></a>`;
-				}
-			});
+			topNavBar += `<a href="" class="button nav-item-first disabled" title="First page (accesskey: '[')" accesskey="["></a>`;
+			topNavBar += `<a href="" class="button nav-item-prev disabled" title="Previous page (accesskey: '[')" accesskey="["></a>`;
+
+			let offset = parseInt(getQueryVariable("offset") || "0") / 20;
+			topNavBar += "<span class='page-number'><span class='page-number-label'>Page</span> " + (offset + 1) + "</span>";
+
+			topNavBar += `<a href="" class="button nav-item-next disabled" title="Next page (accesskey: '[')" accesskey="["></a>`;
+			topNavBar += `<a href="" class="button nav-item-last disabled" title="Last page (accesskey: '[')" accesskey="["></a>`;
 			topNavBar += "</div>";
 			
 			let elementToInsertAfter = document.querySelector(".sublevel-nav") || document.querySelector(".archive-nav") || document.querySelector(".page-toolbar");
 			elementToInsertAfter.insertAdjacentHTML("afterend", topNavBar);
-			
-			let offset = parseInt(getQueryVariable("offset") || "0") / 20;
-			let nextOrPrevious = document.querySelector("#top-nav-bar .nav-item-next") || document.querySelector("#top-nav-bar .nav-item-prev");
-			nextOrPrevious.insertAdjacentHTML((nextOrPrevious.hasClass("nav-item-next") ? "beforebegin" : "afterend"), "<span class='page-number'><span class='page-number-label'>Page</span> " + (offset + 1) + "</span>");
+
+			bottomBar.querySelectorAll("a").forEach(function (link) {
+				let topNavBarAnalogue = document.querySelector("#top-nav-bar ." + link.parentElement.id);
+				if (topNavBarAnalogue) {
+					topNavBarAnalogue.href = link.getAttribute("href");
+					topNavBarAnalogue.removeClass("disabled");
+				}
+			});
 		}
 	})
 }

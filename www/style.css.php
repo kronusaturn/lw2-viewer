@@ -142,6 +142,10 @@ input {
 	text-align: center;
 	font-size: 1.25em;
 }
+#top-nav-bar a.disabled {
+	pointer-events: none;
+	visibility: hidden;
+}
 #bottom-bar .nav-item a::before,
 #top-nav-bar a::before {
 	font-family: Font Awesome;
@@ -170,6 +174,9 @@ input {
 	margin-left: -2em;
 	margin-right: 0;
 	left: 3.8em;
+}
+#top-nav-bar a.nav-item-last::before {
+	content: "\2002";
 }
 #top-nav-bar .page-number {
 	position: relative;
