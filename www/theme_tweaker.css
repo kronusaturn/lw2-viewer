@@ -139,7 +139,7 @@
 #theme-tweaker-ui .theme-selector {
 	position: absolute;
 	top: 19px;
-	left: 240px;
+	left: 225px;
 }
 #theme-tweaker-ui .theme-selector button {
 	width: 26px;
@@ -164,7 +164,7 @@
 #theme-tweaker-ui .text-size-adjust {
 	position: absolute;
 	top: 19px;
-	right: 12px;
+	right: 11px;
 }
 #theme-tweaker-ui .text-size-adjust .label {
 	position: relative;
@@ -179,6 +179,7 @@
 	width: 26px;
 	background-repeat: no-repeat;
 	background-position: center center;
+	background-size: 100%;
 }
 #theme-tweaker-ui .text-size-adjust .text-size-adjust-button.decrease {
 	background-image: url('data:image/gif;base64,R0lGODdhNAA0ANUAAAAAAAoKChIREhoZGiMhIygmKC4sLjAuMDs5O0A+QEVCRUpHSk9MT1JPUlpXWmBcYGtna29rb3FtcXVwdXp1en15fYF8gYaBho2HjY2IjZONk5aRlpiSmKOdo6ehp6ymrK+or7Oss7ewt7u0u////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAACUALAAAAAA0ADQAAAb6wJJwSCwaj8ikcslsOp/QqHRKrVqv2Kx2y+16v+CweEwum8/VD+UyQiMpAEPbbbQAEnM6UQIY5PUeAAAUAgAWekIdfSMOABGIJR8AAiENg4gcCpMhjQIVH24jAwAbQyKjpWgjBAAcQ6utbiGCGqajGnkjuru7W3wCGSCvGBCbJSMFgsrKrlkLl0aBlMejy8xajRNHkgIiQiAf4eLhf1QiFYILFhXs7BaaARNsYnDW9spyYnYCDv3+/w4Q3CnXhc8BgkTQyUGIJRAACbiUdMgg6JEXRQO8NWlksYuiaU0YOPoiLYSTB9AgqVzJsqXLlzBjypxJs6bNm1GCAAA7');
@@ -197,7 +198,7 @@
 	position: relative;
 	top: -6px;
 	border: 1px solid #000;
-	width: 10em;	
+	width: 11em;	
 	padding: 1px;
 	margin: 0 0 0 6px;
 }

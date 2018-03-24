@@ -626,7 +626,7 @@ function injectThemeTweaker() {
 		button.addActivateEvent(themeSelectButtonClicked);
 	});
 	
-	// TODO: Make this dynamically get the font…
+	// TODO: Make this dynamically get the font and size...
 	document.querySelector("#theme-tweaker-ui .text-size-adjust .sample-text").style.fontFamily = "Charter";
 	document.querySelectorAll("#theme-tweaker-ui .text-size-adjust button").forEach(function (button) {
 		button.addActivateEvent(themeTweakerTextSizeAdjustButtonClicked);

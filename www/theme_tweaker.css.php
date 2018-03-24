@@ -139,7 +139,7 @@
 #theme-tweaker-ui .theme-selector {
 	position: absolute;
 	top: 19px;
-	left: 240px;
+	left: 225px;
 }
 #theme-tweaker-ui .theme-selector button {
 	width: 26px;
@@ -164,7 +164,7 @@
 #theme-tweaker-ui .text-size-adjust {
 	position: absolute;
 	top: 19px;
-	right: 12px;
+	right: 11px;
 }
 #theme-tweaker-ui .text-size-adjust .label {
 	position: relative;
@@ -179,6 +179,7 @@
 	width: 26px;
 	background-repeat: no-repeat;
 	background-position: center center;
+	background-size: 100%;
 }
 #theme-tweaker-ui .text-size-adjust .text-size-adjust-button.decrease {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("A_minus.gif")) ?>');
@@ -197,7 +198,7 @@
 	position: relative;
 	top: -6px;
 	border: 1px solid #000;
-	width: 10em;	
+	width: 11em;	
 	padding: 1px;
 	margin: 0 0 0 6px;
 }
