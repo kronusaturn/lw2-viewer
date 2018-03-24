@@ -1052,8 +1052,21 @@ function initialize() {
 					let offset = parseInt(/offset=([0-9]+)/.exec(link.href)[1]) / 20;
 					topNavBar += "<span>Page " + offset + "</span>";
 				}
-				if (link.getAttribute("href") != "#top")
-					topNavBar += "<a href='" + link.getAttribute("href") + "' class='button " + link.parentElement.id + "' title='" + link.textContent + "'></a>";
+				if (link.getAttribute("href") != "#top") {
+					var accessKey;
+					switch (link.parentElement.id) {
+						case "nav-item-next":
+							accessKey = ']';
+							break;
+						case "nav-item-prev":
+							accessKey = '[';
+							break;
+						case "nav-item-first":
+							accessKey = '\\';
+							break;
+					}
+					topNavBar += `<a href="${link.getAttribute('href')}" class="button ${link.parentElement.id}" title="${link.textContent} (accesskey: '${accessKey}')" accesskey="${accessKey}"></a>`;
+				}
 			});
 			topNavBar += "</div>";
 			
