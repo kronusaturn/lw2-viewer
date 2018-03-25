@@ -1,7 +1,8 @@
-(defpackage #:lw2.lmdb
+(uiop:define-package #:lw2.lmdb
   (:use #:cl #:sb-thread #:lw2-viewer.config)
   (:import-from #:flexi-streams #:string-to-octets #:octets-to-string) 
-  (:export #:with-cache-mutex #:with-db #:lmdb-clear-db #:lmdb-put-string #:cache-put #:cache-get #:simple-cacheable #:define-lmdb-memoized))
+  (:export #:with-cache-mutex #:with-db #:lmdb-put-string #:cache-put #:cache-get #:simple-cacheable #:define-lmdb-memoized)
+  (:unintern #:lmdb-clear-db))
 
 (in-package #:lw2.lmdb) 
 
@@ -38,10 +39,6 @@
 						      (setf ,txn nil)))
 						  (lmdb:close-database ,db)))) 
 					    (when ,txn (lmdb:abort-transaction ,txn)))))))
-
-(defun lmdb-clear-db (db)
-  (lmdb:do-pairs (db key value)
-		 (lmdb:del db key nil)))
 
 (defun lmdb-put-string (db key value)
   (if 
@@ -108,7 +105,7 @@
 			  `(progn
 			     (unless (equalp ,now-hash (with-db (db ,db-name) (lmdb:get db ,version-octets)))
 			       (with-db (db ,db-name)
-					(lmdb-clear-db db)
+					(lmdb:drop-database db :delete 0)
 					(lmdb:put db ,version-octets ,now-hash)))
 			     (defun ,name (&rest args)
 			       (labels ((real-fn ,lambda ,@body))
