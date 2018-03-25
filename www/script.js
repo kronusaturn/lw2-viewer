@@ -305,7 +305,7 @@ function getCurrentVisibleComment() {
 	let px = window.innerWidth/2, py = window.innerHeight/10;
 	let ci = document.elementFromPoint(px, py).closest(".comment-item") || document.elementFromPoint(px, py+60).closest(".comment-item"); // Mind the gap between threads
 	let atbottom = document.querySelector("#comments").getBoundingClientRect().bottom < window.innerHeight;
-	if(atbottom) {
+	if (atbottom) {
 		let hashci = location.hash && document.querySelector(location.hash);
 		if(hashci && /comment-item/.test(hashci.className) && hashci.getBoundingClientRect().top > 0) {
 			ci = hashci;
@@ -1032,6 +1032,7 @@ function initialize() {
 		// Clean up ToC
 		document.querySelectorAll(".contents-list li a").forEach(function (a) {
 			a.innerText = a.innerText.replace(/^[0-9]+\. /, '');
+			a.innerText = a.innerText.replace(/^[0-9]+: /, '');
 			a.innerText = a.innerText.replace(/^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})\. /i, '');
 			a.innerText = a.innerText.replace(/^[A-Z]\. /, '');
 		});
