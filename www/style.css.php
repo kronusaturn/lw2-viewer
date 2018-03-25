@@ -77,6 +77,10 @@ input {
 	top: 1px;
 }
 
+.mjx-chtml {
+	clear: both;
+}
+
 /***********/
 /* NAV BAR */
 /***********/
