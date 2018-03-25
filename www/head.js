@@ -50,6 +50,9 @@ function setContentWidth(widthString) {
 		}
 		#theme-tweaker-toggle {
 			left: calc((100% - ${widthString}) / 2 - 75px);
+		}
+		#text-size-adjustment-ui {
+			right: calc((100% - ${widthString}) / 2 - 85px)
 		}`;
 }
 setContentWidth(window.localStorage.getItem('selected-width'));
