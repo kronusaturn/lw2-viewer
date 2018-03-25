@@ -181,7 +181,8 @@
 					   (let ((header-level (parse-integer (subseq (plump:tag-name node) 1))))
 					     (setf min-header-level (min min-header-level header-level)) 
 					     (push (list header-level
-							 (plump:text node)
+							 (with-output-to-string (stream)
+							   (plump:traverse node (lambda (n) (typecase n (plump:text-node (when (text-node-is-not n "style" "script") (write-string (plump:text n) stream)))))))
 							 (plump:attribute node "id"))
 						   contents)))))
 				     (when (tag-is node "style")
