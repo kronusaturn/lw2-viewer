@@ -1080,14 +1080,14 @@ function initialize() {
 		let bottomBar = document.querySelector("#bottom-bar");
 		if (bottomBar && (bottomBar.querySelector("#nav-item-next") != null || bottomBar.querySelector("#nav-item-prev") != null)) {
 			let topNavBar = "<div id='top-nav-bar'>";
-			topNavBar += `<a href="" class="button nav-item-first disabled" title="First page (accesskey: '\\')" accesskey="\\"></a>`;
-			topNavBar += `<a href="" class="button nav-item-prev disabled" title="Previous page (accesskey: '[')" accesskey="["></a>`;
+			topNavBar += `<a href="#" class="button nav-item-first disabled" title="First page (accesskey: '\\')" accesskey="\\"></a>`;
+			topNavBar += `<a href="#" class="button nav-item-prev disabled" title="Previous page (accesskey: '[')" accesskey="["></a>`;
 
 			let offset = parseInt(getQueryVariable("offset") || "0") / 20;
 			topNavBar += "<span class='page-number'><span class='page-number-label'>Page</span> " + (offset + 1) + "</span>";
 
-			topNavBar += `<a href="" class="button nav-item-next disabled" title="Next page (accesskey: ']')" accesskey="]"></a>`;
-			topNavBar += `<a href="" class="button nav-item-last disabled" title="Last page (accesskey: '=')" accesskey="="></a>`;
+			topNavBar += `<a href="#" class="button nav-item-next disabled" title="Next page (accesskey: ']')" accesskey="]"></a>`;
+			topNavBar += `<a href="#" class="button nav-item-last disabled" title="Last page (accesskey: '=')" accesskey="="></a>`;
 			topNavBar += "</div>";
 			
 			let elementToInsertAfter = document.querySelector(".sublevel-nav") || document.querySelector(".archive-nav") || document.querySelector(".page-toolbar");

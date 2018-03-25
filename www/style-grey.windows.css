@@ -148,10 +148,16 @@ input {
 	width: 100%;
 }
 #top-nav-bar {
-	margin: 1em 0 -1.5em 0;
+	margin: 0.5em 0 -1.5em 0;
 	padding: 0.75em 0 0 0;
 	text-align: center;
 	font-size: 1.25em;
+}
+.sublevel-nav + #top-nav-bar {
+	margin-top: 0.25em;
+}
+.archive-nav + #top-nav-bar {
+	margin-top: 1em;
 }
 #top-nav-bar a.disabled {
 	pointer-events: none;
@@ -775,7 +781,7 @@ h1.listing a[href^="http"] {
 
 .user-page .sublevel-nav {
 	text-align: center;
-	margin: 0 0 24px 0;
+	margin: 0;
 }
 .user-page .sublevel-nav:nth-last-child(2)::after {
 	content: "No entries.";
