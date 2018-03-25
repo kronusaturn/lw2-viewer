@@ -1,5 +1,5 @@
 (defpackage #:lw2.clean-html
-  (:use #:cl #:lw2.lmdb #:lw2.links)
+  (:use #:cl #:split-sequence #:lw2.lmdb #:lw2.links)
   (:export #:clean-text #:clean-html))
 
 (in-package #:lw2.clean-html)
@@ -68,13 +68,24 @@
 			       (let ((child (plump:first-child node))) 
 				 (and 
 				   (typep child 'plump:element)
-				   (apply #'tag-is (cons child args)))))) 
+				   (apply #'tag-is (cons child args))))))
+	   (class-is-not (node &rest args)
+			 (declare (type plump:node node)
+				  (dynamic-extent args))
+			 (or
+			   (typep node 'plump:root)
+			   (and (not (intersection (split-sequence #\Space (or (plump:attribute node "class") "")) args :test #'string=))
+				(or (null (plump:parent node)) (apply #'class-is-not (cons (plump:parent node) args))))))
 	   (text-node-is-not (node &rest args)
 			     (declare (type plump:node node) 
 				      (dynamic-extent args)) 
 			     (or
 			       (typep (plump:parent node) 'plump:root)
-			       (every (lambda (x) (string/= (plump:tag-name (plump:parent node)) x)) args))) 
+			       (every (lambda (x) (string/= (plump:tag-name (plump:parent node)) x)) args)))
+	   (text-class-is-not (node &rest args)
+			      (declare (type plump:node node)
+				       (dynamic-extent args))
+			      (apply #'class-is-not (cons (plump:parent node) args)))
 	   (string-is-whitespace (string)
 				 (every (lambda (c) (cl-unicode:has-binary-property c "White_Space")) string))
 	   (scan-for-urls (text-node)
@@ -129,7 +140,8 @@
 				   (plump:text-node 
 				     (when (text-node-is-not node "a" "style" "pre")
 				       (scan-for-urls node))
-				     (when (text-node-is-not node "style" "pre" "code")
+				     (when (and (text-node-is-not node "style" "pre" "code")
+						(text-class-is-not node "mjx-math"))
 				       (setf (plump:text node) (clean-text (plump:text node)))))
 				   (plump:element
 				     (alexandria:when-let (style (plump:attribute node "style"))
