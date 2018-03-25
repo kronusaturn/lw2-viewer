@@ -232,6 +232,17 @@
 	text-align: center;
 	vertical-align: middle;
 }
+/* This doesn't work in Mozilla browsers, so hide it */
+@-moz-document url-prefix() {
+	#theme-tweaker-ui #theme-tweak-section-text-size-adjust {
+		height: 0;
+		overflow: hidden;
+		padding: 0;
+		border: 0;
+		margin: 0 0 -16px 0;
+		visibility: hidden;
+	}
+}
 
 #theme-tweaker-ui div.section#theme-tweak-section-invert {
 	padding: 23px 10px 15px 10px;
@@ -259,6 +270,7 @@
 	height: 1rem;
 	position: absolute;
 	left: 0.25em;
+	top: 5px;
 	background-color: #fff8ff;
 	box-shadow:
 		-1px -1px 0 #dfd8df inset,

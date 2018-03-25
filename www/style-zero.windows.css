@@ -612,6 +612,12 @@ input {
 	text-shadow: none;
 	cursor: default;
 }
+/* This doesn't work in Mozilla browsers, so hide it */
+@-moz-document url-prefix() {
+	#text-size-adjustment-ui {
+		display: none;
+	}
+}
 
 /************/
 /* ARCHIVES */
