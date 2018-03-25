@@ -816,6 +816,10 @@ function themeTweakerTextSizeAdjustButtonClicked(event) {
 	}	
 	setTextZoom(zoomFactor);
 	window.currentTextZoom = `${zoomFactor}`;
+	
+	if (event.target.parentElement.id == "text-size-adjustment-ui") {
+		window.localStorage.setItem("text-zoom", window.currentTextZoom);
+	}
 }
 function updateThemeTweakerTextSizeAdjustSampleText() {
 	let bodyTextElement = document.querySelector(".post-body") || document.querySelector(".comment-body");
@@ -861,6 +865,22 @@ function injectNewCommentNavUI(newCommentsCount) {
 
 		document.addEventListener("keyup", function(e) { if(e.key == ",") scrollToNewComment(false); if(e.key == ".") scrollToNewComment(true)});
 	}
+}
+
+/***************************/
+/* TEXT SIZE ADJUSTMENT UI */
+/***************************/
+
+function injectTextSizeAdjustmentUI() {
+	let textSizeAdjustmentUIContaner = addUIElement("<div id='text-size-adjustment-ui'>"
+	+ `<button type='button' class='text-size-adjust decrease' title='Decrease text size' tabindex='-1'>&#xf068;</button>`
+	+ `<button type='button' class='text-size-adjust default' title='Reset to default text size' tabindex='-1'>A</button>`
+	+ `<button type='button' class='text-size-adjust increase' title='Increase text size' tabindex='-1'>&#xf067;</button>`
+	+ "</div>");
+	
+	document.querySelectorAll("#text-size-adjustment-ui button").forEach(function (button) {
+		button.addActivateEvent(themeTweakerTextSizeAdjustButtonClicked);
+	});
 }
 
 /*****************************/
@@ -1045,6 +1065,8 @@ function initialize() {
 		injectThemeTweaker();
 		// Add the quick-nav UI.
 		injectQuickNavUI();
+		// Add the text size adjustment widget.
+		injectTextSizeAdjustmentUI();
 
 		// Call pageLayoutFinished() once all activity that can affect the page layout has finished.
 		document.addEventListener("readystatechange", pageLayoutFinished);

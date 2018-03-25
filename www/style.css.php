@@ -565,6 +565,36 @@ input {
 	cursor: auto;
 }
 
+/************************/
+/* TEXT SIZE ADJUSTMENT */
+/************************/
+
+#text-size-adjustment-ui {
+	position: fixed;
+	top: 30px;
+	right: calc((100vw - 900px) / 2 - 85px);
+	opacity: 0.4;
+}
+#text-size-adjustment-ui:hover {
+	opacity: 1.0;
+}
+#text-size-adjustment-ui button {
+	font-weight: 900;
+	font-family: Font Awesome;
+	font-size: 0.75rem;
+	color: #777;
+	width: 24px;
+	height: 24px;
+	padding: 0;
+}
+#text-size-adjustment-ui button.default {
+	font-family: inherit;
+	font-size: 1.125rem;
+	font-weight: 600;
+	position: relative;
+	top: 1px;
+}
+
 /************/
 /* ARCHIVES */
 /************/
