@@ -881,6 +881,10 @@ function injectTextSizeAdjustmentUI() {
 	document.querySelectorAll("#text-size-adjustment-ui button").forEach(function (button) {
 		button.addActivateEvent(themeTweakerTextSizeAdjustButtonClicked);
 	});
+	
+	if (!(document.querySelector(".post-body") || document.querySelector(".comment-body"))) {
+		document.querySelector("#text-size-adjustment-ui").style.display = "none";	
+	}
 }
 
 /*****************************/
