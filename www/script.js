@@ -808,9 +808,9 @@ function themeTweakerTextSizeAdjustButtonClicked(event) {
 	var zoomFactor = parseFloat(window.currentTextZoom) || 1.0;
 	console.log("Zoom factor is " + zoomFactor);
 	if (event.target.hasClass("decrease")) {
-		zoomFactor = Math.max(zoomFactor - 0.1, 0.5).toFixed(1);
+		zoomFactor = (zoomFactor - 0.05).toFixed(2);
 	} else if (event.target.hasClass("increase")) {
-		zoomFactor = Math.min(zoomFactor + 0.1, 2.0).toFixed(1);
+		zoomFactor = (zoomFactor + 0.05).toFixed(2);
 	} else {
 		zoomFactor = 1.0;
 	}	
@@ -873,9 +873,9 @@ function injectNewCommentNavUI(newCommentsCount) {
 
 function injectTextSizeAdjustmentUI() {
 	let textSizeAdjustmentUIContaner = addUIElement("<div id='text-size-adjustment-ui'>"
-	+ `<button type='button' class='text-size-adjust decrease' title='Decrease text size' tabindex='-1'>&#xf068;</button>`
-	+ `<button type='button' class='text-size-adjust default' title='Reset to default text size' tabindex='-1'>A</button>`
-	+ `<button type='button' class='text-size-adjust increase' title='Increase text size' tabindex='-1'>&#xf067;</button>`
+	+ `<button type='button' class='text-size-adjust-button decrease' title='Decrease text size' tabindex='-1'>&#xf068;</button>`
+	+ `<button type='button' class='text-size-adjust-button default' title='Reset to default text size' tabindex='-1'>A</button>`
+	+ `<button type='button' class='text-size-adjust-button increase' title='Increase text size' tabindex='-1'>&#xf067;</button>`
 	+ "</div>");
 	
 	document.querySelectorAll("#text-size-adjustment-ui button").forEach(function (button) {

@@ -605,6 +605,13 @@ input {
 	position: relative;
 	top: 1px;
 }
+#text-size-adjustment-ui button:disabled {
+	opacity: 0.5;
+}
+#text-size-adjustment-ui button:disabled:hover {
+	text-shadow: none;
+	cursor: default;
+}
 
 /************/
 /* ARCHIVES */

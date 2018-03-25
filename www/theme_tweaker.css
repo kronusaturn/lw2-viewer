@@ -206,6 +206,10 @@
 #theme-tweaker-ui #theme-tweak-section-text-size-adjust .text-size-adjust-button.increase {
 	background-image: url('data:image/gif;base64,R0lGODdhNAA0ANUAAAAAABIREhsaGyMhIygmKC4sLjg2ODs5O0A+QEZDRk9MT1JPUlpWWl5aXmBdYGVhZWpmam9rb3FtcXVxdXp2en14fYB7gIaBhoyHjI2IjZOOk5iSmKOdo6ehp6ymrK6orrOss7ewt7u0u////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAACQALAAAAAA0ADQAAAb/QJJwSCwaj8ikcslsOp/QqHRKrVqv2Kx2y+16v+CweJwUXSoZMjMkABREaqVoAEDA48h5/Y4vikABAAIifH0kHQCCGokBIIZCHIkUJAwAjY8kkQARJAqWjk8aBgccVx6JnJ4CIVAUiRtVHRUJkiQNiQ8UoEwWr1WuABpFwMJNvQCwVMfJQ8tOzsq+RNC80lGEEonFQ8AYhUOE4SIT2iTi30iVABMYu0IeGLfrRYiJ9vf4l0uqrEinm0U04RvIyB2SBZ+SaOJEBASDhw8dtAFAwAFEBg3QGUEYoN+RehOqIYNipkIgABAqqFyp0oI8AhbSJKHWhA3Bm/fezLTWRA9OWpx2do58okeAh6NIkyL9wCFQUCQ0l/wJpJOJiDaDNJIg5qReAA3MmGjIUPCIhwsXDCqsJaWSvisLp3BUOyWuFE9vrdSbJMWBILqYAgseTLiw4cOIEytezJhEEAA7');
 }
+#theme-tweaker-ui #theme-tweak-section-text-size-adjust .text-size-adjust-button:disabled {
+	cursor: default;
+	opacity: 0.5;
+}
 #theme-tweaker-ui #theme-tweak-section-text-size-adjust .sample-text-container {
 	display: table;
 	background-color: #fff8ff;

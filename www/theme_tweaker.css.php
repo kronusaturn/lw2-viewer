@@ -206,6 +206,10 @@
 #theme-tweaker-ui #theme-tweak-section-text-size-adjust .text-size-adjust-button.increase {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("A_plus.gif")) ?>');
 }
+#theme-tweaker-ui #theme-tweak-section-text-size-adjust .text-size-adjust-button:disabled {
+	cursor: default;
+	opacity: 0.5;
+}
 #theme-tweaker-ui #theme-tweak-section-text-size-adjust .sample-text-container {
 	display: table;
 	background-color: #fff8ff;

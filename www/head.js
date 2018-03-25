@@ -84,11 +84,33 @@ applyFilters(window.currentFilters);
 document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='text-zoom'></style>");
 function setTextZoom(zoomFactor) {
 	if (!zoomFactor) return;
+
+	let minZoomFactor = 0.5;
+	let maxZoomFactor = 1.5;
+	
+	if (zoomFactor <= minZoomFactor) {
+		zoomFactor = minZoomFactor;
+		document.querySelectorAll(".text-size-adjust-button.decrease").forEach(function (button) {
+			button.disabled = true;
+		});
+	} else if (zoomFactor >= maxZoomFactor) {
+		zoomFactor = maxZoomFactor;
+		document.querySelectorAll(".text-size-adjust-button.increase").forEach(function (button) {
+			button.disabled = true;
+		});
+	} else {
+		document.querySelectorAll(".text-size-adjust-button").forEach(function (button) {
+			button.disabled = false;
+		});
+	}
+
 	let textZoomStyle = document.querySelector("#text-zoom");
 	textZoomStyle.innerHTML = 
 		`.post-body, .comment-body, #theme-tweaker-ui #theme-tweak-section-text-size-adjust .sample-text {
 			zoom: ${zoomFactor};
 		}`;
+
+
 }
 window.currentTextZoom = window.localStorage.getItem('text-zoom');
 setTextZoom(window.currentTextZoom);
