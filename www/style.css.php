@@ -572,7 +572,7 @@ input {
 #text-size-adjustment-ui {
 	position: fixed;
 	top: 30px;
-	right: calc((100% - 900px) / 2 - 85px);
+	right: calc((100% - 900px) / 2 - 78px);
 	opacity: 0.4;
 }
 #text-size-adjustment-ui:hover {
