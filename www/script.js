@@ -33,8 +33,8 @@ Element.prototype.hasClass = function(className) {
 /*******************************/
 
 Element.prototype.addActivateEvent = function(func, includeMouseDown) {
-	let ael = this.activateEventListener = function(e) { if(e.button === 0 || e.key === ' ') func(e) };
-	if(includeMouseDown) this.addEventListener("mousedown", ael);
+	let ael = this.activateEventListener = function(e) { if (e.button === 0 || e.key === ' ') func(e) };
+	if (includeMouseDown) this.addEventListener("mousedown", ael);
 	this.addEventListener("mouseup", ael);
 	this.addEventListener("keyup", ael);
 }
@@ -854,9 +854,9 @@ function injectQuickNavUI() {
 
 function injectNewCommentNavUI(newCommentsCount) {
 	let newCommentUIContainer = addUIElement("<div id='new-comment-nav-ui'>" + 
-	`<button type='button' class='new-comment-sequential-nav-button new-comment-previous' title='Previous new comment [,]' tabindex='-1' accesskey=',' disabled>&#xf0d8;</button>
+	`<button type='button' class='new-comment-sequential-nav-button new-comment-previous' title='Previous new comment [,]' tabindex='-1' disabled>&#xf0d8;</button>
 	<span class='new-comments-count' title='${newCommentsCount} new comments'>${newCommentsCount}</span>
-	<button type='button' class='new-comment-sequential-nav-button new-comment-next' title='Next new comment [.]' tabindex='-1' accesskey='.'${(newCommentsCount == 0 ? " disabled" : "")}>&#xf0d7;</button>`
+	<button type='button' class='new-comment-sequential-nav-button new-comment-next' title='Next new comment [.]' tabindex='-1'${(newCommentsCount == 0 ? " disabled" : "")}>&#xf0d7;</button>`
 	+ "</div>");
 	
 	if (newCommentsCount > 0) {
@@ -873,13 +873,15 @@ function injectNewCommentNavUI(newCommentsCount) {
 
 function injectTextSizeAdjustmentUI() {
 	let textSizeAdjustmentUIContaner = addUIElement("<div id='text-size-adjustment-ui'>"
-	+ `<button type='button' class='text-size-adjust-button decrease' title='Decrease text size' tabindex='-1'>&#xf068;</button>`
-	+ `<button type='button' class='text-size-adjust-button default' title='Reset to default text size' tabindex='-1'>A</button>`
-	+ `<button type='button' class='text-size-adjust-button increase' title='Increase text size' tabindex='-1'>&#xf067;</button>`
+	+ `<button type='button' class='text-size-adjust-button decrease' title="Decrease text size (accesskey: '-')" tabindex='-1' accesskey='-'>&#xf068;</button>`
+	+ `<button type='button' class='text-size-adjust-button default' title="Reset to default text size (accesskey: '0')" tabindex='-1' accesskey='0'>A</button>`
+	+ `<button type='button' class='text-size-adjust-button increase' title="Increase text size (accesskey: '=')" tabindex='-1' accesskey='='>&#xf067;</button>`
 	+ "</div>");
 	
 	document.querySelectorAll("#text-size-adjustment-ui button").forEach(function (button) {
-		button.addActivateEvent(themeTweakerTextSizeAdjustButtonClicked);
+		// Using addEventListener directly because addActivateEvent doesn't work with 
+		// accesskeys, and we don't need the keydown event because tabindex is -1.
+		button.addEventListener("click", themeTweakerTextSizeAdjustButtonClicked);
 	});
 	
 	if (!(document.querySelector(".post-body") || document.querySelector(".comment-body"))) {
@@ -1120,7 +1122,7 @@ function initialize() {
 			topNavBar += "<span class='page-number'><span class='page-number-label'>Page</span> " + (offset + 1) + "</span>";
 
 			topNavBar += `<a href="#" class="button nav-item-next disabled" title="Next page (accesskey: ']')" accesskey="]"></a>`;
-			topNavBar += `<a href="#" class="button nav-item-last disabled" title="Last page (accesskey: '=')" accesskey="="></a>`;
+			topNavBar += `<a href="#" class="button nav-item-last disabled" title="Last page (accesskey: )"></a>`;
 			topNavBar += "</div>";
 			
 			let elementToInsertAfter = document.querySelector(".sublevel-nav") || document.querySelector(".archive-nav") || document.querySelector(".page-toolbar");
