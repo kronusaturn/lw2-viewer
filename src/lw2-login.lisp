@@ -2,6 +2,7 @@
   (:use #:cl #:lw2-viewer.config #:alexandria #:cl-json #:flexi-streams #:websocket-driver-client)
   (:import-from #:ironclad #:byte-array-to-hex-string #:digest-sequence)
   (:export #:do-lw2-login #:do-lw2-create-user #:do-lw2-forgot-password #:do-lw2-reset-password
+	   #:do-lw2-post-query #:do-lw2-post-query*
            #:do-lw2-post #:do-lw2-post-edit #:do-lw2-post-remove #:do-lw2-comment #:do-lw2-comment-edit #:do-lw2-comment-remove #:do-lw2-vote))
 
 (in-package #:lw2.login) 
