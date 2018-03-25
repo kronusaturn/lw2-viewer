@@ -3242,6 +3242,9 @@ h6 strong {
 		0 0 0 5px #888 inset;
 	text-decoration: none;
 }
+.theme-selector button:hover {
+	text-decoration: none;
+}
 #width-selector button {
 	box-shadow:
 		0 0 0 4px #888 inset,

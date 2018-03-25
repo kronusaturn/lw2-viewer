@@ -529,18 +529,17 @@ function injectThemeTweaker() {
 		<h1>Customize appearance</h1>
 		<button type='button' class='minimize-button minimize' tabindex='-1'></button>
 		<button type='button' class='help-button' tabindex='-1'></button>
-		<p class='text-size-adjust'>
-			<span class='label'>Text size:</span>
-			<button type='button' class='text-size-adjust-button decrease' title='Decrease text size' tabindex='-1'></button>
-			<button type='button' class='text-size-adjust-button default' title='Reset to default text size' tabindex='-1'></button>
-			<button type='button' class='text-size-adjust-button increase' title='Increase text size' tabindex='-1'></button>
-			<span class='sample-text-container'><span class='sample-text'>Less Wrong</span></span>
-		</p>
 		<p class='current-theme'>Current theme: <span>` + 
 		(window.localStorage.getItem("selected-theme") || "default") + 
 		`</span></p>
 		<p class='theme-selector'></p>
 		<div class='controls-container'>
+			<div id='theme-tweak-section-text-size-adjust' class='section' data-label='Text size'>
+				<div class='sample-text-container'><span class='sample-text'>Less Wrong</span></div>
+				<button type='button' class='text-size-adjust-button decrease' title='Decrease text size' tabindex='-1'></button>
+				<button type='button' class='text-size-adjust-button default' title='Reset to default text size' tabindex='-1'></button>
+				<button type='button' class='text-size-adjust-button increase' title='Increase text size' tabindex='-1'></button>
+			</div>
 			<div id='theme-tweak-section-invert' class='section' data-label='Invert (photo-negative)'>
 				<input type='checkbox' id='theme-tweak-control-invert'></input>
 				<label for='theme-tweak-control-invert'>Invert colors</label>
@@ -626,9 +625,7 @@ function injectThemeTweaker() {
 		button.addActivateEvent(themeSelectButtonClicked);
 	});
 	
-	// TODO: Make this dynamically get the font and size...
-	document.querySelector("#theme-tweaker-ui .text-size-adjust .sample-text").style.fontFamily = "Charter";
-	document.querySelectorAll("#theme-tweaker-ui .text-size-adjust button").forEach(function (button) {
+	document.querySelectorAll("#theme-tweaker-ui #theme-tweak-section-text-size-adjust button").forEach(function (button) {
 		button.addActivateEvent(themeTweakerTextSizeAdjustButtonClicked);
 	});
 }
@@ -644,6 +641,8 @@ function toggleThemeTweakerUI() {
 		window.currentTheme = (window.localStorage.getItem("selected-theme") || "default");
 		// Focus invert checkbox.
 		document.querySelector("#theme-tweaker-ui #theme-tweak-control-invert").focus();
+		// Show sample text in appropriate font.
+		updateThemeTweakerTextSizeAdjustSampleText();
 	}
 	// Set theme tweaker assistant visibility.
 	document.querySelector(".clippy-container").style.display = JSON.parse(window.localStorage.getItem("theme-tweaker-settings") || '{ "showClippy": true }')["showClippy"] ? "block" : "none";
@@ -817,6 +816,13 @@ function themeTweakerTextSizeAdjustButtonClicked(event) {
 	}	
 	setTextZoom(zoomFactor);
 	window.currentTextZoom = `${zoomFactor}`;
+}
+function updateThemeTweakerTextSizeAdjustSampleText() {
+	let bodyTextElement = document.querySelector(".post-body") || document.querySelector(".comment-body");
+	let sampleText = document.querySelector("#theme-tweaker-ui #theme-tweak-section-text-size-adjust .sample-text");
+	sampleText.style.fontFamily = bodyTextElement ? window.getComputedStyle(bodyTextElement).fontFamily : "MS Sans Serif";
+	sampleText.style.fontSize = bodyTextElement ? window.getComputedStyle(bodyTextElement).fontSize : "1rem";
+	sampleText.style.fontWeight = bodyTextElement ? window.getComputedStyle(bodyTextElement).fontWeight : "normal";
 }
 
 /*********************/

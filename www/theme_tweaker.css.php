@@ -161,54 +161,6 @@
 		0 0 0 2px #fff8ff;
 }
 
-#theme-tweaker-ui .text-size-adjust {
-	position: absolute;
-	top: 19px;
-	right: 11px;
-}
-#theme-tweaker-ui .text-size-adjust .label {
-	position: relative;
-	display: inline-block;
-	top: -6px;
-	margin: 0 3px 0 0;
-}
-#theme-tweaker-ui .text-size-adjust button {
-	margin: 6px 3px;
-	padding: 0;
-	height: 26px;
-	width: 26px;
-	background-repeat: no-repeat;
-	background-position: center center;
-	background-size: 100%;
-}
-#theme-tweaker-ui .text-size-adjust .text-size-adjust-button.decrease {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("A_minus.gif")) ?>');
-}
-#theme-tweaker-ui .text-size-adjust .text-size-adjust-button.default {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("A.gif")) ?>');
-}
-#theme-tweaker-ui .text-size-adjust .text-size-adjust-button.increase {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("A_plus.gif")) ?>');
-}
-#theme-tweaker-ui .text-size-adjust .sample-text-container {
-	display: inline-table;
-	background-color: #fff;
-	height: 49px;
-	vertical-align: top;
-	position: relative;
-	top: -6px;
-	border: 1px solid #000;
-	width: 11em;	
-	padding: 1px;
-	margin: 0 0 0 6px;
-}
-#theme-tweaker-ui .text-size-adjust .sample-text {
-	display: table-cell;
-	width: 100%;
-	text-align: center;
-	vertical-align: middle;
-}
-
 #theme-tweaker-ui div.section {
 	border: 1px solid #7f787f;
 	box-shadow:
@@ -232,6 +184,51 @@
 	left: 1em;
 	padding: 0 4px;
 }
+
+#theme-tweaker-ui #theme-tweak-section-text-size-adjust {
+	text-align: center;
+}
+#theme-tweaker-ui #theme-tweak-section-text-size-adjust button {
+	margin: 6px 3px;
+	padding: 0;
+	height: 26px;
+	width: 26px;
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: 100%;
+}
+#theme-tweaker-ui #theme-tweak-section-text-size-adjust .text-size-adjust-button.decrease {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("A_minus.gif")) ?>');
+}
+#theme-tweaker-ui #theme-tweak-section-text-size-adjust .text-size-adjust-button.default {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("A.gif")) ?>');
+}
+#theme-tweaker-ui #theme-tweak-section-text-size-adjust .text-size-adjust-button.increase {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("A_plus.gif")) ?>');
+}
+#theme-tweaker-ui #theme-tweak-section-text-size-adjust .sample-text-container {
+	display: table;
+	background-color: #fff8ff;
+	box-shadow:
+		-1px -1px 0 #dfd8df inset,
+		1px 1px 0 #030303 inset,
+		0 -1px 0 #7f787f,
+		-1px 0 0 #7f787f,
+		-1px -1px 0 #7f787f,
+		0 0 0 1px #fff8ff;
+	cursor: pointer;
+	height: 60px;
+	width: 15em;	
+	padding: 1px;
+	margin: 0 auto 0.5em auto;
+}
+#theme-tweaker-ui #theme-tweak-section-text-size-adjust .sample-text {
+	display: table-cell;
+	width: 100%;
+	text-align: center;
+	vertical-align: middle;
+}
+
 #theme-tweaker-ui div.section#theme-tweak-section-invert {
 	padding: 23px 10px 15px 10px;
 }
