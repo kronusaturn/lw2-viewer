@@ -2401,7 +2401,7 @@ ol {
 #content.about-page img {
 	border: 1px solid #000;
 }
-#content.about-page h3 {
+#content.about-page h3:nth-of-type(n+2) {
 	clear: both;
 }
 
