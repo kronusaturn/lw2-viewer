@@ -431,10 +431,12 @@ function injectContentWidthSelector() {
 function setWidthAdjustButtonsAccesskey() {
 	document.querySelectorAll("#width-selector button").forEach(function (button) {
 		button.accessKey = "";
+		button.title = /(.+?)( \(accesskey: '''\))?$/.exec(button.title)[1];
 	});
 	let selectedButton = document.querySelector("#width-selector button.selected");
 	let nextButtonInCycle = (selectedButton == selectedButton.parentElement.lastChild) ? selectedButton.parentElement.firstChild : selectedButton.nextSibling;
 	nextButtonInCycle.accessKey = "'";
+	nextButtonInCycle.title += ` (accesskey: '\'')`;
 }
 function widthAdjustButtonClicked(event) {
 	let selectedWidth = event.target.getAttribute("data-width");
@@ -510,7 +512,7 @@ function injectThemeSelector() {
 			let selected = (name == currentTheme ? ' selected' : '');
 			let disabled = (name == currentTheme ? ' disabled' : '');
 			let accesskey = letter.charCodeAt(0) - 'A'.charCodeAt(0) + 1;
-			return `<button type='button' class='select-theme-${name}${selected}'${disabled} title='${desc}' accesskey='${accesskey}' tabindex='-1'>${letter}</button>`;})) +
+			return `<button type='button' class='select-theme-${name}${selected}'${disabled} title="${desc} (accesskey: '${accesskey}')" accesskey='${accesskey}' tabindex='-1'>${letter}</button>`;})) +
 		"</div>");
 	themeSelector.querySelectorAll("button").forEach(function (button) {
 		button.addActivateEvent(themeSelectButtonClicked);
@@ -541,7 +543,7 @@ function setSelectedTheme(themeName) {
 /********************************************/
 
 function injectThemeTweaker() {
-	let themeTweakerToggle = addUIElement("<div id='theme-tweaker-toggle'><button type='button' tabindex='-1' title='Customize appearance (accesskey: \';\')' accesskey=';'>&#xf1de;</button></div>");
+	let themeTweakerToggle = addUIElement(`<div id='theme-tweaker-toggle'><button type='button' tabindex='-1' title="Customize appearance (accesskey: ';')" accesskey=';'>&#xf1de;</button></div>`);
 	themeTweakerToggle.querySelector("button").addActivateEvent(themeTweakerToggleButtonClicked);
 	
 	let themeTweakerUI = addUIElement("<div id='theme-tweaker-ui' style='display: none;'>" + 
