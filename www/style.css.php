@@ -2343,6 +2343,9 @@ ol {
 #content.about-page img {
 	border: 1px solid #000;
 }
+#content.about-page h3 {
+	clear: both;
+}
 
 /*******************/
 /* USER STATS PAGE */
