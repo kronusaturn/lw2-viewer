@@ -2320,8 +2320,28 @@ ol {
 /* ABOUT PAGE */
 /**************/
 
-#content.about-page {
-	padding-bottom: 3em;
+#content.about-page .contents {
+	margin-top: 0.25em;
+}
+#content.about-page .accesskey-table {
+	font-family: <?php echo $UI_font; ?>;
+	border-collapse: collapse;
+	border-color: #ddd;
+	margin: auto;
+}
+#content.about-page .accesskey-table th,
+#content.about-page .accesskey-table td {
+	padding: 2px 6px;
+}
+#content.about-page .accesskey-table td:first-child {
+	padding-right: 1.5em;
+}
+#content.about-page .accesskey-table td:last-child {
+	text-align: center;
+	font-family: Inconsolata, Menlo, monospace;
+}
+#content.about-page img {
+	border: 1px solid #000;
 }
 
 /*******************/

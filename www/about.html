@@ -1,10 +1,101 @@
 <div class="post">
 <h1>About GreaterWrong</h1>
 <div class="post-body">
-	<p>GreaterWrong is an alternative way to browse <a href="https://www.lesserwrong.com/">LessWrong 2.0</a>, with a focus on speed and usability.</p>
+	<p>GreaterWrong is an alternative way to browse <a href="https://www.lesswrong.com/">LessWrong 2.0</a>, with a focus on speed and usability.</p>
 	<p>Source code is <a href="https://github.com/kronusaturn/lw2-viewer">available on GitHub</a>, and issues are <a href="https://saturn.obormot.net/LW2Reader/Issues">tracked on OborWiki</a>.
 	<h2>Contact</h2>
+	<p>
 	Email: <a href="mailto:admin@greaterwrong.com">admin@greaterwrong.com</a><br>
 	or IRC: <a href="https://kiwiirc.com/client/irc.freenode.net?channel=#lesswrong">#lesswrong on freenode</a> (ping saturn2)
+	</p>
+	<h1>Features</h1>
+	<div class='contents'>
+		<div class='contents-head'>Contents</div>
+		<ul class='contents-list about-page-toc'>
+			<li class='toc-item-1'><a href='#themes'>Themes</a>
+			</li><li class='toc-item-1'><a href='#adjustable-width'>Adjustable width</a>
+			</li><li class='toc-item-1'><a href='#adjustable-text-size'>Adjustable text size</a>
+			</li><li class='toc-item-1'><a href='#appearance-customization'>Appearance customization</a>
+			</li><li class='toc-item-1'><a href='#keyboard-based-navigation'>Keyboard-based navigation</a>
+			</li><li class='toc-item-1'><a href='#new-comments-quick-nav'>New comments quick-nav</a>
+			</li><li class='toc-item-1'><a href='#rss-feeds'>RSS feeds</a>
+			</li><li class='toc-item-1'><a href='#archive-browser'>Archive browser</a>
+			</li><li class='toc-item-1'><a href='#auto-generated-toc'>Auto-generated table of contents</a>
+			</li></ul>
+	</div>
+	<h3 id='themes'>Themes</h3>
+	<img src='/about-page-images/theme-selector.png' style='width: 32px; float: left; margin: 0.4em 1em 0 0.125em; '>
+	<p>Six different themes are available. Click on the theme selection buttons at the top left of the page (labeled with the letters ‘A’ through ‘F’) to select a theme. (You can also change the theme in the Customize Appearance window (see below).)
+	<h3 id='adjustable-width'>Adjustable width</h3>
+	<img src='/about-page-images/width-adjustment.png'style='width: 96px; float: left; margin: 0.4em 1em 0 0.125em; '>
+	<p>You can adjust the width of the content column by clicking on one of the three width selection buttons at the top-right of the page. (The options are: fixed-width narrow; fixed-width wide; and fluid width, which expands to fill the width of the browser window.)
+	</p>
+	<h3 id='adjustable-text-size'>Adjustable text size</h3>
+	<img src='/about-page-images/text-size-adjustment.png'style='width: 95px; float: left; margin: 0.4em 1em 0 0.125em; '>
+	<p>You can adjust the size of the body text by clicking the text size adjustment buttons at the top-right of the page. (This changes the text size of both posts and comments.) Click “−”/“+” to decrease/increase the text size; click “A” to reset to the default text size.
+	</p>
+	<p>(The text size adjustment buttons are hidden when viewing pages that don’t contain any body text. You can always adjust the text size setting via the Customize Appearance window (see below), regardless of what page you’re viewing.)
+	<p><em>This feature does not currently work in Firefox (or other Mozilla-based browsers).</em>
+	</p>
+	<h3 id='appearance-customization'>Appearance customization</h3>
+	<img src='/about-page-images/customize-appearance.png'style='width: 432px; display: block; margin: auto; '>
+	<p>In addition to picking a theme, you can further customize the way that GreaterWrong looks. Click on the “sliders” icon, at the top left of the page, to bring up the Customize Appearance window. The following settings are available:
+	</p>
+	<ul><li>Text size
+	</li><li>Invert colors (a.k.a. photo-negative)
+	</li><li>Saturation
+	</li><li>Brightness
+	</li><li>Contrast
+	</li><li>Hue rotation (a.k.a. color-shift)
+	</li></ul>
+	<h3 id='keyboard-based-navigation'>Keyboard-based navigation</h3>
+	<p>GreaterWrong has extensive support for keyboard-based navigation. The following <a href="https://en.wikipedia.org/wiki/Access_key">accesskeys</a> are available:</p>
+	<table class='accesskey-table' border='1'>
+		<tr><th>Action</th><th>Key</th></tr>
+		<tr><td>Switch to Home (a.k.a. “Frontpage”) view</td><td>h</td></tr>
+		<tr><td>Switch to Featured (a.k.a. “Curated”) view</td><td>f</td></tr>
+		<tr><td>Switch to All (a.k.a. “Community”) view</td><td>a</td></tr>
+		<tr><td>Switch to Meta view</td><td>m</td></tr>
+		<tr><td>Switch to Recent Comments view</td><td>c</td></tr>
+		<tr><td>Jump up to top of page</td><td>,</td></tr>
+		<tr><td>Jump down to bottom of page</td><td>.</td></tr>
+		<tr><td>Jump to top of comments section</td><td>/</td></tr>
+		<tr><td>Next page of current post/comment listing</td><td>]</td></tr>
+		<tr><td>Previous page of current post/comment listing</td><td>[</td></tr>
+		<tr><td>First page of current post/comment listing</td><td>\</td></tr>
+		<tr><td>Open Customize Appearance window</td><td>;</td></tr>
+		<tr><td>Switch to theme A (default theme)</td><td>1</td></tr>
+		<tr><td>Switch to theme B (dark theme)</td><td>2</td></tr>
+		<tr><td>Switch to theme C (grey theme)</td><td>3</td></tr>
+		<tr><td>Switch to theme D (ultramodern theme)</td><td>4</td></tr>
+		<tr><td>Switch to theme E (simple theme)</td><td>5</td></tr>
+		<tr><td>Switch to theme F (brutalist theme)</td><td>6</td></tr>
+		<tr><td>Increase text size</td><td>=</td></tr>
+		<tr><td>Decrease text size</td><td>-</td></tr>
+		<tr><td>Reset to default text size</td><td>0</td></tr>
+		<tr><td>Cycle through content width settings</td><td>′</td></tr>
+	</table>
+	<p>(See the <a href="https://en.wikipedia.org/wiki/Access_key">Wikipedia article on accesskeys</a> to find the appropriate modifier key(s) that trigger accesskeys in your browser.)
+	</p>
+	<h3 id='new-comments-quick-nav'>New comments quick-nav</h3>
+	<img src='/about-page-images/new-comments-quick-nav.png'style='width: 128px; float: left; margin: 0.4em 1em 0 0.125em; '>
+	<p>When viewing any post page that contains new comments (as shown by the new comment indicator on the bottom right of the page), you can jump to the next new comment with the <code>.</code> (period) key (or by clicking the “next new comment” button), or jump to the previous new comment with the <code>,</code> (comma) key (or by clicking the “previous new comment” button). (These are not accesskeys; you need not hold any modifier keys to use them.)
+	<h3 id='rss-feeds'>RSS feeds</h3>
+	<img src='/about-page-images/rss-feeds.png'style='width: 123px; display: block; margin: auto; '>
+	<p>The following RSS feeds are available:
+	</p>
+	<ul><li><a href="https://www.greaterwrong.com/?format=rss" rel="nofollow">Home (“Frontpage posts”)</a>
+	</li><li><a href="https://www.greaterwrong.com/index?view=featured&format=rss" rel="nofollow">Featured (“Curated posts”)</a>
+	</li><li><a href="https://www.greaterwrong.com/index?view=new&all=t&format=rss" rel="nofollow">All (“Community posts”)</a>
+	</li><li><a href="https://www.greaterwrong.com/index?view=meta&all=t&format=rss" rel="nofollow">Meta posts</a>
+	</li><li><a href="https://www.greaterwrong.com/recentcomments?format=rss" rel="nofollow">Recent comments</a>
+	</li><li>Feeds for just the comments, just the posts, or both comments and posts, of an individual user (for example, here’s <a href="https://www.greaterwrong.com/users/eliezer_yudkowsky?show=comments&format=rss"> Eliezer Yudkowsky’s comments feed</a>); these are accessible from the user’s page (e.g., here’s <a href="https://www.greaterwrong.com/users/eliezer_yudkowsky">Eliezer Yudkowsky’s page</a>)
+	</li></ul>
+	<h3 id='archive-browser'>Archive browser</h3>
+	<img src='/about-page-images/archive-browser.png'style='width: 420px; display: block; margin: auto; '>
+	<p>GreaterWrong has an archive browser that lets you quickly find posts from any time in LessWrong’s past. Click the Archive link at the top of the page to go to the archive browser.
+	</p>
+	<h3 id='auto-generated-toc'>Auto-generated table of contents</h3>
+	<p>Posts that contain multiple headings (such as <a href="https://www.greaterwrong.com//posts/kAgJJa3HLSZxsuSrf/arbital-postmortem">this one</a>) have automatically-generated tables of contents (with links), for easy navigation.</p>
 </div>
 </div>

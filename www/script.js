@@ -1194,6 +1194,9 @@ function pageLayoutFinished() {
 	generateImagesOverlay();
 }
 function generateImagesOverlay() {
+	// Don't do this on the about page.
+	if (document.querySelector(".about-page") != null) return;
+
 	// Remove existing, if any.
 	removeElement("#images-overlay");
 
