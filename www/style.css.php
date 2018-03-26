@@ -2345,6 +2345,12 @@ ol {
 }
 #images-overlay img {
 	position: absolute;
+	left: 0;
+	right: 0;
+	margin: auto;
+}
+#images-overlay + #content .post-body img {
+	visibility: hidden;
 }
 
 /**********************/
