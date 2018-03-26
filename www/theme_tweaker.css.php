@@ -505,9 +505,7 @@ input[type='range']::-ms-thumb {
 #theme-tweaker-ui .buttons-container button:active {
 	padding: 7px 0 6px 0;
 }
-#theme-tweaker-ui .reset-defaults-button:focus,
-#theme-tweaker-ui .ok-button:focus,
-#theme-tweaker-ui .cancel-button:focus {
+#theme-tweaker-ui button:focus {
 	outline: 1px dotted #000;
 }
 

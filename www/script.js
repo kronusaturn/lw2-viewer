@@ -35,7 +35,8 @@ Element.prototype.hasClass = function(className) {
 Element.prototype.addActivateEvent = function(func, includeMouseDown) {
 	let ael = this.activateEventListener = function(e) { if (e.button === 0 || e.key === ' ') func(e) };
 	if (includeMouseDown) this.addEventListener("mousedown", ael);
-	this.addEventListener("mouseup", ael);
+	this.addEventListener("click", ael);
+// 	this.addEventListener("mouseup", ael);
 	this.addEventListener("keyup", ael);
 }
 
@@ -521,7 +522,7 @@ function setSelectedTheme(themeName) {
 /********************************************/
 
 function injectThemeTweaker() {
-	let themeTweakerToggle = addUIElement("<div id='theme-tweaker-toggle'><button type='button' tabindex='-1' title='Customize appearance'>&#xf1de;</button></div>");
+	let themeTweakerToggle = addUIElement("<div id='theme-tweaker-toggle'><button type='button' tabindex='-1' title='Customize appearance (accesskey: \';\')' accesskey=';'>&#xf1de;</button></div>");
 	themeTweakerToggle.querySelector("button").addActivateEvent(themeTweakerToggleButtonClicked);
 	
 	let themeTweakerUI = addUIElement("<div id='theme-tweaker-ui' style='display: none;'>" + 
@@ -536,9 +537,9 @@ function injectThemeTweaker() {
 		<div class='controls-container'>
 			<div id='theme-tweak-section-text-size-adjust' class='section' data-label='Text size'>
 				<div class='sample-text-container'><span class='sample-text'>Less Wrong</span></div>
-				<button type='button' class='text-size-adjust-button decrease' title='Decrease text size' tabindex='-1'></button>
-				<button type='button' class='text-size-adjust-button default' title='Reset to default text size' tabindex='-1'></button>
-				<button type='button' class='text-size-adjust-button increase' title='Increase text size' tabindex='-1'></button>
+				<button type='button' class='text-size-adjust-button decrease' title='Decrease text size'></button>
+				<button type='button' class='text-size-adjust-button default' title='Reset to default text size'></button>
+				<button type='button' class='text-size-adjust-button increase' title='Increase text size'></button>
 			</div>
 			<div id='theme-tweak-section-invert' class='section' data-label='Invert (photo-negative)'>
 				<input type='checkbox' id='theme-tweak-control-invert'></input>
@@ -643,9 +644,19 @@ function toggleThemeTweakerUI() {
 		document.querySelector("#theme-tweaker-ui #theme-tweak-control-invert").focus();
 		// Show sample text in appropriate font.
 		updateThemeTweakerTextSizeAdjustSampleText();
+		// Disable tab-selection of the search box.
+		setSearchBoxTabSelectable(false);
+	} else {
+		document.querySelector("#theme-tweaker-toggle button").disabled = false;
+		// Re-enable tab-selection of the search box.
+		setSearchBoxTabSelectable(true);
 	}
 	// Set theme tweaker assistant visibility.
 	document.querySelector(".clippy-container").style.display = JSON.parse(window.localStorage.getItem("theme-tweaker-settings") || '{ "showClippy": true }')["showClippy"] ? "block" : "none";
+}
+function setSearchBoxTabSelectable(selectable) {
+	document.querySelector("input[type='search']").tabIndex = selectable ? "" : "-1";
+	document.querySelector("input[type='search'] + button").tabIndex = selectable ? "" : "-1";
 }
 function themeTweakerToggleButtonClicked(event) {
 	document.querySelector("#theme-tweaker-ui .current-theme span").innerText = (window.localStorage.getItem("selected-theme") || "default");
@@ -658,6 +669,7 @@ function themeTweakerToggleButtonClicked(event) {
 	});
 
 	toggleThemeTweakerUI();
+	event.target.disabled = true;
 }
 function themeTweakerUIOverlayClicked(event) {
 	if (event.type == 'mousedown') {
@@ -879,9 +891,7 @@ function injectTextSizeAdjustmentUI() {
 	+ "</div>");
 	
 	document.querySelectorAll("#text-size-adjustment-ui button").forEach(function (button) {
-		// Using addEventListener directly because addActivateEvent doesn't work with 
-		// accesskeys, and we don't need the keydown event because tabindex is -1.
-		button.addEventListener("click", themeTweakerTextSizeAdjustButtonClicked);
+		button.addActivateEvent(themeTweakerTextSizeAdjustButtonClicked);
 	});
 	
 	if (!(document.querySelector(".post-body") || document.querySelector(".comment-body"))) {
