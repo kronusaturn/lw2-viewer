@@ -425,6 +425,16 @@ function injectContentWidthSelector() {
 	widthSelector.querySelectorAll("button").forEach(function (button) {
 		button.addActivateEvent(widthAdjustButtonClicked);
 	});
+	
+	setWidthAdjustButtonsAccesskey();
+}
+function setWidthAdjustButtonsAccesskey() {
+	document.querySelectorAll("#width-selector button").forEach(function (button) {
+		button.accessKey = "";
+	});
+	let selectedButton = document.querySelector("#width-selector button.selected");
+	let nextButtonInCycle = (selectedButton == selectedButton.parentElement.lastChild) ? selectedButton.parentElement.firstChild : selectedButton.nextSibling;
+	nextButtonInCycle.accessKey = "'";
 }
 function widthAdjustButtonClicked(event) {
 	let selectedWidth = event.target.getAttribute("data-width");
@@ -436,6 +446,8 @@ function widthAdjustButtonClicked(event) {
 	});
 	event.target.addClass("selected");
 	event.target.disabled = true;
+	
+	setWidthAdjustButtonsAccesskey();
 
 	// Regenerate images overlay.
 	generateImagesOverlay();
