@@ -494,7 +494,8 @@ function injectThemeSelector() {
 			let [name, desc, letter] = to;
 			let selected = (name == currentTheme ? ' selected' : '');
 			let disabled = (name == currentTheme ? ' disabled' : '');
-			return `<button type='button' class='select-theme-${name}${selected}'${disabled} title='${desc}' tabindex='-1'>${letter}</button>`;})) +
+			let accesskey = letter.charCodeAt(0) - 'A'.charCodeAt(0) + 1;
+			return `<button type='button' class='select-theme-${name}${selected}'${disabled} title='${desc}' accesskey='${accesskey}' tabindex='-1'>${letter}</button>`;})) +
 		"</div>");
 	themeSelector.querySelectorAll("button").forEach(function (button) {
 		button.addActivateEvent(themeSelectButtonClicked);
@@ -847,9 +848,9 @@ function updateThemeTweakerTextSizeAdjustSampleText() {
 
 function injectQuickNavUI() {
 	let quickNavContainer = addUIElement("<div id='quick-nav-ui'>" +
-	`<a href='#top' title='Up to top'>&#xf106;</a>
-	<a href='#comments' title='Comments'>&#xf036;</a>
-	<a href='#bottom-bar' title='Down to bottom'>&#xf107;</a>
+	`<a href='#top' title="Up to top (accesskey: ',')" accesskey=','>&#xf106;</a>
+	<a href='#comments' title="Comments (accesskey: '/')" accesskey='/'>&#xf036;</a>
+	<a href='#bottom-bar' title="Down to bottom (accesskey: '.')" accesskey='.'>&#xf107;</a>
 	` + "</div>");
 	
 	var content = document.querySelector("#content");
