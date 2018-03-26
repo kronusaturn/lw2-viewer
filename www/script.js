@@ -436,6 +436,9 @@ function widthAdjustButtonClicked(event) {
 	});
 	event.target.addClass("selected");
 	event.target.disabled = true;
+
+	// Regenerate images overlay.
+	generateImagesOverlay();
 }
 
 /*******************/
@@ -504,6 +507,9 @@ function injectThemeSelector() {
 function themeSelectButtonClicked(event) {
 	let themeName = /select-theme-([^\s]+)/.exec(event.target.className)[1];
 	setSelectedTheme(themeName);
+
+	// Regenerate images overlay (after slight delay).
+	setTimeout(function() { generateImagesOverlay(); }, 10);
 }
 function setSelectedTheme(themeName) {
 	document.querySelectorAll(".theme-selector button").forEach(function (button) {
@@ -1171,6 +1177,13 @@ function pageLayoutFinished() {
 	});
 		
 	// Add overlay of images in post (for avoidance of theme tweaks).		
+	generateImagesOverlay();
+}
+function generateImagesOverlay() {
+	// Remove existing, if any.
+	removeElement("#images-overlay");
+
+	// Create new.
 	document.querySelector("body").insertAdjacentHTML("afterbegin", "<div id='images-overlay'></div>");
 	let imagesOverlay = document.querySelector("#images-overlay");
 	document.querySelectorAll(".post-body img").forEach(function (image) {
