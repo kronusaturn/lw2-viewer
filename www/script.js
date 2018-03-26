@@ -875,7 +875,7 @@ function injectQuickNavUI() {
 	
 	var content = document.querySelector("#content");
 	if (content.clientHeight <= window.innerHeight + 30 || 
-		(content.querySelector("#comments") && content.querySelector("#comments").childNodes.length == 0)) {
+		content.querySelector("#comments .comment-thread") == null) {
 		try { document.querySelector("#quick-nav-ui a[href='#comments']").addClass("no-comments"); }
 		catch (e) { }
 	}
