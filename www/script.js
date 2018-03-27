@@ -269,7 +269,7 @@ function voteEvent(e) {
 		oldVoteType = commentVotes[targetId];
 		commentVotes[targetId] = ((voteType == oldVoteType) ? null : voteType);
 	}
-	let f = function() { sendVoteRequest(targetId, targetType, voteType, makeVoteCompleteEvent((targetType == 'Comments' ? e.target.parentNode : null), e.target.parentNode.querySelector(".karma-value"))) };
+	let f = function() { sendVoteRequest(targetId, targetType, voteType, makeVoteCompleteEvent((targetType == 'Comments' ? e.target.parentNode : null))) };
 	if(oldVoteType && (oldVoteType != voteType)) {
 		sendVoteRequest(targetId, targetType, oldVoteType, f);
 	} else {
