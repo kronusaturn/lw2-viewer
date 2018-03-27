@@ -1108,10 +1108,6 @@ function initialize() {
 		// Add the text size adjustment widget.
 		injectTextSizeAdjustmentUI();
 
-		// Call pageLayoutFinished() once all activity that can affect the page layout has finished.
-		document.addEventListener("readystatechange", pageLayoutFinished);
-		window.setTimeout(pageLayoutFinished);
-		
 		// Add event listeners for Escape and Enter, for the theme tweaker.
 		document.addEventListener("keyup", function(event) {
 			if (event.keyCode == 27) {
@@ -1169,6 +1165,10 @@ function initialize() {
 				}
 			});
 		}
+
+		// Call pageLayoutFinished() once all activity that can affect the page layout has finished.
+		document.addEventListener("readystatechange", pageLayoutFinished);
+		window.setTimeout(pageLayoutFinished);
 	})
 }
 
