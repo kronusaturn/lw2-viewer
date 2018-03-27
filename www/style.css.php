@@ -2679,6 +2679,9 @@ ol {
 		font-size: 1rem;
 		margin: 0.25em;
 	}
+	#top-nav-bar {
+		margin-top: 1.5em;
+	}
 	.comment-minimize-button::after {
 		height: 100%;
 		top: 0;
