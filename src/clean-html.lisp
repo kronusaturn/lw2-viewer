@@ -173,7 +173,7 @@
 											   ps))))
 						  (plump:remove-child n)
 						  (plump:append-child ps n))))
-				     (when (and (tag-is node "li") (let ((c (plump:first-child node))) (or (if (plump:text-node-p c) (not (string-is-whitespace (plump:text c))) (not (tag-is c "p" "ul" "ol"))))))
+				     (when (and (tag-is node "li") (let ((c (plump:first-child node))) (and c (or (if (plump:text-node-p c) (not (string-is-whitespace (plump:text c))) (not (tag-is c "p" "ul" "ol")))))))
 				       (let ((p (plump:make-element node "p")))
 					 (plump:remove-child p)
 					 (setf (plump:children p) (plump:clone-children node t p)
