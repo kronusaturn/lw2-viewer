@@ -1193,6 +1193,14 @@ function initialize() {
 				}
 			});
 		}
+	
+		// Move MathJax style tags to <head>.
+		var aggregatedStyles = "";
+		document.querySelectorAll("#content style").forEach(function (styleTag) {
+			aggregatedStyles += styleTag.innerHTML;
+			removeElement("style", styleTag.parentElement);
+		});
+		document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='mathjax-styles'>" + aggregatedStyles + "</style>");
 
 		// Call pageLayoutFinished() once all activity that can affect the page layout has finished.
 		document.addEventListener("readystatechange", pageLayoutFinished);
