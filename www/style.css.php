@@ -2718,6 +2718,9 @@ ol {
 		width: 2em;
 		height: 1em;
 	}
+	#edit-post-form textarea {
+		min-height: unset;
+	}
 	.textarea-container:focus-within textarea {
 		position: fixed;
 		top: -1px;
