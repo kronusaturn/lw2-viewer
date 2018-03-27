@@ -34,6 +34,9 @@ a:visited {
 	font-size: 1rem;
 	line-height: 1.5;
 }
+.comment-body img {
+	border: none;
+}
 .nav-bar {
 	box-shadow: none;
 }

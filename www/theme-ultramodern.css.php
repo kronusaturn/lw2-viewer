@@ -383,6 +383,9 @@ a.comment-parent-link:hover::before {
 .comment-body strong {
 	font-weight: 500;
 }
+.comment-body img {
+	border: 1px solid #666;
+}
 
 .post-body a:link,
 .comment-body a:link {

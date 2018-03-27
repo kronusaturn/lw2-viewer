@@ -1478,6 +1478,9 @@ ul.comment-thread {
 	padding: 10px;
 }
 
+.comment-body img {
+	border: 1px solid #2c2c2c;
+}
 .comment-body ul {
 	list-style-type: circle;
 }

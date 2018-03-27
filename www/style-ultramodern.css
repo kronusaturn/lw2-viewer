@@ -1478,6 +1478,9 @@ ul.comment-thread {
 	padding: 10px;
 }
 
+.comment-body img {
+	border: 1px solid #ccc;
+}
 .comment-body ul {
 	list-style-type: circle;
 }
@@ -3578,6 +3581,9 @@ a.comment-parent-link:hover::before {
 .post-body strong,
 .comment-body strong {
 	font-weight: 500;
+}
+.comment-body img {
+	border: 1px solid #666;
 }
 
 .post-body a:link,

@@ -1478,6 +1478,9 @@ ul.comment-thread {
 	padding: 10px;
 }
 
+.comment-body img {
+	border: 1px solid #ccc;
+}
 .comment-body ul {
 	list-style-type: circle;
 }
@@ -2966,6 +2969,9 @@ a:visited {
 .comment-body {
 	font-size: 1rem;
 	line-height: 1.5;
+}
+.comment-body img {
+	border: none;
 }
 .nav-bar {
 	box-shadow: none;
