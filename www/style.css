@@ -1726,7 +1726,7 @@ a.comment-parent-link:hover::after {
 }
 #markdown-hints-checkbox + label {
 	float: left;
-	padding: 2px 0 0 0;
+	padding: 4px 0 0 0;
 	margin: 0 0 0 1em;
 	color: #00e;
 	cursor: pointer;
