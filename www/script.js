@@ -910,7 +910,22 @@ function injectNewCommentNavUI(newCommentsCount) {
 		newCommentUIContainer.querySelector(".new-comment-previous").addActivateEvent(commentQuicknavButtonClicked);
 		newCommentUIContainer.querySelector(".new-comment-next").addActivateEvent(commentQuicknavButtonClicked);
 
-		document.addEventListener("keyup", function(e) { if(e.key == ",") scrollToNewComment(false); if(e.key == ".") scrollToNewComment(true)});
+		document.addEventListener("keyup", function(e) { 
+			if (window.shiftKeyDown || window.ctrlKeyDown || window.altKeyDown) return;
+			if(e.key == ",") scrollToNewComment(false);
+			if(e.key == ".") scrollToNewComment(true)
+		});
+		
+		document.addEventListener("keydown", function (e) { 
+			if (e.keyCode == 16) window.shiftKeyDown = true;
+			if (e.keyCode == 17) window.ctrlKeyDown = true;
+			if (e.keyCode == 18) window.altKeyDown = true;
+		});
+		document.addEventListener("keyup", function (e) { 
+			if (e.keyCode == 16) window.shiftKeyDown = false;
+			if (e.keyCode == 17) window.ctrlKeyDown = false;
+			if (e.keyCode == 18) window.altKeyDown = false;
+		});
 	}
 }
 
