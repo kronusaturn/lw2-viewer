@@ -138,6 +138,8 @@
 						(typecase v
 						  ((member t) "true") 
 						  ((member nil) "false")
+						  ((member :null) "null")
+						  ((member :undefined) "undefined")
 						  (list (format nil "{~{~A~^,~}}" (terms v)))
 						  (t (format nil "~S" v)))))))
 	    (terms terms))

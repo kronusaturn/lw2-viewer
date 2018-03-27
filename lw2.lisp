@@ -559,18 +559,20 @@
                                (user-info (lw2-graphql-query (format nil "{UsersSingle(slug:\"~A\"){_id, displayName, karma}}" user-slug)))
                                (comments-index-fields (remove :page-url *comments-index-fields*)) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
                                (title (format nil "~A~@['s ~A~]" (cdr (assoc :display-name user-info)) (if (member show '(nil "posts" "comments") :test #'equal) show)))
+			       (posts-base-terms (load-time-value (alist :view "userPosts" :meta :null)))
+			       (comments-base-terms (load-time-value (alist :view "allRecentComments")))
                                (items (alexandria:switch (show :test #'string=)
                                                          ("posts"
-                                                          (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (alist :view "new" :limit 21 :offset offset :user-id (cdr (assoc :--id user-info)))) *posts-index-fields*)))
+							  (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (nconc (alist :offset offset :limit 21 :user-id (cdr (assoc :--id user-info))) posts-base-terms)) *posts-index-fields*)))
                                                          ("comments"
-                                                          (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (alist :view "allRecentComments" :limit 21 :offset offset :user-id (cdr (assoc :--id user-info))))
+							  (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (nconc (alist :offset offset :limit 21 :user-id (cdr (assoc :--id user-info))) comments-base-terms))
                                                                                                    comments-index-fields)))
                                                          ("drafts"
                                                           (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (alist :view "drafts" :limit 21 :offset offset :user-id (cdr (assoc :--id user-info)))) *posts-index-fields*)
                                                                              :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
                                                          (t
-                                                           (let ((user-posts (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (alist :view "new" :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info)))) *posts-index-fields*)))
-                                                                 (user-comments (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (alist :view "allRecentComments" :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info))))
+							   (let ((user-posts (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (nconc (alist :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info))) posts-base-terms)) *posts-index-fields*)))
+								 (user-comments (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (nconc (alist :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info))) comments-base-terms)) 
                                                                                                                          comments-index-fields))))
                                                              (concatenate 'list user-posts user-comments)))))
                                (with-next (> (length items) (+ (if show 0 offset) 20)))
