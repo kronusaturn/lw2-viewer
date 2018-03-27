@@ -470,7 +470,7 @@
                                                             (t
                                                               (with-outputs (out-stream) (post-body-to-html post))
                                                               (if lw2-auth-token
-                                                                  (format out-stream "<script>postVote=~A</script>~@[<div class=\"post-controls\"><a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\">Edit post</a></div>~]"
+                                                                  (format out-stream "<script>postVote=~A</script>~@[<div class=\"post-controls\"><a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\" accesskey=\"e\" title=\"Edit post [e]\">Edit post</a></div>~]"
                                                                           (json:encode-json-to-string (get-post-vote post-id lw2-auth-token))
                                                                           (if (equal (logged-in-userid) (cdr (assoc :user-id post))) (cdr (assoc :--id post)))))))
                                                           (force-output out-stream)
