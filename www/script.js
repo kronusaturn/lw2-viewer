@@ -219,16 +219,28 @@ function ExpandTextarea(textarea) {
 /* VOTING */
 /**********/
 
-function makeVoteCompleteEvent(buttonTarget, karmaTarget) {
+function makeVoteCompleteEvent(target) {
 	return function(e) {
-		buttonTarget.parentNode.querySelectorAll("button.vote").forEach(function(b) { b.style.pointerEvents = "" });
-		buttonTarget.parentNode.style.opacity = "";
+		var buttonTargets, karmaTargets;
+		if(target === null) {
+			buttonTargets = document.querySelectorAll(".post-meta .karma");
+			karmaTargets = document.querySelectorAll(".post-meta .karma-value");
+		} else {
+			buttonTargets = [target];
+			karmaTargets = [target.querySelector(".karma-value")];
+		}
+		buttonTargets.forEach(function (bt) {
+			bt.querySelectorAll("button.vote").forEach(function(b) { b.style.pointerEvents = "" });
+			bt.style.opacity = "";
+		});
 		if(e.target.status == 200) {
 			let res = JSON.parse(e.target.responseText);
 			let karmaText = res[0], voteType = res[1];
-			karmaTarget.innerHTML = karmaText;
-			buttonTarget.parentNode.querySelectorAll("button.vote").forEach(function(b) {
-				b.className = 'vote ' + b.getAttribute("data-vote-type") + ((b.getAttribute('data-vote-type') == voteType) ? ' selected' : '');
+			karmaTargets.forEach(function (kt) { kt.innerHTML = karmaText; });
+			buttonTargets.forEach(function (bt) {
+				bt.querySelectorAll("button.vote").forEach(function(b) {
+					b.className = 'vote ' + b.getAttribute("data-vote-type") + ((b.getAttribute('data-vote-type') == voteType) ? ' selected' : '');
+				});
 			});
 		}
 	}
@@ -257,7 +269,7 @@ function voteEvent(e) {
 		oldVoteType = commentVotes[targetId];
 		commentVotes[targetId] = ((voteType == oldVoteType) ? null : voteType);
 	}
-	let f = function() { sendVoteRequest(targetId, targetType, voteType, makeVoteCompleteEvent(e.target, e.target.parentNode.querySelector(".karma-value"))) };
+	let f = function() { sendVoteRequest(targetId, targetType, voteType, makeVoteCompleteEvent((targetType == 'Comments' ? e.target.parentNode : null))) };
 	if(oldVoteType && (oldVoteType != voteType)) {
 		sendVoteRequest(targetId, targetType, oldVoteType, f);
 	} else {
@@ -1019,13 +1031,23 @@ function initialize() {
 		document.querySelectorAll("#edit-post-form textarea").forEach(function (textarea) { textarea.addTextareaFeatures(); });
 		document.querySelectorAll((getQueryVariable("post-id")) ? "#edit-post-form textarea" : "#edit-post-form input[name='title']").forEach(function (field) { field.focus(); });
 
+		// Replicate .post-meta at bottom of post.
+		let postMeta = document.querySelector(".post .post-meta");
+		if (postMeta) {
+			let clonedPostMeta = postMeta.cloneNode(true);
+			postMeta.addClass("top-post-meta");
+			clonedPostMeta.addClass("bottom-post-meta");
+			document.querySelector(".post").appendChild(clonedPostMeta);
+		}
+		
 		if(readCookie("lw2-auth-token")) {
 			// Add upvote/downvote buttons.
 			if(typeof(postVote) != 'undefined') {
-				let e = document.querySelector(".post-meta .karma-value");
-				let voteType = postVote;
-				e.insertAdjacentHTML('beforebegin', "<button type='button' class='vote upvote"+(voteType=='upvote'?' selected':'')+"' data-vote-type='upvote' data-target-type='Posts' tabindex='-1'></button>");
-				e.insertAdjacentHTML('afterend', "<button type='button' class='vote downvote"+(voteType=='downvote'?' selected':'')+"' data-vote-type='downvote' data-target-type='Posts' tabindex='-1'></button>");
+				document.querySelectorAll(".post-meta .karma-value").forEach(function (e) {
+					let voteType = postVote;
+					e.insertAdjacentHTML('beforebegin', "<button type='button' class='vote upvote"+(voteType=='upvote'?' selected':'')+"' data-vote-type='upvote' data-target-type='Posts' tabindex='-1'></button>");
+					e.insertAdjacentHTML('afterend', "<button type='button' class='vote downvote"+(voteType=='downvote'?' selected':'')+"' data-vote-type='downvote' data-target-type='Posts' tabindex='-1'></button>");
+				});
 			}
 			if(typeof(commentVotes) != 'undefined') {
 				document.querySelectorAll(".comment-meta .karma-value").forEach(function (e) {
@@ -1130,16 +1152,7 @@ function initialize() {
 				}
 			}
 		});
-		
-		// Replicate .post-meta at bottom of post.
-		let postMeta = document.querySelector(".post .post-meta");
-		if (postMeta) {
-			let clonedPostMeta = postMeta.cloneNode(true);
-			postMeta.addClass("top-post-meta");
-			clonedPostMeta.addClass("bottom-post-meta");
-			document.querySelector(".post").appendChild(clonedPostMeta);
-		}
-		
+
 		// Add page navigation at top of pages.
 		let bottomBar = document.querySelector("#bottom-bar");
 		if (bottomBar && (bottomBar.querySelector("#nav-item-next") != null || bottomBar.querySelector("#nav-item-prev") != null)) {
