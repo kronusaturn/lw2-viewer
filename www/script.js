@@ -160,6 +160,8 @@ Element.prototype.injectCommentButtons = function() {
 	if (e.parentElement.id == 'comments') {
 		replyButton.className = "new-comment-button action-button";
 		replyButton.innerHTML = "Post new comment";
+		replyButton.setAttribute("accesskey", "n");
+		replyButton.setAttribute("title", "Post new comment [n]");
 	} else {
 		if (e.parentElement.querySelector(".comment-body").hasAttribute("data-markdown-source")) {
 			let editButton = e.appendChild(document.createElement("button"));

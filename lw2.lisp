@@ -210,10 +210,8 @@
 			      ("meta" "/index?view=meta&all=t" "Meta" :description "Latest meta posts" :accesskey "m")
 			      ("recent-comments" "/recentcomments" "<span>Recent </span>Comments" :description "Latest comments" :accesskey "c"))) 
 
-(defparameter *secondary-nav* `(("archive" "/archive" "Archive")
-				("about" "/about" "About")
-				("search" "/search" "Search" :html ,#'search-bar-to-html)
-				("login" "/login" "Log In"))) 
+(defparameter *secondary-nav* nil)
+
 (defun nav-bar-inner (items &optional current-uri)
   (let ((active-bar nil)) 
     (values
@@ -226,7 +224,7 @@
 				      (format nil "<span id=\"nav-item-~A\" class=\"nav-item nav-current\" ~@[title=\"~A\"~]>~:[<span class=\"nav-inner\">~A</span>~;~:*~A~]</span>"
 					      id description (and html (funcall html)) name)) 
 			       (format nil "<span id=\"nav-item-~A\" class=\"nav-item nav-inactive~:[~; nav-item-last-before-current~]\" ~@[title=\"~A\"~]>~:[<a href=\"~A\" class=\"nav-inner\"~@[ accesskey=\"~A\"~]~:[~; rel=\"nofollow\"~]>~A</a>~;~:*~A~]</span>"
-				       id (string= (nth 1 (cadr items)) current-uri) (if accesskey (format nil "~A [~A]" description accesskey) description) (and html (funcall html)) uri accesskey nofollow name)))))
+				       id (string= (nth 1 (cadr items)) current-uri) (if accesskey (format nil "~A [~A]" (or description name) accesskey) description) (and html (funcall html)) uri accesskey nofollow name)))))
 		       items))
       active-bar)))
 
@@ -245,13 +243,13 @@
 
 (defun user-nav-bar (&optional current-uri)
   (let* ((username (logged-in-username)))
-    (let ((*secondary-nav* `(("archive" "/archive" "Archive")
-			     ("about" "/about" "About")
+    (let ((*secondary-nav* `(("archive" "/archive" "Archive" :accesskey "r")
+			     ("about" "/about" "About" :accesskey "t")
 			     ("search" "/search" "Search" :html ,#'search-bar-to-html)
 			     ,(if username
-				`("login" ,(format nil "/users/~A" (encode-entities (get-user-slug (logged-in-userid)))) ,(plump:encode-entities username))
-				`("login" ,(format nil "/login?return=~A" (url-rewrite:url-encode current-uri)) "Log In")))))
-      (nav-bar-to-html current-uri)))) 
+				`("login" ,(format nil "/users/~A" (encode-entities (get-user-slug (logged-in-userid)))) ,(plump:encode-entities username) :description "User page" :accesskey "u")
+				`("login" ,(format nil "/login?return=~A" (url-rewrite:url-encode current-uri)) "Log In" :accesskey "u")))))
+      (nav-bar-to-html current-uri))))
 
 (defun make-csrf-token (session-token &optional (nonce (ironclad:make-random-salt)))
   (if (typep session-token 'string) (setf session-token (base64:base64-string-to-usb8-array session-token)))
@@ -369,7 +367,7 @@
                      (t
                        (emit-page (out-stream :title (if hide-title nil title) :description "A faster way to browse LessWrong 2.0" :content-class content-class :with-offset with-offset :with-next with-next
                                               :robots (if (and with-offset (> with-offset 0)) "noindex, nofollow"))
-                                  (format out-stream "<div class=\"page-toolbar\">~@[<a class=\"new-post button\" href=\"/edit-post?section=~A\">New post</a>~]~{~@[<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" title=\"~A RSS feed\" href=\"~A\">RSS</a>~]~}</div>~@[~A~]"
+                                  (format out-stream "<div class=\"page-toolbar\">~@[<a class=\"new-post button\" href=\"/edit-post?section=~A\" accesskey=\"n\" title=\"Create new post [n]\">New post</a>~]~{~@[<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" title=\"~A RSS feed\" href=\"~A\">RSS</a>~]~}</div>~@[~A~]"
                                           (if (and section (logged-in-userid)) section)
                                           (unless need-auth
                                             (list title (replace-query-params (hunchentoot:request-uri*) "offset" nil "format" "rss")))
