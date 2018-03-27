@@ -163,6 +163,9 @@ input {
 .sublevel-nav + #top-nav-bar {
 	margin-top: 0.25em;
 }
+.sublevel-nav + #top-nav-bar + h1.listing {
+	margin-top: 1.5em;
+}
 .archive-nav + #top-nav-bar {
 	margin-top: 1em;
 }
