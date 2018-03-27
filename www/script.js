@@ -319,8 +319,7 @@ Element.prototype.getCommentDate = function() {
 function getCurrentVisibleComment() {
 	let px = window.innerWidth/2, py = window.innerHeight/10;
 	let ci = document.elementFromPoint(px, py).closest(".comment-item") || document.elementFromPoint(px, py+60).closest(".comment-item"); // Mind the gap between threads
-	let commentsContainer = document.querySelector("#comments");
-	let atbottom = commentsContainer && (commentsContainer.getBoundingClientRect().bottom < window.innerHeight);
+	let atbottom = document.querySelector("#comments").getBoundingClientRect().bottom < window.innerHeight;
 	if (atbottom) {
 		let hashci = location.hash && document.querySelector(location.hash);
 		if(hashci && /comment-item/.test(hashci.className) && hashci.getBoundingClientRect().top > 0) {
