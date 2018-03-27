@@ -112,6 +112,9 @@ input {
 	white-space: nowrap;
 	overflow: hidden;
 }
+#nav-item-search * {
+	text-overflow: unset;
+}
 .nav-inner {
 	padding: 12px 30px;
 	font-weight: 600;
