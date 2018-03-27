@@ -1106,7 +1106,7 @@ function initialize() {
 		}
 		
 		// Read and update last-visited-date.
-		if(getPostHash()) {
+		if(document.querySelector("#comments") && getPostHash()) {
 			let lastVisitedDate = getLastVisitedDate();
 			setLastVisitedDate(Date.now());
 
