@@ -1420,9 +1420,6 @@ ul.comment-thread {
 	padding: 10px;
 }
 
-.comment-body img {
-	border: 1px solid #ccc;
-}
 .comment-body ul {
 	list-style-type: circle;
 }
@@ -2188,6 +2185,15 @@ blockquote *:last-child {
 .post-body img,
 .comment-body img {
 	max-width: 100%;
+	border: 1px solid #ccc;
+}
+
+#content figure {
+	text-align: center;
+	margin: 1.5em auto;
+}
+#content figure img {
+	border: 1px solid #000;
 }
 
 li {
@@ -2226,14 +2232,6 @@ pre > code {
 	display: block;
 	border-radius: 0;
 	padding: 3px 4px 5px 8px;
-}
-
-figure {
-	text-align: center;
-	margin: 1.5em auto;
-}
-figure img {
-	border: 1px solid #000;
 }
 
 input[type='text'],
