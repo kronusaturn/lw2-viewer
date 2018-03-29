@@ -74,8 +74,11 @@
 
 (defun comment-to-html (comment &key with-post-title)
   (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :posted-at comment)))
-    (format nil "<div class=\"comment~A\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <a class=\"date\" href=\"~A\" data-js-date=\"~A\">~A</a><div class=\"karma\"><span class=\"karma-value\">~A</span></div>~@[<a class=\"lw2-link\" href=\"~A\">LW2 link</a>~]~A</div><div class=\"comment-body\"~@[ data-markdown-source=\"~A\"~]>~A</div></div>"
-            (if (and (logged-in-userid (cdr (assoc :user-id comment))) (< (* 1000 (local-time:timestamp-to-unix (local-time:now))) (+ js-time 15000))) " just-posted-comment" "")
+    (format nil "<div class=\"comment~{ ~A~}\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <a class=\"date\" href=\"~A\" data-js-date=\"~A\">~A</a><div class=\"karma\"><span class=\"karma-value\">~A</span></div>~@[<a class=\"lw2-link\" href=\"~A\">LW2 link</a>~]~A</div><div class=\"comment-body\"~@[ data-markdown-source=\"~A\"~]>~A</div></div>"
+	    (let ((l nil))
+	      (if (and (logged-in-userid (cdr (assoc :user-id comment))) (< (* 1000 (local-time:timestamp-to-unix (local-time:now))) (+ js-time 15000))) (push "just-posted-comment" l))
+	      (if (cdr (assoc :highlight-new comment)) (push "comment-item-highlight" l))
+	      l)
 	    (encode-entities (get-user-slug (cdr (assoc :user-id comment)))) 
 	    (encode-entities (get-username (cdr (assoc :user-id comment)))) 
 	    (generate-post-link (cdr (assoc :post-id comment)) (cdr (assoc :--id comment)))
@@ -104,7 +107,8 @@
 
 (defun conversation-message-to-html (message)
   (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :created-at message)))
-    (format nil "<div class=\"comment private-message\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <span class=\"date\" data-js-date=\"~A\">~A</span><div class=\"comment-post-title\">Private message: ~A</div></div><div class=\"comment-body\">~A</div></div>"
+    (format nil "<div class=\"comment private-message~A\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <span class=\"date\" data-js-date=\"~A\">~A</span><div class=\"comment-post-title\">Private message: ~A</div></div><div class=\"comment-body\">~A</div></div>"
+	    (if (cdr (assoc :highlight-new message)) " comment-item-highlight" "")
 	    (encode-entities (get-user-slug (cdr (assoc :user-id message))))
 	    (encode-entities (get-username (cdr (assoc :user-id message))))
 	    js-time
@@ -593,7 +597,9 @@
 (define-regex-handler view-user ("^/users/(.*?)(?:$|\\?)" user-slug) (offset show)
                       (with-error-page
                         (let* ((offset (if offset (parse-integer offset) 0))
-                               (user-info (lw2-graphql-query (format nil "{UsersSingle(slug:\"~A\"){_id, displayName, karma}}" user-slug)))
+			       (auth-token (if (string= show "inbox") (hunchentoot:cookie-in "lw2-auth-token")))
+			       (user-info (lw2-graphql-query (graphql-query-string "UsersSingle" (alist :slug user-slug) `(:--id :display-name :karma ,@(if (string= show "inbox") '(:last-notifications-check))))
+							     :auth-token auth-token))
                                (comments-index-fields (remove :page-url *comments-index-fields*)) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
                                (title (format nil "~A~@['s ~A~]" (cdr (assoc :display-name user-info)) (if (member show '(nil "posts" "comments") :test #'equal) show)))
 			       (posts-base-terms (load-time-value (alist :view "userPosts" :meta :null)))
@@ -611,16 +617,24 @@
 							  (prog1
 							    (let ((notifications (lw2-graphql-query (graphql-query-string "NotificationsList" (alist :terms (alist :view "userNotifications" :user-id (cdr (assoc :--id user-info)) :limit 21 :offset offset))
 															  '(:--id :document-type :document-id :link :title :message :type :viewed))
-												    :auth-token (hunchentoot:cookie-in "lw2-auth-token"))))
+												    :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
+								  (last-check (ignore-errors (local-time:parse-timestring (cdr (assoc :last-notifications-check user-info))))))
 							      (loop for n in notifications collect
 								    (handler-case
-								      (alexandria:switch ((cdr (assoc :document-type n)) :test #'string=)
-											 ("comment"
-											  (lw2-graphql-query (graphql-query-string "CommentsSingle" (alist :document-id (cdr (assoc :document-id n))) *comments-index-fields*)))
-											 ("message"
-											  (lw2-graphql-query (graphql-query-string "MessagesSingle" (alist :document-id (cdr (assoc :document-id n)))
-																   '(:--id :user-id :created-at :content (:conversation :--id :title) :----typename))
-													     :auth-token (hunchentoot:cookie-in "lw2-auth-token"))))
+								      (labels ((check-new (key obj)
+											  (if (ignore-errors (local-time:timestamp< last-check (local-time:parse-timestring (cdr (assoc key obj)))))
+											    (acons :highlight-new t obj)
+											    obj)))
+									(alexandria:switch ((cdr (assoc :document-type n)) :test #'string=)
+											   ("comment"
+											    (check-new :posted-at (lw2-graphql-query (graphql-query-string "CommentsSingle"
+																			   (alist :document-id (cdr (assoc :document-id n)))
+																			   *comments-index-fields*))))
+											   ("message"
+											    (check-new :created-at
+												       (lw2-graphql-query (graphql-query-string "MessagesSingle" (alist :document-id (cdr (assoc :document-id n)))
+																		'(:--id :user-id :created-at :content (:conversation :--id :title) :----typename))
+															  :auth-token (hunchentoot:cookie-in "lw2-auth-token"))))))
 								      (condition (c) c))))
 							    (do-lw2-post-query (hunchentoot:cookie-in "lw2-auth-token")
 									       (list (alist :query "mutation usersEdit($documentId: String, $set: UsersInput) { usersEdit(documentId: $documentId, set: $set) { _id }}"
