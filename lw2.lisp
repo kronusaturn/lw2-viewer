@@ -220,15 +220,15 @@
                          :body (clean-html (cdr (assoc :html-body item)))))))))))
 
 (defun check-notifications (user-id auth-token)
-  (let ((notifications (lw2-graphql-query (graphql-query-string "NotificationsList" (alist :terms (alist :view "userNotifications" :user-id user-id :limit 1))
-								'(:created-at))
-					  :auth-token auth-token))
-	(user-info (lw2-graphql-query (graphql-query-string "UsersSingle" (alist :document-id user-id) '(:last-notifications-check))
-				      :auth-token auth-token)))
-    (when (and notifications user-info)
-      (handler-case
-	(local-time:timestamp> (local-time:parse-timestring (cdr (assoc :created-at (first notifications)))) (local-time:parse-timestring (cdr (assoc :last-notifications-check user-info))))
-	(local-time::invalid-timestring () nil)))))
+  (handler-case
+    (let ((notifications (lw2-graphql-query (graphql-query-string "NotificationsList" (alist :terms (alist :view "userNotifications" :user-id user-id :limit 1))
+								  '(:created-at))
+					    :auth-token auth-token))
+	  (user-info (lw2-graphql-query (graphql-query-string "UsersSingle" (alist :document-id user-id) '(:last-notifications-check))
+					:auth-token auth-token)))
+      (when (and notifications user-info)
+	  (local-time:timestamp> (local-time:parse-timestring (cdr (assoc :created-at (first notifications)))) (local-time:parse-timestring (cdr (assoc :last-notifications-check user-info))))))
+    (t () nil)))
 
 (defparameter *html-head*
 "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
