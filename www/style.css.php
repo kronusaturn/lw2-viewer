@@ -2732,6 +2732,16 @@ ol {
 	#top-nav-bar {
 		margin-top: 1.5em;
 	}
+	.user-page .sublevel-nav {
+		display: table;
+		margin: auto;
+		padding: 0 1em;
+	}
+	.user-page .sublevel-nav .sublevel-item {
+		display: table-cell;
+		font-size: 1rem;
+		padding: 0.25em 0.5em;
+	}
 	.comment-minimize-button::after {
 		height: 100%;
 		top: 0;
@@ -2925,6 +2935,12 @@ ol {
 @media only screen and (max-width: 374px) {
 	.nav-bar .nav-inner {
 		padding: 6px 3.33vw;
+	}
+	.user-page .sublevel-nav {
+		padding: 0 0.5em;
+	}
+	.user-page .sublevel-nav .sublevel-item {
+		font-size: 0.9375rem;
 	}
 	#inbox-indicator::before {
 		font-size: 0.625rem;
