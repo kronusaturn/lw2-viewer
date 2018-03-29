@@ -1,4 +1,4 @@
-(defpackage #:lw2-viewer
+(uiop:define-package #:lw2-viewer
   (:use #:cl #:sb-thread #:flexi-streams #:djula #:lw2-viewer.config #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login))
 
 (in-package #:lw2-viewer) 
@@ -73,7 +73,7 @@
 		    (clean-html (or (cdr (assoc :html-body post)) "") :with-toc t :post-id (cdr (assoc :--id post))))))) 
 
 (defun comment-to-html (comment &key with-post-title)
-  (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :posted-at comment))) 
+  (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :posted-at comment)))
     (format nil "<div class=\"comment~A\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <a class=\"date\" href=\"~A\" data-js-date=\"~A\">~A</a><div class=\"karma\"><span class=\"karma-value\">~A</span></div>~@[<a class=\"lw2-link\" href=\"~A\">LW2 link</a>~]~A</div><div class=\"comment-body\"~@[ data-markdown-source=\"~A\"~]>~A</div></div>"
             (if (and (logged-in-userid (cdr (assoc :user-id comment))) (< (* 1000 (local-time:timestamp-to-unix (local-time:now))) (+ js-time 15000))) " just-posted-comment" "")
 	    (encode-entities (get-user-slug (cdr (assoc :user-id comment)))) 
@@ -84,7 +84,11 @@
 	    (pretty-number (cdr (assoc :base-score comment)) "point")
 	    (cdr (assoc :page-url comment)) 
 	    (if with-post-title
-	      (format nil "<div class=\"comment-post-title\">on: <a href=\"~A\">~A</a></div>"
+	      (format nil "<div class=\"comment-post-title\">~1{in reply to: <a href=\"/users/~A\">~A</a>'s <a href=\"~A\">comment</a> ~}on: <a href=\"~A\">~A</a></div>"
+		      (alexandria:if-let (parent-comment (cdr (assoc :parent-comment comment)))
+			(list (encode-entities (get-user-slug (cdr (assoc :user-id parent-comment))))
+			      (encode-entities (get-username (cdr (assoc :user-id parent-comment))))
+			      (generate-post-link (cdr (assoc :post-id parent-comment)) (cdr (assoc :--id parent-comment)))))
 		      (generate-post-link (cdr (assoc :post-id comment)))
 		      (encode-entities (clean-text (get-post-title (cdr (assoc :post-id comment))))))
 	      (format nil "~@[<a class=\"comment-parent-link\" href=\"#comment-~A\">Parent</a>~]~@[<div class=\"comment-child-links\">Replies: ~:{<a href=\"#comment-~A\">&gt;~A</a>~}</div>~]~:[~;<div class=\"comment-minimize-button\" data-child-count=\"~A\"></div>~]"
@@ -409,9 +413,6 @@
 
 (declaim (inline alist)) 
 (defun alist (&rest parms) (alexandria:plist-alist parms))
-
-(defparameter *posts-index-fields* '(:title :--id :slug :user-id :posted-at :base-score :comment-count :page-url :url))
-(defparameter *comments-index-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id :base-score :page-url :html-body)) 
 
 (hunchentoot:define-easy-handler (view-root :uri "/") (offset)
 				 (with-error-page
