@@ -271,6 +271,7 @@ input {
 /* For Webkit: */
 .active-bar {
 	box-shadow: 0 -3px 8px -2px #ccc;
+	position: relative;
 }
 
 .active-bar .nav-inactive {
