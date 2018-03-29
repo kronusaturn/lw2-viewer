@@ -326,7 +326,7 @@ input {
 }
 
 #secondary-bar {
-	table-layout: fixed;
+/* 	table-layout: fixed; */
 }
 
 /* Search tab */
