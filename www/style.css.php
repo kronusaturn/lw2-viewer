@@ -378,42 +378,55 @@ input {
 }
 
 #nav-item-archive {
-	width: 10%;
+	width: 12%;
 }
 #nav-item-login {
-	width: 15%;
+	position: relative;
+}
+#nav-item-login .nav-inner {
+	padding: 0 2.5em;
 }
 #nav-item-about {
-	width: 10%;
+	width: 12%;
 }
+
+/*******************/
+/* INBOX INDICATOR */
+/*******************/
 
 #inbox-indicator {
 	position: absolute;
 	top: 0;
 	right: 0;
-	/* text-shadow: 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff;
-	content: "";
-	width: 0;
-	z-index: 1000;*/
+	height: 100%;
 	visibility: hidden;
 }
-
 #inbox-indicator::before {
 	content: "\f0e0";
 	font-family: "Font Awesome";
-	color: #ff2200;
+	color: #f00;
+	font-size: 1.1875rem;
 	position: absolute;
-	top: 1px;
-	right: 3px;
+	height: 100%;
+	right: 0;
+	top: 0;
+	padding: 0 0.45em;
 	visibility: visible;
 	z-index: 1000;
-	line-height: 18px;
-	font-size: 20px;
-	background-color: #fff;
-	padding: 0 2px;
-	border-radius: 2px;
-	height: 19px;
-	box-shadow: 1px 1px 3px #b1b1b1;
+	font-weight: 900;
+	text-shadow: 
+		0 0 1px #777,
+		0.5px 0.5px 1px #777;
+}
+#inbox-indicator:hover::before {
+	font-weight: normal;
+	color: #fff;
+	text-shadow: 
+		0 0 1px #f00,
+		0 0 2px #f00,
+		0 0 4px #f00,
+		0 0 1px #777,
+		0.5px 0.5px 1px #777;
 }
 
 /******************/
