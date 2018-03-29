@@ -398,6 +398,35 @@ input {
 	width: 10%;
 }
 
+#inbox-indicator {
+	position: absolute;
+	top: 0;
+	right: 0;
+	/* text-shadow: 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff;
+	content: "";
+	width: 0;
+	z-index: 1000;*/
+	visibility: hidden;
+}
+
+#inbox-indicator::before {
+	content: "\f0e0";
+	font-family: "Font Awesome";
+	color: #ff2200;
+	position: absolute;
+	top: 1px;
+	right: 3px;
+	visibility: visible;
+	z-index: 1000;
+	line-height: 18px;
+	font-size: 20px;
+	background-color: #fff;
+	padding: 0 2px;
+	border-radius: 2px;
+	height: 19px;
+	box-shadow: 1px 1px 3px #b1b1b1;
+}
+
 /******************/
 /* WIDTH SELECTOR */
 /******************/
