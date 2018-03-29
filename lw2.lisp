@@ -87,7 +87,7 @@
 	    (pretty-number (cdr (assoc :base-score comment)) "point")
 	    (cdr (assoc :page-url comment)) 
 	    (if with-post-title
-	      (format nil "<div class=\"comment-post-title\">~1{in reply to: <a href=\"/users/~A\">~A</a>'s <a href=\"~A\">comment</a> ~}on: <a href=\"~A\">~A</a></div>"
+	      (format nil "<div class=\"comment-post-title\">~1{in reply to: <a href=\"/users/~A\">~A</a>’s <a href=\"~A\">comment</a> ~}on: <a href=\"~A\">~A</a></div>"
 		      (alexandria:if-let (parent-comment (cdr (assoc :parent-comment comment)))
 			(list (encode-entities (get-user-slug (cdr (assoc :user-id parent-comment))))
 			      (encode-entities (get-username (cdr (assoc :user-id parent-comment))))
