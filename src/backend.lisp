@@ -128,25 +128,28 @@
 		      (error "Failed to load ~A ~A and no cached version available." cache-db cache-key)))))))))
 
 (defun graphql-query-string (query-type terms fields)
-  (format nil "{~A(~{~A~^,~}){~{~A~^,~}}}"
-	  query-type
-	  (labels ((terms (tlist)
-			  (loop for (k . v) in tlist
-				when k
-				collect (format nil "~A:~A"
-						(json:lisp-to-camel-case (string k))
-						(typecase v
-						  ((member t) "true") 
-						  ((member nil) "false")
-						  ((member :null) "null")
-						  ((member :undefined) "undefined")
-						  (list (format nil "{~{~A~^,~}}" (terms v)))
-						  (t (format nil "~S" v)))))))
-	    (terms terms))
-	  (map 'list (lambda (x) (typecase x
-				   (string x)
-				   (symbol (json:lisp-to-camel-case (string x)))))
-	       fields)))
+  (labels ((terms (tlist)
+		  (loop for (k . v) in tlist
+			when k
+			collect (format nil "~A:~A"
+					(json:lisp-to-camel-case (string k))
+					(typecase v
+					  ((member t) "true") 
+					  ((member nil) "false")
+					  ((member :null) "null")
+					  ((member :undefined) "undefined")
+					  (list (format nil "{~{~A~^,~}}" (terms v)))
+					  (t (format nil "~S" v))))))
+	   (fields (flist)
+		   (map 'list (lambda (x) (typecase x
+					    (string x)
+					    (symbol (json:lisp-to-camel-case (string x)))
+					    (list (format nil "~A{~{~A~^,~}}" (json:lisp-to-camel-case (string (first x))) (fields (rest x))))))
+			flist)))
+    (format nil "{~A(~{~A~^,~}){~{~A~^,~}}}"
+	    query-type
+	    (terms terms)
+	    (fields fields))))
 
 (declaim (inline make-posts-list-query)) 
 (defun make-posts-list-query (&key (view "frontpage-rss") (limit 20) (meta nil) (before nil) (after nil) (with-body nil))
