@@ -2910,10 +2910,26 @@ ol {
 		margin: 1em 0 0 0;
 		padding: 0;
 	}
+	#inbox-indicator {
+		width: 100%;
+	}
+	#inbox-indicator::before {
+		width: 100%;
+		height: 100%;
+		box-shadow: 0 0 5px 1px inset;
+		font-size: 0.75rem;
+		text-align: right;
+		padding: 1px 5px;
+	}
 }
 @media only screen and (max-width: 374px) {
 	.nav-bar .nav-inner {
 		padding: 6px 3.33vw;
+	}
+	#inbox-indicator::before {
+		font-size: 0.625rem;
+		text-align: right;
+		padding: 1px 5px;
 	}
 }
 
