@@ -5,8 +5,8 @@
 
 (defparameter *site-uri* "http://www.example.com/") 
 
-(defparameter *graphql-uri* "https://www.lesserwrong.com/graphql")
-(defparameter *websocket-uri* "wss://www.lesserwrong.com/")
+(defparameter *graphql-uri* "https://www.lesswrong.com/graphql")
+(defparameter *websocket-uri* "wss://www.lesswrong.com/")
 
 (defparameter *secure-cookies* nil)
 

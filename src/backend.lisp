@@ -1,15 +1,20 @@
-(defpackage #:lw2.backend
+(uiop:define-package #:lw2.backend
   (:use #:cl #:sb-thread #:flexi-streams #:lw2-viewer.config #:lw2.lmdb)
-  (:export #:log-condition #:log-conditions #:start-background-loader #:stop-background-loader
+  (:export #:*posts-index-fields* #:*comments-index-fields*
+	   #:log-condition #:log-conditions #:start-background-loader #:stop-background-loader
 	   #:lw2-graphql-query-streamparse #:lw2-graphql-query-noparse #:decode-graphql-json #:lw2-graphql-query #:graphql-query-string #:make-posts-list-query
 	   #:get-posts #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
-	   #:lw2-search-query #:get-post-title #:get-post-slug #:get-slug-postid #:get-username #:get-user-slug))
+	   #:lw2-search-query #:get-post-title #:get-post-slug #:get-slug-postid #:get-username #:get-user-slug)
+  (:recycle #:lw2-viewer))
 
 (in-package #:lw2.backend)
 
 (defvar *cookie-jar* (make-instance 'drakma:cookie-jar))
 
 (defvar *background-loader-thread* nil) 
+
+(defparameter *posts-index-fields* '(:title :--id :slug :user-id :posted-at :base-score :comment-count :page-url :url))
+(defparameter *comments-index-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id (:parent-comment :--id :user-id :post-id) :base-score :page-url :html-body)) 
 
 (defun log-condition (condition)
   (with-open-file (outstream "./logs/error.log" :direction :output :if-exists :append :if-does-not-exist :create)
@@ -128,25 +133,28 @@
 		      (error "Failed to load ~A ~A and no cached version available." cache-db cache-key)))))))))
 
 (defun graphql-query-string (query-type terms fields)
-  (format nil "{~A(~{~A~^,~}){~{~A~^,~}}}"
-	  query-type
-	  (labels ((terms (tlist)
-			  (loop for (k . v) in tlist
-				when k
-				collect (format nil "~A:~A"
-						(json:lisp-to-camel-case (string k))
-						(typecase v
-						  ((member t) "true") 
-						  ((member nil) "false")
-						  ((member :null) "null")
-						  ((member :undefined) "undefined")
-						  (list (format nil "{~{~A~^,~}}" (terms v)))
-						  (t (format nil "~S" v)))))))
-	    (terms terms))
-	  (map 'list (lambda (x) (typecase x
-				   (string x)
-				   (symbol (json:lisp-to-camel-case (string x)))))
-	       fields)))
+  (labels ((terms (tlist)
+		  (loop for (k . v) in tlist
+			when k
+			collect (format nil "~A:~A"
+					(json:lisp-to-camel-case (string k))
+					(typecase v
+					  ((member t) "true") 
+					  ((member nil) "false")
+					  ((member :null) "null")
+					  ((member :undefined) "undefined")
+					  (list (format nil "{~{~A~^,~}}" (terms v)))
+					  (t (format nil "~S" v))))))
+	   (fields (flist)
+		   (map 'list (lambda (x) (typecase x
+					    (string x)
+					    (symbol (json:lisp-to-camel-case (string x)))
+					    (list (format nil "~A{~{~A~^,~}}" (json:lisp-to-camel-case (string (first x))) (fields (rest x))))))
+			flist)))
+    (format nil "{~A(~{~A~^,~}){~{~A~^,~}}}"
+	    query-type
+	    (terms terms)
+	    (fields fields))))
 
 (declaim (inline make-posts-list-query)) 
 (defun make-posts-list-query (&key (view "frontpage-rss") (limit 20) (meta nil) (before nil) (after nil) (with-body nil))
@@ -199,10 +207,10 @@
   (let ((cached-result (and *background-loader-thread* (cache-get "index-json" "recent-comments"))))
     (if cached-result
       (rest (cadar (json:decode-json-from-string cached-result))) 
-      (lw2-graphql-query (format nil "{CommentsList (terms:{view:\"postCommentsNew\",limit:20}) {_id, userId, postId, postedAt, parentCommentId, baseScore, pageUrl, htmlBody}}")))))
+      (lw2-graphql-query (graphql-query-string "CommentsList" '((:terms . ((:view . "postCommentsNew") (:limit . 20)))) *comments-index-fields*)))))
 
 (defun get-recent-comments-json ()
-  (lw2-graphql-query-noparse (format nil "{CommentsList (terms:{view:\"postCommentsNew\",limit:20}) {_id, userId, postId, postedAt, parentCommentId, baseScore, pageUrl, htmlBody}}")))
+  (lw2-graphql-query-noparse (graphql-query-string "CommentsList" '((:terms . ((:view . "postCommentsNew") (:limit . 20)))) *comments-index-fields*)))
 
 (defun lw2-search-query (query)
   (multiple-value-bind (req-stream req-status req-headers req-uri req-reuse-stream want-close)
