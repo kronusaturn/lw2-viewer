@@ -1182,6 +1182,14 @@ function initialize() {
 				}
 			});
 		}
+		
+		// Add accesskeys to user page view selector.
+		let viewSelector = document.querySelector(".sublevel-nav");
+		if (viewSelector) {
+			let currentView = viewSelector.querySelector("span");
+			(currentView.nextSibling || viewSelector.firstChild).accessKey = 'x';
+			(currentView.previousSibling || viewSelector.lastChild).accessKey = 'z';
+		}
 	
 		// Move MathJax style tags to <head>.
 		var aggregatedStyles = "";
