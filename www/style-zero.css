@@ -396,7 +396,7 @@ input {
 	position: relative;
 }
 #nav-item-login .nav-inner {
-	padding: 0 2.5em;
+	padding: 3px 2.5em 4px 2.5em;
 }
 #nav-item-about {
 	width: 12%;
