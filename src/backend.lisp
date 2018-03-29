@@ -2,8 +2,8 @@
   (:use #:cl #:sb-thread #:flexi-streams #:lw2-viewer.config #:lw2.lmdb)
   (:export #:*posts-index-fields* #:*comments-index-fields*
 	   #:log-condition #:log-conditions #:start-background-loader #:stop-background-loader
-	   #:lw2-graphql-query-streamparse #:lw2-graphql-query-noparse #:decode-graphql-json #:lw2-graphql-query #:graphql-query-string #:make-posts-list-query
-	   #:get-posts #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
+	   #:lw2-graphql-query-streamparse #:lw2-graphql-query-noparse #:decode-graphql-json #:lw2-graphql-query #:graphql-query-string* #:graphql-query-string #:lw2-graphql-query-map
+	   #:make-posts-list-query #:get-posts #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
 	   #:lw2-search-query #:get-post-title #:get-post-slug #:get-slug-postid #:get-username #:get-user-slug)
   (:recycle #:lw2-viewer))
 
@@ -67,7 +67,7 @@
     (declare (ignore status-code headers final-uri reuse-stream))
     (setf (flexi-stream-external-format req-stream) :utf-8)
     (unwind-protect
-      (rest (cadar (json:decode-json req-stream)))
+      (json:decode-json req-stream)
       (if want-close (close req-stream)))))
 
 (defun lw2-graphql-query-noparse (query &key auth-token)
@@ -95,6 +95,22 @@
 	  ((search "not_allowed" message) (error "LW2 server reports: not allowed."))
 	  (t (error "LW2 server reports: ~A" message))))
       data)))  
+
+(defun lw2-graphql-query-map (fn data &key auth-token postprocess)
+  (let* ((query-string
+	  (with-output-to-string (stream)
+	    (format stream "{")
+	    (loop for n from 0
+		  for d in data
+		  do (format stream "g~A:~A " n (funcall fn d)))
+	    (format stream "}")))
+	 (result (lw2-graphql-query-streamparse query-string :auth-token auth-token)))
+    (values
+      (loop for result-data-cell in (cdr (assoc :data result))
+	    as result-data = (cdr result-data-cell)
+	    for input-data in data
+	    collect (if postprocess (funcall postprocess input-data result-data) result-data))
+      (cdr (assoc :errors result)))))
 
 (defun lw2-graphql-query (query &key auth-token)
   (decode-graphql-json (lw2-graphql-query-noparse query :auth-token auth-token))) 
@@ -132,7 +148,7 @@
 	    (t () (or cached-result
 		      (error "Failed to load ~A ~A and no cached version available." cache-db cache-key)))))))))
 
-(defun graphql-query-string (query-type terms fields)
+(defun graphql-query-string* (query-type terms fields)
   (labels ((terms (tlist)
 		  (loop for (k . v) in tlist
 			when k
@@ -151,10 +167,13 @@
 					    (symbol (json:lisp-to-camel-case (string x)))
 					    (list (format nil "~A{~{~A~^,~}}" (json:lisp-to-camel-case (string (first x))) (fields (rest x))))))
 			flist)))
-    (format nil "{~A(~{~A~^,~}){~{~A~^,~}}}"
+    (format nil "~A(~{~A~^,~}){~{~A~^,~}}"
 	    query-type
 	    (terms terms)
 	    (fields fields))))
+
+(defun graphql-query-string (query-type terms fields)
+  (format nil "{~A}" (graphql-query-string* query-type terms fields)))
 
 (declaim (inline make-posts-list-query)) 
 (defun make-posts-list-query (&key (view "frontpage-rss") (limit 20) (meta nil) (before nil) (after nil) (with-body nil))

@@ -225,13 +225,14 @@
 
 (defun check-notifications (user-id auth-token)
   (handler-case
-    (let ((notifications (lw2-graphql-query (graphql-query-string "NotificationsList" (alist :terms (alist :view "userNotifications" :user-id user-id :limit 1))
-								  '(:created-at))
-					    :auth-token auth-token))
-	  (user-info (lw2-graphql-query (graphql-query-string "UsersSingle" (alist :document-id user-id) '(:last-notifications-check))
-					:auth-token auth-token)))
+    (destructuring-bind (notifications user-info)
+      (lw2-graphql-query-map #'identity (list
+					  (graphql-query-string* "NotificationsList" (alist :terms (alist :view "userNotifications" :user-id user-id :limit 1))
+								'(:created-at))
+					  (graphql-query-string* "UsersSingle" (alist :document-id user-id) '(:last-notifications-check)))
+			     :auth-token auth-token)
       (when (and notifications user-info)
-	  (local-time:timestamp> (local-time:parse-timestring (cdr (assoc :created-at (first notifications)))) (local-time:parse-timestring (cdr (assoc :last-notifications-check user-info))))))
+	(local-time:timestamp> (local-time:parse-timestring (cdr (assoc :created-at (first notifications)))) (local-time:parse-timestring (cdr (assoc :last-notifications-check user-info))))))
     (t () nil)))
 
 (defparameter *html-head*
@@ -619,23 +620,30 @@
 															  '(:--id :document-type :document-id :link :title :message :type :viewed))
 												    :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
 								  (last-check (ignore-errors (local-time:parse-timestring (cdr (assoc :last-notifications-check user-info))))))
-							      (loop for n in notifications collect
-								    (handler-case
-								      (labels ((check-new (key obj)
-											  (if (ignore-errors (local-time:timestamp< last-check (local-time:parse-timestring (cdr (assoc key obj)))))
-											    (acons :highlight-new t obj)
-											    obj)))
-									(alexandria:switch ((cdr (assoc :document-type n)) :test #'string=)
-											   ("comment"
-											    (check-new :posted-at (lw2-graphql-query (graphql-query-string "CommentsSingle"
-																			   (alist :document-id (cdr (assoc :document-id n)))
-																			   *comments-index-fields*))))
-											   ("message"
-											    (check-new :created-at
-												       (lw2-graphql-query (graphql-query-string "MessagesSingle" (alist :document-id (cdr (assoc :document-id n)))
-																		'(:--id :user-id :created-at :content (:conversation :--id :title) :----typename))
-															  :auth-token (hunchentoot:cookie-in "lw2-auth-token"))))))
-								      (condition (c) c))))
+							      (labels ((check-new (key obj)
+										  (if (ignore-errors (local-time:timestamp< last-check (local-time:parse-timestring (cdr (assoc key obj)))))
+										    (acons :highlight-new t obj)
+										    obj)))
+								(lw2-graphql-query-map
+								  (lambda (n)
+								    (alexandria:switch ((cdr (assoc :document-type n)) :test #'string=)
+										       ("comment"
+											(graphql-query-string* "CommentsSingle"
+													       (alist :document-id (cdr (assoc :document-id n)))
+													       *comments-index-fields*))
+										       ("message"
+											(graphql-query-string* "MessagesSingle" (alist :document-id (cdr (assoc :document-id n)))
+													       '(:--id :user-id :created-at :content (:conversation :--id :title) :----typename)))))
+								  notifications
+								  :postprocess (lambda (n result)
+										 (if result
+										   (check-new
+										     (alexandria:switch ((cdr (assoc :document-type n)) :test #'string=)
+													("comment" :posted-at)
+													("message" :created-at))
+										     result)
+										   n))
+								  :auth-token auth-token)))
 							    (do-lw2-post-query (hunchentoot:cookie-in "lw2-auth-token")
 									       (list (alist :query "mutation usersEdit($documentId: String, $set: UsersInput) { usersEdit(documentId: $documentId, set: $set) { _id }}"
 											    :variables (alist :document-id (cdr (assoc :--id user-info))
