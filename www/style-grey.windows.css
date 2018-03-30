@@ -678,8 +678,12 @@ input {
 
 #comments-view-mode-selector {
 	position: fixed;
-	bottom: 25px;
-	left: calc((100% - 900px) / 2 - 35px);
+	bottom: 30px;
+	left: calc((100% - 900px) / 2 - 40px);
+	opacity: 0.6;
+}
+#comments-view-mode-selector:hover {
+	opacity: 1.0;
 }
 #comments-view-mode-selector a {
 	display: block;
@@ -1640,6 +1644,7 @@ a.comment-parent-link:hover::after {
 	max-width: 700px;
 	z-index: 10000;
 	font-size: 1rem;
+	white-space: unset;
 	pointer-events: none;
 }
 .comment-popup .comment-parent-link {
