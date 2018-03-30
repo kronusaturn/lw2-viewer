@@ -923,7 +923,7 @@ function injectNewCommentNavUI(newCommentsCount) {
 /***************************/
 
 function injectTextSizeAdjustmentUI() {
-	let textSizeAdjustmentUIContaner = addUIElement("<div id='text-size-adjustment-ui'>"
+	let textSizeAdjustmentUIContainer = addUIElement("<div id='text-size-adjustment-ui'>"
 	+ `<button type='button' class='text-size-adjust-button decrease' title="Decrease text size (accesskey: '-')" tabindex='-1' accesskey='-'>&#xf068;</button>`
 	+ `<button type='button' class='text-size-adjust-button default' title="Reset to default text size (accesskey: '0')" tabindex='-1' accesskey='0'>A</button>`
 	+ `<button type='button' class='text-size-adjust-button increase' title="Increase text size (accesskey: '=')" tabindex='-1' accesskey='='>&#xf067;</button>`
@@ -936,6 +936,22 @@ function injectTextSizeAdjustmentUI() {
 	if (!(document.querySelector(".post-body") || document.querySelector(".comment-body"))) {
 		document.querySelector("#text-size-adjustment-ui").style.display = "none";	
 	}
+}
+
+/********************************/
+/* COMMENTS VIEW MODE SELECTION */
+/********************************/
+
+function injectCommentsViewModeSelector() {
+	if (document.querySelector("#comments") == null) return;
+	
+	let currentModeThreaded = (location.href.search("chrono=t") == -1);
+	let newHref = "href='" + location.pathname + location.search.replace("chrono=t","") + (currentModeThreaded ? ((location.search == "" ? "?" : "&") + "chrono=t") : "") + location.hash + "'";
+		
+	let commentsViewModeSelector = addUIElement("<div id='comments-view-mode-selector'>"
+	+ `<a class="threaded ${currentModeThreaded ? 'selected' : ''}" ${currentModeThreaded ? "" : newHref}  title='Comments threaded view'>&#xf038;</a>`
+	+ `<a class="chrono ${currentModeThreaded ? '' : 'selected'}" ${currentModeThreaded ? newHref : ""} title='Comments chronological (flat) view'>&#xf017;</a>`
+	+ "</div>");
 }
 
 /*****************************/
@@ -1133,6 +1149,8 @@ function initialize() {
 		injectQuickNavUI();
 		// Add the text size adjustment widget.
 		injectTextSizeAdjustmentUI();
+		// Add the comments view selector widget (threaded vs. chrono).
+// 		injectCommentsViewModeSelector();
 
 		// Add event listeners for Escape and Enter, for the theme tweaker.
 		document.addEventListener("keyup", function(event) {

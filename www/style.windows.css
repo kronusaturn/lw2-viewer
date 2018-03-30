@@ -672,6 +672,41 @@ input {
 	}
 }
 
+/*******************************/
+/* COMMENTS VIEW MODE SELECTOR */
+/*******************************/
+
+#comments-view-mode-selector {
+	position: fixed;
+	bottom: 25px;
+	left: calc((100% - 900px) / 2 - 35px);
+}
+#comments-view-mode-selector a {
+	display: block;
+	font-family: Font Awesome;
+	font-size: 1.25rem;
+	color: #777;
+	text-align: center;
+	opacity: 0.4;
+	padding: 0.25em;
+	z-index: 1;
+}
+#comments-view-mode-selector a.threaded {
+	transform: scaleY(-1);
+	font-weight: 900;
+}
+#comments-view-mode-selector a.chrono {
+	font-weight: normal;
+}
+#comments-view-mode-selector a.selected,
+#comments-view-mode-selector a:hover {
+	opacity: 1.0;
+	text-decoration: none;
+}
+#comments-view-mode-selector a.selected {
+	cursor: default;
+}
+
 /************/
 /* ARCHIVES */
 /************/
