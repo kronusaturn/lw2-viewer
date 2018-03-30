@@ -3652,6 +3652,17 @@ button:hover {
 	color: #777;
 }
 
+#text-size-adjustment-ui button {
+	color: #ccc;
+}
+#text-size-adjustment-ui button:hover {
+	text-decoration: none;
+}
+
+#comments-view-mode-selector a {
+	color: #ccc;
+}
+
 h1.listing a[href^='/'] {
 	font-family: Raleway;
 	font-weight: 100;

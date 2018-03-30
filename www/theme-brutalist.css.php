@@ -319,6 +319,17 @@ a.comment-parent-link:hover::before {
 		0 0 0 3px #000;
 }
 
+#text-size-adjustment-ui button {
+	color: #000;
+}
+#text-size-adjustment-ui button:hover {
+	text-decoration: none;
+}
+
+#comments-view-mode-selector a {
+	color: #000;
+}
+
 .guiedit-buttons-container {
 	background-image: none;
 	background-color: #000;
