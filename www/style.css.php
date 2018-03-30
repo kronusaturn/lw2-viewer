@@ -1556,6 +1556,20 @@ a.comment-parent-link:hover::after {
 	visibility: visible;
 }
 
+div.comment-child-links {
+	display: block;
+	font-weight: 600;
+}
+div.comment-child-links a {
+	margin: 0 0.2em;
+	font-weight: normal;
+	display: inline-block;
+}
+div.comment-child-links a::first-letter {
+	color: #aaa;
+	margin: 0 1px 0 0;
+}
+
 #comments .comment-thread > li {
 	position: relative;
 }
