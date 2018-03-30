@@ -167,7 +167,7 @@
 					    (symbol (json:lisp-to-camel-case (string x)))
 					    (list (format nil "~A{~{~A~^,~}}" (json:lisp-to-camel-case (string (first x))) (fields (rest x))))))
 			flist)))
-    (format nil "~A(~{~A~^,~}){~{~A~^,~}}"
+    (format nil "~A(~{~A~^,~})~@[{~{~A~^,~}}~]"
 	    query-type
 	    (terms terms)
 	    (fields fields))))
