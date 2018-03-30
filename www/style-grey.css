@@ -2336,6 +2336,9 @@ blockquote *:first-child {
 blockquote *:last-child {
 	margin-bottom: 0;
 }
+blockquote blockquote {
+	font-size: 0.95em;
+}
 
 .post-body img,
 .comment-body img {
