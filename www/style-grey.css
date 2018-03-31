@@ -3328,3 +3328,15 @@ input[type='submit'] {
 .post-body h6 {
 	font-weight: 400;
 }
+
+.frac {
+	padding-left: 2px;
+}
+.frac sup {
+	position: relative;
+	left: -1px;
+}
+.frac sub {
+	position: relative;
+	left: -0.5px;
+}

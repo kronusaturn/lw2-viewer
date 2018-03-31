@@ -517,3 +517,16 @@ blockquote {
 	font-weight: 300;
 }
 
+.frac {
+	padding-left: 2px;
+	font-feature-settings: 'lnum';
+	font-size: 0.95em;
+}
+.frac sup {
+	position: relative;
+	left: -1px;
+}
+.frac sub {
+	position: relative;
+	left: -0.5px;
+}

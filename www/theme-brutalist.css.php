@@ -607,3 +607,12 @@ blockquote {
 	padding-left: calc(0.5em + 5px);
 	border-left-width: 0;
 }
+
+.frac sup {
+	position: relative;
+	left: -1px;
+}
+.frac sub {
+	position: relative;
+	left: -0.5px;
+}
