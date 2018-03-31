@@ -29,6 +29,9 @@
   
   // turn a hyphen surrounded by spaces, between words, into an em-dash
   [/([a-z\u201d]) - ([a-z\u201c])/ig, '$1\u2014$2'],
+  // turn a hyphen between a space and a quote, into an em-dash
+  [/([a-z]) -(\u201d)/ig, '$1\u2014$2'],
+  [/(\u201c)- ([a-z])/ig, '$1\u2014$2'],
   // turn a double hyphen, optionally surrounded by spaces, between words, into an em-dash
   [/([a-z]) ?-- ?([a-z])/ig, '$1\u2014$2'],
   
