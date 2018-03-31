@@ -6,7 +6,8 @@
                 :components ((:file "lmdb")
                              (:file "backend" :depends-on ("lmdb"))
                              (:file "links" :depends-on ("lmdb" "backend"))
-                             (:file "clean-html" :depends-on ("links" "lmdb"))
+			     (:static-file "../text-clean-regexps.js")
+                             (:file "clean-html" :depends-on ("links" "lmdb" "../text-clean-regexps.js"))
                              (:file "lw2-login"))
                 :depends-on ("config"))
                (:static-file "www/head.js")
@@ -15,8 +16,6 @@
                (module "config-copy"
                        :pathname ""
                        :output-files (compile-op (o c) (list "config.lisp"))
-                       :components
-                       ((:static-file "config-example.lisp"))
                        :perform (compile-op :before (o c)
                                             (if (not (uiop:file-exists-p "config.lisp"))
                                                 (uiop:copy-file "config-example.lisp" "config.lisp"))))

@@ -54,7 +54,7 @@
 								text ,replacement))))))
     (inner)))
 
-(define-lmdb-memoized clean-html (in-html &key with-toc post-id)
+(define-lmdb-memoized clean-html (:sources ("src/clean-html.lisp" "src/links.lisp" "text-clean-regexps.js")) (in-html &key with-toc post-id)
   (labels ((tag-is (node &rest args)
 		   (declare (type plump:node node)
 			    (dynamic-extent args))

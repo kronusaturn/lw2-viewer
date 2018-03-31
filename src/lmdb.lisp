@@ -95,12 +95,18 @@
 				(city-hash:city-hash-128 data)))))) 
 
   (defun hash-printable-object (object)
-    (city-hash-128-vector (string-to-octets (prin1-to-string object) :external-format :utf-8))))
+    (city-hash-128-vector (string-to-octets (prin1-to-string object) :external-format :utf-8)))
+  
+  (defun hash-file-list (file-list)
+    (city-hash-128-vector
+      (apply #'concatenate
+	     `((vector character)
+	       ,@(map 'list (lambda (f) (uiop:read-file-string (uiop:subpathname (asdf:system-source-directory "lw2-viewer") f))) file-list))))))
 
-(defmacro define-lmdb-memoized (&whole whole name lambda &body body)
+(defmacro define-lmdb-memoized (name (&key sources) lambda &body body)
   (let ((db-name (concatenate 'string (string-downcase (symbol-name name)) "-memo"))
 	(version-octets (string-to-octets "version" :external-format :utf-8))
-	(now-hash (hash-printable-object whole)))
+	(now-hash (hash-file-list sources)))
     (alexandria:once-only (db-name version-octets now-hash)
 			  `(progn
 			     (unless (equalp ,now-hash (with-db (db ,db-name) (lmdb:get db ,version-octets)))
