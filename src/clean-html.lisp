@@ -1,6 +1,7 @@
-(defpackage #:lw2.clean-html
+(uiop:define-package #:lw2.clean-html
   (:use #:cl #:split-sequence #:lw2.lmdb #:lw2.links)
-  (:export #:clean-text #:clean-html))
+  (:export #:clean-text #:clean-html)
+  (:unintern #:*text-clean-regexps* #:*html-clean-regexps*))
 
 (in-package #:lw2.clean-html)
 
@@ -32,29 +33,31 @@
 			 ("7ZqGiPHTpiDMwqMN2" "The-Twelve-Virtues-Of-Rationality"))
       do (let ((file* file)) (setf (gethash id *html-overrides*) (lambda () (rts-to-html file*)))))
 
-(eval-when (:compile-toplevel :load-toplevel :execute) 
-  (defparameter *text-clean-regexps*
+(defmacro define-cleaner (name regexp-list)
+  `(defun ,name (text) ,@(loop for (regex flags replacement) in (eval regexp-list)
+			       collecting `(setf text (ppcre:regex-replace-all
+							(ppcre:create-scanner ,regex
+									      ,@(loop for (flag sym) in '((#\i :case-insensitive-mode)
+													  (#\m :multi-line-mode)
+													  (#\s :single-line-mode)
+													  (#\x :extended-mode))
+										      when (find flag flags)
+										      append (list sym t)))
+							text ,replacement)))))
+
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (defun read-regexp-file (filename)
     (let ((data (destructuring-bind (* ((* (* inner))))
-		  (with-open-file (stream "text-clean-regexps.js") (parse-js:parse-js stream))
+		  (with-open-file (stream (uiop:subpathname (asdf:system-source-directory "lw2-viewer") filename)) (parse-js:parse-js stream))
 		  inner)))
       (loop for input in data
 	    collecting (destructuring-bind (* ((* regex flags) (* replacement))) input
-			 (list regex flags (ppcre:regex-replace-all "\\$(\\d)" replacement "\\\\\\1"))))))) 
+			 (list regex flags (ppcre:regex-replace-all "\\$(\\d)" replacement "\\\\\\1")))))))
 
-(defun clean-text (text)
-  (macrolet ((inner () `(progn ,@(loop for (regex flags replacement) in *text-clean-regexps*
-				       collecting `(setf text (ppcre:regex-replace-all
-								(ppcre:create-scanner ,regex
-										      ,@(loop for (flag sym) in '((#\i :case-insensitive-mode)
-														  (#\m :multi-line-mode)
-														  (#\s :single-line-mode)
-														  (#\x :extended-mode))
-											      when (find flag flags)
-											      append (list sym t)))
-								text ,replacement))))))
-    (inner)))
+(define-cleaner clean-text (read-regexp-file "text-clean-regexps.js"))
+(define-cleaner clean-html-regexps (read-regexp-file "html-clean-regexps.js"))
 
-(define-lmdb-memoized clean-html (:sources ("src/clean-html.lisp" "src/links.lisp" "text-clean-regexps.js")) (in-html &key with-toc post-id)
+(define-lmdb-memoized clean-html (:sources ("src/clean-html.lisp" "src/links.lisp" "text-clean-regexps.js" "html-clean-regexps.js")) (in-html &key with-toc post-id)
   (labels ((tag-is (node &rest args)
 		   (declare (type plump:node node)
 			    (dynamic-extent args))
@@ -142,7 +145,17 @@
 				       (scan-for-urls node))
 				     (when (and (text-node-is-not node "style" "pre" "code")
 						(text-class-is-not node "mjx-math"))
-				       (setf (plump:text node) (clean-text (plump:text node)))))
+				       (let ((new-root (plump:parse (clean-html-regexps (plump:text node))))
+					     (other-children (prog1
+							       (subseq (plump:family node) (1+ (plump:child-position node)))
+							       (setf (fill-pointer (plump:family node)) (plump:child-position node)))))
+					 (alexandria:if-let (first (plump:first-child new-root))
+							    (when (typep first 'plump:text-node)
+							      (setf (plump:text first) (clean-text (plump:text first)))))
+					 (loop for item across (plump:children new-root)
+					       do (plump:append-child (plump:parent node) item))
+					 (loop for item across other-children
+					       do (plump:append-child (plump:parent node) item)))))
 				   (plump:element
 				     (alexandria:when-let (style (plump:attribute node "style"))
 							  (when (or aggressive-deformat (search "font-family" style))
