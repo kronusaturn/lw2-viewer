@@ -923,19 +923,17 @@ function injectNewCommentNavUI(newCommentsCount) {
 /***************************/
 
 function injectTextSizeAdjustmentUI() {
+	if (document.querySelector(".post-body") == null && document.querySelector(".comment-body") == null) return;
+
 	let textSizeAdjustmentUIContainer = addUIElement("<div id='text-size-adjustment-ui'>"
 	+ `<button type='button' class='text-size-adjust-button decrease' title="Decrease text size (accesskey: '-')" tabindex='-1' accesskey='-'>&#xf068;</button>`
 	+ `<button type='button' class='text-size-adjust-button default' title="Reset to default text size (accesskey: '0')" tabindex='-1' accesskey='0'>A</button>`
 	+ `<button type='button' class='text-size-adjust-button increase' title="Increase text size (accesskey: '=')" tabindex='-1' accesskey='='>&#xf067;</button>`
 	+ "</div>");
 	
-	document.querySelectorAll("#text-size-adjustment-ui button").forEach(function (button) {
+	textSizeAdjustmentUIContainer.querySelectorAll("button").forEach(function (button) {
 		button.addActivateEvent(themeTweakerTextSizeAdjustButtonClicked);
 	});
-	
-	if (!(document.querySelector(".post-body") || document.querySelector(".comment-body"))) {
-		document.querySelector("#text-size-adjustment-ui").style.display = "none";	
-	}
 }
 
 /********************************/
@@ -952,6 +950,45 @@ function injectCommentsViewModeSelector() {
 	+ `<a class="threaded ${currentModeThreaded ? 'selected' : ''}" ${currentModeThreaded ? "" : newHref}  title='Comments threaded view'>&#xf038;</a>`
 	+ `<a class="chrono ${currentModeThreaded ? '' : 'selected'}" ${currentModeThreaded ? newHref : ""} title='Comments chronological (flat) view'>&#xf017;</a>`
 	+ "</div>");
+}
+
+/********************************/
+/* COMMENTS LIST MODE SELECTION */
+/********************************/
+
+function injectCommentsListModeSelector() {
+	if (document.querySelector("#content > .comment-thread") == null) return;
+	
+	let commentsListModeSelector = addUIElement("<div id='comments-list-mode-selector'>"
+	+ `<span>View:</span>`
+	+ `<button type='button' class='expanded' title='Expanded comments view' tabindex='-1'>Expanded</button>`
+	+ `<button type='button' class='compact' title='Compact comments view' tabindex='-1'>Compact</button>`
+	+ "</div>");
+	
+	commentsListModeSelector.querySelectorAll("button").forEach(function (button) {
+		button.addActivateEvent(commentsListModeSelectButtonClicked);
+	});
+	
+	if (window.localStorage.getItem("comments-list-mode") == "compact") {
+		document.querySelector("#content").addClass("compact");
+		commentsListModeSelector.querySelector("compact").addClass("selected");
+	} else {
+		commentsListModeSelector.querySelector("expanded").addClass("selected");
+	}
+}
+
+function commentsListModeSelectButtonClicked(event) {
+	event.target.parentElement.querySelectorAll("button").forEach(function (button) {
+		button.removeClass("selected");
+	});
+	window.localStorage.setItem("comments-list-mode", event.target.className);
+	event.target.addClass("selected");	
+
+	if (event.target.hasClass("expanded")) {
+		document.querySelector("#content").removeClass("compact");
+	} else {
+		document.querySelector("#content").addClass("compact");
+	}
 }
 
 /*****************************/
@@ -1151,6 +1188,8 @@ function initialize() {
 		injectTextSizeAdjustmentUI();
 		// Add the comments view selector widget (threaded vs. chrono).
 // 		injectCommentsViewModeSelector();
+		// Add the comments list mode selector widget (expanded vs. compact).
+		injectCommentsListModeSelector();
 
 		// Add event listeners for Escape and Enter, for the theme tweaker.
 		document.addEventListener("keyup", function(event) {

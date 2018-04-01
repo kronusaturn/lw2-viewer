@@ -1668,6 +1668,114 @@ div.comment-child-links a::first-letter {
 	font-size: 1.0625rem;
 }
 
+/*************************/
+/* COMMENTS COMPACT VIEW */
+/*************************/
+
+#comments-list-mode-selector {
+	position: absolute;
+	top: 125px;
+	left: calc((100% - 900px) / 2 + 30px);
+}
+#comments-list-mode-selector button {
+	padding: 0;
+	margin: 0 0 0 0.5em;
+}
+#comments-list-mode-selector button.selected {
+	color: #000;
+	cursor: default;
+}
+#comments-list-mode-selector button.selected:active {
+	transform: none;
+}
+#comments-list-mode-selector button:not(.selected) {
+	opacity: 0.4;
+}
+#comments-list-mode-selector button:not(.selected):hover {
+	opacity: 1.0;
+}
+
+#content.compact > .comment-thread {
+	font-size: 0.9375rem;
+}
+#content.compact > .comment-thread .comment-body {
+	font-size: 1.0625rem;
+}
+#content.compact > .comment-thread .comment-item {
+	max-height: 72px;
+	margin-top: 1em;
+	overflow: hidden;
+	position: relative;
+	pointer-events: none;
+}
+#content.compact > .comment-thread .comment-item::after {
+	content: "…";
+	color: #00e;
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	font-size: 2rem;
+	line-height: 1;
+	background: linear-gradient(to right, transparent 0%, #fff 50%, #fff 100%);
+	padding: 0 16px 10px 64px;
+	pointer-events: auto;
+}
+#content.compact > .comment-thread:first-of-type .comment-item {
+	margin-top: 2.25em;
+}
+#content.compact > .comment-thread .comment-item:hover {
+	overflow: visible;
+	pointer-events: auto;
+}
+#content.compact > .comment-thread .comment-item .comment-meta {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding: 2px 10px;
+}
+#content.compact > .comment-thread .comment-item:hover .comment-meta {
+	white-space: unset;
+}
+#content.compact > .comment-thread .comment-item .comment-meta a {
+	pointer-events: auto;
+}
+#content.compact > .comment-thread .comment-item .comment-meta .comment-post-title {
+	display: inline;
+}
+#content.compact > .comment-thread:last-of-type .comment-item:hover {
+	max-height: unset;
+}
+#content.compact > .comment-thread .comment-item:hover .comment {
+	background-color: #fff;
+	position: relative;
+	z-index: 1;
+	outline: 3px solid #00c;
+	margin-bottom: 2em;
+	bottom: 0;
+}
+#content.compact > .comment-thread .comment-item:hover .comment::before {
+	content: "";
+	position: absolute;
+	display: block;
+	background-color: #fff;
+	width: calc(100% + 20px);
+	height: calc(100% + 20px);
+	z-index: -1;
+	top: -10px;
+	left: -10px;
+	box-shadow: 
+		0 0  3px #fff,
+		0 0  5px #fff,
+		0 0  7px #fff,
+		0 0 10px #fff,
+		0 0 20px #fff,
+		0 0 30px #fff,
+		0 0 40px #fff;
+}
+#content.compact > .comment-thread:last-of-type .comment-item:hover .comment {
+	margin: 0;
+}
+
 /*****************************/
 /* HIGHLIGHTING NEW COMMENTS */
 /*****************************/

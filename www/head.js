@@ -56,6 +56,9 @@ function setContentWidth(widthString) {
 		}
 		#comments-view-mode-selector {
 			left: calc((100% - ${widthString}) / 2 - 40px);
+		}
+		#comments-list-mode-selector {
+			left: calc((100% - ${widthString}) / 2 + 30px);
 		}`;
 }
 setContentWidth(window.localStorage.getItem('selected-width'));
