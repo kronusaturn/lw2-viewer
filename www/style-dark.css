@@ -985,6 +985,9 @@ h1.listing a[href^="http"] {
 #content.user-page .post-meta .author {
 	font-weight: 600;
 }
+#content.search-results-page #secondary-bar + * {
+	margin-top: 3.5rem;
+}
 
 /****************/
 /* ALIGNED FORM */
@@ -1680,24 +1683,27 @@ div.comment-child-links a::first-letter {
 #content.user-page + #ui-elements-container #comments-list-mode-selector {
 	top: 165px;
 }
+#content.search-results-page + #ui-elements-container #comments-list-mode-selector {
+	top: 105px;
+}
 #comments-list-mode-selector button {
 	padding: 0;
 	margin: 0 0 0 0.5em;
 	font-weight: 600;
+	color: #575756;
 }
 #comments-list-mode-selector button.selected {
 	color: #fff;
 	cursor: default;
 }
-#comments-list-mode-selector button.selected:active {
+#comments-list-mode-selector button:active {
 	transform: none;
+	color: #00a9ed;
 }
-#comments-list-mode-selector button:not(.selected) {
-	opacity: 0.4;
-}
-#comments-list-mode-selector button:not(.selected):hover {
-	opacity: 1.0;
-}
+#comments-list-mode-selector button.selected, 
+#comments-list-mode-selector button:hover {
+	border-bottom: 1px solid #fff;
+} 
 
 #content.compact > .comment-thread {
 	font-size: 0.9375rem;
