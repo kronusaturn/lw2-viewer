@@ -971,9 +971,9 @@ function injectCommentsListModeSelector() {
 	
 	if (window.localStorage.getItem("comments-list-mode") == "compact") {
 		document.querySelector("#content").addClass("compact");
-		commentsListModeSelector.querySelector("compact").addClass("selected");
+		commentsListModeSelector.querySelector(".compact").addClass("selected");
 	} else {
-		commentsListModeSelector.querySelector("expanded").addClass("selected");
+		commentsListModeSelector.querySelector(".expanded").addClass("selected");
 	}
 }
 

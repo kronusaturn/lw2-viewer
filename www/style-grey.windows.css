@@ -1677,9 +1677,13 @@ div.comment-child-links a::first-letter {
 	top: 125px;
 	left: calc((100% - 900px) / 2 + 30px);
 }
+#content.user-page + #ui-elements-container #comments-list-mode-selector {
+	top: 165px;
+}
 #comments-list-mode-selector button {
 	padding: 0;
 	margin: 0 0 0 0.5em;
+	font-weight: 600;
 }
 #comments-list-mode-selector button.selected {
 	color: #000;
@@ -1702,7 +1706,7 @@ div.comment-child-links a::first-letter {
 	font-size: 1.0625rem;
 }
 #content.compact > .comment-thread .comment-item {
-	max-height: 72px;
+	max-height: 71px;
 	margin-top: 1em;
 	overflow: hidden;
 	position: relative;
@@ -1741,6 +1745,9 @@ div.comment-child-links a::first-letter {
 }
 #content.compact > .comment-thread .comment-item .comment-meta .comment-post-title {
 	display: inline;
+}
+#content.compact > .comment-thread .comment-item .comment-meta .karma + .comment-post-title {
+	margin-left: 0.75em;
 }
 #content.compact > .comment-thread:last-of-type .comment-item:hover {
 	max-height: unset;
