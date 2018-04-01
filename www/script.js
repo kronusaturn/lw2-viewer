@@ -535,9 +535,6 @@ function injectThemeSelector() {
 function themeSelectButtonClicked(event) {
 	let themeName = /select-theme-([^\s]+)/.exec(event.target.className)[1];
 	setSelectedTheme(themeName);
-
-	// Regenerate images overlay (after slight delay).
-	setTimeout(function() { generateImagesOverlay(); }, 10);
 }
 function setSelectedTheme(themeName) {
 	document.querySelectorAll(".theme-selector button").forEach(function (button) {
@@ -550,6 +547,11 @@ function setSelectedTheme(themeName) {
 	});
 	setTheme(themeName);
 	document.querySelector("#theme-tweaker-ui .current-theme span").innerText = themeName;
+
+	// Regenerate images overlay (after slight delay).
+	setTimeout(function() { generateImagesOverlay(); }, 10);
+	// Update theme tweaker font size selector sample text font.
+	setTimeout(function() { updateThemeTweakerTextSizeAdjustSampleText(); }, 50);	
 }
 
 /********************************************/
