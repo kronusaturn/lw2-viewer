@@ -960,7 +960,7 @@ function updateNewCommentNavUI(newCommentsCount, hns = -1) {
 	// Update the date picker field.
 	if (hns != -1) {
 		let hnsDatePickerInputField = document.querySelector("#hns-date-picker input");
-		hnsDatePickerInputField.value = (new Date(+ hns)).toISOString().slice(0, 16).replace('T', ' ');
+		hnsDatePickerInputField.value = (new Date(+ hns - (new Date()).getTimezoneOffset() * 60e3)).toISOString().slice(0, 16).replace('T', ' ');
 	}
 }
 
