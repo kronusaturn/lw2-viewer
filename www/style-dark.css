@@ -595,6 +595,18 @@ input {
 	text-shadow: 0.5px 0.5px 0 #000;
 	text-align: center;
 	left: 1px;
+	cursor: pointer;
+}
+#new-comment-nav-ui .new-comments-count::selection {
+	background-color: transparent;
+}
+#new-comment-nav-ui .new-comments-count:hover {
+	text-shadow: 
+		0 0 1px #000,
+		0 0 3px #000,
+		0 0 5px #000,
+		0 0 8px #000,
+		0.5px 0.5px 0 #000;
 }
 #new-comment-nav-ui .new-comments-count::after {
 	content: "NEW";
@@ -627,6 +639,61 @@ input {
 	color: #393939;
 	text-shadow: none;
 	cursor: auto;
+}
+
+#hns-date-picker {
+	position: fixed;
+	bottom: 72px;
+	right: calc((100vw - 900px) / 2 - 261px);
+	opacity: 0.6;
+}
+@media only screen and (max-width: 1200px) {
+	#hns-date-picker {
+		right: calc((100vw - 900px) / 2 - 88px);
+		z-index: 1;
+		background-color: #232323;
+		opacity: 1.0;
+		padding: 8px 10px 10px 10px;
+		bottom: 62px;
+		display: none;
+	}
+	#hns-date-picker::before {
+		content: "";
+		position: absolute;
+		display: block;
+		border: 1px solid #575756;
+		border-width: 1px 0 1px 1px;
+		z-index: -1;
+		height: calc(100% + 2px);
+		top: -1px;
+		left: -1px;
+		width: 50%;
+	}
+}
+#hns-date-picker:hover, 
+#hns-date-picker:focus-within {
+	opacity: 1.0;
+}
+#hns-date-picker span {
+	display: block;
+	color: #777;
+	text-shadow: 0.5px 0.5px 0 #000;
+	font-size: 0.75rem;
+	font-weight: 600;
+	text-transform: uppercase;
+}
+#hns-date-picker input {
+	border: 1px solid #777;
+	margin-top: 1px;
+	background-color: transparent;
+	padding: 1px 3px;
+	width: 140px;
+	text-align: center;
+	color: #888;
+}
+#hns-date-picker input:focus {
+	outline: none;
+	color: #fff;
 }
 
 /************************/

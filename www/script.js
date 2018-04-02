@@ -903,21 +903,71 @@ function injectQuickNavUI() {
 
 function injectNewCommentNavUI(newCommentsCount) {
 	let newCommentUIContainer = addUIElement("<div id='new-comment-nav-ui'>" + 
-	`<button type='button' class='new-comment-sequential-nav-button new-comment-previous' title='Previous new comment [,]' tabindex='-1' disabled>&#xf0d8;</button>
-	<span class='new-comments-count' title='${newCommentsCount} new comments'>${newCommentsCount}</span>
-	<button type='button' class='new-comment-sequential-nav-button new-comment-next' title='Next new comment [.]' tabindex='-1'${(newCommentsCount == 0 ? " disabled" : "")}>&#xf0d7;</button>`
+	`<button type='button' class='new-comment-sequential-nav-button new-comment-previous' title='Previous new comment [,]' tabindex='-1'>&#xf0d8;</button>
+	<span class='new-comments-count'></span>
+	<button type='button' class='new-comment-sequential-nav-button new-comment-next' title='Next new comment [.]' tabindex='-1'>&#xf0d7;</button>`
+	+ "</div>");
+
+	newCommentUIContainer.querySelector(".new-comment-previous").addActivateEvent(commentQuicknavButtonClicked);
+	newCommentUIContainer.querySelector(".new-comment-next").addActivateEvent(commentQuicknavButtonClicked);
+
+	document.addEventListener("keyup", function(e) { 
+		if(e.shiftKey || e.ctrlKey || e.altKey) return;
+		if(e.key == ",") scrollToNewComment(false);
+		if(e.key == ".") scrollToNewComment(true)
+	});
+	
+	let hnsDatePicker = addUIElement("<div id='hns-date-picker'>"
+	+ `<span>Since:</span>`
+	+ `<input type='text' class='hns-date'></input>`
 	+ "</div>");
 	
-	if (newCommentsCount > 0) {
-		newCommentUIContainer.querySelector(".new-comment-previous").addActivateEvent(commentQuicknavButtonClicked);
-		newCommentUIContainer.querySelector(".new-comment-next").addActivateEvent(commentQuicknavButtonClicked);
+	hnsDatePicker.querySelector("input").addEventListener("input", OnInputUpdateHNSDate, false);
+	
+	newCommentUIContainer.querySelector(".new-comments-count").addActivateEvent(toggleHNSDatePickerVisibility);
+}
 
-		document.addEventListener("keyup", function(e) { 
-			if(e.shiftKey || e.ctrlKey || e.altKey) return;
-			if(e.key == ",") scrollToNewComment(false);
-			if(e.key == ".") scrollToNewComment(true)
-		});
+function OnInputUpdateHNSDate() {
+	let hns = time_fromHuman(this.value);
+	let newCommentsCount = highlightCommentsSince(hns);
+	updateNewCommentNavUI(newCommentsCount);
+}
+
+// time_fromHuman() function copied from https://bakkot.github.io/SlateStarComments/ssc.js
+function time_fromHuman(string) {
+	/* Convert a human-readable date into a JS timestamp */
+	if (string.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}/)) {
+		string = string.replace(' ', 'T');  // revert nice spacing
+		string += ':00.000Z';  // complete ISO 8601 date
+		time = Date.parse(string);  // milliseconds since epoch
+
+		// browsers handle ISO 8601 without explicit timezone differently
+		// thus, we have to fix that by hand
+		time += (new Date()).getTimezoneOffset() * 60e3;
+	} else {
+		string = string.replace(' at', '');
+		time = Date.parse(string);  // milliseconds since epoch
 	}
+	return time;
+}
+
+function updateNewCommentNavUI(newCommentsCount, hns = -1) {
+	// Update the new comments count.
+	let newCommentsCountLabel = document.querySelector("#new-comment-nav-ui .new-comments-count");
+	newCommentsCountLabel.innerText = newCommentsCount;
+	newCommentsCountLabel.title = `${newCommentsCount} new comments`;
+	
+	// Update the date picker field.
+	if (hns != -1) {
+		let hnsDatePickerInputField = document.querySelector("#hns-date-picker input");
+		hnsDatePickerInputField.value = (new Date(+ hns)).toISOString().slice(0, 16).replace('T', ' ');
+	}
+}
+
+function toggleHNSDatePickerVisibility() {
+	let hnsDatePicker = document.querySelector("#hns-date-picker");
+	let hnsDatePickerVisible = (window.getComputedStyle(hnsDatePicker).display != "none");
+	hnsDatePicker.style.display = hnsDatePickerVisible ? "none" : "block";
 }
 
 /***************************/
@@ -1164,18 +1214,23 @@ function initialize() {
 			window.needHashRealignment = true;
 		}
 		
-		// Read and update last-visited-date.
 		if(document.querySelector("#comments") && getPostHash()) {
+			// Read and update last-visited-date.
 			let lastVisitedDate = getLastVisitedDate();
 			setLastVisitedDate(Date.now());
 
-			// Highlight new comments (as specified by URL parameter, if present, or otherwise
-			// all the new ones since last visit).
-			let hns = parseInt(getQueryVariable("hns"));
-			let newCommentsCount = highlightCommentsSince(hns || lastVisitedDate);
-
 			// Add the new comments count & navigator.
-			injectNewCommentNavUI(newCommentsCount);
+			injectNewCommentNavUI();
+
+			// Get the highlight-new-since date (as specified by URL parameter, if 
+			// present, or otherwise the date of the last visit).
+			let hns = parseInt(getQueryVariable("hns")) || lastVisitedDate;
+
+			// Highlight new comments since the specified date.			 
+			let newCommentsCount = highlightCommentsSince(hns);
+			
+			// Update the comment count display.
+			updateNewCommentNavUI(newCommentsCount, hns);
 		}
 		
 		// Add the content width selector.

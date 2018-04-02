@@ -59,7 +59,14 @@ function setContentWidth(widthString) {
 		}
 		#comments-list-mode-selector {
 			left: calc((100% - ${widthString}) / 2 + 30px);
-		}`;
+		}
+		#hns-date-picker {
+			right: calc((100vw - ${widthString}) / 2 - 261px);
+		}
+		@media only screen and (max-width: 1200px) {
+			#hns-date-picker {
+				right: calc((100vw - ${widthString}) / 2 - 88px);
+			}`;
 }
 setContentWidth(window.localStorage.getItem('selected-width'));
 
