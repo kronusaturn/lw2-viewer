@@ -1020,20 +1020,21 @@ function injectCommentsListModeSelector() {
 		button.addActivateEvent(commentsListModeSelectButtonClicked);
 	});
 	
-	if (window.localStorage.getItem("comments-list-mode") == "compact") {
+	let savedMode = (window.localStorage.getItem("comments-list-mode") == "compact") ? "compact" : "expanded";
+	if (savedMode == "compact")	
 		document.querySelector("#content").addClass("compact");
-		commentsListModeSelector.querySelector(".compact").addClass("selected");
-	} else {
-		commentsListModeSelector.querySelector(".expanded").addClass("selected");
-	}
+	commentsListModeSelector.querySelector(`.${savedMode}`).addClass("selected");
+	commentsListModeSelector.querySelector(`.${savedMode}`).disabled = true;
 }
 
 function commentsListModeSelectButtonClicked(event) {
 	event.target.parentElement.querySelectorAll("button").forEach(function (button) {
 		button.removeClass("selected");
+		button.disabled = false;
 	});
 	window.localStorage.setItem("comments-list-mode", event.target.className);
-	event.target.addClass("selected");	
+	event.target.addClass("selected");
+	event.target.disabled = true;
 
 	if (event.target.hasClass("expanded")) {
 		document.querySelector("#content").removeClass("compact");
