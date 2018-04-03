@@ -1696,23 +1696,33 @@ div.comment-child-links a::first-letter {
 	top: 105px;
 }
 #comments-list-mode-selector button {
-	padding: 0;
-	margin: 0 0 0 0.5em;
-	font-weight: 600;
-	color: #999;
+	color: transparent;
+	width: 32px;
+	height: 32px;
+	padding: 6px;
+	margin: 1px;
+	overflow: hidden;
+	box-shadow:
+		0 0 0 4px #d8d8d8 inset,
+		0 0 0 5px #bbb inset;
+	background-repeat: no-repeat;
+	background-size: 100%;
+	background-origin: content-box;
 }
+#comments-list-mode-selector button:hover,
 #comments-list-mode-selector button.selected {
-	color: #000;
-	cursor: default;
+	box-shadow:
+		0 0 0 5px #bbb inset;
 }
-#comments-list-mode-selector button:active {
-	transform: none;
-	color: #c00;
+#comments-list-mode-selector button:disabled {
+	cursor: auto;
 }
-#comments-list-mode-selector button.selected, 
-#comments-list-mode-selector button:hover {
-	border-bottom: 1px solid #000;
-} 
+#comments-list-mode-selector button.expanded {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("expanded.gif")) ?>');
+}
+#comments-list-mode-selector button.compact {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("compact.gif")) ?>');
+}
 
 #content.compact > .comment-thread {
 	font-size: 0.9375rem;

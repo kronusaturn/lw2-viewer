@@ -1012,9 +1012,8 @@ function injectCommentsListModeSelector() {
 	if (document.querySelector("#content > .comment-thread") == null) return;
 	
 	let commentsListModeSelector = addUIElement("<div id='comments-list-mode-selector'>"
-	+ `<span>View:</span>`
-	+ `<button type='button' class='expanded' title='Expanded comments view' tabindex='-1'>Expanded</button>`
-	+ `<button type='button' class='compact' title='Compact comments view' tabindex='-1'>Compact</button>`
+	+ `<button type='button' class='expanded' title='Expanded comments view' tabindex='-1'></button>`
+	+ `<button type='button' class='compact' title='Compact comments view' tabindex='-1'></button>`
 	+ "</div>");
 	
 	commentsListModeSelector.querySelectorAll("button").forEach(function (button) {

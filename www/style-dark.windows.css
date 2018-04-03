@@ -1754,23 +1754,33 @@ div.comment-child-links a::first-letter {
 	top: 105px;
 }
 #comments-list-mode-selector button {
-	padding: 0;
-	margin: 0 0 0 0.5em;
-	font-weight: 600;
-	color: #575756;
+	color: transparent;
+	width: 32px;
+	height: 32px;
+	padding: 6px;
+	margin: 1px;
+	overflow: hidden;
+	box-shadow:
+		0 0 0 4px #232323 inset,
+		0 0 0 5px #393939 inset;
+	background-repeat: no-repeat;
+	background-size: 100%;
+	background-origin: content-box;
 }
+#comments-list-mode-selector button:hover,
 #comments-list-mode-selector button.selected {
-	color: #fff;
-	cursor: default;
+	box-shadow:
+		0 0 0 5px #393939 inset;
 }
-#comments-list-mode-selector button:active {
-	transform: none;
-	color: #00a9ed;
+#comments-list-mode-selector button:disabled {
+	cursor: auto;
 }
-#comments-list-mode-selector button.selected, 
-#comments-list-mode-selector button:hover {
-	border-bottom: 1px solid #fff;
-} 
+#comments-list-mode-selector button.expanded {
+	background-image: url('data:image/gif;base64,R0lGODdhKAAoAJEAAAAAAKqqqv///wAAACH5BAkAAAMALAAAAAAoACgAAAJTnI+py+0Po5wn2Iuz3lrxD25eSIJjiWZnyq4s6r5kLJtJndK4eO9z77NRhsSi8YhMKpfMpvMJjTqDIR3VYr1mqdtg1/fdhXHjWll2fqVb0rY7WQAAOw==');
+}
+#comments-list-mode-selector button.compact {
+	background-image: url('data:image/gif;base64,R0lGODdhKAAoAJEAAAAAAKqqqv///wAAACH5BAkAAAMALAAAAAAoACgAAAJXnI+py+0Po5y0uoCz3rxz5YViB46mWJ7qlq5u66rWTNf2fcQxrI98H/oBSYnhSWjU4JbMJi7pK0KD0ikRYfUgp1uo8wsOM7LXHJlVPWO6SbbRPRTL57gCADs=');
+}
 
 #content.compact > .comment-thread {
 	font-size: 0.9375rem;
