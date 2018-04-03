@@ -3937,11 +3937,27 @@ a.comment-parent-link:hover::before {
 	background-color: transparent;
 }
 
+#new-comment-nav-ui button:hover {
+	text-decoration: none;
+}
 #new-comment-nav-ui .new-comments-count {
 	text-shadow: none;
 }
 #new-comment-nav-ui .new-comments-count::after {
 	color: #666;
+}
+#hns-date-picker {
+	opacity: 0.7;
+}
+#hns-date-picker span {
+	color: #666;
+	text-shadow: none;
+}
+#hns-date-picker input {
+	border: 1px solid #999;
+}
+#hns-date-picker input:focus {
+	border: 1px solid #ccc;
 }
 
 .post-body strong,

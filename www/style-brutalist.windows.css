@@ -3599,6 +3599,17 @@ a.comment-parent-link:hover::before {
 		0 0 0 3px #000;
 }
 
+#hns-date-picker {
+	bottom: 75px;
+	text-indent: -16px;
+}
+#hns-date-picker span {
+	text-indent: 0px;
+}
+#hns-date-picker input {
+	width: 160px;
+}
+
 #text-size-adjustment-ui button {
 	color: #000;
 }
