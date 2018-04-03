@@ -2416,7 +2416,13 @@ h1 {
 .post-body h3,
 .post-body h4,
 .post-body h5,
-.post-body h6 {
+.post-body h6,
+.comment-body h1,
+.comment-body h2,
+.comment-body h3,
+.comment-body h4,
+.comment-body h5,
+.comment-body h6 {
 	font-family: <?php echo $UI_font; ?>;
 	line-height: 1.1;
 	margin: 1em 0 0.75em 0;
@@ -2424,26 +2430,33 @@ h1 {
 }
 
 .post-body h5,
-.post-body h6 {
+.post-body h6,
+.comment-body h5,
+.comment-body h6 {
 	font-size: 1em;
 	font-weight: 600;
 	font-family: <?php echo ($platform == 'Mac') ? "'Concourse SmallCaps'" : "'Whitney SmallCaps'"; ?>;
 }
-.post-body h6 {
+.post-body h6,
+.comment-body h6 {
 	color: #555;
 }
-.post-body h4 {
+.post-body h4,
+.comment-body h4 {
 	font-size: 1.2em;
 }
-.post-body h3 {
+.post-body h3,
+.comment-body h3 {
 	font-size: 1.4em;
 	font-family: <?php echo ($platform == 'Mac') ? "'Concourse SmallCaps'" : "'Whitney SmallCaps'"; ?>;
 	font-weight: 
 }
-.post-body h2 {
+.post-body h2,
+.comment-body h2 {
 	font-size: 1.75em;
 }
-.post-body h1 {
+.post-body h1,
+.comment-body h1 {
 	font-size: 2.1em;
 	border-bottom: 1px solid #aaa;
 }
