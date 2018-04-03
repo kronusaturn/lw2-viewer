@@ -270,13 +270,16 @@ input[type='submit']:active {
 		0 0 0 5px #fff inset;
 	text-decoration: none;
 }
-#width-selector button {
+#width-selector button,
+#comments-list-mode-selector button {
 	box-shadow:
 		0 0 0 4px #fff inset,
 		0 0 0 5px #000 inset;
 }
 #width-selector button:hover,
-#width-selector button.selected {
+#width-selector button.selected,
+#comments-list-mode-selector button:hover,
+#comments-list-mode-selector button.selected {
 	box-shadow:
 		0 0 0 1px #fff inset,
 		0 0 0 2px #000 inset,

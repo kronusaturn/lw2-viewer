@@ -137,13 +137,16 @@ h6 strong {
 .theme-selector button:hover {
 	text-decoration: none;
 }
-#width-selector button {
+#width-selector button,
+#comments-list-mode-selector button {
 	box-shadow:
 		0 0 0 4px #888 inset,
 		0 0 0 5px #ccc inset;
 }
 #width-selector button:hover,
-#width-selector button.selected {
+#width-selector button.selected,
+#comments-list-mode-selector button:hover,
+#comments-list-mode-selector button.selected {
 	box-shadow:
 		0 0 0 1px #888 inset,
 		0 0 0 2px #ccc inset,

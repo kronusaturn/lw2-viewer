@@ -3385,13 +3385,16 @@ body {
 		0 0 0 4px #eee inset,
 		0 0 0 5px #999 inset;
 }
-#width-selector button {
+#width-selector button,
+#comments-list-mode-selector button {
 	box-shadow:
 		0 0 0 4px #eee inset,
 		0 0 0 5px #aaa inset;
 }
 #width-selector button:hover,
-#width-selector button.selected {
+#width-selector button.selected,
+#comments-list-mode-selector button:hover,
+#comments-list-mode-selector button.selected {
 	box-shadow:
 		0 0 0 1px #eee inset,
 		0 0 0 2px #aaa inset,
