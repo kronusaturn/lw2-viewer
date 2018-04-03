@@ -1025,16 +1025,19 @@ function injectCommentsListModeSelector() {
 		document.querySelector("#content").addClass("compact");
 	commentsListModeSelector.querySelector(`.${savedMode}`).addClass("selected");
 	commentsListModeSelector.querySelector(`.${savedMode}`).disabled = true;
+	commentsListModeSelector.querySelector(`.${(savedMode == "compact" ? "expanded" : "compact")}`).accessKey = '`';
 }
 
 function commentsListModeSelectButtonClicked(event) {
 	event.target.parentElement.querySelectorAll("button").forEach(function (button) {
 		button.removeClass("selected");
 		button.disabled = false;
+		button.accessKey = '`';
 	});
 	window.localStorage.setItem("comments-list-mode", event.target.className);
 	event.target.addClass("selected");
 	event.target.disabled = true;
+	event.target.accessKey = '';
 
 	if (event.target.hasClass("expanded")) {
 		document.querySelector("#content").removeClass("compact");
