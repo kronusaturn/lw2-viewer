@@ -2530,6 +2530,9 @@ hr {
 	border-bottom: 1px solid #999;
 }
 
+pre {
+	white-space: pre-wrap;
+}
 code {
 	font-family: Inconsolata, Menlo, monospace;
 	font-size: 0.95em;

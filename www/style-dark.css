@@ -2588,6 +2588,9 @@ hr {
 	border-bottom: 1px solid #575756;
 }
 
+pre {
+	white-space: pre-wrap;
+}
 code {
 	font-family: Inconsolata, Menlo, monospace;
 	font-size: 0.95em;
