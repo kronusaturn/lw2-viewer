@@ -58,7 +58,7 @@ function setContentWidth(widthString) {
 			left: calc((100% - ${widthString}) / 2 - 40px);
 		}
 		#comments-list-mode-selector {
-			left: calc((100% - ${widthString}) / 2 + 30px);
+			left: calc((100% - ${widthString}) / 2 + 29px);
 		}
 		#hns-date-picker {
 			right: calc((100vw - ${widthString}) / 2 - 261px);

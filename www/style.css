@@ -1744,14 +1744,14 @@ div.comment-child-links a::first-letter {
 
 #comments-list-mode-selector {
 	position: absolute;
-	top: 125px;
-	left: calc((100% - 900px) / 2 + 30px);
+	top: 108px;
+	left: calc((100% - 900px) / 2 + 29px);
 }
 #content.user-page + #ui-elements-container #comments-list-mode-selector {
 	top: 165px;
 }
 #content.search-results-page + #ui-elements-container #comments-list-mode-selector {
-	top: 105px;
+	top: 95px;
 }
 #comments-list-mode-selector button {
 	color: transparent;
@@ -1761,7 +1761,7 @@ div.comment-child-links a::first-letter {
 	margin: 1px;
 	overflow: hidden;
 	box-shadow:
-		0 0 0 4px #d8d8d8 inset,
+		0 0 0 4px #fff inset,
 		0 0 0 5px #bbb inset;
 	background-repeat: no-repeat;
 	background-size: 100%;
