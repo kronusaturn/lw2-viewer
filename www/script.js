@@ -1327,6 +1327,9 @@ function initialize() {
 		if (aggregatedStyles != "") {
 			document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='mathjax-styles'>" + aggregatedStyles + "</style>");
 		}
+		
+		// Add "qualified hyperlinking" toolbar.
+		
 
 		// Call pageLayoutFinished() once all activity that can affect the page layout has finished.
 		document.addEventListener("readystatechange", pageLayoutFinished);

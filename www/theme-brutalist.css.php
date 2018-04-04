@@ -647,3 +647,8 @@ blockquote {
 	position: relative;
 	left: -0.5px;
 }
+
+#content.no-nav-bars {
+	border-width: 2px;
+	box-shadow: none;
+}
