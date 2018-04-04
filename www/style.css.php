@@ -2705,6 +2705,7 @@ ol {
 #content.no-comments .post-meta .comment-count,
 #content.no-comments .post-meta .karma,
 #content.no-comments + #ui-elements-container #new-comment-nav-ui,
+#content.no-comments + #ui-elements-container #hns-date-picker,
 #content.no-comments + #ui-elements-container #quick-nav-ui {
 	display: none;
 }
@@ -2712,6 +2713,12 @@ ol {
 #content.no-nav-bars #primary-bar,
 #content.no-nav-bars #secondary-bar {
 	display: none;
+}
+#content.no-nav-bars {
+	margin: 8px auto;
+}
+#content.no-nav-bars + #ui-elements-container > * {
+	padding-top: 8px;
 }
 
 #aux-about-link {
