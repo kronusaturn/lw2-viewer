@@ -3484,6 +3484,9 @@ body {
 .nav-current span {
 	background-color: #eee;
 }
+#secondary-bar .nav-current span {
+	box-shadow: 0 1px 0 #eee;
+}
 .nav-inner {
 	font-size: 1.125em;
 }
