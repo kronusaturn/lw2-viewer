@@ -322,12 +322,29 @@ a.comment-parent-link:hover::before {
 		0 0 0 3px #000;
 }
 
-#hns-date-picker {
-	bottom: 75px;
-	text-indent: -16px;
+.new-comment-sequential-nav-button:hover {
+	text-decoration: none;
 }
-#hns-date-picker span {
-	text-indent: 0px;
+
+@media only screen and (min-width: 1201px) {
+	#hns-date-picker {
+		bottom: 75px;
+		text-indent: -16px;
+	}
+	#hns-date-picker span {
+		text-indent: 0px;
+	}
+}
+@media only screen and (max-width: 1200px) {
+	#hns-date-picker {
+		bottom: 64px;
+		background-color: #fff;
+	}
+	#hns-date-picker::before {
+		width: 56%;
+		border: 2px solid #000;
+		border-width: 2px 0 2px 2px;
+	}
 }
 #hns-date-picker input {
 	width: 160px;

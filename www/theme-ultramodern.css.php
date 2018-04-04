@@ -398,6 +398,15 @@ a.comment-parent-link:hover::before {
 #hns-date-picker {
 	opacity: 0.7;
 }
+@media only screen and (max-width: 1200px) {
+	#hns-date-picker::before {
+		display: none;
+	}
+	#hns-date-picker {
+		background-color: #888;
+		bottom: 61px;
+	}
+}
 #hns-date-picker span {
 	color: #666;
 	text-shadow: none;

@@ -3491,6 +3491,15 @@ input[type='submit'] {
 	background-color: #d8d8d8;
 }
 
+@media only screen and (max-width: 1200px) {
+	#hns-date-picker {
+		background-color: #eee;
+	}
+	#hns-date-picker::before {
+		border-color: #ccc;
+	}
+}
+
 .new-comment::before {
 	outline: 2px solid #9037ff;
 	box-shadow:

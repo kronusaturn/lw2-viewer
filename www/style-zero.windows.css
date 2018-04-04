@@ -3437,6 +3437,16 @@ body {
 	background-color: transparent;
 	box-shadow: 0 0 0 1px #faa;
 }
+
+@media only screen and (max-width: 1200px) {
+	#hns-date-picker {
+		background-color: #eee;
+	}
+	#hns-date-picker::before {
+		display: none;
+	}
+}
+
 .new-comment::before {
 	display: none;
 }
