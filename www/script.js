@@ -1297,6 +1297,24 @@ function initialize() {
 				}
 			}
 		});
+		
+		// Add event listener for Ctrl-up-arrow and Ctrl-down-arrow (for navigating 
+		// listings pages)
+		let listings = document.querySelectorAll("h1.listing a:last-of-type");
+		document.addEventListener("keyup", function(e) { 
+			if(!e.ctrlKey || e.shiftKey || e.altKey || (e.keyCode != 40 && e.keyCode != 38)) return;
+		
+			var indexOfActiveListing = -1;
+			for (i = 0; i < listings.length; i++) {
+				if (listings[i] === document.activeElement) {
+					indexOfActiveListing = i;
+					break;
+				}
+			}
+			let indexOfNextListing = (e.keyCode == 40 ? ++indexOfActiveListing : (--indexOfActiveListing + listings.length)) % listings.length;
+			listings[indexOfNextListing].focus();
+		});
+
 
 		// Add page navigation at top of pages.
 		let bottomBar = document.querySelector("#bottom-bar");
