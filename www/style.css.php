@@ -2787,6 +2787,7 @@ ol {
 	right: 0.25em;
 	top: 110%;
 	background-color: #fff;
+	z-index: 1;
 }
 .qualified-linking input[type='checkbox'] ~ .qualified-linking-toolbar {
 	display: none;
