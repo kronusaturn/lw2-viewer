@@ -639,7 +639,7 @@ input {
 @media only screen and (max-width: 1200px) {
 	#hns-date-picker {
 		right: calc((100vw - 900px) / 2 - 88px);
-		z-index: 1;
+		z-index: 10001;
 		background-color: #d8d8d8;
 		opacity: 1.0;
 		padding: 8px 10px 10px 10px;
