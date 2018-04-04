@@ -1317,7 +1317,9 @@ function initialize() {
 			aggregatedStyles += styleTag.innerHTML;
 			removeElement("style", styleTag.parentElement);
 		});
-		document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='mathjax-styles'>" + aggregatedStyles + "</style>");
+		if (aggregatedStyles != "") {
+			document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='mathjax-styles'>" + aggregatedStyles + "</style>");
+		}
 
 		// Call pageLayoutFinished() once all activity that can affect the page layout has finished.
 		document.addEventListener("readystatechange", pageLayoutFinished);
