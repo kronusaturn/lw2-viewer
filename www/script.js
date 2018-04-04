@@ -1150,12 +1150,26 @@ function initialize() {
 		document.querySelectorAll("#edit-post-form textarea").forEach(function (textarea) { textarea.addTextareaFeatures(); });
 		document.querySelectorAll((getQueryVariable("post-id")) ? "#edit-post-form textarea" : "#edit-post-form input[name='title']").forEach(function (field) { field.focus(); });
 
+		// Add "qualified hyperlinking" toolbar.
+		let postPermalink = location.protocol + "//" + location.host + location.pathname;
+		document.querySelector(".post .post-meta").insertAdjacentHTML("beforeend", "<div class='qualified-linking'>" + 
+		"<input type='checkbox' tabindex='-1' id='qualified-linking-toolbar-toggle-checkbox'><label for='qualified-linking-toolbar-toggle-checkbox'>&#xf141;</label>" + 
+		"<div class='qualified-linking-toolbar'>" +
+		`<a href='${postPermalink}'>Post permalink</a>` +
+		`<a href='${postPermalink}?comments=false'>Link without comments</a>` +
+		`<a href='${postPermalink}?hide-nav-bars=true'>Link without top nav bars</a>` +
+		`<a href='${postPermalink}?comments=false&hide-nav-bars=true'>Link without comments or top nav bars</a>` +
+		"</div>" +
+		"</div>");
+
 		// Replicate .post-meta at bottom of post.
 		let postMeta = document.querySelector(".post .post-meta");
 		if (postMeta) {
 			let clonedPostMeta = postMeta.cloneNode(true);
 			postMeta.addClass("top-post-meta");
 			clonedPostMeta.addClass("bottom-post-meta");
+			clonedPostMeta.querySelector("input[type='checkbox']").id += "-bottom";
+			clonedPostMeta.querySelector("label").htmlFor += "-bottom";
 			document.querySelector(".post").appendChild(clonedPostMeta);
 		}
 		
@@ -1328,9 +1342,6 @@ function initialize() {
 			document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='mathjax-styles'>" + aggregatedStyles + "</style>");
 		}
 		
-		// Add "qualified hyperlinking" toolbar.
-		
-
 		// Call pageLayoutFinished() once all activity that can affect the page layout has finished.
 		document.addEventListener("readystatechange", pageLayoutFinished);
 		window.setTimeout(pageLayoutFinished);
