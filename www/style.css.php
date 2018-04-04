@@ -2774,11 +2774,26 @@ ol {
 		0 0 5px #00e;
 	cursor: pointer;
 }
-.qualified-linking label:active {
+.qualified-linking label:active span {
+	display: inline-block;
 	transform: scale(0.9);
 }
 .qualified-linking label::selection {
 	background-color: transparent;
+}
+
+.qualified-linking label::after {
+	content: "";
+	width: 100vw;
+	height: 0;
+	left: 0;
+	top: 0;
+	position: fixed;
+	z-index: 1;
+	cursor: default;
+}
+.qualified-linking input[type='checkbox']:checked + label::after {
+	height: 100vh;
 }
 
 .qualified-linking-toolbar {

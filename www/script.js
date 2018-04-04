@@ -1153,7 +1153,7 @@ function initialize() {
 		// Add "qualified hyperlinking" toolbar.
 		let postPermalink = location.protocol + "//" + location.host + location.pathname;
 		document.querySelector(".post .post-meta").insertAdjacentHTML("beforeend", "<div class='qualified-linking'>" + 
-		"<input type='checkbox' tabindex='-1' id='qualified-linking-toolbar-toggle-checkbox'><label for='qualified-linking-toolbar-toggle-checkbox'>&#xf141;</label>" + 
+		"<input type='checkbox' tabindex='-1' id='qualified-linking-toolbar-toggle-checkbox'><label for='qualified-linking-toolbar-toggle-checkbox'><span>&#xf141;</span></label>" + 
 		"<div class='qualified-linking-toolbar'>" +
 		`<a href='${postPermalink}'>Post permalink</a>` +
 		`<a href='${postPermalink}?comments=false'>Link without comments</a>` +
