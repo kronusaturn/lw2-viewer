@@ -1097,10 +1097,17 @@ function removeElement(selector, ancestor = document) {
 
 var initializeDone = false;
 function initialize() {
-	if(initializeDone || (document.readyState == "loading")) return;
+	if (initializeDone || (document.readyState == "loading")) return;
 	initializeDone = true;
 
 	window.requestAnimationFrame(function() {
+		if (getQueryVariable("comments") == "false")
+			document.querySelector("#content").addClass("no-comments");
+		if (getQueryVariable("hide-nav-bars") == "true") {
+			document.querySelector("#content").addClass("no-nav-bars");
+			let auxAboutLink = addUIElement("<div id='aux-about-link'><a href='/about' accesskey='t' target='_new'>&#xf129;</a></div>");
+		}
+	
 		if(location.hash.length == 18) {
 			location.hash = "#comment-" + location.hash.substring(1);
 		}

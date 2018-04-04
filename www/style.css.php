@@ -2697,6 +2697,48 @@ ol {
 	visibility: hidden;
 }
 
+/**************************/
+/* QUALIFIED HYPERLINKING */
+/**************************/
+
+#content.no-comments #comments, 
+#content.no-comments .post-meta .comment-count,
+#content.no-comments .post-meta .karma,
+#content.no-comments + #ui-elements-container #new-comment-nav-ui,
+#content.no-comments + #ui-elements-container #quick-nav-ui {
+	display: none;
+}
+
+#content.no-nav-bars #primary-bar,
+#content.no-nav-bars #secondary-bar {
+	display: none;
+}
+
+#aux-about-link {
+	position: fixed;
+	top: 40px;
+	left: calc((100% - 900px) / 2 - 69px);
+	width: 1.5em;
+	height: 1.5em;
+	text-align: center;
+	display: table;
+}
+#aux-about-link a {
+	display: table-cell;
+	width: 100%;
+	vertical-align: middle;
+	font-family: Font Awesome;
+	font-weight: 900;
+	font-size: 1.25rem;
+	color: #777;
+	opacity: 0.4;
+	z-index: 1;
+}
+#aux-about-link a:hover {
+	opacity: 1.0;
+	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+}
+
 /**********************/
 /* FOR NARROW SCREENS */
 /**********************/

@@ -66,7 +66,11 @@ function setContentWidth(widthString) {
 		@media only screen and (max-width: 1200px) {
 			#hns-date-picker {
 				right: calc((100vw - ${widthString}) / 2 - 88px);
-			}`;
+			}
+		}
+		#aux-about-link {
+			left: calc((100% - ${widthString}) / 2 - 69px);
+		}`;
 }
 setContentWidth(window.localStorage.getItem('selected-width'));
 
