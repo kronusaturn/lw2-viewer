@@ -302,10 +302,10 @@ Element.prototype.setCommentThreadMaximized = function(toggle, userOriginated = 
 
 	minimize_button.className = "comment-minimize-button " + (maximize ? "maximized" : "minimized");
 	minimize_button.innerHTML = maximize ? "&#xf146;" : "&#xf0fe;";
-	minimize_button.title = (maximize ? "Collapse" : "Expand") + 
-							" comment thread (" + 
-							minimize_button.dataset["childCount"] + 
-							" child comments)";
+	minimize_button.title = `${(maximize ? "Collapse" : "Expand")} comment`;
+	if (getQueryVariable("chrono") != "t") {
+		minimize_button.title += ` thread (${minimize_button.dataset["childCount"]} child comments)`;
+	}
 }
 
 /*****************************************/
@@ -1211,6 +1211,9 @@ function initialize() {
 			b.closest(".comment-item").setCommentThreadMaximized(false);
 			b.addActivateEvent(commentMinimizeButtonClicked);
 		});
+		if (getQueryVariable("chrono") == "t") {
+			document.querySelector("head").insertAdjacentHTML("beforeend", "<style>.comment-minimize-button::after { display: none; }</style>");
+		}
 		let urlParts = document.URL.split('#comment-');
 		if (urlParts.length > 1) {
 			expandAncestorsOf(urlParts[1]);
