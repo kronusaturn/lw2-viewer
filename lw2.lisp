@@ -520,9 +520,10 @@
                                                             (progn
                                                               (format out-stream "<div id=\"comments\">~A</div>"
                                                                       (let ((comments (get-post-comments post-id)))
-                                                                        (if chrono
-                                                                            (comment-chrono-to-html comments)
-                                                                            (comment-tree-to-html (make-comment-parent-hash comments)))))
+									(with-cache-transaction
+									  (if chrono
+									    (comment-chrono-to-html comments)
+									    (comment-tree-to-html (make-comment-parent-hash comments))))))
                                                               (if lw2-auth-token
                                                                   (format out-stream "<script>commentVotes=~A</script>" (json:encode-json-to-string (get-post-comments-votes post-id lw2-auth-token)))))
                                                             (serious-condition (c) (write-string (error-to-html c) out-stream))))))))))))

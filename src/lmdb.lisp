@@ -1,7 +1,7 @@
 (uiop:define-package #:lw2.lmdb
   (:use #:cl #:sb-thread #:lw2-viewer.config)
   (:import-from #:flexi-streams #:string-to-octets #:octets-to-string) 
-  (:export #:with-cache-mutex #:with-db #:lmdb-put-string #:cache-put #:cache-get #:simple-cacheable #:define-lmdb-memoized)
+  (:export #:with-cache-mutex #:with-cache-transaction #:with-db #:lmdb-put-string #:cache-put #:cache-get #:simple-cacheable #:define-lmdb-memoized)
   (:unintern #:lmdb-clear-db))
 
 (in-package #:lw2.lmdb) 
@@ -20,25 +20,29 @@
   `(with-mutex (*db-mutex*)
 	       ,@body)) 
 
-(defmacro with-db ((db db-name) &body body)
+(defmacro with-cache-transaction (&body body)
   (alexandria:with-gensyms (txn)
-			   `(with-mutex (*db-mutex*)
-					(let ((,txn (lmdb:make-transaction *db-environment* :flags 0))
-					      (,db (lmdb:make-database ,db-name)))
-					  (unwind-protect
-					    (progn 
-					      (lmdb:begin-transaction ,txn)
-					      (let ((lmdb:*transaction* ,txn))
-						(unwind-protect
-						  (progn 
-						    (lmdb:open-database ,db :create t) 
-						    (prog1
-						      (progn
-							,@body)
-						      (lmdb:commit-transaction ,txn)
-						      (setf ,txn nil)))
-						  (lmdb:close-database ,db)))) 
-					    (when ,txn (lmdb:abort-transaction ,txn)))))))
+			   `(with-recursive-lock (*db-mutex*)
+						 (if lmdb:*transaction*
+						   (progn ,@body)
+						   (let ((,txn (lmdb:make-transaction *db-environment* :flags 0)))
+						     (unwind-protect
+						       (progn 
+							 (lmdb:begin-transaction ,txn)
+							 (let ((lmdb:*transaction* ,txn))
+							   (prog1
+							     (progn ,@body)
+							     (lmdb:commit-transaction ,txn)
+							     (setf ,txn nil))))
+						       (when ,txn (lmdb:abort-transaction ,txn))))))))
+
+(defmacro with-db ((db db-name) &body body)
+  `(with-cache-transaction
+     (let ((,db (lmdb:make-database ,db-name)))
+       (unwind-protect
+	 (progn
+	   (lmdb:open-database ,db :create t)
+	   (progn ,@body))))))
 
 (defun lmdb-put-string (db key value)
   (if 
