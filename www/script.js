@@ -1302,7 +1302,7 @@ function initialize() {
 		// listings pages)
 		let listings = document.querySelectorAll("h1.listing a:last-of-type");
 		document.addEventListener("keyup", function(e) { 
-			if(!e.ctrlKey || e.shiftKey || e.altKey || (e.keyCode != 40 && e.keyCode != 38)) return;
+			if(e.ctrlKey || e.shiftKey || e.altKey || !(e.key == "," || e.key == ".")) return;
 		
 			var indexOfActiveListing = -1;
 			for (i = 0; i < listings.length; i++) {
@@ -1311,7 +1311,7 @@ function initialize() {
 					break;
 				}
 			}
-			let indexOfNextListing = (e.keyCode == 40 ? ++indexOfActiveListing : (--indexOfActiveListing + listings.length)) % listings.length;
+			let indexOfNextListing = (e.key == "." ? ++indexOfActiveListing : (--indexOfActiveListing + listings.length)) % listings.length;
 			listings[indexOfNextListing].focus();
 		});
 
