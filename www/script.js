@@ -1240,6 +1240,11 @@ function initialize() {
 			expandAncestorsOf(urlParts[1]);
 			window.needHashRealignment = true;
 		}
+
+		// Prevent conflict between new comment keys and text fields
+		document.querySelectorAll("input[type='text'], input[type='search'], input[type='password']").forEach(function (x) {
+			x.addEventListener("keyup", function(e) { e.stopPropagation(); });
+		});
 		
 		if(document.querySelector("#comments") && getPostHash()) {
 			// Read and update last-visited-date.

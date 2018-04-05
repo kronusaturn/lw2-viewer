@@ -149,10 +149,9 @@
 					     (other-children (prog1
 							       (subseq (plump:family node) (1+ (plump:child-position node)))
 							       (setf (fill-pointer (plump:family node)) (plump:child-position node)))))
-					 (alexandria:if-let (first (plump:first-child new-root))
-							    (when (typep first 'plump:text-node)
-							      (setf (plump:text first) (clean-text (plump:text first)))))
 					 (loop for item across (plump:children new-root)
+					       do (when (typep item 'plump:text-node)
+						    (setf (plump:text item) (clean-text (plump:text item))))
 					       do (plump:append-child (plump:parent node) item))
 					 (loop for item across other-children
 					       do (plump:append-child (plump:parent node) item)))))
