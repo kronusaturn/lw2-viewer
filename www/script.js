@@ -1301,19 +1301,21 @@ function initialize() {
 		// Add event listener for Ctrl-up-arrow and Ctrl-down-arrow (for navigating 
 		// listings pages)
 		let listings = document.querySelectorAll("h1.listing a:last-of-type");
-		document.addEventListener("keyup", function(e) { 
-			if(e.ctrlKey || e.shiftKey || e.altKey || !(e.key == "," || e.key == ".")) return;
+		if (listings.length > 0) {
+			document.addEventListener("keyup", function(e) { 
+				if(e.ctrlKey || e.shiftKey || e.altKey || !(e.key == "," || e.key == ".")) return;
 		
-			var indexOfActiveListing = -1;
-			for (i = 0; i < listings.length; i++) {
-				if (listings[i] === document.activeElement) {
-					indexOfActiveListing = i;
-					break;
+				var indexOfActiveListing = -1;
+				for (i = 0; i < listings.length; i++) {
+					if (listings[i] === document.activeElement) {
+						indexOfActiveListing = i;
+						break;
+					}
 				}
-			}
-			let indexOfNextListing = (e.key == "." ? ++indexOfActiveListing : (--indexOfActiveListing + listings.length)) % listings.length;
-			listings[indexOfNextListing].focus();
-		});
+				let indexOfNextListing = (e.key == "." ? ++indexOfActiveListing : (--indexOfActiveListing + listings.length)) % listings.length;
+				listings[indexOfNextListing].focus();
+			});
+		}
 
 
 		// Add page navigation at top of pages.
