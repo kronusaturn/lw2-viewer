@@ -16,9 +16,10 @@
                (:static-file "templates/reset-password.html")
                (module "config-copy"
                        :pathname ""
-                       :output-files (compile-op (o c) (list "config.lisp"))
+                       :output-files (compile-op (o c) (if (file-exists-p "config.lisp") nil (list "config.lisp")))
                        :perform (compile-op :before (o c)
-                                            (if (not (uiop:file-exists-p "config.lisp"))
-                                                (uiop:copy-file "config-example.lisp" "config.lisp"))))
+                                            (if (file-exists-p "config.lisp")
+                                                (mark-operation-done o c)
+                                                (copy-file "config-example.lisp" "config.lisp"))))
                (:file "lw2" :depends-on ("src" "config" "www/head.js" "templates/edit-post.html" "templates/reset-password.html"))
                (:file "config" :depends-on ("config-copy"))))
