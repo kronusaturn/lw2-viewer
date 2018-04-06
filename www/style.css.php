@@ -1381,19 +1381,24 @@ h1.listing a[href^="http"] {
 /* LINK POSTS */
 /**************/
 
-.post.link-post > .post-body > p:only-child {
+.post.link-post > .post-body > p:first-child {
 	text-align: center;
-	font-weight: 600;
+	font-size: 1.125em;
+	margin: 0.5em 0 0 0;
+}
+.post.link-post > .post-body > p:only-child {
 	font-size: 1.5em;
-	font-family: <?php echo $UI_font; ?>;
+	margin: 1em 0;
 }
-.post.link-post > .post-body > p:only-child a:only-child {
+.post.link-post a.link-post-link {
 	text-decoration: none;
+	font-family: <?php echo $UI_font; ?>;
+	font-weight: 600;
 }
-.post.link-post > .post-body > p:only-child a:only-child:hover {
+.post.link-post a.link-post-link:hover {
 	color: #c00;
 }
-.post.link-post > .post-body > p:only-child a:only-child::before {
+.post.link-post a.link-post-link::before {
 	content: "\F0C1";
 	font-family: Font Awesome;
 	font-weight: 900;
@@ -1402,7 +1407,7 @@ h1.listing a[href^="http"] {
 	top: -2px;
 	margin-right: 0.25em;
 }
-.post.link-post > .post-body > p:only-child a:only-child:hover::before {
+.post.link-post a.link-post-link:hover::before {
 	color: #4879ec;
 	text-shadow: 
 		0.5px 0.5px 0 #fff,
