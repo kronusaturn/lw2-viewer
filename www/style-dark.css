@@ -2559,7 +2559,7 @@ blockquote blockquote {
 .post-body img,
 .comment-body img {
 	max-width: 100%;
-	border: 1px solid #2c2c2c;
+/* 	border: 1px solid #2c2c2c; */
 }
 
 #content figure {
@@ -2567,7 +2567,7 @@ blockquote blockquote {
 	margin: 1.5em auto;
 }
 #content figure img {
-	border: 1px solid #fff;
+/* 	border: 1px solid #fff; */
 }
 
 li {
