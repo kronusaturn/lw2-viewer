@@ -190,10 +190,12 @@
 	  (if with-body ", htmlBody" ""))) 
 
 (defun get-posts ()
-  (let ((cached-result (and *background-loader-thread* (cache-get "index-json" "new-not-meta")))) 
-    (if cached-result
-      (decode-graphql-json cached-result)
-      (lw2-graphql-query (make-posts-list-query)))))
+  (let ((cached-result (cache-get "index-json" "new-not-meta"))) 
+    (if (and cached-result *background-loader-thread*)
+        (decode-graphql-json cached-result)
+        (handler-case
+          (lw2-graphql-query (make-posts-list-query))
+          (t () (decode-graphql-json cached-result))))))
 
 (defun process-vote-result (res)
   (let ((id (cdr (assoc :--id res)))
@@ -223,10 +225,12 @@
   (lw2-graphql-query-timeout-cached (format nil "{CommentsList(terms:{view:\"postCommentsTop\",limit:10000,postId:\"~A\"}) {_id, userId, postId, postedAt, parentCommentId, baseScore, pageUrl, htmlBody}}" post-id) "post-comments-json" post-id))
 
 (defun get-recent-comments ()
-  (let ((cached-result (and *background-loader-thread* (cache-get "index-json" "recent-comments"))))
-    (if cached-result
-      (rest (cadar (json:decode-json-from-string cached-result))) 
-      (lw2-graphql-query (graphql-query-string "CommentsList" '((:terms . ((:view . "postCommentsNew") (:limit . 20)))) *comments-index-fields*)))))
+  (let ((cached-result (cache-get "index-json" "recent-comments")))
+    (if (and cached-result *background-loader-thread*)
+      (rest (cadar (json:decode-json-from-string cached-result)))
+      (handler-case
+        (lw2-graphql-query (graphql-query-string "CommentsList" '((:terms . ((:view . "postCommentsNew") (:limit . 20)))) *comments-index-fields*))
+        (t () (decode-graphql-json cached-result))))))
 
 (defun get-recent-comments-json ()
   (lw2-graphql-query-noparse (graphql-query-string "CommentsList" '((:terms . ((:view . "postCommentsNew") (:limit . 20)))) *comments-index-fields*)))
