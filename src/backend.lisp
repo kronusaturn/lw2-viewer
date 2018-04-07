@@ -97,20 +97,29 @@
       data)))  
 
 (defun lw2-graphql-query-map (fn data &key auth-token postprocess)
-  (let* ((query-string
-	  (with-output-to-string (stream)
-	    (format stream "{")
-	    (loop for n from 0
-		  for d in data
-		  do (format stream "g~A:~A " n (funcall fn d)))
-	    (format stream "}")))
-	 (result (lw2-graphql-query-streamparse query-string :auth-token auth-token)))
-    (values
-      (loop for result-data-cell in (cdr (assoc :data result))
-	    as result-data = (cdr result-data-cell)
-	    for input-data in data
-	    collect (if postprocess (funcall postprocess input-data result-data) result-data))
-      (cdr (assoc :errors result)))))
+  (multiple-value-bind (map-values queries)
+    (loop for d in data
+          as out-values = (multiple-value-list (funcall fn d))
+          as (out passthrough-p) = out-values
+          when (not passthrough-p) collect out into queries
+          collect out-values into map-values
+          finally (return (values map-values queries)))
+    (let* ((query-string
+             (with-output-to-string (stream)
+               (format stream "{")
+               (loop for n from 0
+                     for q in queries
+                     do (format stream "g~A:~A " n q))
+               (format stream "}")))
+           (result (lw2-graphql-query-streamparse query-string :auth-token auth-token)))
+      (values
+        (loop for (out passthrough-p) in map-values
+              as results = (cdr (assoc :data result)) then (if passthrough-p results (rest results))
+              as result-data-cell = (first results)
+              as result-data = (if passthrough-p out (cdr result-data-cell))
+              for input-data in data
+              collect (if postprocess (funcall postprocess input-data result-data) result-data))
+        (cdr (assoc :errors result))))))
 
 (defun lw2-graphql-query (query &key auth-token)
   (decode-graphql-json (lw2-graphql-query-noparse query :auth-token auth-token))) 
