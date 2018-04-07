@@ -2559,7 +2559,11 @@ blockquote blockquote {
 .post-body img,
 .comment-body img {
 	max-width: 100%;
-/* 	border: 1px solid #2c2c2c; */
+	border: 1px solid #2c2c2c;
+}
+.post-body img[src$='.svg'],
+.comment-body img[src$='.svg'] {
+	border: none;
 }
 
 #content figure {
@@ -2567,7 +2571,10 @@ blockquote blockquote {
 	margin: 1.5em auto;
 }
 #content figure img {
-/* 	border: 1px solid #fff; */
+	border: 1px solid #fff;
+}
+#content figure img[src$='.svg'] {
+	border: none;
 }
 
 li {
@@ -2621,6 +2628,10 @@ textarea {
 
 select {
 	color: #fff;
+}
+
+.frac::after {
+	content: "\200B";
 }
 
 /*************/
