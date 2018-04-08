@@ -416,7 +416,7 @@ input {
 #inbox-indicator::before {
 	content: "\f0e0";
 	font-family: "Font Awesome";
-	color: #0090e0;
+	color: #fff;
 	font-size: 1.1875rem;
 	position: absolute;
 	height: 100%;
@@ -425,14 +425,25 @@ input {
 	padding: 0 0.45em;
 	visibility: visible;
 	z-index: 1000;
-	font-weight: 900;
 	text-shadow: 
 		0 0 1px #777,
 		0.5px 0.5px 1px #777;
 }
+#inbox-indicator.new-messages::before {
+	color: #0090e0;
+	font-weight: 900;
+}
 #inbox-indicator:hover::before {
 	font-weight: normal;
 	color: #000;
+	text-shadow: 
+		0 0 1px #fff,
+		0 0 2px #fff,
+		0 0 4px #fff,
+		0 0 1px #777,
+		0.5px 0.5px 1px #777;
+}
+#inbox-indicator.new-messages:hover::before {
 	text-shadow: 
 		0 0 1px #0090e0,
 		0 0 2px #0090e0,

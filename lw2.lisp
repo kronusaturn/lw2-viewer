@@ -247,6 +247,12 @@
   (let ((query (and (boundp '*current-search-query*) (hunchentoot:escape-for-html *current-search-query*))))
     (format nil "<form action=\"/search\" class=\"nav-inner\"><input name=\"q\" type=\"search\" ~@[value=\"~A\"~] autocomplete=\"off\" accesskey=\"s\" title=\"Search [s]&#10;Tip: Paste a LessWrong URL here to jump to that page.\"><button>Search</button></form>" query)))  
 
+(defun inbox-to-html (user-slug new-messages)
+  (multiple-value-bind (nm-class nm-text)
+    (if new-messages (values "new-messages" "New messages") (values "no-messages" "Inbox"))
+    (format nil "<a href=\"/users/~A?show=inbox\" id=\"inbox-indicator\" class=\"~A\" title=\"~A\">~A</a>"
+            user-slug nm-class nm-text nm-text)))
+
 (defparameter *primary-nav* '(("home" "/" "Home" :description "Latest frontpage posts" :accesskey "h")
 			      ("featured" "/index?view=featured" "Featured" :description "Latest featured posts" :accesskey "f")
 			      ("all" "/index?view=new&all=t" "All" :description "Latest frontpage posts and userpage posts" :accesskey "a") 
@@ -261,14 +267,14 @@
       (format nil "~{~A~}"
 	      (maplist (lambda (items)
 			 (let ((item (first items))) 
-			   (destructuring-bind (id uri name &key description html accesskey nofollow inbox) item
+			   (destructuring-bind (id uri name &key description html accesskey nofollow trailing-html) item
 			     (if (string= uri current-uri)
 			       (progn (setf active-bar t)
-				      (format nil "<span id=\"nav-item-~A\" class=\"nav-item nav-current\" ~@[title=\"~A\"~]>~:[<span class=\"nav-inner\">~A</span>~@[<a href=\"~A?show=inbox\" id=\"inbox-indicator\" title=\"New messages\">New messages</a>~]~;~:*~A~]</span>"
-					      id description (and html (funcall html)) name (if inbox uri))) 
-			       (format nil "<span id=\"nav-item-~A\" class=\"nav-item nav-inactive~:[~; nav-item-last-before-current~]\" ~@[title=\"~A\"~]>~:[<a href=\"~A\" class=\"nav-inner\"~@[ accesskey=\"~A\"~]~:[~; rel=\"nofollow\"~]>~A</a>~@[<a href=\"~A?show=inbox\" id=\"inbox-indicator\" title=\"New messages\">New messages</a>~]~;~:*~A~]</span>"
+				      (format nil "<span id=\"nav-item-~A\" class=\"nav-item nav-current\" ~@[title=\"~A\"~]>~:[<span class=\"nav-inner\">~A</span>~@[~A~]~;~:*~A~]</span>"
+					      id description (and html (funcall html)) name trailing-html))
+			       (format nil "<span id=\"nav-item-~A\" class=\"nav-item nav-inactive~:[~; nav-item-last-before-current~]\" ~@[title=\"~A\"~]>~:[<a href=\"~A\" class=\"nav-inner\"~@[ accesskey=\"~A\"~]~:[~; rel=\"nofollow\"~]>~A</a>~@[~A~]~;~:*~A~]</span>"
 				       id (string= (nth 1 (cadr items)) current-uri) (if accesskey (format nil "~A [~A]" (or description name) accesskey) description) (and html (funcall html)) uri accesskey nofollow name
-				       (if inbox uri))))))
+				       trailing-html)))))
 		       items))
       active-bar)))
 
@@ -287,14 +293,15 @@
 
 (defun user-nav-bar (&optional current-uri)
   (let* ((username (logged-in-username))
-	 (user-id (logged-in-userid))
-	 (*secondary-nav* `(("archive" "/archive" "Archive" :accesskey "r")
-			    ("about" "/about" "About" :accesskey "t")
-			    ("search" "/search" "Search" :html ,#'search-bar-to-html)
-			    ,(if username
-			       `("login" ,(format nil "/users/~A" (encode-entities (get-user-slug (logged-in-userid)))) ,(plump:encode-entities username) :description "User page" :accesskey "u"
-				 :inbox ,(check-notifications user-id (hunchentoot:cookie-in "lw2-auth-token")))
-			       `("login" ,(format nil "/login?return=~A" (url-rewrite:url-encode current-uri)) "Log In" :accesskey "u")))))
+         (user-id (logged-in-userid))
+         (*secondary-nav* `(("archive" "/archive" "Archive" :accesskey "r")
+                            ("about" "/about" "About" :accesskey "t")
+                            ("search" "/search" "Search" :html ,#'search-bar-to-html)
+                            ,(if username
+                                 (let ((user-slug (encode-entities (get-user-slug (logged-in-userid)))))
+                                   `("login" ,(format nil "/users/~A" user-slug) ,(plump:encode-entities username) :description "User page" :accesskey "u"
+                                     :trailing-html ,(inbox-to-html user-slug (check-notifications user-id (hunchentoot:cookie-in "lw2-auth-token")))))
+                                 `("login" ,(format nil "/login?return=~A" (url-rewrite:url-encode current-uri)) "Log In" :accesskey "u")))))
     (nav-bar-to-html current-uri)))
 
 (defun make-csrf-token (session-token &optional (nonce (ironclad:make-random-salt)))
