@@ -3428,10 +3428,12 @@ ol {
 	#inbox-indicator::before {
 		width: 100%;
 		height: 100%;
-		box-shadow: 0 0 5px 1px inset;
 		font-size: 0.75rem;
 		text-align: right;
 		padding: 1px 5px;
+	}
+	a#inbox-indicator.new-messages::before {
+		box-shadow: 0 0 5px 1px inset;
 	}
 }
 @media only screen and (max-width: 374px) {
