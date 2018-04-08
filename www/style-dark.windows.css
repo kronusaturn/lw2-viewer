@@ -416,7 +416,7 @@ input {
 #inbox-indicator::before {
 	content: "\f0e0";
 	font-family: "Font Awesome";
-	color: #484848;
+	color: #393939;
 	font-size: 1.1875rem;
 	position: absolute;
 	height: 100%;
@@ -433,7 +433,7 @@ input {
 		0 0 1px #777,
 		0.5px 0.5px 1px #777;
 }
-#inbox-indicator:hover::before {
+a#inbox-indicator:hover::before {
 	font-weight: normal;
 	color: #000;
 	text-shadow: 
@@ -443,7 +443,7 @@ input {
 		0 0 1px #777,
 		0.5px 0.5px 1px #777;
 }
-#inbox-indicator.new-messages:hover::before {
+a#inbox-indicator.new-messages:hover::before {
 	text-shadow: 
 		0 0 1px #0090e0,
 		0 0 2px #0090e0,
