@@ -248,11 +248,12 @@
     (format nil "<form action=\"/search\" class=\"nav-inner\"><input name=\"q\" type=\"search\" ~@[value=\"~A\"~] autocomplete=\"off\" accesskey=\"s\" title=\"Search [s]&#10;Tip: Paste a LessWrong URL here to jump to that page.\"><button>Search</button></form>" query)))  
 
 (defun inbox-to-html (user-slug new-messages)
-  (let ((target-uri (format nil "/users/~A?show=inbox" user-slug)))
+  (let* ((target-uri (format nil "/users/~A?show=inbox" user-slug))
+         (as-link (string= (hunchentoot:request-uri*) target-uri)))
     (multiple-value-bind (nm-class nm-text)
       (if new-messages (values "new-messages" "New messages") (values "no-messages" "Inbox"))
-      (format nil "<~:[a href=\"~A\"~;span~*~] id=\"inbox-indicator\" class=\"~A\" title=\"~A\">~A</a>"
-              (string= (hunchentoot:request-uri*) target-uri) target-uri nm-class nm-text nm-text))))
+      (format nil "<~:[a href=\"~A\"~;span~*~] id=\"inbox-indicator\" class=\"~A\" accesskey=\"o\" title=\"~A~:[ [o]~;~]\">~A</a>"
+              as-link target-uri nm-class nm-text as-link nm-text))))
 
 (defparameter *primary-nav* '(("home" "/" "Home" :description "Latest frontpage posts" :accesskey "h")
 			      ("featured" "/index?view=featured" "Featured" :description "Latest featured posts" :accesskey "f")
