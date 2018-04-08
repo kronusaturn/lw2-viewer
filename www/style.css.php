@@ -2519,6 +2519,11 @@ blockquote blockquote {
 	border: none;
 }
 
+p.imgonly,
+div.imgonly {
+	text-align: center;
+}
+
 li {
 	margin-bottom: 0.5em;
 }
