@@ -198,13 +198,29 @@
 	  (if after (format nil ",after:\"~A\"" after) "")
 	  (if with-body ", htmlBody" ""))) 
 
-(defun get-posts ()
-  (let ((cached-result (cache-get "index-json" "new-not-meta"))) 
+(defun get-cached-index-query (cache-id query)
+  (let ((cached-result (cache-get "index-json" cache-id)))
     (if (and cached-result *background-loader-thread*)
         (decode-graphql-json cached-result)
-        (handler-case
-          (lw2-graphql-query (make-posts-list-query))
-          (t () (decode-graphql-json cached-result))))))
+        (if cached-result
+            (handler-case
+              (lw2-graphql-query query)
+              (t () (decode-graphql-json cached-result)))
+            (alexandria:when-let (result (lw2-graphql-query query))
+                      (cache-put "index-json" cache-id result)
+                      result)))))
+
+(defun get-posts ()
+  (get-cached-index-query "new-not-meta" (make-posts-list-query)))
+
+(defun get-posts-json ()
+  (lw2-graphql-query-noparse (make-posts-list-query)))
+
+(defun get-recent-comments ()
+  (get-cached-index-query "recent-comments" (graphql-query-string "CommentsList" '((:terms . ((:view . "postCommentsNew") (:limit . 20)))) *comments-index-fields*)))
+
+(defun get-recent-comments-json ()
+  (lw2-graphql-query-noparse (graphql-query-string "CommentsList" '((:terms . ((:view . "postCommentsNew") (:limit . 20)))) *comments-index-fields*)))
 
 (defun process-vote-result (res)
   (let ((id (cdr (assoc :--id res)))
@@ -214,9 +230,6 @@
 (defun process-votes-result (res)
   (loop for v in res
 	collect (multiple-value-bind (votetype id) (process-vote-result v) (cons id votetype))))
-
-(defun get-posts-json ()
-  (lw2-graphql-query-noparse (make-posts-list-query)))
 
 (defun get-post-vote (post-id auth-token)
   (process-vote-result (lw2-graphql-query (format nil "{PostsSingle(documentId:\"~A\") {_id, currentUserVotes{voteType}}}" post-id) :auth-token auth-token))) 
@@ -232,17 +245,6 @@
 
 (defun get-post-comments (post-id)
   (lw2-graphql-query-timeout-cached (format nil "{CommentsList(terms:{view:\"postCommentsTop\",limit:10000,postId:\"~A\"}) {_id, userId, postId, postedAt, parentCommentId, baseScore, pageUrl, htmlBody}}" post-id) "post-comments-json" post-id))
-
-(defun get-recent-comments ()
-  (let ((cached-result (cache-get "index-json" "recent-comments")))
-    (if (and cached-result *background-loader-thread*)
-      (rest (cadar (json:decode-json-from-string cached-result)))
-      (handler-case
-        (lw2-graphql-query (graphql-query-string "CommentsList" '((:terms . ((:view . "postCommentsNew") (:limit . 20)))) *comments-index-fields*))
-        (t () (decode-graphql-json cached-result))))))
-
-(defun get-recent-comments-json ()
-  (lw2-graphql-query-noparse (graphql-query-string "CommentsList" '((:terms . ((:view . "postCommentsNew") (:limit . 20)))) *comments-index-fields*)))
 
 (defun lw2-search-query (query)
   (multiple-value-bind (req-stream req-status req-headers req-uri req-reuse-stream want-close)
