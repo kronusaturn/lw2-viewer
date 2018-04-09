@@ -642,6 +642,9 @@
                                                                                         (graphql-query-string* "CommentsSingle"
                                                                                                                (alist :document-id (cdr (assoc :document-id n)))
                                                                                                                *comments-index-fields*))
+                                                                                       ("post"
+                                                                                        (graphql-query-string* "PostsSingle" (alist :document-id (cdr (assoc :document-id n)))
+                                                                                                               *posts-index-fields*))
                                                                                        ("message"
                                                                                         (graphql-query-string* "MessagesSingle" (alist :document-id (cdr (assoc :document-id n)))
                                                                                                                '(:--id :user-id :created-at :content (:conversation :--id :title) :----typename)))
@@ -653,6 +656,7 @@
                                                                                      (check-new
                                                                                        (alexandria:switch ((cdr (assoc :document-type n)) :test #'string=)
                                                                                                           ("comment" :posted-at)
+                                                                                                          ("post" :posted-at)
                                                                                                           ("message" :created-at))
                                                                                        result)
                                                                                      n))
