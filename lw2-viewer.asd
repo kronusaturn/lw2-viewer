@@ -3,8 +3,9 @@
 (asdf:defsystem :lw2-viewer
   :depends-on ("uiop" "flexi-streams" "hunchentoot" "drakma" "cl-json" "lmdb" "local-time" "plump" "clss" "cl-ppcre" "xml-emitter" "city-hash" "bit-smasher" "cl-unicode" "parse-js" "markdown.cl" "websocket-driver-client" "ironclad" "cl-base64" "djula" "split-sequence")
   :components ((:module "src"
-                :components ((:file "lmdb")
-                             (:file "backend" :depends-on ("lmdb"))
+                :components ((:file "utils")
+                             (:file "lmdb")
+                             (:file "backend" :depends-on ("utils" "lmdb"))
                              (:file "links" :depends-on ("lmdb" "backend"))
 			     (:static-file "../text-clean-regexps.js")
 			     (:static-file "../html-clean-regexps.js")
