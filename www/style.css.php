@@ -2592,6 +2592,15 @@ select {
 	content: "\200B";
 }
 
+u {
+	background-color: #e6e6e6;
+	text-decoration: none;
+	box-shadow: 
+		0 -1px 0 0 #000 inset, 
+		0 -3px 1px -2px #000 inset;
+	padding: 0 1px;
+}
+
 /*************/
 /* FOOTNOTES */
 /*************/
