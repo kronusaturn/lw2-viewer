@@ -9,6 +9,9 @@
 
 (defvar *memory-intensive-mutex* (sb-thread:make-mutex :name "memory-intensive-mutex")) 
 
+(declaim (inline alist))
+(defun alist (&rest parms) (alexandria:plist-alist parms))
+
 (defun logged-in-userid (&optional is-userid)
   (let ((current-userid (and *current-auth-token* (cache-get "auth-token-to-userid" *current-auth-token*))))
     (if is-userid
@@ -438,9 +441,6 @@
   (ppcre:regex-replace-all (load-time-value (concatenate 'string (ppcre:regex-replace-all "\\." *site-uri* "\\.") "posts/([^/ ]{17})/([^/# ]*)(?:(#)comment-([^/ ]{17}))?"))
                            markdown
                            "https://www.lesserwrong.com/posts/\\1/\\2\\3\\4"))
-
-(declaim (inline alist)) 
-(defun alist (&rest parms) (alexandria:plist-alist parms))
 
 (hunchentoot:define-easy-handler (view-root :uri "/") (offset)
 				 (with-error-page
