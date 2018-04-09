@@ -101,8 +101,8 @@
     (loop for d in data
           as out-values = (multiple-value-list (funcall fn d))
           as (out passthrough-p) = out-values
-          when (not passthrough-p) collect out into queries
           collect out-values into map-values
+          when (not passthrough-p) collect out into queries
           finally (return (values map-values queries)))
     (let* ((query-string
              (with-output-to-string (stream)
@@ -113,8 +113,8 @@
                (format stream "}")))
            (result (lw2-graphql-query-streamparse query-string :auth-token auth-token)))
       (values
-        (loop for (out passthrough-p) in map-values
-              as results = (cdr (assoc :data result)) then (if passthrough-p results (rest results))
+        (loop as results = (cdr (assoc :data result)) then (if passthrough-p results (rest results))
+              for (out passthrough-p) in map-values
               as result-data-cell = (first results)
               as result-data = (if passthrough-p out (cdr result-data-cell))
               for input-data in data

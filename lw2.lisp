@@ -626,7 +626,8 @@
                                                                              :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
                                                          ("inbox"
                                                           (prog1
-                                                            (let ((notifications (lw2-graphql-query (graphql-query-string "NotificationsList" (alist :terms (alist :view "userNotifications" :user-id (cdr (assoc :--id user-info)) :limit 21 :offset offset))
+                                                            (let ((notifications (lw2-graphql-query (graphql-query-string "NotificationsList"
+                                                                                                                          (alist :terms (alist :view "userNotifications" :user-id (cdr (assoc :--id user-info)) :created-at :null :limit 21 :offset offset))
                                                                                                                           '(:--id :document-type :document-id :link :title :message :type :viewed))
                                                                                                     :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
                                                                   (last-check (ignore-errors (local-time:parse-timestring (cdr (assoc :last-notifications-check user-info))))))
