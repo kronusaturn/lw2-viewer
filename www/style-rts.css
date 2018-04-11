@@ -3504,6 +3504,9 @@ a.nav-inner,
 	border-top: 1px solid #bbb;
 	margin-top: 2em;
 }
+.post-page #bottom-bar {
+	margin-top: 0.5em;
+}
 #content.no-nav-bars {
 	margin: auto;
 }
@@ -3518,7 +3521,9 @@ a.nav-inner,
 	background-color: #f0f0eb;
 }
 .nav-bar a:hover,
-.nav-bar a:focus {
+.nav-bar a:focus,
+.nav-bar button:hover,
+.nav-bar button:focus {
 	color: #333;
 	text-shadow: 0px 0px 0.5px #333;
 }
@@ -3532,6 +3537,14 @@ a.nav-inner,
 #top-nav-bar a:hover::before {
 	color: #333;
 }
+#bottom-bar #nav-item-first a::before,
+#top-nav-bar a.nav-item-first::before {
+	content: "\F0D9\F0D9";
+}
+#bottom-bar #nav-item-prev a::before,
+#top-nav-bar a.nav-item-prev::before {
+	content: "\F0D9";	
+}
 #bottom-bar #nav-item-top a::before {
 	content: "\F0D8";
 }
@@ -3540,7 +3553,7 @@ a.nav-inner,
 	content: "\F0DA";
 }
 #bottom-bar #nav-item-next a::before {
-	margin: 0;
+	margin-left: -1em;
 	left: 2.85em;
 }
 
@@ -3551,11 +3564,14 @@ h1.listing a[href^='/'] {
 	font-family: Garamond Premier Pro;
 	color: #690010;
 	font-weight: 500;
+	text-shadow: 0.5px 0.5px 0.5px #de7069;
+	padding: 0 2px 1px 1px;
 }
 h1.listing a[href^='/']:hover {
 	text-shadow: 
 		0px 0px 0.5px #ff987b, 
-		0px 0px 1.5px #c05651;
+		0px 0px 1.5px #c05651,
+		0.5px 0.5px 0.5px #de7069;
 	text-decoration: none;
 }
 .post-meta,
@@ -3565,8 +3581,18 @@ h1.listing + .post-meta {
 }
 .post-meta > *,
 .post-meta .author,
-.post-meta .date {
+.post-meta .date,
+.post-meta a:visited,
+.comment-meta,
+.comment-meta a {
 	color: #999;
+}
+.post-meta a:hover,
+.comment-meta a:hover,
+.comment-meta .author:hover {
+	color: #333;
+	text-shadow: 0px 0px 0.5px #333;
+	text-decoration: none;
 }
 .post-meta .vote,
 .post-meta .qualified-linking label {
@@ -3594,6 +3620,16 @@ h1.listing + .post-meta {
 	text-shadow:
 		0 0 0.5px #fff, 
 		0 0 8px #f00;
+}
+.comment-meta {
+	font-weight: 300;
+	padding-top: 5px;
+	padding-bottom: 4px;
+}
+.comment-meta .author {
+	font-size: 1.125em;
+	color: #666;
+	font-weight: 600;
 }
 
 h1.listing a[href^="http"] {
@@ -3665,11 +3701,17 @@ h1.listing a[href^="http"]:hover {
 	font-weight: 600;
 }
 
-.post-body {
+.post-body,
+.comment-body {
 	font-family: Garamond Premier Pro;
 	font-weight: 500;
-	font-size: 1.375rem;
 	line-height: 1.45;
+}
+.post-body {
+	font-size: 1.375rem;
+}
+.comment-body {
+	font-size: 1.25rem;
 }
 
 .post-body a,
@@ -3678,7 +3720,9 @@ h1.listing a[href^="http"]:hover {
 	color: inherit;
 }
 .post-body a:link::after,
-.post-body a:visited::after {
+.post-body a:visited::after,
+.comment-body a:link::after,
+.comment-body a:visited::after {
     position: relative;
     content: "﻿°";
     margin-left: 2px;
@@ -3721,6 +3765,44 @@ textarea {
 	background-color: #f0f0eb;
 	color: #333;
 	text-shadow: 0px 0px 0.5px #333;
+}
+
+#new-comment-nav-ui .new-comment-sequential-nav-button {
+	color: #999;
+}
+#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
+	color: #e6e6e6;
+}
+#new-comment-nav-ui .new-comments-count,
+#new-comment-nav-ui .new-comments-count::after {
+	color: #999;
+	font-weight: normal;
+}
+#hns-date-picker input[type='text'] {
+	border: 1px solid #bbb;
+	color: #888;
+}
+#hns-date-picker input[type='text']:hover,
+#hns-date-picker input[type='text']:focus {
+	color: #666;
+}
+#hns-date-picker span {
+	color: #aaa;
+}
+@media only screen and (max-width: 1200px) {
+#hns-date-picker {
+    right: calc((100vw - 900px) / 2 - 88px);
+    z-index: 10001;
+    background-color: rgba(255,255,250,0.9);
+    opacity: 1.0;
+    padding: 8px 10px 10px 10px;
+    bottom: 61px;
+    display: none;
+    border-radius: 4px;
+}
+#hns-date-picker::before {
+	content: none;
+}
 }
 
 .contents {
@@ -3800,4 +3882,43 @@ textarea {
 }
 .post-body {
 	margin: 0;
+}
+
+.qualified-linking label:hover {
+	color: #333;
+	text-shadow: 0px 0px 0.5px #333;
+}
+
+#comments {
+	border: none;
+	box-shadow: none;
+}
+.comment-item {
+	background-color: transparent !important;
+	border: none;
+	box-shadow: 
+		0 0  3px #bbb,
+		0 0  5px #bbb,
+		0 0  7px #bbb,
+		0 0 10px #bbb;
+}
+.comment-meta {
+	border-bottom: 1px dotted #bbb;
+}
+
+#comments > .comment-controls {
+	margin: 0;
+}
+
+button,
+input[type='submit'] {
+	color: #888;
+}
+button:hover,
+input[type='submit']:hover {
+	color: #333;
+	text-shadow: 0px 0px 0.5px #333;
+}
+.comment + .comment-controls .action-button {
+	font-weight: 300;
 }
