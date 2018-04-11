@@ -434,7 +434,6 @@ input {
 		0.5px 0.5px 1px #777;
 }
 a#inbox-indicator:hover::before {
-	font-weight: normal;
 	color: #fff;
 	text-shadow: 
 		0 0 1px #000,
