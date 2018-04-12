@@ -90,7 +90,7 @@ a:hover {
 
 .contents {
 	border: 2px solid #000;
-	background-color: transparent;
+	background-color: #fff;
 	font-family: Anonymous Pro;
 }
 .post-body .contents ul {
