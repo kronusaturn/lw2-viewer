@@ -42,7 +42,7 @@ body {
 .contents {
 	font-family: sans-serif;
 	border: none;
-	background-color: transparent;
+	background-color: #eee;
 }
 #primary-bar > *,
 #secondary-bar > *,

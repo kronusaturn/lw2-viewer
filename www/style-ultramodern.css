@@ -3828,7 +3828,7 @@ h6 strong {
 .contents {
 	font-family: Raleway;
 	border: none;
-	background-color: transparent;
+	background-color: #888;
 }
 .post-body .contents a:link,
 .post-body .contents a:visited {
