@@ -2591,7 +2591,7 @@ select {
 	content: "\200B";
 }
 
-u {
+.about-page u {
 	background-color: #e6e6e6;
 	text-decoration: none;
 	box-shadow: 
