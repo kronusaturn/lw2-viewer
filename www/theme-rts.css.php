@@ -19,7 +19,7 @@ body {
 }
 a.nav-inner,
 #nav-item-search button {
-	font-weight: 200;
+	font-weight: <?php echo ($platform == 'Mac') ? '200' : '300'; ?>;
 }
 .nav-bar a:link,
 .nav-bar a:visited,
@@ -35,7 +35,7 @@ a.nav-inner,
 	border: none;
 }
 .nav-inner::after {
-	font-weight: 200;
+	font-weight: <?php echo ($platform == 'Mac') ? '200' : '300'; ?>;
 }
 #bottom-bar {
 	border-top: 1px solid #bbb;
@@ -114,7 +114,7 @@ h1.listing a[href^='/']:hover {
 .post-meta,
 h1.listing + .post-meta {
 	text-align: center;
-	font-weight: 300;
+	font-weight: <?php echo ($platform == 'Mac') ? '300' : '400'; ?>;
 }
 .post-meta > *,
 .post-meta .author,
@@ -159,7 +159,7 @@ h1.listing + .post-meta {
 		0 0 8px #f00;
 }
 .comment-meta {
-	font-weight: 300;
+	font-weight: <?php echo ($platform == 'Mac') ? '300' : '400'; ?>;
 	padding-top: 5px;
 	padding-bottom: 4px;
 }
@@ -203,7 +203,7 @@ h1.listing a[href^="http"]:hover {
 .new-post, 
 .new-post:visited {
 	color: #888;
-	font-weight: 200;
+	font-weight: <?php echo ($platform == 'Mac') ? '300' : '400'; ?>;
 }
 .new-post::before {
 	opacity: 0.5;
@@ -316,30 +316,24 @@ textarea {
 	font-weight: normal;
 }
 #hns-date-picker input[type='text'] {
-	border: 1px solid #bbb;
-	color: #888;
+	border: 1px solid <?php echo ($platform == 'Mac') ? '#bbb' : '#aaa'; ?>;
+	color: <?php echo ($platform == 'Mac') ? '#888' : '#666'; ?>;
 }
 #hns-date-picker input[type='text']:hover,
 #hns-date-picker input[type='text']:focus {
-	color: #666;
+	color: <?php echo ($platform == 'Mac') ? '#666' : '#444'; ?>;
 }
 #hns-date-picker span {
-	color: #aaa;
+	color: <?php echo ($platform == 'Mac') ? '#aaa' : '#888'; ?>;
 }
 @media only screen and (max-width: 1200px) {
-#hns-date-picker {
-    right: calc((100vw - 900px) / 2 - 88px);
-    z-index: 10001;
-    background-color: rgba(255,255,250,0.9);
-    opacity: 1.0;
-    padding: 8px 10px 10px 10px;
-    bottom: 61px;
-    display: none;
-    border-radius: 4px;
-}
-#hns-date-picker::before {
-	content: none;
-}
+	#hns-date-picker {
+		bottom: 61px;
+		border-radius: 4px;
+	}
+	#hns-date-picker::before {
+		content: none;
+	}
 }
 
 .contents {
@@ -436,6 +430,12 @@ textarea {
 	font-weight: normal;
 	font-style: normal;
 }
+.post-body h1:first-child::before,
+.post-body .contents + h1::before,
+.post-body h2:first-child::before,
+.post-body .contents + h2::before {
+	content: "";
+}
 
 .post-page .post-meta::after {
 	display: block;
@@ -490,5 +490,5 @@ input[type='submit']:hover {
 	text-shadow: 0px 0px 0.5px #333;
 }
 .comment + .comment-controls .action-button {
-	font-weight: 300;
+	font-weight: <?php echo ($platform == 'Mac') ? '300' : '400'; ?>;
 }

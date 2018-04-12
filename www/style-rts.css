@@ -3666,7 +3666,7 @@ h1.listing a[href^="http"]:hover {
 .new-post, 
 .new-post:visited {
 	color: #888;
-	font-weight: 200;
+	font-weight: 300;
 }
 .new-post::before {
 	opacity: 0.5;
@@ -3790,19 +3790,13 @@ textarea {
 	color: #aaa;
 }
 @media only screen and (max-width: 1200px) {
-#hns-date-picker {
-    right: calc((100vw - 900px) / 2 - 88px);
-    z-index: 10001;
-    background-color: rgba(255,255,250,0.9);
-    opacity: 1.0;
-    padding: 8px 10px 10px 10px;
-    bottom: 61px;
-    display: none;
-    border-radius: 4px;
-}
-#hns-date-picker::before {
-	content: none;
-}
+	#hns-date-picker {
+		bottom: 61px;
+		border-radius: 4px;
+	}
+	#hns-date-picker::before {
+		content: none;
+	}
 }
 
 .contents {
@@ -3898,6 +3892,12 @@ textarea {
 	margin: 0 auto 0.5em auto;
 	font-weight: normal;
 	font-style: normal;
+}
+.post-body h1:first-child::before,
+.post-body .contents + h1::before,
+.post-body h2:first-child::before,
+.post-body .contents + h2::before {
+	content: "";
 }
 
 .post-page .post-meta::after {
