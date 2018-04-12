@@ -395,13 +395,46 @@ textarea {
 	font-family: Garamond Premier Pro;
 	margin: 1.5em 0 0.25em 0;
 }
-.post-body h2, 
-.comment-body h2 {
-	font-style: italic;
+.post-body h4,
+.comment-body h4 {
+	font-size: 1.15em;
 }
 .post-body h3, 
 .comment-body h3 {
 	font-variant: small-caps;
+	font-size: 1.3em;
+}
+.post-body h2, 
+.comment-body h2 {
+	font-style: italic;
+	font-size: 1.5em;
+}
+.post-body h1,
+.comment-body h1 {
+	font-size: 1.9em;
+	border: none;
+}
+.post-body h1 {
+	text-align: center;
+	margin: 1em 0 0 0;
+}
+.post-body h2 {
+	margin: 1em 0 0 0;
+}
+.post-body h1::before {
+	content: "❦";
+	display: block;
+	margin: 0 auto 1em auto;
+	font-size: 0.625em;
+	font-weight: normal;
+}
+.post-body h2::before {
+	content: "☙";
+	text-align: center;
+	display: block;
+	margin: 0 auto 0.5em auto;
+	font-weight: normal;
+	font-style: normal;
 }
 
 .post-page .post-meta::after {

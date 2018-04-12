@@ -508,6 +508,12 @@ function injectThemeSelector() {
 			color: #000;
 			background-color: #fff;
 			font-weight: 400;
+		}
+		.theme-selector button.select-theme-rts,
+		.theme-selector button.select-theme-rts:hover {
+			color: #690010;
+			background-color: #fffffa;
+			font-weight: 400;
 		}` + "</style>");
 
 	let currentTheme = window.localStorage.getItem("selected-theme") || "default";
@@ -517,7 +523,8 @@ function injectThemeSelector() {
 		['grey', 'Grey theme (more subdued than default theme)', 'C'],
 		['ultramodern', 'Ultramodern theme (very hip)', 'D'],
 		['zero', 'Simple theme with no custom fonts', 'E'],
-		['brutalist', 'Brutalist theme (the Motherland calls!)', 'F']
+		['brutalist', 'Brutalist theme (the Motherland calls!)', 'F'],
+		['rts', 'ReadTheSequences.com theme', 'G']
 	];
 	let themeSelector = addUIElement(
 		"<div id='theme-selector' class='theme-selector'>" +
