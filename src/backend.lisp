@@ -202,16 +202,19 @@
 	  (if with-body ", htmlBody" ""))) 
 
 (defun get-cached-index-query (cache-id query)
-  (let ((cached-result (cache-get "index-json" cache-id)))
-    (if (and cached-result *background-loader-thread*)
+  (labels ((query-and-put ()
+             (let* ((result (lw2-graphql-query-noparse query))
+                    (decoded-result (decode-graphql-json result)))
+               (cache-put "index-json" cache-id result)
+               decoded-result)))
+    (let ((cached-result (cache-get "index-json" cache-id)))
+      (if (and cached-result *background-loader-thread*)
         (decode-graphql-json cached-result)
         (if cached-result
             (handler-case
-              (lw2-graphql-query query)
+              (query-and-put)
               (t () (decode-graphql-json cached-result)))
-            (alexandria:when-let (result (lw2-graphql-query query))
-                      (cache-put "index-json" cache-id result)
-                      result)))))
+            (query-and-put))))))
 
 (defun get-posts ()
   (get-cached-index-query "new-not-meta" (make-posts-list-query)))
