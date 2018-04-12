@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2-viewer
-  (:use #:cl #:sb-thread #:flexi-streams #:djula #:lw2-viewer.config #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login))
+  (:use #:cl #:sb-thread #:flexi-streams #:djula #:lw2-viewer.config #:lw2.utils #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login))
 
 (in-package #:lw2-viewer) 
 
@@ -227,7 +227,7 @@
   (handler-case
     (destructuring-bind (notifications user-info)
       (lw2-graphql-query-map #'identity (list
-					  (graphql-query-string* "NotificationsList" (alist :terms (alist :view "userNotifications" :user-id user-id :limit 1))
+                                          (graphql-query-string* "NotificationsList" (alist :terms (nconc (alist :user-id user-id :limit 1) *notifications-base-terms*))
 								'(:created-at))
 					  (graphql-query-string* "UsersSingle" (alist :document-id user-id) '(:last-notifications-check)))
 			     :auth-token auth-token)
@@ -439,9 +439,6 @@
                            markdown
                            "https://www.lesserwrong.com/posts/\\1/\\2\\3\\4"))
 
-(declaim (inline alist)) 
-(defun alist (&rest parms) (alexandria:plist-alist parms))
-
 (hunchentoot:define-easy-handler (view-root :uri "/") (offset)
 				 (with-error-page
 				   (let* ((offset (and offset (parse-integer offset)))
@@ -627,7 +624,7 @@
                                                          ("inbox"
                                                           (prog1
                                                             (let ((notifications (lw2-graphql-query (graphql-query-string "NotificationsList"
-                                                                                                                          (alist :terms (alist :view "userNotifications" :user-id (cdr (assoc :--id user-info)) :created-at :null :limit 21 :offset offset))
+                                                                                                                          (alist :terms (nconc (alist :user-id (cdr (assoc :--id user-info)) :limit 21 :offset offset) *notifications-base-terms*))
                                                                                                                           '(:--id :document-type :document-id :link :title :message :type :viewed))
                                                                                                     :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
                                                                   (last-check (ignore-errors (local-time:parse-timestring (cdr (assoc :last-notifications-check user-info))))))

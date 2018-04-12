@@ -1,6 +1,7 @@
 (uiop:define-package #:lw2.backend
-  (:use #:cl #:sb-thread #:flexi-streams #:lw2-viewer.config #:lw2.lmdb)
+  (:use #:cl #:sb-thread #:flexi-streams #:alexandria #:lw2-viewer.config #:lw2.lmdb #:lw2.utils)
   (:export #:*posts-index-fields* #:*comments-index-fields*
+           #:*notifications-base-terms*
 	   #:log-condition #:log-conditions #:start-background-loader #:stop-background-loader
 	   #:lw2-graphql-query-streamparse #:lw2-graphql-query-noparse #:decode-graphql-json #:lw2-graphql-query #:graphql-query-string* #:graphql-query-string #:lw2-graphql-query-map
 	   #:make-posts-list-query #:get-posts #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
@@ -15,6 +16,8 @@
 
 (defparameter *posts-index-fields* '(:title :--id :slug :user-id :posted-at :base-score :comment-count :page-url :url))
 (defparameter *comments-index-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id (:parent-comment :--id :user-id :post-id) :base-score :page-url :html-body)) 
+
+(defparameter *notifications-base-terms* (alist :view "userNotifications" :created-at :null :viewed :null))
 
 (defun log-condition (condition)
   (with-open-file (outstream "./logs/error.log" :direction :output :if-exists :append :if-does-not-exist :create)
@@ -198,13 +201,29 @@
 	  (if after (format nil ",after:\"~A\"" after) "")
 	  (if with-body ", htmlBody" ""))) 
 
-(defun get-posts ()
-  (let ((cached-result (cache-get "index-json" "new-not-meta"))) 
+(defun get-cached-index-query (cache-id query)
+  (let ((cached-result (cache-get "index-json" cache-id)))
     (if (and cached-result *background-loader-thread*)
         (decode-graphql-json cached-result)
-        (handler-case
-          (lw2-graphql-query (make-posts-list-query))
-          (t () (decode-graphql-json cached-result))))))
+        (if cached-result
+            (handler-case
+              (lw2-graphql-query query)
+              (t () (decode-graphql-json cached-result)))
+            (alexandria:when-let (result (lw2-graphql-query query))
+                      (cache-put "index-json" cache-id result)
+                      result)))))
+
+(defun get-posts ()
+  (get-cached-index-query "new-not-meta" (make-posts-list-query)))
+
+(defun get-posts-json ()
+  (lw2-graphql-query-noparse (make-posts-list-query)))
+
+(defun get-recent-comments ()
+  (get-cached-index-query "recent-comments" (graphql-query-string "CommentsList" '((:terms . ((:view . "postCommentsNew") (:limit . 20)))) *comments-index-fields*)))
+
+(defun get-recent-comments-json ()
+  (lw2-graphql-query-noparse (graphql-query-string "CommentsList" '((:terms . ((:view . "postCommentsNew") (:limit . 20)))) *comments-index-fields*)))
 
 (defun process-vote-result (res)
   (let ((id (cdr (assoc :--id res)))
@@ -214,9 +233,6 @@
 (defun process-votes-result (res)
   (loop for v in res
 	collect (multiple-value-bind (votetype id) (process-vote-result v) (cons id votetype))))
-
-(defun get-posts-json ()
-  (lw2-graphql-query-noparse (make-posts-list-query)))
 
 (defun get-post-vote (post-id auth-token)
   (process-vote-result (lw2-graphql-query (format nil "{PostsSingle(documentId:\"~A\") {_id, currentUserVotes{voteType}}}" post-id) :auth-token auth-token))) 
@@ -232,17 +248,6 @@
 
 (defun get-post-comments (post-id)
   (lw2-graphql-query-timeout-cached (format nil "{CommentsList(terms:{view:\"postCommentsTop\",limit:10000,postId:\"~A\"}) {_id, userId, postId, postedAt, parentCommentId, baseScore, pageUrl, htmlBody}}" post-id) "post-comments-json" post-id))
-
-(defun get-recent-comments ()
-  (let ((cached-result (cache-get "index-json" "recent-comments")))
-    (if (and cached-result *background-loader-thread*)
-      (rest (cadar (json:decode-json-from-string cached-result)))
-      (handler-case
-        (lw2-graphql-query (graphql-query-string "CommentsList" '((:terms . ((:view . "postCommentsNew") (:limit . 20)))) *comments-index-fields*))
-        (t () (decode-graphql-json cached-result))))))
-
-(defun get-recent-comments-json ()
-  (lw2-graphql-query-noparse (graphql-query-string "CommentsList" '((:terms . ((:view . "postCommentsNew") (:limit . 20)))) *comments-index-fields*)))
 
 (defun lw2-search-query (query)
   (multiple-value-bind (req-stream req-status req-headers req-uri req-reuse-stream want-close)
