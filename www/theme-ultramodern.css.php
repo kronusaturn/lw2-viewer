@@ -348,7 +348,8 @@ h1.listing a[href^='/'] {
 		0.5px 0.5px 1px #aaa,
 		0.5px 0.5px 1px #bbb;
 }
-h1.listing a:hover {
+h1.listing a:hover,
+h1.listing a:focus {
 	background-color: transparent;
 	color: #f60;
 	text-shadow: 
@@ -358,6 +359,9 @@ h1.listing a:hover {
 		0 0 1px #f60,
 		0 0 2px #f60,
 		0 0 3px #f60;
+}
+h1.listing:focus-within::before {
+	color: #f60;
 }
 
 .comment-item {

@@ -954,12 +954,23 @@ h1.listing a[href^="http"] {
 	top: 4px;
 }
 @media only screen and (hover: hover) {
-	h1.listing a:hover {
+	h1.listing a:hover,
+	h1.listing a:focus {
 		color: #777;
 		text-decoration: dotted underline;
 		white-space: initial;
 		background-color: rgba(255,255,255,0.85);
 		z-index: 2;
+	}	
+	h1.listing a:focus {
+		outline: none;
+	}
+	h1.listing:focus-within::before {
+		content: ">";
+		display: block;
+		position: absolute;
+		left: 1em;
+		color: #00f;
 	}
 
 		h1.listing a:hover::before {
@@ -3635,6 +3646,9 @@ h1.listing a[href^="http"]:hover {
         -0.5px -0.5px 0 #000,
          0 0 2px #000,
          0 0 3px #000;
+}
+h1.listing:focus-within::before {
+	color: #000;
 }
 
 #comments {

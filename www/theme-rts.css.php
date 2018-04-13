@@ -119,6 +119,10 @@ h1.listing a[href^='/']:hover {
 		0.5px 0.5px 0.5px #de7069;
 	text-decoration: none;
 }
+h1.listing:focus-within::before {
+	color: #690010;
+}
+
 .post-meta,
 h1.listing + .post-meta {
 	text-align: center;

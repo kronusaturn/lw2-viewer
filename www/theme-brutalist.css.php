@@ -146,6 +146,9 @@ h1.listing a[href^="http"]:hover {
          0 0 2px #000,
          0 0 3px #000;
 }
+h1.listing:focus-within::before {
+	color: #000;
+}
 
 #comments {
 	border-top: 2px solid #000;
