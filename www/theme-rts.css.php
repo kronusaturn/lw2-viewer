@@ -252,7 +252,9 @@ h1.listing a[href^="http"]:hover {
 }
 
 .post-body a,
-.post-body a:visited {
+.post-body a:visited,
+.comment-body a,
+.comment-body a:visited {
 	text-decoration: none;
 	color: inherit;
 }
