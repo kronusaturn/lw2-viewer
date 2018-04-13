@@ -873,23 +873,28 @@
 					      (alexandria:with-input-from-file (in-stream "www/about.html" :element-type '(unsigned-byte 8))
 									       (alexandria:copy-stream in-stream out-stream))))) 
 
-(defun send-versioned-resource (file v content-type)
-  (when v (setf (hunchentoot:header-out "Cache-Control") (format nil "public, max-age=~A, immutable" (- (expt 2 31) 1))))
-  (hunchentoot:handle-static-file file content-type))
-
-(defmacro define-versioned-resource (uri content-type)
-  `(hunchentoot:define-easy-handler (,(alexandria:symbolicate "versioned-resource-" uri) :uri ,uri) (v)
-                                    (send-versioned-resource ,(concatenate 'string "www" uri) v ,content-type)))
-
-#.(cons 'progn (loop for system in '("mac" "windows" "linux") nconc
-                     (loop for theme in '(nil "dark" "grey" "ultramodern" "zero" "brutalist" "rts")
-                           collect `(define-versioned-resource ,(format nil "/style~@[-~A~].~A.css" theme system) "text/css"))))
-
-(define-versioned-resource "/theme_tweaker.css" "text/css")
-(define-versioned-resource "/script.js" "text/javascript") 
-(define-versioned-resource "/guiedit.js" "text/javascript") 
-(define-versioned-resource "/favicon.ico" "image/x-icon") 
-(define-versioned-resource "/fa-regular-400.ttf" "application/x-font-ttf; charset=binary")
-(define-versioned-resource "/fa-solid-900.ttf" "application/x-font-ttf; charset=binary")
-(define-versioned-resource "/basilisk.png" "image/png")
-(define-versioned-resource "minimize_button_icon.gif" "image/gif")
+(hunchentoot:define-easy-handler (view-versioned-resource :uri (lambda (r)
+                                                                 (multiple-value-bind (file content-type)
+                                                                   #.(labels ((defres (uri content-type)
+                                                                                `(,uri (values (concatenate 'string "www" ,uri) ,content-type))))
+                                                                       (concatenate 'list
+                                                                                    '(alexandria:switch ((hunchentoot:script-name r) :test #'string=))
+                                                                                    (loop for system in '("mac" "windows" "linux") nconc
+                                                                                      (loop for theme in '(nil "dark" "grey" "ultramodern" "zero" "brutalist" "rts")
+                                                                                            collect (defres (format nil "/style~@[-~A~].~A.css" theme system) "text/css")))
+                                                                                    (loop for (uri content-type) in
+                                                                                      '(("/theme_tweaker.css" "text/css")
+                                                                                        ("/script.js" "text/javascript")
+                                                                                        ("/guiedit.js" "text/javascript")
+                                                                                        ("/favicon.ico" "image/x-icon")
+                                                                                        ("/fa-regular-400.ttf" "application/x-font-ttf; charset=binary")
+                                                                                        ("/fa-solid-900.ttf" "application/x-font-ttf; charset=binary")
+                                                                                        ("/basilisk.png" "image/png")
+                                                                                        ("/minimize_button_icon.gif" "image/gif"))
+                                                                                      collect (defres uri content-type))))
+                                                                   (when file
+                                                                     (when (assoc "v" (hunchentoot:get-parameters r) :test #'string=)
+                                                                       (setf (hunchentoot:header-out "Cache-Control") (format nil "public, max-age=~A, immutable" (- (expt 2 31) 1))))
+                                                                     (hunchentoot:handle-static-file file content-type)
+                                                                     t))))
+                                 nil)
