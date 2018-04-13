@@ -500,8 +500,9 @@ a#inbox-indicator.new-messages:hover::before {
 	width: 26px;
 	height: 26px;
 /* 	This was to fix the alignment in some browser. Check to see if still needed. */
-/* 	padding: 0 0 0 1px; */
-	padding: 0;
+/* 	Apparently yes, in Chrome at least... */
+	padding: 0 0 0 1px;
+/* 	padding: 0; */
 	text-align: center;
 	margin: 2px 7px;
 	font-size: 0.75rem;
