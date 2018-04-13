@@ -226,10 +226,10 @@
   (lw2-graphql-query-noparse (make-posts-list-query)))
 
 (defun get-recent-comments ()
-  (get-cached-index-query "recent-comments" (graphql-query-string "CommentsList" '((:terms . ((:view . "postCommentsNew") (:limit . 20)))) *comments-index-fields*)))
+  (get-cached-index-query "recent-comments" (graphql-query-string "CommentsList" '((:terms . ((:view . "recentComments") (:limit . 20)))) *comments-index-fields*)))
 
 (defun get-recent-comments-json ()
-  (lw2-graphql-query-noparse (graphql-query-string "CommentsList" '((:terms . ((:view . "postCommentsNew") (:limit . 20)))) *comments-index-fields*)))
+  (lw2-graphql-query-noparse (graphql-query-string "CommentsList" '((:terms . ((:view . "recentComments") (:limit . 20)))) *comments-index-fields*)))
 
 (defun process-vote-result (res)
   (let ((id (cdr (assoc :--id res)))
