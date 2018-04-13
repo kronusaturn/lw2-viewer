@@ -92,11 +92,14 @@
 	 (errors (cadr (assoc :errors decoded)))
 	 (data (cdadr (assoc :data decoded))))
     (if errors
-      (let ((message (cdr (assoc :message errors))))
-	(cond 
-	  ((search "document_not_found" message) (error "LW2 server reports: document not found."))
-	  ((search "not_allowed" message) (error "LW2 server reports: not allowed."))
-	  (t (error "LW2 server reports: ~A" message))))
+      (let ((message (cdr (assoc :message errors)))
+            (path (cdr (assoc :path errors))))
+        (if (and path (> (length path) 1))
+            (values data errors)
+            (cond
+              ((search "document_not_found" message) (error "LW2 server reports: document not found."))
+              ((search "not_allowed" message) (error "LW2 server reports: not allowed."))
+              (t (error "LW2 server reports: ~A" message)))))
       data)))  
 
 (defun lw2-graphql-query-map (fn data &key auth-token postprocess)
@@ -223,10 +226,10 @@
   (lw2-graphql-query-noparse (make-posts-list-query)))
 
 (defun get-recent-comments ()
-  (get-cached-index-query "recent-comments" (graphql-query-string "CommentsList" '((:terms . ((:view . "postCommentsNew") (:limit . 20)))) *comments-index-fields*)))
+  (get-cached-index-query "recent-comments" (graphql-query-string "CommentsList" '((:terms . ((:view . "recentComments") (:limit . 20)))) *comments-index-fields*)))
 
 (defun get-recent-comments-json ()
-  (lw2-graphql-query-noparse (graphql-query-string "CommentsList" '((:terms . ((:view . "postCommentsNew") (:limit . 20)))) *comments-index-fields*)))
+  (lw2-graphql-query-noparse (graphql-query-string "CommentsList" '((:terms . ((:view . "recentComments") (:limit . 20)))) *comments-index-fields*)))
 
 (defun process-vote-result (res)
   (let ((id (cdr (assoc :--id res)))
