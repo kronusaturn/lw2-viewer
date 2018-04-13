@@ -916,6 +916,9 @@ h1.listing:first-of-type {
 	text-align: left;
 	margin: 0 20px 0 21px;
 }
+.listing:last-of-type + .post-meta {
+	margin-bottom: 1em;
+}
 h1.listing a {
 	color: #fff;
 	position: relative;
@@ -2649,7 +2652,7 @@ select {
 	content: "\200B";
 }
 
-u {
+.about-page u {
 	background-color: #191919;
 	text-decoration: none;
 	box-shadow: 
@@ -2934,6 +2937,28 @@ ol {
 }
 .qualified-linking-toolbar a::selection {
 	background-color: transparent;
+}
+
+/********/
+/* MATH */
+/********/
+
+div > .MJXc-display {
+	max-width: 100%;
+	overflow-y: hidden;
+	padding: 10px 6px;
+	border-radius: 6px;
+}
+.MJXc-display::-webkit-scrollbar {
+	height: 12px;
+	background-color: #0b0b00;
+	border-radius: 6px;
+	border: 1px solid #1d1f00;
+}
+.MJXc-display::-webkit-scrollbar-thumb {
+	background-color: #1e1f13;
+	border-radius: 6px;
+	border: 1px solid #282c11;
 }
 
 /**********************/

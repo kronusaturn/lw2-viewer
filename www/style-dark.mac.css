@@ -2943,20 +2943,22 @@ ol {
 /* MATH */
 /********/
 
-.mjx-math {
+div > .MJXc-display {
 	max-width: 100%;
 	overflow-y: hidden;
+	padding: 10px 6px;
+	border-radius: 6px;
 }
-.mjx-math::-webkit-scrollbar {
+.MJXc-display::-webkit-scrollbar {
 	height: 12px;
-	background-color: #0b0b0b;
+	background-color: #0b0b00;
 	border-radius: 6px;
-	border: 1px solid #1f1f1f;
+	border: 1px solid #1d1f00;
 }
-.mjx-math::-webkit-scrollbar-thumb {
-	background-color: #1f1f1f;
+.MJXc-display::-webkit-scrollbar-thumb {
+	background-color: #1e1f13;
 	border-radius: 6px;
-	border: 1px solid #2c2c2c;
+	border: 1px solid #282c11;
 }
 
 /**********************/

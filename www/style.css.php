@@ -2885,20 +2885,22 @@ ol {
 /* MATH */
 /********/
 
-.mjx-math {
+div > .MJXc-display {
 	max-width: 100%;
 	overflow-y: hidden;
+	padding: 10px 6px;
+	border-radius: 6px;
 }
-.mjx-math::-webkit-scrollbar {
+.MJXc-display::-webkit-scrollbar {
 	height: 12px;
-	background-color: #f6f6f6;
+	background-color: #f6f6ff;
 	border-radius: 6px;
-	border: 1px solid #ddd;
+	border: 1px solid #ddf;
 }
-.mjx-math::-webkit-scrollbar-thumb {
-	background-color: #ddd;
+.MJXc-display::-webkit-scrollbar-thumb {
+	background-color: #dde;
 	border-radius: 6px;
-	border: 1px solid #ccc;
+	border: 1px solid #cce;
 }
 
 /**********************/
