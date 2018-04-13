@@ -2,7 +2,7 @@
 	header ('Content-type: text/css; charset=utf-8');
 	
 	$platform = @$argv[1] ?: 'Mac';
-	$UI_font = ($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Whitney', 'a_Avante'";
+	$UI_font = ($platform == 'Windows') ? "'Whitney', 'a_Avante'" : "'Concourse', 'a_Avante'";
 ?>
 
 <?php echo file_get_contents('fa-custom.css'); ?>
@@ -2463,7 +2463,7 @@ h1 {
 .comment-body h6 {
 	font-size: 1em;
 	font-weight: 600;
-	font-family: <?php echo ($platform == 'Mac') ? "'Concourse SmallCaps'" : "'Whitney SmallCaps'"; ?>;
+	font-family: <?php echo ($platform == 'Windows') ? "'Whitney SmallCaps'" : "'Concourse SmallCaps'"; ?>;
 }
 .post-body h6,
 .comment-body h6 {
@@ -2476,7 +2476,7 @@ h1 {
 .post-body h3,
 .comment-body h3 {
 	font-size: 1.4em;
-	font-family: <?php echo ($platform == 'Mac') ? "'Concourse SmallCaps'" : "'Whitney SmallCaps'"; ?>;
+	font-family: <?php echo ($platform == 'Windows') ? "'Whitney SmallCaps'" : "'Concourse SmallCaps'"; ?>;
 	font-weight: 
 }
 .post-body h2,
