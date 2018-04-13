@@ -517,3 +517,22 @@ input[type='submit']:hover {
 #content.about-page .accesskey-table {
 	font-family: <?php echo $UI_font; ?>;
 }
+
+.archive-nav {
+	border: 1px solid transparent;
+}
+.archive-nav *[class^='archive-nav-item'] {
+	background-color: transparent;
+}
+.archive-nav a:link,
+.archive-nav a:visited {
+	color: #999;
+	font-weight: 300;
+}
+.archive-nav a:hover,
+.archive-nav span[class^='archive-nav-item'] {
+	font-weight: 300;
+	background-color: #f0f0eb;
+	color: #333;
+    text-shadow: 0px 0px 0.5px #333;
+}
