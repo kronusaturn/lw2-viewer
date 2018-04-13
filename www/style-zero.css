@@ -916,6 +916,9 @@ h1.listing:first-of-type {
 	text-align: left;
 	margin: 0 20px 0 21px;
 }
+.listing:last-of-type + .post-meta {
+	margin-bottom: 1em;
+}
 h1.listing a {
 	color: #000;
 	position: relative;
