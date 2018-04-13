@@ -1337,7 +1337,7 @@ function initialize() {
 			topNavBar += `<a href="#" class="button nav-item-first disabled" title="First page (accesskey: '\\')" accesskey="\\"></a>`;
 			topNavBar += `<a href="#" class="button nav-item-prev disabled" title="Previous page (accesskey: '[')" accesskey="["></a>`;
 
-			let offset = parseInt(getQueryVariable("offset") || "0") / 20;
+			let offset = parseInt(getQueryVariable("offset") || "0") / itemsPerPage;
 			topNavBar += "<span class='page-number'><span class='page-number-label'>Page</span> " + (offset + 1) + "</span>";
 
 			topNavBar += `<a href="#" class="button nav-item-next disabled" title="Next page (accesskey: ']')" accesskey="]"></a>`;

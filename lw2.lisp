@@ -350,18 +350,17 @@
       (setf (quri:uri-query quri) nil))
     (quri:render-uri quri)))
 
-(defun end-html (out-stream &key next prev)
+(defun end-html (out-stream &key items-per-page next prev)
   (let ((request-uri (hunchentoot:request-uri*)))
-    #|(format out-stream "<div id=\"bottom-bar\" class=\"nav-bar\">~@[<a class=\"nav-item nav-inner\" href=\"~A\">Previous</a>~]<a class=\"nav-item nav-inner\" href=\"#top\">Back to top</a>~@[<a class=\"nav-item nav-inner\" href=\"~A\">Next</a>~]</div></div></body></html>"
-	      (if prev )
-	      (if next ))|#
+    (if items-per-page (format out-stream "<script>var itemsPerPage=~A</script>" items-per-page))
     (write-string
       (nav-bar-outer "bottom-bar" nil (nav-bar-inner
 					`(,@(if (and prev (> prev 0)) `(("first" ,(replace-query-params request-uri "offset" nil) "Back to first")))
 					  ,@(if prev `(("prev" ,(replace-query-params request-uri "offset" (if (= prev 0) nil prev)) "Previous" :nofollow t)))
 					   ("top" "#top" "Back to top")
 					   ,@(if next `(("next" ,(replace-query-params request-uri "offset" next) "Next" :nofollow t))))))
-      out-stream)))
+      out-stream)
+    (format out-stream "</div></body></html>")))
 
 (defun map-output (out-stream fn list)
   (loop for item in list do (write-string (funcall fn item) out-stream))) 
@@ -372,15 +371,25 @@
 			     `(let ((,stream-sym ,out-stream)) 
 				,.out-body)))) 
 
-(defmacro emit-page ((out-stream &key title description current-uri content-class (return-code 200) with-offset with-next robots) &body body)
-  `(ignore-errors
-     (log-conditions
-       (setf (hunchentoot:content-type*) "text/html; charset=utf-8"
-	     (hunchentoot:return-code*) ,return-code)
-       (let ((,out-stream (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8)))
-	 (begin-html ,out-stream :title ,title :description ,description :current-uri ,current-uri :content-class ,content-class :robots ,robots)
-	 ,@body
-	 (end-html ,out-stream :next (if (and ,with-offset ,with-next) (+ ,with-offset 20)) :prev (if (and ,with-offset (>= ,with-offset 20)) (- ,with-offset 20)))))))
+(defun call-with-emit-page (out-stream fn &key title description current-uri content-class (return-code 200) (items-per-page 20) with-offset with-next robots)
+  (ignore-errors
+    (log-conditions
+      (begin-html out-stream :title title :description description :current-uri current-uri :content-class content-class :robots robots)
+      (funcall fn)
+      (end-html out-stream
+                :items-per-page (if with-offset items-per-page)
+                :next (if (and with-offset with-next) (+ with-offset items-per-page)) :prev (if (and with-offset (>= with-offset items-per-page)) (- with-offset items-per-page)))
+      (force-output out-stream))))
+
+(defmacro emit-page ((out-stream &rest args &key (return-code 200) &allow-other-keys) &body body)
+  (alexandria:once-only (return-code)
+    (alexandria:with-gensyms (fn)
+      `(progn
+         (setf (hunchentoot:content-type*) "text/html; charset=utf-8"
+               (hunchentoot:return-code*) ,return-code)
+         (let* ((,out-stream (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8))
+                (,fn (lambda () ,@body)))
+           (call-with-emit-page ,out-stream ,fn ,@args))))))
 
 (defmacro with-error-page (&body body)
   `(let ((*current-auth-token* (hunchentoot:cookie-in "lw2-auth-token")))
@@ -832,7 +841,7 @@
                                                                                                                         :before (if year (format nil "~A-~A-~A" (or year current-year) (or month 12)
                                                                                                                                                  (or day (local-time:days-in-month (or month 12) (or year current-year)))))))
                                                                                                    *posts-index-fields*))))
-                                              (emit-page (out-stream :title "Archive" :current-uri "/archive" :content-class "archive-page" :with-offset offset :with-next (> (length posts) 50))
+                                              (emit-page (out-stream :title "Archive" :current-uri "/archive" :content-class "archive-page" :items-per-page 50 :with-offset offset :with-next (> (length posts) 50))
                                                 (with-outputs (out-stream) "<div class=\"archive-nav\"><div class=\"archive-nav-years\">")
                                                 (link-if-not out-stream (not (or year month day)) (url-elements "archive") "archive-nav-item-year" "All") 
                                                 (loop for y from earliest-year to current-year
