@@ -1768,12 +1768,13 @@ div.comment-child-links a::first-letter {
 	padding: 0 16px 10px 64px;
 	pointer-events: auto;
 }
-#content.compact > .comment-thread:first-of-type .comment-item {
+#content.compact > #top-nav-bar + .comment-thread .comment-item {
 	margin-top: 2.25em;
 }
 #content.compact > .comment-thread .comment-item:hover {
 	overflow: visible;
 	pointer-events: auto;
+	z-index: 10;
 }
 #content.compact > .comment-thread .comment-item .comment-meta {
 	white-space: nowrap;

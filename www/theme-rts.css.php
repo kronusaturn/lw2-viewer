@@ -2,8 +2,12 @@
 /* READTHESEQUENCES.COM THEME */
 /******************************/
 
+<?php
+	$UI_font = "Proxima Nova";
+?>
+
 body {
-	font-family: Proxima Nova;
+	font-family: <?php echo $UI_font; ?>;
 	background-color: #fffffa;
 }
 #content {
@@ -93,9 +97,13 @@ a.nav-inner,
 	margin-left: -1em;
 	left: 2.85em;
 }
+.sublevel-nav + #top-nav-bar {
+	margin-top: 0;
+}
 
 h1.listing {
 	text-align: center;
+	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
 }
 h1.listing a[href^='/'] {
 	font-family: Garamond Premier Pro;
@@ -169,6 +177,10 @@ h1.listing + .post-meta {
 	font-weight: 600;
 }
 
+.post.link-post a.link-post-link {
+	font-family: <?php echo $UI_font; ?>;
+}
+
 h1.listing a[href^="http"] {
 	font-size: 0.6875em;
 	top: 3px;
@@ -222,7 +234,7 @@ h1.listing a[href^="http"]:hover {
 	font-family: Garamond Premier Pro;
 }
 #top-nav-bar .page-number-label {
-	font-family: Proxima Nova;
+	font-family: <?php echo $UI_font; ?>;
 }
 #top-nav-bar::after {
 	content: "";
@@ -493,4 +505,15 @@ input[type='submit']:hover {
 }
 .comment + .comment-controls .action-button {
 	font-weight: <?php echo ($platform == 'Mac') ? '300' : '400'; ?>;
+}
+
+.comment-minimize-button::after {
+	font-family: <?php echo $UI_font; ?>;
+}
+.guiedit::after {
+	font-family: <?php echo $UI_font; ?>;
+}
+
+#content.about-page .accesskey-table {
+	font-family: <?php echo $UI_font; ?>;
 }

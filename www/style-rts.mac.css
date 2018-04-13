@@ -1826,12 +1826,13 @@ div.comment-child-links a::first-letter {
 	padding: 0 16px 10px 64px;
 	pointer-events: auto;
 }
-#content.compact > .comment-thread:first-of-type .comment-item {
+#content.compact > #top-nav-bar + .comment-thread .comment-item {
 	margin-top: 2.25em;
 }
 #content.compact > .comment-thread .comment-item:hover {
 	overflow: visible;
 	pointer-events: auto;
+	z-index: 10;
 }
 #content.compact > .comment-thread .comment-item .comment-meta {
 	white-space: nowrap;
@@ -3491,6 +3492,7 @@ div > .MJXc-display {
 /* READTHESEQUENCES.COM THEME */
 /******************************/
 
+
 body {
 	font-family: Proxima Nova;
 	background-color: #fffffa;
@@ -3582,9 +3584,13 @@ a.nav-inner,
 	margin-left: -1em;
 	left: 2.85em;
 }
+.sublevel-nav + #top-nav-bar {
+	margin-top: 0;
+}
 
 h1.listing {
 	text-align: center;
+	font-family: Proxima Nova, 'Font Awesome';
 }
 h1.listing a[href^='/'] {
 	font-family: Garamond Premier Pro;
@@ -3656,6 +3662,10 @@ h1.listing + .post-meta {
 	font-size: 1.125em;
 	color: #666;
 	font-weight: 600;
+}
+
+.post.link-post a.link-post-link {
+	font-family: Proxima Nova;
 }
 
 h1.listing a[href^="http"] {
@@ -3982,4 +3992,15 @@ input[type='submit']:hover {
 }
 .comment + .comment-controls .action-button {
 	font-weight: 300;
+}
+
+.comment-minimize-button::after {
+	font-family: Proxima Nova;
+}
+.guiedit::after {
+	font-family: Proxima Nova;
+}
+
+#content.about-page .accesskey-table {
+	font-family: Proxima Nova;
 }
