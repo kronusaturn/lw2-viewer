@@ -2939,6 +2939,26 @@ ol {
 	background-color: transparent;
 }
 
+/********/
+/* MATH */
+/********/
+
+.mjx-math {
+	max-width: 100%;
+	overflow-y: hidden;
+}
+.mjx-math::-webkit-scrollbar {
+	height: 12px;
+	background-color: #f6f6f6;
+	border-radius: 6px;
+	border: 1px solid #ddd;
+}
+.mjx-math::-webkit-scrollbar-thumb {
+	background-color: #ddd;
+	border-radius: 6px;
+	border: 1px solid #ccc;
+}
+
 /**********************/
 /* FOR NARROW SCREENS */
 /**********************/
