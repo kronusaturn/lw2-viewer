@@ -375,6 +375,7 @@
 				,.out-body)))) 
 
 (defun call-with-emit-page (out-stream fn &key title description current-uri content-class (return-code 200) (items-per-page 20) with-offset with-next robots)
+  (declare (ignore return-code))
   (ignore-errors
     (log-conditions
       (begin-html out-stream :title title :description description :current-uri current-uri :content-class content-class :robots robots)
