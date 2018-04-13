@@ -324,7 +324,10 @@
     (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"stylesheet\" href=\"~A\"><style id='width-adjust'></style><link rel=\"shortcut icon\" href=\"~A\"><script src=\"~A\" async></script><script src=\"~A\" async></script><script>~A</script>~@[<script>var csrfToken=\"~A\"</script>~]~@[<meta name=\"robots\" content=\"~A\">~]</head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
 	    title description
 	    *html-head*
-	    (generate-versioned-link (if (search "Windows" (hunchentoot:header-in* :user-agent)) "/style.windows.css" "/style.css"))
+	    (generate-versioned-link (let ((ua (hunchentoot:header-in* :user-agent)))
+                                       (cond ((search "Windows" ua) "/style.windows.css")
+                                             ((or (search "Linux" ua) (search "CrOS" ua) (search "Android" ua)) "/style.linux.css")
+                                             (t "style.mac.css"))))
             (generate-versioned-link "/theme_tweaker.css")
 	    (generate-versioned-link "/favicon.ico") (generate-versioned-link "/script.js") (generate-versioned-link "/guiedit.js")
 	    (load-time-value (with-open-file (s "www/head.js") (uiop:slurp-stream-string s)) t)
@@ -869,23 +872,18 @@
 					      (alexandria:with-input-from-file (in-stream "www/about.html" :element-type '(unsigned-byte 8))
 									       (alexandria:copy-stream in-stream out-stream))))) 
 
+(defun send-versioned-resource (file v content-type)
+  (when v (setf (hunchentoot:header-out "Cache-Control") (format nil "public, max-age=~A, immutable" (- (expt 2 31) 1))))
+  (hunchentoot:handle-static-file file content-type))
+
 (defmacro define-versioned-resource (uri content-type)
   `(hunchentoot:define-easy-handler (,(alexandria:symbolicate "versioned-resource-" uri) :uri ,uri) (v)
-				    (when v (setf (hunchentoot:header-out "Cache-Control") (format nil "public, max-age=~A, immutable" (- (expt 2 31) 1)))) 
-				    (hunchentoot:handle-static-file ,(concatenate 'string "www" uri) ,content-type))) 
+                                    (send-versioned-resource ,(concatenate 'string "www" uri) v ,content-type)))
 
-(define-versioned-resource "/style.css" "text/css")
-(define-versioned-resource "/style.windows.css" "text/css")
-(define-versioned-resource "/style-dark.css" "text/css")
-(define-versioned-resource "/style-dark.windows.css" "text/css")
-(define-versioned-resource "/style-grey.css" "text/css")
-(define-versioned-resource "/style-grey.windows.css" "text/css")
-(define-versioned-resource "/style-ultramodern.css" "text/css")
-(define-versioned-resource "/style-ultramodern.windows.css" "text/css")
-(define-versioned-resource "/style-zero.css" "text/css")
-(define-versioned-resource "/style-zero.windows.css" "text/css")
-(define-versioned-resource "/style-brutalist.css" "text/css")
-(define-versioned-resource "/style-brutalist.windows.css" "text/css")
+#.(cons 'progn (loop for system in '("mac" "windows" "linux") nconc
+                     (loop for theme in '(nil "dark" "grey" "ultramodern" "zero" "brutalist" "rts")
+                           collect `(define-versioned-resource ,(format nil "/style~@[-~A~].~A.css" theme system) "text/css"))))
+
 (define-versioned-resource "/theme_tweaker.css" "text/css")
 (define-versioned-resource "/script.js" "text/javascript") 
 (define-versioned-resource "/guiedit.js" "text/javascript") 

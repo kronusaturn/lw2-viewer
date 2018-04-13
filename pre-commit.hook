@@ -2,20 +2,25 @@
 
 set -e
 
+SYSTEMS=(Mac Windows Linux)
+SUFFIXES=(.mac.css .windows.css .linux.css)
+
 if [[ "$1" = "--force" ]] || ! git diff-index --quiet --cached HEAD -- www/style.css.php color-scheme-convert.php www/theme\* ; then
 	git ls-files --cached HEAD 'www/theme-*' |while read F; do
 		IN="${F#www/}"
-		OUT="style${IN#theme}"
-		OUT="${OUT%.php}"
-		WINOUT="${OUT%.css}.windows.css"
-		git show :www/style.css.php | (cd www; php -- Mac "$IN" >"$OUT")
-		git show :www/style.css.php | (cd www; php -- Windows "$IN" >"$WINOUT")
-		git add www/"$OUT" www/"$WINOUT"
+		OUTBASE="style${IN#theme}"
+		OUTBASE="${OUTBASE%.php}"
+		for N in ${!SYSTEMS[*]}; do
+			OUT="${OUTBASE%.css}${SUFFIXES[N]}"
+			git show :www/style.css.php | (cd www; php -- ${SYSTEMS[N]} "$IN" >"$OUT")
+			git add www/"$OUT"
+		done
+	done
+	for N in ${!SYSTEMS[*]}; do
+		git show :www/style.css.php | (cd www; php -- ${SYSTEMS[N]} >style${SUFFIXES[N]})
+		php color-scheme-convert.php www/style${SUFFIXES[N]} 3 >www/style-dark${SUFFIXES[N]}
+		git add www/style${SUFFIXES[N]} www/style-dark${SUFFIXES[N]}
 	done
 	git show :www/theme_tweaker.css.php | (cd www; php >theme_tweaker.css)
-	git show :www/style.css.php | (cd www; php -- Mac >style.css)
-	git show :www/style.css.php | (cd www; php -- Windows >style.windows.css)
-	php color-scheme-convert.php www/style.css 3 >www/style-dark.css
-	php color-scheme-convert.php www/style.windows.css 3 >www/style-dark.windows.css
-	git add www/style.css www/style.windows.css www/style-dark.css www/style-dark.windows.css www/theme_tweaker.css
+	git add www/theme_tweaker.css
 fi
