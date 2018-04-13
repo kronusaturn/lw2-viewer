@@ -894,7 +894,12 @@ h1.listing {
 	line-height: 1.15;
 	margin: 0.8em 20px 0.1em 20px;
 }
-@media only screen and (min-width: 901px) and (hover) {
+@media only screen and (min-width: 901px) and (hover: hover) {
+	h1.listing {
+		max-height: 1.15em;
+	}
+}
+@-moz-document url-prefix() {
 	h1.listing {
 		max-height: 1.15em;
 	}
@@ -934,6 +939,24 @@ h1.listing a:nth-of-type(2) {
 		max-width: calc(100% - 33px);
 	}
 }
+@-moz-document url-prefix() {
+	h1.listing a {
+		max-width: 100%;
+		display: inline-block;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		border-bottom: 1px solid transparent;
+		-moz-hyphens: auto;
+		-ms-hyphens: auto;
+		hyphens: auto;
+		z-index: 1;
+		padding: 0 0 1px 1px;
+	}
+	h1.listing a:nth-of-type(2) {
+		max-width: calc(100% - 33px);
+	}
+}
 h1.listing a[href^="http"] {
 	color: #00c;
 	font-size: 0.8em;
@@ -943,6 +966,46 @@ h1.listing a[href^="http"] {
 	top: 4px;
 }
 @media only screen and (hover: hover) {
+	h1.listing a:hover,
+	h1.listing a:focus {
+		color: #777;
+		text-decoration: dotted underline;
+		white-space: initial;
+		background-color: rgba(255,255,255,0.85);
+		z-index: 2;
+	}	
+	h1.listing a:focus {
+		outline: none;
+	}
+	h1.listing:focus-within::before {
+		content: ">";
+		display: block;
+		position: absolute;
+		left: 1em;
+		color: #00f;
+	}
+
+	<?php $margin_of_hover_error = '10px'; ?>
+	h1.listing a:hover::before {
+		content: "";
+		position: absolute;
+		top: -<?php echo $margin_of_hover_error; ?>;
+		right: -<?php echo $margin_of_hover_error; ?>;
+		bottom: -<?php echo $margin_of_hover_error; ?>;
+		left: -<?php echo $margin_of_hover_error; ?>;
+		z-index: -1;
+	}
+	h1.listing a[href^="http"]:hover {
+		color: #4879ec;
+		text-decoration: none;
+		text-shadow: 
+			 0.5px 0.5px 0 #fff,
+			 -0.5px -0.5px 0 #fff,
+			 0 0 2px #fff,
+			 0 0 3px #00c;
+	}
+}
+@-moz-document url-prefix() {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		color: #777;
