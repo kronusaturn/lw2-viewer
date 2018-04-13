@@ -327,7 +327,7 @@
 	    (generate-versioned-link (let ((ua (hunchentoot:header-in* :user-agent)))
                                        (cond ((search "Windows" ua) "/style.windows.css")
                                              ((or (search "Linux" ua) (search "CrOS" ua) (search "Android" ua)) "/style.linux.css")
-                                             (t "style.mac.css"))))
+                                             (t "/style.mac.css"))))
             (generate-versioned-link "/theme_tweaker.css")
 	    (generate-versioned-link "/favicon.ico") (generate-versioned-link "/script.js") (generate-versioned-link "/guiedit.js")
 	    (load-time-value (with-open-file (s "www/head.js") (uiop:slurp-stream-string s)) t)
