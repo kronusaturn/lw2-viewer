@@ -3875,6 +3875,12 @@ textarea {
 	border: 1px solid #ccc;
 }
 
+.posting-controls textarea {
+	font-family: Garamond Premier Pro;
+	font-size: 1.25rem;
+	font-weight: 500;
+}
+
 #quick-nav-ui a {
 	background-color: transparent;
 	box-shadow: 0 0 0 1px #ccc inset;
