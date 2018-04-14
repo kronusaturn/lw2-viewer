@@ -647,7 +647,7 @@ a#inbox-indicator.new-messages:hover::before {
 	right: calc((100vw - 900px) / 2 - 261px);
 	opacity: 0.6;
 }
-@media only screen and (max-width: 1200px) {
+@media only screen and (max-width: 1440px) {
 	#hns-date-picker {
 		right: calc((100vw - 900px) / 2 - 88px);
 		z-index: 10001;
