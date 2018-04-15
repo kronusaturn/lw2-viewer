@@ -559,4 +559,11 @@ a.comment-parent-link::after {
 a.comment-parent-link:hover::before {
 	background-color: transparent;
 	text-shadow: none;
+	background-image: linear-gradient(to right, transparent 0%, #bbb 100%);
+	background-repeat: no-repeat;
+	box-shadow: 1px 0 0 0 #bbb;
+}
+.comment-item input[id^="expand"] ~ .comment-thread {
+	max-height: 39px;
+	padding-top: 5px;
 }
