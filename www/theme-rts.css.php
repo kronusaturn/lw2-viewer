@@ -551,3 +551,12 @@ input[type='submit']:hover {
 	color: #333;
     text-shadow: 0px 0px 0.5px #333;
 }
+
+
+a.comment-parent-link::after {
+	display: none;
+}
+a.comment-parent-link:hover::before {
+	background-color: transparent;
+	text-shadow: none;
+}
