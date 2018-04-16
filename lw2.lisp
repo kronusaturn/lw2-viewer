@@ -430,7 +430,7 @@
   (format out-stream "<div class=\"action-container\"><input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><input type=\"submit\" value=\"~A\">~@[~A~]</div></div></form>"
 	  csrf-token button-label end-html))
 
-(defun view-items-index (items &key section with-offset (with-next t) title current-uri hide-title need-auth extra-html (content-class "index-page"))
+(defun view-items-index (items &key section with-offset (with-next t) title current-uri hide-title need-auth extra-html page-toolbar-extra (content-class "index-page"))
   (alexandria:switch ((hunchentoot:get-parameter "format") :test #'string=)
                      ("rss" 
                       (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
@@ -439,8 +439,9 @@
                      (t
                        (emit-page (out-stream :title (if hide-title nil title) :description "A faster way to browse LessWrong 2.0" :content-class content-class :with-offset with-offset :with-next with-next
                                               :current-uri current-uri :robots (if (and with-offset (> with-offset 0)) "noindex, nofollow"))
-                                  (format out-stream "<div class=\"page-toolbar\">~@[<a class=\"new-post button\" href=\"/edit-post?section=~A\" accesskey=\"n\" title=\"Create new post [n]\">New post</a>~]~{~@[<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" title=\"~A RSS feed\" href=\"~A\">RSS</a>~]~}</div>~@[~A~]"
+                                  (format out-stream "<div class=\"page-toolbar\">~@[<a class=\"new-post button\" href=\"/edit-post?section=~A\" accesskey=\"n\" title=\"Create new post [n]\">New post</a>~]~@[~A~]~{~@[<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" title=\"~A RSS feed\" href=\"~A\">RSS</a>~]~}</div>~@[~A~]"
                                           (if (and section (logged-in-userid)) section)
+                                          page-toolbar-extra
                                           (unless need-auth
                                             (list title (replace-query-params (hunchentoot:request-uri*) "offset" nil "format" "rss")))
                                           extra-html)
@@ -691,6 +692,8 @@
                           (view-items-index interleave :with-offset offset :title title :content-class "user-page" :current-uri (format nil "/users/~A" user-slug)
                                             :with-offset offset :with-next with-next
                                             :need-auth (string= show "drafts") :section (if (string= show "drafts") "drafts" nil)
+                                            :page-toolbar-extra (format nil "<a class=\"new-private-message button\" href=\"/conversation?to=~A\">Send private message</a>"
+                                                                        user-slug)
                                             :extra-html (format nil "<h1 class=\"page-main-heading\">~A</h1><div class=\"user-stats\">Karma: <span class=\"karma-total\">~A</span></div><div class=\"sublevel-nav\">~A</div>"
                                                                 (cdr (assoc :display-name user-info))
                                                                 (pretty-number (or (cdr (assoc :karma user-info)) 0))
@@ -700,7 +703,7 @@
                                                                         do (link-if-not stream (string= show l-show) (format nil "~A~@[?show=~A~]" (hunchentoot:script-name*) l-show)
                                                                                         "sublevel-item" text))))))))
 
-(hunchentoot:define-easy-handler (view-conversation :uri "/conversation") (id to)
+(hunchentoot:define-easy-handler (view-conversation :uri "/conversation") (id to (csrf-token :request-type :post) (text :request-type :post))
                                  (with-error-page
                                    (cond
                                      ((or (and id to) (not (or id to))) (error "This is an invalid URL."))
@@ -712,7 +715,7 @@
                                              (graphql-query-string* "MessagesList" (alist :terms (alist :view "messagesConversation" :conversation-id id)) *messages-index-fields*))
                                            :auth-token (hunchentoot:cookie-in "lw2-auth-token"))
                                          (view-items-index messages :content-class "conversation-page" :need-auth t
-                                                           :extra-html (format nil "<h1 class=\"page-main-heading\">~A</h1><p>with: <ul>~{<li><a href=\"/users/~A\">~A</a></li>~}</ul></p>"
+                                                           :extra-html (format nil "<h1 class=\"page-main-heading\">~A</h1><div class=\"conversation-participants\">with: <ul>~{<li><a href=\"/users/~A\">~A</a></li>~}</ul></div>"
                                                                                (cdr (assoc :title conversation))
                                                                                (loop for p in (cdr (assoc :participants conversation)) nconc (list (cdr (assoc :slug p)) (cdr (assoc :display-name p))))))))
                                      (to

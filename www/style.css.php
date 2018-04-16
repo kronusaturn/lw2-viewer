@@ -58,13 +58,22 @@ input {
 	margin-left: 1.5em;
 }
 .new-post,
-.new-post:visited {
+.new-post:visited,
+.new-private-message,
+.new-private-message:visited {
 	color: #090;
 }
 .new-post::before {
 	content: '\F067';
 	font-family: "Font Awesome";
 	font-weight: 900;
+	font-size: 0.9em;
+	padding-right: 0.3em;
+}
+.new-private-message::before {
+	content: '\F075';
+	font-family: "Font Awesome";
+	font-weight: 400;
 	font-size: 0.9em;
 	padding-right: 0.3em;
 }
@@ -1105,6 +1114,25 @@ h1.listing a[href^="http"] {
 	cursor: default;
 }
 
+/*****************/
+/* CONVERSATIONS */
+/*****************/
+
+.conversation-participants {
+	margin: 3em 0 0;
+}
+
+.conversation-participants ul,
+.conversation-participants li {
+	list-style-type: none;
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+}
+.conversation-participants li {
+	margin-left: 1em;
+}
+
 /*********************************/
 /* SEARCH RESULTS AND USER PAGES */
 /*********************************/
@@ -1782,7 +1810,8 @@ div.comment-child-links a::first-letter {
 	top: 108px;
 	left: calc((100% - 900px) / 2 + 29px);
 }
-#content.user-page + #ui-elements-container #comments-list-mode-selector {
+#content.user-page + #ui-elements-container #comments-list-mode-selector,
+#content.conversation-page + #ui-elements-container #comments-list-mode-selector {
 	top: 165px;
 }
 #content.search-results-page + #ui-elements-container #comments-list-mode-selector {
