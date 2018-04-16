@@ -230,11 +230,11 @@
 
 (defun check-notifications (user-id auth-token)
   (handler-case
-    (destructuring-bind (notifications user-info)
-      (lw2-graphql-query-map #'identity (list
-                                          (graphql-query-string* "NotificationsList" (alist :terms (nconc (alist :user-id user-id :limit 1) *notifications-base-terms*))
-								'(:created-at))
-					  (graphql-query-string* "UsersSingle" (alist :document-id user-id) '(:last-notifications-check)))
+    (multiple-value-bind (notifications user-info)
+      (lw2-graphql-query-multi (list
+                                 (graphql-query-string* "NotificationsList" (alist :terms (nconc (alist :user-id user-id :limit 1) *notifications-base-terms*))
+                                                        '(:created-at))
+                                 (graphql-query-string* "UsersSingle" (alist :document-id user-id) '(:last-notifications-check)))
 			     :auth-token auth-token)
       (when (and notifications user-info)
 	(local-time:timestamp> (local-time:parse-timestring (cdr (assoc :created-at (first notifications)))) (local-time:parse-timestring (cdr (assoc :last-notifications-check user-info))))))
