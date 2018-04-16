@@ -1,9 +1,9 @@
 (uiop:define-package #:lw2.backend
   (:use #:cl #:sb-thread #:flexi-streams #:alexandria #:lw2-viewer.config #:lw2.lmdb #:lw2.utils)
-  (:export #:*posts-index-fields* #:*comments-index-fields*
+  (:export #:*posts-index-fields* #:*comments-index-fields* #:*messages-index-fields*
            #:*notifications-base-terms*
 	   #:log-condition #:log-conditions #:start-background-loader #:stop-background-loader
-	   #:lw2-graphql-query-streamparse #:lw2-graphql-query-noparse #:decode-graphql-json #:lw2-graphql-query #:graphql-query-string* #:graphql-query-string #:lw2-graphql-query-map
+	   #:lw2-graphql-query-streamparse #:lw2-graphql-query-noparse #:decode-graphql-json #:lw2-graphql-query #:graphql-query-string* #:graphql-query-string #:lw2-graphql-query-map #:lw2-graphql-query-multi
 	   #:make-posts-list-query #:get-posts #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
 	   #:lw2-search-query #:get-post-title #:get-post-slug #:get-slug-postid #:get-username #:get-user-slug)
   (:recycle #:lw2-viewer))
@@ -16,6 +16,7 @@
 
 (defparameter *posts-index-fields* '(:title :--id :slug :user-id :posted-at :base-score :comment-count :page-url :url))
 (defparameter *comments-index-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id (:parent-comment :--id :user-id :post-id) :base-score :page-url :html-body)) 
+(defparameter *messages-index-fields* '(:--id :user-id :created-at :content (:conversation :--id :title) :----typename))
 
 (defparameter *notifications-base-terms* (alist :view "userNotifications" :created-at :null :viewed :null))
 
@@ -126,6 +127,9 @@
               for input-data in data
               collect (if postprocess (funcall postprocess input-data result-data) result-data))
         (cdr (assoc :errors result))))))
+
+(defun lw2-graphql-query-multi (query-list &key auth-token)
+  (values-list (lw2-graphql-query-map #'identity query-list :auth-token auth-token)))
 
 (defun lw2-graphql-query (query &key auth-token)
   (decode-graphql-json (lw2-graphql-query-noparse query :auth-token auth-token))) 

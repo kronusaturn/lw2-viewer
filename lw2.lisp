@@ -111,12 +111,13 @@
 
 (defun conversation-message-to-html (message)
   (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :created-at message)))
-    (format nil "<div class=\"comment private-message~A\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <span class=\"date\" data-js-date=\"~A\">~A</span><div class=\"comment-post-title\">Private message: ~A</div></div><div class=\"comment-body\">~A</div></div>"
+    (format nil "<div class=\"comment private-message~A\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <span class=\"date\" data-js-date=\"~A\">~A</span><div class=\"comment-post-title\">Private message in: <a href=\"/conversation?id=~A\">~A</a></div></div><div class=\"comment-body\">~A</div></div>"
 	    (if (cdr (assoc :highlight-new message)) " comment-item-highlight" "")
 	    (encode-entities (get-user-slug (cdr (assoc :user-id message))))
 	    (encode-entities (get-username (cdr (assoc :user-id message))))
 	    js-time
 	    pretty-time
+            (encode-entities (cdr (assoc :--id (cdr (assoc :conversation message)))))
 	    (encode-entities (cdr (assoc :title (cdr (assoc :conversation message)))))
 	    (format nil "~{<p>~A</p>~}" (loop for block in (cdr (assoc :blocks (cdr (assoc :content message)))) collect (cdr (assoc :text block)))))))
 
@@ -661,7 +662,7 @@
                                                                                                                *posts-index-fields*))
                                                                                        ("message"
                                                                                         (graphql-query-string* "MessagesSingle" (alist :document-id (cdr (assoc :document-id n)))
-                                                                                                               '(:--id :user-id :created-at :content (:conversation :--id :title) :----typename)))
+                                                                                                               *messages-index-fields*))
                                                                                        (t
                                                                                          (values n t))))
                                                                   notifications
@@ -698,6 +699,24 @@
                                                                                                            ,@(if (logged-in-userid (cdr (assoc :--id user-info))) '(("drafts" "Drafts") ("inbox" "Inbox"))))
                                                                         do (link-if-not stream (string= show l-show) (format nil "~A~@[?show=~A~]" (hunchentoot:script-name*) l-show)
                                                                                         "sublevel-item" text))))))))
+
+(hunchentoot:define-easy-handler (view-conversation :uri "/conversation") (id to)
+                                 (with-error-page
+                                   (cond
+                                     ((or (and id to) (not (or id to))) (error "This is an invalid URL."))
+                                     (id
+                                       (multiple-value-bind (conversation messages)
+                                         (lw2-graphql-query-multi
+                                           (list
+                                             (graphql-query-string* "ConversationsSingle" (alist :document-id id) '(:title (:participants :display-name :slug)))
+                                             (graphql-query-string* "MessagesList" (alist :terms (alist :view "messagesConversation" :conversation-id id)) *messages-index-fields*))
+                                           :auth-token (hunchentoot:cookie-in "lw2-auth-token"))
+                                         (view-items-index messages :content-class "conversation-page" :need-auth t
+                                                           :extra-html (format nil "<h1 class=\"page-main-heading\">~A</h1><p>with: <ul>~{<li><a href=\"/users/~A\">~A</a></li>~}</ul></p>"
+                                                                               (cdr (assoc :title conversation))
+                                                                               (loop for p in (cdr (assoc :participants conversation)) nconc (list (cdr (assoc :slug p)) (cdr (assoc :display-name p))))))))
+                                     (to
+                                       (error "Not implemented yet.")))))
 
 (defun search-result-markdown-to-html (item)
   (cons (cons :html-body (markdown:parse (cdr (assoc :body item)))) item)) 
