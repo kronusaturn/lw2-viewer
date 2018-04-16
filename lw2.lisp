@@ -38,6 +38,10 @@
       (concatenate 'string (generate-post-link post comment-id absolute) "?need-auth=y")
       (generate-post-link post comment-id absolute)))
 
+(defun clean-lw-link (url)
+  (when url
+    (ppcre:regex-replace "([^/]*//[^/]*)lesserwrong\.com" url "\\1lesswrong.com")))
+
 (defun post-headline-to-html (post &key need-auth)
   (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :posted-at post))) 
     (format nil "<h1 class=\"listing~:[~; link-post-listing~]\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~A</a></h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\"><span class=\"karma-value\">~A</span></div><a class=\"comment-count\" href=\"~A#comments\">~A comment~:P</a>~@[<a class=\"lw2-link\" href=\"~A\">LW link</a>~]~A</div>"
@@ -52,7 +56,7 @@
 	    (pretty-number (cdr (assoc :base-score post)) "point")
 	    (generate-post-link post) 
 	    (or (cdr (assoc :comment-count post)) 0) 
-	    (cdr (assoc :page-url post))
+	    (clean-lw-link (cdr (assoc :page-url post)))
 	    (if (cdr (assoc :url post)) (format nil "<div class=\"link-post-domain\">(~A)</div>" (encode-entities (puri:uri-host (puri:parse-uri (string-trim " " (cdr (assoc :url post))))))) "")))) 
 
 (defun post-body-to-html (post)
@@ -67,7 +71,7 @@
 	    (cdr (assoc :--id post)) 
 	    (pretty-number (cdr (assoc :base-score post)) "point")
 	    (or (cdr (assoc :comment-count post)) 0) 
-	    (cdr (assoc :page-url post)) 
+	    (clean-lw-link (cdr (assoc :page-url post)))
 	    (format nil "~A~A"
 		    (if (cdr (assoc :url post)) (format nil "<p><a href=\"~A\" class=\"link-post-link\">Link post</a></p>" (encode-entities (string-trim " " (cdr (assoc :url post))))) "")
 		    (clean-html (or (cdr (assoc :html-body post)) "") :with-toc t :post-id (cdr (assoc :--id post))))))) 
@@ -85,7 +89,7 @@
 	    js-time
 	    pretty-time
 	    (pretty-number (cdr (assoc :base-score comment)) "point")
-	    (cdr (assoc :page-url comment)) 
+	    (clean-lw-link (cdr (assoc :page-url comment)))
 	    (if with-post-title
 	      (format nil "<div class=\"comment-post-title\">~1{in reply to: <a href=\"/users/~A\">~A</a>’s <a href=\"~A\">comment</a> ~}on: <a href=\"~A\">~A</a></div>"
 		      (alexandria:if-let (parent-comment (cdr (assoc :parent-comment comment)))
