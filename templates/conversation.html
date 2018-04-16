@@ -1,0 +1,27 @@
+{% if conversation %}
+<h1 class="page-main-heading">{{ conversation.title }}</h1>
+<div class="conversation-participants">with: <ul>
+	{% for party in conversation.participants %}<li><a href="/users/{{party.slug}}">{{ party.display-name }}</a></li>{% endfor %}
+</ul></div>
+{% endif %}
+<div class="posting-controls">
+<form method="post" id="conversation-form" class="aligned-form">
+	{% if not conversation %}<div class="post-meta-fields">
+		<label for="to">To:</label>
+		<input name="to" autocomplete="off" value="{{to}}" type="text">
+		<label for="subject">Subject:</label>
+		<input name="subject" autocomplete="off" type="text">
+	</div>{% endif %}
+	<div class="textarea-container">
+		<textarea name="text">{{ markdown-source }}</textarea>
+		<span class="markdown-reference-link">You <em>cannot</em> use Markdown here—plain text only.</span>
+		<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-help-button">Help</button>
+		<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-exit-button">Exit</button>
+	</div>
+	<div>
+		{% if post-id %}<input name="post-id" value="{{ post-id }}" type="hidden">{% endif %}
+		<input name="csrf-token" value="{{ csrf-token }}" type="hidden">
+		<input value="Submit" type="submit">
+	</div>
+</form>
+</div>

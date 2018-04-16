@@ -12,9 +12,11 @@
                              (:file "clean-html" :depends-on ("links" "lmdb" "../text-clean-regexps.js" "../html-clean-regexps.js"))
                              (:file "lw2-login"))
                 :depends-on ("config"))
+               (:module "templates"
+                :components ((:static-file "conversation.html")
+                             (:static-file "edit-post.html")
+                             (:static-file "reset-password.html")))
                (:static-file "www/head.js")
-               (:static-file "templates/edit-post.html")
-               (:static-file "templates/reset-password.html")
                (module "config-copy"
                        :pathname ""
                        :output-files (compile-op (o c) (if (file-exists-p "config.lisp") nil (list "config.lisp")))
@@ -22,5 +24,5 @@
                                             (if (file-exists-p "config.lisp")
                                                 (mark-operation-done o c)
                                                 (copy-file "config-example.lisp" "config.lisp"))))
-               (:file "lw2" :depends-on ("src" "config" "www/head.js" "templates/edit-post.html" "templates/reset-password.html"))
+               (:file "lw2" :depends-on ("src" "config" "www/head.js" "templates"))
                (:file "config" :depends-on ("config-copy"))))

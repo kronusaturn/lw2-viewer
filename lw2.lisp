@@ -311,12 +311,12 @@
                                  `("login" ,(format nil "/login?return=~A" (url-rewrite:url-encode current-uri)) "Log In" :accesskey "u")))))
     (nav-bar-to-html current-uri)))
 
-(defun make-csrf-token (session-token &optional (nonce (ironclad:make-random-salt)))
+(defun make-csrf-token (&optional (session-token (hunchentoot:cookie-in "session-token")) (nonce (ironclad:make-random-salt)))
   (if (typep session-token 'string) (setf session-token (base64:base64-string-to-usb8-array session-token)))
   (let ((csrf-token (concatenate '(vector (unsigned-byte 8)) nonce (ironclad:digest-sequence :sha256 (concatenate '(vector (unsigned-byte 8)) nonce session-token)))))
     (values (base64:usb8-array-to-base64-string csrf-token) csrf-token))) 
 
-(defun check-csrf-token (session-token csrf-token)
+(defun check-csrf-token (csrf-token &optional (session-token (hunchentoot:cookie-in "session-token")))
   (let* ((session-token (base64:base64-string-to-usb8-array session-token))
 	 (csrf-token (base64:base64-string-to-usb8-array csrf-token))
 	 (correct-token (nth-value 1 (make-csrf-token session-token (subseq csrf-token 0 16)))))
@@ -507,7 +507,7 @@
 				 (with-error-page
 				   (cond
 				     (text
-				       (check-csrf-token (hunchentoot:cookie-in "session-token") csrf-token)
+				       (check-csrf-token csrf-token)
 				       (let ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token"))
 					     (post-id (match-lw2-link (hunchentoot:request-uri*)))) 
 					 (assert (and lw2-auth-token (not (string= text ""))))
@@ -559,7 +559,7 @@
                                  (with-error-page
                                    (cond
                                      (text
-                                       (check-csrf-token (hunchentoot:cookie-in "session-token") csrf-token)
+                                       (check-csrf-token csrf-token)
                                        (let ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token"))
                                              (url (if (string= url "") nil url)))
                                          (assert (and lw2-auth-token (not (string= text ""))))
@@ -580,7 +580,7 @@
                                                                                            (concatenate 'string (generate-post-link new-post-data) "?need-auth=y")
                                                                                            (generate-post-link new-post-data)))))))
                                      (t
-                                      (let* ((csrf-token (make-csrf-token (hunchentoot:cookie-in "session-token")))
+                                      (let* ((csrf-token (make-csrf-token))
                                              (post-body (if post-id (get-post-body post-id :auth-token (hunchentoot:cookie-in "lw2-auth-token"))))
                                              (section (or section (loop for (sym . sec) in '((:draft . "drafts") (:meta . "meta") (:frontpage-date . "frontpage"))
                                                                         if (cdr (assoc sym post-body)) return sec
@@ -596,7 +596,7 @@
                                                                      :markdown-source (or (and post-id (cache-get "post-markdown-source" post-id)) (cdr (assoc :html-body post-body)) ""))))))))
 
 (hunchentoot:define-easy-handler (view-karma-vote :uri "/karma-vote") ((csrf-token :request-type :post) (target :request-type :post) (target-type :request-type :post) (vote-type :request-type :post))
-				 (check-csrf-token (hunchentoot:cookie-in "session-token") csrf-token)
+				 (check-csrf-token csrf-token)
 				 (let ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token")))
 				   (multiple-value-bind (points vote-type) (do-lw2-vote lw2-auth-token target target-type vote-type)
 				     (json:encode-json-to-string (list (pretty-number points "point") vote-type)))))
@@ -703,9 +703,24 @@
                                                                         do (link-if-not stream (string= show l-show) (format nil "~A~@[?show=~A~]" (hunchentoot:script-name*) l-show)
                                                                                         "sublevel-item" text))))))))
 
+(defparameter *conversation-template* (compile-template* "conversation.html"))
+
 (hunchentoot:define-easy-handler (view-conversation :uri "/conversation") (id to (csrf-token :request-type :post) (text :request-type :post))
                                  (with-error-page
                                    (cond
+                                     (text
+                                       (check-csrf-token csrf-token)
+                                       (do-lw2-post-query (hunchentoot:cookie-in "lw2-auth-token")
+                                                          (list (alist :query "mutation MessagesNew($document: MessagesInput) { MessagesNew(document: $document) { _id }}"
+                                                                       :variables (alist :document
+                                                                                         (alist :content
+                                                                                                (alist :blocks (loop for para in (ppcre:split "\\n+" text)
+                                                                                                                     collect (alist :text para :type "unstyled"))
+                                                                                                       :entity-map (make-hash-table))
+                                                                                                :conversation-id id))
+                                                                       :operation-name "MessagesNew")))
+                                       (setf (hunchentoot:return-code*) 303
+                                             (hunchentoot:header-out "Location") (format nil "/conversation?id=~A" id)))
                                      ((or (and id to) (not (or id to))) (error "This is an invalid URL."))
                                      (id
                                        (multiple-value-bind (conversation messages)
@@ -714,12 +729,14 @@
                                              (graphql-query-string* "ConversationsSingle" (alist :document-id id) '(:title (:participants :display-name :slug)))
                                              (graphql-query-string* "MessagesList" (alist :terms (alist :view "messagesConversation" :conversation-id id)) *messages-index-fields*))
                                            :auth-token (hunchentoot:cookie-in "lw2-auth-token"))
-                                         (view-items-index messages :content-class "conversation-page" :need-auth t
-                                                           :extra-html (format nil "<h1 class=\"page-main-heading\">~A</h1><div class=\"conversation-participants\">with: <ul>~{<li><a href=\"/users/~A\">~A</a></li>~}</ul></div>"
-                                                                               (cdr (assoc :title conversation))
-                                                                               (loop for p in (cdr (assoc :participants conversation)) nconc (list (cdr (assoc :slug p)) (cdr (assoc :display-name p))))))))
+                                         (view-items-index (nreverse messages) :content-class "conversation-page" :need-auth t
+                                                           :extra-html (with-output-to-string (out-stream) (render-template* *conversation-template* out-stream
+                                                                                                                             :conversation conversation :csrf-token (make-csrf-token))))))
                                      (to
-                                       (error "Not implemented yet.")))))
+                                       (emit-page (out-stream :title "New conversation" :content-class "conversation-page")
+                                                  (render-template* *conversation-template* out-stream
+                                                                    :to to
+                                                                    :csrf-token (make-csrf-token)))))))
 
 (defun search-result-markdown-to-html (item)
   (cons (cons :html-body (markdown:parse (cdr (assoc :body item)))) item)) 
@@ -744,7 +761,7 @@
 				 (with-error-page
 				   (labels
 				     ((emit-login-page (&key error-message)
-					(let ((csrf-token (make-csrf-token (hunchentoot:cookie-in "session-token"))))
+					(let ((csrf-token (make-csrf-token)))
 					  (emit-page (out-stream :title "Log in" :current-uri "/login" :content-class "login-page")
 						     (when error-message
 						       (format out-stream "<div class=\"error-box\">~A</div>" error-message)) 
@@ -774,7 +791,7 @@
 					   (emit-page (out-stream :title "Log in" :current-uri "/login")
 						      (format out-stream "<h1>Enable cookies</h1><p>Please enable cookies in your browser and <a href=\"/login~@[?return=~A~]\">try again</a>.</p>" (if return (url-rewrite:url-encode return)))))) 
 				       (login-username
-					 (check-csrf-token (hunchentoot:cookie-in "session-token") csrf-token)
+					 (check-csrf-token csrf-token)
 					 (cond
 					   ((or (string= login-username "") (string= login-password "")) (emit-login-page :error-message "Please enter a username and password")) 
 					   (t (multiple-value-bind (user-id auth-token error-message) (do-lw2-login "username" login-username login-password) 
@@ -788,7 +805,7 @@
 						  (t
 						    (emit-login-page :error-message error-message))))))) 
 				       (signup-username
-					 (check-csrf-token (hunchentoot:cookie-in "session-token") csrf-token)
+					 (check-csrf-token csrf-token)
 					 (cond
 					   ((not (every (lambda (x) (not (string= x ""))) (list signup-username signup-email signup-password signup-password2)))
 					    (emit-login-page :error-message "Please fill in all fields"))
@@ -811,7 +828,7 @@
 (hunchentoot:define-easy-handler (view-reset-password :uri "/reset-password") ((csrf-token :request-type :post) (email :request-type :post) (reset-link :request-type :post) (password :request-type :post) (password2 :request-type :post))
                                  (labels ((emit-rpw-page (&key message message-type step)
                                             (with-error-page
-                                              (let ((csrf-token (make-csrf-token (hunchentoot:cookie-in "session-token"))))
+                                              (let ((csrf-token (make-csrf-token)))
                                                 (emit-page (out-stream :title "Reset password" :content-class "reset-password")
                                                            (render-template* *reset-password-template* out-stream
                                                                              :csrf-token csrf-token
@@ -821,7 +838,7 @@
                                                                              :step step))))))
                                    (cond
                                      (email
-                                       (check-csrf-token (hunchentoot:cookie-in "session-token") csrf-token)
+                                       (check-csrf-token csrf-token)
                                        (multiple-value-bind (ret error)
                                          (do-lw2-forgot-password email)
                                          (declare (ignore ret))
@@ -836,7 +853,7 @@
                                            ((not (string= password password2))
                                             (emit-rpw-page :step 2 :message "Passwords do not match." :message-type "error"))
                                            (t
-                                            (check-csrf-token (hunchentoot:cookie-in "session-token") csrf-token)
+                                            (check-csrf-token csrf-token)
                                             (multiple-value-bind (user-id auth-token error-message) (do-lw2-reset-password reset-token password)
                                                 (declare (ignore user-id auth-token))
                                                 (cond

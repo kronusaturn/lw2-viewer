@@ -1132,6 +1132,16 @@ h1.listing a[href^="http"] {
 .conversation-participants li {
 	margin-left: 1em;
 }
+#content.conversation-page .posting-controls {
+	margin: 1em 0 4em;
+}
+#content.conversation-page .textarea-container {
+	position: unset;
+}
+#content.conversation-page textarea {
+	border-top-width: 1px;
+	margin-top: 0.5em;
+}
 
 /*********************************/
 /* SEARCH RESULTS AND USER PAGES */
