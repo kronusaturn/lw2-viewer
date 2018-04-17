@@ -1133,14 +1133,34 @@ h1.listing a[href^="http"] {
 	margin-left: 1em;
 }
 #content.conversation-page .posting-controls {
-	margin: 1em 0 4em;
+	margin: 0.5em 0 4em;
+}
+#content.conversation-page .post-meta-fields {
+	overflow: auto;
 }
 #content.conversation-page .textarea-container {
 	position: unset;
 }
 #content.conversation-page textarea {
 	border-top-width: 1px;
-	margin-top: 0.5em;
+	margin-top: 0.25em;
+}
+#content.conversation-page h1.page-main-heading {
+	text-align: center;
+	margin: 0.5em 0 0 0;
+}
+#conversation-form input[type='text'],
+#conversation-form label {
+	margin: 0.25em 0;
+}
+#conversation-form label {
+	width: 6em;
+}
+#conversation-form input[type='text'] {
+	width: calc(100% - 6em);
+}
+#conversation-form input[type='submit'] {
+	float: right;
 }
 
 /*********************************/
