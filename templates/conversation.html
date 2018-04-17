@@ -3,6 +3,8 @@
 <div class="conversation-participants">with: <ul>
 	{% for party in conversation.participants %}<li><a href="/users/{{party.slug}}">{{ party.display-name }}</a></li>{% endfor %}
 </ul></div>
+{% else %}
+<h1 class="page-main-heading">New conversation</h1>
 {% endif %}
 <div class="posting-controls">
 <form method="post" id="conversation-form" class="aligned-form">
