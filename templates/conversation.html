@@ -4,7 +4,7 @@
 	{% for party in conversation.participants %}<li><a href="/users/{{party.slug}}">{{ party.display-name }}</a></li>{% endfor %}
 </ul></div>
 {% else %}
-<h1 class="page-main-heading">New conversation</h1>
+<h1 class="page-main-heading">Send private message</h1>
 {% endif %}
 <div class="posting-controls">
 <form method="post" id="conversation-form" class="aligned-form">
