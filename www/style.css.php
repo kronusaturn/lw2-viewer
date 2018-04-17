@@ -1118,7 +1118,7 @@ h1.listing a[href^="http"] {
 /* CONVERSATIONS */
 /*****************/
 
-.conversation-participants {
+#content.conversation-page .conversation-participants {
 	margin: 3em 0 0;
 }
 

@@ -121,6 +121,17 @@
 	    (encode-entities (cdr (assoc :title (cdr (assoc :conversation message)))))
 	    (format nil "~{<p>~A</p>~}" (loop for block in (cdr (assoc :blocks (cdr (assoc :content message)))) collect (cdr (assoc :text block)))))))
 
+(defun conversation-index-to-html (conversation)
+  (multiple-value-bind (pretty-time js-time) (alexandria:if-let (ca (cdr (assoc :created-at conversation))) (pretty-time ca) (values "?" 0))
+    (format nil "<h1 class=\"listing\"><a href=\"/conversation?id=~A\">~A</a></h1><div class=\"post-meta\"><div class=\"conversation-participants\"><ul>~:{<li><a href=\"/users/~A\">~A</a></li>~}</ul></div><div class=\"messages-count\">~A</div><div class=\"date\" data-js-date=\"~A\">~A</div></div>"
+            (encode-entities (cdr (assoc :--id conversation)))
+            (encode-entities (cdr (assoc :title conversation)))
+            (loop for p in (cdr (assoc :participants conversation))
+                  collect (list (encode-entities (cdr (assoc :slug p))) (encode-entities (cdr (assoc :display-name p)))))
+            (pretty-number (cdr (assoc :messages-total conversation)) "message")
+            js-time
+            pretty-time)))
+
 (defun error-to-html (condition)
   (format nil "<h1>Error</h1><p>~A</p>"
 	  condition))
@@ -195,6 +206,8 @@
       ((string= (cdr (assoc :----typename x)) "Message")
        (format out-stream "<ul class=\"comment-thread\"><li class=\"comment-item\">~A</li></ul>"
 	       (conversation-message-to-html x)))
+      ((string= (cdr (assoc :----typename x)) "Conversation")
+       (write-string (conversation-index-to-html x) out-stream))
       ((assoc :comment-count x)
        (write-string (post-headline-to-html x :need-auth need-auth) out-stream))
       (t
@@ -636,13 +649,32 @@
                                (comments-base-terms (load-time-value (alist :view "allRecentComments")))
                                (items (alexandria:switch (show :test #'string=)
                                                          ("posts"
-                                                          (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (nconc (alist :offset offset :limit 21 :user-id (cdr (assoc :--id user-info))) posts-base-terms)) *posts-index-fields*)))
+                                                          (lw2-graphql-query (graphql-query-string "PostsList"
+                                                                                                   (alist :terms (nconc (alist :offset offset :limit 21 :user-id (cdr (assoc :--id user-info))) posts-base-terms))
+                                                                                                   *posts-index-fields*)))
                                                          ("comments"
-                                                          (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (nconc (alist :offset offset :limit 21 :user-id (cdr (assoc :--id user-info))) comments-base-terms))
+                                                          (lw2-graphql-query (graphql-query-string "CommentsList"
+                                                                                                   (alist :terms (nconc (alist :offset offset :limit 21 :user-id (cdr (assoc :--id user-info)))
+                                                                                                                        comments-base-terms))
                                                                                                    comments-index-fields)))
                                                          ("drafts"
-                                                          (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (alist :view "drafts" :limit 21 :offset offset :user-id (cdr (assoc :--id user-info)))) *posts-index-fields*)
+                                                          (lw2-graphql-query (graphql-query-string "PostsList"
+                                                                                                   (alist :terms (alist :view "drafts" :limit 21 :offset offset :user-id (cdr (assoc :--id user-info))))
+                                                                                                   *posts-index-fields*)
                                                                              :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
+                                                         ("conversations"
+                                                          (let ((conversations
+                                                                  (lw2-graphql-query (graphql-query-string "ConversationsList"
+                                                                                                           (alist :terms (alist :view "userConversations" :limit 21 :offset offset :user-id (cdr (assoc :--id user-info))))
+                                                                                                           '(:--id :created-at :title (:participants :display-name :slug) :----typename))
+                                                                                     :auth-token (hunchentoot:cookie-in "lw2-auth-token"))))
+                                                            (lw2-graphql-query-map
+                                                              (lambda (c)
+                                                                (graphql-query-string* "MessagesTotal" (alist :terms (alist :view "messagesConversation" :conversation-id (cdr (assoc :--id c)))) nil))
+                                                              conversations
+                                                              :postprocess (lambda (c result)
+                                                                             (acons :messages-total result c))
+                                                              :auth-token (hunchentoot:cookie-in "lw2-auth-token"))))
                                                          ("inbox"
                                                           (prog1
                                                             (let ((notifications (lw2-graphql-query (graphql-query-string "NotificationsList"
@@ -691,7 +723,7 @@
                                                                                                                          comments-index-fields))))
                                                              (concatenate 'list user-posts user-comments)))))
                                (with-next (> (length items) (+ (if show 0 offset) 20)))
-                               (interleave (if (string= show "inbox") (firstn items 20) (comment-post-interleave items :limit 20 :offset (if show nil offset))))) ; this destructively sorts items
+                               (interleave (if (not show) (comment-post-interleave items :limit 20 :offset (if show nil offset)) (firstn items 20)))) ; this destructively sorts items
                           (view-items-index interleave :with-offset offset :title title :content-class "user-page" :current-uri (format nil "/users/~A" user-slug)
                                             :with-offset offset :with-next with-next
                                             :need-auth (string= show "drafts") :section (if (string= show "drafts") "drafts" nil)
@@ -702,7 +734,8 @@
                                                                 (pretty-number (or (cdr (assoc :karma user-info)) 0))
                                                                 (with-output-to-string (stream)
                                                                   (loop for (l-show text) in `((nil "All") ("posts" "Posts") ("comments" "Comments")
-                                                                                                           ,@(if (logged-in-userid (cdr (assoc :--id user-info))) '(("drafts" "Drafts") ("inbox" "Inbox"))))
+                                                                                                           ,@(if (logged-in-userid (cdr (assoc :--id user-info)))
+                                                                                                                 '(("drafts" "Drafts") ("conversations" "Conversations") ("inbox" "Inbox"))))
                                                                         do (link-if-not stream (string= show l-show) (format nil "~A~@[?show=~A~]" (hunchentoot:script-name*) l-show)
                                                                                         "sublevel-item" text))))))))
 
