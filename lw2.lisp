@@ -336,16 +336,19 @@
     (assert (ironclad:constant-time-equal csrf-token correct-token) nil "CSRF check failed.")
     t)) 
 
+(defun generate-css-link ()
+  (generate-versioned-link (let ((ua (hunchentoot:header-in* :user-agent)))
+                             (cond ((search "Windows" ua) "/style.windows.css")
+                                   ((or (search "Linux" ua) (search "CrOS" ua) (search "Android" ua)) "/style.linux.css")
+                                   (t "/style.mac.css")))))
+
 (defun begin-html (out-stream &key title description current-uri content-class robots)
   (let* ((session-token (hunchentoot:cookie-in "session-token"))
 	 (csrf-token (and session-token (make-csrf-token session-token)))) 
     (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"stylesheet\" href=\"~A\"><style id='width-adjust'></style><link rel=\"shortcut icon\" href=\"~A\"><script src=\"~A\" async></script><script src=\"~A\" async></script><script>~A</script>~@[<script>var csrfToken=\"~A\"</script>~]~@[<meta name=\"robots\" content=\"~A\">~]</head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
 	    title description
 	    *html-head*
-	    (generate-versioned-link (let ((ua (hunchentoot:header-in* :user-agent)))
-                                       (cond ((search "Windows" ua) "/style.windows.css")
-                                             ((or (search "Linux" ua) (search "CrOS" ua) (search "Android" ua)) "/style.linux.css")
-                                             (t "/style.mac.css"))))
+	    (generate-css-link)
             (generate-versioned-link "/theme_tweaker.css")
 	    (generate-versioned-link "/favicon.ico") (generate-versioned-link "/script.js") (generate-versioned-link "/guiedit.js")
 	    (load-time-value (with-open-file (s "www/head.js") (uiop:slurp-stream-string s)) t)
@@ -408,7 +411,8 @@
     (alexandria:with-gensyms (fn)
       `(progn
          (setf (hunchentoot:content-type*) "text/html; charset=utf-8"
-               (hunchentoot:return-code*) ,return-code)
+               (hunchentoot:return-code*) ,return-code
+               (hunchentoot:header-out :link) (format nil "<~A>;rel=preload;type=text/css;as=style,<~A>;rel=preload;type=text/css;as=style,</fa-solid-900.ttf?v=1>;rel=preload;type=font/ttf;as=font;crossorigin,</fa-regular-400.ttf?v=1>;rel=preload;type=font/ttf;as=font;crossorigin,<//fonts.greaterwrong.com/font_files/BitmapFonts/MSSansSerif.ttf>;rel=preload;type=font/ttf;as=font;crossorigin,</minimize_button_icon.gif?v=1>;rel=preload;type=image/gif;as=image,</basilisk.png?v=1>;rel=preload;type=image/png;as=image" (generate-css-link) "//fonts.greaterwrong.com/?fonts=Charter,Concourse,a_Avante,Whitney,SourceSansPro,Raleway,ProximaNova,AnonymousPro,InputSans,GaramondPremierPro,ProximaNova,BitmapFonts"))
          (let* ((,out-stream (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8))
                 (,fn (lambda () ,@body)))
            (call-with-emit-page ,out-stream ,fn ,@args))))))
