@@ -459,7 +459,7 @@
   (format out-stream "<div class=\"action-container\"><input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><input type=\"submit\" value=\"~A\">~@[~A~]</div></div></form>"
 	  csrf-token button-label end-html))
 
-(defun view-items-index (items &key section with-offset (with-next t) title current-uri hide-title need-auth extra-html page-toolbar-extra (content-class "index-page"))
+(defun view-items-index (items &key section with-offset (with-next t) title current-uri hide-title need-auth hide-rss extra-html page-toolbar-extra (content-class "index-page"))
   (alexandria:switch ((hunchentoot:get-parameter "format") :test #'string=)
                      ("rss" 
                       (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
@@ -471,7 +471,7 @@
                                   (format out-stream "<div class=\"page-toolbar\">~@[<a class=\"new-post button\" href=\"/edit-post?section=~A\" accesskey=\"n\" title=\"Create new post [n]\">New post</a>~]~@[~A~]~{~@[<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" title=\"~A RSS feed\" href=\"~A\">RSS</a>~]~}</div>~@[~A~]"
                                           (if (and section (logged-in-userid)) section)
                                           page-toolbar-extra
-                                          (unless need-auth
+                                          (unless (or need-auth hide-rss)
                                             (list title (replace-query-params (hunchentoot:request-uri*) "offset" nil "format" "rss")))
                                           extra-html)
                                   (write-index-items-to-html out-stream items :need-auth need-auth)))))
@@ -749,8 +749,11 @@
                           (view-items-index interleave :with-offset offset :title title :content-class "user-page" :current-uri (format nil "/users/~A" user-slug)
                                             :with-offset offset :with-next with-next
                                             :need-auth (string= show "drafts") :section (if (string= show "drafts") "drafts" nil)
-                                            :page-toolbar-extra (format nil "<a class=\"new-private-message button\" href=\"/conversation?to=~A\">Send private message</a>"
-                                                                        user-slug)
+                                            :hide-rss (some (lambda (x) (string= show x)) '("drafts" "conversations" "inbox"))
+                                            :page-toolbar-extra (let ((liu (logged-in-userid)))
+                                                                  (if (and liu (not (string= liu (cdr (assoc :--id user-info)))))
+                                                                      (format nil "<a class=\"new-private-message button\" href=\"/conversation?to=~A\">Send private message</a>"
+                                                                              user-slug)))
                                             :extra-html (format nil "<h1 class=\"page-main-heading\">~A</h1><div class=\"user-stats\">Karma: <span class=\"karma-total\">~A</span></div><div class=\"sublevel-nav\">~A</div>"
                                                                 (cdr (assoc :display-name user-info))
                                                                 (pretty-number (or (cdr (assoc :karma user-info)) 0))
@@ -789,7 +792,7 @@
                                                                            :operation-name "MessagesNew")))
                                            (setf (hunchentoot:return-code*) 303
                                                  (hunchentoot:header-out "Location") (format nil "/conversation?id=~A" id))))
-                                       ((or (and id to) (not (or id to))) (error "This is an invalid URL."))
+                                       ((and id to) (error "This is an invalid URL."))
                                        (id
                                          (multiple-value-bind (conversation messages)
                                            (lw2-graphql-query-multi
@@ -800,7 +803,7 @@
                                            (view-items-index (nreverse messages) :content-class "conversation-page" :need-auth t :title (cdr (assoc :title conversation))
                                                              :extra-html (with-output-to-string (out-stream) (render-template* *conversation-template* out-stream
                                                                                                                                :conversation conversation :csrf-token (make-csrf-token))))))
-                                       (to
+                                       (t
                                          (emit-page (out-stream :title "New conversation" :content-class "conversation-page")
                                                     (render-template* *conversation-template* out-stream
                                                                       :to to
