@@ -253,9 +253,13 @@
 	(local-time:timestamp> (local-time:parse-timestring (cdr (assoc :created-at (first notifications)))) (local-time:parse-timestring (cdr (assoc :last-notifications-check user-info))))))
     (t () nil)))
 
+(defparameter *fonts-stylesheet-uri* "//fonts.greaterwrong.com/?fonts=Charter,Concourse,a_Avante,Whitney,SourceSansPro,Raleway,ProximaNova,AnonymousPro,InputSans,GaramondPremierPro,ProximaNova,BitmapFonts")
+
 (defparameter *html-head*
+  (format nil
 "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
-<link rel=\"stylesheet\" href=\"//fonts.greaterwrong.com/?fonts=Charter,Concourse,a_Avante,Whitney,SourceSansPro,Raleway,ProximaNova,AnonymousPro,InputSans,GaramondPremierPro,ProximaNova,BitmapFonts\">")
+<link rel=\"stylesheet\" href=\"~A\">"
+          *fonts-stylesheet-uri*))
 
 (defun generate-versioned-link (file)
   (format nil "~A?v=~A" file (sb-posix:stat-mtime (sb-posix:stat (format nil "www~A" file))))) 
@@ -412,7 +416,13 @@
       `(progn
          (setf (hunchentoot:content-type*) "text/html; charset=utf-8"
                (hunchentoot:return-code*) ,return-code
-               (hunchentoot:header-out :link) (format nil "<~A>;rel=preload;type=text/css;as=style,<~A>;rel=preload;type=text/css;as=style,</fa-solid-900.ttf?v=1>;rel=preload;type=font/ttf;as=font;crossorigin,</fa-regular-400.ttf?v=1>;rel=preload;type=font/ttf;as=font;crossorigin,<//fonts.greaterwrong.com/font_files/BitmapFonts/MSSansSerif.ttf>;rel=preload;type=font/ttf;as=font;crossorigin,</minimize_button_icon.gif?v=1>;rel=preload;type=image/gif;as=image,</basilisk.png?v=1>;rel=preload;type=image/png;as=image" (generate-css-link) "//fonts.greaterwrong.com/?fonts=Charter,Concourse,a_Avante,Whitney,SourceSansPro,Raleway,ProximaNova,AnonymousPro,InputSans,GaramondPremierPro,ProximaNova,BitmapFonts"))
+               (hunchentoot:header-out :link) (format nil "~:{<~A>;rel=preload;type=~A;as=~A~@{;~A~}~:^,~}"
+                                                      `((,(generate-css-link) "text/css" "style")
+                                                        (,*fonts-stylesheet-uri* "text/css" "style")
+                                                        ("/fa-solid-900.ttf?v=1" "font/ttf" "font" "crossorigin")
+                                                        ("/fa-regular-400.ttf?v=1" "font/ttf" "font" "crossorigin")
+                                                        ("//fonts.greaterwrong.com/font_files/BitmapFonts/MSSansSerif.ttf" "font/ttf" "font" "crossorigin")
+                                                        ("/basilisk.png?v=1" "image/png" "image"))))
          (let* ((,out-stream (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8))
                 (,fn (lambda () ,@body)))
            (call-with-emit-page ,out-stream ,fn ,@args))))))
