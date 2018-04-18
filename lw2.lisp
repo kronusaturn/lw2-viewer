@@ -978,7 +978,7 @@
                                                                                         ("/favicon.ico" "image/x-icon")
                                                                                         ("/fa-regular-400.ttf" "application/x-font-ttf; charset=binary")
                                                                                         ("/fa-solid-900.ttf" "application/x-font-ttf; charset=binary")
-                                                                                        ("/basilisk.png" "image/png")
+                                                                                        ("/basilisk.png" "image/png"))
                                                                                       collect (defres uri content-type))))
                                                                    (when file
                                                                      (when (assoc "v" (hunchentoot:get-parameters r) :test #'string=)
