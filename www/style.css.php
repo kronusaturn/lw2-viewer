@@ -1134,6 +1134,7 @@ h1.listing a[href^="http"] {
 }
 #content.conversation-page .posting-controls {
 	margin: 0.5em 0 4em;
+	padding-bottom: 1em;
 }
 #content.conversation-page .post-meta-fields {
 	overflow: auto;
