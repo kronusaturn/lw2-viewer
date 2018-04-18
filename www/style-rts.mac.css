@@ -1063,6 +1063,12 @@ h1.listing a[href^="http"] {
 			 0 0 3px #00c;
 	}
 }
+.listing-message {
+	width: 100%;
+	text-align: center;
+	padding: 0.75em 0 0.9em 0;
+	font-size: 1.375em;
+}
 
 /**************/
 /* USER PAGES */

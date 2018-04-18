@@ -196,23 +196,25 @@
 	  when (or (not offset) (>= count offset))
 	  collect x)))
 
-(defun write-index-items-to-html (out-stream items &key need-auth)
-  (dolist (x items)
-    (cond
-      ((typep x 'condition)
-       (write-string (error-to-html x) out-stream))
-      ((assoc :message x)
-       (format out-stream "<p>~A</p>" (cdr (assoc :message x))))
-      ((string= (cdr (assoc :----typename x)) "Message")
-       (format out-stream "<ul class=\"comment-thread\"><li class=\"comment-item\">~A</li></ul>"
-	       (conversation-message-to-html x)))
-      ((string= (cdr (assoc :----typename x)) "Conversation")
-       (write-string (conversation-index-to-html x) out-stream))
-      ((assoc :comment-count x)
-       (write-string (post-headline-to-html x :need-auth need-auth) out-stream))
-      (t
-	(format out-stream "<ul class=\"comment-thread\"><li class=\"comment-item\" id=\"comment-~A\">~A</li></ul>"
-		(cdr (assoc :--id x)) (comment-to-html x :with-post-title t))))))
+(defun write-index-items-to-html (out-stream items &key need-auth (empty-message "No entries."))
+  (if items
+      (dolist (x items)
+        (cond
+          ((typep x 'condition)
+           (write-string (error-to-html x) out-stream))
+          ((assoc :message x)
+           (format out-stream "<p>~A</p>" (cdr (assoc :message x))))
+          ((string= (cdr (assoc :----typename x)) "Message")
+           (format out-stream "<ul class=\"comment-thread\"><li class=\"comment-item\">~A</li></ul>"
+                   (conversation-message-to-html x)))
+          ((string= (cdr (assoc :----typename x)) "Conversation")
+           (write-string (conversation-index-to-html x) out-stream))
+          ((assoc :comment-count x)
+           (write-string (post-headline-to-html x :need-auth need-auth) out-stream))
+          (t
+           (format out-stream "<ul class=\"comment-thread\"><li class=\"comment-item\" id=\"comment-~A\">~A</li></ul>"
+                   (cdr (assoc :--id x)) (comment-to-html x :with-post-title t)))))
+      (format out-stream "<div class=\"listing-message\">~A</div>" empty-message)))
 
 (defun write-index-items-to-rss (out-stream items &key title need-auth)
   (let ((full-title (format nil "~@[~A - ~]LessWrong 2 viewer" title)))
