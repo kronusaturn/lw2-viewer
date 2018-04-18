@@ -119,7 +119,7 @@
 	    pretty-time
             (encode-entities (cdr (assoc :--id (cdr (assoc :conversation message)))))
 	    (encode-entities (cdr (assoc :title (cdr (assoc :conversation message)))))
-	    (format nil "~{<p>~A</p>~}" (loop for block in (cdr (assoc :blocks (cdr (assoc :content message)))) collect (cdr (assoc :text block)))))))
+            (format nil "~{<p>~A</p>~}" (loop for block in (cdr (assoc :blocks (cdr (assoc :content message)))) collect (encode-entities (cdr (assoc :text block))))))))
 
 (defun conversation-index-to-html (conversation)
   (multiple-value-bind (pretty-time js-time) (alexandria:if-let (ca (cdr (assoc :created-at conversation))) (pretty-time ca) (values "?" 0))
