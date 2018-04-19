@@ -70,6 +70,13 @@ Element.prototype.getCommentId = function() {
 /* COMMENTING */
 /**************/
 
+function GUIEditMobileHelpButtonClicked(event) {
+	console.log("Help button clicked");
+}
+function GUIEditMobileExitButtonClicked(event) {
+	event.target.blur();
+}
+
 Element.prototype.addTextareaFeatures = function() {
 	let textarea = this;
 
@@ -119,13 +126,6 @@ Element.prototype.addTextareaFeatures = function() {
 	if (guiEditMobileExitButton) {
 		guiEditMobileExitButton.addActivateEvent(GUIEditMobileExitButtonClicked);
 	}
-}
-
-function GUIEditMobileHelpButtonClicked(event) {
-	console.log("Help button clicked");
-}
-function GUIEditMobileExitButtonClicked(event) {
-	event.target.blur();
 }
 
 Element.prototype.injectReplyForm = function(editMarkdownSource) {
@@ -1154,7 +1154,7 @@ function initialize() {
 			});
 		});
 
-		document.querySelectorAll("#edit-post-form textarea").forEach(function (textarea) { textarea.addTextareaFeatures(); });
+		document.querySelectorAll(".with-markdown-editor textarea").forEach(function (textarea) { textarea.addTextareaFeatures(); });
 		document.querySelectorAll((getQueryVariable("post-id")) ? "#edit-post-form textarea" : "#edit-post-form input[name='title']").forEach(function (field) { field.focus(); });
 
 		let postMeta = document.querySelector(".post .post-meta");

@@ -1145,9 +1145,6 @@ h1.listing a[href^="http"] {
 #content.conversation-page .post-meta-fields {
 	overflow: auto;
 }
-#content.conversation-page .textarea-container {
-	position: unset;
-}
 #content.conversation-page textarea {
 	border-top-width: 1px;
 	margin-top: 0.25em;
@@ -3391,30 +3388,31 @@ div > .MJXc-display {
 	}
 	#edit-post-form label[for='link-post'] {
 		white-space: normal;
+		line-height: 0.9;
 		width: 2em;
 		height: 1em;
 	}
 	#edit-post-form textarea {
 		min-height: unset;
 	}
-	.textarea-container:focus-within textarea {
+	#edit-post-form .textarea-container:focus-within textarea {
 		position: fixed;
 		top: -1px;
 		left: 2px;
 		width: calc(100vw - 4px);
-		height: calc(100vh - 5px);
+		height: calc(100vh - 101px) !important;
 		max-height: unset;
 		border-width: 1px;
 		z-index: 11001;
 	}
-	.textarea-container:focus-within .guiedit-buttons-container {
+	#edit-post-form .textarea-container:focus-within .guiedit-buttons-container {
 		position: fixed;
 		z-index: 11002;
 		left: 3px;
 		width: calc(100vw - 6px);
 		height: auto;
 		background-image: none;
-		background-color: transparent;
+		background-color: white;
 		border-top: 1px solid #ddf;
 		padding: 1px;
 		text-align: center;
@@ -3423,7 +3421,7 @@ div > .MJXc-display {
 		top: auto;
 		bottom: 0;
 	}
-	.textarea-container:focus-within button.guiedit {
+	#edit-post-form .textarea-container:focus-within button.guiedit {
 		font-size: 0.9375rem;
 		line-height: 1.5;
 		height: auto;
@@ -3435,7 +3433,7 @@ div > .MJXc-display {
 		border-radius: 6px;
 		margin: 1px;
 	}
-	.textarea-container:focus-within button.guiedit sup {
+	#edit-post-form .textarea-container:focus-within button.guiedit sup {
 		position: absolute;
 		left: calc(50% + 0.65em);
 		top: calc(50% - 1.3em);
