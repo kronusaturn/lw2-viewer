@@ -421,9 +421,9 @@
                (hunchentoot:header-out :link) (format nil "~:{<~A>;rel=preload;type=~A;as=~A~@{;~A~}~:^,~}"
                                                       `((,(generate-css-link) "text/css" "style")
                                                         (,*fonts-stylesheet-uri* "text/css" "style")
-                                                        ("/fa-solid-900.ttf?v=1" "application/x-font-ttf" "font" "crossorigin")
-                                                        ("/fa-regular-400.ttf?v=1" "application/x-font-ttf" "font" "crossorigin")
-                                                        ("//fonts.greaterwrong.com/font_files/BitmapFonts/MSSansSerif.ttf" "application/x-font-ttf" "font" "crossorigin")
+                                                        ("/fa-solid-900.ttf?v=1" "font/ttf" "font" "crossorigin")
+                                                        ("/fa-regular-400.ttf?v=1" "font/ttf" "font" "crossorigin")
+                                                        ("//fonts.greaterwrong.com/font_files/BitmapFonts/MSSansSerif.ttf" "font/ttf" "font" "crossorigin")
                                                         ("/basilisk.png?v=1" "image/png" "image"))))
          (let* ((,out-stream (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8))
                 (,fn (lambda () ,@body)))
@@ -1001,8 +1001,8 @@
                                                                                         ("/script.js" "text/javascript")
                                                                                         ("/guiedit.js" "text/javascript")
                                                                                         ("/favicon.ico" "image/x-icon")
-                                                                                        ("/fa-regular-400.ttf" "application/x-font-ttf; charset=binary")
-                                                                                        ("/fa-solid-900.ttf" "application/x-font-ttf; charset=binary")
+                                                                                        ("/fa-regular-400.ttf" "font/ttf; charset=binary")
+                                                                                        ("/fa-solid-900.ttf" "font/ttf; charset=binary")
                                                                                         ("/basilisk.png" "image/png"))
                                                                                       collect (defres uri content-type))))
                                                                    (when file
