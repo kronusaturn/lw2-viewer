@@ -511,19 +511,19 @@ a#inbox-indicator.new-messages:hover::before {
 	top: 3px;
 	left: calc((100% - 900px) / 2 - 41px);
 	opacity: 0.4;
+	display: table;
+	max-width: 40px;
 }
 #theme-selector:hover {
 	opacity: 1.0;
 }
 .theme-selector button {
-	display: block;
+	display: table-cell;
 	width: 26px;
 	height: 26px;
-/* 	This was to fix the alignment in some browser. Check to see if still needed. */
-/* 	Apparently yes, in Chrome at least... */
-/* 	padding: 0 0 0 1px; */
-/* 	padding: 0; */
+	padding: 0;
 	text-align: center;
+	vertical-align: middle;
 	margin: 2px 7px;
 	font-size: 0.75rem;
 	font-weight: bold;
