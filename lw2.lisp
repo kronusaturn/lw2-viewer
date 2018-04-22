@@ -256,6 +256,7 @@
     (t () nil)))
 
 (defparameter *fonts-stylesheet-uri* "//fonts.greaterwrong.com/?fonts=Charter,Concourse,a_Avante,Whitney,SourceSansPro,Raleway,ProximaNova,AnonymousPro,InputSans,GaramondPremierPro,ProximaNova,BitmapFonts")
+(defparameter *fonts-stylesheet-uri* "//fonts.greaterwrong.com/?fonts=*")
 
 (defparameter *html-head*
   (format nil

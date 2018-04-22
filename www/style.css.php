@@ -1067,7 +1067,8 @@ h1.listing a[href^="http"] {
 
 #content.user-page h1.page-main-heading {
 	border-bottom: 1px solid #ccc;
-	margin-bottom: 0.75em;
+	margin: 1em 0 0.75em 0;
+	line-height: 1.2;
 }
 #content.user-page .user-stats {
 	float: right;
