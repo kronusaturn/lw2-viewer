@@ -1000,8 +1000,8 @@
                                                                                         ("/script.js" "text/javascript")
                                                                                         ("/guiedit.js" "text/javascript")
                                                                                         ("/favicon.ico" "image/x-icon")
-                                                                                        ("/fa-regular-400.ttf" "font/ttf; charset=binary")
-                                                                                        ("/fa-solid-900.ttf" "font/ttf; charset=binary"))
+                                                                                        ("/fa-regular-400.ttf" "font/ttf")
+                                                                                        ("/fa-solid-900.ttf" "font/ttf"))
                                                                                       collect (defres uri content-type))))
                                                                    (when file
                                                                      (when (assoc "v" (hunchentoot:get-parameters r) :test #'string=)
