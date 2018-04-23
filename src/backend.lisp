@@ -2,7 +2,7 @@
   (:use #:cl #:sb-thread #:flexi-streams #:alexandria #:lw2-viewer.config #:lw2.lmdb #:lw2.utils)
   (:export #:*posts-index-fields* #:*comments-index-fields* #:*messages-index-fields*
            #:*notifications-base-terms*
-	   #:log-condition #:log-conditions #:start-background-loader #:stop-background-loader
+	   #:log-condition #:log-conditions #:start-background-loader #:stop-background-loader #:background-loader-running-p
 	   #:lw2-graphql-query-streamparse #:lw2-graphql-query-noparse #:decode-graphql-json #:lw2-graphql-query #:graphql-query-string* #:graphql-query-string #:lw2-graphql-query-map #:lw2-graphql-query-multi
 	   #:make-posts-list-query #:get-posts #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
 	   #:lw2-search-query #:get-post-title #:get-post-slug #:get-slug-postid #:get-username #:get-user-slug)
@@ -11,8 +11,6 @@
 (in-package #:lw2.backend)
 
 (defvar *cookie-jar* (make-instance 'drakma:cookie-jar))
-
-(defvar *background-loader-thread* nil) 
 
 (defparameter *posts-index-fields* '(:title :--id :slug :user-id :posted-at :base-score :comment-count :page-url :url))
 (defparameter *comments-index-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id (:parent-comment :--id :user-id :post-id) :base-score :page-url :html-body)) 
@@ -30,6 +28,14 @@
      (handler-bind
        (((or warning serious-condition) (lambda (c) (log-condition c))))
        (progn ,@body))))
+
+(defvar *background-loader-thread* nil)
+(defvar *background-loader-semaphore* (make-semaphore :count 1))
+
+(defun background-loader-running-p ()
+  (case (semaphore-count *background-loader-semaphore*)
+    (0 t)
+    (1 nil)))
 
 (defun background-loader ()
   (loop
@@ -52,16 +58,21 @@
 	  (if (and recent-comments-json (ignore-errors (json:decode-json-from-string recent-comments-json)))
 	    (cache-put "index-json" "recent-comments" recent-comments-json))))
       (t (condition) (values nil condition)))
-    (sleep 60))) 
+    (if (wait-on-semaphore *background-loader-semaphore* :timeout 60)
+        (return))))
 
 (defun start-background-loader ()
-  (assert (not *background-loader-thread*))
-  (setf *background-loader-thread* (sb-thread:make-thread #'background-loader))) 
+  (if (background-loader-running-p)
+      (warn "Background loader already running.")
+      (setf *background-loader-thread* (sb-thread:make-thread #'background-loader))))
 
 (defun stop-background-loader ()
-  (with-cache-mutex
-    (sb-thread:terminate-thread *background-loader-thread*))
-  (setf *background-loader-thread* nil)) 
+  (if (background-loader-running-p)
+      (progn
+        (signal-semaphore *background-loader-semaphore*)
+        (join-thread *background-loader-thread*)
+        (setf *background-loader-thread* nil))
+      (warn "Background loader not running.")))
 
 (defun lw2-graphql-query-streamparse (query &key auth-token)
   (multiple-value-bind (req-stream status-code headers final-uri reuse-stream want-close)
@@ -215,7 +226,7 @@
                (cache-put "index-json" cache-id result)
                decoded-result)))
     (let ((cached-result (cache-get "index-json" cache-id)))
-      (if (and cached-result *background-loader-thread*)
+      (if (and cached-result (background-loader-running-p))
         (decode-graphql-json cached-result)
         (if cached-result
             (handler-case
