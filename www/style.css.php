@@ -3401,7 +3401,7 @@ div > .MJXc-display {
 		top: -1px;
 		left: 2px;
 		width: calc(100vw - 4px);
-		height: calc(100vh - 101px) !important;
+		height: calc(100% - 101px) !important;
 		max-height: unset;
 		border-width: 1px;
 		z-index: 11001;
@@ -3409,13 +3409,14 @@ div > .MJXc-display {
 	#edit-post-form .textarea-container:focus-within .guiedit-buttons-container {
 		position: fixed;
 		z-index: 11002;
-		left: 3px;
-		width: calc(100vw - 6px);
+		left: 0;
+		width: 100vw;
 		height: auto;
 		background-image: none;
 		background-color: white;
 		border-top: 1px solid #ddf;
-		padding: 1px;
+		padding: 3px 4px 4px 4px;
+		margin: 0;
 		text-align: center;
 	}
 	#edit-post-form .textarea-container:focus-within .guiedit-buttons-container {
