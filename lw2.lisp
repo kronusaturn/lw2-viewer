@@ -196,24 +196,30 @@
 	  when (or (not offset) (>= count offset))
 	  collect x)))
 
+(defmacro with-error-html-block ((out-stream) &body body)
+  `(handler-case
+     (progn ,@body)
+     (serious-condition (c) (write-string (error-to-html c) ,out-stream))))
+
 (defun write-index-items-to-html (out-stream items &key need-auth (empty-message "No entries."))
   (if items
       (dolist (x items)
-        (cond
-          ((typep x 'condition)
-           (write-string (error-to-html x) out-stream))
-          ((assoc :message x)
-           (format out-stream "<p>~A</p>" (cdr (assoc :message x))))
-          ((string= (cdr (assoc :----typename x)) "Message")
-           (format out-stream "<ul class=\"comment-thread\"><li class=\"comment-item\">~A</li></ul>"
-                   (conversation-message-to-html x)))
-          ((string= (cdr (assoc :----typename x)) "Conversation")
-           (write-string (conversation-index-to-html x) out-stream))
-          ((assoc :comment-count x)
-           (write-string (post-headline-to-html x :need-auth need-auth) out-stream))
-          (t
-           (format out-stream "<ul class=\"comment-thread\"><li class=\"comment-item\" id=\"comment-~A\">~A</li></ul>"
-                   (cdr (assoc :--id x)) (comment-to-html x :with-post-title t)))))
+        (with-error-html-block (out-stream)
+          (cond
+            ((typep x 'condition)
+             (write-string (error-to-html x) out-stream))
+            ((assoc :message x)
+             (format out-stream "<p>~A</p>" (cdr (assoc :message x))))
+            ((string= (cdr (assoc :----typename x)) "Message")
+             (format out-stream "<ul class=\"comment-thread\"><li class=\"comment-item\">~A</li></ul>"
+                     (conversation-message-to-html x)))
+            ((string= (cdr (assoc :----typename x)) "Conversation")
+             (write-string (conversation-index-to-html x) out-stream))
+            ((assoc :comment-count x)
+             (write-string (post-headline-to-html x :need-auth need-auth) out-stream))
+            (t
+             (format out-stream "<ul class=\"comment-thread\"><li class=\"comment-item\" id=\"comment-~A\">~A</li></ul>"
+                     (cdr (assoc :--id x)) (comment-to-html x :with-post-title t))))))
       (format out-stream "<div class=\"listing-message\">~A</div>" empty-message)))
 
 (defun write-index-items-to-rss (out-stream items &key title need-auth)
@@ -978,8 +984,8 @@
                                                         to (if (and (= (or year current-year) current-year) (= (or month current-month) current-month)) current-day (local-time:days-in-month (or month current-month) (or year current-year)))
                                                         do (link-if-not out-stream (eq d day) (url-elements "archive" (or year current-year) (or month current-month) d) "archive-nav-item-day" d))
                                                   (format out-stream "</div>")) 
-                                                (format out-stream "</div>") 
-                                                (map-output out-stream #'post-headline-to-html (firstn posts 50))))))))))
+                                                (format out-stream "</div>")
+                                                (write-index-items-to-html out-stream (firstn posts 50) :empty-message "No posts for the selected period.")))))))))
 
 (hunchentoot:define-easy-handler (view-about :uri "/about") ()
 				 (with-error-page
