@@ -812,16 +812,6 @@ a#inbox-indicator.new-messages:hover::before {
 .archive-nav:nth-last-child(2) {
 	margin-bottom: 5.25em;
 }
-.archive-nav:last-child::after,
-.archive-nav:nth-last-child(2)::after {
-	content: "No posts for the selected period.";
-	display: block;
-	position: absolute;
-	width: 100%;
-	text-align: center;
-	padding: 1.25em 0 1.25em 0;
-	font-size: 1.375em;
-}
 
 div[class^='archive-nav-'] {
 	display: table;
@@ -1069,7 +1059,7 @@ h1.listing a[href^="http"] {
 .listing-message {
 	width: 100%;
 	text-align: center;
-	padding: 0.75em 0 0.9em 0;
+	padding: 1.25em 0 1.25em 0;
 	font-size: 1.375em;
 }
 
@@ -1090,12 +1080,6 @@ h1.listing a[href^="http"] {
 .user-page .sublevel-nav {
 	text-align: center;
 	margin: 0;
-}
-.user-page .sublevel-nav:nth-last-child(2)::after {
-	content: "No entries.";
-	display: block;
-	margin: 1.25em;
-	font-size: 1.375em;
 }
 .user-page .sublevel-nav .sublevel-item {
 	display: inline-block;
