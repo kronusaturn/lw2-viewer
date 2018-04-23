@@ -1053,6 +1053,9 @@ h1.listing a[href^="http"] {
 	padding: 1.25em 0 1.25em 0;
 	font-size: 1.375em;
 }
+.archive-nav + .listing-message {
+	padding: 1.75em 0 1.25em 0;
+}
 
 /**************/
 /* USER PAGES */
