@@ -993,6 +993,9 @@ h1.listing a[href^="http"] {
 		left: 1em;
 		color: #00f;
 	}
+	.search-results-page h1.listing:focus-within::before {
+		left: 0.5em;
+	}
 
 	<?php $margin_of_hover_error = '10px'; ?>
 	h1.listing a:hover::before {
@@ -3446,7 +3449,7 @@ div > .MJXc-display {
 	.textarea-container .guiedit-mobile-auxiliary-button {
 		z-index: 11011;
 		position: fixed;
-		bottom: 8px;
+		bottom: 7px;
 		width: calc(((100% - 16px) / 10) * 3 - 7px);
 		font-size: 1.25rem;
 		padding: 5px;
