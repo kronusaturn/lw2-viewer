@@ -64,7 +64,9 @@
 (defun start-background-loader ()
   (if (background-loader-running-p)
       (warn "Background loader already running.")
-      (setf *background-loader-thread* (sb-thread:make-thread #'background-loader))))
+      (progn
+        (wait-on-semaphore *background-loader-semaphore*)
+        (setf *background-loader-thread* (sb-thread:make-thread #'background-loader)))))
 
 (defun stop-background-loader ()
   (if (background-loader-running-p)
