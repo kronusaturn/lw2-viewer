@@ -1,7 +1,7 @@
 (uiop:define-package #:lw2.hash-utils
   (:use #:cl)
   (:import-from #:flexi-streams #:string-to-octets #:octets-to-string)
-  (:export #:city-hash-128-vector #:hash-printable-object #:hash-file-list)
+  (:export #:city-hash-128-vector #:hash-string #:hash-printable-object #:hash-file-list)
   (:recycle #:lw2.lmdb))
 
 (in-package #:lw2.hash-utils)
@@ -12,8 +12,11 @@
                             (multiple-value-list
                               (city-hash:city-hash-128 data))))))
 
+(defun hash-string (string)
+  (city-hash-128-vector (string-to-octets string :external-format :utf-8)))
+
 (defun hash-printable-object (object)
-  (city-hash-128-vector (string-to-octets (prin1-to-string object) :external-format :utf-8)))
+  (hash-string (prin1-to-string object)))
 
 (defun hash-file-list (file-list)
   (city-hash-128-vector

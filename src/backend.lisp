@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.backend
-  (:use #:cl #:sb-thread #:flexi-streams #:alexandria #:lw2-viewer.config #:lw2.lmdb #:lw2.utils)
+  (:use #:cl #:sb-thread #:flexi-streams #:alexandria #:lw2-viewer.config #:lw2.lmdb #:lw2.utils #:lw2.hash-utils)
   (:export #:*posts-index-fields* #:*comments-index-fields* #:*messages-index-fields*
            #:*notifications-base-terms*
 	   #:log-condition #:log-conditions #:start-background-loader #:stop-background-loader #:background-loader-running-p
@@ -150,13 +150,35 @@
 (defvar *background-cache-update-threads* (make-hash-table :test 'equal
 							   :weakness :value
 							   :synchronized t)) 
- 
+
+(defun cache-update (cache-db key data)
+  (let ((meta-db (format nil "~A-meta" cache-db))
+        (new-hash (hash-string data))
+        (current-time (get-unix-time)))
+    (with-cache-transaction
+      (let* ((metadata (if-let (m-str (cache-get meta-db key)) (read-from-string m-str)))
+             (last-mod (if (equalp new-hash (cdr (assoc :city-128-hash metadata)))
+                           (or (cdr (assoc :last-modified metadata)) current-time)
+                           current-time)))
+        (cache-put meta-db key (prin1-to-string `((:last-checked . ,current-time) (:last-modified . ,last-mod) (:city-128-hash . ,new-hash))))
+        (cache-put cache-db key data)))))
+
+(declaim (type (and fixnum (integer 1)) *cache-stale-factor*))
+(defparameter *cache-stale-factor* 100)
+
+(defun cache-is-fresh (cache-db key)
+  (let ((metadata (if-let (m-str (cache-get (format nil "~A-meta" cache-db) key)) (read-from-string m-str)))
+        (current-time (get-unix-time)))
+    (if-let ((last-mod (cdr (assoc :last-modified metadata)))
+             (last-checked (cdr (assoc :last-checked metadata))))
+            (> (- last-checked last-mod) (* *cache-stale-factor* (- current-time last-checked))))))
+
 (defun ensure-cache-update-thread (query cache-db cache-key)
   (let ((key (format nil "~A-~A" cache-db cache-key))) 
     (labels ((background-fn ()
 			    (handler-case 
 			      (prog1
-				(cache-put cache-db cache-key (lw2-graphql-query-noparse query))
+				(cache-update cache-db cache-key (lw2-graphql-query-noparse query))
 				(remhash key *background-cache-update-threads*))
 			      (t (c)
 				 (remhash key *background-cache-update-threads*)
@@ -168,17 +190,17 @@
 					 (setf (gethash key *background-cache-update-threads*)
 					       (sb-thread:make-thread #'background-fn)))))))) 
 
-(defun lw2-graphql-query-timeout-cached (query cache-db cache-key &key (revalidate t))
-  (let ((cached-result (cache-get cache-db cache-key))) 
-    (if (and cached-result (not revalidate))
-      (decode-graphql-json cached-result)
-      (let ((timeout (if cached-result 3 nil)) 
-	    (thread (ensure-cache-update-thread query cache-db cache-key))) 
-	(decode-graphql-json
-	  (handler-case
-	    (sb-thread:join-thread thread :timeout timeout)
-	    (t () (or cached-result
-		      (error "Failed to load ~A ~A and no cached version available." cache-db cache-key)))))))))
+(defun lw2-graphql-query-timeout-cached (query cache-db cache-key &key (revalidate t) force-revalidate)
+    (multiple-value-bind (cached-result is-fresh) (with-cache-transaction (values (cache-get cache-db cache-key) (cache-is-fresh cache-db cache-key)))
+      (if (and cached-result (if force-revalidate (not revalidate) (or is-fresh (not revalidate))))
+          (decode-graphql-json cached-result)
+          (let ((timeout (if cached-result (if force-revalidate nil 3) nil))
+                (thread (ensure-cache-update-thread query cache-db cache-key)))
+            (decode-graphql-json
+              (handler-case
+                (sb-thread:join-thread thread :timeout timeout)
+                (t () (or cached-result
+                          (error "Failed to load ~A ~A and no cached version available." cache-db cache-key)))))))))
 
 (defun graphql-query-string* (query-type terms fields)
   (labels ((terms (tlist)
