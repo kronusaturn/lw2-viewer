@@ -282,17 +282,17 @@
 (defun get-post-vote (post-id auth-token)
   (process-vote-result (lw2-graphql-query (format nil "{PostsSingle(documentId:\"~A\") {_id, currentUserVotes{voteType}}}" post-id) :auth-token auth-token))) 
 
-(defun get-post-body (post-id &key (revalidate t) auth-token)
+(defun get-post-body (post-id &key (revalidate t) force-revalidate auth-token)
   (let ((query-string (format nil "{PostsSingle(documentId:\"~A\") {title, _id, slug, userId, postedAt, baseScore, commentCount, pageUrl, url, frontpageDate, meta, draft, htmlBody}}" post-id)))
     (if auth-token
         (lw2-graphql-query query-string :auth-token auth-token)
-        (lw2-graphql-query-timeout-cached query-string "post-body-json" post-id :revalidate revalidate))))
+        (lw2-graphql-query-timeout-cached query-string "post-body-json" post-id :revalidate revalidate :force-revalidate force-revalidate))))
 
 (defun get-post-comments-votes (post-id auth-token)
   (process-votes-result (lw2-graphql-query (format nil "{CommentsList(terms:{view:\"postCommentsTop\",limit:10000,postId:\"~A\"}) {_id, currentUserVotes{voteType}}}" post-id) :auth-token auth-token)))
 
-(defun get-post-comments (post-id)
-  (lw2-graphql-query-timeout-cached (format nil "{CommentsList(terms:{view:\"postCommentsTop\",limit:10000,postId:\"~A\"}) {_id, userId, postId, postedAt, parentCommentId, baseScore, pageUrl, htmlBody}}" post-id) "post-comments-json" post-id))
+(defun get-post-comments (post-id &key (revalidate t) force-revalidate)
+  (lw2-graphql-query-timeout-cached (format nil "{CommentsList(terms:{view:\"postCommentsTop\",limit:10000,postId:\"~A\"}) {_id, userId, postId, postedAt, parentCommentId, baseScore, pageUrl, htmlBody}}" post-id) "post-comments-json" post-id :revalidate revalidate :force-revalidate force-revalidate))
 
 (defun lw2-search-query (query)
   (multiple-value-bind (req-stream req-status req-headers req-uri req-reuse-stream want-close)
