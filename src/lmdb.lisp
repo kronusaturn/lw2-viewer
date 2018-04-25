@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.lmdb
-  (:use #:cl #:sb-thread #:lw2-viewer.config)
+  (:use #:cl #:sb-thread #:lw2-viewer.config #:lw2.hash-utils)
   (:import-from #:flexi-streams #:string-to-octets #:octets-to-string) 
   (:export #:with-cache-mutex #:with-cache-transaction #:with-db #:lmdb-put-string #:cache-put #:cache-get #:simple-cacheable #:define-lmdb-memoized)
   (:unintern #:lmdb-clear-db))
@@ -90,22 +90,6 @@
        (setf (fdefinition (quote ,get-real)) (lambda (,key) ,@body)
 	     (fdefinition (quote ,cache)) (make-simple-cache ,cache-db)
 	     (fdefinition (quote ,get)) (,(if catch-errors 'wrap-handler 'identity) (make-simple-get ,cache-db (fdefinition (quote ,cache)) (fdefinition (quote ,get-real)))))))) 
-
-(eval-when (:compile-toplevel :load-toplevel :execute) 
-  (defun city-hash-128-vector (data)
-    (apply #'concatenate
-	   (cons 'vector (map 'list #'bit-smasher:int->octets
-			      (multiple-value-list
-				(city-hash:city-hash-128 data)))))) 
-
-  (defun hash-printable-object (object)
-    (city-hash-128-vector (string-to-octets (prin1-to-string object) :external-format :utf-8)))
-  
-  (defun hash-file-list (file-list)
-    (city-hash-128-vector
-      (apply #'concatenate
-	     `((vector character)
-	       ,@(map 'list (lambda (f) (uiop:read-file-string (uiop:subpathname (asdf:system-source-directory "lw2-viewer") f))) file-list))))))
 
 (defmacro define-lmdb-memoized (name (&key sources) lambda &body body)
   (let ((db-name (concatenate 'string (string-downcase (symbol-name name)) "-memo"))
