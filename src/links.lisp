@@ -11,7 +11,7 @@
 
 (simple-cacheable ("lw1-link" "lw1-link" link :catch-errors nil)
   (multiple-value-bind (body status headers uri)
-    (ignore-errors (drakma:http-request (concatenate 'string "https://www.lesserwrong.com" link) :method :head :close t :redirect nil))
+    (ignore-errors (drakma:http-request (concatenate 'string "https://www.lesswrong.com" link) :method :head :close t :redirect nil))
     (declare (ignore body uri))
     (let ((location (cdr (assoc :location headers)))) 
       (if (and (typep status 'integer) (< 300 status 400) location)
