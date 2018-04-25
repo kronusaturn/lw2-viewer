@@ -38,7 +38,7 @@
   [/([a-z]) ?-- ?([a-z])/ig, '$1\u2014$2'],
   
   // Two spaces after a period is INCORRECT.
-  [ /(\w[\.\?\!])  (\w)/g, '$1 $2'],
+  [ /(\w[\.\?\!])[ \u00a0]{2}(\w)/g, '$1 $2'],
   
   // ellipsis rectification
   [/(\s)\.\.\./g, '$1…'],
