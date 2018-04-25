@@ -524,7 +524,7 @@ a#inbox-indicator.new-messages:hover::before {
 	padding: 0;
 	text-align: center;
 	vertical-align: middle;
-	margin: 2px 7px;
+	margin: 1px 7px 0 7px;
 	font-size: 0.75rem;
 	font-weight: bold;
 	position: relative;
@@ -2664,7 +2664,7 @@ h1 {
 .comment-body h3 {
 	font-size: 1.4em;
 	font-family: 'Whitney SmallCaps';
-	font-weight: 
+	font-weight: normal;
 }
 .post-body h2,
 .comment-body h2 {
