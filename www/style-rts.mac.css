@@ -1495,6 +1495,7 @@ h1.listing a[href^="http"] {
 
 .post-meta {
 	text-align: center;
+	position: relative;
 }
 .post-meta .author {
 	color: #090;
@@ -1509,8 +1510,20 @@ h1.listing a[href^="http"] {
 .post-section::before {
 	visibility: visible;
 	font-family: "Font Awesome";
-	font-weight: bold;
-	color: #090;
+	font-weight: 900;
+	color: #fff;
+	text-shadow: 
+		1px 1px 0 #090, 
+		0 1px 0 #090, 
+		0 0 5px #090;
+}
+h1.list + .post-meta .post-section {
+	width: 0;
+	margin: -0.5em;
+}
+h1.list + .post-meta .post-section::before {
+	position: absolute;
+	left: -28px;
 }
 .post-section.frontpage::before {
 	content: "\F015";
