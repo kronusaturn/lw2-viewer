@@ -1,4 +1,6 @@
 [
+  // convert nbsp to regular space
+  [/\xa0/, ' '],
   // line-breaks after slashes (for long URLs etc.)
   [/\/+/, '\\&\u200b'],
 

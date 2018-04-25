@@ -1455,7 +1455,7 @@ h1.listing a[href^="http"] {
 	font-size: 1.0625em;
 	white-space: nowrap;
 }
-.post-meta .lw2-link,
+.post-meta .post-section,
 .post-meta a[href='#bottom-bar'] {
 	margin: 0;
 }
@@ -1492,6 +1492,28 @@ h1.listing a[href^="http"] {
 }
 .post-meta .comment-count {
 	margin-left: 1em;
+}
+.post-section {
+	visibility: hidden;
+	width: 1em;
+}
+.post-section::before {
+	visibility: visible;
+	font-family: "Font Awesome";
+	font-weight: bold;
+	color: #090;
+}
+.post-section.frontpage::before {
+	content: "\F015";
+}
+.post-section.featured::before {
+	content: "\F005";
+}
+.post-section.meta::before {
+	content: "\F077";
+}
+.post-section.personal::before {
+	content: "\F007";
 }
 .post-body {
 	min-height: 8em;
