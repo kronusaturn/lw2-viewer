@@ -62,10 +62,11 @@
                (posted-at string)
                (base-score fixnum)
                (comment-count (or null fixnum))
-               (page-url (or null string)))
+               (page-url (or null string))
+               (word-count (or null fixnum)))
     post
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      (format out-stream "<h1 class=\"listing~:[~; link-post-listing~]\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~A</a></h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\"><span class=\"karma-value\">~A</span></div><a class=\"comment-count\" href=\"~A#comments\">~A comment~:P</a>~@[<a class=\"lw2-link\" href=\"~A\">LW link</a>~]~A</div>"
+      (format out-stream "<h1 class=\"listing~:[~; link-post-listing~]\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~A</a></h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\"><span class=\"karma-value\">~A</span></div><a class=\"comment-count\" href=\"~A#comments\">~A comment~:P</a>~:[~*~;~:*<span class=\"read-time\" title=\"~A word~:P\">~A min read</span>~]~@[<a class=\"lw2-link\" href=\"~A\">LW link</a>~]~A</div>"
               url
               (if url (encode-entities (string-trim " " url)))
               (generate-post-auth-link post nil nil need-auth)
@@ -77,6 +78,8 @@
               (pretty-number base-score "point")
               (generate-post-link post)
               (or comment-count 0)
+              word-count
+              (and word-count (max 1 (round word-count 300)))
               (clean-lw-link page-url)
               (if url (format nil "<div class=\"link-post-domain\">(~A)</div>" (encode-entities (puri:uri-host (puri:parse-uri (string-trim " " url))))) "")))))
 
