@@ -42,95 +42,151 @@
   (when url
     (ppcre:regex-replace "([^/]*//[^/]*)lesserwrong\.com" url "\\1lesswrong.com")))
 
+(defmacro alist-bind (bindings alist &body body)
+  (alexandria:once-only (alist)
+    (let ((inner-bindings (loop for x in bindings collect
+                                (destructuring-bind (bind &optional type key) (if (consp x) x (list x))
+                                  (list (gensym) bind (or type t) (or key (intern (string bind) '#:keyword)))))))
+      (macrolet ((inner-loop (&body body)
+                   `(loop for (gensym bind type key) in inner-bindings collect
+                          (progn gensym bind type key ,@body))))
+        `(let ,(inner-loop `(,gensym (assoc ,key ,alist)))
+           (declare ,@(inner-loop `(type (or null (cons symbol ,type)) ,gensym)))
+           (symbol-macrolet ,(inner-loop `(,bind (cdr ,gensym)))
+             ,@body))))))
+
 (defun post-headline-to-html (post &key need-auth)
-  (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :posted-at post))) 
-    (format nil "<h1 class=\"listing~:[~; link-post-listing~]\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~A</a></h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\"><span class=\"karma-value\">~A</span></div><a class=\"comment-count\" href=\"~A#comments\">~A comment~:P</a>~@[<a class=\"lw2-link\" href=\"~A\">LW link</a>~]~A</div>"
-	    (cdr (assoc :url post))
-	    (if (cdr (assoc :url post)) (encode-entities (string-trim " " (cdr (assoc :url post)))))
-            (generate-post-auth-link post nil nil need-auth)
-	    (encode-entities (clean-text (cdr (assoc :title post))))
-	    (encode-entities (get-user-slug (cdr (assoc :user-id post)))) 
-	    (encode-entities (get-username (cdr (assoc :user-id post))))
-	    js-time
-	    pretty-time
-	    (pretty-number (cdr (assoc :base-score post)) "point")
-	    (generate-post-link post) 
-	    (or (cdr (assoc :comment-count post)) 0) 
-	    (clean-lw-link (cdr (assoc :page-url post)))
-	    (if (cdr (assoc :url post)) (format nil "<div class=\"link-post-domain\">(~A)</div>" (encode-entities (puri:uri-host (puri:parse-uri (string-trim " " (cdr (assoc :url post))))))) "")))) 
+  (alist-bind ((title string)
+               (user-id string)
+               (url (or null string))
+               (posted-at string)
+               (base-score fixnum)
+               (comment-count (or null fixnum))
+               (page-url (or null string)))
+    post
+    (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
+      (format nil "<h1 class=\"listing~:[~; link-post-listing~]\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~A</a></h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\"><span class=\"karma-value\">~A</span></div><a class=\"comment-count\" href=\"~A#comments\">~A comment~:P</a>~@[<a class=\"lw2-link\" href=\"~A\">LW link</a>~]~A</div>"
+              url
+              (if url (encode-entities (string-trim " " url)))
+              (generate-post-auth-link post nil nil need-auth)
+              (encode-entities (clean-text title))
+              (encode-entities (get-user-slug user-id))
+              (encode-entities (get-username user-id))
+              js-time
+              pretty-time
+              (pretty-number base-score "point")
+              (generate-post-link post)
+              (or comment-count 0)
+              (clean-lw-link page-url)
+              (if url (format nil "<div class=\"link-post-domain\">(~A)</div>" (encode-entities (puri:uri-host (puri:parse-uri (string-trim " " url))))) "")))))
 
 (defun post-body-to-html (post)
-  (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :posted-at post))) 
-    (format nil "<div class=\"post~:[~; link-post~]\"><h1>~A</h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A comment~:P</a>~@[<a class=\"lw2-link\" href=\"~A\">LW link</a>~]<a href=\"#bottom-bar\"></a></div><div class=\"post-body\">~A</div></div>"
-	    (cdr (assoc :url post))
-	    (encode-entities (clean-text (cdr (assoc :title post))))
-	    (encode-entities (get-user-slug (cdr (assoc :user-id post)))) 
-	    (encode-entities (get-username (cdr (assoc :user-id post))))
-	    js-time
-	    pretty-time
-	    (cdr (assoc :--id post)) 
-	    (pretty-number (cdr (assoc :base-score post)) "point")
-	    (or (cdr (assoc :comment-count post)) 0) 
-	    (clean-lw-link (cdr (assoc :page-url post)))
-	    (format nil "~A~A"
-		    (if (cdr (assoc :url post)) (format nil "<p><a href=\"~A\" class=\"link-post-link\">Link post</a></p>" (encode-entities (string-trim " " (cdr (assoc :url post))))) "")
-		    (clean-html (or (cdr (assoc :html-body post)) "") :with-toc t :post-id (cdr (assoc :--id post))))))) 
+  (alist-bind ((post-id string :--id)
+               (title string)
+               (user-id string)
+               (url (or null string))
+               (posted-at string)
+               (base-score fixnum)
+               (comment-count (or null fixnum))
+               (page-url (or null string))
+               (html-body string))
+    post
+    (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
+      (format nil "<div class=\"post~:[~; link-post~]\"><h1>~A</h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A comment~:P</a>~@[<a class=\"lw2-link\" href=\"~A\">LW link</a>~]<a href=\"#bottom-bar\"></a></div><div class=\"post-body\">~A</div></div>"
+              url
+              (encode-entities (clean-text title))
+              (encode-entities (get-user-slug user-id))
+              (encode-entities (get-username user-id))
+              js-time
+              pretty-time
+              post-id
+              (pretty-number base-score "point")
+              (or comment-count 0)
+              (clean-lw-link page-url)
+              (format nil "~A~A"
+                      (if url (format nil "<p><a href=\"~A\" class=\"link-post-link\">Link post</a></p>" (encode-entities (string-trim " " url))) "")
+                      (clean-html (or html-body "") :with-toc t :post-id post-id))))))
 
 (defun comment-to-html (comment &key with-post-title)
-  (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :posted-at comment)))
-    (format nil "<div class=\"comment~{ ~A~}\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <a class=\"date\" href=\"~A\" data-js-date=\"~A\">~A</a><div class=\"karma\"><span class=\"karma-value\">~A</span></div>~@[<a class=\"lw2-link\" href=\"~A\">LW link</a>~]~A</div><div class=\"comment-body\"~@[ data-markdown-source=\"~A\"~]>~A</div></div>"
-	    (let ((l nil))
-	      (if (and (logged-in-userid (cdr (assoc :user-id comment))) (< (* 1000 (local-time:timestamp-to-unix (local-time:now))) (+ js-time 15000))) (push "just-posted-comment" l))
-	      (if (cdr (assoc :highlight-new comment)) (push "comment-item-highlight" l))
-	      l)
-	    (encode-entities (get-user-slug (cdr (assoc :user-id comment)))) 
-	    (encode-entities (get-username (cdr (assoc :user-id comment)))) 
-	    (generate-post-link (cdr (assoc :post-id comment)) (cdr (assoc :--id comment)))
-	    js-time
-	    pretty-time
-	    (pretty-number (cdr (assoc :base-score comment)) "point")
-	    (clean-lw-link (cdr (assoc :page-url comment)))
-	    (if with-post-title
-	      (format nil "<div class=\"comment-post-title\">~1{in reply to: <a href=\"/users/~A\">~A</a>’s <a href=\"~A\">comment</a> ~}on: <a href=\"~A\">~A</a></div>"
-		      (alexandria:if-let (parent-comment (cdr (assoc :parent-comment comment)))
-			(list (encode-entities (get-user-slug (cdr (assoc :user-id parent-comment))))
-			      (encode-entities (get-username (cdr (assoc :user-id parent-comment))))
-			      (generate-post-link (cdr (assoc :post-id parent-comment)) (cdr (assoc :--id parent-comment)))))
-		      (generate-post-link (cdr (assoc :post-id comment)))
-		      (encode-entities (clean-text (get-post-title (cdr (assoc :post-id comment))))))
-	      (format nil "~@[<a class=\"comment-parent-link\" href=\"#comment-~A\">Parent</a>~]~@[<div class=\"comment-child-links\">Replies: ~:{<a href=\"#comment-~A\">&gt;~A</a>~}</div>~]~:[~;<div class=\"comment-minimize-button\" data-child-count=\"~A\"></div>~]"
-		      (cdr (assoc :parent-comment-id comment))
-		      (map 'list (lambda (c) (list (cdr (assoc :--id c)) (get-username (cdr (assoc :user-id c))))) (cdr (assoc :children comment)))
-		      (not (cdr (assoc :parent-comment-id comment)))
-		      (cdr (assoc :child-count comment))))
-	    (if (logged-in-userid (cdr (assoc :user-id comment)))
-	      (encode-entities
-		(or (cache-get "comment-markdown-source" (cdr (assoc :--id comment))) 
-		    (cdr (assoc :html-body comment)))))
-	    (clean-html (cdr (assoc :html-body comment)))))) 
+  (alist-bind ((comment-id string :--id)
+               (user-id string)
+               (posted-at string)
+               (highlight-new boolean)
+               (post-id string)
+               (base-score fixnum)
+               (page-url (or null string))
+               (parent-comment list)
+               (parent-comment-id (or null string))
+               (child-count fixnum)
+               (children list)
+               (html-body string))
+    comment
+    (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
+      (format nil "<div class=\"comment~{ ~A~}\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <a class=\"date\" href=\"~A\" data-js-date=\"~A\">~A</a><div class=\"karma\"><span class=\"karma-value\">~A</span></div>~@[<a class=\"lw2-link\" href=\"~A\">LW link</a>~]~A</div><div class=\"comment-body\"~@[ data-markdown-source=\"~A\"~]>~A</div></div>"
+              (let ((l nil))
+                (if (and (logged-in-userid user-id) (< (* 1000 (local-time:timestamp-to-unix (local-time:now))) (+ js-time 15000))) (push "just-posted-comment" l))
+                (if highlight-new (push "comment-item-highlight" l))
+                l)
+              (encode-entities (get-user-slug user-id))
+              (encode-entities (get-username user-id))
+              (generate-post-link post-id comment-id)
+              js-time
+              pretty-time
+              (pretty-number base-score "point")
+              (clean-lw-link page-url)
+              (if with-post-title
+                  (format nil "<div class=\"comment-post-title\">~1{in reply to: <a href=\"/users/~A\">~A</a>’s <a href=\"~A\">comment</a> ~}on: <a href=\"~A\">~A</a></div>"
+                          (alexandria:if-let (parent-comment parent-comment)
+                                             (list (encode-entities (get-user-slug (cdr (assoc :user-id parent-comment))))
+                                                   (encode-entities (get-username (cdr (assoc :user-id parent-comment))))
+                                                   (generate-post-link (cdr (assoc :post-id parent-comment)) (cdr (assoc :comment-id parent-comment)))))
+                          (generate-post-link post-id)
+                          (encode-entities (clean-text (get-post-title post-id))))
+                  (format nil "~@[<a class=\"comment-parent-link\" href=\"#comment-~A\">Parent</a>~]~@[<div class=\"comment-child-links\">Replies: ~:{<a href=\"#comment-~A\">&gt;~A</a>~}</div>~]~:[~;<div class=\"comment-minimize-button\" data-child-count=\"~A\"></div>~]"
+                          parent-comment-id
+                          (map 'list (lambda (c) (list (cdr (assoc :comment-id c)) (get-username (cdr (assoc :user-id c))))) children)
+                          (not parent-comment-id)
+                          child-count))
+              (if (logged-in-userid user-id)
+                  (encode-entities
+                    (or (cache-get "comment-markdown-source" comment-id)
+                        html-body)))
+              (clean-html html-body)))))
 
 (defun conversation-message-to-html (message)
-  (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :created-at message)))
-    (format nil "<div class=\"comment private-message~A\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <span class=\"date\" data-js-date=\"~A\">~A</span><div class=\"comment-post-title\">Private message in: <a href=\"/conversation?id=~A\">~A</a></div></div><div class=\"comment-body\">~A</div></div>"
-	    (if (cdr (assoc :highlight-new message)) " comment-item-highlight" "")
-	    (encode-entities (get-user-slug (cdr (assoc :user-id message))))
-	    (encode-entities (get-username (cdr (assoc :user-id message))))
-	    js-time
-	    pretty-time
-            (encode-entities (cdr (assoc :--id (cdr (assoc :conversation message)))))
-	    (encode-entities (cdr (assoc :title (cdr (assoc :conversation message)))))
-            (format nil "~{<p>~A</p>~}" (loop for block in (cdr (assoc :blocks (cdr (assoc :content message)))) collect (encode-entities (cdr (assoc :text block))))))))
+  (alist-bind ((user-id string)
+               (created-at string)
+               (highlight-new boolean)
+               (conversation list)
+               (content cons))
+    message
+    (multiple-value-bind (pretty-time js-time) (pretty-time created-at)
+      (format nil "<div class=\"comment private-message~A\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <span class=\"date\" data-js-date=\"~A\">~A</span><div class=\"comment-post-title\">Private message in: <a href=\"/conversation?id=~A\">~A</a></div></div><div class=\"comment-body\">~A</div></div>"
+              (if highlight-new " comment-item-highlight" "")
+              (encode-entities (get-user-slug user-id))
+              (encode-entities (get-username user-id))
+              js-time
+              pretty-time
+              (encode-entities (cdr (assoc :--id conversation)))
+              (encode-entities (cdr (assoc :title conversation)))
+              (format nil "~{<p>~A</p>~}" (loop for block in (cdr (assoc :blocks content)) collect (encode-entities (cdr (assoc :text block)))))))))
 
 (defun conversation-index-to-html (conversation)
-  (multiple-value-bind (pretty-time js-time) (alexandria:if-let (ca (cdr (assoc :created-at conversation))) (pretty-time ca) (values "?" 0))
-    (format nil "<h1 class=\"listing\"><a href=\"/conversation?id=~A\">~A</a></h1><div class=\"post-meta\"><div class=\"conversation-participants\"><ul>~:{<li><a href=\"/users/~A\">~A</a></li>~}</ul></div><div class=\"messages-count\">~A</div><div class=\"date\" data-js-date=\"~A\">~A</div></div>"
-            (encode-entities (cdr (assoc :--id conversation)))
-            (encode-entities (cdr (assoc :title conversation)))
-            (loop for p in (cdr (assoc :participants conversation))
-                  collect (list (encode-entities (cdr (assoc :slug p))) (encode-entities (cdr (assoc :display-name p)))))
-            (pretty-number (cdr (assoc :messages-total conversation)) "message")
-            js-time
-            pretty-time)))
+  (alist-bind ((conversation-id string :--id)
+               (title string)
+               (created-at (or null string))
+               (participants list)
+               (messages-total fixnum))
+    conversation
+    (multiple-value-bind (pretty-time js-time) (if created-at (pretty-time created-at) (values "[Error]" 0))
+      (format nil "<h1 class=\"listing\"><a href=\"/conversation?id=~A\">~A</a></h1><div class=\"post-meta\"><div class=\"conversation-participants\"><ul>~:{<li><a href=\"/users/~A\">~A</a></li>~}</ul></div><div class=\"messages-count\">~A</div><div class=\"date\" data-js-date=\"~A\">~A</div></div>"
+              (encode-entities conversation-id)
+              (encode-entities title)
+              (loop for p in participants
+                    collect (list (encode-entities (cdr (assoc :slug p))) (encode-entities (cdr (assoc :display-name p)))))
+              (pretty-number messages-total "message")
+              js-time
+              pretty-time))))
 
 (defun error-to-html (condition)
   (format nil "<h1>Error</h1><p>~A</p>"
