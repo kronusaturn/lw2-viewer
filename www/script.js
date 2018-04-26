@@ -1074,9 +1074,10 @@ function toggleReadTimeOrWordCount() {
 	});
 }
 function readTimeOrWordCountClicked(event) {
-	let displayReadTime = window.localStorage.getItem("display-read-time");
+	let displayWordCount = window.localStorage.getItem("display-word-count");
 	toggleReadTimeOrWordCount();
-	window.localStorage.setItem("display-read-time", !displayReadTime);
+	if(displayWordCount) window.localStorage.removeItem("display-word-count");
+	else window.localStorage.setItem("display-word-count", true);
 }
 
 /*********************/
@@ -1390,7 +1391,7 @@ function initialize() {
 		}
 		
 		// Add listeners to switch between word count and read time.
-		if (window.localStorage.getItem("display-read-time") == false) toggleReadTimeOrWordCount();
+		if (window.localStorage.getItem("display-word-count")) toggleReadTimeOrWordCount();
 		document.querySelectorAll(".post-meta .read-time").forEach(function (rt) { rt.addActivateEvent(readTimeOrWordCountClicked); });
 		
 		// Call pageLayoutFinished() once all activity that can affect the page layout has finished.
