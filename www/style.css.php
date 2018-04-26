@@ -1528,6 +1528,9 @@ h1.list + .post-meta .post-section::before {
 .post-section.personal::before {
 	content: "\F007";
 }
+.post-section.draft::before {
+	content: "\F15B";
+}
 .post-body {
 	min-height: 8em;
 	font-family: Charter;

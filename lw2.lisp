@@ -55,7 +55,7 @@
            (symbol-macrolet ,(inner-loop `(,bind (cdr ,gensym)))
              ,@body))))))
 
-(defun post-headline-to-html (out-stream post &key need-auth)
+(defun post-headline-to-html (out-stream post &key skip-section need-auth)
   (alist-bind ((title string)
                (user-id string)
                (url (or null string))
@@ -66,10 +66,11 @@
                (word-count (or null fixnum))
                (frontpage-date (or null string))
                (curated-date (or null string))
-               (meta boolean))
+               (meta boolean)
+               (draft boolean))
     post
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      (format out-stream "<h1 class=\"listing~:[~; link-post-listing~]\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~A</a></h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\"><span class=\"karma-value\">~A</span></div><a class=\"comment-count\" href=\"~A#comments\">~A comment~:P</a>~:[~*~;~:*<span class=\"read-time\" title=\"~A word~:P\">~A min read</span>~]~@[<a class=\"lw2-link\" href=\"~A\">LW link</a>~]~1{<span class=\"post-section ~A\" title=\"~A\">~:*~A</span>~:}~A</div>"
+      (format out-stream "<h1 class=\"listing~:[~; link-post-listing~]\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~A</a></h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\"><span class=\"karma-value\">~A</span></div><a class=\"comment-count\" href=\"~A#comments\">~A comment~:P</a>~:[~*~;~:*<span class=\"read-time\" title=\"~A word~:P\">~A min read</span>~]~@[<a class=\"lw2-link\" href=\"~A\">LW link</a>~]~1{<span class=\"post-section ~A\" title=\"~A\">~:*~A</span>~}~A</div>"
               url
               (if url (encode-entities (string-trim " " url)))
               (generate-post-auth-link post nil nil need-auth)
@@ -84,10 +85,12 @@
               word-count
               (and word-count (max 1 (round word-count 300)))
               (clean-lw-link page-url)
-              (cond (curated-date (list "featured" "Featured post"))
-                    (frontpage-date (list "frontpage" "Frontpage post"))
-                    (meta (list "meta" "Meta post"))
-                    (t (list "personal" "Personal post")))
+              (cond ((eq skip-section t) nil)
+                    (draft nil)
+                    (curated-date (if (eq skip-section :featured) nil (list "featured" "Featured post")))
+                    (frontpage-date (if (eq skip-section :frontpage) nil (list "frontpage" "Frontpage post")))
+                    (meta (if (eq skip-section :meta) nil (list "meta" "Meta post")))
+                    (t (if (eq skip-section :personal) nil (list "personal" "Personal post"))))
               (if url (format nil "<div class=\"link-post-domain\">(~A)</div>" (encode-entities (puri:uri-host (puri:parse-uri (string-trim " " url))))) "")))))
 
 (defun post-body-to-html (out-stream post)
@@ -102,10 +105,11 @@
                (frontpage-date (or null string))
                (curated-date (or null string))
                (meta boolean)
+               (draft boolean)
                (html-body string))
     post
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      (format out-stream "<div class=\"post~:[~; link-post~]\"><h1>~A</h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A comment~:P</a>~@[<a class=\"lw2-link\" href=\"~A\">LW link</a>~]~1{<span class=\"post-section ~A\" title=\"~A\">~:*~A</span>~:}<a href=\"#bottom-bar\"></a></div><div class=\"post-body\">~A</div></div>"
+      (format out-stream "<div class=\"post~:[~; link-post~]\"><h1>~A</h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A comment~:P</a>~@[<a class=\"lw2-link\" href=\"~A\">LW link</a>~]~1{<span class=\"post-section ~A\" title=\"~A\">~:*~A</span>~}<a href=\"#bottom-bar\"></a></div><div class=\"post-body\">~A</div></div>"
               url
               (encode-entities (clean-text title))
               (encode-entities (get-user-slug user-id))
@@ -116,7 +120,8 @@
               (pretty-number base-score "point")
               (or comment-count 0)
               (clean-lw-link page-url)
-              (cond (curated-date (list "featured" "Featured post"))
+              (cond (draft (list "draft" "Draft post"))
+                    (curated-date (list "featured" "Featured post"))
                     (frontpage-date (list "frontpage" "Frontpage post"))
                     (meta (list "meta" "Meta post"))
                     (t (list "personal" "Personal post")))
@@ -272,7 +277,7 @@
      (progn ,@body)
      (serious-condition (c) (error-to-html ,out-stream c))))
 
-(defun write-index-items-to-html (out-stream items &key need-auth (empty-message "No entries."))
+(defun write-index-items-to-html (out-stream items &key need-auth (empty-message "No entries.") skip-section)
   (if items
       (dolist (x items)
         (with-error-html-block (out-stream)
@@ -288,7 +293,7 @@
             ((string= (cdr (assoc :----typename x)) "Conversation")
              (conversation-index-to-html out-stream x))
             ((assoc :comment-count x)
-             (post-headline-to-html out-stream x :need-auth need-auth))
+             (post-headline-to-html out-stream x :need-auth need-auth :skip-section skip-section))
             (t
              (format out-stream "<ul class=\"comment-thread\"><li class=\"comment-item\" id=\"comment-~A\">" (cdr (assoc :--id x)))
              (comment-to-html out-stream x :with-post-title t)
@@ -548,12 +553,16 @@
                        (emit-page (out-stream :title (if hide-title nil title) :description "A faster way to browse LessWrong 2.0" :content-class content-class :with-offset with-offset :with-next with-next
                                               :current-uri current-uri :robots (if (and with-offset (> with-offset 0)) "noindex, nofollow"))
                                   (format out-stream "<div class=\"page-toolbar\">~@[<a class=\"new-post button\" href=\"/edit-post?section=~A\" accesskey=\"n\" title=\"Create new post [n]\">New post</a>~]~@[~A~]~{~@[<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" title=\"~A RSS feed\" href=\"~A\">RSS</a>~]~}</div>~@[~A~]"
-                                          (if (and section (logged-in-userid)) section)
+                                          (if (and (case section (:frontpage t) (:meta t) (:all t)) (logged-in-userid)) (string-downcase (string section)))
                                           page-toolbar-extra
                                           (unless (or need-auth hide-rss)
                                             (list title (replace-query-params (hunchentoot:request-uri*) "offset" nil "format" "rss")))
                                           extra-html)
-                                  (write-index-items-to-html out-stream items :need-auth need-auth)))))
+                                  (write-index-items-to-html out-stream items :need-auth need-auth
+                                                             :skip-section (case section
+                                                                             (:frontpage :frontpage)
+                                                                             (:featured t)
+                                                                             (:meta t)))))))
 
 (defun link-if-not (stream linkp url class text)
   (declare (dynamic-extent linkp url text))
@@ -577,7 +586,7 @@
 											    (alist :terms (alist :view "frontpage-rss" :limit 20 :offset offset))
 											    *posts-index-fields*))
 						   (get-posts))))
-				     (view-items-index posts :section "frontpage" :title "Frontpage posts" :hide-title t :with-offset (or offset 0)))))
+				     (view-items-index posts :section :frontpage :title "Frontpage posts" :hide-title t :with-offset (or offset 0)))))
 
 (hunchentoot:define-easy-handler (view-index :uri "/index") (view meta before after offset)
                                  (with-error-page
@@ -587,8 +596,11 @@
                                                                                                                         (alist :view (if (string= view "featured") "curated" (or view "new"))
                                                                                                                                :meta (not (not meta)) :before before :after after :limit 20 :offset offset)))
                                                                                           *posts-index-fields*)))
-                                          (section (or (if (string= view "new") "all" view) "all")))
-                                     (view-items-index posts :section (if (string/= section "featured") section) :title (format nil "~@(~A posts~)" section) :with-offset (or offset 0)))))
+                                          (section (cond ((string= view "frontpage") :frontpage)
+                                                         ((string= view "featured") :featured)
+                                                         ((string= view "meta") :meta)
+                                                         (t :all))))
+                                     (view-items-index posts :section section :title (format nil "~@(~A posts~)" section) :with-offset (or offset 0)))))
 
 (hunchentoot:define-easy-handler (view-post :uri "/post") (id)
 				 (with-error-page
