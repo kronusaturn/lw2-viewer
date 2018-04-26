@@ -1494,6 +1494,9 @@ h1.listing a[href^="http"] {
 .post-meta .comment-count {
 	margin-left: 1em;
 }
+.post-meta .read-time {
+	cursor: default;
+}
 .post-section {
 	visibility: hidden;
 	width: 1em;

@@ -1064,6 +1064,21 @@ function expandAncestorsOf(commentId) {
 	catch (e) { }
 }
 
+/**************************/
+/* WORD COUNT & READ TIME */
+/**************************/
+
+function toggleReadTimeOrWordCount() {
+	document.querySelectorAll(".post-meta .read-time").forEach(function (rt) {
+		[ rt.innerText, rt.title ] = [ rt.title, rt.innerText ];
+	});
+}
+function readTimeOrWordCountClicked(event) {
+	let displayReadTime = window.localStorage.getItem("display-read-time");
+	toggleReadTimeOrWordCount();
+	window.localStorage.setItem("display-read-time", !displayReadTime);
+}
+
 /*********************/
 /* MORE MISC HELPERS */
 /*********************/
@@ -1373,6 +1388,10 @@ function initialize() {
 		if (aggregatedStyles != "") {
 			document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='mathjax-styles'>" + aggregatedStyles + "</style>");
 		}
+		
+		// Add listeners to switch between word count and read time.
+		if (window.localStorage.getItem("display-read-time") == false) toggleReadTimeOrWordCount();
+		document.querySelectorAll(".post-meta .read-time").forEach(function (rt) { rt.addActivateEvent(readTimeOrWordCountClicked); });
 		
 		// Call pageLayoutFinished() once all activity that can affect the page layout has finished.
 		document.addEventListener("readystatechange", pageLayoutFinished);
