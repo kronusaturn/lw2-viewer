@@ -167,6 +167,9 @@ input {
 .archive-nav + #top-nav-bar {
 	margin-top: 1em;
 }
+.archive-nav + #top-nav-bar + h1.listing {
+	margin-top: 1em;
+}
 #top-nav-bar a.disabled {
 	pointer-events: none;
 	visibility: hidden;
