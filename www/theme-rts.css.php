@@ -123,6 +123,9 @@ h1.listing:focus-within::before {
 	color: #690010;
 }
 
+.post-meta {
+	overflow: hidden;
+}
 .post-meta,
 h1.listing + .post-meta {
 	text-align: center;
@@ -142,6 +145,17 @@ h1.listing + .post-meta {
 	color: #333;
 	text-shadow: 0px 0px 0.5px #333;
 	text-decoration: none;
+}
+.post-meta .post-section::before {
+	top: -1px;
+	text-shadow: 
+		1px 1px 0 #999, 
+		0 1px 0 #999, 
+		0 0 5px #999;
+	margin: 0 0 0 0.5em;
+}
+h1.listing + .post-meta .post-section::before {
+	left: unset;
 }
 .post-meta .vote,
 .post-meta .qualified-linking label {

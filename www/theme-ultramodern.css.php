@@ -19,6 +19,14 @@ body {
 .comment-meta .date { 
 	color: #444;
 }
+.post-meta .post-section::before {
+	top: -2px;
+	color: #888;
+	text-shadow: 
+		1px 1px 0 #ccc, 
+		0 1px 0 #ccc, 
+		0 0 5px #ccc;
+}
 .bottom-post-meta {
 	border: none;
 }

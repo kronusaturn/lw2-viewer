@@ -155,6 +155,9 @@ h1.listing:focus-within::before {
 	box-shadow: none;
 }
 
+.post-meta {
+	overflow: hidden;
+}
 .post-meta > *,
 .post-meta .author,
 .post-meta .date,
@@ -165,6 +168,16 @@ h1.listing:focus-within::before {
 .comment-meta .lw2-link,
 .comment-meta .comment-parent-link {
 	color: inherit;
+}
+.post-meta .post-section::before {
+	top: -1px;
+	text-shadow: 
+		1px 1px 0 #777, 
+		0 1px 0 #777, 
+		0 0 5px #777;
+}
+h1.listing + .post-meta .post-section::before {
+	left: -30px;
 }
 .comment-meta .author:hover {
 	color: inherit;

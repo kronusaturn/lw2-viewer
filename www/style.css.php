@@ -1517,6 +1517,7 @@ h1.listing a[href^="http"] {
 h1.listing + .post-meta .post-section {
 	width: 0;
 	margin: -0.5em;
+	overflow: hidden;
 }
 h1.listing + .post-meta .post-section::before {
 	position: absolute;
