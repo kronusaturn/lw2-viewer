@@ -2648,7 +2648,7 @@ h1 {
 .comment-body h3 {
 	font-size: 1.4em;
 	font-family: <?php echo ($platform == 'Windows') ? "'Whitney SmallCaps'" : "'Concourse SmallCaps'"; ?>;
-	font-weight: normal;
+	font-weight: 600;
 }
 .post-body h2,
 .comment-body h2 {
