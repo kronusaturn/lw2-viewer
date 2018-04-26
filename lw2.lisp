@@ -411,7 +411,7 @@
                             ,(if username
                                  (let ((user-slug (encode-entities (get-user-slug (logged-in-userid)))))
                                    `("login" ,(format nil "/users/~A" user-slug) ,(plump:encode-entities username) :description "User page" :accesskey "u"
-                                     :trailing-html ,(inbox-to-html user-slug (check-notifications user-id (hunchentoot:cookie-in "lw2-auth-token")))))
+                                     :trailing-html ,(inbox-to-html user-slug (check-notifications user-id *current-auth-token*))))
                                  `("login" ,(format nil "/login?return=~A" (url-rewrite:url-encode current-uri)) "Log In" :accesskey "u")))))
     (nav-bar-to-html current-uri)))
 
@@ -514,7 +514,7 @@
            (call-with-emit-page ,out-stream ,fn ,@args))))))
 
 (defmacro with-error-page (&body body)
-  `(let ((*current-auth-token* (hunchentoot:cookie-in "lw2-auth-token")))
+  `(let ((*current-auth-token* (alexandria:if-let (at (hunchentoot:cookie-in "lw2-auth-token")) (if (string= at "") nil at))))
      (handler-case
        (log-conditions 
          (progn ,@body))
@@ -843,8 +843,10 @@
                                             :with-offset offset :with-next with-next
                                             :need-auth (string= show "drafts") :section (if (string= show "drafts") "drafts" nil)
                                             :hide-rss (some (lambda (x) (string= show x)) '("drafts" "conversations" "inbox"))
-                                            :page-toolbar-extra (let ((liu (logged-in-userid)))
-                                                                  (if (and liu (not (string= liu (cdr (assoc :--id user-info)))))
+                                            :page-toolbar-extra (alexandria:if-let ((liu (logged-in-userid)))
+                                                                  (if (string= liu (cdr (assoc :--id user-info)))
+                                                                      (format nil "<form method=\"post\" action=\"/logout\"><button class=\"logout-button button\" name=\"logout\" value=\"~A\">Log out</button></form>"
+                                                                              (make-csrf-token))
                                                                       (format nil "<a class=\"new-private-message button\" href=\"/conversation?to=~A\">Send private message</a>"
                                                                               user-slug)))
                                             :extra-html (format nil "<h1 class=\"page-main-heading\">~A</h1><div class=\"user-stats\">Karma: <span class=\"karma-total\">~A</span></div><div class=\"sublevel-nav\">~A</div>"
@@ -989,6 +991,13 @@
 							  (hunchentoot:header-out "Location") (if (and return (ppcre:scan "^/[~/]" return)) return "/"))))))))
 				       (t
 					 (emit-login-page)))))) 
+
+(hunchentoot:define-easy-handler (view-logout :uri "/logout") ((logout :request-type :post))
+                                 (with-error-page
+                                   (check-csrf-token logout)
+                                   (hunchentoot:set-cookie "lw2-auth-token" :value "" :secure *secure-cookies* :max-age 0)
+                                   (setf (hunchentoot:return-code*) 303
+                                         (hunchentoot:header-out "Location") "/")))
 
 (defparameter *reset-password-template* (compile-template* "reset-password.html"))
 

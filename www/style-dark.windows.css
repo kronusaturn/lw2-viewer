@@ -68,6 +68,9 @@ input {
 	display: inline-block;
 	margin-left: 1.5em;
 }
+.page-toolbar form {
+	display: inline;
+}
 .new-post,
 .new-post:visited,
 .new-private-message,
@@ -85,6 +88,16 @@ input {
 	content: '\F075';
 	font-family: "Font Awesome";
 	font-weight: 400;
+	font-size: 0.9em;
+	padding-right: 0.3em;
+}
+.logout-button {
+	color: #0094be;
+}
+.logout-button::before {
+	content: '\F2F5';
+	font-family: "Font Awesome";
+	font-weight: 900;
 	font-size: 0.9em;
 	padding-right: 0.3em;
 }
