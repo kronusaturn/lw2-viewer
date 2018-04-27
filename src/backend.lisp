@@ -85,7 +85,8 @@
       (progn
         (signal-semaphore *background-loader-semaphore*)
         (join-thread *background-loader-thread*)
-        (setf *background-loader-thread* nil))
+        (setf *background-loader-thread* nil)
+        (signal-semaphore *background-loader-semaphore*))
       (warn "Background loader not running.")))
 
 (defun lw2-graphql-query-streamparse (query &key auth-token)
