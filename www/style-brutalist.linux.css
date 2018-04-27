@@ -34,7 +34,7 @@ body {
 	font-feature-settings: 'ss07';
 }
 body::before {
-	content: "";
+/* 	content: ""; */
 	background-color: inherit;
 	position: fixed;
 	width: 100%;

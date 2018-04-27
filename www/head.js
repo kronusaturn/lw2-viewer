@@ -88,7 +88,7 @@ function applyFilters(filters) {
 			let value = filters[key];
 			filterString += ` ${key}(${value})`;
 		}
-		fullStyleString = "body::before, #content, #ui-elements-container > div:not(#theme-tweaker-ui) { filter:" + filterString + "; }";
+		fullStyleString = `body::before { content: ""; } body::before, #content, #ui-elements-container > div:not(#theme-tweaker-ui) { filter: ${filterString}; }`;
 	}
 	
 	// Update the style tag (if it’s already been loaded).
