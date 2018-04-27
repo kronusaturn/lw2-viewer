@@ -398,6 +398,35 @@ a.comment-parent-link:hover::before {
 	border-top-width: 28px;
 	box-shadow: none;
 }
+.posting-controls textarea::selection {
+	background-color: #000;
+	color: #fff;
+}
+.posting-controls textarea::-webkit-scrollbar {
+	width: 18px;
+}
+.posting-controls textarea::-webkit-scrollbar-track {
+	background-color: #fff;
+}
+ 
+.posting-controls textarea::-webkit-scrollbar-thumb {
+	background-color: #000;
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("checkerboard2_1px_gray.gif")) ?>');
+	background-size: 2px 2px;
+	box-shadow: 
+		0 2px 0 1px #fff inset,
+		0 0 0 1px #fff inset,
+		0 2px 0 1.5px #777 inset,
+		0 0 0 1.5px #777 inset;
+}
+.posting-controls textarea::-webkit-scrollbar-thumb:active {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("checkerboard2_1px.gif")) ?>');
+	box-shadow: 
+		0 2px 0 1px #fff inset,
+		0 0 0 1px #fff inset,
+		0 2px 0 1.5px #000 inset,
+		0 0 0 1.5px #000 inset;
+}
 .comment-controls .cancel-comment-button,
 #comments > .comment-controls .cancel-comment-button {
 	height: 28px;
