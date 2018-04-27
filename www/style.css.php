@@ -2773,6 +2773,7 @@ input[type='text'],
 input[type='search'],
 input[type='password'],
 textarea {
+	-webkit-appearance: none;
 	background-color: #fff;
 	color: #000;
 }
