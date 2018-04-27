@@ -4160,7 +4160,7 @@ a.comment-parent-link:hover::before {
 #edit-post-form input[type='radio'][value='frontpage'] + label {
 	border-radius: 0;
 }
-#edit-post-form input[type='radio'][value='meta'] + label {
+#edit-post-form input[type='radio'][value='drafts'] + label {
 	border-radius: 0;
 }
 #edit-post-form input[type='radio'] + label:hover,
