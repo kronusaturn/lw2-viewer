@@ -106,7 +106,7 @@
                (curated-date (or null string))
                (meta boolean)
                (draft boolean)
-               (html-body string))
+               (html-body (or null string)))
     post
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
       (format out-stream "<div class=\"post~:[~; link-post~]\"><h1>~A</h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A comment~:P</a>~@[<a class=\"lw2-link\" href=\"~A\">LW link</a>~]~1{<span class=\"post-section ~A\" title=\"~A\">~:*~A</span>~}<a href=\"#bottom-bar\"></a></div><div class=\"post-body\">~A</div></div>"
