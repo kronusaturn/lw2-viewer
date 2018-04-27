@@ -177,7 +177,7 @@
         (cache-put cache-db key data)))))
 
 (declaim (type (and fixnum (integer 1)) *cache-stale-factor*))
-(defparameter *cache-stale-factor* 100)
+(defparameter *cache-stale-factor* 20)
 
 (defun cache-is-fresh (cache-db key)
   (let ((metadata (if-let (m-str (cache-get (format nil "~A-meta" cache-db) key)) (read-from-string m-str)))
