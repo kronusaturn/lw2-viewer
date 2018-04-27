@@ -548,6 +548,9 @@ a#inbox-indicator.new-messages:hover::before {
 		0 0 0 4px #d8d8d8 inset,
 		0 0 0 5px #bbb inset;
 }
+.theme-selector button:first-child {
+	padding: 0 0 0 1px;
+}
 @-moz-document url-prefix() {
 	.theme-selector button {
 		padding: 0;
