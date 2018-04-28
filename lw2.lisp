@@ -23,7 +23,7 @@
 	  (* (local-time:timestamp-to-unix time) 1000))))
 
 (defun pretty-number (number &optional object)
-  (let ((str (coerce (format nil "~A~@[<span> ~A~P</span>~]" number object number) '(vector character))))
+  (let ((str (coerce (format nil "~:D~@[<span> ~A~P</span>~]" number object number) '(vector character))))
     (if (eq (aref str 0) #\-)
       (setf (aref str 0) #\MINUS_SIGN))
     str))
@@ -70,7 +70,7 @@
                (draft boolean))
     post
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      (format out-stream "<h1 class=\"listing~:[~; link-post-listing~]\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~A</a></h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\"><span class=\"karma-value\">~A</span></div><a class=\"comment-count\" href=\"~A#comments\">~A comment~:P</a>~:[~*~;~:*<span class=\"read-time\" title=\"~:D word~:P\">~:D min read</span>~]~@[<a class=\"lw2-link\" href=\"~A\">LW link</a>~]~1{<span class=\"post-section ~A\" title=\"~A\">~:*~A</span>~}~A</div>"
+      (format out-stream "<h1 class=\"listing~:[~; link-post-listing~]\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~A</a></h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\"><span class=\"karma-value\">~A</span></div><a class=\"comment-count\" href=\"~A#comments\">~A</a>~:[~*~;~:*<span class=\"read-time\" title=\"~:D word~:P\">~:D<span> min read</span></span>~]~@[<a class=\"lw2-link\" href=\"~A\">LW<span> link</span></a>~]~1{<span class=\"post-section ~A\" title=\"~A\">~:*~A</span>~}~A</div>"
               url
               (if url (encode-entities (string-trim " " url)))
               (generate-post-auth-link post nil nil need-auth)
@@ -81,7 +81,7 @@
               pretty-time
               (pretty-number base-score "point")
               (generate-post-link post)
-              (or comment-count 0)
+              (pretty-number (or comment-count 0) "comment")
               word-count
               (and word-count (max 1 (round word-count 300)))
               (clean-lw-link page-url)
@@ -109,7 +109,7 @@
                (html-body (or null string)))
     post
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      (format out-stream "<div class=\"post~:[~; link-post~]\"><h1>~A</h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A comment~:P</a>~@[<a class=\"lw2-link\" href=\"~A\">LW link</a>~]~1{<span class=\"post-section ~A\" title=\"~A\">~:*~A</span>~}<a href=\"#bottom-bar\"></a></div><div class=\"post-body\">~A</div></div>"
+      (format out-stream "<div class=\"post~:[~; link-post~]\"><h1>~A</h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A</a>~@[<a class=\"lw2-link\" href=\"~A\">LW<span> link</span></a>~]~1{<span class=\"post-section ~A\" title=\"~A\">~:*~A</span>~}<a href=\"#bottom-bar\"></a></div><div class=\"post-body\">~A</div></div>"
               url
               (encode-entities (clean-text title))
               (encode-entities (get-user-slug user-id))
@@ -118,7 +118,7 @@
               pretty-time
               post-id
               (pretty-number base-score "point")
-              (or comment-count 0)
+              (pretty-number (or comment-count 0) "comment")
               (clean-lw-link page-url)
               (cond (draft (list "draft" "Draft post"))
                     (curated-date (list "featured" "Featured post"))
