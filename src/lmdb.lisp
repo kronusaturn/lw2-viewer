@@ -101,9 +101,9 @@
 			     (defun ,name (&rest args)
 			       (labels ((real-fn ,lambda ,@body))
 				 (let* ((hash (hash-printable-object args))
-					(cached-value (with-db (db ,db-name) (lmdb:get db hash))))
+					(cached-value (with-db (db ,db-name) (lmdb:get db hash :return-type :string))))
 				   (if cached-value
-				     (octets-to-string cached-value :external-format :utf-8)
+				     cached-value
 				     (let ((new-value (apply #'real-fn args)))
 				       (with-db (db ,db-name) (lmdb:put db hash (string-to-octets new-value :external-format :utf-8)))
 				       new-value))))))))) 
