@@ -58,10 +58,7 @@
 
 (defun cache-get (db-name key)
   (with-db (db db-name) 
-	   (let ((result (lmdb:get db (string-to-octets key :external-format :utf-8)))) 
-	     (if result
-	       (octets-to-string result :external-format :utf-8)
-	       nil))))
+	   (lmdb:get db (string-to-octets key :external-format :utf-8) :return-type :string)))
 
 (defun make-simple-cache (cache-db)
   (lambda (key value) (cache-put cache-db key value))) 
