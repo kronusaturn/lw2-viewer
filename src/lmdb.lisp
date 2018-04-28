@@ -94,7 +94,7 @@
 (defmacro define-lmdb-memoized (name (&key sources) lambda &body body)
   (let ((db-name (concatenate 'string (string-downcase (symbol-name name)) "-memo"))
 	(version-octets (string-to-octets "version" :external-format :utf-8))
-	(now-hash (hash-file-list sources)))
+        (now-hash (hash-file-list (list* "src/hash-utils.lisp" sources))))
     (alexandria:once-only (db-name version-octets now-hash)
 			  `(progn
 			     (unless (equalp ,now-hash (with-db (db ,db-name) (lmdb:get db ,version-octets)))

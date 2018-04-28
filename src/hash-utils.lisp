@@ -16,7 +16,7 @@
   (city-hash-128-vector (string-to-octets string :external-format :utf-8)))
 
 (defun hash-printable-object (object)
-  (hash-string (prin1-to-string object)))
+  (hash-string (write-to-string object :circle nil :escape nil :pretty nil)))
 
 (defun hash-file-list (file-list)
   (city-hash-128-vector
