@@ -981,9 +981,7 @@ function toggleHNSDatePickerVisibility() {
 /* TEXT SIZE ADJUSTMENT UI */
 /***************************/
 
-function injectTextSizeAdjustmentUI() {
-	if (document.querySelector(".post-body") == null && document.querySelector(".comment-body") == null) return;
-
+function injectTextSizeAdjustmentUIReal() {
 	let textSizeAdjustmentUIContainer = addUIElement("<div id='text-size-adjustment-ui'>"
 	+ `<button type='button' class='text-size-adjust-button decrease' title="Decrease text size (accesskey: '-')" tabindex='-1' accesskey='-'>&#xf068;</button>`
 	+ `<button type='button' class='text-size-adjust-button default' title="Reset to default text size (accesskey: '0')" tabindex='-1' accesskey='0'>A</button>`
@@ -993,6 +991,14 @@ function injectTextSizeAdjustmentUI() {
 	textSizeAdjustmentUIContainer.querySelectorAll("button").forEach(function (button) {
 		button.addActivateEvent(themeTweakerTextSizeAdjustButtonClicked);
 	});
+}
+
+function injectTextSizeAdjustmentUI() {
+	if (document.querySelector("#text-size-adjustment-ui") != null) return;
+	if (document.querySelector("#content.post-page") != null) injectTextSizeAdjustmentUIReal();
+	else document.addEventListener("DOMContentLoaded", function() {
+		if(document.querySelector(".post-body") != null || document.querySelector(".comment-body") != null) injectTextSizeAdjustmentUIReal();
+	}, {once: true});
 }
 
 /********************************/
@@ -1123,6 +1129,23 @@ function removeElement(selector, ancestor = document) {
 /******************/
 /* INITIALIZATION */
 /******************/
+
+function earlyInitialize() {
+		// Add the content width selector.
+		injectContentWidthSelector();
+		// Add the theme selector.
+		injectThemeSelector();
+		// Add the theme tweaker.
+		injectThemeTweaker();
+		// Add the quick-nav UI.
+		injectQuickNavUI();
+		// Add the text size adjustment widget.
+		injectTextSizeAdjustmentUI();
+		// Add the comments view selector widget (threaded vs. chrono).
+// 		injectCommentsViewModeSelector();
+		// Add the comments list mode selector widget (expanded vs. compact).
+		injectCommentsListModeSelector();
+}
 
 var initializeDone = false;
 function initialize() {
@@ -1294,21 +1317,6 @@ function initialize() {
 			updateNewCommentNavUI(newCommentsCount, hns);
 		}
 		
-		// Add the content width selector.
-		injectContentWidthSelector();
-		// Add the theme selector.
-		injectThemeSelector();
-		// Add the theme tweaker.
-		injectThemeTweaker();
-		// Add the quick-nav UI.
-		injectQuickNavUI();
-		// Add the text size adjustment widget.
-		injectTextSizeAdjustmentUI();
-		// Add the comments view selector widget (threaded vs. chrono).
-// 		injectCommentsViewModeSelector();
-		// Add the comments list mode selector widget (expanded vs. compact).
-		injectCommentsListModeSelector();
-
 		// Add event listeners for Escape and Enter, for the theme tweaker.
 		document.addEventListener("keyup", function(event) {
 			if (event.keyCode == 27) {
@@ -1460,3 +1468,4 @@ function realignHash() {
 
 document.addEventListener("DOMContentLoaded", initialize, {once: true});
 window.setTimeout(initialize);
+window.requestAnimationFrame(earlyInitialize);
