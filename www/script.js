@@ -1069,14 +1069,22 @@ function expandAncestorsOf(commentId) {
 /**************************/
 
 function toggleReadTimeOrWordCount() {
+	let currentlyDisplayingWordCount = window.localStorage.getItem("display-word-count");
+	
 	document.querySelectorAll(".post-meta .read-time").forEach(function (rt) {
-		[ rt.innerText, rt.title ] = [ rt.title, rt.innerText ];
+		if (currentlyDisplayingWordCount) rt.removeClass("word-count");
+		else rt.addClass("word-count");
+		
+		let titleParts = /(\S+)(.+)$/.exec(rt.title);
+		[ rt.innerHTML, rt.title ] = [ `${titleParts[1]}<span>${titleParts[2]}</span>`, rt.textContent ];
 	});
+	
+	
 }
 function readTimeOrWordCountClicked(event) {
 	let displayWordCount = window.localStorage.getItem("display-word-count");
 	toggleReadTimeOrWordCount();
-	if(displayWordCount) window.localStorage.removeItem("display-word-count");
+	if (displayWordCount) window.localStorage.removeItem("display-word-count");
 	else window.localStorage.setItem("display-word-count", true);
 }
 
