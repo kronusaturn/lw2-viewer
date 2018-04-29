@@ -1,6 +1,6 @@
 (uiop:define-package #:lw2.clean-html
   (:use #:cl #:split-sequence #:lw2.lmdb #:lw2.links)
-  (:export #:clean-text #:clean-html)
+  (:export #:clean-text #:clean-html #:clean-html*)
   (:unintern #:*text-clean-regexps* #:*html-clean-regexps*))
 
 (in-package #:lw2.clean-html)

@@ -88,8 +88,20 @@
 	     (fdefinition (quote ,cache)) (make-simple-cache ,cache-db)
 	     (fdefinition (quote ,get)) (,(if catch-errors 'wrap-handler 'identity) (make-simple-get ,cache-db (fdefinition (quote ,cache)) (fdefinition (quote ,get-real)))))))) 
 
+(defun make-lmdb-memoized-wrapper (db-name fn return-type)
+  (lambda (&rest args)
+    (let* ((hash (hash-printable-object args))
+           (cached-value (with-db (db db-name) (lmdb:get db hash :return-type return-type))))
+      (if cached-value
+          cached-value
+          (let* ((new-value (apply fn args))
+                 (octets-value (string-to-octets new-value :external-format :utf-8)))
+            (with-db (db db-name) (lmdb:put db hash octets-value))
+            (ecase return-type (:string new-value) (:byte-vector octets-value)))))))
+
 (defmacro define-lmdb-memoized (name (&key sources) lambda &body body)
   (let ((db-name (concatenate 'string (string-downcase (symbol-name name)) "-memo"))
+        (alt-name (intern (format nil "~A*" name)))
 	(version-octets (string-to-octets "version" :external-format :utf-8))
         (now-hash (hash-file-list (list* "src/hash-utils.lisp" sources))))
     (alexandria:once-only (db-name version-octets now-hash)
@@ -98,13 +110,9 @@
 			       (with-db (db ,db-name)
 					(lmdb:drop-database db :delete 0)
 					(lmdb:put db ,version-octets ,now-hash)))
-			     (defun ,name (&rest args)
-			       (labels ((real-fn ,lambda ,@body))
-				 (let* ((hash (hash-printable-object args))
-					(cached-value (with-db (db ,db-name) (lmdb:get db hash :return-type :string))))
-				   (if cached-value
-				     cached-value
-				     (let ((new-value (apply #'real-fn args)))
-				       (with-db (db ,db-name) (lmdb:put db hash (string-to-octets new-value :external-format :utf-8)))
-				       new-value))))))))) 
+                             (declaim (ftype (function * string) ,name)
+                                      (ftype (function * (vector (unsigned-byte 8))) ,alt-name))
+                             (let ((real-fn (lambda ,lambda ,@body)))
+                               (setf (fdefinition (quote ,name)) (make-lmdb-memoized-wrapper ,db-name real-fn :string)
+                                     (fdefinition (quote ,alt-name)) (make-lmdb-memoized-wrapper ,db-name real-fn :byte-vector)))))))
 

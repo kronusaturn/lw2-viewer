@@ -107,27 +107,27 @@
                (meta boolean)
                (draft boolean)
                (html-body (or null string)))
-    post
-    (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      (format out-stream "<div class=\"post~:[~; link-post~]\"><h1>~A</h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A</a>~@[<a class=\"lw2-link\" href=\"~A\">LW<span> link</span></a>~]~1{<span class=\"post-section ~A\" title=\"~A\">~:*~A</span>~}<a href=\"#bottom-bar\"></a></div><div class=\"post-body\">~A</div></div>"
-              url
-              (encode-entities (clean-text title))
-              (encode-entities (get-user-slug user-id))
-              (encode-entities (get-username user-id))
-              js-time
-              pretty-time
-              post-id
-              (pretty-number base-score "point")
-              (pretty-number (or comment-count 0) "comment")
-              (clean-lw-link page-url)
-              (cond (draft (list "draft" "Draft post"))
-                    (curated-date (list "featured" "Featured post"))
-                    (frontpage-date (list "frontpage" "Frontpage post"))
-                    (meta (list "meta" "Meta post"))
-                    (t (list "personal" "Personal post")))
-              (format nil "~A~A"
-                      (if url (format nil "<p><a href=\"~A\" class=\"link-post-link\">Link post</a></p>" (encode-entities (string-trim " " url))) "")
-                      (clean-html (or html-body "") :with-toc t :post-id post-id))))))
+              post
+              (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
+                (format out-stream "<div class=\"post~:[~; link-post~]\"><h1>~A</h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A</a>~@[<a class=\"lw2-link\" href=\"~A\">LW<span> link</span></a>~]~1{<span class=\"post-section ~A\" title=\"~A\">~:*~A</span>~}<a href=\"#bottom-bar\"></a></div><div class=\"post-body\">"
+                        url
+                        (encode-entities (clean-text title))
+                        (encode-entities (get-user-slug user-id))
+                        (encode-entities (get-username user-id))
+                        js-time
+                        pretty-time
+                        post-id
+                        (pretty-number base-score "point")
+                        (pretty-number (or comment-count 0) "comment")
+                        (clean-lw-link page-url)
+                        (cond (draft (list "draft" "Draft post"))
+                              (curated-date (list "featured" "Featured post"))
+                              (frontpage-date (list "frontpage" "Frontpage post"))
+                              (meta (list "meta" "Meta post"))
+                              (t (list "personal" "Personal post")))))
+              (if url (format out-stream "<p><a href=\"~A\" class=\"link-post-link\">Link post</a></p>" (encode-entities (string-trim " " url))) "")
+              (write-sequence (clean-html* (or html-body "") :with-toc t :post-id post-id) out-stream)
+              (format out-stream "</div></div>")))
 
 (defun comment-to-html (out-stream comment &key with-post-title)
   (alist-bind ((comment-id string :--id)
@@ -144,7 +144,7 @@
                (html-body string))
     comment
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      (format out-stream "<div class=\"comment~{ ~A~}\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <a class=\"date\" href=\"~A\" data-js-date=\"~A\">~A</a><div class=\"karma\"><span class=\"karma-value\">~A</span></div>~@[<a class=\"lw2-link\" href=\"~A\">LW link</a>~]~A</div><div class=\"comment-body\"~@[ data-markdown-source=\"~A\"~]>~A</div></div>"
+      (format out-stream "<div class=\"comment~{ ~A~}\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <a class=\"date\" href=\"~A\" data-js-date=\"~A\">~A</a><div class=\"karma\"><span class=\"karma-value\">~A</span></div>~@[<a class=\"lw2-link\" href=\"~A\">LW link</a>~]~A</div><div class=\"comment-body\"~@[ data-markdown-source=\"~A\"~]>"
               (let ((l nil))
                 (if (and (logged-in-userid user-id) (< (* 1000 (local-time:timestamp-to-unix (local-time:now))) (+ js-time 15000))) (push "just-posted-comment" l))
                 (if highlight-new (push "comment-item-highlight" l))
@@ -172,8 +172,9 @@
               (if (logged-in-userid user-id)
                   (encode-entities
                     (or (cache-get "comment-markdown-source" comment-id)
-                        html-body)))
-              (clean-html html-body)))))
+                        html-body)))))
+    (write-sequence (clean-html* html-body) out-stream)
+    (format out-stream "</div></div>")))
 
 (defun conversation-message-to-html (out-stream message)
   (alist-bind ((user-id string)
