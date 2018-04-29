@@ -145,6 +145,18 @@ h1.listing + .post-meta .lw2-link {
 	right: 0;
 }
 
+@media only screen and (max-width: 900px) {
+	h1.listing + .post-meta .author {
+		margin: 0 0.75em 0 1.5em;
+	}
+	h1.listing + .post-meta .post-section::before {
+		left: 0;
+		top: 0;
+	}
+	h1.listing + .post-meta .post-section {
+		display: inline-block;
+	}
+}
 @media only screen and (max-width: 520px) {
 	h1.listing + .post-meta {
 		padding: 0 0 25px 0;
@@ -154,11 +166,15 @@ h1.listing + .post-meta .lw2-link {
 		width: 100%;
 		top: 36px;
 	}
+	h1.listing + .post-meta > * {
+		margin: 0;
+	}
 	h1.listing + .post-meta .karma-value,
 	h1.listing + .post-meta .comment-count,
 	h1.listing + .post-meta .lw2-link,
 	h1.listing + .post-meta .read-time {
-		top: 40px;
+		top: unset;
+		bottom: -2px;
 	}
 	h1.listing + .post-meta .karma-value {
 		right: 250px;
@@ -171,5 +187,6 @@ h1.listing + .post-meta .lw2-link {
 	}
 	h1.listing + .post-meta .lw2-link {
 		right: 0;
+		opacity: 1;
 	}
 }
