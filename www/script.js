@@ -1068,12 +1068,10 @@ function expandAncestorsOf(commentId) {
 /* WORD COUNT & READ TIME */
 /**************************/
 
-function toggleReadTimeOrWordCount() {
-	let currentlyDisplayingWordCount = window.localStorage.getItem("display-word-count");
-	
+function toggleReadTimeOrWordCount(addWordCountClass) {
 	document.querySelectorAll(".post-meta .read-time").forEach(function (rt) {
-		if (currentlyDisplayingWordCount) rt.removeClass("word-count");
-		else rt.addClass("word-count");
+		if (addWordCountClass) rt.addClass("word-count");
+		else rt.removeClass("word-count");
 		
 		let titleParts = /(\S+)(.+)$/.exec(rt.title);
 		[ rt.innerHTML, rt.title ] = [ `${titleParts[1]}<span>${titleParts[2]}</span>`, rt.textContent ];
@@ -1083,7 +1081,7 @@ function toggleReadTimeOrWordCount() {
 }
 function readTimeOrWordCountClicked(event) {
 	let displayWordCount = window.localStorage.getItem("display-word-count");
-	toggleReadTimeOrWordCount();
+	toggleReadTimeOrWordCount(!displayWordCount);
 	if (displayWordCount) window.localStorage.removeItem("display-word-count");
 	else window.localStorage.setItem("display-word-count", true);
 }
@@ -1399,7 +1397,7 @@ function initialize() {
 		}
 		
 		// Add listeners to switch between word count and read time.
-		if (window.localStorage.getItem("display-word-count")) toggleReadTimeOrWordCount();
+		if (window.localStorage.getItem("display-word-count")) toggleReadTimeOrWordCount(true);
 		document.querySelectorAll(".post-meta .read-time").forEach(function (rt) { rt.addActivateEvent(readTimeOrWordCountClicked); });
 		
 		// Call pageLayoutFinished() once all activity that can affect the page layout has finished.
