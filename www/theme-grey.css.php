@@ -66,10 +66,6 @@ h1.listing + .post-meta .comment-count {
     margin-right: 4px;
 }
 
-h1.listing + .post-meta .lw2-link {
-	margin-left: 10px;
-}
-
 .nav-item a:link,
 .nav-item a:visited {
     font-weight: normal;
@@ -140,7 +136,6 @@ a:hover {
 		0 0 0.5px #fff, 
 		0 0 8px #f00;
 }
-.post-meta .lw2-link,
 .comment-meta .lw2-link {
 	opacity: 0.5;
 }
@@ -282,4 +277,80 @@ input[type='submit'] {
 .frac sub {
 	position: relative;
 	left: -0.5px;
+}
+
+.post-meta > * {
+	margin: 0;
+}
+.post-meta .comment-count span,
+.post-meta .read-time span,
+.post-meta .word-count span,
+.post-meta .lw2-link span {
+	display: none;
+}
+.post-meta .comment-count::before,
+.post-meta .read-time::before,
+.post-meta .word-count::before,
+.post-meta .lw2-link::before {
+	font-family: Font Awesome;
+	margin: 0 0.25em 0 0;
+	font-size: 0.875em;
+	color: #ccc;
+}
+.post-meta .comment-count {
+	margin: 0 0.25em 0 0;
+}
+.post-meta .read-time,
+.post-meta .word-count,
+.post-meta .lw2-link {
+	margin: 0 0.25em 0 0.5em;
+}
+.post-meta .lw2-link {
+	opacity: 1;
+}
+.post-meta .comment-count:hover,
+.post-meta .lw2-link:hover {
+	text-decoration: none;
+	text-shadow: 
+		0 0 0.5px #fff,
+		0 0 1px #fff,
+		0 0 8px #777;
+}
+.post-meta .comment-count:hover::before,
+.post-meta .lw2-link:hover::before {
+	color: #777;
+}
+.post-meta .read-time:hover::before {
+	color: #777;
+	cursor: pointer;
+}
+.post-meta .comment-count::before {
+	content: "\F086";
+}
+.post-meta .read-time::before {
+	content: "\F017";
+}
+.post-meta .read-time::after {
+	content: " min";
+}
+.post-meta .word-count::before {
+	content: "\F15C";
+}
+.post-meta .word-count::after {
+	content: "";
+}
+.post-meta .lw2-link::before {
+	content: "\F0C1";
+	font-weight: 900;
+	opacity: 0.8;
+	font-size: 0.75em;
+	position: relative;
+	bottom: 1px;
+}
+
+.post .post-meta .comment-count {
+	margin: 0 0.5em;
+}
+.post .post-meta .lw2-link {
+	margin: 0 1em 0 0.5em;
 }
