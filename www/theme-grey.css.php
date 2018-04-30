@@ -357,3 +357,7 @@ input[type='submit'] {
 .post .post-meta .karma {
 	margin: 0 0 0 0.5em;
 }
+
+h1.listing + .post-meta .comment-count.new-comments::before {
+	color: #0c0;
+}

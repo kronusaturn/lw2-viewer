@@ -4039,6 +4039,9 @@ input[type='submit'] {
 	margin: 0 0 0 0.5em;
 }
 
+h1.listing + .post-meta .comment-count.new-comments::before {
+	color: #0c0;
+}
 /*********************/
 /* ULTRAMODERN THEME */
 /*********************/
