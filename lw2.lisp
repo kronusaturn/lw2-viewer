@@ -162,7 +162,7 @@
                 (alexandria:if-let (parent-comment parent-comment)
                                    (list (encode-entities (get-user-slug (cdr (assoc :user-id parent-comment))))
                                          (encode-entities (get-username (cdr (assoc :user-id parent-comment))))
-                                         (generate-post-link (cdr (assoc :post-id parent-comment)) (cdr (assoc :comment-id parent-comment)))))
+                                         (generate-post-link (cdr (assoc :post-id parent-comment)) (cdr (assoc :--id parent-comment)))))
                 (generate-post-link post-id)
                 (encode-entities (clean-text (get-post-title post-id))))
         (format out-stream "~@[<a class=\"comment-parent-link\" href=\"#comment-~A\">Parent</a>~]~@[<div class=\"comment-child-links\">Replies: ~:{<a href=\"#comment-~A\">&gt;~A</a>~}</div>~]~:[~;<div class=\"comment-minimize-button\" data-child-count=\"~A\"></div>~]"
