@@ -1131,20 +1131,24 @@ function removeElement(selector, ancestor = document) {
 /******************/
 
 function earlyInitialize() {
-		// Add the content width selector.
-		injectContentWidthSelector();
-		// Add the theme selector.
-		injectThemeSelector();
-		// Add the theme tweaker.
-		injectThemeTweaker();
-		// Add the quick-nav UI.
-		injectQuickNavUI();
-		// Add the text size adjustment widget.
-		injectTextSizeAdjustmentUI();
-		// Add the comments view selector widget (threaded vs. chrono).
-// 		injectCommentsViewModeSelector();
-		// Add the comments list mode selector widget (expanded vs. compact).
-		injectCommentsListModeSelector();
+	if(document.querySelector("#content") == null) {
+		window.requestAnimationFrame(earlyInitialize);
+		return;
+	}
+	// Add the content width selector.
+	injectContentWidthSelector();
+	// Add the theme selector.
+	injectThemeSelector();
+	// Add the theme tweaker.
+	injectThemeTweaker();
+	// Add the quick-nav UI.
+	injectQuickNavUI();
+	// Add the text size adjustment widget.
+	injectTextSizeAdjustmentUI();
+	// Add the comments view selector widget (threaded vs. chrono).
+// 	injectCommentsViewModeSelector();
+	// Add the comments list mode selector widget (expanded vs. compact).
+	injectCommentsListModeSelector();
 }
 
 var initializeDone = false;
