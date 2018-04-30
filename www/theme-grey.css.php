@@ -354,3 +354,6 @@ input[type='submit'] {
 .post .post-meta .lw2-link {
 	margin: 0 1em 0 0.5em;
 }
+.post .post-meta .karma {
+	margin: 0 0 0 0.5em;
+}
