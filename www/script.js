@@ -1148,11 +1148,15 @@ function removeElement(selector, ancestor = document) {
 /* INITIALIZATION */
 /******************/
 
+var earlyInitializeDone = false;
 function earlyInitialize() {
+	if(earlyInitializeDone) return; 
 	if(document.querySelector("#content") == null) {
-		window.requestAnimationFrame(earlyInitialize);
+		window.setTimeout(earlyInitialize, 50);
 		return;
 	}
+	earlyInitializeDone = true;
+
 	// Add the content width selector.
 	injectContentWidthSelector();
 	// Add the theme selector.
@@ -1173,6 +1177,7 @@ var initializeDone = false;
 function initialize() {
 	if (initializeDone || (document.readyState == "loading")) return;
 	initializeDone = true;
+	earlyInitialize();
 
 	window.requestAnimationFrame(function() {
 		if (getQueryVariable("comments") == "false")
