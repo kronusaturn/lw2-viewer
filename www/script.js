@@ -417,6 +417,24 @@ function setLastVisitedDate(date) {
 	window.localStorage.setItem("last-visited-date_" + getPostHash(), date);
 }
 
+function updateSavedCommentCount() {
+	let commentCount = document.querySelectorAll(".comment").length;
+	window.localStorage.setItem("comment-count_" + getPostHash(), commentCount);
+}
+function badgePostsWithNewComments() {
+	document.querySelectorAll("h1.listing a[href^='/']").forEach(function (postLink) {
+		let postHash = /posts\/(.+?)\//.exec(postLink.href)[1];
+
+		let savedCommentCount = window.localStorage.getItem("comment-count_" + postHash);
+		let commentCountDisplay = postLink.parentElement.nextSibling.querySelector(".comment-count");
+		let currentCommentCount = /([0-9]+)/.exec(commentCountDisplay.textContent)[1];
+
+		if (currentCommentCount > savedCommentCount)
+			commentCountDisplay.addClass("new-comments");
+		commentCountDisplay.title = `${currentCommentCount} comments (${currentCommentCount - savedCommentCount} new)`;
+	});
+}
+
 /***********************************/
 /* CONTENT COLUMN WIDTH ADJUSTMENT */
 /***********************************/
@@ -1302,6 +1320,9 @@ function initialize() {
 			// Read and update last-visited-date.
 			let lastVisitedDate = getLastVisitedDate();
 			setLastVisitedDate(Date.now());
+			
+			// Save the number of comments this post has when it's visited.
+			updateSavedCommentCount();
 
 			// Add the new comments count & navigator.
 			injectNewCommentNavUI();
@@ -1315,6 +1336,9 @@ function initialize() {
 			
 			// Update the comment count display.
 			updateNewCommentNavUI(newCommentsCount, hns);
+		} else {
+			// On listing pages, make comment counts more informative.
+			badgePostsWithNewComments();
 		}
 		
 		// Add event listeners for Escape and Enter, for the theme tweaker.

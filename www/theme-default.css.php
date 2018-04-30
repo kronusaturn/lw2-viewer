@@ -22,6 +22,7 @@ h1.listing + .post-meta .read-time::before {
 h1.listing + .post-meta .karma-value::before {
 	content: "\F139";
 	font-weight: 900;
+	text-shadow: none;
 }
 h1.listing + .post-meta .comment-count::before {
 	content: "\F086";
@@ -189,4 +190,12 @@ h1.listing + .post-meta .lw2-link {
 		right: 0;
 		opacity: 1;
 	}
+}
+
+h1.listing + .post-meta .comment-count.new-comments::before {
+	color: #009100;
+	text-shadow: 0.5px 0.5px 0.5px #fff;
+}
+h1.listing + .post-meta .comment-count.new-comments:hover::before {
+	text-shadow: 0.5px 0.5px 0.5px #999;
 }
