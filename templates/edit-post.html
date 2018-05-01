@@ -1,4 +1,4 @@
-<div class="posting-controls with-markdown-editor">
+<div class="posting-controls with-markdown-editor {% if post-id %}edit-existing-post{% else %}create-new-post{% endif %}">
 <form method="post" action="/edit-post" id="edit-post-form" class="aligned-form">
 	<div class="post-meta-fields">
 		<label for="title">Title:</label>
