@@ -1,5 +1,5 @@
 <div class="posting-controls with-markdown-editor">
-<form method="post" action="/edit-post" id="edit-post-form" class="aligned-form">
+<form method="post" action="/edit-post" id="edit-post-form" class="aligned-form" onsubmit="disableBeforeUnload();">
 	<div class="post-meta-fields">
 		<label for="title">Title:</label>
 		<input name="title" autocomplete="off" type="text" value="{{ title }}">
@@ -13,7 +13,7 @@
 		{% endfor %}
 	</div>
 	<div class="textarea-container">
-		<textarea name="text">{{ markdown-source }}</textarea>
+		<textarea name="text" onkeyup="enableBeforeUnload();" onchange="enableBeforeUnload();">{{ markdown-source }}</textarea>
 		<span class="markdown-reference-link">You can use <a href="http://commonmark.org/help/" target="_blank">Markdown</a> here.</span>
 		<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-help-button">Help</button>
 		<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-exit-button">Exit</button>

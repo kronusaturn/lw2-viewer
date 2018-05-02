@@ -1110,6 +1110,17 @@ function readTimeOrWordCountClicked(event) {
 	else window.localStorage.setItem("display-word-count", true);
 }
 
+/**************************/
+/* PROMPT TO SAVE CHANGES */
+/**************************/
+
+function enableBeforeUnload() {
+    window.onbeforeunload = function () { return true; };
+}
+function disableBeforeUnload() {
+    window.onbeforeunload = null;
+}
+
 /*********************/
 /* MORE MISC HELPERS */
 /*********************/
