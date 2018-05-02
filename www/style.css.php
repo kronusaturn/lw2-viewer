@@ -1482,7 +1482,12 @@ h1.listing a[href^="http"] {
 	margin-left: 1em;
 }
 .comment-meta .comment-post-title {
-	display: block;
+	white-space: unset;
+	line-height: 1.2;
+	margin-top: 0.2em;
+}
+.comment-meta .comment-post-title span {
+	display: inline-block;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }

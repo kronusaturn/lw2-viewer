@@ -158,7 +158,7 @@
               (pretty-number base-score "point")
               (clean-lw-link page-url)))
     (if with-post-title
-        (format out-stream "<div class=\"comment-post-title\">~1{in reply to: <a href=\"/users/~A\">~A</a>’s <a href=\"~A\">comment</a> ~}on: <a href=\"~A\">~A</a></div>"
+        (format out-stream "<div class=\"comment-post-title\">~1{<span class=\"comment-in-reply-to\">in reply to: <a href=\"/users/~A\">~A</a>’s <a href=\"~A\">comment</a></span> ~}<span class=\"comment-post-title2\">on: <a href=\"~A\">~A</a></span></div>"
                 (alexandria:if-let (parent-comment parent-comment)
                                    (list (encode-entities (get-user-slug (cdr (assoc :user-id parent-comment))))
                                          (encode-entities (get-username (cdr (assoc :user-id parent-comment))))
