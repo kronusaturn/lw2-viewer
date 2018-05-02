@@ -20,21 +20,23 @@
   `(with-mutex (*db-mutex*)
 	       ,@body)) 
 
+(defun call-with-cache-transaction (fn)
+  (with-recursive-lock (*db-mutex*)
+    (if lmdb:*transaction*
+        (funcall fn)
+        (let ((txn (lmdb:make-transaction *db-environment* :flags 0)))
+          (unwind-protect
+            (progn
+              (lmdb:begin-transaction txn)
+              (let ((lmdb:*transaction* txn))
+                (multiple-value-prog1
+                  (funcall fn)
+                  (lmdb:commit-transaction txn)
+                  (setf txn nil))))
+            (when txn (lmdb:abort-transaction txn)))))))
+
 (defmacro with-cache-transaction (&body body)
-  (alexandria:with-gensyms (txn)
-			   `(with-recursive-lock (*db-mutex*)
-						 (if lmdb:*transaction*
-						   (progn ,@body)
-						   (let ((,txn (lmdb:make-transaction *db-environment* :flags 0)))
-						     (unwind-protect
-						       (progn 
-							 (lmdb:begin-transaction ,txn)
-							 (let ((lmdb:*transaction* ,txn))
-							   (multiple-value-prog1
-							     (progn ,@body)
-							     (lmdb:commit-transaction ,txn)
-							     (setf ,txn nil))))
-						       (when ,txn (lmdb:abort-transaction ,txn))))))))
+  `(call-with-cache-transaction (lambda () ,@body)))
 
 (defmacro with-db ((db db-name) &body body)
   `(with-cache-transaction
