@@ -521,7 +521,7 @@
   `(let ((*current-auth-token* (alexandria:if-let (at (hunchentoot:cookie-in "lw2-auth-token")) (if (string= at "") nil at))))
      (handler-case
        (log-conditions 
-         (progn ,@body))
+         (prog1 (progn ,@body) (sb-ext:gc :gen 1)))
        (serious-condition (condition)
                           (emit-page (out-stream :title "Error" :return-code 500) 
                                      (error-to-html out-stream condition))))))
