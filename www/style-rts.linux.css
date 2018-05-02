@@ -1494,6 +1494,7 @@ h1.listing a[href^="http"] {
 	white-space: unset;
 	line-height: 1.2;
 	margin-top: 0.2em;
+	display: block;
 }
 .comment-meta .comment-post-title span {
 	display: inline-block;
