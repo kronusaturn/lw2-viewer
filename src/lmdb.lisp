@@ -30,7 +30,7 @@
 						       (progn 
 							 (lmdb:begin-transaction ,txn)
 							 (let ((lmdb:*transaction* ,txn))
-							   (prog1
+							   (multiple-value-prog1
 							     (progn ,@body)
 							     (lmdb:commit-transaction ,txn)
 							     (setf ,txn nil))))
