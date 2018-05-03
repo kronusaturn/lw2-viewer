@@ -142,9 +142,9 @@
                (format stream "{")
                (loop for n from 0
                      for q in queries
-                     do (format stream "g~A:~A " n q))
+                     do (format stream "g~6,'0D:~A " n q))
                (format stream "}")))
-           (result (lw2-graphql-query-streamparse query-string :auth-token auth-token)))
+           (result (sort (lw2-graphql-query-streamparse query-string :auth-token auth-token) #'string< :key #'car)))
       (values
         (loop as results = (cdr (assoc :data result)) then (if passthrough-p results (rest results))
               for (out passthrough-p) in map-values
