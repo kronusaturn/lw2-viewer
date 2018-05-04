@@ -651,7 +651,7 @@
                                                         (do-lw2-comment-edit lw2-auth-token edit-comment-id comment-data))
                                                       (do-lw2-comment lw2-auth-token comment-data))))
                                            (cache-put "comment-markdown-source" new-comment-id text)
-                                           (get-post-comments post-id :force-revalidate t)
+                                           (ignore-errors (get-post-comments post-id :force-revalidate t))
                                            (setf (hunchentoot:return-code*) 303
                                                  (hunchentoot:header-out "Location") (generate-post-link (match-lw2-link (hunchentoot:request-uri*)) new-comment-id)))))
                                      (t 
@@ -710,6 +710,7 @@
                                                   (new-post-id (cdr (assoc :--id new-post-data))))
                                              (assert new-post-id)
                                              (cache-put "post-markdown-source" new-post-id text)
+                                             (ignore-errors (get-post-body post-id :force-revalidate t))
                                              (setf (hunchentoot:return-code*) 303
                                                    (hunchentoot:header-out "Location") (if (cdr (assoc "draft" post-data :test #'equal))
                                                                                            (concatenate 'string (generate-post-link new-post-data) "?need-auth=y")
