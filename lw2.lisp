@@ -419,6 +419,13 @@
                                  `("login" ,(format nil "/login?return=~A" (url-rewrite:url-encode current-uri)) "Log In" :accesskey "u")))))
     (nav-bar-to-html current-uri)))
 
+(defun sublevel-nav-to-html (out-stream options current &key (base-uri (hunchentoot:request-uri*)) (param-name "show") (remove-params '("offset")))
+  (format out-stream "<div class=\"sublevel-nav\">")
+  (loop for (param-value text) in options
+        do (link-if-not out-stream (string= current param-value) (apply #'replace-query-params (list* base-uri param-name param-value (loop for x in remove-params nconc (list x nil))))
+                        "sublevel-item" text))
+  (format out-stream "</div>"))
+
 (defun make-csrf-token (&optional (session-token (hunchentoot:cookie-in "session-token")) (nonce (ironclad:make-random-salt)))
   (if (typep session-token 'string) (setf session-token (base64:base64-string-to-usb8-array session-token)))
   (let ((csrf-token (concatenate '(vector (unsigned-byte 8)) nonce (ironclad:digest-sequence :sha256 (concatenate '(vector (unsigned-byte 8)) nonce session-token)))))
@@ -462,7 +469,7 @@
                                   (alexandria:if-let (old-cons (assoc param out :test #'equal))
                                                      (setf (cdr old-cons) value)
                                                      (setf out (nconc out (list (cons param value)))))
-                                  (setf out (remove-if (lambda (x) (equal (car x) param)) old-params)))
+                                  (setf out (remove-if (lambda (x) (equal (car x) param)) out)))
                            finally (return out))))
     (if new-params 
       (setf (quri:uri-query-params quri) new-params)
@@ -556,12 +563,14 @@
                      (t
                        (emit-page (out-stream :title (if hide-title nil title) :description "A faster way to browse LessWrong 2.0" :content-class content-class :with-offset with-offset :with-next with-next
                                               :current-uri current-uri :robots (if (and with-offset (> with-offset 0)) "noindex, nofollow"))
-                                  (format out-stream "<div class=\"page-toolbar\">~@[<a class=\"new-post button\" href=\"/edit-post?section=~A\" accesskey=\"n\" title=\"Create new post [n]\">New post</a>~]~@[~A~]~{~@[<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" title=\"~A RSS feed\" href=\"~A\">RSS</a>~]~}</div>~@[~A~]"
+                                  (format out-stream "<div class=\"page-toolbar\">~@[<a class=\"new-post button\" href=\"/edit-post?section=~A\" accesskey=\"n\" title=\"Create new post [n]\">New post</a>~]~@[~A~]~{~@[<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" title=\"~A RSS feed\" href=\"~A\">RSS</a>~]~}</div>"
                                           (if (and (case section (:frontpage t) (:meta t) (:all t)) (logged-in-userid)) (string-downcase (string section)))
                                           page-toolbar-extra
                                           (unless (or need-auth hide-rss)
-                                            (list title (replace-query-params (hunchentoot:request-uri*) "offset" nil "format" "rss")))
-                                          extra-html)
+                                            (list title (replace-query-params (hunchentoot:request-uri*) "offset" nil "format" "rss"))))
+                                  (typecase extra-html
+                                    (function (funcall extra-html out-stream))
+                                    (t (format out-stream "~@[~A~]" extra-html)))
                                   (write-index-items-to-html out-stream items :need-auth need-auth
                                                              :skip-section (case section
                                                                              (:frontpage :frontpage)
@@ -854,15 +863,15 @@
                                                                               (make-csrf-token))
                                                                       (format nil "<a class=\"new-private-message button\" href=\"/conversation?to=~A\">Send private message</a>"
                                                                               user-slug)))
-                                            :extra-html (format nil "<h1 class=\"page-main-heading\">~A</h1><div class=\"user-stats\">Karma: <span class=\"karma-total\">~A</span></div><div class=\"sublevel-nav\">~A</div>"
-                                                                (cdr (assoc :display-name user-info))
-                                                                (pretty-number (or (cdr (assoc :karma user-info)) 0))
-                                                                (with-output-to-string (stream)
-                                                                  (loop for (l-show text) in `((nil "All") ("posts" "Posts") ("comments" "Comments")
-                                                                                                           ,@(if (logged-in-userid (cdr (assoc :--id user-info)))
-                                                                                                                 '(("drafts" "Drafts") ("conversations" "Conversations") ("inbox" "Inbox"))))
-                                                                        do (link-if-not stream (string= show l-show) (format nil "~A~@[?show=~A~]" (hunchentoot:script-name*) l-show)
-                                                                                        "sublevel-item" text))))))))
+                                            :extra-html (lambda (out-stream)
+                                                          (format out-stream "<h1 class=\"page-main-heading\">~A</h1><div class=\"user-stats\">Karma: <span class=\"karma-total\">~A</span></div>"
+                                                                  (cdr (assoc :display-name user-info))
+                                                                  (pretty-number (or (cdr (assoc :karma user-info)) 0)))
+                                                          (sublevel-nav-to-html out-stream
+                                                                                `((nil "All") ("posts" "Posts") ("comments" "Comments")
+                                                                                              ,@(if (logged-in-userid (cdr (assoc :--id user-info)))
+                                                                                                    '(("drafts" "Drafts") ("conversations" "Conversations") ("inbox" "Inbox"))))
+                                                                                show))))))
 
 (defparameter *conversation-template* (compile-template* "conversation.html"))
 
