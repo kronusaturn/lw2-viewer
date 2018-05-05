@@ -459,6 +459,13 @@ input {
 .sublevel-nav span.sublevel-item {
 	cursor: default;
 }
+.sublevel-nav.sort {
+	text-align: right;
+}
+.sublevel-nav.sort .sublevel-item {
+	width: 4em;
+	padding: 0;
+}
 
 /*******************/
 /* INBOX INDICATOR */

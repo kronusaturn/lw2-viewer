@@ -266,14 +266,18 @@
             (format out-stream "</li>")))
     (format nil "</ul>")))
 
-(defun comment-post-interleave (list &key limit offset)
-  (let ((sorted (sort list #'local-time:timestamp> :key (lambda (x) (local-time:parse-timestring (cdr (assoc :posted-at x)))))))
-    (loop for end = (if (or limit offset) (+ (or limit 0) (or offset 0)))
-	  for x in sorted
-	  for count from 0
-	  until (and end (>= count end))
-	  when (or (not offset) (>= count offset))
-	  collect x)))
+(defun comment-post-interleave (list &key limit offset (sort-by :date))
+  (multiple-value-bind (sort-fn sort-key)
+    (ecase sort-by
+      (:date (values #'local-time:timestamp> (lambda (x) (local-time:parse-timestring (cdr (assoc :posted-at x))))))
+      (:score (values #'> (lambda (x) (cdr (assoc :base-score x))))))
+    (let ((sorted (sort list sort-fn :key sort-key)))
+      (loop for end = (if (or limit offset) (+ (or limit 0) (or offset 0)))
+            for x in sorted
+            for count from 0
+            until (and end (>= count end))
+            when (or (not offset) (>= count offset))
+            collect x))))
 
 (defmacro with-error-html-block ((out-stream) &body body)
   `(handler-case
@@ -419,8 +423,9 @@
                                  `("login" ,(format nil "/login?return=~A" (url-rewrite:url-encode current-uri)) "Log In" :accesskey "u")))))
     (nav-bar-to-html current-uri)))
 
-(defun sublevel-nav-to-html (out-stream options current &key (base-uri (hunchentoot:request-uri*)) (param-name "show") (remove-params '("offset")))
-  (format out-stream "<div class=\"sublevel-nav\">")
+(defun sublevel-nav-to-html (out-stream options current &key (base-uri (hunchentoot:request-uri*)) (param-name "show") (remove-params '("offset")) extra-class)
+  (declare (type (or null string) extra-class))
+  (format out-stream "<div class=\"sublevel-nav~@[ ~A~]\">" extra-class)
   (loop for (param-value text) in options
         do (link-if-not out-stream (string= current param-value) (apply #'replace-query-params (list* base-uri param-name param-value (loop for x in remove-params nconc (list x nil))))
                         "sublevel-item" text))
@@ -766,7 +771,7 @@
 	     ,(loop for v in vars as x from 0 collecting `(,v (if (> (length ,result-vector) ,x) (aref ,result-vector ,x)))) 
 	     ,@body))))))
 
-(define-regex-handler view-user ("^/users/(.*?)(?:$|\\?)" user-slug) (offset show)
+(define-regex-handler view-user ("^/users/(.*?)(?:$|\\?)" user-slug) (offset show sort)
                       (with-error-page
                         (let* ((offset (if offset (parse-integer offset) 0))
                                (auth-token (if (string= show "inbox") (hunchentoot:cookie-in "lw2-auth-token")))
@@ -774,8 +779,9 @@
                                                              :auth-token auth-token))
                                (comments-index-fields (remove :page-url *comments-index-fields*)) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
                                (title (format nil "~A~@['s ~A~]" (cdr (assoc :display-name user-info)) (if (member show '(nil "posts" "comments") :test #'equal) show)))
-                               (posts-base-terms (load-time-value (alist :view "userPosts" :meta :null)))
-                               (comments-base-terms (load-time-value (alist :view "allRecentComments")))
+                               (sort-type (alexandria:switch (sort :test #'string=) ("top" :score) (t :date)))
+                               (posts-base-terms (ecase sort-type (:score (load-time-value (alist :view "best" :meta :null))) (:date (load-time-value (alist :view "userPosts" :meta :null)))))
+                               (comments-base-terms (ecase sort-type (:score (load-time-value (alist :view "postCommentsTop"))) (:date (load-time-value (alist :view "allRecentComments")))))
                                (items (alexandria:switch (show :test #'string=)
                                                          ("posts"
                                                           (lw2-graphql-query (graphql-query-string "PostsList"
@@ -852,7 +858,7 @@
                                                                                                                          comments-index-fields))))
                                                              (concatenate 'list user-posts user-comments)))))
                                (with-next (> (length items) (+ (if show 0 offset) 20)))
-                               (interleave (if (not show) (comment-post-interleave items :limit 20 :offset (if show nil offset)) (firstn items 20)))) ; this destructively sorts items
+                               (interleave (if (not show) (comment-post-interleave items :limit 20 :offset (if show nil offset) :sort-by sort-type) (firstn items 20)))) ; this destructively sorts items
                           (view-items-index interleave :with-offset offset :title title :content-class "user-page" :current-uri (format nil "/users/~A" user-slug)
                                             :with-offset offset :with-next with-next
                                             :need-auth (string= show "drafts") :section (if (string= show "drafts") "drafts" nil)
@@ -871,7 +877,13 @@
                                                                                 `((nil "All") ("posts" "Posts") ("comments" "Comments")
                                                                                               ,@(if (logged-in-userid (cdr (assoc :--id user-info)))
                                                                                                     '(("drafts" "Drafts") ("conversations" "Conversations") ("inbox" "Inbox"))))
-                                                                                show))))))
+                                                                                show)
+                                                          (when (some (lambda (x) (string= show x)) '(nil "posts" "comments"))
+                                                            (sublevel-nav-to-html out-stream
+                                                                                  `((nil "New") ("top" "Top"))
+                                                                                  sort
+                                                                                  :param-name "sort"
+                                                                                  :extra-class "sort")))))))
 
 (defparameter *conversation-template* (compile-template* "conversation.html"))
 
