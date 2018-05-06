@@ -3210,6 +3210,11 @@ div > .MJXc-display {
 		width: unset;
 		float: unset;
 	}
+	.sublevel-nav.sort {
+		position: unset;
+		margin-top: 1.75em;
+		margin-bottom: -1.25em;
+        }
 }
 @media only screen and (max-width: 520px) {
 	.nav-inner,
@@ -3430,13 +3435,6 @@ div > .MJXc-display {
 		font-size: 1rem;
 		padding: 0.25em 0.5em;
 	}
-	.sublevel-nav.sort {
-		position: unset;
-	}
-	#top-nav-bar + .sublevel-nav.sort {
-		margin-top: 1.75em;
-		margin-bottom: -1.25em;
-        }
 	.comment-minimize-button::after {
 		height: 100%;
 		top: 0;
