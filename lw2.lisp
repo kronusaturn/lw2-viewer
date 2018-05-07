@@ -611,7 +611,10 @@
                                    (let* ((offset (and offset (parse-integer offset))) 
                                           (posts (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms
                                                                                                              (remove-if (lambda (x) (null (cdr x)))
-                                                                                                                        (alist :view (if (string= view "featured") "curated" (or view "new"))
+                                                                                                                        (alist :view (alexandria:switch (view :test #'string=)
+                                                                                                                                                        ("featured" "curated")
+                                                                                                                                                        ("new" "community-rss")
+                                                                                                                                                        (t (or view "community-rss")))
                                                                                                                                :meta (if meta t :null) :before before :after after :limit 20 :offset offset)))
                                                                                           *posts-index-fields*)))
                                           (section (cond ((string= view "frontpage") :frontpage)
