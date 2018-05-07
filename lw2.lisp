@@ -374,7 +374,7 @@
 
 (defparameter *primary-nav* '(("home" "/" "Home" :description "Latest frontpage posts" :accesskey "h")
 			      ("featured" "/index?view=featured" "Featured" :description "Latest featured posts" :accesskey "f")
-			      ("all" "/index?view=new&all=t" "All" :description "Latest frontpage posts and userpage posts" :accesskey "a") 
+			      ("all" "/index?view=new&all=t" "All" :description "Latest posts from all sections" :accesskey "a")
 			      ("meta" "/index?view=meta&all=t" "Meta" :description "Latest meta posts" :accesskey "m")
 			      ("recent-comments" "/recentcomments" "<span>Recent </span>Comments" :description "Latest comments" :accesskey "c"))) 
 
@@ -612,7 +612,7 @@
                                           (posts (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms
                                                                                                              (remove-if (lambda (x) (null (cdr x)))
                                                                                                                         (alist :view (if (string= view "featured") "curated" (or view "new"))
-                                                                                                                               :meta (not (not meta)) :before before :after after :limit 20 :offset offset)))
+                                                                                                                               :meta (if meta t :null) :before before :after after :limit 20 :offset offset)))
                                                                                           *posts-index-fields*)))
                                           (section (cond ((string= view "frontpage") :frontpage)
                                                          ((string= view "featured") :featured)
