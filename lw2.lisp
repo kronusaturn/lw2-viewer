@@ -569,7 +569,7 @@
                        (emit-page (out-stream :title (if hide-title nil title) :description "A faster way to browse LessWrong 2.0" :content-class content-class :with-offset with-offset :with-next with-next
                                               :current-uri current-uri :robots (if (and with-offset (> with-offset 0)) "noindex, nofollow"))
                                   (format out-stream "<div class=\"page-toolbar\">~@[<a class=\"new-post button\" href=\"/edit-post?section=~A\" accesskey=\"n\" title=\"Create new post [n]\">New post</a>~]~@[~A~]~{~@[<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" title=\"~A RSS feed\" href=\"~A\">RSS</a>~]~}</div>"
-                                          (if (and (case section (:frontpage t) (:meta t) (:all t)) (logged-in-userid)) (string-downcase (string section)))
+                                          (if (and (case section (:meta t) (:all t)) (logged-in-userid)) (string-downcase (string section)))
                                           page-toolbar-extra
                                           (unless (or need-auth hide-rss)
                                             (list title (replace-query-params (hunchentoot:request-uri*) "offset" nil "format" "rss"))))
@@ -716,7 +716,6 @@
                                              (url (if (string= url "") nil url)))
                                          (assert (and lw2-auth-token (not (string= text ""))))
                                          (let* ((post-data `(("body" . ,(postprocess-markdown text)) ("title" . ,title) ("url" . ,(if link-post url))
-                                                                              ("frontpageDate" . ,(if (string= section "frontpage") (local-time:format-timestring nil (local-time:now))))
                                                                               ("meta" . ,(string= section "meta")) ("draft" . ,(string= section "drafts")) ("content" . ("blocks" . nil))))
                                                 (post-set (loop for item in post-data when (cdr item) collect item))
                                                 (post-unset (loop for item in post-data when (not (cdr item)) collect (cons (car item) t))))
@@ -744,7 +743,7 @@
                                                                      :title (cdr (assoc :title post-body))
                                                                      :url (cdr (assoc :url post-body))
                                                                      :post-id post-id
-                                                                     :section-list (loop for (name desc) in '(("frontpage" "Frontpage") ("all" "All") ("meta" "Meta") ("drafts" "Drafts"))
+                                                                     :section-list (loop for (name desc) in '(("all" "All") ("meta" "Meta") ("drafts" "Drafts"))
                                                                                          collect (alist :name name :desc desc :selected (string= name section)))
                                                                      :markdown-source (or (and post-id (cache-get "post-markdown-source" post-id)) (cdr (assoc :html-body post-body)) ""))))))))
 

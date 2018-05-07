@@ -2516,7 +2516,7 @@ div.comment-child-links a::first-letter {
 	border-width: 1px 1px 1px 0;
 	cursor: pointer;
 }
-#edit-post-form input[type='radio'][value='frontpage'] + label {
+#edit-post-form input[type='radio'][value='all'] + label {
 	border-radius: 8px 0 0 8px;
 	border-width: 1px;
 }
