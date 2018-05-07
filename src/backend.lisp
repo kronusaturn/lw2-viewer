@@ -37,6 +37,10 @@
     (0 t)
     (1 nil)))
 
+(defun comments-list-to-graphql-json (comments-list)
+  (json:encode-json-to-string
+    (json:make-object `((data . ,(json:make-object `((*comments-list . ,comments-list)) nil))) nil)))
+
 (defun background-loader ()
   (let (last-comment-processed)
     (loop
@@ -67,7 +71,7 @@
                                      (post-comments (ignore-errors (decode-graphql-json (cache-get "post-comments-json" post-id))))
                                      (new-post-comments (sort (cons comment (delete-if (lambda (c) (string= comment-id (cdr (assoc :--id c)))) post-comments))
                                                               #'> :key (lambda (c) (cdr (assoc :base-score c))))))
-                                (cache-update "post-comments-json" post-id (json:encode-json-to-string (json:make-object `((data . ,(json:make-object `((*comments-list . ,new-post-comments)) nil))) nil))))))
+                                (cache-update "post-comments-json" post-id (comments-list-to-graphql-json new-post-comments)))))
                       (setf last-comment-processed (cdr (assoc :--id (first recent-comments)))))))
         (t (condition) (values nil condition)))
       (if (wait-on-semaphore *background-loader-semaphore* :timeout 60)
@@ -186,12 +190,17 @@
              (last-checked (cdr (assoc :last-checked metadata))))
             (> (- last-checked last-mod) (* *cache-stale-factor* (- current-time last-checked))))))
 
+(defun run-query (query)
+  (etypecase query
+    (string (lw2-graphql-query-noparse query))
+    (function (funcall query))))
+
 (defun ensure-cache-update-thread (query cache-db cache-key)
   (let ((key (format nil "~A-~A" cache-db cache-key))) 
     (labels ((background-fn ()
 			    (handler-case 
 			      (prog1
-				(cache-update cache-db cache-key (lw2-graphql-query-noparse query))
+				(cache-update cache-db cache-key (run-query query))
 				(remhash key *background-cache-update-threads*))
 			      (t (c)
 				 (remhash key *background-cache-update-threads*)
@@ -305,7 +314,17 @@
   (process-votes-result (lw2-graphql-query (format nil "{CommentsList(terms:{view:\"postCommentsTop\",limit:10000,postId:\"~A\"}) {_id, currentUserVotes{voteType}}}" post-id) :auth-token auth-token)))
 
 (defun get-post-comments (post-id &key (revalidate t) force-revalidate)
-  (lw2-graphql-query-timeout-cached (format nil "{CommentsList(terms:{view:\"postCommentsTop\",limit:10000,postId:\"~A\"}) {_id, userId, postId, postedAt, parentCommentId, baseScore, pageUrl, htmlBody}}" post-id) "post-comments-json" post-id :revalidate revalidate :force-revalidate force-revalidate))
+  (let ((fn (lambda ()
+              (let ((base-terms (alist :view "postCommentsTop" :post-id "JYckkCqhZPrdScjBx"))
+                    (comments-fields '(:--id :user-id :post-id :posted-at :parent-comment-id :base-score :page-url :html-body)))
+                (multiple-value-bind (comments-total comments-list)
+                  (lw2-graphql-query-multi (list (graphql-query-string* "CommentsTotal" (alist :terms base-terms) nil)
+                                                 (graphql-query-string* "CommentsList" (alist :terms (nconc (alist :limit 500) base-terms)) comments-fields)))
+                  (loop for offset from 500 to comments-total by 500
+                        as comments-next = (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (nconc (alist :limit 500 :offset offset) base-terms)) comments-fields))
+                        do (setf comments-list (nconc comments-list comments-next)))
+                  (comments-list-to-graphql-json comments-list))))))
+    (lw2-graphql-query-timeout-cached fn "post-comments-json" post-id :revalidate revalidate :force-revalidate force-revalidate)))
 
 (defun lw2-search-query (query)
   (multiple-value-bind (req-stream req-status req-headers req-uri req-reuse-stream want-close)
