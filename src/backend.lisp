@@ -315,7 +315,7 @@
 
 (defun get-post-comments (post-id &key (revalidate t) force-revalidate)
   (let ((fn (lambda ()
-              (let ((base-terms (alist :view "postCommentsTop" :post-id "JYckkCqhZPrdScjBx"))
+              (let ((base-terms (alist :view "postCommentsTop" :post-id post-id))
                     (comments-fields '(:--id :user-id :post-id :posted-at :parent-comment-id :base-score :page-url :html-body)))
                 (multiple-value-bind (comments-total comments-list)
                   (lw2-graphql-query-multi (list (graphql-query-string* "CommentsTotal" (alist :terms base-terms) nil)
