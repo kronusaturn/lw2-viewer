@@ -46,14 +46,18 @@
   (alexandria:once-only (alist)
     (let ((inner-bindings (loop for x in bindings collect
                                 (destructuring-bind (bind &optional type key) (if (consp x) x (list x))
-                                  (list (gensym) bind (or type t) (or key (intern (string bind) '#:keyword)))))))
+                                  (list (gensym (string bind)) (gensym (string bind)) (gensym (string bind)) bind (or type t) (or key (intern (string bind) '#:keyword)))))))
       (macrolet ((inner-loop (&body body)
-                   `(loop for (gensym bind type key) in inner-bindings collect
-                          (progn gensym bind type key ,@body))))
-        `(let ,(inner-loop `(,gensym (assoc ,key ,alist)))
-           (declare ,@(inner-loop `(type (or null (cons symbol ,type)) ,gensym)))
-           (symbol-macrolet ,(inner-loop `(,bind (cdr ,gensym)))
-             ,@body))))))
+                   `(loop for (fn-gensym cons-gensym value-gensym bind type key) in inner-bindings collect
+                          (progn fn-gensym cons-gensym value-gensym bind type key ,@body))))
+        `(let* (,@(inner-loop `(,cons-gensym (assoc ,key ,alist)))
+                ,@(inner-loop `(,value-gensym (cdr ,cons-gensym))))
+             (declare ,@(inner-loop `(type ,type ,value-gensym)))
+             (flet (,@(inner-loop `(,fn-gensym () ,value-gensym))
+                    ,@(inner-loop `((setf ,fn-gensym) (new) (setf (cdr ,cons-gensym) new ,value-gensym new))))
+               (declare (inline ,@(inner-loop fn-gensym)))
+               (symbol-macrolet ,(inner-loop `(,bind (,fn-gensym)))
+                 ,@body)))))))
 
 (defun post-headline-to-html (out-stream post &key skip-section need-auth)
   (alist-bind ((title string)
@@ -140,7 +144,7 @@
                (page-url (or null string))
                (parent-comment list)
                (parent-comment-id (or null string))
-               (child-count fixnum)
+               (child-count (or null fixnum))
                (children list)
                (html-body string))
     comment
