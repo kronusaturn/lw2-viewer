@@ -7,8 +7,6 @@
 
 (defvar *current-auth-token*) 
 
-(defvar *memory-intensive-mutex* (sb-thread:make-mutex :name "memory-intensive-mutex")) 
-
 (defun logged-in-userid (&optional is-userid)
   (let ((current-userid (and *current-auth-token* (cache-get "auth-token-to-userid" *current-auth-token*))))
     (if is-userid
@@ -333,30 +331,29 @@
 
 (defun write-index-items-to-rss (out-stream items &key title need-auth)
   (let ((full-title (format nil "~@[~A - ~]LessWrong 2 viewer" title)))
-    (with-recursive-lock (*memory-intensive-mutex*)
-      (xml-emitter:with-rss2 (out-stream :encoding "UTF-8")
-        (xml-emitter:rss-channel-header full-title *site-uri* :description full-title)
-        (labels ((emit-item (item &key title link (guid (cdr (assoc :--id item))) (author (get-username (cdr (assoc :user-id item))))
-                                  (date (pretty-time (cdr (assoc :posted-at item)) :format local-time:+rfc-1123-format+)) body)
-                   (xml-emitter:rss-item
-                     title
-                     :link link
-                     :author author
-                     :pubDate date
-                     :guid guid
-                     :description body)))
-          (dolist (item items)
-            (if (assoc :comment-count item)
-              (let ((author (get-username (cdr (assoc :user-id item)))))
-                (emit-item item
-                           :title (clean-text (format nil "~A by ~A" (cdr (assoc :title item)) author))
-                           :author author
-                           :link (generate-post-auth-link item nil t need-auth)
-                           :body (clean-html (or (cdr (assoc :html-body (get-post-body (cdr (assoc :--id item)) :revalidate nil))) "") :post-id (cdr (assoc :--id item)))))
+    (xml-emitter:with-rss2 (out-stream :encoding "UTF-8")
+      (xml-emitter:rss-channel-header full-title *site-uri* :description full-title)
+      (labels ((emit-item (item &key title link (guid (cdr (assoc :--id item))) (author (get-username (cdr (assoc :user-id item))))
+                                (date (pretty-time (cdr (assoc :posted-at item)) :format local-time:+rfc-1123-format+)) body)
+                          (xml-emitter:rss-item
+                            title
+                            :link link
+                            :author author
+                            :pubDate date
+                            :guid guid
+                            :description body)))
+        (dolist (item items)
+          (if (assoc :comment-count item)
+            (let ((author (get-username (cdr (assoc :user-id item)))))
               (emit-item item
-                         :title (format nil "Comment by ~A on ~A" (get-username (cdr (assoc :user-id item))) (get-post-title (cdr (assoc :post-id item))))
-                         :link (generate-post-link (cdr (assoc :post-id item)) (cdr (assoc :--id item)) t)
-                         :body (clean-html (cdr (assoc :html-body item)))))))))))
+                         :title (clean-text (format nil "~A by ~A" (cdr (assoc :title item)) author))
+                         :author author
+                         :link (generate-post-auth-link item nil t need-auth)
+                         :body (clean-html (or (cdr (assoc :html-body (get-post-body (cdr (assoc :--id item)) :revalidate nil))) "") :post-id (cdr (assoc :--id item)))))
+            (emit-item item
+                       :title (format nil "Comment by ~A on ~A" (get-username (cdr (assoc :user-id item))) (get-post-title (cdr (assoc :post-id item))))
+                       :link (generate-post-link (cdr (assoc :post-id item)) (cdr (assoc :--id item)) t)
+                       :body (clean-html (cdr (assoc :html-body item))))))))))
 
 (defun check-notifications (user-id auth-token)
   (handler-case
