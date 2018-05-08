@@ -25,7 +25,7 @@
 		       (:signal (get-lw1-link canonical-link))))) 
 
 (defun match-lw2-link (link)
-  (multiple-value-bind (match? strings) (ppcre:scan-to-strings "^(?:https?://(?:www.)?less(?:er)?wrong.com)?/posts/([^/]+)/([^/#]*)(?:/?#?([^/#]+)?)?" link)
+  (multiple-value-bind (match? strings) (ppcre:scan-to-strings "^(?:https?://(?:www.)?less(?:er)?wrong.com)?/posts/([^/]+)/([^/#]*)(?:/comment/([^/#]+)|/?#?([^/#]+)?)?" link)
     (when match?
       (values (elt strings 0) (elt strings 2) (elt strings 1))))) 
 
