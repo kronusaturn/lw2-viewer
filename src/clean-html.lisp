@@ -177,9 +177,13 @@
 					       (setf (plump:attribute node "href") new-link)))))
 				       (when (only-child-is node "u")
 					 (setf (plump:children node) (plump:children (plump:first-child node)))))
-                                     (when (and (tag-is node "img")
-                                                (ignore-errors (every (lambda (a) (<= (parse-integer (plump:attribute node a)) 1)) (list "width" "height"))))
-                                       (plump:remove-child node))
+                                     (when (tag-is node "img")
+                                       (when
+                                         (ignore-errors (every (lambda (a) (<= (parse-integer (plump:attribute node a)) 1)) (list "width" "height")))
+                                         (plump:remove-child node))
+                                       (when
+                                         (string= "/" (plump:attribute node "src") :end2 1)
+                                         (setf (plump:attribute node "src") (concatenate 'string "https://www.lesswrong.com" (plump:attribute node "src")))))
                                      (when (tag-is node "p" "blockquote" "div")
                                        (when (string-is-whitespace (plump:text node))
                                          (if (plump:get-elements-by-tag-name node "img")

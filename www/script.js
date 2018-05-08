@@ -913,13 +913,6 @@ function injectQuickNavUI() {
 	<a href='#comments' title="Comments (accesskey: '/')" accesskey='/'>&#xf036;</a>
 	<a href='#bottom-bar' title="Down to bottom (accesskey: '.')" accesskey='.'>&#xf107;</a>
 	` + "</div>");
-	
-	var content = document.querySelector("#content");
-	if (content.clientHeight <= window.innerHeight + 30 || 
-		content.querySelector("#comments .comment-thread") == null) {
-		try { document.querySelector("#quick-nav-ui a[href='#comments']").addClass("no-comments"); }
-		catch (e) { }
-	}
 }
 
 /**********************/
@@ -1197,7 +1190,14 @@ function initialize() {
 			document.querySelector("#content").addClass("no-nav-bars");
 			let auxAboutLink = addUIElement("<div id='aux-about-link'><a href='/about' accesskey='t' target='_new'>&#xf129;</a></div>");
 		}
-	
+
+		let content = document.querySelector("#content");
+		if (content.clientHeight <= window.innerHeight + 30 || 
+			content.querySelector("#comments .comment-thread") == null) {
+			try { document.querySelector("#quick-nav-ui a[href='#comments']").addClass("no-comments"); }
+			catch (e) { }
+		}
+
 		if(location.hash.length == 18) {
 			location.hash = "#comment-" + location.hash.substring(1);
 		}
