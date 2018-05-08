@@ -265,3 +265,11 @@ h1.listing + .post-meta .comment-count.new-comments:hover::before {
 .guiedit-buttons-container button {
 	font-family: Font Awesome, Charter, Georgia, serif;
 }
+
+/*==============*/
+/* SUBLEVEL NAV */
+/*==============*/
+
+.sublevel-nav.sort .sublevel-item {
+	font-family: <?php echo ($platform == 'Windows') ? "'Whitney SmallCaps'" : "'Concourse SmallCaps'"; ?>;
+}

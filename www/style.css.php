@@ -444,16 +444,52 @@ input {
 .sublevel-nav span.sublevel-item {
 	cursor: default;
 }
+
 .sublevel-nav.sort {
-	margin-top: -0.5em;
 	position: absolute;
-	right: 2em;
+	top: 166px;
+	right: 30px;
+	border: 1px solid #ddd;
+	padding: 2px 2px 2px 4px;
 }
 .sublevel-nav.sort .sublevel-item {
-	width: 4em;
-	padding: 0;
+	border: none;
+	border-radius: 0;
+	width: unset;
+	margin: 0;
+	background-color: transparent;
+	line-height: 1;
+	padding: 3px 1px;
+	text-shadow: none;
+	color: #000;
+	display: block;
+	text-align: left;
+	text-shadow: 0 -1px 0 #fff, 0 0.5px 0.5px #999;
 }
-
+.sublevel-nav.sort .sublevel-item::before {
+	content: "\F160";
+	font-family: Font Awesome;
+	font-weight: 900;
+	font-size: 0.75em;
+	margin: 0 3px 0 0;
+	position: relative;
+	top: -1px;
+	color: #ccc;
+	text-shadow: none;
+}
+.sublevel-nav.sort a.sublevel-item:hover,
+.sublevel-nav.sort span.sublevel-item {
+	background-color: transparent;
+	color: #000;
+}
+.sublevel-nav.sort a.sublevel-item:hover::before,
+.sublevel-nav.sort span.sublevel-item::before {
+	color: #000;
+	text-shadow: 0.5px 0.5px 0.5px #777;
+}
+.sublevel-nav.sort a.sublevel-item:hover {
+	text-shadow: 0 -1px 0 #fff, 0 0.5px 0.5px #000
+}
 /*******************/
 /* INBOX INDICATOR */
 /*******************/
