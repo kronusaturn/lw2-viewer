@@ -37,8 +37,9 @@ body {
 /*==========*/
 
 h1.listing {
-	margin: 0.8em 20px 0.1em 20px;
+	margin: 0.7em 20px 0.1em 20px;
 }
+
 h1.listing a {
 	color: #000;
 }
