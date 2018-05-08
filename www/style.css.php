@@ -1548,9 +1548,6 @@ h1.listing a[href^="http"] {
 .post-meta .author {
 	color: #090;
 }
-.post-meta .comment-count {
-	margin-left: 1em;
-}
 .post-meta .read-time {
 	cursor: default;
 }
