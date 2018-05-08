@@ -221,6 +221,11 @@
   (format out-stream "<h1>Error</h1><p>~A</p>"
 	  condition))
 
+(defmacro with-error-html-block ((out-stream) &body body)
+  `(handler-case
+     (progn ,@body)
+     (serious-condition (c) (error-to-html ,out-stream c))))
+
 (defun make-comment-parent-hash (comments)
   (let ((hash (make-hash-table :test 'equal)))
     (dolist (c comments)
@@ -247,15 +252,17 @@
     (when comments
       (format out-stream "<ul class=\"comment-thread\">")
       (loop for c in comments do 
-            (let ((c-id (cdr (assoc :--id c)))) 
-              (format out-stream "<li id=\"comment-~A\" class=\"comment-item\">" c-id)
-              (comment-to-html out-stream c)
-              (if (and (= level 10) (gethash c-id comment-hash))
-                  (format out-stream "<input type=\"checkbox\" id=\"expand-~A\"><label for=\"expand-~:*~A\" data-child-count=\"~A comment~:P\">Expand this thread</label>"
-                          c-id
-                          (cdr (assoc :child-count c))))
-              (comment-tree-to-html out-stream comment-hash c-id (1+ level))
-              (format out-stream "</li>")))
+            (let ((c-id (cdr (assoc :--id c))))
+              (with-error-html-block (out-stream)
+                (format out-stream "<li id=\"comment-~A\" class=\"comment-item\">" c-id)
+                (unwind-protect
+                  (comment-to-html out-stream c)
+                  (if (and (= level 10) (gethash c-id comment-hash))
+                      (format out-stream "<input type=\"checkbox\" id=\"expand-~A\"><label for=\"expand-~:*~A\" data-child-count=\"~A comment~:P\">Expand this thread</label>"
+                              c-id
+                              (cdr (assoc :child-count c))))
+                  (comment-tree-to-html out-stream comment-hash c-id (1+ level))
+                  (format out-stream "</li>")))))
       (format out-stream "</ul>"))))
 
 (defun comment-chrono-to-html (out-stream comments)
@@ -265,9 +272,11 @@
     (loop for c in comments-sorted do
           (let* ((c-id (cdr (assoc :--id c)))
                  (new-c (acons :children (gethash c-id comment-hash) c)))
-            (format out-stream "<li id=\"comment-~A\" class=\"comment-item\">" c-id)
-            (comment-to-html out-stream new-c)
-            (format out-stream "</li>")))
+            (with-error-html-block (out-stream)
+              (format out-stream "<li id=\"comment-~A\" class=\"comment-item\">" c-id)
+              (unwind-protect
+                (comment-to-html out-stream new-c)
+                (format out-stream "</li>")))))
     (format nil "</ul>")))
 
 (defun comment-post-interleave (list &key limit offset (sort-by :date))
@@ -283,11 +292,6 @@
             when (or (not offset) (>= count offset))
             collect x))))
 
-(defmacro with-error-html-block ((out-stream) &body body)
-  `(handler-case
-     (progn ,@body)
-     (serious-condition (c) (error-to-html ,out-stream c))))
-
 (defun write-index-items-to-html (out-stream items &key need-auth (empty-message "No entries.") skip-section)
   (if items
       (dolist (x items)
@@ -299,16 +303,18 @@
              (format out-stream "<p>~A</p>" (cdr (assoc :message x))))
             ((string= (cdr (assoc :----typename x)) "Message")
              (format out-stream "<ul class=\"comment-thread\"><li class=\"comment-item\">")
-             (conversation-message-to-html out-stream x)
-             (format out-stream "</li></ul>"))
+             (unwind-protect
+               (conversation-message-to-html out-stream x)
+               (format out-stream "</li></ul>")))
             ((string= (cdr (assoc :----typename x)) "Conversation")
              (conversation-index-to-html out-stream x))
             ((assoc :comment-count x)
              (post-headline-to-html out-stream x :need-auth need-auth :skip-section skip-section))
             (t
              (format out-stream "<ul class=\"comment-thread\"><li class=\"comment-item\" id=\"comment-~A\">" (cdr (assoc :--id x)))
-             (comment-to-html out-stream x :with-post-title t)
-             (format out-stream "</li></ul>")))))
+             (unwind-protect
+               (comment-to-html out-stream x :with-post-title t)
+               (format out-stream "</li></ul>"))))))
       (format out-stream "<div class=\"listing-message\">~A</div>" empty-message)))
 
 (defun write-index-items-to-rss (out-stream items &key title need-auth)
