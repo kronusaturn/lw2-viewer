@@ -151,7 +151,7 @@
                (html-body string))
     comment
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      (format out-stream "<div class=\"comment~{ ~A~}\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <a class=\"date\" href=\"~A\" data-js-date=\"~A\">~A</a><div class=\"karma\"><span class=\"karma-value\">~A</span></div>~@[<a class=\"lw2-link\" href=\"~A\">LW link</a>~]"
+      (format out-stream "<div class=\"comment~{ ~A~}\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <a class=\"date\" href=\"~A\" data-js-date=\"~A\">~A</a><div class=\"karma\"><span class=\"karma-value\">~A</span></div><a class=\"thread-link\" href=\"~A/comment/~A\">Thread link</a>~@[<a class=\"lw2-link\" href=\"~A\">LW link</a>~]"
               (let ((l nil))
                 (if (and (logged-in-userid user-id) (< (* 1000 (local-time:timestamp-to-unix (local-time:now))) (+ js-time 15000))) (push "just-posted-comment" l))
                 (if highlight-new (push "comment-item-highlight" l))
@@ -162,6 +162,8 @@
               js-time
               pretty-time
               (pretty-number base-score "point")
+              (generate-post-link post-id)
+              comment-id
               (clean-lw-link page-url)))
     (if with-post-title
         (format out-stream "<div class=\"comment-post-title\">~1{<span class=\"comment-in-reply-to\">in reply to: <a href=\"/users/~A\">~A</a>’s <a href=\"~A\">comment</a></span> ~}<span class=\"comment-post-title2\">on: <a href=\"~A\">~A</a></span></div>"
@@ -718,8 +720,13 @@
                                               (if comment-id
                                                 (let* ((*comment-individual-link* t)
                                                        (comments (get-post-comments post-id))
-                                                       (target-comment (find comment-id comments :key (lambda (c) (cdr (assoc :--id c))) :test #'string=)))
-                                                  (emit-page (out-stream :title (format nil "~A comments on ~A" (get-username (cdr (assoc :user-id target-comment))) title) :content-class "post-page individual-thread-page")
+                                                       (target-comment (find comment-id comments :key (lambda (c) (cdr (assoc :--id c))) :test #'string=))
+                                                       (display-name (get-username (cdr (assoc :user-id target-comment)))))
+                                                  (emit-page (out-stream :title (format nil "~A comments on ~A" display-name title) :content-class "post-page individual-thread-page")
+                                                             (format out-stream "<h1>~A comments on <a href=\"~A\">~A</a></h1>"
+                                                                     (encode-entities display-name)
+                                                                     (generate-post-link post-id)
+                                                                     (encode-entities title))
                                                              (output-comments out-stream comments target-comment)))
                                                 (emit-page (out-stream :title title :content-class "post-page")
                                                            (cond
