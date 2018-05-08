@@ -1980,6 +1980,44 @@ div.comment-child-links a::first-letter {
 	font-size: 1.0625rem;
 }
 
+/**********************/
+/* COMMENT PERMALINKS */
+/**********************/
+
+.comment-meta .permalink::before {
+	content: "\F13D";
+	font-family: Font Awesome;
+	font-weight: 900;
+	font-size: 0.625em;
+	color: #fff;
+	background-color: #00e;
+	display: inline-block;
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 3px;
+	text-align: center;
+	position: relative;
+	top: -2px;
+	box-shadow: 
+		0 0 0 1px #fff,
+		0 0 0 2px #00e;
+}
+.comment-meta .permalink:hover::before {
+	color: #00e;
+	background-color: #fff;
+	box-shadow: 
+		0 0 0 2px #00e;
+}
+.comment-meta .permalink:active::before {
+	transform: scale(0.9);
+}
+
+/********************/
+/* COMMENT LW LINKS */
+/********************/
+
+
+
 /*************************/
 /* COMMENTS COMPACT VIEW */
 /*************************/
