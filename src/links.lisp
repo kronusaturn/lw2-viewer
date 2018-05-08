@@ -27,7 +27,7 @@
 (defun match-lw2-link (link)
   (multiple-value-bind (match? strings) (ppcre:scan-to-strings "^(?:https?://(?:www.)?less(?:er)?wrong.com)?/posts/([^/]+)/([^/#]*)(?:/comment/([^/#]+)|/?#?([^/#]+)?)?" link)
     (when match?
-      (values (elt strings 0) (elt strings 2) (elt strings 1))))) 
+      (values (elt strings 0) (or (elt strings 2) (elt strings 3)) (elt strings 1)))))
 
 (defun match-lw2-slug-link (link)
   (multiple-value-bind (match? strings) (ppcre:scan-to-strings "^(?:https?://(?:www.)?less(?:er)?wrong.com)?/(?:codex|hpmor)/([^/#]+)(?:/?#?([^/#]+)?)?" link)
