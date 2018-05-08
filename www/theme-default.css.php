@@ -1,3 +1,48 @@
+/*****************/
+/* DEFAULT THEME */
+/*****************/
+
+body {
+	background-color: #d8d8d8;
+}
+
+#content {
+	box-shadow: 0px 0px 10px #555;
+}
+
+/*=========*/
+/* NAV BAR */
+/*=========*/
+
+.nav-bar a:link,
+.nav-bar a:visited {
+	color: #00e;
+}
+
+.nav-inner::after {
+	display: block;
+	position: absolute;
+	left: 5px;
+	top: -2px;
+	font-weight: 400;
+	font-size: 0.7em;
+	color: #d6d6d6;
+}
+.nav-inner:hover::after {
+	color: #bbb;
+}
+
+/*==========*/
+/* LISTINGS */
+/*==========*/
+
+h1.listing {
+	margin: 0.8em 20px 0.1em 20px;
+}
+h1.listing a {
+	color: #000;
+}
+
 h1.listing + .post-meta {
 	padding-right: 320px;
 }
@@ -200,4 +245,22 @@ h1.listing + .post-meta .comment-count.new-comments::before {
 }
 h1.listing + .post-meta .comment-count.new-comments:hover::before {
 	text-shadow: 0.5px 0.5px 0.5px #999;
+}
+
+/*==================*/
+/* POSTS & COMMENTS */
+/*==================*/
+
+.post-body,
+.comment-body,
+.posting-controls textarea {
+	font-family: Charter, Georgia, serif;
+}
+
+/*===========================*/
+/* COMMENTING AND POSTING UI */
+/*===========================*/
+
+.guiedit-buttons-container button {
+	font-family: Font Awesome, Charter, Georgia, serif;
 }

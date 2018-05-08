@@ -49,7 +49,7 @@
 	width: 18px;
 	height: 16px;
 	z-index: 2;
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_close_widget.gif")) ?>');
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/win95_close_widget.gif")) ?>');
 	background-size: 100%;
 	background-repeat: no-repeat;
 	background-position: center center;
@@ -120,7 +120,7 @@
 	letter-spacing: 1px;
 }
 #theme-tweaker-ui .main-theme-tweaker-window h1 {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_themes_icon.gif")) ?>');
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/win95_themes_icon.gif")) ?>');
 }
 
 #theme-tweaker-ui .current-theme {
@@ -198,13 +198,13 @@
 	background-size: 100%;
 }
 #theme-tweaker-ui #theme-tweak-section-text-size-adjust .text-size-adjust-button.decrease {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("A_minus.gif")) ?>');
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/A_minus.gif")) ?>');
 }
 #theme-tweaker-ui #theme-tweak-section-text-size-adjust .text-size-adjust-button.default {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("A.gif")) ?>');
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/A.gif")) ?>');
 }
 #theme-tweaker-ui #theme-tweak-section-text-size-adjust .text-size-adjust-button.increase {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("A_plus.gif")) ?>');
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/A_plus.gif")) ?>');
 }
 #theme-tweaker-ui #theme-tweak-section-text-size-adjust .text-size-adjust-button:disabled {
 	cursor: default;
@@ -282,7 +282,7 @@
 	cursor: pointer;
 }
 #theme-tweaker-ui input[type='checkbox']:checked + label::before {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_checkmark.gif")) ?>');	
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/win95_checkmark.gif")) ?>');	
 	background-size: 14px;
 	background-repeat: no-repeat;
 	background-position: center center;
@@ -520,10 +520,10 @@ input[type='range']::-ms-thumb {
 	background-position: center center;
 }
 #theme-tweaker-ui .minimize-button.minimize {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_minimize_widget.gif")) ?>');	
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/win95_minimize_widget.gif")) ?>');	
 }
 #theme-tweaker-ui .minimize-button.maximize {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_maximize_widget.gif")) ?>');	
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/win95_maximize_widget.gif")) ?>');	
 }
 
 #theme-tweaker-ui .help-button {
@@ -532,7 +532,7 @@ input[type='range']::-ms-thumb {
 	position: absolute;
 	top: -1px;
 	right: 55px;
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_help_widget.gif")) ?>');	
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/win95_help_widget.gif")) ?>');	
 	background-size: 14px;
 	background-repeat: no-repeat;
 	background-position: center center;
@@ -549,7 +549,7 @@ input[type='range']::-ms-thumb {
 }
 #theme-tweaker-ui .controls-container::-webkit-scrollbar-track {
 	background-color: #fff8ff;
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_scrollbar_track.gif")) ?>');	
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/win95_scrollbar_track.gif")) ?>');	
 }
  
 #theme-tweaker-ui .controls-container::-webkit-scrollbar-thumb {
@@ -635,7 +635,7 @@ input[type='range']::-ms-thumb {
 	pointer-events: auto;
 }
 #theme-tweaker-ui .help-window h1 {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("win95_help_icon.gif")) ?>');
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/win95_help_icon.gif")) ?>');
 }
 #theme-tweaker-ui div.section#theme-tweak-section-clippy {
 	padding: 23px 0 15px 10px;

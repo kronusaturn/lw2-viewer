@@ -15,7 +15,6 @@ html {
 	box-sizing: inherit;
 }
 body {
-	background-color: #d8d8d8;
 	color: #000;
 	padding: 0;
 	margin: 0;
@@ -23,7 +22,6 @@ body {
 	font-feature-settings: 'ss07';
 }
 body::before {
-/* 	content: ""; */
 	background-color: inherit;
 	position: fixed;
 	width: 100%;
@@ -37,7 +35,6 @@ input {
 }
 #content {
 	background-color: #fff;
-	box-shadow: 0px 0px 10px #555;
 	margin: 0 auto;
 	padding: 0 30px;
 	overflow: auto;
@@ -91,7 +88,7 @@ input {
 	padding-right: 0.3em;
 }
 .rss::before {
-	content: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("rss.svg")) ?>');
+	content: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/rss.svg")) ?>');
 	display: inline-block;
 	width: 1em;
 	padding-right: 0.2em;
@@ -139,16 +136,8 @@ input {
 	padding-bottom: 13px;
 }
 .nav-inner::after {
-	position: absolute;
-	left: 5px;
-	top: -2px;
 	content: attr(accesskey);
-	font-weight: 400;
-	font-size: 0.7em;
-	color: #d6d6d6;
-}
-.nav-inner:hover::after {
-	color: #bbb;
+	display: none;
 }
 #secondary-bar .nav-inner {
 	font-size: 1em;
@@ -235,10 +224,6 @@ input {
 #top-nav-bar a::before {
 	margin: 0.5em;
 	display: inline-block;
-}
-.nav-bar a:link,
-.nav-bar a:visited {
-	color: #00e;
 }
 .nav-bar a:hover,
 .nav-bar a:focus {
@@ -498,13 +483,13 @@ a#inbox-indicator.new-messages:hover::before {
 	cursor: auto;
 }
 #width-selector button.select-width-normal {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("normal.gif")) ?>');
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/normal.gif")) ?>');
 }
 #width-selector button.select-width-wide {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("wide.gif")) ?>');
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/wide.gif")) ?>');
 }
 #width-selector button.select-width-fluid {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("fluid.gif")) ?>');
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/fluid.gif")) ?>');
 }
 
 /******************/
@@ -910,7 +895,6 @@ h1.listing {
 	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
 	font-size: 1.875rem;
 	line-height: 1.15;
-	margin: 0.8em 20px 0.1em 20px;
 }
 @media only screen and (min-width: 901px) and (hover: hover) {
 	h1.listing {
@@ -933,7 +917,6 @@ h1.listing:first-of-type {
 	margin-bottom: 1em;
 }
 h1.listing a {
-	color: #000;
 	position: relative;
 }
 h1.listing a:nth-of-type(2) {
@@ -1556,7 +1539,6 @@ h1.listing + .post-meta .post-section::before {
 }
 .post-body {
 	min-height: 8em;
-	font-family: Charter;
 	padding: 0 30px;
 	line-height: 1.5;
 	font-size: 1.3rem;
@@ -1773,7 +1755,6 @@ ul.comment-thread {
 }
 
 .comment-body {
-	font-family: Charter;
 	line-height: 1.45;
 	font-size: 1.2rem;
 	padding: 10px;
@@ -1926,10 +1907,10 @@ div.comment-child-links a::first-letter {
 	cursor: auto;
 }
 #comments-list-mode-selector button.expanded {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("expanded.gif")) ?>');
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/expanded.gif")) ?>');
 }
 #comments-list-mode-selector button.compact {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("compact.gif")) ?>');
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/compact.gif")) ?>');
 }
 
 #content.compact > .comment-thread {
@@ -2136,7 +2117,6 @@ div.comment-child-links a::first-letter {
 	max-height: calc(100vh - 6em);
 	margin: 2px 0;
 	padding: 4px 5px;
-	font-family: Charter, serif;
 	font-size: 1.2rem;
 	border: 1px solid #aaa;
 	border-top-width: 29px;
@@ -2179,6 +2159,9 @@ div.comment-child-links a::first-letter {
 	margin: 0 0 0 1em;
 	color: #00e;
 	cursor: pointer;
+}
+#edit-post-form #markdown-hints-checkbox + label {
+	padding: 2px 0 0 0;
 }
 #markdown-hints-checkbox {
 	visibility: hidden;
@@ -2351,7 +2334,6 @@ div.comment-child-links a::first-letter {
 .guiedit-buttons-container button {
 	height: 26px;
 	padding: 0 7px;
-	font-family: Font Awesome, Charter;
 	font-weight: 900;
 	font-size: 0.875rem;
 	line-height: 1;

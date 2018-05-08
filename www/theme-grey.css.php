@@ -3,12 +3,61 @@
 /**************/
 
 body {
-    background: #eee;
+    background-color: #eee;
 }
 
 #content {
     box-shadow: 0px 0px 10px #bbb;
 }
+
+/*=======*/
+/* FONTS */
+/*=======*/
+
+.post-body,
+.comment-body,
+.posting-controls textarea {
+	font-family: Source Sans Pro, Trebuchet MS, Helvetica, Arial, Verdana, sans-serif;
+}
+.guiedit-buttons-container button {
+	font-family: Font Awesome, Source Sans Pro, Trebuchet MS, Helvetica, Arial, Verdana, sans-serif;
+}
+
+/*=========*/
+/* NAV BAR */
+/*=========*/
+
+.nav-item a:link,
+.nav-item a:visited {
+    font-weight: normal;
+    color: #888;
+}
+
+#secondary-bar .nav-item {
+    font-size: 0.875rem;
+}
+
+#primary-bar .nav-item {
+    font-size: 0.875rem;
+}
+
+#nav-item-search form::before {
+    opacity: 0.4;
+	font-size: 0.9375rem;
+}
+
+.nav-bar a, 
+#nav-item-search button, 
+.button, 
+.button:visited, 
+.rss,
+.rss:visited {
+    color: #999;
+}
+
+/*==========*/
+/* LISTINGS */
+/*==========*/
 
 h1.listing {
 	margin: 0.6em 20px 0.1em 20px;
@@ -66,41 +115,15 @@ h1.listing + .post-meta .comment-count {
     margin-right: 4px;
 }
 
-.nav-item a:link,
-.nav-item a:visited {
-    font-weight: normal;
-    color: #888;
-}
-
-.nav-inner::after {
-    display: none;
-}
-
-#secondary-bar .nav-item {
-    font-size: 0.875rem;
-}
-
-#primary-bar .nav-item {
-    font-size: 0.875rem;
-}
-
-#nav-item-search form::before {
-    opacity: 0.4;
-	font-size: 0.9375rem;
-}
-
-.nav-bar a, 
-#nav-item-search button, 
-.button, 
-.button:visited, 
-.rss,
-.rss:visited {
-    color: #999;
-}
-
+/* 
 a:hover {
     text-shadow: none;
 }
+ */
+
+/*==================*/
+/* POSTS & COMMENTS */
+/*==================*/
 
 .post > h1:first-child {
 	margin: 1.1em 0 0.25em 0;
@@ -148,12 +171,14 @@ a:hover {
 	color: #ff943b;
 }
 .post-body,
-.comment-body {
-	font-family: Source Sans Pro, Trebuchet MS, Helvetica, Arial, Verdana, sans-serif;
+.comment-body,
+.posting-controls textarea {
 	font-weight: 400;
 }
 @-moz-document url-prefix() {
-	.post-body, .comment-body {
+	.post-body,
+	.comment-body,
+	.posting-controls textarea {
 		font-weight: <?php global $platform; echo ($platform == 'Windows' ? '300' : '400'); ?>;
 	}
 }
@@ -177,16 +202,29 @@ a:hover {
 	font-weight: 600;
 }
 
-button,
-input[type='submit'] {
-	color: #f60;
-}
+/*===========================*/
+/* COMMENTING AND POSTING UI */
+/*===========================*/
+
 .guiedit-buttons-container button {
 	color: #00e;
 }
 #markdown-hints-checkbox + label {
 	color: #999;
 }
+
+/*=========*/
+/* BUTTONS */
+/*=========*/
+
+button,
+input[type='submit'] {
+	color: #f60;
+}
+
+/*================*/
+/* THEME SELECTOR */
+/*================*/
 
 #theme-selector button,
 #width-selector button {
@@ -201,10 +239,19 @@ input[type='submit'] {
 	box-shadow:
 		0 0 0 5px #ccc inset;
 }
+
+/*=================*/
+/* QUICKNAV WIDGET */
+/*=================*/
+
 #quick-nav-ui a:hover  {
 	color: #000;
 	background-color: #d8d8d8;
 }
+
+/*======================*/
+/* NEW COMMENT QUICKNAV */
+/*======================*/
 
 @media only screen and (max-width: 1200px) {
 	#hns-date-picker {
@@ -215,6 +262,10 @@ input[type='submit'] {
 	}
 }
 
+/*===========================*/
+/* HIGHLIGHTING NEW COMMENTS */
+/*===========================*/
+
 .new-comment::before {
 	outline: 2px solid #9037ff;
 	box-shadow:
@@ -223,10 +274,19 @@ input[type='submit'] {
 		0 0 6px #9037ff;
 }
 
+/*==========*/
+/* ARCHIVES */
+/*==========*/
+
 .archive-nav a:link,
 .archive-nav a:visited {
 	color: #888;
 }
+
+/*===============================*/
+/* SEARCH RESULTS AND USER PAGES */
+/*===============================*/
+
 #content.search-results-page .post-meta .author, 
 #content.user-page .post-meta .author {
 	font-weight: normal;
@@ -235,6 +295,10 @@ input[type='submit'] {
 #content.user-page h1.listing a[href^='http'] {
 	top: 6px;
 }
+
+/*===================*/
+/* TABLE OF CONTENTS */
+/*===================*/
 
 .contents {
 	padding-right: 0.5em;
@@ -246,26 +310,31 @@ input[type='submit'] {
 	font-size: 0.85em;
 }
 
+/*==========*/
+/* HEADINGS */
+/*==========*/
 
-.post-body h1 {
+.post-body h1,
+.post-body h2,
+.post-body h3,
+.post-body h4,
+.post-body h5,
+.post-body h6,
+.comment-body h1,
+.comment-body h2,
+.comment-body h3,
+.comment-body h4,
+.comment-body h5,
+.comment-body h6 {
 	font-weight: 400;
 }
 .post-body h2 {
-	font-weight: 400;
 	border-bottom: 1px dotted #ccc;
 }
-.post-body h3 {
-	font-weight: 400;
-}
-.post-body h4 {
-	font-weight: 400;
-}
-.post-body h5 {
-	font-weight: 400;
-}
-.post-body h6 {
-	font-weight: 400;
-}
+
+/*======*/
+/* MISC */
+/*======*/
 
 .frac {
 	padding-left: 2px;
@@ -278,6 +347,10 @@ input[type='submit'] {
 	position: relative;
 	left: -0.5px;
 }
+
+/*====================*/
+/* LISTINGS POST-META */
+/*====================*/
 
 .post-meta > * {
 	margin: 0;
@@ -360,4 +433,10 @@ input[type='submit'] {
 
 h1.listing + .post-meta .comment-count.new-comments::before {
 	color: #0c0;
+}
+
+h1.listing + .post-meta .post-section::before {
+    left: -26px;
+    top: 0px;
+    font-size: 0.9375em;
 }
