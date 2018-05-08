@@ -1805,7 +1805,7 @@ ul.comment-thread {
 	text-decoration: none;
 	color: #090;
 }
-.comment-meta .lw2-link {
+.comment-meta:last-child {
 	margin-left: 1em;
 }
 
@@ -2119,8 +2119,7 @@ div.comment-child-links a::first-letter {
 /* VOTE BUTTONS */
 /****************/
 
-.vote,
-.karma {
+.vote {
 	margin: 0;
 }
 .vote {

@@ -1302,9 +1302,11 @@ function initialize() {
 				});
 			
 				// Add top-level new comment form.
-				comments_container.insertAdjacentHTML("afterbegin", "<div class='comment-controls posting-controls'></div>");
-				comments_container.querySelector(".comment-controls").injectCommentButtons();
-			}			
+				if(!document.querySelector(".individual-thread-page")) {
+					comments_container.insertAdjacentHTML("afterbegin", "<div class='comment-controls posting-controls'></div>");
+					comments_container.querySelector(".comment-controls").injectCommentButtons();
+				}
+			}
 
 			window.needHashRealignment = true;
 		}
@@ -1336,7 +1338,7 @@ function initialize() {
 			x.addEventListener("keyup", function(e) { e.stopPropagation(); });
 		});
 		
-		if(document.querySelector("#comments") && getPostHash()) {
+		if(document.querySelector("#comments") && !document.querySelector(".individual-thread-page") && getPostHash()) {
 			// Read and update last-visited-date.
 			let lastVisitedDate = getLastVisitedDate();
 			setLastVisitedDate(Date.now());

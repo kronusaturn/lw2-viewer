@@ -134,6 +134,8 @@
     (write-sequence (clean-html* (or html-body "") :with-toc t :post-id post-id) out-stream)
     (format out-stream "</div></div>")))
 
+(defparameter *comment-individual-link* nil)
+
 (defun comment-to-html (out-stream comment &key with-post-title)
   (alist-bind ((comment-id string :--id)
                (user-id string)
@@ -149,7 +151,7 @@
                (html-body string))
     comment
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      (format out-stream "<div class=\"comment~{ ~A~}\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <a class=\"date\" href=\"~A\" data-js-date=\"~A\">~A</a><div class=\"karma\"><span class=\"karma-value\">~A</span></div>~@[<a class=\"lw2-link\" href=\"~A\">LW link</a>~]"
+      (format out-stream "<div class=\"comment~{ ~A~}\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <a class=\"date\" href=\"~A\" data-js-date=\"~A\">~A</a><div class=\"karma\"><span class=\"karma-value\">~A</span></div><a class=\"permalink\" href=\"~A/comment/~A\">Permalink</a>~@[<a class=\"lw2-link\" href=\"~A\">LW link</a>~]"
               (let ((l nil))
                 (if (and (logged-in-userid user-id) (< (* 1000 (local-time:timestamp-to-unix (local-time:now))) (+ js-time 15000))) (push "just-posted-comment" l))
                 (if highlight-new (push "comment-item-highlight" l))
@@ -160,6 +162,8 @@
               js-time
               pretty-time
               (pretty-number base-score "point")
+              (generate-post-link post-id)
+              comment-id
               (clean-lw-link page-url)))
     (if with-post-title
         (format out-stream "<div class=\"comment-post-title\">~1{<span class=\"comment-in-reply-to\">in reply to: <a href=\"/users/~A\">~A</a>’s <a href=\"~A\">comment</a></span> ~}<span class=\"comment-post-title2\">on: <a href=\"~A\">~A</a></span></div>"
@@ -169,11 +173,15 @@
                                          (generate-post-link (cdr (assoc :post-id parent-comment)) (cdr (assoc :--id parent-comment)))))
                 (generate-post-link post-id)
                 (encode-entities (clean-text (get-post-title post-id))))
-        (format out-stream "~@[<a class=\"comment-parent-link\" href=\"#comment-~A\">Parent</a>~]~@[<div class=\"comment-child-links\">Replies: ~:{<a href=\"#comment-~A\">&gt;~A</a>~}</div>~]~:[~;<div class=\"comment-minimize-button\" data-child-count=\"~A\"></div>~]"
-                parent-comment-id
-                (map 'list (lambda (c) (list (cdr (assoc :comment-id c)) (get-username (cdr (assoc :user-id c))))) children)
-                (not parent-comment-id)
-                child-count))
+        (progn
+          (when parent-comment-id
+            (format out-stream "<a class=\"comment-parent-link\" href=\"~:[#comment-~;~]~A\">Parent</a>"
+                    *comment-individual-link*
+                    parent-comment-id))
+          (format out-stream "~@[<div class=\"comment-child-links\">Replies: ~:{<a href=\"#comment-~A\">&gt;~A</a>~}</div>~]~:[~;<div class=\"comment-minimize-button\" data-child-count=\"~A\"></div>~]"
+                  (map 'list (lambda (c) (list (cdr (assoc :comment-id c)) (get-username (cdr (assoc :user-id c))))) children)
+                  (not parent-comment-id)
+                  child-count)))
     (format out-stream "</div><div class=\"comment-body\"~@[ data-markdown-source=\"~A\"~]>"
             (if (logged-in-userid user-id)
                 (encode-entities
@@ -247,37 +255,43 @@
       (setf (gethash nil hash) (add-child-counts (gethash nil hash)))) 
     hash)) 
 
+(defun comment-thread-to-html (out-stream emit-comment-item-fn)
+  (format out-stream "<ul class=\"comment-thread\">")
+  (funcall emit-comment-item-fn)
+  (format out-stream "</ul>"))
+
+(defun comment-item-to-html (out-stream comment &key extra-html-fn)
+  (with-error-html-block (out-stream)
+    (let ((c-id (cdr (assoc :--id comment))))
+      (format out-stream "<li id=\"comment-~A\" class=\"comment-item\">" c-id)
+      (unwind-protect
+        (comment-to-html out-stream comment)
+        (if extra-html-fn (funcall extra-html-fn c-id))
+        (format out-stream "</li>")))))
+
 (defun comment-tree-to-html (out-stream comment-hash &optional (target nil) (level 0))
   (let ((comments (gethash target comment-hash)))
     (when comments
-      (format out-stream "<ul class=\"comment-thread\">")
-      (loop for c in comments do 
-            (let ((c-id (cdr (assoc :--id c))))
-              (with-error-html-block (out-stream)
-                (format out-stream "<li id=\"comment-~A\" class=\"comment-item\">" c-id)
-                (unwind-protect
-                  (comment-to-html out-stream c)
-                  (if (and (= level 10) (gethash c-id comment-hash))
-                      (format out-stream "<input type=\"checkbox\" id=\"expand-~A\"><label for=\"expand-~:*~A\" data-child-count=\"~A comment~:P\">Expand this thread</label>"
-                              c-id
-                              (cdr (assoc :child-count c))))
-                  (comment-tree-to-html out-stream comment-hash c-id (1+ level))
-                  (format out-stream "</li>")))))
-      (format out-stream "</ul>"))))
+      (comment-thread-to-html out-stream
+        (lambda ()
+          (loop for c in comments do
+                (comment-item-to-html out-stream c
+                  :extra-html-fn (lambda (c-id)
+                                   (if (and (= level 10) (gethash c-id comment-hash))
+                                       (format out-stream "<input type=\"checkbox\" id=\"expand-~A\"><label for=\"expand-~:*~A\" data-child-count=\"~A comment~:P\">Expand this thread</label>"
+                                               c-id
+                                               (cdr (assoc :child-count c))))
+                                   (comment-tree-to-html out-stream comment-hash c-id (1+ level))))))))))
 
 (defun comment-chrono-to-html (out-stream comments)
   (let ((comment-hash (make-comment-parent-hash comments)) 
         (comments-sorted (sort comments #'local-time:timestamp< :key (lambda (c) (local-time:parse-timestring (cdr (assoc :posted-at c)))))))
-    (format nil "<ul class=\"comment-thread\">")
-    (loop for c in comments-sorted do
-          (let* ((c-id (cdr (assoc :--id c)))
-                 (new-c (acons :children (gethash c-id comment-hash) c)))
-            (with-error-html-block (out-stream)
-              (format out-stream "<li id=\"comment-~A\" class=\"comment-item\">" c-id)
-              (unwind-protect
-                (comment-to-html out-stream new-c)
-                (format out-stream "</li>")))))
-    (format nil "</ul>")))
+    (comment-thread-to-html out-stream
+      (lambda ()
+        (loop for c in comments-sorted do
+              (let* ((c-id (cdr (assoc :--id c)))
+                     (new-c (acons :children (gethash c-id comment-hash) c)))
+                (comment-item-to-html out-stream new-c)))))))
 
 (defun comment-post-interleave (list &key limit offset (sort-by :date))
   (multiple-value-bind (sort-fn sort-key)
@@ -463,7 +477,7 @@
   (let* ((session-token (hunchentoot:cookie-in "session-token"))
 	 (csrf-token (and session-token (make-csrf-token session-token)))) 
     (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"stylesheet\" href=\"~A\"><style id='width-adjust'></style><link rel=\"shortcut icon\" href=\"~A\"><script src=\"~A\" async></script><script src=\"~A\" async></script><script>~A</script>~@[<script>var csrfToken=\"~A\"</script>~]~@[<meta name=\"robots\" content=\"~A\">~]</head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
-	    title description
+            (if title (encode-entities title)) description
 	    *html-head*
 	    (generate-css-link)
             (generate-versioned-link "/theme_tweaker.css")
@@ -665,32 +679,55 @@
 
 (hunchentoot:define-easy-handler (view-post-lw2-link :uri (lambda (r) (declare (ignore r)) (match-lw2-link (hunchentoot:request-uri*)))) ((csrf-token :request-type :post) (text :request-type :post) (parent-comment-id :request-type :post) (edit-comment-id :request-type :post) need-auth chrono)
                                  (with-error-page
-                                   (cond
-                                     (text
-                                       (check-csrf-token csrf-token)
-                                       (let ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token"))
-                                             (post-id (match-lw2-link (hunchentoot:request-uri*)))) 
-                                         (assert (and lw2-auth-token (not (string= text ""))))
-                                         (let* ((comment-data `(("body" . ,(postprocess-markdown text)) ,(if (not edit-comment-id) `("postId" . ,post-id)) ,(if parent-comment-id `("parentCommentId" . ,parent-comment-id)) ("content" . ("blocks" . nil)))) 
-                                                (new-comment-id
-                                                  (if edit-comment-id
-                                                      (prog1 edit-comment-id
-                                                        (do-lw2-comment-edit lw2-auth-token edit-comment-id comment-data))
-                                                      (do-lw2-comment lw2-auth-token comment-data))))
-                                           (cache-put "comment-markdown-source" new-comment-id text)
-                                           (ignore-errors (get-post-comments post-id :force-revalidate t))
-                                           (setf (hunchentoot:return-code*) 303
-                                                 (hunchentoot:header-out "Location") (generate-post-link (match-lw2-link (hunchentoot:request-uri*)) new-comment-id)))))
-                                     (t 
-                                      (multiple-value-bind (post-id comment-id) (match-lw2-link (hunchentoot:request-uri*))
-                                        (if comment-id 
-                                            (setf (hunchentoot:return-code*) 303
-                                                  (hunchentoot:header-out "Location") (generate-post-link post-id comment-id))
-                                            (let ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token")))
-                                              (multiple-value-bind (post title condition)
-                                                (handler-case (get-post-body post-id :auth-token (and need-auth lw2-auth-token))
-                                                  (serious-condition (c) (values nil "Error" c))
-                                                  (:no-error (post) (values post (cdr (assoc :title post)) nil)))
+                                   (let ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token")))
+                                     (cond
+                                       (text
+                                         (check-csrf-token csrf-token)
+                                         (let ((post-id (match-lw2-link (hunchentoot:request-uri*)))) 
+                                           (assert (and lw2-auth-token (not (string= text ""))))
+                                           (let* ((comment-data `(("body" . ,(postprocess-markdown text)) ,(if (not edit-comment-id) `("postId" . ,post-id)) ,(if parent-comment-id `("parentCommentId" . ,parent-comment-id)) ("content" . ("blocks" . nil)))) 
+                                                  (new-comment-id
+                                                    (if edit-comment-id
+                                                        (prog1 edit-comment-id
+                                                          (do-lw2-comment-edit lw2-auth-token edit-comment-id comment-data))
+                                                        (do-lw2-comment lw2-auth-token comment-data))))
+                                             (cache-put "comment-markdown-source" new-comment-id text)
+                                             (ignore-errors (get-post-comments post-id :force-revalidate t))
+                                             (setf (hunchentoot:return-code*) 303
+                                                   (hunchentoot:header-out "Location") (generate-post-link (match-lw2-link (hunchentoot:request-uri*)) new-comment-id)))))
+                                       (t
+                                        (multiple-value-bind (post-id comment-id) (match-lw2-link (hunchentoot:request-uri*))
+                                          (labels ((output-comments (out-stream comments target)
+                                                     (format out-stream "<div id=\"comments\">")
+                                                     (with-cache-transaction
+                                                       (if target
+                                                           (comment-thread-to-html out-stream
+                                                             (lambda ()
+                                                               (comment-item-to-html out-stream
+                                                                                     target
+                                                                                     :extra-html-fn (lambda (c-id)
+                                                                                                      (comment-tree-to-html out-stream (make-comment-parent-hash comments) c-id)))))
+                                                           (if chrono
+                                                               (comment-chrono-to-html out-stream comments)
+                                                               (comment-tree-to-html out-stream (make-comment-parent-hash comments)))))
+                                                     (format out-stream "</div>")
+                                                     (if lw2-auth-token
+                                                         (format out-stream "<script>commentVotes=~A</script>" (json:encode-json-to-string (get-post-comments-votes post-id lw2-auth-token))))))
+                                            (multiple-value-bind (post title condition)
+                                              (handler-case (get-post-body post-id :auth-token (and need-auth lw2-auth-token))
+                                                (serious-condition (c) (values nil "Error" c))
+                                                (:no-error (post) (values post (cdr (assoc :title post)) nil)))
+                                              (if comment-id
+                                                (let* ((*comment-individual-link* t)
+                                                       (comments (get-post-comments post-id))
+                                                       (target-comment (find comment-id comments :key (lambda (c) (cdr (assoc :--id c))) :test #'string=))
+                                                       (display-name (get-username (cdr (assoc :user-id target-comment)))))
+                                                  (emit-page (out-stream :title (format nil "~A comments on ~A" display-name title) :content-class "post-page individual-thread-page")
+                                                             (format out-stream "<h1>~A comments on <a href=\"~A\">~A</a></h1>"
+                                                                     (encode-entities display-name)
+                                                                     (generate-post-link post-id)
+                                                                     (encode-entities title))
+                                                             (output-comments out-stream comments target-comment)))
                                                 (emit-page (out-stream :title title :content-class "post-page")
                                                            (cond
                                                              (condition
@@ -703,17 +740,9 @@
                                                                           (if (equal (logged-in-userid) (cdr (assoc :user-id post))) (cdr (assoc :--id post)))))))
                                                            (force-output out-stream)
                                                            (handler-case
-                                                             (progn
-                                                               (format out-stream "<div id=\"comments\">")
-                                                               (let ((comments (get-post-comments post-id)))
-                                                                 (with-cache-transaction
-                                                                   (if chrono
-                                                                       (comment-chrono-to-html out-stream comments)
-                                                                       (comment-tree-to-html out-stream (make-comment-parent-hash comments)))))
-                                                               (format out-stream "</div>")
-                                                               (if lw2-auth-token
-                                                                   (format out-stream "<script>commentVotes=~A</script>" (json:encode-json-to-string (get-post-comments-votes post-id lw2-auth-token)))))
-                                                             (serious-condition (c) (error-to-html out-stream c))))))))))))
+                                                             (let ((comments (get-post-comments post-id)))
+                                                               (output-comments out-stream comments nil))
+                                                               (serious-condition (c) (error-to-html out-stream c)))))))))))))
 
 (defparameter *edit-post-template* (compile-template* "edit-post.html"))
 
