@@ -1923,40 +1923,62 @@ div.comment-child-links a::first-letter {
 /**********************/
 /* COMMENT PERMALINKS */
 /**********************/
-
-.comment-meta .permalink::before {
-	content: "\F13D";
-	font-family: Font Awesome;
-	font-weight: 900;
-	font-size: 0.625em;
-	color: #fff;
-	background-color: #00e;
-	display: inline-block;
-	width: 1.5em;
-	height: 1.5em;
-	border-radius: 3px;
-	text-align: center;
-	position: relative;
-	top: -2px;
-	box-shadow: 
-		0 0 0 1px #fff,
-		0 0 0 2px #00e;
-}
-.comment-meta .permalink:hover::before {
-	color: #00e;
-	background-color: #fff;
-	box-shadow: 
-		0 0 0 2px #00e;
-}
-.comment-meta .permalink:active::before {
-	transform: scale(0.9);
-}
-
 /********************/
 /* COMMENT LW LINKS */
 /********************/
 
+.comment-meta .permalink::before,
+.comment-meta .lw2-link::before {
+	content: "";
+	display: inline-block;
+	width: 1rem;
+	height: 1rem;
+	border-radius: 3px;
+	box-shadow: 
+		0 0 0 1px #fff,
+		0 0 0 2px #00e;
+	padding: 0 0 0 2px;
+	background-size: 100%;
+	position: relative;
+	top: 2px;
+}
+.comment-meta .permalink::before {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/anchor-white-on-blue.gif")) ?>');
+}
+.comment-meta .lw2-link::before {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/lw-white-on-blue.gif")) ?>');
+}
+.comment-meta .permalink:hover::before {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/anchor-blue-on-white.gif")) ?>');
+}
+.comment-meta .lw2-link:hover::before {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/lw-blue-on-white.gif")) ?>');
+}
+.comment-meta .permalink:hover::before,
+.comment-meta .lw2-link:hover::before {
+	box-shadow: 
+		0 0 0 2px #00e;
+}
+.comment-meta .permalink:active::before,
+.comment-meta .lw2-link:active::before {
+	transform: scale(0.9);
+}
 
+.comment-meta .permalink,
+.comment-meta .lw2-link {
+	position: relative;
+}
+.comment-meta .permalink::after,
+.comment-meta .lw2-link::after {
+	content: "";
+	width: 30px;
+	height: 30px;
+	display: block;
+	position: absolute;
+	top: -2px;
+	left: -7px;
+	opacity: 0.8;
+}
 
 /*************************/
 /* COMMENTS COMPACT VIEW */
