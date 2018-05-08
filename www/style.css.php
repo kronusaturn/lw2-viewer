@@ -2114,6 +2114,9 @@ div.comment-child-links a::first-letter {
 .comment-minimize-button.maximized::after {
 	color: #ccc;
 }
+#content.individual-thread-page .comment-minimize-button {
+	display: none;
+}
 
 /****************/
 /* VOTE BUTTONS */
