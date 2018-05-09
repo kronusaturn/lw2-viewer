@@ -20,11 +20,11 @@
   `(with-mutex (*db-mutex*)
 	       ,@body)) 
 
-(defun call-with-cache-transaction (fn)
+(defun call-with-cache-transaction (fn &key read-only)
   (with-recursive-lock (*db-mutex*)
     (if lmdb:*transaction*
         (funcall fn)
-        (let ((txn (lmdb:make-transaction *db-environment* :flags 0)))
+        (let ((txn (lmdb:make-transaction *db-environment* :flags (if read-only liblmdb:+rdonly+ 0))))
           (unwind-protect
             (progn
               (lmdb:begin-transaction txn)
@@ -38,16 +38,18 @@
 (defmacro with-cache-transaction (&body body)
   `(call-with-cache-transaction (lambda () ,@body)))
 
-(defmacro with-db ((db db-name) &body body)
-  `(with-cache-transaction
-     (let ((,db (lmdb:make-database ,db-name)))
-       (unwind-protect
-	 (progn
-	   (lmdb:open-database ,db :create t)
-	   (progn ,@body))))))
+(defmacro with-db ((db db-name &key read-only) &body body)
+  `(call-with-cache-transaction
+     (lambda ()
+       (let ((,db (lmdb:make-database ,db-name)))
+         (unwind-protect
+           (progn
+             (lmdb:open-database ,db :create t)
+             (progn ,@body)))))
+     :read-only ,read-only))
 
 (defun lmdb-put-string (db key value)
-  (if 
+  (if
     (lmdb:put db
 	      (string-to-octets key :external-format :utf-8)
 	      (string-to-octets value :external-format :utf-8))
@@ -59,7 +61,7 @@
 	   (lmdb-put-string db key value)))
 
 (defun cache-get (db-name key)
-  (with-db (db db-name) 
+  (with-db (db db-name :read-only t)
 	   (lmdb:get db (string-to-octets key :external-format :utf-8) :return-type :string)))
 
 (defun make-simple-cache (cache-db)

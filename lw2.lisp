@@ -696,17 +696,16 @@
                                         (multiple-value-bind (post-id comment-id) (match-lw2-link (hunchentoot:request-uri*))
                                           (labels ((output-comments (out-stream comments target)
                                                      (format out-stream "<div id=\"comments\">")
-                                                     (with-cache-transaction
-                                                       (if target
-                                                           (comment-thread-to-html out-stream
-                                                             (lambda ()
-                                                               (comment-item-to-html out-stream
-                                                                                     target
-                                                                                     :extra-html-fn (lambda (c-id)
-                                                                                                      (comment-tree-to-html out-stream (make-comment-parent-hash comments) c-id)))))
-                                                           (if chrono
-                                                               (comment-chrono-to-html out-stream comments)
-                                                               (comment-tree-to-html out-stream (make-comment-parent-hash comments)))))
+                                                     (if target
+                                                         (comment-thread-to-html out-stream
+                                                           (lambda ()
+                                                             (comment-item-to-html out-stream
+                                                                                   target
+                                                                                   :extra-html-fn (lambda (c-id)
+                                                                                                    (comment-tree-to-html out-stream (make-comment-parent-hash comments) c-id)))))
+                                                         (if chrono
+                                                             (comment-chrono-to-html out-stream comments)
+                                                             (comment-tree-to-html out-stream (make-comment-parent-hash comments))))
                                                      (format out-stream "</div>")
                                                      (if lw2-auth-token
                                                          (format out-stream "<script>commentVotes=~A</script>" (json:encode-json-to-string (get-post-comments-votes post-id lw2-auth-token))))))
