@@ -21,20 +21,6 @@ input {
 	border: 1px solid #ddd;
 }
 
-/*==============*/
-/* PAGE TOOLBAR */
-/*==============*/
-
-.new-post,
-.new-post:visited,
-.new-private-message,
-.new-private-message:visited {
-	color: #090;
-}
-.logout-button {
-	color: #d33;
-}
-
 /*=========*/
 /* NAV BAR */
 /*=========*/
@@ -107,12 +93,14 @@ input {
 .active-bar .nav-inactive {
 	background-color: #eee;
 }
+.active-bar {
+	position: relative;
+}
+
 /* For Webkit: */
 .active-bar {
 	box-shadow: 0 -3px 8px -2px #ccc;
-/* 	position: relative; */
 }
-
 .active-bar .nav-inactive {
 	box-shadow: 
 		0 -4px 8px -4px #bbb inset,
@@ -189,6 +177,58 @@ input {
 		0 0 3px #fff,
 		0 0 5px #fff;
 }
+
+/*==============*/
+/* PAGE TOOLBAR */
+/*==============*/
+
+.new-post,
+.new-post:visited,
+.new-private-message,
+.new-private-message:visited {
+	color: #090;
+}
+.logout-button {
+	color: #d33;
+}
+
+/*==============*/
+/* SUBLEVEL NAV */
+/*==============*/
+
+.sublevel-nav .sublevel-item {
+	border-color: #ddd;
+	border-style: solid;
+	border-width: 1px 1px 1px 0;
+	color: #777;
+}
+.sublevel-nav .sublevel-item:first-child {
+	border-radius: 8px 0 0 8px;
+	border-width: 1px;
+}
+.sublevel-nav .sublevel-item:last-child {
+	border-radius: 0 8px 8px 0;
+}
+.sublevel-nav a.sublevel-item:hover {
+	background-color: #ddd;
+	color: #000;
+	text-decoration: none;
+}
+.sublevel-nav a.sublevel-item:active,
+.sublevel-nav span.sublevel-item {
+	background-color: #ddd;
+	border-color: #ddd;
+	color: #000;
+	text-shadow: 
+		0 -1px 0 #fff,
+		0 0.5px 0.5px #000;
+}
+
+/*=====================*/
+/* SORT ORDER SELECTOR */
+/*=====================*/
+
+
 
 /*==========*/
 /* ARCHIVES */
