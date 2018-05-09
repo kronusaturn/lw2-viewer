@@ -1844,6 +1844,9 @@ ul.comment-thread {
 	padding: 2px 80px 2px 10px;
 	margin: 0 -1px;
 	border: none;
+	display: flex;
+	flex-flow: row wrap;
+	align-items: baseline;
 }
 .user-page .comment-meta {
 	padding-right: 10px;
