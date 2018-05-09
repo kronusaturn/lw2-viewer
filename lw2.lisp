@@ -173,9 +173,9 @@
                 (encode-entities (clean-text (get-post-title post-id))))
         (progn
           (when parent-comment-id
-            (format out-stream "<a class=\"comment-parent-link\" href=\"~:[#comment-~;~]~A\">Parent</a>"
-                    *comment-individual-link*
-                    parent-comment-id))
+            (if *comment-individual-link*
+                (format out-stream "<a class=\"comment-parent-link\" href=\"~A\" title=\"Parent\"></a>" parent-comment-id)
+                (format out-stream "<a class=\"comment-parent-link\" href=\"#comment-~A\">Parent</a>" parent-comment-id)))
           (format out-stream "~@[<div class=\"comment-child-links\">Replies: ~:{<a href=\"#comment-~A\">&gt;~A</a>~}</div>~]~:[~;<div class=\"comment-minimize-button\" data-child-count=\"~A\"></div>~]"
                   (map 'list (lambda (c) (list (cdr (assoc :comment-id c)) (get-username (cdr (assoc :user-id c))))) children)
                   (not parent-comment-id)
