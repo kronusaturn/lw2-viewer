@@ -1217,7 +1217,8 @@ function initialize() {
 
 		document.querySelectorAll(".comment-meta .comment-parent-link, .comment-meta .comment-child-links a").forEach(function (cpl) {
 			cpl.addEventListener("mouseover", function(e) {
-				let parent = document.querySelector(cpl.getAttribute("href")).firstChild;
+				let parent_id = "#comment-" + /(?:#comment-)?(.+)/.exec(cpl.getAttribute("href"))[1];
+				try { let parent = document.querySelector(parent_id).firstChild; } catch (e) { return; }
 				let parentCI = parent.parentNode;
 				var highlight_cn;
 				if(parent.getBoundingClientRect().bottom < 10 || parent.getBoundingClientRect().top > window.innerHeight + 10) {
