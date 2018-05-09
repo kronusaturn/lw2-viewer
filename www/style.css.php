@@ -43,9 +43,12 @@ input {
 	position: relative;
 }
 
+/****************/
+/* PAGE TOOLBAR */
+/****************/
+
 .page-toolbar {
 	position: absolute;
-	vertical-align: top;
 	font-size: 0.9em;
 	right: 0.4em;
 	line-height: 1.8;
@@ -57,6 +60,11 @@ input {
 .page-toolbar form {
 	display: inline;
 }
+.page-toolbar .button::before {
+	font-family: "Font Awesome";
+	font-size: 0.9em;
+	padding-right: 0.3em;
+}
 .new-post,
 .new-post:visited,
 .new-private-message,
@@ -65,27 +73,18 @@ input {
 }
 .new-post::before {
 	content: '\F067';
-	font-family: "Font Awesome";
 	font-weight: 900;
-	font-size: 0.9em;
-	padding-right: 0.3em;
 }
 .new-private-message::before {
 	content: '\F075';
-	font-family: "Font Awesome";
 	font-weight: 400;
-	font-size: 0.9em;
-	padding-right: 0.3em;
 }
 .logout-button {
 	color: #d33;
 }
 .logout-button::before {
 	content: '\F2F5';
-	font-family: "Font Awesome";
 	font-weight: 900;
-	font-size: 0.9em;
-	padding-right: 0.3em;
 }
 .rss::before {
 	content: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/rss.svg")) ?>');
@@ -94,10 +93,6 @@ input {
 	padding-right: 0.2em;
 	position: relative;
 	top: 1px;
-}
-
-.mjx-chtml {
-	clear: both;
 }
 
 /***********/
@@ -2930,6 +2925,9 @@ select {
 		0 -1px 0 0 #000 inset, 
 		0 -3px 1px -2px #000 inset;
 	padding: 0 1px;
+}
+.mjx-chtml {
+	clear: both;
 }
 
 /*************/
