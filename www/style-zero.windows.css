@@ -26,11 +26,8 @@ html {
 	box-sizing: inherit;
 }
 body {
-	color: #000;
 	padding: 0;
 	margin: 0;
-	font-family: 'Whitney', 'a_Avante';
-	font-feature-settings: 'ss07';
 }
 body::before {
 	background-color: inherit;
@@ -42,15 +39,12 @@ input {
 	font-family: inherit;
 	font-size: inherit;
 	font-weight: inherit;
-	border: 1px solid #ddd;
 }
 #content {
-	background-color: #fff;
 	margin: 0 auto;
 	padding: 0 30px;
 	overflow: auto;
 	max-width: 900px;
-	line-height: 1.55;
 	position: relative;
 }
 
@@ -76,12 +70,6 @@ input {
 	font-size: 0.9em;
 	padding-right: 0.3em;
 }
-.new-post,
-.new-post:visited,
-.new-private-message,
-.new-private-message:visited {
-	color: #090;
-}
 .new-post::before {
 	content: '\F067';
 	font-weight: 900;
@@ -89,9 +77,6 @@ input {
 .new-private-message::before {
 	content: '\F075';
 	font-weight: 400;
-}
-.logout-button {
-	color: #d33;
 }
 .logout-button::before {
 	content: '\F2F5';
@@ -133,7 +118,6 @@ input {
  */
 .nav-inner {
 	padding: 12px 30px;
-	font-weight: 600;
 	font-size: 1.375em;
 	text-align: center;
 	display: block;
@@ -194,116 +178,6 @@ input {
 	margin-right: 0;
 	left: 3.8em;
 }
-.nav-bar a:hover,
-.nav-bar a:focus {
-	text-decoration: none;
-	text-shadow:
-		0 0 1px #fff,
-		0 0 3px #fff,
-		0 0 5px #fff;
-	outline: none;
-}
-.nav-bar .nav-item:not(.nav-current):not(#nav-item-search):hover {
-	background-color: #ddd;
-}
-.inactive-bar .nav-item:not(.nav-current):not(#nav-item-search):hover {
-	background-color: #d8d8d8;
-}
-#bottom-bar a:hover {
-	background-color: #ddd;
-}
-#content > h1:first-child {
-	margin-top: 2em;
-}
-#content > .post-meta:nth-last-child(2) {
-	margin-bottom: 20px;
-}
-
-/* This makes the navbar items look like tabs: */
-
-.nav-inactive {
-	box-shadow: 
-		 0 -1px #d8d8d8 inset,
-		 1px 0 #fff inset;
-}
-.nav-current {
-	border-right: 1px solid #d8d8d8;
-	border-left: 1px solid #d8d8d8;
-}
-.nav-current:first-child {
-	border-left: none;
-}
-.nav-current:last-child {
-	border-right: none;
-}
-.nav-current + .nav-inactive,
-.nav-inactive:first-child	{
-	box-shadow: 0 -1px #d8d8d8 inset;
-}
-
-.inactive-bar .nav-inactive {
-	background-color: #e4e4e4;
-}
-.active-bar .nav-inactive {
-	background-color: #eee;
-}
-/* For Webkit: */
-.active-bar {
-	box-shadow: 0 -3px 8px -2px #ccc;
-	position: relative;
-}
-
-.active-bar .nav-inactive {
-	box-shadow: 
-		0 -4px 8px -4px #bbb inset,
-		1px 0 #fff inset;
-}
-.active-bar .nav-inactive:first-child {
-	box-shadow: 
-		0 -4px 8px -4px #bbb inset;
-}
-.active-bar .nav-current + .nav-inactive {
-	box-shadow: 
-		4px -4px 8px -4px #bbb inset;
-}
-.active-bar .nav-item-last-before-current {
-	box-shadow: 
-		-4px -4px 8px -4px #bbb inset,
-		1px 0 #fff inset;
-}
-.active-bar .nav-item-last-before-current:first-child {
-	box-shadow: 
-		-4px -4px 8px -4px #bbb inset;
-}
-/* And for Gecko: */
-@-moz-document url-prefix() {
-	.active-bar {
-		box-shadow: 0 -3px 4px -2px #ccc;
-	}
-
-	.active-bar .nav-inactive {
-		box-shadow: 
-			0 -4px 4px -4px #bbb inset,
-			1px 0 #fff inset;
-	}
-	.active-bar .nav-inactive:first-child {
-		box-shadow: 
-			0 -4px 4px -4px #bbb inset;
-	}
-	.active-bar .nav-current + .nav-inactive {
-		box-shadow: 
-			4px -4px 4px -4px #bbb inset;
-	}
-	.active-bar .nav-item-last-before-current {
-		box-shadow: 
-			-4px -4px 4px -4px #bbb inset,
-			1px 0 #fff inset;
-	}
-	.active-bar .nav-item-last-before-current:first-child {
-		box-shadow: 
-			-4px -4px 4px -4px #bbb inset;
-	}
-}
 
 /* Search tab */
 
@@ -327,37 +201,14 @@ input {
 	width: calc(95% - 96px);
 	padding: 1px 4px;
 }
-#nav-item-search input:focus {
-	outline: none;
-	background-color: #ffd;
-	border: 1px solid #bbb;
-}
-#nav-item-search:focus-within {
-	background-color: #ddd;
-}
-.inactive-bar #nav-item-search:focus-within {
-	background-color: #d8d8d8;
-}
-#nav-item-search.nav-current:focus-within {
-	background-color: #fff;
-}
 #nav-item-search button {
-	border: none;
-	font-weight: inherit;
 	height: 21px;
 }
-#nav-item-search button:focus {
-	text-shadow:
-		0 0 1px #fff,
-		0 0 3px #fff,
-		0 0 5px #fff;
-}
+
+/* Other tabs */
 
 #nav-item-archive {
 	width: 12%;
-}
-#nav-item-login {
-	position: relative;
 }
 #nav-item-login .nav-inner {
 	padding: 3px 2.5em 4px 2.5em;
@@ -928,6 +779,9 @@ a#inbox-indicator.new-messages:hover::before {
 /* LISTINGS */
 /************/
 
+#content > .post-meta:nth-last-child(2) {
+	margin-bottom: 20px;
+}
 h1.listing {
 	font-family: 'Whitney', 'a_Avante', 'Font Awesome';
 	font-size: 1.875rem;
@@ -1490,6 +1344,9 @@ h1.listing a[href^="http"] {
 /* POSTS */
 /*********/
 
+#content > h1:first-child {
+	margin-top: 2em;
+}
 .post-meta {
 	text-align: center;
 	position: relative;

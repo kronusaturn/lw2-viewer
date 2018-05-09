@@ -26,11 +26,8 @@ html {
 	box-sizing: inherit;
 }
 body {
-	color: #fff;
 	padding: 0;
 	margin: 0;
-	font-family: 'Concourse', 'a_Avante';
-	font-feature-settings: 'ss07';
 }
 body::before {
 	background-color: inherit;
@@ -42,15 +39,12 @@ input {
 	font-family: inherit;
 	font-size: inherit;
 	font-weight: inherit;
-	border: 1px solid #1f1f1f;
 }
 #content {
-	background-color: #000;
 	margin: 0 auto;
 	padding: 0 30px;
 	overflow: auto;
 	max-width: 900px;
-	line-height: 1.55;
 	position: relative;
 }
 
@@ -76,12 +70,6 @@ input {
 	font-size: 0.9em;
 	padding-right: 0.3em;
 }
-.new-post,
-.new-post:visited,
-.new-private-message,
-.new-private-message:visited {
-	color: #9740cb;
-}
 .new-post::before {
 	content: '\F067';
 	font-weight: 900;
@@ -89,9 +77,6 @@ input {
 .new-private-message::before {
 	content: '\F075';
 	font-weight: 400;
-}
-.logout-button {
-	color: #0094be;
 }
 .logout-button::before {
 	content: '\F2F5';
@@ -133,7 +118,6 @@ input {
  */
 .nav-inner {
 	padding: 12px 30px;
-	font-weight: 600;
 	font-size: 1.375em;
 	text-align: center;
 	display: block;
@@ -194,116 +178,6 @@ input {
 	margin-right: 0;
 	left: 3.8em;
 }
-.nav-bar a:hover,
-.nav-bar a:focus {
-	text-decoration: none;
-	text-shadow:
-		0 0 1px #000,
-		0 0 3px #000,
-		0 0 5px #000;
-	outline: none;
-}
-.nav-bar .nav-item:not(.nav-current):not(#nav-item-search):hover {
-	background-color: #1f1f1f;
-}
-.inactive-bar .nav-item:not(.nav-current):not(#nav-item-search):hover {
-	background-color: #232323;
-}
-#bottom-bar a:hover {
-	background-color: #1f1f1f;
-}
-#content > h1:first-child {
-	margin-top: 2em;
-}
-#content > .post-meta:nth-last-child(2) {
-	margin-bottom: 20px;
-}
-
-/* This makes the navbar items look like tabs: */
-
-.nav-inactive {
-	box-shadow: 
-		 0 -1px #232323 inset,
-		 1px 0 #000 inset;
-}
-.nav-current {
-	border-right: 1px solid #232323;
-	border-left: 1px solid #232323;
-}
-.nav-current:first-child {
-	border-left: none;
-}
-.nav-current:last-child {
-	border-right: none;
-}
-.nav-current + .nav-inactive,
-.nav-inactive:first-child	{
-	box-shadow: 0 -1px #232323 inset;
-}
-
-.inactive-bar .nav-inactive {
-	background-color: #1a1a1a;
-}
-.active-bar .nav-inactive {
-	background-color: #131313;
-}
-/* For Webkit: */
-.active-bar {
-	box-shadow: 0 -3px 8px -2px #2c2c2c;
-	position: relative;
-}
-
-.active-bar .nav-inactive {
-	box-shadow: 
-		0 -4px 8px -4px #393939 inset,
-		1px 0 #000 inset;
-}
-.active-bar .nav-inactive:first-child {
-	box-shadow: 
-		0 -4px 8px -4px #393939 inset;
-}
-.active-bar .nav-current + .nav-inactive {
-	box-shadow: 
-		4px -4px 8px -4px #393939 inset;
-}
-.active-bar .nav-item-last-before-current {
-	box-shadow: 
-		-4px -4px 8px -4px #393939 inset,
-		1px 0 #000 inset;
-}
-.active-bar .nav-item-last-before-current:first-child {
-	box-shadow: 
-		-4px -4px 8px -4px #393939 inset;
-}
-/* And for Gecko: */
-@-moz-document url-prefix() {
-	.active-bar {
-		box-shadow: 0 -3px 4px -2px #2c2c2c;
-	}
-
-	.active-bar .nav-inactive {
-		box-shadow: 
-			0 -4px 4px -4px #393939 inset,
-			1px 0 #000 inset;
-	}
-	.active-bar .nav-inactive:first-child {
-		box-shadow: 
-			0 -4px 4px -4px #393939 inset;
-	}
-	.active-bar .nav-current + .nav-inactive {
-		box-shadow: 
-			4px -4px 4px -4px #393939 inset;
-	}
-	.active-bar .nav-item-last-before-current {
-		box-shadow: 
-			-4px -4px 4px -4px #393939 inset,
-			1px 0 #000 inset;
-	}
-	.active-bar .nav-item-last-before-current:first-child {
-		box-shadow: 
-			-4px -4px 4px -4px #393939 inset;
-	}
-}
 
 /* Search tab */
 
@@ -327,37 +201,14 @@ input {
 	width: calc(95% - 96px);
 	padding: 1px 4px;
 }
-#nav-item-search input:focus {
-	outline: none;
-	background-color: #00001e;
-	border: 1px solid #393939;
-}
-#nav-item-search:focus-within {
-	background-color: #1f1f1f;
-}
-.inactive-bar #nav-item-search:focus-within {
-	background-color: #232323;
-}
-#nav-item-search.nav-current:focus-within {
-	background-color: #000;
-}
 #nav-item-search button {
-	border: none;
-	font-weight: inherit;
 	height: 21px;
 }
-#nav-item-search button:focus {
-	text-shadow:
-		0 0 1px #000,
-		0 0 3px #000,
-		0 0 5px #000;
-}
+
+/* Other tabs */
 
 #nav-item-archive {
 	width: 12%;
-}
-#nav-item-login {
-	position: relative;
 }
 #nav-item-login .nav-inner {
 	padding: 3px 2.5em 4px 2.5em;
@@ -928,6 +779,9 @@ a#inbox-indicator.new-messages:hover::before {
 /* LISTINGS */
 /************/
 
+#content > .post-meta:nth-last-child(2) {
+	margin-bottom: 20px;
+}
 h1.listing {
 	font-family: 'Concourse', 'a_Avante', 'Font Awesome';
 	font-size: 1.875rem;
@@ -1490,6 +1344,9 @@ h1.listing a[href^="http"] {
 /* POSTS */
 /*********/
 
+#content > h1:first-child {
+	margin-top: 2em;
+}
 .post-meta {
 	text-align: center;
 	position: relative;
@@ -3765,27 +3622,47 @@ div > .MJXc-display {
 	}
 }
 
+
 /*****************/
 /* DEFAULT THEME */
 /*****************/
 
 body {
+	color: #fff;
 	background-color: #232323;
+	font-family: 'Concourse', 'a_Avante';
+	font-feature-settings: 'ss07';
+}
+#content {
+	background-color: #000;
+	box-shadow: 0px 0px 10px #9b9b9b;
+	line-height: 1.55;
+}
+input {
+	border: 1px solid #1f1f1f;
 }
 
-#content {
-	box-shadow: 0px 0px 10px #9b9b9b;
+/*==============*/
+/* PAGE TOOLBAR */
+/*==============*/
+
+.new-post,
+.new-post:visited,
+.new-private-message,
+.new-private-message:visited {
+	color: #9740cb;
+}
+.logout-button {
+	color: #0094be;
 }
 
 /*=========*/
 /* NAV BAR */
 /*=========*/
 
-.nav-bar a:link,
-.nav-bar a:visited {
-	color: #0cc800;
+.nav-inner {
+	font-weight: 600;
 }
-
 .nav-inner::after {
 	display: block;
 	position: absolute;
@@ -3797,6 +3674,141 @@ body {
 }
 .nav-inner:hover::after {
 	color: #393939;
+}
+
+.nav-bar .nav-item:not(.nav-current):not(#nav-item-search):hover {
+	background-color: #1f1f1f;
+}
+.inactive-bar .nav-item:not(.nav-current):not(#nav-item-search):hover {
+	background-color: #232323;
+}
+#bottom-bar a:hover {
+	background-color: #1f1f1f;
+}
+
+.nav-bar a:link,
+.nav-bar a:visited {
+	color: #0cc800;
+}
+.nav-bar a:hover,
+.nav-bar a:focus {
+	text-decoration: none;
+	text-shadow:
+		0 0 1px #000,
+		0 0 3px #000,
+		0 0 5px #000;
+	outline: none;
+}
+
+/* This makes the navbar items look like tabs: */
+
+.nav-inactive {
+	box-shadow: 
+		 0 -1px #232323 inset,
+		 1px 0 #000 inset;
+}
+.nav-current {
+	border-right: 1px solid #232323;
+	border-left: 1px solid #232323;
+}
+.nav-current:first-child {
+	border-left: none;
+}
+.nav-current:last-child {
+	border-right: none;
+}
+.nav-current + .nav-inactive,
+.nav-inactive:first-child	{
+	box-shadow: 0 -1px #232323 inset;
+}
+
+.inactive-bar .nav-inactive {
+	background-color: #1a1a1a;
+}
+.active-bar .nav-inactive {
+	background-color: #131313;
+}
+/* For Webkit: */
+.active-bar {
+	box-shadow: 0 -3px 8px -2px #2c2c2c;
+/* 	position: relative; */
+}
+
+.active-bar .nav-inactive {
+	box-shadow: 
+		0 -4px 8px -4px #393939 inset,
+		1px 0 #000 inset;
+}
+.active-bar .nav-inactive:first-child {
+	box-shadow: 
+		0 -4px 8px -4px #393939 inset;
+}
+.active-bar .nav-current + .nav-inactive {
+	box-shadow: 
+		4px -4px 8px -4px #393939 inset;
+}
+.active-bar .nav-item-last-before-current {
+	box-shadow: 
+		-4px -4px 8px -4px #393939 inset,
+		1px 0 #000 inset;
+}
+.active-bar .nav-item-last-before-current:first-child {
+	box-shadow: 
+		-4px -4px 8px -4px #393939 inset;
+}
+/* And for Gecko: */
+@-moz-document url-prefix() {
+	.active-bar {
+		box-shadow: 0 -3px 4px -2px #2c2c2c;
+	}
+
+	.active-bar .nav-inactive {
+		box-shadow: 
+			0 -4px 4px -4px #393939 inset,
+			1px 0 #000 inset;
+	}
+	.active-bar .nav-inactive:first-child {
+		box-shadow: 
+			0 -4px 4px -4px #393939 inset;
+	}
+	.active-bar .nav-current + .nav-inactive {
+		box-shadow: 
+			4px -4px 4px -4px #393939 inset;
+	}
+	.active-bar .nav-item-last-before-current {
+		box-shadow: 
+			-4px -4px 4px -4px #393939 inset,
+			1px 0 #000 inset;
+	}
+	.active-bar .nav-item-last-before-current:first-child {
+		box-shadow: 
+			-4px -4px 4px -4px #393939 inset;
+	}
+}
+
+#nav-item-search input:focus {
+	outline: none;
+	background-color: #00001e;
+	border: 1px solid #393939;
+}
+#nav-item-search:focus-within {
+	background-color: #1f1f1f;
+}
+.inactive-bar #nav-item-search:focus-within {
+	background-color: #232323;
+}
+#nav-item-search.nav-current:focus-within {
+	background-color: #000;
+}
+#nav-item-search button {
+	border: none;
+	font-weight: inherit;
+}
+#nav-item-search button:focus {
+	text-shadow:
+		0 0 1px #000,
+		0 0 3px #000,
+		0 0 5px #000;
 }
 
 /*==========*/
