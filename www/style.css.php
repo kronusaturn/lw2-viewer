@@ -153,28 +153,7 @@ input {
 	width: 100%;
 }
  */
-#top-nav-bar {
-	margin: 0.5em 0 -1.5em 0;
-	padding: 0.75em 0 0 0;
-	text-align: center;
-	font-size: 1.25em;
-}
-.sublevel-nav + #top-nav-bar {
-	margin-top: 0.25em;
-}
-.sublevel-nav + #top-nav-bar + h1.listing {
-	margin-top: 1.5em;
-}
-.archive-nav + #top-nav-bar {
-	margin-top: 1em;
-}
-.archive-nav + #top-nav-bar + h1.listing {
-	margin-top: 1em;
-}
-#top-nav-bar a.disabled {
-	pointer-events: none;
-	visibility: hidden;
-}
+ 
 #bottom-bar .nav-item a::before,
 #top-nav-bar a::before {
 	font-family: Font Awesome;
@@ -203,26 +182,6 @@ input {
 	margin-left: -2em;
 	margin-right: 0;
 	left: 3.8em;
-}
-#top-nav-bar a.nav-item-last::before {
-	content: "\2002";
-}
-#top-nav-bar .page-number {
-	position: relative;
-	display: inline-block;
-	width: 1.5em;
-}
-#top-nav-bar .page-number-label {
-	position: absolute;
-	font-size: 0.5em;
-	text-transform: uppercase;
-	width: 100%;
-	bottom: 90%;
-	left: 0;
-}
-#top-nav-bar a::before {
-	margin: 0.5em;
-	display: inline-block;
 }
 .nav-bar a:hover,
 .nav-bar a:focus {
@@ -394,6 +353,53 @@ input {
 }
 #nav-item-about {
 	width: 12%;
+}
+
+/*********************/
+/* TOP PAGINATION UI */
+/*********************/
+
+#top-nav-bar {
+	margin: 0.5em 0 -1.5em 0;
+	padding: 0.75em 0 0 0;
+	text-align: center;
+	font-size: 1.25em;
+}
+.sublevel-nav + #top-nav-bar {
+	margin-top: 0.25em;
+}
+.sublevel-nav + #top-nav-bar + h1.listing {
+	margin-top: 1.5em;
+}
+.archive-nav + #top-nav-bar {
+	margin-top: 1em;
+}
+.archive-nav + #top-nav-bar + h1.listing {
+	margin-top: 1em;
+}
+#top-nav-bar a.disabled {
+	pointer-events: none;
+	visibility: hidden;
+}
+#top-nav-bar a.nav-item-last::before {
+	content: "\2002";
+}
+#top-nav-bar .page-number {
+	position: relative;
+	display: inline-block;
+	width: 1.5em;
+}
+#top-nav-bar .page-number-label {
+	position: absolute;
+	font-size: 0.5em;
+	text-transform: uppercase;
+	width: 100%;
+	bottom: 90%;
+	left: 0;
+}
+#top-nav-bar a::before {
+	margin: 0.5em;
+	display: inline-block;
 }
 
 /****************/
@@ -891,7 +897,7 @@ a#inbox-indicator.new-messages:hover::before {
 	flex: 1 1 5%;
 	text-align: center;
 	padding: 6px 4px 4px 4px;
-	max-width: 7.5%;
+	max-width: 8%;
 }
 @-moz-document url-prefix() {
 	.archive-nav *[class^='archive-nav-item'] {
