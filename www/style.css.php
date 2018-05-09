@@ -1514,7 +1514,7 @@ h1.listing a[href^="http"] {
 	margin-left: 1em;
 }
 .comment-meta .comment-post-title {
-	display: inline-block;
+	display: block;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	max-width: 100%;
