@@ -1937,7 +1937,8 @@ div.comment-child-links a::first-letter {
 /********************/
 
 .comment-meta .permalink::before,
-.comment-meta .lw2-link::before {
+.comment-meta .lw2-link::before,
+.individual-thread-page a.comment-parent-link:empty::before {
 	content: "";
 	display: inline-block;
 	width: 1rem;
@@ -1957,28 +1958,40 @@ div.comment-child-links a::first-letter {
 .comment-meta .lw2-link::before {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/lw-white-on-blue.gif")) ?>');
 }
+.individual-thread-page a.comment-parent-link:empty::before {
+	left: unset;
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/up-arrow-white-on-blue.gif")) ?>');
+}
 .comment-meta .permalink:hover::before {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/anchor-blue-on-white.gif")) ?>');
 }
 .comment-meta .lw2-link:hover::before {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/lw-blue-on-white.gif")) ?>');
 }
+.individual-thread-page a.comment-parent-link:empty:hover::before {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/up-arrow-blue-on-white.gif")) ?>');
+}
 .comment-meta .permalink:hover::before,
-.comment-meta .lw2-link:hover::before {
+.comment-meta .lw2-link:hover::before,
+.individual-thread-page a.comment-parent-link:empty:hover::before {
 	box-shadow: 
 		0 0 0 2px #00e;
 }
 .comment-meta .permalink:active::before,
-.comment-meta .lw2-link:active::before {
+.comment-meta .lw2-link:active::before,
+.individual-thread-page a.comment-parent-link:empty:active::before {
 	transform: scale(0.9);
 }
 
 .comment-meta .permalink,
-.comment-meta .lw2-link {
+.comment-meta .lw2-link,
+.individual-thread-page .comment-parent-link:empty {
 	position: relative;
+	opacity: 1.0;
 }
 .comment-meta .permalink::after,
-.comment-meta .lw2-link::after {
+.comment-meta .lw2-link::after,
+.individual-thread-page .comment-parent-link:empty::after {
 	content: "";
 	width: 30px;
 	height: 30px;
@@ -1986,7 +1999,9 @@ div.comment-child-links a::first-letter {
 	position: absolute;
 	top: -2px;
 	left: -7px;
-	opacity: 0.8;
+	box-shadow: none;
+	pointer-events: auto;
+	visibility: visible;
 }
 
 /*************************/
