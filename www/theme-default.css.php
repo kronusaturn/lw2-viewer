@@ -1,24 +1,47 @@
+<?php
+	$UI_font = ($platform == 'Windows') ? "'Whitney', 'a_Avante'" : "'Concourse', 'a_Avante'";
+?>
+
 /*****************/
 /* DEFAULT THEME */
 /*****************/
 
 body {
+	color: #000;
 	background-color: #d8d8d8;
+	font-family: <?php echo $UI_font; ?>;
+	font-feature-settings: 'ss07';
+}
+#content {
+	background-color: #fff;
+	box-shadow: 0px 0px 10px #555;
+	line-height: 1.55;
+}
+input {
+	border: 1px solid #ddd;
 }
 
-#content {
-	box-shadow: 0px 0px 10px #555;
+/*==============*/
+/* PAGE TOOLBAR */
+/*==============*/
+
+.new-post,
+.new-post:visited,
+.new-private-message,
+.new-private-message:visited {
+	color: #090;
+}
+.logout-button {
+	color: #d33;
 }
 
 /*=========*/
 /* NAV BAR */
 /*=========*/
 
-.nav-bar a:link,
-.nav-bar a:visited {
-	color: #00e;
+.nav-inner {
+	font-weight: 600;
 }
-
 .nav-inner::after {
 	display: block;
 	position: absolute;
@@ -30,6 +53,141 @@ body {
 }
 .nav-inner:hover::after {
 	color: #bbb;
+}
+
+.nav-bar .nav-item:not(.nav-current):not(#nav-item-search):hover {
+	background-color: #ddd;
+}
+.inactive-bar .nav-item:not(.nav-current):not(#nav-item-search):hover {
+	background-color: #d8d8d8;
+}
+#bottom-bar a:hover {
+	background-color: #ddd;
+}
+
+.nav-bar a:link,
+.nav-bar a:visited {
+	color: #00e;
+}
+.nav-bar a:hover,
+.nav-bar a:focus {
+	text-decoration: none;
+	text-shadow:
+		0 0 1px #fff,
+		0 0 3px #fff,
+		0 0 5px #fff;
+	outline: none;
+}
+
+/* This makes the navbar items look like tabs: */
+
+.nav-inactive {
+	box-shadow: 
+		 0 -1px #d8d8d8 inset,
+		 1px 0 #fff inset;
+}
+.nav-current {
+	border-right: 1px solid #d8d8d8;
+	border-left: 1px solid #d8d8d8;
+}
+.nav-current:first-child {
+	border-left: none;
+}
+.nav-current:last-child {
+	border-right: none;
+}
+.nav-current + .nav-inactive,
+.nav-inactive:first-child	{
+	box-shadow: 0 -1px #d8d8d8 inset;
+}
+
+.inactive-bar .nav-inactive {
+	background-color: #e4e4e4;
+}
+.active-bar .nav-inactive {
+	background-color: #eee;
+}
+/* For Webkit: */
+.active-bar {
+	box-shadow: 0 -3px 8px -2px #ccc;
+/* 	position: relative; */
+}
+
+.active-bar .nav-inactive {
+	box-shadow: 
+		0 -4px 8px -4px #bbb inset,
+		1px 0 #fff inset;
+}
+.active-bar .nav-inactive:first-child {
+	box-shadow: 
+		0 -4px 8px -4px #bbb inset;
+}
+.active-bar .nav-current + .nav-inactive {
+	box-shadow: 
+		4px -4px 8px -4px #bbb inset;
+}
+.active-bar .nav-item-last-before-current {
+	box-shadow: 
+		-4px -4px 8px -4px #bbb inset,
+		1px 0 #fff inset;
+}
+.active-bar .nav-item-last-before-current:first-child {
+	box-shadow: 
+		-4px -4px 8px -4px #bbb inset;
+}
+/* And for Gecko: */
+@-moz-document url-prefix() {
+	.active-bar {
+		box-shadow: 0 -3px 4px -2px #ccc;
+	}
+
+	.active-bar .nav-inactive {
+		box-shadow: 
+			0 -4px 4px -4px #bbb inset,
+			1px 0 #fff inset;
+	}
+	.active-bar .nav-inactive:first-child {
+		box-shadow: 
+			0 -4px 4px -4px #bbb inset;
+	}
+	.active-bar .nav-current + .nav-inactive {
+		box-shadow: 
+			4px -4px 4px -4px #bbb inset;
+	}
+	.active-bar .nav-item-last-before-current {
+		box-shadow: 
+			-4px -4px 4px -4px #bbb inset,
+			1px 0 #fff inset;
+	}
+	.active-bar .nav-item-last-before-current:first-child {
+		box-shadow: 
+			-4px -4px 4px -4px #bbb inset;
+	}
+}
+
+#nav-item-search input:focus {
+	outline: none;
+	background-color: #ffd;
+	border: 1px solid #bbb;
+}
+#nav-item-search:focus-within {
+	background-color: #ddd;
+}
+.inactive-bar #nav-item-search:focus-within {
+	background-color: #d8d8d8;
+}
+#nav-item-search.nav-current:focus-within {
+	background-color: #fff;
+}
+#nav-item-search button {
+	border: none;
+	font-weight: inherit;
+}
+#nav-item-search button:focus {
+	text-shadow:
+		0 0 1px #fff,
+		0 0 3px #fff,
+		0 0 5px #fff;
 }
 
 /*==========*/
