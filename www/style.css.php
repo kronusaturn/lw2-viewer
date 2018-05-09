@@ -2173,6 +2173,20 @@ div.comment-child-links a::first-letter {
 	display: none;
 }
 
+/***********************************/
+/* INDIVIDUAL COMMENT THREAD PAGES */
+/***********************************/
+
+.individual-thread-page > h1 {
+	line-height: 1;
+}
+.individual-thread-page .comment-controls .edit-button {
+	right: 4px;
+}
+.individual-thread-page #comments {
+	border: none;
+}
+
 /****************/
 /* VOTE BUTTONS */
 /****************/
