@@ -1318,6 +1318,15 @@ h1.listing a[href^="http"] {
 	text-align: center;
 	margin: 0.5em 0;
 }
+.login-container .login-tip {
+	width: auto;
+	padding: 0.5em;
+	border: 1px solid #131313;
+	margin: 0.75em 10%;
+}
+.login-container .login-tip span {
+	font-weight: bold;
+}
 #login-form-container h1 {
 	padding-left: 2rem;
 }

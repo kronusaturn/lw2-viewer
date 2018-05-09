@@ -1011,7 +1011,7 @@
 								    ("signup-password" "Password" "password" "new-password")
 								    ("signup-password2" "Confirm password" "password" "new-password"))
 								  "Create account")
-						     (with-outputs (out-stream) "</div></div>"))))) 
+						     (with-outputs (out-stream) "</div><div class=\"login-tip\"><span>Tip:</span> You can log in with the same username and password that you use on LessWrong. Creating an account here also creates one on LessWrong.</div></div>")))))
 				     (cond
 				       ((not (or cookie-check (hunchentoot:cookie-in "session-token")))
 					(hunchentoot:set-cookie "session-token" :max-age (- (expt 2 31) 1) :secure *secure-cookies* :value (base64:usb8-array-to-base64-string (ironclad:make-random-salt)))
