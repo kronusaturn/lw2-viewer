@@ -1839,6 +1839,7 @@ ul.comment-thread {
 .user-page .comment-meta {
 	padding-right: 10px;
 }
+/* 
 .comment-meta::before {
 	content: "";
 	float: right;
@@ -1848,6 +1849,7 @@ ul.comment-thread {
 .comment-item .comment-item .comment-meta::before {
 	width: 48px;
 }
+ */
 .comment-meta .author {
 	font-weight: bold;
 	font-size: 1.25em;
@@ -4055,13 +4057,6 @@ h1.listing + .post-meta .comment-count.new-comments:hover::before {
 .comment-body,
 .posting-controls textarea {
 	font-family: Charter, Georgia, serif;
-}
-
-.comment-meta .karma .karma-value {
-	text-shadow: 0 -1px 0 #000, 0 0.5px 0.5px #fff;
-}
-.comment-meta .karma .karma-value span {
-	text-shadow: none;
 }
 
 .posting-controls.edit-existing-post textarea:focus,

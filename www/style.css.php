@@ -1782,6 +1782,7 @@ ul.comment-thread {
 .user-page .comment-meta {
 	padding-right: 10px;
 }
+/* 
 .comment-meta::before {
 	content: "";
 	float: right;
@@ -1791,6 +1792,7 @@ ul.comment-thread {
 .comment-item .comment-item .comment-meta::before {
 	width: 48px;
 }
+ */
 .comment-meta .author {
 	font-weight: bold;
 	font-size: 1.25em;

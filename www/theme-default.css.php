@@ -258,13 +258,6 @@ h1.listing + .post-meta .comment-count.new-comments:hover::before {
 	font-family: Charter, Georgia, serif;
 }
 
-.comment-meta .karma .karma-value {
-	text-shadow: 0 -1px 0 #fff, 0 0.5px 0.5px #000;
-}
-.comment-meta .karma .karma-value span {
-	text-shadow: none;
-}
-
 .posting-controls.edit-existing-post textarea:focus,
 .posting-controls.edit-existing-comment textarea:focus {
 	border-color: #090;
