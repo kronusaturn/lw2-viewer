@@ -183,6 +183,7 @@ function showCommentEditForm(event) {
 	let commentBody = commentControls.parentElement.querySelector(".comment-body");
 	commentBody.setAttribute("style", "display: none;");
 	commentControls.injectReplyForm(commentBody.getAttribute("data-markdown-source"));
+	commentControls.addClass("edit-existing-comment");
 	ExpandTextarea(commentControls.querySelector("textarea"));
 }
 

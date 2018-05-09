@@ -4050,6 +4050,17 @@ h1.listing + .post-meta .comment-count.new-comments:hover::before {
 	text-shadow: none;
 }
 
+.posting-controls.edit-existing-post textarea:focus,
+.posting-controls.edit-existing-comment textarea:focus {
+	border-color: #9740cb;
+    box-shadow: 0 0 0 1px #3d0061 inset, 0 0 0 1px #000, 0 0 0 2px #9740cb;
+}
+.posting-controls.edit-existing-post .guiedit-buttons-container button,
+.posting-controls.edit-existing-comment .guiedit-buttons-container button {
+    color: #ce92ee;
+}
+
+
 /*===========================*/
 /* COMMENTING AND POSTING UI */
 /*===========================*/
