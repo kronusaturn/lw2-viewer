@@ -702,7 +702,8 @@
                                                              (comment-item-to-html out-stream
                                                                                    target
                                                                                    :extra-html-fn (lambda (c-id)
-                                                                                                    (comment-tree-to-html out-stream (make-comment-parent-hash comments) c-id)))))
+                                                                                                    (let ((*comment-individual-link* nil))
+                                                                                                      (comment-tree-to-html out-stream (make-comment-parent-hash comments) c-id))))))
                                                          (if chrono
                                                              (comment-chrono-to-html out-stream comments)
                                                              (comment-tree-to-html out-stream (make-comment-parent-hash comments))))
