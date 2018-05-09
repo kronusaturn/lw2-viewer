@@ -115,9 +115,11 @@ input {
 	white-space: nowrap;
 	overflow: hidden;
 }
+/* 
 #nav-item-search * {
 	text-overflow: unset;
 }
+ */
 .nav-inner {
 	padding: 12px 30px;
 	font-weight: 600;
@@ -145,10 +147,12 @@ input {
 #bottom-bar {
 	table-layout: fixed;
 }
+/* 
 #bottom-bar a {
 	float: left;
 	width: 100%;
 }
+ */
 #top-nav-bar {
 	margin: 0.5em 0 -1.5em 0;
 	padding: 0.75em 0 0 0;
@@ -329,10 +333,6 @@ input {
 		box-shadow: 
 			-4px -4px 4px -4px #bbb inset;
 	}
-}
-
-#secondary-bar {
-/* 	table-layout: fixed; */
 }
 
 /* Search tab */
@@ -1518,10 +1518,9 @@ h1.listing a[href^="http"] {
 	margin-left: 1em;
 }
 .comment-meta .comment-post-title {
-	display: block;
+	flex-basis: 100%;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	max-width: 100%;
 }
 .post-body, .comment-body {
 	text-align: justify;
