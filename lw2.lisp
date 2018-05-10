@@ -93,7 +93,7 @@
                     (frontpage-date (if (eq skip-section :frontpage) nil (list "frontpage" "Frontpage post")))
                     (meta (if (eq skip-section :meta) nil (list "meta" "Meta post")))
                     (t (if (eq skip-section :personal) nil (list "personal" "Personal post"))))))
-    (if url (format nil "<div class=\"link-post-domain\">(~A)</div>" (encode-entities (puri:uri-host (puri:parse-uri (string-trim " " url))))))
+    (if url (format out-stream "<div class=\"link-post-domain\">(~A)</div>" (encode-entities (puri:uri-host (puri:parse-uri (string-trim " " url))))))
     (format out-stream "</div>")))
 
 (defun post-body-to-html (out-stream post)
