@@ -342,20 +342,46 @@
 			 collect (cdr (assoc :hits r))))
       (if want-close (close req-stream)))))
 
-(simple-cacheable ("post-title" "postid-to-title" post-id)
-  (cdr (first (lw2-graphql-query (format nil "{PostsSingle(documentId:\"~A\") {title}}" post-id))))) 
+(defun make-rate-limiter (delay)
+  (let ((rl-hash (make-hash-table :test 'equal :synchronized t)))
+    (lambda (datum fn)
+      (let ((unix-time (get-unix-time)))
+        (if (sb-ext:with-locked-hash-table (rl-hash)
+              (maphash (lambda (k v)
+                         (if (> (- unix-time v) delay)
+                             (remhash k rl-hash)))
+                       rl-hash)
+              (not (gethash datum rl-hash)))
+            (progn
+              (setf (gethash datum rl-hash) unix-time)
+              (funcall fn))
+            (error "Request aborted due to rate limit."))))))
 
-(simple-cacheable ("post-slug" "postid-to-slug" post-id)
-  (cdr (first (lw2-graphql-query (format nil "{PostsSingle(documentId:\"~A\") {slug}}" post-id)))))
+(defmacro with-rate-limit (&body outer-body)
+    `(let ((rate-limiter (make-rate-limiter 30)))
+       (macrolet ((rate-limit ((key) &body inner-body)
+                    `(funcall rate-limiter ,key (lambda () ,@inner-body))))
+         ,@outer-body)))
 
-(simple-cacheable ("slug-postid" "slug-to-postid" slug)
-  (cdr (first (lw2-graphql-query (format nil "{PostsSingle(slug:\"~A\") {_id}}" slug)))))
+(with-rate-limit
+  (simple-cacheable ("post-title" "postid-to-title" post-id)
+    (rate-limit (post-id) (cdr (first (lw2-graphql-query (format nil "{PostsSingle(documentId:\"~A\") {title}}" post-id))))))) 
 
-(simple-cacheable ("username" "userid-to-displayname" user-id)
-  (cdr (first (lw2-graphql-query (format nil "{UsersSingle(documentId:\"~A\") {displayName}}" user-id))))) 
+(with-rate-limit
+  (simple-cacheable ("post-slug" "postid-to-slug" post-id)
+    (rate-limit (post-id) (cdr (first (lw2-graphql-query (format nil "{PostsSingle(documentId:\"~A\") {slug}}" post-id)))))))
 
-(simple-cacheable ("user-slug" "userid-to-slug" user-id)
-  (cdr (first (lw2-graphql-query (format nil "{UsersSingle(documentId:\"~A\") {slug}}" user-id)))))
+(with-rate-limit
+  (simple-cacheable ("slug-postid" "slug-to-postid" slug)
+    (rate-limit (slug) (cdr (first (lw2-graphql-query (format nil "{PostsSingle(slug:\"~A\") {_id}}" slug)))))))
+
+(with-rate-limit
+  (simple-cacheable ("username" "userid-to-displayname" user-id)
+    (rate-limit (user-id) (cdr (first (lw2-graphql-query (format nil "{UsersSingle(documentId:\"~A\") {displayName}}" user-id))))))) 
+
+(with-rate-limit
+  (simple-cacheable ("user-slug" "userid-to-slug" user-id)
+    (rate-limit (user-id) (cdr (first (lw2-graphql-query (format nil "{UsersSingle(documentId:\"~A\") {slug}}" user-id)))))))
 
 (defun preload-username-cache ()
   (let ((user-list (lw2-graphql-query "{UsersList(terms:{}) {_id, displayName}}")))
