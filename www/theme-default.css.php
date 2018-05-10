@@ -228,7 +228,181 @@ input {
 /* SORT ORDER SELECTOR */
 /*=====================*/
 
+.sublevel-nav.sort {
+	position: absolute;
+	top: 167px;
+	right: 30px;
+	border: 2px solid #bbb;
+	padding: 18px 0 0 0;
+	border-radius: 8px;
+	box-shadow: 0 18px #bbb inset;
+}
+.sublevel-nav.sort::before {
+	text-transform: uppercase;
+	font-weight: 600;
+	color: #444;
+	text-shadow: 0.5px 0.5px 0 #fff;
+}
+.sublevel-nav.sort .sublevel-item {
+	border-radius: 0;
+	padding: 5px 6px;
+	border-color: #aaa;
+	border-style: solid;
+	text-transform: uppercase;
+}
+.sublevel-nav.sort .sublevel-item:first-child {
+	border-radius: 6px 6px 0 0;
+	border-width: 1px;
+}
+.sublevel-nav.sort .sublevel-item:last-child {
+	border-radius: 0 0 6px 6px;
+	border-width: 0 1px 1px 1px;
+}
+.sublevel-nav.sort .sublevel-item:active {
+	border-color: #aaa;
+}
 
+/*================*/
+/* WIDTH SELECTOR */
+/*================*/
+/* THEME SELECTOR */
+/*================*/
+
+#width-selector button,
+#theme-selector button {
+	box-shadow:
+		0 0 0 4px #d8d8d8 inset,
+		0 0 0 5px #bbb inset;
+}
+#width-selector button:hover,
+#width-selector button.selected,
+#theme-selector button:hover,
+#theme-selector button.selected {
+	text-shadow: none;
+	box-shadow:
+		0 0 0 5px #bbb inset;
+}
+
+#theme-selector button:first-child {
+	padding: 0 0 0 1px;
+}
+@-moz-document url-prefix() {
+	#theme-selector button {
+		padding: 0;
+	}
+}
+
+/*=================*/
+/* QUICKNAV WIDGET */
+/*=================*/
+
+#quick-nav-ui a {
+	color: #999;
+	background-color: #e4e4e4;
+	border-radius: 4px;
+}
+#quick-nav-ui a[href='#bottom-bar'] {
+	line-height: 1.8;
+}
+#quick-nav-ui a:hover {
+	color: #000;
+	background-color: #eee;
+	text-decoration: none;
+}
+#quick-nav-ui a:active {
+	transform: scale(0.9);
+}
+#quick-nav-ui a:focus:not(:hover) {
+	transform: none;
+	text-shadow: none;
+}
+#quick-nav-ui a[href='#comments'].no-comments {
+	opacity: 0.4;
+	color: #bbb;
+}
+
+/*======================*/
+/* NEW COMMENT QUICKNAV */
+/*======================*/
+
+#new-comment-nav-ui .new-comments-count {
+	font-weight: 600;
+	color: #666;
+	text-shadow: 0.5px 0.5px 0 #fff;
+}
+#new-comment-nav-ui .new-comments-count:hover {
+	text-shadow: 
+		0 0 1px #fff,
+		0 0 3px #fff,
+		0 0 5px #fff,
+		0 0 8px #fff,
+		0.5px 0.5px 0 #fff;
+}
+#new-comment-nav-ui .new-comments-count::after {
+	font-weight: 600;
+	color: #777;
+}
+#new-comment-nav-ui .new-comment-sequential-nav-button:focus {
+	color: #d00;
+	text-shadow:
+		0 0 1px #fff,
+		0 0 3px #fff,
+		0 0 5px #fff;
+}
+#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
+	color: #bbb;
+	text-shadow: none;
+}
+
+/*=================*/
+/* HNS DATE PICKER */
+/*=================*/
+
+@media only screen and (max-width: 1440px) {
+	#hns-date-picker {
+		background-color: #d8d8d8;
+		opacity: 1.0;
+	}
+	#hns-date-picker::before {
+		border: 1px solid #999;
+		border-width: 1px 0 1px 1px;
+	}
+}
+#hns-date-picker span {
+	color: #777;
+	text-shadow: 0.5px 0.5px 0 #fff;
+	font-weight: 600;
+}
+#hns-date-picker input {
+	border: 1px solid #777;
+	background-color: transparent;
+	color: #666;
+}
+#hns-date-picker input:focus {
+	color: #000;
+}
+
+/*======================*/
+/* TEXT SIZE ADJUSTMENT */
+/*======================*/
+
+#text-size-adjustment-ui button {
+	color: #777;
+}
+#text-size-adjustment-ui button.default {
+	font-weight: 600;
+}
+#text-size-adjustment-ui button:disabled:hover {
+	text-shadow: none;
+}
+
+/*=============================*/
+/* COMMENTS VIEW MODE SELECTOR */
+/*=============================*/
+
+#comments-view-mode-selector a {
+	color: #777;
+}
 
 /*==========*/
 /* ARCHIVES */
@@ -284,12 +458,54 @@ input {
 /*==========*/
 
 h1.listing {
-	margin: 0.7em 20px 0.1em 20px;
+	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
 }
 
 h1.listing a {
 	color: #000;
 }
+h1.listing a[href^="http"] {
+	color: #00c;
+}
+
+@media only screen and (hover: hover) {
+	h1.listing a:hover,
+	h1.listing a:focus {
+		color: #777;
+	}	
+	h1.listing:focus-within::before {
+		color: #00f;
+	}
+	h1.listing a[href^="http"]:hover {
+		color: #4879ec;
+		text-shadow: 
+			 0.5px 0.5px 0 #fff,
+			 -0.5px -0.5px 0 #fff,
+			 0 0 2px #fff,
+			 0 0 3px #00c;
+	}
+}
+@-moz-document url-prefix() {
+	h1.listing a:hover,
+	h1.listing a:focus {
+		color: #777;
+	}	
+	h1.listing:focus-within::before {
+		color: #00f;
+	}
+	h1.listing a[href^="http"]:hover {
+		color: #4879ec;
+		text-shadow: 
+			 0.5px 0.5px 0 #fff,
+			 -0.5px -0.5px 0 #fff,
+			 0 0 2px #fff,
+			 0 0 3px #00c;
+	}
+}
+
+/*===================*/
+/* LISTING POST-META */
+/*===================*/
 
 h1.listing + .post-meta {
 	padding-right: 320px;
@@ -493,6 +709,14 @@ h1.listing + .post-meta .comment-count.new-comments::before {
 }
 h1.listing + .post-meta .comment-count.new-comments:hover::before {
 	text-shadow: 0.5px 0.5px 0.5px #999;
+}
+
+/*============*/
+/* USER PAGES */
+/*============*/
+
+#content.user-page h1.page-main-heading {
+	border-bottom: 1px solid #ccc;
 }
 
 /*==================*/
