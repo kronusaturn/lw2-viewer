@@ -644,13 +644,6 @@ h1.listing {
 h1.listing:first-of-type {
 	margin-top: 1.25em;
 }
-h1.listing + .post-meta {
-	text-align: left;
-	margin: 0 20px 0 21px;
-}
-h1.listing:last-of-type + .post-meta {
-	margin-bottom: 1.25em;
-}
 
 h1.listing a {
 	position: relative;
@@ -769,6 +762,24 @@ h1.listing a[href^="http"] {
 	padding: 1.75em 0 1.25em 0;
 }
 
+h1.listing + .post-meta {
+	text-align: left;
+	margin: 0 20px 0 21px;
+}
+h1.listing:last-of-type + .post-meta {
+	margin-bottom: 1.25em;
+}
+
+h1.listing + .post-meta .post-section {
+	width: 0;
+	margin: -0.5em;
+	overflow: hidden;
+}
+h1.listing + .post-meta .post-section::before {
+	position: absolute;
+	left: -28px;
+}
+
 /**************/
 /* USER PAGES */
 /**************/
@@ -844,7 +855,6 @@ h1.listing a[href^="http"] {
 #content.search-results-page #secondary-bar + * {
 	margin-top: 3.5rem;
 }
-
 
 /**************/
 /* LOGIN PAGE */
@@ -1084,17 +1094,6 @@ h1.listing a[href^="http"] {
 	font-size: 1.0625em;
 	white-space: nowrap;
 }
-.post-meta .post-section {
-	margin: 0;
-}
-.post-meta .link-post-domain {
-	margin-left: 1em;
-}
-.comment-meta .comment-post-title {
-	flex-basis: 100%;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
 .post-body, .comment-body {
 	text-align: justify;
 	-webkit-hyphens: auto;
@@ -1104,49 +1103,28 @@ h1.listing a[href^="http"] {
 .post-body p, .comment-body p {
 	margin: 1em 0;
 }
-.post-meta .date {
-	color: #666;
-}
 
-/*********/
-/* POSTS */
-/*********/
+/*************/
+/* POST-META */
+/*************/
 
-#content > h1:first-child {
-	margin-top: 2em;
-}
 .post-meta {
-	text-align: center;
-	position: relative;
+/* 	position: relative; */
 }
-.post-meta .author {
-	color: #9740cb;
-}
-.post-meta .read-time {
-	cursor: default;
-}
-.post-section {
+.post-meta .post-section {
+	margin: 0;
 	visibility: hidden;
-	width: 1em;
 }
-.post-section::before {
+.post-meta .post-section::before {
 	visibility: visible;
 	font-family: "Font Awesome";
 	font-weight: 900;
-	color: #000;
-	text-shadow: 
-		1px 1px 0 #9740cb, 
-		0 1px 0 #9740cb, 
-		0 0 5px #9740cb;
 }
-h1.listing + .post-meta .post-section {
-	width: 0;
-	margin: -0.5em;
-	overflow: hidden;
+.post-meta .link-post-domain {
+	margin-left: 1em;
 }
-h1.listing + .post-meta .post-section::before {
-	position: absolute;
-	left: -28px;
+.post-meta .read-time {
+	cursor: default;
 }
 .post-section.frontpage::before {
 	content: "\F015";
@@ -1163,6 +1141,11 @@ h1.listing + .post-meta .post-section::before {
 .post-section.draft::before {
 	content: "\F15B";
 }
+
+/*********/
+/* POSTS */
+/*********/
+
 .post-body {
 	min-height: 8em;
 	padding: 0 30px;
@@ -1178,13 +1161,15 @@ h1.listing + .post-meta .post-section::before {
 	font-size: 2.5em;
 	line-height: 1;
 }
-.top-post-meta:last-child {
+.post .post-meta {
+	text-align: center;
+}
+.post .top-post-meta:last-child {
 	margin-bottom: 40px;
 }
-.bottom-post-meta {
+.post .bottom-post-meta {
 	margin: 0;
 	padding: 20px 0 22px 0;
-	border-top: 1px solid #1f1f1f;
 }
 
 /**************/
@@ -1200,14 +1185,6 @@ h1.listing + .post-meta .post-section::before {
 	font-size: 1.5em;
 	margin: 1em 0;
 }
-.post.link-post a.link-post-link {
-	text-decoration: none;
-	font-family: 'Whitney', 'a_Avante';
-	font-weight: 600;
-}
-.post.link-post a.link-post-link:hover {
-	color: #00a9ed;
-}
 .post.link-post a.link-post-link::before {
 	content: "\F0C1";
 	font-family: Font Awesome;
@@ -1216,14 +1193,6 @@ h1.listing + .post-meta .post-section::before {
 	position: relative;
 	top: -2px;
 	margin-right: 0.25em;
-}
-.post.link-post a.link-post-link:hover::before {
-	color: #670;
-	text-shadow: 
-		0.5px 0.5px 0 #000,
-		-0.5px -0.5px 0 #000,
-		0 0 2px #000,
-		0 0 3px #54d400;
 }
 
 /************/
@@ -1408,6 +1377,11 @@ ul.comment-thread {
 	display: flex;
 	flex-flow: row wrap;
 	align-items: baseline;
+}
+.comment-meta .comment-post-title {
+	flex-basis: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 .user-page .comment-meta {
 	padding-right: 10px;
@@ -4198,12 +4172,57 @@ h1.listing + .post-meta .comment-count.new-comments:hover::before {
 /* POSTS & COMMENTS */
 /*==================*/
 
+.post-body,
+.comment-body {
+	font-family: Charter, Georgia, serif;
+}
+
+/*===========*/
+/* POST-META */
+/*===========*/
+
+.post-meta .post-section::before {
+	color: #000;
+	text-shadow: 
+		1px 1px 0 #9740cb, 
+		0 1px 0 #9740cb, 
+		0 0 5px #9740cb;
+}
+.post-meta .date {
+	color: #666;
+}
+.post-meta .author {
+	color: #9740cb;
+}
+.bottom-post-meta {
+	border-top: 1px solid #1f1f1f;
+}
+
+/*============*/
+/* LINK POSTS */
+/*============*/
+
+.post.link-post a.link-post-link {
+	text-decoration: none;
+	font-family: 'Whitney', 'a_Avante';
+	font-weight: 600;
+}
+.post.link-post a.link-post-link:hover {
+	color: #00a9ed;
+}
+.post.link-post a.link-post-link:hover::before {
+	color: #670;
+	text-shadow: 
+		0.5px 0.5px 0 #000,
+		-0.5px -0.5px 0 #000,
+		0 0 2px #000,
+		0 0 3px #54d400;
+}
+
 /*===========================*/
 /* COMMENTING AND POSTING UI */
 /*===========================*/
 
-.post-body,
-.comment-body,
 .posting-controls textarea {
 	font-family: Charter, Georgia, serif;
 }
