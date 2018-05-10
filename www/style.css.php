@@ -947,10 +947,7 @@ h1.listing a[href^="http"] {
 	margin-bottom: 2em;
 }
 .reset-password-container input[type='submit'] {
-	background-color: #e4e4e4;
-	border: 1px solid #ccc;
 	padding: 0.2em 0.5em;
-	font-weight: bold;
 	width: unset;
 }
 .reset-password-container input {
@@ -977,9 +974,6 @@ h1.listing a[href^="http"] {
 /*********************/
 
 .contents {
-	font-family: <?php echo $UI_font; ?>;
-	border: 1px solid #ddd;
-	background-color: #eee;
 	float: right;
 	min-width: 12em;
 	max-width: 40%;
@@ -992,7 +986,6 @@ h1.listing a[href^="http"] {
 
 .contents-head {
 	text-align: center;
-	font-weight: bold;
 	margin-bottom: 0.25em;
 }
 
@@ -1016,8 +1009,6 @@ h1.listing a[href^="http"] {
 	display: block;
 	text-align: right;
 	left: -4.5em;
-	color: #999;
-	font-feature-settings: "tnum";
 }
 .contents .toc-item-1 {
 	counter-increment: toc-item-1;
@@ -1084,8 +1075,7 @@ h1.listing a[href^="http"] {
 	font-size: 1.0625em;
 	white-space: nowrap;
 }
-.post-meta .post-section,
-.post-meta a[href='#bottom-bar'] {
+.post-meta .post-section {
 	margin: 0;
 }
 .post-meta .link-post-domain {

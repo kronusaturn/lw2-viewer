@@ -770,16 +770,46 @@ h1.listing + .post-meta .comment-count.new-comments:hover::before {
 	background-color: #afa;
 }
 
+/*=====================*/
+/* PASSWORD RESET PAGE */
+/*=====================*/
+
+.reset-password-container input[type='submit'] {
+	background-color: #e4e4e4;
+	border: 1px solid #ccc;
+	font-weight: bold;
+}
+
+/*===================*/
+/* TABLE OF CONTENTS */
+/*===================*/
+
+.contents {
+	font-family: <?php echo $UI_font; ?>;
+	border: 1px solid #ddd;
+	background-color: #eee;
+}
+.contents-head {
+	font-weight: bold;
+}
+.post-body .contents li::before {
+	color: #999;
+	font-feature-settings: "tnum";
+}
+
 /*==================*/
 /* POSTS & COMMENTS */
 /*==================*/
+
+/*===========================*/
+/* COMMENTING AND POSTING UI */
+/*===========================*/
 
 .post-body,
 .comment-body,
 .posting-controls textarea {
 	font-family: Charter, Georgia, serif;
 }
-
 .posting-controls.edit-existing-post textarea:focus,
 .posting-controls.edit-existing-comment textarea:focus {
 	border-color: #090;
