@@ -62,7 +62,6 @@ input {
 		0 0 1px #fff,
 		0 0 3px #fff,
 		0 0 5px #fff;
-	outline: none;
 }
 
 /* This makes the navbar items look like tabs: */
@@ -154,7 +153,6 @@ input {
 }
 
 #nav-item-search input:focus {
-	outline: none;
 	background-color: #ffd;
 	border: 1px solid #bbb;
 }

@@ -18,6 +18,9 @@ html {
 *, *::before, *::after {
 	box-sizing: inherit;
 }
+:focus {
+	outline: none;
+}
 body {
 	padding: 0;
 	margin: 0;
@@ -497,9 +500,6 @@ a#inbox-indicator.new-messages:hover::before {
 	width: 140px;
 	text-align: center;
 }
-#hns-date-picker input:focus {
-	outline: none;
-}
 
 /************************/
 /* TEXT SIZE ADJUSTMENT */
@@ -698,9 +698,6 @@ h1.listing a[href^="http"] {
 		background-color: rgba(255,255,255,0.85);
 		z-index: 2;
 	}	
-	h1.listing a:focus {
-		outline: none;
-	}
 	h1.listing:focus-within::before {
 		content: ">";
 		display: block;
@@ -730,9 +727,6 @@ h1.listing a[href^="http"] {
 		background-color: rgba(255,255,255,0.85);
 		z-index: 2;
 	}	
-	h1.listing a:focus {
-		outline: none;
-	}
 	h1.listing:focus-within::before {
 		content: ">";
 		display: block;
@@ -1860,7 +1854,6 @@ div.comment-child-links a::first-letter {
 	resize: none;
 }
 .posting-controls textarea:focus {
-	outline: none;
 	background-color: #ffd;
 	border-color: #00e;
 	box-shadow: 
@@ -2268,9 +2261,6 @@ div.comment-child-links a::first-letter {
 	height: 33px;
 	padding: 4px;
 }
-#edit-post-form select:focus {
-	outline: none;
-}
 #content.edit-post-page {
 	overflow: visible;
 }
@@ -2320,10 +2310,6 @@ button:active,
 input[type='submit']:active {
 	color: #f00;
 	transform: scale(0.9);
-}
-button:focus,
-input[type='submit']:focus {
-	outline: none;
 }
 .button:hover {
 	color: #d00;
