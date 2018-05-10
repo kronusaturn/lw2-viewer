@@ -801,12 +801,57 @@ h1.listing + .post-meta .comment-count.new-comments:hover::before {
 /* POSTS & COMMENTS */
 /*==================*/
 
+.post-body,
+.comment-body {
+	font-family: Charter, Georgia, serif;
+}
+
+/*===========*/
+/* POST-META */
+/*===========*/
+
+.post-meta .post-section::before {
+	color: #fff;
+	text-shadow: 
+		1px 1px 0 #090, 
+		0 1px 0 #090, 
+		0 0 5px #090;
+}
+.post-meta .date {
+	color: #888;
+}
+.post-meta .author {
+	color: #090;
+}
+.bottom-post-meta {
+	border-top: 1px solid #ddd;
+}
+
+/*============*/
+/* LINK POSTS */
+/*============*/
+
+.post.link-post a.link-post-link {
+	text-decoration: none;
+	font-family: <?php echo $UI_font; ?>;
+	font-weight: 600;
+}
+.post.link-post a.link-post-link:hover {
+	color: #c00;
+}
+.post.link-post a.link-post-link:hover::before {
+	color: #4879ec;
+	text-shadow: 
+		0.5px 0.5px 0 #fff,
+		-0.5px -0.5px 0 #fff,
+		0 0 2px #fff,
+		0 0 3px #00c;
+}
+
 /*===========================*/
 /* COMMENTING AND POSTING UI */
 /*===========================*/
 
-.post-body,
-.comment-body,
 .posting-controls textarea {
 	font-family: Charter, Georgia, serif;
 }
