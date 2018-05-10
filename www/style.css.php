@@ -707,9 +707,6 @@ h1.listing a[href^="http"] {
 		position: absolute;
 		left: 1em;
 	}
-	.search-results-page h1.listing:focus-within::before {
-		left: 0.5em;
-	}
 
 	<?php $margin_of_hover_error = '10px'; ?>
 	h1.listing a:hover::before {
@@ -879,20 +876,9 @@ h1.listing a[href^="http"] {
 .aligned-form input[type='submit'] {
 	width: 11em;
 	padding: 0.35em;
-	font-weight: bold;
 	line-height: 1;
-	background-color: #eee;
-	border: 1px solid #ccc;
-}
-.aligned-form input[type='submit']:hover,
-.aligned-form input[type='submit']:focus {
-	background-color: #ddd;
-	border: 1px solid #aaa;
 }
 .aligned-form label + input:focus {
-	background-color: #ffd;
-	border: 1px solid #bbb;
-	box-shadow: 0 0 1px #bbb;
 	outline: none;
 }
 .aligned-form label {
@@ -904,8 +890,7 @@ h1.listing a[href^="http"] {
 /**************/
 
 .login-container {
-	margin: 3em 0 3em;
-	padding: 0 0 1em 0;
+	margin: 3em 0 4em 0;
 	overflow: auto;
 }
 .login-container > div {
@@ -918,9 +903,11 @@ h1.listing a[href^="http"] {
 }
 .login-container .login-tip {
 	width: auto;
-	padding: 0.5em;
+	padding: 0.5em 0.5em 0.5em 3em;
 	border: 1px solid #eee;
-	margin: 0.75em 10%;
+	margin: 2em 4em 0 4em;
+	line-height: 1.4;
+	text-indent: -2em;
 }
 .login-container .login-tip span {
 	font-weight: bold;
