@@ -719,11 +719,58 @@ h1.listing + .post-meta .comment-count.new-comments:hover::before {
 	border-bottom: 1px solid #ccc;
 }
 
-/*==============*/
-/* ALIGNED FORM */
-/*==============*/
+/*============*/
+/* LOGIN PAGE */
+/*============*/
 
+.login-container form input[type='submit'] {
+	font-weight: bold;
+	background-color: #eee;
+	border: 1px solid #ccc;
+}
+.login-container form input[type='submit']:hover,
+.login-container form input[type='submit']:focus {
+	background-color: #ddd;
+	border: 1px solid #aaa;
+}
+.login-container form label + input:focus {
+	background-color: #ffd;
+	border: 1px solid #bbb;
+	box-shadow: 0 0 1px #bbb;
+}
 
+/* “Create account” form */
+
+#signup-form {
+	background-color: #f3f3f3;
+	padding: 0 0 0.5em 1em;
+	border: 1px solid #ddd;
+}
+#signup-form input[type='submit'] {
+	background-color: #e4e4e4;
+	border: 1px solid #ccc;
+}
+#signup-form input[type='submit']:hover {
+	background-color: #d8d8d8;
+	border: 1px solid #aaa;
+}
+
+/* Log in tip */
+
+.login-container .login-tip {
+	border: 1px solid #eee;
+}
+
+/* Message box */
+
+.error-box {
+	border: 1px solid red;
+	background-color: #faa;
+}
+.success-box {
+	border: 1px solid green;
+	background-color: #afa;
+}
 
 /*==================*/
 /* POSTS & COMMENTS */

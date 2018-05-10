@@ -842,117 +842,101 @@ h1.listing a[href^="http"] {
 	margin-top: 3.5rem;
 }
 
-/****************/
-/* ALIGNED FORM */
-/****************/
-
-.aligned-form > div > div {
-	overflow: auto;
-	margin: 0.25em 0;
-}
-.aligned-form label,
-.aligned-form input {
-	float: left;
-}
-.aligned-form label {
-	clear: left;
-	text-align: right;
-	padding: 0.25em 0.5em;
-	white-space: nowrap;
-}
-.aligned-form input {
-	width: calc(100% - 11em);
-	padding: 0.25em;
-}
-.aligned-form .action-container {
-	padding-left: 2.75em;
-}
-.aligned-form .action-container > * {
-	float: unset;
-	display: block;
-	margin: 0.5em auto;
-	text-align: center;
-}
-.aligned-form input[type='submit'] {
-	width: 11em;
-	padding: 0.35em;
-	line-height: 1;
-}
-.aligned-form label + input:focus {
-	outline: none;
-}
-.aligned-form label {
-	width: 9em;
-}
 
 /**************/
-/* LOGIN FORM */
+/* LOGIN PAGE */
 /**************/
 
 .login-container {
-	margin: 3em 0 4em 0;
-	overflow: auto;
+	margin: 3em 0 4em;
+	display: flex;
+	flex-flow: row wrap;
 }
-.login-container > div {
-	float: left;
+
+.login-container form {
 	width: 50%;
+	display: flex;
+	flex-flow: row wrap;
+	align-items: baseline;
+	align-content: flex-start;
 }
-.login-container h1 {
+.login-container form label {
+	text-align: right;
+	padding: 0.25em 0.5em;
+	white-space: nowrap;
+	margin: 0 0 0.25em 0;
+}
+.login-container form input {
+	width: calc(100% - 11em);
+	padding: 0.25em;
+}
+.login-container form input[type='submit'],
+.login-container form a {
+	text-align: center;
+}
+.login-container form input[type='submit'] {
+	width: 11em;
+	padding: 0.35em;
+	margin: 0.5em auto;
+	line-height: 1;
+}
+.login-container form a {
+	width: 100%;
+}
+.login-container form h1 {
 	text-align: center;
 	margin: 0.5em 0;
+	width: 100%;
 }
-.login-container .login-tip {
-	width: auto;
-	padding: 0.5em 0.5em 0.5em 3em;
-	border: 1px solid #eee;
-	margin: 2em 4em 0 4em;
-	line-height: 1.4;
-	text-indent: -2em;
-}
-.login-container .login-tip span {
-	font-weight: bold;
-}
-#login-form-container h1 {
+
+/* “Log in” form */
+
+#login-form h1 {
 	padding-left: 2rem;
 }
-#create-account-form-container {
-	background-color: #f3f3f3;
-	padding: 0 0 0.5em 1em;
-	border: 1px solid #ddd;
+#login-form label {
+	width: 7em;
+}
+#login-form input[type='submit'],
+#login-form a {
+	position: relative;
+	left: 1.375em;
+}
+
+/* “Create account” form */
+
+#signup-form {
 	font-size: 0.9em;
 	width: calc(50% - 1em);
 	margin-right: 1em;
 }
-#create-account-form-container h1 {
+#signup-form h1 {
 	font-size: 1.7em;
-}
-.textarea-container {
-	position: relative;
-}
-
-#edit-post-form {
-	padding: 1em 1em 3em;
-}
-
-#login-form label {
-	width: 7em;
 }
 #signup-form label {
 	width: 9em;
 }
-#signup-form .action-container {
-	padding-left: 7em;
-}
 #signup-form input[type='submit'] {
 	margin: 0.75em auto 0.5em auto;
 	padding: 0.4em 0.5em 0.5em 0.5em;
-	background-color: #e4e4e4;
-	border: 1px solid #ccc;
+	position: relative;
+	left: 3.5em;
 }
-#signup-form input[type='submit']:hover {
-	background-color: #d8d8d8;
-	border: 1px solid #aaa;
+
+/* Log in tip */
+
+.login-container .login-tip {
+	padding: 0.5em 0.5em 0.5em 3em;
+	margin: 2em 4em 0 4em;
+	text-indent: -2em;
+	line-height: 1.4;
 }
+.login-container .login-tip span {
+	font-weight: bold;
+}
+
+/* Message box */
+
 #content.login-page .error-box {
 	margin: 1.5em 0.875em -1.5em 0.875em;
 }
@@ -960,14 +944,11 @@ h1.listing a[href^="http"] {
 	padding: 0.25em;
 	text-align: center;
 }
-.error-box {
-	border: 1px solid red;
-	background-color: #faa;
-}
-.success-box {
-	border: 1px solid green;
-	background-color: #afa;
-}
+
+/***********************/
+/* PASSWORD RESET PAGE */
+/***********************/
+
 .reset-password-container {
 	margin-bottom: 2em;
 }
@@ -2120,11 +2101,18 @@ div.comment-child-links a::first-letter {
 .guiedit:hover::after {
 	visibility: visible;
 }
+.textarea-container {
+	position: relative;
+}
+
 
 /******************/
 /* EDIT POST FORM */
 /******************/
 
+#edit-post-form {
+	padding: 1em 1em 3em;
+}
 #edit-post-form {
 	padding-bottom: 4em;
 }
