@@ -594,10 +594,10 @@
 (defmacro with-error-page (&body body)
   `(call-with-error-page (lambda () ,@body)))
 
-(defun output-form (out-stream method action id class csrf-token fields button-label &key textarea end-html)
-  (format out-stream "<form method=\"~A\" action=\"~A\" id=\"~A\" class=\"~A\"><div>" method action id class)
+(defun output-form (out-stream method action id heading csrf-token fields button-label &key textarea end-html)
+  (format out-stream "<form method=\"~A\" action=\"~A\" id=\"~A\"><h1>~A</h1>" method action id heading)
   (loop for (id label type . params) in fields
-	do (format out-stream "<div><label for=\"~A\">~A:</label>" id label)
+	do (format out-stream "<label for=\"~A\">~A:</label>" id label)
 	do (cond
 	     ((string= type "select")
 	      (destructuring-bind (option-list &optional default) params
@@ -608,11 +608,11 @@
 	     (t
 	       (destructuring-bind (&optional (autocomplete "off") default) params
 		 (format out-stream "<input type=\"~A\" name=\"~A\" autocomplete=\"~A\"~@[ value=\"~A\"~]>" type id autocomplete (and default (encode-entities default))))))
-	do (format out-stream "</div>"))
+	do (format out-stream ""))
   (if textarea
     (destructuring-bind (ta-name ta-contents) textarea
       (format out-stream "<div class=\"textarea-container\"><textarea name=\"~A\">~A</textarea><span class='markdown-reference-link'>You can use <a href='http://commonmark.org/help/' target='_blank'>Markdown</a> here.</span></div>" ta-name (encode-entities ta-contents))))
-  (format out-stream "<div class=\"action-container\"><input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><input type=\"submit\" value=\"~A\">~@[~A~]</div></div></form>"
+  (format out-stream "<input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><input type=\"submit\" value=\"~A\">~@[~A~]</form>"
 	  csrf-token button-label end-html))
 
 (defun view-items-index (items &key section with-offset (with-next t) title current-uri hide-title need-auth hide-rss extra-html page-toolbar-extra (content-class "index-page"))
@@ -1040,20 +1040,19 @@
 					  (emit-page (out-stream :title "Log in" :current-uri "/login" :content-class "login-page")
 						     (when error-message
 						       (format out-stream "<div class=\"error-box\">~A</div>" error-message)) 
-						     (with-outputs (out-stream) "<div class=\"login-container\"><div id=\"login-form-container\"><h1>Log in</h1>")
-						     (output-form out-stream "post" (format nil "/login~@[?return=~A~]" (if return (url-rewrite:url-encode return))) "login-form" "aligned-form" csrf-token
+						     (with-outputs (out-stream) "<div class=\"login-container\">")
+						     (output-form out-stream "post" (format nil "/login~@[?return=~A~]" (if return (url-rewrite:url-encode return))) "login-form" "Log in" csrf-token
 								  '(("login-username" "Username" "text" "username")
 								    ("login-password" "Password" "password" "current-password"))
 								  "Log in"
                                                                   :end-html "<a href=\"/reset-password\">Forgot password</a>")
-						     (with-outputs (out-stream) "</div><div id=\"create-account-form-container\"><h1>Create account</h1>")
-						     (output-form out-stream "post" (format nil "/login~@[?return=~A~]" (if return (url-rewrite:url-encode return))) "signup-form" "aligned-form" csrf-token
+						     (output-form out-stream "post" (format nil "/login~@[?return=~A~]" (if return (url-rewrite:url-encode return))) "signup-form" "Create account" csrf-token
 								  '(("signup-username" "Username" "text" "username")
 								    ("signup-email" "Email" "text" "email")
 								    ("signup-password" "Password" "password" "new-password")
 								    ("signup-password2" "Confirm password" "password" "new-password"))
 								  "Create account")
-						     (with-outputs (out-stream) "</div><div class=\"login-tip\"><span>Tip:</span> You can log in with the same username and password that you use on LessWrong. Creating an account here also creates one on LessWrong.</div></div>")))))
+						     (with-outputs (out-stream) "<div class=\"login-tip\"><span>Tip:</span> You can log in with the same username and password that you use on LessWrong. Creating an account here also creates one on LessWrong.</div></div>")))))
 				     (cond
 				       ((not (or cookie-check (hunchentoot:cookie-in "session-token")))
 					(hunchentoot:set-cookie "session-token" :max-age (- (expt 2 31) 1) :secure *secure-cookies* :value (base64:usb8-array-to-base64-string (ironclad:make-random-salt)))
