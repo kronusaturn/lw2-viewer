@@ -1,52 +1,52 @@
 (uiop:define-package #:lw2.lmdb
-  (:use #:cl #:sb-thread #:lw2-viewer.config #:lw2.hash-utils)
-  (:import-from #:flexi-streams #:string-to-octets #:octets-to-string) 
+  (:use #:cl #:sb-ext #:sb-thread #:alexandria #:lw2-viewer.config #:lw2.hash-utils)
   (:export #:with-cache-mutex #:with-cache-transaction #:with-db #:lmdb-put-string #:cache-put #:cache-get #:simple-cacheable #:define-lmdb-memoized)
-  (:unintern #:lmdb-clear-db))
+  (:unintern #:lmdb-clear-db #:*db-mutex*))
 
 (in-package #:lw2.lmdb) 
 
-(defvar *db-mutex* (sb-thread:make-mutex :name "lmdb"))
-(defvar *db-environment*)
+(defglobal *db-environment* nil)
 
 (uiop:chdir (asdf:system-source-directory "lw2-viewer"))
 (uiop:ensure-all-directories-exist (list *cache-db*))
 
-(when (not (boundp '*db-environment*))
-  (setq *db-environment* (lmdb:make-environment *cache-db* :max-databases 1024 :mapsize *lmdb-mapsize*))
+(when (not *db-environment*)
+  (setf *db-environment* (lmdb:make-environment *cache-db* :max-databases 1024 :max-readers 126 :open-flags 0 :mapsize *lmdb-mapsize*))
   (lmdb:open-environment *db-environment* :create t))
 
-(defmacro with-cache-mutex (&body body)
-  `(with-mutex (*db-mutex*)
-	       ,@body)) 
-
 (defun call-with-cache-transaction (fn &key read-only)
-  (with-recursive-lock (*db-mutex*)
-    (if lmdb:*transaction*
-        (funcall fn)
-        (let ((txn (lmdb:make-transaction *db-environment* :flags (if read-only liblmdb:+rdonly+ 0))))
-          (unwind-protect
-            (progn
-              (lmdb:begin-transaction txn)
-              (let ((lmdb:*transaction* txn))
-                (multiple-value-prog1
-                  (funcall fn)
-                  (lmdb:commit-transaction txn)
-                  (setf txn nil))))
-            (when txn (lmdb:abort-transaction txn)))))))
+  (if lmdb:*transaction*
+      (funcall fn)
+      (let ((txn (lmdb:make-transaction *db-environment* :flags (if read-only liblmdb:+rdonly+ 0))))
+        (unwind-protect
+          (progn
+            (lmdb:begin-transaction txn)
+            (let ((lmdb:*transaction* txn))
+              (multiple-value-prog1
+                (funcall fn)
+                (lmdb:commit-transaction txn)
+                (setf txn nil))))
+          (when txn (lmdb:abort-transaction txn))))))
 
 (defmacro with-cache-transaction (&body body)
   `(call-with-cache-transaction (lambda () ,@body)))
 
+(defglobal *open-databases* (make-hash-table :test 'equal :synchronized t))
+
+(defun get-open-database (db-name)
+  (if-let (db (gethash db-name *open-databases*))
+          db
+          (with-locked-hash-table (*open-databases*)
+            (with-cache-transaction
+              (let ((db (lmdb:make-database db-name)))
+                (lmdb:open-database db :create t)
+                (setf (gethash db-name *open-databases*) db))))))
+
 (defmacro with-db ((db db-name &key read-only) &body body)
-  `(call-with-cache-transaction
-     (lambda ()
-       (let ((,db (lmdb:make-database ,db-name)))
-         (unwind-protect
-           (progn
-             (lmdb:open-database ,db :create t)
-             (progn ,@body)))))
-     :read-only ,read-only))
+  `(let ((,db (get-open-database ,db-name)))
+     (call-with-cache-transaction
+       (lambda () ,@body)
+       :read-only ,read-only)))
 
 (defun lmdb-put-string (db key value)
   (if
