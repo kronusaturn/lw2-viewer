@@ -719,6 +719,12 @@ h1.listing + .post-meta .comment-count.new-comments:hover::before {
 	border-bottom: 1px solid #ccc;
 }
 
+/*==============*/
+/* ALIGNED FORM */
+/*==============*/
+
+
+
 /*==================*/
 /* POSTS & COMMENTS */
 /*==================*/
