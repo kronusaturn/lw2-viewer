@@ -475,6 +475,9 @@ h1.listing a[href^="http"] {
 	h1.listing a:focus {
 		color: #777;
 	}	
+	#content.user-page h1.listing:focus-within::before {
+		left: -0.75em;
+	}
 	h1.listing:focus-within::before {
 		color: #00f;
 	}
@@ -492,6 +495,9 @@ h1.listing a[href^="http"] {
 	h1.listing a:focus {
 		color: #777;
 	}	
+	#content.user-page h1.listing:focus-within::before {
+		left: -0.75em;
+	}
 	h1.listing:focus-within::before {
 		color: #00f;
 	}
@@ -716,6 +722,23 @@ h1.listing + .post-meta .comment-count.new-comments:hover::before {
 
 #content.user-page h1.page-main-heading {
 	border-bottom: 1px solid #ccc;
+}
+
+#content.user-page h1.listing::after {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: calc(100% + 1.375em);
+	box-shadow: 0px 0px 10px #555;
+}
+#content.user-page h1.listing + .post-meta {
+	margin: 0 6px 3em 35px;
+}
+#content.user-page h1.listing + .post-meta::after {
+	display: none;
 }
 
 /*============*/
