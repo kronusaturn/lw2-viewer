@@ -441,7 +441,7 @@
                                  (let ((user-slug (encode-entities (get-user-slug (logged-in-userid)))))
                                    `("login" ,(format nil "/users/~A" user-slug) ,(plump:encode-entities username) :description "User page" :accesskey "u"
                                      :trailing-html ,(inbox-to-html user-slug (check-notifications user-id *current-auth-token*))))
-                                 `("login" ,(format nil "/login?return=~A" (url-rewrite:url-encode current-uri)) "Log In" :accesskey "u")))))
+                                 `("login" ,(format nil "/login?return=~A" (url-encode current-uri)) "Log In" :accesskey "u")))))
     (nav-bar-to-html current-uri)))
 
 (defun sublevel-nav-to-html (out-stream options current &key (base-uri (hunchentoot:request-uri*)) (param-name "show") (remove-params '("offset")) extra-class)
@@ -609,10 +609,29 @@
       (format stream "<a href=\"~A\" class=\"~A\">~A</a>" url class text)
       (format stream "<span class=\"~A\">~A</span>" class text)))
 
+(defun substring (string &optional (start 0) (end (length string)))
+  (make-array (- end start) :element-type (array-element-type string) :displaced-to string :displaced-index-offset start))
+
 (defun postprocess-markdown (markdown)
-  (ppcre:regex-replace-all (load-time-value (concatenate 'string (ppcre:regex-replace-all "\\." *site-uri* "\\.") "posts/([^/ ]{17})/([^/# ]*)(?:(#)comment-([^/ ]{17}))?"))
-                           markdown
-                           "https://www.lesserwrong.com/posts/\\1/\\2\\3\\4"))
+  (setf markdown
+        (ppcre:regex-replace-all (load-time-value (concatenate 'string (ppcre:regex-replace-all "\\." *site-uri* "\\.") "posts/([^/ ]{17})/([^/# ]*)(?:(#)comment-([^/ ]{17}))?"))
+                                 markdown
+                                 "https://www.lesserwrong.com/posts/\\1/\\2\\3\\4")
+        markdown
+        (ppcre:regex-replace-all "(?<!\\\\)\\$\\$(.*?)(?<!\\\\)\\$\\$" markdown
+                                 (lambda (target-string start end match-start match-end reg-starts reg-ends)
+                                   (declare (ignore start end match-start match-end))
+                                   (let* ((latex-formula (substring target-string (elt reg-starts 0) (elt reg-ends 0)))
+                                          (formula-wrapped (format nil "$~A$" latex-formula))
+                                          (image-url (format nil "https://wiki.obormot.net/latexcache/~A.svg"
+                                                             (ironclad:byte-array-to-hex-string
+                                                               (ironclad:digest-sequence :md5 (string-to-octets formula-wrapped :external-format :utf8)))))
+                                          (request-url (concatenate 'string "https://wiki.obormot.net/latex?formula=" (url-encode latex-formula))))
+                                     (drakma:http-request request-url :preserve-uri t :want-stream nil :close t
+                                                          :additional-headers '((:referer . "https://www.greaterwrong.com/")))
+                                     (concatenate 'string "![](" image-url ")"))))
+        markdown
+        (ppcre:regex-replace-all "\\\\\\$" markdown "$")))
 
 (defun post-or-get-parameter (name)
   (or (hunchentoot:post-parameter name) (hunchentoot:get-parameter name)))
@@ -999,13 +1018,13 @@
 						     (when error-message
 						       (format out-stream "<div class=\"error-box\">~A</div>" error-message)) 
 						     (with-outputs (out-stream) "<div class=\"login-container\"><div id=\"login-form-container\"><h1>Log in</h1>")
-						     (output-form out-stream "post" (format nil "/login~@[?return=~A~]" (if return (url-rewrite:url-encode return))) "login-form" "aligned-form" csrf-token
+						     (output-form out-stream "post" (format nil "/login~@[?return=~A~]" (if return (url-encode return))) "login-form" "aligned-form" csrf-token
 								  '(("login-username" "Username" "text" "username")
 								    ("login-password" "Password" "password" "current-password"))
 								  "Log in"
                                                                   :end-html "<a href=\"/reset-password\">Forgot password</a>")
 						     (with-outputs (out-stream) "</div><div id=\"create-account-form-container\"><h1>Create account</h1>")
-						     (output-form out-stream "post" (format nil "/login~@[?return=~A~]" (if return (url-rewrite:url-encode return))) "signup-form" "aligned-form" csrf-token
+						     (output-form out-stream "post" (format nil "/login~@[?return=~A~]" (if return (url-encode return))) "signup-form" "aligned-form" csrf-token
 								  '(("signup-username" "Username" "text" "username")
 								    ("signup-email" "Email" "text" "email")
 								    ("signup-password" "Password" "password" "new-password")
@@ -1016,13 +1035,13 @@
 				       ((not (or cookie-check (hunchentoot:cookie-in "session-token")))
 					(hunchentoot:set-cookie "session-token" :max-age (- (expt 2 31) 1) :secure *secure-cookies* :value (base64:usb8-array-to-base64-string (ironclad:make-random-salt)))
 					(setf (hunchentoot:return-code*) 303
-					      (hunchentoot:header-out "Location") (format nil "/login?~@[return=~A&~]cookie-check=y" (if return (url-rewrite:url-encode return))))) 
+					      (hunchentoot:header-out "Location") (format nil "/login?~@[return=~A&~]cookie-check=y" (if return (url-encode return))))) 
 				       (cookie-check
 					 (if (hunchentoot:cookie-in "session-token")
 					   (setf (hunchentoot:return-code*) 303
-						 (hunchentoot:header-out "Location") (format nil "/login~@[?return=~A~]" (if return (url-rewrite:url-encode return))))
+						 (hunchentoot:header-out "Location") (format nil "/login~@[?return=~A~]" (if return (url-encode return))))
 					   (emit-page (out-stream :title "Log in" :current-uri "/login")
-						      (format out-stream "<h1>Enable cookies</h1><p>Please enable cookies in your browser and <a href=\"/login~@[?return=~A~]\">try again</a>.</p>" (if return (url-rewrite:url-encode return)))))) 
+						      (format out-stream "<h1>Enable cookies</h1><p>Please enable cookies in your browser and <a href=\"/login~@[?return=~A~]\">try again</a>.</p>" (if return (url-encode return)))))) 
 				       (login-username
 					 (check-csrf-token csrf-token)
 					 (cond
