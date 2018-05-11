@@ -1314,7 +1314,6 @@ a.comment-parent-link::before {
 	font-family: "Font Awesome";
 	font-weight: 900;
 	font-size: 0.75rem;
-	color: #bbb;
 	line-height: 1;
 	position: absolute;
 	z-index: 1;
@@ -1324,10 +1323,6 @@ a.comment-parent-link::before {
 	height: calc(100% + 2px);
 	top: -1px;
 	left: -17px;
-}
-a.comment-parent-link:hover::before {
-	background-color: #ffd;
-	color: #999;
 }
 a.comment-parent-link::after {
 	content: "";
@@ -1348,40 +1343,17 @@ a.comment-parent-link:hover::after {
 
 div.comment-child-links {
 	display: block;
-	font-weight: 600;
 }
 div.comment-child-links a {
 	margin: 0 0.2em;
-	font-weight: normal;
 	display: inline-block;
 }
 div.comment-child-links a::first-letter {
-	color: #aaa;
 	margin: 0 1px 0 0;
-}
-
-.comment-item-highlight {
-	box-shadow:
-		0 0	2px #e7b200,
-		0 0	3px #e7b200,
-		0 0	5px #e7b200,
-		0 0	7px #e7b200,
-		0 0 10px #e7b200;
-	border: 1px solid #e7b200;
-}
-.comment-item-highlight-faint {
-	box-shadow:
-		0 0	2px #f8e7b5,
-		0 0	3px #f8e7b5,
-		0 0	5px #f8e7b5,
-		0 0	7px #f8e7b5,
-		0 0 10px #f8e7b5;
-	border: 1px solid #f8e7b5;
 }
 
 .comment-popup {
 	position: fixed;
-	background-color: #fff;
 	top: 10%;
 	right: 10%;
 	max-width: 700px;
