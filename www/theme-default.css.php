@@ -1146,6 +1146,59 @@ div.comment-child-links a::first-letter {
 	background-color: #ffa;
 }
 
+/*================*/
+/* EDIT POST FORM */
+/*================*/
+
+#edit-post-form .link-post-checkbox + label::before {
+	border-radius: 3px;
+	border: 1px solid #ddd;
+	color: #777;
+}
+#edit-post-form .link-post-checkbox + label:hover,
+#edit-post-form .link-post-checkbox:focus + label {
+	text-shadow: 
+		0 0 1px #fff,
+		0 0 2px #fff,
+		0 0 2.5px #aaa;
+}
+#edit-post-form .link-post-checkbox + label:hover::before,
+#edit-post-form .link-post-checkbox:focus + label::before {
+	border-color: #aaa;
+}
+#edit-post-form .link-post-checkbox:checked + label::before {
+	content: "\F00C";
+}
+#edit-post-form input[type='radio'] + label {
+	color: #777;
+	border-color: #ddd;
+}
+#edit-post-form input[type='radio'][value='all'] + label {
+	border-radius: 8px 0 0 8px;
+	border-width: 1px;
+}
+#edit-post-form input[type='radio'][value='drafts'] + label {
+	border-radius: 0 8px 8px 0;
+}
+#edit-post-form input[type='radio'] + label:hover,
+#edit-post-form input[type='radio']:focus + label {
+	background-color: #ddd;
+	color: #000;
+}
+#edit-post-form input[type='radio']:focus + label {
+	color: #000;
+	box-shadow: 
+		0 0 0 1px #aaa;
+}
+#edit-post-form input[type='radio']:checked + label {
+	background-color: #ddd;
+	border-color: #ddd;
+	color: #000;
+	text-shadow: 
+		0 -1px 0 #fff,
+		0 0.5px 0.5px #000;
+}
+
 /*==============*/
 /* SUBLEVEL NAV */
 /*==============*/
