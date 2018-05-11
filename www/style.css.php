@@ -1944,11 +1944,13 @@ div.comment-child-links a::first-letter {
 	border-radius: 3px;
 	box-shadow: 
 		0 0 0 1px #fff,
-		0 0 0 2px #00e;
+		0 0 0 2px #00e,
+		0 0 0 3px transparent;
 	padding: 0 0 0 2px;
 	background-size: 100%;
 	position: relative;
 	top: 2px;
+	opacity: 0.5;
 }
 .comment-meta .permalink::before {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/anchor-white-on-blue.gif")) ?>');
@@ -1973,7 +1975,8 @@ div.comment-child-links a::first-letter {
 .comment-meta .lw2-link:hover::before,
 .individual-thread-page a.comment-parent-link:empty:hover::before {
 	box-shadow: 
-		0 0 0 2px #00e;
+		0 0 0 2px #00e,
+		0 0 0 3px transparent;
 }
 .comment-meta .permalink:active::before,
 .comment-meta .lw2-link:active::before,
