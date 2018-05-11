@@ -1200,10 +1200,41 @@ h1.listing + .post-meta .post-section::before {
 /************/
 
 #comments {
-	border-top: 1px solid #fff;
-	box-shadow: 0 3px 4px -4px #fff inset;
 	padding: 0 0 1px 0;
 }
+ul.comment-thread {
+	list-style-type: none;
+	padding: 0;
+}
+#comments .comment-thread > li {
+	position: relative;
+}
+
+.comment-item {
+	margin: 2em 0 0 0;
+}
+.comment-item .comment-item {
+	margin: 1em 8px 8px 16px;
+}
+.comment-item .comment-item + .comment-item {
+	margin: 2em 8px 8px 16px;
+}
+
+.comment-body {
+	line-height: 1.45;
+	font-size: 1.2rem;
+	padding: 10px;
+}
+.comment-body ul {
+	list-style-type: circle;
+}
+.comment-body > *:first-child {
+	margin-top: 0;
+}
+.comment-body > *:last-child {
+	margin-bottom: 0;
+}
+
 #comments:empty::before,
 #comments > .comment-controls:last-child::after {
 	content: "No comments.";
@@ -1213,6 +1244,10 @@ h1.listing + .post-meta .post-section::before {
 	padding: 0.75em 0 0.9em 0;
 	font-size: 1.375em;
 }
+
+/**********************************/
+/* DEEP COMMENT THREAD COLLAPSING */
+/**********************************/
 
 .comment-item input[id^="expand"] {
 	display: none;
@@ -1229,19 +1264,10 @@ h1.listing + .post-meta .post-section::before {
 	position: absolute;
 	left: 0;
 	white-space: nowrap;
-	color: #0cc800;
-	font-weight: 600;
 	cursor: pointer;
 }
 .comment-item input[id^="expand"]:checked + label::after {
 	content: "(Collapse " attr(data-child-count) "	below)";
-}
-.comment-item input[id^="expand"] + label:hover::after {
-	color: #00a9ed;
-}
-.comment-item input[id^="expand"] + label:active::after,
-.comment-item input[id^="expand"] + label:focus::after{
-	color: #00a9ed;
 }
 .comment-item input[id^="expand"] ~ .comment-thread {
 	max-height: 34px;
@@ -1256,119 +1282,14 @@ h1.listing + .post-meta .post-section::before {
 
 .comment-item input[id^="expand"]:checked ~ .comment-thread .comment-thread .comment-item {
 	margin: 0;
-	border-width: 1px 0 0 0;
 }
 .comment-item input[id^="expand"]:checked ~ .comment-thread .comment-thread .comment-item a.comment-parent-link:hover::after {
 	display: none;
 }
 
-
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
-.comment-item .comment-item .comment-item .comment-item .comment-item,
-.comment-item .comment-item .comment-item,
-.comment-item {
-	background-color: #131313;
-}
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
-.comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
-.comment-item .comment-item .comment-item a.comment-parent-link::after,
-.comment-item a.comment-parent-link::after {
-	box-shadow: 
-		0 28px 16px -16px #000 inset,
-		4px 16px 0 12px #00001e inset,
-		4px	4px 0 12px #00001e inset;
-}
-
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
-.comment-item .comment-item .comment-item .comment-item,
-.comment-item .comment-item {
-	background-color: #000;
-}
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
-.comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
-.comment-item .comment-item a.comment-parent-link::after {
-	box-shadow: 
-		0 28px 16px -16px #131313 inset,
-		4px 16px 0 12px #00001e inset,
-		4px	4px 0 12px #00001e inset;
-}
-
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
-.comment-item .comment-item .comment-item .comment-item .comment-item:target,
-.comment-item .comment-item .comment-item .comment-item:target,
-.comment-item .comment-item .comment-item:target,
-.comment-item .comment-item:target,
-.comment-item:target {
-	background-color: #00001e;
-}
-.comment-item:target > .comment-thread > .comment-item > .comment > .comment-meta > a.comment-parent-link::after {
-	box-shadow: 
-		0 28px 16px -16px #00001e inset,
-		4px 16px 0 12px #00001e inset,
-		4px	4px 0 12px #00001e inset !important;
-}
-
-ul.comment-thread {
-	list-style-type: none;
-	padding: 0;
-}
-
-.comment-item {
-	border: 1px solid #2c2c2c;
-	margin: 2em 0 0 0;
-}
-
-.comment-item .comment-item {
-	margin: 1em 8px 8px 16px;
-}
-
-.comment-item .comment-item + .comment-item {
-	margin: 2em 8px 8px 16px;
-}
+/****************/
+/* COMMENT-META */
+/****************/
 
 .comment-meta {
 	padding: 2px 80px 2px 10px;
@@ -1386,45 +1307,10 @@ ul.comment-thread {
 .user-page .comment-meta {
 	padding-right: 10px;
 }
-/* 
-.comment-meta::before {
-	content: "";
-	float: right;
-	height: 20px;
-	width: 66px;
-}
-.comment-item .comment-item .comment-meta::before {
-	width: 48px;
-}
- */
-.comment-meta .author {
-	font-weight: bold;
-	font-size: 1.25em;
-	color: #fff;
-}
-.comment-meta .author:hover {
-	text-decoration: none;
-	color: #9740cb;
-}
-.comment-meta:last-child {
-	margin-left: 1em;
-}
 
-.comment-body {
-	line-height: 1.45;
-	font-size: 1.2rem;
-	padding: 10px;
-}
-
-.comment-body ul {
-	list-style-type: circle;
-}
-.comment-body > *:first-child {
-	margin-top: 0;
-}
-.comment-body > *:last-child {
-	margin-bottom: 0;
-}
+/*****************************/
+/* COMMENT THREAD NAVIGATION */
+/*****************************/
 
 a.comment-parent-link {
 	opacity: 0.5;
@@ -1432,7 +1318,6 @@ a.comment-parent-link {
 a.comment-parent-link:hover {
 	opacity: 1.0;
 }
-
 a.comment-parent-link::before {
 	content: "\F062";
 	font-family: "Font Awesome";
@@ -1484,10 +1369,6 @@ div.comment-child-links a::first-letter {
 	margin: 0 1px 0 0;
 }
 
-#comments .comment-thread > li {
-	position: relative;
-}
-
 .comment-item-highlight {
 	box-shadow:
 		0 0	2px #0047b5,
@@ -1506,6 +1387,7 @@ div.comment-child-links a::first-letter {
 		0 0 10px #00193b;
 	border: 1px solid #00193b;
 }
+
 .comment-popup {
 	position: fixed;
 	background-color: #000;
@@ -3870,9 +3752,6 @@ h1.listing a[href^="http"] {
 h1.listing + .post-meta {
 	padding-right: 320px;
 }
-h1.listing + .post-meta > * {
-	display: inline;
-}
 h1.listing + .post-meta .karma-value span,
 h1.listing + .post-meta .comment-count span,
 h1.listing + .post-meta .lw2-link span,
@@ -4210,6 +4089,141 @@ h1.listing + .post-meta .comment-count.new-comments:hover::before {
 		0 0 3px #54d400;
 }
 
+/*==========*/
+/* COMMENTS */
+/*==========*/
+
+#comments {
+	border-top: 1px solid #fff;
+	box-shadow: 0 3px 4px -4px #fff inset;
+}
+.comment-item {
+	border: 1px solid #2c2c2c;
+}
+
+
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item,
+.comment-item {
+	background-color: #131313;
+}
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item a.comment-parent-link::after {
+	box-shadow: 
+		0 28px 16px -16px #000 inset,
+		4px 16px 0 12px #00001e inset,
+		4px	4px 0 12px #00001e inset;
+}
+
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item {
+	background-color: #000;
+}
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item a.comment-parent-link::after {
+	box-shadow: 
+		0 28px 16px -16px #131313 inset,
+		4px 16px 0 12px #00001e inset,
+		4px	4px 0 12px #00001e inset;
+}
+
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item:target,
+.comment-item .comment-item:target,
+.comment-item:target {
+	background-color: #00001e;
+}
+.comment-item:target > .comment-thread > .comment-item > .comment > .comment-meta > a.comment-parent-link::after {
+	box-shadow: 
+		0 28px 16px -16px #00001e inset,
+		4px 16px 0 12px #00001e inset,
+		4px	4px 0 12px #00001e inset !important;
+}
+
+/*================================*/
+/* DEEP COMMENT THREAD COLLAPSING */
+/*================================*/
+
+.comment-item input[id^="expand"] + label::after {
+	color: #0cc800;
+	font-weight: 600;
+}
+.comment-item input[id^="expand"] + label:hover::after {
+	color: #00a9ed;
+}
+.comment-item input[id^="expand"] + label:active::after,
+.comment-item input[id^="expand"] + label:focus::after{
+	color: #00a9ed;
+}
+.comment-item input[id^="expand"]:checked ~ .comment-thread .comment-thread .comment-item {
+	border-width: 1px 0 0 0;
+}
+
+/*==============*/
+/* COMMENT-META */
+/*==============*/
+
+.comment-meta .author {
+	font-weight: bold;
+	font-size: 1.25em;
+	color: #fff;
+}
+.comment-meta .author:hover {
+	text-decoration: none;
+	color: #9740cb;
+}
+
 /*===========================*/
 /* COMMENTING AND POSTING UI */
 /*===========================*/
@@ -4226,12 +4240,6 @@ h1.listing + .post-meta .comment-count.new-comments:hover::before {
 .posting-controls.edit-existing-comment .guiedit-buttons-container button {
     color: #ce92ee;
 }
-
-
-/*===========================*/
-/* COMMENTING AND POSTING UI */
-/*===========================*/
-
 .guiedit-buttons-container button {
 	font-family: Font Awesome, Charter, Georgia, serif;
 }

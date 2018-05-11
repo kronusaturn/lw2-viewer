@@ -508,9 +508,6 @@ h1.listing a[href^="http"] {
 h1.listing + .post-meta {
 	padding-right: 320px;
 }
-h1.listing + .post-meta > * {
-	display: inline;
-}
 h1.listing + .post-meta .karma-value span,
 h1.listing + .post-meta .comment-count span,
 h1.listing + .post-meta .lw2-link span,
@@ -848,6 +845,93 @@ h1.listing + .post-meta .comment-count.new-comments:hover::before {
 		0 0 3px #00c;
 }
 
+/*==========*/
+/* COMMENTS */
+/*==========*/
+
+#comments {
+	border-top: 1px solid #000;
+	box-shadow: 0 3px 4px -4px #000 inset;
+}
+.comment-item {
+	border: 1px solid #ccc;
+}
+
+<?php
+	function nested_stuff($segment, $tip, $last_tip, $nesting_levels) {
+		for ($i = $nesting_levels; $i > 0; $i--) {
+			for ($j = $i; $j > 0; $j--)
+				echo $segment;
+			echo $tip;
+		}
+		echo $last_tip;
+	}
+	$comment_nesting_depth = 10;
+?>
+
+<?php nested_stuff(".comment-item .comment-item ", ".comment-item,\n", ".comment-item", $comment_nesting_depth); ?> {
+	background-color: #eee;
+}
+<?php nested_stuff(".comment-item .comment-item ", ".comment-item a.comment-parent-link::after,\n", ".comment-item a.comment-parent-link::after", $comment_nesting_depth); ?> {
+	box-shadow: 
+		0 28px 16px -16px #fff inset,
+		4px 16px 0 12px #ffd inset,
+		4px	4px 0 12px #ffd inset;
+}
+
+<?php nested_stuff(".comment-item .comment-item ", ".comment-item .comment-item,\n", ".comment-item .comment-item", $comment_nesting_depth); ?> {
+	background-color: #fff;
+}
+<?php nested_stuff(".comment-item .comment-item ", ".comment-item .comment-item a.comment-parent-link::after,\n", ".comment-item .comment-item a.comment-parent-link::after", $comment_nesting_depth); ?> {
+	box-shadow: 
+		0 28px 16px -16px #eee inset,
+		4px 16px 0 12px #ffd inset,
+		4px	4px 0 12px #ffd inset;
+}
+
+<?php nested_stuff(".comment-item ", ".comment-item:target,\n", ".comment-item:target", (2 * $comment_nesting_depth) - 1); ?> {
+	background-color: #ffd;
+}
+.comment-item:target > .comment-thread > .comment-item > .comment > .comment-meta > a.comment-parent-link::after {
+	box-shadow: 
+		0 28px 16px -16px #ffd inset,
+		4px 16px 0 12px #ffd inset,
+		4px	4px 0 12px #ffd inset !important;
+}
+
+/*================================*/
+/* DEEP COMMENT THREAD COLLAPSING */
+/*================================*/
+
+.comment-item input[id^="expand"] + label::after {
+	color: #00e;
+	font-weight: 600;
+}
+.comment-item input[id^="expand"] + label:hover::after {
+	color: #c00;
+}
+.comment-item input[id^="expand"] + label:active::after,
+.comment-item input[id^="expand"] + label:focus::after{
+	color: #c00;
+}
+.comment-item input[id^="expand"]:checked ~ .comment-thread .comment-thread .comment-item {
+	border-width: 1px 0 0 0;
+}
+
+/*==============*/
+/* COMMENT-META */
+/*==============*/
+
+.comment-meta .author {
+	font-weight: bold;
+	font-size: 1.25em;
+	color: #000;
+}
+.comment-meta .author:hover {
+	text-decoration: none;
+	color: #090;
+}
+
 /*===========================*/
 /* COMMENTING AND POSTING UI */
 /*===========================*/
@@ -864,12 +948,6 @@ h1.listing + .post-meta .comment-count.new-comments:hover::before {
 .posting-controls.edit-existing-comment .guiedit-buttons-container button {
     color: #050;
 }
-
-
-/*===========================*/
-/* COMMENTING AND POSTING UI */
-/*===========================*/
-
 .guiedit-buttons-container button {
 	font-family: Font Awesome, Charter, Georgia, serif;
 }
