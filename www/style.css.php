@@ -754,6 +754,7 @@ h1.listing a[href^="http"] {
 }
 
 h1.listing + .post-meta {
+	position: relative;
 	text-align: left;
 	margin: 0 20px 0 21px;
 }
@@ -1750,7 +1751,8 @@ div.comment-child-links a::first-letter {
 	margin: 2px 0;
 	padding: 4px 5px;
 	font-size: 1.2rem;
-	border-top-width: 29px;
+	border-style: solid;
+	border-width: 29px 1px 1px 1px;
 	resize: none;
 }
 

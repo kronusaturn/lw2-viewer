@@ -1093,7 +1093,7 @@ div.comment-child-links a::first-letter {
 
 .posting-controls textarea {
 	font-family: Charter, Georgia, serif;
-	border: 1px solid #aaa;
+	border-color: #aaa;
 	box-shadow: 
 		0 0 0 1px #eee inset;
 }
@@ -1398,6 +1398,7 @@ select {
 
 .qualified-linking label {
 	color: #00e;
+}
 .qualified-linking label:hover {
 	text-shadow:
 		0 0 1px #fff,
