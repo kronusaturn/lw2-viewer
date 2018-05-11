@@ -2847,6 +2847,12 @@ blockquote blockquote {
 	border: none;
 }
 
+img.inline-latex {
+	position: relative;
+	top: 2.5px;
+	margin: 0 2px;
+}
+
 #content figure {
 	text-align: center;
 	margin: 1.5em auto;
