@@ -410,6 +410,7 @@ a#inbox-indicator.new-messages:hover::before {
 #quick-nav-ui a {
 	font-family: 'Font Awesome';
 	font-weight: 900;
+	font-size: 1.5rem;
 	line-height: 1.7;
 	text-align: center;
 	display: block;

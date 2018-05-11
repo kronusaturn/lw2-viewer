@@ -724,6 +724,14 @@ h1.listing + .post-meta .comment-count.new-comments:hover::before {
 	border-bottom: 1px solid #ccc;
 }
 
+#content.user-page .sublevel-nav + h1.listing {
+	margin-top: 1.75em;
+}
+#content.user-page h1.listing {
+	margin: 1.5em 0 0 0;
+	padding: 0 6px;
+	position: relative;
+}
 #content.user-page h1.listing::after {
 	content: "";
 	display: block;
