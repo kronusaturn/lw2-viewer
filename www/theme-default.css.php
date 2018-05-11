@@ -1,5 +1,6 @@
 <?php
 	$UI_font = ($platform == 'Windows') ? "'Whitney', 'a_Avante'" : "'Concourse', 'a_Avante'";
+	$UI_font_smallcaps = ($platform == 'Windows') ? "'Whitney Smallcaps', 'a_Avante'" : "'Concourse Smallcaps', 'a_Avante'";
 ?>
 
 /*****************/
@@ -194,6 +195,9 @@ input {
 /* SUBLEVEL NAV */
 /*==============*/
 
+.sublevel-nav.sort .sublevel-item {
+	font-family: <?php echo $UI_font_smallcaps; ?>;
+}
 .sublevel-nav .sublevel-item {
 	border-color: #ddd;
 	border-style: solid;
@@ -1199,10 +1203,245 @@ div.comment-child-links a::first-letter {
 		0 0.5px 0.5px #000;
 }
 
-/*==============*/
-/* SUBLEVEL NAV */
-/*==============*/
+/*=======*/
+/* LINKS */
+/*=======*/
 
-.sublevel-nav.sort .sublevel-item {
-	font-family: <?php echo ($platform == 'Windows') ? "'Whitney SmallCaps'" : "'Concourse SmallCaps'"; ?>;
+a {
+	text-decoration: none;
+	color: #00e;
+}
+a:visited {
+	color: #551a8b;
+}
+a:hover {
+	text-decoration: underline;
+}
+
+/*=========*/
+/* BUTTONS */
+/*=========*/
+
+button,
+input[type='submit'] {
+	color: #00e;
+}
+
+button:hover,
+input[type='submit']:hover {
+	color: #d00;
+	text-shadow:
+		0 0 1px #fff,
+		0 0 3px #fff,
+		0 0 5px #fff;
+}
+button:active,
+input[type='submit']:active {
+	color: #f00;
+	transform: scale(0.9);
+}
+.button:hover {
+	color: #d00;
+	text-shadow:
+		0 0 1px #fff,
+		0 0 2px #fff,
+		0 0 4px #fff,
+		0 0 2px #f00;
+	text-decoration: none;
+}
+.button:active {
+	transform: scale(0.9);
+}
+.button:focus:not(:hover) {
+	transform: none;
+}
+@-moz-document url-prefix() {
+	.button:active {
+		transform: none;
+	}
+}
+
+/*==========*/
+/* HEADINGS */
+/*==========*/
+
+h1 {
+	font-weight: <?php echo ($platform == 'Mac') ? "700" : "800"; ?>;
+}
+
+.post-body h1,
+.post-body h2,
+.post-body h4,
+.comment-body h1,
+.comment-body h2,
+.comment-body h4 {
+	font-family: <?php echo $UI_font; ?>;
+}
+.post-body h3,
+.comment-body h3 {
+	font-family: <?php echo $UI_font_smallcaps; ?>;
+	font-weight: 600;
+}
+.post-body h5,
+.post-body h6,
+.comment-body h5,
+.comment-body h6 {
+	font-weight: 600;
+	font-family: <?php echo $UI_font_smallcaps; ?>;
+}
+.post-body h6,
+.comment-body h6 {
+	color: #555;
+}
+.post-body h1,
+.comment-body h1 {
+	border-bottom: 1px solid #aaa;
+}
+
+/*========*/
+/* QUOTES */
+/*========*/
+
+blockquote {
+	border-left: 5px solid #ccc;
+}
+
+/*========*/
+/* IMAGES */
+/*========*/
+
+.post-body img,
+.comment-body img {
+	border: 1px solid #ccc;
+}
+.post-body img[src$='.svg'],
+.comment-body img[src$='.svg'] {
+	border: none;
+}
+#content figure img {
+	border: 1px solid #000;
+}
+#content figure img[src$='.svg'] {
+	border: none;
+}
+
+/*======*/
+/* MISC */
+/*======*/
+
+hr {
+	border-bottom: 1px solid #999;
+}
+
+code {
+	background-color: #f6f6ff;
+	border: 1px solid #ddf;
+	border-radius: 4px;
+}
+
+input[type='text'],
+input[type='search'],
+input[type='password'],
+textarea {
+	background-color: #fff;
+	color: #000;
+}
+
+select {
+	color: #000;
+}
+
+/*============*/
+/* ABOUT PAGE */
+/*============*/
+
+.about-page u {
+	background-color: #e6e6e6;
+	text-decoration: none;
+	box-shadow: 
+		0 -1px 0 0 #000 inset, 
+		0 -3px 1px -2px #000 inset;
+	padding: 0 1px;
+}
+
+#content.about-page .accesskey-table {
+	font-family: <?php echo $UI_font; ?>;
+	border-color: #ddd;
+}
+
+#content.about-page img {
+	border: 1px solid #000;
+}
+
+/*============*/
+/* USER STATS */
+/*============*/
+
+.user-stats .karma-total {
+	font-weight: bold;
+}
+
+/*========================*/
+/* QUALIFIED HYPERLINKING */
+/*========================*/
+
+#aux-about-link a {
+	color: #777;
+}
+#aux-about-link a:hover {
+	opacity: 1.0;
+	text-shadow: 
+		0 0 1px #fff, 
+		0 0 3px #fff, 
+		0 0 5px #fff;
+}
+
+.qualified-linking label {
+	color: #00e;
+.qualified-linking label:hover {
+	text-shadow:
+		0 0 1px #fff,
+		0 0 3px #fff,
+		0 0 5px #00e;
+}
+
+.qualified-linking-toolbar {
+	border: 1px solid #000;
+	background-color: #fff;
+}
+.qualified-linking-toolbar a {
+	background-color: #eee;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+.qualified-linking-toolbar a:visited {
+	color: #00e;
+}
+.qualified-linking-toolbar a:hover {
+	text-decoration: none;
+	background-color: #ddd;
+	text-shadow:
+		0 0 1px #fff,
+		0 0 3px #fff,
+		0 0 5px #fff;
+}
+
+/*======*/
+/* MATH */
+/*======*/
+
+div > .MJXc-display {
+	padding: 10px 6px;
+	border-radius: 6px;
+}
+.MJXc-display::-webkit-scrollbar {
+	height: 12px;
+	background-color: #f6f6ff;
+	border-radius: 6px;
+	border: 1px solid #ddf;
+}
+.MJXc-display::-webkit-scrollbar-thumb {
+	background-color: #dde;
+	border-radius: 6px;
+	border: 1px solid #cce;
 }
