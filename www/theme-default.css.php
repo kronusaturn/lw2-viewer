@@ -933,6 +933,51 @@ h1.listing + .post-meta .comment-count.new-comments:hover::before {
 }
 
 /*===========================*/
+/* COMMENT THREAD NAVIGATION */
+/*===========================*/
+
+a.comment-parent-link::before {
+	color: #bbb;
+}
+a.comment-parent-link:hover::before {
+	background-color: #ffd;
+	color: #999;
+}
+
+div.comment-child-links {
+	font-weight: 600;
+}
+div.comment-child-links a {
+	font-weight: normal;
+}
+div.comment-child-links a::first-letter {
+	color: #aaa;
+}
+
+.comment-item-highlight {
+	box-shadow:
+		0 0	2px #e7b200,
+		0 0	3px #e7b200,
+		0 0	5px #e7b200,
+		0 0	7px #e7b200,
+		0 0 10px #e7b200;
+	border: 1px solid #e7b200;
+}
+.comment-item-highlight-faint {
+	box-shadow:
+		0 0	2px #f8e7b5,
+		0 0	3px #f8e7b5,
+		0 0	5px #f8e7b5,
+		0 0	7px #f8e7b5,
+		0 0 10px #f8e7b5;
+	border: 1px solid #f8e7b5;
+}
+
+.comment-popup {
+	background-color: #fff;
+}
+
+/*===========================*/
 /* COMMENTING AND POSTING UI */
 /*===========================*/
 
