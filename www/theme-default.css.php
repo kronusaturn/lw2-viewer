@@ -977,6 +977,74 @@ div.comment-child-links a::first-letter {
 	background-color: #fff;
 }
 
+/*=======================*/
+/* COMMENTS COMPACT VIEW */
+/*=======================*/
+
+#comments-list-mode-selector button {
+	box-shadow:
+		0 0 0 4px #fff inset,
+		0 0 0 5px #bbb inset;
+}
+#comments-list-mode-selector button:hover,
+#comments-list-mode-selector button.selected {
+	box-shadow:
+		0 0 0 5px #bbb inset;
+}
+#content.compact > .comment-thread .comment-item::after {
+	color: #00e;
+	background: linear-gradient(to right, transparent 0%, #fff 50%, #fff 100%);
+}
+#content.compact > .comment-thread .comment-item:hover .comment {
+	background-color: #fff;
+	outline: 3px solid #00c;
+}
+#content.compact > .comment-thread .comment-item:hover .comment::before {
+	background-color: #fff;
+	box-shadow: 
+		0 0  3px #fff,
+		0 0  5px #fff,
+		0 0  7px #fff,
+		0 0 10px #fff,
+		0 0 20px #fff,
+		0 0 30px #fff,
+		0 0 40px #fff;
+}
+
+/*===========================*/
+/* HIGHLIGHTING NEW COMMENTS */
+/*===========================*/
+
+.new-comment::before {
+	outline: 2px solid #5a5;
+	box-shadow:
+		0 0 6px -2px #5a5 inset, 
+		0 0 4px #5a5, 
+		0 0 6px #5a5;
+}
+
+/*=================================*/
+/* COMMENT THREAD MINIMIZE BUTTONS */
+/*=================================*/
+
+.comment-minimize-button {
+	color: #ccc;
+}
+.comment-minimize-button:hover {
+	color: #aaa;
+	text-shadow:
+		0 0 1px #fff,
+		0 0 3px #fff,
+		0 0 5px #fff;
+}
+.comment-minimize-button::after {
+	font-family: <?php echo $UI_font; ?>;
+	color: #777;
+}
+.comment-minimize-button.maximized::after {
+	color: #ccc;
+}
+
 /*===========================*/
 /* COMMENTING AND POSTING UI */
 /*===========================*/

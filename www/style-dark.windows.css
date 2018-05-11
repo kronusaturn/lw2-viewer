@@ -1476,17 +1476,9 @@ div.comment-child-links a::first-letter {
 	padding: 6px;
 	margin: 1px;
 	overflow: hidden;
-	box-shadow:
-		0 0 0 4px #000 inset,
-		0 0 0 5px #393939 inset;
 	background-repeat: no-repeat;
 	background-size: 100%;
 	background-origin: content-box;
-}
-#comments-list-mode-selector button:hover,
-#comments-list-mode-selector button.selected {
-	box-shadow:
-		0 0 0 5px #393939 inset;
 }
 #comments-list-mode-selector button:disabled {
 	cursor: auto;
@@ -1513,13 +1505,11 @@ div.comment-child-links a::first-letter {
 }
 #content.compact > .comment-thread .comment-item::after {
 	content: "…";
-	color: #0cc800;
 	position: absolute;
 	right: 0;
 	bottom: 0;
 	font-size: 2rem;
 	line-height: 1;
-	background: linear-gradient(to right, transparent 0%, #000 50%, #000 100%);
 	padding: 0 16px 10px 64px;
 	pointer-events: auto;
 }
@@ -1553,10 +1543,8 @@ div.comment-child-links a::first-letter {
 	max-height: unset;
 }
 #content.compact > .comment-thread .comment-item:hover .comment {
-	background-color: #000;
 	position: relative;
 	z-index: 1;
-	outline: 3px solid #54d400;
 	margin-bottom: 2em;
 	bottom: 0;
 }
@@ -1564,20 +1552,11 @@ div.comment-child-links a::first-letter {
 	content: "";
 	position: absolute;
 	display: block;
-	background-color: #000;
 	width: calc(100% + 20px);
 	height: calc(100% + 20px);
 	z-index: -1;
 	top: -10px;
 	left: -10px;
-	box-shadow: 
-		0 0  3px #000,
-		0 0  5px #000,
-		0 0  7px #000,
-		0 0 10px #000,
-		0 0 20px #000,
-		0 0 30px #000,
-		0 0 40px #000;
 }
 #content.compact > .comment-thread:last-of-type .comment-item:hover .comment {
 	margin: 0;
@@ -1592,11 +1571,6 @@ div.comment-child-links a::first-letter {
 	position: absolute;
 	width: 100%;
 	height: 100%;
-	outline: 2px solid #7f3b92;
-	box-shadow:
-		0 0 6px -2px #7f3b92 inset, 
-		0 0 4px #7f3b92, 
-		0 0 6px #7f3b92;
 	z-index: 5000;
 	pointer-events: none;
 }
@@ -1609,7 +1583,6 @@ div.comment-child-links a::first-letter {
 	font-family: Font Awesome;
 	font-weight: 900;
 	font-size: 1.25rem;
-	color: #2c2c2c;
 	line-height: 1;
 	position: absolute;
 	right: 1px;
@@ -1618,31 +1591,18 @@ div.comment-child-links a::first-letter {
 	margin: 0;
 	cursor: pointer;
 }
-.comment-minimize-button:hover {
-	color: #484848;
-	text-shadow:
-		0 0 1px #000,
-		0 0 3px #000,
-		0 0 5px #000;
-}
 .comment-minimize-button:active {
 	transform: scale(0.9);
 }
-
 .comment-minimize-button::after {
 	content: attr(data-child-count);
 	font-weight: normal;
-	font-family: 'Whitney', 'a_Avante';
 	font-size: 0.8125rem;
 	position: absolute;
 	left: 0;
 	width: 100%;
 	text-align: center;
 	top: 21px;
-	color: #777;
-}
-.comment-minimize-button.maximized::after {
-	color: #2c2c2c;
 }
 #content.individual-thread-page .comment-minimize-button {
 	display: none;
@@ -4239,6 +4199,74 @@ div.comment-child-links a::first-letter {
 
 .comment-popup {
 	background-color: #000;
+}
+
+/*=======================*/
+/* COMMENTS COMPACT VIEW */
+/*=======================*/
+
+#comments-list-mode-selector button {
+	box-shadow:
+		0 0 0 4px #000 inset,
+		0 0 0 5px #393939 inset;
+}
+#comments-list-mode-selector button:hover,
+#comments-list-mode-selector button.selected {
+	box-shadow:
+		0 0 0 5px #393939 inset;
+}
+#content.compact > .comment-thread .comment-item::after {
+	color: #0cc800;
+	background: linear-gradient(to right, transparent 0%, #000 50%, #000 100%);
+}
+#content.compact > .comment-thread .comment-item:hover .comment {
+	background-color: #000;
+	outline: 3px solid #54d400;
+}
+#content.compact > .comment-thread .comment-item:hover .comment::before {
+	background-color: #000;
+	box-shadow: 
+		0 0  3px #000,
+		0 0  5px #000,
+		0 0  7px #000,
+		0 0 10px #000,
+		0 0 20px #000,
+		0 0 30px #000,
+		0 0 40px #000;
+}
+
+/*===========================*/
+/* HIGHLIGHTING NEW COMMENTS */
+/*===========================*/
+
+.new-comment::before {
+	outline: 2px solid #7f3b92;
+	box-shadow:
+		0 0 6px -2px #7f3b92 inset, 
+		0 0 4px #7f3b92, 
+		0 0 6px #7f3b92;
+}
+
+/*=================================*/
+/* COMMENT THREAD MINIMIZE BUTTONS */
+/*=================================*/
+
+.comment-minimize-button {
+	color: #2c2c2c;
+}
+.comment-minimize-button:hover {
+	color: #484848;
+	text-shadow:
+		0 0 1px #000,
+		0 0 3px #000,
+		0 0 5px #000;
+}
+.comment-minimize-button::after {
+	font-family: 'Whitney', 'a_Avante';
+	color: #777;
+}
+.comment-minimize-button.maximized::after {
+	color: #2c2c2c;
 }
 
 /*===========================*/
