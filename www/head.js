@@ -22,7 +22,7 @@ function setTheme(themeName) {
 	
 	if (themeName == 'dark') {
 		document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='dark-theme-adjustments'>" + 
-		`.markdown-reference-link a::before { filter: invert(100%); }` + "</style>");
+		`.markdown-reference-link a { color: #d200cf; filter: invert(100%); }` + "</style>");
 	} else {
 		document.querySelectorAll("#dark-theme-adjustments").forEach(function(e) {e.parentNode.removeChild(e)});
 	}
