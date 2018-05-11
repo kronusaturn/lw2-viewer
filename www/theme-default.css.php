@@ -1049,20 +1049,101 @@ div.comment-child-links a::first-letter {
 /* COMMENTING AND POSTING UI */
 /*===========================*/
 
+.posting-controls input[type='submit'] {
+	background-color: #fff;
+	border: 1px solid #aaa;
+	font-weight: bold;
+}
+.posting-controls input[type='submit']:hover,
+.posting-controls input[type='submit']:focus {
+	background-color: #ddd;
+	border: 1px solid #999;
+}
+
+.comment-controls .cancel-comment-button {
+	font-weight: 600;
+	color: #c00;
+	text-shadow: 
+		0 0 1px #fff,
+		0 0 2px #fff;
+}
+.comment-controls .cancel-comment-button:hover {
+	color: #f00;
+	text-shadow:
+		0 0 1px #fff,
+		0 0 3px #fff,
+		0 0 5px #fff;
+}
+
+.comment-controls .edit-button {
+	color: #0b0;
+}
+.comment-controls .edit-button:hover {
+	color: #f00;
+}
+
+.edit-post-link,
+.edit-post-link:visited {
+	color: #090;
+}
+
 .posting-controls textarea {
 	font-family: Charter, Georgia, serif;
+	border: 1px solid #aaa;
+	box-shadow: 
+		0 0 0 1px #eee inset;
+}
+.posting-controls textarea:focus {
+	background-color: #ffd;
+	border-color: #00e;
+	box-shadow: 
+		0 0 0 1px #ddf inset,
+		0 0 0 1px #fff,
+		0 0 0 2px #00e;
 }
 .posting-controls.edit-existing-post textarea:focus,
 .posting-controls.edit-existing-comment textarea:focus {
 	border-color: #090;
-    box-shadow: 0 0 0 1px #81ff7f inset, 0 0 0 1px #fff, 0 0 0 2px #090;
+    box-shadow: 
+    	0 0 0 1px #81ff7f inset,
+    	0 0 0 1px #fff,
+    	0 0 0 2px #090;
 }
+
+/* GUIEdit buttons */
+
+.guiedit-buttons-container {
+	background-image: linear-gradient(to bottom, #fff 0%, #ddf 50%, #ccf 75%, #aaf 100%);
+}
+
 .posting-controls.edit-existing-post .guiedit-buttons-container button,
 .posting-controls.edit-existing-comment .guiedit-buttons-container button {
     color: #050;
 }
 .guiedit-buttons-container button {
 	font-family: Font Awesome, Charter, Georgia, serif;
+}
+
+.guiedit::after {
+	font-family: <?php echo $UI_font; ?>;
+	color: #777;
+	text-shadow: none;
+}
+
+/* Markdown hints */
+
+#markdown-hints-checkbox + label {
+	color: #00e;
+}
+#markdown-hints-checkbox + label:hover {
+	color: #e00;
+	text-shadow:
+		0 0 1px #fff,
+		0 0 3px #fff;
+}
+.markdown-hints {
+	border: 1px solid #c00;
+	background-color: #ffa;
 }
 
 /*==============*/

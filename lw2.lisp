@@ -479,7 +479,7 @@
             (generate-versioned-link "/theme_tweaker.css")
             (generate-versioned-link "/favicon.ico")
             (if (string= (hunchentoot:cookie-in "theme") "dark")
-                "<style id='dark-theme-adjustments'>.markdown-reference-link a::before { filter: invert(100%); }</style>"
+                "<style id='dark-theme-adjustments'>.markdown-reference-link a { color: #d200cf; filter: invert(100%); }</style>"
                 ""))
     (if *current-auth-token*
         (format out-stream "<script>loggedInUserId=\"~A\"</script>" (logged-in-userid)))

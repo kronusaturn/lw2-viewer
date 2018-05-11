@@ -1667,177 +1667,54 @@ div.comment-child-links a::first-letter {
 #comments > .comment-controls:last-child {
 	margin: 8px 0 16px 0;
 }
-#comments > .comment-controls > button {
-	font-weight: 600;
-	font-size: 1.5rem;
-	padding: 0;
-	margin: 0 0.25em;
-}
-.posting-controls textarea {
-	display: block;
-	width: 100%;
-	height: 15em;
-	min-height: 15em;
-	max-height: calc(100vh - 6em);
-	margin: 2px 0;
-	padding: 4px 5px;
-	font-size: 1.2rem;
-	border: 1px solid #aaa;
-	border-top-width: 29px;
-	box-shadow: 
-		0 0 0 1px #eee inset;
-	resize: none;
-}
-.posting-controls textarea:focus {
-	background-color: #ffd;
-	border-color: #00e;
-	box-shadow: 
-		0 0 0 1px #ddf inset,
-		0 0 0 1px #fff,
-		0 0 0 2px #00e;
-}
-.posting-controls form span {
-	float: left;
-	padding: 5px 0 0 6px;
-}
-.markdown-reference-link a {
-	padding-right: 1.5em;
-	margin-right: 0.15em;
-	position: relative;
-}
-.markdown-reference-link a::before {
-	content: "";
-	position: absolute;
-	top: 0;
-	width: 100%;
-	height: 100%;
-	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJAAAACQCAQAAABNTyozAAAEDklEQVR4Ae3cY3QDjRaG0V1e27Zt27Zt27Ztf7Zt27Zt10jOdZtZzbSN2q41533+tsFO4zRi0TKRJVACJdDiJVACJVACJVACZQmUQAmUQAmUQAmUQFkCJVACJVACJVACJVDWuD7P8icnGRcVbdyJ/uRZ+jTZYxwq/lN2qMcozvtMibmySe/TsPeqi0JZ3XsAHm1SZAua9CjgoMQo6UB4uiim5gbXV7Ab1EQxT+P3RRw/dHtV3e39UL3g8XuOEw39QNX3g4LHcYwU/n5uo+q7beGKNqLwJ3U1cteKuepEQ1cid03BJIESKIESKIESKIESaIkl0I3dv7Q7a293c//ShrWym7l/abdbGaCnidJGPFzre6opUdqDtLJXitJ+svpA4Uy30dru6hJRHaCws37L37CDRbWAwvctf38S1QOqe43l7f2iikDheg+x9J5ksqpA4TS3svju5CJRXaCwvX7lG3KAqDZQ+Jby/U4kUM0rNN+7hAQSrvNAC/c4Ewn0/052C8Xd0fkigebbRp/5DdpHJFCxr5nfr4QEUqzmJYC3iQRq1jXuj8cYT6CyTnAv54oEKm9EJFBnJVAC7eoS0XJn2r8qQP/wNFOipUY8wvbVAeIjooXq3ki1gPhHC0A/oWWgQZ/37ZI2FaUdVPpb33LHlQS6scPFstrDQBtAvEpNdLEfsZJA3N3lYsnOcTvaAuKzomttqW+lgXimabFoYx5N20D8SXSlw9yElQfiE0J5dW+lI6BBu4uOO8+dWB0g1hel/YIOgbiVE0VHXefhrB7QTRwtmra3gS4AcW+Xibab8SJWE4h7uaLpn/Ud6AoQTzIu2uzDrDYQzzUjCo17HF0D4g3qoo1+yWoCld8hv5OuAvFl0XLb6V8rQGws5votXQfqs45oqaPdjLUDdNO5f7Xa32APgBhu6b2SC92VtQTEfVwlXOhO9ASI2zhNLKsRj2atAfFCo55Iz4C4nyvFks16OWsRiPvQUyCeblIs0adYq0B6DsTb1EV5fk+1gfiWKG0XAwnUZyPRtOPdggTiRg4UC7rEPUkg4PbOFIXGPIEEmt+DCmeu5rUkUHHPaXj76Qsk0MK9R/ynv5FAzfdDYS9Da+n/xe6ovd2lS/8vVlyfH7o1vQLKJVACJVACJVACJVACIYGW/A6z/A6zG8RcNbdT9d1eTcx1A8eKhn6s6vtxweNYfisaqvupu+jXV8H63cXP1Asev+Wpopi6aVMVbFpdFPMUlP6jdrY/8AgTYkHZhEcAvFNdFMpq3qFh78y/okIT3qk4j8zborn290hN91S/c6zrzapVsFnXO9bvPFXjYtEykSVQAnVUAiVQAiVQAiVQAiVQlkAJlEAJlEAJlEAJlCVQAiVQAiVQAiVQAmX/BMHb3CdNrgcrAAAAAElFTkSuQmCC');
-	background-size: 1.25em;
-	background-repeat: no-repeat;
-	background-position: right center;
-}
-#markdown-hints-checkbox + label {
-	float: left;
-	padding: 4px 0 0 0;
-	margin: 0 0 0 1em;
-	color: #00e;
-	cursor: pointer;
-}
-#edit-post-form #markdown-hints-checkbox + label {
-	padding: 2px 0 0 0;
-}
-#markdown-hints-checkbox {
-	visibility: hidden;
-}
-#markdown-hints-checkbox + label::after {
-	content: "(Show Markdown help)";
-}
-#markdown-hints-checkbox:checked + label::after {
-	content: "(Hide Markdown help)";
-}
-#markdown-hints-checkbox + label::before {
-	content: '\F059';
-	font-family: Font Awesome;
-	font-weight: 900;
-	margin-right: 3px;
-}
-#markdown-hints-checkbox:checked + label::before {
-	font-weight: normal;
-}
-#markdown-hints-checkbox + label:hover {
-	color: #e00;
-	text-shadow:
-		0 0 1px #fff,
-		0 0 3px #fff;
-}
-.markdown-hints {
-	margin: 4px 0 0 4px;
-	padding: 4px 8px;
-	border: 1px solid #c00;
-	background-color: #ffa;
-	position: absolute;
-	text-align: left;
-	top: calc(100% - 1em);
-	z-index: 1;
-	display: none;
-}
-#markdown-hints-checkbox:checked ~ .markdown-hints {
-	display: table;
-}
-.markdown-hints-row {
-	display: table-row;
-}
-.markdown-hints .markdown-hints-row span,
-.markdown-hints .markdown-hints-row code {
-	float: none;
-	display: table-cell;
-	border: none;
-	background-color: inherit;
-	padding: 0 12px 0 0;
-}
+
 .posting-controls input[type='submit'] {
 	margin: 6px;
-	background-color: #fff;
 	padding: 4px 10px;
-	border: 1px solid #aaa;
-	font-weight: bold;
 	font-size: 1.125rem;
 }
-.posting-controls input[type='submit']:hover,
-.posting-controls input[type='submit']:focus {
-	background-color: #ddd;
-	border: 1px solid #999;
-}
-.posting-controls button {
-	border: none;
-	font-weight: 600;
-	padding: 1px 6px;
-	position: relative;
-	z-index: 1;
-}
-.comment-controls .cancel-comment-button,
-#comments > .comment-controls .cancel-comment-button {
+
+.comment-controls .cancel-comment-button {
 	position: absolute;
 	right: 8px;
 	margin: 0;
 	height: 27px;
 	font-size: inherit;
-	color: #c00;
-	text-shadow: 
-		0 0 1px #fff,
-		0 0 2px #fff;
 	padding: 4px 8px 2px 4px;
+	z-index: 1;
 }
 #comments > .comment-controls .cancel-comment-button {
 	right: 30px;
 }
-.comment-controls .cancel-comment-button:hover,
-#comments > .comment-controls .cancel-comment-button:hover {
-	color: #f00;
-	text-shadow:
-		0 0 1px #fff,
-		0 0 3px #fff,
-		0 0 5px #fff;
+.comment-controls .cancel-comment-button::before {
+	font-family: Font Awesome;
+	margin-right: 3px;
+	content: '\F00D';
+	font-weight: 900;
+	font-size: 0.9em;
+	opacity: 0.7;
 }
+
 .comment + .comment-controls .action-button {
 	font-weight: normal;
 	font-size: 1.0625em;
+	padding: 1px 6px;
+}
+.comment-controls .action-button::before {
+	font-family: Font Awesome;
+	margin-right: 3px;
+}
+.new-comment-button {
+	font-size: 1.5rem;
+	margin: 0 0.25em;
 }
 .comment-controls .edit-button {
 	position: absolute;
 	right: 24px;
 	top: 7px;
-	color: #0b0;
 }
 .comment-thread .comment-thread .edit-button {
 	right: 8px;
-}
-.comment-controls .edit-button:hover {
-	color: #f00;
-}
-.comment-controls .action-button::before {
-	font-family: Font Awesome;
-	margin-right: 3px;
 }
 .comment-controls .reply-button::before {
 	content: '\F3E5';
@@ -1845,6 +1722,7 @@ div.comment-child-links a::first-letter {
 	font-size: 0.9em;
 	opacity: 0.6;
 }
+
 .post-controls {
 	text-align: right;
 }
@@ -1852,10 +1730,6 @@ div.comment-child-links a::first-letter {
 	display: inline-block;
 	margin-bottom: 0.25em;
 	font-size: 1.125rem;
-}
-.edit-post-link,
-.edit-post-link:visited {
-	color: #090;
 }
 .edit-post-link::before {
 	margin-right: 0.3em;
@@ -1869,19 +1743,29 @@ div.comment-child-links a::first-letter {
 	position: relative;
 	top: -1px;
 }
-.comment-controls .cancel-comment-button::before {
-	font-family: Font Awesome;
-	margin-right: 3px;
-	content: '\F00D';
-	font-weight: 900;
-	font-size: 0.9em;
-	opacity: 0.7;
-}
+
 .comment-controls form {
 	position: relative;
 }
+.textarea-container {
+	position: relative;
+}
+.posting-controls textarea {
+	display: block;
+	width: 100%;
+	height: 15em;
+	min-height: 15em;
+	max-height: calc(100vh - 6em);
+	margin: 2px 0;
+	padding: 4px 5px;
+	font-size: 1.2rem;
+	border-top-width: 29px;
+	resize: none;
+}
+
+/* GUIEdit buttons */
+
 .guiedit-buttons-container {
-	background-image: linear-gradient(to bottom, #fff 0%, #ddf 50%, #ccf 75%, #aaf 100%);
 	position: absolute;
 	left: 1px;
 	top: 1px;
@@ -1915,12 +1799,9 @@ div.comment-child-links a::first-letter {
 	content: attr(data-tooltip);
 	position: absolute;
 	font-weight: normal;
-	font-family: 'Concourse', 'a_Avante';
 	font-size: 1rem;
 	top: 2px;
 	left: 440px;
-	color: #777;
-	text-shadow: none;
 	height: 25px;
 	padding: 4px 0;
 	white-space: nowrap;
@@ -1929,10 +1810,72 @@ div.comment-child-links a::first-letter {
 .guiedit:hover::after {
 	visibility: visible;
 }
-.textarea-container {
-	position: relative;
+
+/* Markdown hints */
+
+.posting-controls .markdown-reference-link {
+	float: left;
+	padding: 5px 0 0 6px;
+}
+.posting-controls .markdown-reference-link a {
+	padding-right: 1.5em;
+	margin-right: 0.15em;
+	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJAAAACQCAQAAABNTyozAAAEDklEQVR4Ae3cY3QDjRaG0V1e27Zt27Zt27Ztf7Zt27Zt10jOdZtZzbSN2q41533+tsFO4zRi0TKRJVACJdDiJVACJVACJVACZQmUQAmUQAmUQAmUQFkCJVACJVACJVACJVDWuD7P8icnGRcVbdyJ/uRZ+jTZYxwq/lN2qMcozvtMibmySe/TsPeqi0JZ3XsAHm1SZAua9CjgoMQo6UB4uiim5gbXV7Ab1EQxT+P3RRw/dHtV3e39UL3g8XuOEw39QNX3g4LHcYwU/n5uo+q7beGKNqLwJ3U1cteKuepEQ1cid03BJIESKIESKIESKIESaIkl0I3dv7Q7a293c//ShrWym7l/abdbGaCnidJGPFzre6opUdqDtLJXitJ+svpA4Uy30dru6hJRHaCws37L37CDRbWAwvctf38S1QOqe43l7f2iikDheg+x9J5ksqpA4TS3svju5CJRXaCwvX7lG3KAqDZQ+Jby/U4kUM0rNN+7hAQSrvNAC/c4Ewn0/052C8Xd0fkigebbRp/5DdpHJFCxr5nfr4QEUqzmJYC3iQRq1jXuj8cYT6CyTnAv54oEKm9EJFBnJVAC7eoS0XJn2r8qQP/wNFOipUY8wvbVAeIjooXq3ki1gPhHC0A/oWWgQZ/37ZI2FaUdVPpb33LHlQS6scPFstrDQBtAvEpNdLEfsZJA3N3lYsnOcTvaAuKzomttqW+lgXimabFoYx5N20D8SXSlw9yElQfiE0J5dW+lI6BBu4uOO8+dWB0g1hel/YIOgbiVE0VHXefhrB7QTRwtmra3gS4AcW+Xibab8SJWE4h7uaLpn/Ud6AoQTzIu2uzDrDYQzzUjCo17HF0D4g3qoo1+yWoCld8hv5OuAvFl0XLb6V8rQGws5votXQfqs45oqaPdjLUDdNO5f7Xa32APgBhu6b2SC92VtQTEfVwlXOhO9ASI2zhNLKsRj2atAfFCo55Iz4C4nyvFks16OWsRiPvQUyCeblIs0adYq0B6DsTb1EV5fk+1gfiWKG0XAwnUZyPRtOPdggTiRg4UC7rEPUkg4PbOFIXGPIEEmt+DCmeu5rUkUHHPaXj76Qsk0MK9R/ynv5FAzfdDYS9Da+n/xe6ovd2lS/8vVlyfH7o1vQLKJVACJVACJVACJVACIYGW/A6z/A6zG8RcNbdT9d1eTcx1A8eKhn6s6vtxweNYfisaqvupu+jXV8H63cXP1Asev+Wpopi6aVMVbFpdFPMUlP6jdrY/8AgTYkHZhEcAvFNdFMpq3qFh78y/okIT3qk4j8zborn290hN91S/c6zrzapVsFnXO9bvPFXjYtEykSVQAnVUAiVQAiVQAiVQAiVQlkAJlEAJlEAJlEAJlCVQAiVQAiVQAiVQAmX/BMHb3CdNrgcrAAAAAElFTkSuQmCC');
+	background-size: 1.25em;
+	background-repeat: no-repeat;
+	background-position: right center;
 }
 
+#markdown-hints-checkbox + label {
+	float: left;
+	padding: 4px 0 0 0;
+	margin: 0 0 0 1em;
+	cursor: pointer;
+}
+#edit-post-form #markdown-hints-checkbox + label {
+	padding: 2px 0 0 0;
+}
+#markdown-hints-checkbox {
+	visibility: hidden;
+}
+#markdown-hints-checkbox + label::after {
+	content: "(Show Markdown help)";
+}
+#markdown-hints-checkbox:checked + label::after {
+	content: "(Hide Markdown help)";
+}
+#markdown-hints-checkbox + label::before {
+	content: '\F059';
+	font-family: Font Awesome;
+	font-weight: 900;
+	margin-right: 3px;
+}
+#markdown-hints-checkbox:checked + label::before {
+	font-weight: normal;
+}
+.markdown-hints {
+	margin: 4px 0 0 4px;
+	padding: 4px 8px;
+	position: absolute;
+	text-align: left;
+	top: calc(100% - 1em);
+	z-index: 1;
+	display: none;
+}
+#markdown-hints-checkbox:checked ~ .markdown-hints {
+	display: table;
+}
+.markdown-hints-row {
+	display: table-row;
+}
+.markdown-hints .markdown-hints-row span,
+.markdown-hints .markdown-hints-row code {
+	float: none;
+	display: table-cell;
+	border: none;
+	background-color: inherit;
+	padding: 0 12px 0 0;
+}
 
 /******************/
 /* EDIT POST FORM */
@@ -2345,9 +2288,6 @@ select {
 		0 -3px 1px -2px #000 inset;
 	padding: 0 1px;
 }
-.mjx-chtml {
-	clear: both;
-}
 
 /*************/
 /* FOOTNOTES */
@@ -2647,6 +2587,9 @@ div > .MJXc-display {
 	background-color: #dde;
 	border-radius: 6px;
 	border: 1px solid #cce;
+}
+.mjx-chtml {
+	clear: both;
 }
 
 /**********************/
@@ -4282,20 +4225,101 @@ div.comment-child-links a::first-letter {
 /* COMMENTING AND POSTING UI */
 /*===========================*/
 
+.posting-controls input[type='submit'] {
+	background-color: #fff;
+	border: 1px solid #aaa;
+	font-weight: bold;
+}
+.posting-controls input[type='submit']:hover,
+.posting-controls input[type='submit']:focus {
+	background-color: #ddd;
+	border: 1px solid #999;
+}
+
+.comment-controls .cancel-comment-button {
+	font-weight: 600;
+	color: #c00;
+	text-shadow: 
+		0 0 1px #fff,
+		0 0 2px #fff;
+}
+.comment-controls .cancel-comment-button:hover {
+	color: #f00;
+	text-shadow:
+		0 0 1px #fff,
+		0 0 3px #fff,
+		0 0 5px #fff;
+}
+
+.comment-controls .edit-button {
+	color: #0b0;
+}
+.comment-controls .edit-button:hover {
+	color: #f00;
+}
+
+.edit-post-link,
+.edit-post-link:visited {
+	color: #090;
+}
+
 .posting-controls textarea {
 	font-family: Charter, Georgia, serif;
+	border: 1px solid #aaa;
+	box-shadow: 
+		0 0 0 1px #eee inset;
+}
+.posting-controls textarea:focus {
+	background-color: #ffd;
+	border-color: #00e;
+	box-shadow: 
+		0 0 0 1px #ddf inset,
+		0 0 0 1px #fff,
+		0 0 0 2px #00e;
 }
 .posting-controls.edit-existing-post textarea:focus,
 .posting-controls.edit-existing-comment textarea:focus {
 	border-color: #090;
-    box-shadow: 0 0 0 1px #81ff7f inset, 0 0 0 1px #fff, 0 0 0 2px #090;
+    box-shadow: 
+    	0 0 0 1px #81ff7f inset,
+    	0 0 0 1px #fff,
+    	0 0 0 2px #090;
 }
+
+/* GUIEdit buttons */
+
+.guiedit-buttons-container {
+	background-image: linear-gradient(to bottom, #fff 0%, #ddf 50%, #ccf 75%, #aaf 100%);
+}
+
 .posting-controls.edit-existing-post .guiedit-buttons-container button,
 .posting-controls.edit-existing-comment .guiedit-buttons-container button {
     color: #050;
 }
 .guiedit-buttons-container button {
 	font-family: Font Awesome, Charter, Georgia, serif;
+}
+
+.guiedit::after {
+	font-family: 'Concourse', 'a_Avante';
+	color: #777;
+	text-shadow: none;
+}
+
+/* Markdown hints */
+
+#markdown-hints-checkbox + label {
+	color: #00e;
+}
+#markdown-hints-checkbox + label:hover {
+	color: #e00;
+	text-shadow:
+		0 0 1px #fff,
+		0 0 3px #fff;
+}
+.markdown-hints {
+	border: 1px solid #c00;
+	background-color: #ffa;
 }
 
 /*==============*/
