@@ -2448,6 +2448,22 @@ div > .MJXc-display {
 	#text-size-adjustment-ui button.decrease {
 		top: 50px;
 	}
+	#theme-selector {
+		top: 54px;
+	}
+	#theme-tweaker-toggle button {
+		position: relative;
+		left: 34px;
+		height: 2em;
+		width: 2em;
+		padding: 7px;
+		border: 1px solid #999;
+		box-shadow: 
+			0 0 10px #999 inset,
+			0 0 0 1px transparent;
+		border-radius: 50%;
+		transform: scale(0.8);
+	}
 }
 @media only screen and (max-width: 1020px) {
 	#new-comment-nav-ui {
@@ -2468,9 +2484,6 @@ div > .MJXc-display {
 	}
 	#quick-nav-ui {
 		right: calc((100vw - 900px) / 2 - 51px);
-	}
-	#width-selector {
-		display: none;
 	}
 }
 
