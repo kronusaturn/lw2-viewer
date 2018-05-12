@@ -53,6 +53,7 @@ input {
 	overflow: auto;
 	position: relative;
 	width: calc(100% - 300px);
+	min-width: 900px;
 	max-width: 900px;
 }
 
@@ -414,6 +415,9 @@ a#inbox-indicator.new-messages:hover::before {
 }
 .theme-selector button:nth-of-type(7) {
 	background-image: url('data:image/gif;base64,R0lGODlhIAAgAPUAMWcEFG4QH3QZKHcfLXslM4AtOYIxPYQ1QYY4Q4tAS5VPWZpYYbKAhrSCh7iJjruPk72RlcWfosikp8qnqsyrrNK1tdO2tta7u9e+vtzExOTS0ebV0+bW1OfX1ejY1ujZ1+na1+nb2Ozf3Ozg3e3h3u7i3+/k4fDm4/Ho5PLq5vPr5/Ts6PXu6vfx7fjz7/j07/n18Pr28fr38vv48/v59Pz69f379v389/79+P//+gAAwKwtDQEAAAAAAAAAAAAAACwAAAAAIAAgAAAGssCccEgsGo/IpHLJbDqf0Kh0CmWhVi5q0TYhAL6AwySmFRXAaEAANOWAIScbjRT5fqQzBEAQMrYoOFIWamxaRTV6DIZGL2cbi0UgAAMtRDAyM5kzMlGSAixDjWkJN1Adk6BComgLgU8nAgEllpg2GgAKrk4yZw9IkrlRD3uzRsC6TioCAAQmRh4ArVIXYBKpMBhepFMZaAYHaBVaLA5pAA0pkDQjISEmM5Dx8vP09fb3UUEAOw==');
+}
+.theme-selector button:hover {
+	color: transparent;
 }
 .theme-selector button:disabled {
 	cursor: auto;
@@ -2476,6 +2480,8 @@ div > .MJXc-display {
 
 #content {
 	padding: 0 4px;
+	min-width: unset;
+	width: unset;
 }
 #content.post-page {
 	padding-bottom: 112px;

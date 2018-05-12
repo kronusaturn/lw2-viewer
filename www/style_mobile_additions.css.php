@@ -4,6 +4,8 @@
 
 #content {
 	padding: 0 4px;
+	min-width: unset;
+	width: unset;
 }
 #content.post-page {
 	padding-bottom: 112px;
