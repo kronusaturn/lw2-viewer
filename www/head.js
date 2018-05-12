@@ -35,9 +35,6 @@ function setContentWidth(widthString) {
 	widthAdjustStyle.innerHTML = 
 		`#content, #ui-elements-container { 
 			max-width: calc(${widthString});
-		}
-		#ui-elements-container {
-			left: calc((100% - ${widthString}) / 2);
 		}`;
 }
 setContentWidth(window.localStorage.getItem('selected-width'));

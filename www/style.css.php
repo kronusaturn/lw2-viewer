@@ -52,7 +52,9 @@ input {
 	position: fixed;
 	height: 100vh;
 	top: 0;
-	left: calc((100% - 900px) / 2);
+	left: 0;
+	right: 0;
+	margin: auto;
 }
 
 /***********/
@@ -339,9 +341,9 @@ a#inbox-indicator.new-messages:hover::before {
 /******************/
 
 #width-selector {
-	position: fixed;
+	position: absolute;
 	top: 4px;
-	left: calc(50% + 900px / 2 + 6px);
+	right: -78px;
 }
 #width-selector button {
 	color: transparent;
@@ -427,7 +429,7 @@ a#inbox-indicator.new-messages:hover::before {
 
 #quick-nav-ui {
 	position: absolute;
-	right: -27px;
+	right: -67px;
 	bottom: 20px;
 }
 #quick-nav-ui a {
@@ -543,7 +545,7 @@ a#inbox-indicator.new-messages:hover::before {
 #text-size-adjustment-ui {
 	position: absolute;
 	top: 30px;
-	right: -6px;
+	right: -78px;
 	opacity: 0.4;
 }
 #text-size-adjustment-ui:hover {
