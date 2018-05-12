@@ -3,9 +3,9 @@
 /*****************/
 
 #theme-tweaker-toggle {
-	position: fixed;
+	position: absolute;
 	top: 7px;
-	left: calc((100% - 900px) / 2 - 75px);
+	left: -75px;
 }
 #theme-tweaker-toggle button {
 	font-family: Font Awesome;
