@@ -31,8 +31,7 @@ setTheme();
 
 function setContentWidth(widthString) {
 	if (!widthString) return;
-	let widthAdjustStyle = document.querySelector('#width-adjust');
-	widthAdjustStyle.innerHTML = 
+	document.querySelector('#width-adjust').innerHTML = 
 		`#content, #ui-elements-container { 
 			max-width: calc(${widthString});
 		}`;

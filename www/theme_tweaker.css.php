@@ -2,23 +2,6 @@
 /* THEME TWEAKER */
 /*****************/
 
-#theme-tweaker-toggle {
-	position: absolute;
-	top: 7px;
-	left: -75px;
-}
-#theme-tweaker-toggle button {
-	font-family: Font Awesome;
-	font-weight: 900;
-	font-size: 1.25rem;
-	color: #777;
-	opacity: 0.4;
-	z-index: 1;
-}
-#theme-tweaker-toggle button:hover {
-	opacity: 1.0;
-}
-
 #theme-tweaker-ui {
 	position: fixed;
 	width: 100vw;
