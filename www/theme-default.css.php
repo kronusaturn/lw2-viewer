@@ -285,15 +285,6 @@ input {
 		0 0 0 5px #bbb inset;
 }
 
-#theme-selector button:first-child {
-	padding: 0 0 0 1px;
-}
-@-moz-document url-prefix() {
-	#theme-selector button {
-		padding: 0;
-	}
-}
-
 /*=================*/
 /* QUICKNAV WIDGET */
 /*=================*/
@@ -1108,6 +1099,10 @@ div.comment-child-links a::first-letter {
 		0 0 1px #fff,
 		0 0 3px #fff,
 		0 0 5px #fff;
+}
+
+.new-comment-button {
+	font-weight: 600;
 }
 
 .comment-controls .edit-button {
