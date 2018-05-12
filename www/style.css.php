@@ -2851,6 +2851,7 @@ img.inline-latex {
 	position: relative;
 	top: 2.5px;
 	margin: 0 2px;
+	filter: drop-shadow(0.5px 0.5px 0.5px #aaa);
 }
 
 #content figure {

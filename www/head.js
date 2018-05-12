@@ -22,7 +22,8 @@ function setTheme(themeName) {
 	
 	if (themeName == 'dark') {
 		document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='dark-theme-adjustments'>" + 
-		`.markdown-reference-link a::before { filter: invert(100%); }` + "</style>");
+		`.markdown-reference-link a { filter: invert(100%); } ` +
+		`img.inline-latex { filter: invert(100%) drop-shadow(0.5px 0.5px 0.5px #fff); }` + "</style>");
 	} else {
 		document.querySelectorAll("#dark-theme-adjustments").forEach(function(e) {e.parentNode.removeChild(e)});
 	}
