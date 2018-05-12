@@ -47,14 +47,23 @@ input {
 	font-size: inherit;
 	font-weight: inherit;
 }
+#content,
+#ui-elements-container {
+	width: calc(100% - 300px);
+	min-width: 900px;
+	max-width: 900px;
+}
 #content {
 	margin: 0 auto;
 	padding: 0 30px;
 	overflow: auto;
 	position: relative;
-	width: calc(100% - 300px);
-	min-width: 900px;
-	max-width: 900px;
+}
+#ui-elements-container {
+	position: fixed;
+	height: 100vh;
+	top: 0;
+	left: calc((100% - 900px) / 2);
 }
 
 /***********/
@@ -374,9 +383,9 @@ a#inbox-indicator.new-messages:hover::before {
 /******************/
 
 #theme-selector {
-	position: fixed;
+	position: absolute;
 	top: 3px;
-	left: calc((100% - 900px) / 2 - 41px);
+	left: -41px;
 	opacity: 0.4;
 	display: table;
 	max-width: 40px;
@@ -428,8 +437,8 @@ a#inbox-indicator.new-messages:hover::before {
 /*******************/
 
 #quick-nav-ui {
-	position: fixed;
-	right: calc((100vw - 900px) / 2 - 75px);
+	position: absolute;
+	right: -27px;
 	bottom: 20px;
 }
 #quick-nav-ui a {
@@ -452,8 +461,8 @@ a#inbox-indicator.new-messages:hover::before {
 /************************/
 
 #new-comment-nav-ui {
-	position: fixed;
-	right: calc((100vw - 900px) / 2 - 120px);
+	position: absolute;
+	right: -120px;
 	bottom: 42px;
 }
 #new-comment-nav-ui > * {
@@ -498,9 +507,9 @@ a#inbox-indicator.new-messages:hover::before {
 /*******************/
 
 #hns-date-picker {
-	position: fixed;
+	position: absolute;
 	bottom: 72px;
-	right: calc((100vw - 900px) / 2 - 261px);
+	right: -261px;
 	opacity: 0.6;
 }
 @media only screen and (max-width: 1440px) {
@@ -543,9 +552,9 @@ a#inbox-indicator.new-messages:hover::before {
 /************************/
 
 #text-size-adjustment-ui {
-	position: fixed;
+	position: absolute;
 	top: 30px;
-	left: calc(50% + 900px / 2 + 6px);
+	right: -6px;
 	opacity: 0.4;
 }
 #text-size-adjustment-ui:hover {
@@ -583,9 +592,9 @@ a#inbox-indicator.new-messages:hover::before {
 /*******************************/
 
 #comments-view-mode-selector {
-	position: fixed;
+	position: absolute;
 	bottom: 30px;
-	left: calc((100% - 900px) / 2 - 40px);
+	left: -40px;
 	opacity: 0.6;
 }
 #comments-view-mode-selector:hover {
@@ -2443,8 +2452,6 @@ div > .MJXc-display {
 		top: 54px;
 	}
 	#theme-tweaker-toggle button {
-		position: relative;
-		left: 34px;
 		height: 2em;
 		width: 2em;
 		padding: 7px;
