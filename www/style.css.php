@@ -2849,7 +2849,7 @@ blockquote blockquote {
 
 img.inline-latex {
 	position: relative;
-	top: 2.5px;
+	top: 2.85px;
 	margin: 0 2px;
 	filter: drop-shadow(0.5px 0.5px 0.5px #aaa);
 }
