@@ -285,6 +285,14 @@ input {
 		0 0 0 5px #bbb inset;
 }
 
+/*======================*/
+/* THEME TWEAKER TOGGLE */
+/*======================*/
+
+#theme-tweaker-toggle button {
+	color: #777;
+}
+
 /*=================*/
 /* QUICKNAV WIDGET */
 /*=================*/
