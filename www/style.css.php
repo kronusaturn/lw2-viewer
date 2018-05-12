@@ -55,6 +55,10 @@ input {
 	left: 0;
 	right: 0;
 	margin: auto;
+	pointer-events: none;
+}
+#ui-elements-container > * {
+	pointer-events: auto;
 }
 
 /***********/
@@ -421,6 +425,26 @@ a#inbox-indicator.new-messages:hover::before {
 }
 .theme-selector button:disabled {
 	cursor: auto;
+}
+
+/************************/
+/* THEME TWEAKER TOGGLE */
+/************************/
+
+#theme-tweaker-toggle {
+	position: absolute;
+	top: 7px;
+	left: -75px;
+}
+#theme-tweaker-toggle button {
+	font-family: Font Awesome;
+	font-weight: 900;
+	font-size: 1.25rem;
+	opacity: 0.4;
+	z-index: 1;
+}
+#theme-tweaker-toggle button:hover {
+	opacity: 1.0;
 }
 
 /*******************/
@@ -2429,20 +2453,25 @@ div > .MJXc-display {
 /**********************/
 
 @media only screen and (max-width: 1080px) {
+	#width-selector {
+		right: -30px;
+	}
 	#width-selector button {
 		display: block;
 	}
 	#text-size-adjustment-ui {
 		top: 90px;
+		right: -30px;
 	}
 	#text-size-adjustment-ui button {
 		display: block;
 		position: relative;
 		border: 1px solid #999;
-		left: 2px;
 		padding: 0 0 0 1px;
 		border-radius: 50%;
-		box-shadow: 0 0 6px #999 inset;
+		box-shadow: 
+			0 0 6px #999 inset,
+			0 0 0 1px transparent;
 	}
 	#text-size-adjustment-ui button.increase {
 		bottom: 48px;
@@ -2452,6 +2481,9 @@ div > .MJXc-display {
 	}
 	#theme-selector {
 		top: 54px;
+	}
+	#theme-tweaker-toggle {
+		left: -41px;
 	}
 	#theme-tweaker-toggle button {
 		height: 2em;
@@ -2463,6 +2495,9 @@ div > .MJXc-display {
 			0 0 0 1px transparent;
 		border-radius: 50%;
 		transform: scale(0.8);
+	}
+	#quick-nav-ui {
+		right: -54px;
 	}
 }
 @media only screen and (max-width: 1020px) {
