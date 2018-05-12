@@ -14,7 +14,7 @@ function setContentWidth(widthString) {
 			right: calc((100vw - ${widthString}) / 2 - 120px);
 		}
 		#width-selector {
-			right: calc((100% - ${widthString}) / 2 - 78px);
+			left: calc(50% + ${widthString} / 2 + 6px);
 		}
 		#theme-selector {
 			left: calc((100% - ${widthString}) / 2 - 41px);
@@ -23,7 +23,7 @@ function setContentWidth(widthString) {
 			left: calc((100% - ${widthString}) / 2 - 75px);
 		}
 		#text-size-adjustment-ui {
-			right: calc((100% - ${widthString}) / 2 - 78px)
+			left: calc(50% + ${widthString} / 2 + 6px);
 		}
 		#comments-view-mode-selector {
 			left: calc((100% - ${widthString}) / 2 - 40px);

@@ -40,8 +40,9 @@ input {
 	margin: 0 auto;
 	padding: 0 30px;
 	overflow: auto;
-	max-width: 900px;
 	position: relative;
+	width: calc(100% - 300px);
+	max-width: 900px;
 }
 
 /***********/
@@ -330,7 +331,7 @@ a#inbox-indicator.new-messages:hover::before {
 #width-selector {
 	position: fixed;
 	top: 4px;
-	right: calc((100% - 900px) / 2 - 78px);
+	left: calc(50% + 900px / 2 + 6px);
 }
 #width-selector button {
 	color: transparent;
@@ -376,12 +377,32 @@ a#inbox-indicator.new-messages:hover::before {
 	display: table-cell;
 	width: 26px;
 	height: 26px;
-	padding: 0;
-	text-align: center;
-	vertical-align: middle;
+	padding: 5px;
 	margin: 1px 7px 0 7px;
-	font-size: 0.75rem;
-	position: relative;
+	color: transparent;
+	background-size: 16px 16px;
+	background-origin: content-box;
+}
+.theme-selector button:nth-of-type(1) {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_A.gif")) ?>');
+}
+.theme-selector button:nth-of-type(2) {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_B.gif")) ?>');
+}
+.theme-selector button:nth-of-type(3) {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_C.gif")) ?>');
+}
+.theme-selector button:nth-of-type(4) {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_D.gif")) ?>');
+}
+.theme-selector button:nth-of-type(5) {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_E.gif")) ?>');
+}
+.theme-selector button:nth-of-type(6) {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_F.gif")) ?>');
+}
+.theme-selector button:nth-of-type(7) {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_G.gif")) ?>');
 }
 .theme-selector button:disabled {
 	cursor: auto;
@@ -509,7 +530,7 @@ a#inbox-indicator.new-messages:hover::before {
 #text-size-adjustment-ui {
 	position: fixed;
 	top: 30px;
-	right: calc((100% - 900px) / 2 - 78px);
+	left: calc(50% + 900px / 2 + 6px);
 	opacity: 0.4;
 }
 #text-size-adjustment-ui:hover {
@@ -2392,6 +2413,29 @@ div > .MJXc-display {
 /* FOR NARROW SCREENS */
 /**********************/
 
+@media only screen and (max-width: 1080px) {
+	#width-selector button {
+		display: block;
+	}
+	#text-size-adjustment-ui {
+		top: 90px;
+	}
+	#text-size-adjustment-ui button {
+		display: block;
+		position: relative;
+		border: 1px solid #999;
+		left: 2px;
+		padding: 0 0 0 1px;
+		border-radius: 50%;
+		box-shadow: 0 0 6px #999 inset;
+	}
+	#text-size-adjustment-ui button.increase {
+		bottom: 48px;
+	}
+	#text-size-adjustment-ui button.decrease {
+		top: 50px;
+	}
+}
 @media only screen and (max-width: 1020px) {
 	#new-comment-nav-ui {
 		right: calc((100vw - 900px) / 2 - 61px);
