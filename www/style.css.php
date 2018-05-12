@@ -42,6 +42,7 @@ input {
 	overflow: auto;
 	position: relative;
 	width: calc(100% - 300px);
+	min-width: 900px;
 	max-width: 900px;
 }
 
@@ -403,6 +404,9 @@ a#inbox-indicator.new-messages:hover::before {
 }
 .theme-selector button:nth-of-type(7) {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_G.gif")) ?>');
+}
+.theme-selector button:hover {
+	color: transparent;
 }
 .theme-selector button:disabled {
 	cursor: auto;
