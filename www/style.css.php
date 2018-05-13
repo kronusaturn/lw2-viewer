@@ -82,7 +82,6 @@ input {
 }
 .nav-inner {
 	padding: 12px 30px;
-	font-size: 1.375em;
 	text-align: center;
 	display: block;
 	position: relative;
@@ -96,7 +95,6 @@ input {
 	display: none;
 }
 #secondary-bar .nav-inner {
-	font-size: 1em;
 	padding: 4px 0;
 }
 #bottom-bar .nav-item {
@@ -141,6 +139,7 @@ input {
 #nav-item-search form::before {
 	content: "\F002";
 	font-family: Font Awesome;
+	font-weight: 900;
 	display: inline-block;
 	vertical-align: top;
 	height: 23px;
@@ -1667,18 +1666,6 @@ div.comment-child-links a::first-letter {
 	font-family: Font Awesome;
 	font-weight: 900;
 	border: none;
-}
-.upvote {
-	color: #c8c8c8;	
-}
-.upvote::before {
-	content: '\F055';
-}
-.downvote {
-	color: #ccc;
-}
-.downvote::before {
-	content: '\F056';
 }
 
 /*****************************/
