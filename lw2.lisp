@@ -545,8 +545,8 @@
   (setf (hunchentoot:content-type*) "text/html; charset=utf-8"
         (hunchentoot:return-code*) return-code
         (hunchentoot:header-out :link) (format nil "~:{<~A>;rel=preload;type=~A;as=~A~@{;~A~}~:^,~}"
-                                               `(((generate-css-link) "text/css" "style")
-                                                 (*fonts-stylesheet-uri* "text/css" "style")
+                                               `((,(generate-css-link) "text/css" "style")
+                                                 (,*fonts-stylesheet-uri* "text/css" "style")
                                                  ("/fa-solid-900.ttf?v=1" "font/ttf" "font" "crossorigin")
                                                  ("/fa-regular-400.ttf?v=1" "font/ttf" "font" "crossorigin")
                                                  ("//fonts.greaterwrong.com/font_files/BitmapFonts/MSSansSerif.ttf" "font/ttf" "font" "crossorigin")))))
