@@ -4176,6 +4176,8 @@ div.comment-child-links a::first-letter {
 
 .posting-controls textarea {
 	font-family: Charter, Georgia, serif;
+	color: #fff;
+	background-color: #000;
 	border-color: #484848;
 	box-shadow: 
 		0 0 0 1px #131313 inset;

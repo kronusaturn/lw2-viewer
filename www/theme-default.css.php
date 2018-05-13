@@ -1035,17 +1035,19 @@ div.comment-child-links a::first-letter {
 
 .posting-controls textarea {
 	font-family: Charter, Georgia, serif;
+	color: #000;
+	background-color: #fff;
 	border-color: #aaa;
 	box-shadow: 
 		0 0 0 1px #eee inset;
 }
 .posting-controls textarea:focus {
 	background-color: #ffd;
-	border-color: #00e;
+	border-color: <?php echo $hyperlink_color; ?>;
 	box-shadow: 
 		0 0 0 1px #ddf inset,
 		0 0 0 1px #fff,
-		0 0 0 2px #00e;
+		0 0 0 2px <?php echo $hyperlink_color; ?>;
 }
 .posting-controls.edit-existing-post textarea:focus,
 .posting-controls.edit-existing-comment textarea:focus {

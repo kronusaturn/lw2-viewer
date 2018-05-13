@@ -269,6 +269,7 @@ body {
 #theme-selector button.selected,
 #width-selector button:hover,
 #width-selector button.selected {
+	text-shadow: none;
 	box-shadow:
 		0 0 0 5px #ccc inset;
 }
@@ -443,7 +444,7 @@ h1.listing a[href^='/'] {
 	font-weight: normal;
 }
 h1.listing a[href^="http"] {
-	color: #bbb;
+	color: #ccc;
 }
 
 @media only screen and (hover: hover) {
@@ -1054,6 +1055,8 @@ div.comment-child-links a::first-letter {
 .posting-controls textarea {
 	font-weight: 400;
 	font-family: Source Sans Pro, Trebuchet MS, Helvetica, Arial, Verdana, sans-serif;
+	color: #000;
+	background-color: #fff;
 	border-color: #aaa;
 	box-shadow: 
 		0 0 0 1px #eee inset;
@@ -1064,12 +1067,12 @@ div.comment-child-links a::first-letter {
 	}
 }
 .posting-controls textarea:focus {
-	background-color: #ffd;
-	border-color: #00e;
+	background-color: #ffe;
+	border-color: <?php echo $hyperlink_color; ?>;
 	box-shadow: 
 		0 0 0 1px #ddf inset,
 		0 0 0 1px #fff,
-		0 0 0 2px #00e;
+		0 0 0 2px <?php echo $hyperlink_color; ?>;
 }
 .posting-controls.edit-existing-post textarea:focus,
 .posting-controls.edit-existing-comment textarea:focus {
@@ -1083,7 +1086,7 @@ div.comment-child-links a::first-letter {
 /* GUIEdit buttons */
 
 .guiedit-buttons-container {
-	background-image: linear-gradient(to bottom, #fff 0%, #ddf 50%, #ccf 75%, #aaf 100%);
+	background-image: linear-gradient(to bottom, #fff 0%, #ddd 50%, #ccc 75%, #aaa 100%);
 }
 
 .posting-controls.edit-existing-post .guiedit-buttons-container button,
@@ -1314,17 +1317,15 @@ code {
 
 input[type='text'],
 input[type='search'],
-input[type='password'],
-textarea {
+input[type='password'] {
 	background-color: #fff;
 	border: 1px solid #ddd;
 	color: #000;
 }
 input[type='text']:focus,
 input[type='search']:focus,
-input[type='password']:focus,
-textarea:focus {
-	background-color: #ffd;
+input[type='password']:focus {
+	background-color: #ffe;
 	border: 1px solid #bbb;
 	box-shadow: 0 0 1px #bbb;
 }
