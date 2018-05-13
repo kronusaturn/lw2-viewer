@@ -7,6 +7,9 @@
 
 (defvar *current-auth-token*) 
 
+(defvar *check-notifications-thread*)
+(defvar *notifications-status*)
+
 (defun logged-in-userid (&optional is-userid)
   (let ((current-userid (and *current-auth-token* (cache-get "auth-token-to-userid" *current-auth-token*))))
     (if is-userid
@@ -356,17 +359,15 @@
                        :body (clean-html (cdr (assoc :html-body item))))))))))
 
 (defun check-notifications (user-id auth-token)
-  (handler-case
-    (multiple-value-bind (notifications user-info)
-      (sb-sys:with-deadline (:seconds 1)
-        (lw2-graphql-query-multi (list
-                                   (graphql-query-string* "NotificationsList" (alist :terms (nconc (alist :user-id user-id :limit 1) *notifications-base-terms*))
-                                                          '(:created-at))
-                                   (graphql-query-string* "UsersSingle" (alist :document-id user-id) '(:last-notifications-check)))
-                                 :auth-token auth-token))
-      (when (and notifications user-info)
-	(local-time:timestamp> (local-time:parse-timestring (cdr (assoc :created-at (first notifications)))) (local-time:parse-timestring (cdr (assoc :last-notifications-check user-info))))))
-    (t () nil)))
+  (multiple-value-bind (notifications user-info)
+    (sb-sys:with-deadline (:seconds 1)
+                          (lw2-graphql-query-multi (list
+                                                     (graphql-query-string* "NotificationsList" (alist :terms (nconc (alist :user-id user-id :limit 1) *notifications-base-terms*))
+                                                                            '(:created-at))
+                                                     (graphql-query-string* "UsersSingle" (alist :document-id user-id) '(:last-notifications-check)))
+                                                   :auth-token auth-token))
+    (when (and notifications user-info)
+      (local-time:timestamp> (local-time:parse-timestring (cdr (assoc :created-at (first notifications)))) (local-time:parse-timestring (cdr (assoc :last-notifications-check user-info)))))))
 
 (defparameter *fonts-stylesheet-uri* "//fonts.greaterwrong.com/?fonts=Charter,Concourse,a_Avante,Whitney,SourceSansPro,Raleway,ProximaNova,AnonymousPro,InputSans,GaramondPremierPro,ProximaNova,BitmapFonts")
 (defparameter *fonts-stylesheet-uri* "//fonts.greaterwrong.com/?fonts=*")
@@ -433,14 +434,13 @@
 
 (defun user-nav-bar (&optional current-uri)
   (let* ((username (logged-in-username))
-         (user-id (logged-in-userid))
          (*secondary-nav* `(("archive" "/archive" "Archive" :accesskey "r")
                             ("about" "/about" "About" :accesskey "t")
                             ("search" "/search" "Search" :html ,#'search-bar-to-html)
                             ,(if username
                                  (let ((user-slug (encode-entities (get-user-slug (logged-in-userid)))))
                                    `("login" ,(format nil "/users/~A" user-slug) ,(plump:encode-entities username) :description "User page" :accesskey "u"
-                                     :trailing-html ,(inbox-to-html user-slug (check-notifications user-id *current-auth-token*))))
+                                     :trailing-html ,(inbox-to-html user-slug *notifications-status*)))
                                  `("login" ,(format nil "/login?return=~A" (url-rewrite:url-encode current-uri)) "Log In" :accesskey "u")))))
     (nav-bar-to-html current-uri)))
 
@@ -523,41 +523,61 @@
 			     `(let ((,stream-sym ,out-stream)) 
 				,.out-body)))) 
 
-(defun call-with-emit-page (out-stream fn &key title description current-uri content-class (return-code 200) (items-per-page 20) with-offset with-next robots)
+(defun call-with-emit-page (out-stream fn &key title description current-uri content-class (return-code 200) (items-per-page 20) with-offset with-next robots ignore-notifications)
   (declare (ignore return-code))
   (ignore-errors
     (log-conditions
-      (begin-html out-stream :title title :description description :current-uri current-uri :content-class content-class :robots robots)
+      (let ((*notifications-status*
+              (if *check-notifications-thread*
+                  (let ((x (join-thread *check-notifications-thread*)))
+                    (typecase x
+                      (lw2-client-error (setf *current-auth-token* nil) nil)
+                      (condition nil)
+                      (t (if ignore-notifications nil x)))))))
+        (begin-html out-stream :title title :description description :current-uri current-uri :content-class content-class :robots robots))
       (funcall fn)
       (end-html out-stream
                 :items-per-page (if with-offset items-per-page)
                 :next (if (and with-offset with-next) (+ with-offset items-per-page)) :prev (if (and with-offset (>= with-offset items-per-page)) (- with-offset items-per-page)))
       (force-output out-stream))))
 
+(defun set-default-headers (return-code)
+  (setf (hunchentoot:content-type*) "text/html; charset=utf-8"
+        (hunchentoot:return-code*) return-code
+        (hunchentoot:header-out :link) (format nil "~:{<~A>;rel=preload;type=~A;as=~A~@{;~A~}~:^,~}"
+                                               `(((generate-css-link) "text/css" "style")
+                                                 (*fonts-stylesheet-uri* "text/css" "style")
+                                                 ("/fa-solid-900.ttf?v=1" "font/ttf" "font" "crossorigin")
+                                                 ("/fa-regular-400.ttf?v=1" "font/ttf" "font" "crossorigin")
+                                                 ("//fonts.greaterwrong.com/font_files/BitmapFonts/MSSansSerif.ttf" "font/ttf" "font" "crossorigin")))))
+
 (defmacro emit-page ((out-stream &rest args &key (return-code 200) &allow-other-keys) &body body)
   (alexandria:once-only (return-code)
     (alexandria:with-gensyms (fn)
       `(progn
-         (setf (hunchentoot:content-type*) "text/html; charset=utf-8"
-               (hunchentoot:return-code*) ,return-code
-               (hunchentoot:header-out :link) (format nil "~:{<~A>;rel=preload;type=~A;as=~A~@{;~A~}~:^,~}"
-                                                      `((,(generate-css-link) "text/css" "style")
-                                                        (,*fonts-stylesheet-uri* "text/css" "style")
-                                                        ("/fa-solid-900.ttf?v=1" "font/ttf" "font" "crossorigin")
-                                                        ("/fa-regular-400.ttf?v=1" "font/ttf" "font" "crossorigin")
-                                                        ("//fonts.greaterwrong.com/font_files/BitmapFonts/MSSansSerif.ttf" "font/ttf" "font" "crossorigin"))))
+         (set-default-headers ,return-code)
          (let* ((,out-stream (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8))
                 (,fn (lambda () ,@body)))
            (call-with-emit-page ,out-stream ,fn ,@args))))))
 
+(defun call-with-error-page (fn)
+  (let ((*current-auth-token* (alexandria:if-let (at (hunchentoot:cookie-in "lw2-auth-token")) (if (string= at "") nil at))))
+    (let ((*check-notifications-thread* (if *current-auth-token*
+                                            (make-thread
+                                              (let ((cat *current-auth-token*))
+                                                (lambda ()
+                                                  (let ((*current-auth-token* cat))
+                                                    (handler-case (log-conditions (check-notifications (logged-in-userid) cat))
+                                                      (serious-condition (c) c)))))))))
+          (handler-case
+            (log-conditions 
+              (prog1 (funcall fn) (sb-ext:gc :gen 1)))
+            (serious-condition (condition)
+                               (emit-page (out-stream :title "Error" :return-code 500) 
+                                          (error-to-html out-stream condition)))))))
+
 (defmacro with-error-page (&body body)
-  `(let ((*current-auth-token* (alexandria:if-let (at (hunchentoot:cookie-in "lw2-auth-token")) (if (string= at "") nil at))))
-     (handler-case
-       (log-conditions 
-         (prog1 (progn ,@body) (sb-ext:gc :gen 1)))
-       (serious-condition (condition)
-                          (emit-page (out-stream :title "Error" :return-code 500) 
-                                     (error-to-html out-stream condition))))))
+  `(call-with-error-page (lambda () ,@body)))
 
 (defun output-form (out-stream method action id class csrf-token fields button-label &key textarea end-html)
   (format out-stream "<form method=\"~A\" action=\"~A\" id=\"~A\" class=\"~A\"><div>" method action id class)
@@ -580,7 +600,7 @@
   (format out-stream "<div class=\"action-container\"><input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><input type=\"submit\" value=\"~A\">~@[~A~]</div></div></form>"
 	  csrf-token button-label end-html))
 
-(defun view-items-index (items &key section with-offset (with-next t) title current-uri hide-title need-auth hide-rss extra-html page-toolbar-extra (content-class "index-page"))
+(defun view-items-index (items &key section with-offset (with-next t) title current-uri hide-title need-auth hide-rss extra-html page-toolbar-extra (content-class "index-page") ignore-notifications)
   (alexandria:switch ((hunchentoot:get-parameter "format") :test #'string=)
                      ("rss" 
                       (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
@@ -588,7 +608,7 @@
                         (write-index-items-to-rss (make-flexi-stream out-stream :external-format :utf-8) items :title title)))
                      (t
                        (emit-page (out-stream :title (if hide-title nil title) :description "A faster way to browse LessWrong 2.0" :content-class content-class :with-offset with-offset :with-next with-next
-                                              :current-uri current-uri :robots (if (and with-offset (> with-offset 0)) "noindex, nofollow"))
+                                              :current-uri current-uri :robots (if (and with-offset (> with-offset 0)) "noindex, nofollow") :ignore-notifications ignore-notifications)
                                   (format out-stream "<div class=\"page-toolbar\">~@[<a class=\"new-post button\" href=\"/edit-post?section=~A\" accesskey=\"n\" title=\"Create new post [n]\">New post</a>~]~@[~A~]~{~@[<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" title=\"~A RSS feed\" href=\"~A\">RSS</a>~]~}</div>"
                                           (if (and (case section (:meta t) (:all t)) (logged-in-userid)) (string-downcase (string section)))
                                           page-toolbar-extra
@@ -711,7 +731,7 @@
                                                      (if lw2-auth-token
                                                          (format out-stream "<script>commentVotes=~A</script>" (json:encode-json-to-string (get-post-comments-votes post-id lw2-auth-token))))))
                                             (multiple-value-bind (post title condition)
-                                              (handler-case (get-post-body post-id :auth-token (and need-auth lw2-auth-token))
+                                              (handler-case (nth-value 0 (get-post-body post-id :auth-token (and need-auth lw2-auth-token)))
                                                 (serious-condition (c) (values nil "Error" c))
                                                 (:no-error (post) (values post (cdr (assoc :title post)) nil)))
                                               (if comment-id
@@ -739,7 +759,7 @@
                                                            (handler-case
                                                              (let ((comments (get-post-comments post-id)))
                                                                (output-comments out-stream comments nil))
-                                                               (serious-condition (c) (error-to-html out-stream c)))))))))))))
+                                                             (serious-condition (c) (error-to-html out-stream c)))))))))))))
 
 (defparameter *edit-post-template* (compile-template* "edit-post.html"))
 
@@ -901,6 +921,7 @@
                                             :with-offset offset :with-next with-next
                                             :need-auth (string= show "drafts") :section (if (string= show "drafts") "drafts" nil)
                                             :hide-rss (some (lambda (x) (string= show x)) '("drafts" "conversations" "inbox"))
+                                            :ignore-notifications (string= show "inbox")
                                             :page-toolbar-extra (alexandria:if-let ((liu (logged-in-userid)))
                                                                   (if (string= liu (cdr (assoc :--id user-info)))
                                                                       (format nil "<form method=\"post\" action=\"/logout\"><button class=\"logout-button button\" name=\"logout\" value=\"~A\">Log out</button></form>"
