@@ -82,6 +82,7 @@ input {
 }
 .nav-bar {
 	display: flex;
+	justify-content: flex-end;
 }
 .nav-item {
 	flex: 1 1 auto;
@@ -1147,9 +1148,6 @@ h1.listing + .post-meta .post-section::before {
 /* POST-META */
 /*************/
 
-.post-meta {
-/* 	position: relative; */
-}
 .post-meta .post-section {
 	margin: 0;
 	visibility: hidden;
@@ -3123,9 +3121,16 @@ body {
 .nav-inner {
 	font-weight: normal;
 	font-size: 1.1875em;
+	padding: 11px 30px 13px 30px;
+}
+.nav-current .nav-inner {
+	font-weight: 600;
 }
 #secondary-bar .nav-inner {
     font-size: 0.875rem;
+}
+#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
+	padding: 5px 0 3px 0;
 }
 
 .nav-bar .nav-item:not(.nav-current):not(#nav-item-search):hover,
@@ -3254,17 +3259,17 @@ body {
 	font-weight: inherit;
 }
 
+/* Inbox indicator */
+
+#inbox-indicator {
+	top: 0;
+}
+
 /*==============*/
 /* PAGE TOOLBAR */
 /*==============*/
 
-.new-post,
-.new-post:visited,
-.new-private-message,
-.new-private-message:visited {
-	color: #999;
-}
-.logout-button {
+.page-toolbar > * {
 	color: #999;
 }
 
@@ -3522,10 +3527,11 @@ body {
 
 h1.listing {
 	font-family: 'Whitney', 'a_Avante', 'Font Awesome';
-	margin: 0.6em 20px 0.1em 20px;
     font-size: 1.5rem;
 }
-
+h1.listing:first-of-type {
+	margin-top: 1.5em;
+}
 h1.listing a[href^='/'] {
 	font-weight: normal;
 }
@@ -3575,61 +3581,36 @@ h1.listing a[href^="http"] {
 }
 
 /*===================*/
-/* LISTING POST-META */ /************************************/
+/* LISTING POST-META */
 /*===================*/
 
 h1.listing + .post-meta > * {
     color: #222;
     font-size: 1em;
 }
-
 h1.listing + .post-meta .comment-count::before,
 h1.listing + .post-meta .lw2-link::before,
 h1.listing + .post-meta .read-time::before {
 	font-family: Font Awesome;
-	font-weight: 900;
 }
-
-h1.listing + .post-meta .karma-value::before {
-	content: "\F139";
-}
-
 h1.listing + .post-meta .karma {
     float: left;
     margin-right: 3px;
 }
-
 h1.listing + .post-meta .karma::after {
     content: " by";
 }
-
-h1.listing + .post-meta .author {
-    margin-right: 0;
-}
-
 h1.listing + .post-meta .date::before {
     content: "on ";
 }
-
 h1.listing + .post-meta .date::after {
     content: " — ";
 	opacity: 0.5;
-}
-
-h1.listing + .post-meta .date {
     margin-right: 5px;
 }
-
-h1.listing + .post-meta .comment-count {
-    margin-left: 0;
-    margin-right: 4px;
-}
-
-
 h1.listing + .post-meta .comment-count.new-comments::before {
 	color: #0c0;
 }
-
 h1.listing + .post-meta .post-section::before {
     left: -26px;
     top: 0px;
@@ -3640,34 +3621,97 @@ h1.listing + .post-meta .post-section::before {
 /* USER PAGES */
 /*============*/
 
-/*============*/
-/* USER PAGES */
-/*============*/
+#content.user-page h1.page-main-heading {
+	border-bottom: 1px solid #ccc;
+}
+
+.user-stats .karma-total {
+	font-weight: bold;
+}
 
 /*============*/
 /* LOGIN PAGE */
 /*============*/
 
+.login-container form input[type='submit'] {
+	font-weight: 600;
+	background-color: #eee;
+	border: 1px solid #ccc;
+}
+.login-container form input[type='submit']:hover,
+.login-container form input[type='submit']:focus {
+	background-color: #ddd;
+	border: 1px solid #aaa;
+}
+
+/* “Create account” form */
+
+#signup-form {
+	background-color: #f3f3f3;
+	padding: 0 0 0.5em 1em;
+	border: 1px solid #ddd;
+}
+#signup-form input[type='submit'] {
+	background-color: #e4e4e4;
+	border: 1px solid #ccc;
+}
+#signup-form input[type='submit']:hover {
+	background-color: #d8d8d8;
+	border: 1px solid #aaa;
+}
+
+/* Log in tip */
+
+.login-container .login-tip {
+	border: 1px solid #eee;
+}
+
+/* Message box */
+
+.error-box {
+	border: 1px solid red;
+	background-color: #faa;
+}
+.success-box {
+	border: 1px solid green;
+	background-color: #afa;
+}
+
 /*=====================*/
 /* PASSWORD RESET PAGE */
 /*=====================*/
+
+.reset-password-container input[type='submit'] {
+	background-color: #e4e4e4;
+	border: 1px solid #ccc;
+	font-weight: 600;
+}
 
 /*===================*/
 /* TABLE OF CONTENTS */
 /*===================*/
 
 .contents {
-	padding-right: 0.5em;
+	font-family: 'Whitney', 'a_Avante';
+	border: 1px solid #ddd;
+	background-color: #eee;
 }
-.post-body .contents a:link {
+.contents-head {
+	font-weight: bold;
+}
+.contents a:link {
 	color: #d64400;
 }
-.post-body .contents ul {
+.contents ul {
 	font-size: 0.85em;
+}
+.contents li::before {
+	color: #999;
+	font-feature-settings: "tnum";
 }
 
 /*==================*/
-/* POSTS & COMMENTS */ /************************************/
+/* POSTS & COMMENTS */
 /*==================*/
 
 .post-body,
@@ -3703,7 +3747,7 @@ h1.listing + .post-meta .post-section::before {
 }
 
 /*===========*/
-/* POST-META */ /************************************/
+/* POST-META */
 /*===========*/
 
 .post-meta a,
@@ -3781,6 +3825,9 @@ h1.listing + .post-meta .post-section::before {
 	bottom: 1px;
 }
 
+.post .post-meta .author {
+	margin: 0 0.75em 0 0;
+}
 .post .post-meta .comment-count {
 	margin: 0 0.5em;
 }
@@ -3791,17 +3838,159 @@ h1.listing + .post-meta .post-section::before {
 	margin: 0 0 0 0.5em;
 }
 
+.post-meta .post-section::before {
+	color: #fff;
+	text-shadow: 
+		1px 1px 0 #090, 
+		0 1px 0 #090, 
+		0 0 5px #090;
+}
+
+.bottom-post-meta {
+	border-top: 1px solid #ddd;
+}
+
 /*============*/
 /* LINK POSTS */
 /*============*/
+
+.post.link-post a.link-post-link {
+	text-decoration: none;
+	font-family: 'Whitney', 'a_Avante';
+	font-weight: 600;
+}
+.post.link-post a.link-post-link:hover {
+	color: #c00;
+}
+.post.link-post a.link-post-link:hover::before {
+	color: #4879ec;
+	text-shadow: 
+		0.5px 0.5px 0 #fff,
+		-0.5px -0.5px 0 #fff,
+		0 0 2px #fff,
+		0 0 3px #00c;
+}
 
 /*==========*/
 /* COMMENTS */
 /*==========*/
 
+#comments {
+	border-top: 1px solid #000;
+	box-shadow: 0 3px 4px -4px #000 inset;
+}
+.comment-item {
+	border: 1px solid #ccc;
+}
+
+
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item,
+.comment-item {
+	background-color: #eee;
+}
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item a.comment-parent-link::after {
+	box-shadow: 
+		0 28px 16px -16px #fff inset,
+		4px 16px 0 12px #ffd inset,
+		4px	4px 0 12px #ffd inset;
+}
+
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item .comment-item .comment-item,
+.comment-item .comment-item {
+	background-color: #fff;
+}
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
+.comment-item .comment-item a.comment-parent-link::after {
+	box-shadow: 
+		0 28px 16px -16px #eee inset,
+		4px 16px 0 12px #ffd inset,
+		4px	4px 0 12px #ffd inset;
+}
+
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item .comment-item:target,
+.comment-item .comment-item .comment-item:target,
+.comment-item .comment-item:target,
+.comment-item:target {
+	background-color: #ffd;
+}
+.comment-item:target > .comment-thread > .comment-item > .comment > .comment-meta > a.comment-parent-link::after {
+	box-shadow: 
+		0 28px 16px -16px #ffd inset,
+		4px 16px 0 12px #ffd inset,
+		4px	4px 0 12px #ffd inset !important;
+}
+
 /*================================*/
 /* DEEP COMMENT THREAD COLLAPSING */
 /*================================*/
+
+.comment-item input[id^="expand"] + label::after {
+	color: #f60;
+	font-weight: 600;
+}
+.comment-item input[id^="expand"] + label:hover::after {
+	color: #c00;
+}
+.comment-item input[id^="expand"] + label:active::after,
+.comment-item input[id^="expand"] + label:focus::after{
+	color: #c00;
+}
+.comment-item input[id^="expand"]:checked ~ .comment-thread .comment-thread .comment-item {
+	border-width: 1px 0 0 0;
+}
 
 /*==============*/
 /* COMMENT-META */
@@ -3812,16 +4001,96 @@ h1.listing + .post-meta .post-section::before {
 }
 .comment-meta .author {
 	color: #999;
+	font-size: 1.25em;
 	font-weight: 600;
+}
+.comment-meta .author:hover {
+	text-decoration: none;
+	color: #090;
 }
 
 /*===========================*/
 /* COMMENT THREAD NAVIGATION */
 /*===========================*/
 
+a.comment-parent-link::before {
+	color: #bbb;
+}
+a.comment-parent-link:hover::before {
+	background-color: #ffd;
+	color: #999;
+}
+
+div.comment-child-links {
+	font-weight: 600;
+}
+div.comment-child-links a {
+	font-weight: normal;
+}
+div.comment-child-links a::first-letter {
+	color: #aaa;
+}
+
+.comment-item-highlight {
+	box-shadow:
+		0 0	2px #e7b200,
+		0 0	3px #e7b200,
+		0 0	5px #e7b200,
+		0 0	7px #e7b200,
+		0 0 10px #e7b200;
+	border: 1px solid #e7b200;
+}
+.comment-item-highlight-faint {
+	box-shadow:
+		0 0	2px #f8e7b5,
+		0 0	3px #f8e7b5,
+		0 0	5px #f8e7b5,
+		0 0	7px #f8e7b5,
+		0 0 10px #f8e7b5;
+	border: 1px solid #f8e7b5;
+}
+
+.comment-popup {
+	background-color: #fff;
+}
+
 /*=======================*/
 /* COMMENTS COMPACT VIEW */
 /*=======================*/
+
+#comments-list-mode-selector button {
+	box-shadow:
+		0 0 0 4px #fff inset,
+		0 0 0 5px #bbb inset;
+}
+#comments-list-mode-selector button:hover,
+#comments-list-mode-selector button.selected {
+	box-shadow:
+		0 0 0 5px #bbb inset;
+}
+#content.compact > .comment-thread .comment-item::after {
+	color: #f60;
+	background: linear-gradient(to right, transparent 0%, #fff 50%, #fff 100%);
+}
+#content.compact > .comment-thread .comment-item:hover .comment {
+	background-color: #fff;
+	outline: 3px solid #00c;
+}
+#content.compact > .comment-thread .comment-item:hover .comment::before {
+	background-color: #fff;
+	box-shadow: 
+		0 0  3px #fff,
+		0 0  5px #fff,
+		0 0  7px #fff,
+		0 0 10px #fff,
+		0 0 20px #fff,
+		0 0 30px #fff,
+		0 0 40px #fff;
+}
+
+/*===========================*/
+/* HIGHLIGHTING NEW COMMENTS */
+/*===========================*/
 
 .new-comment::before {
 	outline: 2px solid #9037ff;
@@ -3831,13 +4100,24 @@ h1.listing + .post-meta .post-section::before {
 		0 0 6px #9037ff;
 }
 
-/*===========================*/
-/* HIGHLIGHTING NEW COMMENTS */
-/*===========================*/
-
 /*=================================*/
 /* COMMENT THREAD MINIMIZE BUTTONS */
 /*=================================*/
+
+.comment-minimize-button {
+	color: #ccc;
+}
+.comment-minimize-button:hover {
+	color: #aaa;
+	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+}
+.comment-minimize-button::after {
+	font-family: 'Whitney', 'a_Avante';
+	color: #777;
+}
+.comment-minimize-button.maximized::after {
+	color: #ccc;
+}
 
 /*==============*/
 /* VOTE BUTTONS */
@@ -3868,31 +4148,165 @@ h1.listing + .post-meta .post-section::before {
 		0 0 0.5px #fff, 
 		0 0 8px #f00;
 }
+
 /*===========================*/
 /* COMMENTING AND POSTING UI */
 /*===========================*/
 
+.posting-controls input[type='submit'] {
+	background-color: #fff;
+	border: 1px solid #aaa;
+	font-weight: bold;
+}
+.posting-controls input[type='submit']:hover,
+.posting-controls input[type='submit']:focus {
+	background-color: #ddd;
+	border: 1px solid #999;
+}
+
+.comment-controls .cancel-comment-button {
+	font-weight: 600;
+	color: #c00;
+	text-shadow: 
+		0 0 1px #fff,
+		0 0 2px #fff;
+}
+.comment-controls .cancel-comment-button:hover {
+	color: #f00;
+	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+}
+
+.new-comment-button {
+	font-weight: 600;
+}
+
+.comment-controls .edit-button {
+	color: #0b0;
+}
+.comment-controls .edit-button:hover {
+	color: #f00;
+}
+
+.edit-post-link,
+.edit-post-link:visited {
+	color: #090;
+}
+
 .posting-controls textarea {
 	font-weight: 400;
 	font-family: Source Sans Pro, Trebuchet MS, Helvetica, Arial, Verdana, sans-serif;
+	border-color: #aaa;
+	box-shadow: 
+		0 0 0 1px #eee inset;
 }
 @-moz-document url-prefix() {
 	.posting-controls textarea {
 		font-weight: 300;
 	}
 }
+.posting-controls textarea:focus {
+	background-color: #ffd;
+	border-color: #00e;
+	box-shadow: 
+		0 0 0 1px #ddf inset,
+		0 0 0 1px #fff,
+		0 0 0 2px #00e;
+}
+.posting-controls.edit-existing-post textarea:focus,
+.posting-controls.edit-existing-comment textarea:focus {
+	border-color: #090;
+    box-shadow: 
+    	0 0 0 1px #81ff7f inset,
+    	0 0 0 1px #fff,
+    	0 0 0 2px #090;
+}
 
+/* GUIEdit buttons */
+
+.guiedit-buttons-container {
+	background-image: linear-gradient(to bottom, #fff 0%, #ddf 50%, #ccf 75%, #aaf 100%);
+}
+
+.posting-controls.edit-existing-post .guiedit-buttons-container button,
+.posting-controls.edit-existing-comment .guiedit-buttons-container button {
+    color: #050;
+}
 .guiedit-buttons-container button {
 	font-family: Font Awesome, Source Sans Pro, Trebuchet MS, Helvetica, Arial, Verdana, sans-serif;
-	color: #00e;
 }
+
+.guiedit::after {
+	font-family: 'Whitney', 'a_Avante';
+	color: #777;
+	text-shadow: none;
+}
+
+/* Markdown hints */
+
 #markdown-hints-checkbox + label {
 	color: #999;
+}
+#markdown-hints-checkbox + label:hover {
+	color: #e00;
+	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+}
+.markdown-hints {
+	border: 1px solid #c00;
+	background-color: #ffa;
 }
 
 /*================*/
 /* EDIT POST FORM */
 /*================*/
+
+#edit-post-form .link-post-checkbox + label::before {
+	border-radius: 3px;
+	border: 1px solid #ddd;
+	color: #777;
+}
+#edit-post-form .link-post-checkbox + label:hover,
+#edit-post-form .link-post-checkbox:focus + label {
+	text-shadow: 
+		0 0 1px #fff,
+		0 0 2px #fff,
+		0 0 2.5px #aaa;
+}
+#edit-post-form .link-post-checkbox + label:hover::before,
+#edit-post-form .link-post-checkbox:focus + label::before {
+	border-color: #aaa;
+}
+#edit-post-form .link-post-checkbox:checked + label::before {
+	content: "\F00C";
+}
+#edit-post-form input[type='radio'] + label {
+	color: #777;
+	border-color: #ddd;
+}
+#edit-post-form input[type='radio'][value='all'] + label {
+	border-radius: 8px 0 0 8px;
+	border-width: 1px;
+}
+#edit-post-form input[type='radio'][value='drafts'] + label {
+	border-radius: 0 8px 8px 0;
+}
+#edit-post-form input[type='radio'] + label:hover,
+#edit-post-form input[type='radio']:focus + label {
+	background-color: #ddd;
+	color: #000;
+}
+#edit-post-form input[type='radio']:focus + label {
+	color: #000;
+	box-shadow: 
+		0 0 0 1px #aaa;
+}
+#edit-post-form input[type='radio']:checked + label {
+	background-color: #ddd;
+	border-color: #ddd;
+	color: #000;
+	text-shadow: 
+		0 -1px 0 #fff,
+		0 0.5px 0.5px #000;
+}
 
 /*=======*/
 /* LINKS */
@@ -3923,10 +4337,55 @@ input[type='submit'] {
 	color: #999;
 }
 
+button:hover,
+input[type='submit']:hover,
+button:focus,
+input[type='submit']:focus {
+	color: #d00;
+	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+}
+button:active,
+input[type='submit']:active {
+	color: #f00;
+	transform: scale(0.9);
+}
+.button:hover {
+	color: #d00;
+	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+	text-decoration: none;
+}
+.button:active {
+	transform: scale(0.9);
+}
+.button:focus:not(:hover) {
+	transform: none;
+}
+@-moz-document url-prefix() {
+	.button:active {
+		transform: none;
+	}
+}
+
 /*==========*/
 /* HEADINGS */
 /*==========*/
 
+.post-body h1,
+.post-body h2,
+.post-body h4,
+.comment-body h1,
+.comment-body h2,
+.comment-body h4 {
+	font-family: 'Whitney', 'a_Avante';
+}
+.post-body h3,
+.comment-body h3,
+.post-body h5,
+.post-body h6,
+.comment-body h5,
+.comment-body h6 {
+	font-family: 'Whitney Smallcaps', 'a_Avante';
+}
 .post-body h1,
 .post-body h2,
 .post-body h3,
@@ -3941,6 +4400,14 @@ input[type='submit'] {
 .comment-body h6 {
 	font-weight: 400;
 }
+.post-body h6,
+.comment-body h6 {
+	color: #555;
+}
+.post-body h1,
+.comment-body h1 {
+	border-bottom: 1px solid #aaa;
+}
 .post-body h2 {
 	border-bottom: 1px dotted #ccc;
 }
@@ -3949,13 +4416,63 @@ input[type='submit'] {
 /* QUOTES */
 /*========*/
 
+blockquote {
+	border-left: 5px solid #ccc;
+}
+
 /*========*/
 /* IMAGES */
 /*========*/
 
+.post-body img,
+.comment-body img {
+	border: 1px solid #ccc;
+}
+.post-body img[src$='.svg'],
+.comment-body img[src$='.svg'] {
+	border: none;
+}
+#content figure img {
+	border: 1px solid #000;
+}
+#content figure img[src$='.svg'] {
+	border: none;
+}
+
 /*======*/
 /* MISC */
 /*======*/
+
+hr {
+	border-bottom: 1px solid #999;
+}
+
+code {
+	background-color: #f6f6ff;
+	border: 1px solid #ddf;
+	border-radius: 4px;
+}
+
+input[type='text'],
+input[type='search'],
+input[type='password'],
+textarea {
+	background-color: #fff;
+	border: 1px solid #ddd;
+	color: #000;
+}
+input[type='text']:focus,
+input[type='search']:focus,
+input[type='password']:focus,
+textarea:focus {
+	background-color: #ffd;
+	border: 1px solid #bbb;
+	box-shadow: 0 0 1px #bbb;
+}
+
+select {
+	color: #000;
+}
 
 .frac {
 	padding-left: 2px;
@@ -3973,17 +4490,83 @@ input[type='submit'] {
 /* ABOUT PAGE */
 /*============*/
 
-/*============*/
-/* USER STATS */
-/*============*/
+.about-page u {
+	background-color: #e6e6e6;
+	text-decoration: none;
+	box-shadow: 
+		0 -1px 0 0 #000 inset, 
+		0 -3px 1px -2px #000 inset;
+	padding: 0 1px;
+}
+
+#content.about-page .accesskey-table {
+	font-family: 'Whitney', 'a_Avante';
+	border-color: #ddd;
+}
+
+#content.about-page img {
+	border: 1px solid #000;
+}
 
 /*========================*/
 /* QUALIFIED HYPERLINKING */
 /*========================*/
 
+#aux-about-link a {
+	color: #777;
+}
+#aux-about-link a:hover {
+	opacity: 1.0;
+	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+}
+
+.qualified-linking label {
+	color: #f60;
+}
+.qualified-linking label:hover {
+	text-shadow:
+		0 0 1px #fff,
+		0 0 3px #fff,
+		0 0 5px #00e;
+}
+
+.qualified-linking-toolbar {
+	border: 1px solid #000;
+	background-color: #fff;
+}
+.qualified-linking-toolbar a {
+	background-color: #eee;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+.qualified-linking-toolbar a:visited {
+	color: #f60;
+}
+.qualified-linking-toolbar a:hover {
+	text-decoration: none;
+	background-color: #ddd;
+	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+}
+
 /*======*/
 /* MATH */
 /*======*/
+
+div > .MJXc-display {
+	padding: 10px 6px;
+	border-radius: 6px;
+}
+.MJXc-display::-webkit-scrollbar {
+	height: 12px;
+	background-color: #f6f6ff;
+	border-radius: 6px;
+	border: 1px solid #ddf;
+}
+.MJXc-display::-webkit-scrollbar-thumb {
+	background-color: #dde;
+	border-radius: 6px;
+	border: 1px solid #cce;
+}
 
 /*====================*/
 /* FOR NARROW SCREENS */
@@ -3999,3 +4582,53 @@ input[type='submit'] {
 		border-width: 1px 0 1px 1px;
 	}
 }
+@media only screen and (max-width: 1080px) {
+	#text-size-adjustment-ui button {
+		border: 1px solid #999;
+		padding: 0 0 0 1px;
+		border-radius: 50%;
+		box-shadow: 
+			0 0 6px #999 inset,
+			0 0 0 1px transparent;
+	}
+	#theme-tweaker-toggle button {
+		border: 1px solid #999;
+		box-shadow: 
+			0 0 10px #999 inset,
+			0 0 0 1px transparent;
+		border-radius: 50%;
+		transform: scale(0.8);
+	}
+}
+@media only screen and (max-width: 1020px) {
+	#quick-nav-ui a {
+		box-shadow: 
+			0 0 0 1px #999,
+			0 0 0 2px transparent;
+	}
+	#new-comment-nav-ui .new-comments-count::before {
+		background-color: #d8d8d8;
+		box-shadow: 
+			0 0 0 1px #999,
+			0 0 0 2px transparent;
+		border-radius: 8px;
+	}
+}
+@media only screen and (max-width: 1000px) {
+	#theme-selector {
+		background-color: #d8d8d8;
+		box-shadow: 
+			0 0 0 1px #999,
+			0 0 0 2px transparent;
+	}
+	#text-size-adjustment-ui button {
+		background-color: #ddd;
+	}
+	#text-size-adjustment-ui button:hover {
+		background-color: #eee;
+	}
+	#theme-tweaker-toggle button {
+		background-color: #ddd;
+	}
+}
+

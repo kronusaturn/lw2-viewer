@@ -82,6 +82,7 @@ input {
 }
 .nav-bar {
 	display: flex;
+	justify-content: flex-end;
 }
 .nav-item {
 	flex: 1 1 auto;
@@ -1147,9 +1148,6 @@ h1.listing + .post-meta .post-section::before {
 /* POST-META */
 /*************/
 
-.post-meta {
-/* 	position: relative; */
-}
 .post-meta .post-section {
 	margin: 0;
 	visibility: hidden;
@@ -3741,6 +3739,10 @@ h1.listing + .post-meta::after {
 	display: none;
 }
 
+.user-stats .karma-total {
+	font-weight: bold;
+}
+
 /*============*/
 /* LOGIN PAGE */
 /*============*/
@@ -4320,11 +4322,7 @@ input[type='submit']:active {
 }
 .button:hover {
 	color: #d00;
-	text-shadow:
-		0 0 1px #fff,
-		0 0 2px #fff,
-		0 0 4px #fff,
-		0 0 2px #f00;
+	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
 	text-decoration: none;
 }
 .button:active {
@@ -4356,10 +4354,7 @@ h1 {
 	font-family: 'Whitney', 'a_Avante';
 }
 .post-body h3,
-.comment-body h3 {
-	font-family: 'Whitney Smallcaps', 'a_Avante';
-	font-weight: 600;
-}
+.comment-body h3,
 .post-body h5,
 .post-body h6,
 .comment-body h5,
@@ -4458,14 +4453,6 @@ select {
 
 #content.about-page img {
 	border: 1px solid #000;
-}
-
-/*============*/
-/* USER STATS */
-/*============*/
-
-.user-stats .karma-total {
-	font-weight: bold;
 }
 
 /*========================*/
