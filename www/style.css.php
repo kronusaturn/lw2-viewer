@@ -71,6 +71,7 @@ input {
 }
 .nav-bar {
 	display: flex;
+	justify-content: flex-end;
 }
 .nav-item {
 	flex: 1 1 auto;
@@ -1138,9 +1139,6 @@ h1.listing + .post-meta .post-section::before {
 /* POST-META */
 /*************/
 
-.post-meta {
-/* 	position: relative; */
-}
 .post-meta .post-section {
 	margin: 0;
 	visibility: hidden;

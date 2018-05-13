@@ -646,6 +646,10 @@ h1.listing + .post-meta::after {
 	display: none;
 }
 
+.user-stats .karma-total {
+	font-weight: bold;
+}
+
 /*============*/
 /* LOGIN PAGE */
 /*============*/
@@ -1177,11 +1181,7 @@ input[type='submit']:active {
 }
 .button:hover {
 	color: #d00;
-	text-shadow:
-		0 0 1px #fff,
-		0 0 2px #fff,
-		0 0 4px #fff,
-		0 0 2px #f00;
+	text-shadow: <?php echo $white_glow; ?>;
 	text-decoration: none;
 }
 .button:active {
@@ -1213,10 +1213,7 @@ h1 {
 	font-family: <?php echo $UI_font; ?>;
 }
 .post-body h3,
-.comment-body h3 {
-	font-family: <?php echo $UI_font_smallcaps; ?>;
-	font-weight: 600;
-}
+.comment-body h3,
 .post-body h5,
 .post-body h6,
 .comment-body h5,
@@ -1315,14 +1312,6 @@ select {
 
 #content.about-page img {
 	border: 1px solid #000;
-}
-
-/*============*/
-/* USER STATS */
-/*============*/
-
-.user-stats .karma-total {
-	font-weight: bold;
 }
 
 /*========================*/
