@@ -3247,7 +3247,7 @@ body {
 #nav-item-search button {
     color: #999;
 	border: none;
-	font-weight: inherit;
+	font-weight: 600;
 }
 
 /* Inbox indicator */
@@ -4595,13 +4595,13 @@ div > .MJXc-display {
 @media only screen and (max-width: 1020px) {
 	#quick-nav-ui a {
 		box-shadow: 
-			0 0 0 1px #999,
+			0 0 0 1px #ccc,
 			0 0 0 2px transparent;
 	}
 	#new-comment-nav-ui .new-comments-count::before {
-		background-color: #d8d8d8;
+		background-color: #eee;
 		box-shadow: 
-			0 0 0 1px #999,
+			0 0 0 1px #ccc,
 			0 0 0 2px transparent;
 		border-radius: 8px;
 	}
