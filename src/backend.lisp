@@ -2,6 +2,7 @@
   (:use #:cl #:sb-thread #:flexi-streams #:alexandria #:lw2-viewer.config #:lw2.lmdb #:lw2.utils #:lw2.hash-utils)
   (:export #:*posts-index-fields* #:*comments-index-fields* #:*messages-index-fields*
            #:*notifications-base-terms*
+           #:lw2-error #:lw2-client-error #:lw2-not-found-error #:lw2-not-allowed-error #:lw2-server-error #:lw2-connection-error #:lw2-unknown-error
 	   #:log-condition #:log-conditions #:start-background-loader #:stop-background-loader #:background-loader-running-p
 	   #:lw2-graphql-query-streamparse #:lw2-graphql-query-noparse #:decode-graphql-json #:lw2-graphql-query #:graphql-query-string* #:graphql-query-string #:lw2-graphql-query-map #:lw2-graphql-query-multi
 	   #:make-posts-list-query #:get-posts #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
@@ -17,6 +18,28 @@
 (defparameter *messages-index-fields* '(:--id :user-id :created-at :content (:conversation :--id :title) :----typename))
 
 (defparameter *notifications-base-terms* (alist :view "userNotifications" :created-at :null :viewed :null))
+
+(define-condition lw2-error (error) ())
+
+(define-condition lw2-client-error (lw2-error) ())
+
+(define-condition lw2-not-found-error (lw2-client-error) ()
+  (:report "LW server reports: document not found."))
+
+(define-condition lw2-not-allowed-error (lw2-client-error) ()
+  (:report "LW server reports: not allowed."))
+
+(define-condition lw2-server-error (lw2-error) ())
+
+(define-condition lw2-connection-error (lw2-server-error)
+  ((message :initarg :message :reader lw2-server-error-message))
+  (:report (lambda (c s)
+             (format s "Unable to connect to LW server: ~A" (lw2-server-error-message c)))))
+
+(define-condition lw2-unknown-error (lw2-server-error)
+  ((message :initarg :message :reader lw2-unknown-error-message))
+  (:report (lambda (c s)
+             (format s "Unrecognized LW server error: ~A" (lw2-unknown-error-message c)))))
 
 (defun log-condition (condition)
   (with-open-file (outstream "./logs/error.log" :direction :output :if-exists :append :if-does-not-exist :create)
@@ -118,20 +141,22 @@
       (t
 	(error "Error while contacting LW2: ~A ~A" status-code status-string)))))
 
+(defun signal-lw2-errors (errors)
+  (loop for error in errors
+        do (let ((message (cdr (assoc :message error)))
+                 (path (cdr (assoc :path error))))
+             (unless (and path (> (length path) 1))
+               (cond
+                 ((search "document_not_found" message) (error (make-condition 'lw2-not-found-error)))
+                 ((search "not_allowed" message) (error (make-condition 'lw2-not-allowed-error)))
+                 (t (error (make-condition 'lw2-unknown-error :message message))))))))
+
 (defun decode-graphql-json (json-string)
   (let* ((decoded (json:decode-json-from-string json-string))
-	 (errors (cadr (assoc :errors decoded)))
+	 (errors (cdr (assoc :errors decoded)))
 	 (data (cdadr (assoc :data decoded))))
-    (if errors
-      (let ((message (cdr (assoc :message errors)))
-            (path (cdr (assoc :path errors))))
-        (if (and path (> (length path) 1))
-            (values data errors)
-            (cond
-              ((search "document_not_found" message) (error "LW2 server reports: document not found."))
-              ((search "not_allowed" message) (error "LW2 server reports: not allowed."))
-              (t (error "LW2 server reports: ~A" message)))))
-      data)))  
+    (signal-lw2-errors errors)
+    data))
 
 (defun lw2-graphql-query-map (fn data &key auth-token postprocess)
   (multiple-value-bind (map-values queries)
@@ -148,7 +173,9 @@
                      for q in queries
                      do (format stream "g~6,'0D:~A " n q))
                (format stream "}")))
-           (result (sort (lw2-graphql-query-streamparse query-string :auth-token auth-token) #'string< :key #'car)))
+           (result (when queries (sort (lw2-graphql-query-streamparse query-string :auth-token auth-token) #'string< :key #'car)))
+           (errors (cdr (assoc :errors result))))
+      (signal-lw2-errors errors)
       (values
         (loop as results = (cdr (assoc :data result)) then (if passthrough-p results (rest results))
               for (out passthrough-p) in map-values
@@ -156,7 +183,7 @@
               as result-data = (if passthrough-p out (cdr result-data-cell))
               for input-data in data
               collect (if postprocess (funcall postprocess input-data result-data) result-data))
-        (cdr (assoc :errors result))))))
+        errors))))
 
 (defun lw2-graphql-query-multi (query-list &key auth-token)
   (values-list (lw2-graphql-query-map #'identity query-list :auth-token auth-token)))
