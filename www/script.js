@@ -66,6 +66,30 @@ Element.prototype.getCommentId = function() {
 	}
 }
 
+/*******************/
+/* INBOX INDICATOR */
+/*******************/
+
+function updateInbox() {
+	let onFinish = function (e) {
+		if(e.target.status == 200) {
+			let res = JSON.parse(e.target.responseText);
+			if(res) {
+				let element = document.querySelector('#inbox-indicator');
+				element.className = 'new-messages';
+				element.title = 'New messages [o]';
+			}
+		}
+	};
+
+	if(loggedInUserId) {
+		let req = new XMLHttpRequest();
+		req.addEventListener("load", onFinish);
+		req.open("GET", "/check-notifications");
+		req.send();
+	}
+}
+
 /**************/
 /* COMMENTING */
 /**************/
@@ -1176,6 +1200,8 @@ function earlyInitialize() {
 // 	injectCommentsViewModeSelector();
 	// Add the comments list mode selector widget (expanded vs. compact).
 	injectCommentsListModeSelector();
+
+	updateInbox();
 }
 
 var initializeDone = false;

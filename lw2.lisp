@@ -7,9 +7,6 @@
 
 (defvar *current-auth-token*) 
 
-(defvar *check-notifications-thread*)
-(defvar *notifications-status*)
-
 (defun logged-in-userid (&optional is-userid)
   (let ((current-userid (and *current-auth-token* (cache-get "auth-token-to-userid" *current-auth-token*))))
     (if is-userid
@@ -360,7 +357,7 @@
 
 (defun check-notifications (user-id auth-token)
   (multiple-value-bind (notifications user-info)
-    (sb-sys:with-deadline (:seconds 1)
+    (sb-sys:with-deadline (:seconds 5)
                           (lw2-graphql-query-multi (list
                                                      (graphql-query-string* "NotificationsList" (alist :terms (nconc (alist :user-id user-id :limit 1) *notifications-base-terms*))
                                                                             '(:created-at))
@@ -386,7 +383,7 @@
   (let ((query (and (boundp '*current-search-query*) (hunchentoot:escape-for-html *current-search-query*))))
     (format nil "<form action=\"/search\" class=\"nav-inner\"><input name=\"q\" type=\"search\" ~@[value=\"~A\"~] autocomplete=\"off\" accesskey=\"s\" title=\"Search [s]&#10;Tip: Paste a LessWrong URL here to jump to that page.\"><button>Search</button></form>" query)))  
 
-(defun inbox-to-html (user-slug new-messages)
+(defun inbox-to-html (user-slug &optional new-messages)
   (let* ((target-uri (format nil "/users/~A?show=inbox" user-slug))
          (as-link (string= (hunchentoot:request-uri*) target-uri)))
     (multiple-value-bind (nm-class nm-text)
@@ -440,7 +437,7 @@
                             ,(if username
                                  (let ((user-slug (encode-entities (get-user-slug (logged-in-userid)))))
                                    `("login" ,(format nil "/users/~A" user-slug) ,(plump:encode-entities username) :description "User page" :accesskey "u"
-                                     :trailing-html ,(inbox-to-html user-slug *notifications-status*)))
+                                     :trailing-html ,(inbox-to-html user-slug)))
                                  `("login" ,(format nil "/login?return=~A" (url-rewrite:url-encode current-uri)) "Log In" :accesskey "u")))))
     (nav-bar-to-html current-uri)))
 
@@ -472,19 +469,23 @@
 
 (defun begin-html (out-stream &key title description current-uri content-class robots)
   (let* ((session-token (hunchentoot:cookie-in "session-token"))
-	 (csrf-token (and session-token (make-csrf-token session-token)))) 
-    (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"stylesheet\" href=\"~A\"><style id='width-adjust'></style><link rel=\"shortcut icon\" href=\"~A\"><script src=\"~A\" async></script><script src=\"~A\" async></script><script>~A</script>~@[<script>var csrfToken=\"~A\"</script>~]~@[<meta name=\"robots\" content=\"~A\">~]</head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
+         (csrf-token (and session-token (make-csrf-token session-token)))) 
+    (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"stylesheet\" href=\"~A\"><style id='width-adjust'></style><link rel=\"shortcut icon\" href=\"~A\">"
             (if title (encode-entities title)) description
-	    *html-head*
-	    (generate-css-link)
+            *html-head*
+            (generate-css-link)
             (generate-versioned-link "/theme_tweaker.css")
-	    (generate-versioned-link "/favicon.ico") (generate-versioned-link "/script.js") (generate-versioned-link "/guiedit.js")
-	    (load-time-value (with-open-file (s "www/head.js") (uiop:slurp-stream-string s)) t)
-	    csrf-token
+            (generate-versioned-link "/favicon.ico"))
+    (if *current-auth-token*
+        (format out-stream "<script>loggedInUserId=\"~A\"</script>" (logged-in-userid)))
+    (format out-stream "<script src=\"~A\" async></script><script src=\"~A\" async></script><script>~A</script>~@[<script>var csrfToken=\"~A\"</script>~]~@[<meta name=\"robots\" content=\"~A\">~]</head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
+            (generate-versioned-link "/script.js") (generate-versioned-link "/guiedit.js")
+            (load-time-value (with-open-file (s "www/head.js") (uiop:slurp-stream-string s)) t)
+            csrf-token
             robots
-	    content-class
+            content-class
             (user-nav-bar (or current-uri (replace-query-params (hunchentoot:request-uri*) "offset" nil)))))
-  (force-output out-stream)) 
+  (force-output out-stream))
 
 (defun replace-query-params (uri &rest params)
   (let* ((quri (quri:uri uri))
@@ -523,18 +524,11 @@
 			     `(let ((,stream-sym ,out-stream)) 
 				,.out-body)))) 
 
-(defun call-with-emit-page (out-stream fn &key title description current-uri content-class (return-code 200) (items-per-page 20) with-offset with-next robots ignore-notifications)
+(defun call-with-emit-page (out-stream fn &key title description current-uri content-class (return-code 200) (items-per-page 20) with-offset with-next robots)
   (declare (ignore return-code))
   (ignore-errors
     (log-conditions
-      (let ((*notifications-status*
-              (if *check-notifications-thread*
-                  (let ((x (join-thread *check-notifications-thread*)))
-                    (typecase x
-                      (lw2-client-error (setf *current-auth-token* nil) nil)
-                      (condition nil)
-                      (t (if ignore-notifications nil x)))))))
-        (begin-html out-stream :title title :description description :current-uri current-uri :content-class content-class :robots robots))
+      (begin-html out-stream :title title :description description :current-uri current-uri :content-class content-class :robots robots)
       (funcall fn)
       (end-html out-stream
                 :items-per-page (if with-offset items-per-page)
@@ -562,19 +556,12 @@
 
 (defun call-with-error-page (fn)
   (let ((*current-auth-token* (alexandria:if-let (at (hunchentoot:cookie-in "lw2-auth-token")) (if (string= at "") nil at))))
-    (let ((*check-notifications-thread* (if *current-auth-token*
-                                            (make-thread
-                                              (let ((cat *current-auth-token*))
-                                                (lambda ()
-                                                  (let ((*current-auth-token* cat))
-                                                    (handler-case (log-conditions (check-notifications (logged-in-userid) cat))
-                                                      (serious-condition (c) c)))))))))
-          (handler-case
-            (log-conditions 
-              (prog1 (funcall fn) (sb-ext:gc :gen 1)))
-            (serious-condition (condition)
-                               (emit-page (out-stream :title "Error" :return-code 500) 
-                                          (error-to-html out-stream condition)))))))
+    (handler-case
+      (log-conditions 
+        (prog1 (funcall fn) (sb-ext:gc :gen 1)))
+      (serious-condition (condition)
+                         (emit-page (out-stream :title "Error" :return-code 500) 
+                                    (error-to-html out-stream condition))))))
 
 (defmacro with-error-page (&body body)
   `(call-with-error-page (lambda () ,@body)))
@@ -600,7 +587,7 @@
   (format out-stream "<div class=\"action-container\"><input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><input type=\"submit\" value=\"~A\">~@[~A~]</div></div></form>"
 	  csrf-token button-label end-html))
 
-(defun view-items-index (items &key section with-offset (with-next t) title current-uri hide-title need-auth hide-rss extra-html page-toolbar-extra (content-class "index-page") ignore-notifications)
+(defun view-items-index (items &key section with-offset (with-next t) title current-uri hide-title need-auth hide-rss extra-html page-toolbar-extra (content-class "index-page"))
   (alexandria:switch ((hunchentoot:get-parameter "format") :test #'string=)
                      ("rss" 
                       (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
@@ -608,7 +595,7 @@
                         (write-index-items-to-rss (make-flexi-stream out-stream :external-format :utf-8) items :title title)))
                      (t
                        (emit-page (out-stream :title (if hide-title nil title) :description "A faster way to browse LessWrong 2.0" :content-class content-class :with-offset with-offset :with-next with-next
-                                              :current-uri current-uri :robots (if (and with-offset (> with-offset 0)) "noindex, nofollow") :ignore-notifications ignore-notifications)
+                                              :current-uri current-uri :robots (if (and with-offset (> with-offset 0)) "noindex, nofollow"))
                                   (format out-stream "<div class=\"page-toolbar\">~@[<a class=\"new-post button\" href=\"/edit-post?section=~A\" accesskey=\"n\" title=\"Create new post [n]\">New post</a>~]~@[~A~]~{~@[<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" title=\"~A RSS feed\" href=\"~A\">RSS</a>~]~}</div>"
                                           (if (and (case section (:meta t) (:all t)) (logged-in-userid)) (string-downcase (string section)))
                                           page-toolbar-extra
@@ -809,6 +796,12 @@
 				   (multiple-value-bind (points vote-type) (do-lw2-vote lw2-auth-token target target-type vote-type)
 				     (json:encode-json-to-string (list (pretty-number points "point") vote-type)))))
 
+(hunchentoot:define-easy-handler (view-check-notifications :uri "/check-notifications") ()
+                                 (with-error-page
+                                   (if *current-auth-token*
+                                       (let ((notifications-status (check-notifications (logged-in-userid) *current-auth-token*)))
+                                         (json:encode-json-to-string notifications-status)))))
+
 (hunchentoot:define-easy-handler (view-recent-comments :uri "/recentcomments") (offset)
 				 (with-error-page
 				   (let* ((offset (and offset (parse-integer offset))) 
@@ -921,7 +914,6 @@
                                             :with-offset offset :with-next with-next
                                             :need-auth (string= show "drafts") :section (if (string= show "drafts") "drafts" nil)
                                             :hide-rss (some (lambda (x) (string= show x)) '("drafts" "conversations" "inbox"))
-                                            :ignore-notifications (string= show "inbox")
                                             :page-toolbar-extra (alexandria:if-let ((liu (logged-in-userid)))
                                                                   (if (string= liu (cdr (assoc :--id user-info)))
                                                                       (format nil "<form method=\"post\" action=\"/logout\"><button class=\"logout-button button\" name=\"logout\" value=\"~A\">Log out</button></form>"
