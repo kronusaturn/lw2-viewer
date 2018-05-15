@@ -28,7 +28,7 @@ body {
 	padding: 11px 30px 13px 30px;
 }
 .nav-current .nav-inner {
-	font-weight: 600;
+	font-weight: 300;
 	color: #ccc;
 }
 #secondary-bar .nav-inner {
@@ -57,13 +57,14 @@ body {
 	top: -2px;
 	font-weight: 400;
 	font-size: 0.7em;
-	color: #d8d8d8;
+	color: #7c7c7c;
 }
 .inactive-bar .nav-inner::after {
-	color: #ccc;
+	color: #777;
+	top: 0;
 }
 .nav-inner:hover::after {
-	color: #bbb;
+	color: #666;
 }
 
 /* Search tab */
@@ -73,9 +74,8 @@ body {
 	font-size: 0.9375rem;
 }
 #nav-item-search button {
-    color: #999;
 	border: none;
-	font-weight: 600;
+	font-weight: 300;
 }
 
 /* Inbox indicator */
@@ -205,8 +205,8 @@ body {
 /* THEME TWEAKER TOGGLE */
 /*======================*/
 
-#theme-tweaker-toggle button {
-	color: #777;
+#theme-tweaker-toggle button:hover {
+	text-decoration: none;
 }
 
 /*=================*/
@@ -264,6 +264,10 @@ body {
 #new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
 	color: #929292;
 }
+#new-comment-nav-ui .new-comment-sequential-nav-button:hover {
+	color: #444;
+	text-decoration: none;
+}
 #new-comment-nav-ui .new-comment-sequential-nav-button:focus {
 	color: #d00;
 	text-shadow: <?php echo $white_glow; ?>;
@@ -303,6 +307,7 @@ body {
 }
 #text-size-adjustment-ui button:hover {
 	text-decoration: none;
+	color: #444;
 }
 
 /*=============================*/
@@ -370,7 +375,7 @@ h1.listing a[href^='/'] {
 		0.5px 0.5px 1px #bbb;
 }
 h1.listing a[href^="http"] {
-	color: #ccc;
+	color: #aaa;
 }
 
 @media only screen and (hover: hover) {
@@ -414,7 +419,6 @@ h1.listing a[href^="http"] {
 			0 0 2px #f60,
 			0 0 3px #f60;
 	}	
-	}	
 	#content.user-page h1.listing:focus-within::before {
 		left: -0.75em;
 	}
@@ -435,14 +439,12 @@ h1.listing a[href^="http"] {
 /* LISTING POST-META */
 /*===================*/
 
+h1.listing + .post-meta {
+	margin-top: 4px;
+}
 h1.listing + .post-meta > * {
     color: #222;
     font-size: 1em;
-}
-h1.listing + .post-meta .comment-count::before,
-h1.listing + .post-meta .lw2-link::before,
-h1.listing + .post-meta .read-time::before {
-	font-family: Font Awesome;
 }
 h1.listing + .post-meta .karma {
     float: left;
@@ -540,12 +542,12 @@ h1.listing + .post-meta .post-section::before {
 	background-color: #888;
 }
 .contents-head {
-	font-weight: bold;
+	font-weight: 200;
 }
-.contents ul {
+.post-body .contents ul {
 	font-size: 0.85em;
 }
-.contents li::before {
+.post-body .contents li::before {
 	color: #999;
 	font-feature-settings: "tnum";
 }
@@ -650,7 +652,7 @@ h1.listing + .post-meta .post-section::before {
 	font-family: Font Awesome;
 	margin: 0 0.25em 0 0;
 	font-size: 0.875em;
-	color: #ccc;
+	color: #aaa;
 }
 .post-meta .comment-count {
 	margin: 0 0.25em 0 0;
@@ -660,20 +662,17 @@ h1.listing + .post-meta .post-section::before {
 .post-meta .lw2-link {
 	margin: 0 0.25em 0 0.5em;
 }
-.post-meta .lw2-link {
-	opacity: 1;
-}
 .post-meta .comment-count:hover,
 .post-meta .lw2-link:hover {
 	text-decoration: none;
 	text-shadow: 
-		0 0 0.5px #fff,
+		0 0 0.5px #000,
 		0 0 1px #fff,
-		0 0 8px #777;
+		0 0 8px #000;
 }
 .post-meta .comment-count:hover::before,
 .post-meta .lw2-link:hover::before {
-	color: #777;
+	color: #ccc;
 }
 .post-meta .read-time:hover::before {
 	color: #777;
@@ -697,7 +696,6 @@ h1.listing + .post-meta .post-section::before {
 .post-meta .lw2-link::before {
 	content: "\F0C1";
 	font-weight: 900;
-	opacity: 0.8;
 	font-size: 0.75em;
 	position: relative;
 	bottom: 1px;
@@ -713,7 +711,7 @@ h1.listing + .post-meta .post-section::before {
 	margin: 0 1em 0 0.5em;
 }
 .post .post-meta .karma {
-	margin: 0 0 0 0.5em;
+	margin: 0 0.5em 0 1em;
 }
 
 .post-meta .post-section::before {
@@ -803,10 +801,9 @@ a.comment-parent-link::before {
 /*==============*/
 
 .comment-meta a {
-	color: #222;
+	color: #444;
 }
 .comment-meta .author {
-	color: #999;
 	font-weight: 300;
 	font-size: 1.125em;
 }
@@ -1131,19 +1128,19 @@ input[type='submit'] {
 
 .button,
 .button:visited {
-	color: #999;
+	color: #444;
 }
 
 button:hover,
 input[type='submit']:hover,
 button:focus,
 input[type='submit']:focus {
-	color: #d00;
+	color: #999;
     text-decoration: underline;
 }
 button:active,
 input[type='submit']:active {
-	color: #f00;
+	color: #ccc;
 	transform: scale(0.9);
 }
 .button:hover {
@@ -1184,12 +1181,12 @@ input[type='submit']:active {
 		0.5px 0.5px 1px #aaa,
 		0.5px 0.5px 1px #bbb;
 }
-h1 strong,
-h2 strong,
-h3 strong,
-h4 strong,
-h5 strong,
-h6 strong {
+.post-body h1 strong,
+.post-body h2 strong,
+.post-body h3 strong,
+.post-body h4 strong,
+.post-body h5 strong,
+.post-body h6 strong {
 	font-weight: normal;
 }
 .post-body h6,
@@ -1251,6 +1248,7 @@ input[type='search'],
 input[type='password'] {
 	border: 1px solid #999;
 	color: #000;
+	background-color: transparent;
 }
 input[type='text']:focus,
 input[type='search']:focus,
@@ -1303,39 +1301,31 @@ select {
 /*========================*/
 
 #aux-about-link a {
-	color: #777;
+	color: #444;
 }
 #aux-about-link a:hover {
 	opacity: 1.0;
 	text-shadow: <?php echo $white_glow; ?>;
 }
 
-.qualified-linking label {
-	color: <?php echo $hyperlink_color; ?>;
+.qualified-linking label 
 }
 .qualified-linking label:hover {
-	text-shadow:
-		0 0 1px #fff,
-		0 0 3px #fff,
-		0 0 5px #00e;
+	text-shadow: <?php echo $white_glow; ?>;
 }
 
 .qualified-linking-toolbar {
 	border: 1px solid #000;
-	background-color: #fff;
+	background-color: #777;
 }
 .qualified-linking-toolbar a {
-	background-color: #eee;
-	border: 1px solid #ccc;
+	border: 1px solid #888;
 	border-radius: 4px;
-	color: <?php echo $hyperlink_color; ?>;
-}
-.qualified-linking-toolbar a:visited {
-	color: <?php echo $hyperlink_color; ?>;
+	color: #444;
 }
 .qualified-linking-toolbar a:hover {
+	border: 1px solid #999;
 	text-decoration: none;
-	background-color: #ddd;
 	text-shadow: <?php echo $white_glow; ?>;
 }
 
