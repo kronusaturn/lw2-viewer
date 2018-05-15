@@ -1039,21 +1039,21 @@ h1.listing + .post-meta .post-section::before {
 	margin-bottom: 0.25em;
 }
 
-.contents ul {
+.post-body .contents ul {
 	list-style-type: none;
 	margin: 0 0 0 0.5em;
 	counter-reset: toc-item-1 toc-item-2 toc-item-3;
 	padding-left: 1em;
 	font-size: 0.75em;
 }
-.contents li {
+.post-body .contents li {
 	margin: 0.15em 0 0.3em 1em;
 	text-align: left;
 	text-indent: -1em;
 	line-height: 1.2;
 	position: relative;
 }
-.contents li::before {
+.post-body .contents li::before {
 	position: absolute;
 	width: 3em;
 	display: block;
