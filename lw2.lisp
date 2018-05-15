@@ -619,7 +619,7 @@
 (defun postprocess-markdown (markdown)
   (ppcre:regex-replace-all (load-time-value (concatenate 'string (ppcre:regex-replace-all "\\." *site-uri* "\\.") "posts/([^/ ]{17})/([^/# ]*)(?:(#)comment-([^/ ]{17}))?"))
                            markdown
-                           "https://www.lesserwrong.com/posts/\\1/\\2\\3\\4"))
+                           "https://www.lesswrong.com/posts/\\1/\\2\\3\\4"))
 
 (defun post-or-get-parameter (name)
   (or (hunchentoot:post-parameter name) (hunchentoot:get-parameter name)))
