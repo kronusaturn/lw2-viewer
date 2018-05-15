@@ -671,11 +671,11 @@ h1.listing + .post-meta .post-section::before {
 		0 0 8px #000;
 }
 .post-meta .comment-count:hover::before,
-.post-meta .lw2-link:hover::before {
+.post-meta .lw2-link:hover::before,
+.post-meta .read-time:hover::before {
 	color: #ccc;
 }
 .post-meta .read-time:hover::before {
-	color: #777;
 	cursor: pointer;
 }
 .post-meta .comment-count::before {
@@ -1135,7 +1135,7 @@ button:hover,
 input[type='submit']:hover,
 button:focus,
 input[type='submit']:focus {
-	color: #999;
+	color: #aaa;
     text-decoration: underline;
 }
 button:active,
@@ -1144,8 +1144,7 @@ input[type='submit']:active {
 	transform: scale(0.9);
 }
 .button:hover {
-	color: #d00;
-    text-decoration: underline;
+	color: #aaa;
 }
 .button:active {
 	transform: scale(0.9);
