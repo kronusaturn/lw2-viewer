@@ -264,20 +264,16 @@ body {
 #new-comment-nav-ui .new-comment-sequential-nav-button {
 	color: #bbb;
 }
-#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
-	color: #929292;
-}
 #new-comment-nav-ui .new-comment-sequential-nav-button:hover {
 	color: #444;
 	text-decoration: none;
 }
+#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
+	color: #929292;
+}
 #new-comment-nav-ui .new-comment-sequential-nav-button:focus {
 	color: #d00;
 	text-shadow: <?php echo $white_glow; ?>;
-}
-#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
-	color: #bbb;
-	text-shadow: none;
 }
 
 /*=================*/
@@ -535,7 +531,7 @@ h1.listing + .post-meta .post-section::before {
 	background-color: #888;
 }
 .contents-head {
-	font-weight: 200;
+	font-weight: 300;
 }
 .post-body .contents ul {
 	font-size: 0.85em;
@@ -552,7 +548,7 @@ h1.listing + .post-meta .post-section::before {
 .post-body,
 .comment-body {
 	font-family: Raleway, Helvetica, Arial, Verdana, sans-serif;
-	font-weight: 200;
+	font-weight: 300;
 	color: #000;
 	text-shadow: 
 		0px 0px 1px #777,
@@ -600,6 +596,7 @@ h1.listing + .post-meta .post-section::before {
 	margin: 1.1em 0 0.25em 0;
 	font-family: Raleway, Helvetica, Arial, Verdana, sans-serif;
 	font-weight: 100;
+	color: #000;
 	font-size: 3em;
 	text-shadow: 
 		0px 0px 1px #777,
@@ -986,7 +983,7 @@ div.comment-child-links a::first-letter {
 }
 
 .posting-controls textarea {
-	font-weight: 200;
+	font-weight: 300;
 	font-family: Raleway, Helvetica, Arial, Verdana, sans-serif;
 	color: #000;
 	background-color: transparent;
