@@ -1,6 +1,7 @@
 <?php
 	$UI_font = "'Proxima Nova'";
 	$hyperlink_color = "#f60";
+	$white_glow = "0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff";
 ?>
 
 /**************/
@@ -129,7 +130,8 @@ body {
 /*=====================*/
 
 .sublevel-nav.sort .sublevel-item {
-	font-family: <?php echo $UI_font_smallcaps; ?>;
+	font-family: <?php echo $UI_font; ?>;
+	font-variant: small-caps;
 }
 .sublevel-nav.sort {
 	position: absolute;
