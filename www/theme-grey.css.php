@@ -496,11 +496,6 @@ h1.listing + .post-meta > * {
     color: #222;
     font-size: 1em;
 }
-h1.listing + .post-meta .comment-count::before,
-h1.listing + .post-meta .lw2-link::before,
-h1.listing + .post-meta .read-time::before {
-	font-family: Font Awesome;
-}
 h1.listing + .post-meta .karma {
     float: left;
     margin-right: 3px;
