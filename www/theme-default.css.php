@@ -510,11 +510,11 @@ h1.listing + .post-meta .read-time::before {
 
 h1.listing + .post-meta .karma-value {
 	box-shadow: 
-		23px 0 0 0 #ddd inset,
+		22px 0 0 0 #ddd inset,
 		0 0 0 3px #ddd;
 	cursor: default;
 	color: #c00;
-	right: 31%;
+	right: 248px;
 }
 h1.listing + .post-meta .karma-value::before {
 	content: "\F139";
@@ -531,7 +531,7 @@ h1.listing + .post-meta .comment-count {
 		25px 0 0 0 #ddd inset,
 		0 0 0 3px #ddd;
 	color: #009100;
-	right: 22%;
+	right: 176px;
 }
 h1.listing + .post-meta .comment-count:hover {
 	text-decoration: none;
@@ -572,7 +572,7 @@ h1.listing + .post-meta .read-time {
 	box-shadow: 
 		21px 0 0 0 #ddd inset,
 		0 0 0 3px #ddd;
-	right: 10%;
+	right: 80px;
 }
 h1.listing + .post-meta .read-time::before {
 	content: "\F2F2";

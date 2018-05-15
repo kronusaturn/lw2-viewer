@@ -1488,13 +1488,13 @@ div.comment-child-links a::first-letter {
 #comments-list-mode-selector {
 	position: absolute;
 	top: 108px;
-	left: calc((100% - 900px) / 2 + 29px);
+	left: 29px;
 }
-#content.user-page + #ui-elements-container #comments-list-mode-selector,
-#content.conversation-page + #ui-elements-container #comments-list-mode-selector {
+#content.user-page #comments-list-mode-selector,
+#content.conversation-page #comments-list-mode-selector {
 	top: 165px;
 }
-#content.search-results-page + #ui-elements-container #comments-list-mode-selector {
+#content.search-results-page #comments-list-mode-selector {
 	top: 95px;
 }
 #comments-list-mode-selector button {
