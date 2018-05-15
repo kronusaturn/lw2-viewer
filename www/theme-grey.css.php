@@ -659,7 +659,6 @@ h1.listing + .post-meta .post-section::before {
 /*===========*/
 
 .post-meta a,
-.post-meta .author,
 .post-meta .date {
 	color: #222;
 }
@@ -1093,11 +1092,11 @@ div.comment-child-links a::first-letter {
 .posting-controls.edit-existing-comment .guiedit-buttons-container button {
     color: #050;
 }
-.guiedit-buttons-container button {
+button.guiedit {
 	font-family: Font Awesome, Source Sans Pro, Trebuchet MS, Helvetica, Arial, Verdana, sans-serif;
 }
 
-.guiedit::after {
+button.guiedit::after {
 	font-family: <?php echo $UI_font; ?>;
 	color: #777;
 	text-shadow: none;
@@ -1398,6 +1397,7 @@ select {
 	background-color: #eee;
 	border: 1px solid #ccc;
 	border-radius: 4px;
+	color: <?php echo $hyperlink_color; ?>;
 }
 .qualified-linking-toolbar a:visited {
 	color: <?php echo $hyperlink_color; ?>;

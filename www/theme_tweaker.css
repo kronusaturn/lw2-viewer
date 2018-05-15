@@ -558,7 +558,7 @@ input[type='range']::-ms-thumb {
 }
 @media only screen and (max-width: 1305px) {
 	#theme-tweaker-ui .clippy-container {
-		opacity: 0.6;
+		visibility: hidden;
 	}
 }
 #theme-tweaker-ui .clippy-container::before {
@@ -596,6 +596,24 @@ input[type='range']::-ms-thumb {
 	position: absolute;
 	bottom: -150px;
 	left: 0;
+}
+@media only screen and (max-width: 1305px) {
+	#theme-tweaker-ui .clippy-container .clippy {
+		visibility: visible;
+		transform: scale(0.75) translate(-50px, 60px)
+	}
+}
+@media only screen and (max-width: 1220px) {
+	#theme-tweaker-ui .clippy-container .clippy {
+		visibility: visible;
+		transform: scale(0.625) translate(-90px, 100px)
+	}
+}
+@media only screen and (max-width: 1140px) {
+	#theme-tweaker-ui .clippy-container .clippy {
+		visibility: visible;
+		transform: scale(0.5) translate(-140px, 140px)
+	}
 }
 
 #theme-tweaker-ui .help-window {
