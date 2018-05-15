@@ -3215,9 +3215,8 @@ body {
 /*=====================*/
 
 .sublevel-nav.sort .sublevel-item {
-	font-family: 
-Notice: Undefined variable: UI_font_smallcaps in /Volumes/obormot-1/quicklisp/local-projects/lw2-viewer/www/theme-ultramodern.css.php on line 132
-;
+	font-family: 'Proxima Nova';
+	font-variant: small-caps;
 }
 .sublevel-nav.sort {
 	position: absolute;
@@ -3352,9 +3351,7 @@ Notice: Undefined variable: UI_font_smallcaps in /Volumes/obormot-1/quicklisp/lo
 }
 #new-comment-nav-ui .new-comment-sequential-nav-button:focus {
 	color: #d00;
-	text-shadow: 
-Notice: Undefined variable: white_glow in /Volumes/obormot-1/quicklisp/local-projects/lw2-viewer/www/theme-ultramodern.css.php on line 267
-;
+	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
 }
 #new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
 	color: #bbb;
@@ -3997,9 +3994,7 @@ div.comment-child-links a::first-letter {
 }
 .comment-minimize-button:hover {
 	color: #aaa;
-	text-shadow: 
-Notice: Undefined variable: white_glow in /Volumes/obormot-1/quicklisp/local-projects/lw2-viewer/www/theme-ultramodern.css.php on line 921
-;
+	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
 }
 .comment-minimize-button::after {
 	font-family: 'Proxima Nova';
@@ -4386,9 +4381,7 @@ select {
 }
 #aux-about-link a:hover {
 	opacity: 1.0;
-	text-shadow: 
-Notice: Undefined variable: white_glow in /Volumes/obormot-1/quicklisp/local-projects/lw2-viewer/www/theme-ultramodern.css.php on line 1308
-;
+	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
 }
 
 .qualified-linking label {
@@ -4417,9 +4410,7 @@ Notice: Undefined variable: white_glow in /Volumes/obormot-1/quicklisp/local-pro
 .qualified-linking-toolbar a:hover {
 	text-decoration: none;
 	background-color: #ddd;
-	text-shadow: 
-Notice: Undefined variable: white_glow in /Volumes/obormot-1/quicklisp/local-projects/lw2-viewer/www/theme-ultramodern.css.php on line 1337
-;
+	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
 }
 
 /*======*/
