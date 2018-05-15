@@ -697,6 +697,11 @@ h1.listing + .post-meta .post-section::before {
 .post .post-meta .author {
 	margin: 0 0.75em 0 0;
 }
+.post-meta .author:hover,
+.comment-meta .author:hover {
+	text-decoration: none;
+	color: #090;
+}
 .post .post-meta .comment-count {
 	margin: 0 0.5em;
 }
@@ -744,8 +749,8 @@ h1.listing + .post-meta .post-section::before {
 	border-top: 1px solid transparent;
 }
 .comment-item {
-	border-width: 0 0 0 1px;
-	border-color: #666;
+	border: 1px solid transparent;
+	border-left-color: #666;
 	box-shadow:
 		1.5px 0 1.5px -1.5px #bbb inset, 
 		1px 0 1px -1px #777 inset;
@@ -801,10 +806,6 @@ a.comment-parent-link::before {
 	font-size: 1.125em;
 	color: #444;
 	font-weight: normal;
-}
-.comment-meta .author:hover {
-	text-decoration: none;
-	color: #090;
 }
 
 /*===========================*/
@@ -925,12 +926,9 @@ div.comment-child-links a::first-letter {
 /* VOTE BUTTONS */
 /*==============*/
 
-.vote {
-	color: #666;
-}
 .upvote,
 .downvote {
-	color: #c8c8c8;	
+	color: #666;
 }
 .upvote::before {
 	content: "\F077";
@@ -958,23 +956,13 @@ div.comment-child-links a::first-letter {
 /* COMMENTING AND POSTING UI */
 /*===========================*/
 
-.posting-controls input[type='submit'] {
-	background-color: #fff;
-	border: 1px solid #aaa;
-	font-weight: bold;
-}
-.posting-controls input[type='submit']:hover,
-.posting-controls input[type='submit']:focus {
-	background-color: #ddd;
-	border: 1px solid #999;
-}
-
 .comment-controls .cancel-comment-button {
 	font-weight: normal;
-	color: #c00;
+	color: #f00;
 }
 .comment-controls .cancel-comment-button:hover {
 	color: #f00;
+	text-shadow: <?php echo $white_glow; ?>;
 }
 
 .new-comment-button {
@@ -982,6 +970,7 @@ div.comment-child-links a::first-letter {
 }
 .new-comment-button:hover {
 	text-decoration: underline;
+	color: #444;
 }
 
 .comment-controls .edit-button {
@@ -1305,8 +1294,6 @@ select {
 	text-shadow: <?php echo $white_glow; ?>;
 }
 
-.qualified-linking label 
-}
 .qualified-linking label:hover {
 	text-shadow: <?php echo $white_glow; ?>;
 }
