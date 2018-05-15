@@ -4,9 +4,9 @@
 	$white_glow = "0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff";
 ?>
 
-/**************/
-/* GREY THEME */
-/**************/
+/*********************/
+/* ULTRAMODERN THEME */
+/*********************/
 
 body {
 	color: #444;
@@ -92,7 +92,8 @@ body {
 	color: #444;
 	font-weight: 300;
 }
-.new-post::before {
+.new-post::before,
+.logout-button::before {
 	color: #555;
 }
 
@@ -120,8 +121,6 @@ body {
 }
 .sublevel-nav a.sublevel-item:active,
 .sublevel-nav span.sublevel-item {
-	background-color: #ddd;
-	border-color: #000;
 	color: #000;
 }
 
@@ -300,14 +299,14 @@ body {
 /*======================*/
 
 #text-size-adjustment-ui button {
-	color: #ccc;
+	color: #444;
 }
 #text-size-adjustment-ui button.default {
 	font-weight: 600;
 }
 #text-size-adjustment-ui button:hover {
 	text-decoration: none;
-	color: #444;
+	color: #aaa;
 }
 
 /*=============================*/
@@ -801,11 +800,13 @@ a.comment-parent-link::before {
 /*==============*/
 
 .comment-meta a {
-	color: #444;
+	color: #222;
 }
 .comment-meta .author {
 	font-weight: 300;
 	font-size: 1.125em;
+	color: #444;
+	font-weight: normal;
 }
 .comment-meta .author:hover {
 	text-decoration: none;
@@ -1109,9 +1110,6 @@ button.guiedit:hover {
 a {
 	text-decoration: none;
 	color: <?php echo $hyperlink_color; ?>;
-}
-a:visited {
-	color: #ff943b;
 }
 a:hover {
 	text-decoration: underline;
