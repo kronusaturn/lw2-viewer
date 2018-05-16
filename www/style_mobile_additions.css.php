@@ -8,7 +8,7 @@
 	width: unset;
 }
 #content.post-page {
-	padding-bottom: 112px;
+	padding-bottom: 12px;
 }
 #content > a:last-child,
 #content > a:first-child {
