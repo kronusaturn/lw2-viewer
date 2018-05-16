@@ -2286,15 +2286,13 @@ li {
 #images-overlay {
 	position: absolute;
 	z-index: 1;
-	width: 100%;
-	padding-left: calc((100% - 900px) / 2 + 60px);
-	padding-right: calc((100% - 900px) / 2 + 60px);
-}
-#images-overlay img {
-	position: absolute;
 	left: 0;
 	right: 0;
 	margin: auto;
+	width: 900px;
+}
+#images-overlay img {
+	position: absolute;
 }
 #images-overlay + #content .post-body img {
 	visibility: hidden;
