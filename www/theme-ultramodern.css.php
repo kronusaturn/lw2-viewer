@@ -1193,12 +1193,13 @@ blockquote {
 /* IMAGES */
 /*========*/
 
-.post-body img,
-.comment-body img {
+#content img {
 	border: 1px solid #666;
 }
-.post-body img[src$='.svg'],
-.comment-body img[src$='.svg'] {
+#content img[style^='float'] {
+	border: 1px solid transparent;
+}
+#content img[src$='.svg'] {
 	border: none;
 }
 #content figure img {

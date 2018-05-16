@@ -2100,11 +2100,9 @@ blockquote blockquote {
 /* IMAGES */
 /**********/
 
-.post-body img,
-.comment-body img {
+#content img {
 	max-width: 100%;
 }
-
 #content figure {
 	text-align: center;
 	margin: 1.5em auto;
@@ -3087,6 +3085,6 @@ a#inbox-indicator.new-messages::before {
   }
 /***/
 
-Warning: include(theme-zero.css): failed to open stream: No such file or directory in - on line 2557
+Warning: include(theme-zero.css): failed to open stream: No such file or directory in - on line 2555
 
-Warning: include(): Failed opening 'theme-zero.css' for inclusion (include_path='.:') in - on line 2557
+Warning: include(): Failed opening 'theme-zero.css' for inclusion (include_path='.:') in - on line 2555

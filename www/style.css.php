@@ -2091,11 +2091,9 @@ blockquote blockquote {
 /* IMAGES */
 /**********/
 
-.post-body img,
-.comment-body img {
+#content img {
 	max-width: 100%;
 }
-
 #content figure {
 	text-align: center;
 	margin: 1.5em auto;

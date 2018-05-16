@@ -1459,8 +1459,8 @@ function generateImagesOverlay() {
 	let imagesOverlayLeftOffset = imagesOverlay.getBoundingClientRect().left;
 	document.querySelectorAll(".post-body img").forEach(function (image) {
 		let clonedImage = image.cloneNode(true);
-		clonedImage.style.top = image.getBoundingClientRect().top + window.scrollY + "px";
-		clonedImage.style.left = (image.getBoundingClientRect().left - imagesOverlayLeftOffset) + "px";
+		clonedImage.style.top = image.getBoundingClientRect().top - parseFloat(window.getComputedStyle(image).marginTop) + window.scrollY + "px";
+		clonedImage.style.left = image.getBoundingClientRect().left - parseFloat(window.getComputedStyle(image).marginLeft) - imagesOverlayLeftOffset + "px";
 		clonedImage.style.width = image.getBoundingClientRect().width + "px";
 		clonedImage.style.height = image.getBoundingClientRect().height + "px";
 		clonedImage.style.border = window.getComputedStyle(image).border;
