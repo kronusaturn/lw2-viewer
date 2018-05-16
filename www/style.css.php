@@ -2094,8 +2094,7 @@ blockquote blockquote {
 /* IMAGES */
 /**********/
 
-.post-body img,
-.comment-body img {
+#content img {
 	max-width: 100%;
 }
 

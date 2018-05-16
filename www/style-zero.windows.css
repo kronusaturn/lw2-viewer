@@ -2103,8 +2103,7 @@ blockquote blockquote {
 /* IMAGES */
 /**********/
 
-.post-body img,
-.comment-body img {
+#content img {
 	max-width: 100%;
 }
 
@@ -3095,7 +3094,197 @@ a#inbox-indicator.new-messages::before {
 /***/
   }
 /***/
+/**************/
+/* THEME ZERO */
+/**************/
 
-Warning: include(theme-zero.css): failed to open stream: No such file or directory in - on line 2557
+body {
+	font-family: sans-serif;
+	background-color: #eee;
+}
+.post-body,
+.comment-body {
+	font-family: serif;
+}
+#content {
+	box-shadow: none;
+	background-color: transparent;
+}
+.post-body,
+.comment-body,
+.contents-head {
+	color: #000;
+}
+.post-body {
+	font-size: 1.25rem;
+}
+.comment-body {
+	font-size: 1.1875rem;
+}
+.post h1:first-child{
+	font-size: 2rem;
+	line-height: 1.1;
+	margin: 1em 0 0.25em 0;
+}
+.post-body h1, 
+.post-body h2, 
+.post-body h3, 
+.post-body h4, 
+.post-body h5, 
+.post-body h6 {
+	font-family: sans-serif;
+	font-size: unset;
+}
+.contents {
+	font-family: sans-serif;
+	border: none;
+	background-color: #eee;
+}
+#primary-bar > *,
+#secondary-bar > *,
+#bottom-bar > * {
+	background-color: transparent;
+	box-shadow: none;
+	border: none;
+}
+.active-bar {
+	border-top: 2px solid #eee;
+}
+.nav-bar a {
+	font-weight: normal;
+}
+#primary-bar a {
+	font-weight: bold;
+}
+.nav-current span {
+	background-color: #eee;
+}
+#secondary-bar .nav-current span {
+	box-shadow: 0 1px 0 #eee;
+}
+.nav-inner {
+	font-size: 1.125em;
+}
+#secondary-bar .nav-inner {
+	font-size: 0.875em;
+}
+.nav-inner::after {
+	display: none;
+}
+#primary-bar, 
+#secondary-bar {
+	box-shadow: none;
+	background-color: #e4e4e4;
+}
+#nav-item-top {
+	box-shadow: none;
+}
+.nav-item a:hover {
+	text-shadow: none;
+	text-decoration: underline;
+}
+.nav-item:hover,
+#bottom-bar a:hover {
+	background-color: transparent !important;
+}
+.comment-item {
+	background-color: transparent !important;
+}
+#theme-selector button {
+	box-shadow:
+		0 0 0 4px #eee inset,
+		0 0 0 5px #999 inset;
+	vertical-align: middle;
+}
+#theme-selector button:hover,
+#theme-selector button.selected {
+	box-shadow:
+		0 0 0 1px #eee inset,
+		0 0 0 2px #999 inset,
+		0 0 0 4px #eee inset,
+		0 0 0 5px #999 inset;
+}
+#width-selector button,
+#comments-list-mode-selector button {
+	box-shadow:
+		0 0 0 4px #eee inset,
+		0 0 0 5px #aaa inset;
+}
+#width-selector button:hover,
+#width-selector button.selected,
+#comments-list-mode-selector button:hover,
+#comments-list-mode-selector button.selected {
+	box-shadow:
+		0 0 0 1px #eee inset,
+		0 0 0 2px #aaa inset,
+		0 0 0 4px #eee inset,
+		0 0 0 5px #aaa inset;
+}
+#nav-item-search input {
+	border: 1px solid #999;
+	background-color: transparent;
+}
+#nav-item-search input:focus {
+	border: 1px solid #00e;
+	outline: 1px solid #00e;
+	background-color: transparent;
+}
+#nav-item-search:focus-within,
+.inactive-bar #nav-item-search:focus-within,
+#nav-item-search.nav-current:focus-within {
+	background-color: transparent;
+}
+#comments {
+	border-top: 1px solid transparent;
+	box-shadow: none;
+}
+.comment-meta .author {
+	font-weight: normal;
+	font-size: 1.125em;
+	color: #090;
+}
+.comment-meta .author:hover {
+	text-decoration: underline;
+}
+#quick-nav-ui a  {
+	color: #00c;
+	background-color: transparent;
+	box-shadow: 0 0 0 1px #ddf;
+}
+#quick-nav-ui a:hover  {
+	color: #f00;
+	background-color: transparent;
+	box-shadow: 0 0 0 1px #faa;
+}
 
-Warning: include(): Failed opening 'theme-zero.css' for inclusion (include_path='.:') in - on line 2557
+@media only screen and (max-width: 1200px) {
+	#hns-date-picker {
+		background-color: #eee;
+	}
+	#hns-date-picker::before {
+		display: none;
+	}
+}
+
+.new-comment::before {
+	display: none;
+}
+.new-comment {
+	border: 1px solid #e00;
+	outline: 1px solid #e00;
+}
+
+h1.listing {
+	font-size: 1.375rem;
+	line-height: 1.2;
+}
+h1.listing a[href^='/'] {
+	font-weight: normal;
+	font-family: sans-serif;
+}
+h1.listing + .post-meta {
+	font-size: 0.875rem;
+}
+h1.listing:first-of-type {
+	margin-top: 2em;
+}
