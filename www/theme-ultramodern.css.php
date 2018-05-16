@@ -548,18 +548,12 @@ h1.listing + .post-meta .post-section::before {
 .post-body,
 .comment-body {
 	font-family: Raleway, Helvetica, Arial, Verdana, sans-serif;
-	font-weight: 300;
+	font-weight: <?php global $platform; echo ($platform == 'Mac' ? '300' : '400'); ?>;
 	color: #000;
 	text-shadow: 
 		0px 0px 1px #777,
 		0.5px 0.5px 1px #aaa,
 		0.5px 0.5px 1px #bbb;
-}
-@-moz-document url-prefix() {
-	.post-body,
-	.comment-body {
-		font-weight: <?php global $platform; echo ($platform == 'Windows' ? '300' : '400'); ?>;
-	}
 }
 .post-body strong,
 .comment-body strong {

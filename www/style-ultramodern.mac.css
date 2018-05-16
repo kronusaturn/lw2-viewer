@@ -3649,12 +3649,6 @@ h1.listing + .post-meta .post-section::before {
 		0.5px 0.5px 1px #aaa,
 		0.5px 0.5px 1px #bbb;
 }
-@-moz-document url-prefix() {
-	.post-body,
-	.comment-body {
-		font-weight: 400;
-	}
-}
 .post-body strong,
 .comment-body strong {
 	font-weight: 500;
