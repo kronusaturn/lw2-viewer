@@ -367,7 +367,7 @@ h1.listing:first-of-type {
 }
 h1.listing a[href^='/'] {
 	font-family: Raleway, Helvetica, Arial, Verdana, sans-serif;
-	font-weight: 100;
+	font-weight: <?php global $platform; echo ($platform == 'Mac' ? '100' : '200'); ?>;
 	text-shadow: 
 		0px 0px 1px #777,
 		0.5px 0.5px 1px #aaa,
@@ -595,7 +595,7 @@ h1.listing + .post-meta .post-section::before {
 .post > h1:first-child {
 	margin: 1.1em 0 0.25em 0;
 	font-family: Raleway, Helvetica, Arial, Verdana, sans-serif;
-	font-weight: 100;
+	font-weight: <?php global $platform; echo ($platform == 'Mac' ? '100' : '200'); ?>;
 	color: #000;
 	font-size: 3em;
 	text-shadow: 
@@ -962,10 +962,12 @@ div.comment-child-links a::first-letter {
 	text-shadow: <?php echo $white_glow; ?>;
 }
 
-.new-comment-button {
+.posting-controls .action-button,
+.posting-controls input[type='submit'] {
 	font-weight: normal;
 }
-.new-comment-button:hover {
+.posting-controls .action-button:hover,
+.posting-controls input[type='submit']:hover {
 	text-decoration: underline;
 	color: #444;
 }
@@ -1158,7 +1160,7 @@ input[type='submit']:active {
 .comment-body h4,
 .comment-body h5,
 .comment-body h6 {
-	font-weight: 100;
+	font-weight: <?php global $platform; echo ($platform == 'Mac' ? '100' : '200'); ?>;
 	text-shadow: 
 		0px 0px 1px #777,
 		0.5px 0.5px 1px #aaa,
@@ -1339,9 +1341,16 @@ div > .MJXc-display {
 		background-color: #888;
 		bottom: 61px;
 		opacity: 1.0;
+		right: -77px;
 	}
 	#hns-date-picker::before {
 		display: none;
+	}
+}
+@media only screen and (max-width: 1160px) {
+	#hns-date-picker {
+		bottom: 204px;
+		right: -30px;
 	}
 }
 @media only screen and (max-width: 1080px) {
@@ -1353,44 +1362,27 @@ div > .MJXc-display {
 			0 0 6px #999 inset,
 			0 0 0 1px transparent;
 	}
-	#theme-tweaker-toggle button {
-		border: 1px solid #999;
-		box-shadow: 
-			0 0 10px #999 inset,
-			0 0 0 1px transparent;
-		border-radius: 50%;
-		transform: scale(0.8);
+	#hns-date-picker {
+		right: -18px;
+	}
+}
+@media only screen and (max-width: 1040px) {
+	#hns-date-picker {
+		right: -13px;
 	}
 }
 @media only screen and (max-width: 1020px) {
-	#quick-nav-ui a {
-		box-shadow: 
-			0 0 0 1px #ccc,
-			0 0 0 2px transparent;
-	}
-	#new-comment-nav-ui .new-comments-count::before {
-		background-color: #eee;
-		box-shadow: 
-			0 0 0 1px #ccc,
-			0 0 0 2px transparent;
-		border-radius: 8px;
+	#hns-date-picker {
+		right: 15px;
 	}
 }
 @media only screen and (max-width: 1000px) {
-	#theme-selector {
-		background-color: #d8d8d8;
-		box-shadow: 
-			0 0 0 1px #999,
-			0 0 0 2px transparent;
+	#theme-tweaker-toggle {
+		left: -19px;
 	}
-	#text-size-adjustment-ui button {
-		background-color: #ddd;
-	}
-	#text-size-adjustment-ui button:hover {
-		background-color: #eee;
-	}
-	#theme-tweaker-toggle button {
-		background-color: #ddd;
+	#quick-nav-ui,
+	#new-comment-nav-ui,
+	#new-comment-nav-ui + #hns-date-picker {
+		opacity: 1.0;
 	}
 }
-
