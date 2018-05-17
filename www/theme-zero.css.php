@@ -1,5 +1,5 @@
 <?php
-	$UI_font = "Verdana, sans-serif";
+	$UI_font = "Trade Gothic, Helvetica, sans-serif";
 	$hyperlink_color = "#00e";
 	$white_glow = "0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff";
 ?>
@@ -21,6 +21,9 @@ body {
 /* NAV BAR */
 /*=========*/
 
+.nav-bar {
+	background-color: #e4e4e4;
+}
 .nav-inner {
 	font-size: 1.125em;
 }
@@ -30,10 +33,10 @@ body {
 .active-bar {
 	border-top: 2px solid #eee;
 }
-
-#primary-bar a {
-	font-weight: bold;
+.nav-bar .nav-current span {
+	background-color: #eee;
 }
+
 .nav-bar a:visited {
 	color: <?php echo $hyperlink_color; ?>;
 }
@@ -360,11 +363,15 @@ h1.listing a {
 h1.listing a[href^="http"] {
 	color: #00c;
 }
+h1.listing a[href^="/"] {
+	font-weight: normal;
+}
 
 @media only screen and (hover: hover) {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		color: #777;
+		background-color: rgba(228,228,228,0.85);
 	}	
 	#content.user-page h1.listing:focus-within::before {
 		left: -0.75em;
@@ -385,6 +392,7 @@ h1.listing a[href^="http"] {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		color: #777;
+		background-color: rgba(228,228,228,0.85);
 	}	
 	#content.user-page h1.listing:focus-within::before {
 		left: -0.75em;
@@ -407,144 +415,14 @@ h1.listing a[href^="http"] {
 /*===================*/
 
 h1.listing + .post-meta {
-	padding-right: 320px;
 	font-size: 0.875rem;
 }
 h1.listing:first-of-type {
 	margin-top: 2em;
 }
-h1.listing + .post-meta .karma-value,
-h1.listing + .post-meta .comment-count,
-h1.listing + .post-meta .lw2-link,
-h1.listing + .post-meta .read-time {
-	border-radius: 4px;
-	padding: 0 4px 0 2px;
-	text-shadow: 0.5px 0.5px 0.5px #999;
-	margin: 0 0.25em 0 0.5em;
-	position: absolute;
-	line-height: 1.15;
-	top: 12px;
-}
-h1.listing + .post-meta .karma-value span,
-h1.listing + .post-meta .comment-count span,
-h1.listing + .post-meta .lw2-link span,
-h1.listing + .post-meta .read-time span {
-	display: none;
-}
-h1.listing + .post-meta .karma-value::before,
-h1.listing + .post-meta .comment-count::before,
-h1.listing + .post-meta .lw2-link::before,
-h1.listing + .post-meta .read-time::before {
-	color: #fff;
-	font-family: Font Awesome;
-	font-weight: 900;
-	margin: 0 8px 0 0;
-	box-shadow: 0 0 0 2px #ddd;
-}
 
 h1.listing + .post-meta .karma-value {
-	box-shadow: 
-		22px 0 0 0 #ddd inset,
-		0 0 0 3px #ddd;
 	cursor: default;
-	color: #c00;
-	right: 248px;
-}
-h1.listing + .post-meta .karma-value::before {
-	content: "\F139";
-	text-shadow: none;
-    font-size: 0.9375em;
-    line-height: 1.3;
-}
-
-h1.listing + .post-meta .comment-count::before {
-	content: "\F086";
-}
-h1.listing + .post-meta .comment-count {
-	box-shadow: 
-		25px 0 0 0 #ddd inset,
-		0 0 0 3px #ddd;
-	color: #009100;
-	right: 176px;
-}
-h1.listing + .post-meta .comment-count:hover {
-	text-decoration: none;
-	color: #fff;
-	background-color: #009100;
-}
-h1.listing + .post-meta .comment-count:hover::before {
-	color: #009100;
-}
-h1.listing + .post-meta .comment-count.new-comments::before {
-	color: #009100;
-	text-shadow: 0.5px 0.5px 0.5px #fff;
-}
-h1.listing + .post-meta .comment-count.new-comments:hover::before {
-	text-shadow: 0.5px 0.5px 0.5px #999;
-}
-
-
-h1.listing + .post-meta .lw2-link {
-	box-shadow: 
-		23px 0 0 0 #ddd inset,
-		0 0 0 3px #ddd;
-	right: 0;
-}
-h1.listing + .post-meta .lw2-link::before {
-	content: "\F0C1";
-}
-h1.listing + .post-meta .lw2-link:hover {
-	text-decoration: none;
-	color: #fff;
-	background-color: #00f;
-}
-h1.listing + .post-meta .lw2-link:hover::before {
-	color: #00f;
-}
-
-h1.listing + .post-meta .read-time {
-	box-shadow: 
-		21px 0 0 0 #ddd inset,
-		0 0 0 3px #ddd;
-	right: 80px;
-}
-h1.listing + .post-meta .read-time::before {
-	content: "\F2F2";
-	cursor: pointer;
-}
-h1.listing + .post-meta .read-time::after {
-	content: " min";
-}
-h1.listing + .post-meta .read-time:hover::before {
-	color: #777;
-}
-
-h1.listing + .post-meta .word-count {
-	box-shadow: 
-		22px 0 0 0 #ddd inset,
-		0 0 0 3px #ddd;
-	padding: 0 4px 0 4px;
-}
-h1.listing + .post-meta .word-count::before {
-	content: "\F15C";
-	margin: 0 10px 0 0;
-}
-h1.listing + .post-meta .read-time.word-count::after {
-	content: none;
-}
-
-h1.listing + .post-meta .link-post-domain {
-	margin: 0 0 0 0.5em;
-}
-
-h1.listing + .post-meta::after {
-	content: "";
-	display: block;
-	height: 1px;
-	width: calc(100% + 320px);
-	background-color: #ddd;
-	position: relative;
-	top: 14px;
 }
 
 /*============*/
@@ -664,7 +542,7 @@ h1.listing + .post-meta::after {
 
 .post-body,
 .comment-body {
-	font-family: Georgia, serif;
+	font-family: News Gothic BT, Helvetica, sans-serif;
 }
 
 /*=======*/
@@ -982,7 +860,7 @@ div.comment-child-links a::first-letter {
 }
 
 .posting-controls textarea {
-	font-family: Georgia, serif;
+	font-family: News Gothic BT, Helvetica, sans-serif;
 	color: #000;
 	background-color: #fff;
 	border-color: #aaa;
@@ -1017,7 +895,7 @@ div.comment-child-links a::first-letter {
     color: #050;
 }
 .guiedit-buttons-container button {
-	font-family: Font Awesome, Georgia, serif;
+	font-family: Font Awesome, News Gothic BT, Helvetica, sans-serif;
 }
 
 .guiedit::after {
@@ -1129,6 +1007,9 @@ input[type='submit']:active {
 	color: #f00;
 	transform: scale(0.9);
 }
+.button:visited {
+	color: <?php echo $hyperlink_color; ?>;
+}
 .button:hover {
 	color: #d00;
 	text-shadow: <?php echo $white_glow; ?>;
@@ -1216,6 +1097,7 @@ input[type='password'],
 textarea {
 	border: 1px solid #999;
 	color: #000;
+	background-color: transparent;
 }
 input[type='text']:focus,
 input[type='search']:focus,

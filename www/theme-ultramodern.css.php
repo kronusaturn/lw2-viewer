@@ -380,7 +380,7 @@ h1.listing a[href^="http"] {
 @media only screen and (hover: hover) {
 	h1.listing a:hover,
 	h1.listing a:focus {
-		background-color: transparent;
+		background-color: rgba(136,136,136,0.85);
 		color: #f60;
 		text-shadow: 
 			0px 0px 1px #777,
@@ -408,7 +408,7 @@ h1.listing a[href^="http"] {
 @-moz-document url-prefix() {
 	h1.listing a:hover,
 	h1.listing a:focus {
-		background-color: transparent;
+		background-color: rgba(136,136,136,0.85);
 		color: #f60;
 		text-shadow: 
 			0px 0px 1px #777,

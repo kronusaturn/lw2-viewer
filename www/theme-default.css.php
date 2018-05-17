@@ -435,6 +435,7 @@ h1.listing a[href^="http"] {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		color: #777;
+		background-color: rgba(255,255,255,0.85);
 	}	
 	#content.user-page h1.listing:focus-within::before {
 		left: -0.75em;
@@ -455,6 +456,7 @@ h1.listing a[href^="http"] {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		color: #777;
+		background-color: rgba(255,255,255,0.85);
 	}	
 	#content.user-page h1.listing:focus-within::before {
 		left: -0.75em;
@@ -1180,6 +1182,9 @@ button:active,
 input[type='submit']:active {
 	color: #f00;
 	transform: scale(0.9);
+}
+.button:visited {
+	color: <?php echo $hyperlink_color; ?>;
 }
 .button:hover {
 	color: #d00;
