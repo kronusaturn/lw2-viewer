@@ -1,23 +1,19 @@
 <?php
-	$UI_font = ($platform == 'Windows') ? "'Whitney', 'a_Avante'" : "'Concourse', 'a_Avante'";
-	$UI_font_smallcaps = ($platform == 'Windows') ? "'Whitney Smallcaps', 'a_Avante'" : "'Concourse Smallcaps', 'a_Avante'";
+	$UI_font = "Verdana, sans-serif";
 	$hyperlink_color = "#00e";
 	$white_glow = "0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff";
 ?>
 
-/*****************/
-/* DEFAULT THEME */
-/*****************/
+/**************/
+/* THEME ZERO */
+/**************/
 
 body {
 	color: #000;
-	background-color: #d8d8d8;
 	font-family: <?php echo $UI_font; ?>;
-	font-feature-settings: 'ss07';
+	background-color: #eee;
 }
 #content {
-	background-color: #fff;
-	box-shadow: 0px 0px 10px #555;
 	line-height: 1.55;
 }
 
@@ -26,30 +22,20 @@ body {
 /*=========*/
 
 .nav-inner {
-	font-size: 1.375em;
-	font-weight: 600;
+	font-size: 1.125em;
 }
 #secondary-bar .nav-inner {
-	font-size: 1em;
+	font-size: 0.875em;
+}
+.active-bar {
+	border-top: 2px solid #eee;
 }
 
-.nav-bar .nav-item:not(.nav-current):not(#nav-item-search):hover,
-#bottom-bar a:hover,
-#nav-item-search:not(.nav-current):focus-within {
-	background-color: #ddd;
+#primary-bar a {
+	font-weight: bold;
 }
-.inactive-bar .nav-item:not(.nav-current):not(#nav-item-search):hover,
-.inactive-bar #nav-item-search:not(.nav-current):focus-within {
-	background-color: #d8d8d8;
-}
-
 .nav-bar a:visited {
 	color: <?php echo $hyperlink_color; ?>;
-}
-.nav-bar a:hover,
-.nav-bar a:focus {
-	text-decoration: none;
-	text-shadow: <?php echo $white_glow; ?>;
 }
 
 /* Accesskey hints */
@@ -70,80 +56,10 @@ body {
 	color: #bbb;
 }
 
-/* This makes the navbar items look like tabs: */
+/* "Tabs" */
 
-.nav-inactive {
-	box-shadow: 
-		 0 -1px #d8d8d8 inset,
-		 1px 0 #fff inset;
-}
-.nav-inactive:first-child {
-	box-shadow: 0 -1px #d8d8d8 inset;
-}
-.inactive-bar .nav-inactive {
-	background-color: #e4e4e4;
-}
-.active-bar .nav-inactive {
+.nav-current span {
 	background-color: #eee;
-}
-.active-bar {
-	position: relative;
-}
-
-/* For Webkit: */
-.active-bar {
-	box-shadow: 0 -3px 8px -2px #ccc;
-}
-.active-bar .nav-inactive {
-	box-shadow: 
-		0 -4px 8px -4px #bbb inset,
-		1px 0 #fff inset;
-}
-.active-bar .nav-inactive:first-child {
-	box-shadow: 
-		0 -4px 8px -4px #bbb inset;
-}
-.active-bar .nav-current + .nav-inactive {
-	box-shadow: 
-		5px -4px 8px -4px #bbb inset;
-}
-.active-bar .nav-item-last-before-current {
-	box-shadow: 
-		-5px -4px 8px -4px #bbb inset,
-		1px 0 #fff inset;
-}
-.active-bar .nav-item-last-before-current:first-child {
-	box-shadow: 
-		-5px -4px 8px -4px #bbb inset;
-}
-/* And for Gecko: */
-@-moz-document url-prefix() {
-	.active-bar {
-		box-shadow: 0 -3px 4px -2px #ccc;
-	}
-
-	.active-bar .nav-inactive {
-		box-shadow: 
-			0 -4px 4px -4px #bbb inset,
-			1px 0 #fff inset;
-	}
-	.active-bar .nav-inactive:first-child {
-		box-shadow: 
-			0 -4px 4px -4px #bbb inset;
-	}
-	.active-bar .nav-current + .nav-inactive {
-		box-shadow: 
-			5px -4px 4px -4px #bbb inset;
-	}
-	.active-bar .nav-item-last-before-current {
-		box-shadow: 
-			-5px -4px 4px -4px #bbb inset,
-			1px 0 #fff inset;
-	}
-	.active-bar .nav-item-last-before-current:first-child {
-		box-shadow: 
-			-5px -4px 4px -4px #bbb inset;
-	}
 }
 
 /* Search tab */
@@ -203,9 +119,6 @@ body {
 /* SORT ORDER SELECTOR */
 /*=====================*/
 
-.sublevel-nav.sort .sublevel-item {
-	font-family: <?php echo $UI_font_smallcaps; ?>;
-}
 .sublevel-nav.sort {
 	position: absolute;
 	top: 167px;
@@ -243,22 +156,37 @@ body {
 /*================*/
 /* WIDTH SELECTOR */
 /*================*/
+
+#width-selector button {
+	box-shadow:
+		0 0 0 4px #eee inset,
+		0 0 0 5px #aaa inset;
+}
+#width-selector button:hover,
+#width-selector button.selected {
+	box-shadow:
+		0 0 0 1px #eee inset,
+		0 0 0 2px #aaa inset,
+		0 0 0 4px #eee inset,
+		0 0 0 5px #aaa inset;
+}
+
+/*================*/
 /* THEME SELECTOR */
 /*================*/
 
-#width-selector button,
 #theme-selector button {
 	box-shadow:
-		0 0 0 4px #d8d8d8 inset,
-		0 0 0 5px #bbb inset;
+		0 0 0 4px #eee inset,
+		0 0 0 5px #999 inset;
 }
-#width-selector button:hover,
-#width-selector button.selected,
 #theme-selector button:hover,
 #theme-selector button.selected {
-	text-shadow: none;
 	box-shadow:
-		0 0 0 5px #bbb inset;
+		0 0 0 1px #eee inset,
+		0 0 0 2px #999 inset,
+		0 0 0 4px #eee inset,
+		0 0 0 5px #999 inset;
 }
 
 /*======================*/
@@ -274,17 +202,17 @@ body {
 /*=================*/
 
 #quick-nav-ui a {
-	color: #999;
-	background-color: #e4e4e4;
+	color: #00c;
 	border-radius: 4px;
+	box-shadow: 0 0 0 1px #ddf;
 }
 #quick-nav-ui a[href='#bottom-bar'] {
 	line-height: 1.8;
 }
 #quick-nav-ui a:hover {
-	color: #000;
-	background-color: #eee;
+	color: #f00;
 	text-decoration: none;
+	box-shadow: 0 0 0 1px #faa;
 }
 #quick-nav-ui a:active {
 	transform: scale(0.9);
@@ -422,6 +350,8 @@ body {
 
 h1.listing {
 	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
+	font-size: 1.375rem;
+	line-height: 1.2;
 }
 
 h1.listing a {
@@ -478,6 +408,10 @@ h1.listing a[href^="http"] {
 
 h1.listing + .post-meta {
 	padding-right: 320px;
+	font-size: 0.875rem;
+}
+h1.listing:first-of-type {
+	margin-top: 2em;
 }
 h1.listing + .post-meta .karma-value,
 h1.listing + .post-meta .comment-count,
@@ -714,7 +648,6 @@ h1.listing + .post-meta::after {
 
 .contents {
 	font-family: <?php echo $UI_font; ?>;
-	border: 1px solid #ddd;
 	background-color: #eee;
 }
 .contents-head {
@@ -731,7 +664,21 @@ h1.listing + .post-meta::after {
 
 .post-body,
 .comment-body {
-	font-family: Charter, Georgia, serif;
+	font-family: Georgia, serif;
+}
+
+/*=======*/
+/* POSTS */
+/*=======*/
+
+.post-body {
+	font-size: 1.25rem;
+}
+
+.post > h1:first-child {
+	font-size: 2rem;
+	line-height: 1.1;
+	margin: 1em 0 0.25em 0;
 }
 
 /*===========*/
@@ -781,8 +728,7 @@ h1.listing + .post-meta::after {
 /*==========*/
 
 #comments {
-	border-top: 1px solid #000;
-	box-shadow: 0 3px 4px -4px #000 inset;
+	border-top: 1px solid transparent;
 }
 .comment-item {
 	border: 1px solid #ccc;
@@ -830,6 +776,10 @@ h1.listing + .post-meta::after {
 		4px	4px 0 12px #ffd inset !important;
 }
 
+.comment-body {
+	font-size: 1.1875rem;
+}
+
 /*================================*/
 /* DEEP COMMENT THREAD COLLAPSING */
 /*================================*/
@@ -854,12 +804,7 @@ h1.listing + .post-meta::after {
 /*==============*/
 
 .comment-meta .author {
-	font-weight: bold;
-	font-size: 1.25em;
-	color: #000;
-}
-.comment-meta .author:hover {
-	text-decoration: none;
+	font-size: 1.125em;
 	color: #090;
 }
 
@@ -914,13 +859,16 @@ div.comment-child-links a::first-letter {
 
 #comments-list-mode-selector button {
 	box-shadow:
-		0 0 0 4px #fff inset,
-		0 0 0 5px #bbb inset;
+		0 0 0 4px #eee inset,
+		0 0 0 5px #aaa inset;
 }
 #comments-list-mode-selector button:hover,
 #comments-list-mode-selector button.selected {
 	box-shadow:
-		0 0 0 5px #bbb inset;
+		0 0 0 1px #eee inset,
+		0 0 0 2px #aaa inset,
+		0 0 0 4px #eee inset,
+		0 0 0 5px #aaa inset;
 }
 #content.compact > .comment-thread .comment-item::after {
 	color: <?php echo $hyperlink_color; ?>;
@@ -947,11 +895,11 @@ div.comment-child-links a::first-letter {
 /*===========================*/
 
 .new-comment::before {
-	outline: 2px solid #5a5;
-	box-shadow:
-		0 0 6px -2px #5a5 inset, 
-		0 0 4px #5a5, 
-		0 0 6px #5a5;
+	display: none;
+}
+.new-comment {
+	border: 1px solid #e00;
+	outline: 1px solid #e00;
 }
 
 /*=================================*/
@@ -1034,7 +982,7 @@ div.comment-child-links a::first-letter {
 }
 
 .posting-controls textarea {
-	font-family: Charter, Georgia, serif;
+	font-family: Georgia, serif;
 	color: #000;
 	background-color: #fff;
 	border-color: #aaa;
@@ -1069,7 +1017,7 @@ div.comment-child-links a::first-letter {
     color: #050;
 }
 .guiedit-buttons-container button {
-	font-family: Font Awesome, Charter, Georgia, serif;
+	font-family: Font Awesome, Georgia, serif;
 }
 
 .guiedit::after {
@@ -1202,30 +1150,23 @@ input[type='submit']:active {
 /* HEADINGS */
 /*==========*/
 
-.post-body h1,
-.post-body h2,
-.post-body h4,
+.post-body h1, 
+.post-body h2, 
+.post-body h3, 
+.post-body h4, 
+.post-body h5, 
+.post-body h6,
 .comment-body h1,
 .comment-body h2,
-.comment-body h4 {
-	font-family: <?php echo $UI_font; ?>;
-}
-.post-body h3,
 .comment-body h3,
-.post-body h5,
-.post-body h6,
+.comment-body h4,
 .comment-body h5,
 .comment-body h6 {
-	font-weight: 600;
-	font-family: <?php echo $UI_font_smallcaps; ?>;
+	font-family: <?php echo $UI_font; ?>;
 }
 .post-body h6,
 .comment-body h6 {
 	color: #555;
-}
-.post-body h1,
-.comment-body h1 {
-	border-bottom: 1px solid #aaa;
 }
 
 /*========*/
@@ -1240,13 +1181,12 @@ blockquote {
 /* IMAGES */
 /*========*/
 
-#content img {
+.post-body img,
+.comment-body img {
 	border: 1px solid #ccc;
 }
-#content img[style^='float'] {
-	border: 1px solid transparent;
-}
-#content img[src$='.svg'] {
+.post-body img[src$='.svg'],
+.comment-body img[src$='.svg'] {
 	border: none;
 }
 #content figure img {
@@ -1274,17 +1214,15 @@ input[type='text'],
 input[type='search'],
 input[type='password'],
 textarea {
-	background-color: #fff;
-	border: 1px solid #ddd;
+	border: 1px solid #999;
 	color: #000;
 }
 input[type='text']:focus,
 input[type='search']:focus,
 input[type='password']:focus,
 textarea:focus {
-	background-color: #ffd;
-	border: 1px solid #bbb;
-	box-shadow: 0 0 1px #bbb;
+	border: 1px solid #00e;
+	outline: 1px solid #00e;
 }
 
 select {
@@ -1385,6 +1323,14 @@ div > .MJXc-display {
 	#hns-date-picker::before {
 		border: 1px solid #999;
 		border-width: 1px 0 1px 1px;
+	}
+}
+@media only screen and (max-width: 1200px) {
+	#hns-date-picker {
+		background-color: #eee;
+	}
+	#hns-date-picker::before {
+		display: none;
 	}
 }
 @media only screen and (max-width: 1080px) {
