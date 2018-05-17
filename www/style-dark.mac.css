@@ -4330,10 +4330,6 @@ input[type='submit']:active {
 /* HEADINGS */
 /*==========*/
 
-h1 {
-	font-weight: 700;
-}
-
 .post-body h1,
 .post-body h2,
 .post-body h4,
