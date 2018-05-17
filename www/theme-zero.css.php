@@ -369,7 +369,7 @@ h1.listing a[href^="http"] {
 	font-size: 0.75em;
 }
 h1.listing a[href^="/"] {
-	font-weight: normal;
+	font-weight: bold;
 }
 
 @media only screen and (hover: hover) {
@@ -867,26 +867,10 @@ div.comment-child-links a::first-letter {
 .posting-controls textarea {
 	font-family: News Gothic BT, Helvetica, sans-serif;
 	color: #000;
-	background-color: #fff;
-	border-color: #aaa;
-	box-shadow: 
-		0 0 0 1px #eee inset;
-}
-.posting-controls textarea:focus {
-	background-color: #ffd;
-	border-color: <?php echo $hyperlink_color; ?>;
-	box-shadow: 
-		0 0 0 1px #ddf inset,
-		0 0 0 1px #fff,
-		0 0 0 2px <?php echo $hyperlink_color; ?>;
 }
 .posting-controls.edit-existing-post textarea:focus,
 .posting-controls.edit-existing-comment textarea:focus {
 	border-color: #090;
-    box-shadow: 
-    	0 0 0 1px #81ff7f inset,
-    	0 0 0 1px #fff,
-    	0 0 0 2px #090;
 }
 
 /* GUIEdit buttons */
