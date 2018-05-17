@@ -565,7 +565,7 @@ function setSelectedTheme(themeName) {
 	document.querySelector("#theme-tweaker-ui .current-theme span").innerText = themeName;
 
 	// Regenerate images overlay (after slight delay).
-	setTimeout(function() { generateImagesOverlay(); }, 10);
+	setTimeout(function() { generateImagesOverlay(); }, 25);
 	// Update theme tweaker font size selector sample text font.
 	setTimeout(function() { updateThemeTweakerTextSizeAdjustSampleText(); }, 50);	
 }

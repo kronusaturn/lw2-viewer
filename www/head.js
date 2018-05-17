@@ -3,7 +3,7 @@ document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='hide-
 function setContentWidth(widthString) {
 	if (!widthString) return;
 	document.querySelector('#width-adjust').innerHTML = 
-		`#content, #ui-elements-container { 
+		`#content, #ui-elements-container, #images-overlay { 
 			max-width: calc(${widthString});
 		}`;
 }
