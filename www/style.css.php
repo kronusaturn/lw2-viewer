@@ -37,7 +37,8 @@ input {
 	font-weight: inherit;
 }
 #content,
-#ui-elements-container {
+#ui-elements-container,
+#images-overlay {
 	width: calc(100% - 300px);
 	min-width: 900px;
 	max-width: 900px;
@@ -60,6 +61,13 @@ input {
 }
 #ui-elements-container > * {
 	pointer-events: auto;
+}
+#images-overlay {
+	position: absolute;
+	z-index: 1;
+	left: 0;
+	right: 0;
+	margin: auto;
 }
 
 /***********/
@@ -2263,14 +2271,6 @@ li {
 /* IMAGES OVERLAY */
 /******************/
 
-#images-overlay {
-	position: absolute;
-	z-index: 1;
-	left: 0;
-	right: 0;
-	margin: auto;
-	width: 900px;
-}
 #images-overlay img {
 	position: absolute;
 }
