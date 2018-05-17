@@ -368,12 +368,10 @@ a#inbox-indicator.new-messages:hover::before {
 	background-size: 100%;
 	background-origin: content-box;
 }
-#width-selector button:hover {
-	text-shadow: none;
-}
 #width-selector button,
 #width-selector button:active,
 #width-selector button:focus {
+	text-shadow: none;
 	color: transparent;
 }	
 #width-selector button:disabled {
@@ -415,6 +413,12 @@ a#inbox-indicator.new-messages:hover::before {
 	background-size: 16px 16px;
 	background-origin: content-box;
 }
+#theme-selector button,
+#theme-selector button:active,
+#theme-selector button:focus {
+	text-shadow: none;
+	color: transparent;
+}	
 .theme-selector button:nth-of-type(1) {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_A.gif")) ?>');
 }
@@ -435,10 +439,6 @@ a#inbox-indicator.new-messages:hover::before {
 }
 .theme-selector button:nth-of-type(7) {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_G.gif")) ?>');
-}
-.theme-selector button:hover {
-	color: transparent;
-	text-shadow: none;
 }
 .theme-selector button:disabled {
 	cursor: auto;

@@ -868,9 +868,22 @@ div.comment-child-links a::first-letter {
 	font-family: News Gothic BT, Helvetica, sans-serif;
 	color: #000;
 }
+.posting-controls .textarea-container:focus-within .guiedit-buttons-container {
+	box-shadow: 
+		-1px 0 0 0 #00e inset,
+		1px 0 0 0 #00e inset,
+		0 1px 0 0 #00e inset;
+}
 .posting-controls.edit-existing-post textarea:focus,
 .posting-controls.edit-existing-comment textarea:focus {
 	border-color: #090;
+}
+.posting-controls.edit-existing-post .textarea-container:focus-within .guiedit-buttons-container,
+.posting-controls.edit-existing-comment .textarea-container:focus-within .guiedit-buttons-container {
+	box-shadow: 
+		-1px 0 0 0 #090 inset,
+		1px 0 0 0 #090 inset,
+		0 1px 0 0 #090 inset;
 }
 
 /* GUIEdit buttons */
