@@ -531,7 +531,7 @@ function injectThemeSelector() {
 		['dark', 'Dark theme (light text on dark background)', 'B'],
 		['grey', 'Grey theme (more subdued than default theme)', 'C'],
 		['ultramodern', 'Ultramodern theme (very hip)', 'D'],
-		['zero', 'Simple theme with no custom fonts', 'E'],
+		['zero', 'Theme zero (plain and simple)', 'E'],
 		['brutalist', 'Brutalist theme (the Motherland calls!)', 'F'],
 		['rts', 'ReadTheSequences.com theme', 'G']
 	];

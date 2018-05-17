@@ -359,7 +359,6 @@ a#inbox-indicator.new-messages:hover::before {
 	right: -78px;
 }
 #width-selector button {
-	color: transparent;
 	width: 22px;
 	height: 22px;
 	padding: 6px;
@@ -369,6 +368,14 @@ a#inbox-indicator.new-messages:hover::before {
 	background-size: 100%;
 	background-origin: content-box;
 }
+#width-selector button:hover {
+	text-shadow: none;
+}
+#width-selector button,
+#width-selector button:active,
+#width-selector button:focus {
+	color: transparent;
+}	
 #width-selector button:disabled {
 	cursor: auto;
 }
@@ -431,6 +438,7 @@ a#inbox-indicator.new-messages:hover::before {
 }
 .theme-selector button:hover {
 	color: transparent;
+	text-shadow: none;
 }
 .theme-selector button:disabled {
 	cursor: auto;
@@ -739,7 +747,6 @@ h1.listing a[href^="http"] {
 	h1.listing a:focus {
 		text-decoration: dotted underline;
 		white-space: initial;
-		background-color: rgba(255,255,255,0.85);
 		z-index: 2;
 	}	
 	h1.listing:focus-within::before {
@@ -768,7 +775,6 @@ h1.listing a[href^="http"] {
 	h1.listing a:focus {
 		text-decoration: dotted underline;
 		white-space: initial;
-		background-color: rgba(255,255,255,0.85);
 		z-index: 2;
 	}	
 	h1.listing:focus-within::before {
