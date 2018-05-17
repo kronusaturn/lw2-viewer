@@ -26,15 +26,16 @@ body {
 }
 .nav-inner {
 	font-size: 1.125em;
+	padding: 11px 30px 13px 30px;
 }
 #secondary-bar .nav-inner {
 	font-size: 0.875em;
 }
+#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
+	padding: 6px 0 3px 0;
+}
 .active-bar {
 	border-top: 2px solid #eee;
-}
-.nav-bar .nav-current span {
-	background-color: #eee;
 }
 
 .nav-bar a:visited {
@@ -47,7 +48,7 @@ body {
 	display: block;
 	position: absolute;
 	left: 5px;
-	top: -2px;
+	top: -1px;
 	font-weight: 400;
 	font-size: 0.7em;
 	color: #d8d8d8;
@@ -61,12 +62,15 @@ body {
 
 /* "Tabs" */
 
-.nav-current span {
+.nav-current {
 	background-color: #eee;
 }
 
 /* Search tab */
 
+#nav-item-search form::before {
+	font-size: 1.125em;
+}
 #nav-item-search button {
 	border: none;
 	font-weight: inherit;
@@ -362,6 +366,7 @@ h1.listing a {
 }
 h1.listing a[href^="http"] {
 	color: #00c;
+	font-size: 0.75em;
 }
 h1.listing a[href^="/"] {
 	font-weight: normal;
@@ -371,7 +376,7 @@ h1.listing a[href^="/"] {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		color: #777;
-		background-color: rgba(228,228,228,0.85);
+		background-color: rgba(238,238,238,0.85);
 	}	
 	#content.user-page h1.listing:focus-within::before {
 		left: -0.75em;
@@ -392,7 +397,7 @@ h1.listing a[href^="/"] {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		color: #777;
-		background-color: rgba(228,228,228,0.85);
+		background-color: rgba(238,238,238,0.85);
 	}	
 	#content.user-page h1.listing:focus-within::before {
 		left: -0.75em;
