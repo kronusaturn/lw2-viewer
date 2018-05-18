@@ -1,7 +1,5 @@
 <?php
 	$UI_font = "'Anonymous Pro'";
-	$hyperlink_color = "#00e";
-	$white_glow = "0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff";
 ?>
 
 /*****************/
@@ -79,9 +77,6 @@ body {
 #nav-item-search button {
 	border: none;
 	font-weight: inherit;
-}
-#nav-item-search button:hover {
-	text-decoration: dotted underline;
 }
 
 /*==============*/
@@ -353,7 +348,7 @@ h1.listing {
 
 h1.listing a[href^="http"] {
 	font-size: 0.7em;
-	top: 5px;
+	top: 6px;
     color: #fff;
     text-shadow: 
          0.5px 0.5px 0 #000, 
@@ -570,9 +565,6 @@ h1.listing a[href^="http"] {
 .post-meta .date {
 	color: #888;
 }
-.post-meta .author {
-	color: #090;
-}
 .bottom-post-meta {
 	border-top: 1px dotted #000;
 }
@@ -582,20 +574,28 @@ h1.listing a[href^="http"] {
 /*============*/
 
 .post.link-post a.link-post-link {
-	text-decoration: none;
 	font-family: <?php echo $UI_font; ?>;
 	font-weight: 600;
+	font-size: 1.25em;
+	border: none;
+}
+.post.link-post a.link-post-link::before {
+	color: #fff;
+	text-shadow: 
+         0.5px 0.5px 0 #000, 
+        -0.5px -0.5px 0 #000,
+         0 0 2px #000;
 }
 .post.link-post a.link-post-link:hover {
-	color: #c00;
+	color: inherit;
+	border-bottom: 2px dotted #000;
 }
 .post.link-post a.link-post-link:hover::before {
-	color: #4879ec;
 	text-shadow: 
-		0.5px 0.5px 0 #fff,
-		-0.5px -0.5px 0 #fff,
-		0 0 2px #fff,
-		0 0 3px #00c;
+		 0.5px 0.5px 0 #000, 
+		-0.5px -0.5px 0 #000,
+		 0 0 2px #000,
+		 0 0 3px #000;
 }
 
 /*=======*/
@@ -773,9 +773,15 @@ div.comment-child-links a::first-letter {
 .downvote::before {
 	content: "\F146";
 }
-.vote:hover,
-.vote.selected {
+.upvote:hover,
+.upvote.selected,
+.downvote:hover,
+.downvote.selected {
 	color: inherit;
+}
+.vote:hover,
+.vote:active {
+	box-shadow: none;
 }
 
 /*===========================*/
@@ -803,16 +809,16 @@ div.comment-child-links a::first-letter {
 	font-weight: 600;
 }
 
-.comment-controls .edit-button {
-	color: #0b0;
+.posting-controls .action-button {
+	border: none;
 }
-.comment-controls .edit-button:hover {
-	color: #f00;
+.posting-controls .action-button:hover,
+.posting-controls .action-button:active {
+	box-shadow: none;
+	text-decoration: dotted underline;
 }
-
-.edit-post-link,
-.edit-post-link:visited {
-	color: #090;
+.posting-controls .action-button:active {
+	transform: scale(0.9);
 }
 
 .posting-controls textarea {
@@ -1110,32 +1116,21 @@ select {
 	text-shadow: <?php echo $white_glow; ?>;
 }
 
-.qualified-linking label {
-	color: <?php echo $hyperlink_color; ?>;
-}
 .qualified-linking label:hover {
-	text-shadow:
-		0 0 1px #fff,
-		0 0 3px #fff,
-		0 0 5px #00e;
+	color: #777;
 }
 
 .qualified-linking-toolbar {
-	border: 1px solid #000;
+	border: 2px solid #000;
 	background-color: #fff;
 }
 .qualified-linking-toolbar a {
-	background-color: #eee;
-	border: 1px solid #ccc;
-	border-radius: 4px;
-}
-.qualified-linking-toolbar a:visited {
-	color: <?php echo $hyperlink_color; ?>;
 }
 .qualified-linking-toolbar a:hover {
-	text-decoration: none;
-	background-color: #ddd;
-	text-shadow: <?php echo $white_glow; ?>;
+	box-shadow: 0 0 0 2px #000;
+}
+.qualified-linking-toolbar a:active {
+	box-shadow: 0 0 0 2px #000 inset;
 }
 
 /*======*/
