@@ -3117,6 +3117,12 @@ body {
 /* NAV BAR */
 /*=========*/
 
+.nav-bar {
+	justify-content: flex-start;
+}
+.nav-bar:nth-of-type(2) {
+	border-bottom: 2px solid #000;
+}
 .nav-inner {
 	font-size: 1.375em;
 	font-weight: 600;
@@ -3142,8 +3148,8 @@ body {
 .nav-inner::after {
 	display: block;
 	position: absolute;
-	left: 5px;
-	top: -2px;
+	left: 8px;
+	top: 3px;
 	font-weight: 400;
 	font-size: 0.7em;
 	color: #d8d8d8;
@@ -3208,9 +3214,7 @@ body {
 /*=====================*/
 
 .sublevel-nav.sort .sublevel-item {
-	font-family: 
-Notice: Undefined variable: UI_font_smallcaps in /Volumes/obormot-1/quicklisp/local-projects/lw2-viewer/www/theme-brutalist.css.php on line 124
-;
+	font-feature-settings: 'smcp';
 }
 .sublevel-nav.sort {
 	position: absolute;
@@ -3284,6 +3288,11 @@ Notice: Undefined variable: UI_font_smallcaps in /Volumes/obormot-1/quicklisp/lo
 /* THEME TWEAKER TOGGLE */
 /*======================*/
 
+#theme-tweaker-toggle button:hover,
+#theme-tweaker-toggle button:active {
+	box-shadow: none;
+}
+
 /*=================*/
 /* QUICKNAV WIDGET */
 /*=================*/
@@ -3313,6 +3322,7 @@ Notice: Undefined variable: UI_font_smallcaps in /Volumes/obormot-1/quicklisp/lo
 }
 #quick-nav-ui a[href='#comments'].no-comments {
 	opacity: 0.4;
+	color: #bbb;
 }
 
 /*======================*/
@@ -3445,11 +3455,11 @@ h1.listing a[href^="http"] {
 		background-color: rgba(255,255,255,0.85);
 	}	
 	#content.user-page h1.listing:focus-within::before {
-		left: 1.25em;
+		left: -0.625em;
 	}
 	h1.listing:focus-within::before {
 		color: #000;
-		left: 1.375em;
+		left: 1.25em;
 	}
 	h1.listing a[href^="http"]:hover {
 		color: #fff;
@@ -3467,11 +3477,11 @@ h1.listing a[href^="http"] {
 		background-color: rgba(255,255,255,0.85);
 	}	
 	#content.user-page h1.listing:focus-within::before {
-		left: 1.25em;
+		left: -0.625em;
 	}
 	h1.listing:focus-within::before {
 		color: #000;
-		left: 1.375em;
+		left: 1.25em;
 	}
 	h1.listing a[href^="http"]:hover {
 		color: #fff;
@@ -3484,145 +3494,16 @@ h1.listing a[href^="http"] {
 }
 
 /*===================*/
-/* LISTING POST-META */
+/* TOP PAGINATION UI */
 /*===================*/
 
-h1.listing + .post-meta {
-	padding-right: 320px;
-}
-h1.listing + .post-meta .karma-value,
-h1.listing + .post-meta .comment-count,
-h1.listing + .post-meta .lw2-link,
-h1.listing + .post-meta .read-time {
-	border-radius: 4px;
-	padding: 0 4px 0 2px;
-	text-shadow: 0.5px 0.5px 0.5px #999;
-	margin: 0 0.25em 0 0.5em;
-	position: absolute;
-	line-height: 1.15;
-	top: 12px;
-}
-h1.listing + .post-meta .karma-value span,
-h1.listing + .post-meta .comment-count span,
-h1.listing + .post-meta .lw2-link span,
-h1.listing + .post-meta .read-time span {
-	display: none;
-}
-h1.listing + .post-meta .karma-value::before,
-h1.listing + .post-meta .comment-count::before,
-h1.listing + .post-meta .lw2-link::before,
-h1.listing + .post-meta .read-time::before {
-	color: #fff;
-	font-family: Font Awesome;
-	font-weight: 900;
-	margin: 0 8px 0 0;
-	box-shadow: 0 0 0 2px #ddd;
-}
-
-h1.listing + .post-meta .karma-value {
-	box-shadow: 
-		22px 0 0 0 #ddd inset,
-		0 0 0 3px #ddd;
-	cursor: default;
-	color: #c00;
-	right: 248px;
-}
-h1.listing + .post-meta .karma-value::before {
-	content: "\F139";
-	text-shadow: none;
-    font-size: 0.9375em;
-    line-height: 1.3;
-}
-
-h1.listing + .post-meta .comment-count::before {
-	content: "\F086";
-}
-h1.listing + .post-meta .comment-count {
-	box-shadow: 
-		25px 0 0 0 #ddd inset,
-		0 0 0 3px #ddd;
-	color: #009100;
-	right: 176px;
-}
-h1.listing + .post-meta .comment-count:hover {
-	text-decoration: none;
-	color: #fff;
-	background-color: #009100;
-}
-h1.listing + .post-meta .comment-count:hover::before {
-	color: #009100;
-}
-h1.listing + .post-meta .comment-count.new-comments::before {
-	color: #009100;
-	text-shadow: 0.5px 0.5px 0.5px #fff;
-}
-h1.listing + .post-meta .comment-count.new-comments:hover::before {
-	text-shadow: 0.5px 0.5px 0.5px #999;
-}
-
-
-h1.listing + .post-meta .lw2-link {
-	box-shadow: 
-		23px 0 0 0 #ddd inset,
-		0 0 0 3px #ddd;
-	right: 0;
-}
-h1.listing + .post-meta .lw2-link::before {
-	content: "\F0C1";
-}
-h1.listing + .post-meta .lw2-link:hover {
-	text-decoration: none;
-	color: #fff;
-	background-color: #00f;
-}
-h1.listing + .post-meta .lw2-link:hover::before {
-	color: #00f;
-}
-
-h1.listing + .post-meta .read-time {
-	box-shadow: 
-		21px 0 0 0 #ddd inset,
-		0 0 0 3px #ddd;
-	right: 80px;
-}
-h1.listing + .post-meta .read-time::before {
-	content: "\F2F2";
-	cursor: pointer;
-}
-h1.listing + .post-meta .read-time::after {
-	content: " min";
-}
-h1.listing + .post-meta .read-time:hover::before {
+#top-nav-bar a:hover {
 	color: #777;
 }
 
-h1.listing + .post-meta .word-count {
-	box-shadow: 
-		22px 0 0 0 #ddd inset,
-		0 0 0 3px #ddd;
-	padding: 0 4px 0 4px;
-}
-h1.listing + .post-meta .word-count::before {
-	content: "\F15C";
-	margin: 0 10px 0 0;
-}
-h1.listing + .post-meta .read-time.word-count::after {
-	content: none;
-}
-
-h1.listing + .post-meta .link-post-domain {
-	margin: 0 0 0 0.5em;
-}
-
-h1.listing + .post-meta::after {
-	content: "";
-	display: block;
-	height: 1px;
-	width: calc(100% + 320px);
-	background-color: #ddd;
-	position: relative;
-	top: 14px;
-}
+/*===================*/
+/* LISTING POST-META */
+/*===================*/
 
 /*============*/
 /* USER PAGES */
@@ -3758,7 +3639,6 @@ h1.listing + .post-meta::after {
 }
 .post-body a:hover,
 .comment-body a:hover {
-	text-decoration: none;
 	color: #999;
 }
 
@@ -4164,9 +4044,6 @@ a:visited {
 	color: inherit;
 	text-decoration: none;
 }
-a:hover {
-	text-decoration: dotted underline;
-}
 
 /*=========*/
 /* BUTTONS */
@@ -4175,6 +4052,10 @@ a:hover {
 button,
 input[type='submit'] {
 	border: 2px solid #000;
+	box-shadow: 0 0 0 1px transparent;
+}
+#ui-elements-container button {
+	border: none;
 }
 
 button:hover,
@@ -4186,13 +4067,15 @@ input[type='submit']:focus {
 	color: inherit;
 	box-shadow: 
 		0 0 0 2px #fff inset,
-		0 0 0 4px #000 inset;
+		0 0 0 4px #000 inset,
+		0 0 0 1px transparent;
 }
 button:active,
 input[type='submit']:active {
 	box-shadow: 
 		0 0 0 4px #fff inset,
-		0 0 0 6px #000 inset;
+		0 0 0 6px #000 inset,
+		0 0 0 1px transparent;
 }
 
 /*==========*/
@@ -4214,9 +4097,6 @@ input[type='submit']:active {
 .comment-body h5,
 .comment-body h6 {
 	font-weight: 600;
-	font-family: 
-Notice: Undefined variable: UI_font_smallcaps in /Volumes/obormot-1/quicklisp/local-projects/lw2-viewer/www/theme-brutalist.css.php on line 1128
-;
 }
 .post-body h6,
 .comment-body h6 {
