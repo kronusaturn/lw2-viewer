@@ -113,6 +113,7 @@ a.nav-inner,
 }
 .active-bar {
 	position: relative;
+	border-style: solid;
 	border-color: #bbb;
 	border-width: 1px 0;
 }
@@ -136,6 +137,10 @@ a.nav-inner,
 .page-toolbar * {
 	color: #888;
 	font-weight: <?php echo ($platform == 'Mac') ? '300' : '400'; ?>;
+}
+.page-toolbar a:hover,
+.page-toolbar button:hover {
+	text-shadow: 0px 0px 0.5px #333;
 }
 .logout-button {
 	color: #d33;
@@ -321,7 +326,6 @@ a.nav-inner,
 }
 #new-comment-nav-ui .new-comment-sequential-nav-button:focus {
 	color: #d00;
-	text-shadow: <?php echo $white_glow; ?>;
 }
 #new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
 	color: #bbb;
@@ -428,7 +432,7 @@ h1.listing {
 
 h1.listing a[href^="http"] {
 	font-size: 0.6875em;
-	top: 3px;
+	top: 4px;
 	color: #888;
 }
 h1.listing a[href^='/'] {
@@ -450,7 +454,10 @@ h1.listing a[href^='/'] {
 		background-color: rgba(255,255,255,0.85);
 	}	
 	#content.user-page h1.listing:focus-within::before {
-		left: -0.75em;
+		display: inline-block;
+		vertical-align: top;
+		position: relative;
+		left: -0.25em;
 	}
 	h1.listing:focus-within::before {
 	color: #690010;
@@ -474,10 +481,13 @@ h1.listing a[href^='/'] {
 		background-color: rgba(255,255,255,0.85);
 	}	
 	#content.user-page h1.listing:focus-within::before {
-		left: -0.75em;
+		display: inline-block;
+		vertical-align: top;
+		position: relative;
+		left: -0.25em;
 	}
 	h1.listing:focus-within::before {
-	color: #690010;
+		color: #690010;
 	}
 	h1.listing a[href^="http"]:hover {
 		color: #690010;
@@ -893,7 +903,6 @@ div.comment-child-links a::first-letter {
 }
 .comment-minimize-button:hover {
 	color: #aaa;
-	text-shadow: <?php echo $white_glow; ?>;
 }
 .comment-minimize-button::after {
 	font-family: <?php echo $UI_font; ?>;
@@ -962,7 +971,6 @@ div.comment-child-links a::first-letter {
 }
 .comment-controls .cancel-comment-button:hover {
 	color: #f00;
-	text-shadow: <?php echo $white_glow; ?>;
 }
 
 .new-comment-button {
@@ -1035,7 +1043,6 @@ div.comment-child-links a::first-letter {
 }
 #markdown-hints-checkbox + label:hover {
 	color: #e00;
-	text-shadow: <?php echo $white_glow; ?>;
 }
 .markdown-hints {
 	border: 1px solid #c00;
@@ -1309,7 +1316,6 @@ select {
 }
 #aux-about-link a:hover {
 	opacity: 1.0;
-	text-shadow: <?php echo $white_glow; ?>;
 }
 
 .qualified-linking label {
@@ -1335,7 +1341,6 @@ select {
 .qualified-linking-toolbar a:hover {
 	text-decoration: none;
 	background-color: #ddd;
-	text-shadow: <?php echo $white_glow; ?>;
 }
 
 /*======*/
