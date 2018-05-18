@@ -215,10 +215,9 @@ a.nav-inner,
 }
 .sublevel-nav.sort {
 	position: absolute;
-	top: 167px;
+	top: 169px;
 	right: 30px;
-	border: 2px solid #bbb;
-	padding: 18px 0 0 0;
+	padding: 19px 0 0 0;
 	border-radius: 8px;
 	box-shadow: 0 18px #bbb inset;
 }
@@ -230,7 +229,7 @@ a.nav-inner,
 }
 .sublevel-nav.sort .sublevel-item {
 	border-radius: 0;
-	padding: 5px 6px;
+	padding: 6px 6px 4px 6px;
 	border-color: #aaa;
 	border-style: solid;
 	text-transform: uppercase;
@@ -543,7 +542,7 @@ h1.listing + .post-meta .post-section::before {
 	top: 0;
 	left: 0;
 	width: 100%;
-	height: calc(100% + 1.375em);
+	height: calc(100% + 1.25em);
 	box-shadow: 0px 0px 10px #555;
 }
 #content.user-page h1.listing + .post-meta {
@@ -782,20 +781,8 @@ h1.listing + .post-meta {
 /*==========*/
 
 .comment-item {
-	border: 1px solid #ccc;
+	border: 1px solid transparent;
 }
-
-<?php
-	function nested_stuff($segment, $tip, $last_tip, $nesting_levels) {
-		for ($i = $nesting_levels; $i > 0; $i--) {
-			for ($j = $i; $j > 0; $j--)
-				echo $segment;
-			echo $tip;
-		}
-		echo $last_tip;
-	}
-	$comment_nesting_depth = 10;
-?>
 
 .comment-item {
 	box-shadow: 
@@ -1440,12 +1427,8 @@ div > .MJXc-display {
 
 @media only screen and (max-width: 1440px) {
 	#hns-date-picker {
-		background-color: #d8d8d8;
+		background-color: #fffffa;
 		opacity: 1.0;
-	}
-	#hns-date-picker::before {
-		border: 1px solid #999;
-		border-width: 1px 0 1px 1px;
 	}
 }
 @media only screen and (max-width: 1080px) {
@@ -1466,27 +1449,7 @@ div > .MJXc-display {
 		transform: scale(0.8);
 	}
 }
-@media only screen and (max-width: 1020px) {
-	#quick-nav-ui a {
-		box-shadow: 
-			0 0 0 1px #999,
-			0 0 0 2px transparent;
-	}
-	#new-comment-nav-ui .new-comments-count::before {
-		background-color: #d8d8d8;
-		box-shadow: 
-			0 0 0 1px #999,
-			0 0 0 2px transparent;
-		border-radius: 8px;
-	}
-}
 @media only screen and (max-width: 1000px) {
-	#theme-selector {
-		background-color: #d8d8d8;
-		box-shadow: 
-			0 0 0 1px #999,
-			0 0 0 2px transparent;
-	}
 	#text-size-adjustment-ui button {
 		background-color: #ddd;
 	}

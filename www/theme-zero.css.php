@@ -96,7 +96,7 @@ body {
 /*==============*/
 
 .sublevel-nav .sublevel-item {
-	border-color: #ddd;
+	border-color: #ccc;
 	border-style: solid;
 	border-width: 1px 1px 1px 0;
 	color: #777;
@@ -116,7 +116,7 @@ body {
 .sublevel-nav a.sublevel-item:active,
 .sublevel-nav span.sublevel-item {
 	background-color: #ddd;
-	border-color: #ddd;
+	border-color: #ccc;
 	color: #000;
 	text-shadow: 
 		0 -1px 0 #fff,
