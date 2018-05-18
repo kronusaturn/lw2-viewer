@@ -192,7 +192,7 @@ input {
 	top: 0;
 	padding: 0 0.45em;
 	visibility: visible;
-	z-index: 1000;
+/* 	z-index: 1000; */
 	font-weight: 900;
 }
 #inbox-indicator.new-messages::before {
