@@ -72,7 +72,7 @@ a.nav-inner,
 	border-right: 1px solid #bbb;
 }
 .nav-bar .nav-item:not(.nav-current):not(#nav-item-search):hover,
-.inactive-bar #nav-item-search:focus-within {
+#nav-item-search:focus-within {
 	background-color: #f0f0eb;
 }
 .nav-bar a:hover,
@@ -456,7 +456,7 @@ h1.listing a[href^='/'] {
 }
 
 @media only screen and (hover: hover) {
-	h1.listing a[href^='/' {
+	h1.listing a[href^='/'] {
 		max-width: calc(100% - 60px);
 	}
 	h1.listing a:hover,
@@ -484,7 +484,7 @@ h1.listing a[href^='/'] {
 	}
 }
 @-moz-document url-prefix() {
-	h1.listing a[href^='/' {
+	h1.listing a[href^='/'] {
 		max-width: calc(100% - 60px);
 	}
 	h1.listing a:hover,
