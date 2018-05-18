@@ -1,10 +1,11 @@
 <?php
-	$UI_font = "'Anonymous Pro'";
+	$UI_font = "'Anonymous Pro', monospace";
+	$text_font = "'Input Sans', sans-serif"
 ?>
 
-/*****************/
-/* DEFAULT THEME */
-/*****************/
+/*******************/
+/* BRUTALIST THEME */
+/*******************/
 
 body {
 	color: #000;
@@ -43,12 +44,12 @@ body {
 }
 
 .nav-current .nav-inner,
-.nav-bar .nav-item:not(#nav-item-search) .nav-inner:hover {
+.nav-bar a.nav-inner:hover {
 	box-shadow: 
 		0 0 0 4px #fff inset,
 		0 0 0 6px #000 inset;
 }
-.nav-bar .nav-item:not(#nav-item-search) .nav-inner:active {
+.nav-bar a.nav-inner:active {
 	box-shadow: 
 		0 0 0 8px #fff inset,
 		0 0 0 10px #000 inset;
@@ -255,36 +256,41 @@ body {
 	color: #666;
 	text-shadow: 0.5px 0.5px 0 #fff;
 }
-#new-comment-nav-ui .new-comments-count:hover {
-	text-shadow: 
-		0 0 1px #fff,
-		0 0 3px #fff,
-		0 0 5px #fff,
-		0 0 8px #fff,
-		0.5px 0.5px 0 #fff;
+#new-comment-nav-ui .new-comments-count {
+	left: 2px;
 }
 #new-comment-nav-ui .new-comments-count::after {
 	font-weight: 600;
 	color: #777;
+	position: relative;
+	left: -0.5px;
 }
+#new-comment-nav-ui .new-comment-sequential-nav-button:hover,
+#new-comment-nav-ui .new-comment-sequential-nav-button:active,
+#new-comment-nav-ui .new-comment-sequential-nav-button:focus,
 #new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
-	color: #bbb;
-	text-shadow: none;
+	box-shadow: none;
+}
+#new-comment-nav-ui .new-comment-sequential-nav-button:hover {
+	color: #777;
 }
 
 /*=================*/
 /* HNS DATE PICKER */
 /*=================*/
 
+#hns-date-picker {
+	bottom: 75px;
+	text-indent: -16px;
+}
 #hns-date-picker span {
 	color: #777;
-	text-shadow: 0.5px 0.5px 0 #fff;
 	font-weight: 600;
+	text-indent: 0px;
 }
 #hns-date-picker input {
-	border: 1px solid #777;
-	background-color: transparent;
 	color: #666;
+	width: 160px;
 }
 #hns-date-picker input:focus {
 	color: #000;
@@ -441,35 +447,19 @@ h1.listing a[href^="http"] {
 
 .login-container form input[type='submit'] {
 	font-weight: bold;
-	background-color: #eee;
-	border: 1px solid #ccc;
-}
-.login-container form input[type='submit']:hover,
-.login-container form input[type='submit']:focus {
-	background-color: #ddd;
-	border: 1px solid #aaa;
 }
 
 /* “Create account” form */
 
 #signup-form {
-	background-color: #f3f3f3;
 	padding: 0 0 0.5em 1em;
-	border: 1px solid #ddd;
-}
-#signup-form input[type='submit'] {
-	background-color: #e4e4e4;
-	border: 1px solid #ccc;
-}
-#signup-form input[type='submit']:hover {
-	background-color: #d8d8d8;
-	border: 1px solid #aaa;
+	border: 2px solid #000;
 }
 
 /* Log in tip */
 
 .login-container .login-tip {
-	border: 1px solid #eee;
+	border: 1px solid #000;
 }
 
 /* Message box */
@@ -523,7 +513,7 @@ h1.listing a[href^="http"] {
 
 .post-body,
 .comment-body {
-	font-family: Input Sans, sans-serif;
+	font-family: <?php echo $text_font; ?>;
 	font-weight: 200;
 }
 .post-body a,
@@ -788,23 +778,13 @@ div.comment-child-links a::first-letter {
 /* COMMENTING AND POSTING UI */
 /*===========================*/
 
-.posting-controls input[type='submit'] {
-	background-color: #fff;
-	border: 1px solid #aaa;
-	font-weight: bold;
-}
-.posting-controls input[type='submit']:hover,
-.posting-controls input[type='submit']:focus {
-	background-color: #ddd;
-	border: 1px solid #999;
-}
-
 .comment-controls .cancel-comment-button {
 	height: 28px;
-	font-weight: 600;
 	color: #fff;
 }
 
+.posting-controls input[type='submit'],
+.comment-controls .cancel-comment-button,
 .new-comment-button {
 	font-weight: 600;
 }
@@ -823,7 +803,7 @@ div.comment-child-links a::first-letter {
 }
 
 .posting-controls textarea {
-	font-family: Input Sans, sans-serif;
+	font-family: <?php echo $text_font; ?>;
 	font-weight: 200;
 	font-size: 1rem;
 	line-height: 1.4;
@@ -834,6 +814,7 @@ div.comment-child-links a::first-letter {
 }
 .posting-controls textarea:focus {
 	border-style: dotted;
+	border-width: 28px 2px 2px 2px;
 }
 .posting-controls textarea::selection {
 	background-color: #000;
@@ -868,7 +849,6 @@ div.comment-child-links a::first-letter {
 
 .guiedit-buttons-container {
 	background-color: #000;
-	color: #fff;
 	box-shadow: 0 0 0 1px #000;
 }
 
@@ -876,11 +856,18 @@ div.comment-child-links a::first-letter {
 .posting-controls.edit-existing-comment .guiedit-buttons-container button {
     color: #050;
 }
-.guiedit-buttons-container button {
-	font-family: Font Awesome, Input Sans, sans-serif;
-	font-weight: 200;
-}
 
+button.guiedit {
+	font-family: Font Awesome, <?php echo $UI_font; ?>;
+	color: #fff;
+	border: none;
+}
+button.guiedit:hover,
+button.guiedit:active,
+button.guiedit:focus {
+	box-shadow: none;
+	color: #777;
+}
 button.guiedit::after {
 	color: #fff;
 	top: 2px;
@@ -891,61 +878,76 @@ button.guiedit::after {
 /* Markdown hints */
 
 .markdown-hints {
-	border: 1px solid #c00;
-	background-color: #ffa;
+	border: 2px solid #000;
+	background-color: #fff;
 }
 
 /*================*/
 /* EDIT POST FORM */
 /*================*/
 
-#edit-post-form .link-post-checkbox + label::before {
-	border-radius: 3px;
-	border: 1px solid #ddd;
-	color: #777;
+#edit-post-form input[name='title'] {
+	max-width: calc(100% - 14em);
 }
-#edit-post-form .link-post-checkbox + label:hover,
-#edit-post-form .link-post-checkbox:focus + label {
-	text-shadow: 
-		0 0 1px #fff,
-		0 0 2px #fff,
-		0 0 2.5px #aaa;
+#edit-post-form .link-post-checkbox + label::before {
+	color: #000;
+	border: 1px solid #000;
+	top: 2px;
 }
 #edit-post-form .link-post-checkbox + label:hover::before,
 #edit-post-form .link-post-checkbox:focus + label::before {
-	border-color: #aaa;
+	box-shadow: 
+		0 0 0 1px #fff inset,
+		0 0 0 2px #000 inset;
+}
+#edit-post-form .link-post-checkbox:active + label::before,
+#edit-post-form .link-post-checkbox:checked:active + label::before {
+	background-color: #fff;
+	box-shadow: 
+		0 0 0 3px #fff inset,
+		0 0 0 4px #000 inset;
 }
 #edit-post-form .link-post-checkbox:checked + label::before {
-	content: "\F00C";
+	content: "";
+	background-color: #000;
+	box-shadow: 
+		0 0 0 4px #fff inset;
 }
 #edit-post-form input[type='radio'] + label {
-	color: #777;
-	border-color: #ddd;
+	border-color: #000;
+	color: #000;
 }
 #edit-post-form input[type='radio'][value='all'] + label {
-	border-radius: 8px 0 0 8px;
 	border-width: 1px;
 }
 #edit-post-form input[type='radio'][value='drafts'] + label {
-	border-radius: 0 8px 8px 0;
 }
 #edit-post-form input[type='radio'] + label:hover,
 #edit-post-form input[type='radio']:focus + label {
-	background-color: #ddd;
-	color: #000;
-}
-#edit-post-form input[type='radio']:focus + label {
 	color: #000;
 	box-shadow: 
-		0 0 0 1px #aaa;
+		0 0 0 1px #fff inset,
+		0 0 0 2px #000 inset;
+}
+#edit-post-form input[type='radio']:active + label {
+	box-shadow: 
+		0 0 0 2px #fff inset,
+		0 0 0 3px #000 inset;
+}
+#edit-post-form input[type='radio']:focus + label {
+	box-shadow: 
+		0 0 0 1px #000;
 }
 #edit-post-form input[type='radio']:checked + label {
-	background-color: #ddd;
-	border-color: #ddd;
-	color: #000;
-	text-shadow: 
-		0 -1px 0 #fff,
-		0 0.5px 0.5px #000;
+	border-color: #000;
+	box-shadow: 
+		0 0 0 1px #fff inset,
+		0 0 0 2px #000 inset;
+	font-weight: bold;
+}
+
+#edit-post-form #markdown-hints-checkbox + label {
+	padding: 4px 0 0 6px;
 }
 
 /*=======*/
