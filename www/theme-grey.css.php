@@ -454,10 +454,11 @@ h1.listing a[href^="http"] {
 		background-color: rgba(255,255,255,0.85);
 	}	
 	#content.user-page h1.listing:focus-within::before {
-		left: -0.75em;
+		left: 1.25em;
 	}
 	h1.listing:focus-within::before {
 		color: #00f;
+		left: 1.375em;
 	}
 	h1.listing a[href^="http"]:hover {
 		color: #4879ec;
@@ -475,10 +476,11 @@ h1.listing a[href^="http"] {
 		background-color: rgba(255,255,255,0.85);
 	}	
 	#content.user-page h1.listing:focus-within::before {
-		left: -0.75em;
+		left: 1.25em;
 	}
 	h1.listing:focus-within::before {
 		color: #00f;
+		left: 1.375em;
 	}
 	h1.listing a[href^="http"]:hover {
 		color: #4879ec;
@@ -528,6 +530,9 @@ h1.listing + .post-meta .post-section::before {
 
 #content.user-page h1.page-main-heading {
 	border-bottom: 1px solid #ccc;
+}
+#content.user-page .sublevel-nav + h1.listing {
+	margin-top: 1.75em;
 }
 
 .user-stats .karma-total {

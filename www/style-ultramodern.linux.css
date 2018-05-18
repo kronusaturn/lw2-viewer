@@ -3573,6 +3573,9 @@ h1.listing + .post-meta .post-section::before {
 #content.user-page h1.page-main-heading {
 	border-bottom: 1px solid #777;
 }
+#content.user-page .sublevel-nav + h1.listing {
+	margin-top: 1.75em;
+}
 
 .user-stats .karma-total {
 	font-weight: bold;

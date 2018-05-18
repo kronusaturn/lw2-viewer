@@ -256,7 +256,6 @@ body {
 #width-selector button.selected,
 #theme-selector button:hover,
 #theme-selector button.selected {
-	text-shadow: none;
 	box-shadow:
 		0 0 0 5px #bbb inset;
 }
