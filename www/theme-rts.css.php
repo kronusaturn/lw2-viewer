@@ -695,7 +695,8 @@ h1.listing + .post-meta .post-section::before {
     margin-right: 1px;
     color: #933;
 }
-.post-body a:hover {
+.post-body a:hover,
+.comment-body a:hover {
     color: #999;
     border-bottom: 1px dotted #999;
 }
