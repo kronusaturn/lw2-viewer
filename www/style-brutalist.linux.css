@@ -3281,6 +3281,17 @@ body {
 		0 0 0 5px #fff inset;
 }
 
+/*=========================*/
+/* TEXT SIZE ADJUSTMENT UI */
+/*=========================*/
+
+#text-size-adjustment-ui button:hover,
+#text-size-adjustment-ui button:active,
+#text-size-adjustment-ui button:focus {
+	box-shadow: none;
+	color: #777;
+}
+
 /*======================*/
 /* THEME TWEAKER TOGGLE */
 /*======================*/
@@ -3342,12 +3353,6 @@ body {
 #new-comment-nav-ui .new-comments-count::after {
 	font-weight: 600;
 	color: #777;
-}
-#new-comment-nav-ui .new-comment-sequential-nav-button:focus {
-	color: #d00;
-	text-shadow: 
-Notice: Undefined variable: white_glow in /Volumes/obormot-1/quicklisp/local-projects/lw2-viewer/www/theme-brutalist.css.php on line 259
-;
 }
 #new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
 	color: #bbb;
@@ -3417,7 +3422,7 @@ Notice: Undefined variable: white_glow in /Volumes/obormot-1/quicklisp/local-pro
 	color: #c00;
 	background-color: #e0e0e0;
 	text-shadow: 
-Notice: Undefined variable: white_glow in /Volumes/obormot-1/quicklisp/local-projects/lw2-viewer/www/theme-brutalist.css.php on line 328
+Notice: Undefined variable: white_glow in /Volumes/obormot-1/quicklisp/local-projects/lw2-viewer/www/theme-brutalist.css.php on line 335
 ;
 }
 .archive-nav a:active {
@@ -3661,6 +3666,9 @@ h1.listing a[href^="http"] {
 .bottom-post-meta {
 	border-top: 1px dotted #000;
 }
+.post-meta a:hover {
+	text-decoration: dotted underline;
+}
 
 /*============*/
 /* LINK POSTS */
@@ -3723,9 +3731,6 @@ h1.listing a[href^="http"] {
 /*================================*/
 
 .comment-item input[id^="expand"] + label::after {
-	color: 
-Notice: Undefined variable: hyperlink_color in /Volumes/obormot-1/quicklisp/local-projects/lw2-viewer/www/theme-brutalist.css.php on line 633
-;
 	font-weight: 600;
 }
 .comment-item input[id^="expand"] + label:hover::after {
@@ -3781,9 +3786,20 @@ div.comment-child-links a::first-letter {
 
 .comment-popup {
     border: 2px solid #000;
+    background-color: #fff;
 }
 .comment-popup .comment-body {
     font-size: 0.9375rem;
+}
+
+/*====================*/
+/* COMMENT PERMALINKS */
+/*====================*/
+
+.comment-meta .permalink,
+.comment-meta .lw2-link,
+.individual-thread-page .comment-parent-link:empty {
+	filter: grayscale(100%);
 }
 
 /*=======================*/
@@ -3804,9 +3820,6 @@ div.comment-child-links a::first-letter {
 		0 0 0 5px #000 inset;
 }
 #content.compact > .comment-thread .comment-item::after {
-	color: 
-Notice: Undefined variable: hyperlink_color in /Volumes/obormot-1/quicklisp/local-projects/lw2-viewer/www/theme-brutalist.css.php on line 712
-;
 	background: linear-gradient(to right, transparent 0%, #fff 50%, #fff 100%);
 }
 #content.compact > .comment-thread .comment-item:hover .comment {
@@ -3845,9 +3858,6 @@ Notice: Undefined variable: hyperlink_color in /Volumes/obormot-1/quicklisp/loca
 }
 .comment-minimize-button:hover {
 	color: #aaa;
-	text-shadow: 
-Notice: Undefined variable: white_glow in /Volumes/obormot-1/quicklisp/local-projects/lw2-viewer/www/theme-brutalist.css.php on line 751
-;
 }
 .comment-minimize-button::after {
 	font-size: 0.8125rem;
@@ -3876,10 +3886,11 @@ Notice: Undefined variable: white_glow in /Volumes/obormot-1/quicklisp/local-pro
 .upvote.selected,
 .downvote:hover,
 .downvote.selected {
-	color: inherit;
+	color: inherit !important;
 }
 .vote:hover,
-.vote:active {
+.vote:active,
+.vote:focus {
 	box-shadow: none;
 }
 
@@ -3912,7 +3923,8 @@ Notice: Undefined variable: white_glow in /Volumes/obormot-1/quicklisp/local-pro
 	border: none;
 }
 .posting-controls .action-button:hover,
-.posting-controls .action-button:active {
+.posting-controls .action-button:active,
+.posting-controls .action-button:focus {
 	box-shadow: none;
 	text-decoration: dotted underline;
 }
@@ -3988,17 +4000,6 @@ button.guiedit::after {
 
 /* Markdown hints */
 
-#markdown-hints-checkbox + label {
-	color: 
-Notice: Undefined variable: hyperlink_color in /Volumes/obormot-1/quicklisp/local-projects/lw2-viewer/www/theme-brutalist.css.php on line 893
-;
-}
-#markdown-hints-checkbox + label:hover {
-	color: #e00;
-	text-shadow: 
-Notice: Undefined variable: white_glow in /Volumes/obormot-1/quicklisp/local-projects/lw2-viewer/www/theme-brutalist.css.php on line 897
-;
-}
 .markdown-hints {
 	border: 1px solid #c00;
 	background-color: #ffa;
@@ -4211,14 +4212,8 @@ select {
 /* QUALIFIED HYPERLINKING */
 /*========================*/
 
-#aux-about-link a {
-	color: #777;
-}
 #aux-about-link a:hover {
-	opacity: 1.0;
-	text-shadow: 
-Notice: Undefined variable: white_glow in /Volumes/obormot-1/quicklisp/local-projects/lw2-viewer/www/theme-brutalist.css.php on line 1116
-;
+	color: #777;
 }
 
 .qualified-linking label:hover {
