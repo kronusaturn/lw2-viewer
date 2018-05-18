@@ -3132,16 +3132,6 @@ a.nav-inner,
 	color: #888;
 }
 
-
-.nav-bar a:visited {
-	color: #00e;
-}
-.nav-bar a:hover,
-.nav-bar a:focus {
-	text-decoration: none;
-	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
-}
-
 /* Accesskey hints */
 
 .nav-inner::after {
@@ -3428,7 +3418,9 @@ a.nav-inner,
 }
 #new-comment-nav-ui .new-comment-sequential-nav-button:focus {
 	color: #d00;
-	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+	text-shadow: 
+Notice: Undefined variable: white_glow in /Volumes/obormot-1/quicklisp/local-projects/lw2-viewer/www/theme-rts.css.php on line 324
+;
 }
 #new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
 	color: #bbb;
@@ -3540,6 +3532,7 @@ h1.listing a[href^="http"] {
 }
 h1.listing a[href^='/'] {
 	font-family: 'Garamond Premier Pro', 'Georgia', serif;
+	text-decoration: none;
 	color: #690010;
 	font-weight: 500;
 	text-shadow: 0.5px 0.5px 0.5px #de7069;
@@ -3549,7 +3542,6 @@ h1.listing a[href^='/'] {
 @media only screen and (hover: hover) {
 	h1.listing a:hover,
 	h1.listing a:focus {
-		color: #777;
 		text-shadow: 
 			0px 0px 0.5px #ff987b, 
 			0px 0px 1.5px #c05651,
@@ -3574,7 +3566,6 @@ h1.listing a[href^='/'] {
 @-moz-document url-prefix() {
 	h1.listing a:hover,
 	h1.listing a:focus {
-		color: #777;
 		text-shadow: 
 			0px 0px 0.5px #ff987b, 
 			0px 0px 1.5px #c05651,
@@ -3601,140 +3592,6 @@ h1.listing a[href^='/'] {
 /* LISTING POST-META */
 /*===================*/
 
-
-h1.listing + .post-meta .karma-value,
-h1.listing + .post-meta .comment-count,
-h1.listing + .post-meta .lw2-link,
-h1.listing + .post-meta .read-time {
-	border-radius: 4px;
-	padding: 0 4px 0 2px;
-	text-shadow: 0.5px 0.5px 0.5px #999;
-	margin: 0 0.25em 0 0.5em;
-	position: absolute;
-	line-height: 1.15;
-	top: 12px;
-}
-h1.listing + .post-meta .karma-value span,
-h1.listing + .post-meta .comment-count span,
-h1.listing + .post-meta .lw2-link span,
-h1.listing + .post-meta .read-time span {
-	display: none;
-}
-h1.listing + .post-meta .karma-value::before,
-h1.listing + .post-meta .comment-count::before,
-h1.listing + .post-meta .lw2-link::before,
-h1.listing + .post-meta .read-time::before {
-	color: #fff;
-	font-family: Font Awesome;
-	font-weight: 900;
-	margin: 0 8px 0 0;
-	box-shadow: 0 0 0 2px #ddd;
-}
-
-h1.listing + .post-meta .karma-value {
-	box-shadow: 
-		22px 0 0 0 #ddd inset,
-		0 0 0 3px #ddd;
-	cursor: default;
-	color: #c00;
-	right: 248px;
-}
-h1.listing + .post-meta .karma-value::before {
-	content: "\F139";
-	text-shadow: none;
-    font-size: 0.9375em;
-    line-height: 1.3;
-}
-
-h1.listing + .post-meta .comment-count::before {
-	content: "\F086";
-}
-h1.listing + .post-meta .comment-count {
-	box-shadow: 
-		25px 0 0 0 #ddd inset,
-		0 0 0 3px #ddd;
-	color: #009100;
-	right: 176px;
-}
-h1.listing + .post-meta .comment-count:hover {
-	text-decoration: none;
-	color: #fff;
-	background-color: #009100;
-}
-h1.listing + .post-meta .comment-count:hover::before {
-	color: #009100;
-}
-h1.listing + .post-meta .comment-count.new-comments::before {
-	color: #009100;
-	text-shadow: 0.5px 0.5px 0.5px #fff;
-}
-h1.listing + .post-meta .comment-count.new-comments:hover::before {
-	text-shadow: 0.5px 0.5px 0.5px #999;
-}
-
-
-h1.listing + .post-meta .lw2-link {
-	box-shadow: 
-		23px 0 0 0 #ddd inset,
-		0 0 0 3px #ddd;
-	right: 0;
-}
-h1.listing + .post-meta .lw2-link::before {
-	content: "\F0C1";
-}
-h1.listing + .post-meta .lw2-link:hover {
-	text-decoration: none;
-	color: #fff;
-	background-color: #00f;
-}
-h1.listing + .post-meta .lw2-link:hover::before {
-	color: #00f;
-}
-
-h1.listing + .post-meta .read-time {
-	box-shadow: 
-		21px 0 0 0 #ddd inset,
-		0 0 0 3px #ddd;
-	right: 80px;
-}
-h1.listing + .post-meta .read-time::before {
-	content: "\F2F2";
-	cursor: pointer;
-}
-h1.listing + .post-meta .read-time::after {
-	content: " min";
-}
-h1.listing + .post-meta .read-time:hover::before {
-	color: #777;
-}
-
-h1.listing + .post-meta .word-count {
-	box-shadow: 
-		22px 0 0 0 #ddd inset,
-		0 0 0 3px #ddd;
-	padding: 0 4px 0 4px;
-}
-h1.listing + .post-meta .word-count::before {
-	content: "\F15C";
-	margin: 0 10px 0 0;
-}
-h1.listing + .post-meta .read-time.word-count::after {
-	content: none;
-}
-
-h1.listing + .post-meta .link-post-domain {
-	margin: 0 0 0 0.5em;
-}
-
-h1.listing + .post-meta::after {
-	content: "";
-	display: block;
-	height: 1px;
-	width: calc(100% + 320px);
-	background-color: #ddd;
-	position: relative;
-	top: 14px;
-}
 h1.listing + .post-meta .post-section::before {
 	left: unset;
 }
@@ -3896,7 +3753,8 @@ h1.listing + .post-meta .post-section::before {
 /* POST-META */
 /*===========*/
 
-.post-meta {
+.post-meta,
+h1.listing + .post-meta {
 	text-align: center;
 	font-weight: 400;
 }
@@ -3992,7 +3850,7 @@ h1.listing + .post-meta .post-section::before {
 /*================================*/
 
 .comment-item input[id^="expand"] + label::after {
-	color: #00e;
+	color: #888;
 	font-weight: 600;
 }
 .comment-item input[id^="expand"] + label:hover::after {
@@ -4083,7 +3941,7 @@ div.comment-child-links a::first-letter {
 		0 0 0 5px #bbb inset;
 }
 #content.compact > .comment-thread .comment-item::after {
-	color: #00e;
+	color: #888;
 	background: linear-gradient(to right, transparent 0%, #fff 50%, #fff 100%);
 }
 #content.compact > .comment-thread .comment-item:hover .comment {
@@ -4123,7 +3981,9 @@ div.comment-child-links a::first-letter {
 }
 .comment-minimize-button:hover {
 	color: #aaa;
-	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+	text-shadow: 
+Notice: Undefined variable: white_glow in /Volumes/obormot-1/quicklisp/local-projects/lw2-viewer/www/theme-rts.css.php on line 896
+;
 }
 .comment-minimize-button::after {
 	font-family: 'Proxima Nova', sans-serif;
@@ -4192,7 +4052,9 @@ div.comment-child-links a::first-letter {
 }
 .comment-controls .cancel-comment-button:hover {
 	color: #f00;
-	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+	text-shadow: 
+Notice: Undefined variable: white_glow in /Volumes/obormot-1/quicklisp/local-projects/lw2-viewer/www/theme-rts.css.php on line 965
+;
 }
 
 .new-comment-button {
@@ -4223,11 +4085,11 @@ div.comment-child-links a::first-letter {
 }
 .posting-controls textarea:focus {
 	background-color: #ffd;
-	border-color: #00e;
+	border-color: #888;
 	box-shadow: 
 		0 0 0 1px #ddf inset,
 		0 0 0 1px #fff,
-		0 0 0 2px #00e;
+		0 0 0 2px #888;
 }
 .posting-controls.edit-existing-post textarea:focus,
 .posting-controls.edit-existing-comment textarea:focus {
@@ -4261,11 +4123,13 @@ div.comment-child-links a::first-letter {
 /* Markdown hints */
 
 #markdown-hints-checkbox + label {
-	color: #00e;
+	color: #888;
 }
 #markdown-hints-checkbox + label:hover {
 	color: #e00;
-	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+	text-shadow: 
+Notice: Undefined variable: white_glow in /Volumes/obormot-1/quicklisp/local-projects/lw2-viewer/www/theme-rts.css.php on line 1038
+;
 }
 .markdown-hints {
 	border: 1px solid #c00;
@@ -4331,13 +4195,10 @@ div.comment-child-links a::first-letter {
 
 a {
 	text-decoration: none;
-	color: #00e;
+	color: #888;
 }
 a:visited {
-	color: #551a8b;
-}
-a:hover {
-	text-decoration: underline;
+	color: #888;
 }
 
 /*=========*/
@@ -4362,7 +4223,7 @@ input[type='submit']:active {
 	transform: scale(0.9);
 }
 .button:visited {
-	color: #00e;
+	color: #888;
 }
 .button:hover {
 	color: #333;
@@ -4542,7 +4403,9 @@ select {
 }
 #aux-about-link a:hover {
 	opacity: 1.0;
-	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+	text-shadow: 
+Notice: Undefined variable: white_glow in /Volumes/obormot-1/quicklisp/local-projects/lw2-viewer/www/theme-rts.css.php on line 1312
+;
 }
 
 .qualified-linking label {
@@ -4563,12 +4426,14 @@ select {
 	border-radius: 4px;
 }
 .qualified-linking-toolbar a:visited {
-	color: #00e;
+	color: #888;
 }
 .qualified-linking-toolbar a:hover {
 	text-decoration: none;
 	background-color: #ddd;
-	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+	text-shadow: 
+Notice: Undefined variable: white_glow in /Volumes/obormot-1/quicklisp/local-projects/lw2-viewer/www/theme-rts.css.php on line 1338
+;
 }
 
 /*======*/

@@ -1,6 +1,3 @@
-h1.listing a[href^='/']:hover {
-	text-decoration: none;
-}
 #nav-item-login .nav-inner {
 	padding-top: 4px;
 }
