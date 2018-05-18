@@ -2557,6 +2557,7 @@ div > .MJXc-display {
 	#quick-nav-ui:hover,
 	#new-comment-nav-ui:hover,
 	#new-comment-nav-ui + #hns-date-picker:hover,
+	#new-comment-nav-ui + #hns-date-picker:focus-within,
 	#new-comment-nav-ui:hover + #hns-date-picker {
 		opacity: 1.0;
 	}
