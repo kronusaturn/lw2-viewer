@@ -3547,11 +3547,26 @@ h1.listing a[href^="http"] {
 	font-weight: bold;
 }
 
+/* “Log in” form */
+#login-form a:hover {
+	text-decoration: dotted underline;
+}
+#login-form a:active {
+	transform: scale(0.9);
+}
+
 /* “Create account” form */
 
 #signup-form {
 	padding: 0 0 0.5em 1em;
 	border: 2px solid #000;
+}
+#signup-form label {
+	width: 10em;
+}
+#signup-form input[type='text'],
+#signup-form input[type='password'] {
+	width: calc(100% - 12em);
 }
 
 /* Log in tip */
@@ -3575,9 +3590,10 @@ h1.listing a[href^="http"] {
 /* PASSWORD RESET PAGE */
 /*=====================*/
 
+.reset-password-container label {
+	width: 12em;
+}
 .reset-password-container input[type='submit'] {
-	background-color: #e4e4e4;
-	border: 1px solid #ccc;
 	font-weight: bold;
 }
 
@@ -3727,19 +3743,18 @@ h1.listing a[href^="http"] {
 .comment-meta .author {
 	font-weight: bold;
 	font-size: 1.25em;
-	color: #000;
-}
-.comment-meta .author:hover {
-	text-decoration: none;
-	color: #090;
 }
 
 /*===========================*/
 /* COMMENT THREAD NAVIGATION */
 /*===========================*/
 
+a.comment-parent-link::after {
+	display: none;
+}
 a.comment-parent-link::before {
 	color: #bbb;
+	padding: 4px 3px 0 2px;
 }
 a.comment-parent-link:hover::before {
 	color: #999;
@@ -4249,61 +4264,95 @@ div > .MJXc-display {
 
 @media only screen and (max-width: 1440px) {
 	#hns-date-picker {
-		background-color: #d8d8d8;
+		right: -70px;
+		bottom: 64px;
+		background-color: #fff;
 		opacity: 1.0;
 	}
 	#hns-date-picker::before {
-		border: 1px solid #999;
-		border-width: 1px 0 1px 1px;
+		width: 56%;
+		border: 2px solid #000;
+		box-shadow: 0 0 0 1px #000;
+	}
+}
+@media only screen and (max-width: 1160px) {
+	#hns-date-picker {
+		bottom: 203px;
+		right: -24px;
+	}
+	#hns-date-picker::before {
+		width: 85%;
 	}
 }
 @media only screen and (max-width: 1080px) {
-	#text-size-adjustment-ui button {
-		border: 1px solid #999;
-		padding: 0 0 0 1px;
-		border-radius: 50%;
-		box-shadow: 
-			0 0 6px #999 inset,
-			0 0 0 1px transparent;
-	}
 	#theme-tweaker-toggle button {
 		border: 1px solid #999;
 		box-shadow: 
 			0 0 10px #999 inset,
 			0 0 0 1px transparent;
-		border-radius: 50%;
 		transform: scale(0.8);
+	}
+	#hns-date-picker {
+		right: -14px;
+	}
+	#hns-date-picker::before {
+		width: 92%;
+	}
+}
+@media only screen and (max-width: 1040px) {
+	#hns-date-picker {
+		right: -8px;
+	}
+	#hns-date-picker::before {
+		width: 94%;
 	}
 }
 @media only screen and (max-width: 1020px) {
-	#quick-nav-ui a {
-		box-shadow: 
-			0 0 0 1px #999,
-			0 0 0 2px transparent;
+	#hns-date-picker {
+		right: 19px;
+	}
+	#hns-date-picker::before {
+		width: 100%;
+	}
+	#quick-nav-ui {
+		background-color: #fff;
+		box-shadow: 0 9px 0 0px #fff;
 	}
 	#new-comment-nav-ui .new-comments-count::before {
-		background-color: #d8d8d8;
+		background-color: #fff;
 		box-shadow: 
-			0 0 0 1px #999,
-			0 0 0 2px transparent;
-		border-radius: 8px;
+			0 0 0 2px #000,
+			0 0 0 10px #fff;
 	}
 }
 @media only screen and (max-width: 1000px) {
+	#theme-selector,
+	#quick-nav-ui,
+	#new-comment-nav-ui,
+	#new-comment-nav-ui + #hns-date-picker,
+	#theme-tweaker-toggle button,
+	#text-size-adjustment-ui {
+		opacity: 1.0;
+	}
 	#theme-selector {
-		background-color: #d8d8d8;
-		box-shadow: 
-			0 0 0 1px #999,
-			0 0 0 2px transparent;
+		background-color: #fff;
+		border: 1px solid #000;
 	}
-	#text-size-adjustment-ui button {
-		background-color: #ddd;
+	#text-size-adjustment-ui {
+		background-color: #fff;
+		box-shadow: 0 0 0 1px #000;
+		padding: 2px 0 4px 0;
 	}
-	#text-size-adjustment-ui button:hover {
-		background-color: #eee;
+	#theme-tweaker-toggle {
+		left: -19px;
 	}
 	#theme-tweaker-toggle button {
-		background-color: #ddd;
+		background-color: #fff;
+		box-shadow: none;
+		border: 1px solid #000;
+	}
+	#theme-tweaker-toggle button:hover {
+		color: #777;
 	}
 }
 
