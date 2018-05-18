@@ -192,6 +192,17 @@ body {
 		0 0 0 5px #fff inset;
 }
 
+/*=========================*/
+/* TEXT SIZE ADJUSTMENT UI */
+/*=========================*/
+
+#text-size-adjustment-ui button:hover,
+#text-size-adjustment-ui button:active,
+#text-size-adjustment-ui button:focus {
+	box-shadow: none;
+	color: #777;
+}
+
 /*======================*/
 /* THEME TWEAKER TOGGLE */
 /*======================*/
@@ -253,10 +264,6 @@ body {
 #new-comment-nav-ui .new-comments-count::after {
 	font-weight: 600;
 	color: #777;
-}
-#new-comment-nav-ui .new-comment-sequential-nav-button:focus {
-	color: #d00;
-	text-shadow: <?php echo $white_glow; ?>;
 }
 #new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
 	color: #bbb;
@@ -568,6 +575,9 @@ h1.listing a[href^="http"] {
 .bottom-post-meta {
 	border-top: 1px dotted #000;
 }
+.post-meta a:hover {
+	text-decoration: dotted underline;
+}
 
 /*============*/
 /* LINK POSTS */
@@ -630,7 +640,6 @@ h1.listing a[href^="http"] {
 /*================================*/
 
 .comment-item input[id^="expand"] + label::after {
-	color: <?php echo $hyperlink_color; ?>;
 	font-weight: 600;
 }
 .comment-item input[id^="expand"] + label:hover::after {
@@ -686,9 +695,20 @@ div.comment-child-links a::first-letter {
 
 .comment-popup {
     border: 2px solid #000;
+    background-color: #fff;
 }
 .comment-popup .comment-body {
     font-size: 0.9375rem;
+}
+
+/*====================*/
+/* COMMENT PERMALINKS */
+/*====================*/
+
+.comment-meta .permalink,
+.comment-meta .lw2-link,
+.individual-thread-page .comment-parent-link:empty {
+	filter: grayscale(100%);
 }
 
 /*=======================*/
@@ -709,7 +729,6 @@ div.comment-child-links a::first-letter {
 		0 0 0 5px #000 inset;
 }
 #content.compact > .comment-thread .comment-item::after {
-	color: <?php echo $hyperlink_color; ?>;
 	background: linear-gradient(to right, transparent 0%, #fff 50%, #fff 100%);
 }
 #content.compact > .comment-thread .comment-item:hover .comment {
@@ -748,7 +767,6 @@ div.comment-child-links a::first-letter {
 }
 .comment-minimize-button:hover {
 	color: #aaa;
-	text-shadow: <?php echo $white_glow; ?>;
 }
 .comment-minimize-button::after {
 	font-size: 0.8125rem;
@@ -777,10 +795,11 @@ div.comment-child-links a::first-letter {
 .upvote.selected,
 .downvote:hover,
 .downvote.selected {
-	color: inherit;
+	color: inherit !important;
 }
 .vote:hover,
-.vote:active {
+.vote:active,
+.vote:focus {
 	box-shadow: none;
 }
 
@@ -813,7 +832,8 @@ div.comment-child-links a::first-letter {
 	border: none;
 }
 .posting-controls .action-button:hover,
-.posting-controls .action-button:active {
+.posting-controls .action-button:active,
+.posting-controls .action-button:focus {
 	box-shadow: none;
 	text-decoration: dotted underline;
 }
@@ -889,13 +909,6 @@ button.guiedit::after {
 
 /* Markdown hints */
 
-#markdown-hints-checkbox + label {
-	color: <?php echo $hyperlink_color; ?>;
-}
-#markdown-hints-checkbox + label:hover {
-	color: #e00;
-	text-shadow: <?php echo $white_glow; ?>;
-}
 .markdown-hints {
 	border: 1px solid #c00;
 	background-color: #ffa;
@@ -1108,12 +1121,8 @@ select {
 /* QUALIFIED HYPERLINKING */
 /*========================*/
 
-#aux-about-link a {
-	color: #777;
-}
 #aux-about-link a:hover {
-	opacity: 1.0;
-	text-shadow: <?php echo $white_glow; ?>;
+	color: #777;
 }
 
 .qualified-linking label:hover {
