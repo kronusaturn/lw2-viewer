@@ -1,6 +1,7 @@
 <?php
 	$UI_font = ($platform == 'Windows') ? "'Whitney', 'a_Avante'" : "'Concourse', 'a_Avante'";
 	$UI_font_smallcaps = ($platform == 'Windows') ? "'Whitney Smallcaps', 'a_Avante'" : "'Concourse Smallcaps', 'a_Avante'";
+	$text_font = "'Charter', 'Georgia', serif";
 	$hyperlink_color = "#00e";
 	$white_glow = "0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff";
 ?>
@@ -732,7 +733,7 @@ h1.listing + .post-meta::after {
 
 .post-body,
 .comment-body {
-	font-family: Charter, Georgia, serif;
+	font-family: <?php echo $text_font; ?>;
 }
 
 /*===========*/
@@ -1035,7 +1036,7 @@ div.comment-child-links a::first-letter {
 }
 
 .posting-controls textarea {
-	font-family: Charter, Georgia, serif;
+	font-family: <?php echo $text_font; ?>;
 	color: #000;
 	background-color: #fff;
 	border-color: #aaa;
@@ -1070,7 +1071,7 @@ div.comment-child-links a::first-letter {
     color: #050;
 }
 .guiedit-buttons-container button {
-	font-family: Font Awesome, Charter, Georgia, serif;
+	font-family: Font Awesome, <?php echo $text_font; ?>;
 }
 
 .guiedit::after {

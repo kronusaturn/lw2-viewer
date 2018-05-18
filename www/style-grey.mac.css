@@ -3712,7 +3712,7 @@ h1.listing + .post-meta .post-section::before {
 
 .post-body,
 .comment-body {
-	font-family: Source Sans Pro, Trebuchet MS, Helvetica, Arial, Verdana, sans-serif;
+	font-family: 'Source Sans Pro', 'Trebuchet MS', 'Helvetica', 'Arial', 'Verdana', sans-serif;
 	font-weight: 400;
 }
 @-moz-document url-prefix() {
@@ -4189,7 +4189,7 @@ div.comment-child-links a::first-letter {
 
 .posting-controls textarea {
 	font-weight: 400;
-	font-family: Source Sans Pro, Trebuchet MS, Helvetica, Arial, Verdana, sans-serif;
+	font-family: 'Source Sans Pro', 'Trebuchet MS', 'Helvetica', 'Arial', 'Verdana', sans-serif;
 	color: #000;
 	background-color: #fff;
 	border-color: #aaa;
@@ -4229,7 +4229,7 @@ div.comment-child-links a::first-letter {
     color: #050;
 }
 button.guiedit {
-	font-family: Font Awesome, Source Sans Pro, Trebuchet MS, Helvetica, Arial, Verdana, sans-serif;
+	font-family: Font Awesome, 'Source Sans Pro', 'Trebuchet MS', 'Helvetica', 'Arial', 'Verdana', sans-serif;
 }
 
 button.guiedit::after {
