@@ -79,9 +79,31 @@ body {
 	font-weight: inherit;
 }
 
+/* Inbox indicator */
+
+#inbox-indicator {
+	text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff;
+}
+
 /*==============*/
 /* PAGE TOOLBAR */
 /*==============*/
+
+.page-toolbar button,
+.page-toolbar button:hover,
+.page-toolbar button:active,
+.page-toolbar button:focus {
+	border: none;
+	box-shadow: none;
+}
+.page-toolbar a:hover,
+.page-toolbar button:hover {
+	text-decoration: dotted underline;
+}
+.page-toolbar a:active,
+.page-toolbar button:active {
+	transform: scale(0.9);
+}
 
 .rss::before {
 	filter: grayscale(100%);
@@ -121,41 +143,21 @@ body {
 /* SORT ORDER SELECTOR */
 /*=====================*/
 
-.sublevel-nav.sort .sublevel-item {
-	font-feature-settings: 'smcp';
-}
 .sublevel-nav.sort {
 	position: absolute;
 	top: 167px;
 	right: 30px;
-	border: 2px solid #bbb;
 	padding: 18px 0 0 0;
-	border-radius: 8px;
-	box-shadow: 0 18px #bbb inset;
+	border: 2px solid #000;
 }
 .sublevel-nav.sort::before {
 	text-transform: uppercase;
 	font-weight: 600;
-	color: #444;
-	text-shadow: 0.5px 0.5px 0 #fff;
 }
 .sublevel-nav.sort .sublevel-item {
-	border-radius: 0;
-	padding: 5px 6px;
-	border-color: #aaa;
-	border-style: solid;
+	padding: 6px 8px;
 	text-transform: uppercase;
-}
-.sublevel-nav.sort .sublevel-item:first-child {
-	border-radius: 6px 6px 0 0;
-	border-width: 1px;
-}
-.sublevel-nav.sort .sublevel-item:last-child {
-	border-radius: 0 0 6px 6px;
-	border-width: 0 1px 1px 1px;
-}
-.sublevel-nav.sort .sublevel-item:active {
-	border-color: #aaa;
+	border: none;
 }
 
 /*================*/
@@ -301,47 +303,23 @@ body {
 /*==========*/
 
 .archive-nav {
-	border: 1px solid #aaa;
+	border: 2px solid #000;
 }
 .archive-nav *[class^='archive-nav-item'] {
-	border-style: solid;
-	border-color: #ddd;
-	border-width: 1px 0 1px 1px;
-	background-color: #eee;
+	padding: 6px 4px 5px 7px;
 }
-.archive-nav div[class^='archive-nav-']:nth-of-type(2) *[class^='archive-nav-item'] {
-	border-top-width: 0;
-	border-bottom-width: 0;
-}
-.archive-nav div[class^='archive-nav-']:last-of-type *[class^='archive-nav-item'] {
-	border-bottom-width: 1px;
-}
-.archive-nav *[class^='archive-nav-item']:last-child {
-	border-right-width: 1px;
-}
-.archive-nav span[class^='archive-nav-item'] {
-	font-weight: bold;
-	background-color: #ddd;
-}
-
-.archive-nav a:link,
-.archive-nav a:visited {
-	color: rgba(0, 0, 238, 0.7);
-}
+.archive-nav span[class^='archive-nav-item'],
 .archive-nav a:hover {
-	text-decoration: none;
-	color: #c00;
-	background-color: #e0e0e0;
-	text-shadow: <?php echo $white_glow; ?>;
+	font-weight: bold;
+	box-shadow: 
+		0 0 0 1px #fff inset,
+		0 0 0 3px #000 inset;
 }
 .archive-nav a:active {
-	transform: scale(0.9);
-}
-.archive-nav a:focus:not(:hover) {
 	transform: none;
-}
-.archive-nav a.archive-nav-item-day:hover {
-	background-color: #ddd;
+	box-shadow: 
+		0 0 0 3px #fff inset,
+		0 0 0 5px #000 inset;
 }
 
 /*==========*/
@@ -443,7 +421,7 @@ h1.listing a[href^="http"] {
 	top: 0;
 	left: 0;
 	width: 100%;
-	height: calc(100% + 1.375em);
+	height: calc(100% + 1.25em);
 	box-shadow: 0px 0px 10px #555;
 }
 #content.user-page h1.listing + .post-meta {
@@ -556,6 +534,10 @@ h1.listing a[href^="http"] {
 .comment-body a:hover {
 	color: #999;
 }
+.post-meta a:hover,
+.comment-meta a:hover {
+	text-decoration: dotted underline;
+}
 
 /*===========*/
 /* POST-META */
@@ -574,9 +556,6 @@ h1.listing a[href^="http"] {
 }
 .bottom-post-meta {
 	border-top: 1px dotted #000;
-}
-.post-meta a:hover {
-	text-decoration: dotted underline;
 }
 
 /*============*/
@@ -719,6 +698,7 @@ div.comment-child-links a::first-letter {
 	box-shadow:
 		0 0 0 4px #fff inset,
 		0 0 0 5px #000 inset;
+	border: none;
 }
 #comments-list-mode-selector button:hover,
 #comments-list-mode-selector button.selected {
@@ -733,7 +713,7 @@ div.comment-child-links a::first-letter {
 }
 #content.compact > .comment-thread .comment-item:hover .comment {
 	background-color: #fff;
-	outline: 3px solid #00c;
+	outline: 3px solid #000;
 }
 #content.compact > .comment-thread .comment-item:hover .comment::before {
 	background-color: #fff;
@@ -764,6 +744,7 @@ div.comment-child-links a::first-letter {
 
 .comment-minimize-button {
 	color: #ccc;
+	font-family: Font Awesome, <?php echo $UI_font; ?>;
 }
 .comment-minimize-button:hover {
 	color: #aaa;

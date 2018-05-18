@@ -1,11 +1,5 @@
-#top-nav-bar a:hover {
-	color: #777;
-}
 .rss:hover {
 	text-decoration: dotted underline;
-}
-.nav-bar:nth-of-type(2) {
-	border-bottom: 2px solid #000;
 }
 .post-meta {
 	overflow: hidden;
@@ -49,50 +43,10 @@ a.comment-parent-link::before {
 }
 
 
-#theme-tweaker-toggle button:hover {
-	text-decoration: none;
-}
 button.guiedit:hover {
 	text-decoration: none;
 }
 
-
-
-
-
-.archive-nav {
-	border: 2px solid #000;
-}
-.archive-nav *[class^='archive-nav-item'] {
-	background-color: transparent;
-	border: none;
-	padding: 6px 4px 5px 7px;
-}
-.archive-nav a:link,
-.archive-nav a:visited {
-	color: inherit;
-}
-.archive-nav span[class^="archive-nav-item"],
-.archive-nav a:hover {
-	background-color: transparent;
-	box-shadow: 
-		0 0 0 1px #fff inset,
-		0 0 0 3px #000 inset;
-}
-.archive-nav a:active {
-	transform: none;
-	box-shadow: 
-		0 0 0 3px #fff inset,
-		0 0 0 5px #000 inset;
-}
-.archive-nav span.archive-nav-item-day,
-.archive-nav a.archive-nav-item-day:hover {
-	background-color: transparent;
-} 
-.archive-nav .archive-nav-item-day:first-child,
-.archive-nav a.archive-nav-item-day:first-child:hover {
-	padding-left: 6px;
-}
 
 
 #edit-post-form input[name='title'] {
