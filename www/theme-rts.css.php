@@ -1,8 +1,7 @@
 <?php
 	$UI_font = "'Proxima Nova', sans-serif";
 	$text_font = "'Garamond Premier Pro', 'Georgia', serif";
-	$hyperlink_color = "#00e";
-	$white_glow = "0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff";
+	$hyperlink_color = "#888";
 ?>
 
 /******************************/
@@ -34,16 +33,6 @@ a.nav-inner,
 #nav-item-search button {
 	font-weight: <?php echo ($platform == 'Mac') ? '200' : '300'; ?>;
 	color: #888;
-}
-
-
-.nav-bar a:visited {
-	color: <?php echo $hyperlink_color; ?>;
-}
-.nav-bar a:hover,
-.nav-bar a:focus {
-	text-decoration: none;
-	text-shadow: <?php echo $white_glow; ?>;
 }
 
 /* Accesskey hints */
@@ -444,6 +433,7 @@ h1.listing a[href^="http"] {
 }
 h1.listing a[href^='/'] {
 	font-family: <?php echo $text_font; ?>;
+	text-decoration: none;
 	color: #690010;
 	font-weight: 500;
 	text-shadow: 0.5px 0.5px 0.5px #de7069;
@@ -453,7 +443,6 @@ h1.listing a[href^='/'] {
 @media only screen and (hover: hover) {
 	h1.listing a:hover,
 	h1.listing a:focus {
-		color: #777;
 		text-shadow: 
 			0px 0px 0.5px #ff987b, 
 			0px 0px 1.5px #c05651,
@@ -478,7 +467,6 @@ h1.listing a[href^='/'] {
 @-moz-document url-prefix() {
 	h1.listing a:hover,
 	h1.listing a:focus {
-		color: #777;
 		text-shadow: 
 			0px 0px 0.5px #ff987b, 
 			0px 0px 1.5px #c05651,
@@ -505,140 +493,6 @@ h1.listing a[href^='/'] {
 /* LISTING POST-META */
 /*===================*/
 
-
-h1.listing + .post-meta .karma-value,
-h1.listing + .post-meta .comment-count,
-h1.listing + .post-meta .lw2-link,
-h1.listing + .post-meta .read-time {
-	border-radius: 4px;
-	padding: 0 4px 0 2px;
-	text-shadow: 0.5px 0.5px 0.5px #999;
-	margin: 0 0.25em 0 0.5em;
-	position: absolute;
-	line-height: 1.15;
-	top: 12px;
-}
-h1.listing + .post-meta .karma-value span,
-h1.listing + .post-meta .comment-count span,
-h1.listing + .post-meta .lw2-link span,
-h1.listing + .post-meta .read-time span {
-	display: none;
-}
-h1.listing + .post-meta .karma-value::before,
-h1.listing + .post-meta .comment-count::before,
-h1.listing + .post-meta .lw2-link::before,
-h1.listing + .post-meta .read-time::before {
-	color: #fff;
-	font-family: Font Awesome;
-	font-weight: 900;
-	margin: 0 8px 0 0;
-	box-shadow: 0 0 0 2px #ddd;
-}
-
-h1.listing + .post-meta .karma-value {
-	box-shadow: 
-		22px 0 0 0 #ddd inset,
-		0 0 0 3px #ddd;
-	cursor: default;
-	color: #c00;
-	right: 248px;
-}
-h1.listing + .post-meta .karma-value::before {
-	content: "\F139";
-	text-shadow: none;
-    font-size: 0.9375em;
-    line-height: 1.3;
-}
-
-h1.listing + .post-meta .comment-count::before {
-	content: "\F086";
-}
-h1.listing + .post-meta .comment-count {
-	box-shadow: 
-		25px 0 0 0 #ddd inset,
-		0 0 0 3px #ddd;
-	color: #009100;
-	right: 176px;
-}
-h1.listing + .post-meta .comment-count:hover {
-	text-decoration: none;
-	color: #fff;
-	background-color: #009100;
-}
-h1.listing + .post-meta .comment-count:hover::before {
-	color: #009100;
-}
-h1.listing + .post-meta .comment-count.new-comments::before {
-	color: #009100;
-	text-shadow: 0.5px 0.5px 0.5px #fff;
-}
-h1.listing + .post-meta .comment-count.new-comments:hover::before {
-	text-shadow: 0.5px 0.5px 0.5px #999;
-}
-
-
-h1.listing + .post-meta .lw2-link {
-	box-shadow: 
-		23px 0 0 0 #ddd inset,
-		0 0 0 3px #ddd;
-	right: 0;
-}
-h1.listing + .post-meta .lw2-link::before {
-	content: "\F0C1";
-}
-h1.listing + .post-meta .lw2-link:hover {
-	text-decoration: none;
-	color: #fff;
-	background-color: #00f;
-}
-h1.listing + .post-meta .lw2-link:hover::before {
-	color: #00f;
-}
-
-h1.listing + .post-meta .read-time {
-	box-shadow: 
-		21px 0 0 0 #ddd inset,
-		0 0 0 3px #ddd;
-	right: 80px;
-}
-h1.listing + .post-meta .read-time::before {
-	content: "\F2F2";
-	cursor: pointer;
-}
-h1.listing + .post-meta .read-time::after {
-	content: " min";
-}
-h1.listing + .post-meta .read-time:hover::before {
-	color: #777;
-}
-
-h1.listing + .post-meta .word-count {
-	box-shadow: 
-		22px 0 0 0 #ddd inset,
-		0 0 0 3px #ddd;
-	padding: 0 4px 0 4px;
-}
-h1.listing + .post-meta .word-count::before {
-	content: "\F15C";
-	margin: 0 10px 0 0;
-}
-h1.listing + .post-meta .read-time.word-count::after {
-	content: none;
-}
-
-h1.listing + .post-meta .link-post-domain {
-	margin: 0 0 0 0.5em;
-}
-
-h1.listing + .post-meta::after {
-	content: "";
-	display: block;
-	height: 1px;
-	width: calc(100% + 320px);
-	background-color: #ddd;
-	position: relative;
-	top: 14px;
-}
 h1.listing + .post-meta .post-section::before {
 	left: unset;
 }
@@ -800,7 +654,8 @@ h1.listing + .post-meta .post-section::before {
 /* POST-META */
 /*===========*/
 
-.post-meta {
+.post-meta,
+h1.listing + .post-meta {
 	text-align: center;
 	font-weight: <?php echo ($platform == 'Mac') ? '300' : '400'; ?>;
 }
@@ -1249,10 +1104,7 @@ a {
 	color: <?php echo $hyperlink_color; ?>;
 }
 a:visited {
-	color: #551a8b;
-}
-a:hover {
-	text-decoration: underline;
+	color: <?php echo $hyperlink_color; ?>;
 }
 
 /*=========*/
