@@ -453,14 +453,12 @@ h1.listing a[href^='/'] {
 			0.5px 0.5px 0.5px #de7069;
 		background-color: rgba(255,255,255,0.85);
 	}	
-	#content.user-page h1.listing:focus-within::before {
+	h1.listing:focus-within::before {
 		display: inline-block;
 		vertical-align: top;
 		position: relative;
 		left: -0.25em;
-	}
-	h1.listing:focus-within::before {
-	color: #690010;
+		color: #690010;
 	}
 	h1.listing a[href^="http"]:hover {
 		color: #690010;
@@ -480,13 +478,11 @@ h1.listing a[href^='/'] {
 			0.5px 0.5px 0.5px #de7069;
 		background-color: rgba(255,255,255,0.85);
 	}	
-	#content.user-page h1.listing:focus-within::before {
+	h1.listing:focus-within::before {
 		display: inline-block;
 		vertical-align: top;
 		position: relative;
 		left: -0.25em;
-	}
-	h1.listing:focus-within::before {
 		color: #690010;
 	}
 	h1.listing a[href^="http"]:hover {
