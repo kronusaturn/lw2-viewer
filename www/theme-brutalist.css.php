@@ -43,7 +43,7 @@ body {
 	font-size: 1em;
 }
 
-.nav-current .nav-inner,
+.nav-current:not(#nav-item-search) .nav-inner,
 .nav-bar a.nav-inner:hover {
 	box-shadow: 
 		0 0 0 4px #fff inset,
