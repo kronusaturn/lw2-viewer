@@ -1,5 +1,6 @@
 <?php
 	$UI_font = "'Proxima Nova'";
+	$text_font = "'Raleway', 'Helvetica', 'Arial', 'Verdana', sans-serif;";
 	$hyperlink_color = "#f60";
 	$white_glow = "0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff";
 ?>
@@ -366,7 +367,7 @@ h1.listing:first-of-type {
 	margin-top: 1.5em;
 }
 h1.listing a[href^='/'] {
-	font-family: Raleway, Helvetica, Arial, Verdana, sans-serif;
+	font-family: <?php echo $text_font; ?>;
 	font-weight: <?php global $platform; echo ($platform == 'Mac' ? '100' : '200'); ?>;
 	text-shadow: 
 		0px 0px 1px #777,
@@ -550,7 +551,7 @@ h1.listing + .post-meta .post-section::before {
 
 .post-body,
 .comment-body {
-	font-family: Raleway, Helvetica, Arial, Verdana, sans-serif;
+	font-family: <?php echo $text_font; ?>;
 	font-weight: <?php global $platform; echo ($platform == 'Mac' ? '300' : '400'); ?>;
 	color: #000;
 	text-shadow: 
@@ -591,7 +592,7 @@ h1.listing + .post-meta .post-section::before {
 
 .post > h1:first-child {
 	margin: 1.1em 0 0.25em 0;
-	font-family: Raleway, Helvetica, Arial, Verdana, sans-serif;
+	font-family: <?php echo $text_font; ?>;
 	font-weight: <?php global $platform; echo ($platform == 'Mac' ? '100' : '200'); ?>;
 	color: #000;
 	font-size: 3em;
@@ -983,7 +984,7 @@ div.comment-child-links a::first-letter {
 
 .posting-controls textarea {
 	font-weight: 300;
-	font-family: Raleway, Helvetica, Arial, Verdana, sans-serif;
+	font-family: <?php echo $text_font; ?>;
 	color: #000;
 	background-color: transparent;
 	border-color: #999;

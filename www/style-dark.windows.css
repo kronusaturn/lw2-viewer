@@ -3828,7 +3828,7 @@ h1.listing + .post-meta::after {
 
 .post-body,
 .comment-body {
-	font-family: Charter, Georgia, serif;
+	font-family: 'Charter', 'Georgia', serif;
 }
 
 /*===========*/
@@ -4179,7 +4179,7 @@ div.comment-child-links a::first-letter {
 }
 
 .posting-controls textarea {
-	font-family: Charter, Georgia, serif;
+	font-family: 'Charter', 'Georgia', serif;
 	color: #fff;
 	background-color: #000;
 	border-color: #484848;
@@ -4214,7 +4214,7 @@ div.comment-child-links a::first-letter {
     color: #ce92ee;
 }
 .guiedit-buttons-container button {
-	font-family: Font Awesome, Charter, Georgia, serif;
+	font-family: Font Awesome, 'Charter', 'Georgia', serif;
 }
 
 .guiedit::after {

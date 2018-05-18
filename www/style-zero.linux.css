@@ -3646,7 +3646,7 @@ h1.listing + .post-meta .karma-value {
 
 .post-body,
 .comment-body {
-	font-family: News Gothic BT, Helvetica, sans-serif;
+	font-family: 'News Gothic BT', 'Helvetica', sans-serif;
 }
 
 /*=======*/
@@ -4012,7 +4012,7 @@ div.comment-child-links a::first-letter {
 }
 
 .posting-controls textarea {
-	font-family: News Gothic BT, Helvetica, sans-serif;
+	font-family: 'News Gothic BT', 'Helvetica', sans-serif;
 	color: #000;
 }
 .posting-controls .textarea-container:focus-within .guiedit-buttons-container {
@@ -4044,7 +4044,7 @@ div.comment-child-links a::first-letter {
     color: #050;
 }
 .guiedit-buttons-container button {
-	font-family: Font Awesome, News Gothic BT, Helvetica, sans-serif;
+	font-family: Font Awesome, 'News Gothic BT', 'Helvetica', sans-serif;
 }
 
 .guiedit::after {

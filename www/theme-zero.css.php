@@ -1,5 +1,6 @@
 <?php
 	$UI_font = "Trade Gothic, Helvetica, sans-serif";
+	$text_font = "'News Gothic BT', 'Helvetica', sans-serif";
 	$hyperlink_color = "#00e";
 	$white_glow = "0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff";
 ?>
@@ -549,7 +550,7 @@ h1.listing + .post-meta .karma-value {
 
 .post-body,
 .comment-body {
-	font-family: News Gothic BT, Helvetica, sans-serif;
+	font-family: <?php echo $text_font; ?>;
 }
 
 /*=======*/
@@ -867,7 +868,7 @@ div.comment-child-links a::first-letter {
 }
 
 .posting-controls textarea {
-	font-family: News Gothic BT, Helvetica, sans-serif;
+	font-family: <?php echo $text_font; ?>;
 	color: #000;
 }
 .posting-controls .textarea-container:focus-within .guiedit-buttons-container {
@@ -899,7 +900,7 @@ div.comment-child-links a::first-letter {
     color: #050;
 }
 .guiedit-buttons-container button {
-	font-family: Font Awesome, News Gothic BT, Helvetica, sans-serif;
+	font-family: Font Awesome, <?php echo $text_font; ?>;
 }
 
 .guiedit::after {
