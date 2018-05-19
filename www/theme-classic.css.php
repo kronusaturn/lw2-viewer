@@ -1039,6 +1039,9 @@ div.comment-child-links a::first-letter {
 	overflow: hidden;
 	margin-right: 0.375em;
 }
+.comment-controls .cancel-comment-button::before {
+	font-size: 1.25em;
+}
 .comment-controls .cancel-comment-button:hover {
 	color: #f00;
 }
@@ -1077,6 +1080,7 @@ div.comment-child-links a::first-letter {
 
 .posting-controls textarea {
 	font-family: <?php echo $text_font; ?>;
+	font-size: 1rem;
 	color: #000;
 	background-color: #fff;
 	border-color: #aaa;
