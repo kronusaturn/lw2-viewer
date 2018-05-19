@@ -1,34 +1,5 @@
 document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='hide-bottom-bar'>#bottom-bar { display: none }</style>");
 
-function setTheme(themeName) {
-	if (typeof(themeName) == 'undefined') {
-		themeName = window.localStorage.getItem('selected-theme');
-		if (!themeName) return;
-	} else {
-		if (themeName == 'default') window.localStorage.removeItem('selected-theme');
-		else window.localStorage.setItem('selected-theme', themeName);
-	}
-	
-	let styleSheetNameSuffix = (themeName == 'default') ? '' : ('-' + themeName);
-	let currentStyleSheetNameComponents = /style[^\.]*(\..+)$/.exec(document.querySelector("head link[href*='.css']").href);
-	
-	let newStyle = document.createElement('link');
-	newStyle.setAttribute('rel', 'stylesheet');
-	newStyle.setAttribute('href', '/style' + styleSheetNameSuffix + currentStyleSheetNameComponents[1]);
-	
-	let oldStyle = document.querySelector("head link[href*='.css']");
-	newStyle.addEventListener('load', function() { oldStyle.parentElement.removeChild(oldStyle); });
-	document.querySelector('head').insertBefore(newStyle, oldStyle.nextSibling);
-	
-	if (themeName == 'dark') {
-		document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='dark-theme-adjustments'>" + 
-		`.markdown-reference-link a::before { filter: invert(100%); }` + "</style>");
-	} else {
-		document.querySelectorAll("#dark-theme-adjustments").forEach(function(e) {e.parentNode.removeChild(e)});
-	}
-}
-setTheme();
-
 function setContentWidth(widthString) {
 	if (!widthString) return;
 	let widthAdjustStyle = document.querySelector('#width-adjust');

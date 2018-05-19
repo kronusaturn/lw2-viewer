@@ -1,7 +1,15 @@
 /***********/
 /* COOKIES */
 /***********/
-
+function setCookie(name,value,days) {
+	var expires = "";
+	if (days) {
+		var date = new Date();
+		date.setTime(date.getTime() + (days*24*60*60*1000));
+		expires = "; expires=" + date.toUTCString();
+	}
+	document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+}
 function readCookie(name) {
 	var nameEQ = name + "=";
 	var ca = document.cookie.split(';');
@@ -559,7 +567,7 @@ function injectThemeSelector() {
 			font-weight: 400;
 		}` + "</style>");
 
-	let currentTheme = window.localStorage.getItem("selected-theme") || "default";
+	let currentTheme = readCookie("theme") || "default";
 	let themeOptions = [
 		['default', 'Default theme (dark text on light background)', 'A'],
 		['dark', 'Dark theme (light text on dark background)', 'B'],
@@ -603,6 +611,33 @@ function setSelectedTheme(themeName) {
 	// Update theme tweaker font size selector sample text font.
 	setTimeout(function() { updateThemeTweakerTextSizeAdjustSampleText(); }, 50);	
 }
+function setTheme(themeName) {
+	if (typeof(themeName) == 'undefined') {
+		themeName = readCookie('theme');
+		if (!themeName) return;
+	} else {
+		if (themeName == 'default') setCookie('theme', '');
+		else setCookie('theme', themeName);
+	}
+	
+	let styleSheetNameSuffix = (themeName == 'default') ? '' : ('-' + themeName);
+	let currentStyleSheetNameComponents = /style[^\.]*(\..+)$/.exec(document.querySelector("head link[href*='.css']").href);
+	
+	let newStyle = document.createElement('link');
+	newStyle.setAttribute('rel', 'stylesheet');
+	newStyle.setAttribute('href', '/style' + styleSheetNameSuffix + currentStyleSheetNameComponents[1]);
+	
+	let oldStyle = document.querySelector("head link[href*='.css']");
+	newStyle.addEventListener('load', function() { oldStyle.parentElement.removeChild(oldStyle); });
+	document.querySelector('head').insertBefore(newStyle, oldStyle.nextSibling);
+	
+	if (themeName == 'dark') {
+		document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='dark-theme-adjustments'>" + 
+		`.markdown-reference-link a::before { filter: invert(100%); }` + "</style>");
+	} else {
+		document.querySelectorAll("#dark-theme-adjustments").forEach(function(e) {e.parentNode.removeChild(e)});
+	}
+}
 
 /********************************************/
 /* APPEARANCE CUSTOMIZATION (THEME TWEAKER) */
@@ -618,7 +653,7 @@ function injectThemeTweaker() {
 		<button type='button' class='minimize-button minimize' tabindex='-1'></button>
 		<button type='button' class='help-button' tabindex='-1'></button>
 		<p class='current-theme'>Current theme: <span>` + 
-		(window.localStorage.getItem("selected-theme") || "default") + 
+		(readCookie("theme") || "default") + 
 		`</span></p>
 		<p class='theme-selector'></p>
 		<div class='controls-container'>
@@ -726,7 +761,7 @@ function toggleThemeTweakerUI() {
 		}`;
 	if (themeTweakerUI.style.display != "none") {
 		// Save selected theme.
-		window.currentTheme = (window.localStorage.getItem("selected-theme") || "default");
+		window.currentTheme = (readCookie("theme") || "default");
 		// Focus invert checkbox.
 		document.querySelector("#theme-tweaker-ui #theme-tweak-control-invert").focus();
 		// Show sample text in appropriate font.
@@ -746,7 +781,7 @@ function setSearchBoxTabSelectable(selectable) {
 	document.querySelector("input[type='search'] + button").tabIndex = selectable ? "" : "-1";
 }
 function themeTweakerToggleButtonClicked(event) {
-	document.querySelector("#theme-tweaker-ui .current-theme span").innerText = (window.localStorage.getItem("selected-theme") || "default");
+	document.querySelector("#theme-tweaker-ui .current-theme span").innerText = (readCookie("theme") || "default");
 	
 	document.querySelector("#theme-tweak-control-invert").checked = (window.currentFilters['invert'] == "100%");	
 	[ "saturate", "brightness", "contrast", "hue-rotate" ].forEach(function (sliderName) {
@@ -862,7 +897,7 @@ function themeTweakReset() {
 	setTextZoom(window.currentTextZoom);
 }
 function themeTweakSave() {
-	window.currentTheme = (window.localStorage.getItem("selected-theme") || "default");
+	window.currentTheme = (readCookie("theme") || "default");
 	window.localStorage.setItem("theme-tweaks", JSON.stringify(window.currentFilters));
 	window.localStorage.setItem("text-zoom", window.currentTextZoom);
 }
@@ -1185,6 +1220,13 @@ function earlyInitialize() {
 		return;
 	}
 	earlyInitializeDone = true;
+
+	// Backward compatibility
+	let storedTheme = window.localStorage.getItem('selected-theme');
+	if(storedTheme) {
+		setTheme(storedTheme);
+		window.localStorage.removeItem('selected-theme');
+	}
 
 	// Add the content width selector.
 	injectContentWidthSelector();

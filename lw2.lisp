@@ -462,20 +462,25 @@
     t)) 
 
 (defun generate-css-link ()
-  (generate-versioned-link (let ((ua (hunchentoot:header-in* :user-agent)))
-                             (cond ((search "Windows" ua) "/style.windows.css")
-                                   ((or (search "Linux" ua) (search "CrOS" ua) (search "Android" ua)) "/style.linux.css")
-                                   (t "/style.mac.css")))))
+  (generate-versioned-link (let* ((ua (hunchentoot:header-in* :user-agent))
+                                  (theme (hunchentoot:cookie-in "theme"))
+                                  (os (cond ((search "Windows" ua) "windows")
+                                            ((search "Macintosh" ua) "mac")
+                                            (t "linux"))))
+                             (format nil "/style~@[-~A~].~A.css" (if (and theme (> (length theme) 0)) theme) os))))
 
 (defun begin-html (out-stream &key title description current-uri content-class robots)
   (let* ((session-token (hunchentoot:cookie-in "session-token"))
          (csrf-token (and session-token (make-csrf-token session-token)))) 
-    (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"stylesheet\" href=\"~A\"><style id='width-adjust'></style><link rel=\"shortcut icon\" href=\"~A\">"
+    (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"stylesheet\" href=\"~A\"><style id='width-adjust'></style><link rel=\"shortcut icon\" href=\"~A\">~A"
             (if title (encode-entities title)) description
             *html-head*
             (generate-css-link)
             (generate-versioned-link "/theme_tweaker.css")
-            (generate-versioned-link "/favicon.ico"))
+            (generate-versioned-link "/favicon.ico")
+            (if (string= (hunchentoot:cookie-in "theme") "dark")
+                "<style id='dark-theme-adjustments'>.markdown-reference-link a::before { filter: invert(100%); }</style>"
+                ""))
     (if *current-auth-token*
         (format out-stream "<script>loggedInUserId=\"~A\"</script>" (logged-in-userid)))
     (format out-stream "<script src=\"~A\" async></script><script src=\"~A\" async></script><script>~A</script>~@[<script>var csrfToken=\"~A\"</script>~]~@[<meta name=\"robots\" content=\"~A\">~]</head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
