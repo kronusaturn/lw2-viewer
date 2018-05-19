@@ -704,13 +704,11 @@ h1.listing + .post-meta span.post-section::before {
 	font-weight: bold;
 	font-size: 0.8125rem;
 	border-radius: 1em;
-	padding: 5px 6px 1px 6px;
+	padding: 2px 6px;
 	text-align: center;
 	min-width: 1.75em;
 	display: inline-block;
 	float: left;
-	position: relative;
-	top: -4px;
 	margin: 0 0.5em 0 0;
 }
 .post .post-meta .karma-value span,
@@ -728,11 +726,11 @@ h1.listing + .post-meta span.post-section::before {
 
 .post .post-meta span.post-section::before {
 	position: absolute;
-	top: -2px;
+	top: 1px;
 	left: 0;
 }
 .post .bottom-post-meta span.post-section::before {
-	top: 19px;
+	top: 21px;
 }
 
 /*============*/
@@ -1408,6 +1406,7 @@ select {
 	background-color: #eee;
 	border: 1px solid #ccc;
 	border-radius: 4px;
+	padding: 2px 12px;
 }
 .qualified-linking-toolbar a:visited {
 	color: <?php echo $hyperlink_color; ?>;
