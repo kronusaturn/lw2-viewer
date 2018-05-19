@@ -24,30 +24,15 @@ body {
 /*=========*/
 
 .nav-inner {
-	font-size: 1.375em;
-	font-weight: 600;
+	font-size: 1.25em;
+	font-weight: bold;
+	padding: 14px 30px 10px 30px;;
 }
 #secondary-bar .nav-inner {
-	font-size: 1em;
+	font-size: 0.875em;
 }
-
-.nav-bar .nav-item:not(.nav-current):not(#nav-item-search):hover,
-#bottom-bar a:hover,
-#nav-item-search:not(.nav-current):focus-within {
-	background-color: #ddd;
-}
-.inactive-bar .nav-item:not(.nav-current):not(#nav-item-search):hover,
-.inactive-bar #nav-item-search:not(.nav-current):focus-within {
-	background-color: #d8d8d8;
-}
-
-.nav-bar a:visited {
-	color: <?php echo $hyperlink_color; ?>;
-}
-.nav-bar a:hover,
-.nav-bar a:focus {
-	text-decoration: none;
-	text-shadow: <?php echo $white_glow; ?>;
+#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
+	padding: 8px 0 0 0;
 }
 
 /* Accesskey hints */
@@ -56,13 +41,10 @@ body {
 	display: block;
 	position: absolute;
 	left: 5px;
-	top: -2px;
-	font-weight: 400;
+	top: 0;
+	font-weight: normal;
 	font-size: 0.7em;
 	color: #d8d8d8;
-}
-.inactive-bar .nav-inner::after {
-	color: #ccc;
 }
 .nav-inner:hover::after {
 	color: #bbb;
@@ -70,85 +52,49 @@ body {
 
 /* This makes the navbar items look like tabs: */
 
-.nav-inactive {
-	box-shadow: 
-		 0 -1px #d8d8d8 inset,
-		 1px 0 #fff inset;
-}
-.nav-inactive:first-child {
-	box-shadow: 0 -1px #d8d8d8 inset;
-}
-.inactive-bar .nav-inactive {
-	background-color: #e4e4e4;
-}
-.active-bar .nav-inactive {
-	background-color: #eee;
-}
 .active-bar {
 	position: relative;
 }
-
-/* For Webkit: */
-.active-bar {
-	box-shadow: 0 -3px 8px -2px #ccc;
+.nav-bar {
+	background-color: #f5f5f5;
 }
-.active-bar .nav-inactive {
-	box-shadow: 
-		0 -4px 8px -4px #bbb inset,
-		1px 0 #fff inset;
+.nav-bar {
+	border-bottom: 1px solid #d6d5d6;
 }
-.active-bar .nav-inactive:first-child {
-	box-shadow: 
-		0 -4px 8px -4px #bbb inset;
+.nav-bar a,
+.nav-bar a:visited {
+	color: #999;
 }
-.active-bar .nav-current + .nav-inactive {
-	box-shadow: 
-		5px -4px 8px -4px #bbb inset;
+.nav-bar a:hover {
+	color: #777;
+	text-decoration: none;
 }
-.active-bar .nav-item-last-before-current {
-	box-shadow: 
-		-5px -4px 8px -4px #bbb inset,
-		1px 0 #fff inset;
+.nav-bar .nav-current {
+	color: #666;
 }
-.active-bar .nav-item-last-before-current:first-child {
-	box-shadow: 
-		-5px -4px 8px -4px #bbb inset;
-}
-/* And for Gecko: */
-@-moz-document url-prefix() {
-	.active-bar {
-		box-shadow: 0 -3px 4px -2px #ccc;
-	}
-
-	.active-bar .nav-inactive {
-		box-shadow: 
-			0 -4px 4px -4px #bbb inset,
-			1px 0 #fff inset;
-	}
-	.active-bar .nav-inactive:first-child {
-		box-shadow: 
-			0 -4px 4px -4px #bbb inset;
-	}
-	.active-bar .nav-current + .nav-inactive {
-		box-shadow: 
-			5px -4px 4px -4px #bbb inset;
-	}
-	.active-bar .nav-item-last-before-current {
-		box-shadow: 
-			-5px -4px 4px -4px #bbb inset,
-			1px 0 #fff inset;
-	}
-	.active-bar .nav-item-last-before-current:first-child {
-		box-shadow: 
-			-5px -4px 4px -4px #bbb inset;
-	}
+.nav-item:nth-of-type(n+2) {
+	box-shadow: -9px 0 0 -8px #d6d5d6;
 }
 
 /* Search tab */
 
+#nav-item-search form::before {
+	position: relative;
+	top: 2px;
+	opacity: 0.3;
+}
 #nav-item-search button {
 	border: none;
 	font-weight: inherit;
+	position: relative;
+	top: 3px;
+}
+
+/* User/login tab */
+
+#inbox-indicator::before {
+	top: 1px;
+	color: #ccc;
 }
 
 /*==============*/
@@ -201,9 +147,6 @@ body {
 /* SORT ORDER SELECTOR */
 /*=====================*/
 
-.sublevel-nav.sort .sublevel-item {
-	font-family: <?php echo $UI_font_smallcaps; ?>;
-}
 .sublevel-nav.sort {
 	position: absolute;
 	top: 167px;
@@ -318,7 +261,6 @@ body {
 }
 #new-comment-nav-ui .new-comment-sequential-nav-button:focus {
 	color: #d00;
-	text-shadow: <?php echo $white_glow; ?>;
 }
 #new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
 	color: #bbb;
@@ -401,7 +343,6 @@ body {
 	text-decoration: none;
 	color: #c00;
 	background-color: #e0e0e0;
-	text-shadow: <?php echo $white_glow; ?>;
 }
 .archive-nav a:active {
 	transform: scale(0.9);
@@ -962,7 +903,6 @@ div.comment-child-links a::first-letter {
 }
 .comment-minimize-button:hover {
 	color: #aaa;
-	text-shadow: <?php echo $white_glow; ?>;
 }
 .comment-minimize-button::after {
 	font-family: <?php echo $UI_font; ?>;
@@ -1013,7 +953,6 @@ div.comment-child-links a::first-letter {
 }
 .comment-controls .cancel-comment-button:hover {
 	color: #f00;
-	text-shadow: <?php echo $white_glow; ?>;
 }
 
 .new-comment-button {
@@ -1084,7 +1023,6 @@ div.comment-child-links a::first-letter {
 }
 #markdown-hints-checkbox + label:hover {
 	color: #e00;
-	text-shadow: <?php echo $white_glow; ?>;
 }
 .markdown-hints {
 	border: 1px solid #c00;
@@ -1149,14 +1087,14 @@ div.comment-child-links a::first-letter {
 /*=======*/
 
 a {
-	text-decoration: none;
+	text-decoration: underline;
 	color: <?php echo $hyperlink_color; ?>;
 }
 a:visited {
-	color: #551a8b;
+	color: #8a8a8b;
 }
 a:hover {
-	text-decoration: underline;
+	color: #3d3d3e;
 }
 
 /*=========*/
@@ -1173,7 +1111,6 @@ input[type='submit']:hover,
 button:focus,
 input[type='submit']:focus {
 	color: #d00;
-	text-shadow: <?php echo $white_glow; ?>;
 }
 button:active,
 input[type='submit']:active {
@@ -1185,7 +1122,6 @@ input[type='submit']:active {
 }
 .button:hover {
 	color: #d00;
-	text-shadow: <?php echo $white_glow; ?>;
 	text-decoration: none;
 }
 .button:active {
@@ -1219,7 +1155,6 @@ input[type='submit']:active {
 .comment-body h5,
 .comment-body h6 {
 	font-weight: 600;
-	font-family: <?php echo $UI_font_smallcaps; ?>;
 }
 .post-body h6,
 .comment-body h6 {
@@ -1324,7 +1259,6 @@ select {
 }
 #aux-about-link a:hover {
 	opacity: 1.0;
-	text-shadow: <?php echo $white_glow; ?>;
 }
 
 .qualified-linking label {
@@ -1352,7 +1286,6 @@ select {
 .qualified-linking-toolbar a:hover {
 	text-decoration: none;
 	background-color: #ddd;
-	text-shadow: <?php echo $white_glow; ?>;
 }
 
 /*======*/
