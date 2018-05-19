@@ -869,10 +869,26 @@ a.comment-parent-link::after {
 	color: #999;
 	font-style: italic;
 }
+.comment-meta .date:hover {
+	color: #777;
+}
 .comment-meta .karma-value {
 	color: #666;
 	float: left;
 	margin-right: 0.5em;
+}
+.comment-meta .karma-value:only-child {
+	float: none;
+}
+
+/*====================*/
+/* COMMENT PERMALINKS */
+/*====================*/
+
+.comment-meta .permalink,
+.comment-meta .lw2-link,
+.individual-thread-page .comment-parent-link:empty {
+	top: 1px;
 }
 
 /*===========================*/
