@@ -783,6 +783,12 @@ h1.listing + .post-meta span.post-section::before {
 .comment-item {
 	border: 1px solid #bbbcbf;
 }
+.comment-item .comment-item {
+	margin: 1em -1px 8px 16px;
+}
+.comment-item .comment-item + .comment-item {
+	margin: 2em -1px 8px 16px;
+}
 
 <?php
 	function nested_stuff($segment, $tip, $last_tip, $nesting_levels) {
@@ -824,6 +830,10 @@ h1.listing + .post-meta span.post-section::before {
 		0 28px 16px -16px #ffd inset,
 		4px 16px 0 12px #ffd inset,
 		4px	4px 0 12px #ffd inset !important;
+}
+
+a.comment-parent-link::after {
+	display: none;
 }
 
 /*================================*/
@@ -1011,6 +1021,7 @@ div.comment-child-links a::first-letter {
 	background-color: #fff;
 	border: 1px solid #aaa;
 	font-weight: bold;
+    padding: 6px 10px 2px 10px;
 }
 .posting-controls input[type='submit']:hover,
 .posting-controls input[type='submit']:focus {
@@ -1024,6 +1035,9 @@ div.comment-child-links a::first-letter {
 	text-shadow: 
 		0 0 1px #fff,
 		0 0 2px #fff;
+	max-width: 1.2em;
+	overflow: hidden;
+	margin-right: 0.375em;
 }
 .comment-controls .cancel-comment-button:hover {
 	color: #f00;
@@ -1104,12 +1118,17 @@ div.comment-child-links a::first-letter {
 	font-family: <?php echo $UI_font; ?>;
 	color: #777;
 	text-shadow: none;
+	top: 4px;
 }
 
 /* Markdown hints */
 
+.posting-controls .markdown-reference-link a {
+	background-position: right bottom;
+}
 #markdown-hints-checkbox + label {
 	color: <?php echo $hyperlink_color; ?>;
+	padding: 2px 0 0 0;
 }
 #markdown-hints-checkbox + label:hover {
 	color: #e00;
