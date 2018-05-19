@@ -376,6 +376,9 @@ h1.listing a {
 	white-space: unset;
 	display: inline;
 }
+h1.listing a:visited {
+	color: #5a5a5b;
+}
 h1.listing a[href^="http"] {
 	top: 2px;
 }
