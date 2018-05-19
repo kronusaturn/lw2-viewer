@@ -26,16 +26,13 @@ body {
 .nav-inner {
 	font-size: 1.125em;
 	font-weight: bold;
-	padding: 14px 30px 10px 30px;;
-}
-#primary-bar.inactive-bar .nav-inner {
-	padding: 14px 30px 10px 30px;;
+	padding: 13px 30px 11px 30px;
 }
 #secondary-bar .nav-inner {
 	font-size: 0.875em;
 }
 #secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
-	padding: 8px 0 0 0;
+	padding: 5px 0 3px 0;
 }
 
 /* Accesskey hints */
@@ -89,8 +86,6 @@ body {
 #nav-item-search button {
 	border: none;
 	font-weight: inherit;
-	position: relative;
-	top: 3px;
 }
 
 /* User/login tab */
@@ -124,7 +119,7 @@ body {
 	border-width: 1px 1px 1px 0;
 	color: #777;
     line-height: 1;
-    padding: 8px 0 4px 0;
+    padding: 7px 3px;
 }
 .sublevel-nav .sublevel-item:first-child {
 	border-radius: 8px 0 0 8px;
@@ -170,7 +165,7 @@ body {
 }
 .sublevel-nav.sort .sublevel-item {
 	border-radius: 0;
-	padding: 8px 6px 3px 6px;
+	padding: 7px;
 	border-color: #aaa;
 	border-style: solid;
 	text-transform: uppercase;
@@ -471,13 +466,13 @@ h1.listing + .post-meta .karma-value {
 	font-weight: bold;
 	font-size: 0.8125rem;
 	border-radius: 0.875em;
-	padding: 4px 6px 0 6px;
+	padding: 2px 6px;
 	text-align: center;
 	display: block;
 	min-width: 1.75em;
 	position: absolute;
 	right: calc(100% - 1.75em);
-	top: -2.125em;
+	top: -2em;
 }
 h1.listing + .post-meta .karma-value span,
 h1.listing + .post-meta .lw2-link span,
@@ -513,7 +508,7 @@ h1.listing + .post-meta .post-section {
 h1.listing + .post-meta span.post-section::before {
 	left: unset;
 	right: calc(100% + 1.25em);
-	top: -1.875em;
+	top: -1.75em;
 }
 
 /*============*/
@@ -1021,7 +1016,6 @@ div.comment-child-links a::first-letter {
 	background-color: #fff;
 	border: 1px solid #aaa;
 	font-weight: bold;
-    padding: 6px 10px 2px 10px;
 }
 .posting-controls input[type='submit']:hover,
 .posting-controls input[type='submit']:focus {
@@ -1132,7 +1126,6 @@ div.comment-child-links a::first-letter {
 }
 #markdown-hints-checkbox + label {
 	color: <?php echo $hyperlink_color; ?>;
-	padding: 2px 0 0 0;
 }
 #markdown-hints-checkbox + label:hover {
 	color: #e00;
@@ -1150,6 +1143,7 @@ div.comment-child-links a::first-letter {
 	border-radius: 3px;
 	border: 1px solid #ddd;
 	color: #777;
+	top: 2px;
 }
 #edit-post-form .link-post-checkbox + label:hover,
 #edit-post-form .link-post-checkbox:focus + label {
@@ -1193,6 +1187,9 @@ div.comment-child-links a::first-letter {
 	text-shadow: 
 		0 -1px 0 #fff,
 		0 0.5px 0.5px #000;
+}
+#edit-post-form #markdown-hints-checkbox + label {
+	padding: 3px 0 0 0;
 }
 
 /*=======*/
