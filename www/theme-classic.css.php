@@ -1,6 +1,6 @@
 <?php
-	$UI_font = "'Helvetica', 'Arial', sans-serif";
-	$text_font = "'Helvetica', 'Arial', sans-serif";
+	$UI_font = "'Arial', sans-serif";
+	$text_font = "'Arial', sans-serif";
 	$hyperlink_color = "#6a8a6b";
 ?>
 

@@ -3102,7 +3102,7 @@ a#inbox-indicator.new-messages::before {
 body {
 	color: #000;
 	background-color: #d8d8d8;
-	font-family: 'Helvetica', 'Arial', sans-serif;
+	font-family: 'Arial', sans-serif;
 }
 #content {
 	background-color: #fff;
@@ -3456,7 +3456,7 @@ body {
 /*==========*/
 
 h1.listing {
-	font-family: 'Helvetica', 'Arial', sans-serif, 'Font Awesome';
+	font-family: 'Arial', sans-serif, 'Font Awesome';
 	font-size: 1.125rem;
 	padding-left: 30px;
 	max-height: unset;
@@ -3715,7 +3715,7 @@ h1.listing + .post-meta span.post-section::before {
 /*===================*/
 
 .contents {
-	font-family: 'Helvetica', 'Arial', sans-serif;
+	font-family: 'Arial', sans-serif;
 	border: 1px solid #ddd;
 	background-color: #eee;
 	padding: 0.75em 0.5em 0.5em 0.5em;
@@ -3738,7 +3738,7 @@ h1.listing + .post-meta span.post-section::before {
 
 .post-body,
 .comment-body {
-	font-family: 'Helvetica', 'Arial', sans-serif;
+	font-family: 'Arial', sans-serif;
 	font-size: 1rem;
 }
 .post-body a,
@@ -3837,7 +3837,7 @@ h1.listing + .post-meta span.post-section::before {
 }
 .post.link-post a.link-post-link {
 	text-decoration: none;
-	font-family: 'Helvetica', 'Arial', sans-serif;
+	font-family: 'Arial', sans-serif;
 	font-weight: 600;
 }
 .post.link-post a.link-post-link:hover {
@@ -4125,7 +4125,7 @@ div.comment-child-links a::first-letter {
 	color: #aaa;
 }
 .comment-minimize-button::after {
-	font-family: 'Helvetica', 'Arial', sans-serif;
+	font-family: 'Arial', sans-serif;
 	color: #777;
 }
 .comment-minimize-button.maximized::after {
@@ -4218,7 +4218,7 @@ div.comment-child-links a::first-letter {
 }
 
 .posting-controls textarea {
-	font-family: 'Helvetica', 'Arial', sans-serif;
+	font-family: 'Arial', sans-serif;
 	font-size: 1rem;
 	color: #000;
 	background-color: #fff;
@@ -4254,11 +4254,11 @@ div.comment-child-links a::first-letter {
     color: #050;
 }
 .guiedit-buttons-container button {
-	font-family: Font Awesome, 'Helvetica', 'Arial', sans-serif;
+	font-family: Font Awesome, 'Arial', sans-serif;
 }
 
 .guiedit::after {
-	font-family: 'Helvetica', 'Arial', sans-serif;
+	font-family: 'Arial', sans-serif;
 	color: #777;
 	text-shadow: none;
 	top: 4px;
@@ -4398,7 +4398,7 @@ input[type='submit']:active {
 .comment-body h1,
 .comment-body h2,
 .comment-body h4 {
-	font-family: 'Helvetica', 'Arial', sans-serif;
+	font-family: 'Arial', sans-serif;
 }
 .post-body h3,
 .comment-body h3,
@@ -4494,7 +4494,7 @@ select {
 }
 
 #content.about-page .accesskey-table {
-	font-family: 'Helvetica', 'Arial', sans-serif;
+	font-family: 'Arial', sans-serif;
 	border-color: #ddd;
 }
 
