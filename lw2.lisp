@@ -503,17 +503,34 @@
       (setf (quri:uri-query quri) nil))
     (quri:render-uri quri)))
 
-(defun end-html (out-stream &key items-per-page next prev)
-  (let ((request-uri (hunchentoot:request-uri*)))
-    (if items-per-page (format out-stream "<script>var itemsPerPage=~A</script>" items-per-page))
-    (write-string
+(defun pagination-nav-bars (&key with-offset with-next items-per-page)
+  (let* ((next (if (and with-offset with-next) (+ with-offset items-per-page)))
+         (prev (if (and with-offset (>= with-offset items-per-page)) (- with-offset items-per-page)))
+         (request-uri (hunchentoot:request-uri*))
+         (first-uri (if (and prev (> prev 0)) (replace-query-params request-uri "offset" nil)))
+         (prev-uri (if prev (replace-query-params request-uri "offset" (if (= prev 0) nil prev))))
+         (next-uri (if next (replace-query-params request-uri "offset" next))))
+    (values
+      (with-output-to-string (out-stream)
+        (labels ((write-item (uri class title accesskey)
+                            (format out-stream "<a href=\"~A\" class=\"button nav-item-~A~:[ disabled~;~]\" title=\"~A (accesskey: '~A')\" accesskey=\"~A\"></a>"
+                              (or uri "#") class uri title accesskey accesskey)))
+          (format out-stream "<div id='top-nav-bar'>")
+          (write-item first-uri "first" "First page" "\\")
+          (write-item prev-uri "prev" "Previous page" "[")
+          (format out-stream "<span class='page-number'><span class='page-number-label'>Page</span> ~A</span>" (+ 1 (/ (or with-offset 0) items-per-page)))
+          (write-item next-uri "next" "Next page" "]")
+          (format out-stream "</div>")))
       (nav-bar-outer "bottom-bar" nil (nav-bar-inner
-					`(,@(if (and prev (> prev 0)) `(("first" ,(replace-query-params request-uri "offset" nil) "Back to first")))
-					  ,@(if prev `(("prev" ,(replace-query-params request-uri "offset" (if (= prev 0) nil prev)) "Previous" :nofollow t)))
+					`(,@(if first-uri `(("first" ,first-uri "Back to first")))
+					  ,@(if prev-uri `(("prev" ,prev-uri "Previous" :nofollow t)))
 					   ("top" "#top" "Back to top")
-					   ,@(if next `(("next" ,(replace-query-params request-uri "offset" next) "Next" :nofollow t))))))
-      out-stream)
-    (format out-stream "</div></body></html>")))
+					   ,@(if next-uri `(("next" ,next-uri "Next" :nofollow t)))))))))
+
+(defun end-html (out-stream &key items-per-page bottom-bar-html)
+  (if items-per-page (format out-stream "<script>var itemsPerPage=~A</script>" items-per-page))
+  (write-string bottom-bar-html out-stream)
+  (format out-stream "</div></body></html>"))
 
 (defun map-output (out-stream fn list)
   (loop for item in list do (write-string (funcall fn item) out-stream))) 
@@ -528,11 +545,12 @@
   (declare (ignore return-code))
   (ignore-errors
     (log-conditions
-      (begin-html out-stream :title title :description description :current-uri current-uri :content-class content-class :robots robots)
-      (funcall fn)
-      (end-html out-stream
-                :items-per-page (if with-offset items-per-page)
-                :next (if (and with-offset with-next) (+ with-offset items-per-page)) :prev (if (and with-offset (>= with-offset items-per-page)) (- with-offset items-per-page)))
+      (multiple-value-bind (top-bar-html bottom-bar-html) (pagination-nav-bars :with-offset with-offset :with-next with-next :items-per-page items-per-page)
+        (begin-html out-stream :title title :description description :current-uri current-uri :content-class content-class :robots robots)
+        (funcall fn (lambda () (write-string top-bar-html out-stream)))
+        (end-html out-stream
+                  :items-per-page (if with-offset items-per-page)
+                  :bottom-bar-html bottom-bar-html))
       (force-output out-stream))))
 
 (defun set-default-headers (return-code)
@@ -545,14 +563,16 @@
                                                  ("/fa-regular-400.ttf?v=1" "font/ttf" "font" "crossorigin")
                                                  ("//fonts.greaterwrong.com/font_files/BitmapFonts/MSSansSerif.ttf" "font/ttf" "font" "crossorigin")))))
 
-(defmacro emit-page ((out-stream &rest args &key (return-code 200) &allow-other-keys) &body body)
+(defmacro emit-page ((out-stream &rest args &key (return-code 200) (top-nav (gensym) top-nav-supplied) &allow-other-keys) &body body)
   (alexandria:once-only (return-code)
     (alexandria:with-gensyms (fn)
-      `(progn
-         (set-default-headers ,return-code)
-         (let* ((,out-stream (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8))
-                (,fn (lambda () ,@body)))
-           (call-with-emit-page ,out-stream ,fn ,@args))))))
+      (let ((args2 (copy-seq args)))
+        (remf args2 :top-nav)
+        `(progn
+           (set-default-headers ,return-code)
+           (let* ((,out-stream (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8))
+                  (,fn (lambda (,top-nav) ,@(if (not top-nav-supplied) `((declare (ignore ,top-nav)))) ,@body)))
+             (call-with-emit-page ,out-stream ,fn ,@args2)))))))
 
 (defun call-with-error-page (fn)
   (let ((*current-auth-token* (alexandria:if-let (at (hunchentoot:cookie-in "lw2-auth-token")) (if (string= at "") nil at))))
@@ -595,7 +615,7 @@
                         (write-index-items-to-rss (make-flexi-stream out-stream :external-format :utf-8) items :title title)))
                      (t
                        (emit-page (out-stream :title (if hide-title nil title) :description "A faster way to browse LessWrong 2.0" :content-class content-class :with-offset with-offset :with-next with-next
-                                              :current-uri current-uri :robots (if (and with-offset (> with-offset 0)) "noindex, nofollow"))
+                                              :current-uri current-uri :robots (if (and with-offset (> with-offset 0)) "noindex, nofollow") :top-nav top-nav)
                                   (format out-stream "<div class=\"page-toolbar\">~@[<a class=\"new-post button\" href=\"/edit-post?section=~A\" accesskey=\"n\" title=\"Create new post [n]\">New post</a>~]~@[~A~]~{~@[<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" title=\"~A RSS feed\" href=\"~A\">RSS</a>~]~}</div>"
                                           (if (and (case section (:meta t) (:all t)) (logged-in-userid)) (string-downcase (string section)))
                                           page-toolbar-extra
@@ -604,6 +624,7 @@
                                   (typecase extra-html
                                     (function (funcall extra-html out-stream))
                                     (t (format out-stream "~@[~A~]" extra-html)))
+                                  (funcall top-nav)
                                   (write-index-items-to-html out-stream items :need-auth need-auth
                                                              :skip-section (case section
                                                                              (:frontpage :frontpage)
