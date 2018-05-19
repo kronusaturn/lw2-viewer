@@ -26,13 +26,16 @@ body {
 .nav-inner {
 	font-size: 1.125em;
 	font-weight: bold;
+}
+.nav-inner,
+#primary-bar.inactive-bar .nav-inner {
 	padding: 13px 30px 11px 30px;
 }
 #secondary-bar .nav-inner {
 	font-size: 0.875em;
 }
 #secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
-	padding: 5px 0 3px 0;
+	padding: 6px 0 4px 0;
 }
 
 /* Accesskey hints */
@@ -355,6 +358,10 @@ body {
 	background-color: #ddd;
 }
 
+.archive-nav + #top-nav-bar + h1.listing {
+	margin-top: 2em;
+}
+
 /*==========*/
 /* LISTINGS */
 /*==========*/
@@ -522,29 +529,11 @@ h1.listing + .post-meta span.post-section::before {
 	border-bottom: 1px solid #ccc;
 }
 
-#content.user-page .sublevel-nav + h1.listing {
-	margin-top: 1.75em;
+#content.user-page > h1:nth-of-type(2) {
+	margin-top: 2em;
 }
-#content.user-page h1.listing {
-	margin: 1.5em 0 0 0;
-	padding: 0 6px;
-	position: relative;
-}
-#content.user-page h1.listing::after {
-	content: "";
-	display: block;
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: calc(100% + 1.375em);
-	box-shadow: 0px 0px 10px #555;
-}
-#content.user-page h1.listing + .post-meta {
-	margin: 0 6px 3em 35px;
-}
-#content.user-page h1.listing + .post-meta::after {
-	display: none;
+#content.user-page.compact > .comment-thread:first-of-type {
+	margin-top: 2em;
 }
 
 .user-stats .karma-total {
@@ -948,6 +937,9 @@ div.comment-child-links a::first-letter {
 	box-shadow:
 		0 0 0 5px #bbb inset;
 }
+#content.compact > .comment-thread .comment-item {
+    max-height: 57px;
+}
 #content.compact > .comment-thread .comment-item::after {
 	color: <?php echo $hyperlink_color; ?>;
 	background: linear-gradient(to right, transparent 0%, #fff 50%, #fff 100%);
@@ -1138,9 +1130,6 @@ div.comment-child-links a::first-letter {
 
 /* Markdown hints */
 
-.posting-controls .markdown-reference-link a {
-	background-position: right bottom;
-}
 #markdown-hints-checkbox + label {
 	color: <?php echo $hyperlink_color; ?>;
 }
