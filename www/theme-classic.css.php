@@ -24,7 +24,7 @@ body {
 /*=========*/
 
 .nav-inner {
-	font-size: 1.25em;
+	font-size: 1.125em;
 	font-weight: bold;
 	padding: 14px 30px 10px 30px;;
 }
@@ -44,7 +44,7 @@ body {
 	top: 0;
 	font-weight: normal;
 	font-size: 0.7em;
-	color: #d8d8d8;
+	color: #ddd;
 }
 .nav-inner:hover::after {
 	color: #bbb;
@@ -360,26 +360,38 @@ body {
 
 h1.listing {
 	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
+	font-size: 1.125rem;
+	padding-left: 20px;
+	max-height: unset;
+	margin-top: 1.125em;
+	margin-bottom: 0.25em;
+}
+h1.listing:first-of-type {
+	margin-top: 1.75em;
 }
 
 h1.listing a {
-	color: #000;
+	color: #538d4d;
+	white-space: unset;
+	display: inline;
 }
 h1.listing a[href^="http"] {
-	color: #00c;
+	top: 2px;
 }
 
 @media only screen and (hover: hover) {
 	h1.listing a:hover,
 	h1.listing a:focus {
-		color: #777;
-		background-color: rgba(255,255,255,0.85);
+		color: #3d3d3e;
+		text-decoration: none;
 	}	
-	#content.user-page h1.listing:focus-within::before {
-		left: -0.75em;
-	}
 	h1.listing:focus-within::before {
-		color: #00f;
+		display: none;
+	}
+	h1.listing:focus-within + .post-meta .karma-value {
+		box-shadow: 
+			0 0 0 3px #fff,
+			0 0 0 6px #3d3d3e;
 	}
 	h1.listing a[href^="http"]:hover {
 		color: #4879ec;
@@ -393,14 +405,16 @@ h1.listing a[href^="http"] {
 @-moz-document url-prefix() {
 	h1.listing a:hover,
 	h1.listing a:focus {
-		color: #777;
-		background-color: rgba(255,255,255,0.85);
+		color: #3d3d3e;
+		text-decoration: none;
 	}	
-	#content.user-page h1.listing:focus-within::before {
-		left: -0.75em;
-	}
 	h1.listing:focus-within::before {
-		color: #00f;
+		display: none;
+	}
+	h1.listing:focus-within + .post-meta .karma-value {
+		box-shadow: 
+			0 0 0 3px #fff,
+			0 0 0 6px #3d3d3e;
 	}
 	h1.listing a[href^="http"]:hover {
 		color: #4879ec;
@@ -417,140 +431,84 @@ h1.listing a[href^="http"] {
 /*===================*/
 
 h1.listing + .post-meta {
-	padding-right: 320px;
+	font-size: 0.8125rem;
+	padding-left: 20px;
+	display: flex;
+	justify-content: flex-end;
 }
-h1.listing + .post-meta .karma-value,
-h1.listing + .post-meta .comment-count,
-h1.listing + .post-meta .lw2-link,
+
+h1.listing + .post-meta .author {
+	font-weight: bold;
+	color: #6a8a6b;
+	text-decoration: none;
+	margin: 0 0 0 1.5em;
+}
+h1.listing + .post-meta .author:hover {
+	color: #3d3d3e;
+}
+h1.listing + .post-meta .date,
 h1.listing + .post-meta .read-time {
-	border-radius: 4px;
-	padding: 0 4px 0 2px;
-	text-shadow: 0.5px 0.5px 0.5px #999;
-	margin: 0 0.25em 0 0.5em;
-	position: absolute;
-	line-height: 1.15;
-	top: 12px;
+	color: #999;
+	font-style: italic;
 }
-h1.listing + .post-meta .karma-value span,
-h1.listing + .post-meta .comment-count span,
-h1.listing + .post-meta .lw2-link span,
-h1.listing + .post-meta .read-time span {
-	display: none;
+h1.listing + .post-meta a {
+	color: #8a8a8b;
+	text-decoration: underline;
 }
-h1.listing + .post-meta .karma-value::before,
-h1.listing + .post-meta .comment-count::before,
-h1.listing + .post-meta .lw2-link::before,
-h1.listing + .post-meta .read-time::before {
-	color: #fff;
-	font-family: Font Awesome;
-	font-weight: 900;
-	margin: 0 8px 0 0;
-	box-shadow: 0 0 0 2px #ddd;
+h1.listing + .post-meta a:hover {
+	color: #3d3d3e;
 }
 
 h1.listing + .post-meta .karma-value {
-	box-shadow: 
-		22px 0 0 0 #ddd inset,
-		0 0 0 3px #ddd;
-	cursor: default;
-	color: #c00;
-	right: 248px;
-}
-h1.listing + .post-meta .karma-value::before {
-	content: "\F139";
-	text-shadow: none;
-    font-size: 0.9375em;
-    line-height: 1.3;
-}
-
-h1.listing + .post-meta .comment-count::before {
-	content: "\F086";
-}
-h1.listing + .post-meta .comment-count {
-	box-shadow: 
-		25px 0 0 0 #ddd inset,
-		0 0 0 3px #ddd;
-	color: #009100;
-	right: 176px;
-}
-h1.listing + .post-meta .comment-count:hover {
-	text-decoration: none;
+	background-color: #538d4d;
 	color: #fff;
-	background-color: #009100;
+	font-weight: bold;
+	font-size: 0.8125rem;
+	border-radius: 0.875em;
+	padding: 4px 6px 0 6px;
+	text-align: center;
+	display: block;
+	min-width: 1.75em;
+	position: absolute;
+	right: calc(100% - 0.75em);
+	top: -2.125em;
 }
-h1.listing + .post-meta .comment-count:hover::before {
-	color: #009100;
-}
-h1.listing + .post-meta .comment-count.new-comments::before {
-	color: #009100;
-	text-shadow: 0.5px 0.5px 0.5px #fff;
-}
-h1.listing + .post-meta .comment-count.new-comments:hover::before {
-	text-shadow: 0.5px 0.5px 0.5px #999;
-}
-
-
-h1.listing + .post-meta .lw2-link {
-	box-shadow: 
-		23px 0 0 0 #ddd inset,
-		0 0 0 3px #ddd;
-	right: 0;
-}
-h1.listing + .post-meta .lw2-link::before {
-	content: "\F0C1";
-}
-h1.listing + .post-meta .lw2-link:hover {
-	text-decoration: none;
-	color: #fff;
-	background-color: #00f;
-}
-h1.listing + .post-meta .lw2-link:hover::before {
-	color: #00f;
+h1.listing + .post-meta .karma-value span,
+h1.listing + .post-meta .lw2-link span,
+h1.listing + .post-meta .comment-count span {
+	display: none;
 }
 
-h1.listing + .post-meta .read-time {
-	box-shadow: 
-		21px 0 0 0 #ddd inset,
-		0 0 0 3px #ddd;
-	right: 80px;
-}
-h1.listing + .post-meta .read-time::before {
-	content: "\F2F2";
-	cursor: pointer;
-}
-h1.listing + .post-meta .read-time::after {
-	content: " min";
-}
-h1.listing + .post-meta .read-time:hover::before {
-	color: #777;
-}
-
-h1.listing + .post-meta .word-count {
-	box-shadow: 
-		22px 0 0 0 #ddd inset,
-		0 0 0 3px #ddd;
-	padding: 0 4px 0 4px;
-}
-h1.listing + .post-meta .word-count::before {
-	content: "\F15C";
-	margin: 0 10px 0 0;
-}
-h1.listing + .post-meta .read-time.word-count::after {
-	content: none;
-}
-
-h1.listing + .post-meta .link-post-domain {
+h1.listing + .post-meta > * {
+	text-align: right;
 	margin: 0 0 0 0.5em;
 }
-
-h1.listing + .post-meta::after {
-	content: "";
-	display: block;
-	height: 1px;
-	width: calc(100% + 320px);
-	background-color: #ddd;
-	position: relative;
-	top: 14px;
+h1.listing + .post-meta .read-time {
+	width: 6em;
+}
+h1.listing + .post-meta .comment-count {
+	width: 6em;
+	order: -1;
+}
+h1.listing + .post-meta .comment-count::before {
+	content: "Comments ("
+}
+h1.listing + .post-meta .comment-count::after {
+	content: ")"
+}
+h1.listing + .post-meta .date {
+	width: 11em;
+}
+h1.listing + .post-meta .lw2-link {
+	margin: 0 0 0 1em;
+}
+h1.listing + .post-meta .post-section {
+	margin: 0;
+}
+h1.listing + .post-meta span.post-section::before {
+	left: unset;
+	right: calc(100% + 1.75em);
+	top: -1.875em;
 }
 
 /*============*/
@@ -1087,7 +1045,7 @@ div.comment-child-links a::first-letter {
 /*=======*/
 
 a {
-	text-decoration: underline;
+	text-decoration: none;
 	color: <?php echo $hyperlink_color; ?>;
 }
 a:visited {
