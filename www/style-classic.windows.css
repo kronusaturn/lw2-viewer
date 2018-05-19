@@ -3119,6 +3119,9 @@ body {
 	font-weight: bold;
 	padding: 14px 30px 10px 30px;;
 }
+#primary-bar.inactive-bar .nav-inner {
+	padding: 14px 30px 10px 30px;;
+}
 #secondary-bar .nav-inner {
 	font-size: 0.875em;
 }
@@ -3211,6 +3214,8 @@ body {
 	border-style: solid;
 	border-width: 1px 1px 1px 0;
 	color: #777;
+    line-height: 1;
+    padding: 8px 0 4px 0;
 }
 .sublevel-nav .sublevel-item:first-child {
 	border-radius: 8px 0 0 8px;
@@ -3252,10 +3257,11 @@ body {
 	font-weight: 600;
 	color: #444;
 	text-shadow: 0.5px 0.5px 0 #fff;
+	top: 1px;
 }
 .sublevel-nav.sort .sublevel-item {
 	border-radius: 0;
-	padding: 5px 6px;
+	padding: 8px 6px 3px 6px;
 	border-color: #aaa;
 	border-style: solid;
 	text-transform: uppercase;
@@ -3452,7 +3458,7 @@ body {
 h1.listing {
 	font-family: 'Helvetica', 'Arial', sans-serif, 'Font Awesome';
 	font-size: 1.125rem;
-	padding-left: 20px;
+	padding-left: 30px;
 	max-height: unset;
 	margin-top: 1.125em;
 	margin-bottom: 0.25em;
@@ -3523,7 +3529,7 @@ h1.listing a[href^="http"] {
 
 h1.listing + .post-meta {
 	font-size: 0.8125rem;
-	padding-left: 20px;
+	padding-left: 30px;
 	display: flex;
 	justify-content: flex-end;
 }
@@ -3561,7 +3567,7 @@ h1.listing + .post-meta .karma-value {
 	display: block;
 	min-width: 1.75em;
 	position: absolute;
-	right: calc(100% - 0.75em);
+	right: calc(100% - 1.75em);
 	top: -2.125em;
 }
 h1.listing + .post-meta .karma-value span,
@@ -3597,7 +3603,7 @@ h1.listing + .post-meta .post-section {
 }
 h1.listing + .post-meta span.post-section::before {
 	left: unset;
-	right: calc(100% + 1.75em);
+	right: calc(100% + 1.25em);
 	top: -1.875em;
 }
 
@@ -3636,6 +3642,14 @@ h1.listing + .post-meta span.post-section::before {
 
 .user-stats .karma-total {
 	font-weight: bold;
+}
+
+/*================*/
+/* SEARCH RESULTS */
+/*================*/
+
+#content.search-results-page h1.listing {
+	font-size: 1.125rem;
 }
 
 /*============*/
@@ -3988,6 +4002,8 @@ h1.listing + .post-meta span.post-section::before {
 }
 .comment-meta .karma-value {
 	color: #666;
+	float: left;
+	margin-right: 0.5em;
 }
 
 /*===========================*/
