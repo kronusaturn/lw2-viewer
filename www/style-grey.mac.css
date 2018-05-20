@@ -1482,6 +1482,8 @@ div.comment-child-links a::first-letter {
 	box-shadow: 
 		0 0 0 2px #00e,
 		0 0 0 3px transparent;
+	opacity: 1.0;
+	filter: unset;
 }
 .comment-meta .permalink:active::before,
 .comment-meta .lw2-link:active::before,
