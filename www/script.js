@@ -35,6 +35,12 @@ Element.prototype.removeClass = function(className) {
 Element.prototype.hasClass = function(className) {
 	return this.className.match(new RegExp("(^|\\s)" + className + "(\\s|$)"));
 }
+Element.prototype.toggleClass = function(className( {
+	if (this.hasClass(className))
+		this.removeClass(className);
+	else
+		this.addClass(className);
+}
 
 /*******************************/
 /* EVENT LISTENER MANIPULATION */
@@ -1100,15 +1106,10 @@ function injectPostNavUIToggle() {
 	postNavUIToggle.querySelector("button").addActivateEvent(postNavUIToggleButtonClicked);
 }
 function postNavUIToggleButtonClicked(event) {
+	event.target.toggleClass("engaged");
 	document.querySelectorAll("#quick-nav-ui, #new-comment-nav-ui, #hns-date-picker").forEach(function (element) {
-		element.style.visibility = (window.getComputedStyle(element).visibility == "visible") ? "hidden" : "visible";
+		element.toggleClass("engaged");
 	});
-	
-	let quickNavUI = document.querySelector("#quick-nav-ui");
-	quickNavUI.style.maxHeight = (quickNavUI.style.maxHeight == "") ? "1000px" : ""
-	
-	event.target.style.transform = (event.target.style.transform == "") ? "rotate(-90deg)" : "";
-	event.target.style.opacity = (event.target.style.opacity == "") ? "1.0" : "";
 }
 
 /*****************************/

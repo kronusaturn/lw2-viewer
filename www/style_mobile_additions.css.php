@@ -28,12 +28,25 @@
 	#post-nav-ui-toggle button::selection {
 		background-color: transparent;
 	}
+	#post-nav-ui-toggle button.engaged {
+		transform: rotate(-90deg);
+		opacity: 1.0;
+	}
+	
+	#quick-nav-ui.engaged,
+	#new-comment-nav-ui.engaged,
+	#hns-date-picker.engaged {
+		visibility: visible;
+	}
 	
 	#quick-nav-ui {
 		padding: 4px 12px 12px 12px;
 		max-height: 0;
 		overflow: hidden;
 		transition: max-height 0.2s ease-out, visibility 0.2s ease;
+	}
+	#quick-nav-ui.engaged {
+		max-height: 1000px;
 	}
 	#quick-nav-ui::before {
 		content: "";
@@ -47,6 +60,14 @@
 	}
 	#quick-nav-ui a {
 		position: relative;
+	}
+	
+	#new-comment-nav-ui {
+		max-height: 0;
+		transition: max-height 0.2s ease-out, visibility 0.2s ease;
+	}
+	#new-comment-nav-ui.engaged {
+		max-height: 1000px;
 	}
 }
 
@@ -72,6 +93,17 @@
 #quick-nav-ui {
 	right: 4px;
 	bottom: 68px;
+}
+#new-comment-nav-ui {
+	right: 15px;
+	bottom: 68px;
+}
+#new-comment-nav-ui.engaged {
+	bottom: 248px;
+
+}
+#new-comment-nav-ui .new-comments-count {
+	z-index: 2;
 }
 
 #content {
@@ -126,13 +158,6 @@
 }
 .nav-inner::after {
 	display: none;
-}
-#new-comment-nav-ui {
-	right: 12px;
-	bottom: 12px;
-}
-#new-comment-nav-ui .new-comments-count {
-	z-index: 2;
 }
 
 /*******************************************/
