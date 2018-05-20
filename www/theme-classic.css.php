@@ -1406,6 +1406,7 @@ select {
 	border: 1px solid #ccc;
 	border-radius: 4px;
 	padding: 2px 12px;
+	white-space: nowrap;
 }
 .qualified-linking-toolbar a:visited {
 	color: <?php echo $hyperlink_color; ?>;
