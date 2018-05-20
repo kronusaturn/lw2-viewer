@@ -453,6 +453,7 @@ h1.listing + .post-meta .author {
 	color: #6a8a6b;
 	text-decoration: none;
 	margin: 0 0 0 1.5em;
+	order: 0;
 }
 h1.listing + .post-meta .author:hover {
 	color: #3d3d3e;
@@ -496,6 +497,7 @@ h1.listing + .post-meta > * {
 }
 h1.listing + .post-meta .read-time {
 	width: 6em;
+	order: 2;
 }
 h1.listing + .post-meta .comment-count {
 	order: -1;
@@ -508,9 +510,11 @@ h1.listing + .post-meta .comment-count::after {
 }
 h1.listing + .post-meta .date {
 	width: 11em;
+	order: 1;
 }
 h1.listing + .post-meta .lw2-link {
 	margin: 0 0 0 1em;
+	order: 3;
 }
 h1.listing + .post-meta .post-section {
 	margin: 0;
@@ -519,6 +523,10 @@ h1.listing + .post-meta span.post-section::before {
 	left: unset;
 	right: calc(100% + 1.25em);
 	top: -1.75em;
+}
+h1.listing + .post-meta .link-post-domain {
+	order: -2;
+	margin: 0 1em 0 0;
 }
 
 /*============*/
