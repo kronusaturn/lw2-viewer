@@ -1091,6 +1091,15 @@ function commentsListModeSelectButtonClicked(event) {
 	}
 }
 
+/**********************/
+/* MOBILE UI ELEMENTS */
+/**********************/
+
+function injectPostNavUIToggleButton() {
+	if (document.querySelector("#content > .comment-thread") == null) return;
+	let postNavUIToggleButton = addUIElement("<div id='post-nav-ui-toggle'><button type='button' tabindex='-1'>&#xf14e;</button></div>");
+}
+
 /*****************************/
 /* MINIMIZED THREAD HANDLING */
 /*****************************/
@@ -1203,6 +1212,9 @@ function earlyInitialize() {
 // 	injectCommentsViewModeSelector();
 	// Add the comments list mode selector widget (expanded vs. compact).
 	injectCommentsListModeSelector();
+	
+	// Add the toggle for the post nav UI elements on mobile.
+	injectPostNavUIToggleButton();
 
 	updateInbox();
 }

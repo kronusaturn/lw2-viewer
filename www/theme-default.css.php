@@ -1446,6 +1446,16 @@ div > .MJXc-display {
 /* MOBILE */
 /*========*/
 
+@media only screen and (hover: none) {
+	#post-nav-ui-toggle button {
+		color: #888;
+		text-shadow:
+			0 0 1px #fff,
+			0 0 3px #fff,
+			0 0 5px #fff;
+	}
+}
+
 @media only screen and (max-width: 900px) {
 	h1.listing + .post-meta .author {
 		margin: 0 0.75em 0 1.5em;

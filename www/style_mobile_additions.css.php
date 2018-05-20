@@ -1,3 +1,34 @@
+/*****************/
+/* MOBILE LAYOUT */
+/*****************/
+
+@media only screen and (hover: none) {
+	#ui-elements-container > * {
+		visibility: hidden;
+	}
+	#post-nav-ui-toggle {
+		visibility: visible;
+		display: inline-block;
+		position: fixed;
+		bottom: 20px;
+		right: 20px;
+	}
+	#post-nav-ui-toggle button {
+		font-family: Font Awesome;
+		font-weight: 900;
+		font-size: 32px;
+		padding: 4px;
+	}
+}
+
+/* Hide the mobile elements on desktop screens: */
+
+@media only screen and (hover: hover) {
+	#post-nav-ui-toggle {
+		display: none;
+	}
+}
+
 /*****************************************/
 @media only screen and (max-width: 900px) {
 /*****************************************/
