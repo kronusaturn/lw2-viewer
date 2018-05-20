@@ -2092,7 +2092,8 @@ input[type='submit'] {
 /* QUOTES */
 /**********/
 
-blockquote {
+blockquote,
+.post-body .comment-box .comment-body {
 	font-size: 0.9em;
 	margin: 1em 0;
 	padding-left: 0.5em;
@@ -2107,6 +2108,18 @@ blockquote *:last-child {
 }
 blockquote blockquote {
 	font-size: 0.95em;
+}
+
+/* Pseudo-blockquotes that LW sometimes uses for some reason */
+
+.post-body .comment-box .user-name {
+	font-style: italic;
+}
+.post-body .comment-box .user-name::after {
+	content: ":";
+}
+.post-body .comment-box {
+	zoom: 1.25;
 }
 
 /**********/
