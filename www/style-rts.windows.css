@@ -424,9 +424,10 @@ a#inbox-indicator.new-messages:hover::before {
 	background-size: 16px 16px;
 	background-origin: content-box;
 }
-#theme-selector button,
-#theme-selector button:active,
-#theme-selector button:focus {
+.theme-selector button,
+.theme-selector button:hover,
+.theme-selector button:active,
+.theme-selector button:focus {
 	text-shadow: none;
 	color: transparent;
 }	
