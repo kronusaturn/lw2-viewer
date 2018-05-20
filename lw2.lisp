@@ -466,7 +466,7 @@
   (generate-versioned-link (let* ((ua (hunchentoot:header-in* :user-agent))
                                   (theme (hunchentoot:cookie-in "theme"))
                                   (os (cond ((search "Windows" ua) "windows")
-                                            ((search "Macintosh" ua) "mac")
+                                            ((search "Mac OS" ua) "mac")
                                             (t "linux"))))
                              (format nil "/style~@[-~A~].~A.css" (if (and theme (> (length theme) 0)) theme) os))))
 
