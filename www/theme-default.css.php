@@ -1452,7 +1452,10 @@ div > .MJXc-display {
 		text-shadow:
 			0 0 1px #fff,
 			0 0 3px #fff,
-			0 0 5px #fff;
+			0 0 5px #fff,
+			0 0 10px #fff,
+			0 0 20px #fff,
+			0 0 30px #fff;
 	}
 }
 

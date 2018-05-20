@@ -9,15 +9,23 @@
 	#post-nav-ui-toggle {
 		visibility: visible;
 		display: inline-block;
-		position: fixed;
-		bottom: 20px;
-		right: 20px;
+		position: absolute;
+		bottom: 10px;
+		right: 10px;
+		border-radius: 50%;
+		overflow: hidden;
+		z-index: 1;
 	}
 	#post-nav-ui-toggle button {
 		font-family: Font Awesome;
 		font-weight: 900;
 		font-size: 32px;
-		padding: 4px;
+		padding: 10px;
+		opacity: 0.8;
+		transition: transform 0.3s ease;
+	}
+	#post-nav-ui-toggle button::selection {
+		background-color: transparent;
 	}
 }
 
@@ -34,7 +42,8 @@
 /*****************************************/
 
 #content,
-#images-overlay {
+#images-overlay,
+#ui-elements-container {
 	min-width: unset;
 	width: unset;
 }

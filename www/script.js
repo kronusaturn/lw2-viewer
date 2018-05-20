@@ -1095,8 +1095,16 @@ function commentsListModeSelectButtonClicked(event) {
 /* MOBILE UI ELEMENTS */
 /**********************/
 
-function injectPostNavUIToggleButton() {
-	let postNavUIToggleButton = addUIElement("<div id='post-nav-ui-toggle'><button type='button' tabindex='-1'>&#xf14e;</button></div>");
+function injectPostNavUIToggle() {
+	let postNavUIToggle = addUIElement("<div id='post-nav-ui-toggle'><button type='button' tabindex='-1'>&#xf14e;</button></div>");
+	postNavUIToggle.querySelector("button").addActivateEvent(postNavUIToggleButtonClicked);
+}
+function postNavUIToggleButtonClicked(event) {
+	document.querySelectorAll("#quick-nav-ui, #new-comment-nav-ui, #hns-date-picker").forEach(function (element) {
+		element.style.visibility = (window.getComputedStyle(element).visibility == "visible") ? "hidden" : "visible";
+	});
+	event.target.style.transform = (event.target.style.transform == "") ? "rotate(-90deg)" : "";
+	event.target.style.opacity = (event.target.style.opacity == "") ? "1.0" : "";
 }
 
 /*****************************/
@@ -1213,7 +1221,7 @@ function earlyInitialize() {
 	injectCommentsListModeSelector();
 	
 	// Add the toggle for the post nav UI elements on mobile.
-	injectPostNavUIToggleButton();
+	injectPostNavUIToggle();
 
 	updateInbox();
 }
