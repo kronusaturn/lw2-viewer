@@ -33,10 +33,13 @@
 @media only screen and (max-width: 900px) {
 /*****************************************/
 
-#content {
-	padding: 0 4px;
+#content,
+#images-overlay {
 	min-width: unset;
 	width: unset;
+}
+#content {
+	padding: 0 4px;
 }
 #content.post-page {
 	padding-bottom: 12px;

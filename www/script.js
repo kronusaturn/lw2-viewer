@@ -1096,7 +1096,6 @@ function commentsListModeSelectButtonClicked(event) {
 /**********************/
 
 function injectPostNavUIToggleButton() {
-	if (document.querySelector("#content > .comment-thread") == null) return;
 	let postNavUIToggleButton = addUIElement("<div id='post-nav-ui-toggle'><button type='button' tabindex='-1'>&#xf14e;</button></div>");
 }
 
