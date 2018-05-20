@@ -1460,6 +1460,11 @@ div > .MJXc-display {
 }
 
 @media only screen and (max-width: 900px) {
+	#quick-nav-ui::before {
+		box-shadow: 
+			0 0 4px 0 rgba(238,238,238,0.7);
+	}
+
 	h1.listing + .post-meta .author {
 		margin: 0 0.75em 0 1.5em;
 	}

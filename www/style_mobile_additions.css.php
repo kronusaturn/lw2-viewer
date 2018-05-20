@@ -50,12 +50,12 @@
 
 #quick-nav-ui {
 	opacity: 1.0;
-	right: 6px;
+	right: 4px;
 	bottom: 68px;
 	padding: 4px 12px 12px 12px;
 	max-height: 0;
 	overflow: hidden;
-	transition: max-height 0.3 ease;
+	transition: max-height 0.2s ease-out, visibility 0.2s ease;
 }
 #quick-nav-ui::before {
 	content: "";
@@ -66,9 +66,6 @@
 	width: calc(100% - 2px);
 	height: calc(100% - 2px);
 	border-radius: 6px;
-	background-color: rgba(238,238,238,0.7);
-	box-shadow: 
-		0 0 4px 0 rgba(238,238,238,0.7);
 }
 #quick-nav-ui a {
 	position: relative;
