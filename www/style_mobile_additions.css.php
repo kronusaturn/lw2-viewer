@@ -47,6 +47,33 @@
 	min-width: unset;
 	width: unset;
 }
+
+#quick-nav-ui {
+	opacity: 1.0;
+	right: 6px;
+	bottom: 68px;
+	padding: 4px 12px 12px 12px;
+	max-height: 0;
+	overflow: hidden;
+	transition: max-height 0.3 ease;
+}
+#quick-nav-ui::before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 1px;
+	left: 1px;
+	width: calc(100% - 2px);
+	height: calc(100% - 2px);
+	border-radius: 6px;
+	background-color: rgba(238,238,238,0.7);
+	box-shadow: 
+		0 0 4px 0 rgba(238,238,238,0.7);
+}
+#quick-nav-ui a {
+	position: relative;
+}
+
 #content {
 	padding: 0 4px;
 }

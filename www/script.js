@@ -1103,6 +1103,10 @@ function postNavUIToggleButtonClicked(event) {
 	document.querySelectorAll("#quick-nav-ui, #new-comment-nav-ui, #hns-date-picker").forEach(function (element) {
 		element.style.visibility = (window.getComputedStyle(element).visibility == "visible") ? "hidden" : "visible";
 	});
+	
+	let quickNavUI = document.querySelector("#quick-nav-ui");
+	quickNavUI.style.maxHeight = (quickNavUI.style.maxHeight == "") ? "unset" : ""
+	
 	event.target.style.transform = (event.target.style.transform == "") ? "rotate(-90deg)" : "";
 	event.target.style.opacity = (event.target.style.opacity == "") ? "1.0" : "";
 }
