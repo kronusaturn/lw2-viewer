@@ -3,6 +3,7 @@
 /***********/
 function setCookie(name,value,days) {
 	var expires = "";
+	if (!days) days = 36500;
 	if (days) {
 		var date = new Date();
 		date.setTime(date.getTime() + (days*24*60*60*1000));
