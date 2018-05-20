@@ -5,6 +5,7 @@
 @media only screen and (hover: none) {
 	#ui-elements-container > * {
 		visibility: hidden;
+		opacity: 1.0;
 	}
 	#post-nav-ui-toggle {
 		visibility: visible;
@@ -22,10 +23,30 @@
 		font-size: 32px;
 		padding: 10px;
 		opacity: 0.8;
-		transition: transform 0.3s ease;
+		transition: transform 0.2s ease;
 	}
 	#post-nav-ui-toggle button::selection {
 		background-color: transparent;
+	}
+	
+	#quick-nav-ui {
+		padding: 4px 12px 12px 12px;
+		max-height: 0;
+		overflow: hidden;
+		transition: max-height 0.2s ease-out, visibility 0.2s ease;
+	}
+	#quick-nav-ui::before {
+		content: "";
+		display: block;
+		position: absolute;
+		top: 1px;
+		left: 1px;
+		width: calc(100% - 2px);
+		height: calc(100% - 2px);
+		border-radius: 6px;
+	}
+	#quick-nav-ui a {
+		position: relative;
 	}
 }
 
@@ -49,26 +70,8 @@
 }
 
 #quick-nav-ui {
-	opacity: 1.0;
 	right: 4px;
 	bottom: 68px;
-	padding: 4px 12px 12px 12px;
-	max-height: 0;
-	overflow: hidden;
-	transition: max-height 0.2s ease-out, visibility 0.2s ease;
-}
-#quick-nav-ui::before {
-	content: "";
-	display: block;
-	position: absolute;
-	top: 1px;
-	left: 1px;
-	width: calc(100% - 2px);
-	height: calc(100% - 2px);
-	border-radius: 6px;
-}
-#quick-nav-ui a {
-	position: relative;
 }
 
 #content {
