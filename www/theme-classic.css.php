@@ -641,6 +641,10 @@ h1.listing + .post-meta span.post-section::before {
 .comment-body a {
 	text-decoration: underline;
 }
+.post-meta > *,
+.comment-meta > * {
+	white-space: unset;
+}
 
 /*===========*/
 /* POST-META */
