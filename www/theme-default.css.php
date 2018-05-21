@@ -1459,6 +1459,16 @@ div > .MJXc-display {
 			0 0 30px #fff;
 	}
 
+	#theme-selector {
+		background-color: #d8d8d8;
+		box-shadow: 
+			0 0 0 1px #999,
+			0 0 0 2px transparent;
+	}
+	#theme-selector::before {
+		color: #666;
+		text-shadow: 0.5px 0.5px 0 #fff;
+	}
 	#theme-selector button {
 		background-color: #e6e6e6;
 		border-radius: 10px;

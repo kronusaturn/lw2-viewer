@@ -78,9 +78,14 @@
 			top 0.2s ease,
 			max-height 0.2s ease,
 			visibility 0.2s ease;
+		top: calc(100% - 20px);
+		left: 0;
+		right: 0;
+		margin: auto;
 	}
 	#theme-selector.engaged {
 		max-height: 1000px;
+		top: 10px;
 	}
 	#theme-selector::before {
 		content: "Select theme";
@@ -116,6 +121,8 @@
 			max-width 0.2s ease,
 			visibility 0.2s ease;
 		display: flex;
+		right: 68px;
+		bottom: 10px;
 	}
 	#quick-nav-ui.engaged {
 		max-width: 1000px;
@@ -147,6 +154,8 @@
 			max-height 0.2s ease,
 			visibility 0.2s ease;
 		display: flex;
+		right: 78px;
+		bottom: 70px;
 	}
 	#new-comment-nav-ui.engaged {
 		max-width: 1000px;
@@ -169,14 +178,18 @@
 
 	#hns-date-picker {
 		max-height: 0px;
+		bottom: 124px;
+		right: 62px;
+		transition:
+			max-height 0.2s ease,
+			visibility 0.2s ease;
 	}
 	#hns-date-picker.engaged {
 		max-height: 1000px;
 	}
-	#hns-date-picker {
-		transition:
-			max-height 0.2s ease,
-			visibility 0.2s ease;
+	#hns-date-picker::before {
+		width: calc(100% + 2px);
+		border-width: 1px !important;
 	}
 }
 
@@ -197,32 +210,6 @@
 #ui-elements-container {
 	min-width: unset;
 	width: unset;
-}
-
-#theme-selector {
-	top: calc(100% - 20px);
-	left: 0;
-	right: 0;
-	margin: auto;
-}
-#theme-selector.engaged {
-	top: 10px;
-}
-#quick-nav-ui {
-	right: 68px;
-	bottom: 10px;
-}
-#new-comment-nav-ui {
-	right: 78px;
-	bottom: 70px;
-}
-#hns-date-picker {
-	bottom: 124px;
-	right: 62px;
-}
-#hns-date-picker::before {
-	width: calc(100% + 2px);
-	border-width: 1px !important;
 }
 
 #content {
