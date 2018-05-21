@@ -1458,6 +1458,20 @@ div > .MJXc-display {
 			0 0 20px #fff,
 			0 0 30px #fff;
 	}
+
+	#theme-selector button {
+		background-color: #e6e6e6;
+		border-radius: 10px;
+	}
+	#theme-selector button::after {
+		color: #000;
+	}
+	#theme-selector button.selected::after {
+		text-shadow: 
+			0 -1px 0 #fff,
+			0 0.5px 0.5px #000;
+	}
+
 	#new-comment-nav-ui {
 		background-color: #d8d8d8;
 		border: 1px solid #999;

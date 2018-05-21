@@ -2663,13 +2663,18 @@ div > .MJXc-display {
 	}
 	
 	#theme-selector {
-		left: 10px;
-		max-width: unset;
 		display: flex;
 		flex-flow: column;
 		width: calc(100vw - 20px);
-		padding: 0;
+		max-width: 360px;
+		padding: 0 0 3px 0;
 		border-radius: 12px;
+		overflow: hidden;
+		max-height: 0;
+		transition: 
+			top 0.2s ease,
+			max-height 0.2s ease,
+			visibility 0.2s ease;
 	}
 	#theme-selector::before {
 		content: "Select theme";
@@ -2680,10 +2685,21 @@ div > .MJXc-display {
 		margin: 0.375em 1em 0.5em 1em;
 		text-align: center;
 	}
+	#theme-selector button {
+		width: calc(100% - 0.5em);
+		background-repeat: no-repeat;
+		padding: 1em 0.875em;
+		line-height: 1;
+		height: unset;
+		position: relative;
+	}
 	#theme-selector button::after {
 		content: attr(data-theme-description);
-		color: #000;
 		white-space: nowrap;
+		position: absolute;
+		text-align: left;
+		left: 2.5em;
+		top: 1em;
 	}
 	
 	#quick-nav-ui {
@@ -2777,6 +2793,15 @@ div > .MJXc-display {
 	width: unset;
 }
 
+#theme-selector {
+	top: calc(100% - 20px);
+	left: 0;
+	right: 0;
+	margin: auto;
+}
+#theme-selector.engaged {
+	top: 10px;
+}
 #quick-nav-ui {
 	right: 68px;
 	bottom: 10px;
