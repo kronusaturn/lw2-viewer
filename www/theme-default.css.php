@@ -1448,7 +1448,8 @@ div > .MJXc-display {
 
 @media only screen and (hover: none), only screen and (-moz-touch-enabled) {
 	#appearance-adjust-ui-toggle button,
-	#post-nav-ui-toggle button {
+	#post-nav-ui-toggle button,
+	#theme-selector .theme-selector-close-button  {
 		color: #888;
 		text-shadow:
 			0 0 1px #fff,

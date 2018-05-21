@@ -2616,20 +2616,22 @@ div > .MJXc-display {
 		visibility: visible;
 		display: inline-block;
 		border-radius: 50%;
-		overflow: hidden;
 		z-index: 1;
 	}
 	#appearance-adjust-ui-toggle button,
-	#post-nav-ui-toggle button {
+	#post-nav-ui-toggle button,
+	#theme-selector .theme-selector-close-button {
 		font-family: Font Awesome;
 		font-weight: 900;
 		font-size: 32px;
 		padding: 10px;
 		opacity: 0.8;
+		-webkit-tap-highlight-color: transparent;
 		transition: transform 0.2s ease;
 	}
 	#appearance-adjust-ui-toggle button::selection,
-	#post-nav-ui-toggle button::selection {
+	#post-nav-ui-toggle button::selection,
+	#theme-selector .theme-selector-close-button::selection {
 		background-color: transparent;
 	}
 	#appearance-adjust-ui-toggle button.engaged,
@@ -2649,7 +2651,6 @@ div > .MJXc-display {
 	}
 	
 	#theme-selector.engaged,
-	#text-size-adjustment-ui.engaged,
 	#quick-nav-ui.engaged,
 	#new-comment-nav-ui.engaged,
 	#hns-date-picker.engaged {
@@ -2702,6 +2703,19 @@ div > .MJXc-display {
 		text-align: left;
 		left: 2.5em;
 		top: 1em;
+	}
+	#theme-selector .theme-selector-close-button {
+		position: absolute;
+		width: unset;
+		background-color: transparent;
+		top: 0;
+		right: -3px;
+	}
+	#theme-selector .theme-selector-close-button,
+	#theme-selector .theme-selector-close-button:focus,
+	#theme-selector .theme-selector-close-button:active,
+	#theme-selector .theme-selector-close-button:hover {
+		box-shadow: none;
 	}
 	
 	#quick-nav-ui {
@@ -4796,7 +4810,8 @@ div > .MJXc-display {
 
 @media only screen and (hover: none), only screen and (-moz-touch-enabled) {
 	#appearance-adjust-ui-toggle button,
-	#post-nav-ui-toggle button {
+	#post-nav-ui-toggle button,
+	#theme-selector .theme-selector-close-button  {
 		color: #888;
 		text-shadow:
 			0 0 1px #fff,

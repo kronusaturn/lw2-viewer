@@ -1120,6 +1120,12 @@ function togglePostNavUI() {
 function injectAppearanceAdjustUIToggle() {
 	let appearanceAdjustUIToggle = addUIElement("<div id='appearance-adjust-ui-toggle'><button type='button' tabindex='-1'>&#xf013;</button></div>");
 	appearanceAdjustUIToggle.querySelector("button").addActivateEvent(appearanceAdjustUIToggleButtonClicked);
+	
+	let themeSelectorCloseButton = appearanceAdjustUIToggle.querySelector("button").cloneNode(true);
+	themeSelectorCloseButton.addClass("theme-selector-close-button");
+	themeSelectorCloseButton.innerHTML = "&#xf057;";
+	document.querySelector("#theme-selector").appendChild(themeSelectorCloseButton);
+	themeSelectorCloseButton.addActivateEvent(appearanceAdjustUIToggleButtonClicked);
 }
 function appearanceAdjustUIToggleButtonClicked(event) {
 	toggleAppearanceAdjustUI();
