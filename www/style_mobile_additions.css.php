@@ -44,18 +44,19 @@
 	
 	#quick-nav-ui {
 		padding: 4px 4px 4px 4px;
-		max-height: 0;
+		max-width: 0px;
 		overflow: hidden;
-		transition: max-height 0.2s ease-out, visibility 0.2s ease;
+		transition:
+			max-width 0.2s ease,
+			visibility 0.2s ease;
+		display: flex;
 	}
 	#quick-nav-ui.engaged {
-		max-height: 1000px;
+		max-width: 1000px;
 	}
 	#quick-nav-ui a {
 		position: relative;
-	}
-	#quick-nav-ui a[href='#top'] {
-		margin: 0;
+		margin: 5px;
 	}
 	#quick-nav-ui::before {
 		content: "";
@@ -70,13 +71,16 @@
 	
 	#new-comment-nav-ui {
 		overflow: hidden;
-		max-height: 0;
+		max-width: 0px;
+		max-height: 0px;
 		transition: 
-			bottom 0.2s ease-out,
-			max-height 0.2s ease-out,
+			max-width 0.2s ease,
+			max-height 0.2s ease,
 			visibility 0.2s ease;
+		display: flex;
 	}
 	#new-comment-nav-ui.engaged {
+		max-width: 1000px;
 		max-height: 1000px;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button {
@@ -95,7 +99,15 @@
 	}
 
 	#hns-date-picker {
-		transition: right 0.2s ease-out;
+		max-height: 0px;
+	}
+	#hns-date-picker.engaged {
+		max-height: 1000px;
+	}
+	#hns-date-picker {
+		transition:
+			max-height 0.2s ease,
+			visibility 0.2s ease;
 	}
 }
 
@@ -119,27 +131,20 @@
 }
 
 #quick-nav-ui {
-	right: 12px;
-	bottom: 68px;
+	right: 68px;
+	bottom: 8px;
 }
 #new-comment-nav-ui {
-	right: 14px;
-	bottom: 68px;
-}
-#new-comment-nav-ui.engaged {
-	bottom: 248px;
+	right: 84px;
+	bottom: 72px;
 }
 #hns-date-picker {
-	bottom: 275px;
-	right: -148px;
-	z-index: -1;
+	bottom: 120px;
+	right: 68px;
 }
-#hns-date-picker.engaged {
-	right: 58px;
-}
-#hns-date-picker.engaged::before {
+#hns-date-picker::before {
 	width: calc(100% + 2px);
-	border-width: 1px;
+	border-width: 1px !important;
 }
 
 #content {
