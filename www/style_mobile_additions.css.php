@@ -56,7 +56,10 @@
 	}
 	#quick-nav-ui a {
 		position: relative;
-		margin: 5px;
+		margin: 2px;
+	}
+	#quick-nav-ui a + a {
+		margin-left: 5px;
 	}
 	#quick-nav-ui::before {
 		content: "";
@@ -132,15 +135,15 @@
 
 #quick-nav-ui {
 	right: 68px;
-	bottom: 8px;
+	bottom: 10px;
 }
 #new-comment-nav-ui {
-	right: 84px;
-	bottom: 72px;
+	right: 78px;
+	bottom: 70px;
 }
 #hns-date-picker {
-	bottom: 120px;
-	right: 68px;
+	bottom: 124px;
+	right: 62px;
 }
 #hns-date-picker::before {
 	width: calc(100% + 2px);

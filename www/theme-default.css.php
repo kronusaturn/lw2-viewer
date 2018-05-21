@@ -1472,14 +1472,20 @@ div > .MJXc-display {
 	#quick-nav-ui::before {
 		background-color: rgba(255,255,255,0.9);
 	}
-	#quick-nav-ui::before,
-	#new-comment-nav-ui,
-	#hns-date-picker::before {
+	#quick-nav-ui::before {
 		box-shadow: 
 			0 0 1px rgba(255,255,255,0.9),
 			0 0 3px rgba(255,255,255,0.9),
 			0 0 5px rgba(255,255,255,0.9),
 			0 0 8px rgba(255,255,255,0.9);
+	}
+	#new-comment-nav-ui,
+	#hns-date-picker::before {
+		box-shadow: 
+			0 0 1px 3px rgba(255,255,255,0.9),
+			0 0 3px 3px rgba(255,255,255,0.9),
+			0 0 5px 3px rgba(255,255,255,0.9),
+			0 0 8px 3px rgba(255,255,255,0.9);
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button {
 		color: #777;

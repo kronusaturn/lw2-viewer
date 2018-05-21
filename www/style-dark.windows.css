@@ -2653,7 +2653,10 @@ div > .MJXc-display {
 	}
 	#quick-nav-ui a {
 		position: relative;
-		margin: 5px;
+		margin: 2px;
+	}
+	#quick-nav-ui a + a {
+		margin-left: 5px;
 	}
 	#quick-nav-ui::before {
 		content: "";
@@ -2729,15 +2732,15 @@ div > .MJXc-display {
 
 #quick-nav-ui {
 	right: 68px;
-	bottom: 8px;
+	bottom: 10px;
 }
 #new-comment-nav-ui {
-	right: 84px;
-	bottom: 72px;
+	right: 78px;
+	bottom: 70px;
 }
 #hns-date-picker {
-	bottom: 120px;
-	right: 68px;
+	bottom: 124px;
+	right: 62px;
 }
 #hns-date-picker::before {
 	width: calc(100% + 2px);
@@ -4772,14 +4775,20 @@ div > .MJXc-display {
 	#quick-nav-ui::before {
 		background-color: rgba(0, 0, 0, 0.9);
 	}
-	#quick-nav-ui::before,
-	#new-comment-nav-ui,
-	#hns-date-picker::before {
+	#quick-nav-ui::before {
 		box-shadow: 
 			0 0 1px rgba(0, 0, 0, 0.9),
 			0 0 3px rgba(0, 0, 0, 0.9),
 			0 0 5px rgba(0, 0, 0, 0.9),
 			0 0 8px rgba(0, 0, 0, 0.9);
+	}
+	#new-comment-nav-ui,
+	#hns-date-picker::before {
+		box-shadow: 
+			0 0 1px 3px rgba(0, 0, 0, 0.9),
+			0 0 3px 3px rgba(0, 0, 0, 0.9),
+			0 0 5px 3px rgba(0, 0, 0, 0.9),
+			0 0 8px 3px rgba(0, 0, 0, 0.9);
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button {
 		color: #777;
