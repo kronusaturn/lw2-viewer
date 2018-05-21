@@ -4745,6 +4745,15 @@ div > .MJXc-display {
 			0 0 20px #000,
 			0 0 30px #000;
 	}
+	#new-comment-nav-ui {
+		background-color: #232323;
+		border: 1px solid #575756;
+		border-radius: 8px;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button {
+		box-shadow: 0 0 0 1px #575756;
+		color: #575756;
+	}
 }
 
 @media only screen and (max-width: 900px) {
