@@ -2599,7 +2599,7 @@ div > .MJXc-display {
 /* MOBILE LAYOUT */
 /*****************/
 
-@media only screen and (hover: none) {
+@media only screen and (hover: none), only screen and (-moz-touch-enabled) {
 	#ui-elements-container {
 		backface-visibility: hidden;
 	}
@@ -4741,7 +4741,7 @@ div > .MJXc-display {
 /* MOBILE */
 /*========*/
 
-@media only screen and (hover: none) {
+@media only screen and (hover: none), only screen and (-moz-touch-enabled) {
 	#post-nav-ui-toggle button {
 		color: #888;
 		text-shadow:

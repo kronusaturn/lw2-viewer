@@ -1446,7 +1446,7 @@ div > .MJXc-display {
 /* MOBILE */
 /*========*/
 
-@media only screen and (hover: none) {
+@media only screen and (hover: none), only screen and (-moz-touch-enabled) {
 	#post-nav-ui-toggle button {
 		color: #888;
 		text-shadow:

@@ -2,7 +2,7 @@
 /* MOBILE LAYOUT */
 /*****************/
 
-@media only screen and (hover: none) {
+@media only screen and (hover: none), only screen and (-moz-touch-enabled) {
 	#ui-elements-container {
 		backface-visibility: hidden;
 	}
