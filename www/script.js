@@ -1230,7 +1230,8 @@ function earlyInitialize() {
 	// Add the comments list mode selector widget (expanded vs. compact).
 	injectCommentsListModeSelector();
 
-	updateInbox();
+	try { updateInbox(); }
+	catch (e) { }
 }
 
 var initializeDone = false;
