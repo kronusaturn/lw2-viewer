@@ -71,7 +71,6 @@
 		width: calc(100vw - 20px);
 		max-width: 360px;
 		padding: 0 0 3px 0;
-		border-radius: 12px;
 		overflow: hidden;
 		max-height: 0;
 		transition: 
@@ -100,6 +99,7 @@
 		width: calc(100% - 0.5em);
 		background-repeat: no-repeat;
 		padding: 1em 0.875em;
+		margin: 1px 4px;
 		line-height: 1;
 		height: unset;
 		position: relative;
