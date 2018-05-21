@@ -42,7 +42,7 @@
 	}
 	
 	#appearance-adjust-ui-toggle {
-		top: 60px;
+		bottom: 10px;
 		left: 10px;
 	}
 	#appearance-adjust-ui-toggle button.engaged {
@@ -57,6 +57,8 @@
 		transform: rotate(-90deg);
 	}
 	
+	#theme-selector.engaged,
+	#text-size-adjustment-ui.engaged,
 	#quick-nav-ui.engaged,
 	#new-comment-nav-ui.engaged,
 	#hns-date-picker.engaged {

@@ -1118,7 +1118,7 @@ function togglePostNavUI() {
 }
 
 function injectAppearanceAdjustUIToggle() {
-	let appearanceAdjustUIToggle = addUIElement("<div id='appearance-adjust-ui-toggle'<button type='button' tabindex='-1'>&#xf013;</button></div>");
+	let appearanceAdjustUIToggle = addUIElement("<div id='appearance-adjust-ui-toggle'><button type='button' tabindex='-1'>&#xf013;</button></div>");
 	appearanceAdjustUIToggle.querySelector("button").addActivateEvent(appearanceAdjustUIToggleButtonClicked);
 }
 function appearanceAdjustUIToggleButtonClicked(event) {

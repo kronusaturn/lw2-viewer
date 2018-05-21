@@ -2639,7 +2639,7 @@ div > .MJXc-display {
 	}
 	
 	#appearance-adjust-ui-toggle {
-		top: 60px;
+		bottom: 10px;
 		left: 10px;
 	}
 	#appearance-adjust-ui-toggle button.engaged {
@@ -2654,6 +2654,8 @@ div > .MJXc-display {
 		transform: rotate(-90deg);
 	}
 	
+	#theme-selector.engaged,
+	#text-size-adjustment-ui.engaged,
 	#quick-nav-ui.engaged,
 	#new-comment-nav-ui.engaged,
 	#hns-date-picker.engaged {
@@ -4771,6 +4773,7 @@ div > .MJXc-display {
 /*========*/
 
 @media only screen and (hover: none), only screen and (-moz-touch-enabled) {
+	#appearance-adjust-ui-toggle button,
 	#post-nav-ui-toggle button {
 		color: #666;
 		text-shadow:
