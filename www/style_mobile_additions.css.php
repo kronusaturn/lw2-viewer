@@ -108,15 +108,14 @@
 	}
 	
 	#quick-nav-ui {
-		padding: 4px 4px 4px 4px;
 		max-width: 0px;
 		overflow: hidden;
 		transition:
 			max-width 0.2s ease,
 			visibility 0.2s ease;
 		display: flex;
-		right: 68px;
-		bottom: 10px;
+		right: 72px;
+		bottom: 14px;
 	}
 	#quick-nav-ui.engaged {
 		max-width: 1000px;
@@ -127,16 +126,6 @@
 	}
 	#quick-nav-ui a + a {
 		margin-left: 5px;
-	}
-	#quick-nav-ui::before {
-		content: "";
-		display: block;
-		position: absolute;
-		top: 2px;
-		left: 2px;
-		width: calc(100% - 4px);
-		height: calc(100% - 4px);
-		border-radius: 6px;
 	}
 	
 	#new-comment-nav-ui {

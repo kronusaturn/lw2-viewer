@@ -1483,10 +1483,10 @@ div > .MJXc-display {
 			0 0.5px 0.5px #000;
 	}
 
-	#quick-nav-ui::before {
+	#quick-nav-ui {
 		background-color: #fff;
 	}
-	#quick-nav-ui::before,
+	#quick-nav-ui,
 	#new-comment-nav-ui,
 	#hns-date-picker {
 		box-shadow:
@@ -1496,10 +1496,13 @@ div > .MJXc-display {
 			0 0 10px 3px #fff,
 			0 0 20px 3px #fff;
 	}
+	#quick-nav-ui,
+	#new-comment-nav-ui {
+		border-radius: 8px;
+	}
 	#new-comment-nav-ui {
 		background-color: #d8d8d8;
 		border: 1px solid #999;
-		border-radius: 8px;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button {
 		box-shadow: 0 0 0 1px #999;
