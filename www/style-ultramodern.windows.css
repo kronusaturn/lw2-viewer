@@ -2642,16 +2642,10 @@ div > .MJXc-display {
 		bottom: 10px;
 		left: 10px;
 	}
-	#appearance-adjust-ui-toggle button.engaged {
-		transform: rotate(90deg);
-	}
 	
 	#post-nav-ui-toggle {
 		bottom: 10px;
 		right: 10px;
-	}
-	#post-nav-ui-toggle button.engaged {
-		transform: rotate(-90deg);
 	}
 	
 	#theme-selector.engaged,

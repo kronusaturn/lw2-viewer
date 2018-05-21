@@ -2642,16 +2642,10 @@ div > .MJXc-display {
 		bottom: 10px;
 		left: 10px;
 	}
-	#appearance-adjust-ui-toggle button.engaged {
-		transform: rotate(90deg);
-	}
 	
 	#post-nav-ui-toggle {
 		bottom: 10px;
 		right: 10px;
-	}
-	#post-nav-ui-toggle button.engaged {
-		transform: rotate(-90deg);
 	}
 	
 	#theme-selector.engaged,
@@ -4848,6 +4842,19 @@ div > .MJXc-display {
 			0 0.5px 0.5px #fff;
 	}
 
+	#quick-nav-ui::before {
+		background-color: #000;
+	}
+	#quick-nav-ui::before,
+	#new-comment-nav-ui,
+	#hns-date-picker {
+		box-shadow:
+			0 0 1px 3px #000,
+			0 0 3px 3px #000,
+			0 0 5px 3px #000,
+			0 0 10px 3px #000,
+			0 0 20px 3px #000;
+	}
 	#new-comment-nav-ui {
 		background-color: #232323;
 		border: 1px solid #575756;
@@ -4855,36 +4862,14 @@ div > .MJXc-display {
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button {
 		box-shadow: 0 0 0 1px #575756;
-		color: #575756;
-	}
-}
-
-@media only screen and (max-width: 900px) {
-	#quick-nav-ui::before {
-		background-color: rgba(0, 0, 0, 0.9);
-	}
-	#quick-nav-ui::before {
-		box-shadow: 
-			0 0 1px rgba(0, 0, 0, 0.9),
-			0 0 3px rgba(0, 0, 0, 0.9),
-			0 0 5px rgba(0, 0, 0, 0.9),
-			0 0 8px rgba(0, 0, 0, 0.9);
-	}
-	#new-comment-nav-ui,
-	#hns-date-picker::before {
-		box-shadow: 
-			0 0 1px 3px rgba(0, 0, 0, 0.9),
-			0 0 3px 3px rgba(0, 0, 0, 0.9),
-			0 0 5px 3px rgba(0, 0, 0, 0.9),
-			0 0 8px 3px rgba(0, 0, 0, 0.9);
-	}
-	#new-comment-nav-ui .new-comment-sequential-nav-button {
 		color: #777;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
 		color: #393939;
 	}
+}
 
+@media only screen and (max-width: 900px) {
 	h1.listing + .post-meta .author {
 		margin: 0 0.75em 0 1.5em;
 	}
