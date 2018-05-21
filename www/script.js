@@ -1117,6 +1117,19 @@ function togglePostNavUI() {
 	});
 }
 
+function injectAppearanceAdjustUIToggle() {
+	let appearanceAdjustUIToggle = addUIElement("<div id='appearance-adjust-ui-toggle'<button type='button' tabindex='-1'>&#xf013;</button></div>");
+	appearanceAdjustUIToggle.querySelector("button").addActivateEvent(appearanceAdjustUIToggleButtonClicked);
+}
+function appearanceAdjustUIToggleButtonClicked(event) {
+	toggleAppearanceAdjustUI();
+}
+function toggleAppearanceAdjustUI() {
+	document.querySelectorAll("#theme-selector, #appearance-adjust-ui-toggle button").forEach(function (element) {
+		element.toggleClass("engaged");
+	});
+}
+
 /*****************************/
 /* MINIMIZED THREAD HANDLING */
 /*****************************/
@@ -1424,6 +1437,9 @@ function initialize() {
 		
 		// Add the toggle for the post nav UI elements on mobile.
 		injectPostNavUIToggle();
+		
+		// Add the toggle for the appearance adjustment UI elements on mobile.
+		injectAppearanceAdjustUIToggle();
 	
 		// Add event listeners for Escape and Enter, for the theme tweaker.
 		document.addEventListener("keyup", function(event) {

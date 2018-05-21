@@ -13,15 +13,16 @@
 		opacity: 1.0 !important;
 		z-index: 10000;
 	}
+	
+	#appearance-adjust-ui-toggle,
 	#post-nav-ui-toggle {
 		visibility: visible;
 		display: inline-block;
-		bottom: 10px;
-		right: 10px;
 		border-radius: 50%;
 		overflow: hidden;
 		z-index: 1;
 	}
+	#appearance-adjust-ui-toggle button,
 	#post-nav-ui-toggle button {
 		font-family: Font Awesome;
 		font-weight: 900;
@@ -30,12 +31,30 @@
 		opacity: 0.8;
 		transition: transform 0.2s ease;
 	}
+	#appearance-adjust-ui-toggle button::selection,
 	#post-nav-ui-toggle button::selection {
 		background-color: transparent;
 	}
+	#appearance-adjust-ui-toggle button.engaged,
 	#post-nav-ui-toggle button.engaged {
 		transform: rotate(-90deg);
 		opacity: 1.0;
+	}
+	
+	#appearance-adjust-ui-toggle {
+		top: 60px;
+		left: 10px;
+	}
+	#appearance-adjust-ui-toggle button.engaged {
+		transform: rotate(90deg);
+	}
+	
+	#post-nav-ui-toggle {
+		bottom: 10px;
+		right: 10px;
+	}
+	#post-nav-ui-toggle button.engaged {
+		transform: rotate(-90deg);
 	}
 	
 	#quick-nav-ui.engaged,
