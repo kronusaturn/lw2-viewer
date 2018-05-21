@@ -1463,7 +1463,11 @@ div > .MJXc-display {
 		background-color: #d8d8d8;
 		box-shadow: 
 			0 0 0 1px #999,
-			0 0 0 2px transparent;
+			0 0 1px 3px #fff,
+			0 0 3px 3px #fff,
+			0 0 5px 3px #fff,
+			0 0 10px 3px #fff,
+			0 0 20px 3px #fff;
 		border-radius: 12px;
 	}
 	#theme-selector::before {
