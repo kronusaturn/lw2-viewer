@@ -7,6 +7,7 @@
 		height: 100%;
 	}
 	#ui-elements-container > * {
+		position: fixed;
 		visibility: hidden;
 		opacity: 1.0 !important;
 	}
