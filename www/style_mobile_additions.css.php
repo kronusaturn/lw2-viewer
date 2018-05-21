@@ -5,6 +5,7 @@
 @media only screen and (hover: none), only screen and (-moz-touch-enabled) {
 	#ui-elements-container {
 		height: unset;
+		position: unset;
 	}
 	#ui-elements-container > * {
 		position: fixed;
