@@ -1385,3 +1385,106 @@ div > .MJXc-display {
 		opacity: 1.0;
 	}
 }
+
+/*========*/
+/* MOBILE */
+/*========*/
+
+@media only screen and (hover: none), only screen and (-moz-touch-enabled) {
+	#appearance-adjust-ui-toggle button,
+	#post-nav-ui-toggle button,
+	#theme-selector .theme-selector-close-button  {
+		color: #444;
+		text-shadow:
+			0 0 1px #999,
+			0 0 3px #999,
+			0 0 5px #999,
+			0 0 10px #999,
+			0 0 20px #999,
+			0 0 30px #999;
+	}
+
+	#theme-selector {
+		background-color: #888;
+		box-shadow: 
+			0 0 0 1px #444,
+			0 0 1px 3px #999,
+			0 0 3px 3px #999,
+			0 0 5px 3px #999,
+			0 0 10px 3px #999,
+			0 0 20px 3px #999;
+		border-radius: 12px;
+	}
+	#theme-selector::before {
+		color: #222;
+		font-weight: 300;
+		text-shadow: 
+			0px 0px 1px #777, 
+			0.5px 0.5px 1px #aaa, 
+			0.5px 0.5px 1px #bbb;
+	}
+	#theme-selector button {
+		background-color: #777;
+		border-radius: 10px;
+	}
+	#theme-selector button::after {
+		color: #222;
+		max-width: calc(100% - 3.5em);
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	#theme-selector button.selected::after {
+		color: #000;
+		text-shadow: 
+			0 -1px 0 #fff,
+			0 0.5px 0.5px #000;
+	}
+
+	#quick-nav-ui {
+		background-color: #999;
+	}
+	#quick-nav-ui a {
+		background-color: #888;
+		box-shadow: 0 0 0 1px #444;
+		color: #444;
+	}
+	#quick-nav-ui,
+	#new-comment-nav-ui,
+	#hns-date-picker {
+		box-shadow:
+			0 0 1px 3px #999,
+			0 0 3px 3px #999,
+			0 0 5px 3px #999,
+			0 0 10px 3px #999,
+			0 0 20px 3px #999;
+	}
+	#quick-nav-ui,
+	#new-comment-nav-ui {
+		border-radius: 8px;
+	}
+	#new-comment-nav-ui {
+		background-color: #888;
+		border: 1px solid #444;
+	}
+	#new-comment-nav-ui .new-comments-count,
+	#new-comment-nav-ui .new-comments-count::after {
+		color: #444;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button {
+		box-shadow: 0 0 0 1px #444;
+		color: #444;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
+		color: #999;
+	}
+
+	#hns-date-picker.engaged {
+		bottom: 124px;
+		right: 61px;
+		border: 1px solid #444;
+	}
+	#hns-date-picker span,
+	#hns-date-picker input {
+		color: #444;
+	}
+}
