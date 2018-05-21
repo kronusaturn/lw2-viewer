@@ -4,7 +4,7 @@
 
 @media only screen and (hover: none), only screen and (-moz-touch-enabled) {
 	#ui-elements-container {
-		backface-visibility: hidden;
+		height: 100%;
 	}
 	#ui-elements-container > * {
 		visibility: hidden;
