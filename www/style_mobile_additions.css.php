@@ -5,7 +5,7 @@
 @media only screen and (hover: none) {
 	#ui-elements-container > * {
 		visibility: hidden;
-		opacity: 1.0;
+		opacity: 1.0 !important;
 	}
 	#post-nav-ui-toggle {
 		visibility: visible;
@@ -63,11 +63,33 @@
 	}
 	
 	#new-comment-nav-ui {
+		overflow: hidden;
 		max-height: 0;
-		transition: max-height 0.2s ease-out, visibility 0.2s ease;
+		transition: 
+			bottom 0.2s ease-out,
+			max-height 0.2s ease-out,
+			visibility 0.2s ease;
 	}
 	#new-comment-nav-ui.engaged {
 		max-height: 1000px;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button {
+		top: unset;
+		bottom: unset;
+		padding: 2px 7px;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-previous {
+		padding: 2px 7px 3px 7px;
+	}
+	#new-comment-nav-ui .new-comments-count {
+		padding: 4px 0 5px 0;
+	}
+	#new-comment-nav-ui .new-comments-count::before {
+		display: none;
+	}
+
+	#hns-date-picker {
+		transition: right 0.2s ease-out;
 	}
 }
 
@@ -95,15 +117,22 @@
 	bottom: 68px;
 }
 #new-comment-nav-ui {
-	right: 15px;
+	right: 14px;
 	bottom: 68px;
 }
 #new-comment-nav-ui.engaged {
 	bottom: 248px;
-
 }
-#new-comment-nav-ui .new-comments-count {
-	z-index: 2;
+#hns-date-picker {
+	bottom: 275px;
+	right: -148px;
+}
+#hns-date-picker.engaged {
+	right: 58px;
+}
+#hns-date-picker.engaged::before {
+	width: calc(100% + 2px);
+	border-width: 1px;
 }
 
 #content {

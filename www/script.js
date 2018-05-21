@@ -35,7 +35,7 @@ Element.prototype.removeClass = function(className) {
 Element.prototype.hasClass = function(className) {
 	return this.className.match(new RegExp("(^|\\s)" + className + "(\\s|$)"));
 }
-Element.prototype.toggleClass = function(className( {
+Element.prototype.toggleClass = function(className) {
 	if (this.hasClass(className))
 		this.removeClass(className);
 	else
