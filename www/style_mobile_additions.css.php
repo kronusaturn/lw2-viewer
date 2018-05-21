@@ -14,7 +14,6 @@
 	#post-nav-ui-toggle {
 		visibility: visible;
 		display: inline-block;
-		position: absolute;
 		bottom: 10px;
 		right: 10px;
 		border-radius: 50%;
