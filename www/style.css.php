@@ -56,7 +56,7 @@ input {
 	left: 0;
 	right: 0;
 	margin: auto;
-	z-index: 2;
+	z-index: 10000;
 	pointer-events: none;
 }
 #ui-elements-container > * {

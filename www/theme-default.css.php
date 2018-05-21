@@ -1470,8 +1470,22 @@ div > .MJXc-display {
 
 @media only screen and (max-width: 900px) {
 	#quick-nav-ui::before {
+		background-color: rgba(255,255,255,0.9);
+	}
+	#quick-nav-ui::before,
+	#new-comment-nav-ui,
+	#hns-date-picker::before {
 		box-shadow: 
-			0 0 4px 0 rgba(238,238,238,0.7);
+			0 0 1px rgba(255,255,255,0.9),
+			0 0 3px rgba(255,255,255,0.9),
+			0 0 5px rgba(255,255,255,0.9),
+			0 0 8px rgba(255,255,255,0.9);
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button {
+		color: #777;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
+		color: #bbb;
 	}
 
 	h1.listing + .post-meta .author {

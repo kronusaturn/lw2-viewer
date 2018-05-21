@@ -3,6 +3,9 @@
 /*****************/
 
 @media only screen and (hover: none) {
+	#ui-elements-container {
+		backface-visibility: hidden;
+	}
 	#ui-elements-container > * {
 		visibility: hidden;
 		opacity: 1.0 !important;
@@ -40,7 +43,7 @@
 	}
 	
 	#quick-nav-ui {
-		padding: 4px 12px 12px 12px;
+		padding: 4px 4px 4px 4px;
 		max-height: 0;
 		overflow: hidden;
 		transition: max-height 0.2s ease-out, visibility 0.2s ease;
@@ -48,18 +51,21 @@
 	#quick-nav-ui.engaged {
 		max-height: 1000px;
 	}
+	#quick-nav-ui a {
+		position: relative;
+	}
+	#quick-nav-ui a[href='#top'] {
+		margin: 0;
+	}
 	#quick-nav-ui::before {
 		content: "";
 		display: block;
 		position: absolute;
-		top: 1px;
-		left: 1px;
-		width: calc(100% - 2px);
-		height: calc(100% - 2px);
+		top: 2px;
+		left: 2px;
+		width: calc(100% - 4px);
+		height: calc(100% - 4px);
 		border-radius: 6px;
-	}
-	#quick-nav-ui a {
-		position: relative;
 	}
 	
 	#new-comment-nav-ui {
@@ -113,7 +119,7 @@
 }
 
 #quick-nav-ui {
-	right: 4px;
+	right: 12px;
 	bottom: 68px;
 }
 #new-comment-nav-ui {
@@ -126,6 +132,7 @@
 #hns-date-picker {
 	bottom: 275px;
 	right: -148px;
+	z-index: -1;
 }
 #hns-date-picker.engaged {
 	right: 58px;
