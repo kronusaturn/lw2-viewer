@@ -1104,10 +1104,15 @@ function commentsListModeSelectButtonClicked(event) {
 function injectPostNavUIToggle() {
 	let postNavUIToggle = addUIElement("<div id='post-nav-ui-toggle'><button type='button' tabindex='-1'>&#xf14e;</button></div>");
 	postNavUIToggle.querySelector("button").addActivateEvent(postNavUIToggleButtonClicked);
+	
+	if (window.localStorage.getItem("post-nav-ui-toggle-engaged") == "true") togglePostNavUI();
 }
 function postNavUIToggleButtonClicked(event) {
-	event.target.toggleClass("engaged");
-	document.querySelectorAll("#quick-nav-ui, #new-comment-nav-ui, #hns-date-picker").forEach(function (element) {
+	togglePostNavUI();
+	window.localStorage.setItem("post-nav-ui-toggle-engaged", window.localStorage.getItem("post-nav-ui-toggle-engaged") == "false");
+}
+function togglePostNavUI() {
+	document.querySelectorAll("#quick-nav-ui, #new-comment-nav-ui, #hns-date-picker, #post-nav-ui-toggle button").forEach(function (element) {
 		element.toggleClass("engaged");
 	});
 }
@@ -1224,9 +1229,6 @@ function earlyInitialize() {
 // 	injectCommentsViewModeSelector();
 	// Add the comments list mode selector widget (expanded vs. compact).
 	injectCommentsListModeSelector();
-	
-	// Add the toggle for the post nav UI elements on mobile.
-	injectPostNavUIToggle();
 
 	updateInbox();
 }
@@ -1419,6 +1421,9 @@ function initialize() {
 			badgePostsWithNewComments();
 		}
 		
+		// Add the toggle for the post nav UI elements on mobile.
+		injectPostNavUIToggle();
+	
 		// Add event listeners for Escape and Enter, for the theme tweaker.
 		document.addEventListener("keyup", function(event) {
 			if (event.keyCode == 27) {
