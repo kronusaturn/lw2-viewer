@@ -2662,6 +2662,30 @@ div > .MJXc-display {
 		visibility: visible;
 	}
 	
+	#theme-selector {
+		left: 10px;
+		max-width: unset;
+		display: flex;
+		flex-flow: column;
+		width: calc(100vw - 20px);
+		padding: 0;
+		border-radius: 12px;
+	}
+	#theme-selector::before {
+		content: "Select theme";
+		white-space: nowrap;
+		display: block;
+		font-weight: 600;
+		font-size: 2rem;
+		margin: 0.375em 1em 0.5em 1em;
+		text-align: center;
+	}
+	#theme-selector button::after {
+		content: attr(data-theme-description);
+		color: #fff;
+		white-space: nowrap;
+	}
+	
 	#quick-nav-ui {
 		padding: 4px 4px 4px 4px;
 		max-width: 0px;

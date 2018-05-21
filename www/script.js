@@ -549,7 +549,7 @@ function injectThemeSelector() {
 			let selected = (name == currentTheme ? ' selected' : '');
 			let disabled = (name == currentTheme ? ' disabled' : '');
 			let accesskey = letter.charCodeAt(0) - 'A'.charCodeAt(0) + 1;
-			return `<button type='button' class='select-theme-${name}${selected}'${disabled} title="${desc} (accesskey: '${accesskey}')" accesskey='${accesskey}' tabindex='-1'>${letter}</button>`;})) +
+			return `<button type='button' class='select-theme-${name}${selected}'${disabled} title="${desc} (accesskey: '${accesskey}')" data-theme-description="${desc}" accesskey='${accesskey}' tabindex='-1'>${letter}</button>`;})) +
 		"</div>");
 	themeSelector.querySelectorAll("button").forEach(function (button) {
 		button.addActivateEvent(themeSelectButtonClicked);
