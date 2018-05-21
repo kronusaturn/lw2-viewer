@@ -4,7 +4,7 @@
 
 @media only screen and (hover: none), only screen and (-moz-touch-enabled) {
 	#ui-elements-container {
-		height: 100%;
+		height: unset;
 	}
 	#ui-elements-container > * {
 		position: fixed;
