@@ -79,6 +79,9 @@
 			max-height 0.2s ease,
 			visibility 0.2s ease;
 	}
+	#theme-selector.engaged {
+		max-height: 1000px;
+	}
 	#theme-selector::before {
 		content: "Select theme";
 		white-space: nowrap;
