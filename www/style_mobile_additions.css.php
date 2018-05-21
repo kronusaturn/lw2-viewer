@@ -11,6 +11,7 @@
 		position: fixed;
 		visibility: hidden;
 		opacity: 1.0 !important;
+		z-index: 10000;
 	}
 	#post-nav-ui-toggle {
 		visibility: visible;
