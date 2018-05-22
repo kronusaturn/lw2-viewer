@@ -1466,6 +1466,86 @@ div > .MJXc-display {
 /* MOBILE */
 /*========*/
 
+@media only screen and (hover: none), only screen and (-moz-touch-enabled) {
+	#appearance-adjust-ui-toggle button,
+	#post-nav-ui-toggle button  {
+		color: #bbb;
+		text-shadow:
+			0 0 1px #fffffa,
+			0 0 3px #fffffa,
+			0 0 5px #fffffa,
+			0 0 10px #fffffa,
+			0 0 20px #fffffa,
+			0 0 30px #fffffa;
+	}
+
+	#theme-selector {
+		background-color: #fffffa;
+		box-shadow: 
+			0 0 0 1px #ccc,
+			0 0 1px 3px #fffffa,
+			0 0 3px 3px #fffffa,
+			0 0 5px 3px #fffffa,
+			0 0 10px 3px #fffffa,
+			0 0 20px 3px #fffffa;
+		border-radius: 8px;
+	}
+	#theme-selector::before {
+		color: #999;
+		font-weight: 300;
+		text-shadow: 0.5px 0.5px 0 #fff;
+	}
+	#theme-selector button {
+		background-color: #fffffa;
+		border-radius: 8px;
+	}
+	#theme-selector button::after {
+		color: #777;
+		max-width: calc(100% - 3.5em);
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	#theme-selector button.selected::after {
+		color: #222;
+		text-shadow: 
+			0 -1px 0 #fff,
+			0 0.5px 0.5px #000;
+	}
+	#theme-selector .theme-selector-close-button {
+		color: #fffffa;
+		text-shadow:
+			1px 1px 0 #ccc,
+			0 0 8px #ccc;
+		opacity: 1.0;
+	}
+
+	#quick-nav-ui {
+		background-color: #fffffa;
+	}
+	#quick-nav-ui,
+	#new-comment-nav-ui,
+	#hns-date-picker {
+		box-shadow:
+			0 0 1px 3px #fffffa,
+			0 0 3px 3px #fffffa,
+			0 0 5px 3px #fffffa,
+			0 0 10px 3px #fffffa,
+			0 0 20px 3px #fffffa;
+	}
+	#quick-nav-ui,
+	#new-comment-nav-ui {
+		border-radius: 8px;
+	}
+	#new-comment-nav-ui {
+		background-color: #fffffa;
+		border: 1px solid #ccc;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button {
+		box-shadow: 0 0 0 1px #ccc;
+		color: #777;
+	}
+}
+
 @media only screen and (max-width: 900px) {
 	h1.listing + .post-meta .author {
 		margin: 0 0.75em 0 1.5em;
