@@ -277,25 +277,27 @@ body {
 	color: #999;
 	background-color: #e4e4e4;
 	border-radius: 4px;
+	text-decoration: none;
 }
 #quick-nav-ui a[href='#bottom-bar'] {
 	line-height: 1.8;
 }
-#quick-nav-ui a:hover {
-	color: #000;
-	background-color: #eee;
-	text-decoration: none;
-}
 #quick-nav-ui a:active {
 	transform: scale(0.9);
-}
-#quick-nav-ui a:focus:not(:hover) {
-	transform: none;
-	text-shadow: none;
 }
 #quick-nav-ui a[href='#comments'].no-comments {
 	opacity: 0.4;
 	color: #bbb;
+}
+@media only screen and (hover:hover), only screen and (-moz-touch-enabled) {
+	#quick-nav-ui a:hover {
+		color: #000;
+		background-color: #eee;
+	}
+	#quick-nav-ui a:focus:not(:hover) {
+		transform: none;
+		text-shadow: none;
+	}
 }
 
 /*======================*/
@@ -307,25 +309,27 @@ body {
 	color: #666;
 	text-shadow: 0.5px 0.5px 0 #fff;
 }
-#new-comment-nav-ui .new-comments-count:hover {
-	text-shadow: 
-		0 0 1px #fff,
-		0 0 3px #fff,
-		0 0 5px #fff,
-		0 0 8px #fff,
-		0.5px 0.5px 0 #fff;
-}
 #new-comment-nav-ui .new-comments-count::after {
 	font-weight: 600;
 	color: #777;
 }
-#new-comment-nav-ui .new-comment-sequential-nav-button:focus {
-	color: #d00;
-	text-shadow: <?php echo $white_glow; ?>;
-}
 #new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
 	color: #bbb;
 	text-shadow: none;
+}
+@media only screen and (hover:hover), only screen and (-moz-touch-enabled) {
+	#new-comment-nav-ui .new-comments-count:hover {
+		text-shadow: 
+			0 0 1px #fff,
+			0 0 3px #fff,
+			0 0 5px #fff,
+			0 0 8px #fff,
+			0.5px 0.5px 0 #fff;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button:focus {
+		color: #d00;
+		text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+	}
 }
 
 /*=================*/
@@ -1171,13 +1175,6 @@ input[type='submit'] {
 	color: <?php echo $hyperlink_color; ?>;
 }
 
-button:hover,
-input[type='submit']:hover,
-button:focus,
-input[type='submit']:focus {
-	color: #d00;
-	text-shadow: <?php echo $white_glow; ?>;
-}
 button:active,
 input[type='submit']:active {
 	color: #f00;
@@ -1186,19 +1183,30 @@ input[type='submit']:active {
 .button:visited {
 	color: <?php echo $hyperlink_color; ?>;
 }
-.button:hover {
-	color: #d00;
-	text-shadow: <?php echo $white_glow; ?>;
-	text-decoration: none;
-}
 .button:active {
 	transform: scale(0.9);
 }
-.button:focus:not(:hover) {
-	transform: none;
-}
 @-moz-document url-prefix() {
 	.button:active {
+		transform: none;
+	}
+}
+
+@media only screen and (hover:hover), only screen and (-moz-touch-enabled) {
+	button:hover,
+	input[type='submit']:hover,
+	button:focus,
+	input[type='submit']:focus {
+		color: #d00;
+		text-shadow: <?php echo $white_glow; ?>;
+	}
+
+	.button:hover {
+		color: #d00;
+		text-shadow: <?php echo $white_glow; ?>;
+		text-decoration: none;
+	}
+	.button:focus:not(:hover) {
 		transform: none;
 	}
 }

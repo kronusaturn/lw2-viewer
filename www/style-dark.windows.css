@@ -2789,7 +2789,7 @@ div > .MJXc-display {
 
 /* Hide the mobile elements on desktop screens: */
 
-@media only screen and (hover: hover) {
+@media not screen and (hover: none), not screen and (-moz-touch-enabled) {
 	#post-nav-ui-toggle,
 	#appearance-adjust-ui-toggle,
 	#theme-selector .theme-selector-close-button {
@@ -3593,25 +3593,27 @@ body {
 	color: #575756;
 	background-color: #1a1a1a;
 	border-radius: 4px;
+	text-decoration: none;
 }
 #quick-nav-ui a[href='#bottom-bar'] {
 	line-height: 1.8;
 }
-#quick-nav-ui a:hover {
-	color: #fff;
-	background-color: #131313;
-	text-decoration: none;
-}
 #quick-nav-ui a:active {
 	transform: scale(0.9);
-}
-#quick-nav-ui a:focus:not(:hover) {
-	transform: none;
-	text-shadow: none;
 }
 #quick-nav-ui a[href='#comments'].no-comments {
 	opacity: 0.4;
 	color: #393939;
+}
+@media only screen and (hover:hover), only screen and (-moz-touch-enabled) {
+	#quick-nav-ui a:hover {
+		color: #fff;
+		background-color: #131313;
+	}
+	#quick-nav-ui a:focus:not(:hover) {
+		transform: none;
+		text-shadow: none;
+	}
 }
 
 /*======================*/
@@ -3623,25 +3625,27 @@ body {
 	color: #888;
 	text-shadow: 0.5px 0.5px 0 #000;
 }
-#new-comment-nav-ui .new-comments-count:hover {
-	text-shadow: 
-		0 0 1px #000,
-		0 0 3px #000,
-		0 0 5px #000,
-		0 0 8px #000,
-		0.5px 0.5px 0 #000;
-}
 #new-comment-nav-ui .new-comments-count::after {
 	font-weight: 600;
 	color: #777;
 }
-#new-comment-nav-ui .new-comment-sequential-nav-button:focus {
-	color: #00a1e8;
-	text-shadow: 0 0 1px #000, 0 0 3px #000, 0 0 5px #000;
-}
 #new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
 	color: #393939;
 	text-shadow: none;
+}
+@media only screen and (hover:hover), only screen and (-moz-touch-enabled) {
+	#new-comment-nav-ui .new-comments-count:hover {
+		text-shadow: 
+			0 0 1px #000,
+			0 0 3px #000,
+			0 0 5px #000,
+			0 0 8px #000,
+			0.5px 0.5px 0 #000;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button:focus {
+		color: #00a1e8;
+		text-shadow: 0 0 1px #000, 0 0 3px #000, 0 0 5px #000;
+	}
 }
 
 /*=================*/
@@ -4535,13 +4539,6 @@ input[type='submit'] {
 	color: #0cc800;
 }
 
-button:hover,
-input[type='submit']:hover,
-button:focus,
-input[type='submit']:focus {
-	color: #00a1e8;
-	text-shadow: 0 0 1px #000, 0 0 3px #000, 0 0 5px #000;
-}
 button:active,
 input[type='submit']:active {
 	color: #0090e0;
@@ -4550,19 +4547,30 @@ input[type='submit']:active {
 .button:visited {
 	color: #0cc800;
 }
-.button:hover {
-	color: #00a1e8;
-	text-shadow: 0 0 1px #000, 0 0 3px #000, 0 0 5px #000;
-	text-decoration: none;
-}
 .button:active {
 	transform: scale(0.9);
 }
-.button:focus:not(:hover) {
-	transform: none;
-}
 @-moz-document url-prefix() {
 	.button:active {
+		transform: none;
+	}
+}
+
+@media only screen and (hover:hover), only screen and (-moz-touch-enabled) {
+	button:hover,
+	input[type='submit']:hover,
+	button:focus,
+	input[type='submit']:focus {
+		color: #00a1e8;
+		text-shadow: 0 0 1px #000, 0 0 3px #000, 0 0 5px #000;
+	}
+
+	.button:hover {
+		color: #00a1e8;
+		text-shadow: 0 0 1px #000, 0 0 3px #000, 0 0 5px #000;
+		text-decoration: none;
+	}
+	.button:focus:not(:hover) {
 		transform: none;
 	}
 }
