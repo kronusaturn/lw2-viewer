@@ -1634,12 +1634,15 @@ div > .MJXc-display {
 	}
 	#bottom-bar .nav-item {
 		box-shadow: none;
+		position: relative;
 	}
 	#bottom-bar .nav-inner {
 		font-size: 2rem;
 		padding: 0;
 		visibility: hidden;
-		position: relative;
+		position: static;
+		width: 0;
+		overflow: visible;
 	}
 	#content #bottom-bar .nav-item .nav-inner::before {
 		margin: 0;
