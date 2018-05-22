@@ -203,7 +203,7 @@
 	}
 	#bottom-bar .nav-inner {
 		font-size: 2rem;
-		padding: 1rem 0 0 0;
+		padding: 1rem 0;
 		visibility: hidden;
 		position: static;
 	}
@@ -214,17 +214,18 @@
 		width: 100%;
 		height: 100%;
 		left: 0;
-		top: 1.25rem;
+		top: 0;
+		padding: 1rem 0;
 	}
 	#bottom-bar .nav-inner::after {
 		display: block;
 		visibility: visible;
 		text-transform: uppercase;
 		color: unset;
-		font-size: 0.875rem;
+		font-size: 0.75rem;
 		top: unset;
 		left: 0;
-		bottom: -0.875rem;
+		bottom: 0.75rem;
 		width: 100%;
 	}
 	#bottom-bar #nav-item-first .nav-inner::after {
@@ -280,6 +281,9 @@
 .nav-bar .nav-inner::after {
 	display: none;
 }
+#nav-item-recent-comments span {
+	display: none;
+}
 
 .post-body,
 .post > h1:first-child {
@@ -306,14 +310,6 @@
 	max-width: none;
 	margin-left: auto;
 	margin-right: auto;
-}
-
-/*******************************************/
-} @media only screen and (max-width: 700px) {
-/*******************************************/
-
-#nav-item-recent-comments span {
-	display: none;
 }
 
 /*******************************************/
