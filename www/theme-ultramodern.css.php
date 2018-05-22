@@ -221,25 +221,27 @@ body {
 	color: #666;
 	border-radius: 4px;
 	box-shadow: 0 0 0 1px #999;
+	text-decoration: none;
 }
 #quick-nav-ui a[href='#bottom-bar'] {
 	line-height: 1.8;
 }
-#quick-nav-ui a:hover  {
-	color: #444;
-	text-decoration: none;
-	box-shadow: 0 0 0 1px #ccc;
-}
 #quick-nav-ui a:active {
 	transform: scale(0.9);
-}
-#quick-nav-ui a:focus:not(:hover) {
-	transform: none;
-	text-shadow: none;
 }
 #quick-nav-ui a[href='#comments'].no-comments {
 	opacity: 0.4;
 	color: #777;
+}
+@media only screen and (hover:hover), only screen and (-moz-touch-enabled) {
+	#quick-nav-ui a:hover  {
+		color: #444;
+		box-shadow: 0 0 0 1px #ccc;
+	}
+	#quick-nav-ui a:focus:not(:hover) {
+		transform: none;
+		text-shadow: none;
+	}
 }
 
 /*======================*/
@@ -250,14 +252,6 @@ body {
 	font-weight: 600;
 	color: #666;
 }
-#new-comment-nav-ui .new-comments-count:hover {
-	text-shadow: 
-		0 0 1px #fff,
-		0 0 3px #fff,
-		0 0 5px #fff,
-		0 0 8px #fff,
-		0.5px 0.5px 0 #fff;
-}
 #new-comment-nav-ui .new-comments-count::after {
 	font-weight: 600;
 	color: #666;
@@ -265,16 +259,26 @@ body {
 #new-comment-nav-ui .new-comment-sequential-nav-button {
 	color: #bbb;
 }
-#new-comment-nav-ui .new-comment-sequential-nav-button:hover {
-	color: #444;
-	text-decoration: none;
-}
 #new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
 	color: #929292;
 }
-#new-comment-nav-ui .new-comment-sequential-nav-button:focus {
-	color: #d00;
-	text-shadow: <?php echo $white_glow; ?>;
+@media only screen and (hover:hover), only screen and (-moz-touch-enabled) {
+	#new-comment-nav-ui .new-comments-count:hover {
+		text-shadow: 
+			0 0 1px #fff,
+			0 0 3px #fff,
+			0 0 5px #fff,
+			0 0 8px #fff,
+			0.5px 0.5px 0 #fff;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button:hover {
+		color: #444;
+		text-decoration: none;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button:focus {
+		color: #d00;
+		text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+	}
 }
 
 /*=================*/
