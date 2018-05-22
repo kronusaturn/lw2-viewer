@@ -1574,7 +1574,7 @@ div > .MJXc-display {
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button {
 		box-shadow: 0 0 0 1px #999;
-		color: #00c;
+		color: #538d4d;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
 		color: #bbb;
