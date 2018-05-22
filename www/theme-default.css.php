@@ -1,6 +1,6 @@
 <?php
-	$UI_font = ($platform == 'Windows') ? "'Whitney', 'a_Avante'" : "'Concourse', 'a_Avante'";
-	$UI_font_smallcaps = ($platform == 'Windows') ? "'Whitney Smallcaps', 'a_Avante'" : "'Concourse Smallcaps', 'a_Avante'";
+	$UI_font = ($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Whitney', 'a_Avante'";
+	$UI_font_smallcaps = ($platform == 'Mac') ? "'Concourse Smallcaps', 'a_Avante'" : "'Whitney Smallcaps', 'a_Avante'";
 	$text_font = "'Charter', 'Georgia', serif";
 	$hyperlink_color = "#00e";
 	$white_glow = "0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff";
@@ -1533,6 +1533,14 @@ div > .MJXc-display {
 }
 
 @media only screen and (max-width: 900px) {
+	h1.listing {
+		font-size: 1.75rem;
+		line-height: 1;
+		margin-top: 0.8em;
+	}
+	h1.listing:last-of-type + .post-meta {
+		margin-bottom: 12px;
+	}
 	h1.listing + .post-meta .post-section::before {
 		left: 0;
 		top: 0;
@@ -1543,10 +1551,6 @@ div > .MJXc-display {
 	}
 }
 @media only screen and (max-width: 520px) {
-	#top-nav-bar {
-		margin: 0.25em 0;
-		font-size: 1.75rem;
-	}
 	h1.listing:first-of-type {
 		margin-top: 0;
 	}
@@ -1628,29 +1632,5 @@ div > .MJXc-display {
 	}
 	h1.listing:last-of-type + .post-meta {
 		margin-bottom: 0.75em;
-	}
-	#bottom-bar { 
-		padding: 0 3em;
-	}
-	#bottom-bar .nav-item {
-		box-shadow: none;
-		position: relative;
-	}
-	#bottom-bar .nav-inner {
-		font-size: 2rem;
-		padding: 0;
-		visibility: hidden;
-		position: static;
-		width: 0;
-		overflow: visible;
-	}
-	#content #bottom-bar .nav-item .nav-inner::before {
-		margin: 0;
-		visibility: visible;
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		left: 0;
-		top: 0;
 	}
 }

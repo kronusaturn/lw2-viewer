@@ -1317,6 +1317,7 @@ div > .MJXc-display {
 		max-width: calc(100% - 3.5em);
 		overflow: hidden;
 		text-overflow: ellipsis;
+		padding: 0 0 2px 0;
 	}
 	#theme-selector button.selected::after {
 		text-shadow: 

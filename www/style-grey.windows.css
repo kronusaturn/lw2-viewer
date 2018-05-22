@@ -2790,6 +2790,60 @@ div > .MJXc-display {
 		width: calc(100% + 2px);
 		border-width: 1px !important;
 	}
+
+	#bottom-bar { 
+		padding: 0 4.5rem;
+	}
+	#bottom-bar .nav-item {
+		box-shadow: none;
+		position: relative;
+	}
+	#bottom-bar .nav-inner {
+		font-size: 2rem;
+		padding: 1rem 0 0 0;
+		visibility: hidden;
+		position: static;
+	}
+	#content #bottom-bar .nav-item .nav-inner::before {
+		margin: 0;
+		visibility: visible;
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		left: 0;
+		top: 1.25rem;
+	}
+	#bottom-bar .nav-inner::after {
+		display: block;
+		visibility: visible;
+		text-transform: uppercase;
+		color: unset;
+		font-size: 0.875rem;
+		top: unset;
+		left: 0;
+		bottom: -0.875rem;
+		width: 100%;
+	}
+	#bottom-bar #nav-item-first .nav-inner::after {
+		content: "First Page";
+	}
+	#bottom-bar #nav-item-prev .nav-inner::after {
+		content: "Prev. Page";
+	}
+	#bottom-bar #nav-item-top .nav-inner::after {
+		content: "Top";
+	}
+	#bottom-bar #nav-item-next .nav-inner::after {
+		content: "Next Page";
+	}
+	#bottom-bar #nav-item-last .nav-inner::after {
+		content: "Last Page";
+	}
+
+	#top-nav-bar {
+		margin: 0.25em 0 0 0;
+		font-size: 1.75rem;
+	}
 }
 
 /* Hide the mobile elements on desktop screens: */
@@ -2824,15 +2878,6 @@ div > .MJXc-display {
 	display: none;
 }
 
-h1.listing {
-	font-size: 1.75rem;
-	line-height: 1;
-	margin-top: 0.8em;
-}
-h1.listing:last-of-type + .post-meta {
-	margin-bottom: 12px;
-}
-
 .post-body,
 .post > h1:first-child {
 	padding: 0 6px;
@@ -2858,6 +2903,14 @@ h1.listing:last-of-type + .post-meta {
 	max-width: none;
 	margin-left: auto;
 	margin-right: auto;
+}
+
+/*******************************************/
+} @media only screen and (max-width: 700px) {
+/*******************************************/
+
+#nav-item-recent-comments span {
+	display: none;
 }
 
 /*******************************************/

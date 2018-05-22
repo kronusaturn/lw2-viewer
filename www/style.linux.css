@@ -2790,6 +2790,60 @@ div > .MJXc-display {
 		width: calc(100% + 2px);
 		border-width: 1px !important;
 	}
+
+	#bottom-bar { 
+		padding: 0 4.5rem;
+	}
+	#bottom-bar .nav-item {
+		box-shadow: none;
+		position: relative;
+	}
+	#bottom-bar .nav-inner {
+		font-size: 2rem;
+		padding: 1rem 0 0 0;
+		visibility: hidden;
+		position: static;
+	}
+	#content #bottom-bar .nav-item .nav-inner::before {
+		margin: 0;
+		visibility: visible;
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		left: 0;
+		top: 1.25rem;
+	}
+	#bottom-bar .nav-inner::after {
+		display: block;
+		visibility: visible;
+		text-transform: uppercase;
+		color: unset;
+		font-size: 0.875rem;
+		top: unset;
+		left: 0;
+		bottom: -0.875rem;
+		width: 100%;
+	}
+	#bottom-bar #nav-item-first .nav-inner::after {
+		content: "First Page";
+	}
+	#bottom-bar #nav-item-prev .nav-inner::after {
+		content: "Prev. Page";
+	}
+	#bottom-bar #nav-item-top .nav-inner::after {
+		content: "Top";
+	}
+	#bottom-bar #nav-item-next .nav-inner::after {
+		content: "Next Page";
+	}
+	#bottom-bar #nav-item-last .nav-inner::after {
+		content: "Last Page";
+	}
+
+	#top-nav-bar {
+		margin: 0.25em 0 0 0;
+		font-size: 1.75rem;
+	}
 }
 
 /* Hide the mobile elements on desktop screens: */
@@ -2824,15 +2878,6 @@ div > .MJXc-display {
 	display: none;
 }
 
-h1.listing {
-	font-size: 1.75rem;
-	line-height: 1;
-	margin-top: 0.8em;
-}
-h1.listing:last-of-type + .post-meta {
-	margin-bottom: 12px;
-}
-
 .post-body,
 .post > h1:first-child {
 	padding: 0 6px;
@@ -2858,6 +2903,14 @@ h1.listing:last-of-type + .post-meta {
 	max-width: none;
 	margin-left: auto;
 	margin-right: auto;
+}
+
+/*******************************************/
+} @media only screen and (max-width: 700px) {
+/*******************************************/
+
+#nav-item-recent-comments span {
+	display: none;
 }
 
 /*******************************************/
@@ -3312,7 +3365,7 @@ a#inbox-indicator.new-messages::before {
 body {
 	color: #000;
 	background-color: #d8d8d8;
-	font-family: 'Concourse', 'a_Avante';
+	font-family: 'Whitney', 'a_Avante';
 	font-feature-settings: 'ss07';
 }
 #content {
@@ -3504,7 +3557,7 @@ body {
 /*=====================*/
 
 .sublevel-nav.sort .sublevel-item {
-	font-family: 'Concourse Smallcaps', 'a_Avante';
+	font-family: 'Whitney Smallcaps', 'a_Avante';
 }
 .sublevel-nav.sort {
 	position: absolute;
@@ -3724,7 +3777,7 @@ body {
 /*==========*/
 
 h1.listing {
-	font-family: 'Concourse', 'a_Avante', 'Font Awesome';
+	font-family: 'Whitney', 'a_Avante', 'Font Awesome';
 }
 
 h1.listing a {
@@ -4018,7 +4071,7 @@ h1.listing + .post-meta::after {
 /*===================*/
 
 .contents {
-	font-family: 'Concourse', 'a_Avante';
+	font-family: 'Whitney', 'a_Avante';
 	border: 1px solid #ddd;
 	background-color: #eee;
 }
@@ -4066,7 +4119,7 @@ h1.listing + .post-meta::after {
 
 .post.link-post a.link-post-link {
 	text-decoration: none;
-	font-family: 'Concourse', 'a_Avante';
+	font-family: 'Whitney', 'a_Avante';
 	font-weight: 600;
 }
 .post.link-post a.link-post-link:hover {
@@ -4319,7 +4372,7 @@ div.comment-child-links a::first-letter {
 	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
 }
 .comment-minimize-button::after {
-	font-family: 'Concourse', 'a_Avante';
+	font-family: 'Whitney', 'a_Avante';
 	color: #777;
 }
 .comment-minimize-button.maximized::after {
@@ -4426,7 +4479,7 @@ div.comment-child-links a::first-letter {
 }
 
 .guiedit::after {
-	font-family: 'Concourse', 'a_Avante';
+	font-family: 'Whitney', 'a_Avante';
 	color: #777;
 	text-shadow: none;
 }
@@ -4568,7 +4621,7 @@ input[type='submit']:active {
 .comment-body h1,
 .comment-body h2,
 .comment-body h4 {
-	font-family: 'Concourse', 'a_Avante';
+	font-family: 'Whitney', 'a_Avante';
 }
 .post-body h3,
 .comment-body h3,
@@ -4577,7 +4630,7 @@ input[type='submit']:active {
 .comment-body h5,
 .comment-body h6 {
 	font-weight: 600;
-	font-family: 'Concourse Smallcaps', 'a_Avante';
+	font-family: 'Whitney Smallcaps', 'a_Avante';
 }
 .post-body h6,
 .comment-body h6 {
@@ -4665,7 +4718,7 @@ select {
 }
 
 #content.about-page .accesskey-table {
-	font-family: 'Concourse', 'a_Avante';
+	font-family: 'Whitney', 'a_Avante';
 	border-color: #ddd;
 }
 
@@ -4880,6 +4933,14 @@ div > .MJXc-display {
 }
 
 @media only screen and (max-width: 900px) {
+	h1.listing {
+		font-size: 1.75rem;
+		line-height: 1;
+		margin-top: 0.8em;
+	}
+	h1.listing:last-of-type + .post-meta {
+		margin-bottom: 12px;
+	}
 	h1.listing + .post-meta .post-section::before {
 		left: 0;
 		top: 0;
@@ -4890,10 +4951,6 @@ div > .MJXc-display {
 	}
 }
 @media only screen and (max-width: 520px) {
-	#top-nav-bar {
-		margin: 0.25em 0;
-		font-size: 1.75rem;
-	}
 	h1.listing:first-of-type {
 		margin-top: 0;
 	}
@@ -4975,29 +5032,5 @@ div > .MJXc-display {
 	}
 	h1.listing:last-of-type + .post-meta {
 		margin-bottom: 0.75em;
-	}
-	#bottom-bar { 
-		padding: 0 3em;
-	}
-	#bottom-bar .nav-item {
-		box-shadow: none;
-		position: relative;
-	}
-	#bottom-bar .nav-inner {
-		font-size: 2rem;
-		padding: 0;
-		visibility: hidden;
-		position: static;
-		width: 0;
-		overflow: visible;
-	}
-	#content #bottom-bar .nav-item .nav-inner::before {
-		margin: 0;
-		visibility: visible;
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		left: 0;
-		top: 0;
 	}
 }

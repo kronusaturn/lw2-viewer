@@ -1,6 +1,6 @@
 <?php
-	$UI_font = ($platform == 'Windows') ? "'Whitney', 'a_Avante'" : "'Concourse', 'a_Avante'";
-	$UI_font_smallcaps = ($platform == 'Windows') ? "'Whitney Smallcaps', 'a_Avante'" : "'Concourse Smallcaps', 'a_Avante'";
+	$UI_font = ($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Whitney', 'a_Avante'";
+	$UI_font_smallcaps = ($platform == 'Mac') ? "'Concourse Smallcaps', 'a_Avante'" : "'Whitney Smallcaps', 'a_Avante'";
 	$text_font = "'Source Sans Pro', 'Trebuchet MS', 'Helvetica', 'Arial', 'Verdana', sans-serif";
 	$hyperlink_color = "#f60";
 	$white_glow = "0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff";
