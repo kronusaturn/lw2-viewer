@@ -192,7 +192,7 @@
 
 /* Hide the mobile elements on desktop screens: */
 
-@media only screen and (hover: hover) {
+@media not screen and (hover: none), not screen and (-moz-touch-enabled) {
 	#post-nav-ui-toggle,
 	#appearance-adjust-ui-toggle,
 	#theme-selector .theme-selector-close-button {
