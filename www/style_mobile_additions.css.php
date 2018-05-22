@@ -203,9 +203,10 @@
 	}
 	#bottom-bar .nav-inner {
 		font-size: 2rem;
-		padding: 1rem 0;
+		padding: 1rem 0 1.25rem 0;
 		visibility: hidden;
 		position: static;
+		width: 0;
 	}
 	#content #bottom-bar .nav-item .nav-inner::before {
 		margin: 0;
@@ -225,7 +226,7 @@
 		font-size: 0.75rem;
 		top: unset;
 		left: 0;
-		bottom: 0.75rem;
+		bottom: 1rem;
 		width: 100%;
 	}
 	#bottom-bar #nav-item-first .nav-inner::after {
