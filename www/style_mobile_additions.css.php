@@ -193,7 +193,8 @@
 /* Hide the mobile elements on desktop screens: */
 
 @media only screen and (hover: hover) {
-	#post-nav-ui-toggle {
+	#post-nav-ui-toggle,
+	#appearance-adjust-ui-toggle {
 		display: none;
 	}
 }
