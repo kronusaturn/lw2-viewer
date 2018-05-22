@@ -194,7 +194,8 @@
 
 @media only screen and (hover: hover) {
 	#post-nav-ui-toggle,
-	#appearance-adjust-ui-toggle {
+	#appearance-adjust-ui-toggle,
+	#theme-selector .theme-selector-close-button {
 		display: none;
 	}
 }
