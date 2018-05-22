@@ -3774,7 +3774,7 @@ body {
 
 h1.listing {
 	font-family: 'Whitney', 'a_Avante', 'Font Awesome';
-	font-weight: ($platform == 'Mac') ? "700" : "800";
+	font-weight: 800;
 }
 
 h1.listing a {

@@ -426,7 +426,7 @@ body {
 
 h1.listing {
 	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
-	font-weight: ($platform == 'Mac') ? "700" : "800";
+	font-weight: <?php echo ($platform == 'Mac') ? "700" : "800"; ?>;
 }
 
 h1.listing a {
