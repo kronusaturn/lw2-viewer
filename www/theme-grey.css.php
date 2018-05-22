@@ -1502,8 +1502,7 @@ div > .MJXc-display {
 
 @media only screen and (hover: none), only screen and (-moz-touch-enabled) {
 	#appearance-adjust-ui-toggle button,
-	#post-nav-ui-toggle button,
-	#theme-selector .theme-selector-close-button  {
+	#post-nav-ui-toggle button  {
 		color: #aaa;
 		text-shadow:
 			0 0 1px #fff,
@@ -1525,7 +1524,8 @@ div > .MJXc-display {
 			0 0 20px 3px #fff;
 		border-radius: 12px;
 	}
-	#theme-selector::before {
+	#theme-selector::before,
+	#theme-selector .theme-selector-close-button {
 		color: #888;
 		text-shadow: 0.5px 0.5px 0 #fff;
 	}
