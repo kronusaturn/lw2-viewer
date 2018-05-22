@@ -1424,11 +1424,10 @@ div > .MJXc-display {
 			0.5px 0.5px 1px #bbb;
 	}
 	#theme-selector button {
-		background-color: #777;
 		border-radius: 10px;
 	}
 	#theme-selector button::after {
-		color: #222;
+		color: #444;
 		max-width: calc(100% - 3.5em);
 		overflow: hidden;
 		text-overflow: ellipsis;
