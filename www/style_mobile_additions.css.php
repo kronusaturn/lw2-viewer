@@ -236,9 +236,6 @@ h1.listing:last-of-type + .post-meta {
 	margin-bottom: 12px;
 }
 
-#content.post-page {
-	padding-bottom: 12px;
-}
 .post-body,
 .post > h1:first-child {
 	padding: 0 6px;
@@ -257,27 +254,13 @@ h1.listing:last-of-type + .post-meta {
 		hyphens: auto;
 	}
 }
+
 .contents {
 	float: none;
 	display: table;
 	max-width: none;
 	margin-left: auto;
 	margin-right: auto;
-}
-
-/*******************************************/
-} @media only screen and (max-width: 768px) {
-/*******************************************/
-
-#login-form-container,
-#create-account-form-container {
-	width: unset;
-	float: unset;
-}
-.sublevel-nav.sort {
-	position: unset;
-	margin-top: 1.75em;
-	margin-bottom: -1.25em;
 }
 
 /*******************************************/
