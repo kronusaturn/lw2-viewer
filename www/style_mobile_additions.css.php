@@ -37,6 +37,11 @@
 	#theme-selector .theme-selector-close-button::selection {
 		background-color: transparent;
 	}
+	#appearance-adjust-ui-toggle button::-moz-focus-inner,
+	#post-nav-ui-toggle button::-moz-focus-inner,
+	#theme-selector .theme-selector-close-button::-moz-focus-inner {
+		border: none;
+	}
 	#appearance-adjust-ui-toggle button.engaged,
 	#post-nav-ui-toggle button.engaged {
 		transform: rotate(-90deg);
