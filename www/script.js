@@ -1279,7 +1279,7 @@ function initialize() {
 		}
 
 		try {
-			let dtf = new Intl.DateTimeFormat([], (window.innerWidth > 520 ? {month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'}
+			let dtf = new Intl.DateTimeFormat([], (window.innerWidth > 720 ? {month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'}
 										       : {month: 'numeric', day: 'numeric', year: '2-digit', hour: 'numeric', minute: 'numeric'}));
 			document.querySelectorAll(".date").forEach(function (e) {
 				let d = e.getAttribute("data-js-date");

@@ -671,6 +671,11 @@ h1.listing {
 a.comment-parent-link::after {
 	display: none;
 }
+@media only screen and (max-width: 900px) {
+	.comment-meta {
+		padding: 2px 40px 2px 10px;
+	}
+}
 @media only screen and (max-width: 720px) {
 	.comment-meta .karma-value span {
 		display: none;
@@ -770,6 +775,17 @@ a.comment-parent-link::after {
 /* COMMENTING AND POSTING UI */
 /*===========================*/
 
+@media only screen and (max-width: 900px) {
+	.comment-controls .edit-button {
+		color: #0b0;
+		max-width: 1.3em;
+		overflow: hidden;
+		margin-right: 0.125em;
+	}
+	.comment-controls .edit-button::before {
+		font-size: 1rem;
+	}
+}
 @media only screen and (max-width: 520px) {
 	.textarea-container button:active {
 		background-color: #ccc;
