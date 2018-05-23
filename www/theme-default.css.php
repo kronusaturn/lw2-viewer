@@ -427,6 +427,7 @@ body {
 h1.listing {
 	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
 	font-weight: <?php echo ($platform == 'Mac') ? "700" : "800"; ?>;
+	margin: 0.7em 20px 0 20px;
 }
 
 h1.listing a {
@@ -463,7 +464,7 @@ h1.listing a[href^="http"] {
 /*===================*/
 
 h1.listing + .post-meta {
-	padding-right: 320px;
+	padding-right: 330px;
 }
 h1.listing + .post-meta .karma-value,
 h1.listing + .post-meta .comment-count,
@@ -494,6 +495,9 @@ h1.listing + .post-meta .read-time::before {
 	box-shadow: 0 0 0 2px #ddd;
 }
 
+h1.listing + .post-meta .karma {
+	margin: 0;
+}
 h1.listing + .post-meta .karma-value {
 	box-shadow: 
 		22px 0 0 0 #ddd inset,
@@ -593,10 +597,10 @@ h1.listing + .post-meta::after {
 	content: "";
 	display: block;
 	height: 1px;
-	width: calc(100% + 320px);
+	width: 100%;
 	background-color: #ddd;
-	position: relative;
-	top: 14px;
+	position: absolute;
+	bottom: -10px;
 }
 
 /*============*/
@@ -1574,8 +1578,7 @@ div > .MJXc-display {
 		justify-content: flex-end;
 	}
 	h1.listing + .post-meta::after {
-		width: calc(100% + 144px);
-		top: 0;
+		bottom: -2px;
 	}
 	h1.listing + .post-meta > * {
 		margin: 0;

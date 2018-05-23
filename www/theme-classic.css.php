@@ -370,12 +370,11 @@ body {
 /*==========*/
 
 h1.listing {
+	margin: 1.125em 20px 0.25em 20px;
 	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
 	font-size: 1.125rem;
 	padding-left: 30px;
 	max-height: unset;
-	margin-top: 1.125em;
-	margin-bottom: 0.25em;
 }
 
 h1.listing a {

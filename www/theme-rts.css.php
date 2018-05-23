@@ -440,6 +440,7 @@ a.nav-inner,
 /*==========*/
 
 h1.listing {
+	margin: 0.7em 20px 0.1em 20px;
 	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
 	text-align: center;
 }

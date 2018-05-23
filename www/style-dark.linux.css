@@ -694,7 +694,6 @@ a#inbox-indicator.new-messages:hover::before {
 /************/
 
 h1.listing {
-	margin: 0.7em 20px 0.1em 20px;
 	font-size: 1.875rem;
 	line-height: 1.15;
 	max-height: 1.15em;
@@ -768,24 +767,30 @@ h1.listing a[href^="http"] {
 	padding: 1.75em 0 1.25em 0;
 }
 
+/*********************/
+/* LISTING POST-META */
+/*********************/
+
 h1.listing + .post-meta {
 	position: relative;
-	text-align: left;
+	justify-content: flex-start;
 	margin: 0 20px 0 21px;
 }
 h1.listing:last-of-type + .post-meta {
 	margin-bottom: 1.25em;
 }
 
+h1.listing + .post-meta > * {
+	margin: 0 1em 0 0;
+}
 h1.listing + .post-meta .post-section {
 	width: 0;
-	margin: -0.5em;
+	margin: 0;
 	overflow: hidden;
-	display: inline;
 }
 h1.listing + .post-meta .post-section::before {
 	position: absolute;
-	left: -28px;
+	left: -36px;
 }
 
 h1.listing + .post-meta .read-time {
@@ -3892,6 +3897,7 @@ body {
 h1.listing {
 	font-family: 'Whitney', 'a_Avante', 'Font Awesome';
 	font-weight: 800;
+	margin: 0.7em 20px 0 20px;
 }
 
 h1.listing a {
@@ -3928,7 +3934,7 @@ h1.listing a[href^="http"] {
 /*===================*/
 
 h1.listing + .post-meta {
-	padding-right: 320px;
+	padding-right: 330px;
 }
 h1.listing + .post-meta .karma-value,
 h1.listing + .post-meta .comment-count,
@@ -3959,6 +3965,9 @@ h1.listing + .post-meta .read-time::before {
 	box-shadow: 0 0 0 2px #1f1f1f;
 }
 
+h1.listing + .post-meta .karma {
+	margin: 0;
+}
 h1.listing + .post-meta .karma-value {
 	box-shadow: 
 		22px 0 0 0 #1f1f1f inset,
@@ -4058,10 +4067,10 @@ h1.listing + .post-meta::after {
 	content: "";
 	display: block;
 	height: 1px;
-	width: calc(100% + 320px);
+	width: 100%;
 	background-color: #1f1f1f;
-	position: relative;
-	top: 14px;
+	position: absolute;
+	bottom: -10px;
 }
 
 /*============*/
@@ -5087,8 +5096,7 @@ div > .MJXc-display {
 		justify-content: flex-end;
 	}
 	h1.listing + .post-meta::after {
-		width: calc(100% + 144px);
-		top: 0;
+		bottom: -2px;
 	}
 	h1.listing + .post-meta > * {
 		margin: 0;

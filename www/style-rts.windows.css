@@ -694,7 +694,6 @@ a#inbox-indicator.new-messages:hover::before {
 /************/
 
 h1.listing {
-	margin: 0.7em 20px 0.1em 20px;
 	font-size: 1.875rem;
 	line-height: 1.15;
 	max-height: 1.15em;
@@ -768,24 +767,30 @@ h1.listing a[href^="http"] {
 	padding: 1.75em 0 1.25em 0;
 }
 
+/*********************/
+/* LISTING POST-META */
+/*********************/
+
 h1.listing + .post-meta {
 	position: relative;
-	text-align: left;
+	justify-content: flex-start;
 	margin: 0 20px 0 21px;
 }
 h1.listing:last-of-type + .post-meta {
 	margin-bottom: 1.25em;
 }
 
+h1.listing + .post-meta > * {
+	margin: 0 1em 0 0;
+}
 h1.listing + .post-meta .post-section {
 	width: 0;
-	margin: -0.5em;
+	margin: 0;
 	overflow: hidden;
-	display: inline;
 }
 h1.listing + .post-meta .post-section::before {
 	position: absolute;
-	left: -28px;
+	left: -36px;
 }
 
 h1.listing + .post-meta .read-time {
@@ -3907,6 +3912,7 @@ a.nav-inner,
 /*==========*/
 
 h1.listing {
+	margin: 0.7em 20px 0.1em 20px;
 	font-family: 'Proxima Nova', sans-serif, 'Font Awesome';
 	text-align: center;
 }
