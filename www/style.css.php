@@ -264,10 +264,12 @@ a#inbox-indicator.new-messages:hover::before {
 /*********************/
 
 #top-nav-bar {
-	margin: 0.125em 0 0 0;
+	margin: 0.25em 0 0 0;
 	padding: 0.75em 0 0 0;
 	text-align: center;
 	font-size: 1.25em;
+	display: flex;
+	justify-content: center;
 }
 .sublevel-nav + #top-nav-bar {
 	margin-top: 0.25em;
@@ -280,6 +282,9 @@ a#inbox-indicator.new-messages:hover::before {
 }
 .archive-nav + #top-nav-bar + h1.listing {
 	margin-top: 1em;
+}
+#top-nav-bar a {
+	line-height: 1;
 }
 #top-nav-bar a.disabled {
 	pointer-events: none;
@@ -681,7 +686,7 @@ h1.listing {
 	margin: 0.7em 20px 0.1em 20px;
 	font-size: 1.875rem;
 	line-height: 1.15;
-		max-height: 1.15em;
+	max-height: 1.15em;
 }
 
 h1.listing a {

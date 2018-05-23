@@ -454,7 +454,6 @@
 /*===================*/
 
 #top-nav-bar {
-	margin: 0 0 0.5em 0;
 	font-size: 1.75rem;
 }
 
@@ -571,6 +570,9 @@
 /* LISTINGS */
 /*==========*/
 
+h1.listing {
+	max-height: unset;
+}
 @media only screen and (max-width: 520px) {
 	h1.listing {
 		margin: 6px;
