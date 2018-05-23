@@ -297,6 +297,10 @@
 }
 
 @media only screen and (max-width: 900px) {
+	#primary-bar,
+	#secondary-bar {
+		font-size: 0.75rem;
+	}
 	.nav-bar {
 		width: calc(100% + 8px);
 		margin: 0 -4px;
@@ -305,15 +309,11 @@
 		display: none;
 	}
 
-	#primary-bar,
-	#secondary-bar {
-		font-size: 0.5em;
-	}
 	#primary-bar .nav-item {
 		flex: 1 1 100%;
 	}
 	#secondary-bar .nav-item:not(#nav-item-search) {
-		flex: 1 1 15%;
+		flex: 1 1 60px;
 	}
 	#primary-bar .nav-inner,
 	#secondary-bar .nav-inner {
@@ -324,11 +324,8 @@
 	#secondary-bar .nav-inner::before {
 		display: block;
 		font-family: "Font Awesome";
-		font-size: 1.5rem;
+		font-size: 2em;
 		font-weight: 900;
-	}
-	#secondary-bar .nav-inner::before {
-		font-size: 1rem;
 	}
 
 	#nav-item-home .nav-inner::before {
@@ -357,24 +354,31 @@
 	}
 	#nav-item-search {
 		font-size: 2em;
+		padding: 10px;
 	}
 	#nav-item-search .nav-inner::before {
 		content: none;
 	}
+	#nav-item-search .nav-inner {
+		height: 100%;
+		display: flex;
+	}
 	#nav-item-search input {
-		width: calc(100% - 28px);
+		width: 100%;
+		height: 100%;
 	}
 	#nav-item-search button {
-		width: 22px;
-		color: transparent;
-		vertical-align: bottom;
-		padding-left: 4px;
+		height: 100%;
+		padding: 5px 5px 5px 10px;
+		width: 47px;
+		overflow: visible;
+		visibility: hidden;
 	}
 	#nav-item-search button::before {
 		content: "\F002";
-		color: #00e;
 		font-family: Font Awesome;
 		font-weight: 900;
+		visibility: visible;
 	}
 	#nav-item-login {
 		padding: 0;
@@ -384,6 +388,18 @@
 	}
 }
 @media only screen and (max-width: 520px) {
+	#primary-bar,
+	#secondary-bar {
+		font-size: 0.5rem;
+	}
+
+	#nav-item-search .nav-inner {
+		padding: 0;
+	}
+	#nav-item-search button {
+		width: 31px;
+	}
+
 	#bottom-bar #nav-item-first .nav-inner::after {
 		content: "First";
 	}
@@ -403,8 +419,18 @@
 /*===================*/
 
 #top-nav-bar {
-	margin: 0.25em 0 0 0;
+	margin: 0 0 0.5em 0;
 	font-size: 1.75rem;
+}
+
+/*==============*/
+/* PAGE TOOLBAR */
+/*==============*/
+
+@media only screen and (max-width: 900px) {
+	.page-toolbar {
+		font-size: 1rem;
+	}
 }
 
 /*==========*/
@@ -538,13 +564,6 @@
 	}
 	a.comment-parent-link::after {
 		display: none;
-	}
-	.page-toolbar {
-		font-size: 1rem;
-		margin: 0.25em;
-	}
-	#top-nav-bar {
-		margin-top: 1.5em;
 	}
 	.sublevel-nav {
 		display: table;

@@ -1550,6 +1550,9 @@ div > .MJXc-display {
 		display: inline-block;
 		margin: 0;
 	}
+	#nav-item-search button::before {
+		color: #00e;
+	}
 }
 @media only screen and (max-width: 520px) {
 	h1.listing:first-of-type {
