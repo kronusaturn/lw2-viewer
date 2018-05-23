@@ -3922,9 +3922,6 @@ h1.listing {
 	font-family: 'Concourse', 'a_Avante', 'Font Awesome';
     font-size: 1.5rem;
 }
-h1.listing:first-of-type {
-	margin-top: 1.5em;
-}
 h1.listing a[href^='/'] {
 	font-weight: normal;
 }

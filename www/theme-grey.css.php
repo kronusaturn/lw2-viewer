@@ -442,9 +442,6 @@ h1.listing {
 	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
     font-size: 1.5rem;
 }
-h1.listing:first-of-type {
-	margin-top: 1.5em;
-}
 h1.listing a[href^='/'] {
 	font-weight: normal;
 }

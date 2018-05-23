@@ -3859,9 +3859,6 @@ h1.listing {
 	margin-top: 1.125em;
 	margin-bottom: 0.25em;
 }
-h1.listing:first-of-type {
-	margin-top: 1.75em;
-}
 
 h1.listing a {
 	color: #538d4d;

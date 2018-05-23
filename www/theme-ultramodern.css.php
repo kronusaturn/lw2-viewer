@@ -367,9 +367,6 @@ h1.listing {
 	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
     font-size: 1.5rem;
 }
-h1.listing:first-of-type {
-	margin-top: 1.5em;
-}
 h1.listing a[href^='/'] {
 	font-family: <?php echo $text_font; ?>;
 	font-weight: <?php global $platform; echo ($platform == 'Mac' ? '100' : '200'); ?>;

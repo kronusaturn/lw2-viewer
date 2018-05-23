@@ -407,9 +407,6 @@ h1.listing a[href^="/"] {
 h1.listing + .post-meta {
 	font-size: 0.875rem;
 }
-h1.listing:first-of-type {
-	margin-top: 2em;
-}
 
 h1.listing + .post-meta .karma-value {
 	cursor: default;
