@@ -668,25 +668,29 @@ h1.listing {
 /* COMMENT-META */
 /*==============*/
 
-@media only screen and (max-width: 900px) {
+a.comment-parent-link::after {
+	display: none;
+}
+@media only screen and (max-width: 720px) {
+	.comment-meta .karma-value span {
+		display: none;
+	}
+	.comment-meta .comment-parent-link {
+		opacity: 1.0;
+	}
 }
 @media only screen and (max-width: 520px) {
 	.comment-meta {
 		padding: 2px 10px;
+		position: relative;
+	}
+	.comment-meta .author {
+		flex-basis: 100%;
 	}
 	.comment-post-title2 {
 		display: block;
 		text-overflow: ellipsis;
 		overflow: hidden;
-	}
-	.comment-meta author {
-		display: block;
-	}
-	.comment-meta .karma-value {
-		font-weight: 600;
-	}
-	.comment-meta .karma-value span {
-		display: none;
 	}
 	.comment-meta .lw2-link {
 		display: none;
@@ -719,28 +723,36 @@ h1.listing {
 /* COMMENT THREAD NAVIGATION */
 /*===========================*/
 
-@media only screen and (max-width: 520px) {
+@media only screen and (max-width: 720px) {
 	a.comment-parent-link {
-		position: relative;
 		width: 0;
 		visibility: hidden;
+		position: relative;
 	}
 	a.comment-parent-link::before {
-		display: inline-block;
-		width: unset;
-		height: unset;
 		padding: 0;
 		font-size: 1em;
 		left: 0;
 		top: 0;
 		line-height: inherit;
 		visibility: visible;
-		color: #000;
 		content: "\F3BF";
 		transform: scaleX(-1);
+		width: 2em;
+		text-align: center;
 	}
-	a.comment-parent-link::after {
-		display: none;
+}
+@media only screen and (max-width: 520px) {
+	a.comment-parent-link {
+		position: static;
+	}
+	a.comment-parent-link::before {
+		padding: 6px;
+		left: unset;
+		right: 0;
+		top: unset;
+		bottom: 0;
+		height: 2em;
 	}
 }
 
@@ -749,13 +761,8 @@ h1.listing {
 /*=================================*/
 
 @media only screen and (max-width: 520px) {
-	.comment-minimize-button::after {
-		height: 100%;
-		top: 0;
-		left: -2em;
-		width: 1.5em;
-		line-height: 1.6;
-		text-align: right;
+	.comment-minimize-button{
+		right: 2px;
 	}
 }
 

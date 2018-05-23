@@ -1679,4 +1679,7 @@ div > .MJXc-display {
 		border-radius: 0 0 6px 6px;
 		border-width: 0 1px 1px 1px;
 	}
+	a.comment-parent-link:hover::before {
+		background-color: unset;
+	}
 }
