@@ -1571,6 +1571,12 @@ div > .MJXc-display {
 	}
 }
 @media only screen and (max-width: 520px) {
+	h1.listing {
+		margin: 6px;
+	}
+	h1.listing + .post-meta {
+		margin: 0 6px 0 7px;
+	}
 	h1.listing + .post-meta {
 		padding: 0.25em 144px 0 0;
 		display: flex;
