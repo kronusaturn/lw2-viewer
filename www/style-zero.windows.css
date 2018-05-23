@@ -3011,6 +3011,35 @@ div > .MJXc-display {
 	}
 }
 
+/*=================*/
+/* INBOX INDICATOR */
+/*=================*/
+
+@media only screen and (max-width: 900px) {
+	#inbox-indicator {
+		width: 100%;
+		top: 0;
+		pointer-events: none;
+	}
+	#inbox-indicator::before {
+		width: 100%;
+		font-size: 0.75rem;
+		text-align: right;
+		padding: 2px 5px;
+	}
+	#inbox-indicator.new-messages {
+		pointer-events: auto;
+	}
+	#inbox-indicator.new-messages::before {
+		box-shadow: 0 0 8px 1px #f00 inset;
+	}
+}
+@media only screen and (max-width: 374px) {
+	#inbox-indicator::before {
+		font-size: 0.625rem;
+	}
+}
+
 /*===================*/
 /* TOP PAGINATION UI */
 /*===================*/
@@ -3033,6 +3062,35 @@ div > .MJXc-display {
 /*==============*/
 /* SUBLEVEL NAV */
 /*==============*/
+
+/*==========*/
+/* ARCHIVES */
+/*==========*/
+
+@media only screen and (max-width: 900px) {
+}
+@media only screen and (max-width: 520px) {
+	div[class^='archive-nav-'] {
+		display: block;
+		text-align: justify;
+	}
+	.archive-nav *[class^='archive-nav-item'],
+	.archive-nav *[class^='archive-nav-item']:first-child {
+		display: inline-block;
+		width: auto;
+		padding: 6px 10px;
+		width: 4em;
+		margin: 2px;
+	}
+	.archive-nav *[class^='archive-nav-item'],
+	.archive-nav *[class^='archive-nav-item-'],
+	.archive-nav div[class^='archive-nav-']:nth-of-type(n+2) *[class^='archive-nav-item'] {
+		border: 1px solid #ddd;
+	}
+	.archive-nav > *[class^='archive-nav-'] +	*[class^='archive-nav-'] {
+		margin-top: 0.5em;
+	}
+}
 
 /*==========*/
 /* LISTINGS */
@@ -3067,15 +3125,11 @@ div > .MJXc-display {
 	}
 }
 
-/*=======*/
-/* OTHER */
-/*=======*/
+/*==================*/
+/* POSTS & COMMENTS */
+/*==================*/
 
 @media only screen and (max-width: 900px) {
-	.post-body,
-	.post > h1:first-child {
-		padding: 0 6px;
-	}
 	.post-body, .comment-body {
 		text-align: left;
 		-webkit-hyphens: none;
@@ -3085,21 +3139,42 @@ div > .MJXc-display {
 	@-moz-document url-prefix() {
 		.post-body, .comment-body {
 			text-align: justify;
-			-webkit-hyphens: auto;
-			-ms-hyphens: auto;
 			hyphens: auto;
 		}
 	}
+}
+@media only screen and (max-width: 520px) {
+}
 
-	.contents {
-		float: none;
-		display: table;
-		max-width: none;
-		margin-left: auto;
-		margin-right: auto;
+/*===========*/
+/* POST-META */
+/*===========*/
+
+@media only screen and (max-width: 900px) {
+}
+@media only screen and (max-width: 520px) {
+	.post-meta {
+		line-height: 1.9;
+	}
+	.post-meta > *,
+	.post-meta .lw2-link {
+		margin: 0 0.5em;
+	}
+	.post-meta .lw2-link {
+		opacity: 0.5;
 	}
 }
 
+/*=======*/
+/* POSTS */
+/*=======*/
+
+@media only screen and (max-width: 900px) {
+	.post-body,
+	.post > h1:first-child {
+		padding: 0 6px;
+	}
+}
 @media only screen and (max-width: 520px) {
 	.post-body {
 		font-size: 1.2rem;
@@ -3113,6 +3188,15 @@ div > .MJXc-display {
 		margin: 1em 0.25em 0.25em 0.25em;
 		font-size: 2em;
 	}
+}
+
+/*==========*/
+/* COMMENTS */
+/*==========*/
+
+@media only screen and (max-width: 900px) {
+}
+@media only screen and (max-width: 520px) {
 	.comment-item .comment-item {
 		margin: 0.75em 4px 4px 4px;
 		box-shadow: 
@@ -3126,6 +3210,57 @@ div > .MJXc-display {
 	.comment-body ul {
 		padding-left: 30px;
 	}
+	.comment-body {
+		font-size: 1.125rem;
+	}
+	.comment-body ol {
+		padding-left: 30px;
+	}
+}
+
+/*==============*/
+/* COMMENT-META */
+/*==============*/
+
+@media only screen and (max-width: 900px) {
+}
+@media only screen and (max-width: 520px) {
+	.comment-meta {
+		padding: 2px 10px;
+	}
+	.comment-post-title2 {
+		display: block;
+		text-overflow: ellipsis;
+		overflow: hidden;
+	}
+	.comment-meta author {
+		display: block;
+	}
+	.comment-meta .karma-value {
+		font-weight: 600;
+	}
+	.comment-meta .karma-value span {
+		display: none;
+	}
+	.comment-meta .lw2-link {
+		display: none;
+	}
+}
+
+/*=======*/
+/* OTHER */
+/*=======*/
+
+@media only screen and (max-width: 900px) {
+	.contents {
+		float: none;
+		display: table;
+		max-width: none;
+		margin-left: auto;
+		margin-right: auto;
+	}
+}
+@media only screen and (max-width: 520px) {
 	.contents {
 		max-width: 100%;
 		margin: 1em 0 0 0;
@@ -3134,36 +3269,15 @@ div > .MJXc-display {
 	.contents-head {
 		font-size: 1.2em;
 	}
-	div[class^='archive-nav-'] {
-		display: block;
-		text-align: justify;
+	.contents {
+		padding: 0.35em 0.75em 0.4em 0.35em;
 	}
-	.archive-nav *[class^='archive-nav-item'],
-	.archive-nav *[class^='archive-nav-item']:first-child {
-		display: inline-block;
-		width: auto;
-		padding: 6px 10px;
-		width: 4em;
-		margin: 2px;
+	.post-body .contents ul {
+		font-size: unset;
 	}
-	.archive-nav *[class^='archive-nav-item'],
-	.archive-nav *[class^='archive-nav-item-'],
-	.archive-nav div[class^='archive-nav-']:nth-of-type(n+2) *[class^='archive-nav-item'] {
-		border: 1px solid #ddd;
-	}
-	.archive-nav > *[class^='archive-nav-'] +	*[class^='archive-nav-'] {
-		margin-top: 0.5em;
-	}
-	.post-meta {
-		line-height: 1.9;
-	}
-	.post-meta > *,
-	.post-meta .lw2-link {
-		margin: 0 0.5em;
-	}
-	.post-meta .lw2-link {
-		opacity: 0.5;
-	}
+}
+
+@media only screen and (max-width: 520px) {
 	a.comment-parent-link {
 		position: relative;
 		width: 0;
@@ -3296,64 +3410,9 @@ div > .MJXc-display {
 	#edit-post-form input[type='submit'] {
 		margin-top: -6px;
 	}
-	.comment-meta {
-		padding: 2px 10px;
-	}
-	.comment-post-title2 {
-		display: block;
-		text-overflow: ellipsis;
-		overflow: hidden;
-	}
-	.comment-meta author {
-		display: block;
-	}
-	.comment-meta .karma-value {
-		font-weight: 600;
-	}
-	.comment-meta .karma-value span {
-		display: none;
-	}
-	.comment-meta .lw2-link {
-		display: none;
-	}
-	.comment-body {
-		font-size: 1.125rem;
-	}
-	.comment-body ol {
-		padding-left: 30px;
-	}
-	.contents {
-		padding: 0.35em 0.75em 0.4em 0.35em;
-	}
-	.post-body .contents ul {
-		font-size: unset;
-	}
-	#inbox-indicator {
-		width: 100%;
-	}
-	#inbox-indicator::before {
-		width: 100%;
-		height: 100%;
-		font-size: 0.75rem;
-		text-align: right;
-		padding: 1px 5px;
-	}
-	a#inbox-indicator.new-messages::before {
-		box-shadow: 0 0 5px 1px inset;
-	}
-}
-@media only screen and (max-width: 374px) {
-	.nav-bar .nav-inner {
-		padding: 6px 3.33vw;
-	}
-	#inbox-indicator::before {
-		font-size: 0.625rem;
-		text-align: right;
-		padding: 1px 5px;
-	}
 }
 
-}
+} /* END MOBILE LAYOUT */
 
 /**************/
 /* THEME ZERO */
