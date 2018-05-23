@@ -3047,6 +3047,26 @@ div > .MJXc-display {
 	}
 }
 
+/*============*/
+/* LOGIN PAGE */
+/*============*/
+
+@media only screen and (max-width: 640px) {
+	.login-container {
+		flex-flow: column;
+		margin: 0 auto 3em auto;
+		max-width: 400px;
+	}
+	.login-container #login-form,
+	.login-container #signup-form {
+		width: unset;
+		margin: 0;
+	}
+	.login-container #signup-form {
+		margin-top: 2em;
+	}
+}
+
 /*=======*/
 /* OTHER */
 /*=======*/
@@ -3308,51 +3328,6 @@ div > .MJXc-display {
 	.post-body .contents ul {
 		font-size: unset;
 	}
-/* 
-	.login-container {
-		margin: 0;
-	}
-	#login-form-container h1 {
-		padding: 0;
-		margin: 0.5em 0 0.25em 0;
-	}
-	.login-container form label,
-	.login-container form input {
-		float: none;
-		display: block;
-	}
-	#login-form label,
-	#signup-form label {
-		padding: 0.5em 0 0 1px;
-		color: #666;
-	}
-	.login-container form label,
-	.login-container form input[type='text'],
-	.login-container form input[type='password'] {
-		width: calc(100% - 2em);
-		margin: 0 1em;
-		text-align: left;
-			font-size: 1.125rem;
-	}
-	.login-container form input[type='text'],
-	.login-container form input[type='password'] {
-			font-weight: 600;
-	}
-	.login-container form input[type='text'],
-	.login-container form input[type='password'] {
-	}
-	.login-container form input[type='submit'] {
-			width: auto;
-		margin: 0.75em auto;
-		padding: 8px 12px;
-		font-size: 1.125rem;
-		float: none;
-	}
-	#create-account-form-container {
-		margin: 1em 0 0 0;
-		padding: 0;
-	}
- */
 	#inbox-indicator {
 		width: 100%;
 	}
