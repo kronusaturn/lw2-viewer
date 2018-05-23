@@ -1553,6 +1553,9 @@ div > .MJXc-display {
 	#nav-item-search button::before {
 		color: #00e;
 	}
+	.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
+		background-color: #aaa;
+	}
 }
 @media only screen and (max-width: 520px) {
 	h1.listing:first-of-type {
@@ -1636,8 +1639,5 @@ div > .MJXc-display {
 	}
 	h1.listing:last-of-type + .post-meta {
 		margin-bottom: 0.75em;
-	}
-	.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
-		background-color: #aaa;
 	}
 }

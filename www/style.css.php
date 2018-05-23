@@ -312,13 +312,12 @@ a#inbox-indicator.new-messages:hover::before {
 
 .sublevel-nav {
 	text-align: center;
-	margin: 0;
+	display: flex;
+	justify-content: center;
 }
 .sublevel-nav .sublevel-item {
-	display: inline-block;
-	width: 6em;
-	padding: 0.125em;
-	text-align: center;
+	flex: 0 0 6em;
+	padding: 0.125em 0.5em;
 	font-size: 1.125rem;
 }
 .sublevel-nav span.sublevel-item {
@@ -334,6 +333,7 @@ a#inbox-indicator.new-messages:hover::before {
 	top: 167px;
 	right: 30px;
 	font-size: 0.75em;
+	flex-flow: column;
 }
 .sublevel-nav.sort::before {
 	content: "Sort";
@@ -343,10 +343,9 @@ a#inbox-indicator.new-messages:hover::before {
 	width: 100%;
 }
 .sublevel-nav.sort .sublevel-item {
-	width: unset;
 	line-height: 1;
-	display: block;
-	font-size: 1.125em;
+	font-size: 0.875rem;
+	flex-basis: unset;
 }
 
 /******************/
