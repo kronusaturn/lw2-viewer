@@ -1559,7 +1559,6 @@ div > .MJXc-display {
 	.sublevel-nav.sort {
 		top: 312px;
 		right: 10px;
-		flex-flow: row;
 	}
 	.sublevel-nav.sort .sublevel-item:first-child {
 		border-radius: 6px 0 0 6px;
@@ -1574,7 +1573,10 @@ div > .MJXc-display {
 	.sublevel-nav .sublevel-item:first-child,
 	.sublevel-nav .sublevel-item:last-child {
 		border-width: 1px;
-		border-radius: 6px;
+		border-radius: 8px;
+	}
+	.sublevel-nav.sort {
+		top: 273px;
 	}
 }
 @media only screen and (max-width: 520px) {
@@ -1659,5 +1661,16 @@ div > .MJXc-display {
 	}
 	h1.listing:last-of-type + .post-meta {
 		margin-bottom: 0.75em;
+	}
+	.sublevel-nav.sort {
+		top: 215px;
+		right: 4px;
+	}
+	.sublevel-nav.sort .sublevel-item:first-child {
+		border-radius: 6px 6px 0 0;
+	}
+	.sublevel-nav.sort .sublevel-item:last-child {
+		border-radius: 0 0 6px 6px;
+		border-width: 0 1px 1px 1px;
 	}
 }
