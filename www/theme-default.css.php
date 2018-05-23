@@ -1556,6 +1556,18 @@ div > .MJXc-display {
 	.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
 		background-color: #aaa;
 	}
+	.sublevel-nav.sort {
+		top: 312px;
+		right: 10px;
+		flex-flow: row;
+	}
+	.sublevel-nav.sort .sublevel-item:first-child {
+		border-radius: 6px 0 0 6px;
+	}
+	.sublevel-nav.sort .sublevel-item:last-child {
+		border-radius: 0 6px 6px 0;
+		border-width: 1px 1px 1px 0;
+	}
 }
 @media only screen and (max-width: 520px) {
 	h1.listing:first-of-type {

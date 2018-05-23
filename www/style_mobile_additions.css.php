@@ -370,7 +370,7 @@
 	#nav-item-search button {
 		height: 100%;
 		padding: 5px 5px 5px 10px;
-		width: 47px;
+		width: 40px;
 		overflow: visible;
 		visibility: hidden;
 	}
@@ -426,7 +426,7 @@
 	}
 	#inbox-indicator::before {
 		width: 100%;
-		font-size: 0.75rem;
+		font-size: 1rem;
 		text-align: right;
 		padding: 1px 6px;
 	}
@@ -471,6 +471,25 @@
 /*==============*/
 /* SUBLEVEL NAV */
 /*==============*/
+
+@media only screen and (max-width: 720px) {
+	.sublevel-nav {
+		flex-wrap: wrap;
+	}
+	.sublevel-nav .sublevel-item {
+		margin: 0.25em;
+	}
+}
+
+/*=====================*/
+/* SORT ORDER SELECTOR */
+/*=====================*/
+
+@media only screen and (max-width: 720px) {
+	.sublevel-nav.sort .sublevel-item {
+		margin: 0;
+	}
+}
 
 /*==========*/
 /* ARCHIVES */
@@ -523,6 +542,17 @@
 	h1.listing + .post-meta {
 		margin: 0 6px 0 7px;
 	}
+}
+
+/*============*/
+/* USER PAGES */
+/*============*/
+
+#content.user-page h1.page-main-heading {
+	margin: 1em 0.125em 0.75em 0.125em;
+}
+#content.user-page .user-stats {
+	margin-right: 0.25em;
 }
 
 /*============*/
@@ -665,6 +695,15 @@
 	.comment-meta .lw2-link {
 		display: none;
 	}
+}
+
+/*=======================*/
+/* COMMENTS COMPACT VIEW */
+/*=======================*/
+
+#content.user-page #comments-list-mode-selector {
+	top: 316px;
+	left: 12px;
 }
 
 /*=======*/

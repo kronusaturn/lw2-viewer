@@ -2966,7 +2966,7 @@ div > .MJXc-display {
 	#nav-item-search button {
 		height: 100%;
 		padding: 5px 5px 5px 10px;
-		width: 47px;
+		width: 40px;
 		overflow: visible;
 		visibility: hidden;
 	}
@@ -3022,7 +3022,7 @@ div > .MJXc-display {
 	}
 	#inbox-indicator::before {
 		width: 100%;
-		font-size: 0.75rem;
+		font-size: 1rem;
 		text-align: right;
 		padding: 1px 6px;
 	}
@@ -3067,6 +3067,25 @@ div > .MJXc-display {
 /*==============*/
 /* SUBLEVEL NAV */
 /*==============*/
+
+@media only screen and (max-width: 720px) {
+	.sublevel-nav {
+		flex-wrap: wrap;
+	}
+	.sublevel-nav .sublevel-item {
+		margin: 0.25em;
+	}
+}
+
+/*=====================*/
+/* SORT ORDER SELECTOR */
+/*=====================*/
+
+@media only screen and (max-width: 720px) {
+	.sublevel-nav.sort .sublevel-item {
+		margin: 0;
+	}
+}
 
 /*==========*/
 /* ARCHIVES */
@@ -3119,6 +3138,17 @@ div > .MJXc-display {
 	h1.listing + .post-meta {
 		margin: 0 6px 0 7px;
 	}
+}
+
+/*============*/
+/* USER PAGES */
+/*============*/
+
+#content.user-page h1.page-main-heading {
+	margin: 1em 0.125em 0.75em 0.125em;
+}
+#content.user-page .user-stats {
+	margin-right: 0.25em;
 }
 
 /*============*/
@@ -3261,6 +3291,15 @@ div > .MJXc-display {
 	.comment-meta .lw2-link {
 		display: none;
 	}
+}
+
+/*=======================*/
+/* COMMENTS COMPACT VIEW */
+/*=======================*/
+
+#content.user-page #comments-list-mode-selector {
+	top: 316px;
+	left: 12px;
 }
 
 /*=======*/
@@ -5027,6 +5066,18 @@ div > .MJXc-display {
 	}
 	.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
 		background-color: #aaa;
+	}
+	.sublevel-nav.sort {
+		top: 312px;
+		right: 10px;
+		flex-flow: row;
+	}
+	.sublevel-nav.sort .sublevel-item:first-child {
+		border-radius: 6px 0 0 6px;
+	}
+	.sublevel-nav.sort .sublevel-item:last-child {
+		border-radius: 0 6px 6px 0;
+		border-width: 1px 1px 1px 0;
 	}
 }
 @media only screen and (max-width: 520px) {
