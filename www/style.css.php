@@ -710,6 +710,7 @@ h1.listing a[href^="http"] {
 		text-overflow: ellipsis;
 		overflow: hidden;
 		border-bottom: 1px solid transparent;
+		-webkit-hyphens: auto;
 		-moz-hyphens: auto;
 		-ms-hyphens: auto;
 		hyphens: auto;
@@ -995,6 +996,7 @@ h1.listing + .post-meta .read-time {
 	margin: 1.25em 0 0.75em 1.25em;
 	padding: 0.35em 0.35em 0.4em 0.35em;
 	-webkit-hyphens: none;
+	-moz-hyphens: none;
 	-ms-hyphens: none;
 	hyphens: none;
 }
@@ -1090,11 +1092,19 @@ h1.listing + .post-meta .read-time {
 	font-size: 1.0625em;
 	white-space: nowrap;
 }
-.post-body, .comment-body {
-	text-align: justify;
-	-webkit-hyphens: auto;
-	-ms-hyphens: auto;
-	hyphens: auto;
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+	.post-body, .comment-body {
+		-ms-hyphens: auto;
+		text-align: justify;
+	}
+}
+@supports (hyphens: auto) or (-moz-hyphens: auto) or (-webkit-hyphens: auto) {
+	.post-body, .comment-body {
+		text-align: justify;
+		-webkit-hyphens: auto;
+		-moz-hyphens: auto;
+		hyphens: auto;
+	}
 }
 .post-body p, .comment-body p {
 	margin: 1em 0;
@@ -2117,6 +2127,7 @@ sup, sub {
 sub {
 	top: 0.3em;
 	-webkit-hyphens: none;
+	-moz-hyphens: none;
 	-ms-hyphens: none;
 	hyphens: none;
 }

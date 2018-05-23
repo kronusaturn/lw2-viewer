@@ -617,21 +617,6 @@ h1.listing {
 /* POSTS & COMMENTS */
 /*==================*/
 
-@media only screen and (max-width: 900px) {
-	.post-body, .comment-body {
-		text-align: left;
-		-webkit-hyphens: none;
-		-ms-hyphens: none;
-		hyphens: none;
-	}
-	@-moz-document url-prefix() {
-		.post-body, .comment-body {
-			text-align: justify;
-			hyphens: auto;
-		}
-	}
-}
-
 /*===========*/
 /* POST-META */
 /*===========*/
@@ -639,7 +624,7 @@ h1.listing {
 .post-meta {
 	line-height: 1.9;
 }
-@media only screen and (max-width: 520px) {
+@media only screen and (max-width: 720px) {
 	.post-meta .lw2-link span,
 	.post-meta .karma-value span,
 	.post-meta .comment-count span {
@@ -668,13 +653,8 @@ h1.listing {
 	.post-body {
 		font-size: 1.2rem;
 		line-height: 1.45;
-		text-align: center;
-	}
-	.post-body > * {
-		text-align: left;
 	}
 	.post > h1:first-child {
-		margin: 1em 0.25em 0.25em 0.25em;
 		font-size: 2em;
 	}
 }

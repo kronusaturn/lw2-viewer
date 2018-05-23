@@ -721,6 +721,7 @@ h1.listing a[href^="http"] {
 		text-overflow: ellipsis;
 		overflow: hidden;
 		border-bottom: 1px solid transparent;
+		-webkit-hyphens: auto;
 		-moz-hyphens: auto;
 		-ms-hyphens: auto;
 		hyphens: auto;
@@ -1005,6 +1006,7 @@ h1.listing + .post-meta .read-time {
 	margin: 1.25em 0 0.75em 1.25em;
 	padding: 0.35em 0.35em 0.4em 0.35em;
 	-webkit-hyphens: none;
+	-moz-hyphens: none;
 	-ms-hyphens: none;
 	hyphens: none;
 }
@@ -1100,11 +1102,19 @@ h1.listing + .post-meta .read-time {
 	font-size: 1.0625em;
 	white-space: nowrap;
 }
-.post-body, .comment-body {
-	text-align: justify;
-	-webkit-hyphens: auto;
-	-ms-hyphens: auto;
-	hyphens: auto;
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+	.post-body, .comment-body {
+		-ms-hyphens: auto;
+		text-align: justify;
+	}
+}
+@supports (hyphens: auto) or (-moz-hyphens: auto) or (-webkit-hyphens: auto) {
+	.post-body, .comment-body {
+		text-align: justify;
+		-webkit-hyphens: auto;
+		-moz-hyphens: auto;
+		hyphens: auto;
+	}
 }
 .post-body p, .comment-body p {
 	margin: 1em 0;
@@ -2127,6 +2137,7 @@ sup, sub {
 sub {
 	top: 0.3em;
 	-webkit-hyphens: none;
+	-moz-hyphens: none;
 	-ms-hyphens: none;
 	hyphens: none;
 }
@@ -3172,21 +3183,6 @@ h1.listing {
 /* POSTS & COMMENTS */
 /*==================*/
 
-@media only screen and (max-width: 900px) {
-	.post-body, .comment-body {
-		text-align: left;
-		-webkit-hyphens: none;
-		-ms-hyphens: none;
-		hyphens: none;
-	}
-	@-moz-document url-prefix() {
-		.post-body, .comment-body {
-			text-align: justify;
-			hyphens: auto;
-		}
-	}
-}
-
 /*===========*/
 /* POST-META */
 /*===========*/
@@ -3194,7 +3190,7 @@ h1.listing {
 .post-meta {
 	line-height: 1.9;
 }
-@media only screen and (max-width: 520px) {
+@media only screen and (max-width: 720px) {
 	.post-meta .lw2-link span,
 	.post-meta .karma-value span,
 	.post-meta .comment-count span {
@@ -3223,13 +3219,8 @@ h1.listing {
 	.post-body {
 		font-size: 1.2rem;
 		line-height: 1.45;
-		text-align: center;
-	}
-	.post-body > * {
-		text-align: left;
 	}
 	.post > h1:first-child {
-		margin: 1em 0.25em 0.25em 0.25em;
 		font-size: 2em;
 	}
 }
