@@ -2937,7 +2937,7 @@ div > .MJXc-display {
 	#nav-item-meta .nav-inner::before {
 		content: "\F077";
 	}
-	#nav-item-recent-comments span {
+	#nav-item-recent-comments > * > span {
 		display: none;
 	}
 	#nav-item-recent-comments .nav-inner::before {
@@ -3929,7 +3929,7 @@ h1.listing + .post-meta .karma-value {
 		0 0 0 3px #1f1f1f;
 	cursor: default;
 	color: #00a9ed;
-	right: 248px;
+	right: 264px;
 }
 h1.listing + .post-meta .karma-value::before {
 	content: "\F139";

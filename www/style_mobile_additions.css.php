@@ -340,7 +340,7 @@
 	#nav-item-meta .nav-inner::before {
 		content: "\F077";
 	}
-	#nav-item-recent-comments span {
+	#nav-item-recent-comments > * > span {
 		display: none;
 	}
 	#nav-item-recent-comments .nav-inner::before {

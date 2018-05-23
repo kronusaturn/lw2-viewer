@@ -521,7 +521,7 @@ h1.listing + .post-meta .karma-value {
 		0 0 0 3px #ddd;
 	cursor: default;
 	color: #c00;
-	right: 248px;
+	right: 264px;
 }
 h1.listing + .post-meta .karma-value::before {
 	content: "\F139";
