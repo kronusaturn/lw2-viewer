@@ -636,20 +636,22 @@ h1.listing {
 /* POST-META */
 /*===========*/
 
-@media only screen and (max-width: 900px) {
+.post-meta {
+	line-height: 1.9;
 }
 @media only screen and (max-width: 520px) {
-	.post-meta {
-		line-height: 1.9;
+	.post-meta .lw2-link span,
+	.post-meta .karma-value span,
+	.post-meta .comment-count span {
+		display: none;
 	}
-	.post-meta > *,
-	.post-meta .lw2-link {
-		margin: 0 0.5em;
+	.post-meta .comment-count::before {
+		content: "\F086";
+		font-family: Font Awesome;
+		font-size: 0.875em;
+		margin: 0 0.25em 0 0;
+		font-weight: 400;
 	}
-	.post-meta .lw2-link {
-		opacity: 0.5;
-	}
-}
 
 /*=======*/
 /* POSTS */

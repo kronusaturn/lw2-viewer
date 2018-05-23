@@ -695,6 +695,13 @@ h1.listing a {
 h1.listing a:nth-of-type(2) {
 	margin-left: 0.25em;
 }
+h1.listing a[href^="http"] {
+	font-size: 0.8em;
+	display: inline;
+	vertical-align: top;
+	position: relative;
+	top: 4px;
+}
 @media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
 	h1.listing a {
 		max-width: 100%;
@@ -712,15 +719,6 @@ h1.listing a:nth-of-type(2) {
 	h1.listing a:nth-of-type(2) {
 		max-width: calc(100% - 33px);
 	}
-}
-h1.listing a[href^="http"] {
-	font-size: 0.8em;
-	display: inline;
-	vertical-align: top;
-	position: relative;
-	top: 4px;
-}
-@media only screen and (hover: hover) {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		text-decoration: dotted underline;
@@ -745,35 +743,6 @@ h1.listing a[href^="http"] {
 		z-index: -1;
 	}
 	h1.listing a[href^="http"]:hover {
-		text-decoration: none;
-	}
-}
-@-moz-document url-prefix() {
-	h1.listing a:hover,
-	h1.listing a:focus {
-		text-decoration: dotted underline;
-		white-space: initial;
-		z-index: 2;
-	}	
-	h1.listing:focus-within::before {
-		content: ">";
-		display: block;
-		position: absolute;
-		left: 1em;
-	}
-
-	<?php $margin_of_hover_error = '10px'; ?>
-	h1.listing a:hover::before {
-		content: "";
-		position: absolute;
-		top: -<?php echo $margin_of_hover_error; ?>;
-		right: -<?php echo $margin_of_hover_error; ?>;
-		bottom: -<?php echo $margin_of_hover_error; ?>;
-		left: -<?php echo $margin_of_hover_error; ?>;
-		z-index: -1;
-	}
-	h1.listing a[href^="http"]:hover {
-		color: #4879ec;
 		text-decoration: none;
 	}
 }
@@ -806,6 +775,10 @@ h1.listing + .post-meta .post-section {
 h1.listing + .post-meta .post-section::before {
 	position: absolute;
 	left: -28px;
+}
+
+h1.listing + .post-meta .read-time {
+	cursor: default;
 }
 
 /**************/
@@ -1131,7 +1104,22 @@ h1.listing + .post-meta .post-section::before {
 /* POST-META */
 /*************/
 
+.post-meta {
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: center;
+	line-height: 1.9;
+}
+.post-meta .lw2-link {
+	opacity: 0.5;
+	order: 1;
+}
+.post-meta > *,
+.post-meta .post-section::before {
+	margin: 0 0.5em;
+}
 .post-meta .post-section {
+	order: -1;
 	margin: 0;
 	visibility: hidden;
 }
@@ -1139,12 +1127,6 @@ h1.listing + .post-meta .post-section::before {
 	visibility: visible;
 	font-family: "Font Awesome";
 	font-weight: 900;
-}
-.post-meta .link-post-domain {
-	margin-left: 1em;
-}
-.post-meta .read-time {
-	cursor: default;
 }
 .post-section.frontpage::before {
 	content: "\F015";
@@ -2339,6 +2321,7 @@ li {
 	visibility: hidden;
 	width: 0;
 	height: 0;
+	margin: 0;
 }
 .qualified-linking label {
 	font-family: Font Awesome;
