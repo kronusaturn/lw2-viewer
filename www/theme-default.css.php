@@ -1558,6 +1558,19 @@ div > .MJXc-display {
 		border-radius: 0 6px 6px 0;
 		border-width: 1px 1px 1px 0;
 	}
+	.comment-item .comment-item {
+		margin: 0.75em 2px 4px 6px;
+		box-shadow: 
+			0 0 2px #ccc, 
+			0 0 4px #ccc, 
+			0 0 7px #ccc;
+	}
+	.comment-item .comment-item + .comment-item {
+		margin: 1.5em 2px 4px 6px;
+	}
+	.comment-body {
+		font-size: 1.125rem;
+	}
 }
 @media only screen and (max-width: 720px) {
 	.sublevel-nav .sublevel-item,

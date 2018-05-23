@@ -573,14 +573,6 @@
 h1.listing {
 	max-height: unset;
 }
-@media only screen and (max-width: 520px) {
-	h1.listing {
-		margin: 6px;
-	}
-	h1.listing + .post-meta {
-		margin: 0 6px 0 7px;
-	}
-}
 
 /*============*/
 /* USER PAGES */
@@ -664,23 +656,8 @@ h1.listing {
 /*==========*/
 
 @media only screen and (max-width: 900px) {
-}
-@media only screen and (max-width: 520px) {
-	.comment-item .comment-item {
-		margin: 0.75em 4px 4px 4px;
-		box-shadow: 
-			0 0 2px #ccc, 
-			0 0 4px #ccc, 
-			0 0 7px #ccc;
-	}
-	.comment-item .comment-item + .comment-item {
-		margin: 1.5em 4px 4px 4px;
-	}
 	.comment-body ul {
 		padding-left: 30px;
-	}
-	.comment-body {
-		font-size: 1.125rem;
 	}
 	.comment-body ol {
 		padding-left: 30px;
@@ -738,35 +715,9 @@ h1.listing {
 	}
 }
 
-/*=======*/
-/* OTHER */
-/*=======*/
-
-@media only screen and (max-width: 900px) {
-	.contents {
-		float: none;
-		display: table;
-		max-width: none;
-		margin-left: auto;
-		margin-right: auto;
-	}
-}
-@media only screen and (max-width: 520px) {
-	.contents {
-		max-width: 100%;
-		margin: 1em 0 0 0;
-		display: inline-block;
-	}
-	.contents-head {
-		font-size: 1.2em;
-	}
-	.contents {
-		padding: 0.35em 0.75em 0.4em 0.35em;
-	}
-	.post-body .contents ul {
-		font-size: unset;
-	}
-}
+/*===========================*/
+/* COMMENT THREAD NAVIGATION */
+/*===========================*/
 
 @media only screen and (max-width: 520px) {
 	a.comment-parent-link {
@@ -791,6 +742,13 @@ h1.listing {
 	a.comment-parent-link::after {
 		display: none;
 	}
+}
+
+/*=================================*/
+/* COMMENT THREAD MINIMIZE BUTTONS */
+/*=================================*/
+
+@media only screen and (max-width: 520px) {
 	.comment-minimize-button::after {
 		height: 100%;
 		top: 0;
@@ -799,6 +757,46 @@ h1.listing {
 		line-height: 1.6;
 		text-align: right;
 	}
+}
+
+/*===========================*/
+/* COMMENTING AND POSTING UI */
+/*===========================*/
+
+@media only screen and (max-width: 520px) {
+	.textarea-container button:active {
+		background-color: #ccc;
+	}
+	.textarea-container .guiedit-mobile-auxiliary-button {
+		z-index: 11011;
+		position: fixed;
+		bottom: 7px;
+		width: calc(((100% - 16px) / 10) * 3 - 7px);
+		font-size: 1.25rem;
+		padding: 5px;
+		background-color: #eee;
+		border: 1px solid #ddd;
+		border-radius: 6px;
+	}
+	.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
+		display: block;
+	}
+	.textarea-container .guiedit-mobile-help-button {
+		left: 8px;
+	}
+	.textarea-container .guiedit-mobile-exit-button {
+		right: 8px;
+	}
+	.guiedit::after {
+		display: none;
+	}
+}
+
+/*================*/
+/* EDIT POST FORM */
+/*================*/
+
+@media only screen and (max-width: 520px) {
 	#edit-post-form label[for='title'] {
 		width: 2.5em;
 	}
@@ -872,34 +870,38 @@ h1.listing {
 		left: calc(50% + 0.65em);
 		top: calc(50% - 1.3em);
 	}
-	.textarea-container button:active {
-		background-color: #ccc;
-	}
-	.textarea-container .guiedit-mobile-auxiliary-button {
-		z-index: 11011;
-		position: fixed;
-		bottom: 7px;
-		width: calc(((100% - 16px) / 10) * 3 - 7px);
-		font-size: 1.25rem;
-		padding: 5px;
-		background-color: #eee;
-		border: 1px solid #ddd;
-		border-radius: 6px;
-	}
-	.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
-		display: block;
-	}
-	.textarea-container .guiedit-mobile-help-button {
-		left: 8px;
-	}
-	.textarea-container .guiedit-mobile-exit-button {
-		right: 8px;
-	}
-	.guiedit::after {
-		display: none;
-	}
 	#edit-post-form input[type='submit'] {
 		margin-top: -6px;
+	}
+}
+
+/*===================*/
+/* TABLE OF CONTENTS */
+/*===================*/
+
+@media only screen and (max-width: 900px) {
+	.contents {
+		float: none;
+		display: table;
+		max-width: none;
+		margin-left: auto;
+		margin-right: auto;
+	}
+}
+@media only screen and (max-width: 520px) {
+	.contents {
+		max-width: 100%;
+		margin: 1em 0 0 0;
+		display: inline-block;
+	}
+	.contents-head {
+		font-size: 1.2em;
+	}
+	.contents {
+		padding: 0.35em 0.75em 0.4em 0.35em;
+	}
+	.post-body .contents ul {
+		font-size: unset;
 	}
 }
 
