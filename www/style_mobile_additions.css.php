@@ -652,6 +652,7 @@ h1.listing {
 		margin: 0 0.25em 0 0;
 		font-weight: 400;
 	}
+}
 
 /*=======*/
 /* POSTS */
