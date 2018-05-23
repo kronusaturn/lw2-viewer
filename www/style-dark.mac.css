@@ -4185,6 +4185,14 @@ h1.listing + .post-meta::after {
 	font-family: 'Charter', 'Georgia', serif;
 }
 
+/*=======*/
+/* POSTS */
+/*=======*/
+
+.post > h1:first-child {
+	font-weight: 700;
+}
+
 /*===========*/
 /* POST-META */
 /*===========*/

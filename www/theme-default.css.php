@@ -720,6 +720,14 @@ h1.listing + .post-meta::after {
 	font-family: <?php echo $text_font; ?>;
 }
 
+/*=======*/
+/* POSTS */
+/*=======*/
+
+.post > h1:first-child {
+	font-weight: <?php echo ($platform == 'Mac') ? "700" : "800"; ?>;
+}
+
 /*===========*/
 /* POST-META */
 /*===========*/
