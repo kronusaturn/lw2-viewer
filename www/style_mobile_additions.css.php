@@ -433,6 +433,10 @@
 	}
 }
 
+/*==============*/
+/* SUBLEVEL NAV */
+/*==============*/
+
 /*==========*/
 /* LISTINGS */
 /*==========*/
@@ -564,16 +568,6 @@
 	}
 	a.comment-parent-link::after {
 		display: none;
-	}
-	.sublevel-nav {
-		display: table;
-		margin: auto;
-		padding: 0 1em;
-	}
-	.sublevel-nav .sublevel-item {
-		display: table-cell;
-		font-size: 1rem;
-		padding: 0.25em 0.5em;
 	}
 	.comment-minimize-button::after {
 		height: 100%;
@@ -717,6 +711,7 @@
 	.post-body .contents ul {
 		font-size: unset;
 	}
+/* 
 	.login-container {
 		margin: 0;
 	}
@@ -760,6 +755,7 @@
 		margin: 1em 0 0 0;
 		padding: 0;
 	}
+ */
 	#inbox-indicator {
 		width: 100%;
 	}
@@ -777,12 +773,6 @@
 @media only screen and (max-width: 374px) {
 	.nav-bar .nav-inner {
 		padding: 6px 3.33vw;
-	}
-	.sublevel-nav {
-		padding: 0 0.5em;
-	}
-	.sublevel-nav .sublevel-item {
-		font-size: 0.9375rem;
 	}
 	#inbox-indicator::before {
 		font-size: 0.625rem;
