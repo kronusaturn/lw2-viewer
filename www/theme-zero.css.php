@@ -225,7 +225,7 @@ body {
 	opacity: 0.4;
 	color: #bbb;
 }
-@media only screen and (hover:hover), only screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
 	#quick-nav-ui a:hover {
 		color: #f00;
 		box-shadow: 0 0 0 1px #faa;
@@ -253,7 +253,7 @@ body {
 	color: #bbb;
 	text-shadow: none;
 }
-@media only screen and (hover:hover), only screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
 	#new-comment-nav-ui .new-comments-count:hover {
 		text-shadow: 
 			0 0 1px #fff,
@@ -377,29 +377,7 @@ h1.listing a[href^="/"] {
 	font-weight: bold;
 }
 
-@media only screen and (hover: hover) {
-	h1.listing a:hover,
-	h1.listing a:focus {
-		color: #777;
-		background-color: rgba(238,238,238,0.85);
-	}	
-	#content.user-page h1.listing:focus-within::before {
-		left: -1em;
-	}
-	h1.listing:focus-within::before {
-		color: #00f;
-		left: 1.25em;
-	}
-	h1.listing a[href^="http"]:hover {
-		color: #4879ec;
-		text-shadow: 
-			 0.5px 0.5px 0 #fff,
-			 -0.5px -0.5px 0 #fff,
-			 0 0 2px #fff,
-			 0 0 3px #00c;
-	}
-}
-@-moz-document url-prefix() {
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		color: #777;

@@ -239,7 +239,7 @@ body {
 	opacity: 0.4;
 	color: #bbb;
 }
-@media only screen and (hover:hover), only screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
 	#quick-nav-ui a:hover {
 		box-shadow: 
 			0 0 0 1px #fff inset,
@@ -273,7 +273,7 @@ body {
 	opacity: 0.4;
 	color: #bbb;
 }
-@media only screen and (hover:hover), only screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
 	#quick-nav-ui a:hover {
 		box-shadow: 
 			0 0 0 1px #fff inset,
@@ -355,29 +355,7 @@ h1.listing a[href^="http"] {
          0 0 2px #000;
 }
 
-@media only screen and (hover: hover) {
-	h1.listing a:hover,
-	h1.listing a:focus {
-		color: #777;
-		background-color: rgba(255,255,255,0.85);
-	}	
-	#content.user-page h1.listing:focus-within::before {
-		left: -0.625em;
-	}
-	h1.listing:focus-within::before {
-		color: #000;
-		left: 1.25em;
-	}
-	h1.listing a[href^="http"]:hover {
-		color: #fff;
-		text-shadow: 
-			 0.5px 0.5px 0 #000, 
-			-0.5px -0.5px 0 #000,
-			 0 0 2px #000,
-			 0 0 3px #000;
-	}
-}
-@-moz-document url-prefix() {
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		color: #777;

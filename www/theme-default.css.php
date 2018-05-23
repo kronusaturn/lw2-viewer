@@ -289,7 +289,7 @@ body {
 	opacity: 0.4;
 	color: #bbb;
 }
-@media only screen and (hover:hover), only screen and (-moz-touch-enabled) {
+@media only screen and (hover:hover), not screen and (-moz-touch-enabled) {
 	#quick-nav-ui a:hover {
 		color: #000;
 		background-color: #eee;
@@ -317,7 +317,7 @@ body {
 	color: #bbb;
 	text-shadow: none;
 }
-@media only screen and (hover:hover), only screen and (-moz-touch-enabled) {
+@media only screen and (hover:hover), not screen and (-moz-touch-enabled) {
 	#new-comment-nav-ui .new-comments-count:hover {
 		text-shadow: 
 			0 0 1px #fff,
@@ -436,28 +436,7 @@ h1.listing a[href^="http"] {
 	color: #00c;
 }
 
-@media only screen and (hover: hover) {
-	h1.listing a:hover,
-	h1.listing a:focus {
-		color: #777;
-		background-color: rgba(255,255,255,0.85);
-	}	
-	#content.user-page h1.listing:focus-within::before {
-		left: -0.75em;
-	}
-	h1.listing:focus-within::before {
-		color: #00f;
-	}
-	h1.listing a[href^="http"]:hover {
-		color: #4879ec;
-		text-shadow: 
-			 0.5px 0.5px 0 #fff,
-			 -0.5px -0.5px 0 #fff,
-			 0 0 2px #fff,
-			 0 0 3px #00c;
-	}
-}
-@-moz-document url-prefix() {
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		color: #777;
@@ -1193,7 +1172,7 @@ input[type='submit']:active {
 	}
 }
 
-@media only screen and (hover:hover), only screen and (-moz-touch-enabled) {
+@media only screen and (hover:hover), not screen and (-moz-touch-enabled) {
 	button:hover,
 	input[type='submit']:hover,
 	button:focus,
@@ -1580,9 +1559,6 @@ div > .MJXc-display {
 	}
 }
 @media only screen and (max-width: 520px) {
-	h1.listing:first-of-type {
-		margin-top: 0;
-	}
 	h1.listing + .post-meta {
 		padding: 0.25em 144px 0 0;
 		display: flex;

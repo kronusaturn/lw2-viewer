@@ -275,7 +275,7 @@ a#inbox-indicator.new-messages:hover::before {
 /*********************/
 
 #top-nav-bar {
-	margin: 0.5em 0 -1.5em 0;
+	margin: 0.125em 0 0 0;
 	padding: 0.75em 0 0 0;
 	text-align: center;
 	font-size: 1.25em;
@@ -692,19 +692,7 @@ h1.listing {
 	margin: 0.7em 20px 0.1em 20px;
 	font-size: 1.875rem;
 	line-height: 1.15;
-}
-@media only screen and (min-width: 901px) and (hover: hover) {
-	h1.listing {
 		max-height: 1.15em;
-	}
-}
-@-moz-document url-prefix() {
-	h1.listing {
-		max-height: 1.15em;
-	}
-}
-h1.listing:first-of-type {
-	margin-top: 1.25em;
 }
 
 h1.listing a {
@@ -713,25 +701,7 @@ h1.listing a {
 h1.listing a:nth-of-type(2) {
 	margin-left: 0.25em;
 }
-@media only screen and (min-width: 901px) and (hover: hover) {
-	h1.listing a {
-		max-width: 100%;
-		display: inline-block;
-		white-space: nowrap;
-		text-overflow: ellipsis;
-		overflow: hidden;
-		border-bottom: 1px solid transparent;
-		-moz-hyphens: auto;
-		-ms-hyphens: auto;
-		hyphens: auto;
-		z-index: 1;
-		padding: 0 0 1px 1px;
-	}
-	h1.listing a:nth-of-type(2) {
-		max-width: calc(100% - 33px);
-	}
-}
-@-moz-document url-prefix() {
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
 	h1.listing a {
 		max-width: 100%;
 		display: inline-block;
@@ -3807,7 +3777,7 @@ a.nav-inner,
 	opacity: 0.4;
 	color: #bbb;
 }
-@media only screen and (hover:hover), only screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
 	#quick-nav-ui a:hover {
 		background-color: #f0f0eb;
 		color: #333;
@@ -3838,7 +3808,7 @@ a.nav-inner,
 	color: #e6e6e6;
 	text-shadow: none;
 }
-@media only screen and (hover:hover), only screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
 	#new-comment-nav-ui .new-comments-count:hover {
 		text-shadow: 
 			0 0 1px #fff,
@@ -3970,35 +3940,7 @@ h1.listing a[href^='/'] {
 	padding: 0 2px 1px 1px;
 }
 
-@media only screen and (hover: hover) {
-	h1.listing a[href^='/'] {
-		max-width: calc(100% - 60px);
-	}
-	h1.listing a:hover,
-	h1.listing a:focus {
-		text-shadow: 
-			0px 0px 0.5px #ff987b, 
-			0px 0px 1.5px #c05651,
-			0.5px 0.5px 0.5px #de7069;
-		background-color: rgba(255,255,250,0.85);
-	}	
-	h1.listing:focus-within::before {
-		display: inline-block;
-		vertical-align: top;
-		position: relative;
-		left: -0.25em;
-		color: #690010;
-	}
-	h1.listing a[href^="http"]:hover {
-		color: #690010;
-		text-shadow: 
-			 0.5px 0.5px 0 #fff,
-			 -0.5px -0.5px 0 #fff,
-			 0 0 2px #fff,
-			 0 0 3px #00c;
-	}
-}
-@-moz-document url-prefix() {
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
 	h1.listing a[href^='/'] {
 		max-width: calc(100% - 60px);
 	}
@@ -4714,7 +4656,7 @@ input[type='submit']:active {
 		transform: none;
 	}
 }
-@media only screen and (hover:hover), only screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
 	button:hover,
 	input[type='submit']:hover,
 	button:focus,

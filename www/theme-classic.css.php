@@ -232,7 +232,7 @@ body {
 	opacity: 0.4;
 	color: #bbb;
 }
-@media only screen and (hover:hover), only screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
 	#quick-nav-ui a:hover {
 		color: #000;
 		background-color: #eee;
@@ -260,7 +260,7 @@ body {
 	color: #bbb;
 	text-shadow: none;
 }
-@media only screen and (hover:hover), only screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
 	#new-comment-nav-ui .new-comments-count:hover {
 		text-shadow: 
 			0 0 1px #fff,
@@ -393,30 +393,7 @@ h1.listing a[href^="http"] {
 	top: 2px;
 }
 
-@media only screen and (hover: hover) {
-	h1.listing a:hover,
-	h1.listing a:focus {
-		color: #3d3d3e;
-		text-decoration: none;
-	}	
-	h1.listing:focus-within::before {
-		display: none;
-	}
-	h1.listing:focus-within + .post-meta .karma-value {
-		box-shadow: 
-			0 0 0 3px #fff,
-			0 0 0 6px #3d3d3e;
-	}
-	h1.listing a[href^="http"]:hover {
-		color: #4879ec;
-		text-shadow: 
-			 0.5px 0.5px 0 #fff,
-			 -0.5px -0.5px 0 #fff,
-			 0 0 2px #fff,
-			 0 0 3px #00c;
-	}
-}
-@-moz-document url-prefix() {
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		color: #3d3d3e;

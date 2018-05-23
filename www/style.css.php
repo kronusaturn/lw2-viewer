@@ -264,7 +264,7 @@ a#inbox-indicator.new-messages:hover::before {
 /*********************/
 
 #top-nav-bar {
-	margin: 0.5em 0 -1.5em 0;
+	margin: 0.125em 0 0 0;
 	padding: 0.75em 0 0 0;
 	text-align: center;
 	font-size: 1.25em;
@@ -681,19 +681,7 @@ h1.listing {
 	margin: 0.7em 20px 0.1em 20px;
 	font-size: 1.875rem;
 	line-height: 1.15;
-}
-@media only screen and (min-width: 901px) and (hover: hover) {
-	h1.listing {
 		max-height: 1.15em;
-	}
-}
-@-moz-document url-prefix() {
-	h1.listing {
-		max-height: 1.15em;
-	}
-}
-h1.listing:first-of-type {
-	margin-top: 1.25em;
 }
 
 h1.listing a {
@@ -702,25 +690,7 @@ h1.listing a {
 h1.listing a:nth-of-type(2) {
 	margin-left: 0.25em;
 }
-@media only screen and (min-width: 901px) and (hover: hover) {
-	h1.listing a {
-		max-width: 100%;
-		display: inline-block;
-		white-space: nowrap;
-		text-overflow: ellipsis;
-		overflow: hidden;
-		border-bottom: 1px solid transparent;
-		-moz-hyphens: auto;
-		-ms-hyphens: auto;
-		hyphens: auto;
-		z-index: 1;
-		padding: 0 0 1px 1px;
-	}
-	h1.listing a:nth-of-type(2) {
-		max-width: calc(100% - 33px);
-	}
-}
-@-moz-document url-prefix() {
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
 	h1.listing a {
 		max-width: 100%;
 		display: inline-block;

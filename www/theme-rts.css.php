@@ -295,7 +295,7 @@ a.nav-inner,
 	opacity: 0.4;
 	color: #bbb;
 }
-@media only screen and (hover:hover), only screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
 	#quick-nav-ui a:hover {
 		background-color: #f0f0eb;
 		color: #333;
@@ -326,7 +326,7 @@ a.nav-inner,
 	color: #e6e6e6;
 	text-shadow: none;
 }
-@media only screen and (hover:hover), only screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
 	#new-comment-nav-ui .new-comments-count:hover {
 		text-shadow: 
 			0 0 1px #fff,
@@ -458,35 +458,7 @@ h1.listing a[href^='/'] {
 	padding: 0 2px 1px 1px;
 }
 
-@media only screen and (hover: hover) {
-	h1.listing a[href^='/'] {
-		max-width: calc(100% - 60px);
-	}
-	h1.listing a:hover,
-	h1.listing a:focus {
-		text-shadow: 
-			0px 0px 0.5px #ff987b, 
-			0px 0px 1.5px #c05651,
-			0.5px 0.5px 0.5px #de7069;
-		background-color: rgba(255,255,250,0.85);
-	}	
-	h1.listing:focus-within::before {
-		display: inline-block;
-		vertical-align: top;
-		position: relative;
-		left: -0.25em;
-		color: #690010;
-	}
-	h1.listing a[href^="http"]:hover {
-		color: #690010;
-		text-shadow: 
-			 0.5px 0.5px 0 #fff,
-			 -0.5px -0.5px 0 #fff,
-			 0 0 2px #fff,
-			 0 0 3px #00c;
-	}
-}
-@-moz-document url-prefix() {
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
 	h1.listing a[href^='/'] {
 		max-width: calc(100% - 60px);
 	}
@@ -1202,7 +1174,7 @@ input[type='submit']:active {
 		transform: none;
 	}
 }
-@media only screen and (hover:hover), only screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
 	button:hover,
 	input[type='submit']:hover,
 	button:focus,

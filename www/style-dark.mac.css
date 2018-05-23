@@ -275,7 +275,7 @@ a#inbox-indicator.new-messages:hover::before {
 /*********************/
 
 #top-nav-bar {
-	margin: 0.5em 0 -1.5em 0;
+	margin: 0.125em 0 0 0;
 	padding: 0.75em 0 0 0;
 	text-align: center;
 	font-size: 1.25em;
@@ -692,19 +692,7 @@ h1.listing {
 	margin: 0.7em 20px 0.1em 20px;
 	font-size: 1.875rem;
 	line-height: 1.15;
-}
-@media only screen and (min-width: 901px) and (hover: hover) {
-	h1.listing {
 		max-height: 1.15em;
-	}
-}
-@-moz-document url-prefix() {
-	h1.listing {
-		max-height: 1.15em;
-	}
-}
-h1.listing:first-of-type {
-	margin-top: 1.25em;
 }
 
 h1.listing a {
@@ -713,25 +701,7 @@ h1.listing a {
 h1.listing a:nth-of-type(2) {
 	margin-left: 0.25em;
 }
-@media only screen and (min-width: 901px) and (hover: hover) {
-	h1.listing a {
-		max-width: 100%;
-		display: inline-block;
-		white-space: nowrap;
-		text-overflow: ellipsis;
-		overflow: hidden;
-		border-bottom: 1px solid transparent;
-		-moz-hyphens: auto;
-		-ms-hyphens: auto;
-		hyphens: auto;
-		z-index: 1;
-		padding: 0 0 1px 1px;
-	}
-	h1.listing a:nth-of-type(2) {
-		max-width: calc(100% - 33px);
-	}
-}
-@-moz-document url-prefix() {
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
 	h1.listing a {
 		max-width: 100%;
 		display: inline-block;
@@ -3799,7 +3769,7 @@ body {
 	opacity: 0.4;
 	color: #393939;
 }
-@media only screen and (hover:hover), only screen and (-moz-touch-enabled) {
+@media only screen and (hover:hover), not screen and (-moz-touch-enabled) {
 	#quick-nav-ui a:hover {
 		color: #fff;
 		background-color: #131313;
@@ -3827,7 +3797,7 @@ body {
 	color: #393939;
 	text-shadow: none;
 }
-@media only screen and (hover:hover), only screen and (-moz-touch-enabled) {
+@media only screen and (hover:hover), not screen and (-moz-touch-enabled) {
 	#new-comment-nav-ui .new-comments-count:hover {
 		text-shadow: 
 			0 0 1px #000,
@@ -3946,28 +3916,7 @@ h1.listing a[href^="http"] {
 	color: #54d400;
 }
 
-@media only screen and (hover: hover) {
-	h1.listing a:hover,
-	h1.listing a:focus {
-		color: #777;
-		background-color: rgba(0, 0, 0, 0.85);
-	}	
-	#content.user-page h1.listing:focus-within::before {
-		left: -0.75em;
-	}
-	h1.listing:focus-within::before {
-		color: #00c200;
-	}
-	h1.listing a[href^="http"]:hover {
-		color: #670;
-		text-shadow: 
-			 0.5px 0.5px 0 #000,
-			 -0.5px -0.5px 0 #000,
-			 0 0 2px #000,
-			 0 0 3px #54d400;
-	}
-}
-@-moz-document url-prefix() {
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		color: #777;
@@ -4751,7 +4700,7 @@ input[type='submit']:active {
 	}
 }
 
-@media only screen and (hover:hover), only screen and (-moz-touch-enabled) {
+@media only screen and (hover:hover), not screen and (-moz-touch-enabled) {
 	button:hover,
 	input[type='submit']:hover,
 	button:focus,
@@ -5138,9 +5087,6 @@ div > .MJXc-display {
 	}
 }
 @media only screen and (max-width: 520px) {
-	h1.listing:first-of-type {
-		margin-top: 0;
-	}
 	h1.listing + .post-meta {
 		padding: 0.25em 144px 0 0;
 		display: flex;
