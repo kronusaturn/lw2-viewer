@@ -1569,6 +1569,14 @@ div > .MJXc-display {
 		border-width: 1px 1px 1px 0;
 	}
 }
+@media only screen and (max-width: 720px) {
+	.sublevel-nav .sublevel-item,
+	.sublevel-nav .sublevel-item:first-child,
+	.sublevel-nav .sublevel-item:last-child {
+		border-width: 1px;
+		border-radius: 6px;
+	}
+}
 @media only screen and (max-width: 520px) {
 	h1.listing:first-of-type {
 		margin-top: 0;
