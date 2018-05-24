@@ -109,10 +109,16 @@ function updateInbox() {
 /**************/
 
 function GUIEditMobileHelpButtonClicked(event) {
-	console.log("Help button clicked");
+	toggleMarkdownHintsBox();
+}
+function toggleMarkdownHintsBox() {
+	let markdownHintsBox = document.querySelector(".markdown-hints");
+	markdownHintsBox.style.display = (window.getComputedStyle(markdownHintsBox).display == "none") ? "block" : "none";
 }
 function GUIEditMobileExitButtonClicked(event) {
 	event.target.blur();
+	let markdownHintsBox = document.querySelector(".markdown-hints");
+	if (window.getComputedStyle(markdownHintsBox).display != "none") markdownHintsBox.style.display = "none";
 }
 
 Element.prototype.addTextareaFeatures = function() {
@@ -120,6 +126,7 @@ Element.prototype.addTextareaFeatures = function() {
 
 	textarea.addEventListener("focus", function(e) { e.target.parentElement.parentElement.scrollIntoViewIfNeeded(); });
 	textarea.addEventListener("input", OnInputExpandTextarea, false);
+	textarea.addEventListener("input", OnInputRemoveMarkdownHints, false);
 	textarea.addEventListener("keyup", function(e) { e.stopPropagation(); });
 	
 	textarea.insertAdjacentHTML("beforebegin", "<div class='guiedit-buttons-container'></div>");
@@ -256,6 +263,12 @@ function ExpandTextarea(textarea) {
 			textarea.parentElement.parentElement.scrollIntoViewIfNeeded();
 		}
 	});
+}
+
+function OnInputRemoveMarkdownHints() {
+	if (window.innerWidth > 520) return;
+	let markdownHintsBox = document.querySelector(".markdown-hints");
+	if (window.getComputedStyle(markdownHintsBox).display != "none") markdownHintsBox.style.display = "none";
 }
 
 /**********/

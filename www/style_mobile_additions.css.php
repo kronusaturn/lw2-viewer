@@ -874,6 +874,29 @@ a.comment-parent-link::after {
 	.guiedit::after {
 		display: none;
 	}
+
+	#edit-post-form .markdown-hints {
+		z-index: 11111;
+		position: fixed;
+		top: 40px;
+		left: 0;
+		right: 0;
+		margin: auto;
+		padding: 4px 0 4px 8px;
+		width: 310px;
+		border-width: 3px;
+		border-style: double;
+		pointer-events: none;
+	}
+	.markdown-hints::after {
+		content: "(Type to hide this help box.)";
+		color: #090;
+		display: block;
+		margin: 12px 18px 13px 10px;
+		padding: 5px;
+		font-size: 0.9em;
+		text-align: center;
+	}
 }
 
 /*================*/

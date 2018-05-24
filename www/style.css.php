@@ -2001,6 +2001,9 @@ div.comment-child-links a::first-letter {
 	overflow: visible;
 }
 
+#edit-post-form button.guiedit div {
+	overflow: visible;
+}
 .guiedit-mobile-auxiliary-button {
 	display: none;
 }
