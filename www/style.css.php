@@ -1226,6 +1226,9 @@ ul.comment-thread {
 #comments .comment-thread > li {
 	position: relative;
 }
+#content > #top-nav-bar + .comment-thread .comment-item {
+	margin-top: 0;
+}
 
 .comment-item {
 	margin: 2em 0 0 0;

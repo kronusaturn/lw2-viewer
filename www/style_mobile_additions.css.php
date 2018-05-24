@@ -466,6 +466,13 @@
 		font-size: 1rem;
 	}
 }
+@media only screen and (max-width: 520px) {
+	.page-toolbar {
+		display: flex;
+		flex-direction: column-reverse;
+		text-align: right;
+	}
+}
 
 /*==============*/
 /* SUBLEVEL NAV */
@@ -706,9 +713,12 @@ a.comment-parent-link::after {
 /* COMMENTS COMPACT VIEW */
 /*=======================*/
 
+#comments-list-mode-selector {
+	top: 185px;
+	left: 12px;
+}
 #content.user-page #comments-list-mode-selector {
 	top: 316px;
-	left: 12px;
 }
 @media only screen and (max-width: 720px) {
 	#content.user-page #comments-list-mode-selector {
