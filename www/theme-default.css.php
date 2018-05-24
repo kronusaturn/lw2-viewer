@@ -1539,6 +1539,11 @@ div > .MJXc-display {
 		overflow: visible;
 		order: 1;
 	}
+	h1.listing + .post-meta .link-post-domain {
+		order: 2;
+		line-height: 1;
+		flex-basis: 100%;
+	}
 
 	#nav-item-search button::before {
 		color: #00e;
@@ -1585,13 +1590,14 @@ div > .MJXc-display {
 	h1.listing {
 		margin: 10px 6px 6px 6px;
 		font-size: 1.5rem;
+		padding-right: 35px;
 	}
 	h1.listing + .post-meta {
 		margin: 0 6px 0 7px;
 		clear: both;
 	}
 	h1.listing + .post-meta {
-		padding: .25em 144px 0 0;
+		padding: .25em 254px 0 0;
 	}
 	h1.listing + .post-meta::after {
 		bottom: -2px;
@@ -1644,21 +1650,16 @@ div > .MJXc-display {
 	h1.listing + .post-meta .link-post-domain {
 		margin: 0;
 		line-height: 1.3;
-		opacity: 0.5;
-		order: -1;
 	}
 	h1.listing + .post-meta .post-section::before {
 		position: absolute;
 		left: unset;
-		right: 144px;
+		right: 0;
 		bottom: 30px;
 		top: unset;
 	}
 	h1.listing a {
 		display: inline;
-	}
-	h1.listing a[href^='http'] {
-		top: 2px;
 	}
 
 	.sublevel-nav .sublevel-item,
@@ -1673,6 +1674,7 @@ div > .MJXc-display {
 }
 @media only screen and (max-width: 520px) {
 	h1.listing + .post-meta {
+		padding: .25em 144px 0 0;
 		flex-flow: column;
 	}
 	h1.listing + .post-meta .date {
@@ -1695,6 +1697,9 @@ div > .MJXc-display {
 	h1.listing + .post-meta .lw2-link {
 		right: 0;
 		bottom: 4px;
+	}
+	h1.listing + .post-meta .post-section::before {
+		right: 120px;
 	}
 
 	.sublevel-nav.sort {
