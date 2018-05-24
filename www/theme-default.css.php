@@ -1712,21 +1712,20 @@ div > .MJXc-display {
 		border-width: 0 1px 1px 1px;
 	}
 	
-	.textarea-container button:active {
+	.posting-controls:focus-within button:active {
 		background-color: #ccc;
 	}
-	.textarea-container .guiedit-mobile-auxiliary-button {
+	.posting-controls:focus-within .guiedit-mobile-auxiliary-button {
 		background-color: #eee;
 		border: 1px solid #ddd;
 		border-radius: 6px;
 	}
-	#edit-post-form .textarea-container:focus-within .guiedit-buttons-container {
+	.posting-controls:focus-within .guiedit-buttons-container {
 		background-color: white;
 		border-top: 1px solid #ddf;
 	}
-	#edit-post-form .textarea-container:focus-within button.guiedit {
+	.posting-controls:focus-within button.guiedit {
 		background-color: #eee;
 		border: 1px solid #ddd;
 		border-radius: 6px;
-	}
 }

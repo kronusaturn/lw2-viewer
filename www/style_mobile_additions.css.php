@@ -726,10 +726,13 @@ a.comment-parent-link::after {
 	}
 }
 @media only screen and (max-width: 520px) {
+	#comments-list-mode-selector {
+		top: 123px;
+	}
 	#content.user-page #comments-list-mode-selector {
 		top: 203px;
 	}
-	#content.user-page #comments-list-mode-selector button {
+	#comments-list-mode-selector button {
 		display: block;
 	}
 }
@@ -786,32 +789,77 @@ a.comment-parent-link::after {
 /*===========================*/
 
 @media only screen and (max-width: 900px) {
-	.comment-controls .edit-button {
-		color: #0b0;
+	.comment-controls .edit-button,
+	.comment-controls .cancel-comment-button {
 		max-width: 1.3em;
 		overflow: hidden;
 		margin-right: 0.125em;
 	}
+	.comment-controls .edit-button {
+		color: #0b0;
+	}
 	.comment-controls .edit-button::before {
 		font-size: 1rem;
 	}
+	#comments > .comment-controls .cancel-comment-button,
+	.comment-controls .cancel-comment-button {
+		right: 8px;
+	}
+	.comment-controls .cancel-comment-button::before {
+		font-size: 1.25rem;		
+	}
 }
 @media only screen and (max-width: 520px) {
-	.textarea-container .guiedit-mobile-auxiliary-button {
+	.posting-controls:focus-within textarea {
+		position: fixed;
+		top: 0;
+		left: 2px;
+		width: calc(100vw - 4px);
+		height: calc(100% - 100px);
+		max-height: unset;
+		border-width: 1px;
+		z-index: 11001;
+	}
+	.posting-controls:focus-within .guiedit-buttons-container {
+		position: fixed;
+		z-index: 11002;
+		left: 0;
+		width: 100vw;
+		height: auto;
+		background-image: none;
+		padding: 3px 4px 4px 4px;
+		margin: 0;
+		text-align: center;
+		top: auto;
+		bottom: 0;
+	}
+	.posting-controls:focus-within button.guiedit {
+		font-size: 0.9375rem;
+		line-height: 1.5;
+		height: auto;
+		width: calc((100% / 10) - 2px);
+		padding: 10px 1px 8px 0;
+		position: relative;
+		margin: 1px;
+	}
+	.posting-controls:focus-within .guiedit-mobile-auxiliary-button {
 		z-index: 11011;
 		position: fixed;
 		bottom: 7px;
 		width: calc(((100% - 16px) / 10) * 3 - 7px);
 		font-size: 1.25rem;
 		padding: 5px;
-	}
-	.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
 		display: block;
 	}
-	.textarea-container .guiedit-mobile-help-button {
+	.posting-controls:focus-within button.guiedit sup {
+		position: absolute;
+		left: calc(50% + 0.65em);
+		top: calc(50% - 1.3em);
+	}
+	.posting-controls:focus-within .guiedit-mobile-help-button {
 		left: 8px;
 	}
-	.textarea-container .guiedit-mobile-exit-button {
+	.posting-controls:focus-within .guiedit-mobile-exit-button {
 		right: 8px;
 	}
 	.guiedit::after {
@@ -857,43 +905,7 @@ a.comment-parent-link::after {
 		min-height: calc(100vh - 325px);
 	}
 	#edit-post-form .textarea-container:focus-within textarea {
-		position: fixed;
 		top: -1px;
-		left: 2px;
-		width: calc(100vw - 4px);
-		height: calc(100% - 101px) !important;
-		max-height: unset;
-		border-width: 1px;
-		z-index: 11001;
-	}
-	#edit-post-form .textarea-container:focus-within .guiedit-buttons-container {
-		position: fixed;
-		z-index: 11002;
-		left: 0;
-		width: 100vw;
-		height: auto;
-		background-image: none;
-		padding: 3px 4px 4px 4px;
-		margin: 0;
-		text-align: center;
-	}
-	#edit-post-form .textarea-container:focus-within .guiedit-buttons-container {
-		top: auto;
-		bottom: 0;
-	}
-	#edit-post-form .textarea-container:focus-within button.guiedit {
-		font-size: 0.9375rem;
-		line-height: 1.5;
-		height: auto;
-		width: calc((100% / 10) - 2px);
-		padding: 10px 1px 8px 0;
-		position: relative;
-		margin: 1px;
-	}
-	#edit-post-form .textarea-container:focus-within button.guiedit sup {
-		position: absolute;
-		left: calc(50% + 0.65em);
-		top: calc(50% - 1.3em);
 	}
 
 	#markdown-hints-checkbox,
