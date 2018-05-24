@@ -5101,7 +5101,9 @@ div > .MJXc-display {
 /* MOBILE */
 /*========*/
 
+/**************************************************************************/
 @media only screen and (hover: none), only screen and (-moz-touch-enabled) {
+/**************************************************************************/
 	#appearance-adjust-ui-toggle button,
 	#post-nav-ui-toggle button  {
 		color: #aaa;
@@ -5136,6 +5138,9 @@ div > .MJXc-display {
 	}
 	#theme-selector button::after {
 		color: #000;
+		max-width: calc(100% - 3.25em);
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 	#theme-selector button.selected::after {
 		text-shadow: 
@@ -5180,5 +5185,67 @@ div > .MJXc-display {
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-next {
 		border-radius: 0 7px 7px 0;
+	}
+
+	/*****************************************/
+	@media only screen and (max-width: 900px) {
+	/*****************************************/
+		h1.listing {
+			margin: 0.6em 20px 0 20px;
+			line-height: 1;
+		}
+		h1.listing:last-of-type + .post-meta {
+			margin-bottom: 0;
+		}
+		h1.listing + .post-meta .karma {
+			order: -1;
+		}
+		h1.listing + .post-meta .author {
+			margin-right: 0.25em;
+		}
+		h1.listing + .post-meta .date {
+			margin: 0;
+		}
+		h1.listing + .post-meta .post-section::before {
+			position: unset;
+		}
+		h1.listing + .post-meta .post-section {
+			overflow: visible;
+			order: 2;
+		}
+		h1.listing + .post-meta .link-post-domain {
+			order: 1;
+		}
+
+		#secondary-bar .nav-inner {
+			font-size: 1em;
+		}
+		#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
+			padding: 6px 10px;
+		}
+		#primary-bar .nav-inner::before, 
+		#secondary-bar .nav-inner::before {
+			opacity: 0.8;
+		}
+	/*******************************************/
+	} @media only screen and (max-width: 720px) {
+	/*******************************************/
+
+	/*******************************************/
+	} @media only screen and (max-width: 520px) {
+	/*******************************************/
+		h1.listing {
+			font-size: 1.25rem;
+			margin: 18px 6px 4px 6px;
+		}
+		h1.listing + .post-meta {
+			margin: 4px 6px;
+		}
+		h1.listing + .post-meta > * {
+			line-height: 1.5;
+		}
+		h1.listing a[href^='http'] {
+			top: 2px;
+		}
 	}
 }
