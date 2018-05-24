@@ -966,4 +966,14 @@ a.comment-parent-link::after {
 	}
 }
 
+/*========================*/
+/* QUALIFIED HYPERLINKING */
+/*========================*/
+
+@media only screen and (max-width: 520px) {
+	.qualified-linking-toolbar {
+		right: -5em;
+	}
+}
+
 } /* END MOBILE LAYOUT */
