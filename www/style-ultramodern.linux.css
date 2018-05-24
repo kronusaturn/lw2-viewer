@@ -3398,6 +3398,9 @@ a.comment-parent-link::after {
 /*================*/
 
 @media only screen and (max-width: 520px) {
+	#edit-post-form {
+		padding-bottom: 0;
+	}
 	#edit-post-form label[for='title'] {
 		width: 2.5em;
 	}
@@ -3425,7 +3428,7 @@ a.comment-parent-link::after {
 		top: -1px;
 	}
 	#edit-post-form textarea {
-		min-height: calc(100vh - 312px);
+		min-height: calc(100vh - 325px);
 	}
 	#edit-post-form .textarea-container:focus-within textarea {
 		position: fixed;
@@ -3466,8 +3469,22 @@ a.comment-parent-link::after {
 		left: calc(50% + 0.65em);
 		top: calc(50% - 1.3em);
 	}
+
+	#markdown-hints-checkbox,
+	#markdown-hints-checkbox + label {
+		display: none;
+	}
+
+	#edit-post-form div:last-child {
+		clear: both;
+		overflow: auto;
+	}
 	#edit-post-form input[type='submit'] {
-		margin-top: -6px;
+		float: none;
+		display: block;
+		font-size: 1.5rem;
+		margin: 1rem auto 1.5rem auto;
+		padding: 6px 12px 8px 12px;
 	}
 }
 
