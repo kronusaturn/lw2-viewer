@@ -3431,7 +3431,7 @@ a.comment-parent-link::after {
 		bottom: 7px;
 		width: calc(((100% - 16px) / 10) * 3 - 7px);
 		font-size: 1.25rem;
-		padding: 5px;
+		padding: 5px 5px 6px 5px;
 		display: block;
 	}
 	.comment-controls form:focus-within button.guiedit sup,
@@ -3452,6 +3452,7 @@ a.comment-parent-link::after {
 		display: none;
 	}
 
+	.markdown-hints,
 	#edit-post-form .markdown-hints {
 		z-index: 11111;
 		position: fixed;

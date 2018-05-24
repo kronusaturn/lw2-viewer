@@ -110,15 +110,19 @@ function updateInbox() {
 
 function GUIEditMobileHelpButtonClicked(event) {
 	toggleMarkdownHintsBox();
+	event.target.toggleClass("active");
 }
 function toggleMarkdownHintsBox() {
 	let markdownHintsBox = document.querySelector(".markdown-hints");
 	markdownHintsBox.style.display = (window.getComputedStyle(markdownHintsBox).display == "none") ? "block" : "none";
 }
-function GUIEditMobileExitButtonClicked(event) {
-	event.target.blur();
+function removeMarkdownHintsBox() {
 	let markdownHintsBox = document.querySelector(".markdown-hints");
 	if (window.getComputedStyle(markdownHintsBox).display != "none") markdownHintsBox.style.display = "none";
+}
+function GUIEditMobileExitButtonClicked(event) {
+	event.target.blur();
+	removeMarkdownHintsBox();
 }
 
 Element.prototype.addTextareaFeatures = function() {
@@ -267,8 +271,7 @@ function ExpandTextarea(textarea) {
 
 function OnInputRemoveMarkdownHints() {
 	if (window.innerWidth > 520) return;
-	let markdownHintsBox = document.querySelector(".markdown-hints");
-	if (window.getComputedStyle(markdownHintsBox).display != "none") markdownHintsBox.style.display = "none";
+	removeMarkdownHintsBox();
 }
 
 /**********/

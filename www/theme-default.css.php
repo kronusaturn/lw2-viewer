@@ -1726,6 +1726,15 @@ div > .MJXc-display {
 		border: 1px solid #ddd;
 		border-radius: 6px;
 	}
+	.comment-controls form:focus-within .guiedit-mobile-help-button.active,
+	.textarea-container:focus-within .guiedit-mobile-help-button.active {
+		border-color: #c00;
+		box-shadow:
+			0 0 0 1px #fff,
+			0 0 0 2px #c00;
+		color: #c00;
+		font-weight: 600;
+	}
 	.comment-controls form:focus-within .guiedit-buttons-container,
 	.textarea-container:focus-within .guiedit-buttons-container {
 		background-color: white;
@@ -1736,4 +1745,8 @@ div > .MJXc-display {
 		background-color: #eee;
 		border: 1px solid #ddd;
 		border-radius: 6px;
+	}
+	.markdown-hints::after {
+		color: #090;
+	}
 }
