@@ -467,7 +467,7 @@
 	}
 }
 @media only screen and (max-width: 520px) {
-	.page-toolbar {
+	#content:not(.user-page) .page-toolbar {
 		display: flex;
 		flex-direction: column-reverse;
 		text-align: right;

@@ -162,7 +162,7 @@ body {
 .new-post:visited,
 .new-private-message,
 .new-private-message:visited {
-	color: #090;
+	color: #090 !important;
 }
 .logout-button {
 	color: #d33;
