@@ -244,6 +244,7 @@ function hideReplyForm(event) {
 }
 
 function OnInputExpandTextarea() {
+	if (window.innerWidth <= 520) return;
 	if ((this.offsetHeight - 30) < this.scrollHeight)
 		ExpandTextarea(this);
 }
