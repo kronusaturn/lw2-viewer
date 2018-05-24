@@ -728,7 +728,7 @@ a.comment-parent-link::after {
 /* COMMENT THREAD NAVIGATION */
 /*===========================*/
 
-@media only screen and (max-width: 720px) {
+@media only screen and (max-width: 900px) {
 	a.comment-parent-link {
 		width: 0;
 		visibility: hidden;

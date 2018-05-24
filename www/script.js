@@ -1246,8 +1246,6 @@ function earlyInitialize() {
 	injectTextSizeAdjustmentUI();
 	// Add the comments view selector widget (threaded vs. chrono).
 // 	injectCommentsViewModeSelector();
-	// Add the comments list mode selector widget (expanded vs. compact).
-	injectCommentsListModeSelector();
 
 	try { updateInbox(); }
 	catch (e) { }
@@ -1441,6 +1439,9 @@ function initialize() {
 			badgePostsWithNewComments();
 		}
 		
+		// Add the comments list mode selector widget (expanded vs. compact).
+		injectCommentsListModeSelector();
+
 		// Add the toggle for the post nav UI elements on mobile.
 		injectPostNavUIToggle();
 		

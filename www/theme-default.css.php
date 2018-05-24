@@ -1528,25 +1528,30 @@ div > .MJXc-display {
 	h1.listing {
 		font-size: 1.75rem;
 		line-height: 1;
-		margin-top: 0.8em;
 	}
 	h1.listing:last-of-type + .post-meta {
 		margin-bottom: 12px;
 	}
 	h1.listing + .post-meta .post-section::before {
-		left: 0;
-		top: 0;
+		position: unset;
 	}
 	h1.listing + .post-meta .post-section {
-		display: inline-block;
-		margin: 0;
+		overflow: visible;
+		order: 1;
 	}
+
 	#nav-item-search button::before {
 		color: #00e;
 	}
+
+	#content > #top-nav-bar + .comment-thread .comment-item {
+		margin-top: 0;
+	}
+
 	.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
 		background-color: #aaa;
 	}
+	
 	.sublevel-nav.sort {
 		top: 312px;
 		right: 10px;
