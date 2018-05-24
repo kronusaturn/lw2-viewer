@@ -1277,16 +1277,14 @@ code {
 
 input[type='text'],
 input[type='search'],
-input[type='password'],
-textarea {
+input[type='password'] {
 	background-color: #fff;
 	border: 1px solid #ddd;
 	color: #000;
 }
 input[type='text']:focus,
 input[type='search']:focus,
-input[type='password']:focus,
-textarea:focus {
+input[type='password']:focus {
 	background-color: #ffd;
 	border: 1px solid #bbb;
 	box-shadow: 0 0 1px #bbb;
@@ -1712,5 +1710,11 @@ div > .MJXc-display {
 	.sublevel-nav.sort .sublevel-item:last-child {
 		border-radius: 0 0 6px 6px;
 		border-width: 0 1px 1px 1px;
+	}
+
+	#edit-post-form .textarea-container:focus-within button.guiedit {
+		background-color: #eee;
+		border: 1px solid #ddd;
+		border-radius: 6px;
 	}
 }

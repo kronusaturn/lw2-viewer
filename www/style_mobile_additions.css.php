@@ -837,12 +837,11 @@ a.comment-parent-link::after {
 		width: 2.5em;
 	}
 	#edit-post-form label[for='section'] {
-		width: 3.6em;
+		width: 4.1em;
 	}
 	#edit-post-form label[for='url'], 
 	#edit-post-form label[for='section'],
 	#edit-post-form label[for='title'] {
-		clear: left;
 		text-align: left;
 		padding-left: 0;
 	}
@@ -855,9 +854,10 @@ a.comment-parent-link::after {
 		line-height: 0.9;
 		width: 2em;
 		height: 1em;
+		top: -1px;
 	}
 	#edit-post-form textarea {
-		min-height: unset;
+		min-height: calc(100vh - 308px);
 	}
 	#edit-post-form .textarea-container:focus-within textarea {
 		position: fixed;
@@ -893,9 +893,6 @@ a.comment-parent-link::after {
 		width: calc((100% / 10) - 2px);
 		padding: 10px 1px 8px 0;
 		position: relative;
-		background-color: #eee;
-		border: 1px solid #ddd;
-		border-radius: 6px;
 		margin: 1px;
 	}
 	#edit-post-form .textarea-container:focus-within button.guiedit sup {
