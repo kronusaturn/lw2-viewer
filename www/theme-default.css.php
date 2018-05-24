@@ -1479,6 +1479,10 @@ div > .MJXc-display {
 	}
 	#theme-selector button::after {
 		color: #000;
+		padding-bottom: 2px;
+		max-width: calc(100% - 3.25em);
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 	#theme-selector button.selected::after {
 		text-shadow: 
@@ -1712,19 +1716,23 @@ div > .MJXc-display {
 		border-width: 0 1px 1px 1px;
 	}
 	
-	.posting-controls:focus-within button:active {
+	.comment-controls form:focus-within button:active
+	.textarea-container:focus-within button:active {
 		background-color: #ccc;
 	}
-	.posting-controls:focus-within .guiedit-mobile-auxiliary-button {
+	.comment-controls form:focus-within .guiedit-mobile-auxiliary-button
+	.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
 		background-color: #eee;
 		border: 1px solid #ddd;
 		border-radius: 6px;
 	}
-	.posting-controls:focus-within .guiedit-buttons-container {
+	.comment-controls form:focus-within .guiedit-buttons-container
+	.textarea-container:focus-within .guiedit-buttons-container {
 		background-color: white;
 		border-top: 1px solid #ddf;
 	}
-	.posting-controls:focus-within button.guiedit {
+	.comment-controls form:focus-within button.guiedit
+	.textarea-container:focus-within button.guiedit {
 		background-color: #eee;
 		border: 1px solid #ddd;
 		border-radius: 6px;
