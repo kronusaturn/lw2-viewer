@@ -1711,7 +1711,19 @@ div > .MJXc-display {
 		border-radius: 0 0 6px 6px;
 		border-width: 0 1px 1px 1px;
 	}
-
+	
+	.textarea-container button:active {
+		background-color: #ccc;
+	}
+	.textarea-container .guiedit-mobile-auxiliary-button {
+		background-color: #eee;
+		border: 1px solid #ddd;
+		border-radius: 6px;
+	}
+	#edit-post-form .textarea-container:focus-within .guiedit-buttons-container {
+		background-color: white;
+		border-top: 1px solid #ddf;
+	}
 	#edit-post-form .textarea-container:focus-within button.guiedit {
 		background-color: #eee;
 		border: 1px solid #ddd;

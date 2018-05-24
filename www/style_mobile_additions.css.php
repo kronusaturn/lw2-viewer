@@ -797,9 +797,6 @@ a.comment-parent-link::after {
 	}
 }
 @media only screen and (max-width: 520px) {
-	.textarea-container button:active {
-		background-color: #ccc;
-	}
 	.textarea-container .guiedit-mobile-auxiliary-button {
 		z-index: 11011;
 		position: fixed;
@@ -807,9 +804,6 @@ a.comment-parent-link::after {
 		width: calc(((100% - 16px) / 10) * 3 - 7px);
 		font-size: 1.25rem;
 		padding: 5px;
-		background-color: #eee;
-		border: 1px solid #ddd;
-		border-radius: 6px;
 	}
 	.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
 		display: block;
@@ -857,7 +851,7 @@ a.comment-parent-link::after {
 		top: -1px;
 	}
 	#edit-post-form textarea {
-		min-height: calc(100vh - 308px);
+		min-height: calc(100vh - 312px);
 	}
 	#edit-post-form .textarea-container:focus-within textarea {
 		position: fixed;
@@ -876,8 +870,6 @@ a.comment-parent-link::after {
 		width: 100vw;
 		height: auto;
 		background-image: none;
-		background-color: white;
-		border-top: 1px solid #ddf;
 		padding: 3px 4px 4px 4px;
 		margin: 0;
 		text-align: center;
