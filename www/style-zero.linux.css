@@ -5076,6 +5076,9 @@ div > .MJXc-display {
 			background-color: #fff;
 			border-top: 1px solid #ddf;
 		}
+		.posting-controls .textarea-container:focus-within .guiedit-buttons-container {
+			box-shadow: none;
+		}
 		.comment-controls form:focus-within button.guiedit,
 		.textarea-container:focus-within button.guiedit {
 			border: 1px solid #00c;

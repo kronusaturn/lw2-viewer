@@ -111,6 +111,7 @@ function updateInbox() {
 function GUIEditMobileHelpButtonClicked(event) {
 	toggleMarkdownHintsBox();
 	event.target.toggleClass("active");
+	document.querySelector(".posting-controls:focus-within textarea").focus();
 }
 function toggleMarkdownHintsBox() {
 	let markdownHintsBox = document.querySelector(".markdown-hints");
@@ -272,6 +273,7 @@ function ExpandTextarea(textarea) {
 function OnInputRemoveMarkdownHints() {
 	if (window.innerWidth > 520) return;
 	removeMarkdownHintsBox();
+	document.querySelector(".guiedit-mobile-help-button").removeClass("active");
 }
 
 /**********/
