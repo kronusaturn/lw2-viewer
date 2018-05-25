@@ -1376,6 +1376,21 @@ div > .MJXc-display {
 		a.comment-parent-link::before {
 			line-height: 1;
 		}
+
+		#edit-post-form textarea {
+			min-height: calc(100vh - 400px)
+		}
+		#edit-post-form .markdown-hints {
+			position: fixed;
+			top: 74px;
+			left: 0;
+			right: 0;
+			max-width: 330px;
+			margin: auto;
+		}
+		#edit-post-form input[type='submit'] {
+			background-color: #fff;
+		}
 	/*******************************************/
 	} @media only screen and (max-width: 720px) {
 	/*******************************************/
