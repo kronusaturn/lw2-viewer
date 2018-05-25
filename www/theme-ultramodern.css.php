@@ -1537,5 +1537,61 @@ div > .MJXc-display {
 	/*******************************************/
 	} @media only screen and (max-width: 520px) {
 	/*******************************************/
+		h1.listing {
+			font-size: 1.25rem;
+			margin: 18px 6px 4px 6px;
+		}
+		h1.listing + .post-meta {
+			margin: 4px 6px;
+		}
+		h1.listing + .post-meta > * {
+			line-height: 1.5;
+		}
+		h1.listing a[href^='http'] {
+			top: 3px;
+		}
+
+		.sublevel-nav.sort {
+			top: 215px;
+			right: 4px;
+		}
+		.sublevel-nav.sort .sublevel-item:first-child {
+			border-radius: 6px 6px 0 0;
+		}
+		.sublevel-nav.sort .sublevel-item:last-child {
+			border-radius: 0 0 6px 6px;
+			border-width: 0 1px 1px 1px;
+		}
+		
+		.comment-controls form:focus-within textarea,
+		.textarea-container:focus-within textarea {
+			background-color: #888;
+		}
+		.comment-controls form:focus-within .guiedit-mobile-auxiliary-button,
+		.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
+			border: 1px solid transparent;
+			padding: 6px;
+		}
+		.comment-controls form:focus-within .guiedit-mobile-help-button.active,
+		.textarea-container:focus-within .guiedit-mobile-help-button.active {
+			box-shadow:
+				0 0 0 1px #ccc,
+				0 0 0 2px #888,
+				0 0 0 3px #ccc;
+			color: #ccc;
+			font-weight: 600;
+		}
+		.comment-controls form:focus-within .guiedit-buttons-container,
+		.textarea-container:focus-within .guiedit-buttons-container {
+			background-color: 888;
+			border-top: 1px solid #ddf;
+		}
+		.comment-controls form:focus-within button.guiedit,
+		.textarea-container:focus-within button.guiedit {
+			border: 1px solid transparent;
+		}
+		.markdown-hints::after {
+			color: #0f0;
+		}
 	}
 }
