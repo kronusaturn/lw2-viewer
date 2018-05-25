@@ -1168,7 +1168,8 @@
                                                                                                                         :before (if year (format nil "~A-~A-~A" (or year current-year) (or month 12)
                                                                                                                                                  (or day (local-time:days-in-month (or month 12) (or year current-year)))))))
                                                                                                    *posts-index-fields*))))
-                                              (emit-page (out-stream :title "Archive" :current-uri "/archive" :content-class "archive-page" :items-per-page 50 :with-offset offset :with-next (> (length posts) 50))
+                                              (emit-page (out-stream :title "Archive" :current-uri "/archive" :content-class "archive-page"
+                                                                     :items-per-page 50 :with-offset offset :with-next (> (length posts) 50) :top-nav top-nav)
                                                 (with-outputs (out-stream) "<div class=\"archive-nav\"><div class=\"archive-nav-years\">")
                                                 (link-if-not out-stream (not (or year month day)) (url-elements "archive") "archive-nav-item-year" "All") 
                                                 (loop for y from earliest-year to current-year
@@ -1188,6 +1189,7 @@
                                                         do (link-if-not out-stream (eq d day) (url-elements "archive" (or year current-year) (or month current-month) d) "archive-nav-item-day" d))
                                                   (format out-stream "</div>")) 
                                                 (format out-stream "</div>")
+                                                (funcall top-nav)
                                                 (write-index-items-to-html out-stream (firstn posts 50) :empty-message "No posts for the selected period.")))))))))
 
 (hunchentoot:define-easy-handler (view-about :uri "/about") ()
