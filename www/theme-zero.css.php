@@ -1431,7 +1431,8 @@ div > .MJXc-display {
 		.sublevel-nav.sort .sublevel-item:last-child {
 			border-radius: 0 0 6px 6px;
 			border-width: 0 1px 1px 1px;
-
+		}
+		
 		.comment-body {
 			font-size: 1.125rem;
 		}
