@@ -319,9 +319,6 @@ body {
 .archive-nav {
 	border: 2px solid #000;
 }
-.archive-nav *[class^='archive-nav-item'] {
-	padding: 6px 4px 5px 7px;
-}
 .archive-nav span[class^='archive-nav-item'],
 .archive-nav a:hover {
 	font-weight: bold;
@@ -1345,6 +1342,31 @@ div > .MJXc-display {
 			left: -28px;
 			font-size: 0.875em;
 			top: 1px;
+		}
+
+		#content.compact > #top-nav-bar + .comment-thread .comment-item {
+			margin-top: 0;
+		}
+
+		.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
+			background-color: #000;
+			height: 2px;
+		}
+	
+		.sublevel-nav.sort {
+			top: 315px;
+			right: 10px;
+		}
+
+		.comment-item .comment-item {
+			margin: 0.75em 2px 3px 6px;
+		}
+		.comment-item .comment-item + .comment-item {
+			margin: 1.5em 2px 3px 6px;
+		}
+
+		a.comment-parent-link::before {
+			line-height: 1;
 		}
 	/*******************************************/
 	} @media only screen and (max-width: 720px) {
