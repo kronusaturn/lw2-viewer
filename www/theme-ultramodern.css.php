@@ -1584,7 +1584,7 @@ div > .MJXc-display {
 		}
 		.comment-controls form:focus-within .guiedit-buttons-container,
 		.textarea-container:focus-within .guiedit-buttons-container {
-			background-color: 888;
+			background-color: #888;
 			border-top: 1px solid #ddf;
 		}
 		.comment-controls form:focus-within button.guiedit,
