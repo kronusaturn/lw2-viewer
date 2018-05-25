@@ -3715,21 +3715,20 @@ body {
 	position: absolute;
 	top: 167px;
 	right: 30px;
-	border: 2px solid #bbb;
+	border: 2px solid #999;
 	padding: 18px 0 0 0;
 	border-radius: 8px;
-	box-shadow: 0 18px #bbb inset;
+	box-shadow: 0 18px #999 inset;
 }
 .sublevel-nav.sort::before {
 	text-transform: uppercase;
 	font-weight: 600;
 	color: #444;
-	text-shadow: 0.5px 0.5px 0 #fff;
 }
 .sublevel-nav.sort .sublevel-item {
 	border-radius: 0;
-	padding: 5px 6px;
-	border-color: #aaa;
+	padding: 6px 7px 5px 7px;
+	border-color: #777;
 	border-style: solid;
 	text-transform: uppercase;
 }
@@ -3742,7 +3741,7 @@ body {
 	border-width: 0 1px 1px 1px;
 }
 .sublevel-nav.sort .sublevel-item:active {
-	border-color: #aaa;
+	border-color: #777;
 }
 
 /*================*/
@@ -5067,9 +5066,37 @@ div > .MJXc-display {
 		.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
 			background-color: #ccc;
 		}
+	
+		.sublevel-nav.sort {
+			top: 305px;
+			right: 10px;
+		}
+		.sublevel-nav.sort .sublevel-item:first-child {
+			border-radius: 6px 0 0 6px;
+		}
+		.sublevel-nav.sort .sublevel-item:last-child {
+			border-radius: 0 6px 6px 0;
+			border-width: 1px 1px 1px 0;
+		}
+
+		.comment-item .comment-item {
+			margin: 0.75em 0 4px 6px;
+		}
+		.comment-item .comment-item + .comment-item {
+			margin: 1.5em 0 4px 6px;
+		}
 	/*****************************************/
 	@media only screen and (max-width: 720px) {
 	/*****************************************/
+		.sublevel-nav .sublevel-item,
+		.sublevel-nav .sublevel-item:first-child,
+		.sublevel-nav .sublevel-item:last-child {
+			border-width: 1px;
+			border-radius: 8px;
+		}
+		.sublevel-nav.sort {
+			top: 273px;
+		}
 	/*******************************************/
 	} @media only screen and (max-width: 520px) {
 	/*******************************************/
