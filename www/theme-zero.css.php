@@ -1407,6 +1407,34 @@ div > .MJXc-display {
 	/*******************************************/
 	} @media only screen and (max-width: 520px) {
 	/*******************************************/
+		h1.listing {
+			font-size: 1.25rem;
+			margin: 18px 6px 4px 6px;
+		}
+		h1.listing + .post-meta {
+			margin: 4px 6px;
+		}
+		h1.listing + .post-meta > * {
+			line-height: 1.5;
+		}
+		h1.listing a[href^='http'] {
+			top: 2px;
+		}
+
+		.sublevel-nav.sort {
+			top: 215px;
+			right: 4px;
+		}
+		.sublevel-nav.sort .sublevel-item:first-child {
+			border-radius: 6px 6px 0 0;
+		}
+		.sublevel-nav.sort .sublevel-item:last-child {
+			border-radius: 0 0 6px 6px;
+			border-width: 0 1px 1px 1px;
+
+		.comment-body {
+			font-size: 1rem;
+		}
 	}
 }
 
