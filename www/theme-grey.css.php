@@ -439,7 +439,8 @@ body {
 /*==========*/
 
 h1.listing {
-	margin: 0.7em 20px 0.1em 20px;
+	margin: 0.6em 20px 0 20px;
+	line-height: 1;
 	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
     font-size: 1.5rem;
 }
@@ -481,10 +482,6 @@ h1.listing + .post-meta > * {
     color: #222;
     font-size: 1em;
 }
-h1.listing + .post-meta .karma {
-    float: left;
-    margin-right: 3px;
-}
 h1.listing + .post-meta .karma::after {
     content: " by";
 }
@@ -494,15 +491,35 @@ h1.listing + .post-meta .date::before {
 h1.listing + .post-meta .date::after {
     content: " — ";
 	opacity: 0.5;
-    margin-right: 5px;
+	margin: 0 0.5em 0 0.125em;
 }
 h1.listing + .post-meta .comment-count.new-comments::before {
 	color: #0c0;
 }
+h1.listing:last-of-type + .post-meta {
+	margin-bottom: 0;
+}
+h1.listing + .post-meta .karma {
+	order: -1;
+	margin-right: 0.25em;
+}
+h1.listing + .post-meta .author {
+	margin-right: 0.25em;
+}
+h1.listing + .post-meta .date {
+	margin: 0;
+}
+h1.listing + .post-meta .post-section {
+	overflow: visible;
+	order: 2;
+}
 h1.listing + .post-meta .post-section::before {
-    left: -26px;
-    top: 0px;
-    font-size: 0.9375em;
+	font-size: 0.9375em;
+	top: 1px;
+	left: -32px;
+}
+h1.listing + .post-meta .link-post-domain {
+	order: 1;
 }
 
 /*============*/
@@ -1570,31 +1587,8 @@ div > .MJXc-display {
 	/*****************************************/
 	@media only screen and (max-width: 900px) {
 	/*****************************************/
-		h1.listing {
-			margin: 0.6em 20px 0 20px;
-			line-height: 1;
-		}
-		h1.listing:last-of-type + .post-meta {
-			margin-bottom: 0;
-		}
-		h1.listing + .post-meta .karma {
-			order: -1;
-		}
-		h1.listing + .post-meta .author {
-			margin-right: 0.25em;
-		}
-		h1.listing + .post-meta .date {
-			margin: 0;
-		}
 		h1.listing + .post-meta .post-section::before {
 			position: unset;
-		}
-		h1.listing + .post-meta .post-section {
-			overflow: visible;
-			order: 2;
-		}
-		h1.listing + .post-meta .link-post-domain {
-			order: 1;
 		}
 
 		#secondary-bar .nav-inner {
