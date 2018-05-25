@@ -1259,6 +1259,13 @@ div > .MJXc-display {
 	#theme-selector .theme-selector-close-button  {
 		color: #000;
 		box-shadow: none;
+		opacity: 1.0;
+	}
+	#appearance-adjust-ui-toggle button,
+	#post-nav-ui-toggle button {
+		box-shadow:
+			0 0 0 2px #fff,
+			0 0 0 2px #000 inset;
 	}
 
 	#theme-selector {
@@ -1371,6 +1378,14 @@ div > .MJXc-display {
 	/*******************************************/
 	} @media only screen and (max-width: 720px) {
 	/*******************************************/
+		.sublevel-nav .sublevel-item,
+		.sublevel-nav .sublevel-item:first-child,
+		.sublevel-nav .sublevel-item:last-child {
+			border-width: 1px;
+		}
+		.sublevel-nav.sort {
+			top: 275px;
+		}
 	/*******************************************/
 	} @media only screen and (max-width: 520px) {
 	/*******************************************/
