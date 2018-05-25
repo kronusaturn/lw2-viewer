@@ -131,10 +131,8 @@ body {
 	position: absolute;
 	top: 167px;
 	right: 30px;
-	border: 2px solid #bbb;
 	padding: 18px 0 0 0;
 	border-radius: 8px;
-	box-shadow: 0 18px #bbb inset;
 }
 .sublevel-nav.sort::before {
 	text-transform: uppercase;
@@ -145,7 +143,7 @@ body {
 .sublevel-nav.sort .sublevel-item {
 	border-radius: 0;
 	padding: 5px 6px;
-	border-color: #aaa;
+	border-color: #ccc;
 	border-style: solid;
 	text-transform: uppercase;
 }
@@ -158,7 +156,7 @@ body {
 	border-width: 0 1px 1px 1px;
 }
 .sublevel-nav.sort .sublevel-item:active {
-	border-color: #aaa;
+	border-color: #ccc;
 }
 
 /*================*/
@@ -735,6 +733,9 @@ div.comment-child-links a::first-letter {
 		0 0 0 2px #aaa inset,
 		0 0 0 4px #eee inset,
 		0 0 0 5px #aaa inset;
+}
+#content.compact > .comment-thread .comment-item {
+	max-height: 58px;
 }
 #content.compact > .comment-thread .comment-item::after {
 	color: <?php echo $hyperlink_color; ?>;
@@ -1372,11 +1373,40 @@ div > .MJXc-display {
 		.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
 			background-color: #aaa;
 		}
+	
+		.sublevel-nav.sort {
+			top: 315px;
+			right: 10px;
+		}
+		.sublevel-nav.sort .sublevel-item:first-child {
+			border-radius: 6px 0 0 6px;
+		}
+		.sublevel-nav.sort .sublevel-item:last-child {
+			border-radius: 0 6px 6px 0;
+			border-width: 1px 1px 1px 0;
+		}
+
+		.comment-item .comment-item {
+			margin: 0.75em 3px 3px 6px;
+		}
+		.comment-item .comment-item + .comment-item {
+			margin: 1.5em 3px 3px 6px;
+		}
 	/*******************************************/
 	} @media only screen and (max-width: 720px) {
 	/*******************************************/
+		.sublevel-nav .sublevel-item,
+		.sublevel-nav .sublevel-item:first-child,
+		.sublevel-nav .sublevel-item:last-child {
+			border-width: 1px;
+			border-radius: 8px;
+		}
+		.sublevel-nav.sort {
+			top: 278px;
+		}
 	/*******************************************/
 	} @media only screen and (max-width: 520px) {
 	/*******************************************/
+	}
 }
 
