@@ -1605,10 +1605,45 @@ div > .MJXc-display {
 		#content.compact > #top-nav-bar + .comment-thread .comment-item {
 			margin-top: 0;
 		}
+
+		.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
+			background-color: #aaa;
+		}
+	
+		.sublevel-nav.sort {
+			top: 305px;
+			right: 10px;
+		}
+		.sublevel-nav.sort .sublevel-item:first-child {
+			border-radius: 6px 0 0 6px;
+		}
+		.sublevel-nav.sort .sublevel-item:last-child {
+			border-radius: 0 6px 6px 0;
+			border-width: 1px 1px 1px 0;
+		}
+
+		.comment-item .comment-item {
+			margin: 0.75em 2px 4px 6px;
+		}
+		.comment-item .comment-item + .comment-item {
+			margin: 1.5em 2px 4px 6px;
+		}
+
+		a.comment-parent-link:hover::before {
+			background-color: unset;
+		}
 	/*******************************************/
 	} @media only screen and (max-width: 720px) {
 	/*******************************************/
-
+		.sublevel-nav .sublevel-item,
+		.sublevel-nav .sublevel-item:first-child,
+		.sublevel-nav .sublevel-item:last-child {
+			border-width: 1px;
+			border-radius: 8px;
+		}
+		.sublevel-nav.sort {
+			top: 273px;
+		}
 	/*******************************************/
 	} @media only screen and (max-width: 520px) {
 	/*******************************************/
@@ -1624,6 +1659,52 @@ div > .MJXc-display {
 		}
 		h1.listing a[href^='http'] {
 			top: 2px;
+		}
+
+		.sublevel-nav.sort {
+			top: 215px;
+			right: 4px;
+		}
+		.sublevel-nav.sort .sublevel-item:first-child {
+			border-radius: 6px 6px 0 0;
+		}
+		.sublevel-nav.sort .sublevel-item:last-child {
+			border-radius: 0 0 6px 6px;
+			border-width: 0 1px 1px 1px;
+		}
+	
+		.comment-controls form:focus-within button:active,
+		.textarea-container:focus-within button:active {
+			background-color: #ccc;
+		}
+		.comment-controls form:focus-within .guiedit-mobile-auxiliary-button,
+		.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
+			background-color: #eee;
+			border: 1px solid #ddd;
+			border-radius: 6px;
+		}
+		.comment-controls form:focus-within .guiedit-mobile-help-button.active,
+		.textarea-container:focus-within .guiedit-mobile-help-button.active {
+			border-color: #c00;
+			box-shadow:
+				0 0 0 1px #fff,
+				0 0 0 2px #c00;
+			color: #c00;
+			font-weight: 600;
+		}
+		.comment-controls form:focus-within .guiedit-buttons-container,
+		.textarea-container:focus-within .guiedit-buttons-container {
+			background-color: white;
+			border-top: 1px solid #ddf;
+		}
+		.comment-controls form:focus-within button.guiedit,
+		.textarea-container:focus-within button.guiedit {
+			background-color: #eee;
+			border: 1px solid #ddd;
+			border-radius: 6px;
+		}
+		.markdown-hints::after {
+			color: #090;
 		}
 	}
 }
