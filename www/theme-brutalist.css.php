@@ -391,6 +391,13 @@ h1.listing a[href^="http"] {
 /* LISTING POST-META */
 /*===================*/
 
+h1.listing + .post-meta > * {
+	line-height: 1.5;
+}
+h1.listing + .post-meta .read-time {
+	opacity: 0.5;
+}
+
 /*============*/
 /* USER PAGES */
 /*============*/
@@ -1326,15 +1333,18 @@ div > .MJXc-display {
 	/*****************************************/
 	@media only screen and (max-width: 900px) {
 	/*****************************************/
-		h1.listing + .post-meta .author {
-			margin: 0 0.75em 0 1.5em;
+		h1.listing {
+			line-height: 1;
+			margin-bottom: 6px;
+		}
+		h1.listing + .post-meta {
+			font-family: Input Sans Narrow;
+			font-weight: 300;
 		}
 		h1.listing + .post-meta .post-section::before {
-			left: 0;
-			top: 0;
-		}
-		h1.listing + .post-meta .post-section {
-			display: inline-block;
+			left: -28px;
+			font-size: 0.875em;
+			top: 1px;
 		}
 	/*******************************************/
 	} @media only screen and (max-width: 720px) {
