@@ -1554,7 +1554,8 @@ div > .MJXc-display {
 			color: #00e;
 		}
 
-		#content > #top-nav-bar + .comment-thread .comment-item {
+		#content > #top-nav-bar + .comment-thread .comment-item,
+		#content.compact > #top-nav-bar + .comment-thread .comment-item {
 			margin-top: 0;
 		}
 

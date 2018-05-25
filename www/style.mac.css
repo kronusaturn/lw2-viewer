@@ -662,7 +662,7 @@ a#inbox-indicator.new-messages:hover::before {
 /************/
 
 .archive-nav {
-	margin: 1.25em 0.5em -1.25em;
+	margin: 1.25em 0.5em;
 	padding: 0.25em;
 }
 .archive-nav > * {
@@ -5175,7 +5175,8 @@ div > .MJXc-display {
 			color: #00e;
 		}
 
-		#content > #top-nav-bar + .comment-thread .comment-item {
+		#content > #top-nav-bar + .comment-thread .comment-item,
+		#content.compact > #top-nav-bar + .comment-thread .comment-item {
 			margin-top: 0;
 		}
 

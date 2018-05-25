@@ -651,7 +651,7 @@ a#inbox-indicator.new-messages:hover::before {
 /************/
 
 .archive-nav {
-	margin: 1.25em 0.5em -1.25em;
+	margin: 1.25em 0.5em;
 	padding: 0.25em;
 }
 .archive-nav > * {

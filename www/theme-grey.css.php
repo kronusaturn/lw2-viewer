@@ -1517,6 +1517,7 @@ div > .MJXc-display {
 	}
 	#theme-selector button::after {
 		color: #000;
+		padding-bottom: 2px;
 		max-width: calc(100% - 3.25em);
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -1605,6 +1606,10 @@ div > .MJXc-display {
 		#primary-bar .nav-inner::before, 
 		#secondary-bar .nav-inner::before {
 			opacity: 0.8;
+		}
+
+		#content.compact > #top-nav-bar + .comment-thread .comment-item {
+			margin-top: 0;
 		}
 	/*******************************************/
 	} @media only screen and (max-width: 720px) {
