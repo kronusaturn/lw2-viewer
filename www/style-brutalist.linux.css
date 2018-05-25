@@ -4836,6 +4836,7 @@ div > .MJXc-display {
 	}
 	#appearance-adjust-ui-toggle button,
 	#post-nav-ui-toggle button {
+		background-color: #fff;
 		box-shadow:
 			0 0 0 2px #fff,
 			0 0 0 2px #000 inset;
@@ -4962,36 +4963,22 @@ div > .MJXc-display {
 	/*******************************************/
 	} @media only screen and (max-width: 520px) {
 	/*******************************************/
+		h1.listing {
+			font-size: 1.375rem;
+			margin: 18px 6px 4px 6px;
+		}
 		h1.listing + .post-meta {
-			padding: 0 0 25px 0;
-			white-space: unset;
+			margin: 4px 6px;
+			font-family: Input Sans Condensed;
+			font-weight: 300;
 		}
-		h1.listing + .post-meta::after {
-			width: 100%;
-			top: 36px;
+		h1.listing a[href^='http'] {
+			top: 4px;
 		}
-		h1.listing + .post-meta > * {
-			margin: 0;
-		}
-		h1.listing + .post-meta .karma-value,
-		h1.listing + .post-meta .comment-count,
-		h1.listing + .post-meta .lw2-link,
-		h1.listing + .post-meta .read-time {
-			top: unset;
-			bottom: -2px;
-		}
-		h1.listing + .post-meta .karma-value {
-			right: 250px;
-		}
-		h1.listing + .post-meta .comment-count {
-			right: 175px;
-		}
-		h1.listing + .post-meta .read-time {
-			right: 75px;
-		}
-		h1.listing + .post-meta .lw2-link {
-			right: 0;
-			opacity: 1;
+
+		.sublevel-nav.sort {
+			top: 215px;
+			right: 4px;
 		}
 	}
 }
