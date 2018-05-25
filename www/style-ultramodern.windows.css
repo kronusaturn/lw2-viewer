@@ -3987,16 +3987,9 @@ h1.listing a[href^="http"] {
 /* LISTING POST-META */
 /*===================*/
 
-h1.listing + .post-meta {
-	margin-top: 4px;
-}
 h1.listing + .post-meta > * {
     color: #222;
     font-size: 1em;
-}
-h1.listing + .post-meta .karma {
-    float: left;
-    margin-right: 3px;
 }
 h1.listing + .post-meta .karma::after {
     content: " by";
@@ -4007,15 +4000,34 @@ h1.listing + .post-meta .date::before {
 h1.listing + .post-meta .date::after {
     content: " — ";
 	opacity: 0.5;
-    margin-right: 5px;
+	margin: 0 0.5em 0 0.125em;
 }
 h1.listing + .post-meta .comment-count.new-comments::before {
 	color: #0c0;
 }
+h1.listing:last-of-type + .post-meta {
+	margin-bottom: 0;
+}
+h1.listing + .post-meta .karma {
+	order: -1;
+	margin-right: 0.25em;
+}
+h1.listing + .post-meta .author {
+	margin-right: 0.25em;
+}
+h1.listing + .post-meta .date {
+	margin: 0;
+}
+h1.listing + .post-meta .post-section {
+	overflow: visible;
+	order: 2;
+}
 h1.listing + .post-meta .post-section::before {
-    left: -26px;
-    top: 0px;
-    font-size: 0.9375em;
+	font-size: 0.9375em;
+	left: -32px;
+}
+h1.listing + .post-meta .link-post-domain {
+	order: 1;
 }
 
 /*============*/
@@ -5028,5 +5040,19 @@ div > .MJXc-display {
 	#hns-date-picker span,
 	#hns-date-picker input {
 		color: #444;
+	}
+
+	/*****************************************/
+	@media only screen and (max-width: 900px) {
+	/*****************************************/
+		h1.listing + .post-meta .post-section::before {
+			position: unset;
+		}
+	/*****************************************/
+	@media only screen and (max-width: 720px) {
+	/*****************************************/
+	/*******************************************/
+	} @media only screen and (max-width: 520px) {
+	/*******************************************/
 	}
 }
