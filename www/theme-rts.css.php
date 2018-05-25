@@ -154,21 +154,27 @@ a.nav-inner,
 /*===================*/
 
 #top-nav-bar {
-	margin: 0 0 -1.5em 0;
+	margin: 0 0 1.5em 0;
+	flex-wrap: wrap;
 }
 #top-nav-bar .page-number {
 	font-family: <?php echo $text_font; ?>;
+	padding-top: 7px;
 }
 #top-nav-bar .page-number-label {
 	font-family: <?php echo $UI_font; ?>;
+	bottom: 70%;
 }
 #top-nav-bar::after {
 	content: "";
 	background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+	background-origin: content-box;
+	background-repeat: no-repeat;
 	display: block;
-	width: 75%;
-	margin: 0.125em auto 2.75em auto;
+	margin: 0.125em auto 0 auto;
+	padding: 0 12.5%;
 	height: 1px;
+	flex: 1 0 100%;
 }
 
 /*==============*/
@@ -492,8 +498,21 @@ h1.listing a[href^='/'] {
 /* LISTING POST-META */
 /*===================*/
 
+h1.listing + .post-meta {
+	justify-content: center;
+}
+h1.listing + .post-meta > * {
+	line-height: 1.5;
+}
+h1.listing + .post-meta .post-section {
+	order: 1;
+}
 h1.listing + .post-meta .post-section::before {
 	left: unset;
+}
+h1.listing + .post-meta .link-post-domain {
+	order: 2;
+	flex-basis: 100%;
 }
 
 /*============*/
