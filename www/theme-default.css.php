@@ -1,5 +1,6 @@
 <?php
 	$UI_font = ($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Whitney', 'a_Avante'";
+	$listings_font = ($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Mundo Sans', 'a_Avante'";
 	$UI_font_smallcaps = ($platform == 'Mac') ? "'Concourse Smallcaps', 'a_Avante'" : "'Whitney Smallcaps', 'a_Avante'";
 	$text_font = "'Charter', 'Georgia', serif";
 	$hyperlink_color = "#00e";
@@ -425,7 +426,7 @@ body {
 /*==========*/
 
 h1.listing {
-	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
+	font-family: <?php echo $listings_font; ?>, 'Font Awesome';
 	font-weight: <?php echo ($platform == 'Mac') ? "700" : "800"; ?>;
 	margin: 0.7em 20px 0 20px;
 }
@@ -729,6 +730,7 @@ h1.listing + .post-meta::after {
 /*=======*/
 
 .post > h1:first-child {
+	font-family: <?php echo $listings_font; ?>;
 	font-weight: <?php echo ($platform == 'Mac') ? "700" : "800"; ?>;
 }
 
@@ -1574,6 +1576,7 @@ div > .MJXc-display {
 			border-radius: 0 6px 6px 0;
 			border-width: 1px 1px 1px 0;
 		}
+
 		.comment-item .comment-item {
 			margin: 0.75em 2px 4px 6px;
 			box-shadow: 

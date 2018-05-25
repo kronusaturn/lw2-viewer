@@ -3998,7 +3998,7 @@ body {
 /*==========*/
 
 h1.listing {
-	font-family: 'Whitney', 'a_Avante', 'Font Awesome';
+	font-family: 'Mundo Sans', 'a_Avante', 'Font Awesome';
 	font-weight: 800;
 	margin: 0.7em 20px 0 20px;
 }
@@ -4302,6 +4302,7 @@ h1.listing + .post-meta::after {
 /*=======*/
 
 .post > h1:first-child {
+	font-family: 'Mundo Sans', 'a_Avante';
 	font-weight: 800;
 }
 
@@ -5195,6 +5196,7 @@ div > .MJXc-display {
 			border-radius: 0 6px 6px 0;
 			border-width: 1px 1px 1px 0;
 		}
+
 		.comment-item .comment-item {
 			margin: 0.75em 2px 4px 6px;
 			box-shadow: 
