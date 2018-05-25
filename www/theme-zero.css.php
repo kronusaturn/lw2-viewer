@@ -1341,49 +1341,42 @@ div > .MJXc-display {
 	}
 }
 
-@media only screen and (max-width: 900px) {
-	h1.listing + .post-meta .author {
-		margin: 0 0.75em 0 1.5em;
-	}
-	h1.listing + .post-meta .post-section::before {
-		left: 0;
-		top: 0;
-	}
-	h1.listing + .post-meta .post-section {
-		display: inline-block;
-	}
-}
-@media only screen and (max-width: 520px) {
-	h1.listing + .post-meta {
-		padding: 0 0 25px 0;
-		white-space: unset;
-	}
-	h1.listing + .post-meta::after {
-		width: 100%;
-		top: 36px;
-	}
-	h1.listing + .post-meta > * {
-		margin: 0;
-	}
-	h1.listing + .post-meta .karma-value,
-	h1.listing + .post-meta .comment-count,
-	h1.listing + .post-meta .lw2-link,
-	h1.listing + .post-meta .read-time {
-		top: unset;
-		bottom: -2px;
-	}
-	h1.listing + .post-meta .karma-value {
-		right: 250px;
-	}
-	h1.listing + .post-meta .comment-count {
-		right: 175px;
-	}
-	h1.listing + .post-meta .read-time {
-		right: 75px;
-	}
-	h1.listing + .post-meta .lw2-link {
-		right: 0;
-		opacity: 1;
-	}
+	/*****************************************/
+	@media only screen and (max-width: 900px) {
+	/*****************************************/
+		h1.listing + .post-meta .post-section {
+			overflow: visible;
+			order: 1;
+		}
+		h1.listing + .post-meta .post-section::before {
+			position: unset;
+		}
+
+		#primary-bar .nav-inner {
+			font-size: 1.375em;
+		}
+		#secondary-bar .nav-inner {
+			font-size: 1.125em;
+		}
+		#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
+			padding: 6px 10px;
+		}
+
+		#content.compact > #top-nav-bar + .comment-thread .comment-item {
+			margin-top: 0;
+		}
+
+		.archive-nav *[class^='archive-nav-item-'] {
+			border-width: 1px !important;
+		}
+		.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
+			background-color: #aaa;
+		}
+	/*******************************************/
+	} @media only screen and (max-width: 720px) {
+	/*******************************************/
+	/*******************************************/
+	} @media only screen and (max-width: 520px) {
+	/*******************************************/
 }
 

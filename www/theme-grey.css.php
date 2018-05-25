@@ -1632,9 +1632,9 @@ div > .MJXc-display {
 		a.comment-parent-link:hover::before {
 			background-color: unset;
 		}
-	/*****************************************/
-	@media only screen and (max-width: 720px) {
-	/*****************************************/
+	/*******************************************/
+	} @media only screen and (max-width: 720px) {
+	/*******************************************/
 		.sublevel-nav .sublevel-item,
 		.sublevel-nav .sublevel-item:first-child,
 		.sublevel-nav .sublevel-item:last-child {
