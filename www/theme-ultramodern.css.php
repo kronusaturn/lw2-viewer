@@ -1003,6 +1003,7 @@ div.comment-child-links a::first-letter {
 
 button.guiedit {
     color: #444;
+    background-color: transparent;
 	font-family: Font Awesome, Source Sans Pro, Trebuchet MS, Helvetica, Arial, Verdana, sans-serif;
 }
 button.guiedit::after {
