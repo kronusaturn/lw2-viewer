@@ -483,6 +483,8 @@ function updateSavedCommentCount() {
 	window.localStorage.setItem("comment-count_" + getPostHash(), commentCount);
 }
 function badgePostsWithNewComments() {
+	if (getQueryVariable("show") == "conversations") return;
+	
 	document.querySelectorAll("h1.listing a[href^='/']").forEach(function (postLink) {
 		let postHash = /posts\/(.+?)\//.exec(postLink.href)[1];
 
