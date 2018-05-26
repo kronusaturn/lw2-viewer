@@ -1328,6 +1328,12 @@ div > .MJXc-display {
 		box-shadow: 
 			0 0 0 2px #000;
 	}
+	#quick-nav-ui a::after {
+		font-family: <?php echo $UI_font; ?>;
+		font-weight: bold;
+		font-size: 0.5rem;
+		background-color: #fff;
+	}
 	#new-comment-nav-ui {
 		background-color: #fff;
 		border: 1px solid #000;

@@ -1552,6 +1552,16 @@ div > .MJXc-display {
 			0 0 10px 3px #fffffa,
 			0 0 20px 3px #fffffa;
 	}
+	#quick-nav-ui a::after {
+		font-family: <?php echo $UI_font; ?>;
+		font-weight: bold;
+		box-shadow:
+			0 0 1px 0 #fffffa,
+			0 0 3px 0 #fffffa,
+			0 0 5px 0 #fffffa;
+		background-color: #fffffa;
+		border-radius: 4px;
+	}
 	#quick-nav-ui,
 	#new-comment-nav-ui {
 		border-radius: 8px;

@@ -5210,6 +5210,7 @@ div > .MJXc-display {
 	}
 	#quick-nav-ui a::after {
 		font-family: 'Concourse', 'a_Avante';
+		font-weight: 600;
 		box-shadow:
 			0 0 1px 0 #fff,
 			0 0 3px 0 #fff,
