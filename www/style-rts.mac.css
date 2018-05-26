@@ -3795,15 +3795,16 @@ a.nav-inner,
 	position: absolute;
 	top: 169px;
 	right: 30px;
-	padding: 19px 0 0 0;
+	padding: 20px 0 0 0;
 	border-radius: 8px;
-	box-shadow: 0 18px #bbb inset;
+	box-shadow: 0 20px #bbb inset;
 }
 .sublevel-nav.sort::before {
 	text-transform: uppercase;
 	font-weight: 600;
 	color: #444;
 	text-shadow: 0.5px 0.5px 0 #fff;
+	line-height: 2;
 }
 .sublevel-nav.sort .sublevel-item {
 	border-radius: 0;
@@ -4330,8 +4331,10 @@ h1.listing + .post-meta {
 }
 .post-page .post-meta::after {
 	display: block;
-	margin: 1em 0 0 0;
+	margin: 0.5em 0 0 0;
 	font-size: 1.5rem;
+	flex-basis: 100%;
+	order: 2;
 }
 .post-page .post-meta:first-of-type::after {
 	content: "❦";
@@ -5125,6 +5128,9 @@ div > .MJXc-display {
 	/*****************************************/
 	@media only screen and (max-width: 900px) {
 	/*****************************************/
+		h1.listing {
+			line-height: 1;
+		}
 		h1.listing + .post-meta .post-section::before {
 			position: unset;
 		}
@@ -5138,9 +5144,58 @@ div > .MJXc-display {
 		#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
 			padding: 6px 10px;
 		}
+
+		#top-nav-bar {
+			margin: 0 0 0.75em 0;
+		}
+		#top-nav-bar .page-number {
+			padding-top: 11px;
+		}
+		#top-nav-bar::after {
+			margin: 0 auto;
+		}
+
+		#content.compact > #top-nav-bar + .comment-thread .comment-item {
+			margin-top: 0;
+		}
+
+		.archive-nav *[class^='archive-nav-item-'] {
+			border-width: 1px !important;
+		}
+		.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
+			background-color: #bbb;
+		}
+	
+		.sublevel-nav.sort {
+			top: 315px;
+			right: 10px;
+		}
+		.sublevel-nav.sort .sublevel-item:first-child {
+			border-radius: 6px 0 0 6px;
+		}
+		.sublevel-nav.sort .sublevel-item:last-child {
+			border-radius: 0 6px 6px 0;
+			border-width: 1px 1px 1px 0;
+		}
+
+		.comment-item .comment-item {
+			margin: 0.75em 3px 3px 6px;
+		}
+		.comment-item .comment-item + .comment-item {
+			margin: 1.5em 3px 3px 6px;
+		}
 	/*******************************************/
 	} @media only screen and (max-width: 720px) {
 	/*******************************************/
+		.sublevel-nav .sublevel-item,
+		.sublevel-nav .sublevel-item:first-child,
+		.sublevel-nav .sublevel-item:last-child {
+			border-width: 1px;
+			border-radius: 8px;
+		}
+		.sublevel-nav.sort {
+			top: 278px;
+		}
 	/*******************************************/
 	} @media only screen and (max-width: 520px) {
 	/*******************************************/
