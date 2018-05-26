@@ -2831,6 +2831,24 @@ div > .MJXc-display {
 #new-comment-nav-ui .new-comments-count::before {
 	display: none;
 }
+#new-comment-nav-ui button::after {
+	position: absolute;
+	font-size: 0.375rem;
+	left: 0;
+	right: 0;
+	margin: auto;
+	line-height: 1;
+	text-transform: uppercase;
+	pointer-events: none;
+}
+#new-comment-nav-ui button.new-comment-previous::after {
+	content: "Previous";
+	bottom: 5px;
+}
+#new-comment-nav-ui button.new-comment-next::after {
+	content: "Next";
+	top: 7px;
+}
 
 /*=================*/
 /* HNS DATE PICKER */
@@ -5213,6 +5231,9 @@ div > .MJXc-display {
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-next {
 		border-radius: 0 7px 7px 0;
+	}
+	#new-comment-nav-ui button::after {
+		font-family: 'Concourse', 'a_Avante';
 	}
 	
 	/*****************************************/
