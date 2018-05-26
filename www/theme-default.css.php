@@ -1536,6 +1536,9 @@ div > .MJXc-display {
 			font-size: 1.75rem;
 			line-height: 1;
 		}
+		h1.listing a[href^='http'] {
+			top: 2px;
+		}
 		h1.listing:last-of-type + .post-meta {
 			margin-bottom: 12px;
 		}
