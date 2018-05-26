@@ -1349,6 +1349,9 @@ div > .MJXc-display {
 	#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
 		color: #bbb;
 	}
+	#new-comment-nav-ui button::after {
+		font-family: <?php echo $UI_font; ?>;
+	}
 
 	#hns-date-picker {
 		bottom: 122px;

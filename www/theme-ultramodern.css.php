@@ -1489,6 +1489,9 @@ div > .MJXc-display {
 	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-next {
 		border-radius: 0 7px 7px 0;
 	}
+	#new-comment-nav-ui button::after {
+		font-family: <?php echo $UI_font; ?>;
+	}
 
 	#hns-date-picker.engaged {
 		bottom: 124px;

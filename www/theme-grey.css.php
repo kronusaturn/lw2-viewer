@@ -1594,6 +1594,9 @@ div > .MJXc-display {
 	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-previous {
 		border-radius: 7px 0 0 7px;
 	}
+	#new-comment-nav-ui button::after {
+		font-family: <?php echo $UI_font; ?>;
+	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-next {
 		border-radius: 0 7px 7px 0;
 	}

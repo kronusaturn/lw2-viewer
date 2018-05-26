@@ -4976,6 +4976,9 @@ div > .MJXc-display {
 	#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
 		color: #bbb;
 	}
+	#new-comment-nav-ui button::after {
+		font-family: 'Anonymous Pro', monospace;
+	}
 
 	#hns-date-picker {
 		bottom: 122px;
