@@ -1725,7 +1725,7 @@ div > .MJXc-display {
 		}
 		
 		#edit-post-form textarea {
-			min-height: calc(100vh - 350px);
+			min-height: calc(100vh - 345px);
 		}
 		#edit-post-form label[for='section'] {
 			width: 4.3em;
