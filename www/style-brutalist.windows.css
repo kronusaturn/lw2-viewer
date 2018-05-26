@@ -4920,10 +4920,12 @@ div > .MJXc-display {
 			font-family: Input Sans Narrow;
 			font-weight: 300;
 		}
+		h1.listing + .post-meta .post-section {
+			overflow: visible;
+			order: 1;
+		}
 		h1.listing + .post-meta .post-section::before {
-			left: -28px;
-			font-size: 0.875em;
-			top: 1px;
+			position: unset;
 		}
 
 		#content.compact > #top-nav-bar + .comment-thread .comment-item {
