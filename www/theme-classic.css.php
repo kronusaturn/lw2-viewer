@@ -1679,6 +1679,9 @@ div > .MJXc-display {
 		#content.user-page #comments-list-mode-selector {
 			top: 196px;
 		}
+		#content.compact > .comment-thread .comment-item {
+			max-height: 104px;
+		}
 
 		.sublevel-nav.sort {
 			top: 215px;

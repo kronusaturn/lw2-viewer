@@ -1715,6 +1715,10 @@ div > .MJXc-display {
 			right: 120px;
 		}
 
+		#content.compact > .comment-thread .comment-item {
+			max-height: 110px;
+		}
+		
 		.sublevel-nav.sort {
 			top: 215px;
 			right: 4px;

@@ -5228,6 +5228,10 @@ div > .MJXc-display {
 			border-width: 0 1px 1px 1px;
 		}
 		
+		#content.compact > .comment-thread .comment-item {
+			max-height: 104px;
+		}
+		
 		.comment-body {
 			font-size: 1.1875rem;
 			line-height: 1.35;

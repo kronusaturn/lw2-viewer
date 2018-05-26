@@ -5056,6 +5056,10 @@ div > .MJXc-display {
 			font-size: 1.125rem;
 		}
 		
+		#content.compact > .comment-thread .comment-item {
+			max-height: 105px;
+		}
+		
 		.comment-controls form:focus-within textarea,
 		.textarea-container:focus-within textarea {
 			background-color: #fff;
