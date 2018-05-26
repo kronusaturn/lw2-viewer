@@ -1660,5 +1660,45 @@ div > .MJXc-display {
 			font-size: 1.1875rem;
 			line-height: 1.35;
 		}
+		
+		.comment-controls form:focus-within .guiedit-mobile-auxiliary-button,
+		.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
+			padding: 5px 6px 6px 6px;
+			font-weight: 600;
+		}
+		.comment-controls form:focus-within .guiedit-mobile-help-button.active,
+		.textarea-container:focus-within .guiedit-mobile-help-button.active {
+			box-shadow:
+				0 0 0 1px #c00,
+				0 0 0 1px #c00 inset;
+			color: #c00;
+			border-color: transparent;
+		}
+		.comment-controls form:focus-within .guiedit-buttons-container,
+		.textarea-container:focus-within .guiedit-buttons-container {
+			background-color: #fff;
+			border-top: 1px solid #ddf;
+		}
+		.comment-controls form:focus-within .guiedit-mobile-auxiliary-button,
+		.textarea-container:focus-within .guiedit-mobile-auxiliary-button,
+		.comment-controls form:focus-within button.guiedit,
+		.textarea-container:focus-within button.guiedit {
+			border: 1px solid #bbb;
+			border-radius: 6px;
+		}
+		.markdown-hints::after {
+			color: #090;
+		}
+		
+		#edit-post-form label[for='section'] {
+			width: 4.3em;
+		}
+		#edit-post-form input[name='title'],
+		#edit-post-form input[name='url'] {
+			max-width: calc(100% - 6.75em);
+		}
+		#edit-post-form textarea {
+			min-height: calc(100vh - 360px);
+		}
 	}
 }
