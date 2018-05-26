@@ -1565,7 +1565,7 @@ function pageLayoutFinished() {
 	generateImagesOverlay();
 	
 	// FOR TESTING ONLY, COMMENT WHEN DEPLOYING.
-	document.querySelector("input[type='search']").value = document.documentElement.clientWidth;
+// 	document.querySelector("input[type='search']").value = document.documentElement.clientWidth;
 }
 function generateImagesOverlay() {
 	// Don't do this on the about page.
