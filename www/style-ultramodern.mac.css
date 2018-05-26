@@ -2745,7 +2745,6 @@ div > .MJXc-display {
 
 #quick-nav-ui {
 	max-width: 0px;
-	overflow: hidden;
 	transition:
 		max-width 0.2s ease,
 		visibility 0.2s ease;
@@ -2762,6 +2761,29 @@ div > .MJXc-display {
 }
 #quick-nav-ui a + a {
 	margin-left: 5px;
+}
+#quick-nav-ui a::after {
+	position: absolute;
+	top: 100%;
+	font-size: 0.375rem;
+	left: 0;
+	right: 0;
+	margin: auto;
+	line-height: 1;
+	padding: 4px 0 2px 0;
+	font-family: Arial;
+	text-transform: uppercase;
+	z-index: -1;
+}
+#quick-nav-ui a[href='#top']::after {
+	content: "Top";
+	left: -1px;
+}
+#quick-nav-ui a[href='#comments']::after {
+	content: "Comments";
+}
+#quick-nav-ui a[href='#bottom-bar']::after {
+	content: "Bottom";
 }
 	
 /*======================*/
@@ -5016,6 +5038,14 @@ div > .MJXc-display {
 			0 0 5px 3px #999,
 			0 0 10px 3px #999,
 			0 0 20px 3px #999;
+	}
+	#quick-nav-ui a::after {
+		box-shadow:
+			0 0 1px 0 #999,
+			0 0 3px 0 #999,
+			0 0 5px 0 #999;
+		background-color: #999;
+		border-radius: 4px;
 	}
 	#quick-nav-ui,
 	#new-comment-nav-ui {

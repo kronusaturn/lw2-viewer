@@ -1522,6 +1522,14 @@ div > .MJXc-display {
 			0 0 10px 3px #fff,
 			0 0 20px 3px #fff;
 	}
+	#quick-nav-ui a::after {
+		box-shadow:
+			0 0 1px 0 #fff,
+			0 0 3px 0 #fff,
+			0 0 5px 0 #fff;
+		background-color: #fff;
+		border-radius: 4px;
+	}
 	#quick-nav-ui,
 	#new-comment-nav-ui {
 		border-radius: 8px;
