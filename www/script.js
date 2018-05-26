@@ -1563,6 +1563,9 @@ function pageLayoutFinished() {
 		
 	// Add overlay of images in post (for avoidance of theme tweaks).		
 	generateImagesOverlay();
+	
+	// FOR TESTING ONLY, COMMENT WHEN DEPLOYING.
+	document.querySelector("input[type='search']").value = document.documentElement.clientWidth;
 }
 function generateImagesOverlay() {
 	// Don't do this on the about page.

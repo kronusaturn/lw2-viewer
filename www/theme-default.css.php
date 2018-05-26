@@ -1660,6 +1660,8 @@ div > .MJXc-display {
 		h1.listing + .post-meta .link-post-domain {
 			margin: 0;
 			line-height: 1.3;
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 		h1.listing + .post-meta .post-section::before {
 			position: absolute;
