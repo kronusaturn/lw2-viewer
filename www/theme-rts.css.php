@@ -549,6 +549,21 @@ h1.listing + .post-meta .link-post-domain {
 	display: none;
 }
 
+#content.conversations-user-page h1.listing {
+	margin: 0.75em 0 0 0;
+	font-size: 1.5rem;
+}
+#content.conversations-user-page .sublevel-nav + h1.listing {
+	margin: 1em 0 0 0;
+}
+#content.conversations-user-page h1.listing::after {
+	display: none;
+}
+#content.conversations-user-page h1.listing + .post-meta {
+	padding: 0;
+	margin: 0;
+}
+
 .user-stats .karma-total {
 	font-weight: bold;
 }
