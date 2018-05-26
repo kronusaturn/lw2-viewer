@@ -1345,6 +1345,9 @@ div > .MJXc-display {
 	/*****************************************/
 	@media only screen and (max-width: 900px) {
 	/*****************************************/
+		h1.listing + .post-meta > * {
+			line-height: 1.5;
+		}
 		h1.listing + .post-meta .post-section {
 			overflow: visible;
 			order: 1;
@@ -1413,9 +1416,6 @@ div > .MJXc-display {
 		}
 		h1.listing + .post-meta {
 			margin: 4px 6px;
-		}
-		h1.listing + .post-meta > * {
-			line-height: 1.5;
 		}
 		h1.listing a[href^='http'] {
 			top: 2px;
