@@ -1552,7 +1552,8 @@ div > .MJXc-display {
 			0 0 10px 3px #fffffa,
 			0 0 20px 3px #fffffa;
 	}
-	#quick-nav-ui a::after {
+	#quick-nav-ui a::after,
+	#new-comment-nav-ui::before {
 		font-family: <?php echo $UI_font; ?>;
 		font-weight: bold;
 		box-shadow:
@@ -1569,6 +1570,10 @@ div > .MJXc-display {
 	#new-comment-nav-ui {
 		background-color: #fffffa;
 		border: 1px solid #ccc;
+	}
+	#new-comment-nav-ui::before {
+		color: #777;
+		font-weight: bold;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button {
 		box-shadow: 0 0 0 1px #ccc;

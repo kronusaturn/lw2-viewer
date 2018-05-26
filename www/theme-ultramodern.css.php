@@ -1454,7 +1454,8 @@ div > .MJXc-display {
 			0 0 10px 3px #999,
 			0 0 20px 3px #999;
 	}
-	#quick-nav-ui a::after {
+	#quick-nav-ui a::after,
+	#new-comment-nav-ui::before {
 		font-family: <?php echo $UI_font; ?>;
 		font-weight: bold;
 		box-shadow:
@@ -1471,6 +1472,10 @@ div > .MJXc-display {
 	#new-comment-nav-ui {
 		background-color: #888;
 		border: 1px solid #444;
+	}
+	#new-comment-nav-ui::before {
+		color: #444;
+		font-weight: bold;
 	}
 	#new-comment-nav-ui .new-comments-count,
 	#new-comment-nav-ui .new-comments-count::after {
