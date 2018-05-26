@@ -4971,6 +4971,8 @@ div > .MJXc-display {
 		color: #000;
 		font-size: 0.6875rem;
 		font-weight: bold;
+		bottom: calc(100% + 2px);
+		padding: 2px 0 0 0;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button {
 		color: #000;

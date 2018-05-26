@@ -5199,11 +5199,15 @@ div > .MJXc-display {
 	}
 	#new-comment-nav-ui::before {
 		color: #777;
-		font-weight: bold;
+		font-weight: 600;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button {
 		box-shadow: 0 0 0 1px #ccc;
 		color: #777;
+	}
+	#new-comment-nav-ui .new-comments-count {
+		background-color: inherit;
+		box-shadow: 0 -1px 0 0 #ccc;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-previous {
 		border-radius: 7px 0 0 7px;
