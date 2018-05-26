@@ -470,6 +470,13 @@ h1.listing + .post-meta .link-post-domain {
 	margin-top: 1.75em;
 }
 
+#content.conversations-user-page .sublevel-nav + h1.listing {
+	margin-top: 1em;
+}
+#content.conversations-user-page h1.listing + .post-meta .date::after {
+	display: none;
+}
+
 .user-stats .karma-total {
 	font-weight: bold;
 }
