@@ -428,6 +428,21 @@ h1.listing + .post-meta .read-time {
 	display: none;
 }
 
+#content.conversations-user-page h1.listing {
+	margin: 0.75em 0 0 0;
+	font-size: 1.5rem;
+}
+#content.conversations-user-page .sublevel-nav + h1.listing {
+	margin: 1em 0 0 0;
+}
+#content.conversations-user-page h1.listing::after {
+	display: none;
+}
+#content.conversations-user-page h1.listing + .post-meta {
+	padding: 0;
+	margin: 0;
+}
+
 .user-stats .karma-total {
 	font-weight: bold;
 }
@@ -1396,6 +1411,10 @@ div > .MJXc-display {
 	/*******************************************/
 	} @media only screen and (max-width: 720px) {
 	/*******************************************/
+		#content.conversations-user-page h1.listing + .post-meta .date {
+			margin: 0 0 0 1em;
+		}
+		
 		.sublevel-nav .sublevel-item,
 		.sublevel-nav .sublevel-item:first-child,
 		.sublevel-nav .sublevel-item:last-child {
@@ -1427,6 +1446,15 @@ div > .MJXc-display {
 			position: relative;
 			top: -1px;
 			left: 0;
+		}
+		#content.conversations-user-page h1.listing {
+			font-size: 1.375rem;
+		}
+		#content.conversations-user-page h1.listing + .post-meta .conversation-participants {
+			margin: 0;
+		}
+		#content.conversations-user-page h1.listing + .post-meta .messages-count {
+			margin: 0 0 0 1em;
 		}
 
 		#content.compact > .comment-thread .comment-item {
