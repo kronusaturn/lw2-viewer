@@ -2771,7 +2771,6 @@ div > .MJXc-display {
 	margin: auto;
 	line-height: 1;
 	padding: 4px 0 2px 0;
-	font-family: Arial;
 	text-transform: uppercase;
 	z-index: -1;
 }
@@ -5210,6 +5209,7 @@ div > .MJXc-display {
 			0 0 20px 3px #fff;
 	}
 	#quick-nav-ui a::after {
+		font-family: 'Concourse', 'a_Avante';
 		box-shadow:
 			0 0 1px 0 #fff,
 			0 0 3px 0 #fff,

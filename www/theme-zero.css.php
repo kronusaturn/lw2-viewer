@@ -1323,6 +1323,7 @@ div > .MJXc-display {
 			0 0 20px 3px #fff;
 	}
 	#quick-nav-ui a::after {
+		font-family: <?php echo $UI_font; ?>;
 		box-shadow:
 			0 0 1px 0 #fff,
 			0 0 3px 0 #fff,

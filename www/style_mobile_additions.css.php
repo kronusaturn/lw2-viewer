@@ -194,7 +194,6 @@
 	margin: auto;
 	line-height: 1;
 	padding: 4px 0 2px 0;
-	font-family: Arial;
 	text-transform: uppercase;
 	z-index: -1;
 }
