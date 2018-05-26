@@ -4487,6 +4487,9 @@ div.comment-child-links a::first-letter {
 	box-shadow:
 		0 0 0 5px #bbb inset;
 }
+#content.compact > .comment-thread .comment-item {
+	max-height: 56px;
+}
 #content.compact > .comment-thread .comment-item::after {
 	color: #888;
 	background: linear-gradient(to right, transparent 0%, #fff 50%, #fff 100%);
@@ -5199,36 +5202,35 @@ div > .MJXc-display {
 	/*******************************************/
 	} @media only screen and (max-width: 520px) {
 	/*******************************************/
-		h1.listing + .post-meta {
-			padding: 0 0 25px 0;
-			white-space: unset;
+		h1.listing {
+			font-size: 1.5rem;
+			margin: 18px 6px 4px 6px;
 		}
-		h1.listing + .post-meta::after {
-			width: 100%;
-			top: 36px;
+		h1.listing + .post-meta {
+			margin: 4px 6px;
 		}
 		h1.listing + .post-meta > * {
-			margin: 0;
+			line-height: 1.4;
 		}
-		h1.listing + .post-meta .karma-value,
-		h1.listing + .post-meta .comment-count,
-		h1.listing + .post-meta .lw2-link,
-		h1.listing + .post-meta .read-time {
-			top: unset;
-			bottom: -2px;
+		h1.listing a[href^='http'] {
+			top: 4px;
 		}
-		h1.listing + .post-meta .karma-value {
-			right: 250px;
+
+		.sublevel-nav.sort {
+			top: 215px;
+			right: 4px;
 		}
-		h1.listing + .post-meta .comment-count {
-			right: 175px;
+		.sublevel-nav.sort .sublevel-item:first-child {
+			border-radius: 6px 6px 0 0;
 		}
-		h1.listing + .post-meta .read-time {
-			right: 75px;
+		.sublevel-nav.sort .sublevel-item:last-child {
+			border-radius: 0 0 6px 6px;
+			border-width: 0 1px 1px 1px;
 		}
-		h1.listing + .post-meta .lw2-link {
-			right: 0;
-			opacity: 1;
+		
+		.comment-body {
+			font-size: 1.1875rem;
+			line-height: 1.35;
 		}
 	}
 }
