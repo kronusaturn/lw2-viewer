@@ -120,6 +120,7 @@
 #theme-selector.engaged {
 	max-height: 1000px;
 	top: 10px;
+    z-index: 10001;
 }
 #theme-selector::before {
 	content: "Select theme";
