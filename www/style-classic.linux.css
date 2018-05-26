@@ -4023,14 +4023,14 @@ h1.listing + .post-meta .karma-value {
 	color: #fff;
 	font-weight: bold;
 	font-size: 0.8125rem;
-	border-radius: 0.875em;
-	padding: 2px 6px;
+	border-radius: 1.0625em;
+	padding: 2px 6px 1px 6px;
 	text-align: center;
 	display: block;
-	min-width: 1.75em;
+	min-width: 2.125em;
 	position: absolute;
 	right: calc(100% - 1.75em);
-	top: -2em;
+	top: -2.1em;
 }
 h1.listing + .post-meta .karma-value span,
 h1.listing + .post-meta .lw2-link span,
@@ -4213,7 +4213,7 @@ h1.listing + .post-meta span.post-section::before {
 .post .post-meta {
 	position: relative;
 	font-size: 0.875rem;
-	display: flex;
+	justify-content: flex-start;
 	padding-left: 30px;
 }
 .post .post-meta .author {
