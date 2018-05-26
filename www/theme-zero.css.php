@@ -444,6 +444,13 @@ h1.listing + .post-meta .karma-value {
 	display: none;
 }
 
+#content.conversations-user-page .sublevel-nav + h1.listing {
+	margin-top: 1em;
+}
+#content.conversations-user-page h1.listing + .post-meta {
+	margin: 0;
+}
+
 .user-stats .karma-total {
 	font-weight: bold;
 }
@@ -1419,6 +1426,12 @@ div > .MJXc-display {
 		}
 		h1.listing a[href^='http'] {
 			top: 2px;
+		}
+		#content.conversations-user-page h1.listing::after {
+			height: calc(100% + 2.25em);
+		}
+		#content.conversations-user-page h1.listing + .post-meta .date {
+			margin: 0 0 0 1em;
 		}
 
 		.sublevel-nav.sort {
