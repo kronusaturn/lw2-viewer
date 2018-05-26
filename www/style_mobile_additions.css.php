@@ -213,7 +213,6 @@
 /*======================*/
 
 #new-comment-nav-ui {
-	overflow: hidden;
 	max-width: 0px;
 	max-height: 0px;
 	transition: 
@@ -223,6 +222,19 @@
 	display: flex;
 	right: 78px;
 	bottom: 70px;
+}
+#new-comment-nav-ui::before {
+	content: "New Comments";
+	position: absolute;
+	bottom: 100%;
+	font-size: 0.5625rem;
+	left: 0;
+	right: 0;
+	margin: auto;
+	padding: 2px 0;
+	text-transform: uppercase;
+	z-index: -1;
+	text-align: center;
 }
 #new-comment-nav-ui.engaged {
 	max-width: 1000px;

@@ -2790,7 +2790,6 @@ div > .MJXc-display {
 /*======================*/
 
 #new-comment-nav-ui {
-	overflow: hidden;
 	max-width: 0px;
 	max-height: 0px;
 	transition: 
@@ -2800,6 +2799,19 @@ div > .MJXc-display {
 	display: flex;
 	right: 78px;
 	bottom: 70px;
+}
+#new-comment-nav-ui::before {
+	content: "New Comments";
+	position: absolute;
+	bottom: 100%;
+	font-size: 0.5625rem;
+	left: 0;
+	right: 0;
+	margin: auto;
+	padding: 2px 0;
+	text-transform: uppercase;
+	z-index: -1;
+	text-align: center;
 }
 #new-comment-nav-ui.engaged {
 	max-width: 1000px;
@@ -5163,7 +5175,8 @@ div > .MJXc-display {
 			0 0 10px 3px #000,
 			0 0 20px 3px #000;
 	}
-	#quick-nav-ui a::after {
+	#quick-nav-ui a::after,
+	#new-comment-nav-ui::before {
 		font-family: 'Concourse', 'a_Avante';
 		font-weight: 600;
 		box-shadow:
@@ -5181,9 +5194,16 @@ div > .MJXc-display {
 		background-color: #232323;
 		border: 1px solid #575756;
 	}
+	#new-comment-nav-ui::before {
+		color: #777;
+	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button {
 		box-shadow: 0 0 0 1px #575756;
 		color: #777;
+	}
+	#new-comment-nav-ui .new-comments-count {
+		background-color: inherit;
+		box-shadow: 0 -1px 0 0 #575756;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
 		color: #393939;
