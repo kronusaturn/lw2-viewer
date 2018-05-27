@@ -1499,6 +1499,9 @@ div > .MJXc-display {
 		.posting-controls .textarea-container:focus-within .guiedit-buttons-container {
 			box-shadow: none;
 		}
+		#content.conversation-page .textarea-container:focus-within::after {
+			background-color: #fff;
+		}
 		.comment-controls form:focus-within button.guiedit,
 		.textarea-container:focus-within button.guiedit {
 			border: 1px solid #00c;

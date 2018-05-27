@@ -3490,6 +3490,19 @@ a.comment-parent-link::after {
 		border-width: 1px;
 		z-index: 11001;
 	}
+	#content.conversation-page .textarea-container:focus-within textarea {
+		height: calc(100% - 54px);
+	}
+	#content.conversation-page .textarea-container:focus-within::after {
+		content: "";
+		display: block;
+		width: 100%;
+		height: 50px;
+		position: fixed;
+		left: 0;
+		bottom: 0;
+		z-index: 11000;
+	}
 	.comment-controls form:focus-within .guiedit-buttons-container,
 	.textarea-container:focus-within .guiedit-buttons-container {
 		position: fixed;
@@ -5178,6 +5191,9 @@ div > .MJXc-display {
 		}
 		.posting-controls .textarea-container:focus-within .guiedit-buttons-container {
 			padding-bottom: 5px;
+		}
+		#content.conversation-page .textarea-container:focus-within::after {
+			background-color: #fff;
 		}
 		.comment-controls form:focus-within button.guiedit,
 		.textarea-container:focus-within button.guiedit {

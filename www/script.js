@@ -134,38 +134,45 @@ Element.prototype.addTextareaFeatures = function() {
 	textarea.addEventListener("input", OnInputRemoveMarkdownHints, false);
 	textarea.addEventListener("keyup", function(e) { e.stopPropagation(); });
 	
-	textarea.insertAdjacentHTML("beforebegin", "<div class='guiedit-buttons-container'></div>");
-	var buttons_container = textarea.parentElement.querySelector(".guiedit-buttons-container");
-	for (var button of guiEditButtons) {
-		buttons_container.insertAdjacentHTML("beforeend", 
-			"<button type='button' class='guiedit guiedit-" 
-			+ button[0]
-			+ "' tabindex='-1' title='"
-			+ button[1] + ((button[2] != "") ? (" [accesskey: " + button[2] + "]") : "")
-			+ "' data-tooltip='" + button[1]
-			+ "' accesskey='"
-			+ button[2]
-			+ "' onclick='insMarkup(event,"
-			+ ((typeof button[3] == 'function') ?
-				button[3].name : 
-				("\"" + button[3]  + "\",\"" + button[4] + "\",\"" + button[5] + "\""))
-			+ ");'><div>"
-			+ button[6]
-			+ "</div></button>"
-		);
-	}
+	if (textarea.hasClass("with-markdown-editor")) {
+		textarea.insertAdjacentHTML("beforebegin", "<div class='guiedit-buttons-container'></div>");
+		var buttons_container = textarea.parentElement.querySelector(".guiedit-buttons-container");
+		for (var button of guiEditButtons) {
+			buttons_container.insertAdjacentHTML("beforeend", 
+				"<button type='button' class='guiedit guiedit-" 
+				+ button[0]
+				+ "' tabindex='-1' title='"
+				+ button[1] + ((button[2] != "") ? (" [accesskey: " + button[2] + "]") : "")
+				+ "' data-tooltip='" + button[1]
+				+ "' accesskey='"
+				+ button[2]
+				+ "' onclick='insMarkup(event,"
+				+ ((typeof button[3] == 'function') ?
+					button[3].name : 
+					("\"" + button[3]  + "\",\"" + button[4] + "\",\"" + button[5] + "\""))
+				+ ");'><div>"
+				+ button[6]
+				+ "</div></button>"
+			);
+		}
 	
-	var markdown_hints = "<input type='checkbox' id='markdown-hints-checkbox'><label for='markdown-hints-checkbox'></label>";
-	markdown_hints += "<div class='markdown-hints'>";
-	markdown_hints += "<div class='markdown-hints-row'><span style='font-weight: bold;'>Bold</span><code>**Bold**</code></div>";
-	markdown_hints += "<div class='markdown-hints-row'><span style='font-style: italic;'>Italic</span><code>*Italic*</code></div>";
-	markdown_hints += "<div class='markdown-hints-row'><span><a href=#>Link</a></span><code>[Link](http://example.com)</code></div>";
-	markdown_hints += "<div class='markdown-hints-row'><span>Heading 1</span><code># Heading 1</code></div>";
-	markdown_hints += "<div class='markdown-hints-row'><span>Heading 2</span><code>## Heading 1</code></div>";
-	markdown_hints += "<div class='markdown-hints-row'><span>Heading 3</span><code>### Heading 1</code></div>";
-	markdown_hints += "<div class='markdown-hints-row'><span>Blockquote</span><code>&gt; Blockquote</code></div>";
-	markdown_hints += "</div>";
-	textarea.parentElement.querySelector("span").insertAdjacentHTML("afterend", markdown_hints);
+		var markdown_hints = "<input type='checkbox' id='markdown-hints-checkbox'><label for='markdown-hints-checkbox'></label>";
+		markdown_hints += "<div class='markdown-hints'>";
+		markdown_hints += "<div class='markdown-hints-row'><span style='font-weight: bold;'>Bold</span><code>**Bold**</code></div>";
+		markdown_hints += "<div class='markdown-hints-row'><span style='font-style: italic;'>Italic</span><code>*Italic*</code></div>";
+		markdown_hints += "<div class='markdown-hints-row'><span><a href=#>Link</a></span><code>[Link](http://example.com)</code></div>";
+		markdown_hints += "<div class='markdown-hints-row'><span>Heading 1</span><code># Heading 1</code></div>";
+		markdown_hints += "<div class='markdown-hints-row'><span>Heading 2</span><code>## Heading 1</code></div>";
+		markdown_hints += "<div class='markdown-hints-row'><span>Heading 3</span><code>### Heading 1</code></div>";
+		markdown_hints += "<div class='markdown-hints-row'><span>Blockquote</span><code>&gt; Blockquote</code></div>";
+		markdown_hints += "</div>";
+		textarea.parentElement.querySelector("span").insertAdjacentHTML("afterend", markdown_hints);
+	} else {
+		var markdown_hints = "<div class='markdown-hints'>";
+		markdown_hints += "You <em>cannot</em> use Markdown here—plain text only.";
+		markdown_hints += "</div>";
+		textarea.parentElement.querySelector("span").insertAdjacentHTML("afterend", markdown_hints);
+	}
 	
 	let guiEditMobileHelpButton = document.querySelector(".guiedit-mobile-help-button");
 	if (guiEditMobileHelpButton) {
@@ -1338,8 +1345,8 @@ function initialize() {
 			});
 		});
 
-		document.querySelectorAll(".with-markdown-editor textarea").forEach(function (textarea) { textarea.addTextareaFeatures(); });
-		document.querySelectorAll((getQueryVariable("post-id")) ? "#edit-post-form textarea" : "#edit-post-form input[name='title']").forEach(function (field) { field.focus(); });
+		document.querySelectorAll(".with-markdown-editor textarea, .conversation-page textarea").forEach(function (textarea) { textarea.addTextareaFeatures(); });
+		document.querySelectorAll(((getQueryVariable("post-id")) ? "#edit-post-form textarea" : "#edit-post-form input[name='title']") + ", .conversation-page textarea").forEach(function (field) { field.focus(); });
 
 		let postMeta = document.querySelector(".post .post-meta");
 		if (postMeta) {

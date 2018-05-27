@@ -1831,6 +1831,9 @@ div > .MJXc-display {
 			color: #c00;
 			font-weight: 600;
 		}
+		#content.conversation-page .textarea-container:focus-within::after {
+			background-color: #fff;
+		}
 		.comment-controls form:focus-within .guiedit-buttons-container,
 		.textarea-container:focus-within .guiedit-buttons-container {
 			background-color: white;

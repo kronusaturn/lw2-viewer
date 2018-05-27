@@ -1720,6 +1720,9 @@ div > .MJXc-display {
 			background-color: #fff;
 			border-top: 1px solid #ddf;
 		}
+		#content.conversation-page .textarea-container:focus-within::after {
+			background-color: #fff;
+		}
 		.comment-controls form:focus-within .guiedit-mobile-auxiliary-button,
 		.textarea-container:focus-within .guiedit-mobile-auxiliary-button,
 		.comment-controls form:focus-within button.guiedit,
