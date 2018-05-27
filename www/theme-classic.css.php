@@ -945,6 +945,9 @@ div.comment-child-links a::first-letter {
 		0 0 30px #fff,
 		0 0 40px #fff;
 }
+#content.search-results-page #comments-list-mode-selector {
+	top: 32px;
+}
 
 /*===========================*/
 /* HIGHLIGHTING NEW COMMENTS */
@@ -1610,6 +1613,9 @@ div > .MJXc-display {
 			padding: 6px 10px;
 		}
 
+		#content.search-results-page #comments-list-mode-selector {
+			top: 114px;
+		}
 		#content.compact > #top-nav-bar + .comment-thread .comment-item {
 			margin-top: 0;
 		}
@@ -1700,6 +1706,9 @@ div > .MJXc-display {
 		}
 		#content.user-page #comments-list-mode-selector {
 			top: 196px;
+		}
+		#content.search-results-page #comments-list-mode-selector {
+			top: 64px;
 		}
 		#content.compact > .comment-thread .comment-item {
 			max-height: 104px;
