@@ -617,7 +617,7 @@ h1.listing + .post-meta::after {
 #content.user-page h1.listing {
 	margin: 1em 0 0 0;
 	padding: 0 6px;
-	position: relative;
+	padding-top: <?php echo ($platform == 'Mac') ? "0" : "0.125em"; ?>;
 }
 #content.user-page .sublevel-nav + h1.listing {
 	margin-top: 1.75em;
@@ -634,7 +634,6 @@ h1.listing + .post-meta::after {
 	width: 100%;
 	height: calc(100% + 1.375em);
 	box-shadow: 0px 0px 10px #555;
-	padding-top: <?php echo ($platform == 'Mac') ? "0" : "0.125em"; ?>;
 }
 #content.user-page h1.listing + .post-meta {
 	margin: 0 6px 2em 35px;
