@@ -1843,6 +1843,12 @@ div > .MJXc-display {
 		h1.listing {
 			font-size: 1.25rem;
 		}
+		#content.user-page h1.listing::after {
+			height: calc(100% + 2.625em);
+		}
+		#content.user-page h1.link-post-listing::after {
+			height: calc(100% + 3.75em);
+		}
 	}
 }
 
