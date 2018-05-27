@@ -1854,7 +1854,7 @@ div.comment-child-links a::first-letter {
 	cursor: pointer;
 }
 #edit-post-form #markdown-hints-checkbox + label {
-	padding: 2px 0 0 0;
+	padding: 2px 0 0 14px;
 }
 #markdown-hints-checkbox {
 	visibility: hidden;
@@ -1931,7 +1931,7 @@ div.comment-child-links a::first-letter {
 }
 #edit-post-form .link-post-checkbox + label {
 	padding-left: 6px;
-	margin-left: 0.5em;
+	margin-left: 1.375em;
 	white-space: nowrap;
 	position: relative;
 	cursor: pointer;
