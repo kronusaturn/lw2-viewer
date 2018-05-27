@@ -1516,7 +1516,7 @@ div > .MJXc-display {
 			padding-bottom: 5px;
 		}
 		#content.conversation-page .textarea-container:focus-within::after {
-			background-color: #fff;
+			background-color: #000;
 		}
 		.comment-controls form:focus-within button.guiedit,
 		.textarea-container:focus-within button.guiedit {

@@ -134,7 +134,7 @@ Element.prototype.addTextareaFeatures = function() {
 	textarea.addEventListener("input", OnInputRemoveMarkdownHints, false);
 	textarea.addEventListener("keyup", function(e) { e.stopPropagation(); });
 	
-	if (textarea.hasClass("with-markdown-editor")) {
+	if (textarea.hasClass("with-markdown-editor") || textarea.parentElement.closest("#edit-post-form") != null) {
 		textarea.insertAdjacentHTML("beforebegin", "<div class='guiedit-buttons-container'></div>");
 		var buttons_container = textarea.parentElement.querySelector(".guiedit-buttons-container");
 		for (var button of guiEditButtons) {

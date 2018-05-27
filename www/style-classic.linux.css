@@ -4912,7 +4912,7 @@ div.comment-child-links a::first-letter {
 		0 0.5px 0.5px #000;
 }
 #edit-post-form #markdown-hints-checkbox + label {
-	padding: 3px 0 0 0;
+	padding: 3px 0 0 14px;
 }
 
 /*=======*/
