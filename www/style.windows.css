@@ -3797,6 +3797,7 @@ body {
 /*==============*/
 
 .sublevel-nav .sublevel-item {
+	background-color: #fff;
 	border-color: #ddd;
 	border-style: solid;
 	border-width: 1px 1px 1px 0;
@@ -5292,6 +5293,7 @@ div > .MJXc-display {
 		.sublevel-nav.sort {
 			top: 312px;
 			right: 10px;
+			z-index: 1;
 		}
 		.sublevel-nav.sort .sublevel-item:first-child {
 			border-radius: 6px 0 0 6px;
