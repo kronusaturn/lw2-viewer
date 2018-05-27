@@ -2165,9 +2165,8 @@ pre > code {
 	padding: 3px 4px 5px 8px;
 }
 
-input[type='text'],
-input[type='search'],
-input[type='password'],
+input,
+button,
 textarea {
 	-webkit-appearance: none;
 }
