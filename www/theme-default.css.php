@@ -1595,6 +1595,15 @@ div > .MJXc-display {
 			line-height: 1;
 			flex-basis: 100%;
 		}
+		#content.user-page h1.listing {
+			padding-top: <?php echo ($platform == 'Mac') ? "0" : "0.25em"; ?>;		
+		}
+		#content.user-page h1.listing + .post-meta {
+			margin-bottom: 1em;
+		}
+		#content.user-page h1.link-post-listing::after {
+			height: calc(100% + 1.875em);
+		}
 
 		#nav-item-search button::before {
 			color: #00e;
@@ -1746,6 +1755,12 @@ div > .MJXc-display {
 		h1.listing + .post-meta .date {
 			margin: 0.375em 0 0.25em 0;
 			line-height: 1;
+		}
+		#content.user-page h1.listing::after {
+			height: calc(100% + 2.125em);
+		}
+		#content.user-page h1.link-post-listing::after {
+			height: calc(100% + 3.0625em);
 		}
 		#content.conversations-user-page h1.listing + .post-meta .date {
 			margin: 0 0 0 1em;
