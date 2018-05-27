@@ -4052,6 +4052,8 @@ h1.listing {
 	font-family: 'Mundo Sans', 'a_Avante', 'Font Awesome';
 	font-weight: 800;
 	margin: 0.7em 20px 0 20px;
+	position: relative;
+	top: 0.125em; ;
 }
 
 h1.listing a {
@@ -4255,6 +4257,7 @@ h1.listing + .post-meta::after {
 	width: 100%;
 	height: calc(100% + 1.375em);
 	box-shadow: 0px 0px 10px #9b9b9b;
+	padding-top: 0.125em;
 }
 #content.user-page h1.listing + .post-meta {
 	margin: 0 6px 2em 35px;

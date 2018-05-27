@@ -429,6 +429,8 @@ h1.listing {
 	font-family: <?php echo $listings_font; ?>, 'Font Awesome';
 	font-weight: <?php echo ($platform == 'Mac') ? "700" : "800"; ?>;
 	margin: 0.7em 20px 0 20px;
+	position: relative;
+	top: <?php echo ($platform == 'Mac') ? "0" : "0.125em"; ?>; ;
 }
 
 h1.listing a {
@@ -632,6 +634,7 @@ h1.listing + .post-meta::after {
 	width: 100%;
 	height: calc(100% + 1.375em);
 	box-shadow: 0px 0px 10px #555;
+	padding-top: <?php echo ($platform == 'Mac') ? "0" : "0.125em"; ?>;
 }
 #content.user-page h1.listing + .post-meta {
 	margin: 0 6px 2em 35px;
