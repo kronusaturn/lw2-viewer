@@ -452,6 +452,7 @@ h1.listing a[href^="http"] {
 	}
 	h1.listing:focus-within::before {
 		color: #00f;
+		left: -0.625em;
 	}
 	h1.listing a[href^="http"]:hover {
 		color: #4879ec;
