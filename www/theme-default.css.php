@@ -612,13 +612,16 @@ h1.listing + .post-meta::after {
 	border-bottom: 1px solid #ccc;
 }
 
+#content.user-page h1.listing {
+	margin: 1em 0 0 0;
+	padding: 0 6px;
+	position: relative;
+}
 #content.user-page .sublevel-nav + h1.listing {
 	margin-top: 1.75em;
 }
-#content.user-page h1.listing {
-	margin: 1.5em 0 0 0;
-	padding: 0 6px;
-	position: relative;
+#content.user-page #top-nav-bar + h1.listing {
+	margin-top: 0.5em;
 }
 #content.user-page h1.listing::after {
 	content: "";
@@ -631,7 +634,7 @@ h1.listing + .post-meta::after {
 	box-shadow: 0px 0px 10px #555;
 }
 #content.user-page h1.listing + .post-meta {
-	margin: 0 6px 3em 35px;
+	margin: 0 6px 2em 35px;
 }
 #content.user-page h1.listing + .post-meta::after {
 	display: none;
@@ -1814,6 +1817,12 @@ div > .MJXc-display {
 		}
 		.markdown-hints::after {
 			color: #090;
+		}
+	/*******************************************/
+	} @media only screen and (max-width: 320px) {
+	/*******************************************/
+		h1.listing {
+			font-size: 1.25rem;
 		}
 	}
 }
