@@ -1006,6 +1006,10 @@ div.comment-child-links a::first-letter {
 	top: 2px;
 }
 
+.comment-controls .karma {
+	margin-left: -10px;
+}
+
 /*===========================*/
 /* COMMENTING AND POSTING UI */
 /*===========================*/

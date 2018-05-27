@@ -287,8 +287,9 @@ function makeVoteCompleteEvent(target) {
 			buttonTargets = document.querySelectorAll(".post-meta .karma");
 			karmaTargets = document.querySelectorAll(".post-meta .karma-value");
 		} else {
-			buttonTargets = [target];
-			karmaTargets = [target.querySelector(".karma-value")];
+			let commentItem = target.closest(".comment-item")
+			buttonTargets = [ commentItem.querySelector(".comment-meta .karma"), commentItem.querySelector(".comment-controls .karma") ];
+			karmaTargets = [ commentItem.querySelector(".comment-meta .karma-value"), commentItem.querySelector(".comment-controls .karma-value") ];
 		}
 		buttonTargets.forEach(function (bt) {
 			bt.querySelectorAll("button.vote").forEach(function(b) { b.style.pointerEvents = "" });
@@ -1364,6 +1365,21 @@ function initialize() {
 		}
 		
 		if(readCookie("lw2-auth-token")) {
+			var comments_container = document.querySelector("#comments");
+			if (comments_container) {
+				// Add reply buttons.
+				comments_container.querySelectorAll(".comment").forEach(function (e) {
+					e.insertAdjacentHTML("afterend", "<div class='comment-controls posting-controls'></div>");
+					e.parentElement.querySelector(".comment-controls").injectCommentButtons();
+				});
+			
+				// Add top-level new comment form.
+				if(!document.querySelector(".individual-thread-page")) {
+					comments_container.insertAdjacentHTML("afterbegin", "<div class='comment-controls posting-controls'></div>");
+					comments_container.querySelector(".comment-controls").injectCommentButtons();
+				}
+			}
+
 			// Add upvote/downvote buttons.
 			if(typeof(postVote) != 'undefined') {
 				document.querySelectorAll(".post-meta .karma-value").forEach(function (e) {
@@ -1379,6 +1395,12 @@ function initialize() {
 					e.insertAdjacentHTML('beforebegin', "<button type='button' class='vote upvote"+(voteType=='upvote'?' selected':'')+"' data-vote-type='upvote' data-target-type='Comments' tabindex='-1'></button>");
 					e.insertAdjacentHTML('afterend', "<button type='button' class='vote downvote"+(voteType=='downvote'?' selected':'')+"' data-vote-type='downvote' data-target-type='Comments' tabindex='-1'></button>");
 				});
+				// Replicate karma controls at the bottom of comments.
+				document.querySelectorAll(".comment-meta .karma").forEach(function (karma_controls) {
+					let karma_controls_cloned = karma_controls.cloneNode(true);
+					let comment_controls = karma_controls.parentElement.parentElement.nextSibling;
+					comment_controls.appendChild(karma_controls_cloned);
+				});
 			}
 			document.querySelector("head").insertAdjacentHTML("beforeend","<style id='vote-buttons'>" + 
 			`.upvote:hover,
@@ -1392,21 +1414,6 @@ function initialize() {
 			document.querySelectorAll("button.vote").forEach(function(e) {
 				e.addActivateEvent(voteEvent);
 			});
-
-			var comments_container = document.querySelector("#comments");
-			if (comments_container) {
-				// Add reply buttons.
-				comments_container.querySelectorAll(".comment").forEach(function (e) {
-					e.insertAdjacentHTML("afterend", "<div class='comment-controls posting-controls'></div>");
-					e.parentElement.querySelector(".comment-controls").injectCommentButtons();
-				});
-			
-				// Add top-level new comment form.
-				if(!document.querySelector(".individual-thread-page")) {
-					comments_container.insertAdjacentHTML("afterbegin", "<div class='comment-controls posting-controls'></div>");
-					comments_container.querySelector(".comment-controls").injectCommentButtons();
-				}
-			}
 
 			window.needHashRealignment = true;
 		}

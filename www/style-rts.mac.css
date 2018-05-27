@@ -1673,6 +1673,13 @@ div.comment-child-links a::first-letter {
 	border: none;
 }
 
+/* Replicated karma controls at bottom of comments. */
+.comment-controls .karma {
+	float: left;
+	margin-left: -14px;
+	font-size: 0.9375em;
+}
+
 /*****************************/
 /* COMMENTING AND POSTING UI */
 /*****************************/
