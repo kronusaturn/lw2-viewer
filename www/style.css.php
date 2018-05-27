@@ -1492,7 +1492,10 @@ div.comment-child-links a::first-letter {
 	top: 165px;
 }
 #content.search-results-page #comments-list-mode-selector {
-	top: 95px;
+	top: 50px;
+	left: unset;
+	right: 48px;
+	z-index: 1;
 }
 #comments-list-mode-selector button {
 	color: transparent;

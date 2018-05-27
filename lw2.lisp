@@ -371,7 +371,7 @@
 
 (defparameter *html-head*
   (format nil
-"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
+"<meta name=\"viewport\" content=\"minimal-ui, width=device-width, initial-scale=1\">
 <meta name=\"HandheldFriendly\" content=\"True\" />
 <link rel=\"stylesheet\" href=\"~A\">"
           *fonts-stylesheet-uri*))
