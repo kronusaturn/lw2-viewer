@@ -672,11 +672,11 @@ h1.listing + .post-meta span.post-section::before {
 	color: #fff;
 	font-weight: bold;
 	font-size: 0.8125rem;
-	border-radius: 1em;
-	padding: 2px 6px;
+	border-radius: 1.125em;
+	padding: 2px 6px 1px 6px;
 	text-align: center;
-	min-width: 1.75em;
-	display: inline-block;
+	min-width: 2.125em;
+	display: block;
 	float: left;
 	margin: 0 0.5em 0 0;
 }
