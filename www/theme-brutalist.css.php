@@ -795,6 +795,10 @@ div.comment-child-links a::first-letter {
 	box-shadow: none;
 }
 
+.comment-controls .karma {
+	margin-left: -12px;
+}
+
 /*===========================*/
 /* COMMENTING AND POSTING UI */
 /*===========================*/
