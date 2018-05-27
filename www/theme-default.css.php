@@ -635,6 +635,7 @@ h1.listing + .post-meta::after {
 	width: 100%;
 	height: calc(100% + 1.375em);
 	box-shadow: 0px 0px 10px #555;
+	pointer-events: none;
 }
 #content.user-page h1.listing + .post-meta {
 	margin: 0 6px 2em 35px;
