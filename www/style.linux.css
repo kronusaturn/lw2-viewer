@@ -4091,7 +4091,7 @@ h1.listing + .post-meta .read-time {
 	margin: 0 0.25em 0 0.5em;
 	position: absolute;
 	line-height: 1.15;
-	top: 12px;
+	bottom: -6px;
 }
 h1.listing + .post-meta .karma-value span,
 h1.listing + .post-meta .comment-count span,
@@ -5254,6 +5254,12 @@ div > .MJXc-display {
 		h1.listing:last-of-type + .post-meta {
 			margin-bottom: 12px;
 		}
+		h1.listing + .post-meta .karma-value,
+		h1.listing + .post-meta .comment-count,
+		h1.listing + .post-meta .lw2-link,
+		h1.listing + .post-meta .read-time {
+			bottom: 0;
+		}
 		h1.listing + .post-meta .post-section::before {
 			position: unset;
 		}
@@ -5276,7 +5282,7 @@ div > .MJXc-display {
 			margin-bottom: 1em;
 		}
 		#content.user-page h1.link-post-listing::after {
-			height: calc(100% + 1.875em);
+			height: calc(100% + 2em);
 		}
 
 		#nav-item-search button::before {
@@ -5428,7 +5434,7 @@ div > .MJXc-display {
 			height: calc(100% + 2.125em);
 		}
 		#content.user-page h1.link-post-listing::after {
-			height: calc(100% + 3.0625em);
+			height: calc(100% + 3.125em);
 		}
 		#content.conversations-user-page h1.listing + .post-meta .date {
 			margin: 0 0 0 1em;
