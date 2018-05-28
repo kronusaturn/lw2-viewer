@@ -807,7 +807,7 @@ h1.listing + .post-meta .read-time {
 }
 #content.user-page .user-stats {
 	float: right;
-	margin-top: -3.1em;
+	margin-top: -1.6em;
 }
 
 #content.user-page #comments-list-mode-selector {
@@ -1549,9 +1549,6 @@ div.comment-child-links a::first-letter {
 	line-height: 1;
 	padding: 0 16px 10px 64px;
 	pointer-events: auto;
-}
-#content.compact > #top-nav-bar + .comment-thread .comment-item {
-	margin-top: 2.25em;
 }
 #content.compact > .comment-thread .comment-item:hover {
 	overflow: visible;
