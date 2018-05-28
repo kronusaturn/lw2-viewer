@@ -1432,7 +1432,14 @@ function initialize() {
 			a.innerText = a.innerText.replace(/^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})\. /i, '');
 			a.innerText = a.innerText.replace(/^[A-Z]\. /, '');
 		});
-		
+
+		// Add comment-minimize buttons to every comment.		
+		if (document.querySelector("#comments") != null) {
+			document.querySelectorAll(".comment-meta").forEach(function (cm) {
+				if (!cm.lastChild.hasClass("comment-minimize-button"))
+					cm.insertAdjacentHTML("beforeend", "<div class='comment-minimize-button maximized'>&#xf146;</div>");
+			});
+		}
 		// Format and activate comment-minimize buttons.
 		document.querySelectorAll(".comment-minimize-button").forEach(function (b) {
 			b.closest(".comment-item").setCommentThreadMaximized(false);

@@ -1492,6 +1492,9 @@ div.comment-child-links a::first-letter {
 #comments-list-mode-selector {
 	padding-top: 6px;
 }
+#content.index-page #comments-list-mode-selector {
+	position: absolute;
+}
 #comments-list-mode-selector button {
 	color: transparent;
 	width: 32px;
