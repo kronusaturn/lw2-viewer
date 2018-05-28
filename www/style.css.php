@@ -273,9 +273,6 @@ a#inbox-indicator.new-messages:hover::before {
 .sublevel-nav + #top-nav-bar + h1.listing {
 	margin-top: 1.5em;
 }
-.archive-nav + #top-nav-bar {
-	margin-top: 1em;
-}
 .archive-nav + #top-nav-bar + h1.listing {
 	margin-top: 1em;
 }
@@ -647,7 +644,7 @@ a#inbox-indicator.new-messages:hover::before {
 /************/
 
 .archive-nav {
-	margin: 1.25em 0.5em;
+	margin: 1.25em 0.5em 0 0.5em;
 	padding: 0.25em;
 }
 .archive-nav > * {

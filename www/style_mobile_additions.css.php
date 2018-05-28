@@ -560,9 +560,6 @@
 /*==========*/
 
 @media only screen and (max-width: 900px) {
-	.archive-nav {
-		margin: 1.25em 0.5em;
-	}
 	div[class^='archive-nav-'] {
 		flex-wrap: wrap;
 		justify-content: flex-start;
