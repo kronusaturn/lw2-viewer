@@ -2,45 +2,9 @@ document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='hide-
 
 function setContentWidth(widthString) {
 	if (!widthString) return;
-	let widthAdjustStyle = document.querySelector('#width-adjust');
-	widthAdjustStyle.innerHTML = 
-		`#content { 
+	document.querySelector('#width-adjust').innerHTML = 
+		`#content, #ui-elements-container, #images-overlay { 
 			max-width: calc(${widthString});
-		}
-		#quick-nav-ui {
-			right: calc((100vw - ${widthString}) / 2 - 75px);
-		}
-		#new-comment-nav-ui {
-			right: calc((100vw - ${widthString}) / 2 - 120px);
-		}
-		#width-selector {
-			right: calc((100% - ${widthString}) / 2 - 78px);
-		}
-		#theme-selector {
-			left: calc((100% - ${widthString}) / 2 - 41px);
-		}
-		#theme-tweaker-toggle {
-			left: calc((100% - ${widthString}) / 2 - 75px);
-		}
-		#text-size-adjustment-ui {
-			right: calc((100% - ${widthString}) / 2 - 78px)
-		}
-		#comments-view-mode-selector {
-			left: calc((100% - ${widthString}) / 2 - 40px);
-		}
-		#comments-list-mode-selector {
-			left: calc((100% - ${widthString}) / 2 + 29px);
-		}
-		#hns-date-picker {
-			right: calc((100vw - ${widthString}) / 2 - 261px);
-		}
-		@media only screen and (max-width: 1200px) {
-			#hns-date-picker {
-				right: calc((100vw - ${widthString}) / 2 - 88px);
-			}
-		}
-		#aux-about-link {
-			left: calc((100% - ${widthString}) / 2 - 69px);
 		}`;
 }
 setContentWidth(window.localStorage.getItem('selected-width'));
