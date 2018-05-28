@@ -2779,8 +2779,9 @@ div > .MJXc-display {
 	right: 0;
 	margin: auto;
 	line-height: 1;
-	padding: 2px 0;
+	padding: 2px;
 	text-transform: uppercase;
+	width: fit-content;
 	z-index: -1;
 }
 #quick-nav-ui a[href='#top']::after {
@@ -2817,10 +2818,10 @@ div > .MJXc-display {
 	left: 0;
 	right: 0;
 	margin: auto;
-	padding: 2px 0;
+	padding: 2px 3px;
 	text-transform: uppercase;
+	width: fit-content;
 	z-index: -1;
-	text-align: center;
 }
 #new-comment-nav-ui.engaged {
 	max-width: 1000px;
@@ -5568,6 +5569,10 @@ div > .MJXc-display {
 		}
 		.markdown-hints::after {
 			color: #090;
+		}
+
+		#edit-post-form .link-post-checkbox + label {
+			margin-left: 1.25em;
 		}
 	/*******************************************/
 	} @media only screen and (max-width: 320px) {

@@ -193,8 +193,9 @@
 	right: 0;
 	margin: auto;
 	line-height: 1;
-	padding: 2px 0;
+	padding: 2px;
 	text-transform: uppercase;
+	width: fit-content;
 	z-index: -1;
 }
 #quick-nav-ui a[href='#top']::after {
@@ -231,10 +232,10 @@
 	left: 0;
 	right: 0;
 	margin: auto;
-	padding: 2px 0;
+	padding: 2px 3px;
 	text-transform: uppercase;
+	width: fit-content;
 	z-index: -1;
-	text-align: center;
 }
 #new-comment-nav-ui.engaged {
 	max-width: 1000px;

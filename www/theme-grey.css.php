@@ -1742,5 +1742,9 @@ div > .MJXc-display {
 		.markdown-hints::after {
 			color: #090;
 		}
+
+		#edit-post-form .link-post-checkbox + label {
+			margin-left: 1.25em;
+		}
 	}
 }
