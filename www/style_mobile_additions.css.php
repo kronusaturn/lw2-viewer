@@ -753,6 +753,9 @@ a.comment-parent-link::after {
 	#comments-list-mode-selector {
 		padding-top: 4px;
 	}
+	#content.user-page #comments-list-mode-selector {
+		left: 7px;
+	}
 }
 
 /*===========================*/

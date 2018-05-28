@@ -1632,7 +1632,7 @@ div > .MJXc-display {
 		}
 	
 		.sublevel-nav.sort {
-			top: 312px;
+			top: 300px;
 			right: 10px;
 			z-index: 1;
 		}
@@ -1747,7 +1747,7 @@ div > .MJXc-display {
 			border-radius: 8px;
 		}
 		.sublevel-nav.sort {
-			top: 273px;
+			top: 248px;
 		}
 	/*******************************************/
 	} @media only screen and (max-width: 520px) {
@@ -1798,8 +1798,8 @@ div > .MJXc-display {
 		}
 		
 		.sublevel-nav.sort {
-			top: 215px;
-			right: 4px;
+			top: 200px;
+			right: 8px;
 		}
 	
 		.comment-controls form:focus-within button:active,

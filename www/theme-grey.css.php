@@ -1640,8 +1640,8 @@ div > .MJXc-display {
 		}
 	
 		.sublevel-nav.sort {
-			top: 305px;
-			right: 10px;
+			top: 290px;
+			right: 8px;
 		}
 
 		.comment-item .comment-item {
@@ -1664,7 +1664,7 @@ div > .MJXc-display {
 			border-radius: 8px;
 		}
 		.sublevel-nav.sort {
-			top: 273px;
+			top: 240px;
 		}
 	/*******************************************/
 	} @media only screen and (max-width: 520px) {
@@ -1685,8 +1685,8 @@ div > .MJXc-display {
 		}
 		
 		.sublevel-nav.sort {
-			top: 215px;
-			right: 4px;
+			top: 194px;
+			right: 8px;
 		}
 	
 		.comment-controls form:focus-within button:active,
