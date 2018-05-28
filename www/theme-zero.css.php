@@ -866,11 +866,11 @@ div.comment-child-links a::first-letter {
 		0 1px 0 0 #00e inset;
 }
 .posting-controls.edit-existing-post textarea:focus,
-.posting-controls.edit-existing-comment textarea:focus {
+.posting-controls form.edit-existing-comment textarea:focus {
 	border-color: #090;
 }
 .posting-controls.edit-existing-post .textarea-container:focus-within .guiedit-buttons-container,
-.posting-controls.edit-existing-comment .textarea-container:focus-within .guiedit-buttons-container {
+.posting-controls form.edit-existing-comment .textarea-container:focus-within .guiedit-buttons-container {
 	box-shadow: 
 		-1px 0 0 0 #090 inset,
 		1px 0 0 0 #090 inset,
@@ -884,7 +884,7 @@ div.comment-child-links a::first-letter {
 }
 
 .posting-controls.edit-existing-post .guiedit-buttons-container button,
-.posting-controls.edit-existing-comment .guiedit-buttons-container button {
+.posting-controls form.edit-existing-comment .guiedit-buttons-container button {
     color: #050;
 }
 .guiedit-buttons-container button {

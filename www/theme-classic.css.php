@@ -1090,7 +1090,7 @@ div.comment-child-links a::first-letter {
 		0 0 0 2px <?php echo $hyperlink_color; ?>;
 }
 .posting-controls.edit-existing-post textarea:focus,
-.posting-controls.edit-existing-comment textarea:focus {
+.posting-controls form.edit-existing-comment textarea:focus {
 	border-color: #090;
     box-shadow: 
     	0 0 0 1px #81ff7f inset,
@@ -1105,7 +1105,7 @@ div.comment-child-links a::first-letter {
 }
 
 .posting-controls.edit-existing-post .guiedit-buttons-container button,
-.posting-controls.edit-existing-comment .guiedit-buttons-container button {
+.posting-controls form.edit-existing-comment .guiedit-buttons-container button {
     color: #050;
 }
 .guiedit-buttons-container button {

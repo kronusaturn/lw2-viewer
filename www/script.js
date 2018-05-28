@@ -134,7 +134,7 @@ Element.prototype.addTextareaFeatures = function() {
 	textarea.addEventListener("input", OnInputRemoveMarkdownHints, false);
 	textarea.addEventListener("keyup", function(e) { e.stopPropagation(); });
 	
-	if (textarea.hasClass("with-markdown-editor") || textarea.parentElement.closest("#edit-post-form") != null) {
+	if (!textarea.closest("#content").hasClass("conversation-page")) {
 		textarea.insertAdjacentHTML("beforebegin", "<div class='guiedit-buttons-container'></div>");
 		var buttons_container = textarea.parentElement.querySelector(".guiedit-buttons-container");
 		for (var button of guiEditButtons) {
@@ -243,7 +243,7 @@ function showCommentEditForm(event) {
 	let commentBody = commentControls.parentElement.querySelector(".comment-body");
 	commentBody.setAttribute("style", "display: none;");
 	commentControls.injectReplyForm(commentBody.getAttribute("data-markdown-source"));
-	commentControls.addClass("edit-existing-comment");
+	commentControls.querySelector("form").addClass("edit-existing-comment");
 	ExpandTextarea(commentControls.querySelector("textarea"));
 }
 
