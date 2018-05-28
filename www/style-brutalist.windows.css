@@ -2773,13 +2773,13 @@ div > .MJXc-display {
 }
 #quick-nav-ui a::after {
 	position: absolute;
-	top: 100%;
+	top: calc(100% + 2px);
 	font-size: 0.375rem;
 	left: 0;
 	right: 0;
 	margin: auto;
 	line-height: 1;
-	padding: 4px 0 2px 0;
+	padding: 2px 0;
 	text-transform: uppercase;
 	z-index: -1;
 }
@@ -5223,6 +5223,9 @@ div > .MJXc-display {
 		#edit-post-form input[name='title'],
 		#edit-post-form input[name='url'] {
 			max-width: calc(100% - 7.75em);
+		}
+		#edit-post-form .link-post-checkbox + label {
+			margin-left: 1.25em;
 		}
 	}
 }

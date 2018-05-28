@@ -1547,5 +1547,8 @@ div > .MJXc-display {
 		#edit-post-form input[name='url'] {
 			max-width: calc(100% - 7.75em);
 		}
+		#edit-post-form .link-post-checkbox + label {
+			margin-left: 1.25em;
+		}
 	}
 }
