@@ -603,11 +603,6 @@ function setSelectedTheme(themeName) {
 	});
 	setTheme(themeName);
 	document.querySelector("#theme-tweaker-ui .current-theme span").innerText = themeName;
-
-	// Regenerate images overlay (after slight delay).
-	setTimeout(function() { generateImagesOverlay(); }, 25);
-	// Update theme tweaker font size selector sample text font.
-	setTimeout(function() { updateThemeTweakerTextSizeAdjustSampleText(); }, 50);	
 }
 function setTheme(themeName) {
 	if (typeof(themeName) == 'undefined') {
@@ -627,6 +622,8 @@ function setTheme(themeName) {
 	
 	let oldStyle = document.querySelector("head link[href*='.css']");
 	newStyle.addEventListener('load', function() { oldStyle.parentElement.removeChild(oldStyle); });
+	newStyle.addEventListener('load', generateImagesOverlay);
+	newStyle.addEventListener('load', updateThemeTweakerTextSizeAdjustSampleText);
 	document.querySelector('head').insertBefore(newStyle, oldStyle.nextSibling);
 	
 	if (themeName == 'dark') {
