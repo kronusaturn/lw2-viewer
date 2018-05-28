@@ -1096,7 +1096,7 @@ function injectCommentsListModeSelector() {
 	+ `<button type='button' class='expanded' title='Expanded comments view' tabindex='-1'></button>`
 	+ `<button type='button' class='compact' title='Compact comments view' tabindex='-1'></button>`
 	+ "</div>";
-	document.querySelector(".active-bar").insertAdjacentHTML("afterend", commentsListModeSelectorHTML);
+	(document.querySelector("#content.user-page .user-stats") || document.querySelector(".page-toolbar") || document.querySelector(".active-bar")).insertAdjacentHTML("afterend", commentsListModeSelectorHTML);
 	let commentsListModeSelector = document.querySelector("#comments-list-mode-selector");
 	
 	commentsListModeSelector.querySelectorAll("button").forEach(function (button) {

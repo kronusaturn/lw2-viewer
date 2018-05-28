@@ -792,7 +792,7 @@ h1.listing + .post-meta .read-time {
 /**************/
 
 #content.user-page h1.page-main-heading {
-	margin: 1em 0 0.75em 0;
+	margin: 1em 0 0 0;
 	line-height: 1.2;
 }
 #content.user-page .user-stats {

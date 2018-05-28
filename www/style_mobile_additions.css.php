@@ -639,7 +639,7 @@ h1.listing {
 /*============*/
 
 #content.user-page h1.page-main-heading {
-	margin: 1em 0.125em 0.75em 0.125em;
+	margin: 1em 0.125em 0 0.125em;
 }
 #content.user-page .user-stats {
 	margin-right: 0.25em;
