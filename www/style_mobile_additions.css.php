@@ -532,21 +532,21 @@
 /*==============*/
 
 @media only screen and (max-width: 720px) {
-	.sublevel-nav {
+	.sublevel-nav:not(.sort) {
 		flex-wrap: wrap;
 		max-width: calc(100% - 200px);
 		margin: -1em auto 0 auto;
 	}
-	.sublevel-nav .sublevel-item {
+	.sublevel-nav:not(.sort) .sublevel-item {
 		margin: 1px;
 		flex-basis: 7em;
 	}
 }
 @media only screen and (max-width: 520px) {
-	.sublevel-nav {
+	.sublevel-nav:not(.sort) {
 		max-width: calc(100% - 100px);
 	}
-	#content .sublevel-nav:not(.sort) .sublevel-item {
+	.sublevel-nav:not(.sort) .sublevel-item {
 		font-size: 1rem;
 	}
 }
@@ -554,23 +554,6 @@
 /*=====================*/
 /* SORT ORDER SELECTOR */
 /*=====================*/
-
-@media only screen and (max-width: 900px) {
-	.sublevel-nav.sort {
-		flex-flow: row;
-	}
-}
-@media only screen and (max-width: 720px) {
-	.sublevel-nav.sort .sublevel-item {
-		margin: 0;
-	}
-}
-@media only screen and (max-width: 520px) {
-	.sublevel-nav.sort {
-		flex-flow: column;
-		right: 4px;
-	}
-}
 
 /*==========*/
 /* ARCHIVES */

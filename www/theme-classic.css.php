@@ -1629,13 +1629,6 @@ div > .MJXc-display {
 			top: 290px;
 			right: 10px;
 		}
-		.sublevel-nav.sort .sublevel-item:first-child {
-			border-radius: 6px 0 0 6px;
-		}
-		.sublevel-nav.sort .sublevel-item:last-child {
-			border-radius: 0 6px 6px 0;
-			border-width: 1px 1px 1px 0;
-		}
 
 		.comment-item .comment-item {
 			margin: 0.75em 0 3px 6px;
@@ -1695,13 +1688,6 @@ div > .MJXc-display {
 		.sublevel-nav.sort {
 			top: 215px;
 			right: 4px;
-		}
-		.sublevel-nav.sort .sublevel-item:first-child {
-			border-radius: 6px 6px 0 0;
-		}
-		.sublevel-nav.sort .sublevel-item:last-child {
-			border-radius: 0 0 6px 6px;
-			border-width: 0 1px 1px 1px;
 		}
 
 		.comment-controls form:focus-within textarea,

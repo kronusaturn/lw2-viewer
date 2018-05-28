@@ -800,6 +800,16 @@ h1.listing + .post-meta .read-time {
 	margin-top: -3.1em;
 }
 
+#content.user-page #comments-list-mode-selector {
+	position: absolute;
+}
+#content.user-page #comments-list-mode-selector button {
+	display: block;
+}
+#content.user-page .sublevel-nav:not(.sort) {
+	margin-top: 1em;
+}
+
 /*****************/
 /* CONVERSATIONS */
 /*****************/
