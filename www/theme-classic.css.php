@@ -839,7 +839,8 @@ a.comment-parent-link::after {
 .comment-meta .date:hover {
 	color: #777;
 }
-.comment-meta .karma-value {
+.comment-meta .karma-value,
+.comment-controls .karma .karma-value {
 	color: #666;
 	float: left;
 	margin-right: 0.5em;
@@ -1004,7 +1005,7 @@ div.comment-child-links a::first-letter {
 }
 
 .comment-controls .karma {
-	margin-left: -10px;
+	margin-left: -6px;
 }
 
 /*===========================*/
