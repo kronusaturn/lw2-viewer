@@ -861,9 +861,6 @@ h1.listing + .post-meta .read-time {
 #content.search-results-page h1.listing {
 	font-size: 1.625em;
 }
-#content.search-results-page #secondary-bar + * {
-	margin-top: 3.5rem;
-}
 
 /**************/
 /* LOGIN PAGE */
