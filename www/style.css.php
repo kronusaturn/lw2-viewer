@@ -1127,7 +1127,6 @@ h1.listing + .post-meta .read-time {
 	display: flex;
 	flex-flow: row wrap;
 	justify-content: center;
-	line-height: 1.9;
 }
 .post-meta .lw2-link {
 	opacity: 0.5;

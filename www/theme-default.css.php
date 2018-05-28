@@ -611,7 +611,7 @@ h1.listing + .post-meta::after {
 	width: 100%;
 	background-color: #ddd;
 	position: absolute;
-	bottom: -10px;
+	bottom: -14px;
 }
 
 /*============*/
@@ -1607,6 +1607,9 @@ div > .MJXc-display {
 			order: 2;
 			line-height: 1;
 			flex-basis: 100%;
+		}
+		h1.listing + .post-meta::after {
+			bottom: -10px;
 		}
 		#content.user-page h1.listing {
 			padding-top: <?php echo ($platform == 'Mac') ? "0" : "0.25em"; ?>;		

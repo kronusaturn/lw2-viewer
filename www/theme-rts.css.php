@@ -774,7 +774,7 @@ h1.listing + .post-meta {
 }
 .post-page .post-meta::after {
 	display: block;
-	margin: 0.5em 0 0 0;
+	margin: 0.625em 0 0 0;
 	font-size: 1.5rem;
 	flex-basis: 100%;
 	order: 2;

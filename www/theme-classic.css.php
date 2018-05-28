@@ -634,6 +634,9 @@ h1.listing + .post-meta .link-post-domain {
 /* POST-META */
 /*===========*/
 
+.post-meta {
+	line-height: 1.9;
+}
 .post-meta .post-section::before {
 	color: #fff;
 	text-shadow: 
