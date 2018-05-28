@@ -141,21 +141,20 @@ body {
 	position: absolute;
 	top: 167px;
 	right: 30px;
-	border: 2px solid #bbb;
+	border: 2px solid #999;
 	padding: 18px 0 0 0;
 	border-radius: 8px;
-	box-shadow: 0 18px #bbb inset;
+	box-shadow: 0 18px #999 inset;
 }
 .sublevel-nav.sort::before {
 	text-transform: uppercase;
 	font-weight: 600;
 	color: #444;
-	text-shadow: 0.5px 0.5px 0 #fff;
 }
 .sublevel-nav.sort .sublevel-item {
 	border-radius: 0;
-	padding: 5px 6px;
-	border-color: #aaa;
+	padding: 6px 7px 5px 7px;
+	border-color: #777;
 	border-style: solid;
 	text-transform: uppercase;
 }
@@ -168,7 +167,7 @@ body {
 	border-width: 0 1px 1px 1px;
 }
 .sublevel-nav.sort .sublevel-item:active {
-	border-color: #aaa;
+	border-color: #777;
 }
 
 /*================*/
@@ -221,25 +220,27 @@ body {
 	color: #666;
 	border-radius: 4px;
 	box-shadow: 0 0 0 1px #999;
+	text-decoration: none;
 }
 #quick-nav-ui a[href='#bottom-bar'] {
 	line-height: 1.8;
 }
-#quick-nav-ui a:hover  {
-	color: #444;
-	text-decoration: none;
-	box-shadow: 0 0 0 1px #ccc;
-}
 #quick-nav-ui a:active {
 	transform: scale(0.9);
-}
-#quick-nav-ui a:focus:not(:hover) {
-	transform: none;
-	text-shadow: none;
 }
 #quick-nav-ui a[href='#comments'].no-comments {
 	opacity: 0.4;
 	color: #777;
+}
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+	#quick-nav-ui a:hover  {
+		color: #444;
+		box-shadow: 0 0 0 1px #ccc;
+	}
+	#quick-nav-ui a:focus:not(:hover) {
+		transform: none;
+		text-shadow: none;
+	}
 }
 
 /*======================*/
@@ -250,14 +251,6 @@ body {
 	font-weight: 600;
 	color: #666;
 }
-#new-comment-nav-ui .new-comments-count:hover {
-	text-shadow: 
-		0 0 1px #fff,
-		0 0 3px #fff,
-		0 0 5px #fff,
-		0 0 8px #fff,
-		0.5px 0.5px 0 #fff;
-}
 #new-comment-nav-ui .new-comments-count::after {
 	font-weight: 600;
 	color: #666;
@@ -265,16 +258,26 @@ body {
 #new-comment-nav-ui .new-comment-sequential-nav-button {
 	color: #bbb;
 }
-#new-comment-nav-ui .new-comment-sequential-nav-button:hover {
-	color: #444;
-	text-decoration: none;
-}
 #new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
 	color: #929292;
 }
-#new-comment-nav-ui .new-comment-sequential-nav-button:focus {
-	color: #d00;
-	text-shadow: <?php echo $white_glow; ?>;
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+	#new-comment-nav-ui .new-comments-count:hover {
+		text-shadow: 
+			0 0 1px #fff,
+			0 0 3px #fff,
+			0 0 5px #fff,
+			0 0 8px #fff,
+			0.5px 0.5px 0 #fff;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button:hover {
+		color: #444;
+		text-decoration: none;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button:focus {
+		color: #d00;
+		text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+	}
 }
 
 /*=================*/
@@ -337,7 +340,6 @@ body {
 }
 .archive-nav span[class^='archive-nav-item'] {
 	font-weight: bold;
-	background-color: #ddd;
 }
 
 .archive-nav span[class^="archive-nav-item"],
@@ -345,8 +347,13 @@ body {
 	font-weight: normal;
 	box-shadow: 
 		0 0 0 1px #ccc inset,
-		0 0 0 2px #888 inset;
+		0 0 0 3px #888 inset,
+		0 0 0 4px #ccc inset,
+		0 0 0 5px #888 inset;
 	color: #c00;
+}
+.archive-nav span[class^="archive-nav-item"] {
+	color: #ffb359;
 }
 .archive-nav a:active {
 	transform: scale(0.9);
@@ -360,11 +367,9 @@ body {
 /*==========*/
 
 h1.listing {
+	margin: 0.7em 20px 0.1em 20px;
 	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
     font-size: 1.5rem;
-}
-h1.listing:first-of-type {
-	margin-top: 1.5em;
 }
 h1.listing a[href^='/'] {
 	font-family: <?php echo $text_font; ?>;
@@ -378,35 +383,7 @@ h1.listing a[href^="http"] {
 	color: #aaa;
 }
 
-@media only screen and (hover: hover) {
-	h1.listing a:hover,
-	h1.listing a:focus {
-		background-color: rgba(136,136,136,0.85);
-		color: #f60;
-		text-shadow: 
-			0px 0px 1px #777,
-			0.5px 0.5px 1px #aaa,
-			0.5px 0.5px 1px #bbb,
-			0 0 1px #f60,
-			0 0 2px #f60,
-			0 0 3px #f60;
-	}	
-	#content.user-page h1.listing:focus-within::before {
-		left: -0.75em;
-	}
-	h1.listing:focus-within::before {
-		color: #f60;
-	}
-	h1.listing a[href^="http"]:hover {
-		color: #4879ec;
-		text-shadow: 
-			 0.5px 0.5px 0 #fff,
-			 -0.5px -0.5px 0 #fff,
-			 0 0 2px #fff,
-			 0 0 3px #00c;
-	}
-}
-@-moz-document url-prefix() {
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		background-color: rgba(136,136,136,0.85);
@@ -439,16 +416,9 @@ h1.listing a[href^="http"] {
 /* LISTING POST-META */
 /*===================*/
 
-h1.listing + .post-meta {
-	margin-top: 4px;
-}
 h1.listing + .post-meta > * {
     color: #222;
     font-size: 1em;
-}
-h1.listing + .post-meta .karma {
-    float: left;
-    margin-right: 3px;
 }
 h1.listing + .post-meta .karma::after {
     content: " by";
@@ -459,15 +429,34 @@ h1.listing + .post-meta .date::before {
 h1.listing + .post-meta .date::after {
     content: " — ";
 	opacity: 0.5;
-    margin-right: 5px;
+	margin: 0 0.5em 0 0.125em;
 }
 h1.listing + .post-meta .comment-count.new-comments::before {
 	color: #0c0;
 }
+h1.listing:last-of-type + .post-meta {
+	margin-bottom: 0;
+}
+h1.listing + .post-meta .karma {
+	order: -1;
+	margin-right: 0.25em;
+}
+h1.listing + .post-meta .author {
+	margin-right: 0.25em;
+}
+h1.listing + .post-meta .date {
+	margin: 0;
+}
+h1.listing + .post-meta .post-section {
+	overflow: visible;
+	order: 2;
+}
 h1.listing + .post-meta .post-section::before {
-    left: -26px;
-    top: 0px;
-    font-size: 0.9375em;
+	font-size: 0.9375em;
+	left: -32px;
+}
+h1.listing + .post-meta .link-post-domain {
+	order: 1;
 }
 
 /*============*/
@@ -479,6 +468,13 @@ h1.listing + .post-meta .post-section::before {
 }
 #content.user-page .sublevel-nav + h1.listing {
 	margin-top: 1.75em;
+}
+
+#content.conversations-user-page .sublevel-nav + h1.listing {
+	margin-top: 1em;
+}
+#content.conversations-user-page h1.listing + .post-meta .date::after {
+	display: none;
 }
 
 .user-stats .karma-total {
@@ -865,23 +861,23 @@ div.comment-child-links a::first-letter {
 		0 0 0 5px #ccc inset;
 }
 #content.compact > .comment-thread .comment-item::after {
-	color: <?php echo $hyperlink_color; ?>;
-	background: linear-gradient(to right, transparent 0%, #fff 50%, #fff 100%);
+	color: #ccc;
+	background: linear-gradient(to right, transparent 0%, #888 50%, #888 100%);
 }
 #content.compact > .comment-thread .comment-item:hover .comment {
-	background-color: #fff;
-	outline: 3px solid #00c;
+	background-color: #999;
+	outline: 3px solid #ccc;
 }
 #content.compact > .comment-thread .comment-item:hover .comment::before {
-	background-color: #fff;
+	background-color: #999;
 	box-shadow: 
-		0 0  3px #fff,
-		0 0  5px #fff,
-		0 0  7px #fff,
-		0 0 10px #fff,
-		0 0 20px #fff,
-		0 0 30px #fff,
-		0 0 40px #fff;
+		0 0  3px #999,
+		0 0  5px #999,
+		0 0  7px #999,
+		0 0 10px #999,
+		0 0 20px #999,
+		0 0 30px #999,
+		0 0 40px #999;
 }
 
 /*===========================*/
@@ -1014,6 +1010,7 @@ div.comment-child-links a::first-letter {
 
 button.guiedit {
     color: #444;
+    background-color: transparent;
 	font-family: Font Awesome, Source Sans Pro, Trebuchet MS, Helvetica, Arial, Verdana, sans-serif;
 }
 button.guiedit::after {
@@ -1383,5 +1380,249 @@ div > .MJXc-display {
 	#new-comment-nav-ui,
 	#new-comment-nav-ui + #hns-date-picker {
 		opacity: 1.0;
+	}
+}
+
+/*========*/
+/* MOBILE */
+/*========*/
+
+@media only screen and (hover: none), only screen and (-moz-touch-enabled) {
+	#appearance-adjust-ui-toggle button,
+	#post-nav-ui-toggle button,
+	#theme-selector .theme-selector-close-button  {
+		color: #444;
+		text-shadow:
+			0 0 1px #999,
+			0 0 3px #999,
+			0 0 5px #999,
+			0 0 10px #999,
+			0 0 20px #999,
+			0 0 30px #999;
+	}
+
+	#theme-selector {
+		background-color: #888;
+		box-shadow: 
+			0 0 0 1px #444,
+			0 0 1px 3px #999,
+			0 0 3px 3px #999,
+			0 0 5px 3px #999,
+			0 0 10px 3px #999,
+			0 0 20px 3px #999;
+		border-radius: 12px;
+	}
+	#theme-selector::before {
+		color: #222;
+		font-weight: 300;
+		text-shadow: 
+			0px 0px 1px #777, 
+			0.5px 0.5px 1px #aaa, 
+			0.5px 0.5px 1px #bbb;
+	}
+	#theme-selector button {
+		border-radius: 10px;
+	}
+	#theme-selector button::after {
+		color: #444;
+		max-width: calc(100% - 3.5em);
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	#theme-selector button.selected::after {
+		color: #000;
+		text-shadow: 
+			0 -1px 0 #fff,
+			0 0.5px 0.5px #000;
+	}
+
+	#quick-nav-ui {
+		background-color: #999;
+	}
+	#quick-nav-ui a {
+		background-color: #888;
+		box-shadow: 0 0 0 1px #444;
+		color: #444;
+	}
+	#quick-nav-ui,
+	#new-comment-nav-ui,
+	#hns-date-picker {
+		box-shadow:
+			0 0 1px 3px #999,
+			0 0 3px 3px #999,
+			0 0 5px 3px #999,
+			0 0 10px 3px #999,
+			0 0 20px 3px #999;
+	}
+	#quick-nav-ui a::after,
+	#new-comment-nav-ui::before {
+		font-family: <?php echo $UI_font; ?>;
+		font-weight: bold;
+		box-shadow:
+			0 0 1px 0 #999,
+			0 0 3px 0 #999,
+			0 0 5px 0 #999;
+		background-color: #999;
+		border-radius: 4px;
+	}
+	#quick-nav-ui,
+	#new-comment-nav-ui {
+		border-radius: 8px;
+	}
+	#new-comment-nav-ui {
+		background-color: #888;
+		border: 1px solid #444;
+	}
+	#new-comment-nav-ui::before {
+		color: #444;
+		font-weight: bold;
+	}
+	#new-comment-nav-ui .new-comments-count,
+	#new-comment-nav-ui .new-comments-count::after {
+		color: #444;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button {
+		box-shadow: 0 0 0 1px #444;
+		color: #444;
+	}
+	#new-comment-nav-ui .new-comments-count {
+		background-color: inherit;
+		box-shadow: 0 -1px 0 0 #444;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
+		color: #999;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-previous {
+		border-radius: 7px 0 0 7px;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-next {
+		border-radius: 0 7px 7px 0;
+	}
+	#new-comment-nav-ui button::after {
+		font-family: <?php echo $UI_font; ?>;
+	}
+
+	#hns-date-picker.engaged {
+		bottom: 124px;
+		right: 61px;
+		border: 1px solid #444;
+	}
+	#hns-date-picker span,
+	#hns-date-picker input {
+		color: #444;
+	}
+
+	/*****************************************/
+	@media only screen and (max-width: 900px) {
+	/*****************************************/
+		h1.listing + .post-meta .post-section::before {
+			position: unset;
+		}
+
+		#secondary-bar .nav-inner {
+			font-size: 1em;
+		}
+		#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
+			padding: 6px 10px;
+		}
+
+		#content.compact > #top-nav-bar + .comment-thread .comment-item {
+			margin-top: 0;
+		}
+
+		.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
+			background-color: #ccc;
+		}
+	
+		.sublevel-nav.sort {
+			top: 286px;
+			right: 10px;
+		}
+
+		.comment-item .comment-item {
+			margin: 0.75em 0 4px 6px;
+		}
+		.comment-item .comment-item + .comment-item {
+			margin: 1.5em 0 4px 6px;
+		}
+	/*****************************************/
+	@media only screen and (max-width: 720px) {
+	/*****************************************/
+		.sublevel-nav .sublevel-item,
+		.sublevel-nav .sublevel-item:first-child,
+		.sublevel-nav .sublevel-item:last-child {
+			border-width: 1px;
+			border-radius: 8px;
+		}
+		.sublevel-nav.sort {
+			top: 273px;
+		}
+	/*******************************************/
+	} @media only screen and (max-width: 520px) {
+	/*******************************************/
+		h1.listing {
+			font-size: 1.25rem;
+			margin: 18px 6px 4px 6px;
+		}
+		h1.listing + .post-meta {
+			margin: 4px 6px;
+		}
+		h1.listing + .post-meta > * {
+			line-height: 1.5;
+		}
+		h1.listing a[href^='http'] {
+			top: 3px;
+		}
+
+		#content.compact > .comment-thread .comment-item {
+			max-height: 105px;
+		}
+		
+		.sublevel-nav.sort {
+			top: 215px;
+			right: 4px;
+		}
+		
+		.comment-controls form:focus-within textarea,
+		.textarea-container:focus-within textarea {
+			background-color: #888;
+		}
+		.comment-controls form:focus-within .guiedit-mobile-auxiliary-button,
+		.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
+			border: 1px solid transparent;
+			padding: 6px;
+		}
+		.comment-controls form:focus-within .guiedit-mobile-help-button.active,
+		.textarea-container:focus-within .guiedit-mobile-help-button.active {
+			box-shadow:
+				0 0 0 1px #ccc,
+				0 0 0 2px #888,
+				0 0 0 3px #ccc;
+			color: #ccc;
+			font-weight: 600;
+		}
+		.comment-controls form:focus-within .guiedit-buttons-container,
+		.textarea-container:focus-within .guiedit-buttons-container {
+			background-color: #888;
+			border-top: 1px solid #ddf;
+		}
+		#content.conversation-page .textarea-container:focus-within::after {
+			background-color: #888;
+		}
+		.comment-controls form:focus-within button.guiedit,
+		.textarea-container:focus-within button.guiedit {
+			border: 1px solid transparent;
+		}
+		.markdown-hints::after {
+			color: #0f0;
+		}
+		
+		#edit-post-form label[for='section'] {
+			width: 4.3em;
+		}
+		#edit-post-form input[name='title'],
+		#edit-post-form input[name='url'] {
+			max-width: calc(100% - 6.75em);
+		}
 	}
 }

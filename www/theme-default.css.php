@@ -1,6 +1,7 @@
 <?php
-	$UI_font = ($platform == 'Windows') ? "'Whitney', 'a_Avante'" : "'Concourse', 'a_Avante'";
-	$UI_font_smallcaps = ($platform == 'Windows') ? "'Whitney Smallcaps', 'a_Avante'" : "'Concourse Smallcaps', 'a_Avante'";
+	$UI_font = ($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Whitney', 'a_Avante'";
+	$listings_font = ($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Mundo Sans', 'a_Avante'";
+	$UI_font_smallcaps = ($platform == 'Mac') ? "'Concourse Smallcaps', 'a_Avante'" : "'Whitney Smallcaps', 'a_Avante'";
 	$text_font = "'Charter', 'Georgia', serif";
 	$hyperlink_color = "#00e";
 	$white_glow = "0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff";
@@ -162,7 +163,7 @@ body {
 .new-post:visited,
 .new-private-message,
 .new-private-message:visited {
-	color: #090;
+	color: #090 !important;
 }
 .logout-button {
 	color: #d33;
@@ -173,6 +174,7 @@ body {
 /*==============*/
 
 .sublevel-nav .sublevel-item {
+	background-color: #fff;
 	border-color: #ddd;
 	border-style: solid;
 	border-width: 1px 1px 1px 0;
@@ -277,25 +279,27 @@ body {
 	color: #999;
 	background-color: #e4e4e4;
 	border-radius: 4px;
+	text-decoration: none;
 }
 #quick-nav-ui a[href='#bottom-bar'] {
 	line-height: 1.8;
 }
-#quick-nav-ui a:hover {
-	color: #000;
-	background-color: #eee;
-	text-decoration: none;
-}
 #quick-nav-ui a:active {
 	transform: scale(0.9);
-}
-#quick-nav-ui a:focus:not(:hover) {
-	transform: none;
-	text-shadow: none;
 }
 #quick-nav-ui a[href='#comments'].no-comments {
 	opacity: 0.4;
 	color: #bbb;
+}
+@media only screen and (hover:hover), not screen and (-moz-touch-enabled) {
+	#quick-nav-ui a:hover {
+		color: #000;
+		background-color: #eee;
+	}
+	#quick-nav-ui a:focus:not(:hover) {
+		transform: none;
+		text-shadow: none;
+	}
 }
 
 /*======================*/
@@ -307,25 +311,27 @@ body {
 	color: #666;
 	text-shadow: 0.5px 0.5px 0 #fff;
 }
-#new-comment-nav-ui .new-comments-count:hover {
-	text-shadow: 
-		0 0 1px #fff,
-		0 0 3px #fff,
-		0 0 5px #fff,
-		0 0 8px #fff,
-		0.5px 0.5px 0 #fff;
-}
 #new-comment-nav-ui .new-comments-count::after {
 	font-weight: 600;
 	color: #777;
 }
-#new-comment-nav-ui .new-comment-sequential-nav-button:focus {
-	color: #d00;
-	text-shadow: <?php echo $white_glow; ?>;
-}
 #new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
 	color: #bbb;
 	text-shadow: none;
+}
+@media only screen and (hover:hover), not screen and (-moz-touch-enabled) {
+	#new-comment-nav-ui .new-comments-count:hover {
+		text-shadow: 
+			0 0 1px #fff,
+			0 0 3px #fff,
+			0 0 5px #fff,
+			0 0 8px #fff,
+			0.5px 0.5px 0 #fff;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button:focus {
+		color: #d00;
+		text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+	}
 }
 
 /*=================*/
@@ -421,7 +427,11 @@ body {
 /*==========*/
 
 h1.listing {
-	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
+	font-family: <?php echo $listings_font; ?>, 'Font Awesome';
+	font-weight: <?php echo ($platform == 'Mac') ? "700" : "800"; ?>;
+	margin: 0.7em 20px 0 20px;
+	position: relative;
+	top: <?php echo ($platform == 'Mac') ? "0" : "0.125em"; ?>; ;
 }
 
 h1.listing a {
@@ -431,7 +441,7 @@ h1.listing a[href^="http"] {
 	color: #00c;
 }
 
-@media only screen and (hover: hover) {
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		color: #777;
@@ -442,27 +452,7 @@ h1.listing a[href^="http"] {
 	}
 	h1.listing:focus-within::before {
 		color: #00f;
-	}
-	h1.listing a[href^="http"]:hover {
-		color: #4879ec;
-		text-shadow: 
-			 0.5px 0.5px 0 #fff,
-			 -0.5px -0.5px 0 #fff,
-			 0 0 2px #fff,
-			 0 0 3px #00c;
-	}
-}
-@-moz-document url-prefix() {
-	h1.listing a:hover,
-	h1.listing a:focus {
-		color: #777;
-		background-color: rgba(255,255,255,0.85);
-	}	
-	#content.user-page h1.listing:focus-within::before {
-		left: -0.75em;
-	}
-	h1.listing:focus-within::before {
-		color: #00f;
+		left: -0.625em;
 	}
 	h1.listing a[href^="http"]:hover {
 		color: #4879ec;
@@ -479,7 +469,7 @@ h1.listing a[href^="http"] {
 /*===================*/
 
 h1.listing + .post-meta {
-	padding-right: 320px;
+	padding-right: 330px;
 }
 h1.listing + .post-meta .karma-value,
 h1.listing + .post-meta .comment-count,
@@ -509,14 +499,23 @@ h1.listing + .post-meta .read-time::before {
 	margin: 0 8px 0 0;
 	box-shadow: 0 0 0 2px #ddd;
 }
+_::-webkit-full-page-media, _:future, :root h1.listing + .post-meta .karma-value::before,
+_::-webkit-full-page-media, _:future, :root h1.listing + .post-meta .comment-count::before,
+_::-webkit-full-page-media, _:future, :root h1.listing + .post-meta .lw2-link::before,
+_::-webkit-full-page-media, _:future, :root h1.listing + .post-meta .read-time::before {
+	text-shadow: 0 0 3px #999;
+}
 
+h1.listing + .post-meta .karma {
+	margin: 0;
+}
 h1.listing + .post-meta .karma-value {
 	box-shadow: 
 		22px 0 0 0 #ddd inset,
 		0 0 0 3px #ddd;
 	cursor: default;
 	color: #c00;
-	right: 248px;
+	right: 264px;
 }
 h1.listing + .post-meta .karma-value::before {
 	content: "\F139";
@@ -609,10 +608,10 @@ h1.listing + .post-meta::after {
 	content: "";
 	display: block;
 	height: 1px;
-	width: calc(100% + 320px);
+	width: 100%;
 	background-color: #ddd;
-	position: relative;
-	top: 14px;
+	position: absolute;
+	bottom: -10px;
 }
 
 /*============*/
@@ -623,13 +622,16 @@ h1.listing + .post-meta::after {
 	border-bottom: 1px solid #ccc;
 }
 
+#content.user-page h1.listing {
+	margin: 1em 0 0 0;
+	padding: 0 6px;
+	padding-top: <?php echo ($platform == 'Mac') ? "0" : "0.125em"; ?>;
+}
 #content.user-page .sublevel-nav + h1.listing {
 	margin-top: 1.75em;
 }
-#content.user-page h1.listing {
-	margin: 1.5em 0 0 0;
-	padding: 0 6px;
-	position: relative;
+#content.user-page #top-nav-bar + h1.listing {
+	margin-top: 0.5em;
 }
 #content.user-page h1.listing::after {
 	content: "";
@@ -640,17 +642,37 @@ h1.listing + .post-meta::after {
 	width: 100%;
 	height: calc(100% + 1.375em);
 	box-shadow: 0px 0px 10px #555;
+	pointer-events: none;
 }
 #content.user-page h1.listing + .post-meta {
-	margin: 0 6px 3em 35px;
+	margin: 0 6px 2em 35px;
 }
 #content.user-page h1.listing + .post-meta::after {
 	display: none;
 }
 
+#content.conversations-user-page h1.listing {
+	margin: 0.5em 0 0 0;
+	font-size: 1.75rem;
+}
+#content.conversations-user-page .sublevel-nav + h1.listing {
+	margin: 0.75em 0 0 0;
+}
+#content.conversations-user-page h1.listing::after {
+	display: none;
+}
+#content.conversations-user-page h1.listing + .post-meta {
+	padding: 0;
+	margin: 0;
+}
+
 .user-stats .karma-total {
 	font-weight: bold;
 }
+
+/*===============*/
+/* CONVERSATIONS */
+/*===============*/
 
 /*============*/
 /* LOGIN PAGE */
@@ -734,6 +756,15 @@ h1.listing + .post-meta::after {
 .post-body,
 .comment-body {
 	font-family: <?php echo $text_font; ?>;
+}
+
+/*=======*/
+/* POSTS */
+/*=======*/
+
+.post > h1:first-child {
+	font-family: <?php echo $listings_font; ?>;
+	font-weight: <?php echo ($platform == 'Mac') ? "700" : "800"; ?>;
 }
 
 /*===========*/
@@ -1052,7 +1083,7 @@ div.comment-child-links a::first-letter {
 		0 0 0 2px <?php echo $hyperlink_color; ?>;
 }
 .posting-controls.edit-existing-post textarea:focus,
-.posting-controls.edit-existing-comment textarea:focus {
+.posting-controls form.edit-existing-comment textarea:focus {
 	border-color: #090;
     box-shadow: 
     	0 0 0 1px #81ff7f inset,
@@ -1067,7 +1098,7 @@ div.comment-child-links a::first-letter {
 }
 
 .posting-controls.edit-existing-post .guiedit-buttons-container button,
-.posting-controls.edit-existing-comment .guiedit-buttons-container button {
+.posting-controls form.edit-existing-comment .guiedit-buttons-container button {
     color: #050;
 }
 .guiedit-buttons-container button {
@@ -1171,13 +1202,6 @@ input[type='submit'] {
 	color: <?php echo $hyperlink_color; ?>;
 }
 
-button:hover,
-input[type='submit']:hover,
-button:focus,
-input[type='submit']:focus {
-	color: #d00;
-	text-shadow: <?php echo $white_glow; ?>;
-}
 button:active,
 input[type='submit']:active {
 	color: #f00;
@@ -1186,19 +1210,30 @@ input[type='submit']:active {
 .button:visited {
 	color: <?php echo $hyperlink_color; ?>;
 }
-.button:hover {
-	color: #d00;
-	text-shadow: <?php echo $white_glow; ?>;
-	text-decoration: none;
-}
 .button:active {
 	transform: scale(0.9);
 }
-.button:focus:not(:hover) {
-	transform: none;
-}
 @-moz-document url-prefix() {
 	.button:active {
+		transform: none;
+	}
+}
+
+@media only screen and (hover:hover), not screen and (-moz-touch-enabled) {
+	button:hover,
+	input[type='submit']:hover,
+	button:focus,
+	input[type='submit']:focus {
+		color: #d00;
+		text-shadow: <?php echo $white_glow; ?>;
+	}
+
+	.button:hover {
+		color: #d00;
+		text-shadow: <?php echo $white_glow; ?>;
+		text-decoration: none;
+	}
+	.button:focus:not(:hover) {
 		transform: none;
 	}
 }
@@ -1277,16 +1312,14 @@ code {
 
 input[type='text'],
 input[type='search'],
-input[type='password'],
-textarea {
+input[type='password'] {
 	background-color: #fff;
 	border: 1px solid #ddd;
 	color: #000;
 }
 input[type='text']:focus,
 input[type='search']:focus,
-input[type='password']:focus,
-textarea:focus {
+input[type='password']:focus {
 	background-color: #ffd;
 	border: 1px solid #bbb;
 	box-shadow: 0 0 1px #bbb;
@@ -1446,49 +1479,381 @@ div > .MJXc-display {
 /* MOBILE */
 /*========*/
 
-@media only screen and (max-width: 900px) {
-	h1.listing + .post-meta .author {
-		margin: 0 0.75em 0 1.5em;
+/**************************************************************************/
+@media only screen and (hover: none), only screen and (-moz-touch-enabled) {
+/**************************************************************************/
+	#appearance-adjust-ui-toggle button,
+	#post-nav-ui-toggle button  {
+		color: #888;
+		text-shadow:
+			0 0 1px #fff,
+			0 0 3px #fff,
+			0 0 5px #fff,
+			0 0 10px #fff,
+			0 0 20px #fff,
+			0 0 30px #fff;
 	}
-	h1.listing + .post-meta .post-section::before {
-		left: 0;
-		top: 0;
+
+	#theme-selector {
+		background-color: #d8d8d8;
+		box-shadow: 
+			0 0 0 1px #999,
+			0 0 1px 3px #fff,
+			0 0 3px 3px #fff,
+			0 0 5px 3px #fff,
+			0 0 10px 3px #fff,
+			0 0 20px 3px #fff;
+		border-radius: 12px;
 	}
-	h1.listing + .post-meta .post-section {
-		display: inline-block;
+	#theme-selector::before,
+	#theme-selector .theme-selector-close-button {
+		color: #666;
+		text-shadow: 0.5px 0.5px 0 #fff;
 	}
-}
-@media only screen and (max-width: 520px) {
-	h1.listing + .post-meta {
-		padding: 0 0 25px 0;
-		white-space: unset;
+	#theme-selector button {
+		background-color: #e6e6e6;
+		border-radius: 10px;
 	}
-	h1.listing + .post-meta::after {
-		width: 100%;
-		top: 36px;
+	#theme-selector button::after {
+		color: #000;
+		padding-bottom: 2px;
+		max-width: calc(100% - 3.25em);
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
-	h1.listing + .post-meta > * {
-		margin: 0;
+	#theme-selector button.selected::after {
+		text-shadow: 
+			0 -1px 0 #fff,
+			0 0.5px 0.5px #000;
 	}
-	h1.listing + .post-meta .karma-value,
-	h1.listing + .post-meta .comment-count,
-	h1.listing + .post-meta .lw2-link,
-	h1.listing + .post-meta .read-time {
-		top: unset;
-		bottom: -2px;
+
+	#quick-nav-ui {
+		background-color: #fff;
 	}
-	h1.listing + .post-meta .karma-value {
-		right: 250px;
+	#quick-nav-ui,
+	#new-comment-nav-ui,
+	#hns-date-picker {
+		box-shadow:
+			0 0 1px 3px #fff,
+			0 0 3px 3px #fff,
+			0 0 5px 3px #fff,
+			0 0 10px 3px #fff,
+			0 0 20px 3px #fff;
 	}
-	h1.listing + .post-meta .comment-count {
-		right: 175px;
+	#quick-nav-ui a::after,
+	#new-comment-nav-ui::before {
+		font-family: <?php echo $UI_font; ?>;
+		font-weight: 600;
+		box-shadow:
+			0 0 1px 0 #fff,
+			0 0 3px 0 #fff,
+			0 0 5px 0 #fff;
+		background-color: #fff;
+		border-radius: 4px;
 	}
-	h1.listing + .post-meta .read-time {
-		right: 75px;
+	#quick-nav-ui,
+	#new-comment-nav-ui {
+		border-radius: 8px;
 	}
-	h1.listing + .post-meta .lw2-link {
-		right: 0;
-		opacity: 1;
+	#new-comment-nav-ui {
+		background-color: #d8d8d8;
+		border: 1px solid #999;
+	}
+	#new-comment-nav-ui::before {
+		color: #777;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button {
+		box-shadow: 0 0 0 1px #999;
+		color: #777;
+	}
+	#new-comment-nav-ui .new-comments-count {
+		background-color: inherit;
+		box-shadow: 0 -1px 0 0 #999;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
+		color: #bbb;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-previous {
+		border-radius: 7px 0 0 7px;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-next {
+		border-radius: 0 7px 7px 0;
+	}
+	#new-comment-nav-ui button::after {
+		font-family: <?php echo $UI_font; ?>;
+	}
+	
+	/*****************************************/
+	@media only screen and (max-width: 900px) {
+	/*****************************************/
+		h1.listing {
+			font-size: 1.75rem;
+			line-height: 1;
+		}
+		h1.listing a[href^='http'] {
+			top: 2px;
+		}
+		h1.listing:last-of-type + .post-meta {
+			margin-bottom: 12px;
+		}
+		h1.listing + .post-meta .post-section::before {
+			position: unset;
+		}
+		h1.listing + .post-meta .post-section {
+			overflow: visible;
+			order: 1;
+		}
+		h1.listing + .post-meta .link-post-domain {
+			order: 2;
+			line-height: 1;
+			flex-basis: 100%;
+		}
+		#content.user-page h1.listing {
+			padding-top: <?php echo ($platform == 'Mac') ? "0" : "0.25em"; ?>;		
+		}
+		#content.user-page h1.listing + .post-meta {
+			margin-bottom: 1em;
+		}
+		#content.user-page h1.link-post-listing::after {
+			height: calc(100% + 1.875em);
+		}
+
+		#nav-item-search button::before {
+			color: #00e;
+		}
+
+		#content > #top-nav-bar + .comment-thread .comment-item,
+		#content.compact > #top-nav-bar + .comment-thread .comment-item {
+			margin-top: 0;
+		}
+
+		.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
+			background-color: #aaa;
+		}
+	
+		.sublevel-nav.sort {
+			top: 286px;
+			right: 10px;
+			z-index: 1;
+		}
+
+		.comment-item .comment-item {
+			margin: 0.75em 2px 4px 6px;
+			box-shadow: 
+				0 0 2px #ccc, 
+				0 0 4px #ccc, 
+				0 0 7px #ccc;
+		}
+		.comment-item .comment-item + .comment-item {
+			margin: 1.5em 2px 4px 6px;
+		}
+		.comment-body {
+			font-size: 1.125rem;
+		}
+
+		a.comment-parent-link:hover::before {
+			background-color: unset;
+		}
+	/*******************************************/
+	} @media only screen and (max-width: 720px) {
+	/*******************************************/
+		h1.listing {
+			margin: 10px 6px 6px 6px;
+			font-size: 1.5rem;
+			padding-right: 35px;
+		}
+		#content.conversations-user-page h1.listing {
+			font-size: 1.5rem;
+		}
+		h1.listing + .post-meta {
+			margin: 0 6px 0 7px;
+			clear: both;
+		}
+		h1.listing + .post-meta {
+			padding: .25em 254px 0 0;
+		}
+		h1.listing + .post-meta::after {
+			bottom: -2px;
+		}
+		h1.listing + .post-meta > * {
+			line-height: 1;
+			display: block;
+		}
+		#content.conversations-user-page h1.listing + .post-meta > * {
+			line-height: 1.5;
+		}
+		h1.listing + .post-meta .date,
+		h1.listing + .post-meta .author {
+			line-height: 1.3;		
+		}
+		h1.listing + .post-meta .karma-value,
+		h1.listing + .post-meta .comment-count,
+		h1.listing + .post-meta .lw2-link,
+		h1.listing + .post-meta .read-time {
+			top: unset;
+			font-size: 1rem;
+			box-shadow: none;
+		}
+		h1.listing + .post-meta .karma-value::before,
+		h1.listing + .post-meta .comment-count::before,
+		h1.listing + .post-meta .lw2-link::before,
+		h1.listing + .post-meta .read-time::before {
+			box-shadow: none;
+		}
+		h1.listing + .post-meta .karma-value,
+		h1.listing + .post-meta .comment-count,
+		h1.listing + .post-meta .read-time,
+		h1.listing + .post-meta .lw2-link {
+			bottom: 4px;
+		}
+
+		h1.listing + .post-meta .karma-value {
+			right: 192px;
+		}
+		h1.listing + .post-meta .karma-value::before {
+			text-shadow: 0.5px 0.5px 0.5px #999;
+		}
+		h1.listing + .post-meta .comment-count {
+			right: 132px;
+		}
+		h1.listing + .post-meta .read-time {
+			right: 56px;
+		}
+		h1.listing + .post-meta .lw2-link {
+			opacity: 1;
+			right: 0;
+		}
+		h1.listing + .post-meta .link-post-domain {
+			margin: 0;
+			line-height: 1.3;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+		h1.listing + .post-meta .post-section::before {
+			position: absolute;
+			left: unset;
+			right: 0;
+			bottom: 30px;
+			top: unset;
+		}
+		h1.listing a {
+			display: inline;
+		}
+
+		.sublevel-nav .sublevel-item,
+		.sublevel-nav .sublevel-item:first-child,
+		.sublevel-nav .sublevel-item:last-child {
+			border-width: 1px;
+			border-radius: 8px;
+		}
+		.sublevel-nav.sort {
+			top: 248px;
+		}
+	/*******************************************/
+	} @media only screen and (max-width: 520px) {
+	/*******************************************/
+		h1.listing + .post-meta {
+			padding: .25em 144px 0 0;
+			flex-flow: column;
+		}
+		#content.conversations-user-page h1.listing + .post-meta {
+			flex-flow: row wrap;
+		}
+		h1.listing + .post-meta .date {
+			margin: 0.375em 0 0.25em 0;
+			line-height: 1;
+		}
+		#content.user-page h1.listing::after {
+			height: calc(100% + 2.125em);
+		}
+		#content.user-page h1.link-post-listing::after {
+			height: calc(100% + 3.0625em);
+		}
+		#content.conversations-user-page h1.listing + .post-meta .date {
+			margin: 0 0 0 1em;
+		}
+
+		h1.listing + .post-meta .karma-value {
+			bottom: 28px;
+			right: 0;
+		}
+		h1.listing + .post-meta .comment-count {
+			bottom: 28px;
+			right: 56px;
+		}
+		h1.listing + .post-meta .read-time {
+			right: 56px;
+			bottom: 4px;
+		}
+		h1.listing + .post-meta .lw2-link {
+			right: 0;
+			bottom: 4px;
+		}
+		h1.listing + .post-meta .post-section::before {
+			right: 120px;
+		}
+
+		#content.compact > .comment-thread .comment-item {
+			max-height: 110px;
+		}
+		
+		.sublevel-nav.sort {
+			top: 200px;
+			right: 8px;
+		}
+	
+		.comment-controls form:focus-within button:active,
+		.textarea-container:focus-within button:active {
+			background-color: #ccc;
+		}
+		.comment-controls form:focus-within .guiedit-mobile-auxiliary-button,
+		.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
+			background-color: #eee;
+			border: 1px solid #ddd;
+			border-radius: 6px;
+		}
+		.comment-controls form:focus-within .guiedit-mobile-help-button.active,
+		.textarea-container:focus-within .guiedit-mobile-help-button.active {
+			border-color: #c00;
+			box-shadow:
+				0 0 0 1px #fff,
+				0 0 0 2px #c00;
+			color: #c00;
+			font-weight: 600;
+		}
+		#content.conversation-page .textarea-container:focus-within::after {
+			background-color: #fff;
+		}
+		.comment-controls form:focus-within .guiedit-buttons-container,
+		.textarea-container:focus-within .guiedit-buttons-container {
+			background-color: white;
+			border-top: 1px solid #ddf;
+		}
+		.comment-controls form:focus-within button.guiedit,
+		.textarea-container:focus-within button.guiedit {
+			background-color: #eee;
+			border: 1px solid #ddd;
+			border-radius: 6px;
+		}
+		.markdown-hints::after {
+			color: #090;
+		}
+
+		#edit-post-form .link-post-checkbox + label {
+			margin-left: 1.25em;
+		}
+	/*******************************************/
+	} @media only screen and (max-width: 320px) {
+	/*******************************************/
+		h1.listing {
+			font-size: 1.25rem;
+		}
+		#content.user-page h1.listing::after {
+			height: calc(100% + 2.625em);
+		}
+		#content.user-page h1.link-post-listing::after {
+			height: calc(100% + 3.75em);
+		}
 	}
 }
 

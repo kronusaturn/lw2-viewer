@@ -3,6 +3,7 @@
 /***********/
 function setCookie(name,value,days) {
 	var expires = "";
+	if (!days) days = 36500;
 	if (days) {
 		var date = new Date();
 		date.setTime(date.getTime() + (days*24*60*60*1000));
@@ -34,6 +35,12 @@ Element.prototype.removeClass = function(className) {
 }
 Element.prototype.hasClass = function(className) {
 	return this.className.match(new RegExp("(^|\\s)" + className + "(\\s|$)"));
+}
+Element.prototype.toggleClass = function(className) {
+	if (this.hasClass(className))
+		this.removeClass(className);
+	else
+		this.addClass(className);
 }
 
 /*******************************/
@@ -103,10 +110,21 @@ function updateInbox() {
 /**************/
 
 function GUIEditMobileHelpButtonClicked(event) {
-	console.log("Help button clicked");
+	toggleMarkdownHintsBox();
+	event.target.toggleClass("active");
+	document.querySelector(".posting-controls:focus-within textarea").focus();
+}
+function toggleMarkdownHintsBox() {
+	let markdownHintsBox = document.querySelector(".markdown-hints");
+	markdownHintsBox.style.display = (window.getComputedStyle(markdownHintsBox).display == "none") ? "block" : "none";
+}
+function removeMarkdownHintsBox() {
+	let markdownHintsBox = document.querySelector(".markdown-hints");
+	if (window.getComputedStyle(markdownHintsBox).display != "none") markdownHintsBox.style.display = "none";
 }
 function GUIEditMobileExitButtonClicked(event) {
 	event.target.blur();
+	removeMarkdownHintsBox();
 }
 
 Element.prototype.addTextareaFeatures = function() {
@@ -114,40 +132,48 @@ Element.prototype.addTextareaFeatures = function() {
 
 	textarea.addEventListener("focus", function(e) { e.target.parentElement.parentElement.scrollIntoViewIfNeeded(); });
 	textarea.addEventListener("input", OnInputExpandTextarea, false);
+	textarea.addEventListener("input", OnInputRemoveMarkdownHints, false);
 	textarea.addEventListener("keyup", function(e) { e.stopPropagation(); });
 	
-	textarea.insertAdjacentHTML("beforebegin", "<div class='guiedit-buttons-container'></div>");
-	var buttons_container = textarea.parentElement.querySelector(".guiedit-buttons-container");
-	for (var button of guiEditButtons) {
-		buttons_container.insertAdjacentHTML("beforeend", 
-			"<button type='button' class='guiedit guiedit-" 
-			+ button[0]
-			+ "' tabindex='-1' title='"
-			+ button[1] + ((button[2] != "") ? (" [accesskey: " + button[2] + "]") : "")
-			+ "' data-tooltip='" + button[1]
-			+ "' accesskey='"
-			+ button[2]
-			+ "' onclick='insMarkup(event,"
-			+ ((typeof button[3] == 'function') ?
-				button[3].name : 
-				("\"" + button[3]  + "\",\"" + button[4] + "\",\"" + button[5] + "\""))
-			+ ");'><div>"
-			+ button[6]
-			+ "</div></button>"
-		);
-	}
+	if (!textarea.closest("#content").hasClass("conversation-page")) {
+		textarea.insertAdjacentHTML("beforebegin", "<div class='guiedit-buttons-container'></div>");
+		var buttons_container = textarea.parentElement.querySelector(".guiedit-buttons-container");
+		for (var button of guiEditButtons) {
+			buttons_container.insertAdjacentHTML("beforeend", 
+				"<button type='button' class='guiedit guiedit-" 
+				+ button[0]
+				+ "' tabindex='-1' title='"
+				+ button[1] + ((button[2] != "") ? (" [accesskey: " + button[2] + "]") : "")
+				+ "' data-tooltip='" + button[1]
+				+ "' accesskey='"
+				+ button[2]
+				+ "' onclick='insMarkup(event,"
+				+ ((typeof button[3] == 'function') ?
+					button[3].name : 
+					("\"" + button[3]  + "\",\"" + button[4] + "\",\"" + button[5] + "\""))
+				+ ");'><div>"
+				+ button[6]
+				+ "</div></button>"
+			);
+		}
 	
-	var markdown_hints = "<input type='checkbox' id='markdown-hints-checkbox'><label for='markdown-hints-checkbox'></label>";
-	markdown_hints += "<div class='markdown-hints'>";
-	markdown_hints += "<div class='markdown-hints-row'><span style='font-weight: bold;'>Bold</span><code>**Bold**</code></div>";
-	markdown_hints += "<div class='markdown-hints-row'><span style='font-style: italic;'>Italic</span><code>*Italic*</code></div>";
-	markdown_hints += "<div class='markdown-hints-row'><span><a href=#>Link</a></span><code>[Link](http://example.com)</code></div>";
-	markdown_hints += "<div class='markdown-hints-row'><span>Heading 1</span><code># Heading 1</code></div>";
-	markdown_hints += "<div class='markdown-hints-row'><span>Heading 2</span><code>## Heading 1</code></div>";
-	markdown_hints += "<div class='markdown-hints-row'><span>Heading 3</span><code>### Heading 1</code></div>";
-	markdown_hints += "<div class='markdown-hints-row'><span>Blockquote</span><code>&gt; Blockquote</code></div>";
-	markdown_hints += "</div>";
-	textarea.parentElement.querySelector("span").insertAdjacentHTML("afterend", markdown_hints);
+		var markdown_hints = "<input type='checkbox' id='markdown-hints-checkbox'><label for='markdown-hints-checkbox'></label>";
+		markdown_hints += "<div class='markdown-hints'>";
+		markdown_hints += "<div class='markdown-hints-row'><span style='font-weight: bold;'>Bold</span><code>**Bold**</code></div>";
+		markdown_hints += "<div class='markdown-hints-row'><span style='font-style: italic;'>Italic</span><code>*Italic*</code></div>";
+		markdown_hints += "<div class='markdown-hints-row'><span><a href=#>Link</a></span><code>[Link](http://example.com)</code></div>";
+		markdown_hints += "<div class='markdown-hints-row'><span>Heading 1</span><code># Heading 1</code></div>";
+		markdown_hints += "<div class='markdown-hints-row'><span>Heading 2</span><code>## Heading 1</code></div>";
+		markdown_hints += "<div class='markdown-hints-row'><span>Heading 3</span><code>### Heading 1</code></div>";
+		markdown_hints += "<div class='markdown-hints-row'><span>Blockquote</span><code>&gt; Blockquote</code></div>";
+		markdown_hints += "</div>";
+		textarea.parentElement.querySelector("span").insertAdjacentHTML("afterend", markdown_hints);
+	} else {
+		var markdown_hints = "<div class='markdown-hints'>";
+		markdown_hints += "You <em>cannot</em> use Markdown here—plain text only.";
+		markdown_hints += "</div>";
+		textarea.parentElement.querySelector("span").insertAdjacentHTML("afterend", markdown_hints);
+	}
 	
 	let guiEditMobileHelpButton = document.querySelector(".guiedit-mobile-help-button");
 	if (guiEditMobileHelpButton) {
@@ -169,7 +195,10 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 		(withparent ? "<input type='hidden' name='parent-comment-id' value='" + e.getCommentId() + "'>" : "") +
 		(editCommentId ? "<input type='hidden' name='edit-comment-id' value='" + editCommentId + "'>" : "") +
 		"<input type='hidden' name='csrf-token' value='" + window.csrfToken + "'>" +
-		"<span class='markdown-reference-link'>You can use <a href='http://commonmark.org/help/' target='_blank'>Markdown</a> here.</span><input type='submit' value='Submit'></form>";
+		"<span class='markdown-reference-link'>You can use <a href='http://commonmark.org/help/' target='_blank'>Markdown</a> here.</span>" + 
+		`<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-help-button">Help</button>` + 
+		`<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-exit-button">Exit</button>` + 
+		"<input type='submit' value='Submit'></form>";
 	
 	e.querySelector(".cancel-comment-button").addActivateEvent(window.hideReplyForm);
 	e.scrollIntoViewIfNeeded();
@@ -215,7 +244,7 @@ function showCommentEditForm(event) {
 	let commentBody = commentControls.parentElement.querySelector(".comment-body");
 	commentBody.setAttribute("style", "display: none;");
 	commentControls.injectReplyForm(commentBody.getAttribute("data-markdown-source"));
-	commentControls.addClass("edit-existing-comment");
+	commentControls.querySelector("form").addClass("edit-existing-comment");
 	ExpandTextarea(commentControls.querySelector("textarea"));
 }
 
@@ -235,6 +264,7 @@ function hideReplyForm(event) {
 }
 
 function OnInputExpandTextarea() {
+	if (window.innerWidth <= 520) return;
 	if ((this.offsetHeight - 30) < this.scrollHeight)
 		ExpandTextarea(this);
 }
@@ -248,6 +278,12 @@ function ExpandTextarea(textarea) {
 	});
 }
 
+function OnInputRemoveMarkdownHints() {
+	if (window.innerWidth > 520) return;
+	removeMarkdownHintsBox();
+	document.querySelector(".guiedit-mobile-help-button").removeClass("active");
+}
+
 /**********/
 /* VOTING */
 /**********/
@@ -259,8 +295,9 @@ function makeVoteCompleteEvent(target) {
 			buttonTargets = document.querySelectorAll(".post-meta .karma");
 			karmaTargets = document.querySelectorAll(".post-meta .karma-value");
 		} else {
-			buttonTargets = [target];
-			karmaTargets = [target.querySelector(".karma-value")];
+			let commentItem = target.closest(".comment-item")
+			buttonTargets = [ commentItem.querySelector(".comment-meta .karma"), commentItem.querySelector(".comment-controls .karma") ];
+			karmaTargets = [ commentItem.querySelector(".comment-meta .karma-value"), commentItem.querySelector(".comment-controls .karma-value") ];
 		}
 		buttonTargets.forEach(function (bt) {
 			bt.querySelectorAll("button.vote").forEach(function(b) { b.style.pointerEvents = "" });
@@ -455,6 +492,8 @@ function updateSavedCommentCount() {
 	window.localStorage.setItem("comment-count_" + getPostHash(), commentCount);
 }
 function badgePostsWithNewComments() {
+	if (getQueryVariable("show") == "conversations") return;
+	
 	document.querySelectorAll("h1.listing a[href^='/']").forEach(function (postLink) {
 		let postHash = /posts\/(.+?)\//.exec(postLink.href)[1];
 
@@ -543,7 +582,7 @@ function injectThemeSelector() {
 			let selected = (name == currentTheme ? ' selected' : '');
 			let disabled = (name == currentTheme ? ' disabled' : '');
 			let accesskey = letter.charCodeAt(0) - 'A'.charCodeAt(0) + 1;
-			return `<button type='button' class='select-theme-${name}${selected}'${disabled} title="${desc} (accesskey: '${accesskey}')" accesskey='${accesskey}' tabindex='-1'>${letter}</button>`;})) +
+			return `<button type='button' class='select-theme-${name}${selected}'${disabled} title="${desc} (accesskey: '${accesskey}')" data-theme-description="${desc}" accesskey='${accesskey}' tabindex='-1'>${letter}</button>`;})) +
 		"</div>");
 	themeSelector.querySelectorAll("button").forEach(function (button) {
 		button.addActivateEvent(themeSelectButtonClicked);
@@ -1058,7 +1097,7 @@ function injectCommentsListModeSelector() {
 	+ `<button type='button' class='expanded' title='Expanded comments view' tabindex='-1'></button>`
 	+ `<button type='button' class='compact' title='Compact comments view' tabindex='-1'></button>`
 	+ "</div>";
-	document.querySelector(".active-bar").insertAdjacentHTML("afterend", commentsListModeSelectorHTML);
+	(document.querySelector("#content.user-page .user-stats") || document.querySelector(".page-toolbar") || document.querySelector(".active-bar")).insertAdjacentHTML("afterend", commentsListModeSelectorHTML);
 	let commentsListModeSelector = document.querySelector("#comments-list-mode-selector");
 	
 	commentsListModeSelector.querySelectorAll("button").forEach(function (button) {
@@ -1089,6 +1128,45 @@ function commentsListModeSelectButtonClicked(event) {
 	} else {
 		document.querySelector("#content").addClass("compact");
 	}
+}
+
+/**********************/
+/* MOBILE UI ELEMENTS */
+/**********************/
+
+function injectPostNavUIToggle() {
+	let postNavUIToggle = addUIElement("<div id='post-nav-ui-toggle'><button type='button' tabindex='-1'>&#xf14e;</button></div>");
+	postNavUIToggle.querySelector("button").addActivateEvent(postNavUIToggleButtonClicked);
+	
+	if (window.localStorage.getItem("post-nav-ui-toggle-engaged") == "true") togglePostNavUI();
+}
+function postNavUIToggleButtonClicked(event) {
+	togglePostNavUI();
+	window.localStorage.setItem("post-nav-ui-toggle-engaged", window.localStorage.getItem("post-nav-ui-toggle-engaged") == "false");
+}
+function togglePostNavUI() {
+	document.querySelectorAll("#quick-nav-ui, #new-comment-nav-ui, #hns-date-picker, #post-nav-ui-toggle button").forEach(function (element) {
+		element.toggleClass("engaged");
+	});
+}
+
+function injectAppearanceAdjustUIToggle() {
+	let appearanceAdjustUIToggle = addUIElement("<div id='appearance-adjust-ui-toggle'><button type='button' tabindex='-1'>&#xf013;</button></div>");
+	appearanceAdjustUIToggle.querySelector("button").addActivateEvent(appearanceAdjustUIToggleButtonClicked);
+	
+	let themeSelectorCloseButton = appearanceAdjustUIToggle.querySelector("button").cloneNode(true);
+	themeSelectorCloseButton.addClass("theme-selector-close-button");
+	themeSelectorCloseButton.innerHTML = "&#xf057;";
+	document.querySelector("#theme-selector").appendChild(themeSelectorCloseButton);
+	themeSelectorCloseButton.addActivateEvent(appearanceAdjustUIToggleButtonClicked);
+}
+function appearanceAdjustUIToggleButtonClicked(event) {
+	toggleAppearanceAdjustUI();
+}
+function toggleAppearanceAdjustUI() {
+	document.querySelectorAll("#theme-selector, #appearance-adjust-ui-toggle button").forEach(function (element) {
+		element.toggleClass("engaged");
+	});
 }
 
 /*****************************/
@@ -1201,10 +1279,9 @@ function earlyInitialize() {
 	injectTextSizeAdjustmentUI();
 	// Add the comments view selector widget (threaded vs. chrono).
 // 	injectCommentsViewModeSelector();
-	// Add the comments list mode selector widget (expanded vs. compact).
-	injectCommentsListModeSelector();
 
-	updateInbox();
+	try { updateInbox(); }
+	catch (e) { }
 }
 
 var initializeDone = false;
@@ -1233,7 +1310,7 @@ function initialize() {
 		}
 
 		try {
-			let dtf = new Intl.DateTimeFormat([], (window.innerWidth > 520 ? {month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'}
+			let dtf = new Intl.DateTimeFormat([], (window.innerWidth > 720 ? {month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'}
 										       : {month: 'numeric', day: 'numeric', year: '2-digit', hour: 'numeric', minute: 'numeric'}));
 			document.querySelectorAll(".date").forEach(function (e) {
 				let d = e.getAttribute("data-js-date");
@@ -1269,8 +1346,8 @@ function initialize() {
 			});
 		});
 
-		document.querySelectorAll(".with-markdown-editor textarea").forEach(function (textarea) { textarea.addTextareaFeatures(); });
-		document.querySelectorAll((getQueryVariable("post-id")) ? "#edit-post-form textarea" : "#edit-post-form input[name='title']").forEach(function (field) { field.focus(); });
+		document.querySelectorAll(".with-markdown-editor textarea, .conversation-page textarea").forEach(function (textarea) { textarea.addTextareaFeatures(); });
+		document.querySelectorAll(((getQueryVariable("post-id")) ? "#edit-post-form textarea" : "#edit-post-form input[name='title']") + ", .conversation-page textarea").forEach(function (field) { field.focus(); });
 
 		let postMeta = document.querySelector(".post .post-meta");
 		if (postMeta) {
@@ -1296,35 +1373,6 @@ function initialize() {
 		}
 		
 		if(readCookie("lw2-auth-token")) {
-			// Add upvote/downvote buttons.
-			if(typeof(postVote) != 'undefined') {
-				document.querySelectorAll(".post-meta .karma-value").forEach(function (e) {
-					let voteType = postVote;
-					e.insertAdjacentHTML('beforebegin', "<button type='button' class='vote upvote"+(voteType=='upvote'?' selected':'')+"' data-vote-type='upvote' data-target-type='Posts' tabindex='-1'></button>");
-					e.insertAdjacentHTML('afterend', "<button type='button' class='vote downvote"+(voteType=='downvote'?' selected':'')+"' data-vote-type='downvote' data-target-type='Posts' tabindex='-1'></button>");
-				});
-			}
-			if(typeof(commentVotes) != 'undefined') {
-				document.querySelectorAll(".comment-meta .karma-value").forEach(function (e) {
-					let cid = e.getCommentId();
-					let voteType = commentVotes[cid];
-					e.insertAdjacentHTML('beforebegin', "<button type='button' class='vote upvote"+(voteType=='upvote'?' selected':'')+"' data-vote-type='upvote' data-target-type='Comments' tabindex='-1'></button>");
-					e.insertAdjacentHTML('afterend', "<button type='button' class='vote downvote"+(voteType=='downvote'?' selected':'')+"' data-vote-type='downvote' data-target-type='Comments' tabindex='-1'></button>");
-				});
-			}
-			document.querySelector("head").insertAdjacentHTML("beforeend","<style id='vote-buttons'>" + 
-			`.upvote:hover,
-			.upvote.selected {
-				color: #00d800;
-			}
-			.downvote:hover,
-			.downvote.selected {
-				color: #eb4c2a;
-			}` + "</style>");
-			document.querySelectorAll("button.vote").forEach(function(e) {
-				e.addActivateEvent(voteEvent);
-			});
-
 			var comments_container = document.querySelector("#comments");
 			if (comments_container) {
 				// Add reply buttons.
@@ -1340,6 +1388,41 @@ function initialize() {
 				}
 			}
 
+			// Add upvote/downvote buttons.
+			if(typeof(postVote) != 'undefined') {
+				document.querySelectorAll(".post-meta .karma-value").forEach(function (e) {
+					let voteType = postVote;
+					e.insertAdjacentHTML('beforebegin', "<button type='button' class='vote upvote"+(voteType=='upvote'?' selected':'')+"' data-vote-type='upvote' data-target-type='Posts' tabindex='-1'></button>");
+					e.insertAdjacentHTML('afterend', "<button type='button' class='vote downvote"+(voteType=='downvote'?' selected':'')+"' data-vote-type='downvote' data-target-type='Posts' tabindex='-1'></button>");
+				});
+			}
+			if(typeof(commentVotes) != 'undefined') {
+				document.querySelectorAll(".comment-meta .karma-value").forEach(function (e) {
+					let cid = e.getCommentId();
+					let voteType = commentVotes[cid];
+					e.insertAdjacentHTML('beforebegin', "<button type='button' class='vote upvote"+(voteType=='upvote'?' selected':'')+"' data-vote-type='upvote' data-target-type='Comments' tabindex='-1'></button>");
+					e.insertAdjacentHTML('afterend', "<button type='button' class='vote downvote"+(voteType=='downvote'?' selected':'')+"' data-vote-type='downvote' data-target-type='Comments' tabindex='-1'></button>");
+				});
+				// Replicate karma controls at the bottom of comments.
+				document.querySelectorAll(".comment-meta .karma").forEach(function (karma_controls) {
+					let karma_controls_cloned = karma_controls.cloneNode(true);
+					let comment_controls = karma_controls.parentElement.parentElement.nextSibling;
+					comment_controls.appendChild(karma_controls_cloned);
+				});
+			}
+			document.querySelector("head").insertAdjacentHTML("beforeend","<style id='vote-buttons'>" + 
+			`.upvote:hover,
+			.upvote.selected {
+				color: #00d800;
+			}
+			.downvote:hover,
+			.downvote.selected {
+				color: #eb4c2a;
+			}` + "</style>");
+			document.querySelectorAll("button.vote").forEach(function(e) {
+				e.addActivateEvent(voteEvent);
+			});
+
 			window.needHashRealignment = true;
 		}
 
@@ -1350,7 +1433,14 @@ function initialize() {
 			a.innerText = a.innerText.replace(/^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})\. /i, '');
 			a.innerText = a.innerText.replace(/^[A-Z]\. /, '');
 		});
-		
+
+		// Add comment-minimize buttons to every comment.		
+		if (document.querySelector("#comments") != null) {
+			document.querySelectorAll(".comment-meta").forEach(function (cm) {
+				if (!cm.lastChild.hasClass("comment-minimize-button"))
+					cm.insertAdjacentHTML("beforeend", "<div class='comment-minimize-button maximized'>&#xf146;</div>");
+			});
+		}
 		// Format and activate comment-minimize buttons.
 		document.querySelectorAll(".comment-minimize-button").forEach(function (b) {
 			b.closest(".comment-item").setCommentThreadMaximized(false);
@@ -1395,6 +1485,15 @@ function initialize() {
 			badgePostsWithNewComments();
 		}
 		
+		// Add the comments list mode selector widget (expanded vs. compact).
+		injectCommentsListModeSelector();
+
+		// Add the toggle for the post nav UI elements on mobile.
+		injectPostNavUIToggle();
+		
+		// Add the toggle for the appearance adjustment UI elements on mobile.
+		injectAppearanceAdjustUIToggle();
+	
 		// Add event listeners for Escape and Enter, for the theme tweaker.
 		document.addEventListener("keyup", function(event) {
 			if (event.keyCode == 27) {
@@ -1488,6 +1587,9 @@ function pageLayoutFinished() {
 		
 	// Add overlay of images in post (for avoidance of theme tweaks).		
 	generateImagesOverlay();
+	
+	// FOR TESTING ONLY, COMMENT WHEN DEPLOYING.
+// 	document.querySelector("input[type='search']").value = document.documentElement.clientWidth;
 }
 function generateImagesOverlay() {
 	// Don't do this on the about page.

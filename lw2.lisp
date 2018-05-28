@@ -366,12 +366,13 @@
     (when (and notifications user-info)
       (local-time:timestamp> (local-time:parse-timestring (cdr (assoc :created-at (first notifications)))) (local-time:parse-timestring (cdr (assoc :last-notifications-check user-info)))))))
 
-(defparameter *fonts-stylesheet-uri* "//fonts.greaterwrong.com/?fonts=Charter,Concourse,a_Avante,Whitney,SourceSansPro,Raleway,ProximaNova,AnonymousPro,InputSans,GaramondPremierPro,ProximaNova,TradeGothic,NewsGothicBT,Inconsolata,BitmapFonts")
+(defparameter *fonts-stylesheet-uri* "//fonts.greaterwrong.com/?fonts=Charter,Concourse,a_Avante,Whitney,MundoSans,SourceSansPro,Raleway,ProximaNova,AnonymousPro,InputSans,InputSansNarrow,InputSansCondensed,GaramondPremierPro,ProximaNova,TradeGothic,NewsGothicBT,Inconsolata,BitmapFonts")
 (defparameter *fonts-stylesheet-uri* "//fonts.greaterwrong.com/?fonts=*")
 
 (defparameter *html-head*
   (format nil
-"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
+"<meta name=\"viewport\" content=\"minimal-ui, width=device-width, initial-scale=1\">
+<meta name=\"HandheldFriendly\" content=\"True\" />
 <link rel=\"stylesheet\" href=\"~A\">"
           *fonts-stylesheet-uri*))
 
@@ -481,8 +482,7 @@
             (if (string= (hunchentoot:cookie-in "theme") "dark")
                 "<style id='dark-theme-adjustments'>.markdown-reference-link a { color: #d200cf; filter: invert(100%); }</style>"
                 ""))
-    (if *current-auth-token*
-        (format out-stream "<script>loggedInUserId=\"~A\"</script>" (logged-in-userid)))
+    (format out-stream "<script>loggedInUserId=\"~A\"</script>" (or (logged-in-userid) ""))
     (format out-stream "<script src=\"~A\" async></script><script src=\"~A\" async></script><script>~A</script>~@[<script>var csrfToken=\"~A\"</script>~]~@[<meta name=\"robots\" content=\"~A\">~]</head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
             (generate-versioned-link "/script.js") (generate-versioned-link "/guiedit.js")
             (load-time-value (with-open-file (s "www/head.js") (uiop:slurp-stream-string s)) t)
@@ -853,96 +853,100 @@
 
 (define-regex-handler view-user ("^/users/(.*?)(?:$|\\?)" user-slug) (offset show sort)
                       (with-error-page
-                        (let* ((offset (if offset (parse-integer offset) 0))
-                               (auth-token (if (string= show "inbox") (hunchentoot:cookie-in "lw2-auth-token")))
-                               (user-info (lw2-graphql-query (graphql-query-string "UsersSingle" (alist :slug user-slug) `(:--id :display-name :karma ,@(if (string= show "inbox") '(:last-notifications-check))))
+                        (let* ((show-text show)
+                               (show (alexandria:switch (show-text :test #'string=)
+                                                        ("posts" :posts) ("comments" :comments) ("drafts" :drafts)
+                                                        ("conversations" :conversations) ("inbox" :inbox)))
+                               (offset (if offset (parse-integer offset) 0))
+                               (auth-token (if (eq show :inbox) (hunchentoot:cookie-in "lw2-auth-token")))
+                               (user-info (lw2-graphql-query (graphql-query-string "UsersSingle" (alist :slug user-slug) `(:--id :display-name :karma ,@(if (eq show :inbox) '(:last-notifications-check))))
                                                              :auth-token auth-token))
                                (comments-index-fields (remove :page-url *comments-index-fields*)) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
-                               (title (format nil "~A~@['s ~A~]" (cdr (assoc :display-name user-info)) (if (member show '(nil "posts" "comments") :test #'equal) show)))
+                               (title (format nil "~A~@['s ~A~]" (cdr (assoc :display-name user-info)) (if (member show '(nil :posts :comments)) show-text)))
                                (sort-type (alexandria:switch (sort :test #'string=) ("top" :score) (t :date)))
                                (posts-base-terms (ecase sort-type (:score (load-time-value (alist :view "best" :meta :null))) (:date (load-time-value (alist :view "userPosts" :meta :null)))))
                                (comments-base-terms (ecase sort-type (:score (load-time-value (alist :view "postCommentsTop"))) (:date (load-time-value (alist :view "allRecentComments")))))
-                               (items (alexandria:switch (show :test #'string=)
-                                                         ("posts"
-                                                          (lw2-graphql-query (graphql-query-string "PostsList"
-                                                                                                   (alist :terms (nconc (alist :offset offset :limit 21 :user-id (cdr (assoc :--id user-info))) posts-base-terms))
-                                                                                                   *posts-index-fields*)))
-                                                         ("comments"
-                                                          (lw2-graphql-query (graphql-query-string "CommentsList"
-                                                                                                   (alist :terms (nconc (alist :offset offset :limit 21 :user-id (cdr (assoc :--id user-info)))
-                                                                                                                        comments-base-terms))
-                                                                                                   comments-index-fields)))
-                                                         ("drafts"
-                                                          (lw2-graphql-query (graphql-query-string "PostsList"
-                                                                                                   (alist :terms (alist :view "drafts" :limit 21 :offset offset :user-id (cdr (assoc :--id user-info))))
-                                                                                                   *posts-index-fields*)
-                                                                             :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
-                                                         ("conversations"
-                                                          (let ((conversations
-                                                                  (lw2-graphql-query (graphql-query-string "ConversationsList"
-                                                                                                           (alist :terms (alist :view "userConversations" :limit 21 :offset offset :user-id (cdr (assoc :--id user-info))))
-                                                                                                           '(:--id :created-at :title (:participants :display-name :slug) :----typename))
-                                                                                     :auth-token (hunchentoot:cookie-in "lw2-auth-token"))))
-                                                            (lw2-graphql-query-map
-                                                              (lambda (c)
-                                                                (graphql-query-string* "MessagesTotal" (alist :terms (alist :view "messagesConversation" :conversation-id (cdr (assoc :--id c)))) nil))
-                                                              conversations
-                                                              :postprocess (lambda (c result)
-                                                                             (acons :messages-total result c))
-                                                              :auth-token (hunchentoot:cookie-in "lw2-auth-token"))))
-                                                         ("inbox"
-                                                          (prog1
-                                                            (let ((notifications (lw2-graphql-query (graphql-query-string "NotificationsList"
-                                                                                                                          (alist :terms (nconc (alist :user-id (cdr (assoc :--id user-info)) :limit 21 :offset offset) *notifications-base-terms*))
-                                                                                                                          '(:--id :document-type :document-id :link :title :message :type :viewed))
-                                                                                                    :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
-                                                                  (last-check (ignore-errors (local-time:parse-timestring (cdr (assoc :last-notifications-check user-info))))))
-                                                              (labels ((check-new (key obj)
-                                                                         (if (ignore-errors (local-time:timestamp< last-check (local-time:parse-timestring (cdr (assoc key obj)))))
-                                                                             (acons :highlight-new t obj)
-                                                                             obj)))
-                                                                (lw2-graphql-query-map
-                                                                  (lambda (n)
-                                                                    (alexandria:switch ((cdr (assoc :document-type n)) :test #'string=)
-                                                                                       ("comment"
-                                                                                        (graphql-query-string* "CommentsSingle"
-                                                                                                               (alist :document-id (cdr (assoc :document-id n)))
-                                                                                                               *comments-index-fields*))
-                                                                                       ("post"
-                                                                                        (graphql-query-string* "PostsSingle" (alist :document-id (cdr (assoc :document-id n)))
-                                                                                                               *posts-index-fields*))
-                                                                                       ("message"
-                                                                                        (graphql-query-string* "MessagesSingle" (alist :document-id (cdr (assoc :document-id n)))
-                                                                                                               *messages-index-fields*))
-                                                                                       (t
-                                                                                         (values n t))))
-                                                                  notifications
-                                                                  :postprocess (lambda (n result)
-                                                                                 (if result
-                                                                                     (check-new
-                                                                                       (alexandria:switch ((cdr (assoc :document-type n)) :test #'string=)
-                                                                                                          ("comment" :posted-at)
-                                                                                                          ("post" :posted-at)
-                                                                                                          ("message" :created-at))
-                                                                                       result)
-                                                                                     n))
-                                                                  :auth-token auth-token)))
-                                                            (do-lw2-post-query (hunchentoot:cookie-in "lw2-auth-token")
-                                                                               (list (alist :query "mutation usersEdit($documentId: String, $set: UsersInput) { usersEdit(documentId: $documentId, set: $set) { _id }}"
-                                                                                            :variables (alist :document-id (cdr (assoc :--id user-info))
-                                                                                                              :set (alist :last-notifications-check (local-time:format-timestring nil (local-time:now))))
-                                                                                            :operation-name "usersEdit")))))
-                                                         (t
-                                                           (let ((user-posts (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (nconc (alist :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info))) posts-base-terms)) *posts-index-fields*)))
-                                                                 (user-comments (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (nconc (alist :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info))) comments-base-terms)) 
-                                                                                                                         comments-index-fields))))
-                                                             (concatenate 'list user-posts user-comments)))))
+                               (items (case show
+                                        (:posts
+                                          (lw2-graphql-query (graphql-query-string "PostsList"
+                                                                                   (alist :terms (nconc (alist :offset offset :limit 21 :user-id (cdr (assoc :--id user-info))) posts-base-terms))
+                                                                                   *posts-index-fields*)))
+                                        (:comments
+                                          (lw2-graphql-query (graphql-query-string "CommentsList"
+                                                                                   (alist :terms (nconc (alist :offset offset :limit 21 :user-id (cdr (assoc :--id user-info)))
+                                                                                                        comments-base-terms))
+                                                                                   comments-index-fields)))
+                                        (:drafts
+                                          (lw2-graphql-query (graphql-query-string "PostsList"
+                                                                                   (alist :terms (alist :view "drafts" :limit 21 :offset offset :user-id (cdr (assoc :--id user-info))))
+                                                                                   *posts-index-fields*)
+                                                             :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
+                                        (:conversations
+                                          (let ((conversations
+                                                  (lw2-graphql-query (graphql-query-string "ConversationsList"
+                                                                                           (alist :terms (alist :view "userConversations" :limit 21 :offset offset :user-id (cdr (assoc :--id user-info))))
+                                                                                           '(:--id :created-at :title (:participants :display-name :slug) :----typename))
+                                                                     :auth-token (hunchentoot:cookie-in "lw2-auth-token"))))
+                                            (lw2-graphql-query-map
+                                              (lambda (c)
+                                                (graphql-query-string* "MessagesTotal" (alist :terms (alist :view "messagesConversation" :conversation-id (cdr (assoc :--id c)))) nil))
+                                              conversations
+                                              :postprocess (lambda (c result)
+                                                             (acons :messages-total result c))
+                                              :auth-token (hunchentoot:cookie-in "lw2-auth-token"))))
+                                        (:inbox
+                                          (prog1
+                                            (let ((notifications (lw2-graphql-query (graphql-query-string "NotificationsList"
+                                                                                                          (alist :terms (nconc (alist :user-id (cdr (assoc :--id user-info)) :limit 21 :offset offset) *notifications-base-terms*))
+                                                                                                          '(:--id :document-type :document-id :link :title :message :type :viewed))
+                                                                                    :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
+                                                  (last-check (ignore-errors (local-time:parse-timestring (cdr (assoc :last-notifications-check user-info))))))
+                                              (labels ((check-new (key obj)
+                                                         (if (ignore-errors (local-time:timestamp< last-check (local-time:parse-timestring (cdr (assoc key obj)))))
+                                                             (acons :highlight-new t obj)
+                                                             obj)))
+                                                (lw2-graphql-query-map
+                                                  (lambda (n)
+                                                    (alexandria:switch ((cdr (assoc :document-type n)) :test #'string=)
+                                                                       ("comment"
+                                                                        (graphql-query-string* "CommentsSingle"
+                                                                                               (alist :document-id (cdr (assoc :document-id n)))
+                                                                                               *comments-index-fields*))
+                                                                       ("post"
+                                                                        (graphql-query-string* "PostsSingle" (alist :document-id (cdr (assoc :document-id n)))
+                                                                                               *posts-index-fields*))
+                                                                       ("message"
+                                                                        (graphql-query-string* "MessagesSingle" (alist :document-id (cdr (assoc :document-id n)))
+                                                                                               *messages-index-fields*))
+                                                                       (t
+                                                                         (values n t))))
+                                                  notifications
+                                                  :postprocess (lambda (n result)
+                                                                 (if result
+                                                                     (check-new
+                                                                       (alexandria:switch ((cdr (assoc :document-type n)) :test #'string=)
+                                                                                          ("comment" :posted-at)
+                                                                                          ("post" :posted-at)
+                                                                                          ("message" :created-at))
+                                                                       result)
+                                                                     n))
+                                                  :auth-token auth-token)))
+                                            (do-lw2-post-query (hunchentoot:cookie-in "lw2-auth-token")
+                                                               (list (alist :query "mutation usersEdit($documentId: String, $set: UsersInput) { usersEdit(documentId: $documentId, set: $set) { _id }}"
+                                                                            :variables (alist :document-id (cdr (assoc :--id user-info))
+                                                                                              :set (alist :last-notifications-check (local-time:format-timestring nil (local-time:now))))
+                                                                            :operation-name "usersEdit")))))
+                                        (t
+                                          (let ((user-posts (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (nconc (alist :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info))) posts-base-terms)) *posts-index-fields*)))
+                                                (user-comments (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (nconc (alist :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info))) comments-base-terms)) 
+                                                                                                        comments-index-fields))))
+                                            (concatenate 'list user-posts user-comments)))))
                                (with-next (> (length items) (+ (if show 0 offset) 20)))
                                (interleave (if (not show) (comment-post-interleave items :limit 20 :offset (if show nil offset) :sort-by sort-type) (firstn items 20)))) ; this destructively sorts items
-                          (view-items-index interleave :with-offset offset :title title :content-class "user-page" :current-uri (format nil "/users/~A" user-slug)
+                          (view-items-index interleave :with-offset offset :title title :content-class (format nil "user-page~@[ ~A-user-page~]" (if show show-text)) :current-uri (format nil "/users/~A" user-slug)
                                             :with-offset offset :with-next with-next
-                                            :need-auth (string= show "drafts") :section (if (string= show "drafts") "drafts" nil)
-                                            :hide-rss (some (lambda (x) (string= show x)) '("drafts" "conversations" "inbox"))
+                                            :need-auth (eq show :drafts) :section (if (eq show :drafts) "drafts" nil)
+                                            :hide-rss (member show '(:drafts :conversations :inbox))
                                             :page-toolbar-extra (alexandria:if-let ((liu (logged-in-userid)))
                                                                   (if (string= liu (cdr (assoc :--id user-info)))
                                                                       (format nil "<form method=\"post\" action=\"/logout\"><button class=\"logout-button button\" name=\"logout\" value=\"~A\">Log out</button></form>"
@@ -957,8 +961,8 @@
                                                                                 `((nil "All") ("posts" "Posts") ("comments" "Comments")
                                                                                               ,@(if (logged-in-userid (cdr (assoc :--id user-info)))
                                                                                                     '(("drafts" "Drafts") ("conversations" "Conversations") ("inbox" "Inbox"))))
-                                                                                show)
-                                                          (when (some (lambda (x) (string= show x)) '(nil "posts" "comments"))
+                                                                                show-text)
+                                                          (when (member show '(nil :posts :comments))
                                                             (sublevel-nav-to-html out-stream
                                                                                   `((nil "New") ("top" "Top"))
                                                                                   sort
@@ -1169,7 +1173,8 @@
                                                                                                                         :before (if year (format nil "~A-~A-~A" (or year current-year) (or month 12)
                                                                                                                                                  (or day (local-time:days-in-month (or month 12) (or year current-year)))))))
                                                                                                    *posts-index-fields*))))
-                                              (emit-page (out-stream :title "Archive" :current-uri "/archive" :content-class "archive-page" :items-per-page 50 :with-offset offset :with-next (> (length posts) 50))
+                                              (emit-page (out-stream :title "Archive" :current-uri "/archive" :content-class "archive-page"
+                                                                     :items-per-page 50 :with-offset offset :with-next (> (length posts) 50) :top-nav top-nav)
                                                 (with-outputs (out-stream) "<div class=\"archive-nav\"><div class=\"archive-nav-years\">")
                                                 (link-if-not out-stream (not (or year month day)) (url-elements "archive") "archive-nav-item-year" "All") 
                                                 (loop for y from earliest-year to current-year
@@ -1189,6 +1194,7 @@
                                                         do (link-if-not out-stream (eq d day) (url-elements "archive" (or year current-year) (or month current-month) d) "archive-nav-item-day" d))
                                                   (format out-stream "</div>")) 
                                                 (format out-stream "</div>")
+                                                (funcall top-nav)
                                                 (write-index-items-to-html out-stream (firstn posts 50) :empty-message "No posts for the selected period.")))))))))
 
 (hunchentoot:define-easy-handler (view-about :uri "/about") ()

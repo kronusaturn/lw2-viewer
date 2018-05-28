@@ -1,6 +1,6 @@
 <?php
-	$UI_font = ($platform == 'Windows') ? "'Whitney', 'a_Avante'" : "'Concourse', 'a_Avante'";
-	$UI_font_smallcaps = ($platform == 'Windows') ? "'Whitney Smallcaps', 'a_Avante'" : "'Concourse Smallcaps', 'a_Avante'";
+	$UI_font = ($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Whitney', 'a_Avante'";
+	$UI_font_smallcaps = ($platform == 'Mac') ? "'Concourse Smallcaps', 'a_Avante'" : "'Whitney Smallcaps', 'a_Avante'";
 	$text_font = "'Source Sans Pro', 'Trebuchet MS', 'Helvetica', 'Arial', 'Verdana', sans-serif";
 	$hyperlink_color = "#f60";
 	$white_glow = "0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff";
@@ -291,25 +291,27 @@ body {
 	color: #999;
 	background-color: #e4e4e4;
 	border-radius: 4px;
+	text-decoration: none;
 }
 #quick-nav-ui a[href='#bottom-bar'] {
 	line-height: 1.8;
 }
-#quick-nav-ui a:hover  {
-	color: #000;
-	background-color: #d8d8d8;
-	text-decoration: none;
-}
 #quick-nav-ui a:active {
 	transform: scale(0.9);
-}
-#quick-nav-ui a:focus:not(:hover) {
-	transform: none;
-	text-shadow: none;
 }
 #quick-nav-ui a[href='#comments'].no-comments {
 	opacity: 0.4;
 	color: #bbb;
+}
+@media only screen and (hover:hover), not screen and (-moz-touch-enabled) {
+	#quick-nav-ui a:hover  {
+		color: #000;
+		background-color: #d8d8d8;
+	}
+	#quick-nav-ui a:focus:not(:hover) {
+		transform: none;
+		text-shadow: none;
+	}
 }
 
 /*======================*/
@@ -321,25 +323,27 @@ body {
 	color: #666;
 	text-shadow: 0.5px 0.5px 0 #fff;
 }
-#new-comment-nav-ui .new-comments-count:hover {
-	text-shadow: 
-		0 0 1px #fff,
-		0 0 3px #fff,
-		0 0 5px #fff,
-		0 0 8px #fff,
-		0.5px 0.5px 0 #fff;
-}
 #new-comment-nav-ui .new-comments-count::after {
 	font-weight: 600;
 	color: #777;
 }
-#new-comment-nav-ui .new-comment-sequential-nav-button:focus {
-	color: #d00;
-	text-shadow: <?php echo $white_glow; ?>;
-}
 #new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
 	color: #bbb;
 	text-shadow: none;
+}
+@media only screen and (hover:hover), not screen and (-moz-touch-enabled) {
+	#new-comment-nav-ui .new-comments-count:hover {
+		text-shadow: 
+			0 0 1px #fff,
+			0 0 3px #fff,
+			0 0 5px #fff,
+			0 0 8px #fff,
+			0.5px 0.5px 0 #fff;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button:focus {
+		color: #d00;
+		text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+	}
 }
 
 /*=================*/
@@ -435,11 +439,10 @@ body {
 /*==========*/
 
 h1.listing {
+	margin: 0.6em 20px 0 20px;
+	line-height: 1;
 	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
     font-size: 1.5rem;
-}
-h1.listing:first-of-type {
-	margin-top: 1.5em;
 }
 h1.listing a[href^='/'] {
 	font-weight: normal;
@@ -448,29 +451,7 @@ h1.listing a[href^="http"] {
 	color: #ccc;
 }
 
-@media only screen and (hover: hover) {
-	h1.listing a:hover,
-	h1.listing a:focus {
-		color: #777;
-		background-color: rgba(255,255,255,0.85);
-	}	
-	#content.user-page h1.listing:focus-within::before {
-		left: 1.25em;
-	}
-	h1.listing:focus-within::before {
-		color: #00f;
-		left: 1.375em;
-	}
-	h1.listing a[href^="http"]:hover {
-		color: #4879ec;
-		text-shadow: 
-			 0.5px 0.5px 0 #fff,
-			 -0.5px -0.5px 0 #fff,
-			 0 0 2px #fff,
-			 0 0 3px #00c;
-	}
-}
-@-moz-document url-prefix() {
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		color: #777;
@@ -501,10 +482,6 @@ h1.listing + .post-meta > * {
     color: #222;
     font-size: 1em;
 }
-h1.listing + .post-meta .karma {
-    float: left;
-    margin-right: 3px;
-}
 h1.listing + .post-meta .karma::after {
     content: " by";
 }
@@ -514,15 +491,35 @@ h1.listing + .post-meta .date::before {
 h1.listing + .post-meta .date::after {
     content: " — ";
 	opacity: 0.5;
-    margin-right: 5px;
+	margin: 0 0.5em 0 0.125em;
 }
 h1.listing + .post-meta .comment-count.new-comments::before {
 	color: #0c0;
 }
+h1.listing:last-of-type + .post-meta {
+	margin-bottom: 0;
+}
+h1.listing + .post-meta .karma {
+	order: -1;
+	margin-right: 0.25em;
+}
+h1.listing + .post-meta .author {
+	margin-right: 0.25em;
+}
+h1.listing + .post-meta .date {
+	margin: 0;
+}
+h1.listing + .post-meta .post-section {
+	overflow: visible;
+	order: 2;
+}
 h1.listing + .post-meta .post-section::before {
-    left: -26px;
-    top: 0px;
-    font-size: 0.9375em;
+	font-size: 0.9375em;
+	top: 1px;
+	left: -32px;
+}
+h1.listing + .post-meta .link-post-domain {
+	order: 1;
 }
 
 /*============*/
@@ -534,6 +531,10 @@ h1.listing + .post-meta .post-section::before {
 }
 #content.user-page .sublevel-nav + h1.listing {
 	margin-top: 1.75em;
+}
+
+#content.conversations-user-page h1.listing + .post-meta .date::after {
+	display: none;
 }
 
 .user-stats .karma-total {
@@ -1077,7 +1078,7 @@ div.comment-child-links a::first-letter {
 		0 0 0 2px <?php echo $hyperlink_color; ?>;
 }
 .posting-controls.edit-existing-post textarea:focus,
-.posting-controls.edit-existing-comment textarea:focus {
+.posting-controls form.edit-existing-comment textarea:focus {
 	border-color: #090;
     box-shadow: 
     	0 0 0 1px #81ff7f inset,
@@ -1092,7 +1093,7 @@ div.comment-child-links a::first-letter {
 }
 
 .posting-controls.edit-existing-post .guiedit-buttons-container button,
-.posting-controls.edit-existing-comment .guiedit-buttons-container button {
+.posting-controls form.edit-existing-comment .guiedit-buttons-container button {
     color: #050;
 }
 button.guiedit {
@@ -1496,3 +1497,237 @@ div > .MJXc-display {
 	}
 }
 
+/*========*/
+/* MOBILE */
+/*========*/
+
+/**************************************************************************/
+@media only screen and (hover: none), only screen and (-moz-touch-enabled) {
+/**************************************************************************/
+	#appearance-adjust-ui-toggle button,
+	#post-nav-ui-toggle button  {
+		color: #aaa;
+		text-shadow:
+			0 0 1px #fff,
+			0 0 3px #fff,
+			0 0 5px #fff,
+			0 0 10px #fff,
+			0 0 20px #fff,
+			0 0 30px #fff;
+	}
+
+	#theme-selector {
+		background-color: #eee;
+		box-shadow: 
+			0 0 0 1px #999,
+			0 0 1px 3px #fff,
+			0 0 3px 3px #fff,
+			0 0 5px 3px #fff,
+			0 0 10px 3px #fff,
+			0 0 20px 3px #fff;
+		border-radius: 12px;
+	}
+	#theme-selector::before,
+	#theme-selector .theme-selector-close-button {
+		color: #888;
+		text-shadow: 0.5px 0.5px 0 #fff;
+	}
+	#theme-selector button {
+		background-color: #e6e6e6;
+		border-radius: 10px;
+	}
+	#theme-selector button::after {
+		color: #000;
+		padding-bottom: 2px;
+		max-width: calc(100% - 3.25em);
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	#theme-selector button.selected::after {
+		text-shadow: 
+			0 -1px 0 #fff,
+			0 0.5px 0.5px #000;
+	}
+
+	#quick-nav-ui {
+		background-color: #fff;
+	}
+	#quick-nav-ui a {
+		background-color: #eee;
+		box-shadow: 0 0 0 1px #999;
+	}
+	#quick-nav-ui,
+	#new-comment-nav-ui,
+	#hns-date-picker {
+		box-shadow:
+			0 0 1px 3px #fff,
+			0 0 3px 3px #fff,
+			0 0 5px 3px #fff,
+			0 0 10px 3px #fff,
+			0 0 20px 3px #fff;
+	}
+	#quick-nav-ui a::after,
+	#new-comment-nav-ui::before {
+		font-family: <?php echo $UI_font; ?>;
+		font-weight: 600;
+		box-shadow:
+			0 0 1px 0 #fff,
+			0 0 3px 0 #fff,
+			0 0 5px 0 #fff;
+		background-color: #fff;
+		border-radius: 4px;
+	}
+	#quick-nav-ui,
+	#new-comment-nav-ui {
+		border-radius: 8px;
+	}
+	#new-comment-nav-ui {
+		background-color: #eee;
+		border: 1px solid #999;
+	}
+	#new-comment-nav-ui::before {
+		color: #777;
+		font-weight: 600;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button {
+		box-shadow: 0 0 0 1px #999;
+		color: #777;
+	}
+	#new-comment-nav-ui .new-comments-count {
+		background-color: inherit;
+		box-shadow: 0 -1px 0 0 #999;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
+		color: #bbb;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-previous {
+		border-radius: 7px 0 0 7px;
+	}
+	#new-comment-nav-ui button::after {
+		font-family: <?php echo $UI_font; ?>;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-next {
+		border-radius: 0 7px 7px 0;
+	}
+
+	/*****************************************/
+	@media only screen and (max-width: 900px) {
+	/*****************************************/
+		h1.listing + .post-meta > * {
+			line-height: 1.5;
+		}
+		h1.listing + .post-meta .post-section::before {
+			position: unset;
+		}
+
+		#secondary-bar .nav-inner {
+			font-size: 1em;
+		}
+		#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
+			padding: 6px 10px;
+		}
+		#primary-bar .nav-inner::before, 
+		#secondary-bar .nav-inner::before {
+			opacity: 0.8;
+		}
+
+		#content.compact > #top-nav-bar + .comment-thread .comment-item {
+			margin-top: 0;
+		}
+
+		.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
+			background-color: #aaa;
+		}
+	
+		.sublevel-nav.sort {
+			top: 276px;
+			right: 8px;
+		}
+
+		.comment-item .comment-item {
+			margin: 0.75em 2px 4px 6px;
+		}
+		.comment-item .comment-item + .comment-item {
+			margin: 1.5em 2px 4px 6px;
+		}
+
+		a.comment-parent-link:hover::before {
+			background-color: unset;
+		}
+	/*******************************************/
+	} @media only screen and (max-width: 720px) {
+	/*******************************************/
+		.sublevel-nav .sublevel-item,
+		.sublevel-nav .sublevel-item:first-child,
+		.sublevel-nav .sublevel-item:last-child {
+			border-width: 1px;
+			border-radius: 8px;
+		}
+		.sublevel-nav.sort {
+			top: 240px;
+		}
+	/*******************************************/
+	} @media only screen and (max-width: 520px) {
+	/*******************************************/
+		h1.listing {
+			font-size: 1.25rem;
+			margin: 18px 6px 4px 6px;
+		}
+		h1.listing + .post-meta {
+			margin: 4px 6px;
+		}
+		h1.listing a[href^='http'] {
+			top: 2px;
+		}
+
+		#content.compact > .comment-thread .comment-item {
+			max-height: 108px;
+		}
+		
+		.sublevel-nav.sort {
+			top: 194px;
+			right: 8px;
+		}
+	
+		.comment-controls form:focus-within button:active,
+		.textarea-container:focus-within button:active {
+			background-color: #ccc;
+		}
+		.comment-controls form:focus-within .guiedit-mobile-auxiliary-button,
+		.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
+			background-color: #eee;
+			border: 1px solid #ddd;
+			border-radius: 6px;
+		}
+		.comment-controls form:focus-within .guiedit-mobile-help-button.active,
+		.textarea-container:focus-within .guiedit-mobile-help-button.active {
+			border-color: #c00;
+			box-shadow:
+				0 0 0 1px #fff,
+				0 0 0 2px #c00;
+			color: #c00;
+			font-weight: 600;
+		}
+		.comment-controls form:focus-within .guiedit-buttons-container,
+		.textarea-container:focus-within .guiedit-buttons-container {
+			background-color: #fff;
+			border-top: 1px solid #ddf;
+		}
+		#content.conversation-page .textarea-container:focus-within::after {
+			background-color: #fff;
+		}
+		.comment-controls form:focus-within button.guiedit,
+		.textarea-container:focus-within button.guiedit {
+			background-color: #eee;
+			border: 1px solid #ddd;
+			border-radius: 6px;
+		}
+		.markdown-hints::after {
+			color: #090;
+		}
+
+		#edit-post-form .link-post-checkbox + label {
+			margin-left: 1.25em;
+		}
+	}
+}
