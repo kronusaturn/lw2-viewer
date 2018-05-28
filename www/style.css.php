@@ -1392,7 +1392,7 @@ div.comment-child-links a::first-letter {
 	top: 10%;
 	right: 10%;
 	max-width: 700px;
-	z-index: 10000;
+	z-index: 10001;
 	font-size: 1rem;
 	white-space: unset;
 	pointer-events: none;
