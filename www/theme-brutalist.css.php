@@ -1390,6 +1390,9 @@ div > .MJXc-display {
 			position: unset;
 		}
 
+		#content.user-page #comments-list-mode-selector {
+			left: 6px;
+		}
 		#content.compact > #top-nav-bar + .comment-thread .comment-item {
 			margin-top: 0;
 		}
@@ -1400,8 +1403,8 @@ div > .MJXc-display {
 		}
 	
 		.sublevel-nav.sort {
-			top: 315px;
-			right: 10px;
+			top: 300px;
+			right: 4px;
 		}
 
 		.comment-item .comment-item {
