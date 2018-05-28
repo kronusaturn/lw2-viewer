@@ -805,7 +805,7 @@ h1.listing + .post-meta .read-time {
 /*****************/
 
 #content.conversation-page .conversation-participants {
-	margin: 3em 0 0;
+	margin: 1.5em 0 0;
 }
 
 .conversation-participants ul,
@@ -832,6 +832,7 @@ h1.listing + .post-meta .read-time {
 #content.conversation-page h1.page-main-heading {
 	text-align: center;
 	margin: 0.5em 0 0 0;
+	line-height: 1.15;
 }
 #conversation-form input[type='text'],
 #conversation-form label {
@@ -1487,9 +1488,11 @@ div.comment-child-links a::first-letter {
 	top: 108px;
 	left: 29px;
 }
-#content.user-page #comments-list-mode-selector,
-#content.conversation-page #comments-list-mode-selector {
+#content.user-page #comments-list-mode-selector {
 	top: 165px;
+}
+#content.conversation-page #comments-list-mode-selector {
+	top: 472px;
 }
 #content.search-results-page #comments-list-mode-selector {
 	top: 50px;

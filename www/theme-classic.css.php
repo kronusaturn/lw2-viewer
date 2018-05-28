@@ -1634,6 +1634,9 @@ div > .MJXc-display {
 		#comments-list-mode-selector {
 			top: 175px;
 		}
+		#content.conversation-page #comments-list-mode-selector {
+			top: 544px;
+		}
 		#content.user-page #comments-list-mode-selector {
 			top: 300px;
 		}
@@ -1661,6 +1664,9 @@ div > .MJXc-display {
 	/*******************************************/
 		#content.user-page #comments-list-mode-selector {
 			top: 250px;
+		}
+		#content.conversation-page #comments-list-mode-selector {
+			top: 580px;
 		}
 
 		.sublevel-nav .sublevel-item,
@@ -1710,6 +1716,12 @@ div > .MJXc-display {
 		}
 		#content.user-page #comments-list-mode-selector {
 			top: 196px;
+		}
+		#content.conversation-page #comments-list-mode-selector {
+			top: 574px;
+		}
+		#content.conversation-page #comments-list-mode-selector button {
+			display: inline-block;
 		}
 		#content.search-results-page #comments-list-mode-selector {
 			top: 64px;
