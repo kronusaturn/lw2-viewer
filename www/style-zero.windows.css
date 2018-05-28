@@ -4518,23 +4518,16 @@ div.comment-child-links a::first-letter {
 .posting-controls textarea {
 	font-family: 'News Gothic BT', 'Helvetica', sans-serif;
 	color: #000;
+	border-color: #00e;
 }
-.posting-controls .textarea-container:focus-within .guiedit-buttons-container {
-	box-shadow: 
-		-1px 0 0 0 #00e inset,
-		1px 0 0 0 #00e inset,
-		0 1px 0 0 #00e inset;
+.posting-controls textarea:focus {
+	border-width: 29px 1px 1px 1px;
+	box-shadow: 0 0 0 1px #00e;
 }
 .posting-controls.edit-existing-post textarea:focus,
 .posting-controls form.edit-existing-comment textarea:focus {
 	border-color: #090;
-}
-.posting-controls.edit-existing-post .textarea-container:focus-within .guiedit-buttons-container,
-.posting-controls form.edit-existing-comment .textarea-container:focus-within .guiedit-buttons-container {
-	box-shadow: 
-		-1px 0 0 0 #090 inset,
-		1px 0 0 0 #090 inset,
-		0 1px 0 0 #090 inset;
+	box-shadow: 0 0 0 1px #090;
 }
 
 /* GUIEdit buttons */
@@ -4746,16 +4739,14 @@ code {
 
 input[type='text'],
 input[type='search'],
-input[type='password'],
-textarea {
+input[type='password'] {
 	border: 1px solid #999;
 	color: #000;
 	background-color: transparent;
 }
 input[type='text']:focus,
 input[type='search']:focus,
-input[type='password']:focus,
-textarea:focus {
+input[type='password']:focus {
 	border: 1px solid #00e;
 	outline: 1px solid #00e;
 }

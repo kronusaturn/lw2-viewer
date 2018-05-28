@@ -1327,16 +1327,14 @@ code {
 
 input[type='text'],
 input[type='search'],
-input[type='password'],
-textarea {
+input[type='password'] {
 	background-color: #fff;
 	border: 1px solid #ddd;
 	color: #000;
 }
 input[type='text']:focus,
 input[type='search']:focus,
-input[type='password']:focus,
-textarea:focus {
+input[type='password']:focus {
 	background-color: #ffd;
 	border: 1px solid #bbb;
 	box-shadow: 0 0 1px #bbb;
