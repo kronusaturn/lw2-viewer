@@ -1581,9 +1581,6 @@ div > .MJXc-display {
 			top: 3px;
 		}
 
-		#comments-list-mode-selector {
-			top: 110px;
-		}
 		#content.compact > .comment-thread .comment-item {
 			max-height: 105px;
 		}

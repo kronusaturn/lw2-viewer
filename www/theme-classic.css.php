@@ -945,9 +945,6 @@ div.comment-child-links a::first-letter {
 		0 0 30px #fff,
 		0 0 40px #fff;
 }
-#content.search-results-page #comments-list-mode-selector {
-	top: 32px;
-}
 
 /*===========================*/
 /* HIGHLIGHTING NEW COMMENTS */
@@ -1617,9 +1614,6 @@ div > .MJXc-display {
 			padding: 6px 10px;
 		}
 
-		#content.search-results-page #comments-list-mode-selector {
-			top: 114px;
-		}
 		#content.compact > #top-nav-bar + .comment-thread .comment-item {
 			margin-top: 0;
 		}
@@ -1631,16 +1625,6 @@ div > .MJXc-display {
 			background-color: #aaa;
 		}
 	
-		#comments-list-mode-selector {
-			top: 175px;
-		}
-		#content.conversation-page #comments-list-mode-selector {
-			top: 544px;
-		}
-		#content.user-page #comments-list-mode-selector {
-			top: 300px;
-		}
-
 		.sublevel-nav.sort {
 			top: 290px;
 			right: 10px;
@@ -1662,13 +1646,6 @@ div > .MJXc-display {
 	/*******************************************/
 	} @media only screen and (max-width: 720px) {
 	/*******************************************/
-		#content.user-page #comments-list-mode-selector {
-			top: 250px;
-		}
-		#content.conversation-page #comments-list-mode-selector {
-			top: 580px;
-		}
-
 		.sublevel-nav .sublevel-item,
 		.sublevel-nav .sublevel-item:first-child,
 		.sublevel-nav .sublevel-item:last-child {
@@ -1711,21 +1688,6 @@ div > .MJXc-display {
 			right: calc(100% - 2.25em);
 		}
 
-		#comments-list-mode-selector {
-			top: 120px;
-		}
-		#content.user-page #comments-list-mode-selector {
-			top: 196px;
-		}
-		#content.conversation-page #comments-list-mode-selector {
-			top: 574px;
-		}
-		#content.conversation-page #comments-list-mode-selector button {
-			display: inline-block;
-		}
-		#content.search-results-page #comments-list-mode-selector {
-			top: 64px;
-		}
 		#content.compact > .comment-thread .comment-item {
 			max-height: 104px;
 		}
