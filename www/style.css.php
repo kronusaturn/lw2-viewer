@@ -1671,6 +1671,8 @@ div.comment-child-links a::first-letter {
 .comment-controls {
 	text-align: right;
 	margin: 0 8px 8px 16px;
+	position: relative;
+	z-index: 1;
 }
 .comment-thread .comment-controls + .comment-thread > li:first-child {
 	margin-top: 8px;
@@ -1690,7 +1692,7 @@ div.comment-child-links a::first-letter {
 
 .comment-controls .cancel-comment-button {
 	position: absolute;
-	right: 8px;
+	right: 0;
 	margin: 0;
 	height: 27px;
 	font-size: inherit;
