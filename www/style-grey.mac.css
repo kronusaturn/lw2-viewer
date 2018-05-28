@@ -106,10 +106,6 @@ input {
 	display: block;
 	position: relative;
 }
-#primary-bar.inactive-bar .nav-inner {
-	padding-top: 11px;
-	padding-bottom: 13px;
-}
 .nav-inner::after {
 	content: attr(accesskey);
 	display: none;
