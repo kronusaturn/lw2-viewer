@@ -1484,21 +1484,7 @@ div.comment-child-links a::first-letter {
 /*************************/
 
 #comments-list-mode-selector {
-	position: absolute;
-	top: 108px;
-	left: 29px;
-}
-#content.user-page #comments-list-mode-selector {
-	top: 165px;
-}
-#content.conversation-page #comments-list-mode-selector {
-	top: 472px;
-}
-#content.search-results-page #comments-list-mode-selector {
-	top: 50px;
-	left: unset;
-	right: 48px;
-	z-index: 1;
+	padding-top: 6px;
 }
 #comments-list-mode-selector button {
 	color: transparent;

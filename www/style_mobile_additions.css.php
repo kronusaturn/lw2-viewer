@@ -766,55 +766,9 @@ a.comment-parent-link::after {
 /* COMMENTS COMPACT VIEW */
 /*=======================*/
 
-#comments-list-mode-selector {
-	top: 185px;
-	left: 12px;
-}
-#content.user-page #comments-list-mode-selector {
-	top: 316px;
-}
 @media only screen and (max-width: 900px) {
-	#content.search-results-page #comments-list-mode-selector {
-		top: 130px;
-		right: 24px;
-	}
-}
-@media only screen and (max-width: 720px) {
-	#content.user-page #comments-list-mode-selector {
-		top: 268px;
-	}
-	#content.search-results-page #comments-list-mode-selector {
-		top: 111px;
-		right: 103px;
-	}
-	#content.search-results-page #comments-list-mode-selector::after {
-		content: "";
-		position: absolute;
-		display: block;
-		left: -8px;
-		right: -8px;
-		top: -8px;
-		bottom: -8px;
-		z-index: -1;
-		background-color: inherit;
-	}
-}
-@media only screen and (max-width: 520px) {
 	#comments-list-mode-selector {
-		top: 123px;
-	}
-	#content.user-page #comments-list-mode-selector {
-		top: 203px;
-	}
-	#comments-list-mode-selector button {
-		display: block;
-	}
-	#content.search-results-page #comments-list-mode-selector {
-		top: 72px;
-		right: 16px;
-	}
-	#content.search-results-page #comments-list-mode-selector button {
-		display: inline-block;
+		padding-top: 4px;
 	}
 }
 
