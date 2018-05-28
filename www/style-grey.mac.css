@@ -1682,7 +1682,7 @@ div.comment-child-links a::first-letter {
 	text-align: right;
 	margin: 0 8px 8px 16px;
 	position: relative;
-	z-index: 1;
+	z-index: 9999;
 }
 .comment-thread .comment-controls + .comment-thread > li:first-child {
 	margin-top: 8px;
@@ -3404,14 +3404,17 @@ a.comment-parent-link::after {
 	#comments > .comment-controls .cancel-comment-button {
 		right: 8px;	
 	}
-	.comment-controls .cancel-comment-button {
-		right: 10px;
-	}
 	.comment-controls .cancel-comment-button::before {
 		font-size: 1.25rem;		
 	}
 }
 @media only screen and (max-width: 520px) {
+	.comment-controls {
+		position: static;
+	}
+	.comment-controls .cancel-comment-button {
+		right: 10px;
+	}
 	.comment-controls form:focus-within textarea,
 	.textarea-container:focus-within textarea {
 		position: fixed;

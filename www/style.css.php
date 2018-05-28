@@ -1672,7 +1672,7 @@ div.comment-child-links a::first-letter {
 	text-align: right;
 	margin: 0 8px 8px 16px;
 	position: relative;
-	z-index: 1;
+	z-index: 9999;
 }
 .comment-thread .comment-controls + .comment-thread > li:first-child {
 	margin-top: 8px;

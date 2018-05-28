@@ -822,14 +822,17 @@ a.comment-parent-link::after {
 	#comments > .comment-controls .cancel-comment-button {
 		right: 8px;	
 	}
-	.comment-controls .cancel-comment-button {
-		right: 10px;
-	}
 	.comment-controls .cancel-comment-button::before {
 		font-size: 1.25rem;		
 	}
 }
 @media only screen and (max-width: 520px) {
+	.comment-controls {
+		position: static;
+	}
+	.comment-controls .cancel-comment-button {
+		right: 10px;
+	}
 	.comment-controls form:focus-within textarea,
 	.textarea-container:focus-within textarea {
 		position: fixed;
