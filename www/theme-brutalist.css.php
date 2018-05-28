@@ -1403,7 +1403,7 @@ div > .MJXc-display {
 		}
 	
 		.sublevel-nav.sort {
-			top: 300px;
+			top: 286px;
 			right: 4px;
 		}
 

@@ -1407,8 +1407,8 @@ div > .MJXc-display {
 		}
 	
 		.sublevel-nav.sort {
-			top: 300px;
-			right: 8px;
+			top: 292px;
+			right: 10px;
 		}
 
 		.comment-item .comment-item {
