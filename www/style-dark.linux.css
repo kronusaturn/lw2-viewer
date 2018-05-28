@@ -1993,7 +1993,7 @@ div.comment-child-links a::first-letter {
 #edit-post-form input[type='radio'] + label {
 	margin: 0.35em 0;
 	width: auto;
-	padding: 6px 12px;
+	padding: 4px 12px;
 	text-align: center;
 	border-style: solid;
 	border-width: 1px 1px 1px 0;
