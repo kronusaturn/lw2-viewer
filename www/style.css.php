@@ -822,11 +822,13 @@ h1.listing + .post-meta .read-time {
 	margin-left: 1em;
 }
 #content.conversation-page .posting-controls {
-	margin: 0.5em 0 4em;
+	margin: 0.5em 0 3em;
 	padding-bottom: 1em;
 }
 #content.conversation-page .post-meta-fields {
 	overflow: auto;
+	display: flex;
+	flex-flow: row wrap;
 }
 #content.conversation-page textarea {
 	border-top-width: 1px;
@@ -842,10 +844,14 @@ h1.listing + .post-meta .read-time {
 	margin: 0.25em 0;
 }
 #conversation-form label {
-	width: 6em;
+	width: 4em;
+	text-align: right;
+	padding: 2px 6px;
+	border: 1px solid transparent;
 }
 #conversation-form input[type='text'] {
-	width: calc(100% - 6em);
+	width: calc(100% - 4em);
+	padding: 0.25em;
 }
 #conversation-form input[type='submit'] {
 	float: right;
