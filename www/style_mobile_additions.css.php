@@ -171,15 +171,14 @@
 }
 #theme-selector ~ #theme-tweaker-toggle {
 	top: 100%;
-	padding: 0 4px 0 0;
-	background-color: #e6e6e6;
-	border-radius: 6px;
-	box-shadow: 0 0 0 1px #bbb;
 }
 #theme-selector ~ #theme-tweaker-toggle::after {
 	content: "Open theme tweaker";
-	position: relative;
-	bottom: 2px;
+	position: absolute;
+	font-size: 0.625em;
+	white-space: nowrap;
+	left: -50%;
+	top: 100%;
 }
 #theme-selector.engaged ~ #theme-tweaker-toggle {
 	visibility: visible;
