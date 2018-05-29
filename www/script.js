@@ -1437,7 +1437,7 @@ function initialize() {
 				if (!cm.lastChild.hasClass("comment-minimize-button"))
 					cm.insertAdjacentHTML("beforeend", "<div class='comment-minimize-button maximized'>&#xf146;</div>");
 			});
-			if (!document.querySelector("#content").hasClass("individual-thread-page") {
+			if (!document.querySelector("#content").hasClass("individual-thread-page")) {
 				// Format and activate comment-minimize buttons.
 				document.querySelectorAll(".comment-minimize-button").forEach(function (b) {
 					b.closest(".comment-item").setCommentThreadMaximized(false);
