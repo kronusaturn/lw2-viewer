@@ -2,7 +2,7 @@
 	$UI_font = "'Mundo Sans', 'Helvetica', sans-serif";
 	$headings_font = "'Caecilia', 'Helvetica', sans-serif";
 	$text_font = "'Mundo Sans', 'Helvetica', sans-serif";
-	$hyperlink_color = "#bbb";
+	$hyperlink_color = "#92c396";
 	$white_glow = "0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff";
 ?>
 
@@ -43,7 +43,10 @@ body {
 
 .nav-bar a,
 .nav-bar a:visited {
-	color: #ccc;
+	color: #acd2af;
+}
+.nav-bar a:hover {
+	color: #92c396;
 }
 
 /* Accesskey hints */
@@ -74,22 +77,23 @@ body {
 
 #nav-item-search form::before {
 	font-size: 1.125em;
-	color: #ddd;
+	color: #e6e6e6;
+}
+#nav-item-search form:focus-within::before {
+	color: #92c396;
 }
 #nav-item-search button {
 	border: none;
 	font-weight: inherit;
 	color: #ccc;
-}
-#nav-item-search input {
-	border-color: transparent;
-	border-bottom-color: #eee;
+	padding: 2px 7px;
+	vertical-align: bottom;
 }
 
 /* Inbox indicator */
 
 #inbox-indicator::before {
-	color: #e6e6e6;
+	color: #eaeaea;
 }
 
 /*==============*/
@@ -118,13 +122,23 @@ body {
 /*===================*/
 
 #top-nav-bar {
-	opacity: 0.5;
+	justify-content: flex-start;
+	padding: 0 0 0 16px;
+	font-size: 1em;
+	margin: 0.25em 0 1.25em 0;
 }
 #top-nav-bar:hover {
 	opacity: 1.0;
 }
 #top-nav-bar .page-number {
-	line-height: 1.7;
+	line-height: 1.5;
+}
+#top-nav-bar .page-number span {
+	display: none;
+}
+#top-nav-bar a.disabled {
+	visibility: visible;
+	opacity: 0.4;
 }
 
 /*==============*/
@@ -418,7 +432,7 @@ h1.listing a[href^="http"] {
 	top: 3px;
 }
 h1.listing a[href^="/"] {
-	font-weight: bold;
+	font-weight: 300;
 }
 
 @media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
@@ -435,12 +449,7 @@ h1.listing a[href^="/"] {
 		left: 1.25em;
 	}
 	h1.listing a[href^="http"]:hover {
-		color: #4879ec;
-		text-shadow: 
-			 0.5px 0.5px 0 #fff,
-			 -0.5px -0.5px 0 #fff,
-			 0 0 2px #fff,
-			 0 0 3px #00c;
+		color: #79a97e;
 	}
 }
 
@@ -454,6 +463,12 @@ h1.listing + .post-meta {
 
 h1.listing + .post-meta > * {
 	color: #bbb;
+}
+h1.listing + .post-meta a {
+	color: #92c396;
+}
+h1.listing + .post-meta a:hover {
+	color: #79a97e;
 }
 h1.listing + .post-meta .karma-value {
 	cursor: default;
@@ -1012,10 +1027,10 @@ a {
 	color: <?php echo $hyperlink_color; ?>;
 }
 a:visited {
-	color: #551a8b;
+	color: #bebb84;
 }
 a:hover {
-	text-decoration: underline;
+	color: #bbb;
 }
 
 /*=========*/
@@ -1129,12 +1144,13 @@ input[type='password'] {
 	border: 1px solid #999;
 	color: #000;
 	background-color: transparent;
+	border-color: transparent;
+	border-bottom-color: #eee;
 }
 input[type='text']:focus,
 input[type='search']:focus,
 input[type='password']:focus {
-	border: 1px solid #00e;
-	outline: 1px solid #00e;
+	border-bottom-color: #92c396;
 }
 
 select {
