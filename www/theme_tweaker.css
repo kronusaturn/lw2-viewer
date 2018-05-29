@@ -714,6 +714,7 @@ input[type='range']::-ms-thumb {
 	#theme-tweaker-ui .theme-selector {
 		position: unset;
 		margin: 0.5em 0 1em 0;
+		white-space: nowrap;
 	}
 	#theme-tweaker-ui .clippy-container .clippy {
 		transform: scale(0.375) translate(-215px, 215px);
