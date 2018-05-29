@@ -1061,8 +1061,8 @@ div.comment-child-links a::first-letter {
 	color: #f00;
 }
 
-.edit-post-link,
-.edit-post-link:visited {
+.button.edit-post-link,
+.button.edit-post-link:visited {
 	color: #090;
 }
 
