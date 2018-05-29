@@ -666,6 +666,16 @@ h1.listing + .post-meta::after {
 	margin: 0;
 }
 
+#content:not(.compact) > .comment-thread + h1.listing {
+	margin-top: 1.125em;
+}
+#content.compact > .comment-thread + h1.listing {
+	margin-top: 0.625em;
+}
+#content:not(.compact) > .post-meta + .comment-thread {
+	margin-top: 3em;
+}
+
 .user-stats .karma-total {
 	font-weight: bold;
 }
