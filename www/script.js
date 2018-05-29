@@ -1431,18 +1431,20 @@ function initialize() {
 			a.innerText = a.innerText.replace(/^[A-Z]\. /, '');
 		});
 
-		// Add comment-minimize buttons to every comment.		
 		if (document.querySelector("#comments") != null) {
+			// Add comment-minimize buttons to every comment.		
 			document.querySelectorAll(".comment-meta").forEach(function (cm) {
 				if (!cm.lastChild.hasClass("comment-minimize-button"))
 					cm.insertAdjacentHTML("beforeend", "<div class='comment-minimize-button maximized'>&#xf146;</div>");
 			});
+			if (!document.querySelector("#content").hasClass("individual-thread-page") {
+				// Format and activate comment-minimize buttons.
+				document.querySelectorAll(".comment-minimize-button").forEach(function (b) {
+					b.closest(".comment-item").setCommentThreadMaximized(false);
+					b.addActivateEvent(commentMinimizeButtonClicked);
+				});
+			}
 		}
-		// Format and activate comment-minimize buttons.
-		document.querySelectorAll(".comment-minimize-button").forEach(function (b) {
-			b.closest(".comment-item").setCommentThreadMaximized(false);
-			b.addActivateEvent(commentMinimizeButtonClicked);
-		});
 		if (getQueryVariable("chrono") == "t") {
 			document.querySelector("head").insertAdjacentHTML("beforeend", "<style>.comment-minimize-button::after { display: none; }</style>");
 		}
