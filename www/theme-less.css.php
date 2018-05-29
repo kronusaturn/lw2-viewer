@@ -18,6 +18,8 @@ body {
 }
 #content {
 	line-height: 1.55;
+	overflow: visible;
+	padding: 0 0 0 60px;
 }
 
 /*=========*/
@@ -29,16 +31,25 @@ body {
 }
 .nav-inner {
 	font-size: 1.125em;
-	padding: 11px 30px 13px 30px;
+	padding: 0.5rem 0.75rem;
+	text-align: right;
 }
 #secondary-bar .nav-inner {
 	font-size: 0.875em;
+	padding: 0.5rem 0.75rem;
 }
-#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
-	padding: 6px 0 3px 0;
+#primary-bar,
+#secondary-bar {
+	position: absolute;
+	right: calc(100% - 30px);
+	flex-flow: column;
+	line-height: 1;
 }
-.active-bar {
-	border-bottom: 1px solid #eee;
+#primary-bar {
+	top: 0;
+}
+#secondary-bar {
+	top: 200px;
 }
 
 .nav-bar a,
@@ -73,6 +84,13 @@ body {
 	font-weight: bold;
 }
 
+#nav-item-recent-comments span {
+	display: none;
+}
+#nav-item-home {
+	padding-top: 0.5em;
+}
+
 /* Search tab */
 
 #nav-item-search form::before {
@@ -102,6 +120,7 @@ body {
 
 .page-toolbar {
 	opacity: 0.4;
+	padding: 1px 0 0 0;
 }
 .page-toolbar:hover {
 	opacity: 1.0;
@@ -123,12 +142,9 @@ body {
 
 #top-nav-bar {
 	justify-content: flex-start;
-	padding: 0 0 0 16px;
+	padding: 0.25em 0 0 1em;
 	font-size: 1em;
-	margin: 0.25em 0 1.25em 0;
-}
-#top-nav-bar:hover {
-	opacity: 1.0;
+	margin: 0;
 }
 #top-nav-bar .page-number {
 	line-height: 1.5;
@@ -463,6 +479,7 @@ h1.listing + .post-meta {
 
 h1.listing + .post-meta > * {
 	color: #bbb;
+	margin: 0;
 }
 h1.listing + .post-meta a {
 	color: #92c396;
@@ -472,6 +489,9 @@ h1.listing + .post-meta a:hover {
 }
 h1.listing + .post-meta .karma-value {
 	cursor: default;
+}
+h1.listing + .post-meta .lw2-link {
+	display: none;
 }
 
 /*============*/
