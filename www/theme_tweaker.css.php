@@ -705,6 +705,7 @@ input[type='range']::-ms-thumb {
 	}
 	#theme-tweaker-ui .controls-container {
 		max-height: calc(100% - 192px);
+		padding: 0.75em;
 	}
 	#theme-tweaker-ui .current-theme {
 		margin: 0.75em -8px 0 -8px;

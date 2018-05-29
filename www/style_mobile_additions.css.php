@@ -167,7 +167,7 @@
 /*===============*/
 
 #theme-selector {
-	padding: 0 0 56px 0;
+	padding: 0 0 64px 0;
 }
 #theme-selector ~ #theme-tweaker-toggle {
 	top: 100%;
