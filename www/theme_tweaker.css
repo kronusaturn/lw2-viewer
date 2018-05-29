@@ -719,4 +719,21 @@ input[type='range']::-ms-thumb {
 	#theme-tweaker-ui .clippy-container .clippy {
 		transform: scale(0.375) translate(-215px, 215px);
 	}
+
+	@media only screen and (max-width: 369px) {
+		#theme-tweaker-ui .theme-selector button {
+			margin: 0.5em 0.25em 0.5em 0.5em;
+		}
+		#theme-tweaker-ui .reset-defaults-button {
+			width: 9em;
+		}
+		#theme-tweaker-ui #theme-tweak-section-text-size-adjust .sample-text-container {
+			width: 12em;
+		}
+	}
+	@media only screen and (max-width: 333px) {
+		#theme-tweaker-ui .theme-selector button {
+			margin: 0.5em 0.125em 0.5em 0.5em;
+		}
+	}
 }
