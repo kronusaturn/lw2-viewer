@@ -285,7 +285,7 @@ a#inbox-indicator.new-messages:hover::before {
 	margin-top: 1.5em;
 }
 .archive-nav + #top-nav-bar + h1.listing {
-	margin-top: 1em;
+	margin-top: 0.25em;
 }
 #top-nav-bar a {
 	line-height: 1;
