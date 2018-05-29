@@ -394,7 +394,7 @@
     (when (and notifications user-info)
       (local-time:timestamp> (local-time:parse-timestring (cdr (assoc :created-at (first notifications)))) (local-time:parse-timestring (cdr (assoc :last-notifications-check user-info)))))))
 
-(defparameter *fonts-stylesheet-uri* "//fonts.greaterwrong.com/?fonts=Charter,Concourse,a_Avante,Whitney,MundoSans,SourceSansPro,Raleway,ProximaNova,AnonymousPro,InputSans,InputSansNarrow,InputSansCondensed,GaramondPremierPro,ProximaNova,TradeGothic,NewsGothicBT,Inconsolata,BitmapFonts,FontAwesomeGW")
+(defparameter *fonts-stylesheet-uri* "//fonts.greaterwrong.com/?fonts=Charter,Concourse,a_Avante,Whitney,MundoSans,SourceSansPro,Raleway,ProximaNova,AnonymousPro,InputSans,InputSansNarrow,InputSansCondensed,GaramondPremierPro,ProximaNova,TradeGothic,NewsGothicBT,Caecilia,Inconsolata,BitmapFonts,FontAwesomeGW")
 (defparameter *fonts-stylesheet-uri* "//fonts.greaterwrong.com/?fonts=*")
 
 (defparameter *html-head*
