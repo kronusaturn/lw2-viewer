@@ -1118,7 +1118,12 @@ h1.listing + .post-meta .read-time {
 		hyphens: auto;
 	}
 }
-.post-body p, .comment-body p {
+.post-body,
+.comment-body {
+	overflow-wrap: break-word;
+}
+.post-body p,
+.comment-body p {
 	margin: 1em 0;
 }
 
