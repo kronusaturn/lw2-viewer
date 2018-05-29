@@ -340,7 +340,7 @@ body {
 h1.listing {
 	margin: 0.7em 20px 0.1em 20px;
 	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
-	font-size: 1.75rem;
+	font-size: 1.625rem;
 }
 
 h1.listing a[href^="http"] {
