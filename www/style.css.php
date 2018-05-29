@@ -1318,7 +1318,7 @@ ul.comment-thread {
 /****************/
 
 .comment-meta {
-	padding: 2px 80px 2px 10px;
+	padding: 2px 24px 2px 10px;
 	margin: 0 -1px;
 	border: none;
 	display: flex;
@@ -1637,9 +1637,6 @@ div.comment-child-links a::first-letter {
 .individual-thread-page > h1 {
 	line-height: 1;
 }
-.individual-thread-page .comment-controls .edit-button {
-	right: 4px;
-}
 .individual-thread-page #comments {
 	border: none;
 }
@@ -1723,14 +1720,6 @@ div.comment-child-links a::first-letter {
 .new-comment-button {
 	font-size: 1.5rem;
 	margin: 0 0.25em;
-}
-.comment-controls .edit-button {
-	position: absolute;
-	right: 24px;
-	top: 7px;
-}
-.comment-thread .comment-thread .edit-button {
-	right: 8px;
 }
 .comment-controls .reply-button::before {
 	content: '\F3E5';
