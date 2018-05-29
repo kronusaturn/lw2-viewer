@@ -2749,10 +2749,19 @@ div > .MJXc-display {
 /*===============*/
 
 #theme-selector {
-	padding: 0 0 50px 0;
+	padding: 0 0 56px 0;
 }
 #theme-selector ~ #theme-tweaker-toggle {
 	top: 100%;
+	padding: 0 4px 0 0;
+	background-color: #e6e6e6;
+	border-radius: 6px;
+	box-shadow: 0 0 0 1px #bbb;
+}
+#theme-selector ~ #theme-tweaker-toggle::after {
+	content: "Open theme tweaker";
+	position: relative;
+	bottom: 2px;
 }
 #theme-selector.engaged ~ #theme-tweaker-toggle {
 	visibility: visible;
