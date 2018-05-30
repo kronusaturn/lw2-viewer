@@ -700,8 +700,9 @@ h1.listing + .post-meta .post-section::before {
 	opacity: 1;
 }
 
-.bottom-post-meta {
-	border-top: 1px solid #ddd;
+.post .bottom-post-meta {
+	padding: unset;
+	margin: 0.5em 0 1.5em 0;
 }
 
 /*============*/
@@ -726,7 +727,7 @@ h1.listing + .post-meta .post-section::before {
 	border-top: 1px solid transparent;
 }
 .comment-item {
-	border: 1px solid #ccc;
+	border: 1px solid #ddd;
 }
 
 <?php
@@ -849,6 +850,22 @@ div.comment-child-links a::first-letter {
 	background-color: #fff;
 }
 
+/*====================*/
+/* COMMENT PERMALINKS */
+/*====================*/
+
+.comment-meta .permalink,
+.comment-meta .lw2-link,
+.individual-thread-page .comment-parent-link:empty {
+	filter: hue-rotate(270deg);
+	opacity: 0.5;
+}
+.comment-meta .permalink:hover,
+.comment-meta .lw2-link:hover,
+.individual-thread-page .comment-parent-link:empty:hover {
+	opacity: 1.0;
+}
+
 /*=======================*/
 /* COMMENTS COMPACT VIEW */
 /*=======================*/
@@ -969,6 +986,11 @@ div.comment-child-links a::first-letter {
 }
 .comment + .comment-controls .action-button {
 	font-weight: 300;
+}
+
+.new-comment-button {
+	margin: 0;
+	padding: 0.125em;
 }
 
 .comment-controls .cancel-comment-button {
@@ -1277,7 +1299,7 @@ select {
 }
 
 .qualified-linking-toolbar {
-	border: 1px solid #000;
+	border: 1px solid #ccc;
 	background-color: #fff;
 }
 .qualified-linking-toolbar a {
