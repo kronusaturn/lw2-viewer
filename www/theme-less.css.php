@@ -19,8 +19,11 @@ body {
 #content {
 	line-height: 1.55;
 	overflow: visible;
-	padding: 0 0 0 60px;
+	padding: 10px 20px 0 80px;
 	transform: scale(1);
+}
+#content.post-page {
+	padding: 0 0 0 60px;
 }
 #ui-elements-container {
 	visibility: hidden;
@@ -103,7 +106,8 @@ body {
 	left: 16em;
 	width: 400px;
 }
-#content.post-page #nav-item-search {
+#content.post-page #nav-item-search,
+#content.user-page #nav-item-search {
 	left: 4.5em;
 }
 #nav-item-search .nav-inner {
@@ -184,15 +188,22 @@ body {
 	opacity: 0.4;
 }
 
+.sublevel-nav + #top-nav-bar {
+	justify-content: center;
+	margin: 0.5em;
+	padding: 0;
+}
+
 /*==============*/
 /* SUBLEVEL NAV */
 /*==============*/
 
 .sublevel-nav .sublevel-item {
-	border-color: #ccc;
+	border-color: #c4dbc4;
 	border-style: solid;
 	border-width: 1px 1px 1px 0;
-	color: #777;
+	color: #92c396;
+	padding: 3px 9px 0 9px;
 }
 .sublevel-nav .sublevel-item:first-child {
 	border-radius: 8px 0 0 8px;
@@ -201,19 +212,16 @@ body {
 .sublevel-nav .sublevel-item:last-child {
 	border-radius: 0 8px 8px 0;
 }
-.sublevel-nav a.sublevel-item:hover {
-	background-color: #ddd;
-	color: #000;
-	text-decoration: none;
-}
+.sublevel-nav a.sublevel-item:hover,
 .sublevel-nav a.sublevel-item:active,
 .sublevel-nav span.sublevel-item {
-	background-color: #ddd;
-	border-color: #ccc;
-	color: #000;
-	text-shadow: 
-		0 -1px 0 #fff,
-		0 0.5px 0.5px #000;
+	background-color: #c4dbc4;
+	color: #fff;
+	text-decoration: none;
+}
+.sublevel-nav a.sublevel-item:active {
+	background-color: #92c396;
+	border-color: #92c396;
 }
 
 /*=====================*/
@@ -222,21 +230,19 @@ body {
 
 .sublevel-nav.sort {
 	position: absolute;
-	top: 167px;
-	right: 30px;
+	top: 80px;
+	right: 20px;
 	padding: 18px 0 0 0;
 	border-radius: 8px;
 }
 .sublevel-nav.sort::before {
 	text-transform: uppercase;
-	font-weight: 600;
 	color: #444;
 	text-shadow: 0.5px 0.5px 0 #fff;
 }
 .sublevel-nav.sort .sublevel-item {
 	border-radius: 0;
-	padding: 5px 6px;
-	border-color: #ccc;
+	padding: 5px 6px 2px 6px;
 	border-style: solid;
 	text-transform: uppercase;
 }
@@ -247,9 +253,6 @@ body {
 .sublevel-nav.sort .sublevel-item:last-child {
 	border-radius: 0 0 6px 6px;
 	border-width: 0 1px 1px 1px;
-}
-.sublevel-nav.sort .sublevel-item:active {
-	border-color: #ccc;
 }
 
 /*================*/
@@ -535,43 +538,38 @@ h1.listing + .post-meta .post-section::before {
 /*============*/
 
 #content.user-page h1.page-main-heading {
-	border-bottom: 1px solid #ccc;
+	font-family: <?php echo $headings_font; ?>;
+	border-bottom: 1px solid #e6e6e6;
+	line-height: 1;
+	font-weight: normal;
 }
 
 #content.user-page .sublevel-nav + h1.listing {
 	margin-top: 1.75em;
 }
+#content.user-page h1.listing,
+#content.user-page h1.listing + .post-meta {
+	border-color: #ddd;
+	border-style: solid;
+}
 #content.user-page h1.listing {
 	margin: 1.5em 0 0 0;
-	padding: 0 6px;
+	padding: 6px 8px 0 8px;
 	position: relative;
-}
-#content.user-page h1.listing::after {
-	content: "";
-	display: block;
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: calc(100% + 1.3125em);
-	box-shadow: 0px 0px 10px #555;
+	border-width: 1px 1px 0 1px;
 }
 #content.user-page h1.listing + .post-meta {
-	margin: 0 6px 3em 35px;
-}
-#content.user-page h1.listing + .post-meta::after {
-	display: none;
-}
-
-#content.conversations-user-page .sublevel-nav + h1.listing {
-	margin-top: 1em;
-}
-#content.conversations-user-page h1.listing + .post-meta {
 	margin: 0;
+	padding: 12px 8px 3px 8px;
+	border-width: 0 1px 1px 1px;
+	line-height: 1;
 }
 
+#content.user-page .user-stats {
+	margin-top: -1.5em;
+}
 .user-stats .karma-total {
-	font-weight: bold;
+	font-weight: 500;
 }
 
 /*============*/
@@ -779,6 +777,10 @@ h1.listing + .post-meta .post-section::before {
 .comment-body {
 	font-size: 1.1875rem;
 }
+#content.user-page .comment-body,
+#content.index-page .comment-body {
+	font-size: 1.125rem;
+}
 
 /*================================*/
 /* DEEP COMMENT THREAD COLLAPSING */
@@ -890,17 +892,24 @@ div.comment-child-links a::first-letter {
 /* COMMENTS COMPACT VIEW */
 /*=======================*/
 
+#comments-list-mode-selector {
+	opacity: 0.4;
+}
+#comments-list-mode-selector:hover {
+	opacity: 1.0;
+}
+
 #comments-list-mode-selector button {
 	box-shadow:
-		0 0 0 4px #eee inset,
+		0 0 0 4px #fff inset,
 		0 0 0 5px #aaa inset;
 }
 #comments-list-mode-selector button:hover,
 #comments-list-mode-selector button.selected {
 	box-shadow:
-		0 0 0 1px #eee inset,
+		0 0 0 1px #fff inset,
 		0 0 0 2px #aaa inset,
-		0 0 0 4px #eee inset,
+		0 0 0 4px #fff inset,
 		0 0 0 5px #aaa inset;
 }
 #content.compact > .comment-thread .comment-item {

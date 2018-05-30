@@ -283,7 +283,8 @@ a#inbox-indicator.new-messages:hover::before {
 	visibility: hidden;
 }
 #top-nav-bar a.nav-item-last::before {
-	content: "\2002";
+	content: "\F101";
+	visibility: hidden;
 }
 #top-nav-bar .page-number {
 	position: relative;
