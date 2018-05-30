@@ -103,7 +103,7 @@ body {
 #nav-item-search {
 	position: fixed;
 	top: 0;
-	left: 16em;
+	left: 5.5em;
 	width: 400px;
 }
 #content.post-page #nav-item-search,
@@ -540,11 +540,14 @@ h1.listing + .post-meta .post-section::before {
 /* USER PAGES */
 /*============*/
 
-#content.user-page h1.page-main-heading {
+#content.user-page h1.page-main-heading,
+#content.conversation-page h1.page-main-heading {
 	font-family: <?php echo $headings_font; ?>;
+	font-weight: normal;
+}
+#content.user-page h1.page-main-heading {
 	border-bottom: 1px solid #e6e6e6;
 	line-height: 1;
-	font-weight: normal;
 }
 
 #content.user-page .sublevel-nav + h1.listing {
@@ -556,7 +559,7 @@ h1.listing + .post-meta .post-section::before {
 	border-style: solid;
 }
 #content.user-page h1.listing {
-	margin: 1.5em 0 0 0;
+	margin: 1em 0 0 0;
 	padding: 6px 8px 0 8px;
 	position: relative;
 	border-width: 1px 1px 0 1px;
@@ -566,6 +569,10 @@ h1.listing + .post-meta .post-section::before {
 	padding: 12px 8px 3px 8px;
 	border-width: 0 1px 1px 1px;
 	line-height: 1;
+}
+
+#content.user-page .comment-thread {
+	margin: 1em 0 2em 0;
 }
 
 #content.user-page .user-stats {
@@ -916,6 +923,10 @@ div.comment-child-links a::first-letter {
 		0 0 0 4px #fff inset,
 		0 0 0 5px #aaa inset;
 }
+
+#content.compact > .comment-thread {
+	margin: 1em 0;
+}
 #content.compact > .comment-thread .comment-item {
 	max-height: 58px;
 }
@@ -1004,14 +1015,7 @@ div.comment-child-links a::first-letter {
 /*===========================*/
 
 .posting-controls input[type='submit'] {
-	background-color: #fff;
-	border: 1px solid #aaa;
-	font-weight: bold;
-}
-.posting-controls input[type='submit']:hover,
-.posting-controls input[type='submit']:focus {
-	background-color: #ddd;
-	border: 1px solid #999;
+	padding: 6px 12px 3px 12px;
 }
 
 .comment-controls {
@@ -1034,7 +1038,6 @@ div.comment-child-links a::first-letter {
 }
 .comment-controls .cancel-comment-button:hover {
 	color: #f00;
-	text-shadow: <?php echo $white_glow; ?>;
 }
 
 .comment-controls .edit-button {
@@ -1051,12 +1054,14 @@ div.comment-child-links a::first-letter {
 
 .posting-controls textarea {
 	font-family: <?php echo $text_font; ?>;
+	font-weight: 300;
 	color: #000;
-	border-color: #00e;
+	text-shadow: 0 0 0 #000;
+	border-color: #eee;
 }
 .posting-controls textarea:focus {
 	border-width: 29px 1px 1px 1px;
-	box-shadow: 0 0 0 1px #00e;
+	border-color: #92c396;
 }
 .posting-controls.edit-existing-post textarea:focus,
 .posting-controls form.edit-existing-comment textarea:focus {
@@ -1091,7 +1096,6 @@ div.comment-child-links a::first-letter {
 }
 #markdown-hints-checkbox + label:hover {
 	color: #e00;
-	text-shadow: <?php echo $white_glow; ?>;
 }
 .markdown-hints {
 	border: 1px solid #c00;
@@ -1172,27 +1176,27 @@ a:hover {
 
 button,
 input[type='submit'] {
-	color: <?php echo $hyperlink_color; ?>;
+	background-color: #fff;
+	border: 1px solid #c4dbc4;
 }
 
 button:hover,
 input[type='submit']:hover,
 button:focus,
 input[type='submit']:focus {
-	color: #d00;
-	text-shadow: <?php echo $white_glow; ?>;
+	background-color: #c4dbc4;
+	color: #fff;
 }
 button:active,
 input[type='submit']:active {
-	color: #f00;
-	transform: scale(0.9);
+	background-color: #92c396;
+	border-color: #92c396;
 }
 .button:visited {
 	color: <?php echo $hyperlink_color; ?>;
 }
 .button:hover {
-	color: #d00;
-	text-shadow: <?php echo $white_glow; ?>;
+	color: #79a97e;
 	text-decoration: none;
 }
 .button:active {
