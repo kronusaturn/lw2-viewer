@@ -107,7 +107,8 @@ body {
 	width: 400px;
 }
 #content.post-page #nav-item-search,
-#content.user-page #nav-item-search {
+#content.user-page #nav-item-search,
+#content.archive-page #nav-item-search {
 	left: 4.5em;
 }
 #nav-item-search .nav-inner {
@@ -432,10 +433,12 @@ body {
 
 .archive-nav {
 	border: 1px solid transparent;
+	margin: 1.25em 0.75em 0 0.75em;
 }
 .archive-nav *[class^='archive-nav-item'] {
+	color: <?php echo $hyperlink_color; ?>;
 	border-style: solid;
-	border-color: #ddd;
+	border-color: #c4dbc4;
 	border-width: 1px 0 1px 1px;
 }
 .archive-nav div[class^='archive-nav-']:nth-of-type(2) *[class^='archive-nav-item'] {
@@ -448,28 +451,14 @@ body {
 .archive-nav *[class^='archive-nav-item']:last-child {
 	border-right-width: 1px;
 }
+.archive-nav a:hover,
 .archive-nav span[class^='archive-nav-item'] {
-	font-weight: bold;
-	background-color: #ddd;
+	background-color: #c4dbc4;
+	color: #fff;
 }
 
-.archive-nav a:link,
-.archive-nav a:visited {
-	color: <?php echo $hyperlink_color; ?>;
-}
-.archive-nav a:hover {
-	text-decoration: none;
-	color: #c00;
-	background-color: #e0e0e0;
-}
 .archive-nav a:active {
-	transform: scale(0.9);
-}
-.archive-nav a:focus:not(:hover) {
-	transform: none;
-}
-.archive-nav a.archive-nav-item-day:hover {
-	background-color: #ddd;
+	background-color: <?php echo $hyperlink_color; ?>;
 }
 
 /*==========*/
@@ -650,10 +639,7 @@ h1.listing + .post-meta .post-section::before {
 
 .contents {
 	font-family: <?php echo $UI_font; ?>;
-	background-color: #eee;
-}
-.contents-head {
-	font-weight: bold;
+	border: 1px solid #c4dbc4;
 }
 .post-body .contents li::before {
 	color: #999;
@@ -1237,7 +1223,14 @@ input[type='submit']:active {
 .comment-body h4,
 .comment-body h5,
 .comment-body h6 {
-	font-family: <?php echo $UI_font; ?>;
+	font-family: <?php echo $headings_font; ?>;
+	font-weight: 300;
+}
+.post-body h1,
+.comment-body h1 {
+	border-bottom: 1px solid #eee;
+	line-height: 0.7;
+	margin-top: 1.25em;
 }
 .post-body h6,
 .comment-body h6 {
