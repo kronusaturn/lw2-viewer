@@ -102,6 +102,9 @@ body {
 	left: 16em;
 	width: 400px;
 }
+#content.post-page #nav-item-search {
+	left: 4.5em;
+}
 #nav-item-search .nav-inner {
 	padding: 1px;
 	display: flex;
@@ -133,7 +136,8 @@ body {
 
 #inbox-indicator::before {
 	color: #eaeaea;
-	top: 2px;
+	top: 3px;
+	font-size: 1.125em;
 }
 
 /*==============*/
@@ -738,7 +742,7 @@ h1.listing + .post-meta .post-section::before {
 ?>
 
 <?php nested_stuff(".comment-item .comment-item ", ".comment-item,\n", ".comment-item", $comment_nesting_depth); ?> {
-	background-color: #eee;
+	background-color: #f6f6f6;
 }
 <?php nested_stuff(".comment-item .comment-item ", ".comment-item a.comment-parent-link::after,\n", ".comment-item a.comment-parent-link::after", $comment_nesting_depth); ?> {
 	box-shadow: 
@@ -960,6 +964,13 @@ div.comment-child-links a::first-letter {
 	border: 1px solid #999;
 }
 
+.comment-controls {
+	margin: 0 4px 4px 16px;
+}
+.comment + .comment-controls .action-button {
+	font-weight: 300;
+}
+
 .comment-controls .cancel-comment-button {
 	color: #c00;
 	text-shadow: 
@@ -1169,7 +1180,7 @@ input[type='submit']:active {
 /*========*/
 
 blockquote {
-	border-left: 5px solid #ccc;
+	border-left: 5px solid #e6e6e6;
 }
 
 /*========*/
@@ -1259,7 +1270,7 @@ select {
 }
 
 .qualified-linking label {
-	color: #bbb;
+	color: #ccc;
 }
 .qualified-linking label:hover {
 	color: #92c396;
