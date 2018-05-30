@@ -3777,22 +3777,19 @@ body {
 /*==============*/
 
 .page-toolbar {
-	opacity: 0.5;
-	padding: 0 0.75rem 0 0;
+	padding: 0 0 0 0;
 	white-space: nowrap;
 	right: calc(100% - 60px);
 	top: 280px;
 }
-.page-toolbar:hover {
-	opacity: 1.0;
+
+.page-toolbar > * {
+	display: block;
+	text-align: right;
+	line-height: 1;
+	padding: 0.5rem 0.75rem;
 }
 
-.new-post,
-.new-post:visited,
-.new-private-message,
-.new-private-message:visited {
-	color: #090;
-}
 .logout-button {
 	color: #d33;
 }
@@ -4123,7 +4120,7 @@ h1.listing a[href^="/"] {
 	}
 	h1.listing:focus-within::before {
 		color: #79a97e;
-		left: 3em;
+		left: 3.125em;
 	}
 	h1.listing a[href^="http"]:hover {
 		color: #79a97e;
@@ -4154,8 +4151,13 @@ h1.listing + .post-meta .karma-value {
 h1.listing + .post-meta .lw2-link {
 	display: none;
 }
+h1.listing + .post-meta .post-section {
+	overflow: visible;
+	order: 1;
+}
 h1.listing + .post-meta .post-section::before {
-	left: -34px;
+	position: relative;
+	left: unset;
 	top: -1px;
 }
 
@@ -4313,7 +4315,7 @@ h1.listing + .post-meta .post-section::before {
 /*===========*/
 
 .post-meta .post-section::before {
-	color: #d8d8d8;
+	color: #dfdfdf;
 }
 .post .post-meta .post-section::before {
 	position: relative;
@@ -4495,6 +4497,7 @@ h1.listing + .post-meta .post-section::before {
 }
 .comment-meta .author {
 	font-size: 1.125em;
+	font-weight: normal;
 }
 
 .comment-controls .karma {
