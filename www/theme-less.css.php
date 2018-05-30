@@ -900,7 +900,9 @@ div.comment-child-links a::first-letter {
 /*=======================*/
 
 #comments-list-mode-selector {
+	display: inline-block;
 	opacity: 0.4;
+	transition: opacity 0.15s ease;
 }
 #comments-list-mode-selector:hover {
 	opacity: 1.0;
@@ -911,6 +913,8 @@ div.comment-child-links a::first-letter {
 }
 
 #comments-list-mode-selector button {
+	border: none;
+	background-color: transparent;
 	box-shadow:
 		0 0 0 4px #fff inset,
 		0 0 0 5px #aaa inset;
@@ -1058,6 +1062,7 @@ div.comment-child-links a::first-letter {
 	color: #000;
 	text-shadow: 0 0 0 #000;
 	border-color: #eee;
+	transition: border-color 0.15s ease;
 }
 .posting-controls textarea:focus {
 	border-width: 29px 1px 1px 1px;
@@ -1162,6 +1167,7 @@ div.comment-child-links a::first-letter {
 a {
 	text-decoration: none;
 	color: <?php echo $hyperlink_color; ?>;
+	transition: color 0.15s ease;
 }
 a:visited {
 	color: #bebb84;
@@ -1176,8 +1182,13 @@ a:hover {
 
 button,
 input[type='submit'] {
+	color: #92c396;
 	background-color: #fff;
 	border: 1px solid #c4dbc4;
+	transition:
+		color 0.15s ease,
+		background-color 0.15s ease,
+		border-color 0.15s ease;
 }
 
 button:hover,
