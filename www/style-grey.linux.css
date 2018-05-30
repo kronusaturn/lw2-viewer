@@ -276,9 +276,14 @@ a#inbox-indicator.new-messages:hover::before {
 	pointer-events: none;
 	visibility: hidden;
 }
+/* REMOVE THEN THIS FEATURE IS IMPLEMENTED: */
+#top-nav-bar a.nav-item-last {
+	pointer-events: none;
+	visibility: hidden;
+}
+/* END REMOVE */
 #top-nav-bar a.nav-item-last::before {
 	content: "\F101";
-	visibility: hidden;
 }
 #top-nav-bar .page-number {
 	position: relative;

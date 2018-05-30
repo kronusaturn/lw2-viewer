@@ -85,7 +85,7 @@ body {
 	font-weight: bold;
 }
 
-#nav-item-recent-comments span {
+#nav-item-recent-comments .nav-inner span {
 	display: none;
 }
 #nav-item-home {
@@ -161,6 +161,18 @@ body {
 	text-align: right;
 	line-height: 1;
 	padding: 0.5rem 0.75rem;
+}
+
+.page-toolbar .button::before {
+	font-size: 0.875em;
+}
+
+.new-private-message {
+	white-space: normal;
+	line-height: 1.15;
+}
+.new-private-message::before {
+	opacity: 0.7;
 }
 
 .logout-button {
@@ -492,7 +504,7 @@ h1.listing a[href^="/"] {
 	}
 	h1.listing:focus-within::before {
 		color: #79a97e;
-		left: 3.125em;
+		left: 4em;
 	}
 	h1.listing a[href^="http"]:hover {
 		color: #79a97e;
@@ -921,7 +933,7 @@ div.comment-child-links a::first-letter {
 }
 #content.compact > .comment-thread .comment-item:hover .comment {
 	background-color: #fff;
-	outline: 3px solid #00c;
+	outline: 1px solid #92c396;
 }
 #content.compact > .comment-thread .comment-item:hover .comment::before {
 	background-color: #fff;
