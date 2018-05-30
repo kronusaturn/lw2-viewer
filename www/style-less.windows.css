@@ -3651,6 +3651,10 @@ body {
 	line-height: 1.55;
 	overflow: visible;
 	padding: 0 0 0 60px;
+	transform: scale(1);
+}
+#ui-elements-container {
+	visibility: hidden;
 }
 
 /*=========*/
@@ -3672,7 +3676,8 @@ body {
 #primary-bar,
 #secondary-bar {
 	position: absolute;
-	right: calc(100% - 30px);
+	right: calc(100% - 60px);
+	margin: 0;
 	flex-flow: column;
 	line-height: 1;
 }
@@ -3681,6 +3686,10 @@ body {
 }
 #secondary-bar {
 	top: 200px;
+}
+
+#bottom-bar .nav-inner {
+	text-align: center;
 }
 
 .nav-bar a,
@@ -3694,19 +3703,7 @@ body {
 /* Accesskey hints */
 
 .nav-inner::after {
-	display: block;
-	position: absolute;
-	left: 5px;
-	top: -1px;
-	font-weight: 400;
-	font-size: 0.7em;
-	color: transparent;
-}
-.inactive-bar .nav-inner::after {
-	color: transparent;
-}
-.nav-inner:hover::after {
-	color: transparent;
+	display: none;
 }
 
 /* "Tabs" */
@@ -3721,12 +3718,29 @@ body {
 #nav-item-home {
 	padding-top: 0.5em;
 }
+#nav-item-login {
+	position: fixed;
+	top: 0;
+	right: 0;
+	padding-right: 1.5em;
+}
 
 /* Search tab */
 
+#nav-item-search {
+	position: fixed;
+	top: 0;
+	left: 16em;
+	width: 400px;
+}
+#nav-item-search .nav-inner {
+	padding: 1px;
+	display: flex;
+}
 #nav-item-search form::before {
 	font-size: 1.125em;
 	color: #e6e6e6;
+	padding: 5px;
 }
 #nav-item-search form:focus-within::before {
 	color: #92c396;
@@ -3735,14 +3749,22 @@ body {
 	border: none;
 	font-weight: inherit;
 	color: #ccc;
-	padding: 2px 7px;
-	vertical-align: bottom;
+	padding: 6px;
+	height: 23px;
+}
+#nav-item-search input {
+	width: unset;
+	flex: 1 0 auto;
+	font-family: Inconsolata, monospace;
+	padding: 2px 1px;
+	margin: 0 0 0 2px;
 }
 
 /* Inbox indicator */
 
 #inbox-indicator::before {
 	color: #eaeaea;
+	top: 2px;
 }
 
 /*==============*/
@@ -3750,8 +3772,11 @@ body {
 /*==============*/
 
 .page-toolbar {
-	opacity: 0.4;
-	padding: 1px 0 0 0;
+	opacity: 0.5;
+	padding: 0 0.75rem 0 0;
+	white-space: nowrap;
+	right: calc(100% - 60px);
+	top: 280px;
 }
 .page-toolbar:hover {
 	opacity: 1.0;
@@ -3773,9 +3798,9 @@ body {
 
 #top-nav-bar {
 	justify-content: flex-start;
-	padding: 0.25em 0 0 1em;
+	padding: 1em 0 0 1em;
 	font-size: 1em;
-	margin: 0;
+	margin: 0 0 1em 0;
 }
 #top-nav-bar .page-number {
 	line-height: 1.5;
@@ -4110,7 +4135,7 @@ h1.listing + .post-meta {
 
 h1.listing + .post-meta > * {
 	color: #bbb;
-	margin: 0;
+	margin: 0 1.25em 0 0;
 }
 h1.listing + .post-meta a {
 	color: #92c396;
