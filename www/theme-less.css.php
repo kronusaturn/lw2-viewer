@@ -59,6 +59,7 @@ body {
 
 #bottom-bar .nav-inner {
 	text-align: center;
+    padding: 0.75em;
 }
 
 .nav-bar a,
@@ -690,7 +691,8 @@ h1.listing + .post-meta .post-section::before {
 .post-meta > * {
 	color: #bbb;
 }
-.post-meta a {
+.post-meta a,
+.post-meta a:visited {
 	color: #92c396;
 }
 .post-meta a:hover {
@@ -799,10 +801,25 @@ h1.listing + .post-meta .post-section::before {
 /* COMMENT-META */
 /*==============*/
 
+.comment-meta {
+	padding-top: 4px;
+}
+.comment-meta > * {
+	color: #bbb;
+}
+.comment-meta a,
+.comment-meta a:visited {
+	color: #92c396;
+}
+.comment-meta a:hover {
+	color: #79a97e;
+}
 .comment-meta .author {
 	font-size: 1.125em;
-	color: #090;
-	padding-top: 3px;
+}
+
+.comment-controls .karma {
+	color: #bbb;
 }
 
 /*===========================*/
@@ -858,7 +875,7 @@ div.comment-child-links a::first-letter {
 .comment-meta .lw2-link,
 .individual-thread-page .comment-parent-link:empty {
 	filter: hue-rotate(270deg);
-	opacity: 0.5;
+	opacity: 0.4;
 }
 .comment-meta .permalink:hover,
 .comment-meta .lw2-link:hover,
@@ -923,15 +940,15 @@ div.comment-child-links a::first-letter {
 /*=================================*/
 
 .comment-minimize-button {
-	color: #ccc;
+	color: #ddd;
 }
 .comment-minimize-button:hover {
-	color: #aaa;
+	color: #bbb;
 	text-shadow: <?php echo $white_glow; ?>;
 }
 .comment-minimize-button::after {
 	font-family: <?php echo $UI_font; ?>;
-	color: #777;
+	color: #999;
 }
 .comment-minimize-button.maximized::after {
 	color: #ccc;
