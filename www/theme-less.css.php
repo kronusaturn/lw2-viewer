@@ -19,7 +19,7 @@ body {
 #content {
 	line-height: 1.55;
 	overflow: visible;
-	padding: 10px 20px 0 80px;
+	padding: 30px 20px 0 80px;
 	transform: scale(1);
 }
 #content.post-page {
@@ -163,6 +163,10 @@ body {
 	padding: 0.5rem 0.75rem;
 }
 
+.page-toolbar button {
+	padding: 0;
+}
+
 .page-toolbar .button::before {
 	font-size: 0.875em;
 }
@@ -242,7 +246,7 @@ body {
 
 .sublevel-nav.sort {
 	position: absolute;
-	top: 80px;
+	top: 100px;
 	right: 20px;
 	padding: 18px 0 0 0;
 	border-radius: 8px;
@@ -427,13 +431,12 @@ body {
 /*==========*/
 
 .archive-nav {
-	border: 1px solid #aaa;
+	border: 1px solid transparent;
 }
 .archive-nav *[class^='archive-nav-item'] {
 	border-style: solid;
 	border-color: #ddd;
 	border-width: 1px 0 1px 1px;
-	background-color: #eee;
 }
 .archive-nav div[class^='archive-nav-']:nth-of-type(2) *[class^='archive-nav-item'] {
 	border-top-width: 0;
@@ -452,13 +455,12 @@ body {
 
 .archive-nav a:link,
 .archive-nav a:visited {
-	color: rgba(0, 0, 238, 0.7);
+	color: <?php echo $hyperlink_color; ?>;
 }
 .archive-nav a:hover {
 	text-decoration: none;
 	color: #c00;
 	background-color: #e0e0e0;
-	text-shadow: <?php echo $white_glow; ?>;
 }
 .archive-nav a:active {
 	transform: scale(0.9);
@@ -910,6 +912,10 @@ div.comment-child-links a::first-letter {
 #comments-list-mode-selector:hover {
 	opacity: 1.0;
 }
+#content.index-page #comments-list-mode-selector {
+	top: 24px;
+	right: 20px;
+}
 
 #comments-list-mode-selector button {
 	box-shadow:
@@ -952,11 +958,11 @@ div.comment-child-links a::first-letter {
 /*===========================*/
 
 .new-comment::before {
-	display: none;
-}
-.new-comment {
-	border: 1px solid #e00;
-	outline: 1px solid #e00;
+	outline: 2px solid #5a5;
+	box-shadow:
+		0 0 6px -2px #5a5 inset, 
+		0 0 4px #5a5, 
+		0 0 6px #5a5;
 }
 
 /*=================================*/
