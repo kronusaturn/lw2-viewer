@@ -1,7 +1,7 @@
 <?php
 	$UI_font = "'Mundo Sans', 'Helvetica', sans-serif";
 	$headings_font = "'Caecilia', 'Helvetica', sans-serif";
-	$text_font = "'Mundo Sans', 'Helvetica', sans-serif";
+	$text_font = "'Source Serif Pro', 'Helvetica', sans-serif";
 	$hyperlink_color = "#92c396";
 	$white_glow = "0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff";
 ?>
@@ -66,7 +66,7 @@ body {
 	color: #acd2af;
 }
 .nav-bar a:hover {
-	color: #92c396;
+	color: #79a97e;
 }
 
 /* Accesskey hints */
@@ -486,8 +486,8 @@ h1.listing a[href^="/"] {
 		left: -1em;
 	}
 	h1.listing:focus-within::before {
-		color: #00f;
-		left: 1.25em;
+		color: #79a97e;
+		left: 3em;
 	}
 	h1.listing a[href^="http"]:hover {
 		color: #79a97e;
@@ -517,6 +517,10 @@ h1.listing + .post-meta .karma-value {
 }
 h1.listing + .post-meta .lw2-link {
 	display: none;
+}
+h1.listing + .post-meta .post-section::before {
+	left: -34px;
+	top: -1px;
 }
 
 /*============*/
@@ -644,11 +648,17 @@ h1.listing + .post-meta .lw2-link {
 .post-body,
 .comment-body {
 	font-family: <?php echo $text_font; ?>;
+	text-shadow: 0 0 0 #000;
 }
 
 /*=======*/
 /* POSTS */
 /*=======*/
+
+.post {
+	overflow: auto;
+	padding: 2em 0 0 0;
+}
 
 .post-body {
 	font-size: 1.25rem;
@@ -656,6 +666,8 @@ h1.listing + .post-meta .lw2-link {
 
 .post > h1:first-child {
 	font-size: 2rem;
+	font-family: <?php echo $headings_font; ?>;
+	font-weight: 300;
 	line-height: 1.1;
 	margin: 1em 0 0.25em 0;
 }
@@ -666,15 +678,24 @@ h1.listing + .post-meta .lw2-link {
 
 .post-meta .post-section::before {
 	color: #d8d8d8;
-	left: -34px;
-	top: -1px;
 }
-.post-meta .date {
-	color: #888;
+.post .post-meta .post-section::before {
+	position: relative;
+	top: -3px;
 }
-.post-meta .author {
-	color: #090;
+.post-meta > * {
+	color: #bbb;
 }
+.post-meta a {
+	color: #92c396;
+}
+.post-meta a:hover {
+	color: #79a97e;
+}
+.post-meta .lw2-link:hover {
+	opacity: 1;
+}
+
 .bottom-post-meta {
 	border-top: 1px solid #ddd;
 }
@@ -684,20 +705,13 @@ h1.listing + .post-meta .lw2-link {
 /*============*/
 
 .post.link-post a.link-post-link {
-	text-decoration: none;
 	font-family: <?php echo $UI_font; ?>;
-	font-weight: 600;
 }
-.post.link-post a.link-post-link:hover {
-	color: #c00;
+.post.link-post a.link-post-link::before {
+	opacity: 0.6;
 }
 .post.link-post a.link-post-link:hover::before {
-	color: #4879ec;
-	text-shadow: 
-		0.5px 0.5px 0 #fff,
-		-0.5px -0.5px 0 #fff,
-		0 0 2px #fff,
-		0 0 3px #00c;
+	opacity: 1;
 }
 
 /*==========*/
@@ -783,6 +797,7 @@ h1.listing + .post-meta .lw2-link {
 .comment-meta .author {
 	font-size: 1.125em;
 	color: #090;
+	padding-top: 3px;
 }
 
 /*===========================*/
@@ -905,17 +920,29 @@ div.comment-child-links a::first-letter {
 /* VOTE BUTTONS */
 /*==============*/
 
-.upvote {
-	color: #c8c8c8;	
+.upvote,
+.downvote {
+	color: #ddd;	
 }
 .upvote::before {
-	content: '\F055';
-}
-.downvote {
-	color: #ccc;
+	content: "\F077";
 }
 .downvote::before {
-	content: '\F056';
+	content: "\F078";
+	position: relative;
+	top: 1px;
+}
+.upvote:hover,
+.upvote.selected {
+	text-shadow:
+		0 0 0.5px #fff, 
+		0 0 8px #0f0;
+}
+.downvote:hover,
+.downvote.selected {
+	text-shadow:
+		0 0 0.5px #fff, 
+		0 0 8px #f00;
 }
 
 /*===========================*/
@@ -934,7 +961,6 @@ div.comment-child-links a::first-letter {
 }
 
 .comment-controls .cancel-comment-button {
-	font-weight: 600;
 	color: #c00;
 	text-shadow: 
 		0 0 1px #fff,
@@ -943,10 +969,6 @@ div.comment-child-links a::first-letter {
 .comment-controls .cancel-comment-button:hover {
 	color: #f00;
 	text-shadow: <?php echo $white_glow; ?>;
-}
-
-.new-comment-button {
-	font-weight: 600;
 }
 
 .comment-controls .edit-button {
@@ -1233,17 +1255,14 @@ select {
 }
 #aux-about-link a:hover {
 	opacity: 1.0;
-	text-shadow: <?php echo $white_glow; ?>;
+	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
 }
 
 .qualified-linking label {
-	color: <?php echo $hyperlink_color; ?>;
+	color: #bbb;
 }
 .qualified-linking label:hover {
-	text-shadow:
-		0 0 1px #fff,
-		0 0 3px #fff,
-		0 0 5px #00e;
+	color: #92c396;
 }
 
 .qualified-linking-toolbar {
@@ -1251,17 +1270,16 @@ select {
 	background-color: #fff;
 }
 .qualified-linking-toolbar a {
-	background-color: #eee;
-	border: 1px solid #ccc;
-	border-radius: 4px;
+	padding: 3px 6px 0 6px;
 }
+.qualified-linking-toolbar a,
 .qualified-linking-toolbar a:visited {
-	color: <?php echo $hyperlink_color; ?>;
+	color: #acd2af;
 }
 .qualified-linking-toolbar a:hover {
+	color: #92c396;
 	text-decoration: none;
-	background-color: #ddd;
-	text-shadow: <?php echo $white_glow; ?>;
+	background-color: #e4f1e5;
 }
 
 /*======*/
