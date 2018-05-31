@@ -19,7 +19,7 @@ body {
 #content {
 	line-height: 1.55;
 	overflow: visible;
-	padding: 30px 20px 0 80px;
+	padding: 30px 20px 0 90px;
 	transform: scale(1);
 }
 #content.post-page {
@@ -103,14 +103,8 @@ body {
 #nav-item-search {
 	position: fixed;
 	top: 0;
-	left: 5.5em;
+	left: 5em;
 	width: 400px;
-}
-#content.post-page #nav-item-search,
-#content.user-page #nav-item-search,
-#content.archive-page #nav-item-search,
-#content.conversation-page #nav-item-search {
-	left: 4.5em;
 }
 #nav-item-search .nav-inner {
 	padding: 1px;
@@ -194,7 +188,7 @@ body {
 
 #top-nav-bar {
 	justify-content: flex-start;
-	padding: 1em 0 0 1em;
+	padding: 1em 0 0 6px;
 	font-size: 1em;
 	margin: 0 0 1em 0;
 }
@@ -470,7 +464,7 @@ body {
 /*==========*/
 
 h1.listing {
-	margin: 0.7em 20px 0.1em 20px;
+	margin: 0.7em 20px 0.1em 0;
 	font-family: <?php echo $headings_font; ?>, 'Font Awesome';
 	font-size: 1.25rem;
 	line-height: 1.2;
@@ -512,6 +506,7 @@ h1.listing a[href^="/"] {
 
 h1.listing + .post-meta {
 	font-size: 0.875rem;
+	margin: 0 20px 0 1px;
 }
 
 h1.listing + .post-meta > * {
@@ -912,7 +907,7 @@ div.comment-child-links a::first-letter {
 	opacity: 1.0;
 }
 #content.index-page #comments-list-mode-selector {
-	top: 24px;
+	top: 36px;
 	right: 20px;
 }
 
