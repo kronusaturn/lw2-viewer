@@ -164,6 +164,7 @@ body {
 
 .page-toolbar button {
 	padding: 0;
+	border: none;
 }
 
 .page-toolbar .button::before {
@@ -188,9 +189,9 @@ body {
 
 #top-nav-bar {
 	justify-content: flex-start;
-	padding: 1em 0 0 6px;
+	padding: 1em 0 0 0;
 	font-size: 1em;
-	margin: 0 0 1em 0;
+	margin: 0 0 1em -5px;
 }
 #top-nav-bar .page-number {
 	line-height: 1.5;
@@ -206,6 +207,10 @@ body {
 .sublevel-nav + #top-nav-bar {
 	justify-content: center;
 	margin: 0.5em;
+	padding: 0;
+}
+.archive-nav + #top-nav-bar {
+	margin: 0.25em 0 1em -4px;
 	padding: 0;
 }
 
@@ -431,7 +436,8 @@ body {
 
 .archive-nav {
 	border: 1px solid transparent;
-	margin: 1.25em 0.75em 0 0.75em;
+	margin: 1.25em 0 0 0;
+	padding: 0;
 }
 .archive-nav *[class^='archive-nav-item'] {
 	color: <?php echo $hyperlink_color; ?>;
