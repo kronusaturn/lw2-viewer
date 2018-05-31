@@ -3671,8 +3671,10 @@ body {
 .post-meta > *:not(.post-section),
 #primary-bar a,
 #secondary-bar a,
-.page-toolbar > * {
-	filter: none;
+#nav-item-search > *,
+.page-toolbar > *,
+#top-nav-bar > * {
+	text-shadow: none;
 }
 
 /*=========*/

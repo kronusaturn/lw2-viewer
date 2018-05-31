@@ -34,8 +34,10 @@ body {
 .post-meta > *:not(.post-section),
 #primary-bar a,
 #secondary-bar a,
-.page-toolbar > * {
-	filter: <?php global $platform; echo ($platform == 'Mac' ? 'none' : 'contrast(50%) saturate(250%) brightness(75%)'); ?>;
+#nav-item-search > *,
+.page-toolbar > *,
+#top-nav-bar > * {
+	text-shadow: <?php global $platform; echo ($platform == 'Mac' ? 'none' : '0 0 0 #aaa'); ?>;
 }
 
 /*=========*/
