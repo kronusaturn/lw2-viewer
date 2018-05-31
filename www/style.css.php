@@ -1334,6 +1334,7 @@ ul.comment-thread {
 	flex-basis: 100%;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	line-height: 1.2;
 }
 .user-page .comment-meta {
 	padding-right: 10px;
