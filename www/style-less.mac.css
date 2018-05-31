@@ -4122,6 +4122,7 @@ h1.listing a[href^="http"] {
 }
 h1.listing a[href^="/"] {
 	font-weight: 300;
+	text-shadow: none;
 }
 
 @media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
@@ -4305,6 +4306,13 @@ h1.listing + .post-meta .post-section::before {
 	font-family: 'Source Serif Pro', 'Helvetica', sans-serif;
 	text-shadow: 0 0 0 #000;
 }
+@-moz-document url-prefix() {
+	.post-body,
+	.comment-body {
+		text-shadow: 0 0 0 #000;
+		font-weight: 300;
+	}
+}
 
 /*=======*/
 /* POSTS */
@@ -4486,7 +4494,7 @@ h1.listing + .post-meta .post-section::before {
 
 .comment-item input[id^="expand"] + label::after {
 	color: #92c396;
-	font-weight: 600;
+	font-weight: 400;
 }
 .comment-item input[id^="expand"] + label:hover::after {
 	color: #c00;
@@ -4653,9 +4661,7 @@ div.comment-child-links a::first-letter {
 	outline: 1px solid #5a5;
 	box-shadow:
 		0 0 6px -2px #5a5 inset, 
-		0 0 4px #5a5, 
-		0 0 6px #5a5, 
-		0 0 8px #5a5;
+		0 0 4px #5a5;
 }
 
 /*=================================*/
@@ -5059,6 +5065,10 @@ input[type='password']:focus {
 
 select {
 	color: #000;
+}
+
+strong, b {
+	font-weight: 600;
 }
 
 /*============*/

@@ -485,6 +485,7 @@ h1.listing a[href^="http"] {
 }
 h1.listing a[href^="/"] {
 	font-weight: 300;
+	text-shadow: <?php global $platform; echo ($platform == 'Mac' ? 'none' : '0 0 0 #000'); ?>;
 }
 
 @media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
@@ -668,6 +669,13 @@ h1.listing + .post-meta .post-section::before {
 	font-family: <?php echo $text_font; ?>;
 	text-shadow: 0 0 0 #000;
 }
+@-moz-document url-prefix() {
+	.post-body,
+	.comment-body {
+		text-shadow: <?php global $platform; echo ($platform == 'Mac' ? '0 0 0 #000' : 'none'); ?>;
+		font-weight: <?php global $platform; echo ($platform == 'Mac' ? '300' : '400'); ?>;
+	}
+}
 
 /*=======*/
 /* POSTS */
@@ -801,7 +809,7 @@ h1.listing + .post-meta .post-section::before {
 
 .comment-item input[id^="expand"] + label::after {
 	color: <?php echo $hyperlink_color; ?>;
-	font-weight: 600;
+	font-weight: 400;
 }
 .comment-item input[id^="expand"] + label:hover::after {
 	color: #c00;
@@ -968,9 +976,7 @@ div.comment-child-links a::first-letter {
 	outline: 1px solid #5a5;
 	box-shadow:
 		0 0 6px -2px #5a5 inset, 
-		0 0 4px #5a5, 
-		0 0 6px #5a5, 
-		0 0 8px #5a5;
+		0 0 4px #5a5;
 }
 
 /*=================================*/
@@ -1374,6 +1380,10 @@ input[type='password']:focus {
 
 select {
 	color: #000;
+}
+
+strong, b {
+	font-weight: 600;
 }
 
 /*============*/

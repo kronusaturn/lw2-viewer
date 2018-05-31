@@ -689,7 +689,7 @@ function injectThemeSelector() {
 		['brutalist', 'Brutalist theme (the Motherland calls!)', 'F'],
 		['rts', 'ReadTheSequences.com theme', 'G'],
 		['classic', 'Classic Less Wrong theme', 'H'],
-		['less', 'Serenity now', 'I']
+		['less', 'Less theme (serenity now)', 'I']
 	];
 	let themeSelector = addUIElement(
 		"<div id='theme-selector' class='theme-selector'>" +
