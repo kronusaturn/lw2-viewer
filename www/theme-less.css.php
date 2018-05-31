@@ -164,7 +164,6 @@ body {
 
 .page-toolbar button {
 	padding: 0;
-	border: none;
 }
 
 .page-toolbar .button::before {
@@ -1241,6 +1240,9 @@ a:hover {
 button,
 input[type='submit'] {
 	color: #92c396;
+}
+input[type='submit'] {
+	color: #92c396;
 	background-color: #fff;
 	border: 1px solid #c4dbc4;
 	transition:
@@ -1249,28 +1251,28 @@ input[type='submit'] {
 		border-color 0.15s ease;
 }
 
-button:hover,
 input[type='submit']:hover,
-button:focus,
 input[type='submit']:focus {
 	background-color: #c4dbc4;
 	color: #fff;
 }
-button:active,
 input[type='submit']:active {
 	background-color: #92c396;
 	border-color: #92c396;
 }
 .button:visited {
-	color: <?php echo $hyperlink_color; ?>;
+	color: #92c396;
 }
+button:hover,
 .button:hover {
 	color: #79a97e;
 	text-decoration: none;
 }
+button:active,
 .button:active {
 	transform: scale(0.9);
 }
+button:focus:not(:hover),
 .button:focus:not(:hover) {
 	transform: none;
 }
