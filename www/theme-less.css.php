@@ -498,7 +498,7 @@ h1.listing a[href^="/"] {
 	}
 	h1.listing:focus-within::before {
 		color: #79a97e;
-		left: 4em;
+		left: 3.625em;
 	}
 	h1.listing a[href^="http"]:hover {
 		color: #79a97e;
@@ -652,9 +652,11 @@ h1.listing + .post-meta .post-section::before {
 	font-family: <?php echo $UI_font; ?>;
 	border: 1px solid #c4dbc4;
 }
+.post-body .contents ul {
+	font-size: 0.8125em;
+}
 .post-body .contents li::before {
-	color: #999;
-	font-feature-settings: "tnum";
+	color: #bbb;
 }
 
 /*==================*/
@@ -963,11 +965,12 @@ div.comment-child-links a::first-letter {
 /*===========================*/
 
 .new-comment::before {
-	outline: 2px solid #5a5;
+	outline: 1px solid #5a5;
 	box-shadow:
 		0 0 6px -2px #5a5 inset, 
 		0 0 4px #5a5, 
-		0 0 6px #5a5;
+		0 0 6px #5a5, 
+		0 0 8px #5a5;
 }
 
 /*=================================*/
@@ -1634,7 +1637,6 @@ div > .MJXc-display {
 		background-color: #fff;
 		border: 1px solid #999;
 	}
-}
 
 	/*****************************************/
 	@media only screen and (max-width: 900px) {

@@ -1468,7 +1468,6 @@ div > .MJXc-display {
 		background-color: #fff;
 		border: 1px solid #999;
 	}
-}
 
 	/*****************************************/
 	@media only screen and (max-width: 900px) {
