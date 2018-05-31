@@ -583,7 +583,15 @@
              (call-with-emit-page ,out-stream ,fn ,@args2)))))))
 
 (defun call-with-error-page (fn)
-  (let ((*current-auth-token* (alexandria:if-let (at (hunchentoot:cookie-in "lw2-auth-token")) (if (string= at "") nil at))))
+  (let* ((lw2-status
+           (alexandria:if-let (status-string (hunchentoot:cookie-in "lw2-status"))
+             (if (string= status-string "") nil
+                 (let ((json:*identifier-name-to-key* #'json:safe-json-intern))
+                   (json:decode-json-from-string status-string)))))
+         (*current-auth-token*
+           (alexandria:if-let (at (hunchentoot:cookie-in "lw2-auth-token"))
+             (if (or (string= at "") (not lw2-status) (> (get-unix-time) (- (cdr (assoc :expires lw2-status)) (* 60 60 24))))
+                 nil at))))
     (handler-case
       (log-conditions 
         (prog1 (funcall fn) (sb-ext:gc :gen 1)))
@@ -1072,10 +1080,11 @@
 					 (check-csrf-token csrf-token)
 					 (cond
 					   ((or (string= login-username "") (string= login-password "")) (emit-login-page :error-message "Please enter a username and password")) 
-					   (t (multiple-value-bind (user-id auth-token error-message) (do-lw2-login "username" login-username login-password) 
+					   (t (multiple-value-bind (user-id auth-token error-message expires) (do-lw2-login "username" login-username login-password)
 						(cond
 						  (auth-token
-						    (hunchentoot:set-cookie "lw2-auth-token" :value auth-token :secure *secure-cookies* :max-age (- (expt 2 31) 1)) 
+						    (hunchentoot:set-cookie "lw2-auth-token" :value auth-token :secure *secure-cookies* :max-age (+ (- expires (get-unix-time)) (* 24 60 60)))
+                                                    (hunchentoot:set-cookie "lw2-status" :value (json:encode-json-to-string (alist :expires expires)) :secure *secure-cookies* :max-age (- (expt 2 31) 1))
 						    (cache-put "auth-token-to-userid" auth-token user-id)
 						    (cache-put "auth-token-to-username" auth-token login-username)
 						    (setf (hunchentoot:return-code*) 303
@@ -1089,11 +1098,12 @@
 					    (emit-login-page :error-message "Please fill in all fields"))
 					   ((not (string= signup-password signup-password2))
 					    (emit-login-page :error-message "Passwords do not match"))
-					   (t (multiple-value-bind (user-id auth-token error-message) (do-lw2-create-user signup-username signup-email signup-password)
+					   (t (multiple-value-bind (user-id auth-token error-message expires) (do-lw2-create-user signup-username signup-email signup-password)
 						(cond
 						  (error-message (emit-login-page :error-message error-message))
-						  (t
-						    (hunchentoot:set-cookie "lw2-auth-token" :value auth-token :secure *secure-cookies* :max-age (- (expt 2 31) 1))
+                                                  (t
+                                                    (hunchentoot:set-cookie "lw2-auth-token" :value auth-token :secure *secure-cookies* :max-age (+ (- expires (get-unix-time)) (* 24 60 60)))
+                                                    (hunchentoot:set-cookie "lw2-status" :value (json:encode-json-to-string (alist :expires expires)) :secure *secure-cookies* :max-age (- (expt 2 31) 1))
 						    (cache-put "auth-token-to-userid" auth-token user-id)
 						    (cache-put "auth-token-to-username" auth-token signup-username)
 						    (setf (hunchentoot:return-code*) 303
