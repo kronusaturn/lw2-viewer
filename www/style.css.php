@@ -1702,9 +1702,6 @@ div.comment-child-links a::first-letter {
 	padding: 4px 8px 2px 4px;
 	z-index: 1;
 }
-#comments > .comment-controls .cancel-comment-button {
-	right: 30px;
-}
 .comment-controls .cancel-comment-button::before {
 	font-family: Font Awesome;
 	margin-right: 3px;
