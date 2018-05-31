@@ -108,7 +108,8 @@ body {
 }
 #content.post-page #nav-item-search,
 #content.user-page #nav-item-search,
-#content.archive-page #nav-item-search {
+#content.archive-page #nav-item-search,
+#content.conversation-page #nav-item-search {
 	left: 4.5em;
 }
 #nav-item-search .nav-inner {
@@ -119,6 +120,7 @@ body {
 	font-size: 1.125em;
 	color: #e6e6e6;
 	padding: 5px;
+	transition: color 0.15s ease;
 }
 #nav-item-search form:focus-within::before {
 	color: #92c396;
@@ -126,9 +128,11 @@ body {
 #nav-item-search button {
 	border: none;
 	font-weight: inherit;
-	color: #ccc;
 	padding: 6px;
 	height: 23px;
+}
+#nav-item-search form:not(:focus-within) button:not(:hover) {
+	color: #ddd;
 }
 #nav-item-search input {
 	width: unset;
@@ -1077,7 +1081,7 @@ div.comment-child-links a::first-letter {
 /* GUIEdit buttons */
 
 .guiedit-buttons-container {
-	background-image: linear-gradient(to bottom, #fff 0%, #ddf 50%, #ccf 75%, #aaf 100%);
+	background-color: #fff;
 }
 
 .posting-controls.edit-existing-post .guiedit-buttons-container button,
@@ -1086,12 +1090,22 @@ div.comment-child-links a::first-letter {
 }
 .guiedit-buttons-container button {
 	font-family: Font Awesome, <?php echo $text_font; ?>;
+	border: 1px solid transparent;
 }
 
 .guiedit::after {
 	font-family: <?php echo $UI_font; ?>;
-	color: #777;
-	text-shadow: none;
+	color: #999;
+	font-weight: 300;
+	text-shadow: 0 0 0 #999;
+	top: 3px;
+}
+
+.posting-controls .markdown-reference-link a {
+	background-position: right 70%;
+}
+.markdown-reference-link {
+	color: #999;
 }
 
 /* Markdown hints */
@@ -1100,7 +1114,7 @@ div.comment-child-links a::first-letter {
 	color: <?php echo $hyperlink_color; ?>;
 }
 #markdown-hints-checkbox + label:hover {
-	color: #e00;
+	color: #79a97e;
 }
 .markdown-hints {
 	border: 1px solid #c00;
@@ -1111,28 +1125,74 @@ div.comment-child-links a::first-letter {
 /* EDIT POST FORM */
 /*================*/
 
+#edit-post-form .link-post-checkbox + label {
+	top: 2px;
+	color: #acd2af;
+	transition: color 0.15s ease;
+}
+#edit-post-form .link-post-checkbox + label:hover {
+	color: #79a97e;
+}
 #edit-post-form .link-post-checkbox + label::before {
-	border-radius: 3px;
-	border: 1px solid #ddd;
-	color: #777;
+	top: 2px;
+	border: 1px solid #eee;
+	color: #bbb;
+	transition: 
+		box-shadow 0.3s ease,
+		border-color 0.15s ease;
 }
-#edit-post-form .link-post-checkbox + label:hover,
-#edit-post-form .link-post-checkbox:focus + label {
-	text-shadow: 
-		0 0 1px #fff,
-		0 0 2px #fff,
-		0 0 2.5px #aaa;
+#edit-post-form .link-post-checkbox + label:hover::before {
+	border-color: #c4dbc4;
 }
-#edit-post-form .link-post-checkbox + label:hover::before,
-#edit-post-form .link-post-checkbox:focus + label::before {
-	border-color: #aaa;
+#edit-post-form .link-post-checkbox:checked + label {
+	font-weight: normal;
 }
 #edit-post-form .link-post-checkbox:checked + label::before {
-	content: "\F00C";
+	border-color: #c4dbc4;
+	box-shadow: 
+		0 0 0 4px #fff inset,
+		0 0 0 1em #c4dbc4 inset;
 }
+
+#edit-post-form label[for='url'],
+#edit-post-form input[name='url'] {
+	display: block;
+	transition:
+		max-height 0.15s ease,
+		overflow 0.15s ease,
+		margin-top 0.15s ease,
+		margin-bottom 0.15s ease,
+		padding 0.15s ease,
+		border-color 0.15s ease;
+		
+}
+#edit-post-form .link-post-checkbox:not(:checked) ~ label[for='url'],
+#edit-post-form .link-post-checkbox:not(:checked) ~ input[name='url'] {
+	max-height: 0;
+	overflow: hidden;
+	margin-top: 0;
+	margin-bottom: 0;
+	padding: 0;
+	border-color: transparent;
+}
+
+#edit-post-form label[for='title'],
+#edit-post-form label[for='url'],
+#edit-post-form label[for='section'] {
+	color: #aaa;
+	text-shadow: 0 0 0 #aaa;
+}
+
 #edit-post-form input[type='radio'] + label {
-	color: #777;
-	border-color: #ddd;
+	color: #92c396;
+	border-color: #c4dbc4;
+	padding: 6px 12px 3px 12px;
+	position: relative;
+	top: -2px;
+	transition:
+		background-color 0.15s ease,
+		color 0.15s ease,
+		border-color 0.15s ease;
 }
 #edit-post-form input[type='radio'][value='all'] + label {
 	border-radius: 8px 0 0 8px;
@@ -1140,24 +1200,21 @@ div.comment-child-links a::first-letter {
 }
 #edit-post-form input[type='radio'][value='drafts'] + label {
 	border-radius: 0 8px 8px 0;
+	padding-right: 13px;
 }
 #edit-post-form input[type='radio'] + label:hover,
-#edit-post-form input[type='radio']:focus + label {
-	background-color: #ddd;
-	color: #000;
-}
-#edit-post-form input[type='radio']:focus + label {
-	color: #000;
-	box-shadow: 
-		0 0 0 1px #aaa;
-}
+#edit-post-form input[type='radio']:focus + label,
 #edit-post-form input[type='radio']:checked + label {
-	background-color: #ddd;
-	border-color: #ddd;
-	color: #000;
-	text-shadow: 
-		0 -1px 0 #fff,
-		0 0.5px 0.5px #000;
+	background-color: #c4dbc4;
+	color: #fff;
+}
+#edit-post-form input[type='radio']:active + label {
+	border-color: #92c396;
+	background-color: #92c396;
+}
+
+#edit-post-form input[type='submit'] {
+	padding: 7px 14px 4px 14px;
 }
 
 /*=======*/
@@ -1301,11 +1358,12 @@ input[type='password'] {
 	background-color: transparent;
 	border-color: transparent;
 	border-bottom-color: #eee;
+	transition: border-color 0.15s ease;
 }
 input[type='text']:focus,
 input[type='search']:focus,
 input[type='password']:focus {
-	border-bottom-color: #92c396;
+	border-bottom-color: #c4dbc4;
 }
 
 select {
