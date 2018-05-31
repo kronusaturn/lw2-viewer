@@ -29,6 +29,15 @@ body {
 	visibility: hidden;
 }
 
+/* Compensating for Linux/Windows being terrible. */
+
+.post-meta > *:not(.post-section),
+#primary-bar a,
+#secondary-bar a,
+.page-toolbar > * {
+	filter: <?php global $platform; echo ($platform == 'Mac' ? 'none' : 'contrast(50%) saturate(250%) brightness(75%)'); ?>;
+}
+
 /*=========*/
 /* NAV BAR */
 /*=========*/
@@ -475,9 +484,6 @@ h1.listing {
 	line-height: 1.2;
 }
 
-h1.listing a {
-	color: #444;
-}
 h1.listing a[href^="http"] {
 	color: #bbb;
 	font-size: 0.8125em;
@@ -485,7 +491,13 @@ h1.listing a[href^="http"] {
 }
 h1.listing a[href^="/"] {
 	font-weight: 300;
-	text-shadow: <?php global $platform; echo ($platform == 'Mac' ? 'none' : '0 0 0 #000'); ?>;
+	text-shadow: <?php global $platform; echo ($platform == 'Mac' ? 'none' : '0 0 0 #444'); ?>;
+	color: <?php global $platform; echo ($platform == 'Mac' ? '#444' : '#000'); ?>;
+}
+@-moz-document url-prefix() {
+	h1.listing a[href^="/"] {
+		text-shadow: none;
+	}
 }
 
 @media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
@@ -667,14 +679,8 @@ h1.listing + .post-meta .post-section::before {
 .post-body,
 .comment-body {
 	font-family: <?php echo $text_font; ?>;
-	text-shadow: 0 0 0 #000;
-}
-@-moz-document url-prefix() {
-	.post-body,
-	.comment-body {
-		text-shadow: <?php global $platform; echo ($platform == 'Mac' ? '0 0 0 #000' : 'none'); ?>;
-		font-weight: <?php global $platform; echo ($platform == 'Mac' ? '300' : '400'); ?>;
-	}
+	text-shadow: <?php global $platform; echo ($platform == 'Mac' ? '0 0 0 #000' : 'none'); ?>;
+	font-weight: <?php global $platform; echo ($platform == 'Mac' ? '300' : '400'); ?>;
 }
 
 /*=======*/
@@ -780,7 +786,7 @@ h1.listing + .post-meta .post-section::before {
 }
 <?php nested_stuff(".comment-item .comment-item ", ".comment-item .comment-item a.comment-parent-link::after,\n", ".comment-item .comment-item a.comment-parent-link::after", $comment_nesting_depth); ?> {
 	box-shadow: 
-		0 28px 16px -16px #eee inset,
+		0 28px 16px -16px #f6f6f6 inset,
 		4px 16px 0 12px #ffd inset,
 		4px	4px 0 12px #ffd inset;
 }

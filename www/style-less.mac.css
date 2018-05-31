@@ -3666,6 +3666,15 @@ body {
 	visibility: hidden;
 }
 
+/* Compensating for Linux/Windows being terrible. */
+
+.post-meta > *:not(.post-section),
+#primary-bar a,
+#secondary-bar a,
+.page-toolbar > * {
+	filter: none;
+}
+
 /*=========*/
 /* NAV BAR */
 /*=========*/
@@ -4112,9 +4121,6 @@ h1.listing {
 	line-height: 1.2;
 }
 
-h1.listing a {
-	color: #444;
-}
 h1.listing a[href^="http"] {
 	color: #bbb;
 	font-size: 0.8125em;
@@ -4123,6 +4129,12 @@ h1.listing a[href^="http"] {
 h1.listing a[href^="/"] {
 	font-weight: 300;
 	text-shadow: none;
+	color: #444;
+}
+@-moz-document url-prefix() {
+	h1.listing a[href^="/"] {
+		text-shadow: none;
+	}
 }
 
 @media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
@@ -4305,13 +4317,7 @@ h1.listing + .post-meta .post-section::before {
 .comment-body {
 	font-family: 'Source Serif Pro', 'Helvetica', sans-serif;
 	text-shadow: 0 0 0 #000;
-}
-@-moz-document url-prefix() {
-	.post-body,
-	.comment-body {
-		text-shadow: 0 0 0 #000;
-		font-weight: 300;
-	}
+	font-weight: 300;
 }
 
 /*=======*/
@@ -4446,7 +4452,7 @@ h1.listing + .post-meta .post-section::before {
 .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
 .comment-item .comment-item a.comment-parent-link::after {
 	box-shadow: 
-		0 28px 16px -16px #eee inset,
+		0 28px 16px -16px #f6f6f6 inset,
 		4px 16px 0 12px #ffd inset,
 		4px	4px 0 12px #ffd inset;
 }
