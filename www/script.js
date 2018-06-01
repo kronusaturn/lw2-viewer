@@ -646,6 +646,18 @@ function injectContentWidthSelector() {
 	});
 	
 	setWidthAdjustButtonsAccesskey();
+	
+	if (window.adjustmentTransitions) {
+		document.querySelector("head").insertAdjacentHTML("beforeend", 
+			"<style id='width-transition'>" + 
+			`#content,
+			#ui-elements-container,
+			#images-overlay {
+				transition:
+					max-width 0.3s ease;
+			}` + 
+			"</style>");
+	}
 }
 function setWidthAdjustButtonsAccesskey() {
 	document.querySelectorAll("#width-selector button").forEach(function (button) {
@@ -692,6 +704,24 @@ function injectThemeSelector() {
 	themeSelector.querySelectorAll("button").forEach(function (button) {
 		button.addActivateEvent(themeSelectButtonClicked);
 	});
+	
+	if (window.adjustmentTransitions) {
+		document.querySelector("head").insertAdjacentHTML("beforeend", 
+			"<style id='theme-fade-transition'>" + 
+			`body {
+				transition:
+					opacity 0.5s ease-out,
+					background-color 0.3s ease-out;
+			}
+			body.transparent {
+				background-color: #777;
+				opacity: 0.0;
+				transition:
+					opacity 0.5s ease-in,
+					background-color 0.3s ease-in;
+			}` + 
+			"</style>");
+	}
 }
 function themeSelectButtonClicked(event) {
 	let themeName = /select-theme-([^\s]+)/.exec(event.target.className)[1];
@@ -735,8 +765,23 @@ function setTheme(themeName) {
 	newStyle.addEventListener('load', function() { oldStyle.parentElement.removeChild(oldStyle); });
 	newStyle.addEventListener('load', generateImagesOverlay);
 	newStyle.addEventListener('load', updateThemeTweakerSampleText);
+	if (window.adjustmentTransitions) newStyle.addEventListener('load', function() { pageFadeTransition(true); });
 	if (themeLoadCallback != null) newStyle.addEventListener('load', themeLoadCallback);
-	document.querySelector('head').insertBefore(newStyle, oldStyle.nextSibling);
+
+	if (window.adjustmentTransitions) {
+		pageFadeTransition(false);
+		window.setTimeout(function () { document.querySelector('head').insertBefore(newStyle, oldStyle.nextSibling); }, 500);
+	} else {
+		document.querySelector('head').insertBefore(newStyle, oldStyle.nextSibling);
+	}
+}
+
+function pageFadeTransition(fadeIn) {
+	if (fadeIn) {
+		document.querySelector("body").removeClass("transparent");
+	} else {
+		document.querySelector("body").addClass("transparent");
+	}
 }
 
 function themeLoadCallback_less() {
@@ -1408,6 +1453,9 @@ registerInitializer('earlyInitialize', true, () => document.querySelector("#cont
 		let themeLoadCallback = window['themeLoadCallback_' + (readCookie('theme') || 'default')];
 		if (themeLoadCallback != null) themeLoadCallback();
 	}
+
+	// Animate width & theme adjustments?
+	window.adjustmentTransitions = false;
 
 	// Add the content width selector.
 	injectContentWidthSelector();
