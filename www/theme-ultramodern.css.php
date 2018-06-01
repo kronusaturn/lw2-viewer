@@ -1583,16 +1583,13 @@ div > .MJXc-display {
 			right: 4px;
 		}
 		
-		.comment-controls form:focus-within textarea,
 		.textarea-container:focus-within textarea {
 			background-color: #888;
 		}
-		.comment-controls form:focus-within .guiedit-mobile-auxiliary-button,
 		.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
 			border: 1px solid transparent;
 			padding: 6px;
 		}
-		.comment-controls form:focus-within .guiedit-mobile-help-button.active,
 		.textarea-container:focus-within .guiedit-mobile-help-button.active {
 			box-shadow:
 				0 0 0 1px #ccc,
@@ -1601,7 +1598,6 @@ div > .MJXc-display {
 			color: #ccc;
 			font-weight: 600;
 		}
-		.comment-controls form:focus-within .guiedit-buttons-container,
 		.textarea-container:focus-within .guiedit-buttons-container {
 			background-color: #888;
 			border-top: 1px solid #ddf;
@@ -1609,7 +1605,6 @@ div > .MJXc-display {
 		#content.conversation-page .textarea-container:focus-within::after {
 			background-color: #888;
 		}
-		.comment-controls form:focus-within button.guiedit,
 		.textarea-container:focus-within button.guiedit {
 			border: 1px solid transparent;
 		}

@@ -191,14 +191,18 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 	let editCommentId = (editMarkdownSource ? e.getCommentId() : false);
 	let withparent = (!editMarkdownSource && e.getCommentId());
 	e.innerHTML = "<button class='cancel-comment-button' tabindex='-1'>Cancel</button>" +
-		"<form method='post'><textarea name='text'></textarea>" +
+		"<form method='post'>" + 
+		"<div class='textarea-container'>" + 
+		"<textarea name='text'></textarea>" +
 		(withparent ? "<input type='hidden' name='parent-comment-id' value='" + e.getCommentId() + "'>" : "") +
 		(editCommentId ? "<input type='hidden' name='edit-comment-id' value='" + editCommentId + "'>" : "") +
-		"<input type='hidden' name='csrf-token' value='" + window.csrfToken + "'>" +
 		"<span class='markdown-reference-link'>You can use <a href='http://commonmark.org/help/' target='_blank'>Markdown</a> here.</span>" + 
 		`<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-help-button">Help</button>` + 
 		`<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-exit-button">Exit</button>` + 
-		"<input type='submit' value='Submit'></form>";
+		"</div><div>" + 
+		"<input type='hidden' name='csrf-token' value='" + window.csrfToken + "'>" +
+		"<input type='submit' value='Submit'>" + 
+		"</div></form>";
 	
 	e.querySelector(".cancel-comment-button").addActivateEvent(window.hideReplyForm);
 	e.scrollIntoViewIfNeeded();
