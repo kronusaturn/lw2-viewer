@@ -683,7 +683,7 @@ function injectThemeSelector() {
 	let themeSelector = addUIElement(
 		"<div id='theme-selector' class='theme-selector'>" +
 		String.prototype.concat.apply("", window.themeOptions.map(function (to) {
-			let [name, desc, letter, load_callback, unload_callback] = to;
+			let [name, desc, letter] = to;
 			let selected = (name == currentTheme ? ' selected' : '');
 			let disabled = (name == currentTheme ? ' disabled' : '');
 			let accesskey = letter.charCodeAt(0) - 'A'.charCodeAt(0) + 1;
@@ -710,21 +710,19 @@ function setSelectedTheme(themeName) {
 	document.querySelector("#theme-tweaker-ui .current-theme span").innerText = themeName;
 }
 function setTheme(themeName) {
-	var themeUnloadCallback = null;
-	var themeLoadCallback = null;
-	
+	var themeUnloadCallback = '';
 	if (typeof(themeName) == 'undefined') {
 		themeName = readCookie('theme');
 		if (!themeName) return;
 	} else {
-		themeUnloadCallback = window.themeUnloadCallbacks[readCookie('theme')];
+		themeUnloadCallback = 'themeUnloadCallback_' + readCookie('theme');
 	
 		if (themeName == 'default') setCookie('theme', '');
 		else setCookie('theme', themeName);
 	}
-	themeLoadCallback = window.themeLoadCallbacks[themeName];
+	let themeLoadCallback = 'themeLoadCallback_' + themeName;
 	
-	if (themeUnloadCallback != null) themeUnloadCallback();
+	if (window[themeUnloadCallback] != null) window[themeUnloadCallback]();
 	
 	let styleSheetNameSuffix = (themeName == 'default') ? '' : ('-' + themeName);
 	let currentStyleSheetNameComponents = /style[^\.]*(\..+)$/.exec(document.querySelector("head link[href*='.css']").href);
@@ -737,23 +735,25 @@ function setTheme(themeName) {
 	newStyle.addEventListener('load', function() { oldStyle.parentElement.removeChild(oldStyle); });
 	newStyle.addEventListener('load', generateImagesOverlay);
 	newStyle.addEventListener('load', updateThemeTweakerSampleText);
+	if (window[themeLoadCallback] != null) newStyle.addEventListener('load', window[themeLoadCallback]);
 	document.querySelector('head').insertBefore(newStyle, oldStyle.nextSibling);
-	
-	if (themeName == 'dark') {
-		document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='dark-theme-adjustments'>" + 
-		`.markdown-reference-link a { color: #d200cf; filter: invert(100%); }` + "</style>");
-	} else {
-		document.querySelectorAll("#dark-theme-adjustments").forEach(function(e) {e.parentNode.removeChild(e)});
-	}
-
-	if (themeLoadCallback != null) themeLoadCallback();
 }
 
-function themeLoadCallbackLess() {
+function themeLoadCallback_less() {
 	console.log("Loading theme Less...");
 }
-function themeUnloadCallbackLess() {
+function themeUnloadCallback_less() {
 	console.log("Unloading theme Less...");
+}
+
+function themeLoadCallback_dark() {
+	document.querySelector("head").insertAdjacentHTML("beforeend", 
+		"<style id='dark-theme-adjustments'>" + 
+		`.markdown-reference-link a { color: #d200cf; filter: invert(100%); }` + 
+		"</style>");
+}
+function themeUnloadCallback_dark() {
+	document.querySelectorAll("#dark-theme-adjustments").forEach(function (e) { e.parentNode.removeChild(e); });
 }
 
 /********************************************/
@@ -1401,9 +1401,12 @@ function removeElement(selector, ancestor = document) {
 registerInitializer('earlyInitialize', true, () => document.querySelector("#content") != null, function () {
 	// Backward compatibility
 	let storedTheme = window.localStorage.getItem('selected-theme');
-	if(storedTheme) {
+	if (storedTheme) {
 		setTheme(storedTheme);
 		window.localStorage.removeItem('selected-theme');
+	} else {
+		let themeLoadCallback = window['themeLoadCallback_' + (readCookie('theme') || 'default')];
+		if (window[themeLoadCallback] != null) window[themeLoadCallback]();
 	}
 
 	// Add the content width selector.
@@ -1669,7 +1672,6 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 			listings[indexOfNextListing].focus();
 		});
 	}
-
 
 	// Add accesskeys to user page view selector.
 	let viewSelector = document.querySelector(".sublevel-nav");

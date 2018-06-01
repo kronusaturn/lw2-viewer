@@ -518,14 +518,11 @@
             csrf-token
             (load-time-value (with-open-file (s "www/head.js") (uiop:slurp-stream-string s)) t)
             *extra-inline-scripts*)
-    (format out-stream "~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"stylesheet\" href=\"~A\"><link rel=\"shortcut icon\" href=\"~A\">~A"
+    (format out-stream "~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"stylesheet\" href=\"~A\"><link rel=\"shortcut icon\" href=\"~A\">"
             *html-head*
             (generate-css-link)
             (generate-versioned-link "/theme_tweaker.css")
-            (generate-versioned-link "/favicon.ico")
-            (if (string= (hunchentoot:cookie-in "theme") "dark")
-                "<style id='dark-theme-adjustments'>.markdown-reference-link a { color: #d200cf; filter: invert(100%); }</style>"
-                ""))
+            (generate-versioned-link "/favicon.ico"))
     (format out-stream "<script src=\"~A\" async></script>~A"
             (generate-versioned-link "/script.js")
             *extra-external-scripts*)

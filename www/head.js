@@ -83,20 +83,13 @@ window.currentTextZoom = window.localStorage.getItem('text-zoom');
 setTextZoom(window.currentTextZoom);
 
 window.themeOptions = [
-	['default', 'Default theme (dark text on light background)', 'A', null, null],
-	['dark', 'Dark theme (light text on dark background)', 'B', null, null],
-	['grey', 'Grey theme (more subdued than default theme)', 'C', null, null],
-	['ultramodern', 'Ultramodern theme (very hip)', 'D', null, null],
-	['zero', 'Theme zero (plain and simple)', 'E', null, null],
-	['brutalist', 'Brutalist theme (the Motherland calls!)', 'F', null, null],
-	['rts', 'ReadTheSequences.com theme', 'G', null, null],
-	['classic', 'Classic Less Wrong theme', 'H', null, null],
-	['less', 'Less theme (serenity now)', 'I', 'themeLoadCallbackLess', 'themeUnloadCallbackLess']
+	['default', 'Default theme (dark text on light background)', 'A'],
+	['dark', 'Dark theme (light text on dark background)', 'B'],
+	['grey', 'Grey theme (more subdued than default theme)', 'C'],
+	['ultramodern', 'Ultramodern theme (very hip)', 'D'],
+	['zero', 'Theme zero (plain and simple)', 'E'],
+	['brutalist', 'Brutalist theme (the Motherland calls!)', 'F'],
+	['rts', 'ReadTheSequences.com theme', 'G'],
+	['classic', 'Classic Less Wrong theme', 'H'],
+	['less', 'Less theme (serenity now)', 'I']
 ];
-window.themeLoadCallbacks = [ ];
-window.themeUnloadCallbacks = [ ];
-window.themeOptions.forEach(function (t) {
-	let [name, desc, letter, load_callback, unload_callback] = t;
-	window.themeLoadCallbacks[name] = load_callback;
-	window.themeUnloadCallbacks[name] = unload_callback;
-});
