@@ -717,12 +717,12 @@ function setTheme(themeName) {
 		themeName = readCookie('theme');
 		if (!themeName) return;
 	} else {
-		themeUnloadCallback = window.themeOptions[readCookie('theme')][4];
+		themeUnloadCallback = window.themeUnloadCallbacks[readCookie('theme')];
 	
 		if (themeName == 'default') setCookie('theme', '');
 		else setCookie('theme', themeName);
 	}
-	themeLoadCallback = window.themeOptions[themeName][3];
+	themeLoadCallback = window.themeLoadCallbacks[themeName];
 	
 	if (themeUnloadCallback != null) themeUnloadCallback();
 	

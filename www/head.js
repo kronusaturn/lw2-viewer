@@ -91,5 +91,12 @@ window.themeOptions = [
 	['brutalist', 'Brutalist theme (the Motherland calls!)', 'F', null, null],
 	['rts', 'ReadTheSequences.com theme', 'G', null, null],
 	['classic', 'Classic Less Wrong theme', 'H', null, null],
-	['less', 'Less theme (serenity now)', 'I', themeLoadCallbackLess, themeUnloadCallbackLess]
+	['less', 'Less theme (serenity now)', 'I', 'themeLoadCallbackLess', 'themeUnloadCallbackLess']
 ];
+window.themeLoadCallbacks = [ ];
+window.themeUnloadCallbacks = [ ];
+window.themeOptions.forEach(function (t) {
+	let [name, desc, letter, load_callback, unload_callback] = t;
+	window.themeLoadCallbacks[name] = load_callback;
+	window.themeUnloadCallbacks[name] = unload_callback;
+});
