@@ -5344,6 +5344,15 @@ div > .MJXc-display {
 	/*****************************************/
 	@media only screen and (max-width: 900px) {
 	/*****************************************/
+		#primary-bar,
+		#secondary-bar,
+		.page-toolbar {
+			display: none !important;
+		}
+		#content {
+			padding: 0 4px;
+		}
+
 		h1.listing + .post-meta > * {
 			line-height: 1.5;
 		}

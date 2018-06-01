@@ -81,3 +81,15 @@ function setTextZoom(zoomFactor) {
 }
 window.currentTextZoom = window.localStorage.getItem('text-zoom');
 setTextZoom(window.currentTextZoom);
+
+window.themeOptions = [
+	['default', 'Default theme (dark text on light background)', 'A', null, null],
+	['dark', 'Dark theme (light text on dark background)', 'B', null, null],
+	['grey', 'Grey theme (more subdued than default theme)', 'C', null, null],
+	['ultramodern', 'Ultramodern theme (very hip)', 'D', null, null],
+	['zero', 'Theme zero (plain and simple)', 'E', null, null],
+	['brutalist', 'Brutalist theme (the Motherland calls!)', 'F', null, null],
+	['rts', 'ReadTheSequences.com theme', 'G', null, null],
+	['classic', 'Classic Less Wrong theme', 'H', null, null],
+	['less', 'Less theme (serenity now)', 'I', themeLoadCallbackLess, themeUnloadCallbackLess]
+];

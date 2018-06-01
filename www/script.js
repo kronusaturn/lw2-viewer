@@ -680,21 +680,10 @@ function widthAdjustButtonClicked(event) {
 
 function injectThemeSelector() {
 	let currentTheme = readCookie("theme") || "default";
-	let themeOptions = [
-		['default', 'Default theme (dark text on light background)', 'A'],
-		['dark', 'Dark theme (light text on dark background)', 'B'],
-		['grey', 'Grey theme (more subdued than default theme)', 'C'],
-		['ultramodern', 'Ultramodern theme (very hip)', 'D'],
-		['zero', 'Theme zero (plain and simple)', 'E'],
-		['brutalist', 'Brutalist theme (the Motherland calls!)', 'F'],
-		['rts', 'ReadTheSequences.com theme', 'G'],
-		['classic', 'Classic Less Wrong theme', 'H'],
-		['less', 'Less theme (serenity now)', 'I']
-	];
 	let themeSelector = addUIElement(
 		"<div id='theme-selector' class='theme-selector'>" +
-		String.prototype.concat.apply("", themeOptions.map(function (to) {
-			let [name, desc, letter] = to;
+		String.prototype.concat.apply("", window.themeOptions.map(function (to) {
+			let [name, desc, letter, load_callback, unload_callback] = to;
 			let selected = (name == currentTheme ? ' selected' : '');
 			let disabled = (name == currentTheme ? ' disabled' : '');
 			let accesskey = letter.charCodeAt(0) - 'A'.charCodeAt(0) + 1;
@@ -721,13 +710,21 @@ function setSelectedTheme(themeName) {
 	document.querySelector("#theme-tweaker-ui .current-theme span").innerText = themeName;
 }
 function setTheme(themeName) {
+	var themeUnloadCallback = null;
+	var themeLoadCallback = null;
+	
 	if (typeof(themeName) == 'undefined') {
 		themeName = readCookie('theme');
 		if (!themeName) return;
 	} else {
+		themeUnloadCallback = window.themeOptions[readCookie('theme')][4];
+	
 		if (themeName == 'default') setCookie('theme', '');
 		else setCookie('theme', themeName);
 	}
+	themeLoadCallback = window.themeOptions[themeName][3];
+	
+	if (themeUnloadCallback != null) themeUnloadCallback();
 	
 	let styleSheetNameSuffix = (themeName == 'default') ? '' : ('-' + themeName);
 	let currentStyleSheetNameComponents = /style[^\.]*(\..+)$/.exec(document.querySelector("head link[href*='.css']").href);
@@ -748,6 +745,15 @@ function setTheme(themeName) {
 	} else {
 		document.querySelectorAll("#dark-theme-adjustments").forEach(function(e) {e.parentNode.removeChild(e)});
 	}
+
+	if (themeLoadCallback != null) themeLoadCallback();
+}
+
+function themeLoadCallbackLess() {
+	console.log("Loading theme Less...");
+}
+function themeUnloadCallbackLess() {
+	console.log("Unloading theme Less...");
 }
 
 /********************************************/
