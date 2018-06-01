@@ -3968,6 +3968,7 @@ body {
 	border: 1px solid #777;
 	background-color: transparent;
 	color: #666;
+	box-shadow: 0 0 0 1px transparent;
 }
 #hns-date-picker input:focus {
 	color: #000;
