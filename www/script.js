@@ -348,6 +348,7 @@ function makeVoteCompleteEvent(target) {
 			buttonTargets.forEach(function (bt) {
 				bt.querySelectorAll("button.vote").forEach(function(b) {
 					b.className = 'vote ' + b.getAttribute("data-vote-type") + ((b.getAttribute('data-vote-type') == voteType) ? ' selected' : '');
+					b.removeClass("clicked-twice");
 				});
 			});
 		}
@@ -362,13 +363,41 @@ function sendVoteRequest(targetId, targetType, voteType, onFinish) {
 	req.send("csrf-token="+encodeURIComponent(csrfToken)+"&target="+encodeURIComponent(targetId)+"&target-type="+encodeURIComponent(targetType)+"&vote-type="+encodeURIComponent(voteType));
 }
 
-function voteEvent(e) {
-	e.target.blur();
-	e.target.parentNode.querySelectorAll("button.vote").forEach(function(b) { b.style.pointerEvents = "none" });
-	e.target.parentNode.style.opacity = "0.5";
-	let targetType = e.target.getAttribute("data-target-type");
-	let targetId = ((targetType == 'Comments') ? e.target.getCommentId() : e.target.parentNode.getAttribute("data-post-id"));
-	let voteType = e.target.getAttribute("data-vote-type");
+function voteButtonClicked(event) {
+	let vb = event.target;
+	
+	// 500 ms (0.5 s) double-click timeout.	
+	let doubleClickTimeout = 500;
+	
+	if (!vb.clickedOnce) {
+		vb.clickedOnce = true;
+		vb.addClass("clicked-once");
+
+		window.setTimeout(vbDoubleClickTimeoutCallback, doubleClickTimeout, vb);
+	} else {
+		vb.clickedOnce = false;
+		
+		// Do double-click code.
+		voteEvent(vb, 2);
+		vb.removeClass("clicked-once");
+		vb.addClass("clicked-twice");
+	}
+}
+function vbDoubleClickTimeoutCallback(vb) {
+	if (!vb.clickedOnce) return;
+	
+	// Do single-click code.
+	vb.clickedOnce = false;
+	voteEvent(vb, 1);
+	vb.removeClass("clicked-once");
+}
+function voteEvent(vb, numClicks) {
+	vb.blur();
+	vb.parentNode.querySelectorAll("button.vote").forEach(function(b) { b.style.pointerEvents = "none" });
+	vb.parentNode.style.opacity = "0.5";
+	let targetType = vb.getAttribute("data-target-type");
+	let targetId = ((targetType == 'Comments') ? vb.getCommentId() : vb.parentNode.getAttribute("data-post-id"));
+	let voteType = vb.getAttribute("data-vote-type");
 	let oldVoteType;
 	if(targetType == "Posts") {
 		oldVoteType = postVote;
@@ -377,7 +406,7 @@ function voteEvent(e) {
 		oldVoteType = commentVotes[targetId];
 		commentVotes[targetId] = ((voteType == oldVoteType) ? null : voteType);
 	}
-	let f = function() { sendVoteRequest(targetId, targetType, voteType, makeVoteCompleteEvent((targetType == 'Comments' ? e.target.parentNode : null))) };
+	let f = function() { sendVoteRequest(targetId, targetType, voteType, makeVoteCompleteEvent((targetType == 'Comments' ? vb.parentNode : null))) };
 	if(oldVoteType && (oldVoteType != voteType)) {
 		sendVoteRequest(targetId, targetType, oldVoteType, f);
 	} else {
@@ -1436,9 +1465,16 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		.downvote:hover,
 		.downvote.selected {
 			color: #eb4c2a;
-		}` + "</style>");
+		}` +
+		`.vote.clicked-once {
+			transform: scale(1.25);
+		}
+		.vote.clicked-twice {
+			transform: scale(1.55);
+		}` + 
+		"</style>");
 		document.querySelectorAll("button.vote").forEach(function(e) {
-			e.addActivateEvent(voteEvent);
+			e.addActivateEvent(voteButtonClicked);
 		});
 
 		window.needHashRealignment = true;
