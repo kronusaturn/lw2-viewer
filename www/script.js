@@ -112,7 +112,8 @@ Element.prototype.addActivateEvent = function(func, includeMouseDown) {
 Element.prototype.removeActivateEvent = function() {
 	let ael = this.activateEventListener;
 	this.removeEventListener("mousedown", ael);
-	this.removeEventListener("mouseup", ael);
+// 	this.removeEventListener("mouseup", ael);
+	this.removeEventListener("click", ael);
 	this.removeEventListener("keyup", ael);
 }
 
