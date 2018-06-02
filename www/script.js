@@ -324,13 +324,16 @@ function hideReplyForm(event) {
 
 function OnInputExpandTextarea() {
 	if (window.innerWidth <= 520) return;
-	if ((this.offsetHeight - 30) < this.scrollHeight)
+	let totalBorderHeight = (this.closest("#conversation-form") == null) ? 30 : 2;
+	if ((this.offsetHeight - totalBorderHeight) < this.scrollHeight) {
 		ExpandTextarea(this);
+	}
 }
 function ExpandTextarea(textarea) {
 	window.requestAnimationFrame(function() {
 		textarea.style.height = 'auto';
-		textarea.style.height = textarea.scrollHeight + 30 + 'px';
+		let totalBorderHeight = (textarea.closest("#conversation-form") == null) ? 30 : 2;
+		textarea.style.height = textarea.scrollHeight + totalBorderHeight + 'px';
 		if(textarea.clientHeight < window.innerHeight) {
 			textarea.parentElement.parentElement.scrollIntoViewIfNeeded();
 		}
