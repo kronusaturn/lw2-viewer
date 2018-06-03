@@ -44,8 +44,14 @@ input {
 #content {
 	margin: 0 auto;
 	padding: 0 30px;
-	overflow: auto;
-	position: relative;
+/* 	overflow: auto; */
+/* 	position: relative; */
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-auto-flow: dense;
+}
+#content > * {
+	grid-column: 1 / span 3;
 }
 #ui-elements-container {
 	position: fixed;
@@ -190,7 +196,6 @@ input {
 	top: 0;
 	padding: 0 0.45em;
 	visibility: visible;
-/* 	z-index: 1000; */
 	font-weight: 900;
 }
 #inbox-indicator.new-messages::before {
@@ -221,10 +226,14 @@ a#inbox-indicator.new-messages:hover::before {
 /* PAGE TOOLBAR */
 /****************/
 
+#content > .page-toolbar {
+	grid-column: 3;
+	text-align: right;
+	margin-right: -24px;
+}
+
 .page-toolbar {
-	position: absolute;
 	font-size: 0.9em;
-	right: 0.4em;
 	line-height: 1.8;
 }
 .page-toolbar > * {
@@ -262,6 +271,7 @@ a#inbox-indicator.new-messages:hover::before {
 /*********************/
 
 #top-nav-bar {
+	grid-column: 2;
 	margin: 0.25em 0 0 0;
 	padding: 0.75em 0 0 0;
 	text-align: center;
@@ -282,7 +292,7 @@ a#inbox-indicator.new-messages:hover::before {
 	pointer-events: none;
 	visibility: hidden;
 }
-/* REMOVE THEN THIS FEATURE IS IMPLEMENTED: */
+/* REMOVE WHEN THIS FEATURE IS IMPLEMENTED: */
 #top-nav-bar a.nav-item-last {
 	pointer-events: none;
 	visibility: hidden;
@@ -317,6 +327,12 @@ a#inbox-indicator.new-messages:hover::before {
 	text-align: center;
 	display: flex;
 	justify-content: center;
+	margin: 1em 0 0 0;
+}
+.sublevel-nav:not(.sort) {
+	grid-row: 5;
+	grid-column: 2;
+	align-self: start;
 }
 .sublevel-nav .sublevel-item {
 	flex: 0 0 6em;
@@ -332,8 +348,12 @@ a#inbox-indicator.new-messages:hover::before {
 /***********************/
 
 .sublevel-nav.sort {
-	position: absolute;
-	right: 30px;
+	grid-column: 3;
+	grid-row: 5 / span 2;
+	position: relative;
+	justify-self: end;
+	align-self: start;
+	margin-top: 8px;
 	font-size: 0.75em;
 	flex-flow: column;
 }
@@ -797,23 +817,26 @@ h1.listing + .post-meta .read-time {
 /* USER PAGES */
 /**************/
 
+#content.user-page > #top-nav-bar {
+	grid-row: 6;
+}
+
 #content.user-page h1.page-main-heading {
 	margin: 1em 0 0 0;
 	line-height: 1.2;
 }
+
 #content.user-page .user-stats {
-	float: right;
-	margin-top: -1.6em;
+	grid-column: 3;
+	grid-row: 5;
+	text-align: right;
 }
 
 #content.user-page #comments-list-mode-selector {
-	position: absolute;
+	grid-row: 5 / span 2;
 }
 #content.user-page #comments-list-mode-selector button {
 	display: block;
-}
-#content.user-page .sublevel-nav:not(.sort) {
-	margin-top: 1em;
 }
 
 /*****************/
@@ -1521,11 +1544,13 @@ div.comment-child-links a::first-letter {
 /* COMMENTS COMPACT VIEW */
 /*************************/
 
-#comments-list-mode-selector {
+#comments-list-mode-selector,
+#content.index-page #comments-list-mode-selector,
+#content.user-page #comments-list-mode-selector {
 	padding-top: 6px;
-}
-#content.index-page #comments-list-mode-selector {
-	position: absolute;
+	grid-column: 1;
+	position: unset;
+	z-index: 1;
 }
 #comments-list-mode-selector button {
 	color: transparent;
@@ -1548,14 +1573,25 @@ div.comment-child-links a::first-letter {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/compact.gif")) ?>');
 }
 
+#content.compact > ul.comment-thread {
+}
+#content > ul.comment-thread > li.comment-item,
+#content.compact > ul.comment-thread > li.comment-item {
+	margin: 0;
+}
+
+#content > .comment-thread {
+	margin: 0 0 2em 0;
+}
 #content.compact > .comment-thread {
 	font-size: 0.9375rem;
+	margin: 0 0 1em 0;
 }
 #content.compact > .comment-thread .comment-body {
 	font-size: 1.0625rem;
 }
 #content.compact > .comment-thread .comment-item {
-	max-height: 71px;
+	max-height: 61px;
 	margin-top: 1em;
 	overflow: hidden;
 	position: relative;
