@@ -166,9 +166,6 @@ body {
 	font-variant: small-caps;
 }
 .sublevel-nav.sort {
-	position: absolute;
-	top: 167px;
-	right: 30px;
 	border: 2px solid #999;
 	padding: 18px 0 0 0;
 	border-radius: 8px;
@@ -494,13 +491,7 @@ h1.listing + .post-meta .link-post-domain {
 #content.user-page h1.page-main-heading {
 	border-bottom: 1px solid #777;
 }
-#content.user-page .sublevel-nav + h1.listing {
-	margin-top: 1.75em;
-}
 
-#content.conversations-user-page .sublevel-nav + h1.listing {
-	margin-top: 1em;
-}
 #content.conversations-user-page h1.listing + .post-meta .date::after {
 	display: none;
 }
@@ -521,9 +512,6 @@ h1.listing + .post-meta .link-post-domain {
 		0px 0px 1px #777,
 		0.5px 0.5px 1px #aaa,
 		0.5px 0.5px 1px #bbb;
-}
-#content.conversation-page .conversation-participants {
-	top: 92px;
 }
 
 /*============*/
@@ -1653,17 +1641,8 @@ div > .MJXc-display {
 			padding: 6px 10px;
 		}
 
-		#content.compact > #top-nav-bar + .comment-thread .comment-item {
-			margin-top: 0;
-		}
-
 		.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
 			background-color: #ccc;
-		}
-	
-		.sublevel-nav.sort {
-			top: 286px;
-			right: 10px;
 		}
 
 		.comment-item .comment-item {
@@ -1672,18 +1651,16 @@ div > .MJXc-display {
 		.comment-item .comment-item + .comment-item {
 			margin: 1.5em 0 4px 6px;
 		}
-	/*****************************************/
-	@media only screen and (max-width: 720px) {
-	/*****************************************/
+
 		.sublevel-nav .sublevel-item,
 		.sublevel-nav .sublevel-item:first-child,
 		.sublevel-nav .sublevel-item:last-child {
 			border-width: 1px;
 			border-radius: 8px;
 		}
-		.sublevel-nav.sort {
-			top: 273px;
-		}
+	/*****************************************/
+	@media only screen and (max-width: 720px) {
+	/*****************************************/
 	/*******************************************/
 	} @media only screen and (max-width: 520px) {
 	/*******************************************/
@@ -1703,11 +1680,6 @@ div > .MJXc-display {
 
 		#content.compact > .comment-thread .comment-item {
 			max-height: 105px;
-		}
-		
-		.sublevel-nav.sort {
-			top: 215px;
-			right: 4px;
 		}
 		
 		.textarea-container:focus-within textarea {

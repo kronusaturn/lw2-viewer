@@ -3882,9 +3882,6 @@ body {
 /*=====================*/
 
 .sublevel-nav.sort {
-	position: absolute;
-	top: 167px;
-	right: 30px;
 	padding: 18px 0 0 0;
 	border-radius: 8px;
 }
@@ -4173,11 +4170,8 @@ h1.listing + .post-meta .karma-value {
 	border-bottom: 1px solid #ccc;
 }
 
-#content.user-page .sublevel-nav + h1.listing {
-	margin-top: 1.75em;
-}
 #content.user-page h1.listing {
-	margin: 1.5em 0 0 0;
+	margin: 0;
 	padding: 0 6px;
 	position: relative;
 }
@@ -4192,15 +4186,12 @@ h1.listing + .post-meta .karma-value {
 	box-shadow: 0px 0px 10px #555;
 }
 #content.user-page h1.listing + .post-meta {
-	margin: 0 6px 3em 35px;
+	margin: 0 6px 2em 35px;
 }
 #content.user-page h1.listing + .post-meta::after {
 	display: none;
 }
 
-#content.conversations-user-page .sublevel-nav + h1.listing {
-	margin-top: 1em;
-}
 #content.conversations-user-page h1.listing + .post-meta {
 	margin: 0;
 }
@@ -4212,10 +4203,6 @@ h1.listing + .post-meta .karma-value {
 /*===============*/
 /* CONVERSATIONS */
 /*===============*/
-
-#content.conversation-page .conversation-participants {
-	top: 92px;
-}
 
 /*============*/
 /* LOGIN PAGE */
@@ -5272,20 +5259,11 @@ div > .MJXc-display {
 			padding: 6px 10px;
 		}
 
-		#content.compact > #top-nav-bar + .comment-thread .comment-item {
-			margin-top: 0;
-		}
-
 		.archive-nav *[class^='archive-nav-item-'] {
 			border-width: 1px !important;
 		}
 		.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
 			background-color: #aaa;
-		}
-	
-		.sublevel-nav.sort {
-			top: 292px;
-			right: 10px;
 		}
 
 		.comment-item .comment-item {
@@ -5294,18 +5272,16 @@ div > .MJXc-display {
 		.comment-item .comment-item + .comment-item {
 			margin: 1.5em 3px 3px 6px;
 		}
-	/*******************************************/
-	} @media only screen and (max-width: 720px) {
-	/*******************************************/
+
 		.sublevel-nav .sublevel-item,
 		.sublevel-nav .sublevel-item:first-child,
 		.sublevel-nav .sublevel-item:last-child {
 			border-width: 1px;
 			border-radius: 8px;
 		}
-		.sublevel-nav.sort {
-			top: 278px;
-		}
+	/*******************************************/
+	} @media only screen and (max-width: 720px) {
+	/*******************************************/
 	/*******************************************/
 	} @media only screen and (max-width: 520px) {
 	/*******************************************/
@@ -5324,11 +5300,6 @@ div > .MJXc-display {
 		}
 		#content.conversations-user-page h1.listing + .post-meta .date {
 			margin: 0 0 0 1em;
-		}
-
-		.sublevel-nav.sort {
-			top: 215px;
-			right: 4px;
 		}
 		
 		.comment-body {
