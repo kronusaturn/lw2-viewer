@@ -44,8 +44,6 @@ input {
 #content {
 	margin: 0 auto;
 	padding: 0 30px;
-/* 	overflow: auto; */
-/* 	position: relative; */
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 	grid-auto-flow: dense;
@@ -105,6 +103,9 @@ input {
 }
 #secondary-bar .nav-inner {
 	padding: 4px 0;
+}
+#bottom-bar {
+	margin-top: 1.25em;
 }
 #bottom-bar .nav-item {
 	flex: 1 1 0;
@@ -278,12 +279,6 @@ a#inbox-indicator.new-messages:hover::before {
 	font-size: 1.25em;
 	display: flex;
 	justify-content: center;
-}
-.sublevel-nav + #top-nav-bar {
-	margin-top: 0.25em;
-}
-.user-page .archive-nav + #top-nav-bar + h1.listing {
-	margin-top: 0.25em;
 }
 #top-nav-bar a {
 	line-height: 1;
@@ -779,9 +774,6 @@ h1.listing a[href^="http"] {
 	padding: 1.25em 0 1.25em 0;
 	font-size: 1.375em;
 }
-.archive-nav + .listing-message {
-	padding: 1.75em 0 1.25em 0;
-}
 
 /*********************/
 /* LISTING POST-META */
@@ -791,9 +783,6 @@ h1.listing + .post-meta {
 	position: relative;
 	justify-content: flex-start;
 	margin: 0 20px 0 21px;
-}
-h1.listing:last-of-type + .post-meta {
-	margin-bottom: 1.25em;
 }
 
 h1.listing + .post-meta > * {
@@ -822,7 +811,7 @@ h1.listing + .post-meta .read-time {
 }
 
 #content.user-page h1.page-main-heading {
-	margin: 0;
+	margin: 0.25em 0 0 0;
 	line-height: 1.1;
 	grid-row: 4;
 }
@@ -846,9 +835,10 @@ h1.listing + .post-meta .read-time {
 /*****************/
 
 #content.conversation-page .conversation-participants {
-	position: absolute;
-	right: 30px;
-	top: 100px;
+	grid-column: 2 / span 2;
+	grid-row: 3;
+	text-align: right;
+	margin: 0.5em 0 0 0;
 }
 
 .conversation-participants ul,
@@ -865,8 +855,8 @@ h1.listing + .post-meta .read-time {
 	content: ",";
 }
 #content.conversation-page .posting-controls {
-	margin: 0.5em 0 3em;
-	padding-bottom: 1em;
+	margin: 0;
+	padding: 0 0 1em 0;
 }
 #content.conversation-page .post-meta-fields {
 	overflow: auto;
@@ -881,7 +871,7 @@ h1.listing + .post-meta .read-time {
 }
 #content.conversation-page h1.page-main-heading {
 	text-align: center;
-	margin: 0.25em 0 0.5em 0;
+	margin: 0.5em 0;
 	line-height: 1.15;
 }
 #content.conversation-page > ul.comment-thread:last-of-type {
