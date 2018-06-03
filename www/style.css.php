@@ -329,7 +329,7 @@ a#inbox-indicator.new-messages:hover::before {
 	justify-content: center;
 	margin: 1em 0 0 0;
 }
-.sublevel-nav:not(.sort) {
+#content > .sublevel-nav:not(.sort) {
 	grid-row: 5;
 	grid-column: 2;
 	align-self: start;
@@ -347,7 +347,7 @@ a#inbox-indicator.new-messages:hover::before {
 /* SORT ORDER SELECTOR */
 /***********************/
 
-.sublevel-nav.sort {
+#content > .sublevel-nav.sort {
 	grid-column: 3;
 	grid-row: 5 / span 2;
 	position: relative;
@@ -822,14 +822,16 @@ h1.listing + .post-meta .read-time {
 }
 
 #content.user-page h1.page-main-heading {
-	margin: 1em 0 0 0;
-	line-height: 1.2;
+	margin: 0;
+	line-height: 1.1;
+	grid-row: 4;
 }
 
 #content.user-page .user-stats {
 	grid-column: 3;
-	grid-row: 5;
+	grid-row: 4;
 	text-align: right;
+	align-self: end;
 }
 
 #content.user-page #comments-list-mode-selector {
@@ -1581,11 +1583,11 @@ div.comment-child-links a::first-letter {
 }
 
 #content > .comment-thread {
-	margin: 0 0 2em 0;
+	margin: 1em 0;
 }
 #content.compact > .comment-thread {
 	font-size: 0.9375rem;
-	margin: 0 0 1em 0;
+	margin: 0.5em 0;
 }
 #content.compact > .comment-thread .comment-body {
 	font-size: 1.0625rem;
