@@ -1728,11 +1728,6 @@ div > .MJXc-display {
 			color: #00e;
 		}
 
-		#content > #top-nav-bar + .comment-thread .comment-item,
-		#content.compact > #top-nav-bar + .comment-thread .comment-item {
-			margin-top: 0;
-		}
-
 		.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
 			background-color: #aaa;
 		}
@@ -1753,6 +1748,13 @@ div > .MJXc-display {
 
 		a.comment-parent-link:hover::before {
 			background-color: unset;
+		}
+
+		.sublevel-nav .sublevel-item,
+		.sublevel-nav .sublevel-item:first-child,
+		.sublevel-nav .sublevel-item:last-child {
+			border-width: 1px;
+			border-radius: 8px;
 		}
 	/*******************************************/
 	} @media only screen and (max-width: 720px) {
@@ -1838,13 +1840,6 @@ div > .MJXc-display {
 		}
 		h1.listing a {
 			display: inline;
-		}
-
-		.sublevel-nav .sublevel-item,
-		.sublevel-nav .sublevel-item:first-child,
-		.sublevel-nav .sublevel-item:last-child {
-			border-width: 1px;
-			border-radius: 8px;
 		}
 	/*******************************************/
 	} @media only screen and (max-width: 520px) {

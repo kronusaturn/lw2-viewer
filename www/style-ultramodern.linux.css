@@ -3231,14 +3231,19 @@ div > .MJXc-display {
 /* SUBLEVEL NAV */
 /*==============*/
 
-@media only screen and (max-width: 720px) {
+@media only screen and (max-width: 900px) {
 	.sublevel-nav:not(.sort) {
 		flex-wrap: wrap;
-		width: calc(100vw - 200px);
+		width: calc(100vw - 100px);
 	}
 	.sublevel-nav:not(.sort) .sublevel-item {
 		margin: 1px;
 		flex-basis: 7em;
+	}
+}
+@media only screen and (max-width: 720px) {
+	.sublevel-nav:not(.sort) {
+		width: calc(100vw - 200px);
 	}
 }
 @media only screen and (max-width: 520px) {

@@ -248,9 +248,6 @@ body {
 	font-family: <?php echo $UI_font_smallcaps; ?>;
 }
 .sublevel-nav.sort {
-	position: absolute;
-	top: 167px;
-	right: 30px;
 	border: 2px solid #bbb;
 	padding: 18px 0 0 0;
 	border-radius: 8px;
@@ -575,9 +572,6 @@ h1.listing + .post-meta .link-post-domain {
 #content.conversation-page h1.page-main-heading {
 	font-weight: normal;
 	color: #222;
-}
-#content.conversation-page .conversation-participants {
-	top: 92px;
 }
 
 /*============*/
@@ -1731,17 +1725,8 @@ div > .MJXc-display {
 			opacity: 0.8;
 		}
 
-		#content.compact > #top-nav-bar + .comment-thread .comment-item {
-			margin-top: 0;
-		}
-
 		.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
 			background-color: #aaa;
-		}
-	
-		.sublevel-nav.sort {
-			top: 276px;
-			right: 8px;
 		}
 
 		.comment-item .comment-item {
@@ -1754,18 +1739,16 @@ div > .MJXc-display {
 		a.comment-parent-link:hover::before {
 			background-color: unset;
 		}
-	/*******************************************/
-	} @media only screen and (max-width: 720px) {
-	/*******************************************/
+
 		.sublevel-nav .sublevel-item,
 		.sublevel-nav .sublevel-item:first-child,
 		.sublevel-nav .sublevel-item:last-child {
 			border-width: 1px;
 			border-radius: 8px;
 		}
-		.sublevel-nav.sort {
-			top: 240px;
-		}
+	/*******************************************/
+	} @media only screen and (max-width: 720px) {
+	/*******************************************/
 	/*******************************************/
 	} @media only screen and (max-width: 520px) {
 	/*******************************************/
@@ -1782,11 +1765,6 @@ div > .MJXc-display {
 
 		#content.compact > .comment-thread .comment-item {
 			max-height: 108px;
-		}
-		
-		.sublevel-nav.sort {
-			top: 194px;
-			right: 8px;
 		}
 	
 		.textarea-container:focus-within button:active {
