@@ -652,12 +652,6 @@ h1.listing + .post-meta::after {
 	padding: 0 6px;
 	padding-top: <?php echo ($platform == 'Mac') ? "0" : "0.125em"; ?>;
 }
-#content.user-page .sublevel-nav + h1.listing {
-	margin-top: 1.75em;
-}
-#content.user-page #top-nav-bar + h1.listing {
-	margin-top: 0.5em;
-}
 #content.user-page h1.listing::after {
 	content: "";
 	display: block;
@@ -676,9 +670,6 @@ h1.listing + .post-meta::after {
 	display: none;
 }
 
-#content.conversations-user-page .sublevel-nav {
-	margin-bottom: 0.5em;
-}
 #content.conversations-user-page h1.listing {
 	font-size: 1.75rem;
 }

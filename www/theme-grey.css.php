@@ -553,9 +553,6 @@ h1.listing + .post-meta .link-post-domain {
 #content.user-page h1.page-main-heading {
 	border-bottom: 1px solid #ccc;
 }
-#content.user-page .sublevel-nav + h1.listing {
-	margin-top: 1.75em;
-}
 
 #content.conversations-user-page h1.listing + .post-meta .date::after {
 	display: none;

@@ -44,6 +44,7 @@ input {
 #content {
 	margin: 0 auto;
 	padding: 0 30px;
+	overflow: auto;
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 	grid-auto-flow: dense;
@@ -828,6 +829,10 @@ h1.listing + .post-meta .read-time {
 }
 #content.user-page #comments-list-mode-selector button {
 	display: block;
+}
+
+#content.conversations-user-page .sublevel-nav {
+	margin-bottom: 0.5em;
 }
 
 /*****************/

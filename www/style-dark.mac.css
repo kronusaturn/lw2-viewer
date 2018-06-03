@@ -38,6 +38,7 @@ input {
 #content {
 	margin: 0 auto;
 	padding: 0 30px;
+	overflow: auto;
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 	grid-auto-flow: dense;
@@ -821,6 +822,10 @@ h1.listing + .post-meta .read-time {
 }
 #content.user-page #comments-list-mode-selector button {
 	display: block;
+}
+
+#content.conversations-user-page .sublevel-nav {
+	margin-bottom: 0.5em;
 }
 
 /*****************/
@@ -4368,12 +4373,6 @@ h1.listing + .post-meta::after {
 	padding: 0 6px;
 	padding-top: 0;
 }
-#content.user-page .sublevel-nav + h1.listing {
-	margin-top: 1.75em;
-}
-#content.user-page #top-nav-bar + h1.listing {
-	margin-top: 0.5em;
-}
 #content.user-page h1.listing::after {
 	content: "";
 	display: block;
@@ -4392,9 +4391,6 @@ h1.listing + .post-meta::after {
 	display: none;
 }
 
-#content.conversations-user-page .sublevel-nav {
-	margin-bottom: 0.5em;
-}
 #content.conversations-user-page h1.listing {
 	font-size: 1.75rem;
 }
