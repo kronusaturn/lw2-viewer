@@ -562,6 +562,8 @@
 	#content > .page-toolbar {
 		font-size: 1rem;
 		margin-right: 0;
+	}
+	#content.user-page > .page-toolbar {
 		grid-column: 2 / span 2;
 	}
 }
@@ -570,6 +572,7 @@
 		display: flex;
 		flex-direction: column-reverse;
 		text-align: right;
+		align-self: start;
 	}
 }
 

@@ -237,9 +237,6 @@ body {
 	font-family: <?php echo $UI_font_smallcaps; ?>;
 }
 .sublevel-nav.sort {
-	position: absolute;
-	top: 167px;
-	right: 30px;
 	border: 2px solid #bbb;
 	padding: 18px 0 0 0;
 	border-radius: 8px;
@@ -651,7 +648,7 @@ h1.listing + .post-meta::after {
 }
 
 #content.user-page h1.listing {
-	margin: 1em 0 0 0;
+	margin: 0.5em 0 0 0;
 	padding: 0 6px;
 	padding-top: <?php echo ($platform == 'Mac') ? "0" : "0.125em"; ?>;
 }
@@ -673,18 +670,17 @@ h1.listing + .post-meta::after {
 	pointer-events: none;
 }
 #content.user-page h1.listing + .post-meta {
-	margin: 0 6px 2em 35px;
+	margin: 0 6px 1em 35px;
 }
 #content.user-page h1.listing + .post-meta::after {
 	display: none;
 }
 
-#content.conversations-user-page h1.listing {
-	margin: 0.5em 0 0 0;
-	font-size: 1.75rem;
+#content.conversations-user-page .sublevel-nav {
+	margin-bottom: 0.5em;
 }
-#content.conversations-user-page .sublevel-nav + h1.listing {
-	margin: 0.75em 0 0 0;
+#content.conversations-user-page h1.listing {
+	font-size: 1.75rem;
 }
 #content.conversations-user-page h1.listing::after {
 	display: none;
@@ -692,16 +688,6 @@ h1.listing + .post-meta::after {
 #content.conversations-user-page h1.listing + .post-meta {
 	padding: 0;
 	margin: 0;
-}
-
-#content:not(.compact) > .comment-thread + h1.listing {
-	margin-top: 1.125em;
-}
-#content.compact > .comment-thread + h1.listing {
-	margin-top: 0.625em;
-}
-#content:not(.compact) > .post-meta + .comment-thread {
-	margin-top: 3em;
 }
 
 .user-stats .karma-total {
@@ -1707,9 +1693,6 @@ div > .MJXc-display {
 		h1.listing a[href^='http'] {
 			top: 2px;
 		}
-		h1.listing:last-of-type + .post-meta {
-			margin-bottom: 12px;
-		}
 		h1.listing + .post-meta .karma-value,
 		h1.listing + .post-meta .comment-count,
 		h1.listing + .post-meta .lw2-link,
@@ -1752,12 +1735,6 @@ div > .MJXc-display {
 
 		.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
 			background-color: #aaa;
-		}
-	
-		.sublevel-nav.sort {
-			top: 286px;
-			right: 10px;
-			z-index: 1;
 		}
 
 		.comment-item .comment-item {
@@ -1869,9 +1846,6 @@ div > .MJXc-display {
 			border-width: 1px;
 			border-radius: 8px;
 		}
-		.sublevel-nav.sort {
-			top: 248px;
-		}
 	/*******************************************/
 	} @media only screen and (max-width: 520px) {
 	/*******************************************/
@@ -1918,11 +1892,6 @@ div > .MJXc-display {
 
 		#content.compact > .comment-thread .comment-item {
 			max-height: 110px;
-		}
-		
-		.sublevel-nav.sort {
-			top: 200px;
-			right: 8px;
 		}
 	
 		.textarea-container:focus-within button:active {
