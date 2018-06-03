@@ -173,9 +173,6 @@ body {
 /*=====================*/
 
 .sublevel-nav.sort {
-	position: absolute;
-	top: 167px;
-	right: 30px;
 	padding: 18px 0 0 0;
 	border: 2px solid #000;
 }
@@ -431,11 +428,7 @@ h1.listing + .post-meta .read-time {
 	border-bottom: 1px dotted #000;
 }
 
-#content.user-page .sublevel-nav + h1.listing {
-	margin-top: 1.75em;
-}
 #content.user-page h1.listing {
-	margin: 1.5em 0 0 0;
 	padding: 0 6px;
 	position: relative;
 }
@@ -457,11 +450,7 @@ h1.listing + .post-meta .read-time {
 }
 
 #content.conversations-user-page h1.listing {
-	margin: 0.75em 0 0 0;
 	font-size: 1.5rem;
-}
-#content.conversations-user-page .sublevel-nav + h1.listing {
-	margin: 1em 0 0 0;
 }
 #content.conversations-user-page h1.listing::after {
 	display: none;
@@ -1473,21 +1462,9 @@ div > .MJXc-display {
 			position: unset;
 		}
 
-		#content.user-page #comments-list-mode-selector {
-			left: 6px;
-		}
-		#content.compact > #top-nav-bar + .comment-thread .comment-item {
-			margin-top: 0;
-		}
-
 		.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
 			background-color: #000;
 			height: 2px;
-		}
-	
-		.sublevel-nav.sort {
-			top: 286px;
-			right: 4px;
 		}
 
 		.comment-item .comment-item {
@@ -1515,20 +1492,17 @@ div > .MJXc-display {
 		#edit-post-form input[type='submit'] {
 			background-color: #fff;
 		}
-	/*******************************************/
-	} @media only screen and (max-width: 720px) {
-	/*******************************************/
-		#content.conversations-user-page h1.listing + .post-meta .date {
-			margin: 0 0 0 1em;
-		}
 		
 		.sublevel-nav .sublevel-item,
 		.sublevel-nav .sublevel-item:first-child,
 		.sublevel-nav .sublevel-item:last-child {
 			border-width: 1px;
 		}
-		.sublevel-nav.sort {
-			top: 275px;
+	/*******************************************/
+	} @media only screen and (max-width: 720px) {
+	/*******************************************/
+		#content.conversations-user-page h1.listing + .post-meta .date {
+			margin: 0 0 0 1em;
 		}
 	/*******************************************/
 	} @media only screen and (max-width: 520px) {
@@ -1566,11 +1540,6 @@ div > .MJXc-display {
 
 		#content.compact > .comment-thread .comment-item {
 			max-height: 110px;
-		}
-		
-		.sublevel-nav.sort {
-			top: 215px;
-			right: 4px;
 		}
 		
 		.textarea-container:focus-within textarea {
