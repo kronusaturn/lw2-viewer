@@ -443,7 +443,7 @@ h1.listing + .post-meta .read-time {
 	box-shadow: 0px 0px 10px #555;
 }
 #content.user-page h1.listing + .post-meta {
-	margin: 0 6px 3em 35px;
+	margin: 0 6px 1em 35px;
 }
 #content.user-page h1.listing + .post-meta::after {
 	display: none;
