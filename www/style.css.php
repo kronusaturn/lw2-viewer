@@ -1973,31 +1973,34 @@ div.comment-child-links a::first-letter {
 	padding: 1em 1em 4em 1em;
 }
 #edit-post-form .post-meta-fields {
-	overflow: auto;
-	display: flex;
-	flex-flow: row wrap;
+	display: grid;
+	grid-template-columns: 6em auto auto auto 1fr 6em;
+	margin-bottom: 0.5em;
 }
 
-#edit-post-form input {
-	width: auto;
+#edit-post-form label[for='title'],
+#edit-post-form label[for='url'],
+#edit-post-form label[for='section'] {
+	grid-column: 1;
 }
 #edit-post-form input[type='text'] {
-	width: calc(100% - 6em);
-	margin: 0.25em 0;
 	padding: 0.25em;
+	grid-column: 2 / span 4;
+	margin-bottom: 0.5em;
 }
-#edit-post-form input[type='submit'] {
-	padding: 6px 12px;
-	float: right;
+
+#edit-post-form .link-post-checkbox,
+#edit-post-form .link-post-checkbox + label {
+	grid-row: 1;
+	grid-column: 6;
 }
+
 #edit-post-form .link-post-checkbox {
 	height: 0;
 	opacity: 0;
 	pointer-events: none;
 }
 #edit-post-form .link-post-checkbox + label {
-	padding-left: 6px;
-	margin-left: 1.375em;
 	white-space: nowrap;
 	position: relative;
 	cursor: pointer;
@@ -2012,8 +2015,7 @@ div.comment-child-links a::first-letter {
 	position: absolute;
 	width: 20px;
 	height: 20px;
-	left: -20px;
-	top: 4px;
+	left: 5px;
 }
 #edit-post-form label[for='url'],
 #edit-post-form input[name='url'] {
@@ -2021,29 +2023,14 @@ div.comment-child-links a::first-letter {
 }
 #edit-post-form .link-post-checkbox:checked ~ label[for='url'],
 #edit-post-form .link-post-checkbox:checked ~ input[name='url'] {
-	display: block;
+	display: initial;
 }
 #edit-post-form label {
-	margin: 0.25em 0;
 	line-height: normal;
 	border: 1px solid transparent;
 	text-align: right;
     padding: 0.25em 0.5em;
     white-space: nowrap;
-}
-#edit-post-form label[for='title'],
-#edit-post-form label[for='url'],
-#edit-post-form label[for='section'] {
-	width: 6em;
-}
-#edit-post-form input[name='title'] {
-	max-width: calc(100% - 12.5em);
-}
-#edit-post-form label[for='link-post'] {
-	width: 4em;
-}
-#edit-post-form label[for='section'] {
-	margin: 0.35em 0;
 }
 #edit-post-form input[type='radio'] {
 	width: 0;
@@ -2052,31 +2039,39 @@ div.comment-child-links a::first-letter {
 	pointer-events: none;
 }
 #edit-post-form input[type='radio'] + label {
-	margin: 0.35em 0;
-	width: auto;
 	padding: 4px 12px;
 	text-align: center;
 	border-style: solid;
 	border-width: 1px 1px 1px 0;
 	cursor: pointer;
 }
-#edit-post-form input[type='radio']:focus + label {
-	position: relative;
-}
 #edit-post-form input[type='radio']:checked + label {
 	cursor: default;
 }
+
+#edit-post-form label[for='section'] {
+	grid-row: 3;
+}
+#edit-post-form input[type='radio'] + label {
+	grid-row: 3;
+	width: fit-content;
+}
+
 #edit-post-form textarea {
 	min-height: 24em;
-	margin-top: 4px;
+}
+
+#edit-post-form input[type='submit'] {
+	padding: 6px 12px;
+	float: right;
 }
 #edit-post-form .markdown-hints {
 	top: calc(100% + 2em);
 }
+
 #content.edit-post-page {
 	overflow: visible;
 }
-
 #edit-post-form button.guiedit div {
 	overflow: visible;
 }

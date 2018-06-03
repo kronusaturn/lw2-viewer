@@ -497,7 +497,7 @@ h1.listing + .post-meta > * {
 	margin: 0 0 0 0.5em;
 }
 h1.listing + .post-meta .read-time {
-	width: 6em;
+	width: 6.5em;
 	order: 2;
 }
 h1.listing + .post-meta .comment-count {

@@ -979,30 +979,17 @@ a.comment-parent-link::after {
 	#edit-post-form {
 		padding-bottom: 0;
 	}
-	#edit-post-form label[for='title'] {
-		width: 2.5em;
-	}
-	#edit-post-form label[for='url'] {
-		width: 2.5em;
-	}
-	#edit-post-form label[for='section'] {
-		width: 4.1em;
+	#edit-post-form .post-meta-fields {
+		grid-template-columns: 4em auto auto auto 1fr 4em;
 	}
 	#edit-post-form label[for='url'], 
 	#edit-post-form label[for='section'],
 	#edit-post-form label[for='title'] {
-		text-align: left;
 		padding-left: 0;
-	}
-	#edit-post-form input[name='title'],
-	#edit-post-form input[name='url'] {
-		max-width: calc(100% - 6.5em);
 	}
 	#edit-post-form label[for='link-post'] {
 		white-space: normal;
 		line-height: 0.9;
-		width: 2em;
-		height: 1em;
 		top: -1px;
 	}
 	#edit-post-form .textarea-container:focus-within textarea {
