@@ -559,8 +559,10 @@
 /*==============*/
 
 @media only screen and (max-width: 900px) {
-	.page-toolbar {
+	#content > .page-toolbar {
 		font-size: 1rem;
+		margin-right: 0;
+		grid-column: 2 / span 2;
 	}
 }
 @media only screen and (max-width: 520px) {
@@ -578,8 +580,7 @@
 @media only screen and (max-width: 720px) {
 	.sublevel-nav:not(.sort) {
 		flex-wrap: wrap;
-		max-width: calc(100% - 200px);
-		margin: -1em auto 0 auto;
+		width: calc(100vw - 200px);
 	}
 	.sublevel-nav:not(.sort) .sublevel-item {
 		margin: 1px;
@@ -588,7 +589,7 @@
 }
 @media only screen and (max-width: 520px) {
 	.sublevel-nav:not(.sort) {
-		max-width: calc(100% - 100px);
+		width: calc(100vw - 100px);
 	}
 	.sublevel-nav:not(.sort) .sublevel-item {
 		font-size: 1rem;
@@ -667,13 +668,6 @@ h1.listing {
 /*============*/
 /* USER PAGES */
 /*============*/
-
-#content.user-page h1.page-main-heading {
-	margin: 1em 0.125em 0 0.125em;
-}
-#content.user-page .user-stats {
-	margin-right: 0.25em;
-}
 
 /*============*/
 /* LOGIN PAGE */
@@ -795,15 +789,6 @@ a.comment-parent-link::after {
 /*=======================*/
 /* COMMENTS COMPACT VIEW */
 /*=======================*/
-
-@media only screen and (max-width: 900px) {
-	#comments-list-mode-selector {
-		padding-top: 4px;
-	}
-	#content.user-page #comments-list-mode-selector {
-		left: 7px;
-	}
-}
 
 /*===========================*/
 /* COMMENT THREAD NAVIGATION */
