@@ -648,7 +648,6 @@ h1.listing + .post-meta::after {
 }
 
 #content.user-page h1.listing {
-	margin: 0.5em 0 0 0;
 	padding: 0 6px;
 	padding-top: <?php echo ($platform == 'Mac') ? "0" : "0.125em"; ?>;
 }

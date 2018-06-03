@@ -824,6 +824,10 @@ h1.listing + .post-meta .read-time {
 	align-self: end;
 }
 
+#content.user-page h1.listing {
+	margin: 0.5em 0 0 0;
+}
+
 #content.user-page #comments-list-mode-selector {
 	grid-row: 5 / span 2;
 }
@@ -831,7 +835,7 @@ h1.listing + .post-meta .read-time {
 	display: block;
 }
 
-#content.conversations-user-page .sublevel-nav {
+#content.user-page .sublevel-nav {
 	margin-bottom: 0.5em;
 }
 

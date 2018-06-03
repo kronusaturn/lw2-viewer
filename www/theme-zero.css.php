@@ -448,7 +448,7 @@ h1.listing + .post-meta .karma-value {
 }
 
 #content.user-page h1.listing {
-	margin: 0;
+	margin: 0.5em 0 0 0;
 	padding: 0 6px;
 	position: relative;
 }
@@ -463,7 +463,7 @@ h1.listing + .post-meta .karma-value {
 	box-shadow: 0px 0px 10px #555;
 }
 #content.user-page h1.listing + .post-meta {
-	margin: 0 6px 2em 35px;
+	margin: 0 6px 1em 35px;
 }
 #content.user-page h1.listing + .post-meta::after {
 	display: none;
