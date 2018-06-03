@@ -183,9 +183,6 @@ body {
 /*=====================*/
 
 .sublevel-nav.sort {
-	position: absolute;
-	top: 167px;
-	right: 30px;
 	border: 2px solid #bbb;
 	padding: 18px 0 0 0;
 	border-radius: 8px;
@@ -393,10 +390,6 @@ body {
 	background-color: #ddd;
 }
 
-.archive-nav + #top-nav-bar + h1.listing {
-	margin-top: 2em;
-}
-
 /*==========*/
 /* LISTINGS */
 /*==========*/
@@ -545,13 +538,6 @@ h1.listing + .post-meta .link-post-domain {
 	border-bottom: 1px solid #ccc;
 }
 
-#content.user-page > h1:nth-of-type(2) {
-	margin-top: 2em;
-}
-#content.user-page.compact > .comment-thread:first-of-type {
-	margin-top: 2em;
-}
-
 .user-stats .karma-total {
 	font-weight: bold;
 }
@@ -571,9 +557,6 @@ h1.listing + .post-meta .link-post-domain {
 #content.conversation-page h1.page-main-heading {
 	font-size: 1.375em;
 	text-align: left;
-}
-#content.conversation-page .conversation-participants {
-	top: 92px;
 }
 
 /*============*/
@@ -1693,20 +1676,11 @@ div > .MJXc-display {
 			padding: 6px 10px;
 		}
 
-		#content.compact > #top-nav-bar + .comment-thread .comment-item {
-			margin-top: 0;
-		}
-
 		.archive-nav *[class^='archive-nav-item-'] {
 			border-width: 1px !important;
 		}
 		.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
 			background-color: #aaa;
-		}
-	
-		.sublevel-nav.sort {
-			top: 290px;
-			right: 10px;
 		}
 
 		.comment-item .comment-item {
@@ -1715,19 +1689,16 @@ div > .MJXc-display {
 		.comment-item .comment-item + .comment-item {
 			margin: 1.5em 0 3px 6px;
 		}
-	/*******************************************/
-	} @media only screen and (max-width: 720px) {
-	/*******************************************/
+
 		.sublevel-nav .sublevel-item,
 		.sublevel-nav .sublevel-item:first-child,
 		.sublevel-nav .sublevel-item:last-child {
 			border-width: 1px;
 			border-radius: 8px;
 		}
-		.sublevel-nav.sort {
-			top: 256px;
-		}
-
+	/*******************************************/
+	} @media only screen and (max-width: 720px) {
+	/*******************************************/
 		.post-meta .comment-count::before {
 			font-family: inherit;
 			font-size: inherit;
@@ -1762,11 +1733,6 @@ div > .MJXc-display {
 
 		#content.compact > .comment-thread .comment-item {
 			max-height: 104px;
-		}
-
-		.sublevel-nav.sort {
-			top: 215px;
-			right: 4px;
 		}
 
 		.textarea-container:focus-within textarea {
