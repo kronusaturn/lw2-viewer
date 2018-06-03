@@ -486,6 +486,14 @@ h1.listing + .post-meta .karma-value {
 	font-weight: bold;
 }
 
+/*===============*/
+/* CONVERSATIONS */
+/*===============*/
+
+#content.conversation-page .conversation-participants {
+	top: 92px;
+}
+
 /*============*/
 /* LOGIN PAGE */
 /*============*/

@@ -599,6 +599,14 @@ h1.listing + .post-meta .link-post-domain {
 	font-weight: bold;
 }
 
+/*===============*/
+/* CONVERSATIONS */
+/*===============*/
+
+#content.conversation-page h1.page-main-heading {
+	font-family: <?php echo $text_font; ?>;
+}
+
 /*============*/
 /* LOGIN PAGE */
 /*============*/

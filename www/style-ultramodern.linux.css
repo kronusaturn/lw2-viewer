@@ -4206,6 +4206,23 @@ h1.listing + .post-meta .link-post-domain {
 	font-weight: bold;
 }
 
+/*===============*/
+/* CONVERSATIONS */
+/*===============*/
+
+#content.conversation-page h1.page-main-heading {
+	font-family: 'Raleway', 'Helvetica', 'Arial', 'Verdana', sans-serif;;
+	font-weight: 200;
+	color: #000;
+	text-shadow: 
+		0px 0px 1px #777,
+		0.5px 0.5px 1px #aaa,
+		0.5px 0.5px 1px #bbb;
+}
+#content.conversation-page .conversation-participants {
+	top: 92px;
+}
+
 /*============*/
 /* LOGIN PAGE */
 /*============*/

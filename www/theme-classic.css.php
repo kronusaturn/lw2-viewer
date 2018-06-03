@@ -564,6 +564,18 @@ h1.listing + .post-meta .link-post-domain {
 	font-size: 1.125rem;
 }
 
+/*===============*/
+/* CONVERSATIONS */
+/*===============*/
+
+#content.conversation-page h1.page-main-heading {
+	font-size: 1.375em;
+	text-align: left;
+}
+#content.conversation-page .conversation-participants {
+	top: 92px;
+}
+
 /*============*/
 /* LOGIN PAGE */
 /*============*/

@@ -568,6 +568,18 @@ h1.listing + .post-meta .link-post-domain {
 	font-weight: bold;
 }
 
+/*===============*/
+/* CONVERSATIONS */
+/*===============*/
+
+#content.conversation-page h1.page-main-heading {
+	font-weight: normal;
+	color: #222;
+}
+#content.conversation-page .conversation-participants {
+	top: 92px;
+}
+
 /*============*/
 /* LOGIN PAGE */
 /*============*/

@@ -475,6 +475,14 @@ h1.listing + .post-meta .read-time {
 	font-weight: bold;
 }
 
+/*===============*/
+/* CONVERSATIONS */
+/*===============*/
+
+#content.conversation-page textarea {
+	border-top-width: 2px;
+}
+
 /*============*/
 /* LOGIN PAGE */
 /*============*/

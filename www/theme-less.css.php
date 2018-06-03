@@ -601,6 +601,15 @@ h1.listing + .post-meta .post-section::before {
 	font-weight: 500;
 }
 
+/*===============*/
+/* CONVERSATIONS */
+/*===============*/
+
+#content.conversation-page .conversation-participants {
+	right: 24px;
+	top: 50px;
+}
+
 /*============*/
 /* LOGIN PAGE */
 /*============*/
