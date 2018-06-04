@@ -59,7 +59,7 @@ body {
 #primary-bar,
 #secondary-bar {
 	position: absolute;
-	right: calc(100% - 60px);
+	right: calc(100% + 30px);
 	margin: 0;
 	flex-flow: column;
 	line-height: 1;
@@ -159,11 +159,14 @@ body {
 /* PAGE TOOLBAR */
 /*==============*/
 
-.page-toolbar {
+#content > .page-toolbar {
 	padding: 0 0 0 0;
+	margin: 0;
 	white-space: nowrap;
-	right: calc(100% - 60px);
+	position: absolute;
+	right: calc(100% + 30px);
 	top: 280px;
+	grid-column: 1;
 }
 
 .page-toolbar > * {
@@ -199,9 +202,10 @@ body {
 
 #top-nav-bar {
 	justify-content: flex-start;
-	padding: 1em 0 0 0;
+	padding: 1em 0 0.25em 0;
 	font-size: 1em;
-	margin: 0 0 1em -5px;
+	margin: 0 0 0 -5px;
+	grid-column: 1;
 }
 #top-nav-bar .page-number {
 	line-height: 1.5;
