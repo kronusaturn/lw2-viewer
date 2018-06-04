@@ -263,9 +263,6 @@ body {
 /*=====================*/
 
 .sublevel-nav.sort {
-	position: absolute;
-	top: 100px;
-	right: 20px;
 	padding: 18px 0 0 0;
 	border-radius: 8px;
 }
@@ -573,16 +570,12 @@ h1.listing + .post-meta .post-section::before {
 	line-height: 1;
 }
 
-#content.user-page .sublevel-nav + h1.listing {
-	margin-top: 1.75em;
-}
 #content.user-page h1.listing,
 #content.user-page h1.listing + .post-meta {
 	border-color: #ddd;
 	border-style: solid;
 }
 #content.user-page h1.listing {
-	margin: 1em 0 0 0;
 	padding: 6px 8px 0 8px;
 	position: relative;
 	border-width: 1px 1px 0 1px;
@@ -594,13 +587,6 @@ h1.listing + .post-meta .post-section::before {
 	line-height: 1;
 }
 
-#content.user-page .comment-thread {
-	margin: 1em 0 2em 0;
-}
-
-#content.user-page .user-stats {
-	margin-top: -1.5em;
-}
 .user-stats .karma-total {
 	font-weight: 500;
 }
@@ -608,11 +594,6 @@ h1.listing + .post-meta .post-section::before {
 /*===============*/
 /* CONVERSATIONS */
 /*===============*/
-
-#content.conversation-page .conversation-participants {
-	right: 24px;
-	top: 50px;
-}
 
 /*============*/
 /* LOGIN PAGE */
@@ -942,10 +923,6 @@ div.comment-child-links a::first-letter {
 #comments-list-mode-selector:hover {
 	opacity: 1.0;
 }
-#content.index-page #comments-list-mode-selector {
-	top: 36px;
-	right: 20px;
-}
 
 #comments-list-mode-selector button {
 	border: none;
@@ -963,9 +940,6 @@ div.comment-child-links a::first-letter {
 		0 0 0 5px #aaa inset;
 }
 
-#content.compact > .comment-thread {
-	margin: 1em 0;
-}
 #content.compact > .comment-thread .comment-item {
 	max-height: 58px;
 }
