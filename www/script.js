@@ -1332,7 +1332,7 @@ function commentsListModeSelectButtonClicked(event) {
 
 function injectSiteNavUIToggle() {
 	let siteNavUIToggle = addUIElement("<div id='site-nav-ui-toggle'><button type='button' tabindex='-1'>&#xf0c9;</button></div>");
-	siteNavUIToggle.querySelector("button").addActivateEvent(postNavUIToggleButtonClicked);
+	siteNavUIToggle.querySelector("button").addActivateEvent(siteNavUIToggleButtonClicked);
 	
 	if (window.localStorage.getItem("site-nav-ui-toggle-engaged") != "false") toggleSiteNavUI();
 }
@@ -1349,7 +1349,7 @@ function siteNavUIToggleButtonClicked() {
 	window.localStorage.setItem("site-nav-ui-toggle-engaged", (currentValue ? "false" : "true"));
 }
 function toggleSiteNavUI() {
-	document.querySelectorAll("#primary-bar, #nav-item-archive, #nav-item-about, .page-toolbar, #site-nav-ui-toggle button").forEach(function (element) {
+	document.querySelectorAll("#primary-bar, #secondary-bar, .page-toolbar, #site-nav-ui-toggle button").forEach(function (element) {
 		element.toggleClass("engaged");
 	});
 }

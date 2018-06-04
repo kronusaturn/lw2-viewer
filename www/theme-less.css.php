@@ -68,12 +68,6 @@ body {
 #content.post-page #secondary-bar {
 	right: 100%;
 }
-#primary-bar {
-	top: 0;
-}
-#secondary-bar {
-	top: 200px;
-}
 
 #bottom-bar .nav-inner {
 	text-align: center;
@@ -169,7 +163,6 @@ body {
 	white-space: nowrap;
 	position: absolute;
 	right: calc(100% + 30px);
-	top: 280px;
 	grid-column: 1;
 }
 
@@ -327,12 +320,49 @@ body {
 	#post-nav-ui-toggle button::-moz-focus-inner {
 		border: none;
 	}
-	#site-nav-ui-toggle button.engaged,
-	#post-nav-ui-toggle button.engaged {
-		transform: rotate(-90deg);
+	
+	#site-nav-ui-toggle {
+		top: 10px;
+		left: -26px;
+	}
+	#site-nav-ui-toggle button.engaged {
+		position: relative;
+		left: -75px;
 	}
 	
-	
+	#primary-bar,
+	#secondary-bar,
+	.page-toolbar {
+		visibility: hidden;
+		top: 0;
+		max-height: 0px;
+		opacity: 0.0;
+		transition:
+			top 0.2s ease,
+			max-height 0.2s ease,
+			opacity 0.2s ease,
+			visibility 0.2s ease;
+	}
+	#nav-item-search,
+	#nav-item-login {
+		visibility: visible;
+	}
+	#primary-bar.engaged,
+	#secondary-bar.engaged,
+	.page-toolbar.engaged {
+		visibility: visible;
+		max-height: 1000px;
+		opacity: 1.0;
+	}
+	#primary-bar.engaged {
+		top: 0;
+	}
+	#secondary-bar.engaged {
+		top: 200px;
+	}
+	.page-toolbar.engaged {	
+		top: 280px;
+	}
 
 	#post-nav-ui-toggle {
 		bottom: 10px;
@@ -340,6 +370,9 @@ body {
 	}
 	#content.post-page ~ #ui-elements-container #post-nav-ui-toggle {
 		right: -50px;
+	}
+	#post-nav-ui-toggle button.engaged {
+		transform: rotate(-90deg);
 	}
 	
 	#quick-nav-ui,
