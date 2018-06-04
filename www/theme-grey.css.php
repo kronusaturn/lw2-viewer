@@ -1202,6 +1202,9 @@ button.guiedit::after {
 /* EDIT POST FORM */
 /*================*/
 
+#edit-post-form .link-post-checkbox + label {
+	top: -2px;
+}
 #edit-post-form .link-post-checkbox + label::before {
 	border-radius: 3px;
 	border: 1px solid #ddd;
