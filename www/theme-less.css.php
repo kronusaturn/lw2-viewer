@@ -64,6 +64,10 @@ body {
 	flex-flow: column;
 	line-height: 1;
 }
+#content.post-page #primary-bar,
+#content.post-page #secondary-bar {
+	right: 100%;
+}
 #primary-bar {
 	top: 0;
 }
@@ -284,6 +288,87 @@ body {
 .sublevel-nav.sort .sublevel-item:last-child {
 	border-radius: 0 0 6px 6px;
 	border-width: 0 1px 1px 1px;
+}
+
+/*============*/
+/* UI TOGGLES */
+/*============*/
+
+@media not screen and (hover: none), not screen and (-moz-touch-enabled) {
+	#post-nav-ui-toggle {
+		visibility: visible;
+		position: absolute;
+		display: inline-block;
+		border-radius: 50%;
+		z-index: 1;
+	}
+	#post-nav-ui-toggle button {
+		font-family: Font Awesome;
+		font-weight: 900;
+		font-size: 32px;
+		padding: 10px;
+		opacity: 0.4;
+		-webkit-tap-highlight-color: transparent;
+		transition:
+			transform 0.2s ease,
+			opacity 0.15s ease;
+	}
+	#post-nav-ui-toggle button:hover {
+		opacity: 1.0;
+	}
+	#post-nav-ui-toggle button::selection {
+		background-color: transparent;
+	}
+	#post-nav-ui-toggle button::-moz-focus-inner {
+		border: none;
+	}
+	#post-nav-ui-toggle button.engaged {
+		transform: rotate(-90deg);
+	}
+
+	#post-nav-ui-toggle {
+		bottom: 10px;
+		right: -26px;
+	}
+	#content.post-page ~ #ui-elements-container #post-nav-ui-toggle {
+		right: -50px;
+	}
+	
+	#quick-nav-ui,
+	#new-comment-nav-ui {
+		bottom: 0;
+		max-height: 0px;
+		opacity: 0.0;
+		transition:
+			bottom 0.2s ease,
+			max-height 0.2s ease,
+			opacity 0.2s ease,
+			visibility 0.2s ease;
+	}
+	#quick-nav-ui.engaged,
+	#new-comment-nav-ui.engaged,
+	#hns-date-picker.engaged {
+		visibility: visible;
+		max-height: 1000px;
+		opacity: 1.0;
+	}	
+	
+	#quick-nav-ui {
+		right: -20px;
+	}
+	#content.post-page ~ #ui-elements-container #quick-nav-ui {
+		right: -44px;
+	}
+	#quick-nav-ui.engaged {
+		bottom: 64px;
+	}
+	
+	#new-comment-nav-ui {
+		right: -45px;
+	}
+	#new-comment-nav-ui.engaged {
+		bottom: 216px;
+	}
 }
 
 /*================*/
