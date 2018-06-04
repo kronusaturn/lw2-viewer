@@ -1337,14 +1337,18 @@ function injectSiteNavUIToggle() {
 	if (window.localStorage.getItem("site-nav-ui-toggle-engaged") == "true") toggleSiteNavUI();
 }
 function removeSiteNavUIToggle() {
-	if (window.localStorage.getItem("site-nav-ui-toggle-engaged") != "true") toggleSiteNavUI();
+	if (window.localStorage.getItem("site-nav-ui-toggle-engaged") == "true") {
+		document.querySelectorAll("#primary-bar, #secondary-bar, .page-toolbar, #site-nav-ui-toggle button").forEach(function (element) {
+			element.removeClass("engaged");
+		});
+	}
 
 	let siteNavUIToggle = document.querySelector("#site-nav-ui-toggle");
 	siteNavUIToggle.parentElement.removeChild(siteNavUIToggle);	
 }
 function siteNavUIToggleButtonClicked() {
 	toggleSiteNavUI();
-	window.localStorage.setItem("site-nav-ui-toggle-engaged", window.localStorage.getItem("site-nav-ui-toggle-engaged") == "false");
+	window.localStorage.setItem("site-nav-ui-toggle-engaged", window.localStorage.getItem("site-nav-ui-toggle-engaged") != "true");
 }
 function toggleSiteNavUI() {
 	document.querySelectorAll("#primary-bar, #secondary-bar, .page-toolbar, #site-nav-ui-toggle button").forEach(function (element) {
@@ -1360,7 +1364,7 @@ function injectPostNavUIToggle() {
 }
 function postNavUIToggleButtonClicked(event) {
 	togglePostNavUI();
-	window.localStorage.setItem("post-nav-ui-toggle-engaged", window.localStorage.getItem("post-nav-ui-toggle-engaged") == "false");
+	window.localStorage.setItem("post-nav-ui-toggle-engaged", window.localStorage.getItem("post-nav-ui-toggle-engaged") != "true");
 }
 function togglePostNavUI() {
 	document.querySelectorAll("#quick-nav-ui, #new-comment-nav-ui, #hns-date-picker, #post-nav-ui-toggle button").forEach(function (element) {
