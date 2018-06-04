@@ -3937,11 +3937,11 @@ body {
 
 .sublevel-nav + #top-nav-bar {
 	justify-content: center;
-	margin: 0.5em;
+	grid-column: 2;
 	padding: 0;
 }
 .archive-nav + #top-nav-bar {
-	margin: 0.25em 0 1em -4px;
+	margin: 0.5em 0 0 -4px;
 	padding: 0;
 }
 
@@ -4278,9 +4278,25 @@ h1.listing + .post-meta .post-section::before {
 /*============*/
 
 #content.user-page h1.page-main-heading,
+#content.user-page .user-stats {
+	grid-row: 1;
+}
+#content.user-page #comments-list-mode-selector,
+#content.user-page .sublevel-nav.sort {
+	grid-row: 2 / span 2;
+}
+#content.user-page .sublevel-nav {
+	grid-row: 2;
+}
+#content.user-page #top-nav-bar {
+	grid-row: 3;
+}
+
+#content.user-page h1.page-main-heading,
 #content.conversation-page h1.page-main-heading {
 	font-family: 'Caecilia', 'Helvetica', sans-serif;
 	font-weight: normal;
+	margin: 0.5em 0 0 0;
 }
 #content.user-page h1.page-main-heading {
 	border-bottom: 1px solid #e6e6e6;
@@ -4684,6 +4700,10 @@ div.comment-child-links a::first-letter {
 	display: inline-block;
 	opacity: 0.4;
 	transition: opacity 0.15s ease;
+}
+#content.index-page #comments-list-mode-selector {
+	grid-column: 3;
+	justify-self: end;
 }
 #comments-list-mode-selector:hover {
 	opacity: 1.0;
