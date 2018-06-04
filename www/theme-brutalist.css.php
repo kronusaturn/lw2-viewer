@@ -970,6 +970,9 @@ button.guiedit::after {
 /* EDIT POST FORM */
 /*================*/
 
+#edit-post-form .post-meta-fields {
+	grid-template-columns: 6em auto auto auto 1fr auto;
+}
 #edit-post-form .link-post-checkbox + label::before {
 	color: #000;
 	border: 1px solid #000;

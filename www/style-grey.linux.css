@@ -1967,7 +1967,7 @@ div.comment-child-links a::first-letter {
 }
 #edit-post-form .post-meta-fields {
 	display: grid;
-	grid-template-columns: 6em auto auto auto 1fr auto;
+	grid-template-columns: 5em auto auto auto 1fr auto;
 	margin-bottom: 0.5em;
 }
 
