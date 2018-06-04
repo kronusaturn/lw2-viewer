@@ -789,10 +789,10 @@ function pageFadeTransition(fadeIn) {
 }
 
 function themeLoadCallback_less() {
-	console.log("Loading theme Less...");
+	injectSiteNavUIToggle();
 }
 function themeUnloadCallback_less() {
-	console.log("Unloading theme Less...");
+	removeSiteNavUIToggle();
 }
 
 function themeLoadCallback_dark() {
@@ -1329,6 +1329,30 @@ function commentsListModeSelectButtonClicked(event) {
 /**********************/
 /* MOBILE UI ELEMENTS */
 /**********************/
+
+function injectSiteNavUIToggle() {
+	let siteNavUIToggle = addUIElement("<div id='site-nav-ui-toggle'><button type='button' tabindex='-1'>&#xf0c9;</button></div>");
+	siteNavUIToggle.querySelector("button").addActivateEvent(postNavUIToggleButtonClicked);
+	
+	if (window.localStorage.getItem("site-nav-ui-toggle-engaged") != "false") toggleSiteNavUI();
+}
+function removeSiteNavUIToggle() {
+	let currentValue = window.localStorage.getItem("site-nav-ui-toggle-engaged") == null || window.localStorage.getItem("site-nav-ui-toggle-engaged") == "true";
+	if (!currentValue) toggleSiteNavUI();
+
+	let siteNavUIToggle = document.querySelector("#site-nav-ui-toggle");
+	siteNavUIToggle.parentElement.removeChild(siteNavUIToggle);	
+}
+function siteNavUIToggleButtonClicked() {
+	toggleSiteNavUI();
+	let currentValue = window.localStorage.getItem("site-nav-ui-toggle-engaged") == null || window.localStorage.getItem("site-nav-ui-toggle-engaged") == "true";
+	window.localStorage.setItem("site-nav-ui-toggle-engaged", (currentValue ? "false" : "true"));
+}
+function toggleSiteNavUI() {
+	document.querySelectorAll("#primary-bar, #nav-item-archive, #nav-item-about, .page-toolbar, #site-nav-ui-toggle button").forEach(function (element) {
+		element.toggleClass("engaged");
+	});
+}
 
 function injectPostNavUIToggle() {
 	let postNavUIToggle = addUIElement("<div id='post-nav-ui-toggle'><button type='button' tabindex='-1'>&#xf14e;</button></div>");

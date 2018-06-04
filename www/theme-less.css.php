@@ -295,6 +295,7 @@ body {
 /*============*/
 
 @media not screen and (hover: none), not screen and (-moz-touch-enabled) {
+	#site-nav-ui-toggle,
 	#post-nav-ui-toggle {
 		visibility: visible;
 		position: absolute;
@@ -302,6 +303,7 @@ body {
 		border-radius: 50%;
 		z-index: 1;
 	}
+	#site-nav-ui-toggle button,
 	#post-nav-ui-toggle button {
 		font-family: Font Awesome;
 		font-weight: 900;
@@ -313,18 +315,24 @@ body {
 			transform 0.2s ease,
 			opacity 0.15s ease;
 	}
+	#site-nav-ui-toggle button:hover,
 	#post-nav-ui-toggle button:hover {
 		opacity: 1.0;
 	}
+	#site-nav-ui-toggle button::selection,
 	#post-nav-ui-toggle button::selection {
 		background-color: transparent;
 	}
+	#site-nav-ui-toggle button::-moz-focus-inner,
 	#post-nav-ui-toggle button::-moz-focus-inner {
 		border: none;
 	}
+	#site-nav-ui-toggle button.engaged,
 	#post-nav-ui-toggle button.engaged {
 		transform: rotate(-90deg);
 	}
+	
+	
 
 	#post-nav-ui-toggle {
 		bottom: 10px;
