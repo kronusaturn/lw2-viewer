@@ -980,7 +980,7 @@ a.comment-parent-link::after {
 		padding-bottom: 0;
 	}
 	#edit-post-form .post-meta-fields {
-		grid-template-columns: 4em auto auto auto 1fr 4em;
+		grid-template-columns: 4em auto auto auto 1fr 4.25em;
 	}
 	#edit-post-form label[for='url'], 
 	#edit-post-form label[for='section'],

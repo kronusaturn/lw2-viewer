@@ -970,9 +970,6 @@ button.guiedit::after {
 /* EDIT POST FORM */
 /*================*/
 
-#edit-post-form input[name='title'] {
-	max-width: calc(100% - 14em);
-}
 #edit-post-form .link-post-checkbox + label::before {
 	color: #000;
 	border: 1px solid #000;
@@ -1585,20 +1582,6 @@ div > .MJXc-display {
 		
 		#edit-post-form .textarea-container:focus-within textarea {
 			margin: 3px 0;
-		}
-		#edit-post-form label[for='title'],
-		#edit-post-form label[for='url'] {
-			width: 3.5em;
-		}
-		#edit-post-form label[for='section'] {
-			width: 4.6em;
-		}
-		#edit-post-form input[name='title'],
-		#edit-post-form input[name='url'] {
-			max-width: calc(100% - 7.75em);
-		}
-		#edit-post-form .link-post-checkbox + label {
-			margin-left: 1.25em;
 		}
 	}
 }

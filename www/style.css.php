@@ -1974,7 +1974,7 @@ div.comment-child-links a::first-letter {
 }
 #edit-post-form .post-meta-fields {
 	display: grid;
-	grid-template-columns: 6em auto auto auto 1fr 6em;
+	grid-template-columns: 6em auto auto auto 1fr auto;
 	margin-bottom: 0.5em;
 }
 
@@ -2004,6 +2004,7 @@ div.comment-child-links a::first-letter {
 	white-space: nowrap;
 	position: relative;
 	cursor: pointer;
+	padding: 0.25em 0.5em 0.25em calc(20px + 0.25em + 0.3725em);
 }
 #edit-post-form .link-post-checkbox + label::before {
 	content: "";
