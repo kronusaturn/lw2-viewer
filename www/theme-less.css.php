@@ -330,13 +330,20 @@ body {
 		left: 0;
 		transition:
 			left 0.2s ease,
-			opacity 0.2s ease;
+			opacity 0.2s ease,
+			width 0.2s ease;
 	}
 	#site-nav-ui-toggle button:active {
 		transform: none;
 	}
 	#site-nav-ui-toggle button.engaged {
 		left: -92px;
+		width: 1.125em;
+		overflow: hidden;
+	}
+	#site-nav-ui-toggle button.engaged::before {
+		content: "\F00D";
+		padding: 0 0.25em 0 0;
 	}
 	
 	#primary-bar,
@@ -401,7 +408,8 @@ body {
 	}
 	
 	#quick-nav-ui,
-	#new-comment-nav-ui {
+	#new-comment-nav-ui,
+	#hns-date-picker {
 		bottom: 0;
 		max-height: 0px;
 		opacity: 0.0;
@@ -434,6 +442,13 @@ body {
 	}
 	#new-comment-nav-ui.engaged {
 		bottom: 216px;
+	}
+
+	#hns-date-picker {
+		right: -182px;
+	}
+	#hns-date-picker.engaged {
+		bottom: 247px;
 	}
 }
 
@@ -541,14 +556,14 @@ body {
 /*=================*/
 
 #hns-date-picker span {
-	color: #777;
-	text-shadow: 0.5px 0.5px 0 #fff;
-	font-weight: 600;
+	color: #999;
+	font-weight: 400;
 }
 #hns-date-picker input {
-	border: 1px solid #777;
+	border: 1px solid #ddd;
 	background-color: transparent;
-	color: #666;
+	color: #999;
+	padding: 3px 3px 0 3px;
 }
 #hns-date-picker input:focus {
 	color: #000;
