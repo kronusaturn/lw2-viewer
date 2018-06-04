@@ -324,6 +324,7 @@ body {
 	#site-nav-ui-toggle {
 		top: 0;
 		left: 12px;
+		pointer-events: none;
 	}
 	#site-nav-ui-toggle button {
 		position: relative;
@@ -332,6 +333,7 @@ body {
 			left 0.2s ease,
 			opacity 0.2s ease,
 			width 0.2s ease;
+		pointer-events: auto;
 	}
 	#site-nav-ui-toggle button:active {
 		transform: none;
@@ -450,6 +452,30 @@ body {
 	#hns-date-picker.engaged {
 		bottom: 247px;
 	}
+	@media only screen and (max-width: 1440px) {
+		#hns-date-picker {
+			background-color: rgba(255,255,255,0.95);
+			right: -14px;
+		}
+		#hns-date-picker::before {
+			display: none;
+		}
+		#hns-date-picker input {
+			background-color: #fff;
+		}
+		#hns-date-picker span {
+			text-shadow:
+				0 0 1px #fff,
+				0 0 3px #fff,
+				0 0 5px #fff,
+				0 0 8px #fff,
+				0 0 13px #fff,
+				0 0 21px #fff;
+		}
+		#hns-date-picker.engaged {
+			bottom: 238px;
+		}
+	}
 }
 
 /*================*/
@@ -561,7 +587,6 @@ body {
 }
 #hns-date-picker input {
 	border: 1px solid #ddd;
-	background-color: transparent;
 	color: #999;
 	padding: 3px 3px 0 3px;
 }
@@ -1626,7 +1651,6 @@ div > .MJXc-display {
 
 @media only screen and (max-width: 1440px) {
 	#hns-date-picker {
-		background-color: #d8d8d8;
 		opacity: 1.0;
 	}
 	#hns-date-picker::before {
@@ -1635,9 +1659,6 @@ div > .MJXc-display {
 	}
 }
 @media only screen and (max-width: 1200px) {
-	#hns-date-picker {
-		background-color: #eee;
-	}
 	#hns-date-picker::before {
 		display: none;
 	}
