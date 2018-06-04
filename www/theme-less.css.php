@@ -322,12 +322,21 @@ body {
 	}
 	
 	#site-nav-ui-toggle {
-		top: 10px;
-		left: -26px;
+		top: 0;
+		left: 12px;
+	}
+	#site-nav-ui-toggle button {
+		position: relative;
+		left: 0;
+		transition:
+			left 0.2s ease,
+			opacity 0.2s ease;
+	}
+	#site-nav-ui-toggle button:active {
+		transform: none;
 	}
 	#site-nav-ui-toggle button.engaged {
-		position: relative;
-		left: -75px;
+		left: -92px;
 	}
 	
 	#primary-bar,
@@ -336,12 +345,23 @@ body {
 		visibility: hidden;
 		top: 0;
 		max-height: 0px;
+	}
+	#primary-bar,
+	#secondary-bar #nav-item-archive,
+	#secondary-bar #nav-item-about,
+	.page-toolbar {
 		opacity: 0.0;
+	}
+	#primary-bar,
+	#secondary-bar,
+	#secondary-bar #nav-item-archive,
+	#secondary-bar #nav-item-about,
+	.page-toolbar {
 		transition:
 			top 0.2s ease,
 			max-height 0.2s ease,
-			opacity 0.2s ease,
-			visibility 0.2s ease;
+			visibility 0.2s ease,
+			opacity 0.2s ease;
 	}
 	#nav-item-search,
 	#nav-item-login {
@@ -352,6 +372,11 @@ body {
 	.page-toolbar.engaged {
 		visibility: visible;
 		max-height: 1000px;
+	}
+	#primary-bar.engaged,
+	#secondary-bar.engaged #nav-item-archive,
+	#secondary-bar.engaged #nav-item-about,
+	.page-toolbar.engaged {
 		opacity: 1.0;
 	}
 	#primary-bar.engaged {
