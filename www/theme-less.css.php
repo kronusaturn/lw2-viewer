@@ -1698,20 +1698,11 @@ div > .MJXc-display {
 			padding: 6px 10px;
 		}
 
-		#content.compact > #top-nav-bar + .comment-thread .comment-item {
-			margin-top: 0;
-		}
-
 		.archive-nav *[class^='archive-nav-item-'] {
 			border-width: 1px !important;
 		}
 		.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
 			background-color: #aaa;
-		}
-	
-		.sublevel-nav.sort {
-			top: 292px;
-			right: 10px;
 		}
 
 		.comment-item .comment-item {
@@ -1720,18 +1711,16 @@ div > .MJXc-display {
 		.comment-item .comment-item + .comment-item {
 			margin: 1.5em 3px 3px 6px;
 		}
-	/*******************************************/
-	} @media only screen and (max-width: 720px) {
-	/*******************************************/
+
 		.sublevel-nav .sublevel-item,
 		.sublevel-nav .sublevel-item:first-child,
 		.sublevel-nav .sublevel-item:last-child {
 			border-width: 1px;
 			border-radius: 8px;
 		}
-		.sublevel-nav.sort {
-			top: 278px;
-		}
+	/*******************************************/
+	} @media only screen and (max-width: 720px) {
+	/*******************************************/
 	/*******************************************/
 	} @media only screen and (max-width: 520px) {
 	/*******************************************/
@@ -1750,11 +1739,6 @@ div > .MJXc-display {
 		}
 		#content.conversations-user-page h1.listing + .post-meta .date {
 			margin: 0 0 0 1em;
-		}
-
-		.sublevel-nav.sort {
-			top: 215px;
-			right: 4px;
 		}
 		
 		.comment-body {
@@ -1798,14 +1782,6 @@ div > .MJXc-display {
 		}
 		.markdown-hints::after {
 			color: #090;
-		}
-		
-		#edit-post-form label[for='section'] {
-			width: 4.3em;
-		}
-		#edit-post-form input[name='title'],
-		#edit-post-form input[name='url'] {
-			max-width: calc(100% - 6.75em);
 		}
 	}
 }
