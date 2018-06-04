@@ -945,7 +945,7 @@ h1.listing + .post-meta .read-time {
 }
 .login-container form h1 {
 	text-align: center;
-	margin: 0.5em 0 0 0;
+	margin: 0;
 	grid-column: 2;
 }
 

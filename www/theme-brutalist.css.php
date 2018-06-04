@@ -495,6 +495,7 @@ h1.listing + .post-meta .read-time {
 /* “Create account” form */
 
 #signup-form {
+    grid-template-columns: 10.5em 1fr;
 	border: 2px solid #000;
 }
 
