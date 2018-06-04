@@ -689,11 +689,34 @@ h1.listing {
 	}
 	.login-container #login-form,
 	.login-container #signup-form {
-		width: unset;
-		margin: 0;
+		padding: 0 1em 1.25em 1em;
+		grid-row-gap: 0;
 	}
 	.login-container #signup-form {
-		margin-top: 2em;
+		padding-top: 1em;
+	}
+	.login-container #login-form > *,
+	.login-container #signup-form > * {
+		grid-column: 1 / span 2;
+	}
+	.login-container form label {
+		text-align: left;
+		padding: 0;
+		line-height: 1;
+	}
+	.login-container form input {
+		margin: 0.25em 0 0.75em 0;
+		padding: 0.5em;
+	}
+	.login-container form h1 {
+		grid-column: 1 / span 2;
+		margin: 0 0 0.25em 0;
+	}
+	.login-container form a {
+		margin: 0.75em 0 0 0;
+	}
+	.login-container .login-tip {
+		margin: 1.5em 1em 0 1em;
 	}
 }
 
