@@ -917,79 +917,64 @@ h1.listing + .post-meta .read-time {
 /**************/
 
 .login-container {
-	margin: 3em 0 4em;
+	margin: 2em 0;
+	padding: 1em;
 	display: flex;
 	flex-flow: row wrap;
 }
 
 .login-container form {
-	width: 50%;
-	display: flex;
-	flex-flow: row wrap;
-	align-items: baseline;
-	align-content: flex-start;
+	flex-basis: 50%;
+	display: grid;
+	grid-row-gap: 0.5em;
+	align-content: start;
 }
 .login-container form label {
 	text-align: right;
 	padding: 0.25em 0.5em;
 	white-space: nowrap;
-	margin: 0 0 0.25em 0;
+	grid-column: 1;
 }
 .login-container form input {
-	width: calc(100% - 11em);
+	grid-column: 2;
 	padding: 0.25em;
 }
 .login-container form input[type='submit'],
 .login-container form a {
-	text-align: center;
+	grid-column: 2;
+	justify-self: center;
 }
 .login-container form input[type='submit'] {
-	width: 11em;
+	width: 10em;
 	padding: 0.35em;
-	margin: 0.5em auto;
 	line-height: 1;
-}
-.login-container form a {
-	width: 100%;
+	margin: 0.5em 0 0 0;
 }
 .login-container form h1 {
 	text-align: center;
-	margin: 0.5em 0;
-	width: 100%;
+	margin: 0.5em 0 0 0;
+	grid-column: 2;
 }
 
 /* “Log in” form */
 
-#login-form h1 {
-	padding-left: 2rem;
-}
-#login-form label {
-	width: 7em;
-}
-#login-form input[type='submit'],
-#login-form a {
-	position: relative;
-	left: 1.375em;
+#login-form {
+	grid-template-columns: 5.5em 1fr;
+	padding: 0.5em 1.5em 0.5em 0;
 }
 
 /* “Create account” form */
 
 #signup-form {
 	font-size: 0.9em;
-	width: calc(50% - 1em);
-	margin-right: 1em;
+	grid-template-columns: 8.5em 1fr;
+	padding: 0.5em 1em 1em 1em;
 }
 #signup-form h1 {
 	font-size: 1.7em;
 }
-#signup-form label {
-	width: 9em;
-}
 #signup-form input[type='submit'] {
-	margin: 0.75em auto 0.5em auto;
 	padding: 0.4em 0.5em 0.5em 0.5em;
-	position: relative;
-	left: 3.5em;
 }
 
 /* Log in tip */
