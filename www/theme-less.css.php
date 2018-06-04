@@ -430,9 +430,12 @@ body {
 /*=================*/
 
 #quick-nav-ui a {
-	color: #ccc;
+	color: #acd2af;
 	border-radius: 4px;
 	text-decoration: none;
+}
+#quick-nav-ui a:hover {
+	color: #79a97e;
 }
 #quick-nav-ui a[href='#bottom-bar'] {
 	line-height: 1.8;
@@ -445,9 +448,6 @@ body {
 	color: #ddd;
 }
 @media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
-	#quick-nav-ui a:hover {
-		color: #f00;
-	}
 	#quick-nav-ui a:focus:not(:hover) {
 		transform: none;
 		text-shadow: none;
@@ -459,31 +459,15 @@ body {
 /*======================*/
 
 #new-comment-nav-ui .new-comments-count {
-	font-weight: 600;
-	color: #666;
+	color: #888;
 	text-shadow: 0.5px 0.5px 0 #fff;
+	top: 2px;
 }
 #new-comment-nav-ui .new-comments-count::after {
-	font-weight: 600;
 	color: #777;
 }
 #new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
-	color: #bbb;
-	text-shadow: none;
-}
-@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
-	#new-comment-nav-ui .new-comments-count:hover {
-		text-shadow: 
-			0 0 1px #fff,
-			0 0 3px #fff,
-			0 0 5px #fff,
-			0 0 8px #fff,
-			0.5px 0.5px 0 #fff;
-	}
-	#new-comment-nav-ui .new-comment-sequential-nav-button:focus {
-		color: #d00;
-		text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
-	}
+	color: #e6e6e6;
 }
 
 /*=================*/
