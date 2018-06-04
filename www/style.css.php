@@ -960,7 +960,7 @@ h1.listing + .post-meta .read-time {
 
 #login-form {
 	grid-template-columns: 5.5em 1fr;
-	padding: 0.5em 1.5em 0.5em 0;
+	padding: 0.5em 2em 0.5em 0;
 }
 
 /* “Create account” form */

@@ -481,6 +481,10 @@ h1.listing + .post-meta .read-time {
 }
 
 /* “Log in” form */
+#login-form {
+    grid-template-columns: 5.75em 1fr;
+}
+
 #login-form a:hover {
 	text-decoration: dotted underline;
 }
@@ -491,15 +495,7 @@ h1.listing + .post-meta .read-time {
 /* “Create account” form */
 
 #signup-form {
-	padding: 0 0 0.5em 1em;
 	border: 2px solid #000;
-}
-#signup-form label {
-	width: 10em;
-}
-#signup-form input[type='text'],
-#signup-form input[type='password'] {
-	width: calc(100% - 12em);
 }
 
 /* Log in tip */

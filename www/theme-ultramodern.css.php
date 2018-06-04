@@ -525,7 +525,6 @@ h1.listing + .post-meta .link-post-domain {
 /* “Create account” form */
 
 #signup-form {
-	padding: 0 0 0.5em 1em;
 	border: 1px solid #aaa;
 }
 
