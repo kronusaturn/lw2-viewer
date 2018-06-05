@@ -505,7 +505,8 @@ body {
 	}
 
 	#theme-selector,
-	#width-selector {
+	#width-selector,
+	#text-size-adjustment-ui {
 		top: 100%;
 		max-height: 0px;
 		opacity: 0.0;
@@ -516,7 +517,8 @@ body {
 			visibility 0.35s ease;
 	}
 	#theme-selector.engaged,
-	#width-selector.engaged {
+	#width-selector.engaged,
+	#text-size-adjustment-ui.engaged {
 		visibility: visible;
 		max-height: 1000px;
 		opacity: 1.0;
@@ -534,6 +536,13 @@ body {
 	}
 	#width-selector.engaged {
 		top: calc(100% - 48px);
+	}
+
+	#text-size-adjustment-ui {
+		left: -67px;
+	}
+	#text-size-adjustment-ui.engaged {
+		top: calc(100% - 80px);
 	}
 }
 
@@ -657,14 +666,8 @@ body {
 /* TEXT SIZE ADJUSTMENT */
 /*======================*/
 
-#text-size-adjustment-ui button {
-	color: #777;
-}
 #text-size-adjustment-ui button.default {
 	font-weight: 600;
-}
-#text-size-adjustment-ui button:disabled:hover {
-	text-shadow: none;
 }
 
 /*=============================*/
