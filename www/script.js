@@ -790,9 +790,28 @@ function pageFadeTransition(fadeIn) {
 
 function themeLoadCallback_less() {
 	injectSiteNavUIToggle();
+
+	let addSpans = function () {
+		document.querySelectorAll(".top-post-meta .date, .top-post-meta .comment-count").forEach(function (element) {
+			element.innerHTML = "<span>" + element.innerHTML + "</span>";
+		});
+	}
+	if (initializersDone['pageLayoutFinished']) {
+		addSpans();
+	} else {
+		document.addEventListener("DOMContentLoaded", function () {
+			window.requestAnimationFrame(function () {
+				addSpans();
+			});
+		}, { once: true });
+	}
 }
 function themeUnloadCallback_less() {
 	removeSiteNavUIToggle();
+
+	document.querySelectorAll(".top-post-meta .date, .top-post-meta .comment-count").forEach(function (element) {
+		element.innerHTML = element.textContent;
+	});
 }
 
 function themeLoadCallback_dark() {

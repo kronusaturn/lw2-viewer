@@ -4798,6 +4798,11 @@ h1.listing + .post-meta .post-section::before {
 .post .top-post-meta .comment-count {
 	top: calc(100% + 60px);
 }
+.post .top-post-meta .date span,
+.post .top-post-meta .comment-count span {
+	position: fixed;
+	transform: translateX(-100%);
+}
 
 .post .bottom-post-meta {
 	padding: 1.75em 0 0 0;
