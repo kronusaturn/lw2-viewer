@@ -702,6 +702,7 @@ h1.listing {
 	font-size: 1.875rem;
 	line-height: 1.15;
 	max-height: 1.15em;
+	position: relative;
 }
 
 h1.listing a {
@@ -4291,7 +4292,6 @@ h1.listing + .post-meta .link-post-domain {
 
 #content.user-page h1.listing {
 	padding: 0 6px;
-	position: relative;
 }
 #content.user-page h1.listing::after {
 	content: "";

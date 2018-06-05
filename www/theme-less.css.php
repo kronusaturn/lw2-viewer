@@ -674,7 +674,6 @@ h1.listing {
 	font-family: <?php echo $headings_font; ?>, 'Font Awesome';
 	font-size: 1.25rem;
 	line-height: 1.2;
-	position: relative;
 }
 
 h1.listing a[href^="http"] {
@@ -783,7 +782,6 @@ h1.listing + .post-meta .post-section::before {
 }
 #content.user-page h1.listing {
 	padding: 6px 8px 0 8px;
-	position: relative;
 	border-width: 1px 1px 0 1px;
 }
 #content.user-page h1.listing + .post-meta {

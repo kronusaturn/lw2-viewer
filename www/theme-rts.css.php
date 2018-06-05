@@ -564,7 +564,6 @@ h1.listing + .post-meta .link-post-domain {
 
 #content.user-page h1.listing {
 	padding: 0 6px;
-	position: relative;
 }
 #content.user-page h1.listing::after {
 	content: "";

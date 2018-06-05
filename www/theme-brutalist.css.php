@@ -14,10 +14,12 @@ body {
 }
 #content {
 	background-color: #fff;
-	box-shadow: 0 2px 0 #000;
+	box-shadow: 
+		-1px 0 0 #000 inset,
+		0 2px 0 #000;
 	border-style: solid;
 	border-color: #000;
-	border-width: 0 2px;
+	border-width: 0 1px 0 2px;
 	line-height: 1.55;
 }
 #content.no-nav-bars {
@@ -430,7 +432,6 @@ h1.listing + .post-meta .read-time {
 
 #content.user-page h1.listing {
 	padding: 0 6px;
-	position: relative;
 }
 #content.user-page h1.listing::after {
 	content: "";

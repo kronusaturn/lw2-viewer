@@ -708,6 +708,7 @@ h1.listing {
 	font-size: 1.875rem;
 	line-height: 1.15;
 	max-height: 1.15em;
+	position: relative;
 }
 
 h1.listing a {
