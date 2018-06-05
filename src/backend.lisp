@@ -2,6 +2,7 @@
   (:use #:cl #:sb-thread #:flexi-streams #:alexandria #:lw2-viewer.config #:lw2.lmdb #:lw2.utils #:lw2.hash-utils)
   (:export #:*posts-index-fields* #:*comments-index-fields* #:*messages-index-fields*
            #:*notifications-base-terms*
+           #:condition-http-return-code
            #:lw2-error #:lw2-client-error #:lw2-not-found-error #:lw2-user-not-found-error #:lw2-not-allowed-error #:lw2-server-error #:lw2-connection-error #:lw2-unknown-error
 	   #:log-condition #:log-conditions #:start-background-loader #:stop-background-loader #:background-loader-running-p
 	   #:lw2-graphql-query-streamparse #:lw2-graphql-query-noparse #:decode-graphql-json #:lw2-graphql-query #:graphql-query-string* #:graphql-query-string #:lw2-graphql-query-map #:lw2-graphql-query-multi
@@ -19,17 +20,19 @@
 
 (defparameter *notifications-base-terms* (alist :view "userNotifications" :created-at :null :viewed :null))
 
-(define-condition lw2-error (error) ())
+(defmethod condition-http-return-code ((c condition)) 500)
 
-(define-condition lw2-client-error (lw2-error) ())
+(define-condition lw2-error (error) ((http-return-code :allocation :class :reader condition-http-return-code :initform 503)))
 
-(define-condition lw2-not-found-error (lw2-client-error) ()
+(define-condition lw2-client-error (lw2-error) ((http-return-code :allocation :class :initform 400)))
+
+(define-condition lw2-not-found-error (lw2-client-error) ((http-return-code :allocation :class :initform 404))
   (:report "LW server reports: document not found."))
 
 (define-condition lw2-user-not-found-error (lw2-not-found-error) ()
   (:report "User not found."))
 
-(define-condition lw2-not-allowed-error (lw2-client-error) ()
+(define-condition lw2-not-allowed-error (lw2-client-error) ((http-return-code :allocation :class :initform 403))
   (:report "LW server reports: not allowed."))
 
 (define-condition lw2-server-error (lw2-error) ())
