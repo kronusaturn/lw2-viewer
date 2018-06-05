@@ -72,6 +72,10 @@ body {
 	transform: translateX(-96px);
 	width: 70px;
 }
+#content.post-page #nav-item-archive,
+#content.post-page #nav-item-about {
+	transform: translateX(-66px);
+}
 
 #bottom-bar .nav-inner {
 	text-align: center;
@@ -166,6 +170,7 @@ body {
 	margin: 0;
 	white-space: nowrap;
 	position: fixed;
+	width: 120px;
 }
 
 .page-toolbar > * {
@@ -174,7 +179,7 @@ body {
 	line-height: 1;
 	padding: 0.5rem 0.75rem;
 	position: relative;
-	right: 16px;
+	right: 56px;
 }
 
 .page-toolbar button {
@@ -195,6 +200,7 @@ body {
 
 .logout-button {
 	color: #d33;
+	font-weight: 300;
 }
 
 /*===================*/
@@ -697,7 +703,7 @@ h1.listing a[href^="/"] {
 	}
 	h1.listing:focus-within::before {
 		color: #79a97e;
-		left: 3.625em;
+		left: -0.875em;
 	}
 	h1.listing a[href^="http"]:hover {
 		color: #79a97e;
