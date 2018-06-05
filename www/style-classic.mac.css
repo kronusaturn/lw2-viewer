@@ -463,6 +463,9 @@ a#inbox-indicator.new-messages:hover::before {
 .theme-selector button:nth-of-type(8) {
 	background-image: url('data:image/gif;base64,R0lGODlhIAAgAPQAMVONTVSNTlaPUFeQUViQUlmRU2yeZ3Cga3KhbYKsfqbEo6jGpazIqbLMr7PNsMHWvsHWv8LXwMPXwejw5+nw6Orx6e/07vH28PX49Pf69vn7+fv9+/z9/P7//v///wAAACwAAAAAIAAgAAAFe6AnjmRpnmiqrmzrvnAsz3Rts52zbKamNBxZxwB4mC6CAEWIKJowhECF6SxBpVSjNTqNdZqSJ5fKyFzO58kA620C3nA4G/YFEAr4fAEwf9UhYn0udVokV110TYUjh1mBiH6Kj0IHVYZRS14JABFiAhY3oaKjpKWmp6g2IQA7');
 }
+.theme-selector button:nth-of-type(9) {
+	background-image: url('data:image/gif;base64,R0lGODlhIAAgAPQAMZLDlpPDl5XEmJfFmpfGm5rHnZ3JoKjPq6nPrLXWuL/cwe317e317vb69vz9/P3+/f7//v///wAAQBsmAIBgAAAQhqFS/38AAO86GpX/fwAAwAzpDQEAAAAeBwAAAAAAACwAAAAAIAAgAAAFT2AkjmRpnmiqrmzrvnAsz3RtQsig2OYSAAdeifELCkcNAfA4ghiWzIgTypwaq8/r0RqVZrvcaBhLPT4KZSExzVtrhQ4CINGt2+/4vH4/CwEAOw==');
+}
 .theme-selector button:disabled {
 	cursor: auto;
 }

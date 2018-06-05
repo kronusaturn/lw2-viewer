@@ -469,6 +469,9 @@ a#inbox-indicator.new-messages:hover::before {
 .theme-selector button:nth-of-type(8) {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_H.gif")) ?>');
 }
+.theme-selector button:nth-of-type(9) {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_I.gif")) ?>');
+}
 .theme-selector button:disabled {
 	cursor: auto;
 }
