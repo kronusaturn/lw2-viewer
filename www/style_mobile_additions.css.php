@@ -172,6 +172,14 @@
 #theme-selector ~ #theme-tweaker-toggle {
 	top: 100%;
 }
+#theme-selector ~ #theme-tweaker-toggle::after {
+	content: "Open theme tweaker";
+	position: absolute;
+	font-size: 0.625em;
+	white-space: nowrap;
+	left: -50%;
+	top: 100%;
+}
 #theme-selector.engaged ~ #theme-tweaker-toggle {
 	visibility: visible;
 	width: fit-content;
@@ -186,6 +194,10 @@
 }
 #theme-selector.engaged ~ #theme-tweaker-toggle button {
 	opacity: 1.0;
+}
+
+#theme-tweaker-ui {
+	visibility: visible;
 }
 
 /*=================*/

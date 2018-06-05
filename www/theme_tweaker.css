@@ -682,3 +682,59 @@ input[type='range']::-ms-thumb {
 		-1px -2px 0 1px #dfd8df,
 		0 0 0 3px #030303;
 }
+
+/*========*/
+/* MOBILE */
+/*========*/
+
+@media only screen and (hover: none), only screen and (-moz-touch-enabled) {
+	#theme-tweaker-ui {
+		z-index: 12000;
+	}
+	#theme-tweaker-ui::after {
+		top: 10px;
+		right: 8px;
+	}
+	#theme-tweaker-ui .main-theme-tweaker-window {
+		max-width: unset;
+		max-height: unset;
+		left: 3px;
+		top: 3px;
+		width: calc(100% - 5px);
+		height: calc(100% - 5px)
+	}
+	#theme-tweaker-ui .controls-container {
+		max-height: calc(100% - 192px);
+		padding: 0.75em;
+	}
+	#theme-tweaker-ui .current-theme {
+		margin: 0.75em -8px 0 -8px;
+		box-shadow: none;
+		padding: 0 12px;
+	}
+	#theme-tweaker-ui .theme-selector {
+		position: unset;
+		margin: 0.5em 0 1em 0;
+		white-space: nowrap;
+	}
+	#theme-tweaker-ui .clippy-container .clippy {
+		transform: scale(0.375) translate(-215px, 215px);
+	}
+
+	@media only screen and (max-width: 369px) {
+		#theme-tweaker-ui .theme-selector button {
+			margin: 0.5em 0.25em 0.5em 0.5em;
+		}
+		#theme-tweaker-ui .reset-defaults-button {
+			width: 9em;
+		}
+		#theme-tweaker-ui #theme-tweak-section-text-size-adjust .sample-text-container {
+			width: 12em;
+		}
+	}
+	@media only screen and (max-width: 333px) {
+		#theme-tweaker-ui .theme-selector button {
+			margin: 0.5em 0.125em 0.5em 0.5em;
+		}
+	}
+}
