@@ -4238,42 +4238,73 @@ body {
 	#theme-selector,
 	#width-selector,
 	#text-size-adjustment-ui {
-		top: 100%;
-		max-height: 0px;
+		pointer-events: none;
+		visibility: visible;
+		width: fit-content;
 		opacity: 0.0;
 		transition:
-			top 0.35s ease,
-			max-height 0.35s ease,
-			opacity 0.35s ease,
-			visibility 0.35s ease;
+			opacity 0.35s ease;
+	}
+	#theme-selector::after,
+	#width-selector::after,
+	#text-size-adjustment-ui::after {
+		content: "";
+		background-color: #fff;
+		display: block;
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
 	}
 	#theme-selector.engaged,
 	#width-selector.engaged,
 	#text-size-adjustment-ui.engaged {
-		visibility: visible;
-		max-height: 1000px;
+		pointer-events: auto;
 		opacity: 1.0;
 	}
 
 	#theme-selector {
+		display: block;
 		left: 16px;
-	}
-	#theme-selector.engaged {
 		top: calc(100% - 316px);
+	}
+	#theme-selector::after {
+		max-height: 1000px;
+		transition:
+			max-height 0.2s ease;
+	}
+	#theme-selector.engaged::after {
+		max-height: 0px;
 	}
 
 	#width-selector {
 		left: -68px;
-	}
-	#width-selector.engaged {
 		top: calc(100% - 48px);
+	}
+	#width-selector::after {
+		max-width: 1000px;
+		transition:
+			max-width 0.2s ease;
+	}
+	#width-selector.engaged::after {
+		max-width: 0px;
 	}
 
 	#text-size-adjustment-ui {
 		left: -67px;
-	}
-	#text-size-adjustment-ui.engaged {
 		top: calc(100% - 80px);
+	}
+	#text-size-adjustment-ui::after {
+		max-width: 1000px;
+		max-height: 1000px;
+		transition:
+			max-width 0.2s ease,
+			max-height 0.2s ease;
+	}
+	#text-size-adjustment-ui.engaged::after {
+		max-width: 0px;
+		max-height: 0px;
 	}
 }
 
@@ -4281,12 +4312,6 @@ body {
 /* WIDTH SELECTOR */
 /*================*/
 
-#width-selector {
-	opacity: 0.3;
-}
-#width-selector:hover {
-	opacity: 1.0;
-}
 #width-selector button {
 	box-shadow:
 		0 0 0 4px #fff inset,
@@ -4305,9 +4330,6 @@ body {
 /* THEME SELECTOR */
 /*================*/
 
-#theme-selector {
-	opacity: 0.2;
-}
 #theme-selector button {
 	box-shadow:
 		0 0 0 4px #fff inset,
@@ -4659,7 +4681,7 @@ h1.listing + .post-meta .post-section::before {
 /*=======*/
 
 .post {
-	overflow: auto;
+	overflow: visible;
 	padding: 2em 0 0 0;
 }
 
@@ -4702,6 +4724,7 @@ h1.listing + .post-meta .post-section::before {
 
 .post .top-post-meta {
 	flex-flow: column;
+	position: relative;
 }
 .post .top-post-meta .karma,
 .post .top-post-meta .author,
@@ -4715,7 +4738,7 @@ h1.listing + .post-meta .post-section::before {
 	flex-flow: column;
 }
 .post .top-post-meta .karma .karma-value {
-	padding: 4px 0 0 0;
+	padding: 5px 0 0 0;
 	color: #999;
 	font-size: 1.125em;
 	position: relative;
@@ -4755,13 +4778,13 @@ h1.listing + .post-meta .post-section::before {
 .post .top-post-meta .date,
 .post .top-post-meta .comment-count {
 	position: absolute;
-	right: calc(100% - 60px);
+	right: 100%;
 }
 .post .top-post-meta .date {
-	top: 384px;
+	top: calc(100% + 34px);
 }
 .post .top-post-meta .comment-count {
-	top: 412px;
+	top: calc(100% + 60px);
 }
 
 .post .bottom-post-meta {
