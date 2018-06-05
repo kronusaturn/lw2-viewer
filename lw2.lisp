@@ -867,8 +867,12 @@
                                                         ("conversations" :conversations) ("inbox" :inbox)))
                                (offset (if offset (parse-integer offset) 0))
                                (auth-token (if (eq show :inbox) (hunchentoot:cookie-in "lw2-auth-token")))
-                               (user-info (lw2-graphql-query (graphql-query-string "UsersSingle" (alist :slug user-slug) `(:--id :display-name :karma ,@(if (eq show :inbox) '(:last-notifications-check))))
-                                                             :auth-token auth-token))
+                               (user-info
+                                 (let ((ui (lw2-graphql-query (graphql-query-string "UsersSingle" (alist :slug user-slug) `(:--id :display-name :karma ,@(if (eq show :inbox) '(:last-notifications-check))))
+                                                              :auth-token auth-token)))
+                                   (if (cdr (assoc :--id ui))
+                                       ui
+                                       (error (make-condition 'lw2-user-not-found-error)))))
                                (comments-index-fields (remove :page-url *comments-index-fields*)) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
                                (title (format nil "~A~@['s ~A~]" (cdr (assoc :display-name user-info)) (if (member show '(nil :posts :comments)) show-text)))
                                (sort-type (alexandria:switch (sort :test #'string=) ("top" :score) (t :date)))
