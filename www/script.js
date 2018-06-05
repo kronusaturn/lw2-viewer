@@ -516,13 +516,13 @@ function badgePostsWithNewComments() {
 /***********************************/
 
 function injectContentWidthSelector() {
-	let currentWidth = window.localStorage.getItem("selected-width") || 'normal';
+	let currentWidth = widthDict[window.localStorage.getItem("selected-width")] || widthDict['normal'];
 	let widthSelector = addUIElement(
 		"<div id='width-selector'>" +
 		String.prototype.concat.apply("", widthOptions.map(function (wo) {
 			let [name, desc, abbr, width] = wo;
-			let selected = (width == widthDict[currentWidth] ? ' selected' : '');
-			let disabled = (width == widthDict[currentWidth] ? ' disabled' : '');
+			let selected = (width == currentWidth ? ' selected' : '');
+			let disabled = (width == currentWidth ? ' disabled' : '');
 			return `<button type='button' class='select-width-${name}${selected}'${disabled} title='${desc}' tabindex='-1' data-name='${name}'>${abbr}</button>`})) +
 		"</div>");
 	widthSelector.querySelectorAll("button").forEach(function (button) {

@@ -13,8 +13,8 @@ widthOptions.map((wo) => {
 });
 
 function setContentWidth(widthString) {
-	if (!widthString) return;
 	let width = widthDict[widthString];
+	if (!width) return;
 	document.querySelector('#width-adjust').innerHTML = 
 		`#content, #ui-elements-container, #images-overlay { 
 			max-width: calc(${width});
