@@ -2,7 +2,7 @@
   (:use #:cl #:alexandria #:lw2.lmdb #:lw2.backend #:lw2-viewer.config)
   (:export #:match-lw1-link #:convert-lw1-link
            #:match-overcomingbias-link #:convert-overcomingbias-link
-           #:match-lw2-link #:match-lw2-slug-link #:match-lw2-sequence-link #:convert-lw2-link #:convert-lw2-slug-link #:convert-lw2-sequence-link
+           #:match-lw2-link #:match-lw2-slug-link #:match-lw2-sequence-link #:convert-lw2-link #:convert-lw2-slug-link #:convert-lw2-sequence-link #:convert-lw2-user-link
            #:generate-post-link
            #:convert-any-link))
 
@@ -69,6 +69,11 @@
     (when match?
       (values (elt strings 0) (elt strings 1)))))
 
+(defun convert-lw2-user-link (link)
+  (multiple-value-bind (match? strings) (ppcre:scan-to-strings "^(?:https?://(?:www.)?less(?:er)?wrong.com)(/users/[^/#]+)" link)
+    (when match?
+      (elt strings 0))))
+
 (labels
   ((gen-internal (post-id slug comment-id &optional absolute-uri)
 		 (format nil "~Aposts/~A/~A~@[#comment-~A~]" (if absolute-uri *site-uri* "/") post-id (or slug "-") comment-id))) 
@@ -97,4 +102,4 @@
 	  (gen-internal story-id (or (cdr (assoc :slug story)) (get-post-slug story-id)) comment-id absolute-uri))))))
 
 (defun convert-any-link (url &key (if-error :signal))
-  (or (convert-lw2-link url) (convert-lw2-slug-link url) (convert-lw2-sequence-link url) (convert-lw1-link url :if-error if-error) (convert-overcomingbias-link url :if-error if-error)))
+  (or (convert-lw2-link url) (convert-lw2-slug-link url) (convert-lw2-sequence-link url) (convert-lw1-link url :if-error if-error) (convert-overcomingbias-link url :if-error if-error) (convert-lw2-user-link url)))
