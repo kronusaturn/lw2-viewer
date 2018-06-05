@@ -515,7 +515,8 @@ h1.listing a[href^='/'] {
 		display: inline-block;
 		vertical-align: top;
 		position: relative;
-		left: -0.25em;
+		left: -0.125em;
+		top: 1px;
 		color: #690010;
 	}
 	h1.listing a[href^="http"]:hover {

@@ -412,7 +412,8 @@ h1.listing a[href^="/"] {
 	}	
 	h1.listing:focus-within::before {
 		color: #00f;
-		left: -0.75em;
+		left: -0.625em;
+		top: 1px;
 	}
 	#content.user-page h1.listing:focus-within::before {
 		left: -0.625em;

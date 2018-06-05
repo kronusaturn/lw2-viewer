@@ -423,7 +423,8 @@ h1.listing a[href^="http"] {
 	}	
 	h1.listing:focus-within::before {
 		color: #f60;
-		left: -0.75em;
+		left: -0.625em;
+		top: 1px;
 	}
 	#content.user-page h1.listing:focus-within::before {
 		left: -0.625em;

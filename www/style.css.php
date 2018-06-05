@@ -753,7 +753,7 @@ h1.listing a[href^="http"] {
 		font-family: Font Awesome;
 		display: block;
 		position: absolute;
-		left: 1em;
+		left: -0.75em;
 	}
 
 <?php $margin_of_hover_error = '10px'; ?>
