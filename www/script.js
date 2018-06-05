@@ -1386,7 +1386,7 @@ function appearanceAdjustUIToggleButtonClicked(event) {
 	toggleAppearanceAdjustUI();
 }
 function toggleAppearanceAdjustUI() {
-	document.querySelectorAll("#theme-selector, #width-selector, #text-size-adjustment-ui, #appearance-adjust-ui-toggle button").forEach(function (element) {
+	document.querySelectorAll("#theme-selector, #width-selector, #text-size-adjustment-ui, #theme-tweaker-toggle, #appearance-adjust-ui-toggle button").forEach(function (element) {
 		element.toggleClass("engaged");
 	});
 }

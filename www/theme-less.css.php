@@ -506,7 +506,8 @@ body {
 
 	#theme-selector,
 	#width-selector,
-	#text-size-adjustment-ui {
+	#text-size-adjustment-ui,
+	#theme-tweaker-toggle {
 		pointer-events: none;
 		visibility: visible;
 		width: fit-content;
@@ -528,7 +529,8 @@ body {
 	}
 	#theme-selector.engaged,
 	#width-selector.engaged,
-	#text-size-adjustment-ui.engaged {
+	#text-size-adjustment-ui.engaged,
+	#theme-tweaker-toggle.engaged {
 		pointer-events: auto;
 		opacity: 1.0;
 	}
@@ -575,6 +577,13 @@ body {
 		max-width: 0px;
 		max-height: 0px;
 	}
+
+	#theme-tweaker-toggle {
+		left: 18px;
+		top: calc(100% - 356px);
+		transition:
+			opacity 0.5s ease-out;
+	}
 }
 
 /*================*/
@@ -618,7 +627,6 @@ body {
 /*======================*/
 
 #theme-tweaker-toggle button {
-	opacity: 0.2;
 	color: #777;
 }
 
