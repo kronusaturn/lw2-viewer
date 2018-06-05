@@ -44,9 +44,6 @@ body {
 /* NAV BAR */
 /*=========*/
 
-.nav-bar {
-	background-color: #fff;
-}
 .nav-inner {
 	font-size: 1.125em;
 	padding: 0.5rem 0.75rem;
@@ -72,6 +69,8 @@ body {
 #nav-item-archive,
 #nav-item-about {
 	position: fixed;
+	transform: translateX(-96px);
+	width: 70px;
 }
 
 #bottom-bar .nav-inner {
@@ -117,7 +116,7 @@ body {
 #nav-item-search {
 	position: absolute;
 	top: 0;
-	left: 16px;
+	left: 4.5em;
 	width: 400px;
 }
 #nav-item-search .nav-inner {
@@ -166,9 +165,7 @@ body {
 	padding: 0 0 0 0;
 	margin: 0;
 	white-space: nowrap;
-	position: absolute;
-	right: calc(100% + 30px);
-	grid-column: 1;
+	position: fixed;
 }
 
 .page-toolbar > * {
@@ -176,6 +173,8 @@ body {
 	text-align: right;
 	line-height: 1;
 	padding: 0.5rem 0.75rem;
+	position: relative;
+	right: 16px;
 }
 
 .page-toolbar button {
@@ -398,7 +397,7 @@ body {
 		top: 0;
 	}
 	#secondary-bar.engaged #nav-item-archive {
-		top: 200px;
+		top: 196px;
 	}
 	#secondary-bar.engaged #nav-item-about {
 		top: 230px;
@@ -409,10 +408,10 @@ body {
 
 	#post-nav-ui-toggle {
 		bottom: 10px;
-		right: -26px;
+		right: -30px;
 	}
 	#content.post-page ~ #ui-elements-container #post-nav-ui-toggle {
-		right: -50px;
+		right: -54px;
 	}
 	#post-nav-ui-toggle button.engaged {
 		transform: rotate(-90deg);
