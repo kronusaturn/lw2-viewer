@@ -69,12 +69,12 @@ body {
 #nav-item-archive,
 #nav-item-about {
 	position: fixed;
-	transform: translateX(-96px);
-	width: 70px;
+	transform: translateX(-106px);
+	width: 80px;
 }
 #content.post-page #nav-item-archive,
 #content.post-page #nav-item-about {
-	transform: translateX(-66px);
+	transform: translateX(-76px);
 }
 
 #bottom-bar .nav-inner {
@@ -211,7 +211,7 @@ body {
 	justify-content: flex-start;
 	padding: 1em 0 0.25em 0;
 	font-size: 1em;
-	margin: 0 0 0 -5px;
+	margin: 0 0 0 -4px;
 	grid-column: 1;
 }
 #top-nav-bar .page-number {
@@ -232,7 +232,7 @@ body {
 }
 .archive-nav + #top-nav-bar {
 	margin: 0.5em 0 0 -4px;
-	padding: 0;
+	padding: 0 0 0.25em 0;
 }
 
 /*==============*/
@@ -674,6 +674,7 @@ h1.listing {
 	font-family: <?php echo $headings_font; ?>, 'Font Awesome';
 	font-size: 1.25rem;
 	line-height: 1.2;
+	position: relative;
 }
 
 h1.listing a[href^="http"] {
