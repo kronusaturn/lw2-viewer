@@ -3845,7 +3845,7 @@ body {
 #nav-item-search {
 	position: absolute;
 	top: 0;
-	left: 4.5em;
+	left: 5em;
 	width: 400px;
 }
 #nav-item-search .nav-inner {
@@ -4169,24 +4169,24 @@ body {
 	}	
 	
 	#quick-nav-ui {
-		right: -20px;
+		right: -24px;
 	}
 	#content.post-page ~ #ui-elements-container #quick-nav-ui {
-		right: -44px;
+		right: -48px;
 	}
 	#quick-nav-ui.engaged {
 		bottom: 64px;
 	}
 	
 	#new-comment-nav-ui {
-		right: -45px;
+		right: -49px;
 	}
 	#new-comment-nav-ui.engaged {
 		bottom: 216px;
 	}
 
 	#hns-date-picker {
-		right: -182px;
+		right: -186px;
 	}
 	#hns-date-picker.engaged {
 		bottom: 247px;
@@ -4194,7 +4194,7 @@ body {
 	@media only screen and (max-width: 1440px) {
 		#hns-date-picker {
 			background-color: rgba(255,255,255,0.95);
-			right: -14px;
+			right: -18px;
 		}
 		#hns-date-picker::before {
 			display: none;
