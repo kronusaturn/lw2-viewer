@@ -516,19 +516,14 @@ function badgePostsWithNewComments() {
 /***********************************/
 
 function injectContentWidthSelector() {
-	let widthOptions = [
-		['normal', 'Narrow (fixed-width) content column', 'N', '900px'],
-		['wide', 'Wide (fixed-width) content column', 'W', '1150px'],
-		['fluid', 'Full-width (fluid) content column', 'F', '(100% - 300px)']
-	];
-	let currentWidth = window.localStorage.getItem("selected-width") || '900px';
+	let currentWidth = window.localStorage.getItem("selected-width") || 'normal';
 	let widthSelector = addUIElement(
 		"<div id='width-selector'>" +
 		String.prototype.concat.apply("", widthOptions.map(function (wo) {
 			let [name, desc, abbr, width] = wo;
-			let selected = (width == currentWidth ? ' selected' : '');
-			let disabled = (width == currentWidth ? ' disabled' : '');
-			return `<button type='button' class='select-width-${name}${selected}'${disabled} title='${desc}' tabindex='-1' data-width='${width}'>${abbr}</button>`})) +
+			let selected = (width == widthDict[currentWidth] ? ' selected' : '');
+			let disabled = (width == widthDict[currentWidth] ? ' disabled' : '');
+			return `<button type='button' class='select-width-${name}${selected}'${disabled} title='${desc}' tabindex='-1' data-name='${name}'>${abbr}</button>`})) +
 		"</div>");
 	widthSelector.querySelectorAll("button").forEach(function (button) {
 		button.addActivateEvent(widthAdjustButtonClicked);
@@ -547,8 +542,8 @@ function setWidthAdjustButtonsAccesskey() {
 	nextButtonInCycle.title += ` (accesskey: '\'')`;
 }
 function widthAdjustButtonClicked(event) {
-	let selectedWidth = event.target.getAttribute("data-width");
-	if(selectedWidth == "900px") window.localStorage.removeItem("selected-width"); else window.localStorage.setItem("selected-width", selectedWidth);
+	let selectedWidth = event.target.getAttribute("data-name");
+	if(selectedWidth == "normal") window.localStorage.removeItem("selected-width"); else window.localStorage.setItem("selected-width", selectedWidth);
 	setContentWidth(selectedWidth);
 	event.target.parentElement.childNodes.forEach(function (button) {
 		button.removeClass("selected");

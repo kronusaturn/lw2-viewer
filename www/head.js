@@ -1,10 +1,23 @@
 document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='hide-bottom-bar'>#bottom-bar { display: none }</style>");
 
+var widthOptions = [
+	['normal', 'Narrow (fixed-width) content column', 'N', '900px'],
+	['wide', 'Wide (fixed-width) content column', 'W', '1150px'],
+	['fluid', 'Full-width (fluid) content column', 'F', '(100% - 300px)']
+];
+
+var widthDict = {'(100vw - 300px)': 'fluid'};
+widthOptions.map((wo) => {
+	widthDict[wo[0]] = wo[3];
+	widthDict[wo[3]] = wo[3];
+});
+
 function setContentWidth(widthString) {
 	if (!widthString) return;
+	let width = widthDict[widthString];
 	document.querySelector('#width-adjust').innerHTML = 
 		`#content, #ui-elements-container, #images-overlay { 
-			max-width: calc(${widthString});
+			max-width: calc(${width});
 		}`;
 }
 setContentWidth(window.localStorage.getItem('selected-width'));
