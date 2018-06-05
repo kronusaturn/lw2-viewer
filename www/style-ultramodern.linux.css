@@ -743,13 +743,15 @@ h1.listing a[href^="http"] {
 		z-index: 2;
 	}	
 	h1.listing:focus-within::before {
-		content: ">";
+		content: "\F105";
+		font-family: Font Awesome;
 		display: block;
 		position: absolute;
 		left: 1em;
 	}
 
-		h1.listing a:hover::before {
+
+	h1.listing a:hover::before {
 		content: "";
 		position: absolute;
 		top: -10px;
