@@ -299,7 +299,8 @@ body {
 
 @media not screen and (hover: none), not screen and (-moz-touch-enabled) {
 	#site-nav-ui-toggle,
-	#post-nav-ui-toggle {
+	#post-nav-ui-toggle,
+	#appearance-adjust-ui-toggle {
 		visibility: visible;
 		position: absolute;
 		display: inline-block;
@@ -307,7 +308,8 @@ body {
 		z-index: 1;
 	}
 	#site-nav-ui-toggle button,
-	#post-nav-ui-toggle button {
+	#post-nav-ui-toggle button,
+	#appearance-adjust-ui-toggle button {
 		font-family: Font Awesome;
 		font-weight: 900;
 		font-size: 32px;
@@ -319,15 +321,18 @@ body {
 			opacity 0.15s ease;
 	}
 	#site-nav-ui-toggle button:hover,
-	#post-nav-ui-toggle button:hover {
+	#post-nav-ui-toggle button:hover,
+	#appearance-adjust-ui-toggle button:hover {
 		opacity: 1.0;
 	}
 	#site-nav-ui-toggle button::selection,
-	#post-nav-ui-toggle button::selection {
+	#post-nav-ui-toggle button::selection,
+	#appearance-adjust-ui-toggle button::selection {
 		background-color: transparent;
 	}
 	#site-nav-ui-toggle button::-moz-focus-inner,
-	#post-nav-ui-toggle button::-moz-focus-inner {
+	#post-nav-ui-toggle button::-moz-focus-inner,
+	#appearance-adjust-ui-toggle button::-moz-focus-inner {
 		border: none;
 	}
 	
@@ -489,6 +494,37 @@ body {
 		#hns-date-picker.engaged {
 			bottom: 238px;
 		}
+	}
+
+	#appearance-adjust-ui-toggle {
+		bottom: 10px;
+		left: 10px;
+	}
+	#appearance-adjust-ui-toggle button.engaged {
+		transform: rotate(-90deg);
+	}
+
+	#theme-selector {
+		top: 100%;
+		max-height: 0px;
+		opacity: 0.0;
+		transition:
+			top 0.35s ease,
+			max-height 0.35s ease,
+			opacity 0.35s ease,
+			visibility 0.35s ease;
+	}
+	#theme-selector.engaged {
+		visibility: visible;
+		max-height: 1000px;
+		opacity: 1.0;
+	}
+
+	#theme-selector {
+		left: 16px;
+	}
+	#theme-selector.engaged {
+		top: calc(100% - 316px);
 	}
 }
 
