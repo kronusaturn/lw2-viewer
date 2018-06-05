@@ -481,12 +481,12 @@ h1.listing a[href^="http"] {
 		color: #777;
 		background-color: rgba(255,255,255,0.85);
 	}	
-	#content.user-page h1.listing:focus-within::before {
-		left: 1.25em;
-	}
 	h1.listing:focus-within::before {
 		color: #00f;
-		left: 1.375em;
+		left: -0.75em;
+	}
+	#content.user-page h1.listing:focus-within::before {
+		left: -0.625em;
 	}
 	h1.listing a[href^="http"]:hover {
 		color: #4879ec;
@@ -554,6 +554,9 @@ h1.listing + .post-meta .link-post-domain {
 	border-bottom: 1px solid #ccc;
 }
 
+#content.user-page h1.listing + .post-meta {
+	margin: 0 6px 0 28px;
+}
 #content.conversations-user-page h1.listing + .post-meta .date::after {
 	display: none;
 }
