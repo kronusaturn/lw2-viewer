@@ -504,7 +504,8 @@ body {
 		transform: rotate(-90deg);
 	}
 
-	#theme-selector {
+	#theme-selector,
+	#width-selector {
 		top: 100%;
 		max-height: 0px;
 		opacity: 0.0;
@@ -514,7 +515,8 @@ body {
 			opacity 0.35s ease,
 			visibility 0.35s ease;
 	}
-	#theme-selector.engaged {
+	#theme-selector.engaged,
+	#width-selector.engaged {
 		visibility: visible;
 		max-height: 1000px;
 		opacity: 1.0;
@@ -525,6 +527,13 @@ body {
 	}
 	#theme-selector.engaged {
 		top: calc(100% - 316px);
+	}
+
+	#width-selector {
+		left: -68px;
+	}
+	#width-selector.engaged {
+		top: calc(100% - 48px);
 	}
 }
 
