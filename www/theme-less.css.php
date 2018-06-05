@@ -584,6 +584,10 @@ body {
 		transition:
 			opacity 0.5s ease-out;
 	}
+
+	#theme-tweaker-ui {
+		visibility: visible;
+	}
 }
 
 /*================*/
