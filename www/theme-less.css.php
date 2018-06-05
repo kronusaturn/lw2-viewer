@@ -120,7 +120,7 @@ body {
 #nav-item-search {
 	position: absolute;
 	top: 0;
-	left: 5em;
+	left: 4.75em;
 	width: 400px;
 }
 #nav-item-search .nav-inner {
@@ -902,7 +902,8 @@ h1.listing + .post-meta .post-section::before {
 
 .contents {
 	font-family: <?php echo $UI_font; ?>;
-	border: 1px solid #c4dbc4;
+	padding-top: 0;
+	margin-top: 1em;
 }
 .post-body .contents ul {
 	font-size: 0.8125em;
@@ -936,11 +937,11 @@ h1.listing + .post-meta .post-section::before {
 }
 
 .post > h1:first-child {
-	font-size: 2rem;
+	font-size: 2.75rem;
 	font-family: <?php echo $headings_font; ?>;
 	font-weight: 300;
 	line-height: 1.1;
-	margin: 1em 0 0.25em 0;
+	margin: 1.375em 0 0.5em 0;
 }
 
 /*===========*/
@@ -968,9 +969,83 @@ h1.listing + .post-meta .post-section::before {
 	opacity: 1;
 }
 
+.post .top-post-meta {
+	flex-flow: column;
+}
+.post .top-post-meta .karma,
+.post .top-post-meta .author,
+.post .top-post-meta .qualified-linking {
+	width: fit-content;
+	margin: auto;
+}
+.post .top-post-meta .karma {
+	order: -1;
+	display: flex;
+	flex-flow: column;
+}
+.post .top-post-meta .karma .karma-value {
+	padding: 4px 0 0 0;
+	color: #999;
+	font-size: 1.125em;
+	position: relative;
+}
+.post .top-post-meta .karma .karma-value::before,
+.post .top-post-meta .karma .karma-value::after {
+	content: "";
+	position: absolute;
+	display: block;
+	background-color: #ccc;
+	height: 1px;
+	width: 100px;
+	top: 50%;
+}
+.post .top-post-meta .karma .karma-value::before {
+	right: calc(100% + 8px);
+}
+.post .top-post-meta .karma .karma-value::after {
+	left: calc(100% + 8px);
+}
+.post .top-post-meta .karma .karma-value span {
+	display: none;
+}
+.post .top-post-meta .author {
+	padding: 4px 0 0 0;
+	margin: 0.25em auto;
+}
+.post .top-post-meta .qualified-linking label {
+	margin: 0;
+}
+
+.post .top-post-meta .post-section,
+.post .top-post-meta .lw2-link {
+	display: none;
+}
+
+.post .top-post-meta .date,
+.post .top-post-meta .comment-count {
+	position: absolute;
+	right: calc(100% - 60px);
+}
+.post .top-post-meta .date {
+	top: 384px;
+}
+.post .top-post-meta .comment-count {
+	top: 412px;
+}
+
 .post .bottom-post-meta {
-	padding: unset;
+	padding: 1.75em 0 0 0;
 	margin: 0.5em 0 1.5em 0;
+	position: relative;
+}
+.post .bottom-post-meta::before {
+	content: "";
+	position: absolute;
+	display: block;
+	background-color: #ddd;
+	height: 1px;
+	width: calc(100% - 60px);
+	top: 0;
 }
 
 /*============*/
