@@ -1729,9 +1729,9 @@ pre {
 	font-feature-settings: 'ss04';
 }
 code {
-	background-color: #f6f6ff;
-	border: 1px solid #ddf;
-	border-radius: 4px;
+	background-color: #eee;
+	padding: 0 5px 1px 5px;
+	box-shadow: 0 0 0 1px #fff inset;
 }
 
 input[type='text'],
