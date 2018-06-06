@@ -791,21 +791,15 @@ function pageFadeTransition(fadeIn) {
 function themeLoadCallback_less() {
 	injectSiteNavUIToggle();
 
-	let addSpans = function () {
+	registerInitializer('addSpans', true, () => document.querySelector(".top-post-meta") != null, function () {
 		document.querySelectorAll(".top-post-meta .date, .top-post-meta .comment-count").forEach(function (element) {
 			element.innerHTML = "<span>" + element.innerHTML + "</span>";
 		});
-	}
+	});
 	if (initializersDone['pageLayoutFinished']) {
-		addSpans();
-	} else {
-		document.addEventListener("DOMContentLoaded", function () {
-			window.requestAnimationFrame(function () {
-				addSpans();
-			});
-		}, { once: true });
+		forceInitializer('addSpans');
 	}
-	
+
 	let isFirefox = /firefox/i.test(navigator.userAgent);
 	if (isFirefox) {
 		let themeTweakStyle = document.querySelector("#theme-tweak");
