@@ -32,11 +32,14 @@ body {
 /* Compensating for Linux/Windows being terrible. */
 
 .post-meta > *:not(.post-section),
+.comment-meta > *,
 #primary-bar a,
 #secondary-bar a,
 #nav-item-search > *,
 .page-toolbar > *,
-#top-nav-bar > * {
+#top-nav-bar > *,
+.post-body a,
+.comment-body a {
 	text-shadow: <?php global $platform; echo ($platform == 'Mac' ? 'none' : '0 0 0 #aaa'); ?>;
 }
 
@@ -550,6 +553,7 @@ body {
 	}
 
 	#width-selector {
+		display: table;
 		left: -68px;
 		top: calc(100% - 48px);
 	}
