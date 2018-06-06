@@ -1,3 +1,25 @@
+/***************************/
+/* INITIALIZATION REGISTRY */
+/***************************/
+var initializersDone = {};
+function registerInitializer(name, tryEarly, precondition, fn) {
+	let wrapper = function () {
+		if(initializersDone[name]) return;
+		if(!precondition()) {
+			if(tryEarly) window.setTimeout(wrapper, 50);
+			return;
+		}
+		initializersDone[name] = true;
+		fn();
+	};
+	if(tryEarly) {
+		window.requestAnimationFrame(wrapper);
+	} else {
+		document.addEventListener("readystatechange", wrapper, {once: true});
+		window.setTimeout(wrapper);
+	}
+}
+
 /***********/
 /* COOKIES */
 /***********/
@@ -1248,15 +1270,7 @@ function removeElement(selector, ancestor = document) {
 /* INITIALIZATION */
 /******************/
 
-var earlyInitializeDone = false;
-function earlyInitialize() {
-	if(earlyInitializeDone) return; 
-	if(document.querySelector("#content") == null) {
-		window.setTimeout(earlyInitialize, 50);
-		return;
-	}
-	earlyInitializeDone = true;
-
+registerInitializer('earlyInitialize', true, () => document.querySelector("#content") != null, function () {
 	// Backward compatibility
 	let storedTheme = window.localStorage.getItem('selected-theme');
 	if(storedTheme) {
@@ -1279,317 +1293,301 @@ function earlyInitialize() {
 
 	try { updateInbox(); }
 	catch (e) { }
-}
+});
 
-var initializeDone = false;
-function initialize() {
-	if (initializeDone || (document.readyState == "loading")) return;
-	initializeDone = true;
-	earlyInitialize();
+registerInitializer('initialize', false, () => document.readyState != 'loading', function () {
+	if (getQueryVariable("comments") == "false")
+		document.querySelector("#content").addClass("no-comments");
+	if (getQueryVariable("hide-nav-bars") == "true") {
+		document.querySelector("#content").addClass("no-nav-bars");
+		let auxAboutLink = addUIElement("<div id='aux-about-link'><a href='/about' accesskey='t' target='_new'>&#xf129;</a></div>");
+	}
 
-	window.requestAnimationFrame(function() {
-		if (getQueryVariable("comments") == "false")
-			document.querySelector("#content").addClass("no-comments");
-		if (getQueryVariable("hide-nav-bars") == "true") {
-			document.querySelector("#content").addClass("no-nav-bars");
-			let auxAboutLink = addUIElement("<div id='aux-about-link'><a href='/about' accesskey='t' target='_new'>&#xf129;</a></div>");
-		}
+	let content = document.querySelector("#content");
+	if (content.clientHeight <= window.innerHeight + 30 || 
+		content.querySelector("#comments .comment-thread") == null) {
+		try { document.querySelector("#quick-nav-ui a[href='#comments']").addClass("no-comments"); }
+		catch (e) { }
+	}
 
-		let content = document.querySelector("#content");
-		if (content.clientHeight <= window.innerHeight + 30 || 
-			content.querySelector("#comments .comment-thread") == null) {
-			try { document.querySelector("#quick-nav-ui a[href='#comments']").addClass("no-comments"); }
-			catch (e) { }
-		}
+	if(location.hash.length == 18) {
+		location.hash = "#comment-" + location.hash.substring(1);
+	}
 
-		if(location.hash.length == 18) {
-			location.hash = "#comment-" + location.hash.substring(1);
-		}
-
-		try {
-			let dtf = new Intl.DateTimeFormat([], (window.innerWidth > 720 ? {month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'}
-										       : {month: 'numeric', day: 'numeric', year: '2-digit', hour: 'numeric', minute: 'numeric'}));
-			document.querySelectorAll(".date").forEach(function (e) {
-				let d = e.getAttribute("data-js-date");
-				if(d) { e.innerHTML = dtf.format(new Date(+ d)); }
-			});
-		}
-		catch(e) { }
-
-		window.needHashRealignment = false;
-
-		document.querySelectorAll(".comment-meta .comment-parent-link, .comment-meta .comment-child-links a").forEach(function (cpl) {
-			cpl.addEventListener("mouseover", function(e) {
-				let parent_id = "#comment-" + /(?:#comment-)?(.+)/.exec(cpl.getAttribute("href"))[1];
-				var parent;
-				try { parent = document.querySelector(parent_id).firstChild; } catch (e) { return; }
-				let parentCI = parent.parentNode;
-				var highlight_cn;
-				if(parent.getBoundingClientRect().bottom < 10 || parent.getBoundingClientRect().top > window.innerHeight + 10) {
-					highlight_cn = "comment-item-highlight-faint";
-					parent = parent.cloneNode(true);
-					parent.addClass("comment-popup")
-					parent.addClass("comment-item-highlight");
-					cpl.addEventListener("mouseout", function(e) {
-						parent.parentNode.removeChild(parent);
-					}, {once: true});
-					cpl.parentNode.parentNode.appendChild(parent);
-				} else {
-					highlight_cn = "comment-item-highlight";
-				}
-				let cn = parentCI.className;
-				parentCI.className = cn + " " + highlight_cn;
-				cpl.addEventListener("mouseout", function(e) { parentCI.className = cn; }, {once: true});
-			});
+	try {
+		let dtf = new Intl.DateTimeFormat([], (window.innerWidth > 720 ? {month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'}
+									       : {month: 'numeric', day: 'numeric', year: '2-digit', hour: 'numeric', minute: 'numeric'}));
+		document.querySelectorAll(".date").forEach(function (e) {
+			let d = e.getAttribute("data-js-date");
+			if(d) { e.innerHTML = dtf.format(new Date(+ d)); }
 		});
+	}
+	catch(e) { }
 
-		document.querySelectorAll(".with-markdown-editor textarea, .conversation-page textarea").forEach(function (textarea) { textarea.addTextareaFeatures(); });
-		document.querySelectorAll(((getQueryVariable("post-id")) ? "#edit-post-form textarea" : "#edit-post-form input[name='title']") + ", .conversation-page textarea").forEach(function (field) { field.focus(); });
+	window.needHashRealignment = false;
 
-		let postMeta = document.querySelector(".post .post-meta");
-		if (postMeta) {
-			// Add "qualified hyperlinking" toolbar.
-			let postPermalink = location.protocol + "//" + location.host + location.pathname;
-			postMeta.insertAdjacentHTML("beforeend", "<div class='qualified-linking'>" + 
-			"<input type='checkbox' tabindex='-1' id='qualified-linking-toolbar-toggle-checkbox'><label for='qualified-linking-toolbar-toggle-checkbox'><span>&#xf141;</span></label>" + 
-			"<div class='qualified-linking-toolbar'>" +
-			`<a href='${postPermalink}'>Post permalink</a>` +
-			`<a href='${postPermalink}?comments=false'>Link without comments</a>` +
-			`<a href='${postPermalink}?hide-nav-bars=true'>Link without top nav bars</a>` +
-			`<a href='${postPermalink}?comments=false&hide-nav-bars=true'>Link without comments or top nav bars</a>` +
-			"</div>" +
-			"</div>");
-
-			// Replicate .post-meta at bottom of post.
-			let clonedPostMeta = postMeta.cloneNode(true);
-			postMeta.addClass("top-post-meta");
-			clonedPostMeta.addClass("bottom-post-meta");
-			clonedPostMeta.querySelector("input[type='checkbox']").id += "-bottom";
-			clonedPostMeta.querySelector("label").htmlFor += "-bottom";
-			document.querySelector(".post").appendChild(clonedPostMeta);
-		}
-		
-		if(readCookie("lw2-auth-token")) {
-			var comments_container = document.querySelector("#comments");
-			if (comments_container) {
-				// Add reply buttons.
-				comments_container.querySelectorAll(".comment").forEach(function (e) {
-					e.insertAdjacentHTML("afterend", "<div class='comment-controls posting-controls'></div>");
-					e.parentElement.querySelector(".comment-controls").injectCommentButtons();
-				});
-			
-				// Add top-level new comment form.
-				if(!document.querySelector(".individual-thread-page")) {
-					comments_container.insertAdjacentHTML("afterbegin", "<div class='comment-controls posting-controls'></div>");
-					comments_container.querySelector(".comment-controls").injectCommentButtons();
-				}
+	document.querySelectorAll(".comment-meta .comment-parent-link, .comment-meta .comment-child-links a").forEach(function (cpl) {
+		cpl.addEventListener("mouseover", function(e) {
+			let parent_id = "#comment-" + /(?:#comment-)?(.+)/.exec(cpl.getAttribute("href"))[1];
+			var parent;
+			try { parent = document.querySelector(parent_id).firstChild; } catch (e) { return; }
+			let parentCI = parent.parentNode;
+			var highlight_cn;
+			if(parent.getBoundingClientRect().bottom < 10 || parent.getBoundingClientRect().top > window.innerHeight + 10) {
+				highlight_cn = "comment-item-highlight-faint";
+				parent = parent.cloneNode(true);
+				parent.addClass("comment-popup")
+				parent.addClass("comment-item-highlight");
+				cpl.addEventListener("mouseout", function(e) {
+					parent.parentNode.removeChild(parent);
+				}, {once: true});
+				cpl.parentNode.parentNode.appendChild(parent);
+			} else {
+				highlight_cn = "comment-item-highlight";
 			}
-
-			// Add upvote/downvote buttons.
-			if(typeof(postVote) != 'undefined') {
-				document.querySelectorAll(".post-meta .karma-value").forEach(function (e) {
-					let voteType = postVote;
-					e.insertAdjacentHTML('beforebegin', "<button type='button' class='vote upvote"+(voteType=='upvote'?' selected':'')+"' data-vote-type='upvote' data-target-type='Posts' tabindex='-1'></button>");
-					e.insertAdjacentHTML('afterend', "<button type='button' class='vote downvote"+(voteType=='downvote'?' selected':'')+"' data-vote-type='downvote' data-target-type='Posts' tabindex='-1'></button>");
-				});
-			}
-			if(typeof(commentVotes) != 'undefined') {
-				document.querySelectorAll(".comment-meta .karma-value").forEach(function (e) {
-					let cid = e.getCommentId();
-					let voteType = commentVotes[cid];
-					e.insertAdjacentHTML('beforebegin', "<button type='button' class='vote upvote"+(voteType=='upvote'?' selected':'')+"' data-vote-type='upvote' data-target-type='Comments' tabindex='-1'></button>");
-					e.insertAdjacentHTML('afterend', "<button type='button' class='vote downvote"+(voteType=='downvote'?' selected':'')+"' data-vote-type='downvote' data-target-type='Comments' tabindex='-1'></button>");
-				});
-				// Replicate karma controls at the bottom of comments.
-				document.querySelectorAll(".comment-meta .karma").forEach(function (karma_controls) {
-					let karma_controls_cloned = karma_controls.cloneNode(true);
-					let comment_controls = karma_controls.parentElement.parentElement.nextSibling;
-					comment_controls.appendChild(karma_controls_cloned);
-				});
-			}
-			document.querySelector("head").insertAdjacentHTML("beforeend","<style id='vote-buttons'>" + 
-			`.upvote:hover,
-			.upvote.selected {
-				color: #00d800;
-			}
-			.downvote:hover,
-			.downvote.selected {
-				color: #eb4c2a;
-			}` + "</style>");
-			document.querySelectorAll("button.vote").forEach(function(e) {
-				e.addActivateEvent(voteEvent);
-			});
-
-			window.needHashRealignment = true;
-		}
-
-		// Clean up ToC
-		document.querySelectorAll(".contents-list li a").forEach(function (a) {
-			a.innerText = a.innerText.replace(/^[0-9]+\. /, '');
-			a.innerText = a.innerText.replace(/^[0-9]+: /, '');
-			a.innerText = a.innerText.replace(/^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})\. /i, '');
-			a.innerText = a.innerText.replace(/^[A-Z]\. /, '');
+			let cn = parentCI.className;
+			parentCI.className = cn + " " + highlight_cn;
+			cpl.addEventListener("mouseout", function(e) { parentCI.className = cn; }, {once: true});
 		});
+	});
 
-		if (document.querySelector("#comments") != null) {
-			// Add comment-minimize buttons to every comment.		
-			document.querySelectorAll(".comment-meta").forEach(function (cm) {
-				if (!cm.lastChild.hasClass("comment-minimize-button"))
-					cm.insertAdjacentHTML("beforeend", "<div class='comment-minimize-button maximized'>&#xf146;</div>");
-			});
-			if (!document.querySelector("#content").hasClass("individual-thread-page")) {
-				// Format and activate comment-minimize buttons.
-				document.querySelectorAll(".comment-minimize-button").forEach(function (b) {
-					b.closest(".comment-item").setCommentThreadMaximized(false);
-					b.addActivateEvent(commentMinimizeButtonClicked);
-				});
-			}
-		}
-		if (getQueryVariable("chrono") == "t") {
-			document.querySelector("head").insertAdjacentHTML("beforeend", "<style>.comment-minimize-button::after { display: none; }</style>");
-		}
-		let urlParts = document.URL.split('#comment-');
-		if (urlParts.length > 1) {
-			expandAncestorsOf(urlParts[1]);
-			window.needHashRealignment = true;
-		}
+	document.querySelectorAll(".with-markdown-editor textarea, .conversation-page textarea").forEach(function (textarea) { textarea.addTextareaFeatures(); });
+	document.querySelectorAll(((getQueryVariable("post-id")) ? "#edit-post-form textarea" : "#edit-post-form input[name='title']") + ", .conversation-page textarea").forEach(function (field) { field.focus(); });
 
-		// Prevent conflict between new comment keys and text fields
-		document.querySelectorAll("input[type='text'], input[type='search'], input[type='password']").forEach(function (x) {
-			x.addEventListener("keyup", function(e) { e.stopPropagation(); });
-		});
-		
-		if(document.querySelector("#comments") && !document.querySelector(".individual-thread-page") && getPostHash()) {
-			// Read and update last-visited-date.
-			let lastVisitedDate = getLastVisitedDate();
-			setLastVisitedDate(Date.now());
-			
-			// Save the number of comments this post has when it's visited.
-			updateSavedCommentCount();
+	let postMeta = document.querySelector(".post .post-meta");
+	if (postMeta) {
+		// Add "qualified hyperlinking" toolbar.
+		let postPermalink = location.protocol + "//" + location.host + location.pathname;
+		postMeta.insertAdjacentHTML("beforeend", "<div class='qualified-linking'>" + 
+		"<input type='checkbox' tabindex='-1' id='qualified-linking-toolbar-toggle-checkbox'><label for='qualified-linking-toolbar-toggle-checkbox'><span>&#xf141;</span></label>" + 
+		"<div class='qualified-linking-toolbar'>" +
+		`<a href='${postPermalink}'>Post permalink</a>` +
+		`<a href='${postPermalink}?comments=false'>Link without comments</a>` +
+		`<a href='${postPermalink}?hide-nav-bars=true'>Link without top nav bars</a>` +
+		`<a href='${postPermalink}?comments=false&hide-nav-bars=true'>Link without comments or top nav bars</a>` +
+		"</div>" +
+		"</div>");
 
-			// Add the new comments count & navigator.
-			injectNewCommentNavUI();
-
-			// Get the highlight-new-since date (as specified by URL parameter, if 
-			// present, or otherwise the date of the last visit).
-			let hns = parseInt(getQueryVariable("hns")) || lastVisitedDate;
-
-			// Highlight new comments since the specified date.			 
-			let newCommentsCount = highlightCommentsSince(hns);
-			
-			// Update the comment count display.
-			updateNewCommentNavUI(newCommentsCount, hns);
-		} else {
-			// On listing pages, make comment counts more informative.
-			badgePostsWithNewComments();
-		}
-		
-		// Add the comments list mode selector widget (expanded vs. compact).
-		injectCommentsListModeSelector();
-
-		// Add the toggle for the post nav UI elements on mobile.
-		injectPostNavUIToggle();
-		
-		// Add the toggle for the appearance adjustment UI elements on mobile.
-		injectAppearanceAdjustUIToggle();
+		// Replicate .post-meta at bottom of post.
+		let clonedPostMeta = postMeta.cloneNode(true);
+		postMeta.addClass("top-post-meta");
+		clonedPostMeta.addClass("bottom-post-meta");
+		clonedPostMeta.querySelector("input[type='checkbox']").id += "-bottom";
+		clonedPostMeta.querySelector("label").htmlFor += "-bottom";
+		document.querySelector(".post").appendChild(clonedPostMeta);
+	}
 	
-		// Add event listeners for Escape and Enter, for the theme tweaker.
-		document.addEventListener("keyup", function(event) {
-			if (event.keyCode == 27) {
-			// Escape key.
-				if (document.querySelector("#theme-tweaker-ui .help-window").style.display != "none") {
-					toggleThemeTweakerHelpWindow();
-					themeTweakerResetSettings();
-				} else if (document.querySelector("#theme-tweaker-ui").style.display != "none") {
-					toggleThemeTweakerUI();
-					themeTweakReset();
-				}
-			} else if (event.keyCode == 13) {
-			// Enter key.
-				if (document.querySelector("#theme-tweaker-ui .help-window").style.display != "none") {
-					toggleThemeTweakerHelpWindow();
-					themeTweakerSaveSettings();
-				} else if (document.querySelector("#theme-tweaker-ui").style.display != "none") {
-					toggleThemeTweakerUI();
-					themeTweakSave();
-				}
+	if(readCookie("lw2-auth-token")) {
+		var comments_container = document.querySelector("#comments");
+		if (comments_container) {
+			// Add reply buttons.
+			comments_container.querySelectorAll(".comment").forEach(function (e) {
+				e.insertAdjacentHTML("afterend", "<div class='comment-controls posting-controls'></div>");
+				e.parentElement.querySelector(".comment-controls").injectCommentButtons();
+			});
+		
+			// Add top-level new comment form.
+			if(!document.querySelector(".individual-thread-page")) {
+				comments_container.insertAdjacentHTML("afterbegin", "<div class='comment-controls posting-controls'></div>");
+				comments_container.querySelector(".comment-controls").injectCommentButtons();
 			}
-		});
-		
-		// Add event listener for Ctrl-up-arrow and Ctrl-down-arrow (for navigating 
-		// listings pages)
-		let listings = document.querySelectorAll("h1.listing a:last-of-type");
-		if (listings.length > 0) {
-			document.addEventListener("keyup", function(e) { 
-				if(e.ctrlKey || e.shiftKey || e.altKey || !(e.key == "," || e.key == ".")) return;
-		
-				var indexOfActiveListing = -1;
-				for (i = 0; i < listings.length; i++) {
-					if (listings[i] === document.activeElement) {
-						indexOfActiveListing = i;
-						break;
-					}
-				}
-				let indexOfNextListing = (e.key == "." ? ++indexOfActiveListing : (--indexOfActiveListing + listings.length)) % listings.length;
-				listings[indexOfNextListing].focus();
+		}
+
+		// Add upvote/downvote buttons.
+		if(typeof(postVote) != 'undefined') {
+			document.querySelectorAll(".post-meta .karma-value").forEach(function (e) {
+				let voteType = postVote;
+				e.insertAdjacentHTML('beforebegin', "<button type='button' class='vote upvote"+(voteType=='upvote'?' selected':'')+"' data-vote-type='upvote' data-target-type='Posts' tabindex='-1'></button>");
+				e.insertAdjacentHTML('afterend', "<button type='button' class='vote downvote"+(voteType=='downvote'?' selected':'')+"' data-vote-type='downvote' data-target-type='Posts' tabindex='-1'></button>");
 			});
 		}
-
-
-		// Add accesskeys to user page view selector.
-		let viewSelector = document.querySelector(".sublevel-nav");
-		if (viewSelector) {
-			let currentView = viewSelector.querySelector("span");
-			(currentView.nextSibling || viewSelector.firstChild).accessKey = 'x';
-			(currentView.previousSibling || viewSelector.lastChild).accessKey = 'z';
+		if(typeof(commentVotes) != 'undefined') {
+			document.querySelectorAll(".comment-meta .karma-value").forEach(function (e) {
+				let cid = e.getCommentId();
+				let voteType = commentVotes[cid];
+				e.insertAdjacentHTML('beforebegin', "<button type='button' class='vote upvote"+(voteType=='upvote'?' selected':'')+"' data-vote-type='upvote' data-target-type='Comments' tabindex='-1'></button>");
+				e.insertAdjacentHTML('afterend', "<button type='button' class='vote downvote"+(voteType=='downvote'?' selected':'')+"' data-vote-type='downvote' data-target-type='Comments' tabindex='-1'></button>");
+			});
+			// Replicate karma controls at the bottom of comments.
+			document.querySelectorAll(".comment-meta .karma").forEach(function (karma_controls) {
+				let karma_controls_cloned = karma_controls.cloneNode(true);
+				let comment_controls = karma_controls.parentElement.parentElement.nextSibling;
+				comment_controls.appendChild(karma_controls_cloned);
+			});
 		}
-	
-		// Move MathJax style tags to <head>.
-		var aggregatedStyles = "";
-		document.querySelectorAll("#content style").forEach(function (styleTag) {
-			aggregatedStyles += styleTag.innerHTML;
-			removeElement("style", styleTag.parentElement);
+		document.querySelector("head").insertAdjacentHTML("beforeend","<style id='vote-buttons'>" + 
+		`.upvote:hover,
+		.upvote.selected {
+			color: #00d800;
+		}
+		.downvote:hover,
+		.downvote.selected {
+			color: #eb4c2a;
+		}` + "</style>");
+		document.querySelectorAll("button.vote").forEach(function(e) {
+			e.addActivateEvent(voteEvent);
 		});
-		if (aggregatedStyles != "") {
-			document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='mathjax-styles'>" + aggregatedStyles + "</style>");
+
+		window.needHashRealignment = true;
+	}
+
+	// Clean up ToC
+	document.querySelectorAll(".contents-list li a").forEach(function (a) {
+		a.innerText = a.innerText.replace(/^[0-9]+\. /, '');
+		a.innerText = a.innerText.replace(/^[0-9]+: /, '');
+		a.innerText = a.innerText.replace(/^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})\. /i, '');
+		a.innerText = a.innerText.replace(/^[A-Z]\. /, '');
+	});
+
+	if (document.querySelector("#comments") != null) {
+		// Add comment-minimize buttons to every comment.		
+		document.querySelectorAll(".comment-meta").forEach(function (cm) {
+			if (!cm.lastChild.hasClass("comment-minimize-button"))
+				cm.insertAdjacentHTML("beforeend", "<div class='comment-minimize-button maximized'>&#xf146;</div>");
+		});
+		if (!document.querySelector("#content").hasClass("individual-thread-page")) {
+			// Format and activate comment-minimize buttons.
+			document.querySelectorAll(".comment-minimize-button").forEach(function (b) {
+				b.closest(".comment-item").setCommentThreadMaximized(false);
+				b.addActivateEvent(commentMinimizeButtonClicked);
+			});
 		}
+	}
+	if (getQueryVariable("chrono") == "t") {
+		document.querySelector("head").insertAdjacentHTML("beforeend", "<style>.comment-minimize-button::after { display: none; }</style>");
+	}
+	let urlParts = document.URL.split('#comment-');
+	if (urlParts.length > 1) {
+		expandAncestorsOf(urlParts[1]);
+		window.needHashRealignment = true;
+	}
+
+	// Prevent conflict between new comment keys and text fields
+	document.querySelectorAll("input[type='text'], input[type='search'], input[type='password']").forEach(function (x) {
+		x.addEventListener("keyup", function(e) { e.stopPropagation(); });
+	});
+	
+	if(document.querySelector("#comments") && !document.querySelector(".individual-thread-page") && getPostHash()) {
+		// Read and update last-visited-date.
+		let lastVisitedDate = getLastVisitedDate();
+		setLastVisitedDate(Date.now());
 		
-		// Add listeners to switch between word count and read time.
-		if (window.localStorage.getItem("display-word-count")) toggleReadTimeOrWordCount(true);
-		document.querySelectorAll(".post-meta .read-time").forEach(function (rt) { rt.addActivateEvent(readTimeOrWordCountClicked); });
+		// Save the number of comments this post has when it's visited.
+		updateSavedCommentCount();
+
+		// Add the new comments count & navigator.
+		injectNewCommentNavUI();
+
+		// Get the highlight-new-since date (as specified by URL parameter, if 
+		// present, or otherwise the date of the last visit).
+		let hns = parseInt(getQueryVariable("hns")) || lastVisitedDate;
+
+		// Highlight new comments since the specified date.			 
+		let newCommentsCount = highlightCommentsSince(hns);
 		
-		// Call pageLayoutFinished() once all activity that can affect the page layout has finished.
-		document.addEventListener("readystatechange", pageLayoutFinished);
-		window.setTimeout(pageLayoutFinished);
-	})
-}
+		// Update the comment count display.
+		updateNewCommentNavUI(newCommentsCount, hns);
+	} else {
+		// On listing pages, make comment counts more informative.
+		badgePostsWithNewComments();
+	}
+	
+	// Add the comments list mode selector widget (expanded vs. compact).
+	injectCommentsListModeSelector();
+
+	// Add the toggle for the post nav UI elements on mobile.
+	injectPostNavUIToggle();
+	
+	// Add the toggle for the appearance adjustment UI elements on mobile.
+	injectAppearanceAdjustUIToggle();
+
+	// Add event listeners for Escape and Enter, for the theme tweaker.
+	document.addEventListener("keyup", function(event) {
+		if (event.keyCode == 27) {
+		// Escape key.
+			if (document.querySelector("#theme-tweaker-ui .help-window").style.display != "none") {
+				toggleThemeTweakerHelpWindow();
+				themeTweakerResetSettings();
+			} else if (document.querySelector("#theme-tweaker-ui").style.display != "none") {
+				toggleThemeTweakerUI();
+				themeTweakReset();
+			}
+		} else if (event.keyCode == 13) {
+		// Enter key.
+			if (document.querySelector("#theme-tweaker-ui .help-window").style.display != "none") {
+				toggleThemeTweakerHelpWindow();
+				themeTweakerSaveSettings();
+			} else if (document.querySelector("#theme-tweaker-ui").style.display != "none") {
+				toggleThemeTweakerUI();
+				themeTweakSave();
+			}
+		}
+	});
+	
+	// Add event listener for Ctrl-up-arrow and Ctrl-down-arrow (for navigating 
+	// listings pages)
+	let listings = document.querySelectorAll("h1.listing a:last-of-type");
+	if (listings.length > 0) {
+		document.addEventListener("keyup", function(e) { 
+			if(e.ctrlKey || e.shiftKey || e.altKey || !(e.key == "," || e.key == ".")) return;
+	
+			var indexOfActiveListing = -1;
+			for (i = 0; i < listings.length; i++) {
+				if (listings[i] === document.activeElement) {
+					indexOfActiveListing = i;
+					break;
+				}
+			}
+			let indexOfNextListing = (e.key == "." ? ++indexOfActiveListing : (--indexOfActiveListing + listings.length)) % listings.length;
+			listings[indexOfNextListing].focus();
+		});
+	}
+
+
+	// Add accesskeys to user page view selector.
+	let viewSelector = document.querySelector(".sublevel-nav");
+	if (viewSelector) {
+		let currentView = viewSelector.querySelector("span");
+		(currentView.nextSibling || viewSelector.firstChild).accessKey = 'x';
+		(currentView.previousSibling || viewSelector.lastChild).accessKey = 'z';
+	}
+
+	// Move MathJax style tags to <head>.
+	var aggregatedStyles = "";
+	document.querySelectorAll("#content style").forEach(function (styleTag) {
+		aggregatedStyles += styleTag.innerHTML;
+		removeElement("style", styleTag.parentElement);
+	});
+	if (aggregatedStyles != "") {
+		document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='mathjax-styles'>" + aggregatedStyles + "</style>");
+	}
+	
+	// Add listeners to switch between word count and read time.
+	if (window.localStorage.getItem("display-word-count")) toggleReadTimeOrWordCount(true);
+	document.querySelectorAll(".post-meta .read-time").forEach(function (rt) { rt.addActivateEvent(readTimeOrWordCountClicked); });
+});
 
 /*************************/
 /* POST-LOAD ADJUSTMENTS */
 /*************************/
 
-var pageLayoutFinishedDone = false;
-function pageLayoutFinished() {
-	if(pageLayoutFinishedDone || (document.readyState != "complete")) return;
-	pageLayoutFinishedDone = true;
+registerInitializer('pageLayoutFinished', false, () => document.readyState == "complete", function () {
+	if (window.needHashRealignment)
+		realignHash();
 
-	window.requestAnimationFrame(function () {
-		if (window.needHashRealignment)
-			realignHash();
+	if (document.querySelector("#content").clientHeight <= window.innerHeight + 30) {
+		document.querySelector("#quick-nav-ui a[href='#bottom-bar']").style.visibility = "hidden";
+	} else {
+		removeElement("#hide-bottom-bar", document.querySelector("head"));
+	}
 
-		if (document.querySelector("#content").clientHeight <= window.innerHeight + 30) {
-			document.querySelector("#quick-nav-ui a[href='#bottom-bar']").style.visibility = "hidden";
-		} else {
-			removeElement("#hide-bottom-bar", document.querySelector("head"));
-		}
-	});
-		
 	// Add overlay of images in post (for avoidance of theme tweaks).		
 	generateImagesOverlay();
 	
 	// FOR TESTING ONLY, COMMENT WHEN DEPLOYING.
 // 	document.querySelector("input[type='search']").value = document.documentElement.clientWidth;
-}
+});
+
 function generateImagesOverlay() {
 	// Don't do this on the about page.
 	if (document.querySelector(".about-page") != null) return;
@@ -1616,11 +1614,3 @@ function realignHash() {
 	if (h)
 		document.querySelectorAll(h).forEach(function (e) { e.scrollIntoView(true); });
 }
-
-/*******/
-/* =*= */
-/*******/
-
-document.addEventListener("DOMContentLoaded", initialize, {once: true});
-window.setTimeout(initialize);
-window.requestAnimationFrame(earlyInitialize);
