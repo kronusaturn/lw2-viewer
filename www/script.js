@@ -9,7 +9,11 @@ function registerInitializer(name, tryEarly, precondition, fn) {
 	let wrapper = function () {
 		if(initializersDone[name]) return;
 		if(!precondition()) {
-			if(tryEarly) window.setTimeout(wrapper, 50);
+			if(tryEarly) {
+				window.setTimeout(wrapper, 50);
+			} else {
+				document.addEventListener("readystatechange", wrapper, {once: true});
+			}
 			return;
 		}
 		initializersDone[name] = true;
