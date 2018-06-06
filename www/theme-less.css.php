@@ -1840,19 +1840,7 @@ div > .MJXc-display {
 /* FOR NARROW SCREENS */
 /*====================*/
 
-@media only screen and (max-width: 1440px) {
-	#hns-date-picker {
-		opacity: 1.0;
-	}
-	#hns-date-picker::before {
-		border: 1px solid #999;
-		border-width: 1px 0 1px 1px;
-	}
-}
 @media only screen and (max-width: 1200px) {
-	#hns-date-picker::before {
-		display: none;
-	}
 }
 @media only screen and (max-width: 1080px) {
 	#text-size-adjustment-ui button {

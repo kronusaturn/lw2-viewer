@@ -105,7 +105,7 @@ input {
 #secondary-bar .nav-inner {
 	padding: 4px 0;
 }
-#bottom-bar {
+h1.listing ~ #bottom-bar {
 	margin-top: 1.25em;
 }
 #bottom-bar .nav-item {
