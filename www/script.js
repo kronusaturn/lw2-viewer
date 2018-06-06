@@ -3,6 +3,7 @@
 /***************************/
 var initializersDone = {};
 function registerInitializer(name, tryEarly, precondition, fn) {
+	initializersDone[name] = false;
 	let wrapper = function () {
 		if(initializersDone[name]) return;
 		if(!precondition()) {
