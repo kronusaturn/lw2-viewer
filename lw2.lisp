@@ -483,9 +483,9 @@
                 "<style id='dark-theme-adjustments'>.markdown-reference-link a { color: #d200cf; filter: invert(100%); }</style>"
                 ""))
     (format out-stream "<script>loggedInUserId=\"~A\"</script>" (or (logged-in-userid) ""))
-    (format out-stream "<script src=\"~A\" async></script><script src=\"~A\" async></script><script>~A</script>~@[<script>var csrfToken=\"~A\"</script>~]~@[<meta name=\"robots\" content=\"~A\">~]</head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
-            (generate-versioned-link "/script.js") (generate-versioned-link "/guiedit.js")
+    (format out-stream "<script>~A</script><script src=\"~A\" async></script><script src=\"~A\" async></script>~@[<script>var csrfToken=\"~A\"</script>~]~@[<meta name=\"robots\" content=\"~A\">~]</head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
             (load-time-value (with-open-file (s "www/head.js") (uiop:slurp-stream-string s)) t)
+            (generate-versioned-link "/script.js") (generate-versioned-link "/guiedit.js")
             csrf-token
             robots
             content-class
