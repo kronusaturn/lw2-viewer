@@ -4494,7 +4494,8 @@ body {
 /* LISTINGS */
 /*==========*/
 
-h1.listing {
+h1.listing,
+#content.search-results-page h1.listing {
 	margin: 0.7em 20px 0.1em 0;
 	font-family: 'Caecilia', 'Helvetica', sans-serif, 'Font Awesome';
 	font-size: 1.25rem;

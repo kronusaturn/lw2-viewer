@@ -760,7 +760,8 @@ body {
 /* LISTINGS */
 /*==========*/
 
-h1.listing {
+h1.listing,
+#content.search-results-page h1.listing {
 	margin: 0.7em 20px 0.1em 0;
 	font-family: <?php echo $headings_font; ?>, 'Font Awesome';
 	font-size: 1.25rem;
