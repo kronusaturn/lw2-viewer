@@ -162,32 +162,6 @@
 	box-shadow: none;
 }
 	
-/*===============*/
-/* THEME TWEAKER */
-/*===============*/
-
-#theme-selector {
-	padding: 0 0 50px 0;
-}
-#theme-selector ~ #theme-tweaker-toggle {
-	top: 100%;
-}
-#theme-selector.engaged ~ #theme-tweaker-toggle {
-	visibility: visible;
-	width: fit-content;
-	top: 480px;
-	left: 0;
-	right: 0;
-	margin: auto;
-	z-index: 11111;
-	transition: 
-		top 0.2s ease,
-		visibility 0.2s ease;
-}
-#theme-selector.engaged ~ #theme-tweaker-toggle button {
-	opacity: 1.0;
-}
-
 /*=================*/
 /* QUICKNAV WIDGET */
 /*=================*/
