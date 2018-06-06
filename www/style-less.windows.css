@@ -4319,6 +4319,11 @@ body {
 		transition:
 			opacity 0.5s ease-out;
 	}
+	@-moz-document url-prefix() {
+		#theme-tweaker-toggle {
+			display: none;
+		}
+	}
 
 	#theme-tweaker-ui {
 		visibility: visible;
