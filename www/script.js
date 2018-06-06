@@ -2,8 +2,10 @@
 /* INITIALIZATION REGISTRY */
 /***************************/
 var initializersDone = {};
+var initializers = {};
 function registerInitializer(name, tryEarly, precondition, fn) {
 	initializersDone[name] = false;
+	initializers[name] = fn;
 	let wrapper = function () {
 		if(initializersDone[name]) return;
 		if(!precondition()) {
@@ -19,6 +21,11 @@ function registerInitializer(name, tryEarly, precondition, fn) {
 		document.addEventListener("readystatechange", wrapper, {once: true});
 		window.setTimeout(wrapper);
 	}
+}
+function forceInitializer(name) {
+	if(initializersDone[name]) return;
+	initializersDone[name] = true;
+	initializers[name]();
 }
 
 /***********/
@@ -1297,6 +1304,8 @@ registerInitializer('earlyInitialize', true, () => document.querySelector("#cont
 });
 
 registerInitializer('initialize', false, () => document.readyState != 'loading', function () {
+	forceInitializer('earlyInitialize');
+
 	if (getQueryVariable("comments") == "false")
 		document.querySelector("#content").addClass("no-comments");
 	if (getQueryVariable("hide-nav-bars") == "true") {
@@ -1573,6 +1582,8 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 /*************************/
 
 registerInitializer('pageLayoutFinished', false, () => document.readyState == "complete", function () {
+	forceInitializer('initialize');
+
 	if (window.needHashRealignment)
 		realignHash();
 
