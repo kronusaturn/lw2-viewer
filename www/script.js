@@ -805,6 +805,13 @@ function themeLoadCallback_less() {
 			});
 		}, { once: true });
 	}
+	
+	let isFirefox = /firefox/i.test(navigator.userAgent);
+	if (isFirefox) {
+		let themeTweakStyle = document.querySelector("#theme-tweak");
+		themeTweakStyle.dataset["tweaks"] = themeTweakStyle.textContent;
+		themeTweakStyle.textContent = "";
+	}
 }
 function themeUnloadCallback_less() {
 	removeSiteNavUIToggle();
@@ -812,6 +819,13 @@ function themeUnloadCallback_less() {
 	document.querySelectorAll(".top-post-meta .date, .top-post-meta .comment-count").forEach(function (element) {
 		element.innerHTML = element.textContent;
 	});
+	
+	let isFirefox = /firefox/i.test(navigator.userAgent);
+	if (isFirefox) {
+		let themeTweakStyle = document.querySelector("#theme-tweak");
+		themeTweakStyle.textContent = themeTweakStyle.dataset["tweaks"];
+		themeTweakStyle.dataset["tweaks"] = "";
+	}
 }
 
 function themeLoadCallback_dark() {
