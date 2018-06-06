@@ -2240,11 +2240,14 @@ hr {
 	border: none;
 }
 
+pre,
+code {
+	font-family: Inconsolata, Menlo, monospace;
+}
 pre {
 	white-space: pre-wrap;
 }
 code {
-	font-family: Inconsolata, Menlo, monospace;
 	font-size: 0.95em;
 	display: inline-block;
 	padding: 0 4px 1px 5px;
