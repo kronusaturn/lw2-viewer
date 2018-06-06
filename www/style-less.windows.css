@@ -5504,6 +5504,12 @@ hr {
 	border-bottom: 1px solid #999;
 }
 
+code,
+pre {
+	font-family: 'Source Code Pro', Inconsolata, monospace;
+	font-size: 0.9375em;
+	font-feature-settings: 'ss04';
+}
 code {
 	background-color: #f6f6ff;
 	border: 1px solid #ddf;
