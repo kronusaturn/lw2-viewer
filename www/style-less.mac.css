@@ -5671,13 +5671,35 @@ div > .MJXc-display {
 /* FOR NARROW SCREENS */
 /*====================*/
 
-@media only screen and (max-width: 1200px) {
-}
 @media only screen and (max-width: 1080px) {
+	#site-nav-ui-toggle button.engaged {
+		left: -72px;
+	}
+	#text-size-adjustment-ui {
+		left: -22px;
+		top: calc(100% - 240px);
+	}
+	#width-selector {
+		left: -23px;
+		top: calc(100% - 140px);
+	}
+	#theme-tweaker-toggle button {
+		width: unset;
+		height: unset;
+	}
 }
 @media only screen and (max-width: 1020px) {
 }
 @media only screen and (max-width: 1000px) {
+	#site-nav-ui-toggle button.engaged {
+		left: -56px;
+	}
+	#theme-selector {
+		padding: 0;
+	}
+	#theme-selector button {
+		margin: 1px 7px 0 7px;
+	}
 }
 
 /*========*/

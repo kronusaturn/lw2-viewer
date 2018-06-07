@@ -792,7 +792,10 @@ function themeLoadCallback_less() {
 	injectSiteNavUIToggle();
 
 	registerInitializer('shortenDate', true, () => document.querySelector(".top-post-meta") != null, function () {
-		let dtf = new Intl.DateTimeFormat([], { month: 'short', day: 'numeric', year: 'numeric' });
+		let dtf = new Intl.DateTimeFormat([], 
+			(window.innerWidth < 1100) ? 
+				{ month: 'short', day: 'numeric', year: 'numeric' } : 
+					{ month: 'long', day: 'numeric', year: 'numeric' });
 		let postDate = document.querySelector(".top-post-meta .date");
 		postDate.innerHTML = dtf.format(new Date(+ postDate.getAttribute("data-js-date")));
 	});
