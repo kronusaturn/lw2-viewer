@@ -714,6 +714,7 @@ body {
 }
 #hns-date-picker input {
 	border: 1px solid #ddd;
+	box-shadow: 0 0 0 1px transparent;
 	color: #999;
 	padding: 3px 3px 0 3px;
 }
