@@ -5174,6 +5174,7 @@ div.comment-child-links a::first-letter {
 .comment-minimize-button {
 	color: #ddd;
 	font-weight: 300;
+	box-shadow: 0 0 0 1px transparent;
 }
 .comment-minimize-button:hover {
 	color: #bbb;
