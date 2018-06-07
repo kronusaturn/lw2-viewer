@@ -191,6 +191,7 @@ body {
 
 .page-toolbar .button::before {
 	font-size: 0.875em;
+	font-weight: 400;
 }
 
 .new-private-message {
@@ -314,7 +315,7 @@ body {
 	#post-nav-ui-toggle button,
 	#appearance-adjust-ui-toggle button {
 		font-family: Font Awesome;
-		font-weight: 900;
+		font-weight: 400;
 		font-size: 32px;
 		padding: 10px;
 		opacity: 0.4;
@@ -345,6 +346,7 @@ body {
 		pointer-events: none;
 	}
 	#site-nav-ui-toggle button {
+		font-weight: 300;
 		position: relative;
 		left: 0;
 		transition:
@@ -459,6 +461,9 @@ body {
 	}
 	#quick-nav-ui.engaged {
 		bottom: 64px;
+	}
+	#quick-nav-ui a {
+		font-weight: 400;
 	}
 	
 	#new-comment-nav-ui {
@@ -583,7 +588,7 @@ body {
 	}
 
 	#theme-tweaker-toggle {
-		left: 18px;
+		left: 19px;
 		top: calc(100% - 356px);
 		transition:
 			opacity 0.5s ease-out;
@@ -592,6 +597,9 @@ body {
 		#theme-tweaker-toggle {
 			display: none;
 		}
+	}
+	#theme-tweaker-toggle button {
+		font-weight: 400;
 	}
 
 	#theme-tweaker-ui {
@@ -710,7 +718,7 @@ body {
 /*======================*/
 
 #text-size-adjustment-ui button.default {
-	font-weight: 600;
+	font-weight: 400;
 }
 
 /*=============================*/
@@ -994,6 +1002,8 @@ h1.listing + .post-meta .post-section::before {
 
 .post-meta .post-section::before {
 	color: #dfdfdf;
+	font-weight: 400;
+	padding: 1px;
 }
 .post .post-meta .post-section::before {
 	position: relative;
