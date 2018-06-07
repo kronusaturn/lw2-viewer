@@ -1764,7 +1764,15 @@ blockquote {
 /*======*/
 
 hr {
-	border-bottom: 1px solid #999;
+	margin: 1em 0;
+}
+hr::before {
+	content: "• • •";
+	letter-spacing: 7px;
+	color: #aaa;
+	text-align: center;
+	display: block;
+	font-size: 0.875em;
 }
 
 code,
