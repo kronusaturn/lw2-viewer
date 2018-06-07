@@ -1042,6 +1042,8 @@ h1.listing + .post-meta .read-time {
 	-moz-hyphens: none;
 	-ms-hyphens: none;
 	hyphens: none;
+	position: relative;
+	z-index: 1;
 }
 
 .contents-head {
@@ -4448,6 +4450,7 @@ body {
 }
 #hns-date-picker input {
 	border: 1px solid #ddd;
+	box-shadow: 0 0 0 1px transparent;
 	color: #999;
 	padding: 3px 3px 0 3px;
 }

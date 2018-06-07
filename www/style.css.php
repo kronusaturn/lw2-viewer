@@ -1049,6 +1049,8 @@ h1.listing + .post-meta .read-time {
 	-moz-hyphens: none;
 	-ms-hyphens: none;
 	hyphens: none;
+	position: relative;
+	z-index: 1;
 }
 
 .contents-head {
