@@ -786,6 +786,7 @@ h1.listing,
 
 h1.listing a[href^="http"] {
 	color: #bbb;
+	font-weight: 400;
 	font-size: 0.8125em;
 	top: 3px;
 }
@@ -808,6 +809,7 @@ h1.listing a[href^="/"] {
 	}	
 	h1.listing:focus-within::before {
 		color: #79a97e;
+		font-weight: 400;
 		left: -0.75em;
 	}
 	#content.user-page h1.listing:focus-within::before {
