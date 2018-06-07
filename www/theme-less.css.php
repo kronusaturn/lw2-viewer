@@ -64,10 +64,11 @@ body {
 }
 #primary-bar {
 	position: fixed;
+	width: 112px;
 }
 #primary-bar > * {
 	position: relative;
-	right: 40px;
+	right: 47px;
 }
 #nav-item-archive,
 #nav-item-about {
@@ -83,6 +84,9 @@ body {
 #bottom-bar .nav-inner {
 	text-align: center;
     padding: 0.75em;
+}
+#bottom-bar .nav-item a::before {
+	font-weight: 300;
 }
 
 .nav-bar a,
@@ -102,7 +106,7 @@ body {
 /* "Tabs" */
 
 .nav-current {
-	font-weight: bold;
+	font-weight: 500;
 }
 
 #nav-item-recent-comments .nav-inner span {
@@ -133,6 +137,7 @@ body {
 #nav-item-search form::before {
 	font-size: 1.125em;
 	color: #e6e6e6;
+	font-weight: 400;
 	padding: 5px;
 	transition: color 0.15s ease;
 }
@@ -223,6 +228,9 @@ body {
 }
 #top-nav-bar .page-number span {
 	display: none;
+}
+#top-nav-bar a::before {
+	font-weight: 400;
 }
 #top-nav-bar a.disabled {
 	visibility: visible;
@@ -717,7 +725,7 @@ body {
 /* TEXT SIZE ADJUSTMENT */
 /*======================*/
 
-#text-size-adjustment-ui button.default {
+#text-size-adjustment-ui button {
 	font-weight: 400;
 }
 
@@ -1234,6 +1242,7 @@ h1.listing + .post-meta .post-section::before {
 
 a.comment-parent-link::before {
 	color: #bbb;
+	font-weight: 400;
 }
 a.comment-parent-link:hover::before {
 	background-color: #ffd;
@@ -1276,6 +1285,26 @@ div.comment-child-links a::first-letter {
 /*====================*/
 /* COMMENT PERMALINKS */
 /*====================*/
+
+.comment-meta .permalink::before {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/anchor-blue-on-white.gif")) ?>');
+}
+.comment-meta .lw2-link::before {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/lw-blue-on-white.gif")) ?>');
+}
+.individual-thread-page a.comment-parent-link:empty::before {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/up-arrow-blue-on-white.gif")) ?>');
+}
+.comment-meta .permalink:hover::before {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/anchor-white-on-blue.gif")) ?>');
+}
+.comment-meta .lw2-link:hover::before {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/lw-white-on-blue.gif")) ?>');
+}
+.individual-thread-page a.comment-parent-link:hover:empty::before {
+	left: unset;
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/up-arrow-white-on-blue.gif")) ?>');
+}
 
 .comment-meta .permalink,
 .comment-meta .lw2-link,
@@ -1362,6 +1391,7 @@ div.comment-child-links a::first-letter {
 
 .comment-minimize-button {
 	color: #ddd;
+	font-weight: 300;
 }
 .comment-minimize-button:hover {
 	color: #bbb;
@@ -1381,7 +1411,8 @@ div.comment-child-links a::first-letter {
 
 .upvote,
 .downvote {
-	color: #ddd;	
+	color: #ddd;
+	font-weight: 400;
 }
 .upvote::before {
 	content: "\F077";
@@ -1805,6 +1836,7 @@ strong, b {
 
 .qualified-linking label {
 	color: #ccc;
+	font-weight: 400;
 }
 .qualified-linking label:hover {
 	color: #92c396;
