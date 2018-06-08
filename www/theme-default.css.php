@@ -521,8 +521,8 @@ h1.listing + .post-meta .karma-value {
 h1.listing + .post-meta .karma-value::before {
 	content: "\F139";
 	text-shadow: none;
-    font-size: 0.9375em;
-    line-height: 1.3;
+	font-size: 0.9375em;
+	line-height: 1.3;
 }
 
 h1.listing + .post-meta .comment-count::before {
@@ -1130,10 +1130,10 @@ div.comment-child-links a::first-letter {
 .posting-controls.edit-existing-post textarea:focus,
 .posting-controls form.edit-existing-comment textarea:focus {
 	border-color: #090;
-    box-shadow: 
-    	0 0 0 1px #81ff7f inset,
-    	0 0 0 1px #fff,
-    	0 0 0 2px #090;
+	box-shadow: 
+		0 0 0 1px #81ff7f inset,
+		0 0 0 1px #fff,
+		0 0 0 2px #090;
 }
 
 /* GUIEdit buttons */
@@ -1144,7 +1144,7 @@ div.comment-child-links a::first-letter {
 
 .posting-controls.edit-existing-post .guiedit-buttons-container button,
 .posting-controls form.edit-existing-comment .guiedit-buttons-container button {
-    color: #050;
+	color: #050;
 }
 .guiedit-buttons-container button {
 	font-family: Font Awesome, <?php echo $text_font; ?>;

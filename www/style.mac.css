@@ -4097,8 +4097,8 @@ h1.listing + .post-meta .karma-value {
 h1.listing + .post-meta .karma-value::before {
 	content: "\F139";
 	text-shadow: none;
-    font-size: 0.9375em;
-    line-height: 1.3;
+	font-size: 0.9375em;
+	line-height: 1.3;
 }
 
 h1.listing + .post-meta .comment-count::before {
@@ -4671,7 +4671,7 @@ div.comment-child-links a::first-letter {
 }
 
 .upvote::before {
-	background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBkPSJNMjU2IDhDMTE5IDggOCAxMTkgOCAyNTZzMTExIDI0OCAyNDggMjQ4IDI0OC0xMTEgMjQ4LTI0OFMzOTMgOCAyNTYgOHpNMTI0IDI5NmMtNi42IDAtMTItNS40LTEyLTEydi01NmMwLTYuNiA1LjQtMTIgMTItMTJoMjY0YzYuNiAwIDEyIDUuNCAxMiAxMnY1NmMwIDYuNi01LjQgMTItMTIgMTJIMTI0eiIgZmlsbD0iI0VCNEMyQSIvPjwvc3ZnPg==');
+	background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBkPSJNMjU2IDhDMTE5IDggOCAxMTkgOCAyNTZzMTExIDI0OCAyNDggMjQ4IDI0OC0xMTEgMjQ4LTI0OFMzOTMgOCAyNTYgOHptMTQ0IDI3NmMwIDYuNi01LjQgMTItMTIgMTJoLTkydjkyYzAgNi42LTUuNCAxMi0xMiAxMmgtNTZjLTYuNiAwLTEyLTUuNC0xMi0xMnYtOTJoLTkyYy02LjYgMC0xMi01LjQtMTItMTJ2LTU2YzAtNi42IDUuNC0xMiAxMi0xMmg5MnYtOTJjMC02LjYgNS40LTEyIDEyLTEyaDU2YzYuNiAwIDEyIDUuNCAxMiAxMnY5Mmg5MmM2LjYgMCAxMiA1LjQgMTIgMTJ2NTZ6IiAgIGZpbGw9IiMwMEQ4MDAiLz48L3N2Zz4=');
 	filter: grayscale(100%) brightness(128%);
 }
 .upvote.selected.clicked-twice::before,
@@ -4682,7 +4682,7 @@ div.comment-child-links a::first-letter {
 }
 
 .downvote::before {
-	background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBkPSJNMjU2IDhDMTE5IDggOCAxMTkgOCAyNTZzMTExIDI0OCAyNDggMjQ4IDI0OC0xMTEgMjQ4LTI0OFMzOTMgOCAyNTYgOHptMTQ0IDI3NmMwIDYuNi01LjQgMTItMTIgMTJoLTkydjkyYzAgNi42LTUuNCAxMi0xMiAxMmgtNTZjLTYuNiAwLTEyLTUuNC0xMi0xMnYtOTJoLTkyYy02LjYgMC0xMi01LjQtMTItMTJ2LTU2YzAtNi42IDUuNC0xMiAxMi0xMmg5MnYtOTJjMC02LjYgNS40LTEyIDEyLTEyaDU2YzYuNiAwIDEyIDUuNCAxMiAxMnY5Mmg5MmM2LjYgMCAxMiA1LjQgMTIgMTJ2NTZ6IiAgIGZpbGw9IiMwMEQ4MDAiLz48L3N2Zz4=');
+	background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBkPSJNMjU2IDhDMTE5IDggOCAxMTkgOCAyNTZzMTExIDI0OCAyNDggMjQ4IDI0OC0xMTEgMjQ4LTI0OFMzOTMgOCAyNTYgOHpNMTI0IDI5NmMtNi42IDAtMTItNS40LTEyLTEydi01NmMwLTYuNiA1LjQtMTIgMTItMTJoMjY0YzYuNiAwIDEyIDUuNCAxMiAxMnY1NmMwIDYuNi01LjQgMTItMTIgMTJIMTI0eiIgZmlsbD0iI0VCNEMyQSIvPjwvc3ZnPg==');
 	filter: grayscale(100%) brightness(188%);
 }
 .downvote.selected.clicked-twice::before,
@@ -4754,10 +4754,10 @@ div.comment-child-links a::first-letter {
 .posting-controls.edit-existing-post textarea:focus,
 .posting-controls form.edit-existing-comment textarea:focus {
 	border-color: #090;
-    box-shadow: 
-    	0 0 0 1px #81ff7f inset,
-    	0 0 0 1px #fff,
-    	0 0 0 2px #090;
+	box-shadow: 
+		0 0 0 1px #81ff7f inset,
+		0 0 0 1px #fff,
+		0 0 0 2px #090;
 }
 
 /* GUIEdit buttons */
@@ -4768,7 +4768,7 @@ div.comment-child-links a::first-letter {
 
 .posting-controls.edit-existing-post .guiedit-buttons-container button,
 .posting-controls form.edit-existing-comment .guiedit-buttons-container button {
-    color: #050;
+	color: #050;
 }
 .guiedit-buttons-container button {
 	font-family: Font Awesome, 'Charter', 'Georgia', serif;
