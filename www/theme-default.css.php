@@ -64,7 +64,7 @@ body {
 #bottom-bar.decorative::before {
 	width: 100%;
 	color: transparent;
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/one-pixel-DDD.gif")) ?>');
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/one_pixel_DDD.gif")) ?>');
 	background-repeat-y: no-repeat;
 	background-position: center 35%;
 	margin: 0 30px;

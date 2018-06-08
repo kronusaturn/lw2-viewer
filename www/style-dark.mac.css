@@ -3644,9 +3644,7 @@ body {
 #bottom-bar.decorative::before {
 	width: 100%;
 	color: transparent;
-	background-image: url('data:image/gif;base64,
-Warning: file_get_contents(assets/one-pixel-DDD.gif): failed to open stream: No such file or directory in /Volumes/obormot-1/quicklisp/local-projects/lw2-viewer/www/theme-default.css.php on line 67
-');
+	background-image: url('data:image/gif;base64,R0lGODlhAQABAPAAMeXl5Q8BACwAAAAAAQABAAACAkQBADs=');
 	background-repeat-y: no-repeat;
 	background-position: center 35%;
 	margin: 0 30px;
