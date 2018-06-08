@@ -570,8 +570,9 @@
         (hunchentoot:header-out :link) (format nil "~:{<~A>;rel=preload;type=~A;as=~A~@{;~A~}~:^,~}"
                                                `((,(generate-css-link) "text/css" "style")
                                                  (,*fonts-stylesheet-uri* "text/css" "style")
-                                                 ("/fa-solid-900.ttf?v=1" "font/ttf" "font" "crossorigin")
-                                                 ("/fa-regular-400.ttf?v=1" "font/ttf" "font" "crossorigin")
+                                                 ("//fonts.greaterwrong.com/font_files/FontAwesomeGW/fa-solid-900.ttf?v=1" "font/ttf" "font" "crossorigin")
+                                                 ("//fonts.greaterwrong.com/font_files/FontAwesomeGW/fa-regular-400.ttf?v=1" "font/ttf" "font" "crossorigin")
+                                                 ("//fonts.greaterwrong.com/font_files/FontAwesomeGW/fa-light-300.ttf?v=1" "font/ttf" "font" "crossorigin")
                                                  ("//fonts.greaterwrong.com/font_files/BitmapFonts/MSSansSerif.ttf" "font/ttf" "font" "crossorigin")))))
 
 (defmacro emit-page ((out-stream &rest args &key (return-code 200) (top-nav (gensym) top-nav-supplied) &allow-other-keys) &body body)
