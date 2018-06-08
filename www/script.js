@@ -1498,12 +1498,6 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		.downvote.selected {
 			color: #eb4c2a;
 		}` +
-		`.vote.clicked-once {
-			transform: scale(1.25);
-		}
-		.vote.clicked-twice {
-			transform: scale(1.55);
-		}` + 
 		"</style>");
 		document.querySelectorAll("button.vote").forEach(function(e) {
 			e.addActivateEvent(voteButtonClicked);
