@@ -1021,66 +1021,51 @@ div.comment-child-links a::first-letter {
 /* VOTE BUTTONS */
 /*==============*/
 
-.upvote {
-	color: #c8c8c8;	
-}
-.upvote::before {
-	content: '\F055';
-}
-.downvote {
-	color: #ccc;
-}
-.downvote::before {
-	content: '\F056';
-}
-.vote.selected {
-	position: relative;
-}
-.vote.selected::before {
-	position: relative;
-	z-index: 1;
-	background-color: #fff;
+.vote::before {
+	content: "";
 	border-radius: 50%;
-	text-shadow:
-		0 0 1px #fff,
-		0 0 3px #fff,
-		0 0 5px #fff;
+	background-size: 17px 17px;
+	width: 17px;
+	height: 17px;
+	display: inline-block;
+	position: relative;
+	top: 2.5px;
 }
-.vote.selected::after {
-	font-weight: 400;
-	position: absolute;
-	left: 3px;
-	top: -3px;
-	font-size: 1.5625rem;
-	color: #c8c8c8;
+.vote:active {
+	transform: none;
 }
-.comment-controls .vote.selected::after {
-	font-size: 23px;
-	left: 3px;
-	top: -2.5px;
+.vote:hover::before,
+.vote.selected::before {
+	filter: drop-shadow(0 0 1px #fff);
 }
-@-moz-document url-prefix() {
-	.vote.selected::after {
-		left: 4px;
-	}
-	.comment-controls .vote.selected::after {
-		font-size: 21.5px;
-		left: 4.75px;
-		top: -2.5px;
-	}
+
+.vote.clicked-once::before,
+.vote.selected.big-vote.clicked-once::before {
+	box-shadow:
+		0 0 0 1px #fff,
+		0 0 0 4px #c8c8c8;
 }
-.vote.selected.big-vote::after {
-	color: inherit;
+
+.upvote::before {
+	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/upvote-green-circle-plus.svg")) ?>');
+	filter: grayscale(100%) brightness(128%);
 }
-.upvote.selected::after {
-	content: "\F055";
+.upvote.selected.clicked-twice::before,
+.upvote.selected.big-vote::before {
+	box-shadow:
+		0 0 0 1px #fff,
+		0 0 0 4px #00d800;
 }
-.downvote.selected::after {
-	content: "\F056";
+
+.downvote::before {
+	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/downvote-red-circle-minus.svg")) ?>');
+	filter: grayscale(100%) brightness(188%);
 }
-.vote.clicked-once::after,
-.vote.clicked-twice::after {
-	display: none;
+.downvote.selected.clicked-twice::before,
+.downvote.selected.big-vote::before {
+	box-shadow:
+		0 0 0 1px #fff,
+		0 0 0 4px #eb4c2a;
 }
 
 /*===========================*/
