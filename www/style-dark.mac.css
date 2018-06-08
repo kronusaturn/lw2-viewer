@@ -4691,6 +4691,55 @@ div.comment-child-links a::first-letter {
 .downvote::before {
 	content: '\F056';
 }
+.vote.selected {
+	position: relative;
+}
+.vote.selected::before {
+	position: relative;
+	z-index: 1;
+	background-color: #000;
+	border-radius: 50%;
+	text-shadow:
+		0 0 1px #000,
+		0 0 3px #000,
+		0 0 5px #000;
+}
+.vote.selected::after {
+	font-weight: 400;
+	position: absolute;
+	left: 3px;
+	top: -3px;
+	font-size: 1.5625rem;
+	color: #2f2f2f;
+}
+.comment-controls .vote.selected::after {
+	font-size: 23px;
+	left: 3px;
+	top: -2.5px;
+}
+@-moz-document url-prefix() {
+	.vote.selected::after {
+		left: 4px;
+	}
+	.comment-controls .vote.selected::after {
+		font-size: 21.5px;
+		left: 4.75px;
+		top: -2.5px;
+	}
+}
+.vote.selected.big-vote::after {
+	color: inherit;
+}
+.upvote.selected::after {
+	content: "\F055";
+}
+.downvote.selected::after {
+	content: "\F056";
+}
+.vote.clicked-once::after,
+.vote.clicked-twice::after {
+	display: none;
+}
 
 /*===========================*/
 /* COMMENTING AND POSTING UI */
