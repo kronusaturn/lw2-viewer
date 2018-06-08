@@ -134,6 +134,10 @@ input {
 	left: 3.8em;
 }
 
+#bottom-bar.decorative .nav-item {
+	display: none;
+}
+
 /* Search tab */
 
 #nav-item-search {

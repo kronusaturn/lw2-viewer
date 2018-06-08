@@ -128,6 +128,10 @@ input {
 	left: 3.8em;
 }
 
+#bottom-bar.decorative .nav-item {
+	display: none;
+}
+
 /* Search tab */
 
 #nav-item-search {
@@ -3628,6 +3632,35 @@ body {
 .nav-bar a:focus {
 	text-decoration: none;
 	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+}
+
+#bottom-bar.decorative::before,
+#bottom-bar.decorative::after {
+	content: "GW";
+	display: block;
+	text-align: center;
+	padding: 0.25em 0 1em 0;
+}
+#bottom-bar.decorative::before {
+	width: 100%;
+	color: transparent;
+	background-image: url('data:image/gif;base64,
+Warning: file_get_contents(assets/one-pixel-DDD.gif): failed to open stream: No such file or directory in /Volumes/obormot-1/quicklisp/local-projects/lw2-viewer/www/theme-default.css.php on line 67
+');
+	background-repeat-y: no-repeat;
+	background-position: center 35%;
+	margin: 0 30px;
+}
+#bottom-bar.decorative::after {
+	width: fit-content;
+	color: #d8d8d8;
+	position: absolute;
+	left: 0;
+	right: 0;
+	margin: auto;
+	background-color: #fff;
+	padding-right: 4px;
+	padding-left: 4px;
 }
 
 /* Accesskey hints */

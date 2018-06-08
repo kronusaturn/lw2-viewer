@@ -1653,10 +1653,10 @@ registerInitializer('pageLayoutFinished', false, () => document.readyState == "c
 		realignHash();
 
 	if (document.querySelector("#content").clientHeight <= window.innerHeight + 30) {
+		document.querySelector("#bottom-bar").addClass("decorative");
 		document.querySelector("#quick-nav-ui a[href='#bottom-bar']").style.visibility = "hidden";
-	} else {
-		removeElement("#hide-bottom-bar", document.querySelector("head"));
 	}
+	removeElement("#hide-bottom-bar", document.querySelector("head"));
 
 	// Add overlay of images in post (for avoidance of theme tweaks).		
 	generateImagesOverlay();
