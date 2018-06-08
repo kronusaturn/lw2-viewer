@@ -326,6 +326,34 @@ function OnInputRemoveMarkdownHints() {
 /* VOTING */
 /**********/
 
+function parseVoteType(voteType) {
+	let val = {};
+	if(!voteType) return val;
+	val.up = /[Uu]pvote$/.test(voteType);
+	val.down = /[Dd]ownvote$/.test(voteType);
+	val.big = /^big/.test(voteType);
+	return val;
+}
+
+function makeVoteType(val) {
+	return (val.big ? 'big' : 'small') + (val.up ? 'Up' : 'Down') + 'vote';
+}
+
+function makeVoteClass(vote) {
+	if(vote.up || vote.down) {
+		return (vote.big ? 'selected big-vote' : 'selected');
+	} else {
+		return '';
+	}
+}
+
+function addVoteButtons(e, voteType, targetType) {
+	let vote = parseVoteType(voteType);
+	let voteClass = makeVoteClass(vote);
+	e.insertAdjacentHTML('beforebegin', "<button type='button' class='vote upvote"+(vote.up ?' '+voteClass:'')+"' data-vote-type='upvote' data-target-type='"+targetType+"' tabindex='-1'></button>");
+	e.insertAdjacentHTML('afterend', "<button type='button' class='vote downvote"+(vote.down ?' '+voteClass:'')+"' data-vote-type='downvote' data-target-type='"+targetType+"' tabindex='-1'></button>");
+}
+
 function makeVoteCompleteEvent(target) {
 	return function(e) {
 		var buttonTargets, karmaTargets;
@@ -344,10 +372,15 @@ function makeVoteCompleteEvent(target) {
 		if(e.target.status == 200) {
 			let res = JSON.parse(e.target.responseText);
 			let karmaText = res[0], voteType = res[1];
+
+			let vote = parseVoteType(voteType);
+			let voteUpDown = (vote.up ? 'upvote' : (vote.down ? 'downvote' : ''));
+			let voteClass = makeVoteClass(vote);
+
 			karmaTargets.forEach(function (kt) { kt.innerHTML = karmaText; });
 			buttonTargets.forEach(function (bt) {
 				bt.querySelectorAll("button.vote").forEach(function(b) {
-					b.className = 'vote ' + b.getAttribute("data-vote-type") + ((b.getAttribute('data-vote-type') == voteType) ? ' selected' : '');
+					b.className = 'vote ' + b.getAttribute("data-vote-type") + ((b.getAttribute('data-vote-type') == voteUpDown) ? ' '+voteClass : '');
 					b.removeClass("clicked-twice");
 				});
 			});
@@ -397,7 +430,10 @@ function voteEvent(vb, numClicks) {
 	vb.parentNode.style.opacity = "0.5";
 	let targetType = vb.getAttribute("data-target-type");
 	let targetId = ((targetType == 'Comments') ? vb.getCommentId() : vb.parentNode.getAttribute("data-post-id"));
-	let voteType = vb.getAttribute("data-vote-type");
+	let voteUpDown = vb.getAttribute("data-vote-type");
+	let vote = parseVoteType(voteUpDown);
+	vote.big = (numClicks == 2);
+	let voteType = makeVoteType(vote);
 	let oldVoteType;
 	if(targetType == "Posts") {
 		oldVoteType = postVote;
@@ -1438,17 +1474,13 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		// Add upvote/downvote buttons.
 		if(typeof(postVote) != 'undefined') {
 			document.querySelectorAll(".post-meta .karma-value").forEach(function (e) {
-				let voteType = postVote;
-				e.insertAdjacentHTML('beforebegin', "<button type='button' class='vote upvote"+(voteType=='upvote'?' selected':'')+"' data-vote-type='upvote' data-target-type='Posts' tabindex='-1'></button>");
-				e.insertAdjacentHTML('afterend', "<button type='button' class='vote downvote"+(voteType=='downvote'?' selected':'')+"' data-vote-type='downvote' data-target-type='Posts' tabindex='-1'></button>");
+				addVoteButtons(e, postVote, 'Posts');
 			});
 		}
 		if(typeof(commentVotes) != 'undefined') {
 			document.querySelectorAll(".comment-meta .karma-value").forEach(function (e) {
 				let cid = e.getCommentId();
-				let voteType = commentVotes[cid];
-				e.insertAdjacentHTML('beforebegin', "<button type='button' class='vote upvote"+(voteType=='upvote'?' selected':'')+"' data-vote-type='upvote' data-target-type='Comments' tabindex='-1'></button>");
-				e.insertAdjacentHTML('afterend', "<button type='button' class='vote downvote"+(voteType=='downvote'?' selected':'')+"' data-vote-type='downvote' data-target-type='Comments' tabindex='-1'></button>");
+				addVoteButtons(e, commentVotes[cid], 'Comments');
 			});
 			// Replicate karma controls at the bottom of comments.
 			document.querySelectorAll(".comment-meta .karma").forEach(function (karma_controls) {
