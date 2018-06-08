@@ -5,8 +5,6 @@
 	$UI_font = ($platform == 'Windows') ? "'Whitney', 'a_Avante'" : "'Concourse', 'a_Avante'";
 ?>
 
-<?php echo file_get_contents('fa-custom.css'); ?>
-
 /***************/
 /* BASE LAYOUT */
 /***************/
