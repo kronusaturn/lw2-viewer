@@ -1054,6 +1054,21 @@ div.comment-child-links a::first-letter {
 	font-size: 1.5625rem;
 	color: #c8c8c8;
 }
+.comment-controls .vote.selected::after {
+	font-size: 23px;
+	left: 3px;
+	top: -2.5px;
+}
+@-moz-document url-prefix() {
+	.vote.selected::after {
+		left: 4px;
+	}
+	.comment-controls .vote.selected::after {
+		font-size: 21.5px;
+		left: 4.75px;
+		top: -2.5px;
+	}
+}
 .vote.selected.big-vote::after {
 	color: inherit;
 }
@@ -1062,6 +1077,10 @@ div.comment-child-links a::first-letter {
 }
 .downvote.selected::after {
 	content: "\F056";
+}
+.vote.clicked-once::after,
+.vote.clicked-twice::after {
+	display: none;
 }
 
 /*===========================*/
