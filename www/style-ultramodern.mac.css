@@ -4109,7 +4109,7 @@ h1.listing + .post-meta .link-post-domain {
 /* Log in tip */
 
 .login-container .login-tip {
-	border: 1px solid #eee;
+	border: 1px solid transparent;
 }
 
 /* Message box */
