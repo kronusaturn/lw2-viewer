@@ -43,6 +43,37 @@ body {
 	color: <?php echo $hyperlink_color; ?>;
 }
 
+#bottom-bar.decorative {
+	background-color: transparent;
+}
+#bottom-bar.decorative::before,
+#bottom-bar.decorative::after {
+	content: "GW";
+	display: block;
+	text-align: center;
+	padding: 0.25em 0 1em 0;
+}
+#bottom-bar.decorative::before {
+	width: 100%;
+	color: transparent;
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/one_pixel_DDD.gif")) ?>');
+	background-repeat-y: no-repeat;
+	background-position: center 35%;
+	margin: 0 30px;
+	filter: contrast(90%);
+}
+#bottom-bar.decorative::after {
+	width: fit-content;
+	color: #d8d8d8;
+	position: absolute;
+	left: 0;
+	right: 0;
+	margin: auto;
+	background-color: #eee;
+	padding-right: 4px;
+	padding-left: 4px;
+}
+
 /* Accesskey hints */
 
 .nav-inner::after {
