@@ -988,16 +988,21 @@ div.comment-child-links a::first-letter {
 
 .upvote,
 .downvote {
-	color: #c8c8c8;	
+	color: #c8c8c8;
+	position: relative;	
+}
+.vote::before {
+	position: relative;
+	z-index: 1;
 }
 .upvote::before {
 	content: "\F077";
+	top: 1px;
 }
 .downvote::before {
 	content: "\F078";
 	position: relative;
 	left: -2px;
-	top: 1px;
 }
 .upvote:hover,
 .upvote.selected {
@@ -1010,6 +1015,34 @@ div.comment-child-links a::first-letter {
 	text-shadow:
 		0 0 0.5px #fff, 
 		0 0 8px #f00;
+}
+
+.vote::after,
+.vote.selected.big-vote.clicked-twice::after {
+	position: absolute;
+	text-shadow: none;
+	color: transparent;
+}
+.vote.clicked-once::after,
+.vote.selected.clicked-once::after,
+.vote.selected.big-vote.clicked-once::after {
+	color: #c8c8c8;
+}
+.vote.clicked-twice::after,
+.vote.selected.big-vote::after {
+	color: inherit;
+}
+
+.upvote::after {
+	content: "\F325";
+	left: 7px;
+	bottom: 4px;
+}
+
+.downvote::after {
+	content: "\F322";
+	left: 5px;
+	top: 4px;
 }
 
 /*===========================*/
