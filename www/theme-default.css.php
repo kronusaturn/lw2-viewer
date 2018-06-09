@@ -1070,7 +1070,8 @@ div.comment-child-links a::first-letter {
 .vote.selected.big-vote.clicked-once::before {
 	box-shadow:
 		0 0 0 1px #fff,
-		0 0 0 4px #c8c8c8;
+		0 0 0 4px #c8c8c8,
+		0 0 0 5px transparent;
 }
 
 .upvote::before {
@@ -1081,7 +1082,8 @@ div.comment-child-links a::first-letter {
 .upvote.selected.big-vote::before {
 	box-shadow:
 		0 0 0 1px #fff,
-		0 0 0 4px #00d800;
+		0 0 0 4px #00d800,
+		0 0 0 5px transparent;
 }
 
 .downvote::before {
@@ -1092,7 +1094,8 @@ div.comment-child-links a::first-letter {
 .downvote.selected.big-vote::before {
 	box-shadow:
 		0 0 0 1px #fff,
-		0 0 0 4px #eb4c2a;
+		0 0 0 4px #eb4c2a,
+		0 0 0 5px transparent;
 }
 
 /*===========================*/
