@@ -1297,6 +1297,13 @@ select {
 	left: -0.5px;
 }
 
+.post-body *::selection,
+.comment-body *::selection,
+textarea::selection,
+input::selection {
+	background-color: #d8d8d8;
+}
+
 /*============*/
 /* ABOUT PAGE */
 /*============*/
