@@ -367,7 +367,7 @@ function makeVoteCompleteEvent(target) {
 		}
 		buttonTargets.forEach(function (bt) {
 			bt.querySelectorAll("button.vote").forEach(function(b) { b.style.pointerEvents = "" });
-			bt.style.opacity = "";
+			bt.removeClass("waiting");
 		});
 		if(e.target.status == 200) {
 			let res = JSON.parse(e.target.responseText);
@@ -427,7 +427,7 @@ function vbDoubleClickTimeoutCallback(vb) {
 function voteEvent(vb, numClicks) {
 	vb.blur();
 	vb.parentNode.querySelectorAll("button.vote").forEach(function(b) { b.style.pointerEvents = "none" });
-	vb.parentNode.style.opacity = "0.5";
+	vb.parentNode.addClass("waiting");
 	let targetType = vb.getAttribute("data-target-type");
 	let targetId = ((targetType == 'Comments') ? vb.getCommentId() : vb.parentNode.getAttribute("data-post-id"));
 	let voteUpDown = vb.getAttribute("data-vote-type");
