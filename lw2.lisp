@@ -488,7 +488,7 @@
     (format out-stream "<script>loggedInUserId=\"~A\"</script>" (or (logged-in-userid) ""))
     (format out-stream "<script>~A</script><script src=\"~A\" async></script><script src=\"~A\" async></script>~@[<script>var csrfToken=\"~A\"</script>~]~@[<meta name=\"robots\" content=\"~A\">~]</head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
             (load-time-value (with-open-file (s "www/head.js") (uiop:slurp-stream-string s)) t)
-            (generate-versioned-link "/script.js") (generate-versioned-link "/guiedit.js")
+            (generate-versioned-link "/script.js")
             csrf-token
             robots
             content-class
@@ -1233,7 +1233,6 @@
                                                                                     (loop for (uri content-type) in
                                                                                       '(("/theme_tweaker.css" "text/css")
                                                                                         ("/script.js" "text/javascript")
-                                                                                        ("/guiedit.js" "text/javascript")
                                                                                         ("/favicon.ico" "image/x-icon")
                                                                                         ("/fa-regular-400.ttf" "font/ttf")
                                                                                         ("/fa-solid-900.ttf" "font/ttf"))
