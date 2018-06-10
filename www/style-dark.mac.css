@@ -4696,36 +4696,47 @@ div.comment-child-links a::first-letter {
 	transform: none;
 }
 .vote:hover::before,
-.vote.selected::before {
+.vote.selected::before,
+.vote.clicked-once::before,
+.vote.clicked-twice::before {
 	filter: drop-shadow(0 0 1px #fff);
 }
 
+.upvote::before,
+.waiting .upvote.big-vote.clicked-twice::before {
+	background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBkPSJNMjU2IDhDMTE5IDggOCAxMTkgOCAyNTZzMTExIDI0OCAyNDggMjQ4IDI0OC0xMTEgMjQ4LTI0OFMzOTMgOCAyNTYgOHptMTQ0IDI3NmMwIDYuNi01LjQgMTItMTIgMTJoLTkydjkyYzAgNi42LTUuNCAxMi0xMiAxMmgtNTZjLTYuNiAwLTEyLTUuNC0xMi0xMnYtOTJoLTkyYy02LjYgMC0xMi01LjQtMTItMTJ2LTU2YzAtNi42IDUuNC0xMiAxMi0xMmg5MnYtOTJjMC02LjYgNS40LTEyIDEyLTEyaDU2YzYuNiAwIDEyIDUuNCAxMiAxMnY5Mmg5MmM2LjYgMCAxMiA1LjQgMTIgMTJ2NTZ6IiAgIGZpbGw9IiMwMEQ4MDAiLz48L3N2Zz4=');
+	filter: grayscale(100%) brightness(128%);
+}
+.downvote::before,
+.waiting .downvote.big-vote.clicked-twice::before {
+	background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBkPSJNMjU2IDhDMTE5IDggOCAxMTkgOCAyNTZzMTExIDI0OCAyNDggMjQ4IDI0OC0xMTEgMjQ4LTI0OFMzOTMgOCAyNTYgOHpNMTI0IDI5NmMtNi42IDAtMTItNS40LTEyLTEydi01NmMwLTYuNiA1LjQtMTIgMTItMTJoMjY0YzYuNiAwIDEyIDUuNCAxMiAxMnY1NmMwIDYuNi01LjQgMTItMTIgMTJIMTI0eiIgZmlsbD0iI0VCNEMyQSIvPjwvc3ZnPg==');
+	filter: grayscale(100%) brightness(188%);
+}
+
 .vote.clicked-once::before,
-.vote.selected.big-vote.clicked-once::before {
+.vote.big-vote.clicked-once::before {
 	box-shadow:
 		0 0 0 1px #000,
 		0 0 0 4px #2f2f2f,
 		0 0 0 5px transparent;
 }
 
-.upvote::before {
-	background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBkPSJNMjU2IDhDMTE5IDggOCAxMTkgOCAyNTZzMTExIDI0OCAyNDggMjQ4IDI0OC0xMTEgMjQ4LTI0OFMzOTMgOCAyNTYgOHptMTQ0IDI3NmMwIDYuNi01LjQgMTItMTIgMTJoLTkydjkyYzAgNi42LTUuNCAxMi0xMiAxMmgtNTZjLTYuNiAwLTEyLTUuNC0xMi0xMnYtOTJoLTkyYy02LjYgMC0xMi01LjQtMTItMTJ2LTU2YzAtNi42IDUuNC0xMiAxMi0xMmg5MnYtOTJjMC02LjYgNS40LTEyIDEyLTEyaDU2YzYuNiAwIDEyIDUuNCAxMiAxMnY5Mmg5MmM2LjYgMCAxMiA1LjQgMTIgMTJ2NTZ6IiAgIGZpbGw9IiMwMEQ4MDAiLz48L3N2Zz4=');
-	filter: grayscale(100%) brightness(128%);
+.vote.big-vote.clicked-twice::before,
+.waiting .vote.big-vote:not(.clicked-twice)::before,
+.waiting .vote:not(.big-vote).clicked-once::before {
+	box-shadow: none;
 }
-.upvote.selected.clicked-twice::before,
-.upvote.selected.big-vote::before {
+
+.upvote.clicked-twice::before,
+.upvote.big-vote::before {
 	box-shadow:
 		0 0 0 1px #000,
 		0 0 0 4px #6200ad,
 		0 0 0 5px transparent;
 }
 
-.downvote::before {
-	background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBkPSJNMjU2IDhDMTE5IDggOCAxMTkgOCAyNTZzMTExIDI0OCAyNDggMjQ4IDI0OC0xMTEgMjQ4LTI0OFMzOTMgOCAyNTYgOHpNMTI0IDI5NmMtNi42IDAtMTItNS40LTEyLTEydi01NmMwLTYuNiA1LjQtMTIgMTItMTJoMjY0YzYuNiAwIDEyIDUuNCAxMiAxMnY1NmMwIDYuNi01LjQgMTItMTIgMTJIMTI0eiIgZmlsbD0iI0VCNEMyQSIvPjwvc3ZnPg==');
-	filter: grayscale(100%) brightness(188%);
-}
-.downvote.selected.clicked-twice::before,
-.downvote.selected.big-vote::before {
+.downvote.clicked-twice::before,
+.downvote.big-vote::before {
 	box-shadow:
 		0 0 0 1px #000,
 		0 0 0 4px #0084c2,

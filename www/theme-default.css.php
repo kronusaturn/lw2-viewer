@@ -1062,36 +1062,47 @@ div.comment-child-links a::first-letter {
 	transform: none;
 }
 .vote:hover::before,
-.vote.selected::before {
+.vote.selected::before,
+.vote.clicked-once::before,
+.vote.clicked-twice::before {
 	filter: drop-shadow(0 0 1px #fff);
 }
 
+.upvote::before,
+.waiting .upvote.big-vote.clicked-twice::before {
+	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/upvote-green-circle-plus.svg")) ?>');
+	filter: grayscale(100%) brightness(128%);
+}
+.downvote::before,
+.waiting .downvote.big-vote.clicked-twice::before {
+	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/downvote-red-circle-minus.svg")) ?>');
+	filter: grayscale(100%) brightness(188%);
+}
+
 .vote.clicked-once::before,
-.vote.selected.big-vote.clicked-once::before {
+.vote.big-vote.clicked-once::before {
 	box-shadow:
 		0 0 0 1px #fff,
 		0 0 0 4px #c8c8c8,
 		0 0 0 5px transparent;
 }
 
-.upvote::before {
-	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/upvote-green-circle-plus.svg")) ?>');
-	filter: grayscale(100%) brightness(128%);
+.vote.big-vote.clicked-twice::before,
+.waiting .vote.big-vote:not(.clicked-twice)::before,
+.waiting .vote:not(.big-vote).clicked-once::before {
+	box-shadow: none;
 }
-.upvote.selected.clicked-twice::before,
-.upvote.selected.big-vote::before {
+
+.upvote.clicked-twice::before,
+.upvote.big-vote::before {
 	box-shadow:
 		0 0 0 1px #fff,
 		0 0 0 4px #00d800,
 		0 0 0 5px transparent;
 }
 
-.downvote::before {
-	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/downvote-red-circle-minus.svg")) ?>');
-	filter: grayscale(100%) brightness(188%);
-}
-.downvote.selected.clicked-twice::before,
-.downvote.selected.big-vote::before {
+.downvote.clicked-twice::before,
+.downvote.big-vote::before {
 	box-shadow:
 		0 0 0 1px #fff,
 		0 0 0 4px #eb4c2a,

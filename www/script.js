@@ -61,14 +61,32 @@ function readCookie(name) {
 /****************************************************/
 
 Element.prototype.addClass = function(className) {
-	if (!this.className.match(new RegExp("(^|\\s)" + className + "(\\s|$)")))
+	if (!this.hasClass(className))
 		this.className += " " + className;
 }
+Element.prototype.addClasses = function(classNames) {
+	let element = this;
+	let elementClassNames = this.className.trim().split(/\s/);
+	
+	classNames.forEach(function (className) {
+		if (!element.hasClass(className))
+			elementClassNames.push(className);
+	});
+	
+	this.className = elementClassNames.join(" ");
+}
 Element.prototype.removeClass = function(className) {
-	this.className = this.className.replace(new RegExp("(^|\\s)" + className + "(\\s|$)"), "");
+	this.className = this.className.replace(new RegExp("(^|\\s+)" + className + "(\\s+|$)"), "$1").trim();
+}
+Element.prototype.removeClasses = function(classNames) {
+	let elementClassNames = this.className;
+	classNames.forEach(function (className) {
+		elementClassNames = elementClassNames.replace(new RegExp("(^|\\s+)" + className + "(\\s+|$)"), "$1").trim();
+	});
+	this.className = elementClassNames;
 }
 Element.prototype.hasClass = function(className) {
-	return this.className.match(new RegExp("(^|\\s)" + className + "(\\s|$)"));
+	return this.className.match(new RegExp("(^|\\s+)" + className + "(\\s+|$)"));
 }
 Element.prototype.toggleClass = function(className) {
 	if (this.hasClass(className))
@@ -340,7 +358,7 @@ function makeVoteType(val) {
 }
 
 function makeVoteClass(vote) {
-	if(vote.up || vote.down) {
+	if (vote.up || vote.down) {
 		return (vote.big ? 'selected big-vote' : 'selected');
 	} else {
 		return '';
@@ -379,9 +397,8 @@ function makeVoteCompleteEvent(target) {
 			karmaTargets.forEach(function (kt) { kt.innerHTML = karmaText; });
 			buttonTargets.forEach(function (bt) {
 				bt.querySelectorAll("button.vote").forEach(function(b) {
-					b.className = 'vote ' + b.getAttribute("data-vote-type") + ((b.getAttribute('data-vote-type') == voteUpDown) ? ' '+voteClass : '');
-					b.removeClass("clicked-once");
-					b.removeClass("clicked-twice");
+					b.removeClasses([ "clicked-once", "clicked-twice", "selected", "big-vote" ]);
+					if (b.getAttribute('data-vote-type') == voteUpDown) b.addClass(voteClass);
 				});
 			});
 		}
