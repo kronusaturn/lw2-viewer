@@ -4679,20 +4679,20 @@ div.comment-child-links a::first-letter {
 		0 0 8px #f00;
 }
 
-.vote::after,
-.vote.selected.big-vote.clicked-twice::after {
+.vote::after {
 	position: absolute;
 	text-shadow: none;
 	color: transparent;
 }
-.vote.clicked-once::after,
-.vote.selected.clicked-once::after,
-.vote.selected.big-vote.clicked-once::after {
-	color: #c8c8c8;
+.karma.waiting .vote.big-vote::after {
+	color: transparent;
 }
-.vote.clicked-twice::after,
-.vote.selected.big-vote::after {
+.vote.big-vote::after,
+.vote:not(.big-vote).clicked-twice::after {
 	color: inherit;
+}
+.karma:not(.waiting) .vote.clicked-once::after {
+	color: #c8c8c8;
 }
 
 .upvote::after {
