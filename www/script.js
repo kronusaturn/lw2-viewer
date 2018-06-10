@@ -366,7 +366,6 @@ function makeVoteCompleteEvent(target) {
 			karmaTargets = [ commentItem.querySelector(".comment-meta .karma-value"), commentItem.querySelector(".comment-controls .karma-value") ];
 		}
 		buttonTargets.forEach(function (bt) {
-			bt.querySelectorAll("button.vote").forEach(function(b) { b.style.pointerEvents = "" });
 			bt.removeClass("waiting");
 		});
 		if(e.target.status == 200) {
@@ -381,6 +380,7 @@ function makeVoteCompleteEvent(target) {
 			buttonTargets.forEach(function (bt) {
 				bt.querySelectorAll("button.vote").forEach(function(b) {
 					b.className = 'vote ' + b.getAttribute("data-vote-type") + ((b.getAttribute('data-vote-type') == voteUpDown) ? ' '+voteClass : '');
+					b.removeClass("clicked-once");
 					b.removeClass("clicked-twice");
 				});
 			});
@@ -422,11 +422,9 @@ function vbDoubleClickTimeoutCallback(vb) {
 	// Do single-click code.
 	vb.clickedOnce = false;
 	voteEvent(vb, 1);
-	vb.removeClass("clicked-once");
 }
 function voteEvent(vb, numClicks) {
 	vb.blur();
-	vb.parentNode.querySelectorAll("button.vote").forEach(function(b) { b.style.pointerEvents = "none" });
 	vb.parentNode.addClass("waiting");
 	let targetType = vb.getAttribute("data-target-type");
 	let targetId = ((targetType == 'Comments') ? vb.getCommentId() : vb.parentNode.getAttribute("data-post-id"));

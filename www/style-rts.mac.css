@@ -1657,6 +1657,9 @@ div.comment-child-links a::first-letter {
 .karma.waiting {
 	opacity: 0.5;
 }
+.karma.waiting button {
+	pointer-events: none;
+}
 
 /* Replicated karma controls at bottom of comments. */
 .comment-controls .karma {
