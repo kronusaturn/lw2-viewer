@@ -821,19 +821,10 @@ div.comment-child-links a::first-letter {
 .vote.clicked-twice::before {
 	filter: drop-shadow(0 0 1px #fff);
 }
-
 .vote::before,
 .waiting .vote.big-vote.clicked-twice::before {
 	filter: brightness(200%);
 }
-
-.upvote::before {
-	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/upvote-black-square-plus.svg")) ?>');
-}
-.downvote::before {
-	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/downvote-black-square-minus.svg")) ?>');
-}
-
 .vote.clicked-once::before,
 .vote.big-vote.clicked-once::before {
 	box-shadow:
@@ -841,19 +832,24 @@ div.comment-child-links a::first-letter {
 		0 0 0 4px #ddd,
 		0 0 0 5px transparent;
 }
-
 .vote.big-vote.clicked-twice::before,
 .waiting .vote.big-vote:not(.clicked-twice)::before,
 .waiting .vote:not(.big-vote).clicked-once::before {
 	box-shadow: none;
 }
-
 .vote.clicked-twice::before,
 .vote.big-vote::before {
 	box-shadow:
 		0 0 0 1px #fff,
 		0 0 0 4px #000,
 		0 0 0 5px transparent;
+}
+
+.upvote::before {
+	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/upvote-black-square-plus.svg")) ?>');
+}
+.downvote::before {
+	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/downvote-black-square-minus.svg")) ?>');
 }
 
 /*===========================*/
