@@ -529,6 +529,7 @@ a#inbox-indicator.new-messages:hover::before {
 }
 #new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
 	cursor: auto;
+	pointer-events: none;
 }
 
 /*******************/
