@@ -802,29 +802,58 @@ div.comment-child-links a::first-letter {
 /* VOTE BUTTONS */
 /*==============*/
 
-.vote {
-	color: #ddd;
+.vote::before {
+	content: "";
+	border-radius: 3px;
+	background-size: 17px 17px;
+	width: 17px;
+	height: 17px;
+	display: inline-block;
+	position: relative;
+	top: 2.5px;
 }
+.vote:active {
+	transform: none;
+}
+.vote:hover::before,
+.vote.selected::before,
+.vote.clicked-once::before,
+.vote.clicked-twice::before {
+	filter: drop-shadow(0 0 1px #fff);
+}
+
+.vote::before,
+.waiting .vote.big-vote.clicked-twice::before {
+	filter: brightness(200%);
+}
+
 .upvote::before {
-	content: "\F0FE";
+	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/upvote-black-square-plus.svg")) ?>');
 }
 .downvote::before {
-	content: "\F146";
+	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/downvote-black-square-minus.svg")) ?>');
 }
-.upvote:hover,
-.upvote.selected,
-.downvote:hover,
-.downvote.selected {
-	color: inherit !important;
+
+.vote.clicked-once::before,
+.vote.big-vote.clicked-once::before {
+	box-shadow:
+		0 0 0 1px #fff,
+		0 0 0 4px #ddd,
+		0 0 0 5px transparent;
 }
-.vote:hover,
-.vote:active,
-.vote:focus {
+
+.vote.big-vote.clicked-twice::before,
+.waiting .vote.big-vote:not(.clicked-twice)::before,
+.waiting .vote:not(.big-vote).clicked-once::before {
 	box-shadow: none;
 }
 
-.comment-controls .karma {
-	margin-left: -12px;
+.vote.clicked-twice::before,
+.vote.big-vote::before {
+	box-shadow:
+		0 0 0 1px #fff,
+		0 0 0 4px #000,
+		0 0 0 5px transparent;
 }
 
 /*===========================*/
