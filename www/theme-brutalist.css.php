@@ -804,7 +804,7 @@ div.comment-child-links a::first-letter {
 
 .vote::before {
 	content: "";
-	border-radius: 3px;
+	border-radius: 2px;
 	background-size: 17px 17px;
 	width: 17px;
 	height: 17px;
@@ -815,6 +815,11 @@ div.comment-child-links a::first-letter {
 .vote:active {
 	transform: none;
 }
+.vote:hover,
+.vote:active,
+.vote:focus {
+	box-shadow: none;
+}
 .vote:hover::before,
 .vote.selected::before,
 .vote.clicked-once::before,
@@ -823,14 +828,13 @@ div.comment-child-links a::first-letter {
 }
 .vote::before,
 .waiting .vote.big-vote.clicked-twice::before {
-	filter: brightness(200%);
+	filter: contrast(5%) brightness(182%);
 }
 .vote.clicked-once::before,
 .vote.big-vote.clicked-once::before {
 	box-shadow:
-		0 0 0 1px #fff,
-		0 0 0 4px #ddd,
-		0 0 0 5px transparent;
+		0 0 0 3px #ccc,
+		0 0 0 4px transparent;
 }
 .vote.big-vote.clicked-twice::before,
 .waiting .vote.big-vote:not(.clicked-twice)::before,
@@ -840,9 +844,8 @@ div.comment-child-links a::first-letter {
 .vote.clicked-twice::before,
 .vote.big-vote::before {
 	box-shadow:
-		0 0 0 1px #fff,
-		0 0 0 4px #000,
-		0 0 0 5px transparent;
+		0 0 0 3px #000,
+		0 0 0 4px transparent;
 }
 
 .upvote::before {
