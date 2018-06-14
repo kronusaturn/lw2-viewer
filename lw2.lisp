@@ -57,6 +57,11 @@
                (symbol-macrolet ,(inner-loop `(,bind (,fn-gensym)))
                  ,@body)))))))
 
+(defun vote-list-to-tooltip (vote-list)
+  (if vote-list
+      (format nil "~A vote~:*~P" (length vote-list))
+      ""))
+
 (defun post-headline-to-html (out-stream post &key skip-section need-auth)
   (alist-bind ((title string)
                (user-id string)
@@ -69,10 +74,11 @@
                (frontpage-date (or null string))
                (curated-date (or null string))
                (meta boolean)
+               (all-votes list)
                (draft boolean))
     post
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      (format out-stream "<h1 class=\"listing~:[~; link-post-listing~]\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~A</a></h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\"><span class=\"karma-value\">~A</span></div><a class=\"comment-count\" href=\"~A#comments\">~A</a>~:[~*~;~:*<span class=\"read-time\" title=\"~:D word~:P\">~:D<span> min read</span></span>~]~@[<a class=\"lw2-link\" href=\"~A\">LW<span> link</span></a>~]~1{<span class=\"post-section ~A\" title=\"~A\"></span>~}"
+      (format out-stream "<h1 class=\"listing~:[~; link-post-listing~]\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~A</a></h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"comment-count\" href=\"~A#comments\">~A</a>~:[~*~;~:*<span class=\"read-time\" title=\"~:D word~:P\">~:D<span> min read</span></span>~]~@[<a class=\"lw2-link\" href=\"~A\">LW<span> link</span></a>~]~1{<span class=\"post-section ~A\" title=\"~A\"></span>~}"
               url
               (if url (encode-entities (string-trim " " url)))
               (generate-post-auth-link post nil nil need-auth)
@@ -81,6 +87,7 @@
               (encode-entities (get-username user-id))
               js-time
               pretty-time
+              (vote-list-to-tooltip all-votes)
               (pretty-number base-score "point")
               (generate-post-link post)
               (pretty-number (or comment-count 0) "comment")
@@ -109,10 +116,11 @@
                (curated-date (or null string))
                (meta boolean)
                (draft boolean)
+               (all-votes list)
                (html-body (or null string)))
     post
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      (format out-stream "<div class=\"post~:[~; link-post~]\"><h1>~A</h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A</a>~@[<a class=\"lw2-link\" href=\"~A\">LW<span> link</span></a>~]~1{<span class=\"post-section ~A\" title=\"~A\"></span>~}</div><div class=\"post-body\">"
+      (format out-stream "<div class=\"post~:[~; link-post~]\"><h1>~A</h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A</a>~@[<a class=\"lw2-link\" href=\"~A\">LW<span> link</span></a>~]~1{<span class=\"post-section ~A\" title=\"~A\"></span>~}</div><div class=\"post-body\">"
               url
               (encode-entities (clean-text title))
               (encode-entities (get-user-slug user-id))
@@ -120,6 +128,7 @@
               js-time
               pretty-time
               post-id
+              (vote-list-to-tooltip all-votes)
               (pretty-number base-score "point")
               (pretty-number (or comment-count 0) "comment")
               (clean-lw-link page-url)
@@ -146,10 +155,11 @@
                (parent-comment-id (or null string))
                (child-count (or null fixnum))
                (children list)
+               (all-votes list)
                (html-body string))
     comment
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      (format out-stream "<div class=\"comment~{ ~A~}\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <a class=\"date\" href=\"~A\" data-js-date=\"~A\">~A</a><div class=\"karma\"><span class=\"karma-value\">~A</span></div><a class=\"permalink\" href=\"~A/comment/~A\" title=\"Permalink\"></a>~@[<a class=\"lw2-link\" href=\"~A\" title=\"LW link\"></a>~]"
+      (format out-stream "<div class=\"comment~{ ~A~}\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <a class=\"date\" href=\"~A\" data-js-date=\"~A\">~A</a><div class=\"karma\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"permalink\" href=\"~A/comment/~A\" title=\"Permalink\"></a>~@[<a class=\"lw2-link\" href=\"~A\" title=\"LW link\"></a>~]"
               (let ((l nil))
                 (if (and (logged-in-userid user-id) (< (* 1000 (local-time:timestamp-to-unix (local-time:now))) (+ js-time 15000))) (push "just-posted-comment" l))
                 (if highlight-new (push "comment-item-highlight" l))
@@ -159,6 +169,7 @@
               (generate-post-link post-id comment-id)
               js-time
               pretty-time
+              (vote-list-to-tooltip all-votes)
               (pretty-number base-score "point")
               (generate-post-link post-id)
               comment-id

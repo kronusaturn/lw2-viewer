@@ -14,8 +14,8 @@
 
 (defvar *cookie-jar* (make-instance 'drakma:cookie-jar))
 
-(defparameter *posts-index-fields* '(:title :--id :slug :user-id :posted-at :base-score :comment-count :page-url :url :word-count :frontpage-date :curated-date :meta :draft))
-(defparameter *comments-index-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id (:parent-comment :--id :user-id :post-id) :base-score :page-url :html-body)) 
+(defparameter *posts-index-fields* '(:title :--id :slug :user-id :posted-at :base-score :comment-count :page-url :url :word-count :frontpage-date :curated-date :meta :draft (:all-votes :vote-type)))
+(defparameter *comments-index-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id (:parent-comment :--id :user-id :post-id) :base-score :page-url (:all-votes :vote-type) :html-body))
 (defparameter *messages-index-fields* '(:--id :user-id :created-at :content (:conversation :--id :title) :----typename))
 
 (defparameter *notifications-base-terms* (alist :view "userNotifications" :created-at :null :viewed :null))
@@ -290,7 +290,7 @@
 	   (type (integer 1) limit)
 	   (type boolean meta)
 	   (type (or string null) before after))
-  (format nil "{PostsList (terms:{view:\"~A\",limit:~A,meta:~A~A~A}) {title, _id, slug, userId, postedAt, baseScore, commentCount, pageUrl, url, wordCount, frontpageDate, curatedDate, meta~A}}"
+  (format nil "{PostsList (terms:{view:\"~A\",limit:~A,meta:~A~A~A}) {title, _id, slug, userId, postedAt, baseScore, commentCount, pageUrl, url, wordCount, frontpageDate, curatedDate, meta, allVotes{voteType}~A}}"
 	  view
 	  limit
 	  (if meta "true" "false")
@@ -338,7 +338,7 @@
   (process-vote-result (lw2-graphql-query (format nil "{PostsSingle(documentId:\"~A\") {_id, currentUserVotes{voteType}}}" post-id) :auth-token auth-token))) 
 
 (defun get-post-body (post-id &key (revalidate t) force-revalidate auth-token)
-  (let ((query-string (format nil "{PostsSingle(documentId:\"~A\") {title, _id, slug, userId, postedAt, baseScore, commentCount, pageUrl, url, frontpageDate, meta, draft, htmlBody}}" post-id)))
+  (let ((query-string (format nil "{PostsSingle(documentId:\"~A\") {title, _id, slug, userId, postedAt, baseScore, commentCount, pageUrl, url, frontpageDate, meta, draft, allVotes{voteType}, htmlBody}}" post-id)))
     (if auth-token
         (lw2-graphql-query query-string :auth-token auth-token)
         (lw2-graphql-query-timeout-cached query-string "post-body-json" post-id :revalidate revalidate :force-revalidate force-revalidate))))
@@ -349,7 +349,7 @@
 (defun get-post-comments (post-id &key (revalidate t) force-revalidate)
   (let ((fn (lambda ()
               (let ((base-terms (alist :view "postCommentsTop" :post-id post-id))
-                    (comments-fields '(:--id :user-id :post-id :posted-at :parent-comment-id :base-score :page-url :html-body)))
+                    (comments-fields '(:--id :user-id :post-id :posted-at :parent-comment-id :base-score :page-url (:all-votes :vote-type) :html-body)))
                 (multiple-value-bind (comments-total comments-list)
                   (lw2-graphql-query-multi (list (graphql-query-string* "CommentsTotal" (alist :terms base-terms) nil)
                                                  (graphql-query-string* "CommentsList" (alist :terms (nconc (alist :limit 500) base-terms)) comments-fields)))
