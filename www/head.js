@@ -17,7 +17,7 @@ function setContentWidth(widthString) {
 	if (!width) return;
 	document.querySelector('#width-adjust').innerHTML = 
 		`#content, #ui-elements-container, #images-overlay { 
-			max-width: calc(${width});
+			max-width: calc(${width}) !important;
 		}`;
 }
 setContentWidth(window.localStorage.getItem('selected-width'));

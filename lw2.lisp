@@ -491,12 +491,12 @@
   (let* ((session-token (hunchentoot:cookie-in "session-token"))
          (csrf-token (and session-token (make-csrf-token session-token)))) 
     (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head>")
-    (format out-stream "<script>loggedInUserId=\"~A\"; ~@[var csrfToken=\"~A\"; ~]~A</script>~A"
+    (format out-stream "<style id='width-adjust'></style><script>loggedInUserId=\"~A\"; ~@[var csrfToken=\"~A\"; ~]~A</script>~A"
             (or (logged-in-userid) "")
             csrf-token
             (load-time-value (with-open-file (s "www/head.js") (uiop:slurp-stream-string s)) t)
             *extra-inline-scripts*)
-    (format out-stream "~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"stylesheet\" href=\"~A\"><style id='width-adjust'></style><link rel=\"shortcut icon\" href=\"~A\">~A"
+    (format out-stream "~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"stylesheet\" href=\"~A\"><link rel=\"shortcut icon\" href=\"~A\">~A"
             *html-head*
             (generate-css-link)
             (generate-versioned-link "/theme_tweaker.css")
