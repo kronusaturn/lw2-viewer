@@ -387,6 +387,9 @@
 <link rel=\"stylesheet\" href=\"~A\">"
           *fonts-stylesheet-uri*))
 
+(defparameter *extra-external-scripts* "")
+(defparameter *extra-inline-scripts* "")
+
 (defun generate-versioned-link (file)
   (format nil "~A?v=~A" file (sb-posix:stat-mtime (sb-posix:stat (format nil "www~A" file))))) 
 
@@ -487,8 +490,13 @@
 (defun begin-html (out-stream &key title description current-uri content-class robots)
   (let* ((session-token (hunchentoot:cookie-in "session-token"))
          (csrf-token (and session-token (make-csrf-token session-token)))) 
-    (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head><title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"stylesheet\" href=\"~A\"><style id='width-adjust'></style><link rel=\"shortcut icon\" href=\"~A\">~A"
-            (if title (encode-entities title)) description
+    (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head>")
+    (format out-stream "<script>loggedInUserId=\"~A\"; ~@[var csrfToken=\"~A\"; ~]~A</script>~A"
+            (or (logged-in-userid) "")
+            csrf-token
+            (load-time-value (with-open-file (s "www/head.js") (uiop:slurp-stream-string s)) t)
+            *extra-inline-scripts*)
+    (format out-stream "~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"stylesheet\" href=\"~A\"><style id='width-adjust'></style><link rel=\"shortcut icon\" href=\"~A\">~A"
             *html-head*
             (generate-css-link)
             (generate-versioned-link "/theme_tweaker.css")
@@ -496,12 +504,14 @@
             (if (string= (hunchentoot:cookie-in "theme") "dark")
                 "<style id='dark-theme-adjustments'>.markdown-reference-link a { color: #d200cf; filter: invert(100%); }</style>"
                 ""))
-    (format out-stream "<script>loggedInUserId=\"~A\"</script>" (or (logged-in-userid) ""))
-    (format out-stream "<script>~A</script><script src=\"~A\" async></script>~@[<script>var csrfToken=\"~A\"</script>~]~@[<meta name=\"robots\" content=\"~A\">~]</head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
-            (load-time-value (with-open-file (s "www/head.js") (uiop:slurp-stream-string s)) t)
+    (format out-stream "<script src=\"~A\" async></script>~A"
             (generate-versioned-link "/script.js")
-            csrf-token
-            robots
+            *extra-external-scripts*)
+    (format out-stream "<title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~@[<meta name=\"robots\" content=\"~A\">~]"
+            (if title (encode-entities title))
+            description
+            robots)
+    (format out-stream "</head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
             content-class
             (user-nav-bar (or current-uri (replace-query-params (hunchentoot:request-uri*) "offset" nil)))))
   (force-output out-stream))
