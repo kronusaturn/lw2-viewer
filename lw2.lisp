@@ -7,13 +7,16 @@
 
 (defvar *current-auth-token*) 
 
+(defvar *read-only-mode* nil)
+
 (defun logged-in-userid (&optional is-userid)
-  (let ((current-userid (and *current-auth-token* (cache-get "auth-token-to-userid" *current-auth-token*))))
-    (if is-userid
-      (string= current-userid is-userid)
-      current-userid))) 
+  (if *read-only-mode* nil
+      (let ((current-userid (and *current-auth-token* (cache-get "auth-token-to-userid" *current-auth-token*))))
+        (if is-userid
+            (string= current-userid is-userid)
+            current-userid)))) 
 (defun logged-in-username ()
-  (and *current-auth-token* (cache-get "auth-token-to-username" *current-auth-token*))) 
+  (and (not *read-only-mode*) *current-auth-token* (cache-get "auth-token-to-username" *current-auth-token*))) 
 
 (defun pretty-time (timestring &key format)
   (let ((time (local-time:parse-timestring timestring)))
@@ -449,11 +452,13 @@
          (*secondary-nav* `(("archive" "/archive" "Archive" :accesskey "r")
                             ("about" "/about" "About" :accesskey "t")
                             ("search" "/search" "Search" :html ,#'search-bar-to-html)
-                            ,(if username
-                                 (let ((user-slug (encode-entities (get-user-slug (logged-in-userid)))))
-                                   `("login" ,(format nil "/users/~A" user-slug) ,(plump:encode-entities username) :description "User page" :accesskey "u"
-                                     :trailing-html ,(inbox-to-html user-slug)))
-                                 `("login" ,(format nil "/login?return=~A" (url-rewrite:url-encode current-uri)) "Log In" :accesskey "u" :nofollow t)))))
+                            ,(if *read-only-mode*
+                                 `("login" "/login" "Read Only Mode" :html ,(lambda () "<span class=\"nav-inner\" title=\"Due to a system outage, you cannot log in or post at this time.\">[Read Only Mode]</span>"))
+                                 (if username
+                                     (let ((user-slug (encode-entities (get-user-slug (logged-in-userid)))))
+                                       `("login" ,(format nil "/users/~A" user-slug) ,(plump:encode-entities username) :description "User page" :accesskey "u"
+                                         :trailing-html ,(inbox-to-html user-slug)))
+                                     `("login" ,(format nil "/login?return=~A" (url-rewrite:url-encode current-uri)) "Log In" :accesskey "u" :nofollow t))))))
     (nav-bar-to-html current-uri)))
 
 (defun sublevel-nav-to-html (out-stream options current &key (base-uri (hunchentoot:request-uri*)) (param-name "show") (remove-params '("offset")) extra-class)
