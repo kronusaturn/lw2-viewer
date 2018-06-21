@@ -453,7 +453,7 @@
                                  (let ((user-slug (encode-entities (get-user-slug (logged-in-userid)))))
                                    `("login" ,(format nil "/users/~A" user-slug) ,(plump:encode-entities username) :description "User page" :accesskey "u"
                                      :trailing-html ,(inbox-to-html user-slug)))
-                                 `("login" ,(format nil "/login?return=~A" (url-rewrite:url-encode current-uri)) "Log In" :accesskey "u")))))
+                                 `("login" ,(format nil "/login?return=~A" (url-rewrite:url-encode current-uri)) "Log In" :accesskey "u" :nofollow t)))))
     (nav-bar-to-html current-uri)))
 
 (defun sublevel-nav-to-html (out-stream options current &key (base-uri (hunchentoot:request-uri*)) (param-name "show") (remove-params '("offset")) extra-class)
@@ -1078,7 +1078,7 @@
 				   (labels
 				     ((emit-login-page (&key error-message)
 					(let ((csrf-token (make-csrf-token)))
-					  (emit-page (out-stream :title "Log in" :current-uri "/login" :content-class "login-page")
+					  (emit-page (out-stream :title "Log in" :current-uri "/login" :content-class "login-page" :robots "noindex, nofollow")
 						     (when error-message
 						       (format out-stream "<div class=\"error-box\">~A</div>" error-message)) 
 						     (with-outputs (out-stream) "<div class=\"login-container\">")
@@ -1153,7 +1153,7 @@
                                  (labels ((emit-rpw-page (&key message message-type step)
                                             (with-error-page
                                               (let ((csrf-token (make-csrf-token)))
-                                                (emit-page (out-stream :title "Reset password" :content-class "reset-password")
+                                                (emit-page (out-stream :title "Reset password" :content-class "reset-password" :robots "noindex, nofollow")
                                                            (render-template* *reset-password-template* out-stream
                                                                              :csrf-token csrf-token
                                                                              :reset-link reset-link
