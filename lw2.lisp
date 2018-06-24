@@ -782,8 +782,9 @@
                                                              (comment-chrono-to-html out-stream comments)
                                                              (comment-tree-to-html out-stream (make-comment-parent-hash comments))))
                                                      (format out-stream "</div>")
-                                                     (if lw2-auth-token
-                                                         (format out-stream "<script>commentVotes=~A</script>" (json:encode-json-to-string (get-post-comments-votes post-id lw2-auth-token))))))
+                                                     (when lw2-auth-token
+                                                       (force-output out-stream)
+                                                       (format out-stream "<script>commentVotes=~A</script>" (json:encode-json-to-string (get-post-comments-votes post-id lw2-auth-token))))))
                                             (multiple-value-bind (post title condition)
                                               (handler-case (nth-value 0 (get-post-body post-id :auth-token (and need-auth lw2-auth-token)))
                                                 (serious-condition (c) (values nil "Error" c))
@@ -810,10 +811,11 @@
                                                              (let ((comments (get-post-comments post-id)))
                                                                (output-comments out-stream comments nil))
                                                              (serious-condition (c) (error-to-html out-stream c)))
-                                                           (if lw2-auth-token
-                                                               (format out-stream "<script>postVote=~A</script>~@[<div class=\"post-controls\"><a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\" accesskey=\"e\" title=\"Edit post [e]\">Edit post</a></div>~]"
-                                                                       (json:encode-json-to-string (get-post-vote post-id lw2-auth-token))
-                                                                       (if (equal (logged-in-userid) (cdr (assoc :user-id post))) (cdr (assoc :--id post)))))))))))))))
+                                                           (when lw2-auth-token
+                                                             (force-output out-stream)
+                                                             (format out-stream "<script>postVote=~A</script>~@[<div class=\"post-controls\"><a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\" accesskey=\"e\" title=\"Edit post [e]\">Edit post</a></div>~]"
+                                                                     (json:encode-json-to-string (get-post-vote post-id lw2-auth-token))
+                                                                     (if (equal (logged-in-userid) (cdr (assoc :user-id post))) (cdr (assoc :--id post)))))))))))))))
 
 (defparameter *edit-post-template* (compile-template* "edit-post.html"))
 
