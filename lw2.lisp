@@ -804,16 +804,16 @@
                                                              (condition
                                                                (error-to-html out-stream condition))
                                                              (t
-                                                              (post-body-to-html out-stream post)
-                                                              (if lw2-auth-token
-                                                                  (format out-stream "<script>postVote=~A</script>~@[<div class=\"post-controls\"><a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\" accesskey=\"e\" title=\"Edit post [e]\">Edit post</a></div>~]"
-                                                                          (json:encode-json-to-string (get-post-vote post-id lw2-auth-token))
-                                                                          (if (equal (logged-in-userid) (cdr (assoc :user-id post))) (cdr (assoc :--id post)))))))
+                                                              (post-body-to-html out-stream post)))
                                                            (force-output out-stream)
                                                            (handler-case
                                                              (let ((comments (get-post-comments post-id)))
                                                                (output-comments out-stream comments nil))
-                                                             (serious-condition (c) (error-to-html out-stream c)))))))))))))
+                                                             (serious-condition (c) (error-to-html out-stream c)))
+                                                           (if lw2-auth-token
+                                                               (format out-stream "<script>postVote=~A</script>~@[<div class=\"post-controls\"><a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\" accesskey=\"e\" title=\"Edit post [e]\">Edit post</a></div>~]"
+                                                                       (json:encode-json-to-string (get-post-vote post-id lw2-auth-token))
+                                                                       (if (equal (logged-in-userid) (cdr (assoc :user-id post))) (cdr (assoc :--id post)))))))))))))))
 
 (defparameter *edit-post-template* (compile-template* "edit-post.html"))
 
