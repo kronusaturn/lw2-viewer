@@ -152,7 +152,7 @@
 				       (scan-for-urls node))
 				     (when (and (text-node-is-not node "style" "pre" "code")
 						(text-class-is-not node "mjx-math"))
-				       (let ((new-root (plump:parse (clean-html-regexps (plump:text node))))
+                                       (let ((new-root (plump:parse (clean-html-regexps (plump:serialize node nil))))
 					     (other-children (prog1
 							       (subseq (plump:family node) (1+ (plump:child-position node)))
 							       (setf (fill-pointer (plump:family node)) (plump:child-position node)))))
