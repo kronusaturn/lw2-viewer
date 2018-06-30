@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.clean-html
-  (:use #:cl #:split-sequence #:lw2.lmdb #:lw2.links)
+  (:use #:cl #:alexandria #:split-sequence #:lw2.lmdb #:lw2.links)
   (:export #:clean-text #:clean-html #:clean-html*)
   (:unintern #:*text-clean-regexps* #:*html-clean-regexps*))
 
@@ -33,17 +33,22 @@
 			 ("7ZqGiPHTpiDMwqMN2" "The-Twelve-Virtues-Of-Rationality"))
       do (let ((file* file)) (setf (gethash id *html-overrides*) (lambda () (rts-to-html file*)))))
 
+(defmacro do-with-cleaners ((regexp-list scanner replacement) &body body)
+  `(labels ((fn (,scanner ,replacement) ,@body))
+     ,@(loop for (regex flags replacement) in (eval regexp-list)
+             collecting `(fn (ppcre:create-scanner ,regex
+                                                   ,@(loop for (flag sym) in '((#\i :case-insensitive-mode)
+                                                                               (#\m :multi-line-mode)
+                                                                               (#\s :single-line-mode)
+                                                                               (#\x :extended-mode))
+                                                           when (find flag flags)
+                                                           append (list sym t)))
+                             ,replacement))))
+
 (defmacro define-cleaner (name regexp-list)
-  `(defun ,name (text) ,@(loop for (regex flags replacement) in (eval regexp-list)
-			       collecting `(setf text (ppcre:regex-replace-all
-							(ppcre:create-scanner ,regex
-									      ,@(loop for (flag sym) in '((#\i :case-insensitive-mode)
-													  (#\m :multi-line-mode)
-													  (#\s :single-line-mode)
-													  (#\x :extended-mode))
-										      when (find flag flags)
-										      append (list sym t)))
-							text ,replacement)))))
+  `(defun ,name (text)
+     (do-with-cleaners (,regexp-list scanner replacement)
+       (setf text (ppcre:regex-replace-all scanner text replacement)))))
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (defun read-regexp-file (filename)
@@ -56,6 +61,59 @@
 
 (define-cleaner clean-text (read-regexp-file "text-clean-regexps.js"))
 (define-cleaner clean-html-regexps (read-regexp-file "html-clean-regexps.js"))
+
+(defun clean-dom-text (root)
+  (handler-bind
+    (((or plump:invalid-xml-character plump:discouraged-xml-character) #'abort))
+    (let* ((offset-list nil)
+           (whole-string-input
+             (with-output-to-string (stream)
+               (plump:traverse
+                 root
+                 (lambda (node)
+                   (typecase node
+                     (plump:text-node
+                       (push (length (plump:text node)) offset-list)
+                       (write-string (plump:text node) stream)))))))
+           (whole-string-output whole-string-input))
+      (setf offset-list (nreverse offset-list))
+      (do-with-cleaners ((read-regexp-file "text-clean-regexps.js") scanner replacement)
+        (let ((replacements 0)
+              (replacement-list nil)
+              (original-length (length whole-string-output)))
+          (ppcre:do-matches (match-start match-end scanner whole-string-output)
+            (incf replacements)
+            (push (list match-start match-end) replacement-list))
+          (setf replacement-list (nreverse replacement-list))
+          (setf whole-string-output (ppcre:regex-replace-all scanner whole-string-output replacement))
+          (loop with length-difference = (- (length whole-string-output) original-length)
+                with current-offset = offset-list
+                with total-offset = 0
+                for (start end) in replacement-list
+                for length-change = (round length-difference replacements)
+                do (setf length-difference (- length-difference length-change)
+                         replacements (- replacements 1))
+                do (loop while (<= (+ total-offset (first current-offset)) (round (+ start end) 2))
+                         do (setf total-offset (+ total-offset (first current-offset))
+                                  current-offset (cdr current-offset)))
+                do (loop while (/= length-change 0)
+                         do (if (> (+ (first current-offset) length-change) 0)
+                                (setf (first current-offset) (+ (first current-offset) length-change)
+                                      length-change 0)
+                                (setf length-change (+ (first current-offset) length-change)
+                                      (first current-offset) 0
+                                      current-offset (cdr current-offset)))))))
+      (let ((current-offset 0))
+        (plump:traverse
+          root
+          (lambda (node)
+            (typecase node
+              (plump:text-node
+                (let ((next-offset (if offset-list (+ current-offset (first offset-list)) nil)))
+                  (setf (plump:text node) (subseq whole-string-output current-offset next-offset)
+                        current-offset next-offset
+                        offset-list (cdr offset-list))))))))))
+  root)
 
 (define-lmdb-memoized clean-html (:sources ("src/clean-html.lisp" "src/links.lisp" "text-clean-regexps.js" "html-clean-regexps.js")) (in-html &key with-toc post-id)
   (labels ((tag-is (node &rest args)
@@ -157,8 +215,6 @@
 							       (subseq (plump:family node) (1+ (plump:child-position node)))
 							       (setf (fill-pointer (plump:family node)) (plump:child-position node)))))
 					 (loop for item across (plump:children new-root)
-					       do (when (typep item 'plump:text-node)
-						    (setf (plump:text item) (clean-text (plump:text item))))
 					       do (plump:append-child (plump:parent node) item))
 					 (loop for item across other-children
 					       do (plump:append-child (plump:parent node) item)))))
@@ -233,6 +289,8 @@
                                          (plump:remove-child node))
                                        ((tag-is node "script")
                                          (plump:remove-child node)))))))
+          (loop for node across (plump:children root)
+                do (clean-dom-text node))
 	  (concatenate 'string (if (>= section-count 3) (contents-to-html (nreverse contents) min-header-level) "") 
 		       (style-hash-to-html style-hash) 
 		       (plump:serialize root nil)))))))
