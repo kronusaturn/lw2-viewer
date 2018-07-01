@@ -84,10 +84,10 @@
           (ppcre:do-scans (match-start match-end reg-starts reg-ends scanner whole-string-output)
             (incf replacements)
             (push
-              (list (if (and (> (length reg-starts) 0) (= (aref reg-starts 0) match-start))
+              (list (if (and (> (length reg-starts) 0) (eq (aref reg-starts 0) match-start))
                         (aref reg-ends 0)
                         match-start)
-                    (if (and (> (length reg-starts) 0) (= (aref reg-ends (- (length reg-ends) 1)) match-end))
+                    (if (and (> (length reg-starts) 0) (eq (aref reg-ends (- (length reg-ends) 1)) match-end))
                         (aref reg-starts (- (length reg-starts) 1))
                         match-end))
               replacement-list))
