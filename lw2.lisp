@@ -207,7 +207,7 @@
                (created-at string)
                (highlight-new boolean)
                (conversation list)
-               (content cons))
+               (content list))
     message
     (multiple-value-bind (pretty-time js-time) (pretty-time created-at)
       (format out-stream "<div class=\"comment private-message~A\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <span class=\"date\" data-js-date=\"~A\">~A</span><div class=\"comment-post-title\">Private message in: <a href=\"/conversation?id=~A\">~A</a></div></div><div class=\"comment-body\">"
