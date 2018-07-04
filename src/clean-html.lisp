@@ -95,21 +95,24 @@
           (setf whole-string-output (ppcre:regex-replace-all scanner whole-string-output replacement))
           (loop with length-difference = (- (length whole-string-output) original-length)
                 with current-offset = offset-list
+                with output-offset = (first current-offset)
+                with output-offset-list = nil
                 with total-offset = 0
                 for (start end) in replacement-list
                 for length-change = (round length-difference replacements)
                 do (setf length-difference (- length-difference length-change)
                          replacements (- replacements 1))
-                do (loop while (< (+ total-offset (first current-offset)) (round (+ start end) 2))
-                         do (setf total-offset (+ total-offset (first current-offset))
-                                  current-offset (cdr current-offset)))
-                do (loop while (/= length-change 0)
-                         do (if (> (+ (first current-offset) length-change) 0)
-                                (setf (first current-offset) (+ (first current-offset) length-change)
-                                      length-change 0)
-                                (setf length-change (+ (first current-offset) length-change)
-                                      (first current-offset) 0
-                                      current-offset (cdr current-offset)))))))
+                do (loop while (and (rest current-offset) (< (+ total-offset (first current-offset)) (round (+ start end) 2)))
+                         do (progn
+                              (push output-offset output-offset-list)
+                              (setf total-offset (+ total-offset (first current-offset))
+                                    current-offset (cdr current-offset)
+                                    output-offset (first current-offset))))
+                do (setf output-offset (max 0 (+ output-offset length-change)))
+                finally (progn
+                          (push output-offset output-offset-list)
+                          (loop for x in (rest current-offset) do (push x output-offset-list))
+                          (setf offset-list (nreverse output-offset-list))))))
       (let ((current-offset 0))
         (plump:traverse
           root
