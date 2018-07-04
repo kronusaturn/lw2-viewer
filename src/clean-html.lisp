@@ -246,7 +246,7 @@
                                            (setf (plump:children node) (plump:children (plump:first-child node)))))
                                        ((tag-is node "img")
                                          (when
-                                           (ignore-errors (every (lambda (a) (<= (parse-integer (plump:attribute node a)) 1)) (list "width" "height")))
+                                           (every (lambda (a) (if-let (attr (plump:attribute node a)) (ignore-errors (<= (parse-integer attr) 1)))) (list "width" "height"))
                                            (plump:remove-child node))
                                          (when
                                            (string= "/" (plump:attribute node "src") :end2 1)
