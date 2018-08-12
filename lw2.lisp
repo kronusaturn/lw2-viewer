@@ -760,7 +760,7 @@
                                          (check-csrf-token csrf-token)
                                          (let ((post-id (match-lw2-link (hunchentoot:request-uri*)))) 
                                            (assert (and lw2-auth-token (not (string= text ""))))
-                                           (let* ((comment-data `(("body" . ,(postprocess-markdown text)) ,(if (not edit-comment-id) `("postId" . ,post-id)) ,(if parent-comment-id `("parentCommentId" . ,parent-comment-id)) ("content" . ("blocks" . nil)))) 
+                                           (let* ((comment-data `(("body" . ,(postprocess-markdown text)) ,(if (not edit-comment-id) `("postId" . ,post-id)) ,(if parent-comment-id `("parentCommentId" . ,parent-comment-id)))) 
                                                   (new-comment-id
                                                     (if edit-comment-id
                                                         (prog1 edit-comment-id
@@ -832,7 +832,7 @@
                                              (url (if (string= url "") nil url)))
                                          (assert (and lw2-auth-token (not (string= text ""))))
                                          (let* ((post-data `(("body" . ,(postprocess-markdown text)) ("title" . ,title) ("url" . ,(if link-post url))
-                                                                              ("meta" . ,(string= section "meta")) ("draft" . ,(string= section "drafts")) ("content" . ("blocks" . nil))))
+                                                                              ("meta" . ,(string= section "meta")) ("draft" . ,(string= section "drafts"))))
                                                 (post-set (loop for item in post-data when (cdr item) collect item))
                                                 (post-unset (loop for item in post-data when (not (cdr item)) collect (cons (car item) t))))
                                            (let* ((new-post-data
