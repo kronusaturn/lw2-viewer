@@ -8,6 +8,7 @@
 (defvar *current-auth-token*) 
 
 (defvar *read-only-mode* nil)
+(defvar *read-only-default-message* "Due to a system outage, you cannot log in or post at this time.")
 
 (defun logged-in-userid (&optional is-userid)
   (if *read-only-mode* nil
@@ -453,7 +454,10 @@
                             ("about" "/about" "About" :accesskey "t")
                             ("search" "/search" "Search" :html ,#'search-bar-to-html)
                             ,(if *read-only-mode*
-                                 `("login" "/login" "Read Only Mode" :html ,(lambda () "<span class=\"nav-inner\" title=\"Due to a system outage, you cannot log in or post at this time.\">[Read Only Mode]</span>"))
+                                 `("login" "/login" "Read Only Mode" :html ,(lambda () (format nil "<span class=\"nav-inner\" title=\"~A\">[Read Only Mode]</span>"
+                                                                                               (typecase *read-only-mode*
+                                                                                                 (string *read-only-mode*)
+                                                                                                 (t *read-only-default-message*)))))
                                  (if username
                                      (let ((user-slug (encode-entities (get-user-slug (logged-in-userid)))))
                                        `("login" ,(format nil "/users/~A" user-slug) ,(plump:encode-entities username) :description "User page" :accesskey "u"
