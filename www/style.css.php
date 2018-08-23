@@ -2131,6 +2131,36 @@ div.imgonly {
 	text-align: center;
 }
 
+/**********/
+/* TABLES */
+/**********/
+
+.post-body table,
+.comment-body table {
+	border-collapse: collapse;
+	font-family: Inconsolata, Menlo, monospace;
+	font-size: 0.875em;
+}
+.post-body table th,
+.post-body table td,
+.comment-body table th,
+.comment-body table td {
+	text-align: left;
+	hyphens: none;
+	padding: 4px 6px;
+	line-height: 1.3;
+}
+.post-body table td:nth-of-type(n+2),
+.comment-body table td:nth-of-type(n+2) {
+	text-align: right;
+}
+.post-body table caption,
+.comment-body table caption {
+	margin: 0 0 0.25em 0;
+	font-weight: bold;
+	font-size: 1.125em;
+}
+
 /********/
 /* MISC */
 /********/

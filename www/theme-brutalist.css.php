@@ -1119,6 +1119,19 @@ blockquote {
 /* IMAGES */
 /*========*/
 
+/*========*/
+/* TABLES */
+/*========*/
+
+.post-body table,
+.comment-body table,
+.post-body table th,
+.post-body table td,
+.comment-body table th,
+.comment-body table td {
+	border: 1px solid #000;
+}
+
 /*======*/
 /* MISC */
 /*======*/
