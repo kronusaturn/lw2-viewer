@@ -412,8 +412,8 @@
 
 (defparameter *primary-nav* '(("home" "/" "Home" :description "Latest frontpage posts" :accesskey "h")
 			      ("featured" "/index?view=featured" "Featured" :description "Latest featured posts" :accesskey "f")
-			      ("all" "/index?view=new&all=t" "All" :description "Latest posts from all sections" :accesskey "a")
-			      ("meta" "/index?view=meta&all=t" "Meta" :description "Latest meta posts" :accesskey "m")
+			      ("all" "/index?view=new" "All" :description "Latest posts from all sections" :accesskey "a")
+			      ("meta" "/index?view=meta" "Meta" :description "Latest meta posts" :accesskey "m")
 			      ("recent-comments" "/recentcomments" "<span>Recent </span>Comments" :description "Latest comments" :accesskey "c"))) 
 
 (defparameter *secondary-nav* nil)
@@ -705,7 +705,7 @@
 						   (get-posts))))
 				     (view-items-index posts :section :frontpage :title "Frontpage posts" :hide-title t :with-offset (or offset 0)))))
 
-(hunchentoot:define-easy-handler (view-index :uri "/index") (view meta before after offset)
+(hunchentoot:define-easy-handler (view-index :uri "/index") (view before after offset)
                                  (with-error-page
                                    (let* ((offset (and offset (parse-integer offset)))
                                           (terms
