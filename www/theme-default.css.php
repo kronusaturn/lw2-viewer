@@ -816,6 +816,12 @@ h1.listing + .post-meta::after {
 		0 1px 0 #090, 
 		0 0 5px #090;
 }
+.post-meta .post-section.alignment-forum::before {
+	text-shadow:
+		1px 1px 0   #626dd7, 
+		0   1px 0   #626dd7, 
+		0   0   5px #626dd7;
+}
 .post-meta .date {
 	color: #888;
 }

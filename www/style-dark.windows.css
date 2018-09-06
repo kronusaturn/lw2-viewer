@@ -1165,6 +1165,10 @@ h1.listing + .post-meta .read-time {
 .post-section.draft::before {
 	content: "\F15B";
 }
+.post-section.alignment-forum::before {
+	content: "AF";
+	font-family: Concourse;
+}
 
 /*********/
 /* POSTS */
@@ -4432,6 +4436,12 @@ h1.listing + .post-meta::after {
 		1px 1px 0 #9740cb, 
 		0 1px 0 #9740cb, 
 		0 0 5px #9740cb;
+}
+.post-meta .post-section.alignment-forum::before {
+	text-shadow:
+		1px 1px 0   #658100, 
+		0   1px 0   #658100, 
+		0   0   5px #658100;
 }
 .post-meta .date {
 	color: #666;

@@ -1172,6 +1172,10 @@ h1.listing + .post-meta .read-time {
 .post-section.draft::before {
 	content: "\F15B";
 }
+.post-section.alignment-forum::before {
+	content: "AF";
+	font-family: Concourse;
+}
 
 /*********/
 /* POSTS */
