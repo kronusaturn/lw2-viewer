@@ -14,7 +14,7 @@
 
 (defvar *cookie-jar* (make-instance 'drakma:cookie-jar))
 
-(defparameter *posts-index-fields* '(:title :--id :slug :user-id :posted-at :base-score :comment-count :page-url :url :word-count :frontpage-date :curated-date :meta :draft (:all-votes :vote-type)))
+(defparameter *posts-index-fields* '(:title :--id :slug :user-id :posted-at :base-score :comment-count :page-url :url :word-count :frontpage-date :curated-date :meta :draft :af (:all-votes :vote-type)))
 (defparameter *comments-index-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id (:parent-comment :--id :user-id :post-id) :base-score :page-url (:all-votes :vote-type) :html-body))
 (defparameter *messages-index-fields* '(:--id :user-id :created-at :content (:conversation :--id :title) :----typename))
 
@@ -338,7 +338,7 @@
   (process-vote-result (lw2-graphql-query (format nil "{PostsSingle(documentId:\"~A\") {_id, currentUserVotes{voteType}}}" post-id) :auth-token auth-token))) 
 
 (defun get-post-body (post-id &key (revalidate t) force-revalidate auth-token)
-  (let ((query-string (format nil "{PostsSingle(documentId:\"~A\") {title, _id, slug, userId, postedAt, baseScore, commentCount, pageUrl, url, frontpageDate, meta, draft, allVotes{voteType}, htmlBody}}" post-id)))
+  (let ((query-string (format nil "{PostsSingle(documentId:\"~A\") {title, _id, slug, userId, postedAt, baseScore, commentCount, pageUrl, url, frontpageDate, meta, draft, af, allVotes{voteType}, htmlBody}}" post-id)))
     (if auth-token
         (lw2-graphql-query query-string :auth-token auth-token)
         (lw2-graphql-query-timeout-cached query-string "post-body-json" post-id :revalidate revalidate :force-revalidate force-revalidate))))

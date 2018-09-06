@@ -78,6 +78,7 @@
                (frontpage-date (or null string))
                (curated-date (or null string))
                (meta boolean)
+               (af boolean)
                (all-votes list)
                (draft boolean))
     post
@@ -101,6 +102,7 @@
               (cond ((eq skip-section t) nil)
                     (draft nil)
                     (curated-date (if (eq skip-section :featured) nil (list "featured" "Featured post")))
+                    (af (if (eq skip-section :alignment-forum) nil (list "alignment-forum" "Alignment Forum post")))
                     (frontpage-date (if (eq skip-section :frontpage) nil (list "frontpage" "Frontpage post")))
                     (meta (if (eq skip-section :meta) nil (list "meta" "Meta post")))
                     (t (if (eq skip-section :personal) nil (list "personal" "Personal post"))))))
@@ -120,6 +122,7 @@
                (curated-date (or null string))
                (meta boolean)
                (draft boolean)
+               (af boolean)
                (all-votes list)
                (html-body (or null string)))
     post
@@ -138,6 +141,7 @@
               (clean-lw-link page-url)
               (cond (draft (list "draft" "Draft post"))
                     (curated-date (list "featured" "Featured post"))
+                    (af (list "alignment-forum" "Alignment Forum post"))
                     (frontpage-date (list "frontpage" "Frontpage post"))
                     (meta (list "meta" "Meta post"))
                     (t (list "personal" "Personal post")))))
@@ -714,6 +718,7 @@
                                                                  ("featured" (alist :view "curated"))
                                                                  ("new" (alist :view "community-rss"))
                                                                  ("meta" (alist :view "new" :meta t :all t))
+                                                                 ("alignment-forum" (alist :view "new" :af t))
                                                                  (t (alist :view (or view "community-rss"))))
                                               (remove-if (lambda (x) (null (cdr x)))
                                                          (alist :before before :after after :limit 20 :offset offset))))
@@ -722,6 +727,7 @@
                                           (section (cond ((string= view "frontpage") :frontpage)
                                                          ((string= view "featured") :featured)
                                                          ((string= view "meta") :meta)
+                                                         ((string= view "alignment-forum") :alignment-forum)
                                                          (t :all))))
                                      (view-items-index posts :section section :title (format nil "~@(~A posts~)" section) :with-offset (or offset 0)))))
 
