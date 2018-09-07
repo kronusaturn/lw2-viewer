@@ -4437,11 +4437,17 @@ h1.listing + .post-meta::after {
 		0 1px 0 #9740cb, 
 		0 0 5px #9740cb;
 }
+a.post-section:hover::before {
+    color: #2e0062;
+}
 .post-meta .post-section.alignment-forum::before {
 	text-shadow:
 		1px 1px 0   #658100, 
 		0   1px 0   #658100, 
 		0   0   5px #658100;
+}
+a.post-section.alignment-forum:hover::before {
+    color: #181a00;
 }
 .post-meta .date {
 	color: #666;
