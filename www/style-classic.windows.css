@@ -4151,7 +4151,7 @@ h1.listing + .post-meta .lw2-link {
 h1.listing + .post-meta .post-section {
 	margin: 0;
 }
-h1.listing + .post-meta span.post-section::before {
+h1.listing + .post-meta .post-section::before {
 	left: unset;
 	right: calc(100% + 1.25em);
 	top: -1.75em;
@@ -4372,12 +4372,12 @@ a.post-section.alignment-forum:hover::before {
 	content: ")"
 }
 
-.post .post-meta span.post-section::before {
+.post .post-meta .post-section::before {
 	position: absolute;
 	top: 1px;
 	left: 0;
 }
-.post .bottom-post-meta span.post-section::before {
+.post .bottom-post-meta .post-section::before {
 	top: 21px;
 }
 
