@@ -738,6 +738,12 @@ h1.listing + .post-meta .link-post-domain {
 		0 1px 0 #ccc, 
 		0 0 5px #ccc;
 }
+.post-meta .post-section.alignment-forum::before {
+	text-shadow:
+		1px 1px 0   #b9bbff,
+		0   1px 0   #b9bbff,
+		0   0   5px #b9bbff;
+}
 
 /*============*/
 /* LINK POSTS */
