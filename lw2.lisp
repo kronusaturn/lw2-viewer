@@ -66,6 +66,24 @@
       (format nil "~A vote~:*~P" (length vote-list))
       ""))
 
+(defun post-section-to-html (out-stream post &key skip-section)
+  (alist-bind ((user-id string)
+               (frontpage-date (or null string))
+               (curated-date (or null string))
+               (meta boolean)
+               (af boolean)
+               (draft boolean))
+    post
+    (format out-stream "~1{<a class=\"post-section ~A\" title=\"~A\"~1@{ href=\"~A\"~}></a>~}"
+            (cond (af (if (eq skip-section :alignment-forum) nil (list "alignment-forum" "View Alignment Forum posts" "/index?view=alignment-forum")))
+                  ; show alignment forum even if skip-section is t
+                  ((eq skip-section t) nil)
+                  (draft nil)
+                  (curated-date (if (eq skip-section :featured) nil (list "featured" "View Featured posts" "/index?view=featured")))
+                  (frontpage-date (if (eq skip-section :frontpage) nil (list "frontpage" "View Frontpage posts" "/")))
+                  (meta (if (eq skip-section :meta) nil (list "meta" "View Meta posts" "/index?view=meta")))
+                  (t (if (eq skip-section :personal) nil (list "personal" (format nil "View posts by ~A" (get-username user-id)) (format nil "/users/~A?show=posts" (get-user-slug user-id)))))))))
+
 (defun post-headline-to-html (out-stream post &key skip-section need-auth)
   (alist-bind ((title string)
                (user-id string)
@@ -83,7 +101,7 @@
                (draft boolean))
     post
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      (format out-stream "<h1 class=\"listing~:[~; link-post-listing~]\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~A</a></h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"comment-count\" href=\"~A#comments\">~A</a>~:[~*~;~:*<span class=\"read-time\" title=\"~:D word~:P\">~:D<span> min read</span></span>~]~@[<a class=\"lw2-link\" href=\"~A\">LW<span> link</span></a>~]~1{<span class=\"post-section ~A\" title=\"~A\"></span>~}"
+      (format out-stream "<h1 class=\"listing~:[~; link-post-listing~]\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~A</a></h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"comment-count\" href=\"~A#comments\">~A</a>~:[~*~;~:*<span class=\"read-time\" title=\"~:D word~:P\">~:D<span> min read</span></span>~]~@[<a class=\"lw2-link\" href=\"~A\">LW<span> link</span></a>~]"
               url
               (if url (encode-entities (string-trim " " url)))
               (generate-post-auth-link post nil nil need-auth)
@@ -98,15 +116,8 @@
               (pretty-number (or comment-count 0) "comment")
               word-count
               (and word-count (max 1 (round word-count 300)))
-              (clean-lw-link page-url)
-              (cond (af (if (eq skip-section :alignment-forum) nil (list "alignment-forum" "Alignment Forum post")))
-                    ; show alignment forum even if skip-section is t
-                    ((eq skip-section t) nil)
-                    (draft nil)
-                    (curated-date (if (eq skip-section :featured) nil (list "featured" "Featured post")))
-                    (frontpage-date (if (eq skip-section :frontpage) nil (list "frontpage" "Frontpage post")))
-                    (meta (if (eq skip-section :meta) nil (list "meta" "Meta post")))
-                    (t (if (eq skip-section :personal) nil (list "personal" "Personal post"))))))
+              (clean-lw-link page-url)))
+    (post-section-to-html out-stream post :skip-section skip-section)
     (if url (format out-stream "<div class=\"link-post-domain\">(~A)</div>" (encode-entities (puri:uri-host (puri:parse-uri (string-trim " " url))))))
     (format out-stream "</div>")))
 
@@ -128,7 +139,7 @@
                (html-body (or null string)))
     post
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      (format out-stream "<div class=\"post~:[~; link-post~]\"><h1>~A</h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A</a>~@[<a class=\"lw2-link\" href=\"~A\">LW<span> link</span></a>~]~1{<span class=\"post-section ~A\" title=\"~A\"></span>~}</div><div class=\"post-body\">"
+      (format out-stream "<div class=\"post~:[~; link-post~]\"><h1>~A</h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A</a>~@[<a class=\"lw2-link\" href=\"~A\">LW<span> link</span></a>~]"
               url
               (encode-entities (clean-text title))
               (encode-entities (get-user-slug user-id))
@@ -139,13 +150,9 @@
               (vote-list-to-tooltip all-votes)
               (pretty-number base-score "point")
               (pretty-number (or comment-count 0) "comment")
-              (clean-lw-link page-url)
-              (cond (draft (list "draft" "Draft post"))
-                    (curated-date (list "featured" "Featured post"))
-                    (af (list "alignment-forum" "Alignment Forum post"))
-                    (frontpage-date (list "frontpage" "Frontpage post"))
-                    (meta (list "meta" "Meta post"))
-                    (t (list "personal" "Personal post")))))
+              (clean-lw-link page-url)))
+    (post-section-to-html out-stream post)
+    (format out-stream "</div><div class=\"post-body\">")
     (if url (format out-stream "<p><a href=\"~A\" class=\"link-post-link\">Link post</a></p>" (encode-entities (string-trim " " url))))
     (write-sequence (clean-html* (or html-body "") :with-toc t :post-id post-id) out-stream)
     (format out-stream "</div></div>")))
@@ -681,10 +688,7 @@
                                     (t (format out-stream "~@[~A~]" extra-html)))
                                   (funcall top-nav)
                                   (write-index-items-to-html out-stream items :need-auth need-auth
-                                                             :skip-section (case section
-                                                                             (:frontpage :frontpage)
-                                                                             (:featured t)
-                                                                             (:meta t)))))))
+                                                             :skip-section section)))))
 
 (defun link-if-not (stream linkp url class text)
   (declare (dynamic-extent linkp url text))
@@ -1002,6 +1006,7 @@
                                (with-next (> (length items) (+ (if show 0 offset) 20)))
                                (interleave (if (not show) (comment-post-interleave items :limit 20 :offset (if show nil offset) :sort-by sort-type) (firstn items 20)))) ; this destructively sorts items
                           (view-items-index interleave :with-offset offset :title title :content-class (format nil "user-page~@[ ~A-user-page~]" (if show show-text)) :current-uri (format nil "/users/~A" user-slug)
+                                            :section :personal
                                             :with-offset offset :with-next with-next
                                             :need-auth (eq show :drafts) :section (if (eq show :drafts) "drafts" nil)
                                             :hide-rss (member show '(:drafts :conversations :inbox))
