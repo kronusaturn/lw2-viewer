@@ -762,11 +762,17 @@ h1.listing + .post-meta {
 		0 0 5px #999;
 	margin: 0 0 0 0.5em;
 }
+a.post-section:hover::before {
+    color: #eee;
+}
 .post-meta .post-section.alignment-forum::before {
 	text-shadow:
 		1px 1px 0   #b9bbff,
 		0   1px 0   #b9bbff,
 		0   0   5px #b9bbff;
+}
+a.post-section.alignment-forum:hover::before {
+    color: #e7e8ff;
 }
 .post-meta > *,
 .comment-meta a {

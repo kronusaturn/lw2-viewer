@@ -676,11 +676,17 @@ h1.listing + .post-meta .link-post-domain {
 		0 1px 0 #090, 
 		0 0 5px #090;
 }
+a.post-section:hover::before {
+    color: #97ff7c;
+}
 .post-meta .post-section.alignment-forum::before {
 	text-shadow:
 		1px 1px 0   #626dd7,
 		0   1px 0   #626dd7,
 		0   0   5px #626dd7;
+}
+a.post-section.alignment-forum:hover::before {
+    color: #e6e5ff;
 }
 
 .bottom-post-meta {
