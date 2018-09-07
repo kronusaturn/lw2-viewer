@@ -290,7 +290,7 @@
 	   (type (integer 1) limit)
 	   (type boolean meta)
 	   (type (or string null) before after))
-  (format nil "{PostsList (terms:{view:\"~A\",limit:~A,meta:~A~A~A}) {title, _id, slug, userId, postedAt, baseScore, commentCount, pageUrl, url, wordCount, frontpageDate, curatedDate, meta, allVotes{voteType}~A}}"
+  (format nil "{PostsList (terms:{view:\"~A\",limit:~A,meta:~A~A~A}) {title, _id, slug, userId, postedAt, baseScore, commentCount, pageUrl, url, wordCount, frontpageDate, curatedDate, af, meta, allVotes{voteType}~A}}"
 	  view
 	  limit
 	  (if meta "true" "false")

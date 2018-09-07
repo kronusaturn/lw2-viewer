@@ -99,10 +99,11 @@
               word-count
               (and word-count (max 1 (round word-count 300)))
               (clean-lw-link page-url)
-              (cond ((eq skip-section t) nil)
+              (cond (af (if (eq skip-section :alignment-forum) nil (list "alignment-forum" "Alignment Forum post")))
+                    ; show alignment forum even if skip-section is t
+                    ((eq skip-section t) nil)
                     (draft nil)
                     (curated-date (if (eq skip-section :featured) nil (list "featured" "Featured post")))
-                    (af (if (eq skip-section :alignment-forum) nil (list "alignment-forum" "Alignment Forum post")))
                     (frontpage-date (if (eq skip-section :frontpage) nil (list "frontpage" "Frontpage post")))
                     (meta (if (eq skip-section :meta) nil (list "meta" "Meta post")))
                     (t (if (eq skip-section :personal) nil (list "personal" "Personal post"))))))
