@@ -324,10 +324,15 @@ a#inbox-indicator.new-messages:hover::before {
 
 .sublevel-nav.sort {
 	position: absolute;
-	top: 167px;
 	right: 30px;
 	font-size: 0.75em;
 	flex-flow: column;
+}
+.index-page .sublevel-nav.sort {
+	top: 118px;
+}
+.user-page .sublevel-nav.sort {
+	top: 167px;
 }
 .sublevel-nav.sort::before {
 	content: "Sort";
@@ -3155,6 +3160,12 @@ div > .MJXc-display {
 /* SORT ORDER SELECTOR */
 /*=====================*/
 
+@media only screen and (max-width: 720px) {
+	.sublevel-nav.sort {
+		margin-top: 20px;
+	}
+}
+
 /*==========*/
 /* ARCHIVES */
 /*==========*/
@@ -3627,6 +3638,7 @@ a.comment-parent-link::after {
 }
 
 } /* END MOBILE LAYOUT */
+
 
 /**************/
 /* THEME ZERO */

@@ -534,7 +534,7 @@
             robots)
     (format out-stream "</head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
             content-class
-            (user-nav-bar (or current-uri (replace-query-params (hunchentoot:request-uri*) "offset" nil)))))
+            (user-nav-bar (or current-uri (replace-query-params (hunchentoot:request-uri*) "offset" nil "sort" nil)))))
   (force-output out-stream))
 
 (defun replace-query-params (uri &rest params)
@@ -704,24 +704,32 @@
 (defun post-or-get-parameter (name)
   (or (hunchentoot:post-parameter name) (hunchentoot:get-parameter name)))
 
-(hunchentoot:define-easy-handler (view-root :uri "/") (offset)
+(hunchentoot:define-easy-handler (view-root :uri "/") (offset sort)
 				 (with-error-page
 				   (let* ((offset (and offset (parse-integer offset)))
-					  (posts (if offset
+					  (posts (if (or offset sort)
 						   (lw2-graphql-query (graphql-query-string "PostsList"
-											    (alist :terms (alist :view "frontpage-rss" :limit 20 :offset offset))
+											    (alist :terms
+                                                                                                   (remove-if (lambda (x) (null (cdr x)))
+                                                                                                              (alist :view (if (string= sort "hot") "magicalSorting" "frontpage-rss") :limit 20 :offset offset)))
 											    *posts-index-fields*))
 						   (get-posts))))
-				     (view-items-index posts :section :frontpage :title "Frontpage posts" :hide-title t :with-offset (or offset 0)))))
+				     (view-items-index posts :section :frontpage :title "Frontpage posts" :hide-title t :with-offset (or offset 0)
+                                                       :extra-html (lambda (out-stream)
+                                                                     (sublevel-nav-to-html out-stream
+                                                                                           '((nil "New") ("hot" "Hot"))
+                                                                                           sort
+                                                                                           :param-name "sort"
+                                                                                           :extra-class "sort"))))))
 
-(hunchentoot:define-easy-handler (view-index :uri "/index") (view before after offset)
+(hunchentoot:define-easy-handler (view-index :uri "/index") (view before after offset sort)
                                  (with-error-page
                                    (let* ((offset (and offset (parse-integer offset)))
                                           (terms
                                             (nconc
                                               (alexandria:switch (view :test #'string=)
                                                                  ("featured" (alist :view "curated"))
-                                                                 ("new" (alist :view "community-rss"))
+                                                                 ("new" (alist :view (if (string= sort "hot") "community" "community-rss")))
                                                                  ("meta" (alist :view "new" :meta t :all t))
                                                                  ("alignment-forum" (alist :view "new" :af t))
                                                                  (t (alist :view (or view "community-rss"))))
@@ -734,7 +742,14 @@
                                                          ((string= view "meta") :meta)
                                                          ((string= view "alignment-forum") :alignment-forum)
                                                          (t :all))))
-                                     (view-items-index posts :section section :title (format nil "~@(~A posts~)" section) :with-offset (or offset 0)))))
+                                     (view-items-index posts :section section :title (format nil "~@(~A posts~)" section) :with-offset (or offset 0)
+                                                       :extra-html (lambda (out-stream)
+                                                                     (if (string= view "new")
+                                                                         (sublevel-nav-to-html out-stream
+                                                                                               '((nil "New") ("hot" "Hot"))
+                                                                                               sort
+                                                                                               :param-name "sort"
+                                                                                               :extra-class "sort")))))))
 
 (hunchentoot:define-easy-handler (view-post :uri "/post") (id)
 				 (with-error-page

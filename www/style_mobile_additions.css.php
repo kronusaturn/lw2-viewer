@@ -555,6 +555,12 @@
 /* SORT ORDER SELECTOR */
 /*=====================*/
 
+@media only screen and (max-width: 720px) {
+	.sublevel-nav.sort {
+		margin-top: 20px;
+	}
+}
+
 /*==========*/
 /* ARCHIVES */
 /*==========*/

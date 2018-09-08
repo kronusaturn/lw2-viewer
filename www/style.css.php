@@ -330,10 +330,15 @@ a#inbox-indicator.new-messages:hover::before {
 
 .sublevel-nav.sort {
 	position: absolute;
-	top: 167px;
 	right: 30px;
 	font-size: 0.75em;
 	flex-flow: column;
+}
+.index-page .sublevel-nav.sort {
+	top: 118px;
+}
+.user-page .sublevel-nav.sort {
+	top: 167px;
 }
 .sublevel-nav.sort::before {
 	content: "Sort";
