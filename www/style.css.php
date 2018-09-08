@@ -272,10 +272,7 @@ a#inbox-indicator.new-messages:hover::before {
 .sublevel-nav + #top-nav-bar {
 	margin-top: 0.25em;
 }
-.sublevel-nav + #top-nav-bar + h1.listing {
-	margin-top: 1.5em;
-}
-.archive-nav + #top-nav-bar + h1.listing {
+.user-page .archive-nav + #top-nav-bar + h1.listing {
 	margin-top: 0.25em;
 }
 #top-nav-bar a {
@@ -335,7 +332,9 @@ a#inbox-indicator.new-messages:hover::before {
 	flex-flow: column;
 }
 .index-page .sublevel-nav.sort {
-	top: 118px;
+	top: 83px;
+	right: unset;
+	left: 20px;
 }
 .user-page .sublevel-nav.sort {
 	top: 167px;
