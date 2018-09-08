@@ -33,7 +33,7 @@
 (defun encode-entities (text)
   (handler-bind
     (((or plump:invalid-xml-character plump:discouraged-xml-character) #'abort))
-    (plump:encode-entities text)))
+    (plump:encode-entities (format nil "~A" text))))
 
 (defun generate-post-auth-link (post &optional comment-id absolute need-auth)
   (if need-auth
