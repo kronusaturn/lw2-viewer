@@ -230,12 +230,12 @@
               js-time
               pretty-time
               (encode-entities (cdr (assoc :--id conversation)))
-              (encode-entities (cdr (assoc :title conversation)))))
+              (encode-entities (or (cdr (assoc :title conversation)) "[Untitled conversation]"))))
     (format out-stream "~{<p>~A</p>~}</div></div>" (loop for block in (cdr (assoc :blocks content)) collect (encode-entities (cdr (assoc :text block)))))))
 
 (defun conversation-index-to-html (out-stream conversation)
   (alist-bind ((conversation-id string :--id)
-               (title string)
+               (title (or null string))
                (created-at (or null string))
                (participants list)
                (messages-total fixnum))
@@ -243,7 +243,7 @@
     (multiple-value-bind (pretty-time js-time) (if created-at (pretty-time created-at) (values "[Error]" 0))
       (format out-stream "<h1 class=\"listing\"><a href=\"/conversation?id=~A\">~A</a></h1><div class=\"post-meta\"><div class=\"conversation-participants\"><ul>~:{<li><a href=\"/users/~A\">~A</a></li>~}</ul></div><div class=\"messages-count\">~A</div><div class=\"date\" data-js-date=\"~A\">~A</div></div>"
               (encode-entities conversation-id)
-              (encode-entities title)
+              (encode-entities (or title "[Untitled conversation]"))
               (loop for p in participants
                     collect (list (encode-entities (cdr (assoc :slug p))) (encode-entities (cdr (assoc :display-name p)))))
               (pretty-number messages-total "message")
