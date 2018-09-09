@@ -461,7 +461,7 @@ a.nav-inner,
 	font-weight: 300;
 	background-color: #f0f0eb;
 	color: #333;
-    text-shadow: 0px 0px 0.5px #333;
+	text-shadow: 0px 0px 0.5px #333;
 }
 .archive-nav a:active {
 	transform: scale(0.9);
@@ -682,8 +682,8 @@ h1.listing + .post-meta .link-post-domain {
 	display: none;
 }
 .post-body .contents ul {
-    margin: 0 0.5em;
-    padding: 0 1em;
+	margin: 0 0.5em;
+	padding: 0 1em;
 }
 .post-body .contents a,
 .post-body .contents a:visited {
@@ -732,16 +732,16 @@ h1.listing + .post-meta .link-post-domain {
 .post-body a:visited::after,
 .comment-body a:link::after,
 .comment-body a:visited::after {
-    position: relative;
-    content: "﻿°";
-    margin-left: 2px;
-    margin-right: 1px;
-    color: #933;
+	position: relative;
+	content: "﻿°";
+	margin-left: 2px;
+	margin-right: 1px;
+	color: #933;
 }
 .post-body a:hover,
 .comment-body a:hover {
-    color: #999;
-    border-bottom: 1px dotted #999;
+	color: #999;
+	border-bottom: 1px dotted #999;
 }
 
 /*===========*/
@@ -762,8 +762,8 @@ h1.listing + .post-meta {
 		0 0 5px #999;
 	margin: 0 0 0 0.5em;
 }
-a.post-section:hover::before {
-    color: #eee;
+a.post-section:hover {
+	text-decoration: none;
 }
 .post-meta .post-section.alignment-forum::before {
 	text-shadow:
@@ -772,7 +772,7 @@ a.post-section:hover::before {
 		0   0   5px #b9bbff;
 }
 a.post-section.alignment-forum:hover::before {
-    color: #e7e8ff;
+	color: #e7e8ff;
 }
 .post-meta > *,
 .comment-meta a {
@@ -1129,10 +1129,10 @@ div.comment-child-links a::first-letter {
 .posting-controls.edit-existing-post textarea:focus,
 .posting-controls form.edit-existing-comment textarea:focus {
 	border-color: #090;
-    box-shadow: 
-    	0 0 0 1px #81ff7f inset,
-    	0 0 0 1px #fff,
-    	0 0 0 2px #090;
+	box-shadow: 
+		0 0 0 1px #81ff7f inset,
+		0 0 0 1px #fff,
+		0 0 0 2px #090;
 }
 
 /* GUIEdit buttons */
@@ -1143,7 +1143,7 @@ div.comment-child-links a::first-letter {
 
 .posting-controls.edit-existing-post .guiedit-buttons-container button,
 .posting-controls form.edit-existing-comment .guiedit-buttons-container button {
-    color: #050;
+	color: #050;
 }
 .guiedit-buttons-container button {
 	font-family: Font Awesome, <?php echo $text_font; ?>;

@@ -594,8 +594,11 @@ h1.listing + .post-meta .karma-value {
 		0 1px 0 #090, 
 		0 0 5px #090;
 }
+a.post-section:hover {
+	text-decoration: none;
+}
 a.post-section:hover::before {
-    color: #97ff7c;
+	color: #97ff7c;
 }
 .post-meta .post-section.alignment-forum::before {
 	text-shadow:
@@ -604,7 +607,8 @@ a.post-section:hover::before {
 		0   0   5px #626dd7;
 }
 a.post-section.alignment-forum:hover::before {
-    color: #e6e5ff;
+	color: #e6e5ff;
+	text-decoration: none;
 }
 .post-meta .date {
 	color: #888;
@@ -969,7 +973,7 @@ div.comment-child-links a::first-letter {
 
 .posting-controls.edit-existing-post .guiedit-buttons-container button,
 .posting-controls form.edit-existing-comment .guiedit-buttons-container button {
-    color: #050;
+	color: #050;
 }
 .guiedit-buttons-container button {
 	font-family: Font Awesome, <?php echo $text_font; ?>;

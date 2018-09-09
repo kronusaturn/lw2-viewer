@@ -33,7 +33,7 @@ body {
 	color: #ccc;
 }
 #secondary-bar .nav-inner {
-    font-size: 0.875rem;
+	font-size: 0.875rem;
 }
 #secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
 	padding: 5px 0 3px 0;
@@ -99,7 +99,7 @@ body {
 /* Search tab */
 
 #nav-item-search form::before {
-    opacity: 0.4;
+	opacity: 0.4;
 	font-size: 0.9375rem;
 }
 #nav-item-search button {
@@ -397,7 +397,7 @@ body {
 h1.listing {
 	margin: 0.7em 20px 0.1em 20px;
 	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
-    font-size: 1.5rem;
+	font-size: 1.5rem;
 }
 h1.listing a[href^='/'] {
 	font-family: <?php echo $text_font; ?>;
@@ -445,17 +445,17 @@ h1.listing a[href^="http"] {
 /*===================*/
 
 h1.listing + .post-meta > * {
-    color: #222;
-    font-size: 1em;
+	color: #222;
+	font-size: 1em;
 }
 h1.listing + .post-meta .karma::after {
-    content: " by";
+	content: " by";
 }
 h1.listing + .post-meta .date::before {
-    content: "on ";
+	content: "on ";
 }
 h1.listing + .post-meta .date::after {
-    content: " — ";
+	content: " — ";
 	opacity: 0.5;
 	margin: 0 0.5em 0 0.125em;
 }
@@ -738,8 +738,11 @@ h1.listing + .post-meta .link-post-domain {
 		0 1px 0 #ccc, 
 		0 0 5px #ccc;
 }
+a.post-section:hover {
+	text-decoration: none;
+}
 a.post-section:hover::before {
-    color: #999;
+	color: #999;
 }
 .post-meta .post-section.alignment-forum::before {
 	text-shadow:
@@ -748,7 +751,7 @@ a.post-section:hover::before {
 		0   0   5px #b9bbff;
 }
 a.post-section.alignment-forum:hover::before {
-    color: #9093d4;
+	color: #9093d4;
 }
 
 /*============*/
@@ -1088,36 +1091,36 @@ div.comment-child-links a::first-letter {
 /* GUIEdit buttons */
 
 .guiedit-buttons-container {
-    background-color: #888;
-    box-shadow: 0 -1px 0 0 #999 inset;
+	background-color: #888;
+	box-shadow: 0 -1px 0 0 #999 inset;
 }
 .textarea-container:focus-within .guiedit-buttons-container {
-    box-shadow: 0 -1px 0 0 #ccc inset;
+	box-shadow: 0 -1px 0 0 #ccc inset;
 }
 
 button.guiedit {
-    color: #444;
-    background-color: transparent;
+	color: #444;
+	background-color: transparent;
 	font-family: Font Awesome, Source Sans Pro, Trebuchet MS, Helvetica, Arial, Verdana, sans-serif;
 }
 button.guiedit::after {
-    font-family: Proxima Nova;
-    font-weight: 300;
-    color: #444;
-    top: 2px;
-    height: 25px;
+	font-family: Proxima Nova;
+	font-weight: 300;
+	color: #444;
+	top: 2px;
+	height: 25px;
 }
 button.guiedit:hover {
-    color: #ccc;
+	color: #ccc;
 }
 
 /* Markdown hints */
 
 #markdown-hints-checkbox + label {
-    color: #444;
+	color: #444;
 }
 #markdown-hints-checkbox + label:hover {
-    text-decoration: underline;
+	text-decoration: underline;
 }
 .markdown-hints {
 	background-color: #888;
@@ -1135,7 +1138,7 @@ button.guiedit:hover {
 }
 #edit-post-form .link-post-checkbox + label:hover,
 #edit-post-form .link-post-checkbox:focus + label {
-    text-decoration: underline;
+	text-decoration: underline;
 }
 #edit-post-form .link-post-checkbox + label:hover::before,
 #edit-post-form .link-post-checkbox:focus + label::before {
@@ -1187,8 +1190,8 @@ a:hover {
 
 button,
 input[type='submit'] {
-    color: #444;
-    font-weight: normal;
+	color: #444;
+	font-weight: normal;
 }
 
 .button,

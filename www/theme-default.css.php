@@ -816,8 +816,11 @@ h1.listing + .post-meta::after {
 		0 1px 0 #090, 
 		0 0 5px #090;
 }
+a.post-section:hover {
+	text-decoration: none;
+}
 a.post-section:hover::before {
-    color: #97ff7c;
+	color: #97ff7c;
 }
 .post-meta .post-section.alignment-forum::before {
 	text-shadow:
@@ -826,7 +829,7 @@ a.post-section:hover::before {
 		0   0   5px #626dd7;
 }
 a.post-section.alignment-forum:hover::before {
-    color: #e6e5ff;
+	color: #e6e5ff;
 }
 .post-meta .date {
 	color: #888;

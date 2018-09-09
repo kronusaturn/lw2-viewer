@@ -12,7 +12,7 @@
 
 body {
 	color: #000;
-    background-color: #eee;
+	background-color: #eee;
 	font-family: <?php echo $UI_font; ?>;
 	font-feature-settings: 'ss07';
 }
@@ -35,7 +35,7 @@ body {
 	font-weight: 600;
 }
 #secondary-bar .nav-inner {
-    font-size: 0.875rem;
+	font-size: 0.875rem;
 }
 #secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
 	padding: 5px 0 3px 0;
@@ -80,7 +80,7 @@ body {
 
 .nav-bar a:link,
 .nav-bar a:visited {
-    color: #888;
+	color: #888;
 }
 .nav-bar a:hover,
 .nav-bar a:focus {
@@ -185,11 +185,11 @@ body {
 /* Search tab */
 
 #nav-item-search form::before {
-    opacity: 0.4;
+	opacity: 0.4;
 	font-size: 0.9375rem;
 }
 #nav-item-search button {
-    color: #999;
+	color: #999;
 	border: none;
 	font-weight: 600;
 }
@@ -469,7 +469,7 @@ h1.listing {
 	margin: 0.6em 20px 0 20px;
 	line-height: 1;
 	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
-    font-size: 1.5rem;
+	font-size: 1.5rem;
 }
 h1.listing a[href^='/'] {
 	font-weight: normal;
@@ -506,17 +506,17 @@ h1.listing a[href^="http"] {
 /*===================*/
 
 h1.listing + .post-meta > * {
-    color: #222;
-    font-size: 1em;
+	color: #222;
+	font-size: 1em;
 }
 h1.listing + .post-meta .karma::after {
-    content: " by";
+	content: " by";
 }
 h1.listing + .post-meta .date::before {
-    content: "on ";
+	content: "on ";
 }
 h1.listing + .post-meta .date::after {
-    content: " — ";
+	content: " — ";
 	opacity: 0.5;
 	margin: 0 0.5em 0 0.125em;
 }
@@ -783,8 +783,11 @@ h1.listing + .post-meta .link-post-domain {
 		0 1px 0 #090, 
 		0 0 5px #090;
 }
+a.post-section:hover {
+	text-decoration: none;
+}
 a.post-section:hover::before {
-    color: #97ff7c;
+	color: #97ff7c;
 }
 .post-meta .post-section.alignment-forum::before {
 	text-shadow:
@@ -793,7 +796,7 @@ a.post-section:hover::before {
 		0   0   5px #626dd7;
 }
 a.post-section.alignment-forum:hover::before {
-    color: #e6e5ff;
+	color: #e6e5ff;
 }
 
 .bottom-post-meta {
@@ -1152,10 +1155,10 @@ div.comment-child-links a::first-letter {
 .posting-controls.edit-existing-post textarea:focus,
 .posting-controls form.edit-existing-comment textarea:focus {
 	border-color: #090;
-    box-shadow: 
-    	0 0 0 1px #81ff7f inset,
-    	0 0 0 1px #fff,
-    	0 0 0 2px #090;
+	box-shadow: 
+		0 0 0 1px #81ff7f inset,
+		0 0 0 1px #fff,
+		0 0 0 2px #090;
 }
 
 /* GUIEdit buttons */
@@ -1166,7 +1169,7 @@ div.comment-child-links a::first-letter {
 
 .posting-controls.edit-existing-post .guiedit-buttons-container button,
 .posting-controls form.edit-existing-comment .guiedit-buttons-container button {
-    color: #050;
+	color: #050;
 }
 button.guiedit {
 	font-family: Font Awesome, <?php echo $text_font; ?>;

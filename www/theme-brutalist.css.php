@@ -374,11 +374,11 @@ h1.listing {
 h1.listing a[href^="http"] {
 	font-size: 0.7em;
 	top: 6px;
-    color: #fff;
-    text-shadow: 
-         0.5px 0.5px 0 #000, 
-        -0.5px -0.5px 0 #000,
-         0 0 2px #000;
+	color: #fff;
+	text-shadow: 
+		 0.5px 0.5px 0 #000, 
+		-0.5px -0.5px 0 #000,
+		 0 0 2px #000;
 }
 
 @media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
@@ -591,8 +591,11 @@ h1.listing + .post-meta .read-time {
 		0 1px 0 #777, 
 		0 0 5px #777;
 }
+a.post-section:hover {
+	text-decoration: none;
+}
 a.post-section:hover::before {
-    color: #eee;
+	color: #eee;
 }
 .post-meta .date {
 	color: #888;
@@ -614,9 +617,9 @@ a.post-section:hover::before {
 .post.link-post a.link-post-link::before {
 	color: #fff;
 	text-shadow: 
-         0.5px 0.5px 0 #000, 
-        -0.5px -0.5px 0 #000,
-         0 0 2px #000;
+		 0.5px 0.5px 0 #000, 
+		-0.5px -0.5px 0 #000,
+		 0 0 2px #000;
 }
 .post.link-post a.link-post-link:hover {
 	color: inherit;
@@ -711,15 +714,15 @@ div.comment-child-links a::first-letter {
 
 .comment-item-highlight,
 .comment-item-highlight-faint {
-    border: 2px solid #ccc;
+	border: 2px solid #ccc;
 }
 
 .comment-popup {
-    border: 2px solid #000;
-    background-color: #fff;
+	border: 2px solid #000;
+	background-color: #fff;
 }
 .comment-popup .comment-body {
-    font-size: 0.9375rem;
+	font-size: 0.9375rem;
 }
 
 /*====================*/
@@ -938,7 +941,7 @@ div.comment-child-links a::first-letter {
 
 .posting-controls.edit-existing-post .guiedit-buttons-container button,
 .posting-controls form.edit-existing-comment .guiedit-buttons-container button {
-    color: #050;
+	color: #050;
 }
 
 button.guiedit {
@@ -1144,7 +1147,7 @@ hr {
 }
 
 code {
-    border: 1px dotted #000;
+	border: 1px dotted #000;
 }
 
 input[type='text'],
