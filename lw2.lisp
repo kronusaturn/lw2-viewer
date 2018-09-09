@@ -807,17 +807,21 @@
                                                          (comment-thread-to-html out-stream
                                                            (lambda ()
                                                              (comment-item-to-html out-stream
-                                                                                   target
-                                                                                   :extra-html-fn (lambda (c-id)
-                                                                                                    (let ((*comment-individual-link* nil))
-                                                                                                      (comment-tree-to-html out-stream (make-comment-parent-hash comments) c-id))))))
+                                                               target
+                                                               :extra-html-fn (lambda (c-id)
+                                                                                (let ((*comment-individual-link* nil))
+                                                                                  (comment-tree-to-html out-stream (make-comment-parent-hash comments) c-id))))))
                                                          (if chrono
                                                              (comment-chrono-to-html out-stream comments)
                                                              (comment-tree-to-html out-stream (make-comment-parent-hash comments))))
-                                                     (format out-stream "</div>")
+                                                     (format out-stream "</div>"))
+                                                   (output-comments-votes (out-stream)
                                                      (when lw2-auth-token
-                                                       (force-output out-stream)
-                                                       (format out-stream "<script>commentVotes=~A</script>" (json:encode-json-to-string (get-post-comments-votes post-id lw2-auth-token))))))
+                                                       (format out-stream "<script>commentVotes=~A</script>"
+                                                               (json:encode-json-to-string (get-post-comments-votes post-id lw2-auth-token)))))
+                                                   (output-post-vote (out-stream)
+                                                     (format out-stream "<script>postVote=~A</script>"
+                                                             (json:encode-json-to-string (get-post-vote post-id lw2-auth-token)))))
                                             (multiple-value-bind (post title condition)
                                               (handler-case (nth-value 0 (get-post-body post-id :auth-token (and need-auth lw2-auth-token)))
                                                 (serious-condition (c) (values nil "Error" c))
@@ -832,13 +836,19 @@
                                                                      (encode-entities display-name)
                                                                      (generate-post-link post-id)
                                                                      (encode-entities title))
-                                                             (output-comments out-stream comments target-comment)))
+                                                             (output-comments out-stream comments target-comment)
+                                                             (when lw2-auth-token
+                                                               (force-output out-stream)
+                                                               (output-comments-votes out-stream))))
                                                 (emit-page (out-stream :title title :content-class "post-page")
                                                            (cond
                                                              (condition
                                                                (error-to-html out-stream condition))
                                                              (t
                                                               (post-body-to-html out-stream post)))
+                                                           (when (and lw2-auth-token (equal (logged-in-userid) (cdr (assoc :user-id post))))
+                                                             (format out-stream "<div class=\"post-controls\"><a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\" accesskey=\"e\" title=\"Edit post [e]\">Edit post</a></div>"
+                                                                     (cdr (assoc :--id post))))
                                                            (force-output out-stream)
                                                            (handler-case
                                                              (let ((comments (get-post-comments post-id)))
@@ -846,9 +856,8 @@
                                                              (serious-condition (c) (error-to-html out-stream c)))
                                                            (when lw2-auth-token
                                                              (force-output out-stream)
-                                                             (format out-stream "<script>postVote=~A</script>~@[<div class=\"post-controls\"><a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\" accesskey=\"e\" title=\"Edit post [e]\">Edit post</a></div>~]"
-                                                                     (json:encode-json-to-string (get-post-vote post-id lw2-auth-token))
-                                                                     (if (equal (logged-in-userid) (cdr (assoc :user-id post))) (cdr (assoc :--id post)))))))))))))))
+                                                             (output-post-vote out-stream)
+                                                             (output-comments-votes out-stream))))))))))))
 
 (defparameter *edit-post-template* (compile-template* "edit-post.html"))
 
