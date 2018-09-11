@@ -669,7 +669,26 @@
   (format out-stream "<input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><input type=\"submit\" value=\"~A\">~@[~A~]</form>"
 	  csrf-token button-label end-html))
 
-(defun view-items-index (items &key section with-offset (with-next t) title current-uri hide-title need-auth hide-rss extra-html page-toolbar-extra (content-class "index-page"))
+(defun page-toolbar-to-html (out-stream &key title new-post new-conversation logout (rss t))
+  (let ((liu (logged-in-userid)))
+    (format out-stream "<div class=\"page-toolbar\">")
+    (when logout
+      (format out-stream "<form method=\"post\" action=\"/logout\"><button class=\"logout-button button\" name=\"logout\" value=\"~A\">Log out</button></form>"
+              (make-csrf-token)))
+    (when (and new-conversation liu)
+      (multiple-value-bind (text to)
+        (typecase new-conversation (string (values "Send private message" new-conversation)) (t "New conversation"))
+        (format out-stream "<a class=\"new-private-message button\" href=\"/conversation~@[?to=~A~]\">~A</a>"
+                to text)))
+    (when (and new-post liu)
+      (format out-stream "<a class=\"new-post button\" href=\"/edit-post~@[?section=~A~]\" accesskey=\"n\" title=\"Create new post [n]\">New post</a>"
+              (typecase new-post (string new-post) (t nil))))
+    (when (and title rss)
+      (format out-stream "<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" title=\"~A RSS feed\" href=\"~A\">RSS</a>"
+              title (replace-query-params (hunchentoot:request-uri*) "offset" nil "format" "rss")))
+    (format out-stream "</div>")))
+
+(defun view-items-index (items &key section with-offset (with-next t) title current-uri hide-title need-auth (extra-html (lambda (s) (page-toolbar-to-html s :title title))) (content-class "index-page"))
   (alexandria:switch ((hunchentoot:get-parameter "format") :test #'string=)
                      ("rss" 
                       (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
@@ -678,11 +697,6 @@
                      (t
                        (emit-page (out-stream :title (if hide-title nil title) :description "A faster way to browse LessWrong 2.0" :content-class content-class :with-offset with-offset :with-next with-next
                                               :current-uri current-uri :robots (if (and with-offset (> with-offset 0)) "noindex, nofollow") :top-nav top-nav)
-                                  (format out-stream "<div class=\"page-toolbar\">~@[<a class=\"new-post button\" href=\"/edit-post?section=~A\" accesskey=\"n\" title=\"Create new post [n]\">New post</a>~]~@[~A~]~{~@[<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" title=\"~A RSS feed\" href=\"~A\">RSS</a>~]~}</div>"
-                                          (if (and (case section (:meta t) (:all t)) (logged-in-userid)) (string-downcase (string section)))
-                                          page-toolbar-extra
-                                          (unless (or need-auth hide-rss)
-                                            (list title (replace-query-params (hunchentoot:request-uri*) "offset" nil "format" "rss"))))
                                   (typecase extra-html
                                     (function (funcall extra-html out-stream))
                                     (t (format out-stream "~@[~A~]" extra-html)))
@@ -716,6 +730,9 @@
 						   (get-posts))))
 				     (view-items-index posts :section :frontpage :title "Frontpage posts" :hide-title t :with-offset (or offset 0)
                                                        :extra-html (lambda (out-stream)
+                                                                     (page-toolbar-to-html out-stream
+                                                                                           :title "Frontpage posts"
+                                                                                           :new-post t)
                                                                      (sublevel-nav-to-html out-stream
                                                                                            '((nil "New") ("hot" "Hot"))
                                                                                            sort
@@ -741,9 +758,13 @@
                                                          ((string= view "featured") :featured)
                                                          ((string= view "meta") :meta)
                                                          ((string= view "alignment-forum") :alignment-forum)
-                                                         (t :all))))
-                                     (view-items-index posts :section section :title (format nil "~@(~A posts~)" section) :with-offset (or offset 0)
+                                                         (t :all)))
+                                          (page-title (format nil "~@(~A posts~)" section)))
+                                     (view-items-index posts :section section :title page-title :with-offset (or offset 0)
                                                        :extra-html (lambda (out-stream)
+                                                                     (page-toolbar-to-html out-stream
+                                                                                           :title page-title
+                                                                                           :new-post (if (eq section :meta) "meta" t))
                                                                      (if (string= view "new")
                                                                          (sublevel-nav-to-html out-stream
                                                                                                '((nil "New") ("hot" "Hot"))
@@ -947,6 +968,8 @@
                                    (if (cdr (assoc :--id ui))
                                        ui
                                        (error (make-condition 'lw2-user-not-found-error)))))
+                               (user-id (cdr (assoc :--id user-info)))
+                               (own-user-page (logged-in-userid user-id))
                                (comments-index-fields (remove :page-url *comments-index-fields*)) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
                                (title (format nil "~A~@['s ~A~]" (cdr (assoc :display-name user-info)) (if (member show '(nil :posts :comments)) show-text)))
                                (sort-type (alexandria:switch (sort :test #'string=) ("top" :score) (t :date)))
@@ -955,22 +978,22 @@
                                (items (case show
                                         (:posts
                                           (lw2-graphql-query (graphql-query-string "PostsList"
-                                                                                   (alist :terms (nconc (alist :offset offset :limit 21 :user-id (cdr (assoc :--id user-info))) posts-base-terms))
+                                                                                   (alist :terms (nconc (alist :offset offset :limit 21 :user-id user-id) posts-base-terms))
                                                                                    *posts-index-fields*)))
                                         (:comments
                                           (lw2-graphql-query (graphql-query-string "CommentsList"
-                                                                                   (alist :terms (nconc (alist :offset offset :limit 21 :user-id (cdr (assoc :--id user-info)))
+                                                                                   (alist :terms (nconc (alist :offset offset :limit 21 :user-id user-id)
                                                                                                         comments-base-terms))
                                                                                    comments-index-fields)))
                                         (:drafts
                                           (lw2-graphql-query (graphql-query-string "PostsList"
-                                                                                   (alist :terms (alist :view "drafts" :limit 21 :offset offset :user-id (cdr (assoc :--id user-info))))
+                                                                                   (alist :terms (alist :view "drafts" :limit 21 :offset offset :user-id user-id))
                                                                                    *posts-index-fields*)
                                                              :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
                                         (:conversations
                                           (let ((conversations
                                                   (lw2-graphql-query (graphql-query-string "ConversationsList"
-                                                                                           (alist :terms (alist :view "userConversations" :limit 21 :offset offset :user-id (cdr (assoc :--id user-info))))
+                                                                                           (alist :terms (alist :view "userConversations" :limit 21 :offset offset :user-id user-id))
                                                                                            '(:--id :created-at :title (:participants :display-name :slug) :----typename))
                                                                      :auth-token (hunchentoot:cookie-in "lw2-auth-token"))))
                                             (lw2-graphql-query-map
@@ -983,7 +1006,7 @@
                                         (:inbox
                                           (prog1
                                             (let ((notifications (lw2-graphql-query (graphql-query-string "NotificationsList"
-                                                                                                          (alist :terms (nconc (alist :user-id (cdr (assoc :--id user-info)) :limit 21 :offset offset) *notifications-base-terms*))
+                                                                                                          (alist :terms (nconc (alist :user-id user-id :limit 21 :offset offset) *notifications-base-terms*))
                                                                                                           '(:--id :document-type :document-id :link :title :message :type :viewed))
                                                                                     :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
                                                   (last-check (ignore-errors (local-time:parse-timestring (cdr (assoc :last-notifications-check user-info))))))
@@ -1019,12 +1042,12 @@
                                                   :auth-token auth-token)))
                                             (do-lw2-post-query (hunchentoot:cookie-in "lw2-auth-token")
                                                                (list (alist :query "mutation usersEdit($documentId: String, $set: UsersInput) { usersEdit(documentId: $documentId, set: $set) { _id }}"
-                                                                            :variables (alist :document-id (cdr (assoc :--id user-info))
+                                                                            :variables (alist :document-id user-id
                                                                                               :set (alist :last-notifications-check (local-time:format-timestring nil (local-time:now))))
                                                                             :operation-name "usersEdit")))))
                                         (t
-                                          (let ((user-posts (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (nconc (alist :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info))) posts-base-terms)) *posts-index-fields*)))
-                                                (user-comments (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (nconc (alist :limit (+ 21 offset) :user-id (cdr (assoc :--id user-info))) comments-base-terms)) 
+                                          (let ((user-posts (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (nconc (alist :limit (+ 21 offset) :user-id user-id) posts-base-terms)) *posts-index-fields*)))
+                                                (user-comments (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (nconc (alist :limit (+ 21 offset) :user-id user-id) comments-base-terms)) 
                                                                                                         comments-index-fields))))
                                             (concatenate 'list user-posts user-comments)))))
                                (with-next (> (length items) (+ (if show 0 offset) 20)))
@@ -1033,20 +1056,19 @@
                                             :section :personal
                                             :with-offset offset :with-next with-next
                                             :need-auth (eq show :drafts) :section (if (eq show :drafts) "drafts" nil)
-                                            :hide-rss (member show '(:drafts :conversations :inbox))
-                                            :page-toolbar-extra (alexandria:if-let ((liu (logged-in-userid)))
-                                                                  (if (string= liu (cdr (assoc :--id user-info)))
-                                                                      (format nil "<form method=\"post\" action=\"/logout\"><button class=\"logout-button button\" name=\"logout\" value=\"~A\">Log out</button></form>"
-                                                                              (make-csrf-token))
-                                                                      (format nil "<a class=\"new-private-message button\" href=\"/conversation?to=~A\">Send private message</a>"
-                                                                              user-slug)))
                                             :extra-html (lambda (out-stream)
+                                                          (page-toolbar-to-html out-stream
+                                                                                :title title
+                                                                                :rss (not (member show '(:drafts :conversations :inbox)))
+                                                                                :new-post (if (eq show :drafts) "drafts" t)
+                                                                                :new-conversation (if own-user-page t user-slug)
+                                                                                :logout own-user-page)
                                                           (format out-stream "<h1 class=\"page-main-heading\">~A</h1><div class=\"user-stats\">Karma: <span class=\"karma-total\">~A</span></div>"
                                                                   (cdr (assoc :display-name user-info))
                                                                   (pretty-number (or (cdr (assoc :karma user-info)) 0)))
                                                           (sublevel-nav-to-html out-stream
                                                                                 `((nil "All") ("posts" "Posts") ("comments" "Comments")
-                                                                                              ,@(if (logged-in-userid (cdr (assoc :--id user-info)))
+                                                                                              ,@(if own-user-page
                                                                                                     '(("drafts" "Drafts") ("conversations" "Conversations") ("inbox" "Inbox"))))
                                                                                 show-text)
                                                           (when (member show '(nil :posts :comments))
