@@ -61,9 +61,10 @@
                (symbol-macrolet ,(inner-loop `(,bind (,fn-gensym)))
                  ,@body)))))))
 
-(defun vote-list-to-tooltip (vote-list)
-  (if vote-list
-      (format nil "~A vote~:*~P" (length vote-list))
+(defun votes-to-tooltip (votes)
+  (if votes
+      (format nil "~A vote~:*~P"
+              (typecase votes (integer votes) (list (length votes))))
       ""))
 
 (defun post-section-to-html (out-stream post &key skip-section)
@@ -97,7 +98,7 @@
                (curated-date (or null string))
                (meta boolean)
                (af boolean)
-               (all-votes list)
+               (vote-count (or null fixnum))
                (draft boolean))
     post
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
@@ -110,7 +111,7 @@
               (encode-entities (get-username user-id))
               js-time
               pretty-time
-              (vote-list-to-tooltip all-votes)
+              (votes-to-tooltip vote-count)
               (pretty-number base-score "point")
               (generate-post-link post)
               (pretty-number (or comment-count 0) "comment")
@@ -135,7 +136,7 @@
                (meta boolean)
                (draft boolean)
                (af boolean)
-               (all-votes list)
+               (vote-count (or null fixnum))
                (html-body (or null string)))
     post
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
@@ -147,7 +148,7 @@
               js-time
               pretty-time
               post-id
-              (vote-list-to-tooltip all-votes)
+              (votes-to-tooltip vote-count)
               (pretty-number base-score "point")
               (pretty-number (or comment-count 0) "comment")
               (clean-lw-link page-url)))
@@ -171,7 +172,7 @@
                (parent-comment-id (or null string))
                (child-count (or null fixnum))
                (children list)
-               (all-votes list)
+               (vote-count (or null fixnum))
                (html-body string))
     comment
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
@@ -185,7 +186,7 @@
               (generate-post-link post-id comment-id)
               js-time
               pretty-time
-              (vote-list-to-tooltip all-votes)
+              (votes-to-tooltip vote-count)
               (pretty-number base-score "point")
               (generate-post-link post-id)
               comment-id
