@@ -721,6 +721,13 @@ input[type='range']::-ms-thumb {
 		transform: scale(0.375) translate(-215px, 215px);
 	}
 
+	#theme-tweaker-ui .controls-container {
+		margin-right: -12px;
+	}
+	#theme-tweaker-ui .controls-container::-webkit-scrollbar {
+		width: 32px;
+	}
+
 	@media only screen and (max-width: 369px) {
 		#theme-tweaker-ui .theme-selector button {
 			margin: 0.5em 0.25em 0.5em 0.5em;
