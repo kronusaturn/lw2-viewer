@@ -736,7 +736,7 @@ function setTheme(themeName) {
 	let oldStyle = document.querySelector("head link[href*='.css']");
 	newStyle.addEventListener('load', function() { oldStyle.parentElement.removeChild(oldStyle); });
 	newStyle.addEventListener('load', generateImagesOverlay);
-	newStyle.addEventListener('load', updateThemeTweakerTextSizeAdjustSampleText);
+	newStyle.addEventListener('load', updateThemeTweakerSampleText);
 	document.querySelector('head').insertBefore(newStyle, oldStyle.nextSibling);
 	
 	if (themeName == 'dark') {
@@ -875,7 +875,7 @@ function toggleThemeTweakerUI() {
 		// Focus invert checkbox.
 		document.querySelector("#theme-tweaker-ui #theme-tweak-control-invert").focus();
 		// Show sample text in appropriate font.
-		updateThemeTweakerTextSizeAdjustSampleText();
+		updateThemeTweakerSampleText();
 		// Disable tab-selection of the search box.
 		setSearchBoxTabSelectable(false);
 	} else {
@@ -1065,7 +1065,7 @@ function themeTweakerTextSizeAdjustButtonClicked(event) {
 		window.localStorage.setItem("text-zoom", window.currentTextZoom);
 	}
 }
-function updateThemeTweakerTextSizeAdjustSampleText() {
+function updateThemeTweakerSampleText() {
 	let bodyTextElement = document.querySelector(".post-body") || document.querySelector(".comment-body");
 	let sampleText = document.querySelector("#theme-tweaker-ui #theme-tweak-section-sample-text .sample-text");
 	sampleText.style.fontFamily = bodyTextElement ? window.getComputedStyle(bodyTextElement).fontFamily : "MS Sans Serif";
