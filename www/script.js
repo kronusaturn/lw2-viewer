@@ -1,6 +1,7 @@
 /***************************/
 /* INITIALIZATION REGISTRY */
 /***************************/
+
 var initializersDone = {};
 var initializers = {};
 function registerInitializer(name, tryEarly, precondition, fn) {
@@ -35,6 +36,7 @@ function forceInitializer(name) {
 /***********/
 /* COOKIES */
 /***********/
+
 function setCookie(name,value,days) {
 	var expires = "";
 	if (!days) days = 36500;
@@ -828,7 +830,8 @@ function injectThemeTweaker() {
 	});
 	
 	themeTweakerUI.querySelectorAll("input").forEach(function (field) {
-		field.addEventListener((field.type == "checkbox" ? "change" : "input"), themeTweakerFieldInputReceived);
+		field.addEventListener("change", themeTweakerFieldValueChanged);
+		if (field.type == "range") field.addEventListener("input", themeTweakerFieldInputReceived);
 	});
 	
 	themeTweakerUI.querySelector(".minimize-button").addActivateEvent(themeTweakerMinimizeButtonClicked);
@@ -1014,7 +1017,17 @@ function themeTweakSave() {
 function clickInterceptor(event) {
 	event.stopPropagation();
 }
+
 function themeTweakerFieldInputReceived(event) {
+	var sampleTextFilters = window.currentFilters;
+	
+	let sliderName = /^theme-tweak-control-(.+)$/.exec(event.target.id)[1];
+	document.querySelector("#theme-tweak-label-" + sliderName).innerText = event.target.value + event.target.dataset["labelSuffix"];
+	sampleTextFilters[sliderName] = event.target.value + event.target.dataset["valueSuffix"];
+	
+	document.querySelector("#theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container").style.filter = filterStringFromFilters(sampleTextFilters);
+}
+function themeTweakerFieldValueChanged(event) {
 	if (event.target.id == 'theme-tweak-control-invert') {
 		window.currentFilters['invert'] = event.target.checked ? '100%' : '0%';
 	} else if (event.target.type == 'range') {
@@ -1024,6 +1037,9 @@ function themeTweakerFieldInputReceived(event) {
 	} else if (event.target.id == 'theme-tweak-control-clippy') {
 		document.querySelector(".clippy-container").style.display = event.target.checked ? "block" : "none";
 	}
+	// Clear the sample text filters.
+	document.querySelector("#theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container").style.filter = "";
+	// Apply the new filters globally.
 	applyFilters(window.currentFilters);
 }
 function themeTweakerHelpWindowCancelButtonClicked(event) {
