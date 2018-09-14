@@ -765,8 +765,10 @@ function injectThemeTweaker() {
 		`</span></p>
 		<p class='theme-selector'></p>
 		<div class='controls-container'>
-			<div id='theme-tweak-section-text-size-adjust' class='section' data-label='Text size'>
+			<div id='theme-tweak-section-sample-text' class='section' data-label='Sample text'>
 				<div class='sample-text-container'><span class='sample-text'>Less Wrong</span></div>
+			</div>
+			<div id='theme-tweak-section-text-size-adjust' class='section' data-label='Text size'>
 				<button type='button' class='text-size-adjust-button decrease' title='Decrease text size'></button>
 				<button type='button' class='text-size-adjust-button default' title='Reset to default text size'></button>
 				<button type='button' class='text-size-adjust-button increase' title='Increase text size'></button>
@@ -1065,7 +1067,7 @@ function themeTweakerTextSizeAdjustButtonClicked(event) {
 }
 function updateThemeTweakerTextSizeAdjustSampleText() {
 	let bodyTextElement = document.querySelector(".post-body") || document.querySelector(".comment-body");
-	let sampleText = document.querySelector("#theme-tweaker-ui #theme-tweak-section-text-size-adjust .sample-text");
+	let sampleText = document.querySelector("#theme-tweaker-ui #theme-tweak-section-sample-text .sample-text");
 	sampleText.style.fontFamily = bodyTextElement ? window.getComputedStyle(bodyTextElement).fontFamily : "MS Sans Serif";
 	sampleText.style.fontSize = bodyTextElement ? window.getComputedStyle(bodyTextElement).fontSize : "1rem";
 	sampleText.style.fontWeight = bodyTextElement ? window.getComputedStyle(bodyTextElement).fontWeight : "normal";
