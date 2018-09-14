@@ -1050,7 +1050,6 @@ function themeTweakerTextSizeAdjustButtonClicked(event) {
 	let textZoomStyle = document.querySelector("#text-zoom");
 	
 	var zoomFactor = parseFloat(window.currentTextZoom) || 1.0;
-	console.log("Zoom factor is " + zoomFactor);
 	if (event.target.hasClass("decrease")) {
 		zoomFactor = (zoomFactor - 0.05).toFixed(2);
 	} else if (event.target.hasClass("increase")) {
@@ -1071,7 +1070,7 @@ function updateThemeTweakerSampleText() {
 	sampleText.style.fontFamily = bodyTextElement ? window.getComputedStyle(bodyTextElement).fontFamily : "MS Sans Serif";
 	sampleText.style.fontSize = bodyTextElement ? window.getComputedStyle(bodyTextElement).fontSize : "1rem";
 	sampleText.style.fontWeight = bodyTextElement ? window.getComputedStyle(bodyTextElement).fontWeight : "normal";
-	sampleText.style.color = bodyTextElement ? window.getComputedStyle(bodyTextElement).color : "#000";
+	sampleText.style.color = bodyTextElement ? window.getComputedStyle(bodyTextElement).color : window.getComputedStyle(document.querySelector("#content")).color;
 	
 	var backgroundElement = document.querySelector("#content");
 	while (window.getComputedStyle(backgroundElement).backgroundColor == "" || 
