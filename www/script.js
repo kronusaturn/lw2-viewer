@@ -1786,7 +1786,10 @@ function hyperlink(text, startpos) {
 		endpos = startpos + link_text.length;
 	} else {
 		url = prompt("Link address (URL):");
-		if (!url) return text;
+		if (!url) {
+			endpos = startpos + text.length;
+			return [ text, startpos, endpos ];
+		}
 		startpos = startpos + text.length + url.length + 4;
 		endpos = startpos;
 	}	
