@@ -1071,6 +1071,13 @@ function updateThemeTweakerSampleText() {
 	sampleText.style.fontFamily = bodyTextElement ? window.getComputedStyle(bodyTextElement).fontFamily : "MS Sans Serif";
 	sampleText.style.fontSize = bodyTextElement ? window.getComputedStyle(bodyTextElement).fontSize : "1rem";
 	sampleText.style.fontWeight = bodyTextElement ? window.getComputedStyle(bodyTextElement).fontWeight : "normal";
+	sampleText.style.color = bodyTextElement ? window.getComputedStyle(bodyTextElement).color : "#000";
+	
+	var backgroundElement = document.querySelector("#content");
+	while (window.getComputedStyle(backgroundElement).backgroundColor == "" || 
+		   window.getComputedStyle(backgroundElement).backgroundColor == "rgba(0, 0, 0, 0)")
+		   backgroundElement = backgroundElement.parentElement;
+	sampleText.parentElement.style.backgroundColor = window.getComputedStyle(backgroundElement).backgroundColor;
 }
 
 /*********************/
