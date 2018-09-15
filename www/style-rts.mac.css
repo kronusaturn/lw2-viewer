@@ -3862,7 +3862,7 @@ a.nav-inner,
 	flex-wrap: wrap;
 }
 #top-nav-bar .page-number {
-	font-family: 'Garamond Premier Pro', 'Georgia', serif;
+	font-family: 'Garamond Premier Pro', 'Georgia', 'Times New Roman', serif;
 	padding-top: 7px;
 }
 #top-nav-bar .page-number-label {
@@ -4162,7 +4162,7 @@ h1.listing a[href^="http"] {
 	color: #888;
 }
 h1.listing a[href^='/'] {
-	font-family: 'Garamond Premier Pro', 'Georgia', serif;
+	font-family: 'Garamond Premier Pro', 'Georgia', 'Times New Roman', serif;
 	text-decoration: none;
 	color: #690010;
 	font-weight: 500;
@@ -4381,15 +4381,15 @@ h1.listing + .post-meta .link-post-domain {
 
 .post-body,
 .comment-body {
-	font-family: 'Garamond Premier Pro', 'Georgia', serif;
+	font-family: 'Garamond Premier Pro', 'Georgia', 'Times New Roman', serif;
 }
 .post > h1:first-child {
-	font-family: 'Garamond Premier Pro', 'Georgia', serif;
+	font-family: 'Garamond Premier Pro', 'Georgia', 'Times New Roman', serif;
 	font-weight: 600;
 }
 .post-body,
 .comment-body {
-	font-family: 'Garamond Premier Pro', 'Georgia', serif;
+	font-family: 'Garamond Premier Pro', 'Georgia', 'Times New Roman', serif;
 	font-weight: 500;
 	line-height: 1.45;
 }
@@ -4782,7 +4782,7 @@ div.comment-child-links a::first-letter {
 }
 
 .posting-controls textarea {
-	font-family: 'Garamond Premier Pro', 'Georgia', serif;
+	font-family: 'Garamond Premier Pro', 'Georgia', 'Times New Roman', serif;
 	font-size: 1.25rem;
 	font-weight: 500;
 	color: #000;
@@ -4819,7 +4819,7 @@ div.comment-child-links a::first-letter {
 	color: #050;
 }
 .guiedit-buttons-container button {
-	font-family: Font Awesome, 'Garamond Premier Pro', 'Georgia', serif;
+	font-family: Font Awesome, 'Garamond Premier Pro', 'Georgia', 'Times New Roman', serif;
 }
 
 .guiedit::after {

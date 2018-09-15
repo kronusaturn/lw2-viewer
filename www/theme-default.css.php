@@ -1,7 +1,7 @@
 <?php
-	$UI_font = ($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Whitney', 'a_Avante'";
-	$listings_font = ($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Mundo Sans', 'a_Avante'";
-	$UI_font_smallcaps = ($platform == 'Mac') ? "'Concourse Smallcaps', 'a_Avante'" : "'Whitney Smallcaps', 'a_Avante'";
+	$UI_font = (($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Whitney', 'a_Avante'") . ", Arial, sans-serif";
+	$listings_font = (($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Mundo Sans', 'a_Avante'") . ", Arial, sans-serif";
+	$UI_font_smallcaps = (($platform == 'Mac') ? "'Concourse Smallcaps', 'a_Avante'" : "'Whitney Smallcaps', 'a_Avante'") . ", Arial, sans-serif";
 	$text_font = "'Charter', 'Georgia', serif";
 	$hyperlink_color = "#00e";
 	$white_glow = "0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff";

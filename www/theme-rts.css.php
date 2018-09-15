@@ -1,6 +1,6 @@
 <?php
 	$UI_font = "'Proxima Nova', sans-serif";
-	$text_font = "'Garamond Premier Pro', 'Georgia', serif";
+	$text_font = "'Garamond Premier Pro', 'Georgia', 'Times New Roman', serif";
 	$hyperlink_color = "#888";
 ?>
 

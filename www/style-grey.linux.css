@@ -3684,7 +3684,7 @@ a.comment-parent-link::after {
 body {
 	color: #000;
 	background-color: #eee;
-	font-family: 'Whitney', 'a_Avante';
+	font-family: 'Whitney', 'a_Avante', Arial, sans-serif;
 	font-feature-settings: 'ss07';
 }
 #content {
@@ -3916,7 +3916,7 @@ body {
 /*=====================*/
 
 .sublevel-nav.sort .sublevel-item {
-	font-family: 'Whitney Smallcaps', 'a_Avante';
+	font-family: 'Whitney Smallcaps', 'a_Avante', Arial, sans-serif;
 }
 .sublevel-nav.sort {
 	position: absolute;
@@ -4139,7 +4139,7 @@ body {
 h1.listing {
 	margin: 0.6em 20px 0 20px;
 	line-height: 1;
-	font-family: 'Whitney', 'a_Avante', 'Font Awesome';
+	font-family: 'Whitney', 'a_Avante', Arial, sans-serif, 'Font Awesome';
 	font-size: 1.5rem;
 }
 h1.listing a[href^='/'] {
@@ -4302,7 +4302,7 @@ h1.listing + .post-meta .link-post-domain {
 /*===================*/
 
 .contents {
-	font-family: 'Whitney', 'a_Avante';
+	font-family: 'Whitney', 'a_Avante', Arial, sans-serif;
 	border: 1px solid #ddd;
 	background-color: #eee;
 }
@@ -4480,7 +4480,7 @@ a.post-section.alignment-forum:hover::before {
 
 .post.link-post a.link-post-link {
 	text-decoration: none;
-	font-family: 'Whitney', 'a_Avante';
+	font-family: 'Whitney', 'a_Avante', Arial, sans-serif;
 	font-weight: 600;
 }
 .post.link-post a.link-post-link:hover {
@@ -4736,7 +4736,7 @@ div.comment-child-links a::first-letter {
 	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
 }
 .comment-minimize-button::after {
-	font-family: 'Whitney', 'a_Avante';
+	font-family: 'Whitney', 'a_Avante', Arial, sans-serif;
 	color: #777;
 }
 .comment-minimize-button.maximized::after {
@@ -4895,7 +4895,7 @@ button.guiedit {
 }
 
 button.guiedit::after {
-	font-family: 'Whitney', 'a_Avante';
+	font-family: 'Whitney', 'a_Avante', Arial, sans-serif;
 	color: #777;
 	text-shadow: none;
 }
@@ -5035,7 +5035,7 @@ input[type='submit']:active {
 .comment-body h1,
 .comment-body h2,
 .comment-body h4 {
-	font-family: 'Whitney', 'a_Avante';
+	font-family: 'Whitney', 'a_Avante', Arial, sans-serif;
 }
 .post-body h3,
 .comment-body h3,
@@ -5043,7 +5043,7 @@ input[type='submit']:active {
 .post-body h6,
 .comment-body h5,
 .comment-body h6 {
-	font-family: 'Whitney Smallcaps', 'a_Avante';
+	font-family: 'Whitney Smallcaps', 'a_Avante', Arial, sans-serif;
 }
 .post-body h1,
 .post-body h2,
@@ -5171,7 +5171,7 @@ select {
 }
 
 #content.about-page .accesskey-table {
-	font-family: 'Whitney', 'a_Avante';
+	font-family: 'Whitney', 'a_Avante', Arial, sans-serif;
 	border-color: #ddd;
 }
 
@@ -5375,7 +5375,7 @@ div > .MJXc-display {
 	}
 	#quick-nav-ui a::after,
 	#new-comment-nav-ui::before {
-		font-family: 'Whitney', 'a_Avante';
+		font-family: 'Whitney', 'a_Avante', Arial, sans-serif;
 		font-weight: 600;
 		box-shadow:
 			0 0 1px 0 #fff,
@@ -5411,7 +5411,7 @@ div > .MJXc-display {
 		border-radius: 7px 0 0 7px;
 	}
 	#new-comment-nav-ui button::after {
-		font-family: 'Whitney', 'a_Avante';
+		font-family: 'Whitney', 'a_Avante', Arial, sans-serif;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-next {
 		border-radius: 0 7px 7px 0;
