@@ -27,17 +27,19 @@ Object.prototype.isEmpty = function() {
     return true;
 };
 
+function filterStringFromFilters(filters) {
+	var filterString = "";
+	for (key of Object.keys(filters)) {
+		let value = filters[key];
+		filterString += ` ${key}(${value})`;
+	}
+	return filterString;
+}
 function applyFilters(filters) {
 	var fullStyleString = "";
 	
-	if (!filters.isEmpty()) {
-		var filterString = "";
-		for (key of Object.keys(filters)) {
-			let value = filters[key];
-			filterString += ` ${key}(${value})`;
-		}
-		fullStyleString = `body::before { content: ""; } body::before, #content, #ui-elements-container > div:not(#theme-tweaker-ui) { filter: ${filterString}; }`;
-	}
+	if (!filters.isEmpty())
+		fullStyleString = `body::before { content: ""; } body::before, #content, #ui-elements-container > div:not(#theme-tweaker-ui), #theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container { filter: ${filterStringFromFilters(filters)}; }`;
 	
 	// Update the style tag (if it’s already been loaded).
 	document.querySelectorAll("#theme-tweak").forEach(function (styleBlock) { styleBlock.innerHTML = fullStyleString; });
@@ -71,7 +73,7 @@ function setTextZoom(zoomFactor) {
 
 	let textZoomStyle = document.querySelector("#text-zoom");
 	textZoomStyle.innerHTML = 
-		`.post-body, .comment-body, #theme-tweaker-ui #theme-tweak-section-text-size-adjust .sample-text {
+		`.post-body, .comment-body, #theme-tweaker-ui #theme-tweak-section-sample-text .sample-text {
 			zoom: ${zoomFactor};
 		}`;
 
