@@ -276,6 +276,7 @@
 	position: relative;
 	-webkit-appearance: none;
 	width: 100%;
+	height: 50px;
 	margin: 0;
 	padding: 0 3.5em 0 2.3em;
 	background-color: transparent;
