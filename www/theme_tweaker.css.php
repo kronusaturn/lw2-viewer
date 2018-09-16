@@ -277,7 +277,7 @@
 	-webkit-appearance: none;
 	width: 100%;
 	margin: 0;
-	padding: 24px 3.5em 24px 2.3em;
+	padding: 0 3.5em 0 2.3em;
 	background-color: transparent;
 	border: none;
 	cursor: pointer;
@@ -286,17 +286,18 @@ input[type='range']:focus {
 	outline: 1px dotted #000;
 }
 input[type='range']::-webkit-slider-runnable-track {
-	width: 100%;
-	height: 2px;
+	width: 100%;	
+	height: 4px;
+	box-sizing: content-box;
 	box-shadow:
-		-1px -1px 0 #dfd8df inset,
-		1px 1px 0 #030303 inset,
-		0 -1px 0 #7f787f,
-		-1px 0 0 #7f787f,
-		-1px -1px 0 #7f787f,
-		0 0 0 1px #fff8ff;
-	border-radius: 0px;
-	border: none;
+		-1px -1px 0 0 #fff8ff inset,
+		1px 1px 0 #7f787f inset,
+		-2px -2px 0 #dfd8df inset,
+		2px 2px 0 #030303 inset;
+	border-radius: 0;
+	border-color: #bfb8bf;
+	border-style: solid;
+	border-width: 23px 0 23px 0;
 }
 input[type='range']::-webkit-slider-thumb {
 	box-shadow: 
@@ -317,17 +318,18 @@ input[type='range']::-webkit-slider-thumb {
 	margin-top: -16px;
 }
 input[type='range']::-moz-range-track {
-	width: 100%;
-	height: 2px;
+	width: 100%;	
+	height: 4px;
+	box-sizing: content-box;
 	box-shadow:
-		-1px -1px 0 #dfd8df inset,
-		1px 1px 0 #030303 inset,
-		0 -1px 0 #7f787f,
-		-1px 0 0 #7f787f,
-		-1px -1px 0 #7f787f,
-		0 0 0 1px #fff8ff;
-	border-radius: 0px;
-	border: none;
+		-1px -1px 0 0 #fff8ff inset,
+		1px 1px 0 #7f787f inset,
+		-2px -2px 0 #dfd8df inset,
+		2px 2px 0 #030303 inset;
+	border-radius: 0;
+	border-color: #bfb8bf;
+	border-style: solid;
+	border-width: 23px 0 23px 0;
 }
 input[type='range']::-moz-range-thumb {
 	box-shadow: 
@@ -346,17 +348,18 @@ input[type='range']::-moz-range-thumb {
 	background: #bfb8bf;
 }
 input[type='range']::-ms-track {
-	width: 100%;
-	height: 2px;
-	border: none;
-	color: transparent;
+	width: 100%;	
+	height: 4px;
+	box-sizing: content-box;
 	box-shadow:
-		-1px -1px 0 #dfd8df inset,
-		1px 1px 0 #030303 inset,
-		0 -1px 0 #7f787f,
-		-1px 0 0 #7f787f,
-		-1px -1px 0 #7f787f,
-		0 0 0 1px #fff8ff;
+		-1px -1px 0 0 #fff8ff inset,
+		1px 1px 0 #7f787f inset,
+		-2px -2px 0 #dfd8df inset,
+		2px 2px 0 #030303 inset;
+	color: transparent;
+	border-color: #bfb8bf;
+	border-style: solid;
+	border-width: 23px 0 23px 0;
 }
 input[type='range']::-ms-thumb {
 	box-shadow: 
