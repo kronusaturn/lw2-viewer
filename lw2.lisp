@@ -797,11 +797,10 @@
                                      (setf (hunchentoot:return-code*) 303
                                            (hunchentoot:header-out "Location") location))))
 
-(hunchentoot:define-easy-handler (view-feed :uri "/feed") (view meta before after)
-				 (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
-				 (let ((posts (lw2-graphql-query (make-posts-list-query :view (or view "new") :meta (not (not meta)) :before before :after after)))
-				       (out-stream (hunchentoot:send-headers)))
-				   (write-index-items-to-rss (make-flexi-stream out-stream :external-format :utf-8) posts))) 
+(hunchentoot:define-easy-handler (view-feed :uri "/feed") ()
+                                 (with-error-page
+                                   (setf (hunchentoot:return-code*) 301
+                                         (hunchentoot:header-out "Location") "/?format=rss")))
 
 (hunchentoot:define-easy-handler (view-post-lw2-link :uri (lambda (r) (declare (ignore r)) (match-lw2-link (hunchentoot:request-uri*)))) ((csrf-token :request-type :post) (text :request-type :post) (parent-comment-id :request-type :post) (edit-comment-id :request-type :post) need-auth chrono)
                                  (with-error-page
