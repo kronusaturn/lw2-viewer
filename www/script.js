@@ -770,7 +770,7 @@ function injectThemeTweaker() {
 			<div id='theme-tweak-section-sample-text' class='section' data-label='Sample text'>
 				<div class='sample-text-container'><span class='sample-text'>
 					<p>Less Wrong (text)</p>
-					<p><a>Less Wrong (link)</a></p>
+					<p><a href="#">Less Wrong (link)</a></p>
 				</span></div>
 			</div>
 			<div id='theme-tweak-section-text-size-adjust' class='section' data-label='Text size'>
