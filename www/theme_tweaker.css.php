@@ -168,30 +168,30 @@
 	padding: 0 4px;
 }
 
-#theme-tweaker-ui #theme-tweak-section-text-size-adjust {
-	text-align: center;
+#theme-tweaker-ui #theme-tweak-section-sample-text {
+	position: sticky;
+	top: 24px;
+	background-color: #bfb8bf;
+	z-index: 1;
+	box-shadow:
+		1px 1px 0 #fff8ff inset,
+		0 1px 0 #fff8ff,
+		1px 0 0 #fff8ff,
+		1px 1px 0 #fff8ff,
+		0 -24px 0 1px #bfb8bf,
+		0  2px 0 1px rgba(191, 184, 191, 1.0),
+		0  4px 0 1px rgba(191, 184, 191, 0.875),
+		0  6px 0 1px rgba(191, 184, 191, 0.75),
+		0  8px 0 1px rgba(191, 184, 191, 0.625),
+		0 10px 0 1px rgba(191, 184, 191, 0.5),
+		0 12px 0 1px rgba(191, 184, 191, 0.375),
+		0 14px 0 1px rgba(191, 184, 191, 0.25),
+		0 16px 0 1px rgba(191, 184, 191, 0.125);
 }
-#theme-tweaker-ui #theme-tweak-section-text-size-adjust button {
-	margin: 6px 3px;
-	padding: 0;
-	height: 26px;
-	width: 26px;
-	background-repeat: no-repeat;
-	background-position: center center;
-	background-size: 100%;
-}
-#theme-tweaker-ui #theme-tweak-section-text-size-adjust .text-size-adjust-button.decrease {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/A_minus.gif")) ?>');
-}
-#theme-tweaker-ui #theme-tweak-section-text-size-adjust .text-size-adjust-button.default {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/A.gif")) ?>');
-}
-#theme-tweaker-ui #theme-tweak-section-text-size-adjust .text-size-adjust-button.increase {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/A_plus.gif")) ?>');
-}
-#theme-tweaker-ui #theme-tweak-section-text-size-adjust .text-size-adjust-button:disabled {
-	cursor: default;
-	opacity: 0.5;
+@-moz-document url-prefix() {
+	#theme-tweaker-ui #theme-tweak-section-sample-text {
+		top: 8px;
+	}
 }
 #theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container {
 	display: table;
@@ -220,15 +220,44 @@
 	text-align: center;
 	vertical-align: middle;
 }
+
+#theme-tweaker-ui #theme-tweak-section-text-size-adjust {
+	text-align: center;
+}
+#theme-tweaker-ui #theme-tweak-section-text-size-adjust button {
+	margin: 6px 3px;
+	padding: 0;
+	height: 26px;
+	width: 26px;
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: 100%;
+}
+#theme-tweaker-ui #theme-tweak-section-text-size-adjust .text-size-adjust-button.decrease {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/A_minus.gif")) ?>');
+}
+#theme-tweaker-ui #theme-tweak-section-text-size-adjust .text-size-adjust-button.default {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/A.gif")) ?>');
+}
+#theme-tweaker-ui #theme-tweak-section-text-size-adjust .text-size-adjust-button.increase {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/A_plus.gif")) ?>');
+}
+#theme-tweaker-ui #theme-tweak-section-text-size-adjust .text-size-adjust-button:disabled {
+	cursor: default;
+	opacity: 0.5;
+}
 /* This doesn't work in Mozilla browsers, so hide it */
 @-moz-document url-prefix() {
 	#theme-tweaker-ui #theme-tweak-section-text-size-adjust {
+/* 
 		height: 0;
 		overflow: hidden;
 		padding: 0;
 		border: 0;
 		margin: 0 0 -16px 0;
 		visibility: hidden;
+ */
+	display: none;
 	}
 }
 
