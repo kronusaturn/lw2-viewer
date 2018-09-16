@@ -203,9 +203,8 @@
 		-1px 0 0 #7f787f,
 		-1px -1px 0 #7f787f,
 		0 0 0 1px #fff8ff;
-	cursor: pointer;
 	height: 60px;
-	width: 15em;	
+	width: 16em;	
 	padding: 1px;
 	margin: 0 auto 0.5em auto;
 }
