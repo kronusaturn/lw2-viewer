@@ -2786,7 +2786,6 @@ div > .MJXc-display {
 }
 #theme-selector.engaged ~ #theme-tweaker-toggle {
 	visibility: visible;
-	width: fit-content;
 	top: 480px;
 	left: 0;
 	right: 0;
@@ -2795,6 +2794,16 @@ div > .MJXc-display {
 	transition: 
 		top 0.2s ease,
 		visibility 0.2s ease;
+}
+@supports (width: -moz-fit-content) {
+	#theme-selector.engaged ~ #theme-tweaker-toggle {
+		width: -moz-fit-content;
+	}
+}
+@supports (width: fit-content) {
+	#theme-selector.engaged ~ #theme-tweaker-toggle {
+		width: fit-content;
+	}
 }
 #theme-selector.engaged ~ #theme-tweaker-toggle button {
 	opacity: 1.0;

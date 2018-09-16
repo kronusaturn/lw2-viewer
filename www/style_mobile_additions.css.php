@@ -182,7 +182,6 @@
 }
 #theme-selector.engaged ~ #theme-tweaker-toggle {
 	visibility: visible;
-	width: fit-content;
 	top: 480px;
 	left: 0;
 	right: 0;
@@ -192,6 +191,13 @@
 		top 0.2s ease,
 		visibility 0.2s ease;
 }
+<?php foreach (["-moz-fit-content", "fit-content"] as $pvalue) echo 
+"@supports (width: {$pvalue}) {
+	#theme-selector.engaged ~ #theme-tweaker-toggle {
+		width: {$pvalue};
+	}
+}
+"; ?>
 #theme-selector.engaged ~ #theme-tweaker-toggle button {
 	opacity: 1.0;
 }
