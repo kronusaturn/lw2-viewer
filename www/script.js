@@ -1066,8 +1066,6 @@ function themeTweakerClippyCloseButtonClicked() {
 	document.querySelector("#theme-tweak-control-clippy").checked = false;
 }
 function themeTweakerTextSizeAdjustButtonClicked(event) {
-	let textZoomStyle = document.querySelector("#text-zoom");
-	
 	var zoomFactor = parseFloat(window.currentTextZoom) || 1.0;
 	if (event.target.hasClass("decrease")) {
 		zoomFactor = (zoomFactor - 0.05).toFixed(2);

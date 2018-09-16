@@ -204,9 +204,15 @@
 		-1px -1px 0 #7f787f,
 		0 0 0 1px #fff8ff;
 	height: 60px;
-	width: 16em;	
+	min-width: 16em;
 	padding: 1px;
 	margin: 0 auto 0.5em auto;
+}
+/* This only needs to support Webkit because Firefox doesn’t support text size adjustment anyhow. */
+@supports (width: fit-content) {
+	#theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container {
+		width: fit-content;
+	}
 }
 #theme-tweaker-ui #theme-tweak-section-sample-text .sample-text {
 	display: table-cell;
