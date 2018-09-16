@@ -335,16 +335,16 @@
 	collect (multiple-value-bind (votetype id) (process-vote-result v) (cons id votetype))))
 
 (defun get-post-vote (post-id auth-token)
-  (process-vote-result (lw2-graphql-query (format nil "{PostsSingle(documentId:\"~A\") {_id, currentUserVotes{voteType}}}" post-id) :auth-token auth-token))) 
+  (process-vote-result (lw2-graphql-query (graphql-query-string "PostsSingle" (alist :document-id post-id) '(:--id (:current-user-votes :vote-type))) :auth-token auth-token))) 
 
 (defun get-post-body (post-id &key (revalidate t) force-revalidate auth-token)
-  (let ((query-string (format nil "{PostsSingle(documentId:\"~A\") {title, _id, slug, userId, postedAt, baseScore, commentCount, pageUrl, url, frontpageDate, meta, draft, af, voteCount, htmlBody}}" post-id)))
+  (let ((query-string (graphql-query-string "PostsSingle" (alist :document-id post-id) (cons :html-body *posts-index-fields*))))
     (if auth-token
         (lw2-graphql-query query-string :auth-token auth-token)
         (lw2-graphql-query-timeout-cached query-string "post-body-json" post-id :revalidate revalidate :force-revalidate force-revalidate))))
 
 (defun get-post-comments-votes (post-id auth-token)
-  (process-votes-result (lw2-graphql-query (format nil "{CommentsList(terms:{view:\"postCommentsTop\",limit:10000,postId:\"~A\"}) {_id, currentUserVotes{voteType}}}" post-id) :auth-token auth-token)))
+  (process-votes-result (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (alist :view "postCommentsTop" :limit 10000 :post-id post-id)) '(:--id (:current-user-votes :vote-type))) :auth-token auth-token)))
 
 (defun get-post-comments (post-id &key (revalidate t) force-revalidate)
   (let ((fn (lambda ()
@@ -398,23 +398,23 @@
 
 (with-rate-limit
   (simple-cacheable ("post-title" "postid-to-title" post-id)
-    (rate-limit (post-id) (cdr (first (lw2-graphql-query (format nil "{PostsSingle(documentId:\"~A\") {title}}" post-id))))))) 
+    (rate-limit (post-id) (cdr (first (lw2-graphql-query (graphql-query-string "PostsSingle" (alist :document-id post-id) '(:title)))))))) 
 
 (with-rate-limit
   (simple-cacheable ("post-slug" "postid-to-slug" post-id)
-    (rate-limit (post-id) (cdr (first (lw2-graphql-query (format nil "{PostsSingle(documentId:\"~A\") {slug}}" post-id)))))))
+    (rate-limit (post-id) (cdr (first (lw2-graphql-query (graphql-query-string "PostsSingle" (alist :document-id post-id) '(:slug))))))))
 
 (with-rate-limit
   (simple-cacheable ("slug-postid" "slug-to-postid" slug)
-    (rate-limit (slug) (cdr (first (lw2-graphql-query (format nil "{PostsSingle(slug:\"~A\") {_id}}" slug)))))))
+    (rate-limit (slug) (cdr (first (lw2-graphql-query (graphql-query-string "PostsSingle" (alist :slug slug) '(:--id))))))))
 
 (with-rate-limit
   (simple-cacheable ("username" "userid-to-displayname" user-id)
-    (rate-limit (user-id) (cdr (first (lw2-graphql-query (format nil "{UsersSingle(documentId:\"~A\") {displayName}}" user-id))))))) 
+    (rate-limit (user-id) (cdr (first (lw2-graphql-query (graphql-query-string "UsersSingle" (alist :document-id user-id) '(:display-name)))))))) 
 
 (with-rate-limit
   (simple-cacheable ("user-slug" "userid-to-slug" user-id)
-    (rate-limit (user-id) (cdr (first (lw2-graphql-query (format nil "{UsersSingle(documentId:\"~A\") {slug}}" user-id)))))))
+    (rate-limit (user-id) (cdr (first (lw2-graphql-query (graphql-query-string "UsersSingle" (alist :document-id user-id) '(:slug))))))))
 
 (defun preload-username-cache ()
   (let ((user-list (lw2-graphql-query "{UsersList(terms:{}) {_id, displayName}}")))
