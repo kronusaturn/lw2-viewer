@@ -140,9 +140,15 @@
 
 (defun do-accordius-login (user-designator-type user-designator password)
   (declare (ignore user-designator-type))
-  (let ((response
-          (lw2-graphql-query (graphql-query-string "Login" (alist :username user-designator :password password) nil))))
-    (values "1" response)))
+  (let* ((response
+           (do-lw2-post-query nil `(("query" . "mutation Login($username: String, $password: String) { Login(username: $username, password: $password) {userId, sessionKey, expiration}}")
+                                    ("variables" .
+                                     (("username" . ,user-designator)
+                                      ("password" . ,password))))))
+         (user-id (format nil "~A" (cdr (assoc :user-id response))))
+         (auth-token (cdr (assoc :session-key response)))
+         (expiration (truncate (* 1000 (cdr (assoc :expiration response))))))
+    (values user-id auth-token nil expiration)))
 
 (declaim (ftype (function (string string string) (values string string &optional))))
 (setf (symbol-function 'do-login)
