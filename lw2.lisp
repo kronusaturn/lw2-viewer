@@ -828,25 +828,31 @@
                                         (multiple-value-bind (post-id comment-id) (match-lw2-link (hunchentoot:request-uri*))
                                           (labels ((output-comments (out-stream comments target)
                                                      (format out-stream "<div id=\"comments\">")
-                                                     (if target
-                                                         (comment-thread-to-html out-stream
-                                                           (lambda ()
-                                                             (comment-item-to-html out-stream
-                                                               target
-                                                               :extra-html-fn (lambda (c-id)
-                                                                                (let ((*comment-individual-link* nil))
-                                                                                  (comment-tree-to-html out-stream (make-comment-parent-hash comments) c-id))))))
-                                                         (if chrono
-                                                             (comment-chrono-to-html out-stream comments)
-                                                             (comment-tree-to-html out-stream (make-comment-parent-hash comments))))
+                                                     (with-error-html-block (out-stream)
+                                                       (if target
+                                                           (comment-thread-to-html out-stream
+                                                             (lambda ()
+                                                               (comment-item-to-html
+                                                                 out-stream
+                                                                 target
+                                                                 :extra-html-fn (lambda (c-id)
+                                                                                  (let ((*comment-individual-link* nil))
+                                                                                    (comment-tree-to-html out-stream (make-comment-parent-hash comments) c-id))))))
+                                                           (if chrono
+                                                               (comment-chrono-to-html out-stream comments)
+                                                               (comment-tree-to-html out-stream (make-comment-parent-hash comments)))))
                                                      (format out-stream "</div>"))
                                                    (output-comments-votes (out-stream)
-                                                     (when lw2-auth-token
-                                                       (format out-stream "<script>commentVotes=~A</script>"
-                                                               (json:encode-json-to-string (get-post-comments-votes post-id lw2-auth-token)))))
+                                                     (handler-case
+                                                       (when lw2-auth-token
+                                                         (format out-stream "<script>commentVotes=~A</script>"
+                                                                 (json:encode-json-to-string (get-post-comments-votes post-id lw2-auth-token))))
+                                                       (t () nil)))
                                                    (output-post-vote (out-stream)
-                                                     (format out-stream "<script>postVote=~A</script>"
-                                                             (json:encode-json-to-string (get-post-vote post-id lw2-auth-token)))))
+                                                     (handler-case
+                                                       (format out-stream "<script>postVote=~A</script>"
+                                                               (json:encode-json-to-string (get-post-vote post-id lw2-auth-token)))
+                                                       (t () nil))))
                                             (multiple-value-bind (post title condition)
                                               (handler-case (nth-value 0 (get-post-body post-id :auth-token (and need-auth lw2-auth-token)))
                                                 (serious-condition (c) (values nil "Error" c))
