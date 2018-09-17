@@ -1185,11 +1185,11 @@
 					 (check-csrf-token csrf-token)
 					 (cond
 					   ((or (string= login-username "") (string= login-password "")) (emit-login-page :error-message "Please enter a username and password")) 
-					   (t (multiple-value-bind (user-id auth-token error-message expires) (do-lw2-login "username" login-username login-password)
+					   (t (multiple-value-bind (user-id auth-token error-message expires) (do-login "username" login-username login-password)
 						(cond
 						  (auth-token
-						    (hunchentoot:set-cookie "lw2-auth-token" :value auth-token :secure *secure-cookies* :max-age (+ (- expires (get-unix-time)) (* 24 60 60)))
-                                                    (hunchentoot:set-cookie "lw2-status" :value (json:encode-json-to-string (alist :expires expires)) :secure *secure-cookies* :max-age (- (expt 2 31) 1))
+						    (hunchentoot:set-cookie "lw2-auth-token" :value auth-token :secure *secure-cookies* :max-age (and expires (+ (- expires (get-unix-time)) (* 24 60 60))))
+                                                    (if expires (hunchentoot:set-cookie "lw2-status" :value (json:encode-json-to-string (alist :expires expires)) :secure *secure-cookies* :max-age (- (expt 2 31) 1)))
 						    (cache-put "auth-token-to-userid" auth-token user-id)
 						    (cache-put "auth-token-to-username" auth-token login-username)
 						    (setf (hunchentoot:return-code*) 303

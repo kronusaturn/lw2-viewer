@@ -1,12 +1,15 @@
 (defpackage lw2-viewer.config
   (:use #:cl)
-  (:export #:*site-uri* #:*graphql-uri* #:*websocket-uri* #:*secure-cookies* #:*cache-db* #:*lmdb-mapsize*))
+  (:export #:*site-uri* #:*graphql-uri* #:*websocket-uri* #:*backend-type* #:*secure-cookies* #:*cache-db* #:*lmdb-mapsize*))
 (in-package #:lw2-viewer.config)
 
 (defparameter *site-uri* "http://www.example.com/") 
 
 (defparameter *graphql-uri* "https://www.lesswrong.com/graphql")
 (defparameter *websocket-uri* "wss://www.lesswrong.com/")
+
+; Supported backends: lw2 accordius
+(defparameter *backend-type* "lw2")
 
 (defparameter *secure-cookies* nil)
 

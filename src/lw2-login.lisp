@@ -1,7 +1,7 @@
-(defpackage #:lw2.login
-  (:use #:cl #:lw2-viewer.config #:alexandria #:cl-json #:flexi-streams #:websocket-driver-client)
+(uiop:define-package #:lw2.login
+  (:use #:cl #:lw2-viewer.config #:lw2.utils #:lw2.backend #:alexandria #:cl-json #:flexi-streams #:websocket-driver-client)
   (:import-from #:ironclad #:byte-array-to-hex-string #:digest-sequence)
-  (:export #:do-lw2-resume #:do-lw2-login #:do-lw2-create-user #:do-lw2-forgot-password #:do-lw2-reset-password
+  (:export #:do-lw2-resume #:do-login #:do-lw2-create-user #:do-lw2-forgot-password #:do-lw2-reset-password
 	   #:do-lw2-post-query #:do-lw2-post-query*
            #:do-lw2-post #:do-lw2-post-edit #:do-lw2-post-remove #:do-lw2-comment #:do-lw2-comment-edit #:do-lw2-comment-remove #:do-lw2-vote))
 
@@ -124,8 +124,9 @@
 
 (defun do-lw2-post-query (auth-token data)
   (let* ((response-json (octets-to-string
-			  (drakma:http-request *graphql-uri* :method :post :additional-headers `(("authorization" . ,auth-token)
-												 ,@(forwarded-header))
+			  (drakma:http-request *graphql-uri* :method :post
+                                               :additional-headers (remove-if #'null `(,(if auth-token (cons "authorization" auth-token))
+                                                                                       ,@(forwarded-header)))
 					       :content-type "application/json"
 					       :content (encode-json-to-string data))))
 	 (response-alist (json:decode-json-from-string response-json))
@@ -136,6 +137,17 @@
 		   (error "Unknown LW2 error: ~A" res-error)))
       (res-data res-data) 
       (t (error "Unknown response from LW2 server: ~A" response-json))))) 
+
+(defun do-accordius-login (user-designator-type user-designator password)
+  (declare (ignore user-designator-type))
+  (let ((response
+          (lw2-graphql-query (graphql-query-string "Login" (alist :username user-designator :password password) nil))))
+    (values "1" response)))
+
+(declaim (ftype (function (string string string) (values string string &optional))))
+(setf (symbol-function 'do-login)
+      (symbol-function (cond ((string= *backend-type* "lw2") 'do-lw2-login)
+                             ((string= *backend-type* "accordius") 'do-accordius-login))))
 
 (defun do-lw2-post-query* (auth-token data)
   (cdr (assoc :--id (do-lw2-post-query auth-token data))))
