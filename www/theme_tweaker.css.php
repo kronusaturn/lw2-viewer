@@ -168,6 +168,59 @@
 	padding: 0 4px;
 }
 
+#theme-tweaker-ui #theme-tweak-section-sample-text {
+	position: sticky;
+	top: 24px;
+	background-color: #bfb8bf;
+	z-index: 1;
+	box-shadow:
+		1px 1px 0 #fff8ff inset,
+		0 1px 0 #fff8ff,
+		1px 0 0 #fff8ff,
+		1px 1px 0 #fff8ff,
+		0 -24px 0 1px #bfb8bf,
+		0  2px 0 1px rgba(191, 184, 191, 1.0),
+		0  4px 0 1px rgba(191, 184, 191, 0.875),
+		0  6px 0 1px rgba(191, 184, 191, 0.75),
+		0  8px 0 1px rgba(191, 184, 191, 0.625),
+		0 10px 0 1px rgba(191, 184, 191, 0.5),
+		0 12px 0 1px rgba(191, 184, 191, 0.375),
+		0 14px 0 1px rgba(191, 184, 191, 0.25),
+		0 16px 0 1px rgba(191, 184, 191, 0.125);
+}
+@-moz-document url-prefix() {
+	#theme-tweaker-ui #theme-tweak-section-sample-text {
+		top: 8px;
+	}
+}
+#theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container {
+	display: table;
+	background-color: #fff8ff;
+	box-shadow:
+		-1px -1px 0 #dfd8df inset,
+		1px 1px 0 #030303 inset,
+		0 -1px 0 #7f787f,
+		-1px 0 0 #7f787f,
+		-1px -1px 0 #7f787f,
+		0 0 0 1px #fff8ff;
+	height: 135px;
+	width: 260px;
+	padding: 1px;
+	margin: 0 auto 0.5em auto;
+}
+/* This only needs to support Webkit because Firefox doesn’t support text size adjustment anyhow. */
+@supports (min-width: fit-content) {
+	#theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container {
+		min-width: fit-content;
+	}
+}
+#theme-tweaker-ui #theme-tweak-section-sample-text .sample-text {
+	display: table-cell;
+	width: 100%;
+	text-align: center;
+	vertical-align: middle;
+}
+
 #theme-tweaker-ui #theme-tweak-section-text-size-adjust {
 	text-align: center;
 }
@@ -193,37 +246,18 @@
 	cursor: default;
 	opacity: 0.5;
 }
-#theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container {
-	display: table;
-	background-color: #fff8ff;
-	box-shadow:
-		-1px -1px 0 #dfd8df inset,
-		1px 1px 0 #030303 inset,
-		0 -1px 0 #7f787f,
-		-1px 0 0 #7f787f,
-		-1px -1px 0 #7f787f,
-		0 0 0 1px #fff8ff;
-	cursor: pointer;
-	height: 60px;
-	width: 15em;	
-	padding: 1px;
-	margin: 0 auto 0.5em auto;
-}
-#theme-tweaker-ui #theme-tweak-section-sample-text .sample-text {
-	display: table-cell;
-	width: 100%;
-	text-align: center;
-	vertical-align: middle;
-}
 /* This doesn't work in Mozilla browsers, so hide it */
 @-moz-document url-prefix() {
 	#theme-tweaker-ui #theme-tweak-section-text-size-adjust {
+/* 
 		height: 0;
 		overflow: hidden;
 		padding: 0;
 		border: 0;
 		margin: 0 0 -16px 0;
 		visibility: hidden;
+ */
+	display: none;
 	}
 }
 
@@ -276,8 +310,9 @@
 	position: relative;
 	-webkit-appearance: none;
 	width: 100%;
+	height: 50px;
 	margin: 0;
-	padding: 24px 3.5em 24px 2.3em;
+	padding: 0 3.5em 0 2.3em;
 	background-color: transparent;
 	border: none;
 	cursor: pointer;
@@ -286,17 +321,18 @@ input[type='range']:focus {
 	outline: 1px dotted #000;
 }
 input[type='range']::-webkit-slider-runnable-track {
-	width: 100%;
-	height: 2px;
+	width: 100%;	
+	height: 4px;
+	box-sizing: content-box;
 	box-shadow:
-		-1px -1px 0 #dfd8df inset,
-		1px 1px 0 #030303 inset,
-		0 -1px 0 #7f787f,
-		-1px 0 0 #7f787f,
-		-1px -1px 0 #7f787f,
-		0 0 0 1px #fff8ff;
-	border-radius: 0px;
-	border: none;
+		-1px -1px 0 0 #fff8ff inset,
+		1px 1px 0 #7f787f inset,
+		-2px -2px 0 #dfd8df inset,
+		2px 2px 0 #030303 inset;
+	border-radius: 0;
+	border-color: #bfb8bf;
+	border-style: solid;
+	border-width: 23px 0 23px 0;
 }
 input[type='range']::-webkit-slider-thumb {
 	box-shadow: 
@@ -317,17 +353,18 @@ input[type='range']::-webkit-slider-thumb {
 	margin-top: -16px;
 }
 input[type='range']::-moz-range-track {
-	width: 100%;
-	height: 2px;
+	width: 100%;	
+	height: 4px;
+	box-sizing: content-box;
 	box-shadow:
-		-1px -1px 0 #dfd8df inset,
-		1px 1px 0 #030303 inset,
-		0 -1px 0 #7f787f,
-		-1px 0 0 #7f787f,
-		-1px -1px 0 #7f787f,
-		0 0 0 1px #fff8ff;
-	border-radius: 0px;
-	border: none;
+		-1px -1px 0 0 #fff8ff inset,
+		1px 1px 0 #7f787f inset,
+		-2px -2px 0 #dfd8df inset,
+		2px 2px 0 #030303 inset;
+	border-radius: 0;
+	border-color: #bfb8bf;
+	border-style: solid;
+	border-width: 23px 0 23px 0;
 }
 input[type='range']::-moz-range-thumb {
 	box-shadow: 
@@ -346,17 +383,18 @@ input[type='range']::-moz-range-thumb {
 	background: #bfb8bf;
 }
 input[type='range']::-ms-track {
-	width: 100%;
-	height: 2px;
-	border: none;
-	color: transparent;
+	width: 100%;	
+	height: 4px;
+	box-sizing: content-box;
 	box-shadow:
-		-1px -1px 0 #dfd8df inset,
-		1px 1px 0 #030303 inset,
-		0 -1px 0 #7f787f,
-		-1px 0 0 #7f787f,
-		-1px -1px 0 #7f787f,
-		0 0 0 1px #fff8ff;
+		-1px -1px 0 0 #fff8ff inset,
+		1px 1px 0 #7f787f inset,
+		-2px -2px 0 #dfd8df inset,
+		2px 2px 0 #030303 inset;
+	color: transparent;
+	border-color: #bfb8bf;
+	border-style: solid;
+	border-width: 23px 0 23px 0;
 }
 input[type='range']::-ms-thumb {
 	box-shadow: 

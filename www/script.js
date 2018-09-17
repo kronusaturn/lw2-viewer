@@ -768,7 +768,10 @@ function injectThemeTweaker() {
 		<p class='theme-selector'></p>
 		<div class='controls-container'>
 			<div id='theme-tweak-section-sample-text' class='section' data-label='Sample text'>
-				<div class='sample-text-container'><span class='sample-text'>Less Wrong</span></div>
+				<div class='sample-text-container'><span class='sample-text'>
+					<p>Less Wrong (text)</p>
+					<p><a href="#">Less Wrong (link)</a></p>
+				</span></div>
 			</div>
 			<div id='theme-tweak-section-text-size-adjust' class='section' data-label='Text size'>
 				<button type='button' class='text-size-adjust-button decrease' title='Decrease text size'></button>
@@ -1063,8 +1066,6 @@ function themeTweakerClippyCloseButtonClicked() {
 	document.querySelector("#theme-tweak-control-clippy").checked = false;
 }
 function themeTweakerTextSizeAdjustButtonClicked(event) {
-	let textZoomStyle = document.querySelector("#text-zoom");
-	
 	var zoomFactor = parseFloat(window.currentTextZoom) || 1.0;
 	if (event.target.hasClass("decrease")) {
 		zoomFactor = (zoomFactor - 0.05).toFixed(2);
@@ -1081,13 +1082,18 @@ function themeTweakerTextSizeAdjustButtonClicked(event) {
 	}
 }
 function updateThemeTweakerSampleText() {
-	let bodyTextElement = document.querySelector(".post-body") || document.querySelector(".comment-body");
 	let sampleText = document.querySelector("#theme-tweaker-ui #theme-tweak-section-sample-text .sample-text");
-	sampleText.style.fontFamily = bodyTextElement ? window.getComputedStyle(bodyTextElement).fontFamily : "MS Sans Serif";
-	sampleText.style.fontSize = bodyTextElement ? window.getComputedStyle(bodyTextElement).fontSize : "1rem";
-	sampleText.style.fontWeight = bodyTextElement ? window.getComputedStyle(bodyTextElement).fontWeight : "normal";
-	sampleText.style.color = bodyTextElement ? window.getComputedStyle(bodyTextElement).color : window.getComputedStyle(document.querySelector("#content")).color;
+
+	// This causes the sample text to take on the properties of the body text of a post.
+	sampleText.removeClass("post-body");
+	let bodyTextElement = document.querySelector(".post-body") || document.querySelector(".comment-body");
+	sampleText.addClass("post-body");	
+	sampleText.style.color = bodyTextElement ? 
+								window.getComputedStyle(bodyTextElement).color : 
+									window.getComputedStyle(document.querySelector("#content")).color;
 	
+	// Here we find out what is the actual background color that will be visible behind
+	// the body text of posts, and set the sample text’s background to that.
 	var backgroundElement = document.querySelector("#content");
 	while (window.getComputedStyle(backgroundElement).backgroundColor == "" || 
 		   window.getComputedStyle(backgroundElement).backgroundColor == "rgba(0, 0, 0, 0)")

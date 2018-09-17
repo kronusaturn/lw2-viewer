@@ -73,7 +73,7 @@ function setTextZoom(zoomFactor) {
 
 	let textZoomStyle = document.querySelector("#text-zoom");
 	textZoomStyle.innerHTML = 
-		`.post-body, .comment-body, #theme-tweaker-ui #theme-tweak-section-sample-text .sample-text {
+		`.post-body, .comment-body {
 			zoom: ${zoomFactor};
 		}`;
 
