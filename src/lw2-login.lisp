@@ -123,6 +123,7 @@
 ; (do-lw2-post-query "OCP7NeJEW9fPpYGG_nCN3g0felGTTNd0eg5uiLNQqBR" `((("query" . "mutation vote($documentId: String, $voteType: String, $collectionName: String) { vote(documentId: $documentId, voteType: $voteType, collectionName: $collectionName) { ... on Post { currentUserVotes { _id, voteType, power } } } }") ("variables" ("documentId" . "sqhAntEGpYgFXXH2H") ("voteType" . "upvote") ("collectionName" . "Posts")) ("operationName" . "vote"))))
 
 (defun do-lw2-post-query (auth-token data)
+  (lw2.backend::do-graphql-debug data)
   (let* ((response-json (octets-to-string
 			  (drakma:http-request *graphql-uri* :method :post
                                                :additional-headers (remove-if #'null `(,(if auth-token (cons "authorization" auth-token))

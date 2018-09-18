@@ -1,6 +1,7 @@
 (uiop:define-package #:lw2.backend
   (:use #:cl #:sb-thread #:flexi-streams #:alexandria #:lw2-viewer.config #:lw2.lmdb #:lw2.utils #:lw2.hash-utils)
-  (:export #:*posts-index-fields* #:*comments-index-fields* #:*messages-index-fields*
+  (:export #:*graphql-debug-output*
+           #:*posts-index-fields* #:*comments-index-fields* #:*messages-index-fields*
            #:*notifications-base-terms*
            #:condition-http-return-code
            #:lw2-error #:lw2-client-error #:lw2-not-found-error #:lw2-user-not-found-error #:lw2-not-allowed-error #:lw2-server-error #:lw2-connection-error #:lw2-unknown-error
@@ -13,6 +14,8 @@
 (in-package #:lw2.backend)
 
 (defvar *cookie-jar* (make-instance 'drakma:cookie-jar))
+
+(defvar *graphql-debug-output* nil)
 
 (defparameter *posts-index-fields* '(:title :--id :slug :user-id :posted-at :base-score :comment-count :page-url :url :word-count :frontpage-date :curated-date :meta :draft :af :vote-count))
 (defparameter *comments-index-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id (:parent-comment :--id :user-id :post-id) :base-score :page-url :vote-count :html-body))
@@ -122,7 +125,12 @@
         (signal-semaphore *background-loader-semaphore*))
       (warn "Background loader not running.")))
 
+(defun do-graphql-debug (query)
+  (when *graphql-debug-output*
+    (format *graphql-debug-output* "~&GraphQL query: ~A~%" query)))
+
 (defun lw2-graphql-query-streamparse (query &key auth-token)
+  (do-graphql-debug query)
   (multiple-value-bind (req-stream status-code headers final-uri reuse-stream want-close)
     (drakma:http-request *graphql-uri* :parameters (list (cons "query" query))
 			 :cookie-jar *cookie-jar* :additional-headers (if auth-token `(("authorization" . ,auth-token)) nil)
@@ -134,6 +142,7 @@
       (if want-close (close req-stream)))))
 
 (defun lw2-graphql-query-noparse (query &key auth-token)
+  (do-graphql-debug query)
   (multiple-value-bind (response-body status-code headers final-uri reuse-stream want-close status-string)
     (drakma:http-request *graphql-uri* :parameters (list (cons "query" query))
                          :cookie-jar *cookie-jar* :additional-headers (if auth-token `(("authorization" . ,auth-token)) nil)
