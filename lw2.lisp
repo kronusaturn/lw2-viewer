@@ -1051,10 +1051,10 @@
                                                                      n))
                                                   :auth-token auth-token)))
                                             (do-lw2-post-query (hunchentoot:cookie-in "lw2-auth-token")
-                                                               (list (alist :query "mutation usersEdit($documentId: String, $set: UsersInput) { usersEdit(documentId: $documentId, set: $set) { _id }}"
-                                                                            :variables (alist :document-id user-id
-                                                                                              :set (alist :last-notifications-check (local-time:format-timestring nil (local-time:now))))
-                                                                            :operation-name "usersEdit")))))
+                                                               (alist :query "mutation usersEdit($documentId: String, $set: UsersInput) { usersEdit(documentId: $documentId, set: $set) { _id }}"
+                                                                      :variables (alist :document-id user-id
+                                                                                        :set (alist :last-notifications-check (local-time:format-timestring nil (local-time:now))))
+                                                                      :operation-name "usersEdit"))))
                                         (t
                                           (let ((user-posts (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (nconc (alist :limit (+ 21 offset) :user-id user-id) posts-base-terms)) *posts-index-fields*)))
                                                 (user-comments (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (nconc (alist :limit (+ 21 offset) :user-id user-id) comments-base-terms)) 
@@ -1100,20 +1100,20 @@
                                                 (id (or id
                                                         (let ((participant-ids (list (logged-in-userid) (cdar (lw2-graphql-query (graphql-query-string "UsersSingle" (alist :slug to) '(:--id)))))))
                                                           (do-lw2-post-query* (hunchentoot:cookie-in "lw2-auth-token")
-                                                                              (list (alist :query "mutation ConversationsNew($document: ConversationsInput) { ConversationsNew(document: $document) { _id }}"
-                                                                                           :variables (alist :document
-                                                                                                             (alist :participant-ids participant-ids
-                                                                                                                    :title subject))
-                                                                                           :operation-name "ConversationsNew")))))))
+                                                                              (alist :query "mutation ConversationsNew($document: ConversationsInput) { ConversationsNew(document: $document) { _id }}"
+                                                                                     :variables (alist :document
+                                                                                                       (alist :participant-ids participant-ids
+                                                                                                              :title subject))
+                                                                                     :operation-name "ConversationsNew"))))))
                                            (do-lw2-post-query (hunchentoot:cookie-in "lw2-auth-token")
-                                                              (list (alist :query "mutation MessagesNew($document: MessagesInput) { MessagesNew(document: $document) { _id }}"
-                                                                           :variables (alist :document
-                                                                                             (alist :content
-                                                                                                    (alist :blocks (loop for para in (ppcre:split "\\n+" text)
-                                                                                                                         collect (alist :text para :type "unstyled"))
-                                                                                                           :entity-map (make-hash-table))
-                                                                                                    :conversation-id id))
-                                                                           :operation-name "MessagesNew")))
+                                                              (alist :query "mutation MessagesNew($document: MessagesInput) { MessagesNew(document: $document) { _id }}"
+                                                                     :variables (alist :document
+                                                                                       (alist :content
+                                                                                              (alist :blocks (loop for para in (ppcre:split "\\n+" text)
+                                                                                                                   collect (alist :text para :type "unstyled"))
+                                                                                                     :entity-map (make-hash-table))
+                                                                                              :conversation-id id))
+                                                                     :operation-name "MessagesNew"))
                                            (setf (hunchentoot:return-code*) 303
                                                  (hunchentoot:header-out "Location") (format nil "/conversation?id=~A" id))))
                                        ((and id to) (error "This is an invalid URL."))
