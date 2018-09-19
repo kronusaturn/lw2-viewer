@@ -353,6 +353,13 @@ a#inbox-indicator.new-messages:hover::before {
 	font-size: 0.75em;
 	flex-flow: column;
 }
+#content.index-page > .sublevel-nav.sort {
+	grid-column: 1;
+	grid-row: 3 / span 1;
+	justify-self: start;
+	flex-flow: row;
+}
+
 .sublevel-nav.sort::before {
 	content: "Sort";
 	position: absolute;
