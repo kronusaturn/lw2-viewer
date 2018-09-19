@@ -828,7 +828,9 @@ function themeUnloadCallback_less() {
 		element.innerHTML = element.firstChild.innerHTML;
 	});
 	
-	document.querySelector(".top-post-meta .date").innerHTML = document.querySelector(".bottom-post-meta .date").innerHTML;
+	document.querySelectorAll(".top-post-meta .date").forEach(function (topMetaDate) {
+		topMetaDate.innerHTML = document.querySelector(".bottom-post-meta .date").innerHTML;
+	});
 	
 	let isFirefox = /firefox/i.test(navigator.userAgent);
 	if (isFirefox) {
