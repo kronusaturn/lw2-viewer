@@ -884,6 +884,7 @@ h1.listing + .post-meta .post-section::before {
 }
 #content.user-page .sublevel-nav {
 	grid-row: 2;
+	margin-bottom: 1em;
 }
 #content.user-page #top-nav-bar {
 	grid-row: 3;
