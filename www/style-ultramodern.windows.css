@@ -347,14 +347,6 @@ a#inbox-indicator.new-messages:hover::before {
 	font-size: 0.75em;
 	flex-flow: column;
 }
-.index-page .sublevel-nav.sort {
-	top: 83px;
-	right: unset;
-	left: 20px;
-}
-.user-page .sublevel-nav.sort {
-	top: 167px;
-}
 .sublevel-nav.sort::before {
 	content: "Sort";
 	position: absolute;
