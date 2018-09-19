@@ -3996,20 +3996,29 @@ body {
 	text-shadow: 0.5px 0.5px 0 #fff;
 }
 .sublevel-nav.sort .sublevel-item {
-	border-radius: 0;
 	padding: 5px 6px;
-	border-color: #aaa;
-	border-style: solid;
 	text-transform: uppercase;
+	border: 1px solid #aaa;
 }
+
+/* Vertical */
 .sublevel-nav.sort .sublevel-item:first-child {
 	border-radius: 6px 6px 0 0;
-	border-width: 1px;
 }
 .sublevel-nav.sort .sublevel-item:last-child {
 	border-radius: 0 0 6px 6px;
 	border-width: 0 1px 1px 1px;
 }
+
+/* Horizontal */
+.sublevel-nav.sort.horizontal .sublevel-item:first-child {
+	border-radius: 6px 0 0 6px;
+}
+.sublevel-nav.sort.horizontal .sublevel-item:last-child {
+	border-radius: 0 6px 6px 0;
+	border-width: 1px 1px 1px 0;
+}
+
 .sublevel-nav.sort .sublevel-item:active {
 	border-color: #aaa;
 }

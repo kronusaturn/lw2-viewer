@@ -3973,7 +3973,7 @@ body {
 	opacity: 0.4;
 }
 
-.sublevel-nav + #top-nav-bar {
+#content.user-page > #top-nav-bar {
 	justify-content: center;
 	grid-column: 2;
 	padding: 0;
@@ -4017,6 +4017,12 @@ body {
 /* SORT ORDER SELECTOR */
 /*=====================*/
 
+#content.index-page .sublevel-nav.sort {
+	grid-row: 2;
+	grid-column: 3;
+	justify-self: right;
+}
+
 .sublevel-nav.sort {
 	padding: 18px 0 0 0;
 	border-radius: 8px;
@@ -4027,18 +4033,27 @@ body {
 	text-shadow: 0.5px 0.5px 0 #fff;
 }
 .sublevel-nav.sort .sublevel-item {
-	border-radius: 0;
 	padding: 5px 6px 2px 6px;
-	border-style: solid;
+	border: 1px solid #c4dbc4;
 	text-transform: uppercase;
 }
+
+/* Vertical */
 .sublevel-nav.sort .sublevel-item:first-child {
 	border-radius: 6px 6px 0 0;
-	border-width: 1px;
 }
 .sublevel-nav.sort .sublevel-item:last-child {
 	border-radius: 0 0 6px 6px;
 	border-width: 0 1px 1px 1px;
+}
+
+/* Horizontal */
+.sublevel-nav.sort.horizontal .sublevel-item:first-child {
+	border-radius: 6px 0 0 6px;
+}
+.sublevel-nav.sort.horizontal .sublevel-item:last-child {
+	border-radius: 0 6px 6px 0;
+	border-width: 1px 1px 1px 0;
 }
 
 /*============*/

@@ -1843,6 +1843,13 @@ registerInitializer('pageLayoutFinished', false, () => document.readyState == "c
 	
 	// FOR TESTING ONLY, COMMENT WHEN DEPLOYING.
 // 	document.querySelector("input[type='search']").value = document.documentElement.clientWidth;
+
+	// Add "horizontal" class to sort order selector when it's specified, via CSS, to
+	// be horizontal (i.e. flex-direction: row)
+	document.querySelectorAll(".sublevel-nav.sort").forEach(function (sortSelector) {
+		if (window.getComputedStyle(sortSelector).flexDirection == "row")
+			sortSelector.addClass("horizontal");
+	});
 });
 
 function generateImagesOverlay() {
