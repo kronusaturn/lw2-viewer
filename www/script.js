@@ -805,9 +805,6 @@ function themeLoadCallback_less() {
 			element.innerHTML = "<span>" + element.innerHTML + "</span>";
 		});
 	});
-	if (initializersDone['pageLayoutFinished']) {
-		forceInitializer('addSpans');
-	}
 
 	let isFirefox = /firefox/i.test(navigator.userAgent);
 	if (isFirefox) {
@@ -815,11 +812,6 @@ function themeLoadCallback_less() {
 		themeTweakStyle.dataset["tweaks"] = themeTweakStyle.textContent;
 		themeTweakStyle.textContent = "";
 	}
-	
-		try {
-	}
-	catch(e) { }
-
 }
 function themeUnloadCallback_less() {
 	removeSiteNavUIToggle();
