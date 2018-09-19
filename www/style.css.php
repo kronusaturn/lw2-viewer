@@ -229,9 +229,12 @@ a#inbox-indicator.new-messages:hover::before {
 /****************/
 
 #content > .page-toolbar {
-	grid-column: 2 / span 2;
+	grid-column: 3;
 	text-align: right;
 	margin-right: -20px;
+}
+#content.user-page > .page-toolbar {
+	grid-column: 2 / span 2;
 }
 
 .page-toolbar {
