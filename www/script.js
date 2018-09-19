@@ -1371,14 +1371,16 @@ function injectSiteNavUIToggle() {
 	let siteNavUIToggle = addUIElement("<div id='site-nav-ui-toggle'><button type='button' tabindex='-1'>&#xf0c9;</button></div>");
 	siteNavUIToggle.querySelector("button").addActivateEvent(siteNavUIToggleButtonClicked);
 	
-	if (window.localStorage.getItem("site-nav-ui-toggle-engaged") == "true") toggleSiteNavUI();
-}
-function removeSiteNavUIToggle() {
 	if (window.localStorage.getItem("site-nav-ui-toggle-engaged") == "true") {
-		document.querySelectorAll("#primary-bar, #secondary-bar, .page-toolbar, #site-nav-ui-toggle button").forEach(function (element) {
-			element.removeClass("engaged");
+		registerInitializer('engageSiteNavUI', true, () => document.querySelector(".page-toolbar") != null, function () {
+			toggleSiteNavUI();
 		});
 	}
+}
+function removeSiteNavUIToggle() {
+	document.querySelectorAll("#primary-bar, #secondary-bar, .page-toolbar, #site-nav-ui-toggle button").forEach(function (element) {
+		element.removeClass("engaged");
+	});
 
 	let siteNavUIToggle = document.querySelector("#site-nav-ui-toggle");
 	siteNavUIToggle.parentElement.removeChild(siteNavUIToggle);	
