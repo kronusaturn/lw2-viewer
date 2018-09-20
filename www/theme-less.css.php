@@ -1039,6 +1039,16 @@ h1.listing + .post-meta .post-section::before {
 	top: -3px;
 }
 
+a.post-section::before {
+	transition: color 0.15s ease;
+}
+a.post-section:hover::before {
+	color: #79a97e;
+}
+a.post-section.alignment-forum:hover::before {
+	color: #999bc1;
+}
+
 .post-meta > * {
 	color: #bbb;
 }
