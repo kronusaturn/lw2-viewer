@@ -4105,12 +4105,7 @@ body {
 	#post-nav-ui-toggle button.highlighted,
 	#appearance-adjust-ui-toggle button.highlighted {
 		opacity: 1.0;
-		transform: scale(1.25);
-		text-shadow:
-			0 0 1px #d9ffdc,
-			0 0 3px #aad0ae,
-			0 0 5px #aad0ae,
-			0 0 8px #aad0ae;
+		transform: scale(1.33);
 	}
 	
 	#site-nav-ui-toggle {

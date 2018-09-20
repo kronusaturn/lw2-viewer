@@ -745,18 +745,20 @@ function setSelectedTheme(themeName) {
 }
 function setTheme(themeName) {
 	var themeUnloadCallback = '';
+	var oldThemeName = '';
 	if (typeof(themeName) == 'undefined') {
 		themeName = readCookie('theme');
 		if (!themeName) return;
 	} else {
-		themeUnloadCallback = window['themeUnloadCallback_' + readCookie('theme')];
-	
+		themeUnloadCallback = window['themeUnloadCallback_' + (readCookie('theme') || 'default')];
+		oldThemeName = readCookie('theme') || 'default';
+		
 		if (themeName == 'default') setCookie('theme', '');
 		else setCookie('theme', themeName);
 	}
 	let themeLoadCallback = window['themeLoadCallback_' + themeName];
 	
-	if (themeUnloadCallback != null) themeUnloadCallback();
+	if (themeUnloadCallback != null) themeUnloadCallback(themeName);
 	
 	let styleSheetNameSuffix = (themeName == 'default') ? '' : ('-' + themeName);
 	let currentStyleSheetNameComponents = /style[^\.]*(\..+)$/.exec(document.querySelector("head link[href*='.css']").href);
@@ -770,7 +772,7 @@ function setTheme(themeName) {
 	newStyle.addEventListener('load', generateImagesOverlay);
 	newStyle.addEventListener('load', updateThemeTweakerSampleText);
 	if (window.adjustmentTransitions) newStyle.addEventListener('load', function() { pageFadeTransition(true); });
-	if (themeLoadCallback != null) newStyle.addEventListener('load', themeLoadCallback);
+	if (themeLoadCallback != null) newStyle.addEventListener('load', function () { themeLoadCallback(oldThemeName); });
 
 	if (window.adjustmentTransitions) {
 		pageFadeTransition(false);
@@ -788,7 +790,7 @@ function pageFadeTransition(fadeIn) {
 	}
 }
 
-function themeLoadCallback_less() {
+function themeLoadCallback_less(fromTheme = "") {
 	injectSiteNavUIToggle();
 
 	registerInitializer('shortenDate', true, () => document.querySelector(".top-post-meta") != null, function () {
@@ -815,8 +817,18 @@ function themeLoadCallback_less() {
 		// adjustment UI toggle) then show it, but then hide it after a short time.
 		registerInitializer('engageAppearanceAdjustUI', true, () => document.querySelector("#ui-elements-container") != null, function () {
 			toggleAppearanceAdjustUI();
-			window.setTimeout(toggleAppearanceAdjustUI,3000);
+			window.setTimeout(toggleAppearanceAdjustUI, 3000);
 		});
+	}
+	
+	if (fromTheme != "") {
+		allUIToggleButtons = document.querySelectorAll("#ui-elements-container div[id$='-ui-toggle'] button");
+		window.setTimeout(function () {
+			allUIToggleButtons.forEach(function (button) { button.addClass("highlighted"); });
+		}, 300);
+		window.setTimeout(function () {
+			allUIToggleButtons.forEach(function (button) { button.removeClass("highlighted"); });
+		}, 1800);
 	}
 
 	let isFirefox = /firefox/i.test(navigator.userAgent);
@@ -826,7 +838,7 @@ function themeLoadCallback_less() {
 		themeTweakStyle.textContent = "";
 	}
 }
-function themeUnloadCallback_less() {
+function themeUnloadCallback_less(toTheme = "") {
 	removeSiteNavUIToggle();
 
 	document.querySelectorAll(".top-post-meta .date, .top-post-meta .comment-count").forEach(function (element) {
@@ -849,14 +861,14 @@ function themeUnloadCallback_less() {
 	}
 }
 
-function themeLoadCallback_dark() {
+function themeLoadCallback_dark(fromTheme = "") {
 	document.querySelector("head").insertAdjacentHTML("beforeend", 
 		"<style id='dark-theme-adjustments'>" + 
 		`.markdown-reference-link a { color: #d200cf; filter: invert(100%); }` + 
 		`#bottom-bar.decorative::before { filter: invert(100%); }` +
 		"</style>");
 }
-function themeUnloadCallback_dark() {
+function themeUnloadCallback_dark(toTheme = "") {
 	document.querySelectorAll("#dark-theme-adjustments").forEach(function (e) { e.parentNode.removeChild(e); });
 }
 
