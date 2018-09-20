@@ -1031,10 +1031,14 @@ h1.listing + .post-meta .post-section::before {
 	font-weight: 400;
 	padding: 1px;
 }
+.post-meta .post-section.alignment-forum::before {
+	color: #d6d7ff;
+}
 .post .post-meta .post-section::before {
 	position: relative;
 	top: -3px;
 }
+
 .post-meta > * {
 	color: #bbb;
 }
