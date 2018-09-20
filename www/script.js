@@ -806,6 +806,16 @@ function themeLoadCallback_less() {
 		});
 	});
 
+	// If we're loading theme Less for the first time, then set the appearance adjustment 
+	// UI to be visible (to avoid confusion when initially switching from another theme).
+	if (window.localStorage.getItem("appearance-adjust-ui-toggle-engaged") == null)
+		window.localStorage.setItem("appearance-adjust-ui-toggle-engaged", "true");
+	if (window.localStorage.getItem("appearance-adjust-ui-toggle-engaged") == "true") {
+		registerInitializer('engageAppearanceAdjustUI', true, () => document.querySelector("#ui-elements-container") != null, function () {
+			toggleAppearanceAdjustUI();
+		});
+	}
+
 	let isFirefox = /firefox/i.test(navigator.userAgent);
 	if (isFirefox) {
 		let themeTweakStyle = document.querySelector("#theme-tweak");
@@ -824,6 +834,10 @@ function themeUnloadCallback_less() {
 		topMetaDate.innerHTML = document.querySelector(".bottom-post-meta .date").innerHTML;
 	});
 	
+	if (window.localStorage.getItem("appearance-adjust-ui-toggle-engaged") == "true") {
+		toggleAppearanceAdjustUI();
+	}
+
 	let isFirefox = /firefox/i.test(navigator.userAgent);
 	if (isFirefox) {
 		let themeTweakStyle = document.querySelector("#theme-tweak");
@@ -1423,6 +1437,7 @@ function injectAppearanceAdjustUIToggle() {
 }
 function appearanceAdjustUIToggleButtonClicked(event) {
 	toggleAppearanceAdjustUI();
+	window.localStorage.setItem("appearance-adjust-ui-toggle-engaged", window.localStorage.getItem("appearance-adjust-ui-toggle-engaged") != "true");
 }
 function toggleAppearanceAdjustUI() {
 	document.querySelectorAll("#theme-selector, #width-selector, #text-size-adjustment-ui, #theme-tweaker-toggle, #appearance-adjust-ui-toggle button").forEach(function (element) {
