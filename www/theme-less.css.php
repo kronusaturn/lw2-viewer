@@ -1853,6 +1853,13 @@ strong, b {
 /* QUALIFIED HYPERLINKING */
 /*========================*/
 
+#content.no-nav-bars ~ #ui-elements-container #site-nav-ui-toggle {
+	display: none;
+}
+#content.no-comments ~ #ui-elements-container #post-nav-ui-toggle {
+	display: none;
+}
+
 #aux-about-link a {
 	color: #777;
 }
