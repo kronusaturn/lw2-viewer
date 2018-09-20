@@ -806,13 +806,16 @@ function themeLoadCallback_less() {
 		});
 	});
 
-	// If we're loading theme Less for the first time, then set the appearance adjustment 
-	// UI to be visible (to avoid confusion when initially switching from another theme).
-	if (window.localStorage.getItem("appearance-adjust-ui-toggle-engaged") == null)
-		window.localStorage.setItem("appearance-adjust-ui-toggle-engaged", "true");
 	if (window.localStorage.getItem("appearance-adjust-ui-toggle-engaged") == "true") {
 		registerInitializer('engageAppearanceAdjustUI', true, () => document.querySelector("#ui-elements-container") != null, function () {
 			toggleAppearanceAdjustUI();
+		});
+	} else if (window.localStorage.getItem("appearance-adjust-ui-toggle-engaged") == null) {
+		// If state is not set (user has never clicked on the Less theme's appearance
+		// adjustment UI toggle) then show it, but then hide it after a short time.
+		registerInitializer('engageAppearanceAdjustUI', true, () => document.querySelector("#ui-elements-container") != null, function () {
+			toggleAppearanceAdjustUI();
+			window.setTimeout(toggleAppearanceAdjustUI,3000);
 		});
 	}
 
