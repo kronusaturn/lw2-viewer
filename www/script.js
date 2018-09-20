@@ -850,6 +850,7 @@ function themeLoadCallback_dark() {
 	document.querySelector("head").insertAdjacentHTML("beforeend", 
 		"<style id='dark-theme-adjustments'>" + 
 		`.markdown-reference-link a { color: #d200cf; filter: invert(100%); }` + 
+		`#bottom-bar.decorative::before { filter: invert(100%); }` +
 		"</style>");
 }
 function themeUnloadCallback_dark() {
