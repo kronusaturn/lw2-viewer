@@ -1372,7 +1372,7 @@ function injectSiteNavUIToggle() {
 	siteNavUIToggle.querySelector("button").addActivateEvent(siteNavUIToggleButtonClicked);
 	
 	if (window.localStorage.getItem("site-nav-ui-toggle-engaged") == "true") {
-		registerInitializer('engageSiteNavUI', true, () => document.querySelector(".page-toolbar") != null, function () {
+		registerInitializer('engageSiteNavUI', true, () => document.querySelector("#ui-elements-container") != null, function () {
 			toggleSiteNavUI();
 		});
 	}
