@@ -337,8 +337,12 @@ body {
 	#site-nav-ui-toggle.highlighted,
 	#post-nav-ui-toggle.highlighted,
 	#appearance-adjust-ui-toggle.highlighted {
-		opacity: 1.0;
 		transform: scale(1.33);
+	}
+	#site-nav-ui-toggle.highlighted button,
+	#post-nav-ui-toggle.highlighted button,
+	#appearance-adjust-ui-toggle.highlighted button {
+		opacity: 1.0;
 	}
 	#site-nav-ui-toggle button,
 	#post-nav-ui-toggle button,
@@ -367,6 +371,12 @@ body {
 	#post-nav-ui-toggle button::-moz-focus-inner,
 	#appearance-adjust-ui-toggle button::-moz-focus-inner {
 		border: none;
+	}
+	#site-nav-ui-toggle.highlighted,
+	#post-nav-ui-toggle.highlighted,
+	#appearance-adjust-ui-toggle.highlighted {
+		opacity: 1.0;
+		transform: scale(1.33);
 	}
 	
 	#site-nav-ui-toggle {
