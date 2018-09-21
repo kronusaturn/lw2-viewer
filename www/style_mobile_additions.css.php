@@ -565,6 +565,7 @@
 	}
 	#content.user-page > .page-toolbar {
 		grid-column: 2 / span 2;
+		margin: 0 0 6px 0;
 	}
 }
 @media only screen and (max-width: 520px) {
@@ -578,6 +579,10 @@
 	.page-toolbar > * {
 		line-height: 1.15;
 		padding: 4px 0;
+		margin: 0;
+	}
+	#content.user-page .page-toolbar > * {
+		margin-left: 1.5em;
 	}
 }
 
@@ -682,6 +687,16 @@ h1.listing {
 /*============*/
 /* USER PAGES */
 /*============*/
+
+@media only screen and (max-width: 720px) {
+	#content.user-page h1.page-main-heading {
+		align-self: center;
+	}
+	#content.user-page .user-stats {
+		padding: 4px 0;
+		line-height: 1.3;
+	}
+}
 
 /*============*/
 /* LOGIN PAGE */
