@@ -334,6 +334,12 @@ body {
 		border-radius: 50%;
 		z-index: 1;
 	}
+	#site-nav-ui-toggle.highlighted,
+	#post-nav-ui-toggle.highlighted,
+	#appearance-adjust-ui-toggle.highlighted {
+		opacity: 1.0;
+		transform: scale(1.33);
+	}
 	#site-nav-ui-toggle button,
 	#post-nav-ui-toggle button,
 	#appearance-adjust-ui-toggle button {
@@ -361,12 +367,6 @@ body {
 	#post-nav-ui-toggle button::-moz-focus-inner,
 	#appearance-adjust-ui-toggle button::-moz-focus-inner {
 		border: none;
-	}
-	#site-nav-ui-toggle button.highlighted,
-	#post-nav-ui-toggle button.highlighted,
-	#appearance-adjust-ui-toggle button.highlighted {
-		opacity: 1.0;
-		transform: scale(1.33);
 	}
 	
 	#site-nav-ui-toggle {

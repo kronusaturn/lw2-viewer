@@ -822,12 +822,12 @@ function themeLoadCallback_less(fromTheme = "") {
 	}
 	
 	if (fromTheme != "") {
-		allUIToggleButtons = document.querySelectorAll("#ui-elements-container div[id$='-ui-toggle'] button");
+		allUIToggles = document.querySelectorAll("#ui-elements-container div[id$='-ui-toggle']");
 		window.setTimeout(function () {
-			allUIToggleButtons.forEach(function (button) { button.addClass("highlighted"); });
+			allUIToggles.forEach(function (toggle) { toggle.addClass("highlighted"); });
 		}, 300);
 		window.setTimeout(function () {
-			allUIToggleButtons.forEach(function (button) { button.removeClass("highlighted"); });
+			allUIToggles.forEach(function (toggle) { toggle.removeClass("highlighted"); });
 		}, 1800);
 	}
 
