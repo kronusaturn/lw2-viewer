@@ -116,6 +116,16 @@ Element.prototype.removeActivateEvent = function() {
 	this.removeEventListener("keyup", ael);
 }
 
+function addScrollListener(fn) {
+	let wrapper = function(e) {
+		window.requestAnimationFrame(function () {
+			fn();
+			document.addEventListener("scroll", wrapper, {once: true, passive: true});
+		});
+	}
+	document.addEventListener("scroll", wrapper, {once: true, passive: true});
+}
+
 /****************/
 /* MISC HELPERS */
 /****************/
@@ -538,21 +548,17 @@ function highlightCommentsSince(date) {
 			oldCommentsStack.push(ci);
 		}
 	});
-	window.scrollListener = function(e) {
-		window.requestAnimationFrame(function () {
-			let ci = getCurrentVisibleComment();
-			if(ci) {
-				document.querySelector("#new-comment-nav-ui .new-comment-previous").disabled = !ci.prevNewComment;
-				document.querySelector("#new-comment-nav-ui .new-comment-next").disabled = !ci.nextNewComment;
-			} else {
-				document.querySelector("#new-comment-nav-ui .new-comment-previous").disabled = true;
-				document.querySelector("#new-comment-nav-ui .new-comment-next").disabled = (window.newComments.length == 0);
-			}
-			document.addEventListener("scroll", scrollListener, {once: true, passive: true});
-		});
-	}
-
-	scrollListener();
+	
+	addScrollListener(function () {
+		let ci = getCurrentVisibleComment();
+		if(ci) {
+			document.querySelector("#new-comment-nav-ui .new-comment-previous").disabled = !ci.prevNewComment;
+			document.querySelector("#new-comment-nav-ui .new-comment-next").disabled = !ci.nextNewComment;
+		} else {
+			document.querySelector("#new-comment-nav-ui .new-comment-previous").disabled = true;
+			document.querySelector("#new-comment-nav-ui .new-comment-next").disabled = (window.newComments.length == 0);
+		}
+	});
 
 	return newCommentsCount;
 }
@@ -577,7 +583,6 @@ function scrollToNewComment(next) {
 		history.replaceState(null, null, "#comment-" + tcid);
 		targetComment.scrollIntoView();
 	}
-	scrollListener();
 }
 
 function commentQuicknavButtonClicked(event) {
