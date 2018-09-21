@@ -573,6 +573,11 @@
 		flex-direction: column-reverse;
 		text-align: right;
 		align-self: start;
+		padding: 4px 0 0 0;
+	}
+	.page-toolbar > * {
+		line-height: 1.15;
+		padding: 4px 0;
 	}
 }
 
@@ -609,8 +614,9 @@
 /*=====================*/
 
 @media only screen and (max-width: 720px) {
-	.sublevel-nav.sort {
-		margin-top: 20px;
+	#content.index-page > .sublevel-nav.sort {
+		flex-flow: column;
+		margin-left: 4px;
 	}
 }
 
