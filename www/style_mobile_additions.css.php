@@ -182,7 +182,7 @@
 }
 #theme-selector.engaged ~ #theme-tweaker-toggle {
 	visibility: visible;
-	top: 480px;
+	top: 530px;
 	left: 0;
 	right: 0;
 	margin: auto;
@@ -578,7 +578,7 @@
 	}
 	.page-toolbar > * {
 		line-height: 1.15;
-		padding: 4px 0;
+		padding: 6px 0;
 		margin: 0;
 	}
 	#content.user-page .page-toolbar > * {
