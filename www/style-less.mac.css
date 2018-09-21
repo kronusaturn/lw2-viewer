@@ -5370,8 +5370,12 @@ div.comment-child-links a::first-letter {
 	color: #79a97e;
 }
 .markdown-hints {
-	border: 1px solid #c00;
-	background-color: #ffa;
+	border: 1px solid #faa;
+	background-color: #fff;
+}
+.markdown-hints .markdown-hints-row span,
+.markdown-hints .markdown-hints-row code {
+	padding: 2px 12px 2px 2px;
 }
 
 /*================*/
