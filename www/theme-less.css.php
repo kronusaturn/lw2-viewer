@@ -1987,8 +1987,12 @@ div > .MJXc-display {
 /*========*/
 
 @media only screen and (hover: none), only screen and (-moz-touch-enabled) {
-	#appearance-adjust-ui-toggle button,
-	#post-nav-ui-toggle button,
+	#site-nav-ui-toggle {
+		top: 10px;
+		left: 10px;
+	}
+
+	#ui-elements-container > div[id$='-ui-toggle'] button,
 	#theme-selector .theme-selector-close-button  {
 		color: #aaa;
 		text-shadow:

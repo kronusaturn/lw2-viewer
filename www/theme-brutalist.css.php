@@ -1343,8 +1343,7 @@ div > .MJXc-display {
 /*========*/
 
 @media only screen and (hover: none), only screen and (-moz-touch-enabled) {
-	#appearance-adjust-ui-toggle button,
-	#post-nav-ui-toggle button,
+	#ui-elements-container > div[id$='-ui-toggle'] button,
 	#theme-selector .theme-selector-close-button  {
 		color: #000;
 		box-shadow: none;
