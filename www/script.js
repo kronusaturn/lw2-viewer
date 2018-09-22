@@ -1405,7 +1405,9 @@ function injectSiteNavUIToggle() {
 	let siteNavUIToggle = addUIElement("<div id='site-nav-ui-toggle'><button type='button' tabindex='-1'>&#xf0c9;</button></div>");
 	siteNavUIToggle.querySelector("button").addActivateEvent(siteNavUIToggleButtonClicked);
 	
-	if (window.localStorage.getItem("site-nav-ui-toggle-engaged") == "true") {
+// 	let mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+	let mobile = ('ontouchstart' in document.documentElement);
+	if (!mobile && window.localStorage.getItem("site-nav-ui-toggle-engaged") == "true") {
 		registerInitializer('engageSiteNavUI', true, () => document.querySelector("#ui-elements-container") != null, function () {
 			toggleSiteNavUI();
 		});
