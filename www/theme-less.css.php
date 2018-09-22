@@ -1951,34 +1951,36 @@ div > .MJXc-display {
 /* FOR NARROW SCREENS */
 /*====================*/
 
-@media only screen and (max-width: 1080px) {
-	#site-nav-ui-toggle button.engaged {
-		left: -72px;
+@media not screen and (hover: none), not screen and (-moz-touch-enabled) {
+	@media only screen and (max-width: 1080px) {
+		#site-nav-ui-toggle button.engaged {
+			left: -72px;
+		}
+		#text-size-adjustment-ui {
+			left: -22px;
+			top: calc(100% - 240px);
+		}
+		#width-selector {
+			left: -23px;
+			top: calc(100% - 140px);
+		}
+		#theme-tweaker-toggle button {
+			width: unset;
+			height: unset;
+		}
 	}
-	#text-size-adjustment-ui {
-		left: -22px;
-		top: calc(100% - 240px);
+	@media only screen and (max-width: 1020px) {
 	}
-	#width-selector {
-		left: -23px;
-		top: calc(100% - 140px);
-	}
-	#theme-tweaker-toggle button {
-		width: unset;
-		height: unset;
-	}
-}
-@media only screen and (max-width: 1020px) {
-}
-@media only screen and (max-width: 1000px) {
-	#site-nav-ui-toggle button.engaged {
-		left: -56px;
-	}
-	#theme-selector {
-		padding: 0;
-	}
-	#theme-selector button {
-		margin: 1px 7px 0 7px;
+	@media only screen and (max-width: 1000px) {
+		#site-nav-ui-toggle button.engaged {
+			left: -56px;
+		}
+		#theme-selector {
+			padding: 0;
+		}
+		#theme-selector button {
+			margin: 1px 7px 0 7px;
+		}
 	}
 }
 
@@ -1991,10 +1993,26 @@ div > .MJXc-display {
 		top: 10px;
 		left: 10px;
 	}
+	#site-nav-ui-toggle button.engaged {
+		width: 1.125em;
+		overflow: hidden;
+		position: relative;
+		left: 5px;
+		top: -3px;
+	}
+	#site-nav-ui-toggle button.engaged::before {
+		content: "\F00D";
+		font-size: 34px;
+		padding: 0 0.25em 0 0;
+	}
+	#ui-elements-container > #site-nav-ui-toggle button.engaged {
+		transform: rotate(90deg);
+	}
 
 	#ui-elements-container > div[id$='-ui-toggle'] button,
 	#theme-selector .theme-selector-close-button  {
-		color: #aaa;
+		font-weight: 400;
+		color: #bbb;
 		text-shadow:
 			0 0 1px #fff,
 			0 0 3px #fff,
@@ -2098,6 +2116,10 @@ div > .MJXc-display {
 		border: 1px solid #999;
 	}
 
+	#content.index-page .sublevel-nav.sort {
+		grid-row: 1;
+	}
+
 	/*****************************************/
 	@media only screen and (max-width: 900px) {
 	/*****************************************/
@@ -2154,6 +2176,10 @@ div > .MJXc-display {
 	/*******************************************/
 	} @media only screen and (max-width: 720px) {
 	/*******************************************/
+		#content.index-page > .sublevel-nav.sort {
+			flex-flow: column;
+			margin-right: 4px;
+		}
 	/*******************************************/
 	} @media only screen and (max-width: 520px) {
 	/*******************************************/
