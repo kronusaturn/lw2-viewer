@@ -2011,7 +2011,6 @@ div > .MJXc-display {
 
 	#ui-elements-container > div[id$='-ui-toggle'] button,
 	#theme-selector .theme-selector-close-button  {
-		font-weight: 400;
 		color: #bbb;
 		text-shadow:
 			0 0 1px #fff,
@@ -2021,9 +2020,15 @@ div > .MJXc-display {
 			0 0 20px #fff,
 			0 0 30px #fff;
 	}
+	#ui-elements-container > div[id$='-ui-toggle'] button {
+		font-weight: 400;
+	}
+	#theme-selector .theme-selector-close-button {
+		font-weight: 300;
+	}
 
 	#theme-selector {
-		background-color: #eee;
+		background-color: #fff;
 		box-shadow: 
 			0 0 0 1px #999,
 			0 0 1px 3px #fff,
@@ -2034,25 +2039,37 @@ div > .MJXc-display {
 		border-radius: 12px;
 	}
 	#theme-selector::before {
-		color: #777;
-		font-weight: normal;
-		text-shadow: 0.5px 0.5px 0 #aaa;
+		color: #999;
+		font-weight: 300;
+		position: relative;
+		top: 6px;
 	}
-	#theme-selector button {
-		background-color: #e6e6e6;
+	#theme-selector button,
+	#theme-selector button.selected {
+		background-color: #fff;
 		border-radius: 10px;
+		box-shadow:
+			0 0 0 4px #fff inset,
+			0 0 0 5px #999 inset;
+	}
+	#theme-selector button.selected {
+		background-color: #c4dbc4;
 	}
 	#theme-selector button::after {
-		color: #000;
+		color: #819681;
+		font-weight: 300;
 		max-width: calc(100% - 3.5em);
 		overflow: hidden;
 		text-overflow: ellipsis;
-		padding: 0 0 2px 0;
+		padding: 1px 0 0 0;
 	}
 	#theme-selector button.selected::after {
-		text-shadow: 
-			0 -1px 0 #fff,
-			0 0.5px 0.5px #000;
+		color: #fff;
+	}
+
+	#theme-tweaker-toggle button {
+		color: #999;
+		font-weight: 400;
 	}
 
 	#quick-nav-ui {
