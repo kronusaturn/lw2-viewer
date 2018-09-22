@@ -25,7 +25,7 @@
 #ui-elements-container > * {
 	position: fixed;
 	visibility: hidden;
-	opacity: 1.0 !important;
+	opacity: 1.0;
 	z-index: 10000;
 }
 

@@ -2685,7 +2685,7 @@ div > .MJXc-display {
 #ui-elements-container > * {
 	position: fixed;
 	visibility: hidden;
-	opacity: 1.0 !important;
+	opacity: 1.0;
 	z-index: 10000;
 }
 
@@ -5989,9 +5989,6 @@ div > .MJXc-display {
 		}
 		h1.listing + .post-meta {
 			margin: 4px 6px;
-		}
-		h1.listing a[href^='http'] {
-			top: 2px;
 		}
 		#content.conversations-user-page h1.listing::after {
 			height: calc(100% + 2.25em);

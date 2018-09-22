@@ -2160,9 +2160,6 @@ div > .MJXc-display {
 		h1.listing + .post-meta {
 			margin: 4px 6px;
 		}
-		h1.listing a[href^='http'] {
-			top: 2px;
-		}
 		#content.conversations-user-page h1.listing::after {
 			height: calc(100% + 2.25em);
 		}
