@@ -576,13 +576,36 @@
 		align-self: start;
 		padding: 4px 0 0 0;
 	}
+	#content.user-page .page-toolbar {
+		display: flex;
+		flex-flow: row;
+		justify-content: flex-end;
+		padding: 2px 0 0 0;
+	}
+	#content.user-page .page-toolbar > * {
+		text-align: center;
+		flex-basis: 25%;
+		margin-left: 1.5em;
+	}
+	#content.user-page .page-toolbar > *,
+	#content.user-page .page-toolbar .button {
+		text-transform: uppercase;
+		font-size: 0.625rem;
+	}
+	#content.user-page .page-toolbar > *::before,
+	#content.user-page .page-toolbar .button::before {
+		font-size: 1.375rem;
+		display: block;
+		padding: 0;
+	}
+	#content.user-page .page-toolbar .rss::before {
+		font-size: 1.25rem;
+		margin: auto;
+	}
 	.page-toolbar > * {
 		line-height: 1.15;
 		padding: 6px 0;
 		margin: 0;
-	}
-	#content.user-page .page-toolbar > * {
-		margin-left: 1.5em;
 	}
 }
 
