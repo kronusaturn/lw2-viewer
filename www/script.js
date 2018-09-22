@@ -808,27 +808,31 @@ function themeLoadCallback_less(fromTheme = "") {
 		});
 	});
 
-	if (window.localStorage.getItem("appearance-adjust-ui-toggle-engaged") == "true") {
-		registerInitializer('engageAppearanceAdjustUI', true, () => document.querySelector("#ui-elements-container") != null, function () {
-			toggleAppearanceAdjustUI();
-		});
-	} else if (window.localStorage.getItem("appearance-adjust-ui-toggle-engaged") == null) {
-		// If state is not set (user has never clicked on the Less theme's appearance
-		// adjustment UI toggle) then show it, but then hide it after a short time.
-		registerInitializer('engageAppearanceAdjustUI', true, () => document.querySelector("#ui-elements-container") != null, function () {
-			toggleAppearanceAdjustUI();
-			window.setTimeout(toggleAppearanceAdjustUI, 3000);
-		});
-	}
+// 	let mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+	let mobile = ('ontouchstart' in document.documentElement);
+	if (!mobile) {
+		if (window.localStorage.getItem("appearance-adjust-ui-toggle-engaged") == "true") {
+			registerInitializer('engageAppearanceAdjustUI', true, () => document.querySelector("#ui-elements-container") != null, function () {
+				toggleAppearanceAdjustUI();
+			});
+		} else if (window.localStorage.getItem("appearance-adjust-ui-toggle-engaged") == null) {
+			// If state is not set (user has never clicked on the Less theme's appearance
+			// adjustment UI toggle) then show it, but then hide it after a short time.
+			registerInitializer('engageAppearanceAdjustUI', true, () => document.querySelector("#ui-elements-container") != null, function () {
+				toggleAppearanceAdjustUI();
+				window.setTimeout(toggleAppearanceAdjustUI, 3000);
+			});
+		}
 	
-	if (fromTheme != "") {
-		allUIToggles = document.querySelectorAll("#ui-elements-container div[id$='-ui-toggle']");
-		window.setTimeout(function () {
-			allUIToggles.forEach(function (toggle) { toggle.addClass("highlighted"); });
-		}, 300);
-		window.setTimeout(function () {
-			allUIToggles.forEach(function (toggle) { toggle.removeClass("highlighted"); });
-		}, 1800);
+		if (fromTheme != "") {
+			allUIToggles = document.querySelectorAll("#ui-elements-container div[id$='-ui-toggle']");
+			window.setTimeout(function () {
+				allUIToggles.forEach(function (toggle) { toggle.addClass("highlighted"); });
+			}, 300);
+			window.setTimeout(function () {
+				allUIToggles.forEach(function (toggle) { toggle.removeClass("highlighted"); });
+			}, 1800);
+		}
 	}
 
 	let isFirefox = /firefox/i.test(navigator.userAgent);
