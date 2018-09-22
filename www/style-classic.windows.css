@@ -4315,8 +4315,8 @@ h1.listing + .post-meta .post-section {
 }
 h1.listing + .post-meta .post-section::before {
 	left: unset;
-	right: calc(100% + 1.25em);
-	top: -1.75em;
+	right: calc(100% + 1.15em);
+	top: -1.95em;
 }
 h1.listing + .post-meta .link-post-domain {
 	order: -2;
