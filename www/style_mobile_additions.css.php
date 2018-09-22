@@ -582,25 +582,24 @@
 		justify-content: flex-end;
 		padding: 2px 0 0 0;
 	}
-	#content.user-page .page-toolbar > * {
+	#content.user-page .page-toolbar > form,
+	#content.user-page .page-toolbar > .button {
 		text-align: center;
 		flex-basis: 25%;
 		margin-left: 1.5em;
 	}
-	#content.user-page .page-toolbar > *,
 	#content.user-page .page-toolbar .button {
 		text-transform: uppercase;
 		font-size: 0.625rem;
 	}
-	#content.user-page .page-toolbar > *::before,
 	#content.user-page .page-toolbar .button::before {
 		font-size: 1.375rem;
 		display: block;
 		padding: 0;
 	}
-	#content.user-page .page-toolbar .rss::before {
-		font-size: 1.25rem;
-		margin: auto;
+	#content.user-page .page-toolbar .rss {
+		white-space: nowrap;
+		margin: 0 0 0 1.5em;
 	}
 	.page-toolbar > * {
 		line-height: 1.15;
