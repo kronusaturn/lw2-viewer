@@ -2202,7 +2202,7 @@ div > .MJXc-display {
 			display: none;
 		}
 		#inbox-indicator::before {
-			font-size: 1.625em;
+			font-size: 1.75em;
 			left: 2px;
 		}
 
@@ -2213,7 +2213,8 @@ div > .MJXc-display {
 			position: absolute;
 		}
 
-		#content {
+		#content,
+		#content.post-page {
 			padding: 0 4px;
 		}
 
@@ -2233,6 +2234,23 @@ div > .MJXc-display {
 		}
 		.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
 			background-color: #aaa;
+		}
+
+		.post {
+			padding: 0;
+		}
+		.post .top-post-meta .author {
+			margin: 1em auto 0 auto;
+		}
+		.post .top-post-meta .date,
+		.post .top-post-meta .comment-count {
+			position: static;
+		}
+		.post .top-post-meta .date {
+			margin: 1.5em auto 0 auto;
+		}
+		.post .top-post-meta .comment-count span {
+			display: initial;
 		}
 
 		.comment-item .comment-item {

@@ -802,12 +802,6 @@ function themeLoadCallback_less(fromTheme = "") {
 		postDate.innerHTML = dtf.format(new Date(+ postDate.getAttribute("data-js-date")));
 	});
 
-	registerInitializer('addSpans', true, () => document.querySelector(".top-post-meta") != null, function () {
-		document.querySelectorAll(".top-post-meta .date, .top-post-meta .comment-count").forEach(function (element) {
-			element.innerHTML = "<span>" + element.innerHTML + "</span>";
-		});
-	});
-
 // 	let mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 	let mobile = ('ontouchstart' in document.documentElement);
 	
@@ -816,6 +810,12 @@ function themeLoadCallback_less(fromTheme = "") {
 	}
 	
 	if (!mobile) {
+		registerInitializer('addSpans', true, () => document.querySelector(".top-post-meta") != null, function () {
+			document.querySelectorAll(".top-post-meta .date, .top-post-meta .comment-count").forEach(function (element) {
+				element.innerHTML = "<span>" + element.innerHTML + "</span>";
+			});
+		});
+
 		if (window.localStorage.getItem("appearance-adjust-ui-toggle-engaged") == "true") {
 			registerInitializer('engageAppearanceAdjustUI', true, () => document.querySelector("#ui-elements-container") != null, function () {
 				toggleAppearanceAdjustUI();
@@ -854,9 +854,15 @@ function themeUnloadCallback_less(toTheme = "") {
 		e.parentElement.removeChild(e);
 	});
 
-	document.querySelectorAll(".top-post-meta .date, .top-post-meta .comment-count").forEach(function (element) {
-		element.innerHTML = element.firstChild.innerHTML;
-	});
+// 	let mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+	let mobile = ('ontouchstart' in document.documentElement);
+
+	if (!mobile) {
+		// Remove spans
+		document.querySelectorAll(".top-post-meta .date, .top-post-meta .comment-count").forEach(function (element) {
+			element.innerHTML = element.firstChild.innerHTML;
+		});
+	}
 	
 	document.querySelectorAll(".top-post-meta .date").forEach(function (topMetaDate) {
 		topMetaDate.innerHTML = document.querySelector(".bottom-post-meta .date").innerHTML;
