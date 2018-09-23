@@ -2647,17 +2647,19 @@ div > .MJXc-display {
 		top: 100px;
 		right: -12px;
 	}
-	#quick-nav-ui,
-	#new-comment-nav-ui,
-	#new-comment-nav-ui + #hns-date-picker {
-		opacity: 0.4;
-	}
-	#quick-nav-ui:hover,
-	#new-comment-nav-ui:hover,
-	#new-comment-nav-ui + #hns-date-picker:hover,
-	#new-comment-nav-ui + #hns-date-picker:focus-within,
-	#new-comment-nav-ui:hover + #hns-date-picker {
-		opacity: 1.0;
+	@media not screen and (hover: none), not screen and (-moz-touch-enabled) {
+		#quick-nav-ui,
+		#new-comment-nav-ui,
+		#new-comment-nav-ui + #hns-date-picker {
+			opacity: 0.4;
+		}
+		#quick-nav-ui:hover,
+		#new-comment-nav-ui:hover,
+		#new-comment-nav-ui + #hns-date-picker:hover,
+		#new-comment-nav-ui + #hns-date-picker:focus-within,
+		#new-comment-nav-ui:hover + #hns-date-picker {
+			opacity: 1.0;
+		}
 	}
 	#theme-tweaker-toggle {
 		top: 70px;
