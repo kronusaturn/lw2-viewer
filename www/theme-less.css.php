@@ -2182,7 +2182,7 @@ div > .MJXc-display {
 			height: unset;
 			background-color: #fff;
 			border-bottom: 1px solid #eee;
-			z-index: 1;
+			z-index: 2;
 			visibility: hidden;
 			transition:
 				visibility 0.2s ease,
@@ -2190,8 +2190,27 @@ div > .MJXc-display {
 		}
 		#primary-bar.engaged {
 			width: 100%;
-			padding: 5px 4px 5px 60px;
 			visibility: visible;
+			padding: 5px 4px 70px 60px;
+		}
+		#secondary-bar #nav-item-archive,
+		#secondary-bar #nav-item-about {
+			opacity: 0.0;
+			transition: opacity 1.2s ease;
+		}
+		#secondary-bar.engaged #nav-item-archive,
+		#secondary-bar.engaged #nav-item-about {
+			opacity: 1.0;
+			position: fixed;
+			top: 80px;
+			z-index: 3;
+			width: 64px;
+		}
+		#secondary-bar.engaged #nav-item-archive {
+			left: 8px;
+		}
+		#secondary-bar.engaged #nav-item-about {
+			left: 72px;
 		}
 
 		#primary-bar .nav-inner {
