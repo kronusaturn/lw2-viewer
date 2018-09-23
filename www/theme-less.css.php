@@ -2196,7 +2196,7 @@ div > .MJXc-display {
 		#secondary-bar #nav-item-archive,
 		#secondary-bar #nav-item-about {
 			opacity: 0.0;
-			transition: opacity 1.2s ease;
+			transition: opacity 0.3s ease;
 		}
 		#secondary-bar.engaged #nav-item-archive,
 		#secondary-bar.engaged #nav-item-about {
@@ -2211,6 +2211,56 @@ div > .MJXc-display {
 		}
 		#secondary-bar.engaged #nav-item-about {
 			left: 72px;
+		}
+
+		.page-toolbar {
+			position: fixed;
+			height: unset;
+			z-index: 4;
+			right: 100%;
+			top: 80px;
+			opacity: 0.0;
+			transition:
+				opacity 0.3s ease,
+				right 0.2s ease;
+		}
+		.page-toolbar.engaged {
+			right: 0;
+			opacity: 1.0;
+		}
+		.page-toolbar,
+		#content:not(.user-page) .page-toolbar {
+			display: flex;
+			flex-flow: row;
+			justify-content: flex-end;
+			padding: 0 8px 0 0;
+		}
+		.page-toolbar > * {
+			right: unset;
+		}
+		.page-toolbar > form,
+		.page-toolbar > .button {
+			text-align: center;
+			flex-basis: 25%;
+			margin-left: 1.5em;
+		}
+		.page-toolbar .button {
+			text-transform: uppercase;
+			font-size: 0.625rem;
+		}
+		.page-toolbar .button::before {
+			font-size: 1.375rem;
+			display: block;
+			padding: 0;
+		}
+		.page-toolbar .rss {
+			white-space: nowrap;
+			margin: 0 0 0 1.5em;
+		}
+		.page-toolbar > * {
+			line-height: 1.15;
+			padding: 6px 0;
+			margin: 0;
 		}
 
 		#primary-bar .nav-inner {
