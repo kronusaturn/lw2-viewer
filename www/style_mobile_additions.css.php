@@ -319,7 +319,7 @@
 
 #hns-date-picker {
 	max-height: 0px;
-	bottom: 124px;
+	bottom: 132px;
 	right: 62px;
 	transition:
 		max-height 0.2s ease,

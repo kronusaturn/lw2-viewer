@@ -1435,7 +1435,7 @@ div > .MJXc-display {
 	}
 
 	#hns-date-picker {
-		bottom: 122px;
+		bottom: 130px;
 		right: 52px;
 		text-indent: 0;
 	}
