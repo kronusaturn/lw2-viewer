@@ -810,6 +810,11 @@ function themeLoadCallback_less(fromTheme = "") {
 
 // 	let mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 	let mobile = ('ontouchstart' in document.documentElement);
+	
+	if (mobile) {
+		document.querySelector("#content").insertAdjacentHTML("beforeend", "<div id='theme-less-mobile-first-row-placeholder'></div>");
+	}
+	
 	if (!mobile) {
 		if (window.localStorage.getItem("appearance-adjust-ui-toggle-engaged") == "true") {
 			registerInitializer('engageAppearanceAdjustUI', true, () => document.querySelector("#ui-elements-container") != null, function () {
@@ -844,6 +849,10 @@ function themeLoadCallback_less(fromTheme = "") {
 }
 function themeUnloadCallback_less(toTheme = "") {
 	removeSiteNavUIToggle();
+	
+	document.querySelectorAll("#theme-less-mobile-first-row-placeholder").forEach(function (e) {
+		e.parentElement.removeChild(e);
+	});
 
 	document.querySelectorAll(".top-post-meta .date, .top-post-meta .comment-count").forEach(function (element) {
 		element.innerHTML = element.firstChild.innerHTML;
