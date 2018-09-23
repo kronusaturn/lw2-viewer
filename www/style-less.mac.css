@@ -5992,8 +5992,18 @@ div > .MJXc-display {
 			height: 0;
 		}
 
+		#primary-bar .nav-inner {
+			font-size: 1.375em;
+		}
+		#secondary-bar .nav-inner {
+			font-size: 1.125em;
+		}
+		#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
+			padding: 6px 10px;
+		}
+
 		#nav-item-search {
-			max-width: calc(100% - 168px);
+			max-width: calc(100% - 180px);
 			top: 4px;
 			left: 68px;
 		}
@@ -6003,6 +6013,22 @@ div > .MJXc-display {
 		#nav-item-search button {
 			position: relative;
 			bottom: 2px;
+		}
+
+		#nav-item-login {
+			top: 16px;
+			right: 8px;
+		}
+		#nav-item-login .nav-inner {
+			text-transform: none;
+			font-size: 1.75em;
+		}
+		#nav-item-login .nav-inner::before {
+			display: none;
+		}
+		#inbox-indicator::before {
+			font-size: 1.625em;
+			left: 2px;
 		}
 
 		#bottom-bar .nav-inner {
@@ -6025,16 +6051,6 @@ div > .MJXc-display {
 		}
 		h1.listing + .post-meta .post-section::before {
 			position: unset;
-		}
-
-		#primary-bar .nav-inner {
-			font-size: 1.375em;
-		}
-		#secondary-bar .nav-inner {
-			font-size: 1.125em;
-		}
-		#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
-			padding: 6px 10px;
 		}
 
 		.archive-nav *[class^='archive-nav-item-'] {
