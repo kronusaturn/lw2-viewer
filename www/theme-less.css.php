@@ -2285,6 +2285,9 @@ div > .MJXc-display {
 		#content.user-page .user-stats {
 			grid-row: 2;
 		}
+		#content.user-page h1.page-main-heading {
+			margin: 0.5em 0 0 0.125em;
+		}
 		#content.user-page #comments-list-mode-selector,
 		#content.user-page .sublevel-nav.sort {
 			grid-row: 3 / span 2;
