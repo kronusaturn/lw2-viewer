@@ -5962,6 +5962,22 @@ div > .MJXc-display {
 		grid-row: 1;
 	}
 
+	#top-nav-bar {
+		padding: 1.25em 0 0.25em 0;
+		font-size: 1.625rem;
+		margin: 0;
+		grid-column: 2;
+	}
+	#top-nav-bar .page-number {
+		line-height: 1.7;
+	}
+	#top-nav-bar .page-number span {
+		display: block;
+	}
+	#top-nav-bar a.disabled {
+		opacity: 0.2;
+	}
+
 	/*****************************************/
 	@media only screen and (max-width: 900px) {
 	/*****************************************/
@@ -5970,8 +5986,16 @@ div > .MJXc-display {
 		.page-toolbar {
 			display: none !important;
 		}
+
 		#content {
 			padding: 0 4px;
+		}
+
+		#bottom-bar .nav-inner {
+			padding: 1rem 0 1.25rem 0;
+		}
+		#bottom-bar .nav-inner::after {
+			position: absolute;
 		}
 
 		h1.listing + .post-meta > * {
