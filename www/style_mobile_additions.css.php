@@ -33,7 +33,7 @@
 	visibility: visible;
 	display: inline-block;
 	border-radius: 50%;
-	z-index: 1;
+	z-index: 10000;
 }
 #ui-elements-container > div[id$='-ui-toggle'] button,
 #theme-selector .theme-selector-close-button {
@@ -933,6 +933,9 @@ a.comment-parent-link::after {
 @media only screen and (max-width: 520px) {
 	.comment-controls {
 		position: static;
+	}
+	.comment-controls:focus-within {
+		z-index: 10001;
 	}
 	.comment-controls .cancel-comment-button {
 		right: 10px;
