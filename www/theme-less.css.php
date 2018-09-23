@@ -2174,16 +2174,24 @@ div > .MJXc-display {
 			height: 0;
 		}
 
-		#primary-bar.engaged {
+		#primary-bar {
 			position: fixed;
 			left: 0;
-			width: 100%;
 			margin: 0;
-			padding: 5px 4px 5px 60px;
+			padding: 5px 0 5px 0;
 			height: unset;
 			background-color: #fff;
 			border-bottom: 1px solid #eee;
 			z-index: 1;
+			visibility: hidden;
+			transition:
+				visibility 0.2s ease,
+				width 0.2s ease;
+		}
+		#primary-bar.engaged {
+			width: 100%;
+			padding: 5px 4px 5px 60px;
+			visibility: visible;
 		}
 
 		#primary-bar .nav-inner {
