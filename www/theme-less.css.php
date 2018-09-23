@@ -2129,7 +2129,7 @@ div > .MJXc-display {
 	}
 	#hns-date-picker {
 		background-color: #fff;
-		border: 1px solid #999;
+		border: 1px solid #fff;
 	}
 
 	#top-nav-bar {
@@ -2261,6 +2261,14 @@ div > .MJXc-display {
 		}
 		.comment-item .comment-item + .comment-item {
 			margin: 1.5em 3px 3px 6px;
+		}
+
+		.comment-controls {
+			position: relative;
+		}
+		.comment-controls .cancel-comment-button,
+		#comments > .comment-controls .cancel-comment-button {
+			right: 4px;
 		}
 
 		.sublevel-nav .sublevel-item,

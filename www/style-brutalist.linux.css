@@ -5272,6 +5272,15 @@ div > .MJXc-display {
 			background-color: #fff;
 		}
 		
+		.comment-controls .cancel-comment-button {
+			max-width: 1.4em;
+		}
+		.comment-controls .cancel-comment-button::before {
+			opacity: 1.0;
+			position: relative;
+			top: -1px;
+		}
+		
 		.sublevel-nav .sublevel-item,
 		.sublevel-nav .sublevel-item:first-child,
 		.sublevel-nav .sublevel-item:last-child {

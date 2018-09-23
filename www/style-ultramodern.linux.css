@@ -5430,6 +5430,12 @@ div > .MJXc-display {
 			margin: 1.5em 0 4px 6px;
 		}
 
+		.comment-controls .cancel-comment-button::before {
+			text-shadow:
+				0 0 1px #fff,
+				0 0 3px #fff;
+		}
+
 		.sublevel-nav .sublevel-item,
 		.sublevel-nav .sublevel-item:first-child,
 		.sublevel-nav .sublevel-item:last-child {
