@@ -2277,6 +2277,29 @@ div > .MJXc-display {
 			border-width: 1px;
 			border-radius: 8px;
 		}
+
+		#content.user-page #theme-less-mobile-first-row-placeholder {
+			height: 60px;
+		}
+		#content.user-page h1.page-main-heading,
+		#content.user-page .user-stats {
+			grid-row: 2;
+		}
+		#content.user-page #comments-list-mode-selector,
+		#content.user-page .sublevel-nav.sort {
+			grid-row: 3 / span 2;
+		}
+		#content.user-page .sublevel-nav {
+			grid-row: 3;
+			margin-bottom: 1em;
+		}
+		#content.user-page #top-nav-bar {
+			grid-row: 4;
+			margin: 0.5em 0 0 0;
+		}
+		#content.user-page .page-toolbar {
+			display: none;
+		}
 	/*******************************************/
 	} @media only screen and (max-width: 720px) {
 	/*******************************************/
@@ -2319,8 +2342,6 @@ div > .MJXc-display {
 			font-weight: bold;
 		}
 		.textarea-container:focus-within .guiedit-mobile-help-button.active {
-			box-shadow:
-				0 0 0 2px #c00;
 			color: #c00;
 		}
 		.textarea-container:focus-within .guiedit-buttons-container {
