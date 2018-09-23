@@ -47,44 +47,55 @@ body {
 /* NAV BAR */
 /*=========*/
 
-.nav-inner {
-	font-size: 1.125em;
-	padding: 0.5rem 0.75rem;
-	text-align: right;
-}
-#secondary-bar .nav-inner {
-	font-size: 0.875em;
-	padding: 0.5rem 0.75rem;
-}
-#primary-bar,
-#secondary-bar {
-	margin: 0;
-	flex-flow: column;
-	line-height: 1;
-}
-#primary-bar {
-	position: fixed;
-	width: 112px;
-}
-#primary-bar > * {
-	position: relative;
-	right: 47px;
-}
-#nav-item-archive,
-#nav-item-about {
-	position: fixed;
-	transform: translateX(-106px);
-	width: 80px;
-}
-#content.post-page #nav-item-archive,
-#content.post-page #nav-item-about {
-	transform: translateX(-76px);
+/*= Layout (desktop) =*/
+
+@media not screen and (hover: none), not screen and (-moz-touch-enabled) {
+	.nav-inner {
+		font-size: 1.125em;
+		padding: 0.5rem 0.75rem;
+		text-align: right;
+	}
+	#secondary-bar .nav-inner {
+		font-size: 0.875em;
+		padding: 0.5rem 0.75rem;
+	}
+	#primary-bar,
+	#secondary-bar {
+		margin: 0;
+		flex-flow: column;
+		line-height: 1;
+	}
+	#primary-bar {
+		position: fixed;
+		width: 112px;
+	}
+	#primary-bar > * {
+		position: relative;
+		right: 47px;
+	}
+	#nav-item-archive,
+	#nav-item-about {
+		position: fixed;
+		transform: translateX(-106px);
+		width: 80px;
+	}
+	#content.post-page #nav-item-archive,
+	#content.post-page #nav-item-about {
+		transform: translateX(-76px);
+	}
+
+	#nav-item-home {
+		padding-top: 0.5em;
+	}
+
+	#bottom-bar .nav-inner {
+		text-align: center;
+		padding: 0.75em;
+	}
 }
 
-#bottom-bar .nav-inner {
-	text-align: center;
-    padding: 0.75em;
-}
+/*= Styling =*/
+
 #bottom-bar .nav-item a::before {
 	font-weight: 300;
 }
@@ -111,9 +122,6 @@ body {
 
 #nav-item-recent-comments .nav-inner span {
 	display: none;
-}
-#nav-item-home {
-	padding-top: 0.5em;
 }
 #nav-item-login {
 	position: absolute;
@@ -699,9 +707,6 @@ body {
 	border-radius: 4px;
 	text-decoration: none;
 }
-#quick-nav-ui a:hover {
-	color: #79a97e;
-}
 #quick-nav-ui a[href='#bottom-bar'] {
 	line-height: 1.8;
 }
@@ -713,6 +718,9 @@ body {
 	color: #ddd;
 }
 @media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+	#quick-nav-ui a:hover {
+		color: #79a97e;
+	}
 	#quick-nav-ui a:focus:not(:hover) {
 		transform: none;
 		text-shadow: none;
@@ -2164,6 +2172,18 @@ div > .MJXc-display {
 			position: static;
 			width: 0;
 			height: 0;
+		}
+
+		#primary-bar.engaged {
+			position: fixed;
+			left: 0;
+			width: 100%;
+			margin: 0;
+			padding: 5px 4px 5px 60px;
+			height: unset;
+			background-color: #fff;
+			border-bottom: 1px solid #eee;
+			z-index: 1;
 		}
 
 		#primary-bar .nav-inner {
