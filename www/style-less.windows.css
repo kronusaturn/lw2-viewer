@@ -2982,7 +2982,7 @@ div > .MJXc-display {
 
 #hns-date-picker {
 	max-height: 0px;
-	bottom: 124px;
+	bottom: 132px;
 	right: 62px;
 	transition:
 		max-height 0.2s ease,
@@ -5927,22 +5927,21 @@ div > .MJXc-display {
 	}
 	#new-comment-nav-ui {
 		background-color: #fff;
-		border: 1px solid #999;
+		border: 1px solid #fff;
 	}
 	#new-comment-nav-ui::before {
-		color: #777;
-		font-weight: bold;
+		color: #aaa;
+		font-weight: 500;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button {
-		box-shadow: 0 0 0 1px #999;
 		color: #00c;
 	}
 	#new-comment-nav-ui .new-comments-count {
 		background-color: inherit;
-		box-shadow: 0 -1px 0 0 #999;
+		top: 0;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
-		color: #bbb;
+		color: #e6e6e6;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-previous {
 		border-radius: 7px 0 0 7px;
@@ -6076,6 +6075,10 @@ div > .MJXc-display {
 		}
 		.post .top-post-meta .comment-count span {
 			display: initial;
+			position: static;
+		}
+		.post > h1:first-child {
+			line-height: 1.3;
 		}
 
 		.comment-item .comment-item {
