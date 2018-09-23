@@ -230,7 +230,8 @@
 					       do (plump:append-child (plump:parent node) item)))))
 				   (plump:element
 				     (alexandria:when-let (style (plump:attribute node "style"))
-							  (when (or aggressive-deformat (search "font-family" style) (search "font-style: inherit" style))
+							  (when (or aggressive-deformat (search "font-family" style) (search "font-style: inherit" style)
+                                                                    (search "MsoNormal" (plump:attribute node "class")))
 							    (setf aggressive-deformat t) 
 							    (plump:remove-attribute node "style"))) 
 				     (when (and aggressive-deformat (tag-is node "div"))
