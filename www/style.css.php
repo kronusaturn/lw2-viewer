@@ -480,6 +480,7 @@ a#inbox-indicator.new-messages:hover::before {
 
 #theme-selector button {
 	position: relative;
+	z-index: 1;
 }
 #theme-selector button::before {
 	content: attr(data-theme-name);
