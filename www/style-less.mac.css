@@ -3963,7 +3963,7 @@ body {
 /* PAGE TOOLBAR */
 /*==============*/
 
-#content > .page-toolbar {
+.page-toolbar {
 	padding: 0 0 0 0;
 	margin: 0;
 	white-space: nowrap;
@@ -6021,7 +6021,7 @@ div > .MJXc-display {
 		#primary-bar.engaged {
 			width: 100%;
 			visibility: visible;
-			padding: 5px 4px 70px 60px;
+			padding: 5px 4px 75px 60px;
 		}
 		#secondary-bar #nav-item-archive,
 		#secondary-bar #nav-item-about {
@@ -6078,16 +6078,27 @@ div > .MJXc-display {
 			text-transform: uppercase;
 			font-size: 0.625rem;
 		}
-		.page-toolbar .button::before {
+		.page-toolbar .button::before,
+		#content.user-page .page-toolbar .button::before,
+		.page-toolbar form::before,
+		#content.user-page .page-toolbar form::before {
 			font-size: 1.375rem;
 			display: block;
-			padding: 0;
+			padding: 2px;
+			font-size: 1.375rem;
+			display: block;
 		}
 		.page-toolbar .rss {
 			white-space: nowrap;
-			margin: 0 0 0 1.5em;
+			margin: 0;
 			position: fixed;
-			right: 40px;
+			left: 16px;
+			top: 88px;
+		}
+		#content.user-page .page-toolbar .rss {
+			top: 192px;
+			left: unset;
+			right: 6px;
 		}
 		.page-toolbar.engaged .rss {
 			visibility: hidden;
