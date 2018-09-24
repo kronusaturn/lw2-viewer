@@ -2219,14 +2219,11 @@ div > .MJXc-display {
 			z-index: 4;
 			right: 100%;
 			top: 80px;
-			opacity: 0.0;
 			transition:
-				opacity 0.3s ease,
 				right 0.2s ease;
 		}
 		.page-toolbar.engaged {
 			right: 0;
-			opacity: 1.0;
 		}
 		.page-toolbar,
 		#content:not(.user-page) .page-toolbar {
@@ -2237,6 +2234,9 @@ div > .MJXc-display {
 		}
 		.page-toolbar > * {
 			right: unset;
+			line-height: 1.15;
+			padding: 6px 0;
+			margin: 0;
 		}
 		.page-toolbar > form,
 		.page-toolbar > .button {
@@ -2256,11 +2256,11 @@ div > .MJXc-display {
 		.page-toolbar .rss {
 			white-space: nowrap;
 			margin: 0 0 0 1.5em;
+			position: fixed;
+			right: 40px;
 		}
-		.page-toolbar > * {
-			line-height: 1.15;
-			padding: 6px 0;
-			margin: 0;
+		.page-toolbar.engaged .rss {
+			visibility: hidden;
 		}
 
 		#primary-bar .nav-inner {
@@ -2396,9 +2396,6 @@ div > .MJXc-display {
 		#content.user-page #top-nav-bar {
 			grid-row: 4;
 			margin: 0.5em 0 0 0;
-		}
-		#content.user-page .page-toolbar {
-			display: none;
 		}
 	/*******************************************/
 	} @media only screen and (max-width: 720px) {
