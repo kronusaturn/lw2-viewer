@@ -4748,6 +4748,7 @@ h1.listing + .post-meta .post-section::before {
 	border-style: solid;
 }
 #content.user-page h1.listing {
+	max-width: 100%;
 	padding: 6px 8px 0 8px;
 	border-width: 1px 1px 0 1px;
 }

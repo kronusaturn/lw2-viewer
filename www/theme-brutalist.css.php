@@ -445,6 +445,7 @@ h1.listing + .post-meta .read-time {
 
 #content.user-page h1.listing {
 	padding: 0 6px;
+	max-width: 100%;
 }
 #content.user-page h1.listing::after {
 	content: "";

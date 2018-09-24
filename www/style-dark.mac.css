@@ -4469,6 +4469,7 @@ h1.listing + .post-meta::after {
 #content.user-page h1.listing {
 	padding: 0 6px;
 	padding-top: 0;
+	max-width: 100%;
 }
 #content.user-page h1.listing::after {
 	content: "";
