@@ -548,8 +548,8 @@ function highlightCommentsSince(date) {
 			oldCommentsStack.push(ci);
 		}
 	});
-	
-	addScrollListener(function () {
+
+	window.newCommentScrollListener = function () {
 		let ci = getCurrentVisibleComment();
 		if(ci) {
 			document.querySelector("#new-comment-nav-ui .new-comment-previous").disabled = !ci.prevNewComment;
@@ -558,7 +558,10 @@ function highlightCommentsSince(date) {
 			document.querySelector("#new-comment-nav-ui .new-comment-previous").disabled = true;
 			document.querySelector("#new-comment-nav-ui .new-comment-next").disabled = (window.newComments.length == 0);
 		}
-	});
+	};
+
+	addScrollListener(newCommentScrollListener);
+	newCommentScrollListener();
 
 	return newCommentsCount;
 }
@@ -583,6 +586,8 @@ function scrollToNewComment(next) {
 		history.replaceState(null, null, "#comment-" + tcid);
 		targetComment.scrollIntoView();
 	}
+
+	newCommentScrollListener();
 }
 
 function commentQuicknavButtonClicked(event) {
