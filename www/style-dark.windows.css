@@ -4475,30 +4475,40 @@ h1.listing + .post-meta::after {
 	border-bottom: 1px solid #2c2c2c;
 }
 
+#content.user-page h1.listing,
+#content.user-page h1.listing + .post-meta {
+	background-color: #131313;
+	border-style: solid;
+	border-color: #2c2c2c;
+}
+
 #content.user-page h1.listing {
 	padding: 0 6px;
-	padding-top: 0.125em;
-	max-width: 100%;
+	padding-top: 0.25em;
+	border-width: 1px 1px 0 1px;
+	margin: 1rem 0 0 0;
+}
+#content.user-page h1.listing a:hover {
+	background-color: #131313;
 }
 
 #content.user-page h1.listing + .post-meta {
-	margin: 0 6px 1em 35px;
-}
-#content.user-page h1.listing + .post-meta > * {
-	z-index: 1;
+	margin: 0;
+	padding: 0 6px 1em 35px;
+	border-width: 0 1px 1px 1px;
+	margin: 0 0 1rem 0;
 }
 #content.user-page h1.listing + .post-meta::after {
-	content: "";
-	display: block;
-	position: absolute;
-	left: -35px;
-	top: -37px;
-	width: calc(100% + 41px);
-	height: calc(100% + 52px);
-	box-shadow: 0px 0px 10px #9b9b9b;
-	pointer-events: none;
-	background-color: transparent;
-	z-index: 0;
+	display: none;
+}
+#content.user-page h1.listing + .post-meta .karma-value,
+#content.user-page h1.listing + .post-meta .comment-count,
+#content.user-page h1.listing + .post-meta .lw2-link,
+#content.user-page h1.listing + .post-meta .read-time {
+	bottom: 8px;
+}
+#content.user-page h1.listing + .post-meta .post-section::before {
+	left: -1px;
 }
 
 #content.conversations-user-page h1.listing {
