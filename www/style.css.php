@@ -488,6 +488,8 @@ a#inbox-indicator.new-messages:hover::before {
 	right: 100%;
 	padding: 5px 6px 6px 6px;
 	line-height: 1;
+	width: 6em;
+	text-align: right;
 	z-index: 1;
 	visibility: hidden;
 }

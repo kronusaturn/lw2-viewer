@@ -308,6 +308,15 @@ body {
 		0 0 0 5px #ccc inset;
 }
 
+#theme-selector button::before {
+	color: #aaa;
+	background-color: #eee;
+}
+#theme-selector button:hover::before,
+#theme-selector button.selected::before {
+	color: #777;
+}
+
 /*======================*/
 /* THEME TWEAKER TOGGLE */
 /*======================*/

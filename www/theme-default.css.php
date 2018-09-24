@@ -297,8 +297,12 @@ body {
 }
 
 #theme-selector button::before {
-	color: #888;
+	color: #999;
 	background-color: #d8d8d8;
+}
+#theme-selector button:hover::before,
+#theme-selector button.selected::before {
+	color: #666;
 }
 
 /*======================*/

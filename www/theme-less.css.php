@@ -692,6 +692,18 @@ body {
 		0 0 0 5px #999 inset;
 }
 
+#theme-selector button::before {
+	font-size: 0.9375em;
+	font-weight: 300;
+	padding: 6px;
+	color: #aaa;
+	background-color: #fff;
+}
+#theme-selector button:hover::before,
+#theme-selector button.selected::before {
+	color: #000;
+}
+
 /*======================*/
 /* THEME TWEAKER TOGGLE */
 /*======================*/

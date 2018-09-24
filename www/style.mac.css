@@ -482,6 +482,8 @@ a#inbox-indicator.new-messages:hover::before {
 	right: 100%;
 	padding: 5px 6px 6px 6px;
 	line-height: 1;
+	width: 6em;
+	text-align: right;
 	z-index: 1;
 	visibility: hidden;
 }
@@ -4096,8 +4098,12 @@ body {
 }
 
 #theme-selector button::before {
-	color: #888;
+	color: #999;
 	background-color: #d8d8d8;
+}
+#theme-selector button:hover::before,
+#theme-selector button.selected::before {
+	color: #666;
 }
 
 /*======================*/

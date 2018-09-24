@@ -317,6 +317,18 @@ a.nav-inner,
 		0 0 0 5px #bbb inset;
 }
 
+#theme-selector button::before {
+	font-size: 0.9375em;
+	padding: 6px;
+	font-weight: 300;
+	color: #bbb;
+	background-color: #fff;
+}
+#theme-selector button:hover::before,
+#theme-selector button.selected::before {
+	color: #444;
+}
+
 /*======================*/
 /* THEME TWEAKER TOGGLE */
 /*======================*/

@@ -243,6 +243,17 @@ body {
 		0 0 0 5px #bbb inset;
 }
 
+#theme-selector button::before {
+	font-size: 0.9375em;
+	padding: 5px 6px 7px 6px;
+	color: #999;
+	background-color: #d8d8d8;
+}
+#theme-selector button:hover::before,
+#theme-selector button.selected::before {
+	color: #222;
+}
+
 /*======================*/
 /* THEME TWEAKER TOGGLE */
 /*======================*/
