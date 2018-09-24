@@ -342,16 +342,6 @@ body {
 		border-radius: 50%;
 		z-index: 1;
 	}
-	#site-nav-ui-toggle.highlighted,
-	#post-nav-ui-toggle.highlighted,
-	#appearance-adjust-ui-toggle.highlighted {
-		transform: scale(1.33);
-	}
-	#site-nav-ui-toggle.highlighted button,
-	#post-nav-ui-toggle.highlighted button,
-	#appearance-adjust-ui-toggle.highlighted button {
-		opacity: 1.0;
-	}
 	#site-nav-ui-toggle button,
 	#post-nav-ui-toggle button,
 	#appearance-adjust-ui-toggle button {
@@ -383,8 +373,18 @@ body {
 	#site-nav-ui-toggle.highlighted,
 	#post-nav-ui-toggle.highlighted,
 	#appearance-adjust-ui-toggle.highlighted {
-		opacity: 1.0;
 		transform: scale(1.33);
+	}
+	#site-nav-ui-toggle.highlighted button,
+	#post-nav-ui-toggle.highlighted button,
+	#appearance-adjust-ui-toggle.highlighted button {
+		opacity: 1.0;
+		text-shadow:
+			0 0 1px #fff,
+			0 0 1px #64ff4c,
+			0 0 3px #64ff4c,
+			0 0 5px #64ff4c,
+			0 0 8px #64ff4c;
 	}
 	
 	#site-nav-ui-toggle {
