@@ -3863,7 +3863,6 @@ body {
 	filter: opacity(0.7);
 }
 #bottom-bar.decorative::after {
-	width: fit-content;
 	color: #eee;
 	position: absolute;
 	left: 0;
@@ -3872,6 +3871,16 @@ body {
 	background-color: #fff;
 	padding-right: 4px;
 	padding-left: 4px;
+}
+@supports (width: -moz-fit-content) {
+	#bottom-bar.decorative::after {
+		width: -moz-fit-content;
+	}
+}
+@supports (width: fit-content) {
+	#bottom-bar.decorative::after {
+		width: fit-content;
+	}
 }
 
 /* Accesskey hints */

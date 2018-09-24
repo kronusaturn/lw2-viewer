@@ -59,7 +59,6 @@ body {
 	filter: opacity(0.7);
 }
 #bottom-bar.decorative::after {
-	width: fit-content;
 	color: #eee;
 	position: absolute;
 	left: 0;
@@ -69,6 +68,13 @@ body {
 	padding-right: 4px;
 	padding-left: 4px;
 }
+<?php foreach (["-moz-fit-content", "fit-content"] as $pvalue) echo 
+"@supports (width: {$pvalue}) {
+	#bottom-bar.decorative::after {
+		width: {$pvalue};
+	}
+}
+"; ?>
 
 /* Accesskey hints */
 

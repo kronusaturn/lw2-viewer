@@ -3859,7 +3859,6 @@ body {
 	margin: 0 30px;
 }
 #bottom-bar.decorative::after {
-	width: fit-content;
 	color: #d8d8d8;
 	position: absolute;
 	left: 0;
@@ -3868,6 +3867,16 @@ body {
 	background-color: #fff;
 	padding-right: 4px;
 	padding-left: 4px;
+}
+@supports (width: -moz-fit-content) {
+	#bottom-bar.decorative::after {
+		width: -moz-fit-content;
+	}
+}
+@supports (width: fit-content) {
+	#bottom-bar.decorative::after {
+		width: fit-content;
+	}
 }
 
 .nav-bar .nav-item:not(.nav-current):not(#nav-item-search):hover,
