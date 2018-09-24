@@ -5997,8 +5997,7 @@ div > .MJXc-display {
 		}
 
 		#primary-bar,
-		#secondary-bar,
-		.page-toolbar {
+		#secondary-bar {
 			position: static;
 			width: 0;
 			height: 0;
@@ -6046,11 +6045,11 @@ div > .MJXc-display {
 		.page-toolbar {
 			position: fixed;
 			height: unset;
+			width: unset;
 			z-index: 4;
 			right: 100%;
 			top: 80px;
-			transition:
-				right 0.2s ease;
+			transition: right 0.2s ease;
 		}
 		.page-toolbar.engaged {
 			right: 0;
@@ -6090,18 +6089,24 @@ div > .MJXc-display {
 		}
 		.page-toolbar .rss {
 			white-space: nowrap;
-			margin: 0;
 			position: fixed;
-			left: 16px;
-			top: 88px;
+			top: 143px;
+			left: -60px;
+			padding: 6px 10px 5px 10px;
+			visibility: hidden;
+			background-color: #fff;
+			border-style: solid;
+			border-color: #eee;
+			border-width: 0 1px 1px 0;
+			transition: left 0.2s ease;
 		}
+		.page-toolbar .rss,
 		#content.user-page .page-toolbar .rss {
-			top: 192px;
-			left: unset;
-			right: 6px;
+			margin: 0;
 		}
 		.page-toolbar.engaged .rss {
-			visibility: hidden;
+			visibility: visible;
+			left: 0;
 		}
 
 		#primary-bar .nav-inner {
