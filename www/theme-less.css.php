@@ -2325,6 +2325,12 @@ div > .MJXc-display {
 			position: absolute;
 		}
 
+		#content.search-results-page #comments-list-mode-selector {
+			grid-column: 3;
+			grid-row: 2;
+			justify-self: end;
+		}
+
 		#content,
 		#content.post-page {
 			padding: 0 4px;
@@ -2336,6 +2342,7 @@ div > .MJXc-display {
 		h1.listing + .post-meta .post-section {
 			overflow: visible;
 			order: 1;
+			width: unset;
 		}
 		h1.listing + .post-meta .post-section::before {
 			position: unset;
@@ -2423,7 +2430,8 @@ div > .MJXc-display {
 	/*******************************************/
 	} @media only screen and (max-width: 520px) {
 	/*******************************************/
-		h1.listing {
+		h1.listing,
+		#content.search-results-page h1.listing {
 			font-size: 1.25rem;
 			margin: 18px 6px 4px 6px;
 		}
