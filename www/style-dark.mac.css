@@ -4274,6 +4274,7 @@ h1.listing {
 	font-family: 'Concourse', 'a_Avante', Arial, sans-serif, 'Font Awesome';
 	font-weight: 700;
 	margin: 0.7em 20px 0 20px;
+	max-width: calc(100% - 40px);
 	top: 0; ;
 }
 
@@ -5619,6 +5620,7 @@ div > .MJXc-display {
 	/*******************************************/
 		h1.listing {
 			margin: 10px 6px 6px 6px;
+			max-width: calc(100% - 12px);
 			font-size: 1.5rem;
 			padding-right: 35px;
 		}

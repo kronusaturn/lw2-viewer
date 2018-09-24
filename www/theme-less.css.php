@@ -832,6 +832,7 @@ body {
 h1.listing,
 #content.search-results-page h1.listing {
 	margin: 0.7em 20px 0.1em 0;
+	max-width: calc(100% - 20px);
 	font-family: <?php echo $headings_font; ?>, 'Font Awesome';
 	font-size: 1.25rem;
 	line-height: 1.2;
@@ -2448,6 +2449,7 @@ div > .MJXc-display {
 		#content.search-results-page h1.listing {
 			font-size: 1.25rem;
 			margin: 18px 6px 4px 6px;
+			max-width: calc(100% - 12px);
 		}
 		h1.listing + .post-meta {
 			margin: 4px 6px;

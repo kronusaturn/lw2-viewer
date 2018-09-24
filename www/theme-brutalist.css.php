@@ -378,6 +378,7 @@ body {
 
 h1.listing {
 	margin: 0.7em 20px 0.1em 20px;
+	max-width: calc(100% - 40px);
 	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
 	font-size: 1.625rem;
 }
@@ -1528,6 +1529,7 @@ div > .MJXc-display {
 		h1.listing {
 			font-size: 1.375rem;
 			margin: 18px 6px 4px 6px;
+			max-width: calc(100% - 12px);
 		}
 		h1.listing a[href^='http'] {
 			top: 4px;

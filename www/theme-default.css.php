@@ -473,6 +473,7 @@ h1.listing {
 	font-family: <?php echo $listings_font; ?>, 'Font Awesome';
 	font-weight: <?php echo ($platform == 'Mac') ? "700" : "800"; ?>;
 	margin: 0.7em 20px 0 20px;
+	max-width: calc(100% - 40px);
 	top: <?php echo ($platform == 'Mac') ? "0" : "0.125em"; ?>; ;
 }
 
@@ -1770,6 +1771,7 @@ div > .MJXc-display {
 	/*******************************************/
 		h1.listing {
 			margin: 10px 6px 6px 6px;
+			max-width: calc(100% - 12px);
 			font-size: 1.5rem;
 			padding-right: 35px;
 		}

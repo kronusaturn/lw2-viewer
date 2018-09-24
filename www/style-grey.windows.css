@@ -4284,6 +4284,7 @@ body {
 
 h1.listing {
 	margin: 0.6em 20px 0 20px;
+	max-width: calc(100% - 40px);
 	line-height: 1;
 	font-family: 'Whitney', 'a_Avante', Arial, sans-serif, 'Font Awesome';
 	font-size: 1.5rem;
@@ -5625,6 +5626,7 @@ div > .MJXc-display {
 		h1.listing {
 			font-size: 1.25rem;
 			margin: 18px 6px 4px 6px;
+			max-width: calc(100% - 12px);
 		}
 		h1.listing + .post-meta {
 			margin: 4px 6px;
