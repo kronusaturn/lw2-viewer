@@ -640,9 +640,11 @@ body {
 		transition:
 			opacity 0.5s ease-out;
 	}
-	@-moz-document url-prefix() {
-		#theme-tweaker-toggle {
-			display: none;
+	@media not screen and (hover: none), not screen and (-moz-touch-enabled) {
+		@-moz-document url-prefix() {
+			#theme-tweaker-toggle {
+				display: none;
+			}
 		}
 	}
 	#theme-tweaker-toggle button {
