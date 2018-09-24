@@ -683,13 +683,13 @@ h1.listing + .post-meta::after {
 	padding-top: <?php echo ($platform == 'Mac') ? "0.125em" : "0.25em"; ?>;
 	border-width: 1px 1px 0 1px;
 	margin: 1rem 0 0 0;
+	max-width: 100%;
 }
 #content.user-page h1.listing a:hover {
 	background-color: #eee;
 }
 
 #content.user-page h1.listing + .post-meta {
-	margin: 0;
 	padding: 0 6px 1em 35px;
 	border-width: 0 1px 1px 1px;
 	margin: 0 0 1rem 0;
@@ -701,7 +701,7 @@ h1.listing + .post-meta::after {
 #content.user-page h1.listing + .post-meta .comment-count,
 #content.user-page h1.listing + .post-meta .lw2-link,
 #content.user-page h1.listing + .post-meta .read-time {
-	bottom: 8px;
+	bottom: 10px;
 }
 #content.user-page h1.listing + .post-meta .post-section::before {
 	left: -1px;
@@ -1039,6 +1039,13 @@ div.comment-child-links a::first-letter {
 		0 0 20px #fff,
 		0 0 30px #fff,
 		0 0 40px #fff;
+}
+
+#content.user-page.compact > h1.listing {
+	margin-top: 0.5rem;
+}
+#content.user-page.compact > h1.listing + .post-meta {
+	margin-bottom: 0.5rem;
 }
 
 /*===========================*/
