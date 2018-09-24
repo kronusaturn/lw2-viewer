@@ -1142,14 +1142,10 @@
 				       (setf (hunchentoot:return-code*) 301
 					     (hunchentoot:header-out "Location") link)
 				       (multiple-value-bind (posts comments) (lw2-search-query q)
-                                         (emit-page (out-stream :title "Search" :current-uri "/search" :content-class "search-results-page")
-                                                    (dolist (p posts) (post-headline-to-html out-stream p))
-                                                    (with-outputs (out-stream) "<ul class=\"comment-thread\">")
-                                                    (dolist (c comments)
-                                                      (format out-stream "<li class=\"comment-item\">")
-                                                      (comment-to-html out-stream (search-result-markdown-to-html c) :with-post-title t)
-                                                      (format out-stream "</li>"))
-                                                    (with-outputs (out-stream) "</ul>")))))))
+                                         (view-items-index (nconc (map 'list (lambda (p) (if (cdr (assoc :comment-count p)) p (cons (cons :comment-count 0) p))) posts)
+                                                                  (map 'list #'search-result-markdown-to-html comments))
+                                                           :content-class "search-results-page" :current-uri "/search"
+                                                           :title (format nil "~@[~A - ~]Search" (and q (encode-entities q)))))))))
 
 (hunchentoot:define-easy-handler (view-login :uri "/login") (return cookie-check (csrf-token :request-type :post) (login-username :request-type :post) (login-password :request-type :post)
 								    (signup-username :request-type :post) (signup-email :request-type :post) (signup-password :request-type :post) (signup-password2 :request-type :post))
