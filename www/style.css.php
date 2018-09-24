@@ -1280,6 +1280,7 @@ h1.listing + .post-meta .read-time {
 ul.comment-thread {
 	list-style-type: none;
 	padding: 0;
+	max-width: 100%;
 }
 #comments .comment-thread > li {
 	position: relative;
