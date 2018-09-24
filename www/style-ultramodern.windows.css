@@ -472,6 +472,23 @@ a#inbox-indicator.new-messages:hover::before {
 	cursor: auto;
 }
 
+#theme-selector button {
+	position: relative;
+}
+#theme-selector button::before {
+	content: attr(data-theme-name);
+	position: absolute;
+	top: 0;
+	right: 100%;
+	padding: 5px 6px 6px 6px;
+	line-height: 1;
+	z-index: 1;
+	visibility: hidden;
+}
+#theme-selector:hover button::before {
+	visibility: visible;
+}
+
 /************************/
 /* THEME TWEAKER TOGGLE */
 /************************/

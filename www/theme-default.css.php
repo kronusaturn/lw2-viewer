@@ -296,6 +296,11 @@ body {
 		0 0 0 5px #bbb inset;
 }
 
+#theme-selector button::before {
+	color: #888;
+	background-color: #d8d8d8;
+}
+
 /*======================*/
 /* THEME TWEAKER TOGGLE */
 /*======================*/
