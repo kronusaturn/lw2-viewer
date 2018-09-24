@@ -1366,7 +1366,6 @@ div > .MJXc-display {
 	#ui-elements-container > div[id$='-ui-toggle'] button,
 	#theme-selector .theme-selector-close-button  {
 		color: #000;
-		box-shadow: none;
 		opacity: 1.0;
 	}
 	#appearance-adjust-ui-toggle button,
