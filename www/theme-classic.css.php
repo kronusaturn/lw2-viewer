@@ -53,7 +53,7 @@ body {
 	width: 100%;
 	color: transparent;
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/one_pixel_DDD.gif")) ?>');
-	background-repeat-y: no-repeat;
+	background-repeat: repeat-x;
 	background-position: center 44%;
 	margin: 0 30px;
 	filter: opacity(0.7);

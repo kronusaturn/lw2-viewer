@@ -3866,7 +3866,7 @@ body {
 	width: 100%;
 	color: transparent;
 	background-image: url('data:image/gif;base64,R0lGODlhAQABAPAAMeXl5Q8BACwAAAAAAQABAAACAkQBADs=');
-	background-repeat-y: no-repeat;
+	background-repeat: repeat-x;
 	background-position: center 35%;
 	margin: 0 30px;
 }
