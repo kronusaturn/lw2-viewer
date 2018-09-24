@@ -4471,22 +4471,25 @@ h1.listing + .post-meta::after {
 	padding-top: 0;
 	max-width: 100%;
 }
-#content.user-page h1.listing::after {
-	content: "";
-	display: block;
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: calc(100% + 1.375em);
-	box-shadow: 0px 0px 10px #555;
-	pointer-events: none;
-}
+
 #content.user-page h1.listing + .post-meta {
 	margin: 0 6px 1em 35px;
 }
+#content.user-page h1.listing + .post-meta > * {
+	z-index: 1;
+}
 #content.user-page h1.listing + .post-meta::after {
-	display: none;
+	content: "";
+	display: block;
+	position: absolute;
+	left: -35px;
+	top: -37px;
+	width: calc(100% + 41px);
+	height: calc(100% + 52px);
+	box-shadow: 0px 0px 10px #555;
+	pointer-events: none;
+	background-color: transparent;
+	z-index: 0;
 }
 
 #content.conversations-user-page h1.listing {
