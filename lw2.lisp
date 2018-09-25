@@ -1258,7 +1258,7 @@
                                                     (format nil "/~{~A~^/~}" url-elements)))
                                             (let* ((offset (if offset (parse-integer offset) 0))
                                                    (posts (lw2-graphql-query (graphql-query-string "PostsList"
-                                                                                                   (alist :terms (alist :view (if day "new" "best") :limit 51 :offset offset
+                                                                                                   (alist :terms (alist :view (if day "new" "top") :limit 51 :offset offset
                                                                                                                         :after (if (and year (not day)) (format nil "~A-~A-~A" (or year earliest-year) (or month 1) (or day 1)))
                                                                                                                         :before (if year (format nil "~A-~A-~A" (or year current-year) (or month 12)
                                                                                                                                                  (or day (local-time:days-in-month (or month 12) (or year current-year)))))))
