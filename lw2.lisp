@@ -722,13 +722,7 @@
 (hunchentoot:define-easy-handler (view-root :uri "/") (offset sort)
 				 (with-error-page
 				   (let* ((offset (and offset (parse-integer offset)))
-					  (posts (if (or offset sort)
-						   (lw2-graphql-query (graphql-query-string "PostsList"
-											    (alist :terms
-                                                                                                   (remove-if (lambda (x) (null (cdr x)))
-                                                                                                              (alist :view (if (string= sort "hot") "magicalSorting" "frontpage-rss") :limit 20 :offset offset)))
-											    *posts-index-fields*))
-						   (get-posts))))
+					  (posts (get-posts-index :offset offset :sort sort)))
 				     (view-items-index posts :section :frontpage :title "Frontpage posts" :hide-title t :with-offset (or offset 0)
                                                        :extra-html (lambda (out-stream)
                                                                      (page-toolbar-to-html out-stream
@@ -743,18 +737,7 @@
 (hunchentoot:define-easy-handler (view-index :uri "/index") (view before after offset sort)
                                  (with-error-page
                                    (let* ((offset (and offset (parse-integer offset)))
-                                          (terms
-                                            (nconc
-                                              (alexandria:switch (view :test #'string=)
-                                                                 ("featured" (alist :view "curated"))
-                                                                 ("new" (alist :view (if (string= sort "hot") "community" "community-rss")))
-                                                                 ("meta" (alist :view "new" :meta t :all t))
-                                                                 ("alignment-forum" (alist :view "new" :af t))
-                                                                 (t (alist :view (or view "community-rss"))))
-                                              (remove-if (lambda (x) (null (cdr x)))
-                                                         (alist :before before :after after :limit 20 :offset offset))))
-                                          (posts (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms terms)
-                                                                                          *posts-index-fields*)))
+                                          (posts (get-posts-index :view view :before before :after after :offset offset :sort sort))
                                           (section (cond ((string= view "frontpage") :frontpage)
                                                          ((string= view "featured") :featured)
                                                          ((string= view "meta") :meta)

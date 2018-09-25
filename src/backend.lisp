@@ -7,9 +7,10 @@
            #:lw2-error #:lw2-client-error #:lw2-not-found-error #:lw2-user-not-found-error #:lw2-not-allowed-error #:lw2-server-error #:lw2-connection-error #:lw2-unknown-error
 	   #:log-condition #:log-conditions #:start-background-loader #:stop-background-loader #:background-loader-running-p
 	   #:lw2-graphql-query-streamparse #:lw2-graphql-query-noparse #:decode-graphql-json #:lw2-graphql-query #:graphql-query-string* #:graphql-query-string #:lw2-graphql-query-map #:lw2-graphql-query-multi
-	   #:make-posts-list-query #:get-posts #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
+	   #:make-posts-list-query #:get-posts-index #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
 	   #:lw2-search-query #:get-post-title #:get-post-slug #:get-slug-postid #:get-username #:get-user-slug)
-  (:recycle #:lw2-viewer))
+  (:recycle #:lw2-viewer)
+  (:unintern #:get-posts))
 
 (in-package #:lw2.backend)
 
@@ -22,6 +23,12 @@
 (defparameter *messages-index-fields* '(:--id :user-id :created-at :content (:conversation :--id :title) :----typename))
 
 (defparameter *notifications-base-terms* (alist :view "userNotifications" :created-at :null :viewed :null))
+
+(defclass backend-base () ())
+
+(defclass backend-lw2 (backend-base) ())
+
+(defparameter *current-backend* (make-instance 'backend-lw2))
 
 (defmethod condition-http-return-code ((c condition)) 500)
 
@@ -322,8 +329,24 @@
               (t () (decode-graphql-json cached-result)))
             (query-and-put))))))
 
-(defun get-posts ()
-  (get-cached-index-query "new-not-meta" (make-posts-list-query)))
+(defmethod backend-operation ((backend backend-lw2) (operation (eql 'get-posts-index)) &key view sort offset before after)
+  (multiple-value-bind (view-terms cache-key)
+    (alexandria:switch (view :test #'string=)
+                               ("featured" (alist :view "curated"))
+                               ("new" (alist :view (if (string= sort "hot") "community" "community-rss")))
+                               ("meta" (alist :view "new" :meta t :all t))
+                               ("alignment-forum" (alist :view "new" :af t))
+                               (t (values (alist :view (if (string= sort "hot") "magicalSorting" "frontpage-rss")) "new-not-meta")))
+    (let* ((extra-terms
+            (remove-if (lambda (x) (null (cdr x)))
+                       (alist :before before :after after :limit 20 :offset offset)))
+           (query-string (graphql-query-string "PostsList" (alist :terms (nconc view-terms extra-terms)) *posts-index-fields*)))
+      (if (and cache-key (not extra-terms))
+          (get-cached-index-query cache-key query-string)
+          (lw2-graphql-query query-string)))))
+
+(declaim (inline get-posts-index))
+(defun get-posts-index (&rest args) (apply 'backend-operation (list* *current-backend* 'get-posts-index args)))
 
 (defun get-posts-json ()
   (lw2-graphql-query-noparse (make-posts-list-query)))
