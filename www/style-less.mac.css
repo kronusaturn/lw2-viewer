@@ -4752,9 +4752,10 @@ h1.listing + .post-meta .post-section::before {
 	max-width: 100%;
 	padding: 6px 8px 0 8px;
 	border-width: 1px 1px 0 1px;
+	margin: 1rem 0 0 0;
 }
 #content.user-page h1.listing + .post-meta {
-	margin: 0;
+	margin: 0 0 1rem 0;
 	padding: 12px 8px 3px 8px;
 	border-width: 0 1px 1px 1px;
 	line-height: 1;
@@ -5295,6 +5296,13 @@ div.comment-child-links a::first-letter {
 		0 0 20px #fff,
 		0 0 30px #fff,
 		0 0 40px #fff;
+}
+
+#content.user-page.compact > h1.listing {
+	margin-top: 0.5rem;
+}
+#content.user-page.compact > h1.listing + .post-meta {
+	margin-bottom: 1rem;
 }
 
 /*===========================*/
