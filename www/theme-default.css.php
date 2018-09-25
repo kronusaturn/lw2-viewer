@@ -496,9 +496,6 @@ h1.listing a[href^="http"] {
 		color: #777;
 		background-color: rgba(255,255,255,0.85);
 	}	
-	#content.user-page h1.listing:focus-within::before {
-		left: -0.5em;
-	}
 	h1.listing:focus-within::before {
 		color: #00f;
 		left: -0.625em;
@@ -677,7 +674,6 @@ h1.listing + .post-meta::after {
 	border-style: solid;
 	border-color: #ccc;
 }
-
 #content.user-page h1.listing {
 	padding: 0 6px;
 	padding-top: <?php echo ($platform == 'Mac') ? "0.125em" : "0.25em"; ?>;
@@ -685,10 +681,15 @@ h1.listing + .post-meta::after {
 	margin: 1rem 0 0 0;
 	max-width: 100%;
 }
-#content.user-page h1.listing a:hover {
-	background-color: #eee;
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+	#content.user-page h1.listing a:hover,
+	#content.user-page h1.listing a:focus {
+		background-color: #eee;
+	}
+	#content.user-page h1.listing:focus-within::before {
+		left: -0.625em;
+	}
 }
-
 #content.user-page h1.listing + .post-meta {
 	padding: 0.125em 6px 1em 36px;
 	border-width: 0 1px 1px 1px;

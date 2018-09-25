@@ -440,9 +440,6 @@ h1.listing a[href^="/"] {
 		left: -0.625em;
 		top: 1px;
 	}
-	#content.user-page h1.listing:focus-within::before {
-		left: -0.625em;
-	}
 	h1.listing a[href^="http"]:hover {
 		color: #4879ec;
 		text-shadow: 
@@ -478,7 +475,6 @@ h1.listing + .post-meta .karma-value {
 	border-style: solid;
 	border-color: #ccc;
 }
-
 #content.user-page h1.listing {
 	padding: 0 6px;
 	padding-top: 0.25em;
@@ -486,10 +482,12 @@ h1.listing + .post-meta .karma-value {
 	margin: 1rem 0 0 0;
 	max-width: 100%;
 }
-#content.user-page h1.listing a:hover {
-	background-color: #eee;
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+	#content.user-page h1.listing:focus-within::before {
+		left: -0.625em;
+		top: 6px;
+	}
 }
-
 #content.user-page h1.listing + .post-meta {
 	padding: 0.75em 6px 0.5em 32px;
 	border-width: 0 1px 1px 1px;

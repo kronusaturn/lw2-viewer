@@ -4316,9 +4316,6 @@ h1.listing a[href^="http"] {
 		color: #00f;
 		left: -0.625em;
 	}
-	#content.user-page h1.listing:focus-within::before {
-		left: -0.625em;
-	}
 	h1.listing a[href^="http"]:hover {
 		color: #4879ec;
 		text-shadow: 
@@ -4396,6 +4393,15 @@ h1.listing + .post-meta .link-post-domain {
 	margin: 1rem 0 0 0;
 	padding: 6px;
 	border-width: 1px 1px 0 1px;
+}
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+	#content.user-page h1.listing a:hover,
+	#content.user-page h1.listing a:focus {
+		background-color: #eee;
+	}	
+	#content.user-page h1.listing:focus-within::before {
+		left: -0.625em;
+	}
 }
 #content.user-page h1.listing + .post-meta {
 	margin: 0 0 1rem 0;

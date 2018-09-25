@@ -866,9 +866,6 @@ h1.listing a[href^="/"] {
 		font-weight: 400;
 		left: -0.625em;
 	}
-	#content.user-page h1.listing:focus-within::before {
-		left: -0.75em;
-	}
 	h1.listing a[href^="http"]:hover {
 		color: #79a97e;
 	}
@@ -950,6 +947,11 @@ h1.listing + .post-meta .post-section::before {
 	padding: 6px 8px 0 8px;
 	border-width: 1px 1px 0 1px;
 	margin: 1rem 0 0 0;
+}
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+	#content.user-page h1.listing:focus-within::before {
+		left: -0.625em;
+	}
 }
 #content.user-page h1.listing + .post-meta {
 	margin: 0 0 1rem 0;

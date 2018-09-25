@@ -596,6 +596,11 @@ h1.listing + .post-meta .link-post-domain {
 	max-width: 100%;
 	margin: 1rem 0 0 0;
 }
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+	#content.user-page h1.listing:focus-within::before {
+		top: -2px;
+	}
+}
 #content.user-page h1.listing::after {
 	content: "";
 	display: block;

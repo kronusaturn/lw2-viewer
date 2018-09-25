@@ -451,9 +451,6 @@ h1.listing a[href^="http"] {
 		left: -0.625em;
 		top: 1px;
 	}
-	#content.user-page h1.listing:focus-within::before {
-		left: -0.625em;
-	}
 	h1.listing a[href^="http"]:hover {
 		color: #4879ec;
 		text-shadow: 
@@ -532,6 +529,12 @@ h1.listing + .post-meta .link-post-domain {
 	max-width: 100%;
 	margin: 1rem 0 0 0;
 	padding: 6px;
+}
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+	#content.user-page h1.listing:focus-within::before {
+		left: -0.625em;
+		top: 8px;
+	}
 }
 #content.user-page h1.listing + .post-meta {
 	margin: 0 0 1rem 0;

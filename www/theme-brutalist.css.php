@@ -390,9 +390,6 @@ h1.listing a[href^="http"] {
 		color: #000;
 		left: -0.625em;
 	}
-	#content.user-page h1.listing:focus-within::before {
-		left: -0.5em;
-	}
 	h1.listing a[href^="http"]:hover {
 		color: #fff;
 		text-shadow: 
@@ -435,7 +432,6 @@ h1.listing + .post-meta .read-time {
 	border-style: solid;
 	border-color: #000;
 }
-
 #content.user-page h1.listing {
 	padding: 0 6px;
 	padding-top: 0.25em;
@@ -443,7 +439,11 @@ h1.listing + .post-meta .read-time {
 	margin: 1rem 0 0 0;
 	max-width: 100%;
 }
-
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+	#content.user-page h1.listing:focus-within::before {
+		left: -0.625em;
+	}
+}
 #content.user-page h1.listing + .post-meta {
 	padding: 0.75em 6px 0.5em 33px;
 	border-width: 0 2px 2px 2px;
