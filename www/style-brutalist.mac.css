@@ -4107,34 +4107,15 @@ body {
 /* NEW COMMENT QUICKNAV */
 /*======================*/
 
-#quick-nav-ui a {
-	color: #000;
-	box-shadow: 
-		0 0 0 1px #fff,
-		0 0 0 3px #000;
+#new-comment-nav-ui .new-comments-count {
+	left: 2px;
 }
-#quick-nav-ui a[href='#bottom-bar'] {
-	line-height: 1.8;
+#new-comment-nav-ui .new-comments-count::after {
+	position: relative;
+	right: 1px;
 }
-#quick-nav-ui a:active {
-	box-shadow: 
-		0 0 0 3px #fff inset,
-		0 0 0 5px #000 inset,
-		0 0 0 1px #fff,
-		0 0 0 3px #000;
-}
-#quick-nav-ui a[href='#comments'].no-comments {
-	opacity: 0.4;
+#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
 	color: #bbb;
-}
-@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
-	#quick-nav-ui a:hover {
-		box-shadow: 
-			0 0 0 1px #fff inset,
-			0 0 0 3px #000 inset,
-			0 0 0 1px #fff,
-			0 0 0 3px #000;
-	}
 }
 
 /*=================*/
