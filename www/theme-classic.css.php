@@ -546,6 +546,7 @@ h1.listing + .post-meta .lw2-link {
 }
 h1.listing + .post-meta .post-section {
 	margin: 0;
+	text-decoration: none;
 }
 h1.listing + .post-meta .post-section::before {
 	left: unset;
@@ -563,6 +564,48 @@ h1.listing + .post-meta .link-post-domain {
 
 #content.user-page h1.page-main-heading {
 	border-bottom: 1px solid #ccc;
+}
+
+#content.user-page h1.listing,
+#content.user-page h1.listing + .post-meta {
+	background-color: #f7f7f8;
+	border-style: solid;
+	border-color: #bbbcbf;
+}
+
+#content.user-page h1.listing {
+	padding: 0.5em 6px 0 48px;
+	border-width: 1px 1px 0 1px;
+	margin: 1rem 0 0 0;
+	max-width: 100%;
+}
+#content.user-page h1.listing a:hover {
+	background-color: #f7f7f8;
+}
+
+#content.user-page h1.listing + .post-meta {
+	padding: 0.25em 10px 0.5em 32px;
+	border-width: 0 1px 1px 1px;
+	margin: 0 0 1rem 0;
+}
+#content.user-page h1.listing + .post-meta .karma-value {
+	right: calc(100% - 3.25em);
+	top: -1.8em;
+}
+#content.user-page h1.listing + .post-meta .post-section::before {
+	right: calc(100% - 5.1em);
+	top: 4px;
+}
+
+#content.conversations-user-page h1.listing {
+	font-size: 1.75rem;
+}
+#content.conversations-user-page h1.listing::after {
+	display: none;
+}
+#content.conversations-user-page h1.listing + .post-meta {
+	padding: 0;
+	margin: 0;
 }
 
 .user-stats .karma-total {
@@ -1021,6 +1064,13 @@ div.comment-child-links a::first-letter {
 		0 0 20px #fff,
 		0 0 30px #fff,
 		0 0 40px #fff;
+}
+
+#content.user-page.compact > h1.listing {
+	margin-top: 0.5rem;
+}
+#content.user-page.compact > h1.listing + .post-meta {
+	margin-bottom: 0.5rem;
 }
 
 /*===========================*/
