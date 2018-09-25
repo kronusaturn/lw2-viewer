@@ -1220,6 +1220,7 @@ a.post-section.alignment-forum:hover::before {
 
 #comments {
 	border-top: 1px solid transparent;
+	padding: 0 0 0 10px;
 }
 .comment-item {
 	border: 1px solid #ddd;
@@ -1495,6 +1496,17 @@ div.comment-child-links a::first-letter {
 }
 .comment-minimize-button.maximized::after {
 	color: #ccc;
+}
+
+/*=================================*/
+/* INDIVIDUAL COMMENT THREAD PAGES */
+/*=================================*/
+
+.individual-thread-page > h1 {
+	margin: 2em 0 0 36px;
+}
+.individual-thread-page > #comments {
+	padding: 0 0 0 30px;
 }
 
 /*==============*/
@@ -2411,6 +2423,9 @@ div > .MJXc-display {
 			line-height: 1.3;
 		}
 
+		#comments {
+			padding: 0;
+		}
 		.comment-item .comment-item {
 			margin: 0.75em 3px 3px 6px;
 		}

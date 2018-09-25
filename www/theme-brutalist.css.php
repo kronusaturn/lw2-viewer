@@ -808,6 +808,14 @@ div.comment-child-links a::first-letter {
 	color: #ccc;
 }
 
+/*=================================*/
+/* INDIVIDUAL COMMENT THREAD PAGES */
+/*=================================*/
+
+.individual-thread-page > #comments {
+	border-top: 2px solid #000;
+}
+
 /*==============*/
 /* VOTE BUTTONS */
 /*==============*/
