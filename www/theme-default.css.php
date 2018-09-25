@@ -690,18 +690,20 @@ h1.listing + .post-meta::after {
 }
 
 #content.user-page h1.listing + .post-meta {
-	padding: 0 6px 1em 35px;
+	padding: 0.125em 6px 1em 36px;
 	border-width: 0 1px 1px 1px;
 	margin: 0 0 1rem 0;
 }
 #content.user-page h1.listing + .post-meta::after {
 	display: none;
 }
-#content.user-page h1.listing + .post-meta .karma-value,
-#content.user-page h1.listing + .post-meta .comment-count,
-#content.user-page h1.listing + .post-meta .lw2-link,
-#content.user-page h1.listing + .post-meta .read-time {
-	bottom: 10px;
+@media only screen and (min-width: 521px) {
+	#content.user-page h1.listing + .post-meta .karma-value,
+	#content.user-page h1.listing + .post-meta .comment-count,
+	#content.user-page h1.listing + .post-meta .lw2-link,
+	#content.user-page h1.listing + .post-meta .read-time {
+		bottom: 10px;
+	}
 }
 #content.user-page h1.listing + .post-meta .post-section::before {
 	left: -1px;
@@ -1750,9 +1752,6 @@ div > .MJXc-display {
 		}
 		h1.listing + .post-meta::after {
 			bottom: -10px;
-		}
-		#content.user-page h1.listing {
-			padding-top: <?php echo ($platform == 'Mac') ? "0" : "0.25em"; ?>;		
 		}
 		#content.user-page h1.listing + .post-meta {
 			margin-bottom: 1em;
