@@ -455,13 +455,11 @@ h1.listing + .post-meta .read-time {
 }
 
 #content.conversations-user-page h1.listing {
+	padding: 8px 6px 8px 10px;
 	font-size: 1.5rem;
 }
-#content.conversations-user-page h1.listing::after {
-	display: none;
-}
 #content.conversations-user-page h1.listing + .post-meta {
-	padding: 0;
+	padding: 10px 4px 6px 4px;
 	margin: 0;
 }
 

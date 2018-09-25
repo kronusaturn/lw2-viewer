@@ -544,6 +544,14 @@ h1.listing + .post-meta .link-post-domain {
 	left: 1px;
 }
 
+#content.conversations-user-page h1.listing {
+	padding: 6px 6px 4px 8px;
+	font-size: 1.5rem;
+}
+#content.conversations-user-page h1.listing + .post-meta {
+	padding: 6px 4px;
+	margin: 0 0 0.25rem 0;
+}
 #content.conversations-user-page h1.listing + .post-meta .date::after {
 	display: none;
 }

@@ -498,13 +498,11 @@ h1.listing + .post-meta .karma-value {
 }
 
 #content.conversations-user-page h1.listing {
-	font-size: 1.75rem;
-}
-#content.conversations-user-page h1.listing::after {
-	display: none;
+	padding: 6px 6px 4px 9px;
+	font-size: 1.5rem;
 }
 #content.conversations-user-page h1.listing + .post-meta {
-	padding: 0;
+	padding: 6px 4px;
 	margin: 0;
 }
 

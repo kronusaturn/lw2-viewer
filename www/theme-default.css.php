@@ -711,14 +711,12 @@ h1.listing + .post-meta::after {
 }
 
 #content.conversations-user-page h1.listing {
+	padding: 4px 6px;
 	font-size: 1.75rem;
 }
-#content.conversations-user-page h1.listing::after {
-	display: none;
-}
 #content.conversations-user-page h1.listing + .post-meta {
-	padding: 0;
-	margin: 0;
+	padding: 6px 4px;
+	margin: 0 0 0.25rem 0;
 }
 
 .user-stats .karma-total {

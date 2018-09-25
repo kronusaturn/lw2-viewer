@@ -960,6 +960,15 @@ h1.listing + .post-meta .post-section::before {
 	line-height: 1;
 }
 
+#content.conversations-user-page h1.listing {
+	padding: 8px 6px 8px 10px;
+	font-size: 1.25rem;
+}
+#content.conversations-user-page h1.listing + .post-meta {
+	padding: 1.25em 10px 0.5em 6px;
+	margin: 0;
+}
+
 .user-stats .karma-total {
 	font-weight: 500;
 }
