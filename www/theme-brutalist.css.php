@@ -449,25 +449,28 @@ h1.listing + .post-meta .read-time {
 	border-bottom: 1px dotted #000;
 }
 
+#content.user-page h1.listing,
+#content.user-page h1.listing + .post-meta {
+	border-style: solid;
+	border-color: #000;
+}
+
 #content.user-page h1.listing {
 	padding: 0 6px;
+	padding-top: 0.25em;
+	border-width: 2px 2px 0 2px;
+	margin: 1rem 0 0 0;
 	max-width: 100%;
 }
-#content.user-page h1.listing::after {
-	content: "";
-	display: block;
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: calc(100% + 1.25em);
-	box-shadow: 0px 0px 10px #555;
-}
+
 #content.user-page h1.listing + .post-meta {
-	margin: 0 6px 1em 35px;
+	padding: 0.75em 6px 0.5em 33px;
+	border-width: 0 2px 2px 2px;
+	margin: 0 0 1rem 0;
 }
-#content.user-page h1.listing + .post-meta::after {
-	display: none;
+#content.user-page h1.listing + .post-meta .post-section::before {
+	left: -2px;
+	top: unset;
 }
 
 #content.conversations-user-page h1.listing {
@@ -785,6 +788,13 @@ div.comment-child-links a::first-letter {
 		0 0 20px #fff,
 		0 0 30px #fff,
 		0 0 40px #fff;
+}
+
+#content.user-page.compact > h1.listing {
+	margin-top: 0.5rem;
+}
+#content.user-page.compact > h1.listing + .post-meta {
+	margin-bottom: 0.5rem;
 }
 
 /*===========================*/
