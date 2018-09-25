@@ -592,7 +592,7 @@ h1.listing + .post-meta .link-post-domain {
 }
 
 #content.user-page h1.listing {
-	padding: 0 6px;
+	padding: 6px 6px 0 6px;
 	max-width: 100%;
 }
 #content.user-page h1.listing::after {
@@ -605,8 +605,11 @@ h1.listing + .post-meta .link-post-domain {
 	height: calc(100% + 1.25em);
 	box-shadow: 0px 0px 10px #555;
 }
+#content.user-page h1.listing.link-post-listing::after {
+	height: calc(100% + 2.125em);
+}
 #content.user-page h1.listing + .post-meta {
-	margin: 0 6px 1em 35px;
+	margin: 6px 6px 1em 35px;
 }
 #content.user-page h1.listing + .post-meta::after {
 	display: none;
