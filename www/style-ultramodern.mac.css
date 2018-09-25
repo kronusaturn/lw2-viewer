@@ -4323,7 +4323,7 @@ h1.listing + .post-meta .link-post-domain {
 /*============*/
 
 #content.user-page h1.page-main-heading {
-	border-bottom: 1px solid #ccc;
+	border-bottom: 1px solid #777;
 }
 
 #content.user-page h1.listing,
