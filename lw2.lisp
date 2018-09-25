@@ -383,17 +383,6 @@
                        :link (generate-post-link (cdr (assoc :post-id item)) (cdr (assoc :--id item)) t)
                        :body (clean-html (cdr (assoc :html-body item))))))))))
 
-(defun check-notifications (user-id auth-token)
-  (multiple-value-bind (notifications user-info)
-    (sb-sys:with-deadline (:seconds 5)
-                          (lw2-graphql-query-multi (list
-                                                     (graphql-query-string* "NotificationsList" (alist :terms (nconc (alist :user-id user-id :limit 1) *notifications-base-terms*))
-                                                                            '(:created-at))
-                                                     (graphql-query-string* "UsersSingle" (alist :document-id user-id) '(:last-notifications-check)))
-                                                   :auth-token auth-token))
-    (when (and notifications user-info)
-      (local-time:timestamp> (local-time:parse-timestring (cdr (assoc :created-at (first notifications)))) (local-time:parse-timestring (cdr (assoc :last-notifications-check user-info)))))))
-
 (defparameter *fonts-stylesheet-uri* "//fonts.greaterwrong.com/?fonts=Charter,Concourse,a_Avante,Whitney,MundoSans,SourceSansPro,Raleway,ProximaNova,AnonymousPro,InputSans,InputSansNarrow,InputSansCondensed,GaramondPremierPro,ProximaNova,TradeGothic,NewsGothicBT,Inconsolata,BitmapFonts,FontAwesomeGW")
 (defparameter *fonts-stylesheet-uri* "//fonts.greaterwrong.com/?fonts=*")
 
@@ -998,10 +987,7 @@
                                               :auth-token (hunchentoot:cookie-in "lw2-auth-token"))))
                                         (:inbox
                                           (prog1
-                                            (let ((notifications (lw2-graphql-query (graphql-query-string "NotificationsList"
-                                                                                                          (alist :terms (nconc (alist :user-id user-id :limit 21 :offset offset) *notifications-base-terms*))
-                                                                                                          '(:--id :document-type :document-id :link :title :message :type :viewed))
-                                                                                    :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
+                                            (let ((notifications (get-notifications :user-id user-id :offset offset :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
                                                   (last-check (ignore-errors (local-time:parse-timestring (cdr (assoc :last-notifications-check user-info))))))
                                               (labels ((check-new (key obj)
                                                          (if (ignore-errors (local-time:timestamp< last-check (local-time:parse-timestring (cdr (assoc key obj)))))

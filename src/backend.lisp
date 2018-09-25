@@ -11,6 +11,7 @@
 	   #:log-condition #:log-conditions #:start-background-loader #:stop-background-loader #:background-loader-running-p
 	   #:lw2-graphql-query-streamparse #:lw2-graphql-query-noparse #:decode-graphql-json #:lw2-graphql-query #:graphql-query-string* #:graphql-query-string #:lw2-graphql-query-map #:lw2-graphql-query-multi
 	   #:make-posts-list-query #:get-posts-index #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
+           #:get-notifications #:check-notifications
 	   #:lw2-search-query #:get-post-title #:get-post-slug #:get-slug-postid #:get-username #:get-user-slug)
   (:recycle #:lw2-viewer)
   (:unintern #:get-posts))
@@ -401,6 +402,33 @@
                         do (setf comments-list (nconc comments-list comments-next)))
                   (comments-list-to-graphql-json comments-list))))))
     (lw2-graphql-query-timeout-cached fn "post-comments-json" post-id :revalidate revalidate :force-revalidate force-revalidate)))
+
+(define-backend-operation get-notifications backend-lw2 (&key user-id offset auth-token)
+                          (lw2-graphql-query (graphql-query-string "NotificationsList"
+                                                                   (alist :terms (nconc (alist :user-id user-id :limit 21 :offset offset) *notifications-base-terms*))
+                                                                   '(:--id :document-type :document-id :link :title :message :type :viewed))
+                                             :auth-token auth-token))
+
+(define-backend-operation check-notifications backend-lw2 (user-id auth-token)
+  (multiple-value-bind (notifications user-info)
+    (sb-sys:with-deadline (:seconds 5)
+                          (lw2-graphql-query-multi (list
+                                                     (graphql-query-string* "NotificationsList" (alist :terms (nconc (alist :user-id user-id :limit 1) *notifications-base-terms*))
+                                                                            '(:created-at))
+                                                     (graphql-query-string* "UsersSingle" (alist :document-id user-id) '(:last-notifications-check)))
+                                                   :auth-token auth-token))
+    (when (and notifications user-info)
+      (local-time:timestamp> (local-time:parse-timestring (cdr (assoc :created-at (first notifications)))) (local-time:parse-timestring (cdr (assoc :last-notifications-check user-info)))))))
+
+(define-backend-operation get-notifications backend-accordius (&key user-id offset auth-token)
+                          (declare (ignore user-id offset auth-token))
+                          (let ((*notifications-base-terms* (remove :null *notifications-base-terms* :key #'cdr)))
+                            (call-next-method)))
+
+(define-backend-operation check-notifications backend-accordius (user-id auth-token)
+                          (declare (ignore user-id auth-token))
+                          (let ((*notifications-base-terms* (remove :null *notifications-base-terms* :key #'cdr)))
+                            (call-next-method)))
 
 (defun lw2-search-query (query)
   (multiple-value-bind (req-stream req-status req-headers req-uri req-reuse-stream want-close)
