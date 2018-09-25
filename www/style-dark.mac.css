@@ -5774,6 +5774,9 @@ div > .MJXc-display {
 			right: 0;
 			bottom: 4px;
 		}
+		h1.listing + .post-meta .link-post-domain {
+			max-width: calc(100% - 132px);
+		}
 		h1.listing + .post-meta .post-section::before {
 			right: 120px;
 		}

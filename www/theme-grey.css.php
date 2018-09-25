@@ -1042,6 +1042,13 @@ div.comment-child-links a::first-letter {
 		0 0 40px #fff;
 }
 
+#content.user-page.compact > h1.listing {
+	margin-top: 0.5rem;
+}
+#content.user-page.compact > h1.listing + .post-meta {
+	margin-bottom: 0.5rem;
+}
+
 /*===========================*/
 /* HIGHLIGHTING NEW COMMENTS */
 /*===========================*/

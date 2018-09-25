@@ -4323,7 +4323,29 @@ h1.listing + .post-meta .link-post-domain {
 /*============*/
 
 #content.user-page h1.page-main-heading {
-	border-bottom: 1px solid #777;
+	border-bottom: 1px solid #ccc;
+}
+
+#content.user-page h1.listing,
+#content.user-page h1.listing + .post-meta {
+	border-style: solid;
+	border-color: #666;
+	border-width: 0 0 0 1px;
+	box-shadow:
+		1.5px 0 1.5px -1.5px #bbb inset,
+		1px 0 1px -1px #777 inset;
+}
+#content.user-page h1.listing {
+	max-width: 100%;
+	margin: 1rem 0 0 0;
+	padding: 6px;
+}
+#content.user-page h1.listing + .post-meta {
+	margin: 0 0 1rem 0;
+	padding: 0.5em 6px 6px 34px;
+}
+#content.user-page h1.listing + .post-meta .post-section::before {
+	left: 1px;
 }
 
 #content.conversations-user-page h1.listing + .post-meta .date::after {
@@ -4748,6 +4770,13 @@ div.comment-child-links a::first-letter {
 		0 0 20px #999,
 		0 0 30px #999,
 		0 0 40px #999;
+}
+
+#content.user-page.compact > h1.listing {
+	margin-top: 0.5rem;
+}
+#content.user-page.compact > h1.listing + .post-meta {
+	margin-bottom: 0.5rem;
 }
 
 /*===========================*/
