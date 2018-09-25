@@ -1898,6 +1898,9 @@ div > .MJXc-display {
 		#content.user-page h1.link-post-listing::after {
 			height: calc(100% + 3.125em);
 		}
+		#content.user-page h1.listing + .post-meta {
+			padding: 0.125em 6px 0.5em 36px;
+		}
 		#content.conversations-user-page h1.listing + .post-meta .date {
 			margin: 0 0 0 1em;
 		}
