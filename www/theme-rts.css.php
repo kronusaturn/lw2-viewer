@@ -587,13 +587,14 @@ h1.listing + .post-meta .link-post-domain {
 }
 
 #content.user-page #top-nav-bar {
-	margin-top: -0.5em;
+	margin: -0.5em 0 0.25em 0;
 	grid-column: 1 / span 3;
 }
 
 #content.user-page h1.listing {
 	padding: 6px 6px 0 6px;
 	max-width: 100%;
+	margin: 1rem 0 0 0;
 }
 #content.user-page h1.listing::after {
 	content: "";
@@ -609,7 +610,7 @@ h1.listing + .post-meta .link-post-domain {
 	height: calc(100% + 2.125em);
 }
 #content.user-page h1.listing + .post-meta {
-	margin: 6px 6px 1em 35px;
+	margin: 6px 6px 1.5rem 35px;
 }
 #content.user-page h1.listing + .post-meta::after {
 	display: none;
@@ -1032,6 +1033,13 @@ div.comment-child-links a::first-letter {
 		0 0 20px #fff,
 		0 0 30px #fff,
 		0 0 40px #fff;
+}
+
+#content.user-page.compact > h1.listing {
+	margin-top: 0.5rem;
+}
+#content.user-page.compact > h1.listing + .post-meta {
+	margin-bottom: 1rem;
 }
 
 /*===========================*/
@@ -1751,11 +1759,27 @@ div > .MJXc-display {
 		h1.listing a[href^='http'] {
 			top: 4px;
 		}
-		
+
+		#content.user-page h1.listing::after {
+			height: calc(100% + 2.375em);
+		}
+		#content.user-page h1.listing.link-post-listing::after {
+			height: calc(100% + 3.375em);
+		}
+		#content.user-page h1.listing + .post-meta {
+			margin-bottom: 1.5rem;
+		}
+	
 		#content.compact > .comment-thread .comment-item {
 			max-height: 104px;
 		}
-		
+		#content.compact.user-page h1.listing {
+			margin-top: 0.5rem;
+		}
+		#content.compact.user-page h1.listing + .post-meta {
+			margin-bottom: 0.75rem;
+		}
+	
 		.comment-body {
 			font-size: 1.1875rem;
 			line-height: 1.35;
