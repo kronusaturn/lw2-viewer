@@ -4174,9 +4174,11 @@ body {
 	#appearance-adjust-ui-toggle button::-moz-focus-inner {
 		border: none;
 	}
-	#site-nav-ui-toggle.highlighted,
 	#post-nav-ui-toggle.highlighted,
 	#appearance-adjust-ui-toggle.highlighted {
+		transform: scale(1.33);
+	}
+	#site-nav-ui-toggle.highlighted button {
 		transform: scale(1.33);
 	}
 	#site-nav-ui-toggle.highlighted button,
@@ -4211,7 +4213,7 @@ body {
 	}
 	#site-nav-ui-toggle button.engaged {
 		left: -92px;
-		width: 1.125em;
+		width: 2.125rem;
 		overflow: hidden;
 	}
 	#site-nav-ui-toggle button.engaged::before {
