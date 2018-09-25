@@ -273,6 +273,15 @@ body {
 #quick-nav-ui a[href='#bottom-bar'] {
 	line-height: 1.8;
 }
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+	#quick-nav-ui a:hover {
+		box-shadow: 
+			0 0 0 1px #fff inset,
+			0 0 0 3px #000 inset,
+			0 0 0 1px #fff,
+			0 0 0 3px #000;
+	}
+}
 #quick-nav-ui a:active {
 	box-shadow: 
 		0 0 0 3px #fff inset,
@@ -283,15 +292,6 @@ body {
 #quick-nav-ui a[href='#comments'].no-comments {
 	opacity: 0.4;
 	color: #bbb;
-}
-@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
-	#quick-nav-ui a:hover {
-		box-shadow: 
-			0 0 0 1px #fff inset,
-			0 0 0 3px #000 inset,
-			0 0 0 1px #fff,
-			0 0 0 3px #000;
-	}
 }
 
 /*======================*/
