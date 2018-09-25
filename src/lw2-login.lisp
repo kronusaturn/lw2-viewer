@@ -83,7 +83,7 @@
   (let ((result (do-lw2-sockjs-method "login" `((("resume" . ,auth-token))))))
     (parse-login-result result)))
 
-(defun do-lw2-login (user-designator-type user-designator password)
+(define-backend-operation do-login backend-lw2 (user-designator-type user-designator password)
   (let ((result (do-lw2-sockjs-method "login"
                                       `((("user" (,user-designator-type . ,user-designator))
                                          ("password"
@@ -139,7 +139,7 @@
       (res-data res-data) 
       (t (error "Unknown response from LW2 server: ~A" response-json))))) 
 
-(defun do-accordius-login (user-designator-type user-designator password)
+(define-backend-operation do-login backend-accordius (user-designator-type user-designator password)
   (declare (ignore user-designator-type))
   (let* ((response
            (do-lw2-post-query nil `(("query" . "mutation Login($username: String, $password: String) { Login(username: $username, password: $password) {userId, sessionKey, expiration}}")
@@ -150,11 +150,6 @@
          (auth-token (cdr (assoc :session-key response)))
          (expiration (truncate (* 1000 (cdr (assoc :expiration response))))))
     (values user-id auth-token nil expiration)))
-
-(declaim (ftype (function (string string string) (values string string &optional))))
-(setf (symbol-function 'do-login)
-      (symbol-function (cond ((string= *backend-type* "lw2") 'do-lw2-login)
-                             ((string= *backend-type* "accordius") 'do-accordius-login))))
 
 (defun do-lw2-post-query* (auth-token data)
   (cdr (assoc :--id (do-lw2-post-query auth-token data))))

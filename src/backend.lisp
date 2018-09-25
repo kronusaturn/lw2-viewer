@@ -3,6 +3,9 @@
   (:export #:*graphql-debug-output*
            #:*posts-index-fields* #:*comments-index-fields* #:*messages-index-fields*
            #:*notifications-base-terms*
+           #:backend-base #:backend-lw2 #:backend-accordius
+           #:*current-backend*
+           #:define-backend-operation
            #:condition-http-return-code
            #:lw2-error #:lw2-client-error #:lw2-not-found-error #:lw2-user-not-found-error #:lw2-not-allowed-error #:lw2-server-error #:lw2-connection-error #:lw2-unknown-error
 	   #:log-condition #:log-conditions #:start-background-loader #:stop-background-loader #:background-loader-running-p
@@ -28,7 +31,18 @@
 
 (defclass backend-lw2 (backend-base) ())
 
-(defparameter *current-backend* (make-instance 'backend-lw2))
+(defclass backend-accordius (backend-lw2) ())
+
+(defparameter *current-backend* (make-instance (cond ((string= *backend-type* "lw2") 'backend-lw2)
+                                                     ((string= *backend-type* "accordius") 'backend-accordius))))
+
+(defmacro define-backend-operation (name backend (&rest args) &body body)
+  (let ((inner-name (symbolicate "%" name)))
+    `(progn
+       (defmethod ,inner-name ((backend ,backend) ,@args) ,@body)
+       (eval-when (:compile-toplevel :load-toplevel :execute)
+         (declaim (inline ,name))
+         (setf (symbol-function (quote ,name)) (lambda (&rest args) (apply (quote ,inner-name) (list* *current-backend* args))))))))
 
 (defmethod condition-http-return-code ((c condition)) 500)
 
@@ -329,7 +343,7 @@
               (t () (decode-graphql-json cached-result)))
             (query-and-put))))))
 
-(defmethod backend-operation ((backend backend-lw2) (operation (eql 'get-posts-index)) &key view sort offset before after)
+(define-backend-operation get-posts-index backend-lw2 (&key view sort offset before after)
   (multiple-value-bind (view-terms cache-key)
     (alexandria:switch (view :test #'string=)
                                ("featured" (alist :view "curated"))
@@ -344,9 +358,6 @@
       (if (and cache-key (not extra-terms))
           (get-cached-index-query cache-key query-string)
           (lw2-graphql-query query-string)))))
-
-(declaim (inline get-posts-index))
-(defun get-posts-index (&rest args) (apply 'backend-operation (list* *current-backend* 'get-posts-index args)))
 
 (defun get-posts-json ()
   (lw2-graphql-query-noparse (make-posts-list-query)))
