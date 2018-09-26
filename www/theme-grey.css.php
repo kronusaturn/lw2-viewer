@@ -489,7 +489,7 @@ body {
 h1.listing {
 	margin: 0.6em 20px 0 20px;
 	max-width: calc(100% - 40px);
-	line-height: 1;
+	line-height: 1.1;
 	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
 	font-size: 1.5rem;
 }
@@ -498,6 +498,7 @@ h1.listing a[href^='/'] {
 }
 h1.listing a[href^="http"] {
 	color: #ccc;
+	top: 3px;
 }
 
 @media only screen and (hover: hover), not screen and (-moz-touch-enabled) {

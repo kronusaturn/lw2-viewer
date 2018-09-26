@@ -530,6 +530,7 @@ h1.listing a[href^='/'] {
 @media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
 	h1.listing a[href^='/'] {
 		max-width: calc(100% - 60px);
+		padding: 2px 2px 1px 1px;
 	}
 	h1.listing a:hover,
 	h1.listing a:focus {

@@ -766,6 +766,7 @@ h1.listing a[href^="http"] {
 	h1.listing a:focus {
 		text-decoration: dotted underline;
 		white-space: initial;
+		overflow: visible;
 		z-index: 2;
 	}	
 	h1.listing:focus-within::before {
@@ -4296,7 +4297,7 @@ body {
 h1.listing {
 	margin: 0.6em 20px 0 20px;
 	max-width: calc(100% - 40px);
-	line-height: 1;
+	line-height: 1.1;
 	font-family: 'Whitney', 'a_Avante', Arial, sans-serif, 'Font Awesome';
 	font-size: 1.5rem;
 }
@@ -4305,6 +4306,7 @@ h1.listing a[href^='/'] {
 }
 h1.listing a[href^="http"] {
 	color: #ccc;
+	top: 3px;
 }
 
 @media only screen and (hover: hover), not screen and (-moz-touch-enabled) {

@@ -772,6 +772,7 @@ h1.listing a[href^="http"] {
 	h1.listing a:focus {
 		text-decoration: dotted underline;
 		white-space: initial;
+		overflow: visible;
 		z-index: 2;
 	}	
 	h1.listing:focus-within::before {
