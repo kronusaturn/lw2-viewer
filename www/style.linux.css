@@ -491,6 +491,10 @@ a#inbox-indicator.new-messages:hover::before {
 #theme-selector:hover button::before {
 	visibility: visible;
 }
+#theme-selector:hover ~ #theme-tweaker-toggle,
+#theme-selector:active ~ #theme-tweaker-toggle {
+	z-index: -1;
+}
 
 /************************/
 /* THEME TWEAKER TOGGLE */
