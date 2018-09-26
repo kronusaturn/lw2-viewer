@@ -1921,7 +1921,7 @@ div > .MJXc-display {
 			bottom: 4px;
 		}
 		h1.listing + .post-meta .link-post-domain {
-			max-width: calc(100% - 132px);
+			max-width: 100%;
 		}
 		h1.listing + .post-meta .post-section::before {
 			right: 120px;
