@@ -1575,6 +1575,8 @@ div.comment-child-links a::first-letter {
 	grid-column: 1;
 	position: unset;
 	z-index: 1;
+	justify-self: start;
+	align-self: start;
 }
 #comments-list-mode-selector button {
 	color: transparent;

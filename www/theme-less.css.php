@@ -1410,7 +1410,6 @@ div.comment-child-links a::first-letter {
 /*=======================*/
 
 #comments-list-mode-selector {
-	display: inline-block;
 	opacity: 0.4;
 	transition: opacity 0.15s ease;
 }
