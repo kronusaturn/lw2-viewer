@@ -39,7 +39,9 @@
 
 (defmacro declare-backend-function (name)
   (let ((inner-name (symbolicate "%" name)))
-   `(defmacro ,name (&rest args) (list* ',inner-name '*current-backend*  args))))
+   `(progn
+      (export '(,name ,inner-name))
+      (defmacro ,name (&rest args) (list* ',inner-name '*current-backend*  args)))))
 
 (defmacro define-backend-operation (name backend (&rest args) &body body)
   (let ((inner-name (symbolicate "%" name)))
