@@ -226,7 +226,8 @@
                (created-at string)
                (highlight-new boolean)
                (conversation list)
-               (content list))
+               (content list)
+               (html-body (or string null)))
     message
     (multiple-value-bind (pretty-time js-time) (pretty-time created-at)
       (format out-stream "<div class=\"comment private-message~A\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <span class=\"date\" data-js-date=\"~A\">~A</span><div class=\"comment-post-title\">Private message in: <a href=\"/conversation?id=~A\">~A</a></div></div><div class=\"comment-body\">"
@@ -237,7 +238,10 @@
               pretty-time
               (encode-entities (cdr (assoc :--id conversation)))
               (encode-entities (postprocess-conversation-title (cdr (assoc :title conversation))))))
-    (format out-stream "~{<p>~A</p>~}</div></div>" (loop for block in (cdr (assoc :blocks content)) collect (encode-entities (cdr (assoc :text block)))))))
+    (if html-body
+        (write-sequence (clean-html* html-body) out-stream)
+        (format out-stream "~{<p>~A</p>~}" (loop for block in (cdr (assoc :blocks content)) collect (encode-entities (cdr (assoc :text block))))))
+    (format out-stream "</div></div>")))
 
 (defun conversation-index-to-html (out-stream conversation)
   (alist-bind ((conversation-id string :--id)
@@ -1084,11 +1088,7 @@
                                        ((and id to) (error "This is an invalid URL."))
                                        (id
                                          (multiple-value-bind (conversation messages)
-                                           (lw2-graphql-query-multi
-                                             (list
-                                               (graphql-query-string* "ConversationsSingle" (alist :document-id id) '(:title (:participants :display-name :slug)))
-                                               (graphql-query-string* "MessagesList" (alist :terms (alist :view "messagesConversation" :conversation-id id)) *messages-index-fields*))
-                                             :auth-token (hunchentoot:cookie-in "lw2-auth-token"))
+                                           (get-conversation-messages id (hunchentoot:cookie-in "lw2-auth-token"))
                                            (view-items-index (nreverse messages) :content-class "conversation-page" :need-auth t :title (encode-entities (postprocess-conversation-title (cdr (assoc :title conversation))))
                                                              :extra-html (with-output-to-string (out-stream) (render-template* *conversation-template* out-stream
                                                                                                                                :conversation conversation :csrf-token (make-csrf-token))))))
