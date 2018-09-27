@@ -5,7 +5,7 @@
            #:*notifications-base-terms*
            #:backend-base #:backend-lw2 #:backend-accordius
            #:*current-backend*
-           #:define-backend-operation
+           #:declare-backend-function #:define-backend-operation
            #:condition-http-return-code
            #:lw2-error #:lw2-client-error #:lw2-not-found-error #:lw2-user-not-found-error #:lw2-not-allowed-error #:lw2-server-error #:lw2-connection-error #:lw2-unknown-error
 	   #:log-condition #:log-conditions #:start-background-loader #:stop-background-loader #:background-loader-running-p
@@ -37,13 +37,13 @@
 (defparameter *current-backend* (make-instance (cond ((string= *backend-type* "lw2") 'backend-lw2)
                                                      ((string= *backend-type* "accordius") 'backend-accordius))))
 
+(defmacro declare-backend-function (name)
+  (let ((inner-name (symbolicate "%" name)))
+   `(defmacro ,name (&rest args) (list* ',inner-name '*current-backend*  args))))
+
 (defmacro define-backend-operation (name backend (&rest args) &body body)
   (let ((inner-name (symbolicate "%" name)))
-    `(progn
-       (defmethod ,inner-name ((backend ,backend) ,@args) ,@body)
-       (eval-when (:compile-toplevel :load-toplevel :execute)
-         (declaim (inline ,name))
-         (setf (symbol-function (quote ,name)) (lambda (&rest args) (apply (quote ,inner-name) (list* *current-backend* args))))))))
+    `(defmethod ,inner-name ((backend ,backend) ,@args) ,@body)))
 
 (defmethod condition-http-return-code ((c condition)) 500)
 
@@ -344,6 +344,8 @@
               (t () (decode-graphql-json cached-result)))
             (query-and-put))))))
 
+(declare-backend-function get-posts-index)
+
 (define-backend-operation get-posts-index backend-lw2 (&key view sort offset before after)
   (multiple-value-bind (view-terms cache-key)
     (alexandria:switch (view :test #'string=)
@@ -403,11 +405,15 @@
                   (comments-list-to-graphql-json comments-list))))))
     (lw2-graphql-query-timeout-cached fn "post-comments-json" post-id :revalidate revalidate :force-revalidate force-revalidate)))
 
+(declare-backend-function get-notifications)
+
 (define-backend-operation get-notifications backend-lw2 (&key user-id offset auth-token)
                           (lw2-graphql-query (graphql-query-string "NotificationsList"
                                                                    (alist :terms (nconc (alist :user-id user-id :limit 21 :offset offset) *notifications-base-terms*))
                                                                    '(:--id :document-type :document-id :link :title :message :type :viewed))
                                              :auth-token auth-token))
+
+(declare-backend-function check-notifications)
 
 (define-backend-operation check-notifications backend-lw2 (user-id auth-token)
   (multiple-value-bind (notifications user-info)

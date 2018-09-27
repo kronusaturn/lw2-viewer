@@ -83,6 +83,8 @@
   (let ((result (do-lw2-sockjs-method "login" `((("resume" . ,auth-token))))))
     (parse-login-result result)))
 
+(declare-backend-function do-login)
+
 (define-backend-operation do-login backend-lw2 (user-designator-type user-designator password)
   (let ((result (do-lw2-sockjs-method "login"
                                       `((("user" (,user-designator-type . ,user-designator))
