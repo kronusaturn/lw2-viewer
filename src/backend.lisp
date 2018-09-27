@@ -457,6 +457,7 @@
                        :auth-token auth-token)))
 
 (define-backend-operation get-user-posts backend-accordius (user-id &key offset limit (sort-type :date) drafts auth-token)
+  (declare (ignore user-id offset limit sort-type drafts auth-token))
   (let ((*graphql-correct* t))
     (declare (special *graphql-correct*))
     (call-next-method)))
