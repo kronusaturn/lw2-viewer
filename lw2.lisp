@@ -216,6 +216,11 @@
     (write-sequence (clean-html* html-body) out-stream)
     (format out-stream "</div></div>")))
 
+(defun postprocess-conversation-title (title)
+  (if (or (null title) (string= title ""))
+      "[Untitled conversation]"
+      title))
+
 (defun conversation-message-to-html (out-stream message)
   (alist-bind ((user-id string)
                (created-at string)
@@ -231,7 +236,7 @@
               js-time
               pretty-time
               (encode-entities (cdr (assoc :--id conversation)))
-              (encode-entities (or (cdr (assoc :title conversation)) "[Untitled conversation]"))))
+              (encode-entities (postprocess-conversation-title (cdr (assoc :title conversation))))))
     (format out-stream "~{<p>~A</p>~}</div></div>" (loop for block in (cdr (assoc :blocks content)) collect (encode-entities (cdr (assoc :text block)))))))
 
 (defun conversation-index-to-html (out-stream conversation)
@@ -244,7 +249,7 @@
     (multiple-value-bind (pretty-time js-time) (if created-at (pretty-time created-at) (values "[Error]" 0))
       (format out-stream "<h1 class=\"listing\"><a href=\"/conversation?id=~A\">~A</a></h1><div class=\"post-meta\"><div class=\"conversation-participants\"><ul>~:{<li><a href=\"/users/~A\">~A</a></li>~}</ul></div><div class=\"messages-count\">~A</div><div class=\"date\" data-js-date=\"~A\">~A</div></div>"
               (encode-entities conversation-id)
-              (encode-entities (or title "[Untitled conversation]"))
+              (encode-entities (postprocess-conversation-title title))
               (loop for p in participants
                     collect (list (encode-entities (cdr (assoc :slug p))) (encode-entities (cdr (assoc :display-name p)))))
               (pretty-number messages-total "message")
@@ -1084,7 +1089,7 @@
                                                (graphql-query-string* "ConversationsSingle" (alist :document-id id) '(:title (:participants :display-name :slug)))
                                                (graphql-query-string* "MessagesList" (alist :terms (alist :view "messagesConversation" :conversation-id id)) *messages-index-fields*))
                                              :auth-token (hunchentoot:cookie-in "lw2-auth-token"))
-                                           (view-items-index (nreverse messages) :content-class "conversation-page" :need-auth t :title (cdr (assoc :title conversation))
+                                           (view-items-index (nreverse messages) :content-class "conversation-page" :need-auth t :title (encode-entities (postprocess-conversation-title (cdr (assoc :title conversation))))
                                                              :extra-html (with-output-to-string (out-stream) (render-template* *conversation-template* out-stream
                                                                                                                                :conversation conversation :csrf-token (make-csrf-token))))))
                                        (t
