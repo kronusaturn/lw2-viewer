@@ -52,12 +52,11 @@ body {
 	width: 100%;
 	color: transparent;
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/one_pixel_DDD.gif")) ?>');
-	background-repeat-y: no-repeat;
+	background-repeat: repeat-x;
 	background-position: center 35%;
 	margin: 0 30px;
 }
 #bottom-bar.decorative::after {
-	width: fit-content;
 	color: #d8d8d8;
 	position: absolute;
 	left: 0;
@@ -67,6 +66,13 @@ body {
 	padding-right: 4px;
 	padding-left: 4px;
 }
+<?php foreach (["-moz-fit-content", "fit-content"] as $pvalue) echo 
+"@supports (width: {$pvalue}) {
+	#bottom-bar.decorative::after {
+		width: {$pvalue};
+	}
+}
+"; ?>
 
 .nav-bar .nav-item:not(.nav-current):not(#nav-item-search):hover,
 #bottom-bar a:hover,
@@ -248,9 +254,6 @@ body {
 	font-family: <?php echo $UI_font_smallcaps; ?>;
 }
 .sublevel-nav.sort {
-	position: absolute;
-	top: 167px;
-	right: 30px;
 	border: 2px solid #bbb;
 	padding: 18px 0 0 0;
 	border-radius: 8px;
@@ -263,20 +266,29 @@ body {
 	text-shadow: 0.5px 0.5px 0 #fff;
 }
 .sublevel-nav.sort .sublevel-item {
-	border-radius: 0;
 	padding: 5px 6px;
-	border-color: #aaa;
-	border-style: solid;
 	text-transform: uppercase;
+	border: 1px solid #aaa;
 }
+
+/* Vertical */
 .sublevel-nav.sort .sublevel-item:first-child {
 	border-radius: 6px 6px 0 0;
-	border-width: 1px;
 }
 .sublevel-nav.sort .sublevel-item:last-child {
 	border-radius: 0 0 6px 6px;
 	border-width: 0 1px 1px 1px;
 }
+
+/* Horizontal */
+.sublevel-nav.sort.horizontal .sublevel-item:first-child {
+	border-radius: 6px 0 0 6px;
+}
+.sublevel-nav.sort.horizontal .sublevel-item:last-child {
+	border-radius: 0 6px 6px 0;
+	border-width: 1px 1px 1px 0;
+}
+
 .sublevel-nav.sort .sublevel-item:active {
 	border-color: #aaa;
 }
@@ -300,6 +312,15 @@ body {
 	text-shadow: none;
 	box-shadow:
 		0 0 0 5px #ccc inset;
+}
+
+#theme-selector button::before {
+	color: #aaa;
+	background-color: #eee;
+}
+#theme-selector button:hover::before,
+#theme-selector button.selected::before {
+	color: #777;
 }
 
 /*======================*/
@@ -467,7 +488,8 @@ body {
 
 h1.listing {
 	margin: 0.6em 20px 0 20px;
-	line-height: 1;
+	max-width: calc(100% - 40px);
+	line-height: 1.1;
 	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
 	font-size: 1.5rem;
 }
@@ -476,6 +498,7 @@ h1.listing a[href^='/'] {
 }
 h1.listing a[href^="http"] {
 	color: #ccc;
+	top: 3px;
 }
 
 @media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
@@ -484,12 +507,9 @@ h1.listing a[href^="http"] {
 		color: #777;
 		background-color: rgba(255,255,255,0.85);
 	}	
-	#content.user-page h1.listing:focus-within::before {
-		left: 1.25em;
-	}
 	h1.listing:focus-within::before {
 		color: #00f;
-		left: 1.375em;
+		left: -0.625em;
 	}
 	h1.listing a[href^="http"]:hover {
 		color: #4879ec;
@@ -556,16 +576,61 @@ h1.listing + .post-meta .link-post-domain {
 #content.user-page h1.page-main-heading {
 	border-bottom: 1px solid #ccc;
 }
-#content.user-page .sublevel-nav + h1.listing {
-	margin-top: 1.75em;
+
+#content.user-page h1.listing,
+#content.user-page h1.listing + .post-meta {
+	background-color: #eee;
+	border-style: solid;
+	border-color: #ccc;
+}
+#content.user-page h1.listing {
+	max-width: 100%;
+	margin: 1rem 0 0 0;
+	padding: 6px;
+	border-width: 1px 1px 0 1px;
+}
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+	#content.user-page h1.listing a:hover,
+	#content.user-page h1.listing a:focus {
+		background-color: #eee;
+	}	
+	#content.user-page h1.listing:focus-within::before {
+		left: -0.625em;
+	}
+}
+#content.user-page h1.listing + .post-meta {
+	margin: 0 0 1rem 0;
+	padding: 0.5em 6px 6px 34px;
+	border-width: 0 1px 1px 1px;
+}
+#content.user-page h1.listing + .post-meta .post-section::before {
+	left: 1px;
+	top: unset;
 }
 
+#content.conversations-user-page h1.listing {
+	padding: 6px 6px 4px 8px;
+	font-size: 1.5rem;
+}
+#content.conversations-user-page h1.listing + .post-meta {
+	padding: 6px 4px;
+	margin: 0 0 0.25rem 0;
+}
 #content.conversations-user-page h1.listing + .post-meta .date::after {
 	display: none;
 }
 
 .user-stats .karma-total {
 	font-weight: bold;
+}
+
+/*===============*/
+/* CONVERSATIONS */
+/*===============*/
+
+#content.conversation-page h1.page-main-heading {
+	font-weight: normal;
+	color: #222;
 }
 
 /*============*/
@@ -587,7 +652,6 @@ h1.listing + .post-meta .link-post-domain {
 
 #signup-form {
 	background-color: #f3f3f3;
-	padding: 0 0 0.5em 1em;
 	border: 1px solid #ddd;
 }
 #signup-form input[type='submit'] {
@@ -993,6 +1057,13 @@ div.comment-child-links a::first-letter {
 		0 0 40px #fff;
 }
 
+#content.user-page.compact > h1.listing {
+	margin-top: 0.5rem;
+}
+#content.user-page.compact > h1.listing + .post-meta {
+	margin-bottom: 0.5rem;
+}
+
 /*===========================*/
 /* HIGHLIGHTING NEW COMMENTS */
 /*===========================*/
@@ -1199,6 +1270,9 @@ button.guiedit::after {
 /* EDIT POST FORM */
 /*================*/
 
+#edit-post-form .link-post-checkbox + label {
+	top: -2px;
+}
 #edit-post-form .link-post-checkbox + label::before {
 	border-radius: 3px;
 	border: 1px solid #ddd;
@@ -1221,6 +1295,7 @@ button.guiedit::after {
 #edit-post-form input[type='radio'] + label {
 	color: #777;
 	border-color: #ddd;
+	padding: 4px 12px 6px 12px;
 }
 #edit-post-form input[type='radio'][value='all'] + label {
 	border-radius: 8px 0 0 8px;
@@ -1592,8 +1667,7 @@ div > .MJXc-display {
 /**************************************************************************/
 @media only screen and (hover: none), only screen and (-moz-touch-enabled) {
 /**************************************************************************/
-	#appearance-adjust-ui-toggle button,
-	#post-nav-ui-toggle button  {
+	#ui-elements-container > div[id$='-ui-toggle'] button  {
 		color: #aaa;
 		text-shadow:
 			0 0 1px #fff,
@@ -1719,17 +1793,8 @@ div > .MJXc-display {
 			opacity: 0.8;
 		}
 
-		#content.compact > #top-nav-bar + .comment-thread .comment-item {
-			margin-top: 0;
-		}
-
 		.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
 			background-color: #aaa;
-		}
-	
-		.sublevel-nav.sort {
-			top: 276px;
-			right: 8px;
 		}
 
 		.comment-item .comment-item {
@@ -1742,24 +1807,23 @@ div > .MJXc-display {
 		a.comment-parent-link:hover::before {
 			background-color: unset;
 		}
-	/*******************************************/
-	} @media only screen and (max-width: 720px) {
-	/*******************************************/
+
 		.sublevel-nav .sublevel-item,
 		.sublevel-nav .sublevel-item:first-child,
 		.sublevel-nav .sublevel-item:last-child {
 			border-width: 1px;
 			border-radius: 8px;
 		}
-		.sublevel-nav.sort {
-			top: 240px;
-		}
+	/*******************************************/
+	} @media only screen and (max-width: 720px) {
+	/*******************************************/
 	/*******************************************/
 	} @media only screen and (max-width: 520px) {
 	/*******************************************/
 		h1.listing {
 			font-size: 1.25rem;
 			margin: 18px 6px 4px 6px;
+			max-width: calc(100% - 12px);
 		}
 		h1.listing + .post-meta {
 			margin: 4px 6px;
@@ -1770,11 +1834,6 @@ div > .MJXc-display {
 
 		#content.compact > .comment-thread .comment-item {
 			max-height: 108px;
-		}
-		
-		.sublevel-nav.sort {
-			top: 194px;
-			right: 8px;
 		}
 	
 		.textarea-container:focus-within button:active {

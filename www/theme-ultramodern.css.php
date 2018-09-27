@@ -50,13 +50,12 @@ body {
 	width: 100%;
 	color: transparent;
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/one_pixel_DDD.gif")) ?>');
-	background-repeat-y: no-repeat;
+	background-repeat: repeat-x;
 	background-position: center 35%;
 	margin: 0 30px;
 	filter: brightness(50%) opacity(0.6);
 }
 #bottom-bar.decorative::after {
-	width: fit-content;
 	color: #777;
 	position: absolute;
 	left: 0;
@@ -66,6 +65,13 @@ body {
 	padding-right: 4px;
 	padding-left: 4px;
 }
+<?php foreach (["-moz-fit-content", "fit-content"] as $pvalue) echo 
+"@supports (width: {$pvalue}) {
+	#bottom-bar.decorative::after {
+		width: {$pvalue};
+	}
+}
+"; ?>
 
 .nav-bar a:link,
 .nav-bar a:visited {
@@ -166,9 +172,6 @@ body {
 	font-variant: small-caps;
 }
 .sublevel-nav.sort {
-	position: absolute;
-	top: 167px;
-	right: 30px;
 	border: 2px solid #999;
 	padding: 18px 0 0 0;
 	border-radius: 8px;
@@ -180,20 +183,29 @@ body {
 	color: #444;
 }
 .sublevel-nav.sort .sublevel-item {
-	border-radius: 0;
 	padding: 6px 7px 5px 7px;
-	border-color: #777;
-	border-style: solid;
 	text-transform: uppercase;
+	border: 1px solid #777;
 }
+
+/* Vertical */
 .sublevel-nav.sort .sublevel-item:first-child {
 	border-radius: 6px 6px 0 0;
-	border-width: 1px;
 }
 .sublevel-nav.sort .sublevel-item:last-child {
 	border-radius: 0 0 6px 6px;
 	border-width: 0 1px 1px 1px;
 }
+
+/* Horizontal */
+.sublevel-nav.sort.horizontal .sublevel-item:first-child {
+	border-radius: 6px 0 0 6px;
+}
+.sublevel-nav.sort.horizontal .sublevel-item:last-child {
+	border-radius: 0 6px 6px 0;
+	border-width: 1px 1px 1px 0;
+}
+
 .sublevel-nav.sort .sublevel-item:active {
 	border-color: #777;
 }
@@ -230,6 +242,15 @@ body {
 		0 0 0 2px #888 inset,
 		0 0 0 3px #ccc inset,
 		0 0 0 5px #888 inset;
+}
+
+#theme-selector button::before {
+	color: #aaa;
+	background-color: #888;
+}
+#theme-selector button:hover::before,
+#theme-selector button.selected::before {
+	color: #ccc;
 }
 
 /*======================*/
@@ -396,6 +417,7 @@ body {
 
 h1.listing {
 	margin: 0.7em 20px 0.1em 20px;
+	max-width: calc(100% - 40px);
 	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
 	font-size: 1.5rem;
 }
@@ -424,11 +446,10 @@ h1.listing a[href^="http"] {
 			0 0 2px #f60,
 			0 0 3px #f60;
 	}	
-	#content.user-page h1.listing:focus-within::before {
-		left: -0.75em;
-	}
 	h1.listing:focus-within::before {
 		color: #f60;
+		left: -0.625em;
+		top: 1px;
 	}
 	h1.listing a[href^="http"]:hover {
 		color: #4879ec;
@@ -494,12 +515,42 @@ h1.listing + .post-meta .link-post-domain {
 #content.user-page h1.page-main-heading {
 	border-bottom: 1px solid #777;
 }
-#content.user-page .sublevel-nav + h1.listing {
-	margin-top: 1.75em;
+
+#content.user-page h1.listing,
+#content.user-page h1.listing + .post-meta {
+	border-style: solid;
+	border-color: #666;
+	border-width: 0 0 0 1px;
+	box-shadow:
+		1.5px 0 1.5px -1.5px #bbb inset,
+		1px 0 1px -1px #777 inset;
+}
+#content.user-page h1.listing {
+	max-width: 100%;
+	margin: 1rem 0 0 0;
+	padding: 6px;
+}
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+	#content.user-page h1.listing:focus-within::before {
+		left: -0.625em;
+		top: 8px;
+	}
+}
+#content.user-page h1.listing + .post-meta {
+	margin: 0 0 1rem 0;
+	padding: 0.5em 6px 6px 34px;
+}
+#content.user-page h1.listing + .post-meta .post-section::before {
+	left: 1px;
 }
 
-#content.conversations-user-page .sublevel-nav + h1.listing {
-	margin-top: 1em;
+#content.conversations-user-page h1.listing {
+	padding: 6px 6px 4px 8px;
+	font-size: 1.5rem;
+}
+#content.conversations-user-page h1.listing + .post-meta {
+	padding: 6px 4px;
+	margin: 0 0 0.25rem 0;
 }
 #content.conversations-user-page h1.listing + .post-meta .date::after {
 	display: none;
@@ -507,6 +558,20 @@ h1.listing + .post-meta .link-post-domain {
 
 .user-stats .karma-total {
 	font-weight: bold;
+}
+
+/*===============*/
+/* CONVERSATIONS */
+/*===============*/
+
+#content.conversation-page h1.page-main-heading {
+	font-family: <?php echo $text_font; ?>;
+	font-weight: <?php global $platform; echo ($platform == 'Mac' ? '100' : '200'); ?>;
+	color: #000;
+	text-shadow: 
+		0px 0px 1px #777,
+		0.5px 0.5px 1px #aaa,
+		0.5px 0.5px 1px #bbb;
 }
 
 /*============*/
@@ -520,7 +585,6 @@ h1.listing + .post-meta .link-post-domain {
 /* “Create account” form */
 
 #signup-form {
-	padding: 0 0 0.5em 1em;
 	border: 1px solid #aaa;
 }
 
@@ -921,6 +985,13 @@ div.comment-child-links a::first-letter {
 		0 0 20px #999,
 		0 0 30px #999,
 		0 0 40px #999;
+}
+
+#content.user-page.compact > h1.listing {
+	margin-top: 0.5rem;
+}
+#content.user-page.compact > h1.listing + .post-meta {
+	margin-bottom: 0.5rem;
 }
 
 /*===========================*/
@@ -1498,8 +1569,7 @@ div > .MJXc-display {
 /*========*/
 
 @media only screen and (hover: none), only screen and (-moz-touch-enabled) {
-	#appearance-adjust-ui-toggle button,
-	#post-nav-ui-toggle button,
+	#ui-elements-container > div[id$='-ui-toggle'] button,
 	#theme-selector .theme-selector-close-button  {
 		color: #444;
 		text-shadow:
@@ -1636,17 +1706,8 @@ div > .MJXc-display {
 			padding: 6px 10px;
 		}
 
-		#content.compact > #top-nav-bar + .comment-thread .comment-item {
-			margin-top: 0;
-		}
-
 		.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
 			background-color: #ccc;
-		}
-	
-		.sublevel-nav.sort {
-			top: 286px;
-			right: 10px;
 		}
 
 		.comment-item .comment-item {
@@ -1655,24 +1716,29 @@ div > .MJXc-display {
 		.comment-item .comment-item + .comment-item {
 			margin: 1.5em 0 4px 6px;
 		}
-	/*****************************************/
-	@media only screen and (max-width: 720px) {
-	/*****************************************/
+
+		.comment-controls .cancel-comment-button::before {
+			text-shadow:
+				0 0 1px #fff,
+				0 0 3px #fff;
+		}
+
 		.sublevel-nav .sublevel-item,
 		.sublevel-nav .sublevel-item:first-child,
 		.sublevel-nav .sublevel-item:last-child {
 			border-width: 1px;
 			border-radius: 8px;
 		}
-		.sublevel-nav.sort {
-			top: 273px;
-		}
+	/*****************************************/
+	@media only screen and (max-width: 720px) {
+	/*****************************************/
 	/*******************************************/
 	} @media only screen and (max-width: 520px) {
 	/*******************************************/
 		h1.listing {
 			font-size: 1.25rem;
 			margin: 18px 6px 4px 6px;
+			max-width: calc(100% - 12px);
 		}
 		h1.listing + .post-meta {
 			margin: 4px 6px;
@@ -1686,11 +1752,6 @@ div > .MJXc-display {
 
 		#content.compact > .comment-thread .comment-item {
 			max-height: 105px;
-		}
-		
-		.sublevel-nav.sort {
-			top: 215px;
-			right: 4px;
 		}
 		
 		.textarea-container:focus-within textarea {

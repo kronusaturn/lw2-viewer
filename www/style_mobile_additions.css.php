@@ -25,19 +25,17 @@
 #ui-elements-container > * {
 	position: fixed;
 	visibility: hidden;
-	opacity: 1.0 !important;
+	opacity: 1.0;
 	z-index: 10000;
 }
 
-#appearance-adjust-ui-toggle,
-#post-nav-ui-toggle {
+#ui-elements-container > div[id$='-ui-toggle'] {
 	visibility: visible;
 	display: inline-block;
 	border-radius: 50%;
-	z-index: 1;
+	z-index: 10000;
 }
-#appearance-adjust-ui-toggle button,
-#post-nav-ui-toggle button,
+#ui-elements-container > div[id$='-ui-toggle'] button,
 #theme-selector .theme-selector-close-button {
 	font-family: Font Awesome;
 	font-weight: 900;
@@ -47,18 +45,15 @@
 	-webkit-tap-highlight-color: transparent;
 	transition: transform 0.2s ease;
 }
-#appearance-adjust-ui-toggle button::selection,
-#post-nav-ui-toggle button::selection,
+#ui-elements-container > div[id$='-ui-toggle'] button::selection,
 #theme-selector .theme-selector-close-button::selection {
 	background-color: transparent;
 }
-#appearance-adjust-ui-toggle button::-moz-focus-inner,
-#post-nav-ui-toggle button::-moz-focus-inner,
+#ui-elements-container > div[id$='-ui-toggle'] button::-moz-focus-inner,
 #theme-selector .theme-selector-close-button::-moz-focus-inner {
 	border: none;
 }
-#appearance-adjust-ui-toggle button.engaged,
-#post-nav-ui-toggle button.engaged {
+#ui-elements-container > div[id$='-ui-toggle'] button.engaged {
 	transform: rotate(-90deg);
 	opacity: 1.0;
 }
@@ -182,7 +177,7 @@
 }
 #theme-selector.engaged ~ #theme-tweaker-toggle {
 	visibility: visible;
-	top: 480px;
+	top: 530px;
 	left: 0;
 	right: 0;
 	margin: auto;
@@ -324,7 +319,7 @@
 
 #hns-date-picker {
 	max-height: 0px;
-	bottom: 124px;
+	bottom: 132px;
 	right: 62px;
 	transition:
 		max-height 0.2s ease,
@@ -559,8 +554,13 @@
 /*==============*/
 
 @media only screen and (max-width: 900px) {
-	.page-toolbar {
+	#content > .page-toolbar {
 		font-size: 1rem;
+		margin-right: 0;
+	}
+	#content.user-page > .page-toolbar {
+		grid-column: 2 / span 2;
+		margin: 0 0 6px 0;
 	}
 }
 @media only screen and (max-width: 520px) {
@@ -568,6 +568,38 @@
 		display: flex;
 		flex-direction: column-reverse;
 		text-align: right;
+		align-self: start;
+		padding: 4px 0 0 0;
+	}
+	#content.user-page .page-toolbar {
+		display: flex;
+		flex-flow: row;
+		justify-content: flex-end;
+		padding: 2px 0 0 0;
+	}
+	#content.user-page .page-toolbar > form,
+	#content.user-page .page-toolbar > .button {
+		text-align: center;
+		flex-basis: 25%;
+		margin-left: 1.5em;
+	}
+	#content.user-page .page-toolbar .button {
+		text-transform: uppercase;
+		font-size: 0.625rem;
+	}
+	#content.user-page .page-toolbar .button::before {
+		font-size: 1.375rem;
+		display: block;
+		padding: 0;
+	}
+	#content.user-page .page-toolbar .rss {
+		white-space: nowrap;
+		margin: 0 0 0 1.5em;
+	}
+	.page-toolbar > * {
+		line-height: 1.15;
+		padding: 6px 0;
+		margin: 0;
 	}
 }
 
@@ -575,20 +607,24 @@
 /* SUBLEVEL NAV */
 /*==============*/
 
-@media only screen and (max-width: 720px) {
+@media only screen and (max-width: 900px) {
 	.sublevel-nav:not(.sort) {
 		flex-wrap: wrap;
-		max-width: calc(100% - 200px);
-		margin: -1em auto 0 auto;
+		width: calc(100vw - 100px);
 	}
 	.sublevel-nav:not(.sort) .sublevel-item {
 		margin: 1px;
 		flex-basis: 7em;
 	}
 }
+@media only screen and (max-width: 720px) {
+	.sublevel-nav:not(.sort) {
+		width: calc(100vw - 200px);
+	}
+}
 @media only screen and (max-width: 520px) {
 	.sublevel-nav:not(.sort) {
-		max-width: calc(100% - 100px);
+		width: calc(100vw - 100px);
 	}
 	.sublevel-nav:not(.sort) .sublevel-item {
 		font-size: 1rem;
@@ -600,8 +636,9 @@
 /*=====================*/
 
 @media only screen and (max-width: 720px) {
-	.sublevel-nav.sort {
-		margin-top: 20px;
+	#content.index-page > .sublevel-nav.sort {
+		flex-flow: column;
+		margin-left: 4px;
 	}
 }
 
@@ -668,11 +705,14 @@ h1.listing {
 /* USER PAGES */
 /*============*/
 
-#content.user-page h1.page-main-heading {
-	margin: 1em 0.125em 0 0.125em;
-}
-#content.user-page .user-stats {
-	margin-right: 0.25em;
+@media only screen and (max-width: 720px) {
+	#content.user-page h1.page-main-heading {
+		align-self: center;
+	}
+	#content.user-page .user-stats {
+		padding: 4px 0;
+		line-height: 1.3;
+	}
 }
 
 /*============*/
@@ -687,11 +727,34 @@ h1.listing {
 	}
 	.login-container #login-form,
 	.login-container #signup-form {
-		width: unset;
-		margin: 0;
+		padding: 0 1em 1.25em 1em;
+		grid-row-gap: 0;
 	}
 	.login-container #signup-form {
-		margin-top: 2em;
+		padding-top: 1em;
+	}
+	.login-container #login-form > *,
+	.login-container #signup-form > * {
+		grid-column: 1 / span 2;
+	}
+	.login-container form label {
+		text-align: left;
+		padding: 0;
+		line-height: 1;
+	}
+	.login-container form input {
+		margin: 0.25em 0 0.75em 0;
+		padding: 0.5em;
+	}
+	.login-container form h1 {
+		grid-column: 1 / span 2;
+		margin: 0 0 0.25em 0;
+	}
+	.login-container form a {
+		margin: 0.75em 0 0 0;
+	}
+	.login-container .login-tip {
+		margin: 1.5em 1em 0 1em;
 	}
 }
 
@@ -796,15 +859,6 @@ a.comment-parent-link::after {
 /* COMMENTS COMPACT VIEW */
 /*=======================*/
 
-@media only screen and (max-width: 900px) {
-	#comments-list-mode-selector {
-		padding-top: 4px;
-	}
-	#content.user-page #comments-list-mode-selector {
-		left: 7px;
-	}
-}
-
 /*===========================*/
 /* COMMENT THREAD NAVIGATION */
 /*===========================*/
@@ -879,6 +933,9 @@ a.comment-parent-link::after {
 @media only screen and (max-width: 520px) {
 	.comment-controls {
 		position: static;
+	}
+	.comment-controls:focus-within {
+		z-index: 10001;
 	}
 	.comment-controls .cancel-comment-button {
 		right: 10px;
@@ -986,30 +1043,17 @@ a.comment-parent-link::after {
 	#edit-post-form {
 		padding-bottom: 0;
 	}
-	#edit-post-form label[for='title'] {
-		width: 2.5em;
-	}
-	#edit-post-form label[for='url'] {
-		width: 2.5em;
-	}
-	#edit-post-form label[for='section'] {
-		width: 4.1em;
+	#edit-post-form .post-meta-fields {
+		grid-template-columns: 4em auto auto auto 1fr 4.25em;
 	}
 	#edit-post-form label[for='url'], 
 	#edit-post-form label[for='section'],
 	#edit-post-form label[for='title'] {
-		text-align: left;
 		padding-left: 0;
-	}
-	#edit-post-form input[name='title'],
-	#edit-post-form input[name='url'] {
-		max-width: calc(100% - 6.5em);
 	}
 	#edit-post-form label[for='link-post'] {
 		white-space: normal;
 		line-height: 0.9;
-		width: 2em;
-		height: 1em;
 		top: -1px;
 	}
 	#edit-post-form .textarea-container:focus-within textarea {

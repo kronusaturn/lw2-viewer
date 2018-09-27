@@ -383,7 +383,7 @@
                        :link (generate-post-link (cdr (assoc :post-id item)) (cdr (assoc :--id item)) t)
                        :body (clean-html (cdr (assoc :html-body item))))))))))
 
-(defparameter *fonts-stylesheet-uri* "//fonts.greaterwrong.com/?fonts=Charter,Concourse,a_Avante,Whitney,MundoSans,SourceSansPro,Raleway,ProximaNova,AnonymousPro,InputSans,InputSansNarrow,InputSansCondensed,GaramondPremierPro,ProximaNova,TradeGothic,NewsGothicBT,Inconsolata,BitmapFonts,FontAwesomeGW")
+(defparameter *fonts-stylesheet-uri* "//fonts.greaterwrong.com/?fonts=Charter,Concourse,a_Avante,Whitney,MundoSans,SourceSansPro,Raleway,ProximaNova,AnonymousPro,InputSans,InputSansNarrow,InputSansCondensed,GaramondPremierPro,ProximaNova,TradeGothic,NewsGothicBT,Caecilia,SourceSerifPro,SourceCodePro,Inconsolata,BitmapFonts,FontAwesomeGW")
 (defparameter *fonts-stylesheet-uri* "//fonts.greaterwrong.com/?fonts=*")
 
 (defparameter *html-head*
@@ -507,14 +507,11 @@
             csrf-token
             (load-time-value (with-open-file (s "www/head.js") (uiop:slurp-stream-string s)) t)
             *extra-inline-scripts*)
-    (format out-stream "~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"stylesheet\" href=\"~A\"><link rel=\"shortcut icon\" href=\"~A\">~A"
+    (format out-stream "~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"stylesheet\" href=\"~A\"><link rel=\"shortcut icon\" href=\"~A\">"
             *html-head*
             (generate-css-link)
             (generate-versioned-link "/theme_tweaker.css")
-            (generate-versioned-link "/favicon.ico")
-            (if (string= (hunchentoot:cookie-in "theme") "dark")
-                "<style id='dark-theme-adjustments'>.markdown-reference-link a { color: #d200cf; filter: invert(100%); }</style>"
-                ""))
+            (generate-versioned-link "/favicon.ico"))
     (format out-stream "<script src=\"~A\" async></script>~A"
             (generate-versioned-link "/script.js")
             *extra-external-scripts*)
@@ -1108,14 +1105,10 @@
 				       (setf (hunchentoot:return-code*) 301
 					     (hunchentoot:header-out "Location") link)
 				       (multiple-value-bind (posts comments) (lw2-search-query q)
-                                         (emit-page (out-stream :title "Search" :current-uri "/search" :content-class "search-results-page")
-                                                    (dolist (p posts) (post-headline-to-html out-stream p))
-                                                    (with-outputs (out-stream) "<ul class=\"comment-thread\">")
-                                                    (dolist (c comments)
-                                                      (format out-stream "<li class=\"comment-item\">")
-                                                      (comment-to-html out-stream (search-result-markdown-to-html c) :with-post-title t)
-                                                      (format out-stream "</li>"))
-                                                    (with-outputs (out-stream) "</ul>")))))))
+                                         (view-items-index (nconc (map 'list (lambda (p) (if (cdr (assoc :comment-count p)) p (cons (cons :comment-count 0) p))) posts)
+                                                                  (map 'list #'search-result-markdown-to-html comments))
+                                                           :content-class "search-results-page" :current-uri "/search"
+                                                           :title (format nil "~@[~A - ~]Search" q)))))))
 
 (hunchentoot:define-easy-handler (view-login :uri "/login") (return cookie-check (csrf-token :request-type :post) (login-username :request-type :post) (login-password :request-type :post)
 								    (signup-username :request-type :post) (signup-email :request-type :post) (signup-password :request-type :post) (signup-password2 :request-type :post))
