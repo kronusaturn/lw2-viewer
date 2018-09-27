@@ -6334,6 +6334,18 @@ div > .MJXc-display {
 			grid-row: 4;
 			margin: 0.5em 0 0 0;
 		}
+
+		#content.conversation-page #theme-less-mobile-first-row-placeholder {
+			height: 64px;
+		}
+		#content.conversation-page #comments-list-mode-selector {
+			grid-row: 6;
+			margin-top: -32px;
+		}
+		#content.conversation-page .conversation-participants {
+			grid-row: 4;
+			align-self: end;
+		}
 	/*******************************************/
 	} @media only screen and (max-width: 720px) {
 	/*******************************************/
