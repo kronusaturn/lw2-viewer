@@ -2351,7 +2351,17 @@ div > .MJXc-display {
 		}
 		#nav-item-search button {
 			position: relative;
-			bottom: 2px;
+			bottom: 5px;
+			visibility: visible;
+			height: 32px;
+			width: 40px;
+			padding: 9px 15px 3px 5px;
+		}
+		#nav-item-search form:not(:focus-within) button:not(:hover) {
+			color: transparent;
+		}
+		#nav-item-search button::before {
+			color: #ddd;
 		}
 
 		#nav-item-login {
