@@ -4208,16 +4208,20 @@ body {
 
 .archive-nav span[class^="archive-nav-item"],
 .archive-nav a:hover {
+	color: #ffb359;
+	box-shadow: 
+		0 0 0 3px #888 inset,
+		0 0 0 4px #ccc inset,
+		0 0 0 5px #888 inset;
+	text-decoration: none;
+}
+.archive-nav span[class^="archive-nav-item"] {
 	font-weight: normal;
 	box-shadow: 
 		0 0 0 1px #ccc inset,
 		0 0 0 3px #888 inset,
 		0 0 0 4px #ccc inset,
 		0 0 0 5px #888 inset;
-	color: #c00;
-}
-.archive-nav span[class^="archive-nav-item"] {
-	color: #ffb359;
 }
 .archive-nav a:active {
 	transform: scale(0.9);
