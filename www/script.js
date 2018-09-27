@@ -1667,7 +1667,9 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	});
 
 	document.querySelectorAll(".with-markdown-editor textarea, .conversation-page textarea").forEach(function (textarea) { textarea.addTextareaFeatures(); });
-	document.querySelectorAll(((getQueryVariable("post-id")) ? "#edit-post-form textarea" : "#edit-post-form input[name='title']") + ", .conversation-page textarea").forEach(function (field) { field.focus(); });
+// 	let mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+	let mobile = ('ontouchstart' in document.documentElement);	
+	document.querySelectorAll(((getQueryVariable("post-id")) ? "#edit-post-form textarea" : "#edit-post-form input[name='title']") + (mobile ? "" : ", .conversation-page textarea")).forEach(function (field) { field.focus(); });
 
 	let postMeta = document.querySelector(".post .post-meta");
 	if (postMeta) {

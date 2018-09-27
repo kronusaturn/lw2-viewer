@@ -2228,7 +2228,8 @@ div > .MJXc-display {
 			padding: 5px 0 5px 0;
 			height: unset;
 			background-color: #fff;
-			border-bottom: 1px solid #eee;
+			border-bottom: 1px solid #ddd;
+			box-shadow: 0 0 0 1px #fff;
 			z-index: 2;
 			visibility: hidden;
 			transition:
@@ -2314,8 +2315,11 @@ div > .MJXc-display {
 			visibility: hidden;
 			background-color: #fff;
 			border-style: solid;
-			border-color: #eee;
+			border-color: #ddd;
 			border-width: 0 1px 1px 0;
+			box-shadow: 
+				0 1px 0 0 #fff,
+				1px 1px 0 0 #fff;
 			transition: left 0.2s ease;
 		}
 		.page-toolbar .rss,
@@ -2470,6 +2474,18 @@ div > .MJXc-display {
 		#content.user-page #top-nav-bar {
 			grid-row: 4;
 			margin: 0.5em 0 0 0;
+		}
+
+		#content.conversation-page #theme-less-mobile-first-row-placeholder {
+			height: 64px;
+		}
+		#content.conversation-page #comments-list-mode-selector {
+			grid-row: 6;
+			margin-top: -32px;
+		}
+		#content.conversation-page .conversation-participants {
+			grid-row: 4;
+			align-self: end;
 		}
 	/*******************************************/
 	} @media only screen and (max-width: 720px) {
