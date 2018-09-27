@@ -107,7 +107,7 @@
 		top 0.2s ease,
 		max-height 0.2s ease,
 		visibility 0.2s ease;
-	top: calc(100% - 20px);
+	top: calc(100% + 10px);
 	left: 0;
 	right: 0;
 	margin: auto;

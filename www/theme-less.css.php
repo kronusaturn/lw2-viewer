@@ -154,7 +154,7 @@ body {
 }
 #nav-item-search button {
 	border: none;
-	font-weight: inherit;
+	font-weight: 300;
 	padding: 6px;
 	height: 23px;
 }
