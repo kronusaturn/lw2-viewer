@@ -143,6 +143,14 @@
 	left: 2.5em;
 	top: 1em;
 }
+@media only screen and (max-height: 675px) {
+	#theme-selector button {	
+		padding: 0.875em;
+	}
+	#theme-selector button::after {
+		top: 0.875em;
+	}
+}
 #theme-selector .theme-selector-close-button {
 	position: absolute;
 	width: unset;
@@ -185,6 +193,11 @@
 	transition: 
 		top 0.2s ease,
 		visibility 0.2s ease;
+}
+@media only screen and (max-height: 675px) {
+	#theme-selector.engaged ~ #theme-tweaker-toggle {	
+		top: 492px;
+	}
 }
 <?php foreach (["-moz-fit-content", "fit-content"] as $pvalue) echo 
 "@supports (width: {$pvalue}) {
