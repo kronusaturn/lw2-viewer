@@ -438,6 +438,19 @@
                           (let ((*notifications-base-terms* (remove :null *notifications-base-terms* :key #'cdr)))
                             (call-next-method)))
 
+(declare-backend-function get-user-posts)
+
+(define-backend-operation get-user-posts backend-lw2 (user-id &key offset limit (sort-type :date) drafts auth-token)
+  (let ((posts-base-terms
+          (cond
+            (drafts (load-time-value (alist :view "drafts")))
+            ((eq sort-type :score) (load-time-value (alist :view "best" :meta :null)))
+            (t (load-time-value (alist :view "userPosts" :meta :null))))))
+    (lw2-graphql-query (graphql-query-string "PostsList"
+                                             (alist :terms (nconc (remove nil (alist :offset offset :limit limit :user-id user-id) :key #'cdr) posts-base-terms))
+                                             *posts-index-fields*)
+                       :auth-token auth-token)))
+
 (defun lw2-search-query (query)
   (multiple-value-bind (req-stream req-status req-headers req-uri req-reuse-stream want-close)
     (drakma:http-request "https://z0gr6exqhd-dsn.algolia.net/1/indexes/*/queries?x-algolia-agent=Algolia%20for%20vanilla%20JavaScript%203.24.5%3Breact-instantsearch%204.1.3%3BJS%20Helper%202.23.0&x-algolia-application-id=Z0GR6EXQHD&x-algolia-api-key=0b1d20b957917dbb5e1c2f3ad1d04ee2"

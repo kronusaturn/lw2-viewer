@@ -955,23 +955,17 @@
                                (comments-index-fields (remove :page-url *comments-index-fields*)) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
                                (title (format nil "~A~@['s ~A~]" (cdr (assoc :display-name user-info)) (if (member show '(nil :posts :comments)) show-text)))
                                (sort-type (alexandria:switch (sort :test #'string=) ("top" :score) (t :date)))
-                               (posts-base-terms (ecase sort-type (:score (load-time-value (alist :view "best" :meta :null))) (:date (load-time-value (alist :view "userPosts" :meta :null)))))
                                (comments-base-terms (ecase sort-type (:score (load-time-value (alist :view "postCommentsTop"))) (:date (load-time-value (alist :view "allRecentComments")))))
                                (items (case show
                                         (:posts
-                                          (lw2-graphql-query (graphql-query-string "PostsList"
-                                                                                   (alist :terms (nconc (alist :offset offset :limit 21 :user-id user-id) posts-base-terms))
-                                                                                   *posts-index-fields*)))
+                                          (get-user-posts user-id :offset offset :limit 21 :sort-type sort-type))
                                         (:comments
                                           (lw2-graphql-query (graphql-query-string "CommentsList"
                                                                                    (alist :terms (nconc (alist :offset offset :limit 21 :user-id user-id)
                                                                                                         comments-base-terms))
                                                                                    comments-index-fields)))
                                         (:drafts
-                                          (lw2-graphql-query (graphql-query-string "PostsList"
-                                                                                   (alist :terms (alist :view "drafts" :limit 21 :offset offset :user-id user-id))
-                                                                                   *posts-index-fields*)
-                                                             :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
+                                          (get-user-posts user-id :drafts t :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
                                         (:conversations
                                           (let ((conversations
                                                   (lw2-graphql-query (graphql-query-string "ConversationsList"
@@ -1025,7 +1019,7 @@
                                                                                         :set (alist :last-notifications-check (local-time:format-timestring nil (local-time:now))))
                                                                       :operation-name "usersEdit"))))
                                         (t
-                                          (let ((user-posts (lw2-graphql-query (graphql-query-string "PostsList" (alist :terms (nconc (alist :limit (+ 21 offset) :user-id user-id) posts-base-terms)) *posts-index-fields*)))
+                                          (let ((user-posts (get-user-posts user-id :limit (+ 21 offset)))
                                                 (user-comments (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (nconc (alist :limit (+ 21 offset) :user-id user-id) comments-base-terms)) 
                                                                                                         comments-index-fields))))
                                             (concatenate 'list user-posts user-comments)))))
