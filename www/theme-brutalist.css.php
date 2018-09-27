@@ -636,9 +636,11 @@ a.post-section:hover::before {
 
 .post-body {
 	font-size: 1.125rem;
+	margin-top: 1em;
 }
 .post > h1:first-child {
 	font-size: 2.25rem;
+	margin-top: 1.375em;
 }
 
 /*==========*/
