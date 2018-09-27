@@ -441,15 +441,25 @@
 (declare-backend-function get-user-posts)
 
 (define-backend-operation get-user-posts backend-lw2 (user-id &key offset limit (sort-type :date) drafts auth-token)
-  (let ((posts-base-terms
-          (cond
-            (drafts (load-time-value (alist :view "drafts")))
-            ((eq sort-type :score) (load-time-value (alist :view "best" :meta :null)))
-            (t (load-time-value (alist :view "userPosts" :meta :null))))))
+  (declare (special *graphql-correct*))
+  (let* ((posts-base-terms
+           (cond
+             (drafts (alist :view "drafts"))
+             ((eq sort-type :score) (alist :view "best"))
+             (t (alist :view "userPosts"))))
+         (posts-base-terms
+           (if (or drafts (boundp '*graphql-correct*))
+               posts-base-terms
+               (cons '(:meta . :null) posts-base-terms))))
     (lw2-graphql-query (graphql-query-string "PostsList"
                                              (alist :terms (nconc (remove nil (alist :offset offset :limit limit :user-id user-id) :key #'cdr) posts-base-terms))
                                              *posts-index-fields*)
                        :auth-token auth-token)))
+
+(define-backend-operation get-user-posts backend-accordius (user-id &key offset limit (sort-type :date) drafts auth-token)
+  (let ((*graphql-correct* t))
+    (declare (special *graphql-correct*))
+    (call-next-method)))
 
 (defun lw2-search-query (query)
   (multiple-value-bind (req-stream req-status req-headers req-uri req-reuse-stream want-close)
