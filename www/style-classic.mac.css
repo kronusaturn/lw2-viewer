@@ -2530,12 +2530,9 @@ li {
 /* MATH */
 /********/
 
-div > .MJXc-display {
+.mathjax-block-container {
 	max-width: 100%;
 	overflow-y: hidden;
-}
-.mjx-chtml {
-	clear: both;
 }
 
 /**********************/
@@ -5413,17 +5410,17 @@ select {
 /* MATH */
 /*======*/
 
-div > .MJXc-display {
+.mathjax-block-container {
 	padding: 10px 6px;
 	border-radius: 6px;
 }
-.MJXc-display::-webkit-scrollbar {
+.mathjax-block-container::-webkit-scrollbar {
 	height: 12px;
 	background-color: #f6f6ff;
 	border-radius: 6px;
 	border: 1px solid #ddf;
 }
-.MJXc-display::-webkit-scrollbar-thumb {
+.mathjax-block-container::-webkit-scrollbar-thumb {
 	background-color: #dde;
 	border-radius: 6px;
 	border: 1px solid #cce;

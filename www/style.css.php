@@ -2537,12 +2537,9 @@ li {
 /* MATH */
 /********/
 
-div > .MJXc-display {
+.mathjax-block-container {
 	max-width: 100%;
 	overflow-y: hidden;
-}
-.mjx-chtml {
-	clear: both;
 }
 
 /**********************/
