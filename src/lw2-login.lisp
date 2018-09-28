@@ -200,3 +200,24 @@
 	       `(("query" . "mutation vote($documentId: String, $voteType: String, $collectionName: String) { vote(documentId: $documentId, voteType: $voteType, collectionName: $collectionName) { ... on Post { baseScore, currentUserVotes { _id, voteType, power } } ... on Comment { baseScore, currentUserVotes { _id, voteType, power } } } }")
 		  ("variables" ("documentId" . ,target) ("voteType" . ,vote-type) ("collectionName" . ,target-type)) ("operationName" . "vote")))))
     (values (cdr (assoc :base-score ret)) (cdr (assoc :vote-type (first (cdr (assoc :current-user-votes ret))))) ret)))
+
+(declare-backend-function generate-message-document)
+
+(define-backend-operation generate-message-document backend-lw2 (conversation-id text)
+  (alist :content
+         (alist :blocks (loop for para in (ppcre:split "\\n+" text)
+                              collect (alist :text para :type "unstyled"))
+                :entity-map (make-hash-table))
+         :conversation-id conversation-id))
+
+(define-backend-operation generate-message-document backend-accordius (conversation-id text)
+  (alist :body text
+         :conversation-id conversation-id))
+
+(declare-backend-function do-create-message)
+
+(define-backend-operation do-create-message backend-lw2 (auth-token conversation-id text)
+  (do-lw2-post-query auth-token
+    (alist :query "mutation MessagesNew($document: MessagesInput) { MessagesNew(document: $document) { _id }}"
+           :variables (alist :document (generate-message-document conversation-id text))
+           :operation-name "MessagesNew")))

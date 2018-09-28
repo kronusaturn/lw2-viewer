@@ -1074,15 +1074,7 @@
                                                                                                        (alist :participant-ids participant-ids
                                                                                                               :title subject))
                                                                                      :operation-name "ConversationsNew"))))))
-                                           (do-lw2-post-query (hunchentoot:cookie-in "lw2-auth-token")
-                                                              (alist :query "mutation MessagesNew($document: MessagesInput) { MessagesNew(document: $document) { _id }}"
-                                                                     :variables (alist :document
-                                                                                       (alist :content
-                                                                                              (alist :blocks (loop for para in (ppcre:split "\\n+" text)
-                                                                                                                   collect (alist :text para :type "unstyled"))
-                                                                                                     :entity-map (make-hash-table))
-                                                                                              :conversation-id id))
-                                                                     :operation-name "MessagesNew"))
+                                           (do-create-message (hunchentoot:cookie-in "lw2-auth-token") id text)
                                            (setf (hunchentoot:return-code*) 303
                                                  (hunchentoot:header-out "Location") (format nil "/conversation?id=~A" id))))
                                        ((and id to) (error "This is an invalid URL."))
