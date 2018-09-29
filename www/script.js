@@ -812,14 +812,11 @@ function themeLoadCallback_less(fromTheme = "") {
 		postDate.innerHTML = dtf.format(new Date(+ postDate.getAttribute("data-js-date")));
 	});
 
-// 	let mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-	let mobile = ('ontouchstart' in document.documentElement);
-	
-	if (mobile) {
+	if (window.isMobile) {
 		document.querySelector("#content").insertAdjacentHTML("beforeend", "<div id='theme-less-mobile-first-row-placeholder'></div>");
 	}
 	
-	if (!mobile) {
+	if (!window.isMobile) {
 		registerInitializer('addSpans', true, () => document.querySelector(".top-post-meta") != null, function () {
 			document.querySelectorAll(".top-post-meta .date, .top-post-meta .comment-count").forEach(function (element) {
 				element.innerHTML = "<span>" + element.innerHTML + "</span>";
@@ -864,10 +861,7 @@ function themeUnloadCallback_less(toTheme = "") {
 		e.parentElement.removeChild(e);
 	});
 
-// 	let mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-	let mobile = ('ontouchstart' in document.documentElement);
-
-	if (!mobile) {
+	if (!window.isMobile) {
 		// Remove spans
 		document.querySelectorAll(".top-post-meta .date, .top-post-meta .comment-count").forEach(function (element) {
 			element.innerHTML = element.firstChild.innerHTML;
@@ -1403,9 +1397,7 @@ function injectCommentsListModeSelector() {
 	commentsListModeSelector.querySelector(`.${savedMode}`).disabled = true;
 	commentsListModeSelector.querySelector(`.${(savedMode == "compact" ? "expanded" : "compact")}`).accessKey = '`';
 	
-// 	let mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-	let mobile = ('ontouchstart' in document.documentElement);
-	if (mobile) {
+	if (window.isMobile) {
 		document.querySelectorAll("#comments-list-mode-selector ~ .comment-thread").forEach(function (ct) {
 			ct.addActivateEvent(function (event) {
 				let pct = event.target.closest("#content.compact .comment-thread");
@@ -1441,9 +1433,7 @@ function injectSiteNavUIToggle() {
 	let siteNavUIToggle = addUIElement("<div id='site-nav-ui-toggle'><button type='button' tabindex='-1'>&#xf0c9;</button></div>");
 	siteNavUIToggle.querySelector("button").addActivateEvent(siteNavUIToggleButtonClicked);
 	
-// 	let mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-	let mobile = ('ontouchstart' in document.documentElement);
-	if (!mobile && window.localStorage.getItem("site-nav-ui-toggle-engaged") == "true") {
+	if (!window.isMobile && window.localStorage.getItem("site-nav-ui-toggle-engaged") == "true") {
 		registerInitializer('engageSiteNavUI', true, () => document.querySelector("#ui-elements-container") != null, function () {
 			toggleSiteNavUI();
 		});
@@ -1586,6 +1576,10 @@ function removeElement(selector, ancestor = document) {
 /******************/
 
 registerInitializer('earlyInitialize', true, () => document.querySelector("#content") != null, function () {
+	// Check to see whether we're on a mobile device (which we define as a touchscreen)
+// 	window.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+	window.isMobile = ('ontouchstart' in document.documentElement);
+
 	// Backward compatibility
 	let storedTheme = window.localStorage.getItem('selected-theme');
 	if (storedTheme) {
@@ -1678,9 +1672,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	});
 
 	document.querySelectorAll(".with-markdown-editor textarea, .conversation-page textarea").forEach(function (textarea) { textarea.addTextareaFeatures(); });
-// 	let mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-	let mobile = ('ontouchstart' in document.documentElement);	
-	document.querySelectorAll(((getQueryVariable("post-id")) ? "#edit-post-form textarea" : "#edit-post-form input[name='title']") + (mobile ? "" : ", .conversation-page textarea")).forEach(function (field) { field.focus(); });
+	document.querySelectorAll(((getQueryVariable("post-id")) ? "#edit-post-form textarea" : "#edit-post-form input[name='title']") + (window.isMobile ? "" : ", .conversation-page textarea")).forEach(function (field) { field.focus(); });
 
 	let postMeta = document.querySelector(".post .post-meta");
 	if (postMeta) {
