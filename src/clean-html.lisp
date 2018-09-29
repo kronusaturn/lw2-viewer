@@ -1,6 +1,6 @@
 (uiop:define-package #:lw2.clean-html
   (:use #:cl #:alexandria #:split-sequence #:lw2.lmdb #:lw2.links)
-  (:export #:clean-text #:clean-html #:clean-html*)
+  (:export #:clean-text #:clean-text-to-html #:clean-html #:clean-html*)
   (:unintern #:*text-clean-regexps* #:*html-clean-regexps*))
 
 (in-package #:lw2.clean-html)
@@ -61,6 +61,11 @@
 
 (define-cleaner clean-text (read-regexp-file "text-clean-regexps.js"))
 (define-cleaner clean-html-regexps (read-regexp-file "html-clean-regexps.js"))
+
+(defun clean-text-to-html (text)
+  (handler-bind
+    (((or plump:invalid-xml-character plump:discouraged-xml-character) #'abort))
+    (clean-html-regexps (plump:encode-entities (clean-text text)))))
 
 (defun clean-dom-text (root)
   (handler-bind
