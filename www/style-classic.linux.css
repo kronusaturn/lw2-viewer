@@ -5070,6 +5070,7 @@ div.comment-child-links a::first-letter {
 .downvote {
 	color: #c8c8c8;	
 	padding: 0 5px;
+	position: relative;
 }
 .vote::before {
 	position: relative;
@@ -5080,6 +5081,66 @@ div.comment-child-links a::first-letter {
 .downvote::before {
 	content: '\F165';
 	top: 2px;
+}
+
+.vote {
+	text-shadow: 
+		 0.5px  0.5px 0 #999,
+		-0.5px  0.5px 0 #999,
+		 0.5px -0.5px 0 #999,
+		-0.5px -0.5px 0 #999;
+}
+
+.upvote.selected,
+.upvote:hover {
+	text-shadow: 
+		 0.5px  0.5px 0 #060,
+		-0.5px  0.5px 0 #060,
+		 0.5px -0.5px 0 #060,
+		-0.5px -0.5px 0 #060;
+}
+
+.downvote.selected,
+.downvote:hover {
+	text-shadow: 
+		 0.5px  0.5px 0 #900,
+		-0.5px  0.5px 0 #900,
+		 0.5px -0.5px 0 #900,
+		-0.5px -0.5px 0 #900;
+}
+
+.vote::before {
+	z-index: 1;
+}
+
+.vote::after {
+	position: absolute;
+	color: #fff;
+	visibility: hidden;
+}
+.vote:hover::after,
+.vote.big-vote::after,
+.vote:not(.big-vote).clicked-twice::after {
+	visibility: visible;
+}
+.vote.big-vote::after,
+.vote:not(.big-vote).clicked-twice::after {
+	color: inherit;
+}
+.karma:not(.waiting) .vote.clicked-once::after {
+	color: #c8c8c8;	
+}
+
+.upvote::after {
+	content: "\F164";
+	left: -1px;
+	top: -3px;
+}
+
+.downvote::after {
+	content: "\F165";
+	left: -1px;
+	top: 5px;
 }
 
 .comment-controls .karma {
