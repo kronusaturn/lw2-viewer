@@ -2575,10 +2575,15 @@ li {
 /********/
 
 .mathjax-block-container {
-	max-width: 100%;
 	overflow-y: hidden;
 	border-radius: 6px;
 	margin: 1em 0 1.5em 0;
+}
+.mathjax-inline-container {
+	max-width: 100%;
+	display: inline-block;
+	overflow-x: scroll;
+	overflow-y: hidden;
 }
 
 /**********************/

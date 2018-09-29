@@ -1317,6 +1317,17 @@ select {
 	border-radius: 6px;
 	border: 1px solid #cce;
 }
+.mathjax-inline-container::-webkit-scrollbar {
+	height: 8px;
+	background-color: #f6f6ff;
+	border-radius: 4px;
+	border: 1px solid #ddf;
+}
+.mathjax-inline-container::-webkit-scrollbar-thumb {
+	background-color: #dde;
+	border-radius: 4px;
+	border: 1px solid #cce;
+}
 
 /*====================*/
 /* FOR NARROW SCREENS */
