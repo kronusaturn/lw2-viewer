@@ -1488,6 +1488,24 @@ select {
 	color: #000;
 }
 
+@-moz-document url-prefix() {
+	h1.listing s,
+	.post > h1:first-of-type s {
+	  position: relative;
+	  text-decoration: none;
+	}
+	h1.listing s::after,
+	.post > h1:first-of-type s::after {
+	  position: absolute;
+	  border-bottom: 3px solid #000;
+	  content: "";
+	  top: 0;
+	  left: 0;
+	  width: 100%;
+	  height: 50%;
+	}
+}
+
 /*============*/
 /* ABOUT PAGE */
 /*============*/
