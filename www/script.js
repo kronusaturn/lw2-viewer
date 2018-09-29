@@ -1402,6 +1402,17 @@ function injectCommentsListModeSelector() {
 	commentsListModeSelector.querySelector(`.${savedMode}`).addClass("selected");
 	commentsListModeSelector.querySelector(`.${savedMode}`).disabled = true;
 	commentsListModeSelector.querySelector(`.${(savedMode == "compact" ? "expanded" : "compact")}`).accessKey = '`';
+	
+// 	let mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+	let mobile = ('ontouchstart' in document.documentElement);
+	if (mobile) {
+		document.querySelectorAll("#comments-list-mode-selector ~ .comment-thread").forEach(function (ct) {
+			ct.addActivateEvent(function (event) {
+				let pct = event.target.closest("#content.compact .comment-thread");
+				if (pct) pct.toggleClass("expanded");
+			}, false);
+		});
+	}
 }
 
 function commentsListModeSelectButtonClicked(event) {

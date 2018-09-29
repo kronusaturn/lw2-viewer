@@ -1706,7 +1706,7 @@ div.comment-child-links a::first-letter {
 		content: "";
 		position: absolute;
 		display: block;
-		width: calc(100% + 20px);
+		width: calc(100% + 14px);
 		height: calc(100% + 20px);
 		z-index: -1;
 		top: -10px;
@@ -1714,6 +1714,17 @@ div.comment-child-links a::first-letter {
 	}
 	#content.compact > .comment-thread.expanded:last-of-type .comment-item .comment {
 		margin: 0;
+	}
+	#content.compact > .comment-thread.expanded .comment-item .comment::after {
+		content: "";
+		display: block;
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: -2;
+		background-color: rgba(0,0,0,0.5);
 	}
 }
 
