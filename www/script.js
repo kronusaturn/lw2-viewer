@@ -11,7 +11,7 @@ function registerInitializer(name, tryEarly, precondition, fn) {
 		if(initializersDone[name]) return;
 		if(!precondition()) {
 			if(tryEarly) {
-				window.setTimeout(wrapper, 50);
+				window.setTimeout(()=>window.requestIdleCallback(wrapper, {timeout: 1000}), 50);
 			} else {
 				document.addEventListener("readystatechange", wrapper, {once: true});
 			}
@@ -21,10 +21,10 @@ function registerInitializer(name, tryEarly, precondition, fn) {
 		fn();
 	};
 	if(tryEarly) {
-		window.requestAnimationFrame(wrapper);
+		window.requestIdleCallback(wrapper, {timeout: 1000});
 	} else {
 		document.addEventListener("readystatechange", wrapper, {once: true});
-		window.setTimeout(wrapper);
+		window.requestIdleCallback(wrapper);
 	}
 }
 function forceInitializer(name) {
