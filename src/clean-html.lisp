@@ -275,7 +275,7 @@
                                                         unless (or (eq s current)
                                                                    (and (plump:text-node-p s) (string-is-whitespace (plump:text s))))
                                                           return t)
-                                               do (progn (add-class (plump:parent node) "mathjax-inline-container")
+                                               do (progn (add-class current "mathjax-inline-container")
                                                          (return))
                                              when (tag-is parent "p" "blockquote" "div")
                                                do (progn (add-class parent "mathjax-block-container")
