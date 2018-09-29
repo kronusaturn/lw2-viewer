@@ -1151,28 +1151,53 @@ div.comment-child-links a::first-letter {
 
 .vote {
 	text-shadow: 
-		 0.5px  0.5px 0 #999,
-		-0.5px  0.5px 0 #999,
-		 0.5px -0.5px 0 #999,
-		-0.5px -0.5px 0 #999;
+		 1px  1px 0 #999,
+		-1px  1px 0 #999,
+		 1px -1px 0 #999,
+		-1px -1px 0 #999;
 }
-
 .upvote.selected,
 .upvote:hover {
 	text-shadow: 
-		 0.5px  0.5px 0 #060,
-		-0.5px  0.5px 0 #060,
-		 0.5px -0.5px 0 #060,
-		-0.5px -0.5px 0 #060;
+		 1px  1px 0 #080,
+		-1px  1px 0 #080,
+		 1px -1px 0 #080,
+		-1px -1px 0 #080;
 }
 
 .downvote.selected,
 .downvote:hover {
 	text-shadow: 
-		 0.5px  0.5px 0 #900,
-		-0.5px  0.5px 0 #900,
-		 0.5px -0.5px 0 #900,
-		-0.5px -0.5px 0 #900;
+		 1px  1px 0 #b00,
+		-1px  1px 0 #a00,
+		 1px -1px 0 #b00,
+		-1px -1px 0 #b00;
+}
+@media only screen and (min-resolution: 192dpi) {
+	.vote {
+		text-shadow: 
+			 0.5px  0.5px 0 #999,
+			-0.5px  0.5px 0 #999,
+			 0.5px -0.5px 0 #999,
+			-0.5px -0.5px 0 #999;
+	}
+	.upvote.selected,
+	.upvote:hover {
+		text-shadow: 
+			 0.5px  0.5px 0 #060,
+			-0.5px  0.5px 0 #060,
+			 0.5px -0.5px 0 #060,
+			-0.5px -0.5px 0 #060;
+	}
+
+	.downvote.selected,
+	.downvote:hover {
+		text-shadow: 
+			 0.5px  0.5px 0 #900,
+			-0.5px  0.5px 0 #900,
+			 0.5px -0.5px 0 #900,
+			-0.5px -0.5px 0 #900;
+	}
 }
 
 .vote::before {
