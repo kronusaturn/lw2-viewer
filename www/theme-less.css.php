@@ -1036,6 +1036,7 @@ h1.listing + .post-meta .post-section::before {
 	font-family: <?php echo $UI_font; ?>;
 	padding-top: 0;
 	margin-top: 1em;
+	background-color: #fff;
 }
 .post-body .contents ul {
 	font-size: 0.8125em;
