@@ -4957,20 +4957,40 @@ div.comment-child-links a::first-letter {
 	color: #0cc800;
 	background: linear-gradient(to right, transparent 0%, #000 50%, #000 100%);
 }
-#content.compact > .comment-thread .comment-item:hover .comment {
-	background-color: #000;
-	outline: 3px solid #54d400;
+
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+	#content.compact > .comment-thread .comment-item:hover .comment {
+		background-color: #000;
+		outline: 3px solid #54d400;
+	}
+	#content.compact > .comment-thread .comment-item:hover .comment::before {
+		background-color: #000;
+		box-shadow: 
+			0 0  3px #000,
+			0 0  5px #000,
+			0 0  7px #000,
+			0 0 10px #000,
+			0 0 20px #000,
+			0 0 30px #000,
+			0 0 40px #000;
+	}
 }
-#content.compact > .comment-thread .comment-item:hover .comment::before {
-	background-color: #000;
-	box-shadow: 
-		0 0  3px #000,
-		0 0  5px #000,
-		0 0  7px #000,
-		0 0 10px #000,
-		0 0 20px #000,
-		0 0 30px #000,
-		0 0 40px #000;
+@media only screen and (hover: none), only screen and (-moz-touch-enabled) {
+	#content.compact > .comment-thread.expanded .comment-item .comment {
+		background-color: #000;
+		outline: 3px solid #54d400;
+	}
+	#content.compact > .comment-thread.expanded .comment-item .comment::before {
+		background-color: #000;
+		box-shadow: 
+			0 0  3px #000,
+			0 0  5px #000,
+			0 0  7px #000,
+			0 0 10px #000,
+			0 0 20px #000,
+			0 0 30px #000,
+			0 0 40px #000;
+	}
 }
 
 #content.user-page.compact > h1.listing {

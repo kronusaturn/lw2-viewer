@@ -1444,6 +1444,41 @@ div.comment-child-links a::first-letter {
 	color: <?php echo $hyperlink_color; ?>;
 	background: linear-gradient(to right, transparent 0%, #fff 50%, #fff 100%);
 }
+
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+	#content.compact > .comment-thread .comment-item:hover .comment {
+		background-color: #fff;
+		outline: 1px solid #92c396;
+	}
+	#content.compact > .comment-thread .comment-item:hover .comment::before {
+		background-color: #fff;
+		box-shadow: 
+			0 0  3px #fff,
+			0 0  5px #fff,
+			0 0  7px #fff,
+			0 0 10px #fff,
+			0 0 20px #fff,
+			0 0 30px #fff,
+			0 0 40px #fff;
+	}
+}
+@media only screen and (hover: none), only screen and (-moz-touch-enabled) {
+	#content.compact > .comment-thread.expanded .comment-item .comment {
+		background-color: #fff;
+		outline: 1px solid #92c396;
+	}
+	#content.compact > .comment-thread.expanded .comment-item .comment::before {
+		background-color: #fff;
+		box-shadow: 
+			0 0  3px #fff,
+			0 0  5px #fff,
+			0 0  7px #fff,
+			0 0 10px #fff,
+			0 0 20px #fff,
+			0 0 30px #fff,
+			0 0 40px #fff;
+	}
+}
 #content.compact > .comment-thread .comment-item:hover .comment {
 	background-color: #fff;
 	outline: 1px solid #92c396;
