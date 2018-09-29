@@ -1246,6 +1246,10 @@ h1.listing + .post-meta .read-time {
 /* POSTS */
 /*********/
 
+.post {
+	max-width: 100%;
+}
+
 .post-body {
 	min-height: 8em;
 	padding: 0 30px;
