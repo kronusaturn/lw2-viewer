@@ -1297,6 +1297,7 @@ h1.listing + .post-meta .read-time {
 /************/
 
 #comments {
+	max-width: 100%;
 	padding: 0 0 1px 0;
 }
 ul.comment-thread {
