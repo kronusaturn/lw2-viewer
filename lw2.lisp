@@ -106,7 +106,7 @@
               url
               (if url (encode-entities (string-trim " " url)))
               (generate-post-auth-link post nil nil need-auth)
-              (encode-entities (clean-text title))
+              (clean-text-to-html title)
               (encode-entities (get-user-slug user-id))
               (encode-entities (get-username user-id))
               js-time
@@ -142,7 +142,7 @@
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
       (format out-stream "<div class=\"post~:[~; link-post~]\"><h1>~A</h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A</a>~@[<a class=\"lw2-link\" href=\"~A\">LW<span> link</span></a>~]"
               url
-              (encode-entities (clean-text title))
+              (clean-text-to-html title)
               (encode-entities (get-user-slug user-id))
               (encode-entities (get-username user-id))
               js-time
@@ -198,7 +198,7 @@
                                          (encode-entities (get-username (cdr (assoc :user-id parent-comment))))
                                          (generate-post-link (cdr (assoc :post-id parent-comment)) (cdr (assoc :--id parent-comment)))))
                 (generate-post-link post-id)
-                (encode-entities (clean-text (get-post-title post-id))))
+                (clean-text-to-html (get-post-title post-id)))
         (progn
           (when parent-comment-id
             (if *comment-individual-link*
