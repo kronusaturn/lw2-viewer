@@ -2582,8 +2582,12 @@ li {
 .mathjax-inline-container {
 	max-width: 100%;
 	display: inline-block;
-	overflow-x: scroll;
+	overflow-x: auto;
 	overflow-y: hidden;
+	padding: 3px 1px 0 1px;
+	line-height: 1;
+	position: relative;
+	top: 2px;
 }
 
 /**********************/
