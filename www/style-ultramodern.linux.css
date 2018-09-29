@@ -4976,11 +4976,16 @@ div.comment-child-links a::first-letter {
 
 .vote::after {
 	position: absolute;
-	text-shadow: none;
 	color: transparent;
 }
+.vote:hover::after {
+	color: #888;
+}
+.vote:not(:hover)::after {
+	text-shadow: none;
+}
 .karma.waiting .vote.big-vote::after {
-	color: transparent;
+	color: #888;
 }
 .vote.big-vote::after,
 .vote:not(.big-vote).clicked-twice::after {

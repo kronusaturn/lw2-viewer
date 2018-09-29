@@ -5482,6 +5482,11 @@ div.comment-child-links a::first-letter {
 .downvote {
 	color: #ddd;
 	font-weight: 400;
+	position: relative;
+}
+.vote::before {
+	position: relative;
+	z-index: 1;
 }
 .upvote::before {
 	content: "\F077";
@@ -5502,6 +5507,36 @@ div.comment-child-links a::first-letter {
 	text-shadow:
 		0 0 0.5px #fff, 
 		0 0 8px #f00;
+}
+
+.vote::after {
+	position: absolute;
+	color: transparent;
+}
+.vote:not(:hover)::after {
+	text-shadow: none;
+}
+.karma.waiting .vote.big-vote::after {
+	color: transparent;
+}
+.vote.big-vote::after,
+.vote:not(.big-vote).clicked-twice::after {
+	color: inherit;
+}
+.karma:not(.waiting) .vote.clicked-once::after {
+	color: #ddd;
+}
+
+.upvote::after {
+	content: "\F325";
+	bottom: 5px;
+	left: 7px;
+}
+
+.downvote::after {
+	content: "\F322";
+	top: 5px;
+	left: 7px;
 }
 
 /*===========================*/

@@ -1103,15 +1103,20 @@ div.comment-child-links a::first-letter {
 .upvote,
 .downvote {
 	color: #bbb;
+	position: relative;	
+}
+.vote::before {
+	position: relative;
+	z-index: 1;
 }
 .upvote::before {
 	content: "\F077";
+	top: 1px;
 }
 .downvote::before {
 	content: "\F078";
 	position: relative;
 	left: -2px;
-	top: 1px;
 }
 .upvote:hover,
 .upvote.selected {
@@ -1125,9 +1130,35 @@ div.comment-child-links a::first-letter {
 		0 0 0.5px #fff, 
 		0 0 8px #f00;
 }
-.upvote:focus,
-.downvote:focus {
+
+.vote::after {
+	position: absolute;
+	color: transparent;
+}
+.vote:not(:hover)::after {
 	text-shadow: none;
+}
+.karma.waiting .vote.big-vote::after {
+	color: transparent;
+}
+.vote.big-vote::after,
+.vote:not(.big-vote).clicked-twice::after {
+	color: inherit;
+}
+.karma:not(.waiting) .vote.clicked-once::after {
+	color: #bbb;
+}
+
+.upvote::after {
+	content: "\F325";
+	left: 7px;
+	bottom: 4px;
+}
+
+.downvote::after {
+	content: "\F322";
+	left: 5px;
+	top: 4px;
 }
 
 /*===========================*/

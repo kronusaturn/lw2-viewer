@@ -1152,8 +1152,10 @@ div.comment-child-links a::first-letter {
 
 .vote::after {
 	position: absolute;
-	text-shadow: none;
 	color: transparent;
+}
+.vote:not(:hover)::after {
+	text-shadow: none;
 }
 .karma.waiting .vote.big-vote::after {
 	color: transparent;
