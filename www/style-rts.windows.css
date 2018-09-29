@@ -2566,6 +2566,8 @@ li {
 .mathjax-block-container {
 	max-width: 100%;
 	overflow-y: hidden;
+	border-radius: 6px;
+	margin: 1em 0 1.5em 0;
 }
 
 /**********************/
@@ -5389,10 +5391,6 @@ select {
 /* MATH */
 /*======*/
 
-.mathjax-block-container {
-	padding: 10px 6px;
-	border-radius: 6px;
-}
 .mathjax-block-container::-webkit-scrollbar {
 	height: 12px;
 	background-color: #f6f6ff;

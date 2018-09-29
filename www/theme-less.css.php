@@ -1987,10 +1987,6 @@ strong, b {
 /* MATH */
 /*======*/
 
-.mathjax-block-container {
-	padding: 10px 6px;
-	border-radius: 6px;
-}
 .mathjax-block-container::-webkit-scrollbar {
 	height: 12px;
 	background-color: #f6f6ff;
