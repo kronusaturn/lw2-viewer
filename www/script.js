@@ -780,6 +780,7 @@ function setTheme(themeName) {
 	let oldStyle = document.querySelector("head link[href*='.css']");
 	newStyle.addEventListener('load', function() { oldStyle.parentElement.removeChild(oldStyle); });
 	newStyle.addEventListener('load', generateImagesOverlay);
+	newStyle.addEventListener('load', recomputeUIElementsContainerHeight);
 	newStyle.addEventListener('load', updateThemeTweakerSampleText);
 	if (window.adjustmentTransitions) newStyle.addEventListener('load', function() { pageFadeTransition(true); });
 	if (themeLoadCallback != null) newStyle.addEventListener('load', function () { themeLoadCallback(oldThemeName); });
@@ -845,6 +846,9 @@ function themeLoadCallback_less(fromTheme = "") {
 				allUIToggles.forEach(function (toggle) { toggle.removeClass("highlighted"); });
 			}, 1800);
 		}
+
+		// Unset the height of the #ui-elements-container
+		document.querySelector("#ui-elements-container").style.height = "";
 	}
 
 	let isFirefox = /firefox/i.test(navigator.userAgent);
@@ -1895,9 +1899,10 @@ registerInitializer('pageLayoutFinished', false, () => document.readyState == "c
 
 	if (document.querySelector("#content").clientHeight <= window.innerHeight + 30) {
 		document.querySelector("#bottom-bar").addClass("decorative");
+		document.querySelector("#quick-nav-ui a[href='#top']").style.visibility = "hidden";
 		document.querySelector("#quick-nav-ui a[href='#bottom-bar']").style.visibility = "hidden";
 	}
-	removeElement("#hide-bottom-bar", document.querySelector("head"));
+	recomputeUIElementsContainerHeight();
 
 	// Add overlay of images in post (for avoidance of theme tweaks).		
 	generateImagesOverlay();
@@ -1934,6 +1939,13 @@ function generateImagesOverlay() {
 		imagesOverlay.appendChild(clonedImage);
 	});
 }
+
+function recomputeUIElementsContainerHeight() {
+	if (!window.isMobile && document.querySelector("#content").clientHeight <= window.innerHeight + 30) {
+		document.querySelector("#ui-elements-container").style.height = document.querySelector("#content").clientHeight + "px";
+	}
+}
+
 function realignHash() {
 	let h = location.hash;
 	if (h)
