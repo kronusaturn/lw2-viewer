@@ -852,6 +852,7 @@ function themeLoadCallback_less(fromTheme = "") {
 		
 		// Due to filters vs. fixed elements, we need to be smarter about selecting which elements to filter...
 		window.filtersTargetSelector = "body::before, #content > *:not(#secondary-bar):not(.post), #secondary-bar > *, .post > *:not(.top-post-meta), .top-post-meta > *:not(.date):not(.comment-count), .top-post-meta .date span, .top-post-meta .comment-count > span, #ui-elements-container > div:not(#theme-tweaker-ui), #theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container";
+		applyFilters(window.currentFilters);
 	}
 }
 function themeUnloadCallback_less(toTheme = "") {

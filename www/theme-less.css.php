@@ -642,6 +642,11 @@ body {
 		transition:
 			opacity 0.5s ease-out;
 	}
+	@-moz-document url-prefix() {
+		#theme-tweaker-toggle {
+			left: 18px;
+		}
+	}
 	#theme-tweaker-toggle button {
 		font-weight: 400;
 	}
