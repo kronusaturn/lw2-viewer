@@ -1897,10 +1897,10 @@ registerInitializer('pageLayoutFinished', false, () => document.readyState == "c
 	if (window.needHashRealignment)
 		realignHash();
 
-	if (document.querySelector("#content").clientHeight <= window.innerHeight + 30) {
-		document.querySelector("#bottom-bar").addClass("decorative");
-		document.querySelector("#quick-nav-ui a[href='#top']").style.visibility = "hidden";
-		document.querySelector("#quick-nav-ui a[href='#bottom-bar']").style.visibility = "hidden";
+	if (document.querySelector("#content").clientHeight > window.innerHeight + 30) {
+		document.querySelector("#bottom-bar").removeClass("decorative");
+		document.querySelector("#quick-nav-ui a[href='#top']").style.visibility = "unset";
+		document.querySelector("#quick-nav-ui a[href='#bottom-bar']").style.visibility = "unset";
 	}
 	recomputeUIElementsContainerHeight();
 

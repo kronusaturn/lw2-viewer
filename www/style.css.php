@@ -545,6 +545,10 @@ a#inbox-indicator.new-messages:hover::before {
 #quick-nav-ui a[href='#comments'].no-comments {
 	pointer-events: none;
 }
+#quick-nav-ui a[href='#top'],
+#quick-nav-ui a[href='#bottom-bar'] {
+	visibility: hidden;
+}
 
 /************************/
 /* NEW COMMENT QUICKNAV */
