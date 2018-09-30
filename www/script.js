@@ -753,24 +753,22 @@ function setSelectedTheme(themeName) {
 	setTheme(themeName);
 	document.querySelector("#theme-tweaker-ui .current-theme span").innerText = themeName;
 }
-function setTheme(themeName) {
+function setTheme(newThemeName) {
 	var themeUnloadCallback = '';
 	var oldThemeName = '';
-	if (typeof(themeName) == 'undefined') {
-		themeName = readCookie('theme');
-		if (!themeName) return;
+	if (typeof(newThemeName) == 'undefined') {
+		newThemeName = readCookie('theme');
+		if (!newThemeName) return;
 	} else {
 		themeUnloadCallback = window['themeUnloadCallback_' + (readCookie('theme') || 'default')];
 		oldThemeName = readCookie('theme') || 'default';
 		
-		if (themeName == 'default') setCookie('theme', '');
-		else setCookie('theme', themeName);
-	}
-	let themeLoadCallback = window['themeLoadCallback_' + themeName];
+		if (newThemeName == 'default') setCookie('theme', '');
+		else setCookie('theme', newThemeName);
+	}	
+	if (themeUnloadCallback != null) themeUnloadCallback(newThemeName);
 	
-	if (themeUnloadCallback != null) themeUnloadCallback(themeName);
-	
-	let styleSheetNameSuffix = (themeName == 'default') ? '' : ('-' + themeName);
+	let styleSheetNameSuffix = (newThemeName == 'default') ? '' : ('-' + newThemeName);
 	let currentStyleSheetNameComponents = /style[^\.]*(\..+)$/.exec(document.querySelector("head link[href*='.css']").href);
 	
 	let newStyle = document.createElement('link');
@@ -779,11 +777,7 @@ function setTheme(themeName) {
 	
 	let oldStyle = document.querySelector("head link[href*='.css']");
 	newStyle.addEventListener('load', function() { oldStyle.parentElement.removeChild(oldStyle); });
-	newStyle.addEventListener('load', generateImagesOverlay);
-	newStyle.addEventListener('load', recomputeUIElementsContainerHeight);
-	newStyle.addEventListener('load', updateThemeTweakerSampleText);
-	if (window.adjustmentTransitions) newStyle.addEventListener('load', function() { pageFadeTransition(true); });
-	if (themeLoadCallback != null) newStyle.addEventListener('load', function () { themeLoadCallback(oldThemeName); });
+	newStyle.addEventListener('load', function() { postSetThemeHousekeeping(oldThemeName, newThemeName); });
 
 	if (window.adjustmentTransitions) {
 		pageFadeTransition(false);
@@ -791,6 +785,16 @@ function setTheme(themeName) {
 	} else {
 		document.querySelector('head').insertBefore(newStyle, oldStyle.nextSibling);
 	}
+}
+function postSetThemeHousekeeping(oldThemeName, newThemeName) {
+	recomputeUIElementsContainerHeight();
+
+	let themeLoadCallback = window['themeLoadCallback_' + newThemeName];
+	if (themeLoadCallback != null) themeLoadCallback(oldThemeName);
+	
+	generateImagesOverlay();
+	if (window.adjustmentTransitions) pageFadeTransition(true);
+	updateThemeTweakerSampleText();
 }
 
 function pageFadeTransition(fadeIn) {
@@ -836,7 +840,7 @@ function themeLoadCallback_less(fromTheme = "") {
 				window.setTimeout(toggleAppearanceAdjustUI, 3000);
 			});
 		}
-	
+
 		if (fromTheme != "") {
 			allUIToggles = document.querySelectorAll("#ui-elements-container div[id$='-ui-toggle']");
 			window.setTimeout(function () {
@@ -849,7 +853,7 @@ function themeLoadCallback_less(fromTheme = "") {
 
 		// Unset the height of the #ui-elements-container
 		document.querySelector("#ui-elements-container").style.height = "";
-		
+
 		// Due to filters vs. fixed elements, we need to be smarter about selecting which elements to filter...
 		window.filtersTargetSelector = "body::before, #content > *:not(#secondary-bar):not(.post), #secondary-bar > *, .post > *:not(.top-post-meta), .top-post-meta > *:not(.date):not(.comment-count), .top-post-meta .date span, .top-post-meta .comment-count > span, #ui-elements-container > div:not(#theme-tweaker-ui), #theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container";
 		applyFilters(window.currentFilters);
@@ -879,6 +883,7 @@ function themeUnloadCallback_less(toTheme = "") {
 	
 	// Reset filtered elements selector to default.
 	window.filtersTargetSelector = "";
+	applyFilters(window.currentFilters);
 }
 
 function themeLoadCallback_dark(fromTheme = "") {
@@ -1582,9 +1587,6 @@ registerInitializer('earlyInitialize', true, () => document.querySelector("#cont
 	if (storedTheme) {
 		setTheme(storedTheme);
 		window.localStorage.removeItem('selected-theme');
-	} else {
-		let themeLoadCallback = window['themeLoadCallback_' + (readCookie('theme') || 'default')];
-		if (themeLoadCallback != null) themeLoadCallback();
 	}
 
 	// Animate width & theme adjustments?
@@ -1895,10 +1897,12 @@ registerInitializer('pageLayoutFinished', false, () => document.readyState == "c
 		document.querySelector("#quick-nav-ui a[href='#top']").style.visibility = "unset";
 		document.querySelector("#quick-nav-ui a[href='#bottom-bar']").style.visibility = "unset";
 	}
-	recomputeUIElementsContainerHeight();
+	
+	postSetThemeHousekeeping("", readCookie('theme') || 'default');
+// 	recomputeUIElementsContainerHeight();
 
 	// Add overlay of images in post (for avoidance of theme tweaks).		
-	generateImagesOverlay();
+// 	generateImagesOverlay();
 	
 	// FOR TESTING ONLY, COMMENT WHEN DEPLOYING.
 // 	document.querySelector("input[type='search']").value = document.documentElement.clientWidth;
