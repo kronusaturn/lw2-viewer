@@ -4561,13 +4561,6 @@ body {
 		transition:
 			opacity 0.5s ease-out;
 	}
-	@media not screen and (hover: none), not screen and (-moz-touch-enabled) {
-		@-moz-document url-prefix() {
-			#theme-tweaker-toggle {
-				display: none;
-			}
-		}
-	}
 	#theme-tweaker-toggle button {
 		font-weight: 400;
 	}

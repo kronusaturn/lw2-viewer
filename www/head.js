@@ -36,8 +36,10 @@ function filterStringFromFilters(filters) {
 function applyFilters(filters) {
 	var fullStyleString = "";
 	
-	if (!filters.isEmpty())
-		fullStyleString = `body::before { content: ""; } body::before, #content, #ui-elements-container > div:not(#theme-tweaker-ui), #theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container { filter: ${filterStringFromFilters(filters)}; }`;
+	if (!filters.isEmpty()) {
+		let selector = window.filtersTargetSelector || "body::before, #content, #ui-elements-container > div:not(#theme-tweaker-ui), #theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container";
+		fullStyleString = `body::before { content: ""; } ${selector} { filter: ${filterStringFromFilters(filters)}; }`;
+	}
 	
 	// Update the style tag (if it’s already been loaded).
 	document.querySelectorAll("#theme-tweak").forEach(function (styleBlock) { styleBlock.innerHTML = fullStyleString; });

@@ -849,14 +849,10 @@ function themeLoadCallback_less(fromTheme = "") {
 
 		// Unset the height of the #ui-elements-container
 		document.querySelector("#ui-elements-container").style.height = "";
+		
+		// Due to filters vs. fixed elements, we need to be smarter about selecting which elements to filter...
+		window.filtersTargetSelector = "body::before, #content > *:not(#secondary-bar):not(.post), #secondary-bar > *, .post > *:not(.top-post-meta), .top-post-meta > *:not(.date):not(.comment-count), .top-post-meta .date span, .top-post-meta .comment-count > span, #ui-elements-container > div:not(#theme-tweaker-ui), #theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container";
 	}
-
-// 	let isFirefox = /firefox/i.test(navigator.userAgent);
-// 	if (isFirefox) {
-// 		let themeTweakStyle = document.querySelector("#theme-tweak");
-// 		themeTweakStyle.dataset["tweaks"] = themeTweakStyle.textContent;
-// 		themeTweakStyle.textContent = "";
-// 	}
 }
 function themeUnloadCallback_less(toTheme = "") {
 	removeSiteNavUIToggle();
@@ -879,13 +875,9 @@ function themeUnloadCallback_less(toTheme = "") {
 	if (window.localStorage.getItem("appearance-adjust-ui-toggle-engaged") == "true") {
 		toggleAppearanceAdjustUI();
 	}
-
-// 	let isFirefox = /firefox/i.test(navigator.userAgent);
-// 	if (isFirefox) {
-// 		let themeTweakStyle = document.querySelector("#theme-tweak");
-// 		themeTweakStyle.textContent = themeTweakStyle.dataset["tweaks"];
-// 		themeTweakStyle.dataset["tweaks"] = "";
-// 	}
+	
+	// Reset filtered elements selector to default.
+	window.filtersTargetSelector = "";
 }
 
 function themeLoadCallback_dark(fromTheme = "") {
