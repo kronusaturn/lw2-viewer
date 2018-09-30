@@ -570,11 +570,15 @@
               (write-item next-uri "last" "Last page" "")
               (format out-stream "</div>")))
           "")
-      (nav-bar-outer "bottom-bar" nil (nav-bar-inner
-					`(,@(if first-uri `(("first" ,first-uri "Back to first")))
-					  ,@(if prev-uri `(("prev" ,prev-uri "Previous" :nofollow t)))
-					   ("top" "#top" "Back to top")
-					   ,@(if next-uri `(("next" ,next-uri "Next" :nofollow t)))))))))
+      (with-output-to-string (out-stream)
+        (write-string
+          (nav-bar-outer "bottom-bar" nil (nav-bar-inner
+                                            `(,@(if first-uri `(("first" ,first-uri "Back to first")))
+                                               ,@(if prev-uri `(("prev" ,prev-uri "Previous" :nofollow t)))
+                                               ("top" "#top" "Back to top")
+                                               ,@(if next-uri `(("next" ,next-uri "Next" :nofollow t))))))
+          out-stream)
+        (format out-stream "<script>document.querySelector('#bottom-bar').addClass('decorative'); document.querySelector(\"#quick-nav-ui a[href='#bottom-bar']\").style.visibility = 'hidden';</script>")))))
 
 (defun end-html (out-stream &key items-per-page bottom-bar-html)
   (if items-per-page (format out-stream "<script>var itemsPerPage=~A</script>" items-per-page))

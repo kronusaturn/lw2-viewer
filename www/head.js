@@ -1,5 +1,3 @@
-document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='hide-bottom-bar'>#bottom-bar { display: none }</style>");
-
 var widthOptions = [
 	['normal', 'Narrow (fixed-width) content column', 'N', '900px'],
 	['wide', 'Wide (fixed-width) content column', 'W', '1150px'],
