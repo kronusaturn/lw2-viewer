@@ -1488,6 +1488,7 @@ select {
 	color: #000;
 }
 
+<?php if ($platform != 'Mac') echo <<<EOT
 @-moz-document url-prefix() {
 	h1.listing s,
 	.post > h1:first-of-type s {
@@ -1505,6 +1506,7 @@ select {
 	  height: 50%;
 	}
 }
+EOT; ?>
 
 /*============*/
 /* ABOUT PAGE */
