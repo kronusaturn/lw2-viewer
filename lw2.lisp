@@ -578,7 +578,7 @@
                                                ("top" "#top" "Back to top")
                                                ,@(if next-uri `(("next" ,next-uri "Next" :nofollow t))))))
           out-stream)
-        (format out-stream "<script>document.querySelector('#bottom-bar').addClass('decorative');</script>")))))
+        (format out-stream "<script>document.querySelector('#bottom-bar').forEach(function (bb) { bb.addClass('decorative'); });</script>")))))
 
 (defun end-html (out-stream &key items-per-page bottom-bar-html)
   (if items-per-page (format out-stream "<script>var itemsPerPage=~A</script>" items-per-page))
