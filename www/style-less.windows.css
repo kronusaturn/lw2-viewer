@@ -5867,9 +5867,10 @@ button:focus:not(:hover),
 }
 .post-body h1,
 .comment-body h1 {
-	border-bottom: 1px solid #eee;
-	line-height: 0.7;
 	margin-top: 1.25em;
+	box-shadow:
+		0 -7px 0 0 #fff inset,
+		0 -8px 0 0 #eee inset;
 }
 .post-body h6,
 .comment-body h6 {

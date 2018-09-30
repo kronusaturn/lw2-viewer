@@ -851,12 +851,12 @@ function themeLoadCallback_less(fromTheme = "") {
 		document.querySelector("#ui-elements-container").style.height = "";
 	}
 
-	let isFirefox = /firefox/i.test(navigator.userAgent);
-	if (isFirefox) {
-		let themeTweakStyle = document.querySelector("#theme-tweak");
-		themeTweakStyle.dataset["tweaks"] = themeTweakStyle.textContent;
-		themeTweakStyle.textContent = "";
-	}
+// 	let isFirefox = /firefox/i.test(navigator.userAgent);
+// 	if (isFirefox) {
+// 		let themeTweakStyle = document.querySelector("#theme-tweak");
+// 		themeTweakStyle.dataset["tweaks"] = themeTweakStyle.textContent;
+// 		themeTweakStyle.textContent = "";
+// 	}
 }
 function themeUnloadCallback_less(toTheme = "") {
 	removeSiteNavUIToggle();
@@ -880,12 +880,12 @@ function themeUnloadCallback_less(toTheme = "") {
 		toggleAppearanceAdjustUI();
 	}
 
-	let isFirefox = /firefox/i.test(navigator.userAgent);
-	if (isFirefox) {
-		let themeTweakStyle = document.querySelector("#theme-tweak");
-		themeTweakStyle.textContent = themeTweakStyle.dataset["tweaks"];
-		themeTweakStyle.dataset["tweaks"] = "";
-	}
+// 	let isFirefox = /firefox/i.test(navigator.userAgent);
+// 	if (isFirefox) {
+// 		let themeTweakStyle = document.querySelector("#theme-tweak");
+// 		themeTweakStyle.textContent = themeTweakStyle.dataset["tweaks"];
+// 		themeTweakStyle.dataset["tweaks"] = "";
+// 	}
 }
 
 function themeLoadCallback_dark(fromTheme = "") {
