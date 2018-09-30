@@ -414,6 +414,24 @@ a#inbox-indicator.new-messages:hover::before {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/fluid.gif")) ?>');
 }
 
+#width-selector button::after {
+	content: attr(data-name);
+	position: absolute;
+	display: block;
+	color: #999;
+	left: 0;
+	width: 100%;
+	text-align: center;
+	top: 56px;
+	visibility: hidden;
+}
+#width-selector button.selected::after {
+	content: attr(data-name) " (selected)";
+}
+#width-selector button:hover:not(:active)::after {
+	visibility: visible;
+}
+
 /******************/
 /* THEME SELECTOR */
 /******************/
@@ -662,6 +680,22 @@ a#inbox-indicator.new-messages:hover::before {
 	#text-size-adjustment-ui {
 		display: none;
 	}
+}
+
+#text-size-adjustment-ui::after {
+	content: "Adjust text size";
+	position: absolute;
+	display: block;
+	color: #999;
+	left: 0;
+	width: 100%;
+	text-align: center;
+	top: 32px;
+	visibility: hidden;
+	font-size: 0.9em;
+}
+#text-size-adjustment-ui:hover::after {
+	visibility: visible;
 }
 
 /*******************************/
