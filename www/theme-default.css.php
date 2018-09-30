@@ -1506,7 +1506,8 @@ select {
 	  height: 50%;
 	}
 }
-EOT; ?>
+EOT;
+?>
 
 /*============*/
 /* ABOUT PAGE */
