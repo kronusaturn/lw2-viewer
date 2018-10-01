@@ -227,6 +227,10 @@ body {
 		0 0 0 4px #888 inset,
 		0 0 0 5px #ccc inset;
 }
+#width-selector button::after {
+	color: #ccc;
+	font-weight: 300;
+}
 
 /*================*/
 /* THEME SELECTOR */
@@ -360,6 +364,10 @@ body {
 #text-size-adjustment-ui button:hover {
 	text-decoration: none;
 	color: #aaa;
+}
+#text-size-adjustment-ui::after {
+	color: #ccc;
+	font-weight: 300;
 }
 
 /*=============================*/

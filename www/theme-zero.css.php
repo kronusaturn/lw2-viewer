@@ -219,6 +219,9 @@ body {
 		0 0 0 4px #eee inset,
 		0 0 0 5px #aaa inset;
 }
+#width-selector button::after {
+	color: #999;
+}
 
 /*================*/
 /* THEME SELECTOR */
@@ -348,6 +351,9 @@ body {
 }
 #text-size-adjustment-ui button:disabled:hover {
 	text-shadow: none;
+}
+#text-size-adjustment-ui::after {
+	color: #999;
 }
 
 /*=============================*/

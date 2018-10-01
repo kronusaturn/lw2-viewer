@@ -211,6 +211,10 @@ body {
 		0 0 0 4px #fff inset,
 		0 0 0 5px #000 inset;
 }
+#width-selector button::after {
+	color: #000;
+	font-size: 0.9em;
+}
 
 /*================*/
 /* THEME SELECTOR */
@@ -249,6 +253,9 @@ body {
 #text-size-adjustment-ui button:focus {
 	box-shadow: none;
 	color: #777;
+}
+#text-size-adjustment-ui::after {
+	color: #000;
 }
 
 /*======================*/

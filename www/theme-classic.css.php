@@ -259,6 +259,10 @@ body {
 #theme-selector button.selected::before {
 	color: #222;
 }
+#width-selector button::after {
+	color: #999;
+	font-size: 0.9em;
+}
 
 /*======================*/
 /* THEME TWEAKER TOGGLE */
@@ -354,11 +358,17 @@ body {
 #text-size-adjustment-ui button {
 	color: #777;
 }
+#text-size-adjustment-ui button:hover {
+	color: #222;
+}
 #text-size-adjustment-ui button.default {
 	font-weight: 600;
 }
 #text-size-adjustment-ui button:disabled:hover {
 	text-shadow: none;
+}
+#text-size-adjustment-ui::after {
+	color: #999;
 }
 
 /*=============================*/

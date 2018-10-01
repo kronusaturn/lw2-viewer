@@ -421,7 +421,6 @@ a#inbox-indicator.new-messages:hover::before {
 	content: attr(data-name);
 	position: absolute;
 	display: block;
-	color: #999;
 	left: 0;
 	width: 100%;
 	text-align: center;
@@ -689,7 +688,6 @@ a#inbox-indicator.new-messages:hover::before {
 	content: "Adjust text size";
 	position: absolute;
 	display: block;
-	color: #999;
 	left: 0;
 	width: 100%;
 	text-align: center;

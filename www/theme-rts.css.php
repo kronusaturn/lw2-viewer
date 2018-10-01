@@ -334,6 +334,10 @@ a.nav-inner,
 #theme-selector button.selected::before {
 	color: #444;
 }
+#width-selector button::after {
+	color: #aaa;
+	font-weight: 300;
+}
 
 /*======================*/
 /* THEME TWEAKER TOGGLE */
@@ -443,6 +447,10 @@ a.nav-inner,
 }
 #text-size-adjustment-ui button:disabled:hover {
 	text-shadow: none;
+}
+#text-size-adjustment-ui::after {
+	color: #aaa;
+	font-weight: 300;
 }
 
 /*=============================*/

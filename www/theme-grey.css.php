@@ -322,6 +322,9 @@ body {
 #theme-selector button.selected::before {
 	color: #777;
 }
+#width-selector button::after {
+	color: #aaa;
+}
 
 /*======================*/
 /* THEME TWEAKER TOGGLE */
@@ -424,6 +427,9 @@ body {
 }
 #text-size-adjustment-ui button:disabled:hover {
 	text-shadow: none;
+}
+#text-size-adjustment-ui::after {
+	color: #aaa;
 }
 
 /*=============================*/

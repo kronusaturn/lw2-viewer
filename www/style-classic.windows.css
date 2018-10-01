@@ -415,7 +415,6 @@ a#inbox-indicator.new-messages:hover::before {
 	content: attr(data-name);
 	position: absolute;
 	display: block;
-	color: #999;
 	left: 0;
 	width: 100%;
 	text-align: center;
@@ -683,7 +682,6 @@ a#inbox-indicator.new-messages:hover::before {
 	content: "Adjust text size";
 	position: absolute;
 	display: block;
-	color: #999;
 	left: 0;
 	width: 100%;
 	text-align: center;
@@ -4183,6 +4181,10 @@ body {
 #theme-selector button.selected::before {
 	color: #222;
 }
+#width-selector button::after {
+	color: #999;
+	font-size: 0.9em;
+}
 
 /*======================*/
 /* THEME TWEAKER TOGGLE */
@@ -4278,11 +4280,17 @@ body {
 #text-size-adjustment-ui button {
 	color: #777;
 }
+#text-size-adjustment-ui button:hover {
+	color: #222;
+}
 #text-size-adjustment-ui button.default {
 	font-weight: 600;
 }
 #text-size-adjustment-ui button:disabled:hover {
 	text-shadow: none;
+}
+#text-size-adjustment-ui::after {
+	color: #999;
 }
 
 /*=============================*/
