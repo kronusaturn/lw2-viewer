@@ -1,4 +1,6 @@
 cache
-.DS_Store
+local
+.*
 post-commit.hook
 config.lisp
+www/robots.txt

@@ -10,11 +10,11 @@
            #:lw2-error #:lw2-client-error #:lw2-not-found-error #:lw2-user-not-found-error #:lw2-not-allowed-error #:lw2-server-error #:lw2-connection-error #:lw2-unknown-error
 	   #:log-condition #:log-conditions #:start-background-loader #:stop-background-loader #:background-loader-running-p
 	   #:lw2-graphql-query-streamparse #:lw2-graphql-query-noparse #:decode-graphql-json #:lw2-graphql-query #:graphql-query-string* #:graphql-query-string #:lw2-graphql-query-map #:lw2-graphql-query-multi
-	   #:make-posts-list-query #:get-posts-index #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
+	   #:get-posts-index #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
            #:get-notifications #:check-notifications
 	   #:lw2-search-query #:get-post-title #:get-post-slug #:get-slug-postid #:get-username #:get-user-slug)
   (:recycle #:lw2-viewer)
-  (:unintern #:get-posts))
+  (:unintern #:get-posts #:make-posts-list-query))
 
 (in-package #:lw2.backend)
 
@@ -43,9 +43,13 @@
       (export '(,name ,inner-name))
       (defmacro ,name (&rest args) (list* ',inner-name '*current-backend*  args)))))
 
-(defmacro define-backend-operation (name backend (&rest args) &body body)
-  (let ((inner-name (symbolicate "%" name)))
-    `(defmethod ,inner-name ((backend ,backend) ,@args) ,@body)))
+(defmacro define-backend-operation (name backend &rest args)
+  (let* ((inner-name (symbolicate "%" name))
+         (latter-args (member-if #'listp args))
+         (method-qualifiers (ldiff args latter-args))
+         (method-args (first latter-args))
+         (body (rest latter-args)))
+    `(defmethod ,inner-name ,.method-qualifiers ((backend ,backend) ,@method-args) ,@body)))
 
 (defmethod condition-http-return-code ((c condition)) 500)
 
@@ -317,20 +321,6 @@
 (defun graphql-query-string (query-type terms fields)
   (format nil "{~A}" (graphql-query-string* query-type terms fields)))
 
-(declaim (inline make-posts-list-query)) 
-(defun make-posts-list-query (&key (view "frontpage-rss") (limit 20) (meta nil) (before nil) (after nil) (with-body nil))
-  (declare (type string view)
-	   (type (integer 1) limit)
-	   (type boolean meta)
-	   (type (or string null) before after))
-  (format nil "{PostsList (terms:{view:\"~A\",limit:~A,meta:~A~A~A}) {title, _id, slug, userId, postedAt, baseScore, commentCount, pageUrl, url, wordCount, frontpageDate, curatedDate, af, meta, voteCount~A}}"
-	  view
-	  limit
-	  (if meta "true" "false")
-	  (if before (format nil ",before:\"~A\"" before) "")
-	  (if after (format nil ",after:\"~A\"" after) "")
-	  (if with-body ", htmlBody" ""))) 
-
 (defun get-cached-index-query (cache-id query)
   (labels ((query-and-put ()
              (let* ((result (lw2-graphql-query-noparse query))
@@ -346,26 +336,34 @@
               (t () (decode-graphql-json cached-result)))
             (query-and-put))))))
 
-(declare-backend-function get-posts-index)
+(declare-backend-function get-posts-index-query-string)
 
-(define-backend-operation get-posts-index backend-lw2 (&key view sort offset before after)
+(define-backend-operation get-posts-index-query-string backend-lw2 (&key view sort offset before after)
   (multiple-value-bind (view-terms cache-key)
     (alexandria:switch (view :test #'string=)
-                               ("featured" (alist :view "curated"))
-                               ("new" (alist :view (if (string= sort "hot") "community" "community-rss")))
-                               ("meta" (alist :view "new" :meta t :all t))
-                               ("alignment-forum" (alist :view "new" :af t))
-                               (t (values (alist :view (if (string= sort "hot") "magicalSorting" "frontpage-rss")) "new-not-meta")))
+                       ("featured" (alist :view "curated"))
+                       ("new" (alist :view (if (string= sort "hot") "community" "community-rss")))
+                       ("meta" (alist :view "new" :meta t :all t))
+                       ("alignment-forum" (alist :view "new" :af t))
+                       (t (values (alist :view (if (string= sort "hot") "magicalSorting" "frontpage-rss")) (if (not (or sort offset before after)) "new-not-meta"))))
     (let* ((extra-terms
-            (remove-if (lambda (x) (null (cdr x)))
-                       (alist :before before :after after :limit 20 :offset offset)))
+             (remove-if (lambda (x) (null (cdr x)))
+                        (alist :before before :after after :limit 20 :offset offset)))
            (query-string (graphql-query-string "PostsList" (alist :terms (nconc view-terms extra-terms)) *posts-index-fields*)))
-      (if (and cache-key (not extra-terms))
-          (get-cached-index-query cache-key query-string)
-          (lw2-graphql-query query-string)))))
+      (values query-string cache-key))))
+
+(declare-backend-function get-posts-index)
+
+(define-backend-operation get-posts-index backend-lw2 (&rest args &key &allow-other-keys)
+  (declare (dynamic-extent args))
+  (multiple-value-bind (query-string cache-key)
+    (apply #'%get-posts-index-query-string (list* backend args))
+    (if cache-key
+        (get-cached-index-query cache-key query-string)
+        (lw2-graphql-query query-string))))
 
 (defun get-posts-json ()
-  (lw2-graphql-query-noparse (make-posts-list-query)))
+  (lw2-graphql-query-noparse (get-posts-index-query-string)))
 
 (defun get-recent-comments ()
   (get-cached-index-query "recent-comments" (graphql-query-string "CommentsList" '((:terms . ((:view . "recentComments") (:limit . 20)))) *comments-index-fields*)))
