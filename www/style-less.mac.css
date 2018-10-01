@@ -4969,7 +4969,7 @@ h1.listing + .post-meta .post-section::before {
 .post-body,
 .comment-body {
 	font-family: 'Source Serif Pro', 'Helvetica', sans-serif;
-	text-shadow: 0 0 0 #000;
+	text-shadow: 0 0 0 rgba(0,0,0,0.7);
 	font-weight: 300;
 }
 

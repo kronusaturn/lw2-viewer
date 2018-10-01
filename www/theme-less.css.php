@@ -1050,7 +1050,7 @@ h1.listing + .post-meta .post-section::before {
 .post-body,
 .comment-body {
 	font-family: <?php echo $text_font; ?>;
-	text-shadow: <?php global $platform; echo ($platform == 'Mac' ? '0 0 0 #000' : 'none'); ?>;
+	text-shadow: <?php global $platform; echo ($platform == 'Mac' ? '0 0 0 rgba(0,0,0,0.7)' : 'none'); ?>;
 	font-weight: <?php global $platform; echo ($platform == 'Mac' ? '300' : '400'); ?>;
 }
 
