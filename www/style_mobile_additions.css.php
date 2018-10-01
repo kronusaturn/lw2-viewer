@@ -1109,16 +1109,13 @@ a.comment-parent-link::after {
 @media only screen and (max-width: 520px) {
 	.contents {
 		max-width: 100%;
-		margin: 1em 0 0 0;
-		display: inline-block;
+		margin: 1em auto 0 auto;
+		display: table;
 	}
 	.contents-head {
 		font-size: 1.2em;
 	}
-	.contents {
-		padding: 0.35em 0.75em 0.4em 0.35em;
-	}
-	.post-body .contents ul {
+	div.post-body .contents ul {
 		font-size: unset;
 	}
 }
