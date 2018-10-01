@@ -1801,6 +1801,10 @@ select {
 			border-width: 1px;
 			border-radius: 8px;
 		}
+
+		.contents {
+			margin-left: auto;
+		}
 	/*******************************************/
 	} @media only screen and (max-width: 720px) {
 	/*******************************************/
