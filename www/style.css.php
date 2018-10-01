@@ -142,6 +142,9 @@ h1.listing ~ #bottom-bar {
 	left: 3.8em;
 }
 
+#bottom-bar.decorative {
+	position: relative;
+}
 #bottom-bar.decorative .nav-item {
 	display: none;
 }
