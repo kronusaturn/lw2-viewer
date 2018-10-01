@@ -2677,6 +2677,19 @@ li {
 	#hns-date-picker::before {
 		width: calc(100% - 35px);
 	}
+	#theme-selector button::before {
+		right: unset;
+		left: 100%;
+	}
+	#theme-selector:hover::after {
+		content: "";
+		display: block;
+		position: absolute;
+		width: calc(6em - 6px);
+		height: calc(100% + 2px);
+		top: 0;
+		left:100%;
+	}
 }
 @media only screen and (max-width: 1080px) {
 	#width-selector {
@@ -2700,10 +2713,12 @@ li {
 		top: 50px;
 	}
 	#theme-selector {
-		top: 54px;
+		top: 46px;
+		left: -44px;
 	}
 	#theme-tweaker-toggle {
-		left: -41px;
+		left: -44px;
+		top: 2px;
 	}
 	#theme-tweaker-toggle button {
 		height: 2em;

@@ -1318,6 +1318,10 @@ select {
 	#hns-date-picker::before {
 		width: 85%;
 	}
+	#theme-selector:hover::after {
+		width: calc(7em - 6px);
+		background-color: #000;
+	}
 }
 @media only screen and (max-width: 1080px) {
 	#theme-tweaker-toggle button {

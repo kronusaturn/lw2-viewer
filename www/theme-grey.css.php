@@ -1645,6 +1645,11 @@ select {
 		border-width: 1px 0 1px 1px;
 	}
 }
+@media only screen and (max-width: 1160px) {
+	#theme-selector:hover::after {
+		background-color: #ddd;
+	}
+}
 @media only screen and (max-width: 1080px) {
 	#text-size-adjustment-ui button {
 		border: 1px solid #999;
