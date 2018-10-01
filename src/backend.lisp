@@ -43,9 +43,13 @@
       (export '(,name ,inner-name))
       (defmacro ,name (&rest args) (list* ',inner-name '*current-backend*  args)))))
 
-(defmacro define-backend-operation (name backend (&rest args) &body body)
-  (let ((inner-name (symbolicate "%" name)))
-    `(defmethod ,inner-name ((backend ,backend) ,@args) ,@body)))
+(defmacro define-backend-operation (name backend &rest args)
+  (let* ((inner-name (symbolicate "%" name))
+         (latter-args (member-if #'listp args))
+         (method-qualifiers (ldiff args latter-args))
+         (method-args (first latter-args))
+         (body (rest latter-args)))
+    `(defmethod ,inner-name ,.method-qualifiers ((backend ,backend) ,@method-args) ,@body)))
 
 (defmethod condition-http-return-code ((c condition)) 500)
 
