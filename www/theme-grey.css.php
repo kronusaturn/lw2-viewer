@@ -705,8 +705,8 @@ h1.listing + .post-meta .link-post-domain {
 .contents a:link {
 	color: #d64400;
 }
-.contents ul {
-	font-size: 0.85em;
+.post-body .contents ul {
+	font-size: 0.875em;
 }
 .contents li::before {
 	color: #999;

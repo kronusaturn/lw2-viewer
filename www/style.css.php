@@ -1107,10 +1107,10 @@ h1.listing + .post-meta .read-time {
 
 .contents {
 	float: right;
-	min-width: 12em;
+	min-width: 6em;
 	max-width: 40%;
 	margin: 1.25em 0 0.75em 1.25em;
-	padding: 0.35em 0.35em 0.4em 0.35em;
+	padding: 7px 14px 10px 10px;
 	-webkit-hyphens: none;
 	-moz-hyphens: none;
 	-ms-hyphens: none;
