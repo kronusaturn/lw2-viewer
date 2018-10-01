@@ -1620,8 +1620,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	}
 
 	let content = document.querySelector("#content");
-	if (content.clientHeight <= window.innerHeight + 30 || 
-		content.querySelector("#comments .comment-thread") == null) {
+	if (content.querySelector("#comments .comment-thread") == null) {
 		try { document.querySelector("#quick-nav-ui a[href='#comments']").addClass("no-comments"); }
 		catch (e) { }
 	}
