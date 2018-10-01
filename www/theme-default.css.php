@@ -1296,7 +1296,7 @@ div.comment-child-links a::first-letter {
 #edit-post-form input[type='radio'] + label {
 	color: #777;
 	border-color: #ddd;
-	padding: 4px 12px 6px 12px;
+	padding: 4px 12px 5px 12px;
 }
 #edit-post-form input[type='radio'][value='all'] + label {
 	border-radius: 8px 0 0 8px;

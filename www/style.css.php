@@ -2090,7 +2090,7 @@ div.comment-child-links a::first-letter {
 #edit-post-form .post-meta-fields {
 	display: grid;
 	grid-template-columns: 5em auto auto auto 1fr auto;
-	margin-bottom: 0.5em;
+	margin-bottom: 0.625em;
 }
 
 #edit-post-form label[for='title'],
