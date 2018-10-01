@@ -355,12 +355,12 @@
                                ("new" (alist :view (if (string= sort "hot") "community" "community-rss")))
                                ("meta" (alist :view "new" :meta t :all t))
                                ("alignment-forum" (alist :view "new" :af t))
-                               (t (values (alist :view (if (string= sort "hot") "magicalSorting" "frontpage-rss")) "new-not-meta")))
+                               (t (values (alist :view (if (string= sort "hot") "magicalSorting" "frontpage-rss")) (if (not (or offset before after)) "new-not-meta"))))
     (let* ((extra-terms
             (remove-if (lambda (x) (null (cdr x)))
                        (alist :before before :after after :limit 20 :offset offset)))
            (query-string (graphql-query-string "PostsList" (alist :terms (nconc view-terms extra-terms)) *posts-index-fields*)))
-      (if (and cache-key (not extra-terms))
+      (if cache-key
           (get-cached-index-query cache-key query-string)
           (lw2-graphql-query query-string)))))
 
