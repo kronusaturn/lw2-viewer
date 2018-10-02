@@ -1468,7 +1468,7 @@ input[type='submit']:active {
 	color: <?php echo $hyperlink_color; ?>;
 }
 .button:hover {
-	color: #d00;
+	color: #f00;
 	text-decoration: none;
 }
 .button:active {

@@ -192,13 +192,11 @@ body {
 /* PAGE TOOLBAR */
 /*==============*/
 
-.new-post,
-.new-post:visited,
-.new-private-message,
-.new-private-message:visited {
-	color: #090 !important;
+.button.new-post:not(:hover),
+.button.new-private-message:not(:hover) {
+	color: #090;
 }
-.logout-button {
+.button.logout-button {
 	color: #d33;
 }
 
@@ -1209,8 +1207,7 @@ div.comment-child-links a::first-letter {
 	color: #f00;
 }
 
-.button.edit-post-link,
-.button.edit-post-link:visited {
+.button.edit-post-link:not(:hover) {
 	color: #090;
 }
 
@@ -1376,12 +1373,12 @@ input[type='submit']:active {
 	input[type='submit']:hover,
 	button:focus,
 	input[type='submit']:focus {
-		color: #d00;
+		color: #f00;
 		text-shadow: <?php echo $white_glow; ?>;
 	}
 
 	.button:hover {
-		color: #d00;
+		color: #f00;
 		text-shadow: <?php echo $white_glow; ?>;
 		text-decoration: none;
 	}

@@ -5455,7 +5455,7 @@ input[type='submit']:active {
 	color: #6a8a6b;
 }
 .button:hover {
-	color: #d00;
+	color: #f00;
 	text-decoration: none;
 }
 .button:active {

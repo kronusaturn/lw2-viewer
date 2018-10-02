@@ -131,6 +131,9 @@ body {
 .logout-button::before {
 	opacity: 0.8;
 }
+.page-toolbar .button:hover {
+	text-decoration: none;
+}
 
 /*==============*/
 /* SUBLEVEL NAV */
