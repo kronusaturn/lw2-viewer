@@ -4895,11 +4895,11 @@ h1.listing + .post-meta .post-section::before {
 }
 
 #content.conversations-user-page h1.listing {
-	padding: 8px 6px 8px 10px;
+	padding: 8px 6px 28px 10px;
 	font-size: 1.25rem;
 }
 #content.conversations-user-page h1.listing + .post-meta {
-	padding: 1.25em 10px 0.5em 6px;
+	padding: 4px 10px 0.5em 6px;
 	margin: 0;
 }
 
