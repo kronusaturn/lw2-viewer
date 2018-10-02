@@ -5094,6 +5094,9 @@ a.post-section.alignment-forum:hover::before {
 	padding: 4px 0 0 0;
 	margin: 0.25em auto;
 }
+.post .top-post-meta .qualified-linking {
+	z-index: 1;
+}
 .post .top-post-meta .qualified-linking label {
 	margin: 0;
 }
