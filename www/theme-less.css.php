@@ -1150,9 +1150,6 @@ a.post-section.alignment-forum:hover::before {
 	left: -100px;
 	z-index: -1;
 }
-.post .top-post-meta .karma .karma-value::before {
-	right: calc(100% + 8px);
-}
 .post .top-post-meta .karma .karma-value span {
 	display: none;
 }
