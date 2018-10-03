@@ -557,8 +557,7 @@ function highlightCommentsSince(date) {
 		}
 	});
 
-	window.newCommentScrollListener = function () {
-		let ci = getCurrentVisibleComment();
+	window.newCommentScrollSet = function (ci) {
 		if(ci) {
 			document.querySelector("#new-comment-nav-ui .new-comment-previous").disabled = !ci.prevNewComment;
 			document.querySelector("#new-comment-nav-ui .new-comment-next").disabled = !ci.nextNewComment;
@@ -567,9 +566,21 @@ function highlightCommentsSince(date) {
 			document.querySelector("#new-comment-nav-ui .new-comment-next").disabled = (window.newComments.length == 0);
 		}
 	};
+	window.newCommentScrollListener = function () {
+		let ci = getCurrentVisibleComment();
+		newCommentScrollSet(ci);
+	}
 
 	addScrollListener(newCommentScrollListener);
-	newCommentScrollListener();
+
+	if(document.readyState=="complete") {
+		newCommentScrollListener();
+	} else {
+		let ci = location.hash && /^#comment-/.test(location.hash) && document.querySelector(location.hash);
+		newCommentScrollSet(ci);
+	}
+
+	registerInitializer("initializeCommentScrollPosition", false, () => document.readyState=="complete", newCommentScrollListener);
 
 	return newCommentsCount;
 }
