@@ -1136,22 +1136,22 @@ a.post-section.alignment-forum:hover::before {
 	color: #999;
 	font-size: 1.125em;
 	position: relative;
+	background-color: #fff;
+	width: 2.25em;
 }
-.post .top-post-meta .karma .karma-value::before,
-.post .top-post-meta .karma .karma-value::after {
+.post .top-post-meta .karma .karma-value::before {
 	content: "";
 	position: absolute;
 	display: block;
 	background-color: #ccc;
 	height: 1px;
-	width: 100px;
+	width: 244px;
 	top: 50%;
+	left: -100px;
+	z-index: -1;
 }
 .post .top-post-meta .karma .karma-value::before {
 	right: calc(100% + 8px);
-}
-.post .top-post-meta .karma .karma-value::after {
-	left: calc(100% + 8px);
 }
 .post .top-post-meta .karma .karma-value span {
 	display: none;
