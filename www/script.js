@@ -2,6 +2,10 @@
 /* INITIALIZATION REGISTRY */
 /***************************/
 
+if(!window.requestIdleCallback) {
+	window.requestIdleCallback = function(fn) { window.setTimeout(fn, 0) };
+}
+
 var initializersDone = {};
 var initializers = {};
 function registerInitializer(name, tryEarly, precondition, fn) {
