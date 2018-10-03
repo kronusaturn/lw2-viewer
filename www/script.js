@@ -1699,7 +1699,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		document.querySelector(".post").appendChild(clonedPostMeta);
 	}
 	
-	if(readCookie("lw2-auth-token")) {
+	if(loggedInUserId) {
 		var comments_container = document.querySelector("#comments");
 		if (comments_container) {
 			// Add reply buttons.
