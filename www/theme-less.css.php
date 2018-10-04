@@ -1126,6 +1126,7 @@ a.post-section.alignment-forum:hover::before {
 	width: fit-content;
 	margin: auto;
 }
+
 .post .top-post-meta .karma {
 	order: -1;
 	display: flex;
@@ -1153,6 +1154,57 @@ a.post-section.alignment-forum:hover::before {
 .post .top-post-meta .karma .karma-value span {
 	display: none;
 }
+
+.post .post-meta .karma {
+	position: relative;
+}
+.post .post-meta .karma::after {
+	content: "Double-click for strong vote";
+	position: absolute;
+	pointer-events: none;
+	display: block;
+	bottom: 0;
+	left: calc(100% + 16px);
+	font-size: 0.875rem;
+	opacity: 0;
+	transition:
+		opacity 0.2s ease;
+}
+.post .post-meta .karma:hover::after {
+	opacity: 0.7;
+}
+.post .bottom-post-meta .karma::after {
+	left: 0;
+	bottom: -32px;
+	max-width: 100%;
+	white-space: normal;
+	line-height: 1.15;
+	padding: 0 4px;
+}
+
+
+.post .post-meta .karma .karma-value::after {
+	content: attr(title);
+	position: absolute;
+	pointer-events: none;
+	display: block;
+	font-size: 0.875rem;
+	color: #bbb;
+	opacity: 0;
+	top: -6px;
+	right: calc(100% + 8px);
+	transition:
+		opacity 0.2s ease;
+}
+.post .post-meta .karma .karma-value:hover::after {
+	opacity: 0.7;
+}
+.post .bottom-post-meta .karma .karma-value::after {
+	right: unset;
+	left: 42px;
+	top: -20px;
+}
+
 .post .top-post-meta .author {
 	padding: 4px 0 0 0;
 	margin: 0.25em auto;
@@ -1607,6 +1659,11 @@ div.comment-child-links a::first-letter {
 	content: "\F322";
 	top: 5px;
 	left: 7px;
+}
+
+.post .top-post-meta .upvote::after,
+.post .top-post-meta .downvote::after {
+	left: 14px;
 }
 
 /*===========================*/
