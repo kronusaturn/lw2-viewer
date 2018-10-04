@@ -2630,10 +2630,17 @@ li {
 	display: inline-block;
 	overflow-x: auto;
 	overflow-y: hidden;
-	padding: 3px 1px 0 1px;
-	line-height: 1;
 	position: relative;
+}
+.post .mathjax-inline-container {
+	line-height: 0.8;
+	padding: 0 1px 0 1px;
 	top: 2px;
+}
+.comment .mathjax-inline-container {
+	padding: 3px 1px 0 1px;
+	top: 2px;
+	line-height: 1;
 }
 
 /**********************/
