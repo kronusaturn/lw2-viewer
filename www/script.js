@@ -1736,6 +1736,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 			document.querySelectorAll(".comment-meta .karma-value").forEach(function (e) {
 				let cid = e.getCommentId();
 				addVoteButtons(e, commentVotes[cid], 'Comments');
+				e.parentElement.addClass("active-controls");
 			});
 			// Replicate karma controls at the bottom of comments.
 			document.querySelectorAll(".comment-meta .karma").forEach(function (karma_controls) {

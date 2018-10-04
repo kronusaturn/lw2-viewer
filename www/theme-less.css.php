@@ -1376,7 +1376,7 @@ a.post-section.alignment-forum:hover::before {
 .comment-meta .karma {
 	position: relative;
 }
-.comment-meta .karma::after {
+.comment-meta .karma.active-controls::after {
 	content: "Double-click for strong vote";
 	position: absolute;
 	pointer-events: none;
@@ -1397,7 +1397,7 @@ a.post-section.alignment-forum:hover::before {
 	transition:
 		opacity 0.2s ease;
 }
-.comment-meta .karma:hover::after {
+.comment-meta .karma.active-controls:hover::after {
 	opacity: 1.0;
 }
 
