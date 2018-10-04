@@ -5771,6 +5771,7 @@ div.comment-child-links a::first-letter {
 
 .guiedit-buttons-container {
 	background-color: #fff;
+	border-bottom: 1px solid #eee;
 }
 
 .posting-controls.edit-existing-post .guiedit-buttons-container button,
