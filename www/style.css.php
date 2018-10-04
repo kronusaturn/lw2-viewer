@@ -1664,6 +1664,9 @@ div.comment-child-links a::first-letter {
 	font-size: 0.9375rem;
 	margin: 0.5em 0;
 }
+#content.compact > .comment-thread:hover {
+	z-index: 1;
+}
 #content.compact > .comment-thread .comment-body {
 	font-size: 1.0625rem;
 }
