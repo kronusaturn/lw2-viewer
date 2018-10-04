@@ -1538,7 +1538,7 @@ div.comment-child-links a::first-letter {
 }
 
 #content.compact > .comment-thread .comment-item {
-	max-height: 58px;
+	max-height: 53px;
 }
 #content.compact > .comment-thread .comment-item::after {
 	color: <?php echo $hyperlink_color; ?>;
