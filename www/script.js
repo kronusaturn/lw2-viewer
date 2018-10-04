@@ -868,6 +868,13 @@ function themeLoadCallback_less(fromTheme = "") {
 
 		// Unset the height of the #ui-elements-container
 		document.querySelector("#ui-elements-container").style.height = "";
+		
+		// Hide the post-nav-ui toggle if none of the elements to be toggled are visible…
+		var hidePostNavUIToggle = true;
+		document.querySelectorAll("#ui-elements-container #quick-nav-ui a, #ui-elements-container #new-comment-nav-ui").forEach(function (element) {
+			if (window.getComputedStyle(element).visibility == "visible") hidePostNavUIToggle = false;
+		});
+		if (hidePostNavUIToggle) document.querySelector("#ui-elements-container #post-nav-ui-toggle").style.visibility = "hidden";
 
 		// Due to filters vs. fixed elements, we need to be smarter about selecting which elements to filter...
 		window.filtersTargetSelector = "body::before, #content > *:not(#secondary-bar):not(.post), #secondary-bar > *, .post > *:not(.top-post-meta), .top-post-meta > *:not(.date):not(.comment-count), .top-post-meta .date span, .top-post-meta .comment-count > span, #ui-elements-container > div:not(#theme-tweaker-ui), #theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container";
