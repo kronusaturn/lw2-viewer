@@ -1960,7 +1960,7 @@ div.comment-child-links a::first-letter {
 	height: 15em;
 	min-height: 15em;
 	max-height: calc(100vh - 6em);
-	margin: 2px 0;
+	margin: 2px 0 0 0;
 	padding: 4px 5px;
 	font-size: 1.2rem;
 	border-style: solid;
@@ -2020,7 +2020,7 @@ div.comment-child-links a::first-letter {
 
 .posting-controls .markdown-reference-link {
 	float: left;
-	padding: 5px 0 0 6px;
+	padding: 1px 0 0 6px;
 }
 .posting-controls .markdown-reference-link a {
 	padding-right: 1.5em;
@@ -2033,8 +2033,8 @@ div.comment-child-links a::first-letter {
 
 #markdown-hints-checkbox + label {
 	float: left;
-	padding: 4px 0 0 0;
 	margin: 0 0 0 1em;
+	line-height: 1.3;
 	cursor: pointer;
 }
 #edit-post-form #markdown-hints-checkbox + label {
