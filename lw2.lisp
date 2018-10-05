@@ -848,7 +848,7 @@
                                                              (format out-stream "<h1>~A comments on <a href=\"~A\">~A</a></h1>"
                                                                      (encode-entities display-name)
                                                                      (generate-post-link post-id)
-                                                                     (encode-entities title))
+                                                                     (clean-text-to-html title))
                                                              (output-comments out-stream comments target-comment)
                                                              (when lw2-auth-token
                                                                (force-output out-stream)
