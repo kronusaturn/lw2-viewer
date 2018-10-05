@@ -982,7 +982,7 @@ div.comment-child-links a::first-letter {
 
 .posting-controls.edit-existing-post .guiedit-buttons-container button,
 .posting-controls form.edit-existing-comment .guiedit-buttons-container button {
-	color: #050;
+	color: #0c0;
 }
 
 button.guiedit {

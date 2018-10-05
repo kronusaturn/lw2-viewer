@@ -1168,7 +1168,7 @@ div.comment-child-links a::first-letter {
 }
 
 .comment-controls .edit-button {
-	color: #0b0;
+	color: #090;
 }
 .comment-controls .edit-button:hover {
 	color: #f00;
