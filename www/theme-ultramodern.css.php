@@ -1062,18 +1062,27 @@ div.comment-child-links a::first-letter {
 	color: #ccc;
 }
 
-/**********************/
+/*====================*/
 /* COMMENT PERMALINKS */
-/**********************/
-/********************/
+/*====================*/
+/*==================*/
 /* COMMENT LW LINKS */
-/********************/
+/*==================*/
 
 .comment-meta .permalink::before,
 .comment-meta .lw2-link::before,
 .individual-thread-page a.comment-parent-link:empty::before {
 	opacity: 1.0;
 	filter: saturate(10%) contrast(20%);
+}
+
+/*=================================*/
+/* INDIVIDUAL COMMENT THREAD PAGES */
+/*=================================*/
+
+.individual-thread-page > h1 {
+	font-family: <?php echo $text_font; ?>;
+	font-weight: <?php global $platform; echo ($platform == 'Mac' ? '200' : '300'); ?>;
 }
 
 /*==============*/

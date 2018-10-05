@@ -1104,6 +1104,14 @@ div.comment-child-links a::first-letter {
 	color: #ccc;
 }
 
+/*=================================*/
+/* INDIVIDUAL COMMENT THREAD PAGES */
+/*=================================*/
+
+.individual-thread-page > h1 {
+	font-family: <?php echo $text_font; ?>;
+}
+
 /*==============*/
 /* VOTE BUTTONS */
 /*==============*/

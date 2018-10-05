@@ -1639,7 +1639,9 @@ div.comment-child-links a::first-letter {
 /*=================================*/
 
 .individual-thread-page > h1 {
-	margin: 2em 0 0 36px;
+	margin: 2em 0 0 30px;
+	font-weight: 300;
+	font-family: <?php echo $headings_font; ?>;
 }
 .individual-thread-page > #comments {
 	padding: 0 0 0 30px;

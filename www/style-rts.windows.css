@@ -1824,7 +1824,7 @@ div.comment-child-links a::first-letter {
 
 .individual-thread-page > h1 {
 	line-height: 1;
-	margin: 1em 0 0.375em 0;
+	margin: 1em 0 0 0;
 }
 .individual-thread-page #comments {
 	border: none;
@@ -5051,6 +5051,14 @@ div.comment-child-links a::first-letter {
 }
 .comment-minimize-button.maximized::after {
 	color: #ccc;
+}
+
+/*=================================*/
+/* INDIVIDUAL COMMENT THREAD PAGES */
+/*=================================*/
+
+.individual-thread-page > h1 {
+	font-family: 'Garamond Premier Pro', 'Georgia', 'Times New Roman', serif;
 }
 
 /*==============*/
