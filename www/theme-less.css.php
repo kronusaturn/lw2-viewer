@@ -177,6 +177,45 @@ body {
 	font-size: 1.125em;
 }
 
+/* Decorative bottom bar */
+
+#bottom-bar.decorative {
+	margin-top: 0.25em;
+}
+#bottom-bar.decorative::before,
+#bottom-bar.decorative::after {
+	content: "GW";
+	display: block;
+	text-align: center;
+	padding: 0.25em 0 1em 0;
+}
+#bottom-bar.decorative::before {
+	width: 100%;
+	color: transparent;
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/one_pixel_EEE.gif")) ?>');
+	background-repeat: repeat-x;
+	background-position: center 35%;
+	margin: 0 30px;
+	filter: brightness(50%) opacity(0.6);
+}
+#bottom-bar.decorative::after {
+	color: #eee;
+	position: absolute;
+	left: 0;
+	right: 0;
+	margin: auto;
+	background-color: #fff;
+	padding-right: 4px;
+	padding-left: 4px;
+}
+<?php foreach (["-moz-fit-content", "fit-content"] as $pvalue) echo 
+"@supports (width: {$pvalue}) {
+	#bottom-bar.decorative::after {
+		width: {$pvalue};
+	}
+}
+"; ?>
+
 /*==============*/
 /* PAGE TOOLBAR */
 /*==============*/
@@ -1645,6 +1684,9 @@ div.comment-child-links a::first-letter {
 }
 .individual-thread-page > #comments {
 	padding: 0 0 0 30px;
+}
+.individual-thread-page > #bottom-bar.decorative::before {
+	margin: 0 30px 0 60px;
 }
 
 /*==============*/
