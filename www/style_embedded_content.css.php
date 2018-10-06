@@ -34,9 +34,11 @@
 }
 #content.embedded-mode .comment-thread .comment-body {
 	font-size: 1em;
+	padding: 4px;
 }
 #content.embedded-mode .comment-meta {
 	font-size: 0.9375em;
+	padding: 4px;
 }
 #content.embedded-mode .comment-meta .karma,
 #content.embedded-mode .comment-meta .lw2-link {
