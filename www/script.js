@@ -1643,6 +1643,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	if (getQueryVariable("embedded-mode") == "true") {
 		contentElement.addClass("embedded-mode");
 		contentElement.removeClass("compact");
+		
 		let maxVisibleEntries = parseInt(getQueryVariable("num-entries"));
 		document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='embedded-mode-styles'>" + `
 			html, body {
@@ -1660,6 +1661,10 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 				display: none;
 			}
 		` + "</style>");
+		
+		document.querySelectorAll("a").forEach(function (link) {
+			link.target = "_parent";
+		});
 	}
 	else if (getQueryVariable("hide-nav-bars") == "true") {
 		contentElement.addClass("no-nav-bars");
