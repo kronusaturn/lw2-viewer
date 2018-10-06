@@ -1265,8 +1265,10 @@ function updateThemeTweakerSampleText() {
 	// Here we find out what is the actual background color that will be visible behind
 	// the body text of posts, and set the sample text’s background to that.
 	var backgroundElement = document.querySelector("#content");
-	while (window.getComputedStyle(backgroundElement).backgroundColor == "" || 
-		   window.getComputedStyle(backgroundElement).backgroundColor == "rgba(0, 0, 0, 0)")
+	while ((backgroundElement != null &&
+		    backgroundElement.parentElement != null) && 
+		   (window.getComputedStyle(backgroundElement).backgroundColor == "" || 
+		    window.getComputedStyle(backgroundElement).backgroundColor == "rgba(0, 0, 0, 0)"))
 		   backgroundElement = backgroundElement.parentElement;
 	sampleText.parentElement.style.backgroundColor = window.getComputedStyle(backgroundElement).backgroundColor;
 }
@@ -1634,11 +1636,28 @@ registerInitializer('earlyInitialize', true, () => document.querySelector("#cont
 registerInitializer('initialize', false, () => document.readyState != 'loading', function () {
 	forceInitializer('earlyInitialize');
 
-	if (getQueryVariable("comments") == "false")
-		document.querySelector("#content").addClass("no-comments");
-	if (getQueryVariable("hide-nav-bars") == "true") {
-		document.querySelector("#content").addClass("no-nav-bars");
-		let auxAboutLink = addUIElement("<div id='aux-about-link'><a href='/about' accesskey='t' target='_new'>&#xf129;</a></div>");
+	let contentElement = document.querySelector("#content");
+	if (getQueryVariable("comments") == "false") {
+		contentElement.addClass("no-comments");
+	}
+	if (getQueryVariable("embedded-mode") == "true") {
+		contentElement.addClass("embedded-mode");
+		contentElement.removeClass("compact");
+		let maxVisibleEntries = parseInt(getQueryVariable("num-entries"));
+		document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='embedded-mode-styles'>" + `
+			#content.embedded-mode > ul:nth-of-type(n+${maxVisibleEntries + 1}),
+			#content.embedded-mode > h1:nth-of-type(n+${maxVisibleEntries + 1}),
+			#content.embedded-mode > h1:nth-of-type(n+${maxVisibleEntries + 1}) + .post-meta {
+				display: none;
+			}
+			#content.embedded-mode > ul:nth-of-type(n+${maxVisibleEntries + 1}) ~ * {
+				display: none;
+			}
+		` + "</style>");
+	}
+	else if (getQueryVariable("hide-nav-bars") == "true") {
+		contentElement.addClass("no-nav-bars");
+		addUIElement("<div id='aux-about-link'><a href='/about' accesskey='t' target='_new'>&#xf129;</a></div>");
 	}
 
 	let content = document.querySelector("#content");
@@ -1935,6 +1954,32 @@ registerInitializer('pageLayoutFinished', false, () => document.readyState == "c
 		if (window.getComputedStyle(sortSelector).flexDirection == "row")
 			sortSelector.addClass("horizontal");
 	});
+
+	// Add the sidebar (unless we ARE the sidebar).
+	if (getQueryVariable("embedded-mode") != "true") {
+		// Add the sidebar container element.
+		document.querySelector("#content").insertAdjacentHTML("beforeend", 
+			"<div id='secondary-content-column'></div>");
+		
+		if (location.pathname != "/") {
+			// Add the recent posts area.
+			document.querySelector("#secondary-content-column").insertAdjacentHTML("beforeend",
+				"<div class='content-area recent-posts'>\n" + 
+				"<h1>Recent Posts</h1>\n" + 
+				"<object data='/?embedded-mode=true&num-entries=5'></object>\n" + 
+				"</div>");
+		}
+
+		if (location.pathname != "/recentcomments") {
+			// Add the recent comments area.
+			document.querySelector("#secondary-content-column").insertAdjacentHTML("beforeend",
+				"<div class='content-area recent-comments'>\n" + 
+				"<h1>Recent Comments</h1>\n" + 
+				"<object data='/recentcomments?embedded-mode=true&num-entries=10'></object>\n" + 
+				"<p><a href='/recentcomments'>More…</a></p>\n" + 
+				"</div>");
+		}
+	}
 });
 
 function generateImagesOverlay() {
