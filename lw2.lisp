@@ -930,9 +930,9 @@
 				 (with-error-page
 				   (let* ((offset (and offset (parse-integer offset))) 
 					  (recent-comments (if offset
-							     (lw2-graphql-query (graphql-query-string "CommentsList"
-												      (alist :terms (alist :view "postCommentsNew" :limit 20 :offset offset))
-												      *comments-index-fields*))
+							     (lw2-graphql-query (lw2-query-string :comment :list
+                                                                                                  (alist :view "postCommentsNew" :limit 20 :offset offset)
+                                                                                                  *comments-index-fields*))
 							     (get-recent-comments))))
                                      (view-items-index recent-comments :title "Recent comments" :with-offset (or offset 0) :with-next t))))
 
@@ -955,7 +955,7 @@
                                (offset (if offset (parse-integer offset) 0))
                                (auth-token (if (eq show :inbox) (hunchentoot:cookie-in "lw2-auth-token")))
                                (user-info
-                                 (let ((ui (lw2-graphql-query (graphql-query-string "UsersSingle" (alist :slug user-slug) `(:--id :display-name :karma ,@(if (eq show :inbox) '(:last-notifications-check))))
+                                 (let ((ui (lw2-graphql-query (lw2-query-string :user :single (alist :slug user-slug) `(:--id :display-name :karma ,@(if (eq show :inbox) '(:last-notifications-check))))
                                                               :auth-token auth-token)))
                                    (if (cdr (assoc :--id ui))
                                        ui
@@ -970,21 +970,21 @@
                                         (:posts
                                           (get-user-posts user-id :offset offset :limit 21 :sort-type sort-type))
                                         (:comments
-                                          (lw2-graphql-query (graphql-query-string "CommentsList"
-                                                                                   (alist :terms (nconc (alist :offset offset :limit 21 :user-id user-id)
-                                                                                                        comments-base-terms))
-                                                                                   comments-index-fields)))
+                                          (lw2-graphql-query (lw2-query-string :comment :list
+                                                                               (nconc (alist :offset offset :limit 21 :user-id user-id)
+                                                                                      comments-base-terms)
+                                                                               comments-index-fields)))
                                         (:drafts
                                           (get-user-posts user-id :drafts t :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
                                         (:conversations
                                           (let ((conversations
-                                                  (lw2-graphql-query (graphql-query-string "ConversationsList"
-                                                                                           (alist :terms (alist :view "userConversations" :limit 21 :offset offset :user-id user-id))
-                                                                                           '(:--id :created-at :title (:participants :display-name :slug) :----typename))
+                                                  (lw2-graphql-query (lw2-query-string :conversation :list
+                                                                                       (alist :view "userConversations" :limit 21 :offset offset :user-id user-id)
+                                                                                       '(:--id :created-at :title (:participants :display-name :slug) :----typename))
                                                                      :auth-token (hunchentoot:cookie-in "lw2-auth-token"))))
                                             (lw2-graphql-query-map
                                               (lambda (c)
-                                                (graphql-query-string* "MessagesTotal" (alist :terms (alist :view "messagesConversation" :conversation-id (cdr (assoc :--id c)))) nil))
+                                                (lw2-query-string* :message :total (alist :view "messagesConversation" :conversation-id (cdr (assoc :--id c))) nil))
                                               conversations
                                               :postprocess (lambda (c result)
                                                              (acons :messages-total result c))
@@ -1001,15 +1001,15 @@
                                                   (lambda (n)
                                                     (alexandria:switch ((cdr (assoc :document-type n)) :test #'string=)
                                                                        ("comment"
-                                                                        (graphql-query-string* "CommentsSingle"
-                                                                                               (alist :document-id (cdr (assoc :document-id n)))
-                                                                                               *comments-index-fields*))
+                                                                        (lw2-query-string* :comment :single
+                                                                                           (alist :document-id (cdr (assoc :document-id n)))
+                                                                                           *comments-index-fields*))
                                                                        ("post"
-                                                                        (graphql-query-string* "PostsSingle" (alist :document-id (cdr (assoc :document-id n)))
-                                                                                               *posts-index-fields*))
+                                                                        (lw2-query-string* :post :single (alist :document-id (cdr (assoc :document-id n)))
+                                                                                           *posts-index-fields*))
                                                                        ("message"
-                                                                        (graphql-query-string* "MessagesSingle" (alist :document-id (cdr (assoc :document-id n)))
-                                                                                               *messages-index-fields*))
+                                                                        (lw2-query-string* :message :single (alist :document-id (cdr (assoc :document-id n)))
+                                                                                           *messages-index-fields*))
                                                                        (t
                                                                          (values n t))))
                                                   notifications
@@ -1030,7 +1030,7 @@
                                                                       :operation-name "usersEdit"))))
                                         (t
                                           (let ((user-posts (get-user-posts user-id :limit (+ 21 offset)))
-                                                (user-comments (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (nconc (alist :limit (+ 21 offset) :user-id user-id) comments-base-terms)) 
+                                                (user-comments (lw2-graphql-query (lw2-query-string :comment :list (nconc (alist :limit (+ 21 offset) :user-id user-id) comments-base-terms) 
                                                                                                         comments-index-fields))))
                                             (concatenate 'list user-posts user-comments)))))
                                (with-next (> (length items) (+ (if show 0 offset) 20)))
@@ -1071,7 +1071,7 @@
                                          (check-csrf-token csrf-token)
                                          (let* ((subject (post-or-get-parameter "subject"))
                                                 (id (or id
-                                                        (let ((participant-ids (list (logged-in-userid) (cdar (lw2-graphql-query (graphql-query-string "UsersSingle" (alist :slug to) '(:--id)))))))
+                                                        (let ((participant-ids (list (logged-in-userid) (cdar (lw2-graphql-query (lw2-query-string :user :single (alist :slug to) '(:--id)))))))
                                                           (do-lw2-post-query* (hunchentoot:cookie-in "lw2-auth-token")
                                                                               (alist :query "mutation ConversationsNew($document: ConversationsInput) { ConversationsNew(document: $document) { _id }}"
                                                                                      :variables (alist :document
@@ -1245,12 +1245,12 @@
                                                     (declare (dynamic-extent url-elements))
                                                     (format nil "/~{~A~^/~}" url-elements)))
                                             (let* ((offset (if offset (parse-integer offset) 0))
-                                                   (posts (lw2-graphql-query (graphql-query-string "PostsList"
-                                                                                                   (alist :terms (alist :view (if day "new" "top") :limit 51 :offset offset
-                                                                                                                        :after (if (and year (not day)) (format nil "~A-~A-~A" (or year earliest-year) (or month 1) (or day 1)))
-                                                                                                                        :before (if year (format nil "~A-~A-~A" (or year current-year) (or month 12)
-                                                                                                                                                 (or day (local-time:days-in-month (or month 12) (or year current-year)))))))
-                                                                                                   *posts-index-fields*))))
+                                                   (posts (lw2-graphql-query (lw2-query-string :post :list
+                                                                                               (alist :view (if day "new" "top") :limit 51 :offset offset
+                                                                                                      :after (if (and year (not day)) (format nil "~A-~A-~A" (or year earliest-year) (or month 1) (or day 1)))
+                                                                                                      :before (if year (format nil "~A-~A-~A" (or year current-year) (or month 12)
+                                                                                                                               (or day (local-time:days-in-month (or month 12) (or year current-year))))))
+                                                                                               *posts-index-fields*))))
                                               (emit-page (out-stream :title "Archive" :current-uri "/archive" :content-class "archive-page"
                                                                      :items-per-page 50 :with-offset offset :with-next (> (length posts) 50) :top-nav top-nav)
                                                 (with-outputs (out-stream) "<div class=\"archive-nav\"><div class=\"archive-nav-years\">")

@@ -9,7 +9,10 @@
            #:condition-http-return-code
            #:lw2-error #:lw2-client-error #:lw2-not-found-error #:lw2-user-not-found-error #:lw2-not-allowed-error #:lw2-server-error #:lw2-connection-error #:lw2-unknown-error
 	   #:log-condition #:log-conditions #:start-background-loader #:stop-background-loader #:background-loader-running-p
-	   #:lw2-graphql-query-streamparse #:lw2-graphql-query-noparse #:decode-graphql-json #:lw2-graphql-query #:graphql-query-string* #:graphql-query-string #:lw2-graphql-query-map #:lw2-graphql-query-multi
+	   #:lw2-graphql-query-streamparse #:lw2-graphql-query-noparse #:decode-graphql-json #:lw2-graphql-query
+           #:graphql-query-string* #:graphql-query-string
+           #:lw2-query-string* #:lw2-query-string
+           #:lw2-graphql-query-map #:lw2-graphql-query-multi
 	   #:get-posts-index #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
            #:get-notifications #:check-notifications
 	   #:lw2-search-query #:get-post-title #:get-post-slug #:get-slug-postid #:get-username #:get-user-slug)
@@ -321,6 +324,23 @@
 (defun graphql-query-string (query-type terms fields)
   (format nil "{~A}" (graphql-query-string* query-type terms fields)))
 
+(declare-backend-function lw2-query-string*)
+
+(define-backend-operation lw2-query-string* backend-lw2 (query-type return-type args fields)
+  (graphql-query-string*
+    (concatenate 'string (string-capitalize query-type)
+                         "s"
+                         (string-capitalize return-type))
+    (if (eq return-type :single)
+        args
+        (alist :terms args))
+    fields))
+
+(declare-backend-function lw2-query-string)
+
+(define-backend-operation lw2-query-string backend-lw2 (query-type return-type args fields)
+  (format nil "{~A}" (lw2-query-string* query-type return-type args fields)))
+
 (defun get-cached-index-query (cache-id query)
   (labels ((query-and-put ()
              (let* ((result (lw2-graphql-query-noparse query))
@@ -349,7 +369,7 @@
     (let* ((extra-terms
              (remove-if (lambda (x) (null (cdr x)))
                         (alist :before before :after after :limit 20 :offset offset)))
-           (query-string (graphql-query-string "PostsList" (alist :terms (nconc view-terms extra-terms)) *posts-index-fields*)))
+           (query-string (lw2-query-string :post :list (nconc view-terms extra-terms) *posts-index-fields*)))
       (values query-string cache-key))))
 
 (declare-backend-function get-posts-index)
@@ -366,10 +386,10 @@
   (lw2-graphql-query-noparse (get-posts-index-query-string)))
 
 (defun get-recent-comments ()
-  (get-cached-index-query "recent-comments" (graphql-query-string "CommentsList" '((:terms . ((:view . "recentComments") (:limit . 20)))) *comments-index-fields*)))
+  (get-cached-index-query "recent-comments" (lw2-query-string :comment :list '((:view . "recentComments") (:limit . 20)) *comments-index-fields*)))
 
 (defun get-recent-comments-json ()
-  (lw2-graphql-query-noparse (graphql-query-string "CommentsList" '((:terms . ((:view . "recentComments") (:limit . 20)))) *comments-index-fields*)))
+  (lw2-graphql-query-noparse (lw2-query-string :comment :list '((:view . "recentComments") (:limit . 20)) *comments-index-fields*)))
 
 (defun process-vote-result (res)
   (let ((id (cdr (assoc :--id res)))
@@ -381,26 +401,26 @@
 	collect (multiple-value-bind (votetype id) (process-vote-result v) (cons id votetype))))
 
 (defun get-post-vote (post-id auth-token)
-  (process-vote-result (lw2-graphql-query (graphql-query-string "PostsSingle" (alist :document-id post-id) '(:--id (:current-user-votes :vote-type))) :auth-token auth-token))) 
+  (process-vote-result (lw2-graphql-query (lw2-query-string :post :single (alist :document-id post-id) '(:--id (:current-user-votes :vote-type))) :auth-token auth-token))) 
 
 (defun get-post-body (post-id &key (revalidate t) force-revalidate auth-token)
-  (let ((query-string (graphql-query-string "PostsSingle" (alist :document-id post-id) (cons :html-body *posts-index-fields*))))
+  (let ((query-string (lw2-query-string :post :single (alist :document-id post-id) (cons :html-body *posts-index-fields*))))
     (if auth-token
         (lw2-graphql-query query-string :auth-token auth-token)
         (lw2-graphql-query-timeout-cached query-string "post-body-json" post-id :revalidate revalidate :force-revalidate force-revalidate))))
 
 (defun get-post-comments-votes (post-id auth-token)
-  (process-votes-result (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (alist :view "postCommentsTop" :limit 10000 :post-id post-id)) '(:--id (:current-user-votes :vote-type))) :auth-token auth-token)))
+  (process-votes-result (lw2-graphql-query (lw2-query-string :comment :list (alist :view "postCommentsTop" :limit 10000 :post-id post-id) '(:--id (:current-user-votes :vote-type))) :auth-token auth-token)))
 
 (defun get-post-comments (post-id &key (revalidate t) force-revalidate)
   (let ((fn (lambda ()
               (let ((base-terms (alist :view "postCommentsTop" :post-id post-id))
                     (comments-fields '(:--id :user-id :post-id :posted-at :parent-comment-id :base-score :page-url :vote-count :html-body)))
                 (multiple-value-bind (comments-total comments-list)
-                  (lw2-graphql-query-multi (list (graphql-query-string* "CommentsTotal" (alist :terms base-terms) nil)
-                                                 (graphql-query-string* "CommentsList" (alist :terms (nconc (alist :limit 500) base-terms)) comments-fields)))
+                  (lw2-graphql-query-multi (list (lw2-query-string* :comment :total base-terms nil)
+                                                 (lw2-query-string* :comment :list (nconc (alist :limit 500) base-terms) comments-fields)))
                   (loop for offset from 500 to comments-total by 500
-                        as comments-next = (lw2-graphql-query (graphql-query-string "CommentsList" (alist :terms (nconc (alist :limit 500 :offset offset) base-terms)) comments-fields))
+                        as comments-next = (lw2-graphql-query (lw2-query-string :comment :list (nconc (alist :limit 500 :offset offset) base-terms) comments-fields))
                         do (setf comments-list (nconc comments-list comments-next)))
                   (comments-list-to-graphql-json comments-list))))))
     (lw2-graphql-query-timeout-cached fn "post-comments-json" post-id :revalidate revalidate :force-revalidate force-revalidate)))
@@ -408,8 +428,8 @@
 (declare-backend-function get-notifications)
 
 (define-backend-operation get-notifications backend-lw2 (&key user-id offset auth-token)
-                          (lw2-graphql-query (graphql-query-string "NotificationsList"
-                                                                   (alist :terms (nconc (alist :user-id user-id :limit 21 :offset offset) *notifications-base-terms*))
+                          (lw2-graphql-query (lw2-query-string :notification :list
+                                                                   (nconc (alist :user-id user-id :limit 21 :offset offset) *notifications-base-terms*)
                                                                    '(:--id :document-type :document-id :link :title :message :type :viewed))
                                              :auth-token auth-token))
 
@@ -419,9 +439,9 @@
   (multiple-value-bind (notifications user-info)
     (sb-sys:with-deadline (:seconds 5)
                           (lw2-graphql-query-multi (list
-                                                     (graphql-query-string* "NotificationsList" (alist :terms (nconc (alist :user-id user-id :limit 1) *notifications-base-terms*))
-                                                                            '(:created-at))
-                                                     (graphql-query-string* "UsersSingle" (alist :document-id user-id) '(:last-notifications-check)))
+                                                     (lw2-query-string* :notification :list (nconc (alist :user-id user-id :limit 1) *notifications-base-terms*)
+                                                                        '(:created-at))
+                                                     (lw2-query-string* :user :single (alist :document-id user-id) '(:last-notifications-check)))
                                                    :auth-token auth-token))
     (when (and notifications user-info)
       (local-time:timestamp> (local-time:parse-timestring (cdr (assoc :created-at (first notifications)))) (local-time:parse-timestring (cdr (assoc :last-notifications-check user-info)))))))
@@ -449,9 +469,9 @@
            (if (or drafts (boundp '*graphql-correct*))
                posts-base-terms
                (cons '(:meta . :null) posts-base-terms))))
-    (lw2-graphql-query (graphql-query-string "PostsList"
-                                             (alist :terms (nconc (remove nil (alist :offset offset :limit limit :user-id user-id) :key #'cdr) posts-base-terms))
-                                             *posts-index-fields*)
+    (lw2-graphql-query (lw2-query-string :post :list
+                                         (nconc (remove nil (alist :offset offset :limit limit :user-id user-id) :key #'cdr) posts-base-terms)
+                                         *posts-index-fields*)
                        :auth-token auth-token)))
 
 (define-backend-operation get-user-posts backend-accordius (user-id &key offset limit (sort-type :date) drafts auth-token)
@@ -465,8 +485,8 @@
 (define-backend-operation get-conversation-messages backend-lw2 (conversation-id auth-token)
   (lw2-graphql-query-multi
     (list
-      (graphql-query-string* "ConversationsSingle" (alist :document-id conversation-id) '(:title (:participants :display-name :slug)))
-      (graphql-query-string* "MessagesList" (alist :terms (alist :view "messagesConversation" :conversation-id conversation-id)) *messages-index-fields*))
+      (lw2-query-string* :conversation :single (alist :document-id conversation-id) '(:title (:participants :display-name :slug)))
+      (lw2-query-string* :message :list (alist :view "messagesConversation" :conversation-id conversation-id) *messages-index-fields*))
     :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
 
 (define-backend-operation get-conversation-messages backend-accordius (conversation-id auth-token)
@@ -513,25 +533,25 @@
 
 (with-rate-limit
   (simple-cacheable ("post-title" "postid-to-title" post-id)
-    (rate-limit (post-id) (cdr (first (lw2-graphql-query (graphql-query-string "PostsSingle" (alist :document-id post-id) '(:title)))))))) 
+    (rate-limit (post-id) (cdr (first (lw2-graphql-query (lw2-query-string :post :single (alist :document-id post-id) '(:title)))))))) 
 
 (with-rate-limit
   (simple-cacheable ("post-slug" "postid-to-slug" post-id)
-    (rate-limit (post-id) (cdr (first (lw2-graphql-query (graphql-query-string "PostsSingle" (alist :document-id post-id) '(:slug))))))))
+    (rate-limit (post-id) (cdr (first (lw2-graphql-query (lw2-query-string :post :single (alist :document-id post-id) '(:slug))))))))
 
 (with-rate-limit
   (simple-cacheable ("slug-postid" "slug-to-postid" slug)
-    (rate-limit (slug) (cdr (first (lw2-graphql-query (graphql-query-string "PostsSingle" (alist :slug slug) '(:--id))))))))
+    (rate-limit (slug) (cdr (first (lw2-graphql-query (lw2-query-string :post :single (alist :slug slug) '(:--id))))))))
 
 (with-rate-limit
   (simple-cacheable ("username" "userid-to-displayname" user-id)
-    (rate-limit (user-id) (cdr (first (lw2-graphql-query (graphql-query-string "UsersSingle" (alist :document-id user-id) '(:display-name)))))))) 
+    (rate-limit (user-id) (cdr (first (lw2-graphql-query (lw2-query-string :user :single (alist :document-id user-id) '(:display-name)))))))) 
 
 (with-rate-limit
   (simple-cacheable ("user-slug" "userid-to-slug" user-id)
-    (rate-limit (user-id) (cdr (first (lw2-graphql-query (graphql-query-string "UsersSingle" (alist :document-id user-id) '(:slug))))))))
+    (rate-limit (user-id) (cdr (first (lw2-graphql-query (lw2-query-string :user :single (alist :document-id user-id) '(:slug))))))))
 
 (defun preload-username-cache ()
-  (let ((user-list (lw2-graphql-query "{UsersList(terms:{}) {_id, displayName}}")))
+  (let ((user-list (lw2-graphql-query (lw2-query-string :user :list '() '(:--id :display-name)))))
     (loop for user in user-list
 	  do (cache-username (cdr (assoc :--id user)) (cdr (assoc :display-name user)))))) 
