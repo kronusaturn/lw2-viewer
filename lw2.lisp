@@ -261,8 +261,8 @@
               pretty-time))))
 
 (defun error-to-html (out-stream condition)
-  (format out-stream "<h1>Error</h1><p>~A</p>"
-	  condition))
+  (format out-stream "<div class=\"gw-error\"><h1>Error</h1><p>~A</p></div>"
+          (encode-entities (princ-to-string condition))))
 
 (defmacro with-error-html-block ((out-stream) &body body)
   `(handler-case
