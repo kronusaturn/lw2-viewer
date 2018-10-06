@@ -23,8 +23,6 @@
 	margin: 0 0 0.5em 0;
 }
 #content.embedded-mode .comment-thread .comment-item {
-	height: 110px;
-	overflow: hidden;
 	border-width: 1px 0 0 0;
 	background-color: transparent;
 }
@@ -35,6 +33,8 @@
 #content.embedded-mode .comment-thread .comment-body {
 	font-size: 1em;
 	padding: 4px;
+	line-height: 1.25;
+	max-height: 44px;
 }
 #content.embedded-mode .comment-meta {
 	font-size: 0.9375em;
@@ -43,6 +43,22 @@
 #content.embedded-mode .comment-meta .karma,
 #content.embedded-mode .comment-meta .lw2-link {
 	display: none;
+}
+#content.embedded-mode .comment-meta .author {
+	max-width: 144px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+#content.embedded-mode .comment-meta .author:hover {
+	overflow: visible;
+	z-index: 1;
+	text-shadow: 
+		0 0  1px #fff,
+		0 0  3px #fff,
+		0 0  5px #fff,
+		0 0  8px #fff,
+		0 0 13px #fff,
+		0 0 21px #fff;
 }
 #content.embedded-mode .comment-post-title > span {
 	display: block;
@@ -114,6 +130,17 @@
 	border-style: solid;
 	border-color: #ddd;
 	border-width: 0 0 1px 0;
+	position: relative;
+}
+#secondary-content-column .content-area::after {
+	content: "";
+	display: block;
+	position: absolute;
+	left: 1px;
+	right: 1px;
+	height: 60px;
+	background-image: linear-gradient(to top, #fff, rgba(255,255,255,0.75) 75%, rgba(255,255,255,0.25) 75%);
+	bottom: 36px;
 }
 #secondary-content-column .content-area.recent-posts {
 	height: 480px;
@@ -125,13 +152,15 @@
 	height: 100%;
 }
 #secondary-content-column .content-area > h1 {
-	margin: 0 -1px -1px -1px;
+	margin: -1px;
 	padding: 0.5em 0 0.5em 0;
 	font-size: 1.5rem;
 	font-weight: 600;
 	line-height: 1;
 	text-align: center;
-	border-bottom: 1px solid #ddd;
+	border-style: solid;
+	border-color: #ddd;
+	border-width: 1px 0;
 	background-color: #eee;
 }
 #secondary-content-column .content-area > h1 span {
