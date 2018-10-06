@@ -77,7 +77,7 @@
 	height: 500px;
 }
 #secondary-content-column .content-area.recent-comments {
-	height: 848px;
+	height: 1268px;
 }
 #secondary-content-column .content-area object {
 	height: 100%;

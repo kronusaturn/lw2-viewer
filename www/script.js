@@ -1681,7 +1681,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 				{ month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' }
 					: { month: 'numeric', day: 'numeric', year: '2-digit', hour: 'numeric', minute: 'numeric' };
 	if (getQueryVariable("embedded-mode") == "true")
-		dateFormat = { month: 'short', day: 'numeric', year: 'numeric' }
+		dateFormat = { month: 'numeric', day: 'numeric', year: 'numeric' }
 	try {
 		let dtf = new Intl.DateTimeFormat([], dateFormat);
 		document.querySelectorAll(".date").forEach(function (e) {
