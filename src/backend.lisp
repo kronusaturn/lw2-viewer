@@ -327,7 +327,7 @@
 
 (declare-backend-function lw2-query-string*)
 
-(define-backend-operation lw2-query-string* backend-lw2 (query-type return-type args fields)
+(define-backend-operation lw2-query-string* backend-lw2-legacy (query-type return-type args fields)
   (graphql-query-string*
     (concatenate 'string (string-capitalize query-type)
                          "s"
@@ -339,7 +339,7 @@
 
 (declare-backend-function lw2-query-string)
 
-(define-backend-operation lw2-query-string backend-lw2 (query-type return-type args fields)
+(define-backend-operation lw2-query-string backend-lw2-legacy (query-type return-type args fields)
   (format nil "{~A}" (lw2-query-string* query-type return-type args fields)))
 
 (defun get-cached-index-query (cache-id query)
@@ -359,7 +359,7 @@
 
 (declare-backend-function get-posts-index-query-string)
 
-(define-backend-operation get-posts-index-query-string backend-lw2 (&key view sort offset before after)
+(define-backend-operation get-posts-index-query-string backend-lw2-legacy (&key view sort offset before after)
   (multiple-value-bind (view-terms cache-key)
     (alexandria:switch (view :test #'string=)
                        ("featured" (alist :view "curated"))
@@ -375,7 +375,7 @@
 
 (declare-backend-function get-posts-index)
 
-(define-backend-operation get-posts-index backend-lw2 (&rest args &key &allow-other-keys)
+(define-backend-operation get-posts-index backend-lw2-legacy (&rest args &key &allow-other-keys)
   (declare (dynamic-extent args))
   (multiple-value-bind (query-string cache-key)
     (apply #'%get-posts-index-query-string (list* backend args))
@@ -428,7 +428,7 @@
 
 (declare-backend-function get-notifications)
 
-(define-backend-operation get-notifications backend-lw2 (&key user-id offset auth-token)
+(define-backend-operation get-notifications backend-lw2-legacy (&key user-id offset auth-token)
                           (lw2-graphql-query (lw2-query-string :notification :list
                                                                    (nconc (alist :user-id user-id :limit 21 :offset offset) *notifications-base-terms*)
                                                                    '(:--id :document-type :document-id :link :title :message :type :viewed))
@@ -436,7 +436,7 @@
 
 (declare-backend-function check-notifications)
 
-(define-backend-operation check-notifications backend-lw2 (user-id auth-token)
+(define-backend-operation check-notifications backend-lw2-legacy (user-id auth-token)
   (multiple-value-bind (notifications user-info)
     (sb-sys:with-deadline (:seconds 5)
                           (lw2-graphql-query-multi (list
@@ -459,7 +459,7 @@
 
 (declare-backend-function get-user-posts)
 
-(define-backend-operation get-user-posts backend-lw2 (user-id &key offset limit (sort-type :date) drafts auth-token)
+(define-backend-operation get-user-posts backend-lw2-legacy (user-id &key offset limit (sort-type :date) drafts auth-token)
   (declare (special *graphql-correct*))
   (let* ((posts-base-terms
            (cond
@@ -483,7 +483,7 @@
 
 (declare-backend-function get-conversation-messages)
 
-(define-backend-operation get-conversation-messages backend-lw2 (conversation-id auth-token)
+(define-backend-operation get-conversation-messages backend-lw2-legacy (conversation-id auth-token)
   (lw2-graphql-query-multi
     (list
       (lw2-query-string* :conversation :single (alist :document-id conversation-id) '(:title (:participants :display-name :slug)))
