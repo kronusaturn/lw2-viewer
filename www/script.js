@@ -1677,11 +1677,13 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	}
 
 	let useLongDate = window.innerWidth > 900;
-	try {
-		let dtf = new Intl.DateTimeFormat([], 
-			( useLongDate ? 
+	var dateFormat = useLongDate ? 
 				{ month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' }
-					: { month: 'numeric', day: 'numeric', year: '2-digit', hour: 'numeric', minute: 'numeric' } ));
+					: { month: 'numeric', day: 'numeric', year: '2-digit', hour: 'numeric', minute: 'numeric' };
+	if (getQueryVariable("embedded-mode") == "true")
+		dateFormat = { month: 'short', day: 'numeric', year: 'numeric' }
+	try {
+		let dtf = new Intl.DateTimeFormat([], dateFormat);
 		document.querySelectorAll(".date").forEach(function (e) {
 			let d = e.getAttribute("data-js-date");
 			if (d) { e.innerHTML = dtf.format(new Date(+ d)); }

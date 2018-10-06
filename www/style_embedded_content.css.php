@@ -17,6 +17,37 @@
 	align-content: start;
 }
 
+/*= Comments =*/
+
+#content.embedded-mode .comment-thread {
+	margin: 0 0 0.5em 0;
+}
+#content.embedded-mode .comment-thread .comment-item {
+	height: 110px;
+	overflow: hidden;
+	border-width: 1px 0 0 0;
+	background-color: transparent;
+}
+#content.embedded-mode .comment-thread .comment,
+#content.embedded-mode .comment-thread .comment-body {
+	overflow: hidden;
+}
+#content.embedded-mode .comment-thread .comment-body {
+	font-size: 1em;
+}
+#content.embedded-mode .comment-meta {
+	font-size: 0.9375em;
+}
+#content.embedded-mode .comment-meta .karma,
+#content.embedded-mode .comment-meta .lw2-link {
+	display: none;
+}
+#content.embedded-mode .comment-post-title > span {
+	display: block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
 /***********/
 /* SIDEBAR */
 /***********/
@@ -52,7 +83,7 @@
 	height: 100%;
 }
 #secondary-content-column .content-area > h1 {
-	margin: 0.75em 0 0.375em 0;
+	margin: 0.625em 0 0.5em 0;
 	font-size: 1.5rem;
 	font-weight: 400;
 	line-height: 1;
