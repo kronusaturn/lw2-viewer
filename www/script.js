@@ -1972,7 +1972,9 @@ registerInitializer('pageLayoutFinished', false, () => document.readyState == "c
 	if (getQueryVariable("embedded-mode") != "true") {
 		// Add the sidebar container element.
 		document.querySelector("#content").insertAdjacentHTML("beforeend", 
-			"<div id='secondary-content-column'></div>");
+			"<div id='secondary-content-column'>" + 
+			"<button type='button' class='secondary-content-column-toggle-button' title='Collapse/expand sidebar'>" + 
+			"</div>");
 		
 		if (location.pathname != "/") {
 			// Add the recent posts area.

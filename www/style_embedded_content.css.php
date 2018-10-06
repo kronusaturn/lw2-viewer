@@ -39,6 +39,7 @@
 #content.embedded-mode .comment-meta {
 	font-size: 0.9375em;
 	padding: 4px;
+	position: relative;
 }
 #content.embedded-mode .comment-meta .karma,
 #content.embedded-mode .comment-meta .lw2-link {
@@ -59,6 +60,7 @@
 	max-width: 170px;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	font-weight: 600;
 }
 #content.embedded-mode .comment-meta .author:hover {
 	overflow: visible;
@@ -133,6 +135,7 @@
 	margin: 0 -30px 0 30px;
 	box-shadow:
 		1px 0 0 0 #ddd inset;
+	position: relative;
 }
 #secondary-content-column .content-area {
 	padding: 0 1px 0 2px;
@@ -190,4 +193,40 @@
 }
 #secondary-content-column .content-area > p a {
 	color: #999;
+}
+
+#secondary-content-column .secondary-content-column-toggle-button {
+	position: absolute;
+	top: 0;
+	left: 0;
+	overflow: visible;
+	z-index: 1;
+	padding: 0;
+	width: 1px;
+	height: 100%;
+}
+#secondary-content-column .secondary-content-column-toggle-button::before {
+	content: "\F324";
+	display: block;
+	position: absolute;
+	left: 0;
+	top: 0;
+	font-family: Font Awesome;
+	font-weight: 900;
+	font-size: 1.25rem;
+	color: #bbb;
+	padding: 6px 6px 6px 9px;
+}
+#secondary-content-column .secondary-content-column-toggle-button:hover::before {
+	color: #fff;
+	text-shadow:
+		0 0 1px #bbb,
+		0 0 3px #bbb,
+		0 0 5px #bbb;
+}
+#secondary-content-column .secondary-content-column-toggle-button:active {
+	transform: none;
+}
+#secondary-content-column .secondary-content-column-toggle-button:active::before {
+	transform: scale(0.9);
 }
