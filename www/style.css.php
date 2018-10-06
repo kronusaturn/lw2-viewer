@@ -2823,6 +2823,6 @@ li {
 
 <?php include("style_mobile_additions.css.php"); ?>
 
-<?php include("style_embedded_content.css.php"); ?> 
+<?php include("style_embedded_content.css.php"); ?>
 
 <?php if (isset($argv[2]) && preg_match("/\\.css(.php)?$/", $argv[2])) include($argv[2]); ?>
