@@ -711,9 +711,13 @@
       (format stream "<span class=\"~A\">~A</span>" class text)))
 
 (defun postprocess-markdown (markdown)
-  (ppcre:regex-replace-all (load-time-value (concatenate 'string (ppcre:regex-replace-all "\\." *site-uri* "\\.") "posts/([^/ ]{17})/([^/# ]*)(?:(#)comment-([^/ ]{17}))?"))
+  (ppcre:regex-replace-all (load-time-value (concatenate 'string (ppcre:regex-replace-all "\\." *site-uri* "\\.") "posts/([^/ ]{17})/([^/# ]*)(?:#comment-([^/ ]{17})|/comment/([^/ ]{17}))?"))
                            markdown
-                           "https://www.lesswrong.com/posts/\\1/\\2\\3\\4"))
+                           (lambda (target-string start end match-start match-end reg-starts reg-ends)
+                             (declare (ignore start end match-start match-end))
+                             (labels ((reg (n) (if (and (> (length reg-starts) n) (aref reg-starts n))
+                                                   (substring target-string (aref reg-starts n) (aref reg-ends n)))))
+                               (format nil "https://www.lesswrong.com/posts/~A/~A~@[#~A~]" (reg 0) (reg 1) (or (reg 2) (reg 3)))))))
 
 (defun post-or-get-parameter (name)
   (or (hunchentoot:post-parameter name) (hunchentoot:get-parameter name)))
