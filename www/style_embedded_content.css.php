@@ -1,30 +1,3 @@
-/****************/
-/* SIDEBAR MODE */
-/****************/
-
-html, body {
-	height: 100%;
-	overflow: hidden;
-}
-body, #content {
-	background-color: transparent;
-	box-shadow: none;
-}
-#content.embedded-mode ~ #ui-elements-container,
-#content.embedded-mode > .nav-bar,
-#content.embedded-mode > .page-toolbar,
-#content.embedded-mode > #top-nav-bar,
-#content.embedded-mode > #comments-list-mode-selector,
-#content.embedded-mode > .sublevel-nav {
-	display: none;
-}
-#content.embedded-mode {
-	padding: 0 2px;
-	min-width: 100%;
-	overflow: visible;
-	align-content: start;
-}
-
 /***********/
 /* SIDEBAR */
 /***********/
