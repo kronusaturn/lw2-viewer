@@ -62,7 +62,7 @@
 }
 
 #content.embedded-mode h1.listing + .post-meta {
-	padding: 0;
+	padding: 3px 0 0 0;
 	margin: 4px 6px;
 }
 #content.embedded-mode h1.listing + .post-meta::after {
@@ -84,6 +84,10 @@
 }
 #content.embedded-mode h1.listing + .post-meta .comment-count::before {
 	box-shadow: none;
+}
+#content.embedded-mode h1.listing + .post-meta .comment-count:hover {
+	background-color: initial;
+	color: #0a0;
 }
 
 /***********/
