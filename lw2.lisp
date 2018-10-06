@@ -642,7 +642,7 @@
       (log-conditions 
         (prog1 (funcall fn) (sb-ext:gc :gen 1)))
       (serious-condition (condition)
-                         (emit-page (out-stream :title "Error" :return-code (condition-http-return-code condition))
+                         (emit-page (out-stream :title "Error" :return-code (condition-http-return-code condition) :content-class "error-page")
                                     (error-to-html out-stream condition))))))
 
 (defmacro with-error-page (&body body)
