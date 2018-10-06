@@ -3976,6 +3976,7 @@ a.comment-parent-link::after {
 	margin: 0 0 0.5em 0;
 }
 #content.embedded-mode .comment-thread .comment-item {
+	border-color: #ddd;
 	border-width: 1px 0 0 0;
 	background-color: transparent;
 }
@@ -4108,6 +4109,7 @@ a.comment-parent-link::after {
 	height: 60px;
 	background-image: linear-gradient(to top, #fff, rgba(255,255,255,0.75) 75%, rgba(255,255,255,0.25) 100%);
 	bottom: 36px;
+	pointer-events: none;
 }
 #secondary-content-column .content-area.recent-posts {
 	height: 480px;
@@ -4151,18 +4153,19 @@ a.comment-parent-link::after {
 #secondary-content-column .secondary-content-column-toggle-button {
 	position: absolute;
 	top: 0;
-	left: 0;
+	left: -7px;
 	overflow: visible;
 	z-index: 1;
 	padding: 0;
-	width: 1px;
+	width: 8px;
 	height: 100%;
+	border-right: 3px double #ddd;
 }
 #secondary-content-column .secondary-content-column-toggle-button::before {
 	content: "\F324";
 	display: block;
 	position: absolute;
-	left: 0;
+	left: 5px;
 	top: 0;
 	font-family: Font Awesome;
 	font-weight: 900;
