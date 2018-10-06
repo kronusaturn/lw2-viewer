@@ -3,7 +3,7 @@
   (:export #:*graphql-debug-output*
            #:*posts-index-fields* #:*comments-index-fields* #:*messages-index-fields*
            #:*notifications-base-terms*
-           #:backend-base #:backend-lw2 #:backend-accordius
+           #:backend-base #:backend-lw2-legacy #:backend-lw2 #:backend-accordius
            #:*current-backend*
            #:declare-backend-function #:define-backend-operation
            #:condition-http-return-code
@@ -201,7 +201,11 @@
 (defun decode-graphql-json (json-string)
   (let* ((decoded (json:decode-json-from-string json-string))
 	 (errors (cdr (assoc :errors decoded)))
-	 (data (cdadr (assoc :data decoded))))
+	 (data (cdadr (assoc :data decoded)))
+         (data (if (or (eq (caar data) :results)
+                       (eq (caar data) :result))
+                   (cdar data)
+                   data)))
     (signal-lw2-errors errors)
     data))
 
@@ -220,17 +224,20 @@
                      for q in queries
                      do (format stream "g~6,'0D:~A " n q))
                (format stream "}")))
-           (result (when queries (sort (lw2-graphql-query-streamparse query-string :auth-token auth-token) #'string< :key #'car)))
-           (errors (cdr (assoc :errors result))))
+           (query-result-data (when queries (lw2-graphql-query-streamparse query-string :auth-token auth-token)))
+           (errors (cdr (assoc :errors query-result-data))))
       (signal-lw2-errors errors)
       (values
-        (loop as results = (cdr (assoc :data result)) then (if passthrough-p results (rest results))
+        (loop as results = (sort (cdr (assoc :data query-result-data)) #'string< :key #'car) then (if passthrough-p results (rest results))
               for (out passthrough-p) in map-values
               as result-data-cell = (first results)
-              as result-data = (if passthrough-p out (cdr result-data-cell))
-              for input-data in data
-              collect (if postprocess (funcall postprocess input-data result-data) result-data))
-        errors))))
+                      as result-data = (if passthrough-p out (if (or (eq (caadr result-data-cell) :results)
+                                                                     (eq (caadr result-data-cell) :result))
+                                                                 (cdadr result-data-cell)
+                                                                 (cdr result-data-cell)))
+                      for input-data in data
+                      collect (if postprocess (funcall postprocess input-data result-data) result-data))
+                errors))))
 
 (defun lw2-graphql-query-multi (query-list &key auth-token)
   (values-list (lw2-graphql-query-map #'identity query-list :auth-token auth-token)))
@@ -336,6 +343,19 @@
         args
         (alist :terms args))
     fields))
+
+(define-backend-operation lw2-query-string* backend-lw2 (query-type return-type args fields)
+  (graphql-query-string*
+    (if (eq return-type :single)
+        (string-downcase query-type)
+        (concatenate 'string (string-downcase query-type) "s"))
+    (alist :input (if (eq return-type :single)
+                      (alist :selector args)
+                      (alist :terms args)))
+    (case return-type
+        (:total '(:total-count))
+        (:list (list (cons :results fields)))
+        (:single (list (cons :result fields))))))
 
 (declare-backend-function lw2-query-string)
 
