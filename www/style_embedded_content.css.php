@@ -110,7 +110,7 @@
 	border-width: 0 0 1px 0;
 }
 #secondary-content-column .content-area.recent-posts {
-	height: 500px;
+	height: 480px;
 }
 #secondary-content-column .content-area.recent-comments {
 	height: 1268px;

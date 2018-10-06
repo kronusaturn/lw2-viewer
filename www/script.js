@@ -1979,7 +1979,8 @@ registerInitializer('pageLayoutFinished', false, () => document.readyState == "c
 			document.querySelector("#secondary-content-column").insertAdjacentHTML("beforeend",
 				"<div class='content-area recent-posts'>\n" + 
 				"<h1>Recent Posts</h1>\n" + 
-				"<object data='/?embedded-mode=true&num-entries=5'></object>\n" + 
+				"<object data='/?embedded-mode=true&num-entries=6'></object>\n" + 
+				"<p><a href='/'>More…</a></p>\n" + 
 				"</div>");
 		}
 
