@@ -101,9 +101,15 @@
     (0 t)
     (1 nil)))
 
-(defun comments-list-to-graphql-json (comments-list)
+(declare-backend-function comments-list-to-graphql-json)
+
+(define-backend-operation comments-list-to-graphql-json backend-lw2-legacy (comments-list)
   (json:encode-json-to-string
     (json:make-object `((data . ,(json:make-object `((*comments-list . ,comments-list)) nil))) nil)))
+
+(define-backend-operation comments-list-to-graphql-json backend-lw2 (comments-list)
+  (json:encode-json-to-string
+    (json:make-object `((data . ,(json:make-object `((*comments-list . ,(json:make-object `((results . ,comments-list)) nil))) nil))) nil)))
 
 (defun background-loader ()
   (let (last-comment-processed)
@@ -198,14 +204,21 @@
                  ((search "not_allowed" message) (error (make-condition 'lw2-not-allowed-error)))
                  (t (error (make-condition 'lw2-unknown-error :message message))))))))
 
+(declare-backend-function fixup-lw2-return-value)
+
+(define-backend-operation fixup-lw2-return-value backend-lw2-legacy (value)
+  value)
+
+(define-backend-operation fixup-lw2-return-value backend-lw2 (value)
+  (let ((junk (caar value)))
+    (if (member junk '(:result :results :total-count))
+        (cdar value)
+        value)))
+
 (defun decode-graphql-json (json-string)
   (let* ((decoded (json:decode-json-from-string json-string))
 	 (errors (cdr (assoc :errors decoded)))
-	 (data (cdadr (assoc :data decoded)))
-         (data (if (or (eq (caar data) :results)
-                       (eq (caar data) :result))
-                   (cdar data)
-                   data)))
+	 (data (fixup-lw2-return-value (cdadr (assoc :data decoded)))))
     (signal-lw2-errors errors)
     data))
 
@@ -231,10 +244,7 @@
         (loop as results = (sort (cdr (assoc :data query-result-data)) #'string< :key #'car) then (if passthrough-p results (rest results))
               for (out passthrough-p) in map-values
               as result-data-cell = (first results)
-                      as result-data = (if passthrough-p out (if (or (eq (caadr result-data-cell) :results)
-                                                                     (eq (caadr result-data-cell) :result))
-                                                                 (cdadr result-data-cell)
-                                                                 (cdr result-data-cell)))
+                      as result-data = (if passthrough-p out (fixup-lw2-return-value (cdr result-data-cell)))
                       for input-data in data
                       collect (if postprocess (funcall postprocess input-data result-data) result-data))
                 errors))))
