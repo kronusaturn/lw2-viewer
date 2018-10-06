@@ -44,8 +44,19 @@
 #content.embedded-mode .comment-meta .lw2-link {
 	display: none;
 }
+#content.embedded-mode .comment-meta .permalink {
+	position: absolute;
+	right: 8px;
+	top: 8px;
+	margin: 0;
+}
+#content.embedded-mode .comment-meta .date {
+	position: absolute;
+	right: 22px;
+	top: 8px;
+}
 #content.embedded-mode .comment-meta .author {
-	max-width: 144px;
+	max-width: 170px;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
@@ -139,7 +150,7 @@
 	left: 1px;
 	right: 1px;
 	height: 60px;
-	background-image: linear-gradient(to top, #fff, rgba(255,255,255,0.75) 75%, rgba(255,255,255,0.25) 75%);
+	background-image: linear-gradient(to top, #fff, rgba(255,255,255,0.75) 75%, rgba(255,255,255,0.25) 100%);
 	bottom: 36px;
 }
 #secondary-content-column .content-area.recent-posts {
