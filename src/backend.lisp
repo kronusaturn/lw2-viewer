@@ -33,12 +33,13 @@
 
 (defclass backend-base () ())
 
-(defclass backend-lw2 (backend-base) ())
+(defclass backend-lw2-legacy (backend-base) ())
 
-(defclass backend-accordius (backend-lw2) ())
+(defclass backend-lw2 (backend-lw2-legacy) ())
 
-(defparameter *current-backend* (make-instance (cond ((string= *backend-type* "lw2") 'backend-lw2)
-                                                     ((string= *backend-type* "accordius") 'backend-accordius))))
+(defclass backend-accordius (backend-lw2-legacy) ())
+
+(defparameter *current-backend* (make-instance (symbolicate "BACKEND-" (string-upcase *backend-type*))))
 
 (defmacro declare-backend-function (name)
   (let ((inner-name (symbolicate "%" name)))

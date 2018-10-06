@@ -8,7 +8,7 @@
 (defparameter *graphql-uri* "https://www.lesswrong.com/graphql")
 (defparameter *websocket-uri* "wss://www.lesswrong.com/")
 
-; Supported backends: lw2 accordius
+; Supported backends: lw2 lw2-legacy accordius
 (defparameter *backend-type* "lw2")
 
 (defparameter *secure-cookies* nil)
