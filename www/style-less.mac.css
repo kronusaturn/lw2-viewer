@@ -4001,6 +4001,42 @@ a.comment-parent-link::after {
 	text-overflow: ellipsis;
 }
 
+/*= Posts =*/
+
+#content.embedded-mode h1.listing {
+	margin: 0;
+	padding: 0.25em 4px 0 4px;
+	max-width: 100%;
+	border-top: 1px solid #ddd;
+	font-size: 1.5em;
+	font-weight: 600;
+}
+
+#content.embedded-mode h1.listing + .post-meta {
+	padding: 0;
+	margin: 4px 6px;
+}
+#content.embedded-mode h1.listing + .post-meta::after {
+	display: none;
+}
+#content.embedded-mode h1.listing + .post-meta .karma,
+#content.embedded-mode h1.listing + .post-meta .read-time,
+#content.embedded-mode h1.listing + .post-meta .lw2-link,
+#content.embedded-mode h1.listing + .post-meta .link-post-domain,
+#content.embedded-mode h1.listing + .post-meta .post-section {
+	display: none;
+}
+#content.embedded-mode h1.listing + .post-meta > * {
+	position: static;
+}
+#content.embedded-mode h1.listing + .post-meta .comment-count {
+	box-shadow: none;
+	line-height: unset;
+}
+#content.embedded-mode h1.listing + .post-meta .comment-count::before {
+	box-shadow: none;
+}
+
 /***********/
 /* SIDEBAR */
 /***********/
