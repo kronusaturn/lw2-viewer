@@ -1978,7 +1978,7 @@ registerInitializer('pageLayoutFinished', false, () => document.readyState == "c
 			// Add the recent posts area.
 			document.querySelector("#secondary-content-column").insertAdjacentHTML("beforeend",
 				"<div class='content-area recent-posts'>\n" + 
-				"<h1>Recent Posts</h1>\n" + 
+				"<h1><span>Recent Posts</span></h1>\n" + 
 				"<object data='/?embedded-mode=true&num-entries=6'></object>\n" + 
 				"<p><a href='/'>More…</a></p>\n" + 
 				"</div>");
@@ -1988,7 +1988,7 @@ registerInitializer('pageLayoutFinished', false, () => document.readyState == "c
 			// Add the recent comments area.
 			document.querySelector("#secondary-content-column").insertAdjacentHTML("beforeend",
 				"<div class='content-area recent-comments'>\n" + 
-				"<h1>Recent Comments</h1>\n" + 
+				"<h1><span>Recent Comments</span></h1>\n" + 
 				"<object data='/recentcomments?embedded-mode=true&num-entries=10'></object>\n" + 
 				"<p><a href='/recentcomments'>More…</a></p>\n" + 
 				"</div>");

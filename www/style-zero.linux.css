@@ -4072,12 +4072,22 @@ a.comment-parent-link::after {
 	height: 100%;
 }
 #secondary-content-column .content-area > h1 {
-	margin: 0.625em 0 0.5em 0;
+	margin: 0 -1px -1px -1px;
+	padding: 0.5em 0 0.5em 0;
 	font-size: 1.5rem;
-	font-weight: 400;
+	font-weight: 600;
 	line-height: 1;
 	text-align: center;
-	color: #999;
+	border-bottom: 1px solid #ddd;
+	background-color: #eee;
+}
+#secondary-content-column .content-area > h1 span {
+	background-color: #888;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: rgba(255,255,255,0.5) 0px 3px 3px;
 }
 #secondary-content-column .content-area > p {
 	text-align: right;
