@@ -1537,6 +1537,33 @@ function injectSidebar() {
 		"</div>");
 	document.querySelector("#secondary-content-column .secondary-content-column-toggle-button").addActivateEvent(sidebarCollapseButtonClicked, false);
 	
+	// Lazy-load the sidebar content - if the sidebar starts out collapsed, no need to 
+	// load the content within it. If it's expanded later, we can load it then.
+	let sidebar = document.querySelector("#secondary-content-column");
+	if (!sidebar.hasClass("collapsed")) {
+		injectSidebarContent();
+	} else {
+		sidebar.addClass("unloaded");
+	}
+	
+	// Inject transitions CSS, if animating changes is enabled.
+	if (window.adjustmentTransitions) {
+		document.querySelector("head").insertAdjacentHTML("beforeend", 
+			"<style id='sidebar-toggle-transition'>" + 
+			`#secondary-content-column {
+				transition: margin 0.2s ease;
+			}
+			#secondary-content-column .secondary-content-column-toggle-button::before {
+				transition:
+					top 0.3s ease,
+					left 0.3s ease,
+					transform 0.3s ease;
+			}` + 
+			"</style>");
+	}
+}
+
+function injectSidebarContent() {
 	// If we're not on the front page...
 	if (location.pathname != "/") {
 		// Add the Recent Posts area.
@@ -1558,29 +1585,23 @@ function injectSidebar() {
 			"<p><a href='/recentcomments'>More…</a></p>\n" + 
 			"</div>");
 	}
-	
-	// Inject transitions CSS, if animating changes is enabled.
-	if (window.adjustmentTransitions) {
-		document.querySelector("head").insertAdjacentHTML("beforeend", 
-			"<style id='sidebar-toggle-transition'>" + 
-			`#secondary-content-column {
-				transition: margin 0.2s ease;
-			}
-			#secondary-content-column .secondary-content-column-toggle-button::before {
-				transition:
-					top 0.3s ease,
-					left 0.3s ease,
-					transform 0.3s ease;
-			}` + 
-			"</style>");
-	}
 }
 
 function sidebarCollapseButtonClicked (event) {
+	// Toggle (collapse/expand) the sidebar.
 	let sidebar = event.target.closest("#secondary-content-column");	
 	sidebar.toggleClass("collapsed");
 	
+	// Save the sidebar state.
 	window.localStorage.setItem("sidebar-collapsed", (sidebar.hasClass("collapsed") ? "true" : "false"));
+	
+	// If the sidebar has just been expanded, and if the content hasn't been loaded yet
+	// (i.e. if we loaded the page with the sidebar in a collapsed state), then load
+	// the content now.
+	if (sidebar.hasClass("unloaded")) {
+		injectSidebarContent();
+		sidebar.removeClass("unloaded");
+	}
 }
 
 /*****************************/
