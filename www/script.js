@@ -1554,7 +1554,9 @@ function enableEmbeddedMode() {
 function injectSidebar() {
 	// Add the sidebar container element.
 	document.querySelector("#content").insertAdjacentHTML("beforeend", 
-		"<div id='secondary-content-column'>" + 
+		"<div id='secondary-content-column'" + 
+		(window.localStorage.getItem("sidebar-collapsed") == "true" ? " class='collapsed' " : "") + 
+		">" + 
 		"<button type='button' class='secondary-content-column-toggle-button' title='Collapse/expand sidebar'>" + 
 		"</div>");
 	document.querySelector("#secondary-content-column .secondary-content-column-toggle-button").addActivateEvent(sidebarCollapseButtonClicked, false);
@@ -1581,7 +1583,10 @@ function injectSidebar() {
 }
 
 function sidebarCollapseButtonClicked (event) {
-	event.target.closest("#secondary-content-column").toggleClass("collapsed");
+	let sidebar = event.target.closest("#secondary-content-column");	
+	sidebar.toggleClass("collapsed");
+	
+	window.localStorage.setItem("sidebar-collapsed", (sidebar.hasClass("collapsed") ? "true" : "false"));
 }
 
 /*****************************/

@@ -240,7 +240,7 @@
 
 #secondary-content-column.collapsed .secondary-content-column-toggle-button::before {
 	left: -24px;
-	top: 30px;
+	top: 36px;
 	transform: rotateY(180deg);
 }
 #secondary-content-column.collapsed {
