@@ -1575,8 +1575,9 @@ function injectSidebar() {
 		"</div>");
 	document.querySelector("#secondary-content-column .secondary-content-column-toggle-button").addActivateEvent(sidebarCollapseButtonClicked, false);
 	
+	// If we're not on the front page...
 	if (location.pathname != "/") {
-		// Add the recent posts area.
+		// Add the Recent Posts area.
 		document.querySelector("#secondary-content-column").insertAdjacentHTML("beforeend",
 			"<div class='content-area recent-posts'>\n" + 
 			"<h1><span>Recent Posts</span></h1>\n" + 
@@ -1585,8 +1586,9 @@ function injectSidebar() {
 			"</div>");
 	}
 
+	// If we're not in the Recent Comments view...
 	if (location.pathname != "/recentcomments") {
-		// Add the recent comments area.
+		// Add the Recent Posts area.
 		document.querySelector("#secondary-content-column").insertAdjacentHTML("beforeend",
 			"<div class='content-area recent-comments'>\n" + 
 			"<h1><span>Recent Comments</span></h1>\n" + 
