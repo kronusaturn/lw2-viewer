@@ -661,7 +661,10 @@ function badgePostsWithNewComments() {
 /***********************************/
 
 function injectContentWidthSelector() {
+	// Get saved width setting (or default).
 	let currentWidth = widthDict[window.localStorage.getItem("selected-width")] || widthDict['normal'];
+	
+	// Inject the content width selector widget and activate buttons.
 	let widthSelector = addUIElement(
 		"<div id='width-selector'>" +
 		String.prototype.concat.apply("", widthOptions.map(function (wo) {
@@ -674,8 +677,10 @@ function injectContentWidthSelector() {
 		button.addActivateEvent(widthAdjustButtonClicked);
 	});
 	
+	// Make sure the accesskey (to cycle to the next width) is on the right button.
 	setWidthAdjustButtonsAccesskey();
 	
+	// Inject transitions CSS, if animating changes is enabled.
 	if (window.adjustmentTransitions) {
 		document.querySelector("head").insertAdjacentHTML("beforeend", 
 			"<style id='width-transition'>" + 
@@ -699,9 +704,17 @@ function setWidthAdjustButtonsAccesskey() {
 	nextButtonInCycle.title += ` (accesskey: '\'')`;
 }
 function widthAdjustButtonClicked(event) {
+	// Determine which setting was chosen (i.e., which button was clicked).
 	let selectedWidth = event.target.getAttribute("data-name");
-	if(selectedWidth == "normal") window.localStorage.removeItem("selected-width"); else window.localStorage.setItem("selected-width", selectedWidth);
+	
+	// Save the new setting.
+	if (selectedWidth == "normal") window.localStorage.removeItem("selected-width");
+	else window.localStorage.setItem("selected-width", selectedWidth);
+	
+	// Actually change the content width.
 	setContentWidth(selectedWidth);
+	
+	// Update width selector buttons state.
 	event.target.parentElement.childNodes.forEach(function (button) {
 		button.removeClass("selected");
 		button.disabled = false;
@@ -709,6 +722,7 @@ function widthAdjustButtonClicked(event) {
 	event.target.addClass("selected");
 	event.target.disabled = true;
 	
+	// Make sure the accesskey (to cycle to the next width) is on the right button.
 	setWidthAdjustButtonsAccesskey();
 
 	// Regenerate images overlay.
