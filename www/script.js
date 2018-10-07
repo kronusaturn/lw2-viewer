@@ -748,6 +748,7 @@ function injectThemeSelector() {
 		button.addActivateEvent(themeSelectButtonClicked);
 	});
 	
+	// Inject transitions CSS, if animating changes is enabled.
 	if (window.adjustmentTransitions) {
 		document.querySelector("head").insertAdjacentHTML("beforeend", 
 			"<style id='theme-fade-transition'>" + 
@@ -1595,6 +1596,22 @@ function injectSidebar() {
 			"<object data='/recentcomments?embedded-mode=true&num-entries=10'></object>\n" + 
 			"<p><a href='/recentcomments'>More…</a></p>\n" + 
 			"</div>");
+	}
+	
+	// Inject transitions CSS, if animating changes is enabled.
+	if (window.adjustmentTransitions) {
+		document.querySelector("head").insertAdjacentHTML("beforeend", 
+			"<style id='sidebar-toggle-transition'>" + 
+			`#secondary-content-column {
+				transition: margin 0.2s ease;
+			}
+			#secondary-content-column .secondary-content-column-toggle-button::before {
+				transition:
+					top 0.3s ease,
+					left 0.3s ease,
+					transform 0.3s ease;
+			}` + 
+			"</style>");
 	}
 }
 

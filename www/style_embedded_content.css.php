@@ -134,7 +134,6 @@
 	display: flex;
 	flex-flow: column;
 	margin: 0 -30px 0 30px;
-	transition: margin 0.2s ease;
 	box-shadow:
 		1px 0 0 0 #ddd inset;
 	position: relative;
@@ -220,10 +219,6 @@
 	font-size: 1.25rem;
 	color: #bbb;
 	padding: 6px 6px 6px 9px;
-	transition:
-		top 0.3s ease,
-		left 0.3s ease,
-		transform 0.3s ease;
 }
 #secondary-content-column .secondary-content-column-toggle-button:hover::before {
 	color: #fff;
