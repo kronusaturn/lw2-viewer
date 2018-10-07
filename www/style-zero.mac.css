@@ -4101,7 +4101,13 @@ a.comment-parent-link::after {
 	border-width: 0 0 1px 0;
 	position: relative;
 }
-#secondary-content-column .content-area::after {
+#secondary-content-column .content-area.recent-posts {
+	height: 480px;
+}
+#secondary-content-column .content-area.recent-comments {
+	height: 1268px;
+}
+#secondary-content-column .content-area.recent-comments::after {
 	content: "";
 	display: block;
 	position: absolute;
@@ -4111,12 +4117,6 @@ a.comment-parent-link::after {
 	background-image: linear-gradient(to top, #fff, rgba(255,255,255,0.75) 75%, rgba(255,255,255,0.25) 100%);
 	bottom: 36px;
 	pointer-events: none;
-}
-#secondary-content-column .content-area.recent-posts {
-	height: 480px;
-}
-#secondary-content-column .content-area.recent-comments {
-	height: 1268px;
 }
 #secondary-content-column .content-area object {
 	height: 100%;
