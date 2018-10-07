@@ -1,5 +1,4 @@
 
-<<<<<<< HEAD
 /***************/
 /* BASE LAYOUT */
 /***************/
@@ -29,9 +28,7 @@ input {
 	font-size: inherit;
 	font-weight: inherit;
 }
-#content,
-#ui-elements-container,
-#images-overlay {
+body > * {
 	width: calc(100% - 300px);
 	min-width: 900px;
 	max-width: 900px;
@@ -427,6 +424,16 @@ a#inbox-indicator.new-messages:hover::before {
 }
 #width-selector button:hover:not(:active)::after {
 	visibility: visible;
+}
+
+head.content-width-normal + body > * {
+	max-width: 900px;
+}
+head.content-width-wide + body > * {
+	max-width: 1150px;
+}
+head.content-width-fluid + body > * {
+	max-width: calc(100% - 300px);
 }
 
 /******************/
@@ -6270,6 +6277,3 @@ select {
 	}
 }
 
-=======
-Parse error: syntax error, unexpected ':', expecting ']' in - on line 8
->>>>>>> Refactored width adjustment code

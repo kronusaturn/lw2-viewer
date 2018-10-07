@@ -5,9 +5,9 @@
 	$UI_font = ($platform == 'Windows') ? "'Whitney', 'a_Avante'" : "'Concourse', 'a_Avante'";
 	
 	$content_width_settings = [
-		'normal' : '900px',
-		'wide' : '1150px',
-		'fluid' : 'calc(100% - 300px)'
+		'normal' => '900px',
+		'wide' => '1150px',
+		'fluid' => 'calc(100% - 300px)'
 	];
 ?>
 
