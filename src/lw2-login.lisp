@@ -85,7 +85,7 @@
 
 (declare-backend-function do-login)
 
-(define-backend-operation do-login backend-lw2 (user-designator-type user-designator password)
+(define-backend-operation do-login backend-lw2-legacy (user-designator-type user-designator password)
   (let ((result (do-lw2-sockjs-method "login"
                                       `((("user" (,user-designator-type . ,user-designator))
                                          ("password"
@@ -203,7 +203,7 @@
 
 (declare-backend-function generate-message-document)
 
-(define-backend-operation generate-message-document backend-lw2 (conversation-id text)
+(define-backend-operation generate-message-document backend-lw2-legacy (conversation-id text)
   (alist :content
          (alist :blocks (loop for para in (ppcre:split "\\n+" text)
                               collect (alist :text para :type "unstyled"))
@@ -216,7 +216,7 @@
 
 (declare-backend-function do-create-message)
 
-(define-backend-operation do-create-message backend-lw2 (auth-token conversation-id text)
+(define-backend-operation do-create-message backend-lw2-legacy (auth-token conversation-id text)
   (do-lw2-post-query auth-token
     (alist :query "mutation MessagesNew($document: MessagesInput) { MessagesNew(document: $document) { _id }}"
            :variables (alist :document (generate-message-document conversation-id text))
