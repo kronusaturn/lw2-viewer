@@ -62,45 +62,6 @@ function readCookie(name) {
 	return null;
 }
 
-/****************************************************/
-/* CSS CLASS MANIPULATION (polyfill for .classList) */
-/****************************************************/
-
-Element.prototype.addClass = function(className) {
-	if (!this.hasClass(className))
-		this.className += " " + className;
-}
-Element.prototype.addClasses = function(classNames) {
-	let element = this;
-	let elementClassNames = this.className.trim().split(/\s/);
-	
-	classNames.forEach(function (className) {
-		if (!element.hasClass(className))
-			elementClassNames.push(className);
-	});
-	
-	this.className = elementClassNames.join(" ");
-}
-Element.prototype.removeClass = function(className) {
-	this.className = this.className.replace(new RegExp("(^|\\s+)" + className + "(\\s+|$)"), "$1").trim();
-}
-Element.prototype.removeClasses = function(classNames) {
-	let elementClassNames = this.className;
-	classNames.forEach(function (className) {
-		elementClassNames = elementClassNames.replace(new RegExp("(^|\\s+)" + className + "(\\s+|$)"), "$1").trim();
-	});
-	this.className = elementClassNames;
-}
-Element.prototype.hasClass = function(className) {
-	return this.className.match(new RegExp("(^|\\s+)" + className + "(\\s+|$)"));
-}
-Element.prototype.toggleClass = function(className) {
-	if (this.hasClass(className))
-		this.removeClass(className);
-	else
-		this.addClass(className);
-}
-
 /*******************************/
 /* EVENT LISTENER MANIPULATION */
 /*******************************/
@@ -662,15 +623,15 @@ function badgePostsWithNewComments() {
 
 function injectContentWidthSelector() {
 	// Get saved width setting (or default).
-	let currentWidth = widthDict[window.localStorage.getItem("selected-width")] || widthDict['normal'];
+	let currentWidth = window.localStorage.getItem("selected-width") || 'normal';
 	
 	// Inject the content width selector widget and activate buttons.
 	let widthSelector = addUIElement(
 		"<div id='width-selector'>" +
 		String.prototype.concat.apply("", widthOptions.map(function (wo) {
-			let [name, desc, abbr, width] = wo;
-			let selected = (width == currentWidth ? ' selected' : '');
-			let disabled = (width == currentWidth ? ' disabled' : '');
+			let [name, desc, abbr] = wo;
+			let selected = (name == currentWidth ? ' selected' : '');
+			let disabled = (name == currentWidth ? ' disabled' : '');
 			return `<button type='button' class='select-width-${name}${selected}'${disabled} title='${desc}' tabindex='-1' data-name='${name}'>${abbr}</button>`})) +
 		"</div>");
 	widthSelector.querySelectorAll("button").forEach(function (button) {

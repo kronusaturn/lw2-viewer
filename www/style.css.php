@@ -3,6 +3,12 @@
 	
 	$platform = @$argv[1] ?: 'Mac';
 	$UI_font = ($platform == 'Windows') ? "'Whitney', 'a_Avante'" : "'Concourse', 'a_Avante'";
+	
+	$content_width_settings = [
+		'normal' : '900px',
+		'wide' : '1150px',
+		'fluid' : 'calc(100% - 300px)'
+	];
 ?>
 
 /***************/
@@ -34,9 +40,7 @@ input {
 	font-size: inherit;
 	font-weight: inherit;
 }
-#content,
-#ui-elements-container,
-#images-overlay {
+body > * {
 	width: calc(100% - 300px);
 	min-width: 900px;
 	max-width: 900px;
@@ -433,6 +437,13 @@ a#inbox-indicator.new-messages:hover::before {
 #width-selector button:hover:not(:active)::after {
 	visibility: visible;
 }
+
+<?php
+global $content_width_settings;
+foreach ($content_width_settings as $name => $setting) {
+	echo "head.content-width-{$name} + body > * {\n	max-width: {$setting};\n}\n";
+}
+?>
 
 /******************/
 /* THEME SELECTOR */

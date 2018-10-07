@@ -1,4 +1,5 @@
 
+<<<<<<< HEAD
 /***************/
 /* BASE LAYOUT */
 /***************/
@@ -6212,3 +6213,6 @@ select {
 		}
 	}
 }
+=======
+Parse error: syntax error, unexpected ':', expecting ']' in - on line 8
+>>>>>>> Refactored width adjustment code
