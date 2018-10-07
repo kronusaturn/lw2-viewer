@@ -1519,6 +1519,71 @@ function toggleAppearanceAdjustUI() {
 	});
 }
 
+/***********/
+/* SIDEBAR */
+/***********/
+
+function enableEmbeddedMode() {
+	let contentElement = document.querySelector("#content");
+	contentElement.addClass("embedded-mode");
+	contentElement.removeClass("compact");
+	
+	let maxVisibleEntries = parseInt(getQueryVariable("num-entries"));
+	document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='embedded-mode-styles'>" + `
+		html, body {
+			height: 100%;
+			overflow: hidden;
+		}
+		body, #content {
+			background-color: transparent;
+			box-shadow: none;
+		}
+		#content.embedded-mode > ul:nth-of-type(n+${maxVisibleEntries + 1}),
+		#content.embedded-mode > h1:nth-of-type(n+${maxVisibleEntries + 1}),
+		#content.embedded-mode > h1:nth-of-type(n+${maxVisibleEntries + 1}) + .post-meta,
+		#content.embedded-mode > ul:nth-of-type(n+${maxVisibleEntries + 1}) ~ * {
+			display: none;
+		}
+	` + "</style>");
+	
+	document.querySelectorAll("a").forEach(function (link) {
+		link.target = "_parent";
+	});
+}
+
+function injectSidebar() {
+	// Add the sidebar container element.
+	document.querySelector("#content").insertAdjacentHTML("beforeend", 
+		"<div id='secondary-content-column'>" + 
+		"<button type='button' class='secondary-content-column-toggle-button' title='Collapse/expand sidebar'>" + 
+		"</div>");
+	document.querySelector("#secondary-content-column .secondary-content-column-toggle-button").addActivateEvent(sidebarCollapseButtonClicked, false);
+	
+	if (location.pathname != "/") {
+		// Add the recent posts area.
+		document.querySelector("#secondary-content-column").insertAdjacentHTML("beforeend",
+			"<div class='content-area recent-posts'>\n" + 
+			"<h1><span>Recent Posts</span></h1>\n" + 
+			"<object data='/?embedded-mode=true&num-entries=6'></object>\n" + 
+			"<p><a href='/'>More…</a></p>\n" + 
+			"</div>");
+	}
+
+	if (location.pathname != "/recentcomments") {
+		// Add the recent comments area.
+		document.querySelector("#secondary-content-column").insertAdjacentHTML("beforeend",
+			"<div class='content-area recent-comments'>\n" + 
+			"<h1><span>Recent Comments</span></h1>\n" + 
+			"<object data='/recentcomments?embedded-mode=true&num-entries=10'></object>\n" + 
+			"<p><a href='/recentcomments'>More…</a></p>\n" + 
+			"</div>");
+	}
+}
+
+function sidebarCollapseButtonClicked (event) {
+	event.target.closest("#secondary-content-column").toggleClass("collapsed");
+}
+
 /*****************************/
 /* MINIMIZED THREAD HANDLING */
 /*****************************/
@@ -1636,38 +1701,14 @@ registerInitializer('earlyInitialize', true, () => document.querySelector("#cont
 registerInitializer('initialize', false, () => document.readyState != 'loading', function () {
 	forceInitializer('earlyInitialize');
 
-	let contentElement = document.querySelector("#content");
 	if (getQueryVariable("comments") == "false") {
-		contentElement.addClass("no-comments");
+		document.querySelector("#content").addClass("no-comments");
 	}
 	if (getQueryVariable("embedded-mode") == "true") {
-		contentElement.addClass("embedded-mode");
-		contentElement.removeClass("compact");
-		
-		let maxVisibleEntries = parseInt(getQueryVariable("num-entries"));
-		document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='embedded-mode-styles'>" + `
-			html, body {
-				height: 100%;
-				overflow: hidden;
-			}
-			body, #content {
-				background-color: transparent;
-				box-shadow: none;
-			}
-			#content.embedded-mode > ul:nth-of-type(n+${maxVisibleEntries + 1}),
-			#content.embedded-mode > h1:nth-of-type(n+${maxVisibleEntries + 1}),
-			#content.embedded-mode > h1:nth-of-type(n+${maxVisibleEntries + 1}) + .post-meta,
-			#content.embedded-mode > ul:nth-of-type(n+${maxVisibleEntries + 1}) ~ * {
-				display: none;
-			}
-		` + "</style>");
-		
-		document.querySelectorAll("a").forEach(function (link) {
-			link.target = "_parent";
-		});
+		enableEmbeddedMode();
 	}
 	else if (getQueryVariable("hide-nav-bars") == "true") {
-		contentElement.addClass("no-nav-bars");
+		document.querySelector("#content").addClass("no-nav-bars");
 		addUIElement("<div id='aux-about-link'><a href='/about' accesskey='t' target='_new'>&#xf129;</a></div>");
 	}
 
@@ -1946,6 +1987,8 @@ registerInitializer('pageLayoutFinished', false, () => document.readyState == "c
 	if (window.needHashRealignment)
 		realignHash();
 
+	// If the content is too much for the window (i.e., if there will be scroll bars),
+	// make the requisite nav UI elements visible.
 	if (document.querySelector("#content").clientHeight > window.innerHeight + 30) {
 		document.querySelector("#bottom-bar").removeClass("decorative");
 		document.querySelector("#quick-nav-ui a[href='#top']").style.visibility = "unset";
@@ -1953,10 +1996,6 @@ registerInitializer('pageLayoutFinished', false, () => document.readyState == "c
 	}
 	
 	postSetThemeHousekeeping("", readCookie('theme') || 'default');
-// 	recomputeUIElementsContainerHeight();
-
-	// Add overlay of images in post (for avoidance of theme tweaks).		
-// 	generateImagesOverlay();
 	
 	// FOR TESTING ONLY, COMMENT WHEN DEPLOYING.
 // 	document.querySelector("input[type='search']").value = document.documentElement.clientWidth;
@@ -1970,31 +2009,7 @@ registerInitializer('pageLayoutFinished', false, () => document.readyState == "c
 
 	// Add the sidebar (unless we ARE the sidebar).
 	if (getQueryVariable("embedded-mode") != "true") {
-		// Add the sidebar container element.
-		document.querySelector("#content").insertAdjacentHTML("beforeend", 
-			"<div id='secondary-content-column'>" + 
-			"<button type='button' class='secondary-content-column-toggle-button' title='Collapse/expand sidebar'>" + 
-			"</div>");
-		
-		if (location.pathname != "/") {
-			// Add the recent posts area.
-			document.querySelector("#secondary-content-column").insertAdjacentHTML("beforeend",
-				"<div class='content-area recent-posts'>\n" + 
-				"<h1><span>Recent Posts</span></h1>\n" + 
-				"<object data='/?embedded-mode=true&num-entries=6'></object>\n" + 
-				"<p><a href='/'>More…</a></p>\n" + 
-				"</div>");
-		}
-
-		if (location.pathname != "/recentcomments") {
-			// Add the recent comments area.
-			document.querySelector("#secondary-content-column").insertAdjacentHTML("beforeend",
-				"<div class='content-area recent-comments'>\n" + 
-				"<h1><span>Recent Comments</span></h1>\n" + 
-				"<object data='/recentcomments?embedded-mode=true&num-entries=10'></object>\n" + 
-				"<p><a href='/recentcomments'>More…</a></p>\n" + 
-				"</div>");
-		}
+		injectSidebar();
 	}
 });
 
