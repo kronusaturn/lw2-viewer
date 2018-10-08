@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.backend
-  (:use #:cl #:sb-thread #:flexi-streams #:alexandria #:lw2-viewer.config #:lw2.lmdb #:lw2.utils #:lw2.hash-utils)
+  (:use #:cl #:sb-thread #:flexi-streams #:alexandria #:lw2-viewer.config #:lw2.graphql #:lw2.lmdb #:lw2.utils #:lw2.hash-utils)
   (:export #:*graphql-debug-output*
            #:*posts-index-fields* #:*comments-index-fields* #:*messages-index-fields*
            #:*notifications-base-terms*
@@ -10,7 +10,6 @@
            #:lw2-error #:lw2-client-error #:lw2-not-found-error #:lw2-user-not-found-error #:lw2-not-allowed-error #:lw2-server-error #:lw2-connection-error #:lw2-unknown-error
 	   #:log-condition #:log-conditions #:start-background-loader #:stop-background-loader #:background-loader-running-p
 	   #:lw2-graphql-query-streamparse #:lw2-graphql-query-noparse #:decode-graphql-json #:lw2-graphql-query
-           #:graphql-query-string* #:graphql-query-string
            #:lw2-query-string* #:lw2-query-string
            #:lw2-graphql-query-map #:lw2-graphql-query-multi
 	   #:get-posts-index #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
@@ -314,33 +313,6 @@
                 (sb-thread:join-thread thread :timeout timeout)
                 (t () (or cached-result
                           (error "Failed to load ~A ~A and no cached version available." cache-db cache-key)))))))))
-
-(defun graphql-query-string* (query-type terms fields)
-  (labels ((terms (tlist)
-		  (loop for (k . v) in tlist
-			when k
-			collect (format nil "~A:~A"
-					(json:lisp-to-camel-case (string k))
-					(typecase v
-					  ((member t) "true") 
-					  ((member nil) "false")
-					  ((member :null) "null")
-					  ((member :undefined) "undefined")
-					  (list (format nil "{~{~A~^,~}}" (terms v)))
-					  (t (format nil "~S" v))))))
-	   (fields (flist)
-		   (map 'list (lambda (x) (typecase x
-					    (string x)
-					    (symbol (json:lisp-to-camel-case (string x)))
-					    (list (format nil "~A{~{~A~^,~}}" (json:lisp-to-camel-case (string (first x))) (fields (rest x))))))
-			flist)))
-    (format nil "~A(~{~A~^,~})~@[{~{~A~^,~}}~]"
-	    query-type
-	    (terms terms)
-	    (fields fields))))
-
-(defun graphql-query-string (query-type terms fields)
-  (format nil "{~A}" (graphql-query-string* query-type terms fields)))
 
 (declare-backend-function lw2-query-string*)
 
