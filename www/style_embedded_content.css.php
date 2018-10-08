@@ -188,6 +188,13 @@ head:not(.content-width-normal) + body > #content > #secondary-bar {
     color: transparent;
     text-shadow: rgba(255,255,255,0.5) 0px 3px 3px;
 }
+#secondary-content-column .content-area > h1 span:hover {
+	background-color: #00e;
+}
+#secondary-content-column .content-area > h1 a {
+	color: inherit;
+	text-decoration: none;
+}
 #secondary-content-column .content-area > p {
 	text-align: right;
 	margin: 0;

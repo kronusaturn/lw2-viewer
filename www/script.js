@@ -1571,9 +1571,9 @@ function injectSidebarContent() {
 		// Add the Recent Posts area.
 		document.querySelector("#secondary-content-column").insertAdjacentHTML("beforeend",
 			"<div class='content-area recent-posts'>\n" + 
-			"<h1><span>Recent Posts</span></h1>\n" + 
+			"<h1><span><a href='/' title='View all recent posts'>Recent Posts</a></span></h1>\n" + 
 			"<object data='/?embedded-mode=true&num-entries=6'></object>\n" + 
-			"<p><a href='/'>More…</a></p>\n" + 
+			"<p><a href='/' title='View all recent posts'>More…</a></p>\n" + 
 			"</div>");
 	}
 
@@ -1582,9 +1582,9 @@ function injectSidebarContent() {
 		// Add the Recent Posts area.
 		document.querySelector("#secondary-content-column").insertAdjacentHTML("beforeend",
 			"<div class='content-area recent-comments'>\n" + 
-			"<h1><span>Recent Comments</span></h1>\n" + 
+			"<h1><span><a href='/recentcomments' title='View all recent comments'>Recent Comments</a></span></h1>\n" + 
 			"<object data='/recentcomments?embedded-mode=true&num-entries=10'></object>\n" + 
-			"<p><a href='/recentcomments'>More…</a></p>\n" + 
+			"<p><a href='/recentcomments' title='View all recent comments'>More…</a></p>\n" + 
 			"</div>");
 	}
 }
