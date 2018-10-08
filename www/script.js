@@ -1533,7 +1533,7 @@ function injectSidebar() {
 		"<div id='secondary-content-column'" + 
 		(window.localStorage.getItem("sidebar-collapsed") == "true" ? " class='collapsed' " : "") + 
 		">" + 
-		"<button type='button' class='secondary-content-column-toggle-button' title='Collapse/expand sidebar'>" + 
+		"<button type='button' class='secondary-content-column-toggle-button' title='Collapse/expand sidebar' accesskey='b'>" + 
 		"</div>");
 	document.querySelector("#secondary-content-column .secondary-content-column-toggle-button").addActivateEvent(sidebarCollapseButtonClicked, false);
 	
