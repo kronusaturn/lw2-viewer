@@ -786,6 +786,9 @@ function postSetThemeHousekeeping(oldThemeName, newThemeName) {
 	generateImagesOverlay();
 	if (window.adjustmentTransitions) pageFadeTransition(true);
 	updateThemeTweakerSampleText();
+	
+	// Reload all embedded frames (i.e., the <object> tags, such as in the sidebar).
+	document.querySelectorAll("object").forEach(function (frame) { frame.data = frame.data; });
 }
 
 function pageFadeTransition(fadeIn) {

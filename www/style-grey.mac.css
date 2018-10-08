@@ -4207,6 +4207,9 @@ head:not(.content-width-normal) + body > #content > #secondary-bar {
 	top: 36px;
 	transform: rotateY(180deg);
 }
+#secondary-content-column.collapsed .secondary-content-column-toggle-button {
+	border-color: transparent;
+}
 #secondary-content-column.collapsed {
 	margin: 0 -430px 0 30px;
 }
