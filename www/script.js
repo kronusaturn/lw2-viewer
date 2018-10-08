@@ -1551,7 +1551,9 @@ function injectSidebar() {
 		document.querySelector("head").insertAdjacentHTML("beforeend", 
 			"<style id='sidebar-toggle-transition'>" + 
 			`#secondary-content-column {
-				transition: margin 0.2s ease;
+				transition:
+					margin 0.2s ease,
+					transform 0.2s ease;
 			}
 			#secondary-content-column .secondary-content-column-toggle-button::before {
 				transition:

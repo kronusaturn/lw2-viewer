@@ -4085,10 +4085,11 @@ a.comment-parent-link::after {
 /* SIDEBAR */
 /***********/
 
-#content > #primary-bar,
-#content > #secondary-bar {
+head:not(.content-width-normal) + body > #content > #primary-bar,
+head:not(.content-width-normal) + body > #content > #secondary-bar {
 	grid-column: 1 / span 4;
 }
+
 #secondary-content-column {
 	grid-column: 4;
 	grid-row: 3 / span 1000;
@@ -4201,6 +4202,32 @@ a.comment-parent-link::after {
 }
 #secondary-content-column.collapsed {
 	margin: 0 -430px 0 30px;
+}
+
+/*= Normal width setting =*/
+
+head.content-width-normal + body #content {
+	position: relative;
+}
+head.content-width-normal + body #secondary-content-column {
+	position: absolute;
+	background-color: #fff;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	margin: 0;
+	opacity: 0.97;
+}
+head.content-width-normal + body #secondary-content-column.collapsed {
+	transform: translateX(100%);
+}
+head.content-width-normal + body #secondary-content-column .secondary-content-column-toggle-button {
+	background-color: transparent;
+	border-right: 1px solid #ddd;
+	box-shadow: -8px 0 8px -8px #222 inset;
+}
+head.content-width-normal + body #secondary-content-column.collapsed .secondary-content-column-toggle-button {
+	box-shadow: none;
 }
 
 
