@@ -1,7 +1,7 @@
 (uiop:define-package #:lw2.graphql
   (:documentation "Contains generic GraphQL client functionality required by lw2-viewer.")
   (:use #:cl #:alexandria)
-  (:export #:graphql-query-string* #:graphql-query-string)
+  (:export #:graphql-query-string* #:graphql-query-string #:graphql-mutation-string)
   (:recycle #:lw2.backend #:lw2.login))
 
 (in-package #:lw2.graphql)
@@ -18,7 +18,7 @@
 					  ((member :null) "null")
 					  ((member :undefined) "undefined")
 					  (list (format nil "{~{~A~^,~}}" (terms v)))
-					  (t (format nil "~S" v))))))
+					  (t (json:encode-json-to-string v))))))
 	   (fields (flist)
 		   (map 'list (lambda (x) (typecase x
 					    (string x)
@@ -33,3 +33,5 @@
 (defun graphql-query-string (query-type terms fields)
   (format nil "{~A}" (graphql-query-string* query-type terms fields)))
 
+(defun graphql-mutation-string (mutation-type terms fields)
+  (format nil "mutation ~A{~A}" mutation-type (graphql-query-string* mutation-type terms fields)))

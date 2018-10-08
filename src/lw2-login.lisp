@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.login
-  (:use #:cl #:lw2-viewer.config #:lw2.utils #:lw2.backend #:alexandria #:cl-json #:flexi-streams #:websocket-driver-client)
+  (:use #:cl #:lw2-viewer.config #:lw2.utils #:lw2.graphql #:lw2.backend #:alexandria #:cl-json #:flexi-streams #:websocket-driver-client)
   (:import-from #:ironclad #:byte-array-to-hex-string #:digest-sequence)
   (:export #:do-lw2-resume #:do-login #:do-lw2-create-user #:do-lw2-forgot-password #:do-lw2-reset-password
 	   #:do-lw2-post-query #:do-lw2-post-query*
@@ -156,19 +156,46 @@
 (defun do-lw2-post-query* (auth-token data)
   (cdr (assoc :--id (do-lw2-post-query auth-token data))))
 
+(declare-backend-function lw2-mutation-string)
+
+(define-backend-operation lw2-mutation-string backend-lw2-legacy (target-type mutation-type terms fields)
+  (let* ((mutation-type-string (case mutation-type
+                                 (:create "New")
+                                 (:update "Edit")
+                                 (:delete "Remove")))
+         (mutation-name (concatenate 'string (string-capitalize target-type) "s" mutation-type-string)))
+    (values (graphql-mutation-string mutation-name terms fields) mutation-name)))
+
+(define-backend-operation lw2-mutation-string backend-lw2 (target-type mutation-type terms fields)
+  (let* ((mutation-name (concatenate 'string (string-downcase mutation-type) (string-capitalize target-type)))
+         (terms (loop for (k . v) in terms collect
+                      (case k
+                        (:document (cons :data v))
+                        (:set (cons :data v))
+                        (:document-id (cons :selector (alist :document-id v)))
+                        (:unset (values))
+                        (t (cons k v)))))
+         (fields (list (list* :data fields))))
+    (values (graphql-mutation-string mutation-name terms fields) mutation-name)))
+
+(declare-backend-function do-lw2-mutation)
+
+(define-backend-operation do-lw2-mutation backend-lw2-legacy (auth-token target-type mutation-type terms fields)
+  (multiple-value-bind (mutation-string operation-name)
+    (lw2-mutation-string target-type mutation-type terms fields)
+    (do-lw2-post-query auth-token `(("query" . ,mutation-string)
+                                    ("operationName" . ,operation-name)))))
+
+(define-backend-operation do-lw2-mutation backend-lw2 (auth-token target-type mutation-type terms fields)
+  (cdr (assoc :data (call-next-method))))
+
 (defun do-lw2-post (auth-token data)
-  (do-lw2-post-query auth-token `(("query" . "mutation PostsNew($document: PostsInput) { PostsNew(document: $document) { _id, slug } }")
-                                  ("variables" .
-                                   (("document" . ,data)))
-                                  ("operationName" . "PostsNew"))))
+  (do-lw2-mutation auth-token :post :create (alist :document data) '(:--id :slug)))
 
 (defun do-lw2-post-edit (auth-token post-id set &optional unset)
-  (do-lw2-post-query auth-token `(("query" . , (format nil "mutation PostsEdit($documentId: String, $set: PostsInput~@[, $unset: PostsUnset~]~@*) { PostsEdit(documentId: $documentId, set: $set~@[, unset: $unset~]~@*) { _id, slug } }" unset)) ; $unset: PostsUnset
-				   ("variables" .
-				    (("documentId" . ,post-id)
-				     ("set" . ,set)
-				     ,@(if unset `(("unset" . ,unset)))))
-				   ("operationName" . "PostsEdit")))) 
+  (let* ((terms (alist :document-id post-id :set set))
+         (terms (if unset (acons :unset unset terms) terms)))
+    (do-lw2-mutation auth-token :post :update terms '(:--id :slug))))
 
 (defun do-lw2-post-remove (auth-token post-id)
   (do-lw2-post-query auth-token `(("query" . "mutation PostsRemove($documentId: String) { PostsRemove(documentId: $documentId) { __typename } }")
