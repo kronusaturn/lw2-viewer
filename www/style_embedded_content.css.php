@@ -205,6 +205,8 @@ head:not(.content-width-normal) + body > #content > #secondary-bar {
 	color: #999;
 }
 
+/*= Sidebar toggle button =*/
+
 #secondary-content-column .secondary-content-column-toggle-button {
 	position: absolute;
 	top: 0;
@@ -237,6 +239,34 @@ head:not(.content-width-normal) + body > #content > #secondary-bar {
 }
 #secondary-content-column .secondary-content-column-toggle-button:active {
 	transform: none;
+}
+
+/*= Loading spinner =*/
+
+#secondary-content-column .content-area .loading-spinner {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+}
+#secondary-content-column .content-area .loading-spinner::before {
+    font-family: Font Awesome;
+    content: "\F3F4";
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    font-size: 2em;
+    font-weight: 400;
+    z-index: -1;
+    line-height: 1;
+         animation: spin 1s infinite linear;
+    color: #999;
+}
+@keyframes spin {
+	0% { transform: translateX(-50%) translateY(-50%) rotate(0deg); }
+	100% { transform: translateX(-50%) translateY(-50%) rotate(360deg); }
 }
 
 /*= Collapsed mode =*/

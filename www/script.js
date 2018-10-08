@@ -1569,27 +1569,41 @@ function injectSidebar() {
 }
 
 function injectSidebarContent() {
+	let sidebar = document.querySelector("#secondary-content-column");
+
 	// If we're not on the front page...
 	if (location.pathname != "/") {
 		// Add the Recent Posts area.
-		document.querySelector("#secondary-content-column").insertAdjacentHTML("beforeend",
+		sidebar.insertAdjacentHTML("beforeend",
 			"<div class='content-area recent-posts'>\n" + 
 			"<h1><span><a href='/' title='View all recent posts'>Recent Posts</a></span></h1>\n" + 
-			"<object data='/?embedded-mode=true&num-entries=6'></object>\n" + 
+			"<div class='loading-spinner'></div>" + 
+			"<object></object>\n" + 
 			"<p><a href='/' title='View all recent posts'>More…</a></p>\n" + 
 			"</div>");
+		let recentPostsObject = sidebar.querySelector(".content-area.recent-posts object");
+		recentPostsObject.addEventListener("load", contentAreaLoaded);
+		recentPostsObject.data = "/?embedded-mode=true&num-entries=6";
 	}
 
 	// If we're not in the Recent Comments view...
 	if (location.pathname != "/recentcomments") {
 		// Add the Recent Posts area.
-		document.querySelector("#secondary-content-column").insertAdjacentHTML("beforeend",
+		sidebar.insertAdjacentHTML("beforeend",
 			"<div class='content-area recent-comments'>\n" + 
 			"<h1><span><a href='/recentcomments' title='View all recent comments'>Recent Comments</a></span></h1>\n" + 
-			"<object data='/recentcomments?embedded-mode=true&num-entries=10'></object>\n" + 
+			"<div class='loading-spinner'></div>" + 
+			"<object></object>\n" + 
 			"<p><a href='/recentcomments' title='View all recent comments'>More…</a></p>\n" + 
 			"</div>");
+		let recentCommentsObject = sidebar.querySelector(".content-area.recent-comments object");
+		recentCommentsObject.addEventListener("load", contentAreaLoaded);
+		recentCommentsObject.data = "/recentcomments?embedded-mode=true&num-entries=10";
 	}
+}
+
+function contentAreaLoaded (event) {
+	event.target.closest(".content-area").querySelector(".loading-spinner").style.display = "none";
 }
 
 function sidebarCollapseButtonClicked (event) {
