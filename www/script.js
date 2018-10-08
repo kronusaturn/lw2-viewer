@@ -1574,32 +1574,41 @@ function injectSidebarContent() {
 	// If we're not on the front page...
 	if (location.pathname != "/") {
 		// Add the Recent Posts area.
-		sidebar.insertAdjacentHTML("beforeend",
-			"<div class='content-area recent-posts'>\n" + 
-			"<h1><span><a href='/' title='View all recent posts'>Recent Posts</a></span></h1>\n" + 
-			"<div class='loading-spinner'></div>" + 
-			"<object></object>\n" + 
-			"<p><a href='/' title='View all recent posts'>More…</a></p>\n" + 
-			"</div>");
-		let recentPostsObject = sidebar.querySelector(".content-area.recent-posts object");
-		recentPostsObject.addEventListener("load", contentAreaLoaded);
-		recentPostsObject.data = "/?embedded-mode=true&num-entries=6";
+		addSidebarContentArea({
+			'name' 			: 'recent-posts',
+			'link' 			: '/',
+			'link_title'	: 'View all recent posts',
+			'heading'		: 'Recent Posts',
+			'data'			: '/?embedded-mode=true&num-entries=6'
+		});
 	}
 
 	// If we're not in the Recent Comments view...
 	if (location.pathname != "/recentcomments") {
-		// Add the Recent Posts area.
-		sidebar.insertAdjacentHTML("beforeend",
-			"<div class='content-area recent-comments'>\n" + 
-			"<h1><span><a href='/recentcomments' title='View all recent comments'>Recent Comments</a></span></h1>\n" + 
-			"<div class='loading-spinner'></div>" + 
-			"<object></object>\n" + 
-			"<p><a href='/recentcomments' title='View all recent comments'>More…</a></p>\n" + 
-			"</div>");
-		let recentCommentsObject = sidebar.querySelector(".content-area.recent-comments object");
-		recentCommentsObject.addEventListener("load", contentAreaLoaded);
-		recentCommentsObject.data = "/recentcomments?embedded-mode=true&num-entries=10";
+		// Add the Recent Comments area.
+		addSidebarContentArea({
+			'name' 			: 'recent-comments',
+			'link' 			: '/recentcomments',
+			'link_title'	: 'View all recent comments',
+			'heading'		: 'Recent Comments',
+			'data'			: '/recentcomments?embedded-mode=true&num-entries=10'
+		});
 	}
+}
+function addSidebarContentArea(sidebarContent) {
+	let sidebar = document.querySelector("#secondary-content-column");
+	
+	sidebar.insertAdjacentHTML("beforeend",
+		`<div class='content-area ${sidebarContent.name}'>\n` + 
+		`<h1><span><a href='${sidebarContent.link}' title='${sidebarContent.link_title}'>${sidebarContent.heading}</a></span></h1>\n` + 
+		`<div class='loading-spinner'></div>` + 
+		`<object></object>\n` + 
+		`<p><a href='${sidebarContent.link}' title='${sidebarContent.link_title}'>More…</a></p>\n` + 
+		`</div>`);
+		
+	let contentObject = sidebar.querySelector(`.content-area.${sidebarContent.name} object`);
+	contentObject.addEventListener("load", contentAreaLoaded);
+	contentObject.data = sidebarContent.data;
 }
 
 function contentAreaLoaded (event) {
