@@ -562,8 +562,10 @@ a#inbox-indicator.new-messages:hover::before {
 #quick-nav-ui a {
 	visibility: hidden;
 }
-#content.post-page:not(.individual-thread-page) ~ #ui-elements-container #quick-nav-ui a[href='#comments'] {
-	visibility: visible;
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+	#content.post-page:not(.individual-thread-page) ~ #ui-elements-container #quick-nav-ui a[href='#comments'] {
+		visibility: visible;
+	}
 }
 
 /************************/
