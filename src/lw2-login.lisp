@@ -1,9 +1,10 @@
 (uiop:define-package #:lw2.login
-  (:use #:cl #:lw2-viewer.config #:lw2.utils #:lw2.backend #:alexandria #:cl-json #:flexi-streams #:websocket-driver-client)
+  (:use #:cl #:lw2-viewer.config #:lw2.utils #:lw2.graphql #:lw2.backend #:alexandria #:cl-json #:flexi-streams #:websocket-driver-client)
   (:import-from #:ironclad #:byte-array-to-hex-string #:digest-sequence)
   (:export #:do-lw2-resume #:do-login #:do-lw2-create-user #:do-lw2-forgot-password #:do-lw2-reset-password
 	   #:do-lw2-post-query #:do-lw2-post-query*
-           #:do-lw2-post #:do-lw2-post-edit #:do-lw2-post-remove #:do-lw2-comment #:do-lw2-comment-edit #:do-lw2-comment-remove #:do-lw2-vote))
+           #:do-lw2-post #:do-lw2-post-edit #:do-lw2-post-remove #:do-lw2-comment #:do-lw2-comment-edit #:do-lw2-comment-remove
+           #:do-lw2-vote #:do-user-edit #:do-create-conversation #:do-create-message))
 
 (in-package #:lw2.login) 
 
@@ -85,7 +86,7 @@
 
 (declare-backend-function do-login)
 
-(define-backend-operation do-login backend-lw2 (user-designator-type user-designator password)
+(define-backend-operation do-login backend-lw2-legacy (user-designator-type user-designator password)
   (let ((result (do-lw2-sockjs-method "login"
                                       `((("user" (,user-designator-type . ,user-designator))
                                          ("password"
@@ -126,12 +127,13 @@
 
 (defun do-lw2-post-query (auth-token data)
   (lw2.backend::do-graphql-debug data)
-  (let* ((response-json (octets-to-string
-			  (drakma:http-request *graphql-uri* :method :post
-                                               :additional-headers (remove-if #'null `(,(if auth-token (cons "authorization" auth-token))
-                                                                                       ,@(forwarded-header)))
-					       :content-type "application/json"
-					       :content (encode-json-to-string data))))
+  (let* ((response-data (drakma:http-request *graphql-uri* :method :post
+                                             :additional-headers (remove-if #'null `(,(if auth-token (cons "authorization" auth-token))
+                                                                                      ,@(forwarded-header)))
+                                             :content-type "application/json"
+                                             :content (encode-json-to-string data)))
+         (response-json (progn (check-type response-data (vector (unsigned-byte 8)))
+                               (octets-to-string response-data)))
 	 (response-alist (json:decode-json-from-string response-json))
 	 (res-error (first (cdr (assoc :errors response-alist))))
 	 (res-data (rest (first (cdr (assoc :data response-alist)))))) 
@@ -156,44 +158,62 @@
 (defun do-lw2-post-query* (auth-token data)
   (cdr (assoc :--id (do-lw2-post-query auth-token data))))
 
+(declare-backend-function lw2-mutation-string)
+
+(define-backend-operation lw2-mutation-string backend-lw2-legacy (target-type mutation-type terms fields)
+  (let* ((mutation-type-string (case mutation-type
+                                 (:create "New")
+                                 (:update "Edit")
+                                 (:delete "Remove")))
+         (mutation-name (concatenate 'string
+                                     (if (eq target-type :user)
+                                         (string-downcase target-type)
+                                         (string-capitalize target-type))
+                                     "s" mutation-type-string)))
+    (values (graphql-mutation-string mutation-name terms fields) mutation-name)))
+
+(define-backend-operation lw2-mutation-string backend-lw2 (target-type mutation-type terms fields)
+  (let* ((mutation-name (concatenate 'string (string-downcase mutation-type) (string-capitalize target-type)))
+         (terms (loop for (k . v) in terms collect
+                      (case k
+                        (:document (cons :data v))
+                        (:set (cons :data v))
+                        (:document-id (cons :selector (alist :document-id v)))
+                        (:unset (values))
+                        (t (cons k v)))))
+         (fields (list (list* :data fields))))
+    (values (graphql-mutation-string mutation-name terms fields) mutation-name)))
+
+(declare-backend-function do-lw2-mutation)
+
+(define-backend-operation do-lw2-mutation backend-lw2-legacy (auth-token target-type mutation-type terms fields)
+  (multiple-value-bind (mutation-string operation-name)
+    (lw2-mutation-string target-type mutation-type terms fields)
+    (do-lw2-post-query auth-token `(("query" . ,mutation-string)
+                                    ("operationName" . ,operation-name)))))
+
+(define-backend-operation do-lw2-mutation backend-lw2 (auth-token target-type mutation-type terms fields)
+  (cdr (assoc :data (call-next-method))))
+
 (defun do-lw2-post (auth-token data)
-  (do-lw2-post-query auth-token `(("query" . "mutation PostsNew($document: PostsInput) { PostsNew(document: $document) { _id, slug } }")
-                                  ("variables" .
-                                   (("document" . ,data)))
-                                  ("operationName" . "PostsNew"))))
+  (do-lw2-mutation auth-token :post :create (alist :document data) '(:--id :slug)))
 
 (defun do-lw2-post-edit (auth-token post-id set &optional unset)
-  (do-lw2-post-query auth-token `(("query" . , (format nil "mutation PostsEdit($documentId: String, $set: PostsInput~@[, $unset: PostsUnset~]~@*) { PostsEdit(documentId: $documentId, set: $set~@[, unset: $unset~]~@*) { _id, slug } }" unset)) ; $unset: PostsUnset
-				   ("variables" .
-				    (("documentId" . ,post-id)
-				     ("set" . ,set)
-				     ,@(if unset `(("unset" . ,unset)))))
-				   ("operationName" . "PostsEdit")))) 
+  (let* ((terms (alist :document-id post-id :set set))
+         (terms (if unset (acons :unset unset terms) terms)))
+    (do-lw2-mutation auth-token :post :update terms '(:--id :slug))))
 
 (defun do-lw2-post-remove (auth-token post-id)
-  (do-lw2-post-query auth-token `(("query" . "mutation PostsRemove($documentId: String) { PostsRemove(documentId: $documentId) { __typename } }")
-				   ("variables" .
-				    (("documentId" . ,post-id)))
-				   ("operationName" . "PostsRemove"))))
+  (do-lw2-mutation auth-token :post :delete (alist :document-id post-id) '(:----typename)))
 
 (defun do-lw2-comment (auth-token data)
-  (do-lw2-post-query* auth-token `(("query" . "mutation CommentsNew ($document: CommentsInput) { CommentsNew (document: $document) { _id } }")
-				    ("variables" .
-				     (("document" . ,data)))
-				    ("operationName" . "CommentsNew"))))
+  (cdr (assoc :--id (do-lw2-mutation auth-token :comment :create (alist :document data) '(:--id)))))
 
 (defun do-lw2-comment-edit (auth-token comment-id set)
-  (do-lw2-post-query* auth-token `(("query" . "mutation CommentsEdit($documentId: String, $set: CommentsInput) { CommentsEdit(documentId: $documentId, set: $set) { _id } }")
-				    ("variables" .
-				     (("documentId" . ,comment-id)
-				      ("set" . ,set)))
-				    ("operationName" . "CommentsEdit")))) 
+  (cdr (assoc :--id (do-lw2-mutation auth-token :comment :update (alist :document-id comment-id :set set) '(:--id)))))
 
 (defun do-lw2-comment-remove (auth-token comment-id)
-  (do-lw2-post-query auth-token `(("query" . "mutation CommentsRemove($documentId: String) { CommentsRemove(documentId: $documentId) { __typename } }")
-				   ("variables" .
-				    (("documentId" . ,comment-id)))
-				   ("operationName" . "CommentsRemove"))))
+  (do-lw2-mutation auth-token :comment :delete (alist :document-id comment-id) '(----typename)))
 
 (defun do-lw2-vote (auth-token target target-type vote-type)
   (let ((ret (do-lw2-post-query auth-token
@@ -201,23 +221,28 @@
 		  ("variables" ("documentId" . ,target) ("voteType" . ,vote-type) ("collectionName" . ,target-type)) ("operationName" . "vote")))))
     (values (cdr (assoc :base-score ret)) (cdr (assoc :vote-type (first (cdr (assoc :current-user-votes ret))))) ret)))
 
+(defun do-user-edit (auth-token user-id data)
+  (do-lw2-mutation auth-token :user :update (alist :document-id user-id :set data) '(--id)))
+
+(declare-backend-function do-create-conversation)
+
+(define-backend-operation do-create-conversation backend-lw2-legacy (auth-token data)
+  (cdr (assoc :--id (do-lw2-mutation auth-token :conversation :create (alist :document data) '(:--id)))))
+
 (declare-backend-function generate-message-document)
 
-(define-backend-operation generate-message-document backend-lw2 (conversation-id text)
+(define-backend-operation generate-message-document backend-lw2-legacy (conversation-id text)
   (alist :content
          (alist :blocks (loop for para in (ppcre:split "\\n+" text)
                               collect (alist :text para :type "unstyled"))
                 :entity-map (make-hash-table))
          :conversation-id conversation-id))
 
-(define-backend-operation generate-message-document backend-accordius (conversation-id text)
+(define-backend-operation generate-message-document backend-lw2-modernized (conversation-id text)
   (alist :body text
          :conversation-id conversation-id))
 
 (declare-backend-function do-create-message)
 
-(define-backend-operation do-create-message backend-lw2 (auth-token conversation-id text)
-  (do-lw2-post-query auth-token
-    (alist :query "mutation MessagesNew($document: MessagesInput) { MessagesNew(document: $document) { _id }}"
-           :variables (alist :document (generate-message-document conversation-id text))
-           :operation-name "MessagesNew")))
+(define-backend-operation do-create-message backend-lw2-legacy (auth-token conversation-id text)
+  (do-lw2-mutation auth-token :message :create (alist :document (generate-message-document conversation-id text)) '(:--id)))
