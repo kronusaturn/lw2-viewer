@@ -799,8 +799,8 @@
                                            (let* ((comment-data
                                                     (remove-if #'null
                                                                `(("body" . ,(postprocess-markdown text))
-                                                                 ,(if (not edit-comment-id) `("postId" . ,post-id))
-                                                                 ,(if parent-comment-id `("parentCommentId" . ,parent-comment-id)))))
+                                                                 ,(if (not edit-comment-id) `(:post-id . ,post-id))
+                                                                 ,(if parent-comment-id `(:parent-comment-id . ,parent-comment-id)))))
                                                   (new-comment-id
                                                     (if edit-comment-id
                                                         (prog1 edit-comment-id
@@ -1027,11 +1027,9 @@
                                                                        result)
                                                                      n))
                                                   :auth-token auth-token)))
-                                            (do-lw2-post-query (hunchentoot:cookie-in "lw2-auth-token")
-                                                               (alist :query "mutation usersEdit($documentId: String, $set: UsersInput) { usersEdit(documentId: $documentId, set: $set) { _id }}"
-                                                                      :variables (alist :document-id user-id
-                                                                                        :set (alist :last-notifications-check (local-time:format-timestring nil (local-time:now))))
-                                                                      :operation-name "usersEdit"))))
+                                            (do-user-edit (hunchentoot:cookie-in "lw2-auth-token") user-id (alist :last-notifications-check (local-time:format-timestring nil (local-time:now)
+                                                                                                                                                                          :format lw2.graphql:+graphql-timestamp-format+
+                                                                                                                                                                          :timezone local-time:+utc-zone+)))))
                                         (t
                                           (let ((user-posts (get-user-posts user-id :limit (+ 21 offset)))
                                                 (user-comments (lw2-graphql-query (lw2-query-string :comment :list (nconc (alist :limit (+ 21 offset) :user-id user-id) comments-base-terms) 

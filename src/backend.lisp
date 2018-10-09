@@ -3,7 +3,7 @@
   (:export #:*graphql-debug-output*
            #:*posts-index-fields* #:*comments-index-fields* #:*messages-index-fields*
            #:*notifications-base-terms*
-           #:backend-base #:backend-lw2-legacy #:backend-lw2 #:backend-accordius
+           #:backend-base #:backend-lw2-legacy #:backend-lw2-modernized #:backend-lw2 #:backend-accordius
            #:*current-backend*
            #:declare-backend-function #:define-backend-operation
            #:condition-http-return-code
@@ -34,9 +34,11 @@
 
 (defclass backend-lw2-legacy (backend-base) ())
 
-(defclass backend-lw2 (backend-lw2-legacy) ())
+(defclass backend-lw2-modernized (backend-base) ())
 
-(defclass backend-accordius (backend-lw2-legacy) ())
+(defclass backend-lw2 (backend-lw2-modernized backend-lw2-legacy) ())
+
+(defclass backend-accordius (backend-lw2-modernized backend-lw2-legacy) ())
 
 (defparameter *current-backend* (make-instance (symbolicate "BACKEND-" (string-upcase *backend-type*))))
 
@@ -431,10 +433,10 @@
 (declare-backend-function get-notifications)
 
 (define-backend-operation get-notifications backend-lw2-legacy (&key user-id offset auth-token)
-                          (lw2-graphql-query (lw2-query-string :notification :list
-                                                                   (nconc (alist :user-id user-id :limit 21 :offset offset) *notifications-base-terms*)
-                                                                   '(:--id :document-type :document-id :link :title :message :type :viewed))
-                                             :auth-token auth-token))
+  (lw2-graphql-query (lw2-query-string :notification :list
+                                       (nconc (alist :user-id user-id :limit 21 :offset offset) *notifications-base-terms*)
+                                       '(:--id :document-type :document-id :link :title :message :type :viewed))
+                     :auth-token auth-token))
 
 (declare-backend-function check-notifications)
 
@@ -449,12 +451,12 @@
     (when (and notifications user-info)
       (local-time:timestamp> (local-time:parse-timestring (cdr (assoc :created-at (first notifications)))) (local-time:parse-timestring (cdr (assoc :last-notifications-check user-info)))))))
 
-(define-backend-operation get-notifications backend-accordius (&key user-id offset auth-token)
+(define-backend-operation get-notifications backend-lw2-modernized (&key user-id offset auth-token)
                           (declare (ignore user-id offset auth-token))
                           (let ((*notifications-base-terms* (remove :null *notifications-base-terms* :key #'cdr)))
                             (call-next-method)))
 
-(define-backend-operation check-notifications backend-accordius (user-id auth-token)
+(define-backend-operation check-notifications backend-lw2-modernized (user-id auth-token)
                           (declare (ignore user-id auth-token))
                           (let ((*notifications-base-terms* (remove :null *notifications-base-terms* :key #'cdr)))
                             (call-next-method)))
@@ -491,6 +493,11 @@
       (lw2-query-string* :conversation :single (alist :document-id conversation-id) '(:title (:participants :display-name :slug)))
       (lw2-query-string* :message :list (alist :view "messagesConversation" :conversation-id conversation-id) *messages-index-fields*))
     :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
+
+(define-backend-operation get-conversation-messages backend-lw2 (conversation-id auth-token)
+  (declare (ignore conversation-id auth-token))
+  (let ((*messages-index-fields* (cons :html-body *messages-index-fields*)))
+    (call-next-method)))
 
 (define-backend-operation get-conversation-messages backend-accordius (conversation-id auth-token)
   (declare (ignore conversation-id auth-token))

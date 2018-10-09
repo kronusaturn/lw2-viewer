@@ -1,10 +1,13 @@
 (uiop:define-package #:lw2.graphql
   (:documentation "Contains generic GraphQL client functionality required by lw2-viewer.")
   (:use #:cl #:alexandria)
-  (:export #:graphql-query-string* #:graphql-query-string #:graphql-mutation-string)
+  (:export #:+graphql-timestamp-format+ #:graphql-query-string* #:graphql-query-string #:graphql-mutation-string)
   (:recycle #:lw2.backend #:lw2.login))
 
 (in-package #:lw2.graphql)
+
+(defconstant +graphql-timestamp-format+ (if (boundp '+graphql-timestamp-format+) +graphql-timestamp-format+
+                                            (substitute-if '(:msec 3) (lambda (x) (and (listp x) (eq (car x) :usec))) local-time:+iso-8601-format+)))
 
 (defun graphql-query-string* (query-type terms fields)
   (labels ((terms (tlist)
@@ -17,7 +20,7 @@
 					  ((member nil) "false")
 					  ((member :null) "null")
 					  ((member :undefined) "undefined")
-					  (list (format nil "{~{~A~^,~}}" (terms v)))
+					  ((cons list list) (format nil "{~{~A~^,~}}" (terms v)))
 					  (t (json:encode-json-to-string v))))))
 	   (fields (flist)
 		   (map 'list (lambda (x) (typecase x

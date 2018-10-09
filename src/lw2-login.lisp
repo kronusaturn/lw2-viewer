@@ -3,7 +3,8 @@
   (:import-from #:ironclad #:byte-array-to-hex-string #:digest-sequence)
   (:export #:do-lw2-resume #:do-login #:do-lw2-create-user #:do-lw2-forgot-password #:do-lw2-reset-password
 	   #:do-lw2-post-query #:do-lw2-post-query*
-           #:do-lw2-post #:do-lw2-post-edit #:do-lw2-post-remove #:do-lw2-comment #:do-lw2-comment-edit #:do-lw2-comment-remove #:do-lw2-vote))
+           #:do-lw2-post #:do-lw2-post-edit #:do-lw2-post-remove #:do-lw2-comment #:do-lw2-comment-edit #:do-lw2-comment-remove
+           #:do-lw2-vote #:do-user-edit #:do-create-conversation #:do-create-message))
 
 (in-package #:lw2.login) 
 
@@ -126,12 +127,13 @@
 
 (defun do-lw2-post-query (auth-token data)
   (lw2.backend::do-graphql-debug data)
-  (let* ((response-json (octets-to-string
-			  (drakma:http-request *graphql-uri* :method :post
-                                               :additional-headers (remove-if #'null `(,(if auth-token (cons "authorization" auth-token))
-                                                                                       ,@(forwarded-header)))
-					       :content-type "application/json"
-					       :content (encode-json-to-string data))))
+  (let* ((response-data (drakma:http-request *graphql-uri* :method :post
+                                             :additional-headers (remove-if #'null `(,(if auth-token (cons "authorization" auth-token))
+                                                                                      ,@(forwarded-header)))
+                                             :content-type "application/json"
+                                             :content (encode-json-to-string data)))
+         (response-json (progn (check-type response-data (vector (unsigned-byte 8)))
+                               (octets-to-string response-data)))
 	 (response-alist (json:decode-json-from-string response-json))
 	 (res-error (first (cdr (assoc :errors response-alist))))
 	 (res-data (rest (first (cdr (assoc :data response-alist)))))) 
@@ -163,7 +165,11 @@
                                  (:create "New")
                                  (:update "Edit")
                                  (:delete "Remove")))
-         (mutation-name (concatenate 'string (string-capitalize target-type) "s" mutation-type-string)))
+         (mutation-name (concatenate 'string
+                                     (if (eq target-type :user)
+                                         (string-downcase target-type)
+                                         (string-capitalize target-type))
+                                     "s" mutation-type-string)))
     (values (graphql-mutation-string mutation-name terms fields) mutation-name)))
 
 (define-backend-operation lw2-mutation-string backend-lw2 (target-type mutation-type terms fields)
@@ -215,6 +221,9 @@
 		  ("variables" ("documentId" . ,target) ("voteType" . ,vote-type) ("collectionName" . ,target-type)) ("operationName" . "vote")))))
     (values (cdr (assoc :base-score ret)) (cdr (assoc :vote-type (first (cdr (assoc :current-user-votes ret))))) ret)))
 
+(defun do-user-edit (auth-token user-id data)
+  (do-lw2-mutation auth-token :user :update (alist :document-id user-id :set data) '(--id)))
+
 (declare-backend-function do-create-conversation)
 
 (define-backend-operation do-create-conversation backend-lw2-legacy (auth-token data)
@@ -229,7 +238,7 @@
                 :entity-map (make-hash-table))
          :conversation-id conversation-id))
 
-(define-backend-operation generate-message-document backend-accordius (conversation-id text)
+(define-backend-operation generate-message-document backend-lw2-modernized (conversation-id text)
   (alist :body text
          :conversation-id conversation-id))
 
