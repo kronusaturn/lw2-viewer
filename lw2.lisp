@@ -1076,12 +1076,7 @@
                                          (let* ((subject (post-or-get-parameter "subject"))
                                                 (id (or id
                                                         (let ((participant-ids (list (logged-in-userid) (cdar (lw2-graphql-query (lw2-query-string :user :single (alist :slug to) '(:--id)))))))
-                                                          (do-lw2-post-query* (hunchentoot:cookie-in "lw2-auth-token")
-                                                                              (alist :query "mutation ConversationsNew($document: ConversationsInput) { ConversationsNew(document: $document) { _id }}"
-                                                                                     :variables (alist :document
-                                                                                                       (alist :participant-ids participant-ids
-                                                                                                              :title subject))
-                                                                                     :operation-name "ConversationsNew"))))))
+                                                          (do-create-conversation (hunchentoot:cookie-in "lw2-auth-token") (alist :participant-ids participant-ids :title subject))))))
                                            (do-create-message (hunchentoot:cookie-in "lw2-auth-token") id text)
                                            (setf (hunchentoot:return-code*) 303
                                                  (hunchentoot:header-out "Location") (format nil "/conversation?id=~A" id))))

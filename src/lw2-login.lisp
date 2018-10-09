@@ -198,35 +198,27 @@
     (do-lw2-mutation auth-token :post :update terms '(:--id :slug))))
 
 (defun do-lw2-post-remove (auth-token post-id)
-  (do-lw2-post-query auth-token `(("query" . "mutation PostsRemove($documentId: String) { PostsRemove(documentId: $documentId) { __typename } }")
-				   ("variables" .
-				    (("documentId" . ,post-id)))
-				   ("operationName" . "PostsRemove"))))
+  (do-lw2-mutation auth-token :post :delete (alist :document-id post-id) '(:----typename)))
 
 (defun do-lw2-comment (auth-token data)
-  (do-lw2-post-query* auth-token `(("query" . "mutation CommentsNew ($document: CommentsInput) { CommentsNew (document: $document) { _id } }")
-				    ("variables" .
-				     (("document" . ,data)))
-				    ("operationName" . "CommentsNew"))))
+  (cdr (assoc :--id (do-lw2-mutation auth-token :comment :create (alist :document data) '(:--id)))))
 
 (defun do-lw2-comment-edit (auth-token comment-id set)
-  (do-lw2-post-query* auth-token `(("query" . "mutation CommentsEdit($documentId: String, $set: CommentsInput) { CommentsEdit(documentId: $documentId, set: $set) { _id } }")
-				    ("variables" .
-				     (("documentId" . ,comment-id)
-				      ("set" . ,set)))
-				    ("operationName" . "CommentsEdit")))) 
+  (cdr (assoc :--id (do-lw2-mutation auth-token :comment :update (alist :document-id comment-id :set set) '(:--id)))))
 
 (defun do-lw2-comment-remove (auth-token comment-id)
-  (do-lw2-post-query auth-token `(("query" . "mutation CommentsRemove($documentId: String) { CommentsRemove(documentId: $documentId) { __typename } }")
-				   ("variables" .
-				    (("documentId" . ,comment-id)))
-				   ("operationName" . "CommentsRemove"))))
+  (do-lw2-mutation auth-token :comment :delete (alist :document-id comment-id) '(----typename)))
 
 (defun do-lw2-vote (auth-token target target-type vote-type)
   (let ((ret (do-lw2-post-query auth-token
 	       `(("query" . "mutation vote($documentId: String, $voteType: String, $collectionName: String) { vote(documentId: $documentId, voteType: $voteType, collectionName: $collectionName) { ... on Post { baseScore, currentUserVotes { _id, voteType, power } } ... on Comment { baseScore, currentUserVotes { _id, voteType, power } } } }")
 		  ("variables" ("documentId" . ,target) ("voteType" . ,vote-type) ("collectionName" . ,target-type)) ("operationName" . "vote")))))
     (values (cdr (assoc :base-score ret)) (cdr (assoc :vote-type (first (cdr (assoc :current-user-votes ret))))) ret)))
+
+(declare-backend-function do-create-conversation)
+
+(define-backend-operation do-create-conversation backend-lw2-legacy (auth-token data)
+  (cdr (assoc :--id (do-lw2-mutation auth-token :conversation :create (alist :document data) '(:--id)))))
 
 (declare-backend-function generate-message-document)
 
@@ -244,7 +236,4 @@
 (declare-backend-function do-create-message)
 
 (define-backend-operation do-create-message backend-lw2-legacy (auth-token conversation-id text)
-  (do-lw2-post-query auth-token
-    (alist :query "mutation MessagesNew($document: MessagesInput) { MessagesNew(document: $document) { _id }}"
-           :variables (alist :document (generate-message-document conversation-id text))
-           :operation-name "MessagesNew")))
+  (do-lw2-mutation auth-token :message :create (alist :document (generate-message-document conversation-id text)) '(:--id)))
