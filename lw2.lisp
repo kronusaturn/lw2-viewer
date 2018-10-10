@@ -1092,7 +1092,10 @@
                                                                       :csrf-token (make-csrf-token))))))))
 
 (defun search-result-markdown-to-html (item)
-  (cons (cons :html-body (markdown:parse (cdr (assoc :body item)))) item)) 
+  (cons (cons :html-body
+              (handler-case (markdown:parse (cdr (assoc :body item)))
+                (serious-condition () "[Error while processing search result]")))
+        item))
 
 (hunchentoot:define-easy-handler (view-search :uri "/search") (q)
 				 (with-error-page
