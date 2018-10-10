@@ -1239,8 +1239,9 @@ a.post-section.alignment-forum:hover::before {
 }
 .post .bottom-post-meta .karma .karma-value::after {
 	right: unset;
-	left: 42px;
+	left: 0;
 	top: -20px;
+	width: 100%;
 }
 
 .post .top-post-meta .author {
@@ -1412,10 +1413,10 @@ a.post-section.alignment-forum:hover::before {
 	color: #bbb;
 }
 
-.comment-meta .karma {
+.comment-item .karma {
 	position: relative;
 }
-.comment-meta .karma.active-controls::after {
+.comment-item .karma.active-controls::after {
 	content: "Double-click for strong vote";
 	position: absolute;
 	pointer-events: none;
@@ -1436,11 +1437,11 @@ a.post-section.alignment-forum:hover::before {
 	transition:
 		opacity 0.2s ease;
 }
-.comment-meta .karma.active-controls:hover::after {
+.comment-item .karma.active-controls:hover::after {
 	opacity: 1.0;
 }
 
-.comment-meta .karma .karma-value::after {
+.comment-item .karma .karma-value::after {
 	content: attr(title);
 	position: absolute;
 	pointer-events: none;
@@ -1455,10 +1456,11 @@ a.post-section.alignment-forum:hover::before {
 	left: 50%;
 	transform: translateX(-50%);
 	top: -30px;
+	width: 64px;
 	transition:
 		opacity 0.2s ease;
 }
-.comment-meta .karma .karma-value:hover::after {
+.comment-item .karma .karma-value:hover::after {
 	opacity: 1.0;
 }
 
