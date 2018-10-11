@@ -74,6 +74,8 @@ body > * {
 	z-index: 1;
 	left: 0;
 	right: 0;
+	top: 0;
+	bottom: 0;
 	margin: auto;
 }
 
@@ -2521,6 +2523,7 @@ li {
 
 #images-overlay img {
 	position: absolute;
+	max-width: 100%;
 }
 #images-overlay + #content .post-body img {
 	visibility: hidden;
