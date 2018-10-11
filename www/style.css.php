@@ -86,10 +86,9 @@ body > * {
 
 .nav-bar {
 	margin: 0 -30px;
-}
-.nav-bar {
 	display: flex;
 	justify-content: flex-end;
+	overflow: hidden;
 }
 .nav-item {
 	flex: 1 1 auto;
