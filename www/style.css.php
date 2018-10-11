@@ -77,6 +77,7 @@ body > * {
 	top: 0;
 	bottom: 0;
 	margin: auto;
+	pointer-events: none;
 }
 
 /***********/
@@ -2524,6 +2525,7 @@ li {
 #images-overlay img {
 	position: absolute;
 	max-width: 100%;
+	pointer-events: auto;
 }
 #images-overlay + #content .post-body img {
 	visibility: hidden;
