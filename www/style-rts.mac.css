@@ -4069,9 +4069,18 @@ a.comment-parent-link::after {
 #content.embedded-mode h1.listing + .post-meta > * {
 	position: static;
 }
+#content.embedded-mode h1.listing + .post-meta .date {
+	position: absolute;
+	right: 0;
+	bottom: -1px;
+	margin: 0;
+}
 #content.embedded-mode h1.listing + .post-meta .comment-count {
 	box-shadow: none;
 	line-height: unset;
+	position: absolute;
+	right: 96px;
+	bottom: -1px;
 }
 #content.embedded-mode h1.listing + .post-meta .comment-count::before {
 	box-shadow: none;
@@ -4079,6 +4088,22 @@ a.comment-parent-link::after {
 #content.embedded-mode h1.listing + .post-meta .comment-count:hover {
 	background-color: initial;
 	color: #0a0;
+}
+#content.embedded-mode h1.listing + .post-meta .author {
+	max-width: 120px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+#content.embedded-mode h1.listing + .post-meta .author:hover {
+	overflow: visible;
+	z-index: 1;
+	text-shadow: 
+		0 0  1px #fff,
+		0 0  3px #fff,
+		0 0  5px #fff,
+		0 0  8px #fff,
+		0 0 13px #fff,
+		0 0 21px #fff;
 }
 
 /***********/
