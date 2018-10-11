@@ -10,7 +10,7 @@
 (defvar *read-only-mode* nil)
 (defvar *read-only-default-message* "Due to a system outage, you cannot log in or post at this time.")
 
-(defparameter *default-prefs* (alist :items-per-page 20))
+(defparameter *default-prefs* (alist :items-per-page 20 :default-sort "new"))
 (defvar *current-prefs* nil)
 
 (defun logged-in-userid (&optional is-userid)
@@ -624,6 +624,11 @@
   (or (cdr (assoc key *current-prefs*))
       (cdr (assoc key *default-prefs*))))
 
+(defun set-user-pref (key value)
+  (assert (boundp 'hunchentoot:*reply*))
+  (setf *current-prefs* (remove-duplicates (acons key value *current-prefs*) :key #'car :from-end t))
+  (hunchentoot:set-cookie "prefs" :max-age (- (expt 2 31) 1) :secure *secure-cookies* :value (quri:url-encode (json:encode-json-to-string *current-prefs*))))
+
 (defmacro emit-page ((out-stream &rest args &key (return-code 200) (top-nav (gensym) top-nav-supplied) &allow-other-keys) &body body)
   (alexandria:once-only (return-code)
     (alexandria:with-gensyms (fn)
@@ -648,7 +653,7 @@
          (*current-prefs*
            (alexandria:if-let (prefs-string (hunchentoot:cookie-in "prefs"))
              (let ((json:*identifier-name-to-key* 'json:safe-json-intern))
-               (ignore-errors (json:decode-json-from-string prefs-string))))))
+               (ignore-errors (json:decode-json-from-string (quri:url-decode prefs-string)))))))
     (handler-case
       (log-conditions 
         (prog1 (funcall fn) (sb-ext:gc :gen 1)))
@@ -735,25 +740,29 @@
 
 (hunchentoot:define-easy-handler (view-root :uri "/") (offset limit sort)
 				 (with-error-page
+                                   (if (and sort (member sort '("new" "hot") :test #'string=))
+                                       (set-user-pref :default-sort sort))
 				   (let* ((offset (and offset (parse-integer offset)))
                                           (limit (and limit (parse-integer limit)))
-					  (posts (get-posts-index :offset offset :limit (or limit (user-pref :items-per-page)) :sort sort)))
+					  (posts (get-posts-index :offset offset :limit (or limit (user-pref :items-per-page)) :sort (user-pref :default-sort))))
 				     (view-items-index posts :section :frontpage :title "Frontpage posts" :hide-title t :with-offset (or offset 0)
                                                        :extra-html (lambda (out-stream)
                                                                      (page-toolbar-to-html out-stream
                                                                                            :title "Frontpage posts"
                                                                                            :new-post t)
                                                                      (sublevel-nav-to-html out-stream
-                                                                                           '((nil "New") ("hot" "Hot"))
-                                                                                           sort
+                                                                                           '(("new" "New") ("hot" "Hot"))
+                                                                                           (user-pref :default-sort)
                                                                                            :param-name "sort"
                                                                                            :extra-class "sort"))))))
 
 (hunchentoot:define-easy-handler (view-index :uri "/index") (view before after offset limit sort)
                                  (with-error-page
+                                   (if (and sort (member sort '("new" "hot") :test #'string=))
+                                       (set-user-pref :default-sort sort))
                                    (let* ((offset (and offset (parse-integer offset)))
                                           (limit (and limit (parse-integer limit)))
-                                          (posts (get-posts-index :view view :before before :after after :offset offset :limit (or limit (user-pref :items-per-page)) :sort sort))
+                                          (posts (get-posts-index :view view :before before :after after :offset offset :limit (or limit (user-pref :items-per-page)) :sort (user-pref :default-sort)))
                                           (section (cond ((string= view "frontpage") :frontpage)
                                                          ((string= view "featured") :featured)
                                                          ((string= view "meta") :meta)
@@ -767,8 +776,8 @@
                                                                                            :new-post (if (eq section :meta) "meta" t))
                                                                      (if (string= view "new")
                                                                          (sublevel-nav-to-html out-stream
-                                                                                               '((nil "New") ("hot" "Hot"))
-                                                                                               sort
+                                                                                               '(("new" "New") ("hot" "Hot"))
+                                                                                               (user-pref :default-sort)
                                                                                                :param-name "sort"
                                                                                                :extra-class "sort")))))))
 
