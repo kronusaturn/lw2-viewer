@@ -10,6 +10,9 @@
 (defvar *read-only-mode* nil)
 (defvar *read-only-default-message* "Due to a system outage, you cannot log in or post at this time.")
 
+(defparameter *default-prefs* (alist :items-per-page 20))
+(defvar *current-prefs* nil)
+
 (defun logged-in-userid (&optional is-userid)
   (if *read-only-mode* nil
       (let ((current-userid (and *current-auth-token* (cache-get "auth-token-to-userid" *current-auth-token*))))
@@ -594,7 +597,7 @@
 			     `(let ((,stream-sym ,out-stream)) 
 				,.out-body)))) 
 
-(defun call-with-emit-page (out-stream fn &key title description current-uri content-class (return-code 200) (items-per-page 20) with-offset with-next robots)
+(defun call-with-emit-page (out-stream fn &key title description current-uri content-class (return-code 200) (items-per-page (user-pref :items-per-page)) with-offset with-next robots)
   (declare (ignore return-code))
   (ignore-errors
     (log-conditions
@@ -617,6 +620,10 @@
                                                  ("//fonts.greaterwrong.com/font_files/FontAwesomeGW/fa-light-300.ttf?v=1" "font/ttf" "font" "crossorigin")
                                                  ("//fonts.greaterwrong.com/font_files/BitmapFonts/MSSansSerif.ttf" "font/ttf" "font" "crossorigin")))))
 
+(defun user-pref (key)
+  (or (cdr (assoc key *current-prefs*))
+      (cdr (assoc key *default-prefs*))))
+
 (defmacro emit-page ((out-stream &rest args &key (return-code 200) (top-nav (gensym) top-nav-supplied) &allow-other-keys) &body body)
   (alexandria:once-only (return-code)
     (alexandria:with-gensyms (fn)
@@ -637,7 +644,11 @@
          (*current-auth-token*
            (alexandria:if-let (at (hunchentoot:cookie-in "lw2-auth-token"))
              (if (or (string= at "") (not lw2-status) (> (get-unix-time) (- (cdr (assoc :expires lw2-status)) (* 60 60 24))))
-                 nil at))))
+                 nil at)))
+         (*current-prefs*
+           (alexandria:if-let (prefs-string (hunchentoot:cookie-in "prefs"))
+             (let ((json:*identifier-name-to-key* 'json:safe-json-intern))
+               (ignore-errors (json:decode-json-from-string prefs-string))))))
     (handler-case
       (log-conditions 
         (prog1 (funcall fn) (sb-ext:gc :gen 1)))
@@ -722,10 +733,11 @@
 (defun post-or-get-parameter (name)
   (or (hunchentoot:post-parameter name) (hunchentoot:get-parameter name)))
 
-(hunchentoot:define-easy-handler (view-root :uri "/") (offset sort)
+(hunchentoot:define-easy-handler (view-root :uri "/") (offset limit sort)
 				 (with-error-page
 				   (let* ((offset (and offset (parse-integer offset)))
-					  (posts (get-posts-index :offset offset :sort sort)))
+                                          (limit (and limit (parse-integer limit)))
+					  (posts (get-posts-index :offset offset :limit (or limit (user-pref :items-per-page)) :sort sort)))
 				     (view-items-index posts :section :frontpage :title "Frontpage posts" :hide-title t :with-offset (or offset 0)
                                                        :extra-html (lambda (out-stream)
                                                                      (page-toolbar-to-html out-stream
@@ -737,10 +749,11 @@
                                                                                            :param-name "sort"
                                                                                            :extra-class "sort"))))))
 
-(hunchentoot:define-easy-handler (view-index :uri "/index") (view before after offset sort)
+(hunchentoot:define-easy-handler (view-index :uri "/index") (view before after offset limit sort)
                                  (with-error-page
                                    (let* ((offset (and offset (parse-integer offset)))
-                                          (posts (get-posts-index :view view :before before :after after :offset offset :sort sort))
+                                          (limit (and limit (parse-integer limit)))
+                                          (posts (get-posts-index :view view :before before :after after :offset offset :limit (or limit (user-pref :items-per-page)) :sort sort))
                                           (section (cond ((string= view "frontpage") :frontpage)
                                                          ((string= view "featured") :featured)
                                                          ((string= view "meta") :meta)
@@ -930,12 +943,14 @@
                                        (let ((notifications-status (check-notifications (logged-in-userid) *current-auth-token*)))
                                          (json:encode-json-to-string notifications-status)))))
 
-(hunchentoot:define-easy-handler (view-recent-comments :uri "/recentcomments") (offset)
+(hunchentoot:define-easy-handler (view-recent-comments :uri "/recentcomments") (offset limit)
 				 (with-error-page
-				   (let* ((offset (and offset (parse-integer offset))) 
-					  (recent-comments (if offset
+				   (let* ((offset (and offset (parse-integer offset)))
+                                          (limit (and limit (parse-integer limit)))
+					  (recent-comments (if (or offset limit (/= (user-pref :items-per-page) 20))
 							     (lw2-graphql-query (lw2-query-string :comment :list
-                                                                                                  (alist :view "postCommentsNew" :limit 20 :offset offset)
+                                                                                                  (remove nil (alist :view "postCommentsNew" :limit (or limit (user-pref :items-per-page)) :offset offset)
+                                                                                                          :key #'cdr)
                                                                                                   *comments-index-fields*))
 							     (get-recent-comments))))
                                      (view-items-index recent-comments :title "Recent comments" :with-offset (or offset 0) :with-next t))))
@@ -972,10 +987,10 @@
                                (comments-base-terms (ecase sort-type (:score (load-time-value (alist :view "postCommentsTop"))) (:date (load-time-value (alist :view "allRecentComments")))))
                                (items (case show
                                         (:posts
-                                          (get-user-posts user-id :offset offset :limit 21 :sort-type sort-type))
+                                          (get-user-posts user-id :offset offset :limit (+ 1 (user-pref :items-per-page)) :sort-type sort-type))
                                         (:comments
                                           (lw2-graphql-query (lw2-query-string :comment :list
-                                                                               (nconc (alist :offset offset :limit 21 :user-id user-id)
+                                                                               (nconc (alist :offset offset :limit (+ 1 (user-pref :items-per-page)) :user-id user-id)
                                                                                       comments-base-terms)
                                                                                comments-index-fields)))
                                         (:drafts
@@ -983,7 +998,7 @@
                                         (:conversations
                                           (let ((conversations
                                                   (lw2-graphql-query (lw2-query-string :conversation :list
-                                                                                       (alist :view "userConversations" :limit 21 :offset offset :user-id user-id)
+                                                                                       (alist :view "userConversations" :limit (+ 1 (user-pref :items-per-page)) :offset offset :user-id user-id)
                                                                                        '(:--id :created-at :title (:participants :display-name :slug) :----typename))
                                                                      :auth-token (hunchentoot:cookie-in "lw2-auth-token"))))
                                             (lw2-graphql-query-map
@@ -1031,12 +1046,12 @@
                                                                                                                                                                           :format lw2.graphql:+graphql-timestamp-format+
                                                                                                                                                                           :timezone local-time:+utc-zone+)))))
                                         (t
-                                          (let ((user-posts (get-user-posts user-id :limit (+ 21 offset)))
-                                                (user-comments (lw2-graphql-query (lw2-query-string :comment :list (nconc (alist :limit (+ 21 offset) :user-id user-id) comments-base-terms) 
+                                          (let ((user-posts (get-user-posts user-id :limit (+ 1 (user-pref :items-per-page) offset)))
+                                                (user-comments (lw2-graphql-query (lw2-query-string :comment :list (nconc (alist :limit (+ 1 (user-pref :items-per-page) offset) :user-id user-id) comments-base-terms) 
                                                                                                         comments-index-fields))))
                                             (concatenate 'list user-posts user-comments)))))
-                               (with-next (> (length items) (+ (if show 0 offset) 20)))
-                               (interleave (if (not show) (comment-post-interleave items :limit 20 :offset (if show nil offset) :sort-by sort-type) (firstn items 20)))) ; this destructively sorts items
+                               (with-next (> (length items) (+ (if show 0 offset) (user-pref :items-per-page))))
+                               (interleave (if (not show) (comment-post-interleave items :limit (user-pref :items-per-page) :offset (if show nil offset) :sort-by sort-type) (firstn items (user-pref :items-per-page))))) ; this destructively sorts items
                           (view-items-index interleave :with-offset offset :title title :content-class (format nil "user-page~@[ ~A-user-page~]" (if show show-text)) :current-uri (format nil "/users/~A" user-slug)
                                             :section :personal
                                             :with-offset offset :with-next with-next
