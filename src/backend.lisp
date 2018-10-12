@@ -307,7 +307,7 @@
 					       (sb-thread:make-thread #'background-fn)))))))) 
 
 (defun lw2-graphql-query-timeout-cached (query cache-db cache-key &key (revalidate t) force-revalidate)
-    (multiple-value-bind (cached-result is-fresh) (with-cache-transaction (values (cache-get cache-db cache-key) (cache-is-fresh cache-db cache-key)))
+    (multiple-value-bind (cached-result is-fresh) (with-cache-readonly-transaction (values (cache-get cache-db cache-key) (cache-is-fresh cache-db cache-key)))
       (if (and cached-result (if force-revalidate (not revalidate) (or is-fresh (not revalidate))))
           (decode-graphql-json cached-result)
           (let ((timeout (if cached-result (if force-revalidate nil 3) nil))

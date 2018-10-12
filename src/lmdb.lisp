@@ -1,6 +1,6 @@
 (uiop:define-package #:lw2.lmdb
   (:use #:cl #:sb-ext #:sb-thread #:alexandria #:lw2-viewer.config #:lw2.hash-utils)
-  (:export #:with-cache-mutex #:with-cache-transaction #:with-db #:lmdb-put-string #:cache-put #:cache-get #:simple-cacheable #:define-lmdb-memoized)
+  (:export #:with-cache-mutex #:with-cache-transaction #:with-cache-readonly-transaction #:with-db #:lmdb-put-string #:cache-put #:cache-get #:simple-cacheable #:define-lmdb-memoized)
   (:unintern #:lmdb-clear-db #:*db-mutex*))
 
 (in-package #:lw2.lmdb) 
@@ -30,6 +30,9 @@
 
 (defmacro with-cache-transaction (&body body)
   `(call-with-cache-transaction (lambda () ,@body)))
+
+(defmacro with-cache-readonly-transaction (&body body)
+  `(call-with-cache-transaction (lambda () ,@body) :read-only t))
 
 (defglobal *open-databases* (make-hash-table :test 'equal :synchronized t))
 
