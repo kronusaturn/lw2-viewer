@@ -106,11 +106,13 @@
 
 (define-backend-operation comments-list-to-graphql-json backend-lw2-legacy (comments-list)
   (json:encode-json-to-string
-    (json:make-object `((data . ,(json:make-object `((*comments-list . ,comments-list)) nil))) nil)))
+    (json:with-local-class-registry ()
+      (json:make-object `((data . ,(json:make-object `((*comments-list . ,comments-list)) nil))) nil))))
 
 (define-backend-operation comments-list-to-graphql-json backend-lw2 (comments-list)
   (json:encode-json-to-string
-    (json:make-object `((data . ,(json:make-object `((*comments-list . ,(json:make-object `((results . ,comments-list)) nil))) nil))) nil)))
+    (json:with-local-class-registry ()
+      (json:make-object `((data . ,(json:make-object `((*comments-list . ,(json:make-object `((results . ,comments-list)) nil))) nil))) nil))))
 
 (defun background-loader ()
   (let (last-comment-processed)
