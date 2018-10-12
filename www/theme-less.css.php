@@ -196,7 +196,7 @@ body {
 	background-repeat: repeat-x;
 	background-position: center 35%;
 	margin: 0 30px;
-	filter: opacity(0.85);
+	filter: opacity(0.5);
 }
 #bottom-bar.decorative::after {
 	color: #eee;
