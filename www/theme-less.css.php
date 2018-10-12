@@ -59,7 +59,7 @@ body {
 	#top-nav-bar > *,
 	.post-body a,
 	.comment-body a {
-		text-shadow: 0 0 1px #aaa;
+		text-shadow: 0 0 1px #888;
 	}
 }}
 
@@ -913,6 +913,12 @@ h1.listing a[href^="/"] {
 		text-shadow: none;
 	}
 }
+@media not all and (min-resolution:.001dpcm) { @media {
+	h1.listing a[href^="/"] {
+		color: #000;
+	}
+}}
+
 
 @media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
 	h1.listing a:hover,
