@@ -1914,8 +1914,17 @@ registerInitializer('pageLayoutFinished', false, () => document.readyState == "c
 	if (window.needHashRealignment)
 		realignHash();
 
+	// Adjust bottom bar state.
+	let bottomBar = document.querySelector("#bottom-bar");
 	if (document.querySelector("#content").clientHeight > window.innerHeight + 30) {
-		document.querySelector("#bottom-bar").removeClass("decorative");
+		bottomBar.removeClass("decorative");
+	} else if (bottomBar.childElementCount > 1) {
+		bottomBar.removeClass("decorative");
+		bottomBar.querySelector("#nav-item-top").style.display = "none";
+	}
+	
+	// Show quick-nav UI up/down buttons if content is taller than window.
+	if (document.querySelector("#content").clientHeight > window.innerHeight + 30) {
 		document.querySelector("#quick-nav-ui a[href='#top']").style.visibility = "unset";
 		document.querySelector("#quick-nav-ui a[href='#bottom-bar']").style.visibility = "unset";
 	}
