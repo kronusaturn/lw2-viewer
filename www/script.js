@@ -801,7 +801,7 @@ function setTheme(newThemeName) {
 		document.querySelector('head').insertBefore(newStyle, oldStyle.nextSibling);
 	}
 }
-function postSetThemeHousekeeping(oldThemeName, newThemeName) {
+function postSetThemeHousekeeping(oldThemeName = "", newThemeName = (readCookie('theme') || 'default')) {
 	recomputeUIElementsContainerHeight();
 
 	let themeLoadCallback = window['themeLoadCallback_' + newThemeName];
@@ -1913,26 +1913,10 @@ registerInitializer('pageLayoutFinished', false, () => document.readyState == "c
 
 	realignHashIfNeeded();
 
-	// Adjust bottom bar state.
-	let bottomBar = document.querySelector("#bottom-bar");
-	if (document.querySelector("#content").clientHeight > window.innerHeight + 30) {
-		bottomBar.removeClass("decorative");
-	} else if (bottomBar.childElementCount > 1) {
-		bottomBar.removeClass("decorative");
-		bottomBar.querySelector("#nav-item-top").style.display = "none";
-	}
-	
-	// Show quick-nav UI up/down buttons if content is taller than window.
-	if (document.querySelector("#content").clientHeight > window.innerHeight + 30) {
-		document.querySelector("#quick-nav-ui a[href='#top']").style.visibility = "unset";
-		document.querySelector("#quick-nav-ui a[href='#bottom-bar']").style.visibility = "unset";
-	}
-	
-	postSetThemeHousekeeping("", readCookie('theme') || 'default');
-// 	recomputeUIElementsContainerHeight();
+	adjustUIForWindowSize();
+	window.addEventListener('resize', function (event) { adjustUIForWindowSize(); });
 
-	// Add overlay of images in post (for avoidance of theme tweaks).		
-// 	generateImagesOverlay();
+	postSetThemeHousekeeping();
 	
 	// FOR TESTING ONLY, COMMENT WHEN DEPLOYING.
 // 	document.querySelector("input[type='search']").value = document.documentElement.clientWidth;
@@ -1964,6 +1948,26 @@ function generateImagesOverlay() {
 		clonedImage.style.height = image.getBoundingClientRect().height + "px";
 		clonedImage.style.border = window.getComputedStyle(image).border;
 		imagesOverlay.appendChild(clonedImage);
+	});
+}
+
+function adjustUIForWindowSize() {
+	// Adjust bottom bar state.
+	let bottomBar = document.querySelector("#bottom-bar");
+	if (document.querySelector("#content").clientHeight > window.innerHeight + 30) {
+		bottomBar.removeClass("decorative");
+		
+		bottomBar.querySelector("#nav-item-top").style.display = "";
+	} else {
+		if (bottomBar.childElementCount > 1) bottomBar.removeClass("decorative");
+		else bottomBar.addClass("decorative");
+
+		bottomBar.querySelector("#nav-item-top").style.display = "none";
+	}
+	
+	// Show quick-nav UI up/down buttons if content is taller than window.
+	document.querySelectorAll("#quick-nav-ui a[href='#top'], #quick-nav-ui a[href='#bottom-bar']").forEach(function (button) {
+		button.style.visibility = (document.querySelector("#content").clientHeight > window.innerHeight + 30) ? "unset" : "hidden";
 	});
 }
 
