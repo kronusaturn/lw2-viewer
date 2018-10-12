@@ -3980,7 +3980,9 @@ body {
 .post-meta > *:not(.post-section),
 .comment-meta > *,
 #primary-bar a,
+#bottom-bar a,
 #secondary-bar a,
+#secondary-bar button,
 #nav-item-search > *,
 .page-toolbar > *,
 #top-nav-bar > *,
@@ -3988,6 +3990,24 @@ body {
 .comment-body a {
 	text-shadow: none;
 }
+
+/* Compensating for Safari being terrible. */
+
+@media not all and (min-resolution:.001dpcm) { @media {
+	.post-meta > *:not(.post-section),
+	.comment-meta > *,
+	#primary-bar a,
+	#secondary-bar a,
+    #secondary-bar button,
+	#bottom-bar a,
+	#nav-item-search > *,
+	.page-toolbar > *,
+	#top-nav-bar > *,
+	.post-body a,
+	.comment-body a {
+		text-shadow: 0 0 1px #aaa;
+	}
+}}
 
 /*=========*/
 /* NAV BAR */
