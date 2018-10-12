@@ -1911,8 +1911,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 registerInitializer('pageLayoutFinished', false, () => document.readyState == "complete", function () {
 	forceInitializer('initialize');
 
-	if (window.needHashRealignment)
-		realignHash();
+	realignHashIfNeeded();
 
 	// Adjust bottom bar state.
 	let bottomBar = document.querySelector("#bottom-bar");
@@ -1974,6 +1973,10 @@ function recomputeUIElementsContainerHeight() {
 	}
 }
 
+function realignHashIfNeeded() {
+	if (window.needHashRealignment)
+		realignHash();
+}
 function realignHash() {
 	let h = location.hash;
 	if (h)
