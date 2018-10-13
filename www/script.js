@@ -803,6 +803,7 @@ function setTheme(newThemeName) {
 }
 function postSetThemeHousekeeping(oldThemeName = "", newThemeName = (readCookie('theme') || 'default')) {
 	recomputeUIElementsContainerHeight();
+	adjustUIForWindowSize();
 
 	let themeLoadCallback = window['themeLoadCallback_' + newThemeName];
 	if (themeLoadCallback != null) themeLoadCallback(oldThemeName);
@@ -869,20 +870,29 @@ function themeLoadCallback_less(fromTheme = "") {
 		// Unset the height of the #ui-elements-container
 		document.querySelector("#ui-elements-container").style.height = "";
 		
-		// Hide the post-nav-ui toggle if none of the elements to be toggled are visible…
-		var hidePostNavUIToggle = true;
-		document.querySelectorAll("#ui-elements-container #quick-nav-ui a, #ui-elements-container #new-comment-nav-ui").forEach(function (element) {
-			if (window.getComputedStyle(element).visibility == "visible") hidePostNavUIToggle = false;
-		});
-		if (hidePostNavUIToggle) document.querySelector("#ui-elements-container #post-nav-ui-toggle").style.visibility = "hidden";
+		updatePostNavUIToggleVisibility();
+		window.addEventListener('resize', updatePostNavUIToggleVisibility);		
 
 		// Due to filters vs. fixed elements, we need to be smarter about selecting which elements to filter...
 		window.filtersTargetSelector = "body::before, #content > *:not(#secondary-bar):not(.post), #secondary-bar > *, .post > *:not(.top-post-meta), .top-post-meta > *:not(.date):not(.comment-count), .top-post-meta .date span, .top-post-meta .comment-count > span, #ui-elements-container > div:not(#theme-tweaker-ui), #theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container";
 		applyFilters(window.currentFilters);
 	}
 }
+
+// Hide the post-nav-ui toggle if none of the elements to be toggled are visible; 
+// otherwise, show it.
+function updatePostNavUIToggleVisibility() {
+	var hidePostNavUIToggle = true;
+	document.querySelectorAll("#ui-elements-container #quick-nav-ui a, #ui-elements-container #new-comment-nav-ui").forEach(function (element) {
+		if (window.getComputedStyle(element).visibility == "visible") hidePostNavUIToggle = false;
+	});
+	document.querySelector("#ui-elements-container #post-nav-ui-toggle").style.visibility = hidePostNavUIToggle ? "hidden" : "";
+}
+
 function themeUnloadCallback_less(toTheme = "") {
 	removeSiteNavUIToggle();
+	
+	window.removeEventListener('resize', updatePostNavUIToggleVisibility);		
 	
 	document.querySelectorAll("#theme-less-mobile-first-row-placeholder").forEach(function (e) {
 		e.parentElement.removeChild(e);
@@ -1914,19 +1924,12 @@ registerInitializer('pageLayoutFinished', false, () => document.readyState == "c
 	realignHashIfNeeded();
 
 	adjustUIForWindowSize();
-	window.addEventListener('resize', function (event) { adjustUIForWindowSize(); });
+	window.addEventListener('resize', adjustUIForWindowSize);
 
 	postSetThemeHousekeeping();
 	
 	// FOR TESTING ONLY, COMMENT WHEN DEPLOYING.
 // 	document.querySelector("input[type='search']").value = document.documentElement.clientWidth;
-
-	// Add "horizontal" class to sort order selector when it's specified, via CSS, to
-	// be horizontal (i.e. flex-direction: row)
-	document.querySelectorAll(".sublevel-nav.sort").forEach(function (sortSelector) {
-		if (window.getComputedStyle(sortSelector).flexDirection == "row")
-			sortSelector.addClass("horizontal");
-	});
 });
 
 function generateImagesOverlay() {
@@ -1968,6 +1971,13 @@ function adjustUIForWindowSize() {
 	// Show quick-nav UI up/down buttons if content is taller than window.
 	document.querySelectorAll("#quick-nav-ui a[href='#top'], #quick-nav-ui a[href='#bottom-bar']").forEach(function (button) {
 		button.style.visibility = (document.querySelector("#content").clientHeight > window.innerHeight + 30) ? "unset" : "hidden";
+	});
+
+	// Add "horizontal" class to sort order selector when it's specified, via CSS, to
+	// be horizontal (i.e. flex-direction: row)
+	document.querySelectorAll(".sublevel-nav.sort").forEach(function (sortSelector) {
+		if (window.getComputedStyle(sortSelector).flexDirection == "row") sortSelector.addClass("horizontal");
+		else sortSelector.removeClass("horizontal");
 	});
 }
 
