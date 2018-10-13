@@ -16,9 +16,9 @@ html {
 *, *::before, *::after {
 	box-sizing: inherit;
 }
-:focus {
-	outline: none;
-}
+
+/*= Body =*/
+
 body {
 	padding: 0;
 	margin: 0;
@@ -29,11 +29,9 @@ body::before {
 	width: 100%;
 	height: 100%;
 }
-input {
-	font-family: inherit;
-	font-size: inherit;
-	font-weight: inherit;
-}
+
+/*= Immediate children of body =*/
+
 #content,
 #ui-elements-container,
 #images-overlay {
@@ -49,9 +47,15 @@ input {
 	grid-template-columns: repeat(3, 1fr);
 	grid-auto-flow: dense;
 }
+
+/*= Content =*/
+
 #content > * {
 	grid-column: 1 / span 3;
 }
+
+/*= Floating UI elements =*/
+
 #ui-elements-container {
 	position: fixed;
 	height: 100vh;
@@ -65,6 +69,10 @@ input {
 #ui-elements-container > * {
 	pointer-events: auto;
 }
+
+/*= Images overlay =*/
+/*	(To exclude images in posts from theme tweaks) */
+
 #images-overlay {
 	position: absolute;
 	z-index: 1;
@@ -84,6 +92,9 @@ input {
 	display: flex;
 	justify-content: flex-end;
 }
+
+/*= Nav bar items =*/
+
 .nav-item {
 	flex: 1 1 auto;
 }
@@ -98,19 +109,27 @@ input {
 	display: block;
 	position: relative;
 }
-.nav-inner::after {
-	content: attr(accesskey);
-	display: none;
-}
 #secondary-bar .nav-inner {
 	padding: 4px 0;
 }
+
+/*= Bottom bar =*/
+
 h1.listing ~ #bottom-bar {
 	margin-top: 1.25em;
 }
 #bottom-bar .nav-item {
 	flex: 1 1 0;
 }
+
+/*= Accesskey hints =*/
+
+.nav-inner::after {
+	content: attr(accesskey);
+	display: none;
+}
+
+/*= Pagination UI =*/
 
 #bottom-bar .nav-item a::before,
 #top-nav-bar a::before {
@@ -142,6 +161,9 @@ h1.listing ~ #bottom-bar {
 	left: 3.8em;
 }
 
+/*= Decorative bottom bar =*/
+/*	(On short pages with no pagination) */
+
 #bottom-bar.decorative {
 	position: relative;
 }
@@ -149,7 +171,7 @@ h1.listing ~ #bottom-bar {
 	display: none;
 }
 
-/* Search tab */
+/*= Search tab =*/
 
 #nav-item-search {
 	flex: 4 1 auto;
@@ -172,7 +194,7 @@ h1.listing ~ #bottom-bar {
 	height: 21px;
 }
 
-/* Login tab */
+/*= Login tab =*/
 
 #nav-item-login {
 	position: relative;
@@ -239,11 +261,13 @@ a#inbox-indicator.new-messages:hover::before {
 #content.user-page > .page-toolbar {
 	grid-column: 2 / span 2;
 }
-
 .page-toolbar {
 	font-size: 0.9em;
 	line-height: 1.8;
 }
+
+/*= Page toolbar items (all) =*/
+
 .page-toolbar > * {
 	display: inline-block;
 	margin-left: 1.5em;
@@ -253,6 +277,9 @@ a#inbox-indicator.new-messages:hover::before {
 	font-size: 0.9em;
 	padding-right: 0.3em;
 }
+
+/*= Page toolbar items (specific) =*/
+
 .new-post::before {
 	content: '\F067';
 	font-weight: 900;
@@ -450,6 +477,8 @@ a#inbox-indicator.new-messages:hover::before {
 	opacity: 1.0;
 }
 
+/*= Theme select buttons =*/
+
 .theme-selector button {
 	display: table-cell;
 	width: 26px;
@@ -467,6 +496,13 @@ a#inbox-indicator.new-messages:hover::before {
 	text-shadow: none;
 	color: transparent;
 }	
+.theme-selector button:disabled {
+	cursor: auto;
+}
+
+/*= Pre-rendered button images =*/
+/*	(Each is just a capital letter A through whatever) */
+
 .theme-selector button:nth-of-type(1) {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_A.gif")) ?>');
 }
@@ -494,9 +530,9 @@ a#inbox-indicator.new-messages:hover::before {
 .theme-selector button:nth-of-type(9) {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_I.gif")) ?>');
 }
-.theme-selector button:disabled {
-	cursor: auto;
-}
+
+/*= Theme select button tooltips =*/
+/*	(with the name & description of the theme that each button selects) */
 
 #theme-selector button {
 	position: relative;
@@ -2350,6 +2386,9 @@ div.imgonly {
 /* MISC */
 /********/
 
+/*= Superscripts & subscripts =*/
+
+/*	Make sure superscripts and subscripts do not affect line spacing. */
 sup, sub {
 	vertical-align: baseline;
 	position: relative;
@@ -2365,9 +2404,7 @@ sub {
 	hyphens: none;
 }
 
-hr {
-	border: none;
-}
+/*= Code blocks & other "unstyled" text. =*/
 
 pre,
 code {
@@ -2387,14 +2424,34 @@ pre > code {
 	padding: 3px 4px 5px 8px;
 }
 
+/*= Fractions =*/
+
+.frac::after {
+	content: "\200B";
+}
+
+/*= Removing browser default styling of various elements =*/
+
+/*	On various input elements such as text fields and buttons, remove "blue glow" focus outlines on Macs, dotted black outlines in Firefox, etc. */
+:focus {
+	outline: none;
+}
+
+/*	Remove "embossed" appearance of horizontal rules. */
+hr {
+	border: none;
+}
+
 input,
 button,
 textarea {
 	-webkit-appearance: none;
 }
 
-.frac::after {
-	content: "\200B";
+input {
+	font-family: inherit;
+	font-size: inherit;
+	font-weight: inherit;
 }
 
 /*************/
