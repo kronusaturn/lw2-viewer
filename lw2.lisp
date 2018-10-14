@@ -395,15 +395,33 @@
                        :link (generate-post-link (cdr (assoc :post-id item)) (cdr (assoc :--id item)) t)
                        :body (clean-html (cdr (assoc :html-body item))))))))))
 
-(defparameter *fonts-stylesheet-uri* "//fonts.greaterwrong.com/?fonts=Charter,Concourse,a_Avante,Whitney,MundoSans,SourceSansPro,Raleway,ProximaNova,AnonymousPro,InputSans,InputSansNarrow,InputSansCondensed,GaramondPremierPro,ProximaNova,TradeGothic,NewsGothicBT,Caecilia,SourceSerifPro,SourceCodePro,Inconsolata,BitmapFonts,FontAwesomeGW")
-(defparameter *fonts-stylesheet-uri* "//fonts.greaterwrong.com/?fonts=*")
+(defparameter *fonts-stylesheet-uri* "https://fonts.greaterwrong.com/?fonts=Charter,Concourse,a_Avante,Whitney,MundoSans,SourceSansPro,Raleway,ProximaNova,AnonymousPro,InputSans,InputSansNarrow,InputSansCondensed,GaramondPremierPro,ProximaNova,TradeGothic,NewsGothicBT,Caecilia,SourceSerifPro,SourceCodePro,Inconsolata,BitmapFonts,FontAwesomeGW")
+(defparameter *fonts-stylesheet-uri* "https://fonts.greaterwrong.com/?fonts=*")
+
+(defvar *fonts-redirect-data* nil)
+(sb-ext:defglobal *fonts-redirect-lock* (make-mutex))
+(defun generate-fonts-link ()
+  (labels ((get-redirect (uri)
+             (multiple-value-bind (body status headers uri)
+               (drakma:http-request uri :method :head :close t :redirect nil :additional-headers (alist :referer "http://lw2-test.glxl.net/" :accept "text/css,*/*;q=0.1"))
+               (declare (ignore body uri))
+               (let ((location (cdr (assoc :location headers))))
+                 (if (and (typep status 'integer) (< 300 status 400) location)
+                     location
+                     nil)))))
+    (let ((current-time (get-unix-time)))
+      (destructuring-bind (&optional base-uri redirect-uri timestamp) (with-mutex (*fonts-redirect-lock*) *fonts-redirect-data*)
+        (if (and (eq base-uri *fonts-stylesheet-uri*) timestamp (< current-time (+ timestamp 3600)))
+            (or redirect-uri *fonts-stylesheet-uri*)
+            (let* ((new-redirect (get-redirect *fonts-stylesheet-uri*))
+                   (new-redirect (if new-redirect (quri:render-uri (quri:merge-uris (quri:uri new-redirect) (quri:uri *fonts-stylesheet-uri*))) *fonts-stylesheet-uri*)))
+              (with-mutex (*fonts-redirect-lock*) (setf *fonts-redirect-data* (list *fonts-stylesheet-uri* new-redirect current-time)))
+              new-redirect))))))
 
 (defparameter *html-head*
   (format nil
 "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
-<meta name=\"HandheldFriendly\" content=\"True\" />
-<link rel=\"stylesheet\" href=\"~A\">"
-          *fonts-stylesheet-uri*))
+<meta name=\"HandheldFriendly\" content=\"True\" />"))
 
 (defparameter *extra-external-scripts* "")
 (defparameter *extra-inline-scripts* "")
@@ -519,10 +537,11 @@
             csrf-token
             (load-time-value (with-open-file (s "www/head.js") (uiop:slurp-stream-string s)) t)
             *extra-inline-scripts*)
-    (format out-stream "~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"stylesheet\" href=\"~A\"><link rel=\"shortcut icon\" href=\"~A\">"
+    (format out-stream "~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"stylesheet\" href=\"~A\"><link rel=\"stylesheet\" href=\"~A\"><link rel=\"shortcut icon\" href=\"~A\">"
             *html-head*
             (generate-css-link)
             (generate-versioned-link "/theme_tweaker.css")
+            (generate-fonts-link)
             (generate-versioned-link "/favicon.ico"))
     (format out-stream "<script src=\"~A\" async></script>~A"
             (generate-versioned-link "/script.js")
@@ -614,7 +633,9 @@
         (hunchentoot:return-code*) return-code
         (hunchentoot:header-out :link) (format nil "~:{<~A>;rel=preload;type=~A;as=~A~@{;~A~}~:^,~}"
                                                `((,(generate-css-link) "text/css" "style")
-                                                 (,*fonts-stylesheet-uri* "text/css" "style")
+                                                 (,(generate-versioned-link "/theme_tweaker.css") "text/css" "style")
+                                                 (,(generate-fonts-link) "text/css" "style")
+                                                 (,(generate-versioned-link "/script.js") "text/javascript" "script")
                                                  ("//fonts.greaterwrong.com/font_files/FontAwesomeGW/fa-solid-900.ttf?v=1" "font/ttf" "font" "crossorigin")
                                                  ("//fonts.greaterwrong.com/font_files/FontAwesomeGW/fa-regular-400.ttf?v=1" "font/ttf" "font" "crossorigin")
                                                  ("//fonts.greaterwrong.com/font_files/FontAwesomeGW/fa-light-300.ttf?v=1" "font/ttf" "font" "crossorigin")
