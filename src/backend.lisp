@@ -365,14 +365,14 @@
 
 (declare-backend-function get-posts-index-query-string)
 
-(define-backend-operation get-posts-index-query-string backend-lw2-legacy (&key view sort (limit 20) offset before after)
+(define-backend-operation get-posts-index-query-string backend-lw2-legacy (&key view (sort "new") (limit 20) offset before after)
   (multiple-value-bind (view-terms cache-key)
     (alexandria:switch (view :test #'string=)
                        ("featured" (alist :view "curated"))
                        ("new" (alist :view (if (string= sort "hot") "community" "community-rss")))
                        ("meta" (alist :view "new" :meta t :all t))
                        ("alignment-forum" (alist :view "new" :af t))
-                       (t (values (alist :view (if (string= sort "hot") "magicalSorting" "frontpage-rss")) (if (not (or sort (/= limit 20) offset before after)) "new-not-meta"))))
+                       (t (values (alist :view (if (string= sort "hot") "magicalSorting" "frontpage-rss")) (if (not (or (string/= sort "new") (/= limit 20) offset before after)) "new-not-meta"))))
     (let* ((extra-terms
              (remove-if (lambda (x) (null (cdr x)))
                         (alist :before before :after after :limit limit :offset offset)))

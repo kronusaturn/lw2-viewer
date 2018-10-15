@@ -36,13 +36,14 @@
 (defmacro do-with-cleaners ((regexp-list scanner replacement) &body body)
   `(labels ((fn (,scanner ,replacement) ,@body))
      ,@(loop for (regex flags replacement) in (eval regexp-list)
-             collecting `(fn (ppcre:create-scanner ,regex
-                                                   ,@(loop for (flag sym) in '((#\i :case-insensitive-mode)
-                                                                               (#\m :multi-line-mode)
-                                                                               (#\s :single-line-mode)
-                                                                               (#\x :extended-mode))
-                                                           when (find flag flags)
-                                                           append (list sym t)))
+             collecting `(fn (load-time-value
+                               (ppcre:create-scanner ,regex
+                                                     ,@(loop for (flag sym) in '((#\i :case-insensitive-mode)
+                                                                                 (#\m :multi-line-mode)
+                                                                                 (#\s :single-line-mode)
+                                                                                 (#\x :extended-mode))
+                                                             when (find flag flags)
+                                                             append (list sym t))))
                              ,replacement))))
 
 (defmacro define-cleaner (name regexp-list)
