@@ -400,23 +400,33 @@
 
 (defvar *fonts-redirect-data* nil)
 (sb-ext:defglobal *fonts-redirect-lock* (make-mutex))
+(sb-ext:defglobal *fonts-redirect-thread* nil)
+
 (defun generate-fonts-link ()
-  (labels ((get-redirect (uri)
-             (multiple-value-bind (body status headers uri)
-               (drakma:http-request uri :method :head :close t :redirect nil :additional-headers (alist :referer "http://lw2-test.glxl.net/" :accept "text/css,*/*;q=0.1"))
-               (declare (ignore body uri))
-               (let ((location (cdr (assoc :location headers))))
-                 (if (and (typep status 'integer) (< 300 status 400) location)
-                     location
-                     nil)))))
-    (let ((current-time (get-unix-time)))
+  (let ((current-time (get-unix-time)))
+    (labels ((get-redirect (uri)
+               (multiple-value-bind (body status headers uri)
+                 (drakma:http-request uri :method :head :close t :redirect nil :additional-headers (alist :referer *site-uri* :accept "text/css,*/*;q=0.1"))
+                 (declare (ignore body uri))
+                 (let ((location (cdr (assoc :location headers))))
+                   (if (and (typep status 'integer) (< 300 status 400) location)
+                       location
+                       nil))))
+             (update-redirect ()
+               (handler-case
+                 (let* ((new-redirect (get-redirect *fonts-stylesheet-uri*))
+                        (new-redirect (if new-redirect (quri:render-uri (quri:merge-uris (quri:uri new-redirect) (quri:uri *fonts-stylesheet-uri*))) *fonts-stylesheet-uri*)))
+                   (with-mutex (*fonts-redirect-lock*) (setf *fonts-redirect-data* (list *fonts-stylesheet-uri* new-redirect current-time)
+                                                             *fonts-redirect-thread* nil))
+                   new-redirect)
+                 (serious-condition () *fonts-stylesheet-uri*))))
       (destructuring-bind (&optional base-uri redirect-uri timestamp) (with-mutex (*fonts-redirect-lock*) *fonts-redirect-data*)
-        (if (and (eq base-uri *fonts-stylesheet-uri*) timestamp (< current-time (+ timestamp 3600)))
-            (or redirect-uri *fonts-stylesheet-uri*)
-            (let* ((new-redirect (get-redirect *fonts-stylesheet-uri*))
-                   (new-redirect (if new-redirect (quri:render-uri (quri:merge-uris (quri:uri new-redirect) (quri:uri *fonts-stylesheet-uri*))) *fonts-stylesheet-uri*)))
-              (with-mutex (*fonts-redirect-lock*) (setf *fonts-redirect-data* (list *fonts-stylesheet-uri* new-redirect current-time)))
-              new-redirect))))))
+        (if (and (eq base-uri *fonts-stylesheet-uri*) timestamp)
+          (progn
+            (if (>= current-time (+ timestamp 60))
+                (with-mutex (*fonts-redirect-lock*) (or *fonts-redirect-thread* (make-thread #'update-redirect :name "fonts redirect update"))))
+            (or redirect-uri *fonts-stylesheet-uri*))
+          (update-redirect))))))
 
 (defparameter *html-head*
   (format nil
