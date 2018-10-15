@@ -639,17 +639,19 @@
       (force-output out-stream))))
 
 (defun set-default-headers (return-code)
-  (setf (hunchentoot:content-type*) "text/html; charset=utf-8"
-        (hunchentoot:return-code*) return-code
-        (hunchentoot:header-out :link) (format nil "~:{<~A>;rel=preload;type=~A;as=~A~@{;~A~}~:^,~}"
-                                               `((,(generate-css-link) "text/css" "style")
-                                                 (,(generate-versioned-link "/theme_tweaker.css") "text/css" "style")
-                                                 (,(generate-fonts-link) "text/css" "style")
-                                                 (,(generate-versioned-link "/script.js") "text/javascript" "script")
-                                                 ("//fonts.greaterwrong.com/font_files/FontAwesomeGW/fa-solid-900.ttf?v=1" "font/ttf" "font" "crossorigin")
-                                                 ("//fonts.greaterwrong.com/font_files/FontAwesomeGW/fa-regular-400.ttf?v=1" "font/ttf" "font" "crossorigin")
-                                                 ("//fonts.greaterwrong.com/font_files/FontAwesomeGW/fa-light-300.ttf?v=1" "font/ttf" "font" "crossorigin")
-                                                 ("//fonts.greaterwrong.com/font_files/BitmapFonts/MSSansSerif.ttf" "font/ttf" "font" "crossorigin")))))
+  (let ((push-option (if (hunchentoot:cookie-in "push") '("nopush"))))
+    (setf (hunchentoot:content-type*) "text/html; charset=utf-8"
+          (hunchentoot:return-code*) return-code
+          (hunchentoot:header-out :link) (format nil "~:{<~A>;rel=preload;type=~A;as=~A~@{;~A~}~:^,~}"
+                                                 `((,(generate-css-link) "text/css" "style" ,.push-option)
+                                                   (,(generate-versioned-link "/theme_tweaker.css") "text/css" "style" ,.push-option)
+                                                   (,(generate-fonts-link) "text/css" "style" ,.push-option)
+                                                   (,(generate-versioned-link "/script.js") "text/javascript" "script" ,.push-option)
+                                                   ("//fonts.greaterwrong.com/font_files/FontAwesomeGW/fa-solid-900.ttf?v=1" "font/ttf" "font" "crossorigin")
+                                                   ("//fonts.greaterwrong.com/font_files/FontAwesomeGW/fa-regular-400.ttf?v=1" "font/ttf" "font" "crossorigin")
+                                                   ("//fonts.greaterwrong.com/font_files/FontAwesomeGW/fa-light-300.ttf?v=1" "font/ttf" "font" "crossorigin")
+                                                   ("//fonts.greaterwrong.com/font_files/BitmapFonts/MSSansSerif.ttf" "font/ttf" "font" "crossorigin"))))
+    (unless push-option (hunchentoot:set-cookie "push" :max-age (* 4 60 60) :secure *secure-cookies* :value "t"))))
 
 (defun user-pref (key)
   (or (cdr (assoc key *current-prefs*))
