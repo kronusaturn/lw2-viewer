@@ -257,6 +257,13 @@
 #quick-nav-ui a[href='#comments']::after {
 	content: "Comments";
 }
+#content.post-page:not(.individual-thread-page) ~ #ui-elements-container #quick-nav-ui a[href='#comments'] {
+	visibility: hidden;
+	transition: visibility 0.2s ease;
+}
+#content.post-page:not(.individual-thread-page) ~ #ui-elements-container #quick-nav-ui.engaged a[href='#comments'] {
+	visibility: visible;
+}
 #quick-nav-ui a[href='#bottom-bar']::after {
 	content: "Bottom";
 }
