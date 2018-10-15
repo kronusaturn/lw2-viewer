@@ -1812,6 +1812,7 @@ div.comment-child-links a::first-letter {
 	text-shadow: 
 		0 0 1px #fff,
 		0 0 2px #fff;
+	padding: 6px 8px 1px 4px;
 }
 .comment-controls .cancel-comment-button:hover {
 	color: #f00;
