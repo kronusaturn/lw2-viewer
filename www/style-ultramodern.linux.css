@@ -617,6 +617,9 @@ a#inbox-indicator.new-messages:hover::before {
 	display: block;
 	position: relative;
 }
+
+/*= New comments count =*/
+
 #new-comment-nav-ui .new-comments-count {
 	width: 2em;
 	font-size: 1.25rem;
@@ -633,6 +636,9 @@ a#inbox-indicator.new-messages:hover::before {
 	display: block;
 	font-size: 0.625rem;
 }
+
+/*= Next/previous new comment buttons =*/
+
 #new-comment-nav-ui .new-comment-sequential-nav-button {
 	font-size: 1.75rem;
 	font-family: 'Font Awesome';
@@ -665,11 +671,17 @@ a#inbox-indicator.new-messages:hover::before {
 #hns-date-picker:focus-within {
 	opacity: 1.0;
 }
+
+/*= "Since" label =*/
+
 #hns-date-picker span {
 	display: block;
 	font-size: 0.75rem;
 	text-transform: uppercase;
 }
+
+/*= "Since" text field =*/
+
 #hns-date-picker input {
 	margin-top: 1px;
 	padding: 1px 3px;
