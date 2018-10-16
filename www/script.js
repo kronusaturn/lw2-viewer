@@ -414,7 +414,13 @@ function makeVoteCompleteEvent(target) {
 			let voteUpDown = (vote.up ? 'upvote' : (vote.down ? 'downvote' : ''));
 			let voteClass = makeVoteClass(vote);
 
-			karmaTargets.forEach(function (kt) { kt.innerHTML = karmaText; });
+			karmaTargets.forEach(function (kt) {
+				kt.innerHTML = karmaText;
+				if (kt.hasClass("redacted")) {
+					kt.dataset["trueValue"] = kt.firstChild.textContent;
+					kt.firstChild.textContent = "##";
+				}
+			});
 			buttonTargets.forEach(function (bt) {
 				bt.querySelectorAll("button.vote").forEach(function(b) {
 					b.removeClasses([ "clicked-once", "clicked-twice", "selected", "big-vote" ]);
