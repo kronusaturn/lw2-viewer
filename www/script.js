@@ -1578,7 +1578,7 @@ function disableBeforeUnload() {
 function injectAntiKibitzer() {
 	// Inject anti-kibitzer toggle controls.
 	let antiKibitzerToggle = addUIElement("<div id='anti-kibitzer-toggle'><button type='button' tabindex='-1' accesskey='g' title='Toggle anti-kibitzer (show/hide authors & karma values)'></button>");
-	antiKibitzerToggle.querySelector("button").addActivateEvent(toggleAntiKibitzerMode);
+	antiKibitzerToggle.querySelector("button").addActivateEvent(antiKibitzerToggleButtonClicked);
 	
 	// Activate anti-kibitzer mode (if needed).
 	if (window.localStorage.getItem("antikibitzer") == "true")
@@ -1588,6 +1588,13 @@ function injectAntiKibitzer() {
 	removeElement("#antikibitzer-temp");
 }
 
+function antiKibitzerToggleButtonClicked(event) {
+	if (document.querySelector("#anti-kibitzer-toggle").hasClass("engaged") && !confirm("Are you sure you want to turn OFF the anti-kibitzer?\n\n(This will reveal the authors and karma values of all posts and comments!)"))
+		return;
+
+	toggleAntiKibitzerMode();
+	event.target.blur();
+}
 function toggleAntiKibitzerMode() {
 	// This will be the URL of the user's own page, if logged in, or the URL of
 	// the login page otherwise.
