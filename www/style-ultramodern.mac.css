@@ -749,9 +749,6 @@ a#inbox-indicator.new-messages:hover::before {
 	height: 40px;
 	padding: 0;
 }
-#anti-kibitzer-toggle button:focus:not(:hover) {
-	text-shadow: none;
-}
 #anti-kibitzer-toggle button::before,
 #anti-kibitzer-toggle button::after {
 	font-family: Font Awesome;
