@@ -973,6 +973,10 @@ a.post-section.alignment-forum:hover::before {
 	opacity: 0.5;
 }
 
+.link-post-domain.redacted {
+	opacity: 0.5;
+}
+
 /*===========================*/
 /* COMMENT THREAD NAVIGATION */
 /*===========================*/

@@ -726,6 +726,10 @@ a.post-section:hover::before {
 	opacity: 0.5;
 }
 
+.link-post-domain.redacted {
+	opacity: 0.3;
+}
+
 /*===========================*/
 /* COMMENT THREAD NAVIGATION */
 /*===========================*/

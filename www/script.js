@@ -1617,6 +1617,16 @@ function toggleAntiKibitzerMode() {
 			
 			e.removeClass("redacted");
 		});
+		// Link post domains.
+		document.querySelectorAll(".link-post-domain").forEach(function (e) {
+			// Skip own posts/comments.
+			if (userTabTarget == e.closest(".post-meta").querySelector(".author").href)
+				return;
+				
+			e.textContent = e.dataset["trueDomain"];
+			
+			e.removeClass("redacted");
+		});
 		
 		antiKibitzerToggle.removeClass("engaged");
 		window.localStorage.setItem("antikibitzer", "false");
@@ -1644,6 +1654,17 @@ function toggleAntiKibitzerMode() {
 			e.dataset["trueValue"] = e.firstChild.textContent;
 			e.innerHTML = "##" + e.lastChild.outerHTML;
 			e.lastChild.textContent = " points";
+			
+			e.addClass("redacted");
+		});
+		// Link post domains.
+		document.querySelectorAll(".link-post-domain").forEach(function (e) {
+			// Skip own posts/comments.
+			if (userTabTarget == e.closest(".post-meta").querySelector(".author").href)
+				return;
+				
+			e.dataset["trueDomain"] = e.textContent;
+			e.textContent = "redacted.domain.tld";
 			
 			e.addClass("redacted");
 		});

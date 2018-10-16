@@ -950,6 +950,10 @@ a.comment-parent-link::before {
 	opacity: 0.6;
 }
 
+.link-post-domain.redacted {
+	opacity: 0.6;
+}
+
 /*===========================*/
 /* COMMENT THREAD NAVIGATION */
 /*===========================*/
