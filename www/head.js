@@ -93,3 +93,14 @@ window.themeOptions = [
 	['classic', 'Classic Less Wrong theme', 'H'],
 	['less', 'Less theme (serenity now)', 'I']
 ];
+
+/*****************/
+/* ANTI-KIBITZER */
+/*****************/
+
+// While everything's being loaded, hide the authors and karma values.
+if (window.localStorage.getItem("antikibitzer") == "true") {
+	document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='antikibitzer-temp'>" +
+	`.author, .karma-value { visibility: hidden; }` + 
+	"</style>");
+}

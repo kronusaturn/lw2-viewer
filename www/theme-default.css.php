@@ -403,6 +403,14 @@ body {
 }
 
 /*======================*/
+/* ANTI-KIBITZER TOGGLE */
+/*======================*/
+
+#anti-kibitzer-toggle button {
+	color: #bbb;
+}
+
+/*======================*/
 /* TEXT SIZE ADJUSTMENT */
 /*======================*/
 

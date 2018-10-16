@@ -741,6 +741,43 @@ a#inbox-indicator.new-messages:hover::before {
 }
 
 /************************/
+/* ANTI-KIBITZER TOGGLE */
+/************************/
+
+#anti-kibitzer-toggle {
+	position: absolute;
+	right: -67px;
+	bottom: 200px;
+}
+#anti-kibitzer-toggle button {
+	display: block;
+	width: 40px;
+	height: 40px;
+	padding: 0;
+}
+#anti-kibitzer-toggle button:focus:not(:hover) {
+	text-shadow: none;
+}
+#anti-kibitzer-toggle button::before,
+#anti-kibitzer-toggle button::after {
+	font-family: Font Awesome;
+}
+#anti-kibitzer-toggle button::before {
+	content: "\F06E";	
+	display: block;
+	font-size: 1.75em;
+	font-weight: 400;
+}
+#anti-kibitzer-toggle button::after {
+	content: "\F007\2004\F164";
+	font-size: 0.875em;
+	font-weight: 900;
+}
+#anti-kibitzer-toggle.engaged button::before {
+	content: "\F070";	
+}
+
+/************************/
 /* TEXT SIZE ADJUSTMENT */
 /************************/
 

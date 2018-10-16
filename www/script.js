@@ -1571,6 +1571,88 @@ function disableBeforeUnload() {
 	window.onbeforeunload = null;
 }
 
+/*****************/
+/* ANTI-KIBITZER */
+/*****************/
+
+function injectAntiKibitzer() {
+	// Inject anti-kibitzer toggle controls.
+	let antiKibitzerToggle = addUIElement("<div id='anti-kibitzer-toggle'><button type='button' tabindex='-1' accesskey='g' title='Toggle anti-kibitzer (show/hide authors & karma values)'></button>");
+	antiKibitzerToggle.querySelector("button").addActivateEvent(toggleAntiKibitzerMode);
+	
+	// Activate anti-kibitzer mode (if needed).
+	if (window.localStorage.getItem("antikibitzer") == "true")
+		toggleAntiKibitzerMode();
+	
+	// Remove temporary CSS that hides the authors and karma values.
+	removeElement("#antikibitzer-temp");
+}
+
+function toggleAntiKibitzerMode() {
+	// This will be the URL of the user's own page, if logged in, or the URL of
+	// the login page otherwise.
+	let userTabTarget = document.querySelector("#nav-item-login .nav-inner").href;
+
+	let antiKibitzerToggle = document.querySelector("#anti-kibitzer-toggle");	
+	if (antiKibitzerToggle.hasClass("engaged")) {
+		// Author names/links.
+		document.querySelectorAll(".author").forEach(function (e) {
+			// Skip own posts/comments.
+			if (userTabTarget == e.href)
+				return;
+		
+			e.textContent = e.dataset["trueName"];
+			e.href = e.dataset["trueLink"];
+			
+			e.removeClass("redacted");
+		});
+		// Post/comment karma values.
+		document.querySelectorAll(".karma-value").forEach(function (e) {
+			// Skip own posts/comments.
+			if (userTabTarget == (e.closest(".comment-item") || e.closest(".post-meta")).querySelector(".author").href)
+				return;
+		
+			e.innerHTML = e.dataset["trueValue"] + e.lastChild.outerHTML;
+			e.lastChild.textContent = (parseInt(e.dataset["trueValue"]) == 1) ? " point" : " points";
+			
+			e.removeClass("redacted");
+		});
+		
+		antiKibitzerToggle.removeClass("engaged");
+		window.localStorage.setItem("antikibitzer", "false");
+	} else {
+		// Author names/links.
+		document.querySelectorAll(".author").forEach(function (e) {
+			// Skip own posts/comments.
+			if (userTabTarget == e.href)
+				return;
+		
+			e.dataset["trueName"] = e.textContent;
+			e.textContent = "REDACTED";
+			
+			e.dataset["trueLink"] = e.href;
+			e.href = "#";
+			
+			e.addClass("redacted");
+		});
+		// Post/comment karma values.
+		document.querySelectorAll(".karma-value").forEach(function (e) {
+			// Skip own posts/comments.
+			if (userTabTarget == (e.closest(".comment-item") || e.closest(".post-meta")).querySelector(".author").href)
+				return;
+		
+			e.dataset["trueValue"] = e.firstChild.textContent;
+			e.innerHTML = "##" + e.lastChild.outerHTML;
+			e.lastChild.textContent = " points";
+			
+			e.addClass("redacted");
+		});
+		
+		antiKibitzerToggle.addClass("engaged");
+		window.localStorage.setItem("antikibitzer", "true");
+	}
+}
+
 /*********************/
 /* MORE MISC HELPERS */
 /*********************/
@@ -1636,7 +1718,7 @@ registerInitializer('earlyInitialize', true, () => document.querySelector("#cont
 	injectTextSizeAdjustmentUI();
 	// Add the comments view selector widget (threaded vs. chrono).
 // 	injectCommentsViewModeSelector();
-
+	
 	try { updateInbox(); }
 	catch (e) { }
 });
@@ -1848,6 +1930,9 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	
 	// Add the toggle for the appearance adjustment UI elements on mobile.
 	injectAppearanceAdjustUIToggle();
+
+	// Add the antikibitzer.
+	injectAntiKibitzer();
 
 	// Add event listeners for Escape and Enter, for the theme tweaker.
 	document.addEventListener("keyup", function(event) {
