@@ -1594,8 +1594,11 @@ function injectAntiKibitzer() {
 	removeElement("#antikibitzer-temp");
 }
 
-function antiKibitzerToggleButtonClicked(event) {
-	if (document.querySelector("#anti-kibitzer-toggle").hasClass("engaged") && !confirm("Are you sure you want to turn OFF the anti-kibitzer?\n\n(This will reveal the authors and karma values of all posts and comments!)")) {
+function antiKibitzerToggleButtonClicked (event) {
+	console.log(event);
+	if (document.querySelector("#anti-kibitzer-toggle").hasClass("engaged") && 
+		!event.shiftKey &&
+		!confirm("Are you sure you want to turn OFF the anti-kibitzer?\n\n(This will reveal the authors and karma values of all posts and comments!)")) {
 		event.target.blur();
 		return;
 	}
