@@ -340,6 +340,22 @@ body {
 }
 
 /*======================*/
+/* ANTI-KIBITZER TOGGLE */
+/*======================*/
+
+#anti-kibitzer-toggle button::before,
+#anti-kibitzer-toggle button::after {
+	background-color: #aaa;
+	-webkit-background-clip: text;
+	color: transparent;
+	text-shadow: rgba(255,255,255,0.5) 0px 1px 1px;
+}
+#anti-kibitzer-toggle button:hover::before,
+#anti-kibitzer-toggle button:hover::after {
+	background-color: #777;
+}
+
+/*======================*/
 /* TEXT SIZE ADJUSTMENT */
 /*======================*/
 
@@ -757,6 +773,19 @@ a.post-section.alignment-forum:hover::before {
 .comment-meta .author {
 	font-size: 1.125em;
 	color: #090;
+}
+
+/*====================*/
+/* ANTI-KIBITZER MODE */
+/*====================*/
+
+.author.redacted {
+	opacity: 0.4;
+	font-weight: 400;
+}
+
+.karma-value.redacted {
+	opacity: 0.4;
 }
 
 /*===========================*/
