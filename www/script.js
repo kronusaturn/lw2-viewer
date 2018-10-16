@@ -1595,8 +1595,10 @@ function injectAntiKibitzer() {
 }
 
 function antiKibitzerToggleButtonClicked(event) {
-	if (document.querySelector("#anti-kibitzer-toggle").hasClass("engaged") && !confirm("Are you sure you want to turn OFF the anti-kibitzer?\n\n(This will reveal the authors and karma values of all posts and comments!)"))
+	if (document.querySelector("#anti-kibitzer-toggle").hasClass("engaged") && !confirm("Are you sure you want to turn OFF the anti-kibitzer?\n\n(This will reveal the authors and karma values of all posts and comments!)")) {
+		event.target.blur();
 		return;
+	}
 
 	toggleAntiKibitzerMode();
 	event.target.blur();

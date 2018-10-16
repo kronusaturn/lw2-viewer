@@ -214,6 +214,30 @@
 	visibility: visible;
 }
 
+/*======================*/
+/* ANTI-KIBITZER TOGGLE */
+/*======================*/
+
+#theme-selector ~ #anti-kibitzer-toggle {
+	top: 100%;
+	bottom: unset;
+	box-shadow: none;
+}
+#theme-selector.engaged ~ #anti-kibitzer-toggle {
+	visibility: visible;
+	z-index: 11111;
+	top: 530px;
+	right: 22px;
+	transition: 
+		top 0.2s ease,
+		visibility 0.2s ease;
+}
+@media only screen and (max-height: 675px) {
+	#theme-selector.engaged ~ #anti-kibitzer-toggle {	
+		top: 492px;
+	}
+}
+
 /*=================*/
 /* QUICKNAV WIDGET */
 /*=================*/
