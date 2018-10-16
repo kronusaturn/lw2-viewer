@@ -1583,7 +1583,7 @@ function disableBeforeUnload() {
 
 function injectAntiKibitzer() {
 	// Inject anti-kibitzer toggle controls.
-	let antiKibitzerToggle = addUIElement("<div id='anti-kibitzer-toggle'><button type='button' tabindex='-1' accesskey='g' title='Toggle anti-kibitzer (show/hide authors & karma values)'></button>");
+	let antiKibitzerToggle = addUIElement("<div id='anti-kibitzer-toggle'><button type='button' tabindex='-1' accesskey='g' title='Toggle anti-kibitzer (show/hide authors & karma values) [g]'></button>");
 	antiKibitzerToggle.querySelector("button").addActivateEvent(antiKibitzerToggleButtonClicked);
 	
 	// Activate anti-kibitzer mode (if needed).
