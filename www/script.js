@@ -1993,8 +1993,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		}
 	});
 	
-	// Add event listener for Ctrl-up-arrow and Ctrl-down-arrow (for navigating 
-	// listings pages)
+	// Add event listener for , and . (for navigating listings pages).
 	let listings = document.querySelectorAll("h1.listing a:last-of-type");
 	if (listings.length > 0) {
 		document.addEventListener("keyup", function(e) { 
