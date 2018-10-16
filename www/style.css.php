@@ -747,12 +747,12 @@ a#inbox-indicator.new-messages:hover::before {
 #anti-kibitzer-toggle {
 	position: absolute;
 	right: -67px;
-	bottom: 200px;
+	bottom: 225px;
 }
 #anti-kibitzer-toggle button {
 	display: block;
 	width: 40px;
-	height: 40px;
+	height: 54px;
 	padding: 0;
 }
 #anti-kibitzer-toggle button::before,
@@ -2849,6 +2849,9 @@ li {
 		top: 0;
 		left:100%;
 	}
+	#anti-kibitzer-toggle {
+		bottom: 330px;
+	}
 }
 @media only screen and (max-width: 1080px) {
 	#width-selector {
@@ -2896,6 +2899,9 @@ li {
 	#hns-date-picker::before {
 		width: calc(100% - 22px);
 	}
+	#anti-kibitzer-toggle {
+		right: -54px;
+	}
 }
 @media only screen and (max-width: 1040px) {
 	#quick-nav-ui {
@@ -2909,6 +2915,9 @@ li {
 	}
 	#hns-date-picker::before {
 		width: calc(100% - 17px);
+	}
+	#anti-kibitzer-toggle {
+		right: -50px;
 	}
 }
 @media only screen and (max-width: 1020px) {
@@ -2933,6 +2942,9 @@ li {
 	#hns-date-picker::before {
 		width: 100%;
 	}
+	#anti-kibitzer-toggle {
+		right: -20px;
+	}
 }
 @media only screen and (max-width: 1000px) {
 	#theme-selector {
@@ -2951,14 +2963,16 @@ li {
 	@media not screen and (hover: none), not screen and (-moz-touch-enabled) {
 		#quick-nav-ui,
 		#new-comment-nav-ui,
-		#new-comment-nav-ui + #hns-date-picker {
+		#new-comment-nav-ui + #hns-date-picker,
+		#anti-kibitzer-toggle {
 			opacity: 0.4;
 		}
 		#quick-nav-ui:hover,
 		#new-comment-nav-ui:hover,
 		#new-comment-nav-ui + #hns-date-picker:hover,
 		#new-comment-nav-ui + #hns-date-picker:focus-within,
-		#new-comment-nav-ui:hover + #hns-date-picker {
+		#new-comment-nav-ui:hover + #hns-date-picker,
+		#anti-kibitzer-toggle:hover {
 			opacity: 1.0;
 		}
 	}

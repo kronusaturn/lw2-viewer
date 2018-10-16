@@ -1680,6 +1680,14 @@ EOT;
 			0 0 0 2px transparent;
 		border-radius: 8px;
 	}
+	#anti-kibitzer-toggle {
+		box-shadow: 
+			0 0 0 1px #999,
+			0 0 0 2px transparent;
+		background-color: #d8d8d8;
+		border-radius: 6px;
+		overflow: hidden;
+	}
 }
 @media only screen and (max-width: 1000px) {
 	#theme-selector {
