@@ -779,6 +779,9 @@ body {
 	color: #acd2af;
 	border-radius: 4px;
 	text-decoration: none;
+	transition:
+		color 0.15s ease,
+		box-shadow 0.15s ease-out;
 }
 #quick-nav-ui a[href='#bottom-bar'] {
 	line-height: 1.8;
@@ -793,6 +796,9 @@ body {
 @media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
 	#quick-nav-ui a:hover {
 		color: #79a97e;
+		box-shadow: 
+			0 0 0 1px rgba(121, 169, 126, 0.3),
+			0 0 0 2px #fff;
 	}
 	#quick-nav-ui a:focus:not(:hover) {
 		transform: none;
