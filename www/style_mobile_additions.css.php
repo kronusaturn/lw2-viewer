@@ -221,13 +221,19 @@
 #theme-selector ~ #anti-kibitzer-toggle {
 	top: 100%;
 	bottom: unset;
+	left: 0;
+	right: 0;
+	margin: auto;
 	box-shadow: none;
+	width: calc(100vw - 44px);
+	max-width: 330px;
+	text-align: right;
+	pointer-events: none;
 }
 #theme-selector.engaged ~ #anti-kibitzer-toggle {
 	visibility: visible;
-	z-index: 11111;
+	z-index: 11110;
 	top: 530px;
-	right: 22px;
 	transition: 
 		top 0.2s ease,
 		visibility 0.2s ease;
@@ -236,6 +242,10 @@
 	#theme-selector.engaged ~ #anti-kibitzer-toggle {	
 		top: 492px;
 	}
+}
+#theme-selector.engaged ~ #anti-kibitzer-toggle button {
+	pointer-events: auto;
+	display: inline-block;
 }
 
 /*=================*/
