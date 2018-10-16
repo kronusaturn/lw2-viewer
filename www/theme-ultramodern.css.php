@@ -355,6 +355,22 @@ body {
 }
 
 /*======================*/
+/* ANTI-KIBITZER TOGGLE */
+/*======================*/
+
+#anti-kibitzer-toggle button::before,
+#anti-kibitzer-toggle button::after {
+	background-color: #222;
+	-webkit-background-clip: text;
+	color: transparent;
+	text-shadow: rgba(255,255,255,0.4) 0px 1px 1px;
+}
+#anti-kibitzer-toggle button:hover::before,
+#anti-kibitzer-toggle button:hover::after {
+	background-color: #000;
+}
+
+/*======================*/
 /* TEXT SIZE ADJUSTMENT */
 /*======================*/
 
@@ -919,6 +935,19 @@ a.comment-parent-link::before {
 	font-size: 1.125em;
 	color: #444;
 	font-weight: normal;
+}
+
+/*====================*/
+/* ANTI-KIBITZER MODE */
+/*====================*/
+
+.author.redacted {
+	opacity: 0.6;
+	font-weight: 300;
+}
+
+.karma-value.redacted {
+	opacity: 0.6;
 }
 
 /*===========================*/
