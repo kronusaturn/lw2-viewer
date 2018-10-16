@@ -4533,6 +4533,22 @@ body {
 }
 
 /*======================*/
+/* ANTI-KIBITZER TOGGLE */
+/*======================*/
+
+#anti-kibitzer-toggle button::before,
+#anti-kibitzer-toggle button::after {
+	background-color: #aaa;
+	-webkit-background-clip: text;
+	color: transparent;
+	text-shadow: rgba(255,255,255,0.5) 0px 1px 1px;
+}
+#anti-kibitzer-toggle button:hover::before,
+#anti-kibitzer-toggle button:hover::after {
+	background-color: #555;
+}
+
+/*======================*/
 /* TEXT SIZE ADJUSTMENT */
 /*======================*/
 
@@ -5147,6 +5163,19 @@ a.post-section.alignment-forum:hover::before {
 .comment-meta .author:hover {
 	text-decoration: none;
 	color: #090;
+}
+
+/*====================*/
+/* ANTI-KIBITZER MODE */
+/*====================*/
+
+.author.redacted {
+	opacity: 0.7;
+	font-weight: 400;
+}
+
+.karma-value.redacted {
+	opacity: 0.4;
 }
 
 /*===========================*/
@@ -5853,6 +5882,14 @@ select {
 			0 0 0 1px #ccc,
 			0 0 0 2px transparent;
 		border-radius: 8px;
+	}
+	#anti-kibitzer-toggle {
+		box-shadow: 
+			0 0 0 1px #ccc,
+			0 0 0 2px transparent;
+		background-color: #eee;
+		border-radius: 6px;
+		overflow: hidden;
 	}
 }
 @media only screen and (max-width: 1000px) {
