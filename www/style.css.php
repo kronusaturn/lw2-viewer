@@ -17,7 +17,9 @@ html {
 	box-sizing: inherit;
 }
 
+/*=------=*/
 /*= Body =*/
+/*=------=*/
 
 body {
 	padding: 0;
@@ -30,7 +32,9 @@ body::before {
 	height: 100%;
 }
 
+/*=----------------------------=*/
 /*= Immediate children of body =*/
+/*=----------------------------=*/
 
 #content,
 #ui-elements-container,
@@ -48,13 +52,17 @@ body::before {
 	grid-auto-flow: dense;
 }
 
+/*=---------=*/
 /*= Content =*/
+/*=---------=*/
 
 #content > * {
 	grid-column: 1 / span 3;
 }
 
+/*=----------------------=*/
 /*= Floating UI elements =*/
+/*=----------------------=*/
 
 #ui-elements-container {
 	position: fixed;
@@ -70,8 +78,10 @@ body::before {
 	pointer-events: auto;
 }
 
+/*=----------------=*/
 /*= Images overlay =*/
-/*	(To exclude images in posts from theme tweaks) */
+/*=----------------=*/
+/* (To exclude images in posts from theme tweaks) */
 
 #images-overlay {
 	position: absolute;
@@ -93,7 +103,9 @@ body::before {
 	justify-content: flex-end;
 }
 
+/*=---------------=*/
 /*= Nav bar items =*/
+/*=---------------=*/
 
 .nav-item {
 	flex: 1 1 auto;
@@ -113,7 +125,9 @@ body::before {
 	padding: 4px 0;
 }
 
+/*=------------=*/
 /*= Bottom bar =*/
+/*=------------=*/
 
 h1.listing ~ #bottom-bar {
 	margin-top: 1.25em;
@@ -122,14 +136,18 @@ h1.listing ~ #bottom-bar {
 	flex: 1 1 0;
 }
 
+/*=-----------------=*/
 /*= Accesskey hints =*/
+/*=-----------------=*/
 
 .nav-inner::after {
 	content: attr(accesskey);
 	display: none;
 }
 
+/*=---------------=*/
 /*= Pagination UI =*/
+/*=---------------=*/
 
 #bottom-bar .nav-item a::before,
 #top-nav-bar a::before {
@@ -161,8 +179,10 @@ h1.listing ~ #bottom-bar {
 	left: 3.8em;
 }
 
+/*=-----------------------=*/
 /*= Decorative bottom bar =*/
-/*	(On short pages with no pagination) */
+/*=-----------------------=*/
+/* (On short pages with no pagination) */
 
 #bottom-bar.decorative {
 	position: relative;
@@ -171,7 +191,9 @@ h1.listing ~ #bottom-bar {
 	display: none;
 }
 
+/*=------------=*/
 /*= Search tab =*/
+/*=------------=*/
 
 #nav-item-search {
 	flex: 4 1 auto;
@@ -194,7 +216,9 @@ h1.listing ~ #bottom-bar {
 	height: 21px;
 }
 
+/*=-----------=*/
 /*= Login tab =*/
+/*=-----------=*/
 
 #nav-item-login {
 	position: relative;
@@ -266,7 +290,9 @@ a#inbox-indicator.new-messages:hover::before {
 	line-height: 1.8;
 }
 
+/*=--------------------------=*/
 /*= Page toolbar items (all) =*/
+/*=--------------------------=*/
 
 .page-toolbar > * {
 	display: inline-block;
@@ -278,7 +304,9 @@ a#inbox-indicator.new-messages:hover::before {
 	padding-right: 0.3em;
 }
 
+/*=-------------------------------=*/
 /*= Page toolbar items (specific) =*/
+/*=-------------------------------=*/
 
 .new-post::before {
 	content: '\F067';
@@ -444,6 +472,10 @@ a#inbox-indicator.new-messages:hover::before {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/fluid.gif")) ?>');
 }
 
+/*=----------------=*/
+/*= Hover tooltips =*/
+/*=----------------=*/
+
 #width-selector button::after {
 	content: attr(data-name);
 	position: absolute;
@@ -477,7 +509,9 @@ a#inbox-indicator.new-messages:hover::before {
 	opacity: 1.0;
 }
 
+/*=----------------------=*/
 /*= Theme select buttons =*/
+/*=----------------------=*/
 
 .theme-selector button {
 	display: table-cell;
@@ -500,7 +534,9 @@ a#inbox-indicator.new-messages:hover::before {
 	cursor: auto;
 }
 
+/*=----------------------------=*/
 /*= Pre-rendered button images =*/
+/*=----------------------------=*/
 /*	(Each is just a capital letter A through whatever) */
 
 .theme-selector button:nth-of-type(1) {
@@ -531,7 +567,9 @@ a#inbox-indicator.new-messages:hover::before {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_I.gif")) ?>');
 }
 
+/*=------------------------------=*/
 /*= Theme select button tooltips =*/
+/*=------------------------------=*/
 /*	(with the name & description of the theme that each button selects) */
 
 #theme-selector button {
@@ -622,7 +660,9 @@ a#inbox-indicator.new-messages:hover::before {
 	position: relative;
 }
 
+/*=--------------------=*/
 /*= New comments count =*/
+/*=--------------------=*/
 
 #new-comment-nav-ui .new-comments-count {
 	width: 2em;
@@ -641,7 +681,9 @@ a#inbox-indicator.new-messages:hover::before {
 	font-size: 0.625rem;
 }
 
+/*=-----------------------------------=*/
 /*= Next/previous new comment buttons =*/
+/*=-----------------------------------=*/
 
 #new-comment-nav-ui .new-comment-sequential-nav-button {
 	font-size: 1.75rem;
@@ -676,7 +718,9 @@ a#inbox-indicator.new-messages:hover::before {
 	opacity: 1.0;
 }
 
+/*=---------------=*/
 /*= "Since" label =*/
+/*=---------------=*/
 
 #hns-date-picker span {
 	display: block;
@@ -684,7 +728,9 @@ a#inbox-indicator.new-messages:hover::before {
 	text-transform: uppercase;
 }
 
+/*=--------------------=*/
 /*= "Since" text field =*/
+/*=--------------------=*/
 
 #hns-date-picker input {
 	margin-top: 1px;
