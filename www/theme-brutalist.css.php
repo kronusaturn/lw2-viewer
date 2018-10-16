@@ -244,6 +244,26 @@ body {
 	color: #000;
 }
 
+/*======================*/
+/* ANTI-KIBITZER TOGGLE */
+/*======================*/
+
+#anti-kibitzer-toggle button::before,
+#anti-kibitzer-toggle button::after {
+	background-color: #999;
+	-webkit-background-clip: text;
+	color: transparent;
+	text-shadow: rgba(255,255,255,0.5) 0px 1px 1px;
+}
+#anti-kibitzer-toggle button:hover {
+	box-shadow: none;
+}
+#anti-kibitzer-toggle button:hover::before,
+#anti-kibitzer-toggle button:hover::after {
+	background-color: #000;
+	text-shadow: rgba(255,255,255,0.2) 0px 1px 1px;
+}
+
 /*=========================*/
 /* TEXT SIZE ADJUSTMENT UI */
 /*=========================*/
@@ -691,6 +711,19 @@ a.post-section:hover::before {
 .comment-meta .author {
 	font-weight: bold;
 	font-size: 1.25em;
+}
+
+/*====================*/
+/* ANTI-KIBITZER MODE */
+/*====================*/
+
+.author.redacted {
+	opacity: 0.3;
+	font-weight: 400;
+}
+
+.karma-value.redacted {
+	opacity: 0.5;
 }
 
 /*===========================*/
@@ -1363,6 +1396,12 @@ select {
 			0 0 0 2px #000,
 			0 0 0 10px #fff;
 	}
+	#anti-kibitzer-toggle {
+		background-color: #fff;
+		box-shadow: 
+			0 0 0 2px #000,
+			0 0 0 10px #fff;
+	}
 }
 @media only screen and (max-width: 1000px) {
 	#theme-selector,
@@ -1370,7 +1409,8 @@ select {
 	#new-comment-nav-ui,
 	#new-comment-nav-ui + #hns-date-picker,
 	#theme-tweaker-toggle button,
-	#text-size-adjustment-ui {
+	#text-size-adjustment-ui,
+	#anti-kibitzer-toggle {
 		opacity: 1.0;
 	}
 	#theme-selector {
