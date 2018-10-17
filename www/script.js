@@ -1494,7 +1494,7 @@ function consoleEnterKeyPressed(event) {
 			return;
 		case "?":
 		case "help":
-			consoleOutput("Some, like, helpful stuff");
+			printConsoleHelp();
 			break;
 		case "quit":
 		case "q":
@@ -1513,17 +1513,29 @@ function flashConsole() {
 function consoleClearInput() {
 	document.querySelector("#console input").value = "";
 }
-function consoleOutput(text) {
-	let outputView = document.querySelector("#console .output");
-	outputView.insertAdjacentHTML("beforeend", `<p>${text}</p>`);
+function consoleOutputText(text) {
+	let lines = text.split("\n");
+	let paragraphs = lines.join("</p>\n</p>");
+	consoleOutput(`<p>${paragraphs}</p>`);
 }
+function consoleOutput(output) {
+	let outputView = document.querySelector("#console .output");
+	outputView.insertAdjacentHTML("beforeend", `<div class='line'>${output}</div>`);
+}
+
 function parseConsoleInput(enteredText) {
 	let commandResponses = { };
 	let parts = enteredText.split(/\s/);
-	if (commandResponses(parts[0]) == null) {
+	
+	if (commandResponses[parts[0]] == null) {
 		flashConsole();
 		return;
 	}
+}
+
+function printConsoleHelp() {
+	consoleOutputText("Available commands:\n" + 
+		"\thelp, ?\t\tPrints this help.");
 }
 
 /**********************/

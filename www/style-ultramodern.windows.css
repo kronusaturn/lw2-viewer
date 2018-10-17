@@ -904,11 +904,18 @@ a#inbox-indicator.new-messages:hover::before {
 	border-bottom: 1px solid #999;
 	padding: 18px;
 }
-#console .output > p {
+#console .output .line {
+	margin: 0;
+	overflow: auto;
+}
+#console .output .line + .line {
+	margin: 0.75em 0 0 0;
+}
+#console .output .line p {
 	margin: 0;
 }
-#console .output > p + p {
-	margin: 0.75em 0 0 0;
+#console .output .line p + p {
+	margin: 0.5em 0 0 0;
 }
 
 #console input {
