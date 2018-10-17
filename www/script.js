@@ -1474,6 +1474,13 @@ function injectConsole() {
 	console.querySelector("form").addEventListener("submit", consoleEnterKeyPressed);
 }
 
+function toggleConsole() {
+	let gwConsole = document.querySelector("#console");
+	gwConsole.toggleClass("engaged");
+	if (gwConsole.hasClass("engaged"))
+		window.setTimeout(function () { gwConsole.querySelector("input").focus(); }, 200);	
+}
+
 function consoleEnterKeyPressed(event) {
 	event.preventDefault();
 	
@@ -1485,6 +1492,11 @@ function consoleEnterKeyPressed(event) {
 		case "?":
 		case "help":
 			consoleOutput("Some, like, helpful stuff");
+			break;
+		case "quit":
+		case "q":
+		case "exit":
+			toggleConsole();
 			break;
 		default:
 			console.log(enteredText);
@@ -2056,12 +2068,9 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	let gwConsole = document.querySelector("#console");
 	// Add event listener for ` and Esc (to show/hide console).
 	document.addEventListener("keyup", function (event) {
-		if (!gwConsole.hasClass("engaged") && event.key == "`") {
-			gwConsole.addClass("engaged");
-			window.setTimeout(function () { gwConsole.querySelector("input").focus(); }, 200);
-		} else if (gwConsole.hasClass("engaged") && event.keyCode == 27) {
-			gwConsole.removeClass("engaged");
-		}
+		if ((!gwConsole.hasClass("engaged") && event.key == "`") || 
+			(gwConsole.hasClass("engaged") && event.keyCode == 27))
+			toggleConsole();
 	});
 
 	// Add accesskeys to user page view selector.
