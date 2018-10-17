@@ -884,7 +884,8 @@ a#inbox-indicator.new-messages:hover::before {
 	transform: translateY(100%);
 	transition:
 		visibility 0.15s ease-out,
-		transform 0.15s ease-out;
+		transform 0.15s ease-out,
+		background-color 0.2s ease;
 }
 #console.engaged {
 	visibility: visible;
@@ -892,15 +893,12 @@ a#inbox-indicator.new-messages:hover::before {
 }
 #console input {
 	width: 100%;
-	background-color: #000;
+	background-color: inherit;
+	border-color: transparent;
 	padding: 5px 6px 6px 27px;
-	border-color: #000;
 	box-shadow: none;
 	color: #fff;
 	opacity: 0.5;
-}
-#console input:focus {
-	opacity: 1.0;
 }
 #console::before {
 	content: "$";
@@ -908,6 +906,14 @@ a#inbox-indicator.new-messages:hover::before {
 	position: absolute;
 	top: 12px;
 	left: 16px;
+	opacity: 0.5;
+}
+#console input:focus,
+#console:focus-within::before {
+	opacity: 1.0;
+}
+#console.flash {
+	background-color: #c00;
 }
 
 /************/

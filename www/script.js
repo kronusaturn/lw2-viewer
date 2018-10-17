@@ -1500,7 +1500,13 @@ function consoleEnterKeyPressed(event) {
 			break;
 		default:
 			console.log(enteredText);
+			flashConsole();
 	}
+}
+function flashConsole() {
+	let gwConsole = document.querySelector("#console");
+	gwConsole.addClass("flash");
+	window.setTimeout(function () { gwConsole.removeClass("flash"); }, 200);
 }
 function consoleClearInput() {
 	document.querySelector("#console input").value = "";
