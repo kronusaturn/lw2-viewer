@@ -1515,12 +1515,16 @@ function consoleClearInput() {
 }
 function consoleOutputText(text) {
 	let lines = text.split("\n");
-	let paragraphs = lines.join("</p>\n</p>");
+	let paragraphs = lines.join("</p><p>");
 	consoleOutput(`<p>${paragraphs}</p>`);
 }
 function consoleOutput(output) {
 	let outputView = document.querySelector("#console .output");
 	outputView.insertAdjacentHTML("beforeend", `<div class='line'>${output}</div>`);
+}
+function consoleClearOutput() {
+	let outputView = document.querySelector("#console .output");
+	outputView.innerHTML = "";
 }
 
 function parseConsoleInput(enteredText) {
@@ -1534,8 +1538,12 @@ function parseConsoleInput(enteredText) {
 }
 
 function printConsoleHelp() {
-	consoleOutputText("Available commands:\n" + 
-		"\thelp, ?\t\tPrints this help.");
+	consoleOutputText(
+		"Available commands:\n" + 
+		"	help, ?			Prints help." + 
+		"	q, quit, exit	Close console." + 
+		"	clear			Clear console output."
+		);
 }
 
 /**********************/

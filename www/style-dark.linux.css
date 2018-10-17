@@ -899,6 +899,8 @@ a#inbox-indicator.new-messages:hover::before {
 
 #console .output {
 	overflow: auto;
+	white-space: pre-wrap;
+	tab-size: 4;
 }
 #console .output:not(:empty) {
 	border-bottom: 1px solid #575756;
