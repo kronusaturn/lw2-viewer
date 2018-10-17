@@ -1767,6 +1767,8 @@ registerInitializer('earlyInitialize', true, () => document.querySelector("#cont
 	injectTextSizeAdjustmentUI();
 	// Add the comments view selector widget (threaded vs. chrono).
 // 	injectCommentsViewModeSelector();
+	// Add the console.
+	injectConsole();
 	
 	try { updateInbox(); }
 	catch (e) { }
@@ -1984,7 +1986,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	injectAntiKibitzer();
 
 	// Add event listeners for Escape and Enter, for the theme tweaker.
-	document.addEventListener("keyup", function(event) {
+	document.addEventListener("keyup", function (event) {
 		if (event.keyCode == 27) {
 		// Escape key.
 			if (document.querySelector("#theme-tweaker-ui .help-window").style.display != "none") {
@@ -2009,7 +2011,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	// Add event listener for , and . (for navigating listings pages).
 	let listings = document.querySelectorAll("h1.listing a:last-of-type");
 	if (listings.length > 0) {
-		document.addEventListener("keyup", function(e) { 
+		document.addEventListener("keyup", function (e) { 
 			if(e.ctrlKey || e.shiftKey || e.altKey || !(e.key == "," || e.key == ".")) return;
 	
 			var indexOfActiveListing = -1;
@@ -2023,6 +2025,17 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 			listings[indexOfNextListing].focus();
 		});
 	}
+	
+	// Add event listener for ` and Esc (for the console).
+	let console = document.querySelector("#console");
+	document.addEventListener("keyup", function (event) {
+		if (!console.hasClass("engaged") && event.key == "`") {
+			console.addClass("engaged");
+			window.setTimeout(function () { console.querySelector("input").focus(); }, 200);
+		} else if (console.hasClass("engaged") && event.keyCode == 27) {
+			console.removeClass("engaged");
+		}
+	});
 
 	// Add accesskeys to user page view selector.
 	let viewSelector = document.querySelector(".sublevel-nav");

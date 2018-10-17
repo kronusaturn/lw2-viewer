@@ -882,7 +882,9 @@ a#inbox-indicator.new-messages:hover::before {
 	color: #fff;
 	visibility: hidden;
 	transform: translateY(100%);
-	transition: transform 0.3s ease-out;
+	transition:
+		visibility 0.15s ease-out,
+		transform 0.15s ease-out;
 }
 #console.engaged {
 	visibility: visible;
@@ -895,9 +897,13 @@ a#inbox-indicator.new-messages:hover::before {
 	border-color: #000;
 	box-shadow: none;
 	color: #fff;
+	opacity: 0.5;
+}
+#console input:focus {
+	opacity: 1.0;
 }
 #console::before {
-	content: ">";
+	content: "$";
 	display: block;
 	position: absolute;
 	top: 12px;
