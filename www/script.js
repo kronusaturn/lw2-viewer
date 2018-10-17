@@ -1470,7 +1470,10 @@ function commentsListModeSelectButtonClicked(event) {
 /***********/
 
 function injectConsole() {
-	let console = addUIElement("<div id='console'><form><input name='console' type='text' title='Console' autocomplete='off' spellcheck='false'></form></div>");
+	let console = addUIElement("<div id='console'>\n" + 
+	"<div class='output'></div>\n" + 
+	"<form><input name='console' type='text' title='Console' autocomplete='off' spellcheck='false'></form>\n" + 
+	"</div>\n");
 	console.querySelector("form").addEventListener("submit", consoleEnterKeyPressed);
 }
 
@@ -1512,7 +1515,8 @@ function consoleClearInput() {
 	document.querySelector("#console input").value = "";
 }
 function consoleOutput(text) {
-	console.log(text);
+	let outputView = document.querySelector("#console .output");
+	outputView.insertAdjacentHTML("beforeend", `<p>${text}</p>`);
 }
 
 /**********************/
@@ -2072,11 +2076,17 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	}
 	
 	let gwConsole = document.querySelector("#console");
-	// Add event listener for ` and Esc (to show/hide console).
+	// Add event listener for ` and Esc (to show/hide/focus console).
 	document.addEventListener("keyup", function (event) {
+		// ` key shows the console; Esc hides it.
 		if ((!gwConsole.hasClass("engaged") && event.key == "`") || 
 			(gwConsole.hasClass("engaged") && event.keyCode == 27))
 			toggleConsole();
+		// If console is shown but not focused, ` key focuses it.
+		else if (gwConsole.hasClass("engaged") &&
+				 document.activeElement != gwConsole.querySelector("input") &&
+				 event.key == "`")
+			gwConsole.querySelector("input").focus();
 	});
 
 	// Add accesskeys to user page view selector.

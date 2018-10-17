@@ -875,12 +875,12 @@ a#inbox-indicator.new-messages:hover::before {
 	position: absolute;
 	bottom: 0;
 	width: 100%;
-	background-color: #000;
-	padding: 6px 6px 16px 6px;
+	background-color: blue;
 	font-family: Inconsolata;
 	font-size: 1.25rem;
 	color: #fff;
 	visibility: hidden;
+	opacity: 0.88;
 	transform: translateY(100%);
 	transition:
 		visibility 0.15s ease-out,
@@ -891,6 +891,30 @@ a#inbox-indicator.new-messages:hover::before {
 	visibility: visible;
 	transform: none;
 }
+#console.flash {
+	background-color: #c00;
+}
+#console:not(:focus-within) input,
+#console:not(:focus-within)::before {
+	opacity: 0.5;
+}
+
+#console form {
+	padding: 6px 6px 16px 6px;
+}
+
+#console .output {
+	background-color: blue;
+	overflow: auto;
+	padding: 6px 18px;
+}
+#console .output:not(:empty) {
+	border-bottom: 1px solid #999;
+}
+#console .output > p {
+	margin: 0.5em 0;
+}
+
 #console input {
 	width: 100%;
 	background-color: inherit;
@@ -898,22 +922,13 @@ a#inbox-indicator.new-messages:hover::before {
 	padding: 5px 6px 6px 27px;
 	box-shadow: none;
 	color: #fff;
-	opacity: 0.5;
 }
 #console::before {
 	content: "$";
 	display: block;
 	position: absolute;
-	top: 12px;
 	left: 16px;
-	opacity: 0.5;
-}
-#console input:focus,
-#console:focus-within::before {
-	opacity: 1.0;
-}
-#console.flash {
-	background-color: #c00;
+	bottom: 23px;
 }
 
 /************/
