@@ -867,6 +867,43 @@ a#inbox-indicator.new-messages:hover::before {
 	cursor: default;
 }
 
+/***********/
+/* CONSOLE */
+/***********/
+
+#console {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	background-color: #000;
+	padding: 6px 6px 16px 6px;
+	font-family: Inconsolata;
+	font-size: 1.25rem;
+	color: #fff;
+	visibility: hidden;
+	transform: translateY(100%);
+	transition: transform 0.3s ease-out;
+}
+#console.engaged {
+	visibility: visible;
+	transform: none;
+}
+#console input {
+	width: 100%;
+	background-color: #000;
+	padding: 5px 6px 6px 26px;
+	border-color: #000;
+	box-shadow: none;
+	color: #fff;
+}
+#console::before {
+	content: ">";
+	display: block;
+	position: absolute;
+	top: 12px;
+	left: 16px;
+}
+
 /************/
 /* ARCHIVES */
 /************/

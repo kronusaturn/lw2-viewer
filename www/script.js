@@ -1465,6 +1465,14 @@ function commentsListModeSelectButtonClicked(event) {
 	}
 }
 
+/***********/
+/* CONSOLE */
+/***********/
+
+function injectConsole() {
+	let console = addUIElement("<div id='console'><input name='console' type='text' title='Console' autocomplete='off'></div>");
+}
+
 /**********************/
 /* MOBILE UI ELEMENTS */
 /**********************/
