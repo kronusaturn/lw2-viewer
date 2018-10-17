@@ -1470,7 +1470,31 @@ function commentsListModeSelectButtonClicked(event) {
 /***********/
 
 function injectConsole() {
-	let console = addUIElement("<div id='console'><input name='console' type='text' title='Console' autocomplete='off'></div>");
+	let console = addUIElement("<div id='console'><form><input name='console' type='text' title='Console' autocomplete='off' spellcheck='false'></form></div>");
+	console.querySelector("form").addEventListener("submit", consoleEnterKeyPressed);
+}
+
+function consoleEnterKeyPressed(event) {
+	event.preventDefault();
+	
+	let enteredText = event.target.querySelector("input").value;
+	consoleClearInput();
+	switch (enteredText) {
+		case "":
+			return;
+		case "?":
+		case "help":
+			consoleOutput("Some, like, helpful stuff");
+			break;
+		default:
+			console.log(enteredText);
+	}
+}
+function consoleClearInput() {
+	document.querySelector("#console input").value = "";
+}
+function consoleOutput(text) {
+	console.log(text);
 }
 
 /**********************/
@@ -1987,6 +2011,9 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 	// Add event listeners for Escape and Enter, for the theme tweaker.
 	document.addEventListener("keyup", function (event) {
+		if (document.querySelector("#theme-tweaker-ui").style.display == "none")
+			return;
+			
 		if (event.keyCode == 27) {
 		// Escape key.
 			if (document.querySelector("#theme-tweaker-ui .help-window").style.display != "none") {
@@ -2026,14 +2053,14 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		});
 	}
 	
-	// Add event listener for ` and Esc (for the console).
-	let console = document.querySelector("#console");
+	let gwConsole = document.querySelector("#console");
+	// Add event listener for ` and Esc (to show/hide console).
 	document.addEventListener("keyup", function (event) {
-		if (!console.hasClass("engaged") && event.key == "`") {
-			console.addClass("engaged");
-			window.setTimeout(function () { console.querySelector("input").focus(); }, 200);
-		} else if (console.hasClass("engaged") && event.keyCode == 27) {
-			console.removeClass("engaged");
+		if (!gwConsole.hasClass("engaged") && event.key == "`") {
+			gwConsole.addClass("engaged");
+			window.setTimeout(function () { gwConsole.querySelector("input").focus(); }, 200);
+		} else if (gwConsole.hasClass("engaged") && event.keyCode == 27) {
+			gwConsole.removeClass("engaged");
 		}
 	});
 

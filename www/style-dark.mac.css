@@ -887,7 +887,7 @@ a#inbox-indicator.new-messages:hover::before {
 #console input {
 	width: 100%;
 	background-color: #fff;
-	padding: 5px 6px 6px 26px;
+	padding: 5px 6px 6px 27px;
 	border-color: #fff;
 	box-shadow: none;
 	color: #000;
