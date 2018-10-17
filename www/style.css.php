@@ -880,7 +880,7 @@ a#inbox-indicator.new-messages:hover::before {
 	font-size: 1.25rem;
 	color: #fff;
 	visibility: hidden;
-	opacity: 0.88;
+	opacity: 0.9;
 	transform: translateY(100%);
 	transition:
 		visibility 0.15s ease-out,
@@ -927,6 +927,16 @@ a#inbox-indicator.new-messages:hover::before {
 }
 #console .output .line p + p {
 	margin: 0.5em 0 0 0;
+}
+#console .output::-webkit-scrollbar {
+	background-color: transparent;
+}
+#console .output::-webkit-scrollbar-track {
+	background-color: transparent;
+}
+#console .output::-webkit-scrollbar-thumb {
+	background-color: rgba(255,255,255,0.7);
+	box-shadow: 0 0 0 2px #00e inset;
 }
 
 #console input {

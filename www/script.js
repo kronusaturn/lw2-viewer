@@ -1471,10 +1471,12 @@ function commentsListModeSelectButtonClicked(event) {
 
 function injectConsole() {
 	let console = addUIElement("<div id='console'>\n" + 
-	"<div class='output'></div>\n" + 
-	"<form><input name='console' type='text' title='Console' autocomplete='off' spellcheck='false'></form>\n" + 
-	"</div>\n");
+		"<div class='output'></div>\n" + 
+		"<form><input name='console' type='text' title='Console' autocomplete='off' spellcheck='false'></form>\n" + 
+		"</div>\n");
 	console.querySelector("form").addEventListener("submit", consoleEnterKeyPressed);
+	
+	consoleOutputText([ "Welcome to the GreaterWrong console!", "Type 'help' or '?' to see a list of available commands." ])
 }
 
 function toggleConsole() {
@@ -1514,57 +1516,63 @@ function consoleOutput(output) {
 	outputView.insertAdjacentHTML("beforeend", `<div class='line'>${output}</div>`);
 	outputView.scrollTop = outputView.scrollHeight;
 }
-function clearConsoleOutput() {
+function consoleCommandClear() {
 	let outputView = document.querySelector("#console .output");
 	outputView.innerHTML = "";
 }
 
 function parseConsoleInput(enteredText) {
 	let commandResponses = {
-			"?":		printConsoleHelp,
-			"help":		printConsoleHelp,
-			"clear":	clearConsoleOutput,
+			"?":		consoleCommandHelp,
+			"help":		consoleCommandHelp,
+			"clear":	consoleCommandClear,
 			"q":		toggleConsole,
 			"quit":		toggleConsole,
 			"exit":		toggleConsole,
+			"x":		toggleConsole,
 			"go":		consoleCommandNavigate,
 			"g":		consoleCommandNavigate
 		};
 	let parts = enteredText.split(/\s/);
 	
+	consoleOutputText("$ " + enteredText);
+	
 	let response = commandResponses[parts[0]];
 	if (response == null) {
+		consoleOutputText("'" + enteredText + "': command not found. Type 'help' or '?' to see a list of available commands.");
 		flashConsole();
 		return;
 	}
 	
 	if (typeof response == "function")
 		response(parts);
+	else
+		consoleOutputText(response);
 }
 
-function printConsoleHelp(commandParts) {
+function consoleCommandHelp(commandParts) {
 	if (commandParts.length == 1) {
 		consoleOutputText([
-			"Available commands:",
+			"<strong>Available commands:</strong>",
 			"	help, ?				Print help.",
 			"	q, quit, exit		Hide console.",
 			"	clear				Clear console output.",
 			"	g, go				Go to specified page.",
 			"Type 'help [command]' for additional help with specific commands.",
-			"Hotkeys:",
+			"<strong>Hotkeys:</strong>",
 			"	` (backtick)		Show/focus console.",
 			"	Esc					Hide console."
 			]);
 	} else {
 		consoleOutputText([ "No help available for command '" + commandParts[1] + "'.",
-			"Please type 'help' or '?' for a list of available commands."]);
+			"Type 'help' or '?' for a list of available commands."]);
 	}
 }
 
 function consoleCommandNavigate(commandParts) {
 	let destinations = {
-			"about":		[ "[a]bout", 		"About page",							"/about" ],
-			"a":			"about",
+			"about":		[ "abou[t]", 		"About page",							"/about" ],
+			"t":			"about",
 			"archive":		[ "a[r]chive", 		"Archive browser",						"/archive" ],
 			"r":			"archive",
 			"user":			[ "[u]ser", 		"Your user page",						"/users/TO_BE_ADDED" ],
@@ -1588,8 +1596,8 @@ function consoleCommandNavigate(commandParts) {
 	}
 	
 	if (commandParts.length == 1) {
-		consoleOutputText([ "Please enter a destination.", "Syntax is:		go [destination]", "Available destinations are:" ].concat(destinationsPrettyPrinted).concat([
-			"(You can use either a destination’s name or the single-letter abbreviation.)" ]));
+		consoleOutputText([ "Please enter a destination.", "Syntax is:		{ go | g } &lt;destination&gt;", "Available destinations are:" ].concat(destinationsPrettyPrinted).concat([
+			"(You can use either a destination’s full name, such as 'about', or the single-letter abbreviation in brackets, such as 't'.)" ]));
 	} else {
 		var destination = destinations[commandParts[1]];
 		if (destination == null || (typeof destination == 'string' && destinations[destination] == null)) {
@@ -1597,6 +1605,7 @@ function consoleCommandNavigate(commandParts) {
 			"(You can use either a destination’s name or the single-letter abbreviation.)" ]));
 		} else {		
 			if (typeof destination == 'string') destination = destinations[destination];
+			consoleOutputText("Loading: " + destination[1] + " ...");
 			window.location.href = destination[2];
 		}
 	}	
