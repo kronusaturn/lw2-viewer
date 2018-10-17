@@ -898,15 +898,17 @@ a#inbox-indicator.new-messages:hover::before {
 }
 
 #console .output {
-	background-color: blue;
 	overflow: auto;
-	padding: 6px 18px;
 }
 #console .output:not(:empty) {
 	border-bottom: 1px solid #575756;
+	padding: 18px;
 }
 #console .output > p {
-	margin: 0.5em 0;
+	margin: 0;
+}
+#console .output > p + p {
+	margin: 0.75em 0 0 0;
 }
 
 #console input {

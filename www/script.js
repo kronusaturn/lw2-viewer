@@ -1502,8 +1502,7 @@ function consoleEnterKeyPressed(event) {
 			toggleConsole();
 			break;
 		default:
-			console.log(enteredText);
-			flashConsole();
+			parseConsoleInput(enteredText);
 	}
 }
 function flashConsole() {
@@ -1517,6 +1516,14 @@ function consoleClearInput() {
 function consoleOutput(text) {
 	let outputView = document.querySelector("#console .output");
 	outputView.insertAdjacentHTML("beforeend", `<p>${text}</p>`);
+}
+function parseConsoleInput(enteredText) {
+	let commandResponses = { };
+	let parts = enteredText.split(/\s/);
+	if (commandResponses(parts[0]) == null) {
+		flashConsole();
+		return;
+	}
 }
 
 /**********************/
