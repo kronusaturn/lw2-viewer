@@ -1489,22 +1489,13 @@ function consoleEnterKeyPressed(event) {
 	
 	let enteredText = event.target.querySelector("input").value;
 	consoleClearInput();
-	switch (enteredText) {
-		case "":
-			return;
-		case "?":
-		case "help":
-			printConsoleHelp();
-			break;
-		case "quit":
-		case "q":
-		case "exit":
-			toggleConsole();
-			break;
-		default:
-			parseConsoleInput(enteredText);
-	}
+	
+	if (enteredText == "")
+		flashConsole();
+	else
+		parseConsoleInput(enteredText);
 }
+
 function flashConsole() {
 	let gwConsole = document.querySelector("#console");
 	gwConsole.addClass("flash");
@@ -1514,36 +1505,101 @@ function consoleClearInput() {
 	document.querySelector("#console input").value = "";
 }
 function consoleOutputText(text) {
-	let lines = text.split("\n");
+	let lines = (typeof text == 'string') ? text.split("\n") : text;
 	let paragraphs = lines.join("</p><p>");
 	consoleOutput(`<p>${paragraphs}</p>`);
 }
 function consoleOutput(output) {
 	let outputView = document.querySelector("#console .output");
 	outputView.insertAdjacentHTML("beforeend", `<div class='line'>${output}</div>`);
+	outputView.scrollTop = outputView.scrollHeight;
 }
-function consoleClearOutput() {
+function clearConsoleOutput() {
 	let outputView = document.querySelector("#console .output");
 	outputView.innerHTML = "";
 }
 
 function parseConsoleInput(enteredText) {
-	let commandResponses = { };
+	let commandResponses = {
+			"?":		printConsoleHelp,
+			"help":		printConsoleHelp,
+			"clear":	clearConsoleOutput,
+			"q":		toggleConsole,
+			"quit":		toggleConsole,
+			"exit":		toggleConsole,
+			"go":		consoleCommandNavigate,
+			"g":		consoleCommandNavigate
+		};
 	let parts = enteredText.split(/\s/);
 	
-	if (commandResponses[parts[0]] == null) {
+	let response = commandResponses[parts[0]];
+	if (response == null) {
 		flashConsole();
 		return;
 	}
+	
+	if (typeof response == "function")
+		response(parts);
 }
 
-function printConsoleHelp() {
-	consoleOutputText(
-		"Available commands:\n" + 
-		"	help, ?			Prints help." + 
-		"	q, quit, exit	Close console." + 
-		"	clear			Clear console output."
-		);
+function printConsoleHelp(commandParts) {
+	if (commandParts.length == 1) {
+		consoleOutputText([
+			"Available commands:",
+			"	help, ?				Print help.",
+			"	q, quit, exit		Hide console.",
+			"	clear				Clear console output.",
+			"	g, go				Go to specified page.",
+			"Type 'help [command]' for additional help with specific commands.",
+			"Hotkeys:",
+			"	` (backtick)		Show/focus console.",
+			"	Esc					Hide console."
+			]);
+	} else {
+		consoleOutputText([ "No help available for command '" + commandParts[1] + "'.",
+			"Please type 'help' or '?' for a list of available commands."]);
+	}
+}
+
+function consoleCommandNavigate(commandParts) {
+	let destinations = {
+			"about":		[ "[a]bout", 		"About page",							"/about" ],
+			"a":			"about",
+			"archive":		[ "a[r]chive", 		"Archive browser",						"/archive" ],
+			"r":			"archive",
+			"user":			[ "[u]ser", 		"Your user page",						"/users/TO_BE_ADDED" ],
+			"u":			"user",
+			"comments":		[ "[c]omments",		"Recent comments page",					"/recentcomments" ],
+			"c":			"comments",
+			"home":			[ "[h]ome",			"Home page (a.k.a. frontpage posts)",	"/" ],
+			"h":			"home",
+			"featured":		[ "[f]eatured",		"Featured (a.k.a. curated posts)",		"/index?view=featured" ],
+			"f":			"featured",
+			"all":			[ "[a]ll",			"All (a.k.a. community posts)",			"/index?view=new" ],
+			"a":			"all",
+			"meta":			[ "[m]eta",			"Meta posts",							"/index?view=meta" ],
+			"m":			"meta",
+		}
+	var destinationsPrettyPrinted = [ ];
+	for (dest in destinations) {
+		console.log(dest);
+		if (typeof destinations[dest] != 'object') continue;
+		destinationsPrettyPrinted.push(`	${destinations[dest][0]}		${(destinations[dest][0].length < 8 ? "	" : "")}${destinations[dest][1]}`);
+	}
+	
+	if (commandParts.length == 1) {
+		consoleOutputText([ "Please enter a destination.", "Syntax is:		go [destination]", "Available destinations are:" ].concat(destinationsPrettyPrinted).concat([
+			"(You can use either a destination’s name or the single-letter abbreviation.)" ]));
+	} else {
+		var destination = destinations[commandParts[1]];
+		if (destination == null || (typeof destination == 'string' && destinations[destination] == null)) {
+			consoleOutputText([ "'" + commandParts[1] + "' is not a valid destination!", "Available destinations are:" ].concat(destinationsPrettyPrinted).concat([
+			"(You can use either a destination’s name or the single-letter abbreviation.)" ]));
+		} else {		
+			if (typeof destination == 'string') destination = destinations[destination];
+			window.location.href = destination[2];
+		}
+	}	
 }
 
 /**********************/

@@ -869,7 +869,7 @@ a#inbox-indicator.new-messages:hover::before {
 	position: absolute;
 	bottom: 0;
 	width: 100%;
-	background-color: blue;
+	background-color: #0cc800;
 	font-family: Inconsolata;
 	font-size: 1.25rem;
 	color: #000;
@@ -880,6 +880,9 @@ a#inbox-indicator.new-messages:hover::before {
 		visibility 0.15s ease-out,
 		transform 0.15s ease-out,
 		background-color 0.2s ease;
+	display: flex;
+	flex-flow: column;
+	max-height: 100%;
 }
 #console.engaged {
 	visibility: visible;
