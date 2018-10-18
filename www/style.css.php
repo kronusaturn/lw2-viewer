@@ -889,6 +889,7 @@ a#inbox-indicator.new-messages:hover::before {
 	display: flex;
 	flex-flow: column;
 	max-height: 100%;
+	z-index: 2;
 }
 #console.engaged {
 	visibility: visible;
@@ -943,7 +944,7 @@ a#inbox-indicator.new-messages:hover::before {
 	width: 100%;
 	background-color: inherit;
 	border-color: transparent;
-	padding: 5px 6px 6px 27px;
+	padding: 5px 6px 6px 30px;
 	box-shadow: none;
 	color: #fff;
 }
@@ -951,7 +952,7 @@ a#inbox-indicator.new-messages:hover::before {
 	content: "$";
 	display: block;
 	position: absolute;
-	left: 16px;
+	left: 18px;
 	bottom: 23px;
 }
 

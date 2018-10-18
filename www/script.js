@@ -1470,11 +1470,16 @@ function commentsListModeSelectButtonClicked(event) {
 /***********/
 
 function injectConsole() {
-	let console = addUIElement("<div id='console'>\n" + 
+	let gwConsole = addUIElement("<div id='console'>\n" + 
 		"<div class='output'></div>\n" + 
 		"<form><input name='console' type='text' title='Console' autocomplete='off' spellcheck='false'></form>\n" + 
 		"</div>\n");
-	console.querySelector("form").addEventListener("submit", consoleEnterKeyPressed);
+	gwConsole.querySelector("form").addEventListener("submit", consoleEnterKeyPressed);
+	gwConsole.querySelector("form input").addEventListener("keydown", consoleTabKeyPressed);
+	
+	for (command in consoleCommands)
+		if (consoleCommands[command].construct != null)
+			consoleCommands[command].construct();
 	
 	consoleOutputText([ "Welcome to the GreaterWrong console!", "Type 'help' or '?' to see a list of available commands." ])
 }
@@ -1483,8 +1488,10 @@ function toggleConsole() {
 	let gwConsole = document.querySelector("#console");
 	gwConsole.toggleClass("engaged");
 	if (gwConsole.hasClass("engaged"))
-		window.setTimeout(function () { gwConsole.querySelector("input").focus(); }, 200);	
+		window.setTimeout(function () { gwConsole.querySelector("input").focus(); }, 100);	
 }
+
+// Special keypress event listeners.
 
 function consoleEnterKeyPressed(event) {
 	event.preventDefault();
@@ -1497,6 +1504,14 @@ function consoleEnterKeyPressed(event) {
 	else
 		parseConsoleInput(enteredText);
 }
+function consoleTabKeyPressed(event) {
+	if (event.keyCode == 9) {
+		event.preventDefault();
+		flashConsole();
+	}
+}
+
+// Console utility functions.
 
 function flashConsole() {
 	let gwConsole = document.querySelector("#console");
@@ -1516,99 +1531,383 @@ function consoleOutput(output) {
 	outputView.insertAdjacentHTML("beforeend", `<div class='line'>${output}</div>`);
 	outputView.scrollTop = outputView.scrollHeight;
 }
-function consoleCommandClear() {
-	let outputView = document.querySelector("#console .output");
-	outputView.innerHTML = "";
-}
+
+// Input parsing.
 
 function parseConsoleInput(enteredText) {
-	let commandResponses = {
-			"?":		consoleCommandHelp,
-			"help":		consoleCommandHelp,
-			"clear":	consoleCommandClear,
-			"q":		toggleConsole,
-			"quit":		toggleConsole,
-			"exit":		toggleConsole,
-			"x":		toggleConsole,
-			"go":		consoleCommandNavigate,
-			"g":		consoleCommandNavigate
-		};
+	// Echo entered line.
+	consoleOutput("<p class='user-input-echo'>$ " + enteredText + "</p>");
+		
 	let parts = enteredText.split(/\s/);
 	
-	consoleOutputText("$ " + enteredText);
-	
 	let response = commandResponses[parts[0]];
-	if (response == null) {
+	if (consoleCommands[response] == null) {
 		consoleOutputText("'" + enteredText + "': command not found. Type 'help' or '?' to see a list of available commands.");
 		flashConsole();
 		return;
 	}
 	
-	if (typeof response == "function")
-		response(parts);
-	else
-		consoleOutputText(response);
+	consoleCommands[response].responder(parts);
 }
 
-function consoleCommandHelp(commandParts) {
-	if (commandParts.length == 1) {
-		consoleOutputText([
-			"<strong>Available commands:</strong>",
-			"	help, ?				Print help.",
-			"	q, quit, exit		Hide console.",
-			"	clear				Clear console output.",
-			"	g, go				Go to specified page.",
-			"Type 'help [command]' for additional help with specific commands.",
-			"<strong>Hotkeys:</strong>",
-			"	` (backtick)		Show/focus console.",
-			"	Esc					Hide console."
-			]);
-	} else {
-		consoleOutputText([ "No help available for command '" + commandParts[1] + "'.",
-			"Type 'help' or '?' for a list of available commands."]);
-	}
+// Specific console commands.
+
+var consoleCommands = { };
+
+consoleCommands["quit"] = {
+	"responder": 		toggleConsole,
+	"displayname":		"[q]uit, e[x]it",
+	"aliases": 			[ "exit", "q", "x" ],
+	"description":		"Hide console."
+};
+
+consoleCommands["clear"] = {
+	"responder":		 function () {
+		let outputView = document.querySelector("#console .output");
+		outputView.innerHTML = "";
+	},
+	"displayname":		"clear",
+	"description":		"Clear console output."
+};
+
+consoleCommands["help"] = {
+	"responder":		function (commandParts) {
+		if (commandParts.length == 1) {
+			var availableCommands = [ ];
+			for (command in consoleCommands) {
+				if (typeof consoleCommands[command] != "object") continue;
+				availableCommands.push(`<span style='tab-size:24;'>    ${consoleCommands[command].displayname}\t${consoleCommands[command].description}</span>`);
+			}
+			consoleOutputText([
+				"<strong>Available commands:</strong>" ].concat(availableCommands).concat([
+				"Type 'help <em>&lt;command&gt;</em>' for additional help with specific commands.",
+				"<strong>Hotkeys:</strong>",
+				"	` (backtick)		Show/focus console.",
+				"	Esc					Hide console."
+				]));
+		} else {
+			let responder = consoleCommands[commandResponses[commandParts[1]]];
+			if (responder == null) {
+				consoleOutputText("No such command exists. Type 'help' or '?' for a list of available commands.");
+			} else {
+				var helpOutput = [ `<strong>${responder.description}</strong>` ];
+				if (responder.help == null) {
+					if (responder.aliases != null)
+						helpOutput.push("Aliases:		" + [ commandResponses[commandParts[1]] ].concat(responder.aliases).join(", "));
+					helpOutput.push("No additional help available for command '" + commandParts[1] + "'.");
+				} else {
+					helpOutput = helpOutput.concat(responder.help);
+				}
+				consoleOutputText(helpOutput);
+			}
+		}
+	},
+	"displayname":		"help, ?",
+	"aliases":			[ "?" ],
+	"description":		"Print help."
+};
+
+consoleCommands["logout"] = {
+	"responder":		function (commandParts) {
+		var formData = new FormData();
+		formData.append("logout", csrfToken);
+		var request = new XMLHttpRequest();
+		request.open("POST", "/logout");
+		request.send(formData);
+		window.location.href = "/";
+	},
+	"displayname":		"logout",
+	"description":		"Log out of GreaterWrong."
 }
 
-function consoleCommandNavigate(commandParts) {
-	let destinations = {
-			"about":		[ "abou[t]", 		"About page",							"/about" ],
-			"t":			"about",
-			"archive":		[ "a[r]chive", 		"Archive browser",						"/archive" ],
-			"r":			"archive",
-			"user":			[ "[u]ser", 		"Your user page",						"/users/TO_BE_ADDED" ],
-			"u":			"user",
-			"comments":		[ "[c]omments",		"Recent comments page",					"/recentcomments" ],
-			"c":			"comments",
-			"home":			[ "[h]ome",			"Home page (a.k.a. frontpage posts)",	"/" ],
-			"h":			"home",
-			"featured":		[ "[f]eatured",		"Featured (a.k.a. curated posts)",		"/index?view=featured" ],
-			"f":			"featured",
-			"all":			[ "[a]ll",			"All (a.k.a. community posts)",			"/index?view=new" ],
-			"a":			"all",
-			"meta":			[ "[m]eta",			"Meta posts",							"/index?view=meta" ],
-			"m":			"meta",
+consoleCommands["go"] = {
+	"responder":		function (commandParts) {			
+		if (commandParts.length == 1) {
+			consoleOutputText([ "<strong>Please enter a destination.</strong>" ].concat(this.help));
+		} else {
+			var destination = this.destinations[commandParts[1]];
+			
+			if (destination == null || (typeof destination == 'string' && this.destinations[destination] == null)) {
+				consoleOutputText([ "<strong>'" + commandParts[1] + "' is not a valid destination!</strong>" ].concat(this.help));
+			} else {		
+				if (typeof destination == 'string') destination = this.destinations[destination];
+				var [ name, desc, target ] = destination;
+				if (typeof desc == 'function') desc = desc(commandParts);
+				if (typeof target == 'function') target = target(commandParts);
+				consoleOutputText("Loading: " + desc + " ...");
+				window.location.href = target;
+			}
+		}	
+	},
+	"displayname":		"[g]o",
+	"aliases":			[ "g" ],
+	"description":		"Go to specified page.",
+	"helpParts":		[ "Syntax is:		[g]o <em>&lt;destination&gt;</em> [ <em>&lt;options&gt;</em> ]",
+						  "Available destinations are:",
+						  "(You can use either a destination’s full name, such as 'about', or the single-letter abbreviation in brackets, such as 't'.)" ],
+	"destinations":		{
+		"about":		[ "abou[t]", 		"About page",							"/about" ],
+		"t":			"about",
+		"archive":		[ "a[r]chive", 		"Archive browser",						"/archive" ],
+		"r":			"archive",
+		"comments":		[ "[c]omments",		"Recent comments page",					"/recentcomments" ],
+		"c":			"comments",
+		"home":			[ "[h]ome",			"Home page (a.k.a. frontpage posts)",	"/" ],
+		"h":			"home",
+		"featured":		[ "[f]eatured",		"Featured (a.k.a. curated posts)",		"/index?view=featured" ],
+		"f":			"featured",
+		"all":			[ "[a]ll",			"All (a.k.a. community posts)",			"/index?view=new" ],
+		"a":			"all",
+		"meta":			[ "[m]eta",			"Meta posts",							"/index?view=meta" ],
+		"m":			"meta",
+		"user":			[ "[u]ser",
+							function (commandParts) {
+								let currentUser = "bob";
+								if (commandParts) {
+									return (commandParts.length > 2) ? `User ${commandParts[2]}’s page` :
+											((currentUser != null) ? "Your user page" : "Login page");
+								} else {
+									return (currentUser != null) ? "Your user page, or other user’s page" : "Login page, or other user’s page";
+								}
+							},
+							function (commandParts) {
+								// TODO: replace this with an actual way of getting the current user.
+								let currentUser = "bob";
+								if (commandParts) {
+									return (commandParts.length > 2) ? `/users/${commandParts[2]}` :
+											((currentUser != null) ? ("/users/" + currentUser) : "/login?return=%2F");
+								} else {
+									return (currentUser != null) ? ("/users/" + currentUser) : "/login?return=%2F";
+								}
+							},
+							[ "			<em>&lt;userid&gt;</em>		User ID of other user (optional)" ],
+							[	"			go user eliezer_yudkowsky",
+								"			g u yvain" ]
+						],
+		"u":			"user"
+	},
+	"construct":		function () {
+		if (this.constructed) return;
+		
+		// Complete the destinations list.
+		// TODO: replace this with an actual way of getting the current user.
+		let currentUser = "bob";
+		if (currentUser) {
+			this.destinations = Object.assign(this.destinations, {
+				"inbox":		[ "inb[o]x", 		"Your inbox",							"/users/" + currentUser + "?show=inbox" ],
+				"o":			"inbox"
+			});
 		}
-	var destinationsPrettyPrinted = [ ];
-	for (dest in destinations) {
-		console.log(dest);
-		if (typeof destinations[dest] != 'object') continue;
-		destinationsPrettyPrinted.push(`	${destinations[dest][0]}		${(destinations[dest][0].length < 8 ? "	" : "")}${destinations[dest][1]}`);
-	}
-	
-	if (commandParts.length == 1) {
-		consoleOutputText([ "Please enter a destination.", "Syntax is:		{ go | g } &lt;destination&gt;", "Available destinations are:" ].concat(destinationsPrettyPrinted).concat([
-			"(You can use either a destination’s full name, such as 'about', or the single-letter abbreviation in brackets, such as 't'.)" ]));
-	} else {
-		var destination = destinations[commandParts[1]];
-		if (destination == null || (typeof destination == 'string' && destinations[destination] == null)) {
-			consoleOutputText([ "'" + commandParts[1] + "' is not a valid destination!", "Available destinations are:" ].concat(destinationsPrettyPrinted).concat([
-			"(You can use either a destination’s name or the single-letter abbreviation.)" ]));
-		} else {		
-			if (typeof destination == 'string') destination = destinations[destination];
-			consoleOutputText("Loading: " + destination[1] + " ...");
-			window.location.href = destination[2];
+		
+		// Construct help.
+		this.help = this.helpParts.slice(0,2);
+		// Pretty-print list of destinations, for output.
+		for (dest in this.destinations) {
+			if (typeof this.destinations[dest] != 'object') continue;
+			var [ name, desc, target, options, examples ] = this.destinations[dest];
+			if (typeof desc == 'function') desc = desc();
+			this.help.push(`	${name}		${(name.length < 8 ? "	" : "")}${desc}`);
+			let thisObj = this;
+			if (options) {
+				this.help.push("		Options:");
+				options.forEach(function (opt) {
+					thisObj.help.push(opt);
+				});
+			}
+			if (examples) {
+				this.help.push("		Examples:");
+				examples.forEach(function (ex) {
+					thisObj.help.push(ex);
+				});
+			}
 		}
-	}	
+		this.help = this.help.concat(this.helpParts.slice(2));
+		
+		this.constructed = true;
+	},
+	"constructed":		false,
+};
+
+consoleCommands["prefs"] = {
+	"responder":		function (commandParts) {
+		if (commandParts.length == 1) {
+			consoleOutputText(this.help.slice(0,1));
+		} else if (commandParts[1] == "help") {
+			consoleOutputText([ "<strong>" + this.description + "</strong>" ].concat(this.help));
+		} else if (commandParts[1] == "list") {
+			if (commandParts.length == 3 && commandParts[2] == "raw") {
+				var output = [ ];
+				
+				output.push("<strong>Local storage:</strong>");
+				for (itemName in window.localStorage) {
+					let itemValue = window.localStorage[itemName];
+					if (typeof itemValue  == 'function' || itemName == "length") continue;
+					
+					output.push("\t" + itemName);
+					output.push("\t\t" + itemValue);					
+				}
+				
+				output.push("<strong>Cookies:</strong>");
+				document.cookie.split(";").forEach(function (cookie) {
+					let [ cookieName, cookieValue ] = cookie.split("=");
+					output.push("\t" + cookieName);
+					output.push("\t\t" + unescape(cookieValue));
+				});
+				
+				consoleOutputText(output);
+			}
+		} else if (commandParts[1] == "set") {
+			if (commandParts.length < 3 || 
+				(commandParts[2] == "-c" && commandParts.length < 4)) {
+				consoleOutputText("You must specify a key to set!");
+			} else if (commandParts.length < 4 ||
+					   (commandParts[2] == "-c" && commandParts.length < 5)) {
+				consoleOutputText("You must specify a value for key '" + 
+					(commandParts[2] == "-c" ? commandParts[3] : commandParts[2]) + 
+					"'!");
+			} else {
+				if (commandParts[2] == "-c") {
+					setCookie(commandParts[3], commandParts[4])
+				} else {
+					window.localStorage.setItem(commandParts[2], commandParts[3]);
+				}
+			}
+		} else if (commandParts[1] == "clear") {
+			if (commandParts.length < 3 || 
+				(commandParts[2] == "-c" && commandParts.length < 4)) {
+				consoleOutputText("You must specify a key to clear! (Or 'prefs clear all' to clear all preferences.)");
+			} else {
+				if (commandParts[2] == "-c") {
+					setCookie(commandParts[3], null);
+				} else {
+					window.localStorage.removeItem(commandParts[2]);
+				}
+			}
+		}
+	},
+	"description":		"View and set site preferences.",
+	"displayname":		"[p]refs",
+	"aliases":			[ "p" ],
+	"helpParts":		[ "Syntax is:		[p]refs { help | list [ <em>&lt;key&gt;</em> ] [ raw ] | set <em>&lt;key&gt;</em> <em>&lt;value&gt;</em> | clear { <em>&lt;key&gt;</em> | all } }",
+						  "Options:",
+						  "	help		Print help.",
+						  "	list		List current value(s) for specified key(s).",
+						  "				(If no key specified, lists all preferences.)",
+						  "				If 'raw' is specified, lists raw value(s).",
+						  "	set			Set a new value for the specified key.",
+						  "	clear		Delete the specified key (or 'all' to delete all preferences).",
+						  "The '-c' flag, if included after the 'set' or 'clear' option, sets or clears the cookie of the given name. Otherwise, the key is assumed to be the name of a localStorage item."						  
+						],
+	"construct":		function () {
+		if (this.constructed) return;
+		
+		this.help = this.helpParts;
+		
+		this.constructed = true;
+	},
+	"constructed":		false
+}
+
+consoleCommands["search"] = {
+	"responder":		function (commandParts) {
+		
+	},
+	"description":		"Search the site.",
+	"displayname":		"[s]earch",
+	"aliases":			[ "s" ]
+}
+
+consoleCommands["antikibitzer"] = {
+	"responder":		function (commandParts) {
+		if (commandParts.length == 1) {
+			let akEnabled = !(window.localStorage.getItem("antikibitzer") != "true");
+			consoleOutputText([ "Anti-kibitzer mode is <strong>" + 
+								(akEnabled ? "on" : "off") + 
+								"</strong>.",
+								"Type 'antikibitzer " + 
+								(akEnabled ? "off" : "on") + 
+								"' to " + 
+								(akEnabled ? "disable" : "enable") + 
+								" anti-kibitzer mode." ]);
+		} else if (commandParts[1] == "on" || commandParts[1] == "off") {
+			let currentState = (window.localStorage.getItem("antikibitzer") != "true") ? "off" : "on";
+			
+			if (commandParts[1] != currentState) {
+				toggleAntiKibitzerMode();
+				consoleOutputText("Anti-kibitzer mode " + (currentState == "off" ? "enabled" : "disabled") + ".");
+			} else {
+				consoleOutputText("Anti-kibitzer mode is already " + (currentState == "off" ? "disabled" : "enabled") + "!");
+			}
+		} else if (commandParts[1] == "help") {
+			consoleOutputText(this.help);
+		} else if (commandParts[1] == "info") {
+			consoleOutputText("Loading post about anti-kibitzer mode ...");
+			window.location.href = "https://www.greaterwrong.com/posts/XbfdLQrAWTRfpggRM/lesswrong-anti-kibitzer-hides-comment-authors-and-vote";
+		} else {
+			consoleOutputText(this.help.slice(0,1));
+		}
+	},
+	"description":		"Turn anti-kibitzer mode on or off.",
+	"displayname":		"antikibitzer, ak",
+	"aliases":			[ "ak" ],
+	"help":				[ "Syntax is:		{ antikibitzer | ak } [ on | off | help | info ]",
+						  "	If used with no options, antikibitzer prints the current status.",
+						  "Anti-kibitzer mode hides the authors, and the karma values, of posts and comments.",
+						  "For more information, please type 'antikibitzer info' (this will take you to another page)." ]
+}
+
+consoleCommands["themeset"] = {
+	"responder":		function (commandParts) {
+		if (commandParts.length == 1) {
+			consoleOutputText("Current theme is: <strong>" + (readCookie('theme') || 'default') + "</strong>");
+		} else if (commandParts[1] == "help") {
+			consoleOutputText([ "<strong>" + this.description + "</strong>" ].concat(this.help));
+		} else if (commandParts[1] == "list") {
+			consoleOutputText(this.helpParts.slice(6));
+		} else {
+			let themeSpec = window.themeOptions.find(function (theme) { return theme[0] == commandParts[1]; });
+			if (themeSpec == null) {
+				consoleOutputText([ "'" + commandParts[1] + "' is not a valid theme name!", "Type 'themeset list' to see a list of available themes." ]);
+			} else {
+				setTheme(commandParts[1]);
+			}
+		}
+	},
+	"description":		"Set theme.",
+	"displayname":		"themeset, ts",
+	"aliases":			[ "ts" ],
+	"helpParts":		[ "Syntax is:		{ themeset | ts } [ help | list | <em>&lt;theme name&gt;</em> ]",
+						  "	Options:",
+						  "<span style='tab-size:8;'>" +	"	help			Print help." + "</span>",
+						  "<span style='tab-size:8;'>" +	"	list			List available themes." + "</span>",
+						  "<span style='tab-size:8;'>" +	"	<em>&lt;theme name&gt;</em>		Set specified theme." + "</span>",
+						  "	If used with no options, themeset prints the currently active theme.",
+						  "Available themes are:" ],
+	"construct":		function () {
+		if (this.constructed) return;
+		
+		this.help = this.helpParts.slice(0,6);
+
+		let thisObj = this;
+		window.themeOptions.forEach(function (themeSpec) {
+			let [ name, desc, letter ] = themeSpec;
+			thisObj.helpParts.push(`<span style='tab-size:20;'>    ${name}	${desc}</span>`);
+		});
+		
+		this.constructed = true;
+	},
+	"constructed":		false
+}
+
+// Map all recognized commands, including aliases, to responders
+
+var commandResponses = { };
+for (command in consoleCommands) {
+	commandResponses[command] = command;
+	if (consoleCommands[command].aliases != null)
+		consoleCommands[command].aliases.forEach(function (alias) {
+			commandResponses[alias] = command;
+		});
 }
 
 /**********************/
@@ -1827,7 +2126,7 @@ function toggleAntiKibitzerMode() {
 		// Link post domains.
 		document.querySelectorAll(".link-post-domain").forEach(function (e) {
 			// Skip own posts/comments.
-			if (userTabTarget == e.closest(".post-meta").querySelector(".author").href)
+			if (userPageLink == e.closest(".post-meta").querySelector(".author").href)
 				return;
 				
 			e.dataset["trueDomain"] = e.textContent;
