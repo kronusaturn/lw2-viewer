@@ -424,11 +424,13 @@
   (let ((fn (lambda ()
               (let ((base-terms (alist :view "postCommentsTop" :post-id post-id))
                     (comments-fields '(:--id :user-id :post-id :posted-at :parent-comment-id :base-score :page-url :vote-count :html-body)))
-                (comments-list-to-graphql-json
-                  (loop for offset from 0 by 500
+                (multiple-value-bind (comments-total comments-list)
+                  (lw2-graphql-query-multi (list (lw2-query-string* :comment :total base-terms nil)
+                                                 (lw2-query-string* :comment :list (nconc (alist :limit 500) base-terms) comments-fields)))
+                  (loop for offset from 500 to comments-total by 500
                         as comments-next = (lw2-graphql-query (lw2-query-string :comment :list (nconc (alist :limit 500 :offset offset) base-terms) comments-fields))
-                        while comments-next
-                        nconc comments-next))))))
+                        do (setf comments-list (nconc comments-list comments-next)))
+                  (comments-list-to-graphql-json comments-list))))))
     (lw2-graphql-query-timeout-cached fn "post-comments-json" post-id :revalidate revalidate :force-revalidate force-revalidate)))
 
 (declare-backend-function get-notifications)
