@@ -950,6 +950,10 @@ a#inbox-indicator.new-messages:hover::before {
 	bottom: 23px;
 }
 
+#console .output .highlight {
+	text-decoration: underline;
+}
+
 /************/
 /* ARCHIVES */
 /************/

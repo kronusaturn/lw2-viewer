@@ -1879,15 +1879,38 @@ consoleCommands["find"] = {
 			consoleOutputText(this.help);
 		} else {
 			var contentChunks = [ ];
-			document.querySelectorAll(".post-body > *:not(.contents)").forEach(element => {
+			document.querySelectorAll("#content .post-body > *:not(.contents)").forEach(element => {
 				contentChunks.push(element.textContent);
 			});
-			consoleOutputText(contentChunks);
+			document.querySelectorAll(".comment-body").forEach(element => {
+				contentChunks.push(element.textContent);
+			});
+			
+			var matches = [ ];
+			contentChunks.forEach(chunk => {
+				commandParts.slice(1).forEach(term => {
+					let loc = chunk.toLowerCase().indexOf(term.toLowerCase());
+					if (loc !== -1) {
+						let excerptWidth = parseInt(this.defaultExcerptWidth);
+						let start = Math.max(loc - excerptWidth, 0);
+						let end = Math.min(loc + term.length + excerptWidth, chunk.length);
+						matches.push("“... " + 
+									  chunk.substring(start, loc) + 
+									  "<span class='highlight'>" + 
+									  chunk.substring(loc, loc + term.length) + 
+									  "</span>" + 
+									  chunk.substring(loc + term.length, end) + 
+									  " ...”");
+					}
+				});
+			});
+			consoleOutputText(matches);
 		}
 	},
-	"description":		"Find text in page.",
-	"displayname":		"[f]ind",
-	"aliases":			[ "f" ]
+	"description":				"Find text in page.",
+	"displayname":				"[f]ind",
+	"aliases":					[ "f" ],
+	"defaultExcerptWidth":		30
 }
 
 consoleCommands["antikibitzer"] = {
