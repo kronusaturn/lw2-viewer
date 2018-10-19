@@ -942,7 +942,7 @@ a.comment-parent-link::before {
 /*====================*/
 
 .author.redacted,
-.comment-in-reply-to a[href^='/users/'].redacted {
+.comment-in-reply-to a.redacted {
 	opacity: 0.6;
 	font-weight: 300;
 }

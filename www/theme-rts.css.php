@@ -965,7 +965,7 @@ a.post-section.alignment-forum:hover::before {
 /*====================*/
 
 .author.redacted,
-.comment-in-reply-to a[href^='/users/'].redacted {
+.comment-in-reply-to a.redacted {
 	opacity: 0.5;
 	font-weight: 300;
 }

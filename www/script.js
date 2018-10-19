@@ -1613,33 +1613,21 @@ function toggleAntiKibitzerMode() {
 	let antiKibitzerToggle = document.querySelector("#anti-kibitzer-toggle");	
 	if (antiKibitzerToggle.hasClass("engaged")) {
 		// Author names/links.
-		document.querySelectorAll(".author, .comment-in-reply-to a[href^='/users/']").forEach(function (e) {
-			// Skip own posts/comments.
-			if (userTabTarget == e.href)
-				return;
-		
+		document.querySelectorAll(".author.redacted, .comment-in-reply-to a.redacted").forEach(function (e) {
 			e.textContent = e.dataset["trueName"];
 			e.href = e.dataset["trueLink"];
 			
 			e.removeClass("redacted");
 		});
 		// Post/comment karma values.
-		document.querySelectorAll(".karma-value").forEach(function (e) {
-			// Skip own posts/comments.
-			if (userTabTarget == (e.closest(".comment-item") || e.closest(".post-meta")).querySelector(".author").href)
-				return;
-		
+		document.querySelectorAll(".karma-value.redacted").forEach(function (e) {
 			e.innerHTML = e.dataset["trueValue"] + e.lastChild.outerHTML;
 			e.lastChild.textContent = (parseInt(e.dataset["trueValue"]) == 1) ? " point" : " points";
 			
 			e.removeClass("redacted");
 		});
 		// Link post domains.
-		document.querySelectorAll(".link-post-domain").forEach(function (e) {
-			// Skip own posts/comments.
-			if (userTabTarget == e.closest(".post-meta").querySelector(".author").href)
-				return;
-				
+		document.querySelectorAll(".link-post-domain.redacted").forEach(function (e) {
 			e.textContent = e.dataset["trueDomain"];
 			
 			e.removeClass("redacted");
@@ -1657,7 +1645,7 @@ function toggleAntiKibitzerMode() {
 			e.dataset["trueName"] = e.textContent;
 			e.textContent = "REDACTED";
 			
-			e.dataset["trueLink"] = e.href;
+			e.dataset["trueLink"] = e.pathname;
 			e.href = "#";
 			
 			e.addClass("redacted");
