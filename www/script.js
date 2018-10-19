@@ -1476,6 +1476,7 @@ function injectConsole() {
 		"</div>\n");
 	gwConsole.querySelector("form").addEventListener("submit", consoleEnterKeyPressed);
 	gwConsole.querySelector("form input").addEventListener("keydown", consoleTabKeyPressed);
+	gwConsole.querySelector("form input").addEventListener("keyup", consoleEscapeKeyPressed);
 	
 	for (command in consoleCommands)
 		if (consoleCommands[command].construct != null)
@@ -1488,11 +1489,19 @@ function toggleConsole() {
 	let gwConsole = document.querySelector("#console");
 	gwConsole.toggleClass("engaged");
 	if (gwConsole.hasClass("engaged"))
-		window.setTimeout(function () { gwConsole.querySelector("input").focus(); }, 100);	
+		window.setTimeout(function () { gwConsole.querySelector("input").focus(); }, 100);
+	else
+		gwConsole.querySelector("input").blur();
 }
 
 // Special keypress event listeners.
 
+function consoleEscapeKeyPressed(event) {
+	if (event.keyCode == 27 && document.querySelector("#console").hasClass("engaged")) {
+		event.preventDefault();
+		toggleConsole();
+	}
+}
 function consoleEnterKeyPressed(event) {
 	event.preventDefault();
 	
@@ -1538,7 +1547,27 @@ function parseConsoleInput(enteredText) {
 	// Echo entered line.
 	consoleOutput("<p class='user-input-echo'>$ " + enteredText + "</p>");
 		
-	let parts = enteredText.split(/\s/);
+	var parts = [ ], flags = [ ];
+
+	// Tokenize.
+	var re = /(?:"([^"]+)"|(\S+))/g;
+	var matches;
+	while ((matches = re.exec(enteredText)) !== null)
+		parts.push(matches[1] || matches[2]);
+
+	// Filter out and set aside flag-bearing tokens.
+	let flagTokens = parts.filter(part => part.lastIndexOf("-", 0) === 0);
+	parts = parts.filter(part => part.lastIndexOf("-", 0) !== 0);
+	
+	// Construct list of unique flags.
+	flagTokens.forEach(token => {
+		if (token.lastIndexOf("--", 0) === 0 && flags.indexOf(token.substring(2) === -1))
+			flags.push(token.substring(2));
+		else
+			[...token.substring(1)].forEach(c => {
+				if (flags.indexOf(c === -1)) flags.push();
+			});
+	});
 	
 	let response = commandResponses[parts[0]];
 	if (consoleCommands[response] == null) {
@@ -1547,7 +1576,7 @@ function parseConsoleInput(enteredText) {
 		return;
 	}
 	
-	consoleCommands[response].responder(parts);
+	consoleCommands[response].responder(parts, flags);
 }
 
 // Specific console commands.
@@ -1571,7 +1600,7 @@ consoleCommands["clear"] = {
 };
 
 consoleCommands["help"] = {
-	"responder":		function (commandParts) {
+	"responder":		function (commandParts, commandFlags) {
 		if (commandParts.length == 1) {
 			var availableCommands = [ ];
 			for (command in consoleCommands) {
@@ -1608,7 +1637,7 @@ consoleCommands["help"] = {
 };
 
 consoleCommands["logout"] = {
-	"responder":		function (commandParts) {
+	"responder":		function (commandParts, commandFlags) {
 		var formData = new FormData();
 		formData.append("logout", csrfToken);
 		var request = new XMLHttpRequest();
@@ -1621,7 +1650,7 @@ consoleCommands["logout"] = {
 }
 
 consoleCommands["go"] = {
-	"responder":		function (commandParts) {			
+	"responder":		function (commandParts, commandFlags) {			
 		if (commandParts.length == 1) {
 			consoleOutputText([ "<strong>Please enter a destination.</strong>" ].concat(this.help));
 		} else {
@@ -1729,7 +1758,7 @@ consoleCommands["go"] = {
 };
 
 consoleCommands["prefs"] = {
-	"responder":		function (commandParts) {
+	"responder":		function (commandParts, commandFlags) {
 		if (commandParts.length == 1) {
 			consoleOutputText(this.help.slice(0,1));
 		} else if (commandParts[1] == "help") {
@@ -1809,7 +1838,7 @@ consoleCommands["prefs"] = {
 }
 
 consoleCommands["search"] = {
-	"responder":		function (commandParts) {
+	"responder":		function (commandParts, commandFlags) {
 		
 	},
 	"description":		"Search the site.",
@@ -1818,7 +1847,7 @@ consoleCommands["search"] = {
 }
 
 consoleCommands["antikibitzer"] = {
-	"responder":		function (commandParts) {
+	"responder":		function (commandParts, commandFlags) {
 		if (commandParts.length == 1) {
 			let akEnabled = !(window.localStorage.getItem("antikibitzer") != "true");
 			consoleOutputText([ "Anti-kibitzer mode is <strong>" + 
@@ -1857,7 +1886,7 @@ consoleCommands["antikibitzer"] = {
 }
 
 consoleCommands["themeset"] = {
-	"responder":		function (commandParts) {
+	"responder":		function (commandParts, commandFlags) {
 		if (commandParts.length == 1) {
 			consoleOutputText("Current theme is: <strong>" + (readCookie('theme') || 'default') + "</strong>");
 		} else if (commandParts[1] == "help") {
