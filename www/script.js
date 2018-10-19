@@ -1647,17 +1647,28 @@ consoleCommands["help"] = {
 	"description":		"Print help."
 };
 
-consoleCommands["logout"] = {
+consoleCommands[(loggedInUserId ? "logout" : "login")] = {
 	"responder":		function (commandParts, commandFlags) {
-		var formData = new FormData();
-		formData.append("logout", csrfToken);
-		var request = new XMLHttpRequest();
-		request.open("POST", "/logout");
-		request.send(formData);
-		window.location.href = "/";
+		if (commandParts[0] == "logout") {	
+			var formData = new FormData();
+			formData.append("logout", csrfToken);
+			var request = new XMLHttpRequest();
+			request.open("POST", "/logout");
+			request.onreadystatechange = () => { if (request.readyState == 4) window.location.href = "/"; };
+			request.send(formData);
+		} else {
+			window.location.href = "/login?return=%2F";
+		}
 	},
-	"displayname":		"logout",
-	"description":		"Log out of GreaterWrong."
+	"construct":		function () {
+		if (this.constructed) return;
+		
+		this.displayname = loggedInUserId ? "logout" : "login";
+		this.description = loggedInUserId ? "Log out of GreaterWrong." : "Log in to GreaterWrong.";
+		
+		this.constructed = true;
+	},
+	"constructed":		false
 }
 
 consoleCommands["go"] = {
@@ -1702,23 +1713,26 @@ consoleCommands["go"] = {
 		"m":			"meta",
 		"user":			[ "[u]ser",
 							function (commandParts) {
-								let currentUser = "bob";
-								if (commandParts) {
-									return (commandParts.length > 2) ? `User ${commandParts[2]}’s page` :
-											((currentUser != null) ? "Your user page" : "Login page");
-								} else {
-									return (currentUser != null) ? "Your user page, or other user’s page" : "Login page, or other user’s page";
-								}
+								return commandParts ?
+										((commandParts.length > 2) ? 
+											`User ${commandParts[2]}’s page` : 
+											(loggedInUserId ? 
+												"Your user page" : 
+												"Login page")) :
+										(loggedInUserId ?
+											"Your user page, or other user’s page" :
+											"Login page, or other user’s page");
 							},
 							function (commandParts) {
-								// TODO: replace this with an actual way of getting the current user.
-								let currentUser = "bob";
-								if (commandParts) {
-									return (commandParts.length > 2) ? `/users/${commandParts[2]}` :
-											((currentUser != null) ? ("/users/" + currentUser) : "/login?return=%2F");
-								} else {
-									return (currentUser != null) ? ("/users/" + currentUser) : "/login?return=%2F";
-								}
+								return commandParts ?
+										((commandParts.length > 2) ? 
+											`/users/${commandParts[2]}` : 
+											(loggedInUserId ? 
+												("/users/" + loggedInUserId) : 
+												"/login?return=%2F")) :
+										(loggedInUserId ? 
+											("/users/" + loggedInUserId) :
+											"/login?return=%2F");
 							},
 							[ "			<em>&lt;userid&gt;</em>		User ID of other user (optional)" ],
 							[	"			go user eliezer_yudkowsky",
@@ -1730,11 +1744,9 @@ consoleCommands["go"] = {
 		if (this.constructed) return;
 		
 		// Complete the destinations list.
-		// TODO: replace this with an actual way of getting the current user.
-		let currentUser = "bob";
-		if (currentUser) {
+		if (loggedInUserId) {
 			this.destinations = Object.assign(this.destinations, {
-				"inbox":		[ "inb[o]x", 		"Your inbox",							"/users/" + currentUser + "?show=inbox" ],
+				"inbox":		[ "inb[o]x", 		"Your inbox",							"/users/" + loggedInUserId + "?show=inbox" ],
 				"o":			"inbox"
 			});
 		}
