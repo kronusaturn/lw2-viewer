@@ -5,7 +5,9 @@
 
 (add-template-directory (asdf:system-relative-pathname "lw2-viewer" "templates/"))
 
-(defvar *current-auth-token*) 
+(defvar *current-auth-token*)
+(defvar *current-userid*)
+(defvar *current-username*)
 
 (defvar *read-only-mode* nil)
 (defvar *read-only-default-message* "Due to a system outage, you cannot log in or post at this time.")
@@ -14,13 +16,13 @@
 (defvar *current-prefs* nil)
 
 (defun logged-in-userid (&optional is-userid)
-  (if *read-only-mode* nil
-      (let ((current-userid (and *current-auth-token* (cache-get "auth-token-to-userid" *current-auth-token*))))
-        (if is-userid
-            (string= current-userid is-userid)
-            current-userid)))) 
+  (let ((current-userid *current-userid*))
+    (if is-userid
+        (string= current-userid is-userid)
+        current-userid))) 
+
 (defun logged-in-username ()
-  (and (not *read-only-mode*) *current-auth-token* (cache-get "auth-token-to-username" *current-auth-token*))) 
+  *current-username*)
 
 (defun pretty-time (timestring &key format)
   (let ((time (local-time:parse-timestring timestring)))
@@ -684,19 +686,31 @@
                  (let ((json:*identifier-name-to-key* #'json:safe-json-intern))
                    (json:decode-json-from-string status-string)))))
          (*current-auth-token*
-           (alexandria:if-let (at (hunchentoot:cookie-in "lw2-auth-token"))
-             (if (or (string= at "") (not lw2-status) (> (get-unix-time) (- (cdr (assoc :expires lw2-status)) (* 60 60 24))))
-                 nil at)))
+           )
          (*current-prefs*
            (alexandria:if-let (prefs-string (hunchentoot:cookie-in "prefs"))
              (let ((json:*identifier-name-to-key* 'json:safe-json-intern))
                (ignore-errors (json:decode-json-from-string (quri:url-decode prefs-string)))))))
-    (handler-case
-      (log-conditions 
-        (funcall fn))
-      (serious-condition (condition)
-                         (emit-page (out-stream :title "Error" :return-code (condition-http-return-code condition) :content-class "error-page")
-                                    (error-to-html out-stream condition))))))
+    (multiple-value-bind (*current-auth-token* *current-userid* *current-username*)
+      (if *read-only-mode*
+          (values)
+          (alexandria:if-let
+            (auth-token
+              (alexandria:if-let
+                (at (hunchentoot:cookie-in "lw2-auth-token"))
+                (if (or (string= at "") (not lw2-status) (> (get-unix-time) (- (cdr (assoc :expires lw2-status)) (* 60 60 24))))
+                    nil at)))
+            (with-cache-readonly-transaction
+              (values
+                auth-token
+                (cache-get "auth-token-to-userid" auth-token)
+                (cache-get "auth-token-to-username" auth-token)))))
+      (handler-case
+        (log-conditions 
+          (funcall fn))
+        (serious-condition (condition)
+                           (emit-page (out-stream :title "Error" :return-code (condition-http-return-code condition) :content-class "error-page")
+                                      (error-to-html out-stream condition)))))))
 
 (defmacro with-error-page (&body body)
   `(call-with-error-page (lambda () ,@body)))
