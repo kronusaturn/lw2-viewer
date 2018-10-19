@@ -1845,7 +1845,7 @@ consoleCommands["prefs"] = {
 
 consoleCommands["search"] = {
 	"responder":		function (commandParts, commandFlags) {
-		
+		window.location.href = "/search?q="+encodeURI(commandParts.slice(1).join(" ").replace(" ","+"));
 	},
 	"description":		"Search the site.",
 	"displayname":		"[s]earch",
