@@ -8,6 +8,7 @@
 (defvar *current-auth-token*)
 (defvar *current-userid*)
 (defvar *current-username*)
+(defvar *current-user-slug*)
 
 (defvar *read-only-mode* nil)
 (defvar *read-only-default-message* "Due to a system outage, you cannot log in or post at this time.")
@@ -23,6 +24,9 @@
 
 (defun logged-in-username ()
   *current-username*)
+
+(defun logged-in-user-slug ()
+  *current-user-slug*)
 
 (defun pretty-time (timestring &key format)
   (let ((time (local-time:parse-timestring timestring)))
@@ -511,7 +515,7 @@
                                                                                                  (string *read-only-mode*)
                                                                                                  (t *read-only-default-message*)))))
                                  (if username
-                                     (let ((user-slug (encode-entities (get-user-slug (logged-in-userid)))))
+                                     (let ((user-slug (encode-entities (logged-in-user-slug))))
                                        `("login" ,(format nil "/users/~A" user-slug) ,(plump:encode-entities username) :description "User page" :accesskey "u"
                                          :trailing-html ,(inbox-to-html user-slug)))
                                      `("login" ,(format nil "/login?return=~A" (url-rewrite:url-encode current-uri)) "Log In" :accesskey "u" :nofollow t))))))
@@ -552,9 +556,10 @@
   (let* ((session-token (hunchentoot:cookie-in "session-token"))
          (csrf-token (and session-token (make-csrf-token session-token)))) 
     (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head>")
-    (format out-stream "<style id='width-adjust'></style><script>loggedInUserId=\"~A\"; loggedInUserDisplayName=\"~A\"; ~@[var csrfToken=\"~A\"; ~]~A</script>~A"
+    (format out-stream "<style id='width-adjust'></style><script>loggedInUserId=\"~A\"; loggedInUserDisplayName=\"~A\"; loggedInUserSlug=\"~A\"; ~@[var csrfToken=\"~A\"; ~]~A</script>~A"
             (or (logged-in-userid) "")
             (or (logged-in-username) "")
+            (or (logged-in-user-slug) "")
             csrf-token
             (load-time-value (with-open-file (s "www/head.js") (uiop:slurp-stream-string s)) t)
             *extra-inline-scripts*)
@@ -708,12 +713,13 @@
                 auth-token
                 (cache-get "auth-token-to-userid" auth-token)
                 (cache-get "auth-token-to-username" auth-token)))))
-      (handler-case
-        (log-conditions 
-          (funcall fn))
-        (serious-condition (condition)
-                           (emit-page (out-stream :title "Error" :return-code (condition-http-return-code condition) :content-class "error-page")
-                                      (error-to-html out-stream condition)))))))
+      (let ((*current-user-slug* (and *current-userid* (get-user-slug *current-userid*))))
+        (handler-case
+          (log-conditions
+            (funcall fn))
+          (serious-condition (condition)
+                             (emit-page (out-stream :title "Error" :return-code (condition-http-return-code condition) :content-class "error-page")
+                                        (error-to-html out-stream condition))))))))
 
 (defmacro with-error-page (&body body)
   `(call-with-error-page (lambda () ,@body)))
