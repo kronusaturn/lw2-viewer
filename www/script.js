@@ -135,19 +135,27 @@ function addScrollListener(fn) {
 /* MISC HELPERS */
 /****************/
 
-Element.prototype.scrollIntoViewIfNeeded = function() {
+Element.prototype.scrollIntoViewIfNeeded = function () {
 	if(this.getBoundingClientRect().bottom > window.innerHeight) {
 		this.scrollIntoView(false);
 	}
 }
 
-Element.prototype.getCommentId = function() {
+Element.prototype.getCommentId = function () {
 	let item = (this.className == "comment-item" ? this : this.closest(".comment-item"));
 	if(item) {
 		return /^comment-(.*)/.exec(item.id)[1];
 	} else {
 		return false;
 	}
+}
+
+Array.prototype.contains = function (element) {
+	return (this.indexOf(element) !== -1);
+}
+
+String.prototype.hasPrefix = function (prefix) {
+	return (this.lastIndexOf(prefix, 0) === 0);
 }
 
 /*******************/
@@ -1554,20 +1562,23 @@ function parseConsoleInput(enteredText) {
 	var matches;
 	while ((matches = re.exec(enteredText)) !== null)
 		parts.push(matches[1] || matches[2]);
-
+	
 	// Filter out and set aside flag-bearing tokens.
-	let flagTokens = parts.filter(part => part.lastIndexOf("-", 0) === 0);
-	parts = parts.filter(part => part.lastIndexOf("-", 0) !== 0);
+	let flagTokens = parts.filter(part => part.hasPrefix("-"));
+	parts = parts.filter(part => !part.hasPrefix("-"));
 	
 	// Construct list of unique flags.
 	flagTokens.forEach(token => {
-		if (token.lastIndexOf("--", 0) === 0 && flags.indexOf(token.substring(2) === -1))
+		if (token.hasPrefix("--") && !flags.contains(token.substring(2)))
 			flags.push(token.substring(2));
 		else
 			[...token.substring(1)].forEach(c => {
-				if (flags.indexOf(c === -1)) flags.push();
+				if (!flags.contains(c)) flags.push(c);
 			});
 	});
+	
+	console.log(parts);
+	console.log(flags);
 	
 	let response = commandResponses[parts[0]];
 	if (consoleCommands[response] == null) {
@@ -1786,28 +1797,23 @@ consoleCommands["prefs"] = {
 				consoleOutputText(output);
 			}
 		} else if (commandParts[1] == "set") {
-			if (commandParts.length < 3 || 
-				(commandParts[2] == "-c" && commandParts.length < 4)) {
+			if (commandParts.length < 3) {
 				consoleOutputText("You must specify a key to set!");
-			} else if (commandParts.length < 4 ||
-					   (commandParts[2] == "-c" && commandParts.length < 5)) {
-				consoleOutputText("You must specify a value for key '" + 
-					(commandParts[2] == "-c" ? commandParts[3] : commandParts[2]) + 
-					"'!");
+			} else if (commandParts.length < 4) {
+				consoleOutputText("You must specify a value for key '" + commandParts[2] + "'!");
 			} else {
-				if (commandParts[2] == "-c") {
-					setCookie(commandParts[3], commandParts[4])
+				if (commandFlags.contains("c")) {
+					setCookie(commandParts[2], commandParts[3])
 				} else {
 					window.localStorage.setItem(commandParts[2], commandParts[3]);
 				}
 			}
 		} else if (commandParts[1] == "clear") {
-			if (commandParts.length < 3 || 
-				(commandParts[2] == "-c" && commandParts.length < 4)) {
+			if (commandParts.length < 3) {
 				consoleOutputText("You must specify a key to clear! (Or 'prefs clear all' to clear all preferences.)");
 			} else {
-				if (commandParts[2] == "-c") {
-					setCookie(commandParts[3], null);
+				if (commandFlags.contains("c")) {
+					setCookie(commandParts[2], null);
 				} else {
 					window.localStorage.removeItem(commandParts[2]);
 				}
