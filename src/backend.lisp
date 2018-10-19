@@ -335,9 +335,10 @@
     (if (eq return-type :single)
         (string-downcase query-type)
         (concatenate 'string (string-downcase query-type) "s"))
-    (alist :input (if (eq return-type :single)
-                      (alist :selector args)
-                      (alist :terms args)))
+    (alist :input (case return-type
+                      (:single (alist :selector args))
+                      (:list (alist :terms args))
+                      (:total (alist :enable-total t :terms args))))
     (case return-type
         (:total '(:total-count))
         (:list (list (cons :results fields)))
