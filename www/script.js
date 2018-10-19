@@ -1845,11 +1845,49 @@ consoleCommands["prefs"] = {
 
 consoleCommands["search"] = {
 	"responder":		function (commandParts, commandFlags) {
-		window.location.href = "/search?q="+encodeURI(commandParts.slice(1).join(" ").replace(" ","+"));
+		if (commandParts.length < 2) {
+			consoleOutputText("Enter one or more search terms!")
+		} else if (commandParts[1] == "help") {
+			consoleOutputText(this.help);
+		} else {
+			window.location.href = "/search?q="+encodeURI(commandParts.slice(1).join(" ").replace(" ","+"));
+		}
 	},
 	"description":		"Search the site.",
 	"displayname":		"[s]earch",
-	"aliases":			[ "s" ]
+	"aliases":			[ "s" ],
+	"helpParts":		[ "Syntax is:		search <em>&lt;term1&gt;</em> [ <em>&lt;term2&gt;</em> <em>&lt;term3&gt;</em> … ]",
+						  "If a search term contains spaces, you must enclose it in double quotes.",
+						  "	Example:		search &quot;Eliezer Yudkowsky&quot;",
+						  "If you want quotes to be part of the search term, you must use single quotes.",
+						  "	Example:		search &apos;Eliezer&apos; &apos;Yudkowsky&apos;" ],
+	"construct":		function () {
+		if (this.constructed) return;
+		
+		this.help = this.helpParts;
+		
+		this.constructed = true;
+	},
+	"constructed":		false
+}
+
+consoleCommands["find"] = {
+	"responder":		function (commandParts, commandFlags) {
+		if (commandParts.length < 2) {
+			consoleOutputText("Enter text to find!");
+		} else if (commandParts[1] == "help") {
+			consoleOutputText(this.help);
+		} else {
+			var contentChunks = [ ];
+			document.querySelectorAll(".post-body > *:not(.contents)").forEach(element => {
+				contentChunks.push(element.textContent);
+			});
+			consoleOutputText(contentChunks);
+		}
+	},
+	"description":		"Find text in page.",
+	"displayname":		"[f]ind",
+	"aliases":			[ "f" ]
 }
 
 consoleCommands["antikibitzer"] = {
