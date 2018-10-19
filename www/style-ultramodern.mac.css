@@ -5082,7 +5082,8 @@ a.comment-parent-link::before {
 /* ANTI-KIBITZER MODE */
 /*====================*/
 
-.author.redacted {
+.author.redacted,
+.comment-in-reply-to a[href^='/users/'].redacted {
 	opacity: 0.6;
 	font-weight: 300;
 }

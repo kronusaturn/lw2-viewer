@@ -1595,7 +1595,6 @@ function injectAntiKibitzer() {
 }
 
 function antiKibitzerToggleButtonClicked (event) {
-	console.log(event);
 	if (document.querySelector("#anti-kibitzer-toggle").hasClass("engaged") && 
 		!event.shiftKey &&
 		!confirm("Are you sure you want to turn OFF the anti-kibitzer?\n\n(This will reveal the authors and karma values of all posts and comments!)")) {
@@ -1614,7 +1613,7 @@ function toggleAntiKibitzerMode() {
 	let antiKibitzerToggle = document.querySelector("#anti-kibitzer-toggle");	
 	if (antiKibitzerToggle.hasClass("engaged")) {
 		// Author names/links.
-		document.querySelectorAll(".author").forEach(function (e) {
+		document.querySelectorAll(".author, .comment-in-reply-to a[href^='/users/']").forEach(function (e) {
 			// Skip own posts/comments.
 			if (userTabTarget == e.href)
 				return;
@@ -1650,7 +1649,7 @@ function toggleAntiKibitzerMode() {
 		window.localStorage.setItem("antikibitzer", "false");
 	} else {
 		// Author names/links.
-		document.querySelectorAll(".author").forEach(function (e) {
+		document.querySelectorAll(".author, .comment-in-reply-to a[href^='/users/']").forEach(function (e) {
 			// Skip own posts/comments.
 			if (userTabTarget == e.href)
 				return;
