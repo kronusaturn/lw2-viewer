@@ -690,8 +690,6 @@
              (if (string= status-string "") nil
                  (let ((json:*identifier-name-to-key* #'json:safe-json-intern))
                    (json:decode-json-from-string status-string)))))
-         (*current-auth-token*
-           )
          (*current-prefs*
            (alexandria:if-let (prefs-string (hunchentoot:cookie-in "prefs"))
              (let ((json:*identifier-name-to-key* 'json:safe-json-intern))
