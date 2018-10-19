@@ -1609,9 +1609,18 @@ function toggleAntiKibitzerMode() {
 	// This will be the URL of the user's own page, if logged in, or the URL of
 	// the login page otherwise.
 	let userTabTarget = document.querySelector("#nav-item-login .nav-inner").href;
+	let pageHeadingElement = document.querySelector("h1.page-main-heading");
 
-	let antiKibitzerToggle = document.querySelector("#anti-kibitzer-toggle");	
+	let antiKibitzerToggle = document.querySelector("#anti-kibitzer-toggle");
 	if (antiKibitzerToggle.hasClass("engaged")) {
+		window.localStorage.setItem("antikibitzer", "false");
+
+		let redirectTarget = pageHeadingElement && pageHeadingElement.dataset["kibitzerRedirect"];
+		if(redirectTarget) {
+			window.location = redirectTarget;
+			return;
+		}
+
 		// Author names/links.
 		document.querySelectorAll(".author.redacted, .comment-in-reply-to a.redacted").forEach(function (e) {
 			e.textContent = e.dataset["trueName"];
@@ -1634,12 +1643,19 @@ function toggleAntiKibitzerMode() {
 		});
 		
 		antiKibitzerToggle.removeClass("engaged");
-		window.localStorage.setItem("antikibitzer", "false");
 	} else {
+		window.localStorage.setItem("antikibitzer", "true");
+
+		let redirectTarget = pageHeadingElement && pageHeadingElement.dataset["antiKibitzerRedirect"];
+		if(redirectTarget) {
+			window.location = redirectTarget;
+			return;
+		}
+
 		// Author names/links.
 		document.querySelectorAll(".author, .comment-in-reply-to a[href^='/users/']").forEach(function (e) {
 			// Skip own posts/comments.
-			if (userTabTarget == e.href)
+			if (e.hasClass("own-user-author"))
 				return;
 		
 			e.dataset["trueName"] = e.textContent;
@@ -1653,7 +1669,7 @@ function toggleAntiKibitzerMode() {
 		// Post/comment karma values.
 		document.querySelectorAll(".karma-value").forEach(function (e) {
 			// Skip own posts/comments.
-			if (userTabTarget == (e.closest(".comment-item") || e.closest(".post-meta")).querySelector(".author").href)
+			if ((e.closest(".comment-item") || e.closest(".post-meta")).querySelector(".author").hasClass("own-user-author"))
 				return;
 		
 			e.dataset["trueValue"] = e.firstChild.textContent;
@@ -1675,7 +1691,6 @@ function toggleAntiKibitzerMode() {
 		});
 		
 		antiKibitzerToggle.addClass("engaged");
-		window.localStorage.setItem("antikibitzer", "true");
 	}
 }
 
