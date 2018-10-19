@@ -1646,7 +1646,7 @@ function toggleAntiKibitzerMode() {
 			e.textContent = "REDACTED";
 			
 			e.dataset["trueLink"] = e.pathname;
-			e.href = "#";
+			e.href = "/user?id=" + e.dataset["userid"];
 			
 			e.addClass("redacted");
 		});

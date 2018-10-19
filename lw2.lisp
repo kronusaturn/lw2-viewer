@@ -105,12 +105,13 @@
                (draft boolean))
     post
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      (format out-stream "<h1 class=\"listing~:[~; link-post-listing~]\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~A</a></h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"comment-count\" href=\"~A#comments\">~A</a>~:[~*~;~:*<span class=\"read-time\" title=\"~:D word~:P\">~:D<span> min read</span></span>~]~@[<a class=\"lw2-link\" href=\"~A\">LW<span> link</span></a>~]"
+      (format out-stream "<h1 class=\"listing~:[~; link-post-listing~]\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~A</a></h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\" data-userid=\"~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"comment-count\" href=\"~A#comments\">~A</a>~:[~*~;~:*<span class=\"read-time\" title=\"~:D word~:P\">~:D<span> min read</span></span>~]~@[<a class=\"lw2-link\" href=\"~A\">LW<span> link</span></a>~]"
               url
               (if url (encode-entities (string-trim " " url)))
               (generate-post-auth-link post nil nil need-auth)
               (clean-text-to-html title)
               (encode-entities (get-user-slug user-id))
+              (encode-entities user-id)
               (encode-entities (get-username user-id))
               js-time
               pretty-time
@@ -143,10 +144,11 @@
                (html-body (or null string)))
     post
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      (format out-stream "<div class=\"post~:[~; link-post~]\"><h1>~A</h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A</a>~@[<a class=\"lw2-link\" href=\"~A\">LW<span> link</span></a>~]"
+      (format out-stream "<div class=\"post~:[~; link-post~]\"><h1>~A</h1><div class=\"post-meta\"><a class=\"author\" href=\"/users/~A\" data-userid=\"~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A</a>~@[<a class=\"lw2-link\" href=\"~A\">LW<span> link</span></a>~]"
               url
               (clean-text-to-html title)
               (encode-entities (get-user-slug user-id))
+              (encode-entities user-id)
               (encode-entities (get-username user-id))
               js-time
               pretty-time
@@ -179,12 +181,13 @@
                (html-body string))
     comment
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      (format out-stream "<div class=\"comment~{ ~A~}\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <a class=\"date\" href=\"~A\" data-js-date=\"~A\">~A</a><div class=\"karma\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"permalink\" href=\"~A/comment/~A\" title=\"Permalink\"></a>~@[<a class=\"lw2-link\" href=\"~A\" title=\"LW link\"></a>~]"
+      (format out-stream "<div class=\"comment~{ ~A~}\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\" data-userid=\"~A\">~A</a> <a class=\"date\" href=\"~A\" data-js-date=\"~A\">~A</a><div class=\"karma\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"permalink\" href=\"~A/comment/~A\" title=\"Permalink\"></a>~@[<a class=\"lw2-link\" href=\"~A\" title=\"LW link\"></a>~]"
               (let ((l nil))
                 (if (and (logged-in-userid user-id) (< (* 1000 (local-time:timestamp-to-unix (local-time:now))) (+ js-time 15000))) (push "just-posted-comment" l))
                 (if highlight-new (push "comment-item-highlight" l))
                 l)
               (encode-entities (get-user-slug user-id))
+              (encode-entities user-id)
               (encode-entities (get-username user-id))
               (generate-post-link post-id comment-id)
               js-time
@@ -195,9 +198,10 @@
               comment-id
               (clean-lw-link page-url)))
     (if with-post-title
-        (format out-stream "<div class=\"comment-post-title\">~1{<span class=\"comment-in-reply-to\">in reply to: <a href=\"/users/~A\">~A</a>’s <a href=\"~A\">comment</a></span> ~}<span class=\"comment-post-title2\">on: <a href=\"~A\">~A</a></span></div>"
+        (format out-stream "<div class=\"comment-post-title\">~1{<span class=\"comment-in-reply-to\">in reply to: <a href=\"/users/~A\" data-userid=\"~A\">~A</a>’s <a href=\"~A\">comment</a></span> ~}<span class=\"comment-post-title2\">on: <a href=\"~A\">~A</a></span></div>"
                 (alexandria:if-let (parent-comment parent-comment)
                                    (list (encode-entities (get-user-slug (cdr (assoc :user-id parent-comment))))
+                                         (encode-entities (cdr (assoc :user-id parent-comment)))
                                          (encode-entities (get-username (cdr (assoc :user-id parent-comment))))
                                          (generate-post-link (cdr (assoc :post-id parent-comment)) (cdr (assoc :--id parent-comment)))))
                 (generate-post-link post-id)
@@ -1007,7 +1011,7 @@
 	     ,(loop for v in vars as x from 0 collecting `(,v (if (> (length ,result-vector) ,x) (aref ,result-vector ,x)))) 
 	     ,@body))))))
 
-(define-regex-handler view-user ("^/users/(.*?)(?:$|\\?)" user-slug) (offset show sort)
+(define-regex-handler view-user ("^/users/(.*?)(?:$|\\?)|^/user" user-slug) (id offset show sort)
                       (with-error-page
                         (let* ((show-text show)
                                (show (alexandria:switch (show-text :test #'string=)
@@ -1015,8 +1019,11 @@
                                                         ("conversations" :conversations) ("inbox" :inbox)))
                                (offset (if offset (parse-integer offset) 0))
                                (auth-token (if (eq show :inbox) (hunchentoot:cookie-in "lw2-auth-token")))
+                               (user-query-terms (cond
+                                                   (user-slug (alist :slug user-slug))
+                                                   (id (alist :document-id id))))
                                (user-info
-                                 (let ((ui (lw2-graphql-query (lw2-query-string :user :single (alist :slug user-slug) `(:--id :display-name :karma ,@(if (eq show :inbox) '(:last-notifications-check))))
+                                 (let ((ui (lw2-graphql-query (lw2-query-string :user :single user-query-terms `(:--id :display-name :karma ,@(if (eq show :inbox) '(:last-notifications-check))))
                                                               :auth-token auth-token)))
                                    (if (cdr (assoc :--id ui))
                                        ui
@@ -1024,7 +1031,8 @@
                                (user-id (cdr (assoc :--id user-info)))
                                (own-user-page (logged-in-userid user-id))
                                (comments-index-fields (remove :page-url *comments-index-fields*)) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
-                               (title (format nil "~A~@['s ~A~]" (cdr (assoc :display-name user-info)) (if (member show '(nil :posts :comments)) show-text)))
+                               (display-name (if user-slug (cdr (assoc :display-name user-info)) user-id))
+                               (title (format nil "~A~@['s ~A~]" display-name (if (member show '(nil :posts :comments)) show-text)))
                                (sort-type (alexandria:switch (sort :test #'string=) ("top" :score) (t :date)))
                                (comments-base-terms (ecase sort-type (:score (load-time-value (alist :view "postCommentsTop"))) (:date (load-time-value (alist :view "allRecentComments")))))
                                (items (case show
@@ -1106,8 +1114,8 @@
                                                                                 :new-conversation (if own-user-page t user-slug)
                                                                                 :logout own-user-page)
                                                           (format out-stream "<h1 class=\"page-main-heading\">~A</h1><div class=\"user-stats\">Karma: <span class=\"karma-total\">~A</span></div>"
-                                                                  (cdr (assoc :display-name user-info))
-                                                                  (pretty-number (or (cdr (assoc :karma user-info)) 0)))
+                                                                  (encode-entities display-name)
+                                                                  (if user-slug (pretty-number (or (cdr (assoc :karma user-info)) 0)) "##"))
                                                           (sublevel-nav-to-html out-stream
                                                                                 `((nil "All") ("posts" "Posts") ("comments" "Comments")
                                                                                               ,@(if own-user-page
