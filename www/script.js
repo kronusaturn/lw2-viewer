@@ -1621,6 +1621,16 @@ function toggleAntiKibitzerMode() {
 			return;
 		}
 
+		// Individual comment page title and header
+		if(document.querySelector(".individual-thread-page")) {
+			let replacer = (node) => {
+				if(!node) return;
+				node.firstChild.replaceWith(node.dataset["trueContent"]);
+			}
+			replacer(document.querySelector("title:not(.fake-title)"));
+			replacer(document.querySelector("#content > h1"));
+		}
+
 		// Author names/links.
 		document.querySelectorAll(".author.redacted, .comment-in-reply-to a.redacted").forEach(function (e) {
 			e.textContent = e.dataset["trueName"];
@@ -1651,6 +1661,22 @@ function toggleAntiKibitzerMode() {
 			window.location = redirectTarget;
 			return;
 		}
+
+		// Individual comment page title and header
+		if(document.querySelector(".individual-thread-page")) {
+			let replacer = (node) => {
+				if(!node) return;
+				node.dataset["trueContent"] = node.firstChild.wholeText;
+				let newText = node.firstChild.wholeText.replace(/^[^ ]+/, "REDACTED");
+				node.firstChild.replaceWith(newText);
+			}
+			replacer(document.querySelector("title:not(.fake-title)"));
+			replacer(document.querySelector("#content > h1"));
+		}
+		
+		let fakeTitle = document.querySelector("title.fake-title")
+		if(fakeTitle)
+			fakeTitle.parentElement.removeChild(fakeTitle);
 
 		// Author names/links.
 		document.querySelectorAll(".author, .comment-in-reply-to a[href^='/users/']").forEach(function (e) {

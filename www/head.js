@@ -103,4 +103,8 @@ if (window.localStorage.getItem("antikibitzer") == "true") {
 	document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='antikibitzer-temp'>" +
 	`.author, .inline-author, .karma-value { visibility: hidden; }` + 
 	"</style>");
+
+	if(document.location.pathname.match(new RegExp("/posts/.*/comment/"))) {
+		document.querySelector("head").insertAdjacentHTML("beforeend", "<title class='fake-title'></title>");
+	}
 }
