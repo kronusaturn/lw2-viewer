@@ -174,13 +174,16 @@
 
 (define-backend-operation lw2-mutation-string backend-lw2 (target-type mutation-type terms fields)
   (let* ((mutation-name (concatenate 'string (string-downcase mutation-type) (string-capitalize target-type)))
-         (terms (loop for (k . v) in terms collect
-                      (case k
-                        (:document (cons :data v))
-                        (:set (cons :data v))
-                        (:document-id (cons :selector (alist :document-id v)))
-                        (:unset (values))
-                        (t (cons k v)))))
+         (data (append (cdr (assoc :set terms)) (map 'list (lambda (x) (cons (car x) :null)) (cdr (assoc :unset terms)))))
+         (terms (nconc
+                  (loop for (k . v) in terms collect
+                        (case k
+                          (:document (cons :data v))
+                          (:set (values))
+                          (:unset (values))
+                          (:document-id (cons :selector (alist :document-id v)))
+                          (t (cons k v))))
+                  (list (cons :data data))))
          (fields (list (list* :data fields))))
     (values (graphql-mutation-string mutation-name terms fields) mutation-name)))
 
