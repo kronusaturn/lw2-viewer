@@ -1582,14 +1582,12 @@ function disableBeforeUnload() {
 /*****************/
 
 function numToAlpha(n) {
-	let alpha = "ABCDEFGHIJKLMNOPQRSTUWXYZ";
-	let k = alpha.length;
 	let ret = "";
-	while(n >= k) {
-		ret = alpha.charAt(n % k) + ret;
-		n = Math.floor((n / k) - 1);
-	}
-	return alpha.charAt(n % k) + ret;
+	do {
+		ret = String.fromCharCode('A'.charCodeAt(0) + (n % 26)) + ret;
+		n = Math.floor((n / 26) - 1);
+	} while (n >= 0);
+	return ret;
 }
 
 function injectAntiKibitzer() {
