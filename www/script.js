@@ -2301,11 +2301,8 @@ function antiKibitzerToggleButtonClicked (event) {
 	event.target.blur();
 }
 function toggleAntiKibitzerMode() {
-	// This will be the URL of the user's own page, if logged in, or the URL of
-	// the login page otherwise.
-	let userTabTarget = document.querySelector("#nav-item-login .nav-inner").href;
 	let pageHeadingElement = document.querySelector("h1.page-main-heading");
-
+	
 	let antiKibitzerToggle = document.querySelector("#anti-kibitzer-toggle");
 	if (antiKibitzerToggle.hasClass("engaged")) {
 		window.localStorage.setItem("antikibitzer", "false");
@@ -2376,7 +2373,7 @@ function toggleAntiKibitzerMode() {
 		// Link post domains.
 		document.querySelectorAll(".link-post-domain").forEach(function (e) {
 			// Skip own posts/comments.
-			if (userPageLink == e.closest(".post-meta").querySelector(".author").href)
+			if (e.closest(".post-meta").querySelector(".author").hasClass("own-user-author"))
 				return;
 				
 			e.dataset["trueDomain"] = e.textContent;
