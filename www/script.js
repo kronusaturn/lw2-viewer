@@ -2084,16 +2084,15 @@ consoleCommands["themeset"] = {
 	"displayname":		"themeset, ts",
 	"aliases":			[ "ts" ],
 	"helpParts":		[ "Syntax is:		{ themeset | ts } [ list | <em>&lt;theme name&gt;</em> ]",
-						  "	Options:",
-						  "<span style='tab-size:8;'>" +	"	help			Print help." + "</span>",
-						  "<span style='tab-size:8;'>" +	"	list			List available themes." + "</span>",
-						  "<span style='tab-size:8;'>" +	"	<em>&lt;theme name&gt;</em>		Set specified theme." + "</span>",
-						  "	If used with no options, themeset prints the currently active theme.",
+						  "Options:",
+						  "<span style='tab-size:8;'>" + "    list			List available themes." + "</span>",
+						  "<span style='tab-size:8;'>" + "    <em>&lt;theme name&gt;</em>		Set specified theme." + "</span>",
+						  "If used with no options, themeset prints the currently active theme.",
 						  "Available themes are:" ],
 	"construct":		function () {
 		if (this.constructed) return;
 		
-		this.help = this.helpParts.slice(0,6);
+		this.help = this.helpParts.slice(0,5);
 
 		let thisObj = this;
 		window.themeOptions.forEach(function (themeSpec) {
@@ -2114,7 +2113,11 @@ consoleCommands["themetweak"] = {
 			consoleOutputText(this.help);
 		} else {
 			if (commandParts.length < 3) {
-			
+				switch (commandParts[1]) {
+				case "w":
+				case "width":
+					break;
+				}
 			} else {
 			
 			}
