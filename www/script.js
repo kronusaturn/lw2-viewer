@@ -1523,12 +1523,41 @@ function consoleEnterKeyPressed(event) {
 	if (enteredText == "")
 		flashConsole();
 	else
-		parseConsoleInput(enteredText);
+		handleConsoleInput(enteredText);
 }
 function consoleTabKeyPressed(event) {
 	if (event.keyCode == 9) {
 		event.preventDefault();
-		flashConsole();
+		
+		let [ parts, flags ] = parseCommandLineInput(event.target.value);
+		
+		if (parts.length > 1) {
+			flashConsole();
+			return;
+		}
+		
+		let fittingCommands = Object.keys(consoleCommands).filter(command => command.hasPrefix(parts[0] || "")).sort();		
+		if (fittingCommands.length > 1) {
+			if (fittingCommands.length != 0) {
+				let longestCommonPrefix = fittingCommands.join(' ').match(/^(\w*)\w*(?: \1\w*)*$/)[1];
+				if (event.target.value != longestCommonPrefix) {
+					event.target.value = longestCommonPrefix;
+				} else {
+					flashConsole();
+					echoEnteredLine(event.target.value);
+
+					let output = "";
+					fittingCommands.forEach(command => {
+						output += `<li style='margin-bottom:0.25em'>${command}</li>`;
+					});
+					consoleOutput(`<ul style='list-style-type:none; padding:0; margin:0; columns:auto 7.5em;'>${output}</ul>`);
+				}
+			}
+		} else if (fittingCommands.length == 1 && event.target.value != fittingCommands[0] + " ") {
+			event.target.value = fittingCommands[0] + " ";
+		} else {
+			flashConsole();
+		}
 	}
 }
 function consoleArrowKeyPressed(event) {
@@ -1551,29 +1580,20 @@ function consoleArrowKeyPressed(event) {
 			event.target.value = gwConsole.commandHistory[prevCommandIndex];
 			gwConsole.commandHistoryOffset++;
 		}
-
-		console.log(gwConsole.commandHistory);
-		console.log(gwConsole.commandHistoryOffset);
-		console.log(gwConsole.commandHistoryCurrentCommand);
 		
 		break;
 	case "ArrowDown":
-		let nextCommandIndex = gwConsole.commandHistory.length - gwConsole.commandHistoryOffset;
-		if (nextCommandIndex >= gwConsole.commandHistory.length) {
-			if (gwConsole.commandHistoryCurrentCommand != null) {
-				event.target.value = gwConsole.commandHistoryCurrentCommand;
-				gwConsole.commandHistoryCurrentCommand = null;
-			} else {
-				flashConsole();
-			}
-		} else {
+		let nextCommandIndex = gwConsole.commandHistory.length - gwConsole.commandHistoryOffset + 1;
+		if (nextCommandIndex < gwConsole.commandHistory.length) {
 			event.target.value = gwConsole.commandHistory[nextCommandIndex];
 			gwConsole.commandHistoryOffset--;
+		} else if (nextCommandIndex == gwConsole.commandHistory.length) {
+			event.target.value = gwConsole.commandHistoryCurrentCommand;
+			gwConsole.commandHistoryCurrentCommand = null;
+			gwConsole.commandHistoryOffset--;
+		} else {
+			flashConsole();
 		}
-
-		console.log(gwConsole.commandHistory);
-		console.log(gwConsole.commandHistoryOffset);
-		console.log(gwConsole.commandHistoryCurrentCommand);
 		
 		break;
 	}
@@ -1602,26 +1622,41 @@ function consoleOutput(output) {
 
 // Input parsing.
 
-function parseConsoleInput(enteredText) {
+function handleConsoleInput(enteredText) {
 	// Echo entered line.
-	consoleOutput("<p class='user-input-echo'>$ " + enteredText + "</p>");
+	echoEnteredLine(enteredText);
 	
 	// Save to command history.
 	let gwConsole = document.querySelector("#console");
 	gwConsole.commandHistory.push(enteredText);
 	gwConsole.commandHistoryOffset = 0;
 	gwConsole.commandHistoryCurrentCommand = null;
+	
+	// Parse.
+	let [ parts, flags ] = parseCommandLineInput(enteredText);
+	
+	// Get handler.
+	let response = commandResponses[parts[0]];
+	if (consoleCommands[response] == null) {
+		consoleOutputText("'" + enteredText + "': command not found. Type 'help' or '?' to see a list of available commands.");
+		flashConsole();
+		return;
+	}
+	
+	// Handle.
+	consoleCommands[response].responder(parts, flags);
+}
+function echoEnteredLine(line) {
+	consoleOutput("<p class='user-input-echo'>$ " + line + "</p>");
+}
 
-	console.log(gwConsole.commandHistory);
-	console.log(gwConsole.commandHistoryOffset);
-	console.log(gwConsole.commandHistoryCurrentCommand);
-		
+function parseCommandLineInput(line) {
 	var parts = [ ], flags = [ ];
 
 	// Tokenize.
 	var re = /(?:"([^"]+)"|(\S+))/g;
 	var matches;
-	while ((matches = re.exec(enteredText)) !== null)
+	while ((matches = re.exec(line)) !== null)
 		parts.push(matches[1] || matches[2]);
 	
 	// Filter out and set aside flag-bearing tokens.
@@ -1641,14 +1676,7 @@ function parseConsoleInput(enteredText) {
 // 	console.log(parts);
 // 	console.log(flags);
 	
-	let response = commandResponses[parts[0]];
-	if (consoleCommands[response] == null) {
-		consoleOutputText("'" + enteredText + "': command not found. Type 'help' or '?' to see a list of available commands.");
-		flashConsole();
-		return;
-	}
-	
-	consoleCommands[response].responder(parts, flags);
+	return [ parts, flags ];
 }
 
 // Specific console commands.
@@ -1674,18 +1702,7 @@ consoleCommands["clear"] = {
 consoleCommands["help"] = {
 	"responder":		function (commandParts, commandFlags) {
 		if (commandParts.length == 1) {
-			var availableCommands = [ ];
-			for (command in consoleCommands) {
-				if (typeof consoleCommands[command] != "object") continue;
-				availableCommands.push(`<span style='tab-size:24;'>    ${consoleCommands[command].displayname}\t${consoleCommands[command].description}</span>`);
-			}
-			consoleOutputText([
-				"<strong>Available commands:</strong>" ].concat(availableCommands).concat([
-				"Type 'help <em>&lt;command&gt;</em>' (or '<em>&lt;command&gt;</em> help') for additional help with specific commands.",
-				"<strong>Hotkeys:</strong>",
-				"	` (backtick)		Show/focus console.",
-				"	Esc					Hide console."
-				]));
+			consoleOutputText(this.helpParts);
 		} else {
 			let responder = consoleCommands[commandResponses[commandParts[1]]];
 			if (responder == null) {
@@ -1705,7 +1722,25 @@ consoleCommands["help"] = {
 	},
 	"displayname":		"help, ?",
 	"aliases":			[ "?" ],
-	"description":		"Print help."
+	"description":		"Print help.",
+	"helpParts":		[ "<strong>Available commands:</strong>",
+						  "Type 'help <em>&lt;command&gt;</em>' (or '<em>&lt;command&gt;</em> help') for additional help with specific commands.",
+						  "<strong>Hotkeys:</strong>",
+						  "	` (backtick)		Show/focus console.",
+						  "	Esc					Hide console." ],
+	"construct":		function () {
+		if (this.constructed) return;
+		
+		var availableCommands = [ ];
+		for (command in consoleCommands) {
+			if (typeof consoleCommands[command] != "object") continue;
+			availableCommands.push(`<span style='tab-size:24;'>    ${consoleCommands[command].displayname}\t${consoleCommands[command].description}</span>`);
+		}
+		Array.prototype.splice.apply(this.helpParts, [ 1, 0 ].concat(availableCommands));
+		
+		this.constructed = true;
+	},
+	"constructed":		false
 };
 
 consoleCommands[(loggedInUserId ? "logout" : "login")] = {
@@ -2071,7 +2106,7 @@ consoleCommands["themeset"] = {
 	"constructed":		false
 }
 
-consoleCommands["themeweak"] = {
+consoleCommands["themetweak"] = {
 	"responder":		function (commandParts, commandFlags) {
 		if (commandParts.length < 2) {
 			consoleOutputText([ "<strong>Please specify a setting.</strong>", this.help.slice(0,1) ]);
@@ -2089,21 +2124,21 @@ consoleCommands["themeweak"] = {
 	"displayname":		"themetweak, tt",
 	"aliases":			[ "tt" ],
 	"helpParts":		[ "Syntax is:		{ themetweak | tt } { <em>&lt;setting&gt;</em> <em>&lt;value&gt;</em> | reset { <em>&lt;setting&gt;</em> | all } | list }",
-						  "	Available settings:",
-						  "		[w]idth			Content width.",
-						  "			Values: normal / wide / fluid (default: normal)",
-						  "		[t]extsize		Text size.",
-						  "			Values: [ 0.5 – 1.5 ] (default: 1.0)",
-						  "		[i]nvert		Invert colors.",
-						  "			Values: true / false (default: false)",
-						  "		brightness		Brightness.",
-						  "			Values: [ 0% – 300% ] (default: 100%)",
-						  "		saturation		Saturation.",
-						  "			Values: [ 0% – 300% ] (default: 100%)",
-						  "		contrast		Contrast.",
-						  "			Values: [ 0% – 300% ] (default: 100%)",
-						  "		hue				Hue rotation.",
-						  "			Values: [ 0° – 360° ] (default: 0°)" ],
+						  "Available settings are:",
+						  "	[w]idth				Content width.",
+						  "							Values: normal / wide / fluid (default: normal)",
+						  "	[t]extsize			Text size.",
+						  "							Values: [ 0.5 – 1.5 ] (default: 1.0)",
+						  "	[i]nvert			Invert colors.",
+						  "							Values: true / false (default: false)",
+						  "	[b]rightness		Brightness.",
+						  "							Values: [ 0% – 300% ] (default: 100%)",
+						  "	[s]aturation		Saturation.",
+						  "							Values: [ 0% – 300% ] (default: 100%)",
+						  "	[c]ontrast			Contrast.",
+						  "							Values: [ 0% – 300% ] (default: 100%)",
+						  "	[h]ue				Hue rotation.",
+						  "							Values: [ 0° – 360° ] (default: 0°)" ],
 	"construct":		function () {
 		if (this.constructed) return;
 		
