@@ -1667,7 +1667,7 @@ function toggleAntiKibitzerMode() {
 			let replacer = (node) => {
 				if(!node) return;
 				node.dataset["trueContent"] = node.firstChild.wholeText;
-				let newText = node.firstChild.wholeText.replace(/^[^ ]+/, "REDACTED");
+				let newText = node.firstChild.wholeText.replace(/^.* comments/, "REDACTED comments");
 				node.firstChild.replaceWith(newText);
 			}
 			replacer(document.querySelector("title:not(.fake-title)"));

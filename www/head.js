@@ -101,7 +101,7 @@ window.themeOptions = [
 // While everything's being loaded, hide the authors and karma values.
 if (window.localStorage.getItem("antikibitzer") == "true") {
 	document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='antikibitzer-temp'>" +
-	`.author, .inline-author, .karma-value { visibility: hidden; }` + 
+	`.author, .inline-author, .karma-value, .individual-thread-page > h1 { visibility: hidden; }` + 
 	"</style>");
 
 	if(document.location.pathname.match(new RegExp("/posts/.*/comment/"))) {
