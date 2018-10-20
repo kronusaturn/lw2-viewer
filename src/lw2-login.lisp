@@ -174,11 +174,14 @@
 
 (define-backend-operation lw2-mutation-string backend-lw2 (target-type mutation-type terms fields)
   (let* ((mutation-name (concatenate 'string (string-downcase mutation-type) (string-capitalize target-type)))
-         (data (append (cdr (assoc :set terms)) (map 'list (lambda (x) (cons (car x) :null)) (cdr (assoc :unset terms)))))
+         (data (append
+                 (cdr (assoc :document terms))
+                 (cdr (assoc :set terms))
+                 (map 'list (lambda (x) (cons (car x) :null)) (cdr (assoc :unset terms)))))
          (terms (nconc
                   (loop for (k . v) in terms collect
                         (case k
-                          (:document (cons :data v))
+                          (:document (values))
                           (:set (values))
                           (:unset (values))
                           (:document-id (cons :selector (alist :document-id v)))
