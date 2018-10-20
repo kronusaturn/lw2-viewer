@@ -881,6 +881,7 @@
                                            (let* ((comment-data
                                                     (remove-if #'null
                                                                `(("body" . ,(postprocess-markdown text))
+                                                                 (:last-edited-as . "markdown")
                                                                  ,(if (not edit-comment-id) `(:post-id . ,post-id))
                                                                  ,(if parent-comment-id `(:parent-comment-id . ,parent-comment-id)))))
                                                   (new-comment-id
@@ -968,7 +969,7 @@
                                        (let ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token"))
                                              (url (if (string= url "") nil url)))
                                          (assert (and lw2-auth-token (not (string= text ""))))
-                                         (let* ((post-data `(("body" . ,(postprocess-markdown text)) ("title" . ,title) ("url" . ,(if link-post url))
+                                         (let* ((post-data `(("body" . ,(postprocess-markdown text)) ("title" . ,title) (:last-edited-as . "markdown") ("url" . ,(if link-post url))
                                                                               ("meta" . ,(string= section "meta")) ("draft" . ,(string= section "drafts"))))
                                                 (post-set (loop for item in post-data when (cdr item) collect item))
                                                 (post-unset (loop for item in post-data when (not (cdr item)) collect (cons (car item) t))))
