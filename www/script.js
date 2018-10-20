@@ -1581,6 +1581,17 @@ function disableBeforeUnload() {
 /* ANTI-KIBITZER */
 /*****************/
 
+function numToAlpha(n) {
+	let alpha = "ABCDEFGHIJKLMNOPQRSTUWXYZ";
+	let k = alpha.length;
+	let ret = "";
+	while(n >= k) {
+		ret = alpha.charAt(n % k) + ret;
+		n = Math.floor((n / k) - 1);
+	}
+	return alpha.charAt(n % k) + ret;
+}
+
 function injectAntiKibitzer() {
 	// Inject anti-kibitzer toggle controls.
 	let antiKibitzerToggle = addUIElement("<div id='anti-kibitzer-toggle'><button type='button' tabindex='-1' accesskey='g' title='Toggle anti-kibitzer (show/hide authors & karma values) [g]'></button>");
@@ -1610,6 +1621,14 @@ function toggleAntiKibitzerMode() {
 	// the login page otherwise.
 	let userTabTarget = document.querySelector("#nav-item-login .nav-inner").href;
 	let pageHeadingElement = document.querySelector("h1.page-main-heading");
+
+	let userCount = 0;
+	let userFakeName = { };
+
+	let appellation = (document.querySelector(".post-page") ? "Commenter" : "User");
+
+	let postAuthor = document.querySelector(".post-page .post-meta .author");
+	if(postAuthor) userFakeName[postAuthor.dataset["userid"]] = "Original Poster";
 
 	let antiKibitzerToggle = document.querySelector("#anti-kibitzer-toggle");
 	if (antiKibitzerToggle.hasClass("engaged")) {
@@ -1684,8 +1703,10 @@ function toggleAntiKibitzerMode() {
 			if (e.hasClass("own-user-author"))
 				return;
 		
+			let userid = e.dataset["userid"];
+
 			e.dataset["trueName"] = e.textContent;
-			e.textContent = "REDACTED";
+			e.textContent = userFakeName[userid] || (userFakeName[userid] = appellation + " " + numToAlpha(userCount++));
 			
 			e.dataset["trueLink"] = e.pathname;
 			e.href = "/user?id=" + e.dataset["userid"];
