@@ -918,7 +918,6 @@ a#inbox-indicator.new-messages:hover::before {
 }
 #console .output .line {
 	margin: 0;
-	overflow: auto;
 }
 #console .output .line + .line {
 	margin: 0.75em 0 0 0;
@@ -957,7 +956,8 @@ a#inbox-indicator.new-messages:hover::before {
 }
 
 #console .output .highlight {
-	text-decoration: underline;
+	background-color: #006ced;
+	box-shadow: 0 0 0 1px #006ced;
 }
 
 /************/

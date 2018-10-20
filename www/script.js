@@ -1484,11 +1484,15 @@ function injectConsole() {
 		"</div>\n");
 	gwConsole.querySelector("form").addEventListener("submit", consoleEnterKeyPressed);
 	gwConsole.querySelector("form input").addEventListener("keydown", consoleTabKeyPressed);
-	gwConsole.querySelector("form input").addEventListener("keyup", consoleEscapeKeyPressed);
+	gwConsole.querySelector("form input").addEventListener("keydown", consoleEscapeKeyPressed);
+	gwConsole.querySelector("form input").addEventListener("keydown", consoleArrowKeyPressed);
 	
 	for (command in consoleCommands)
 		if (consoleCommands[command].construct != null)
 			consoleCommands[command].construct();
+			
+	gwConsole.commandHistory = [ ];
+	gwConsole.commandHistoryOffset = 0;
 	
 	consoleOutputText([ "Welcome to the GreaterWrong console!", "Type 'help' or '?' to see a list of available commands." ])
 }
@@ -1527,6 +1531,53 @@ function consoleTabKeyPressed(event) {
 		flashConsole();
 	}
 }
+function consoleArrowKeyPressed(event) {
+	if (!(event.key == "ArrowUp" || event.key == "ArrowDown"))
+		return;
+	
+	event.preventDefault();
+	let gwConsole = document.querySelector("#console");
+
+	switch (event.key) {
+	case "ArrowUp":
+		let prevCommandIndex = gwConsole.commandHistory.length - 1 - gwConsole.commandHistoryOffset;
+
+		if (gwConsole.commandHistoryOffset == 0)
+			gwConsole.commandHistoryCurrentCommand = event.target.value;
+	
+		if (prevCommandIndex < 0) {
+			flashConsole();
+		} else {
+			event.target.value = gwConsole.commandHistory[prevCommandIndex];
+			gwConsole.commandHistoryOffset++;
+		}
+
+		console.log(gwConsole.commandHistory);
+		console.log(gwConsole.commandHistoryOffset);
+		console.log(gwConsole.commandHistoryCurrentCommand);
+		
+		break;
+	case "ArrowDown":
+		let nextCommandIndex = gwConsole.commandHistory.length - gwConsole.commandHistoryOffset;
+		if (nextCommandIndex >= gwConsole.commandHistory.length) {
+			if (gwConsole.commandHistoryCurrentCommand != null) {
+				event.target.value = gwConsole.commandHistoryCurrentCommand;
+				gwConsole.commandHistoryCurrentCommand = null;
+			} else {
+				flashConsole();
+			}
+		} else {
+			event.target.value = gwConsole.commandHistory[nextCommandIndex];
+			gwConsole.commandHistoryOffset--;
+		}
+
+		console.log(gwConsole.commandHistory);
+		console.log(gwConsole.commandHistoryOffset);
+		console.log(gwConsole.commandHistoryCurrentCommand);
+		
+		break;
+	}
+}
 
 // Console utility functions.
 
@@ -1554,6 +1605,16 @@ function consoleOutput(output) {
 function parseConsoleInput(enteredText) {
 	// Echo entered line.
 	consoleOutput("<p class='user-input-echo'>$ " + enteredText + "</p>");
+	
+	// Save to command history.
+	let gwConsole = document.querySelector("#console");
+	gwConsole.commandHistory.push(enteredText);
+	gwConsole.commandHistoryOffset = 0;
+	gwConsole.commandHistoryCurrentCommand = null;
+
+	console.log(gwConsole.commandHistory);
+	console.log(gwConsole.commandHistoryOffset);
+	console.log(gwConsole.commandHistoryCurrentCommand);
 		
 	var parts = [ ], flags = [ ];
 
@@ -1577,8 +1638,8 @@ function parseConsoleInput(enteredText) {
 			});
 	});
 	
-	console.log(parts);
-	console.log(flags);
+// 	console.log(parts);
+// 	console.log(flags);
 	
 	let response = commandResponses[parts[0]];
 	if (consoleCommands[response] == null) {
@@ -1859,11 +1920,11 @@ consoleCommands["prefs"] = {
 consoleCommands["search"] = {
 	"responder":		function (commandParts, commandFlags) {
 		if (commandParts.length < 2) {
-			consoleOutputText("Enter one or more search terms!")
+			consoleOutputText([ "<strong>Please enter one or more search terms.</strong>", this.help.slice(0,1) ])
 		} else if (commandParts[1] == "help" || commandParts[1] == "?") {
 			consoleOutputText(this.help);
 		} else {
-			window.location.href = "/search?q="+encodeURI(commandParts.slice(1).join(" ").replace(" ","+"));
+			window.location.href = "/search?q=" + encodeURI(commandParts.slice(1).join(" ").replace(/\s/g,"+"));
 		}
 	},
 	"description":		"Search the site.",
@@ -1887,7 +1948,7 @@ consoleCommands["search"] = {
 consoleCommands["find"] = {
 	"responder":		function (commandParts, commandFlags) {
 		if (commandParts.length < 2) {
-			consoleOutputText("Enter text to find!");
+			consoleOutputText([ "<strong>Please enter text to find.</strong>", this.help.slice(0,1) ]);
 		} else if (commandParts[1] == "help" || commandParts[1] == "?") {
 			consoleOutputText(this.help);
 		} else {
@@ -1923,7 +1984,9 @@ consoleCommands["find"] = {
 	"description":				"Find text in page.",
 	"displayname":				"[f]ind",
 	"aliases":					[ "f" ],
-	"defaultExcerptWidth":		30
+	"defaultExcerptWidth":		30,
+	"helpParts":				[ ],
+	"help":						[ ]
 }
 
 consoleCommands["antikibitzer"] = {
