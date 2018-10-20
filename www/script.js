@@ -1620,7 +1620,7 @@ consoleCommands["help"] = {
 			}
 			consoleOutputText([
 				"<strong>Available commands:</strong>" ].concat(availableCommands).concat([
-				"Type 'help <em>&lt;command&gt;</em>' for additional help with specific commands.",
+				"Type 'help <em>&lt;command&gt;</em>' (or '<em>&lt;command&gt;</em> help') for additional help with specific commands.",
 				"<strong>Hotkeys:</strong>",
 				"	` (backtick)		Show/focus console.",
 				"	Esc					Hide console."
@@ -1674,7 +1674,9 @@ consoleCommands[(loggedInUserId ? "logout" : "login")] = {
 consoleCommands["go"] = {
 	"responder":		function (commandParts, commandFlags) {			
 		if (commandParts.length == 1) {
-			consoleOutputText([ "<strong>Please enter a destination.</strong>" ].concat(this.help));
+			consoleOutputText([ "<strong>Please enter a destination.</strong>" ].concat(this.help.slice(0,1)));
+		} else if (commandParts[1] == "help" || commandParts[1] == "?") {
+			consoleOutputText(this.help);
 		} else {
 			var destination = this.destinations[commandParts[1]];
 			
@@ -1728,10 +1730,10 @@ consoleCommands["go"] = {
 										((commandParts.length > 2) ? 
 											`/users/${commandParts[2]}` : 
 											(loggedInUserId ? 
-												("/users/" + loggedInUserId) : 
+												("/users/" + loggedInUserSlug) : 
 												"/login?return=%2F")) :
 										(loggedInUserId ? 
-											("/users/" + loggedInUserId) :
+											("/users/" + loggedInUserSlug) :
 											"/login?return=%2F");
 							},
 							[ "			<em>&lt;userid&gt;</em>		User ID of other user (optional)" ],
@@ -1784,7 +1786,7 @@ consoleCommands["prefs"] = {
 	"responder":		function (commandParts, commandFlags) {
 		if (commandParts.length == 1) {
 			consoleOutputText(this.help.slice(0,1));
-		} else if (commandParts[1] == "help") {
+		} else if (commandParts[1] == "help" || commandParts[1] == "?") {
 			consoleOutputText([ "<strong>" + this.description + "</strong>" ].concat(this.help));
 		} else if (commandParts[1] == "list") {
 			if (commandParts.length == 3 && commandParts[2] == "raw") {
@@ -1835,9 +1837,8 @@ consoleCommands["prefs"] = {
 	"description":		"View and set site preferences.",
 	"displayname":		"[p]refs",
 	"aliases":			[ "p" ],
-	"helpParts":		[ "Syntax is:		[p]refs { help | list [ <em>&lt;key&gt;</em> ] [ raw ] | set <em>&lt;key&gt;</em> <em>&lt;value&gt;</em> | clear { <em>&lt;key&gt;</em> | all } }",
+	"helpParts":		[ "Syntax is:		[p]refs { list [ <em>&lt;key&gt;</em> ] [ raw ] | set <em>&lt;key&gt;</em> <em>&lt;value&gt;</em> | clear { <em>&lt;key&gt;</em> | all } }",
 						  "Options:",
-						  "	help		Print help.",
 						  "	list		List current value(s) for specified key(s).",
 						  "				(If no key specified, lists all preferences.)",
 						  "				If 'raw' is specified, lists raw value(s).",
@@ -1859,7 +1860,7 @@ consoleCommands["search"] = {
 	"responder":		function (commandParts, commandFlags) {
 		if (commandParts.length < 2) {
 			consoleOutputText("Enter one or more search terms!")
-		} else if (commandParts[1] == "help") {
+		} else if (commandParts[1] == "help" || commandParts[1] == "?") {
 			consoleOutputText(this.help);
 		} else {
 			window.location.href = "/search?q="+encodeURI(commandParts.slice(1).join(" ").replace(" ","+"));
@@ -1887,7 +1888,7 @@ consoleCommands["find"] = {
 	"responder":		function (commandParts, commandFlags) {
 		if (commandParts.length < 2) {
 			consoleOutputText("Enter text to find!");
-		} else if (commandParts[1] == "help") {
+		} else if (commandParts[1] == "help" || commandParts[1] == "?") {
 			consoleOutputText(this.help);
 		} else {
 			var contentChunks = [ ];
@@ -1946,11 +1947,11 @@ consoleCommands["antikibitzer"] = {
 			} else {
 				consoleOutputText("Anti-kibitzer mode is already " + (currentState == "off" ? "disabled" : "enabled") + "!");
 			}
-		} else if (commandParts[1] == "help") {
+		} else if (commandParts[1] == "help" || commandParts[1] == "?") {
 			consoleOutputText(this.help);
 		} else if (commandParts[1] == "info") {
 			consoleOutputText("Loading post about anti-kibitzer mode ...");
-			window.location.href = "https://www.greaterwrong.com/posts/XbfdLQrAWTRfpggRM/lesswrong-anti-kibitzer-hides-comment-authors-and-vote";
+			window.location.href = "/posts/jD496b5RZKQkxP63N/new-greaterwrong-feature-anti-kibitzer-hides-post-comment";
 		} else {
 			consoleOutputText(this.help.slice(0,1));
 		}
@@ -1958,7 +1959,7 @@ consoleCommands["antikibitzer"] = {
 	"description":		"Turn anti-kibitzer mode on or off.",
 	"displayname":		"antikibitzer, ak",
 	"aliases":			[ "ak" ],
-	"help":				[ "Syntax is:		{ antikibitzer | ak } [ on | off | help | info ]",
+	"help":				[ "Syntax is:		{ antikibitzer | ak } [ on | off | info ]",
 						  "	If used with no options, antikibitzer prints the current status.",
 						  "Anti-kibitzer mode hides the authors, and the karma values, of posts and comments.",
 						  "For more information, please type 'antikibitzer info' (this will take you to another page)." ]
@@ -1968,7 +1969,7 @@ consoleCommands["themeset"] = {
 	"responder":		function (commandParts, commandFlags) {
 		if (commandParts.length == 1) {
 			consoleOutputText("Current theme is: <strong>" + (readCookie('theme') || 'default') + "</strong>");
-		} else if (commandParts[1] == "help") {
+		} else if (commandParts[1] == "help" || commandParts[1] == "?") {
 			consoleOutputText([ "<strong>" + this.description + "</strong>" ].concat(this.help));
 		} else if (commandParts[1] == "list") {
 			consoleOutputText(this.helpParts.slice(6));
@@ -1984,7 +1985,7 @@ consoleCommands["themeset"] = {
 	"description":		"Set theme.",
 	"displayname":		"themeset, ts",
 	"aliases":			[ "ts" ],
-	"helpParts":		[ "Syntax is:		{ themeset | ts } [ help | list | <em>&lt;theme name&gt;</em> ]",
+	"helpParts":		[ "Syntax is:		{ themeset | ts } [ list | <em>&lt;theme name&gt;</em> ]",
 						  "	Options:",
 						  "<span style='tab-size:8;'>" +	"	help			Print help." + "</span>",
 						  "<span style='tab-size:8;'>" +	"	list			List available themes." + "</span>",
@@ -2001,6 +2002,49 @@ consoleCommands["themeset"] = {
 			let [ name, desc, letter ] = themeSpec;
 			thisObj.helpParts.push(`<span style='tab-size:20;'>    ${name}	${desc}</span>`);
 		});
+		
+		this.constructed = true;
+	},
+	"constructed":		false
+}
+
+consoleCommands["themeweak"] = {
+	"responder":		function (commandParts, commandFlags) {
+		if (commandParts.length < 2) {
+			consoleOutputText([ "<strong>Please specify a setting.</strong>", this.help.slice(0,1) ]);
+		} else if (commandParts[1] == "help" || commandParts[1] == "?") {
+			consoleOutputText(this.help);
+		} else {
+			if (commandParts.length < 3) {
+			
+			} else {
+			
+			}
+		}
+	},
+	"description":		"Adjust appearance (theme tweaker).",
+	"displayname":		"themetweak, tt",
+	"aliases":			[ "tt" ],
+	"helpParts":		[ "Syntax is:		{ themetweak | tt } { <em>&lt;setting&gt;</em> <em>&lt;value&gt;</em> | reset { <em>&lt;setting&gt;</em> | all } | list }",
+						  "	Available settings:",
+						  "		[w]idth			Content width.",
+						  "			Values: normal / wide / fluid (default: normal)",
+						  "		[t]extsize		Text size.",
+						  "			Values: [ 0.5 – 1.5 ] (default: 1.0)",
+						  "		[i]nvert		Invert colors.",
+						  "			Values: true / false (default: false)",
+						  "		brightness		Brightness.",
+						  "			Values: [ 0% – 300% ] (default: 100%)",
+						  "		saturation		Saturation.",
+						  "			Values: [ 0% – 300% ] (default: 100%)",
+						  "		contrast		Contrast.",
+						  "			Values: [ 0% – 300% ] (default: 100%)",
+						  "		hue				Hue rotation.",
+						  "			Values: [ 0° – 360° ] (default: 0°)" ],
+	"construct":		function () {
+		if (this.constructed) return;
+		
+		this.help = this.helpParts;
 		
 		this.constructed = true;
 	},
