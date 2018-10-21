@@ -1424,10 +1424,33 @@ function injectCommentsViewModeSelector() {
 			ccl.addClasses([ "inline-author", "comment-child-link" ]);
 		});
 		
+		rectifyChronoModeCommentChildLinks();
+		
 		commentsContainer.addClass("chrono");
 	} else {
 		commentsContainer.addClass("threaded");
 	}
+}
+
+function rectifyChronoModeCommentChildLinks() {
+	document.querySelectorAll(".comment-child-links").forEach(ccls => {
+		let children = childrenOfComment(ccls.closest(".comment-item").id);
+		let childLinks = ccls.querySelectorAll("a");
+		childLinks.forEach((link, idx) => {
+			link.href = "#" + children.find(c => c.querySelector(".author").textContent == link.textContent).id;
+		});
+		
+		// Sort by date.
+		let childLinksArray = Array.from(childLinks)
+		childLinksArray.sort((a,b) => document.querySelector(`${a.hash} .date`).dataset["jsDate"] - document.querySelector(`${b.hash} .date`).dataset["jsDate"]);
+		ccls.innerHTML = childLinksArray.map(cl => cl.outerHTML).join("");
+	});
+}
+function childrenOfComment(commentID) {
+	return Array.from(document.querySelectorAll(`#${commentID} ~ .comment-item`)).filter(ci => {
+		let cpl = ci.querySelector("a.comment-parent-link");
+		return (cpl != null && cpl.hash == "#" + commentID);
+	});
 }
 
 /********************************/
