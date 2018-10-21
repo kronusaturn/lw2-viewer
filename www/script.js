@@ -1401,15 +1401,33 @@ function injectTextSizeAdjustmentUI() {
 /********************************/
 
 function injectCommentsViewModeSelector() {
-	if (document.querySelector("#comments") == null) return;
-	
+	let commentsContainer = document.querySelector("#comments");
+	if (commentsContainer == null) return;
+
 	let currentModeThreaded = (location.href.search("chrono=t") == -1);
 	let newHref = "href='" + location.pathname + location.search.replace("chrono=t","") + (currentModeThreaded ? ((location.search == "" ? "?" : "&") + "chrono=t") : "") + location.hash + "'";
-		
+
 	let commentsViewModeSelector = addUIElement("<div id='comments-view-mode-selector'>"
 	+ `<a class="threaded ${currentModeThreaded ? 'selected' : ''}" ${currentModeThreaded ? "" : newHref}  title='Comments threaded view'>&#xf038;</a>`
 	+ `<a class="chrono ${currentModeThreaded ? '' : 'selected'}" ${currentModeThreaded ? newHref : ""} title='Comments chronological (flat) view'>&#xf017;</a>`
 	+ "</div>");
+	
+	if (!currentModeThreaded) {
+		document.querySelectorAll(".comment-meta > a.comment-parent-link").forEach(cpl => {
+			cpl.textContent = document.querySelector(cpl.hash).querySelector(".author").textContent;
+			cpl.addClass("inline-author");
+			cpl.outerHTML = "<div class='comment-parent-link'>in reply to: " + cpl.outerHTML + "</div>";
+		});
+		
+		document.querySelectorAll(".comment-child-links a").forEach(ccl => {
+			ccl.textContent = ccl.textContent.slice(1);
+			ccl.addClasses([ "inline-author", "comment-child-link" ]);
+		});
+		
+		commentsContainer.addClass("chrono");
+	} else {
+		commentsContainer.addClass("threaded");
+	}
 }
 
 /********************************/
@@ -1649,7 +1667,7 @@ function toggleAntiKibitzerMode() {
 		}
 
 		// Author names/links.
-		document.querySelectorAll(".author.redacted, .comment-in-reply-to a.redacted").forEach(function (e) {
+		document.querySelectorAll(".author.redacted, .inline-author.redacted").forEach(function (e) {
 			e.textContent = e.dataset["trueName"];
 			e.href = e.dataset["trueLink"];
 			
@@ -1696,7 +1714,7 @@ function toggleAntiKibitzerMode() {
 			fakeTitle.parentElement.removeChild(fakeTitle);
 
 		// Author names/links.
-		document.querySelectorAll(".author, .comment-in-reply-to a[href^='/users/']").forEach(function (e) {
+		document.querySelectorAll(".author, .inline-author").forEach(function (e) {
 			// Skip own posts/comments.
 			if (e.hasClass("own-user-author"))
 				return;
@@ -1802,8 +1820,6 @@ registerInitializer('earlyInitialize', true, () => document.querySelector("#cont
 	injectQuickNavUI();
 	// Add the text size adjustment widget.
 	injectTextSizeAdjustmentUI();
-	// Add the comments view selector widget (threaded vs. chrono).
-// 	injectCommentsViewModeSelector();
 	
 	try { updateInbox(); }
 	catch (e) { }
@@ -1844,30 +1860,32 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 	window.needHashRealignment = false;
 
-	document.querySelectorAll(".comment-meta .comment-parent-link, .comment-meta .comment-child-links a").forEach(function (cpl) {
-		cpl.addEventListener("mouseover", function(e) {
-			let parent_id = "#comment-" + /(?:#comment-)?(.+)/.exec(cpl.getAttribute("href"))[1];
-			var parent;
-			try { parent = document.querySelector(parent_id).firstChild; } catch (e) { return; }
-			let parentCI = parent.parentNode;
-			var highlight_cn;
-			if(parent.getBoundingClientRect().bottom < 10 || parent.getBoundingClientRect().top > window.innerHeight + 10) {
-				highlight_cn = "comment-item-highlight-faint";
-				parent = parent.cloneNode(true);
-				parent.addClass("comment-popup")
-				parent.addClass("comment-item-highlight");
-				cpl.addEventListener("mouseout", function(e) {
-					parent.parentNode.removeChild(parent);
-				}, {once: true});
-				cpl.parentNode.parentNode.appendChild(parent);
-			} else {
-				highlight_cn = "comment-item-highlight";
-			}
-			let cn = parentCI.className;
-			parentCI.className = cn + " " + highlight_cn;
-			cpl.addEventListener("mouseout", function(e) { parentCI.className = cn; }, {once: true});
-		});
-	});
+	// NOTE: Commenting this out here, adding it further on - for now.
+	// Add comment parent popups.
+// 	document.querySelectorAll(".comment-meta a.comment-parent-link, .comment-meta a.comment-child-link").forEach(function (cpl) {
+// 		cpl.addEventListener("mouseover", function(e) {
+// 			let parent_id = "#comment-" + /(?:#comment-)?(.+)/.exec(cpl.getAttribute("href"))[1];
+// 			var parent;
+// 			try { parent = document.querySelector(parent_id).firstChild; } catch (e) { return; }
+// 			let parentCI = parent.parentNode;
+// 			var highlight_cn;
+// 			if(parent.getBoundingClientRect().bottom < 10 || parent.getBoundingClientRect().top > window.innerHeight + 10) {
+// 				highlight_cn = "comment-item-highlight-faint";
+// 				parent = parent.cloneNode(true);
+// 				parent.addClass("comment-popup")
+// 				parent.addClass("comment-item-highlight");
+// 				cpl.addEventListener("mouseout", function(e) {
+// 					parent.parentNode.removeChild(parent);
+// 				}, {once: true});
+// 				cpl.parentNode.parentNode.appendChild(parent);
+// 			} else {
+// 				highlight_cn = "comment-item-highlight";
+// 			}
+// 			let cn = parentCI.className;
+// 			parentCI.className = cn + " " + highlight_cn;
+// 			cpl.addEventListener("mouseout", function(e) { parentCI.className = cn; }, {once: true});
+// 		});
+// 	});
 
 	document.querySelectorAll(".with-markdown-editor textarea, .conversation-page textarea").forEach(function (textarea) { textarea.addTextareaFeatures(); });
 	document.querySelectorAll(((getQueryVariable("post-id")) ? "#edit-post-form textarea" : "#edit-post-form input[name='title']") + (window.isMobile ? "" : ", .conversation-page textarea")).forEach(function (field) { field.focus(); });
@@ -2011,6 +2029,9 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	// Add the comments list mode selector widget (expanded vs. compact).
 	injectCommentsListModeSelector();
 
+	// Add the comments view selector widget (threaded vs. chrono).
+	injectCommentsViewModeSelector();
+
 	// Add the toggle for the post nav UI elements on mobile.
 	injectPostNavUIToggle();
 	
@@ -2019,6 +2040,33 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 	// Add the antikibitzer.
 	injectAntiKibitzer();
+
+	// NOTE: This is commented out earlier on, and added here - for now.
+	// Add comment parent popups.
+	document.querySelectorAll(".comment-meta a.comment-parent-link, .comment-meta a.comment-child-link").forEach(function (cpl) {
+		cpl.addEventListener("mouseover", function(e) {
+			let parent_id = "#comment-" + /(?:#comment-)?(.+)/.exec(cpl.getAttribute("href"))[1];
+			var parent;
+			try { parent = document.querySelector(parent_id).firstChild; } catch (e) { return; }
+			let parentCI = parent.parentNode;
+			var highlight_cn;
+			if(parent.getBoundingClientRect().bottom < 10 || parent.getBoundingClientRect().top > window.innerHeight + 10) {
+				highlight_cn = "comment-item-highlight-faint";
+				parent = parent.cloneNode(true);
+				parent.addClass("comment-popup")
+				parent.addClass("comment-item-highlight");
+				cpl.addEventListener("mouseout", function(e) {
+					parent.parentNode.removeChild(parent);
+				}, {once: true});
+				cpl.parentNode.parentNode.appendChild(parent);
+			} else {
+				highlight_cn = "comment-item-highlight";
+			}
+			let cn = parentCI.className;
+			parentCI.className = cn + " " + highlight_cn;
+			cpl.addEventListener("mouseout", function(e) { parentCI.className = cn; }, {once: true});
+		});
+	});
 
 	// Add event listeners for Escape and Enter, for the theme tweaker.
 	document.addEventListener("keyup", function(event) {

@@ -1036,7 +1036,7 @@ div.comment-child-links {
 div.comment-child-links a {
 	font-weight: normal;
 }
-div.comment-child-links a::first-letter {
+.comment-child-link::before {
 	color: #aaa;
 }
 

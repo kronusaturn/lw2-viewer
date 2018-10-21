@@ -787,6 +787,18 @@ a#inbox-indicator.new-messages:hover::before {
 #text-size-adjustment-ui:hover {
 	opacity: 1.0;
 }
+
+/* This doesn't work in Mozilla browsers, so hide it */
+@-moz-document url-prefix() {
+	#text-size-adjustment-ui {
+		display: none;
+	}
+}
+
+/*=---------=*/
+/*= Buttons =*/
+/*=---------=*/
+
 #text-size-adjustment-ui button {
 	font-weight: 900;
 	font-family: Font Awesome;
@@ -807,12 +819,10 @@ a#inbox-indicator.new-messages:hover::before {
 #text-size-adjustment-ui button:disabled:hover {
 	cursor: default;
 }
-/* This doesn't work in Mozilla browsers, so hide it */
-@-moz-document url-prefix() {
-	#text-size-adjustment-ui {
-		display: none;
-	}
-}
+
+/*=----------------=*/
+/*= Hover tooltips =*/
+/*=----------------=*/
 
 #text-size-adjustment-ui::after {
 	content: "Adjust text size";
@@ -842,6 +852,11 @@ a#inbox-indicator.new-messages:hover::before {
 #comments-view-mode-selector:hover {
 	opacity: 1.0;
 }
+
+/*=---------=*/
+/*= Buttons =*/
+/*=---------=*/
+
 #comments-view-mode-selector a {
 	display: block;
 	font-family: Font Awesome;
@@ -1599,7 +1614,8 @@ ul.comment-thread {
 /* COMMENT THREAD NAVIGATION */
 /*****************************/
 
-a.comment-parent-link {
+a.comment-parent-link:not(.inline-author),
+a.comment-parent-link.inline-author::before {
 	opacity: 0.5;
 }
 a.comment-parent-link:hover {
@@ -1637,15 +1653,15 @@ a.comment-parent-link:hover::after {
 	visibility: visible;
 }
 
-div.comment-child-links {
-	display: block;
+.comment-child-links {
+	flex-basis: 100%;
 }
-div.comment-child-links a {
+.comment-child-link {
 	margin: 0 0.2em;
-	display: inline-block;
 }
-div.comment-child-links a::first-letter {
-	margin: 0 1px 0 0;
+.comment-child-link::before {
+	content: ">\2006";
+	display: inline-block;
 }
 
 .comment-popup {
