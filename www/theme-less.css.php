@@ -1542,6 +1542,12 @@ a.post-section.alignment-forum:hover::before {
 /* COMMENT THREAD NAVIGATION */
 /*===========================*/
 
+div.comment-parent-link {
+	font-weight: 400;
+}
+a.comment-parent-link {
+	font-weight: 300;
+}
 a.comment-parent-link::before {
 	color: #bbb;
 	font-weight: 400;
@@ -1552,13 +1558,13 @@ a.comment-parent-link:hover::before {
 }
 
 div.comment-child-links {
-	font-weight: 600;
+	font-weight: 400;
 }
 div.comment-child-links a {
-	font-weight: normal;
+	font-weight: 300;
 }
 .comment-child-link::before {
-	color: #aaa;
+	color: #ccc;
 }
 
 .comment-item-highlight {

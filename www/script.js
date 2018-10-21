@@ -1644,7 +1644,7 @@ function toggleAntiKibitzerMode() {
 	let appellation = (document.querySelector(".post-page") ? "Commenter" : "User");
 
 	let postAuthor = document.querySelector(".post-page .post-meta .author");
-	if(postAuthor) userFakeName[postAuthor.dataset["userid"]] = "Original Poster";
+	if (postAuthor) userFakeName[postAuthor.dataset["userid"]] = "Original Poster";
 
 	let antiKibitzerToggle = document.querySelector("#anti-kibitzer-toggle");
 	if (antiKibitzerToggle.hasClass("engaged")) {
@@ -1669,7 +1669,7 @@ function toggleAntiKibitzerMode() {
 		// Author names/links.
 		document.querySelectorAll(".author.redacted, .inline-author.redacted").forEach(function (e) {
 			e.textContent = e.dataset["trueName"];
-			e.href = e.dataset["trueLink"];
+			if (/\/user/.test(e.href)) e.href = e.dataset["trueLink"];
 			
 			e.removeClass("redacted");
 		});
@@ -1724,8 +1724,10 @@ function toggleAntiKibitzerMode() {
 			e.dataset["trueName"] = e.textContent;
 			e.textContent = userFakeName[userid] || (userFakeName[userid] = appellation + " " + numToAlpha(userCount++));
 			
-			e.dataset["trueLink"] = e.pathname;
-			e.href = "/user?id=" + e.dataset["userid"];
+			if (/\/user/.test(e.href)) {
+				e.dataset["trueLink"] = e.pathname;
+				e.href = "/user?id=" + e.dataset["userid"];
+			}
 			
 			e.addClass("redacted");
 		});

@@ -735,6 +735,12 @@ a.post-section:hover::before {
 /* COMMENT THREAD NAVIGATION */
 /*===========================*/
 
+div.comment-parent-link {
+	font-weight: 600;
+}
+a.comment-parent-link {
+	font-weight: 400;
+}
 a.comment-parent-link::after {
 	display: none;
 }
@@ -750,7 +756,7 @@ div.comment-child-links {
 	font-weight: 600;
 }
 div.comment-child-links a {
-	font-weight: normal;
+	font-weight: 400;
 }
 .comment-child-link::before {
 	color: #aaa;

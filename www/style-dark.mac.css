@@ -1650,11 +1650,13 @@ a.comment-parent-link:hover::after {
 	flex-basis: 100%;
 }
 .comment-child-link {
-	margin: 0 0.2em;
+	margin: 0 0.25em;
+	display: inline-block;
 }
 .comment-child-link::before {
-	content: ">\2006";
+	content: ">";
 	display: inline-block;
+	margin: 0 2px 0 0;
 }
 
 .comment-popup {
@@ -5219,6 +5221,12 @@ a.post-section.alignment-forum:hover::before {
 /* COMMENT THREAD NAVIGATION */
 /*===========================*/
 
+div.comment-parent-link {
+	font-weight: 600;
+}
+a.comment-parent-link {
+	font-weight: 400;
+}
 a.comment-parent-link::before {
 	color: #393939;
 }
@@ -5231,7 +5239,7 @@ div.comment-child-links {
 	font-weight: 600;
 }
 div.comment-child-links a {
-	font-weight: normal;
+	font-weight: 400;
 }
 .comment-child-link::before {
 	color: #484848;

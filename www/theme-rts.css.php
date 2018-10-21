@@ -996,14 +996,8 @@ a.comment-parent-link:hover::before {
 	box-shadow: 1px 0 0 0 #bbb;
 }
 
-div.comment-child-links {
-	font-weight: 600;
-}
-div.comment-child-links a {
-	font-weight: normal;
-}
 .comment-child-link::before {
-	color: #aaa;
+	color: #ccc;
 }
 
 .comment-item-highlight {

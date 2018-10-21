@@ -1657,11 +1657,13 @@ a.comment-parent-link:hover::after {
 	flex-basis: 100%;
 }
 .comment-child-link {
-	margin: 0 0.2em;
+	margin: 0 0.25em;
+	display: inline-block;
 }
 .comment-child-link::before {
-	content: ">\2006";
+	content: ">";
 	display: inline-block;
+	margin: 0 2px 0 0;
 }
 
 .comment-popup {

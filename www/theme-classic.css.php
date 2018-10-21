@@ -1030,6 +1030,12 @@ a.comment-parent-link::after {
 /* COMMENT THREAD NAVIGATION */
 /*===========================*/
 
+div.comment-parent-link {
+	font-weight: bold;
+}
+a.comment-parent-link {
+	font-weight: normal;
+}
 a.comment-parent-link::before {
 	color: #bbb;
 }
@@ -1039,13 +1045,13 @@ a.comment-parent-link:hover::before {
 }
 
 div.comment-child-links {
-	font-weight: 600;
+	font-weight: bold;
 }
 div.comment-child-links a {
 	font-weight: normal;
 }
 .comment-child-link::before {
-	color: #aaa;
+	color: #bbb;
 }
 
 .comment-item-highlight {
