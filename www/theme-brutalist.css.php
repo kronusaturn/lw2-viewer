@@ -718,8 +718,8 @@ a.post-section:hover::before {
 /*====================*/
 
 .author.redacted,
-.comment-in-reply-to a.redacted {
-	opacity: 0.3;
+.inline-author.redacted {
+	opacity: 0.5;
 	font-weight: 400;
 }
 

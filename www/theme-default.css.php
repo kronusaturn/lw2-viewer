@@ -988,8 +988,8 @@ a.post-section.alignment-forum:hover::before {
 /*====================*/
 
 .author.redacted,
-.comment-in-reply-to a.redacted {
-	opacity: 0.4;
+.inline-author.redacted {
+	opacity: 0.6;
 	font-weight: 400;
 }
 

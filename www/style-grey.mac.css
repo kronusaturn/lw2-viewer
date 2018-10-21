@@ -5204,8 +5204,8 @@ a.post-section.alignment-forum:hover::before {
 /*====================*/
 
 .author.redacted,
-.comment-in-reply-to a.redacted {
-	opacity: 0.7;
+.inline-author.redacted {
+	opacity: 0.8;
 	font-weight: 400;
 }
 

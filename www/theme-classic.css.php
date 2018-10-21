@@ -1013,8 +1013,8 @@ a.comment-parent-link::after {
 /*====================*/
 
 .author.redacted,
-.comment-in-reply-to a.redacted {
-	opacity: 0.5;
+.inline-author.redacted {
+	opacity: 0.8;
 	font-weight: 400;
 }
 
