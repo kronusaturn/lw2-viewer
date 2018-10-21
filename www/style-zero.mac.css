@@ -4885,16 +4885,16 @@ a.post-section.alignment-forum:hover::before {
 .comment-item {
 	background-color: #eee;
 }
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
-.comment-item .comment-item .comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
-.comment-item .comment-item .comment-item .comment-item .comment-item a.comment-parent-link::after,
-.comment-item .comment-item .comment-item a.comment-parent-link::after,
+#comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item .comment-item a.comment-parent-link::after,
+#comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item .comment-item a.comment-parent-link::after,
+#comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item .comment-item a.comment-parent-link::after,
+#comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item .comment-item a.comment-parent-link::after,
+#comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item .comment-item a.comment-parent-link::after,
+#comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item .comment-item a.comment-parent-link::after,
+#comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item .comment-item a.comment-parent-link::after,
+#comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item .comment-item a.comment-parent-link::after,
+#comments.threaded .comment-item .comment-item #comments.threaded .comment-item .comment-item .comment-item a.comment-parent-link::after,
+#comments.threaded .comment-item .comment-item .comment-item a.comment-parent-link::after,
 .comment-item a.comment-parent-link::after {
 	box-shadow: 
 		0 28px 16px -16px #fff inset,

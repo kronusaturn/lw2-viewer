@@ -716,7 +716,7 @@ a.post-section.alignment-forum:hover::before {
 <?php nested_stuff(".comment-item .comment-item ", ".comment-item,\n", ".comment-item", $comment_nesting_depth); ?> {
 	background-color: #eee;
 }
-<?php nested_stuff(".comment-item .comment-item ", ".comment-item a.comment-parent-link::after,\n", ".comment-item a.comment-parent-link::after", $comment_nesting_depth); ?> {
+<?php nested_stuff("#comments.threaded .comment-item .comment-item ", ".comment-item a.comment-parent-link::after,\n", ".comment-item a.comment-parent-link::after", $comment_nesting_depth); ?> {
 	box-shadow: 
 		0 28px 16px -16px #fff inset,
 		4px 16px 0 12px #ffd inset,
