@@ -1443,7 +1443,7 @@ function rectifyChronoModeCommentChildLinks() {
 		// Sort by date.
 		let childLinksArray = Array.from(childLinks)
 		childLinksArray.sort((a,b) => document.querySelector(`${a.hash} .date`).dataset["jsDate"] - document.querySelector(`${b.hash} .date`).dataset["jsDate"]);
-		ccls.innerHTML = childLinksArray.map(cl => cl.outerHTML).join("");
+		ccls.innerHTML = "Replies: " + childLinksArray.map(cl => cl.outerHTML).join("");
 	});
 }
 function childrenOfComment(commentID) {
