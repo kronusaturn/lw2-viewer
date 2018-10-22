@@ -1655,6 +1655,21 @@ function disableBeforeUnload() {
 	window.onbeforeunload = null;
 }
 
+/***************************/
+/* ORIGINAL POSTER BADGING */
+/***************************/
+
+function markOriginalPosterComments() {
+	let postAuthor = document.querySelector(".post .author");
+	if (postAuthor == null) return;
+	
+	document.querySelectorAll(".comment-item .author, .comment-item .inline-author").forEach(author => {
+		if (author.dataset.userid == postAuthor.dataset.userid ||
+			(author.hash != "" && document.querySelector(`${author.hash} .author`).dataset.userid == postAuthor.dataset.userid))
+			author.addClass("original-poster");
+	});
+}
+
 /*****************/
 /* ANTI-KIBITZER */
 /*****************/
@@ -2103,6 +2118,9 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	// Add the antikibitzer.
 	injectAntiKibitzer();
 	
+	// Mark original poster's comments with a special class.
+	markOriginalPosterComments();
+
 	// NOTE: This is commented out earlier on, and added here - for now.
 	// Add comment parent popups.
 	document.querySelectorAll(".comment-meta a.comment-parent-link, .comment-meta a.comment-child-link").forEach(function (cpl) {
