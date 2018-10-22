@@ -1711,13 +1711,13 @@ function toggleAntiKibitzerMode() {
 		window.localStorage.setItem("antikibitzer", "false");
 
 		let redirectTarget = pageHeadingElement && pageHeadingElement.dataset["kibitzerRedirect"];
-		if(redirectTarget) {
+		if (redirectTarget) {
 			window.location = redirectTarget;
 			return;
 		}
 
 		// Individual comment page title and header
-		if(document.querySelector(".individual-thread-page")) {
+		if (document.querySelector(".individual-thread-page")) {
 			let replacer = (node) => {
 				if(!node) return;
 				node.firstChild.replaceWith(node.dataset["trueContent"]);
@@ -1752,13 +1752,13 @@ function toggleAntiKibitzerMode() {
 		window.localStorage.setItem("antikibitzer", "true");
 
 		let redirectTarget = pageHeadingElement && pageHeadingElement.dataset["antiKibitzerRedirect"];
-		if(redirectTarget) {
+		if (redirectTarget) {
 			window.location = redirectTarget;
 			return;
 		}
 
 		// Individual comment page title and header
-		if(document.querySelector(".individual-thread-page")) {
+		if (document.querySelector(".individual-thread-page")) {
 			let replacer = (node) => {
 				if(!node) return;
 				node.dataset["trueContent"] = node.firstChild.wholeText;
@@ -1770,7 +1770,7 @@ function toggleAntiKibitzerMode() {
 		}
 		
 		let fakeTitle = document.querySelector("title.fake-title")
-		if(fakeTitle)
+		if (fakeTitle)
 			fakeTitle.parentElement.removeChild(fakeTitle);
 
 		// Author names/links.
@@ -1778,8 +1778,8 @@ function toggleAntiKibitzerMode() {
 			// Skip own posts/comments.
 			if (e.hasClass("own-user-author"))
 				return;
-		
-			let userid = e.dataset["userid"];
+
+			let userid = e.dataset["userid"] || document.querySelector(`${e.hash} .author`).dataset["userid"];
 
 			e.dataset["trueName"] = e.textContent;
 			e.textContent = userFakeName[userid] || (userFakeName[userid] = appellation + " " + numToAlpha(userCount++));
@@ -2102,7 +2102,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 	// Add the antikibitzer.
 	injectAntiKibitzer();
-
+	
 	// NOTE: This is commented out earlier on, and added here - for now.
 	// Add comment parent popups.
 	document.querySelectorAll(".comment-meta a.comment-parent-link, .comment-meta a.comment-child-link").forEach(function (cpl) {
