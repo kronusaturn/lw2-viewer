@@ -774,6 +774,10 @@ a.post-section.alignment-forum:hover::before {
 	font-size: 1.125em;
 	color: #090;
 }
+.comment-item .author:not(.redacted).original-poster::after {
+	opacity: 0.6;
+	filter: brightness(60%);
+}
 
 /*====================*/
 /* ANTI-KIBITZER MODE */

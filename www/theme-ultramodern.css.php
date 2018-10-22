@@ -936,6 +936,9 @@ a.comment-parent-link::before {
 	color: #444;
 	font-weight: normal;
 }
+.comment-item .author:not(.redacted).original-poster::after {
+	opacity: 0.8;
+}
 
 /*====================*/
 /* ANTI-KIBITZER MODE */

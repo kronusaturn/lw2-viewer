@@ -4888,6 +4888,9 @@ a.post-section:hover::before {
 	font-weight: bold;
 	font-size: 1.25em;
 }
+.comment-item .author:not(.redacted).original-poster::after {
+	opacity: 0.6;
+}
 
 /*====================*/
 /* ANTI-KIBITZER MODE */

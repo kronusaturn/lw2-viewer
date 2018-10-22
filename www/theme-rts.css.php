@@ -959,6 +959,9 @@ a.post-section.alignment-forum:hover::before {
 	color: #666;
 	font-weight: 600;
 }
+.comment-item .author:not(.redacted).original-poster::after {
+	opacity: 0.8;
+}
 
 /*====================*/
 /* ANTI-KIBITZER MODE */

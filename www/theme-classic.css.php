@@ -991,6 +991,9 @@ a.comment-parent-link::after {
 .comment-meta .karma-value:only-child {
 	float: none;
 }
+.comment-item .author:not(.redacted).original-poster::after {
+	opacity: 0.8;
+}
 
 /*====================*/
 /* COMMENT PERMALINKS */
