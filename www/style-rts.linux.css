@@ -1602,6 +1602,10 @@ ul.comment-thread {
 	text-align: right;
 	display: none;	/* Not sure if we need to display this... */
 }
+.comment-item .author:not(.redacted).original-poster::after {
+	content: "\2004(OP)";
+	font-size: 0.75em;
+}
 
 /*****************************/
 /* COMMENT THREAD NAVIGATION */
