@@ -2215,6 +2215,11 @@ function adjustUIForWindowSize() {
 	document.querySelectorAll("#quick-nav-ui a[href='#top'], #quick-nav-ui a[href='#bottom-bar']").forEach(function (button) {
 		button.style.visibility = (document.querySelector("#content").clientHeight > window.innerHeight + 30) ? "unset" : "hidden";
 	});
+	
+	// Move anti-kibitzer toggle if content is very short.
+	document.querySelectorAll("#anti-kibitzer-toggle").forEach(akt => {
+		if (document.querySelector("#content").clientHeight < 400) akt.style.bottom = "125px";
+	});
 
 	// Add "horizontal" class to sort order selector when it's specified, via CSS, to
 	// be horizontal (i.e. flex-direction: row)
