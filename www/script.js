@@ -1569,7 +1569,7 @@ function appearanceAdjustUIToggleButtonClicked(event) {
 	window.localStorage.setItem("appearance-adjust-ui-toggle-engaged", window.localStorage.getItem("appearance-adjust-ui-toggle-engaged") != "true");
 }
 function toggleAppearanceAdjustUI() {
-	document.querySelectorAll("#theme-selector, #width-selector, #text-size-adjustment-ui, #theme-tweaker-toggle, #appearance-adjust-ui-toggle button").forEach(function (element) {
+	document.querySelectorAll("#comments-view-mode-selector, #theme-selector, #width-selector, #text-size-adjustment-ui, #theme-tweaker-toggle, #appearance-adjust-ui-toggle button").forEach(function (element) {
 		element.toggleClass("engaged");
 	});
 }

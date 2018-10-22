@@ -620,6 +620,7 @@ body {
 		transform: rotate(-90deg);
 	}
 
+	#comments-view-mode-selector,
 	#theme-selector,
 	#width-selector,
 	#text-size-adjustment-ui,
@@ -631,6 +632,7 @@ body {
 		transition:
 			opacity 0.35s ease;
 	}
+	#comments-view-mode-selector::after,
 	#theme-selector::after,
 	#width-selector::after,
 	#text-size-adjustment-ui::after {
@@ -643,12 +645,26 @@ body {
 		top: 0;
 		left: 0;
 	}
+	#comments-view-mode-selector.engaged,
 	#theme-selector.engaged,
 	#width-selector.engaged,
 	#text-size-adjustment-ui.engaged,
 	#theme-tweaker-toggle.engaged {
 		pointer-events: auto;
 		opacity: 1.0;
+	}
+
+	#comments-view-mode-selector {
+		left: -45px;
+		top: calc(100% - 180px);
+	}
+	#comments-view-mode-selector::after {
+		max-height: 1000px;
+		transition:
+			max-height 0.2s ease;
+	}
+	#comments-view-mode-selector.engaged::after {
+		max-height: 0px;
 	}
 
 	#theme-selector {
