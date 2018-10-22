@@ -1408,9 +1408,13 @@ function injectCommentsViewModeSelector() {
 	let newHref = "href='" + location.pathname + location.search.replace("chrono=t","") + (currentModeThreaded ? ((location.search == "" ? "?" : "&") + "chrono=t") : "") + location.hash + "'";
 
 	let commentsViewModeSelector = addUIElement("<div id='comments-view-mode-selector'>"
-	+ `<a class="threaded ${currentModeThreaded ? 'selected' : ''}" ${currentModeThreaded ? "" : newHref}  title='Comments threaded view'>&#xf038;</a>`
+	+ `<a class="threaded ${currentModeThreaded ? 'selected' : ''}" ${currentModeThreaded ? "" : newHref} title='Comments threaded view'>&#xf038;</a>`
 	+ `<a class="chrono ${currentModeThreaded ? '' : 'selected'}" ${currentModeThreaded ? newHref : ""} title='Comments chronological (flat) view'>&#xf017;</a>`
 	+ "</div>");
+	
+// 	commentsViewModeSelector.querySelectorAll("a").forEach(button => {
+// 		button.addActivateEvent(commentsViewModeSelectorButtonClicked);
+// 	});
 	
 	if (!currentModeThreaded) {
 		document.querySelectorAll(".comment-meta > a.comment-parent-link").forEach(cpl => {
@@ -1431,6 +1435,39 @@ function injectCommentsViewModeSelector() {
 		commentsContainer.addClass("threaded");
 	}
 }
+
+// function commentsViewModeSelectorButtonClicked(event) {
+// 	event.preventDefault();
+// 	
+// 	var newDocument;
+// 	let request = new XMLHttpRequest();
+// 	request.open("GET", event.target.href);
+// 	request.onreadystatechange = () => {
+// 		if (request.readyState != 4) return;
+// 		newDocument = htmlToElement(request.response);
+// 
+// 		let classes = event.target.hasClass("threaded") ? { "old": "chrono", "new": "threaded" } : { "old": "threaded", "new": "chrono" };
+// 
+// 		// Update the buttons.
+// 		event.target.addClass("selected");
+// 		event.target.parentElement.querySelector("." + classes.old).removeClass("selected");
+// 
+// 		// Update the #comments container.
+// 		let commentsContainer = document.querySelector("#comments");
+// 		commentsContainer.removeClass(classes.old);
+// 		commentsContainer.addClass(classes.new);
+// 		
+// 		// Update the content.
+// 		commentsContainer.outerHTML = newDocument.querySelector("#comments").outerHTML;
+// 	};
+// 	request.send();
+// }
+// 
+// function htmlToElement(html) {
+//     var template = document.createElement('template');
+//     template.innerHTML = html.trim();
+//     return template.content;
+// }
 
 function rectifyChronoModeCommentChildLinks() {
 	document.querySelectorAll(".comment-child-links").forEach(ccls => {
