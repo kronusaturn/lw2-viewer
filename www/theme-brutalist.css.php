@@ -1363,7 +1363,7 @@ select {
 		width: 85%;
 	}
 	#theme-selector:hover::after {
-		width: calc(7em - 6px);
+		width: calc(6.5em - 6px);
 		background-color: #000;
 	}
 }

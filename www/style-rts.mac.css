@@ -2855,10 +2855,10 @@ li {
 		content: "";
 		display: block;
 		position: absolute;
-		width: calc(6em - 6px);
+		width: calc(6em - 7px);
 		height: calc(100% + 2px);
 		top: 0;
-		left:100%;
+		left: calc(100% + 1px);
 	}
 	#anti-kibitzer-toggle {
 		bottom: 330px;
@@ -5832,6 +5832,7 @@ select {
 @media only screen and (max-width: 1160px) {
 	#theme-selector:hover::after {
 		background-color: #bbb;
+		width: calc(6em - 13px);
 	}
 }
 @media only screen and (max-width: 1080px) {

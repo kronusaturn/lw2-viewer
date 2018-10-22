@@ -1661,6 +1661,7 @@ select {
 @media only screen and (max-width: 1160px) {
 	#theme-selector:hover::after {
 		background-color: #bbb;
+		width: calc(6em - 13px);
 	}
 }
 @media only screen and (max-width: 1080px) {

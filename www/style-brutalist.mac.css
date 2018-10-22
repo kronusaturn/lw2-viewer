@@ -2855,10 +2855,10 @@ li {
 		content: "";
 		display: block;
 		position: absolute;
-		width: calc(6em - 6px);
+		width: calc(6em - 7px);
 		height: calc(100% + 2px);
 		top: 0;
-		left:100%;
+		left: calc(100% + 1px);
 	}
 	#anti-kibitzer-toggle {
 		bottom: 330px;
@@ -5535,7 +5535,7 @@ select {
 		width: 85%;
 	}
 	#theme-selector:hover::after {
-		width: calc(7em - 6px);
+		width: calc(6.5em - 6px);
 		background-color: #000;
 	}
 }
