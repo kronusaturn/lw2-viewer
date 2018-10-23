@@ -15,7 +15,7 @@
 		<input name="subject" autocomplete="off" type="text">
 	</div>{% endif %}
 	<div class="textarea-container">
-		<textarea name="text">{{ markdown-source }}</textarea>
+		<textarea name="text" onkeyup="enableBeforeUnload();" onchange="enableBeforeUnload();">{{ markdown-source }}</textarea>
 		<span class="markdown-reference-link">You <em>cannot</em> use Markdown here—plain text only.</span>
 		<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-help-button">Help</button>
 		<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-exit-button">Exit</button>

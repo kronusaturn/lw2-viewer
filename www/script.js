@@ -262,7 +262,7 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 	e.innerHTML = "<button class='cancel-comment-button' tabindex='-1'>Cancel</button>" +
 		"<form method='post'>" + 
 		"<div class='textarea-container'>" + 
-		"<textarea name='text'></textarea>" +
+		"<textarea name='text' onkeyup='enableBeforeUnload();' onchange='enableBeforeUnload();'></textarea>" +
 		(withparent ? "<input type='hidden' name='parent-comment-id' value='" + e.getCommentId() + "'>" : "") +
 		(editCommentId ? "<input type='hidden' name='edit-comment-id' value='" + editCommentId + "'>" : "") +
 		"<span class='markdown-reference-link'>You can use <a href='http://commonmark.org/help/' target='_blank'>Markdown</a> here.</span>" + 
@@ -282,7 +282,7 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 		}
 	}
 	let textarea = e.querySelector("textarea");
-	textarea.value = (editMarkdownSource ? editMarkdownSource : "");
+	textarea.value = editMarkdownSource || "";
 	textarea.addTextareaFeatures();
 	textarea.focus();
 }
