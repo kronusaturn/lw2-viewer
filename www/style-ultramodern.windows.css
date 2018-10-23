@@ -5033,7 +5033,7 @@ a.post-section.alignment-forum:hover::before {
 	font-weight: 600;
 }
 .post.link-post a.link-post-link:hover {
-	color: #c00;
+	color: #f60;
 }
 .post.link-post a.link-post-link:hover::before {
 	color: #4879ec;
@@ -5042,6 +5042,17 @@ a.post-section.alignment-forum:hover::before {
 		-0.5px -0.5px 0 #fff,
 		0 0 2px #fff,
 		0 0 3px #00c;
+}
+.post.link-post a.link-post-link:focus {
+	color: #f60;
+	border-bottom: 2px dotted #f60;
+	text-shadow: 
+		0px 0px 1px #777, 
+		0.5px 0.5px 1px #aaa, 
+		0.5px 0.5px 1px #bbb, 
+		0 0 1px #f60, 
+		0 0 2px #f60, 
+		0 0 3px #f60;
 }
 
 /*==========*/

@@ -4832,6 +4832,10 @@ a.post-section:hover::before {
 		 0 0 2px #000,
 		 0 0 3px #000;
 }
+.post.link-post a.link-post-link:focus {
+	color: #999;
+	border-bottom: 2px dotted #999;
+}
 
 /*=======*/
 /* POSTS */

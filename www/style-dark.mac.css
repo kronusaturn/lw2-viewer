@@ -5067,6 +5067,10 @@ a.post-section.alignment-forum:hover::before {
 		0 0 2px #000,
 		0 0 3px #54d400;
 }
+.post.link-post a.link-post-link:focus {
+	color: #777;
+	border-bottom: 2px dotted #777;
+}
 
 /*==========*/
 /* COMMENTS */

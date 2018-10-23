@@ -2172,21 +2172,36 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		}
 	});
 	
-	// Add event listener for , and . (for navigating listings pages).
+	// Add event listener for . , / (for navigating listings pages).
 	let listings = document.querySelectorAll("h1.listing a:last-of-type");
 	if (listings.length > 0) {
-		document.addEventListener("keyup", function(e) { 
-			if(e.ctrlKey || e.shiftKey || e.altKey || !(e.key == "," || e.key == ".")) return;
+		document.addEventListener("keyup", function (e) { 
+			if (e.ctrlKey || e.shiftKey || e.altKey || !(e.key == "," || e.key == "." || e.key == '/')) return;
+			
+			if (e.key == '/') {
+				if (document.activeElement.parentElement.hasClass("link-post-listing")) {
+					let links = document.activeElement.parentElement.querySelectorAll("a");
+					links[document.activeElement == links[0] ? 1 : 0].focus();
+				}
+				return;
+			}
 	
 			var indexOfActiveListing = -1;
 			for (i = 0; i < listings.length; i++) {
-				if (listings[i] === document.activeElement) {
+				if (listings[i] === document.activeElement.parentElement.querySelector("a[href^='/']")) {
 					indexOfActiveListing = i;
 					break;
 				}
 			}
 			let indexOfNextListing = (e.key == "." ? ++indexOfActiveListing : (--indexOfActiveListing + listings.length)) % listings.length;
 			listings[indexOfNextListing].focus();
+		});
+	}
+	// Add event listener for / (to focus the link on link posts).
+	if (document.querySelector("#content").hasClass("post-page") && 
+		document.querySelector(".post").hasClass("link-post")) {
+		document.addEventListener("keyup", function (e) {
+			if (e.key == '/') document.querySelector("a.link-post-link").focus();
 		});
 	}
 

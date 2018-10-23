@@ -473,6 +473,9 @@ h1.listing a[href^="http"] {
 		color: #3d3d3e;
 		text-decoration: none;
 	}	
+	h1.listing a:focus {
+		border-bottom: 1px dotted #999;
+	}	
 	h1.listing:focus-within::before {
 		display: none;
 	}
@@ -481,13 +484,15 @@ h1.listing a[href^="http"] {
 			0 0 0 3px #fff,
 			0 0 0 6px #3d3d3e;
 	}
-	h1.listing a[href^="http"]:hover {
+	h1.listing a[href^="http"]:hover,
+	h1.listing a[href^="http"]:focus {
 		color: #4879ec;
 		text-shadow: 
 			 0.5px 0.5px 0 #fff,
 			 -0.5px -0.5px 0 #fff,
 			 0 0 2px #fff,
 			 0 0 3px #00c;
+		border: none;
 	}
 }
 
@@ -867,6 +872,10 @@ a.post-section.alignment-forum:hover::before {
 		-0.5px -0.5px 0 #fff,
 		0 0 2px #fff,
 		0 0 3px #00c;
+}
+.post.link-post a.link-post-link:focus {
+	color: #aaa;
+	border-bottom: 2px dotted #aaa;
 }
 
 /*=======*/

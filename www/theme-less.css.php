@@ -978,6 +978,11 @@ h1.listing a[href^="/"] {
 	h1.listing a[href^="http"]:hover {
 		color: #79a97e;
 	}
+	h1.listing a[href^="http"]:focus {
+		color: #a0d3a2;
+		text-decoration: none;
+		border-bottom: 2px dotted #a0d3a2;
+	}
 }
 
 /*===================*/
@@ -1376,6 +1381,10 @@ a.post-section.alignment-forum:hover::before {
 }
 .post.link-post a.link-post-link:hover::before {
 	opacity: 1;
+}
+.post.link-post a.link-post-link:focus {
+	color: #79a97e;
+	border-bottom: 2px dotted #79a97e;
 }
 
 /*==========*/

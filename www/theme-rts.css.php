@@ -539,7 +539,7 @@ h1.listing {
 
 h1.listing a[href^="http"] {
 	font-size: 0.6875em;
-	top: 4px;
+	top: 6px;
 	color: #888;
 }
 h1.listing a[href^='/'] {
@@ -862,9 +862,14 @@ a.post-section.alignment-forum:hover::before {
 	text-decoration: none;
 	font-family: <?php echo $UI_font; ?>;
 	font-weight: 600;
+	color: #77121a;
 }
 .post.link-post a.link-post-link:hover {
-	color: #c00;
+	color: #942f2f;
+	text-shadow: 
+		0px 0px 0.5px #ff987b, 
+		0px 0px 1.5px #c05651, 
+		0.5px 0.5px 0.5px #de7069;
 }
 .post.link-post a.link-post-link:hover::before {
 	color: #4879ec;
@@ -873,6 +878,12 @@ a.post-section.alignment-forum:hover::before {
 		-0.5px -0.5px 0 #fff,
 		0 0 2px #fff,
 		0 0 3px #00c;
+}
+.post.link-post a.link-post-link:focus {
+	text-shadow: 
+		0px 0px 0.5px #ff987b, 
+		0px 0px 1.5px #c05651, 
+		0.5px 0.5px 0.5px #de7069;
 }
 
 /*=======*/
