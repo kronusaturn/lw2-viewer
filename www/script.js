@@ -586,7 +586,7 @@ function highlightCommentsSince(date) {
 		newCommentScrollSet(ci);
 	}
 
-	registerInitializer("initializeCommentScrollPosition", false, () => document.readyState=="complete", newCommentScrollListener);
+	registerInitializer("initializeCommentScrollPosition", false, () => document.readyState == "complete", newCommentScrollListener);
 
 	return newCommentsCount;
 }
@@ -797,7 +797,7 @@ function setTheme(newThemeName) {
 	newStyle.setAttribute('href', '/style' + styleSheetNameSuffix + currentStyleSheetNameComponents[1]);
 	
 	let oldStyle = document.querySelector("head link[href*='.css']");
-	newStyle.addEventListener('load', function() { oldStyle.parentElement.removeChild(oldStyle); });
+	newStyle.addEventListener('load', function() { removeElement(oldStyle); });
 	newStyle.addEventListener('load', function() { postSetThemeHousekeeping(oldThemeName, newThemeName); });
 
 	if (window.adjustmentTransitions) {
@@ -810,6 +810,7 @@ function setTheme(newThemeName) {
 function postSetThemeHousekeeping(oldThemeName = "", newThemeName = (readCookie('theme') || 'default')) {
 	recomputeUIElementsContainerHeight();
 	adjustUIForWindowSize();
+	window.addEventListener('resize', adjustUIForWindowSize);
 
 	let themeLoadCallback = window['themeLoadCallback_' + newThemeName];
 	if (themeLoadCallback != null) themeLoadCallback(oldThemeName);
@@ -829,6 +830,10 @@ function pageFadeTransition(fadeIn) {
 
 function themeLoadCallback_less(fromTheme = "") {
 	injectSiteNavUIToggle();
+	if (!window.isMobile) {
+		injectPostNavUIToggle();
+		injectAppearanceAdjustUIToggle();
+	}
 
 	registerInitializer('shortenDate', true, () => document.querySelector(".top-post-meta") != null, function () {
 		let dtf = new Intl.DateTimeFormat([], 
@@ -850,11 +855,7 @@ function themeLoadCallback_less(fromTheme = "") {
 			});
 		});
 
-		if (window.localStorage.getItem("appearance-adjust-ui-toggle-engaged") == "true") {
-			registerInitializer('engageAppearanceAdjustUI', true, () => document.querySelector("#ui-elements-container") != null, function () {
-				toggleAppearanceAdjustUI();
-			});
-		} else if (window.localStorage.getItem("appearance-adjust-ui-toggle-engaged") == null) {
+		if (window.localStorage.getItem("appearance-adjust-ui-toggle-engaged") == null) {
 			// If state is not set (user has never clicked on the Less theme's appearance
 			// adjustment UI toggle) then show it, but then hide it after a short time.
 			registerInitializer('engageAppearanceAdjustUI', true, () => document.querySelector("#ui-elements-container") != null, function () {
@@ -876,7 +877,7 @@ function themeLoadCallback_less(fromTheme = "") {
 		// Unset the height of the #ui-elements-container
 		document.querySelector("#ui-elements-container").style.height = "";
 		
-		updatePostNavUIToggleVisibility();
+		registerInitializer('updatePostNavUIToggleVisibility', false, () => document.readyState == "complete", updatePostNavUIToggleVisibility);
 		window.addEventListener('resize', updatePostNavUIToggleVisibility);		
 
 		// Due to filters vs. fixed elements, we need to be smarter about selecting which elements to filter...
@@ -889,7 +890,7 @@ function themeLoadCallback_less(fromTheme = "") {
 // otherwise, show it.
 function updatePostNavUIToggleVisibility() {
 	var hidePostNavUIToggle = true;
-	document.querySelectorAll("#ui-elements-container #quick-nav-ui a, #ui-elements-container #new-comment-nav-ui").forEach(function (element) {
+	document.querySelectorAll("#ui-elements-container #quick-nav-ui a, #ui-elements-container #new-comment-nav-ui").forEach(element => {
 		if (window.getComputedStyle(element).visibility == "visible") hidePostNavUIToggle = false;
 	});
 	document.querySelector("#ui-elements-container #post-nav-ui-toggle").style.visibility = hidePostNavUIToggle ? "hidden" : "";
@@ -897,27 +898,24 @@ function updatePostNavUIToggleVisibility() {
 
 function themeUnloadCallback_less(toTheme = "") {
 	removeSiteNavUIToggle();
-	
+	if (!window.isMobile) {
+		removePostNavUIToggle();
+		removeAppearanceAdjustUIToggle();
+	}
 	window.removeEventListener('resize', updatePostNavUIToggleVisibility);		
 	
-	document.querySelectorAll("#theme-less-mobile-first-row-placeholder").forEach(function (e) {
-		e.parentElement.removeChild(e);
-	});
+	document.querySelectorAll("#theme-less-mobile-first-row-placeholder").forEach(e => { removeElement(e); });
 
 	if (!window.isMobile) {
 		// Remove spans
-		document.querySelectorAll(".top-post-meta .date, .top-post-meta .comment-count").forEach(function (element) {
+		document.querySelectorAll(".top-post-meta .date, .top-post-meta .comment-count").forEach(element => {
 			element.innerHTML = element.firstChild.innerHTML;
 		});
 	}
 	
-	document.querySelectorAll(".top-post-meta .date").forEach(function (topMetaDate) {
+	document.querySelectorAll(".top-post-meta .date").forEach(topMetaDate => {
 		topMetaDate.innerHTML = document.querySelector(".bottom-post-meta .date").innerHTML;
 	});
-	
-	if (window.localStorage.getItem("appearance-adjust-ui-toggle-engaged") == "true") {
-		toggleAppearanceAdjustUI();
-	}
 	
 	// Reset filtered elements selector to default.
 	window.filtersTargetSelector = "";
@@ -932,7 +930,7 @@ function themeLoadCallback_dark(fromTheme = "") {
 		"</style>");
 }
 function themeUnloadCallback_dark(toTheme = "") {
-	document.querySelectorAll("#dark-theme-adjustments").forEach(function (e) { e.parentNode.removeChild(e); });
+	document.querySelectorAll("#dark-theme-adjustments").forEach(e => { removeElement(e); });
 }
 
 /********************************************/
@@ -1544,36 +1542,34 @@ function commentsListModeSelectButtonClicked(event) {
 }
 
 /**********************/
-/* MOBILE UI ELEMENTS */
+/* SITE NAV UI TOGGLE */
 /**********************/
 
 function injectSiteNavUIToggle() {
 	let siteNavUIToggle = addUIElement("<div id='site-nav-ui-toggle'><button type='button' tabindex='-1'>&#xf0c9;</button></div>");
 	siteNavUIToggle.querySelector("button").addActivateEvent(siteNavUIToggleButtonClicked);
 	
-	if (!window.isMobile && window.localStorage.getItem("site-nav-ui-toggle-engaged") == "true") {
-		registerInitializer('engageSiteNavUI', true, () => document.querySelector("#ui-elements-container") != null, function () {
-			toggleSiteNavUI();
-		});
-	}
+	if (!window.isMobile && window.localStorage.getItem("site-nav-ui-toggle-engaged") == "true") toggleSiteNavUI();
 }
 function removeSiteNavUIToggle() {
-	document.querySelectorAll("#primary-bar, #secondary-bar, .page-toolbar, #site-nav-ui-toggle button").forEach(function (element) {
+	document.querySelectorAll("#primary-bar, #secondary-bar, .page-toolbar, #site-nav-ui-toggle button").forEach(element => {
 		element.removeClass("engaged");
 	});
-
-	let siteNavUIToggle = document.querySelector("#site-nav-ui-toggle");
-	siteNavUIToggle.parentElement.removeChild(siteNavUIToggle);	
+	removeElement("#site-nav-ui-toggle");
 }
 function siteNavUIToggleButtonClicked() {
 	toggleSiteNavUI();
 	window.localStorage.setItem("site-nav-ui-toggle-engaged", window.localStorage.getItem("site-nav-ui-toggle-engaged") != "true");
 }
 function toggleSiteNavUI() {
-	document.querySelectorAll("#primary-bar, #secondary-bar, .page-toolbar, #site-nav-ui-toggle button").forEach(function (element) {
+	document.querySelectorAll("#primary-bar, #secondary-bar, .page-toolbar, #site-nav-ui-toggle button").forEach(element => {
 		element.toggleClass("engaged");
 	});
 }
+
+/**********************/
+/* POST NAV UI TOGGLE */
+/**********************/
 
 function injectPostNavUIToggle() {
 	let postNavUIToggle = addUIElement("<div id='post-nav-ui-toggle'><button type='button' tabindex='-1'>&#xf14e;</button></div>");
@@ -1581,32 +1577,52 @@ function injectPostNavUIToggle() {
 	
 	if (window.localStorage.getItem("post-nav-ui-toggle-engaged") == "true") togglePostNavUI();
 }
+function removePostNavUIToggle() {
+	document.querySelectorAll("#quick-nav-ui, #new-comment-nav-ui, #hns-date-picker, #post-nav-ui-toggle button").forEach(element => {
+		element.removeClass("engaged");
+	});
+	removeElement("#post-nav-ui-toggle");
+}
 function postNavUIToggleButtonClicked(event) {
 	togglePostNavUI();
 	window.localStorage.setItem("post-nav-ui-toggle-engaged", window.localStorage.getItem("post-nav-ui-toggle-engaged") != "true");
 }
 function togglePostNavUI() {
-	document.querySelectorAll("#quick-nav-ui, #new-comment-nav-ui, #hns-date-picker, #post-nav-ui-toggle button").forEach(function (element) {
+	document.querySelectorAll("#quick-nav-ui, #new-comment-nav-ui, #hns-date-picker, #post-nav-ui-toggle button").forEach(element => {
 		element.toggleClass("engaged");
 	});
 }
+
+/*******************************/
+/* APPEARANCE ADJUST UI TOGGLE */
+/*******************************/
 
 function injectAppearanceAdjustUIToggle() {
 	let appearanceAdjustUIToggle = addUIElement("<div id='appearance-adjust-ui-toggle'><button type='button' tabindex='-1'>&#xf013;</button></div>");
 	appearanceAdjustUIToggle.querySelector("button").addActivateEvent(appearanceAdjustUIToggleButtonClicked);
 	
-	let themeSelectorCloseButton = appearanceAdjustUIToggle.querySelector("button").cloneNode(true);
-	themeSelectorCloseButton.addClass("theme-selector-close-button");
-	themeSelectorCloseButton.innerHTML = "&#xf057;";
-	document.querySelector("#theme-selector").appendChild(themeSelectorCloseButton);
-	themeSelectorCloseButton.addActivateEvent(appearanceAdjustUIToggleButtonClicked);
+	if (window.isMobile) {
+		let themeSelectorCloseButton = appearanceAdjustUIToggle.querySelector("button").cloneNode(true);
+		themeSelectorCloseButton.addClass("theme-selector-close-button");
+		themeSelectorCloseButton.innerHTML = "&#xf057;";
+		document.querySelector("#theme-selector").appendChild(themeSelectorCloseButton);
+		themeSelectorCloseButton.addActivateEvent(appearanceAdjustUIToggleButtonClicked);
+	} else {
+		if (window.localStorage.getItem("appearance-adjust-ui-toggle-engaged") == "true") toggleAppearanceAdjustUI();
+	}
+}
+function removeAppearanceAdjustUIToggle() {
+	document.querySelectorAll("#comments-view-mode-selector, #theme-selector, #width-selector, #text-size-adjustment-ui, #theme-tweaker-toggle, #appearance-adjust-ui-toggle button").forEach(element => {
+		element.removeClass("engaged");
+	});
+	removeElement("#appearance-adjust-ui-toggle");
 }
 function appearanceAdjustUIToggleButtonClicked(event) {
 	toggleAppearanceAdjustUI();
 	window.localStorage.setItem("appearance-adjust-ui-toggle-engaged", window.localStorage.getItem("appearance-adjust-ui-toggle-engaged") != "true");
 }
 function toggleAppearanceAdjustUI() {
-	document.querySelectorAll("#comments-view-mode-selector, #theme-selector, #width-selector, #text-size-adjustment-ui, #theme-tweaker-toggle, #appearance-adjust-ui-toggle button").forEach(function (element) {
+	document.querySelectorAll("#comments-view-mode-selector, #theme-selector, #width-selector, #text-size-adjustment-ui, #theme-tweaker-toggle, #appearance-adjust-ui-toggle button").forEach(element => {
 		element.toggleClass("engaged");
 	});
 }
@@ -1785,9 +1801,7 @@ function toggleAntiKibitzerMode() {
 			replacer(document.querySelector("#content > h1"));
 		}
 		
-		let fakeTitle = document.querySelector("title.fake-title")
-		if (fakeTitle)
-			fakeTitle.parentElement.removeChild(fakeTitle);
+		removeElement("title.fake-title");
 
 		// Author names/links.
 		document.querySelectorAll(".author, .inline-author").forEach(function (e) {
@@ -1864,9 +1878,9 @@ function addUIElement(element_html) {
 	return ui_elements_container.lastElementChild;
 }
 
-function removeElement(selector, ancestor = document) {
-	var element = ancestor.querySelector(selector);
-	if (element) element.parentElement.removeChild(element);
+function removeElement(elementOrSelector, ancestor = document) {
+	if (typeof elementOrSelector == "string") elementOrSelector = ancestor.querySelector(elementOrSelector);
+	if (elementOrSelector) elementOrSelector.parentElement.removeChild(elementOrSelector);
 }
 
 /******************/
@@ -2111,10 +2125,10 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	injectCommentsViewModeSelector();
 
 	// Add the toggle for the post nav UI elements on mobile.
-	injectPostNavUIToggle();
+	if (window.isMobile) injectPostNavUIToggle();
 	
 	// Add the toggle for the appearance adjustment UI elements on mobile.
-	injectAppearanceAdjustUIToggle();
+	if (window.isMobile) injectAppearanceAdjustUIToggle();
 
 	// Add the antikibitzer.
 	injectAntiKibitzer();
@@ -2137,7 +2151,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 				parent.addClass("comment-popup")
 				parent.addClass("comment-item-highlight");
 				cpl.addEventListener("mouseout", function(e) {
-					parent.parentNode.removeChild(parent);
+					removeElement(parent);
 				}, {once: true});
 				cpl.parentNode.parentNode.appendChild(parent);
 			} else {
@@ -2236,9 +2250,6 @@ registerInitializer('pageLayoutFinished', false, () => document.readyState == "c
 	forceInitializer('initialize');
 
 	realignHashIfNeeded();
-
-	adjustUIForWindowSize();
-	window.addEventListener('resize', adjustUIForWindowSize);
 
 	postSetThemeHousekeeping();
 	
