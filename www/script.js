@@ -1423,6 +1423,10 @@ function injectCommentsViewModeSelector() {
 	} else {
 		commentsContainer.addClass("threaded");
 	}
+
+	// Remove extraneous top-level comment thread in chrono mode.
+	let topLevelCommentThread = document.querySelector("#comments > .comment-thread");
+	if (topLevelCommentThread.children.length == 0) removeElement(topLevelCommentThread);
 }
 
 // function commentsViewModeSelectorButtonClicked(event) {
