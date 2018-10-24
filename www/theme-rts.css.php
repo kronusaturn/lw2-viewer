@@ -285,7 +285,9 @@ a.nav-inner,
 }
 .sublevel-nav.sort .sublevel-item:last-child {
 	border-radius: 0 0 6px 6px;
-	border-width: 0 1px 1px 1px;
+}
+.sublevel-nav.sort .sublevel-item:nth-child(n+2) {
+	border-width: 0 1px 1px 1px;	
 }
 
 /* Horizontal */
@@ -294,6 +296,8 @@ a.nav-inner,
 }
 .sublevel-nav.sort.horizontal .sublevel-item:last-child {
 	border-radius: 0 6px 6px 0;
+}
+.sublevel-nav.sort.horizontal .sublevel-item:nth-child(n+2) {
 	border-width: 1px 1px 1px 0;
 }
 

@@ -436,7 +436,8 @@ a#inbox-indicator.new-messages:hover::before {
 /*******************************/
 
 #comments > .sublevel-nav.sort {
-	margin: 0;
+	margin: 1em auto 0 auto;
+	width: fit-content;
 }
 
 /******************/

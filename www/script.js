@@ -1893,6 +1893,10 @@ function injectCommentsSortModeSelector() {
 		"</div>";
 	topCommentThread.insertAdjacentHTML("beforebegin", commentsSortModeSelectorHTML);
 	let commentsSortModeSelector = document.querySelector("comments-sort-mode-selector");
+
+	// TODO: Make this actually get the current sort mode (if that's saved).
+	let currentSortMode = CommentSortMode.TOP;
+	topCommentThread.parentElement.addClass("sort-mode-" + currentSortMode);
 }
 
 /*********************/
