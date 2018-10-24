@@ -3,7 +3,7 @@
 /***************************/
 
 if (!window.requestIdleCallback) {
-	window.requestIdleCallback = function(fn) { window.setTimeout(fn, 0) };
+	window.requestIdleCallback = (fn) => { window.setTimeout(fn, 0) };
 }
 
 var initializersDone = {};
@@ -15,7 +15,7 @@ function registerInitializer(name, tryEarly, precondition, fn) {
 		if (initializersDone[name]) return;
 		if (!precondition()) {
 			if (tryEarly) {
-				window.setTimeout(()=>window.requestIdleCallback(wrapper, {timeout: 1000}), 50);
+				window.setTimeout(() => window.requestIdleCallback(wrapper, {timeout: 1000}), 50);
 			} else {
 				document.addEventListener("readystatechange", wrapper, {once: true});
 			}
@@ -41,7 +41,7 @@ function forceInitializer(name) {
 /* COOKIES */
 /***********/
 
-function setCookie(name,value,days) {
+function setCookie(name, value, days) {
 	var expires = "";
 	if (!days) days = 36500;
 	if (days) {
@@ -54,10 +54,10 @@ function setCookie(name,value,days) {
 function readCookie(name) {
 	var nameEQ = name + "=";
 	var ca = document.cookie.split(';');
-	for(var i=0;i < ca.length;i++) {
+	for(var i = 0; i < ca.length; i++) {
 		var c = ca[i];
-		while (c.charAt(0)==' ') c = c.substring(1,c.length);
-		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+		while (c.charAt(0)==' ') c = c.substring(1, c.length);
+		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
 	}
 	return null;
 }
@@ -122,8 +122,8 @@ Element.prototype.removeActivateEvent = function() {
 }
 
 function addScrollListener(fn) {
-	let wrapper = function(e) {
-		window.requestAnimationFrame(function () {
+	let wrapper = (event) => {
+		window.requestAnimationFrame(() => {
 			fn();
 			document.addEventListener("scroll", wrapper, {once: true, passive: true});
 		});
@@ -275,7 +275,7 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 	
 	element.querySelector(".cancel-comment-button").addActivateEvent(window.hideReplyForm);
 	element.scrollIntoViewIfNeeded();
-	element.querySelector("form").onsubmit = function(event) {
+	element.querySelector("form").onsubmit = (event) => {
 		if (!event.target.text.value) {
 			alert("Please enter a comment.");
 			return false;
@@ -344,7 +344,7 @@ function OnInputExpandTextarea() {
 	}
 }
 function ExpandTextarea(textarea) {
-	window.requestAnimationFrame(function() {
+	window.requestAnimationFrame(() => {
 		textarea.style.height = 'auto';
 		let totalBorderHeight = (textarea.closest("#conversation-form") == null) ? 30 : 2;
 		textarea.style.height = textarea.scrollHeight + totalBorderHeight + 'px';
@@ -365,16 +365,16 @@ function OnInputRemoveMarkdownHints() {
 /**********/
 
 function parseVoteType(voteType) {
-	let val = {};
-	if (!voteType) return val;
-	val.up = /[Uu]pvote$/.test(voteType);
-	val.down = /[Dd]ownvote$/.test(voteType);
-	val.big = /^big/.test(voteType);
-	return val;
+	let value = {};
+	if (!voteType) return value;
+	value.up = /[Uu]pvote$/.test(voteType);
+	value.down = /[Dd]ownvote$/.test(voteType);
+	value.big = /^big/.test(voteType);
+	return value;
 }
 
-function makeVoteType(val) {
-	return (val.big ? 'big' : 'small') + (val.up ? 'Up' : 'Down') + 'vote';
+function makeVoteType(value) {
+	return (value.big ? 'big' : 'small') + (value.up ? 'Up' : 'Down') + 'vote';
 }
 
 function makeVoteClass(vote) {
@@ -665,8 +665,8 @@ function injectContentWidthSelector() {
 	let currentWidth = widthDict[window.localStorage.getItem("selected-width")] || widthDict['normal'];
 	let widthSelector = addUIElement(
 		"<div id='width-selector'>" +
-		String.prototype.concat.apply("", widthOptions.map(function (wo) {
-			let [name, desc, abbr, width] = wo;
+		String.prototype.concat.apply("", widthOptions.map(function (widthOption) {
+			let [name, desc, abbr, width] = widthOption;
 			let selected = (width == currentWidth ? ' selected' : '');
 			let disabled = (width == currentWidth ? ' disabled' : '');
 			return `<button type='button' class='select-width-${name}${selected}'${disabled} title='${desc}' tabindex='-1' data-name='${name}'>${abbr}</button>`})) +
