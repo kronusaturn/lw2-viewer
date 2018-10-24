@@ -390,6 +390,7 @@ a#inbox-indicator.new-messages:hover::before {
 	padding: 0.125em 0.5em;
 	font-size: 1.125rem;
 }
+.sublevel-nav .sublevel-item:disabled,
 .sublevel-nav span.sublevel-item {
 	cursor: default;
 }
@@ -4438,12 +4439,14 @@ body {
 .sublevel-nav .sublevel-item:last-child {
 	border-radius: 0 8px 8px 0;
 }
-.sublevel-nav a.sublevel-item:hover {
+.sublevel-nav .sublevel-item:hover {
 	background-color: #1f1f1f;
 	color: #fff;
 	text-decoration: none;
+	text-shadow: none;
 }
-.sublevel-nav a.sublevel-item:active,
+.sublevel-nav .sublevel-item:active,
+.sublevel-nav .sublevel-item:disabled,
 .sublevel-nav span.sublevel-item {
 	background-color: #1f1f1f;
 	border-color: #1f1f1f;
@@ -4451,6 +4454,7 @@ body {
 	text-shadow: 
 		0 -1px 0 #000,
 		0 0.5px 0.5px #fff;
+	transform: none;
 }
 
 /*=====================*/

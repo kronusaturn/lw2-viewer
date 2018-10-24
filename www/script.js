@@ -1889,14 +1889,16 @@ function injectCommentsSortModeSelector() {
 	if (topCommentThread == null) return;
 	
 	let commentsSortModeSelectorHTML = "<div id='comments-sort-mode-selector' class='sublevel-nav sort'>" + 
-		Object.values(CommentSortMode).map(sortMode => `<button type='button' class='sublevel-item' tabindex='-1' title='Sort by ${sortMode}'>${sortMode}</button>`).join("") +  
+		Object.values(CommentSortMode).map(sortMode => `<button type='button' class='sublevel-item sort-mode-${sortMode}' tabindex='-1' title='Sort by ${sortMode}'>${sortMode}</button>`).join("") +  
 		"</div>";
 	topCommentThread.insertAdjacentHTML("beforebegin", commentsSortModeSelectorHTML);
-	let commentsSortModeSelector = document.querySelector("comments-sort-mode-selector");
+	let commentsSortModeSelector = document.querySelector("#comments-sort-mode-selector");
 
 	// TODO: Make this actually get the current sort mode (if that's saved).
 	let currentSortMode = CommentSortMode.TOP;
-	topCommentThread.parentElement.addClass("sort-mode-" + currentSortMode);
+	topCommentThread.parentElement.addClass("sorted-" + currentSortMode);
+	commentsSortModeSelector.querySelector(".sort-mode-" + currentSortMode).disabled = true;
+	commentsSortModeSelector.querySelector(".sort-mode-" + currentSortMode).addClass("selected");
 }
 
 /*********************/

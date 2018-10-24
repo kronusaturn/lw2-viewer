@@ -406,6 +406,7 @@ a#inbox-indicator.new-messages:hover::before {
 	padding: 0.125em 0.5em;
 	font-size: 1.125rem;
 }
+.sublevel-nav .sublevel-item:disabled,
 .sublevel-nav span.sublevel-item {
 	cursor: default;
 }
