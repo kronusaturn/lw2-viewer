@@ -199,13 +199,7 @@
 		top: 492px;
 	}
 }
-<?php foreach (["-moz-fit-content", "fit-content"] as $pvalue) echo 
-"@supports (width: {$pvalue}) {
-	#theme-selector.engaged ~ #theme-tweaker-toggle {
-		width: {$pvalue};
-	}
-}
-"; ?>
+<?php fit_content("#theme-selector.engaged ~ #theme-tweaker-toggle"); ?>
 #theme-selector.engaged ~ #theme-tweaker-toggle button {
 	opacity: 1.0;
 }
@@ -281,9 +275,9 @@
 	line-height: 1;
 	padding: 2px;
 	text-transform: uppercase;
-	width: fit-content;
 	z-index: -1;
 }
+<?php fit_content("#quick-nav-ui a::after"); ?>
 #quick-nav-ui a[href='#top']::after {
 	content: "Top";
 	left: -1px;
@@ -327,9 +321,9 @@
 	margin: auto;
 	padding: 2px 3px;
 	text-transform: uppercase;
-	width: fit-content;
 	z-index: -1;
 }
+<?php fit_content("#new-comment-nav-ui::before"); ?>
 #new-comment-nav-ui.engaged {
 	max-width: 1000px;
 	max-height: 1000px;

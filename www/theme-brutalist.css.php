@@ -83,13 +83,7 @@ body {
 	padding-right: 5px;
 	padding-left: 6px;
 }
-<?php foreach (["-moz-fit-content", "fit-content"] as $pvalue) echo 
-"@supports (width: {$pvalue}) {
-	#bottom-bar.decorative::after {
-		width: {$pvalue};
-	}
-}
-"; ?>
+<?php fit_content("#bottom-bar.decorative::after"); ?>
 
 /* Accesskey hints */
 

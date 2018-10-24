@@ -437,7 +437,16 @@ a#inbox-indicator.new-messages:hover::before {
 
 #comments > .sublevel-nav.sort {
 	margin: 1em auto 0 auto;
-	width: fit-content;
+}
+@supports (width: -moz-fit-content) {
+	#comments > .sublevel-nav.sort {
+		width: -moz-fit-content;
+	}
+}
+@supports (width: fit-content) {
+	#comments > .sublevel-nav.sort {
+		width: fit-content;
+	}
 }
 
 /******************/
@@ -2328,7 +2337,16 @@ a.comment-parent-link:hover::after {
 }
 #edit-post-form input[type='radio'] + label {
 	grid-row: 3;
-	width: fit-content;
+}
+@supports (width: -moz-fit-content) {
+	#edit-post-form input[type='radio'] + label {
+		width: -moz-fit-content;
+	}
+}
+@supports (width: fit-content) {
+	#edit-post-form input[type='radio'] + label {
+		width: fit-content;
+	}
 }
 
 #edit-post-form textarea {
@@ -3295,8 +3313,17 @@ li {
 	line-height: 1;
 	padding: 2px;
 	text-transform: uppercase;
-	width: fit-content;
 	z-index: -1;
+}
+@supports (width: -moz-fit-content) {
+	#quick-nav-ui a::after {
+		width: -moz-fit-content;
+	}
+}
+@supports (width: fit-content) {
+	#quick-nav-ui a::after {
+		width: fit-content;
+	}
 }
 #quick-nav-ui a[href='#top']::after {
 	content: "Top";
@@ -3341,8 +3368,17 @@ li {
 	margin: auto;
 	padding: 2px 3px;
 	text-transform: uppercase;
-	width: fit-content;
 	z-index: -1;
+}
+@supports (width: -moz-fit-content) {
+	#new-comment-nav-ui::before {
+		width: -moz-fit-content;
+	}
+}
+@supports (width: fit-content) {
+	#new-comment-nav-ui::before {
+		width: fit-content;
+	}
 }
 #new-comment-nav-ui.engaged {
 	max-width: 1000px;

@@ -64,13 +64,7 @@ a.nav-inner,
 	padding-right: 4px;
 	padding-left: 4px;
 }
-<?php foreach (["-moz-fit-content", "fit-content"] as $pvalue) echo 
-"@supports (width: {$pvalue}) {
-	#bottom-bar.decorative::after {
-		width: {$pvalue};
-	}
-}
-"; ?>
+<?php fit_content("#bottom-bar.decorative::after"); ?>
 
 /* Accesskey hints */
 

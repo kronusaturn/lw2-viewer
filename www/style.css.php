@@ -3,6 +3,16 @@
 	
 	$platform = @$argv[1] ?: 'Mac';
 	$UI_font = ($platform == 'Windows') ? "'Whitney', 'a_Avante'" : "'Concourse', 'a_Avante'";
+
+	function fit_content($selector, $property = "width") {
+		foreach (["-moz-fit-content", "fit-content"] as $pvalue) echo 
+"@supports (width: {$pvalue}) {
+	{$selector} {
+		{$property}: {$pvalue};
+	}
+}
+";
+	}
 ?>
 
 /***************/
@@ -443,8 +453,8 @@ a#inbox-indicator.new-messages:hover::before {
 
 #comments > .sublevel-nav.sort {
 	margin: 1em auto 0 auto;
-	width: fit-content;
 }
+<?php fit_content("#comments > .sublevel-nav.sort"); ?>
 
 /******************/
 /* WIDTH SELECTOR */
@@ -2335,8 +2345,8 @@ a.comment-parent-link:hover::after {
 }
 #edit-post-form input[type='radio'] + label {
 	grid-row: 3;
-	width: fit-content;
 }
+<?php fit_content("#edit-post-form input[type='radio'] + label"); ?>
 
 #edit-post-form textarea {
 	min-height: 24em;

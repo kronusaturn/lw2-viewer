@@ -228,13 +228,7 @@ body {
 	padding-right: 4px;
 	padding-left: 4px;
 }
-<?php foreach (["-moz-fit-content", "fit-content"] as $pvalue) echo 
-"@supports (width: {$pvalue}) {
-	#bottom-bar.decorative::after {
-		width: {$pvalue};
-	}
-}
-"; ?>
+<?php fit_content("#bottom-bar.decorative::after"); ?>
 
 /*==============*/
 /* PAGE TOOLBAR */
@@ -631,11 +625,11 @@ body {
 	#theme-tweaker-toggle {
 		pointer-events: none;
 		visibility: visible;
-		width: fit-content;
 		opacity: 0.0;
 		transition:
 			opacity 0.35s ease;
 	}
+	<?php fit_content("#theme-tweaker-toggle"); ?>
 	#comments-view-mode-selector::after,
 	#theme-selector::after,
 	#width-selector::after,
@@ -1241,9 +1235,9 @@ a.post-section.alignment-forum:hover::before {
 .post .top-post-meta .karma,
 .post .top-post-meta .author,
 .post .top-post-meta .qualified-linking {
-	width: fit-content;
 	margin: auto;
 }
+<?php fit_content(".post .top-post-meta .karma, .post .top-post-meta .author, .post .top-post-meta .qualified-linking"); ?>
 
 .post .top-post-meta .karma {
 	order: -1;
