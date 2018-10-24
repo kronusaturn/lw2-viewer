@@ -2373,8 +2373,7 @@ function realignHashIfNeeded() {
 		realignHash();
 }
 function realignHash() {
-	if (location.hash)
-		(document.querySelector(location.hash)||{}).scrollIntoView(true);
+	try { document.querySelector(location.hash).scrollIntoView(true); } catch (ex) { }
 }
 
 /***********/
