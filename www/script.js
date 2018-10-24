@@ -1884,6 +1884,17 @@ function commentVoteCount(commentOrSelector) {
 	return parseInt(commentOrSelector.querySelector(".karma-value").title.split(" ")[0]);
 }
 
+function injectCommentsSortModeSelector() {
+	let topCommentThread = document.querySelector("#comments > .comment-thread");
+	if (topCommentThread == null) return;
+	
+	let commentsSortModeSelectorHTML = "<div id='comments-sort-mode-selector' class='sublevel-nav sort'>" + 
+		Object.values(CommentSortMode).map(sortMode => `<button type='button' class='sublevel-item' tabindex='-1' title='Sort by ${sortMode}'>${sortMode}</button>`).join("") +  
+		"</div>";
+	topCommentThread.insertAdjacentHTML("beforebegin", commentsSortModeSelectorHTML);
+	let commentsSortModeSelector = document.querySelector("comments-sort-mode-selector");
+}
+
 /*********************/
 /* MORE MISC HELPERS */
 /*********************/
@@ -2158,6 +2169,9 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 	// Add the comments view selector widget (threaded vs. chrono).
 	injectCommentsViewModeSelector();
+	
+	// Add the comments sort mode selector (top, hot, new, old).
+	injectCommentsSortModeSelector();
 
 	// Add the toggle for the post nav UI elements on mobile.
 	if (window.isMobile) injectPostNavUIToggle();
@@ -2255,7 +2269,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	}
 
 	// Add accesskeys to user page view selector.
-	let viewSelector = document.querySelector(".sublevel-nav");
+	let viewSelector = document.querySelector("#content.user-page > .sublevel-nav");
 	if (viewSelector) {
 		let currentView = viewSelector.querySelector("span");
 		(currentView.nextSibling || viewSelector.firstChild).accessKey = 'x';

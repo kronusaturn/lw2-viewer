@@ -404,14 +404,16 @@ a#inbox-indicator.new-messages:hover::before {
 /* SORT ORDER SELECTOR */
 /***********************/
 
+.sublevel-nav.sort {
+	position: relative;
+	margin-top: 8px;
+	font-size: 0.75em;
+}
 #content > .sublevel-nav.sort {
 	grid-column: 3;
 	grid-row: 5 / span 2;
-	position: relative;
 	justify-self: end;
 	align-self: start;
-	margin-top: 8px;
-	font-size: 0.75em;
 	flex-flow: column;
 }
 #content.index-page > .sublevel-nav.sort {
@@ -423,6 +425,7 @@ a#inbox-indicator.new-messages:hover::before {
 
 .sublevel-nav.sort::before {
 	content: "Sort";
+	font-size: 0.75rem;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -432,6 +435,14 @@ a#inbox-indicator.new-messages:hover::before {
 	line-height: 1;
 	font-size: 0.875rem;
 	flex-basis: unset;
+}
+
+/*******************************/
+/* COMMENTS SORT MODE SELECTOR */
+/*******************************/
+
+#comments > .sublevel-nav.sort {
+	margin: 0;
 }
 
 /******************/
