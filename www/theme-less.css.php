@@ -1528,6 +1528,7 @@ a.post-section.alignment-forum:hover::before {
 	pointer-events: none;
 	display: block;
 	font-size: 0.875rem;
+	text-align: center;
 	background-color: #fff;
 	color: rgba(187,187,187,0.8);
 	border-radius: 4px;
@@ -1537,7 +1538,6 @@ a.post-section.alignment-forum:hover::before {
 	left: 50%;
 	transform: translateX(-50%);
 	top: -30px;
-	width: 64px;
 	transition:
 		opacity 0.2s ease;
 }
