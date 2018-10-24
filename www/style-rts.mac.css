@@ -5146,6 +5146,16 @@ a.post-section.alignment-forum:hover::before {
 /* COMMENTS */
 /*==========*/
 
+#content > .comment-thread .comment-meta a.date:focus,
+#content > .comment-thread .comment-meta a.permalink:focus {
+	color: #444;
+	font-weight: normal;
+	outline: 2px dotted #444;
+	padding: 0 5px;
+	position: relative;
+	background-color: #fff;
+}
+
 .comment-item {
 	border: 1px solid transparent;
 }

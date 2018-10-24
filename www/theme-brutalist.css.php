@@ -677,6 +677,14 @@ a.post-section:hover::before {
 #comments {
 	border-top: 2px solid #000;
 }
+#content > .comment-thread .comment-meta a.date:focus,
+#content > .comment-thread .comment-meta a.permalink:focus {
+	color: #999;
+	outline: 2px dotted #999;
+	padding: 0 5px;
+	position: relative;
+	background-color: #fff;
+}
 .comment-item {
 	border: 2px solid #000;
 }

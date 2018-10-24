@@ -898,6 +898,14 @@ a.post-section.alignment-forum:hover::before {
 	border-top: 1px solid #000;
 	box-shadow: 0 3px 4px -4px #000 inset;
 }
+#content > .comment-thread .comment-meta a.date:focus,
+#content > .comment-thread .comment-meta a.permalink:focus {
+	color: #444;
+	outline: 2px dotted #444;
+	padding: 0 5px;
+	position: relative;
+	background-color: #fff;
+}
 .comment-item {
 	border: 1px solid #bbbcbf;
 }

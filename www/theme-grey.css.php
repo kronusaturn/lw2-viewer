@@ -923,6 +923,17 @@ a.post-section.alignment-forum:hover::before {
 	border-top: 1px solid #000;
 	box-shadow: 0 3px 4px -4px #000 inset;
 }
+#content > .comment-thread .comment-meta a.date:focus,
+#content > .comment-thread .comment-meta a.permalink:focus {
+	color: #999;
+	outline: 2px dotted #aaa;
+	padding: 0 4px;
+	position: relative;
+	background-color: #fff;
+}
+#content > .comment-thread .comment-meta a.permalink:focus {
+	padding: 0 5px;
+}
 .comment-item {
 	border: 1px solid #ccc;
 }

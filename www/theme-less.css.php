@@ -1395,6 +1395,17 @@ a.post-section.alignment-forum:hover::before {
 	border-top: 1px solid transparent;
 	padding: 0 0 0 10px;
 }
+#content > .comment-thread .comment-meta a.date:focus,
+#content > .comment-thread .comment-meta a.permalink:focus {
+	color: #888;
+	outline: 1px dotted #999;
+	padding: 0 5px;
+	position: relative;
+	background-color: #fff;
+}
+#content > .comment-thread .comment-meta a.permalink:focus {
+	outline: 2px dotted #999;
+}
 .comment-item {
 	border: 1px solid #ddd;
 }

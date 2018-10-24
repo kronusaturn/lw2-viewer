@@ -889,6 +889,17 @@ a.post-section.alignment-forum:hover::before {
 #comments {
 	border-top: 1px solid transparent;
 }
+#content > .comment-thread .comment-meta a.date:focus,
+#content > .comment-thread .comment-meta a.permalink:focus {
+	color: #ccc;
+	outline: 2px dotted #ccc;
+	padding: 0 6px;
+	position: relative;
+	background-color: #444;
+}
+#content > .comment-thread .comment-meta a.permalink:focus {
+	padding: 0 5px;
+}
 .comment-item {
 	border: 1px solid transparent;
 	border-left-color: #666;
