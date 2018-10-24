@@ -2,7 +2,7 @@
 /* INITIALIZATION REGISTRY */
 /***************************/
 
-if(!window.requestIdleCallback) {
+if (!window.requestIdleCallback) {
 	window.requestIdleCallback = function(fn) { window.setTimeout(fn, 0) };
 }
 
@@ -12,9 +12,9 @@ function registerInitializer(name, tryEarly, precondition, fn) {
 	initializersDone[name] = false;
 	initializers[name] = fn;
 	let wrapper = function () {
-		if(initializersDone[name]) return;
-		if(!precondition()) {
-			if(tryEarly) {
+		if (initializersDone[name]) return;
+		if (!precondition()) {
+			if (tryEarly) {
 				window.setTimeout(()=>window.requestIdleCallback(wrapper, {timeout: 1000}), 50);
 			} else {
 				document.addEventListener("readystatechange", wrapper, {once: true});
@@ -24,7 +24,7 @@ function registerInitializer(name, tryEarly, precondition, fn) {
 		initializersDone[name] = true;
 		fn();
 	};
-	if(tryEarly) {
+	if (tryEarly) {
 		window.requestIdleCallback(wrapper, {timeout: 1000});
 	} else {
 		document.addEventListener("readystatechange", wrapper, {once: true});
@@ -32,7 +32,7 @@ function registerInitializer(name, tryEarly, precondition, fn) {
 	}
 }
 function forceInitializer(name) {
-	if(initializersDone[name]) return;
+	if (initializersDone[name]) return;
 	initializersDone[name] = true;
 	initializers[name]();
 }
@@ -74,7 +74,7 @@ Element.prototype.addClasses = function(classNames) {
 	let element = this;
 	let elementClassNames = this.className.trim().split(/\s/);
 	
-	classNames.forEach(function (className) {
+	classNames.forEach(className => {
 		if (!element.hasClass(className))
 			elementClassNames.push(className);
 	});
@@ -86,7 +86,7 @@ Element.prototype.removeClass = function(className) {
 }
 Element.prototype.removeClasses = function(classNames) {
 	let elementClassNames = this.className;
-	classNames.forEach(function (className) {
+	classNames.forEach(className => {
 		elementClassNames = elementClassNames.replace(new RegExp("(^|\\s+)" + className + "(\\s+|$)"), "$1").trim();
 	});
 	this.className = elementClassNames;
@@ -106,7 +106,7 @@ Element.prototype.toggleClass = function(className) {
 /*******************************/
 
 Element.prototype.addActivateEvent = function(func, includeMouseDown) {
-	let ael = this.activateEventListener = function(e) { if (e.button === 0 || e.key === ' ') func(e) };
+	let ael = this.activateEventListener = (event) => { if (event.button === 0 || event.key === ' ') func(event) };
 	if (includeMouseDown) this.addEventListener("mousedown", ael);
 	this.addEventListener("click", ael);
 // 	this.addEventListener("mouseup", ael);
@@ -136,14 +136,14 @@ function addScrollListener(fn) {
 /****************/
 
 Element.prototype.scrollIntoViewIfNeeded = function() {
-	if(this.getBoundingClientRect().bottom > window.innerHeight) {
+	if (this.getBoundingClientRect().bottom > window.innerHeight) {
 		this.scrollIntoView(false);
 	}
 }
 
 Element.prototype.getCommentId = function() {
 	let item = (this.className == "comment-item" ? this : this.closest(".comment-item"));
-	if(item) {
+	if (item) {
 		return /^comment-(.*)/.exec(item.id)[1];
 	} else {
 		return false;
@@ -155,10 +155,10 @@ Element.prototype.getCommentId = function() {
 /*******************/
 
 function updateInbox() {
-	let onFinish = function (e) {
-		if(e.target.status == 200) {
-			let res = JSON.parse(e.target.responseText);
-			if(res) {
+	let onFinish = (event) => {
+		if (event.target.status == 200) {
+			let response = JSON.parse(event.target.responseText);
+			if (response) {
 				let element = document.querySelector('#inbox-indicator');
 				element.className = 'new-messages';
 				element.title = 'New messages [o]';
@@ -166,11 +166,11 @@ function updateInbox() {
 		}
 	};
 
-	if(loggedInUserId) {
-		let req = new XMLHttpRequest();
-		req.addEventListener("load", onFinish);
-		req.open("GET", "/check-notifications");
-		req.send();
+	if (loggedInUserId) {
+		let request = new XMLHttpRequest();
+		request.addEventListener("load", onFinish);
+		request.open("GET", "/check-notifications");
+		request.send();
 	}
 }
 
@@ -199,10 +199,10 @@ function GUIEditMobileExitButtonClicked(event) {
 Element.prototype.addTextareaFeatures = function() {
 	let textarea = this;
 
-	textarea.addEventListener("focus", function(e) { e.target.parentElement.parentElement.scrollIntoViewIfNeeded(); });
+	textarea.addEventListener("focus", (event) => { event.target.closest(".comment-item").scrollIntoViewIfNeeded(); });
 	textarea.addEventListener("input", OnInputExpandTextarea, false);
 	textarea.addEventListener("input", OnInputRemoveMarkdownHints, false);
-	textarea.addEventListener("keyup", function(e) { e.stopPropagation(); });
+	textarea.addEventListener("keyup", (event) => { event.stopPropagation(); });
 	
 	if (!textarea.closest("#content").hasClass("conversation-page")) {
 		textarea.insertAdjacentHTML("beforebegin", "<div class='guiedit-buttons-container'></div>");
@@ -256,14 +256,14 @@ Element.prototype.addTextareaFeatures = function() {
 }
 
 Element.prototype.injectReplyForm = function(editMarkdownSource) {
-	let e = this;
-	let editCommentId = (editMarkdownSource ? e.getCommentId() : false);
-	let withparent = (!editMarkdownSource && e.getCommentId());
-	e.innerHTML = "<button class='cancel-comment-button' tabindex='-1'>Cancel</button>" +
+	let element = this;
+	let editCommentId = (editMarkdownSource ? element.getCommentId() : false);
+	let withparent = (!editMarkdownSource && element.getCommentId());
+	element.innerHTML = "<button class='cancel-comment-button' tabindex='-1'>Cancel</button>" +
 		"<form method='post'>" + 
 		"<div class='textarea-container'>" + 
 		"<textarea name='text' onkeyup='enableBeforeUnload();' onchange='enableBeforeUnload();'></textarea>" +
-		(withparent ? "<input type='hidden' name='parent-comment-id' value='" + e.getCommentId() + "'>" : "") +
+		(withparent ? "<input type='hidden' name='parent-comment-id' value='" + element.getCommentId() + "'>" : "") +
 		(editCommentId ? "<input type='hidden' name='edit-comment-id' value='" + editCommentId + "'>" : "") +
 		"<span class='markdown-reference-link'>You can use <a href='http://commonmark.org/help/' target='_blank'>Markdown</a> here.</span>" + 
 		`<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-help-button">Help</button>` + 
@@ -273,32 +273,32 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 		"<input type='submit' value='Submit'>" + 
 		"</div></form>";
 	
-	e.querySelector(".cancel-comment-button").addActivateEvent(window.hideReplyForm);
-	e.scrollIntoViewIfNeeded();
-	e.querySelector("form").onsubmit = function(event) {
-		if(!event.target.text.value) {
+	element.querySelector(".cancel-comment-button").addActivateEvent(window.hideReplyForm);
+	element.scrollIntoViewIfNeeded();
+	element.querySelector("form").onsubmit = function(event) {
+		if (!event.target.text.value) {
 			alert("Please enter a comment.");
 			return false;
 		}
 	}
-	let textarea = e.querySelector("textarea");
+	let textarea = element.querySelector("textarea");
 	textarea.value = editMarkdownSource || "";
 	textarea.addTextareaFeatures();
 	textarea.focus();
 }
 
 Element.prototype.injectCommentButtons = function() {
-	let e = this;
-	e.innerHTML = "";
+	let element = this;
+	element.innerHTML = "";
 	let replyButton = document.createElement("button");
-	if (e.parentElement.id == 'comments') {
+	if (element.parentElement.id == 'comments') {
 		replyButton.className = "new-comment-button action-button";
 		replyButton.innerHTML = "Post new comment";
 		replyButton.setAttribute("accesskey", "n");
 		replyButton.setAttribute("title", "Post new comment [n]");
 	} else {
-		if (e.parentElement.querySelector(".comment-body").hasAttribute("data-markdown-source")) {
-			let editButton = e.appendChild(document.createElement("button"));
+		if (element.parentElement.querySelector(".comment-body").hasAttribute("data-markdown-source")) {
+			let editButton = element.appendChild(document.createElement("button"));
 			editButton.className = "edit-button action-button";
 			editButton.innerHTML = "Edit";
 			editButton.tabIndex = '-1';
@@ -307,7 +307,7 @@ Element.prototype.injectCommentButtons = function() {
 		replyButton.className = "reply-button action-button";
 		replyButton.innerHTML = "Reply";
 	}
-	e.appendChild(replyButton);
+	element.appendChild(replyButton);
 	replyButton.tabIndex = '-1';
 	replyButton.addActivateEvent(window.showReplyForm);
 }
@@ -323,8 +323,8 @@ function showCommentEditForm(event) {
 
 function showReplyForm(event) {
 	let commentControls = event.target.parentElement;
-	document.querySelectorAll(".comment-controls").forEach(function (e) {
-		e.injectCommentButtons();
+	document.querySelectorAll(".comment-controls").forEach(commentControls => {
+		commentControls.injectCommentButtons();
 	});
 
 	commentControls.injectReplyForm();
@@ -332,7 +332,7 @@ function showReplyForm(event) {
 
 function hideReplyForm(event) {
 	try { event.target.parentElement.parentElement.querySelector(".comment-body").removeAttribute("style"); }
-	catch (e) { }
+	catch (ex) { }
 	event.target.parentElement.injectCommentButtons();
 }
 
@@ -348,7 +348,7 @@ function ExpandTextarea(textarea) {
 		textarea.style.height = 'auto';
 		let totalBorderHeight = (textarea.closest("#conversation-form") == null) ? 30 : 2;
 		textarea.style.height = textarea.scrollHeight + totalBorderHeight + 'px';
-		if(textarea.clientHeight < window.innerHeight) {
+		if (textarea.clientHeight < window.innerHeight) {
 			textarea.parentElement.parentElement.scrollIntoViewIfNeeded();
 		}
 	});
@@ -366,7 +366,7 @@ function OnInputRemoveMarkdownHints() {
 
 function parseVoteType(voteType) {
 	let val = {};
-	if(!voteType) return val;
+	if (!voteType) return val;
 	val.up = /[Uu]pvote$/.test(voteType);
 	val.down = /[Dd]ownvote$/.test(voteType);
 	val.big = /^big/.test(voteType);
@@ -385,17 +385,17 @@ function makeVoteClass(vote) {
 	}
 }
 
-function addVoteButtons(e, voteType, targetType) {
+function addVoteButtons(element, voteType, targetType) {
 	let vote = parseVoteType(voteType);
 	let voteClass = makeVoteClass(vote);
-	e.insertAdjacentHTML('beforebegin', "<button type='button' class='vote upvote"+(vote.up ?' '+voteClass:'')+"' data-vote-type='upvote' data-target-type='"+targetType+"' tabindex='-1'></button>");
-	e.insertAdjacentHTML('afterend', "<button type='button' class='vote downvote"+(vote.down ?' '+voteClass:'')+"' data-vote-type='downvote' data-target-type='"+targetType+"' tabindex='-1'></button>");
+	element.insertAdjacentHTML('beforebegin', "<button type='button' class='vote upvote"+(vote.up ?' '+voteClass:'')+"' data-vote-type='upvote' data-target-type='"+targetType+"' tabindex='-1'></button>");
+	element.insertAdjacentHTML('afterend', "<button type='button' class='vote downvote"+(vote.down ?' '+voteClass:'')+"' data-vote-type='downvote' data-target-type='"+targetType+"' tabindex='-1'></button>");
 }
 
 function makeVoteCompleteEvent(target) {
-	return function(e) {
+	return (event) => {
 		var buttonTargets, karmaTargets;
-		if(target === null) {
+		if (target === null) {
 			buttonTargets = document.querySelectorAll(".post-meta .karma");
 			karmaTargets = document.querySelectorAll(".post-meta .karma-value");
 		} else {
@@ -403,28 +403,28 @@ function makeVoteCompleteEvent(target) {
 			buttonTargets = [ commentItem.querySelector(".comment-meta .karma"), commentItem.querySelector(".comment-controls .karma") ];
 			karmaTargets = [ commentItem.querySelector(".comment-meta .karma-value"), commentItem.querySelector(".comment-controls .karma-value") ];
 		}
-		buttonTargets.forEach(function (bt) {
-			bt.removeClass("waiting");
+		buttonTargets.forEach(buttonTarget => {
+			buttonTarget.removeClass("waiting");
 		});
-		if(e.target.status == 200) {
-			let res = JSON.parse(e.target.responseText);
-			let karmaText = res[0], voteType = res[1];
+		if (event.target.status == 200) {
+			let response = JSON.parse(event.target.responseText);
+			let karmaText = response[0], voteType = response[1];
 
 			let vote = parseVoteType(voteType);
 			let voteUpDown = (vote.up ? 'upvote' : (vote.down ? 'downvote' : ''));
 			let voteClass = makeVoteClass(vote);
 
-			karmaTargets.forEach(function (kt) {
-				kt.innerHTML = karmaText;
-				if (kt.hasClass("redacted")) {
-					kt.dataset["trueValue"] = kt.firstChild.textContent;
-					kt.firstChild.textContent = "##";
+			karmaTargets.forEach(karmaTarget => {
+				karmaTarget.innerHTML = karmaText;
+				if (karmaTarget.hasClass("redacted")) {
+					karmaTarget.dataset["trueValue"] = karmaTarget.firstChild.textContent;
+					karmaTarget.firstChild.textContent = "##";
 				}
 			});
-			buttonTargets.forEach(function (bt) {
-				bt.querySelectorAll("button.vote").forEach(function(b) {
-					b.removeClasses([ "clicked-once", "clicked-twice", "selected", "big-vote" ]);
-					if (b.getAttribute('data-vote-type') == voteUpDown) b.addClass(voteClass);
+			buttonTargets.forEach(buttonTarget => {
+				buttonTarget.querySelectorAll("button.vote").forEach(button => {
+					button.removeClasses([ "clicked-once", "clicked-twice", "selected", "big-vote" ]);
+					if (button.getAttribute('data-vote-type') == voteUpDown) button.addClass(voteClass);
 				});
 			});
 		}
@@ -440,51 +440,51 @@ function sendVoteRequest(targetId, targetType, voteType, onFinish) {
 }
 
 function voteButtonClicked(event) {
-	let vb = event.target;
+	let voteButton = event.target;
 	
 	// 500 ms (0.5 s) double-click timeout.	
 	let doubleClickTimeout = 500;
 	
-	if (!vb.clickedOnce) {
-		vb.clickedOnce = true;
-		vb.addClass("clicked-once");
+	if (!voteButton.clickedOnce) {
+		voteButton.clickedOnce = true;
+		voteButton.addClass("clicked-once");
 
 		window.setTimeout(vbDoubleClickTimeoutCallback, doubleClickTimeout, vb);
 	} else {
-		vb.clickedOnce = false;
+		voteButton.clickedOnce = false;
 		
 		// Do double-click code.
-		voteEvent(vb, 2);
-		vb.removeClass("clicked-once");
-		vb.addClass("clicked-twice");
+		voteEvent(voteButton, 2);
+		voteButton.removeClass("clicked-once");
+		voteButton.addClass("clicked-twice");
 	}
 }
-function vbDoubleClickTimeoutCallback(vb) {
-	if (!vb.clickedOnce) return;
+function vbDoubleClickTimeoutCallback(voteButton) {
+	if (!voteButton.clickedOnce) return;
 	
 	// Do single-click code.
-	vb.clickedOnce = false;
-	voteEvent(vb, 1);
+	voteButton.clickedOnce = false;
+	voteEvent(voteButton, 1);
 }
-function voteEvent(vb, numClicks) {
-	vb.blur();
-	vb.parentNode.addClass("waiting");
-	let targetType = vb.getAttribute("data-target-type");
-	let targetId = ((targetType == 'Comments') ? vb.getCommentId() : vb.parentNode.getAttribute("data-post-id"));
-	let voteUpDown = vb.getAttribute("data-vote-type");
+function voteEvent(voteButton, numClicks) {
+	voteButton.blur();
+	voteButton.parentNode.addClass("waiting");
+	let targetType = voteButton.getAttribute("data-target-type");
+	let targetId = ((targetType == 'Comments') ? voteButton.getCommentId() : voteButton.parentNode.getAttribute("data-post-id"));
+	let voteUpDown = voteButton.getAttribute("data-vote-type");
 	let vote = parseVoteType(voteUpDown);
 	vote.big = (numClicks == 2);
 	let voteType = makeVoteType(vote);
 	let oldVoteType;
-	if(targetType == "Posts") {
+	if (targetType == "Posts") {
 		oldVoteType = postVote;
 		postVote = ((voteType == oldVoteType) ? null : voteType);
 	} else {
 		oldVoteType = commentVotes[targetId];
 		commentVotes[targetId] = ((voteType == oldVoteType) ? null : voteType);
 	}
-	let f = function() { sendVoteRequest(targetId, targetType, voteType, makeVoteCompleteEvent((targetType == 'Comments' ? vb.parentNode : null))) };
-	if(oldVoteType && (oldVoteType != voteType)) {
+	let f = () => { sendVoteRequest(targetId, targetType, voteType, makeVoteCompleteEvent((targetType == 'Comments' ? voteButton.parentNode : null))) };
+	if (oldVoteType && (oldVoteType != voteType)) {
 		sendVoteRequest(targetId, targetType, oldVoteType, f);
 	} else {
 		f();
@@ -499,9 +499,9 @@ function commentMinimizeButtonClicked(event) {
 	event.target.closest(".comment-item").setCommentThreadMaximized(true);
 }
 Element.prototype.setCommentThreadMaximized = function(toggle, userOriginated = true, force) {
-	let ci = this;
-	let storageName = "thread-minimized-" + ci.getCommentId();
-	let minimize_button = ci.querySelector(".comment-minimize-button");
+	let commentItem = this;
+	let storageName = "thread-minimized-" + commentItem.getCommentId();
+	let minimize_button = commentItem.querySelector(".comment-minimize-button");
 	let maximize = force || (toggle ? /minimized/.test(minimize_button.className) : !window.localStorage.getItem(storageName));
 	if (userOriginated) {
 		if (maximize) {
@@ -511,8 +511,8 @@ Element.prototype.setCommentThreadMaximized = function(toggle, userOriginated = 
 		}
 	}
 
-	ci.style.height = maximize ? 'auto' : '38px';
-	ci.style.overflow = maximize ? 'visible' : 'hidden';
+	commentItem.style.height = maximize ? 'auto' : '38px';
+	commentItem.style.overflow = maximize ? 'visible' : 'hidden';
 
 	minimize_button.className = "comment-minimize-button " + (maximize ? "maximized" : "minimized");
 	minimize_button.innerHTML = maximize ? "&#xf146;" : "&#xf0fe;";
@@ -532,15 +532,15 @@ Element.prototype.getCommentDate = function() {
 }
 function getCurrentVisibleComment() {
 	let px = window.innerWidth/2, py = window.innerHeight/10;
-	let ci = document.elementFromPoint(px, py).closest(".comment-item") || document.elementFromPoint(px, py+60).closest(".comment-item"); // Mind the gap between threads
+	let commentItem = document.elementFromPoint(px, py).closest(".comment-item") || document.elementFromPoint(px, py+60).closest(".comment-item"); // Mind the gap between threads
 	let atbottom = document.querySelector("#comments").getBoundingClientRect().bottom < window.innerHeight;
 	if (atbottom) {
 		let hashci = location.hash && document.querySelector(location.hash);
-		if(hashci && /comment-item/.test(hashci.className) && hashci.getBoundingClientRect().top > 0) {
-			ci = hashci;
+		if (hashci && /comment-item/.test(hashci.className) && hashci.getBoundingClientRect().top > 0) {
+			commentItem = hashci;
 		}
 	}
-	return ci;
+	return commentItem;
 }
 
 function highlightCommentsSince(date) {
@@ -548,42 +548,37 @@ function highlightCommentsSince(date) {
 	window.newComments = [ ];
 	let oldCommentsStack = [ ];
 	let prevNewComment;
-	document.querySelectorAll(".comment-item").forEach(function (ci) {
-		ci.prevNewComment = prevNewComment;
-		if (ci.getCommentDate() > date) {
-			ci.addClass("new-comment");
+	document.querySelectorAll(".comment-item").forEach(commentItem => {
+		commentItem.prevNewComment = prevNewComment;
+		if (commentItem.getCommentDate() > date) {
+			commentItem.addClass("new-comment");
 			newCommentsCount++;
-			window.newComments.push(ci.getCommentId());
-			oldCommentsStack.forEach(function (oldci) { oldci.nextNewComment = ci });
-			oldCommentsStack = [ ci ];
-			prevNewComment = ci;
+			window.newComments.push(commentItem.getCommentId());
+			oldCommentsStack.forEach(oldci => { oldci.nextNewComment = commentItem });
+			oldCommentsStack = [ commentItem ];
+			prevNewComment = commentItem;
 		} else {
-			ci.removeClass("new-comment");
-			oldCommentsStack.push(ci);
+			commentItem.removeClass("new-comment");
+			oldCommentsStack.push(commentItem);
 		}
 	});
 
-	window.newCommentScrollSet = function (ci) {
-		if(ci) {
-			document.querySelector("#new-comment-nav-ui .new-comment-previous").disabled = !ci.prevNewComment;
-			document.querySelector("#new-comment-nav-ui .new-comment-next").disabled = !ci.nextNewComment;
-		} else {
-			document.querySelector("#new-comment-nav-ui .new-comment-previous").disabled = true;
-			document.querySelector("#new-comment-nav-ui .new-comment-next").disabled = (window.newComments.length == 0);
-		}
+	window.newCommentScrollSet = (commentItem) => {
+		document.querySelector("#new-comment-nav-ui .new-comment-previous").disabled = commentItem ? !ci.prevNewComment : true;
+		document.querySelector("#new-comment-nav-ui .new-comment-next").disabled = commentItem ? !ci.nextNewComment : (window.newComments.length == 0);
 	};
-	window.newCommentScrollListener = function () {
-		let ci = getCurrentVisibleComment();
-		newCommentScrollSet(ci);
+	window.newCommentScrollListener = () => {
+		let commentItem = getCurrentVisibleComment();
+		newCommentScrollSet(commentItem);
 	}
 
 	addScrollListener(newCommentScrollListener);
 
-	if(document.readyState=="complete") {
+	if (document.readyState=="complete") {
 		newCommentScrollListener();
 	} else {
-		let ci = location.hash && /^#comment-/.test(location.hash) && document.querySelector(location.hash);
-		newCommentScrollSet(ci);
+		let commentItem = location.hash && /^#comment-/.test(location.hash) && document.querySelector(location.hash);
+		newCommentScrollSet(commentItem);
 	}
 
 	registerInitializer("initializeCommentScrollPosition", false, () => document.readyState == "complete", newCommentScrollListener);
@@ -592,23 +587,23 @@ function highlightCommentsSince(date) {
 }
 
 function scrollToNewComment(next) {
-	let ci = getCurrentVisibleComment();
+	let commentItem = getCurrentVisibleComment();
 	let targetComment = null;
-	let tcid = null;
-	if (ci) {
-		targetComment = (next ? ci.nextNewComment : ci.prevNewComment);
+	let targetCommentID = null;
+	if (commentItem) {
+		targetComment = (next ? commentItem.nextNewComment : commentItem.prevNewComment);
 		if (targetComment) {
-			tcid = targetComment.getCommentId();
+			targetCommentID = targetComment.getCommentId();
 		}
 	} else {
 		if (window.newComments[0]) {
-			tcid = window.newComments[0];
-			targetComment = document.querySelector("#comment-" + tcid);
+			targetCommentID = window.newComments[0];
+			targetComment = document.querySelector("#comment-" + targetCommentID);
 		}
 	}
-	if(targetComment) {
-		expandAncestorsOf(tcid);
-		history.replaceState(null, null, "#comment-" + tcid);
+	if (targetComment) {
+		expandAncestorsOf(targetCommentID);
+		history.replaceState(null, null, "#comment-" + targetCommentID);
 		targetComment.scrollIntoView();
 	}
 
@@ -649,7 +644,7 @@ function updateSavedCommentCount() {
 function badgePostsWithNewComments() {
 	if (getQueryVariable("show") == "conversations") return;
 	
-	document.querySelectorAll("h1.listing a[href^='/']").forEach(function (postLink) {
+	document.querySelectorAll("h1.listing a[href^='/']").forEach(postLink => {
 		let postHash = /posts\/(.+?)\//.exec(postLink.href)[1];
 
 		let savedCommentCount = window.localStorage.getItem("comment-count_" + postHash);
@@ -676,7 +671,7 @@ function injectContentWidthSelector() {
 			let disabled = (width == currentWidth ? ' disabled' : '');
 			return `<button type='button' class='select-width-${name}${selected}'${disabled} title='${desc}' tabindex='-1' data-name='${name}'>${abbr}</button>`})) +
 		"</div>");
-	widthSelector.querySelectorAll("button").forEach(function (button) {
+	widthSelector.querySelectorAll("button").forEach(button => {
 		button.addActivateEvent(widthAdjustButtonClicked);
 	});
 	
@@ -695,7 +690,7 @@ function injectContentWidthSelector() {
 	}
 }
 function setWidthAdjustButtonsAccesskey() {
-	document.querySelectorAll("#width-selector button").forEach(function (button) {
+	document.querySelectorAll("#width-selector button").forEach(button => {
 		button.accessKey = "";
 		button.title = /(.+?)( \(accesskey: '''\))?$/.exec(button.title)[1];
 	});
@@ -706,9 +701,9 @@ function setWidthAdjustButtonsAccesskey() {
 }
 function widthAdjustButtonClicked(event) {
 	let selectedWidth = event.target.getAttribute("data-name");
-	if(selectedWidth == "normal") window.localStorage.removeItem("selected-width"); else window.localStorage.setItem("selected-width", selectedWidth);
+	if (selectedWidth == "normal") window.localStorage.removeItem("selected-width"); else window.localStorage.setItem("selected-width", selectedWidth);
 	setContentWidth(selectedWidth);
-	event.target.parentElement.childNodes.forEach(function (button) {
+	event.target.parentElement.childNodes.forEach(button => {
 		button.removeClass("selected");
 		button.disabled = false;
 	});
@@ -736,7 +731,7 @@ function injectThemeSelector() {
 			let accesskey = letter.charCodeAt(0) - 'A'.charCodeAt(0) + 1;
 			return `<button type='button' class='select-theme-${name}${selected}'${disabled} title="${desc} (accesskey: '${accesskey}')" data-theme-name="${name}" data-theme-description="${desc}" accesskey='${accesskey}' tabindex='-1'>${letter}</button>`;})) +
 		"</div>");
-	themeSelector.querySelectorAll("button").forEach(function (button) {
+	themeSelector.querySelectorAll("button").forEach(button => {
 		button.addActivateEvent(themeSelectButtonClicked);
 	});
 	
@@ -763,11 +758,11 @@ function themeSelectButtonClicked(event) {
 	setSelectedTheme(themeName);
 }
 function setSelectedTheme(themeName) {
-	document.querySelectorAll(".theme-selector button").forEach(function (button) {
+	document.querySelectorAll(".theme-selector button").forEach(button => {
 		button.removeClass("selected");
 		button.disabled = false;
 	});
-	document.querySelectorAll(".theme-selector button.select-theme-" + themeName).forEach(function (button) {
+	document.querySelectorAll(".theme-selector button.select-theme-" + themeName).forEach(button => {
 		button.addClass("selected");
 		button.disabled = true;
 	});
@@ -850,7 +845,7 @@ function themeLoadCallback_less(fromTheme = "") {
 	
 	if (!window.isMobile) {
 		registerInitializer('addSpans', true, () => document.querySelector(".top-post-meta") != null, function () {
-			document.querySelectorAll(".top-post-meta .date, .top-post-meta .comment-count").forEach(function (element) {
+			document.querySelectorAll(".top-post-meta .date, .top-post-meta .comment-count").forEach(element => {
 				element.innerHTML = "<span>" + element.innerHTML + "</span>";
 			});
 		});
@@ -867,10 +862,10 @@ function themeLoadCallback_less(fromTheme = "") {
 		if (fromTheme != "") {
 			allUIToggles = document.querySelectorAll("#ui-elements-container div[id$='-ui-toggle']");
 			window.setTimeout(function () {
-				allUIToggles.forEach(function (toggle) { toggle.addClass("highlighted"); });
+				allUIToggles.forEach(toggle => { toggle.addClass("highlighted"); });
 			}, 300);
 			window.setTimeout(function () {
-				allUIToggles.forEach(function (toggle) { toggle.removeClass("highlighted"); });
+				allUIToggles.forEach(toggle => { toggle.removeClass("highlighted"); });
 			}, 1800);
 		}
 
@@ -904,7 +899,7 @@ function themeUnloadCallback_less(toTheme = "") {
 	}
 	window.removeEventListener('resize', updatePostNavUIToggleVisibility);		
 	
-	document.querySelectorAll("#theme-less-mobile-first-row-placeholder").forEach(e => { removeElement(e); });
+	removeElement("#theme-less-mobile-first-row-placeholder");
 
 	if (!window.isMobile) {
 		// Remove spans
@@ -913,9 +908,7 @@ function themeUnloadCallback_less(toTheme = "") {
 		});
 	}
 	
-	document.querySelectorAll(".top-post-meta .date").forEach(topMetaDate => {
-		topMetaDate.innerHTML = document.querySelector(".bottom-post-meta .date").innerHTML;
-	});
+	(document.querySelector(".top-post-meta .date")||{}).innerHTML = (document.querySelector(".bottom-post-meta .date")||{}).innerHTML;
 	
 	// Reset filtered elements selector to default.
 	window.filtersTargetSelector = "";
@@ -930,7 +923,7 @@ function themeLoadCallback_dark(fromTheme = "") {
 		"</style>");
 }
 function themeUnloadCallback_dark(toTheme = "") {
-	document.querySelectorAll("#dark-theme-adjustments").forEach(e => { removeElement(e); });
+	removeElement("#dark-theme-adjustments");
 }
 
 /********************************************/
@@ -1012,11 +1005,9 @@ function injectThemeTweaker() {
 	` + "</div>");
 	themeTweakerUI.addActivateEvent(themeTweakerUIOverlayClicked, true);
 	
-	document.querySelectorAll("#theme-tweaker-ui > div").forEach(function (themeTweakerUIWindow) {
-		themeTweakerUIWindow.addActivateEvent(clickInterceptor, true);
-	});
+	(document.querySelector("#theme-tweaker-ui > div")||{}).addActivateEvent(clickInterceptor, true);
 	
-	themeTweakerUI.querySelectorAll("input").forEach(function (field) {
+	themeTweakerUI.querySelectorAll("input").forEach(field => {
 		field.addEventListener("change", themeTweakerFieldValueChanged);
 		if (field.type == "range") field.addEventListener("input", themeTweakerFieldInputReceived);
 	});
@@ -1029,7 +1020,7 @@ function injectThemeTweaker() {
 	themeTweakerUI.querySelector(".help-window .cancel-button").addActivateEvent(themeTweakerHelpWindowCancelButtonClicked);
 	themeTweakerUI.querySelector(".help-window .ok-button").addActivateEvent(themeTweakerHelpWindowOKButtonClicked);
 	
-	themeTweakerUI.querySelectorAll(".notch").forEach(function (notch) {
+	themeTweakerUI.querySelectorAll(".notch").forEach(notch => {
 		notch.addActivateEvent(function (event) {
 			let slider = event.target.parentElement.querySelector("input[type='range']");
 			slider.value = slider.dataset['defaultValue'];
@@ -1044,11 +1035,11 @@ function injectThemeTweaker() {
 	document.querySelector("head").insertAdjacentHTML("beforeend","<style id='theme-tweaker-style'></style>");
 	
 	document.querySelector("#theme-tweaker-ui .theme-selector").innerHTML = document.querySelector("#theme-selector").innerHTML;
-	document.querySelectorAll("#theme-tweaker-ui .theme-selector button").forEach(function (button) {
+	document.querySelectorAll("#theme-tweaker-ui .theme-selector button").forEach(button => {
 		button.addActivateEvent(themeSelectButtonClicked);
 	});
 	
-	document.querySelectorAll("#theme-tweaker-ui #theme-tweak-section-text-size-adjust button").forEach(function (button) {
+	document.querySelectorAll("#theme-tweaker-ui #theme-tweak-section-text-size-adjust button").forEach(button => {
 		button.addActivateEvent(themeTweakerTextSizeAdjustButtonClicked);
 	});
 }
@@ -1084,7 +1075,7 @@ function themeTweakerToggleButtonClicked(event) {
 	document.querySelector("#theme-tweaker-ui .current-theme span").innerText = (readCookie("theme") || "default");
 	
 	document.querySelector("#theme-tweak-control-invert").checked = (window.currentFilters['invert'] == "100%");	
-	[ "saturate", "brightness", "contrast", "hue-rotate" ].forEach(function (sliderName) {
+	[ "saturate", "brightness", "contrast", "hue-rotate" ].forEach(sliderName => {
 		let slider = document.querySelector("#theme-tweak-control-" + sliderName);
 		slider.value = /^[0-9]+/.exec(window.currentFilters[sliderName]) || slider.dataset['defaultValue'];
 		document.querySelector("#theme-tweak-label-" + sliderName).innerText = slider.value + slider.dataset['labelSuffix'];
@@ -1168,7 +1159,7 @@ function themeTweakerHelpButtonClicked(event) {
 }
 function themeTweakerResetDefaultsButtonClicked(event) {
 	document.querySelector("#theme-tweak-control-invert").checked = false;
-	[ "saturate", "brightness", "contrast", "hue-rotate" ].forEach(function (sliderName) {
+	[ "saturate", "brightness", "contrast", "hue-rotate" ].forEach(sliderName => {
 		let slider = document.querySelector("#theme-tweak-control-" + sliderName);
 		slider.value = slider.dataset['defaultValue'];
 		document.querySelector("#theme-tweak-label-" + sliderName).innerText = slider.value + slider.dataset['labelSuffix'];
@@ -1311,10 +1302,10 @@ function injectNewCommentNavUI(newCommentsCount) {
 	newCommentUIContainer.querySelector(".new-comment-previous").addActivateEvent(commentQuicknavButtonClicked);
 	newCommentUIContainer.querySelector(".new-comment-next").addActivateEvent(commentQuicknavButtonClicked);
 
-	document.addEventListener("keyup", function(e) { 
-		if(e.shiftKey || e.ctrlKey || e.altKey) return;
-		if(e.key == ",") scrollToNewComment(false);
-		if(e.key == ".") scrollToNewComment(true)
+	document.addEventListener("keyup", (event) => { 
+		if (event.shiftKey || event.ctrlKey || event.altKey) return;
+		if (event.key == ",") scrollToNewComment(false);
+		if (event.key == ".") scrollToNewComment(true)
 	});
 	
 	let hnsDatePicker = addUIElement("<div id='hns-date-picker'>"
@@ -1381,7 +1372,7 @@ function injectTextSizeAdjustmentUIReal() {
 	+ `<button type='button' class='text-size-adjust-button increase' title="Increase text size (accesskey: '=')" tabindex='-1' accesskey='='>&#xf067;</button>`
 	+ "</div>");
 	
-	textSizeAdjustmentUIContainer.querySelectorAll("button").forEach(function (button) {
+	textSizeAdjustmentUIContainer.querySelectorAll("button").forEach(button => {
 		button.addActivateEvent(themeTweakerTextSizeAdjustButtonClicked);
 	});
 }
@@ -1390,7 +1381,7 @@ function injectTextSizeAdjustmentUI() {
 	if (document.querySelector("#text-size-adjustment-ui") != null) return;
 	if (document.querySelector("#content.post-page") != null) injectTextSizeAdjustmentUIReal();
 	else document.addEventListener("DOMContentLoaded", function() {
-		if(document.querySelector(".post-body") != null || document.querySelector(".comment-body") != null) injectTextSizeAdjustmentUIReal();
+		if (document.querySelector(".post-body") != null || document.querySelector(".comment-body") != null) injectTextSizeAdjustmentUIReal();
 	}, {once: true});
 }
 
@@ -1415,15 +1406,15 @@ function injectCommentsViewModeSelector() {
 // 	});
 	
 	if (!currentModeThreaded) {
-		document.querySelectorAll(".comment-meta > a.comment-parent-link").forEach(cpl => {
-			cpl.textContent = document.querySelector(cpl.hash).querySelector(".author").textContent;
-			cpl.addClass("inline-author");
-			cpl.outerHTML = "<div class='comment-parent-link'>in reply to: " + cpl.outerHTML + "</div>";
+		document.querySelectorAll(".comment-meta > a.comment-parent-link").forEach(commentParentLink => {
+			commentParentLink.textContent = document.querySelector(commentParentLink.hash).querySelector(".author").textContent;
+			commentParentLink.addClass("inline-author");
+			commentParentLink.outerHTML = "<div class='comment-parent-link'>in reply to: " + commentParentLink.outerHTML + "</div>";
 		});
 		
-		document.querySelectorAll(".comment-child-links a").forEach(ccl => {
-			ccl.textContent = ccl.textContent.slice(1);
-			ccl.addClasses([ "inline-author", "comment-child-link" ]);
+		document.querySelectorAll(".comment-child-links a").forEach(commentChildLink => {
+			commentChildLink.textContent = commentChildLink.textContent.slice(1);
+			commentChildLink.addClasses([ "inline-author", "comment-child-link" ]);
 		});
 		
 		rectifyChronoModeCommentChildLinks();
@@ -1468,23 +1459,23 @@ function injectCommentsViewModeSelector() {
 // }
 
 function rectifyChronoModeCommentChildLinks() {
-	document.querySelectorAll(".comment-child-links").forEach(ccls => {
+	document.querySelectorAll(".comment-child-links").forEach(commentChildLinksContainer => {
 		let children = childrenOfComment(ccls.closest(".comment-item").id);
-		let childLinks = ccls.querySelectorAll("a");
-		childLinks.forEach((link, idx) => {
-			link.href = "#" + children.find(c => c.querySelector(".author").textContent == link.textContent).id;
+		let childLinks = commentChildLinksContainer.querySelectorAll("a");
+		childLinks.forEach((link, index) => {
+			link.href = "#" + children.find(child => child.querySelector(".author").textContent == link.textContent).id;
 		});
 		
 		// Sort by date.
 		let childLinksArray = Array.from(childLinks)
 		childLinksArray.sort((a,b) => document.querySelector(`${a.hash} .date`).dataset["jsDate"] - document.querySelector(`${b.hash} .date`).dataset["jsDate"]);
-		ccls.innerHTML = "Replies: " + childLinksArray.map(cl => cl.outerHTML).join("");
+		commentChildLinksContainer.innerHTML = "Replies: " + childLinksArray.map(childLink => childLink.outerHTML).join("");
 	});
 }
 function childrenOfComment(commentID) {
-	return Array.from(document.querySelectorAll(`#${commentID} ~ .comment-item`)).filter(ci => {
-		let cpl = ci.querySelector("a.comment-parent-link");
-		return (cpl != null && cpl.hash == "#" + commentID);
+	return Array.from(document.querySelectorAll(`#${commentID} ~ .comment-item`)).filter(commentItem => {
+		let commentParentLink = commentItem.querySelector("a.comment-parent-link");
+		return ((commentParentLink||{}).hash == "#" + commentID);
 	});
 }
 
@@ -1502,7 +1493,7 @@ function injectCommentsListModeSelector() {
 	(document.querySelector("#content.user-page .user-stats") || document.querySelector(".page-toolbar") || document.querySelector(".active-bar")).insertAdjacentHTML("afterend", commentsListModeSelectorHTML);
 	let commentsListModeSelector = document.querySelector("#comments-list-mode-selector");
 	
-	commentsListModeSelector.querySelectorAll("button").forEach(function (button) {
+	commentsListModeSelector.querySelectorAll("button").forEach(button => {
 		button.addActivateEvent(commentsListModeSelectButtonClicked);
 	});
 	
@@ -1514,17 +1505,17 @@ function injectCommentsListModeSelector() {
 	commentsListModeSelector.querySelector(`.${(savedMode == "compact" ? "expanded" : "compact")}`).accessKey = '`';
 	
 	if (window.isMobile) {
-		document.querySelectorAll("#comments-list-mode-selector ~ .comment-thread").forEach(function (ct) {
-			ct.addActivateEvent(function (event) {
-				let pct = event.target.closest("#content.compact .comment-thread");
-				if (pct) pct.toggleClass("expanded");
+		document.querySelectorAll("#comments-list-mode-selector ~ .comment-thread").forEach(commentParentLink => {
+			commentParentLink.addActivateEvent(function (event) {
+				let parentCommentThread = event.target.closest("#content.compact .comment-thread");
+				if (parentCommentThread) parentCommentThread.toggleClass("expanded");
 			}, false);
 		});
 	}
 }
 
 function commentsListModeSelectButtonClicked(event) {
-	event.target.parentElement.querySelectorAll("button").forEach(function (button) {
+	event.target.parentElement.querySelectorAll("button").forEach(button => {
 		button.removeClass("selected");
 		button.disabled = false;
 		button.accessKey = '`';
@@ -1633,9 +1624,9 @@ function toggleAppearanceAdjustUI() {
 
 function expandAncestorsOf(commentId) {
 	try { document.querySelector('#comment-'+commentId).closest("label[for^='expand'] + .comment-thread").parentElement.querySelector("input[id^='expand']").checked = true; }
-	catch (e) { }
+	catch (ex) { }
 	try { document.querySelector('#comment-'+commentId).closest("#comments > ul > li").setCommentThreadMaximized(true, false, true); }
-	catch (e) { }
+	catch (ex) { }
 }
 
 /**************************/
@@ -1643,12 +1634,12 @@ function expandAncestorsOf(commentId) {
 /**************************/
 
 function toggleReadTimeOrWordCount(addWordCountClass) {
-	document.querySelectorAll(".post-meta .read-time").forEach(function (rt) {
-		if (addWordCountClass) rt.addClass("word-count");
-		else rt.removeClass("word-count");
+	document.querySelectorAll(".post-meta .read-time").forEach(element => {
+		if (addWordCountClass) element.addClass("word-count");
+		else element.removeClass("word-count");
 		
-		let titleParts = /(\S+)(.+)$/.exec(rt.title);
-		[ rt.innerHTML, rt.title ] = [ `${titleParts[1]}<span>${titleParts[2]}</span>`, rt.textContent ];
+		let titleParts = /(\S+)(.+)$/.exec(element.title);
+		[ element.innerHTML, element.title ] = [ `${titleParts[1]}<span>${titleParts[2]}</span>`, element.textContent ];
 	});
 	
 	
@@ -1751,7 +1742,7 @@ function toggleAntiKibitzerMode() {
 		// Individual comment page title and header
 		if (document.querySelector(".individual-thread-page")) {
 			let replacer = (node) => {
-				if(!node) return;
+				if (!node) return;
 				node.firstChild.replaceWith(node.dataset["trueContent"]);
 			}
 			replacer(document.querySelector("title:not(.fake-title)"));
@@ -1759,24 +1750,24 @@ function toggleAntiKibitzerMode() {
 		}
 
 		// Author names/links.
-		document.querySelectorAll(".author.redacted, .inline-author.redacted").forEach(function (e) {
-			e.textContent = e.dataset["trueName"];
-			if (/\/user/.test(e.href)) e.href = e.dataset["trueLink"];
+		document.querySelectorAll(".author.redacted, .inline-author.redacted").forEach(author => {
+			author.textContent = author.dataset["trueName"];
+			if (/\/user/.test(author.href)) author.href = author.dataset["trueLink"];
 			
-			e.removeClass("redacted");
+			author.removeClass("redacted");
 		});
 		// Post/comment karma values.
-		document.querySelectorAll(".karma-value.redacted").forEach(function (e) {
-			e.innerHTML = e.dataset["trueValue"] + e.lastChild.outerHTML;
-			e.lastChild.textContent = (parseInt(e.dataset["trueValue"]) == 1) ? " point" : " points";
+		document.querySelectorAll(".karma-value.redacted").forEach(karmaValue => {
+			karmaValue.innerHTML = karmaValue.dataset["trueValue"] + karmaValue.lastChild.outerHTML;
+			karmaValue.lastChild.textContent = (parseInt(karmaValue.dataset["trueValue"]) == 1) ? " point" : " points";
 			
-			e.removeClass("redacted");
+			karmaValue.removeClass("redacted");
 		});
 		// Link post domains.
-		document.querySelectorAll(".link-post-domain.redacted").forEach(function (e) {
-			e.textContent = e.dataset["trueDomain"];
+		document.querySelectorAll(".link-post-domain.redacted").forEach(linkPostDomain => {
+			linkPostDomain.textContent = linkPostDomain.dataset["trueDomain"];
 			
-			e.removeClass("redacted");
+			linkPostDomain.removeClass("redacted");
 		});
 		
 		antiKibitzerToggle.removeClass("engaged");
@@ -1792,7 +1783,7 @@ function toggleAntiKibitzerMode() {
 		// Individual comment page title and header
 		if (document.querySelector(".individual-thread-page")) {
 			let replacer = (node) => {
-				if(!node) return;
+				if (!node) return;
 				node.dataset["trueContent"] = node.firstChild.wholeText;
 				let newText = node.firstChild.wholeText.replace(/^.* comments/, "REDACTED comments");
 				node.firstChild.replaceWith(newText);
@@ -1804,45 +1795,45 @@ function toggleAntiKibitzerMode() {
 		removeElement("title.fake-title");
 
 		// Author names/links.
-		document.querySelectorAll(".author, .inline-author").forEach(function (e) {
+		document.querySelectorAll(".author, .inline-author").forEach(author => {
 			// Skip own posts/comments.
-			if (e.hasClass("own-user-author"))
+			if (author.hasClass("own-user-author"))
 				return;
 
-			let userid = e.dataset["userid"] || document.querySelector(`${e.hash} .author`).dataset["userid"];
+			let userid = author.dataset["userid"] || document.querySelector(`${author.hash} .author`).dataset["userid"];
 
-			e.dataset["trueName"] = e.textContent;
-			e.textContent = userFakeName[userid] || (userFakeName[userid] = appellation + " " + numToAlpha(userCount++));
+			author.dataset["trueName"] = author.textContent;
+			author.textContent = userFakeName[userid] || (userFakeName[userid] = appellation + " " + numToAlpha(userCount++));
 			
-			if (/\/user/.test(e.href)) {
-				e.dataset["trueLink"] = e.pathname;
-				e.href = "/user?id=" + e.dataset["userid"];
+			if (/\/user/.test(author.href)) {
+				author.dataset["trueLink"] = author.pathname;
+				author.href = "/user?id=" + author.dataset["userid"];
 			}
 			
-			e.addClass("redacted");
+			author.addClass("redacted");
 		});
 		// Post/comment karma values.
-		document.querySelectorAll(".karma-value").forEach(function (e) {
+		document.querySelectorAll(".karma-value").forEach(karmaValue => {
 			// Skip own posts/comments.
-			if ((e.closest(".comment-item") || e.closest(".post-meta")).querySelector(".author").hasClass("own-user-author"))
+			if ((karmaValue.closest(".comment-item") || karmaValue.closest(".post-meta")).querySelector(".author").hasClass("own-user-author"))
 				return;
 		
-			e.dataset["trueValue"] = e.firstChild.textContent;
-			e.innerHTML = "##" + e.lastChild.outerHTML;
-			e.lastChild.textContent = " points";
+			karmaValue.dataset["trueValue"] = karmaValue.firstChild.textContent;
+			karmaValue.innerHTML = "##" + karmaValue.lastChild.outerHTML;
+			karmaValue.lastChild.textContent = " points";
 			
-			e.addClass("redacted");
+			karmaValue.addClass("redacted");
 		});
 		// Link post domains.
-		document.querySelectorAll(".link-post-domain").forEach(function (e) {
+		document.querySelectorAll(".link-post-domain").forEach(linkPostDomain => {
 			// Skip own posts/comments.
-			if (userTabTarget == e.closest(".post-meta").querySelector(".author").href)
+			if (userTabTarget == linkPostDomain.closest(".post-meta").querySelector(".author").href)
 				return;
 				
-			e.dataset["trueDomain"] = e.textContent;
-			e.textContent = "redacted.domain.tld";
+			linkPostDomain.dataset["trueDomain"] = linkPostDomain.textContent;
+			linkPostDomain.textContent = "redacted.domain.tld";
 			
-			e.addClass("redacted");
+			linkPostDomain.addClass("redacted");
 		});
 		
 		antiKibitzerToggle.addClass("engaged");
@@ -1859,7 +1850,7 @@ function getQueryVariable(variable)
 	var vars = query.split("&");
 	for (var i = 0; i < vars.length; i++) {
 		var pair = vars[i].split("=");
-		if(pair[0] == variable)
+		if (pair[0] == variable)
 			return pair[1];
 	}
 	
@@ -1914,7 +1905,7 @@ registerInitializer('earlyInitialize', true, () => document.querySelector("#cont
 	injectTextSizeAdjustmentUI();
 	
 	try { updateInbox(); }
-	catch (e) { }
+	catch (ex) { }
 });
 
 registerInitializer('initialize', false, () => document.readyState != 'loading', function () {
@@ -1930,10 +1921,10 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	let content = document.querySelector("#content");
 	if (content.querySelector("#comments .comment-thread") == null) {
 		try { document.querySelector("#quick-nav-ui a[href='#comments']").addClass("no-comments"); }
-		catch (e) { }
+		catch (ex) { }
 	}
 
-	if(location.hash.length == 18) {
+	if (location.hash.length == 18) {
 		location.hash = "#comment-" + location.hash.substring(1);
 	}
 
@@ -1943,44 +1934,44 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 			( useLongDate ? 
 				{ month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' }
 					: { month: 'numeric', day: 'numeric', year: '2-digit', hour: 'numeric', minute: 'numeric' } ));
-		document.querySelectorAll(".date").forEach(function (e) {
-			let d = e.getAttribute("data-js-date");
-			if (d) { e.innerHTML = dtf.format(new Date(+ d)); }
+		document.querySelectorAll(".date").forEach(date => {
+			let d = date.getAttribute("data-js-date");
+			if (d) { date.innerHTML = dtf.format(new Date(+ d)); }
 		});
 	}
-	catch(e) { }
+	catch (ex) { }
 
 	window.needHashRealignment = false;
 
 	// NOTE: Commenting this out here, adding it further on - for now.
 	// Add comment parent popups.
-// 	document.querySelectorAll(".comment-meta a.comment-parent-link, .comment-meta a.comment-child-link").forEach(function (cpl) {
-// 		cpl.addEventListener("mouseover", function(e) {
-// 			let parent_id = "#comment-" + /(?:#comment-)?(.+)/.exec(cpl.getAttribute("href"))[1];
+// 	document.querySelectorAll(".comment-meta a.comment-parent-link, .comment-meta a.comment-child-link").forEach(commentParentLink => {
+// 		commentParentLink.addEventListener("mouseover", function(e) {
+// 			let parent_id = "#comment-" + /(?:#comment-)?(.+)/.exec(commentParentLink.getAttribute("href"))[1];
 // 			var parent;
-// 			try { parent = document.querySelector(parent_id).firstChild; } catch (e) { return; }
+// 			try { parent = document.querySelector(parent_id).firstChild; } catch (ex) { return; }
 // 			let parentCI = parent.parentNode;
 // 			var highlight_cn;
-// 			if(parent.getBoundingClientRect().bottom < 10 || parent.getBoundingClientRect().top > window.innerHeight + 10) {
+// 			if (parent.getBoundingClientRect().bottom < 10 || parent.getBoundingClientRect().top > window.innerHeight + 10) {
 // 				highlight_cn = "comment-item-highlight-faint";
 // 				parent = parent.cloneNode(true);
 // 				parent.addClass("comment-popup")
 // 				parent.addClass("comment-item-highlight");
-// 				cpl.addEventListener("mouseout", function(e) {
+// 				commentParentLink.addEventListener("mouseout", function(e) {
 // 					parent.parentNode.removeChild(parent);
 // 				}, {once: true});
-// 				cpl.parentNode.parentNode.appendChild(parent);
+// 				commentParentLink.parentNode.parentNode.appendChild(parent);
 // 			} else {
 // 				highlight_cn = "comment-item-highlight";
 // 			}
-// 			let cn = parentCI.className;
-// 			parentCI.className = cn + " " + highlight_cn;
-// 			cpl.addEventListener("mouseout", function(e) { parentCI.className = cn; }, {once: true});
+// 			let className = parentCI.className;
+// 			parentCI.className = className + " " + highlight_cn;
+// 			commentParentLink.addEventListener("mouseout", (event) => { parentCI.className = cn; }, {once: true});
 // 		});
 // 	});
 
-	document.querySelectorAll(".with-markdown-editor textarea, .conversation-page textarea").forEach(function (textarea) { textarea.addTextareaFeatures(); });
-	document.querySelectorAll(((getQueryVariable("post-id")) ? "#edit-post-form textarea" : "#edit-post-form input[name='title']") + (window.isMobile ? "" : ", .conversation-page textarea")).forEach(function (field) { field.focus(); });
+	document.querySelectorAll(".with-markdown-editor textarea, .conversation-page textarea").forEach(textarea => { textarea.addTextareaFeatures(); });
+	document.querySelectorAll(((getQueryVariable("post-id")) ? "#edit-post-form textarea" : "#edit-post-form input[name='title']") + (window.isMobile ? "" : ", .conversation-page textarea")).forEach(field => { field.focus(); });
 
 	let postMeta = document.querySelector(".post .post-meta");
 	if (postMeta) {
@@ -2005,39 +1996,39 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		document.querySelector(".post").appendChild(clonedPostMeta);
 	}
 	
-	if(loggedInUserId) {
+	if (loggedInUserId) {
 		var comments_container = document.querySelector("#comments");
 		if (comments_container) {
 			// Add reply buttons.
-			comments_container.querySelectorAll(".comment").forEach(function (e) {
-				e.insertAdjacentHTML("afterend", "<div class='comment-controls posting-controls'></div>");
-				e.parentElement.querySelector(".comment-controls").injectCommentButtons();
+			comments_container.querySelectorAll(".comment").forEach(comment => {
+				comment.insertAdjacentHTML("afterend", "<div class='comment-controls posting-controls'></div>");
+				comment.parentElement.querySelector(".comment-controls").injectCommentButtons();
 			});
 		
 			// Add top-level new comment form.
-			if(!document.querySelector(".individual-thread-page")) {
+			if (!document.querySelector(".individual-thread-page")) {
 				comments_container.insertAdjacentHTML("afterbegin", "<div class='comment-controls posting-controls'></div>");
 				comments_container.querySelector(".comment-controls").injectCommentButtons();
 			}
 		}
 
 		// Add upvote/downvote buttons.
-		if(typeof(postVote) != 'undefined') {
-			document.querySelectorAll(".post-meta .karma-value").forEach(function (e) {
-				addVoteButtons(e, postVote, 'Posts');
+		if (typeof postVote != 'undefined') {
+			document.querySelectorAll(".post-meta .karma-value").forEach(karmaValue => {
+				addVoteButtons(karmaValue, postVote, 'Posts');
 			});
 		}
-		if(typeof(commentVotes) != 'undefined') {
-			document.querySelectorAll(".comment-meta .karma-value").forEach(function (e) {
-				let cid = e.getCommentId();
-				addVoteButtons(e, commentVotes[cid], 'Comments');
-				e.parentElement.addClass("active-controls");
+		if (typeof commentVotes != 'undefined') {
+			document.querySelectorAll(".comment-meta .karma-value").forEach(karmaValue => {
+				let commentID = karmaValue.getCommentId();
+				addVoteButtons(karmaValue, commentVotes[commentID], 'Comments');
+				karmaValue.parentElement.addClass("active-controls");
 			});
 			// Replicate karma controls at the bottom of comments.
-			document.querySelectorAll(".comment-meta .karma").forEach(function (karma_controls) {
-				let karma_controls_cloned = karma_controls.cloneNode(true);
-				let comment_controls = karma_controls.parentElement.parentElement.nextSibling;
-				comment_controls.appendChild(karma_controls_cloned);
+			document.querySelectorAll(".comment-meta .karma").forEach(karmaControls => {
+				let karmaControlsCloned = karmaControls.cloneNode(true);
+				let commentControls = karmaControls.closest(".comment").nextSibling;
+				commentControls.appendChild(karmaControlsCloned);
 			});
 		}
 		document.querySelector("head").insertAdjacentHTML("beforeend","<style id='vote-buttons'>" + 
@@ -2050,32 +2041,32 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 			color: #eb4c2a;
 		}` +
 		"</style>");
-		document.querySelectorAll("button.vote").forEach(function(e) {
-			e.addActivateEvent(voteButtonClicked);
+		document.querySelectorAll("button.vote").forEach(voteButton => {
+			voteButton.addActivateEvent(voteButtonClicked);
 		});
 
 		window.needHashRealignment = true;
 	}
 
 	// Clean up ToC
-	document.querySelectorAll(".contents-list li a").forEach(function (a) {
-		a.innerText = a.innerText.replace(/^[0-9]+\. /, '');
-		a.innerText = a.innerText.replace(/^[0-9]+: /, '');
-		a.innerText = a.innerText.replace(/^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})\. /i, '');
-		a.innerText = a.innerText.replace(/^[A-Z]\. /, '');
+	document.querySelectorAll(".contents-list li a").forEach(tocLink => {
+		tocLink.innerText = tocLink.innerText.replace(/^[0-9]+\. /, '');
+		tocLink.innerText = tocLink.innerText.replace(/^[0-9]+: /, '');
+		tocLink.innerText = tocLink.innerText.replace(/^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})\. /i, '');
+		tocLink.innerText = tocLink.innerText.replace(/^[A-Z]\. /, '');
 	});
 
 	if (document.querySelector("#comments") != null) {
 		// Add comment-minimize buttons to every comment.		
-		document.querySelectorAll(".comment-meta").forEach(function (cm) {
-			if (!cm.lastChild.hasClass("comment-minimize-button"))
-				cm.insertAdjacentHTML("beforeend", "<div class='comment-minimize-button maximized'>&#xf146;</div>");
+		document.querySelectorAll(".comment-meta").forEach(commentMeta => {
+			if (!commentMeta.lastChild.hasClass("comment-minimize-button"))
+				commentMeta.insertAdjacentHTML("beforeend", "<div class='comment-minimize-button maximized'>&#xf146;</div>");
 		});
 		if (!document.querySelector("#content").hasClass("individual-thread-page")) {
 			// Format and activate comment-minimize buttons.
-			document.querySelectorAll(".comment-minimize-button").forEach(function (b) {
-				b.closest(".comment-item").setCommentThreadMaximized(false);
-				b.addActivateEvent(commentMinimizeButtonClicked);
+			document.querySelectorAll(".comment-minimize-button").forEach(button => {
+				button.closest(".comment-item").setCommentThreadMaximized(false);
+				button.addActivateEvent(commentMinimizeButtonClicked);
 			});
 		}
 	}
@@ -2089,11 +2080,11 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	}
 
 	// Prevent conflict between new comment keys and text fields
-	document.querySelectorAll("input[type='text'], input[type='search'], input[type='password']").forEach(function (x) {
-		x.addEventListener("keyup", function(e) { e.stopPropagation(); });
+	document.querySelectorAll("input[type='text'], input[type='search'], input[type='password']").forEach(inputField => {
+		inputField.addEventListener("keyup", (event) => { event.stopPropagation(); });
 	});
 	
-	if(document.querySelector("#comments") && !document.querySelector(".individual-thread-page") && getPostHash()) {
+	if (document.querySelector("#comments") && !document.querySelector(".individual-thread-page") && getPostHash()) {
 		// Read and update last-visited-date.
 		let lastVisitedDate = getLastVisitedDate();
 		setLastVisitedDate(Date.now());
@@ -2138,33 +2129,33 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 	// NOTE: This is commented out earlier on, and added here - for now.
 	// Add comment parent popups.
-	document.querySelectorAll(".comment-meta a.comment-parent-link, .comment-meta a.comment-child-link").forEach(function (cpl) {
-		cpl.addEventListener("mouseover", function(e) {
+	document.querySelectorAll(".comment-meta a.comment-parent-link, .comment-meta a.comment-child-link").forEach(commentParentLink => {
+		commentParentLink.addEventListener("mouseover", function(e) {
 			let parent_id = "#comment-" + /(?:#comment-)?(.+)/.exec(cpl.getAttribute("href"))[1];
 			var parent;
-			try { parent = document.querySelector(parent_id).firstChild; } catch (e) { return; }
+			try { parent = document.querySelector(parent_id).firstChild; } catch (ex) { return; }
 			let parentCI = parent.parentNode;
 			var highlight_cn;
-			if(parent.getBoundingClientRect().bottom < 10 || parent.getBoundingClientRect().top > window.innerHeight + 10) {
+			if (parent.getBoundingClientRect().bottom < 10 || parent.getBoundingClientRect().top > window.innerHeight + 10) {
 				highlight_cn = "comment-item-highlight-faint";
 				parent = parent.cloneNode(true);
 				parent.addClass("comment-popup")
 				parent.addClass("comment-item-highlight");
-				cpl.addEventListener("mouseout", function(e) {
+				commentParentLink.addEventListener("mouseout", function(e) {
 					removeElement(parent);
 				}, {once: true});
-				cpl.parentNode.parentNode.appendChild(parent);
+				commentParentLink.parentNode.parentNode.appendChild(parent);
 			} else {
 				highlight_cn = "comment-item-highlight";
 			}
-			let cn = parentCI.className;
-			parentCI.className = cn + " " + highlight_cn;
-			cpl.addEventListener("mouseout", function(e) { parentCI.className = cn; }, {once: true});
+			let className = parentCI.className;
+			parentCI.className = className + " " + highlight_cn;
+			commentParentLink.addEventListener("mouseout", (event) => { parentCI.className = cn; }, {once: true});
 		});
 	});
 
 	// Add event listeners for Escape and Enter, for the theme tweaker.
-	document.addEventListener("keyup", function(event) {
+	document.addEventListener("keyup", (event) => {
 		if (event.keyCode == 27) {
 		// Escape key.
 			if (document.querySelector("#theme-tweaker-ui .help-window").style.display != "none") {
@@ -2189,10 +2180,10 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	// Add event listener for . , / (for navigating listings pages).
 	let listings = document.querySelectorAll("h1.listing a:last-of-type");
 	if (listings.length > 0) {
-		document.addEventListener("keyup", function (e) { 
-			if (e.ctrlKey || e.shiftKey || e.altKey || !(e.key == "," || e.key == "." || e.key == '/')) return;
+		document.addEventListener("keyup", (event) => { 
+			if (event.ctrlKey || event.shiftKey || event.altKey || !(event.key == "," || event.key == "." || event.key == '/')) return;
 			
-			if (e.key == '/') {
+			if (event.key == '/') {
 				if (document.activeElement.parentElement.hasClass("link-post-listing")) {
 					let links = document.activeElement.parentElement.querySelectorAll("a");
 					links[document.activeElement == links[0] ? 1 : 0].focus();
@@ -2207,7 +2198,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 					break;
 				}
 			}
-			let indexOfNextListing = (e.key == "." ? ++indexOfActiveListing : (--indexOfActiveListing + listings.length)) % listings.length;
+			let indexOfNextListing = (event.key == "." ? ++indexOfActiveListing : (--indexOfActiveListing + listings.length)) % listings.length;
 			listings[indexOfNextListing].focus();
 		});
 	}
@@ -2229,7 +2220,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 	// Move MathJax style tags to <head>.
 	var aggregatedStyles = "";
-	document.querySelectorAll("#content style").forEach(function (styleTag) {
+	document.querySelectorAll("#content style").forEach(styleTag => {
 		aggregatedStyles += styleTag.innerHTML;
 		removeElement("style", styleTag.parentElement);
 	});
@@ -2239,7 +2230,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	
 	// Add listeners to switch between word count and read time.
 	if (window.localStorage.getItem("display-word-count")) toggleReadTimeOrWordCount(true);
-	document.querySelectorAll(".post-meta .read-time").forEach(function (rt) { rt.addActivateEvent(readTimeOrWordCountClicked); });
+	document.querySelectorAll(".post-meta .read-time").forEach(element => { element.addActivateEvent(readTimeOrWordCountClicked); });
 });
 
 /*************************/
@@ -2268,7 +2259,7 @@ function generateImagesOverlay() {
 	document.querySelector("body").insertAdjacentHTML("afterbegin", "<div id='images-overlay'></div>");
 	let imagesOverlay = document.querySelector("#images-overlay");
 	let imagesOverlayLeftOffset = imagesOverlay.getBoundingClientRect().left;
-	document.querySelectorAll(".post-body img").forEach(function (image) {
+	document.querySelectorAll(".post-body img").forEach(image => {
 		let clonedImage = image.cloneNode(true);
 		clonedImage.style.top = image.getBoundingClientRect().top - parseFloat(window.getComputedStyle(image).marginTop) + window.scrollY + "px";
 		clonedImage.style.left = image.getBoundingClientRect().left - parseFloat(window.getComputedStyle(image).marginLeft) - imagesOverlayLeftOffset + "px";
@@ -2286,7 +2277,7 @@ function adjustUIForWindowSize() {
 		bottomBar.removeClass("decorative");
 		
 		bottomBar.querySelector("#nav-item-top").style.display = "";
-	} else {
+	} else if (bottomBar) {
 		if (bottomBar.childElementCount > 1) bottomBar.removeClass("decorative");
 		else bottomBar.addClass("decorative");
 
@@ -2294,18 +2285,16 @@ function adjustUIForWindowSize() {
 	}
 	
 	// Show quick-nav UI up/down buttons if content is taller than window.
-	document.querySelectorAll("#quick-nav-ui a[href='#top'], #quick-nav-ui a[href='#bottom-bar']").forEach(function (button) {
+	document.querySelectorAll("#quick-nav-ui a[href='#top'], #quick-nav-ui a[href='#bottom-bar']").forEach(button => {
 		button.style.visibility = (document.querySelector("#content").clientHeight > window.innerHeight + 30) ? "unset" : "hidden";
 	});
 	
 	// Move anti-kibitzer toggle if content is very short.
-	document.querySelectorAll("#anti-kibitzer-toggle").forEach(akt => {
-		if (document.querySelector("#content").clientHeight < 400) akt.style.bottom = "125px";
-	});
+	if (document.querySelector("#content").clientHeight < 400) (document.querySelector("#anti-kibitzer-toggle")||{}).style.bottom = "125px";
 
 	// Add "horizontal" class to sort order selector when it's specified, via CSS, to
 	// be horizontal (i.e. flex-direction: row)
-	document.querySelectorAll(".sublevel-nav.sort").forEach(function (sortSelector) {
+	document.querySelectorAll(".sublevel-nav.sort").forEach(sortSelector => {
 		if (window.getComputedStyle(sortSelector).flexDirection == "row") sortSelector.addClass("horizontal");
 		else sortSelector.removeClass("horizontal");
 	});
@@ -2322,9 +2311,8 @@ function realignHashIfNeeded() {
 		realignHash();
 }
 function realignHash() {
-	let h = location.hash;
-	if (h)
-		document.querySelectorAll(h).forEach(function (e) { e.scrollIntoView(true); });
+	if (location.hash)
+		(document.querySelector(location.hash)||{}).scrollIntoView(true);
 }
 
 /***********/
