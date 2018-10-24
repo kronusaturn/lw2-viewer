@@ -564,8 +564,8 @@ function highlightCommentsSince(date) {
 	});
 
 	window.newCommentScrollSet = (commentItem) => {
-		document.querySelector("#new-comment-nav-ui .new-comment-previous").disabled = commentItem ? !ci.prevNewComment : true;
-		document.querySelector("#new-comment-nav-ui .new-comment-next").disabled = commentItem ? !ci.nextNewComment : (window.newComments.length == 0);
+		document.querySelector("#new-comment-nav-ui .new-comment-previous").disabled = commentItem ? !commentItem.prevNewComment : true;
+		document.querySelector("#new-comment-nav-ui .new-comment-next").disabled = commentItem ? !commentItem.nextNewComment : (window.newComments.length == 0);
 	};
 	window.newCommentScrollListener = () => {
 		let commentItem = getCurrentVisibleComment();
@@ -2130,8 +2130,8 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	// NOTE: This is commented out earlier on, and added here - for now.
 	// Add comment parent popups.
 	document.querySelectorAll(".comment-meta a.comment-parent-link, .comment-meta a.comment-child-link").forEach(commentParentLink => {
-		commentParentLink.addEventListener("mouseover", function(e) {
-			let parent_id = "#comment-" + /(?:#comment-)?(.+)/.exec(cpl.getAttribute("href"))[1];
+		commentParentLink.addEventListener("mouseover", (event) => {
+			let parent_id = "#comment-" + /(?:#comment-)?(.+)/.exec(commentParentLink.getAttribute("href"))[1];
 			var parent;
 			try { parent = document.querySelector(parent_id).firstChild; } catch (ex) { return; }
 			let parentCI = parent.parentNode;
@@ -2141,16 +2141,16 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 				parent = parent.cloneNode(true);
 				parent.addClass("comment-popup")
 				parent.addClass("comment-item-highlight");
-				commentParentLink.addEventListener("mouseout", function(e) {
+				commentParentLink.addEventListener("mouseout", (event) => {
 					removeElement(parent);
 				}, {once: true});
-				commentParentLink.parentNode.parentNode.appendChild(parent);
+				commentParentLink.closest(".comment").appendChild(parent);
 			} else {
 				highlight_cn = "comment-item-highlight";
 			}
 			let className = parentCI.className;
 			parentCI.className = className + " " + highlight_cn;
-			commentParentLink.addEventListener("mouseout", (event) => { parentCI.className = cn; }, {once: true});
+			commentParentLink.addEventListener("mouseout", (event) => { parentCI.className = className; }, {once: true});
 		});
 	});
 
