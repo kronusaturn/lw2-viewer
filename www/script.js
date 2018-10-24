@@ -2180,7 +2180,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		window.needHashRealignment = true;
 	}
 
-	// Prevent conflict between new comment keys and text fields
+	// Prevent conflict between various single-hotkey listeners and text fields
 	document.querySelectorAll("input[type='text'], input[type='search'], input[type='password']").forEach(inputField => {
 		inputField.addEventListener("keyup", (event) => { event.stopPropagation(); });
 	});
@@ -2311,6 +2311,43 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		document.querySelector(".post").hasClass("link-post")) {
 		document.addEventListener("keyup", function (e) {
 			if (e.key == '/') document.querySelector("a.link-post-link").focus();
+		});
+	}
+
+	// Add event listener for . , / (for navigating the recent comments page).
+	let comments = document.querySelectorAll("#content > .comment-thread .comment-meta a.date");
+	if (comments.length > 0) {
+		document.addEventListener("keyup", (event) => {
+			if (event.ctrlKey || event.shiftKey || event.altKey || !(event.key == "," || event.key == "." || event.key == '/')) return;
+
+			if (event.key == '/') {
+				if (document.activeElement.parentElement.hasClass("comment-meta")) {
+					let links = document.activeElement.parentElement.querySelectorAll("a.date, a.permalink");
+					links[document.activeElement == links[0] ? 1 : 0].focus();
+					document.activeElement.closest(".comment-item").addClass("comment-item-highlight");
+				}
+				return;
+			}
+
+			try { document.activeElement.closest(".comment-item").removeClass("comment-item-highlight"); } catch (ex) { }
+
+			var indexOfActiveComment = -1;
+			for (i = 0; i < comments.length; i++) {
+				if (document.activeElement.parentElement.hasClass("comment-meta") && 
+					comments[i] === document.activeElement.parentElement.querySelector("a.date")) {
+					indexOfActiveComment = i;
+					break;
+				}
+			}
+			let indexOfNextComment = (event.key == "." ? ++indexOfActiveComment : (--indexOfActiveComment + comments.length)) % comments.length;
+			comments[indexOfNextComment].closest(".comment-item").addClass("comment-item-highlight");
+			comments[indexOfNextComment].closest(".comment-item").scrollIntoView();
+			comments[indexOfNextComment].focus();
+		});
+		document.querySelectorAll("#content > .comment-thread .comment-meta a.date, #content > .comment-thread .comment-meta a.permalink").forEach(link => {
+			link.addEventListener("blur", (event) => {
+				event.target.closest(".comment-item").removeClass("comment-item-highlight");
+			});
 		});
 	}
 
