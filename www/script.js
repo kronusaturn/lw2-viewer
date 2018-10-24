@@ -2312,6 +2312,9 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		(currentView.nextSibling || viewSelector.firstChild).accessKey = 'x';
 		(currentView.previousSibling || viewSelector.lastChild).accessKey = 'z';
 	}
+	
+	// Add accesskey to index page sort selector.
+	(document.querySelector("#content.index-page > .sublevel-nav.sort a")||{}).accessKey = 'z';
 
 	// Move MathJax style tags to <head>.
 	var aggregatedStyles = "";
