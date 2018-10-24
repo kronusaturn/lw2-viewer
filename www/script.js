@@ -1910,7 +1910,9 @@ function injectCommentsSortModeSelector() {
 	});
 
 	// TODO: Make this actually get the current sort mode (if that's saved).
-	let currentSortMode = CommentSortMode.TOP;
+	// TODO: Also change the condition here to properly get chrono/threaded mode,
+	// when that is properly done with cookies.
+	let currentSortMode = (location.href.search("chrono=t") == -1) ? CommentSortMode.TOP : CommentSortMode.OLD;
 	topCommentThread.parentElement.addClass("sorted-" + currentSortMode);
 	commentsSortModeSelector.querySelector(".sort-mode-" + currentSortMode).disabled = true;
 	commentsSortModeSelector.querySelector(".sort-mode-" + currentSortMode).addClass("selected");
