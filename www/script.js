@@ -1855,7 +1855,11 @@ var CommentSortMode = Object.freeze({
 	HOT:		"hot"
 });
 function sortComments(mode) {
-	document.querySelectorAll(".comment-thread").forEach(commentThread => {
+	let commentsContainer = document.querySelector("#comments");
+	commentsContainer.removeClass(/(sorted-\S+)/.exec(commentsContainer.className)[1]);
+	
+	let clonedCommentsContainer = commentsContainer.cloneNode(true);
+	clonedCommentsContainer.querySelectorAll(".comment-thread").forEach(commentThread => {
 		var comparator;
 		switch (mode) {
 		case CommentSortMode.NEW:
@@ -1874,6 +1878,9 @@ function sortComments(mode) {
 		}
 		commentThread.innerHTML = Array.from(commentThread.childNodes).sort(comparator).map(commentItem => commentItem.outerHTML).join("");
 	});
+	
+	commentsContainer.querySelector("#comments-sort-mode-selector + .comment-thread").innerHTML = clonedCommentsContainer.querySelector("#comments-sort-mode-selector + .comment-thread").innerHTML;
+	commentsContainer.addClass("sorted-" + mode);
 }
 function commentKarmaValue(commentOrSelector) {
 	if (typeof commentOrSelector == "string") commentOrSelector = document.querySelector(commentOrSelector);
