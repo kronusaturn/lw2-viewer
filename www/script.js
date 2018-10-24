@@ -332,7 +332,7 @@ function showReplyForm(event) {
 
 function hideReplyForm(event) {
 	try { event.target.parentElement.parentElement.querySelector(".comment-body").removeAttribute("style"); }
-	catch (ex) { }
+	catch (ex) { console.log(ex); }
 	event.target.parentElement.injectCommentButtons();
 }
 
@@ -1628,9 +1628,9 @@ function toggleAppearanceAdjustUI() {
 
 function expandAncestorsOf(commentId) {
 	try { document.querySelector('#comment-'+commentId).closest("label[for^='expand'] + .comment-thread").parentElement.querySelector("input[id^='expand']").checked = true; }
-	catch (ex) { }
+	catch (ex) { console.log(ex); }
 	try { document.querySelector('#comment-'+commentId).closest("#comments > ul > li").setCommentThreadMaximized(true, false, true); }
-	catch (ex) { }
+	catch (ex) { console.log(ex); }
 }
 
 /**************************/
@@ -2006,7 +2006,7 @@ registerInitializer('earlyInitialize', true, () => document.querySelector("#cont
 	injectTextSizeAdjustmentUI();
 	
 	try { updateInbox(); }
-	catch (ex) { }
+	catch (ex) { console.log(ex); }
 });
 
 registerInitializer('initialize', false, () => document.readyState != 'loading', function () {
@@ -2022,7 +2022,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	let content = document.querySelector("#content");
 	if (content.querySelector("#comments .comment-thread") == null) {
 		try { document.querySelector("#quick-nav-ui a[href='#comments']").addClass("no-comments"); }
-		catch (ex) { }
+		catch (ex) { console.log(ex); }
 	}
 
 	if (location.hash.length == 18) {
@@ -2040,7 +2040,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 			if (d) { date.innerHTML = dtf.format(new Date(+ d)); }
 		});
 	}
-	catch (ex) { }
+	catch (ex) { console.log(ex); }
 
 	window.needHashRealignment = false;
 
@@ -2050,7 +2050,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 // 		commentParentLink.addEventListener("mouseover", function(e) {
 // 			let parent_id = "#comment-" + /(?:#comment-)?(.+)/.exec(commentParentLink.getAttribute("href"))[1];
 // 			var parent;
-// 			try { parent = document.querySelector(parent_id).firstChild; } catch (ex) { return; }
+// 			try { parent = document.querySelector(parent_id).firstChild; } catch (ex) { console.log(ex); return; }
 // 			let parentCI = parent.parentNode;
 // 			var highlight_cn;
 // 			if (parent.getBoundingClientRect().bottom < 10 || parent.getBoundingClientRect().top > window.innerHeight + 10) {
@@ -2237,7 +2237,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		commentParentLink.addEventListener("mouseover", (event) => {
 			let parent_id = "#comment-" + /(?:#comment-)?(.+)/.exec(commentParentLink.getAttribute("href"))[1];
 			var parent;
-			try { parent = document.querySelector(parent_id).firstChild; } catch (ex) { return; }
+			try { parent = document.querySelector(parent_id).firstChild; } catch (ex) { console.log(ex); return; }
 			let parentCI = parent.parentNode;
 			var highlight_cn;
 			if (parent.getBoundingClientRect().bottom < 10 || parent.getBoundingClientRect().top > window.innerHeight + 10) {
@@ -2329,7 +2329,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 				return;
 			}
 
-			try { document.activeElement.closest(".comment-item").removeClass("comment-item-highlight"); } catch (ex) { }
+			try { document.activeElement.closest(".comment-item").removeClass("comment-item-highlight"); } catch (ex) { console.log(ex); }
 
 			var indexOfActiveComment = -1;
 			for (i = 0; i < comments.length; i++) {
@@ -2455,7 +2455,7 @@ function realignHashIfNeeded() {
 		realignHash();
 }
 function realignHash() {
-	try { document.querySelector(location.hash).scrollIntoView(true); } catch (ex) { }
+	try { document.querySelector(location.hash).scrollIntoView(true); } catch (ex) { console.log(ex); }
 }
 
 /***********/
