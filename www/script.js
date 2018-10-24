@@ -1893,12 +1893,39 @@ function injectCommentsSortModeSelector() {
 		"</div>";
 	topCommentThread.insertAdjacentHTML("beforebegin", commentsSortModeSelectorHTML);
 	let commentsSortModeSelector = document.querySelector("#comments-sort-mode-selector");
+	
+	commentsSortModeSelector.querySelectorAll("button").forEach(button => {
+		button.addActivateEvent(commentsSortModeSelectButtonClicked);
+	});
 
 	// TODO: Make this actually get the current sort mode (if that's saved).
 	let currentSortMode = CommentSortMode.TOP;
 	topCommentThread.parentElement.addClass("sorted-" + currentSortMode);
 	commentsSortModeSelector.querySelector(".sort-mode-" + currentSortMode).disabled = true;
 	commentsSortModeSelector.querySelector(".sort-mode-" + currentSortMode).addClass("selected");
+	setCommentsSortModeSelectButtonsAccesskey();
+}
+
+function commentsSortModeSelectButtonClicked(event) {
+	event.target.parentElement.querySelectorAll("button").forEach(button => {
+		button.removeClass("selected");
+		button.disabled = false;
+	});
+	event.target.addClass("selected");
+	event.target.disabled = true;
+
+	sortComments(/sort-mode-(\S+)/.exec(event.target.className)[1]);
+	setCommentsSortModeSelectButtonsAccesskey();
+}
+function setCommentsSortModeSelectButtonsAccesskey() {
+	document.querySelectorAll("#comments-sort-mode-selector button").forEach(button => {
+		button.accessKey = "";
+		button.title = /(.+?)( \[z\])?$/.exec(button.title)[1];
+	});
+	let selectedButton = document.querySelector("#comments-sort-mode-selector button.selected");
+	let nextButtonInCycle = (selectedButton == selectedButton.parentElement.lastChild) ? selectedButton.parentElement.firstChild : selectedButton.nextSibling;
+	nextButtonInCycle.accessKey = "z";
+	nextButtonInCycle.title += " [z]";
 }
 
 /*********************/
