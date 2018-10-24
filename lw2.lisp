@@ -175,7 +175,7 @@
 
 (defun comment-to-html (out-stream comment &key with-post-title)
   (if (cdr (assoc :deleted comment))
-      (format out-stream "<div class=\"comment\"><div class=\"comment-meta\"><span class=\"deleted\">[deleted]</span></div></div>")
+      (format out-stream "<div class=\"comment deleted-comment\"><div class=\"comment-meta\"><span class=\"deleted-meta\">[ ]</span></div><div class=\"comment-body\">[deleted]</div></div>")
       (alist-bind ((comment-id string :--id)
                    (user-id string)
                    (posted-at string)
