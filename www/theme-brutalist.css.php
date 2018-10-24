@@ -152,22 +152,24 @@ body {
 .sublevel-nav .sublevel-item:first-child {
 	border-width: 1px;
 }
-.sublevel-nav a.sublevel-item:hover {
+.sublevel-nav .sublevel-item:hover {
 	box-shadow: 
 		0 0 0 2px #fff inset,
 		0 0 0 3px #000 inset;
 }
-.sublevel-nav a.sublevel-item:active {
+.sublevel-nav .sublevel-item:active {
 	box-shadow: 
 		0 0 0 4px #fff inset,
 		0 0 0 5px #000 inset;
 	font-weight: normal;
 }
+.sublevel-nav .sublevel-item:disabled,
 .sublevel-nav span.sublevel-item {
 	box-shadow: 
 		0 0 0 2px #fff inset,
 		0 0 0 3px #000 inset;
 	font-weight: bold;
+	color: inherit;
 }
 
 /*=====================*/
@@ -183,7 +185,7 @@ body {
 	font-weight: 600;
 }
 .sublevel-nav.sort .sublevel-item {
-	padding: 6px 8px;
+	padding: 7px 8px 6px 9px;
 	text-transform: uppercase;
 	border: none;
 }

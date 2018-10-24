@@ -4546,6 +4546,7 @@ body {
 	border-width: 1px 1px 1px 0;
 	color: #92c396;
 	padding: 3px 9px 0 9px;
+	font-weight: 300;
 }
 .sublevel-nav .sublevel-item:first-child {
 	border-radius: 8px 0 0 8px;
@@ -4554,16 +4555,18 @@ body {
 .sublevel-nav .sublevel-item:last-child {
 	border-radius: 0 8px 8px 0;
 }
-.sublevel-nav a.sublevel-item:hover,
-.sublevel-nav a.sublevel-item:active,
+.sublevel-nav .sublevel-item:hover,
+.sublevel-nav .sublevel-item:active,
+.sublevel-nav .sublevel-item:disabled,
 .sublevel-nav span.sublevel-item {
 	background-color: #c4dbc4;
 	color: #fff;
 	text-decoration: none;
 }
-.sublevel-nav a.sublevel-item:active {
+.sublevel-nav .sublevel-item:active {
 	background-color: #92c396;
 	border-color: #92c396;
+	transform: none;
 }
 
 /*=====================*/
@@ -4586,8 +4589,7 @@ body {
 	text-shadow: 0.5px 0.5px 0 #fff;
 }
 .sublevel-nav.sort .sublevel-item {
-	padding: 5px 6px 2px 6px;
-	border: 1px solid #c4dbc4;
+	padding: 6px 7px 2px 7px;
 	text-transform: uppercase;
 }
 

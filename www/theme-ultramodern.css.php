@@ -146,18 +146,21 @@ body {
 .sublevel-nav .sublevel-item:last-child {
 	border-radius: 0 8px 8px 0;
 }
-.sublevel-nav a.sublevel-item:hover,
-.sublevel-nav a.sublevel-item:active,
+.sublevel-nav .sublevel-item:hover,
+.sublevel-nav .sublevel-item:active,
+.sublevel-nav .sublevel-item:disabled,
 .sublevel-nav span.sublevel-item {
 	background-color: #999;
 	text-decoration: none;
 }
-.sublevel-nav a.sublevel-item:hover {
+.sublevel-nav .sublevel-item:hover {
 	color: #000;
 }
-.sublevel-nav a.sublevel-item:active,
+.sublevel-nav .sublevel-item:active,
+.sublevel-nav .sublevel-item:disabled,
 .sublevel-nav span.sublevel-item {
 	color: #fff;
+	transform: none;
 }
 
 /*=====================*/
@@ -180,7 +183,7 @@ body {
 	color: #444;
 }
 .sublevel-nav.sort .sublevel-item {
-	padding: 6px 7px 5px 7px;
+	padding: 7px 7px 5px 7px;
 	text-transform: uppercase;
 	border: 1px solid #777;
 }

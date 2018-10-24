@@ -163,12 +163,14 @@ body {
 .sublevel-nav .sublevel-item:last-child {
 	border-radius: 0 8px 8px 0;
 }
-.sublevel-nav a.sublevel-item:hover {
+.sublevel-nav .sublevel-item:hover {
 	background-color: #ddd;
 	color: #000;
 	text-decoration: none;
+	text-shadow: none;
 }
-.sublevel-nav a.sublevel-item:active,
+.sublevel-nav .sublevel-item:active,
+.sublevel-nav .sublevel-item:disabled,
 .sublevel-nav span.sublevel-item {
 	background-color: #ddd;
 	border-color: #ddd;
@@ -176,6 +178,7 @@ body {
 	text-shadow: 
 		0 -1px 0 #fff,
 		0 0.5px 0.5px #000;
+	transform: none;
 }
 
 /*=====================*/
@@ -196,7 +199,7 @@ body {
 	top: 1px;
 }
 .sublevel-nav.sort .sublevel-item {
-	padding: 7px;
+	padding: 7px 7px 6px 7px;
 	text-transform: uppercase;
 	border: 1px solid #aaa;
 }
