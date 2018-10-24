@@ -199,7 +199,7 @@ function GUIEditMobileExitButtonClicked(event) {
 Element.prototype.addTextareaFeatures = function() {
 	let textarea = this;
 
-	textarea.addEventListener("focus", (event) => { event.target.closest(".comment-item").scrollIntoViewIfNeeded(); });
+	textarea.addEventListener("focus", (event) => { event.target.closest("form").scrollIntoViewIfNeeded(); });
 	textarea.addEventListener("input", OnInputExpandTextarea, false);
 	textarea.addEventListener("input", OnInputRemoveMarkdownHints, false);
 	textarea.addEventListener("keyup", (event) => { event.stopPropagation(); });
