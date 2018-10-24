@@ -1394,11 +1394,11 @@ function injectCommentsViewModeSelector() {
 	if (commentsContainer == null) return;
 
 	let currentModeThreaded = (location.href.search("chrono=t") == -1);
-	let newHref = "href='" + location.pathname + location.search.replace("chrono=t","") + (currentModeThreaded ? ((location.search == "" ? "?" : "&") + "chrono=t") : "") + location.hash + "'";
+	let newHref = "href='" + location.pathname + location.search.replace("chrono=t","") + (currentModeThreaded ? ((location.search == "" ? "?" : "&") + "chrono=t") : "") + location.hash + "' ";
 
 	let commentsViewModeSelector = addUIElement("<div id='comments-view-mode-selector'>"
-	+ `<a class="threaded ${currentModeThreaded ? 'selected' : ''}" ${currentModeThreaded ? "" : newHref} title='Comments threaded view'>&#xf038;</a>`
-	+ `<a class="chrono ${currentModeThreaded ? '' : 'selected'}" ${currentModeThreaded ? newHref : ""} title='Comments chronological (flat) view'>&#xf017;</a>`
+	+ `<a class="threaded ${currentModeThreaded ? 'selected' : ''}" ${currentModeThreaded ? "" : newHref} ${currentModeThreaded ? "" : "accesskey='x' "} title='Comments threaded view'>&#xf038;</a>`
+	+ `<a class="chrono ${currentModeThreaded ? '' : 'selected'}" ${currentModeThreaded ? newHref : ""} ${currentModeThreaded ? "accesskey='x' " : ""} title='Comments chronological (flat) view'>&#xf017;</a>`
 	+ "</div>");
 	
 // 	commentsViewModeSelector.querySelectorAll("a").forEach(button => {
@@ -1460,7 +1460,7 @@ function injectCommentsViewModeSelector() {
 
 function rectifyChronoModeCommentChildLinks() {
 	document.querySelectorAll(".comment-child-links").forEach(commentChildLinksContainer => {
-		let children = childrenOfComment(ccls.closest(".comment-item").id);
+		let children = childrenOfComment(commentChildLinksContainer.closest(".comment-item").id);
 		let childLinks = commentChildLinksContainer.querySelectorAll("a");
 		childLinks.forEach((link, index) => {
 			link.href = "#" + children.find(child => child.querySelector(".author").textContent == link.textContent).id;
