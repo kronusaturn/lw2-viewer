@@ -1840,6 +1840,50 @@ function toggleAntiKibitzerMode() {
 	}
 }
 
+/*******************************/
+/* COMMENT SORT MODE SELECTION */
+/*******************************/
+
+var CommentSortMode = Object.freeze({
+	TOP:		"top",
+	NEW:		"new",
+	OLD:		"old",
+	HOT:		"hot"
+});
+function sortComments(mode) {
+	document.querySelectorAll(".comment-thread").forEach(commentThread => {
+		var comparator;
+		switch (mode) {
+		case CommentSortMode.NEW:
+			comparator = (a,b) => commentDate(b) - commentDate(a);
+			break;
+		case CommentSortMode.OLD:
+			comparator = (a,b) => commentDate(a) - commentDate(b);
+			break;
+		case CommentSortMode.HOT:
+			comparator = (a,b) => commentVoteCount(b) - commentVoteCount(a);
+			break;
+		case CommentSortMode.TOP:
+		default:
+			comparator = (a,b) => commentKarmaValue(b) - commentKarmaValue(a);
+			break;
+		}
+		commentThread.innerHTML = Array.from(commentThread.childNodes).sort(comparator).map(commentItem => commentItem.outerHTML).join("");
+	});
+}
+function commentKarmaValue(commentOrSelector) {
+	if (typeof commentOrSelector == "string") commentOrSelector = document.querySelector(commentOrSelector);
+	return parseInt(commentOrSelector.querySelector(".karma-value").firstChild.textContent);
+}
+function commentDate(commentOrSelector) {
+	if (typeof commentOrSelector == "string") commentOrSelector = document.querySelector(commentOrSelector);
+	return parseInt(commentOrSelector.querySelector(".date").dataset.jsDate);
+}
+function commentVoteCount(commentOrSelector) {
+	if (typeof commentOrSelector == "string") commentOrSelector = document.querySelector(commentOrSelector);
+	return parseInt(commentOrSelector.querySelector(".karma-value").title.split(" ")[0]);
+}
+
 /*********************/
 /* MORE MISC HELPERS */
 /*********************/
