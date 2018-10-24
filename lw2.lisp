@@ -174,64 +174,65 @@
 (defparameter *comment-individual-link* nil)
 
 (defun comment-to-html (out-stream comment &key with-post-title)
-  (alist-bind ((comment-id string :--id)
-               (user-id string)
-               (posted-at string)
-               (highlight-new boolean)
-               (post-id string)
-               (base-score fixnum)
-               (page-url (or null string))
-               (parent-comment list)
-               (parent-comment-id (or null string))
-               (child-count (or null fixnum))
-               (children list)
-               (vote-count (or null fixnum))
-               (html-body string))
-    comment
-    (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      (format out-stream "<div class=\"comment~{ ~A~}\"><div class=\"comment-meta\"><a class=\"author~:[~; own-user-author~]\" href=\"/users/~A\" data-userid=\"~A\">~A</a> <a class=\"date\" href=\"~A\" data-js-date=\"~A\">~A</a><div class=\"karma\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"permalink\" href=\"~A/comment/~A\" title=\"Permalink\"></a>~@[<a class=\"lw2-link\" href=\"~A\" title=\"LW link\"></a>~]"
-              (let ((l nil))
-                (if (and (logged-in-userid user-id) (< (* 1000 (local-time:timestamp-to-unix (local-time:now))) (+ js-time 15000))) (push "just-posted-comment" l))
-                (if highlight-new (push "comment-item-highlight" l))
-                l)
-              (logged-in-userid user-id)
-              (encode-entities (get-user-slug user-id))
-              (encode-entities user-id)
-              (encode-entities (get-username user-id))
-              (generate-post-link post-id comment-id)
-              js-time
-              pretty-time
-              (votes-to-tooltip vote-count)
-              (pretty-number base-score "point")
-              (generate-post-link post-id)
-              comment-id
-              (clean-lw-link page-url)))
-    (if with-post-title
-        (format out-stream "<div class=\"comment-post-title\">~1{<span class=\"comment-in-reply-to\">in reply to: <a href=\"/users/~A\" class=\"inline-author~:[~; own-user-author~]\" data-userid=\"~A\">~A</a>’s <a href=\"~A\">comment</a></span> ~}<span class=\"comment-post-title2\">on: <a href=\"~A\">~A</a></span></div>"
-                (alexandria:if-let (parent-comment parent-comment)
-                                   (list (encode-entities (get-user-slug (cdr (assoc :user-id parent-comment))))
-                                         (logged-in-userid (cdr (assoc :user-id parent-comment)))
-                                         (encode-entities (cdr (assoc :user-id parent-comment)))
-                                         (encode-entities (get-username (cdr (assoc :user-id parent-comment))))
-                                         (generate-post-link (cdr (assoc :post-id parent-comment)) (cdr (assoc :--id parent-comment)))))
-                (generate-post-link post-id)
-                (clean-text-to-html (get-post-title post-id)))
-        (progn
-          (when parent-comment-id
-            (if *comment-individual-link*
-                (format out-stream "<a class=\"comment-parent-link\" href=\"~A\" title=\"Parent\"></a>" parent-comment-id)
-                (format out-stream "<a class=\"comment-parent-link\" href=\"#comment-~A\">Parent</a>" parent-comment-id)))
-          (format out-stream "~@[<div class=\"comment-child-links\">Replies: ~:{<a href=\"#comment-~A\">&gt;~A</a>~}</div>~]~:[~;<div class=\"comment-minimize-button\" data-child-count=\"~A\"></div>~]"
-                  (map 'list (lambda (c) (list (cdr (assoc :comment-id c)) (get-username (cdr (assoc :user-id c))))) children)
-                  (not parent-comment-id)
-                  child-count)))
-    (format out-stream "</div><div class=\"comment-body\"~@[ data-markdown-source=\"~A\"~]>"
-            (if (logged-in-userid user-id)
-                (encode-entities
-                  (or (cache-get "comment-markdown-source" comment-id)
-                      html-body))))
-    (write-sequence (clean-html* html-body) out-stream)
-    (format out-stream "</div></div>")))
+  (if (cdr (assoc :deleted comment))
+      (format out-stream "<div class=\"comment deleted-comment\"><div class=\"comment-meta\"><span class=\"deleted-meta\">[ ]</span></div><div class=\"comment-body\">[deleted]</div></div>")
+      (alist-bind ((comment-id string :--id)
+                   (user-id string)
+                   (posted-at string)
+                   (highlight-new boolean)
+                   (post-id string)
+                   (base-score fixnum)
+                   (page-url (or null string))
+                   (parent-comment list)
+                   (parent-comment-id (or null string))
+                   (child-count (or null fixnum))
+                   (children list)
+                   (vote-count (or null fixnum))
+                   (html-body string))
+                  comment
+                  (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
+                    (format out-stream "<div class=\"comment~{ ~A~}\"><div class=\"comment-meta\"><a class=\"author~:[~; own-user-author~]\" href=\"/users/~A\" data-userid=\"~A\">~A</a> <a class=\"date\" href=\"~A\" data-js-date=\"~A\">~A</a><div class=\"karma\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"permalink\" href=\"~A/comment/~A\" title=\"Permalink\"></a>~@[<a class=\"lw2-link\" href=\"~A\" title=\"LW link\"></a>~]"
+                            (let ((l nil))
+                              (if (and (logged-in-userid user-id) (< (* 1000 (local-time:timestamp-to-unix (local-time:now))) (+ js-time 15000))) (push "just-posted-comment" l))
+                              (if highlight-new (push "comment-item-highlight" l))
+                              l)
+                            (logged-in-userid user-id)
+                            (encode-entities (get-user-slug user-id))
+                            (encode-entities user-id)
+                            (encode-entities (get-username user-id))
+                            (generate-post-link post-id comment-id)
+                            js-time
+                            pretty-time
+                            (votes-to-tooltip vote-count)
+                            (pretty-number base-score "point")
+                            (generate-post-link post-id)
+                            comment-id
+                            (clean-lw-link page-url)))
+                  (if with-post-title
+                      (format out-stream "<div class=\"comment-post-title\">~1{<span class=\"comment-in-reply-to\">in reply to: <a href=\"/users/~A\" class=\"inline-author~:[~; own-user-author~]\" data-userid=\"~A\">~A</a>’s <a href=\"~A\">comment</a></span> ~}<span class=\"comment-post-title2\">on: <a href=\"~A\">~A</a></span></div>"
+                              (alexandria:if-let (parent-comment parent-comment)
+                                                 (list (encode-entities (get-user-slug (cdr (assoc :user-id parent-comment))))
+                                                       (logged-in-userid (cdr (assoc :user-id parent-comment)))
+                                                       (encode-entities (cdr (assoc :user-id parent-comment)))
+                                                       (encode-entities (get-username (cdr (assoc :user-id parent-comment))))
+                                                       (generate-post-link (cdr (assoc :post-id parent-comment)) (cdr (assoc :--id parent-comment)))))
+                              (generate-post-link post-id)
+                              (clean-text-to-html (get-post-title post-id)))
+                      (progn
+                        (when parent-comment-id
+                          (if *comment-individual-link*
+                              (format out-stream "<a class=\"comment-parent-link\" href=\"~A\" title=\"Parent\"></a>" parent-comment-id)
+                              (format out-stream "<a class=\"comment-parent-link\" href=\"#comment-~A\">Parent</a>" parent-comment-id)))
+                        (format out-stream "~@[<div class=\"comment-child-links\">Replies: ~:{<a href=\"#comment-~A\">&gt;~A</a>~}</div>~]<div class=\"comment-minimize-button\" data-child-count=\"~A\"></div>"
+                                (map 'list (lambda (c) (list (cdr (assoc :comment-id c)) (get-username (cdr (assoc :user-id c))))) children)
+                                child-count)))
+                  (format out-stream "</div><div class=\"comment-body\"~@[ data-markdown-source=\"~A\"~]>"
+                          (if (logged-in-userid user-id)
+                              (encode-entities
+                                (or (cache-get "comment-markdown-source" comment-id)
+                                    html-body))))
+                  (write-sequence (clean-html* html-body) out-stream)
+                  (format out-stream "</div></div>"))))
 
 (defun postprocess-conversation-title (title)
   (if (or (null title) (string= title ""))
@@ -287,11 +288,19 @@
      (serious-condition (c) (error-to-html ,out-stream c))))
 
 (defun make-comment-parent-hash (comments)
-  (let ((hash (make-hash-table :test 'equal)))
+  (let ((existing-comment-hash (make-hash-table :test 'equal))
+        (hash (make-hash-table :test 'equal)))
+    (dolist (c comments)
+      (alexandria:if-let (id (cdr (assoc :--id c)))
+                         (setf (gethash id existing-comment-hash) t)))
     (dolist (c comments)
       (let* ((parent-id (cdr (assoc :parent-comment-id c)))
 	     (old (gethash parent-id hash)))
-	(setf (gethash parent-id hash) (cons c old))))
+	(setf (gethash parent-id hash) (cons c old))
+        (when (and parent-id (not (gethash parent-id existing-comment-hash)))
+          (let ((placeholder (alist :--id parent-id :parent-comment-id nil :deleted t)))
+            (setf (gethash parent-id existing-comment-hash) t
+                  (gethash nil hash) (cons placeholder (gethash nil hash)))))))
     (maphash (lambda (k old)
 	       (setf (gethash k hash) (nreverse old)))
 	     hash)
@@ -299,9 +308,9 @@
       ((count-children (parent)
 	(let ((children (gethash (cdr (assoc :--id parent)) hash)))
 	  (+ (length children) (apply #'+ (map 'list #'count-children children))))) 
-       (add-child-counts (comment-list) 
+       (add-child-counts (comment-list)
 	(loop for c in comment-list
-	      as id = (cdr (assoc :--id c)) 
+	      as id = (cdr (assoc :--id c))
 	      do (setf (gethash id hash) (add-child-counts (gethash id hash))) 
 	      collecting (cons (cons :child-count (count-children c)) c))))
       (setf (gethash nil hash) (add-child-counts (gethash nil hash)))) 
