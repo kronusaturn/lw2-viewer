@@ -71,11 +71,10 @@ Element.prototype.addClass = function(className) {
 		this.className += " " + className;
 }
 Element.prototype.addClasses = function(classNames) {
-	let element = this;
 	let elementClassNames = this.className.trim().split(/\s/);
 	
 	classNames.forEach(className => {
-		if (!element.hasClass(className))
+		if (!this.hasClass(className))
 			elementClassNames.push(className);
 	});
 	
@@ -85,11 +84,9 @@ Element.prototype.removeClass = function(className) {
 	this.className = this.className.replace(new RegExp("(^|\\s+)" + className + "(\\s+|$)"), "$1").trim();
 }
 Element.prototype.removeClasses = function(classNames) {
-	let elementClassNames = this.className;
 	classNames.forEach(className => {
-		elementClassNames = elementClassNames.replace(new RegExp("(^|\\s+)" + className + "(\\s+|$)"), "$1").trim();
+		this.className = this.className.replace(new RegExp("(^|\\s+)" + className + "(\\s+|$)"), "$1").trim();
 	});
-	this.className = elementClassNames;
 }
 Element.prototype.hasClass = function(className) {
 	return (new RegExp("(^|\\s+)" + className + "(\\s+|$)")).test(this.className);
@@ -256,14 +253,14 @@ Element.prototype.addTextareaFeatures = function() {
 }
 
 Element.prototype.injectReplyForm = function(editMarkdownSource) {
-	let element = this;
-	let editCommentId = (editMarkdownSource ? element.getCommentId() : false);
-	let withparent = (!editMarkdownSource && element.getCommentId());
-	element.innerHTML = "<button class='cancel-comment-button' tabindex='-1'>Cancel</button>" +
+	let commentControls = this;
+	let editCommentId = (editMarkdownSource ? commentControls.getCommentId() : false);
+	let withparent = (!editMarkdownSource && commentControls.getCommentId());
+	commentControls.innerHTML = "<button class='cancel-comment-button' tabindex='-1'>Cancel</button>" +
 		"<form method='post'>" + 
 		"<div class='textarea-container'>" + 
 		"<textarea name='text' onkeyup='enableBeforeUnload();' onchange='enableBeforeUnload();'></textarea>" +
-		(withparent ? "<input type='hidden' name='parent-comment-id' value='" + element.getCommentId() + "'>" : "") +
+		(withparent ? "<input type='hidden' name='parent-comment-id' value='" + commentControls.getCommentId() + "'>" : "") +
 		(editCommentId ? "<input type='hidden' name='edit-comment-id' value='" + editCommentId + "'>" : "") +
 		"<span class='markdown-reference-link'>You can use <a href='http://commonmark.org/help/' target='_blank'>Markdown</a> here.</span>" + 
 		`<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-help-button">Help</button>` + 
@@ -273,32 +270,32 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 		"<input type='submit' value='Submit'>" + 
 		"</div></form>";
 	
-	element.querySelector(".cancel-comment-button").addActivateEvent(window.hideReplyForm);
-	element.scrollIntoViewIfNeeded();
-	element.querySelector("form").onsubmit = (event) => {
+	commentControls.querySelector(".cancel-comment-button").addActivateEvent(window.hideReplyForm);
+	commentControls.scrollIntoViewIfNeeded();
+	commentControls.querySelector("form").onsubmit = (event) => {
 		if (!event.target.text.value) {
 			alert("Please enter a comment.");
 			return false;
 		}
 	}
-	let textarea = element.querySelector("textarea");
+	let textarea = commentControls.querySelector("textarea");
 	textarea.value = editMarkdownSource || "";
 	textarea.addTextareaFeatures();
 	textarea.focus();
 }
 
 Element.prototype.injectCommentButtons = function() {
-	let element = this;
-	element.innerHTML = "";
+	let commentControls = this;
+	commentControls.innerHTML = "";
 	let replyButton = document.createElement("button");
-	if (element.parentElement.id == 'comments') {
+	if (commentControls.parentElement.id == 'comments') {
 		replyButton.className = "new-comment-button action-button";
 		replyButton.innerHTML = "Post new comment";
 		replyButton.setAttribute("accesskey", "n");
 		replyButton.setAttribute("title", "Post new comment [n]");
 	} else {
-		if (element.parentElement.querySelector(".comment-body").hasAttribute("data-markdown-source")) {
-			let editButton = element.appendChild(document.createElement("button"));
+		if (commentControls.parentElement.querySelector(".comment-body").hasAttribute("data-markdown-source")) {
+			let editButton = commentControls.appendChild(document.createElement("button"));
 			editButton.className = "edit-button action-button";
 			editButton.innerHTML = "Edit";
 			editButton.tabIndex = '-1';
@@ -307,7 +304,7 @@ Element.prototype.injectCommentButtons = function() {
 		replyButton.className = "reply-button action-button";
 		replyButton.innerHTML = "Reply";
 	}
-	element.appendChild(replyButton);
+	commentControls.appendChild(replyButton);
 	replyButton.tabIndex = '-1';
 	replyButton.addActivateEvent(window.showReplyForm);
 }
