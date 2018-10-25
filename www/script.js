@@ -212,7 +212,7 @@ Element.prototype.addTextareaFeatures = function() {
 				"<button type='button' class='guiedit guiedit-" 
 				+ button[0]
 				+ "' tabindex='-1' title='"
-				+ button[1] + ((button[2] != "") ? (" [accesskey: " + button[2] + "]") : "")
+				+ button[1] + ((button[2] != "") ? (" [" + button[2] + "]") : "")
 				+ "' data-tooltip='" + button[1]
 				+ "' accesskey='"
 				+ button[2]
@@ -692,12 +692,12 @@ function injectContentWidthSelector() {
 function setWidthAdjustButtonsAccesskey() {
 	document.querySelectorAll("#width-selector button").forEach(button => {
 		button.accessKey = "";
-		button.title = /(.+?)( \(accesskey: '''\))?$/.exec(button.title)[1];
+		button.title = /(.+?)( \['\])?$/.exec(button.title)[1];
 	});
 	let selectedButton = document.querySelector("#width-selector button.selected");
 	let nextButtonInCycle = (selectedButton == selectedButton.parentElement.lastChild) ? selectedButton.parentElement.firstChild : selectedButton.nextSibling;
 	nextButtonInCycle.accessKey = "'";
-	nextButtonInCycle.title += ` (accesskey: '\'')`;
+	nextButtonInCycle.title += ` [\']`;
 }
 function widthAdjustButtonClicked(event) {
 	let selectedWidth = event.target.getAttribute("data-name");
@@ -729,7 +729,7 @@ function injectThemeSelector() {
 			let selected = (name == currentTheme ? ' selected' : '');
 			let disabled = (name == currentTheme ? ' disabled' : '');
 			let accesskey = letter.charCodeAt(0) - 'A'.charCodeAt(0) + 1;
-			return `<button type='button' class='select-theme-${name}${selected}'${disabled} title="${desc} (accesskey: '${accesskey}')" data-theme-name="${name}" data-theme-description="${desc}" accesskey='${accesskey}' tabindex='-1'>${letter}</button>`;})) +
+			return `<button type='button' class='select-theme-${name}${selected}'${disabled} title="${desc} [${accesskey}]" data-theme-name="${name}" data-theme-description="${desc}" accesskey='${accesskey}' tabindex='-1'>${letter}</button>`;})) +
 		"</div>");
 	themeSelector.querySelectorAll("button").forEach(button => {
 		button.addActivateEvent(themeSelectButtonClicked);
@@ -931,7 +931,7 @@ function themeUnloadCallback_dark(toTheme = "") {
 /********************************************/
 
 function injectThemeTweaker() {
-	let themeTweakerToggle = addUIElement(`<div id='theme-tweaker-toggle'><button type='button' tabindex='-1' title="Customize appearance (accesskey: ';')" accesskey=';'>&#xf1de;</button></div>`);
+	let themeTweakerToggle = addUIElement(`<div id='theme-tweaker-toggle'><button type='button' tabindex='-1' title="Customize appearance [;]" accesskey=';'>&#xf1de;</button></div>`);
 	themeTweakerToggle.querySelector("button").addActivateEvent(themeTweakerToggleButtonClicked);
 	
 	let themeTweakerUI = addUIElement("<div id='theme-tweaker-ui' style='display: none;'>" + 
@@ -1282,9 +1282,9 @@ function updateThemeTweakerSampleText() {
 
 function injectQuickNavUI() {
 	let quickNavContainer = addUIElement("<div id='quick-nav-ui'>" +
-	`<a href='#top' title="Up to top (accesskey: ',')" accesskey=','>&#xf106;</a>
-	<a href='#comments' title="Comments (accesskey: '/')" accesskey='/'>&#xf036;</a>
-	<a href='#bottom-bar' title="Down to bottom (accesskey: '.')" accesskey='.'>&#xf107;</a>
+	`<a href='#top' title="Up to top [,]" accesskey=','>&#xf106;</a>
+	<a href='#comments' title="Comments [/]" accesskey='/'>&#xf036;</a>
+	<a href='#bottom-bar' title="Down to bottom [.]" accesskey='.'>&#xf107;</a>
 	` + "</div>");
 }
 
@@ -1367,9 +1367,9 @@ function toggleHNSDatePickerVisibility() {
 
 function injectTextSizeAdjustmentUIReal() {
 	let textSizeAdjustmentUIContainer = addUIElement("<div id='text-size-adjustment-ui'>"
-	+ `<button type='button' class='text-size-adjust-button decrease' title="Decrease text size (accesskey: '-')" tabindex='-1' accesskey='-'>&#xf068;</button>`
-	+ `<button type='button' class='text-size-adjust-button default' title="Reset to default text size (accesskey: '0')" tabindex='-1' accesskey='0'>A</button>`
-	+ `<button type='button' class='text-size-adjust-button increase' title="Increase text size (accesskey: '=')" tabindex='-1' accesskey='='>&#xf067;</button>`
+	+ `<button type='button' class='text-size-adjust-button decrease' title="Decrease text size [-]" tabindex='-1' accesskey='-'>&#xf068;</button>`
+	+ `<button type='button' class='text-size-adjust-button default' title="Reset to default text size [0]" tabindex='-1' accesskey='0'>A</button>`
+	+ `<button type='button' class='text-size-adjust-button increase' title="Increase text size [=]" tabindex='-1' accesskey='='>&#xf067;</button>`
 	+ "</div>");
 	
 	textSizeAdjustmentUIContainer.querySelectorAll("button").forEach(button => {
@@ -1397,8 +1397,8 @@ function injectCommentsViewModeSelector() {
 	let newHref = "href='" + location.pathname + location.search.replace("chrono=t","") + (currentModeThreaded ? ((location.search == "" ? "?" : "&") + "chrono=t") : "") + location.hash + "' ";
 
 	let commentsViewModeSelector = addUIElement("<div id='comments-view-mode-selector'>"
-	+ `<a class="threaded ${currentModeThreaded ? 'selected' : ''}" ${currentModeThreaded ? "" : newHref} ${currentModeThreaded ? "" : "accesskey='x' "} title='Comments threaded view'>&#xf038;</a>`
-	+ `<a class="chrono ${currentModeThreaded ? '' : 'selected'}" ${currentModeThreaded ? newHref : ""} ${currentModeThreaded ? "accesskey='x' " : ""} title='Comments chronological (flat) view'>&#xf017;</a>`
+	+ `<a class="threaded ${currentModeThreaded ? 'selected' : ''}" ${currentModeThreaded ? "" : newHref} ${currentModeThreaded ? "" : "accesskey='x' "} title='Comments threaded view${currentModeThreaded ? "" : " [x]"}'>&#xf038;</a>`
+	+ `<a class="chrono ${currentModeThreaded ? '' : 'selected'}" ${currentModeThreaded ? newHref : ""} ${currentModeThreaded ? "accesskey='x' " : ""} title='Comments chronological (flat) view${currentModeThreaded ? " [x]" : ""}'>&#xf017;</a>`
 	+ "</div>");
 	
 // 	commentsViewModeSelector.querySelectorAll("a").forEach(button => {
