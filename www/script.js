@@ -92,7 +92,7 @@ Element.prototype.removeClasses = function(classNames) {
 	this.className = elementClassNames;
 }
 Element.prototype.hasClass = function(className) {
-	return this.className.match(new RegExp("(^|\\s+)" + className + "(\\s+|$)"));
+	return (new RegExp("(^|\\s+)" + className + "(\\s+|$)")).test(this.className);
 }
 Element.prototype.toggleClass = function(className) {
 	if (this.hasClass(className))
@@ -121,14 +121,18 @@ Element.prototype.removeActivateEvent = function() {
 	this.removeEventListener("keyup", ael);
 }
 
-function addScrollListener(fn) {
+function addScrollListener(fn, name) {
 	let wrapper = (event) => {
 		window.requestAnimationFrame(() => {
-			fn();
+			fn(event);
 			document.addEventListener("scroll", wrapper, {once: true, passive: true});
 		});
 	}
 	document.addEventListener("scroll", wrapper, {once: true, passive: true});
+	
+	// Retain a reference to the scroll listener, if a name is provided.
+	if (typeof name != "undefined")
+		window[name] = wrapper;
 }
 
 /****************/
@@ -875,6 +879,15 @@ function themeLoadCallback_less(fromTheme = "") {
 		window.filtersTargetSelector = "body::before, #content > *:not(#secondary-bar):not(.post), #secondary-bar > *, .post > *:not(.top-post-meta), .top-post-meta > *:not(.date):not(.comment-count), .top-post-meta .date span, .top-post-meta .comment-count > span, #ui-elements-container > div:not(#theme-tweaker-ui), #theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container";
 		applyFilters(window.currentFilters);
 	}
+	
+	window.scrollState = {
+		"lastScrollTop":					window.pageYOffset || document.documentElement.scrollTop,
+		"unbrokenDownScrollDistance":		0,
+		"unbrokenUpScrollDistance":			0,
+		"siteNavUIToggleButton":			document.querySelector("#site-nav-ui-toggle button"),
+		"appearanceAdjustUIToggleButton":	document.querySelector("#appearance-adjust-ui-toggle button")
+	};
+	addScrollListener(updateSiteNavUIState, "updateSiteNavUIStateScrollListener");
 }
 
 // Hide the post-nav-ui toggle if none of the elements to be toggled are visible; 
@@ -887,13 +900,48 @@ function updatePostNavUIToggleVisibility() {
 	try { document.querySelector("#ui-elements-container #post-nav-ui-toggle").style.visibility = hidePostNavUIToggle ? "hidden" : ""; } catch (ex) { console.log(ex); }
 }
 
+// Hide the site nav and appearance adjust UIs on scroll down; show them on scroll up.
+// NOTE: The UIs are re-shown on scroll up ONLY if the user has them set to be 
+// engaged; if they're manually disengaged, they are not re-engaged by scroll.
+function updateSiteNavUIState(event) {
+	let newScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+	window.scrollState.unbrokenDownScrollDistance = (newScrollTop > window.scrollState.lastScrollTop) ? 
+														(window.scrollState.unbrokenDownScrollDistance + newScrollTop - window.scrollState.lastScrollTop) : 
+													 	0;
+	window.scrollState.unbrokenUpScrollDistance = (newScrollTop < window.scrollState.lastScrollTop) ?
+													(window.scrollState.unbrokenUpScrollDistance + window.scrollState.lastScrollTop - newScrollTop) :
+													0;
+	window.scrollState.lastScrollTop = newScrollTop;
+
+	// Hide site nav UI and appearance adjust UI when scrolling a full page down.
+	if (window.scrollState.unbrokenDownScrollDistance > window.innerHeight) {
+		if (window.scrollState.siteNavUIToggleButton.hasClass("engaged")) toggleSiteNavUI();
+		if (window.scrollState.appearanceAdjustUIToggleButton.hasClass("engaged")) toggleAppearanceAdjustUI();
+	}
+
+	// Show site nav UI when scrolling a full page up, or to the top.
+	if ((window.scrollState.unbrokenUpScrollDistance > window.innerHeight || 
+		 window.scrollState.lastScrollTop == 0) &&
+		(!window.scrollState.siteNavUIToggleButton.hasClass("engaged") && 
+		 window.localStorage.getItem("site-nav-ui-toggle-engaged") != "false")) toggleSiteNavUI();
+
+	// Show appearance adjust UI when scrolling to the top.
+	if ((window.scrollState.lastScrollTop == 0) &&
+		(!window.scrollState.appearanceAdjustUIToggleButton.hasClass("engaged") && 
+		 window.localStorage.getItem("appearance-adjust-ui-toggle-engaged") != "false")) toggleAppearanceAdjustUI();
+
+	console.log("Scrolling...");
+}
+
 function themeUnloadCallback_less(toTheme = "") {
 	removeSiteNavUIToggle();
 	if (!window.isMobile) {
 		removePostNavUIToggle();
 		removeAppearanceAdjustUIToggle();
 	}
-	window.removeEventListener('resize', updatePostNavUIToggleVisibility);		
+	window.removeEventListener('resize', updatePostNavUIToggleVisibility);
+	
+	document.removeEventListener("scroll", window["updateSiteNavUIStateScrollListener"]);
 	
 	removeElement("#theme-less-mobile-first-row-placeholder");
 
@@ -1550,7 +1598,8 @@ function removeSiteNavUIToggle() {
 }
 function siteNavUIToggleButtonClicked() {
 	toggleSiteNavUI();
-	window.localStorage.setItem("site-nav-ui-toggle-engaged", window.localStorage.getItem("site-nav-ui-toggle-engaged") != "true");
+	window.localStorage.setItem("site-nav-ui-toggle-engaged", event.target.hasClass("engaged"));
+//	window.localStorage.getItem("site-nav-ui-toggle-engaged") != "true");
 }
 function toggleSiteNavUI() {
 	document.querySelectorAll("#primary-bar, #secondary-bar, .page-toolbar, #site-nav-ui-toggle button").forEach(element => {
@@ -1610,7 +1659,8 @@ function removeAppearanceAdjustUIToggle() {
 }
 function appearanceAdjustUIToggleButtonClicked(event) {
 	toggleAppearanceAdjustUI();
-	window.localStorage.setItem("appearance-adjust-ui-toggle-engaged", window.localStorage.getItem("appearance-adjust-ui-toggle-engaged") != "true");
+	window.localStorage.setItem("appearance-adjust-ui-toggle-engaged", event.target.hasClass("engaged"));
+// 	window.localStorage.getItem("appearance-adjust-ui-toggle-engaged") != "true");
 }
 function toggleAppearanceAdjustUI() {
 	document.querySelectorAll("#comments-view-mode-selector, #theme-selector, #width-selector, #text-size-adjustment-ui, #theme-tweaker-toggle, #appearance-adjust-ui-toggle button").forEach(element => {
