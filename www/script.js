@@ -1986,7 +1986,7 @@ function commentsSortModeSelectButtonClicked(event) {
 	event.target.addClass("selected");
 	event.target.disabled = true;
 
-	sortComments(/sort-mode-(\S+)/.exec(event.target.className)[1]);
+	setTimeout(() => { sortComments(/sort-mode-(\S+)/.exec(event.target.className)[1]); });
 	setCommentsSortModeSelectButtonsAccesskey();
 }
 function setCommentsSortModeSelectButtonsAccesskey() {
