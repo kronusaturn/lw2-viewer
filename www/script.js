@@ -1934,9 +1934,10 @@ function sortComments(mode) {
 			comparator = (a,b) => commentKarmaValue(b) - commentKarmaValue(a);
 			break;
 		}
-		commentThread.innerHTML = Array.from(commentThread.childNodes).sort(comparator).map(commentItem => commentItem.outerHTML).join("");
+		Array.from(commentThread.childNodes).sort(comparator).forEach(commentItem => { commentThread.appendChild(commentItem); })
 	});
-	commentsContainer.querySelector("#comments-sort-mode-selector + .comment-thread").innerHTML = clonedCommentsContainer.querySelector("#comments-sort-mode-selector + .comment-thread").innerHTML;
+	removeElement(commentsContainer.lastChild);
+	commentsContainer.appendChild(clonedCommentsContainer.lastChild);
 
 	window.requestAnimationFrame(() => {
 		commentsContainer.removeClass("sorting");
