@@ -1105,7 +1105,6 @@ h1.listing + .post-meta .read-time {
 	content: ",";
 }
 #content.conversation-page .posting-controls {
-	margin: 0;
 	padding: 0 0 1em 0;
 }
 #content.conversation-page .post-meta-fields {
@@ -1114,10 +1113,7 @@ h1.listing + .post-meta .read-time {
 	flex-flow: row wrap;
 }
 #content.conversation-page textarea {
-	border-top-width: 1px;
-	margin-top: 0.25em;
-	min-height: 6em;
-	height: 6em;
+	margin-top: 0.375em;
 }
 #content.conversation-page h1.page-main-heading {
 	text-align: center;
@@ -1126,6 +1122,9 @@ h1.listing + .post-meta .read-time {
 }
 #content.conversation-page > ul.comment-thread:last-of-type {
 	margin-bottom: 2em;
+}
+#conversation-form {
+	padding: 0 1em 3em 1em;
 }
 #conversation-form input[type='text'],
 #conversation-form label {
@@ -1143,6 +1142,15 @@ h1.listing + .post-meta .read-time {
 }
 #conversation-form input[type='submit'] {
 	float: right;
+}
+#content.conversation-page #markdown-hints-checkbox ~ label {
+	white-space: nowrap;
+}
+#content.conversation-page .markdown-hints {
+	top: calc(100% + 2em);
+}
+#content.conversation-page {
+	overflow: visible;
 }
 
 /******************/

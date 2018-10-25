@@ -6,7 +6,7 @@
 {% else %}
 <h1 class="page-main-heading">Send private message</h1>
 {% endif %}
-<div class="posting-controls">
+<div class="posting-controls with-markdown-editor">
 <form method="post" id="conversation-form" class="aligned-form">
 	{% if not conversation %}<div class="post-meta-fields">
 		<label for="to">To:</label>
@@ -16,7 +16,7 @@
 	</div>{% endif %}
 	<div class="textarea-container">
 		<textarea name="text" onkeyup="enableBeforeUnload();" onchange="enableBeforeUnload();">{{ markdown-source }}</textarea>
-		<span class="markdown-reference-link">You <em>cannot</em> use Markdown here—plain text only.</span>
+		<span class="markdown-reference-link">You can use <a href="http://commonmark.org/help/" target="_blank">Markdown</a> here.</span>
 		<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-help-button">Help</button>
 		<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-exit-button">Exit</button>
 	</div>

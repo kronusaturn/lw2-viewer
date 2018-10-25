@@ -203,46 +203,42 @@ Element.prototype.addTextareaFeatures = function() {
 	textarea.addEventListener("input", OnInputExpandTextarea, false);
 	textarea.addEventListener("input", OnInputRemoveMarkdownHints, false);
 	textarea.addEventListener("keyup", (event) => { event.stopPropagation(); });
-	
-	if (!textarea.closest("#content").hasClass("conversation-page")) {
-		textarea.insertAdjacentHTML("beforebegin", "<div class='guiedit-buttons-container'></div>");
-		var buttons_container = textarea.parentElement.querySelector(".guiedit-buttons-container");
-		for (var button of guiEditButtons) {
-			buttons_container.insertAdjacentHTML("beforeend", 
-				"<button type='button' class='guiedit guiedit-" 
-				+ button[0]
-				+ "' tabindex='-1' title='"
-				+ button[1] + ((button[2] != "") ? (" [" + button[2] + "]") : "")
-				+ "' data-tooltip='" + button[1]
-				+ "' accesskey='"
-				+ button[2]
-				+ "' onclick='insMarkup(event,"
-				+ ((typeof button[3] == 'function') ?
-					button[3].name : 
-					("\"" + button[3]  + "\",\"" + button[4] + "\",\"" + button[5] + "\""))
-				+ ");'><div>"
-				+ button[6]
-				+ "</div></button>"
-			);
-		}
-	
-		var markdown_hints = "<input type='checkbox' id='markdown-hints-checkbox'><label for='markdown-hints-checkbox'></label>";
-		markdown_hints += "<div class='markdown-hints'>";
-		markdown_hints += "<div class='markdown-hints-row'><span style='font-weight: bold;'>Bold</span><code>**Bold**</code></div>";
-		markdown_hints += "<div class='markdown-hints-row'><span style='font-style: italic;'>Italic</span><code>*Italic*</code></div>";
-		markdown_hints += "<div class='markdown-hints-row'><span><a href=#>Link</a></span><code>[Link](http://example.com)</code></div>";
-		markdown_hints += "<div class='markdown-hints-row'><span>Heading 1</span><code># Heading 1</code></div>";
-		markdown_hints += "<div class='markdown-hints-row'><span>Heading 2</span><code>## Heading 1</code></div>";
-		markdown_hints += "<div class='markdown-hints-row'><span>Heading 3</span><code>### Heading 1</code></div>";
-		markdown_hints += "<div class='markdown-hints-row'><span>Blockquote</span><code>&gt; Blockquote</code></div>";
-		markdown_hints += "</div>";
-		textarea.parentElement.querySelector("span").insertAdjacentHTML("afterend", markdown_hints);
-	} else {
-		var markdown_hints = "<div class='markdown-hints'>";
-		markdown_hints += "You <em>cannot</em> use Markdown here—plain text only.";
-		markdown_hints += "</div>";
-		textarea.parentElement.querySelector("span").insertAdjacentHTML("afterend", markdown_hints);
+
+	textarea.insertAdjacentHTML("beforebegin", "<div class='guiedit-buttons-container'></div>");
+	var buttons_container = textarea.parentElement.querySelector(".guiedit-buttons-container");
+	for (var button of guiEditButtons) {
+		let [ name, desc, accesskey, m_before_or_func, m_after, placeholder, icon ] = button;
+		buttons_container.insertAdjacentHTML("beforeend", 
+			"<button type='button' class='guiedit guiedit-" 
+			+ name
+			+ "' tabindex='-1' title='"
+			+ desc + ((accesskey != "") ? (" [" + accesskey + "]") : "")
+			+ "' data-tooltip='" + desc
+			+ "' ["
+			+ accesskey
+			+ "] onclick='insMarkup(event,"
+			+ ((typeof m_before_or_func == 'function') ?
+				m_before_or_func.name : 
+				("\"" + m_before_or_func  + "\",\"" + m_after + "\",\"" + placeholder + "\""))
+			+ ");'><div>"
+			+ icon
+			+ "</div></button>"
+		);
 	}
+
+	var markdown_hints = 
+	`<input type='checkbox' id='markdown-hints-checkbox'>
+	<label for='markdown-hints-checkbox'></label>
+	<div class='markdown-hints'>` + 
+	[	"<span style='font-weight: bold;'>Bold</span><code>**Bold**</code>", 
+		"<span style='font-style: italic;'>Italic</span><code>*Italic*</code>",
+		"<span><a href=#>Link</a></span><code>[Link](http://example.com)</code>",
+		"<span>Heading 1</span><code># Heading 1</code>",
+		"<span>Heading 2</span><code>## Heading 1</code>",
+		"<span>Heading 3</span><code>### Heading 1</code>",
+		"<span>Blockquote</span><code>&gt; Blockquote</code>" ].map(row => "<div class='markdown-hints-row'>" + row + "</div>").join("") +
+	`</div>`;
+	textarea.parentElement.querySelector("span").insertAdjacentHTML("afterend", markdown_hints);
 	
 	let guiEditMobileHelpButton = document.querySelector(".guiedit-mobile-help-button");
 	if (guiEditMobileHelpButton) {
