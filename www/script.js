@@ -1856,8 +1856,10 @@ var CommentSortMode = Object.freeze({
 });
 function sortComments(mode) {
 	let commentsContainer = document.querySelector("#comments");
+
 	commentsContainer.removeClass(/(sorted-\S+)/.exec(commentsContainer.className)[1]);
-	
+	commentsContainer.addClass("sorting");
+
 	let clonedCommentsContainer = commentsContainer.cloneNode(true);
 	clonedCommentsContainer.querySelectorAll(".comment-thread").forEach(commentThread => {
 		var comparator;
@@ -1878,9 +1880,12 @@ function sortComments(mode) {
 		}
 		commentThread.innerHTML = Array.from(commentThread.childNodes).sort(comparator).map(commentItem => commentItem.outerHTML).join("");
 	});
-	
 	commentsContainer.querySelector("#comments-sort-mode-selector + .comment-thread").innerHTML = clonedCommentsContainer.querySelector("#comments-sort-mode-selector + .comment-thread").innerHTML;
-	commentsContainer.addClass("sorted-" + mode);
+
+	window.requestAnimationFrame(() => {
+		commentsContainer.removeClass("sorting");
+		commentsContainer.addClass("sorted-" + mode);
+	});
 }
 function commentKarmaValue(commentOrSelector) {
 	if (typeof commentOrSelector == "string") commentOrSelector = document.querySelector(commentOrSelector);
@@ -1898,7 +1903,7 @@ function commentVoteCount(commentOrSelector) {
 function injectCommentsSortModeSelector() {
 	let topCommentThread = document.querySelector("#comments > .comment-thread");
 	if (topCommentThread == null) return;
-	
+
 	let commentsSortModeSelectorHTML = "<div id='comments-sort-mode-selector' class='sublevel-nav sort'>" + 
 		Object.values(CommentSortMode).map(sortMode => `<button type='button' class='sublevel-item sort-mode-${sortMode}' tabindex='-1' title='Sort by ${sortMode}'>${sortMode}</button>`).join("") +  
 		"</div>";
