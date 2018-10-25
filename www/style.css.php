@@ -1869,7 +1869,8 @@ a.comment-parent-link:hover::after {
 	pointer-events: auto;
 }
 @media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
-	#content.compact > .comment-thread .comment-item:hover {
+	#content.compact:not(:focus-within) > .comment-thread .comment-item:hover,
+	#content.compact > .comment-thread .comment-item.expanded {
 		overflow: visible;
 		pointer-events: auto;
 		z-index: 10;
