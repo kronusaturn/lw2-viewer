@@ -1085,11 +1085,13 @@ a.comment-parent-link:hover::before {
 }
 
 @media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
-	#content.compact > .comment-thread .comment-item:hover .comment {
+	#content.compact > .comment-thread .comment-item:hover .comment,
+	#content.compact > .comment-thread .comment-item.expanded .comment {
 		background-color: #fff;
 		outline: 3px solid #888;
 	}
-	#content.compact > .comment-thread .comment-item:hover .comment::before {
+	#content.compact > .comment-thread .comment-item:hover .comment::before,
+	#content.compact > .comment-thread .comment-item.expanded .comment::before {
 		background-color: #fff;
 		box-shadow: 
 			0 0  3px #fff,

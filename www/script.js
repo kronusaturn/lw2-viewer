@@ -2390,7 +2390,8 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 				return;
 			}
 
-			try { document.activeElement.closest(".comment-item").removeClass("comment-item-highlight"); } catch (ex) { console.log(ex); }
+			try { document.activeElement.closest(".comment-item").removeClasses([ "expanded", "comment-item-highlight" ]); }
+			catch (ex) { console.log(ex); }
 
 			var indexOfActiveComment = -1;
 			for (i = 0; i < comments.length; i++) {
@@ -2401,13 +2402,13 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 				}
 			}
 			let indexOfNextComment = (event.key == "." ? ++indexOfActiveComment : (--indexOfActiveComment + comments.length)) % comments.length;
-			comments[indexOfNextComment].closest(".comment-item").addClass("comment-item-highlight");
+			comments[indexOfNextComment].closest(".comment-item").addClasses([ "expanded", "comment-item-highlight" ]);
 			comments[indexOfNextComment].closest(".comment-item").scrollIntoView();
 			comments[indexOfNextComment].focus();
 		});
 		document.querySelectorAll("#content > .comment-thread .comment-meta a.date, #content > .comment-thread .comment-meta a.permalink").forEach(link => {
 			link.addEventListener("blur", (event) => {
-				event.target.closest(".comment-item").removeClass("comment-item-highlight");
+				event.target.closest(".comment-item").removeClasses([ "expanded", "comment-item-highlight" ]);
 			});
 		});
 	}
