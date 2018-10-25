@@ -884,7 +884,7 @@ function updatePostNavUIToggleVisibility() {
 	document.querySelectorAll("#ui-elements-container #quick-nav-ui a, #ui-elements-container #new-comment-nav-ui").forEach(element => {
 		if (window.getComputedStyle(element).visibility == "visible") hidePostNavUIToggle = false;
 	});
-	document.querySelector("#ui-elements-container #post-nav-ui-toggle").style.visibility = hidePostNavUIToggle ? "hidden" : "";
+	try { document.querySelector("#ui-elements-container #post-nav-ui-toggle").style.visibility = hidePostNavUIToggle ? "hidden" : ""; } catch (ex) { console.log(ex); }
 }
 
 function themeUnloadCallback_less(toTheme = "") {
