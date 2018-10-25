@@ -4916,11 +4916,15 @@ body {
 		display: block;
 		left: 16px;
 		top: calc(100% - 316px);
+		opacity: 1.0;
 	}
 	#theme-selector::after {
-		max-height: 1000px;
+		top: -50px;
+		height: calc(100% + 60px);
+		max-height: 300px;
 		transition:
 			max-height 0.2s ease;
+		z-index: 1;
 	}
 	#theme-selector.engaged::after {
 		max-height: 0px;
@@ -4932,9 +4936,9 @@ body {
 		top: calc(100% - 48px);
 	}
 	#width-selector::after {
-		max-width: 1000px;
+		max-width: 100px;
 		transition:
-			max-width 0.2s ease;
+			max-width 0.15s ease;
 	}
 	#width-selector.engaged::after {
 		max-width: 0px;
