@@ -894,7 +894,8 @@ body {
 /*=============================*/
 
 #comments-view-mode-selector a {
-	color: #777;
+	color: #acd2af;
+	opacity: 0.5;
 }
 
 /*==========*/
