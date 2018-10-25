@@ -879,12 +879,15 @@ function themeLoadCallback_less(fromTheme = "") {
 		window.filtersTargetSelector = "body::before, #content > *:not(#secondary-bar):not(.post), #secondary-bar > *, .post > *:not(.top-post-meta), .top-post-meta > *:not(.date):not(.comment-count), .top-post-meta .date span, .top-post-meta .comment-count > span, #ui-elements-container > div:not(#theme-tweaker-ui), #theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container";
 		applyFilters(window.currentFilters);
 	}
-	
+
+	// We pre-query the relevant elements, so we don't have to run querySelector
+	// on every firing of the scroll listener.
 	window.scrollState = {
 		"lastScrollTop":					window.pageYOffset || document.documentElement.scrollTop,
 		"unbrokenDownScrollDistance":		0,
 		"unbrokenUpScrollDistance":			0,
 		"siteNavUIToggleButton":			document.querySelector("#site-nav-ui-toggle button"),
+		"siteNavUIElements":				document.querySelectorAll("#primary-bar, #secondary-bar, .page-toolbar"),
 		"appearanceAdjustUIToggleButton":	document.querySelector("#appearance-adjust-ui-toggle button")
 	};
 	addScrollListener(updateSiteNavUIState, "updateSiteNavUIStateScrollListener");
@@ -918,6 +921,13 @@ function updateSiteNavUIState(event) {
 		if (window.scrollState.siteNavUIToggleButton.hasClass("engaged")) toggleSiteNavUI();
 		if (window.scrollState.appearanceAdjustUIToggleButton.hasClass("engaged")) toggleAppearanceAdjustUI();
 	}
+	
+	// On mobile, make site nav UI translucent on ANY scroll down.
+	if (window.isMobile)
+		window.scrollState.siteNavUIElements.forEach(element => {
+			if (window.scrollState.unbrokenDownScrollDistance > 0) element.addClass("translucent-on-scroll");
+			else element.removeClass("translucent-on-scroll");
+		});
 
 	// Show site nav UI when scrolling a full page up, or to the top.
 	if ((window.scrollState.unbrokenUpScrollDistance > window.innerHeight || 
@@ -925,12 +935,11 @@ function updateSiteNavUIState(event) {
 		(!window.scrollState.siteNavUIToggleButton.hasClass("engaged") && 
 		 window.localStorage.getItem("site-nav-ui-toggle-engaged") != "false")) toggleSiteNavUI();
 
-	// Show appearance adjust UI when scrolling to the top.
-	if ((window.scrollState.lastScrollTop == 0) &&
-		(!window.scrollState.appearanceAdjustUIToggleButton.hasClass("engaged") && 
-		 window.localStorage.getItem("appearance-adjust-ui-toggle-engaged") != "false")) toggleAppearanceAdjustUI();
-
-	console.log("Scrolling...");
+	// On desktop, show appearance adjust UI when scrolling to the top.
+	if ((!window.isMobile) && 
+		(window.scrollState.lastScrollTop == 0) &&
+		(!window.scrollState.appearanceAdjustUIToggleButton.hasClass("engaged")) && 
+		(window.localStorage.getItem("appearance-adjust-ui-toggle-engaged") != "false")) toggleAppearanceAdjustUI();
 }
 
 function themeUnloadCallback_less(toTheme = "") {
@@ -1604,6 +1613,7 @@ function siteNavUIToggleButtonClicked() {
 function toggleSiteNavUI() {
 	document.querySelectorAll("#primary-bar, #secondary-bar, .page-toolbar, #site-nav-ui-toggle button").forEach(element => {
 		element.toggleClass("engaged");
+		element.removeClass("translucent-on-scroll");
 	});
 }
 

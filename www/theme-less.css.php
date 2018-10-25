@@ -2586,7 +2586,9 @@ strong, b {
 			visibility: hidden;
 			transition:
 				visibility 0.2s ease,
-				width 0.2s ease;
+				width 0.2s ease,
+				opacity 0.2s ease,
+				filter 0.2s ease;
 		}
 		#primary-bar.engaged {
 			width: 100%;
@@ -2596,7 +2598,9 @@ strong, b {
 		#secondary-bar #nav-item-archive,
 		#secondary-bar #nav-item-about {
 			opacity: 0.0;
-			transition: opacity 0.3s ease;
+			transition:
+				opacity 0.3s ease,
+				filter 0.2s ease;
 		}
 		#secondary-bar.engaged #nav-item-archive,
 		#secondary-bar.engaged #nav-item-about {
@@ -2613,6 +2617,15 @@ strong, b {
 			left: 72px;
 		}
 
+		#primary-bar.engaged.translucent-on-scroll,
+		#secondary-bar.engaged.translucent-on-scroll #nav-item-archive,
+		#secondary-bar.engaged.translucent-on-scroll #nav-item-about,
+		.page-toolbar.engaged.translucent-on-scroll {
+			opacity: 0.6;
+			filter: blur(2px);
+			pointer-events: none;
+		}
+
 		.page-toolbar {
 			position: fixed;
 			height: unset;
@@ -2620,7 +2633,10 @@ strong, b {
 			z-index: 4;
 			right: 100%;
 			top: 80px;
-			transition: right 0.2s ease;
+			transition:
+				right 0.2s ease,
+				opacity 0.2s ease,
+				filter 0.2s ease;
 		}
 		.page-toolbar.engaged {
 			right: 0;
