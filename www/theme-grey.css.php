@@ -516,7 +516,7 @@ h1.listing {
 	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
 	font-size: 1.5rem;
 }
-h1.listing a[href^='/'] {
+h1.listing a[href^='/posts'] {
 	font-weight: normal;
 }
 h1.listing a[href^="http"] {
@@ -542,6 +542,17 @@ h1.listing a[href^="http"] {
 			 0 0 2px #fff,
 			 0 0 3px #00c;
 	}
+}
+
+h1.listing .edit-post-link {
+	padding: 5px 3px 36px 0.5em;
+	top: 0;
+	right: 0;
+	background-color: #eee;
+}
+h1.listing .edit-post-link:hover {
+	text-decoration: none;
+	background-color: #eee;
 }
 
 /*===================*/

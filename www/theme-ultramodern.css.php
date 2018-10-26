@@ -453,7 +453,7 @@ h1.listing {
 	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
 	font-size: 1.5rem;
 }
-h1.listing a[href^='/'] {
+h1.listing a[href^='/posts'] {
 	font-family: <?php echo $text_font; ?>;
 	font-weight: <?php global $platform; echo ($platform == 'Mac' ? '100' : '200'); ?>;
 	text-shadow: 
@@ -491,6 +491,17 @@ h1.listing a[href^="http"] {
 			 0 0 2px #fff,
 			 0 0 3px #00c;
 	}
+}
+
+h1.listing .edit-post-link {
+	padding: 10px 3px 30px 0.5em;
+	top: 0;
+	right: -1.5em;
+	background-color: #888;
+}
+h1.listing .edit-post-link:hover {
+	text-decoration: none;
+	background-color: #888;
 }
 
 /*===================*/
