@@ -1013,9 +1013,6 @@ h1.listing a[href^="http"] {
 h1.listing .edit-post-link {
 	position: absolute;
 	margin: 0;
-	padding: 0 0 0 0.5em;
-	right: 3px;
-	background-color: #fff;
 }
 
 .listing-message {

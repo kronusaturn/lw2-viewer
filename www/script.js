@@ -2321,7 +2321,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		document.querySelectorAll("h1.listing").forEach(listing => {
 			if (listing.nextSibling.querySelector(".author").hasClass("own-user-author"))
 				listing.insertAdjacentHTML("beforeend", 
-					"<a class='edit-post-link' href='edit-post?post-id=" + 
+					"<a class='edit-post-link button' href='/edit-post?post-id=" + 
 					/posts\/(.+?)\//.exec(listing.querySelector("a[href^='/']").pathname)[1] + 
 					"'></a>");
 		});
@@ -2351,7 +2351,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	});
 	
 	// Add event listener for . , / (for navigating listings pages).
-	let listings = document.querySelectorAll("h1.listing a:last-of-type");
+	let listings = document.querySelectorAll("h1.listing a[href^='/posts']");
 	if (listings.length > 0) {
 		document.addEventListener("keyup", (event) => { 
 			if (event.ctrlKey || event.shiftKey || event.altKey || !(event.key == "," || event.key == "." || event.key == '/')) return;
@@ -2366,13 +2366,15 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	
 			var indexOfActiveListing = -1;
 			for (i = 0; i < listings.length; i++) {
-				if (listings[i] === document.activeElement.parentElement.querySelector("a[href^='/']")) {
+				if (document.activeElement.parentElement.hasClass("listing") && 
+					listings[i] === document.activeElement.parentElement.querySelector("a[href^='/posts']")) {
 					indexOfActiveListing = i;
 					break;
 				}
 			}
-			let indexOfNextListing = (event.key == "." ? ++indexOfActiveListing : (--indexOfActiveListing + listings.length)) % listings.length;
-			listings[indexOfNextListing].focus();
+			let indexOfNextListing = (event.key == "." ? ++indexOfActiveListing : (--indexOfActiveListing + listings.length + 1)) % (listings.length + 1);
+			if (indexOfNextListing < listings.length) listings[indexOfNextListing].focus();
+			else document.activeElement.blur();
 		});
 	}
 	// Add event listener for / (to focus the link on link posts).
@@ -2409,10 +2411,14 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 					break;
 				}
 			}
-			let indexOfNextComment = (event.key == "." ? ++indexOfActiveComment : (--indexOfActiveComment + comments.length)) % comments.length;
-			comments[indexOfNextComment].closest(".comment-item").addClasses([ "expanded", "comment-item-highlight" ]);
-			comments[indexOfNextComment].closest(".comment-item").scrollIntoView();
-			comments[indexOfNextComment].focus();
+			let indexOfNextComment = (event.key == "." ? ++indexOfActiveComment : (--indexOfActiveComment + comments.length + 1)) % (comments.length + 1);
+			if (indexOfNextComment < comments.length) {
+				comments[indexOfNextComment].closest(".comment-item").addClasses([ "expanded", "comment-item-highlight" ]);
+				comments[indexOfNextComment].closest(".comment-item").scrollIntoView();
+				comments[indexOfNextComment].focus();
+			} else {
+				document.activeElement.blur();
+			}
 		});
 		document.querySelectorAll("#content > .comment-thread .comment-meta a.date, #content > .comment-thread .comment-meta a.permalink").forEach(link => {
 			link.addEventListener("blur", (event) => {
