@@ -542,7 +542,7 @@ h1.listing a[href^="http"] {
 	top: 6px;
 	color: #888;
 }
-h1.listing a[href^='/'] {
+h1.listing a[href^='/posts'] {
 	font-family: <?php echo $text_font; ?>;
 	text-decoration: none;
 	color: #690010;
@@ -552,7 +552,7 @@ h1.listing a[href^='/'] {
 }
 
 @media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
-	h1.listing a[href^='/'] {
+	h1.listing a[href^='/posts'] {
 		max-width: calc(100% - 60px);
 		padding: 2px 2px 1px 1px;
 	}
@@ -580,6 +580,17 @@ h1.listing a[href^='/'] {
 			 0 0 2px #fff,
 			 0 0 3px #00c;
 	}
+}
+
+h1.listing .edit-post-link {
+	padding: 5px 3px 36px 0.5em;
+	top: 0;
+	right: 0;
+	background-color: #fff;
+}
+h1.listing .edit-post-link:hover {
+	text-decoration: none;
+	background-color: #fff;
 }
 
 /*===================*/

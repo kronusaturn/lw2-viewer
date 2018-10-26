@@ -456,12 +456,12 @@ h1.listing {
 	max-height: unset;
 }
 
-h1.listing a {
+h1.listing a[href^='/posts'] {
 	color: #538d4d;
 	white-space: unset;
 	display: inline;
 }
-h1.listing a:visited {
+h1.listing a[href^='/posts']:visited {
 	color: #5a5a5b;
 }
 h1.listing a[href^="http"] {
@@ -495,6 +495,17 @@ h1.listing a[href^="http"] {
 			 0 0 3px #00c;
 		border: none;
 	}
+}
+
+h1.listing .edit-post-link {
+	padding: 5px 3px 12px 0.5em;
+	top: 0;
+	right: 0;
+	background-color: #f7f7f8;
+}
+h1.listing .edit-post-link:hover {
+	text-decoration: none;
+	background-color: #f7f7f8;
 }
 
 /*===================*/
@@ -1370,9 +1381,15 @@ div.comment-child-links a {
 	color: #f00;
 }
 
-.edit-post-link,
-.edit-post-link:visited {
+h1.listing .edit-post-link,
+h1.listing .edit-post-link:visited,
+.post-controls .edit-post-link,
+.post-controls .edit-post-link:visited {
 	color: #090;
+}
+h1.listing .edit-post-link:hover,
+.post-controls .edit-post-link:hover {
+	color: #d00;
 }
 
 .posting-controls textarea {

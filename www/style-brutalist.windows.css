@@ -4679,6 +4679,17 @@ h1.listing a[href^="http"] {
 	}
 }
 
+h1.listing .edit-post-link {
+	padding: 5px 3px 36px 0.5em;
+	top: 0;
+	right: 0;
+	background-color: #fff;
+}
+h1.listing .edit-post-link:hover {
+	text-decoration: none;
+	background-color: #fff;
+}
+
 /*===================*/
 /* TOP PAGINATION UI */
 /*===================*/

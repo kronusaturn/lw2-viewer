@@ -5387,8 +5387,8 @@ h1.listing .edit-post-link:visited,
 .post-controls .edit-post-link:visited {
 	color: #090;
 }
-h1.listing .edit-post-link:visited,
-.post-controls .edit-post-link:visited {
+h1.listing .edit-post-link:hover,
+.post-controls .edit-post-link:hover {
 	color: #d00;
 }
 
