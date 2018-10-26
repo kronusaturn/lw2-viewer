@@ -2315,6 +2315,17 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 			commentParentLink.addEventListener("mouseout", (event) => { parentCI.className = className; }, {once: true});
 		});
 	});
+	
+	// Add in-listing edit post links.
+	if (loggedInUserId) {
+		document.querySelectorAll("h1.listing").forEach(listing => {
+			if (listing.nextSibling.querySelector(".author").hasClass("own-user-author"))
+				listing.insertAdjacentHTML("beforeend", 
+					"<a class='edit-post-link' href='edit-post?post-id=" + 
+					/posts\/(.+?)\//.exec(listing.querySelector("a[href^='/']").pathname)[1] + 
+					"'></a>");
+		});
+	}
 
 	// Add event listeners for Escape and Enter, for the theme tweaker.
 	document.addEventListener("keyup", (event) => {

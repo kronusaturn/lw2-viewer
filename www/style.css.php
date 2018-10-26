@@ -951,7 +951,7 @@ h1.listing {
 h1.listing a {
 	position: relative;
 }
-h1.listing a:nth-of-type(2) {
+h1.listing a[href^='http'] + a {
 	margin-left: 0.25em;
 }
 h1.listing a[href^="http"] {
@@ -976,7 +976,7 @@ h1.listing a[href^="http"] {
 		z-index: 1;
 		padding: 0 0 1px 1px;
 	}
-	h1.listing a:nth-of-type(2) {
+	h1.listing a[href^='http'] + a {
 		max-width: calc(100% - 33px);
 	}
 	h1.listing a:hover,
@@ -996,7 +996,7 @@ h1.listing a[href^="http"] {
 
 <?php $margin_of_hover_error = '10px'; ?>
 
-	h1.listing a:hover::before {
+	h1.listing a:not(.edit-post-link):hover::before {
 		content: "";
 		position: absolute;
 		top: -<?php echo $margin_of_hover_error; ?>;
@@ -1008,6 +1008,14 @@ h1.listing a[href^="http"] {
 	h1.listing a[href^="http"]:hover {
 		text-decoration: none;
 	}
+}
+
+h1.listing .edit-post-link {
+	position: absolute;
+	margin: 0;
+	padding: 0 0 0 0.5em;
+	right: 3px;
+	background-color: #fff;
 }
 
 .listing-message {
