@@ -318,7 +318,10 @@ body {
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button:focus {
 		color: #d00;
-		text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+		text-shadow:
+			0 0 1px #fff,
+			0 0 3px #fff,
+			0 0 5px #fff;
 	}
 }
 

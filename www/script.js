@@ -284,7 +284,7 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 	textarea.focus();
 }
 
-Element.prototype.injectCommentButtons = function() {
+Element.prototype.constructCommentControls = function() {
 	let commentControls = this;
 	commentControls.innerHTML = "";
 	let replyButton = document.createElement("button");
@@ -307,6 +307,11 @@ Element.prototype.injectCommentButtons = function() {
 	commentControls.appendChild(replyButton);
 	replyButton.tabIndex = '-1';
 	replyButton.addActivateEvent(window.showReplyForm);
+
+	// Replicate karma controls at the bottom of comments.
+	let karmaControls = commentControls.parentElement.querySelector(".comment-meta .karma");
+	let karmaControlsCloned = karmaControls.cloneNode(true);
+	commentControls.appendChild(karmaControlsCloned);
 }
 
 function showCommentEditForm(event) {
@@ -320,8 +325,8 @@ function showCommentEditForm(event) {
 
 function showReplyForm(event) {
 	let commentControls = event.target.parentElement;
-	document.querySelectorAll(".comment-controls").forEach(commentControls => {
-		commentControls.injectCommentButtons();
+	document.querySelectorAll("textarea").forEach(textarea => {
+		textarea.closest(".comment-controls").constructCommentControls();
 	});
 
 	commentControls.injectReplyForm();
@@ -330,7 +335,7 @@ function showReplyForm(event) {
 function hideReplyForm(event) {
 	try { event.target.parentElement.parentElement.querySelector(".comment-body").removeAttribute("style"); }
 	catch (ex) { console.log(ex); }
-	event.target.parentElement.injectCommentButtons();
+	event.target.parentElement.constructCommentControls();
 }
 
 function OnInputExpandTextarea() {
@@ -2157,21 +2162,6 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	}
 	
 	if (loggedInUserId) {
-		var comments_container = document.querySelector("#comments");
-		if (comments_container) {
-			// Add reply buttons.
-			comments_container.querySelectorAll(".comment").forEach(comment => {
-				comment.insertAdjacentHTML("afterend", "<div class='comment-controls posting-controls'></div>");
-				comment.parentElement.querySelector(".comment-controls").injectCommentButtons();
-			});
-		
-			// Add top-level new comment form.
-			if (!document.querySelector(".individual-thread-page")) {
-				comments_container.insertAdjacentHTML("afterbegin", "<div class='comment-controls posting-controls'></div>");
-				comments_container.querySelector(".comment-controls").injectCommentButtons();
-			}
-		}
-
 		// Add upvote/downvote buttons.
 		if (typeof postVote != 'undefined') {
 			document.querySelectorAll(".post-meta .karma-value").forEach(karmaValue => {
@@ -2183,12 +2173,6 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 				let commentID = karmaValue.getCommentId();
 				addVoteButtons(karmaValue, commentVotes[commentID], 'Comments');
 				karmaValue.parentElement.addClass("active-controls");
-			});
-			// Replicate karma controls at the bottom of comments.
-			document.querySelectorAll(".comment-meta .karma").forEach(karmaControls => {
-				let karmaControlsCloned = karmaControls.cloneNode(true);
-				let commentControls = karmaControls.closest(".comment").nextSibling;
-				commentControls.appendChild(karmaControlsCloned);
 			});
 		}
 		document.querySelector("head").insertAdjacentHTML("beforeend","<style id='vote-buttons'>" + 
@@ -2204,6 +2188,21 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		document.querySelectorAll("button.vote").forEach(voteButton => {
 			voteButton.addActivateEvent(voteButtonClicked);
 		});
+
+		var commentsContainer = document.querySelector("#comments");
+		if (commentsContainer) {
+			// Add reply buttons.
+			commentsContainer.querySelectorAll(".comment").forEach(comment => {
+				comment.insertAdjacentHTML("afterend", "<div class='comment-controls posting-controls'></div>");
+				comment.parentElement.querySelector(".comment-controls").constructCommentControls();
+			});
+
+			// Add top-level new comment form.
+			if (!document.querySelector(".individual-thread-page")) {
+				commentsContainer.insertAdjacentHTML("afterbegin", "<div class='comment-controls posting-controls'></div>");
+				commentsContainer.querySelector(".comment-controls").constructCommentControls();
+			}
+		}
 
 		window.needHashRealignment = true;
 	}
