@@ -2107,6 +2107,13 @@ a.comment-parent-link:hover::after {
 
 .post-controls {
 	text-align: right;
+	margin: 0.75em 0 0 0;
+	grid-row: 3;
+	align-self: start;
+	justify-self: end;
+}
+.post {
+	grid-row: 3;
 }
 .edit-post-link {
 	display: inline-block;
@@ -6229,6 +6236,13 @@ div.comment-child-links a {
 	color: #f00;
 }
 
+.post-controls {
+	margin: 3em 2.5em 0 0;
+	grid-row: 2;
+}
+.post {
+	grid-row: 2;
+}
 .edit-post-link,
 .edit-post-link:visited {
 	color: #090;

@@ -1274,6 +1274,9 @@ a.comment-parent-link:hover::before {
 	color: #f00;
 }
 
+.post-controls {
+	margin: 0.5em -0.75em 0 0;
+}
 .edit-post-link,
 .edit-post-link:visited {
 	color: #090;

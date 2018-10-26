@@ -2107,6 +2107,13 @@ a.comment-parent-link:hover::after {
 
 .post-controls {
 	text-align: right;
+	margin: 0.75em 0 0 0;
+	grid-row: 3;
+	align-self: start;
+	justify-self: end;
+}
+.post {
+	grid-row: 3;
 }
 .edit-post-link {
 	display: inline-block;
@@ -5517,6 +5524,9 @@ a.comment-parent-link:hover::before {
 	color: #f00;
 }
 
+.post-controls {
+	margin: 0.5em -0.75em 0 0;
+}
 .edit-post-link,
 .edit-post-link:visited {
 	color: #090;

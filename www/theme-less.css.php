@@ -1922,6 +1922,13 @@ div.comment-child-links a {
 	color: #f00;
 }
 
+.post-controls {
+	margin: 3em 2.5em 0 0;
+	grid-row: 2;
+}
+.post {
+	grid-row: 2;
+}
 .edit-post-link,
 .edit-post-link:visited {
 	color: #090;
