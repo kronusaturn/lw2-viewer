@@ -2272,7 +2272,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	injectCommentsListModeSelector();
 
 	// Add the comments view selector widget (threaded vs. chrono).
-	injectCommentsViewModeSelector();
+// 	injectCommentsViewModeSelector();
 	
 	// Add the comments sort mode selector (top, hot, new, old).
 	injectCommentsSortModeSelector();
