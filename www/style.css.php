@@ -2593,6 +2593,8 @@ input,
 button,
 textarea {
 	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
 }
 
 input {
