@@ -166,7 +166,7 @@
               (pretty-number (or comment-count 0) "comment")
               (clean-lw-link page-url)))
     (post-section-to-html out-stream post)
-    (format out-stream "</div><div class=\"post-body\">")
+    (format out-stream "</div><div class=\"post-body hyphenate\">")
     (if url (format out-stream "<p><a href=\"~A\" class=\"link-post-link\">Link post</a></p>" (encode-entities (string-trim " " url))))
     (write-sequence (clean-html* (or html-body "") :with-toc t :post-id post-id) out-stream)
     (format out-stream "</div></div>")))
@@ -226,7 +226,7 @@
                         (format out-stream "~@[<div class=\"comment-child-links\">Replies: ~:{<a href=\"#comment-~A\">&gt;~A</a>~}</div>~]<div class=\"comment-minimize-button\" data-child-count=\"~A\"></div>"
                                 (map 'list (lambda (c) (list (cdr (assoc :comment-id c)) (get-username (cdr (assoc :user-id c))))) children)
                                 child-count)))
-                  (format out-stream "</div><div class=\"comment-body\"~@[ data-markdown-source=\"~A\"~]>"
+                  (format out-stream "</div><div class=\"comment-body hyphenate\" ~@[ data-markdown-source=\"~A\"~]>"
                           (if (logged-in-userid user-id)
                               (encode-entities
                                 (or (cache-get "comment-markdown-source" comment-id)
@@ -565,7 +565,10 @@
   (let* ((session-token (hunchentoot:cookie-in "session-token"))
          (csrf-token (and session-token (make-csrf-token session-token)))) 
     (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head>")
-    (format out-stream "<style id='width-adjust'></style><script>loggedInUserId=\"~A\"; loggedInUserDisplayName=\"~A\"; loggedInUserSlug=\"~A\"; ~@[var csrfToken=\"~A\"; ~]~A</script>~A"
+    (format out-stream "<style id='width-adjust'></style><script>var Hyphenopoly = {
+			require: { 'en-us': 'Supercalifragilisticexpialidocious' },
+			paths: { maindir: '/Hyphenopoly/', patterndir: '/Hyphenopoly/patterns/' },
+    		}</script><script src='/Hyphenopoly/Hyphenopoly_Loader.js'></script><script>loggedInUserId=\"~A\"; loggedInUserDisplayName=\"~A\"; loggedInUserSlug=\"~A\"; ~@[var csrfToken=\"~A\"; ~]~A</script>~A"
             (or (logged-in-userid) "")
             (or (logged-in-username) "")
             (or (logged-in-user-slug) "")
