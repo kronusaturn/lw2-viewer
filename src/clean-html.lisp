@@ -6,7 +6,8 @@
 (in-package #:lw2.clean-html)
 
 (eval-when (:load-toplevel :execute)
-  (cl-typesetting-hyphen:load-language :british))
+  (cl-typesetting-hyphen:load-language :british)
+  (setf cl-typesetting::*default-hyphen-language* :british))
 
 (defun file-get-contents (filename)
   (with-open-file (stream filename)
