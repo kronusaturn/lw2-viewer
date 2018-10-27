@@ -5,6 +5,9 @@
 
 (in-package #:lw2.clean-html)
 
+(eval-when (:load-toplevel :execute)
+  (cl-typesetting-hyphen:load-language :british))
+
 (defun file-get-contents (filename)
   (with-open-file (stream filename)
     (uiop:slurp-stream-string stream)))
@@ -119,6 +122,33 @@
                           (push output-offset output-offset-list)
                           (loop for x in (rest current-offset) do (push x output-offset-list))
                           (setf offset-list (nreverse output-offset-list))))))
+      (let ((hyphenation-list (cl-typesetting::hyphenate-string whole-string-output)))
+        (loop with current-offset = offset-list
+              with output-offset = (first current-offset)
+              with output-offset-list = nil
+              with total-offset = 0
+              for hyphen-offset in hyphenation-list
+              do (loop while (and (rest current-offset) (<= (+ total-offset (first current-offset)) hyphen-offset))
+                       do (progn
+                            (push output-offset output-offset-list)
+                            (setf total-offset (+ total-offset (first current-offset))
+                                  current-offset (cdr current-offset)
+                                  output-offset (first current-offset))))
+              do (incf output-offset)
+              finally (progn
+                        (push output-offset output-offset-list)
+                        (loop for x in (rest current-offset) do (push x output-offset-list))
+                        (setf offset-list (nreverse output-offset-list))))
+        (when hyphenation-list
+          (let ((new-whole-string (make-array (+ (length whole-string-output) (length hyphenation-list)) :element-type 'character :fill-pointer 0)))
+            (loop for char across whole-string-output
+                  for orig-offset from 0
+                  with current-hyphenation = hyphenation-list
+                  do (when (and current-hyphenation (= orig-offset (first current-hyphenation)))
+                       (vector-push #\SOFT_HYPHEN new-whole-string)
+                       (setf current-hyphenation (rest current-hyphenation)))
+                  do (vector-push char new-whole-string))
+            (setf whole-string-output new-whole-string))))
       (let ((current-offset 0))
         (plump:traverse
           root

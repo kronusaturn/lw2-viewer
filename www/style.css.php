@@ -1392,23 +1392,10 @@ h1.listing + .post-meta .read-time {
 	font-size: 1.0625em;
 	white-space: nowrap;
 }
-@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-	.post-body, .comment-body {
-		-ms-hyphens: auto;
-		text-align: justify;
-	}
-}
-@supports (hyphens: auto) or (-moz-hyphens: auto) or (-webkit-hyphens: auto) {
-	.post-body, .comment-body {
-		text-align: justify;
-		-webkit-hyphens: auto;
-		-moz-hyphens: auto;
-		hyphens: auto;
-	}
-}
 .post-body,
 .comment-body {
 	overflow-wrap: break-word;
+	text-align: justify;
 }
 .post-body p,
 .comment-body p {
