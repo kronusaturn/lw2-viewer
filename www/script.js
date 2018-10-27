@@ -309,6 +309,7 @@ Element.prototype.constructCommentControls = function() {
 	replyButton.addActivateEvent(window.showReplyForm);
 
 	// Replicate karma controls at the bottom of comments.
+	if (commentControls.parentElement.id == "comments") return;
 	let karmaControls = commentControls.parentElement.querySelector(".comment-meta .karma");
 	let karmaControlsCloned = karmaControls.cloneNode(true);
 	commentControls.appendChild(karmaControlsCloned);
