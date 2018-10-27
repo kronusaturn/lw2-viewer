@@ -934,6 +934,11 @@ a.post-section.alignment-forum:hover::before {
 	border-top: 1px solid #000;
 	box-shadow: 0 3px 4px -4px #000 inset;
 }
+@-moz-document url-prefix() {
+	#comments {
+		box-shadow: 0 3px 3px -4px #000 inset;
+	}
+}
 #content > .comment-thread .comment-meta a.date:focus,
 #content > .comment-thread .comment-meta a.permalink:focus {
 	color: #999;

@@ -918,6 +918,13 @@ a.post-section.alignment-forum:hover::before {
 		1.5px 0 1.5px -1.5px #bbb inset, 
 		1px 0 1px -1px #777 inset;
 }
+@-moz-document url-prefix() {
+	.comment-item {
+		box-shadow:
+			1.5px 0 1.5px -1px #bbb inset, 
+			1px 0 1px -1px #777 inset;
+	}
+}
 
 <?php
 	function nested_stuff($segment, $tip, $last_tip, $nesting_levels) {
