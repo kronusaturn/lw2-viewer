@@ -269,6 +269,7 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 		"<input type='hidden' name='csrf-token' value='" + window.csrfToken + "'>" +
 		"<input type='submit' value='Submit'>" + 
 		"</div></form>";
+	commentControls.onsubmit = disableBeforeUnload;
 	
 	commentControls.querySelector(".cancel-comment-button").addActivateEvent(window.hideReplyForm);
 	commentControls.scrollIntoViewIfNeeded();

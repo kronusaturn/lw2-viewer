@@ -6,7 +6,7 @@
 {% else %}
 <h1 class="page-main-heading">Send private message</h1>
 {% endif %}
-<div class="posting-controls with-markdown-editor">
+<div class="posting-controls with-markdown-editor" onsubmit="disableBeforeUnload();">
 <form method="post" id="conversation-form" class="aligned-form">
 	{% if not conversation %}<div class="post-meta-fields">
 		<label for="to">To:</label>
