@@ -634,6 +634,7 @@ body {
 	<?php fit_content("#theme-tweaker-toggle"); ?>
 	#comments-view-mode-selector::after,
 	#theme-selector::after,
+	#theme-selector::before,
 	#width-selector::after,
 	#text-size-adjustment-ui::after {
 		content: "";
@@ -672,8 +673,15 @@ body {
 		left: 16px;
 		top: calc(100% - 316px);
 		opacity: 1.0;
+		visibility: hidden;
+		transition:
+			visibility 0.2s ease;
 	}
-	#theme-selector::after {
+	#theme-selector.engaged {
+		visibility: visible;
+	}
+	#theme-selector::after,
+	#theme-selector::before {
 		top: -50px;
 		height: calc(100% + 60px);
 		max-height: 300px;
@@ -681,8 +689,12 @@ body {
 			max-height 0.2s ease;
 		z-index: 1;
 	}
-	#theme-selector.engaged::after {
+	#theme-selector.engaged::after,
+	#theme-selector.engaged::before {
 		max-height: 0px;
+	}
+	#theme-selector::before {
+		z-index: 0;
 	}
 
 	#width-selector {
@@ -718,8 +730,12 @@ body {
 	#theme-tweaker-toggle {
 		left: 19px;
 		top: calc(100% - 356px);
+		visibility: hidden;
 		transition:
-			opacity 0.5s ease-out;
+			visibility 0.5s ease-out;
+	}
+	#theme-tweaker-toggle.engaged {
+		visibility: visible;
 	}
 	@-moz-document url-prefix() {
 		#theme-tweaker-toggle {
