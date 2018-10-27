@@ -2350,13 +2350,13 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		}
 	});
 	
-	// Add event listener for . , / (for navigating listings pages).
+	// Add event listener for . , ; (for navigating listings pages).
 	let listings = document.querySelectorAll("h1.listing a[href^='/posts']");
 	if (listings.length > 0) {
 		document.addEventListener("keyup", (event) => { 
-			if (event.ctrlKey || event.shiftKey || event.altKey || !(event.key == "," || event.key == "." || event.key == '/')) return;
+			if (event.ctrlKey || event.shiftKey || event.altKey || !(event.key == "," || event.key == "." || event.key == ';')) return;
 			
-			if (event.key == '/') {
+			if (event.key == ';') {
 				if (document.activeElement.parentElement.hasClass("link-post-listing")) {
 					let links = document.activeElement.parentElement.querySelectorAll("a");
 					links[document.activeElement == links[0] ? 1 : 0].focus();
@@ -2377,21 +2377,21 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 			else document.activeElement.blur();
 		});
 	}
-	// Add event listener for / (to focus the link on link posts).
+	// Add event listener for ; (to focus the link on link posts).
 	if (document.querySelector("#content").hasClass("post-page") && 
 		document.querySelector(".post").hasClass("link-post")) {
 		document.addEventListener("keyup", function (e) {
-			if (e.key == '/') document.querySelector("a.link-post-link").focus();
+			if (e.key == ';') document.querySelector("a.link-post-link").focus();
 		});
 	}
 
-	// Add event listener for . , / (for navigating the recent comments page).
+	// Add event listener for . , ; (for navigating the recent comments page).
 	let comments = document.querySelectorAll("#content > .comment-thread .comment-meta a.date");
 	if (comments.length > 0) {
 		document.addEventListener("keyup", (event) => {
-			if (event.ctrlKey || event.shiftKey || event.altKey || !(event.key == "," || event.key == "." || event.key == '/')) return;
+			if (event.ctrlKey || event.shiftKey || event.altKey || !(event.key == "," || event.key == "." || event.key == ';')) return;
 
-			if (event.key == '/') {
+			if (event.key == ';') {
 				if (document.activeElement.parentElement.hasClass("comment-meta")) {
 					let links = document.activeElement.parentElement.querySelectorAll("a.date, a.permalink");
 					links[document.activeElement == links[0] ? 1 : 0].focus();
