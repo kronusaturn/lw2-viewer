@@ -451,7 +451,7 @@ function voteButtonClicked(event) {
 		voteButton.clickedOnce = true;
 		voteButton.addClass("clicked-once");
 
-		window.setTimeout(vbDoubleClickTimeoutCallback, doubleClickTimeout, vb);
+		window.setTimeout(vbDoubleClickTimeoutCallback, doubleClickTimeout, voteButton);
 	} else {
 		voteButton.clickedOnce = false;
 		
