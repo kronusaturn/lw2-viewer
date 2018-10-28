@@ -263,7 +263,7 @@ body {
 	text-shadow: 0.5px 0.5px 0 #fff;
 }
 .sublevel-nav.sort .sublevel-item {
-	padding: 6px 6px 4px 6px;
+	padding: <?php echo ($platform == 'Mac') ? "6px 6px 4px 6px" : "5px 6px 5px 6px"; ?>;
 	text-transform: uppercase;
 	border: 1px solid #aaa;
 }
