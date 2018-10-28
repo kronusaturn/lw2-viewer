@@ -1352,7 +1352,7 @@ div.comment-child-links a {
 /*================*/
 
 #edit-post-form .link-post-checkbox + label {
-	top: -2px;
+	top: -1px;
 }
 #edit-post-form .link-post-checkbox + label::before {
 	border-radius: 3px;
