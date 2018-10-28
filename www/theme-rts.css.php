@@ -1235,11 +1235,20 @@ a.comment-parent-link:hover::before {
 	left: 7px;
 	bottom: 4px;
 }
-
 .downvote::after {
 	content: "\F322";
 	left: 5px;
 	top: 4px;
+}
+@-moz-document url-prefix() {
+	.upvote::after {
+		bottom: 2px;
+		left: 8px;
+	}
+	.downvote::after {
+		top: 3px;
+		left: 6px;
+	}
 }
 
 /*===========================*/

@@ -1811,10 +1811,14 @@ a.comment-parent-link:hover::after {
 	cursor: auto;
 }
 #comments-list-mode-selector button.expanded {
-	background-image: url('data:image/gif;base64,R0lGODdhKAAoAJEAAAAAAKqqqv///wAAACH5BAkAAAMALAAAAAAoACgAAAJTnI+py+0Po5wn2Iuz3lrxD25eSIJjiWZnyq4s6r5kLJtJndK4eO9z77NRhsSi8YhMKpfMpvMJjTqDIR3VYr1mqdtg1/fdhXHjWll2fqVb0rY7WQAAOw==');
+	background-image: url('data:image/gif;base64,
+Warning: file_get_contents(assets/expanded.gif): failed to open stream: No such file or directory in - on line 1822
+');
 }
 #comments-list-mode-selector button.compact {
-	background-image: url('data:image/gif;base64,R0lGODdhKAAoAJEAAAAAAKqqqv///wAAACH5BAkAAAMALAAAAAAoACgAAAJXnI+py+0Po5y0uoCz3rxz5YViB46mWJ7qlq5u66rWTNf2fcQxrI98H/oBSYnhSWjU4JbMJi7pK0KD0ikRYfUgp1uo8wsOM7LXHJlVPWO6SbbRPRTL57gCADs=');
+	background-image: url('data:image/gif;base64,
+Warning: file_get_contents(assets/compact.gif): failed to open stream: No such file or directory in - on line 1825
+');
 }
 
 #content > ul.comment-thread > li.comment-item,
@@ -5554,11 +5558,20 @@ div.comment-child-links a {
 	left: 7px;
 	bottom: 4px;
 }
-
 .downvote::after {
 	content: "\F322";
 	left: 5px;
 	top: 4px;
+}
+@-moz-document url-prefix() {
+	.upvote::after {
+		bottom: 2px;
+		left: 8px;
+	}
+	.downvote::after {
+		top: 3px;
+		left: 6px;
+	}
 }
 
 /*===========================*/

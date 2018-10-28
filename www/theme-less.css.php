@@ -1898,11 +1898,20 @@ div.comment-child-links a {
 	bottom: 5px;
 	left: 7px;
 }
-
 .downvote::after {
 	content: "\F322";
 	top: 5px;
 	left: 7px;
+}
+@-moz-document url-prefix() {
+	.upvote::after {
+		bottom: 3px;
+		left: 8px;
+	}
+	.downvote::after {
+		top: 4px;
+		left: 8px;
+	}
 }
 
 .post .top-post-meta .upvote::after,
