@@ -1173,6 +1173,16 @@ a.comment-parent-link:hover::before {
 /* INDIVIDUAL COMMENT THREAD PAGES */
 /*=================================*/
 
+.individual-thread-page > h1 a {
+	color: #690010;
+}
+.individual-thread-page > h1 a:hover {
+	text-shadow: 
+		0px 0px 0.5px #ff987b, 
+		0px 0px 1.5px #c05651, 
+		0.5px 0.5px 0.5px #de7069;
+}
+
 .individual-thread-page > h1 {
 	font-family: <?php echo $text_font; ?>;
 }

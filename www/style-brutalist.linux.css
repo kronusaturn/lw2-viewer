@@ -5153,6 +5153,11 @@ div.comment-child-links a {
 /* INDIVIDUAL COMMENT THREAD PAGES */
 /*=================================*/
 
+.individual-thread-page > h1 a:hover {
+	color: #777;
+	text-decoration: dotted underline;
+}
+
 .individual-thread-page > #comments {
 	border-top: 2px solid #000;
 }
