@@ -2144,7 +2144,10 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 // 		});
 // 	});
 
-	document.querySelectorAll(".with-markdown-editor textarea, .conversation-page textarea").forEach(textarea => { textarea.addTextareaFeatures(); });
+	document.querySelectorAll(".with-markdown-editor textarea").forEach(textarea => {
+		textarea.addTextareaFeatures();
+		ExpandTextarea(textarea);
+	});
 	document.querySelectorAll(((getQueryVariable("post-id")) ? "#edit-post-form textarea" : "#edit-post-form input[name='title']") + (window.isMobile ? "" : ", .conversation-page textarea")).forEach(field => { field.focus(); });
 
 	let postMeta = document.querySelector(".post .post-meta");
