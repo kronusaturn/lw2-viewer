@@ -2456,6 +2456,13 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	// Add listeners to switch between word count and read time.
 	if (window.localStorage.getItem("display-word-count")) toggleReadTimeOrWordCount(true);
 	document.querySelectorAll(".post-meta .read-time").forEach(element => { element.addActivateEvent(readTimeOrWordCountClicked); });
+
+	// Add copy listener to strip soft hyphens (inserted by server-side hyphenator).
+	document.querySelector("#content").addEventListener("copy", (event) => {
+		event.preventDefault();
+		const selectedText = window.getSelection().toString();
+		event.clipboardData.setData("text/plain", selectedText.replace(/\u00AD/g, ""));
+	});
 });
 
 /*************************/
