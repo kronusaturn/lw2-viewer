@@ -977,6 +977,7 @@ div.comment-child-links a {
 .comment-controls .cancel-comment-button {
 	height: 28px;
 	color: #fff;
+	padding: 4px 6px 2px 6px;
 }
 
 .posting-controls input[type='submit'],
