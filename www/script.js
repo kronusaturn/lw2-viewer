@@ -279,7 +279,7 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 		}
 	}
 	let textarea = commentControls.querySelector("textarea");
-	textarea.value = editMarkdownSource || "";
+	textarea.value = MarkdownFromHTML(editMarkdownSource || "");
 	textarea.addTextareaFeatures();
 	textarea.focus();
 }
@@ -2076,6 +2076,9 @@ function MarkdownFromHTML(text) {
 		default:
 			return match;
 		}
+	});
+	text = text.replace(/<blockquote>((?:.|\n)+?)<\/blockquote>/g, (match, quotedText, offset, string) => {
+		return "> " + quotedText.trim().split("\n").join("\n> ") + "\n";
 	});
 	return text.replace(/<a href="(.+?)">(.+?)<\/a>/g, (match, href, text, offset, string) => {
 		return `[${text}](${href})`;
