@@ -338,8 +338,10 @@ function showReplyForm(event) {
 }
 
 function hideReplyForm(event) {
-	try { event.target.parentElement.parentElement.querySelector(".comment-body").removeAttribute("style"); }
-	catch (ex) { console.log(ex); }
+	// Are we editing a comment? If so, un-hide the existing comment body.
+	let hiddenCommentBody = event.target.closest(".comment-item").querySelector(".comment-body");
+	if (hiddenCommentBody) hiddenCommentBody.style.display = "";
+
 	event.target.parentElement.constructCommentControls();
 }
 
@@ -907,7 +909,7 @@ function updatePostNavUIToggleVisibility() {
 	document.querySelectorAll("#ui-elements-container #quick-nav-ui a, #ui-elements-container #new-comment-nav-ui").forEach(element => {
 		if (window.getComputedStyle(element).visibility == "visible") hidePostNavUIToggle = false;
 	});
-	try { document.querySelector("#ui-elements-container #post-nav-ui-toggle").style.visibility = hidePostNavUIToggle ? "hidden" : ""; } catch (ex) { console.log(ex); }
+	(document.querySelector("#ui-elements-container #post-nav-ui-toggle")||{}).style.visibility = hidePostNavUIToggle ? "hidden" : "";
 }
 
 // Hide the site nav and appearance adjust UIs on scroll down; show them on scroll up.
@@ -1690,10 +1692,13 @@ function toggleAppearanceAdjustUI() {
 /*****************************/
 
 function expandAncestorsOf(commentId) {
-	try { document.querySelector('#comment-'+commentId).closest("label[for^='expand'] + .comment-thread").parentElement.querySelector("input[id^='expand']").checked = true; }
-	catch (ex) { console.log(ex); }
-	try { document.querySelector('#comment-'+commentId).closest("#comments > ul > li").setCommentThreadMaximized(true, false, true); }
-	catch (ex) { console.log(ex); }
+	// Expand collapsed comment threads.
+	let parentOfContainingCollapseCheckbox = document.querySelector('#comment-'+commentId).closest("label[for^='expand'] + .comment-thread").parentElement;
+	if (parentOfContainingCollapseCheckbox) parentOfContainingCollapseCheckbox.querySelector("input[id^='expand']").checked = true;
+	
+	// Expand collapsed comments.
+	let containingTopLevelCommentItem = document.querySelector('#comment-'+commentId).closest("#comments > ul > li");
+	if (containingTopLevelCommentItem) containingTopLevelCommentItem.setCommentThreadMaximized(true, false, true);
 }
 
 /**************************/
@@ -2093,8 +2098,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 	let content = document.querySelector("#content");
 	if (content.querySelector("#comments .comment-thread") == null) {
-		try { document.querySelector("#quick-nav-ui a[href='#comments']").addClass("no-comments"); }
-		catch (ex) { console.log(ex); }
+		document.querySelector("#quick-nav-ui a[href='#comments']").addClass("no-comments");
 	}
 
 	if (location.hash.length == 18) {
@@ -2102,17 +2106,14 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	}
 
 	let useLongDate = window.innerWidth > 900;
-	try {
-		let dtf = new Intl.DateTimeFormat([], 
-			( useLongDate ? 
-				{ month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' }
-					: { month: 'numeric', day: 'numeric', year: '2-digit', hour: 'numeric', minute: 'numeric' } ));
-		document.querySelectorAll(".date").forEach(date => {
-			let d = date.getAttribute("data-js-date");
-			if (d) { date.innerHTML = dtf.format(new Date(+ d)); }
-		});
-	}
-	catch (ex) { console.log(ex); }
+	let dtf = new Intl.DateTimeFormat([], 
+		( useLongDate ? 
+			{ month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' }
+				: { month: 'numeric', day: 'numeric', year: '2-digit', hour: 'numeric', minute: 'numeric' } ));
+	document.querySelectorAll(".date").forEach(date => {
+		let d = date.getAttribute("data-js-date");
+		if (d) { date.innerHTML = dtf.format(new Date(+ d)); }
+	});
 
 	window.needHashRealignment = false;
 
@@ -2122,7 +2123,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 // 		commentParentLink.addEventListener("mouseover", function(e) {
 // 			let parent_id = "#comment-" + /(?:#comment-)?(.+)/.exec(commentParentLink.getAttribute("href"))[1];
 // 			var parent;
-// 			try { parent = document.querySelector(parent_id).firstChild; } catch (ex) { console.log(ex); return; }
+// 			if (!(parent = (document.querySelector(parent_id)||{}).firstChild)) return;
 // 			let parentCI = parent.parentNode;
 // 			var highlight_cn;
 // 			if (parent.getBoundingClientRect().bottom < 10 || parent.getBoundingClientRect().top > window.innerHeight + 10) {
@@ -2251,7 +2252,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		inputField.addEventListener("keyup", (event) => { event.stopPropagation(); });
 	});
 	
-	if (document.querySelector("#comments") && !document.querySelector(".individual-thread-page") && getPostHash()) {
+	if (document.querySelector("#content").hasClass(".post-page")) {
 		// Read and update last-visited-date.
 		let lastVisitedDate = getLastVisitedDate();
 		setLastVisitedDate(Date.now());
@@ -2303,7 +2304,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		commentParentLink.addEventListener("mouseover", (event) => {
 			let parent_id = "#comment-" + /(?:#comment-)?(.+)/.exec(commentParentLink.getAttribute("href"))[1];
 			var parent;
-			try { parent = document.querySelector(parent_id).firstChild; } catch (ex) { console.log(ex); return; }
+			if (!(parent = (document.querySelector(parent_id)||{}).firstChild)) return;
 			let parentCI = parent.parentNode;
 			var highlight_cn;
 			if (parent.getBoundingClientRect().bottom < 10 || parent.getBoundingClientRect().top > window.innerHeight + 10) {
@@ -2327,7 +2328,8 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	// Add in-listing edit post links.
 	if (loggedInUserId) {
 		document.querySelectorAll("h1.listing").forEach(listing => {
-			if (listing.nextSibling.querySelector(".author").hasClass("own-user-author"))
+			if (listing.querySelector("a[href^='/posts']") != null &&
+				listing.nextSibling.querySelector(".author").hasClass("own-user-author"))
 				listing.insertAdjacentHTML("beforeend", 
 					"<a class='edit-post-link button' href='/edit-post?post-id=" + 
 					/posts\/(.+?)\//.exec(listing.querySelector("a[href^='/']").pathname)[1] + 
@@ -2420,8 +2422,8 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 				return;
 			}
 
-			try { document.activeElement.closest(".comment-item").removeClasses([ "expanded", "comment-item-highlight" ]); }
-			catch (ex) { console.log(ex); }
+			let activeComment = document.activeElement.closest(".comment-item");
+			if (activeComment) activeComment.removeClasses([ "expanded", "comment-item-highlight" ]);
 
 			var indexOfActiveComment = -1;
 			for (i = 0; i < comments.length; i++) {
@@ -2558,7 +2560,10 @@ function realignHashIfNeeded() {
 		realignHash();
 }
 function realignHash() {
-	try { document.querySelector(location.hash).scrollIntoView(true); } catch (ex) { console.log(ex); }
+	if (!location.hash) return;
+	
+	let targetElement = document.querySelector(location.hash);
+	if (targetElement) targetElement.scrollIntoView(true);
 }
 
 /***********/
