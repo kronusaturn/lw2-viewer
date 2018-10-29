@@ -87,69 +87,79 @@
                        (write-string (plump:text node) stream)))))))
            (whole-string-output whole-string-input))
       (setf offset-list (nreverse offset-list))
-      (do-with-cleaners ((read-regexp-file "text-clean-regexps.js") scanner replacement)
-        (let ((replacements 0)
-              (replacement-list nil)
-              (original-length (length whole-string-output)))
-          (ppcre:do-scans (match-start match-end reg-starts reg-ends scanner whole-string-output)
-            (incf replacements)
-            (push
-              (list (if (and (> (length reg-starts) 0) (eq (aref reg-starts 0) match-start))
-                        (aref reg-ends 0)
-                        match-start)
-                    (if (and (> (length reg-starts) 0) (eq (aref reg-ends (- (length reg-ends) 1)) match-end))
-                        (aref reg-starts (- (length reg-starts) 1))
-                        match-end))
-              replacement-list))
-          (setf replacement-list (nreverse replacement-list))
-          (setf whole-string-output (ppcre:regex-replace-all scanner whole-string-output replacement))
-          (loop with length-difference = (- (length whole-string-output) original-length)
-                with current-offset = offset-list
-                with output-offset = (first current-offset)
-                with output-offset-list = nil
-                with total-offset = 0
-                for (start end) in replacement-list
-                for length-change = (round length-difference replacements)
-                do (setf length-difference (- length-difference length-change)
-                         replacements (- replacements 1))
-                do (loop while (and (rest current-offset) (< (+ total-offset (first current-offset)) (round (+ start end) 2)))
-                         do (progn
-                              (push output-offset output-offset-list)
-                              (setf total-offset (+ total-offset (first current-offset))
-                                    current-offset (cdr current-offset)
-                                    output-offset (first current-offset))))
-                do (setf output-offset (max 0 (+ output-offset length-change)))
-                finally (progn
-                          (push output-offset output-offset-list)
-                          (loop for x in (rest current-offset) do (push x output-offset-list))
-                          (setf offset-list (nreverse output-offset-list))))))
-      (let ((hyphenation-list (cl-typesetting::hyphenate-string whole-string-output)))
-        (loop with current-offset = offset-list
-              with output-offset = (first current-offset)
-              with output-offset-list = nil
-              with total-offset = 0
-              for hyphen-offset in hyphenation-list
-              do (loop while (and (rest current-offset) (<= (+ total-offset (first current-offset)) hyphen-offset))
-                       do (progn
-                            (push output-offset output-offset-list)
-                            (setf total-offset (+ total-offset (first current-offset))
-                                  current-offset (cdr current-offset)
-                                  output-offset (first current-offset))))
-              do (incf output-offset)
-              finally (progn
-                        (push output-offset output-offset-list)
-                        (loop for x in (rest current-offset) do (push x output-offset-list))
-                        (setf offset-list (nreverse output-offset-list))))
-        (when hyphenation-list
-          (let ((new-whole-string (make-array (+ (length whole-string-output) (length hyphenation-list)) :element-type 'character :fill-pointer 0)))
-            (loop for char across whole-string-output
-                  for orig-offset from 0
-                  with current-hyphenation = hyphenation-list
-                  do (when (and current-hyphenation (= orig-offset (first current-hyphenation)))
-                       (vector-push #\SOFT_HYPHEN new-whole-string)
-                       (setf current-hyphenation (rest current-hyphenation)))
-                  do (vector-push char new-whole-string))
-            (setf whole-string-output new-whole-string))))
+      (labels
+        ((call-with-offset-loop (continue-fn loop-fn next-offset-fn offset-adjust-fn)
+           (loop with current-offset = offset-list
+                 with output-offset = (first current-offset)
+                 with output-offset-list = nil
+                 with total-offset = 0
+                 while (funcall continue-fn)
+                 do (funcall loop-fn)
+                 do (loop while (and (rest current-offset) (< (+ total-offset (first current-offset)) (funcall next-offset-fn)))
+                          do (progn
+                               (push output-offset output-offset-list)
+                               (setf total-offset (+ total-offset (first current-offset))
+                                     current-offset (cdr current-offset)
+                                     output-offset (first current-offset))))
+                 do (setf output-offset (funcall offset-adjust-fn output-offset))
+                 finally (progn
+                           (push output-offset output-offset-list)
+                           (loop for x in (rest current-offset) do (push x output-offset-list))
+                           (setf offset-list (nreverse output-offset-list))))))
+        (declare (dynamic-extent (function call-with-offset-loop)))
+        (macrolet
+          ((offset-loop ((list-binding list-form) (&body loop-body) (&body next-offset-body) (&body offset-adjust-body))
+             (with-gensyms (list-current)
+               `(let ((,list-current ,list-form)
+                      (,list-binding))
+                  (labels ((continue-fn () (if ,list-current (setf ,list-binding (pop ,list-current))))
+                           (loop-fn () ,.loop-body)
+                           (next-offset-fn () ,.next-offset-body)
+                           (offset-adjust-fn ,.offset-adjust-body))
+                    (declare (dynamic-extent (function continue-fn) (function loop-fn) (function next-offset-fn) (function offset-adjust-fn)))
+                    (call-with-offset-loop #'continue-fn #'loop-fn #'next-offset-fn #'offset-adjust-fn))))))
+          (do-with-cleaners ((read-regexp-file "text-clean-regexps.js") scanner replacement)
+            (let ((replacements 0)
+                  (replacement-list nil)
+                  (original-length (length whole-string-output)))
+              (ppcre:do-scans (match-start match-end reg-starts reg-ends scanner whole-string-output)
+                              (incf replacements)
+                              (push
+                                (list (if (and (> (length reg-starts) 0) (eq (aref reg-starts 0) match-start))
+                                          (aref reg-ends 0)
+                                          match-start)
+                                      (if (and (> (length reg-starts) 0) (eq (aref reg-ends (- (length reg-ends) 1)) match-end))
+                                          (aref reg-starts (- (length reg-starts) 1))
+                                          match-end))
+                                replacement-list))
+              (setf replacement-list (nreverse replacement-list))
+              (setf whole-string-output (ppcre:regex-replace-all scanner whole-string-output replacement))
+              (let ((length-difference (- (length whole-string-output) original-length))
+                    (length-change))
+                (offset-loop
+                  (current-replacement replacement-list)
+                  ((setf length-change (round length-difference replacements)
+                         length-difference (- length-difference length-change)
+                         replacements (- replacements 1)))
+                  ((destructuring-bind (start end) current-replacement
+                     (round (+ start end) 2)))
+                  ((output-offset) (max 0 (+ output-offset length-change)))))))
+          (let ((hyphenation-list (cl-typesetting::hyphenate-string whole-string-output)))
+            (offset-loop
+              (current-hyphenation hyphenation-list)
+              ()
+              (current-hyphenation)
+              ((output-offset) (1+ output-offset)))
+            (when hyphenation-list
+              (let ((new-whole-string (make-array (+ (length whole-string-output) (length hyphenation-list)) :element-type 'character :fill-pointer 0)))
+                (loop for char across whole-string-output
+                      for orig-offset from 0
+                      with current-hyphenation = hyphenation-list
+                      do (when (and current-hyphenation (= orig-offset (first current-hyphenation)))
+                           (vector-push #\SOFT_HYPHEN new-whole-string)
+                           (setf current-hyphenation (rest current-hyphenation)))
+                      do (vector-push char new-whole-string))
+                (setf whole-string-output new-whole-string))))))
       (let ((current-offset 0))
         (plump:traverse
           root
