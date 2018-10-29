@@ -2403,9 +2403,9 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		document.addEventListener("keyup", (event) => { 
 			if (event.ctrlKey || event.shiftKey || event.altKey || !(event.key == "," || event.key == "." || event.key == ';' || event.keyCode == 27)) return;
 			
-			if (event.keyCode == 27 &&
-				document.activeElement.parentElement.hasClass("listing")) {
-				document.activeElement.blur();
+			if (event.keyCode == 27) {
+				if (document.activeElement.parentElement.hasClass("listing"))
+					document.activeElement.blur();
 				return;
 			}
 
@@ -2444,9 +2444,9 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		document.addEventListener("keyup", (event) => {
 			if (event.ctrlKey || event.shiftKey || event.altKey || !(event.key == "," || event.key == "." || event.key == ';' || event.keyCode == 27)) return;
 			
-			if (event.keyCode == 27 &&
-				document.activeElement.parentElement.hasClass("comment-meta")) {
-				document.activeElement.blur();
+			if (event.keyCode == 27) {
+				if (document.activeElement.parentElement.hasClass("comment-meta"))
+					document.activeElement.blur();
 				return;
 			}
 
