@@ -1293,10 +1293,6 @@ h1.listing + .post-meta .read-time {
 	max-width: 40%;
 	margin: 1.25em 0 0.75em 1.25em;
 	padding: 7px 14px 10px 10px;
-	-webkit-hyphens: none;
-	-moz-hyphens: none;
-	-ms-hyphens: none;
-	hyphens: none;
 	position: relative;
 	z-index: 1;
 }
@@ -2522,7 +2518,6 @@ div.imgonly {
 .comment-body table th,
 .comment-body table td {
 	text-align: left;
-	hyphens: none;
 	padding: 4px 6px;
 	line-height: 1.3;
 }
@@ -2553,10 +2548,6 @@ sup, sub {
 }
 sub {
 	top: 0.3em;
-	-webkit-hyphens: none;
-	-moz-hyphens: none;
-	-ms-hyphens: none;
-	hyphens: none;
 }
 
 /*= Code blocks & other "unstyled" text. =*/
