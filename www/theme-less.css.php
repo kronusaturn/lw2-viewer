@@ -1984,7 +1984,6 @@ div.comment-child-links a {
 .posting-controls.edit-existing-post textarea:focus,
 .posting-controls form.edit-existing-comment textarea:focus {
 	border-color: #090;
-	box-shadow: 0 0 0 1px #090;
 }
 
 /*= Scroll bars =*/
