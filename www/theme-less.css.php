@@ -2076,9 +2076,6 @@ div.comment-child-links a {
 #edit-post-form .link-post-checkbox + label:hover::before {
 	border-color: #c4dbc4;
 }
-#edit-post-form .link-post-checkbox:checked + label {
-	font-weight: normal;
-}
 #edit-post-form .link-post-checkbox:checked + label::before {
 	border-color: #c4dbc4;
 	box-shadow: 
