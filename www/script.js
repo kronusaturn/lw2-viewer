@@ -212,12 +212,11 @@ Element.prototype.addTextareaFeatures = function() {
 		buttons_container.insertAdjacentHTML("beforeend", 
 			"<button type='button' class='guiedit guiedit-" 
 			+ name
-			+ "' tabindex='-1' title='"
-			+ desc + ((accesskey != "") ? (" [" + accesskey + "]") : "")
-			+ "' data-tooltip='" + desc
-			+ "' ["
-			+ accesskey
-			+ "] onclick='insMarkup(event,"
+			+ "' tabindex='-1'"
+			+ ((accesskey != "") ? (" accesskey='" + accesskey + "'") : "")
+			+ " title='" + desc + ((accesskey != "") ? (" [" + accesskey + "]") : "") + "'"
+			+ " data-tooltip='" + desc + ((accesskey != "") ? (" [" + accesskey + "]") : "") + "'"
+			+ " onclick='insMarkup(event,"
 			+ ((typeof m_before_or_func == 'function') ?
 				m_before_or_func.name : 
 				("\"" + m_before_or_func  + "\",\"" + m_after + "\",\"" + placeholder + "\""))
