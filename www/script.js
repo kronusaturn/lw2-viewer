@@ -1967,6 +1967,9 @@ function commentVoteCount(commentOrSelector) {
 function injectCommentsSortModeSelector() {
 	let topCommentThread = document.querySelector("#comments > .comment-thread");
 	if (topCommentThread == null) return;
+	
+	// Do not show sort mode selector if there is no branching in comment tree.
+	if (topCommentThread.querySelector(".comment-item + .comment-item") == null) return;
 
 	let commentsSortModeSelectorHTML = "<div id='comments-sort-mode-selector' class='sublevel-nav sort'>" + 
 		Object.values(CommentSortMode).map(sortMode => `<button type='button' class='sublevel-item sort-mode-${sortMode}' tabindex='-1' title='Sort by ${sortMode}'>${sortMode}</button>`).join("") +  
