@@ -314,6 +314,9 @@ Element.prototype.constructCommentControls = function() {
 	let karmaControls = commentControls.parentElement.querySelector(".comment-meta .karma");
 	let karmaControlsCloned = karmaControls.cloneNode(true);
 	commentControls.appendChild(karmaControlsCloned);
+	commentControls.querySelectorAll("button.vote").forEach(voteButton => {
+		voteButton.addActivateEvent(voteButtonClicked);
+	});
 }
 
 function showCommentEditForm(event) {
