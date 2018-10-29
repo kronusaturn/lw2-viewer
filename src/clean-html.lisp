@@ -67,10 +67,24 @@
 (define-cleaner clean-text (read-regexp-file "text-clean-regexps.js"))
 (define-cleaner clean-html-regexps (read-regexp-file "html-clean-regexps.js"))
 
+(defun hyphenate-string (string)
+ (let ((hyphenation-list (cl-typesetting::hyphenate-string string)))
+   (if hyphenation-list
+     (let ((new-string (make-array (+ (length string) (length hyphenation-list)) :element-type 'character :fill-pointer 0)))
+       (loop for char across string
+             for orig-offset from 0
+             with current-hyphenation = hyphenation-list
+             do (when (and current-hyphenation (= orig-offset (first current-hyphenation)))
+                  (vector-push #\SOFT_HYPHEN new-string)
+                  (setf current-hyphenation (rest current-hyphenation)))
+             do (vector-push char new-string))
+       (values new-string hyphenation-list))
+     (values string nil))))
+
 (defun clean-text-to-html (text)
   (handler-bind
     (((or plump:invalid-xml-character plump:discouraged-xml-character) #'abort))
-    (clean-html-regexps (plump:encode-entities (clean-text text)))))
+    (clean-html-regexps (plump:encode-entities (coerce (hyphenate-string (clean-text text)) 'simple-string)))))
 
 (defun clean-dom-text (root)
   (handler-bind
@@ -144,22 +158,13 @@
                   ((destructuring-bind (start end) current-replacement
                      (round (+ start end) 2)))
                   ((output-offset) (max 0 (+ output-offset length-change)))))))
-          (let ((hyphenation-list (cl-typesetting::hyphenate-string whole-string-output)))
+          (multiple-value-bind (hyphenated-string hyphenation-list) (hyphenate-string whole-string-output)
+            (setf whole-string-output hyphenated-string)
             (offset-loop
               (current-hyphenation hyphenation-list)
               ()
               (current-hyphenation)
-              ((output-offset) (1+ output-offset)))
-            (when hyphenation-list
-              (let ((new-whole-string (make-array (+ (length whole-string-output) (length hyphenation-list)) :element-type 'character :fill-pointer 0)))
-                (loop for char across whole-string-output
-                      for orig-offset from 0
-                      with current-hyphenation = hyphenation-list
-                      do (when (and current-hyphenation (= orig-offset (first current-hyphenation)))
-                           (vector-push #\SOFT_HYPHEN new-whole-string)
-                           (setf current-hyphenation (rest current-hyphenation)))
-                      do (vector-push char new-whole-string))
-                (setf whole-string-output new-whole-string))))))
+              ((output-offset) (1+ output-offset))))))
       (let ((current-offset 0))
         (plump:traverse
           root
