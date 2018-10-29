@@ -5696,6 +5696,12 @@ select {
 		background-color: #fff;
 		border: 1px solid #000;
 	}
+	#theme-selector:hover::after {
+		width: calc(6em + 6px);
+		height: calc(100% - 5px);
+		top: 3px;
+		left: 100%;
+	}	
 	#text-size-adjustment-ui {
 		background-color: #fff;
 		box-shadow: 0 0 0 1px #000;

@@ -1827,6 +1827,12 @@ select {
 			0 0 0 1px #999,
 			0 0 0 2px transparent;
 	}
+	#theme-selector:hover::after {
+		width: calc(6em - 9px);
+		height: calc(100% - 5px);
+		top: 3px;
+		left: 100%;
+	}	
 	#text-size-adjustment-ui button {
 		background-color: #ddd;
 	}

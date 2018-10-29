@@ -5975,6 +5975,12 @@ select {
 	}
 }
 @media only screen and (max-width: 1000px) {
+	#theme-selector:hover::after {
+		width: calc(6em - 9px);
+		height: calc(100% - 5px);
+		top: 3px;
+		left: 100%;
+	}	
 	#text-size-adjustment-ui button {
 		background-color: #ddd;
 	}
