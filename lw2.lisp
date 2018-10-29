@@ -940,7 +940,7 @@
                                                        (comments (get-post-comments post-id))
                                                        (target-comment (find comment-id comments :key (lambda (c) (cdr (assoc :--id c))) :test #'string=))
                                                        (display-name (get-username (cdr (assoc :user-id target-comment)))))
-                                                  (emit-page (out-stream :title (format nil "~A comments on ~A" display-name title) :content-class "post-page individual-thread-page")
+                                                  (emit-page (out-stream :title (format nil "~A comments on ~A" display-name title) :content-class "individual-thread-page comment-thread-page")
                                                              (format out-stream "<h1>~A comments on <a href=\"~A\">~A</a></h1>"
                                                                      (encode-entities display-name)
                                                                      (generate-post-link post-id)
@@ -949,7 +949,7 @@
                                                              (when lw2-auth-token
                                                                (force-output out-stream)
                                                                (output-comments-votes out-stream))))
-                                                (emit-page (out-stream :title title :content-class "post-page")
+                                                (emit-page (out-stream :title title :content-class "post-page comment-thread-page")
                                                            (cond
                                                              (condition
                                                                (error-to-html out-stream condition))
