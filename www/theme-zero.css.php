@@ -1133,6 +1133,16 @@ h1.listing .edit-post-link:hover,
 		0 0 0 1px #eee inset;
 }
 
+.posting-controls.edit-existing-post textarea:focus::-webkit-scrollbar-track,
+.posting-controls form.edit-existing-comment textarea:focus::-webkit-scrollbar-track {
+	border-left: 2px solid #090;
+}
+.posting-controls.edit-existing-post textarea:focus::-webkit-scrollbar-thumb,
+.posting-controls form.edit-existing-comment textarea:focus::-webkit-scrollbar-thumb {
+	border-left: 2px solid #090;
+	background-color: #28a708;
+}
+
 /* GUIEdit buttons */
 
 .guiedit-buttons-container {

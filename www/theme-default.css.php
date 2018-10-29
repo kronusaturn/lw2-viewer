@@ -1325,7 +1325,7 @@ div.comment-child-links a {
 	border-top: 1px solid #eee;
 }
 .posting-controls textarea:focus::-webkit-scrollbar-track {
-	border-left: 1px solid #0040ff;
+	border-left: 1px solid #00e;
 	border-top: 1px solid #ddf;
 }
 .posting-controls textarea::-webkit-scrollbar-thumb {
@@ -1334,11 +1334,21 @@ div.comment-child-links a {
 	border-left: 1px solid #aaa;
 }
 .posting-controls textarea:focus::-webkit-scrollbar-thumb {
-	border-left: 1px solid #0040ff;
+	border-left: 1px solid #00e;
 	background-color: #0040ff;
 	box-shadow: 
 		0 1px 0 0 #ddf inset,
 		0 0 0 1px #eee inset;
+}
+
+.posting-controls.edit-existing-post textarea:focus::-webkit-scrollbar-track,
+.posting-controls form.edit-existing-comment textarea:focus::-webkit-scrollbar-track {
+	border-left: 1px solid #090;
+}
+.posting-controls.edit-existing-post textarea:focus::-webkit-scrollbar-thumb,
+.posting-controls form.edit-existing-comment textarea:focus::-webkit-scrollbar-thumb {
+	border-left: 1px solid #090;
+	background-color: #28a708;
 }
 
 /* GUIEdit buttons */
