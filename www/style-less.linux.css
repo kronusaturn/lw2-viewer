@@ -6303,6 +6303,24 @@ div.comment-child-links a {
 	box-shadow: 0 0 0 1px #090;
 }
 
+/*= Scroll bars =*/
+
+.posting-controls textarea::-webkit-scrollbar {
+	width: 16px;
+	background-color: transparent;
+}
+.posting-controls textarea::-webkit-scrollbar-track {
+	background-color: #fff;
+}
+.posting-controls textarea::-webkit-scrollbar-thumb {
+	background-color: #eee;
+	box-shadow: 0 0 0 1px #fff inset;
+}
+.posting-controls textarea:focus::-webkit-scrollbar-thumb {
+	background-color: #c4dbc4;
+	box-shadow: 0 0 0 1px #fff inset;
+}
+
 /* GUIEdit buttons */
 
 .guiedit-buttons-container {

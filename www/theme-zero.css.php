@@ -1105,6 +1105,34 @@ h1.listing .edit-post-link:hover,
 	box-shadow: 0 0 0 1px #090;
 }
 
+/*= Scroll bars =*/
+
+.posting-controls textarea::-webkit-scrollbar {
+	width: 16px;
+	background-color: transparent;
+}
+.posting-controls textarea::-webkit-scrollbar-track {
+	background-color: #fff;
+	border-left: 1px solid #0040ff;
+	border-top: 1px solid #eee;
+}
+.posting-controls textarea:focus::-webkit-scrollbar-track {
+	border-top: 1px solid #ddf;
+	border-left: 2px solid #0040ff;
+}
+.posting-controls textarea::-webkit-scrollbar-thumb {
+	background-color: #acacff;
+	box-shadow: 0 0 0 1px #eee inset;
+	border-left: 1px solid #0040ff;
+}
+.posting-controls textarea:focus::-webkit-scrollbar-thumb {
+	background-color: #0040ff;
+	border-left: 2px solid #0040ff;
+	box-shadow: 
+		0 1px 0 0 #ddf inset,
+		0 0 0 1px #eee inset;
+}
+
 /* GUIEdit buttons */
 
 .guiedit-buttons-container {

@@ -5610,6 +5610,34 @@ div.comment-child-links a {
 		0 0 0 2px #9740cb;
 }
 
+/*= Scroll bars =*/
+
+.posting-controls textarea::-webkit-scrollbar {
+	width: 16px;
+	background-color: transparent;
+}
+.posting-controls textarea::-webkit-scrollbar-track {
+	background-color: #131313;
+	border-left: 1px solid #484848;
+	border-top: 1px solid #131313;
+}
+.posting-controls textarea:focus::-webkit-scrollbar-track {
+	border-left: 1px solid #40a800;
+	border-top: 1px solid #1d1f00;
+}
+.posting-controls textarea::-webkit-scrollbar-thumb {
+	background-color: #484848;
+	box-shadow: 0 0 0 1px #131313 inset;
+	border-left: 1px solid #484848;
+}
+.posting-controls textarea:focus::-webkit-scrollbar-thumb {
+	border-left: 1px solid #40a800;
+	background-color: #40a800;
+	box-shadow: 
+		0 1px 0 0 #1d1f00 inset,
+		0 0 0 1px #131313 inset;
+}
+
 /* GUIEdit buttons */
 
 .guiedit-buttons-container {

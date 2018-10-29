@@ -5652,6 +5652,34 @@ div.comment-child-links a {
 		0 0 0 2px #090;
 }
 
+/*= Scroll bars =*/
+
+.posting-controls textarea::-webkit-scrollbar {
+	width: 16px;
+	background-color: transparent;
+}
+.posting-controls textarea::-webkit-scrollbar-track {
+	background-color: #eee;
+	border-left: 1px solid #bbb;
+	border-top: 1px solid #eee;
+}
+.posting-controls textarea:focus::-webkit-scrollbar-track {
+	border-left: 1px solid #f60;
+	border-top: 1px solid #ddf;
+}
+.posting-controls textarea::-webkit-scrollbar-thumb {
+	background-color: #bbb;
+	box-shadow: 0 0 0 1px #eee inset;
+	border-left: 1px solid #bbb;
+}
+.posting-controls textarea:focus::-webkit-scrollbar-thumb {
+	border-left: 1px solid #f60;
+	background-color: #f60;
+	box-shadow: 
+		0 1px 0 0 #ddf inset,
+		0 0 0 1px #eee inset;
+}
+
 /* GUIEdit buttons */
 
 .guiedit-buttons-container {
