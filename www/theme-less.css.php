@@ -22,7 +22,7 @@ body {
 	padding: 30px 20px 0 90px;
 	position: relative;
 }
-#content.post-page {
+#content.comment-thread-page {
 	padding: 0 0 0 60px;
 }
 #ui-elements-container {
@@ -99,8 +99,8 @@ body {
 		transform: translateX(-106px);
 		width: 80px;
 	}
-	#content.post-page #nav-item-archive,
-	#content.post-page #nav-item-about {
+	#content.comment-thread-page #nav-item-archive,
+	#content.comment-thread-page #nav-item-about {
 		transform: translateX(-76px);
 	}
 
@@ -534,7 +534,7 @@ body {
 		bottom: 10px;
 		right: -30px;
 	}
-	#content.post-page ~ #ui-elements-container #post-nav-ui-toggle {
+	#content.comment-thread-page ~ #ui-elements-container #post-nav-ui-toggle {
 		right: -54px;
 	}
 	#post-nav-ui-toggle button.engaged {
@@ -2824,7 +2824,7 @@ strong, b {
 		}
 
 		#content,
-		#content.post-page {
+		#content.comment-thread-page {
 			padding: 0 4px;
 		}
 

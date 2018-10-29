@@ -658,7 +658,7 @@ a#inbox-indicator.new-messages:hover::before {
 #quick-nav-ui a {
 	visibility: hidden;
 }
-#content.post-page:not(.individual-thread-page) ~ #ui-elements-container #quick-nav-ui a[href='#comments'] {
+#content.post-page ~ #ui-elements-container #quick-nav-ui a[href='#comments'] {
 	visibility: visible;
 }
 
@@ -2161,7 +2161,7 @@ a.comment-parent-link:hover::after {
 	padding: 1px 4px 0 4px;
 	overflow: hidden;
 }
-.post-page .guiedit-buttons-container {
+.comment-thread-page .guiedit-buttons-container {
 	padding-right: 60px;
 }
 .guiedit-buttons-container button {
@@ -4254,7 +4254,7 @@ body {
 	padding: 30px 20px 0 90px;
 	position: relative;
 }
-#content.post-page {
+#content.comment-thread-page {
 	padding: 0 0 0 60px;
 }
 #ui-elements-container {
@@ -4331,8 +4331,8 @@ body {
 		transform: translateX(-106px);
 		width: 80px;
 	}
-	#content.post-page #nav-item-archive,
-	#content.post-page #nav-item-about {
+	#content.comment-thread-page #nav-item-archive,
+	#content.comment-thread-page #nav-item-about {
 		transform: translateX(-76px);
 	}
 
@@ -4775,7 +4775,7 @@ body {
 		bottom: 10px;
 		right: -30px;
 	}
-	#content.post-page ~ #ui-elements-container #post-nav-ui-toggle {
+	#content.comment-thread-page ~ #ui-elements-container #post-nav-ui-toggle {
 		right: -54px;
 	}
 	#post-nav-ui-toggle button.engaged {
@@ -7131,7 +7131,7 @@ strong, b {
 		}
 
 		#content,
-		#content.post-page {
+		#content.comment-thread-page {
 			padding: 0 4px;
 		}
 

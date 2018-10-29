@@ -1791,7 +1791,7 @@ function toggleAntiKibitzerMode() {
 	let userCount = 0;
 	let userFakeName = { };
 
-	let appellation = (document.querySelector(".post-page") ? "Commenter" : "User");
+	let appellation = (document.querySelector(".comment-thread-page") ? "Commenter" : "User");
 
 	let postAuthor = document.querySelector(".post-page .post-meta .author");
 	if (postAuthor) userFakeName[postAuthor.dataset["userid"]] = "Original Poster";
