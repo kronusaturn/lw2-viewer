@@ -2359,8 +2359,14 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	let listings = document.querySelectorAll("h1.listing a[href^='/posts']");
 	if (listings.length > 0) {
 		document.addEventListener("keyup", (event) => { 
-			if (event.ctrlKey || event.shiftKey || event.altKey || !(event.key == "," || event.key == "." || event.key == ';')) return;
+			if (event.ctrlKey || event.shiftKey || event.altKey || !(event.key == "," || event.key == "." || event.key == ';' || event.keyCode == 27)) return;
 			
+			if (event.keyCode == 27 &&
+				document.activeElement.parentElement.hasClass("listing")) {
+				document.activeElement.blur();
+				return;
+			}
+
 			if (event.key == ';') {
 				if (document.activeElement.parentElement.hasClass("link-post-listing")) {
 					let links = document.activeElement.parentElement.querySelectorAll("a");
@@ -2394,7 +2400,13 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	let comments = document.querySelectorAll("#content > .comment-thread .comment-meta a.date");
 	if (comments.length > 0) {
 		document.addEventListener("keyup", (event) => {
-			if (event.ctrlKey || event.shiftKey || event.altKey || !(event.key == "," || event.key == "." || event.key == ';')) return;
+			if (event.ctrlKey || event.shiftKey || event.altKey || !(event.key == "," || event.key == "." || event.key == ';' || event.keyCode == 27)) return;
+			
+			if (event.keyCode == 27 &&
+				document.activeElement.parentElement.hasClass("comment-meta")) {
+				document.activeElement.blur();
+				return;
+			}
 
 			if (event.key == ';') {
 				if (document.activeElement.parentElement.hasClass("comment-meta")) {
