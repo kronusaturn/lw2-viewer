@@ -2052,6 +2052,37 @@ function removeElement(elementOrSelector, ancestor = document) {
 	if (elementOrSelector) elementOrSelector.parentElement.removeChild(elementOrSelector);
 }
 
+function MarkdownFromHTML(text) {
+	text = text.replace(/<(.+?)(?:\s(.+?))?>/g, (match, tag, attributes, offset, string) => {
+		switch(tag) {
+		case "html":
+		case "/html":
+		case "head":
+		case "/head":
+		case "body":
+		case "/body":
+		case "p":
+			return "";
+		case "/p":
+			return "\n";
+		case "strong":
+		case "/strong":
+			return "**";
+		case "em":
+		case "/em":
+			return "*";
+		case "code":
+		case "/code":
+			return "`";
+		default:
+			return match;
+		}
+	});
+	return text.replace(/<a href="(.+?)">(.+?)<\/a>/g, (match, href, text, offset, string) => {
+		return `[${text}](${href})`;
+	}).trim();
+}
+
 /******************/
 /* INITIALIZATION */
 /******************/
@@ -2147,6 +2178,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	document.querySelectorAll(".with-markdown-editor textarea").forEach(textarea => {
 		textarea.addTextareaFeatures();
 		ExpandTextarea(textarea);
+		textarea.value = MarkdownFromHTML(textarea.value);
 	});
 	document.querySelectorAll(((getQueryVariable("post-id")) ? "#edit-post-form textarea" : "#edit-post-form input[name='title']") + (window.isMobile ? "" : ", .conversation-page textarea")).forEach(field => { field.focus(); });
 
