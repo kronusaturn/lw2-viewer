@@ -2107,6 +2107,14 @@ function MarkdownFromHTML(text) {
 			return match;
 		}
 	});
+	text = text.replace(/<ul>((?:.|\n)+?)<\/ul>/g, (match, listItems, offset, string) => {
+		return listItems.replace(/<li>((?:.|\n)+?)<\/li>/g, (match, listItem, offset, string) => {
+			return "* " + listItem + "\n";
+		});
+	});
+	text = text.replace(/<h([1-9])>(.+?)<\/h[1-9]>/g, (match, level, headingText, offset, string) => {
+		return { "1":"#", "2":"##", "3":"###" }[level] + " " + headingText + "\n";
+	});
 	text = text.replace(/<blockquote>((?:.|\n)+?)<\/blockquote>/g, (match, quotedText, offset, string) => {
 		return "> " + quotedText.trim().split("\n").join("\n> ") + "\n";
 	});
