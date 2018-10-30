@@ -112,7 +112,7 @@
       (labels
         ((call-with-offset-loop (continue-fn loop-fn next-offset-fn offset-adjust-fn)
            (loop with current-offset = offset-list
-                 with output-offset of-type fixnum = (first current-offset)
+                 with output-offset of-type (or null fixnum) = (first current-offset)
                  with output-offset-list = nil
                  with total-offset of-type fixnum = 0
                  while (funcall continue-fn)
