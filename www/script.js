@@ -2598,7 +2598,10 @@ function realignHashIfNeeded() {
 		realignHash();
 }
 function realignHash() {
-	try { document.querySelector(location.hash).scrollIntoView(true); } catch (ex) { console.log(ex); }
+	if (!location.hash) return;
+	
+	let targetElement = document.querySelector(location.hash);
+	if (targetElement) targetElement.scrollIntoView(true);
 }
 
 /***********/
