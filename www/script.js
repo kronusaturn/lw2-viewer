@@ -908,7 +908,7 @@ function updatePostNavUIToggleVisibility() {
 	document.querySelectorAll("#ui-elements-container #quick-nav-ui a, #ui-elements-container #new-comment-nav-ui").forEach(element => {
 		if (window.getComputedStyle(element).visibility == "visible") hidePostNavUIToggle = false;
 	});
-	try { document.querySelector("#ui-elements-container #post-nav-ui-toggle").style.visibility = hidePostNavUIToggle ? "hidden" : ""; } catch (ex) { console.log(ex); }
+	(document.querySelector("#ui-elements-container #post-nav-ui-toggle")||{}).style.visibility = hidePostNavUIToggle ? "hidden" : "";
 }
 
 // Hide the site nav and appearance adjust UIs on scroll down; show them on scroll up.
@@ -2131,8 +2131,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 	let content = document.querySelector("#content");
 	if (content.querySelector("#comments .comment-thread") == null) {
-		try { document.querySelector("#quick-nav-ui a[href='#comments']").addClass("no-comments"); }
-		catch (ex) { console.log(ex); }
+		document.querySelector("#quick-nav-ui a[href='#comments']").addClass("no-comments");
 	}
 
 	if (location.hash.length == 18) {
