@@ -1972,6 +1972,13 @@ function sortComments(mode) {
 	});
 	removeElement(commentsContainer.lastChild);
 	commentsContainer.appendChild(clonedCommentsContainer.lastChild);
+	
+	// Re-activate vote buttons.
+	if (loggedInUserId) {
+		commentsContainer.querySelectorAll("button.vote").forEach(voteButton => {
+			voteButton.addActivateEvent(voteButtonClicked);
+		});
+	}
 
 	window.requestAnimationFrame(() => {
 		commentsContainer.removeClass("sorting");
