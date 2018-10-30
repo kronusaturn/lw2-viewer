@@ -2140,17 +2140,14 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	}
 
 	let useLongDate = window.innerWidth > 900;
-	try {
-		let dtf = new Intl.DateTimeFormat([], 
-			( useLongDate ? 
-				{ month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' }
-					: { month: 'numeric', day: 'numeric', year: '2-digit', hour: 'numeric', minute: 'numeric' } ));
-		document.querySelectorAll(".date").forEach(date => {
-			let d = date.getAttribute("data-js-date");
-			if (d) { date.innerHTML = dtf.format(new Date(+ d)); }
-		});
-	}
-	catch (ex) { console.log(ex); }
+	let dtf = new Intl.DateTimeFormat([], 
+		( useLongDate ? 
+			{ month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' }
+				: { month: 'numeric', day: 'numeric', year: '2-digit', hour: 'numeric', minute: 'numeric' } ));
+	document.querySelectorAll(".date").forEach(date => {
+		let d = date.getAttribute("data-js-date");
+		if (d) { date.innerHTML = dtf.format(new Date(+ d)); }
+	});
 
 	window.needHashRealignment = false;
 
