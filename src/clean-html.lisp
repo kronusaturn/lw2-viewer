@@ -14,6 +14,7 @@
     (uiop:slurp-stream-string stream)))
 
 (defun grab-from-rts (url)
+  (declare (optimize (speed 0) (space 3)))
   (let* ((root (plump:parse (drakma:http-request url :close t)))
 	 (post-body (plump:get-element-by-id root "wikitext")))
     (loop for cls in '("div.nav_menu" "div.imgonly" "div.bottom_nav") do
@@ -25,6 +26,7 @@
 		 (plump:serialize post-body stream))))
 
 (defun rts-to-html (file)
+  (declare (optimize (speed 0) (space 3)))
   (concatenate 'string
 	       "<style>"
 	       (file-get-contents "./rts-content/rts.css")
@@ -38,6 +40,7 @@
       do (let ((file* file)) (setf (gethash id *html-overrides*) (lambda () (rts-to-html file*)))))
 
 (defmacro do-with-cleaners ((regexp-list scanner replacement) &body body)
+  (declare (optimize (speed 0) (space 3)))
   `(labels ((fn (,scanner ,replacement) ,@body))
      ,@(loop for (regex flags replacement) in (eval regexp-list)
              collecting `(fn (load-time-value
@@ -51,12 +54,14 @@
                              ,replacement))))
 
 (defmacro define-cleaner (name regexp-list)
+  (declare (optimize (speed 0) (space 3)))
   `(defun ,name (text)
      (do-with-cleaners (,regexp-list scanner replacement)
        (setf text (ppcre:regex-replace-all scanner text replacement)))))
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (defun read-regexp-file (filename)
+    (declare (optimize (speed 0) (space 3)))
     (let ((data (destructuring-bind (* ((* (* inner))))
 		  (with-open-file (stream (uiop:subpathname (asdf:system-source-directory "lw2-viewer") filename)) (parse-js:parse-js stream))
 		  inner)))
@@ -69,12 +74,14 @@
 
 (defun hyphenate-string (string)
  (let ((hyphenation-list (cl-typesetting::hyphenate-string string)))
+   (declare (type (and string (not base-string)) string)
+            (type list hyphenation-list))
    (if hyphenation-list
      (let ((new-string (make-array (+ (length string) (length hyphenation-list)) :element-type 'character :fill-pointer 0)))
        (loop for char across string
-             for orig-offset from 0
+             for orig-offset of-type fixnum from 0
              with current-hyphenation = hyphenation-list
-             do (when (and current-hyphenation (= orig-offset (first current-hyphenation)))
+             do (when (and current-hyphenation (= orig-offset (the fixnum (first current-hyphenation))))
                   (vector-push #\SOFT_HYPHEN new-string)
                   (setf current-hyphenation (rest current-hyphenation)))
              do (vector-push char new-string))
@@ -97,30 +104,34 @@
                  (lambda (node)
                    (typecase node
                      (plump:text-node
-                       (push (length (plump:text node)) offset-list)
+                       (push (length (the string (plump:text node))) offset-list)
                        (write-string (plump:text node) stream)))))))
            (whole-string-output whole-string-input))
+      (declare (type string whole-string-output whole-string-input))
       (setf offset-list (nreverse offset-list))
       (labels
         ((call-with-offset-loop (continue-fn loop-fn next-offset-fn offset-adjust-fn)
            (loop with current-offset = offset-list
-                 with output-offset = (first current-offset)
+                 with output-offset of-type fixnum = (first current-offset)
                  with output-offset-list = nil
-                 with total-offset = 0
+                 with total-offset of-type fixnum = 0
                  while (funcall continue-fn)
                  do (funcall loop-fn)
-                 do (loop while (and (rest current-offset) (< (+ total-offset (first current-offset)) (funcall next-offset-fn)))
+                 do (loop for current-offset-num of-type fixnum = (first current-offset)
+                          while (and (rest current-offset) (< (+ total-offset current-offset-num) (funcall next-offset-fn)))
                           do (progn
                                (push output-offset output-offset-list)
-                               (setf total-offset (+ total-offset (first current-offset))
+                               (setf total-offset (+ total-offset current-offset-num)
                                      current-offset (cdr current-offset)
                                      output-offset (first current-offset))))
                  do (setf output-offset (funcall offset-adjust-fn output-offset))
                  finally (progn
                            (push output-offset output-offset-list)
                            (loop for x in (rest current-offset) do (push x output-offset-list))
-                           (setf offset-list (nreverse output-offset-list))))))
-        (declare (dynamic-extent (function call-with-offset-loop)))
+                           (setf offset-list (nreverse output-offset-list))))
+           (values)))
+        (declare (dynamic-extent (function call-with-offset-loop))
+                 (ftype (function ((function ()) (function ()) (function () fixnum) (function (fixnum) fixnum)) (values)) call-with-offset-loop))
         (macrolet
           ((offset-loop ((list-binding list-form) (&body loop-body) (&body next-offset-body) (&body offset-adjust-body))
              (with-gensyms (list-current)
@@ -129,14 +140,17 @@
                   (labels ((continue-fn () (if ,list-current (setf ,list-binding (pop ,list-current))))
                            (loop-fn () ,.loop-body)
                            (next-offset-fn () ,.next-offset-body)
-                           (offset-adjust-fn ,.offset-adjust-body))
+                           (offset-adjust-fn ,(first offset-adjust-body) (declare (type fixnum ,(caar offset-adjust-body)) (values fixnum)) ,.(rest offset-adjust-body)))
                     (declare (dynamic-extent (function continue-fn) (function loop-fn) (function next-offset-fn) (function offset-adjust-fn)))
                     (call-with-offset-loop #'continue-fn #'loop-fn #'next-offset-fn #'offset-adjust-fn))))))
           (do-with-cleaners ((read-regexp-file "text-clean-regexps.js") scanner replacement)
             (let ((replacements 0)
                   (replacement-list nil)
                   (original-length (length whole-string-output)))
+              (declare (type fixnum replacements))
               (ppcre:do-scans (match-start match-end reg-starts reg-ends scanner whole-string-output)
+                              (declare (type fixnum match-start match-end)
+                                       (type simple-vector reg-starts reg-ends))
                               (incf replacements)
                               (push
                                 (list (if (and (> (length reg-starts) 0) (eq (aref reg-starts 0) match-start))
@@ -149,13 +163,15 @@
               (setf replacement-list (nreverse replacement-list))
               (setf whole-string-output (ppcre:regex-replace-all scanner whole-string-output replacement))
               (let ((length-difference (- (length whole-string-output) original-length))
-                    (length-change))
+                    (length-change 0))
+                (declare (type fixnum length-difference length-change))
                 (offset-loop
                   (current-replacement replacement-list)
                   ((setf length-change (round length-difference replacements)
                          length-difference (- length-difference length-change)
                          replacements (- replacements 1)))
                   ((destructuring-bind (start end) current-replacement
+                     (declare (type fixnum start end))
                      (round (+ start end) 2)))
                   ((output-offset) (max 0 (+ output-offset length-change)))))))
           (multiple-value-bind (hyphenated-string hyphenation-list) (hyphenate-string whole-string-output)
@@ -166,18 +182,23 @@
               (current-hyphenation)
               ((output-offset) (1+ output-offset))))))
       (let ((current-offset 0))
+        (declare (type (or null fixnum) current-offset))
         (plump:traverse
           root
           (lambda (node)
             (typecase node
               (plump:text-node
-                (let ((next-offset (if offset-list (+ current-offset (first offset-list)) nil)))
+                (let ((next-offset (if offset-list (+ current-offset (the fixnum (first offset-list))) nil)))
+                  (declare (type (or null fixnum) next-offset))
                   (setf (plump:text node) (subseq whole-string-output current-offset next-offset)
                         current-offset next-offset
                         offset-list (cdr offset-list))))))))))
   root)
 
 (define-lmdb-memoized clean-html (:sources ("src/clean-html.lisp" "src/links.lisp" "text-clean-regexps.js" "html-clean-regexps.js")) (in-html &key with-toc post-id)
+  (declare (ftype (function (plump:node) fixnum) plump:child-position)
+           (ftype (function (plump:node) simple-array) plump:family)
+           (ftype (function (plump:node) simple-string) plump:text plump:tag-name))
   (labels ((tag-is (node &rest args)
 		   (declare (type plump:node node)
 			    (dynamic-extent args))
@@ -243,6 +264,8 @@
 			  (declare (type plump:text-node text-node)) 
 			  (let ((text (plump:text text-node)))
 			    (multiple-value-bind (url-start url-end) (ppcre:scan "(https?://[-a-zA-Z0-9]+\\.[-a-zA-Z0-9.]+|[-a-zA-Z0-9.]+\\.(com|edu|gov|mil|net|org|biz|info|name|museum|us|ca|uk))(\\:[0-9]+){0,1}(/[-a-zA-Z0-9.,;:?'\\\\+&%$#=~_/]*)?" text)
+                              (declare (type simple-string text)
+                                       (type (or null fixnum) url-start url-end))
 			      (when url-start
 				(let* ((url-raw (subseq text url-start url-end))
 				       (url (if (mismatch "http" url-raw :end2 4) (concatenate 'string "http://" url-raw) url-raw)) 
@@ -273,6 +296,7 @@
 				 (if style-list
 				   (format nil "<style>~{~A~}</style>" style-list)
 				   ""))))
+    (declare (ftype (function (plump:node &rest simple-string) boolean) tag-is only-child-is is-child-of-tag class-is-not text-node-is-not text-class-is-not))
     (handler-bind
       (((or plump:invalid-xml-character plump:discouraged-xml-character) #'abort))
       (alexandria:if-let
@@ -284,6 +308,7 @@
 	      (min-header-level 6) 
 	      (aggressive-deformat nil)
 	      (style-hash (make-hash-table :test 'equal)))
+          (declare (type fixnum section-count min-header-level))
           (let ((wayward-li-container nil))
             (plump:traverse root (lambda (node)
                                    (cond
