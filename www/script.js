@@ -2131,9 +2131,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 	let content = document.querySelector("#content");
 	if (content.querySelector("#comments .comment-thread") == null) {
-		document.querySelectorAll("#quick-nav-ui a[href='#comments'], #new-comment-nav-ui, #hns-date-picker").forEach(element => {
-			element.addClass("no-comments");
-		});
+		document.querySelector("#quick-nav-ui a[href='#comments']").addClass("no-comments");
 	}
 
 	if (location.hash.length == 18) {
@@ -2291,7 +2289,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		inputField.addEventListener("keyup", (event) => { event.stopPropagation(); });
 	});
 	
-	if (document.querySelector("#content").hasClass("post-page")) {
+	if (content.hasClass("post-page")) {
 		// Read and update last-visited-date.
 		let lastVisitedDate = getLastVisitedDate();
 		setLastVisitedDate(Date.now());
@@ -2299,18 +2297,20 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		// Save the number of comments this post has when it's visited.
 		updateSavedCommentCount();
 
-		// Add the new comments count & navigator.
-		injectNewCommentNavUI();
+		if (content.querySelector("#comments .comment-thread") != null) {
+			// Add the new comments count & navigator.
+			injectNewCommentNavUI();
 
-		// Get the highlight-new-since date (as specified by URL parameter, if 
-		// present, or otherwise the date of the last visit).
-		let hns = parseInt(getQueryVariable("hns")) || lastVisitedDate;
+			// Get the highlight-new-since date (as specified by URL parameter, if 
+			// present, or otherwise the date of the last visit).
+			let hns = parseInt(getQueryVariable("hns")) || lastVisitedDate;
 
-		// Highlight new comments since the specified date.			 
-		let newCommentsCount = highlightCommentsSince(hns);
+			// Highlight new comments since the specified date.			 
+			let newCommentsCount = highlightCommentsSince(hns);
 		
-		// Update the comment count display.
-		updateNewCommentNavUI(newCommentsCount, hns);
+			// Update the comment count display.
+			updateNewCommentNavUI(newCommentsCount, hns);
+		}
 	} else {
 		// On listing pages, make comment counts more informative.
 		badgePostsWithNewComments();
