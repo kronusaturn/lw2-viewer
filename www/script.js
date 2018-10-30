@@ -1749,6 +1749,29 @@ function markOriginalPosterComments() {
 	});
 }
 
+/********************************/
+/* EDIT POST PAGE SUBMIT BUTTON */
+/********************************/
+
+function setEditPostPageSubmitButtonText() {
+	if (!document.querySelector("#content").hasClass("edit-post-page")) return;
+	
+	document.querySelectorAll("input[type='radio'][name='section']").forEach(radio => {
+		radio.addEventListener("change", updateEditPostPageSubmitButtonText);
+	});
+
+	updateEditPostPageSubmitButtonText();
+}
+function updateEditPostPageSubmitButtonText() {
+	let submitButton = document.querySelector("input[type='submit']");
+	if (document.querySelector("input#drafts").checked == true)
+		submitButton.value = "Save Draft";
+	else if (document.querySelector(".posting-controls").hasClass("edit-existing-post"))
+		submitButton.value = "Save Post";
+	else
+		submitButton.value = "Submit Post";
+}
+
 /*****************/
 /* ANTI-KIBITZER */
 /*****************/
@@ -2336,6 +2359,9 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	
 	// Mark original poster's comments with a special class.
 	markOriginalPosterComments();
+	
+	// Set the "submit" button on the edit post page to something more helpful.
+	setEditPostPageSubmitButtonText();
 
 	// NOTE: This is commented out earlier on, and added here - for now.
 	// Add comment parent popups.
