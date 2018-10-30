@@ -1691,10 +1691,13 @@ function toggleAppearanceAdjustUI() {
 /*****************************/
 
 function expandAncestorsOf(commentId) {
-	try { document.querySelector('#comment-'+commentId).closest("label[for^='expand'] + .comment-thread").parentElement.querySelector("input[id^='expand']").checked = true; }
-	catch (ex) { console.log(ex); }
-	try { document.querySelector('#comment-'+commentId).closest("#comments > ul > li").setCommentThreadMaximized(true, false, true); }
-	catch (ex) { console.log(ex); }
+	// Expand collapsed comment threads.
+	let parentOfContainingCollapseCheckbox = document.querySelector('#comment-'+commentId).closest("label[for^='expand'] + .comment-thread").parentElement;
+	if (parentOfContainingCollapseCheckbox) parentOfContainingCollapseCheckbox.querySelector("input[id^='expand']").checked = true;
+	
+	// Expand collapsed comments.
+	let containingTopLevelCommentItem = document.querySelector('#comment-'+commentId).closest("#comments > ul > li");
+	if (containingTopLevelCommentItem) containingTopLevelCommentItem.setCommentThreadMaximized(true, false, true);
 }
 
 /**************************/
