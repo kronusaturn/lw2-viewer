@@ -2460,8 +2460,8 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 				return;
 			}
 
-			try { document.activeElement.closest(".comment-item").removeClasses([ "expanded", "comment-item-highlight" ]); }
-			catch (ex) { console.log(ex); }
+			let activeComment = document.activeElement.closest(".comment-item");
+			if (activeComment) activeComment.removeClasses([ "expanded", "comment-item-highlight" ]);
 
 			var indexOfActiveComment = -1;
 			for (i = 0; i < comments.length; i++) {
