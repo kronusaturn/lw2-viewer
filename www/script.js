@@ -2157,7 +2157,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 // 		commentParentLink.addEventListener("mouseover", function(e) {
 // 			let parent_id = "#comment-" + /(?:#comment-)?(.+)/.exec(commentParentLink.getAttribute("href"))[1];
 // 			var parent;
-// 			try { parent = document.querySelector(parent_id).firstChild; } catch (ex) { console.log(ex); return; }
+// 			if (!(parent = (document.querySelector(parent_id)||{}).firstChild)) return;
 // 			let parentCI = parent.parentNode;
 // 			var highlight_cn;
 // 			if (parent.getBoundingClientRect().bottom < 10 || parent.getBoundingClientRect().top > window.innerHeight + 10) {
@@ -2290,7 +2290,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		inputField.addEventListener("keyup", (event) => { event.stopPropagation(); });
 	});
 	
-	if (document.querySelector("#comments") && !document.querySelector(".individual-thread-page") && getPostHash()) {
+	if (document.querySelector("#content").hasClass(".post-page")) {
 		// Read and update last-visited-date.
 		let lastVisitedDate = getLastVisitedDate();
 		setLastVisitedDate(Date.now());
@@ -2342,7 +2342,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		commentParentLink.addEventListener("mouseover", (event) => {
 			let parent_id = "#comment-" + /(?:#comment-)?(.+)/.exec(commentParentLink.getAttribute("href"))[1];
 			var parent;
-			try { parent = document.querySelector(parent_id).firstChild; } catch (ex) { console.log(ex); return; }
+			if (!(parent = (document.querySelector(parent_id)||{}).firstChild)) return;
 			let parentCI = parent.parentNode;
 			var highlight_cn;
 			if (parent.getBoundingClientRect().bottom < 10 || parent.getBoundingClientRect().top > window.innerHeight + 10) {
@@ -2366,7 +2366,8 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	// Add in-listing edit post links.
 	if (loggedInUserId) {
 		document.querySelectorAll("h1.listing").forEach(listing => {
-			if (listing.nextSibling.querySelector(".author").hasClass("own-user-author"))
+			if (listing.querySelector("a[href^='/posts']") != null &&
+				listing.nextSibling.querySelector(".author").hasClass("own-user-author"))
 				listing.insertAdjacentHTML("beforeend", 
 					"<a class='edit-post-link button' href='/edit-post?post-id=" + 
 					/posts\/(.+?)\//.exec(listing.querySelector("a[href^='/']").pathname)[1] + 
