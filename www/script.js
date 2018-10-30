@@ -2290,7 +2290,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		inputField.addEventListener("keyup", (event) => { event.stopPropagation(); });
 	});
 	
-	if (document.querySelector("#content").hasClass(".post-page")) {
+	if (document.querySelector("#content").hasClass("post-page")) {
 		// Read and update last-visited-date.
 		let lastVisitedDate = getLastVisitedDate();
 		setLastVisitedDate(Date.now());
