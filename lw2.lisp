@@ -617,7 +617,7 @@
       (if (or next prev)
           (with-output-to-string (out-stream)
             (labels ((write-item (uri class title accesskey)
-                       (format out-stream "<a href=\"~A\" class=\"button nav-item-~A~:[ disabled~;~]\" title=\"~A (accesskey: '~A')\" accesskey=\"~A\"></a>"
+                       (format out-stream "<a href=\"~A\" class=\"button nav-item-~A~:[ disabled~;~]\" title=\"~A [~A]\" accesskey=\"~A\"></a>"
                                (or uri "#") class uri title accesskey accesskey)))
               (format out-stream "<div id='top-nav-bar'>")
               (write-item first-uri "first" "First page" "\\")
