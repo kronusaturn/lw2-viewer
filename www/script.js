@@ -2131,7 +2131,9 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 	let content = document.querySelector("#content");
 	if (content.querySelector("#comments .comment-thread") == null) {
-		document.querySelector("#quick-nav-ui a[href='#comments']").addClass("no-comments");
+		document.querySelectorAll("#quick-nav-ui a[href='#comments'], #new-comment-nav-ui, #hns-date-picker").forEach(element => {
+			element.addClass("no-comments");
+		});
 	}
 
 	if (location.hash.length == 18) {

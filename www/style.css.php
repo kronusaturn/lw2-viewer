@@ -682,6 +682,9 @@ a#inbox-indicator.new-messages:hover::before {
 	display: block;
 	position: relative;
 }
+#new-comment-nav-ui.no-comments {
+	display: none;
+}
 
 /*=--------------------=*/
 /*= New comments count =*/
@@ -739,6 +742,9 @@ a#inbox-indicator.new-messages:hover::before {
 #hns-date-picker:hover, 
 #hns-date-picker:focus-within {
 	opacity: 1.0;
+}
+#hns-date-picker.no-comments {
+	display: none;
 }
 
 /*=---------------=*/
