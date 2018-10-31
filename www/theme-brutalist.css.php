@@ -741,7 +741,9 @@ a.post-section:hover::before {
 }
 
 .comment-item .karma.active-controls::after,
-.comment-item .karma .karma-value::after {
+.comment-item .karma .karma-value::after,
+.post .karma.active-controls::after,
+.post .karma .karma-value::after {
 	background-color: #fff;
 	color: #000;
 	box-shadow: 0 0 0 1px #000 inset;
