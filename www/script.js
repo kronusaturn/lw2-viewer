@@ -2272,6 +2272,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		if (typeof postVote != 'undefined') {
 			document.querySelectorAll(".post-meta .karma-value").forEach(karmaValue => {
 				addVoteButtons(karmaValue, postVote, 'Posts');
+				karmaValue.parentElement.addClass("active-controls");
 			});
 		}
 		if (typeof commentVotes != 'undefined') {

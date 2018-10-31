@@ -1305,12 +1305,25 @@ a.post-section.alignment-forum:hover::before {
 	display: none;
 }
 
-.post .top-post-meta .karma::after {
+.post .post-meta .karma.active-controls::after {
+	bottom: -32px;
+	padding: 0 4px;
+}
+.post .post-meta .karma.active-controls:hover::after {
+	opacity: 0.7;
+}
+.post .top-post-meta .karma.active-controls::after {
 	bottom: 0;
 	left: calc(100% + 16px);
 	max-width: unset;
 	padding: 0;
 	white-space: nowrap;
+}
+.post .post-meta .karma .karma-value::after {
+	top: -20px;
+}
+.post .post-meta .karma .karma-value:hover::after {
+	opacity: 0.7;
 }
 .post .top-post-meta .karma .karma-value::after {
 	top: -6px;
