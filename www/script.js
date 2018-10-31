@@ -1692,7 +1692,7 @@ function toggleAppearanceAdjustUI() {
 
 function expandAncestorsOf(commentId) {
 	// Expand collapsed comment threads.
-	let parentOfContainingCollapseCheckbox = document.querySelector('#comment-'+commentId).closest("label[for^='expand'] + .comment-thread").parentElement;
+	let parentOfContainingCollapseCheckbox = (document.querySelector('#comment-'+commentId).closest("label[for^='expand'] + .comment-thread")||{}).parentElement;
 	if (parentOfContainingCollapseCheckbox) parentOfContainingCollapseCheckbox.querySelector("input[id^='expand']").checked = true;
 	
 	// Expand collapsed comments.
