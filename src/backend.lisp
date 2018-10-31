@@ -482,12 +482,6 @@
                                          *posts-index-fields*)
                        :auth-token auth-token)))
 
-(define-backend-operation get-user-posts backend-accordius (user-id &key offset limit (sort-type :date) drafts auth-token)
-  (declare (ignore user-id offset limit sort-type drafts auth-token))
-  (let ((*graphql-correct* t))
-    (declare (special *graphql-correct*))
-    (call-next-method)))
-
 (declare-backend-function get-conversation-messages)
 
 (define-backend-operation get-conversation-messages backend-lw2-legacy (conversation-id auth-token)
@@ -500,11 +494,6 @@
 (define-backend-operation get-conversation-messages backend-lw2 (conversation-id auth-token)
   (declare (ignore conversation-id auth-token))
   (let ((*messages-index-fields* (cons :html-body *messages-index-fields*)))
-    (call-next-method)))
-
-(define-backend-operation get-conversation-messages backend-accordius (conversation-id auth-token)
-  (declare (ignore conversation-id auth-token))
-  (let ((*messages-index-fields* (cons :html-body (remove :content *messages-index-fields*))))
     (call-next-method)))
 
 (defun lw2-search-query (query)

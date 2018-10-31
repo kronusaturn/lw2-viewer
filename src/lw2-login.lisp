@@ -143,18 +143,6 @@
       (res-data res-data) 
       (t (error "Unknown response from LW2 server: ~A" response-json))))) 
 
-(define-backend-operation do-login backend-accordius (user-designator-type user-designator password)
-  (declare (ignore user-designator-type))
-  (let* ((response
-           (do-lw2-post-query nil `(("query" . "mutation Login($username: String, $password: String) { Login(username: $username, password: $password) {userId, sessionKey, expiration}}")
-                                    ("variables" .
-                                     (("username" . ,user-designator)
-                                      ("password" . ,password))))))
-         (user-id (format nil "~A" (cdr (assoc :user-id response))))
-         (auth-token (cdr (assoc :session-key response)))
-         (expiration (truncate (* 1000 (cdr (assoc :expiration response))))))
-    (values user-id auth-token nil expiration)))
-
 (defun do-lw2-post-query* (auth-token data)
   (cdr (assoc :--id (do-lw2-post-query auth-token data))))
 
