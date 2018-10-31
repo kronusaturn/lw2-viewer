@@ -2224,10 +2224,6 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 	window.needHashRealignment = false;
 
-	// NOTE: Commenting this out here, adding it further on - for now.
-	// Add comment parent popups.
-// 	addCommentParentPopups();
-
 	document.querySelectorAll(".with-markdown-editor textarea").forEach(textarea => {
 		textarea.addTextareaFeatures();
 		ExpandTextarea(textarea);
@@ -2385,25 +2381,26 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	// Add the antikibitzer.
 	injectAntiKibitzer();
 	
+	// Add comment parent popups.
+	addCommentParentPopups();
+	
 	// Mark original poster's comments with a special class.
 	markOriginalPosterComments();
 	
 	// Set the "submit" button on the edit post page to something more helpful.
 	setEditPostPageSubmitButtonText();
 
-	// NOTE: This is commented out earlier on, and added here - for now.
-	// Add comment parent popups.
-	addCommentParentPopups();
-	
 	// Add in-listing edit post links.
 	if (loggedInUserId) {
 		document.querySelectorAll("h1.listing").forEach(listing => {
 			if (listing.querySelector("a[href^='/posts']") != null &&
-				listing.nextSibling.querySelector(".author").hasClass("own-user-author"))
+				listing.nextSibling.querySelector(".author").hasClass("own-user-author")) {
 				listing.insertAdjacentHTML("beforeend", 
 					"<a class='edit-post-link button' href='/edit-post?post-id=" + 
 					/posts\/(.+?)\//.exec(listing.querySelector("a[href^='/']").pathname)[1] + 
 					"'></a>");
+				listing.addClass("own-post-listing");
+			}
 		});
 	}
 

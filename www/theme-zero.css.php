@@ -478,10 +478,11 @@ h1.listing .edit-post-link {
 	padding: 6px 3px 32px 0.5em;
 	top: 0;
 	right: 0;
-	background-color: #eee;
 }
 h1.listing .edit-post-link:hover {
 	text-decoration: none;
+}
+#content.user-page h1.listing .edit-post-link {
 	background-color: #eee;
 }
 
@@ -516,6 +517,10 @@ h1.listing + .post-meta .karma-value {
 	border-width: 1px 1px 0 1px;
 	margin: 1rem 0 0 0;
 	max-width: 100%;
+}
+#content.own-user-page h1.listing,
+h1.listing.own-post-listing {
+	padding-right: 36px;
 }
 @media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
 	#content.user-page h1.listing:focus-within::before {

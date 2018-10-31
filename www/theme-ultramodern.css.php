@@ -497,10 +497,11 @@ h1.listing .edit-post-link {
 	padding: 10px 3px 30px 0.5em;
 	top: 0;
 	right: -1.5em;
-	background-color: #888;
 }
 h1.listing .edit-post-link:hover {
 	text-decoration: none;
+}
+#content.user-page h1.listing .edit-post-link {
 	background-color: #888;
 }
 
