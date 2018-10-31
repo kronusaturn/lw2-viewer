@@ -1041,12 +1041,14 @@ a.comment-parent-link::after {
 	box-shadow: 0 0 0 1px #ccc inset;
 	border-radius: 4px;
 }
-.comment-item .karma.active-controls::after {
+.comment-item .karma.active-controls::after,
+.post .karma.active-controls::after {
 	padding: 6px;
 	max-width: unset;
 	bottom: -50px;
 }
-.comment-item .karma .karma-value::after {
+.comment-item .karma .karma-value::after,
+.post .karma .karma-value::after {
 	padding: 2px 8px;
 	top: -26px;
 	min-width: 64px;

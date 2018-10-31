@@ -1007,11 +1007,13 @@ a.post-section.alignment-forum:hover::before {
 	box-shadow: 0 0 0 1px #ccc inset;
 	border-radius: 4px;
 }
-.comment-item .karma.active-controls::after {
+.comment-item .karma.active-controls::after,
+.post .karma.active-controls::after {
 	padding: 6px;
 	bottom: -46px;
 }
-.comment-item .karma .karma-value::after {
+.comment-item .karma .karma-value::after,
+.post .karma .karma-value::after {
 	padding: 2px 8px;
 	top: -26px;
 	min-width: 64px;
