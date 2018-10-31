@@ -1944,12 +1944,14 @@ var CommentSortMode = Object.freeze({
 	OLD:		"old",
 	HOT:		"hot"
 });
+var commentValues;
 function sortComments(mode) {
 	let commentsContainer = document.querySelector("#comments");
 
 	commentsContainer.removeClass(/(sorted-\S+)/.exec(commentsContainer.className)[1]);
 	commentsContainer.addClass("sorting");
 
+	commentValues = { };
 	let clonedCommentsContainer = commentsContainer.cloneNode(true);
 	clonedCommentsContainer.querySelectorAll(".comment-thread").forEach(commentThread => {
 		var comparator;
@@ -1972,6 +1974,7 @@ function sortComments(mode) {
 	});
 	removeElement(commentsContainer.lastChild);
 	commentsContainer.appendChild(clonedCommentsContainer.lastChild);
+	commentValues = { };
 	
 	// Re-activate vote buttons.
 	if (loggedInUserId) {
@@ -1990,15 +1993,15 @@ function sortComments(mode) {
 }
 function commentKarmaValue(commentOrSelector) {
 	if (typeof commentOrSelector == "string") commentOrSelector = document.querySelector(commentOrSelector);
-	return parseInt(commentOrSelector.querySelector(".karma-value").firstChild.textContent);
+	return commentValues[commentOrSelector.id] || (commentValues[commentOrSelector.id] = parseInt(commentOrSelector.querySelector(".karma-value").firstChild.textContent));
 }
 function commentDate(commentOrSelector) {
 	if (typeof commentOrSelector == "string") commentOrSelector = document.querySelector(commentOrSelector);
-	return parseInt(commentOrSelector.querySelector(".date").dataset.jsDate);
+	return commentValues[commentOrSelector.id] || (commentValues[commentOrSelector.id] = parseInt(commentOrSelector.querySelector(".date").dataset.jsDate));
 }
 function commentVoteCount(commentOrSelector) {
 	if (typeof commentOrSelector == "string") commentOrSelector = document.querySelector(commentOrSelector);
-	return parseInt(commentOrSelector.querySelector(".karma-value").title.split(" ")[0]);
+	return commentValues[commentOrSelector.id] || (commentValues[commentOrSelector.id] = parseInt(commentOrSelector.querySelector(".karma-value").title.split(" ")[0]));
 }
 
 function injectCommentsSortModeSelector() {
