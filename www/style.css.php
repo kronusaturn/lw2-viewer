@@ -957,9 +957,12 @@ h1.listing {
 h1.listing a {
 	position: relative;
 }
+
+/* Links to link-posts (not the link-post links themselves; that's below) */
 h1.listing a[href^='http'] + a {
 	margin-left: 0.25em;
 }
+/* Link-post links */
 h1.listing a[href^="http"] {
 	font-size: 0.8em;
 	display: inline;
@@ -967,6 +970,12 @@ h1.listing a[href^="http"] {
 	position: relative;
 	top: 4px;
 }
+
+/*=----------------------=*/
+/*= Listing hover reveal =*/
+/*=----------------------=*/
+/*	(On desktops, hover over a multi-line listing to reveal all of it) */
+
 @media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
 	h1.listing a {
 		max-width: 100%;
@@ -1000,6 +1009,8 @@ h1.listing a[href^="http"] {
 		left: -0.75em;
 	}
 
+/* Adds hysteresis to the hover area (i.e., prevents oscillation due to small
+   mouse movements) */
 <?php $margin_of_hover_error = '10px'; ?>
 
 	h1.listing a:not(.edit-post-link):hover::before {
@@ -1016,10 +1027,18 @@ h1.listing a[href^="http"] {
 	}
 }
 
+/*=-----------------------=*/
+/*= In-listing edit links =*/
+/*=-----------------------=*/
+
 h1.listing .edit-post-link {
 	position: absolute;
 	margin: 0;
 }
+
+/*=---------------------------------=*/
+/*= Error messages on listing pages =*/
+/*=---------------------------------=*/
 
 .listing-message {
 	width: 100%;
@@ -1041,6 +1060,7 @@ h1.listing + .post-meta {
 h1.listing + .post-meta > * {
 	margin: 0 1em 0 0;
 }
+
 h1.listing + .post-meta .post-section {
 	width: 0;
 	margin: 0;
@@ -1059,15 +1079,27 @@ h1.listing + .post-meta .read-time {
 /* USER PAGES */
 /**************/
 
+/*=------------=*/
+/*= Pagination =*/
+/*=------------=*/
+
 #content.user-page > #top-nav-bar {
 	grid-row: 6;
 }
+
+/*=---------------------=*/
+/*= User's display name =*/
+/*=---------------------=*/
 
 #content.user-page h1.page-main-heading {
 	margin: 0.25em 0 0 0;
 	line-height: 1.1;
 	grid-row: 4;
 }
+
+/*=--------------------=*/
+/*= User's karma total =*/
+/*=--------------------=*/
 
 #content.user-page .user-stats {
 	grid-column: 3;
@@ -1076,9 +1108,9 @@ h1.listing + .post-meta .read-time {
 	align-self: end;
 }
 
-#content.user-page h1.listing {
-	margin: 0.5em 0 0 0;
-}
+/*=----------------------=*/
+/*= Expanded vs. compact =*/
+/*=----------------------=*/
 
 #content.user-page #comments-list-mode-selector {
 	grid-row: 5 / span 2;
@@ -1087,13 +1119,33 @@ h1.listing + .post-meta .read-time {
 	display: block;
 }
 
+/*=----------------------------------------------------=*/
+/*= All, Posts, Comments, Drafts, Conversations, Inbox =*/
+/*=----------------------------------------------------=*/
+
 #content.user-page .sublevel-nav {
 	margin-bottom: 0.5em;
+}
+
+/*=--------------=*/
+/*= User's posts =*/
+/*=--------------=*/
+
+#content.user-page h1.listing {
+	margin: 0.5em 0 0 0;
 }
 
 /*****************/
 /* CONVERSATIONS */
 /*****************/
+
+#content.conversation-page {
+	overflow: visible;
+}
+
+/*=----------------------=*/
+/*= List of participants =*/
+/*=----------------------=*/
 
 #content.conversation-page .conversation-participants {
 	grid-column: 2 / span 2;
@@ -1115,6 +1167,11 @@ h1.listing + .post-meta .read-time {
 .conversation-participants li:not(:last-of-type)::after {
 	content: ",";
 }
+
+/*=-------------------------=*/
+/*= Posting controls (form) =*/
+/*=-------------------------=*/
+
 #content.conversation-page .posting-controls {
 	padding: 0 0 1em 0;
 }
@@ -1125,14 +1182,6 @@ h1.listing + .post-meta .read-time {
 }
 #content.conversation-page textarea {
 	margin-top: 0.375em;
-}
-#content.conversation-page h1.page-main-heading {
-	text-align: center;
-	margin: 0.5em 0;
-	line-height: 1.15;
-}
-#content.conversation-page > ul.comment-thread:last-of-type {
-	margin-bottom: 2em;
 }
 #conversation-form {
 	padding: 0 1em 3em 1em;
@@ -1160,8 +1209,23 @@ h1.listing + .post-meta .read-time {
 #content.conversation-page .markdown-hints {
 	top: calc(100% + 2em);
 }
-#content.conversation-page {
-	overflow: visible;
+
+/*=--------------------=*/
+/*= Conversation title =*/
+/*=--------------------=*/
+
+#content.conversation-page h1.page-main-heading {
+	text-align: center;
+	margin: 0.5em 0;
+	line-height: 1.15;
+}
+
+/*=----------=*/
+/*= Messages =*/
+/*=----------=*/
+
+#content.conversation-page > ul.comment-thread:last-of-type {
+	margin-bottom: 2em;
 }
 
 /******************/
