@@ -1979,6 +1979,9 @@ function sortComments(mode) {
 			voteButton.addActivateEvent(voteButtonClicked);
 		});
 	}
+	
+	// Re-add comment parent popups.
+	addCommentParentPopups();
 
 	window.requestAnimationFrame(() => {
 		commentsContainer.removeClass("sorting");
@@ -2045,6 +2048,39 @@ function setCommentsSortModeSelectButtonsAccesskey() {
 	let nextButtonInCycle = (selectedButton == selectedButton.parentElement.lastChild) ? selectedButton.parentElement.firstChild : selectedButton.nextSibling;
 	nextButtonInCycle.accessKey = "z";
 	nextButtonInCycle.title += " [z]";
+}
+
+/*************************/
+/* COMMENT PARENT POPUPS */
+/*************************/
+
+function addCommentParentPopups() {
+	if (!document.querySelector("#content").hasClass("comment-thread-page")) return;
+
+	document.querySelectorAll(".comment-meta a.comment-parent-link, .comment-meta a.comment-child-link").forEach(commentParentLink => {
+		commentParentLink.addEventListener("mouseover", (event) => {
+			let parent_id = "#comment-" + /(?:#comment-)?(.+)/.exec(commentParentLink.getAttribute("href"))[1];
+			var parent;
+			if (!(parent = (document.querySelector(parent_id)||{}).firstChild)) return;
+			let parentCI = parent.parentNode;
+			var highlight_cn;
+			if (parent.getBoundingClientRect().bottom < 10 || parent.getBoundingClientRect().top > window.innerHeight + 10) {
+				highlight_cn = "comment-item-highlight-faint";
+				parent = parent.cloneNode(true);
+				parent.addClass("comment-popup")
+				parent.addClass("comment-item-highlight");
+				commentParentLink.addEventListener("mouseout", (event) => {
+					removeElement(parent);
+				}, {once: true});
+				commentParentLink.closest(".comment").appendChild(parent);
+			} else {
+				highlight_cn = "comment-item-highlight";
+			}
+			let className = parentCI.className;
+			parentCI.className = className + " " + highlight_cn;
+			commentParentLink.addEventListener("mouseout", (event) => { parentCI.className = className; }, {once: true});
+		});
+	});
 }
 
 /*********************/
@@ -2190,30 +2226,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 	// NOTE: Commenting this out here, adding it further on - for now.
 	// Add comment parent popups.
-// 	document.querySelectorAll(".comment-meta a.comment-parent-link, .comment-meta a.comment-child-link").forEach(commentParentLink => {
-// 		commentParentLink.addEventListener("mouseover", function(e) {
-// 			let parent_id = "#comment-" + /(?:#comment-)?(.+)/.exec(commentParentLink.getAttribute("href"))[1];
-// 			var parent;
-// 			if (!(parent = (document.querySelector(parent_id)||{}).firstChild)) return;
-// 			let parentCI = parent.parentNode;
-// 			var highlight_cn;
-// 			if (parent.getBoundingClientRect().bottom < 10 || parent.getBoundingClientRect().top > window.innerHeight + 10) {
-// 				highlight_cn = "comment-item-highlight-faint";
-// 				parent = parent.cloneNode(true);
-// 				parent.addClass("comment-popup")
-// 				parent.addClass("comment-item-highlight");
-// 				commentParentLink.addEventListener("mouseout", function(e) {
-// 					parent.parentNode.removeChild(parent);
-// 				}, {once: true});
-// 				commentParentLink.parentNode.parentNode.appendChild(parent);
-// 			} else {
-// 				highlight_cn = "comment-item-highlight";
-// 			}
-// 			let className = parentCI.className;
-// 			parentCI.className = className + " " + highlight_cn;
-// 			commentParentLink.addEventListener("mouseout", (event) => { parentCI.className = cn; }, {once: true});
-// 		});
-// 	});
+// 	addCommentParentPopups();
 
 	document.querySelectorAll(".with-markdown-editor textarea").forEach(textarea => {
 		textarea.addTextareaFeatures();
@@ -2380,30 +2393,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 	// NOTE: This is commented out earlier on, and added here - for now.
 	// Add comment parent popups.
-	document.querySelectorAll(".comment-meta a.comment-parent-link, .comment-meta a.comment-child-link").forEach(commentParentLink => {
-		commentParentLink.addEventListener("mouseover", (event) => {
-			let parent_id = "#comment-" + /(?:#comment-)?(.+)/.exec(commentParentLink.getAttribute("href"))[1];
-			var parent;
-			if (!(parent = (document.querySelector(parent_id)||{}).firstChild)) return;
-			let parentCI = parent.parentNode;
-			var highlight_cn;
-			if (parent.getBoundingClientRect().bottom < 10 || parent.getBoundingClientRect().top > window.innerHeight + 10) {
-				highlight_cn = "comment-item-highlight-faint";
-				parent = parent.cloneNode(true);
-				parent.addClass("comment-popup")
-				parent.addClass("comment-item-highlight");
-				commentParentLink.addEventListener("mouseout", (event) => {
-					removeElement(parent);
-				}, {once: true});
-				commentParentLink.closest(".comment").appendChild(parent);
-			} else {
-				highlight_cn = "comment-item-highlight";
-			}
-			let className = parentCI.className;
-			parentCI.className = className + " " + highlight_cn;
-			commentParentLink.addEventListener("mouseout", (event) => { parentCI.className = className; }, {once: true});
-		});
-	});
+	addCommentParentPopups();
 	
 	// Add in-listing edit post links.
 	if (loggedInUserId) {
