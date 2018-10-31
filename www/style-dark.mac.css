@@ -1443,6 +1443,51 @@ h1.listing + .post-meta .read-time {
 	font-family: Concourse;
 }
 
+/*= Karma controls hover tooltips =*/
+
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+	.post .post-meta .karma {
+		position: relative;
+	}
+	.post .post-meta .karma::after {
+		content: "Double-click for strong vote";
+		position: absolute;
+		pointer-events: none;
+		display: block;
+		left: 0;
+		bottom: -32px;
+		max-width: 100%;
+		white-space: normal;
+		line-height: 1.15;
+		padding: 0 4px;
+		font-size: 0.875rem;
+		opacity: 0;
+		transition:
+			opacity 0.2s ease;
+	}
+	.post .post-meta .karma:hover::after {
+		opacity: 0.7;
+	}
+
+	.post .post-meta .karma .karma-value::after {
+		content: attr(title);
+		position: absolute;
+		pointer-events: none;
+		display: block;
+		left: 0;
+		top: -20px;
+		width: 100%;
+		font-size: 0.875rem;
+		color: #393939;
+		opacity: 0;
+		transition:
+			opacity 0.2s ease;
+	}
+	.post .post-meta .karma .karma-value:hover::after {
+		opacity: 0.7;
+	}
+}
+
 /*********/
 /* POSTS */
 /*********/
@@ -1633,45 +1678,47 @@ ul.comment-thread {
 
 /*= Karma controls hover tooltips =*/
 
-.comment-item .karma {
-	position: relative;
-}
-.comment-item .karma.active-controls::after {
-	content: "Double-click for strong vote";
-	position: absolute;
-	pointer-events: none;
-	display: block;
-	left: 6px;
-	max-width: calc(100% - 12px);
-	white-space: normal;
-	line-height: 1.15;
-	text-align: center;
-	font-size: 0.875rem;
-	opacity: 0;
-	transition:
-		opacity 0.2s ease;
-}
-.comment-item .karma.active-controls:hover::after {
-	opacity: 1.0;
-}
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+	.comment-item .karma {
+		position: relative;
+	}
+	.comment-item .karma.active-controls::after {
+		content: "Double-click for strong vote";
+		position: absolute;
+		pointer-events: none;
+		display: block;
+		left: 6px;
+		max-width: calc(100% - 12px);
+		white-space: normal;
+		line-height: 1.15;
+		text-align: center;
+		font-size: 0.875rem;
+		opacity: 0;
+		transition:
+			opacity 0.2s ease;
+	}
+	.comment-item .karma.active-controls:hover::after {
+		opacity: 1.0;
+	}
 
-.comment-item .karma .karma-value::after {
-	content: attr(title);
-	position: absolute;
-	pointer-events: none;
-	display: block;
-	left: 50%;
-	transform: translateX(-50%);
-	white-space: nowrap;
-	text-align: center;
-	font-size: 0.875rem;
-	opacity: 0;
-	transition:
-		opacity 0.2s ease;
-}
-.comment-item .karma .karma-value:hover::after {
-	opacity: 1.0;
-	z-index: 5001;
+	.comment-item .karma .karma-value::after {
+		content: attr(title);
+		position: absolute;
+		pointer-events: none;
+		display: block;
+		left: 50%;
+		transform: translateX(-50%);
+		white-space: nowrap;
+		text-align: center;
+		font-size: 0.875rem;
+		opacity: 0;
+		transition:
+			opacity 0.2s ease;
+	}
+	.comment-item .karma .karma-value:hover::after {
+		opacity: 1.0;
+		z-index: 5001;
+	}
 }
 
 /*****************************/
