@@ -1135,7 +1135,9 @@
                                             (concatenate 'list user-posts user-comments)))))
                                (with-next (> (length items) (+ (if show 0 offset) (user-pref :items-per-page))))
                                (interleave (if (not show) (comment-post-interleave items :limit (user-pref :items-per-page) :offset (if show nil offset) :sort-by sort-type) (firstn items (user-pref :items-per-page))))) ; this destructively sorts items
-                          (view-items-index interleave :with-offset offset :title title :content-class (format nil "user-page~@[ ~A-user-page~]" (if show show-text)) :current-uri (format nil "/users/~A" user-slug)
+                          (view-items-index interleave :with-offset offset :title title
+                                            :content-class (format nil "user-page~@[ ~A-user-page~]~:[~; own-user-page~]" (if show show-text) own-user-page)
+                                            :current-uri (format nil "/users/~A" user-slug)
                                             :section :personal
                                             :with-offset offset :with-next with-next
                                             :need-auth (eq show :drafts) :section (if (eq show :drafts) "drafts" nil)
