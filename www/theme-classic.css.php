@@ -1034,6 +1034,24 @@ a.comment-parent-link::after {
 	opacity: 0.8;
 }
 
+.comment-item .karma.active-controls::after,
+.comment-item .karma .karma-value::after {
+	background-color: #fff;
+	color: #888;
+	box-shadow: 0 0 0 1px #ccc inset;
+	border-radius: 4px;
+}
+.comment-item .karma.active-controls::after {
+	padding: 6px;
+	max-width: unset;
+	bottom: -50px;
+}
+.comment-item .karma .karma-value::after {
+	padding: 2px 8px;
+	top: -26px;
+	min-width: 64px;
+}
+
 /*====================*/
 /* COMMENT PERMALINKS */
 /*====================*/

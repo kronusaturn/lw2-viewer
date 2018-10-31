@@ -1023,6 +1023,23 @@ a.post-section.alignment-forum:hover::before {
 	opacity: 0.5;
 }
 
+.comment-item .karma.active-controls::after,
+.comment-item .karma .karma-value::after {
+	background-color: #fff;
+	color: #999;
+	border-radius: 4px;
+	box-shadow: 0 0 0 1px #ddd inset;
+}
+.comment-item .karma.active-controls::after {
+	padding: 6px 4px 4px 4px;
+	bottom: -44px;
+}
+.comment-item .karma .karma-value::after {
+	padding: 2px 8px 1px 8px;
+	top: -25px;
+	min-width: 56px;
+}
+
 /*====================*/
 /* ANTI-KIBITZER MODE */
 /*====================*/

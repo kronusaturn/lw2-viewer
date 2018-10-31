@@ -1650,9 +1650,7 @@ ul.comment-thread {
 	pointer-events: none;
 	display: block;
 	left: 6px;
-	bottom: -42px;
 	max-width: calc(100% - 12px);
-	padding: 6px 4px 4px 4px;
 	white-space: normal;
 	line-height: 1.15;
 	text-align: center;
@@ -1670,10 +1668,8 @@ ul.comment-thread {
 	position: absolute;
 	pointer-events: none;
 	display: block;
-	top: -30px;
 	left: 50%;
 	transform: translateX(-50%);
-	padding: 4px 8px 0 8px;
 	white-space: nowrap;
 	text-align: center;
 	font-size: 0.875rem;
@@ -1683,6 +1679,7 @@ ul.comment-thread {
 }
 .comment-item .karma .karma-value:hover::after {
 	opacity: 1.0;
+	z-index: 5001;
 }
 
 /*****************************/

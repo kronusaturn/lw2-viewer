@@ -982,6 +982,23 @@ a.comment-parent-link::before {
 	opacity: 0.8;
 }
 
+.comment-item .karma.active-controls::after,
+.comment-item .karma .karma-value::after {
+	background-color: #888;
+	color: #ccc;
+	border-radius: 4px;
+	box-shadow: 0 0 0 1px #bbb inset;
+}
+.comment-item .karma.active-controls::after {
+	padding: 6px;
+	bottom: -46px;
+}
+.comment-item .karma .karma-value::after {
+	padding: 2px 8px;
+	top: -28px;
+	min-width: 64px;
+}
+
 /*====================*/
 /* ANTI-KIBITZER MODE */
 /*====================*/

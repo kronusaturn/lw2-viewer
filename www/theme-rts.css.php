@@ -1000,6 +1000,23 @@ a.post-section.alignment-forum:hover::before {
 	opacity: 0.8;
 }
 
+.comment-item .karma.active-controls::after,
+.comment-item .karma .karma-value::after {
+	background-color: #fff;
+	color: #777;
+	box-shadow: 0 0 0 1px #ccc inset;
+	border-radius: 4px;
+}
+.comment-item .karma.active-controls::after {
+	padding: 6px;
+	bottom: -46px;
+}
+.comment-item .karma .karma-value::after {
+	padding: 2px 8px;
+	top: -26px;
+	min-width: 64px;
+}
+
 /*====================*/
 /* ANTI-KIBITZER MODE */
 /*====================*/

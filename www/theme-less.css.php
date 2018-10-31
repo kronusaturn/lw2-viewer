@@ -1541,21 +1541,20 @@ a.post-section.alignment-forum:hover::before {
 	color: #bbb;
 }
 
-.comment-item .karma {
-	position: relative;
-}
-.comment-item .karma.active-controls::after {
-	background-color: #fff;
-	color: rgba(187,187,187,0.8);
-	border-radius: 4px;
-	box-shadow: 0 0 0 1px #f6f6f6 inset;
-}
-
+.comment-item .karma.active-controls::after,
 .comment-item .karma .karma-value::after {
 	background-color: #fff;
-	color: rgba(187,187,187,0.8);
+	color: #bbb;
 	border-radius: 4px;
-	box-shadow: 0 0 0 1px #f6f6f6 inset;
+	box-shadow: 0 0 0 1px #eee inset;
+}
+.comment-item .karma.active-controls::after {
+	padding: 6px 4px 4px 4px;
+	bottom: -42px;
+}
+.comment-item .karma .karma-value::after {
+	padding: 4px 8px 0 8px;
+	top: -30px;
 }
 
 /*====================*/

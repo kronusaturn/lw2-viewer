@@ -740,6 +740,22 @@ a.post-section:hover::before {
 	opacity: 0.6;
 }
 
+.comment-item .karma.active-controls::after,
+.comment-item .karma .karma-value::after {
+	background-color: #fff;
+	color: #000;
+	box-shadow: 0 0 0 1px #000 inset;
+}
+.comment-item .karma.active-controls::after {
+	padding: 6px;
+	bottom: -62px;
+}
+.comment-item .karma .karma-value::after {
+	padding: 2px 8px;
+	top: -26px;
+	min-width: 60px;
+}
+
 /*====================*/
 /* ANTI-KIBITZER MODE */
 /*====================*/
