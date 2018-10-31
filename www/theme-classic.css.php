@@ -1047,13 +1047,15 @@ a.comment-parent-link::after {
 .post .karma.active-controls::after {
 	padding: 6px;
 	max-width: unset;
-	bottom: -50px;
+	bottom: -46px;
+	width: 110px;
 }
 .comment-item .karma .karma-value::after,
 .post .karma .karma-value::after {
 	padding: 2px 8px;
-	top: -26px;
+	top: -36px;
 	min-width: 64px;
+	font-weight: normal;
 }
 
 /*====================*/
