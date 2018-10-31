@@ -1545,51 +1545,17 @@ a.post-section.alignment-forum:hover::before {
 	position: relative;
 }
 .comment-item .karma.active-controls::after {
-	content: "Double-click for strong vote";
-	position: absolute;
-	pointer-events: none;
-	display: block;
-	left: 6px;
-	bottom: -42px;
-	max-width: calc(100% - 12px);
-	white-space: normal;
-	line-height: 1.15;
-	text-align: center;
-	padding: 6px 4px 4px 4px;
-	font-size: 0.875rem;
 	background-color: #fff;
 	color: rgba(187,187,187,0.8);
 	border-radius: 4px;
 	box-shadow: 0 0 0 1px #f6f6f6 inset;
-	opacity: 0;
-	transition:
-		opacity 0.2s ease;
-}
-.comment-item .karma.active-controls:hover::after {
-	opacity: 1.0;
 }
 
 .comment-item .karma .karma-value::after {
-	content: attr(title);
-	position: absolute;
-	pointer-events: none;
-	display: block;
-	font-size: 0.875rem;
-	text-align: center;
 	background-color: #fff;
 	color: rgba(187,187,187,0.8);
 	border-radius: 4px;
 	box-shadow: 0 0 0 1px #f6f6f6 inset;
-	padding: 4px 8px 0 8px;
-	opacity: 0;
-	left: 50%;
-	transform: translateX(-50%);
-	top: -30px;
-	transition:
-		opacity 0.2s ease;
-}
-.comment-item .karma .karma-value:hover::after {
-	opacity: 1.0;
 }
 
 /*====================*/
