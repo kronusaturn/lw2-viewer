@@ -95,7 +95,8 @@
                   (t (if (eq skip-section :personal) nil (list "personal" (format nil "View posts by ~A" (get-username user-id)) (format nil "/users/~A?show=posts" (get-user-slug user-id)))))))))
 
 (defun post-headline-to-html (out-stream post &key skip-section need-auth)
-  (alist-bind ((title string)
+  (alist-bind ((post-id string :--id)
+               (title string)
                (user-id string)
                (url (or null string))
                (posted-at string)
@@ -111,11 +112,13 @@
                (draft boolean))
     post
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      (format out-stream "<h1 class=\"listing~:[~; link-post-listing~]\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~A</a></h1><div class=\"post-meta\"><a class=\"author~:[~; own-user-author~]\" href=\"/users/~A\" data-userid=\"~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"comment-count\" href=\"~A#comments\">~A</a>~:[~*~;~:*<span class=\"read-time\" title=\"~:D word~:P\">~:D<span> min read</span></span>~]~@[<a class=\"lw2-link\" href=\"~A\">LW<span> link</span></a>~]"
+      (format out-stream "<h1 class=\"listing~:[~; link-post-listing~]\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~A</a>~@[<a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\"></a>~]</h1>"
               url
               (if url (encode-entities (string-trim " " url)))
               (generate-post-auth-link post nil nil need-auth)
               (clean-text-to-html title)
+              (if (logged-in-userid user-id) post-id))
+      (format out-stream "<div class=\"post-meta\"><a class=\"author~:[~; own-user-author~]\" href=\"/users/~A\" data-userid=\"~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"comment-count\" href=\"~A#comments\">~A</a>~:[~*~;~:*<span class=\"read-time\" title=\"~:D word~:P\">~:D<span> min read</span></span>~]~@[<a class=\"lw2-link\" href=\"~A\">LW<span> link</span></a>~]"
               (logged-in-userid user-id)
               (encode-entities (get-user-slug user-id))
               (encode-entities user-id)

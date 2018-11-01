@@ -2416,20 +2416,6 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	// Set the "submit" button on the edit post page to something more helpful.
 	setEditPostPageSubmitButtonText();
 
-	// Add in-listing edit post links.
-	if (loggedInUserId) {
-		document.querySelectorAll("h1.listing").forEach(listing => {
-			if (listing.querySelector("a[href^='/posts']") != null &&
-				listing.nextSibling.querySelector(".author").hasClass("own-user-author")) {
-				listing.insertAdjacentHTML("beforeend", 
-					"<a class='edit-post-link button' href='/edit-post?post-id=" + 
-					/posts\/(.+?)\//.exec(listing.querySelector("a[href^='/']").pathname)[1] + 
-					"'></a>");
-				listing.addClass("own-post-listing");
-			}
-		});
-	}
-
 	// Add event listeners for Escape and Enter, for the theme tweaker.
 	document.addEventListener("keyup", (event) => {
 		if (event.keyCode == 27) {
