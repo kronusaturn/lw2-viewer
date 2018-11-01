@@ -2061,6 +2061,68 @@ function addCommentParentPopups() {
 	});
 }
 
+/***************/
+/* IMAGE FOCUS */
+/***************/
+
+function imageFocusSetup() {
+	let imageFocusOverlay = addUIElement("<div id='image-focus-overlay'></div>");
+	imageFocusOverlay.addActivateEvent((event) => {
+		unfocusImageOverlay();
+	});
+	document.addEventListener("keyup", (event) => {
+		if (event.keyCode != 27 || 
+			window.getComputedStyle(imageFocusOverlay) == "none") return;
+		event.preventDefault();
+		unfocusImageOverlay();
+	});
+	
+	document.querySelectorAll("#content img, #images-overlay img").forEach(image => {
+		image.addActivateEvent(focusImage);
+	});
+}
+
+function focusImage(event) {
+	let imageFocusOverlay = document.querySelector("#image-focus-overlay");
+	let clonedImage = event.target.cloneNode(true);
+	clonedImage.style = "";
+	imageFocusOverlay.appendChild(clonedImage);
+	
+	document.querySelectorAll("#content, #ui-elements-container > *:not(#image-focus-overlay), #images-overlay").forEach(element => {
+		element.addClass("blurred");
+	});
+	
+	window.addEventListener("wheel", zoomFocusedImage);
+}
+
+function unfocusImageOverlay(imageFocusOverlay) {
+	removeElement(document.querySelector("#image-focus-overlay img"));
+	document.querySelectorAll("#content, #ui-elements-container > *:not(#image-focus-overlay), #images-overlay").forEach(element => {
+		element.removeClass("blurred");
+	});
+	window.removeEventListener("wheel", zoomFocusedImage);
+}
+
+function zoomFocusedImage(event) {
+	event.preventDefault();
+	
+	let image = document.querySelector("#image-focus-overlay img");
+
+	// Remove the filter.
+	image.style.filter = 'none';
+
+	// Resize.
+	var factor = 1 + Math.sqrt(Math.abs(event.deltaY))/100.0;
+	image.style.width = (event.deltaY < 0 ?
+						(image.clientWidth * factor) :
+						(image.clientWidth / factor))
+						+ "px";
+	image.style.height = "auto";
+
+	// Put the filter back.
+	image.style.filter = '';
+}
+
 /*********************/
 /* MORE MISC HELPERS */
 /*********************/
@@ -2534,6 +2596,9 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		const selectedText = window.getSelection().toString();
 		event.clipboardData.setData("text/plain", selectedText.replace(/\u00AD/g, ""));
 	});
+	
+	// Set up Image Focus feature.
+	imageFocusSetup();
 });
 
 /*************************/

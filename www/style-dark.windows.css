@@ -2850,6 +2850,55 @@ li {
 	visibility: hidden;
 }
 
+/***************/
+/* IMAGE FOCUS */
+/***************/
+
+#content img:hover,
+#images-overlay img:hover {
+	filter: drop-shadow(0 0 3px #777);
+}
+#content img:active,
+#images-overlay img:active {
+	transform: scale(0.975);
+}
+
+#image-focus-overlay {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+}
+#image-focus-overlay::before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: #fff;
+	opacity: 0.5;
+	z-index: -1;
+}
+#image-focus-overlay:empty {
+	display: none;
+}
+
+#image-focus-overlay img {
+	filter: drop-shadow(10px 10px 10px #000) drop-shadow(0 0 10px #444);
+	margin: auto;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translateX(-50%) translateY(-50%);
+}
+
+.blurred {
+	filter: blur(3px);
+}
+
 /**************************/
 /* QUALIFIED HYPERLINKING */
 /**************************/
