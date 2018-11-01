@@ -52,9 +52,7 @@ body::before {
 /*= Immediate children of body =*/
 /*=----------------------------=*/
 
-#content,
-#ui-elements-container,
-#images-overlay {
+body > * {
 	width: calc(100% - 300px);
 	min-width: 900px;
 	max-width: 900px;
