@@ -652,7 +652,7 @@ function updateSavedCommentCount() {
 function badgePostsWithNewComments() {
 	if (getQueryVariable("show") == "conversations") return;
 	
-	document.querySelectorAll("h1.listing a[href^='/']").forEach(postLink => {
+	document.querySelectorAll("h1.listing a[href^='/posts']").forEach(postLink => {
 		let postHash = /posts\/(.+?)\//.exec(postLink.href)[1];
 
 		let savedCommentCount = window.localStorage.getItem("comment-count_" + postHash);
