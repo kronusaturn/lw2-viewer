@@ -4,7 +4,7 @@
 
 Element.prototype.addClass = function(className) {
 	if (!this.hasClass(className))
-		this.className += " " + className;
+		this.className = (this.className + " " + className).trim();
 }
 Element.prototype.addClasses = function(classNames) {
 	let elementClassNames = this.className.trim().split(/\s/);
