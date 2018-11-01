@@ -1,24 +1,24 @@
+/***********************************/
+/* CONTENT COLUMN WIDTH ADJUSTMENT */
+/***********************************/
+
 var widthOptions = [
-	['normal', 'Narrow (fixed-width) content column', 'N', '900px'],
-	['wide', 'Wide (fixed-width) content column', 'W', '1150px'],
-	['fluid', 'Full-width (fluid) content column', 'F', '(100% - 300px)']
+	['normal', 'Narrow (fixed-width) content column', 'N'],
+	['wide', 'Wide (fixed-width) content column', 'W'],
+	['fluid', 'Full-width (fluid) content column', 'F']
 ];
 
-var widthDict = {'(100vw - 300px)': 'fluid'};
-widthOptions.map((wo) => {
-	widthDict[wo[0]] = wo[3];
-	widthDict[wo[3]] = wo[3];
-});
-
-function setContentWidth(widthString) {
-	let width = widthDict[widthString];
-	if (!width) return;
-	document.querySelector('#width-adjust').innerHTML = 
-		`#content, #ui-elements-container, #images-overlay { 
-			max-width: calc(${width}) !important;
-		}`;
+function setContentWidth(widthOption) {
+	let currentWidth = window.localStorage.getItem("selected-width") || 'normal';
+	let head = document.querySelector('head');
+	head.removeClasses(widthOptions.map(wo => 'content-width-' + wo[0]));
+	head.addClass('content-width-' + (widthOption || 'normal'));
 }
 setContentWidth(window.localStorage.getItem('selected-width'));
+
+/********************************************/
+/* APPEARANCE CUSTOMIZATION (THEME TWEAKER) */
+/********************************************/
 
 Object.prototype.isEmpty = function() {
     for (var prop in this) if (this.hasOwnProperty(prop)) return false;
@@ -48,6 +48,10 @@ document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='theme
 window.currentFilters = JSON.parse(window.localStorage.getItem("theme-tweaks") || "{ }");
 applyFilters(window.currentFilters);
 
+/************************/
+/* TEXT SIZE ADJUSTMENT */
+/************************/
+
 document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='text-zoom'></style>");
 function setTextZoom(zoomFactor) {
 	if (!zoomFactor) return;
@@ -76,11 +80,13 @@ function setTextZoom(zoomFactor) {
 		`.post-body, .comment-body {
 			zoom: ${zoomFactor};
 		}`;
-
-
 }
 window.currentTextZoom = window.localStorage.getItem('text-zoom');
 setTextZoom(window.currentTextZoom);
+
+/**********/
+/* THEMES */
+/**********/
 
 window.themeOptions = [
 	['default', 'Default theme (dark text on light background)', 'A'],

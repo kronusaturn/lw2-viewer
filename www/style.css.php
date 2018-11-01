@@ -3,6 +3,12 @@
 	
 	$platform = @$argv[1] ?: 'Mac';
 	$UI_font = ($platform == 'Windows') ? "'Whitney', 'a_Avante'" : "'Concourse', 'a_Avante'";
+	
+	$content_width_settings = [
+		'normal' => '900px',
+		'wide' => '1150px',
+		'fluid' => 'calc(100% - 300px)'
+	];
 
 	function fit_content($selector, $property = "width") {
 		foreach (["-moz-fit-content", "fit-content"] as $pvalue) echo 
@@ -515,6 +521,13 @@ a#inbox-indicator.new-messages:hover::before {
 #width-selector button:hover:not(:active)::after {
 	visibility: visible;
 }
+
+<?php
+global $content_width_settings;
+foreach ($content_width_settings as $name => $setting) {
+	echo "head.content-width-{$name} + body > * {\n	max-width: {$setting};\n}\n";
+}
+?>
 
 /******************/
 /* THEME SELECTOR */

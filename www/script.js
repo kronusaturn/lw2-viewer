@@ -106,14 +106,12 @@ Element.prototype.addActivateEvent = function(func, includeMouseDown) {
 	let ael = this.activateEventListener = (event) => { if (event.button === 0 || event.key === ' ') func(event) };
 	if (includeMouseDown) this.addEventListener("mousedown", ael);
 	this.addEventListener("click", ael);
-// 	this.addEventListener("mouseup", ael);
 	this.addEventListener("keyup", ael);
 }
 
 Element.prototype.removeActivateEvent = function() {
 	let ael = this.activateEventListener;
 	this.removeEventListener("mousedown", ael);
-// 	this.removeEventListener("mouseup", ael);
 	this.removeEventListener("click", ael);
 	this.removeEventListener("keyup", ael);
 }
@@ -670,21 +668,26 @@ function badgePostsWithNewComments() {
 /***********************************/
 
 function injectContentWidthSelector() {
-	let currentWidth = widthDict[window.localStorage.getItem("selected-width")] || widthDict['normal'];
+	// Get saved width setting (or default).
+	let currentWidth = window.localStorage.getItem("selected-width") || 'normal';
+	
+	// Inject the content width selector widget and activate buttons.
 	let widthSelector = addUIElement(
 		"<div id='width-selector'>" +
-		String.prototype.concat.apply("", widthOptions.map(function (widthOption) {
-			let [name, desc, abbr, width] = widthOption;
-			let selected = (width == currentWidth ? ' selected' : '');
-			let disabled = (width == currentWidth ? ' disabled' : '');
+		String.prototype.concat.apply("", widthOptions.map(widthOption => {
+			let [name, desc, abbr] = widthOption;
+			let selected = (name == currentWidth ? ' selected' : '');
+			let disabled = (name == currentWidth ? ' disabled' : '');
 			return `<button type='button' class='select-width-${name}${selected}'${disabled} title='${desc}' tabindex='-1' data-name='${name}'>${abbr}</button>`})) +
 		"</div>");
 	widthSelector.querySelectorAll("button").forEach(button => {
 		button.addActivateEvent(widthAdjustButtonClicked);
 	});
 	
+	// Make sure the accesskey (to cycle to the next width) is on the right button.
 	setWidthAdjustButtonsAccesskey();
 	
+	// Inject transitions CSS, if animating changes is enabled.
 	if (window.adjustmentTransitions) {
 		document.querySelector("head").insertAdjacentHTML("beforeend", 
 			"<style id='width-transition'>" + 
@@ -708,8 +711,14 @@ function setWidthAdjustButtonsAccesskey() {
 	nextButtonInCycle.title += ` [\']`;
 }
 function widthAdjustButtonClicked(event) {
+	// Determine which setting was chosen (i.e., which button was clicked).
 	let selectedWidth = event.target.getAttribute("data-name");
-	if (selectedWidth == "normal") window.localStorage.removeItem("selected-width"); else window.localStorage.setItem("selected-width", selectedWidth);
+	
+	// Save the new setting.
+	if (selectedWidth == "normal") window.localStorage.removeItem("selected-width");
+	else window.localStorage.setItem("selected-width", selectedWidth);
+	
+	// Actually change the content width.
 	setContentWidth(selectedWidth);
 	event.target.parentElement.childNodes.forEach(button => {
 		button.removeClass("selected");
@@ -718,6 +727,7 @@ function widthAdjustButtonClicked(event) {
 	event.target.addClass("selected");
 	event.target.disabled = true;
 	
+	// Make sure the accesskey (to cycle to the next width) is on the right button.
 	setWidthAdjustButtonsAccesskey();
 
 	// Regenerate images overlay.
@@ -732,8 +742,8 @@ function injectThemeSelector() {
 	let currentTheme = readCookie("theme") || "default";
 	let themeSelector = addUIElement(
 		"<div id='theme-selector' class='theme-selector'>" +
-		String.prototype.concat.apply("", window.themeOptions.map(function (to) {
-			let [name, desc, letter] = to;
+		String.prototype.concat.apply("", window.themeOptions.map(themeOption => {
+			let [name, desc, letter] = themeOption;
 			let selected = (name == currentTheme ? ' selected' : '');
 			let disabled = (name == currentTheme ? ' disabled' : '');
 			let accesskey = letter.charCodeAt(0) - 'A'.charCodeAt(0) + 1;
@@ -743,6 +753,7 @@ function injectThemeSelector() {
 		button.addActivateEvent(themeSelectButtonClicked);
 	});
 	
+	// Inject transitions CSS, if animating changes is enabled.
 	if (window.adjustmentTransitions) {
 		document.querySelector("head").insertAdjacentHTML("beforeend", 
 			"<style id='theme-fade-transition'>" + 

@@ -509,6 +509,16 @@ a#inbox-indicator.new-messages:hover::before {
 	visibility: visible;
 }
 
+head.content-width-normal + body > * {
+	max-width: 900px;
+}
+head.content-width-wide + body > * {
+	max-width: 1150px;
+}
+head.content-width-fluid + body > * {
+	max-width: calc(100% - 300px);
+}
+
 /******************/
 /* THEME SELECTOR */
 /******************/
