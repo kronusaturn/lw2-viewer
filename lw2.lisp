@@ -112,8 +112,9 @@
                (draft boolean))
     post
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      (format out-stream "<h1 class=\"listing~:[~; link-post-listing~]\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~A</a>~@[<a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\"></a>~]</h1>"
+      (format out-stream "<h1 class=\"listing~:[~; link-post-listing~]~:[~; own-post-listing~]\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~A</a>~@[<a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\"></a>~]</h1>"
               url
+              (logged-in-userid user-id)
               (if url (encode-entities (string-trim " " url)))
               (generate-post-auth-link post nil nil need-auth)
               (clean-text-to-html title)
