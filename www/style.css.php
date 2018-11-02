@@ -2875,6 +2875,7 @@ li {
 
 #images-overlay img {
 	width: 100%;
+	cursor: zoom-in;
 }
 
 /***************/

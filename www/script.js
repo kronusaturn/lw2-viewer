@@ -2068,21 +2068,26 @@ function addCommentParentPopups() {
 function imageFocusSetup(imagesOverlayOnly = false) {
 	// Add event listeners for clicking on images to focus them.
 	document.querySelectorAll("#images-overlay img").forEach(image => {
-		image.addActivateEvent(focusImage);
+		image.addActivateEvent(imageClickedToFocus);
 	});
 	if (imagesOverlayOnly) return;
 	document.querySelectorAll("#content img").forEach(image => {
-		image.addActivateEvent(focusImage);
+		image.addActivateEvent(imageClickedToFocus);
 	});
 
 	// Create the image focus overlay.
 	addUIElement("<div id='image-focus-overlay'></div>");
 }
 
-function focusImage(event) {
+function imageClickedToFocus(event) {
+	focusImage(event.target);
+}
+
+function focusImage(image) {
 	// Create the focused version of the image.
+	image.addClass("focused");
 	let imageFocusOverlay = document.querySelector("#image-focus-overlay");
-	let clonedImage = event.target.cloneNode(true);
+	let clonedImage = image.cloneNode(true);
 	clonedImage.style = "";
 	imageFocusOverlay.appendChild(clonedImage);
 	
@@ -2124,8 +2129,8 @@ function focusImage(event) {
 	// Escape key unfocuses, spacebar resets.
 	document.addEventListener("keyup", keyPressedWhenImageFocused);
 	
-	// Prevent spacebar from scrolling page when image focused.
-	document.addEventListener("keydown", spaceBarPressedWhenImageFocused);
+	// Prevent spacebar or arrow keys from scrolling page when image focused.
+	document.addEventListener("keydown", keyDownWhenImageFocused);
 }
 
 function resetFocusedImagePosition() {
@@ -2154,31 +2159,64 @@ function unfocusImageOverlay() {
 	document.querySelectorAll("#content, #ui-elements-container > *:not(#image-focus-overlay), #images-overlay").forEach(element => {
 		element.removeClass("blurred");
 	});
+	document.querySelectorAll("#content img, #images-overlay img").forEach(image => {
+		image.removeClass("focused");
+	});
 	window.removeEventListener("wheel", focusedImageScrolled);
 	window.removeEventListener("MozMousePixelScroll", oldFirefoxCompatibilityScrollEventFired);
 	window.removeEventListener("dblclick", unfocusImageOverlay);
 	document.removeEventListener("keyup", keyPressedWhenImageFocused);
-	document.removeEventListener("keydown", spaceBarPressedWhenImageFocused);
+	document.removeEventListener("keydown", keyDownWhenImageFocused);
+}
+
+function focusNextImage(image, next = true) {
+	let images = document.querySelectorAll("#images-overlay img");
+	var indexOfActiveImage = -1;
+	for (i = 0; i < images.length; i++) {
+		if (images[i].hasClass("focused")) {
+			indexOfActiveImage = i;
+			break;
+		}
+	}
+	if (next ? (++indexOfActiveImage == images.length) : (--indexOfActiveImage == -1)) return;
+	unfocusImageOverlay();
+	focusImage(images[indexOfActiveImage]);
 }
 
 function keyPressedWhenImageFocused(event) {
-	if (!(event.keyCode == 27 || event.keyCode == 32) || 
+	let allowedKeys = [ " ", "Spacebar", "Escape", "Esc", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Up", "Down", "Left", "Right" ];
+	if (!allowedKeys.contains(event.key) || 
 		window.getComputedStyle(document.querySelector("#image-focus-overlay")).display == "none") return;
 
 	event.preventDefault();
 
-	switch (event.keyCode) {
-	case 27:
+	switch (event.key) {
+	case "Escape":
+	case "Esc":
 		unfocusImageOverlay();
 		break;
-	case 32:
+	case " ":
+	case "Spacebar":
 		resetFocusedImagePosition();
+		break;
+	case "ArrowDown":
+	case "Down":
+	case "ArrowRight":
+	case "Right":
+		focusNextImage(document.querySelector("#image-focus-overlay img"), true);
+		break;
+	case "ArrowUp":
+	case "Up":
+	case "ArrowLeft":
+	case "Left":
+		focusNextImage(document.querySelector("#image-focus-overlay img"), false);
 		break;
 	}
 }
 
-function spaceBarPressedWhenImageFocused(event) {
-	if (event.keyCode == 32)
+function keyDownWhenImageFocused(event) {
+	let disabledKeys = [ " ", "Spacebar", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Up", "Down", "Left", "Right" ];
+	if (disabledKeys.contains(event.key))
 		event.preventDefault();
 }
 
@@ -2275,6 +2313,14 @@ function removeElement(elementOrSelector, ancestor = document) {
 	if (typeof elementOrSelector == "string") elementOrSelector = ancestor.querySelector(elementOrSelector);
 	if (elementOrSelector) elementOrSelector.parentElement.removeChild(elementOrSelector);
 }
+
+Array.prototype.contains = function (element) {
+	return (this.indexOf(element) !== -1);
+}
+
+/*******************************/
+/* HTML TO MARKDOWN CONVERSION */
+/*******************************/
 
 function MarkdownFromHTML(text) {
 	text = text.replace(/<(.+?)(?:\s(.+?))?>/g, (match, tag, attributes, offset, string) => {
