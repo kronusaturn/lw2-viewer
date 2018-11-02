@@ -2926,32 +2926,65 @@ li {
 
 #image-focus-overlay .help-overlay {
 	position: absolute;
+	display: flex;
+	flex-flow: column;
 	z-index: 1;
-	background-color: rgba(0,0,0,0.85);
-	color: #fff;
 	font-size: 1.5rem;
 	padding: 1em;
 	border-radius: 10px;
 	bottom: 1em;
 	right: 1em;
-	opacity: 0.0;
+	overflow: hidden;
+	white-space: nowrap;
+	color: transparent;
 	visibility: hidden;
 	transition: 
-		visibility 1.5s ease-out 3s,
-		opacity 1.5s ease-out 3s;
+		visibility 1s ease,
+		color 1s ease,
+		background-color 1s ease;
 }
 #image-focus-overlay .help-overlay.engaged,
 #image-focus-overlay .help-overlay:hover {
-	opacity: 1.0;
+	max-width: 420px;
+	max-height: 300px;
+	background-color: rgba(0,0,0,0.85);
+	color: #fff;
 	visibility: visible;
 	transition: 
-		visibility 0.2s ease;
-		opacity 0.2s ease;
+		visibility 0.2s ease 0.3s,
+		color 0.2s ease 0.3s,
+		background-color 0.2s ease 0.3s;
 }
+
+#image-focus-overlay .help-overlay::after {
+	content: "\F128";
+	font-family: Font Awesome;
+	font-weight: 900;
+	font-size: 2rem;
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	padding: 10px;
+	color: #000;
+	filter: drop-shadow(0 0 6px #fff);
+	visibility: visible;
+	opacity: 0.85;
+	transition: 
+		visibility 1s ease;
+}
+#image-focus-overlay .help-overlay.engaged::after,
+#image-focus-overlay .help-overlay:hover::after {
+	visibility: hidden;
+	transition: 
+		visibility 0.2s ease 0.3s;
+}
+
 #image-focus-overlay .help-overlay p {
 	margin: 0;
 	text-indent: -2em;
 	padding-left: 2em;
+	max-width: 100%;
+	overflow: hidden;
 }
 #image-focus-overlay .help-overlay p + p {
 	margin: 0.75em 0 0 0;
