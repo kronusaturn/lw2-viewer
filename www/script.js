@@ -2075,14 +2075,8 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 		image.addActivateEvent(focusImage);
 	});
 
-	// Add event listeners for unfocusing images.
-	let imageFocusOverlay = addUIElement("<div id='image-focus-overlay'></div>");
-	document.addEventListener("keyup", (event) => {
-		if (event.keyCode != 27 || 
-			window.getComputedStyle(imageFocusOverlay) == "none") return;
-		event.preventDefault();
-		unfocusImageOverlay();
-	});
+	// Create the image focus overlay.
+	addUIElement("<div id='image-focus-overlay'></div>");
 }
 
 function focusImage(event) {
@@ -2091,15 +2085,9 @@ function focusImage(event) {
 	let clonedImage = event.target.cloneNode(true);
 	clonedImage.style = "";
 	imageFocusOverlay.appendChild(clonedImage);
-
-	// Make sure that initially, the image fits into the viewport.
-	let shrinkRatio = 0.975;
-	clonedImage.style.width = Math.min(clonedImage.clientWidth, window.innerWidth * shrinkRatio) + 'px';
-	let maxImageHeight = window.innerHeight * shrinkRatio;
-	if (clonedImage.clientHeight > maxImageHeight) {
-		clonedImage.style.height = maxImageHeight +'px';
-		clonedImage.style.width = "";
-	}
+	
+	// Set image to default size and position.
+	resetFocusedImagePosition();
 
 	// Blur everything else.
 	document.querySelectorAll("#content, #ui-elements-container > *:not(#image-focus-overlay), #images-overlay").forEach(element => {
@@ -2131,6 +2119,33 @@ function focusImage(event) {
 	
 	// Double-click unfocuses, always.
 	window.addEventListener('dblclick', unfocusImageOverlay);
+	
+	// Escape key unfocuses, spacebar resets.
+	document.addEventListener("keyup", keyPressedWhenImageFocused);
+	
+	// Prevent spacebar from scrolling page when image focused.
+	document.addEventListener("keydown", spaceBarPressedWhenImageFocused);
+}
+
+function resetFocusedImagePosition() {
+	let focusedImage = document.querySelector("#image-focus-overlay img");
+	
+	// Reset modifications to size.
+	focusedImage.style.width = "";
+	focusedImage.style.height = "";
+
+	// Make sure that initially, the image fits into the viewport.
+	let shrinkRatio = 0.975;
+	focusedImage.style.width = Math.min(focusedImage.clientWidth, window.innerWidth * shrinkRatio) + 'px';
+	let maxImageHeight = window.innerHeight * shrinkRatio;
+	if (focusedImage.clientHeight > maxImageHeight) {
+		focusedImage.style.height = maxImageHeight +'px';
+		focusedImage.style.width = "";
+	}
+
+	// Remove modifications to position.
+	focusedImage.style.left = "";
+	focusedImage.style.top = "";
 }
 
 function unfocusImageOverlay() {
@@ -2140,6 +2155,30 @@ function unfocusImageOverlay() {
 	});
 	window.removeEventListener("wheel", focusedImageScrolled);
 	window.removeEventListener("dblclick", unfocusImageOverlay);
+	document.removeEventListener("keyup", keyPressedWhenImageFocused);
+	document.removeEventListener("keydown", spaceBarPressedWhenImageFocused);
+}
+
+function keyPressedWhenImageFocused(event) {
+	// Add event listeners for unfocusing images.
+	if (!(event.keyCode == 27 || event.keyCode == 32) || 
+		window.getComputedStyle(document.querySelector("#image-focus-overlay")).display == "none") return;
+
+	event.preventDefault();
+
+	switch (event.keyCode) {
+	case 27:
+		unfocusImageOverlay();
+		break;
+	case 32:
+		resetFocusedImagePosition();
+		break;
+	}
+}
+
+function spaceBarPressedWhenImageFocused(event) {
+	if (event.keyCode == 32)
+		event.preventDefault();
 }
 
 function mouseUpOnFocusedImage(event) {
