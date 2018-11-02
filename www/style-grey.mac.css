@@ -2941,6 +2941,19 @@ li {
 	border-radius: 10px;
 	bottom: 1em;
 	right: 1em;
+	opacity: 0.0;
+	visibility: hidden;
+	transition: 
+		visibility 1.5s ease-out 3s,
+		opacity 1.5s ease-out 3s;
+}
+#image-focus-overlay .help-overlay.engaged,
+#image-focus-overlay .help-overlay:hover {
+	opacity: 1.0;
+	visibility: visible;
+	transition: 
+		visibility 0.2s ease;
+		opacity 0.2s ease;
 }
 #image-focus-overlay .help-overlay p {
 	margin: 0;

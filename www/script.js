@@ -88,7 +88,7 @@ function addScrollListener(fn, name) {
 		});
 	}
 	document.addEventListener("scroll", wrapper, {once: true, passive: true});
-	
+
 	// Retain a reference to the scroll listener, if a name is provided.
 	if (typeof name != "undefined")
 		window[name] = wrapper;
@@ -201,12 +201,12 @@ Element.prototype.addTextareaFeatures = function() {
 		"<span>Blockquote</span><code>&gt; Blockquote</code>" ].map(row => "<div class='markdown-hints-row'>" + row + "</div>").join("") +
 	`</div>`;
 	textarea.parentElement.querySelector("span").insertAdjacentHTML("afterend", markdown_hints);
-	
+
 	let guiEditMobileHelpButton = document.querySelector(".guiedit-mobile-help-button");
 	if (guiEditMobileHelpButton) {
 		guiEditMobileHelpButton.addActivateEvent(GUIEditMobileHelpButtonClicked);
 	}
-	
+
 	let guiEditMobileExitButton = document.querySelector(".guiedit-mobile-exit-button");
 	if (guiEditMobileExitButton) {
 		guiEditMobileExitButton.addActivateEvent(GUIEditMobileExitButtonClicked);
@@ -231,7 +231,7 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 		"<input type='submit' value='Submit'>" + 
 		"</div></form>";
 	commentControls.onsubmit = disableBeforeUnload;
-	
+
 	commentControls.querySelector(".cancel-comment-button").addActivateEvent(window.hideReplyForm);
 	commentControls.scrollIntoViewIfNeeded();
 	commentControls.querySelector("form").onsubmit = (event) => {
@@ -302,7 +302,7 @@ function hideReplyForm(event) {
 	// Are we editing a comment? If so, un-hide the existing comment body.
 	let hiddenCommentBody = event.target.closest(".comment-item").querySelector(".comment-body");
 	if (hiddenCommentBody) hiddenCommentBody.style.display = "";
-	
+
 	event.target.parentElement.constructCommentControls();
 }
 
@@ -411,10 +411,10 @@ function sendVoteRequest(targetId, targetType, voteType, onFinish) {
 
 function voteButtonClicked(event) {
 	let voteButton = event.target;
-	
-	// 500 ms (0.5 s) double-click timeout.	
+
+	// 500 ms (0.5 s) double-click timeout.
 	let doubleClickTimeout = 500;
-	
+
 	if (!voteButton.clickedOnce) {
 		voteButton.clickedOnce = true;
 		voteButton.addClass("clicked-once");
@@ -422,7 +422,7 @@ function voteButtonClicked(event) {
 		window.setTimeout(vbDoubleClickTimeoutCallback, doubleClickTimeout, voteButton);
 	} else {
 		voteButton.clickedOnce = false;
-		
+
 		// Do double-click code.
 		voteEvent(voteButton, 2);
 		voteButton.removeClass("clicked-once");
@@ -431,7 +431,7 @@ function voteButtonClicked(event) {
 }
 function vbDoubleClickTimeoutCallback(voteButton) {
 	if (!voteButton.clickedOnce) return;
-	
+
 	// Do single-click code.
 	voteButton.clickedOnce = false;
 	voteEvent(voteButton, 1);
@@ -602,7 +602,7 @@ function setLastVisitedDate(date) {
 		let previousLastVisitedDate = (window.localStorage.getItem("last-visited-date_" + getPostHash()) || 0);
 		window.localStorage.setItem("previous-last-visited-date_" + getPostHash(), previousLastVisitedDate);
 	}
-	
+
 	// Set the new value.
 	window.localStorage.setItem("last-visited-date_" + getPostHash(), date);
 }
@@ -613,7 +613,7 @@ function updateSavedCommentCount() {
 }
 function badgePostsWithNewComments() {
 	if (getQueryVariable("show") == "conversations") return;
-	
+
 	document.querySelectorAll("h1.listing a[href^='/posts']").forEach(postLink => {
 		let postHash = /posts\/(.+?)\//.exec(postLink.href)[1];
 
@@ -634,7 +634,7 @@ function badgePostsWithNewComments() {
 function injectContentWidthSelector() {
 	// Get saved width setting (or default).
 	let currentWidth = window.localStorage.getItem("selected-width") || 'normal';
-	
+
 	// Inject the content width selector widget and activate buttons.
 	let widthSelector = addUIElement(
 		"<div id='width-selector'>" +
@@ -647,10 +647,10 @@ function injectContentWidthSelector() {
 	widthSelector.querySelectorAll("button").forEach(button => {
 		button.addActivateEvent(widthAdjustButtonClicked);
 	});
-	
+
 	// Make sure the accesskey (to cycle to the next width) is on the right button.
 	setWidthAdjustButtonsAccesskey();
-	
+
 	// Inject transitions CSS, if animating changes is enabled.
 	if (window.adjustmentTransitions) {
 		document.querySelector("head").insertAdjacentHTML("beforeend", 
@@ -677,11 +677,11 @@ function setWidthAdjustButtonsAccesskey() {
 function widthAdjustButtonClicked(event) {
 	// Determine which setting was chosen (i.e., which button was clicked).
 	let selectedWidth = event.target.getAttribute("data-name");
-	
+
 	// Save the new setting.
 	if (selectedWidth == "normal") window.localStorage.removeItem("selected-width");
 	else window.localStorage.setItem("selected-width", selectedWidth);
-	
+
 	// Actually change the content width.
 	setContentWidth(selectedWidth);
 	event.target.parentElement.childNodes.forEach(button => {
@@ -690,7 +690,7 @@ function widthAdjustButtonClicked(event) {
 	});
 	event.target.addClass("selected");
 	event.target.disabled = true;
-	
+
 	// Make sure the accesskey (to cycle to the next width) is on the right button.
 	setWidthAdjustButtonsAccesskey();
 
@@ -716,7 +716,7 @@ function injectThemeSelector() {
 	themeSelector.querySelectorAll("button").forEach(button => {
 		button.addActivateEvent(themeSelectButtonClicked);
 	});
-	
+
 	// Inject transitions CSS, if animating changes is enabled.
 	if (window.adjustmentTransitions) {
 		document.querySelector("head").insertAdjacentHTML("beforeend", 
@@ -761,19 +761,19 @@ function setTheme(newThemeName) {
 	} else {
 		themeUnloadCallback = window['themeUnloadCallback_' + (readCookie('theme') || 'default')];
 		oldThemeName = readCookie('theme') || 'default';
-		
+
 		if (newThemeName == 'default') setCookie('theme', '');
 		else setCookie('theme', newThemeName);
-	}	
+	}
 	if (themeUnloadCallback != null) themeUnloadCallback(newThemeName);
-	
+
 	let styleSheetNameSuffix = (newThemeName == 'default') ? '' : ('-' + newThemeName);
 	let currentStyleSheetNameComponents = /style[^\.]*(\..+)$/.exec(document.querySelector("head link[href*='.css']").href);
-	
+
 	let newStyle = document.createElement('link');
 	newStyle.setAttribute('rel', 'stylesheet');
 	newStyle.setAttribute('href', '/style' + styleSheetNameSuffix + currentStyleSheetNameComponents[1]);
-	
+
 	let oldStyle = document.querySelector("head link[href*='.css']");
 	newStyle.addEventListener('load', function() { removeElement(oldStyle); });
 	newStyle.addEventListener('load', function() { postSetThemeHousekeeping(oldThemeName, newThemeName); });
@@ -792,7 +792,7 @@ function postSetThemeHousekeeping(oldThemeName = "", newThemeName = (readCookie(
 
 	let themeLoadCallback = window['themeLoadCallback_' + newThemeName];
 	if (themeLoadCallback != null) themeLoadCallback(oldThemeName);
-	
+
 	generateImagesOverlay();
 	if (window.adjustmentTransitions) pageFadeTransition(true);
 	updateThemeTweakerSampleText();
@@ -825,7 +825,7 @@ function themeLoadCallback_less(fromTheme = "") {
 	if (window.isMobile) {
 		document.querySelector("#content").insertAdjacentHTML("beforeend", "<div id='theme-less-mobile-first-row-placeholder'></div>");
 	}
-	
+
 	if (!window.isMobile) {
 		registerInitializer('addSpans', true, () => document.querySelector(".top-post-meta") != null, function () {
 			document.querySelectorAll(".top-post-meta .date, .top-post-meta .comment-count").forEach(element => {
@@ -854,9 +854,9 @@ function themeLoadCallback_less(fromTheme = "") {
 
 		// Unset the height of the #ui-elements-container
 		document.querySelector("#ui-elements-container").style.height = "";
-		
+
 		registerInitializer('updatePostNavUIToggleVisibility', false, () => document.readyState == "complete", updatePostNavUIToggleVisibility);
-		window.addEventListener('resize', updatePostNavUIToggleVisibility);		
+		window.addEventListener('resize', updatePostNavUIToggleVisibility);
 
 		// Due to filters vs. fixed elements, we need to be smarter about selecting which elements to filter...
 		window.filtersTargetSelector = "body::before, #content > *:not(#secondary-bar):not(.post), #secondary-bar > *, .post > *:not(.top-post-meta), .top-post-meta > *:not(.date):not(.comment-count), .top-post-meta .date span, .top-post-meta .comment-count > span, #ui-elements-container > div:not(#theme-tweaker-ui), #theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container";
@@ -904,7 +904,7 @@ function updateSiteNavUIState(event) {
 		if (window.scrollState.siteNavUIToggleButton.hasClass("engaged")) toggleSiteNavUI();
 		if (window.scrollState.appearanceAdjustUIToggleButton.hasClass("engaged")) toggleAppearanceAdjustUI();
 	}
-	
+
 	// On mobile, make site nav UI translucent on ANY scroll down.
 	if (window.isMobile)
 		window.scrollState.siteNavUIElements.forEach(element => {
@@ -932,9 +932,9 @@ function themeUnloadCallback_less(toTheme = "") {
 		removeAppearanceAdjustUIToggle();
 	}
 	window.removeEventListener('resize', updatePostNavUIToggleVisibility);
-	
+
 	document.removeEventListener("scroll", window["updateSiteNavUIStateScrollListener"]);
-	
+
 	removeElement("#theme-less-mobile-first-row-placeholder");
 
 	if (!window.isMobile) {
@@ -943,9 +943,9 @@ function themeUnloadCallback_less(toTheme = "") {
 			element.innerHTML = element.firstChild.innerHTML;
 		});
 	}
-	
+
 	(document.querySelector(".top-post-meta .date")||{}).innerHTML = (document.querySelector(".bottom-post-meta .date")||{}).innerHTML;
-	
+
 	// Reset filtered elements selector to default.
 	window.filtersTargetSelector = "";
 	applyFilters(window.currentFilters);
@@ -969,7 +969,7 @@ function themeUnloadCallback_dark(toTheme = "") {
 function injectThemeTweaker() {
 	let themeTweakerToggle = addUIElement(`<div id='theme-tweaker-toggle'><button type='button' tabindex='-1' title="Customize appearance [;]" accesskey=';'>&#xf1de;</button></div>`);
 	themeTweakerToggle.querySelector("button").addActivateEvent(themeTweakerToggleButtonClicked);
-	
+
 	let themeTweakerUI = addUIElement("<div id='theme-tweaker-ui' style='display: none;'>" + 
 	`<div class='main-theme-tweaker-window'>
 		<h1>Customize appearance</h1>
@@ -1040,14 +1040,14 @@ function injectThemeTweaker() {
 	</div>
 	` + "</div>");
 	themeTweakerUI.addActivateEvent(themeTweakerUIOverlayClicked, true);
-	
+
 	(document.querySelector("#theme-tweaker-ui > div")||{}).addActivateEvent(clickInterceptor, true);
-	
+
 	themeTweakerUI.querySelectorAll("input").forEach(field => {
 		field.addEventListener("change", themeTweakerFieldValueChanged);
 		if (field.type == "range") field.addEventListener("input", themeTweakerFieldInputReceived);
 	});
-	
+
 	themeTweakerUI.querySelector(".minimize-button").addActivateEvent(themeTweakerMinimizeButtonClicked);
 	themeTweakerUI.querySelector(".help-button").addActivateEvent(themeTweakerHelpButtonClicked);
 	themeTweakerUI.querySelector(".reset-defaults-button").addActivateEvent(themeTweakerResetDefaultsButtonClicked);
@@ -1055,7 +1055,7 @@ function injectThemeTweaker() {
 	themeTweakerUI.querySelector(".main-theme-tweaker-window .ok-button").addActivateEvent(themeTweakerOKButtonClicked);
 	themeTweakerUI.querySelector(".help-window .cancel-button").addActivateEvent(themeTweakerHelpWindowCancelButtonClicked);
 	themeTweakerUI.querySelector(".help-window .ok-button").addActivateEvent(themeTweakerHelpWindowOKButtonClicked);
-	
+
 	themeTweakerUI.querySelectorAll(".notch").forEach(notch => {
 		notch.addActivateEvent(function (event) {
 			let slider = event.target.parentElement.querySelector("input[type='range']");
@@ -1065,16 +1065,16 @@ function injectThemeTweaker() {
 			applyFilters(window.currentFilters);
 		});
 	});
-	
+
 	themeTweakerUI.querySelector(".clippy-close-button").addActivateEvent(themeTweakerClippyCloseButtonClicked);
-	
+
 	document.querySelector("head").insertAdjacentHTML("beforeend","<style id='theme-tweaker-style'></style>");
-	
+
 	document.querySelector("#theme-tweaker-ui .theme-selector").innerHTML = document.querySelector("#theme-selector").innerHTML;
 	document.querySelectorAll("#theme-tweaker-ui .theme-selector button").forEach(button => {
 		button.addActivateEvent(themeSelectButtonClicked);
 	});
-	
+
 	document.querySelectorAll("#theme-tweaker-ui #theme-tweak-section-text-size-adjust button").forEach(button => {
 		button.addActivateEvent(themeTweakerTextSizeAdjustButtonClicked);
 	});
@@ -1109,8 +1109,8 @@ function setSearchBoxTabSelectable(selectable) {
 }
 function themeTweakerToggleButtonClicked(event) {
 	document.querySelector("#theme-tweaker-ui .current-theme span").innerText = (readCookie("theme") || "default");
-	
-	document.querySelector("#theme-tweak-control-invert").checked = (window.currentFilters['invert'] == "100%");	
+
+	document.querySelector("#theme-tweak-control-invert").checked = (window.currentFilters['invert'] == "100%");
 	[ "saturate", "brightness", "contrast", "hue-rotate" ].forEach(sliderName => {
 		let slider = document.querySelector("#theme-tweak-control-" + sliderName);
 		slider.value = /^[0-9]+/.exec(window.currentFilters[sliderName]) || slider.dataset['defaultValue'];
@@ -1124,7 +1124,7 @@ function themeTweakerUIOverlayClicked(event) {
 	if (event.type == 'mousedown') {
 		document.querySelector("#theme-tweaker-ui").style.opacity = "0.01";
 	} else {
-		toggleThemeTweakerUI();	
+		toggleThemeTweakerUI();
 		document.querySelector("#theme-tweaker-ui").style.opacity = "1.0";
 		themeTweakReset();
 	}
@@ -1202,10 +1202,10 @@ function themeTweakerResetDefaultsButtonClicked(event) {
 	});
 	window.currentFilters = { };
 	applyFilters(window.currentFilters);
-	
+
 	window.currentTextZoom = 1;
 	setTextZoom(window.currentTextZoom);
-	
+
 	setSelectedTheme("default");
 }
 function themeTweakerCancelButtonClicked(event) {
@@ -1234,11 +1234,11 @@ function clickInterceptor(event) {
 
 function themeTweakerFieldInputReceived(event) {
 	var sampleTextFilters = window.currentFilters;
-	
+
 	let sliderName = /^theme-tweak-control-(.+)$/.exec(event.target.id)[1];
 	document.querySelector("#theme-tweak-label-" + sliderName).innerText = event.target.value + event.target.dataset["labelSuffix"];
 	sampleTextFilters[sliderName] = event.target.value + event.target.dataset["valueSuffix"];
-	
+
 	document.querySelector("#theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container").style.filter = filterStringFromFilters(sampleTextFilters);
 }
 function themeTweakerFieldValueChanged(event) {
@@ -1284,10 +1284,10 @@ function themeTweakerTextSizeAdjustButtonClicked(event) {
 		zoomFactor = (zoomFactor + 0.05).toFixed(2);
 	} else {
 		zoomFactor = 1.0;
-	}	
+	}
 	setTextZoom(zoomFactor);
 	window.currentTextZoom = `${zoomFactor}`;
-	
+
 	if (event.target.parentElement.id == "text-size-adjustment-ui") {
 		window.localStorage.setItem("text-zoom", window.currentTextZoom);
 	}
@@ -1298,11 +1298,11 @@ function updateThemeTweakerSampleText() {
 	// This causes the sample text to take on the properties of the body text of a post.
 	sampleText.removeClass("post-body");
 	let bodyTextElement = document.querySelector(".post-body") || document.querySelector(".comment-body");
-	sampleText.addClass("post-body");	
+	sampleText.addClass("post-body");
 	sampleText.style.color = bodyTextElement ? 
 								window.getComputedStyle(bodyTextElement).color : 
 									window.getComputedStyle(document.querySelector("#content")).color;
-	
+
 	// Here we find out what is the actual background color that will be visible behind
 	// the body text of posts, and set the sample text’s background to that.
 	var backgroundElement = document.querySelector("#content");
@@ -1343,14 +1343,14 @@ function injectNewCommentNavUI(newCommentsCount) {
 		if (event.key == ",") scrollToNewComment(false);
 		if (event.key == ".") scrollToNewComment(true)
 	});
-	
+
 	let hnsDatePicker = addUIElement("<div id='hns-date-picker'>"
 	+ `<span>Since:</span>`
 	+ `<input type='text' class='hns-date'></input>`
 	+ "</div>");
-	
+
 	hnsDatePicker.querySelector("input").addEventListener("input", OnInputUpdateHNSDate, false);
-	
+
 	newCommentUIContainer.querySelector(".new-comments-count").addActivateEvent(toggleHNSDatePickerVisibility);
 }
 
@@ -1383,7 +1383,7 @@ function updateNewCommentNavUI(newCommentsCount, hns = -1) {
 	let newCommentsCountLabel = document.querySelector("#new-comment-nav-ui .new-comments-count");
 	newCommentsCountLabel.innerText = newCommentsCount;
 	newCommentsCountLabel.title = `${newCommentsCount} new comments`;
-	
+
 	// Update the date picker field.
 	if (hns != -1) {
 		let hnsDatePickerInputField = document.querySelector("#hns-date-picker input");
@@ -1407,7 +1407,7 @@ function injectTextSizeAdjustmentUIReal() {
 	+ `<button type='button' class='text-size-adjust-button default' title="Reset to default text size [0]" tabindex='-1' accesskey='0'>A</button>`
 	+ `<button type='button' class='text-size-adjust-button increase' title="Increase text size [=]" tabindex='-1' accesskey='='>&#xf067;</button>`
 	+ "</div>");
-	
+
 	textSizeAdjustmentUIContainer.querySelectorAll("button").forEach(button => {
 		button.addActivateEvent(themeTweakerTextSizeAdjustButtonClicked);
 	});
@@ -1436,25 +1436,25 @@ function injectCommentsViewModeSelector() {
 	+ `<a class="threaded ${currentModeThreaded ? 'selected' : ''}" ${currentModeThreaded ? "" : newHref} ${currentModeThreaded ? "" : "accesskey='x' "} title='Comments threaded view${currentModeThreaded ? "" : " [x]"}'>&#xf038;</a>`
 	+ `<a class="chrono ${currentModeThreaded ? '' : 'selected'}" ${currentModeThreaded ? newHref : ""} ${currentModeThreaded ? "accesskey='x' " : ""} title='Comments chronological (flat) view${currentModeThreaded ? " [x]" : ""}'>&#xf017;</a>`
 	+ "</div>");
-	
+
 // 	commentsViewModeSelector.querySelectorAll("a").forEach(button => {
 // 		button.addActivateEvent(commentsViewModeSelectorButtonClicked);
 // 	});
-	
+
 	if (!currentModeThreaded) {
 		document.querySelectorAll(".comment-meta > a.comment-parent-link").forEach(commentParentLink => {
 			commentParentLink.textContent = document.querySelector(commentParentLink.hash).querySelector(".author").textContent;
 			commentParentLink.addClass("inline-author");
 			commentParentLink.outerHTML = "<div class='comment-parent-link'>in reply to: " + commentParentLink.outerHTML + "</div>";
 		});
-		
+
 		document.querySelectorAll(".comment-child-links a").forEach(commentChildLink => {
 			commentChildLink.textContent = commentChildLink.textContent.slice(1);
 			commentChildLink.addClasses([ "inline-author", "comment-child-link" ]);
 		});
-		
+
 		rectifyChronoModeCommentChildLinks();
-		
+
 		commentsContainer.addClass("chrono");
 	} else {
 		commentsContainer.addClass("threaded");
@@ -1505,7 +1505,7 @@ function rectifyChronoModeCommentChildLinks() {
 		childLinks.forEach((link, index) => {
 			link.href = "#" + children.find(child => child.querySelector(".author").textContent == link.textContent).id;
 		});
-		
+
 		// Sort by date.
 		let childLinksArray = Array.from(childLinks)
 		childLinksArray.sort((a,b) => document.querySelector(`${a.hash} .date`).dataset["jsDate"] - document.querySelector(`${b.hash} .date`).dataset["jsDate"]);
@@ -1525,25 +1525,25 @@ function childrenOfComment(commentID) {
 
 function injectCommentsListModeSelector() {
 	if (document.querySelector("#content > .comment-thread") == null) return;
-	
+
 	let commentsListModeSelectorHTML = "<div id='comments-list-mode-selector'>"
 	+ `<button type='button' class='expanded' title='Expanded comments view' tabindex='-1'></button>`
 	+ `<button type='button' class='compact' title='Compact comments view' tabindex='-1'></button>`
 	+ "</div>";
 	(document.querySelector("#content.user-page .user-stats") || document.querySelector(".page-toolbar") || document.querySelector(".active-bar")).insertAdjacentHTML("afterend", commentsListModeSelectorHTML);
 	let commentsListModeSelector = document.querySelector("#comments-list-mode-selector");
-	
+
 	commentsListModeSelector.querySelectorAll("button").forEach(button => {
 		button.addActivateEvent(commentsListModeSelectButtonClicked);
 	});
-	
+
 	let savedMode = (window.localStorage.getItem("comments-list-mode") == "compact") ? "compact" : "expanded";
-	if (savedMode == "compact")	
+	if (savedMode == "compact")
 		document.querySelector("#content").addClass("compact");
 	commentsListModeSelector.querySelector(`.${savedMode}`).addClass("selected");
 	commentsListModeSelector.querySelector(`.${savedMode}`).disabled = true;
 	commentsListModeSelector.querySelector(`.${(savedMode == "compact" ? "expanded" : "compact")}`).accessKey = '`';
-	
+
 	if (window.isMobile) {
 		document.querySelectorAll("#comments-list-mode-selector ~ .comment-thread").forEach(commentParentLink => {
 			commentParentLink.addActivateEvent(function (event) {
@@ -1579,7 +1579,7 @@ function commentsListModeSelectButtonClicked(event) {
 function injectSiteNavUIToggle() {
 	let siteNavUIToggle = addUIElement("<div id='site-nav-ui-toggle'><button type='button' tabindex='-1'>&#xf0c9;</button></div>");
 	siteNavUIToggle.querySelector("button").addActivateEvent(siteNavUIToggleButtonClicked);
-	
+
 	if (!window.isMobile && window.localStorage.getItem("site-nav-ui-toggle-engaged") == "true") toggleSiteNavUI();
 }
 function removeSiteNavUIToggle() {
@@ -1607,7 +1607,7 @@ function toggleSiteNavUI() {
 function injectPostNavUIToggle() {
 	let postNavUIToggle = addUIElement("<div id='post-nav-ui-toggle'><button type='button' tabindex='-1'>&#xf14e;</button></div>");
 	postNavUIToggle.querySelector("button").addActivateEvent(postNavUIToggleButtonClicked);
-	
+
 	if (window.localStorage.getItem("post-nav-ui-toggle-engaged") == "true") togglePostNavUI();
 }
 function removePostNavUIToggle() {
@@ -1633,7 +1633,7 @@ function togglePostNavUI() {
 function injectAppearanceAdjustUIToggle() {
 	let appearanceAdjustUIToggle = addUIElement("<div id='appearance-adjust-ui-toggle'><button type='button' tabindex='-1'>&#xf013;</button></div>");
 	appearanceAdjustUIToggle.querySelector("button").addActivateEvent(appearanceAdjustUIToggleButtonClicked);
-	
+
 	if (window.isMobile) {
 		let themeSelectorCloseButton = appearanceAdjustUIToggle.querySelector("button").cloneNode(true);
 		themeSelectorCloseButton.addClass("theme-selector-close-button");
@@ -1669,7 +1669,7 @@ function expandAncestorsOf(commentId) {
 	// Expand collapsed comment threads.
 	let parentOfContainingCollapseCheckbox = (document.querySelector('#comment-'+commentId).closest("label[for^='expand'] + .comment-thread")||{}).parentElement;
 	if (parentOfContainingCollapseCheckbox) parentOfContainingCollapseCheckbox.querySelector("input[id^='expand']").checked = true;
-	
+
 	// Expand collapsed comments.
 	let containingTopLevelCommentItem = document.querySelector('#comment-'+commentId).closest("#comments > ul > li");
 	if (containingTopLevelCommentItem) containingTopLevelCommentItem.setCommentThreadMaximized(true, false, true);
@@ -1683,12 +1683,10 @@ function toggleReadTimeOrWordCount(addWordCountClass) {
 	document.querySelectorAll(".post-meta .read-time").forEach(element => {
 		if (addWordCountClass) element.addClass("word-count");
 		else element.removeClass("word-count");
-		
+
 		let titleParts = /(\S+)(.+)$/.exec(element.title);
 		[ element.innerHTML, element.title ] = [ `${titleParts[1]}<span>${titleParts[2]}</span>`, element.textContent ];
 	});
-	
-	
 }
 function readTimeOrWordCountClicked(event) {
 	let displayWordCount = window.localStorage.getItem("display-word-count");
@@ -1715,7 +1713,7 @@ function disableBeforeUnload() {
 function markOriginalPosterComments() {
 	let postAuthor = document.querySelector(".post .author");
 	if (postAuthor == null) return;
-	
+
 	document.querySelectorAll(".comment-item .author, .comment-item .inline-author").forEach(author => {
 		if (author.dataset.userid == postAuthor.dataset.userid ||
 			(author.hash != "" && document.querySelector(`${author.hash} .author`).dataset.userid == postAuthor.dataset.userid))
@@ -1730,7 +1728,7 @@ function markOriginalPosterComments() {
 
 function setEditPostPageSubmitButtonText() {
 	if (!document.querySelector("#content").hasClass("edit-post-page")) return;
-	
+
 	document.querySelectorAll("input[type='radio'][name='section']").forEach(radio => {
 		radio.addEventListener("change", updateEditPostPageSubmitButtonText);
 	});
@@ -1764,11 +1762,11 @@ function injectAntiKibitzer() {
 	// Inject anti-kibitzer toggle controls.
 	let antiKibitzerToggle = addUIElement("<div id='anti-kibitzer-toggle'><button type='button' tabindex='-1' accesskey='g' title='Toggle anti-kibitzer (show/hide authors & karma values) [g]'></button>");
 	antiKibitzerToggle.querySelector("button").addActivateEvent(antiKibitzerToggleButtonClicked);
-	
+
 	// Activate anti-kibitzer mode (if needed).
 	if (window.localStorage.getItem("antikibitzer") == "true")
 		toggleAntiKibitzerMode();
-	
+
 	// Remove temporary CSS that hides the authors and karma values.
 	removeElement("#antikibitzer-temp");
 }
@@ -1822,23 +1820,23 @@ function toggleAntiKibitzerMode() {
 		document.querySelectorAll(".author.redacted, .inline-author.redacted").forEach(author => {
 			author.textContent = author.dataset["trueName"];
 			if (/\/user/.test(author.href)) author.href = author.dataset["trueLink"];
-			
+
 			author.removeClass("redacted");
 		});
 		// Post/comment karma values.
 		document.querySelectorAll(".karma-value.redacted").forEach(karmaValue => {
 			karmaValue.innerHTML = karmaValue.dataset["trueValue"] + karmaValue.lastChild.outerHTML;
 			karmaValue.lastChild.textContent = (parseInt(karmaValue.dataset["trueValue"]) == 1) ? " point" : " points";
-			
+
 			karmaValue.removeClass("redacted");
 		});
 		// Link post domains.
 		document.querySelectorAll(".link-post-domain.redacted").forEach(linkPostDomain => {
 			linkPostDomain.textContent = linkPostDomain.dataset["trueDomain"];
-			
+
 			linkPostDomain.removeClass("redacted");
 		});
-		
+
 		antiKibitzerToggle.removeClass("engaged");
 	} else {
 		window.localStorage.setItem("antikibitzer", "true");
@@ -1860,7 +1858,7 @@ function toggleAntiKibitzerMode() {
 			replacer(document.querySelector("title:not(.fake-title)"));
 			replacer(document.querySelector("#content > h1"));
 		}
-		
+
 		removeElement("title.fake-title");
 
 		// Author names/links.
@@ -1873,12 +1871,12 @@ function toggleAntiKibitzerMode() {
 
 			author.dataset["trueName"] = author.textContent;
 			author.textContent = userFakeName[userid] || (userFakeName[userid] = appellation + " " + numToAlpha(userCount++));
-			
+
 			if (/\/user/.test(author.href)) {
 				author.dataset["trueLink"] = author.pathname;
 				author.href = "/user?id=" + author.dataset["userid"];
 			}
-			
+
 			author.addClass("redacted");
 		});
 		// Post/comment karma values.
@@ -1886,11 +1884,11 @@ function toggleAntiKibitzerMode() {
 			// Skip own posts/comments.
 			if ((karmaValue.closest(".comment-item") || karmaValue.closest(".post-meta")).querySelector(".author").hasClass("own-user-author"))
 				return;
-		
+
 			karmaValue.dataset["trueValue"] = karmaValue.firstChild.textContent;
 			karmaValue.innerHTML = "##" + karmaValue.lastChild.outerHTML;
 			karmaValue.lastChild.textContent = " points";
-			
+
 			karmaValue.addClass("redacted");
 		});
 		// Link post domains.
@@ -1898,13 +1896,13 @@ function toggleAntiKibitzerMode() {
 			// Skip own posts/comments.
 			if (userTabTarget == linkPostDomain.closest(".post-meta").querySelector(".author").href)
 				return;
-				
+
 			linkPostDomain.dataset["trueDomain"] = linkPostDomain.textContent;
 			linkPostDomain.textContent = "redacted.domain.tld";
-			
+
 			linkPostDomain.addClass("redacted");
 		});
-		
+
 		antiKibitzerToggle.addClass("engaged");
 	}
 }
@@ -1950,14 +1948,14 @@ function sortComments(mode) {
 	removeElement(commentsContainer.lastChild);
 	commentsContainer.appendChild(clonedCommentsContainer.lastChild);
 	commentValues = { };
-	
+
 	// Re-activate vote buttons.
 	if (loggedInUserId) {
 		commentsContainer.querySelectorAll("button.vote").forEach(voteButton => {
 			voteButton.addActivateEvent(voteButtonClicked);
 		});
 	}
-	
+
 	// Re-add comment parent popups.
 	addCommentParentPopups();
 
@@ -1982,7 +1980,7 @@ function commentVoteCount(commentOrSelector) {
 function injectCommentsSortModeSelector() {
 	let topCommentThread = document.querySelector("#comments > .comment-thread");
 	if (topCommentThread == null) return;
-	
+
 	// Do not show sort mode selector if there is no branching in comment tree.
 	if (topCommentThread.querySelector(".comment-item + .comment-item") == null) return;
 
@@ -1991,7 +1989,7 @@ function injectCommentsSortModeSelector() {
 		"</div>";
 	topCommentThread.insertAdjacentHTML("beforebegin", commentsSortModeSelectorHTML);
 	let commentsSortModeSelector = document.querySelector("#comments-sort-mode-selector");
-	
+
 	commentsSortModeSelector.querySelectorAll("button").forEach(button => {
 		button.addActivateEvent(commentsSortModeSelectButtonClicked);
 	});
@@ -2089,6 +2087,11 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 
 function imageClickedToFocus(event) {
 	focusImage(event.target);
+
+	// Show, then fade out, the help overlay.
+	let helpOverlay = document.querySelector("#image-focus-overlay .help-overlay");
+	helpOverlay.addClass("engaged");
+	window.setTimeout(() => { helpOverlay.removeClass("engaged"); }, 200);
 }
 
 function focusImage(image) {
@@ -2099,7 +2102,7 @@ function focusImage(image) {
 	clonedImage.style = "";
 	imageFocusOverlay.appendChild(clonedImage);
 	imageFocusOverlay.addClass("engaged");
-	
+
 	// Set image to default size and position.
 	resetFocusedImagePosition();
 
@@ -2111,14 +2114,14 @@ function focusImage(image) {
 	// Add listener to zoom image with scroll wheel.
 	window.addEventListener("wheel", focusedImageScrolled);
 	window.addEventListener("MozMousePixelScroll", oldFirefoxCompatibilityScrollEventFired);
-	
+
 	// If image is bigger than viewport, it's draggable. Otherwise, click unfocuses.
 	window.addEventListener("mouseup", mouseUpOnFocusedImage);
 	window.onmousedown = (event) => {
-		if (clonedImage.height >= window.innerHeight || clonedImage.width >= window.innerWidth) { 							
+		if (clonedImage.height >= window.innerHeight || clonedImage.width >= window.innerWidth) {
 			let mouseCoordX = event.clientX;
 			let mouseCoordY = event.clientY;
-			
+
 			let imageCoordX = parseInt(window.getComputedStyle(clonedImage).left);
 			let imageCoordY = parseInt(window.getComputedStyle(clonedImage).top);
 
@@ -2131,20 +2134,20 @@ function focusImage(image) {
 			return false;
 		}
 	};
-	
+
 	// Double-click unfocuses, always.
 	window.addEventListener('dblclick', unfocusImageOverlay);
-	
+
 	// Escape key unfocuses, spacebar resets.
 	document.addEventListener("keyup", keyPressedWhenImageFocused);
-	
+
 	// Prevent spacebar or arrow keys from scrolling page when image focused.
 	document.addEventListener("keydown", keyDownWhenImageFocused);
 }
 
 function resetFocusedImagePosition() {
 	let focusedImage = document.querySelector("#image-focus-overlay img");
-	
+
 	// Reset modifications to size.
 	focusedImage.style.width = "";
 	focusedImage.style.height = "";
@@ -2173,12 +2176,12 @@ function unfocusImageOverlay() {
 	document.querySelectorAll("#content, #ui-elements-container > *:not(#image-focus-overlay), #images-overlay").forEach(element => {
 		element.removeClass("blurred");
 	});
-	
+
 	// Unset "focused" class of focused image.
 	document.querySelectorAll("#content img, #images-overlay img").forEach(image => {
 		image.removeClass("focused");
 	});
-	
+
 	// Remove event listeners.
 	window.removeEventListener("wheel", focusedImageScrolled);
 	window.removeEventListener("MozMousePixelScroll", oldFirefoxCompatibilityScrollEventFired);
@@ -2245,7 +2248,7 @@ function mouseUpOnFocusedImage(event) {
 		unfocusImageOverlay();
 		return;
 	}
-		
+
 	if (focusedImage.height >= window.innerHeight || focusedImage.width >= window.innerWidth) {
 		window.onmousemove = '';
 		// Put the filter back.
@@ -2257,7 +2260,7 @@ function mouseUpOnFocusedImage(event) {
 
 function focusedImageScrolled(event) {
 	event.preventDefault();
-	
+
 	let image = document.querySelector("#image-focus-overlay img");
 
 	// Remove the filter.
@@ -2311,7 +2314,7 @@ function getQueryVariable(variable)
 		if (pair[0] == variable)
 			return pair[1];
 	}
-	
+
 	return false;
 }
 
@@ -2322,7 +2325,7 @@ function addUIElement(element_html) {
 		ui_elements_container.id = "ui-elements-container";
 		document.querySelector("body").appendChild(ui_elements_container);
 	}
-	
+
 	ui_elements_container.insertAdjacentHTML("beforeend", element_html);
 	return ui_elements_container.lastElementChild;
 }
@@ -2411,7 +2414,7 @@ registerInitializer('earlyInitialize', true, () => document.querySelector("#cont
 	injectQuickNavUI();
 	// Add the text size adjustment widget.
 	injectTextSizeAdjustmentUI();
-	
+
 	try { updateInbox(); }
 	catch (ex) { console.log(ex); }
 });
@@ -2505,7 +2508,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 				karmaValue.parentElement.addClass("active-controls");
 			});
 		}
-		
+
 		// Color the upvote/downvote buttons with an embedded style sheet.
 		document.querySelector("head").insertAdjacentHTML("beforeend","<style id='vote-buttons'>" + 
 		`.upvote:hover,
@@ -2517,7 +2520,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 			color: #eb4c2a;
 		}` +
 		"</style>");
-		
+
 		// Activate the vote buttons.
 		document.querySelectorAll("button.vote").forEach(voteButton => {
 			voteButton.addActivateEvent(voteButtonClicked);
@@ -2555,7 +2558,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 	// If we're on a comment thread page...
 	if (document.querySelector("#comments") != null) {
-		// Add comment-minimize buttons to every comment.		
+		// Add comment-minimize buttons to every comment.
 		document.querySelectorAll(".comment-meta").forEach(commentMeta => {
 			if (!commentMeta.lastChild.hasClass("comment-minimize-button"))
 				commentMeta.insertAdjacentHTML("beforeend", "<div class='comment-minimize-button maximized'>&#xf146;</div>");
@@ -2581,12 +2584,12 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	document.querySelectorAll("input[type='text'], input[type='search'], input[type='password']").forEach(inputField => {
 		inputField.addEventListener("keyup", (event) => { event.stopPropagation(); });
 	});
-	
+
 	if (content.hasClass("post-page")) {
 		// Read and update last-visited-date.
 		let lastVisitedDate = getLastVisitedDate();
 		setLastVisitedDate(Date.now());
-		
+
 		// Save the number of comments this post has when it's visited.
 		updateSavedCommentCount();
 
@@ -2600,7 +2603,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 			// Highlight new comments since the specified date.			 
 			let newCommentsCount = highlightCommentsSince(hns);
-		
+
 			// Update the comment count display.
 			updateNewCommentNavUI(newCommentsCount, hns);
 		}
@@ -2608,31 +2611,31 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		// On listing pages, make comment counts more informative.
 		badgePostsWithNewComments();
 	}
-	
+
 	// Add the comments list mode selector widget (expanded vs. compact).
 	injectCommentsListModeSelector();
 
 	// Add the comments view selector widget (threaded vs. chrono).
 // 	injectCommentsViewModeSelector();
-	
+
 	// Add the comments sort mode selector (top, hot, new, old).
 	injectCommentsSortModeSelector();
 
 	// Add the toggle for the post nav UI elements on mobile.
 	if (window.isMobile) injectPostNavUIToggle();
-	
+
 	// Add the toggle for the appearance adjustment UI elements on mobile.
 	if (window.isMobile) injectAppearanceAdjustUIToggle();
 
 	// Add the antikibitzer.
 	injectAntiKibitzer();
-	
+
 	// Add comment parent popups.
 	addCommentParentPopups();
-	
+
 	// Mark original poster's comments with a special class.
 	markOriginalPosterComments();
-	
+
 	// Set the "submit" button on the edit post page to something more helpful.
 	setEditPostPageSubmitButtonText();
 
@@ -2658,13 +2661,13 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 			}
 		}
 	});
-	
+
 	// Add event listener for . , ; (for navigating listings pages).
 	let listings = document.querySelectorAll("h1.listing a[href^='/posts']");
 	if (listings.length > 0) {
 		document.addEventListener("keyup", (event) => { 
 			if (event.ctrlKey || event.shiftKey || event.altKey || !(event.key == "," || event.key == "." || event.key == ';' || event.keyCode == 27)) return;
-			
+
 			if (event.keyCode == 27) {
 				if (document.activeElement.parentElement.hasClass("listing"))
 					document.activeElement.blur();
@@ -2678,7 +2681,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 				}
 				return;
 			}
-	
+
 			var indexOfActiveListing = -1;
 			for (i = 0; i < listings.length; i++) {
 				if (document.activeElement.parentElement.hasClass("listing") && 
@@ -2705,7 +2708,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	if (comments.length > 0) {
 		document.addEventListener("keyup", (event) => {
 			if (event.ctrlKey || event.shiftKey || event.altKey || !(event.key == "," || event.key == "." || event.key == ';' || event.keyCode == 27)) return;
-			
+
 			if (event.keyCode == 27) {
 				if (document.activeElement.parentElement.hasClass("comment-meta"))
 					document.activeElement.blur();
@@ -2755,7 +2758,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		(currentView.nextSibling || viewSelector.firstChild).accessKey = 'x';
 		(currentView.previousSibling || viewSelector.lastChild).accessKey = 'z';
 	}
-	
+
 	// Add accesskey to index page sort selector.
 	(document.querySelector("#content.index-page > .sublevel-nav.sort a")||{}).accessKey = 'z';
 
@@ -2768,7 +2771,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	if (aggregatedStyles != "") {
 		document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='mathjax-styles'>" + aggregatedStyles + "</style>");
 	}
-	
+
 	// Add listeners to switch between word count and read time.
 	if (window.localStorage.getItem("display-word-count")) toggleReadTimeOrWordCount(true);
 	document.querySelectorAll(".post-meta .read-time").forEach(element => { element.addActivateEvent(readTimeOrWordCountClicked); });
@@ -2779,7 +2782,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		const selectedText = window.getSelection().toString();
 		event.clipboardData.setData("text/plain", selectedText.replace(/\u00AD/g, ""));
 	});
-	
+
 	// Set up Image Focus feature.
 	imageFocusSetup();
 });
@@ -2794,7 +2797,7 @@ registerInitializer('pageLayoutFinished', false, () => document.readyState == "c
 	realignHashIfNeeded();
 
 	postSetThemeHousekeeping();
-	
+
 	// FOR TESTING ONLY, COMMENT WHEN DEPLOYING.
 // 	document.querySelector("input[type='search']").value = document.documentElement.clientWidth;
 });
@@ -2821,7 +2824,7 @@ function generateImagesOverlay() {
 		clonedImageContainer.style.height = image.getBoundingClientRect().height + "px";
 		imagesOverlay.appendChild(clonedImageContainer);
 	});
-	
+
 	// Add the event listeners to focus each image.
 	imageFocusSetup(true);
 }
@@ -2831,7 +2834,7 @@ function adjustUIForWindowSize() {
 	let bottomBar = document.querySelector("#bottom-bar");
 	if (document.querySelector("#content").clientHeight > window.innerHeight + 30) {
 		bottomBar.removeClass("decorative");
-		
+
 		bottomBar.querySelector("#nav-item-top").style.display = "";
 	} else if (bottomBar) {
 		if (bottomBar.childElementCount > 1) bottomBar.removeClass("decorative");
@@ -2839,12 +2842,12 @@ function adjustUIForWindowSize() {
 
 		bottomBar.querySelector("#nav-item-top").style.display = "none";
 	}
-	
+
 	// Show quick-nav UI up/down buttons if content is taller than window.
 	document.querySelectorAll("#quick-nav-ui a[href='#top'], #quick-nav-ui a[href='#bottom-bar']").forEach(button => {
 		button.style.visibility = (document.querySelector("#content").clientHeight > window.innerHeight + 30) ? "unset" : "hidden";
 	});
-	
+
 	// Move anti-kibitzer toggle if content is very short.
 	if (document.querySelector("#content").clientHeight < 400) (document.querySelector("#anti-kibitzer-toggle")||{}).style.bottom = "125px";
 
@@ -2868,7 +2871,7 @@ function realignHashIfNeeded() {
 }
 function realignHash() {
 	if (!location.hash) return;
-	
+
 	let targetElement = document.querySelector(location.hash);
 	if (targetElement) targetElement.scrollIntoView(true);
 }
@@ -2892,10 +2895,10 @@ function insMarkup(event) {
 	var p0 = tarea.selectionStart;
 	var p1 = tarea.selectionEnd;
 	var cur0 = cur1 = p0;
-	
+
 	var str = (p0 == p1) ? mtext : tarea.value.substring(p0, p1);
 	str = func ? func(str, p0) : (mopen + str + mclose);
-	
+
 	// Determine selection.
 	if (!func) {
 		cur0 += (p0 == p1) ? mopen.length : str.length;
@@ -2908,11 +2911,11 @@ function insMarkup(event) {
 
 	// Update textarea contents.
 	tarea.value = tarea.value.substring(0, p0) + str + tarea.value.substring(p1);
-	
+
 	// Set selection.
 	tarea.selectionStart = cur0;
 	tarea.selectionEnd = cur1;
-	
+
 	return;
 }
 
@@ -2958,7 +2961,7 @@ function hyperlink(text, startpos) {
 		}
 		startpos = startpos + text.length + url.length + 4;
 		endpos = startpos;
-	}	
-	
+	}
+
 	return [ "[" + link_text + "](" + url + ")", startpos, endpos ];
 }
