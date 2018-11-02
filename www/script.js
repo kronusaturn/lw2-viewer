@@ -2076,7 +2076,15 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 	});
 
 	// Create the image focus overlay.
-	addUIElement("<div id='image-focus-overlay'></div>");
+	addUIElement("<div id='image-focus-overlay'>" + 
+	`<div class='help-overlay'>
+	 <p><strong>Arrow keys:</strong> Next/previous image</p>
+	 <p><strong>Escape</strong> or <strong>click</strong>: Hide zoomed image</p>
+	 <p><strong>Space bar:</strong> Reset image size & position</p>
+	 <p><strong>Scroll</strong> to zoom in/out</p>
+	 <p>(When zoomed in, <strong>drag</strong> to pan;<br/> <strong>double-click</strong> to close)</p>
+	 </div>` + 
+	"</div>");
 }
 
 function imageClickedToFocus(event) {
@@ -2090,6 +2098,7 @@ function focusImage(image) {
 	let clonedImage = image.cloneNode(true);
 	clonedImage.style = "";
 	imageFocusOverlay.appendChild(clonedImage);
+	imageFocusOverlay.addClass("engaged");
 	
 	// Set image to default size and position.
 	resetFocusedImagePosition();
@@ -2155,13 +2164,22 @@ function resetFocusedImagePosition() {
 }
 
 function unfocusImageOverlay() {
-	removeElement(document.querySelector("#image-focus-overlay img"));
+	// Remove focused image and hide overlay.
+	let imageFocusOverlay = document.querySelector("#image-focus-overlay");
+	imageFocusOverlay.removeClass("engaged");
+	removeElement(imageFocusOverlay.querySelector("img"));
+
+	// Un-blur content/etc.
 	document.querySelectorAll("#content, #ui-elements-container > *:not(#image-focus-overlay), #images-overlay").forEach(element => {
 		element.removeClass("blurred");
 	});
+	
+	// Unset "focused" class of focused image.
 	document.querySelectorAll("#content img, #images-overlay img").forEach(image => {
 		image.removeClass("focused");
 	});
+	
+	// Remove event listeners.
 	window.removeEventListener("wheel", focusedImageScrolled);
 	window.removeEventListener("MozMousePixelScroll", oldFirefoxCompatibilityScrollEventFired);
 	window.removeEventListener("dblclick", unfocusImageOverlay);

@@ -2897,6 +2897,7 @@ li {
 	right: 0;
 	bottom: 0;
 	left: 0;
+	display: none;
 }
 #image-focus-overlay::before {
 	content: "";
@@ -2910,8 +2911,8 @@ li {
 	opacity: 0.5;
 	z-index: -1;
 }
-#image-focus-overlay:empty {
-	display: none;
+#image-focus-overlay.engaged {
+	display: initial;
 }
 
 #image-focus-overlay img {
@@ -2921,6 +2922,26 @@ li {
 	left: 50%;
 	top: 50%;
 	transform: translateX(-50%) translateY(-50%);
+}
+
+#image-focus-overlay .help-overlay {
+	position: absolute;
+	z-index: 1;
+	background-color: rgba(0,0,0,0.85);
+	color: #fff;
+	font-size: 1.5rem;
+	padding: 1em;
+	border-radius: 10px;
+	bottom: 1em;
+	right: 1em;
+}
+#image-focus-overlay .help-overlay p {
+	margin: 0;
+	text-indent: -2em;
+	padding-left: 2em;
+}
+#image-focus-overlay .help-overlay p + p {
+	margin: 0.75em 0 0 0;
 }
 
 .blurred {
