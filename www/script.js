@@ -2096,6 +2096,7 @@ function focusImage(event) {
 
 	// Add listener to zoom image with scroll wheel.
 	window.addEventListener("wheel", focusedImageScrolled);
+	window.addEventListener("MozMousePixelScroll", oldFirefoxCompatibilityScrollEventFired);
 	
 	// If image is bigger than viewport, it's draggable. Otherwise, click unfocuses.
 	window.addEventListener("mouseup", mouseUpOnFocusedImage);
@@ -2154,6 +2155,7 @@ function unfocusImageOverlay() {
 		element.removeClass("blurred");
 	});
 	window.removeEventListener("wheel", focusedImageScrolled);
+	window.removeEventListener("MozMousePixelScroll", oldFirefoxCompatibilityScrollEventFired);
 	window.removeEventListener("dblclick", unfocusImageOverlay);
 	document.removeEventListener("keyup", keyPressedWhenImageFocused);
 	document.removeEventListener("keydown", spaceBarPressedWhenImageFocused);
@@ -2236,6 +2238,9 @@ function focusedImageScrolled(event) {
 	// Set the cursor appropriately.
 	image.style.cursor = (image.height >= window.innerHeight || image.width >= window.innerWidth) ? 
 						 'move' : 'default';
+}
+function oldFirefoxCompatibilityScrollEventFired(event) {
+	event.preventDefault();
 }
 
 /*********************/
