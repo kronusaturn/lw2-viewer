@@ -2087,11 +2087,6 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 
 function imageClickedToFocus(event) {
 	focusImage(event.target);
-
-	// Show, then fade out, the help overlay.
-	let helpOverlay = document.querySelector("#image-focus-overlay .help-overlay");
-	helpOverlay.addClass("engaged");
-	window.setTimeout(() => { helpOverlay.removeClass("engaged"); }, 3000);
 }
 
 function focusImage(image) {

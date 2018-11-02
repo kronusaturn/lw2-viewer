@@ -2943,7 +2943,6 @@ li {
 		color 1s ease,
 		background-color 1s ease;
 }
-#image-focus-overlay .help-overlay.engaged,
 #image-focus-overlay .help-overlay:hover {
 	max-width: 420px;
 	max-height: 300px;
@@ -2972,7 +2971,6 @@ li {
 	transition: 
 		visibility 1s ease;
 }
-#image-focus-overlay .help-overlay.engaged::after,
 #image-focus-overlay .help-overlay:hover::after {
 	visibility: hidden;
 	transition: 
