@@ -2068,6 +2068,7 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 	document.querySelectorAll("#images-overlay img").forEach(image => {
 		image.addActivateEvent(imageClickedToFocus);
 	});
+	((document.querySelector("#image-focus-overlay .image-number")||{}).dataset||{}).numberOfImages = document.querySelectorAll("#images-overlay img").length;
 	if (imagesOverlayOnly) return;
 	document.querySelectorAll("#content img").forEach(image => {
 		image.addActivateEvent(imageClickedToFocus);
@@ -2082,11 +2083,14 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 	 <p><strong>Scroll</strong> to zoom in/out</p>
 	 <p>(When zoomed in, <strong>drag</strong> to pan;<br/> <strong>double-click</strong> to close)</p>
 	 </div>` + 
+	`<div class='image-number'></div>` + 
 	"</div>");
 }
 
 function imageClickedToFocus(event) {
 	focusImage(event.target);
+	
+	document.querySelector("#image-focus-overlay .image-number").textContent = (getIndexOfFocusedImage() + 1);
 }
 
 function focusImage(image) {
@@ -2185,18 +2189,27 @@ function unfocusImageOverlay() {
 	document.removeEventListener("keydown", keyDownWhenImageFocused);
 }
 
-function focusNextImage(image, next = true) {
+function getIndexOfFocusedImage() {
 	let images = document.querySelectorAll("#images-overlay img");
-	var indexOfActiveImage = -1;
+	var indexOfFocusedImage = -1;
 	for (i = 0; i < images.length; i++) {
 		if (images[i].hasClass("focused")) {
-			indexOfActiveImage = i;
+			indexOfFocusedImage = i;
 			break;
 		}
 	}
-	if (next ? (++indexOfActiveImage == images.length) : (--indexOfActiveImage == -1)) return;
+	return indexOfFocusedImage;
+}
+
+function focusNextImage(image, next = true) {
+	let images = document.querySelectorAll("#images-overlay img");
+	var indexOfFocusedImage = getIndexOfFocusedImage();
+	
+	if (next ? (++indexOfFocusedImage == images.length) : (--indexOfFocusedImage == -1)) return;
 	unfocusImageOverlay();
-	focusImage(images[indexOfActiveImage]);
+	focusImage(images[indexOfFocusedImage]);
+	
+	document.querySelector("#image-focus-overlay .image-number").textContent = (indexOfFocusedImage + 1);
 }
 
 function keyPressedWhenImageFocused(event) {

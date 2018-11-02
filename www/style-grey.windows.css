@@ -2995,6 +2995,35 @@ li {
 	margin: 0.75em 0 0 0;
 }
 
+#image-focus-overlay .image-number {
+	position: absolute;
+	z-index: 1;
+	font-size: 1.75rem;
+	left: 1em;
+	bottom: 1em;
+	font-weight: 600;
+	text-shadow:
+		0 0 3px #fff,
+		0 0 5px #fff,
+		0 0 8px #fff,
+		0 0 13px #fff;
+	width: 1.5em;
+	text-align: right;
+	white-space: nowrap;
+}
+#image-focus-overlay .image-number::before {
+	content: "#";
+	visibility: hidden;
+}
+#image-focus-overlay .image-number::after {
+	content: " of " attr(data-number-of-images);
+	visibility: hidden;
+}
+#image-focus-overlay .image-number:hover::before,
+#image-focus-overlay .image-number:hover::after {
+	visibility: visible;
+}
+
 .blurred {
 	filter: blur(3px);
 }
