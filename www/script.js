@@ -2162,7 +2162,6 @@ function unfocusImageOverlay() {
 }
 
 function keyPressedWhenImageFocused(event) {
-	// Add event listeners for unfocusing images.
 	if (!(event.keyCode == 27 || event.keyCode == 32) || 
 		window.getComputedStyle(document.querySelector("#image-focus-overlay")).display == "none") return;
 
@@ -2748,13 +2747,15 @@ function generateImagesOverlay() {
 	let imagesOverlay = document.querySelector("#images-overlay");
 	let imagesOverlayLeftOffset = imagesOverlay.getBoundingClientRect().left;
 	document.querySelectorAll(".post-body img").forEach(image => {
+		let clonedImageContainer = document.createElement("div");
 		let clonedImage = image.cloneNode(true);
-		clonedImage.style.top = image.getBoundingClientRect().top - parseFloat(window.getComputedStyle(image).marginTop) + window.scrollY + "px";
-		clonedImage.style.left = image.getBoundingClientRect().left - parseFloat(window.getComputedStyle(image).marginLeft) - imagesOverlayLeftOffset + "px";
-		clonedImage.style.width = image.getBoundingClientRect().width + "px";
-		clonedImage.style.height = image.getBoundingClientRect().height + "px";
 		clonedImage.style.border = window.getComputedStyle(image).border;
-		imagesOverlay.appendChild(clonedImage);
+		clonedImageContainer.appendChild(clonedImage);
+		clonedImageContainer.style.top = image.getBoundingClientRect().top - parseFloat(window.getComputedStyle(image).marginTop) + window.scrollY + "px";
+		clonedImageContainer.style.left = image.getBoundingClientRect().left - parseFloat(window.getComputedStyle(image).marginLeft) - imagesOverlayLeftOffset + "px";
+		clonedImageContainer.style.width = image.getBoundingClientRect().width + "px";
+		clonedImageContainer.style.height = image.getBoundingClientRect().height + "px";
+		imagesOverlay.appendChild(clonedImageContainer);
 	});
 	
 	// Add the event listeners to focus each image.
