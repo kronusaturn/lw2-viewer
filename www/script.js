@@ -2065,7 +2065,15 @@ function addCommentParentPopups() {
 /* IMAGE FOCUS */
 /***************/
 
-function imageFocusSetup() {
+function imageFocusSetup(imagesOverlayOnly = false) {
+	document.querySelectorAll("#images-overlay img").forEach(image => {
+		image.addActivateEvent(focusImage);
+	});
+	if (imagesOverlayOnly) return;
+	document.querySelectorAll("#content img").forEach(image => {
+		image.addActivateEvent(focusImage);
+	});
+
 	let imageFocusOverlay = addUIElement("<div id='image-focus-overlay'></div>");
 	imageFocusOverlay.addActivateEvent((event) => {
 		unfocusImageOverlay();
@@ -2075,11 +2083,7 @@ function imageFocusSetup() {
 			window.getComputedStyle(imageFocusOverlay) == "none") return;
 		event.preventDefault();
 		unfocusImageOverlay();
-	});
-	
-	document.querySelectorAll("#content img, #images-overlay img").forEach(image => {
-		image.addActivateEvent(focusImage);
-	});
+	});	
 }
 
 function focusImage(event) {
@@ -2087,7 +2091,16 @@ function focusImage(event) {
 	let clonedImage = event.target.cloneNode(true);
 	clonedImage.style = "";
 	imageFocusOverlay.appendChild(clonedImage);
-	
+
+	// Make sure that initially, the image fits into the viewport.
+	let shrinkRatio = 0.975;
+	clonedImage.style.width = Math.min(clonedImage.clientWidth, window.innerWidth * shrinkRatio) + 'px';
+	let maxImageHeight = window.innerHeight * shrinkRatio;
+	if (clonedImage.clientHeight > maxImageHeight) {
+		clonedImage.style.height = maxImageHeight +'px';
+		clonedImage.style.width = "";
+	}
+
 	document.querySelectorAll("#content, #ui-elements-container > *:not(#image-focus-overlay), #images-overlay").forEach(element => {
 		element.addClass("blurred");
 	});
@@ -2636,6 +2649,9 @@ function generateImagesOverlay() {
 		clonedImage.style.border = window.getComputedStyle(image).border;
 		imagesOverlay.appendChild(clonedImage);
 	});
+	
+	// Add the event listeners to focus each image.
+	imageFocusSetup(true);
 }
 
 function adjustUIForWindowSize() {
