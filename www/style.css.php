@@ -3006,15 +3006,15 @@ li {
 }
 #image-focus-overlay .image-number::before {
 	content: "#";
-	visibility: hidden;
+	opacity: 0.3;
 }
 #image-focus-overlay .image-number::after {
 	content: " of " attr(data-number-of-images);
-	visibility: hidden;
+	opacity: 0.3;
 }
 #image-focus-overlay .image-number:hover::before,
 #image-focus-overlay .image-number:hover::after {
-	visibility: visible;
+	opacity: 1.0;
 }
 
 .blurred {
