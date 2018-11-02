@@ -2206,13 +2206,29 @@ function focusedImageScrolled(event) {
 	// Remove the filter.
 	image.style.filter = 'none';
 
-	// Resize.
+	// Locate point under cursor.
+	let offsetOfImageFromCursor = {
+		x: image.getBoundingClientRect().x - event.clientX,
+		y: image.getBoundingClientRect().y - event.clientY
+	}
+
+	// Calculate resize factor.
 	var factor = 1 + Math.sqrt(Math.abs(event.deltaY))/100.0;
+
+	// Resize.
 	image.style.width = (event.deltaY < 0 ?
 						(image.clientWidth * factor) :
 						(image.clientWidth / factor))
 						+ "px";
-	image.style.height = "auto";
+	image.style.height = "";
+
+	// Move image so that the point under the cursor stays the same.
+	let deltaFromCenteredZoom = {
+		x: image.getBoundingClientRect().x - (event.clientX + (event.deltaY < 0 ? offsetOfImageFromCursor.x * factor : offsetOfImageFromCursor.x / factor)),
+		y: image.getBoundingClientRect().y - (event.clientY + (event.deltaY < 0 ? offsetOfImageFromCursor.y * factor : offsetOfImageFromCursor.y / factor))
+	}
+	image.style.left = parseInt(window.getComputedStyle(image).left) - deltaFromCenteredZoom.x + "px";
+	image.style.top = parseInt(window.getComputedStyle(image).top) - deltaFromCenteredZoom.y + "px";
 
 	// Put the filter back.
 	image.style.filter = '';
