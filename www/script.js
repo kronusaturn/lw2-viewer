@@ -2066,6 +2066,7 @@ function addCommentParentPopups() {
 /***************/
 
 function imageFocusSetup(imagesOverlayOnly = false) {
+	// Add event listeners for clicking on images to focus them.
 	document.querySelectorAll("#images-overlay img").forEach(image => {
 		image.addActivateEvent(focusImage);
 	});
@@ -2074,19 +2075,18 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 		image.addActivateEvent(focusImage);
 	});
 
+	// Add event listeners for unfocusing images.
 	let imageFocusOverlay = addUIElement("<div id='image-focus-overlay'></div>");
-	imageFocusOverlay.addActivateEvent((event) => {
-		unfocusImageOverlay();
-	});
 	document.addEventListener("keyup", (event) => {
 		if (event.keyCode != 27 || 
 			window.getComputedStyle(imageFocusOverlay) == "none") return;
 		event.preventDefault();
 		unfocusImageOverlay();
-	});	
+	});
 }
 
 function focusImage(event) {
+	// Create the focused version of the image.
 	let imageFocusOverlay = document.querySelector("#image-focus-overlay");
 	let clonedImage = event.target.cloneNode(true);
 	clonedImage.style = "";
@@ -2101,22 +2101,65 @@ function focusImage(event) {
 		clonedImage.style.width = "";
 	}
 
+	// Blur everything else.
 	document.querySelectorAll("#content, #ui-elements-container > *:not(#image-focus-overlay), #images-overlay").forEach(element => {
 		element.addClass("blurred");
 	});
+
+	// Add listener to zoom image with scroll wheel.
+	window.addEventListener("wheel", focusedImageScrolled);
 	
-	window.addEventListener("wheel", zoomFocusedImage);
+	// If image is bigger than viewport, it's draggable. Otherwise, click unfocuses.
+	window.addEventListener("mouseup", mouseUpOnFocusedImage);
+	window.onmousedown = (event) => {
+		if (clonedImage.height >= window.innerHeight || clonedImage.width >= window.innerWidth) { 							
+			let mouseCoordX = event.clientX;
+			let mouseCoordY = event.clientY;
+			
+			let imageCoordX = parseInt(window.getComputedStyle(clonedImage).left);
+			let imageCoordY = parseInt(window.getComputedStyle(clonedImage).top);
+
+			window.onmousemove = (event) => {
+				// Remove the filter.
+				clonedImage.style.filter = "none";
+				clonedImage.style.left = imageCoordX + event.clientX - mouseCoordX + 'px';
+				clonedImage.style.top = imageCoordY + event.clientY - mouseCoordY + 'px';
+			};
+			return false;
+		}
+	};
+	
+	// Double-click unfocuses, always.
+	window.addEventListener('dblclick', unfocusImageOverlay);
 }
 
-function unfocusImageOverlay(imageFocusOverlay) {
+function unfocusImageOverlay() {
 	removeElement(document.querySelector("#image-focus-overlay img"));
 	document.querySelectorAll("#content, #ui-elements-container > *:not(#image-focus-overlay), #images-overlay").forEach(element => {
 		element.removeClass("blurred");
 	});
-	window.removeEventListener("wheel", zoomFocusedImage);
+	window.removeEventListener("wheel", focusedImageScrolled);
+	window.removeEventListener("dblclick", unfocusImageOverlay);
 }
 
-function zoomFocusedImage(event) {
+function mouseUpOnFocusedImage(event) {
+	let focusedImage = document.querySelector("#image-focus-overlay img");
+
+	if (event.target != focusedImage) {
+		unfocusImageOverlay();
+		return;
+	}
+		
+	if (focusedImage.height >= window.innerHeight || focusedImage.width >= window.innerWidth) {
+		window.onmousemove = '';
+		// Put the filter back.
+		focusedImage.style.filter = '';
+	} else {
+		unfocusImageOverlay();
+	}
+}
+
+function focusedImageScrolled(event) {
 	event.preventDefault();
 	
 	let image = document.querySelector("#image-focus-overlay img");
@@ -2134,6 +2177,10 @@ function zoomFocusedImage(event) {
 
 	// Put the filter back.
 	image.style.filter = '';
+
+	// Set the cursor appropriately.
+	image.style.cursor = (image.height >= window.innerHeight || image.width >= window.innerWidth) ? 
+						 'move' : 'default';
 }
 
 /*********************/
