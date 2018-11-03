@@ -2226,6 +2226,7 @@ function focusNextImage(next = true) {
 
 function slideshowButtonClicked(event) {
 	focusNextImage(event.target.hasClass("next"));
+	event.target.blur();
 }
 
 function keyPressedWhenImageFocused(event) {
