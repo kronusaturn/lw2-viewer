@@ -300,8 +300,8 @@ function showReplyForm(event) {
 
 function hideReplyForm(event) {
 	// Are we editing a comment? If so, un-hide the existing comment body.
-	let hiddenCommentBody = event.target.closest(".comment-item").querySelector(".comment-body");
-	if (hiddenCommentBody) hiddenCommentBody.style.display = "";
+	let containingComment = event.target.closest(".comment-item");
+	if (containingComment) containingComment.querySelector(".comment-body").style.display = "";
 	
 	event.target.parentElement.constructCommentControls();
 }
