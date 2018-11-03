@@ -1720,9 +1720,10 @@ function markOriginalPosterComments() {
 
 	document.querySelectorAll(".comment-item .author, .comment-item .inline-author").forEach(author => {
 		if (author.dataset.userid == postAuthor.dataset.userid ||
-			(author.hash != "" && document.querySelector(`${author.hash} .author`).dataset.userid == postAuthor.dataset.userid))
+			(author.hash != "" && document.querySelector(`${author.hash} .author`).dataset.userid == postAuthor.dataset.userid)) {
 			author.addClass("original-poster");
 			author.title += "Original poster";
+		}
 	});
 }
 
