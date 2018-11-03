@@ -481,7 +481,7 @@
 
 (defparameter *primary-nav* '(("home" "/" "Home" :description "Latest frontpage posts" :accesskey "h")
 			      ("featured" "/index?view=featured" "Featured" :description "Latest featured posts" :accesskey "f")
-			      ("all" "/index?view=new" "All" :description "Latest posts from all sections" :accesskey "a")
+			      ("all" "/index?view=all" "All" :description "Latest posts from all sections" :accesskey "a")
 			      ("meta" "/index?view=meta" "Meta" :description "Latest meta posts" :accesskey "m")
 			      ("recent-comments" "/recentcomments" "<span>Recent </span>Comments" :description "Latest comments" :accesskey "c"))) 
 
@@ -811,208 +811,290 @@
 (defun post-or-get-parameter (name)
   (or (hunchentoot:post-parameter name) (hunchentoot:get-parameter name)))
 
-(hunchentoot:define-easy-handler (view-root :uri "/") (offset limit sort)
-				 (with-error-page
-                                   (if (and sort (member sort '("new" "hot") :test #'string=))
-                                       (set-user-pref :default-sort sort))
-				   (let* ((offset (and offset (parse-integer offset)))
-                                          (limit (and limit (parse-integer limit)))
-					  (posts (get-posts-index :offset offset :limit (or limit (user-pref :items-per-page)) :sort (user-pref :default-sort))))
-				     (view-items-index posts :section :frontpage :title "Frontpage posts" :hide-title t :with-offset (or offset 0)
-                                                       :extra-html (lambda (out-stream)
-                                                                     (page-toolbar-to-html out-stream
-                                                                                           :title "Frontpage posts"
-                                                                                           :new-post t)
-                                                                     (sublevel-nav-to-html out-stream
-                                                                                           '(("new" "New") ("hot" "Hot"))
-                                                                                           (user-pref :default-sort)
-                                                                                           :param-name "sort"
-                                                                                           :extra-class "sort"))))))
+(defun redirect (uri &key (type :see-other))
+  (setf (hunchentoot:return-code*) (ecase type (:see-other 303) (:permanent 301))
+        (hunchentoot:header-out "Location") uri))
 
-(hunchentoot:define-easy-handler (view-index :uri "/index") (view before after offset limit sort)
-                                 (with-error-page
-                                   (if (and sort (member sort '("new" "hot") :test #'string=))
-                                       (set-user-pref :default-sort sort))
-                                   (let* ((offset (and offset (parse-integer offset)))
-                                          (limit (and limit (parse-integer limit)))
-                                          (posts (get-posts-index :view view :before before :after after :offset offset :limit (or limit (user-pref :items-per-page)) :sort (user-pref :default-sort)))
-                                          (section (cond ((string= view "frontpage") :frontpage)
-                                                         ((string= view "featured") :featured)
-                                                         ((string= view "meta") :meta)
-                                                         ((string= view "alignment-forum") :alignment-forum)
-                                                         (t :all)))
-                                          (page-title (format nil "~@(~A posts~)" section)))
-                                     (view-items-index posts :section section :title page-title :with-offset (or offset 0)
-                                                       :extra-html (lambda (out-stream)
-                                                                     (page-toolbar-to-html out-stream
-                                                                                           :title page-title
-                                                                                           :new-post (if (eq section :meta) "meta" t))
-                                                                     (if (string= view "new")
-                                                                         (sublevel-nav-to-html out-stream
-                                                                                               '(("new" "New") ("hot" "Hot"))
-                                                                                               (user-pref :default-sort)
-                                                                                               :param-name "sort"
-                                                                                               :extra-class "sort")))))))
+(defmacro define-page (name path-specifier additional-vars &body body)
+  (labels ((make-lambda (args)
+             (loop for a in args
+                   collect (if (atom a) a (first a))))
+           (filter-plist (plist &rest args)
+             (declare (dynamic-extent args))
+             (loop for (key val . rest) = plist then rest
+                   while key
+                   when (member key args)
+                   nconc (list key val)))
+           (make-hunchentoot-lambda (args)
+             (loop for x in args
+                   collect (if (atom x) x
+                               (cons (first x) (filter-plist (rest x) :request-type :real-name)))))
+           (make-binding-form (additional-vars body &aux additional-declarations additional-preamble)
+             (let ((var-bindings
+                     (loop for x in additional-vars
+                           as binding-form = (destructuring-bind (name &key member type default required request-type real-name) (if (atom x) (list x) x)
+                                               (declare (ignore request-type real-name))
+                                               (let* ((inner-form
+                                                        (cond
+                                                          (member
+                                                            `(let ((sym (find-symbol (string-upcase ,name) ,(find-package '#:keyword))))
+                                                               (if (member sym (quote ,member)) sym)))
+                                                          ((and type (subtypep type 'integer))
+                                                           `(if ,name (parse-integer ,name)))))
+                                                      (inner-form
+                                                        (if default
+                                                            `(or ,inner-form ,default)
+                                                            inner-form)))
+                                                 (when required
+                                                   (push `(unless (and ,name (not (equal ,name ""))) (error "Missing required parameter: ~A" (quote ,name)))
+                                                         additional-preamble))
+                                                 (if member
+                                                     (if type (error "Cannot specify both member and type.")
+                                                         (push `(type (or null symbol) ,name) additional-declarations))
+                                                     (if type
+                                                         (push `(type (or null ,type) ,name) additional-declarations)
+                                                         (push `(type (or null simple-string) ,name) additional-declarations)))
+                                                 (when inner-form
+                                                   `(,name ,inner-form))))
+                           when binding-form collect it)))
+               `(let ,var-bindings (declare ,@additional-declarations) ,@additional-preamble ,@body))))
+   (multiple-value-bind (path-specifier-form path-bindings-wrapper specifier-vars)
+    (if (stringp path-specifier)
+        (values path-specifier #'identity)
+        (destructuring-bind (specifier-type specifier-body &rest specifier-args) path-specifier
+          (ecase specifier-type
+            (:function
+              (values `(lambda (r) (funcall ,specifier-body (hunchentoot:request-uri r)))
+                      (if specifier-args
+                          (lambda (body) `(multiple-value-bind ,(make-lambda specifier-args) (funcall ,specifier-body (hunchentoot:request-uri*)) ,body))
+                          #'identity)
+                      specifier-args))
+            (:regex
+              (let ((fn `(lambda (r) (ppcre:scan-to-strings ,specifier-body (hunchentoot:request-uri r)))))
+                (values fn
+                        (lambda (body)
+                          (alexandria:with-gensyms (result-vector)
+                            `(let ((,result-vector (nth-value 1 (funcall ,fn hunchentoot:*request*))))
+                               (declare (type simple-vector ,result-vector)) 
+                               (let
+                                 ,(loop for v in (make-lambda specifier-args) as x from 0 collecting `(,v (if (> (length ,result-vector) ,x) (aref ,result-vector ,x)))) 
+                                 ,body))))
+                        specifier-args))))))
+    (let* ((rewritten-body
+             (if (string= (ignore-errors (caar body)) "REQUEST-METHOD")
+                 (progn
+                   (unless (= (length body) 1)
+                     (error "REQUEST-METHOD must be the only form when it appears in DEFINE-PAGE."))
+                   `((ecase (hunchentoot:request-method*)
+                       ,.(loop for method-body in (cdar body)
+                               collect (destructuring-bind (method args &body inner-body) method-body
+                                         (unless (eq method :get)
+                                           (alexandria:with-gensyms (csrf-token)
+                                             (push `(,csrf-token :real-name "csrf-token" :required t) args)
+                                             (push `(check-csrf-token ,csrf-token) inner-body)))
+                                         (loop for a in args
+                                               do (push (append (if (atom a) (list a) (cons (first a) (filter-plist (rest a) :real-name))) (list :request-type method)) additional-vars))
+                                         `(,method ,(make-binding-form args inner-body)))))))
+                 body)))
+      `(hunchentoot:define-easy-handler (,name :uri ,path-specifier-form) ,(make-hunchentoot-lambda additional-vars)
+                                        (with-error-page
+                                          (block nil
+                                                 ,(funcall path-bindings-wrapper
+                                                           (make-binding-form (append specifier-vars additional-vars)
+                                                                              rewritten-body)))))))))
 
-(hunchentoot:define-easy-handler (view-post :uri "/post") (id)
-				 (with-error-page
-				   (unless (and id (not (equal id ""))) (error "No post ID.")) 
-				   (setf (hunchentoot:return-code*) 301
-					 (hunchentoot:header-out "Location") (generate-post-link id)))) 
+(defmacro define-regex-handler (name (regex &rest vars) additional-vars &body body)
+  (alexandria:with-gensyms (fn result-vector)
+    `(let ((,fn (lambda (r) (ppcre:scan-to-strings ,regex (hunchentoot:request-uri r)))))
+       (hunchentoot:define-easy-handler (,name :uri ,fn) ,additional-vars
+	 (let ((,result-vector (nth-value 1 (funcall ,fn hunchentoot:*request*))))
+	   (declare (type vector ,result-vector)) 
+	   (symbol-macrolet
+	     ,(loop for v in vars as x from 0 collecting `(,v (if (> (length ,result-vector) ,x) (aref ,result-vector ,x)))) 
+	     ,@body))))))
 
-(hunchentoot:define-easy-handler (view-post-lw1-link :uri (lambda (r) (match-lw1-link (hunchentoot:request-uri r)))) ()
-				 (with-error-page
-				   (let ((location (convert-lw1-link (hunchentoot:request-uri*)))) 
-				     (setf (hunchentoot:return-code*) 301
-					   (hunchentoot:header-out "Location") location)))) 
+(define-page view-root "/" ((offset :type fixnum)
+                            (limit :type fixnum)
+                            (sort :member (:new :hot)))
+  (let ((sort-string (if sort (string-downcase sort))))
+    (if sort-string
+        (set-user-pref :default-sort sort-string))
+    (let ((posts (get-posts-index :offset offset :limit (or limit (user-pref :items-per-page)) :sort (user-pref :default-sort))))
+      (view-items-index posts :section :frontpage :title "Frontpage posts" :hide-title t :with-offset (or offset 0)
+                        :extra-html (lambda (out-stream)
+                                      (page-toolbar-to-html out-stream
+                                                            :title "Frontpage posts"
+                                                            :new-post t)
+                                      (sublevel-nav-to-html out-stream
+                                                            '(("new" "New") ("hot" "Hot"))
+                                                            (user-pref :default-sort)
+                                                            :param-name "sort"
+                                                            :extra-class "sort"))))))
 
-(hunchentoot:define-easy-handler (view-post-lw2-slug-link :uri (lambda (r) (match-lw2-slug-link (hunchentoot:request-uri r)))) ()
-                                 (with-error-page
-                                   (let ((location (convert-lw2-slug-link (hunchentoot:request-uri*))))
-                                     (setf (hunchentoot:return-code*) 303
-                                           (hunchentoot:header-out "Location") location))))
+(define-page view-index "/index" ((view :member (:all :new :frontpage :featured :meta :alignment-forum) :default :all)
+                                  before after
+                                  (offset :type fixnum)
+                                  (limit :type fixnum)
+                                  (sort :member (:new :hot)))
+  (when (eq view :new) (redirect "/index?view=all" :type :permanent) (return))
+  (let ((sort-string (if sort (string-downcase sort))))
+    (if sort-string
+        (set-user-pref :default-sort sort-string)))
+  (let ((posts (get-posts-index :view (string-downcase view) :before before :after after :offset offset :limit (or limit (user-pref :items-per-page)) :sort (user-pref :default-sort)))
+        (page-title (format nil "~@(~A posts~)" view)))
+    (view-items-index posts :section view :title page-title :with-offset (or offset 0)
+                      :extra-html (lambda (out-stream)
+                                    (page-toolbar-to-html out-stream
+                                                          :title page-title
+                                                          :new-post (if (eq view :meta) "meta" t))
+                                    (if (string= view "new")
+                                        (sublevel-nav-to-html out-stream
+                                                              '(("new" "New") ("hot" "Hot"))
+                                                              (user-pref :default-sort)
+                                                              :param-name "sort"
+                                                              :extra-class "sort"))))))
 
-(hunchentoot:define-easy-handler (view-post-lw2-sequence-link :uri (lambda (r) (match-lw2-sequence-link (hunchentoot:request-uri r)))) ()
-                                 (with-error-page
-                                   (let ((location (convert-lw2-sequence-link (hunchentoot:request-uri*))))
-                                     (setf (hunchentoot:return-code*) 303
-                                           (hunchentoot:header-out "Location") location))))
+(define-page view-post "/post" ((id :required t))
+  (redirect (generate-post-link id) :type :permanent))
 
-(hunchentoot:define-easy-handler (view-feed :uri "/feed") ()
-                                 (with-error-page
-                                   (setf (hunchentoot:return-code*) 301
-                                         (hunchentoot:header-out "Location") "/?format=rss")))
+(define-page view-post-lw1-link (:function #'match-lw1-link) ()
+  (redirect (convert-lw1-link (hunchentoot:request-uri*)) :type :permanent))
 
-(hunchentoot:define-easy-handler (view-post-lw2-link :uri (lambda (r) (declare (ignore r)) (match-lw2-link (hunchentoot:request-uri*)))) ((csrf-token :request-type :post) (text :request-type :post) (parent-comment-id :request-type :post) (edit-comment-id :request-type :post) need-auth chrono)
-                                 (with-error-page
-                                   (let ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token")))
-                                     (cond
-                                       (text
-                                         (check-csrf-token csrf-token)
-                                         (let ((post-id (match-lw2-link (hunchentoot:request-uri*)))) 
-                                           (assert (and lw2-auth-token (not (string= text ""))))
-                                           (let* ((comment-data
-                                                    (remove-if #'null
-                                                               `(("body" . ,(postprocess-markdown text))
-                                                                 (:last-edited-as . "markdown")
-                                                                 ,(if (not edit-comment-id) `(:post-id . ,post-id))
-                                                                 ,(if parent-comment-id `(:parent-comment-id . ,parent-comment-id)))))
-                                                  (new-comment-id
-                                                    (if edit-comment-id
-                                                        (prog1 edit-comment-id
-                                                          (do-lw2-comment-edit lw2-auth-token edit-comment-id comment-data))
-                                                        (do-lw2-comment lw2-auth-token comment-data))))
-                                             (cache-put "comment-markdown-source" new-comment-id text)
-                                             (ignore-errors (get-post-comments post-id :force-revalidate t))
-                                             (setf (hunchentoot:return-code*) 303
-                                                   (hunchentoot:header-out "Location") (generate-post-link (match-lw2-link (hunchentoot:request-uri*)) new-comment-id)))))
-                                       (t
-                                        (multiple-value-bind (post-id comment-id) (match-lw2-link (hunchentoot:request-uri*))
-                                          (labels ((output-comments (out-stream comments target)
-                                                     (format out-stream "<div id=\"comments\">")
-                                                     (with-error-html-block (out-stream)
-                                                       (if target
-                                                           (comment-thread-to-html out-stream
-                                                             (lambda ()
-                                                               (comment-item-to-html
-                                                                 out-stream
-                                                                 target
-                                                                 :extra-html-fn (lambda (c-id)
-                                                                                  (let ((*comment-individual-link* nil))
-                                                                                    (comment-tree-to-html out-stream (make-comment-parent-hash comments) c-id))))))
-                                                           (if chrono
-                                                               (comment-chrono-to-html out-stream comments)
-                                                               (comment-tree-to-html out-stream (make-comment-parent-hash comments)))))
-                                                     (format out-stream "</div>"))
-                                                   (output-comments-votes (out-stream)
-                                                     (handler-case
-                                                       (when lw2-auth-token
-                                                         (format out-stream "<script>commentVotes=~A</script>"
-                                                                 (json:encode-json-to-string (get-post-comments-votes post-id lw2-auth-token))))
-                                                       (t () nil)))
-                                                   (output-post-vote (out-stream)
-                                                     (handler-case
-                                                       (format out-stream "<script>postVote=~A</script>"
-                                                               (json:encode-json-to-string (get-post-vote post-id lw2-auth-token)))
-                                                       (t () nil))))
-                                            (multiple-value-bind (post title condition)
-                                              (handler-case (nth-value 0 (get-post-body post-id :auth-token (and need-auth lw2-auth-token)))
-                                                (serious-condition (c) (values nil "Error" c))
-                                                (:no-error (post) (values post (cdr (assoc :title post)) nil)))
-                                              (if comment-id
-                                                (let* ((*comment-individual-link* t)
-                                                       (comments (get-post-comments post-id))
-                                                       (target-comment (find comment-id comments :key (lambda (c) (cdr (assoc :--id c))) :test #'string=))
-                                                       (display-name (get-username (cdr (assoc :user-id target-comment)))))
-                                                  (emit-page (out-stream :title (format nil "~A comments on ~A" display-name title) :content-class "individual-thread-page comment-thread-page")
-                                                             (format out-stream "<h1>~A comments on <a href=\"~A\">~A</a></h1>"
-                                                                     (encode-entities display-name)
-                                                                     (generate-post-link post-id)
-                                                                     (clean-text-to-html title))
-                                                             (output-comments out-stream comments target-comment)
-                                                             (when lw2-auth-token
-                                                               (force-output out-stream)
-                                                               (output-comments-votes out-stream))))
-                                                (emit-page (out-stream :title title :content-class "post-page comment-thread-page")
-                                                           (cond
-                                                             (condition
-                                                               (error-to-html out-stream condition))
-                                                             (t
-                                                              (post-body-to-html out-stream post)))
-                                                           (when (and lw2-auth-token (equal (logged-in-userid) (cdr (assoc :user-id post))))
-                                                             (format out-stream "<div class=\"post-controls\"><a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\" accesskey=\"e\" title=\"Edit post [e]\">Edit post</a></div>"
-                                                                     (cdr (assoc :--id post))))
-                                                           (force-output out-stream)
-                                                           (handler-case
-                                                             (let ((comments (get-post-comments post-id)))
-                                                               (output-comments out-stream comments nil))
-                                                             (serious-condition (c) (error-to-html out-stream c)))
-                                                           (when lw2-auth-token
-                                                             (force-output out-stream)
-                                                             (output-post-vote out-stream)
-                                                             (output-comments-votes out-stream))))))))))))
+(define-page view-post-lw2-slug-link (:function #'match-lw2-slug-link) ()
+  (redirect (convert-lw2-slug-link (hunchentoot:request-uri*)) :type :see-other))
+
+(define-page view-post-lw2-sequence-link (:function #'match-lw2-sequence-link) ()
+  (redirect (convert-lw2-sequence-link (hunchentoot:request-uri*)) :type :see-other))
+
+(define-page view-feed "/feed" ()
+  (redirect "/?format=rss" :type :permanent))
+
+(define-page view-post-lw2-link (:function #'match-lw2-link post-id comment-id) (need-auth chrono)
+  (request-method
+    (:get ()
+     (let ((lw2-auth-token *current-auth-token*))
+       (labels ((output-comments (out-stream comments target)
+                  (format out-stream "<div id=\"comments\">")
+                  (with-error-html-block (out-stream)
+                    (if target
+                        (comment-thread-to-html out-stream
+                                                (lambda ()
+                                                  (comment-item-to-html
+                                                    out-stream
+                                                    target
+                                                    :extra-html-fn (lambda (c-id)
+                                                                     (let ((*comment-individual-link* nil))
+                                                                       (comment-tree-to-html out-stream (make-comment-parent-hash comments) c-id))))))
+                        (if chrono
+                            (comment-chrono-to-html out-stream comments)
+                            (comment-tree-to-html out-stream (make-comment-parent-hash comments)))))
+                  (format out-stream "</div>"))
+                (output-comments-votes (out-stream)
+                  (handler-case
+                    (when lw2-auth-token
+                      (format out-stream "<script>commentVotes=~A</script>"
+                              (json:encode-json-to-string (get-post-comments-votes post-id lw2-auth-token))))
+                    (t () nil)))
+                (output-post-vote (out-stream)
+                  (handler-case
+                    (format out-stream "<script>postVote=~A</script>"
+                            (json:encode-json-to-string (get-post-vote post-id lw2-auth-token)))
+                    (t () nil))))
+         (multiple-value-bind (post title condition)
+           (handler-case (nth-value 0 (get-post-body post-id :auth-token (and need-auth lw2-auth-token)))
+             (serious-condition (c) (values nil "Error" c))
+             (:no-error (post) (values post (cdr (assoc :title post)) nil)))
+           (if comment-id
+             (let* ((*comment-individual-link* t)
+                    (comments (get-post-comments post-id))
+                    (target-comment (find comment-id comments :key (lambda (c) (cdr (assoc :--id c))) :test #'string=))
+                    (display-name (get-username (cdr (assoc :user-id target-comment)))))
+               (emit-page (out-stream :title (format nil "~A comments on ~A" display-name title) :content-class "individual-thread-page comment-thread-page")
+                          (format out-stream "<h1>~A comments on <a href=\"~A\">~A</a></h1>"
+                                  (encode-entities display-name)
+                                  (generate-post-link post-id)
+                                  (clean-text-to-html title))
+                          (output-comments out-stream comments target-comment)
+                          (when lw2-auth-token
+                            (force-output out-stream)
+                            (output-comments-votes out-stream))))
+             (emit-page (out-stream :title title :content-class "post-page comment-thread-page")
+                        (cond
+                          (condition
+                            (error-to-html out-stream condition))
+                          (t
+                           (post-body-to-html out-stream post)))
+                        (when (and lw2-auth-token (equal (logged-in-userid) (cdr (assoc :user-id post))))
+                          (format out-stream "<div class=\"post-controls\"><a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\" accesskey=\"e\" title=\"Edit post [e]\">Edit post</a></div>"
+                                  (cdr (assoc :--id post))))
+                        (force-output out-stream)
+                        (handler-case
+                          (let ((comments (get-post-comments post-id)))
+                            (output-comments out-stream comments nil))
+                          (serious-condition (c) (error-to-html out-stream c)))
+                        (when lw2-auth-token
+                          (force-output out-stream)
+                          (output-post-vote out-stream)
+                          (output-comments-votes out-stream))))))))
+    (:post (csrf-token (text :required t) parent-comment-id edit-comment-id)
+     (let ((lw2-auth-token *current-auth-token*))
+       (check-csrf-token csrf-token)
+       (assert lw2-auth-token)
+       (let* ((comment-data
+                (remove-if #'null
+                           `(("body" . ,(postprocess-markdown text))
+                             (:last-edited-as . "markdown")
+                             ,(if (not edit-comment-id) `(:post-id . ,post-id))
+                             ,(if parent-comment-id `(:parent-comment-id . ,parent-comment-id)))))
+              (new-comment-id
+                (if edit-comment-id
+                    (prog1 edit-comment-id
+                      (do-lw2-comment-edit lw2-auth-token edit-comment-id comment-data))
+                    (do-lw2-comment lw2-auth-token comment-data))))
+         (cache-put "comment-markdown-source" new-comment-id text)
+         (ignore-errors (get-post-comments post-id :force-revalidate t))
+         (setf (hunchentoot:return-code*) 303
+               (hunchentoot:header-out "Location") (generate-post-link (match-lw2-link (hunchentoot:request-uri*)) new-comment-id)))))))
 
 (defparameter *edit-post-template* (compile-template* "edit-post.html"))
 
-(hunchentoot:define-easy-handler (view-edit-post :uri "/edit-post") ((csrf-token :request-type :post) (text :request-type :post) title url section post-id link-post)
-                                 (with-error-page
-                                   (cond
-                                     (text
-                                       (check-csrf-token csrf-token)
-                                       (let ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token"))
-                                             (url (if (string= url "") nil url)))
-                                         (assert (and lw2-auth-token (not (string= text ""))))
-                                         (let* ((post-data `(("body" . ,(postprocess-markdown text)) ("title" . ,title) (:last-edited-as . "markdown") ("url" . ,(if link-post url))
-                                                                              ("meta" . ,(string= section "meta")) ("draft" . ,(string= section "drafts"))))
-                                                (post-set (loop for item in post-data when (cdr item) collect item))
-                                                (post-unset (loop for item in post-data when (not (cdr item)) collect (cons (car item) t))))
-                                           (let* ((new-post-data
-                                                    (if post-id
-                                                        (do-lw2-post-edit lw2-auth-token post-id post-set post-unset)
-                                                        (do-lw2-post lw2-auth-token post-set)))
-                                                  (new-post-id (cdr (assoc :--id new-post-data))))
-                                             (assert new-post-id)
-                                             (cache-put "post-markdown-source" new-post-id text)
-                                             (ignore-errors (get-post-body post-id :force-revalidate t))
-                                             (setf (hunchentoot:return-code*) 303
-                                                   (hunchentoot:header-out "Location") (if (cdr (assoc "draft" post-data :test #'equal))
-                                                                                           (concatenate 'string (generate-post-link new-post-data) "?need-auth=y")
-                                                                                           (generate-post-link new-post-data)))))))
-                                     (t
-                                      (let* ((csrf-token (make-csrf-token))
-                                             (post-body (if post-id (get-post-body post-id :auth-token (hunchentoot:cookie-in "lw2-auth-token"))))
-                                             (section (or section (loop for (sym . sec) in '((:draft . "drafts") (:meta . "meta") (:frontpage-date . "frontpage"))
-                                                                        if (cdr (assoc sym post-body)) return sec
-                                                                        finally (return "all")))))
-                                        (emit-page (out-stream :title (if post-id "Edit Post" "New Post") :content-class "edit-post-page")
-                                                   (render-template* *edit-post-template* out-stream
-                                                                     :csrf-token csrf-token
-                                                                     :title (cdr (assoc :title post-body))
-                                                                     :url (cdr (assoc :url post-body))
-                                                                     :post-id post-id
-                                                                     :section-list (loop for (name desc) in '(("all" "All") ("meta" "Meta") ("drafts" "Drafts"))
-                                                                                         collect (alist :name name :desc desc :selected (string= name section)))
-                                                                     :markdown-source (or (and post-id (cache-get "post-markdown-source" post-id)) (cdr (assoc :html-body post-body)) ""))))))))
+(define-page view-edit-post "/edit-post" (title url section post-id link-post)
+  (request-method
+    (:get ()
+     (let* ((csrf-token (make-csrf-token))
+            (post-body (if post-id (get-post-body post-id :auth-token (hunchentoot:cookie-in "lw2-auth-token"))))
+            (section (or section (loop for (sym . sec) in '((:draft . "drafts") (:meta . "meta") (:frontpage-date . "frontpage"))
+                                       if (cdr (assoc sym post-body)) return sec
+                                       finally (return "all")))))
+       (emit-page (out-stream :title (if post-id "Edit Post" "New Post") :content-class "edit-post-page")
+                  (render-template* *edit-post-template* out-stream
+                                    :csrf-token csrf-token
+                                    :title (cdr (assoc :title post-body))
+                                    :url (cdr (assoc :url post-body))
+                                    :post-id post-id
+                                    :section-list (loop for (name desc) in '(("all" "All") ("meta" "Meta") ("drafts" "Drafts"))
+                                                        collect (alist :name name :desc desc :selected (string= name section)))
+                                    :markdown-source (or (and post-id (cache-get "post-markdown-source" post-id)) (cdr (assoc :html-body post-body)) "")))))
+    (:post ((text :required t))
+     (let ((lw2-auth-token *current-auth-token*)
+           (url (if (string= url "") nil url)))
+       (assert lw2-auth-token)
+       (let* ((post-data `(("body" . ,(postprocess-markdown text)) ("title" . ,title) (:last-edited-as . "markdown") ("url" . ,(if link-post url))
+                                                                   ("meta" . ,(string= section "meta")) ("draft" . ,(string= section "drafts"))))
+              (post-set (loop for item in post-data when (cdr item) collect item))
+              (post-unset (loop for item in post-data when (not (cdr item)) collect (cons (car item) t))))
+         (let* ((new-post-data
+                  (if post-id
+                      (do-lw2-post-edit lw2-auth-token post-id post-set post-unset)
+                      (do-lw2-post lw2-auth-token post-set)))
+                (new-post-id (cdr (assoc :--id new-post-data))))
+           (assert new-post-id)
+           (cache-put "post-markdown-source" new-post-id text)
+           (ignore-errors (get-post-body post-id :force-revalidate t))
+           (setf (hunchentoot:return-code*) 303
+                 (hunchentoot:header-out "Location") (if (cdr (assoc "draft" post-data :test #'equal))
+                                                         (concatenate 'string (generate-post-link new-post-data) "?need-auth=y")
+                                                         (generate-post-link new-post-data)))))))))
 
 (hunchentoot:define-easy-handler (view-karma-vote :uri "/karma-vote") ((csrf-token :request-type :post) (target :request-type :post) (target-type :request-type :post) (vote-type :request-type :post))
 				 (check-csrf-token csrf-token)
@@ -1026,36 +1108,21 @@
                                        (let ((notifications-status (check-notifications (logged-in-userid) *current-auth-token*)))
                                          (json:encode-json-to-string notifications-status)))))
 
-(hunchentoot:define-easy-handler (view-recent-comments :uri "/recentcomments") (offset limit)
-				 (with-error-page
-				   (let* ((offset (and offset (parse-integer offset)))
-                                          (limit (and limit (parse-integer limit)))
-					  (recent-comments (if (or offset limit (/= (user-pref :items-per-page) 20))
-							     (lw2-graphql-query (lw2-query-string :comment :list
-                                                                                                  (remove nil (alist :view "postCommentsNew" :limit (or limit (user-pref :items-per-page)) :offset offset)
-                                                                                                          :key #'cdr)
-                                                                                                  *comments-index-fields*))
-							     (get-recent-comments))))
-                                     (view-items-index recent-comments :title "Recent comments" :with-offset (or offset 0) :with-next t))))
+(define-page view-recent-comments "/recentcomments" ((offset :type fixnum)
+                                                     (limit :type fixnum))
+  (let ((recent-comments (if (or offset limit (/= (user-pref :items-per-page) 20))
+                             (lw2-graphql-query (lw2-query-string :comment :list
+                                                                  (remove nil (alist :view "postCommentsNew" :limit (or limit (user-pref :items-per-page)) :offset offset)
+                                                                          :key #'cdr)
+                                                                  *comments-index-fields*))
+                             (get-recent-comments))))
+    (view-items-index recent-comments :title "Recent comments" :with-offset (or offset 0) :with-next t)))
 
-(defmacro define-regex-handler (name (regex &rest vars) additional-vars &body body)
-  (alexandria:with-gensyms (fn result-vector)
-    `(let ((,fn (lambda (r) (ppcre:scan-to-strings ,regex (hunchentoot:request-uri r)))))
-       (hunchentoot:define-easy-handler (,name :uri ,fn) ,additional-vars
-	 (let ((,result-vector (nth-value 1 (funcall ,fn hunchentoot:*request*))))
-	   (declare (type vector ,result-vector)) 
-	   (symbol-macrolet
-	     ,(loop for v in vars as x from 0 collecting `(,v (if (> (length ,result-vector) ,x) (aref ,result-vector ,x)))) 
-	     ,@body))))))
-
-(define-regex-handler view-user ("^/users/(.*?)(?:$|\\?)|^/user" user-slug) (id offset show sort)
-                      (with-error-page
-                        (let* ((show-text show)
-                               (show (alexandria:switch (show-text :test #'string=)
-                                                        ("posts" :posts) ("comments" :comments) ("drafts" :drafts)
-                                                        ("conversations" :conversations) ("inbox" :inbox)))
-                               (offset (if offset (parse-integer offset) 0))
-                               (auth-token (if (eq show :inbox) (hunchentoot:cookie-in "lw2-auth-token")))
+(define-page view-user (:regex "^/users/(.*?)(?:$|\\?)|^/user" user-slug) (id
+                                                                             (offset :type fixnum :default 0)
+                                                                             (show :member (:posts :comments :drafts :conversations :inbox))
+                                                                             (sort :member (:top :new) :default :new))
+                        (let* ((auth-token (if (eq show :inbox) *current-auth-token*))
                                (user-query-terms (cond
                                                    (user-slug (alist :slug user-slug))
                                                    (id (alist :document-id id))))
@@ -1069,8 +1136,9 @@
                                (own-user-page (logged-in-userid user-id))
                                (comments-index-fields (remove :page-url *comments-index-fields*)) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
                                (display-name (if user-slug (cdr (assoc :display-name user-info)) user-id))
-                               (title (format nil "~A~@['s ~A~]" display-name (if (member show '(nil :posts :comments)) show-text)))
-                               (sort-type (alexandria:switch (sort :test #'string=) ("top" :score) (t :date)))
+                               (show-text (if show (string-downcase show)))
+                               (title (format nil "~A~@['s ~A~]" display-name show-text))
+                               (sort-type (case sort (:top :score) (:new :date)))
                                (comments-base-terms (ecase sort-type (:score (load-time-value (alist :view "postCommentsTop"))) (:date (load-time-value (alist :view "allRecentComments")))))
                                (items (case show
                                         (:posts
@@ -1169,35 +1237,35 @@
                                                                                   `((nil "New") ("top" "Top"))
                                                                                   sort
                                                                                   :param-name "sort"
-                                                                                  :extra-class "sort")))))))
+                                                                                  :extra-class "sort"))))))
 
 (defparameter *conversation-template* (compile-template* "conversation.html"))
 
-(hunchentoot:define-easy-handler (view-conversation :uri "/conversation") (id (csrf-token :request-type :post) (text :request-type :post))
-                                 (with-error-page
-                                   (let ((to (post-or-get-parameter "to")))
-                                     (cond
-                                       (text
-                                         (check-csrf-token csrf-token)
-                                         (let* ((subject (post-or-get-parameter "subject"))
-                                                (id (or id
-                                                        (let ((participant-ids (list (logged-in-userid) (cdar (lw2-graphql-query (lw2-query-string :user :single (alist :slug to) '(:--id)))))))
-                                                          (do-create-conversation (hunchentoot:cookie-in "lw2-auth-token") (alist :participant-ids participant-ids :title subject))))))
-                                           (do-create-message (hunchentoot:cookie-in "lw2-auth-token") id text)
-                                           (setf (hunchentoot:return-code*) 303
-                                                 (hunchentoot:header-out "Location") (format nil "/conversation?id=~A" id))))
-                                       ((and id to) (error "This is an invalid URL."))
-                                       (id
-                                         (multiple-value-bind (conversation messages)
-                                           (get-conversation-messages id (hunchentoot:cookie-in "lw2-auth-token"))
-                                           (view-items-index (nreverse messages) :content-class "conversation-page" :need-auth t :title (encode-entities (postprocess-conversation-title (cdr (assoc :title conversation))))
-                                                             :extra-html (with-output-to-string (out-stream) (render-template* *conversation-template* out-stream
-                                                                                                                               :conversation conversation :csrf-token (make-csrf-token))))))
-                                       (t
-                                         (emit-page (out-stream :title "New conversation" :content-class "conversation-page")
-                                                    (render-template* *conversation-template* out-stream
-                                                                      :to to
-                                                                      :csrf-token (make-csrf-token))))))))
+(define-page view-conversation "/conversation" (id)
+  (request-method
+    (:get ()
+     (let ((to (post-or-get-parameter "to")))
+       (cond
+         ((and id to) (error "This is an invalid URL."))
+         (id
+           (multiple-value-bind (conversation messages)
+             (get-conversation-messages id (hunchentoot:cookie-in "lw2-auth-token"))
+             (view-items-index (nreverse messages) :content-class "conversation-page" :need-auth t :title (encode-entities (postprocess-conversation-title (cdr (assoc :title conversation))))
+                               :extra-html (with-output-to-string (out-stream) (render-template* *conversation-template* out-stream
+                                                                                                 :conversation conversation :csrf-token (make-csrf-token))))))
+         (t
+          (emit-page (out-stream :title "New conversation" :content-class "conversation-page")
+                     (render-template* *conversation-template* out-stream
+                                       :to to
+                                       :csrf-token (make-csrf-token)))))))
+    (:post ((text :required t))
+     (let* ((subject (post-or-get-parameter "subject"))
+            (to (post-or-get-parameter "to"))
+            (id (or id
+                    (let ((participant-ids (list (logged-in-userid) (cdar (lw2-graphql-query (lw2-query-string :user :single (alist :slug to) '(:--id)))))))
+                      (do-create-conversation (hunchentoot:cookie-in "lw2-auth-token") (alist :participant-ids participant-ids :title subject))))))
+       (do-create-message (hunchentoot:cookie-in "lw2-auth-token") id text)
+       (redirect (format nil "/conversation?id=~A" id))))))
 
 (defun search-result-markdown-to-html (item)
   (cons (cons :html-body
@@ -1205,135 +1273,130 @@
                 (serious-condition () "[Error while processing search result]")))
         item))
 
-(hunchentoot:define-easy-handler (view-search :uri "/search") (q)
-				 (with-error-page
-				   (let ((*current-search-query* q)
-					 (link (convert-any-link q)))
-				     (declare (special *current-search-query*))
-				     (if link
-				       (setf (hunchentoot:return-code*) 301
-					     (hunchentoot:header-out "Location") link)
-				       (multiple-value-bind (posts comments) (lw2-search-query q)
-                                         (view-items-index (nconc (map 'list (lambda (p) (if (cdr (assoc :comment-count p)) p (cons (cons :comment-count 0) p))) posts)
-                                                                  (map 'list #'search-result-markdown-to-html comments))
-                                                           :content-class "search-results-page" :current-uri "/search"
-                                                           :title (format nil "~@[~A - ~]Search" q)))))))
+(define-page view-search "/search" ((q :required t))
+  (let ((*current-search-query* q)
+        (link (convert-any-link q)))
+    (declare (special *current-search-query*))
+    (if link
+        (redirect link)
+        (multiple-value-bind (posts comments) (lw2-search-query q)
+          (view-items-index (nconc (map 'list (lambda (p) (if (cdr (assoc :comment-count p)) p (cons (cons :comment-count 0) p))) posts)
+                                   (map 'list #'search-result-markdown-to-html comments))
+                            :content-class "search-results-page" :current-uri "/search"
+                            :title (format nil "~@[~A - ~]Search" q))))))
 
-(hunchentoot:define-easy-handler (view-login :uri "/login") (return cookie-check (csrf-token :request-type :post) (login-username :request-type :post) (login-password :request-type :post)
-								    (signup-username :request-type :post) (signup-email :request-type :post) (signup-password :request-type :post) (signup-password2 :request-type :post))
-				 (with-error-page
-				   (labels
-				     ((emit-login-page (&key error-message)
-					(let ((csrf-token (make-csrf-token)))
-					  (emit-page (out-stream :title "Log in" :current-uri "/login" :content-class "login-page" :robots "noindex, nofollow")
-						     (when error-message
-						       (format out-stream "<div class=\"error-box\">~A</div>" error-message)) 
-						     (with-outputs (out-stream) "<div class=\"login-container\">")
-						     (output-form out-stream "post" (format nil "/login~@[?return=~A~]" (if return (url-rewrite:url-encode return))) "login-form" "Log in" csrf-token
-								  '(("login-username" "Username" "text" "username")
-								    ("login-password" "Password" "password" "current-password"))
-								  "Log in"
-                                                                  :end-html "<a href=\"/reset-password\">Forgot password</a>")
-						     (output-form out-stream "post" (format nil "/login~@[?return=~A~]" (if return (url-rewrite:url-encode return))) "signup-form" "Create account" csrf-token
-								  '(("signup-username" "Username" "text" "username")
-								    ("signup-email" "Email" "text" "email")
-								    ("signup-password" "Password" "password" "new-password")
-								    ("signup-password2" "Confirm password" "password" "new-password"))
-								  "Create account")
-						     (with-outputs (out-stream) "<div class=\"login-tip\"><span>Tip:</span> You can log in with the same username and password that you use on LessWrong. Creating an account here also creates one on LessWrong.</div></div>")))))
-				     (cond
-				       ((not (or cookie-check (hunchentoot:cookie-in "session-token")))
-					(hunchentoot:set-cookie "session-token" :max-age (- (expt 2 31) 1) :secure *secure-cookies* :value (base64:usb8-array-to-base64-string (ironclad:make-random-salt)))
-					(setf (hunchentoot:return-code*) 303
-					      (hunchentoot:header-out "Location") (format nil "/login?~@[return=~A&~]cookie-check=y" (if return (url-rewrite:url-encode return))))) 
-				       (cookie-check
-					 (if (hunchentoot:cookie-in "session-token")
-					   (setf (hunchentoot:return-code*) 303
-						 (hunchentoot:header-out "Location") (format nil "/login~@[?return=~A~]" (if return (url-rewrite:url-encode return))))
-					   (emit-page (out-stream :title "Log in" :current-uri "/login")
-						      (format out-stream "<h1>Enable cookies</h1><p>Please enable cookies in your browser and <a href=\"/login~@[?return=~A~]\">try again</a>.</p>" (if return (url-rewrite:url-encode return)))))) 
-				       (login-username
-					 (check-csrf-token csrf-token)
-					 (cond
-					   ((or (string= login-username "") (string= login-password "")) (emit-login-page :error-message "Please enter a username and password")) 
-					   (t (multiple-value-bind (user-id auth-token error-message expires) (do-login "username" login-username login-password)
-						(cond
-						  (auth-token
-						    (hunchentoot:set-cookie "lw2-auth-token" :value auth-token :secure *secure-cookies* :max-age (and expires (+ (- expires (get-unix-time)) (* 24 60 60))))
-                                                    (if expires (hunchentoot:set-cookie "lw2-status" :value (json:encode-json-to-string (alist :expires expires)) :secure *secure-cookies* :max-age (- (expt 2 31) 1)))
-						    (cache-put "auth-token-to-userid" auth-token user-id)
-						    (cache-put "auth-token-to-username" auth-token login-username)
-						    (setf (hunchentoot:return-code*) 303
-							  (hunchentoot:header-out "Location") (if (and return (ppcre:scan "^/[^/]" return)) return "/")))
-						  (t
-						    (emit-login-page :error-message error-message))))))) 
-				       (signup-username
-					 (check-csrf-token csrf-token)
-					 (cond
-					   ((not (every (lambda (x) (not (string= x ""))) (list signup-username signup-email signup-password signup-password2)))
-					    (emit-login-page :error-message "Please fill in all fields"))
-					   ((not (string= signup-password signup-password2))
-					    (emit-login-page :error-message "Passwords do not match"))
-					   (t (multiple-value-bind (user-id auth-token error-message expires) (do-lw2-create-user signup-username signup-email signup-password)
-						(cond
-						  (error-message (emit-login-page :error-message error-message))
-                                                  (t
-                                                    (hunchentoot:set-cookie "lw2-auth-token" :value auth-token :secure *secure-cookies* :max-age (+ (- expires (get-unix-time)) (* 24 60 60)))
-                                                    (hunchentoot:set-cookie "lw2-status" :value (json:encode-json-to-string (alist :expires expires)) :secure *secure-cookies* :max-age (- (expt 2 31) 1))
-						    (cache-put "auth-token-to-userid" auth-token user-id)
-						    (cache-put "auth-token-to-username" auth-token signup-username)
-						    (setf (hunchentoot:return-code*) 303
-							  (hunchentoot:header-out "Location") (if (and return (ppcre:scan "^/[~/]" return)) return "/"))))))))
-				       (t
-					 (emit-login-page)))))) 
+(define-page view-login "/login" (return cookie-check
+                                         (csrf-token :request-type :post) (login-username :request-type :post) (login-password :request-type :post)
+                                         (signup-username :request-type :post) (signup-email :request-type :post) (signup-password :request-type :post) (signup-password2 :request-type :post))
+  (labels
+    ((emit-login-page (&key error-message)
+       (let ((csrf-token (make-csrf-token)))
+         (emit-page (out-stream :title "Log in" :current-uri "/login" :content-class "login-page" :robots "noindex, nofollow")
+                    (when error-message
+                      (format out-stream "<div class=\"error-box\">~A</div>" error-message)) 
+                    (with-outputs (out-stream) "<div class=\"login-container\">")
+                    (output-form out-stream "post" (format nil "/login~@[?return=~A~]" (if return (url-rewrite:url-encode return))) "login-form" "Log in" csrf-token
+                                 '(("login-username" "Username" "text" "username")
+                                   ("login-password" "Password" "password" "current-password"))
+                                 "Log in"
+                                 :end-html "<a href=\"/reset-password\">Forgot password</a>")
+                    (output-form out-stream "post" (format nil "/login~@[?return=~A~]" (if return (url-rewrite:url-encode return))) "signup-form" "Create account" csrf-token
+                                 '(("signup-username" "Username" "text" "username")
+                                   ("signup-email" "Email" "text" "email")
+                                   ("signup-password" "Password" "password" "new-password")
+                                   ("signup-password2" "Confirm password" "password" "new-password"))
+                                 "Create account")
+                    (with-outputs (out-stream) "<div class=\"login-tip\"><span>Tip:</span> You can log in with the same username and password that you use on LessWrong. Creating an account here also creates one on LessWrong.</div></div>")))))
+    (cond
+      ((not (or cookie-check (hunchentoot:cookie-in "session-token")))
+        (hunchentoot:set-cookie "session-token" :max-age (- (expt 2 31) 1) :secure *secure-cookies* :value (base64:usb8-array-to-base64-string (ironclad:make-random-salt)))
+        (setf (hunchentoot:return-code*) 303
+              (hunchentoot:header-out "Location") (format nil "/login?~@[return=~A&~]cookie-check=y" (if return (url-rewrite:url-encode return))))) 
+      (cookie-check
+        (if (hunchentoot:cookie-in "session-token")
+            (setf (hunchentoot:return-code*) 303
+                  (hunchentoot:header-out "Location") (format nil "/login~@[?return=~A~]" (if return (url-rewrite:url-encode return))))
+            (emit-page (out-stream :title "Log in" :current-uri "/login")
+                       (format out-stream "<h1>Enable cookies</h1><p>Please enable cookies in your browser and <a href=\"/login~@[?return=~A~]\">try again</a>.</p>" (if return (url-rewrite:url-encode return)))))) 
+      (login-username
+        (check-csrf-token csrf-token)
+        (cond
+          ((or (string= login-username "") (string= login-password "")) (emit-login-page :error-message "Please enter a username and password")) 
+          (t (multiple-value-bind (user-id auth-token error-message expires) (do-login "username" login-username login-password)
+               (cond
+                 (auth-token
+                   (hunchentoot:set-cookie "lw2-auth-token" :value auth-token :secure *secure-cookies* :max-age (and expires (+ (- expires (get-unix-time)) (* 24 60 60))))
+                   (if expires (hunchentoot:set-cookie "lw2-status" :value (json:encode-json-to-string (alist :expires expires)) :secure *secure-cookies* :max-age (- (expt 2 31) 1)))
+                   (cache-put "auth-token-to-userid" auth-token user-id)
+                   (cache-put "auth-token-to-username" auth-token login-username)
+                   (setf (hunchentoot:return-code*) 303
+                         (hunchentoot:header-out "Location") (if (and return (ppcre:scan "^/[^/]" return)) return "/")))
+                 (t
+                  (emit-login-page :error-message error-message))))))) 
+      (signup-username
+        (check-csrf-token csrf-token)
+        (cond
+          ((not (every (lambda (x) (not (string= x ""))) (list signup-username signup-email signup-password signup-password2)))
+           (emit-login-page :error-message "Please fill in all fields"))
+          ((not (string= signup-password signup-password2))
+           (emit-login-page :error-message "Passwords do not match"))
+          (t (multiple-value-bind (user-id auth-token error-message expires) (do-lw2-create-user signup-username signup-email signup-password)
+               (cond
+                 (error-message (emit-login-page :error-message error-message))
+                 (t
+                  (hunchentoot:set-cookie "lw2-auth-token" :value auth-token :secure *secure-cookies* :max-age (+ (- expires (get-unix-time)) (* 24 60 60)))
+                  (hunchentoot:set-cookie "lw2-status" :value (json:encode-json-to-string (alist :expires expires)) :secure *secure-cookies* :max-age (- (expt 2 31) 1))
+                  (cache-put "auth-token-to-userid" auth-token user-id)
+                  (cache-put "auth-token-to-username" auth-token signup-username)
+                  (setf (hunchentoot:return-code*) 303
+                        (hunchentoot:header-out "Location") (if (and return (ppcre:scan "^/[~/]" return)) return "/"))))))))
+      (t
+       (emit-login-page))))) 
 
-(hunchentoot:define-easy-handler (view-logout :uri "/logout") ((logout :request-type :post))
-                                 (with-error-page
-                                   (check-csrf-token logout)
-                                   (hunchentoot:set-cookie "lw2-auth-token" :value "" :secure *secure-cookies* :max-age 0)
-                                   (setf (hunchentoot:return-code*) 303
-                                         (hunchentoot:header-out "Location") "/")))
+(define-page view-logout "/logout" ((logout :request-type :post))
+  (check-csrf-token logout)
+  (hunchentoot:set-cookie "lw2-auth-token" :value "" :secure *secure-cookies* :max-age 0)
+  (redirect "/"))
 
 (defparameter *reset-password-template* (compile-template* "reset-password.html"))
 
-(hunchentoot:define-easy-handler (view-reset-password :uri "/reset-password") ((csrf-token :request-type :post) (email :request-type :post) (reset-link :request-type :post) (password :request-type :post) (password2 :request-type :post))
-                                 (labels ((emit-rpw-page (&key message message-type step)
-                                            (with-error-page
-                                              (let ((csrf-token (make-csrf-token)))
-                                                (emit-page (out-stream :title "Reset password" :content-class "reset-password" :robots "noindex, nofollow")
-                                                           (render-template* *reset-password-template* out-stream
-                                                                             :csrf-token csrf-token
-                                                                             :reset-link reset-link
-                                                                             :message message
-                                                                             :message-type message-type
-                                                                             :step step))))))
-                                   (cond
-                                     (email
+(define-page view-reset-password "/reset-password" ((csrf-token :request-type :post) (email :request-type :post) (reset-link :request-type :post) (password :request-type :post) (password2 :request-type :post))
+  (labels ((emit-rpw-page (&key message message-type step)
+             (let ((csrf-token (make-csrf-token)))
+               (emit-page (out-stream :title "Reset password" :content-class "reset-password" :robots "noindex, nofollow")
+                          (render-template* *reset-password-template* out-stream
+                                            :csrf-token csrf-token
+                                            :reset-link reset-link
+                                            :message message
+                                            :message-type message-type
+                                            :step step)))))
+    (cond
+      (email
+        (check-csrf-token csrf-token)
+        (multiple-value-bind (ret error)
+          (do-lw2-forgot-password email)
+          (declare (ignore ret))
+          (if error
+              (emit-rpw-page :step 1 :message error :message-type "error")
+              (emit-rpw-page :step 1 :message "Password reset email sent." :message-type "success"))))
+      (reset-link
+        (ppcre:register-groups-bind (reset-token) ("(?:reset-password/|^)([^/#]+)$" reset-link)
+                                    (cond
+                                      ((not reset-token)
+                                       (emit-rpw-page :step 2 :message "Invalid password reset link." :message-type "error"))
+                                      ((not (string= password password2))
+                                       (emit-rpw-page :step 2 :message "Passwords do not match." :message-type "error"))
+                                      (t
                                        (check-csrf-token csrf-token)
-                                       (multiple-value-bind (ret error)
-                                         (do-lw2-forgot-password email)
-                                         (declare (ignore ret))
-                                         (if error
-                                             (emit-rpw-page :step 1 :message error :message-type "error")
-                                             (emit-rpw-page :step 1 :message "Password reset email sent." :message-type "success"))))
-                                     (reset-link
-                                       (ppcre:register-groups-bind (reset-token) ("(?:reset-password/|^)([^/#]+)$" reset-link)
+                                       (multiple-value-bind (user-id auth-token error-message) (do-lw2-reset-password reset-token password)
+                                         (declare (ignore user-id auth-token))
                                          (cond
-                                           ((not reset-token)
-                                            (emit-rpw-page :step 2 :message "Invalid password reset link." :message-type "error"))
-                                           ((not (string= password password2))
-                                            (emit-rpw-page :step 2 :message "Passwords do not match." :message-type "error"))
+                                           (error-message (emit-rpw-page :step 2 :message error-message :message-type "error"))
                                            (t
-                                            (check-csrf-token csrf-token)
-                                            (multiple-value-bind (user-id auth-token error-message) (do-lw2-reset-password reset-token password)
-                                                (declare (ignore user-id auth-token))
-                                                (cond
-                                                  (error-message (emit-rpw-page :step 2 :message error-message :message-type "error"))
-                                                  (t
-                                                   (with-error-page (emit-page (out-stream :title "Reset password" :content-class "reset-password")
-                                                                               (format out-stream "<h1>Password reset complete</h1><p>You can now <a href=\"/login\">log in</a> with your new password.</p>"))))))))))
-                                     (t
-                                      (emit-rpw-page)))))
+                                            (with-error-page (emit-page (out-stream :title "Reset password" :content-class "reset-password")
+                                                                        (format out-stream "<h1>Password reset complete</h1><p>You can now <a href=\"/login\">log in</a> with your new password.</p>"))))))))))
+      (t
+       (emit-rpw-page)))))
 
 (defun firstn (list n)
   (loop for x in list
@@ -1342,52 +1405,50 @@
 
 (defparameter *earliest-post* (local-time:parse-timestring "2005-01-01")) 
 
-(hunchentoot:define-easy-handler (view-archive :uri (lambda (r) (ppcre:scan "^/archive([/?]|$)" (hunchentoot:request-uri r)))) (offset)
-				 (with-error-page
-				   (destructuring-bind (year month day) (map 'list (lambda (x) (if x (parse-integer x)))
-									     (nth-value 1 (ppcre:scan-to-strings "^/archive(?:/(\\d{4})|/?(?:$|\\?.*$))(?:/(\\d{1,2})|/?(?:$|\\?.*$))(?:/(\\d{1,2})|/?(?:$|\\?.*$))"
-														 (hunchentoot:request-uri*)))) 
-				     (local-time:with-decoded-timestamp (:day current-day :month current-month :year current-year) (local-time:now)
-		                       (local-time:with-decoded-timestamp (:day earliest-day :month earliest-month :year earliest-year) *earliest-post*
-                                         (labels ((url-elements (&rest url-elements)
-                                                    (declare (dynamic-extent url-elements))
-                                                    (format nil "/~{~A~^/~}" url-elements)))
-                                            (let* ((offset (if offset (parse-integer offset) 0))
-                                                   (posts (lw2-graphql-query (lw2-query-string :post :list
-                                                                                               (alist :view (if day "new" "top") :limit 51 :offset offset
-                                                                                                      :after (if (and year (not day)) (format nil "~A-~A-~A" (or year earliest-year) (or month 1) (or day 1)))
-                                                                                                      :before (if year (format nil "~A-~A-~A" (or year current-year) (or month 12)
-                                                                                                                               (or day (local-time:days-in-month (or month 12) (or year current-year))))))
-                                                                                               *posts-index-fields*))))
-                                              (emit-page (out-stream :title "Archive" :current-uri "/archive" :content-class "archive-page"
-                                                                     :items-per-page 50 :with-offset offset :with-next (> (length posts) 50) :top-nav top-nav)
-                                                (with-outputs (out-stream) "<div class=\"archive-nav\"><div class=\"archive-nav-years\">")
-                                                (link-if-not out-stream (not (or year month day)) (url-elements "archive") "archive-nav-item-year" "All") 
-                                                (loop for y from earliest-year to current-year
-                                                      do (link-if-not out-stream (eq y year) (url-elements "archive" y) "archive-nav-item-year" y))
-                                                (format out-stream "</div>")
-                                                (when year
-                                                  (format out-stream "<div class=\"archive-nav-months\">")
-                                                  (link-if-not out-stream (not month) (url-elements "archive" year) "archive-nav-item-month" "All") 
-                                                  (loop for m from (if (= (or year current-year) earliest-year) earliest-month 1) to (if (= (or year current-year) current-year) current-month 12)
-                                                        do (link-if-not out-stream (eq m month) (url-elements "archive" (or year current-year) m) "archive-nav-item-month" (elt local-time:+short-month-names+ m)))
-                                                  (format out-stream "</div>"))
-                                                (when month
-                                                  (format out-stream "<div class=\"archive-nav-days\">")
-                                                  (link-if-not out-stream (not day) (url-elements "archive" year month) "archive-nav-item-day" "All")
-                                                  (loop for d from (if (and (= (or year current-year) earliest-year) (= (or month current-month) earliest-month)) earliest-day 1)
-                                                        to (if (and (= (or year current-year) current-year) (= (or month current-month) current-month)) current-day (local-time:days-in-month (or month current-month) (or year current-year)))
-                                                        do (link-if-not out-stream (eq d day) (url-elements "archive" (or year current-year) (or month current-month) d) "archive-nav-item-day" d))
-                                                  (format out-stream "</div>")) 
-                                                (format out-stream "</div>")
-                                                (funcall top-nav)
-                                                (write-index-items-to-html out-stream (firstn posts 50) :empty-message "No posts for the selected period.")))))))))
+(define-page view-archive (:regex "^/archive(?:/(\\d{4})|/?(?:$|\\?.*$))(?:/(\\d{1,2})|/?(?:$|\\?.*$))(?:/(\\d{1,2})|/?(?:$|\\?.*$))"
+                           (year :type (mod 10000))
+                           (month :type (integer 1 12))
+                           (day :type (integer 1 31)))
+             ((offset :type fixnum :default 0))
+  (local-time:with-decoded-timestamp (:day current-day :month current-month :year current-year) (local-time:now)
+    (local-time:with-decoded-timestamp (:day earliest-day :month earliest-month :year earliest-year) *earliest-post*
+      (labels ((url-elements (&rest url-elements)
+                 (declare (dynamic-extent url-elements))
+                 (format nil "/~{~A~^/~}" url-elements)))
+        (let ((posts (lw2-graphql-query (lw2-query-string :post :list
+                                                          (alist :view (if day "new" "top") :limit 51 :offset offset
+                                                                 :after (if (and year (not day)) (format nil "~A-~A-~A" (or year earliest-year) (or month 1) (or day 1)))
+                                                                 :before (if year (format nil "~A-~A-~A" (or year current-year) (or month 12)
+                                                                                          (or day (local-time:days-in-month (or month 12) (or year current-year))))))
+                                                          *posts-index-fields*))))
+          (emit-page (out-stream :title "Archive" :current-uri "/archive" :content-class "archive-page"
+                                 :items-per-page 50 :with-offset offset :with-next (> (length posts) 50) :top-nav top-nav)
+                     (with-outputs (out-stream) "<div class=\"archive-nav\"><div class=\"archive-nav-years\">")
+                     (link-if-not out-stream (not (or year month day)) (url-elements "archive") "archive-nav-item-year" "All") 
+                     (loop for y from earliest-year to current-year
+                           do (link-if-not out-stream (eq y year) (url-elements "archive" y) "archive-nav-item-year" y))
+                     (format out-stream "</div>")
+                     (when year
+                       (format out-stream "<div class=\"archive-nav-months\">")
+                       (link-if-not out-stream (not month) (url-elements "archive" year) "archive-nav-item-month" "All") 
+                       (loop for m from (if (= (or year current-year) earliest-year) earliest-month 1) to (if (= (or year current-year) current-year) current-month 12)
+                             do (link-if-not out-stream (eq m month) (url-elements "archive" (or year current-year) m) "archive-nav-item-month" (elt local-time:+short-month-names+ m)))
+                       (format out-stream "</div>"))
+                     (when month
+                       (format out-stream "<div class=\"archive-nav-days\">")
+                       (link-if-not out-stream (not day) (url-elements "archive" year month) "archive-nav-item-day" "All")
+                       (loop for d from (if (and (= (or year current-year) earliest-year) (= (or month current-month) earliest-month)) earliest-day 1)
+                             to (if (and (= (or year current-year) current-year) (= (or month current-month) current-month)) current-day (local-time:days-in-month (or month current-month) (or year current-year)))
+                             do (link-if-not out-stream (eq d day) (url-elements "archive" (or year current-year) (or month current-month) d) "archive-nav-item-day" d))
+                       (format out-stream "</div>")) 
+                     (format out-stream "</div>")
+                     (funcall top-nav)
+                     (write-index-items-to-html out-stream (firstn posts 50) :empty-message "No posts for the selected period.")))))))
 
-(hunchentoot:define-easy-handler (view-about :uri "/about") ()
-				 (with-error-page
-				   (emit-page (out-stream :title "About" :current-uri "/about" :content-class "about-page")
-					      (alexandria:with-input-from-file (in-stream "www/about.html" :element-type '(unsigned-byte 8))
-									       (alexandria:copy-stream in-stream out-stream))))) 
+(define-page view-about "/about" ()
+  (emit-page (out-stream :title "About" :current-uri "/about" :content-class "about-page")
+             (alexandria:with-input-from-file (in-stream "www/about.html" :element-type '(unsigned-byte 8))
+                                              (alexandria:copy-stream in-stream out-stream))))
 
 (hunchentoot:define-easy-handler (view-versioned-resource :uri (lambda (r)
                                                                  (multiple-value-bind (file content-type)
