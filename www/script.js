@@ -306,6 +306,7 @@ function hideReplyForm(event) {
 	let enteredText = event.target.parentElement.querySelector("textarea").value;
 	if (enteredText) event.target.parentElement.dataset.enteredText = enteredText;
 
+	disableBeforeUnload();
 	event.target.parentElement.constructCommentControls();
 }
 
