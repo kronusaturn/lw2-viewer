@@ -3039,7 +3039,7 @@ li {
 	font-weight: 900;
 	font-size: 3rem;
 	padding: 0.5em;
-	color: #131313;
+	color: #1f1f1f;
 }
 #image-focus-overlay .slideshow-buttons button:hover {
 	background-color: rgba(255, 255, 255, 0.1);
@@ -3047,6 +3047,12 @@ li {
 }
 #image-focus-overlay .slideshow-buttons button:active {
 	transform: none;
+	color: #666;
+}
+#image-focus-overlay .slideshow-buttons button:disabled {
+	color: #131313;
+	background-color: transparent;
+	cursor: default;
 }
 
 .blurred {

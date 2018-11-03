@@ -2141,7 +2141,7 @@ function focusImage(image) {
 	};
 
 	// Double-click unfocuses, always.
-	window.addEventListener('dblclick', unfocusImageOverlay);
+	window.addEventListener('dblclick', doubleClickOnFocusedImage);
 
 	// Escape key unfocuses, spacebar resets.
 	document.addEventListener("keyup", keyPressedWhenImageFocused);
@@ -2152,8 +2152,8 @@ function focusImage(image) {
 	// Set state of next/previous buttons.
 	let images = document.querySelectorAll("#images-overlay img");
 	var indexOfFocusedImage = getIndexOfFocusedImage();
-	imageFocusOverlay.querySelector(".slideshow-button.previous").style.visibility = (indexOfFocusedImage == 0 ? "hidden" : "");
-	imageFocusOverlay.querySelector(".slideshow-button.next").style.visibility = (indexOfFocusedImage == images.length - 1 ? "hidden" : "");
+	imageFocusOverlay.querySelector(".slideshow-button.previous").disabled = (indexOfFocusedImage == 0);
+	imageFocusOverlay.querySelector(".slideshow-button.next").disabled = (indexOfFocusedImage == images.length - 1);
 }
 
 function resetFocusedImagePosition() {
@@ -2196,7 +2196,7 @@ function unfocusImageOverlay() {
 	// Remove event listeners.
 	window.removeEventListener("wheel", focusedImageScrolled);
 	window.removeEventListener("MozMousePixelScroll", oldFirefoxCompatibilityScrollEventFired);
-	window.removeEventListener("dblclick", unfocusImageOverlay);
+	window.removeEventListener("dblclick", doubleClickOnFocusedImage);
 	document.removeEventListener("keyup", keyPressedWhenImageFocused);
 	document.removeEventListener("keydown", keyDownWhenImageFocused);
 }
@@ -2225,7 +2225,7 @@ function focusNextImage(next = true) {
 }
 
 function slideshowButtonClicked(event) {
-	console.log("Slideshow button clicked");
+	event.stopPropagation();
 
 	focusNextImage(event.target.hasClass("next"));
 }
@@ -2268,6 +2268,8 @@ function keyDownWhenImageFocused(event) {
 }
 
 function mouseUpOnFocusedImage(event) {
+	if (event.target.hasClass("slideshow-button")) return;
+
 	let focusedImage = document.querySelector("#image-focus-overlay img");
 
 	if (event.target != focusedImage) {
@@ -2282,6 +2284,12 @@ function mouseUpOnFocusedImage(event) {
 	} else {
 		unfocusImageOverlay();
 	}
+}
+
+function doubleClickOnFocusedImage(event) {
+	if (event.target.hasClass("slideshow-button")) return;
+
+	unfocusImageOverlay();
 }
 
 function focusedImageScrolled(event) {
