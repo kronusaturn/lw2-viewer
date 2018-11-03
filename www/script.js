@@ -2075,21 +2075,27 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 	});
 
 	// Create the image focus overlay.
-	addUIElement("<div id='image-focus-overlay'>" + 
+	let imageFocusOverlay = addUIElement("<div id='image-focus-overlay'>" + 
 	`<div class='help-overlay'>
 	 <p><strong>Arrow keys:</strong> Next/previous image</p>
 	 <p><strong>Escape</strong> or <strong>click</strong>: Hide zoomed image</p>
 	 <p><strong>Space bar:</strong> Reset image size & position</p>
 	 <p><strong>Scroll</strong> to zoom in/out</p>
-	 <p>(When zoomed in, <strong>drag</strong> to pan;<br/> <strong>double-click</strong> to close)</p>
+	 <p>(When zoomed in, <strong>drag</strong> to pan; <br/><strong>double-click</strong> to close)</p>
 	 </div>` + 
 	`<div class='image-number'></div>` + 
+	`<div class='slideshow-buttons'>
+	 <button type='button' class='slideshow-button previous' tabindex='-1'>&#xf053;</button>
+	 <button type='button' class='slideshow-button next' tabindex='-1'>&#xf054;</button>
+	 </div>` + 
 	"</div>");
+
+	imageFocusOverlay.querySelectorAll(".slideshow-button").forEach(button => { button.addActivateEvent(slideshowButtonClicked); });
 }
 
 function imageClickedToFocus(event) {
 	focusImage(event.target);
-	
+
 	document.querySelector("#image-focus-overlay .image-number").textContent = (getIndexOfFocusedImage() + 1);
 }
 
@@ -2142,6 +2148,12 @@ function focusImage(image) {
 
 	// Prevent spacebar or arrow keys from scrolling page when image focused.
 	document.addEventListener("keydown", keyDownWhenImageFocused);
+
+	// Set state of next/previous buttons.
+	let images = document.querySelectorAll("#images-overlay img");
+	var indexOfFocusedImage = getIndexOfFocusedImage();
+	imageFocusOverlay.querySelector(".slideshow-button.previous").style.visibility = (indexOfFocusedImage == 0 ? "hidden" : "");
+	imageFocusOverlay.querySelector(".slideshow-button.next").style.visibility = (indexOfFocusedImage == images.length - 1 ? "hidden" : "");
 }
 
 function resetFocusedImagePosition() {
@@ -2201,15 +2213,21 @@ function getIndexOfFocusedImage() {
 	return indexOfFocusedImage;
 }
 
-function focusNextImage(image, next = true) {
+function focusNextImage(next = true) {
 	let images = document.querySelectorAll("#images-overlay img");
 	var indexOfFocusedImage = getIndexOfFocusedImage();
-	
+
 	if (next ? (++indexOfFocusedImage == images.length) : (--indexOfFocusedImage == -1)) return;
 	unfocusImageOverlay();
 	focusImage(images[indexOfFocusedImage]);
-	
+
 	document.querySelector("#image-focus-overlay .image-number").textContent = (indexOfFocusedImage + 1);
+}
+
+function slideshowButtonClicked(event) {
+	console.log("Slideshow button clicked");
+
+	focusNextImage(event.target.hasClass("next"));
 }
 
 function keyPressedWhenImageFocused(event) {
@@ -2232,13 +2250,13 @@ function keyPressedWhenImageFocused(event) {
 	case "Down":
 	case "ArrowRight":
 	case "Right":
-		focusNextImage(document.querySelector("#image-focus-overlay img"), true);
+		focusNextImage(true);
 		break;
 	case "ArrowUp":
 	case "Up":
 	case "ArrowLeft":
 	case "Left":
-		focusNextImage(document.querySelector("#image-focus-overlay img"), false);
+		focusNextImage(false);
 		break;
 	}
 }
