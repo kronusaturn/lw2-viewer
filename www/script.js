@@ -2225,8 +2225,6 @@ function focusNextImage(next = true) {
 }
 
 function slideshowButtonClicked(event) {
-	event.stopPropagation();
-
 	focusNextImage(event.target.hasClass("next"));
 }
 
