@@ -232,7 +232,7 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 		"</div></form>";
 	commentControls.onsubmit = disableBeforeUnload;
 	
-	commentControls.querySelector(".cancel-comment-button").addActivateEvent(window.hideReplyForm);
+	commentControls.querySelector(".cancel-comment-button").addActivateEvent(hideReplyForm);
 	commentControls.scrollIntoViewIfNeeded();
 	commentControls.querySelector("form").onsubmit = (event) => {
 		if (!event.target.text.value) {
@@ -261,14 +261,14 @@ Element.prototype.constructCommentControls = function() {
 			editButton.className = "edit-button action-button";
 			editButton.innerHTML = "Edit";
 			editButton.tabIndex = '-1';
-			editButton.addActivateEvent(window.showCommentEditForm);
+			editButton.addActivateEvent(showCommentEditForm);
 		}
 		replyButton.className = "reply-button action-button";
 		replyButton.innerHTML = "Reply";
 	}
 	commentControls.appendChild(replyButton);
 	replyButton.tabIndex = '-1';
-	replyButton.addActivateEvent(window.showReplyForm);
+	replyButton.addActivateEvent(showReplyForm);
 
 	// Replicate karma controls at the bottom of comments.
 	if (commentControls.parentElement.id == "comments") return;
