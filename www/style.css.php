@@ -3051,9 +3051,11 @@ li {
 #image-focus-overlay .slideshow-buttons button::selection {
 	background-color: transparent;
 }
-#image-focus-overlay .slideshow-buttons button:hover {
-	background-color: rgba(0,0,0,0.1);
-	color: #777;
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+	#image-focus-overlay .slideshow-buttons button:hover {
+		background-color: rgba(0,0,0,0.1);
+		color: #777;
+	}
 }
 #image-focus-overlay .slideshow-buttons button:active {
 	transform: none;
