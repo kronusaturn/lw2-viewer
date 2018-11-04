@@ -3060,10 +3060,11 @@ li {
 	color: #888;
 }
 #image-focus-overlay .slideshow-buttons button:disabled {
-	color: #eee;
 	text-shadow: none;
 	background-color: transparent;
+	color: #ddd;
 	cursor: default;
+	opacity: 0.4;
 }
 #image-focus-overlay .slideshow-button.previous.hidden {
 	left: -1.75em;
