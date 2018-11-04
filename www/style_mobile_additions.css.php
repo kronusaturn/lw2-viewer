@@ -74,7 +74,11 @@
 #hns-date-picker.engaged {
 	visibility: visible;
 }
-	
+
+#image-focus-overlay.engaged {
+	visibility: visible;
+}
+
 /*=========*/
 /* GENERAL */
 /*=========*/

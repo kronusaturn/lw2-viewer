@@ -798,8 +798,13 @@ function postSetThemeHousekeeping(oldThemeName = "", newThemeName = (readCookie(
 	if (themeLoadCallback != null) themeLoadCallback(oldThemeName);
 
 	generateImagesOverlay();
+
 	if (window.adjustmentTransitions) pageFadeTransition(true);
 	updateThemeTweakerSampleText();
+
+	if (typeof(window.msMatchMedia || window.MozMatchMedia || window.WebkitMatchMedia || window.matchMedia) !== 'undefined') {
+		window.matchMedia('(orientation: portrait)').addListener(generateImagesOverlay);
+	}
 }
 
 function pageFadeTransition(fadeIn) {
@@ -2096,6 +2101,11 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 	"</div>");
 
 	imageFocusOverlay.querySelectorAll(".slideshow-button").forEach(button => { button.addActivateEvent(slideshowButtonClicked); });
+
+	// On orientation change, reset the size & position.
+	if (typeof(window.msMatchMedia || window.MozMatchMedia || window.WebkitMatchMedia || window.matchMedia) !== 'undefined') {
+		window.matchMedia('(orientation: portrait)').addListener(() => { setTimeout(resetFocusedImagePosition, 0); });
+	}
 }
 
 function imageClickedToFocus(event) {
@@ -2162,13 +2172,14 @@ function focusImage(image) {
 	var indexOfFocusedImage = getIndexOfFocusedImage();
 	imageFocusOverlay.querySelector(".slideshow-button.previous").disabled = (indexOfFocusedImage == 0);
 	imageFocusOverlay.querySelector(".slideshow-button.next").disabled = (indexOfFocusedImage == images.length - 1);
-	
+
 	// Moving mouse unhides image focus UI.
 	window.addEventListener("mousemove", mouseMovedWhenImageFocused);
 }
 
 function resetFocusedImagePosition() {
 	let focusedImage = document.querySelector("#image-focus-overlay img");
+	if (!focusedImage) return;
 
 	// Reset modifications to size.
 	focusedImage.style.width = "";
@@ -2179,7 +2190,7 @@ function resetFocusedImagePosition() {
 	focusedImage.style.width = Math.min(focusedImage.clientWidth, window.innerWidth * shrinkRatio) + 'px';
 	let maxImageHeight = window.innerHeight * shrinkRatio;
 	if (focusedImage.clientHeight > maxImageHeight) {
-		focusedImage.style.height = maxImageHeight +'px';
+		focusedImage.style.height = maxImageHeight + 'px';
 		focusedImage.style.width = "";
 	}
 
