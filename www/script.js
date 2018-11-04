@@ -2078,6 +2078,7 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 	document.querySelectorAll("#images-overlay img").forEach(image => {
 		image.addActivateEvent(imageClickedToFocus);
 	});
+	(document.querySelector("#images-overlay img")||{}).accessKey = 'l';
 	((document.querySelector("#image-focus-overlay .image-number")||{}).dataset||{}).numberOfImages = document.querySelectorAll("#images-overlay img").length;
 	if (imagesOverlayOnly) return;
 	document.querySelectorAll("#content img").forEach(image => {
@@ -2118,6 +2119,13 @@ function imageClickedToFocus(event) {
 }
 
 function focusImage(image) {
+	// Clear 'last-focused' class of last focused image.
+	let lastFocusedImage = document.querySelector("img.last-focused");
+	if (lastFocusedImage) {
+		lastFocusedImage.removeClass("last-focused");
+		lastFocusedImage.accessKey = null;
+	}
+
 	// Create the focused version of the image.
 	image.addClass("focused");
 	let imageFocusOverlay = document.querySelector("#image-focus-overlay");
@@ -2200,6 +2208,13 @@ function resetFocusedImagePosition() {
 }
 
 function unfocusImageOverlay() {
+	// Set accesskey of currently focused image (if it's in the images overlay).
+	let currentlyFocusedImage = document.querySelector("#images-overlay img.focused");
+	if (currentlyFocusedImage) {
+		currentlyFocusedImage.addClass("last-focused");
+		currentlyFocusedImage.accessKey = 'l';
+	}
+
 	// Remove focused image and hide overlay.
 	let imageFocusOverlay = document.querySelector("#image-focus-overlay");
 	imageFocusOverlay.removeClass("engaged");
@@ -2211,7 +2226,7 @@ function unfocusImageOverlay() {
 	});
 
 	// Unset "focused" class of focused image.
-	document.querySelectorAll("#content img, #images-overlay img").forEach(image => {
+	document.querySelectorAll("#content img.focused, #images-overlay img.focused").forEach(image => {
 		image.removeClass("focused");
 	});
 
