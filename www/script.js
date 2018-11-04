@@ -2322,8 +2322,8 @@ function doubleClickOnFocusedImage(event) {
 }
 
 function mouseMovedWhenImageFocused(event) {
-	console.log(event.target);
-	resetImageFocusHideUITimer(true);
+	let restartTimer = (event.target.tagName == "IMG");
+	resetImageFocusHideUITimer(restartTimer);
 }
 
 function focusedImageScrolled(event) {
