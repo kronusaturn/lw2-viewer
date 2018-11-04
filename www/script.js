@@ -3,7 +3,7 @@
 /***************************/
 
 if (!window.requestIdleCallback) {
-	window.requestIdleCallback = (fn) => { window.setTimeout(fn, 0) };
+	window.requestIdleCallback = (fn) => { setTimeout(fn, 0) };
 }
 
 var initializersDone = {};
@@ -15,7 +15,7 @@ function registerInitializer(name, tryEarly, precondition, fn) {
 		if (initializersDone[name]) return;
 		if (!precondition()) {
 			if (tryEarly) {
-				window.setTimeout(() => window.requestIdleCallback(wrapper, {timeout: 1000}), 50);
+				setTimeout(() => requestIdleCallback(wrapper, {timeout: 1000}), 50);
 			} else {
 				document.addEventListener("readystatechange", wrapper, {once: true});
 			}
@@ -25,10 +25,10 @@ function registerInitializer(name, tryEarly, precondition, fn) {
 		fn();
 	};
 	if (tryEarly) {
-		window.requestIdleCallback(wrapper, {timeout: 1000});
+		requestIdleCallback(wrapper, {timeout: 1000});
 	} else {
 		document.addEventListener("readystatechange", wrapper, {once: true});
-		window.requestIdleCallback(wrapper);
+		requestIdleCallback(wrapper);
 	}
 }
 function forceInitializer(name) {
@@ -82,7 +82,7 @@ Element.prototype.removeActivateEvent = function() {
 
 function addScrollListener(fn, name) {
 	let wrapper = (event) => {
-		window.requestAnimationFrame(() => {
+		requestAnimationFrame(() => {
 			fn(event);
 			document.addEventListener("scroll", wrapper, {once: true, passive: true});
 		});
@@ -148,11 +148,11 @@ function GUIEditMobileHelpButtonClicked(event) {
 }
 function toggleMarkdownHintsBox() {
 	let markdownHintsBox = document.querySelector(".markdown-hints");
-	markdownHintsBox.style.display = (window.getComputedStyle(markdownHintsBox).display == "none") ? "block" : "none";
+	markdownHintsBox.style.display = (getComputedStyle(markdownHintsBox).display == "none") ? "block" : "none";
 }
 function removeMarkdownHintsBox() {
 	let markdownHintsBox = document.querySelector(".markdown-hints");
-	if (window.getComputedStyle(markdownHintsBox).display != "none") markdownHintsBox.style.display = "none";
+	if (getComputedStyle(markdownHintsBox).display != "none") markdownHintsBox.style.display = "none";
 }
 function GUIEditMobileExitButtonClicked(event) {
 	event.target.blur();
@@ -318,7 +318,7 @@ function OnInputExpandTextarea() {
 	}
 }
 function ExpandTextarea(textarea) {
-	window.requestAnimationFrame(() => {
+	requestAnimationFrame(() => {
 		textarea.style.height = 'auto';
 		let totalBorderHeight = (textarea.closest("#conversation-form") == null) ? 30 : 2;
 		textarea.style.height = textarea.scrollHeight + totalBorderHeight + 'px';
@@ -423,7 +423,7 @@ function voteButtonClicked(event) {
 		voteButton.clickedOnce = true;
 		voteButton.addClass("clicked-once");
 
-		window.setTimeout(vbDoubleClickTimeoutCallback, doubleClickTimeout, voteButton);
+		setTimeout(vbDoubleClickTimeoutCallback, doubleClickTimeout, voteButton);
 	} else {
 		voteButton.clickedOnce = false;
 
@@ -476,12 +476,12 @@ Element.prototype.setCommentThreadMaximized = function(toggle, userOriginated = 
 	let commentItem = this;
 	let storageName = "thread-minimized-" + commentItem.getCommentId();
 	let minimize_button = commentItem.querySelector(".comment-minimize-button");
-	let maximize = force || (toggle ? /minimized/.test(minimize_button.className) : !window.localStorage.getItem(storageName));
+	let maximize = force || (toggle ? /minimized/.test(minimize_button.className) : !localStorage.getItem(storageName));
 	if (userOriginated) {
 		if (maximize) {
-			window.localStorage.removeItem(storageName);
+			localStorage.removeItem(storageName);
 		} else {
-			window.localStorage.setItem(storageName, true);
+			localStorage.setItem(storageName, true);
 		}
 	}
 
@@ -596,24 +596,24 @@ function getLastVisitedDate() {
 	// Get the last visited date (or, if posting a comment, the previous last visited date).
 	let aCommentHasJustBeenPosted = (document.querySelector(".just-posted-comment") != null);
 	let storageName = (aCommentHasJustBeenPosted ? "previous-last-visited-date_" : "last-visited-date_") + getPostHash();
-	return window.localStorage.getItem(storageName);
+	return localStorage.getItem(storageName);
 }
 function setLastVisitedDate(date) {
 	// If NOT posting a comment, save the previous value for the last-visited-date 
 	// (to recover it in case of posting a comment).
 	let aCommentHasJustBeenPosted = (document.querySelector(".just-posted-comment") != null);
 	if (!aCommentHasJustBeenPosted) {
-		let previousLastVisitedDate = (window.localStorage.getItem("last-visited-date_" + getPostHash()) || 0);
-		window.localStorage.setItem("previous-last-visited-date_" + getPostHash(), previousLastVisitedDate);
+		let previousLastVisitedDate = (localStorage.getItem("last-visited-date_" + getPostHash()) || 0);
+		localStorage.setItem("previous-last-visited-date_" + getPostHash(), previousLastVisitedDate);
 	}
 
 	// Set the new value.
-	window.localStorage.setItem("last-visited-date_" + getPostHash(), date);
+	localStorage.setItem("last-visited-date_" + getPostHash(), date);
 }
 
 function updateSavedCommentCount() {
 	let commentCount = document.querySelectorAll(".comment").length;
-	window.localStorage.setItem("comment-count_" + getPostHash(), commentCount);
+	localStorage.setItem("comment-count_" + getPostHash(), commentCount);
 }
 function badgePostsWithNewComments() {
 	if (getQueryVariable("show") == "conversations") return;
@@ -621,7 +621,7 @@ function badgePostsWithNewComments() {
 	document.querySelectorAll("h1.listing a[href^='/posts']").forEach(postLink => {
 		let postHash = /posts\/(.+?)\//.exec(postLink.href)[1];
 
-		let savedCommentCount = window.localStorage.getItem("comment-count_" + postHash);
+		let savedCommentCount = localStorage.getItem("comment-count_" + postHash);
 		let commentCountDisplay = postLink.parentElement.nextSibling.querySelector(".comment-count");
 		let currentCommentCount = /([0-9]+)/.exec(commentCountDisplay.textContent)[1];
 
@@ -637,7 +637,7 @@ function badgePostsWithNewComments() {
 
 function injectContentWidthSelector() {
 	// Get saved width setting (or default).
-	let currentWidth = window.localStorage.getItem("selected-width") || 'normal';
+	let currentWidth = localStorage.getItem("selected-width") || 'normal';
 
 	// Inject the content width selector widget and activate buttons.
 	let widthSelector = addUIElement(
@@ -683,8 +683,8 @@ function widthAdjustButtonClicked(event) {
 	let selectedWidth = event.target.dataset.name;
 
 	// Save the new setting.
-	if (selectedWidth == "normal") window.localStorage.removeItem("selected-width");
-	else window.localStorage.setItem("selected-width", selectedWidth);
+	if (selectedWidth == "normal") localStorage.removeItem("selected-width");
+	else localStorage.setItem("selected-width", selectedWidth);
 
 	// Actually change the content width.
 	setContentWidth(selectedWidth);
@@ -784,7 +784,7 @@ function setTheme(newThemeName) {
 
 	if (window.adjustmentTransitions) {
 		pageFadeTransition(false);
-		window.setTimeout(function () { document.querySelector('head').insertBefore(newStyle, oldStyle.nextSibling); }, 500);
+		setTimeout(function () { document.querySelector('head').insertBefore(newStyle, oldStyle.nextSibling); }, 500);
 	} else {
 		document.querySelector('head').insertBefore(newStyle, oldStyle.nextSibling);
 	}
@@ -842,21 +842,21 @@ function themeLoadCallback_less(fromTheme = "") {
 			});
 		});
 
-		if (window.localStorage.getItem("appearance-adjust-ui-toggle-engaged") == null) {
+		if (localStorage.getItem("appearance-adjust-ui-toggle-engaged") == null) {
 			// If state is not set (user has never clicked on the Less theme's appearance
 			// adjustment UI toggle) then show it, but then hide it after a short time.
 			registerInitializer('engageAppearanceAdjustUI', true, () => document.querySelector("#ui-elements-container") != null, function () {
 				toggleAppearanceAdjustUI();
-				window.setTimeout(toggleAppearanceAdjustUI, 3000);
+				setTimeout(toggleAppearanceAdjustUI, 3000);
 			});
 		}
 
 		if (fromTheme != "") {
 			allUIToggles = document.querySelectorAll("#ui-elements-container div[id$='-ui-toggle']");
-			window.setTimeout(function () {
+			setTimeout(function () {
 				allUIToggles.forEach(toggle => { toggle.addClass("highlighted"); });
 			}, 300);
-			window.setTimeout(function () {
+			setTimeout(function () {
 				allUIToggles.forEach(toggle => { toggle.removeClass("highlighted"); });
 			}, 1800);
 		}
@@ -890,7 +890,7 @@ function themeLoadCallback_less(fromTheme = "") {
 function updatePostNavUIToggleVisibility() {
 	var hidePostNavUIToggle = true;
 	document.querySelectorAll("#ui-elements-container #quick-nav-ui a, #ui-elements-container #new-comment-nav-ui").forEach(element => {
-		if (window.getComputedStyle(element).visibility == "visible") hidePostNavUIToggle = false;
+		if (getComputedStyle(element).visibility == "visible") hidePostNavUIToggle = false;
 	});
 	(document.querySelector("#ui-elements-container #post-nav-ui-toggle")||{}).style.visibility = hidePostNavUIToggle ? "hidden" : "";
 }
@@ -925,13 +925,13 @@ function updateSiteNavUIState(event) {
 	if ((window.scrollState.unbrokenUpScrollDistance > window.innerHeight || 
 		 window.scrollState.lastScrollTop == 0) &&
 		(!window.scrollState.siteNavUIToggleButton.hasClass("engaged") && 
-		 window.localStorage.getItem("site-nav-ui-toggle-engaged") != "false")) toggleSiteNavUI();
+		 localStorage.getItem("site-nav-ui-toggle-engaged") != "false")) toggleSiteNavUI();
 
 	// On desktop, show appearance adjust UI when scrolling to the top.
 	if ((!window.isMobile) && 
 		(window.scrollState.lastScrollTop == 0) &&
 		(!window.scrollState.appearanceAdjustUIToggleButton.hasClass("engaged")) && 
-		(window.localStorage.getItem("appearance-adjust-ui-toggle-engaged") != "false")) toggleAppearanceAdjustUI();
+		(localStorage.getItem("appearance-adjust-ui-toggle-engaged") != "false")) toggleAppearanceAdjustUI();
 }
 
 function themeUnloadCallback_less(toTheme = "") {
@@ -1110,7 +1110,7 @@ function toggleThemeTweakerUI() {
 		setSearchBoxTabSelectable(true);
 	}
 	// Set theme tweaker assistant visibility.
-	document.querySelector(".clippy-container").style.display = JSON.parse(window.localStorage.getItem("theme-tweaker-settings") || '{ "showClippy": true }')["showClippy"] ? "block" : "none";
+	document.querySelector(".clippy-container").style.display = JSON.parse(localStorage.getItem("theme-tweaker-settings") || '{ "showClippy": true }')["showClippy"] ? "block" : "none";
 }
 function setSearchBoxTabSelectable(selectable) {
 	document.querySelector("input[type='search']").tabIndex = selectable ? "" : "-1";
@@ -1199,7 +1199,7 @@ function toggleThemeTweakerHelpWindow() {
 	}
 }
 function themeTweakerHelpButtonClicked(event) {
-	document.querySelector("#theme-tweak-control-clippy").checked = JSON.parse(window.localStorage.getItem("theme-tweaker-settings") || '{ "showClippy": true }')["showClippy"];
+	document.querySelector("#theme-tweak-control-clippy").checked = JSON.parse(localStorage.getItem("theme-tweaker-settings") || '{ "showClippy": true }')["showClippy"];
 	toggleThemeTweakerHelpWindow();
 }
 function themeTweakerResetDefaultsButtonClicked(event) {
@@ -1227,15 +1227,15 @@ function themeTweakerOKButtonClicked(event) {
 }
 function themeTweakReset() {
 	setSelectedTheme(window.currentTheme);
-	window.currentFilters = JSON.parse(window.localStorage.getItem("theme-tweaks") || "{ }");
+	window.currentFilters = JSON.parse(localStorage.getItem("theme-tweaks") || "{ }");
 	applyFilters(window.currentFilters);
-	window.currentTextZoom = window.localStorage.getItem("text-zoom");
+	window.currentTextZoom = localStorage.getItem("text-zoom");
 	setTextZoom(window.currentTextZoom);
 }
 function themeTweakSave() {
 	window.currentTheme = (readCookie("theme") || "default");
-	window.localStorage.setItem("theme-tweaks", JSON.stringify(window.currentFilters));
-	window.localStorage.setItem("text-zoom", window.currentTextZoom);
+	localStorage.setItem("theme-tweaks", JSON.stringify(window.currentFilters));
+	localStorage.setItem("text-zoom", window.currentTextZoom);
 }
 function clickInterceptor(event) {
 	event.stopPropagation();
@@ -1274,15 +1274,15 @@ function themeTweakerHelpWindowOKButtonClicked(event) {
 	themeTweakerSaveSettings();
 }
 function themeTweakerResetSettings() {
-	document.querySelector("#theme-tweak-control-clippy").checked = JSON.parse(window.localStorage.getItem("theme-tweaker-settings") || '{ "showClippy": true }')['showClippy'];
+	document.querySelector("#theme-tweak-control-clippy").checked = JSON.parse(localStorage.getItem("theme-tweaker-settings") || '{ "showClippy": true }')['showClippy'];
 	document.querySelector(".clippy-container").style.display = document.querySelector("#theme-tweak-control-clippy").checked ? "block" : "none";
 }
 function themeTweakerSaveSettings() {
-	window.localStorage.setItem("theme-tweaker-settings", JSON.stringify({ 'showClippy': document.querySelector("#theme-tweak-control-clippy").checked }));
+	localStorage.setItem("theme-tweaker-settings", JSON.stringify({ 'showClippy': document.querySelector("#theme-tweak-control-clippy").checked }));
 }
 function themeTweakerClippyCloseButtonClicked() {
 	document.querySelector(".clippy-container").style.display = "none";
-	window.localStorage.setItem("theme-tweaker-settings", JSON.stringify({ 'showClippy': false }));
+	localStorage.setItem("theme-tweaker-settings", JSON.stringify({ 'showClippy': false }));
 	document.querySelector("#theme-tweak-control-clippy").checked = false;
 }
 function themeTweakerTextSizeAdjustButtonClicked(event) {
@@ -1298,7 +1298,7 @@ function themeTweakerTextSizeAdjustButtonClicked(event) {
 	window.currentTextZoom = `${zoomFactor}`;
 
 	if (event.target.parentElement.id == "text-size-adjustment-ui") {
-		window.localStorage.setItem("text-zoom", window.currentTextZoom);
+		localStorage.setItem("text-zoom", window.currentTextZoom);
 	}
 }
 function updateThemeTweakerSampleText() {
@@ -1309,16 +1309,16 @@ function updateThemeTweakerSampleText() {
 	let bodyTextElement = document.querySelector(".post-body") || document.querySelector(".comment-body");
 	sampleText.addClass("post-body");
 	sampleText.style.color = bodyTextElement ? 
-								window.getComputedStyle(bodyTextElement).color : 
-									window.getComputedStyle(document.querySelector("#content")).color;
+								getComputedStyle(bodyTextElement).color : 
+									getComputedStyle(document.querySelector("#content")).color;
 
 	// Here we find out what is the actual background color that will be visible behind
 	// the body text of posts, and set the sample text’s background to that.
 	var backgroundElement = document.querySelector("#content");
-	while (window.getComputedStyle(backgroundElement).backgroundColor == "" || 
-		   window.getComputedStyle(backgroundElement).backgroundColor == "rgba(0, 0, 0, 0)")
+	while (getComputedStyle(backgroundElement).backgroundColor == "" || 
+		   getComputedStyle(backgroundElement).backgroundColor == "rgba(0, 0, 0, 0)")
 		   backgroundElement = backgroundElement.parentElement;
-	sampleText.parentElement.style.backgroundColor = window.getComputedStyle(backgroundElement).backgroundColor;
+	sampleText.parentElement.style.backgroundColor = getComputedStyle(backgroundElement).backgroundColor;
 }
 
 /*********************/
@@ -1402,7 +1402,7 @@ function updateNewCommentNavUI(newCommentsCount, hns = -1) {
 
 function toggleHNSDatePickerVisibility() {
 	let hnsDatePicker = document.querySelector("#hns-date-picker");
-	let hnsDatePickerVisible = (window.getComputedStyle(hnsDatePicker).display != "none");
+	let hnsDatePickerVisible = (getComputedStyle(hnsDatePicker).display != "none");
 	hnsDatePicker.style.display = hnsDatePickerVisible ? "none" : "block";
 }
 
@@ -1546,7 +1546,7 @@ function injectCommentsListModeSelector() {
 		button.addActivateEvent(commentsListModeSelectButtonClicked);
 	});
 
-	let savedMode = (window.localStorage.getItem("comments-list-mode") == "compact") ? "compact" : "expanded";
+	let savedMode = (localStorage.getItem("comments-list-mode") == "compact") ? "compact" : "expanded";
 	if (savedMode == "compact")
 		document.querySelector("#content").addClass("compact");
 	commentsListModeSelector.querySelector(`.${savedMode}`).addClass("selected");
@@ -1569,7 +1569,7 @@ function commentsListModeSelectButtonClicked(event) {
 		button.disabled = false;
 		button.accessKey = '`';
 	});
-	window.localStorage.setItem("comments-list-mode", event.target.className);
+	localStorage.setItem("comments-list-mode", event.target.className);
 	event.target.addClass("selected");
 	event.target.disabled = true;
 	event.target.accessKey = '';
@@ -1589,7 +1589,7 @@ function injectSiteNavUIToggle() {
 	let siteNavUIToggle = addUIElement("<div id='site-nav-ui-toggle'><button type='button' tabindex='-1'>&#xf0c9;</button></div>");
 	siteNavUIToggle.querySelector("button").addActivateEvent(siteNavUIToggleButtonClicked);
 
-	if (!window.isMobile && window.localStorage.getItem("site-nav-ui-toggle-engaged") == "true") toggleSiteNavUI();
+	if (!window.isMobile && localStorage.getItem("site-nav-ui-toggle-engaged") == "true") toggleSiteNavUI();
 }
 function removeSiteNavUIToggle() {
 	document.querySelectorAll("#primary-bar, #secondary-bar, .page-toolbar, #site-nav-ui-toggle button").forEach(element => {
@@ -1599,8 +1599,8 @@ function removeSiteNavUIToggle() {
 }
 function siteNavUIToggleButtonClicked() {
 	toggleSiteNavUI();
-	window.localStorage.setItem("site-nav-ui-toggle-engaged", event.target.hasClass("engaged"));
-//	window.localStorage.getItem("site-nav-ui-toggle-engaged") != "true");
+	localStorage.setItem("site-nav-ui-toggle-engaged", event.target.hasClass("engaged"));
+//	localStorage.getItem("site-nav-ui-toggle-engaged") != "true");
 }
 function toggleSiteNavUI() {
 	document.querySelectorAll("#primary-bar, #secondary-bar, .page-toolbar, #site-nav-ui-toggle button").forEach(element => {
@@ -1617,7 +1617,7 @@ function injectPostNavUIToggle() {
 	let postNavUIToggle = addUIElement("<div id='post-nav-ui-toggle'><button type='button' tabindex='-1'>&#xf14e;</button></div>");
 	postNavUIToggle.querySelector("button").addActivateEvent(postNavUIToggleButtonClicked);
 
-	if (window.localStorage.getItem("post-nav-ui-toggle-engaged") == "true") togglePostNavUI();
+	if (localStorage.getItem("post-nav-ui-toggle-engaged") == "true") togglePostNavUI();
 }
 function removePostNavUIToggle() {
 	document.querySelectorAll("#quick-nav-ui, #new-comment-nav-ui, #hns-date-picker, #post-nav-ui-toggle button").forEach(element => {
@@ -1627,7 +1627,7 @@ function removePostNavUIToggle() {
 }
 function postNavUIToggleButtonClicked(event) {
 	togglePostNavUI();
-	window.localStorage.setItem("post-nav-ui-toggle-engaged", window.localStorage.getItem("post-nav-ui-toggle-engaged") != "true");
+	localStorage.setItem("post-nav-ui-toggle-engaged", localStorage.getItem("post-nav-ui-toggle-engaged") != "true");
 }
 function togglePostNavUI() {
 	document.querySelectorAll("#quick-nav-ui, #new-comment-nav-ui, #hns-date-picker, #post-nav-ui-toggle button").forEach(element => {
@@ -1650,7 +1650,7 @@ function injectAppearanceAdjustUIToggle() {
 		document.querySelector("#theme-selector").appendChild(themeSelectorCloseButton);
 		themeSelectorCloseButton.addActivateEvent(appearanceAdjustUIToggleButtonClicked);
 	} else {
-		if (window.localStorage.getItem("appearance-adjust-ui-toggle-engaged") == "true") toggleAppearanceAdjustUI();
+		if (localStorage.getItem("appearance-adjust-ui-toggle-engaged") == "true") toggleAppearanceAdjustUI();
 	}
 }
 function removeAppearanceAdjustUIToggle() {
@@ -1661,8 +1661,8 @@ function removeAppearanceAdjustUIToggle() {
 }
 function appearanceAdjustUIToggleButtonClicked(event) {
 	toggleAppearanceAdjustUI();
-	window.localStorage.setItem("appearance-adjust-ui-toggle-engaged", event.target.hasClass("engaged"));
-// 	window.localStorage.getItem("appearance-adjust-ui-toggle-engaged") != "true");
+	localStorage.setItem("appearance-adjust-ui-toggle-engaged", event.target.hasClass("engaged"));
+// 	localStorage.getItem("appearance-adjust-ui-toggle-engaged") != "true");
 }
 function toggleAppearanceAdjustUI() {
 	document.querySelectorAll("#comments-view-mode-selector, #theme-selector, #width-selector, #text-size-adjustment-ui, #theme-tweaker-toggle, #appearance-adjust-ui-toggle button").forEach(element => {
@@ -1698,10 +1698,10 @@ function toggleReadTimeOrWordCount(addWordCountClass) {
 	});
 }
 function readTimeOrWordCountClicked(event) {
-	let displayWordCount = window.localStorage.getItem("display-word-count");
+	let displayWordCount = localStorage.getItem("display-word-count");
 	toggleReadTimeOrWordCount(!displayWordCount);
-	if (displayWordCount) window.localStorage.removeItem("display-word-count");
-	else window.localStorage.setItem("display-word-count", true);
+	if (displayWordCount) localStorage.removeItem("display-word-count");
+	else localStorage.setItem("display-word-count", true);
 }
 
 /**************************/
@@ -1774,7 +1774,7 @@ function injectAntiKibitzer() {
 	antiKibitzerToggle.querySelector("button").addActivateEvent(antiKibitzerToggleButtonClicked);
 
 	// Activate anti-kibitzer mode (if needed).
-	if (window.localStorage.getItem("antikibitzer") == "true")
+	if (localStorage.getItem("antikibitzer") == "true")
 		toggleAntiKibitzerMode();
 
 	// Remove temporary CSS that hides the authors and karma values.
@@ -1808,7 +1808,7 @@ function toggleAntiKibitzerMode() {
 
 	let antiKibitzerToggle = document.querySelector("#anti-kibitzer-toggle");
 	if (antiKibitzerToggle.hasClass("engaged")) {
-		window.localStorage.setItem("antikibitzer", "false");
+		localStorage.setItem("antikibitzer", "false");
 
 		let redirectTarget = pageHeadingElement && pageHeadingElement.dataset["kibitzerRedirect"];
 		if (redirectTarget) {
@@ -1849,7 +1849,7 @@ function toggleAntiKibitzerMode() {
 
 		antiKibitzerToggle.removeClass("engaged");
 	} else {
-		window.localStorage.setItem("antikibitzer", "true");
+		localStorage.setItem("antikibitzer", "true");
 
 		let redirectTarget = pageHeadingElement && pageHeadingElement.dataset["antiKibitzerRedirect"];
 		if (redirectTarget) {
@@ -1969,7 +1969,7 @@ function sortComments(mode) {
 	// Re-add comment parent popups.
 	addCommentParentPopups();
 
-	window.requestAnimationFrame(() => {
+	requestAnimationFrame(() => {
 		commentsContainer.removeClass("sorting");
 		commentsContainer.addClass("sorted-" + mode);
 	});
@@ -2153,8 +2153,8 @@ function focusImage(image) {
 			let mouseCoordX = event.clientX;
 			let mouseCoordY = event.clientY;
 
-			let imageCoordX = parseInt(window.getComputedStyle(clonedImage).left);
-			let imageCoordY = parseInt(window.getComputedStyle(clonedImage).top);
+			let imageCoordX = parseInt(getComputedStyle(clonedImage).left);
+			let imageCoordY = parseInt(getComputedStyle(clonedImage).top);
 
 			window.onmousemove = (event) => {
 				// Remove the filter.
@@ -2292,7 +2292,7 @@ function slideshowButtonClicked(event) {
 function keyPressedWhenImageFocused(event) {
 	let allowedKeys = [ " ", "Spacebar", "Escape", "Esc", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Up", "Down", "Left", "Right" ];
 	if (!allowedKeys.contains(event.key) || 
-		window.getComputedStyle(document.querySelector("#image-focus-overlay")).display == "none") return;
+		getComputedStyle(document.querySelector("#image-focus-overlay")).display == "none") return;
 
 	event.preventDefault();
 
@@ -2388,8 +2388,8 @@ function focusedImageScrolled(event) {
 		x: image.getBoundingClientRect().x - (event.clientX + (event.deltaY < 0 ? offsetOfImageFromCursor.x * factor : offsetOfImageFromCursor.x / factor)),
 		y: image.getBoundingClientRect().y - (event.clientY + (event.deltaY < 0 ? offsetOfImageFromCursor.y * factor : offsetOfImageFromCursor.y / factor))
 	}
-	image.style.left = parseInt(window.getComputedStyle(image).left) - deltaFromCenteredZoom.x + "px";
-	image.style.top = parseInt(window.getComputedStyle(image).top) - deltaFromCenteredZoom.y + "px";
+	image.style.left = parseInt(getComputedStyle(image).left) - deltaFromCenteredZoom.x + "px";
+	image.style.top = parseInt(getComputedStyle(image).top) - deltaFromCenteredZoom.y + "px";
 
 	// Put the filter back.
 	image.style.filter = '';
@@ -2496,10 +2496,10 @@ registerInitializer('earlyInitialize', true, () => document.querySelector("#cont
 	window.isMobile = ('ontouchstart' in document.documentElement);
 
 	// Backward compatibility
-	let storedTheme = window.localStorage.getItem('selected-theme');
+	let storedTheme = localStorage.getItem('selected-theme');
 	if (storedTheme) {
 		setTheme(storedTheme);
-		window.localStorage.removeItem('selected-theme');
+		localStorage.removeItem('selected-theme');
 	}
 
 	// Animate width & theme adjustments?
@@ -2874,7 +2874,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	}
 
 	// Add listeners to switch between word count and read time.
-	if (window.localStorage.getItem("display-word-count")) toggleReadTimeOrWordCount(true);
+	if (localStorage.getItem("display-word-count")) toggleReadTimeOrWordCount(true);
 	document.querySelectorAll(".post-meta .read-time").forEach(element => { element.addActivateEvent(readTimeOrWordCountClicked); });
 
 	// Add copy listener to strip soft hyphens (inserted by server-side hyphenator).
@@ -2917,10 +2917,10 @@ function generateImagesOverlay() {
 	document.querySelectorAll(".post-body img").forEach(image => {
 		let clonedImageContainer = document.createElement("div");
 		let clonedImage = image.cloneNode(true);
-		clonedImage.style.border = window.getComputedStyle(image).border;
+		clonedImage.style.border = getComputedStyle(image).border;
 		clonedImageContainer.appendChild(clonedImage);
-		clonedImageContainer.style.top = image.getBoundingClientRect().top - parseFloat(window.getComputedStyle(image).marginTop) + window.scrollY + "px";
-		clonedImageContainer.style.left = image.getBoundingClientRect().left - parseFloat(window.getComputedStyle(image).marginLeft) - imagesOverlayLeftOffset + "px";
+		clonedImageContainer.style.top = image.getBoundingClientRect().top - parseFloat(getComputedStyle(image).marginTop) + window.scrollY + "px";
+		clonedImageContainer.style.left = image.getBoundingClientRect().left - parseFloat(getComputedStyle(image).marginLeft) - imagesOverlayLeftOffset + "px";
 		clonedImageContainer.style.width = image.getBoundingClientRect().width + "px";
 		clonedImageContainer.style.height = image.getBoundingClientRect().height + "px";
 		imagesOverlay.appendChild(clonedImageContainer);
@@ -2955,7 +2955,7 @@ function adjustUIForWindowSize() {
 	// Add "horizontal" class to sort order selector when it's specified, via CSS, to
 	// be horizontal (i.e. flex-direction: row)
 	document.querySelectorAll(".sublevel-nav.sort").forEach(sortSelector => {
-		if (window.getComputedStyle(sortSelector).flexDirection == "row") sortSelector.addClass("horizontal");
+		if (getComputedStyle(sortSelector).flexDirection == "row") sortSelector.addClass("horizontal");
 		else sortSelector.removeClass("horizontal");
 	});
 }
