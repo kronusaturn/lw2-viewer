@@ -2340,7 +2340,7 @@ function doubleClickOnFocusedImage(event) {
 }
 
 function mouseMovedWhenImageFocused(event) {
-	let restartTimer = (event.target.tagName == "IMG");
+	let restartTimer = (event.target.tagName == "IMG" || event.target.id == "image-focus-overlay");
 	resetImageFocusHideUITimer(restartTimer);
 }
 
