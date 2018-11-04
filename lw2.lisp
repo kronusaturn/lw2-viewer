@@ -55,6 +55,17 @@
     (ppcre:regex-replace "([^/]*//[^/]*)lesserwrong\.com" url "\\1lesswrong.com")))
 
 (defmacro alist-bind (bindings alist &body body)
+  "Binds elements of ALIST so they can be used as if they were lexical variables.
+
+Syntax: alist-bind (binding-entry*) alist forms*
+=> result*
+binding-entry ::= (variable-name &optional type alist-key)
+
+Each VARIABLE-NAME is bound to the corresponding datum in ALIST. Modifying these
+bindings with SETF will also update the ALIST.
+TYPE: type designator, not evaluated.
+ALIST-KEY: the alist key, as in the first argument to ASSOC. If it is not
+specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
   (alexandria:once-only (alist)
     (let ((inner-bindings (loop for x in bindings collect
                                 (destructuring-bind (bind &optional type key) (if (consp x) x (list x))
@@ -288,6 +299,8 @@
           (encode-entities (princ-to-string condition))))
 
 (defmacro with-error-html-block ((out-stream) &body body)
+  "If an error occurs within BODY, write an HTML representation of the
+signaled condition to OUT-STREAM."
   `(handler-case
      (progn ,@body)
      (serious-condition (c) (error-to-html ,out-stream c))))
