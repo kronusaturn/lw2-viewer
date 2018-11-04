@@ -2213,6 +2213,14 @@ blockquote {
 	border: none;
 }
 
+/*=============*/
+/* IMAGE FOCUS */
+/*=============*/
+
+#image-focus-overlay {
+	visibility: visible;
+}
+
 /*======*/
 /* MISC */
 /*======*/

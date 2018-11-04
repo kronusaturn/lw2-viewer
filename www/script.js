@@ -2064,6 +2064,316 @@ function addCommentParentPopups() {
 	});
 }
 
+/***************/
+/* IMAGE FOCUS */
+/***************/
+
+function imageFocusSetup(imagesOverlayOnly = false) {
+	// Add event listeners for clicking on images to focus them.
+	document.querySelectorAll("#images-overlay img").forEach(image => {
+		image.addActivateEvent(imageClickedToFocus);
+	});
+	((document.querySelector("#image-focus-overlay .image-number")||{}).dataset||{}).numberOfImages = document.querySelectorAll("#images-overlay img").length;
+	if (imagesOverlayOnly) return;
+	document.querySelectorAll("#content img").forEach(image => {
+		image.addActivateEvent(imageClickedToFocus);
+	});
+
+	// Create the image focus overlay.
+	let imageFocusOverlay = addUIElement("<div id='image-focus-overlay'>" + 
+	`<div class='help-overlay'>
+	 <p><strong>Arrow keys:</strong> Next/previous image</p>
+	 <p><strong>Escape</strong> or <strong>click</strong>: Hide zoomed image</p>
+	 <p><strong>Space bar:</strong> Reset image size & position</p>
+	 <p><strong>Scroll</strong> to zoom in/out</p>
+	 <p>(When zoomed in, <strong>drag</strong> to pan; <br/><strong>double-click</strong> to close)</p>
+	 </div>` + 
+	`<div class='image-number'></div>` + 
+	`<div class='slideshow-buttons'>
+	 <button type='button' class='slideshow-button previous' tabindex='-1' title='Previous image'>&#xf053;</button>
+	 <button type='button' class='slideshow-button next' tabindex='-1' title='Next image'>&#xf054;</button>
+	 </div>` + 
+	"</div>");
+
+	imageFocusOverlay.querySelectorAll(".slideshow-button").forEach(button => { button.addActivateEvent(slideshowButtonClicked); });
+}
+
+function imageClickedToFocus(event) {
+	focusImage(event.target);
+
+	document.querySelector("#image-focus-overlay .image-number").textContent = (getIndexOfFocusedImage() + 1);
+
+	// Set timer to hide the image focus UI.
+	resetImageFocusHideUITimer(true);
+}
+
+function focusImage(image) {
+	// Create the focused version of the image.
+	image.addClass("focused");
+	let imageFocusOverlay = document.querySelector("#image-focus-overlay");
+	let clonedImage = image.cloneNode(true);
+	clonedImage.style = "";
+	imageFocusOverlay.appendChild(clonedImage);
+	imageFocusOverlay.addClass("engaged");
+
+	// Set image to default size and position.
+	resetFocusedImagePosition();
+
+	// Blur everything else.
+	document.querySelectorAll("#content, #ui-elements-container > *:not(#image-focus-overlay), #images-overlay").forEach(element => {
+		element.addClass("blurred");
+	});
+
+	// Add listener to zoom image with scroll wheel.
+	window.addEventListener("wheel", focusedImageScrolled);
+	window.addEventListener("MozMousePixelScroll", oldFirefoxCompatibilityScrollEventFired);
+
+	// If image is bigger than viewport, it's draggable. Otherwise, click unfocuses.
+	window.addEventListener("mouseup", mouseUpOnFocusedImage);
+	window.onmousedown = (event) => {
+		if (clonedImage.height >= window.innerHeight || clonedImage.width >= window.innerWidth) {
+			let mouseCoordX = event.clientX;
+			let mouseCoordY = event.clientY;
+
+			let imageCoordX = parseInt(window.getComputedStyle(clonedImage).left);
+			let imageCoordY = parseInt(window.getComputedStyle(clonedImage).top);
+
+			window.onmousemove = (event) => {
+				// Remove the filter.
+				clonedImage.style.filter = "none";
+				clonedImage.style.left = imageCoordX + event.clientX - mouseCoordX + 'px';
+				clonedImage.style.top = imageCoordY + event.clientY - mouseCoordY + 'px';
+			};
+			return false;
+		}
+	};
+
+	// Double-click unfocuses, always.
+	window.addEventListener('dblclick', doubleClickOnFocusedImage);
+
+	// Escape key unfocuses, spacebar resets.
+	document.addEventListener("keyup", keyPressedWhenImageFocused);
+
+	// Prevent spacebar or arrow keys from scrolling page when image focused.
+	document.addEventListener("keydown", keyDownWhenImageFocused);
+
+	// Set state of next/previous buttons.
+	let images = document.querySelectorAll("#images-overlay img");
+	var indexOfFocusedImage = getIndexOfFocusedImage();
+	imageFocusOverlay.querySelector(".slideshow-button.previous").disabled = (indexOfFocusedImage == 0);
+	imageFocusOverlay.querySelector(".slideshow-button.next").disabled = (indexOfFocusedImage == images.length - 1);
+	
+	// Moving mouse unhides image focus UI.
+	window.addEventListener("mousemove", mouseMovedWhenImageFocused);
+}
+
+function resetFocusedImagePosition() {
+	let focusedImage = document.querySelector("#image-focus-overlay img");
+
+	// Reset modifications to size.
+	focusedImage.style.width = "";
+	focusedImage.style.height = "";
+
+	// Make sure that initially, the image fits into the viewport.
+	let shrinkRatio = 0.975;
+	focusedImage.style.width = Math.min(focusedImage.clientWidth, window.innerWidth * shrinkRatio) + 'px';
+	let maxImageHeight = window.innerHeight * shrinkRatio;
+	if (focusedImage.clientHeight > maxImageHeight) {
+		focusedImage.style.height = maxImageHeight +'px';
+		focusedImage.style.width = "";
+	}
+
+	// Remove modifications to position.
+	focusedImage.style.left = "";
+	focusedImage.style.top = "";
+}
+
+function unfocusImageOverlay() {
+	// Remove focused image and hide overlay.
+	let imageFocusOverlay = document.querySelector("#image-focus-overlay");
+	imageFocusOverlay.removeClass("engaged");
+	removeElement(imageFocusOverlay.querySelector("img"));
+
+	// Un-blur content/etc.
+	document.querySelectorAll("#content, #ui-elements-container > *:not(#image-focus-overlay), #images-overlay").forEach(element => {
+		element.removeClass("blurred");
+	});
+
+	// Unset "focused" class of focused image.
+	document.querySelectorAll("#content img, #images-overlay img").forEach(image => {
+		image.removeClass("focused");
+	});
+
+	// Remove event listeners.
+	window.removeEventListener("wheel", focusedImageScrolled);
+	window.removeEventListener("MozMousePixelScroll", oldFirefoxCompatibilityScrollEventFired);
+	window.removeEventListener("dblclick", doubleClickOnFocusedImage);
+	document.removeEventListener("keyup", keyPressedWhenImageFocused);
+	document.removeEventListener("keydown", keyDownWhenImageFocused);
+	window.removeEventListener("mousemove", mouseMovedWhenImageFocused);
+}
+
+function getIndexOfFocusedImage() {
+	let images = document.querySelectorAll("#images-overlay img");
+	var indexOfFocusedImage = -1;
+	for (i = 0; i < images.length; i++) {
+		if (images[i].hasClass("focused")) {
+			indexOfFocusedImage = i;
+			break;
+		}
+	}
+	return indexOfFocusedImage;
+}
+
+function focusNextImage(next = true) {
+	let images = document.querySelectorAll("#images-overlay img");
+	var indexOfFocusedImage = getIndexOfFocusedImage();
+
+	if (next ? (++indexOfFocusedImage == images.length) : (--indexOfFocusedImage == -1)) return;
+	unfocusImageOverlay();
+	focusImage(images[indexOfFocusedImage]);
+
+	document.querySelector("#image-focus-overlay .image-number").textContent = (indexOfFocusedImage + 1);
+}
+
+function hideImageFocusUI() {
+	let imageFocusOverlay = document.querySelector("#image-focus-overlay");
+	imageFocusOverlay.querySelectorAll(".slideshow-button, .help-overlay, .image-number").forEach(element => {
+		element.addClass("hidden");
+	});
+}
+
+function unhideImageFocusUI() {
+	let imageFocusOverlay = document.querySelector("#image-focus-overlay");
+	imageFocusOverlay.querySelectorAll(".slideshow-button, .help-overlay, .image-number").forEach(element => {
+		element.removeClass("hidden");
+	});
+}
+
+function resetImageFocusHideUITimer(restart) {
+	clearTimeout(window.imageFocusHideUITimer);
+	unhideImageFocusUI();
+	if (restart) window.imageFocusHideUITimer = setTimeout(hideImageFocusUI, 1500);
+}
+
+function slideshowButtonClicked(event) {
+	focusNextImage(event.target.hasClass("next"));
+	event.target.blur();
+}
+
+function keyPressedWhenImageFocused(event) {
+	let allowedKeys = [ " ", "Spacebar", "Escape", "Esc", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Up", "Down", "Left", "Right" ];
+	if (!allowedKeys.contains(event.key) || 
+		window.getComputedStyle(document.querySelector("#image-focus-overlay")).display == "none") return;
+
+	event.preventDefault();
+
+	switch (event.key) {
+	case "Escape":
+	case "Esc":
+		unfocusImageOverlay();
+		break;
+	case " ":
+	case "Spacebar":
+		resetFocusedImagePosition();
+		break;
+	case "ArrowDown":
+	case "Down":
+	case "ArrowRight":
+	case "Right":
+		focusNextImage(true);
+		break;
+	case "ArrowUp":
+	case "Up":
+	case "ArrowLeft":
+	case "Left":
+		focusNextImage(false);
+		break;
+	}
+}
+
+function keyDownWhenImageFocused(event) {
+	let disabledKeys = [ " ", "Spacebar", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Up", "Down", "Left", "Right" ];
+	if (disabledKeys.contains(event.key))
+		event.preventDefault();
+}
+
+function mouseUpOnFocusedImage(event) {
+	if (event.target.hasClass("slideshow-button")) {
+		resetImageFocusHideUITimer(false);
+		return;
+	}
+
+	let focusedImage = document.querySelector("#image-focus-overlay img");
+
+	if (event.target != focusedImage) {
+		unfocusImageOverlay();
+		return;
+	}
+
+	if (focusedImage.height >= window.innerHeight || focusedImage.width >= window.innerWidth) {
+		window.onmousemove = '';
+		// Put the filter back.
+		focusedImage.style.filter = '';
+	} else {
+		unfocusImageOverlay();
+	}
+}
+
+function doubleClickOnFocusedImage(event) {
+	if (event.target.hasClass("slideshow-button")) return;
+
+	unfocusImageOverlay();
+}
+
+function mouseMovedWhenImageFocused(event) {
+	let restartTimer = (event.target.tagName == "IMG");
+	resetImageFocusHideUITimer(restartTimer);
+}
+
+function focusedImageScrolled(event) {
+	event.preventDefault();
+
+	let image = document.querySelector("#image-focus-overlay img");
+
+	// Remove the filter.
+	image.style.filter = 'none';
+
+	// Locate point under cursor.
+	let offsetOfImageFromCursor = {
+		x: image.getBoundingClientRect().x - event.clientX,
+		y: image.getBoundingClientRect().y - event.clientY
+	}
+
+	// Calculate resize factor.
+	var factor = 1 + Math.sqrt(Math.abs(event.deltaY))/100.0;
+
+	// Resize.
+	image.style.width = (event.deltaY < 0 ?
+						(image.clientWidth * factor) :
+						(image.clientWidth / factor))
+						+ "px";
+	image.style.height = "";
+
+	// Move image so that the point under the cursor stays the same.
+	let deltaFromCenteredZoom = {
+		x: image.getBoundingClientRect().x - (event.clientX + (event.deltaY < 0 ? offsetOfImageFromCursor.x * factor : offsetOfImageFromCursor.x / factor)),
+		y: image.getBoundingClientRect().y - (event.clientY + (event.deltaY < 0 ? offsetOfImageFromCursor.y * factor : offsetOfImageFromCursor.y / factor))
+	}
+	image.style.left = parseInt(window.getComputedStyle(image).left) - deltaFromCenteredZoom.x + "px";
+	image.style.top = parseInt(window.getComputedStyle(image).top) - deltaFromCenteredZoom.y + "px";
+
+	// Put the filter back.
+	image.style.filter = '';
+
+	// Set the cursor appropriately.
+	image.style.cursor = (image.height >= window.innerHeight || image.width >= window.innerWidth) ? 
+						 'move' : 'default';
+}
+function oldFirefoxCompatibilityScrollEventFired(event) {
+	event.preventDefault();
+}
+
 /*********************/
 /* MORE MISC HELPERS */
 /*********************/
@@ -2097,6 +2407,14 @@ function removeElement(elementOrSelector, ancestor = document) {
 	if (typeof elementOrSelector == "string") elementOrSelector = ancestor.querySelector(elementOrSelector);
 	if (elementOrSelector) elementOrSelector.parentElement.removeChild(elementOrSelector);
 }
+
+Array.prototype.contains = function (element) {
+	return (this.indexOf(element) !== -1);
+}
+
+/*******************************/
+/* HTML TO MARKDOWN CONVERSION */
+/*******************************/
 
 function MarkdownFromHTML(text) {
 	text = text.replace(/<(.+?)(?:\s(.+?))?>/g, (match, tag, attributes, offset, string) => {
@@ -2537,6 +2855,9 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		const selectedText = window.getSelection().toString();
 		event.clipboardData.setData("text/plain", selectedText.replace(/\u00AD/g, ""));
 	});
+
+	// Set up Image Focus feature.
+	imageFocusSetup();
 });
 
 /*************************/
@@ -2566,14 +2887,19 @@ function generateImagesOverlay() {
 	let imagesOverlay = document.querySelector("#images-overlay");
 	let imagesOverlayLeftOffset = imagesOverlay.getBoundingClientRect().left;
 	document.querySelectorAll(".post-body img").forEach(image => {
+		let clonedImageContainer = document.createElement("div");
 		let clonedImage = image.cloneNode(true);
-		clonedImage.style.top = image.getBoundingClientRect().top - parseFloat(window.getComputedStyle(image).marginTop) + window.scrollY + "px";
-		clonedImage.style.left = image.getBoundingClientRect().left - parseFloat(window.getComputedStyle(image).marginLeft) - imagesOverlayLeftOffset + "px";
-		clonedImage.style.width = image.getBoundingClientRect().width + "px";
-		clonedImage.style.height = image.getBoundingClientRect().height + "px";
 		clonedImage.style.border = window.getComputedStyle(image).border;
-		imagesOverlay.appendChild(clonedImage);
+		clonedImageContainer.appendChild(clonedImage);
+		clonedImageContainer.style.top = image.getBoundingClientRect().top - parseFloat(window.getComputedStyle(image).marginTop) + window.scrollY + "px";
+		clonedImageContainer.style.left = image.getBoundingClientRect().left - parseFloat(window.getComputedStyle(image).marginLeft) - imagesOverlayLeftOffset + "px";
+		clonedImageContainer.style.width = image.getBoundingClientRect().width + "px";
+		clonedImageContainer.style.height = image.getBoundingClientRect().height + "px";
+		imagesOverlay.appendChild(clonedImageContainer);
 	});
+
+	// Add the event listeners to focus each image.
+	imageFocusSetup(true);
 }
 
 function adjustUIForWindowSize() {
