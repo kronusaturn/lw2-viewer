@@ -2183,6 +2183,9 @@ function focusImage(image) {
 
 	// Moving mouse unhides image focus UI.
 	window.addEventListener("mousemove", mouseMovedWhenImageFocused);
+	
+	// Replace the hash.
+	history.replaceState(null, null, "#if_slide_" + (indexOfFocusedImage + 1));
 }
 
 function resetFocusedImagePosition() {
@@ -2438,6 +2441,10 @@ function removeElement(elementOrSelector, ancestor = document) {
 
 Array.prototype.contains = function (element) {
 	return (this.indexOf(element) !== -1);
+}
+
+String.prototype.hasPrefix = function (prefix) {
+	return (this.lastIndexOf(prefix, 0) === 0);
 }
 
 /*******************************/
@@ -2898,7 +2905,9 @@ registerInitializer('pageLayoutFinished', false, () => document.readyState == "c
 	realignHashIfNeeded();
 
 	postSetThemeHousekeeping();
-
+	
+	focusImageSpecifiedByURL();
+	
 	// FOR TESTING ONLY, COMMENT WHEN DEPLOYING.
 // 	document.querySelector("input[type='search']").value = document.documentElement.clientWidth;
 });
@@ -2972,9 +2981,19 @@ function realignHashIfNeeded() {
 }
 function realignHash() {
 	if (!location.hash) return;
-
+	
 	let targetElement = document.querySelector(location.hash);
 	if (targetElement) targetElement.scrollIntoView(true);
+}
+
+function focusImageSpecifiedByURL() {
+	if (location.hash.hasPrefix("#if_slide_")) {
+		let images = document.querySelectorAll("#images-overlay img");
+		let imageToFocus = (/#if_slide_([0-9]+)/.exec(location.hash)||{})[1];
+		if (imageToFocus && imageToFocus <= images.length) {
+			focusImage(images[imageToFocus - 1]);
+		}
+	}
 }
 
 /***********/
