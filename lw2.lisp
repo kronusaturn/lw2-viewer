@@ -829,35 +829,33 @@
              (loop for x in args
                    collect (if (atom x) x
                                (cons (first x) (filter-plist (rest x) :request-type :real-name)))))
-           (make-binding-form (additional-vars body &aux additional-declarations additional-preamble)
-             (let ((var-bindings
-                     (loop for x in additional-vars
-                           as binding-form = (destructuring-bind (name &key member type default required request-type real-name) (if (atom x) (list x) x)
-                                               (declare (ignore request-type real-name))
-                                               (let* ((inner-form
-                                                        (cond
-                                                          (member
-                                                            `(let ((sym (find-symbol (string-upcase ,name) ,(find-package '#:keyword))))
-                                                               (if (member sym (quote ,member)) sym)))
-                                                          ((and type (subtypep type 'integer))
-                                                           `(if ,name (parse-integer ,name)))))
-                                                      (inner-form
-                                                        (if default
-                                                            `(or ,inner-form ,default)
-                                                            inner-form)))
-                                                 (when required
-                                                   (push `(unless (and ,name (not (equal ,name ""))) (error "Missing required parameter: ~A" (quote ,name)))
-                                                         additional-preamble))
-                                                 (if member
-                                                     (if type (error "Cannot specify both member and type.")
-                                                         (push `(type (or null symbol) ,name) additional-declarations))
-                                                     (if type
-                                                         (push `(type (or null ,type) ,name) additional-declarations)
-                                                         (push `(type (or null simple-string) ,name) additional-declarations)))
-                                                 (when inner-form
-                                                   `(,name ,inner-form))))
-                           when binding-form collect it)))
-               `(let ,var-bindings (declare ,@additional-declarations) ,@additional-preamble ,@body))))
+           (make-binding-form (additional-vars body &aux var-bindings additional-declarations additional-preamble)
+             (loop for x in additional-vars do
+                   (destructuring-bind (name &key member type default required request-type real-name) (if (atom x) (list x) x)
+                     (declare (ignore request-type real-name))
+                     (let* ((inner-form
+                              (cond
+                                (member
+                                  `(let ((sym (find-symbol (string-upcase ,name) ,(find-package '#:keyword))))
+                                     (if (member sym (quote ,member)) sym)))
+                                ((and type (subtypep type 'integer))
+                                 `(if ,name (parse-integer ,name)))))
+                            (inner-form
+                              (if default
+                                  `(or ,inner-form ,default)
+                                  inner-form)))
+                       (when required
+                         (push `(unless (and ,name (not (equal ,name ""))) (error "Missing required parameter: ~A" (quote ,name)))
+                               additional-preamble))
+                       (if member
+                           (if type (error "Cannot specify both member and type.")
+                               (push `(type (or null symbol) ,name) additional-declarations))
+                           (if type
+                               (push `(type (or null ,type) ,name) additional-declarations)
+                               (push `(type (or null simple-string) ,name) additional-declarations)))
+                       (when inner-form
+                         (push `(,name ,inner-form) var-bindings)))))
+             `(let ,var-bindings (declare ,@additional-declarations) ,@additional-preamble ,@body)))
    (multiple-value-bind (path-specifier-form path-bindings-wrapper specifier-vars)
     (if (stringp path-specifier)
         (values path-specifier #'identity)
