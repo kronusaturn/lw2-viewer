@@ -2085,8 +2085,8 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 	 </div>` + 
 	`<div class='image-number'></div>` + 
 	`<div class='slideshow-buttons'>
-	 <button type='button' class='slideshow-button previous' tabindex='-1'>&#xf053;</button>
-	 <button type='button' class='slideshow-button next' tabindex='-1'>&#xf054;</button>
+	 <button type='button' class='slideshow-button previous' tabindex='-1' title='Previous image'>&#xf053;</button>
+	 <button type='button' class='slideshow-button next' tabindex='-1' title='Next image'>&#xf054;</button>
 	 </div>` + 
 	"</div>");
 
@@ -2222,6 +2222,20 @@ function focusNextImage(next = true) {
 	focusImage(images[indexOfFocusedImage]);
 
 	document.querySelector("#image-focus-overlay .image-number").textContent = (indexOfFocusedImage + 1);
+}
+
+function hideImageFocusUI() {
+	let imageFocusOverlay = document.querySelector("#image-focus-overlay");
+	imageFocusOverlay.querySelectorAll(".slideshow-button, .help-overlay, .image-number").forEach(element => {
+		element.addClass("hidden");
+	});
+}
+
+function unhideImageFocusUI() {
+	let imageFocusOverlay = document.querySelector("#image-focus-overlay");
+	imageFocusOverlay.querySelectorAll(".slideshow-button, .help-overlay, .image-number").forEach(element => {
+		element.removeClass("hidden");
+	});
 }
 
 function slideshowButtonClicked(event) {

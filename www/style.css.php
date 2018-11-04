@@ -2941,7 +2941,8 @@ li {
 	transition: 
 		visibility 1s ease,
 		color 1s ease,
-		background-color 1s ease;
+		background-color 1s ease,
+		bottom 0.5s ease;
 }
 #image-focus-overlay .help-overlay:hover {
 	max-width: 420px;
@@ -2987,6 +2988,9 @@ li {
 #image-focus-overlay .help-overlay p + p {
 	margin: 0.75em 0 0 0;
 }
+#image-focus-overlay .help-overlay.hidden {
+	bottom: -2em;
+}
 
 #image-focus-overlay .image-number {
 	position: absolute;
@@ -3003,6 +3007,7 @@ li {
 	width: 1.5em;
 	text-align: right;
 	white-space: nowrap;
+	transition: bottom 0.5s ease;
 }
 #image-focus-overlay .image-number::before {
 	content: "#";
@@ -3015,6 +3020,9 @@ li {
 #image-focus-overlay .image-number:hover::before,
 #image-focus-overlay .image-number:hover::after {
 	opacity: 1.0;
+}
+#image-focus-overlay .image-number.hidden {
+	bottom: -1.25em;
 }
 
 #image-focus-overlay .slideshow-buttons {
@@ -3033,6 +3041,10 @@ li {
 	font-size: 3rem;
 	padding: 0.5em;
 	color: #ddd;
+	position: relative;
+	left: 0;
+	transition:
+		left 0.3s ease;
 }
 #image-focus-overlay .slideshow-buttons button:hover {
 	background-color: rgba(0,0,0,0.1);
@@ -3044,8 +3056,15 @@ li {
 }
 #image-focus-overlay .slideshow-buttons button:disabled {
 	color: #eee;
+	text-shadow: none;
 	background-color: transparent;
 	cursor: default;
+}
+#image-focus-overlay .slideshow-button.previous.hidden {
+	left: -1.75em;
+}
+#image-focus-overlay .slideshow-button.next.hidden {
+	left: 1.75em;
 }
 
 .blurred {
