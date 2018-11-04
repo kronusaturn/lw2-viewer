@@ -2262,6 +2262,8 @@ function unhideImageFocusUI() {
 }
 
 function resetImageFocusHideUITimer(restart) {
+	if (window.isMobile) return;
+
 	clearTimeout(window.imageFocusHideUITimer);
 	unhideImageFocusUI();
 	if (restart) window.imageFocusHideUITimer = setTimeout(hideImageFocusUI, 1500);

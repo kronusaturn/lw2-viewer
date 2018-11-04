@@ -78,6 +78,9 @@
 #image-focus-overlay.engaged {
 	visibility: visible;
 }
+#image-focus-overlay .help-overlay {
+	display: none;
+}
 
 /*=========*/
 /* GENERAL */
