@@ -1,5 +1,6 @@
 (uiop:define-package #:lw2-viewer
-  (:use #:cl #:sb-thread #:flexi-streams #:djula #:lw2-viewer.config #:lw2.utils #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login))
+  (:use #:cl #:sb-thread #:flexi-streams #:djula #:lw2-viewer.config #:lw2.utils #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login)
+  (:unintern #:define-regex-handler))
 
 (in-package #:lw2-viewer) 
 
@@ -900,16 +901,6 @@
                                                  ,(funcall path-bindings-wrapper
                                                            (make-binding-form (append specifier-vars additional-vars)
                                                                               rewritten-body)))))))))
-
-(defmacro define-regex-handler (name (regex &rest vars) additional-vars &body body)
-  (alexandria:with-gensyms (fn result-vector)
-    `(let ((,fn (lambda (r) (ppcre:scan-to-strings ,regex (hunchentoot:request-uri r)))))
-       (hunchentoot:define-easy-handler (,name :uri ,fn) ,additional-vars
-	 (let ((,result-vector (nth-value 1 (funcall ,fn hunchentoot:*request*))))
-	   (declare (type vector ,result-vector)) 
-	   (symbol-macrolet
-	     ,(loop for v in vars as x from 0 collecting `(,v (if (> (length ,result-vector) ,x) (aref ,result-vector ,x)))) 
-	     ,@body))))))
 
 (define-page view-root "/" ((offset :type fixnum)
                             (limit :type fixnum)
