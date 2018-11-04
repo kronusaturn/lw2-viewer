@@ -3034,6 +3034,7 @@ li {
 	z-index: 1;
 	display: flex;
 	justify-content: space-between;
+	pointer-events: none;
 }
 #image-focus-overlay .slideshow-buttons button {
 	font-family: Font Awesome;
@@ -3045,6 +3046,7 @@ li {
 	left: 0;
 	transition:
 		left 0.3s ease;
+	pointer-events: auto;
 }
 #image-focus-overlay .slideshow-buttons button::selection {
 	background-color: transparent;

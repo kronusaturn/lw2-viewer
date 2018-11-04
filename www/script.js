@@ -2097,6 +2097,9 @@ function imageClickedToFocus(event) {
 	focusImage(event.target);
 
 	document.querySelector("#image-focus-overlay .image-number").textContent = (getIndexOfFocusedImage() + 1);
+
+	// Set timer to hide the image focus UI.
+	resetImageFocusHideUITimer(true);
 }
 
 function focusImage(image) {
@@ -2154,9 +2157,6 @@ function focusImage(image) {
 	var indexOfFocusedImage = getIndexOfFocusedImage();
 	imageFocusOverlay.querySelector(".slideshow-button.previous").disabled = (indexOfFocusedImage == 0);
 	imageFocusOverlay.querySelector(".slideshow-button.next").disabled = (indexOfFocusedImage == images.length - 1);
-	
-	// Set timer to hide the image focus UI.
-	window.imageFocusHideUITimer = setTimeout(hideImageFocusUI, 1500);
 	
 	// Moving mouse unhides image focus UI.
 	window.addEventListener("mousemove", mouseMovedWhenImageFocused);
@@ -2245,16 +2245,15 @@ function unhideImageFocusUI() {
 	});
 }
 
-function resetImageFocusHideUITimer() {
+function resetImageFocusHideUITimer(restart) {
 	clearTimeout(window.imageFocusHideUITimer);
 	unhideImageFocusUI();
-	window.imageFocusHideUITimer = setTimeout(hideImageFocusUI, 1500);
+	if (restart) window.imageFocusHideUITimer = setTimeout(hideImageFocusUI, 1500);
 }
 
 function slideshowButtonClicked(event) {
 	focusNextImage(event.target.hasClass("next"));
 	event.target.blur();
-	resetImageFocusHideUITimer();
 }
 
 function keyPressedWhenImageFocused(event) {
@@ -2295,9 +2294,10 @@ function keyDownWhenImageFocused(event) {
 }
 
 function mouseUpOnFocusedImage(event) {
-	if (event.target.hasClass("slideshow-button")) return;
-
-	resetImageFocusHideUITimer();
+	if (event.target.hasClass("slideshow-button")) {
+		resetImageFocusHideUITimer(false);
+		return;
+	}
 
 	let focusedImage = document.querySelector("#image-focus-overlay img");
 
@@ -2322,7 +2322,8 @@ function doubleClickOnFocusedImage(event) {
 }
 
 function mouseMovedWhenImageFocused(event) {
-	resetImageFocusHideUITimer();
+	console.log(event.target);
+	resetImageFocusHideUITimer(true);
 }
 
 function focusedImageScrolled(event) {
