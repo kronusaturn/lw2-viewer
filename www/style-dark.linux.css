@@ -3216,16 +3216,19 @@ li {
 	overflow-x: auto;
 	overflow-y: hidden;
 	position: relative;
+	vertical-align: text-top;
+	padding: 0 1px;
 }
 .post .mathjax-inline-container {
 	line-height: 0.8;
-	padding: 0 1px 0 1px;
 	top: 2px;
 }
 .comment .mathjax-inline-container {
-	padding: 3px 1px 0 1px;
-	top: 2px;
+	top: 3px;
 	line-height: 1;
+}
+.mathjax-inline-container .mjx-chtml {
+	padding: 0;
 }
 
 /**********************/
