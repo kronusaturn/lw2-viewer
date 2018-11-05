@@ -2646,7 +2646,7 @@ div.imgonly {
 	border-collapse: collapse;
 	font-family: Inconsolata, Menlo, monospace;
 	font-size: 0.875em;
-	margin: 1em 0;
+	margin: 1em auto;
 }
 .post-body table th,
 .post-body table td,
