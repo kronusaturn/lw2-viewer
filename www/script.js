@@ -2405,6 +2405,27 @@ function oldFirefoxCompatibilityScrollEventFired(event) {
 	event.preventDefault();
 }
 
+/***************/
+/* EASY TABLES */
+/***************/
+
+function renderEasyTables() {
+	document.querySelectorAll("pre code").forEach(codeBlock => {
+		let lines = codeBlock.textContent.trim().split("\n");
+		if (lines.length == 0 || !lines[0].hasPrefix("TABLE")) return;
+		
+		let separator = /tsv/i.test(lines[0]) ? "\t" : ",";
+		
+		var tableHTML = "<table><tbody>";
+		lines.slice(1).forEach(line => {
+			tableHTML += "<tr><td>" + line.split(separator).join("</td><td>") + "</td></tr>";
+		});
+		tableHTML += "</tbody></table>";
+
+		codeBlock.parentElement.outerHTML = tableHTML;
+	});
+}
+
 /*********************/
 /* MORE MISC HELPERS */
 /*********************/
@@ -2508,7 +2529,7 @@ registerInitializer('earlyInitialize', true, () => document.querySelector("#cont
 		setTheme(storedTheme);
 		localStorage.removeItem('selected-theme');
 	}
-
+	
 	// Animate width & theme adjustments?
 	window.adjustmentTransitions = false;
 
@@ -2529,6 +2550,9 @@ registerInitializer('earlyInitialize', true, () => document.querySelector("#cont
 
 registerInitializer('initialize', false, () => document.readyState != 'loading', function () {
 	forceInitializer('earlyInitialize');
+
+	// Render tables.
+	renderEasyTables();
 
 	// This is for "qualified hyperlinking", i.e. "link without comments" and/or
 	// "link without nav bars".
