@@ -437,6 +437,7 @@ signaled condition to OUT-STREAM."
                        :body (clean-html (cdr (assoc :html-body item))))))))))
 
 (defparameter *fonts-stylesheet-uri* "https://fonts.greaterwrong.com/?fonts=Charter,Concourse,a_Avante,Whitney,MundoSans,SourceSansPro,Raleway,ProximaNova,AnonymousPro,InputSans,InputSansNarrow,InputSansCondensed,GaramondPremierPro,ProximaNova,TradeGothic,NewsGothicBT,Caecilia,SourceSerifPro,SourceCodePro")
+(defparameter *fonts-stylesheet-uri* "https://fonts.greaterwrong.com/?fonts=*")
 
 (defvar *fonts-redirect-data* nil)
 (sb-ext:defglobal *fonts-redirect-lock* (make-mutex))
