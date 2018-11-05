@@ -1604,6 +1604,8 @@ h1.listing + .post-meta .read-time {
 }
 .post .post-meta {
 	text-align: center;
+	position: relative;
+	z-index: 2;
 }
 .post .top-post-meta:last-child {
 	margin-bottom: 40px;
