@@ -2418,7 +2418,20 @@ function renderEasyTables() {
 		
 		var tableHTML = "<table><tbody>";
 		lines.slice(1).forEach(line => {
-			tableHTML += "<tr><td>" + line.split(separator).join("</td><td>") + "</td></tr>";
+			var cells = line.split(separator);
+			for (var i = 0; i < cells.length; i++) {
+				var colspan = 1;
+				if (cells[i]) {
+					for (var j = i + 1; j < cells.length; j++)
+						if (!cells[j])
+							colspan++;
+						else
+							break;
+					cells[i] = "<td" + (colspan > 1 ? ` colspan='${colspan}'>` : `>`) + cells[i] + "</td>";
+				}
+			}
+			var row = "<tr>" + cells.join("") + "</tr>";
+			tableHTML += row;
 		});
 		tableHTML += "</tbody></table>";
 
