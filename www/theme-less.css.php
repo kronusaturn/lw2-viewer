@@ -2338,6 +2338,10 @@ strong, b {
 	text-decoration: none;
 	background-color: #e4f1e5;
 }
+.qualified-linking label::after {
+	background-color: #fff;
+	opacity: 0.8;
+}
 
 /*======*/
 /* MATH */

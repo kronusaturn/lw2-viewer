@@ -6287,6 +6287,10 @@ input::selection {
 	text-decoration: none;
 	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
 }
+.qualified-linking label::after {
+	background-color: #888;
+	opacity: 0.8;
+}
 
 /*======*/
 /* MATH */

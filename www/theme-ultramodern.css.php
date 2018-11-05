@@ -1677,6 +1677,10 @@ input::selection {
 	text-decoration: none;
 	text-shadow: <?php echo $white_glow; ?>;
 }
+.qualified-linking label::after {
+	background-color: #888;
+	opacity: 0.8;
+}
 
 /*======*/
 /* MATH */

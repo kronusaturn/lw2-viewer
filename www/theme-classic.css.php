@@ -1761,6 +1761,10 @@ select {
 	text-decoration: none;
 	background-color: #ddd;
 }
+.qualified-linking label::after {
+	background-color: #d8d8d8;
+	opacity: 0.8;
+}
 
 /*======*/
 /* MATH */

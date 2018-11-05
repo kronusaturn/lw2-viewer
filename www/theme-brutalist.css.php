@@ -1366,6 +1366,10 @@ select {
 .qualified-linking-toolbar a:active {
 	box-shadow: 0 0 0 2px #000 inset;
 }
+.qualified-linking label::after {
+	background-color: #fff;
+	opacity: 0.8;
+}
 
 /*======*/
 /* MATH */

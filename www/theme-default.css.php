@@ -1714,6 +1714,10 @@ EOT;
 	background-color: #ddd;
 	text-shadow: <?php echo $white_glow; ?>;
 }
+.qualified-linking label::after {
+	background-color: #d8d8d8;
+	opacity: 0.8;
+}
 
 /*======*/
 /* MATH */

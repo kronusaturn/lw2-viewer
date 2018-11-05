@@ -6430,6 +6430,10 @@ select {
 	background-color: #ddd;
 	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
 }
+.qualified-linking label::after {
+	background-color: #eee;
+	opacity: 0.8;
+}
 
 /*======*/
 /* MATH */
