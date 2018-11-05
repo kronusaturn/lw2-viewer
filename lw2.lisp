@@ -436,7 +436,7 @@ signaled condition to OUT-STREAM."
                        :link (generate-post-link (cdr (assoc :post-id item)) (cdr (assoc :--id item)) t)
                        :body (clean-html (cdr (assoc :html-body item))))))))))
 
-(defparameter *fonts-stylesheet-uri* "https://fonts.greaterwrong.com/?fonts=Charter,Whitney,MundoSans,SourceSansPro,Raleway,ProximaNova,AnonymousPro,InputSans,InputSansNarrow,InputSansCondensed,GaramondPremierPro,ProximaNova,TradeGothic,NewsGothicBT,Caecilia,SourceSerifPro,SourceCodePro")
+(defparameter *fonts-stylesheet-uri* "https://fonts.greaterwrong.com/?fonts=Charter,Concourse,a_Avante,Whitney,MundoSans,SourceSansPro,Raleway,ProximaNova,AnonymousPro,InputSans,InputSansNarrow,InputSansCondensed,GaramondPremierPro,ProximaNova,TradeGothic,NewsGothicBT,Caecilia,SourceSerifPro,SourceCodePro")
 
 (defvar *fonts-redirect-data* nil)
 (sb-ext:defglobal *fonts-redirect-lock* (make-mutex))
