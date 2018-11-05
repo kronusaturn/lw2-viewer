@@ -436,8 +436,7 @@ signaled condition to OUT-STREAM."
                        :link (generate-post-link (cdr (assoc :post-id item)) (cdr (assoc :--id item)) t)
                        :body (clean-html (cdr (assoc :html-body item))))))))))
 
-(defparameter *fonts-stylesheet-uri* "https://fonts.greaterwrong.com/?fonts=Charter,Concourse,a_Avante,Whitney,MundoSans,SourceSansPro,Raleway,ProximaNova,AnonymousPro,InputSans,InputSansNarrow,InputSansCondensed,GaramondPremierPro,ProximaNova,TradeGothic,NewsGothicBT,Caecilia,SourceSerifPro,SourceCodePro,Inconsolata,BitmapFonts,FontAwesomeGW")
-(defparameter *fonts-stylesheet-uri* "https://fonts.greaterwrong.com/?fonts=*")
+(defparameter *fonts-stylesheet-uri* "https://fonts.greaterwrong.com/?fonts=Charter,Whitney,MundoSans,SourceSansPro,Raleway,ProximaNova,AnonymousPro,InputSans,InputSansNarrow,InputSansCondensed,GaramondPremierPro,ProximaNova,TradeGothic,NewsGothicBT,Caecilia,SourceSerifPro,SourceCodePro")
 
 (defvar *fonts-redirect-data* nil)
 (sb-ext:defglobal *fonts-redirect-lock* (make-mutex))
@@ -689,11 +688,7 @@ signaled condition to OUT-STREAM."
                                                  `((,(generate-css-link) "text/css" "style" ,.push-option)
                                                    (,(generate-versioned-link "/theme_tweaker.css") "text/css" "style" ,.push-option)
                                                    (,(generate-fonts-link) "text/css" "style" ,.push-option)
-                                                   (,(generate-versioned-link "/script.js") "text/javascript" "script" ,.push-option)
-                                                   ("//fonts.greaterwrong.com/font_files/FontAwesomeGW/fa-solid-900.ttf?v=1" "font/ttf" "font" "crossorigin")
-                                                   ("//fonts.greaterwrong.com/font_files/FontAwesomeGW/fa-regular-400.ttf?v=1" "font/ttf" "font" "crossorigin")
-                                                   ("//fonts.greaterwrong.com/font_files/FontAwesomeGW/fa-light-300.ttf?v=1" "font/ttf" "font" "crossorigin")
-                                                   ("//fonts.greaterwrong.com/font_files/BitmapFonts/MSSansSerif.ttf" "font/ttf" "font" "crossorigin"))))
+                                                   (,(generate-versioned-link "/script.js") "text/javascript" "script" ,.push-option))))
     (unless push-option (hunchentoot:set-cookie "push" :max-age (* 4 60 60) :secure *secure-cookies* :value "t"))))
 
 (defun user-pref (key)

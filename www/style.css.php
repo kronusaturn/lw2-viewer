@@ -21,6 +21,8 @@
 	}
 ?>
 
+@import url("https://fonts.greaterwrong.com/?fonts=Concourse,a_Avante,Inconsolata,BitmapFonts,FontAwesomeGW&base64encode=1");
+
 /***************/
 /* BASE LAYOUT */
 /***************/
