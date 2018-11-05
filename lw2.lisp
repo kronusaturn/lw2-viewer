@@ -1460,9 +1460,7 @@ signaled condition to OUT-STREAM."
                                                                                     (loop for (uri content-type) in
                                                                                       '(("/theme_tweaker.css" "text/css")
                                                                                         ("/script.js" "text/javascript")
-                                                                                        ("/favicon.ico" "image/x-icon")
-                                                                                        ("/fa-regular-400.ttf" "font/ttf")
-                                                                                        ("/fa-solid-900.ttf" "font/ttf"))
+                                                                                        ("/favicon.ico" "image/x-icon"))
                                                                                       collect (defres uri content-type))))
                                                                    (when file
                                                                      (when (assoc "v" (hunchentoot:get-parameters r) :test #'string=)
