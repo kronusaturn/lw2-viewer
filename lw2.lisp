@@ -548,12 +548,16 @@ signaled condition to OUT-STREAM."
                                      `("login" ,(format nil "/login?return=~A" (url-rewrite:url-encode current-uri)) "Log In" :accesskey "u" :nofollow t))))))
     (nav-bar-to-html current-uri)))
 
-(defun sublevel-nav-to-html (out-stream options current &key (base-uri (hunchentoot:request-uri*)) (param-name "show") (remove-params '("offset")) extra-class)
+(defun sublevel-nav-to-html (out-stream options current &key default (base-uri (hunchentoot:request-uri*)) (param-name "show") (remove-params '("offset")) extra-class)
   (declare (type (or null string) extra-class))
   (format out-stream "<div class=\"sublevel-nav~@[ ~A~]\">" extra-class)
-  (loop for (param-value text) in options
-        do (link-if-not out-stream (string= current param-value) (apply #'replace-query-params (list* base-uri param-name param-value (loop for x in remove-params nconc (list x nil))))
-                        "sublevel-item" text))
+  (loop for item in options
+        do (multiple-value-bind (param-value text) (if (atom item)
+                                                       (values (string-downcase item) (string-capitalize item))
+                                                       (values-list item))
+             (link-if-not out-stream (string-equal current param-value) (apply #'replace-query-params base-uri param-name (unless (string-equal param-value default) param-value)
+                                                                               (loop for x in remove-params nconc (list x nil)))
+                          "sublevel-item" text)))
   (format out-stream "</div>"))
 
 (defun make-csrf-token (&optional (session-token (hunchentoot:cookie-in "session-token")) (nonce (ironclad:make-random-salt)))
@@ -924,7 +928,7 @@ signaled condition to OUT-STREAM."
                                                             :title "Frontpage posts"
                                                             :new-post t)
                                       (sublevel-nav-to-html out-stream
-                                                            '(("new" "New") ("hot" "Hot"))
+                                                            '(:new :hot)
                                                             (user-pref :default-sort)
                                                             :param-name "sort"
                                                             :extra-class "sort"))))))
@@ -945,9 +949,9 @@ signaled condition to OUT-STREAM."
                                     (page-toolbar-to-html out-stream
                                                           :title page-title
                                                           :new-post (if (eq view :meta) "meta" t))
-                                    (if (string= view "new")
+                                    (if (member view '(:all))
                                         (sublevel-nav-to-html out-stream
-                                                              '(("new" "New") ("hot" "Hot"))
+                                                              '(:new :hot)
                                                               (user-pref :default-sort)
                                                               :param-name "sort"
                                                               :extra-class "sort"))))))
@@ -1118,7 +1122,7 @@ signaled condition to OUT-STREAM."
 
 (define-page view-user (:regex "^/users/(.*?)(?:$|\\?)|^/user" user-slug) (id
                                                                              (offset :type fixnum :default 0)
-                                                                             (show :member (:posts :comments :drafts :conversations :inbox))
+                                                                             (show :member (:all :posts :comments :drafts :conversations :inbox) :default :all)
                                                                              (sort :member (:top :new) :default :new))
                         (let* ((auth-token (if (eq show :inbox) *current-auth-token*))
                                (user-query-terms (cond
@@ -1134,7 +1138,7 @@ signaled condition to OUT-STREAM."
                                (own-user-page (logged-in-userid user-id))
                                (comments-index-fields (remove :page-url *comments-index-fields*)) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
                                (display-name (if user-slug (cdr (assoc :display-name user-info)) user-id))
-                               (show-text (if show (string-downcase show)))
+                               (show-text (if (not (eq show :all)) (string-capitalize show)))
                                (title (format nil "~A~@['s ~A~]" display-name show-text))
                                (sort-type (case sort (:top :score) (:new :date)))
                                (comments-base-terms (ecase sort-type (:score (load-time-value (alist :view "postCommentsTop"))) (:date (load-time-value (alist :view "allRecentComments")))))
@@ -1226,14 +1230,16 @@ signaled condition to OUT-STREAM."
                                                                   (encode-entities display-name)
                                                                   (if user-slug (pretty-number (or (cdr (assoc :karma user-info)) 0)) "##"))
                                                           (sublevel-nav-to-html out-stream
-                                                                                `((nil "All") ("posts" "Posts") ("comments" "Comments")
+                                                                                `(:all :posts :comments
                                                                                               ,@(if own-user-page
-                                                                                                    '(("drafts" "Drafts") ("conversations" "Conversations") ("inbox" "Inbox"))))
-                                                                                show-text)
-                                                          (when (member show '(nil :posts :comments))
+                                                                                                    '(:drafts :conversations :inbox)))
+                                                                                show
+                                                                                :default :all)
+                                                          (when (member show '(:all :posts :comments))
                                                             (sublevel-nav-to-html out-stream
-                                                                                  `((nil "New") ("top" "Top"))
+                                                                                  '(:new :top)
                                                                                   sort
+                                                                                  :default :new
                                                                                   :param-name "sort"
                                                                                   :extra-class "sort"))))))
 
