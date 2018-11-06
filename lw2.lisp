@@ -944,7 +944,7 @@ signaled condition to OUT-STREAM."
                                   (offset :type fixnum)
                                   (limit :type fixnum)
                                   (sort :member (:new :hot)))
-  (when (eq view :new) (redirect "/index?view=all" :type :permanent) (return))
+  (when (eq view :new) (redirect (replace-query-params (hunchentoot:request-uri*) "view" "all" "all" nil) :type :permanent) (return))
   (let ((sort-string (if sort (string-downcase sort))))
     (if sort-string
         (set-user-pref :default-sort sort-string)))
