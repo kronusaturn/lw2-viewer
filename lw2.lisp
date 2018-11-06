@@ -1213,10 +1213,10 @@ signaled condition to OUT-STREAM."
                                                 (user-comments (lw2-graphql-query (lw2-query-string :comment :list (nconc (alist :limit (+ 1 (user-pref :items-per-page) offset) :user-id user-id) comments-base-terms) 
                                                                                                         comments-index-fields))))
                                             (concatenate 'list user-posts user-comments)))))
-                               (with-next (> (length items) (+ (if show 0 offset) (user-pref :items-per-page))))
-                               (interleave (if (not show) (comment-post-interleave items :limit (user-pref :items-per-page) :offset (if show nil offset) :sort-by sort-type) (firstn items (user-pref :items-per-page))))) ; this destructively sorts items
+                               (with-next (> (length items) (+ (if (eq show :all) offset 0) (user-pref :items-per-page))))
+                               (interleave (if (eq show :all) (comment-post-interleave items :limit (user-pref :items-per-page) :offset (if (eq show :all) offset nil) :sort-by sort-type) (firstn items (user-pref :items-per-page))))) ; this destructively sorts items
                           (view-items-index interleave :with-offset offset :title title
-                                            :content-class (format nil "user-page~@[ ~A-user-page~]~:[~; own-user-page~]" (if show show-text) own-user-page)
+                                            :content-class (format nil "user-page~@[ ~A-user-page~]~:[~; own-user-page~]" show-text own-user-page)
                                             :current-uri (format nil "/users/~A" user-slug)
                                             :section :personal
                                             :with-offset offset :with-next with-next
