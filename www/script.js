@@ -2440,7 +2440,10 @@ function renderEasyTables() {
 		});
 		tableHTML += "</tbody></table>";
 
-		codeBlock.parentElement.outerHTML = tableHTML;
+		let table = document.createElement("table");
+		table.innerHTML = tableHTML;
+
+		codeBlock.parentElement.parentElement.replaceChild(table, codeBlock.parentElement);
 	});
 }
 
