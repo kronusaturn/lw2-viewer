@@ -93,106 +93,125 @@
     (((or plump:invalid-xml-character plump:discouraged-xml-character) #'abort))
     (clean-html-regexps (plump:encode-entities (coerce (hyphenate-string (clean-text text)) 'simple-string)))))
 
+(declaim (ftype (function (plump:node &rest simple-string) boolean) class-is-not text-class-is-not))
+
+(defun class-is-not (node &rest args)
+  (declare (type plump:node node)
+           (dynamic-extent args))
+  (or
+    (plump:root-p node)
+    (and (not (intersection (split-sequence #\Space (or (plump:attribute node "class") "")) args :test #'string=))
+         (or (null (plump:parent node)) (apply #'class-is-not (plump:parent node) args)))))
+
+(defun text-class-is-not (node &rest args)
+  (declare (type plump:node node)
+           (dynamic-extent args))
+  (apply #'class-is-not (plump:parent node) args))
+
 (defun clean-dom-text (root)
   (handler-bind
     (((or plump:invalid-xml-character plump:discouraged-xml-character) #'abort))
-    (let* ((offset-list nil)
-           (whole-string-input
-             (with-output-to-string (stream)
-               (plump:traverse
-                 root
-                 (lambda (node)
-                   (typecase node
-                     (plump:text-node
-                       (push (length (the string (plump:text node))) offset-list)
-                       (write-string (plump:text node) stream)))))))
-           (whole-string-output whole-string-input))
-      (declare (type string whole-string-output whole-string-input))
-      (setf offset-list (nreverse offset-list))
-      (labels
-        ((call-with-offset-loop (continue-fn loop-fn next-offset-fn offset-adjust-fn)
-           (loop with current-offset = offset-list
-                 with output-offset of-type (or null fixnum) = (first current-offset)
-                 with output-offset-list = nil
-                 with total-offset of-type fixnum = 0
-                 while (funcall continue-fn)
-                 do (funcall loop-fn)
-                 do (loop for current-offset-num of-type fixnum = (first current-offset)
-                          while (and (rest current-offset) (< (+ total-offset current-offset-num) (funcall next-offset-fn)))
-                          do (progn
-                               (push output-offset output-offset-list)
-                               (setf total-offset (+ total-offset current-offset-num)
-                                     current-offset (cdr current-offset)
-                                     output-offset (first current-offset))))
-                 do (setf output-offset (funcall offset-adjust-fn output-offset))
-                 finally (progn
-                           (push output-offset output-offset-list)
-                           (loop for x in (rest current-offset) do (push x output-offset-list))
-                           (setf offset-list (nreverse output-offset-list))))
-           (values)))
-        (declare (dynamic-extent (function call-with-offset-loop))
-                 (ftype (function ((function ()) (function ()) (function () fixnum) (function (fixnum) fixnum)) (values)) call-with-offset-loop))
-        (macrolet
-          ((offset-loop ((list-binding list-form) (&body loop-body) (&body next-offset-body) (&body offset-adjust-body))
-             (with-gensyms (list-current)
-               `(let ((,list-current ,list-form)
-                      (,list-binding))
-                  (labels ((continue-fn () (if ,list-current (setf ,list-binding (pop ,list-current))))
-                           (loop-fn () ,.loop-body)
-                           (next-offset-fn () ,.next-offset-body)
-                           (offset-adjust-fn ,(first offset-adjust-body) (declare (type fixnum ,(caar offset-adjust-body)) (values fixnum)) ,.(rest offset-adjust-body)))
-                    (declare (dynamic-extent (function continue-fn) (function loop-fn) (function next-offset-fn) (function offset-adjust-fn)))
-                    (call-with-offset-loop #'continue-fn #'loop-fn #'next-offset-fn #'offset-adjust-fn))))))
-          (do-with-cleaners ((read-regexp-file "text-clean-regexps.js") scanner replacement)
-            (let ((replacements 0)
-                  (replacement-list nil)
-                  (original-length (length whole-string-output)))
-              (declare (type fixnum replacements))
-              (ppcre:do-scans (match-start match-end reg-starts reg-ends scanner whole-string-output)
-                              (declare (type fixnum match-start match-end)
-                                       (type simple-vector reg-starts reg-ends))
-                              (incf replacements)
-                              (push
-                                (list (if (and (> (length reg-starts) 0) (eq (aref reg-starts 0) match-start))
-                                          (aref reg-ends 0)
-                                          match-start)
-                                      (if (and (> (length reg-starts) 0) (eq (aref reg-ends (- (length reg-ends) 1)) match-end))
-                                          (aref reg-starts (- (length reg-starts) 1))
-                                          match-end))
-                                replacement-list))
-              (setf replacement-list (nreverse replacement-list))
-              (setf whole-string-output (ppcre:regex-replace-all scanner whole-string-output replacement))
-              (let ((length-difference (- (length whole-string-output) original-length))
-                    (length-change 0))
-                (declare (type fixnum length-difference length-change))
-                (offset-loop
-                  (current-replacement replacement-list)
-                  ((setf length-change (round length-difference replacements)
-                         length-difference (- length-difference length-change)
-                         replacements (- replacements 1)))
-                  ((destructuring-bind (start end) current-replacement
-                     (declare (type fixnum start end))
-                     (round (+ start end) 2)))
-                  ((output-offset) (max 0 (+ output-offset length-change)))))))
-          (multiple-value-bind (hyphenated-string hyphenation-list) (hyphenate-string whole-string-output)
-            (setf whole-string-output hyphenated-string)
-            (offset-loop
-              (current-hyphenation hyphenation-list)
-              ()
-              (current-hyphenation)
-              ((output-offset) (1+ output-offset))))))
-      (let ((current-offset 0))
-        (declare (type (or null fixnum) current-offset))
-        (plump:traverse
-          root
-          (lambda (node)
-            (typecase node
-              (plump:text-node
-                (let ((next-offset (if offset-list (+ current-offset (the fixnum (first offset-list))) nil)))
-                  (declare (type (or null fixnum) next-offset))
-                  (setf (plump:text node) (subseq whole-string-output current-offset next-offset)
-                        current-offset next-offset
-                        offset-list (cdr offset-list))))))))))
+    (labels
+      ((cleanablep (node)
+         (and (plump:text-node-p node)
+              (text-class-is-not node "mjx-math"))))
+      (declare (dynamic-extent (function cleanablep)))
+      (let* ((offset-list nil)
+             (whole-string-input
+               (with-output-to-string (stream)
+                 (plump:traverse
+                   root
+                   (lambda (node)
+                     (push (length (the string (plump:text node))) offset-list)
+                     (write-string (plump:text node) stream))
+                   :test #'cleanablep)))
+             (whole-string-output whole-string-input))
+        (declare (type string whole-string-output whole-string-input))
+        (setf offset-list (nreverse offset-list))
+        (labels
+          ((call-with-offset-loop (continue-fn loop-fn next-offset-fn offset-adjust-fn)
+             (loop with current-offset = offset-list
+                   with output-offset of-type (or null fixnum) = (first current-offset)
+                   with output-offset-list = nil
+                   with total-offset of-type fixnum = 0
+                   while (funcall continue-fn)
+                   do (funcall loop-fn)
+                   do (loop for current-offset-num of-type fixnum = (first current-offset)
+                            while (and (rest current-offset) (< (+ total-offset current-offset-num) (funcall next-offset-fn)))
+                            do (progn
+                                 (push output-offset output-offset-list)
+                                 (setf total-offset (+ total-offset current-offset-num)
+                                       current-offset (cdr current-offset)
+                                       output-offset (first current-offset))))
+                   do (setf output-offset (funcall offset-adjust-fn output-offset))
+                   finally (progn
+                             (push output-offset output-offset-list)
+                             (loop for x in (rest current-offset) do (push x output-offset-list))
+                             (setf offset-list (nreverse output-offset-list))))
+             (values)))
+          (declare (dynamic-extent (function call-with-offset-loop))
+                   (ftype (function ((function ()) (function ()) (function () fixnum) (function (fixnum) fixnum)) (values)) call-with-offset-loop))
+          (macrolet
+            ((offset-loop ((list-binding list-form) (&body loop-body) (&body next-offset-body) (&body offset-adjust-body))
+               (with-gensyms (list-current)
+                             `(let ((,list-current ,list-form)
+                                    (,list-binding))
+                                (labels ((continue-fn () (if ,list-current (setf ,list-binding (pop ,list-current))))
+                                         (loop-fn () ,.loop-body)
+                                         (next-offset-fn () ,.next-offset-body)
+                                         (offset-adjust-fn ,(first offset-adjust-body) (declare (type fixnum ,(caar offset-adjust-body)) (values fixnum)) ,.(rest offset-adjust-body)))
+                                  (declare (dynamic-extent (function continue-fn) (function loop-fn) (function next-offset-fn) (function offset-adjust-fn)))
+                                  (call-with-offset-loop #'continue-fn #'loop-fn #'next-offset-fn #'offset-adjust-fn))))))
+            (do-with-cleaners ((read-regexp-file "text-clean-regexps.js") scanner replacement)
+              (let ((replacements 0)
+                    (replacement-list nil)
+                    (original-length (length whole-string-output)))
+                (declare (type fixnum replacements))
+                (ppcre:do-scans (match-start match-end reg-starts reg-ends scanner whole-string-output)
+                                (declare (type fixnum match-start match-end)
+                                         (type simple-vector reg-starts reg-ends))
+                                (incf replacements)
+                                (push
+                                  (list (if (and (> (length reg-starts) 0) (eq (aref reg-starts 0) match-start))
+                                            (aref reg-ends 0)
+                                            match-start)
+                                        (if (and (> (length reg-starts) 0) (eq (aref reg-ends (- (length reg-ends) 1)) match-end))
+                                            (aref reg-starts (- (length reg-starts) 1))
+                                            match-end))
+                                  replacement-list))
+                (setf replacement-list (nreverse replacement-list))
+                (setf whole-string-output (ppcre:regex-replace-all scanner whole-string-output replacement))
+                (let ((length-difference (- (length whole-string-output) original-length))
+                      (length-change 0))
+                  (declare (type fixnum length-difference length-change))
+                  (offset-loop
+                    (current-replacement replacement-list)
+                    ((setf length-change (round length-difference replacements)
+                           length-difference (- length-difference length-change)
+                           replacements (- replacements 1)))
+                    ((destructuring-bind (start end) current-replacement
+                       (declare (type fixnum start end))
+                       (round (+ start end) 2)))
+                    ((output-offset) (max 0 (+ output-offset length-change)))))))
+            (multiple-value-bind (hyphenated-string hyphenation-list) (hyphenate-string whole-string-output)
+              (setf whole-string-output hyphenated-string)
+              (offset-loop
+                (current-hyphenation hyphenation-list)
+                ()
+                (current-hyphenation)
+                ((output-offset) (1+ output-offset))))))
+        (let ((current-offset 0))
+          (declare (type (or null fixnum) current-offset))
+          (plump:traverse
+            root
+            (lambda (node)
+              (let ((output-length (length whole-string-output))
+                    (next-offset (if offset-list (+ current-offset (the fixnum (first offset-list))) nil)))
+                (declare (type (or null fixnum) next-offset))
+                (setf (plump:text node) (subseq whole-string-output (min current-offset output-length) (and next-offset (min next-offset output-length)))
+                      current-offset next-offset
+                      offset-list (cdr offset-list))))
+            :test #'cleanablep)))))
   root)
 
 (define-lmdb-memoized clean-html (:sources ("src/clean-html.lisp" "src/links.lisp" "text-clean-regexps.js" "html-clean-regexps.js")) (in-html &key with-toc post-id)
@@ -238,23 +257,12 @@
                (setf (plump:children new-element) (plump:clone-children node t new-element)
                      (plump:children node) (plump:make-child-array))
                (plump:append-child node new-element)))
-	   (class-is-not (node &rest args)
-			 (declare (type plump:node node)
-				  (dynamic-extent args))
-			 (or
-			   (typep node 'plump:root)
-			   (and (not (intersection (split-sequence #\Space (or (plump:attribute node "class") "")) args :test #'string=))
-				(or (null (plump:parent node)) (apply #'class-is-not (cons (plump:parent node) args))))))
 	   (text-node-is-not (node &rest args)
 			     (declare (type plump:node node) 
 				      (dynamic-extent args)) 
 			     (or
 			       (typep (plump:parent node) 'plump:root)
 			       (every (lambda (x) (string/= (plump:tag-name (plump:parent node)) x)) args)))
-	   (text-class-is-not (node &rest args)
-			      (declare (type plump:node node)
-				       (dynamic-extent args))
-			      (apply #'class-is-not (cons (plump:parent node) args)))
 	   (string-is-whitespace (string)
 				 (every (lambda (c) (cl-unicode:has-binary-property c "White_Space")) string))
            (first-non-whitespace-child (node)
@@ -296,7 +304,7 @@
 				 (if style-list
 				   (format nil "<style>~{~A~}</style>" style-list)
 				   ""))))
-    (declare (ftype (function (plump:node &rest simple-string) boolean) tag-is only-child-is is-child-of-tag class-is-not text-node-is-not text-class-is-not))
+    (declare (ftype (function (plump:node &rest simple-string) boolean) tag-is only-child-is is-child-of-tag text-node-is-not))
     (handler-bind
       (((or plump:invalid-xml-character plump:discouraged-xml-character) #'abort))
       (alexandria:if-let
