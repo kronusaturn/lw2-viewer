@@ -2415,19 +2415,24 @@ function renderEasyTables() {
 		if (lines.length == 0 || !lines[0].hasPrefix("TABLE")) return;
 		
 		let separator = /tsv/i.test(lines[0]) ? "\t" : ",";
+		let enable_colspan = /colspan/i.test(lines[0]);
 		
 		var tableHTML = "<table><tbody>";
 		lines.slice(1).forEach(line => {
 			var cells = line.split(separator);
 			for (var i = 0; i < cells.length; i++) {
-				var colspan = 1;
-				if (cells[i]) {
-					for (var j = i + 1; j < cells.length; j++)
-						if (!cells[j])
-							colspan++;
-						else
-							break;
-					cells[i] = "<td" + (colspan > 1 ? ` colspan='${colspan}'>` : `>`) + cells[i] + "</td>";
+				if (enable_colspan) {
+					var colspan = 1;
+					if (cells[i]) {
+						for (var j = i + 1; j < cells.length; j++)
+							if (!cells[j])
+								colspan++;
+							else
+								break;
+						cells[i] = "<td" + (colspan > 1 ? ` colspan='${colspan}'>` : `>`) + cells[i] + "</td>";
+					}
+				} else {
+					cells[i] = "<td>" + cells[i] + "</td>";
 				}
 			}
 			var row = "<tr>" + cells.join("") + "</tr>";
