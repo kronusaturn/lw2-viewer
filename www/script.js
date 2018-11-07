@@ -2414,7 +2414,7 @@ function focusedImageScrolled(event) {
 
 	// Set the cursor appropriately.
 	image.style.cursor = (image.height >= window.innerHeight || image.width >= window.innerWidth) ? 
-						 'move' : 'default';
+						 'move' : '';
 }
 function oldFirefoxCompatibilityScrollEventFired(event) {
 	event.preventDefault();

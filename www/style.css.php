@@ -2900,6 +2900,7 @@ li {
 	bottom: 0;
 	left: 0;
 	display: none;
+	cursor: zoom-out;
 }
 #image-focus-overlay::before {
 	content: "";
