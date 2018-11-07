@@ -2476,6 +2476,7 @@ String.prototype.hasPrefix = function (prefix) {
 /*******************************/
 
 function MarkdownFromHTML(text) {
+	// Wrapper tags, paragraphs, bold, italic, code blocks.
 	text = text.replace(/<(.+?)(?:\s(.+?))?>/g, (match, tag, attributes, offset, string) => {
 		switch(tag) {
 		case "html":
@@ -2501,20 +2502,35 @@ function MarkdownFromHTML(text) {
 			return match;
 		}
 	});
+
+	// Unordered lists.
 	text = text.replace(/<ul>((?:.|\n)+?)<\/ul>/g, (match, listItems, offset, string) => {
 		return listItems.replace(/<li>((?:.|\n)+?)<\/li>/g, (match, listItem, offset, string) => {
 			return "* " + listItem + "\n";
 		});
 	});
+
+	// Headings.
 	text = text.replace(/<h([1-9])>(.+?)<\/h[1-9]>/g, (match, level, headingText, offset, string) => {
 		return { "1":"#", "2":"##", "3":"###" }[level] + " " + headingText + "\n";
 	});
+
+	// Blockquotes.
 	text = text.replace(/<blockquote>((?:.|\n)+?)<\/blockquote>/g, (match, quotedText, offset, string) => {
 		return "> " + quotedText.trim().split("\n").join("\n> ") + "\n";
 	});
-	return text.replace(/<a href="(.+?)">(.+?)<\/a>/g, (match, href, text, offset, string) => {
+
+	// Links.
+	text = text.replace(/<a href="(.+?)">(.+?)<\/a>/g, (match, href, text, offset, string) => {
 		return `[${text}](${href})`;
 	}).trim();
+
+	// Horizontal rules.
+	text = text.replace(/<hr(.+?)\/?>/g, (match, offset, string) => {
+		return "\n---\n";
+	});
+
+	return text;
 }
 
 /******************/
