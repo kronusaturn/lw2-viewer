@@ -2420,8 +2420,7 @@ function renderEasyTables() {
 		
 		var tableHTML = "<table>";
 
-		var caption = /caption=[“"](.+?)[”"]/i.exec(first_line);
-		caption = caption.length == 2 ? caption[1] : "";
+		var caption = (/caption=[“"](.+?)[”"]/i.exec(first_line)||{})[1];
 		if (caption) tableHTML += `<caption>${caption}</caption>`;
 
 		tableHTML += "<tbody>";
