@@ -2924,14 +2924,20 @@ function generateImagesOverlay() {
 	let imagesOverlay = document.querySelector("#images-overlay");
 	let imagesOverlayLeftOffset = imagesOverlay.getBoundingClientRect().left;
 	document.querySelectorAll(".post-body img").forEach(image => {
+		image.style = "";
+		image.className = "";
+	
 		let clonedImageContainer = document.createElement("div");
+		
 		let clonedImage = image.cloneNode(true);
 		clonedImage.style.border = getComputedStyle(image).border;
 		clonedImageContainer.appendChild(clonedImage);
+		
 		clonedImageContainer.style.top = image.getBoundingClientRect().top - parseFloat(getComputedStyle(image).marginTop) + window.scrollY + "px";
 		clonedImageContainer.style.left = image.getBoundingClientRect().left - parseFloat(getComputedStyle(image).marginLeft) - imagesOverlayLeftOffset + "px";
 		clonedImageContainer.style.width = image.getBoundingClientRect().width + "px";
 		clonedImageContainer.style.height = image.getBoundingClientRect().height + "px";
+		
 		imagesOverlay.appendChild(clonedImageContainer);
 	});
 
