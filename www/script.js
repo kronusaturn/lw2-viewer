@@ -2421,6 +2421,9 @@ function renderEasyTables() {
 		lines.slice(1).forEach(line => {
 			var cells = line.split(separator);
 			for (var i = 0; i < cells.length; i++) {
+				let tag = cells[i].hasPrefix("!") ? "th" : "td";
+				if (tag == "th") cells[i] = cells[i].slice(1);
+				
 				if (enable_colspan) {
 					var colspan = 1;
 					if (cells[i]) {
@@ -2429,10 +2432,10 @@ function renderEasyTables() {
 								colspan++;
 							else
 								break;
-						cells[i] = "<td" + (colspan > 1 ? ` colspan='${colspan}'>` : `>`) + cells[i] + "</td>";
+						cells[i] = `<${tag}` + (colspan > 1 ? ` colspan='${colspan}'` : ``) + `>${cells[i]}</${tag}>`;
 					}
 				} else {
-					cells[i] = "<td>" + cells[i] + "</td>";
+					cells[i] = `<${tag}>${cells[i]}</${tag}>`;
 				}
 			}
 			var row = "<tr>" + cells.join("") + "</tr>";
