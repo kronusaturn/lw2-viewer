@@ -2413,11 +2413,19 @@ function renderEasyTables() {
 	document.querySelectorAll("pre code").forEach(codeBlock => {
 		let lines = codeBlock.textContent.trim().split("\n");
 		if (lines.length == 0 || !lines[0].hasPrefix("TABLE")) return;
+
+		let first_line = lines[0].replace(/\u00ad/,"");
+		let separator = /tsv/i.test(first_line) ? "\t" : ",";
+		let enable_colspan = /colspan/i.test(first_line);
 		
-		let separator = /tsv/i.test(lines[0]) ? "\t" : ",";
-		let enable_colspan = /colspan/i.test(lines[0]);
+		var tableHTML = "<table>";
+
+		var caption = /caption=[“"](.+?)[”"]/i.exec(first_line);
+		caption = caption.length == 2 ? caption[1] : "";
+		if (caption) tableHTML += `<caption>${caption}</caption>`;
+
+		tableHTML += "<tbody>";
 		
-		var tableHTML = "<table><tbody>";
 		lines.slice(1).forEach(line => {
 			var cells = line.split(separator);
 			for (var i = 0; i < cells.length; i++) {
@@ -2441,6 +2449,7 @@ function renderEasyTables() {
 			var row = "<tr>" + cells.join("") + "</tr>";
 			tableHTML += row;
 		});
+		
 		tableHTML += "</tbody></table>";
 
 		let table = document.createElement("table");
