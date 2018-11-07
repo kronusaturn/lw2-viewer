@@ -690,6 +690,9 @@ signaled condition to OUT-STREAM."
                   :bottom-bar-html bottom-bar-html))
       (force-output out-stream))))
 
+(defun set-cookie (key value &key (max-age (- (expt 2 31) 1)) (path "/"))
+  (hunchentoot:set-cookie key :value value :path path :max-age max-age :secure *secure-cookies*))
+
 (defun set-default-headers (return-code)
   (let ((push-option (if (hunchentoot:cookie-in "push") '("nopush"))))
     (setf (hunchentoot:content-type*) "text/html; charset=utf-8"
@@ -700,7 +703,7 @@ signaled condition to OUT-STREAM."
                                                    ,.(loop for link in (generate-fonts-links)
                                                            collect (list* link "text/css" "style" push-option))
                                                    (,(generate-versioned-link "/script.js") "text/javascript" "script" ,.push-option))))
-    (unless push-option (hunchentoot:set-cookie "push" :max-age (* 4 60 60) :secure *secure-cookies* :value "t"))))
+    (unless push-option (set-cookie "push" "t" :max-age (* 4 60 60)))))
 
 (defun user-pref (key)
   (or (cdr (assoc key *current-prefs*))
@@ -709,7 +712,7 @@ signaled condition to OUT-STREAM."
 (defun set-user-pref (key value)
   (assert (boundp 'hunchentoot:*reply*))
   (setf *current-prefs* (remove-duplicates (acons key value *current-prefs*) :key #'car :from-end t))
-  (hunchentoot:set-cookie "prefs" :max-age (- (expt 2 31) 1) :secure *secure-cookies* :value (quri:url-encode (json:encode-json-to-string *current-prefs*))))
+  (set-cookie "prefs" (quri:url-encode (json:encode-json-to-string *current-prefs*))))
 
 (defmacro emit-page ((out-stream &rest args &key (return-code 200) (top-nav (gensym) top-nav-supplied) &allow-other-keys) &body body)
   (alexandria:once-only (return-code)
@@ -1319,7 +1322,7 @@ signaled condition to OUT-STREAM."
                     (with-outputs (out-stream) "<div class=\"login-tip\"><span>Tip:</span> You can log in with the same username and password that you use on LessWrong. Creating an account here also creates one on LessWrong.</div></div>")))))
     (cond
       ((not (or cookie-check (hunchentoot:cookie-in "session-token")))
-        (hunchentoot:set-cookie "session-token" :max-age (- (expt 2 31) 1) :secure *secure-cookies* :value (base64:usb8-array-to-base64-string (ironclad:make-random-salt)))
+        (set-cookie "session-token" (base64:usb8-array-to-base64-string (ironclad:make-random-salt)))
         (setf (hunchentoot:return-code*) 303
               (hunchentoot:header-out "Location") (format nil "/login?~@[return=~A&~]cookie-check=y" (if return (url-rewrite:url-encode return))))) 
       (cookie-check
@@ -1335,8 +1338,8 @@ signaled condition to OUT-STREAM."
           (t (multiple-value-bind (user-id auth-token error-message expires) (do-login "username" login-username login-password)
                (cond
                  (auth-token
-                   (hunchentoot:set-cookie "lw2-auth-token" :value auth-token :secure *secure-cookies* :max-age (and expires (+ (- expires (get-unix-time)) (* 24 60 60))))
-                   (if expires (hunchentoot:set-cookie "lw2-status" :value (json:encode-json-to-string (alist :expires expires)) :secure *secure-cookies* :max-age (- (expt 2 31) 1)))
+                   (set-cookie "lw2-auth-token" auth-token :max-age (and expires (+ (- expires (get-unix-time)) (* 24 60 60))))
+                   (if expires (set-cookie "lw2-status" (json:encode-json-to-string (alist :expires expires))))
                    (cache-put "auth-token-to-userid" auth-token user-id)
                    (cache-put "auth-token-to-username" auth-token login-username)
                    (setf (hunchentoot:return-code*) 303
@@ -1354,8 +1357,8 @@ signaled condition to OUT-STREAM."
                (cond
                  (error-message (emit-login-page :error-message error-message))
                  (t
-                  (hunchentoot:set-cookie "lw2-auth-token" :value auth-token :secure *secure-cookies* :max-age (+ (- expires (get-unix-time)) (* 24 60 60)))
-                  (hunchentoot:set-cookie "lw2-status" :value (json:encode-json-to-string (alist :expires expires)) :secure *secure-cookies* :max-age (- (expt 2 31) 1))
+                  (set-cookie "lw2-auth-token" auth-token :max-age (+ (- expires (get-unix-time)) (* 24 60 60)))
+                  (set-cookie "lw2-status" (json:encode-json-to-string (alist :expires expires)))
                   (cache-put "auth-token-to-userid" auth-token user-id)
                   (cache-put "auth-token-to-username" auth-token signup-username)
                   (setf (hunchentoot:return-code*) 303
@@ -1365,7 +1368,7 @@ signaled condition to OUT-STREAM."
 
 (define-page view-logout "/logout" ((logout :request-type :post))
   (check-csrf-token logout)
-  (hunchentoot:set-cookie "lw2-auth-token" :value "" :secure *secure-cookies* :max-age 0)
+  (set-cookie "lw2-auth-token" "" :max-age 0)
   (redirect "/"))
 
 (defparameter *reset-password-template* (compile-template* "reset-password.html"))
