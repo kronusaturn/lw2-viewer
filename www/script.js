@@ -1966,6 +1966,11 @@ function sortComments(mode) {
 		});
 	}
 
+	// Re-activate comment-minimize buttons.
+	document.querySelectorAll(".comment-minimize-button").forEach(button => {
+		button.addActivateEvent(commentMinimizeButtonClicked);
+	});
+
 	// Re-add comment parent popups.
 	addCommentParentPopups();
 
