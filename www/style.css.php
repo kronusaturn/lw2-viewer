@@ -3406,6 +3406,51 @@ li {
 	}
 }
 
+/**************/
+/* PRINT VIEW */
+/**************/
+
+@media only print {
+	.nav-bar {
+		visibility: hidden;
+		max-height: 0;
+		overflow: hidden;
+	}
+	#ui-elements-container {
+		display: none;
+	}
+	#images-overlay {
+		display: none;
+	}
+	#images-overlay + #content .post-body img {
+		visibility: visible;
+	}
+	.comment-controls {
+		display: none;
+	}
+	#comments-sort-mode-selector {
+		display: none;
+	}
+	.comment-minimize-button {
+		display: none;
+	}
+	.post-meta .qualified-linking,
+	.post-meta .lw2-link {
+		display: none;
+	}
+	.comment-meta .permalink,
+	.comment-meta .lw2-link,
+	.comment-meta .comment-parent-link {
+		display: none;
+	}
+	.new-comment::before {
+		display: none;
+	}
+	#content {
+		box-shadow: none;
+	}
+}
+
 <?php include("style_mobile_additions.css.php"); ?>
 
 <?php if (isset($argv[2]) && preg_match("/\\.css(.php)?$/", $argv[2])) include($argv[2]); ?>
