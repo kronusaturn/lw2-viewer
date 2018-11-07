@@ -2107,15 +2107,20 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 	if (typeof(window.msMatchMedia || window.MozMatchMedia || window.WebkitMatchMedia || window.matchMedia) !== 'undefined') {
 		window.matchMedia('(orientation: portrait)').addListener(() => { setTimeout(resetFocusedImagePosition, 0); });
 	}
+
+	// UI starts out hidden.
+	hideImageFocusUI();
 }
 
 function imageClickedToFocus(event) {
 	focusImage(event.target);
 
-	document.querySelector("#image-focus-overlay .image-number").textContent = (getIndexOfFocusedImage() + 1);
+	if (event.target.closest("#images-overlay")) {
+		document.querySelector("#image-focus-overlay .image-number").textContent = (getIndexOfFocusedImage() + 1);
 
-	// Set timer to hide the image focus UI.
-	resetImageFocusHideUITimer(true);
+		// Set timer to hide the image focus UI.
+		resetImageFocusHideUITimer(true);
+	}
 }
 
 function focusImage(image) {
@@ -2175,17 +2180,24 @@ function focusImage(image) {
 	// Prevent spacebar or arrow keys from scrolling page when image focused.
 	document.addEventListener("keydown", keyDownWhenImageFocused);
 
-	// Set state of next/previous buttons.
-	let images = document.querySelectorAll("#images-overlay img");
-	var indexOfFocusedImage = getIndexOfFocusedImage();
-	imageFocusOverlay.querySelector(".slideshow-button.previous").disabled = (indexOfFocusedImage == 0);
-	imageFocusOverlay.querySelector(".slideshow-button.next").disabled = (indexOfFocusedImage == images.length - 1);
+	if (image.closest("#images-overlay")) {
+		// Set state of next/previous buttons.
+		let images = document.querySelectorAll("#images-overlay img");
+		var indexOfFocusedImage = getIndexOfFocusedImage();
+		imageFocusOverlay.querySelector(".slideshow-button.previous").disabled = (indexOfFocusedImage == 0);
+		imageFocusOverlay.querySelector(".slideshow-button.next").disabled = (indexOfFocusedImage == images.length - 1);
 
-	// Moving mouse unhides image focus UI.
-	window.addEventListener("mousemove", mouseMovedWhenImageFocused);
-	
-	// Replace the hash.
-	history.replaceState(null, null, "#if_slide_" + (indexOfFocusedImage + 1));
+		// Moving mouse unhides image focus UI.
+		window.addEventListener("mousemove", mouseMovedWhenImageFocused);
+
+		// Unhide the UI.
+		unhideImageFocusUI();
+
+		// Replace the hash.
+		history.replaceState(null, null, "#if_slide_" + (indexOfFocusedImage + 1));
+	} else {
+		
+	}
 }
 
 function resetFocusedImagePosition() {
@@ -2211,6 +2223,9 @@ function resetFocusedImagePosition() {
 }
 
 function unfocusImageOverlay() {
+	// Hide the UI.
+	hideImageFocusUI();
+
 	// Set accesskey of currently focused image (if it's in the images overlay).
 	let currentlyFocusedImage = document.querySelector("#images-overlay img.focused");
 	if (currentlyFocusedImage) {
@@ -2996,7 +3011,7 @@ function focusImageSpecifiedByURL() {
 	if (location.hash.hasPrefix("#if_slide_")) {
 		let images = document.querySelectorAll("#images-overlay img");
 		let imageToFocus = (/#if_slide_([0-9]+)/.exec(location.hash)||{})[1];
-		if (imageToFocus && imageToFocus <= images.length) {
+		if (imageToFocus > 0 && imageToFocus <= images.length) {
 			focusImage(images[imageToFocus - 1]);
 		}
 	}

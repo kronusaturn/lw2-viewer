@@ -2877,7 +2877,6 @@ li {
 
 #images-overlay img {
 	width: 100%;
-	cursor: zoom-in;
 }
 
 /***************/
@@ -2887,6 +2886,7 @@ li {
 #content img:hover,
 #images-overlay img:hover {
 	filter: drop-shadow(0 0 3px #777);
+	cursor: zoom-in;
 }
 #content img:active,
 #images-overlay img:active {
