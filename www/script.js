@@ -2255,6 +2255,10 @@ function unfocusImageOverlay() {
 	document.removeEventListener("keyup", keyPressedWhenImageFocused);
 	document.removeEventListener("keydown", keyDownWhenImageFocused);
 	window.removeEventListener("mousemove", mouseMovedWhenImageFocused);
+
+	// Reset the hash, if needed.
+	if (location.hash.hasPrefix("#if_slide_"))
+		history.replaceState(null, null, "#");
 }
 
 function getIndexOfFocusedImage() {
