@@ -1,6 +1,6 @@
 (uiop:define-package #:lw2-viewer
   (:use #:cl #:sb-thread #:flexi-streams #:djula #:lw2-viewer.config #:lw2.utils #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login)
-  (:unintern #:define-regex-handler #:*fonts-sytlesheet-uri* #:generate-fonts-link))
+  (:unintern #:define-regex-handler #:*fonts-stylesheet-uri* #:generate-fonts-link))
 
 (in-package #:lw2-viewer) 
 
@@ -462,7 +462,7 @@ signaled condition to OUT-STREAM."
                         (new-redirects (loop for new-redirect in new-redirects
                                              for original-uri in *fonts-stylesheet-uris*
                                              collect (if new-redirect (quri:render-uri (quri:merge-uris (quri:uri new-redirect) (quri:uri original-uri))) original-uri))))
-                   (with-mutex (*fonts-redirect-lock*) (setf *fonts-redirect-data* (list *fonts-stylesheet-uri* new-redirects current-time)
+                   (with-mutex (*fonts-redirect-lock*) (setf *fonts-redirect-data* (list *fonts-stylesheet-uris* new-redirects current-time)
                                                              *fonts-redirect-thread* nil))
                    new-redirects)
                  (serious-condition () *fonts-stylesheet-uris*))))
