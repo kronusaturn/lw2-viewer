@@ -21,8 +21,6 @@
 	}
 ?>
 
-@import url("https://fonts.greaterwrong.com/?fonts=Inconsolata,BitmapFonts,FontAwesomeGW&base64encode=1");
-
 /***************/
 /* BASE LAYOUT */
 /***************/

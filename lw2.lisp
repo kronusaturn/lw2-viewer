@@ -1,6 +1,6 @@
 (uiop:define-package #:lw2-viewer
   (:use #:cl #:sb-thread #:flexi-streams #:djula #:lw2-viewer.config #:lw2.utils #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login)
-  (:unintern #:define-regex-handler))
+  (:unintern #:define-regex-handler #:*fonts-sytlesheet-uri* #:generate-fonts-link))
 
 (in-package #:lw2-viewer) 
 
@@ -436,38 +436,43 @@ signaled condition to OUT-STREAM."
                        :link (generate-post-link (cdr (assoc :post-id item)) (cdr (assoc :--id item)) t)
                        :body (clean-html (cdr (assoc :html-body item))))))))))
 
-(defparameter *fonts-stylesheet-uri* "https://fonts.greaterwrong.com/?fonts=Charter,Concourse,a_Avante,Whitney,MundoSans,SourceSansPro,Raleway,ProximaNova,AnonymousPro,InputSans,InputSansNarrow,InputSansCondensed,GaramondPremierPro,ProximaNova,TradeGothic,NewsGothicBT,Caecilia,SourceSerifPro,SourceCodePro")
-(defparameter *fonts-stylesheet-uri* "https://fonts.greaterwrong.com/?fonts=*")
+(defparameter *fonts-stylesheet-uris*
+  '("https://fonts.greaterwrong.com/?fonts=Charter,Concourse,a_Avante,Whitney,MundoSans,SourceSansPro,Raleway,ProximaNova,AnonymousPro,InputSans,InputSansNarrow,InputSansCondensed,GaramondPremierPro,ProximaNova,TradeGothic,NewsGothicBT,Caecilia,SourceSerifPro,SourceCodePro"
+    "https://fonts.greaterwrong.com/?fonts=Inconsolata,BitmapFonts,FontAwesomeGW&base64encode=1"))
+;(defparameter *fonts-stylesheet-uris* '("https://fonts.greaterwrong.com/?fonts=*"))
 
 (defvar *fonts-redirect-data* nil)
 (sb-ext:defglobal *fonts-redirect-lock* (make-mutex))
 (sb-ext:defglobal *fonts-redirect-thread* nil)
 
-(defun generate-fonts-link ()
+(defun generate-fonts-links ()
   (let ((current-time (get-unix-time)))
-    (labels ((get-redirect (uri)
-               (multiple-value-bind (body status headers uri)
-                 (drakma:http-request uri :method :head :close t :redirect nil :additional-headers (alist :referer *site-uri* :accept "text/css,*/*;q=0.1"))
-                 (declare (ignore body uri))
-                 (let ((location (cdr (assoc :location headers))))
-                   (if (and (typep status 'integer) (< 300 status 400) location)
-                       location
-                       nil))))
-             (update-redirect ()
+    (labels ((get-redirects (uri-list)
+               (loop for request-uri in uri-list collect
+                     (multiple-value-bind (body status headers uri)
+                       (drakma:http-request request-uri :method :head :close t :redirect nil :additional-headers (alist :referer *site-uri* :accept "text/css,*/*;q=0.1"))
+                       (declare (ignore body uri))
+                       (let ((location (cdr (assoc :location headers))))
+                         (if (and (typep status 'integer) (< 300 status 400) location)
+                             location
+                             nil)))))
+             (update-redirects ()
                (handler-case
-                 (let* ((new-redirect (get-redirect *fonts-stylesheet-uri*))
-                        (new-redirect (if new-redirect (quri:render-uri (quri:merge-uris (quri:uri new-redirect) (quri:uri *fonts-stylesheet-uri*))) *fonts-stylesheet-uri*)))
-                   (with-mutex (*fonts-redirect-lock*) (setf *fonts-redirect-data* (list *fonts-stylesheet-uri* new-redirect current-time)
+                 (let* ((new-redirects (get-redirects *fonts-stylesheet-uris*))
+                        (new-redirects (loop for new-redirect in new-redirects
+                                             for original-uri in *fonts-stylesheet-uris*
+                                             collect (if new-redirect (quri:render-uri (quri:merge-uris (quri:uri new-redirect) (quri:uri original-uri))) original-uri))))
+                   (with-mutex (*fonts-redirect-lock*) (setf *fonts-redirect-data* (list *fonts-stylesheet-uri* new-redirects current-time)
                                                              *fonts-redirect-thread* nil))
-                   new-redirect)
-                 (serious-condition () *fonts-stylesheet-uri*))))
-      (destructuring-bind (&optional base-uri redirect-uri timestamp) (with-mutex (*fonts-redirect-lock*) *fonts-redirect-data*)
-        (if (and (eq base-uri *fonts-stylesheet-uri*) timestamp)
+                   new-redirects)
+                 (serious-condition () *fonts-stylesheet-uris*))))
+      (destructuring-bind (&optional base-uris redirect-uris timestamp) (with-mutex (*fonts-redirect-lock*) *fonts-redirect-data*)
+        (if (and (eq base-uris *fonts-stylesheet-uris*) timestamp)
           (progn
             (if (>= current-time (+ timestamp 60))
-                (with-mutex (*fonts-redirect-lock*) (or *fonts-redirect-thread* (make-thread #'update-redirect :name "fonts redirect update"))))
-            (or redirect-uri *fonts-stylesheet-uri*))
-          (update-redirect))))))
+                (with-mutex (*fonts-redirect-lock*) (or *fonts-redirect-thread* (make-thread #'update-redirects :name "fonts redirect update"))))
+            (or redirect-uris *fonts-stylesheet-uris*))
+          (update-redirects))))))
 
 (defparameter *html-head*
   (format nil
@@ -548,12 +553,16 @@ signaled condition to OUT-STREAM."
                                      `("login" ,(format nil "/login?return=~A" (url-rewrite:url-encode current-uri)) "Log In" :accesskey "u" :nofollow t))))))
     (nav-bar-to-html current-uri)))
 
-(defun sublevel-nav-to-html (out-stream options current &key (base-uri (hunchentoot:request-uri*)) (param-name "show") (remove-params '("offset")) extra-class)
+(defun sublevel-nav-to-html (out-stream options current &key default (base-uri (hunchentoot:request-uri*)) (param-name "show") (remove-params '("offset")) extra-class)
   (declare (type (or null string) extra-class))
   (format out-stream "<div class=\"sublevel-nav~@[ ~A~]\">" extra-class)
-  (loop for (param-value text) in options
-        do (link-if-not out-stream (string= current param-value) (apply #'replace-query-params (list* base-uri param-name param-value (loop for x in remove-params nconc (list x nil))))
-                        "sublevel-item" text))
+  (loop for item in options
+        do (multiple-value-bind (param-value text) (if (atom item)
+                                                       (values (string-downcase item) (string-capitalize item))
+                                                       (values-list item))
+             (link-if-not out-stream (string-equal current param-value) (apply #'replace-query-params base-uri param-name (unless (string-equal param-value default) param-value)
+                                                                               (loop for x in remove-params nconc (list x nil)))
+                          "sublevel-item" text)))
   (format out-stream "</div>"))
 
 (defun make-csrf-token (&optional (session-token (hunchentoot:cookie-in "session-token")) (nonce (ironclad:make-random-salt)))
@@ -590,11 +599,11 @@ signaled condition to OUT-STREAM."
             csrf-token
             (load-time-value (with-open-file (s "www/head.js") (uiop:slurp-stream-string s)) t)
             *extra-inline-scripts*)
-    (format out-stream "~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"stylesheet\" href=\"~A\"><link rel=\"stylesheet\" href=\"~A\"><link rel=\"shortcut icon\" href=\"~A\">"
+    (format out-stream "~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"stylesheet\" href=\"~A\">~{<link rel=\"stylesheet\" href=\"~A\">~}<link rel=\"shortcut icon\" href=\"~A\">"
             *html-head*
             (generate-css-link)
             (generate-versioned-link "/theme_tweaker.css")
-            (generate-fonts-link)
+            (generate-fonts-links)
             (generate-versioned-link "/favicon.ico"))
     (format out-stream "<script src=\"~A\" async></script>~A"
             (generate-versioned-link "/script.js")
@@ -688,7 +697,8 @@ signaled condition to OUT-STREAM."
           (hunchentoot:header-out :link) (format nil "~:{<~A>;rel=preload;type=~A;as=~A~@{;~A~}~:^,~}"
                                                  `((,(generate-css-link) "text/css" "style" ,.push-option)
                                                    (,(generate-versioned-link "/theme_tweaker.css") "text/css" "style" ,.push-option)
-                                                   (,(generate-fonts-link) "text/css" "style" ,.push-option)
+                                                   ,.(loop for link in (generate-fonts-links)
+                                                           collect (list* link "text/css" "style" push-option))
                                                    (,(generate-versioned-link "/script.js") "text/javascript" "script" ,.push-option))))
     (unless push-option (hunchentoot:set-cookie "push" :max-age (* 4 60 60) :secure *secure-cookies* :value "t"))))
 
@@ -924,7 +934,7 @@ signaled condition to OUT-STREAM."
                                                             :title "Frontpage posts"
                                                             :new-post t)
                                       (sublevel-nav-to-html out-stream
-                                                            '(("new" "New") ("hot" "Hot"))
+                                                            '(:new :hot)
                                                             (user-pref :default-sort)
                                                             :param-name "sort"
                                                             :extra-class "sort"))))))
@@ -934,7 +944,7 @@ signaled condition to OUT-STREAM."
                                   (offset :type fixnum)
                                   (limit :type fixnum)
                                   (sort :member (:new :hot)))
-  (when (eq view :new) (redirect "/index?view=all" :type :permanent) (return))
+  (when (eq view :new) (redirect (replace-query-params (hunchentoot:request-uri*) "view" "all" "all" nil) :type :permanent) (return))
   (let ((sort-string (if sort (string-downcase sort))))
     (if sort-string
         (set-user-pref :default-sort sort-string)))
@@ -945,9 +955,9 @@ signaled condition to OUT-STREAM."
                                     (page-toolbar-to-html out-stream
                                                           :title page-title
                                                           :new-post (if (eq view :meta) "meta" t))
-                                    (if (string= view "new")
+                                    (if (member view '(:all))
                                         (sublevel-nav-to-html out-stream
-                                                              '(("new" "New") ("hot" "Hot"))
+                                                              '(:new :hot)
                                                               (user-pref :default-sort)
                                                               :param-name "sort"
                                                               :extra-class "sort"))))))
@@ -1118,7 +1128,7 @@ signaled condition to OUT-STREAM."
 
 (define-page view-user (:regex "^/users/(.*?)(?:$|\\?)|^/user" user-slug) (id
                                                                              (offset :type fixnum :default 0)
-                                                                             (show :member (:posts :comments :drafts :conversations :inbox))
+                                                                             (show :member (:all :posts :comments :drafts :conversations :inbox) :default :all)
                                                                              (sort :member (:top :new) :default :new))
                         (let* ((auth-token (if (eq show :inbox) *current-auth-token*))
                                (user-query-terms (cond
@@ -1134,7 +1144,7 @@ signaled condition to OUT-STREAM."
                                (own-user-page (logged-in-userid user-id))
                                (comments-index-fields (remove :page-url *comments-index-fields*)) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
                                (display-name (if user-slug (cdr (assoc :display-name user-info)) user-id))
-                               (show-text (if show (string-downcase show)))
+                               (show-text (if (not (eq show :all)) (string-capitalize show)))
                                (title (format nil "~A~@['s ~A~]" display-name show-text))
                                (sort-type (case sort (:top :score) (:new :date)))
                                (comments-base-terms (ecase sort-type (:score (load-time-value (alist :view "postCommentsTop"))) (:date (load-time-value (alist :view "allRecentComments")))))
@@ -1203,10 +1213,10 @@ signaled condition to OUT-STREAM."
                                                 (user-comments (lw2-graphql-query (lw2-query-string :comment :list (nconc (alist :limit (+ 1 (user-pref :items-per-page) offset) :user-id user-id) comments-base-terms) 
                                                                                                         comments-index-fields))))
                                             (concatenate 'list user-posts user-comments)))))
-                               (with-next (> (length items) (+ (if show 0 offset) (user-pref :items-per-page))))
-                               (interleave (if (not show) (comment-post-interleave items :limit (user-pref :items-per-page) :offset (if show nil offset) :sort-by sort-type) (firstn items (user-pref :items-per-page))))) ; this destructively sorts items
+                               (with-next (> (length items) (+ (if (eq show :all) offset 0) (user-pref :items-per-page))))
+                               (interleave (if (eq show :all) (comment-post-interleave items :limit (user-pref :items-per-page) :offset (if (eq show :all) offset nil) :sort-by sort-type) (firstn items (user-pref :items-per-page))))) ; this destructively sorts items
                           (view-items-index interleave :with-offset offset :title title
-                                            :content-class (format nil "user-page~@[ ~A-user-page~]~:[~; own-user-page~]" (if show show-text) own-user-page)
+                                            :content-class (format nil "user-page~@[ ~A-user-page~]~:[~; own-user-page~]" show-text own-user-page)
                                             :current-uri (format nil "/users/~A" user-slug)
                                             :section :personal
                                             :with-offset offset :with-next with-next
@@ -1226,14 +1236,16 @@ signaled condition to OUT-STREAM."
                                                                   (encode-entities display-name)
                                                                   (if user-slug (pretty-number (or (cdr (assoc :karma user-info)) 0)) "##"))
                                                           (sublevel-nav-to-html out-stream
-                                                                                `((nil "All") ("posts" "Posts") ("comments" "Comments")
+                                                                                `(:all :posts :comments
                                                                                               ,@(if own-user-page
-                                                                                                    '(("drafts" "Drafts") ("conversations" "Conversations") ("inbox" "Inbox"))))
-                                                                                show-text)
-                                                          (when (member show '(nil :posts :comments))
+                                                                                                    '(:drafts :conversations :inbox)))
+                                                                                show
+                                                                                :default :all)
+                                                          (when (member show '(:all :posts :comments))
                                                             (sublevel-nav-to-html out-stream
-                                                                                  `((nil "New") ("top" "Top"))
+                                                                                  '(:new :top)
                                                                                   sort
+                                                                                  :default :new
                                                                                   :param-name "sort"
                                                                                   :extra-class "sort"))))))
 
