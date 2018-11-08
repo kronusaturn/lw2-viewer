@@ -2275,10 +2275,30 @@ function focusNextImage(next = true) {
 	var indexOfFocusedImage = getIndexOfFocusedImage();
 
 	if (next ? (++indexOfFocusedImage == images.length) : (--indexOfFocusedImage == -1)) return;
-	unfocusImageOverlay();
-	focusImage(images[indexOfFocusedImage]);
 
+	// Remove existing image.
+	removeElement("#image-focus-overlay img");
+	// Unset "focused" class of just-removed image.
+	document.querySelectorAll("#content img.focused, #images-overlay img.focused").forEach(image => {
+		image.removeClass("focused");
+	});
+
+	// Create the focused version of the image.
+	images[indexOfFocusedImage].addClass("focused");
+	let imageFocusOverlay = document.querySelector("#image-focus-overlay");
+	let clonedImage = images[indexOfFocusedImage].cloneNode(true);
+	clonedImage.style = "";
+	imageFocusOverlay.appendChild(clonedImage);
+	imageFocusOverlay.addClass("engaged");
+	// Set image to default size and position.
+	resetFocusedImagePosition();
+	// Set state of next/previous buttons.
+	imageFocusOverlay.querySelector(".slideshow-button.previous").disabled = (indexOfFocusedImage == 0);
+	imageFocusOverlay.querySelector(".slideshow-button.next").disabled = (indexOfFocusedImage == images.length - 1);
+	// Set the image number display.
 	document.querySelector("#image-focus-overlay .image-number").textContent = (indexOfFocusedImage + 1);
+	// Replace the hash.
+	history.replaceState(null, null, "#if_slide_" + (indexOfFocusedImage + 1));
 }
 
 function hideImageFocusUI() {
