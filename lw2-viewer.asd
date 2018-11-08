@@ -11,7 +11,7 @@
                              (:file "links" :depends-on ("lmdb" "backend"))
 			     (:static-file "../text-clean-regexps.js")
 			     (:static-file "../html-clean-regexps.js")
-                             (:file "clean-html" :depends-on ("links" "lmdb" "../text-clean-regexps.js" "../html-clean-regexps.js"))
+                             (:file "clean-html" :depends-on ("utils" "links" "lmdb" "../text-clean-regexps.js" "../html-clean-regexps.js"))
                              (:file "lw2-login" :depends-on ("utils" "backend"))
                              (:file "backends/accordius" :depends-on ("backend" "lw2-login")))
                 :depends-on ("config"))
