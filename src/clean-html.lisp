@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.clean-html
-  (:use #:cl #:alexandria #:split-sequence #:lw2.lmdb #:lw2.links)
+  (:use #:cl #:alexandria #:split-sequence #:lw2.lmdb #:lw2.links #:lw2.utils)
   (:export #:clean-text #:clean-text-to-html #:clean-html #:clean-html*)
   (:unintern #:*text-clean-regexps* #:*html-clean-regexps*))
 
@@ -93,15 +93,24 @@
     (((or plump:invalid-xml-character plump:discouraged-xml-character) #'abort))
     (clean-html-regexps (plump:encode-entities (coerce (hyphenate-string (clean-text text)) 'simple-string)))))
 
-(declaim (ftype (function (plump:node &rest simple-string) boolean) class-is-not text-class-is-not))
+(declaim (ftype (function (plump:node &rest simple-string) boolean) tag-is class-is-not text-class-is-not))
+
+(defun tag-is (node &rest args)
+  (declare (type plump:node node)
+           (dynamic-extent args))
+  (let ((tag (plump:tag-name node)))
+    (to-boolean
+      (some (lambda (x) (string= tag x))
+            args))))
 
 (defun class-is-not (node &rest args)
   (declare (type plump:node node)
            (dynamic-extent args))
-  (or
-    (plump:root-p node)
-    (and (not (intersection (split-sequence #\Space (or (plump:attribute node "class") "")) args :test #'string=))
-         (or (null (plump:parent node)) (apply #'class-is-not (plump:parent node) args)))))
+  (to-boolean
+    (or
+      (plump:root-p node)
+      (and (not (intersection (split-sequence #\Space (or (plump:attribute node "class") "")) args :test #'string=))
+           (or (null (plump:parent node)) (apply #'class-is-not (plump:parent node) args))))))
 
 (defun text-class-is-not (node &rest args)
   (declare (type plump:node node)
@@ -112,19 +121,28 @@
   (handler-bind
     (((or plump:invalid-xml-character plump:discouraged-xml-character) #'abort))
     (labels
-      ((cleanablep (node)
+      ((recursep (node)
+         (and (plump:element-p node)
+              (ppcre:scan "^(?:p|div|blockquote|li|h[0-6])$" (plump:tag-name node))))
+       (cleanablep (node)
          (and (plump:text-node-p node)
-              (text-class-is-not node "mjx-math"))))
-      (declare (dynamic-extent (function cleanablep)))
+              (text-class-is-not node "mjx-math")))
+       (traverse (node main-fn &optional recurse-fn)
+         (when (cleanablep node) (funcall main-fn node))
+         (when (plump:nesting-node-p node)
+           (loop for n across (plump:children node)
+                 do (if (recursep n)
+                        (if recurse-fn (funcall recurse-fn n))
+                        (traverse n main-fn recurse-fn))))))
       (let* ((offset-list nil)
              (whole-string-input
                (with-output-to-string (stream)
-                 (plump:traverse
+                 (traverse
                    root
                    (lambda (node)
                      (push (length (the string (plump:text node))) offset-list)
                      (write-string (plump:text node) stream))
-                   :test #'cleanablep)))
+                   #'clean-dom-text)))
              (whole-string-output whole-string-input))
         (declare (type string whole-string-output whole-string-input))
         (setf offset-list (nreverse offset-list))
@@ -202,7 +220,7 @@
                 ((output-offset) (1+ output-offset))))))
         (let ((current-offset 0))
           (declare (type (or null fixnum) current-offset))
-          (plump:traverse
+          (traverse
             root
             (lambda (node)
               (let ((output-length (length whole-string-output))
@@ -211,20 +229,14 @@
                 (setf (plump:text node) (subseq whole-string-output (min current-offset output-length) (and next-offset (min next-offset output-length)))
                       current-offset next-offset
                       offset-list (cdr offset-list))))
-            :test #'cleanablep)))))
+            (lambda (node) (declare (ignore node))))))))
   root)
 
 (define-lmdb-memoized clean-html (:sources ("src/clean-html.lisp" "src/links.lisp" "text-clean-regexps.js" "html-clean-regexps.js")) (in-html &key with-toc post-id)
   (declare (ftype (function (plump:node) fixnum) plump:child-position)
            (ftype (function (plump:node) simple-array) plump:family)
            (ftype (function (plump:node) simple-string) plump:text plump:tag-name))
-  (labels ((tag-is (node &rest args)
-		   (declare (type plump:node node)
-			    (dynamic-extent args))
-		   (let ((tag (plump:tag-name node)))
-		     (some (lambda (x) (string= tag x))
-			   args))) 
-	   (only-child-is (node &rest args)
+  (labels ((only-child-is (node &rest args)
 			  (declare (type plump:node node)
 				   (dynamic-extent args)) 
 			  (and (= 1 (length (plump:children node)))
@@ -304,7 +316,7 @@
 				 (if style-list
 				   (format nil "<style>~{~A~}</style>" style-list)
 				   ""))))
-    (declare (ftype (function (plump:node &rest simple-string) boolean) tag-is only-child-is is-child-of-tag text-node-is-not))
+    (declare (ftype (function (plump:node &rest simple-string) boolean) only-child-is is-child-of-tag text-node-is-not))
     (handler-bind
       (((or plump:invalid-xml-character plump:discouraged-xml-character) #'abort))
       (alexandria:if-let
@@ -430,8 +442,7 @@
                                         (plump:remove-child node))
                                        ((tag-is node "script")
                                         (plump:remove-child node)))))))
-          (loop for node across (plump:children root)
-                do (clean-dom-text node))
+          (clean-dom-text root)
           (concatenate 'string (if (>= section-count 3) (contents-to-html (nreverse contents) min-header-level) "") 
                        (style-hash-to-html style-hash) 
                        (plump:serialize root nil)))))))

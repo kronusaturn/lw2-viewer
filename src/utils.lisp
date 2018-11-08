@@ -1,6 +1,6 @@
 (uiop:define-package #:lw2.utils
   (:use #:cl)
-  (:export #:alist #:get-unix-time #:substring)
+  (:export #:alist #:get-unix-time #:substring #:to-boolean)
   (:recycle #:lw2-viewer))
 
 (in-package #:lw2.utils)
@@ -17,3 +17,9 @@
          (ftype (function (string array-dimension-type &optional array-dimension-type) string) substring))
 (defun substring (string start &optional (end (length string)))
   (make-array (- end start) :element-type 'character :displaced-to string :displaced-index-offset start))
+
+
+(declaim (inline to-boolean))
+(defun to-boolean (value)
+  (and value t))
+
