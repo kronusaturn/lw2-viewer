@@ -2445,6 +2445,34 @@ function oldFirefoxCompatibilityScrollEventFired(event) {
 	event.preventDefault();
 }
 
+/******************************/
+/* EXTERNAL CONTENT EMBEDDING */
+/******************************/
+
+function embedPastebin() {
+	document.querySelectorAll("pre code").forEach(codeBlock => {
+		let lines = codeBlock.textContent.trim().split("\n");
+		if (lines.length == 0 || !lines[0].hasPrefix("PASTEBIN")) return;
+
+		let tokens = lines[0].replace(/\u00ad/,"").match(/(\S+)/g);
+		if (tokens.length < 2) {
+			codeBlock.textContent = "PASTEBIN EMBED FAILED. PASTE ID REQUIRED."
+			return;
+		}
+		
+		let paste_id = tokens[1];
+		let embed_frame_url = "https://pastebin.com/embed_iframe/" + paste_id;
+		let frame = document.createElement("object");
+		frame.data = embed_frame_url;
+		frame.style.width = "100%";
+	
+		codeBlock.parentElement.parentElement.replaceChild(frame, codeBlock.parentElement);
+
+		frame.style.height = frame.clientHeight + 12 + "px";
+		frame.style.margin = "1em auto";
+	});
+}
+
 /*********************/
 /* MORE MISC HELPERS */
 /*********************/
@@ -2585,6 +2613,9 @@ registerInitializer('earlyInitialize', true, () => document.querySelector("#cont
 
 registerInitializer('initialize', false, () => document.readyState != 'loading', function () {
 	forceInitializer('earlyInitialize');
+
+	// Embed pastebin.
+	embedPastebin();
 
 	// This is for "qualified hyperlinking", i.e. "link without comments" and/or
 	// "link without nav bars".
