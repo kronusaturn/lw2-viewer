@@ -2459,13 +2459,13 @@ function embedPastebin() {
 			codeBlock.textContent = "PASTEBIN EMBED FAILED. PASTE ID REQUIRED."
 			return;
 		}
-		
+
 		let paste_id = tokens[1];
 		let embed_frame_url = "https://pastebin.com/embed_iframe/" + paste_id;
 		let frame = document.createElement("object");
 		frame.data = embed_frame_url;
 		frame.style.width = "100%";
-	
+
 		codeBlock.parentElement.parentElement.replaceChild(frame, codeBlock.parentElement);
 
 		frame.style.height = frame.clientHeight + 12 + "px";
