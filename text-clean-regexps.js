@@ -37,7 +37,7 @@
   [/([a-z]) -(\u201d)/ig, '$1\u2014$2'],
   [/(\u201c)- ([a-z])/ig, '$1\u2014$2'],
   // turn a double or triple hyphen, optionally surrounded by spaces, between words, or at the start of a line, into an em-dash
-  [/([a-z]|\n) ?---? ?([a-z])/ig, '$1\u2014$2'],
+  [/([a-z"'“”‘’]|\n) ?---? ?([a-z"'“”‘’])/ig, '$1\u2014$2'],
   
   // Two spaces after a period is INCORRECT.
   [ /(\w[\.\?\!])[ \u00a0]{2}(\w)/g, '$1 $2'],
