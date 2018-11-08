@@ -2328,13 +2328,13 @@ function keyPressedWhenImageFocused(event) {
 	case "Down":
 	case "ArrowRight":
 	case "Right":
-		if (image.closest("#images-overlay")) focusNextImage(true);
+		if (document.querySelector("#images-overlay img.focused")) focusNextImage(true);
 		break;
 	case "ArrowUp":
 	case "Up":
 	case "ArrowLeft":
 	case "Left":
-		if (image.closest("#images-overlay")) focusNextImage(false);
+		if (document.querySelector("#images-overlay img.focused")) focusNextImage(false);
 		break;
 	}
 }
