@@ -2195,13 +2195,8 @@ function focusImage(image) {
 		// Moving mouse unhides image focus UI.
 		window.addEventListener("mousemove", mouseMovedWhenImageFocused);
 
-		// Unhide the UI.
-		unhideImageFocusUI();
-
 		// Replace the hash.
 		history.replaceState(null, null, "#if_slide_" + (indexOfFocusedImage + 1));
-	} else {
-		
 	}
 }
 
@@ -2228,9 +2223,6 @@ function resetFocusedImagePosition() {
 }
 
 function unfocusImageOverlay() {
-	// Hide the UI.
-	hideImageFocusUI();
-
 	// Set accesskey of currently focused image (if it's in the images overlay).
 	let currentlyFocusedImage = document.querySelector("#images-overlay img.focused");
 	if (currentlyFocusedImage) {
@@ -2336,13 +2328,13 @@ function keyPressedWhenImageFocused(event) {
 	case "Down":
 	case "ArrowRight":
 	case "Right":
-		focusNextImage(true);
+		if (image.closest("#images-overlay")) focusNextImage(true);
 		break;
 	case "ArrowUp":
 	case "Up":
 	case "ArrowLeft":
 	case "Left":
-		focusNextImage(false);
+		if (image.closest("#images-overlay")) focusNextImage(false);
 		break;
 	}
 }
