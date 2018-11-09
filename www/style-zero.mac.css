@@ -6227,6 +6227,29 @@ select {
 	border: 1px solid #cce;
 }
 
+/*=================*/
+/* ALIGNMENT FORUM */
+/*=================*/
+
+#content.alignment-forum-index-page {
+	background-color: #eaedff;
+}
+#content.alignment-forum-index-page::before {
+	font-family: "Concourse SmallCaps";
+	font-weight: 600;
+	background-color: #7f85b2;
+	color: transparent;
+	-webkit-background-clip: text;
+	text-shadow: 
+		rgba(255,255,255,0.5) 0px 3px 3px;
+}
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+	#content.alignment-forum-index-page h1.listing a:hover,
+	#content.alignment-forum-index-page h1.listing a:focus {
+		background-color: rgba(234,237,255,0.85);
+	}	
+}
+
 /*====================*/
 /* FOR NARROW SCREENS */
 /*====================*/
