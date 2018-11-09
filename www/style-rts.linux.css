@@ -3232,6 +3232,17 @@ li {
 	padding: 0;
 }
 
+/*******************/
+/* ALIGNMENT FORUM */
+/*******************/
+
+#content.alignment-forum-index-page::before {
+	content: "Alignment Forum";
+	grid-row: 3;
+	font-size: 1.5rem;
+	margin: 0.375em 0 0 -0.375em;
+}
+
 /**********************/
 /* FOR NARROW SCREENS */
 /**********************/

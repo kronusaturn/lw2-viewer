@@ -1746,6 +1746,29 @@ EOT;
 	border: 1px solid #cce;
 }
 
+/*=================*/
+/* ALIGNMENT FORUM */
+/*=================*/
+
+#content.alignment-forum-index-page {
+	background-color: #eef0ff;
+}
+#content.alignment-forum-index-page::before {
+	font-family: "Concourse SmallCaps";
+	font-weight: bold;
+	background-color: #626dd7;
+	-webkit-background-clip: text;
+	color: transparent;
+	text-shadow: 
+		rgba(255,255,255,0.5) 0px 3px 3px;;
+}
+@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+	#content.alignment-forum-index-page h1.listing a:hover,
+	#content.alignment-forum-index-page h1.listing a:focus {
+		background-color: rgba(238,240,255,0.85);
+	}	
+}
+
 /*====================*/
 /* FOR NARROW SCREENS */
 /*====================*/
