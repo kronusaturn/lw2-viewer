@@ -113,6 +113,13 @@ Element.prototype.getCommentId = function() {
 	}
 }
 
+function elementFromHTML(htmlString) {
+  var div = document.createElement('div');
+  div.innerHTML = htmlString.trim();
+
+  return (div.childNodes.length > 1) ? div.childNodes : div.firstChild;
+}
+
 /*******************/
 /* INBOX INDICATOR */
 /*******************/
@@ -2449,6 +2456,7 @@ function oldFirefoxCompatibilityScrollEventFired(event) {
 /* EXTERNAL CONTENT EMBEDDING */
 /******************************/
 
+var pastebinID = 1;
 function embedPastebin() {
 	document.querySelectorAll("pre code").forEach(codeBlock => {
 		let lines = codeBlock.textContent.trim().split("\n");
@@ -2459,9 +2467,13 @@ function embedPastebin() {
 			codeBlock.textContent = "PASTEBIN EMBED FAILED. PASTE ID REQUIRED."
 			return;
 		}
+		console.log(tokens);
 
 		let paste_id = tokens[1];
 		let embed_src_url = "https://api.obormot.net/gw/embed/pastebin/" + paste_id;
+
+		let no_line_nums = tokens.contains("nolinenums");
+		let no_footer = tokens.contains("nofooter");
 
 		let request = new XMLHttpRequest();
 		request.addEventListener("load", embeddedPastebinLoaded);
@@ -2476,7 +2488,13 @@ function embedPastebin() {
 				document.querySelector("head").lastChild.id = "embed-pastebin-styles";
 			}
 
-			codeBlock.parentElement.outerHTML = response.content;
+			let paste = elementFromHTML(response.content);
+			paste.id = "pastebinEmbed_" + pastebinID++;
+
+			if (no_footer) removeElement(paste.querySelector(".embedFooter"), paste);
+			if (no_line_nums) paste.querySelectorAll(".embedPastebin > ol > li").forEach(line => { line.style.paddingLeft = "5px"; });
+
+			codeBlock.parentElement.parentElement.replaceChild(paste, codeBlock.parentElement);
 		}
 	});
 }
