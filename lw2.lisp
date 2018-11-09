@@ -954,6 +954,7 @@ signaled condition to OUT-STREAM."
   (let ((posts (get-posts-index :view (string-downcase view) :before before :after after :offset offset :limit (or limit (user-pref :items-per-page)) :sort (user-pref :default-sort)))
         (page-title (format nil "~@(~A posts~)" view)))
     (view-items-index posts :section view :title page-title :with-offset (or offset 0)
+                      :content-class (format nil "index-page ~(~A~)-index-page" view)
                       :extra-html (lambda (out-stream)
                                     (page-toolbar-to-html out-stream
                                                           :title page-title
