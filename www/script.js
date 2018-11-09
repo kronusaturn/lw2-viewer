@@ -2461,15 +2461,23 @@ function embedPastebin() {
 		}
 
 		let paste_id = tokens[1];
-		let embed_frame_url = "https://pastebin.com/embed_iframe/" + paste_id;
-		let frame = document.createElement("object");
-		frame.data = embed_frame_url;
-		frame.style.width = "100%";
+		let embed_src_url = "https://api.obormot.net/gw/embed/pastebin/" + paste_id;
 
-		codeBlock.parentElement.parentElement.replaceChild(frame, codeBlock.parentElement);
+		let request = new XMLHttpRequest();
+		request.addEventListener("load", embeddedPastebinLoaded);
+		request.open("GET", embed_src_url);
+		request.send();
 
-		frame.style.height = frame.clientHeight + 12 + "px";
-		frame.style.margin = "1em auto";
+		function embeddedPastebinLoaded(event) {
+			let response = JSON.parse(event.target.responseText);
+
+			if (document.querySelector("#embed-pastebin-styles") == null) {
+				document.querySelector("head").insertAdjacentHTML("beforeend", response.styles.replace(/\\/g, ""));
+				document.querySelector("head").lastChild.id = "embed-pastebin-styles";
+			}
+
+			codeBlock.parentElement.outerHTML = response.content;
+		}
 	});
 }
 

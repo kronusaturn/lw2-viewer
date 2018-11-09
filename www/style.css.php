@@ -3237,6 +3237,14 @@ li {
 	margin: 0.375em 0 0 -0.375em;
 }
 
+/******************************/
+/* EXTERNAL CONTENT EMBEDDING */
+/******************************/
+
+#content .embedPastebin {
+	margin: 1.5em auto;
+}
+
 /**********************/
 /* FOR NARROW SCREENS */
 /**********************/
