@@ -813,10 +813,7 @@ signaled condition to OUT-STREAM."
                      (t
                        (emit-page (out-stream :title (if hide-title nil title) :description "A faster way to browse LessWrong 2.0" :content-class content-class :with-offset with-offset :with-next with-next
                                               :current-uri current-uri :robots (if (and with-offset (> with-offset 0)) "noindex, nofollow")
-                                              :additional-nav (lambda (out-stream)
-                                                                (typecase extra-html
-                                                                  (function (funcall extra-html out-stream))
-                                                                  (t (format out-stream "~@[~A~]" extra-html)))))
+                                              :additional-nav extra-html)
                                   (write-index-items-to-html out-stream items :need-auth need-auth
                                                              :skip-section section)))))
 
@@ -1269,8 +1266,8 @@ signaled condition to OUT-STREAM."
            (multiple-value-bind (conversation messages)
              (get-conversation-messages id (hunchentoot:cookie-in "lw2-auth-token"))
              (view-items-index (nreverse messages) :content-class "conversation-page" :need-auth t :title (encode-entities (postprocess-conversation-title (cdr (assoc :title conversation))))
-                               :extra-html (with-output-to-string (out-stream) (render-template* *conversation-template* out-stream
-                                                                                                 :conversation conversation :csrf-token (make-csrf-token))))))
+                               :extra-html (lambda (out-stream) (render-template* *conversation-template* out-stream
+                                                                                  :conversation conversation :csrf-token (make-csrf-token))))))
          (t
           (emit-page (out-stream :title "New conversation" :content-class "conversation-page")
                      (render-template* *conversation-template* out-stream
