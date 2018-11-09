@@ -2869,6 +2869,7 @@ li {
 	border-radius: 5px;
 	opacity: 0.0;
 	transition: opacity 0.15s ease;
+	pointer-events: none;
 }
 <?php fit_content("#images-overlay div::after"); ?>
 #images-overlay div:hover::after {
