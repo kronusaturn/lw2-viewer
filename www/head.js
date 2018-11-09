@@ -18,11 +18,13 @@ Element.prototype.addClasses = function(classNames) {
 }
 Element.prototype.removeClass = function(className) {
 	this.className = this.className.replace(new RegExp("(^|\\s+)" + className + "(\\s+|$)"), "$1").trim();
+	if (this.className == "") this.removeAttribute("class");
 }
 Element.prototype.removeClasses = function(classNames) {
 	classNames.forEach(className => {
 		this.className = this.className.replace(new RegExp("(^|\\s+)" + className + "(\\s+|$)"), "$1").trim();
 	});
+	if (this.className == "") this.removeAttribute("class");
 }
 Element.prototype.hasClass = function(className) {
 	return (new RegExp("(^|\\s+)" + className + "(\\s+|$)")).test(this.className);

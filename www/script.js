@@ -670,7 +670,7 @@ function injectContentWidthSelector() {
 }
 function setWidthAdjustButtonsAccesskey() {
 	document.querySelectorAll("#width-selector button").forEach(button => {
-		button.accessKey = "";
+		button.removeAttribute("accesskey");
 		button.title = /(.+?)( \['\])?$/.exec(button.title)[1];
 	});
 	let selectedButton = document.querySelector("#width-selector button.selected");
@@ -1572,7 +1572,7 @@ function commentsListModeSelectButtonClicked(event) {
 	localStorage.setItem("comments-list-mode", event.target.className);
 	event.target.addClass("selected");
 	event.target.disabled = true;
-	event.target.accessKey = '';
+	event.target.removeAttribute("accesskey");
 
 	if (event.target.hasClass("expanded")) {
 		document.querySelector("#content").removeClass("compact");
@@ -2032,7 +2032,7 @@ function commentsSortModeSelectButtonClicked(event) {
 }
 function setCommentsSortModeSelectButtonsAccesskey() {
 	document.querySelectorAll("#comments-sort-mode-selector button").forEach(button => {
-		button.accessKey = "";
+		button.removeAttribute("accesskey");
 		button.title = /(.+?)( \[z\])?$/.exec(button.title)[1];
 	});
 	let selectedButton = document.querySelector("#comments-sort-mode-selector button.selected");
@@ -2133,7 +2133,7 @@ function focusImage(image) {
 	let lastFocusedImage = document.querySelector("img.last-focused");
 	if (lastFocusedImage) {
 		lastFocusedImage.removeClass("last-focused");
-		lastFocusedImage.accessKey = null;
+		lastFocusedImage.removeAttribute("accesskey");
 	}
 
 	// Create the focused version of the image.
@@ -2141,6 +2141,8 @@ function focusImage(image) {
 	let imageFocusOverlay = document.querySelector("#image-focus-overlay");
 	let clonedImage = image.cloneNode(true);
 	clonedImage.style = "";
+	clonedImage.removeAttribute("width");
+	clonedImage.removeAttribute("height");
 	imageFocusOverlay.appendChild(clonedImage);
 	imageFocusOverlay.addClass("engaged");
 
@@ -2288,6 +2290,8 @@ function focusNextImage(next = true) {
 	let imageFocusOverlay = document.querySelector("#image-focus-overlay");
 	let clonedImage = images[indexOfFocusedImage].cloneNode(true);
 	clonedImage.style = "";
+	clonedImage.removeAttribute("width");
+	clonedImage.removeAttribute("height");
 	imageFocusOverlay.appendChild(clonedImage);
 	imageFocusOverlay.addClass("engaged");
 	// Set image to default size and position.
