@@ -636,6 +636,16 @@ h1.listing.own-post-listing {
 	font-family: <?php echo $text_font; ?>;
 }
 
+.post-body a,
+.comment-body a {
+	border-bottom: 1px dotted #bbb;
+}
+.post-body a:hover,
+.comment-body a:hover {
+	text-decoration: none;
+	border-bottom: 1px solid currentColor;
+}
+
 /*=======*/
 /* POSTS */
 /*=======*/
