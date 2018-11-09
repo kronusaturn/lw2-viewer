@@ -1,11 +1,10 @@
 (uiop:define-package #:lw2.backend
-  (:use #:cl #:sb-thread #:flexi-streams #:alexandria #:lw2-viewer.config #:lw2.graphql #:lw2.lmdb #:lw2.utils #:lw2.hash-utils)
+  (:use #:cl #:sb-thread #:flexi-streams #:alexandria #:lw2-viewer.config #:lw2.graphql #:lw2.lmdb #:lw2.utils #:lw2.hash-utils #:lw2.backend-modules)
+  (:import-from #:lw2.context #:*current-backend*)
+  (:reexport #:lw2.backend-modules)
   (:export #:*graphql-debug-output*
            #:*posts-index-fields* #:*comments-index-fields* #:*messages-index-fields*
            #:*notifications-base-terms*
-           #:backend-base #:backend-lw2-legacy #:backend-lw2-modernized #:backend-lw2 #:backend-accordius
-           #:*current-backend*
-           #:declare-backend-function #:define-backend-operation
            #:condition-http-return-code
            #:lw2-error #:lw2-client-error #:lw2-not-found-error #:lw2-user-not-found-error #:lw2-not-allowed-error #:lw2-server-error #:lw2-connection-error #:lw2-unknown-error
 	   #:log-condition #:log-conditions #:start-background-loader #:stop-background-loader #:background-loader-running-p
@@ -30,31 +29,7 @@
 
 (defparameter *notifications-base-terms* (alist :view "userNotifications" :created-at :null :viewed :null))
 
-(defclass backend-base () ())
-
-(defclass backend-lw2-legacy (backend-base) ())
-
-(defclass backend-lw2-modernized (backend-base) ())
-
-(defclass backend-lw2 (backend-lw2-modernized backend-lw2-legacy) ())
-
-(defclass backend-accordius (backend-lw2-modernized backend-lw2-legacy) ())
-
-(defparameter *current-backend* (make-instance (symbolicate "BACKEND-" (string-upcase *backend-type*))))
-
-(defmacro declare-backend-function (name)
-  (let ((inner-name (symbolicate "%" name)))
-   `(progn
-      (export '(,name ,inner-name))
-      (defmacro ,name (&rest args) (list* ',inner-name '*current-backend*  args)))))
-
-(defmacro define-backend-operation (name backend &rest args)
-  (let* ((inner-name (symbolicate "%" name))
-         (latter-args (member-if #'listp args))
-         (method-qualifiers (ldiff args latter-args))
-         (method-args (first latter-args))
-         (body (rest latter-args)))
-    `(defmethod ,inner-name ,.method-qualifiers ((backend ,backend) ,@method-args) ,@body)))
+(define-cache-database "index-json" "post-comments-json" "post-comments-json-meta" "post-body-json" "post-body-json-meta")
 
 (defmethod condition-http-return-code ((c condition)) 500)
 
@@ -173,7 +148,7 @@
 (defun lw2-graphql-query-streamparse (query &key auth-token)
   (do-graphql-debug query)
   (multiple-value-bind (req-stream status-code headers final-uri reuse-stream want-close)
-    (drakma:http-request *graphql-uri* :parameters (list (cons "query" query))
+    (drakma:http-request (graphql-uri *current-backend*) :parameters (list (cons "query" query))
 			 :cookie-jar *cookie-jar* :additional-headers (if auth-token `(("authorization" . ,auth-token)) nil)
 			 :want-stream t :close t)
     (declare (ignore status-code headers final-uri reuse-stream))
@@ -185,7 +160,7 @@
 (defun lw2-graphql-query-noparse (query &key auth-token)
   (do-graphql-debug query)
   (multiple-value-bind (response-body status-code headers final-uri reuse-stream want-close status-string)
-    (drakma:http-request *graphql-uri* :parameters (list (cons "query" query))
+    (drakma:http-request (graphql-uri *current-backend*) :parameters (list (cons "query" query))
                          :cookie-jar *cookie-jar* :additional-headers (if auth-token `(("authorization" . ,auth-token)) nil)
                          :want-stream nil :close t)
     (declare (ignore headers final-uri reuse-stream want-close))
@@ -289,6 +264,16 @@
     (string (lw2-graphql-query-noparse query))
     (function (funcall query))))
 
+(declaim (inline make-thread-with-current-backend))
+
+(defun make-thread-with-current-backend (fn &rest args)
+  (let ((current-backend *current-backend*))
+    (apply #'sb-thread:make-thread
+      (lambda ()
+        (let ((*current-backend* current-backend))
+          (funcall fn)))
+      args)))
+
 (defun ensure-cache-update-thread (query cache-db cache-key)
   (let ((key (format nil "~A-~A" cache-db cache-key))) 
     (labels ((background-fn ()
@@ -304,7 +289,7 @@
 				     (let ((thread (gethash key *background-cache-update-threads*)))
 				       (if thread thread
 					 (setf (gethash key *background-cache-update-threads*)
-					       (sb-thread:make-thread #'background-fn)))))))) 
+					       (make-thread-with-current-backend #'background-fn))))))))
 
 (defun lw2-graphql-query-timeout-cached (query cache-db cache-key &key (revalidate t) force-revalidate)
     (multiple-value-bind (cached-result is-fresh) (with-cache-readonly-transaction (values (cache-get cache-db cache-key) (cache-is-fresh cache-db cache-key)))

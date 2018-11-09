@@ -1,6 +1,7 @@
 (uiop:define-package #:lw2.login
-  (:use #:cl #:lw2-viewer.config #:lw2.utils #:lw2.graphql #:lw2.backend #:alexandria #:cl-json #:flexi-streams #:websocket-driver-client)
+  (:use #:cl #:lw2-viewer.config #:lw2.utils #:lw2.graphql #:lw2.backend #:lw2.backend-modules #:alexandria #:cl-json #:flexi-streams #:websocket-driver-client)
   (:import-from #:ironclad #:byte-array-to-hex-string #:digest-sequence)
+  (:import-from #:lw2.context #:*current-backend*)
   (:export #:do-lw2-resume #:do-login #:do-lw2-create-user #:do-lw2-forgot-password #:do-lw2-reset-password
 	   #:do-lw2-post-query #:do-lw2-post-query*
            #:do-lw2-post #:do-lw2-post-edit #:do-lw2-post-remove #:do-lw2-comment #:do-lw2-comment-edit #:do-lw2-comment-remove
@@ -40,7 +41,7 @@
   (coerce (loop repeat length collecting (code-char (+ (char-code #\a) (ironclad:strong-random 26)))) 'string)) 
 
 (defun do-lw2-sockjs-operation (operation)
-  (let ((client (wsd:make-client (concatenate 'string *websocket-uri* "sockjs/329/" (random-string 8) "/websocket")
+  (let ((client (wsd:make-client (concatenate 'string (websocket-uri *current-backend*) "sockjs/329/" (random-string 8) "/websocket")
 				 :additional-headers (forwarded-header)))
 	(debug-output *sockjs-debug-output*) 
 	(result-semaphore (sb-thread:make-semaphore))
@@ -127,7 +128,7 @@
 
 (defun do-lw2-post-query (auth-token data)
   (lw2.backend::do-graphql-debug data)
-  (let* ((response-data (drakma:http-request *graphql-uri* :method :post
+  (let* ((response-data (drakma:http-request (graphql-uri *current-backend*) :method :post
                                              :additional-headers (remove-if #'null `(,(if auth-token (cons "authorization" auth-token))
                                                                                       ,@(forwarded-header)))
                                              :content-type "application/json"

@@ -1,10 +1,12 @@
 (uiop:define-package #:lw2-viewer
-  (:use #:cl #:sb-thread #:flexi-streams #:djula #:lw2-viewer.config #:lw2.utils #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login)
+  (:use #:cl #:sb-thread #:flexi-streams #:djula #:lw2-viewer.config #:lw2.utils #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login #:lw2.context #:lw2.sites)
   (:unintern #:define-regex-handler #:*fonts-stylesheet-uri* #:generate-fonts-link))
 
 (in-package #:lw2-viewer) 
 
 (add-template-directory (asdf:system-relative-pathname "lw2-viewer" "templates/"))
+
+(define-cache-database "auth-token-to-userid" "auth-token-to-username")
 
 (defvar *current-auth-token*)
 (defvar *current-userid*)
@@ -411,9 +413,9 @@ signaled condition to OUT-STREAM."
       (format out-stream "<div class=\"listing-message\">~A</div>" empty-message)))
 
 (defun write-index-items-to-rss (out-stream items &key title need-auth)
-  (let ((full-title (format nil "~@[~A - ~]LessWrong 2 viewer" title)))
+  (let ((full-title (format nil "~@[~A - ~]~A" title (site-title *current-site*))))
     (xml-emitter:with-rss2 (out-stream :encoding "UTF-8")
-      (xml-emitter:rss-channel-header full-title *site-uri* :description full-title)
+      (xml-emitter:rss-channel-header full-title (site-uri *current-site*) :description full-title)
       (labels ((emit-item (item &key title link (guid (cdr (assoc :--id item))) (author (get-username (cdr (assoc :user-id item))))
                                 (date (pretty-time (cdr (assoc :posted-at item)) :format local-time:+rfc-1123-format+)) body)
                           (xml-emitter:rss-item
@@ -450,7 +452,7 @@ signaled condition to OUT-STREAM."
     (labels ((get-redirects (uri-list)
                (loop for request-uri in uri-list collect
                      (multiple-value-bind (body status headers uri)
-                       (drakma:http-request request-uri :method :head :close t :redirect nil :additional-headers (alist :referer *site-uri* :accept "text/css,*/*;q=0.1"))
+                       (drakma:http-request request-uri :method :head :close t :redirect nil :additional-headers (alist :referer (site-uri *current-site*) :accept "text/css,*/*;q=0.1"))
                        (declare (ignore body uri))
                        (let ((location (cdr (assoc :location headers))))
                          (if (and (typep status 'integer) (< 300 status 400) location)
@@ -608,8 +610,9 @@ signaled condition to OUT-STREAM."
     (format out-stream "<script src=\"~A\" async></script>~A"
             (generate-versioned-link "/script.js")
             *extra-external-scripts*)
-    (format out-stream "<title>~@[~A - ~]LessWrong 2 viewer</title>~@[<meta name=\"description\" content=\"~A\">~]~@[<meta name=\"robots\" content=\"~A\">~]"
+    (format out-stream "<title>~@[~A - ~]~A</title>~@[<meta name=\"description\" content=\"~A\">~]~@[<meta name=\"robots\" content=\"~A\">~]"
             (if title (encode-entities title))
+            (site-title *current-site*)
             description
             robots)
     (format out-stream "</head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
@@ -692,7 +695,7 @@ signaled condition to OUT-STREAM."
       (force-output out-stream))))
 
 (defun set-cookie (key value &key (max-age (- (expt 2 31) 1)) (path "/"))
-  (hunchentoot:set-cookie key :value value :path path :max-age max-age :secure *secure-cookies*))
+  (hunchentoot:set-cookie key :value value :path path :max-age max-age :secure (site-secure *current-site*)))
 
 (defun set-default-headers (return-code)
   (let ((push-option (if (hunchentoot:cookie-in "push") '("nopush"))))
@@ -739,27 +742,30 @@ signaled condition to OUT-STREAM."
            (alexandria:if-let (prefs-string (hunchentoot:cookie-in "prefs"))
              (let ((json:*identifier-name-to-key* 'json:safe-json-intern))
                (ignore-errors (json:decode-json-from-string (quri:url-decode prefs-string)))))))
-    (multiple-value-bind (*current-auth-token* *current-userid* *current-username*)
-      (if *read-only-mode*
-          (values)
-          (alexandria:if-let
-            (auth-token
-              (alexandria:if-let
-                (at (hunchentoot:cookie-in "lw2-auth-token"))
-                (if (or (string= at "") (not lw2-status) (> (get-unix-time) (- (cdr (assoc :expires lw2-status)) (* 60 60 24))))
-                    nil at)))
-            (with-cache-readonly-transaction
-              (values
-                auth-token
-                (cache-get "auth-token-to-userid" auth-token)
-                (cache-get "auth-token-to-username" auth-token)))))
-      (let ((*current-user-slug* (and *current-userid* (get-user-slug *current-userid*))))
-        (handler-case
-          (log-conditions
-            (funcall fn))
-          (serious-condition (condition)
-                             (emit-page (out-stream :title "Error" :return-code (condition-http-return-code condition) :content-class "error-page")
-                                        (error-to-html out-stream condition))))))))
+    (with-site-context ((let ((host (or (hunchentoot:header-in* :x-forwarded-host) (hunchentoot:header-in* :host))))
+                          (or (find-site host)
+                              (error "Unknown site: ~A" host))))
+      (multiple-value-bind (*current-auth-token* *current-userid* *current-username*)
+        (if *read-only-mode*
+            (values)
+            (alexandria:if-let
+              (auth-token
+                (alexandria:if-let
+                  (at (hunchentoot:cookie-in "lw2-auth-token"))
+                  (if (or (string= at "") (not lw2-status) (> (get-unix-time) (- (cdr (assoc :expires lw2-status)) (* 60 60 24))))
+                      nil at)))
+              (with-cache-readonly-transaction
+                (values
+                  auth-token
+                  (cache-get "auth-token-to-userid" auth-token)
+                  (cache-get "auth-token-to-username" auth-token)))))
+        (let ((*current-user-slug* (and *current-userid* (get-user-slug *current-userid*))))
+          (handler-case
+            (log-conditions
+              (funcall fn))
+            (serious-condition (condition)
+              (emit-page (out-stream :title "Error" :return-code (condition-http-return-code condition) :content-class "error-page")
+                         (error-to-html out-stream condition)))))))))
 
 (defmacro with-error-page (&body body)
   `(call-with-error-page (lambda () ,@body)))
@@ -824,7 +830,7 @@ signaled condition to OUT-STREAM."
       (format stream "<span class=\"~A\">~A</span>" class text)))
 
 (defun postprocess-markdown (markdown)
-  (ppcre:regex-replace-all (load-time-value (concatenate 'string (ppcre:regex-replace-all "\\." *site-uri* "\\.") "posts/([^/ ]{17})/([^/# ]*)(?:#comment-([^/ ]{17})|/comment/([^/ ]{17}))?"))
+  (ppcre:regex-replace-all (concatenate 'string (ppcre:regex-replace-all "\\." (site-uri *current-site*) "\\.") "posts/([^/ ]{17})/([^/# ]*)(?:#comment-([^/ ]{17})|/comment/([^/ ]{17}))?")
                            markdown
                            (lambda (target-string start end match-start match-end reg-starts reg-ends)
                              (declare (ignore start end match-start match-end))
@@ -845,10 +851,7 @@ signaled condition to OUT-STREAM."
                    collect (if (atom a) a (first a))))
            (filter-plist (plist &rest args)
              (declare (dynamic-extent args))
-             (loop for (key val . rest) = plist then rest
-                   while key
-                   when (member key args)
-                   nconc (list key val)))
+             (map-plist (lambda (key val) (when (member key args) (list key val))) plist))
            (make-hunchentoot-lambda (args)
              (loop for x in args
                    collect (if (atom x) x

@@ -1,23 +1,35 @@
 (uiop:define-package #:lw2.lmdb
-  (:use #:cl #:sb-ext #:sb-thread #:alexandria #:lw2-viewer.config #:lw2.hash-utils)
-  (:export #:with-cache-mutex #:with-cache-transaction #:with-cache-readonly-transaction #:with-db #:lmdb-put-string #:cache-put #:cache-get #:simple-cacheable #:define-lmdb-memoized)
+  (:use #:cl #:sb-ext #:sb-thread #:alexandria #:lw2.sites #:lw2.context #:lw2.backend-modules #:lw2-viewer.config #:lw2.hash-utils)
+  (:export
+    #:define-cache-database #:with-cache-mutex #:with-cache-transaction #:with-cache-readonly-transaction #:with-db #:lmdb-put-string #:cache-put #:cache-get #:simple-cacheable #:define-lmdb-memoized)
   (:unintern #:lmdb-clear-db #:*db-mutex*))
 
 (in-package #:lw2.lmdb) 
 
-(defglobal *db-environment* nil)
+(defglobal *cache-databases-list* nil)
 
-(uiop:chdir (asdf:system-source-directory "lw2-viewer"))
-(uiop:ensure-all-directories-exist (list *cache-db*))
+(defglobal *cache-environment-databases-list* nil)
 
-(when (not *db-environment*)
-  (setf *db-environment* (lmdb:make-environment *cache-db* :max-databases 1024 :max-readers 126 :open-flags 0 :mapsize *lmdb-mapsize*))
-  (lmdb:open-environment *db-environment* :create t))
+(defglobal *db-environments-lock* (make-mutex))
 
-(defun call-with-cache-transaction (fn &key read-only)
+(defglobal *db-environments* nil)
+
+(defglobal *environments-sites* nil)
+
+(defun define-cache-database (&rest names)
+  (with-mutex (*db-environments-lock*)
+    (dolist (name names)
+      (setf *cache-databases-list* (adjoin name *cache-databases-list* :test #'string=)))))
+
+(defstruct environment-container
+  (semaphore nil :type semaphore)
+  (environment nil :type lmdb:environment)
+  (open-databases (make-hash-table :test 'equal :synchronized t) :type hash-table))
+
+(defun call-with-environment-transaction (fn environment &key read-only)
   (if lmdb:*transaction*
       (funcall fn)
-      (let ((txn (lmdb:make-transaction *db-environment* :flags (if read-only liblmdb:+rdonly+ 0))))
+      (let ((txn (lmdb:make-transaction environment :flags (if read-only liblmdb:+rdonly+ 0))))
         (unwind-protect
           (progn
             (lmdb:begin-transaction txn)
@@ -28,22 +40,85 @@
                 (setf txn nil))))
           (when txn (lmdb:abort-transaction txn))))))
 
+(defmacro with-environment-transaction ((environment) &body body)
+  `(call-with-environment-transaction (lambda () ,@body) ,environment))
+
+(defun close-environment (environment open-databases)
+  (with-environment-transaction (environment)
+    (maphash (lambda (k v)
+               (declare (ignore k))
+               (lmdb:close-database v :transaction lmdb:*transaction*))
+             open-databases))
+  (lmdb:close-environment environment))
+
+(defun prepare-environment (environment-container)
+  (let ((environment (environment-container-environment environment-container))
+        (open-databases (environment-container-open-databases environment-container)))
+    (with-environment-transaction (environment)
+      (dolist (db-name *cache-databases-list*)
+        (let ((db (lmdb:make-database db-name)))
+          (lmdb:open-database db :create t)
+          (setf (gethash db-name open-databases) db))))))
+
+(when (boundp '*cache-db*)
+  (let ((env *db-environment*)
+        (open-dbs *open-databases*))
+    (make-thread (lambda ()
+                   (sleep 30)
+                   (close-environment env open-dbs))
+                 :name "LMDB old environment cleanup"))
+  (makunbound '*cache-db*)
+  (makunbound '*db-environment*)
+  (makunbound '*open-databases*))
+
+(declare-backend-function get-current-environment)
+
+(define-backend-operation get-current-environment backend-lmdb-cache ()
+  (with-mutex (*db-environments-lock*)
+    (unless (and (backend-lmdb-environment backend) (eq *sites* *environments-sites*))
+      (dolist (env *db-environments*)
+        (wait-on-semaphore (environment-container-semaphore env) :n (expt 2 20))
+        (close-environment (environment-container-environment env) (environment-container-open-databases env)))
+      (setf *db-environments* nil
+            *environments-sites* *sites*)
+      (uiop:ensure-all-directories-exist (map 'list
+                                              (lambda (site)
+                                                (backend-cache-db-path (site-backend site)))
+                                              *environments-sites*))
+      (dolist (site *environments-sites*)
+        (let ((new-environment
+                (make-environment-container
+                  :semaphore (make-semaphore :name (format nil "LMDB environment semaphore for ~A" (site-host site)) :count (expt 2 20))
+                  :environment (lmdb:make-environment (backend-cache-db-path backend) :max-databases 1024 :max-readers 126 :open-flags 0 :mapsize *lmdb-mapsize*))))
+          (lmdb:open-environment (environment-container-environment new-environment) :create t)
+          (prepare-environment new-environment)
+          (setf (backend-lmdb-environment (site-backend site)) new-environment)
+          (push new-environment *db-environments*))))
+    (backend-lmdb-environment backend)))
+
+(uiop:chdir (asdf:system-source-directory "lw2-viewer"))
+
+(defun get-open-database (db-name)
+  (let ((env (get-current-environment)))
+    (with-mutex (*db-environments-lock*)
+      (unless (eq *cache-databases-list* *cache-environment-databases-list*)
+        (prepare-environment env)))
+    (or (gethash db-name (environment-container-open-databases env))
+        (error "The database '~A' is not defined." db-name))))
+
+(defun call-with-cache-transaction (fn &key read-only)
+  (let ((env (get-current-environment)))
+    (unwind-protect
+      (progn
+        (wait-on-semaphore (environment-container-semaphore env))
+        (call-with-environment-transaction fn (environment-container-environment env) :read-only read-only))
+      (signal-semaphore (environment-container-semaphore env)))))
+
 (defmacro with-cache-transaction (&body body)
   `(call-with-cache-transaction (lambda () ,@body)))
 
 (defmacro with-cache-readonly-transaction (&body body)
   `(call-with-cache-transaction (lambda () ,@body) :read-only t))
-
-(defglobal *open-databases* (make-hash-table :test 'equal :synchronized t))
-
-(defun get-open-database (db-name)
-  (if-let (db (gethash db-name *open-databases*))
-          db
-          (with-locked-hash-table (*open-databases*)
-            (with-cache-transaction
-              (let ((db (lmdb:make-database db-name)))
-                (lmdb:open-database db :create t)
-                (setf (gethash db-name *open-databases*) db))))))
 
 (defmacro with-db ((db db-name &key read-only) &body body)
   `(let ((,db (get-open-database ,db-name)))
@@ -89,6 +164,7 @@
 	(cache (intern (format nil "~:@(cache-~A~)" base-name)))
 	(get (intern (format nil "~:@(get-~A~)" base-name))))
     `(progn
+       (define-cache-database ,cache-db)
        (declaim (ftype (function (string) string) ,get-real ,get)
 		(ftype (function (string string) string) ,cache))
        (setf (fdefinition (quote ,get-real)) (lambda (,key) ,@body)
@@ -113,10 +189,14 @@
         (now-hash (hash-file-list (list* "src/hash-utils.lisp" sources))))
     (alexandria:once-only (db-name version-octets now-hash)
 			  `(progn
-			     (unless (equalp ,now-hash (with-db (db ,db-name) (lmdb:get db ,version-octets)))
-			       (with-db (db ,db-name)
-					(lmdb:drop-database db :delete 0)
-					(lmdb:put db ,version-octets ,now-hash)))
+                             (define-cache-database ,db-name)
+                             (dolist (site *sites*)
+                               (let ((*current-backend* (site-backend site)))
+                                 (when (typep *current-backend* 'backend-lmdb-cache)
+                                   (unless (equalp ,now-hash (with-db (db ,db-name) (lmdb:get db ,version-octets)))
+                                     (with-db (db ,db-name)
+                                              (lmdb:drop-database db :delete 0)
+                                              (lmdb:put db ,version-octets ,now-hash))))))
                              (declaim (ftype (function * string) ,name)
                                       (ftype (function * (vector (unsigned-byte 8))) ,alt-name))
                              (let ((real-fn (lambda ,lambda ,@body)))

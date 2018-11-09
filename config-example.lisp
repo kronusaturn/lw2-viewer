@@ -1,20 +1,16 @@
-(defpackage lw2-viewer.config
-  (:use #:cl)
-  (:export #:*site-uri* #:*graphql-uri* #:*websocket-uri* #:*backend-type* #:*secure-cookies* #:*cache-db* #:*lmdb-mapsize*))
 (in-package #:lw2-viewer.config)
 
-(defparameter *site-uri* "http://www.example.com/") 
+(reset-site-definitions)
 
-(defparameter *graphql-uri* "https://www.lesswrong.com/graphql")
-(defparameter *websocket-uri* "wss://www.lesswrong.com/")
+(define-site
+  :uri "http://www.example.com/"
+  :title "Example Site"
+  :backend ("lw2" ; Supported backends: lw2 lw2-legacy accordius
+            :graphql-uri "https://www.lesswrong.com/graphql"
+            :websocket-uri "wss://www.lesswrong.com/"
+            :cache-db-path "./cache/")) ; Location of the cache database. Be sure to include the trailing slash.
 
-; Supported backends: lw2 lw2-legacy accordius
-(defparameter *backend-type* "lw2")
-
-(defparameter *secure-cookies* nil)
-
-; Location of the cache database. Be sure to include the trailing slash.
-(defparameter *cache-db* "./cache/")
+; (You can add more than one define-site directive.)
 
 ; Maximum size of the cache database.
 ; On platforms that don't support sparse files, you may want to reduce this
