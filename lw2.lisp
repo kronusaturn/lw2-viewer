@@ -642,7 +642,7 @@ signaled condition to OUT-STREAM."
          (next-uri (if next (replace-query-params request-uri "offset" next))))
     (values
       (if (or next prev)
-          (with-output-to-string (out-stream)
+          (lambda (out-stream)
             (labels ((write-item (uri class title accesskey)
                        (format out-stream "<a href=\"~A\" class=\"button nav-item-~A~:[ disabled~;~]\" title=\"~A [~A]\" accesskey=\"~A\"></a>"
                                (or uri "#") class uri title accesskey accesskey)))
@@ -652,9 +652,8 @@ signaled condition to OUT-STREAM."
               (format out-stream "<span class='page-number'><span class='page-number-label'>Page</span> ~A</span>" (+ 1 (/ (or with-offset 0) items-per-page)))
               (write-item next-uri "next" "Next page" "]")
               (write-item next-uri "last" "Last page" "")
-              (format out-stream "</div>")))
-          "")
-      (with-output-to-string (out-stream)
+              (format out-stream "</div>"))))
+      (lambda (out-stream)
         (write-string
           (nav-bar-outer "bottom-bar" nil (nav-bar-inner
                                             `(,@(if first-uri `(("first" ,first-uri "Back to first")))
@@ -664,9 +663,9 @@ signaled condition to OUT-STREAM."
           out-stream)
         (format out-stream "<script>document.querySelectorAll('#bottom-bar').forEach(function (bb) { bb.classList.add('decorative'); });</script>")))))
 
-(defun end-html (out-stream &key items-per-page bottom-bar-html)
+(defun end-html (out-stream &key items-per-page bottom-bar-fn)
   (if items-per-page (format out-stream "<script>var itemsPerPage=~A</script>" items-per-page))
-  (write-string bottom-bar-html out-stream)
+  (when bottom-bar-fn (funcall bottom-bar-fn out-stream))
   (format out-stream "</div></body></html>"))
 
 (defun map-output (out-stream fn list)
@@ -678,16 +677,18 @@ signaled condition to OUT-STREAM."
 			     `(let ((,stream-sym ,out-stream)) 
 				,.out-body)))) 
 
-(defun call-with-emit-page (out-stream fn &key title description current-uri content-class (return-code 200) (items-per-page (user-pref :items-per-page)) with-offset with-next robots)
+(defun call-with-emit-page (out-stream fn &key title description current-uri content-class (return-code 200) additional-nav (items-per-page (user-pref :items-per-page)) with-offset with-next robots)
   (declare (ignore return-code))
   (ignore-errors
     (log-conditions
-      (multiple-value-bind (top-bar-html bottom-bar-html) (pagination-nav-bars :with-offset with-offset :with-next with-next :items-per-page items-per-page)
+      (multiple-value-bind (top-bar-fn bottom-bar-fn) (pagination-nav-bars :with-offset with-offset :with-next with-next :items-per-page items-per-page)
         (begin-html out-stream :title title :description description :current-uri current-uri :content-class content-class :robots robots)
-        (funcall fn (lambda () (write-string top-bar-html out-stream)))
+        (when additional-nav (funcall additional-nav out-stream))
+        (when top-bar-fn (funcall top-bar-fn out-stream))
+        (funcall fn)
         (end-html out-stream
                   :items-per-page (if with-offset items-per-page)
-                  :bottom-bar-html bottom-bar-html))
+                  :bottom-bar-fn bottom-bar-fn))
       (force-output out-stream))))
 
 (defun set-cookie (key value &key (max-age (- (expt 2 31) 1)) (path "/"))
@@ -714,16 +715,19 @@ signaled condition to OUT-STREAM."
   (setf *current-prefs* (remove-duplicates (acons key value *current-prefs*) :key #'car :from-end t))
   (set-cookie "prefs" (quri:url-encode (json:encode-json-to-string *current-prefs*))))
 
-(defmacro emit-page ((out-stream &rest args &key (return-code 200) (top-nav (gensym) top-nav-supplied) &allow-other-keys) &body body)
+(defmacro with-response-stream ((out-stream) &body body) `(call-with-response-stream (lambda (,out-stream) ,.body)))
+
+(defun call-with-response-stream (fn)
+  (funcall fn (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8)))
+
+(defmacro emit-page ((out-stream &rest args &key (return-code 200) &allow-other-keys) &body body)
   (alexandria:once-only (return-code)
-    (alexandria:with-gensyms (fn)
-      (let ((args2 (copy-seq args)))
-        (remf args2 :top-nav)
-        `(progn
-           (set-default-headers ,return-code)
-           (let* ((,out-stream (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8))
-                  (,fn (lambda (,top-nav) ,@(if (not top-nav-supplied) `((declare (ignore ,top-nav)))) ,@body)))
-             (call-with-emit-page ,out-stream ,fn ,@args2)))))))
+    `(progn
+       (set-default-headers ,return-code)
+       (with-response-stream (,out-stream)
+         (call-with-emit-page ,out-stream
+                              (lambda () ,@body)
+                              ,@args)))))
 
 (defun call-with-error-page (fn)
   (let* ((lw2-status
@@ -804,15 +808,15 @@ signaled condition to OUT-STREAM."
   (alexandria:switch ((hunchentoot:get-parameter "format") :test #'string=)
                      ("rss" 
                       (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
-                      (let ((out-stream (hunchentoot:send-headers)))
-                        (write-index-items-to-rss (make-flexi-stream out-stream :external-format :utf-8) items :title title)))
+                      (with-response-stream (out-stream)
+                        (write-index-items-to-rss out-stream items :title title)))
                      (t
                        (emit-page (out-stream :title (if hide-title nil title) :description "A faster way to browse LessWrong 2.0" :content-class content-class :with-offset with-offset :with-next with-next
-                                              :current-uri current-uri :robots (if (and with-offset (> with-offset 0)) "noindex, nofollow") :top-nav top-nav)
-                                  (typecase extra-html
-                                    (function (funcall extra-html out-stream))
-                                    (t (format out-stream "~@[~A~]" extra-html)))
-                                  (funcall top-nav)
+                                              :current-uri current-uri :robots (if (and with-offset (> with-offset 0)) "noindex, nofollow")
+                                              :additional-nav (lambda (out-stream)
+                                                                (typecase extra-html
+                                                                  (function (funcall extra-html out-stream))
+                                                                  (t (format out-stream "~@[~A~]" extra-html)))))
                                   (write-index-items-to-html out-stream items :need-auth need-auth
                                                              :skip-section section)))))
 
@@ -1428,7 +1432,27 @@ signaled condition to OUT-STREAM."
     (local-time:with-decoded-timestamp (:day earliest-day :month earliest-month :year earliest-year) *earliest-post*
       (labels ((url-elements (&rest url-elements)
                  (declare (dynamic-extent url-elements))
-                 (format nil "/~{~A~^/~}" url-elements)))
+                 (format nil "/~{~A~^/~}" url-elements))
+               (archive-nav (out-stream)
+                 (with-outputs (out-stream) "<div class=\"archive-nav\"><div class=\"archive-nav-years\">")
+                 (link-if-not out-stream (not (or year month day)) (url-elements "archive") "archive-nav-item-year" "All") 
+                 (loop for y from earliest-year to current-year
+                       do (link-if-not out-stream (eq y year) (url-elements "archive" y) "archive-nav-item-year" y))
+                 (format out-stream "</div>")
+                 (when year
+                   (format out-stream "<div class=\"archive-nav-months\">")
+                   (link-if-not out-stream (not month) (url-elements "archive" year) "archive-nav-item-month" "All") 
+                   (loop for m from (if (= (or year current-year) earliest-year) earliest-month 1) to (if (= (or year current-year) current-year) current-month 12)
+                         do (link-if-not out-stream (eq m month) (url-elements "archive" (or year current-year) m) "archive-nav-item-month" (elt local-time:+short-month-names+ m)))
+                   (format out-stream "</div>"))
+                 (when month
+                   (format out-stream "<div class=\"archive-nav-days\">")
+                   (link-if-not out-stream (not day) (url-elements "archive" year month) "archive-nav-item-day" "All")
+                   (loop for d from (if (and (= (or year current-year) earliest-year) (= (or month current-month) earliest-month)) earliest-day 1)
+                         to (if (and (= (or year current-year) current-year) (= (or month current-month) current-month)) current-day (local-time:days-in-month (or month current-month) (or year current-year)))
+                         do (link-if-not out-stream (eq d day) (url-elements "archive" (or year current-year) (or month current-month) d) "archive-nav-item-day" d))
+                   (format out-stream "</div>")) 
+                 (format out-stream "</div>")))
         (let ((posts (lw2-graphql-query (lw2-query-string :post :list
                                                           (alist :view (if day "new" "top") :limit 51 :offset offset
                                                                  :after (if (and year (not day)) (format nil "~A-~A-~A" (or year earliest-year) (or month 1) (or day 1)))
@@ -1436,27 +1460,8 @@ signaled condition to OUT-STREAM."
                                                                                           (or day (local-time:days-in-month (or month 12) (or year current-year))))))
                                                           *posts-index-fields*))))
           (emit-page (out-stream :title "Archive" :current-uri "/archive" :content-class "archive-page"
-                                 :items-per-page 50 :with-offset offset :with-next (> (length posts) 50) :top-nav top-nav)
-                     (with-outputs (out-stream) "<div class=\"archive-nav\"><div class=\"archive-nav-years\">")
-                     (link-if-not out-stream (not (or year month day)) (url-elements "archive") "archive-nav-item-year" "All") 
-                     (loop for y from earliest-year to current-year
-                           do (link-if-not out-stream (eq y year) (url-elements "archive" y) "archive-nav-item-year" y))
-                     (format out-stream "</div>")
-                     (when year
-                       (format out-stream "<div class=\"archive-nav-months\">")
-                       (link-if-not out-stream (not month) (url-elements "archive" year) "archive-nav-item-month" "All") 
-                       (loop for m from (if (= (or year current-year) earliest-year) earliest-month 1) to (if (= (or year current-year) current-year) current-month 12)
-                             do (link-if-not out-stream (eq m month) (url-elements "archive" (or year current-year) m) "archive-nav-item-month" (elt local-time:+short-month-names+ m)))
-                       (format out-stream "</div>"))
-                     (when month
-                       (format out-stream "<div class=\"archive-nav-days\">")
-                       (link-if-not out-stream (not day) (url-elements "archive" year month) "archive-nav-item-day" "All")
-                       (loop for d from (if (and (= (or year current-year) earliest-year) (= (or month current-month) earliest-month)) earliest-day 1)
-                             to (if (and (= (or year current-year) current-year) (= (or month current-month) current-month)) current-day (local-time:days-in-month (or month current-month) (or year current-year)))
-                             do (link-if-not out-stream (eq d day) (url-elements "archive" (or year current-year) (or month current-month) d) "archive-nav-item-day" d))
-                       (format out-stream "</div>")) 
-                     (format out-stream "</div>")
-                     (funcall top-nav)
+                                 :items-per-page 50 :with-offset offset :with-next (> (length posts) 50)
+                                 :additional-nav #'archive-nav)
                      (write-index-items-to-html out-stream (firstn posts 50) :empty-message "No posts for the selected period.")))))))
 
 (define-page view-about "/about" ()
