@@ -1143,10 +1143,11 @@ signaled condition to OUT-STREAM."
                                                          (generate-post-link new-post-data)))))))))
 
 (hunchentoot:define-easy-handler (view-karma-vote :uri "/karma-vote") ((csrf-token :request-type :post) (target :request-type :post) (target-type :request-type :post) (vote-type :request-type :post))
-				 (check-csrf-token csrf-token)
-				 (let ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token")))
-				   (multiple-value-bind (points vote-type) (do-lw2-vote lw2-auth-token target target-type vote-type)
-				     (json:encode-json-to-string (list (pretty-number points "point") vote-type)))))
+  (with-error-page
+    (check-csrf-token csrf-token)
+    (let ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token")))
+      (multiple-value-bind (points vote-type) (do-lw2-vote lw2-auth-token target target-type vote-type)
+        (json:encode-json-to-string (list (pretty-number points "point") vote-type))))))
 
 (hunchentoot:define-easy-handler (view-check-notifications :uri "/check-notifications") ()
                                  (with-error-page
