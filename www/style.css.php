@@ -3241,8 +3241,20 @@ li {
 /* EXTERNAL CONTENT EMBEDDING */
 /******************************/
 
+/*= Pastebin =*/
+
 #content .embedPastebin {
 	margin: 1.5em auto;
+}
+#content .embedPastebin > ol {
+	list-style-type: decimal;
+	padding-left: 60px;
+}
+#content .embedPastebin > ol > li {
+	padding: 0;
+}
+#content .embedPastebin > ol > li::before {
+	display: none;
 }
 
 /**********************/

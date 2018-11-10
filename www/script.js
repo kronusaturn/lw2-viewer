@@ -2456,6 +2456,15 @@ function oldFirefoxCompatibilityScrollEventFired(event) {
 /* EXTERNAL CONTENT EMBEDDING */
 /******************************/
 
+function parseTokenizedArguments(tokens) {
+	var args = { };
+	tokens.forEach(token => {
+		let parts = token.split("=");
+		args[parts[0]] = parts.length > 1 ? parts[1] : 1;
+	});
+	return args;
+}
+
 var pastebinID = 1;
 function embedPastebin() {
 	document.querySelectorAll("pre code").forEach(codeBlock => {
@@ -2467,13 +2476,11 @@ function embedPastebin() {
 			codeBlock.textContent = "PASTEBIN EMBED FAILED. PASTE ID REQUIRED."
 			return;
 		}
-		console.log(tokens);
 
 		let paste_id = tokens[1];
 		let embed_src_url = "https://api.obormot.net/gw/embed/pastebin/" + paste_id;
-
-		let no_line_nums = tokens.contains("nolinenums");
-		let no_footer = tokens.contains("nofooter");
+		let args = parseTokenizedArguments(tokens.slice(2));
+		console.log(args);
 
 		let request = new XMLHttpRequest();
 		request.addEventListener("load", embeddedPastebinLoaded);
@@ -2491,8 +2498,33 @@ function embedPastebin() {
 			let paste = elementFromHTML(response.content);
 			paste.id = "pastebinEmbed_" + pastebinID++;
 
-			if (no_footer) removeElement(paste.querySelector(".embedFooter"), paste);
-			if (no_line_nums) paste.querySelectorAll(".embedPastebin > ol > li").forEach(line => { line.style.paddingLeft = "5px"; });
+			if (args.nofooter) removeElement(paste.querySelector(".embedFooter"), paste);
+			if (args.nolinenums) paste.querySelector(".embedPastebin > ol").style.paddingLeft = "5px";
+			if (args.lines != "") {
+				// Construct a list of line numbers from the specified ranges.
+				var line_ranges = args.lines.split(",");
+				var line_numbers = [ ];
+				var to_end_from = -1;
+				line_ranges.forEach(line_range => {
+					var range;
+					if (range = line_range.match(/([0-9]+)[-–]([0-9]+)/)) {
+						line_numbers = arrayMerge(line_numbers, arrayFromRange(parseInt(range[1]) - 1, parseInt(range[2]) - 1));
+					} else if (range = line_range.match(/([0-9]+)[-–]$/)) {
+						line_numbers.push(parseInt(range[1]) - 1);
+						to_end_from = parseInt(range[1]) - 1;
+					} else {
+						line_numbers.push(parseInt(range) - 1);
+					}
+				});
+				
+				var lines = paste.querySelectorAll(".embedPastebin > ol > li");
+				if (to_end_from >= 0)
+					line_numbers = arrayMerge(line_numbers, arrayFromRange(to_end_from, lines.length - 1));
+				lines.forEach((line, i) => {
+					if (!line_numbers.contains(i)) removeElement(line, paste);
+					else line.value = ++i;
+				});
+			}
 
 			codeBlock.parentElement.parentElement.replaceChild(paste, codeBlock.parentElement);
 		}
@@ -2535,6 +2567,15 @@ function removeElement(elementOrSelector, ancestor = document) {
 
 Array.prototype.contains = function (element) {
 	return (this.indexOf(element) !== -1);
+}
+
+function arrayMerge(...arr) {
+  return [...new Set([].concat(...arr))];
+}
+
+function arrayFromRange(start, end) {
+	let size = end - start + 1;
+	return Array.from(new Array(size), (x,i) => i + start);
 }
 
 String.prototype.hasPrefix = function (prefix) {
