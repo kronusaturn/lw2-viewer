@@ -10,7 +10,7 @@
 
 (defglobal *cache-environment-databases-list* nil)
 
-(defglobal *db-environments-lock* (make-mutex))
+(defglobal *db-environments-lock* (make-mutex :name "DB environments mutex"))
 
 (defglobal *db-environments* nil)
 
@@ -24,7 +24,7 @@
 (defstruct environment-container
   (semaphore nil :type semaphore)
   (environment nil :type lmdb:environment)
-  (open-databases (make-hash-table :test 'equal :synchronized t) :type hash-table))
+  (open-databases (make-hash-table :test 'equal) :type hash-table))
 
 (defun call-with-environment-transaction (fn environment &key read-only)
   (if lmdb:*transaction*
