@@ -6,7 +6,7 @@
 
 (add-template-directory (asdf:system-relative-pathname "lw2-viewer" "templates/"))
 
-(define-cache-database "auth-token-to-userid" "auth-token-to-username")
+(define-cache-database "auth-token-to-userid" "auth-token-to-username" "comment-markdown-source" "post-markdown-source")
 
 (defvar *current-auth-token*)
 (defvar *current-userid*)
@@ -452,7 +452,7 @@ signaled condition to OUT-STREAM."
     (labels ((get-redirects (uri-list)
                (loop for request-uri in uri-list collect
                      (multiple-value-bind (body status headers uri)
-                       (drakma:http-request request-uri :method :head :close t :redirect nil :additional-headers (alist :referer (site-uri *current-site*) :accept "text/css,*/*;q=0.1"))
+                       (drakma:http-request request-uri :method :head :close t :redirect nil :additional-headers (alist :referer (site-uri (first *sites*)) :accept "text/css,*/*;q=0.1"))
                        (declare (ignore body uri))
                        (let ((location (cdr (assoc :location headers))))
                          (if (and (typep status 'integer) (< 300 status 400) location)
