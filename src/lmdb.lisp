@@ -60,17 +60,6 @@
           (setf (gethash db-name open-databases) db))))
     (setf (environment-container-databases-list environment-container) *cache-databases-list*)))
 
-(when (boundp '*cache-db*)
-  (let ((env *db-environment*)
-        (open-dbs *open-databases*))
-    (make-thread (lambda ()
-                   (sleep 30)
-                   (close-environment env open-dbs))
-                 :name "LMDB old environment cleanup"))
-  (makunbound '*cache-db*)
-  (makunbound '*db-environment*)
-  (makunbound '*open-databases*))
-
 (declare-backend-function get-current-environment)
 
 (define-backend-operation get-current-environment backend-lmdb-cache ()
