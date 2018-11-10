@@ -2,7 +2,7 @@
   (:use #:cl #:sb-thread #:flexi-streams #:djula #:lw2-viewer.config #:lw2.utils #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login #:lw2.context #:lw2.sites)
   (:unintern
     #:define-regex-handler #:*fonts-stylesheet-uri* #:generate-fonts-link
-    #:user-nav-bar #:*primary-nav* #:*secondary-nav*))
+    #:user-nav-bar #:*primary-nav* #:*secondary-nav* #:*nav-bars*))
 
 (in-package #:lw2-viewer) 
 
@@ -502,15 +502,33 @@ signaled condition to OUT-STREAM."
       (format out-stream "<~:[a href=\"~A\"~;span~*~] id=\"inbox-indicator\" class=\"~A\" accesskey=\"o\" title=\"~A~:[ [o]~;~]\">~A</a>"
               as-link target-uri nm-class nm-text as-link nm-text))))
 
-(defparameter *nav-bars* '((:primary-bar (("home" "/" "Home" :description "Latest frontpage posts" :accesskey "h")
-                                          ("featured" "/index?view=featured" "Featured" :description "Latest featured posts" :accesskey "f")
-                                          ("all" "/index?view=all" "All" :description "Latest posts from all sections" :accesskey "a")
-                                          ("meta" "/index?view=meta" "Meta" :description "Latest meta posts" :accesskey "m")
-                                          ("recent-comments" "/recentcomments" "<span>Recent </span>Comments" :description "Latest comments" :accesskey "c")))
-                           (:secondary-bar (("archive" "/archive" "Archive" :accesskey "r")
-                                            ("about" "/about" "About" :accesskey "t")
-                                            ("search" "/search" "Search" :html search-bar-to-html)
-                                            user-nav-item))))
+(defmethod site-nav-bars ((site site))
+  '((:secondary-bar (("archive" "/archive" "Archive" :accesskey "r")
+                     ("about" "/about" "About" :accesskey "t")
+                     user-nav-item))
+    (:primary-bar (("home" "/" "Home" :description "Latest frontpage posts" :accesskey "h")
+                   ("recent-comments" "/recentcomments" "<span>Recent </span>Comments" :description "Latest comments" :accesskey "c")))))
+
+(defmethod site-nav-bars ((site lesswrong-viewer-site))
+  '((:secondary-bar (("archive" "/archive" "Archive" :accesskey "r")
+                     ("about" "/about" "About" :accesskey "t")
+                     ("search" "/search" "Search" :html search-bar-to-html)
+                     user-nav-item))
+    (:primary-bar (("home" "/" "Home" :description "Latest frontpage posts" :accesskey "h")
+                   ("featured" "/index?view=featured" "Featured" :description "Latest featured posts" :accesskey "f")
+                   ("all" "/index?view=all" "All" :description "Latest posts from all sections" :accesskey "a")
+                   ("meta" "/index?view=meta" "Meta" :description "Latest meta posts" :accesskey "m")
+                   ("recent-comments" "/recentcomments" "<span>Recent </span>Comments" :description "Latest comments" :accesskey "c")))))
+
+(defmethod site-nav-bars ((site ea-forum-viewer-site))
+  '((:secondary-bar (("archive" "/archive" "Archive" :accesskey "r")
+                     ("about" "/about" "About" :accesskey "t")
+                     ("search" "/search" "Search" :html search-bar-to-html)
+                     user-nav-item))
+    (:primary-bar (("home" "/" "Home" :description "Latest frontpage posts" :accesskey "h")
+                   ("all" "/index?view=all" "All" :description "Latest posts from all sections" :accesskey "a")
+                   ("meta" "/index?view=community" "Community" :description "Latest community posts" :accesskey "m")
+                   ("recent-comments" "/recentcomments" "<span>Recent </span>Comments" :description "Latest comments" :accesskey "c")))))
 
 (defun prepare-nav-bar (nav-bar current-uri)
   (list (first nav-bar)
@@ -550,8 +568,8 @@ signaled condition to OUT-STREAM."
   (format out-stream "</div>"))
 
 (defun nav-bar-to-html (out-stream &optional current-uri)
-  (let* ((nav-bars (map 'list (lambda (x) (prepare-nav-bar x current-uri)) *nav-bars*))
-         (active-bar (find-if (lambda (x) (nav-bar-active x current-uri)) nav-bars))
+  (let* ((nav-bars (map 'list (lambda (x) (prepare-nav-bar x current-uri)) (site-nav-bars *current-site*)))
+         (active-bar (or (find-if (lambda (x) (nav-bar-active x current-uri)) nav-bars) (car (last nav-bars))))
          (inactive-bars (remove active-bar nav-bars)))
     (dolist (bar inactive-bars)
       (nav-bar-outer out-stream "inactive-bar" bar current-uri))
@@ -958,7 +976,7 @@ signaled condition to OUT-STREAM."
                                                             :param-name "sort"
                                                             :extra-class "sort"))))))
 
-(define-page view-index "/index" ((view :member (:all :new :frontpage :featured :meta :alignment-forum) :default :all)
+(define-page view-index "/index" ((view :member (:all :new :frontpage :featured :meta :community :alignment-forum) :default :all)
                                   before after
                                   (offset :type fixnum)
                                   (limit :type fixnum)

@@ -5,6 +5,7 @@
 (define-site
   :uri "http://www.example.com/"
   :title "Example Site"
+  :class lesswrong-viewer-site
   :backend ("lw2" ; Supported backends: lw2 lw2-legacy accordius
             :graphql-uri "https://www.lesswrong.com/graphql"
             :websocket-uri "wss://www.lesswrong.com/"
