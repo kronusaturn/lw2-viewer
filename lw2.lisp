@@ -1,6 +1,8 @@
 (uiop:define-package #:lw2-viewer
   (:use #:cl #:sb-thread #:flexi-streams #:djula #:lw2-viewer.config #:lw2.utils #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login #:lw2.context #:lw2.sites)
-  (:unintern #:define-regex-handler #:*fonts-stylesheet-uri* #:generate-fonts-link))
+  (:unintern
+    #:define-regex-handler #:*fonts-stylesheet-uri* #:generate-fonts-link
+    #:user-nav-bar #:*primary-nav* #:*secondary-nav*))
 
 (in-package #:lw2-viewer) 
 
@@ -487,73 +489,85 @@ signaled condition to OUT-STREAM."
 (defun generate-versioned-link (file)
   (format nil "~A?v=~A" file (sb-posix:stat-mtime (sb-posix:stat (format nil "www~A" file))))) 
 
-(defun search-bar-to-html ()
+(defun search-bar-to-html (out-stream)
   (declare (special *current-search-query*))
   (let ((query (and (boundp '*current-search-query*) (hunchentoot:escape-for-html *current-search-query*))))
-    (format nil "<form action=\"/search\" class=\"nav-inner\"><input name=\"q\" type=\"search\" ~@[value=\"~A\"~] autocomplete=\"off\" accesskey=\"s\" title=\"Search [s]&#10;Tip: Paste a LessWrong URL here to jump to that page.\"><button>Search</button></form>" query)))  
+    (format out-stream "<form action=\"/search\" class=\"nav-inner\"><input name=\"q\" type=\"search\" ~@[value=\"~A\"~] autocomplete=\"off\" accesskey=\"s\" title=\"Search [s]&#10;Tip: Paste a LessWrong URL here to jump to that page.\"><button>Search</button></form>" query)))  
 
-(defun inbox-to-html (user-slug &optional new-messages)
+(defun inbox-to-html (out-stream user-slug &optional new-messages)
   (let* ((target-uri (format nil "/users/~A?show=inbox" user-slug))
          (as-link (string= (hunchentoot:request-uri*) target-uri)))
     (multiple-value-bind (nm-class nm-text)
       (if new-messages (values "new-messages" "New messages") (values "no-messages" "Inbox"))
-      (format nil "<~:[a href=\"~A\"~;span~*~] id=\"inbox-indicator\" class=\"~A\" accesskey=\"o\" title=\"~A~:[ [o]~;~]\">~A</a>"
+      (format out-stream "<~:[a href=\"~A\"~;span~*~] id=\"inbox-indicator\" class=\"~A\" accesskey=\"o\" title=\"~A~:[ [o]~;~]\">~A</a>"
               as-link target-uri nm-class nm-text as-link nm-text))))
 
-(defparameter *primary-nav* '(("home" "/" "Home" :description "Latest frontpage posts" :accesskey "h")
-			      ("featured" "/index?view=featured" "Featured" :description "Latest featured posts" :accesskey "f")
-			      ("all" "/index?view=all" "All" :description "Latest posts from all sections" :accesskey "a")
-			      ("meta" "/index?view=meta" "Meta" :description "Latest meta posts" :accesskey "m")
-			      ("recent-comments" "/recentcomments" "<span>Recent </span>Comments" :description "Latest comments" :accesskey "c"))) 
+(defparameter *nav-bars* '((:primary-bar (("home" "/" "Home" :description "Latest frontpage posts" :accesskey "h")
+                                          ("featured" "/index?view=featured" "Featured" :description "Latest featured posts" :accesskey "f")
+                                          ("all" "/index?view=all" "All" :description "Latest posts from all sections" :accesskey "a")
+                                          ("meta" "/index?view=meta" "Meta" :description "Latest meta posts" :accesskey "m")
+                                          ("recent-comments" "/recentcomments" "<span>Recent </span>Comments" :description "Latest comments" :accesskey "c")))
+                           (:secondary-bar (("archive" "/archive" "Archive" :accesskey "r")
+                                            ("about" "/about" "About" :accesskey "t")
+                                            ("search" "/search" "Search" :html search-bar-to-html)
+                                            user-nav-item))))
 
-(defparameter *secondary-nav* nil)
+(defun prepare-nav-bar (nav-bar current-uri)
+  (list (first nav-bar)
+        (map 'list (lambda (item) (if (listp item) item (funcall item current-uri)))
+             (second nav-bar))))
 
-(defun nav-bar-inner (items &optional current-uri)
-  (let ((active-bar nil)) 
-    (values
-      (format nil "~{~A~}"
-	      (maplist (lambda (items)
-			 (let ((item (first items))) 
-			   (destructuring-bind (id uri name &key description html accesskey nofollow trailing-html) item
-			     (if (string= uri current-uri)
-			       (progn (setf active-bar t)
-				      (format nil "<span id=\"nav-item-~A\" class=\"nav-item nav-current\" ~@[title=\"~A\"~]>~:[<span class=\"nav-inner\">~A</span>~@[~A~]~;~:*~A~]</span>"
-					      id description (and html (funcall html)) name trailing-html))
-			       (format nil "<span id=\"nav-item-~A\" class=\"nav-item nav-inactive~:[~; nav-item-last-before-current~]\" ~@[title=\"~A\"~]>~:[<a href=\"~A\" class=\"nav-inner\"~@[ accesskey=\"~A\"~]~:[~; rel=\"nofollow\"~]>~A</a>~@[~A~]~;~:*~A~]</span>"
-				       id (string= (nth 1 (cadr items)) current-uri) (if accesskey (format nil "~A [~A]" (or description name) accesskey) description) (and html (funcall html)) uri accesskey nofollow name
-				       trailing-html)))))
-		       items))
-      active-bar)))
+(defun nav-item-active (item current-uri)
+  (when item
+    (destructuring-bind (id uri name &key description html accesskey nofollow trailing-html override-uri) item
+      (declare (ignore id name description html accesskey nofollow trailing-html))
+      (string= (or override-uri uri) current-uri))))
 
-(defun nav-bar-outer (id class html)
-  (format nil "<div id=\"~A\" class=\"nav-bar~@[ ~A~]\">~A</div>" id class html))
+(defun nav-bar-active (nav-bar current-uri)
+  (some (lambda (x) (nav-item-active x current-uri)) (second nav-bar)))
 
-(defun nav-bar-to-html (&optional current-uri)
-  (let ((primary-bar "primary-bar")
-	(secondary-bar "secondary-bar")) 
-    (let ((primary-html (nav-bar-inner *primary-nav* current-uri)))
-      (multiple-value-bind (secondary-html secondary-active)
-	(nav-bar-inner *secondary-nav* current-uri)
-	(if secondary-active
-	  (format nil "~A~A" (nav-bar-outer primary-bar "inactive-bar" primary-html) (nav-bar-outer secondary-bar "active-bar" secondary-html))
-	  (format nil "~A~A" (nav-bar-outer secondary-bar "inactive-bar" secondary-html) (nav-bar-outer primary-bar "active-bar" primary-html))))))) 
+(defun nav-bar-inner (out-stream items &optional current-uri)
+  (maplist (lambda (items)
+             (let ((item (first items)))
+               (destructuring-bind (id uri name &key description html accesskey nofollow trailing-html override-uri) item
+                 (declare (ignore override-uri))
+                 (let* ((item-active (nav-item-active item current-uri))
+                        (nav-class (format nil "nav-item ~:[nav-inactive~;nav-current~]~:[~; nav-item-last-before-current~]"
+                                           item-active (and (not item-active) (nav-item-active (cadr items) current-uri)))))
+                     (format out-stream "<span id=\"nav-item-~A\" class=\"~A\" ~@[title=\"~A\"~]>"
+                             id nav-class description)
+                     (if html
+                         (funcall html out-stream)
+                         (link-if-not out-stream item-active uri "nav-inner" name :accesskey accesskey :nofollow nofollow))
+                     (if trailing-html
+                         (funcall trailing-html out-stream))
+                     (format out-stream "</span>")))))
+           items))
 
-(defun user-nav-bar (&optional current-uri)
-  (let* ((username (logged-in-username))
-         (*secondary-nav* `(("archive" "/archive" "Archive" :accesskey "r")
-                            ("about" "/about" "About" :accesskey "t")
-                            ("search" "/search" "Search" :html ,#'search-bar-to-html)
-                            ,(if *read-only-mode*
-                                 `("login" "/login" "Read Only Mode" :html ,(lambda () (format nil "<span class=\"nav-inner\" title=\"~A\">[Read Only Mode]</span>"
-                                                                                               (typecase *read-only-mode*
-                                                                                                 (string *read-only-mode*)
-                                                                                                 (t *read-only-default-message*)))))
-                                 (if username
-                                     (let ((user-slug (encode-entities (logged-in-user-slug))))
-                                       `("login" ,(format nil "/users/~A" user-slug) ,(plump:encode-entities username) :description "User page" :accesskey "u"
-                                         :trailing-html ,(inbox-to-html user-slug)))
-                                     `("login" ,(format nil "/login?return=~A" (url-rewrite:url-encode current-uri)) "Log In" :accesskey "u" :nofollow t))))))
-    (nav-bar-to-html current-uri)))
+(defun nav-bar-outer (out-stream class nav-bar &optional current-uri)
+  (format out-stream "<div id=\"~A\" class=\"nav-bar~@[ ~A~]\">" (string-downcase (first nav-bar)) class)
+  (nav-bar-inner out-stream (second nav-bar) current-uri)
+  (format out-stream "</div>"))
+
+(defun nav-bar-to-html (out-stream &optional current-uri)
+  (let* ((nav-bars (map 'list (lambda (x) (prepare-nav-bar x current-uri)) *nav-bars*))
+         (active-bar (find-if (lambda (x) (nav-bar-active x current-uri)) nav-bars))
+         (inactive-bars (remove active-bar nav-bars)))
+    (dolist (bar inactive-bars)
+      (nav-bar-outer out-stream "inactive-bar" bar current-uri))
+    (nav-bar-outer out-stream "active-bar" active-bar current-uri)))
+
+(defun user-nav-item (&optional current-uri)
+  (if *read-only-mode*
+      `("login" "/login" "Read Only Mode" :html ,(lambda () (format nil "<span class=\"nav-inner\" title=\"~A\">[Read Only Mode]</span>"
+                                                                    (typecase *read-only-mode*
+                                                                      (string *read-only-mode*)
+                                                                      (t *read-only-default-message*)))))
+      (alexandria:if-let (username (logged-in-username))
+          (let ((user-slug (encode-entities (logged-in-user-slug))))
+            `("login" ,(format nil "/users/~A" user-slug) ,(plump:encode-entities username) :description "User page" :accesskey "u"
+              :trailing-html ,(lambda (out-stream) (inbox-to-html out-stream user-slug))))
+          `("login" ,(format nil "/login?return=~A" (url-rewrite:url-encode current-uri)) "Log In" :accesskey "u" :nofollow t :override-uri "/login"))))
 
 (defun sublevel-nav-to-html (out-stream options current &key default (base-uri (hunchentoot:request-uri*)) (param-name "show") (remove-params '("offset")) extra-class)
   (declare (type (or null string) extra-class))
@@ -615,9 +629,9 @@ signaled condition to OUT-STREAM."
             (site-title *current-site*)
             description
             robots)
-    (format out-stream "</head><body><div id=\"content\"~@[ class=\"~A\"~]>~A"
-            content-class
-            (user-nav-bar (or current-uri (replace-query-params (hunchentoot:request-uri*) "offset" nil "sort" nil)))))
+    (format out-stream "</head><body><div id=\"content\"~@[ class=\"~A\"~]>"
+            content-class)
+    (nav-bar-to-html out-stream (or current-uri (replace-query-params (hunchentoot:request-uri*) "offset" nil "sort" nil))))
   (force-output out-stream))
 
 (defun replace-query-params (uri &rest params)
@@ -657,13 +671,11 @@ signaled condition to OUT-STREAM."
               (write-item next-uri "last" "Last page" "")
               (format out-stream "</div>"))))
       (lambda (out-stream)
-        (write-string
-          (nav-bar-outer "bottom-bar" nil (nav-bar-inner
-                                            `(,@(if first-uri `(("first" ,first-uri "Back to first")))
-                                               ,@(if prev-uri `(("prev" ,prev-uri "Previous" :nofollow t)))
-                                               ("top" "#top" "Back to top")
-                                               ,@(if next-uri `(("next" ,next-uri "Next" :nofollow t))))))
-          out-stream)
+        (nav-bar-outer out-stream nil `(:bottom-bar
+                                         (,@(if first-uri `(("first" ,first-uri "Back to first")))
+                                           ,@(if prev-uri `(("prev" ,prev-uri "Previous" :nofollow t)))
+                                           ("top" "#top" "Back to top")
+                                           ,@(if next-uri `(("next" ,next-uri "Next" :nofollow t))))))
         (format out-stream "<script>document.querySelectorAll('#bottom-bar').forEach(function (bb) { bb.classList.add('decorative'); });</script>")))))
 
 (defun end-html (out-stream &key items-per-page bottom-bar-fn)
@@ -823,10 +835,10 @@ signaled condition to OUT-STREAM."
                                   (write-index-items-to-html out-stream items :need-auth need-auth
                                                              :skip-section section)))))
 
-(defun link-if-not (stream linkp url class text)
+(defun link-if-not (stream linkp url class text &key accesskey nofollow)
   (declare (dynamic-extent linkp url text))
   (if (not linkp)
-      (format stream "<a href=\"~A\" class=\"~A\">~A</a>" url class text)
+      (format stream "<a href=\"~A\" class=\"~A\"~@[ accesskey=\"~A\"~]~:[~; rel=\"nofollow\"~]>~A</a>" url class accesskey nofollow text)
       (format stream "<span class=\"~A\">~A</span>" class text)))
 
 (defun postprocess-markdown (markdown)
