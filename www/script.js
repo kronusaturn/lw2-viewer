@@ -2468,35 +2468,43 @@ function parseTokenizedArguments(tokens) {
 var pastebinID = 1;
 function embedPastebin() {
 	document.querySelectorAll("pre code").forEach(codeBlock => {
+		// Split code block into lines and check if this is meant to be a pastebin embed.
 		let lines = codeBlock.textContent.trim().split("\n");
 		if (lines.length == 0 || !lines[0].hasPrefix("PASTEBIN")) return;
 
+		// Tokenize the parameters line and make sure a paste ID is given.
 		let tokens = lines[0].replace(/\u00ad/,"").match(/(\S+)/g);
 		if (tokens.length < 2) {
 			codeBlock.textContent = "PASTEBIN EMBED FAILED. PASTE ID REQUIRED."
 			return;
 		}
 
+		// Get the paste ID and parse remaining arguments, if any.
 		let paste_id = tokens[1];
 		let embed_src_url = "https://api.obormot.net/gw/embed/pastebin/" + paste_id;
 		let args = parseTokenizedArguments(tokens.slice(2));
 
+		// Retrieve the paste from the pastebin-embedding API endpoint.
 		let request = new XMLHttpRequest();
 		request.addEventListener("load", embeddedPastebinLoaded);
 		request.open("GET", embed_src_url);
 		request.send();
 
+		// Process retrieved paste.
 		function embeddedPastebinLoaded(event) {
 			let response = JSON.parse(event.target.responseText);
 
+			// Inject the pastebin.com-provided styles, if needed.
 			if (document.querySelector("#embed-pastebin-styles") == null) {
 				document.querySelector("head").insertAdjacentHTML("beforeend", response.styles.replace(/\\/g, ""));
 				document.querySelector("head").lastChild.id = "embed-pastebin-styles";
 			}
 
+			// Give each paste a unique ID.
 			let paste = elementFromHTML(response.content);
 			paste.id = "pastebinEmbed_" + pastebinID++;
 
+			// Process arguments.
 			if (args.nofooter) removeElement(paste.querySelector(".embedFooter"), paste);
 			if (args.nolinenums) paste.querySelector(".embedPastebin > ol").style.paddingLeft = "5px";
 			if (args.lines) {
@@ -2525,10 +2533,13 @@ function embedPastebin() {
 						line_numbers.push(parseInt(range));
 					}
 				});
-				
+
+				// Fill in line numbers implied by the "to end" line range type.
 				var lines = paste.querySelectorAll(".embedPastebin > ol > li");
 				if (to_end_from >= 0)
 					line_numbers = arrayMerge(line_numbers, arrayFromRange(to_end_from, lines.length - 1));
+
+				// Process each line, applying the appropriate provided function.
 				lines.forEach((line, i) => {
 					let linenum = line.value || ++i;
 					let func = line_numbers.contains(linenum) ?
@@ -2540,6 +2551,7 @@ function embedPastebin() {
 				});
 			}
 
+			// Inject the fully processed and formatted paste.
 			codeBlock.parentElement.parentElement.replaceChild(paste, codeBlock.parentElement);
 		}
 	});
