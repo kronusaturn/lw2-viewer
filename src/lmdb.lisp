@@ -89,7 +89,7 @@
         (let ((new-environment
                 (make-environment-container
                   :semaphore (make-semaphore :name (format nil "LMDB environment semaphore for ~A" (site-host site)) :count (expt 2 20))
-                  :environment (lmdb:make-environment (backend-cache-db-path backend) :max-databases 1024 :max-readers 126 :open-flags 0 :mapsize *lmdb-mapsize*))))
+                  :environment (lmdb:make-environment (backend-cache-db-path (site-backend site)) :max-databases 1024 :max-readers 126 :open-flags 0 :mapsize *lmdb-mapsize*))))
           (lmdb:open-environment (environment-container-environment new-environment) :create t)
           (prepare-environment new-environment)
           (setf (backend-lmdb-environment (site-backend site)) new-environment)
