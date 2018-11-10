@@ -6502,6 +6502,16 @@ select {
 	}	
 }
 
+/*============================*/
+/* EXTERNAL CONTENT EMBEDDING */
+/*============================*/
+
+/*= Pastebin =*/
+
+.embedPastebin li .pastebin-embed-highlighted-line {
+	background-color: #001994;
+}
+
 /*====================*/
 /* FOR NARROW SCREENS */
 /*====================*/

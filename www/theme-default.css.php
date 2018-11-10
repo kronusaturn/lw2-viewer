@@ -1779,6 +1779,16 @@ EOT;
 	}	
 }
 
+/*============================*/
+/* EXTERNAL CONTENT EMBEDDING */
+/*============================*/
+
+/*= Pastebin =*/
+
+.embedPastebin li .pastebin-embed-highlighted-line {
+	background-color: #ff0;
+}
+
 /*====================*/
 /* FOR NARROW SCREENS */
 /*====================*/

@@ -2480,7 +2480,6 @@ function embedPastebin() {
 		let paste_id = tokens[1];
 		let embed_src_url = "https://api.obormot.net/gw/embed/pastebin/" + paste_id;
 		let args = parseTokenizedArguments(tokens.slice(2));
-		console.log(args);
 
 		let request = new XMLHttpRequest();
 		request.addEventListener("load", embeddedPastebinLoaded);
@@ -2500,9 +2499,19 @@ function embedPastebin() {
 
 			if (args.nofooter) removeElement(paste.querySelector(".embedFooter"), paste);
 			if (args.nolinenums) paste.querySelector(".embedPastebin > ol").style.paddingLeft = "5px";
-			if (args.lines != "") {
+			if (args.lines) {
+				processLineRanges(args.lines,
+					(line, idx) => { line.value = ++idx; },
+					(line, idx) => { removeElement(line, paste); });
+			}
+			if (args.hl) {
+				processLineRanges(args.hl,
+					(line, idx) => { line.firstChild.addClass("pastebin-embed-highlighted-line"); });
+			}
+			
+			function processLineRanges(lineRangeSpecification, funcForIncludedLines, funcForExcludedLines) {
 				// Construct a list of line numbers from the specified ranges.
-				var line_ranges = args.lines.split(",");
+				var line_ranges = lineRangeSpecification.split(",");
 				var line_numbers = [ ];
 				var to_end_from = -1;
 				line_ranges.forEach(line_range => {
@@ -2521,8 +2530,10 @@ function embedPastebin() {
 				if (to_end_from >= 0)
 					line_numbers = arrayMerge(line_numbers, arrayFromRange(to_end_from, lines.length - 1));
 				lines.forEach((line, i) => {
-					if (!line_numbers.contains(i)) removeElement(line, paste);
-					else line.value = ++i;
+					let func = (!line_numbers.contains(i) && typeof funcForExcludedLines != "undefined") ?
+									funcForExcludedLines :
+									funcForIncludedLines;
+					func(line, i);
 				});
 			}
 
