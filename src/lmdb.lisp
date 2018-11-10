@@ -2,13 +2,11 @@
   (:use #:cl #:sb-ext #:sb-thread #:alexandria #:lw2.sites #:lw2.context #:lw2.backend-modules #:lw2-viewer.config #:lw2.hash-utils)
   (:export
     #:define-cache-database #:with-cache-mutex #:with-cache-transaction #:with-cache-readonly-transaction #:with-db #:lmdb-put-string #:cache-put #:cache-get #:simple-cacheable #:define-lmdb-memoized)
-  (:unintern #:lmdb-clear-db #:*db-mutex*))
+  (:unintern #:lmdb-clear-db #:*db-mutex* #:*cache-environment-databases-list*))
 
 (in-package #:lw2.lmdb) 
 
 (defglobal *cache-databases-list* nil)
-
-(defglobal *cache-environment-databases-list* nil)
 
 (defglobal *db-environments-lock* (make-mutex :name "DB environments mutex"))
 
@@ -24,7 +22,8 @@
 (defstruct environment-container
   (semaphore nil :type semaphore)
   (environment nil :type lmdb:environment)
-  (open-databases (make-hash-table :test 'equal) :type hash-table))
+  (open-databases (make-hash-table :test 'equal) :type hash-table)
+  (databases-list nil))
 
 (defun call-with-environment-transaction (fn environment &key read-only)
   (if lmdb:*transaction*
@@ -58,7 +57,8 @@
       (dolist (db-name *cache-databases-list*)
         (let ((db (lmdb:make-database db-name)))
           (lmdb:open-database db :create t)
-          (setf (gethash db-name open-databases) db))))))
+          (setf (gethash db-name open-databases) db))))
+    (setf (environment-container-databases-list environment-container) *cache-databases-list*)))
 
 (when (boundp '*cache-db*)
   (let ((env *db-environment*)
@@ -101,7 +101,7 @@
 (defun get-open-database (db-name)
   (let ((env (get-current-environment)))
     (with-mutex (*db-environments-lock*)
-      (unless (eq *cache-databases-list* *cache-environment-databases-list*)
+      (unless (eq *cache-databases-list* (environment-container-databases-list env))
         (prepare-environment env)))
     (or (gethash db-name (environment-container-open-databases env))
         (error "The database '~A' is not defined." db-name))))
