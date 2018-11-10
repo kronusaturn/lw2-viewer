@@ -2501,12 +2501,12 @@ function embedPastebin() {
 			if (args.nolinenums) paste.querySelector(".embedPastebin > ol").style.paddingLeft = "5px";
 			if (args.lines) {
 				processLineRanges(args.lines,
-					(line, idx) => { line.value = ++idx; },
-					(line, idx) => { removeElement(line, paste); });
+					(line, num) => { line.value = num; },
+					(line, num) => { removeElement(line, paste); });
 			}
 			if (args.hl) {
 				processLineRanges(args.hl,
-					(line, idx) => { line.firstChild.addClass("pastebin-embed-highlighted-line"); });
+					(line, num) => { line.firstChild.addClass("pastebin-embed-highlighted-line"); });
 			}
 			
 			function processLineRanges(lineRangeSpecification, funcForIncludedLines, funcForExcludedLines) {
@@ -2517,12 +2517,12 @@ function embedPastebin() {
 				line_ranges.forEach(line_range => {
 					var range;
 					if (range = line_range.match(/([0-9]+)[-–]([0-9]+)/)) {
-						line_numbers = arrayMerge(line_numbers, arrayFromRange(parseInt(range[1]) - 1, parseInt(range[2]) - 1));
+						line_numbers = arrayMerge(line_numbers, arrayFromRange(parseInt(range[1]), parseInt(range[2])));
 					} else if (range = line_range.match(/([0-9]+)[-–]$/)) {
-						line_numbers.push(parseInt(range[1]) - 1);
-						to_end_from = parseInt(range[1]) - 1;
+						line_numbers.push(parseInt(range[1]));
+						to_end_from = parseInt(range[1]);
 					} else {
-						line_numbers.push(parseInt(range) - 1);
+						line_numbers.push(parseInt(range));
 					}
 				});
 				
@@ -2530,10 +2530,13 @@ function embedPastebin() {
 				if (to_end_from >= 0)
 					line_numbers = arrayMerge(line_numbers, arrayFromRange(to_end_from, lines.length - 1));
 				lines.forEach((line, i) => {
-					let func = (!line_numbers.contains(i) && typeof funcForExcludedLines != "undefined") ?
-									funcForExcludedLines :
-									funcForIncludedLines;
-					func(line, i);
+					let linenum = line.value || ++i;
+					let func = line_numbers.contains(linenum) ?
+									funcForIncludedLines :
+									typeof funcForExcludedLines != "undefined" ?
+										funcForExcludedLines :
+										(line, num) => { };
+					func(line, linenum);
 				});
 			}
 
