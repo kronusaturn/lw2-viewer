@@ -670,14 +670,14 @@ signaled condition to OUT-STREAM."
 
 (defun pagination-nav-bars (&key with-offset with-total with-next items-per-page)
   (labels ((pages-to-end (n) (< (+ with-offset (* items-per-page n)) with-total)))
-    (let* ((with-next (if with-total (pages-to-end 2) with-next))
+    (let* ((with-next (if with-total (pages-to-end 1) with-next))
            (next (if (and with-offset with-next) (+ with-offset items-per-page)))
            (prev (if (and with-offset (>= with-offset items-per-page)) (- with-offset items-per-page)))
            (request-uri (hunchentoot:request-uri*))
            (first-uri (if (and prev (> prev 0)) (replace-query-params request-uri "offset" nil)))
            (prev-uri (if prev (replace-query-params request-uri "offset" (if (= prev 0) nil prev))))
            (next-uri (if next (replace-query-params request-uri "offset" next)))
-           (last-uri (if (and with-total with-offset (pages-to-end 1))
+           (last-uri (if (and with-total with-offset (pages-to-end 2))
                          (replace-query-params request-uri "offset" (- with-total (mod (- with-total 1) items-per-page) 1)))))
       (values
         (if (or next prev last-uri)
