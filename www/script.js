@@ -2423,22 +2423,41 @@ function focusedImageScrolled(event) {
 						+ "px";
 	image.style.height = "";
 
-	// Move image so that the point under the cursor stays the same.
-	if (imageBoundingBox.left <= event.clientX &&
-		event.clientX <= imageBoundingBox.right && 
-		imageBoundingBox.top <= event.clientY &&
-		event.clientY <= imageBoundingBox.bottom) {
-		let offsetOfImageFromCursor = {
-			x: imageBoundingBox.x - event.clientX,
-			y: imageBoundingBox.y - event.clientY
-		}
-		let deltaFromCenteredZoom = {
-			x: image.getBoundingClientRect().x - (event.clientX + (event.deltaY < 0 ? offsetOfImageFromCursor.x * factor : offsetOfImageFromCursor.x / factor)),
-			y: image.getBoundingClientRect().y - (event.clientY + (event.deltaY < 0 ? offsetOfImageFromCursor.y * factor : offsetOfImageFromCursor.y / factor))
-		}
-		image.style.left = parseInt(getComputedStyle(image).left) - deltaFromCenteredZoom.x + "px";
-		image.style.top = parseInt(getComputedStyle(image).top) - deltaFromCenteredZoom.y + "px";
+	// Designate zoom origin.
+	var zoomOrigin;
+	// Zoom from cursor if we're zoomed in to where image exceeds screen, AND
+	// the cursor is over the image.
+	let zoomingFromCursor = (image.height >= window.innerHeight || image.width >= window.innerWidth) &&
+							(imageBoundingBox.left <= event.clientX &&
+							 event.clientX <= imageBoundingBox.right && 
+							 imageBoundingBox.top <= event.clientY &&
+							 event.clientY <= imageBoundingBox.bottom);
+	// Otherwise, if we're zooming OUT, zoom from window center; if we're 
+	// zooming IN, zoom from image center.
+	let zoomingFromWindowCenter = event.deltaY > 0;
+	if (zoomingFromCursor)
+		zoomOrigin = { x: event.clientX, 
+					   y: event.clientY };
+	else if (zoomingFromWindowCenter)
+		zoomOrigin = { x: window.innerWidth / 2, 
+					   y: window.innerHeight / 2 };
+	else
+		zoomOrigin = { x: imageBoundingBox.x + imageBoundingBox.width / 2, 
+					   y: imageBoundingBox.y + imageBoundingBox.height / 2 };
+
+	// Calculate offset from zoom origin.
+	let offsetOfImageFromZoomOrigin = {
+		x: imageBoundingBox.x - zoomOrigin.x,
+		y: imageBoundingBox.y - zoomOrigin.y
 	}
+	// Calculate delta from centered zoom.
+	let deltaFromCenteredZoom = {
+		x: image.getBoundingClientRect().x - (zoomOrigin.x + (event.deltaY < 0 ? offsetOfImageFromZoomOrigin.x * factor : offsetOfImageFromZoomOrigin.x / factor)),
+		y: image.getBoundingClientRect().y - (zoomOrigin.y + (event.deltaY < 0 ? offsetOfImageFromZoomOrigin.y * factor : offsetOfImageFromZoomOrigin.y / factor))
+	}
+	// Adjust image position appropriately.
+	image.style.left = parseInt(getComputedStyle(image).left) - deltaFromCenteredZoom.x + "px";
+	image.style.top = parseInt(getComputedStyle(image).top) - deltaFromCenteredZoom.y + "px";
 
 	// Put the filter back.
 	image.style.filter = '';
