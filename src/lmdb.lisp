@@ -60,7 +60,7 @@
           (setf (gethash db-name open-databases) db))))
     (setf (environment-container-databases-list environment-container) *cache-databases-list*)))
 
-(declare-backend-function get-current-environment)
+(define-backend-function get-current-environment ())
 
 (define-backend-operation get-current-environment backend-lmdb-cache ()
   (with-mutex (*db-environments-lock*)

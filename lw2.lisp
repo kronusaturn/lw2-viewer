@@ -668,33 +668,38 @@ signaled condition to OUT-STREAM."
       (setf (quri:uri-query quri) nil))
     (quri:render-uri quri)))
 
-(defun pagination-nav-bars (&key with-offset with-next items-per-page)
-  (let* ((next (if (and with-offset with-next) (+ with-offset items-per-page)))
-         (prev (if (and with-offset (>= with-offset items-per-page)) (- with-offset items-per-page)))
-         (request-uri (hunchentoot:request-uri*))
-         (first-uri (if (and prev (> prev 0)) (replace-query-params request-uri "offset" nil)))
-         (prev-uri (if prev (replace-query-params request-uri "offset" (if (= prev 0) nil prev))))
-         (next-uri (if next (replace-query-params request-uri "offset" next))))
-    (values
-      (if (or next prev)
-          (lambda (out-stream)
-            (labels ((write-item (uri class title accesskey)
-                       (format out-stream "<a href=\"~A\" class=\"button nav-item-~A~:[ disabled~;~]\" title=\"~A [~A]\" accesskey=\"~A\"></a>"
-                               (or uri "#") class uri title accesskey accesskey)))
-              (format out-stream "<div id='top-nav-bar'>")
-              (write-item first-uri "first" "First page" "\\")
-              (write-item prev-uri "prev" "Previous page" "[")
-              (format out-stream "<span class='page-number'><span class='page-number-label'>Page</span> ~A</span>" (+ 1 (/ (or with-offset 0) items-per-page)))
-              (write-item next-uri "next" "Next page" "]")
-              (write-item next-uri "last" "Last page" "")
-              (format out-stream "</div>"))))
-      (lambda (out-stream)
-        (nav-bar-outer out-stream nil `(:bottom-bar
-                                         (,@(if first-uri `(("first" ,first-uri "Back to first")))
-                                           ,@(if prev-uri `(("prev" ,prev-uri "Previous" :nofollow t)))
-                                           ("top" "#top" "Back to top")
-                                           ,@(if next-uri `(("next" ,next-uri "Next" :nofollow t))))))
-        (format out-stream "<script>document.querySelectorAll('#bottom-bar').forEach(function (bb) { bb.classList.add('decorative'); });</script>")))))
+(defun pagination-nav-bars (&key with-offset with-total with-next items-per-page)
+  (labels ((pages-to-end (n) (< (+ with-offset (* items-per-page n)) with-total)))
+    (let* ((with-next (if with-total (pages-to-end 2) with-next))
+           (next (if (and with-offset with-next) (+ with-offset items-per-page)))
+           (prev (if (and with-offset (>= with-offset items-per-page)) (- with-offset items-per-page)))
+           (request-uri (hunchentoot:request-uri*))
+           (first-uri (if (and prev (> prev 0)) (replace-query-params request-uri "offset" nil)))
+           (prev-uri (if prev (replace-query-params request-uri "offset" (if (= prev 0) nil prev))))
+           (next-uri (if next (replace-query-params request-uri "offset" next)))
+           (last-uri (if (and with-total with-offset (pages-to-end 1))
+                         (replace-query-params request-uri "offset" (- with-total (mod (- with-total 1) items-per-page) 1)))))
+      (values
+        (if (or next prev last-uri)
+            (lambda (out-stream)
+              (labels ((write-item (uri class title accesskey)
+                         (format out-stream "<a href=\"~A\" class=\"button nav-item-~A~:[ disabled~;~]\" title=\"~A [~A]\" accesskey=\"~A\"></a>"
+                                 (or uri "#") class uri title accesskey accesskey)))
+                (format out-stream "<div id='top-nav-bar'>")
+                (write-item first-uri "first" "First page" "\\")
+                (write-item prev-uri "prev" "Previous page" "[")
+                (format out-stream "<span class='page-number'><span class='page-number-label'>Page</span> ~A</span>" (+ 1 (/ (or with-offset 0) items-per-page)))
+                (write-item next-uri "next" "Next page" "]")
+                (write-item last-uri "last" "Last page" "")
+                (format out-stream "</div>"))))
+        (lambda (out-stream)
+          (nav-bar-outer out-stream nil `(:bottom-bar
+                                           (,@(if first-uri `(("first" ,first-uri "Back to first")))
+                                             ,@(if prev-uri `(("prev" ,prev-uri "Previous" :nofollow t)))
+                                             ("top" "#top" "Back to top")
+                                             ,@(if next-uri `(("next" ,next-uri "Next" :nofollow t)))
+                                             ,@(if last-uri `(("last" ,last-uri "Last" :nofollow t))))))
+          (format out-stream "<script>document.querySelectorAll('#bottom-bar').forEach(function (bb) { bb.classList.add('decorative'); });</script>"))))))
 
 (defun end-html (out-stream &key items-per-page bottom-bar-fn)
   (if items-per-page (format out-stream "<script>var itemsPerPage=~A</script>" items-per-page))
@@ -710,11 +715,11 @@ signaled condition to OUT-STREAM."
 			     `(let ((,stream-sym ,out-stream)) 
 				,.out-body)))) 
 
-(defun call-with-emit-page (out-stream fn &key title description current-uri content-class (return-code 200) additional-nav (items-per-page (user-pref :items-per-page)) with-offset with-next robots)
+(defun call-with-emit-page (out-stream fn &key title description current-uri content-class (return-code 200) additional-nav (items-per-page (user-pref :items-per-page)) with-offset with-total with-next robots)
   (declare (ignore return-code))
   (ignore-errors
     (log-conditions
-      (multiple-value-bind (top-bar-fn bottom-bar-fn) (pagination-nav-bars :with-offset with-offset :with-next with-next :items-per-page items-per-page)
+      (multiple-value-bind (top-bar-fn bottom-bar-fn) (pagination-nav-bars :with-offset with-offset :with-total with-total :with-next with-next :items-per-page items-per-page)
         (begin-html out-stream :title title :description description :current-uri current-uri :content-class content-class :robots robots)
         (when additional-nav (funcall additional-nav out-stream))
         (when top-bar-fn (funcall top-bar-fn out-stream))
@@ -840,14 +845,14 @@ signaled condition to OUT-STREAM."
               title (replace-query-params (hunchentoot:request-uri*) "offset" nil "format" "rss")))
     (format out-stream "</div>")))
 
-(defun view-items-index (items &key section with-offset (with-next t) title current-uri hide-title need-auth (extra-html (lambda (s) (page-toolbar-to-html s :title title))) (content-class "index-page"))
+(defun view-items-index (items &key section with-offset with-total (with-next t) title current-uri hide-title need-auth (extra-html (lambda (s) (page-toolbar-to-html s :title title))) (content-class "index-page"))
   (alexandria:switch ((hunchentoot:get-parameter "format") :test #'string=)
                      ("rss" 
                       (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
                       (with-response-stream (out-stream)
                         (write-index-items-to-rss out-stream items :title title)))
                      (t
-                       (emit-page (out-stream :title (if hide-title nil title) :description "A faster way to browse LessWrong 2.0" :content-class content-class :with-offset with-offset :with-next with-next
+                       (emit-page (out-stream :title (if hide-title nil title) :description "A faster way to browse LessWrong 2.0" :content-class content-class :with-offset with-offset :with-total with-total :with-next with-next
                                               :current-uri current-uri :robots (if (and with-offset (> with-offset 0)) "noindex, nofollow")
                                               :additional-nav extra-html)
                                   (write-index-items-to-html out-stream items :need-auth need-auth
@@ -964,8 +969,9 @@ signaled condition to OUT-STREAM."
   (let ((sort-string (if sort (string-downcase sort))))
     (if sort-string
         (set-user-pref :default-sort sort-string))
-    (let ((posts (get-posts-index :offset offset :limit (or limit (user-pref :items-per-page)) :sort (user-pref :default-sort))))
-      (view-items-index posts :section :frontpage :title "Frontpage posts" :hide-title t :with-offset (or offset 0)
+    (multiple-value-bind (posts total)
+      (get-posts-index :offset offset :limit (or limit (user-pref :items-per-page)) :sort (user-pref :default-sort))
+      (view-items-index posts :section :frontpage :title "Frontpage posts" :hide-title t :with-offset (or offset 0) :with-total total
                         :extra-html (lambda (out-stream)
                                       (page-toolbar-to-html out-stream
                                                             :title "Frontpage posts"
@@ -985,20 +991,21 @@ signaled condition to OUT-STREAM."
   (let ((sort-string (if sort (string-downcase sort))))
     (if sort-string
         (set-user-pref :default-sort sort-string)))
-  (let ((posts (get-posts-index :view (string-downcase view) :before before :after after :offset offset :limit (or limit (user-pref :items-per-page)) :sort (user-pref :default-sort)))
-        (page-title (format nil "~@(~A posts~)" view)))
-    (view-items-index posts :section view :title page-title :with-offset (or offset 0)
-                      :content-class (format nil "index-page ~(~A~)-index-page" view)
-                      :extra-html (lambda (out-stream)
-                                    (page-toolbar-to-html out-stream
-                                                          :title page-title
-                                                          :new-post (if (eq view :meta) "meta" t))
-                                    (if (member view '(:all))
-                                        (sublevel-nav-to-html out-stream
-                                                              '(:new :hot)
-                                                              (user-pref :default-sort)
-                                                              :param-name "sort"
-                                                              :extra-class "sort"))))))
+  (multiple-value-bind (posts total)
+    (get-posts-index :view (string-downcase view) :before before :after after :offset offset :limit (or limit (user-pref :items-per-page)) :sort (user-pref :default-sort))
+    (let ((page-title (format nil "~@(~A posts~)" view)))
+      (view-items-index posts :section view :title page-title :with-offset (or offset 0) :with-total total
+                        :content-class (format nil "index-page ~(~A~)-index-page" view)
+                        :extra-html (lambda (out-stream)
+                                      (page-toolbar-to-html out-stream
+                                                            :title page-title
+                                                            :new-post (if (eq view :meta) "meta" t))
+                                      (if (member view '(:all))
+                                          (sublevel-nav-to-html out-stream
+                                                                '(:new :hot)
+                                                                (user-pref :default-sort)
+                                                                :param-name "sort"
+                                                                :extra-class "sort")))))))
 
 (define-page view-post "/post" ((id :required t))
   (redirect (generate-post-link id) :type :permanent))
@@ -1157,136 +1164,140 @@ signaled condition to OUT-STREAM."
 
 (define-page view-recent-comments "/recentcomments" ((offset :type fixnum)
                                                      (limit :type fixnum))
-  (let ((recent-comments (if (or offset limit (/= (user-pref :items-per-page) 20))
-                             (lw2-graphql-query (lw2-query-string :comment :list
-                                                                  (remove nil (alist :view "postCommentsNew" :limit (or limit (user-pref :items-per-page)) :offset offset)
-                                                                          :key #'cdr)
-                                                                  *comments-index-fields*))
-                             (get-recent-comments))))
-    (view-items-index recent-comments :title "Recent comments" :with-offset (or offset 0) :with-next t)))
+  (let ((want-total (not (typep *current-backend* 'backend-lw2)))) ; jumping to last page causes LW2 to explode
+    (multiple-value-bind (recent-comments total)
+      (if (or offset limit (/= (user-pref :items-per-page) 20))
+          (lw2-graphql-query (lw2-query-string :comment :list
+                                               (remove nil (alist :view "postCommentsNew" :limit (or limit (user-pref :items-per-page)) :offset offset)
+                                                       :key #'cdr)
+                                               *comments-index-fields*
+                                               :with-total want-total))
+          (get-recent-comments :with-total want-total))
+      (view-items-index recent-comments :title "Recent comments" :with-offset (or offset 0) :with-next (not want-total) :with-total (if want-total total)))))
 
 (define-page view-user (:regex "^/users/(.*?)(?:$|\\?)|^/user" user-slug) (id
                                                                              (offset :type fixnum :default 0)
                                                                              (show :member (:all :posts :comments :drafts :conversations :inbox) :default :all)
                                                                              (sort :member (:top :new) :default :new))
-                        (let* ((auth-token (if (eq show :inbox) *current-auth-token*))
-                               (user-query-terms (cond
-                                                   (user-slug (alist :slug user-slug))
-                                                   (id (alist :document-id id))))
-                               (user-info
-                                 (let ((ui (lw2-graphql-query (lw2-query-string :user :single user-query-terms `(:--id :slug :display-name :karma ,@(if (eq show :inbox) '(:last-notifications-check))))
-                                                              :auth-token auth-token)))
-                                   (if (cdr (assoc :--id ui))
-                                       ui
-                                       (error (make-condition 'lw2-user-not-found-error)))))
-                               (user-id (cdr (assoc :--id user-info)))
-                               (own-user-page (logged-in-userid user-id))
-                               (comments-index-fields (remove :page-url *comments-index-fields*)) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
-                               (display-name (if user-slug (cdr (assoc :display-name user-info)) user-id))
-                               (show-text (if (not (eq show :all)) (string-capitalize show)))
-                               (title (format nil "~A~@['s ~A~]" display-name show-text))
-                               (sort-type (case sort (:top :score) (:new :date)))
-                               (comments-base-terms (ecase sort-type (:score (load-time-value (alist :view "postCommentsTop"))) (:date (load-time-value (alist :view "allRecentComments")))))
-                               (items (case show
-                                        (:posts
-                                          (get-user-posts user-id :offset offset :limit (+ 1 (user-pref :items-per-page)) :sort-type sort-type))
-                                        (:comments
-                                          (lw2-graphql-query (lw2-query-string :comment :list
-                                                                               (nconc (alist :offset offset :limit (+ 1 (user-pref :items-per-page)) :user-id user-id)
-                                                                                      comments-base-terms)
-                                                                               comments-index-fields)))
-                                        (:drafts
-                                          (get-user-posts user-id :drafts t :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
-                                        (:conversations
-                                          (let ((conversations
-                                                  (lw2-graphql-query (lw2-query-string :conversation :list
-                                                                                       (alist :view "userConversations" :limit (+ 1 (user-pref :items-per-page)) :offset offset :user-id user-id)
-                                                                                       '(:--id :created-at :title (:participants :display-name :slug) :----typename))
-                                                                     :auth-token (hunchentoot:cookie-in "lw2-auth-token"))))
-                                            (lw2-graphql-query-map
-                                              (lambda (c)
-                                                (lw2-query-string* :message :total (alist :view "messagesConversation" :conversation-id (cdr (assoc :--id c))) nil))
-                                              conversations
-                                              :postprocess (lambda (c result)
-                                                             (acons :messages-total result c))
-                                              :auth-token (hunchentoot:cookie-in "lw2-auth-token"))))
-                                        (:inbox
-                                          (prog1
-                                            (let ((notifications (get-notifications :user-id user-id :offset offset :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
-                                                  (last-check (ignore-errors (local-time:parse-timestring (cdr (assoc :last-notifications-check user-info))))))
-                                              (labels ((check-new (key obj)
-                                                         (if (ignore-errors (local-time:timestamp< last-check (local-time:parse-timestring (cdr (assoc key obj)))))
-                                                             (acons :highlight-new t obj)
-                                                             obj)))
-                                                (lw2-graphql-query-map
-                                                  (lambda (n)
-                                                    (alexandria:switch ((cdr (assoc :document-type n)) :test #'string=)
-                                                                       ("comment"
-                                                                        (lw2-query-string* :comment :single
-                                                                                           (alist :document-id (cdr (assoc :document-id n)))
-                                                                                           *comments-index-fields*))
-                                                                       ("post"
-                                                                        (lw2-query-string* :post :single (alist :document-id (cdr (assoc :document-id n)))
-                                                                                           *posts-index-fields*))
-                                                                       ("message"
-                                                                        (lw2-query-string* :message :single (alist :document-id (cdr (assoc :document-id n)))
-                                                                                           *messages-index-fields*))
-                                                                       (t
-                                                                         (values n t))))
-                                                  notifications
-                                                  :postprocess (lambda (n result)
-                                                                 (if result
-                                                                     (check-new
-                                                                       (alexandria:switch ((cdr (assoc :document-type n)) :test #'string=)
-                                                                                          ("comment" :posted-at)
-                                                                                          ("post" :posted-at)
-                                                                                          ("message" :created-at))
-                                                                       result)
-                                                                     n))
-                                                  :auth-token auth-token)))
-                                            (do-user-edit (hunchentoot:cookie-in "lw2-auth-token") user-id (alist :last-notifications-check (local-time:format-timestring nil (local-time:now)
-                                                                                                                                                                          :format lw2.graphql:+graphql-timestamp-format+
-                                                                                                                                                                          :timezone local-time:+utc-zone+)))))
-                                        (t
-                                          (let ((user-posts (get-user-posts user-id :limit (+ 1 (user-pref :items-per-page) offset)))
-                                                (user-comments (lw2-graphql-query (lw2-query-string :comment :list (nconc (alist :limit (+ 1 (user-pref :items-per-page) offset) :user-id user-id) comments-base-terms) 
-                                                                                                        comments-index-fields))))
-                                            (concatenate 'list user-posts user-comments)))))
-                               (with-next (> (length items) (+ (if (eq show :all) offset 0) (user-pref :items-per-page))))
-                               (interleave (if (eq show :all) (comment-post-interleave items :limit (user-pref :items-per-page) :offset (if (eq show :all) offset nil) :sort-by sort-type) (firstn items (user-pref :items-per-page))))) ; this destructively sorts items
-                          (view-items-index interleave :with-offset offset :title title
-                                            :content-class (format nil "user-page~@[ ~A-user-page~]~:[~; own-user-page~]" show-text own-user-page)
-                                            :current-uri (format nil "/users/~A" user-slug)
-                                            :section :personal
-                                            :with-offset offset :with-next with-next
-                                            :need-auth (eq show :drafts) :section (if (eq show :drafts) "drafts" nil)
-                                            :extra-html (lambda (out-stream)
-                                                          (page-toolbar-to-html out-stream
-                                                                                :title title
-                                                                                :rss (not (member show '(:drafts :conversations :inbox)))
-                                                                                :new-post (if (eq show :drafts) "drafts" t)
-                                                                                :new-conversation (if own-user-page t user-slug)
-                                                                                :logout own-user-page)
-                                                          (format out-stream "<h1 class=\"page-main-heading\"~@[ ~A~]>~A</h1><div class=\"user-stats\">Karma: <span class=\"karma-total\">~A</span></div>"
-                                                                  (if (not own-user-page)
-                                                                      (if user-slug
-                                                                          (format nil "data-anti-kibitzer-redirect=\"/user?id=~A\"" (cdr (assoc :--id user-info)))
-                                                                          (format nil "data-kibitzer-redirect=\"/users/~A\"" (cdr (assoc :slug user-info)))))
-                                                                  (encode-entities display-name)
-                                                                  (if user-slug (pretty-number (or (cdr (assoc :karma user-info)) 0)) "##"))
-                                                          (sublevel-nav-to-html out-stream
-                                                                                `(:all :posts :comments
-                                                                                              ,@(if own-user-page
-                                                                                                    '(:drafts :conversations :inbox)))
-                                                                                show
-                                                                                :default :all)
-                                                          (when (member show '(:all :posts :comments))
-                                                            (sublevel-nav-to-html out-stream
-                                                                                  '(:new :top)
-                                                                                  sort
-                                                                                  :default :new
-                                                                                  :param-name "sort"
-                                                                                  :extra-class "sort"))))))
+             (let* ((auth-token (if (eq show :inbox) *current-auth-token*))
+                    (user-query-terms (cond
+                                        (user-slug (alist :slug user-slug))
+                                        (id (alist :document-id id))))
+                    (user-info
+                      (let ((ui (lw2-graphql-query (lw2-query-string :user :single user-query-terms `(:--id :slug :display-name :karma ,@(if (eq show :inbox) '(:last-notifications-check))))
+                                                   :auth-token auth-token)))
+                        (if (cdr (assoc :--id ui))
+                            ui
+                            (error (make-condition 'lw2-user-not-found-error)))))
+                    (user-id (cdr (assoc :--id user-info)))
+                    (own-user-page (logged-in-userid user-id))
+                    (comments-index-fields (remove :page-url *comments-index-fields*)) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
+                    (display-name (if user-slug (cdr (assoc :display-name user-info)) user-id))
+                    (show-text (if (not (eq show :all)) (string-capitalize show)))
+                    (title (format nil "~A~@['s ~A~]" display-name show-text))
+                    (sort-type (case sort (:top :score) (:new :date)))
+                    (comments-base-terms (ecase sort-type (:score (load-time-value (alist :view "postCommentsTop"))) (:date (load-time-value (alist :view "allRecentComments"))))))
+               (multiple-value-bind (items total)
+                 (case show
+                   (:posts
+                     (get-user-posts user-id :offset offset :limit (+ 1 (user-pref :items-per-page)) :sort-type sort-type))
+                   (:comments
+                     (lw2-graphql-query (lw2-query-string :comment :list
+                                                          (nconc (alist :offset offset :limit (+ 1 (user-pref :items-per-page)) :user-id user-id)
+                                                                 comments-base-terms)
+                                                          comments-index-fields)))
+                   (:drafts
+                     (get-user-posts user-id :drafts t :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
+                   (:conversations
+                     (let ((conversations
+                             (lw2-graphql-query (lw2-query-string :conversation :list
+                                                                  (alist :view "userConversations" :limit (+ 1 (user-pref :items-per-page)) :offset offset :user-id user-id)
+                                                                  '(:--id :created-at :title (:participants :display-name :slug) :----typename))
+                                                :auth-token (hunchentoot:cookie-in "lw2-auth-token"))))
+                       (lw2-graphql-query-map
+                         (lambda (c)
+                           (lw2-query-string* :message :total (alist :view "messagesConversation" :conversation-id (cdr (assoc :--id c))) nil))
+                         conversations
+                         :postprocess (lambda (c result)
+                                        (acons :messages-total result c))
+                         :auth-token (hunchentoot:cookie-in "lw2-auth-token"))))
+                   (:inbox
+                     (prog1
+                       (let ((notifications (get-notifications :user-id user-id :offset offset :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
+                             (last-check (ignore-errors (local-time:parse-timestring (cdr (assoc :last-notifications-check user-info))))))
+                         (labels ((check-new (key obj)
+                                    (if (ignore-errors (local-time:timestamp< last-check (local-time:parse-timestring (cdr (assoc key obj)))))
+                                        (acons :highlight-new t obj)
+                                        obj)))
+                           (lw2-graphql-query-map
+                             (lambda (n)
+                               (alexandria:switch ((cdr (assoc :document-type n)) :test #'string=)
+                                                  ("comment"
+                                                   (lw2-query-string* :comment :single
+                                                                      (alist :document-id (cdr (assoc :document-id n)))
+                                                                      *comments-index-fields*))
+                                                  ("post"
+                                                   (lw2-query-string* :post :single (alist :document-id (cdr (assoc :document-id n)))
+                                                                      *posts-index-fields*))
+                                                  ("message"
+                                                   (lw2-query-string* :message :single (alist :document-id (cdr (assoc :document-id n)))
+                                                                      *messages-index-fields*))
+                                                  (t
+                                                    (values n t))))
+                             notifications
+                             :postprocess (lambda (n result)
+                                            (if result
+                                                (check-new
+                                                  (alexandria:switch ((cdr (assoc :document-type n)) :test #'string=)
+                                                                     ("comment" :posted-at)
+                                                                     ("post" :posted-at)
+                                                                     ("message" :created-at))
+                                                  result)
+                                                n))
+                             :auth-token auth-token)))
+                       (do-user-edit (hunchentoot:cookie-in "lw2-auth-token") user-id (alist :last-notifications-check (local-time:format-timestring nil (local-time:now)
+                                                                                                                                                     :format lw2.graphql:+graphql-timestamp-format+
+                                                                                                                                                     :timezone local-time:+utc-zone+)))))
+                   (t
+                     (let ((user-posts (get-user-posts user-id :limit (+ 1 (user-pref :items-per-page) offset)))
+                           (user-comments (lw2-graphql-query (lw2-query-string :comment :list (nconc (alist :limit (+ 1 (user-pref :items-per-page) offset) :user-id user-id) comments-base-terms) 
+                                                                               comments-index-fields))))
+                       (concatenate 'list user-posts user-comments))))
+                 (let ((with-next (> (length items) (+ (if (eq show :all) offset 0) (user-pref :items-per-page))))
+                       (interleave (if (eq show :all) (comment-post-interleave items :limit (user-pref :items-per-page) :offset (if (eq show :all) offset nil) :sort-by sort-type) (firstn items (user-pref :items-per-page))))) ; this destructively sorts items
+                   (view-items-index interleave :with-offset offset :title title
+                                     :content-class (format nil "user-page~@[ ~A-user-page~]~:[~; own-user-page~]" show-text own-user-page)
+                                     :current-uri (format nil "/users/~A" user-slug)
+                                     :section :personal
+                                     :with-offset offset :with-total total :with-next (if (not total) with-next)
+                                     :need-auth (eq show :drafts) :section (if (eq show :drafts) "drafts" nil)
+                                     :extra-html (lambda (out-stream)
+                                                   (page-toolbar-to-html out-stream
+                                                                         :title title
+                                                                         :rss (not (member show '(:drafts :conversations :inbox)))
+                                                                         :new-post (if (eq show :drafts) "drafts" t)
+                                                                         :new-conversation (if own-user-page t user-slug)
+                                                                         :logout own-user-page)
+                                                   (format out-stream "<h1 class=\"page-main-heading\"~@[ ~A~]>~A</h1><div class=\"user-stats\">Karma: <span class=\"karma-total\">~A</span></div>"
+                                                           (if (not own-user-page)
+                                                               (if user-slug
+                                                                   (format nil "data-anti-kibitzer-redirect=\"/user?id=~A\"" (cdr (assoc :--id user-info)))
+                                                                   (format nil "data-kibitzer-redirect=\"/users/~A\"" (cdr (assoc :slug user-info)))))
+                                                           (encode-entities display-name)
+                                                           (if user-slug (pretty-number (or (cdr (assoc :karma user-info)) 0)) "##"))
+                                                   (sublevel-nav-to-html out-stream
+                                                                         `(:all :posts :comments
+                                                                           ,@(if own-user-page
+                                                                                 '(:drafts :conversations :inbox)))
+                                                                         show
+                                                                         :default :all)
+                                                   (when (member show '(:all :posts :comments))
+                                                     (sublevel-nav-to-html out-stream
+                                                                           '(:new :top)
+                                                                           sort
+                                                                           :default :new
+                                                                           :param-name "sort"
+                                                                           :extra-class "sort"))))))))
 
 (defparameter *conversation-template* (compile-template* "conversation.html"))
 
@@ -1484,14 +1495,15 @@ signaled condition to OUT-STREAM."
                          do (link-if-not out-stream (eq d day) (url-elements "archive" (or year current-year) (or month current-month) d) "archive-nav-item-day" d))
                    (format out-stream "</div>")) 
                  (format out-stream "</div>")))
-        (let ((posts (lw2-graphql-query (lw2-query-string :post :list
-                                                          (alist :view (if day "new" "top") :limit 51 :offset offset
-                                                                 :after (if (and year (not day)) (format nil "~A-~A-~A" (or year earliest-year) (or month 1) (or day 1)))
-                                                                 :before (if year (format nil "~A-~A-~A" (or year current-year) (or month 12)
-                                                                                          (or day (local-time:days-in-month (or month 12) (or year current-year))))))
-                                                          *posts-index-fields*))))
+        (multiple-value-bind (posts total)
+          (lw2-graphql-query (lw2-query-string :post :list
+                                               (alist :view (if day "new" "top") :limit 51 :offset offset
+                                                      :after (if (and year (not day)) (format nil "~A-~A-~A" (or year earliest-year) (or month 1) (or day 1)))
+                                                      :before (if year (format nil "~A-~A-~A" (or year current-year) (or month 12)
+                                                                               (or day (local-time:days-in-month (or month 12) (or year current-year))))))
+                                               *posts-index-fields*))
           (emit-page (out-stream :title "Archive" :current-uri "/archive" :content-class "archive-page"
-                                 :items-per-page 50 :with-offset offset :with-next (> (length posts) 50)
+                                 :items-per-page 50 :with-offset offset :with-total total :with-next (if total nil (> (length posts) 50))
                                  :additional-nav #'archive-nav)
                      (write-index-items-to-html out-stream (firstn posts 50) :empty-message "No posts for the selected period.")))))))
 

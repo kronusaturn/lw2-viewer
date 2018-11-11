@@ -7,7 +7,8 @@
     #:backend-graphql
     #:graphql-uri #:websocket-uri
     #:backend-lw2-legacy #:backend-lw2-modernized #:backend-lw2 #:backend-accordius
-    #:make-backend #:declare-backend-function #:define-backend-operation #:backend)
+    #:make-backend #:define-backend-function #:define-backend-operation #:backend)
+  (:unintern #:declare-backend-function)
   (:recycle #:lw2.backend #:lw2.login))
 
 (in-package #:lw2.backend-modules)
@@ -35,10 +36,12 @@
 (defun make-backend (type-string &rest args)
   (apply #'make-instance (symbolicate "BACKEND-" (string-upcase type-string)) args))
 
-(defmacro declare-backend-function (name)
-  (let ((inner-name (symbolicate "%" name)))
+(defmacro define-backend-function (name lambda-list)
+  (let ((inner-name (symbolicate "%" name))
+        (lambda-list (map 'list (lambda (x) (if (atom x) x (first x))) lambda-list)))
    `(progn
       (export '(,name ,inner-name))
+      (defgeneric ,inner-name (backend ,@lambda-list))
       (defmacro ,name (&rest args) (list* ',inner-name 'lw2.context:*current-backend*  args)))))
 
 (defmacro define-backend-operation (name backend &rest args)

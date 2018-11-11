@@ -85,7 +85,7 @@
   (let ((result (do-lw2-sockjs-method "login" `((("resume" . ,auth-token))))))
     (parse-login-result result)))
 
-(declare-backend-function do-login)
+(define-backend-function do-login (user-designator-type user-designator password))
 
 (define-backend-operation do-login backend-lw2-legacy (user-designator-type user-designator password)
   (let ((result (do-lw2-sockjs-method "login"
@@ -147,7 +147,7 @@
 (defun do-lw2-post-query* (auth-token data)
   (cdr (assoc :--id (do-lw2-post-query auth-token data))))
 
-(declare-backend-function lw2-mutation-string)
+(define-backend-function lw2-mutation-string (target-type mutation-type terms fields))
 
 (define-backend-operation lw2-mutation-string backend-lw2-legacy (target-type mutation-type terms fields)
   (let* ((mutation-type-string (case mutation-type
@@ -179,7 +179,7 @@
          (fields (list (list* :data fields))))
     (values (graphql-mutation-string mutation-name terms fields) mutation-name)))
 
-(declare-backend-function do-lw2-mutation)
+(define-backend-function do-lw2-mutation (auth-token target-type mutation-type terms fields))
 
 (define-backend-operation do-lw2-mutation backend-lw2-legacy (auth-token target-type mutation-type terms fields)
   (multiple-value-bind (mutation-string operation-name)
@@ -219,12 +219,12 @@
 (defun do-user-edit (auth-token user-id data)
   (do-lw2-mutation auth-token :user :update (alist :document-id user-id :set data) '(--id)))
 
-(declare-backend-function do-create-conversation)
+(define-backend-function do-create-conversation (auth-token data))
 
 (define-backend-operation do-create-conversation backend-lw2-legacy (auth-token data)
   (cdr (assoc :--id (do-lw2-mutation auth-token :conversation :create (alist :document data) '(:--id)))))
 
-(declare-backend-function generate-message-document)
+(define-backend-function generate-message-document (conversation-id text))
 
 (define-backend-operation generate-message-document backend-lw2-legacy (conversation-id text)
   (alist :content
@@ -237,7 +237,7 @@
   (alist :body text
          :conversation-id conversation-id))
 
-(declare-backend-function do-create-message)
+(define-backend-function do-create-message (auth-token conversation-id text))
 
 (define-backend-operation do-create-message backend-lw2-legacy (auth-token conversation-id text)
   (do-lw2-mutation auth-token :message :create (alist :document (generate-message-document conversation-id text)) '(:--id)))

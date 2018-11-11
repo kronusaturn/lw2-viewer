@@ -77,7 +77,7 @@
     (0 t)
     (1 nil)))
 
-(declare-backend-function comments-list-to-graphql-json)
+(define-backend-function comments-list-to-graphql-json (comments-list))
 
 (define-backend-operation comments-list-to-graphql-json backend-lw2-legacy (comments-list)
   (json:encode-json-to-string
@@ -182,23 +182,25 @@
                  ((search "not_allowed" message) (error (make-condition 'lw2-not-allowed-error)))
                  (t (error (make-condition 'lw2-unknown-error :message message))))))))
 
-(declare-backend-function fixup-lw2-return-value)
+(define-backend-function fixup-lw2-return-value (value))
 
 (define-backend-operation fixup-lw2-return-value backend-lw2-legacy (value)
   value)
 
 (define-backend-operation fixup-lw2-return-value backend-lw2 (value)
-  (let ((junk (caar value)))
-    (if (member junk '(:result :results :total-count))
-        (cdar value)
-        value)))
+  (values-list
+    (map 'list
+         (lambda (x)
+           (if (member (car x) '(:result :results :total-count))
+               (cdr x)
+               x))
+         value)))
 
 (defun decode-graphql-json (json-string)
   (let* ((decoded (json:decode-json-from-string json-string))
-	 (errors (cdr (assoc :errors decoded)))
-	 (data (fixup-lw2-return-value (cdadr (assoc :data decoded)))))
+	 (errors (cdr (assoc :errors decoded))))
     (signal-lw2-errors errors)
-    data))
+    (fixup-lw2-return-value (cdadr (assoc :data decoded)))))
 
 (defun lw2-graphql-query-map (fn data &key auth-token postprocess)
   (multiple-value-bind (map-values queries)
@@ -303,9 +305,10 @@
                 (t () (or cached-result
                           (error "Failed to load ~A ~A and no cached version available." cache-db cache-key)))))))))
 
-(declare-backend-function lw2-query-string*)
+(define-backend-function lw2-query-string* (query-type return-type args fields &key with-total))
 
-(define-backend-operation lw2-query-string* backend-lw2-legacy (query-type return-type args fields)
+(define-backend-operation lw2-query-string* backend-lw2-legacy (query-type return-type args fields &key with-total)
+  (declare (ignore with-total))
   (graphql-query-string*
     (concatenate 'string (string-capitalize query-type)
                          "s"
@@ -315,31 +318,31 @@
         (alist :terms args))
     fields))
 
-(define-backend-operation lw2-query-string* backend-lw2 (query-type return-type args fields)
+(define-backend-operation lw2-query-string* backend-lw2 (query-type return-type args fields &key (with-total t))
   (graphql-query-string*
     (if (eq return-type :single)
         (string-downcase query-type)
         (concatenate 'string (string-downcase query-type) "s"))
     (alist :input (case return-type
                       (:single (alist :selector args))
-                      (:list (alist :terms args))
+                      (:list (alist :enable-total with-total :terms args))
                       (:total (alist :enable-total t :terms args))))
     (case return-type
         (:total '(:total-count))
-        (:list (list (cons :results fields)))
+        (:list (nconc (list (cons :results fields)) (if with-total '(:total-count))))
         (:single (list (cons :result fields))))))
 
-(declare-backend-function lw2-query-string)
+(define-backend-function lw2-query-string (query-type return-type args fields &key with-total))
 
-(define-backend-operation lw2-query-string backend-lw2-legacy (query-type return-type args fields)
-  (format nil "{~A}" (lw2-query-string* query-type return-type args fields)))
+(define-backend-operation lw2-query-string backend-lw2-legacy (query-type return-type args fields &key (with-total t))
+  (format nil "{~A}" (lw2-query-string* query-type return-type args fields :with-total with-total)))
 
 (defun get-cached-index-query (cache-id query)
   (labels ((query-and-put ()
              (let* ((result (lw2-graphql-query-noparse query))
-                    (decoded-result (decode-graphql-json result)))
+                    (decoded-result (multiple-value-list (decode-graphql-json result))))
                (cache-put "index-json" cache-id result)
-               decoded-result)))
+               (values-list decoded-result))))
     (let ((cached-result (cache-get "index-json" cache-id)))
       (if (and cached-result (background-loader-running-p))
         (decode-graphql-json cached-result)
@@ -349,7 +352,7 @@
               (t () (decode-graphql-json cached-result)))
             (query-and-put))))))
 
-(declare-backend-function get-posts-index-query-string)
+(define-backend-function get-posts-index-query-string (&key view (sort "new") (limit 20) offset before after))
 
 (define-backend-operation get-posts-index-query-string backend-lw2-legacy (&key view (sort "new") (limit 20) offset before after)
   (multiple-value-bind (view-terms cache-key)
@@ -366,7 +369,7 @@
            (query-string (lw2-query-string :post :list (nconc view-terms extra-terms) *posts-index-fields*)))
       (values query-string cache-key))))
 
-(declare-backend-function get-posts-index)
+(define-backend-function get-posts-index (&rest args &key &allow-other-keys))
 
 (define-backend-operation get-posts-index backend-lw2-legacy (&rest args &key &allow-other-keys)
   (declare (dynamic-extent args))
@@ -379,8 +382,8 @@
 (defun get-posts-json ()
   (lw2-graphql-query-noparse (get-posts-index-query-string)))
 
-(defun get-recent-comments ()
-  (get-cached-index-query "recent-comments" (lw2-query-string :comment :list '((:view . "recentComments") (:limit . 20)) *comments-index-fields*)))
+(defun get-recent-comments (&key with-total)
+  (get-cached-index-query "recent-comments" (lw2-query-string :comment :list '((:view . "recentComments") (:limit . 20)) *comments-index-fields* :with-total with-total)))
 
 (defun get-recent-comments-json ()
   (lw2-graphql-query-noparse (lw2-query-string :comment :list '((:view . "recentComments") (:limit . 20)) *comments-index-fields*)))
@@ -419,7 +422,7 @@
                   (comments-list-to-graphql-json comments-list))))))
     (lw2-graphql-query-timeout-cached fn "post-comments-json" post-id :revalidate revalidate :force-revalidate force-revalidate)))
 
-(declare-backend-function get-notifications)
+(define-backend-function get-notifications (&key user-id offset auth-token))
 
 (define-backend-operation get-notifications backend-lw2-legacy (&key user-id offset auth-token)
   (lw2-graphql-query (lw2-query-string :notification :list
@@ -427,7 +430,7 @@
                                        '(:--id :document-type :document-id :link :title :message :type :viewed))
                      :auth-token auth-token))
 
-(declare-backend-function check-notifications)
+(define-backend-function check-notifications (user-id auth-token))
 
 (define-backend-operation check-notifications backend-lw2-legacy (user-id auth-token)
   (multiple-value-bind (notifications user-info)
@@ -450,7 +453,7 @@
                           (let ((*notifications-base-terms* (remove :null *notifications-base-terms* :key #'cdr)))
                             (call-next-method)))
 
-(declare-backend-function get-user-posts)
+(define-backend-function get-user-posts (user-id &key offset limit (sort-type :date) drafts auth-token))
 
 (define-backend-operation get-user-posts backend-lw2-legacy (user-id &key offset limit (sort-type :date) drafts auth-token)
   (declare (special *graphql-correct*))
@@ -468,7 +471,7 @@
                                          *posts-index-fields*)
                        :auth-token auth-token)))
 
-(declare-backend-function get-conversation-messages)
+(define-backend-function get-conversation-messages (conversation-id auth-token))
 
 (define-backend-operation get-conversation-messages backend-lw2-legacy (conversation-id auth-token)
   (lw2-graphql-query-multi
