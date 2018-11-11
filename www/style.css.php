@@ -174,7 +174,7 @@ h1.listing ~ #bottom-bar {
 }
 #bottom-bar #nav-item-first a::before,
 #top-nav-bar a.nav-item-first::before {
-	content: "\F100";
+	content: "\F33e";
 }
 #bottom-bar #nav-item-top a::before {
 	content: "\F062";
@@ -189,12 +189,17 @@ h1.listing ~ #bottom-bar {
 }
 #bottom-bar #nav-item-last a::before,
 #top-nav-bar a.nav-item-last::before {
-	content: "\F101";
+	content: "\F340";
 }
 #bottom-bar #nav-item-next a::before {
 	margin-left: -2em;
 	margin-right: 0;
 	left: 3.8em;
+}
+#bottom-bar #nav-item-last a::before {
+	margin-left: -1.8em;
+	margin-right: 0;
+	left: 3.4em;
 }
 
 /*=-----------------------=*/
@@ -366,9 +371,6 @@ a#inbox-indicator.new-messages:hover::before {
 #top-nav-bar a.disabled {
 	pointer-events: none;
 	visibility: hidden;
-}
-#top-nav-bar a.nav-item-last::before {
-	content: "\F101";
 }
 #top-nav-bar .page-number {
 	position: relative;
