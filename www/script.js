@@ -2414,7 +2414,9 @@ function focusedImageScrolled(event) {
 	let imageBoundingBox = image.getBoundingClientRect();
 
 	// Calculate resize factor.
-	var factor = 1 + Math.sqrt(Math.abs(event.deltaY))/100.0;
+	var factor = (image.height > 10 && image.width > 10) || event.deltaY < 0 ?
+					1 + Math.sqrt(Math.abs(event.deltaY))/100.0 :
+					1;
 
 	// Resize.
 	image.style.width = (event.deltaY < 0 ?
