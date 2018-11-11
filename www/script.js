@@ -3081,6 +3081,7 @@ function focusImageSpecifiedByURL() {
 		let imageToFocus = (/#if_slide_([0-9]+)/.exec(location.hash)||{})[1];
 		if (imageToFocus > 0 && imageToFocus <= images.length) {
 			focusImage(images[imageToFocus - 1]);
+			document.querySelector("#image-focus-overlay .image-number").textContent = imageToFocus;
 		}
 	}
 }
