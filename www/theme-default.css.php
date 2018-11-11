@@ -837,6 +837,13 @@ h1.listing.own-post-listing {
 	color: #999;
 	font-feature-settings: "tnum";
 }
+.post-body .contents a,
+.post-body .contents a:hover {
+	border: none;
+}
+.post-body .contents a:hover {
+	text-decoration: underline;
+}
 
 /*==================*/
 /* POSTS & COMMENTS */

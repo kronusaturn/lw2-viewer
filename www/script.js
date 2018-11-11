@@ -2411,10 +2411,7 @@ function focusedImageScrolled(event) {
 	image.style.filter = 'none';
 
 	// Locate point under cursor.
-	let offsetOfImageFromCursor = {
-		x: image.getBoundingClientRect().x - event.clientX,
-		y: image.getBoundingClientRect().y - event.clientY
-	}
+	let imageBoundingBox = image.getBoundingClientRect();
 
 	// Calculate resize factor.
 	var factor = 1 + Math.sqrt(Math.abs(event.deltaY))/100.0;
@@ -2427,12 +2424,21 @@ function focusedImageScrolled(event) {
 	image.style.height = "";
 
 	// Move image so that the point under the cursor stays the same.
-	let deltaFromCenteredZoom = {
-		x: image.getBoundingClientRect().x - (event.clientX + (event.deltaY < 0 ? offsetOfImageFromCursor.x * factor : offsetOfImageFromCursor.x / factor)),
-		y: image.getBoundingClientRect().y - (event.clientY + (event.deltaY < 0 ? offsetOfImageFromCursor.y * factor : offsetOfImageFromCursor.y / factor))
+	if (imageBoundingBox.left <= event.clientX &&
+		event.clientX <= imageBoundingBox.right && 
+		imageBoundingBox.top <= event.clientY &&
+		event.clientY <= imageBoundingBox.bottom) {
+		let offsetOfImageFromCursor = {
+			x: imageBoundingBox.x - event.clientX,
+			y: imageBoundingBox.y - event.clientY
+		}
+		let deltaFromCenteredZoom = {
+			x: image.getBoundingClientRect().x - (event.clientX + (event.deltaY < 0 ? offsetOfImageFromCursor.x * factor : offsetOfImageFromCursor.x / factor)),
+			y: image.getBoundingClientRect().y - (event.clientY + (event.deltaY < 0 ? offsetOfImageFromCursor.y * factor : offsetOfImageFromCursor.y / factor))
+		}
+		image.style.left = parseInt(getComputedStyle(image).left) - deltaFromCenteredZoom.x + "px";
+		image.style.top = parseInt(getComputedStyle(image).top) - deltaFromCenteredZoom.y + "px";
 	}
-	image.style.left = parseInt(getComputedStyle(image).left) - deltaFromCenteredZoom.x + "px";
-	image.style.top = parseInt(getComputedStyle(image).top) - deltaFromCenteredZoom.y + "px";
 
 	// Put the filter back.
 	image.style.filter = '';
