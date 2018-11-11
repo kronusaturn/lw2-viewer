@@ -1106,8 +1106,7 @@ signaled condition to OUT-STREAM."
                     (do-lw2-comment lw2-auth-token comment-data))))
          (cache-put "comment-markdown-source" new-comment-id text)
          (ignore-errors (get-post-comments post-id :force-revalidate t))
-         (setf (hunchentoot:return-code*) 303
-               (hunchentoot:header-out "Location") (generate-post-link (match-lw2-link (hunchentoot:request-uri*)) new-comment-id)))))))
+         (redirect (generate-post-link (match-lw2-link (hunchentoot:request-uri*)) new-comment-id)))))))
 
 (defparameter *edit-post-template* (compile-template* "edit-post.html"))
 
@@ -1144,10 +1143,9 @@ signaled condition to OUT-STREAM."
            (assert new-post-id)
            (cache-put "post-markdown-source" new-post-id text)
            (ignore-errors (get-post-body post-id :force-revalidate t))
-           (setf (hunchentoot:return-code*) 303
-                 (hunchentoot:header-out "Location") (if (cdr (assoc "draft" post-data :test #'equal))
-                                                         (concatenate 'string (generate-post-link new-post-data) "?need-auth=y")
-                                                         (generate-post-link new-post-data)))))))))
+           (redirect (if (cdr (assoc "draft" post-data :test #'equal))
+                         (concatenate 'string (generate-post-link new-post-data) "?need-auth=y")
+                         (generate-post-link new-post-data)))))))))
 
 (hunchentoot:define-easy-handler (view-karma-vote :uri "/karma-vote") ((csrf-token :request-type :post) (target :request-type :post) (target-type :request-type :post) (vote-type :request-type :post))
   (with-error-page
@@ -1366,33 +1364,31 @@ signaled condition to OUT-STREAM."
                                    ("signup-password" "Password" "password" "new-password")
                                    ("signup-password2" "Confirm password" "password" "new-password"))
                                  "Create account")
-                    (with-outputs (out-stream) "<div class=\"login-tip\"><span>Tip:</span> You can log in with the same username and password that you use on LessWrong. Creating an account here also creates one on LessWrong.</div></div>")))))
+                    (with-outputs (out-stream) "<div class=\"login-tip\"><span>Tip:</span> You can log in with the same username and password that you use on LessWrong. Creating an account here also creates one on LessWrong.</div></div>"))))
+     (finish-login (username user-id auth-token error-message expires)
+       (cond
+         (auth-token
+           (set-cookie "lw2-auth-token" auth-token :max-age (and expires (+ (- expires (get-unix-time)) (* 24 60 60))))
+           (if expires (set-cookie "lw2-status" (json:encode-json-to-string (alist :expires expires))))
+           (cache-put "auth-token-to-userid" auth-token user-id)
+           (cache-put "auth-token-to-username" auth-token username)
+           (redirect (if (and return (ppcre:scan "^/[^/]" return)) return "/")))
+         (t
+          (emit-login-page :error-message error-message)))))
     (cond
       ((not (or cookie-check (hunchentoot:cookie-in "session-token")))
         (set-cookie "session-token" (base64:usb8-array-to-base64-string (ironclad:make-random-salt)))
-        (setf (hunchentoot:return-code*) 303
-              (hunchentoot:header-out "Location") (format nil "/login?~@[return=~A&~]cookie-check=y" (if return (url-rewrite:url-encode return))))) 
+        (redirect (format nil "/login?~@[return=~A&~]cookie-check=y" (if return (url-rewrite:url-encode return))))) 
       (cookie-check
         (if (hunchentoot:cookie-in "session-token")
-            (setf (hunchentoot:return-code*) 303
-                  (hunchentoot:header-out "Location") (format nil "/login~@[?return=~A~]" (if return (url-rewrite:url-encode return))))
+            (redirect (format nil "/login~@[?return=~A~]" (if return (url-rewrite:url-encode return))))
             (emit-page (out-stream :title "Log in" :current-uri "/login")
                        (format out-stream "<h1>Enable cookies</h1><p>Please enable cookies in your browser and <a href=\"/login~@[?return=~A~]\">try again</a>.</p>" (if return (url-rewrite:url-encode return)))))) 
       (login-username
         (check-csrf-token csrf-token)
         (cond
           ((or (string= login-username "") (string= login-password "")) (emit-login-page :error-message "Please enter a username and password")) 
-          (t (multiple-value-bind (user-id auth-token error-message expires) (do-login "username" login-username login-password)
-               (cond
-                 (auth-token
-                   (set-cookie "lw2-auth-token" auth-token :max-age (and expires (+ (- expires (get-unix-time)) (* 24 60 60))))
-                   (if expires (set-cookie "lw2-status" (json:encode-json-to-string (alist :expires expires))))
-                   (cache-put "auth-token-to-userid" auth-token user-id)
-                   (cache-put "auth-token-to-username" auth-token login-username)
-                   (setf (hunchentoot:return-code*) 303
-                         (hunchentoot:header-out "Location") (if (and return (ppcre:scan "^/[^/]" return)) return "/")))
-                 (t
-                  (emit-login-page :error-message error-message))))))) 
+          (t (multiple-value-call #'finish-login login-username (do-login "username" login-username login-password))))) 
       (signup-username
         (check-csrf-token csrf-token)
         (cond
@@ -1400,16 +1396,7 @@ signaled condition to OUT-STREAM."
            (emit-login-page :error-message "Please fill in all fields"))
           ((not (string= signup-password signup-password2))
            (emit-login-page :error-message "Passwords do not match"))
-          (t (multiple-value-bind (user-id auth-token error-message expires) (do-lw2-create-user signup-username signup-email signup-password)
-               (cond
-                 (error-message (emit-login-page :error-message error-message))
-                 (t
-                  (set-cookie "lw2-auth-token" auth-token :max-age (+ (- expires (get-unix-time)) (* 24 60 60)))
-                  (set-cookie "lw2-status" (json:encode-json-to-string (alist :expires expires)))
-                  (cache-put "auth-token-to-userid" auth-token user-id)
-                  (cache-put "auth-token-to-username" auth-token signup-username)
-                  (setf (hunchentoot:return-code*) 303
-                        (hunchentoot:header-out "Location") (if (and return (ppcre:scan "^/[~/]" return)) return "/"))))))))
+          (t (multiple-value-call #'finish-login signup-username (do-lw2-create-user signup-username signup-email signup-password)))))
       (t
        (emit-login-page))))) 
 
