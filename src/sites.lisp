@@ -55,9 +55,14 @@
                           ((eq key :backend)
                            (list key `(make-backend ,@val)))
                           ((eq key :uri)
-                           (let ((uri (quri:uri val)))
+                           (let* ((uri (quri:uri val))
+                                  (scheme (quri:uri-scheme uri))
+                                  (host (quri:uri-host uri))
+                                  (port (quri:uri-port uri)))
                              (list key val
-                                   :host (quri:uri-host uri)
+                                   :host (format nil "~A~@[:~A~]"
+                                                 (quri:uri-host uri)
+                                                 (if (/= (quri.port:scheme-default-port scheme) port) port))
                                    :secure (string-equal "https" (quri:uri-scheme uri)))))
                           (t (list key val))))
                       args)))
