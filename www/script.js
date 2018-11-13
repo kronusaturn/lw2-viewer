@@ -2270,6 +2270,7 @@ function unfocusImageOverlay() {
 	document.removeEventListener("keyup", keyPressedWhenImageFocused);
 	document.removeEventListener("keydown", keyDownWhenImageFocused);
 	window.removeEventListener("mousemove", mouseMovedWhenImageFocused);
+	window.onmousedown = null;
 
 	// Reset the hash, if needed.
 	if (location.hash.hasPrefix("#if_slide_"))
