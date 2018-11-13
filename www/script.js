@@ -966,6 +966,16 @@ function themeLoadCallback_dark(fromTheme = "") {
 		`.markdown-reference-link a { color: #d200cf; filter: invert(100%); }` + 
 		`#bottom-bar.decorative::before { filter: invert(100%); }` +
 		"</style>");
+	registerInitializer('makeImagesGlow', true, () => document.querySelector("#images-overlay") != null, () => {
+		console.log("makeImagesGlow");
+		document.querySelectorAll("#images-overlay img").forEach(image => {
+			image.style.filter = "drop-shadow(0 0 0 #000) drop-shadow(0 0 0.5px #fff) drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #fff)";
+			image.style.width = parseInt(image.style.width) + 12 + "px";
+			image.style.height = parseInt(image.style.height) + 12 + "px";
+			image.style.top = parseInt(image.style.top) - 6 + "px";
+			image.style.left = parseInt(image.style.left) - 6 + "px";
+		});
+	});
 }
 function themeUnloadCallback_dark(toTheme = "") {
 	removeElement("#dark-theme-adjustments");
@@ -2105,6 +2115,7 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 	 <button type='button' class='slideshow-button next' tabindex='-1' title='Next image'>&#xf054;</button>
 	 </div>` + 
 	"</div>");
+	imageFocusOverlay.dropShadowFilterForImages = " drop-shadow(10px 10px 10px #000) drop-shadow(0 0 10px #444)";
 
 	imageFocusOverlay.querySelectorAll(".slideshow-button").forEach(button => { button.addActivateEvent(slideshowButtonClicked); });
 
@@ -2143,6 +2154,7 @@ function focusImage(image) {
 	clonedImage.style = "";
 	clonedImage.removeAttribute("width");
 	clonedImage.removeAttribute("height");
+	clonedImage.style.filter = image.style.filter + imageFocusOverlay.dropShadowFilterForImages;
 	imageFocusOverlay.appendChild(clonedImage);
 	imageFocusOverlay.addClass("engaged");
 
@@ -2170,6 +2182,7 @@ function focusImage(image) {
 
 			window.onmousemove = (event) => {
 				// Remove the filter.
+				clonedImage.savedFilter = clonedImage.style.filter;
 				clonedImage.style.filter = "none";
 				clonedImage.style.left = imageCoordX + event.clientX - mouseCoordX + 'px';
 				clonedImage.style.top = imageCoordY + event.clientY - mouseCoordY + 'px';
@@ -2292,6 +2305,7 @@ function focusNextImage(next = true) {
 	clonedImage.style = "";
 	clonedImage.removeAttribute("width");
 	clonedImage.removeAttribute("height");
+	clonedImage.style.filter = images[indexOfFocusedImage].style.filter + imageFocusOverlay.dropShadowFilterForImages;
 	imageFocusOverlay.appendChild(clonedImage);
 	imageFocusOverlay.addClass("engaged");
 	// Set image to default size and position.
@@ -2385,7 +2399,7 @@ function mouseUpOnFocusedImage(event) {
 	if (focusedImage.height >= window.innerHeight || focusedImage.width >= window.innerWidth) {
 		window.onmousemove = '';
 		// Put the filter back.
-		focusedImage.style.filter = '';
+		focusedImage.style.filter = focusedImage.savedFilter;
 	} else {
 		unfocusImageOverlay();
 	}
@@ -2408,6 +2422,7 @@ function focusedImageScrolled(event) {
 	let image = document.querySelector("#image-focus-overlay img");
 
 	// Remove the filter.
+	image.savedFilter = image.style.filter;
 	image.style.filter = 'none';
 
 	// Locate point under cursor.
@@ -2462,7 +2477,7 @@ function focusedImageScrolled(event) {
 	image.style.top = parseInt(getComputedStyle(image).top) - deltaFromCenteredZoom.y + "px";
 
 	// Put the filter back.
-	image.style.filter = '';
+	image.style.filter = image.savedFilter;
 
 	// Set the cursor appropriately.
 	image.style.cursor = (image.height >= window.innerHeight || image.width >= window.innerWidth) ? 
@@ -3077,12 +3092,15 @@ function realignHash() {
 
 function focusImageSpecifiedByURL() {
 	if (location.hash.hasPrefix("#if_slide_")) {
-		let images = document.querySelectorAll("#images-overlay img");
-		let imageToFocus = (/#if_slide_([0-9]+)/.exec(location.hash)||{})[1];
-		if (imageToFocus > 0 && imageToFocus <= images.length) {
-			focusImage(images[imageToFocus - 1]);
-			document.querySelector("#image-focus-overlay .image-number").textContent = imageToFocus;
-		}
+		registerInitializer('focusImageSpecifiedByURL', true, () => document.querySelector("#images-overlay") != null, () => {
+			console.log("focusImageSpecifiedByURL");
+			let images = document.querySelectorAll("#images-overlay img");
+			let imageToFocus = (/#if_slide_([0-9]+)/.exec(location.hash)||{})[1];
+			if (imageToFocus > 0 && imageToFocus <= images.length) {
+				focusImage(images[imageToFocus - 1]);
+				document.querySelector("#image-focus-overlay .image-number").textContent = imageToFocus;
+			}
+		});
 	}
 }
 

@@ -2920,7 +2920,6 @@ li {
 }
 
 #image-focus-overlay img {
-	filter: drop-shadow(10px 10px 10px #000) drop-shadow(0 0 10px #444);
 	margin: auto;
 	position: absolute;
 	left: 50%;
