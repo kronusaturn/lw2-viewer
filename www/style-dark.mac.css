@@ -5625,12 +5625,22 @@ a.post-section.alignment-forum:hover::before {
 #content > .comment-thread .comment-meta a.permalink:focus {
 	color: #666;
 	outline: 2px dotted #575756;
-	padding: 0 4px;
 	position: relative;
 	background-color: #000;
 }
+#content > .comment-thread .comment-meta a.date:focus {
+	padding: 0 4px;
+	left: -4px;
+}
+#content > .comment-thread .comment-meta a.date:focus + * {
+	margin-left: -8px;
+}
 #content > .comment-thread .comment-meta a.permalink:focus {
 	padding: 0 5px;
+	left: -5px;
+}
+#content > .comment-thread .comment-meta a.permalink:focus + * {
+	margin-left: -10px;
 }
 .comment-item {
 	border: 1px solid #2c2c2c;

@@ -740,9 +740,14 @@ a.post-section.alignment-forum:hover::before {
 #content > .comment-thread .comment-meta a.permalink:focus {
 	color: #888;
 	outline: 2px dotted #999;
-	padding: 0 5px;
 	position: relative;
 	background-color: #fff;
+	padding: 0 5px;
+	left: -5px;
+}
+#content > .comment-thread .comment-meta a.date:focus + *,
+#content > .comment-thread .comment-meta a.permalink:focus + * {
+	margin-left: -10px;
 }
 .comment-item {
 	border: 1px solid #ccc;

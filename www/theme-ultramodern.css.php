@@ -905,12 +905,22 @@ a.post-section.alignment-forum:hover::before {
 #content > .comment-thread .comment-meta a.permalink:focus {
 	color: #ccc;
 	outline: 2px dotted #ccc;
-	padding: 0 6px;
 	position: relative;
 	background-color: #444;
 }
+#content > .comment-thread .comment-meta a.date:focus {
+	padding: 0 6px;
+	left: -6px;
+}
+#content > .comment-thread .comment-meta a.date:focus + * {
+	margin-left: -12px;
+}
 #content > .comment-thread .comment-meta a.permalink:focus {
 	padding: 0 5px;
+	left: -5px;
+}
+#content > .comment-thread .comment-meta a.permalink:focus + * {
+	margin-left: -10px;
 }
 .comment-item {
 	border: 1px solid transparent;
