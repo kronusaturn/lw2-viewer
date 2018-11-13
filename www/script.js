@@ -700,6 +700,9 @@ function widthAdjustButtonClicked(event) {
 
 	// Regenerate images overlay.
 	generateImagesOverlay();
+	
+	// Realign hash.
+	realignHash();
 }
 
 /*******************/
