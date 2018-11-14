@@ -2182,10 +2182,12 @@ function focusImage(image) {
 
 			let imageCoordX = parseInt(getComputedStyle(clonedImage).left);
 			let imageCoordY = parseInt(getComputedStyle(clonedImage).top);
+			
+			// Save the filter.
+			clonedImage.savedFilter = clonedImage.style.filter;
 
 			window.onmousemove = (event) => {
 				// Remove the filter.
-				clonedImage.savedFilter = clonedImage.style.filter;
 				clonedImage.style.filter = "none";
 				clonedImage.style.left = imageCoordX + event.clientX - mouseCoordX + 'px';
 				clonedImage.style.top = imageCoordY + event.clientY - mouseCoordY + 'px';
@@ -2270,7 +2272,7 @@ function unfocusImageOverlay() {
 	document.removeEventListener("keyup", keyPressedWhenImageFocused);
 	document.removeEventListener("keydown", keyDownWhenImageFocused);
 	window.removeEventListener("mousemove", mouseMovedWhenImageFocused);
-	window.onmousedown = null;
+	window.onmousedown = '';
 
 	// Reset the hash, if needed.
 	if (location.hash.hasPrefix("#if_slide_"))
@@ -2448,7 +2450,8 @@ function focusedImageScrolled(event) {
 	var zoomOrigin;
 	// Zoom from cursor if we're zoomed in to where image exceeds screen, AND
 	// the cursor is over the image.
-	let zoomingFromCursor = (image.height >= window.innerHeight || image.width >= window.innerWidth) &&
+	let imageSizeExceedsWindowBounds = (image.getBoundingClientRect().width > window.innerWidth || image.getBoundingClientRect().height > window.innerHeight);
+	let zoomingFromCursor = imageSizeExceedsWindowBounds &&
 							(imageBoundingBox.left <= event.clientX &&
 							 event.clientX <= imageBoundingBox.right && 
 							 imageBoundingBox.top <= event.clientY &&
@@ -2479,6 +2482,19 @@ function focusedImageScrolled(event) {
 	// Adjust image position appropriately.
 	image.style.left = parseInt(getComputedStyle(image).left) - deltaFromCenteredZoom.x + "px";
 	image.style.top = parseInt(getComputedStyle(image).top) - deltaFromCenteredZoom.y + "px";
+	// Gradually re-center image, if it's smaller than the window.
+	if (!imageSizeExceedsWindowBounds) {
+		let imageCenter = { x: image.getBoundingClientRect().x + image.getBoundingClientRect().width / 2, 
+							y: image.getBoundingClientRect().y + image.getBoundingClientRect().height / 2 }
+		let windowCenter = { x: window.innerWidth / 2,
+							 y: window.innerHeight / 2 }
+		let imageOffsetFromCenter = { x: windowCenter.x - imageCenter.x,
+									  y: windowCenter.y - imageCenter.y }
+		// Divide the offset by 10 because we're nudging the image toward center,
+		// not jumping it there.
+		image.style.left = parseInt(getComputedStyle(image).left) + imageOffsetFromCenter.x / 10 + "px";
+		image.style.top = parseInt(getComputedStyle(image).top) + imageOffsetFromCenter.y / 10 + "px";
+	}
 
 	// Put the filter back.
 	image.style.filter = image.savedFilter;
