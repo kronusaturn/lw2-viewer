@@ -2390,6 +2390,9 @@ function keyDownWhenImageFocused(event) {
 }
 
 function mouseUpOnFocusedImage(event) {
+	// We only want to do anything on left-clicks.
+	if (event.button != 0) return;
+
 	if (event.target.hasClass("slideshow-button")) {
 		resetImageFocusHideUITimer(false);
 		return;
@@ -3113,7 +3116,6 @@ function realignHash() {
 function focusImageSpecifiedByURL() {
 	if (location.hash.hasPrefix("#if_slide_")) {
 		registerInitializer('focusImageSpecifiedByURL', true, () => document.querySelector("#images-overlay") != null, () => {
-			console.log("focusImageSpecifiedByURL");
 			let images = document.querySelectorAll("#images-overlay img");
 			let imageToFocus = (/#if_slide_([0-9]+)/.exec(location.hash)||{})[1];
 			if (imageToFocus > 0 && imageToFocus <= images.length) {
