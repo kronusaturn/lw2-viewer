@@ -3221,7 +3221,7 @@ li {
 	padding: 0 1px;
 }
 .post .mathjax-inline-container {
-	line-height: 0.8;
+	line-height: 1.1;
 	top: 2px;
 }
 .comment .mathjax-inline-container {
