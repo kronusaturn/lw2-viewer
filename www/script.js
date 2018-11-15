@@ -1687,13 +1687,19 @@ function toggleAppearanceAdjustUI() {
 /* MINIMIZED THREAD HANDLING */
 /*****************************/
 
-function expandAncestorsOf(commentId) {
+function expandAncestorsOf(commentID) {
+	let comment = document.querySelector('#comment-'+commentId);
+	if (!comment) {
+		console.log("Comment with ID " + commentID + " does not exist, so we can’t expand its ancestors.");
+		return;
+	}
+
 	// Expand collapsed comment threads.
-	let parentOfContainingCollapseCheckbox = (document.querySelector('#comment-'+commentId).closest("label[for^='expand'] + .comment-thread")||{}).parentElement;
+	let parentOfContainingCollapseCheckbox = (comment.closest("label[for^='expand'] + .comment-thread")||{}).parentElement;
 	if (parentOfContainingCollapseCheckbox) parentOfContainingCollapseCheckbox.querySelector("input[id^='expand']").checked = true;
 
 	// Expand collapsed comments.
-	let containingTopLevelCommentItem = document.querySelector('#comment-'+commentId).closest("#comments > ul > li");
+	let containingTopLevelCommentItem = comment.closest("#comments > ul > li");
 	if (containingTopLevelCommentItem) containingTopLevelCommentItem.setCommentThreadMaximized(true, false, true);
 }
 
