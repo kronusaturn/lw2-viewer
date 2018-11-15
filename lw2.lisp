@@ -695,7 +695,7 @@ signaled condition to OUT-STREAM."
             (write-item prev-uri "prev" "Previous page" "[")
             (format out-stream "<span class='page-number'><span class='page-number-label'>Page</span> ~A</span>" (+ 1 (/ (or offset 0) items-per-page)))
             (write-item next-uri "next" "Next page" "]")
-            (write-item last-uri "last" "Last page" "")
+            (write-item last-uri "last" "Last page" "/")
             (format out-stream "</div>")))
         (funcall fn)
         (nav-bar-outer out-stream nil `(:bottom-bar

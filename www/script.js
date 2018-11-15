@@ -2666,9 +2666,13 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		let auxAboutLink = addUIElement("<div id='aux-about-link'><a href='/about' accesskey='t' target='_new'>&#xf129;</a></div>");
 	}
 
-	// If there are no comments on a post, disable the #comments quick nav button.
+	// If the page cannot have comments, remove the accesskey from the #comments
+	// quick-nav button; and if the page can have comments, but does not, simply 
+	// disable the #comments quick nav button.
 	let content = document.querySelector("#content");
-	if (content.querySelector("#comments .comment-thread") == null) {
+	if (content.querySelector("#comments") == null) {
+		document.querySelector("#quick-nav-ui a[href='#comments']").accessKey = '';
+	} else if (content.querySelector("#comments .comment-thread") == null) {
 		document.querySelector("#quick-nav-ui a[href='#comments']").addClass("no-comments");
 	}
 
