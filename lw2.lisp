@@ -1492,7 +1492,8 @@ signaled condition to OUT-STREAM."
           (emit-page (out-stream :title "Archive" :current-uri "/archive" :content-class "archive-page")
                      (archive-nav out-stream)
                      (funcall (pagination-nav-bars :items-per-page 50 :offset offset :total total :with-next (if total nil (> (length posts) 50)))
-                              (lambda (out-stream)
+                              out-stream
+                              (lambda ()
                                 (write-index-items-to-html out-stream (firstn posts 50) :empty-message "No posts for the selected period.")))))))))
 
 (define-page view-about "/about" ()
