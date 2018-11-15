@@ -58,12 +58,13 @@
                            (let* ((uri (quri:uri val))
                                   (scheme (quri:uri-scheme uri))
                                   (host (quri:uri-host uri))
-                                  (port (quri:uri-port uri)))
+                                  (port (quri:uri-port uri))
+                                  (default-port (quri.port:scheme-default-port scheme)))
                              (list key val
                                    :host (format nil "~A~@[:~A~]"
-                                                 (quri:uri-host uri)
-                                                 (if (/= (quri.port:scheme-default-port scheme) port) port))
-                                   :secure (string-equal "https" (quri:uri-scheme uri)))))
+                                                 host
+                                                 (if (/= default-port port) port))
+                                   :secure (string-equal "https" scheme))))
                           (t (list key val))))
                       args)))
     `(push (make-instance ',class ,.args2) *sites*)))
