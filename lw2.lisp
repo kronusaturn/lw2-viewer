@@ -715,11 +715,15 @@ signaled condition to OUT-STREAM."
 			     `(let ((,stream-sym ,out-stream)) 
 				,.out-body)))) 
 
-(defun call-with-emit-page (out-stream fn &key title description current-uri content-class (return-code 200) robots)
+(defun call-with-emit-page (out-stream fn &key title description current-uri content-class (return-code 200) robots (pagination (pagination-nav-bars)) top-nav)
   (declare (ignore return-code))
   (ignore-errors
     (log-conditions
-      (html-body out-stream fn :title title :description description :current-uri current-uri :content-class content-class :robots robots)
+      (html-body out-stream
+                 (lambda ()
+                   (when top-nav (funcall top-nav out-stream))
+                   (funcall pagination out-stream fn))
+                 :title title :description description :current-uri current-uri :content-class content-class :robots robots)
       (force-output out-stream))))
 
 (defun set-cookie (key value &key (max-age (- (expt 2 31) 1)) (path "/"))
@@ -838,7 +842,7 @@ signaled condition to OUT-STREAM."
               title (replace-query-params (hunchentoot:request-uri*) "offset" nil "format" "rss")))
     (format out-stream "</div>")))
 
-(defun view-items-index (items &key section title current-uri hide-title need-auth (pagination (pagination-nav-bars)) (extra-html (lambda (s) (page-toolbar-to-html s :title title))) (content-class "index-page"))
+(defun view-items-index (items &key section title current-uri hide-title need-auth (pagination (pagination-nav-bars)) (top-nav (lambda (s) (page-toolbar-to-html s :title title))) (content-class "index-page"))
   (alexandria:switch ((hunchentoot:get-parameter "format") :test #'string=)
                      ("rss" 
                       (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
@@ -846,13 +850,11 @@ signaled condition to OUT-STREAM."
                         (write-index-items-to-rss out-stream items :title title)))
                      (t
                        (emit-page (out-stream :title (if hide-title nil title) :description "A faster way to browse LessWrong 2.0" :content-class content-class
-                                              :current-uri current-uri :robots (if (hunchentoot:get-parameter :offset) "noindex, nofollow"))
-                                  (when extra-html (funcall extra-html out-stream))
-                                  (funcall pagination out-stream
-                                           (lambda ()
-                                             (write-index-items-to-html out-stream items
-                                                                        :need-auth need-auth
-                                                                        :skip-section section)))))))
+                                              :current-uri current-uri :robots (if (hunchentoot:get-parameter :offset) "noindex, nofollow")
+                                              :pagination pagination :top-nav top-nav)
+                                  (write-index-items-to-html out-stream items
+                                                             :need-auth need-auth
+                                                             :skip-section section)))))
 
 (defun link-if-not (stream linkp url class text &key accesskey nofollow)
   (declare (dynamic-extent linkp url text))
@@ -970,15 +972,15 @@ signaled condition to OUT-STREAM."
       (view-items-index posts
                         :section :frontpage :title "Frontpage posts" :hide-title t
                         :pagination (pagination-nav-bars :offset (or offset 0) :total total)
-                        :extra-html (lambda (out-stream)
-                                      (page-toolbar-to-html out-stream
-                                                            :title "Frontpage posts"
-                                                            :new-post t)
-                                      (sublevel-nav-to-html out-stream
-                                                            '(:new :hot)
-                                                            (user-pref :default-sort)
-                                                            :param-name "sort"
-                                                            :extra-class "sort"))))))
+                        :top-nav (lambda (out-stream)
+                                   (page-toolbar-to-html out-stream
+                                                         :title "Frontpage posts"
+                                                         :new-post t)
+                                   (sublevel-nav-to-html out-stream
+                                                         '(:new :hot)
+                                                         (user-pref :default-sort)
+                                                         :param-name "sort"
+                                                         :extra-class "sort"))))))
 
 (define-page view-index "/index" ((view :member (:all :new :frontpage :featured :meta :community :alignment-forum) :default :all)
                                   before after
@@ -996,16 +998,16 @@ signaled condition to OUT-STREAM."
                         :section view :title page-title
                         :pagination (pagination-nav-bars :offset (or offset 0) :total total)
                         :content-class (format nil "index-page ~(~A~)-index-page" view)
-                        :extra-html (lambda (out-stream)
-                                      (page-toolbar-to-html out-stream
-                                                            :title page-title
-                                                            :new-post (if (eq view :meta) "meta" t))
-                                      (if (member view '(:all))
-                                          (sublevel-nav-to-html out-stream
-                                                                '(:new :hot)
-                                                                (user-pref :default-sort)
-                                                                :param-name "sort"
-                                                                :extra-class "sort")))))))
+                        :top-nav (lambda (out-stream)
+                                   (page-toolbar-to-html out-stream
+                                                         :title page-title
+                                                         :new-post (if (eq view :meta) "meta" t))
+                                   (if (member view '(:all))
+                                       (sublevel-nav-to-html out-stream
+                                                             '(:new :hot)
+                                                             (user-pref :default-sort)
+                                                             :param-name "sort"
+                                                             :extra-class "sort")))))))
 
 (define-page view-post "/post" ((id :required t))
   (redirect (generate-post-link id) :type :permanent))
@@ -1269,33 +1271,33 @@ signaled condition to OUT-STREAM."
                                      :section :personal
                                      :pagination (pagination-nav-bars :offset offset :total total :with-next (if (not total) with-next))
                                      :need-auth (eq show :drafts) :section (if (eq show :drafts) "drafts" nil)
-                                     :extra-html (lambda (out-stream)
-                                                   (page-toolbar-to-html out-stream
-                                                                         :title title
-                                                                         :rss (not (member show '(:drafts :conversations :inbox)))
-                                                                         :new-post (if (eq show :drafts) "drafts" t)
-                                                                         :new-conversation (if own-user-page t user-slug)
-                                                                         :logout own-user-page)
-                                                   (format out-stream "<h1 class=\"page-main-heading\"~@[ ~A~]>~A</h1><div class=\"user-stats\">Karma: <span class=\"karma-total\">~A</span></div>"
-                                                           (if (not own-user-page)
-                                                               (if user-slug
-                                                                   (format nil "data-anti-kibitzer-redirect=\"/user?id=~A\"" (cdr (assoc :--id user-info)))
-                                                                   (format nil "data-kibitzer-redirect=\"/users/~A\"" (cdr (assoc :slug user-info)))))
-                                                           (encode-entities display-name)
-                                                           (if user-slug (pretty-number (or (cdr (assoc :karma user-info)) 0)) "##"))
-                                                   (sublevel-nav-to-html out-stream
-                                                                         `(:all :posts :comments
-                                                                           ,@(if own-user-page
-                                                                                 '(:drafts :conversations :inbox)))
-                                                                         show
-                                                                         :default :all)
-                                                   (when (member show '(:all :posts :comments))
-                                                     (sublevel-nav-to-html out-stream
-                                                                           '(:new :top)
-                                                                           sort
-                                                                           :default :new
-                                                                           :param-name "sort"
-                                                                           :extra-class "sort"))))))))
+                                     :top-nav (lambda (out-stream)
+                                                (page-toolbar-to-html out-stream
+                                                                      :title title
+                                                                      :rss (not (member show '(:drafts :conversations :inbox)))
+                                                                      :new-post (if (eq show :drafts) "drafts" t)
+                                                                      :new-conversation (if own-user-page t user-slug)
+                                                                      :logout own-user-page)
+                                                (format out-stream "<h1 class=\"page-main-heading\"~@[ ~A~]>~A</h1><div class=\"user-stats\">Karma: <span class=\"karma-total\">~A</span></div>"
+                                                        (if (not own-user-page)
+                                                            (if user-slug
+                                                                (format nil "data-anti-kibitzer-redirect=\"/user?id=~A\"" (cdr (assoc :--id user-info)))
+                                                                (format nil "data-kibitzer-redirect=\"/users/~A\"" (cdr (assoc :slug user-info)))))
+                                                        (encode-entities display-name)
+                                                        (if user-slug (pretty-number (or (cdr (assoc :karma user-info)) 0)) "##"))
+                                                (sublevel-nav-to-html out-stream
+                                                                      `(:all :posts :comments
+                                                                        ,@(if own-user-page
+                                                                              '(:drafts :conversations :inbox)))
+                                                                      show
+                                                                      :default :all)
+                                                (when (member show '(:all :posts :comments))
+                                                  (sublevel-nav-to-html out-stream
+                                                                        '(:new :top)
+                                                                        sort
+                                                                        :default :new
+                                                                        :param-name "sort"
+                                                                        :extra-class "sort"))))))))
 
 (defparameter *conversation-template* (compile-template* "conversation.html"))
 
@@ -1309,8 +1311,8 @@ signaled condition to OUT-STREAM."
            (multiple-value-bind (conversation messages)
              (get-conversation-messages id (hunchentoot:cookie-in "lw2-auth-token"))
              (view-items-index (nreverse messages) :content-class "conversation-page" :need-auth t :title (encode-entities (postprocess-conversation-title (cdr (assoc :title conversation))))
-                               :extra-html (lambda (out-stream) (render-template* *conversation-template* out-stream
-                                                                                  :conversation conversation :csrf-token (make-csrf-token))))))
+                               :top-nav (lambda (out-stream) (render-template* *conversation-template* out-stream
+                                                                               :conversation conversation :csrf-token (make-csrf-token))))))
          (t
           (emit-page (out-stream :title "New conversation" :content-class "conversation-page")
                      (render-template* *conversation-template* out-stream
@@ -1489,12 +1491,10 @@ signaled condition to OUT-STREAM."
                                                       :before (if year (format nil "~A-~A-~A" (or year current-year) (or month 12)
                                                                                (or day (local-time:days-in-month (or month 12) (or year current-year))))))
                                                *posts-index-fields*))
-          (emit-page (out-stream :title "Archive" :current-uri "/archive" :content-class "archive-page")
-                     (archive-nav out-stream)
-                     (funcall (pagination-nav-bars :items-per-page 50 :offset offset :total total :with-next (if total nil (> (length posts) 50)))
-                              out-stream
-                              (lambda ()
-                                (write-index-items-to-html out-stream (firstn posts 50) :empty-message "No posts for the selected period.")))))))))
+          (emit-page (out-stream :title "Archive" :current-uri "/archive" :content-class "archive-page"
+                                 :top-nav #'archive-nav
+                                 :pagination (pagination-nav-bars :items-per-page 50 :offset offset :total total :with-next (if total nil (> (length posts) 50))))
+                     (write-index-items-to-html out-stream (firstn posts 50) :empty-message "No posts for the selected period.")))))))
 
 (define-page view-about "/about" ()
   (emit-page (out-stream :title "About" :current-uri "/about" :content-class "about-page")
