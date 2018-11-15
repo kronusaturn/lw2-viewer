@@ -2,7 +2,8 @@
   (:use #:cl #:sb-thread #:flexi-streams #:djula #:lw2-viewer.config #:lw2.utils #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login #:lw2.context #:lw2.sites)
   (:unintern
     #:define-regex-handler #:*fonts-stylesheet-uri* #:generate-fonts-link
-    #:user-nav-bar #:*primary-nav* #:*secondary-nav* #:*nav-bars*))
+    #:user-nav-bar #:*primary-nav* #:*secondary-nav* #:*nav-bars*
+    #:begin-html #:end-html))
 
 (in-package #:lw2-viewer) 
 
@@ -622,9 +623,9 @@ signaled condition to OUT-STREAM."
       (handler-case (gen-inner theme os)
         (serious-condition () (gen-inner nil os))))))
 
-(defun begin-html (out-stream &key title description current-uri content-class robots)
+(defun html-body (out-stream fn &key title description current-uri content-class robots)
   (let* ((session-token (hunchentoot:cookie-in "session-token"))
-         (csrf-token (and session-token (make-csrf-token session-token)))) 
+         (csrf-token (and session-token (make-csrf-token session-token))))
     (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head>")
     (format out-stream "<script>loggedInUserId=\"~A\"; loggedInUserDisplayName=\"~A\"; loggedInUserSlug=\"~A\"; ~@[var csrfToken=\"~A\"; ~]~A</script>~A"
             (or (logged-in-userid) "")
@@ -647,10 +648,15 @@ signaled condition to OUT-STREAM."
             (site-title *current-site*)
             description
             robots)
-    (format out-stream "</head><body><div id=\"content\"~@[ class=\"~A\"~]>"
-            content-class)
-    (nav-bar-to-html out-stream (or current-uri (replace-query-params (hunchentoot:request-uri*) "offset" nil "sort" nil))))
-  (force-output out-stream))
+    (format out-stream "</head>"))
+  (unwind-protect
+    (progn
+      (format out-stream "<body><div id=\"content\"~@[ class=\"~A\"~]>"
+              content-class)
+      (nav-bar-to-html out-stream (or current-uri (replace-query-params (hunchentoot:request-uri*) "offset" nil "sort" nil)))
+      (force-output out-stream)
+      (funcall fn))
+    (format out-stream "</div></body></html>")))
 
 (defun replace-query-params (uri &rest params)
   (let* ((quri (quri:uri uri))
@@ -668,43 +674,37 @@ signaled condition to OUT-STREAM."
       (setf (quri:uri-query quri) nil))
     (quri:render-uri quri)))
 
-(defun pagination-nav-bars (&key with-offset with-total with-next items-per-page)
-  (labels ((pages-to-end (n) (< (+ with-offset (* items-per-page n)) with-total)))
-    (let* ((with-next (if with-total (pages-to-end 1) with-next))
-           (next (if (and with-offset with-next) (+ with-offset items-per-page)))
-           (prev (if (and with-offset (>= with-offset items-per-page)) (- with-offset items-per-page)))
-           (request-uri (hunchentoot:request-uri*))
-           (first-uri (if (and prev (> prev 0)) (replace-query-params request-uri "offset" nil)))
-           (prev-uri (if prev (replace-query-params request-uri "offset" (if (= prev 0) nil prev))))
-           (next-uri (if next (replace-query-params request-uri "offset" next)))
-           (last-uri (if (and with-total with-offset (pages-to-end 2))
-                         (replace-query-params request-uri "offset" (- with-total (mod (- with-total 1) items-per-page) 1)))))
-      (values
+(defun pagination-nav-bars (&key offset total with-next (items-per-page (user-pref :items-per-page)))
+  (lambda (out-stream fn)
+    (labels ((pages-to-end (n) (< (+ offset (* items-per-page n)) total)))
+      (let* ((with-next (if total (pages-to-end 1) with-next))
+             (next (if (and offset with-next) (+ offset items-per-page)))
+             (prev (if (and offset (>= offset items-per-page)) (- offset items-per-page)))
+             (request-uri (hunchentoot:request-uri*))
+             (first-uri (if (and prev (> prev 0)) (replace-query-params request-uri "offset" nil)))
+             (prev-uri (if prev (replace-query-params request-uri "offset" (if (= prev 0) nil prev))))
+             (next-uri (if next (replace-query-params request-uri "offset" next)))
+             (last-uri (if (and total offset (pages-to-end 2))
+                           (replace-query-params request-uri "offset" (- total (mod (- total 1) items-per-page) 1)))))
         (if (or next prev last-uri)
-            (lambda (out-stream)
-              (labels ((write-item (uri class title accesskey)
-                         (format out-stream "<a href=\"~A\" class=\"button nav-item-~A~:[ disabled~;~]\" title=\"~A [~A]\" accesskey=\"~A\"></a>"
-                                 (or uri "#") class uri title accesskey accesskey)))
-                (format out-stream "<div id='top-nav-bar'>")
-                (write-item first-uri "first" "First page" "\\")
-                (write-item prev-uri "prev" "Previous page" "[")
-                (format out-stream "<span class='page-number'><span class='page-number-label'>Page</span> ~A</span>" (+ 1 (/ (or with-offset 0) items-per-page)))
-                (write-item next-uri "next" "Next page" "]")
-                (write-item last-uri "last" "Last page" "")
-                (format out-stream "</div>"))))
-        (lambda (out-stream)
-          (nav-bar-outer out-stream nil `(:bottom-bar
-                                           (,@(if first-uri `(("first" ,first-uri "Back to first")))
-                                             ,@(if prev-uri `(("prev" ,prev-uri "Previous" :nofollow t)))
-                                             ("top" "#top" "Back to top")
-                                             ,@(if next-uri `(("next" ,next-uri "Next" :nofollow t)))
-                                             ,@(if last-uri `(("last" ,last-uri "Last" :nofollow t))))))
-          (format out-stream "<script>document.querySelectorAll('#bottom-bar').forEach(function (bb) { bb.classList.add('decorative'); });</script>"))))))
-
-(defun end-html (out-stream &key items-per-page bottom-bar-fn)
-  (if items-per-page (format out-stream "<script>var itemsPerPage=~A</script>" items-per-page))
-  (when bottom-bar-fn (funcall bottom-bar-fn out-stream))
-  (format out-stream "</div></body></html>"))
+          (labels ((write-item (uri class title accesskey)
+                     (format out-stream "<a href=\"~A\" class=\"button nav-item-~A~:[ disabled~;~]\" title=\"~A [~A]\" accesskey=\"~A\"></a>"
+                             (or uri "#") class uri title accesskey accesskey)))
+            (format out-stream "<div id='top-nav-bar'>")
+            (write-item first-uri "first" "First page" "\\")
+            (write-item prev-uri "prev" "Previous page" "[")
+            (format out-stream "<span class='page-number'><span class='page-number-label'>Page</span> ~A</span>" (+ 1 (/ (or offset 0) items-per-page)))
+            (write-item next-uri "next" "Next page" "]")
+            (write-item last-uri "last" "Last page" "")
+            (format out-stream "</div>")))
+        (funcall fn)
+        (nav-bar-outer out-stream nil `(:bottom-bar
+                                         (,@(if first-uri `(("first" ,first-uri "Back to first")))
+                                           ,@(if prev-uri `(("prev" ,prev-uri "Previous" :nofollow t)))
+                                           ("top" "#top" "Back to top")
+                                           ,@(if next-uri `(("next" ,next-uri "Next" :nofollow t)))
+                                           ,@(if last-uri `(("last" ,last-uri "Last" :nofollow t))))))
+        (format out-stream "<script>var itemsPerPage=~A; document.querySelectorAll('#bottom-bar').forEach(function (bb) { bb.classList.add('decorative'); });</script>" items-per-page)))))
 
 (defun map-output (out-stream fn list)
   (loop for item in list do (write-string (funcall fn item) out-stream))) 
@@ -715,18 +715,11 @@ signaled condition to OUT-STREAM."
 			     `(let ((,stream-sym ,out-stream)) 
 				,.out-body)))) 
 
-(defun call-with-emit-page (out-stream fn &key title description current-uri content-class (return-code 200) additional-nav (items-per-page (user-pref :items-per-page)) with-offset with-total with-next robots)
+(defun call-with-emit-page (out-stream fn &key title description current-uri content-class (return-code 200) robots)
   (declare (ignore return-code))
   (ignore-errors
     (log-conditions
-      (multiple-value-bind (top-bar-fn bottom-bar-fn) (pagination-nav-bars :with-offset with-offset :with-total with-total :with-next with-next :items-per-page items-per-page)
-        (begin-html out-stream :title title :description description :current-uri current-uri :content-class content-class :robots robots)
-        (when additional-nav (funcall additional-nav out-stream))
-        (when top-bar-fn (funcall top-bar-fn out-stream))
-        (funcall fn)
-        (end-html out-stream
-                  :items-per-page (if with-offset items-per-page)
-                  :bottom-bar-fn bottom-bar-fn))
+      (html-body out-stream fn :title title :description description :current-uri current-uri :content-class content-class :robots robots)
       (force-output out-stream))))
 
 (defun set-cookie (key value &key (max-age (- (expt 2 31) 1)) (path "/"))
@@ -845,18 +838,21 @@ signaled condition to OUT-STREAM."
               title (replace-query-params (hunchentoot:request-uri*) "offset" nil "format" "rss")))
     (format out-stream "</div>")))
 
-(defun view-items-index (items &key section with-offset with-total (with-next t) title current-uri hide-title need-auth (extra-html (lambda (s) (page-toolbar-to-html s :title title))) (content-class "index-page"))
+(defun view-items-index (items &key section title current-uri hide-title need-auth (pagination (pagination-nav-bars)) (extra-html (lambda (s) (page-toolbar-to-html s :title title))) (content-class "index-page"))
   (alexandria:switch ((hunchentoot:get-parameter "format") :test #'string=)
                      ("rss" 
                       (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
                       (with-response-stream (out-stream)
                         (write-index-items-to-rss out-stream items :title title)))
                      (t
-                       (emit-page (out-stream :title (if hide-title nil title) :description "A faster way to browse LessWrong 2.0" :content-class content-class :with-offset with-offset :with-total with-total :with-next with-next
-                                              :current-uri current-uri :robots (if (and with-offset (> with-offset 0)) "noindex, nofollow")
-                                              :additional-nav extra-html)
-                                  (write-index-items-to-html out-stream items :need-auth need-auth
-                                                             :skip-section section)))))
+                       (emit-page (out-stream :title (if hide-title nil title) :description "A faster way to browse LessWrong 2.0" :content-class content-class
+                                              :current-uri current-uri :robots (if (hunchentoot:get-parameter :offset) "noindex, nofollow"))
+                                  (when extra-html (funcall extra-html out-stream))
+                                  (funcall pagination out-stream
+                                           (lambda ()
+                                             (write-index-items-to-html out-stream items
+                                                                        :need-auth need-auth
+                                                                        :skip-section section)))))))
 
 (defun link-if-not (stream linkp url class text &key accesskey nofollow)
   (declare (dynamic-extent linkp url text))
@@ -971,7 +967,9 @@ signaled condition to OUT-STREAM."
         (set-user-pref :default-sort sort-string))
     (multiple-value-bind (posts total)
       (get-posts-index :offset offset :limit (or limit (user-pref :items-per-page)) :sort (user-pref :default-sort))
-      (view-items-index posts :section :frontpage :title "Frontpage posts" :hide-title t :with-offset (or offset 0) :with-total total
+      (view-items-index posts
+                        :section :frontpage :title "Frontpage posts" :hide-title t
+                        :pagination (pagination-nav-bars :offset (or offset 0) :total total)
                         :extra-html (lambda (out-stream)
                                       (page-toolbar-to-html out-stream
                                                             :title "Frontpage posts"
@@ -994,7 +992,9 @@ signaled condition to OUT-STREAM."
   (multiple-value-bind (posts total)
     (get-posts-index :view (string-downcase view) :before before :after after :offset offset :limit (or limit (user-pref :items-per-page)) :sort (user-pref :default-sort))
     (let ((page-title (format nil "~@(~A posts~)" view)))
-      (view-items-index posts :section view :title page-title :with-offset (or offset 0) :with-total total
+      (view-items-index posts
+                        :section view :title page-title
+                        :pagination (pagination-nav-bars :offset (or offset 0) :total total)
                         :content-class (format nil "index-page ~(~A~)-index-page" view)
                         :extra-html (lambda (out-stream)
                                       (page-toolbar-to-html out-stream
@@ -1171,7 +1171,7 @@ signaled condition to OUT-STREAM."
                                                *comments-index-fields*
                                                :with-total want-total))
           (get-recent-comments :with-total want-total))
-      (view-items-index recent-comments :title "Recent comments" :with-offset (or offset 0) :with-next (not want-total) :with-total (if want-total total)))))
+      (view-items-index recent-comments :title "Recent comments" :pagination (pagination-nav-bars :offset (or offset 0) :with-next (not want-total) :total (if want-total total))))))
 
 (define-page view-user (:regex "^/users/(.*?)(?:$|\\?)|^/user" user-slug) (id
                                                                              (offset :type fixnum :default 0)
@@ -1263,11 +1263,11 @@ signaled condition to OUT-STREAM."
                        (concatenate 'list user-posts user-comments))))
                  (let ((with-next (> (length items) (+ (if (eq show :all) offset 0) (user-pref :items-per-page))))
                        (interleave (if (eq show :all) (comment-post-interleave items :limit (user-pref :items-per-page) :offset (if (eq show :all) offset nil) :sort-by sort-type) (firstn items (user-pref :items-per-page))))) ; this destructively sorts items
-                   (view-items-index interleave :with-offset offset :title title
+                   (view-items-index interleave :title title
                                      :content-class (format nil "user-page~@[ ~A-user-page~]~:[~; own-user-page~]" show-text own-user-page)
                                      :current-uri (format nil "/users/~A" user-slug)
                                      :section :personal
-                                     :with-offset offset :with-total total :with-next (if (not total) with-next)
+                                     :pagination (pagination-nav-bars :offset offset :total total :with-next (if (not total) with-next))
                                      :need-auth (eq show :drafts) :section (if (eq show :drafts) "drafts" nil)
                                      :extra-html (lambda (out-stream)
                                                    (page-toolbar-to-html out-stream
@@ -1489,10 +1489,11 @@ signaled condition to OUT-STREAM."
                                                       :before (if year (format nil "~A-~A-~A" (or year current-year) (or month 12)
                                                                                (or day (local-time:days-in-month (or month 12) (or year current-year))))))
                                                *posts-index-fields*))
-          (emit-page (out-stream :title "Archive" :current-uri "/archive" :content-class "archive-page"
-                                 :items-per-page 50 :with-offset offset :with-total total :with-next (if total nil (> (length posts) 50))
-                                 :additional-nav #'archive-nav)
-                     (write-index-items-to-html out-stream (firstn posts 50) :empty-message "No posts for the selected period.")))))))
+          (emit-page (out-stream :title "Archive" :current-uri "/archive" :content-class "archive-page")
+                     (archive-nav out-stream)
+                     (funcall (pagination-nav-bars :items-per-page 50 :offset offset :total total :with-next (if total nil (> (length posts) 50)))
+                              (lambda (out-stream)
+                                (write-index-items-to-html out-stream (firstn posts 50) :empty-message "No posts for the selected period.")))))))))
 
 (define-page view-about "/about" ()
   (emit-page (out-stream :title "About" :current-uri "/about" :content-class "about-page")
