@@ -2182,21 +2182,22 @@ function focusImage(image) {
 	// If image is bigger than viewport, it's draggable. Otherwise, click unfocuses.
 	window.addEventListener("mouseup", mouseUpOnFocusedImage);
 	window.onmousedown = (event) => {
-		if (clonedImage.height >= window.innerHeight || clonedImage.width >= window.innerWidth) {
+		let focusedImage = document.querySelector("#image-focus-overlay img");
+		if (focusedImage.height >= window.innerHeight || focusedImage.width >= window.innerWidth) {
 			let mouseCoordX = event.clientX;
 			let mouseCoordY = event.clientY;
 
-			let imageCoordX = parseInt(getComputedStyle(clonedImage).left);
-			let imageCoordY = parseInt(getComputedStyle(clonedImage).top);
+			let imageCoordX = parseInt(getComputedStyle(focusedImage).left);
+			let imageCoordY = parseInt(getComputedStyle(focusedImage).top);
 			
 			// Save the filter.
-			clonedImage.savedFilter = clonedImage.style.filter;
+			focusedImage.savedFilter = focusedImage.style.filter;
 
 			window.onmousemove = (event) => {
 				// Remove the filter.
-				clonedImage.style.filter = "none";
-				clonedImage.style.left = imageCoordX + event.clientX - mouseCoordX + 'px';
-				clonedImage.style.top = imageCoordY + event.clientY - mouseCoordY + 'px';
+				focusedImage.style.filter = "none";
+				focusedImage.style.left = imageCoordX + event.clientX - mouseCoordX + 'px';
+				focusedImage.style.top = imageCoordY + event.clientY - mouseCoordY + 'px';
 			};
 			return false;
 		}
@@ -2246,6 +2247,15 @@ function resetFocusedImagePosition() {
 	// Remove modifications to position.
 	focusedImage.style.left = "";
 	focusedImage.style.top = "";
+
+	// Set the cursor appropriately.
+	setFocusedImageCursor();
+}
+function setFocusedImageCursor() {
+	let focusedImage = document.querySelector("#image-focus-overlay img");
+	if (!focusedImage) return;
+	focusedImage.style.cursor = (focusedImage.height >= window.innerHeight || focusedImage.width >= window.innerWidth) ? 
+						 		'move' : '';
 }
 
 function unfocusImageOverlay() {
@@ -2509,8 +2519,7 @@ function focusedImageScrolled(event) {
 	image.style.filter = image.savedFilter;
 
 	// Set the cursor appropriately.
-	image.style.cursor = (image.height >= window.innerHeight || image.width >= window.innerWidth) ? 
-						 'move' : '';
+	setFocusedImageCursor();
 }
 function oldFirefoxCompatibilityScrollEventFired(event) {
 	event.preventDefault();
