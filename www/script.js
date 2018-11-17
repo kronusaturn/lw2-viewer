@@ -886,7 +886,7 @@ function themeLoadCallback_less(fromTheme = "") {
 			}, 1800);
 		}
 
-		// Unset the height of the #ui-elements-container
+		// Unset the height of the #ui-elements-container.
 		document.querySelector("#ui-elements-container").style.height = "";
 
 		registerInitializer('updatePostNavUIToggleVisibility', false, () => document.readyState == "complete", updatePostNavUIToggleVisibility);
