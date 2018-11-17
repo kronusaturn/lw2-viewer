@@ -3247,10 +3247,12 @@ li {
     	background-color 0.1s ease-out 0.1s,
     	text-shadow 0.1s ease-out 0.1s;
 }
+.spoiler::selection,
 .spoiler ::selection {
 	color: #fff;
 	background-color: #000;
 }
+.spoiler:not(:hover)::selection,
 .spoiler:not(:hover) ::selection {
     background-color: transparent;
 }
