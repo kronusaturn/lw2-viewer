@@ -1112,7 +1112,6 @@ a.comment-parent-link::after {
 		top: -1px;
 	}
 	#edit-post-form .textarea-container:focus-within textarea {
-		top: -1px;
 		height: calc(100% - 101px);
 		min-height: unset;
 	}
