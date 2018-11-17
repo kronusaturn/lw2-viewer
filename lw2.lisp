@@ -470,12 +470,16 @@ signaled condition to OUT-STREAM."
                    (with-mutex (*fonts-redirect-lock*) (setf *fonts-redirect-data* (list *fonts-stylesheet-uris* new-redirects current-time)
                                                              *fonts-redirect-thread* nil))
                    new-redirects)
-                 (serious-condition () *fonts-stylesheet-uris*))))
+                 (serious-condition () *fonts-stylesheet-uris*)))
+             (ensure-update-thread ()
+               (with-mutex (*fonts-redirect-lock*)
+                 (or *fonts-redirect-thread*
+                     (setf *fonts-redirect-thread* (make-thread #'update-redirects :name "fonts redirect update"))))))
       (destructuring-bind (&optional base-uris redirect-uris timestamp) (with-mutex (*fonts-redirect-lock*) *fonts-redirect-data*)
         (if (and (eq base-uris *fonts-stylesheet-uris*) timestamp)
           (progn
             (if (>= current-time (+ timestamp 60))
-                (with-mutex (*fonts-redirect-lock*) (or *fonts-redirect-thread* (make-thread #'update-redirects :name "fonts redirect update"))))
+                (ensure-update-thread))
             (or redirect-uris *fonts-stylesheet-uris*))
           (update-redirects))))))
 
