@@ -311,13 +311,13 @@ function hideReplyForm(event) {
 }
 
 function OnInputExpandTextarea() {
-	if (window.innerWidth <= 520) return;
 	let totalBorderHeight = (this.closest("#conversation-form") == null) ? 30 : 2;
 	if ((this.offsetHeight - totalBorderHeight) < this.scrollHeight) {
 		ExpandTextarea(this);
 	}
 }
 function ExpandTextarea(textarea) {
+	if (window.innerWidth <= 520) return;
 	requestAnimationFrame(() => {
 		textarea.style.height = 'auto';
 		let totalBorderHeight = (textarea.closest("#conversation-form") == null) ? 30 : 2;

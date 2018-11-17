@@ -4587,7 +4587,7 @@ a.comment-parent-link::after {
 		z-index: 11011;
 		position: fixed;
 		bottom: 7px;
-		width: calc(((100% - 16px) / 10) * 3 - 7px);
+		width: calc(((100% - 16px) / 10) * 2.5 - 7px);
 		font-size: 1.25rem;
 		padding: 5px 5px 6px 5px;
 		display: block;
