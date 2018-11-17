@@ -211,6 +211,28 @@ Element.prototype.addTextareaFeatures = function() {
 	if (guiEditMobileExitButton) {
 		guiEditMobileExitButton.addActivateEvent(GUIEditMobileExitButtonClicked);
 	}
+	
+	if (window.isMobile && window.innerWidth <= 520) {
+		let fixedEditorElements = textarea.closest(".textarea-container").querySelectorAll("textarea, .guiedit-buttons-container, .guiedit-mobile-auxiliary-button, .markdown-hints");
+		textarea.addEventListener("focus", (event) => {
+			window.savedFilters = window.currentFilters;
+			window.currentFilters = { };
+			applyFilters(window.currentFilters);
+			fixedEditorElements.forEach(element => {
+				element.style.filter = filterStringFromFilters(window.savedFilters);
+			});
+		});
+		textarea.addEventListener("blur", (event) => {
+			window.currentFilters = window.savedFilters;
+			window.savedFilters = { };
+			requestAnimationFrame(() => {
+				applyFilters(window.currentFilters);
+				fixedEditorElements.forEach(element => {
+					element.style.filter = filterStringFromFilters(window.savedFilters);
+				});
+			});
+		});
+	}
 }
 
 Element.prototype.injectReplyForm = function(editMarkdownSource) {
