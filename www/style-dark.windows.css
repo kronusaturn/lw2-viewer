@@ -3232,6 +3232,36 @@ li {
 	padding: 0;
 }
 
+/************/
+/* SPOILERS */
+/************/
+
+p.spoiler {
+    color: #fff;
+    background-color: currentColor;
+    position: relative;
+    transition: none;
+    border: 1px solid currentColor;
+    padding: 0 5px;
+    text-shadow: none;
+}
+p.spoiler:hover {
+    color: unset;
+    background-color: unset;
+    text-shadow: unset;
+    transition:
+    	color 0.1s ease-out 0.1s,
+    	background-color 0.1s ease-out 0.1s,
+    	text-shadow 0.1s ease-out 0.1s;
+}
+.spoiler ::selection {
+	color: #000;
+	background-color: #fff;
+}
+.spoiler:not(:hover) ::selection {
+    background-color: transparent;
+}
+
 /*******************/
 /* ALIGNMENT FORUM */
 /*******************/
