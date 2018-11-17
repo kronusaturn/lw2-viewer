@@ -1688,7 +1688,7 @@ function toggleAppearanceAdjustUI() {
 /*****************************/
 
 function expandAncestorsOf(commentID) {
-	let comment = document.querySelector('#comment-'+commentId);
+	let comment = document.querySelector('#comment-'+commentID);
 	if (!comment) {
 		console.log("Comment with ID " + commentID + " does not exist, so we can’t expand its ancestors.");
 		return;
