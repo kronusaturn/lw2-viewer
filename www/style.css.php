@@ -3235,7 +3235,7 @@ li {
     position: relative;
     transition: none;
     border: 1px solid currentColor;
-    padding: 0 5px;
+    padding: 0 6px;
     text-shadow: none;
 }
 .spoiler:hover {
@@ -3259,9 +3259,13 @@ li {
 
 div.spoiler {
 	margin: 1em 0;
+	overflow: visible;
 }
-div.spoiler > p {
-	margin: 0;
+div.spoiler > p:first-child {
+	margin-top: 0.25em;
+}
+div.spoiler > p:last-child {
+	margin-bottom: 0.25em;
 }
 
 /*******************/
