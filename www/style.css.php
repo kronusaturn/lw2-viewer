@@ -3229,7 +3229,7 @@ li {
 /* SPOILERS */
 /************/
 
-p.spoiler {
+.spoiler {
     color: #000;
     background-color: currentColor;
     position: relative;
@@ -3238,7 +3238,7 @@ p.spoiler {
     padding: 0 5px;
     text-shadow: none;
 }
-p.spoiler:hover {
+.spoiler:hover {
     color: unset;
     background-color: unset;
     text-shadow: unset;
@@ -3253,6 +3253,15 @@ p.spoiler:hover {
 }
 .spoiler:not(:hover) ::selection {
     background-color: transparent;
+}
+
+/*= Fix for LessWrong being weird =*/
+
+div.spoiler {
+	margin: 1em 0;
+}
+div.spoiler > p {
+	margin: 0;
 }
 
 /*******************/
