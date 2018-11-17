@@ -3202,7 +3202,8 @@ var guiEditButtons = [
 	[ 'horizontal-rule', 'Horizontal rule', '', '\\n\\n---\\n\\n', '', '', '&#xf068' ],
 	[ 'inline-code', 'Inline code', '', '`', '`', 'Code', '&#xf121' ],
 	[ 'code-block', 'Code block', '', '```\\n', '\\n```', 'Code', '&#xf1c9' ],
-	[ 'formula', 'LaTeX', '', '$', '$', 'LaTeX formula', '&#xf155' ]
+	[ 'formula', 'LaTeX', '', '$', '$', 'LaTeX formula', '&#xf155' ],
+	[ 'spoiler', 'Spoiler block', '', '::: spoiler\\n', '\\n:::', 'Spoiler text', '&#xf2fc' ]
 ];
 
 function blockquote(text, startpos) {
