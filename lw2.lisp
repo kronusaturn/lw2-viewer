@@ -136,7 +136,7 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
               (generate-post-auth-link post nil nil need-auth)
               (clean-text-to-html title)
               (if (logged-in-userid user-id) post-id))
-      (format out-stream "<div class=\"post-meta\"><a class=\"author~:[~; own-user-author~]\" href=\"/users/~A\" data-userid=\"~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"comment-count\" href=\"~A#comments\">~A</a>~:[~*~;~:*<span class=\"read-time\" title=\"~:D word~:P\">~:D<span> min read</span></span>~]~@[<a class=\"lw2-link\" href=\"~A\">LW<span> link</span></a>~]"
+      (format out-stream "<div class=\"post-meta\"><a class=\"author~:[~; own-user-author~]\" href=\"/users/~A\" data-userid=\"~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"comment-count\" href=\"~A#comments\">~A</a>~:[~*~;~:*<span class=\"read-time\" title=\"~:D word~:P\">~:D<span> min read</span></span>~]~:[~*~;~:*<a class=\"lw2-link\" href=\"~A\">~A<span> link</span></a>~]"
               (logged-in-userid user-id)
               (encode-entities (get-user-slug user-id))
               (encode-entities user-id)
@@ -149,7 +149,8 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
               (pretty-number (or comment-count 0) "comment")
               word-count
               (and word-count (max 1 (round word-count 300)))
-              (clean-lw-link page-url)))
+              (clean-lw-link page-url)
+              (main-site-abbreviation *current-site*)))
     (post-section-to-html out-stream post :skip-section skip-section)
     (if url (format out-stream "<div class=\"link-post-domain\">(~A)</div>" (encode-entities (puri:uri-host (puri:parse-uri (string-trim " " url))))))
     (format out-stream "</div>")))
@@ -172,7 +173,7 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
                (html-body (or null string)))
     post
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      (format out-stream "<div class=\"post~:[~; link-post~]\"><h1>~A</h1><div class=\"post-meta\"><a class=\"author~:[~; own-user-author~]\" href=\"/users/~A\" data-userid=\"~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A</a>~@[<a class=\"lw2-link\" href=\"~A\">LW<span> link</span></a>~]"
+      (format out-stream "<div class=\"post~:[~; link-post~]\"><h1>~A</h1><div class=\"post-meta\"><a class=\"author~:[~; own-user-author~]\" href=\"/users/~A\" data-userid=\"~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A</a>~:[~*~;~:*<a class=\"lw2-link\" href=\"~A\">~A<span> link</span></a>~]"
               url
               (clean-text-to-html title)
               (logged-in-userid user-id)
@@ -185,7 +186,8 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
               (votes-to-tooltip vote-count)
               (pretty-number base-score "point")
               (pretty-number (or comment-count 0) "comment")
-              (clean-lw-link page-url)))
+              (clean-lw-link page-url)
+              (main-site-abbreviation *current-site*)))
     (post-section-to-html out-stream post)
     (format out-stream "</div><div class=\"post-body\">")
     (if url (format out-stream "<p><a href=\"~A\" class=\"link-post-link\">Link post</a></p>" (encode-entities (string-trim " " url))))
@@ -212,7 +214,7 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
                    (html-body string))
                   comment
                   (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-                    (format out-stream "<div class=\"comment~{ ~A~}\"><div class=\"comment-meta\"><a class=\"author~:[~; own-user-author~]\" href=\"/users/~A\" data-userid=\"~A\">~A</a> <a class=\"date\" href=\"~A\" data-js-date=\"~A\">~A</a><div class=\"karma\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"permalink\" href=\"~A/comment/~A\" title=\"Permalink\"></a>~@[<a class=\"lw2-link\" href=\"~A\" title=\"LW link\"></a>~]"
+                    (format out-stream "<div class=\"comment~{ ~A~}\"><div class=\"comment-meta\"><a class=\"author~:[~; own-user-author~]\" href=\"/users/~A\" data-userid=\"~A\">~A</a> <a class=\"date\" href=\"~A\" data-js-date=\"~A\">~A</a><div class=\"karma\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"permalink\" href=\"~A/comment/~A\" title=\"Permalink\"></a>~:[~*~;~:*<a class=\"lw2-link\" href=\"~A\" title=\"~A link\"></a>~]"
                             (let ((l nil))
                               (if (and (logged-in-userid user-id) (< (* 1000 (local-time:timestamp-to-unix (local-time:now))) (+ js-time 15000))) (push "just-posted-comment" l))
                               (if highlight-new (push "comment-item-highlight" l))
@@ -228,7 +230,8 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
                             (pretty-number base-score "point")
                             (generate-post-link post-id)
                             comment-id
-                            (clean-lw-link page-url)))
+                            (clean-lw-link page-url)
+                            (main-site-abbreviation *current-site*)))
                   (if with-post-title
                       (format out-stream "<div class=\"comment-post-title\">~1{<span class=\"comment-in-reply-to\">in reply to: <a href=\"/users/~A\" class=\"inline-author~:[~; own-user-author~]\" data-userid=\"~A\">~A</a>’s <a href=\"~A\">comment</a></span> ~}<span class=\"comment-post-title2\">on: <a href=\"~A\">~A</a></span></div>"
                               (alexandria:if-let (parent-comment parent-comment)
@@ -497,7 +500,7 @@ signaled condition to OUT-STREAM."
 (defun search-bar-to-html (out-stream)
   (declare (special *current-search-query*))
   (let ((query (and (boundp '*current-search-query*) (hunchentoot:escape-for-html *current-search-query*))))
-    (format out-stream "<form action=\"/search\" class=\"nav-inner\"><input name=\"q\" type=\"search\" ~@[value=\"~A\"~] autocomplete=\"off\" accesskey=\"s\" title=\"Search [s]&#10;Tip: Paste a LessWrong URL here to jump to that page.\"><button>Search</button></form>" query)))  
+    (format out-stream "<form action=\"/search\" class=\"nav-inner\"><input name=\"q\" type=\"search\" ~@[value=\"~A\"~] autocomplete=\"off\" accesskey=\"s\" title=\"Search [s]~@[&#10;Tip: Paste a ~A URL here to jump to that page.~]\"><button>Search</button></form>" query (main-site-title *current-site*))))
 
 (defun inbox-to-html (out-stream user-slug &optional new-messages)
   (let* ((target-uri (format nil "/users/~A?show=inbox" user-slug))
@@ -853,7 +856,7 @@ signaled condition to OUT-STREAM."
                       (with-response-stream (out-stream)
                         (write-index-items-to-rss out-stream items :title title)))
                      (t
-                       (emit-page (out-stream :title (if hide-title nil title) :description "A faster way to browse LessWrong 2.0" :content-class content-class
+                       (emit-page (out-stream :title (if hide-title nil title) :description (site-description *current-site*) :content-class content-class
                                               :current-uri current-uri :robots (if (hunchentoot:get-parameter :offset) "noindex, nofollow")
                                               :pagination pagination :top-nav top-nav)
                                   (write-index-items-to-html out-stream items
@@ -1369,7 +1372,10 @@ signaled condition to OUT-STREAM."
                                    ("signup-password" "Password" "password" "new-password")
                                    ("signup-password2" "Confirm password" "password" "new-password"))
                                  "Create account")
-                    (with-outputs (out-stream) "<div class=\"login-tip\"><span>Tip:</span> You can log in with the same username and password that you use on LessWrong. Creating an account here also creates one on LessWrong.</div></div>"))))
+                    (alexandria:if-let (main-site-title (main-site-title *current-site*))
+                      (format out-stream "<div class=\"login-tip\"><span>Tip:</span> You can log in with the same username and password that you use on ~A~:*. Creating an account here also creates one on ~A.</div>"
+                              main-site-title))
+                    (format out-stream "</div>"))))
      (finish-login (username user-id auth-token error-message expires)
        (cond
          (auth-token

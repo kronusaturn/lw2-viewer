@@ -3,8 +3,9 @@
   (:import-from #:sb-ext #:defglobal)
   (:export
     #:*sites*
-    #:site #:lesswrong-viewer-site #:ea-forum-viewer-site
-    #:site-uri #:site-host #:site-secure #:site-backend #:site-title
+    #:site #:alternate-frontend-site #:lesswrong-viewer-site #:ea-forum-viewer-site
+    #:site-uri #:site-host #:site-secure #:site-backend #:site-title #:site-description
+    #:main-site-title #:main-site-abbreviation
     #:host-matches #:find-site
     #:call-with-site-context #:with-site-context
     #:reset-site-definitions
@@ -19,11 +20,20 @@
    (host :accessor site-host :initarg :host :type simple-string)
    (secure :accessor site-secure :initarg :secure)
    (backend :accessor site-backend :initarg :backend :type backend-base)
-   (title :accessor site-title :initarg :title :type simple-string)))
+   (title :accessor site-title :initarg :title :type simple-string)
+   (description :accessor site-description :initarg :description :type simple-string)))
 
-(defclass lesswrong-viewer-site (site) ())
+(defmethod main-site-title ((s site)) nil)
 
-(defclass ea-forum-viewer-site (site) ())
+(defmethod main-site-abbreviation ((s site)) nil)
+
+(defclass alternate-frontend-site (site)
+  ((main-site-title :accessor main-site-title :initarg :main-site-title :type simple-string)
+   (main-site-abbreviation :accessor main-site-abbreviation :initarg :main-site-abbreviation :type simple-string)))
+
+(defclass lesswrong-viewer-site (alternate-frontend-site) ())
+
+(defclass ea-forum-viewer-site (alternate-frontend-site) ())
 
 (defmethod host-matches ((site site) host)
   (let ((site-host (site-host site)))

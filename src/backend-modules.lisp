@@ -5,7 +5,7 @@
     #:backend-base
     #:backend-lmdb-cache #:backend-lmdb-environment #:backend-cache-db-path
     #:backend-graphql
-    #:graphql-uri #:websocket-uri
+    #:graphql-uri #:websocket-uri #:algolia-search-uri
     #:backend-lw2-legacy #:backend-lw2-modernized #:backend-lw2 #:backend-accordius
     #:make-backend #:define-backend-function #:define-backend-operation #:backend)
   (:unintern #:declare-backend-function)
@@ -25,11 +25,14 @@
 (defclass backend-websocket-login (backend-base)
   ((websocket-uri :accessor websocket-uri :initarg :websocket-uri :type simple-string)))
 
+(defclass backend-algolia-search (backend-base)
+  ((algolia-search-uri :accessor algolia-search-uri :initarg :algolia-search-uri :type simple-string)))
+
 (defclass backend-lw2-legacy (backend-graphql) ())
 
 (defclass backend-lw2-modernized (backend-graphql) ())
 
-(defclass backend-lw2 (backend-websocket-login backend-lw2-modernized backend-lw2-legacy) ())
+(defclass backend-lw2 (backend-websocket-login backend-lw2-modernized backend-lw2-legacy backend-algolia-search) ())
 
 (defclass backend-accordius (backend-lw2-modernized backend-lw2-legacy) ())
 
