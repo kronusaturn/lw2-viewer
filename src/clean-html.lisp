@@ -379,7 +379,7 @@
                                        (loop for current = node then (plump:parent current)
                                              for parent = (plump:parent current)
                                              when (plump:root-p parent)
-                                               do (progn (add-class current "mathjax-inline-container")
+                                               do (progn (add-class current "mathjax-block-container")
                                                          (return))
                                              when (loop for s across (plump:family current)
                                                         unless (or (eq s current)
@@ -387,7 +387,8 @@
                                                           return t)
                                                do (progn (add-class current "mathjax-inline-container")
                                                          (return))
-                                             when (tag-is parent "p" "blockquote" "div")
+                                             when (or (tag-is parent "p" "blockquote" "div")
+                                                      (if-let (class (plump:attribute parent "class")) (search "mjpage__block" class)))
                                                do (progn (add-class parent "mathjax-block-container")
                                                          (return))))
                                      (cond

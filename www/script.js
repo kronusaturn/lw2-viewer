@@ -432,7 +432,7 @@ function sendVoteRequest(targetId, targetType, voteType, onFinish) {
 	req.addEventListener("load", onFinish);
 	req.open("POST", "/karma-vote");
 	req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	req.send("csrf-token="+encodeURIComponent(csrfToken)+"&target="+encodeURIComponent(targetId)+"&target-type="+encodeURIComponent(targetType)+"&vote-type="+encodeURIComponent(voteType));
+	req.send("csrf-token="+encodeURIComponent(gwGlobals.csrfToken)+"&target="+encodeURIComponent(targetId)+"&target-type="+encodeURIComponent(targetType)+"&vote-type="+encodeURIComponent(voteType));
 }
 
 function voteButtonClicked(event) {
@@ -603,7 +603,7 @@ function scrollToNewComment(next) {
 		targetComment.scrollIntoView();
 	}
 
-	newCommentScrollListener();
+	gwGlobals.newCommentScrollListener();
 }
 
 function commentQuicknavButtonClicked(event) {
