@@ -2429,6 +2429,8 @@ function keyDownWhenImageFocused(event) {
 }
 
 function mouseUpOnFocusedImage(event) {
+	window.onmousemove = '';
+
 	// We only want to do anything on left-clicks.
 	if (event.button != 0) return;
 
@@ -2445,7 +2447,6 @@ function mouseUpOnFocusedImage(event) {
 	}
 
 	if (focusedImage.height >= window.innerHeight || focusedImage.width >= window.innerWidth) {
-		window.onmousemove = '';
 		// Put the filter back.
 		focusedImage.style.filter = focusedImage.savedFilter;
 	} else {
