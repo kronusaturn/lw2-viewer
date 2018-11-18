@@ -2329,7 +2329,7 @@ a.comment-parent-link:hover::after {
 	font-weight: normal;
 	font-size: 1rem;
 	top: 2px;
-	left: 440px;
+	left: 464px;
 	height: 25px;
 	padding: 4px 0;
 	white-space: nowrap;
