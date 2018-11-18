@@ -3152,6 +3152,7 @@ function realignHash() {
 	
 	let targetElement = document.querySelector(location.hash);
 	if (targetElement) targetElement.scrollIntoView(true);
+	gwGlobals.needHashRealignment = false;
 }
 
 function focusImageSpecifiedByURL() {
