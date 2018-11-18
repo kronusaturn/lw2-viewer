@@ -6,13 +6,13 @@ if (!window.requestIdleCallback) {
 	window.requestIdleCallback = (fn) => { setTimeout(fn, 0) };
 }
 
-var initializersDone = {};
-var initializers = {};
+gwGlobals.initializersDone = {};
+gwGlobals.initializers = {};
 function registerInitializer(name, tryEarly, precondition, fn) {
-	initializersDone[name] = false;
-	initializers[name] = fn;
+	gwGlobals.initializersDone[name] = false;
+	gwGlobals.initializers[name] = fn;
 	let wrapper = function () {
-		if (initializersDone[name]) return;
+		if (gwGlobals.initializersDone[name]) return;
 		if (!precondition()) {
 			if (tryEarly) {
 				setTimeout(() => requestIdleCallback(wrapper, {timeout: 1000}), 50);
@@ -21,7 +21,7 @@ function registerInitializer(name, tryEarly, precondition, fn) {
 			}
 			return;
 		}
-		initializersDone[name] = true;
+		gwGlobals.initializersDone[name] = true;
 		fn();
 	};
 	if (tryEarly) {
@@ -32,9 +32,9 @@ function registerInitializer(name, tryEarly, precondition, fn) {
 	}
 }
 function forceInitializer(name) {
-	if (initializersDone[name]) return;
-	initializersDone[name] = true;
-	initializers[name]();
+	if (gwGlobals.initializersDone[name]) return;
+	gwGlobals.initializersDone[name] = true;
+	gwGlobals.initializers[name]();
 }
 
 /***********/
@@ -169,7 +169,7 @@ Element.prototype.addTextareaFeatures = function() {
 
 	textarea.insertAdjacentHTML("beforebegin", "<div class='guiedit-buttons-container'></div>");
 	var buttons_container = textarea.parentElement.querySelector(".guiedit-buttons-container");
-	for (var button of guiEditButtons) {
+	for (var button of gwGlobals.guiEditButtons) {
 		let [ name, desc, accesskey, m_before_or_func, m_after, placeholder, icon ] = button;
 		buttons_container.insertAdjacentHTML("beforeend", 
 			"<button type='button' class='guiedit guiedit-" 
@@ -1968,14 +1968,13 @@ var CommentSortMode = Object.freeze({
 	OLD:		"old",
 	HOT:		"hot"
 });
-var commentValues;
 function sortComments(mode) {
 	let commentsContainer = document.querySelector("#comments");
 
 	commentsContainer.removeClass(/(sorted-\S+)/.exec(commentsContainer.className)[1]);
 	commentsContainer.addClass("sorting");
 
-	commentValues = { };
+	gwGlobals.commentValues = { };
 	let clonedCommentsContainer = commentsContainer.cloneNode(true);
 	clonedCommentsContainer.querySelectorAll(".comment-thread").forEach(commentThread => {
 		var comparator;
@@ -1998,7 +1997,7 @@ function sortComments(mode) {
 	});
 	removeElement(commentsContainer.lastChild);
 	commentsContainer.appendChild(clonedCommentsContainer.lastChild);
-	commentValues = { };
+	gwGlobals.commentValues = { };
 
 	// Re-activate vote buttons.
 	if (loggedInUserId) {
@@ -2022,15 +2021,15 @@ function sortComments(mode) {
 }
 function commentKarmaValue(commentOrSelector) {
 	if (typeof commentOrSelector == "string") commentOrSelector = document.querySelector(commentOrSelector);
-	return commentValues[commentOrSelector.id] || (commentValues[commentOrSelector.id] = parseInt(commentOrSelector.querySelector(".karma-value").firstChild.textContent));
+	return gwGlobals.commentValues[commentOrSelector.id] || (gwGlobals.commentValues[commentOrSelector.id] = parseInt(commentOrSelector.querySelector(".karma-value").firstChild.textContent));
 }
 function commentDate(commentOrSelector) {
 	if (typeof commentOrSelector == "string") commentOrSelector = document.querySelector(commentOrSelector);
-	return commentValues[commentOrSelector.id] || (commentValues[commentOrSelector.id] = parseInt(commentOrSelector.querySelector(".date").dataset.jsDate));
+	return gwGlobals.commentValues[commentOrSelector.id] || (gwGlobals.commentValues[commentOrSelector.id] = parseInt(commentOrSelector.querySelector(".date").dataset.jsDate));
 }
 function commentVoteCount(commentOrSelector) {
 	if (typeof commentOrSelector == "string") commentOrSelector = document.querySelector(commentOrSelector);
-	return commentValues[commentOrSelector.id] || (commentValues[commentOrSelector.id] = parseInt(commentOrSelector.querySelector(".karma-value").title.split(" ")[0]));
+	return gwGlobals.commentValues[commentOrSelector.id] || (gwGlobals.commentValues[commentOrSelector.id] = parseInt(commentOrSelector.querySelector(".karma-value").title.split(" ")[0]));
 }
 
 function injectCommentsSortModeSelector() {
@@ -3210,7 +3209,7 @@ function insMarkup(event) {
 	return;
 }
 
-var guiEditButtons = [
+gwGlobals.guiEditButtons = [
 	[ 'strong', 'Strong (bold)', 'k', '**', '**', 'Bold text', '&#xf032;' ],
 	[ 'em', 'Emphasized (italic)', 'i', '*', '*', 'Italicized text', '&#xf033;' ],
 	[ 'link', 'Hyperlink', 'l', hyperlink, '', '', '&#xf0c1;' ],
