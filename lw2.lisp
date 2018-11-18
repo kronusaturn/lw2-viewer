@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2-viewer
-  (:use #:cl #:sb-thread #:flexi-streams #:djula #:lw2-viewer.config #:lw2.utils #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login #:lw2.context #:lw2.sites)
+  (:use #:cl #:sb-thread #:flexi-streams #:djula #:lw2-viewer.config #:lw2.utils #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login #:lw2.context #:lw2.sites #:lw2.components)
   (:unintern
     #:define-regex-handler #:*fonts-stylesheet-uri* #:generate-fonts-link
     #:user-nav-bar #:*primary-nav* #:*secondary-nav* #:*nav-bars*
@@ -965,14 +965,24 @@ signaled condition to OUT-STREAM."
                                                            (make-binding-form (append specifier-vars additional-vars)
                                                                               rewritten-body)))))))))
 
-(define-page view-root "/" ((offset :type fixnum)
-                            (limit :type fixnum)
-                            (sort :member (:new :hot)))
+(define-component sort-widget (&key (sort-options '(:new :hot)) (pref :default-sort) (param-name "sort") (html-class "sort"))
+  (:http-args '((sort :alias param-name :member sort-options)))
   (let ((sort-string (if sort (string-downcase sort))))
     (if sort-string
         (set-user-pref :default-sort sort-string))
+    (renderer (out-stream)
+      (sublevel-nav-to-html out-stream
+                            sort-options
+                            (user-pref pref)
+                            :param-name param-name
+                            :extra-class html-class))
+    (or sort-string (user-pref pref))))
+
+(define-page view-root "/" ((offset :type fixnum)
+                            (limit :type fixnum))
+  (component-value-bind ((sort-string sort-widget))
     (multiple-value-bind (posts total)
-      (get-posts-index :offset offset :limit (or limit (user-pref :items-per-page)) :sort (user-pref :default-sort))
+      (get-posts-index :offset offset :limit (or limit (user-pref :items-per-page)) :sort sort-string)
       (view-items-index posts
                         :section :frontpage :title "Frontpage posts" :hide-title t
                         :pagination (pagination-nav-bars :offset (or offset 0) :total total)
@@ -980,38 +990,27 @@ signaled condition to OUT-STREAM."
                                    (page-toolbar-to-html out-stream
                                                          :title "Frontpage posts"
                                                          :new-post t)
-                                   (sublevel-nav-to-html out-stream
-                                                         '(:new :hot)
-                                                         (user-pref :default-sort)
-                                                         :param-name "sort"
-                                                         :extra-class "sort"))))))
+                                   (funcall sort-widget out-stream))))))
 
 (define-page view-index "/index" ((view :member (:all :new :frontpage :featured :meta :community :alignment-forum) :default :all)
                                   before after
                                   (offset :type fixnum)
-                                  (limit :type fixnum)
-                                  (sort :member (:new :hot)))
+                                  (limit :type fixnum))
   (when (eq view :new) (redirect (replace-query-params (hunchentoot:request-uri*) "view" "all" "all" nil) :type :permanent) (return))
-  (let ((sort-string (if sort (string-downcase sort))))
-    (if sort-string
-        (set-user-pref :default-sort sort-string)))
-  (multiple-value-bind (posts total)
-    (get-posts-index :view (string-downcase view) :before before :after after :offset offset :limit (or limit (user-pref :items-per-page)) :sort (user-pref :default-sort))
-    (let ((page-title (format nil "~@(~A posts~)" view)))
-      (view-items-index posts
-                        :section view :title page-title
-                        :pagination (pagination-nav-bars :offset (or offset 0) :total total)
-                        :content-class (format nil "index-page ~(~A~)-index-page" view)
-                        :top-nav (lambda (out-stream)
-                                   (page-toolbar-to-html out-stream
-                                                         :title page-title
-                                                         :new-post (if (eq view :meta) "meta" t))
-                                   (if (member view '(:all))
-                                       (sublevel-nav-to-html out-stream
-                                                             '(:new :hot)
-                                                             (user-pref :default-sort)
-                                                             :param-name "sort"
-                                                             :extra-class "sort")))))))
+  (component-value-bind ((sort-string sort-widget))
+    (multiple-value-bind (posts total)
+      (get-posts-index :view (string-downcase view) :before before :after after :offset offset :limit (or limit (user-pref :items-per-page)) :sort sort-string)
+      (let ((page-title (format nil "~@(~A posts~)" view)))
+        (view-items-index posts
+                          :section view :title page-title
+                          :pagination (pagination-nav-bars :offset (or offset 0) :total total)
+                          :content-class (format nil "index-page ~(~A~)-index-page" view)
+                          :top-nav (lambda (out-stream)
+                                     (page-toolbar-to-html out-stream
+                                                           :title page-title
+                                                           :new-post (if (eq view :meta) "meta" t))
+                                     (if (member view '(:all))
+                                         (funcall sort-widget out-stream))))))))
 
 (define-page view-post "/post" ((id :required t))
   (redirect (generate-post-link id) :type :permanent))
