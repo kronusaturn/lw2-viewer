@@ -2202,7 +2202,9 @@ function focusImage(image) {
 
 	// If image is bigger than viewport, it's draggable. Otherwise, click unfocuses.
 	window.addEventListener("mouseup", mouseUpOnFocusedImage);
-	window.onmousedown = (event) => {
+	window.addEventListener("mousedown", gwGlobals.imageFocusMouseDown = (event) => {
+		event.preventDefault();
+
 		let focusedImage = document.querySelector("#image-focus-overlay img");
 		if (focusedImage.height >= window.innerHeight || focusedImage.width >= window.innerWidth) {
 			let mouseCoordX = event.clientX;
@@ -2222,7 +2224,7 @@ function focusImage(image) {
 			};
 			return false;
 		}
-	};
+	});
 
 	// Double-click unfocuses, always.
 	window.addEventListener('dblclick', doubleClickOnFocusedImage);
@@ -2309,7 +2311,7 @@ function unfocusImageOverlay() {
 	document.removeEventListener("keyup", keyPressedWhenImageFocused);
 	document.removeEventListener("keydown", keyDownWhenImageFocused);
 	window.removeEventListener("mousemove", mouseMovedWhenImageFocused);
-	window.onmousedown = '';
+	window.removeEventListener("mousedown", gwGlobals.imageFocusMouseDown);
 
 	// Reset the hash, if needed.
 	if (location.hash.hasPrefix("#if_slide_"))
