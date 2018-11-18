@@ -212,23 +212,23 @@ Element.prototype.addTextareaFeatures = function() {
 		guiEditMobileExitButton.addActivateEvent(GUIEditMobileExitButtonClicked);
 	}
 	
-	if (window.isMobile && window.innerWidth <= 520) {
+	if (gwGlobals.isMobile && window.innerWidth <= 520) {
 		let fixedEditorElements = textarea.closest(".textarea-container").querySelectorAll("textarea, .guiedit-buttons-container, .guiedit-mobile-auxiliary-button, .markdown-hints");
 		textarea.addEventListener("focus", (event) => {
-			window.savedFilters = window.currentFilters;
-			window.currentFilters = { };
-			applyFilters(window.currentFilters);
+			gwGlobals.savedFilters = gwGlobals.currentFilters;
+			gwGlobals.currentFilters = { };
+			applyFilters(gwGlobals.currentFilters);
 			fixedEditorElements.forEach(element => {
-				element.style.filter = filterStringFromFilters(window.savedFilters);
+				element.style.filter = filterStringFromFilters(gwGlobals.savedFilters);
 			});
 		});
 		textarea.addEventListener("blur", (event) => {
-			window.currentFilters = window.savedFilters;
-			window.savedFilters = { };
+			gwGlobals.currentFilters = gwGlobals.savedFilters;
+			gwGlobals.savedFilters = { };
 			requestAnimationFrame(() => {
-				applyFilters(window.currentFilters);
+				applyFilters(gwGlobals.currentFilters);
 				fixedEditorElements.forEach(element => {
-					element.style.filter = filterStringFromFilters(window.savedFilters);
+					element.style.filter = filterStringFromFilters(gwGlobals.savedFilters);
 				});
 			});
 		});
@@ -249,7 +249,7 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 		`<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-help-button">Help</button>` + 
 		`<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-exit-button">Exit</button>` + 
 		"</div><div>" + 
-		"<input type='hidden' name='csrf-token' value='" + window.csrfToken + "'>" +
+		"<input type='hidden' name='csrf-token' value='" + gwGlobals.csrfToken + "'>" +
 		"<input type='submit' value='Submit'>" + 
 		"</div></form>";
 	commentControls.onsubmit = disableBeforeUnload;
@@ -541,7 +541,7 @@ function getCurrentVisibleComment() {
 
 function highlightCommentsSince(date) {
 	var newCommentsCount = 0;
-	window.newComments = [ ];
+	gwGlobals.newComments = [ ];
 	let oldCommentsStack = [ ];
 	let prevNewComment;
 	document.querySelectorAll(".comment-item").forEach(commentItem => {
@@ -549,7 +549,7 @@ function highlightCommentsSince(date) {
 		if (commentItem.getCommentDate() > date) {
 			commentItem.addClass("new-comment");
 			newCommentsCount++;
-			window.newComments.push(commentItem.getCommentId());
+			gwGlobals.newComments.push(commentItem.getCommentId());
 			oldCommentsStack.forEach(oldci => { oldci.nextNewComment = commentItem });
 			oldCommentsStack = [ commentItem ];
 			prevNewComment = commentItem;
@@ -559,25 +559,25 @@ function highlightCommentsSince(date) {
 		}
 	});
 
-	window.newCommentScrollSet = (commentItem) => {
+	gwGlobals.newCommentScrollSet = (commentItem) => {
 		document.querySelector("#new-comment-nav-ui .new-comment-previous").disabled = commentItem ? !commentItem.prevNewComment : true;
-		document.querySelector("#new-comment-nav-ui .new-comment-next").disabled = commentItem ? !commentItem.nextNewComment : (window.newComments.length == 0);
+		document.querySelector("#new-comment-nav-ui .new-comment-next").disabled = commentItem ? !commentItem.nextNewComment : (gwGlobals.newComments.length == 0);
 	};
-	window.newCommentScrollListener = () => {
+	gwGlobals.newCommentScrollListener = () => {
 		let commentItem = getCurrentVisibleComment();
-		newCommentScrollSet(commentItem);
+		gwGlobals.newCommentScrollSet(commentItem);
 	}
 
-	addScrollListener(newCommentScrollListener);
+	addScrollListener(gwGlobals.newCommentScrollListener);
 
 	if (document.readyState=="complete") {
-		newCommentScrollListener();
+		gwGlobals.newCommentScrollListener();
 	} else {
 		let commentItem = location.hash && /^#comment-/.test(location.hash) && document.querySelector(location.hash);
-		newCommentScrollSet(commentItem);
+		gwGlobals.newCommentScrollSet(commentItem);
 	}
 
-	registerInitializer("initializeCommentScrollPosition", false, () => document.readyState == "complete", newCommentScrollListener);
+	registerInitializer("initializeCommentScrollPosition", false, () => document.readyState == "complete", gwGlobals.newCommentScrollListener);
 
 	return newCommentsCount;
 }
@@ -592,8 +592,8 @@ function scrollToNewComment(next) {
 			targetCommentID = targetComment.getCommentId();
 		}
 	} else {
-		if (window.newComments[0]) {
-			targetCommentID = window.newComments[0];
+		if (gwGlobals.newComments[0]) {
+			targetCommentID = gwGlobals.newComments[0];
 			targetComment = document.querySelector("#comment-" + targetCommentID);
 		}
 	}
@@ -664,7 +664,7 @@ function injectContentWidthSelector() {
 	// Inject the content width selector widget and activate buttons.
 	let widthSelector = addUIElement(
 		"<div id='width-selector'>" +
-		String.prototype.concat.apply("", widthOptions.map(widthOption => {
+		String.prototype.concat.apply("", gwGlobals.widthOptions.map(widthOption => {
 			let [name, desc, abbr] = widthOption;
 			let selected = (name == currentWidth ? ' selected' : '');
 			let disabled = (name == currentWidth ? ' disabled' : '');
@@ -678,7 +678,7 @@ function injectContentWidthSelector() {
 	setWidthAdjustButtonsAccesskey();
 
 	// Inject transitions CSS, if animating changes is enabled.
-	if (window.adjustmentTransitions) {
+	if (gwGlobals.adjustmentTransitions) {
 		document.querySelector("head").insertAdjacentHTML("beforeend", 
 			"<style id='width-transition'>" + 
 			`#content,
@@ -735,7 +735,7 @@ function injectThemeSelector() {
 	let currentTheme = readCookie("theme") || "default";
 	let themeSelector = addUIElement(
 		"<div id='theme-selector' class='theme-selector'>" +
-		String.prototype.concat.apply("", window.themeOptions.map(themeOption => {
+		String.prototype.concat.apply("", gwGlobals.themeOptions.map(themeOption => {
 			let [name, desc, letter] = themeOption;
 			let selected = (name == currentTheme ? ' selected' : '');
 			let disabled = (name == currentTheme ? ' disabled' : '');
@@ -747,7 +747,7 @@ function injectThemeSelector() {
 	});
 
 	// Inject transitions CSS, if animating changes is enabled.
-	if (window.adjustmentTransitions) {
+	if (gwGlobals.adjustmentTransitions) {
 		document.querySelector("head").insertAdjacentHTML("beforeend", 
 			"<style id='theme-fade-transition'>" + 
 			`body {
@@ -807,7 +807,7 @@ function setTheme(newThemeName) {
 	newStyle.addEventListener('load', function() { removeElement(oldStyle); });
 	newStyle.addEventListener('load', function() { postSetThemeHousekeeping(oldThemeName, newThemeName); });
 
-	if (window.adjustmentTransitions) {
+	if (gwGlobals.adjustmentTransitions) {
 		pageFadeTransition(false);
 		setTimeout(function () { document.querySelector('head').insertBefore(newStyle, oldStyle.nextSibling); }, 500);
 	} else {
@@ -842,7 +842,7 @@ function pageFadeTransition(fadeIn) {
 
 function themeLoadCallback_less(fromTheme = "") {
 	injectSiteNavUIToggle();
-	if (!window.isMobile) {
+	if (!gwGlobals.isMobile) {
 		injectPostNavUIToggle();
 		injectAppearanceAdjustUIToggle();
 	}
@@ -856,11 +856,11 @@ function themeLoadCallback_less(fromTheme = "") {
 		postDate.innerHTML = dtf.format(new Date(+ postDate.dataset.jsDate));
 	});
 
-	if (window.isMobile) {
+	if (gwGlobals.isMobile) {
 		document.querySelector("#content").insertAdjacentHTML("beforeend", "<div id='theme-less-mobile-first-row-placeholder'></div>");
 	}
 
-	if (!window.isMobile) {
+	if (!gwGlobals.isMobile) {
 		registerInitializer('addSpans', true, () => document.querySelector(".top-post-meta") != null, function () {
 			document.querySelectorAll(".top-post-meta .date, .top-post-meta .comment-count").forEach(element => {
 				element.innerHTML = "<span>" + element.innerHTML + "</span>";
@@ -893,13 +893,13 @@ function themeLoadCallback_less(fromTheme = "") {
 		window.addEventListener('resize', updatePostNavUIToggleVisibility);
 
 		// Due to filters vs. fixed elements, we need to be smarter about selecting which elements to filter...
-		window.filtersTargetSelector = "body::before, #content > *:not(#secondary-bar):not(.post), #secondary-bar > *, .post > *:not(.top-post-meta), .top-post-meta > *:not(.date):not(.comment-count), .top-post-meta .date span, .top-post-meta .comment-count > span, #ui-elements-container > div:not(#theme-tweaker-ui), #theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container";
-		applyFilters(window.currentFilters);
+		gwGlobals.filtersTargetSelector = "body::before, #content > *:not(#secondary-bar):not(.post), #secondary-bar > *, .post > *:not(.top-post-meta), .top-post-meta > *:not(.date):not(.comment-count), .top-post-meta .date span, .top-post-meta .comment-count > span, #ui-elements-container > div:not(#theme-tweaker-ui), #theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container";
+		applyFilters(gwGlobals.currentFilters);
 	}
 
 	// We pre-query the relevant elements, so we don't have to run querySelector
 	// on every firing of the scroll listener.
-	window.scrollState = {
+	gwGlobals.scrollState = {
 		"lastScrollTop":					window.pageYOffset || document.documentElement.scrollTop,
 		"unbrokenDownScrollDistance":		0,
 		"unbrokenUpScrollDistance":			0,
@@ -925,43 +925,43 @@ function updatePostNavUIToggleVisibility() {
 // engaged; if they're manually disengaged, they are not re-engaged by scroll.
 function updateSiteNavUIState(event) {
 	let newScrollTop = window.pageYOffset || document.documentElement.scrollTop;
-	window.scrollState.unbrokenDownScrollDistance = (newScrollTop > window.scrollState.lastScrollTop) ? 
-														(window.scrollState.unbrokenDownScrollDistance + newScrollTop - window.scrollState.lastScrollTop) : 
+	gwGlobals.scrollState.unbrokenDownScrollDistance = (newScrollTop > gwGlobals.scrollState.lastScrollTop) ? 
+														(gwGlobals.scrollState.unbrokenDownScrollDistance + newScrollTop - gwGlobals.scrollState.lastScrollTop) : 
 													 	0;
-	window.scrollState.unbrokenUpScrollDistance = (newScrollTop < window.scrollState.lastScrollTop) ?
-													(window.scrollState.unbrokenUpScrollDistance + window.scrollState.lastScrollTop - newScrollTop) :
+	gwGlobals.scrollState.unbrokenUpScrollDistance = (newScrollTop < gwGlobals.scrollState.lastScrollTop) ?
+													 (gwGlobals.scrollState.unbrokenUpScrollDistance + gwGlobals.scrollState.lastScrollTop - newScrollTop) :
 													0;
-	window.scrollState.lastScrollTop = newScrollTop;
+	gwGlobals.scrollState.lastScrollTop = newScrollTop;
 
 	// Hide site nav UI and appearance adjust UI when scrolling a full page down.
-	if (window.scrollState.unbrokenDownScrollDistance > window.innerHeight) {
-		if (window.scrollState.siteNavUIToggleButton.hasClass("engaged")) toggleSiteNavUI();
-		if (window.scrollState.appearanceAdjustUIToggleButton.hasClass("engaged")) toggleAppearanceAdjustUI();
+	if (gwGlobals.scrollState.unbrokenDownScrollDistance > window.innerHeight) {
+		if (gwGlobals.scrollState.siteNavUIToggleButton.hasClass("engaged")) toggleSiteNavUI();
+		if (gwGlobals.scrollState.appearanceAdjustUIToggleButton.hasClass("engaged")) toggleAppearanceAdjustUI();
 	}
 
 	// On mobile, make site nav UI translucent on ANY scroll down.
-	if (window.isMobile)
-		window.scrollState.siteNavUIElements.forEach(element => {
-			if (window.scrollState.unbrokenDownScrollDistance > 0) element.addClass("translucent-on-scroll");
+	if (gwGlobals.isMobile)
+		gwGlobals.scrollState.siteNavUIElements.forEach(element => {
+			if (gwGlobals.scrollState.unbrokenDownScrollDistance > 0) element.addClass("translucent-on-scroll");
 			else element.removeClass("translucent-on-scroll");
 		});
 
 	// Show site nav UI when scrolling a full page up, or to the top.
-	if ((window.scrollState.unbrokenUpScrollDistance > window.innerHeight || 
-		 window.scrollState.lastScrollTop == 0) &&
-		(!window.scrollState.siteNavUIToggleButton.hasClass("engaged") && 
+	if ((gwGlobals.scrollState.unbrokenUpScrollDistance > window.innerHeight || 
+		 gwGlobals.scrollState.lastScrollTop == 0) &&
+		(!gwGlobals.scrollState.siteNavUIToggleButton.hasClass("engaged") && 
 		 localStorage.getItem("site-nav-ui-toggle-engaged") != "false")) toggleSiteNavUI();
 
 	// On desktop, show appearance adjust UI when scrolling to the top.
-	if ((!window.isMobile) && 
-		(window.scrollState.lastScrollTop == 0) &&
-		(!window.scrollState.appearanceAdjustUIToggleButton.hasClass("engaged")) && 
+	if ((!gwGlobals.isMobile) && 
+		(gwGlobals.scrollState.lastScrollTop == 0) &&
+		(!gwGlobals.scrollState.appearanceAdjustUIToggleButton.hasClass("engaged")) && 
 		(localStorage.getItem("appearance-adjust-ui-toggle-engaged") != "false")) toggleAppearanceAdjustUI();
 }
 
 function themeUnloadCallback_less(toTheme = "") {
 	removeSiteNavUIToggle();
-	if (!window.isMobile) {
+	if (!gwGlobals.isMobile) {
 		removePostNavUIToggle();
 		removeAppearanceAdjustUIToggle();
 	}
@@ -971,7 +971,7 @@ function themeUnloadCallback_less(toTheme = "") {
 
 	removeElement("#theme-less-mobile-first-row-placeholder");
 
-	if (!window.isMobile) {
+	if (!gwGlobals.isMobile) {
 		// Remove spans
 		document.querySelectorAll(".top-post-meta .date, .top-post-meta .comment-count").forEach(element => {
 			element.innerHTML = element.firstChild.innerHTML;
@@ -981,8 +981,8 @@ function themeUnloadCallback_less(toTheme = "") {
 	(document.querySelector(".top-post-meta .date")||{}).innerHTML = (document.querySelector(".bottom-post-meta .date")||{}).innerHTML;
 
 	// Reset filtered elements selector to default.
-	window.filtersTargetSelector = "";
-	applyFilters(window.currentFilters);
+	gwGlobals.filtersTargetSelector = "";
+	applyFilters(gwGlobals.currentFilters);
 }
 
 function themeLoadCallback_dark(fromTheme = "") {
@@ -1105,8 +1105,8 @@ function injectThemeTweaker() {
 			let slider = event.target.parentElement.querySelector("input[type='range']");
 			slider.value = slider.dataset['defaultValue'];
 			event.target.parentElement.querySelector(".theme-tweak-control-label").innerText = slider.value + slider.dataset['labelSuffix'];
-			window.currentFilters[/^theme-tweak-control-(.+)$/.exec(slider.id)[1]] = slider.value + slider.dataset['valueSuffix'];
-			applyFilters(window.currentFilters);
+			gwGlobals.currentFilters[/^theme-tweak-control-(.+)$/.exec(slider.id)[1]] = slider.value + slider.dataset['valueSuffix'];
+			applyFilters(gwGlobals.currentFilters);
 		});
 	});
 
@@ -1132,7 +1132,7 @@ function toggleThemeTweakerUI() {
 		}`;
 	if (themeTweakerUI.style.display != "none") {
 		// Save selected theme.
-		window.currentTheme = (readCookie("theme") || "default");
+		gwGlobals.currentTheme = (readCookie("theme") || "default");
 		// Focus invert checkbox.
 		document.querySelector("#theme-tweaker-ui #theme-tweak-control-invert").focus();
 		// Show sample text in appropriate font.
@@ -1154,10 +1154,10 @@ function setSearchBoxTabSelectable(selectable) {
 function themeTweakerToggleButtonClicked(event) {
 	document.querySelector("#theme-tweaker-ui .current-theme span").innerText = (readCookie("theme") || "default");
 
-	document.querySelector("#theme-tweak-control-invert").checked = (window.currentFilters['invert'] == "100%");
+	document.querySelector("#theme-tweak-control-invert").checked = (gwGlobals.currentFilters['invert'] == "100%");
 	[ "saturate", "brightness", "contrast", "hue-rotate" ].forEach(sliderName => {
 		let slider = document.querySelector("#theme-tweak-control-" + sliderName);
-		slider.value = /^[0-9]+/.exec(window.currentFilters[sliderName]) || slider.dataset['defaultValue'];
+		slider.value = /^[0-9]+/.exec(gwGlobals.currentFilters[sliderName]) || slider.dataset['defaultValue'];
 		document.querySelector("#theme-tweak-label-" + sliderName).innerText = slider.value + slider.dataset['labelSuffix'];
 	});
 
@@ -1244,11 +1244,11 @@ function themeTweakerResetDefaultsButtonClicked(event) {
 		slider.value = slider.dataset['defaultValue'];
 		document.querySelector("#theme-tweak-label-" + sliderName).innerText = slider.value + slider.dataset['labelSuffix'];
 	});
-	window.currentFilters = { };
-	applyFilters(window.currentFilters);
+	gwGlobals.currentFilters = { };
+	applyFilters(gwGlobals.currentFilters);
 
-	window.currentTextZoom = 1;
-	setTextZoom(window.currentTextZoom);
+	gwGlobals.currentTextZoom = 1;
+	setTextZoom(gwGlobals.currentTextZoom);
 
 	setSelectedTheme("default");
 }
@@ -1261,23 +1261,23 @@ function themeTweakerOKButtonClicked(event) {
 	themeTweakSave();
 }
 function themeTweakReset() {
-	setSelectedTheme(window.currentTheme);
-	window.currentFilters = JSON.parse(localStorage.getItem("theme-tweaks") || "{ }");
-	applyFilters(window.currentFilters);
-	window.currentTextZoom = localStorage.getItem("text-zoom");
-	setTextZoom(window.currentTextZoom);
+	setSelectedTheme(gwGlobals.currentTheme);
+	gwGlobals.currentFilters = JSON.parse(localStorage.getItem("theme-tweaks") || "{ }");
+	applyFilters(gwGlobals.currentFilters);
+	gwGlobals.currentTextZoom = localStorage.getItem("text-zoom");
+	setTextZoom(gwGlobals.currentTextZoom);
 }
 function themeTweakSave() {
-	window.currentTheme = (readCookie("theme") || "default");
-	localStorage.setItem("theme-tweaks", JSON.stringify(window.currentFilters));
-	localStorage.setItem("text-zoom", window.currentTextZoom);
+	gwGlobals.currentTheme = (readCookie("theme") || "default");
+	localStorage.setItem("theme-tweaks", JSON.stringify(gwGlobals.currentFilters));
+	localStorage.setItem("text-zoom", gwGlobals.currentTextZoom);
 }
 function clickInterceptor(event) {
 	event.stopPropagation();
 }
 
 function themeTweakerFieldInputReceived(event) {
-	var sampleTextFilters = window.currentFilters;
+	var sampleTextFilters = gwGlobals.currentFilters;
 
 	let sliderName = /^theme-tweak-control-(.+)$/.exec(event.target.id)[1];
 	document.querySelector("#theme-tweak-label-" + sliderName).innerText = event.target.value + event.target.dataset["labelSuffix"];
@@ -1287,18 +1287,18 @@ function themeTweakerFieldInputReceived(event) {
 }
 function themeTweakerFieldValueChanged(event) {
 	if (event.target.id == 'theme-tweak-control-invert') {
-		window.currentFilters['invert'] = event.target.checked ? '100%' : '0%';
+		gwGlobals.currentFilters['invert'] = event.target.checked ? '100%' : '0%';
 	} else if (event.target.type == 'range') {
 		let sliderName = /^theme-tweak-control-(.+)$/.exec(event.target.id)[1];
 		document.querySelector("#theme-tweak-label-" + sliderName).innerText = event.target.value + event.target.dataset["labelSuffix"];
-		window.currentFilters[sliderName] = event.target.value + event.target.dataset["valueSuffix"];
+		gwGlobals.currentFilters[sliderName] = event.target.value + event.target.dataset["valueSuffix"];
 	} else if (event.target.id == 'theme-tweak-control-clippy') {
 		document.querySelector(".clippy-container").style.display = event.target.checked ? "block" : "none";
 	}
 	// Clear the sample text filters.
 	document.querySelector("#theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container").style.filter = "";
 	// Apply the new filters globally.
-	applyFilters(window.currentFilters);
+	applyFilters(gwGlobals.currentFilters);
 }
 function themeTweakerHelpWindowCancelButtonClicked(event) {
 	toggleThemeTweakerHelpWindow();
@@ -1321,7 +1321,7 @@ function themeTweakerClippyCloseButtonClicked() {
 	document.querySelector("#theme-tweak-control-clippy").checked = false;
 }
 function themeTweakerTextSizeAdjustButtonClicked(event) {
-	var zoomFactor = parseFloat(window.currentTextZoom) || 1.0;
+	var zoomFactor = parseFloat(gwGlobals.currentTextZoom) || 1.0;
 	if (event.target.hasClass("decrease")) {
 		zoomFactor = (zoomFactor - 0.05).toFixed(2);
 	} else if (event.target.hasClass("increase")) {
@@ -1330,10 +1330,10 @@ function themeTweakerTextSizeAdjustButtonClicked(event) {
 		zoomFactor = 1.0;
 	}
 	setTextZoom(zoomFactor);
-	window.currentTextZoom = `${zoomFactor}`;
+	gwGlobals.currentTextZoom = `${zoomFactor}`;
 
 	if (event.target.parentElement.id == "text-size-adjustment-ui") {
-		localStorage.setItem("text-zoom", window.currentTextZoom);
+		localStorage.setItem("text-zoom", gwGlobals.currentTextZoom);
 	}
 }
 function updateThemeTweakerSampleText() {
@@ -1588,7 +1588,7 @@ function injectCommentsListModeSelector() {
 	commentsListModeSelector.querySelector(`.${savedMode}`).disabled = true;
 	commentsListModeSelector.querySelector(`.${(savedMode == "compact" ? "expanded" : "compact")}`).accessKey = '`';
 
-	if (window.isMobile) {
+	if (gwGlobals.isMobile) {
 		document.querySelectorAll("#comments-list-mode-selector ~ .comment-thread").forEach(commentParentLink => {
 			commentParentLink.addActivateEvent(function (event) {
 				let parentCommentThread = event.target.closest("#content.compact .comment-thread");
@@ -1624,7 +1624,7 @@ function injectSiteNavUIToggle() {
 	let siteNavUIToggle = addUIElement("<div id='site-nav-ui-toggle'><button type='button' tabindex='-1'>&#xf0c9;</button></div>");
 	siteNavUIToggle.querySelector("button").addActivateEvent(siteNavUIToggleButtonClicked);
 
-	if (!window.isMobile && localStorage.getItem("site-nav-ui-toggle-engaged") == "true") toggleSiteNavUI();
+	if (!gwGlobals.isMobile && localStorage.getItem("site-nav-ui-toggle-engaged") == "true") toggleSiteNavUI();
 }
 function removeSiteNavUIToggle() {
 	document.querySelectorAll("#primary-bar, #secondary-bar, .page-toolbar, #site-nav-ui-toggle button").forEach(element => {
@@ -1678,7 +1678,7 @@ function injectAppearanceAdjustUIToggle() {
 	let appearanceAdjustUIToggle = addUIElement("<div id='appearance-adjust-ui-toggle'><button type='button' tabindex='-1'>&#xf013;</button></div>");
 	appearanceAdjustUIToggle.querySelector("button").addActivateEvent(appearanceAdjustUIToggleButtonClicked);
 
-	if (window.isMobile) {
+	if (gwGlobals.isMobile) {
 		let themeSelectorCloseButton = appearanceAdjustUIToggle.querySelector("button").cloneNode(true);
 		themeSelectorCloseButton.addClass("theme-selector-close-button");
 		themeSelectorCloseButton.innerHTML = "&#xf057;";
@@ -2378,11 +2378,11 @@ function unhideImageFocusUI() {
 }
 
 function resetImageFocusHideUITimer(restart) {
-	if (window.isMobile) return;
+	if (gwGlobals.isMobile) return;
 
-	clearTimeout(window.imageFocusHideUITimer);
+	clearTimeout(gwGlobals.imageFocusHideUITimer);
 	unhideImageFocusUI();
-	if (restart) window.imageFocusHideUITimer = setTimeout(hideImageFocusUI, 1500);
+	if (restart) gwGlobals.imageFocusHideUITimer = setTimeout(hideImageFocusUI, 1500);
 }
 
 function slideshowButtonClicked(event) {
@@ -2657,8 +2657,8 @@ function MarkdownFromHTML(text) {
 
 registerInitializer('earlyInitialize', true, () => document.querySelector("#content") != null, function () {
 	// Check to see whether we're on a mobile device (which we define as a touchscreen)
-// 	window.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-	window.isMobile = ('ontouchstart' in document.documentElement);
+// 	gwGlobals.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+	gwGlobals.isMobile = ('ontouchstart' in document.documentElement);
 
 	// Backward compatibility
 	let storedTheme = localStorage.getItem('selected-theme');
@@ -2668,7 +2668,7 @@ registerInitializer('earlyInitialize', true, () => document.querySelector("#cont
 	}
 
 	// Animate width & theme adjustments?
-	window.adjustmentTransitions = false;
+	gwGlobals.adjustmentTransitions = false;
 
 	// Add the content width selector.
 	injectContentWidthSelector();
@@ -2725,7 +2725,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		if (d) { date.innerHTML = dtf.format(new Date(+ d)); }
 	});
 
-	window.needHashRealignment = false;
+	gwGlobals.needHashRealignment = false;
 
 	// On edit post pages and conversation pages, add GUIEdit buttons to the 
 	// textarea, expand it, and markdownify the existing text, if any (this is
@@ -2736,7 +2736,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		textarea.value = MarkdownFromHTML(textarea.value);
 	});
 	// Focus the textarea.
-	document.querySelectorAll(((getQueryVariable("post-id")) ? "#edit-post-form textarea" : "#edit-post-form input[name='title']") + (window.isMobile ? "" : ", .conversation-page textarea")).forEach(field => { field.focus(); });
+	document.querySelectorAll(((getQueryVariable("post-id")) ? "#edit-post-form textarea" : "#edit-post-form input[name='title']") + (gwGlobals.isMobile ? "" : ", .conversation-page textarea")).forEach(field => { field.focus(); });
 
 	// If this is a post page...
 	let postMeta = document.querySelector(".post .post-meta");
@@ -2815,7 +2815,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		// Hash realignment is needed because adding the above elements almost
 		// certainly caused the page to reflow, and now client is no longer
 		// scrolled to the place indicated by the hash.
-		window.needHashRealignment = true;
+		gwGlobals.needHashRealignment = true;
 	}
 
 	// Clean up ToC
@@ -2847,7 +2847,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	let urlParts = document.URL.split('#comment-');
 	if (urlParts.length > 1) {
 		expandAncestorsOf(urlParts[1]);
-		window.needHashRealignment = true;
+		gwGlobals.needHashRealignment = true;
 	}
 
 	// Prevent conflict between various single-hotkey listeners and text fields
@@ -2892,10 +2892,10 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	injectCommentsSortModeSelector();
 
 	// Add the toggle for the post nav UI elements on mobile.
-	if (window.isMobile) injectPostNavUIToggle();
+	if (gwGlobals.isMobile) injectPostNavUIToggle();
 
 	// Add the toggle for the appearance adjustment UI elements on mobile.
-	if (window.isMobile) injectAppearanceAdjustUIToggle();
+	if (gwGlobals.isMobile) injectAppearanceAdjustUIToggle();
 
 	// Add the antikibitzer.
 	injectAntiKibitzer();
@@ -3138,13 +3138,13 @@ function adjustUIForWindowSize() {
 }
 
 function recomputeUIElementsContainerHeight() {
-	if (!window.isMobile && document.querySelector("#content").clientHeight <= window.innerHeight + 30) {
+	if (!gwGlobals.isMobile && document.querySelector("#content").clientHeight <= window.innerHeight + 30) {
 		document.querySelector("#ui-elements-container").style.height = document.querySelector("#content").clientHeight + "px";
 	}
 }
 
 function realignHashIfNeeded() {
-	if (window.needHashRealignment)
+	if (gwGlobals.needHashRealignment)
 		realignHash();
 }
 function realignHash() {

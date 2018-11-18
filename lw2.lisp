@@ -631,7 +631,7 @@ signaled condition to OUT-STREAM."
   (let* ((session-token (hunchentoot:cookie-in "session-token"))
          (csrf-token (and session-token (make-csrf-token session-token))))
     (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head>")
-    (format out-stream "<script>loggedInUserId=\"~A\"; loggedInUserDisplayName=\"~A\"; loggedInUserSlug=\"~A\"; ~@[var csrfToken=\"~A\"; ~]~A</script>~A"
+    (format out-stream "<script>window.gwGlobals = { }; loggedInUserId=\"~A\"; loggedInUserDisplayName=\"~A\"; loggedInUserSlug=\"~A\"; ~@[gwGlobals.csrfToken=\"~A\"; ~]~A</script>~A"
             (or (logged-in-userid) "")
             (or (logged-in-username) "")
             (or (logged-in-user-slug) "")
@@ -708,7 +708,7 @@ signaled condition to OUT-STREAM."
                                            ("top" "#top" "Back to top")
                                            ,@(if next-uri `(("next" ,next-uri "Next" :nofollow t)))
                                            ,@(if last-uri `(("last" ,last-uri "Last" :nofollow t))))))
-        (format out-stream "<script>var itemsPerPage=~A; document.querySelectorAll('#bottom-bar').forEach(function (bb) { bb.classList.add('decorative'); });</script>" items-per-page)))))
+        (format out-stream "<script>gwGlobals.itemsPerPage=~A; document.querySelectorAll('#bottom-bar').forEach(function (bb) { bb.classList.add('decorative'); });</script>" items-per-page)))))
 
 (defun map-output (out-stream fn list)
   (loop for item in list do (write-string (funcall fn item) out-stream))) 
