@@ -2681,7 +2681,7 @@ registerInitializer('earlyInitialize', true, () => document.querySelector("#cont
 	// Add the text size adjustment widget.
 	injectTextSizeAdjustmentUI();
 
-	try { updateInbox(); }
+	try { setTimeout(() => { updateInbox(); }, 0); }
 	catch (ex) { console.log(ex); }
 });
 
