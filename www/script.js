@@ -438,7 +438,13 @@ function voteButtonClicked(event) {
 		voteButton.clickedOnce = true;
 		voteButton.addClass("clicked-once");
 
-		setTimeout(vbDoubleClickTimeoutCallback, doubleClickTimeout, voteButton);
+		setTimeout(GW.vbDoubleClickTimeoutCallback = (voteButton) => {
+			if (!voteButton.clickedOnce) return;
+
+			// Do single-click code.
+			voteButton.clickedOnce = false;
+			voteEvent(voteButton, 1);
+		}, doubleClickTimeout, voteButton);
 	} else {
 		voteButton.clickedOnce = false;
 
@@ -447,13 +453,6 @@ function voteButtonClicked(event) {
 		voteButton.removeClass("clicked-once");
 		voteButton.addClass("clicked-twice");
 	}
-}
-function vbDoubleClickTimeoutCallback(voteButton) {
-	if (!voteButton.clickedOnce) return;
-
-	// Do single-click code.
-	voteButton.clickedOnce = false;
-	voteEvent(voteButton, 1);
 }
 function voteEvent(voteButton, numClicks) {
 	voteButton.blur();
@@ -995,9 +994,6 @@ function themeUnloadCallback_dark(toTheme = "") {
 /********************************************/
 
 function injectThemeTweaker() {
-	let themeTweakerToggle = addUIElement(`<div id='theme-tweaker-toggle'><button type='button' tabindex='-1' title="Customize appearance [;]" accesskey=';'>&#xf1de;</button></div>`);
-	themeTweakerToggle.querySelector("button").addActivateEvent(themeTweakerToggleButtonClicked);
-
 	let themeTweakerUI = addUIElement("<div id='theme-tweaker-ui' style='display: none;'>" + 
 	`<div class='main-theme-tweaker-window'>
 		<h1>Customize appearance</h1>
@@ -1067,7 +1063,15 @@ function injectThemeTweaker() {
 		</div>
 	</div>
 	` + "</div>");
-	themeTweakerUI.addActivateEvent(themeTweakerUIOverlayClicked, true);
+	themeTweakerUI.addActivateEvent(GW.themeTweakerUIOverlayClicked = (event) => {
+		if (event.type == 'mousedown') {
+			themeTweakerUI.style.opacity = "0.01";
+		} else {
+			toggleThemeTweakerUI();
+			themeTweakerUI.style.opacity = "1.0";
+			themeTweakReset();
+		}
+	}, true);
 
 	(document.querySelector("#theme-tweaker-ui > div")||{}).addActivateEvent(clickInterceptor, true);
 
@@ -1076,13 +1080,86 @@ function injectThemeTweaker() {
 		if (field.type == "range") field.addEventListener("input", themeTweakerFieldInputReceived);
 	});
 
-	themeTweakerUI.querySelector(".minimize-button").addActivateEvent(themeTweakerMinimizeButtonClicked);
-	themeTweakerUI.querySelector(".help-button").addActivateEvent(themeTweakerHelpButtonClicked);
-	themeTweakerUI.querySelector(".reset-defaults-button").addActivateEvent(themeTweakerResetDefaultsButtonClicked);
-	themeTweakerUI.querySelector(".main-theme-tweaker-window .cancel-button").addActivateEvent(themeTweakerCancelButtonClicked);
-	themeTweakerUI.querySelector(".main-theme-tweaker-window .ok-button").addActivateEvent(themeTweakerOKButtonClicked);
-	themeTweakerUI.querySelector(".help-window .cancel-button").addActivateEvent(themeTweakerHelpWindowCancelButtonClicked);
-	themeTweakerUI.querySelector(".help-window .ok-button").addActivateEvent(themeTweakerHelpWindowOKButtonClicked);
+	themeTweakerUI.querySelector(".minimize-button").addActivateEvent(GW.themeTweakerMinimizeButtonClicked = (event) => {
+		let themeTweakerStyle = document.querySelector("#theme-tweaker-style");
+
+		if (event.target.hasClass("minimize")) {
+			event.target.removeClass("minimize");
+			themeTweakerStyle.innerHTML = 
+				`#theme-tweaker-ui .main-theme-tweaker-window {
+					width: 320px;
+					height: 31px;
+					overflow: hidden;
+					padding: 30px 0 0 0;
+					top: 20px;
+					right: 20px;
+					left: auto;
+				}
+				#theme-tweaker-ui::after {
+					top: 27px;
+					right: 27px;
+				}
+				#theme-tweaker-ui::before {
+					opacity: 0.0;
+					height: 0;
+				}
+				#theme-tweaker-ui .clippy-container {
+					opacity: 1.0;
+				}
+				#theme-tweaker-ui .clippy-container .hint span {
+					color: #c00;
+				}
+				#theme-tweaker-ui {
+					height: 0;
+				}
+				#content, #ui-elements-container > div:not(#theme-tweaker-ui) {
+					pointer-events: none;
+				}`;
+			event.target.addClass("maximize");
+		} else {
+			event.target.removeClass("maximize");
+			themeTweakerStyle.innerHTML = 
+				`#content, #ui-elements-container > div:not(#theme-tweaker-ui) {
+					pointer-events: none;
+				}`;
+			event.target.addClass("minimize");
+		}
+	});
+	themeTweakerUI.querySelector(".help-button").addActivateEvent(GW.themeTweakerHelpButtonClicked = (event) => {
+		themeTweakerUI.querySelector("#theme-tweak-control-clippy").checked = JSON.parse(localStorage.getItem("theme-tweaker-settings") || '{ "showClippy": true }')["showClippy"];
+		toggleThemeTweakerHelpWindow();
+	});
+	themeTweakerUI.querySelector(".reset-defaults-button").addActivateEvent(GW.themeTweakerResetDefaultsButtonClicked = (event) => {
+		themeTweakerUI.querySelector("#theme-tweak-control-invert").checked = false;
+		[ "saturate", "brightness", "contrast", "hue-rotate" ].forEach(sliderName => {
+			let slider = themeTweakerUI.querySelector("#theme-tweak-control-" + sliderName);
+			slider.value = slider.dataset['defaultValue'];
+			themeTweakerUI.querySelector("#theme-tweak-label-" + sliderName).innerText = slider.value + slider.dataset['labelSuffix'];
+		});
+		GW.currentFilters = { };
+		applyFilters(GW.currentFilters);
+
+		GW.currentTextZoom = 1;
+		setTextZoom(GW.currentTextZoom);
+
+		setSelectedTheme("default");
+	});
+	themeTweakerUI.querySelector(".main-theme-tweaker-window .cancel-button").addActivateEvent(GW.themeTweakerCancelButtonClicked = (event) => {
+		toggleThemeTweakerUI();
+		themeTweakReset();
+	});
+	themeTweakerUI.querySelector(".main-theme-tweaker-window .ok-button").addActivateEvent(GW.themeTweakerOKButtonClicked = (event) => {
+		toggleThemeTweakerUI();
+		themeTweakSave();
+	});
+	themeTweakerUI.querySelector(".help-window .cancel-button").addActivateEvent(GW.themeTweakerHelpWindowCancelButtonClicked = (event) => {
+		toggleThemeTweakerHelpWindow();
+		themeTweakerResetSettings();
+	});
+	themeTweakerUI.querySelector(".help-window .ok-button").addActivateEvent(GW.themeTweakerHelpWindowOKButtonClicked = (event) => {
+		toggleThemeTweakerHelpWindow();
+		themeTweakerSaveSettings();
+	});
 
 	themeTweakerUI.querySelectorAll(".notch").forEach(notch => {
 		notch.addActivateEvent(function (event) {
@@ -1095,20 +1172,35 @@ function injectThemeTweaker() {
 	});
 
 	themeTweakerUI.querySelector(".clippy-close-button").addActivateEvent(GW.themeTweakerClippyCloseButtonClicked = (event) => {
-		document.querySelector(".clippy-container").style.display = "none";
+		themeTweakerUI.querySelector(".clippy-container").style.display = "none";
 		localStorage.setItem("theme-tweaker-settings", JSON.stringify({ 'showClippy': false }));
-		document.querySelector("#theme-tweak-control-clippy").checked = false;
+		themeTweakerUI.querySelector("#theme-tweak-control-clippy").checked = false;
 	});
 
 	document.querySelector("head").insertAdjacentHTML("beforeend","<style id='theme-tweaker-style'></style>");
 
-	document.querySelector("#theme-tweaker-ui .theme-selector").innerHTML = document.querySelector("#theme-selector").innerHTML;
-	document.querySelectorAll("#theme-tweaker-ui .theme-selector button").forEach(button => {
+	themeTweakerUI.querySelector(".theme-selector").innerHTML = document.querySelector("#theme-selector").innerHTML;
+	themeTweakerUI.querySelectorAll(".theme-selector button").forEach(button => {
 		button.addActivateEvent(GW.themeSelectButtonClicked);
 	});
 
-	document.querySelectorAll("#theme-tweaker-ui #theme-tweak-section-text-size-adjust button").forEach(button => {
+	themeTweakerUI.querySelectorAll("#theme-tweak-section-text-size-adjust button").forEach(button => {
 		button.addActivateEvent(GW.themeTweakerTextSizeAdjustButtonClicked);
+	});
+
+	let themeTweakerToggle = addUIElement(`<div id='theme-tweaker-toggle'><button type='button' tabindex='-1' title="Customize appearance [;]" accesskey=';'>&#xf1de;</button></div>`);
+	themeTweakerToggle.querySelector("button").addActivateEvent(GW.themeTweakerToggleButtonClicked = (event) => {
+		themeTweakerUI.querySelector(".current-theme span").innerText = (readCookie("theme") || "default");
+
+		themeTweakerUI.querySelector("#theme-tweak-control-invert").checked = (GW.currentFilters['invert'] == "100%");
+		[ "saturate", "brightness", "contrast", "hue-rotate" ].forEach(sliderName => {
+			let slider = themeTweakerUI.querySelector("#theme-tweak-control-" + sliderName);
+			slider.value = /^[0-9]+/.exec(GW.currentFilters[sliderName]) || slider.dataset['defaultValue'];
+			themeTweakerUI.querySelector("#theme-tweak-label-" + sliderName).innerText = slider.value + slider.dataset['labelSuffix'];
+		});
+
+		toggleThemeTweakerUI();
+		event.target.disabled = true;
 	});
 }
 function toggleThemeTweakerUI() {
@@ -1139,73 +1231,6 @@ function setSearchBoxTabSelectable(selectable) {
 	document.querySelector("input[type='search']").tabIndex = selectable ? "" : "-1";
 	document.querySelector("input[type='search'] + button").tabIndex = selectable ? "" : "-1";
 }
-function themeTweakerToggleButtonClicked(event) {
-	document.querySelector("#theme-tweaker-ui .current-theme span").innerText = (readCookie("theme") || "default");
-
-	document.querySelector("#theme-tweak-control-invert").checked = (GW.currentFilters['invert'] == "100%");
-	[ "saturate", "brightness", "contrast", "hue-rotate" ].forEach(sliderName => {
-		let slider = document.querySelector("#theme-tweak-control-" + sliderName);
-		slider.value = /^[0-9]+/.exec(GW.currentFilters[sliderName]) || slider.dataset['defaultValue'];
-		document.querySelector("#theme-tweak-label-" + sliderName).innerText = slider.value + slider.dataset['labelSuffix'];
-	});
-
-	toggleThemeTweakerUI();
-	event.target.disabled = true;
-}
-function themeTweakerUIOverlayClicked(event) {
-	if (event.type == 'mousedown') {
-		document.querySelector("#theme-tweaker-ui").style.opacity = "0.01";
-	} else {
-		toggleThemeTweakerUI();
-		document.querySelector("#theme-tweaker-ui").style.opacity = "1.0";
-		themeTweakReset();
-	}
-}
-function themeTweakerMinimizeButtonClicked(event) {
-	let themeTweakerStyle = document.querySelector("#theme-tweaker-style");
-
-	if (event.target.hasClass("minimize")) {
-		event.target.removeClass("minimize");
-		themeTweakerStyle.innerHTML = 
-			`#theme-tweaker-ui .main-theme-tweaker-window {
-				width: 320px;
-				height: 31px;
-				overflow: hidden;
-				padding: 30px 0 0 0;
-				top: 20px;
-				right: 20px;
-				left: auto;
-			}
-			#theme-tweaker-ui::after {
-				top: 27px;
-				right: 27px;
-			}
-			#theme-tweaker-ui::before {
-				opacity: 0.0;
-				height: 0;
-			}
-			#theme-tweaker-ui .clippy-container {
-				opacity: 1.0;
-			}
-			#theme-tweaker-ui .clippy-container .hint span {
-				color: #c00;
-			}
-			#theme-tweaker-ui {
-				height: 0;
-			}
-			#content, #ui-elements-container > div:not(#theme-tweaker-ui) {
-				pointer-events: none;
-			}`;
-		event.target.addClass("maximize");
-	} else {
-		event.target.removeClass("maximize");
-		themeTweakerStyle.innerHTML = 
-			`#content, #ui-elements-container > div:not(#theme-tweaker-ui) {
-				pointer-events: none;
-			}`;
-		event.target.addClass("minimize");
-	}
-}
 function toggleThemeTweakerHelpWindow() {
 	let themeTweakerHelpWindow = document.querySelector("#theme-tweaker-ui .help-window");
 	themeTweakerHelpWindow.style.display = (themeTweakerHelpWindow.style.display == "none") ? "block" : "none";
@@ -1220,33 +1245,6 @@ function toggleThemeTweakerHelpWindow() {
 		document.querySelector("#theme-tweaker-ui").style.pointerEvents = "auto";
 		document.querySelector("#theme-tweaker-ui .main-theme-tweaker-window").style.pointerEvents = "auto";
 	}
-}
-function themeTweakerHelpButtonClicked(event) {
-	document.querySelector("#theme-tweak-control-clippy").checked = JSON.parse(localStorage.getItem("theme-tweaker-settings") || '{ "showClippy": true }')["showClippy"];
-	toggleThemeTweakerHelpWindow();
-}
-function themeTweakerResetDefaultsButtonClicked(event) {
-	document.querySelector("#theme-tweak-control-invert").checked = false;
-	[ "saturate", "brightness", "contrast", "hue-rotate" ].forEach(sliderName => {
-		let slider = document.querySelector("#theme-tweak-control-" + sliderName);
-		slider.value = slider.dataset['defaultValue'];
-		document.querySelector("#theme-tweak-label-" + sliderName).innerText = slider.value + slider.dataset['labelSuffix'];
-	});
-	GW.currentFilters = { };
-	applyFilters(GW.currentFilters);
-
-	GW.currentTextZoom = 1;
-	setTextZoom(GW.currentTextZoom);
-
-	setSelectedTheme("default");
-}
-function themeTweakerCancelButtonClicked(event) {
-	toggleThemeTweakerUI();
-	themeTweakReset();
-}
-function themeTweakerOKButtonClicked(event) {
-	toggleThemeTweakerUI();
-	themeTweakSave();
 }
 function themeTweakReset() {
 	setSelectedTheme(GW.currentTheme);
@@ -1287,14 +1285,6 @@ function themeTweakerFieldValueChanged(event) {
 	document.querySelector("#theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container").style.filter = "";
 	// Apply the new filters globally.
 	applyFilters(GW.currentFilters);
-}
-function themeTweakerHelpWindowCancelButtonClicked(event) {
-	toggleThemeTweakerHelpWindow();
-	themeTweakerResetSettings();
-}
-function themeTweakerHelpWindowOKButtonClicked(event) {
-	toggleThemeTweakerHelpWindow();
-	themeTweakerSaveSettings();
 }
 function themeTweakerResetSettings() {
 	document.querySelector("#theme-tweak-control-clippy").checked = JSON.parse(localStorage.getItem("theme-tweaker-settings") || '{ "showClippy": true }')['showClippy'];
