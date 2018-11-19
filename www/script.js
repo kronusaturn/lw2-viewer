@@ -2121,13 +2121,22 @@ function addCommentParentPopups() {
 function imageFocusSetup(imagesOverlayOnly = false) {
 	// Add event listeners for clicking on images to focus them.
 	document.querySelectorAll("#images-overlay img").forEach(image => {
-		image.addActivateEvent(imageClickedToFocus);
+		image.addActivateEvent(gwGlobals.imageClickedToFocus = (event) => {
+			focusImage(event.target);
+
+			if (event.target.closest("#images-overlay")) {
+				document.querySelector("#image-focus-overlay .image-number").textContent = (getIndexOfFocusedImage() + 1);
+
+				// Set timer to hide the image focus UI.
+				resetImageFocusHideUITimer(true);
+			}
+		});
 	});
 	(document.querySelector("#images-overlay img")||{}).accessKey = 'l';
 	((document.querySelector("#image-focus-overlay .image-number")||{}).dataset||{}).numberOfImages = document.querySelectorAll("#images-overlay img").length;
 	if (imagesOverlayOnly) return;
 	document.querySelectorAll("#content img").forEach(image => {
-		image.addActivateEvent(imageClickedToFocus);
+		image.addActivateEvent(gwGlobals.imageClickedToFocus);
 	});
 
 	// Create the image focus overlay.
@@ -2147,7 +2156,12 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 	"</div>");
 	imageFocusOverlay.dropShadowFilterForImages = " drop-shadow(10px 10px 10px #000) drop-shadow(0 0 10px #444)";
 
-	imageFocusOverlay.querySelectorAll(".slideshow-button").forEach(button => { button.addActivateEvent(slideshowButtonClicked); });
+	imageFocusOverlay.querySelectorAll(".slideshow-button").forEach(button => {
+		button.addActivateEvent(gwGlobals.imageFocusSlideshowButtonClick = (event) => {
+			focusNextImage(event.target.hasClass("next"));
+			event.target.blur();
+		});
+	});
 
 	// On orientation change, reset the size & position.
 	if (typeof(window.msMatchMedia || window.MozMatchMedia || window.WebkitMatchMedia || window.matchMedia) !== 'undefined') {
@@ -2156,17 +2170,6 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 
 	// UI starts out hidden.
 	hideImageFocusUI();
-}
-
-function imageClickedToFocus(event) {
-	focusImage(event.target);
-
-	if (event.target.closest("#images-overlay")) {
-		document.querySelector("#image-focus-overlay .image-number").textContent = (getIndexOfFocusedImage() + 1);
-
-		// Set timer to hide the image focus UI.
-		resetImageFocusHideUITimer(true);
-	}
 }
 
 function focusImage(image) {
@@ -2197,11 +2200,116 @@ function focusImage(image) {
 	});
 
 	// Add listener to zoom image with scroll wheel.
-	window.addEventListener("wheel", focusedImageScrolled);
-	window.addEventListener("MozMousePixelScroll", oldFirefoxCompatibilityScrollEventFired);
+	window.addEventListener("wheel", gwGlobals.imageFocusScroll = (event) => {
+		event.preventDefault();
+
+		let image = document.querySelector("#image-focus-overlay img");
+
+		// Remove the filter.
+		image.savedFilter = image.style.filter;
+		image.style.filter = 'none';
+
+		// Locate point under cursor.
+		let imageBoundingBox = image.getBoundingClientRect();
+
+		// Calculate resize factor.
+		var factor = (image.height > 10 && image.width > 10) || event.deltaY < 0 ?
+						1 + Math.sqrt(Math.abs(event.deltaY))/100.0 :
+						1;
+
+		// Resize.
+		image.style.width = (event.deltaY < 0 ?
+							(image.clientWidth * factor) :
+							(image.clientWidth / factor))
+							+ "px";
+		image.style.height = "";
+
+		// Designate zoom origin.
+		var zoomOrigin;
+		// Zoom from cursor if we're zoomed in to where image exceeds screen, AND
+		// the cursor is over the image.
+		let imageSizeExceedsWindowBounds = (image.getBoundingClientRect().width > window.innerWidth || image.getBoundingClientRect().height > window.innerHeight);
+		let zoomingFromCursor = imageSizeExceedsWindowBounds &&
+								(imageBoundingBox.left <= event.clientX &&
+								 event.clientX <= imageBoundingBox.right && 
+								 imageBoundingBox.top <= event.clientY &&
+								 event.clientY <= imageBoundingBox.bottom);
+		// Otherwise, if we're zooming OUT, zoom from window center; if we're 
+		// zooming IN, zoom from image center.
+		let zoomingFromWindowCenter = event.deltaY > 0;
+		if (zoomingFromCursor)
+			zoomOrigin = { x: event.clientX, 
+						   y: event.clientY };
+		else if (zoomingFromWindowCenter)
+			zoomOrigin = { x: window.innerWidth / 2, 
+						   y: window.innerHeight / 2 };
+		else
+			zoomOrigin = { x: imageBoundingBox.x + imageBoundingBox.width / 2, 
+						   y: imageBoundingBox.y + imageBoundingBox.height / 2 };
+
+		// Calculate offset from zoom origin.
+		let offsetOfImageFromZoomOrigin = {
+			x: imageBoundingBox.x - zoomOrigin.x,
+			y: imageBoundingBox.y - zoomOrigin.y
+		}
+		// Calculate delta from centered zoom.
+		let deltaFromCenteredZoom = {
+			x: image.getBoundingClientRect().x - (zoomOrigin.x + (event.deltaY < 0 ? offsetOfImageFromZoomOrigin.x * factor : offsetOfImageFromZoomOrigin.x / factor)),
+			y: image.getBoundingClientRect().y - (zoomOrigin.y + (event.deltaY < 0 ? offsetOfImageFromZoomOrigin.y * factor : offsetOfImageFromZoomOrigin.y / factor))
+		}
+		// Adjust image position appropriately.
+		image.style.left = parseInt(getComputedStyle(image).left) - deltaFromCenteredZoom.x + "px";
+		image.style.top = parseInt(getComputedStyle(image).top) - deltaFromCenteredZoom.y + "px";
+		// Gradually re-center image, if it's smaller than the window.
+		if (!imageSizeExceedsWindowBounds) {
+			let imageCenter = { x: image.getBoundingClientRect().x + image.getBoundingClientRect().width / 2, 
+								y: image.getBoundingClientRect().y + image.getBoundingClientRect().height / 2 }
+			let windowCenter = { x: window.innerWidth / 2,
+								 y: window.innerHeight / 2 }
+			let imageOffsetFromCenter = { x: windowCenter.x - imageCenter.x,
+										  y: windowCenter.y - imageCenter.y }
+			// Divide the offset by 10 because we're nudging the image toward center,
+			// not jumping it there.
+			image.style.left = parseInt(getComputedStyle(image).left) + imageOffsetFromCenter.x / 10 + "px";
+			image.style.top = parseInt(getComputedStyle(image).top) + imageOffsetFromCenter.y / 10 + "px";
+		}
+
+		// Put the filter back.
+		image.style.filter = image.savedFilter;
+
+		// Set the cursor appropriately.
+		setFocusedImageCursor();
+	});
+	window.addEventListener("MozMousePixelScroll", gwGlobals.imageFocusOldFirefoxCompatibilityScrollEventFired = (event) => {
+		event.preventDefault();
+	});
 
 	// If image is bigger than viewport, it's draggable. Otherwise, click unfocuses.
-	window.addEventListener("mouseup", mouseUpOnFocusedImage);
+	window.addEventListener("mouseup", gwGlobals.imageFocusMouseUp = (event) => {
+		window.onmousemove = '';
+
+		// We only want to do anything on left-clicks.
+		if (event.button != 0) return;
+
+		if (event.target.hasClass("slideshow-button")) {
+			resetImageFocusHideUITimer(false);
+			return;
+		}
+
+		let focusedImage = document.querySelector("#image-focus-overlay img");
+
+		if (event.target != focusedImage) {
+			unfocusImageOverlay();
+			return;
+		}
+
+		if (focusedImage.height >= window.innerHeight || focusedImage.width >= window.innerWidth) {
+			// Put the filter back.
+			focusedImage.style.filter = focusedImage.savedFilter;
+		} else {
+			unfocusImageOverlay();
+		}
+	});
 	window.addEventListener("mousedown", gwGlobals.imageFocusMouseDown = (event) => {
 		event.preventDefault();
 
@@ -2227,13 +2335,50 @@ function focusImage(image) {
 	});
 
 	// Double-click unfocuses, always.
-	window.addEventListener('dblclick', doubleClickOnFocusedImage);
+	window.addEventListener('dblclick', gwGlobals.imageFocusDoubleClick = (event) => {
+		if (event.target.hasClass("slideshow-button")) return;
+
+		unfocusImageOverlay();
+	});
 
 	// Escape key unfocuses, spacebar resets.
-	document.addEventListener("keyup", keyPressedWhenImageFocused);
+	document.addEventListener("keyup", gwGlobals.imageFocusKeyUp = (event) => {
+		let allowedKeys = [ " ", "Spacebar", "Escape", "Esc", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Up", "Down", "Left", "Right" ];
+		if (!allowedKeys.contains(event.key) || 
+			getComputedStyle(document.querySelector("#image-focus-overlay")).display == "none") return;
+
+		event.preventDefault();
+
+		switch (event.key) {
+		case "Escape": 
+		case "Esc":
+			unfocusImageOverlay();
+			break;
+		case " ":
+		case "Spacebar":
+			resetFocusedImagePosition();
+			break;
+		case "ArrowDown":
+		case "Down":
+		case "ArrowRight":
+		case "Right":
+			if (document.querySelector("#images-overlay img.focused")) focusNextImage(true);
+			break;
+		case "ArrowUp":
+		case "Up":
+		case "ArrowLeft":
+		case "Left":
+			if (document.querySelector("#images-overlay img.focused")) focusNextImage(false);
+			break;
+		}
+	});
 
 	// Prevent spacebar or arrow keys from scrolling page when image focused.
-	document.addEventListener("keydown", keyDownWhenImageFocused);
+	document.addEventListener("keydown", gwGlobals.imageFocusKeyDown = (event) => {
+		let disabledKeys = [ " ", "Spacebar", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Up", "Down", "Left", "Right" ];
+		if (disabledKeys.contains(event.key))
+			event.preventDefault();
+	});
 
 	if (image.closest("#images-overlay")) {
 		// Set state of next/previous buttons.
@@ -2243,7 +2388,10 @@ function focusImage(image) {
 		imageFocusOverlay.querySelector(".slideshow-button.next").disabled = (indexOfFocusedImage == images.length - 1);
 
 		// Moving mouse unhides image focus UI.
-		window.addEventListener("mousemove", mouseMovedWhenImageFocused);
+		window.addEventListener("mousemove", gwGlobals.imageFocusMouseMoved = (event) => {
+			let restartTimer = (event.target.tagName == "IMG" || event.target.id == "image-focus-overlay");
+			resetImageFocusHideUITimer(restartTimer);
+		});
 
 		// Replace the hash.
 		history.replaceState(null, null, "#if_slide_" + (indexOfFocusedImage + 1));
@@ -2305,12 +2453,12 @@ function unfocusImageOverlay() {
 	});
 
 	// Remove event listeners.
-	window.removeEventListener("wheel", focusedImageScrolled);
-	window.removeEventListener("MozMousePixelScroll", oldFirefoxCompatibilityScrollEventFired);
-	window.removeEventListener("dblclick", doubleClickOnFocusedImage);
-	document.removeEventListener("keyup", keyPressedWhenImageFocused);
-	document.removeEventListener("keydown", keyDownWhenImageFocused);
-	window.removeEventListener("mousemove", mouseMovedWhenImageFocused);
+	window.removeEventListener("wheel", gwGlobals.imageFocusScroll);
+	window.removeEventListener("MozMousePixelScroll", gwGlobals.imageFocusOldFirefoxCompatibilityScrollEventFired);
+	window.removeEventListener("dblclick", gwGlobals.imageFocusDoubleClick);
+	document.removeEventListener("keyup", gwGlobals.imageFocusKeyUp);
+	document.removeEventListener("keydown", gwGlobals.imageFocusKeyDown);
+	window.removeEventListener("mousemove", gwGlobals.imageFocusMouseMoved);
 	window.removeEventListener("mousedown", gwGlobals.imageFocusMouseDown);
 
 	// Reset the hash, if needed.
@@ -2384,169 +2532,6 @@ function resetImageFocusHideUITimer(restart) {
 	clearTimeout(gwGlobals.imageFocusHideUITimer);
 	unhideImageFocusUI();
 	if (restart) gwGlobals.imageFocusHideUITimer = setTimeout(hideImageFocusUI, 1500);
-}
-
-function slideshowButtonClicked(event) {
-	focusNextImage(event.target.hasClass("next"));
-	event.target.blur();
-}
-
-function keyPressedWhenImageFocused(event) {
-	let allowedKeys = [ " ", "Spacebar", "Escape", "Esc", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Up", "Down", "Left", "Right" ];
-	if (!allowedKeys.contains(event.key) || 
-		getComputedStyle(document.querySelector("#image-focus-overlay")).display == "none") return;
-
-	event.preventDefault();
-
-	switch (event.key) {
-	case "Escape":
-	case "Esc":
-		unfocusImageOverlay();
-		break;
-	case " ":
-	case "Spacebar":
-		resetFocusedImagePosition();
-		break;
-	case "ArrowDown":
-	case "Down":
-	case "ArrowRight":
-	case "Right":
-		if (document.querySelector("#images-overlay img.focused")) focusNextImage(true);
-		break;
-	case "ArrowUp":
-	case "Up":
-	case "ArrowLeft":
-	case "Left":
-		if (document.querySelector("#images-overlay img.focused")) focusNextImage(false);
-		break;
-	}
-}
-
-function keyDownWhenImageFocused(event) {
-	let disabledKeys = [ " ", "Spacebar", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Up", "Down", "Left", "Right" ];
-	if (disabledKeys.contains(event.key))
-		event.preventDefault();
-}
-
-function mouseUpOnFocusedImage(event) {
-	window.onmousemove = '';
-
-	// We only want to do anything on left-clicks.
-	if (event.button != 0) return;
-
-	if (event.target.hasClass("slideshow-button")) {
-		resetImageFocusHideUITimer(false);
-		return;
-	}
-
-	let focusedImage = document.querySelector("#image-focus-overlay img");
-
-	if (event.target != focusedImage) {
-		unfocusImageOverlay();
-		return;
-	}
-
-	if (focusedImage.height >= window.innerHeight || focusedImage.width >= window.innerWidth) {
-		// Put the filter back.
-		focusedImage.style.filter = focusedImage.savedFilter;
-	} else {
-		unfocusImageOverlay();
-	}
-}
-
-function doubleClickOnFocusedImage(event) {
-	if (event.target.hasClass("slideshow-button")) return;
-
-	unfocusImageOverlay();
-}
-
-function mouseMovedWhenImageFocused(event) {
-	let restartTimer = (event.target.tagName == "IMG" || event.target.id == "image-focus-overlay");
-	resetImageFocusHideUITimer(restartTimer);
-}
-
-function focusedImageScrolled(event) {
-	event.preventDefault();
-
-	let image = document.querySelector("#image-focus-overlay img");
-
-	// Remove the filter.
-	image.savedFilter = image.style.filter;
-	image.style.filter = 'none';
-
-	// Locate point under cursor.
-	let imageBoundingBox = image.getBoundingClientRect();
-
-	// Calculate resize factor.
-	var factor = (image.height > 10 && image.width > 10) || event.deltaY < 0 ?
-					1 + Math.sqrt(Math.abs(event.deltaY))/100.0 :
-					1;
-
-	// Resize.
-	image.style.width = (event.deltaY < 0 ?
-						(image.clientWidth * factor) :
-						(image.clientWidth / factor))
-						+ "px";
-	image.style.height = "";
-
-	// Designate zoom origin.
-	var zoomOrigin;
-	// Zoom from cursor if we're zoomed in to where image exceeds screen, AND
-	// the cursor is over the image.
-	let imageSizeExceedsWindowBounds = (image.getBoundingClientRect().width > window.innerWidth || image.getBoundingClientRect().height > window.innerHeight);
-	let zoomingFromCursor = imageSizeExceedsWindowBounds &&
-							(imageBoundingBox.left <= event.clientX &&
-							 event.clientX <= imageBoundingBox.right && 
-							 imageBoundingBox.top <= event.clientY &&
-							 event.clientY <= imageBoundingBox.bottom);
-	// Otherwise, if we're zooming OUT, zoom from window center; if we're 
-	// zooming IN, zoom from image center.
-	let zoomingFromWindowCenter = event.deltaY > 0;
-	if (zoomingFromCursor)
-		zoomOrigin = { x: event.clientX, 
-					   y: event.clientY };
-	else if (zoomingFromWindowCenter)
-		zoomOrigin = { x: window.innerWidth / 2, 
-					   y: window.innerHeight / 2 };
-	else
-		zoomOrigin = { x: imageBoundingBox.x + imageBoundingBox.width / 2, 
-					   y: imageBoundingBox.y + imageBoundingBox.height / 2 };
-
-	// Calculate offset from zoom origin.
-	let offsetOfImageFromZoomOrigin = {
-		x: imageBoundingBox.x - zoomOrigin.x,
-		y: imageBoundingBox.y - zoomOrigin.y
-	}
-	// Calculate delta from centered zoom.
-	let deltaFromCenteredZoom = {
-		x: image.getBoundingClientRect().x - (zoomOrigin.x + (event.deltaY < 0 ? offsetOfImageFromZoomOrigin.x * factor : offsetOfImageFromZoomOrigin.x / factor)),
-		y: image.getBoundingClientRect().y - (zoomOrigin.y + (event.deltaY < 0 ? offsetOfImageFromZoomOrigin.y * factor : offsetOfImageFromZoomOrigin.y / factor))
-	}
-	// Adjust image position appropriately.
-	image.style.left = parseInt(getComputedStyle(image).left) - deltaFromCenteredZoom.x + "px";
-	image.style.top = parseInt(getComputedStyle(image).top) - deltaFromCenteredZoom.y + "px";
-	// Gradually re-center image, if it's smaller than the window.
-	if (!imageSizeExceedsWindowBounds) {
-		let imageCenter = { x: image.getBoundingClientRect().x + image.getBoundingClientRect().width / 2, 
-							y: image.getBoundingClientRect().y + image.getBoundingClientRect().height / 2 }
-		let windowCenter = { x: window.innerWidth / 2,
-							 y: window.innerHeight / 2 }
-		let imageOffsetFromCenter = { x: windowCenter.x - imageCenter.x,
-									  y: windowCenter.y - imageCenter.y }
-		// Divide the offset by 10 because we're nudging the image toward center,
-		// not jumping it there.
-		image.style.left = parseInt(getComputedStyle(image).left) + imageOffsetFromCenter.x / 10 + "px";
-		image.style.top = parseInt(getComputedStyle(image).top) + imageOffsetFromCenter.y / 10 + "px";
-	}
-
-	// Put the filter back.
-	image.style.filter = image.savedFilter;
-
-	// Set the cursor appropriately.
-	setFocusedImageCursor();
-}
-function oldFirefoxCompatibilityScrollEventFired(event) {
-	event.preventDefault();
 }
 
 /*********************/
