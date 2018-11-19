@@ -3232,11 +3232,17 @@ li {
 .spoiler {
     color: #000;
     background-color: currentColor;
-    position: relative;
     transition: none;
     border: 1px solid currentColor;
     padding: 0 6px;
     text-shadow: none;
+}
+.spoiler:not(:last-child) {
+    margin-bottom: 0;
+}
+.spoiler + .spoiler {
+	margin-top: 0;
+	border-top-width: 0;
 }
 #content .spoiler * {
 	color: inherit;
