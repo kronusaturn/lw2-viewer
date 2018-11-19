@@ -711,7 +711,7 @@ signaled condition to OUT-STREAM."
                                            ("top" "#top" "Back to top")
                                            ,@(if next-uri `(("next" ,next-uri "Next" :nofollow t)))
                                            ,@(if last-uri `(("last" ,last-uri "Last" :nofollow t))))))
-        (format out-stream "<script>queryAll('#bottom-bar').forEach(function (bb) { bb.classList.add('decorative'); });</script>")))))
+        (format out-stream "<script>document.querySelectorAll('#bottom-bar').forEach(bb => { bb.classList.add('decorative'); });</script>")))))
 
 (defun map-output (out-stream fn list)
   (loop for item in list do (write-string (funcall fn item) out-stream))) 
