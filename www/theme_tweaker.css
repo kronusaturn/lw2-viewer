@@ -171,7 +171,7 @@
 
 #theme-tweaker-ui #theme-tweak-section-sample-text {
 	position: sticky;
-	top: 24px;
+	top: 8px;
 	background-color: #bfb8bf;
 	z-index: 1;
 	box-shadow:
@@ -188,11 +188,6 @@
 		0 12px 0 1px rgba(191, 184, 191, 0.375),
 		0 14px 0 1px rgba(191, 184, 191, 0.25),
 		0 16px 0 1px rgba(191, 184, 191, 0.125);
-}
-@-moz-document url-prefix() {
-	#theme-tweaker-ui #theme-tweak-section-sample-text {
-		top: 8px;
-	}
 }
 #theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container {
 	display: table;
