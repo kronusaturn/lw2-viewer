@@ -269,7 +269,7 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 	commentControls.innerHTML = "<button class='cancel-comment-button' tabindex='-1'>Cancel</button>" +
 		"<form method='post'>" + 
 		"<div class='textarea-container'>" + 
-		"<textarea name='text' onkeyup='enableBeforeUnload();' onchange='enableBeforeUnload();'></textarea>" +
+		"<textarea name='text' oninput='enableBeforeUnload();'></textarea>" +
 		(withparent ? "<input type='hidden' name='parent-comment-id' value='" + commentControls.getCommentId() + "'>" : "") +
 		(editCommentId ? "<input type='hidden' name='edit-comment-id' value='" + editCommentId + "'>" : "") +
 		"<span class='markdown-reference-link'>You can use <a href='http://commonmark.org/help/' target='_blank'>Markdown</a> here.</span>" + 
