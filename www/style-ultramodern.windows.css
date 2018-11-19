@@ -4617,8 +4617,8 @@ a.comment-parent-link::after {
 		display: none;
 	}
 
-	.markdown-hints,
-	#edit-post-form .markdown-hints {
+	#markdown-hints,
+	#edit-post-form #markdown-hints {
 		z-index: 11111;
 		position: fixed;
 		top: 40px;
@@ -4631,7 +4631,7 @@ a.comment-parent-link::after {
 		border-style: double;
 		pointer-events: none;
 	}
-	.markdown-hints::after {
+	#markdown-hints::after {
 		content: "(Type to hide this help box.)";
 		color: #090;
 		display: block;
