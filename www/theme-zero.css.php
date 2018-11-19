@@ -1220,7 +1220,7 @@ h1.listing .edit-post-link:hover,
 	color: #e00;
 	text-shadow: <?php echo $white_glow; ?>;
 }
-.markdown-hints {
+#markdown-hints {
 	border: 1px solid #c00;
 	background-color: #ffa;
 }
@@ -1840,7 +1840,7 @@ select {
 			border: 1px solid #00c;
 			border-radius: 6px;
 		}
-		.markdown-hints::after {
+		#markdown-hints::after {
 			color: #090;
 		}
 		

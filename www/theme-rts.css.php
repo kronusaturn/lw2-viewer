@@ -1397,7 +1397,7 @@ a.comment-parent-link:hover::before {
 #markdown-hints-checkbox + label:hover {
 	color: #e00;
 }
-.markdown-hints {
+#markdown-hints {
 	border: 1px solid #c00;
 	background-color: #ffa;
 }
@@ -2057,7 +2057,7 @@ select {
 			border: 1px solid #bbb;
 			border-radius: 6px;
 		}
-		.markdown-hints::after {
+		#markdown-hints::after {
 			color: #090;
 		}
 		

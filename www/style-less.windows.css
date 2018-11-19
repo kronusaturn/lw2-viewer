@@ -1206,7 +1206,7 @@ h1.listing + .post-meta .read-time {
 #content.conversation-page #markdown-hints-checkbox ~ label {
 	white-space: nowrap;
 }
-#content.conversation-page .markdown-hints {
+#content.conversation-page #markdown-hints {
 	top: calc(100% + 2em);
 }
 
@@ -2371,7 +2371,7 @@ a.comment-parent-link:hover::after {
 #markdown-hints-checkbox:checked + label::before {
 	font-weight: normal;
 }
-.markdown-hints {
+#markdown-hints {
 	margin: 4px 0 0 4px;
 	padding: 4px 8px;
 	position: absolute;
@@ -2386,8 +2386,8 @@ a.comment-parent-link:hover::after {
 .markdown-hints-row {
 	display: table-row;
 }
-.markdown-hints .markdown-hints-row span,
-.markdown-hints .markdown-hints-row code {
+#markdown-hints .markdown-hints-row span,
+#markdown-hints .markdown-hints-row code {
 	float: none;
 	display: table-cell;
 	border: none;
@@ -2505,7 +2505,7 @@ a.comment-parent-link:hover::after {
 	padding: 6px 12px;
 	float: right;
 }
-#edit-post-form .markdown-hints {
+#edit-post-form #markdown-hints {
 	top: calc(100% + 2em);
 }
 
@@ -6788,12 +6788,12 @@ div.comment-child-links a {
 #markdown-hints-checkbox + label:hover {
 	color: #79a97e;
 }
-.markdown-hints {
+#markdown-hints {
 	border: 1px solid #faa;
 	background-color: #fff;
 }
-.markdown-hints .markdown-hints-row span,
-.markdown-hints .markdown-hints-row code {
+#markdown-hints .markdown-hints-row span,
+#markdown-hints .markdown-hints-row code {
 	padding: 2px 12px 2px 2px;
 }
 
@@ -7753,7 +7753,7 @@ strong, b {
 		#content.conversation-page .textarea-container:focus-within::after {
 			background-color: #fff;
 		}
-		.markdown-hints::after {
+		#markdown-hints::after {
 			color: #090;
 		}
 	}

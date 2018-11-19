@@ -1993,12 +1993,12 @@ div.comment-child-links a {
 #markdown-hints-checkbox + label:hover {
 	color: #79a97e;
 }
-.markdown-hints {
+#markdown-hints {
 	border: 1px solid #faa;
 	background-color: #fff;
 }
-.markdown-hints .markdown-hints-row span,
-.markdown-hints .markdown-hints-row code {
+#markdown-hints .markdown-hints-row span,
+#markdown-hints .markdown-hints-row code {
 	padding: 2px 12px 2px 2px;
 }
 
@@ -2958,7 +2958,7 @@ strong, b {
 		#content.conversation-page .textarea-container:focus-within::after {
 			background-color: #fff;
 		}
-		.markdown-hints::after {
+		#markdown-hints::after {
 			color: #090;
 		}
 	}

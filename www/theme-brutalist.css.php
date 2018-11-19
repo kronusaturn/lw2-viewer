@@ -1111,7 +1111,7 @@ button.guiedit::after {
 
 /* Markdown hints */
 
-.markdown-hints {
+#markdown-hints {
 	border: 2px solid #000;
 	background-color: #fff;
 }
@@ -1680,7 +1680,7 @@ select {
 		#edit-post-form textarea {
 			min-height: calc(100vh - 400px)
 		}
-		#edit-post-form .markdown-hints {
+		#edit-post-form #markdown-hints {
 			position: fixed;
 			top: 74px;
 			left: 0;
@@ -1781,14 +1781,14 @@ select {
 		.textarea-container:focus-within button.guiedit {
 			border: 1px solid transparent;
 		}
-		.markdown-hints,
-		#edit-post-form .markdown-hints {
+		#markdown-hints,
+		#edit-post-form #markdown-hints {
 			border: 2px solid #000;
 			box-shadow:
 				0 0 0 2px #fff,
 				0 0 0 4px #000;
 		}
-		.markdown-hints::after {
+		#markdown-hints::after {
 			color: #000;
 		}
 		

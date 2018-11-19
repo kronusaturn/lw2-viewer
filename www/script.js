@@ -113,6 +113,32 @@ Element.prototype.getCommentId = function() {
 	}
 }
 
+function query(selector, context) {
+    context = context || document;
+    // Redirect simple selectors to the more performant function
+    if (/^(#?[\w-]+|\.[\w-.]+)$/.test(selector)) {
+        switch (selector.charAt(0)) {
+            case '#':
+                // Handle ID-based selectors
+                return context.getElementById(selector.substr(1));
+            case '.':
+                // Handle class-based selectors
+                // Query by multiple classes by converting the selector 
+                // string into single spaced class names
+                var classes = selector.substr(1).replace(/\./g, ' ');
+                return [].slice.call(context.getElementsByClassName(classes));
+            default:
+                // Handle tag-based selectors
+                return [].slice.call(context.getElementsByTagName(selector));
+        }
+    }
+    // Default to `querySelectorAll`
+    return [].slice.call(context.querySelectorAll(selector));
+}
+Object.prototype.query = function (selector) {
+	query(selector, this);
+}
+
 /*******************/
 /* INBOX INDICATOR */
 /*******************/
@@ -126,7 +152,7 @@ function updateInbox() {
 
 		let response = JSON.parse(event.target.responseText);
 		if (response) {
-			let element = document.querySelector('#inbox-indicator');
+			let element = query('#inbox-indicator');
 			element.className = 'new-messages';
 			element.title = 'New messages [o]';
 		}
@@ -140,11 +166,11 @@ function updateInbox() {
 /**************/
 
 function toggleMarkdownHintsBox() {
-	let markdownHintsBox = document.querySelector(".markdown-hints");
+	let markdownHintsBox = query("#markdown-hints");
 	markdownHintsBox.style.display = (getComputedStyle(markdownHintsBox).display == "none") ? "block" : "none";
 }
 function removeMarkdownHintsBox() {
-	let markdownHintsBox = document.querySelector(".markdown-hints");
+	let markdownHintsBox = query("#markdown-hints");
 	if (getComputedStyle(markdownHintsBox).display != "none") markdownHintsBox.style.display = "none";
 }
 
@@ -180,7 +206,7 @@ Element.prototype.addTextareaFeatures = function() {
 	var markdown_hints = 
 	`<input type='checkbox' id='markdown-hints-checkbox'>
 	<label for='markdown-hints-checkbox'></label>
-	<div class='markdown-hints'>` + 
+	<div id='markdown-hints'>` + 
 	[	"<span style='font-weight: bold;'>Bold</span><code>**Bold**</code>", 
 		"<span style='font-style: italic;'>Italic</span><code>*Italic*</code>",
 		"<span><a href=#>Link</a></span><code>[Link](http://example.com)</code>",
@@ -206,7 +232,7 @@ Element.prototype.addTextareaFeatures = function() {
 	});
 	
 	if (GW.isMobile && window.innerWidth <= 520) {
-		let fixedEditorElements = textarea.closest(".textarea-container").querySelectorAll("textarea, .guiedit-buttons-container, .guiedit-mobile-auxiliary-button, .markdown-hints");
+		let fixedEditorElements = textarea.closest(".textarea-container").querySelectorAll("textarea, .guiedit-buttons-container, .guiedit-mobile-auxiliary-button, #markdown-hints");
 		textarea.addEventListener("focus", (event) => {
 			GW.savedFilters = GW.currentFilters;
 			GW.currentFilters = { };

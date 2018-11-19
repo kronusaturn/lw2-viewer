@@ -1392,7 +1392,7 @@ button.guiedit:hover {
 #markdown-hints-checkbox + label:hover {
 	text-decoration: underline;
 }
-.markdown-hints {
+#markdown-hints {
 	background-color: #888;
 	border: 1px solid #ccc;
 }
@@ -2020,7 +2020,7 @@ input::selection {
 		.textarea-container:focus-within button.guiedit {
 			border: 1px solid transparent;
 		}
-		.markdown-hints::after {
+		#markdown-hints::after {
 			color: #0f0;
 		}
 		

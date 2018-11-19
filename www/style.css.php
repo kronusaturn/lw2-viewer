@@ -1217,7 +1217,7 @@ h1.listing + .post-meta .read-time {
 #content.conversation-page #markdown-hints-checkbox ~ label {
 	white-space: nowrap;
 }
-#content.conversation-page .markdown-hints {
+#content.conversation-page #markdown-hints {
 	top: calc(100% + 2em);
 }
 
@@ -2382,7 +2382,7 @@ a.comment-parent-link:hover::after {
 #markdown-hints-checkbox:checked + label::before {
 	font-weight: normal;
 }
-.markdown-hints {
+#markdown-hints {
 	margin: 4px 0 0 4px;
 	padding: 4px 8px;
 	position: absolute;
@@ -2397,8 +2397,8 @@ a.comment-parent-link:hover::after {
 .markdown-hints-row {
 	display: table-row;
 }
-.markdown-hints .markdown-hints-row span,
-.markdown-hints .markdown-hints-row code {
+#markdown-hints .markdown-hints-row span,
+#markdown-hints .markdown-hints-row code {
 	float: none;
 	display: table-cell;
 	border: none;
@@ -2507,7 +2507,7 @@ a.comment-parent-link:hover::after {
 	padding: 6px 12px;
 	float: right;
 }
-#edit-post-form .markdown-hints {
+#edit-post-form #markdown-hints {
 	top: calc(100% + 2em);
 }
 

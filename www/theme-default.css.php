@@ -1433,7 +1433,7 @@ div.comment-child-links a {
 	color: #e00;
 	text-shadow: <?php echo $white_glow; ?>;
 }
-.markdown-hints {
+#markdown-hints {
 	border: 1px solid #c00;
 	background-color: #ffa;
 }
@@ -2224,7 +2224,7 @@ EOT;
 			border: 1px solid #ddd;
 			border-radius: 6px;
 		}
-		.markdown-hints::after {
+		#markdown-hints::after {
 			color: #090;
 		}
 	/*******************************************/
