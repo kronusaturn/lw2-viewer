@@ -167,7 +167,7 @@ Element.prototype.addTextareaFeatures = function() {
 			+ ((accesskey != "") ? (" accesskey='" + accesskey + "'") : "")
 			+ " title='" + desc + ((accesskey != "") ? (" [" + accesskey + "]") : "") + "'"
 			+ " data-tooltip='" + desc + ((accesskey != "") ? (" [" + accesskey + "]") : "") + "'"
-			+ " onclick='insMarkup(event,"
+			+ " onclick='insertMarkup(event,"
 			+ ((typeof m_before_or_func == 'function') ?
 				m_before_or_func.name : 
 				("\"" + m_before_or_func  + "\",\"" + m_after + "\",\"" + placeholder + "\""))
@@ -2072,7 +2072,7 @@ function addCommentParentPopups() {
 	if (!document.querySelector("#content").hasClass("comment-thread-page")) return;
 
 	document.querySelectorAll(".comment-meta a.comment-parent-link, .comment-meta a.comment-child-link").forEach(commentParentLink => {
-		commentParentLink.addEventListener("mouseover", (event) => {
+		commentParentLink.addEventListener("mouseover", GW.commentParentLinkMouseOver = (event) => {
 			let parent_id = "#comment-" + /(?:#comment-)?(.+)/.exec(commentParentLink.getAttribute("href"))[1];
 			var parent;
 			if (!(parent = (document.querySelector(parent_id)||{}).firstChild)) return;
@@ -2881,7 +2881,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	setEditPostPageSubmitButtonText();
 
 	// Add event listeners for Escape and Enter, for the theme tweaker.
-	document.addEventListener("keyup", (event) => {
+	document.addEventListener("keyup", GW.themeTweakerKeyPressed = (event) => {
 		if (event.keyCode == 27) {
 		// Escape key.
 			if (document.querySelector("#theme-tweaker-ui .help-window").style.display != "none") {
@@ -2906,7 +2906,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	// Add event listener for . , ; (for navigating listings pages).
 	let listings = document.querySelectorAll("h1.listing a[href^='/posts']");
 	if (listings.length > 0) {
-		document.addEventListener("keyup", (event) => { 
+		document.addEventListener("keyup", GW.postListingsNavKeyPressed = (event) => { 
 			if (event.ctrlKey || event.shiftKey || event.altKey || !(event.key == "," || event.key == "." || event.key == ';' || event.keyCode == 27)) return;
 
 			if (event.keyCode == 27) {
@@ -2939,7 +2939,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	// Add event listener for ; (to focus the link on link posts).
 	if (document.querySelector("#content").hasClass("post-page") && 
 		document.querySelector(".post").hasClass("link-post")) {
-		document.addEventListener("keyup", function (e) {
+		document.addEventListener("keyup", GW.linkPostLinkFocusKeyPressed = (event) => {
 			if (e.key == ';') document.querySelector("a.link-post-link").focus();
 		});
 	}
@@ -2947,7 +2947,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	// Add event listener for . , ; (for navigating the recent comments page).
 	let comments = document.querySelectorAll("#content > .comment-thread .comment-meta a.date");
 	if (comments.length > 0) {
-		document.addEventListener("keyup", (event) => {
+		document.addEventListener("keyup", GW.commentListingsNavKeyPressed = (event) => {
 			if (event.ctrlKey || event.shiftKey || event.altKey || !(event.key == "," || event.key == "." || event.key == ';' || event.keyCode == 27)) return;
 
 			if (event.keyCode == 27) {
@@ -2986,7 +2986,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 			}
 		});
 		document.querySelectorAll("#content > .comment-thread .comment-meta a.date, #content > .comment-thread .comment-meta a.permalink").forEach(link => {
-			link.addEventListener("blur", (event) => {
+			link.addEventListener("blur", GW.commentListingsHyperlinkUnfocused = (event) => {
 				event.target.closest(".comment-item").removeClasses([ "expanded", "comment-item-highlight" ]);
 			});
 		});
@@ -3025,7 +3025,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	});
 
 	// Add copy listener to strip soft hyphens (inserted by server-side hyphenator).
-	document.querySelector("#content").addEventListener("copy", (event) => {
+	document.querySelector("#content").addEventListener("copy", GW.textCopied = (event) => {
 		event.preventDefault();
 		const selectedText = window.getSelection().toString();
 		event.clipboardData.setData("text/plain", selectedText.replace(/\u00AD/g, ""));
@@ -3150,7 +3150,7 @@ function focusImageSpecifiedByURL() {
 /* GUIEDIT */
 /***********/
 
-function insMarkup(event) {
+function insertMarkup(event) {
 	var mopen = '', mclose = '', mtext = '', func = false;
 	if (typeof arguments[1] == 'function') {
 		func = arguments[1];
