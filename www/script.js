@@ -139,11 +139,6 @@ function updateInbox() {
 /* COMMENTING */
 /**************/
 
-function GUIEditMobileHelpButtonClicked(event) {
-	toggleMarkdownHintsBox();
-	event.target.toggleClass("active");
-	document.querySelector(".posting-controls:focus-within textarea").focus();
-}
 function toggleMarkdownHintsBox() {
 	let markdownHintsBox = document.querySelector(".markdown-hints");
 	markdownHintsBox.style.display = (getComputedStyle(markdownHintsBox).display == "none") ? "block" : "none";
@@ -151,10 +146,6 @@ function toggleMarkdownHintsBox() {
 function removeMarkdownHintsBox() {
 	let markdownHintsBox = document.querySelector(".markdown-hints");
 	if (getComputedStyle(markdownHintsBox).display != "none") markdownHintsBox.style.display = "none";
-}
-function GUIEditMobileExitButtonClicked(event) {
-	event.target.blur();
-	removeMarkdownHintsBox();
 }
 
 Element.prototype.addTextareaFeatures = function() {
@@ -200,15 +191,19 @@ Element.prototype.addTextareaFeatures = function() {
 	`</div>`;
 	textarea.parentElement.querySelector("span").insertAdjacentHTML("afterend", markdown_hints);
 
-	let guiEditMobileHelpButton = document.querySelector(".guiedit-mobile-help-button");
-	if (guiEditMobileHelpButton) {
-		guiEditMobileHelpButton.addActivateEvent(GUIEditMobileHelpButtonClicked);
-	}
-
-	let guiEditMobileExitButton = document.querySelector(".guiedit-mobile-exit-button");
-	if (guiEditMobileExitButton) {
-		guiEditMobileExitButton.addActivateEvent(GUIEditMobileExitButtonClicked);
-	}
+	document.querySelectorAll(".guiedit-mobile-auxiliary-button").forEach(button => {
+		button.addActivateEvent(GW.GUIEditMobileAuxiliaryButtonClicked = (event) => {
+			if (button.hasClass("guiedit-mobile-help-button")) {
+				toggleMarkdownHintsBox();
+				event.target.toggleClass("active");
+				document.querySelector(".posting-controls:focus-within textarea").focus();
+			} else if (button.hasClass("guiedit-mobile-exit-button")) {
+				event.target.blur();
+				removeMarkdownHintsBox();
+				document.querySelector(".guiedit-mobile-help-button").removeClass("active");
+			}		
+		});
+	});
 	
 	if (GW.isMobile && window.innerWidth <= 520) {
 		let fixedEditorElements = textarea.closest(".textarea-container").querySelectorAll("textarea, .guiedit-buttons-container, .guiedit-mobile-auxiliary-button, .markdown-hints");
@@ -489,9 +484,6 @@ function voteEvent(voteButton, numClicks) {
 /* COMMENT THREAD MINIMIZE BUTTONS */
 /***********************************/
 
-function commentMinimizeButtonClicked(event) {
-	event.target.closest(".comment-item").setCommentThreadMaximized(true);
-}
 Element.prototype.setCommentThreadMaximized = function(toggle, userOriginated = true, force) {
 	let commentItem = this;
 	let storageName = "thread-minimized-" + commentItem.getCommentId();
@@ -602,10 +594,6 @@ function scrollToNewComment(next) {
 	}
 
 	GW.newCommentScrollListener();
-}
-
-function commentQuicknavButtonClicked(event) {
-	scrollToNewComment(/next/.test(event.target.className));
 }
 
 function getPostHash() {
@@ -1118,7 +1106,7 @@ function injectThemeTweaker() {
 	});
 
 	document.querySelectorAll("#theme-tweaker-ui #theme-tweak-section-text-size-adjust button").forEach(button => {
-		button.addActivateEvent(themeTweakerTextSizeAdjustButtonClicked);
+		button.addActivateEvent(GW.themeTweakerTextSizeAdjustButtonClicked);
 	});
 }
 function toggleThemeTweakerUI() {
@@ -1318,22 +1306,6 @@ function themeTweakerClippyCloseButtonClicked() {
 	localStorage.setItem("theme-tweaker-settings", JSON.stringify({ 'showClippy': false }));
 	document.querySelector("#theme-tweak-control-clippy").checked = false;
 }
-function themeTweakerTextSizeAdjustButtonClicked(event) {
-	var zoomFactor = parseFloat(GW.currentTextZoom) || 1.0;
-	if (event.target.hasClass("decrease")) {
-		zoomFactor = (zoomFactor - 0.05).toFixed(2);
-	} else if (event.target.hasClass("increase")) {
-		zoomFactor = (zoomFactor + 0.05).toFixed(2);
-	} else {
-		zoomFactor = 1.0;
-	}
-	setTextZoom(zoomFactor);
-	GW.currentTextZoom = `${zoomFactor}`;
-
-	if (event.target.parentElement.id == "text-size-adjustment-ui") {
-		localStorage.setItem("text-zoom", GW.currentTextZoom);
-	}
-}
 function updateThemeTweakerSampleText() {
 	let sampleText = document.querySelector("#theme-tweaker-ui #theme-tweak-section-sample-text .sample-text");
 
@@ -1377,8 +1349,12 @@ function injectNewCommentNavUI(newCommentsCount) {
 	<button type='button' class='new-comment-sequential-nav-button new-comment-next' title='Next new comment (.)' tabindex='-1'>&#xf0d7;</button>`
 	+ "</div>");
 
-	newCommentUIContainer.querySelector(".new-comment-previous").addActivateEvent(commentQuicknavButtonClicked);
-	newCommentUIContainer.querySelector(".new-comment-next").addActivateEvent(commentQuicknavButtonClicked);
+	newCommentUIContainer.querySelectorAll(".new-comment-sequential-nav-button").forEach(button => {
+		button.addActivateEvent(GW.commentQuicknavButtonClicked = (event) => {
+			scrollToNewComment(/next/.test(event.target.className));
+			event.target.blur();
+		});
+	});
 
 	document.addEventListener("keyup", (event) => { 
 		if (event.shiftKey || event.ctrlKey || event.altKey) return;
@@ -1451,15 +1427,30 @@ function injectTextSizeAdjustmentUIReal() {
 	+ "</div>");
 
 	textSizeAdjustmentUIContainer.querySelectorAll("button").forEach(button => {
-		button.addActivateEvent(themeTweakerTextSizeAdjustButtonClicked);
+		button.addActivateEvent(GW.themeTweakerTextSizeAdjustButtonClicked = (event) => {
+			var zoomFactor = parseFloat(GW.currentTextZoom) || 1.0;
+			if (event.target.hasClass("decrease")) {
+				zoomFactor = (zoomFactor - 0.05).toFixed(2);
+			} else if (event.target.hasClass("increase")) {
+				zoomFactor = (zoomFactor + 0.05).toFixed(2);
+			} else {
+				zoomFactor = 1.0;
+			}
+			setTextZoom(zoomFactor);
+			GW.currentTextZoom = `${zoomFactor}`;
+
+			if (event.target.parentElement.id == "text-size-adjustment-ui") {
+				localStorage.setItem("text-zoom", GW.currentTextZoom);
+			}
+		});
 	});
 }
 
 function injectTextSizeAdjustmentUI() {
 	if (document.querySelector("#text-size-adjustment-ui") != null) return;
 	if (document.querySelector("#content.post-page") != null) injectTextSizeAdjustmentUIReal();
-	else document.addEventListener("DOMContentLoaded", function() {
-		if (document.querySelector(".post-body") != null || document.querySelector(".comment-body") != null) injectTextSizeAdjustmentUIReal();
+	else document.addEventListener("DOMContentLoaded", () => {
+		if (document.querySelector(".post-body") == null && document.querySelector(".comment-body") == null) injectTextSizeAdjustmentUIReal();
 	}, {once: true});
 }
 
@@ -1736,12 +1727,6 @@ function toggleReadTimeOrWordCount(addWordCountClass) {
 		[ element.innerHTML, element.title ] = [ `${titleParts[1]}<span>${titleParts[2]}</span>`, element.textContent ];
 	});
 }
-function readTimeOrWordCountClicked(event) {
-	let displayWordCount = localStorage.getItem("display-word-count");
-	toggleReadTimeOrWordCount(!displayWordCount);
-	if (displayWordCount) localStorage.removeItem("display-word-count");
-	else localStorage.setItem("display-word-count", true);
-}
 
 /**************************/
 /* PROMPT TO SAVE CHANGES */
@@ -2006,7 +1991,7 @@ function sortComments(mode) {
 
 	// Re-activate comment-minimize buttons.
 	document.querySelectorAll(".comment-minimize-button").forEach(button => {
-		button.addActivateEvent(commentMinimizeButtonClicked);
+		button.addActivateEvent(GW.commentMinimizeButtonClicked);
 	});
 
 	// Re-add comment parent popups.
@@ -2821,7 +2806,9 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 			// Format and activate comment-minimize buttons.
 			document.querySelectorAll(".comment-minimize-button").forEach(button => {
 				button.closest(".comment-item").setCommentThreadMaximized(false);
-				button.addActivateEvent(commentMinimizeButtonClicked);
+				button.addActivateEvent(GW.commentMinimizeButtonClicked = (event) => {
+					event.target.closest(".comment-item").setCommentThreadMaximized(true);
+				});
 			});
 		}
 	}
@@ -3028,7 +3015,14 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 	// Add listeners to switch between word count and read time.
 	if (localStorage.getItem("display-word-count")) toggleReadTimeOrWordCount(true);
-	document.querySelectorAll(".post-meta .read-time").forEach(element => { element.addActivateEvent(readTimeOrWordCountClicked); });
+	document.querySelectorAll(".post-meta .read-time").forEach(element => {
+		element.addActivateEvent(GW.readTimeOrWordCountClicked = (event) => {
+			let displayWordCount = localStorage.getItem("display-word-count");
+			toggleReadTimeOrWordCount(!displayWordCount);
+			if (displayWordCount) localStorage.removeItem("display-word-count");
+			else localStorage.setItem("display-word-count", true);
+		});
+	});
 
 	// Add copy listener to strip soft hyphens (inserted by server-side hyphenator).
 	document.querySelector("#content").addEventListener("copy", (event) => {
