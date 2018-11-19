@@ -3070,7 +3070,6 @@ li {
 	color: #ddd;
 	cursor: default;
 	opacity: 0.4;
-	pointer-events: none;
 }
 #image-focus-overlay .slideshow-button.previous.hidden {
 	left: -1.75em;
