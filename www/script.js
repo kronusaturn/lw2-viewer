@@ -657,7 +657,32 @@ function injectContentWidthSelector() {
 			return `<button type='button' class='select-width-${name}${selected}'${disabled} title='${desc}' tabindex='-1' data-name='${name}'>${abbr}</button>`})) +
 		"</div>");
 	widthSelector.querySelectorAll("button").forEach(button => {
-		button.addActivateEvent(widthAdjustButtonClicked);
+		button.addActivateEvent(GW.widthAdjustButtonClicked = (event) => {
+			// Determine which setting was chosen (i.e., which button was clicked).
+			let selectedWidth = event.target.dataset.name;
+
+			// Save the new setting.
+			if (selectedWidth == "normal") localStorage.removeItem("selected-width");
+			else localStorage.setItem("selected-width", selectedWidth);
+
+			// Actually change the content width.
+			setContentWidth(selectedWidth);
+			event.target.parentElement.childNodes.forEach(button => {
+				button.removeClass("selected");
+				button.disabled = false;
+			});
+			event.target.addClass("selected");
+			event.target.disabled = true;
+
+			// Make sure the accesskey (to cycle to the next width) is on the right button.
+			setWidthAdjustButtonsAccesskey();
+
+			// Regenerate images overlay.
+			generateImagesOverlay();
+	
+			// Realign hash.
+			realignHash();
+		});
 	});
 
 	// Make sure the accesskey (to cycle to the next width) is on the right button.
@@ -686,32 +711,6 @@ function setWidthAdjustButtonsAccesskey() {
 	nextButtonInCycle.accessKey = "'";
 	nextButtonInCycle.title += ` [\']`;
 }
-function widthAdjustButtonClicked(event) {
-	// Determine which setting was chosen (i.e., which button was clicked).
-	let selectedWidth = event.target.dataset.name;
-
-	// Save the new setting.
-	if (selectedWidth == "normal") localStorage.removeItem("selected-width");
-	else localStorage.setItem("selected-width", selectedWidth);
-
-	// Actually change the content width.
-	setContentWidth(selectedWidth);
-	event.target.parentElement.childNodes.forEach(button => {
-		button.removeClass("selected");
-		button.disabled = false;
-	});
-	event.target.addClass("selected");
-	event.target.disabled = true;
-
-	// Make sure the accesskey (to cycle to the next width) is on the right button.
-	setWidthAdjustButtonsAccesskey();
-
-	// Regenerate images overlay.
-	generateImagesOverlay();
-	
-	// Realign hash.
-	realignHash();
-}
 
 /*******************/
 /* THEME SELECTION */
@@ -729,7 +728,10 @@ function injectThemeSelector() {
 			return `<button type='button' class='select-theme-${name}${selected}'${disabled} title="${desc} [${accesskey}]" data-theme-name="${name}" data-theme-description="${desc}" accesskey='${accesskey}' tabindex='-1'>${letter}</button>`;})) +
 		"</div>");
 	themeSelector.querySelectorAll("button").forEach(button => {
-		button.addActivateEvent(themeSelectButtonClicked);
+		button.addActivateEvent(GW.themeSelectButtonClicked = (event) => {
+			let themeName = /select-theme-([^\s]+)/.exec(event.target.className)[1];
+			setSelectedTheme(themeName);
+		});
 	});
 
 	// Inject transitions CSS, if animating changes is enabled.
@@ -750,10 +752,6 @@ function injectThemeSelector() {
 			}` + 
 			"</style>");
 	}
-}
-function themeSelectButtonClicked(event) {
-	let themeName = /select-theme-([^\s]+)/.exec(event.target.className)[1];
-	setSelectedTheme(themeName);
 }
 function setSelectedTheme(themeName) {
 	document.querySelectorAll(".theme-selector button").forEach(button => {
@@ -1096,13 +1094,17 @@ function injectThemeTweaker() {
 		});
 	});
 
-	themeTweakerUI.querySelector(".clippy-close-button").addActivateEvent(themeTweakerClippyCloseButtonClicked);
+	themeTweakerUI.querySelector(".clippy-close-button").addActivateEvent(GW.themeTweakerClippyCloseButtonClicked = (event) => {
+		document.querySelector(".clippy-container").style.display = "none";
+		localStorage.setItem("theme-tweaker-settings", JSON.stringify({ 'showClippy': false }));
+		document.querySelector("#theme-tweak-control-clippy").checked = false;
+	});
 
 	document.querySelector("head").insertAdjacentHTML("beforeend","<style id='theme-tweaker-style'></style>");
 
 	document.querySelector("#theme-tweaker-ui .theme-selector").innerHTML = document.querySelector("#theme-selector").innerHTML;
 	document.querySelectorAll("#theme-tweaker-ui .theme-selector button").forEach(button => {
-		button.addActivateEvent(themeSelectButtonClicked);
+		button.addActivateEvent(GW.themeSelectButtonClicked);
 	});
 
 	document.querySelectorAll("#theme-tweaker-ui #theme-tweak-section-text-size-adjust button").forEach(button => {
@@ -1300,11 +1302,6 @@ function themeTweakerResetSettings() {
 }
 function themeTweakerSaveSettings() {
 	localStorage.setItem("theme-tweaker-settings", JSON.stringify({ 'showClippy': document.querySelector("#theme-tweak-control-clippy").checked }));
-}
-function themeTweakerClippyCloseButtonClicked() {
-	document.querySelector(".clippy-container").style.display = "none";
-	localStorage.setItem("theme-tweaker-settings", JSON.stringify({ 'showClippy': false }));
-	document.querySelector("#theme-tweak-control-clippy").checked = false;
 }
 function updateThemeTweakerSampleText() {
 	let sampleText = document.querySelector("#theme-tweaker-ui #theme-tweak-section-sample-text .sample-text");
@@ -1567,7 +1564,23 @@ function injectCommentsListModeSelector() {
 	let commentsListModeSelector = document.querySelector("#comments-list-mode-selector");
 
 	commentsListModeSelector.querySelectorAll("button").forEach(button => {
-		button.addActivateEvent(commentsListModeSelectButtonClicked);
+		button.addActivateEvent(GW.commentsListModeSelectButtonClicked = (event) => {
+			event.target.parentElement.querySelectorAll("button").forEach(button => {
+				button.removeClass("selected");
+				button.disabled = false;
+				button.accessKey = '`';
+			});
+			localStorage.setItem("comments-list-mode", event.target.className);
+			event.target.addClass("selected");
+			event.target.disabled = true;
+			event.target.removeAttribute("accesskey");
+
+			if (event.target.hasClass("expanded")) {
+				document.querySelector("#content").removeClass("compact");
+			} else {
+				document.querySelector("#content").addClass("compact");
+			}
+		});
 	});
 
 	let savedMode = (localStorage.getItem("comments-list-mode") == "compact") ? "compact" : "expanded";
@@ -1587,31 +1600,16 @@ function injectCommentsListModeSelector() {
 	}
 }
 
-function commentsListModeSelectButtonClicked(event) {
-	event.target.parentElement.querySelectorAll("button").forEach(button => {
-		button.removeClass("selected");
-		button.disabled = false;
-		button.accessKey = '`';
-	});
-	localStorage.setItem("comments-list-mode", event.target.className);
-	event.target.addClass("selected");
-	event.target.disabled = true;
-	event.target.removeAttribute("accesskey");
-
-	if (event.target.hasClass("expanded")) {
-		document.querySelector("#content").removeClass("compact");
-	} else {
-		document.querySelector("#content").addClass("compact");
-	}
-}
-
 /**********************/
 /* SITE NAV UI TOGGLE */
 /**********************/
 
 function injectSiteNavUIToggle() {
 	let siteNavUIToggle = addUIElement("<div id='site-nav-ui-toggle'><button type='button' tabindex='-1'>&#xf0c9;</button></div>");
-	siteNavUIToggle.querySelector("button").addActivateEvent(siteNavUIToggleButtonClicked);
+	siteNavUIToggle.querySelector("button").addActivateEvent(GW.siteNavUIToggleButtonClicked = (event) => {
+		toggleSiteNavUI();
+		localStorage.setItem("site-nav-ui-toggle-engaged", event.target.hasClass("engaged"));
+	});
 
 	if (!GW.isMobile && localStorage.getItem("site-nav-ui-toggle-engaged") == "true") toggleSiteNavUI();
 }
@@ -1620,11 +1618,6 @@ function removeSiteNavUIToggle() {
 		element.removeClass("engaged");
 	});
 	removeElement("#site-nav-ui-toggle");
-}
-function siteNavUIToggleButtonClicked() {
-	toggleSiteNavUI();
-	localStorage.setItem("site-nav-ui-toggle-engaged", event.target.hasClass("engaged"));
-//	localStorage.getItem("site-nav-ui-toggle-engaged") != "true");
 }
 function toggleSiteNavUI() {
 	document.querySelectorAll("#primary-bar, #secondary-bar, .page-toolbar, #site-nav-ui-toggle button").forEach(element => {
@@ -1639,7 +1632,10 @@ function toggleSiteNavUI() {
 
 function injectPostNavUIToggle() {
 	let postNavUIToggle = addUIElement("<div id='post-nav-ui-toggle'><button type='button' tabindex='-1'>&#xf14e;</button></div>");
-	postNavUIToggle.querySelector("button").addActivateEvent(postNavUIToggleButtonClicked);
+	postNavUIToggle.querySelector("button").addActivateEvent(GW.postNavUIToggleButtonClicked = (event) => {
+		togglePostNavUI();
+		localStorage.setItem("post-nav-ui-toggle-engaged", localStorage.getItem("post-nav-ui-toggle-engaged") != "true");
+	});
 
 	if (localStorage.getItem("post-nav-ui-toggle-engaged") == "true") togglePostNavUI();
 }
@@ -1648,10 +1644,6 @@ function removePostNavUIToggle() {
 		element.removeClass("engaged");
 	});
 	removeElement("#post-nav-ui-toggle");
-}
-function postNavUIToggleButtonClicked(event) {
-	togglePostNavUI();
-	localStorage.setItem("post-nav-ui-toggle-engaged", localStorage.getItem("post-nav-ui-toggle-engaged") != "true");
 }
 function togglePostNavUI() {
 	document.querySelectorAll("#quick-nav-ui, #new-comment-nav-ui, #hns-date-picker, #post-nav-ui-toggle button").forEach(element => {
@@ -1665,14 +1657,17 @@ function togglePostNavUI() {
 
 function injectAppearanceAdjustUIToggle() {
 	let appearanceAdjustUIToggle = addUIElement("<div id='appearance-adjust-ui-toggle'><button type='button' tabindex='-1'>&#xf013;</button></div>");
-	appearanceAdjustUIToggle.querySelector("button").addActivateEvent(appearanceAdjustUIToggleButtonClicked);
+	appearanceAdjustUIToggle.querySelector("button").addActivateEvent(GW.appearanceAdjustUIToggleButtonClicked = (event) => {
+		toggleAppearanceAdjustUI();
+		localStorage.setItem("appearance-adjust-ui-toggle-engaged", event.target.hasClass("engaged"));
+	});
 
 	if (GW.isMobile) {
 		let themeSelectorCloseButton = appearanceAdjustUIToggle.querySelector("button").cloneNode(true);
 		themeSelectorCloseButton.addClass("theme-selector-close-button");
 		themeSelectorCloseButton.innerHTML = "&#xf057;";
 		document.querySelector("#theme-selector").appendChild(themeSelectorCloseButton);
-		themeSelectorCloseButton.addActivateEvent(appearanceAdjustUIToggleButtonClicked);
+		themeSelectorCloseButton.addActivateEvent(GW.appearanceAdjustUIToggleButtonClicked);
 	} else {
 		if (localStorage.getItem("appearance-adjust-ui-toggle-engaged") == "true") toggleAppearanceAdjustUI();
 	}
@@ -1682,11 +1677,6 @@ function removeAppearanceAdjustUIToggle() {
 		element.removeClass("engaged");
 	});
 	removeElement("#appearance-adjust-ui-toggle");
-}
-function appearanceAdjustUIToggleButtonClicked(event) {
-	toggleAppearanceAdjustUI();
-	localStorage.setItem("appearance-adjust-ui-toggle-engaged", event.target.hasClass("engaged"));
-// 	localStorage.getItem("appearance-adjust-ui-toggle-engaged") != "true");
 }
 function toggleAppearanceAdjustUI() {
 	document.querySelectorAll("#comments-view-mode-selector, #theme-selector, #width-selector, #text-size-adjustment-ui, #theme-tweaker-toggle, #appearance-adjust-ui-toggle button").forEach(element => {
@@ -1764,7 +1754,9 @@ function setEditPostPageSubmitButtonText() {
 	if (!document.querySelector("#content").hasClass("edit-post-page")) return;
 
 	document.querySelectorAll("input[type='radio'][name='section']").forEach(radio => {
-		radio.addEventListener("change", updateEditPostPageSubmitButtonText);
+		radio.addEventListener("change", GW.postSectionSelectorValueChanged = (event) => {
+			updateEditPostPageSubmitButtonText();
+		});
 	});
 
 	updateEditPostPageSubmitButtonText();
@@ -1795,7 +1787,17 @@ function numToAlpha(n) {
 function injectAntiKibitzer() {
 	// Inject anti-kibitzer toggle controls.
 	let antiKibitzerToggle = addUIElement("<div id='anti-kibitzer-toggle'><button type='button' tabindex='-1' accesskey='g' title='Toggle anti-kibitzer (show/hide authors & karma values) [g]'></button>");
-	antiKibitzerToggle.querySelector("button").addActivateEvent(antiKibitzerToggleButtonClicked);
+	antiKibitzerToggle.querySelector("button").addActivateEvent(GW.antiKibitzerToggleButtonClicked = (event) => {
+		if (document.querySelector("#anti-kibitzer-toggle").hasClass("engaged") && 
+			!event.shiftKey &&
+			!confirm("Are you sure you want to turn OFF the anti-kibitzer?\n\n(This will reveal the authors and karma values of all posts and comments!)")) {
+			event.target.blur();
+			return;
+		}
+
+		toggleAntiKibitzerMode();
+		event.target.blur();
+	});
 
 	// Activate anti-kibitzer mode (if needed).
 	if (localStorage.getItem("antikibitzer") == "true")
@@ -1805,17 +1807,6 @@ function injectAntiKibitzer() {
 	removeElement("#antikibitzer-temp");
 }
 
-function antiKibitzerToggleButtonClicked (event) {
-	if (document.querySelector("#anti-kibitzer-toggle").hasClass("engaged") && 
-		!event.shiftKey &&
-		!confirm("Are you sure you want to turn OFF the anti-kibitzer?\n\n(This will reveal the authors and karma values of all posts and comments!)")) {
-		event.target.blur();
-		return;
-	}
-
-	toggleAntiKibitzerMode();
-	event.target.blur();
-}
 function toggleAntiKibitzerMode() {
 	// This will be the URL of the user's own page, if logged in, or the URL of
 	// the login page otherwise.
@@ -2029,7 +2020,17 @@ function injectCommentsSortModeSelector() {
 	let commentsSortModeSelector = document.querySelector("#comments-sort-mode-selector");
 
 	commentsSortModeSelector.querySelectorAll("button").forEach(button => {
-		button.addActivateEvent(commentsSortModeSelectButtonClicked);
+		button.addActivateEvent(GW.commentsSortModeSelectButtonClicked = (event) => {
+			event.target.parentElement.querySelectorAll("button").forEach(button => {
+				button.removeClass("selected");
+				button.disabled = false;
+			});
+			event.target.addClass("selected");
+			event.target.disabled = true;
+
+			setTimeout(() => { sortComments(/sort-mode-(\S+)/.exec(event.target.className)[1]); });
+			setCommentsSortModeSelectButtonsAccesskey();
+		});
 	});
 
 	// TODO: Make this actually get the current sort mode (if that's saved).
@@ -2042,17 +2043,6 @@ function injectCommentsSortModeSelector() {
 	setCommentsSortModeSelectButtonsAccesskey();
 }
 
-function commentsSortModeSelectButtonClicked(event) {
-	event.target.parentElement.querySelectorAll("button").forEach(button => {
-		button.removeClass("selected");
-		button.disabled = false;
-	});
-	event.target.addClass("selected");
-	event.target.disabled = true;
-
-	setTimeout(() => { sortComments(/sort-mode-(\S+)/.exec(event.target.className)[1]); });
-	setCommentsSortModeSelectButtonsAccesskey();
-}
 function setCommentsSortModeSelectButtonsAccesskey() {
 	document.querySelectorAll("#comments-sort-mode-selector button").forEach(button => {
 		button.removeAttribute("accesskey");
