@@ -118,23 +118,21 @@ Element.prototype.getCommentId = function() {
 /*******************/
 
 function updateInbox() {
-	let onFinish = (event) => {
-		if (event.target.status == 200) {
-			let response = JSON.parse(event.target.responseText);
-			if (response) {
-				let element = document.querySelector('#inbox-indicator');
-				element.className = 'new-messages';
-				element.title = 'New messages [o]';
-			}
-		}
-	};
+	if (!loggedInUserId) return;
 
-	if (loggedInUserId) {
-		let request = new XMLHttpRequest();
-		request.addEventListener("load", onFinish);
-		request.open("GET", "/check-notifications");
-		request.send();
-	}
+	let request = new XMLHttpRequest();
+	request.addEventListener("load", (event) => {
+		if (event.target.status != 200) return;
+
+		let response = JSON.parse(event.target.responseText);
+		if (response) {
+			let element = document.querySelector('#inbox-indicator');
+			element.className = 'new-messages';
+			element.title = 'New messages [o]';
+		}
+	});
+	request.open("GET", "/check-notifications");
+	request.send();
 }
 
 /**************/
