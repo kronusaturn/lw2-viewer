@@ -3238,6 +3238,10 @@ li {
     padding: 0 6px;
     text-shadow: none;
 }
+#content .spoiler * {
+	color: inherit;
+	border: none;
+}
 .spoiler:hover {
     color: unset;
     background-color: unset;
