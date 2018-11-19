@@ -157,6 +157,10 @@ a.nav-inner,
 #nav-item-search button:hover {
 	color: #333;
 }
+#nav-item-search input::placeholder {
+	color: #d00;
+	font-weight: normal;
+}
 
 /* User/login tab */
 

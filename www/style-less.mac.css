@@ -4908,6 +4908,10 @@ body {
 	padding: 2px 1px;
 	margin: 0 0 0 2px;
 }
+#nav-item-search input::placeholder {
+	color: #d00;
+	font-weight: normal;
+}
 
 /* Inbox indicator */
 

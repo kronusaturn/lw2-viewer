@@ -107,6 +107,10 @@ body {
 	border: none;
 	font-weight: inherit;
 }
+#nav-item-search input::placeholder {
+	color: #d00;
+	font-weight: normal;
+}
 
 /*==============*/
 /* PAGE TOOLBAR */

@@ -106,6 +106,10 @@ body {
 	border: none;
 	font-weight: 300;
 }
+#nav-item-search input::placeholder {
+	color: #f00;
+	font-weight: normal;
+}
 
 /* Inbox indicator */
 
