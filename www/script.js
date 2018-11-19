@@ -2535,8 +2535,7 @@ function resetImageFocusHideUITimer(restart) {
 /* MORE MISC HELPERS */
 /*********************/
 
-function getQueryVariable(variable)
-{
+function getQueryVariable(variable) {
 	var query = window.location.search.substring(1);
 	var vars = query.split("&");
 	for (var i = 0; i < vars.length; i++) {
@@ -2834,6 +2833,22 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		expandAncestorsOf(urlParts[1]);
 		GW.needHashRealignment = true;
 	}
+
+	// Add error message (as placeholder) if user tries to click Search with
+	// an empty search field.
+	query("#nav-item-search form").addEventListener("submit", GW.siteSearchFormSubmitted = (event) => {
+		let searchField = event.target.query("input");
+		if (searchField.value == "") {
+			event.preventDefault();
+			event.target.blur();
+			searchField.placeholder = "Enter a search string!";
+			searchField.focus();
+		}
+	});
+	// Remove the placeholder / error on any input.
+	query("#nav-item-search input").addEventListener("input", GW.siteSearchFieldValueChanged = (event) => {
+		event.target.placeholder = "";
+	});
 
 	// Prevent conflict between various single-hotkey listeners and text fields
 	queryAll("input[type='text'], input[type='search'], input[type='password']").forEach(inputField => {
