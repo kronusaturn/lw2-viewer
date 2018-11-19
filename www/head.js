@@ -41,7 +41,7 @@ Element.prototype.toggleClass = function(className) {
 /* CONTENT COLUMN WIDTH ADJUSTMENT */
 /***********************************/
 
-gwGlobals.widthOptions = [
+GW.widthOptions = [
 	['normal', 'Narrow (fixed-width) content column', 'N'],
 	['wide', 'Wide (fixed-width) content column', 'W'],
 	['fluid', 'Full-width (fluid) content column', 'F']
@@ -50,7 +50,7 @@ gwGlobals.widthOptions = [
 function setContentWidth(widthOption) {
 	let currentWidth = localStorage.getItem("selected-width") || 'normal';
 	let head = document.querySelector('head');
-	head.removeClasses(gwGlobals.widthOptions.map(wo => 'content-width-' + wo[0]));
+	head.removeClasses(GW.widthOptions.map(wo => 'content-width-' + wo[0]));
 	head.addClass('content-width-' + (widthOption || 'normal'));
 }
 setContentWidth(localStorage.getItem('selected-width'));
@@ -76,7 +76,7 @@ function applyFilters(filters) {
 	var fullStyleString = "";
 	
 	if (!filters.isEmpty()) {
-		let selector = gwGlobals.filtersTargetSelector || "body::before, #content, #ui-elements-container > div:not(#theme-tweaker-ui), #theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container";
+		let selector = GW.filtersTargetSelector || "body::before, #content, #ui-elements-container > div:not(#theme-tweaker-ui), #theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container";
 		fullStyleString = `body::before { content: ""; } ${selector} { filter: ${filterStringFromFilters(filters)}; }`;
 	}
 	
@@ -84,8 +84,8 @@ function applyFilters(filters) {
 	(document.querySelector("#theme-tweak")||{}).innerHTML = fullStyleString;
 }
 document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='theme-tweak'></style>");	
-gwGlobals.currentFilters = JSON.parse(localStorage.getItem("theme-tweaks") || "{ }");
-applyFilters(gwGlobals.currentFilters);
+GW.currentFilters = JSON.parse(localStorage.getItem("theme-tweaks") || "{ }");
+applyFilters(GW.currentFilters);
 
 /************************/
 /* TEXT SIZE ADJUSTMENT */
@@ -120,14 +120,14 @@ function setTextZoom(zoomFactor) {
 			zoom: ${zoomFactor};
 		}`;
 }
-gwGlobals.currentTextZoom = localStorage.getItem('text-zoom');
-setTextZoom(gwGlobals.currentTextZoom);
+GW.currentTextZoom = localStorage.getItem('text-zoom');
+setTextZoom(GW.currentTextZoom);
 
 /**********/
 /* THEMES */
 /**********/
 
-gwGlobals.themeOptions = [
+GW.themeOptions = [
 	['default', 'Default theme (dark text on light background)', 'A'],
 	['dark', 'Dark theme (light text on dark background)', 'B'],
 	['grey', 'Grey theme (more subdued than default theme)', 'C'],
