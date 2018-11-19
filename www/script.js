@@ -113,14 +113,14 @@ Element.prototype.getCommentId = function() {
 	}
 }
 
-function query(selector, context) {
+function queryAll(selector, context) {
     context = context || document;
     // Redirect simple selectors to the more performant function
     if (/^(#?[\w-]+|\.[\w-.]+)$/.test(selector)) {
         switch (selector.charAt(0)) {
             case '#':
                 // Handle ID-based selectors
-                return context.getElementById(selector.substr(1));
+                return [context.getElementById(selector.substr(1))];
             case '.':
                 // Handle class-based selectors
                 // Query by multiple classes by converting the selector 
@@ -135,8 +135,15 @@ function query(selector, context) {
     // Default to `querySelectorAll`
     return [].slice.call(context.querySelectorAll(selector));
 }
+function query(selector, context) {
+	let all = queryAll(selector, context);
+	return (all.length > 0) ? all[0] : null;
+}
+Object.prototype.queryAll = function (selector) {
+	return queryAll(selector, this);
+}
 Object.prototype.query = function (selector) {
-	query(selector, this);
+	return query(selector, this);
 }
 
 /*******************/
@@ -183,7 +190,8 @@ Element.prototype.addTextareaFeatures = function() {
 	textarea.addEventListener("keyup", (event) => { event.stopPropagation(); });
 
 	textarea.insertAdjacentHTML("beforebegin", "<div class='guiedit-buttons-container'></div>");
-	var buttons_container = textarea.parentElement.querySelector(".guiedit-buttons-container");
+	let textareaContainer = textarea.closest(".textarea-container");
+	var buttons_container = textareaContainer.query(".guiedit-buttons-container");
 	for (var button of GW.guiEditButtons) {
 		let [ name, desc, accesskey, m_before_or_func, m_after, placeholder, icon ] = button;
 		buttons_container.insertAdjacentHTML("beforeend", 
@@ -215,24 +223,24 @@ Element.prototype.addTextareaFeatures = function() {
 		"<span>Heading 3</span><code>### Heading 1</code>",
 		"<span>Blockquote</span><code>&gt; Blockquote</code>" ].map(row => "<div class='markdown-hints-row'>" + row + "</div>").join("") +
 	`</div>`;
-	textarea.parentElement.querySelector("span").insertAdjacentHTML("afterend", markdown_hints);
+	textareaContainer.query("span").insertAdjacentHTML("afterend", markdown_hints);
 
-	document.querySelectorAll(".guiedit-mobile-auxiliary-button").forEach(button => {
+	textareaContainer.queryAll(".guiedit-mobile-auxiliary-button").forEach(button => {
 		button.addActivateEvent(GW.GUIEditMobileAuxiliaryButtonClicked = (event) => {
 			if (button.hasClass("guiedit-mobile-help-button")) {
 				toggleMarkdownHintsBox();
 				event.target.toggleClass("active");
-				document.querySelector(".posting-controls:focus-within textarea").focus();
+				query(".posting-controls:focus-within textarea").focus();
 			} else if (button.hasClass("guiedit-mobile-exit-button")) {
 				event.target.blur();
 				removeMarkdownHintsBox();
-				document.querySelector(".guiedit-mobile-help-button").removeClass("active");
+				textareaContainer.query(".guiedit-mobile-help-button").removeClass("active");
 			}		
 		});
 	});
 	
 	if (GW.isMobile && window.innerWidth <= 520) {
-		let fixedEditorElements = textarea.closest(".textarea-container").querySelectorAll("textarea, .guiedit-buttons-container, .guiedit-mobile-auxiliary-button, #markdown-hints");
+		let fixedEditorElements = textareaContainer.queryAll("textarea, .guiedit-buttons-container, .guiedit-mobile-auxiliary-button, #markdown-hints");
 		textarea.addEventListener("focus", (event) => {
 			GW.savedFilters = GW.currentFilters;
 			GW.currentFilters = { };
@@ -273,15 +281,15 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 		"</div></form>";
 	commentControls.onsubmit = disableBeforeUnload;
 
-	commentControls.querySelector(".cancel-comment-button").addActivateEvent(hideReplyForm);
+	commentControls.query(".cancel-comment-button").addActivateEvent(hideReplyForm);
 	commentControls.scrollIntoViewIfNeeded();
-	commentControls.querySelector("form").onsubmit = (event) => {
+	commentControls.query("form").onsubmit = (event) => {
 		if (!event.target.text.value) {
 			alert("Please enter a comment.");
 			return false;
 		}
 	}
-	let textarea = commentControls.querySelector("textarea");
+	let textarea = commentControls.query("textarea");
 	textarea.value = MarkdownFromHTML(editMarkdownSource || "");
 	textarea.addTextareaFeatures();
 	textarea.focus();
@@ -297,7 +305,7 @@ Element.prototype.constructCommentControls = function() {
 		replyButton.setAttribute("accesskey", "n");
 		replyButton.setAttribute("title", "Post new comment [n]");
 	} else {
-		if (commentControls.parentElement.querySelector(".comment-body").hasAttribute("data-markdown-source")) {
+		if (commentControls.parentElement.query(".comment-body").hasAttribute("data-markdown-source")) {
 			let editButton = commentControls.appendChild(document.createElement("button"));
 			editButton.className = "edit-button action-button";
 			editButton.innerHTML = "Edit";
@@ -313,26 +321,26 @@ Element.prototype.constructCommentControls = function() {
 
 	// Replicate karma controls at the bottom of comments.
 	if (commentControls.parentElement.id == "comments") return;
-	let karmaControls = commentControls.parentElement.querySelector(".comment-meta .karma");
+	let karmaControls = commentControls.parentElement.query(".comment-meta .karma");
 	let karmaControlsCloned = karmaControls.cloneNode(true);
 	commentControls.appendChild(karmaControlsCloned);
-	commentControls.querySelectorAll("button.vote").forEach(voteButton => {
+	commentControls.queryAll("button.vote").forEach(voteButton => {
 		voteButton.addActivateEvent(voteButtonClicked);
 	});
 }
 
 function showCommentEditForm(event) {
 	let commentControls = event.target.parentElement;
-	let commentBody = commentControls.parentElement.querySelector(".comment-body");
+	let commentBody = commentControls.parentElement.query(".comment-body");
 	commentBody.setAttribute("style", "display: none;");
 	commentControls.injectReplyForm(commentBody.dataset.markdownSource);
-	commentControls.querySelector("form").addClass("edit-existing-comment");
-	ExpandTextarea(commentControls.querySelector("textarea"));
+	commentControls.query("form").addClass("edit-existing-comment");
+	ExpandTextarea(commentControls.query("textarea"));
 }
 
 function showReplyForm(event) {
 	let commentControls = event.target.parentElement;
-	document.querySelectorAll("textarea").forEach(textarea => {
+	queryAll("textarea").forEach(textarea => {
 		textarea.closest(".comment-controls").constructCommentControls();
 	});
 
@@ -342,9 +350,9 @@ function showReplyForm(event) {
 function hideReplyForm(event) {
 	// Are we editing a comment? If so, un-hide the existing comment body.
 	let containingComment = event.target.closest(".comment-item");
-	if (containingComment) containingComment.querySelector(".comment-body").style.display = "";
+	if (containingComment) containingComment.query(".comment-body").style.display = "";
 
-	let enteredText = event.target.parentElement.querySelector("textarea").value;
+	let enteredText = event.target.parentElement.query("textarea").value;
 	if (enteredText) event.target.parentElement.dataset.enteredText = enteredText;
 
 	disableBeforeUnload();
@@ -372,7 +380,7 @@ function ExpandTextarea(textarea) {
 function OnInputRemoveMarkdownHints() {
 	if (window.innerWidth > 520) return;
 	removeMarkdownHintsBox();
-	document.querySelector(".guiedit-mobile-help-button").removeClass("active");
+	query(".guiedit-mobile-help-button").removeClass("active");
 }
 
 /**********/
@@ -411,8 +419,8 @@ function makeVoteCompleteEvent(target) {
 	return (event) => {
 		var buttonTargets, karmaTargets;
 		if (target === null) {
-			buttonTargets = document.querySelectorAll(".post-meta .karma");
-			karmaTargets = document.querySelectorAll(".post-meta .karma-value");
+			buttonTargets = queryAll(".post-meta .karma");
+			karmaTargets = queryAll(".post-meta .karma-value");
 		} else {
 			let commentItem = target.closest(".comment-item")
 			buttonTargets = [ commentItem.querySelector(".comment-meta .karma"), commentItem.querySelector(".comment-controls .karma") ];
@@ -544,9 +552,9 @@ Element.prototype.getCommentDate = function() {
 function getCurrentVisibleComment() {
 	let px = window.innerWidth/2, py = window.innerHeight/10;
 	let commentItem = document.elementFromPoint(px, py).closest(".comment-item") || document.elementFromPoint(px, py+60).closest(".comment-item"); // Mind the gap between threads
-	let atbottom = document.querySelector("#comments").getBoundingClientRect().bottom < window.innerHeight;
+	let atbottom = query("#comments").getBoundingClientRect().bottom < window.innerHeight;
 	if (atbottom) {
-		let hashci = location.hash && document.querySelector(location.hash);
+		let hashci = location.hash && query(location.hash);
 		if (hashci && /comment-item/.test(hashci.className) && hashci.getBoundingClientRect().top > 0) {
 			commentItem = hashci;
 		}
@@ -559,7 +567,7 @@ function highlightCommentsSince(date) {
 	GW.newComments = [ ];
 	let oldCommentsStack = [ ];
 	let prevNewComment;
-	document.querySelectorAll(".comment-item").forEach(commentItem => {
+	queryAll(".comment-item").forEach(commentItem => {
 		commentItem.prevNewComment = prevNewComment;
 		if (commentItem.getCommentDate() > date) {
 			commentItem.addClass("new-comment");
@@ -575,8 +583,8 @@ function highlightCommentsSince(date) {
 	});
 
 	GW.newCommentScrollSet = (commentItem) => {
-		document.querySelector("#new-comment-nav-ui .new-comment-previous").disabled = commentItem ? !commentItem.prevNewComment : true;
-		document.querySelector("#new-comment-nav-ui .new-comment-next").disabled = commentItem ? !commentItem.nextNewComment : (GW.newComments.length == 0);
+		query("#new-comment-nav-ui .new-comment-previous").disabled = commentItem ? !commentItem.prevNewComment : true;
+		query("#new-comment-nav-ui .new-comment-next").disabled = commentItem ? !commentItem.nextNewComment : (GW.newComments.length == 0);
 	};
 	GW.newCommentScrollListener = () => {
 		let commentItem = getCurrentVisibleComment();
@@ -588,7 +596,7 @@ function highlightCommentsSince(date) {
 	if (document.readyState=="complete") {
 		GW.newCommentScrollListener();
 	} else {
-		let commentItem = location.hash && /^#comment-/.test(location.hash) && document.querySelector(location.hash);
+		let commentItem = location.hash && /^#comment-/.test(location.hash) && query(location.hash);
 		GW.newCommentScrollSet(commentItem);
 	}
 
@@ -609,7 +617,7 @@ function scrollToNewComment(next) {
 	} else {
 		if (GW.newComments[0]) {
 			targetCommentID = GW.newComments[0];
-			targetComment = document.querySelector("#comment-" + targetCommentID);
+			targetComment = query("#comment-" + targetCommentID);
 		}
 	}
 	if (targetComment) {
@@ -627,14 +635,14 @@ function getPostHash() {
 }
 function getLastVisitedDate() {
 	// Get the last visited date (or, if posting a comment, the previous last visited date).
-	let aCommentHasJustBeenPosted = (document.querySelector(".just-posted-comment") != null);
+	let aCommentHasJustBeenPosted = (query(".just-posted-comment") != null);
 	let storageName = (aCommentHasJustBeenPosted ? "previous-last-visited-date_" : "last-visited-date_") + getPostHash();
 	return localStorage.getItem(storageName);
 }
 function setLastVisitedDate(date) {
 	// If NOT posting a comment, save the previous value for the last-visited-date 
 	// (to recover it in case of posting a comment).
-	let aCommentHasJustBeenPosted = (document.querySelector(".just-posted-comment") != null);
+	let aCommentHasJustBeenPosted = (query(".just-posted-comment") != null);
 	if (!aCommentHasJustBeenPosted) {
 		let previousLastVisitedDate = (localStorage.getItem("last-visited-date_" + getPostHash()) || 0);
 		localStorage.setItem("previous-last-visited-date_" + getPostHash(), previousLastVisitedDate);
@@ -645,13 +653,13 @@ function setLastVisitedDate(date) {
 }
 
 function updateSavedCommentCount() {
-	let commentCount = document.querySelectorAll(".comment").length;
+	let commentCount = queryAll(".comment").length;
 	localStorage.setItem("comment-count_" + getPostHash(), commentCount);
 }
 function badgePostsWithNewComments() {
 	if (getQueryVariable("show") == "conversations") return;
 
-	document.querySelectorAll("h1.listing a[href^='/posts']").forEach(postLink => {
+	queryAll("h1.listing a[href^='/posts']").forEach(postLink => {
 		let postHash = /posts\/(.+?)\//.exec(postLink.href)[1];
 
 		let savedCommentCount = localStorage.getItem("comment-count_" + postHash);
