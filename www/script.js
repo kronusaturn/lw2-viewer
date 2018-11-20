@@ -176,7 +176,7 @@ function toggleMarkdownHintsBox() {
 	let markdownHintsBox = query("#markdown-hints");
 	markdownHintsBox.style.display = (getComputedStyle(markdownHintsBox).display == "none") ? "block" : "none";
 }
-function removeMarkdownHintsBox() {
+function hideMarkdownHintsBox() {
 	let markdownHintsBox = query("#markdown-hints");
 	if (getComputedStyle(markdownHintsBox).display != "none") markdownHintsBox.style.display = "none";
 }
@@ -185,8 +185,16 @@ Element.prototype.addTextareaFeatures = function() {
 	let textarea = this;
 
 	textarea.addEventListener("focus", (event) => { event.target.closest("form").scrollIntoViewIfNeeded(); });
-	textarea.addEventListener("input", OnInputExpandTextarea, false);
-	textarea.addEventListener("input", OnInputRemoveMarkdownHints, false);
+	textarea.addEventListener("input", GW.textareaInputReceived = (event) => {
+		if (window.innerWidth > 520) {
+			// Expand textarea if needed.
+			expandTextarea(textarea);
+		} else {
+			// Remove markdown hints.
+			hideMarkdownHintsBox();
+			query(".guiedit-mobile-help-button").removeClass("active");
+		}
+	}, false);
 	textarea.addEventListener("keyup", (event) => { event.stopPropagation(); });
 
 	textarea.insertAdjacentHTML("beforebegin", "<div class='guiedit-buttons-container'></div>");
@@ -233,7 +241,7 @@ Element.prototype.addTextareaFeatures = function() {
 				query(".posting-controls:focus-within textarea").focus();
 			} else if (button.hasClass("guiedit-mobile-exit-button")) {
 				event.target.blur();
-				removeMarkdownHintsBox();
+				hideMarkdownHintsBox();
 				textareaContainer.query(".guiedit-mobile-help-button").removeClass("active");
 			}		
 		});
@@ -335,7 +343,7 @@ function showCommentEditForm(event) {
 	commentBody.setAttribute("style", "display: none;");
 	commentControls.injectReplyForm(commentBody.dataset.markdownSource);
 	commentControls.query("form").addClass("edit-existing-comment");
-	ExpandTextarea(commentControls.query("textarea"));
+	expandTextarea(commentControls.query("textarea"));
 }
 
 function showReplyForm(event) {
@@ -359,28 +367,19 @@ function hideReplyForm(event) {
 	event.target.parentElement.constructCommentControls();
 }
 
-function OnInputExpandTextarea() {
-	let totalBorderHeight = (this.closest("#conversation-form") == null) ? 30 : 2;
-	if ((this.offsetHeight - totalBorderHeight) < this.scrollHeight) {
-		ExpandTextarea(this);
-	}
-}
-function ExpandTextarea(textarea) {
+function expandTextarea(textarea) {
 	if (window.innerWidth <= 520) return;
+
+	let totalBorderHeight = 30;
+	if (textarea.clientHeight == textarea.scrollHeight + totalBorderHeight) return;
+
 	requestAnimationFrame(() => {
 		textarea.style.height = 'auto';
-		let totalBorderHeight = (textarea.closest("#conversation-form") == null) ? 30 : 2;
 		textarea.style.height = textarea.scrollHeight + totalBorderHeight + 'px';
 		if (textarea.clientHeight < window.innerHeight) {
 			textarea.parentElement.parentElement.scrollIntoViewIfNeeded();
 		}
 	});
-}
-
-function OnInputRemoveMarkdownHints() {
-	if (window.innerWidth > 520) return;
-	removeMarkdownHintsBox();
-	query(".guiedit-mobile-help-button").removeClass("active");
 }
 
 /**********/
@@ -2714,7 +2713,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	// needed if a post was last edited on LW).
 	queryAll(".with-markdown-editor textarea").forEach(textarea => {
 		textarea.addTextareaFeatures();
-		ExpandTextarea(textarea);
+		expandTextarea(textarea);
 		textarea.value = MarkdownFromHTML(textarea.value);
 	});
 	// Focus the textarea.
