@@ -113,39 +113,6 @@ Element.prototype.getCommentId = function() {
 	}
 }
 
-function queryAll(selector, context) {
-    context = context || document;
-    // Redirect simple selectors to the more performant function
-    if (/^(#?[\w-]+|\.[\w-.]+)$/.test(selector)) {
-        switch (selector.charAt(0)) {
-            case '#':
-                // Handle ID-based selectors
-                return [document.getElementById(selector.substr(1))];
-            case '.':
-                // Handle class-based selectors
-                // Query by multiple classes by converting the selector 
-                // string into single spaced class names
-                var classes = selector.substr(1).replace(/\./g, ' ');
-                return [].slice.call(context.getElementsByClassName(classes));
-            default:
-                // Handle tag-based selectors
-                return [].slice.call(context.getElementsByTagName(selector));
-        }
-    }
-    // Default to `querySelectorAll`
-    return [].slice.call(context.querySelectorAll(selector));
-}
-function query(selector, context) {
-	let all = queryAll(selector, context);
-	return (all.length > 0) ? all[0] : null;
-}
-Object.prototype.queryAll = function (selector) {
-	return queryAll(selector, this);
-}
-Object.prototype.query = function (selector) {
-	return query(selector, this);
-}
-
 /*******************/
 /* INBOX INDICATOR */
 /*******************/

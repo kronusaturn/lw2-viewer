@@ -37,6 +37,43 @@ Element.prototype.toggleClass = function(className) {
 		this.addClass(className);
 }
 
+/********************/
+/* QUERYING THE DOM */
+/********************/
+
+function queryAll(selector, context) {
+    context = context || document;
+    // Redirect simple selectors to the more performant function
+    if (/^(#?[\w-]+|\.[\w-.]+)$/.test(selector)) {
+        switch (selector.charAt(0)) {
+            case '#':
+                // Handle ID-based selectors
+                return [document.getElementById(selector.substr(1))];
+            case '.':
+                // Handle class-based selectors
+                // Query by multiple classes by converting the selector 
+                // string into single spaced class names
+                var classes = selector.substr(1).replace(/\./g, ' ');
+                return [].slice.call(context.getElementsByClassName(classes));
+            default:
+                // Handle tag-based selectors
+                return [].slice.call(context.getElementsByTagName(selector));
+        }
+    }
+    // Default to `querySelectorAll`
+    return [].slice.call(context.querySelectorAll(selector));
+}
+function query(selector, context) {
+	let all = queryAll(selector, context);
+	return (all.length > 0) ? all[0] : null;
+}
+Object.prototype.queryAll = function (selector) {
+	return queryAll(selector, this);
+}
+Object.prototype.query = function (selector) {
+	return query(selector, this);
+}
+
 /***********************************/
 /* CONTENT COLUMN WIDTH ADJUSTMENT */
 /***********************************/
@@ -49,7 +86,7 @@ GW.widthOptions = [
 
 function setContentWidth(widthOption) {
 	let currentWidth = localStorage.getItem("selected-width") || 'normal';
-	let head = document.querySelector('head');
+	let head = query('head');
 	head.removeClasses(GW.widthOptions.map(wo => 'content-width-' + wo[0]));
 	head.addClass('content-width-' + (widthOption || 'normal'));
 }
@@ -81,9 +118,9 @@ function applyFilters(filters) {
 	}
 	
 	// Update the style tag (if it’s already been loaded).
-	(document.querySelector("#theme-tweak")||{}).innerHTML = fullStyleString;
+	(query("#theme-tweak")||{}).innerHTML = fullStyleString;
 }
-document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='theme-tweak'></style>");	
+query("head").insertAdjacentHTML("beforeend", "<style id='theme-tweak'></style>");	
 GW.currentFilters = JSON.parse(localStorage.getItem("theme-tweaks") || "{ }");
 applyFilters(GW.currentFilters);
 
@@ -91,7 +128,7 @@ applyFilters(GW.currentFilters);
 /* TEXT SIZE ADJUSTMENT */
 /************************/
 
-document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='text-zoom'></style>");
+query("head").insertAdjacentHTML("beforeend", "<style id='text-zoom'></style>");
 function setTextZoom(zoomFactor) {
 	if (!zoomFactor) return;
 
@@ -100,21 +137,21 @@ function setTextZoom(zoomFactor) {
 	
 	if (zoomFactor <= minZoomFactor) {
 		zoomFactor = minZoomFactor;
-		document.querySelectorAll(".text-size-adjust-button.decrease").forEach(function (button) {
+		queryAll(".text-size-adjust-button.decrease").forEach(function (button) {
 			button.disabled = true;
 		});
 	} else if (zoomFactor >= maxZoomFactor) {
 		zoomFactor = maxZoomFactor;
-		document.querySelectorAll(".text-size-adjust-button.increase").forEach(function (button) {
+		queryAll(".text-size-adjust-button.increase").forEach(function (button) {
 			button.disabled = true;
 		});
 	} else {
-		document.querySelectorAll(".text-size-adjust-button").forEach(function (button) {
+		queryAll(".text-size-adjust-button").forEach(function (button) {
 			button.disabled = false;
 		});
 	}
 
-	let textZoomStyle = document.querySelector("#text-zoom");
+	let textZoomStyle = query("#text-zoom");
 	textZoomStyle.innerHTML = 
 		`.post-body, .comment-body {
 			zoom: ${zoomFactor};
@@ -145,11 +182,11 @@ GW.themeOptions = [
 
 // While everything's being loaded, hide the authors and karma values.
 if (localStorage.getItem("antikibitzer") == "true") {
-	document.querySelector("head").insertAdjacentHTML("beforeend", "<style id='antikibitzer-temp'>" +
+	query("head").insertAdjacentHTML("beforeend", "<style id='antikibitzer-temp'>" +
 	`.author, .inline-author, .karma-value, .individual-thread-page > h1 { visibility: hidden; }` + 
 	"</style>");
 
 	if(document.location.pathname.match(new RegExp("/posts/.*/comment/"))) {
-		document.querySelector("head").insertAdjacentHTML("beforeend", "<title class='fake-title'></title>");
+		query("head").insertAdjacentHTML("beforeend", "<title class='fake-title'></title>");
 	}
 }
