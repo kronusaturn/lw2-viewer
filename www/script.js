@@ -1111,7 +1111,11 @@ function injectThemeTweaker() {
 		</div>
 	</div>
 	` + "</div>");
-	themeTweakerUI.addActivateEvent(GW.themeTweakerUIOverlayClicked = (event) => {
+
+	GW.themeTweaker = { };
+
+	// Clicking the background overlay closes the theme tweaker.
+	themeTweakerUI.addActivateEvent(GW.themeTweaker.UIOverlayClicked = (event) => {
 		if (event.type == 'mousedown') {
 			themeTweakerUI.style.opacity = "0.01";
 		} else {
@@ -1130,7 +1134,7 @@ function injectThemeTweaker() {
 		// their value is changed. (Range inputs, in particular, receive this 
 		// event when the user lets go of the handle.) This means we should
 		// update the filters for the entire page, to match the new setting.
-		field.addEventListener("change", GW.themeTweakerFieldValueChanged = (event) => {
+		field.addEventListener("change", GW.themeTweaker.fieldValueChanged = (event) => {
 			if (event.target.id == 'theme-tweak-control-invert') {
 				GW.currentFilters['invert'] = event.target.checked ? '100%' : '0%';
 			} else if (event.target.type == 'range') {
@@ -1151,7 +1155,7 @@ function injectThemeTweaker() {
 		// for the actual page while this is happening, but we do want to change
 		// the filters for the *sample text*, so the user can see what effects
 		// his changes are having, live, without having to let go of the handle.
-		if (field.type == "range") field.addEventListener("input", GW.themeTweakerFieldInputReceived = (event) => {
+		if (field.type == "range") field.addEventListener("input", GW.themeTweaker.fieldInputReceived = (event) => {
 			var sampleTextFilters = GW.currentFilters;
 
 			let sliderName = /^theme-tweak-control-(.+)$/.exec(event.target.id)[1];
@@ -1162,7 +1166,7 @@ function injectThemeTweaker() {
 		});
 	});
 
-	themeTweakerUI.query(".minimize-button").addActivateEvent(GW.themeTweakerMinimizeButtonClicked = (event) => {
+	themeTweakerUI.query(".minimize-button").addActivateEvent(GW.themeTweaker.minimizeButtonClicked = (event) => {
 		let themeTweakerStyle = query("#theme-tweaker-style");
 
 		if (event.target.hasClass("minimize")) {
@@ -1207,11 +1211,11 @@ function injectThemeTweaker() {
 			event.target.addClass("minimize");
 		}
 	});
-	themeTweakerUI.query(".help-button").addActivateEvent(GW.themeTweakerHelpButtonClicked = (event) => {
+	themeTweakerUI.query(".help-button").addActivateEvent(GW.themeTweaker.helpButtonClicked = (event) => {
 		themeTweakerUI.query("#theme-tweak-control-clippy").checked = JSON.parse(localStorage.getItem("theme-tweaker-settings") || '{ "showClippy": true }')["showClippy"];
 		toggleThemeTweakerHelpWindow();
 	});
-	themeTweakerUI.query(".reset-defaults-button").addActivateEvent(GW.themeTweakerResetDefaultsButtonClicked = (event) => {
+	themeTweakerUI.query(".reset-defaults-button").addActivateEvent(GW.themeTweaker.resetDefaultsButtonClicked = (event) => {
 		themeTweakerUI.query("#theme-tweak-control-invert").checked = false;
 		[ "saturate", "brightness", "contrast", "hue-rotate" ].forEach(sliderName => {
 			let slider = themeTweakerUI.query("#theme-tweak-control-" + sliderName);
@@ -1226,19 +1230,19 @@ function injectThemeTweaker() {
 
 		setSelectedTheme("default");
 	});
-	themeTweakerUI.query(".main-theme-tweaker-window .cancel-button").addActivateEvent(GW.themeTweakerCancelButtonClicked = (event) => {
+	themeTweakerUI.query(".main-theme-tweaker-window .cancel-button").addActivateEvent(GW.themeTweaker.cancelButtonClicked = (event) => {
 		toggleThemeTweakerUI();
 		themeTweakReset();
 	});
-	themeTweakerUI.query(".main-theme-tweaker-window .ok-button").addActivateEvent(GW.themeTweakerOKButtonClicked = (event) => {
+	themeTweakerUI.query(".main-theme-tweaker-window .ok-button").addActivateEvent(GW.themeTweaker.OKButtonClicked = (event) => {
 		toggleThemeTweakerUI();
 		themeTweakSave();
 	});
-	themeTweakerUI.query(".help-window .cancel-button").addActivateEvent(GW.themeTweakerHelpWindowCancelButtonClicked = (event) => {
+	themeTweakerUI.query(".help-window .cancel-button").addActivateEvent(GW.themeTweaker.helpWindowCancelButtonClicked = (event) => {
 		toggleThemeTweakerHelpWindow();
 		themeTweakerResetSettings();
 	});
-	themeTweakerUI.query(".help-window .ok-button").addActivateEvent(GW.themeTweakerHelpWindowOKButtonClicked = (event) => {
+	themeTweakerUI.query(".help-window .ok-button").addActivateEvent(GW.themeTweaker.helpWindowOKButtonClicked = (event) => {
 		toggleThemeTweakerHelpWindow();
 		themeTweakerSaveSettings();
 	});
@@ -1253,7 +1257,7 @@ function injectThemeTweaker() {
 		});
 	});
 
-	themeTweakerUI.query(".clippy-close-button").addActivateEvent(GW.themeTweakerClippyCloseButtonClicked = (event) => {
+	themeTweakerUI.query(".clippy-close-button").addActivateEvent(GW.themeTweaker.clippyCloseButtonClicked = (event) => {
 		themeTweakerUI.query(".clippy-container").style.display = "none";
 		localStorage.setItem("theme-tweaker-settings", JSON.stringify({ 'showClippy': false }));
 		themeTweakerUI.query("#theme-tweak-control-clippy").checked = false;
@@ -1267,11 +1271,11 @@ function injectThemeTweaker() {
 	});
 
 	themeTweakerUI.queryAll("#theme-tweak-section-text-size-adjust button").forEach(button => {
-		button.addActivateEvent(GW.themeTweakerTextSizeAdjustButtonClicked);
+		button.addActivateEvent(GW.themeTweaker.textSizeAdjustButtonClicked);
 	});
 
 	let themeTweakerToggle = addUIElement(`<div id='theme-tweaker-toggle'><button type='button' tabindex='-1' title="Customize appearance [;]" accesskey=';'>&#xf1de;</button></div>`);
-	themeTweakerToggle.query("button").addActivateEvent(GW.themeTweakerToggleButtonClicked = (event) => {
+	themeTweakerToggle.query("button").addActivateEvent(GW.themeTweaker.toggleButtonClicked = (event) => {
 		themeTweakerUI.query(".current-theme span").innerText = (readCookie("theme") || "default");
 
 		themeTweakerUI.query("#theme-tweak-control-invert").checked = (GW.currentFilters['invert'] == "100%");
@@ -1415,7 +1419,10 @@ function injectNewCommentNavUI(newCommentsCount) {
 		updateNewCommentNavUI(newCommentsCount);
 	}, false);
 
-	newCommentUIContainer.query(".new-comments-count").addActivateEvent(toggleHNSDatePickerVisibility);
+	newCommentUIContainer.query(".new-comments-count").addActivateEvent(GW.newCommentsCountClicked = (event) => {
+		let hnsDatePickerVisible = (getComputedStyle(hnsDatePicker).display != "none");
+		hnsDatePicker.style.display = hnsDatePickerVisible ? "none" : "block";
+	});
 }
 
 // time_fromHuman() function copied from https://bakkot.github.io/SlateStarComments/ssc.js
@@ -1449,12 +1456,6 @@ function updateNewCommentNavUI(newCommentsCount, hns = -1) {
 	}
 }
 
-function toggleHNSDatePickerVisibility() {
-	let hnsDatePicker = query("#hns-date-picker");
-	let hnsDatePickerVisible = (getComputedStyle(hnsDatePicker).display != "none");
-	hnsDatePicker.style.display = hnsDatePickerVisible ? "none" : "block";
-}
-
 /***************************/
 /* TEXT SIZE ADJUSTMENT UI */
 /***************************/
@@ -1467,7 +1468,7 @@ function injectTextSizeAdjustmentUIReal() {
 	+ "</div>");
 
 	textSizeAdjustmentUIContainer.queryAll("button").forEach(button => {
-		button.addActivateEvent(GW.themeTweakerTextSizeAdjustButtonClicked = (event) => {
+		button.addActivateEvent(GW.themeTweaker.textSizeAdjustButtonClicked = (event) => {
 			var zoomFactor = parseFloat(GW.currentTextZoom) || 1.0;
 			if (event.target.hasClass("decrease")) {
 				zoomFactor = (zoomFactor - 0.05).toFixed(2);
@@ -2173,7 +2174,7 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 	imageFocusOverlay.dropShadowFilterForImages = " drop-shadow(10px 10px 10px #000) drop-shadow(0 0 10px #444)";
 
 	imageFocusOverlay.queryAll(".slideshow-button").forEach(button => {
-		button.addActivateEvent(GW.imageFocusSlideshowButtonClick = (event) => {
+		button.addActivateEvent(GW.imageFocusSlideshowButtonClicked = (event) => {
 			focusNextImage(event.target.hasClass("next"));
 			event.target.blur();
 		});
@@ -2929,7 +2930,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	setEditPostPageSubmitButtonText();
 
 	// Add event listeners for Escape and Enter, for the theme tweaker.
-	document.addEventListener("keyup", GW.themeTweakerKeyPressed = (event) => {
+	document.addEventListener("keyup", GW.themeTweaker.keyPressed = (event) => {
 		if (event.keyCode == 27) {
 		// Escape key.
 			if (query("#theme-tweaker-ui .help-window").style.display != "none") {
