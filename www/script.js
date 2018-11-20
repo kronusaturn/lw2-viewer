@@ -826,20 +826,30 @@ function setTheme(newThemeName) {
 	newStyle.setAttribute('href', '/style' + styleSheetNameSuffix + currentStyleSheetNameComponents[1]);
 
 	let oldStyle = query("head link[href*='.css']");
-	newStyle.addEventListener('load', function() { removeElement(oldStyle); });
-	newStyle.addEventListener('load', function() { postSetThemeHousekeeping(oldThemeName, newThemeName); });
+	newStyle.addEventListener('load', () => { removeElement(oldStyle); });
+	newStyle.addEventListener('load', () => { postSetThemeHousekeeping(oldThemeName, newThemeName); });
 
 	if (GW.adjustmentTransitions) {
 		pageFadeTransition(false);
-		setTimeout(function () { query('head').insertBefore(newStyle, oldStyle.nextSibling); }, 500);
+		setTimeout(() => {
+			query('head').insertBefore(newStyle, oldStyle.nextSibling);
+		}, 500);
 	} else {
 		query('head').insertBefore(newStyle, oldStyle.nextSibling);
 	}
 }
 function postSetThemeHousekeeping(oldThemeName = "", newThemeName = (readCookie('theme') || 'default')) {
-	recomputeUIElementsContainerHeight();
 	adjustUIForWindowSize();
-	window.addEventListener('resize', adjustUIForWindowSize);
+	recomputeUIElementsContainerHeight(true);
+	window.addEventListener('resize', GW.windowResized = (event) => {
+		requestAnimationFrame(() => {
+			adjustUIForWindowSize();
+			recomputeUIElementsContainerHeight();
+
+			GW.needsHashRealignment = true;
+			realignHashIfNeeded();
+		});
+	});
 
 	let themeLoadCallback = window['themeLoadCallback_' + newThemeName];
 	if (themeLoadCallback != null) themeLoadCallback(oldThemeName);
@@ -1111,11 +1121,45 @@ function injectThemeTweaker() {
 		}
 	}, true);
 
-	(query("#theme-tweaker-ui > div")||{}).addActivateEvent(clickInterceptor, true);
+	// Intercept clicks, so they don't "fall through" the background overlay.
+	(query("#theme-tweaker-ui > div")||{}).addActivateEvent((event) => { event.stopPropagation(); }, true);
 
+	let sampleTextContainer = query("#theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container");
 	themeTweakerUI.queryAll("input").forEach(field => {
-		field.addEventListener("change", themeTweakerFieldValueChanged);
-		if (field.type == "range") field.addEventListener("input", themeTweakerFieldInputReceived);
+		// All input types in the theme tweaker receive a 'change' event when
+		// their value is changed. (Range inputs, in particular, receive this 
+		// event when the user lets go of the handle.) This means we should
+		// update the filters for the entire page, to match the new setting.
+		field.addEventListener("change", GW.themeTweakerFieldValueChanged = (event) => {
+			if (event.target.id == 'theme-tweak-control-invert') {
+				GW.currentFilters['invert'] = event.target.checked ? '100%' : '0%';
+			} else if (event.target.type == 'range') {
+				let sliderName = /^theme-tweak-control-(.+)$/.exec(event.target.id)[1];
+				query("#theme-tweak-label-" + sliderName).innerText = event.target.value + event.target.dataset["labelSuffix"];
+				GW.currentFilters[sliderName] = event.target.value + event.target.dataset["valueSuffix"];
+			} else if (event.target.id == 'theme-tweak-control-clippy') {
+				query(".clippy-container").style.display = event.target.checked ? "block" : "none";
+			}
+			// Clear the sample text filters.
+			sampleTextContainer.style.filter = "";
+			// Apply the new filters globally.
+			applyFilters(GW.currentFilters);
+		});
+
+		// Range inputs receive an 'input' event while being scrubbed, updating
+		// "live" as the handle is moved. We don't want to change the filters 
+		// for the actual page while this is happening, but we do want to change
+		// the filters for the *sample text*, so the user can see what effects
+		// his changes are having, live, without having to let go of the handle.
+		if (field.type == "range") field.addEventListener("input", GW.themeTweakerFieldInputReceived = (event) => {
+			var sampleTextFilters = GW.currentFilters;
+
+			let sliderName = /^theme-tweak-control-(.+)$/.exec(event.target.id)[1];
+			query("#theme-tweak-label-" + sliderName).innerText = event.target.value + event.target.dataset["labelSuffix"];
+			sampleTextFilters[sliderName] = event.target.value + event.target.dataset["valueSuffix"];
+
+			sampleTextContainer.style.filter = filterStringFromFilters(sampleTextFilters);
+		});
 	});
 
 	themeTweakerUI.query(".minimize-button").addActivateEvent(GW.themeTweakerMinimizeButtonClicked = (event) => {
@@ -1296,34 +1340,7 @@ function themeTweakSave() {
 	localStorage.setItem("theme-tweaks", JSON.stringify(GW.currentFilters));
 	localStorage.setItem("text-zoom", GW.currentTextZoom);
 }
-function clickInterceptor(event) {
-	event.stopPropagation();
-}
 
-function themeTweakerFieldInputReceived(event) {
-	var sampleTextFilters = GW.currentFilters;
-
-	let sliderName = /^theme-tweak-control-(.+)$/.exec(event.target.id)[1];
-	query("#theme-tweak-label-" + sliderName).innerText = event.target.value + event.target.dataset["labelSuffix"];
-	sampleTextFilters[sliderName] = event.target.value + event.target.dataset["valueSuffix"];
-
-	query("#theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container").style.filter = filterStringFromFilters(sampleTextFilters);
-}
-function themeTweakerFieldValueChanged(event) {
-	if (event.target.id == 'theme-tweak-control-invert') {
-		GW.currentFilters['invert'] = event.target.checked ? '100%' : '0%';
-	} else if (event.target.type == 'range') {
-		let sliderName = /^theme-tweak-control-(.+)$/.exec(event.target.id)[1];
-		query("#theme-tweak-label-" + sliderName).innerText = event.target.value + event.target.dataset["labelSuffix"];
-		GW.currentFilters[sliderName] = event.target.value + event.target.dataset["valueSuffix"];
-	} else if (event.target.id == 'theme-tweak-control-clippy') {
-		query(".clippy-container").style.display = event.target.checked ? "block" : "none";
-	}
-	// Clear the sample text filters.
-	query("#theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container").style.filter = "";
-	// Apply the new filters globally.
-	applyFilters(GW.currentFilters);
-}
 function themeTweakerResetSettings() {
 	query("#theme-tweak-control-clippy").checked = JSON.parse(localStorage.getItem("theme-tweaker-settings") || '{ "showClippy": true }')['showClippy'];
 	query(".clippy-container").style.display = query("#theme-tweak-control-clippy").checked ? "block" : "none";
@@ -1392,15 +1409,13 @@ function injectNewCommentNavUI(newCommentsCount) {
 	+ `<input type='text' class='hns-date'></input>`
 	+ "</div>");
 
-	hnsDatePicker.query("input").addEventListener("input", OnInputUpdateHNSDate, false);
+	hnsDatePicker.query("input").addEventListener("input", GW.hnsDatePickerValueChanged = (event) => {
+		let hns = time_fromHuman(hnsDatePicker.value);
+		let newCommentsCount = highlightCommentsSince(hns);
+		updateNewCommentNavUI(newCommentsCount);
+	}, false);
 
 	newCommentUIContainer.query(".new-comments-count").addActivateEvent(toggleHNSDatePickerVisibility);
-}
-
-function OnInputUpdateHNSDate() {
-	let hns = time_fromHuman(this.value);
-	let newCommentsCount = highlightCommentsSince(hns);
-	updateNewCommentNavUI(newCommentsCount);
 }
 
 // time_fromHuman() function copied from https://bakkot.github.io/SlateStarComments/ssc.js
@@ -2091,13 +2106,13 @@ function addCommentParentPopups() {
 
 	queryAll(".comment-meta a.comment-parent-link, .comment-meta a.comment-child-link").forEach(commentParentLink => {
 		commentParentLink.addEventListener("mouseover", GW.commentParentLinkMouseOver = (event) => {
-			let parent_id = "#comment-" + /(?:#comment-)?(.+)/.exec(commentParentLink.getAttribute("href"))[1];
+			let parentID = "#comment-" + /(?:#comment-)?(.+)/.exec(commentParentLink.getAttribute("href"))[1];
 			var parent;
-			if (!(parent = (query(parent_id)||{}).firstChild)) return;
-			let parentCI = parent.parentNode;
-			var highlight_cn;
+			if (!(parent = (query(parentID)||{}).firstChild)) return;
+			let parentCommentItem = parent.parentNode;
+			var highlightClassName;
 			if (parent.getBoundingClientRect().bottom < 10 || parent.getBoundingClientRect().top > window.innerHeight + 10) {
-				highlight_cn = "comment-item-highlight-faint";
+				highlightClassName = "comment-item-highlight-faint";
 				parent = parent.cloneNode(true);
 				parent.addClass("comment-popup")
 				parent.addClass("comment-item-highlight");
@@ -2106,11 +2121,11 @@ function addCommentParentPopups() {
 				}, {once: true});
 				commentParentLink.closest(".comment").appendChild(parent);
 			} else {
-				highlight_cn = "comment-item-highlight";
+				highlightClassName = "comment-item-highlight";
 			}
-			let className = parentCI.className;
-			parentCI.className = className + " " + highlight_cn;
-			commentParentLink.addEventListener("mouseout", (event) => { parentCI.className = className; }, {once: true});
+			let className = parentCommentItem.className;
+			parentCommentItem.className = className + " " + highlightClassName;
+			commentParentLink.addEventListener("mouseout", (event) => { parentCommentItem.className = className; }, {once: true});
 		});
 	});
 }
@@ -3119,9 +3134,12 @@ function generateImagesOverlay() {
 }
 
 function adjustUIForWindowSize() {
+	var bottomBarOffset;
+
 	// Adjust bottom bar state.
 	let bottomBar = query("#bottom-bar");
-	if (query("#content").clientHeight > window.innerHeight + 30) {
+	bottomBarOffset = bottomBar.hasClass("decorative") ? 16 : 30;
+	if (query("#content").clientHeight > window.innerHeight + bottomBarOffset) {
 		bottomBar.removeClass("decorative");
 
 		bottomBar.query("#nav-item-top").style.display = "";
@@ -3133,8 +3151,9 @@ function adjustUIForWindowSize() {
 	}
 
 	// Show quick-nav UI up/down buttons if content is taller than window.
+	bottomBarOffset = bottomBar.hasClass("decorative") ? 16 : 30;
 	queryAll("#quick-nav-ui a[href='#top'], #quick-nav-ui a[href='#bottom-bar']").forEach(button => {
-		button.style.visibility = (query("#content").clientHeight > window.innerHeight + 30) ? "unset" : "hidden";
+		button.style.visibility = (query("#content").clientHeight > window.innerHeight + bottomBarOffset) ? "unset" : "hidden";
 	});
 
 	// Move anti-kibitzer toggle if content is very short.
@@ -3148,9 +3167,13 @@ function adjustUIForWindowSize() {
 	});
 }
 
-function recomputeUIElementsContainerHeight() {
-	if (!GW.isMobile && query("#content").clientHeight <= window.innerHeight + 30) {
-		query("#ui-elements-container").style.height = query("#content").clientHeight + "px";
+function recomputeUIElementsContainerHeight(force = false) {
+	if (!GW.isMobile &&
+		(force || query("#ui-elements-container").style.height != "")) {
+		let bottomBarOffset = query("#bottom-bar").hasClass("decorative") ? 16 : 30;
+		query("#ui-elements-container").style.height = (query("#content").clientHeight <= window.innerHeight + bottomBarOffset) ? 
+														query("#content").clientHeight + "px" :
+														"100vh";
 	}
 }
 
