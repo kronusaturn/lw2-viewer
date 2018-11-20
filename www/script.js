@@ -2189,7 +2189,7 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 	hideImageFocusUI();
 }
 
-function focusImage(image) {
+function focusImage(imageToFocus) {
 	// Clear 'last-focused' class of last focused image.
 	let lastFocusedImage = query("img.last-focused");
 	if (lastFocusedImage) {
@@ -2198,13 +2198,13 @@ function focusImage(image) {
 	}
 
 	// Create the focused version of the image.
-	image.addClass("focused");
+	imageToFocus.addClass("focused");
 	let imageFocusOverlay = query("#image-focus-overlay");
-	let clonedImage = image.cloneNode(true);
+	let clonedImage = imageToFocus.cloneNode(true);
 	clonedImage.style = "";
 	clonedImage.removeAttribute("width");
 	clonedImage.removeAttribute("height");
-	clonedImage.style.filter = image.style.filter + imageFocusOverlay.dropShadowFilterForImages;
+	clonedImage.style.filter = imageToFocus.style.filter + imageFocusOverlay.dropShadowFilterForImages;
 	imageFocusOverlay.appendChild(clonedImage);
 	imageFocusOverlay.addClass("engaged");
 
@@ -2220,10 +2220,10 @@ function focusImage(image) {
 	window.addEventListener("wheel", GW.imageFocusScroll = (event) => {
 		event.preventDefault();
 
-		let image = query("#image-focus-overlay img");
+		let image = clonedImage;
 
 		// Remove the filter.
-		image.savedFilter = image.style.filter;
+		clonedImage.savedFilter = image.style.filter;
 		image.style.filter = 'none';
 
 		// Locate point under cursor.
@@ -2397,7 +2397,7 @@ function focusImage(image) {
 			event.preventDefault();
 	});
 
-	if (image.closest("#images-overlay")) {
+	if (imageToFocus.closest("#images-overlay")) {
 		// Set state of next/previous buttons.
 		let images = queryAll("#images-overlay img");
 		var indexOfFocusedImage = getIndexOfFocusedImage();
@@ -2930,22 +2930,24 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	setEditPostPageSubmitButtonText();
 
 	// Add event listeners for Escape and Enter, for the theme tweaker.
+	let themeTweakerHelpWindow = query("#theme-tweaker-ui .help-window");
+	let themeTweakerUI = query("#theme-tweaker-ui");
 	document.addEventListener("keyup", GW.themeTweaker.keyPressed = (event) => {
 		if (event.keyCode == 27) {
 		// Escape key.
-			if (query("#theme-tweaker-ui .help-window").style.display != "none") {
+			if (themeTweakerHelpWindow.style.display != "none") {
 				toggleThemeTweakerHelpWindow();
 				themeTweakerResetSettings();
-			} else if (query("#theme-tweaker-ui").style.display != "none") {
+			} else if (themeTweakerUI.style.display != "none") {
 				toggleThemeTweakerUI();
 				themeTweakReset();
 			}
 		} else if (event.keyCode == 13) {
 		// Enter key.
-			if (query("#theme-tweaker-ui .help-window").style.display != "none") {
+			if (themeTweakerHelpWindow.style.display != "none") {
 				toggleThemeTweakerHelpWindow();
 				themeTweakerSaveSettings();
-			} else if (query("#theme-tweaker-ui").style.display != "none") {
+			} else if (themeTweakerUI.style.display != "none") {
 				toggleThemeTweakerUI();
 				themeTweakSave();
 			}
