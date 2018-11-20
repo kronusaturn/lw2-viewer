@@ -246,7 +246,12 @@ Element.prototype.addTextareaFeatures = function() {
 			}		
 		});
 	});
-	
+
+	// On smartphone (narrow mobile) screens, when a textarea is focused (and
+	// automatically fullscreened), remove all the filters from the page, and 
+	// then apply them *just* to the fixed editor UI elements. This is in order
+	// to get around the "children of elements with a filter applied cannot be
+	// fixed" issue".
 	if (GW.isMobile && window.innerWidth <= 520) {
 		let fixedEditorElements = textareaContainer.queryAll("textarea, .guiedit-buttons-container, .guiedit-mobile-auxiliary-button, #markdown-hints");
 		textarea.addEventListener("focus", (event) => {
