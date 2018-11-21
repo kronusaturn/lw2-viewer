@@ -392,6 +392,7 @@
                                                do (progn (add-class parent "mathjax-block-container")
                                                          (return))))
                                      (cond
+                                       ((not (plump:parent node)) nil)
                                        ((tag-is node "a")
                                         (let ((href (plump:attribute node "href")))
                                           (when href
@@ -411,7 +412,25 @@
                                         (if (string-is-whitespace (plump:text node))
                                             (if (plump:get-elements-by-tag-name node "img")
                                                 (add-class node "imgonly")
-                                                (plump:remove-child node))))
+                                                (plump:remove-child node))
+                                            (if-let ((parent (plump:parent node))
+                                                     (next-sibling (plump:next-sibling node)))
+                                                    (labels
+                                                      ((spoilerp (n)
+                                                         (if-let (a (and (plump:element-p n) (plump:attribute n "class")))
+                                                                 (ppcre:scan "(?:^| )spoiler(?: |$)" a))))
+                                                      (when (and (spoilerp node)
+                                                              (not (spoilerp parent))
+                                                              (spoilerp next-sibling)
+                                                              (tag-is next-sibling "p"))
+                                                        (setf (plump:attribute (wrap-children node "p") "class") "spoiler"
+                                                              (plump:tag-name node) "div")
+                                                        (loop for e = next-sibling then ns
+                                                              while (and (plump:element-p e) (tag-is e "p") (spoilerp e))
+                                                              for ns = (plump:next-sibling e)
+                                                              do (progn
+                                                                   (plump:remove-child e)
+                                                                   (plump:append-child node e))))))))
                                        ((tag-is node "u")
                                         (when (only-child-is node "a")
                                           (plump:replace-child node (plump:first-child node)))) 
