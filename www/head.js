@@ -107,7 +107,7 @@ Array.prototype.contains = function (element) {
 	return (this.indexOf(element) !== -1);
 }
 Array.prototype.clone = function() {
-	return this.slice(0);
+	return JSON.parse(JSON.stringify(this));
 };
 
 GW.themeTweaker = { };

@@ -985,7 +985,7 @@ GW.themeUnloadCallback_less = (toTheme = "") => {
 	(query(".top-post-meta .date")||{}).innerHTML = (query(".bottom-post-meta .date")||{}).innerHTML;
 
 	// Reset filtered elements selector to default.
-	GW.themeTweaker.filtersExclusionPaths.themeLess = [ ];
+	delete GW.themeTweaker.filtersExclusionPaths.themeLess;
 	applyFilters(GW.currentFilters);
 }
 
