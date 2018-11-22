@@ -3247,15 +3247,13 @@ li {
     color: #000;
     background-color: currentColor;
     transition: none;
-    border: 1px solid currentColor;
     text-shadow: none;
+	margin: 1em 0;
+    box-shadow: 0 0 0 1px currentColor inset;
+    overflow: auto;
 }
 .spoiler:not(:last-child) {
     margin-bottom: 0;
-}
-.spoiler + .spoiler {
-	margin-top: 0;
-	border-top-width: 0;
 }
 #content .spoiler * {
 	color: inherit;
@@ -3280,14 +3278,10 @@ li {
     background-color: transparent;
 }
 
-.spoiler {
-	margin: 1em 0;
-	overflow: visible;
-	position: relative;
-	overflow: auto;
-}
+/*= Fix for LessWrong being weird =*/
+
 .spoiler > p {
-    padding: 0 6px;
+    padding: 0 7px;
 }
 .spoiler > p:first-child {
 	margin-top: 0.25em;
@@ -3297,7 +3291,7 @@ li {
 	padding-bottom: 0.25em;
 }
 .spoiler > p:hover ~ p {
-	background-color: #000;
+	background-color: currentColor;
 }
 .spoiler > p + p {
 	margin-top: -1em;
