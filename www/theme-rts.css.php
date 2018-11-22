@@ -947,7 +947,7 @@ a.post-section.alignment-forum:hover::before {
 	left: -5px;
 }
 #content > .comment-thread .comment-meta a.date:focus + *,
-#content > .comment-thread .comment-meta a.permalink:focus + * {
+#content > .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
 	margin-left: -10px;
 }
 .comment-item {
