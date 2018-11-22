@@ -807,7 +807,7 @@ function setTheme(newThemeName) {
 }
 function postSetThemeHousekeeping(oldThemeName = "", newThemeName = (readCookie('theme') || 'default')) {
 	function adjustContentSizeAndPosition() {
-		reque(() => {
+		setTimeout(() => {
 			adjustUIForWindowSize();
 			recomputeUIElementsContainerHeight(true);
 
