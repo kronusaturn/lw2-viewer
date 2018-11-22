@@ -3255,7 +3255,6 @@ li {
     background-color: currentColor;
     transition: none;
     border: 1px solid currentColor;
-    padding: 0 6px;
     text-shadow: none;
 }
 .spoiler:not(:last-child) {
@@ -3288,17 +3287,33 @@ li {
     background-color: transparent;
 }
 
-/*= Fix for LessWrong being weird =*/
-
-div.spoiler {
+.spoiler {
 	margin: 1em 0;
 	overflow: visible;
+	position: relative;
+	overflow: auto;
 }
-div.spoiler > p:first-child {
+.spoiler > p {
+    padding: 0 6px;
+}
+.spoiler > p:first-child {
 	margin-top: 0.25em;
 }
-div.spoiler > p:last-child {
-	margin-bottom: 0.25em;
+.spoiler > p:last-child {
+	margin-bottom: 0;
+	padding-bottom: 0.25em;
+}
+.spoiler > p:hover ~ p {
+	background-color: #000;
+}
+.spoiler > p + p {
+	margin-top: -1em;
+}
+.spoiler > p:not(:first-child) {
+	padding-top: 0.5em;
+}
+.spoiler > p:not(:last-child) {
+	padding-bottom: 0.5em;
 }
 
 /*******************/
