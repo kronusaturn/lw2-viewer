@@ -1335,9 +1335,13 @@ function updateThemeTweakerSampleText() {
 	// Here we find out what is the actual background color that will be visible behind
 	// the body text of posts, and set the sample text’s background to that.
 	var backgroundElement = query("#content");
-	while (getComputedStyle(backgroundElement).backgroundColor == "" || 
-		   getComputedStyle(backgroundElement).backgroundColor == "rgba(0, 0, 0, 0)")
-		   backgroundElement = backgroundElement.parentElement;
+	let searchField = query("#nav-item-search input");
+	if (!(getComputedStyle(searchField).backgroundColor == "" || 
+		  getComputedStyle(searchField).backgroundColor == "rgba(0, 0, 0, 0)"))
+		backgroundElement = searchField;
+	else while (getComputedStyle(backgroundElement).backgroundColor == "" || 
+				getComputedStyle(backgroundElement).backgroundColor == "rgba(0, 0, 0, 0)")
+				backgroundElement = backgroundElement.parentElement;
 	sampleText.parentElement.style.backgroundColor = getComputedStyle(backgroundElement).backgroundColor;
 }
 

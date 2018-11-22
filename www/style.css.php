@@ -1649,6 +1649,17 @@ h1.listing + .post-meta .read-time {
 #comments {
 	max-width: 100%;
 	padding: 0 0 1px 0;
+	position: relative;
+}
+#comments::before {
+	content: "";
+	position: absolute;
+	display: block;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
 }
 ul.comment-thread {
 	list-style-type: none;

@@ -696,7 +696,7 @@ a.post-section:hover::before {
 /* COMMENTS */
 /*==========*/
 
-#comments {
+#comments::before {
 	border-top: 2px solid #000;
 }
 #content > .comment-thread .comment-meta a.date:focus,

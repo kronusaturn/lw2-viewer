@@ -902,9 +902,6 @@ a.post-section.alignment-forum:hover::before {
 /* COMMENTS */
 /*==========*/
 
-#comments {
-	border-top: 1px solid transparent;
-}
 #content > .comment-thread .comment-meta a.date:focus,
 #content > .comment-thread .comment-meta a.permalink:focus {
 	color: #ccc;

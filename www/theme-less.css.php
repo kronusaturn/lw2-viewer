@@ -1405,7 +1405,6 @@ a.post-section.alignment-forum:hover::before {
 /*==========*/
 
 #comments {
-	border-top: 1px solid transparent;
 	padding: 0 0 0 10px;
 }
 #content > .comment-thread .comment-meta a.date:focus,

@@ -944,12 +944,12 @@ a.post-section.alignment-forum:hover::before {
 /* COMMENTS */
 /*==========*/
 
-#comments {
+#comments::before {
 	border-top: 1px solid #000;
 	box-shadow: 0 3px 4px -4px #000 inset;
 }
 @-moz-document url-prefix() {
-	#comments {
+	#comments::before {
 		box-shadow: 0 3px 3px -4px #000 inset;
 	}
 }
