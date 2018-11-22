@@ -173,6 +173,8 @@ function applyFilters(filters) {
 		let filtersExclusionTree = exclusionTreeFromExclusionPaths(GW.themeTweaker.filtersExclusionPaths) || GW.themeTweaker.defaultFiltersExclusionTree;
 		console.log(selectorFromExclusionTree(filtersExclusionTree));
 		fullStyleString = `body::before { content: ""; } ${selectorFromExclusionTree(filtersExclusionTree)} { filter: ${filterStringFromFilters(filters)}; }`;
+	} else {
+		fullStyleString = `#content::before { z-index: -1; } `;
 	}
 	
 	// Update the style tag (if it’s already been loaded).
