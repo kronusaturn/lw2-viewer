@@ -806,16 +806,17 @@ function setTheme(newThemeName) {
 	}
 }
 function postSetThemeHousekeeping(oldThemeName = "", newThemeName = (readCookie('theme') || 'default')) {
-	adjustUIForWindowSize();
-	recomputeUIElementsContainerHeight(true);
-	window.addEventListener('resize', GW.windowResized = (event) => {
-		requestAnimationFrame(() => {
+	function adjustContentSizeAndPosition() {
+		reque(() => {
 			adjustUIForWindowSize();
-			recomputeUIElementsContainerHeight();
+			recomputeUIElementsContainerHeight(true);
 
-			GW.needsHashRealignment = true;
-			realignHashIfNeeded();
-		});
+			realignHash();
+		}, 0);
+	}
+	adjustContentSizeAndPosition();
+	window.addEventListener('resize', GW.windowResized = (event) => {
+		adjustContentSizeAndPosition();
 	});
 
 	let themeLoadCallback = GW['themeLoadCallback_' + newThemeName];
