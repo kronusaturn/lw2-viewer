@@ -60,10 +60,22 @@ body > * {
 #content {
 	margin: 0 auto;
 	padding: 0 30px;
-	overflow: auto;
+	position: relative;
+	overflow: visible;
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 	grid-auto-flow: dense;
+}
+#content::before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+	z-index: -1;
 }
 
 /*=---------=*/
@@ -1149,10 +1161,6 @@ h1.listing + .post-meta .read-time {
 /*****************/
 /* CONVERSATIONS */
 /*****************/
-
-#content.conversation-page {
-	overflow: visible;
-}
 
 /*=----------------------=*/
 /*= List of participants =*/
@@ -2511,9 +2519,6 @@ a.comment-parent-link:hover::after {
 	top: calc(100% + 2em);
 }
 
-#content.edit-post-page {
-	overflow: visible;
-}
 #edit-post-form button.guiedit div {
 	overflow: visible;
 }
@@ -3284,7 +3289,7 @@ div.spoiler > p:last-child {
 /* ALIGNMENT FORUM */
 /*******************/
 
-#content.alignment-forum-index-page::before {
+#content.alignment-forum-index-page::after {
 	content: "Alignment Forum";
 	grid-row: 3;
 	font-size: 1.5rem;
@@ -3511,7 +3516,7 @@ div.spoiler > p:last-child {
 	.new-comment::before {
 		display: none;
 	}
-	#content {
+	#content::before {
 		box-shadow: none;
 	}
 }

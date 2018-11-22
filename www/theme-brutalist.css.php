@@ -13,6 +13,9 @@ body {
 	font-family: <?php echo $UI_font; ?>;
 }
 #content {
+	line-height: 1.55;
+}
+#content::before {
 	background-color: #fff;
 	box-shadow: 
 		-1px 0 0 #000 inset,
@@ -20,9 +23,8 @@ body {
 	border-style: solid;
 	border-color: #000;
 	border-width: 0 1px 0 2px;
-	line-height: 1.55;
 }
-#content.no-nav-bars {
+#content.no-nav-bars::before {
 	border-width: 2px;
 	box-shadow: none;
 }
@@ -1411,10 +1413,10 @@ select {
 /* ALIGNMENT FORUM */
 /*=================*/
 
-#content.alignment-forum-index-page {
+#content.alignment-forum-index-page::before {
 	background-color: #f2f6ff;
 }
-#content.alignment-forum-index-page::before {
+#content.alignment-forum-index-page::after {
 	font-family: "Concourse SmallCaps";
 	font-weight: 600;
 	background-color: #7f85b2;

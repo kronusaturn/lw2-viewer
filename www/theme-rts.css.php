@@ -1756,13 +1756,13 @@ select {
 /* ALIGNMENT FORUM */
 /*=================*/
 
-#content.alignment-forum-index-page {
+#content.alignment-forum-index-page::before {
 	background-color: #f4f5ff;
 	border-color: #bbb;
 	border-style: solid;
 	border-width: 0 1px;
 }
-#content.alignment-forum-index-page::before {
+#content.alignment-forum-index-page::after {
 	grid-column: 1;
 	font-family: "Concourse SmallCaps";
 	font-weight: 600;

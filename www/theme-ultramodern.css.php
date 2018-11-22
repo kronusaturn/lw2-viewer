@@ -1735,10 +1735,10 @@ input::selection {
 /* ALIGNMENT FORUM */
 /*=================*/
 
-#content.alignment-forum-index-page {
+#content.alignment-forum-index-page::before {
 	background-color: #878a9f;
 }
-#content.alignment-forum-index-page::before {
+#content.alignment-forum-index-page::after {
 	font-family: "Concourse SmallCaps";
 	font-weight: 600;
 	background-color: #222d4b;

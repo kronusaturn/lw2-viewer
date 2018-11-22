@@ -1533,10 +1533,10 @@ select {
 /* ALIGNMENT FORUM */
 /*=================*/
 
-#content.alignment-forum-index-page {
+#content.alignment-forum-index-page::before {
 	background-color: #eaedff;
 }
-#content.alignment-forum-index-page::before {
+#content.alignment-forum-index-page::after {
 	font-family: "Concourse SmallCaps";
 	font-weight: 600;
 	background-color: #7f85b2;

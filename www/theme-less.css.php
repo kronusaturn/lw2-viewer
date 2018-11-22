@@ -18,9 +18,7 @@ body {
 }
 #content {
 	line-height: 1.55;
-	overflow: visible;
 	padding: 30px 20px 0 90px;
-	position: relative;
 }
 #content.comment-thread-page {
 	padding: 0 0 0 60px;
@@ -2383,7 +2381,7 @@ strong, b {
 /* ALIGNMENT FORUM */
 /*=================*/
 
-#content.alignment-forum-index-page::before {
+#content.alignment-forum-index-page::after {
 	margin: -0.25em 0 0.25em 0;
 	text-align: center;
 	grid-column: 2;

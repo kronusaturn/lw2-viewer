@@ -91,7 +91,7 @@ function addScrollListener(fn, name) {
 
 	// Retain a reference to the scroll listener, if a name is provided.
 	if (typeof name != "undefined")
-		window[name] = wrapper;
+		GW[name] = wrapper;
 }
 
 /****************/
@@ -777,7 +777,7 @@ function setTheme(newThemeName) {
 		newThemeName = readCookie('theme');
 		if (!newThemeName) return;
 	} else {
-		themeUnloadCallback = window['themeUnloadCallback_' + (readCookie('theme') || 'default')];
+		themeUnloadCallback = GW['themeUnloadCallback_' + (readCookie('theme') || 'default')];
 		oldThemeName = readCookie('theme') || 'default';
 
 		if (newThemeName == 'default') setCookie('theme', '');
@@ -818,7 +818,7 @@ function postSetThemeHousekeeping(oldThemeName = "", newThemeName = (readCookie(
 		});
 	});
 
-	let themeLoadCallback = window['themeLoadCallback_' + newThemeName];
+	let themeLoadCallback = GW['themeLoadCallback_' + newThemeName];
 	if (themeLoadCallback != null) themeLoadCallback(oldThemeName);
 
 	generateImagesOverlay();
@@ -839,7 +839,7 @@ function pageFadeTransition(fadeIn) {
 	}
 }
 
-function themeLoadCallback_less(fromTheme = "") {
+GW.themeLoadCallback_less = (fromTheme = "") => {
 	injectSiteNavUIToggle();
 	if (!GW.isMobile) {
 		injectPostNavUIToggle();
@@ -892,7 +892,11 @@ function themeLoadCallback_less(fromTheme = "") {
 		window.addEventListener('resize', updatePostNavUIToggleVisibility);
 
 		// Due to filters vs. fixed elements, we need to be smarter about selecting which elements to filter...
-		GW.filtersTargetSelector = "body::before, #content > *:not(#secondary-bar):not(.post), #secondary-bar > *, .post > *:not(.top-post-meta), .top-post-meta > *:not(.date):not(.comment-count), .top-post-meta .date span, .top-post-meta .comment-count > span, #ui-elements-container > div:not(#theme-tweaker-ui), #theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container";
+		GW.themeTweaker.filtersExclusionPaths.themeLess = [
+			"#content #secondary-bar",
+			"#content .post .top-post-meta .date",
+			"#content .post .top-post-meta .comment-count",
+		];
 		applyFilters(GW.currentFilters);
 	}
 
@@ -958,7 +962,7 @@ function updateSiteNavUIState(event) {
 		(localStorage.getItem("appearance-adjust-ui-toggle-engaged") != "false")) toggleAppearanceAdjustUI();
 }
 
-function themeUnloadCallback_less(toTheme = "") {
+GW.themeUnloadCallback_less = (toTheme = "") => {
 	removeSiteNavUIToggle();
 	if (!GW.isMobile) {
 		removePostNavUIToggle();
@@ -966,7 +970,7 @@ function themeUnloadCallback_less(toTheme = "") {
 	}
 	window.removeEventListener('resize', updatePostNavUIToggleVisibility);
 
-	document.removeEventListener("scroll", window["updateSiteNavUIStateScrollListener"]);
+	document.removeEventListener("scroll", GW["updateSiteNavUIStateScrollListener"]);
 
 	removeElement("#theme-less-mobile-first-row-placeholder");
 
@@ -980,11 +984,11 @@ function themeUnloadCallback_less(toTheme = "") {
 	(query(".top-post-meta .date")||{}).innerHTML = (query(".bottom-post-meta .date")||{}).innerHTML;
 
 	// Reset filtered elements selector to default.
-	GW.filtersTargetSelector = "";
+	GW.themeTweaker.filtersExclusionPaths.themeLess = [ ];
 	applyFilters(GW.currentFilters);
 }
 
-function themeLoadCallback_dark(fromTheme = "") {
+GW.themeLoadCallback_dark = (fromTheme = "") => {
 	query("head").insertAdjacentHTML("beforeend", 
 		"<style id='dark-theme-adjustments'>" + 
 		`.markdown-reference-link a { color: #d200cf; filter: invert(100%); }` + 
@@ -1000,7 +1004,7 @@ function themeLoadCallback_dark(fromTheme = "") {
 		});
 	});
 }
-function themeUnloadCallback_dark(toTheme = "") {
+GW.themeUnloadCallback_dark = (toTheme = "") => {
 	removeElement("#dark-theme-adjustments");
 }
 
@@ -1078,8 +1082,6 @@ function injectThemeTweaker() {
 		</div>
 	</div>
 	` + "</div>");
-
-	GW.themeTweaker = { };
 
 	// Clicking the background overlay closes the theme tweaker.
 	themeTweakerUI.addActivateEvent(GW.themeTweaker.UIOverlayClicked = (event) => {
@@ -1427,6 +1429,23 @@ function updateNewCommentNavUI(newCommentsCount, hns = -1) {
 /* TEXT SIZE ADJUSTMENT UI */
 /***************************/
 
+GW.themeTweaker.textSizeAdjustButtonClicked = (event) => {
+	var zoomFactor = parseFloat(GW.currentTextZoom) || 1.0;
+	if (event.target.hasClass("decrease")) {
+		zoomFactor = (zoomFactor - 0.05).toFixed(2);
+	} else if (event.target.hasClass("increase")) {
+		zoomFactor = (zoomFactor + 0.05).toFixed(2);
+	} else {
+		zoomFactor = 1.0;
+	}
+	setTextZoom(zoomFactor);
+	GW.currentTextZoom = `${zoomFactor}`;
+
+	if (event.target.parentElement.id == "text-size-adjustment-ui") {
+		localStorage.setItem("text-zoom", GW.currentTextZoom);
+	}
+};
+
 function injectTextSizeAdjustmentUIReal() {
 	let textSizeAdjustmentUIContainer = addUIElement("<div id='text-size-adjustment-ui'>"
 	+ `<button type='button' class='text-size-adjust-button decrease' title="Decrease text size [-]" tabindex='-1' accesskey='-'>&#xf068;</button>`
@@ -1435,22 +1454,7 @@ function injectTextSizeAdjustmentUIReal() {
 	+ "</div>");
 
 	textSizeAdjustmentUIContainer.queryAll("button").forEach(button => {
-		button.addActivateEvent(GW.themeTweaker.textSizeAdjustButtonClicked = (event) => {
-			var zoomFactor = parseFloat(GW.currentTextZoom) || 1.0;
-			if (event.target.hasClass("decrease")) {
-				zoomFactor = (zoomFactor - 0.05).toFixed(2);
-			} else if (event.target.hasClass("increase")) {
-				zoomFactor = (zoomFactor + 0.05).toFixed(2);
-			} else {
-				zoomFactor = 1.0;
-			}
-			setTextZoom(zoomFactor);
-			GW.currentTextZoom = `${zoomFactor}`;
-
-			if (event.target.parentElement.id == "text-size-adjustment-ui") {
-				localStorage.setItem("text-zoom", GW.currentTextZoom);
-			}
-		});
+		button.addActivateEvent(GW.themeTweaker.textSizeAdjustButtonClicked);
 	});
 }
 
@@ -1458,7 +1462,7 @@ function injectTextSizeAdjustmentUI() {
 	if (query("#text-size-adjustment-ui") != null) return;
 	if (query("#content.post-page") != null) injectTextSizeAdjustmentUIReal();
 	else document.addEventListener("DOMContentLoaded", () => {
-		if (query(".post-body") == null && query(".comment-body") == null) injectTextSizeAdjustmentUIReal();
+		if (!(query(".post-body") == null && query(".comment-body") == null)) injectTextSizeAdjustmentUIReal();
 	}, {once: true});
 }
 
@@ -2074,28 +2078,33 @@ function addCommentParentPopups() {
 
 	queryAll(".comment-meta a.comment-parent-link, .comment-meta a.comment-child-link").forEach(commentParentLink => {
 		commentParentLink.addEventListener("mouseover", GW.commentParentLinkMouseOver = (event) => {
-			let parentID = "#comment-" + /(?:#comment-)?(.+)/.exec(commentParentLink.getAttribute("href"))[1];
-			var parent;
+			let parentID = commentParentLink.getAttribute("href");
+			var parent, popup;
 			if (!(parent = (query(parentID)||{}).firstChild)) return;
-			let parentCommentItem = parent.parentNode;
 			var highlightClassName;
 			if (parent.getBoundingClientRect().bottom < 10 || parent.getBoundingClientRect().top > window.innerHeight + 10) {
-				highlightClassName = "comment-item-highlight-faint";
-				parent = parent.cloneNode(true);
-				parent.addClass("comment-popup")
-				parent.addClass("comment-item-highlight");
+				parentHighlightClassName = "comment-item-highlight-faint";
+				popup = parent.cloneNode(true);
+				popup.addClasses([ "comment-popup", "comment-item-highlight" ]);
 				commentParentLink.addEventListener("mouseout", (event) => {
-					removeElement(parent);
+					removeElement(popup);
 				}, {once: true});
-				commentParentLink.closest(".comment").appendChild(parent);
+				commentParentLink.closest("#comments > .comment-thread").appendChild(popup);
 			} else {
-				highlightClassName = "comment-item-highlight";
+				parentHighlightClassName = "comment-item-highlight";
 			}
-			let className = parentCommentItem.className;
-			parentCommentItem.className = className + " " + highlightClassName;
-			commentParentLink.addEventListener("mouseout", (event) => { parentCommentItem.className = className; }, {once: true});
+			parent.parentNode.addClass(parentHighlightClassName);
+			commentParentLink.addEventListener("mouseout", (event) => {
+				parent.parentNode.removeClass(parentHighlightClassName);
+			}, {once: true});
 		});
 	});
+	
+	// Due to filters vs. fixed elements, we need to be smarter about selecting which elements to filter...
+	GW.themeTweaker.filtersExclusionPaths.commentParentPopups = [
+		"#content #comments .comment-thread"
+	];
+	applyFilters(GW.currentFilters);
 }
 
 /***************/
@@ -2551,10 +2560,6 @@ function removeElement(elementOrSelector, ancestor = document) {
 	if (elementOrSelector) elementOrSelector.parentElement.removeChild(elementOrSelector);
 }
 
-Array.prototype.contains = function (element) {
-	return (this.indexOf(element) !== -1);
-}
-
 String.prototype.hasPrefix = function (prefix) {
 	return (this.lastIndexOf(prefix, 0) === 0);
 }
@@ -2642,14 +2647,14 @@ registerInitializer('earlyInitialize', true, () => query("#content") != null, fu
 
 	// Add the content width selector.
 	injectContentWidthSelector();
+	// Add the text size adjustment widget.
+	injectTextSizeAdjustmentUI();
 	// Add the theme selector.
 	injectThemeSelector();
 	// Add the theme tweaker.
 	injectThemeTweaker();
 	// Add the quick-nav UI.
 	injectQuickNavUI();
-	// Add the text size adjustment widget.
-	injectTextSizeAdjustmentUI();
 
 	setTimeout(() => { updateInbox(); }, 0);
 });

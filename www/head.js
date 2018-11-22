@@ -96,11 +96,68 @@ setContentWidth(localStorage.getItem('selected-width'));
 /* APPEARANCE CUSTOMIZATION (THEME TWEAKER) */
 /********************************************/
 
-Object.prototype.isEmpty = function() {
+Object.prototype.isEmpty = function () {
     for (var prop in this) if (this.hasOwnProperty(prop)) return false;
     return true;
 };
+Object.prototype.keys = function () {
+	return Object.keys(this);
+}
+Array.prototype.contains = function (element) {
+	return (this.indexOf(element) !== -1);
+}
+Array.prototype.clone = function() {
+	return this.slice(0);
+};
 
+GW.themeTweaker = { };
+GW.themeTweaker.filtersExclusionPaths = { };
+GW.themeTweaker.defaultFiltersExclusionTree = [ "#content", null ];
+
+function exclusionTreeFromExclusionPaths(paths) {
+	if (!paths) return null;
+
+	let tree = GW.themeTweaker.defaultFiltersExclusionTree.clone();
+	paths.keys().flatMap(key => paths[key]).forEach(path => {
+		var currentNodeInTree = tree;
+		path.split(" ").slice(1).forEach(step => {
+			if (currentNodeInTree[1] == null)
+				currentNodeInTree[1] = [ ];
+
+			var indexOfMatchingChild = currentNodeInTree[1].findIndex(child => { return child[0] == step; });
+			if (indexOfMatchingChild == -1) {
+				currentNodeInTree[1].push([ step, [ ] ]);
+				indexOfMatchingChild = currentNodeInTree[1].length - 1;
+			}
+
+			currentNodeInTree = currentNodeInTree[1][indexOfMatchingChild];
+		});
+	});
+
+	return tree;
+}
+function selectorFromExclusionTree(tree) {
+	var selectorParts = [
+		"body::before, #ui-elements-container > div:not(#theme-tweaker-ui), #theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container"
+	];
+	
+	function selectorFromExclusionTreeNode(node, path = [ ]) {
+		let [ value, children ] = node;
+
+		let newPath = path.clone();
+		newPath.push(value);
+
+		if (!children) {
+			return value;
+		} else if (children.length == 0) {
+			return `${newPath.join(" > ")} > *, ${newPath.join(" > ")}::before, ${newPath.join(" > ")}::after`;
+		} else {
+			return `${newPath.join(" > ")} > *:not(${children.map(child => child[0]).join("):not(")}), ${newPath.join(" > ")}::before, ${newPath.join(" > ")}::after, ` + children.map(child => selectorFromExclusionTreeNode(child, newPath)).join(", ");
+		}
+	}
+	
+	return selectorParts + ", " + selectorFromExclusionTreeNode(tree);
+}
 function filterStringFromFilters(filters) {
 	var filterString = "";
 	for (key of Object.keys(filters)) {
@@ -113,8 +170,9 @@ function applyFilters(filters) {
 	var fullStyleString = "";
 	
 	if (!filters.isEmpty()) {
-		let selector = GW.filtersTargetSelector || "body::before, #content, #ui-elements-container > div:not(#theme-tweaker-ui), #theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container";
-		fullStyleString = `body::before { content: ""; } ${selector} { filter: ${filterStringFromFilters(filters)}; }`;
+		let filtersExclusionTree = exclusionTreeFromExclusionPaths(GW.themeTweaker.filtersExclusionPaths) || GW.themeTweaker.defaultFiltersExclusionTree;
+		console.log(selectorFromExclusionTree(filtersExclusionTree));
+		fullStyleString = `body::before { content: ""; } ${selectorFromExclusionTree(filtersExclusionTree)} { filter: ${filterStringFromFilters(filters)}; }`;
 	}
 	
 	// Update the style tag (if it’s already been loaded).

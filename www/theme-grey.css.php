@@ -17,9 +17,11 @@ body {
 	font-feature-settings: 'ss07';
 }
 #content {
+	line-height: 1.55;
+}
+#content::before {
 	background-color: #fff;
 	box-shadow: 0px 0px 10px #bbb;
-	line-height: 1.55;
 }
 
 /*=========*/
@@ -1812,10 +1814,10 @@ select {
 /* ALIGNMENT FORUM */
 /*=================*/
 
-#content.alignment-forum-index-page {
+#content.alignment-forum-index-page::before {
 	background-color: #f1f3ff;
 }
-#content.alignment-forum-index-page::before {
+#content.alignment-forum-index-page::after {
 	font-family: <?php echo $UI_font_smallcaps; ?>;
 	font-weight: 600;
 	background-color: #626dd7;
