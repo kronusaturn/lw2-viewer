@@ -125,7 +125,6 @@ body > * {
 }
 .nav-bar {
 	display: flex;
-	justify-content: flex-end;
 }
 
 /*=---------------=*/

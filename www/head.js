@@ -112,7 +112,7 @@ Array.prototype.clone = function() {
 
 GW.themeTweaker = { };
 GW.themeTweaker.filtersExclusionPaths = { };
-GW.themeTweaker.defaultFiltersExclusionTree = [ "#content", null ];
+GW.themeTweaker.defaultFiltersExclusionTree = [ "#content", [ ] ];
 
 function exclusionTreeFromExclusionPaths(paths) {
 	if (!paths) return null;
