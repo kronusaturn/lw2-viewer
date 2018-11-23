@@ -2968,7 +2968,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	if (query("#content").hasClass("post-page") && 
 		query(".post").hasClass("link-post")) {
 		document.addEventListener("keyup", GW.linkPostLinkFocusKeyPressed = (event) => {
-			if (e.key == ';') query("a.link-post-link").focus();
+			if (event.key == ';') query("a.link-post-link").focus();
 		});
 	}
 
@@ -3138,13 +3138,6 @@ function adjustUIForWindowSize() {
 
 	// Move anti-kibitzer toggle if content is very short.
 	if (query("#content").clientHeight < 400) (query("#anti-kibitzer-toggle")||{}).style.bottom = "125px";
-
-	// Add "horizontal" class to sort order selector when it's specified, via CSS, to
-	// be horizontal (i.e. flex-direction: row)
-	queryAll(".sublevel-nav.sort").forEach(sortSelector => {
-		if (getComputedStyle(sortSelector).flexDirection == "row") sortSelector.addClass("horizontal");
-		else sortSelector.removeClass("horizontal");
-	});
 }
 
 function recomputeUIElementsContainerHeight(force = false) {
