@@ -208,14 +208,14 @@ body {
 	color: #777;
 	background-color: #fff;
 }
-.sublevel-nav a.sublevel-item:hover {
+.sublevel-nav .sublevel-item:not(.selected):hover {
 	background-color: #ddd;
 	color: #000;
 	text-decoration: none;
 	text-shadow: none;
 }
-.sublevel-nav a.sublevel-item:active,
-.sublevel-nav a.sublevel-item:disabled,
+.sublevel-nav .sublevel-item:active,
+.sublevel-nav .sublevel-item.selected,
 .sublevel-nav span.sublevel-item {
 	background-color: #ddd;
 	color: #000;
