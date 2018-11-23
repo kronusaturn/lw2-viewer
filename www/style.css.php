@@ -1698,7 +1698,7 @@ ul.comment-thread {
 	margin-bottom: 0;
 }
 
-#comments:empty::before,
+#comments:empty::after,
 #comments > .comment-controls:last-child::after {
 	content: "No comments.";
 	display: block;
