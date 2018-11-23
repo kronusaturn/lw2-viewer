@@ -394,8 +394,8 @@ function makeVoteCompleteEvent(target) {
 			karmaTargets = queryAll(".post-meta .karma-value");
 		} else {
 			let commentItem = target.closest(".comment-item")
-			buttonTargets = commentItem.queryAll(".karma");
-			karmaTargets = commentItem.queryAll(".karma-value");
+			buttonTargets = [ commentItem.query(".comment-meta .karma"), commentItem.query(".comment-controls .karma") ];
+			karmaTargets = [ commentItem.query(".comment-meta .karma-value"), commentItem.query(".comment-controls .karma-value") ];
 		}
 		buttonTargets.forEach(buttonTarget => {
 			buttonTarget.removeClass("waiting");
