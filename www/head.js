@@ -246,6 +246,6 @@ if (localStorage.getItem("antikibitzer") == "true") {
 	"</style>");
 
 	if(document.location.pathname.match(new RegExp("/posts/.*/comment/"))) {
-		query("head").insertAdjacentHTML("beforeend", "<title class='fake-title'></title>");
+		query("head").insertAdjacentHTML("beforeend", "<"+"title class='fake-title'></title>");
 	}
 }
