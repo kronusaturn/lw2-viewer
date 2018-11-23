@@ -2035,13 +2035,6 @@ EOT;
 		a.comment-parent-link:hover::before {
 			background-color: unset;
 		}
-
-		.sublevel-nav .sublevel-item,
-		.sublevel-nav .sublevel-item:first-child,
-		.sublevel-nav .sublevel-item:last-child {
-			border-width: 1px;
-			border-radius: 8px;
-		}
 	/*******************************************/
 	} @media only screen and (max-width: 720px) {
 	/*******************************************/
