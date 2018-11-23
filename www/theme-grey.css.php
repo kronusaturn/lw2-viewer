@@ -219,19 +219,10 @@ body {
 /*==============*/
 
 .sublevel-nav .sublevel-item {
-	border-color: #ddd;
-	border-style: solid;
-	border-width: 1px 1px 1px 0;
 	color: #777;
+	background-color: #fff;
 }
-.sublevel-nav .sublevel-item:first-child {
-	border-radius: 8px 0 0 8px;
-	border-width: 1px;
-}
-.sublevel-nav .sublevel-item:last-child {
-	border-radius: 0 8px 8px 0;
-}
-.sublevel-nav .sublevel-item:hover {
+.sublevel-nav .sublevel-item:not(.selected):hover {
 	background-color: #ddd;
 	color: #000;
 	text-decoration: none;
@@ -241,12 +232,24 @@ body {
 .sublevel-nav .sublevel-item:disabled,
 .sublevel-nav span.sublevel-item {
 	background-color: #ddd;
-	border-color: #ddd;
 	color: #000;
 	text-shadow: 
 		0 -1px 0 #fff,
 		0 0.5px 0.5px #000;
 	transform: none;
+}
+
+.sublevel-nav:not(.sort) .sublevel-item {
+	border-style: solid;
+	border-color: #ddd;
+	border-width: 1px 0 1px 1px;
+}
+.sublevel-nav:not(.sort) .sublevel-item:first-child {
+	border-radius: 8px 0 0 8px;
+}
+.sublevel-nav:not(.sort) .sublevel-item:last-child {
+	border-width: 1px;
+	border-radius: 0 8px 8px 0;
 }
 
 /*=====================*/
@@ -255,49 +258,40 @@ body {
 
 .sublevel-nav.sort .sublevel-item {
 	font-family: <?php echo $UI_font_smallcaps; ?>;
+	padding: <?php echo ($platform == 'Mac') ? "7px 7px 5px 7px" : "6px 7px"; ?>;
+	text-transform: uppercase;
+	pointer-events: auto;
+	box-shadow: 1px 1px 0 0 #aaa inset;
 }
 .sublevel-nav.sort {
-	border: 2px solid #bbb;
+	border: 2px solid transparent;
 	padding: 18px 0 0 0;
 	border-radius: 8px;
-	box-shadow: 0 18px #bbb inset;
+	pointer-events: none;
+	background-color: #bbb;
 }
 .sublevel-nav.sort::before {
 	text-transform: uppercase;
 	font-weight: 600;
 	color: #444;
 	text-shadow: 0.5px 0.5px 0 #fff;
+	border-radius: inherit;
+	z-index: 1;
 }
-.sublevel-nav.sort .sublevel-item {
-	padding: <?php echo ($platform == 'Mac') ? "6px 6px 4px 6px" : "5px 6px 5px 6px"; ?>;
-	text-transform: uppercase;
-	border: 1px solid #aaa;
-}
-
-/* Vertical */
-.sublevel-nav.sort .sublevel-item:first-child {
-	border-radius: 6px 6px 0 0;
-}
-.sublevel-nav.sort .sublevel-item:last-child {
-	border-radius: 0 0 6px 6px;
-}
-.sublevel-nav.sort .sublevel-item:nth-child(n+2) {
-	border-width: 0 1px 1px 1px;	
-}
-
-/* Horizontal */
-.sublevel-nav.sort.horizontal .sublevel-item:first-child {
-	border-radius: 6px 0 0 6px;
-}
-.sublevel-nav.sort.horizontal .sublevel-item:last-child {
-	border-radius: 0 6px 6px 0;
-}
-.sublevel-nav.sort.horizontal .sublevel-item:nth-child(n+2) {
-	border-width: 1px 1px 1px 0;
-}
-
-.sublevel-nav.sort .sublevel-item:active {
-	border-color: #aaa;
+.sublevel-nav.sort::after {
+	content: "";
+	position: absolute;
+	display: block;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	border-radius: 6px;
+	box-shadow:
+		0 18px 0 0 #bbb inset,
+		0 0 0 1px #aaa inset,
+		0 18px 0 1px #aaa inset,
+		0 0 0 2px #bbb;
 }
 
 /*================*/
@@ -2065,11 +2059,12 @@ select {
 			background-color: unset;
 		}
 
-		.sublevel-nav .sublevel-item,
-		.sublevel-nav .sublevel-item:first-child,
-		.sublevel-nav .sublevel-item:last-child {
-			border-width: 1px;
+		.sublevel-nav:not(.sort) .sublevel-item,
+		.sublevel-nav:not(.sort) .sublevel-item:first-child,
+		.sublevel-nav:not(.sort) .sublevel-item:last-child {
 			border-radius: 8px;
+			border-width: 1px;
+			margin: 2px;
 		}
 	/*******************************************/
 	} @media only screen and (max-width: 720px) {
