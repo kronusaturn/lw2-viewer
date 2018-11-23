@@ -2048,6 +2048,14 @@ EOT;
 		a.comment-parent-link:hover::before {
 			background-color: unset;
 		}
+
+		.sublevel-nav:not(.sort) .sublevel-item,
+		.sublevel-nav:not(.sort) .sublevel-item:first-child,
+		.sublevel-nav:not(.sort) .sublevel-item:last-child {
+			border-radius: 8px;
+			border-width: 1px;
+			margin: 2px;
+		}
 	/*******************************************/
 	} @media only screen and (max-width: 720px) {
 	/*******************************************/
