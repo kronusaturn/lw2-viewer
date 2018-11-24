@@ -2934,7 +2934,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	});
 
 	// Add event listener for . , ; (for navigating listings pages).
-	let listings = queryAll("h1.listing a[href^='/posts']");
+	let listings = queryAll("h1.listing a[href^='/posts'], #content > .comment-thread .comment-meta a.date");
 	if (listings.length > 0) {
 		document.addEventListener("keyup", GW.postListingsNavKeyPressed = (event) => { 
 			if (event.ctrlKey || event.shiftKey || event.altKey || !(event.key == "," || event.key == "." || event.key == ';' || event.keyCode == 27)) return;
@@ -2949,6 +2949,10 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 				if (document.activeElement.parentElement.hasClass("link-post-listing")) {
 					let links = document.activeElement.parentElement.queryAll("a");
 					links[document.activeElement == links[0] ? 1 : 0].focus();
+				} else if (document.activeElement.parentElement.hasClass("comment-meta")) {
+					let links = document.activeElement.parentElement.queryAll("a.date, a.permalink");
+					links[document.activeElement == links[0] ? 1 : 0].focus();
+					document.activeElement.closest(".comment-item").addClass("comment-item-highlight");
 				}
 				return;
 			}
@@ -2959,58 +2963,20 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 					listings[i] === document.activeElement.parentElement.query("a[href^='/posts']")) {
 					indexOfActiveListing = i;
 					break;
-				}
-			}
-			let indexOfNextListing = (event.key == "." ? ++indexOfActiveListing : (--indexOfActiveListing + listings.length + 1)) % (listings.length + 1);
-			if (indexOfNextListing < listings.length) listings[indexOfNextListing].focus();
-			else document.activeElement.blur();
-		});
-	}
-	// Add event listener for ; (to focus the link on link posts).
-	if (query("#content").hasClass("post-page") && 
-		query(".post").hasClass("link-post")) {
-		document.addEventListener("keyup", GW.linkPostLinkFocusKeyPressed = (event) => {
-			if (event.key == ';') query("a.link-post-link").focus();
-		});
-	}
-
-	// Add event listener for . , ; (for navigating the recent comments page).
-	let comments = queryAll("#content > .comment-thread .comment-meta a.date");
-	if (comments.length > 0) {
-		document.addEventListener("keyup", GW.commentListingsNavKeyPressed = (event) => {
-			if (event.ctrlKey || event.shiftKey || event.altKey || !(event.key == "," || event.key == "." || event.key == ';' || event.keyCode == 27)) return;
-
-			if (event.keyCode == 27) {
-				if (document.activeElement.parentElement.hasClass("comment-meta"))
-					document.activeElement.blur();
-				return;
-			}
-
-			if (event.key == ';') {
-				if (document.activeElement.parentElement.hasClass("comment-meta")) {
-					let links = document.activeElement.parentElement.queryAll("a.date, a.permalink");
-					links[document.activeElement == links[0] ? 1 : 0].focus();
-					document.activeElement.closest(".comment-item").addClass("comment-item-highlight");
-				}
-				return;
-			}
-
-			let activeComment = document.activeElement.closest(".comment-item");
-			if (activeComment) activeComment.removeClasses([ "expanded", "comment-item-highlight" ]);
-
-			var indexOfActiveComment = -1;
-			for (i = 0; i < comments.length; i++) {
-				if (document.activeElement.parentElement.hasClass("comment-meta") && 
-					comments[i] === document.activeElement.parentElement.query("a.date")) {
-					indexOfActiveComment = i;
+				} else if (document.activeElement.parentElement.hasClass("comment-meta") && 
+					listings[i] === document.activeElement.parentElement.query("a.date")) {
+					indexOfActiveListing = i;
 					break;
 				}
 			}
-			let indexOfNextComment = (event.key == "." ? ++indexOfActiveComment : (--indexOfActiveComment + comments.length + 1)) % (comments.length + 1);
-			if (indexOfNextComment < comments.length) {
-				comments[indexOfNextComment].closest(".comment-item").addClasses([ "expanded", "comment-item-highlight" ]);
-				comments[indexOfNextComment].closest(".comment-item").scrollIntoView();
-				comments[indexOfNextComment].focus();
+			let indexOfNextListing = (event.key == "." ? ++indexOfActiveListing : (--indexOfActiveListing + listings.length + 1)) % (listings.length + 1);
+			if (indexOfNextListing < listings.length) {
+				listings[indexOfNextListing].focus();
+				
+				if (listings[indexOfNextListing].closest(".comment-item")) {
+					listings[indexOfNextListing].closest(".comment-item").addClasses([ "expanded", "comment-item-highlight" ]);
+					listings[indexOfNextListing].closest(".comment-item").scrollIntoView();
+				}
 			} else {
 				document.activeElement.blur();
 			}
@@ -3019,6 +2985,13 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 			link.addEventListener("blur", GW.commentListingsHyperlinkUnfocused = (event) => {
 				event.target.closest(".comment-item").removeClasses([ "expanded", "comment-item-highlight" ]);
 			});
+		});
+	}
+	// Add event listener for ; (to focus the link on link posts).
+	if (query("#content").hasClass("post-page") && 
+		query(".post").hasClass("link-post")) {
+		document.addEventListener("keyup", GW.linkPostLinkFocusKeyPressed = (event) => {
+			if (event.key == ';') query("a.link-post-link").focus();
 		});
 	}
 
