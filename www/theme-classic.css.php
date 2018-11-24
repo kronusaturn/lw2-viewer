@@ -136,6 +136,12 @@ body {
 	color: #ccc;
 }
 
+/*= Top pagination UI hover tooltips =*/
+
+#top-nav-bar a::after {
+	color: #000;
+}
+
 /*==============*/
 /* PAGE TOOLBAR */
 /*==============*/

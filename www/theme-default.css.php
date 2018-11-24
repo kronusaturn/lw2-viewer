@@ -188,6 +188,12 @@ body {
 	font-weight: normal;
 }
 
+/*= Top pagination UI hover tooltips =*/
+
+#top-nav-bar a::after {
+	color: #000;
+}
+
 /*==============*/
 /* PAGE TOOLBAR */
 /*==============*/

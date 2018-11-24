@@ -122,6 +122,12 @@ body {
 	text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff;
 }
 
+/*= Top pagination UI hover tooltips =*/
+
+#top-nav-bar a::after {
+	color: #000;
+}
+
 /*==============*/
 /* PAGE TOOLBAR */
 /*==============*/

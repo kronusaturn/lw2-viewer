@@ -190,6 +190,25 @@ h1.listing ~ #bottom-bar {
 	left: 3.4em;
 }
 
+/*= Hover tooltips =*/
+
+#top-nav-bar a {
+	position: relative;
+}
+#top-nav-bar a::after {
+	content: attr(data-target-page);
+	display: block;
+	position: absolute;
+	font-size: 0.75rem;
+	width: 100%;
+	bottom: calc(100% - 3px);
+	line-height: 1;
+	visibility: hidden;
+}
+#top-nav-bar a:hover::after {
+	visibility: visible;
+}
+
 /*=-----------------------=*/
 /*= Decorative bottom bar =*/
 /*=-----------------------=*/
@@ -4920,6 +4939,12 @@ a.nav-inner,
 
 #inbox-indicator::before {
 	color: #ddd;
+}
+
+/*= Top pagination UI hover tooltips =*/
+
+#top-nav-bar a::after {
+	color: #222;
 }
 
 /*==============*/

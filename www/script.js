@@ -2907,6 +2907,11 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 	// Set the "submit" button on the edit post page to something more helpful.
 	setEditPostPageSubmitButtonText();
+	
+	// Compute the text of the top pagination UI tooltip text.
+	queryAll("#top-nav-bar a:not(.disabled)").forEach(button => {
+		button.dataset.targetPage = parseInt(/=([0-9]+)/.exec(button.href)[1])/20 + 1;
+	});
 
 	// Add event listeners for Escape and Enter, for the theme tweaker.
 	let themeTweakerHelpWindow = query("#theme-tweaker-ui .help-window");
