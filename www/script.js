@@ -1390,8 +1390,8 @@ function injectNewCommentNavUI(newCommentsCount) {
 	+ "</div>");
 
 	hnsDatePicker.query("input").addEventListener("input", GW.hnsDatePickerValueChanged = (event) => {
-		let hns = time_fromHuman(hnsDatePicker.value);
-		let newCommentsCount = highlightCommentsSince(hns);
+		let hnsDate = time_fromHuman(event.target.value);
+		let newCommentsCount = highlightCommentsSince(hnsDate);
 		updateNewCommentNavUI(newCommentsCount);
 	}, false);
 
@@ -1419,16 +1419,15 @@ function time_fromHuman(string) {
 	return time;
 }
 
-function updateNewCommentNavUI(newCommentsCount, hns = -1) {
+function updateNewCommentNavUI(newCommentsCount, hnsDate = -1) {
 	// Update the new comments count.
 	let newCommentsCountLabel = query("#new-comment-nav-ui .new-comments-count");
 	newCommentsCountLabel.innerText = newCommentsCount;
 	newCommentsCountLabel.title = `${newCommentsCount} new comments`;
 
 	// Update the date picker field.
-	if (hns != -1) {
-		let hnsDatePickerInputField = query("#hns-date-picker input");
-		hnsDatePickerInputField.value = (new Date(+ hns - (new Date()).getTimezoneOffset() * 60e3)).toISOString().slice(0, 16).replace('T', ' ');
+	if (hnsDate != -1) {
+		query("#hns-date-picker input").value = (new Date(+ hnsDate - (new Date()).getTimezoneOffset() * 60e3)).toISOString().slice(0, 16).replace('T', ' ');
 	}
 }
 
@@ -2009,6 +2008,9 @@ function sortComments(mode) {
 
 	// Re-add comment parent popups.
 	addCommentParentPopups();
+
+	// Redo new-comments highlighting.
+	highlightCommentsSince(time_fromHuman(query("#hns-date-picker input").value));
 
 	requestAnimationFrame(() => {
 		commentsContainer.removeClass("sorting");
@@ -2868,13 +2870,13 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 			// Get the highlight-new-since date (as specified by URL parameter, if 
 			// present, or otherwise the date of the last visit).
-			let hns = parseInt(getQueryVariable("hns")) || lastVisitedDate;
+			let hnsDate = parseInt(getQueryVariable("hns")) || lastVisitedDate;
 
 			// Highlight new comments since the specified date.			 
-			let newCommentsCount = highlightCommentsSince(hns);
+			let newCommentsCount = highlightCommentsSince(hnsDate);
 
 			// Update the comment count display.
-			updateNewCommentNavUI(newCommentsCount, hns);
+			updateNewCommentNavUI(newCommentsCount, hnsDate);
 		}
 	} else {
 		// On listing pages, make comment counts more informative.
