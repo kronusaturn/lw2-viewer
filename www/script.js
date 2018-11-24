@@ -806,10 +806,11 @@ function setTheme(newThemeName) {
 	}
 }
 function postSetThemeHousekeeping(oldThemeName = "", newThemeName = (readCookie('theme') || 'default')) {
+	GW.alwaysRecomputeUIElementsContainerHeight = true;
 	function adjustContentSizeAndPosition() {
 		setTimeout(() => {
 			adjustUIForWindowSize();
-			recomputeUIElementsContainerHeight(true);
+			recomputeUIElementsContainerHeight(GW.alwaysRecomputeUIElementsContainerHeight);
 
 			realignHash();
 		}, 0);
@@ -888,6 +889,7 @@ GW.themeLoadCallback_less = (fromTheme = "") => {
 
 		// Unset the height of the #ui-elements-container.
 		query("#ui-elements-container").style.height = "";
+		GW.alwaysRecomputeUIElementsContainerHeight = false;
 
 		registerInitializer('updatePostNavUIVisibility', false, () => document.readyState == "complete", updatePostNavUIVisibility);
 		window.addEventListener('resize', updatePostNavUIVisibility);
@@ -2910,7 +2912,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	// Set the "submit" button on the edit post page to something more helpful.
 	setEditPostPageSubmitButtonText();
 	
-	// Compute the text of the top pagination UI tooltip text.
+	// Compute the text of the pagination UI tooltip text.
 	queryAll("#top-nav-bar a:not(.disabled), #bottom-bar a").forEach(link => {
 		link.dataset.targetPage = parseInt((/=([0-9]+)/.exec(link.href)||{})[1]||0)/20 + 1;
 	});
@@ -3114,8 +3116,8 @@ function adjustUIForWindowSize() {
 
 	// Show quick-nav UI up/down buttons if content is taller than window.
 	bottomBarOffset = bottomBar.hasClass("decorative") ? 16 : 30;
-	queryAll("#quick-nav-ui a[href='#top'], #quick-nav-ui a[href='#bottom-bar']").forEach(button => {
-		button.style.visibility = (query("#content").clientHeight > window.innerHeight + bottomBarOffset) ? "unset" : "hidden";
+	queryAll("#quick-nav-ui, #quick-nav-ui a[href='#top'], #quick-nav-ui a[href='#bottom-bar']").forEach(element => {
+		element.style.visibility = (query("#content").clientHeight > window.innerHeight + bottomBarOffset) ? "unset" : "hidden";
 	});
 
 	// Move anti-kibitzer toggle if content is very short.
