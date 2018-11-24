@@ -806,16 +806,11 @@ function setTheme(newThemeName) {
 	}
 }
 function postSetThemeHousekeeping(oldThemeName = "", newThemeName = (readCookie('theme') || 'default')) {
-	GW.alwaysRecomputeUIElementsContainerHeight = true;
-	function adjustContentSizeAndPosition() {
-		setTimeout(() => {
-			adjustUIForWindowSize();
-			recomputeUIElementsContainerHeight(GW.alwaysRecomputeUIElementsContainerHeight);
-
-			realignHash();
-		}, 0);
+	function adjustContentSizeAndPosition(forceRecompute) {
+		adjustUIForWindowSize();
+		recomputeUIElementsContainerHeight(forceRecompute);
 	}
-	adjustContentSizeAndPosition();
+	adjustContentSizeAndPosition(true);
 	window.addEventListener('resize', GW.windowResized = (event) => {
 		adjustContentSizeAndPosition();
 	});
@@ -831,6 +826,8 @@ function postSetThemeHousekeeping(oldThemeName = "", newThemeName = (readCookie(
 	if (typeof(window.msMatchMedia || window.MozMatchMedia || window.WebkitMatchMedia || window.matchMedia) !== 'undefined') {
 		window.matchMedia('(orientation: portrait)').addListener(generateImagesOverlay);
 	}
+
+	setTimeout(realignHash, 0);
 }
 
 function pageFadeTransition(fadeIn) {
@@ -889,7 +886,6 @@ GW.themeLoadCallback_less = (fromTheme = "") => {
 
 		// Unset the height of the #ui-elements-container.
 		query("#ui-elements-container").style.height = "";
-		GW.alwaysRecomputeUIElementsContainerHeight = false;
 
 		registerInitializer('updatePostNavUIVisibility', false, () => document.readyState == "complete", updatePostNavUIVisibility);
 		window.addEventListener('resize', updatePostNavUIVisibility);
