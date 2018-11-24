@@ -889,8 +889,8 @@ GW.themeLoadCallback_less = (fromTheme = "") => {
 		// Unset the height of the #ui-elements-container.
 		query("#ui-elements-container").style.height = "";
 
-		registerInitializer('updatePostNavUIToggleVisibility', false, () => document.readyState == "complete", updatePostNavUIToggleVisibility);
-		window.addEventListener('resize', updatePostNavUIToggleVisibility);
+		registerInitializer('updatePostNavUIVisibility', false, () => document.readyState == "complete", updatePostNavUIVisibility);
+		window.addEventListener('resize', updatePostNavUIVisibility);
 
 		// Due to filters vs. fixed elements, we need to be smarter about selecting which elements to filter...
 		GW.themeTweaker.filtersExclusionPaths.themeLess = [
@@ -916,12 +916,14 @@ GW.themeLoadCallback_less = (fromTheme = "") => {
 
 // Hide the post-nav-ui toggle if none of the elements to be toggled are visible; 
 // otherwise, show it.
-function updatePostNavUIToggleVisibility() {
+function updatePostNavUIVisibility() {
 	var hidePostNavUIToggle = true;
-	queryAll("#ui-elements-container #quick-nav-ui a, #ui-elements-container #new-comment-nav-ui").forEach(element => {
+	queryAll("#quick-nav-ui a, #new-comment-nav-ui").forEach(element => {
 		if (getComputedStyle(element).visibility == "visible") hidePostNavUIToggle = false;
 	});
-	(query("#ui-elements-container #post-nav-ui-toggle")||{}).style.visibility = hidePostNavUIToggle ? "hidden" : "";
+	queryAll("#post-nav-ui-toggle, #quick-nav-ui").forEach(element => {
+		element.style.visibility = hidePostNavUIToggle ? "hidden" : "";
+	});
 }
 
 // Hide the site nav and appearance adjust UIs on scroll down; show them on scroll up.
@@ -969,7 +971,7 @@ GW.themeUnloadCallback_less = (toTheme = "") => {
 		removePostNavUIToggle();
 		removeAppearanceAdjustUIToggle();
 	}
-	window.removeEventListener('resize', updatePostNavUIToggleVisibility);
+	window.removeEventListener('resize', updatePostNavUIVisibility);
 
 	document.removeEventListener("scroll", GW["updateSiteNavUIStateScrollListener"]);
 
@@ -3138,6 +3140,10 @@ function adjustUIForWindowSize() {
 
 	// Move anti-kibitzer toggle if content is very short.
 	if (query("#content").clientHeight < 400) (query("#anti-kibitzer-toggle")||{}).style.bottom = "125px";
+
+	// Update the visibility of the post nav UI.
+	updatePostNavUIVisibility();
+	window.addEventListener('resize', updatePostNavUIVisibility);
 }
 
 function recomputeUIElementsContainerHeight(force = false) {
