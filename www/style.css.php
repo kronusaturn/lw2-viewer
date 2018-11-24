@@ -2437,6 +2437,9 @@ a.comment-parent-link:hover::after {
 	z-index: 1;
 	display: none;
 }
+.comment-controls #markdown-hints {
+	top: calc(100% + 1.75em);
+}
 #markdown-hints-checkbox:checked ~ #markdown-hints {
 	display: table;
 }
