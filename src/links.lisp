@@ -2,6 +2,7 @@
   (:use #:cl #:alexandria #:lw2.lmdb #:lw2.backend #:lw2.sites #:lw2.context #:lw2-viewer.config)
   (:export #:match-lw1-link #:convert-lw1-link
            #:match-overcomingbias-link #:convert-overcomingbias-link
+           #:direct-link #:with-direct-link
            #:match-lw2-link #:match-lw2-slug-link #:match-lw2-sequence-link #:convert-lw2-link #:convert-lw2-slug-link #:convert-lw2-sequence-link #:convert-lw2-user-link
            #:generate-post-link
            #:convert-any-link))
@@ -25,13 +26,27 @@
 (simple-cacheable ("lw1-link" "lw1-link" link :catch-errors nil)
   (if-let ((location (get-redirect (concatenate 'string "https://www.lesswrong.com" link))))
           (let ((loc-uri (puri:parse-uri location))) (format nil "~A~@[#comment-~A~]" (puri:uri-path loc-uri) (puri:uri-fragment loc-uri)))
-          (error "<p>Could not retrieve LW1 link.</p><p>You may wish to try <a href='~A'>~:*~A</a>" (concatenate 'string "http://lesswrong.com" link))))
+          (error "<p>Could not retrieve LW1 link.</p><p>You may wish to try <a href='~A'>~:*~A</a>" (concatenate 'string "https://www.lesswrong.com" link))))
 
-(defun convert-lw1-link (link &key (if-error :signal))
-  (if-let (canonical-link (match-lw1-link link))
-          (ecase if-error
-            (:direct-link (or (ignore-errors (get-lw1-link canonical-link)) (concatenate 'string "http://lesswrong.com" canonical-link))) 
-            (:signal (get-lw1-link canonical-link)))))
+(defmacro with-direct-link-restart ((direct-link) &body body)
+  (once-only (direct-link)
+    `(restart-case (progn ,@body)
+       (direct-link () :report "Use direct link." ,direct-link))))
+
+(defun direct-link (&optional c)
+  (declare (ignore c))
+  (if-let (restart (find-restart 'direct-link))
+    (invoke-restart restart)))
+
+(defmacro with-direct-link (&body body)
+  `(handler-bind
+     ((serious-condition #'direct-link))
+     (progn ,@body)))
+
+(defun convert-lw1-link (link)
+  (if-let (matched-link (match-lw1-link link))
+    (with-direct-link-restart ((concatenate 'string "https://www.lesswrong.com" matched-link))
+      (get-lw1-link matched-link))))
 
 (defun match-overcomingbias-link (link)
   (if (ppcre:scan "^https?://(?:www\\.)?overcomingbias\\.com/" link)
@@ -43,16 +58,12 @@
           (match-lw1-link location)
           ""))
 
-(defun convert-overcomingbias-link (link &key (if-error :signal))
-  (labels ((inner-convert (link)
-             (let ((lw1-link (get-overcomingbias-link link)))
-               (if (string= lw1-link "")
-                   nil
-                   (convert-lw1-link lw1-link)))))
-    (if (match-overcomingbias-link link)
-        (ecase if-error
-          (:direct-link (or (ignore-errors (inner-convert link)) link))
-          (:signal (inner-convert link))))))
+(defun convert-overcomingbias-link (link)
+  (with-direct-link-restart (link)
+    (let ((lw1-link (get-overcomingbias-link link)))
+      (if (string= lw1-link "")
+          nil
+          (convert-lw1-link lw1-link)))))
 
 (defun match-lw2-link (link)
   (multiple-value-bind (match? strings) (ppcre:scan-to-strings "^(?:https?://(?:www.)?less(?:er)?wrong.com)?/posts/([^/]+)/([^/#]*)(?:/comment/([^/#]+)|/?#?([^/#]+)?)?" link)
@@ -101,5 +112,5 @@
 	(let ((story-id (cdr (assoc :--id story)))) 
 	  (gen-internal story-id (or (cdr (assoc :slug story)) (get-post-slug story-id)) comment-id absolute-uri))))))
 
-(defun convert-any-link (url &key (if-error :signal))
-  (or (convert-lw2-link url) (convert-lw2-slug-link url) (convert-lw2-sequence-link url) (convert-lw1-link url :if-error if-error) (convert-overcomingbias-link url :if-error if-error) (convert-lw2-user-link url)))
+(defun convert-any-link (url)
+  (or (convert-lw2-link url) (convert-lw2-slug-link url) (convert-lw2-sequence-link url) (convert-lw1-link url) (convert-overcomingbias-link url) (convert-lw2-user-link url)))
