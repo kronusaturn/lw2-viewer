@@ -1,4 +1,7 @@
 
+// FOR TESTING ONLY, COMMENT WHEN DEPLOYING.
+// GW.loggingEnabled = true;
+
 /****************************************************/
 /* CSS CLASS MANIPULATION (polyfill for .classList) */
 /****************************************************/
@@ -48,7 +51,8 @@ function queryAll(selector, context) {
         switch (selector.charAt(0)) {
             case '#':
                 // Handle ID-based selectors
-                return [document.getElementById(selector.substr(1))];
+                let element = document.getElementById(selector.substr(1));
+                return element ? [ element ] : [ ];
             case '.':
                 // Handle class-based selectors
                 // Query by multiple classes by converting the selector 
