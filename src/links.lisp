@@ -18,10 +18,26 @@
           location
           nil))))
 
-(defun match-lw1-link (link)
-  (multiple-value-bind (match? strings) (ppcre:scan-to-strings "(?:^https?://(?:www.)?less(?:er)?wrong.com|^)(?:/r/discussion|/r/lesswrong)?(/lw/.*)" link)
-    (when match?
-      (values (elt strings 0))))) 
+(defmacro match-values (regex input registers)
+  (with-gensyms (match? strings)
+    (labels ((register-body (x)
+               (typecase x
+                 (integer `(elt ,strings ,x))
+                 (atom x)
+                 (t (cons (register-body (car x)) (register-body (cdr x)))))))
+      `(multiple-value-bind (,match? ,strings) (ppcre:scan-to-strings ,regex ,input)
+         (when ,match?
+           (values ,.(register-body registers)))))))
+
+(defun match-lw1-link (link) (match-values "(?:^https?://(?:www.)?less(?:er)?wrong.com|^)(?:/r/discussion|/r/lesswrong)?(/lw/.*)" link (0)))
+
+(defun match-lw2-link (link) (match-values "^(?:https?://(?:www.)?less(?:er)?wrong.com)?/posts/([^/]+)/([^/#]*)(?:/comment/([^/#]+)|/?#?([^/#]+)?)?" link (0 (or 2 3) 1)))
+
+(defun match-lw2-slug-link (link) (match-values "^(?:https?://(?:www.)?less(?:er)?wrong.com)?/(?:codex|hpmor)/([^/#]+)(?:/?#?([^/#]+)?)?" link (0 1)))
+
+(defun match-lw2-sequence-link (link) (match-values "^(?:https?://(?:www.)?less(?:er)?wrong.com)?/s/(?:[^/#]+)/p/([^/#]+)(?:#([^/#]+)?)?" link (0 1)))
+
+(defun convert-lw2-user-link (link) (match-values "^(?:https?://(?:www.)?less(?:er)?wrong.com)(/users/[^/#]+)" link (0)))
 
 (simple-cacheable ("lw1-link" "lw1-link" link :catch-errors nil)
   (if-let ((location (get-redirect (concatenate 'string "https://www.lesswrong.com" link))))
@@ -64,26 +80,6 @@
       (if (string= lw1-link "")
           nil
           (convert-lw1-link lw1-link)))))
-
-(defun match-lw2-link (link)
-  (multiple-value-bind (match? strings) (ppcre:scan-to-strings "^(?:https?://(?:www.)?less(?:er)?wrong.com)?/posts/([^/]+)/([^/#]*)(?:/comment/([^/#]+)|/?#?([^/#]+)?)?" link)
-    (when match?
-      (values (elt strings 0) (or (elt strings 2) (elt strings 3)) (elt strings 1)))))
-
-(defun match-lw2-slug-link (link)
-  (multiple-value-bind (match? strings) (ppcre:scan-to-strings "^(?:https?://(?:www.)?less(?:er)?wrong.com)?/(?:codex|hpmor)/([^/#]+)(?:/?#?([^/#]+)?)?" link)
-    (when match?
-      (values (elt strings 0) (elt strings 1)))))
-
-(defun match-lw2-sequence-link (link)
-  (multiple-value-bind (match? strings) (ppcre:scan-to-strings "^(?:https?://(?:www.)?less(?:er)?wrong.com)?/s/(?:[^/#]+)/p/([^/#]+)(?:#([^/#]+)?)?" link)
-    (when match?
-      (values (elt strings 0) (elt strings 1)))))
-
-(defun convert-lw2-user-link (link)
-  (multiple-value-bind (match? strings) (ppcre:scan-to-strings "^(?:https?://(?:www.)?less(?:er)?wrong.com)(/users/[^/#]+)" link)
-    (when match?
-      (elt strings 0))))
 
 (labels
   ((gen-internal (post-id slug comment-id &optional absolute-uri)
