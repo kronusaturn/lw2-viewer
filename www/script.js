@@ -3143,7 +3143,6 @@ function adjustUIForWindowSize() {
 
 	// Update the visibility of the post nav UI.
 	updatePostNavUIVisibility();
-	window.addEventListener('resize', updatePostNavUIVisibility);
 }
 
 function recomputeUIElementsContainerHeight(force = false) {
