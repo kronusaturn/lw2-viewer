@@ -3305,13 +3305,13 @@ GW.guiEditButtons = [
 	[ 'heading2', 'Heading level 2', '', '\\n## ', '', 'Heading', '&#xf1dc;<sup>2</sup>' ],
 	[ 'heading3', 'Heading level 3', '', '\\n### ', '', 'Heading', '&#xf1dc;<sup>3</sup>' ],
 	[ 'blockquote', 'Blockquote', '', blockquote, '', '', '&#xf10e;' ],
-	[ 'bulleted-list', 'Bulleted list', '', '\\n* ', '', 'List item', '&#xf0ca' ],
-	[ 'numbered-list', 'Numbered list', '', '\\n1. ', '', 'List item', '&#xf0cb' ],
-	[ 'horizontal-rule', 'Horizontal rule', '', '\\n\\n---\\n\\n', '', '', '&#xf068' ],
-	[ 'inline-code', 'Inline code', '', '`', '`', 'Code', '&#xf121' ],
-	[ 'code-block', 'Code block', '', '```\\n', '\\n```', 'Code', '&#xf1c9' ],
-	[ 'formula', 'LaTeX', '', '$', '$', 'LaTeX formula', '&#xf155' ],
-	[ 'spoiler', 'Spoiler block', '', '::: spoiler\\n', '\\n:::', 'Spoiler text', '&#xf2fc' ]
+	[ 'bulleted-list', 'Bulleted list', '', '\\n* ', '', 'List item', '&#xf0ca;' ],
+	[ 'numbered-list', 'Numbered list', '', '\\n1. ', '', 'List item', '&#xf0cb;' ],
+	[ 'horizontal-rule', 'Horizontal rule', '', '\\n\\n---\\n\\n', '', '', '&#xf068;' ],
+	[ 'inline-code', 'Inline code', '', '`', '`', 'Code', '&#xf121;' ],
+	[ 'code-block', 'Code block', '', '```\\n', '\\n```', 'Code', '&#xf1c9;' ],
+	[ 'formula', 'LaTeX', '', '$', '$', 'LaTeX formula', '&#xf155;' ],
+	[ 'spoiler', 'Spoiler block', '', '::: spoiler\\n', '\\n:::', 'Spoiler text', '&#xf2fc;' ]
 ];
 
 function blockquote(text, startpos) {
