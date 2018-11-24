@@ -2911,7 +2911,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	setEditPostPageSubmitButtonText();
 	
 	// Compute the text of the top pagination UI tooltip text.
-	queryAll("#top-nav-bar a:not(.disabled)").forEach(link => {
+	queryAll("#top-nav-bar a:not(.disabled), #bottom-bar a").forEach(link => {
 		link.dataset.targetPage = parseInt((/=([0-9]+)/.exec(link.href)||{})[1]||0)/20 + 1;
 	});
 

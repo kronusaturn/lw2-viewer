@@ -170,7 +170,8 @@ a.nav-inner,
 
 /*= Top pagination UI hover tooltips =*/
 
-#top-nav-bar a::after {
+#top-nav-bar a::after,
+#bottom-bar a::after {
 	color: #222;
 }
 

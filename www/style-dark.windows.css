@@ -196,16 +196,26 @@ h1.listing ~ #bottom-bar {
 	position: relative;
 }
 #top-nav-bar a::after {
+	bottom: calc(100% - 3px);
 	content: attr(data-target-page);
+}
+#bottom-bar a:not([href='#top'])::after {
+	content: "Page " attr(data-target-page);
+	top: unset;
+	left: 0;
+	bottom: 4px;
+}
+#top-nav-bar a::after,
+#bottom-bar a:not([href='#top'])::after {
 	display: block;
 	position: absolute;
 	font-size: 0.75rem;
 	width: 100%;
-	bottom: calc(100% - 3px);
 	line-height: 1;
 	visibility: hidden;
 }
-#top-nav-bar a:hover::after {
+#top-nav-bar a:hover::after,
+#bottom-bar a:hover::after {
 	visibility: visible;
 }
 
@@ -4960,7 +4970,8 @@ body {
 
 /*= Top pagination UI hover tooltips =*/
 
-#top-nav-bar a::after {
+#top-nav-bar a::after,
+#bottom-bar a::after {
 	color: #fff;
 }
 
