@@ -2911,8 +2911,8 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	setEditPostPageSubmitButtonText();
 	
 	// Compute the text of the top pagination UI tooltip text.
-	queryAll("#top-nav-bar a:not(.disabled)").forEach(button => {
-		button.dataset.targetPage = parseInt(/=([0-9]+)/.exec(button.href)[1])/20 + 1;
+	queryAll("#top-nav-bar a:not(.disabled)").forEach(link => {
+		link.dataset.targetPage = parseInt((/=([0-9]+)/.exec(link.href)||{})[1]||0)/20 + 1;
 	});
 
 	// Add event listeners for Escape and Enter, for the theme tweaker.
