@@ -2203,10 +2203,10 @@ function focusImage(imageToFocus) {
 	window.addEventListener("wheel", GW.imageFocusScroll = (event) => {
 		event.preventDefault();
 
-		let image = clonedImage;
+		let image = query("#image-focus-overlay img");
 
 		// Remove the filter.
-		clonedImage.savedFilter = image.style.filter;
+		image.savedFilter = image.style.filter;
 		image.style.filter = 'none';
 
 		// Locate point under cursor.
