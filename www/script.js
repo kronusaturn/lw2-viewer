@@ -956,9 +956,12 @@ function updatePostNavUIVisibility() {
 	GWLog("updatePostNavUIVisibility");
 	var hidePostNavUIToggle = true;
 	queryAll("#quick-nav-ui a, #new-comment-nav-ui").forEach(element => {
-		if (getComputedStyle(element).visibility == "visible") hidePostNavUIToggle = false;
+		if (getComputedStyle(element).visibility == "visible" ||
+			element.style.visibility == "visible" ||
+			element.style.visibility == "unset")
+			hidePostNavUIToggle = false;
 	});
-	queryAll("#post-nav-ui-toggle").forEach(element => {
+	queryAll("#quick-nav-ui, #post-nav-ui-toggle").forEach(element => {
 		element.style.visibility = hidePostNavUIToggle ? "hidden" : "";
 	});
 }
