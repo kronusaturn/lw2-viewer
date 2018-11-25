@@ -75,11 +75,12 @@
           ""))
 
 (defun convert-overcomingbias-link (link)
-  (with-direct-link-restart (link)
-    (let ((lw1-link (get-overcomingbias-link link)))
-      (if (string= lw1-link "")
-          nil
-          (convert-lw1-link lw1-link)))))
+  (when (match-overcomingbias-link link)
+    (with-direct-link-restart (link)
+      (let ((lw1-link (get-overcomingbias-link link)))
+        (if (string= lw1-link "")
+            nil
+            (convert-lw1-link lw1-link))))))
 
 (labels
   ((gen-internal (post-id slug comment-id &optional absolute-uri)
