@@ -32,7 +32,7 @@
 (defmethod link-for-site-p ((s site) link) nil)
 
 (defmethod link-for-site-p ((s lesswrong-viewer-site) link)
-  (ppcre:scan "^https?://(?:www.)?less(?:er)?wrong.com" link))
+  (ppcre:scan "^https?://(?:www\\.)?(?:less(?:er)?wrong\\.com|alignmentforum\\.org)" link))
 
 (defmethod link-for-site-p ((s ea-forum-viewer-site) link)
   (ppcre:scan "https?://(?:www\\.)?(?:effective-altruism\\.com|forum\\.effectivealtruism\\.org)" link))
