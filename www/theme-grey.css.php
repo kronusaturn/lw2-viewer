@@ -235,9 +235,8 @@ body {
 	text-decoration: none;
 	text-shadow: none;
 }
-.sublevel-nav .sublevel-item:active,
-.sublevel-nav .sublevel-item:disabled,
-.sublevel-nav span.sublevel-item {
+.sublevel-nav .sublevel-item:not(.selected):active,
+.sublevel-nav .sublevel-item:disabled {
 	background-color: #ddd;
 	color: #000;
 	text-shadow: 
