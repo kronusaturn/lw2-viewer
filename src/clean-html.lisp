@@ -296,7 +296,7 @@
 				       (new-a (plump:make-element (plump:parent text-node) "a"))
 				       (new-text (unless (= url-end (length text)) (plump:make-text-node (plump:parent text-node) (subseq text url-end))))) 
 				  (setf (plump:text text-node) (subseq text 0 url-start)
-                                        (plump:attribute new-a "href") (or (with-direct-link (convert-any-link url)) url))
+                                        (plump:attribute new-a "href") (with-direct-link (convert-any-link url)))
 				  (plump:make-text-node new-a (clean-text url-raw))
 				  (when new-text
 				    (scan-for-urls new-text)
@@ -396,7 +396,7 @@
                                        ((tag-is node "a")
                                         (let ((href (plump:attribute node "href")))
                                           (when href
-                                            (let ((new-link (or (with-direct-link (convert-any-link href)) href)))
+                                            (let ((new-link (with-direct-link (convert-any-link href))))
                                               (when new-link
                                                 (setf (plump:attribute node "href") new-link)))))
                                         (when (only-child-is node "u")

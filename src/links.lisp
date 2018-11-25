@@ -5,7 +5,7 @@
            #:direct-link #:with-direct-link
            #:match-lw2-link #:match-lw2-slug-link #:match-lw2-sequence-link #:convert-lw2-link #:convert-lw2-slug-link #:convert-lw2-sequence-link #:convert-lw2-user-link
            #:generate-post-link
-           #:convert-any-link))
+           #:convert-any-link* #:convert-any-link))
 
 (in-package #:lw2.links)
 
@@ -29,20 +29,29 @@
          (when ,match?
            (values ,.(register-body registers)))))))
 
+(defmethod link-for-site-p ((s site) link) nil)
+
+(defmethod link-for-site-p ((s lesswrong-viewer-site) link)
+  (ppcre:scan "^https?://(?:www.)?less(?:er)?wrong.com" link))
+
+(defmethod link-for-site-p ((s ea-forum-viewer-site) link)
+  (ppcre:scan "https?://(?:www\\.)?(?:effective-altruism\\.com|forum\\.effectivealtruism\\.org)" link))
+
+(defun find-link-site (link)
+  (loop for s in *sites*
+        when (link-for-site-p s link) return s))
+
 (defun match-lw1-link (link) (match-values "(?:^https?://(?:www.)?less(?:er)?wrong.com|^)(?:/r/discussion|/r/lesswrong)?(/lw/.*)" link (0)))
 
-(defun match-lw2-link (link) (match-values "^(?:https?://(?:www.)?less(?:er)?wrong.com)?/posts/([^/]+)/([^/#]*)(?:/comment/([^/#]+)|/?#?([^/#]+)?)?" link (0 (or 2 3) 1)))
+(defun match-ea1-link (link) (match-values "^(?:https?://(?:www\\.)?(?:effective-altruism\\.com|forum\\.effectivealtruism\\.org))?(/ea/.*)" link (0)))
+
+(defun match-lw2-link (link) (match-values "^(?:https?://[^/]+)?/posts/([^/]+)/([^/#]*)(?:/comment/([^/#]+)|/?#?([^/#]+)?)?" link (0 (or 2 3) 1)))
 
 (defun match-lw2-slug-link (link) (match-values "^(?:https?://(?:www.)?less(?:er)?wrong.com)?/(?:codex|hpmor)/([^/#]+)(?:/?#?([^/#]+)?)?" link (0 1)))
 
 (defun match-lw2-sequence-link (link) (match-values "^(?:https?://(?:www.)?less(?:er)?wrong.com)?/s/(?:[^/#]+)/p/([^/#]+)(?:#([^/#]+)?)?" link (0 1)))
 
 (defun convert-lw2-user-link (link) (match-values "^(?:https?://(?:www.)?less(?:er)?wrong.com)(/users/[^/#]+)" link (0)))
-
-(simple-cacheable ("lw1-link" "lw1-link" link :catch-errors nil)
-  (if-let ((location (get-redirect (concatenate 'string "https://www.lesswrong.com" link))))
-          (let ((loc-uri (puri:parse-uri location))) (format nil "~A~@[#comment-~A~]" (puri:uri-path loc-uri) (puri:uri-fragment loc-uri)))
-          (error "<p>Could not retrieve LW1 link.</p><p>You may wish to try <a href='~A'>~:*~A</a>" (concatenate 'string "https://www.lesswrong.com" link))))
 
 (defmacro with-direct-link-restart ((direct-link) &body body)
   (once-only (direct-link)
@@ -59,10 +68,29 @@
      ((serious-condition #'direct-link))
      (progn ,@body)))
 
+(defun process-redirect-link (link base-uri site-name)
+  (if-let ((location (get-redirect (concatenate 'string base-uri link))))
+          (let ((loc-uri (puri:parse-uri location))) (format nil "~A~@[#comment-~A~]" (puri:uri-path loc-uri) (puri:uri-fragment loc-uri)))
+          (error "<p>Could not retrieve ~A link.</p><p>You may wish to try <a href='~A'>~:*~A</a>" site-name (concatenate 'string base-uri link))))
+
+(defun convert-redirect-link (link match-fn get-fn base-uri)
+  (if-let (matched-link (funcall match-fn link))
+    (with-direct-link-restart ((concatenate 'string base-uri matched-link))
+      (quri:render-uri
+        (quri:merge-uris (quri:uri (funcall get-fn matched-link))
+                         (quri:uri (site-uri (find-link-site base-uri))))))))
+
+(simple-cacheable ("lw1-link" "lw1-link" link :catch-errors nil)
+  (process-redirect-link link "https://www.lesswrong.com" "LessWrong 1.0"))
+
 (defun convert-lw1-link (link)
-  (if-let (matched-link (match-lw1-link link))
-    (with-direct-link-restart ((concatenate 'string "https://www.lesswrong.com" matched-link))
-      (get-lw1-link matched-link))))
+  (convert-redirect-link link #'match-lw1-link #'get-lw1-link "https://www.lesswrong.com"))
+
+(simple-cacheable ("ea1-link" "ea1-link" link :catch-errors nil)
+  (process-redirect-link link "https://forum.effectivealtruism.org" "EA Forum 1.0"))
+
+(defun convert-ea1-link (link)
+  (convert-redirect-link link #'match-ea1-link #'get-ea1-link "https://forum.effectivealtruism.org"))
 
 (defun match-overcomingbias-link (link)
   (if (ppcre:scan "^https?://(?:www\\.)?overcomingbias\\.com/" link)
@@ -82,32 +110,36 @@
             nil
             (convert-lw1-link lw1-link))))))
 
-(labels
-  ((gen-internal (post-id slug comment-id &optional absolute-uri)
-		 (format nil "~Aposts/~A/~A~@[#comment-~A~]" (if absolute-uri (site-uri *current-site*) "/") post-id (or slug "-") comment-id))) 
+(defun gen-internal (post-id slug comment-id &optional absolute-uri)
+  (format nil "~Aposts/~A/~A~@[#comment-~A~]" (or absolute-uri "/") post-id (or slug "-") comment-id))
 
-  (defun convert-lw2-slug-link (link)
-    (multiple-value-bind (slug comment-id) (match-lw2-slug-link link)
-      (when slug
-        (gen-internal (get-slug-postid slug) slug comment-id))))
+(defun convert-lw2-slug-link (link)
+  (multiple-value-bind (slug comment-id) (match-lw2-slug-link link)
+    (when slug
+      (gen-internal (get-slug-postid slug) slug comment-id))))
 
-  (defun convert-lw2-sequence-link (link)
-    (multiple-value-bind (post-id comment-id) (match-lw2-sequence-link link)
-      (when post-id
-        (gen-internal post-id (get-post-slug post-id) comment-id))))
+(defun convert-lw2-sequence-link (link)
+  (multiple-value-bind (post-id comment-id) (match-lw2-sequence-link link)
+    (when post-id
+      (gen-internal post-id (get-post-slug post-id) comment-id))))
 
-  (defun convert-lw2-link (link)
-    (multiple-value-bind (post-id comment-id slug) (match-lw2-link link)
-      (when post-id 
-	(gen-internal post-id slug comment-id)))) 
+(defun convert-lw2-link (link)
+  (multiple-value-bind (post-id comment-id slug) (match-lw2-link link)
+    (when post-id
+      (if-let (site (find-link-site link))
+              (gen-internal post-id slug comment-id (site-uri site))))))
 
-  (defun generate-post-link (story &optional comment-id absolute-uri) 
+(defun generate-post-link (story &optional comment-id absolute-uri)
+  (let ((absolute-uri (if (eq absolute-uri t) (site-uri *current-site*) absolute-uri)))
     (typecase story
       (string 
-	(gen-internal story (get-post-slug story) comment-id absolute-uri))
+        (gen-internal story (get-post-slug story) comment-id absolute-uri))
       (cons
-	(let ((story-id (cdr (assoc :--id story)))) 
-	  (gen-internal story-id (or (cdr (assoc :slug story)) (get-post-slug story-id)) comment-id absolute-uri))))))
+        (let ((story-id (cdr (assoc :--id story)))) 
+          (gen-internal story-id (or (cdr (assoc :slug story)) (get-post-slug story-id)) comment-id absolute-uri))))))
+
+(defun convert-any-link* (url)
+  (or (convert-lw2-link url) (convert-lw2-slug-link url) (convert-lw2-sequence-link url) (convert-lw1-link url) (convert-ea1-link url) (convert-overcomingbias-link url) (convert-lw2-user-link url)))
 
 (defun convert-any-link (url)
-  (or (convert-lw2-link url) (convert-lw2-slug-link url) (convert-lw2-sequence-link url) (convert-lw1-link url) (convert-overcomingbias-link url) (convert-lw2-user-link url)))
+  (or (convert-any-link* url) url))

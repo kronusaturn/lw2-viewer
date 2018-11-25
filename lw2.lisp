@@ -132,7 +132,7 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
       (format out-stream "<h1 class=\"listing~:[~; link-post-listing~]~:[~; own-post-listing~]\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~A</a>~@[<a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\"></a>~]</h1>"
               url
               (logged-in-userid user-id)
-              (if url (encode-entities (string-trim " " url)))
+              (if url (encode-entities (convert-any-link (string-trim " " url))))
               (generate-post-auth-link post nil nil need-auth)
               (clean-text-to-html title)
               (if (logged-in-userid user-id) post-id))
@@ -190,7 +190,7 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
               (main-site-abbreviation *current-site*)))
     (post-section-to-html out-stream post)
     (format out-stream "</div><div class=\"post-body\">")
-    (if url (format out-stream "<p><a href=\"~A\" class=\"link-post-link\">Link post</a></p>" (encode-entities (string-trim " " url))))
+    (if url (format out-stream "<p><a href=\"~A\" class=\"link-post-link\">Link post</a></p>" (encode-entities (convert-any-link (string-trim " " url)))))
     (write-sequence (clean-html* (or html-body "") :with-toc t :post-id post-id) out-stream)
     (format out-stream "</div></div>")))
 
@@ -1343,7 +1343,7 @@ signaled condition to OUT-STREAM."
 
 (define-page view-search "/search" ((q :required t))
   (let ((*current-search-query* q)
-        (link (convert-any-link q)))
+        (link (convert-any-link* q)))
     (declare (special *current-search-query*))
     (if link
         (redirect link)
