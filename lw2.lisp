@@ -175,7 +175,7 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
       (format out-stream "<div class=\"post~:[~; link-post~]\"><h1>~A</h1><div class=\"post-meta\"><a class=\"author~:[~; own-user-author~]\" href=\"/users/~A\" data-userid=\"~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A</a>~:[~*~;~:*<a class=\"lw2-link\" href=\"~A\">~A<span> link</span></a>~]"
               url
-              (clean-text-to-html title)
+              (clean-text-to-html title :hyphenation nil)
               (logged-in-userid user-id)
               (encode-entities (get-user-slug user-id))
               (encode-entities user-id)

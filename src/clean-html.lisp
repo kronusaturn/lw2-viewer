@@ -88,10 +88,14 @@
        (values new-string hyphenation-list))
      (values string nil))))
 
-(defun clean-text-to-html (text)
+(defun clean-text-to-html (text &key (hyphenation t))
   (handler-bind
     (((or plump:invalid-xml-character plump:discouraged-xml-character) #'abort))
-    (clean-html-regexps (plump:encode-entities (coerce (hyphenate-string (clean-text text)) 'simple-string)))))
+    (clean-html-regexps
+      (plump:encode-entities
+        (coerce
+          (funcall (if hyphenation #'hyphenate-string #'identity) (clean-text text))
+          'simple-string)))))
 
 (declaim (ftype (function (plump:node &rest simple-string) boolean) tag-is class-is-not text-class-is-not))
 
