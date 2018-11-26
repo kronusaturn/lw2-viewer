@@ -445,7 +445,7 @@ signaled condition to OUT-STREAM."
                        :body (clean-html (cdr (assoc :html-body item))))))))))
 
 (defparameter *fonts-stylesheet-uris*
-  '("https://fonts.greaterwrong.com/?fonts=CharterGW,Concourse,a_Avante,Whitney,MundoSans,SourceSansPro,Raleway,ProximaNova,TiredOfCourier,AnonymousPro,InputSans,InputSansNarrow,InputSansCondensed,GaramondPremierPro,TriplicateCode,TradeGothic,NewsGothicBT,Caecilia,SourceSerifPro,SourceCodePro"
+  '("https://fonts.greaterwrong.com/?fonts=CharterGW,ConcourseGW,a_Avante,Whitney,MundoSans,SourceSansPro,Raleway,ProximaNova,TiredOfCourier,AnonymousPro,InputSans,InputSansNarrow,InputSansCondensed,GaramondPremierPro,TriplicateCode,TradeGothic,NewsGothicBT,Caecilia,SourceSerifPro,SourceCodePro"
     "https://fonts.greaterwrong.com/?fonts=Inconsolata,BitmapFonts,FontAwesomeGW&base64encode=1"))
 ;(defparameter *fonts-stylesheet-uris* '("https://fonts.greaterwrong.com/?fonts=*"))
 
