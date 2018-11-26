@@ -555,7 +555,7 @@ Element.prototype.getCommentDate = function() {
 	return (item ? parseInt(item.query(".date").dataset["jsDate"]) : false);
 }
 function getCurrentVisibleComment() {
-	let px = window.innerWidth/2, py = window.innerHeight/10;
+	let px = window.innerWidth/2, py = 5;
 	let commentItem = document.elementFromPoint(px, py).closest(".comment-item") || document.elementFromPoint(px, py+60).closest(".comment-item"); // Mind the gap between threads
 	let atbottom = query("#comments").getBoundingClientRect().bottom < window.innerHeight;
 	if (atbottom) {
