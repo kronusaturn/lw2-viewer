@@ -242,7 +242,6 @@ body {
 	text-shadow: 
 		0 -1px 0 #fff,
 		0 0.5px 0.5px #000;
-	transform: none;
 }
 
 .sublevel-nav:not(.sort) .sublevel-item {
@@ -281,7 +280,6 @@ body {
 	font-weight: 600;
 	color: #444;
 	text-shadow: 0.5px 0.5px 0 #fff;
-	border-radius: inherit;
 	z-index: 1;
 }
 .sublevel-nav.sort::after {

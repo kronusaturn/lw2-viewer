@@ -427,8 +427,10 @@ a#inbox-indicator.new-messages:hover::before {
 	padding: 0.125em 0.5em;
 	font-size: 1.125rem;
 }
-.sublevel-nav .sublevel-item:disabled,
-.sublevel-nav span.sublevel-item {
+.sublevel-nav .sublevel-item:active {
+	transform: none;
+}
+.sublevel-nav .sublevel-item.selected {
 	cursor: default;
 }
 
@@ -5026,7 +5028,6 @@ body {
 	text-shadow: 
 		0 -1px 0 #fff,
 		0 0.5px 0.5px #000;
-	transform: none;
 }
 
 .sublevel-nav:not(.sort) .sublevel-item {
@@ -5065,7 +5066,6 @@ body {
 	font-weight: 600;
 	color: #444;
 	text-shadow: 0.5px 0.5px 0 #fff;
-	border-radius: inherit;
 	z-index: 1;
 }
 .sublevel-nav.sort::after {
