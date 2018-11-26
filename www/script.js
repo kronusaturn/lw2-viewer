@@ -3128,7 +3128,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	query("#content").addEventListener("copy", GW.textCopied = (event) => {
 		event.preventDefault();
 		const selectedText = window.getSelection().toString();
-		event.clipboardData.setData("text/plain", selectedText.replace(/\u00AD/g, ""));
+		event.clipboardData.setData("text/plain", selectedText.replace(/\u00AD|\u200b/g, ""));
 	});
 
 	// Set up Image Focus feature.
