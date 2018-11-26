@@ -5,9 +5,10 @@
 
 (in-package #:lw2.clean-html)
 
-(eval-when (:load-toplevel :execute)
-  (cl-typesetting-hyphen:load-language :british)
-  (setf cl-typesetting::*default-hyphen-language* :british))
+(setf cl-typesetting-hyphen::*hyphen-patterns-directory* (asdf:system-relative-pathname "lw2-viewer" "data/hyphenation-patterns/"))
+(setf cl-typesetting-hyphen::*language-hyphen-file-list* '((:en-us . "hyph_en_US")))
+(cl-typesetting-hyphen:load-language :en-us)
+(setf cl-typesetting::*default-hyphen-language* :en-us)
 
 (defun file-get-contents (filename)
   (with-open-file (stream filename)
