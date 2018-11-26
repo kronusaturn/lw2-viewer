@@ -248,7 +248,8 @@ body {
 /*=====================*/
 
 .sublevel-nav.sort .sublevel-item {
-	font-family: <?php echo $UI_font_smallcaps; ?>;
+	font-family: <?php echo $UI_font; ?>;
+	letter-spacing: 0.5px;
 	padding: <?php echo ($platform == 'Mac') ? "7px 7px 5px 7px" : "6px 7px"; ?>;
 	text-transform: uppercase;
 	pointer-events: auto;

@@ -5048,7 +5048,8 @@ body {
 /*=====================*/
 
 .sublevel-nav.sort .sublevel-item {
-	font-family: 'Whitney Smallcaps', 'a_Avante', Arial, sans-serif;
+	font-family: 'Whitney', 'a_Avante', Arial, sans-serif;
+	letter-spacing: 0.5px;
 	padding: 6px 7px;
 	text-transform: uppercase;
 	pointer-events: auto;
