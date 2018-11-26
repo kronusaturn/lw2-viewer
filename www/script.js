@@ -1033,6 +1033,27 @@ GW.themeUnloadCallback_less = (toTheme = "") => {
 	applyFilters(GW.currentFilters);
 }
 
+GW.themeLoadCallback_brutalist = (fromTheme = "") => {
+	GWLog("themeLoadCallback_brutalist");
+	let bottomBarLinks = queryAll("#bottom-bar a");
+	if (!GW.isMobile && bottomBarLinks.length == 5) {
+		let newLinkTexts = [ "First", "Previous", "Top", "Next", "Last" ];
+		bottomBarLinks.forEach((link, i) => {
+			link.dataset.originalText = link.textContent;
+			link.textContent = newLinkTexts[i];
+		});
+	}
+}
+GW.themeUnloadCallback_brutalist = (toTheme = "") => {
+	GWLog("themeUnloadCallback_brutalist");
+	let bottomBarLinks = queryAll("#bottom-bar a");
+	if (!GW.isMobile && bottomBarLinks.length == 5) {
+		bottomBarLinks.forEach(link => {
+			link.textContent = link.dataset.originalText;
+		});
+	}
+}
+
 GW.themeLoadCallback_dark = (fromTheme = "") => {
 	GWLog("themeLoadCallback_dark");
 	query("head").insertAdjacentHTML("beforeend", 
