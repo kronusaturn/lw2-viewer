@@ -42,6 +42,9 @@ body {
 .nav-inner {
 	font-size: 1.375em;
 	font-weight: 600;
+	border-style: solid;
+	border-color: transparent;
+	border-width: 0 2px;
 }
 #secondary-bar .nav-inner {
 	font-size: 1em;
@@ -128,6 +131,15 @@ body {
 #bottom-bar a::after {
 	color: #000;
 }
+#bottom-bar a:not([href='#top'])::after {
+	background-color: #fff;
+	left: 0;
+	right: 0;
+	margin: auto;
+	padding: 1px 6px;
+	bottom: 2px;
+}
+<?php fit_content("#bottom-bar a:not([href='#top'])::after"); ?>
 
 /*==============*/
 /* PAGE TOOLBAR */
