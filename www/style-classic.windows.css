@@ -4986,9 +4986,8 @@ body {
 /*=====================*/
 
 .sublevel-nav.sort .sublevel-item {
-	font-family: 'Arial', sans-serif;
 	letter-spacing: 0.5px;
-	padding: 6px 7px;
+	padding: 7px 7px 6px 8px;
 	text-transform: uppercase;
 	pointer-events: auto;
 	box-shadow: 1px 1px 0 0 #aaa inset;
