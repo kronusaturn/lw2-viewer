@@ -138,6 +138,10 @@ a.nav-inner,
 #top-nav-bar a.nav-item-next::before {
 	content: "\F0DA";
 }
+#bottom-bar #nav-item-last a::before,
+#top-nav-bar a.nav-item-last::before {
+	content: "\F0DA\F0DA";
+}
 #bottom-bar #nav-item-next a::before {
 	margin-left: -1em;
 	left: 2.85em;
@@ -173,6 +177,7 @@ a.nav-inner,
 #top-nav-bar a::after,
 #bottom-bar a::after {
 	color: #222;
+	text-shadow: none;
 }
 
 /*==============*/
