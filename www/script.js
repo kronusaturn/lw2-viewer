@@ -2097,10 +2097,18 @@ function sortComments(mode) {
 	commentsContainer.appendChild(clonedCommentsContainer.lastChild);
 	GW.commentValues = { };
 
-	// Re-activate vote buttons.
 	if (loggedInUserId) {
+		// Re-activate vote buttons.
 		commentsContainer.queryAll("button.vote").forEach(voteButton => {
 			voteButton.addActivateEvent(voteButtonClicked);
+		});
+
+		// Re-activate reply and edit buttons.
+		commentsContainer.queryAll(".reply-button").forEach(replyButton => {
+			replyButton.addActivateEvent(showReplyForm);
+		});
+		commentsContainer.queryAll(".edit-button").forEach(editButton => {
+			editButton.addActivateEvent(showCommentEditForm);
 		});
 	}
 
@@ -2111,7 +2119,7 @@ function sortComments(mode) {
 
 	// Re-add comment parent popups.
 	addCommentParentPopups();
-
+	
 	// Redo new-comments highlighting.
 	highlightCommentsSince(time_fromHuman(query("#hns-date-picker input").value));
 
