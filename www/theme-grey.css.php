@@ -236,7 +236,7 @@ body {
 	text-shadow: none;
 }
 .sublevel-nav .sublevel-item:not(.selected):active,
-.sublevel-nav .sublevel-item:disabled {
+.sublevel-nav .sublevel-item.selected {
 	background-color: #ddd;
 	color: #000;
 	text-shadow: 
