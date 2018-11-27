@@ -2228,22 +2228,27 @@ function addCommentParentPopups() {
 
 function imageFocusSetup(imagesOverlayOnly = false) {
 	GWLog("imageFocusSetup");
-	// Add event listeners for clicking on images to focus them.
+	// Create event listener for clicking on images to focus them.
+	GW.imageClickedToFocus = (event) => {
+		focusImage(event.target);
+
+		if (event.target.closest("#images-overlay")) {
+			query("#image-focus-overlay .image-number").textContent = (getIndexOfFocusedImage() + 1);
+
+			// Set timer to hide the image focus UI.
+			resetImageFocusHideUITimer(true);
+		}
+	};
+	// Add the listener to each image in the overlay (i.e., those in the post).
 	queryAll("#images-overlay img").forEach(image => {
-		image.addActivateEvent(GW.imageClickedToFocus = (event) => {
-			focusImage(event.target);
-
-			if (event.target.closest("#images-overlay")) {
-				query("#image-focus-overlay .image-number").textContent = (getIndexOfFocusedImage() + 1);
-
-				// Set timer to hide the image focus UI.
-				resetImageFocusHideUITimer(true);
-			}
-		});
+		image.addActivateEvent(GW.imageClickedToFocus);
 	});
+	// Accesskey-L starts the slideshow.
 	(query("#images-overlay img")||{}).accessKey = 'l';
+	// Count how many images there are in the post, and set the "… of X" label to that.
 	((query("#image-focus-overlay .image-number")||{}).dataset||{}).numberOfImages = queryAll("#images-overlay img").length;
 	if (imagesOverlayOnly) return;
+	// Add the listener to all other content images (including those in comments).
 	queryAll("#content img").forEach(image => {
 		image.addActivateEvent(GW.imageClickedToFocus);
 	});
