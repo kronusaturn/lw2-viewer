@@ -1801,11 +1801,14 @@ function toggleAppearanceAdjustUI() {
 /* MINIMIZED THREAD HANDLING */
 /*****************************/
 
-function expandAncestorsOf(commentID) {
+function expandAncestorsOf(comment) {
 	GWLog("expandAncestorsOf");
-	let comment = query('#comment-'+commentID);
+	if (typeof comment == "string") {
+		comment = /(?:comment-)?(.+)/.exec(comment)[1];
+		comment = query("#comment-" + comment);
+	}
 	if (!comment) {
-		GWLog("Comment with ID " + commentID + " does not exist, so we can’t expand its ancestors.");
+		GWLog("Comment with ID " + comment.id + " does not exist, so we can’t expand its ancestors.");
 		return;
 	}
 
