@@ -1961,11 +1961,12 @@ input::selection {
 				0 0 3px #fff;
 		}
 
-		.sublevel-nav .sublevel-item,
-		.sublevel-nav .sublevel-item:first-child,
-		.sublevel-nav .sublevel-item:last-child {
-			border-width: 1px;
+		.sublevel-nav:not(.sort) .sublevel-item,
+		.sublevel-nav:not(.sort) .sublevel-item:first-child,
+		.sublevel-nav:not(.sort) .sublevel-item:last-child {
 			border-radius: 8px;
+			border-width: 1px;
+			margin: 2px;
 		}
 	/*****************************************/
 	@media only screen and (max-width: 720px) {
