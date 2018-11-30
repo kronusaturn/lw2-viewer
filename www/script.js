@@ -130,6 +130,16 @@ GW.disableLogging = (permanently = false) => {
 		GW.loggingEnabled = false;
 };
 
+function loadAnalysisToolsIfNeeded() {
+	if (localStorage.getItem("always-load-analysis-tools") == "true")
+		loadAnalysisTools();
+}
+function loadAnalysisTools() {
+	let analysisToolsScriptElement = document.createElement('script');
+	analysisToolsScriptElement.src = "/analysis_tools.js";
+	query("head").appendChild(analysisToolsScriptElement);
+}
+
 /*******************/
 /* INBOX INDICATOR */
 /*******************/
@@ -3170,6 +3180,8 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 	// Set up Image Focus feature.
 	imageFocusSetup();
+	
+	// Load analysis
 });
 
 /*************************/
@@ -3222,6 +3234,9 @@ function generateImagesOverlay() {
 
 	// Add the event listeners to focus each image.
 	imageFocusSetup(true);
+	
+	// Load analysis tools, if enabled.
+	loadAnalysisToolsIfNeeded();
 }
 
 function adjustUIForWindowSize() {
