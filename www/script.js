@@ -3209,13 +3209,17 @@ function generateImagesOverlay() {
 		let clonedImageContainer = document.createElement("div");
 
 		let clonedImage = image.cloneNode(true);
-		clonedImage.style.border = getComputedStyle(image).border;
+		clonedImage.style.borderStyle = getComputedStyle(image).borderStyle;
+		clonedImage.style.borderColor = getComputedStyle(image).borderColor;
+		clonedImage.style.borderWidth = Math.round(parseFloat(getComputedStyle(image).borderWidth)) + "px";
 		clonedImageContainer.appendChild(clonedImage);
 
-		clonedImageContainer.style.top = image.getBoundingClientRect().top - parseFloat(getComputedStyle(image).marginTop) + window.scrollY + "px";
-		clonedImageContainer.style.left = image.getBoundingClientRect().left - parseFloat(getComputedStyle(image).marginLeft) - imagesOverlayLeftOffset + "px";
-		clonedImageContainer.style.width = image.getBoundingClientRect().width + "px";
-		clonedImageContainer.style.height = image.getBoundingClientRect().height + "px";
+		let zoomLevel = parseFloat(GW.currentTextZoom);
+
+		clonedImageContainer.style.top = image.getBoundingClientRect().top * zoomLevel - parseFloat(getComputedStyle(image).marginTop) + window.scrollY + "px";
+		clonedImageContainer.style.left = image.getBoundingClientRect().left * zoomLevel - parseFloat(getComputedStyle(image).marginLeft) - imagesOverlayLeftOffset + "px";
+		clonedImageContainer.style.width = image.getBoundingClientRect().width * zoomLevel + "px";
+		clonedImageContainer.style.height = image.getBoundingClientRect().height * zoomLevel + "px";
 
 		imagesOverlay.appendChild(clonedImageContainer);
 	});

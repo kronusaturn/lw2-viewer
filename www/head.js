@@ -219,6 +219,8 @@ function setTextZoom(zoomFactor) {
 		`.post, .comment, .comment-controls {
 			zoom: ${zoomFactor};
 		}`;
+
+	if (window.generateImagesOverlay) setTimeout(generateImagesOverlay);
 }
 GW.currentTextZoom = localStorage.getItem('text-zoom');
 setTextZoom(GW.currentTextZoom);
