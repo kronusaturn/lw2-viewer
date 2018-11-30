@@ -1278,10 +1278,10 @@ div.comment-child-links a {
 
 .vote {
 	text-shadow: 
-		 1px  1px 0 #999,
-		-1px  1px 0 #999,
-		 1px -1px 0 #999,
-		-1px -1px 0 #999;
+		 1px  1px 0 #aaa,
+		-1px  1px 0 #aaa,
+		 1px -1px 0 #aaa,
+		-1px -1px 0 #aaa;
 }
 .upvote.selected,
 .upvote:hover {
@@ -1303,10 +1303,10 @@ div.comment-child-links a {
 @media only screen and (min-resolution: 192dpi) {
 	.vote {
 		text-shadow: 
-			 0.5px  0.5px 0 #999,
-			-0.5px  0.5px 0 #999,
-			 0.5px -0.5px 0 #999,
-			-0.5px -0.5px 0 #999;
+			 0.5px  0.5px 0 #aaa,
+			-0.5px  0.5px 0 #aaa,
+			 0.5px -0.5px 0 #aaa,
+			-0.5px -0.5px 0 #aaa;
 	}
 	.upvote.selected,
 	.upvote:hover {
