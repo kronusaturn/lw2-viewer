@@ -3033,6 +3033,13 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 	// Mark original poster's comments with a special class.
 	markOriginalPosterComments();
+	
+	// Mark posts with non-positive karma with a special class.
+	queryAll("#content.index-page h1.listing + .post-meta .karma-value").forEach(karmaValue => {
+		if (parseInt(karmaValue.textContent.replace("−", "-")) > 0) return;
+
+		karmaValue.closest(".post-meta").previousSibling.addClass("spam");
+	});
 
 	// Set the "submit" button on the edit post page to something more helpful.
 	setEditPostPageSubmitButtonText();

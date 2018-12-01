@@ -505,6 +505,22 @@ h1.listing .edit-post-link:hover {
 	background-color: #888;
 }
 
+/*======*/
+/* SPAM */
+/*======*/
+
+h1.listing.spam {
+	opacity: 0.35;
+}
+h1.listing.spam + .post-meta {
+	opacity: 0.3;
+}
+h1.listing.spam:hover,
+h1.listing.spam + .post-meta:hover,
+h1.listing.spam:hover + .post-meta {
+	opacity: 1.0;
+}
+
 /*===================*/
 /* LISTING POST-META */
 /*===================*/
