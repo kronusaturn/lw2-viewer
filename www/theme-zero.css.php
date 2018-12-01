@@ -1452,7 +1452,7 @@ select {
 /* ABOUT PAGE */
 /*============*/
 
-.about-page u {
+.about-page mark {
 	background-color: #e6e6e6;
 	text-decoration: none;
 	box-shadow: 

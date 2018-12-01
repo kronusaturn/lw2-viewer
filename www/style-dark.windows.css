@@ -6533,7 +6533,7 @@ select {
 /* ABOUT PAGE */
 /*============*/
 
-.about-page u {
+.about-page mark {
 	background-color: #191919;
 	text-decoration: none;
 	box-shadow: 
