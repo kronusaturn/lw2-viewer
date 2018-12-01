@@ -129,11 +129,22 @@ body {
 	font-weight: normal;
 }
 
-/* User/login tab */
+/*= User/login tab =*/
 
 #inbox-indicator::before {
 	top: 1px;
 	color: #ccc;
+}
+
+/*= Pagination UI =*/
+
+#bottom-bar #nav-item-next a::before {
+	margin-left: -2.2em;
+	left: 4.0em;
+}
+#bottom-bar #nav-item-last a::before {
+	margin-left: -2.3em;
+	left: 3.9em;
 }
 
 /*= Top pagination UI hover tooltips =*/
