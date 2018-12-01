@@ -23,6 +23,15 @@ body {
 /* NAV BAR */
 /*=========*/
 
+.active-bar {
+	border: 1px solid transparent;
+	border-bottom-color: #666;
+	box-shadow:
+		0 1.5px 1.5px -1.5px #bbb,
+		0 1px 1px -1px #777;
+	margin: 0 -30px 0 -2px;
+}
+
 .nav-inner {
 	font-weight: normal;
 	font-size: 1.1875em;
