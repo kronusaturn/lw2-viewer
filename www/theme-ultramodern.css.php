@@ -117,7 +117,19 @@ body {
 	top: 0;
 }
 
-/*= Top pagination UI hover tooltips =*/
+/*= Top pagination UI =*/
+
+#top-nav-bar a::before {
+	font-weight: 300;
+}
+
+/*= Bottom pagination UI =*/
+
+#bottom-bar .nav-item a::before {
+	font-weight: 400;
+}
+
+/*= Pagination UI hover tooltips =*/
 
 #top-nav-bar a::after,
 #bottom-bar a::after {
@@ -208,10 +220,10 @@ body {
 	height: 100%;
 	border-radius: 6px;
 	box-shadow:
-		0 18px 0 0 #999 inset,
+		0 18px 0 0 #888 inset,
 		0 0 0 1px #777 inset,
 		0 18px 0 1px #777 inset,
-		0 0 0 2px #999;
+		0 0 0 2px #888;
 }
 
 /*================*/
@@ -541,7 +553,7 @@ h1.listing + .post-meta .date::after {
 	margin: 0 0.5em 0 0.125em;
 }
 h1.listing + .post-meta .comment-count.new-comments::before {
-	color: #0c0;
+	color: #0f0;
 }
 h1.listing:last-of-type + .post-meta {
 	margin-bottom: 0;
@@ -774,6 +786,10 @@ h1.listing + .post-meta .link-post-domain {
 
 .post-meta > * {
 	margin: 0;
+	text-shadow:
+		0px 0px 1px #777,
+		0.5px 0.5px 1px #aaa,
+		0.5px 0.5px 1px #bbb;
 }
 .post-meta .comment-count span,
 .post-meta .read-time span,
@@ -788,7 +804,7 @@ h1.listing + .post-meta .link-post-domain {
 	font-family: Font Awesome;
 	margin: 0 0.25em 0 0;
 	font-size: 0.875em;
-	color: #aaa;
+	color: #666;
 }
 .post-meta .comment-count {
 	margin: 0 0.25em 0 0;
