@@ -355,6 +355,7 @@ Element.prototype.constructCommentControls = function() {
 }
 
 GW.commentActionButtonClicked = (event) => {
+	GWLog("commentActionButtonClicked");
 	if (event.target.hasClass("edit-button") ||
 		event.target.hasClass("reply-button") ||
 		event.target.hasClass("new-comment-button")) {
@@ -364,9 +365,14 @@ GW.commentActionButtonClicked = (event) => {
 	}
 
 	if (event.target.hasClass("delete-button")) {
-		// Delete comment
+		let commentItem = event.target.closest(".comment-item");
+		if (confirm("Are you sure you want to delete this comment?" + "\n\n" +
+					"COMMENT DATE: " + commentItem.query(".date.").innerHTML + "\n" + 
+					"COMMENT ID: " + /comment-(.+)/.exec(commentItem.id)[1] + "\n\n" + 
+					"COMMENT TEXT:" + "\n" + commentItem.query(".comment-body").dataset.markdownSource))
+			deleteComment(commentItem);
 	} else if (event.target.hasClass("retract-button")) {
-		// Retract comment
+		retractComment(event.target.closest(".comment-item"));
 	} else if (event.target.hasClass("edit-button")) {
 		showCommentEditForm(event.target.closest(".comment-item"));
 	} else if (event.target.hasClass("reply-button")) {
@@ -422,6 +428,14 @@ function expandTextarea(textarea) {
 			textarea.parentElement.parentElement.scrollIntoViewIfNeeded();
 		}
 	});
+}
+
+function retractComment(commentItem) {
+	GWLog("retractComment");
+}
+
+function deleteComment(commentItem) {
+	GWLog("deleteComment");
 }
 
 /**********/
