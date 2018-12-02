@@ -1428,10 +1428,25 @@ div.comment-child-links a {
 	font-weight: 600;
 }
 
+.comment-controls .action-button {
+	overflow: hidden;
+}
+.comment-controls .action-button::before {
+	font-size: 1em;
+}
+.comment-controls .delete-button,
+.comment-controls .retract-button {
+	color: #ca3232;
+}
+.comment-controls .delete-button {
+	max-width: 1.5em;
+	margin-right: 0.75em;
+}
+.comment-controls .retract-button {
+	max-width: 1.6em;
+}
 .comment-controls .reply-button {
 	max-width: 1.6em;
-	overflow: hidden;
-	margin-right: 0.5em;
 }
 .comment-controls .reply-button::before {
 	content: "\F086";
@@ -1441,14 +1456,15 @@ div.comment-child-links a {
 .comment-controls .edit-button {
 	color: #0b0;
 	max-width: 1.3em;
-	overflow: hidden;
-	margin-right: 0.25em;
+	margin: 0 1.5em 0 0.75em;
 }
 .comment-controls .edit-button::before {
-	font-size: 1rem;
+	font-size: 0.9375em;
 }
-.comment-controls .edit-button:hover {
+.comment-controls .action-button:hover {
 	color: #f00;
+	text-shadow:
+		0.5px 0.5px 0.5px #f77;
 }
 
 h1.listing .edit-post-link,

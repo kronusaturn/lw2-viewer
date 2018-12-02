@@ -6162,11 +6162,24 @@ a.comment-parent-link:hover::before {
 	font-weight: 600;
 }
 
+.comment-controls .delete-button,
+.comment-controls .retract-button {
+	color: #d00;
+}
+.comment-controls .delete-button::before {
+	opacity: 0.6;
+}
+.comment-controls .retract-button::before {
+	opacity: 0.5;
+}
 .comment-controls .edit-button {
 	color: #0b0;
 }
-.comment-controls .edit-button:hover {
+.comment-controls .action-button:hover {
 	color: #f00;
+	text-shadow:
+		0px 0px 0.5px #fff,
+		0px 0px 1.5px #800,
 }
 
 .post-controls {

@@ -1341,11 +1341,16 @@ div.comment-child-links a {
 	color: #444;
 }
 
-.comment-controls .edit-button {
-	color: #090;
+.comment-controls .delete-button,
+.comment-controls .retract-button {
+	color: #900;
 }
-.comment-controls .edit-button:hover {
-	color: #f00;
+.comment-controls .edit-button {
+	color: #070;
+}
+.comment-controls .action-button:hover {
+	color: #bbb;
+	text-decoration: none;
 }
 
 .edit-post-link,

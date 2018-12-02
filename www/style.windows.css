@@ -6209,14 +6209,12 @@ div.comment-child-links a {
 	font-weight: 600;
 }
 
-.comment-controls .delete-button {
-	color: #c00;
-}
+.comment-controls .delete-button,
 .comment-controls .retract-button {
-	color: #c00;
+	color: #a00;
 }
 .comment-controls .edit-button {
-	color: #0b0;
+	color: #090;
 }
 .comment-controls .action-button:hover {
 	color: #f00;

@@ -5892,6 +5892,11 @@ div.comment-child-links a {
 	font-weight: 600;
 }
 
+.comment-controls .delete-button::before,
+.comment-controls .retract-button::before {
+	opacity: 0.8;
+}
+
 .posting-controls .action-button {
 	border: none;
 }
