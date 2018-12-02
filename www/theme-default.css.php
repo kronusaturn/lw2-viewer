@@ -1350,10 +1350,16 @@ div.comment-child-links a {
 	font-weight: 600;
 }
 
+.comment-controls .delete-button {
+	color: #c00;
+}
+.comment-controls .retract-button {
+	color: #c00;
+}
 .comment-controls .edit-button {
 	color: #0b0;
 }
-.comment-controls .edit-button:hover {
+.comment-controls .action-button:hover {
 	color: #f00;
 }
 

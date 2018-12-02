@@ -283,7 +283,9 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 		"</div></form>";
 	commentControls.onsubmit = disableBeforeUnload;
 
-	commentControls.query(".cancel-comment-button").addActivateEvent(hideReplyForm);
+	commentControls.query(".cancel-comment-button").addActivateEvent(GW.cancelCommentButtonClicked = (event) => {
+		hideReplyForm(event.target.closest(".comment-controls"));
+	});
 	commentControls.scrollIntoViewIfNeeded();
 	commentControls.query("form").onsubmit = (event) => {
 		if (!event.target.text.value) {
@@ -309,18 +311,29 @@ Element.prototype.constructCommentControls = function() {
 		replyButton.setAttribute("title", "Post new comment [n]");
 	} else {
 		if (commentControls.parentElement.query(".comment-body").hasAttribute("data-markdown-source")) {
-			let editButton = commentControls.appendChild(document.createElement("button"));
-			editButton.className = "edit-button action-button";
-			editButton.innerHTML = "Edit";
-			editButton.tabIndex = '-1';
-			editButton.addActivateEvent(showCommentEditForm);
+			[
+				[ "delete-button", "Delete", "Delete this comment" ],
+				[ "retract-button", "Retract", "Retract this comment (without deleting)" ],
+				[ "edit-button", "Edit", "Edit this comment" ]
+			].forEach(buttonSpec => {
+				let [ buttonClass, buttonLabel, buttonAltText ] = buttonSpec;
+				let button = commentControls.appendChild(document.createElement("button"));
+				button.addClasses([ buttonClass, "action-button" ]);
+				button.innerHTML = buttonLabel;
+				button.title = buttonAltText;
+				button.tabIndex = '-1';
+			});
 		}
 		replyButton.className = "reply-button action-button";
 		replyButton.innerHTML = "Reply";
 	}
 	commentControls.appendChild(replyButton);
 	replyButton.tabIndex = '-1';
-	replyButton.addActivateEvent(showReplyForm);
+
+	// Activate buttons.
+	commentControls.queryAll(".action-button").forEach(button => {
+		button.addActivateEvent(GW.commentActionButtonClicked);
+	});
 
 	// Replicate karma controls at the bottom of comments.
 	if (commentControls.parentElement.id == "comments") return;
@@ -332,37 +345,58 @@ Element.prototype.constructCommentControls = function() {
 	});
 }
 
-function showCommentEditForm(event) {
+GW.commentActionButtonClicked = (event) => {
+	if (event.target.hasClass("edit-button") ||
+		event.target.hasClass("reply-button") ||
+		event.target.hasClass("new-comment-button")) {
+		queryAll("textarea").forEach(textarea => {
+			hideReplyForm(textarea.closest(".comment-controls"));
+		});
+	}
+
+	if (event.target.hasClass("delete-button")) {
+		// Delete comment
+	} else if (event.target.hasClass("retract-button")) {
+		// Retract comment
+	} else if (event.target.hasClass("edit-button")) {
+		showCommentEditForm(event.target.closest(".comment-item"));
+	} else if (event.target.hasClass("reply-button")) {
+		showReplyForm(event.target.closest(".comment-item"));
+	} else if (event.target.hasClass("new-comment-button")) {
+		showReplyForm(event.target.closest("#comments"));
+	}
+};
+
+function showCommentEditForm(commentItem) {
 	GWLog("showCommentEditForm");
-	let commentControls = event.target.parentElement;
-	let commentBody = commentControls.parentElement.query(".comment-body");
-	commentBody.setAttribute("style", "display: none;");
+
+	let commentBody = commentItem.query(".comment-body");
+	commentBody.style.display = "none";
+
+	let commentControls = commentItem.query(".comment-controls");
 	commentControls.injectReplyForm(commentBody.dataset.markdownSource);
 	commentControls.query("form").addClass("edit-existing-comment");
 	expandTextarea(commentControls.query("textarea"));
 }
 
-function showReplyForm(event) {
+function showReplyForm(commentItem) {
 	GWLog("showReplyForm");
-	let commentControls = event.target.parentElement;
-	queryAll("textarea").forEach(textarea => {
-		textarea.closest(".comment-controls").constructCommentControls();
-	});
 
+	let commentControls = commentItem.query(".comment-controls");
 	commentControls.injectReplyForm(commentControls.dataset.enteredText);
 }
 
-function hideReplyForm(event) {
+function hideReplyForm(commentControls) {
 	GWLog("hideReplyForm");
 	// Are we editing a comment? If so, un-hide the existing comment body.
-	let containingComment = event.target.closest(".comment-item");
+	let containingComment = commentControls.closest(".comment-item");
 	if (containingComment) containingComment.query(".comment-body").style.display = "";
 
-	let enteredText = event.target.parentElement.query("textarea").value;
-	if (enteredText) event.target.parentElement.dataset.enteredText = enteredText;
+	let enteredText = commentControls.query("textarea").value;
+	if (enteredText) commentControls.dataset.enteredText = enteredText;
 
 	disableBeforeUnload();
-	event.target.parentElement.constructCommentControls();
+	commentControls.constructCommentControls();
 }
 
 function expandTextarea(textarea) {
@@ -2103,12 +2137,9 @@ function sortComments(mode) {
 			voteButton.addActivateEvent(voteButtonClicked);
 		});
 
-		// Re-activate reply and edit buttons.
-		commentsContainer.queryAll(".reply-button").forEach(replyButton => {
-			replyButton.addActivateEvent(showReplyForm);
-		});
-		commentsContainer.queryAll(".edit-button").forEach(editButton => {
-			editButton.addActivateEvent(showCommentEditForm);
+		// Re-activate comment action buttons.
+		commentsContainer.queryAll(".action-button").forEach(button => {
+			button.addActivateEvent(GW.commentActionButtonClicked);
 		});
 	}
 

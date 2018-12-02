@@ -2313,6 +2313,27 @@ a.comment-parent-link:hover::after {
 	top: -1px;
 }
 
+.comment-controls .delete-button {
+	margin-right: 0.25em;
+}
+.comment-controls .edit-button,
+.comment-controls .retract-button {
+	margin-right: 1em;
+}
+.comment-controls .retract-button::before {
+	content: '\F4B3';
+	opacity: 0.6;
+}
+.comment-controls .delete-button::before {
+	content: '\F05E';
+	opacity: 0.7;
+}
+.comment-controls .retract-button::before,
+.comment-controls .delete-button::before {
+	font-weight: 900;
+	font-size: 0.9em;
+}
+
 .comment-controls form {
 	position: relative;
 }
