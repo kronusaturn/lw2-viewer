@@ -209,6 +209,7 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
                    (child-count (or null fixnum))
                    (children list)
                    (vote-count (or null fixnum))
+		   (retracted boolean)
                    (html-body string))
                   comment
                   (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
@@ -219,6 +220,7 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
 						    (< (* 1000 (local-time:timestamp-to-unix (local-time:now))) (+ js-time 15000)))
 					       (push "just-posted-comment" l))
 					   (if highlight-new (push "comment-item-highlight" l))
+					   (if retracted (push "retracted" l))
 					   l))>
 			<div class="comment-meta">
 			  <a class=("author~:[~; own-user-author~]" (logged-in-userid user-id))

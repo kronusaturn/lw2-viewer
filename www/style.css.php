@@ -1516,6 +1516,10 @@ h1.listing + .post-meta .read-time {
 .comment-body p {
 	margin: 1em 0;
 }
+.retracted .post-body,
+.retracted .comment-body {
+	text-decoration: line-through;
+}
 
 /*************/
 /* POST-META */
