@@ -1384,17 +1384,30 @@ function injectThemeTweaker() {
 
 	let themeTweakerToggle = addUIElement(`<div id='theme-tweaker-toggle'><button type='button' tabindex='-1' title="Customize appearance [;]" accesskey=';'>&#xf1de;</button></div>`);
 	themeTweakerToggle.query("button").addActivateEvent(GW.themeTweaker.toggleButtonClicked = (event) => {
-		themeTweakerUI.query(".current-theme span").innerText = (readCookie("theme") || "default");
+		GW.themeTweakerStyleSheetAvailable = () => {
+			themeTweakerUI.query(".current-theme span").innerText = (readCookie("theme") || "default");
 
-		themeTweakerUI.query("#theme-tweak-control-invert").checked = (GW.currentFilters['invert'] == "100%");
-		[ "saturate", "brightness", "contrast", "hue-rotate" ].forEach(sliderName => {
-			let slider = themeTweakerUI.query("#theme-tweak-control-" + sliderName);
-			slider.value = /^[0-9]+/.exec(GW.currentFilters[sliderName]) || slider.dataset['defaultValue'];
-			themeTweakerUI.query("#theme-tweak-label-" + sliderName).innerText = slider.value + slider.dataset['labelSuffix'];
-		});
+			themeTweakerUI.query("#theme-tweak-control-invert").checked = (GW.currentFilters['invert'] == "100%");
+			[ "saturate", "brightness", "contrast", "hue-rotate" ].forEach(sliderName => {
+				let slider = themeTweakerUI.query("#theme-tweak-control-" + sliderName);
+				slider.value = /^[0-9]+/.exec(GW.currentFilters[sliderName]) || slider.dataset['defaultValue'];
+				themeTweakerUI.query("#theme-tweak-label-" + sliderName).innerText = slider.value + slider.dataset['labelSuffix'];
+			});
 
-		toggleThemeTweakerUI();
-		event.target.disabled = true;
+			toggleThemeTweakerUI();
+			event.target.disabled = true;
+		};
+
+		if (query("link[href^='/theme_tweaker.css']")) {
+			GW.themeTweakerStyleSheetAvailable();
+		} else {
+			// Load the theme tweaker CSS (if not loaded).
+			let themeTweakerStyleSheet = document.createElement('link');
+			themeTweakerStyleSheet.setAttribute('rel', 'stylesheet');
+			themeTweakerStyleSheet.setAttribute('href', '/theme_tweaker.css');
+			themeTweakerStyleSheet.addEventListener('load', GW.themeTweakerStyleSheetAvailable);
+			query("head").appendChild(themeTweakerStyleSheet);
+		}
 	});
 }
 function toggleThemeTweakerUI() {

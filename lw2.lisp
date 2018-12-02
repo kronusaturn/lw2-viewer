@@ -667,10 +667,9 @@ signaled condition to OUT-STREAM."
             csrf-token
             (load-time-value (with-open-file (s "www/head.js") (uiop:slurp-stream-string s)) t)
             *extra-inline-scripts*)
-    (format out-stream "~A<link rel=\"stylesheet\" href=\"~A\"><link rel=\"stylesheet\" href=\"~A\">~{<link rel=\"stylesheet\" href=\"~A\">~}<link rel=\"shortcut icon\" href=\"~A\">"
+    (format out-stream "~A<link rel=\"stylesheet\" href=\"~A\">~{<link rel=\"stylesheet\" href=\"~A\">~}<link rel=\"shortcut icon\" href=\"~A\">"
             *html-head*
             (generate-css-link)
-            (generate-versioned-link "/theme_tweaker.css")
             (generate-fonts-links)
             (generate-versioned-link "/favicon.ico"))
     (format out-stream "<script src=\"~A\" async></script>~A"
@@ -768,7 +767,6 @@ signaled condition to OUT-STREAM."
           (hunchentoot:return-code*) return-code
           (hunchentoot:header-out :link) (format nil "~:{<~A>;rel=preload;type=~A;as=~A~@{;~A~}~:^,~}"
                                                  `((,(generate-css-link) "text/css" "style" ,.push-option)
-                                                   (,(generate-versioned-link "/theme_tweaker.css") "text/css" "style" ,.push-option)
                                                    ,.(loop for link in (generate-fonts-links)
                                                            collect (list* link "text/css" "style" push-option))
                                                    (,(generate-versioned-link "/script.js") "text/javascript" "script" ,.push-option))))
@@ -1546,8 +1544,7 @@ signaled condition to OUT-STREAM."
                                                                                       (loop for theme in '(nil "dark" "grey" "ultramodern" "zero" "brutalist" "rts")
                                                                                             collect (defres (format nil "/style~@[-~A~].~A.css" theme system) "text/css")))
                                                                                     (loop for (uri content-type) in
-                                                                                      '(("/theme_tweaker.css" "text/css")
-                                                                                        ("/script.js" "text/javascript")
+                                                                                      '(("/script.js" "text/javascript")
                                                                                         ("/favicon.ico" "image/x-icon"))
                                                                                       collect (defres uri content-type))))
                                                                    (when file
