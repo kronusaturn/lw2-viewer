@@ -6290,38 +6290,46 @@ div.comment-child-links a {
 	font-weight: 600;
 }
 
-.comment-controls .action-button {
-	overflow: hidden;
-}
 .comment-controls .action-button::before {
 	font-size: 1em;
 }
-.comment-controls .delete-button,
-.comment-controls .retract-button {
+.comment-controls .action-button::after {
+	content: attr(data-label);
+	display: block;
+	position: absolute;
+	font-size: 0.5em;
+	text-transform: uppercase;
+	visibility: hidden;
+	text-shadow: none;
+}
+.comment-controls .action-button:hover::after {
+	visibility: visible;
+}
+.comment-controls .delete-button::before,
+.comment-controls .retract-button::before {
 	color: #ca3232;
 }
-.comment-controls .delete-button {
-	max-width: 1.5em;
-	margin-right: 0.75em;
+.comment-controls .delete-button::after {
+	transform: translateX(-8px);
 }
-.comment-controls .retract-button {
-	max-width: 1.6em;
-}
-.comment-controls .reply-button {
-	max-width: 1.6em;
+.comment-controls .retract-button::after {
+	transform: translateX(-8px);
 }
 .comment-controls .reply-button::before {
 	content: "\F086";
 	font-weight: 400;
 	font-size: 1.125rem;
+	color: #6a8a6b;
 }
-.comment-controls .edit-button {
-	color: #0b0;
-	max-width: 1.3em;
-	margin: 0 1.5em 0 0.75em;
+.comment-controls .reply-button::after {
+	transform: translateX(-4px);
 }
 .comment-controls .edit-button::before {
 	font-size: 0.9375em;
+	color: #0b0;
+}
+.comment-controls .edit-button::after {
+	transform: translateX(-1px);
 }
 .comment-controls .action-button:hover {
 	color: #f00;

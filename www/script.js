@@ -320,12 +320,14 @@ Element.prototype.constructCommentControls = function() {
 				let button = commentControls.appendChild(document.createElement("button"));
 				button.addClasses([ buttonClass, "action-button" ]);
 				button.innerHTML = buttonLabel;
+				button.dataset.label = buttonLabel;
 				button.title = buttonAltText;
 				button.tabIndex = '-1';
 			});
 		}
 		replyButton.className = "reply-button action-button";
 		replyButton.innerHTML = "Reply";
+		replyButton.dataset.label = "Reply";
 	}
 	commentControls.appendChild(replyButton);
 	replyButton.tabIndex = '-1';
