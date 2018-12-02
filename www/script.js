@@ -1069,6 +1069,28 @@ GW.themeUnloadCallback_less = (toTheme = "") => {
 	applyFilters(GW.currentFilters);
 }
 
+GW.themeLoadCallback_dark = (fromTheme = "") => {
+	GWLog("themeLoadCallback_dark");
+	query("head").insertAdjacentHTML("beforeend", 
+		"<style id='dark-theme-adjustments'>" + 
+		`.markdown-reference-link a { color: #d200cf; filter: invert(100%); }` + 
+		`#bottom-bar.decorative::before { filter: invert(100%); }` +
+		"</style>");
+	registerInitializer('makeImagesGlow', true, () => query("#images-overlay") != null, () => {
+		queryAll("#images-overlay img").forEach(image => {
+			image.style.filter = "drop-shadow(0 0 0 #000) drop-shadow(0 0 0.5px #fff) drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #fff)";
+			image.style.width = parseInt(image.style.width) + 12 + "px";
+			image.style.height = parseInt(image.style.height) + 12 + "px";
+			image.style.top = parseInt(image.style.top) - 6 + "px";
+			image.style.left = parseInt(image.style.left) - 6 + "px";
+		});
+	});
+}
+GW.themeUnloadCallback_dark = (toTheme = "") => {
+	GWLog("themeUnloadCallback_dark");
+	removeElement("#dark-theme-adjustments");
+}
+
 GW.themeLoadCallback_brutalist = (fromTheme = "") => {
 	GWLog("themeLoadCallback_brutalist");
 	let bottomBarLinks = queryAll("#bottom-bar a");
@@ -1090,26 +1112,17 @@ GW.themeUnloadCallback_brutalist = (toTheme = "") => {
 	}
 }
 
-GW.themeLoadCallback_dark = (fromTheme = "") => {
-	GWLog("themeLoadCallback_dark");
-	query("head").insertAdjacentHTML("beforeend", 
-		"<style id='dark-theme-adjustments'>" + 
-		`.markdown-reference-link a { color: #d200cf; filter: invert(100%); }` + 
-		`#bottom-bar.decorative::before { filter: invert(100%); }` +
-		"</style>");
-	registerInitializer('makeImagesGlow', true, () => query("#images-overlay") != null, () => {
-		queryAll("#images-overlay img").forEach(image => {
-			image.style.filter = "drop-shadow(0 0 0 #000) drop-shadow(0 0 0.5px #fff) drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #fff)";
-			image.style.width = parseInt(image.style.width) + 12 + "px";
-			image.style.height = parseInt(image.style.height) + 12 + "px";
-			image.style.top = parseInt(image.style.top) - 6 + "px";
-			image.style.left = parseInt(image.style.left) - 6 + "px";
-		});
+GW.themeLoadCallback_classic = (fromTheme = "") => {
+	GWLog("themeLoadCallback_classic");
+	queryAll(".comment-item .comment-controls .action-button").forEach(button => {
+		button.innerHTML = "";
 	});
 }
-GW.themeUnloadCallback_dark = (toTheme = "") => {
-	GWLog("themeUnloadCallback_dark");
-	removeElement("#dark-theme-adjustments");
+GW.themeUnloadCallback_classic = (toTheme = "") => {
+	GWLog("themeUnloadCallback_classic");
+	queryAll(".comment-item .comment-controls .action-button").forEach(button => {
+		button.innerHTML = button.dataset.label;
+	});
 }
 
 /********************************************/

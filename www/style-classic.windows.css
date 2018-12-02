@@ -6331,7 +6331,7 @@ div.comment-child-links a {
 .comment-controls .edit-button::after {
 	transform: translateX(-1px);
 }
-.comment-controls .action-button:hover {
+.comment-item .comment-controls .action-button:hover::before {
 	color: #f00;
 	text-shadow:
 		0.5px 0.5px 0.5px #f77;

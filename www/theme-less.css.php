@@ -1916,11 +1916,25 @@ div.comment-child-links a {
 	color: #f00;
 }
 
+.comment-controls .delete-button,
+.comment-controls .retract-button {
+	color: #fd7354;
+}
+.comment-controls .delete-button::before {
+	font-weight: 300;
+}
+.comment-controls .retract-button::before {
+	font-weight: 400;
+}
 .comment-controls .edit-button {
 	color: #0b0;
 }
-.comment-controls .edit-button:hover {
+.comment-controls .edit-button::before {
+	font-weight: 300;
+}
+.comment-controls .action-button:hover {
 	color: #f00;
+	text-shadow: 0 0 0.5px #faa;
 }
 
 .post-controls {
