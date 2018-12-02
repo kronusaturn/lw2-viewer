@@ -175,9 +175,7 @@ function applyFilters(filters) {
 	
 	if (!filters.isEmpty()) {
 		let filtersExclusionTree = exclusionTreeFromExclusionPaths(GW.themeTweaker.filtersExclusionPaths) || GW.themeTweaker.defaultFiltersExclusionTree;
-		fullStyleString = `body::before { content: ""; } ${selectorFromExclusionTree(filtersExclusionTree)} { filter: ${filterStringFromFilters(filters)}; }`;
-	} else {
-		fullStyleString = `#content::before { z-index: -1; } `;
+		fullStyleString = `body::before { content: ""; } body > #content::before { z-index: 0; } ${selectorFromExclusionTree(filtersExclusionTree)} { filter: ${filterStringFromFilters(filters)}; }`;
 	}
 	
 	// Update the style tag (if it’s already been loaded).
