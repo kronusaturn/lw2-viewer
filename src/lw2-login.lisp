@@ -175,7 +175,8 @@
                           (:unset (values))
                           (:document-id (cons :selector (alist :document-id v)))
                           (t (cons k v))))
-                  (list (cons :data data))))
+                  (when data
+		    (list (cons :data data)))))
          (fields (list (list* :data fields))))
     (values (graphql-mutation-string mutation-name terms fields) mutation-name)))
 
