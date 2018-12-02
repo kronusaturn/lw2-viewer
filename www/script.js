@@ -332,6 +332,13 @@ Element.prototype.constructCommentControls = function() {
 	commentControls.appendChild(replyButton);
 	replyButton.tabIndex = '-1';
 
+	// On mobile, hide labels for all but the Reply button.
+	if (GW.isMobile && window.innerWidth <= 900) {
+		commentControls.queryAll(".delete-button, .retract-button, .edit-button").forEach(button => {
+			button.innerHTML = "";
+		});
+	}
+
 	// Activate buttons.
 	commentControls.queryAll(".action-button").forEach(button => {
 		button.addActivateEvent(GW.commentActionButtonClicked);
