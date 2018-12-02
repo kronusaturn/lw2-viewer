@@ -6164,12 +6164,17 @@ a.comment-parent-link:hover::before {
 }
 .comment-controls .delete-button::before {
 	opacity: 0.6;
+	font-weight: 400;
 }
 .comment-controls .retract-button::before {
 	opacity: 0.5;
+	font-weight: 400;
 }
 .comment-controls .edit-button {
-	color: #0b0;
+	color: #0a0;
+}
+.comment-controls .edit-button::before {
+	font-weight: 400;
 }
 .comment-controls .action-button:hover {
 	color: #f00;
