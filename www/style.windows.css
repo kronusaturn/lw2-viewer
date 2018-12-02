@@ -6208,12 +6208,14 @@ div.comment-child-links a {
 .comment-controls .delete-button,
 .comment-controls .retract-button {
 	color: #a00;
+	opacity: 0.85;
 }
 .comment-controls .edit-button {
 	color: #090;
 }
 .comment-controls .action-button:hover {
 	color: #f00;
+	opacity: 1.0;
 }
 
 .button.edit-post-link:not(:hover) {
