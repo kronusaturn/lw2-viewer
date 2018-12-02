@@ -6157,22 +6157,20 @@ div.comment-child-links a {
 
 .vote::after {
 	position: absolute;
-	color: transparent;
-}
-.vote:not(:hover)::after {
-	text-shadow: none;
-}
-.karma.waiting .vote.big-vote::after {
-	color: transparent;
+	visibility: hidden;
 }
 .vote.big-vote::after,
-.vote:not(.big-vote).clicked-twice::after {
-	color: inherit;
+.karma:not(.waiting) .vote.clicked-once::after,
+.karma:not(.waiting) .vote.clicked-twice::after {
+	visibility: visible;
 }
-.karma:not(.waiting) .vote.clicked-once::after {
+.vote.big-vote.clicked-twice::after {
+	visibility: hidden;
+}
+.vote.clicked-once::after {
 	color: #c8c8c8;
+	text-shadow: none;
 }
-
 .upvote::after {
 	content: "\F325";
 	left: 7px;
