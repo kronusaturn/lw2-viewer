@@ -336,7 +336,7 @@ Element.prototype.updateCommentControlButton = function() {
 			let [ buttonClass, buttonLabel, buttonAltText ] = classMap[testClass]();
 			this.className = "";
 			this.addClasses([ buttonClass, "action-button" ]);
-			this.innerHTML = buttonLabel;
+			if (this.innerHTML || !this.dataset.label) this.innerHTML = buttonLabel;
 			this.dataset.label = buttonLabel;
 			this.title = buttonAltText;
 			this.tabIndex = '-1';
