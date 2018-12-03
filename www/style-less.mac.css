@@ -2321,10 +2321,13 @@ a.comment-parent-link:hover::after {
 .comment-controls .unretract-button {
 	margin-right: 1em;
 }
-.comment-controls .retract-button::before,
-.comment-controls .unretract-button::before {
+.comment-controls .retract-button::before {
 	content: '\F4B3';
 	opacity: 0.6;
+}
+.comment-controls .unretract-button::before {
+	content: '\F075';
+	opacity: 0.9;
 }
 .comment-controls .delete-button::before {
 	content: '\F05E';
@@ -6797,13 +6800,15 @@ div.comment-child-links a {
 .comment-controls .retract-button {
 	color: #fd7354;
 }
-.comment-controls .delete-button::before {
+.comment-controls .delete-button::before,
+.comment-controls .unretract-button::before {
 	font-weight: 300;
 }
 .comment-controls .retract-button::before {
 	font-weight: 400;
 }
-.comment-controls .edit-button {
+.comment-controls .edit-button,
+.comment-controls .unretract-button {
 	color: #0b0;
 }
 .comment-controls .edit-button::before {

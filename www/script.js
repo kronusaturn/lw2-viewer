@@ -321,7 +321,7 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 Element.prototype.updateCommentControlButton = function() {
 	let retractFn = () => {
 		if(this.closest(".comment-item").firstChild.hasClass("retracted"))
-			return [ "unretract-button", "Unretract", "Unretract this comment" ];
+			return [ "unretract-button", "Un-retract", "Un-retract this comment" ];
 		else
 			return [ "retract-button", "Retract", "Retract this comment (without deleting)" ];
 	};
@@ -420,6 +420,8 @@ GW.commentActionButtonClicked = (event) => {
 	} else if (event.target.hasClass("new-comment-button")) {
 		showReplyForm(event.target.closest("#comments"));
 	}
+
+	event.target.blur();
 };
 
 function showCommentEditForm(commentItem) {
@@ -479,10 +481,12 @@ function doCommentAction(action, commentItem) {
 		params: params,
 		onSuccess: (event) => {
 			let fn = {
-				retract: () => {commentItem.firstChild.addClass("retracted")},
-				unretract: () => {commentItem.firstChild.removeClass("retracted")},
-				delete: () => {commentItem.firstChild.outerHTML = "<div class=\"comment deleted-comment\"><div class=\"comment-meta\"><span class=\"deleted-meta\">[ ]</span></div><div class=\"comment-body\">[deleted]</div></div>";
-					       commentItem.removeChild(commentItem.query(".comment-controls"));}
+				retract: () => { commentItem.firstChild.addClass("retracted") },
+				unretract: () => { commentItem.firstChild.removeClass("retracted") },
+				delete: () => {
+					commentItem.firstChild.outerHTML = "<div class=\"comment deleted-comment\"><div class=\"comment-meta\"><span class=\"deleted-meta\">[ ]</span></div><div class=\"comment-body\">[deleted]</div></div>";
+					commentItem.removeChild(commentItem.query(".comment-controls"));
+				}
 			}[action];
 			if(fn) fn();
 			if(action != "delete")

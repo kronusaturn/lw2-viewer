@@ -1355,7 +1355,8 @@ div.comment-child-links a {
 	color: #a00;
 	opacity: 0.85;
 }
-.comment-controls .edit-button {
+.comment-controls .edit-button,
+.comment-controls .unretract-button {
 	color: #090;
 }
 .comment-controls .action-button:hover {

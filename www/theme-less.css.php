@@ -1920,13 +1920,15 @@ div.comment-child-links a {
 .comment-controls .retract-button {
 	color: #fd7354;
 }
-.comment-controls .delete-button::before {
+.comment-controls .delete-button::before,
+.comment-controls .unretract-button::before {
 	font-weight: 300;
 }
 .comment-controls .retract-button::before {
 	font-weight: 400;
 }
-.comment-controls .edit-button {
+.comment-controls .edit-button,
+.comment-controls .unretract-button {
 	color: #0b0;
 }
 .comment-controls .edit-button::before {

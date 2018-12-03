@@ -1345,7 +1345,8 @@ div.comment-child-links a {
 .comment-controls .retract-button {
 	color: #900;
 }
-.comment-controls .edit-button {
+.comment-controls .edit-button,
+.comment-controls .unretract-button {
 	color: #070;
 }
 .comment-controls .action-button:hover {

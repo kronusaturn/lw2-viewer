@@ -1360,10 +1360,12 @@ a.comment-parent-link:hover::before {
 	opacity: 0.5;
 	font-weight: 400;
 }
-.comment-controls .edit-button {
+.comment-controls .edit-button,
+.comment-controls .unretract-button {
 	color: #0a0;
 }
-.comment-controls .edit-button::before {
+.comment-controls .edit-button::before,
+.comment-controls .unretract-button::before {
 	font-weight: 400;
 }
 .comment-controls .action-button:hover {

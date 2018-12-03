@@ -1069,7 +1069,8 @@ div.comment-child-links a {
 }
 
 .comment-controls .delete-button::before,
-.comment-controls .retract-button::before {
+.comment-controls .retract-button::before,
+.comment-controls .unretract-button::before {
 	opacity: 0.8;
 }
 

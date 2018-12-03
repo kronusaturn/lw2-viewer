@@ -1466,6 +1466,9 @@ div.comment-child-links a {
 	font-size: 0.9375em;
 	color: #0b0;
 }
+.comment-controls .unretract-button::before {
+	color: #0b0;
+}
 .comment-controls .edit-button::after {
 	transform: translateX(-1px);
 }
