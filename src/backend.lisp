@@ -24,7 +24,7 @@
 (defvar *graphql-debug-output* nil)
 
 (defparameter *posts-index-fields* '(:title :--id :slug :user-id :posted-at :base-score :comment-count :page-url :url :word-count :frontpage-date :curated-date :meta :draft :af :vote-count))
-(defparameter *comments-index-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id (:parent-comment :--id :user-id :post-id) :base-score :page-url :vote-count :retracted :html-body))
+(defparameter *comments-index-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id (:parent-comment :--id :user-id :post-id) :base-score :page-url :vote-count :retracted :deleted-public :html-body))
 (defparameter *messages-index-fields* '(:--id :user-id :created-at :content (:conversation :--id :title) :----typename))
 
 (defparameter *notifications-base-terms* (alist :view "userNotifications" :created-at :null :viewed :null))
@@ -412,7 +412,7 @@
 (defun get-post-comments (post-id &key (revalidate t) force-revalidate)
   (let ((fn (lambda ()
               (let ((base-terms (alist :view "postCommentsTop" :post-id post-id))
-                    (comments-fields '(:--id :user-id :post-id :posted-at :parent-comment-id :base-score :page-url :vote-count :retracted :html-body)))
+                    (comments-fields '(:--id :user-id :post-id :posted-at :parent-comment-id :base-score :page-url :vote-count :retracted :deleted-public :html-body)))
                 (multiple-value-bind (comments-total comments-list)
                   (lw2-graphql-query-multi (list (lw2-query-string* :comment :total base-terms nil)
                                                  (lw2-query-string* :comment :list (nconc (alist :limit 500) base-terms) comments-fields)))
