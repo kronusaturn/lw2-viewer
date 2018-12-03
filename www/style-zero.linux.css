@@ -6000,6 +6000,11 @@ div.comment-child-links a {
 .comment-controls .retract-button {
 	color: #c00;
 }
+.comment-controls .delete-button::before {
+	font-size: 1em;
+	font-weight: 400;
+	opacity: 0.7;
+}
 .comment-controls .edit-button,
 .comment-controls .unretract-button {
 	color: #0a0;
