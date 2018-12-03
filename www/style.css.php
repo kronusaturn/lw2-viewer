@@ -2328,10 +2328,12 @@ a.comment-parent-link:hover::after {
 	margin-right: 0.25em;
 }
 .comment-controls .edit-button,
-.comment-controls .retract-button {
+.comment-controls .retract-button,
+.comment-controls .unretract-button {
 	margin-right: 1em;
 }
-.comment-controls .retract-button::before {
+.comment-controls .retract-button::before,
+.comment-controls .unretract-button::before {
 	content: '\F4B3';
 	opacity: 0.6;
 }
@@ -2340,6 +2342,7 @@ a.comment-parent-link:hover::after {
 	opacity: 0.7;
 }
 .comment-controls .retract-button::before,
+.comment-controls .unretract-button::before,
 .comment-controls .delete-button::before {
 	font-weight: 900;
 	font-size: 0.9em;

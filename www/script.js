@@ -130,6 +130,25 @@ GW.disableLogging = (permanently = false) => {
 		GW.loggingEnabled = false;
 };
 
+function doAjax(params) {
+	let req = new XMLHttpRequest();
+	req.addEventListener("load", (event) => {
+		if(event.target.status < 400) {
+			if(params["onSuccess"]) params.onSuccess();
+		} else {
+			if(params["onFailure"]) params.onFailure();
+		}
+	});
+	req.open((params["method"] || "GET"), (params.location || document.location));
+	if(params["method"] == "POST") {
+		req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		params["params"]["csrf-token"] = GW.csrfToken;
+		req.send(params.params.keys().map((x) => {return "" + x + "=" + encodeURIComponent(params.params[x])}).join("&"));
+	} else {
+		req.send();
+	}
+}
+
 /*******************/
 /* INBOX INDICATOR */
 /*******************/
@@ -299,6 +318,33 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 	textarea.focus();
 }
 
+Element.prototype.updateCommentControlButton = function() {
+	let retractFn = () => {
+		if(this.closest(".comment-item").firstChild.hasClass("retracted"))
+			return [ "unretract-button", "Unretract", "Unretract this comment" ];
+		else
+			return [ "retract-button", "Retract", "Retract this comment (without deleting)" ];
+	};
+	let classMap = {
+		"delete-button": () => { return [ "delete-button", "Delete", "Delete this comment" ] },
+		"retract-button": retractFn,
+		"unretract-button": retractFn,
+		"edit-button": () => { return [ "edit-button", "Edit", "Edit this comment" ] }
+	};
+	classMap.keys().forEach((testClass) => {
+		if(this.hasClass(testClass)) {
+			let [ buttonClass, buttonLabel, buttonAltText ] = classMap[testClass]();
+			this.className = "";
+			this.addClasses([ buttonClass, "action-button" ]);
+			this.innerHTML = buttonLabel;
+			this.dataset.label = buttonLabel;
+			this.title = buttonAltText;
+			this.tabIndex = '-1';
+			return;
+		}
+	});
+}
+
 Element.prototype.constructCommentControls = function() {
 	GWLog("constructCommentControls");
 	let commentControls = this;
@@ -311,18 +357,10 @@ Element.prototype.constructCommentControls = function() {
 		replyButton.setAttribute("title", "Post new comment [n]");
 	} else {
 		if (commentControls.parentElement.query(".comment-body").hasAttribute("data-markdown-source")) {
-			[
-				[ "delete-button", "Delete", "Delete this comment" ],
-				[ "retract-button", "Retract", "Retract this comment (without deleting)" ],
-				[ "edit-button", "Edit", "Edit this comment" ]
-			].forEach(buttonSpec => {
-				let [ buttonClass, buttonLabel, buttonAltText ] = buttonSpec;
+			[ "delete-button", "retract-button", "edit-button" ].forEach(buttonClass => {
 				let button = commentControls.appendChild(document.createElement("button"));
-				button.addClasses([ buttonClass, "action-button" ]);
-				button.innerHTML = buttonLabel;
-				button.dataset.label = buttonLabel;
-				button.title = buttonAltText;
-				button.tabIndex = '-1';
+				button.addClass(buttonClass);
+				button.updateCommentControlButton();
 			});
 		}
 		replyButton.className = "reply-button action-button";
@@ -370,9 +408,11 @@ GW.commentActionButtonClicked = (event) => {
 					"COMMENT DATE: " + commentItem.query(".date.").innerHTML + "\n" + 
 					"COMMENT ID: " + /comment-(.+)/.exec(commentItem.id)[1] + "\n\n" + 
 					"COMMENT TEXT:" + "\n" + commentItem.query(".comment-body").dataset.markdownSource))
-			deleteComment(commentItem);
+			doCommentAction("delete", commentItem);
 	} else if (event.target.hasClass("retract-button")) {
-		retractComment(event.target.closest(".comment-item"));
+		doCommentAction("retract", event.target.closest(".comment-item"));
+	} else if (event.target.hasClass("unretract-button")) {
+		doCommentAction("unretract", event.target.closest(".comment-item"));
 	} else if (event.target.hasClass("edit-button")) {
 		showCommentEditForm(event.target.closest(".comment-item"));
 	} else if (event.target.hasClass("reply-button")) {
@@ -430,12 +470,25 @@ function expandTextarea(textarea) {
 	});
 }
 
-function retractComment(commentItem) {
-	GWLog("retractComment");
-}
-
-function deleteComment(commentItem) {
-	GWLog("deleteComment");
+function doCommentAction(action, commentItem) {
+	GWLog("doCommentAction");
+	let params = {};
+	params[(action + "-comment-id")] = commentItem.getCommentId();
+	doAjax({
+		method: "POST",
+		params: params,
+		onSuccess: (event) => {
+			let fn = {
+				retract: () => {commentItem.firstChild.addClass("retracted")},
+				unretract: () => {commentItem.firstChild.removeClass("retracted")},
+				delete: () => {commentItem.firstChild.outerHTML = "<div class=\"comment deleted-comment\"><div class=\"comment-meta\"><span class=\"deleted-meta\">[ ]</span></div><div class=\"comment-body\">[deleted]</div></div>";
+					       commentItem.removeChild(commentItem.query(".comment-controls"));}
+			}[action];
+			if(fn) fn();
+			if(action != "delete")
+				commentItem.query(".comment-controls").queryAll(".action-button").forEach(x => {x.updateCommentControlButton()});
+		}
+	});
 }
 
 /**********/

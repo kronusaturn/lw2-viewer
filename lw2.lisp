@@ -1121,24 +1121,35 @@ signaled condition to OUT-STREAM."
                           (force-output out-stream)
                           (output-post-vote out-stream)
                           (output-comments-votes out-stream))))))))
-    (:post (csrf-token (text :required t) parent-comment-id edit-comment-id)
+    (:post (csrf-token text parent-comment-id edit-comment-id retract-comment-id unretract-comment-id delete-comment-id)
      (let ((lw2-auth-token *current-auth-token*))
        (check-csrf-token csrf-token)
        (assert lw2-auth-token)
-       (let* ((comment-data
-                (remove-if #'null
-                           `(("body" . ,(postprocess-markdown text))
-                             (:last-edited-as . "markdown")
-                             ,(if (not edit-comment-id) `(:post-id . ,post-id))
-                             ,(if parent-comment-id `(:parent-comment-id . ,parent-comment-id)))))
-              (new-comment-id
-                (if edit-comment-id
-                    (prog1 edit-comment-id
-                      (do-lw2-comment-edit lw2-auth-token edit-comment-id comment-data))
-                    (do-lw2-comment lw2-auth-token comment-data))))
-         (cache-put "comment-markdown-source" new-comment-id text)
-         (ignore-errors (get-post-comments post-id :force-revalidate t))
-         (redirect (generate-post-link (match-lw2-link (hunchentoot:request-uri*)) new-comment-id)))))))
+       (let ((new-comment-id
+	      (cond
+		(text
+		 (let ((comment-data
+			(remove-if #'null
+				   `(("body" . ,(postprocess-markdown text))
+				     (:last-edited-as . "markdown")
+				     ,(if (not edit-comment-id) `(:post-id . ,post-id))
+				     ,(if parent-comment-id `(:parent-comment-id . ,parent-comment-id))))))
+		   (if edit-comment-id
+		       (prog1 edit-comment-id
+			 (do-lw2-comment-edit lw2-auth-token edit-comment-id comment-data))
+		       (do-lw2-comment lw2-auth-token comment-data))))
+		(retract-comment-id
+		 (do-lw2-comment-edit lw2-auth-token retract-comment-id '(("retracted" . t))))
+		(unretract-comment-id
+		 (do-lw2-comment-edit lw2-auth-token unretract-comment-id '(("retracted" . nil))))
+		(delete-comment-id
+					;(do-lw2-comment-remove lw2-auth-token delete-comment-id)
+		 (do-lw2-comment-edit lw2-auth-token delete-comment-id '(("deleted" . t)))
+		 nil))))
+	 (ignore-errors (get-post-comments post-id :force-revalidate t))
+	 (when text
+	   (cache-put "comment-markdown-source" new-comment-id text)
+	   (redirect (generate-post-link (match-lw2-link (hunchentoot:request-uri*)) new-comment-id))))))))
 
 (defparameter *edit-post-template* (compile-template* "edit-post.html"))
 
