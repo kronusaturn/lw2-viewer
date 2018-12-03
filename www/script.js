@@ -372,7 +372,7 @@ Element.prototype.constructCommentControls = function() {
 
 	// On mobile, hide labels for all but the Reply button.
 	if (GW.isMobile && window.innerWidth <= 900) {
-		commentControls.queryAll(".delete-button, .retract-button, .edit-button").forEach(button => {
+		commentControls.queryAll(".delete-button, .retract-button, .unretract-button, .edit-button").forEach(button => {
 			button.innerHTML = "";
 		});
 	}
@@ -1198,6 +1198,7 @@ GW.themeLoadCallback_classic = (fromTheme = "") => {
 }
 GW.themeUnloadCallback_classic = (toTheme = "") => {
 	GWLog("themeUnloadCallback_classic");
+	if (GW.isMobile && window.innerWidth <= 900) return;
 	queryAll(".comment-item .comment-controls .action-button").forEach(button => {
 		button.innerHTML = button.dataset.label;
 	});
