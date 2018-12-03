@@ -1143,7 +1143,8 @@ signaled condition to OUT-STREAM."
 		(unretract-comment-id
 		 (do-lw2-comment-edit lw2-auth-token unretract-comment-id '((:retracted . nil))))
 		(delete-comment-id
-		 (do-lw2-comment-edit lw2-auth-token delete-comment-id '((:deleted-public . t)))
+		 (do-lw2-comment-edit lw2-auth-token delete-comment-id '((:deleted-public . t)
+									 (:deleted-reason . "Comment deleted by its author.")))
 		 nil))))
 	 (ignore-errors (get-post-comments post-id :force-revalidate t))
 	 (when text
