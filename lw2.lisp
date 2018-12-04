@@ -195,7 +195,7 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
 (defparameter *comment-individual-link* nil)
 
 (defun comment-to-html (out-stream comment &key with-post-title)
-  (if (cdr (assoc :deleted comment))
+  (if (or (cdr (assoc :deleted comment)) (cdr (assoc :deleted-public comment)))
       (format out-stream "<div class=\"comment deleted-comment\"><div class=\"comment-meta\"><span class=\"deleted-meta\">[ ]</span></div><div class=\"comment-body\">[deleted]</div></div>")
       (alist-bind ((comment-id string :--id)
                    (user-id string)
@@ -1139,12 +1139,12 @@ signaled condition to OUT-STREAM."
 			 (do-lw2-comment-edit lw2-auth-token edit-comment-id comment-data))
 		       (do-lw2-comment lw2-auth-token comment-data))))
 		(retract-comment-id
-		 (do-lw2-comment-edit lw2-auth-token retract-comment-id '(("retracted" . t))))
+		 (do-lw2-comment-edit lw2-auth-token retract-comment-id '((:retracted . t))))
 		(unretract-comment-id
-		 (do-lw2-comment-edit lw2-auth-token unretract-comment-id '(("retracted" . nil))))
+		 (do-lw2-comment-edit lw2-auth-token unretract-comment-id '((:retracted . nil))))
 		(delete-comment-id
-					;(do-lw2-comment-remove lw2-auth-token delete-comment-id)
-		 (do-lw2-comment-edit lw2-auth-token delete-comment-id '(("deleted" . t)))
+		 (do-lw2-comment-edit lw2-auth-token delete-comment-id '((:deleted . t) (:deleted-public . t)
+									 (:deleted-reason . "Comment deleted by its author.")))
 		 nil))))
 	 (ignore-errors (get-post-comments post-id :force-revalidate t))
 	 (when text

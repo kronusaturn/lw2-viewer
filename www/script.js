@@ -357,7 +357,11 @@ Element.prototype.constructCommentControls = function() {
 		replyButton.setAttribute("title", "Post new comment [n]");
 	} else {
 		if (commentControls.parentElement.query(".comment-body").hasAttribute("data-markdown-source")) {
-			[ "delete-button", "retract-button", "edit-button" ].forEach(buttonClass => {
+			let buttonsList = [];
+			if(!commentControls.parentElement.query(".comment-thread"))
+				buttonsList.push("delete-button");
+			buttonsList.push("retract-button", "edit-button");
+			buttonsList.forEach(buttonClass => {
 				let button = commentControls.appendChild(document.createElement("button"));
 				button.addClass(buttonClass);
 				button.updateCommentControlButton();
