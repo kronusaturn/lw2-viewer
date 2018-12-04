@@ -1391,7 +1391,7 @@ function injectThemeTweaker() {
 		GW.currentFilters = { };
 		applyFilters(GW.currentFilters);
 
-		GW.currentTextZoom = 1;
+		GW.currentTextZoom = "1.0";
 		setTextZoom(GW.currentTextZoom);
 
 		setSelectedTheme("default");
@@ -1519,7 +1519,7 @@ function themeTweakReset() {
 	setSelectedTheme(GW.currentTheme);
 	GW.currentFilters = JSON.parse(localStorage.getItem("theme-tweaks") || "{ }");
 	applyFilters(GW.currentFilters);
-	GW.currentTextZoom = localStorage.getItem("text-zoom");
+	GW.currentTextZoom = localStorage.getItem("text-zoom") || "1.0";
 	setTextZoom(GW.currentTextZoom);
 }
 function themeTweakSave() {
@@ -1682,6 +1682,8 @@ function injectTextSizeAdjustmentUIReal() {
 	textSizeAdjustmentUIContainer.queryAll("button").forEach(button => {
 		button.addActivateEvent(GW.themeTweaker.textSizeAdjustButtonClicked);
 	});
+
+	GW.currentTextZoom = localStorage.getItem("text-zoom") || "1.0";
 }
 
 function injectTextSizeAdjustmentUI() {
@@ -3350,8 +3352,8 @@ function generateImagesOverlay() {
 	let imagesOverlay = query("#images-overlay");
 	let imagesOverlayLeftOffset = imagesOverlay.getBoundingClientRect().left;
 	queryAll(".post-body img").forEach(image => {
-		image.style = "";
-		image.className = "";
+		delete image.style;
+		delete image.className;
 
 		let clonedImageContainer = document.createElement("div");
 
@@ -3367,6 +3369,7 @@ function generateImagesOverlay() {
 		clonedImageContainer.style.left = image.getBoundingClientRect().left * zoomLevel - parseFloat(getComputedStyle(image).marginLeft) - imagesOverlayLeftOffset + "px";
 		clonedImageContainer.style.width = image.getBoundingClientRect().width * zoomLevel + "px";
 		clonedImageContainer.style.height = image.getBoundingClientRect().height * zoomLevel + "px";
+		GWLog(clonedImageContainer);
 
 		imagesOverlay.appendChild(clonedImageContainer);
 	});
