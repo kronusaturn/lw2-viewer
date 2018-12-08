@@ -149,6 +149,12 @@ function doAjax(params) {
 	}
 }
 
+function getSelectionHTML() {
+	var container = document.createElement("div");
+	container.appendChild(window.getSelection().getRangeAt(0).cloneContents());
+	return container.innerHTML;
+}
+
 /*******************/
 /* INBOX INDICATOR */
 /*******************/
@@ -3319,8 +3325,10 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	// Add copy listener to strip soft hyphens (inserted by server-side hyphenator).
 	query("#content").addEventListener("copy", GW.textCopied = (event) => {
 		event.preventDefault();
-		const selectedText = window.getSelection().toString();
+		const selectedHTML = getSelectionHTML();
+		const selectedText = getSelection().toString();
 		event.clipboardData.setData("text/plain", selectedText.replace(/\u00AD|\u200b/g, ""));
+		event.clipboardData.setData("text/html", selectedHTML.replace(/\u00AD|\u200b/g, ""));
 	});
 
 	// Set up Image Focus feature.
