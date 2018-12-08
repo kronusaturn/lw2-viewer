@@ -252,7 +252,7 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
 					  <a href=(generate-post-link post-id parent-id)>comment</a>
 					  (progn " ")
 			                </span>)))
-				    <span class="comment-post-title2">on: <a href=(generate-post-link post-id)>(clean-text-to-html (get-post-title post-id))</a></span>
+				    <span class="comment-post-title2">on: <a href=(generate-post-link post-id)>(safe (clean-text-to-html (get-post-title post-id)))</a></span>
 				  </div>
 			      (when parent-comment-id
 			        (if *comment-individual-link*
