@@ -1523,7 +1523,7 @@ function themeTweakReset() {
 	setSelectedTheme(GW.currentTheme);
 	GW.currentFilters = JSON.parse(localStorage.getItem("theme-tweaks") || "{ }");
 	applyFilters(GW.currentFilters);
-	GW.currentTextZoom = localStorage.getItem("text-zoom") || "1.0";
+	GW.currentTextZoom = `${parseFloat(localStorage.getItem("text-zoom")) || 1.0}`;
 	setTextZoom(GW.currentTextZoom);
 }
 function themeTweakSave() {
@@ -1687,7 +1687,7 @@ function injectTextSizeAdjustmentUIReal() {
 		button.addActivateEvent(GW.themeTweaker.textSizeAdjustButtonClicked);
 	});
 
-	GW.currentTextZoom = localStorage.getItem("text-zoom") || "1.0";
+	GW.currentTextZoom = `${parseFloat(localStorage.getItem("text-zoom")) || 1.0}`;
 }
 
 function injectTextSizeAdjustmentUI() {
