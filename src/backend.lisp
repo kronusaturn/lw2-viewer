@@ -406,20 +406,32 @@
         (lw2-graphql-query query-string :auth-token auth-token)
         (lw2-graphql-query-timeout-cached query-string "post-body-json" post-id :revalidate revalidate :force-revalidate force-revalidate))))
 
+(defun lw2-query-list-limit-workaround (query-type terms fields &key auth-token)
+  (multiple-value-bind (items-total items-list)
+      (lw2-graphql-query-multi (list (lw2-query-string* query-type :total terms nil)
+				     (lw2-query-string* query-type :list (nconc (alist :limit 500) terms) fields))
+			       :auth-token auth-token)
+    (loop for offset from 500 to items-total by 500
+       as items-next = (lw2-graphql-query (lw2-query-string query-type :list (nconc (alist :limit 500 :offset offset) terms) fields)
+					  :auth-token auth-token)
+       do (setf items-list (nconc items-list items-next)))
+    items-list))
+
 (defun get-post-comments-votes (post-id auth-token)
-  (process-votes-result (lw2-graphql-query (lw2-query-string :comment :list (alist :view "postCommentsTop" :limit 10000 :post-id post-id) '(:--id (:current-user-votes :vote-type))) :auth-token auth-token)))
+  (process-votes-result
+   (lw2-query-list-limit-workaround
+    :comment
+    (alist :view "postCommentsTop" :post-id post-id)
+    '(:--id (:current-user-votes :vote-type))
+    :auth-token auth-token)))
 
 (defun get-post-comments (post-id &key (revalidate t) force-revalidate)
   (let ((fn (lambda ()
-              (let ((base-terms (alist :view "postCommentsTop" :post-id post-id))
-                    (comments-fields '(:--id :user-id :post-id :posted-at :parent-comment-id :base-score :page-url :vote-count :retracted :deleted-public :html-body)))
-                (multiple-value-bind (comments-total comments-list)
-                  (lw2-graphql-query-multi (list (lw2-query-string* :comment :total base-terms nil)
-                                                 (lw2-query-string* :comment :list (nconc (alist :limit 500) base-terms) comments-fields)))
-                  (loop for offset from 500 to comments-total by 500
-                        as comments-next = (lw2-graphql-query (lw2-query-string :comment :list (nconc (alist :limit 500 :offset offset) base-terms) comments-fields))
-                        do (setf comments-list (nconc comments-list comments-next)))
-                  (comments-list-to-graphql-json comments-list))))))
+	      (comments-list-to-graphql-json
+	       (lw2-query-list-limit-workaround
+		:comment
+		(alist :view "postCommentsTop" :post-id post-id)
+		'(:--id :user-id :post-id :posted-at :parent-comment-id :base-score :page-url :vote-count :retracted :deleted-public :html-body))))))
     (lw2-graphql-query-timeout-cached fn "post-comments-json" post-id :revalidate revalidate :force-revalidate force-revalidate)))
 
 (define-backend-function get-notifications (&key user-id offset auth-token))
