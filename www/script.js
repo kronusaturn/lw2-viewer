@@ -3342,7 +3342,11 @@ registerInitializer('pageLayoutFinished', false, () => document.readyState == "c
 	focusImageSpecifiedByURL();
 
 	// FOR TESTING ONLY, COMMENT WHEN DEPLOYING.
-// 	query("input[type='search']").value = document.documentElement.clientWidth;
+// 	query("input[type='search']").value = GW.isMobile;
+// 	query("head").insertAdjacentHTML("beforeend", "<style>" + 
+// 		`@media only screen and (hover:none) { #nav-item-search input { background-color: red; }}` + 
+// 		`@media only screen and (hover:hover) { #nav-item-search input { background-color: LightGreen; }}` + 
+// 		"</style>");
 });
 
 function generateImagesOverlay() {
