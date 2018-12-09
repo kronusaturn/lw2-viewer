@@ -2029,7 +2029,7 @@ function setEditPostPageSubmitButtonText() {
 	GWLog("setEditPostPageSubmitButtonText");
 	if (!query("#content").hasClass("edit-post-page")) return;
 
-	queryAll("input[type='radio'][name='section']").forEach(radio => {
+	queryAll("input[type='radio'][name='section'], .question-checkbox").forEach(radio => {
 		radio.addEventListener("change", GW.postSectionSelectorValueChanged = (event) => {
 			updateEditPostPageSubmitButtonText();
 		});
@@ -2040,12 +2040,12 @@ function setEditPostPageSubmitButtonText() {
 function updateEditPostPageSubmitButtonText() {
 	GWLog("updateEditPostPageSubmitButtonText");
 	let submitButton = query("input[type='submit']");
-	if (query("input#drafts").checked == true)
+	if (query("input#drafts").checked == true) 
 		submitButton.value = "Save Draft";
 	else if (query(".posting-controls").hasClass("edit-existing-post"))
-		submitButton.value = "Save Post";
+		submitButton.value = query(".question-checkbox").checked ? "Save Question" : "Save Post";
 	else
-		submitButton.value = "Submit Post";
+		submitButton.value = query(".question-checkbox").checked ? "Submit Question" : "Submit Post";
 }
 
 /*****************/

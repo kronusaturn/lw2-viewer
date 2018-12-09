@@ -1108,6 +1108,7 @@ a.comment-parent-link::after {
 		top: -1px;
 		font-family: Font Awesome;
 		font-weight: 900;
+		justify-self: start;
 	}
 	#edit-post-form .post-meta-fields .question-checkbox,
 	#edit-post-form .post-meta-fields .question-checkbox + label {
