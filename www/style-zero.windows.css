@@ -4742,7 +4742,7 @@ a.comment-parent-link::after {
 		padding-bottom: 0;
 	}
 	#edit-post-form .post-meta-fields {
-		grid-template-columns: 4em auto auto auto 1fr 4.25em;
+		grid-template-columns: 4.5em auto auto auto 1fr 4.5em;
 	}
 	#edit-post-form label[for='url'], 
 	#edit-post-form label[for='section'],
@@ -6738,14 +6738,6 @@ select {
 		}
 		#markdown-hints::after {
 			color: #090;
-		}
-		
-		#edit-post-form label[for='section'] {
-			width: 4.3em;
-		}
-		#edit-post-form input[name='title'],
-		#edit-post-form input[name='url'] {
-			max-width: calc(100% - 6.75em);
 		}
 	}
 }
