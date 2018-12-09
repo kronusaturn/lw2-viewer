@@ -276,14 +276,13 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
 			         data-child-count=(progn child-count)>
 			    </div>)
 			  </div>
-			  (with-html-stream-output
-			    (format out-stream "<div class=\"comment-body\"~@[ data-markdown-source=\"~A\"~]>"
-				    (if (logged-in-userid user-id)
-					(encode-entities
-					 (or (cache-get "comment-markdown-source" comment-id)
-					     html-body))))
-			    (write-sequence (clean-html* html-body) out-stream)
-			    (write-string "</div>" out-stream))
+			  <div class="comment-body" (safe ("~@[ data-markdown-source=\"~A\"~]"
+							   (if (logged-in-userid user-id)
+							       (encode-entities
+								(or (cache-get "comment-markdown-source" comment-id)
+								    html-body)))))>
+			    (with-html-stream-output (write-sequence (clean-html* html-body) out-stream))
+                          </div>
 			</div>)))))
 
 (defun postprocess-conversation-title (title)
