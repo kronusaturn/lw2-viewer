@@ -293,12 +293,14 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 	let commentControls = this;
 	let editCommentId = (editMarkdownSource ? commentControls.getCommentId() : false);
 	let withparent = (!editMarkdownSource && commentControls.getCommentId());
+	let answer = commentControls.parentElement.id == "answers";
 	commentControls.innerHTML = "<button class='cancel-comment-button' tabindex='-1'>Cancel</button>" +
 		"<form method='post'>" + 
 		"<div class='textarea-container'>" + 
 		"<textarea name='text' oninput='enableBeforeUnload();'></textarea>" +
 		(withparent ? "<input type='hidden' name='parent-comment-id' value='" + commentControls.getCommentId() + "'>" : "") +
 		(editCommentId ? "<input type='hidden' name='edit-comment-id' value='" + editCommentId + "'>" : "") +
+		(answer ? "<input type='hidden' name='answer' value='t'>" : "") +
 		"<span class='markdown-reference-link'>You can use <a href='http://commonmark.org/help/' target='_blank'>Markdown</a> here.</span>" + 
 		`<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-help-button">Help</button>` + 
 		`<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-exit-button">Exit</button>` + 
@@ -354,13 +356,14 @@ Element.prototype.updateCommentControlButton = function() {
 Element.prototype.constructCommentControls = function() {
 	GWLog("constructCommentControls");
 	let commentControls = this;
+	let commentType = (commentControls.parentElement.id == "answers" ? "answer" : "comment");
 	commentControls.innerHTML = "";
 	let replyButton = document.createElement("button");
-	if (commentControls.parentElement.id == 'comments') {
+	if (commentControls.parentElement.hasClass("comments")) {
 		replyButton.className = "new-comment-button action-button";
-		replyButton.innerHTML = "Post new comment";
-		replyButton.setAttribute("accesskey", "n");
-		replyButton.setAttribute("title", "Post new comment [n]");
+		replyButton.innerHTML = "Post new " + commentType;
+		replyButton.setAttribute("accesskey", (commentType == "comment" ? "n" : ""));
+		replyButton.setAttribute("title", "Post new " + commentType + (commentType == "comment" ? " [n]" : ""));
 	} else {
 		if (commentControls.parentElement.query(".comment-body").hasAttribute("data-markdown-source")) {
 			let buttonsList = [];
@@ -393,7 +396,7 @@ Element.prototype.constructCommentControls = function() {
 	});
 
 	// Replicate karma controls at the bottom of comments.
-	if (commentControls.parentElement.id == "comments") return;
+	if (commentControls.parentElement.hasClass("comments")) return;
 	let karmaControls = commentControls.parentElement.query(".comment-meta .karma");
 	let karmaControlsCloned = karmaControls.cloneNode(true);
 	commentControls.appendChild(karmaControlsCloned);
@@ -428,7 +431,7 @@ GW.commentActionButtonClicked = (event) => {
 	} else if (event.target.hasClass("reply-button")) {
 		showReplyForm(event.target.closest(".comment-item"));
 	} else if (event.target.hasClass("new-comment-button")) {
-		showReplyForm(event.target.closest("#comments"));
+		showReplyForm(event.target.closest(".comments"));
 	}
 
 	event.target.blur();
@@ -1970,7 +1973,7 @@ function expandAncestorsOf(comment) {
 	if (parentOfContainingCollapseCheckbox) parentOfContainingCollapseCheckbox.query("input[id^='expand']").checked = true;
 
 	// Expand collapsed comments.
-	let containingTopLevelCommentItem = comment.closest("#comments > ul > li");
+	let containingTopLevelCommentItem = comment.closest(".comments > ul > li");
 	if (containingTopLevelCommentItem) containingTopLevelCommentItem.setCommentThreadMaximized(true, false, true);
 }
 
@@ -2362,7 +2365,7 @@ function addCommentParentPopups() {
 				commentParentLink.addEventListener("mouseout", (event) => {
 					removeElement(popup);
 				}, {once: true});
-				commentParentLink.closest("#comments > .comment-thread").appendChild(popup);
+				commentParentLink.closest(".comments > .comment-thread").appendChild(popup);
 			} else {
 				parentHighlightClassName = "comment-item-highlight";
 			}
@@ -2375,7 +2378,7 @@ function addCommentParentPopups() {
 
 	// Due to filters vs. fixed elements, we need to be smarter about selecting which elements to filter...
 	GW.themeTweaker.filtersExclusionPaths.commentParentPopups = [
-		"#content #comments .comment-thread"
+		"#content .comments .comment-thread"
 	];
 	applyFilters(GW.currentFilters);
 }
@@ -3058,9 +3061,8 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 			voteButton.addActivateEvent(voteButtonClicked);
 		});
 
-		// If we're on a comment thread page...
-		var commentsContainer = query("#comments");
-		if (commentsContainer) {
+		// For all comment containers...
+		queryAll(".comments").forEach((commentsContainer) => {
 			// Add reply buttons.
 			commentsContainer.queryAll(".comment").forEach(comment => {
 				comment.insertAdjacentHTML("afterend", "<div class='comment-controls posting-controls'></div>");
@@ -3072,7 +3074,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 				commentsContainer.insertAdjacentHTML("afterbegin", "<div class='comment-controls posting-controls'></div>");
 				commentsContainer.query(".comment-controls").constructCommentControls();
 			}
-		}
+		});
 
 		// Hash realignment is needed because adding the above elements almost
 		// certainly caused the page to reflow, and now client is no longer
@@ -3143,7 +3145,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		// Save the number of comments this post has when it's visited.
 		updateSavedCommentCount();
 
-		if (content.query("#comments .comment-thread") != null) {
+		if (content.query(".comments .comment-thread") != null) {
 			// Add the new comments count & navigator.
 			injectNewCommentNavUI();
 

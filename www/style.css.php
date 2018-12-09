@@ -1682,12 +1682,12 @@ h1.listing + .post-meta .read-time {
 /* COMMENTS */
 /************/
 
-#comments {
+.comments {
 	max-width: 100%;
 	padding: 0 0 1px 0;
 	position: relative;
 }
-#comments::before {
+.comments::before {
 	content: "";
 	position: absolute;
 	display: block;
@@ -1702,7 +1702,7 @@ ul.comment-thread {
 	padding: 0;
 	max-width: 100%;
 }
-#comments .comment-thread > li {
+.comments .comment-thread > li {
 	position: relative;
 }
 #content > #top-nav-bar + .comment-thread .comment-item {

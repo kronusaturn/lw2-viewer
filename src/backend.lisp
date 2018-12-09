@@ -11,7 +11,7 @@
 	   #:lw2-graphql-query-streamparse #:lw2-graphql-query-noparse #:decode-graphql-json #:lw2-graphql-query
            #:lw2-query-string* #:lw2-query-string
            #:lw2-graphql-query-map #:lw2-graphql-query-multi
-	   #:get-posts-index #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
+	   #:get-posts-index #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-answers #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
            #:get-notifications #:check-notifications
 	   #:lw2-search-query #:get-post-title #:get-post-slug #:get-slug-postid #:get-username #:get-user-slug)
   (:recycle #:lw2-viewer)
@@ -23,13 +23,14 @@
 
 (defvar *graphql-debug-output* nil)
 
-(defparameter *posts-index-fields* '(:title :--id :slug :user-id :posted-at :base-score :comment-count :page-url :url :word-count :frontpage-date :curated-date :meta :draft :af :vote-count))
+(defparameter *posts-index-fields* '(:title :--id :slug :user-id :posted-at :base-score :comment-count :page-url :url :word-count :frontpage-date :curated-date :meta :draft :af :vote-count :question))
 (defparameter *comments-index-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id (:parent-comment :--id :user-id :post-id) :base-score :page-url :vote-count :retracted :deleted-public :html-body))
+(defparameter *post-comments-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id :base-score :page-url :vote-count :retracted :deleted-public :html-body))
 (defparameter *messages-index-fields* '(:--id :user-id :created-at :content (:conversation :--id :title) :----typename))
 
 (defparameter *notifications-base-terms* (alist :view "userNotifications" :created-at :null :viewed :null))
 
-(define-cache-database "index-json" "post-comments-json" "post-comments-json-meta" "post-body-json" "post-body-json-meta")
+(define-cache-database "index-json" "post-comments-json" "post-comments-json-meta" "post-answers-json" "post-answers-json-meta" "post-body-json" "post-body-json-meta")
 
 (defmethod condition-http-return-code ((c condition)) 500)
 
@@ -417,22 +418,38 @@
        do (setf items-list (nconc items-list items-next)))
     items-list))
 
+(defun get-post-comments-list (post-id view &key auth-token parent-answer-id (fields *post-comments-fields*))
+  (let ((terms (alist :view view :post-id post-id)))
+    (when parent-answer-id
+      (setf terms (acons :parent-answer-id parent-answer-id terms)))
+    (lw2-query-list-limit-workaround :comment terms fields :auth-token auth-token)))
+
 (defun get-post-comments-votes (post-id auth-token)
-  (process-votes-result
-   (lw2-query-list-limit-workaround
-    :comment
-    (alist :view "postCommentsTop" :post-id post-id)
-    '(:--id (:current-user-votes :vote-type))
-    :auth-token auth-token)))
+  (let* ((fields '(:--id (:current-user-votes :vote-type)))
+	 (answers (get-post-comments-list post-id "questionAnswers" :auth-token auth-token :fields fields)))
+    (process-votes-result
+     (nconc
+      (get-post-comments-list post-id "postCommentsTop" :auth-token auth-token :fields fields)
+      (loop
+	 for a in answers
+	 nconc (get-post-comments-list post-id "repliesToAnswer" :parent-answer-id (cdr (assoc :--id a)) :auth-token auth-token :fields fields))
+      answers))))
 
 (defun get-post-comments (post-id &key (revalidate t) force-revalidate)
   (let ((fn (lambda ()
 	      (comments-list-to-graphql-json
-	       (lw2-query-list-limit-workaround
-		:comment
-		(alist :view "postCommentsTop" :post-id post-id)
-		'(:--id :user-id :post-id :posted-at :parent-comment-id :base-score :page-url :vote-count :retracted :deleted-public :html-body))))))
+	       (get-post-comments-list post-id "postCommentsTop")))))
     (lw2-graphql-query-timeout-cached fn "post-comments-json" post-id :revalidate revalidate :force-revalidate force-revalidate)))
+
+(defun get-post-answers (post-id &key (revalidate t) force-revalidate)
+  (let ((fn (lambda ()
+	      (let ((answers (get-post-comments-list post-id "questionAnswers")))
+		(comments-list-to-graphql-json
+		 (append answers
+			 (loop
+			    for a in answers
+			    nconc (get-post-comments-list post-id "repliesToAnswer" :parent-answer-id (cdr (assoc :--id a))))))))))
+    (lw2-graphql-query-timeout-cached fn "post-answers-json" post-id :revalidate revalidate :force-revalidate force-revalidate)))
 
 (define-backend-function get-notifications (&key user-id offset auth-token))
 

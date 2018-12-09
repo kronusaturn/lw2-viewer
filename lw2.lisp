@@ -123,15 +123,17 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
                (curated-date (or null string))
                (meta boolean)
                (af boolean)
+	       (question boolean)
                (vote-count (or null fixnum))
                (draft boolean))
     post
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      (format out-stream "<h1 class=\"listing~:[~; link-post-listing~]~:[~; own-post-listing~]\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~A</a>~@[<a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\"></a>~]</h1>"
+      (format out-stream "<h1 class=\"listing~:[~; link-post-listing~]~:[~; own-post-listing~]\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~:[~;[Question] ~]~A</a>~@[<a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\"></a>~]</h1>"
               url
               (logged-in-userid user-id)
               (if url (encode-entities (convert-any-link (string-trim " " url))))
               (generate-post-auth-link post nil nil need-auth)
+	      question
               (clean-text-to-html title)
               (if (logged-in-userid user-id) post-id))
       (format out-stream "<div class=\"post-meta\"><a class=\"author~:[~; own-user-author~]\" href=\"/users/~A\" data-userid=\"~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"comment-count\" href=\"~A#comments\">~A</a>~:[~*~;~:*<span class=\"read-time\" title=\"~:D word~:P\">~:D<span> min read</span></span>~]~:[~*~;~:*<a class=\"lw2-link\" href=\"~A\">~A<span> link</span></a>~]"
@@ -167,12 +169,14 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
                (meta boolean)
                (draft boolean)
                (af boolean)
+	       (question boolean)
                (vote-count (or null fixnum))
                (html-body (or null string)))
     post
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      (format out-stream "<div class=\"post~:[~; link-post~]\"><h1>~A</h1><div class=\"post-meta\"><a class=\"author~:[~; own-user-author~]\" href=\"/users/~A\" data-userid=\"~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A</a>~:[~*~;~:*<a class=\"lw2-link\" href=\"~A\">~A<span> link</span></a>~]"
+      (format out-stream "<div class=\"post~:[~; link-post~]~:[~; question-post~]\"><h1>~:*~:[~;[Question] ~]~A</h1><div class=\"post-meta\"><a class=\"author~:[~; own-user-author~]\" href=\"/users/~A\" data-userid=\"~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A</a>~:[~*~;~:*<a class=\"lw2-link\" href=\"~A\">~A<span> link</span></a>~]"
               url
+	      question
               (clean-text-to-html title :hyphenation nil)
               (logged-in-userid user-id)
               (encode-entities (get-user-slug user-id))
@@ -1058,8 +1062,8 @@ signaled condition to OUT-STREAM."
   (request-method
     (:get ()
      (let ((lw2-auth-token *current-auth-token*))
-       (labels ((output-comments (out-stream comments target)
-                  (format out-stream "<div id=\"comments\">")
+       (labels ((output-comments (out-stream id comments target)
+                  (format out-stream "<div id=\"~A\" class=\"comments\">" id)
                   (with-error-html-block (out-stream)
                     (if target
                         (comment-thread-to-html out-stream
@@ -1099,11 +1103,11 @@ signaled condition to OUT-STREAM."
                                   (encode-entities display-name)
                                   (generate-post-link post-id)
                                   (clean-text-to-html title))
-                          (output-comments out-stream comments target-comment)
+                          (output-comments out-stream "comments" comments target-comment)
                           (when lw2-auth-token
                             (force-output out-stream)
                             (output-comments-votes out-stream))))
-             (emit-page (out-stream :title title :content-class "post-page comment-thread-page")
+             (emit-page (out-stream :title title :content-class (format nil "post-page comment-thread-page~:[~; question-post-page~]" (cdr (assoc :question post))))
                         (cond
                           (condition
                             (error-to-html out-stream condition))
@@ -1113,15 +1117,20 @@ signaled condition to OUT-STREAM."
                           (format out-stream "<div class=\"post-controls\"><a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\" accesskey=\"e\" title=\"Edit post [e]\">Edit post</a></div>"
                                   (cdr (assoc :--id post))))
                         (force-output out-stream)
-                        (handler-case
-                          (let ((comments (get-post-comments post-id)))
-                            (output-comments out-stream comments nil))
-                          (serious-condition (c) (error-to-html out-stream c)))
-                        (when lw2-auth-token
+			(handler-case
+			    (let* ((question (cdr (assoc :question post)))
+				   (answers (when question
+					      (get-post-answers post-id)))
+				   (comments (get-post-comments post-id)))
+			      (when question
+				(output-comments out-stream "answers" answers nil))
+			      (output-comments out-stream "comments" comments nil))
+			  (serious-condition (c) (error-to-html out-stream c)))
+			(when lw2-auth-token
                           (force-output out-stream)
                           (output-post-vote out-stream)
                           (output-comments-votes out-stream))))))))
-    (:post (csrf-token text parent-comment-id edit-comment-id retract-comment-id unretract-comment-id delete-comment-id)
+    (:post (csrf-token text answer parent-comment-id edit-comment-id retract-comment-id unretract-comment-id delete-comment-id)
      (let ((lw2-auth-token *current-auth-token*))
        (check-csrf-token csrf-token)
        (assert lw2-auth-token)
@@ -1133,7 +1142,8 @@ signaled condition to OUT-STREAM."
 				   `(("body" . ,(postprocess-markdown text))
 				     (:last-edited-as . "markdown")
 				     ,(if (not edit-comment-id) `(:post-id . ,post-id))
-				     ,(if parent-comment-id `(:parent-comment-id . ,parent-comment-id))))))
+				     ,(if parent-comment-id `(:parent-comment-id . ,parent-comment-id))
+				     ,(if answer `(:answer . t))))))
 		   (if edit-comment-id
 		       (prog1 edit-comment-id
 			 (do-lw2-comment-edit lw2-auth-token edit-comment-id comment-data))
@@ -1166,16 +1176,18 @@ signaled condition to OUT-STREAM."
                                     :csrf-token csrf-token
                                     :title (cdr (assoc :title post-body))
                                     :url (cdr (assoc :url post-body))
+				    :question (cdr (assoc :question post-body))
                                     :post-id post-id
                                     :section-list (loop for (name desc) in '(("all" "All") ("meta" "Meta") ("drafts" "Drafts"))
                                                         collect (alist :name name :desc desc :selected (string= name section)))
                                     :markdown-source (or (and post-id (cache-get "post-markdown-source" post-id)) (cdr (assoc :html-body post-body)) "")))))
-    (:post ((text :required t))
+    (:post ((text :required t) question)
      (let ((lw2-auth-token *current-auth-token*)
            (url (if (string= url "") nil url)))
        (assert lw2-auth-token)
        (let* ((post-data `(("body" . ,(postprocess-markdown text)) ("title" . ,title) (:last-edited-as . "markdown") ("url" . ,(if link-post url))
-                                                                   ("meta" . ,(string= section "meta")) ("draft" . ,(string= section "drafts"))))
+			   ("meta" . ,(string= section "meta")) ("draft" . ,(string= section "drafts"))
+			   ("question" . ,(if question t nil))))
               (post-set (loop for item in post-data when (cdr item) collect item))
               (post-unset (loop for item in post-data when (not (cdr item)) collect (cons (car item) t))))
          (let* ((new-post-data
