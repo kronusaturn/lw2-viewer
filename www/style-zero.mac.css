@@ -6725,6 +6725,7 @@ select {
 		
 		.textarea-container:focus-within textarea {
 			background-color: #fff;
+			border-width: 1px;
 		}
 		.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
 			padding: 5px 6px 6px 6px;
