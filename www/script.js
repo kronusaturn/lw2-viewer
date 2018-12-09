@@ -3080,13 +3080,20 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		GW.needHashRealignment = true;
 	}
 
-	// Clean up ToC
+	// Clean up ToC.
 	queryAll(".contents-list li a").forEach(tocLink => {
 		tocLink.innerText = tocLink.innerText.replace(/^[0-9]+\. /, '');
 		tocLink.innerText = tocLink.innerText.replace(/^[0-9]+: /, '');
 		tocLink.innerText = tocLink.innerText.replace(/^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})\. /i, '');
 		tocLink.innerText = tocLink.innerText.replace(/^[A-Z]\. /, '');
 	});
+
+	// Clone ToC.
+	let tableOfContents = query(".post .contents");
+	if (tableOfContents) {
+		let clonedTOC = tableOfContents.cloneNode(true);
+		query("#ui-elements-container").appendChild(clonedTOC);
+	}
 
 	// If we're on a comment thread page...
 	if (query("#comments") != null) {
