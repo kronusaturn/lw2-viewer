@@ -2038,15 +2038,15 @@ div.comment-child-links a {
 /* EDIT POST FORM */
 /*================*/
 
-#edit-post-form .link-post-checkbox + label {
+#edit-post-form .post-meta-fields input[type='checkbox'] + label {
 	top: 2px;
 	color: #acd2af;
 	transition: color 0.15s ease;
 }
-#edit-post-form .link-post-checkbox + label:hover {
+#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover {
 	color: #79a97e;
 }
-#edit-post-form .link-post-checkbox + label::before {
+#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
 	top: 2px;
 	border: 1px solid #eee;
 	color: #bbb;
@@ -2054,10 +2054,10 @@ div.comment-child-links a {
 		box-shadow 0.3s ease,
 		border-color 0.15s ease;
 }
-#edit-post-form .link-post-checkbox + label:hover::before {
+#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover::before {
 	border-color: #c4dbc4;
 }
-#edit-post-form .link-post-checkbox:checked + label::before {
+#edit-post-form .post-meta-fields input[type='checkbox']:checked + label::before {
 	border-color: #c4dbc4;
 	box-shadow: 
 		0 0 0 4px #fff inset,

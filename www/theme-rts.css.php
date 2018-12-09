@@ -1447,23 +1447,23 @@ a.comment-parent-link:hover::before {
 /* EDIT POST FORM */
 /*================*/
 
-#edit-post-form .link-post-checkbox + label::before {
+#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
 	border-radius: 3px;
 	border: 1px solid #ddd;
 	color: #777;
 }
-#edit-post-form .link-post-checkbox + label:hover,
-#edit-post-form .link-post-checkbox:focus + label {
+#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover,
+#edit-post-form .post-meta-fields input[type='checkbox']:focus + label {
 	text-shadow: 
 		0 0 1px #fff,
 		0 0 2px #fff,
 		0 0 2.5px #aaa;
 }
-#edit-post-form .link-post-checkbox + label:hover::before,
-#edit-post-form .link-post-checkbox:focus + label::before {
+#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover::before,
+#edit-post-form .post-meta-fields input[type='checkbox']:focus + label::before {
 	border-color: #aaa;
 }
-#edit-post-form .link-post-checkbox:checked + label::before {
+#edit-post-form .post-meta-fields input[type='checkbox']:checked + label::before {
 	content: "\F00C";
 }
 #edit-post-form input[type='radio'] + label {

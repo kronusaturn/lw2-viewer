@@ -1174,25 +1174,25 @@ button.guiedit::after {
 #edit-post-form .post-meta-fields {
 	grid-template-columns: 6em auto auto auto 1fr auto;
 }
-#edit-post-form .link-post-checkbox + label::before {
+#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
 	color: #000;
 	border: 1px solid #000;
 	top: 2px;
 }
-#edit-post-form .link-post-checkbox + label:hover::before,
-#edit-post-form .link-post-checkbox:focus + label::before {
+#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover::before,
+#edit-post-form .post-meta-fields input[type='checkbox']:focus + label::before {
 	box-shadow: 
 		0 0 0 1px #fff inset,
 		0 0 0 2px #000 inset;
 }
-#edit-post-form .link-post-checkbox:active + label::before,
-#edit-post-form .link-post-checkbox:checked:active + label::before {
+#edit-post-form .post-meta-fields input[type='checkbox']:active + label::before,
+#edit-post-form .post-meta-fields input[type='checkbox']:checked:active + label::before {
 	background-color: #fff;
 	box-shadow: 
 		0 0 0 3px #fff inset,
 		0 0 0 4px #000 inset;
 }
-#edit-post-form .link-post-checkbox:checked + label::before {
+#edit-post-form .post-meta-fields input[type='checkbox']:checked + label::before {
 	content: "";
 	background-color: #000;
 	box-shadow: 

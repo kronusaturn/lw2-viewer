@@ -1445,20 +1445,20 @@ button.guiedit:hover {
 /* EDIT POST FORM */
 /*================*/
 
-#edit-post-form .link-post-checkbox + label::before {
+#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
 	border-radius: 3px;
 	border: 1px solid #999;
 	color: #aaa;
 }
-#edit-post-form .link-post-checkbox + label:hover,
-#edit-post-form .link-post-checkbox:focus + label {
+#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover,
+#edit-post-form .post-meta-fields input[type='checkbox']:focus + label {
 	text-decoration: underline;
 }
-#edit-post-form .link-post-checkbox + label:hover::before,
-#edit-post-form .link-post-checkbox:focus + label::before {
+#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover::before,
+#edit-post-form .post-meta-fields input[type='checkbox']:focus + label::before {
 	border-color: #ccc;
 }
-#edit-post-form .link-post-checkbox:checked + label::before {
+#edit-post-form .post-meta-fields input[type='checkbox']:checked + label::before {
 	content: "\F00C";
 }
 #edit-post-form input[type='radio'] + label {

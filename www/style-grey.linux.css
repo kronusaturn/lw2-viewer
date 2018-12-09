@@ -2507,19 +2507,24 @@ a.comment-parent-link:hover::after {
 	grid-row: 1;
 	grid-column: 6;
 }
+#edit-post-form .question-checkbox,
+#edit-post-form .question-checkbox + label {
+	grid-row: 3;
+	grid-column: 5 / span 2;
+}
 
-#edit-post-form .link-post-checkbox {
+#edit-post-form .post-meta-fields input[type='checkbox'] {
 	height: 0;
 	opacity: 0;
 	pointer-events: none;
 }
-#edit-post-form .link-post-checkbox + label {
+#edit-post-form .post-meta-fields input[type='checkbox'] + label {
 	white-space: nowrap;
 	position: relative;
 	cursor: pointer;
 	padding: 0.25em 0.5em 0.25em calc(20px + 0.25em + 0.3725em);
 }
-#edit-post-form .link-post-checkbox + label::before {
+#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
 	content: "";
 	font-family: Font Awesome;
 	font-size: 1.375rem;
@@ -6353,26 +6358,26 @@ button.guiedit::after {
 /* EDIT POST FORM */
 /*================*/
 
-#edit-post-form .link-post-checkbox + label {
+#edit-post-form .post-meta-fields input[type='checkbox'] + label {
 	top: -2px;
 }
-#edit-post-form .link-post-checkbox + label::before {
+#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
 	border-radius: 3px;
 	border: 1px solid #ddd;
 	color: #777;
 }
-#edit-post-form .link-post-checkbox + label:hover,
-#edit-post-form .link-post-checkbox:focus + label {
+#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover,
+#edit-post-form .post-meta-fields input[type='checkbox']:focus + label {
 	text-shadow: 
 		0 0 1px #fff,
 		0 0 2px #fff,
 		0 0 2.5px #aaa;
 }
-#edit-post-form .link-post-checkbox + label:hover::before,
-#edit-post-form .link-post-checkbox:focus + label::before {
+#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover::before,
+#edit-post-form .post-meta-fields input[type='checkbox']:focus + label::before {
 	border-color: #aaa;
 }
-#edit-post-form .link-post-checkbox:checked + label::before {
+#edit-post-form .post-meta-fields input[type='checkbox']:checked + label::before {
 	content: "\F00C";
 }
 #edit-post-form input[type='radio'] + label {
@@ -7006,7 +7011,7 @@ select {
 			color: #090;
 		}
 
-		#edit-post-form .link-post-checkbox + label {
+		#edit-post-form .post-meta-fields input[type='checkbox'] + label {
 			margin-left: 1.25em;
 		}
 	}

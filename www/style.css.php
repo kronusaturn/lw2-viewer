@@ -2518,19 +2518,24 @@ a.comment-parent-link:hover::after {
 	grid-row: 1;
 	grid-column: 6;
 }
+#edit-post-form .question-checkbox,
+#edit-post-form .question-checkbox + label {
+	grid-row: 3;
+	grid-column: 5 / span 2;
+}
 
-#edit-post-form .link-post-checkbox {
+#edit-post-form .post-meta-fields input[type='checkbox'] {
 	height: 0;
 	opacity: 0;
 	pointer-events: none;
 }
-#edit-post-form .link-post-checkbox + label {
+#edit-post-form .post-meta-fields input[type='checkbox'] + label {
 	white-space: nowrap;
 	position: relative;
 	cursor: pointer;
 	padding: 0.25em 0.5em 0.25em calc(20px + 0.25em + 0.3725em);
 }
-#edit-post-form .link-post-checkbox + label::before {
+#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
 	content: "";
 	font-family: Font Awesome;
 	font-size: 1.375rem;
