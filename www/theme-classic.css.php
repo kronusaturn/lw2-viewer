@@ -13,7 +13,8 @@ body {
 	background-color: #d8d8d8;
 	font-family: <?php echo $UI_font; ?>;
 }
-#content {
+#content,
+#ui-elements-container .contents {
 	line-height: 1.5;
 }
 #content::before {

@@ -1404,6 +1404,9 @@ h1.listing + .post-meta .read-time {
 	position: relative;
 	z-index: 1;
 }
+#ui-elements-container .contents {
+	font-size: 1.3rem;
+}
 
 .contents-head {
 	text-align: center;
@@ -4820,7 +4823,8 @@ body {
 	background-color: #d8d8d8;
 	font-family: 'Arial', sans-serif;
 }
-#content {
+#content,
+#ui-elements-container .contents {
 	line-height: 1.5;
 }
 #content::before {

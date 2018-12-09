@@ -17,11 +17,14 @@ body {
 	background-color: #fff;
 }
 #content {
-	line-height: 1.55;
 	padding: 30px 20px 0 90px;
 }
 #content.comment-thread-page {
 	padding: 0 0 0 60px;
+}
+#content,
+#ui-elements-container .contents {
+	line-height: 1.55;
 }
 #ui-elements-container {
 	visibility: hidden;

@@ -17,7 +17,8 @@ body {
 	font-family: <?php echo $UI_font; ?>;
 	font-feature-settings: 'ss07';
 }
-#content {
+#content,
+#ui-elements-container .contents {
 	line-height: 1.55;
 }
 #content::before {

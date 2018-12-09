@@ -1415,6 +1415,9 @@ h1.listing + .post-meta .read-time {
 	position: relative;
 	z-index: 1;
 }
+#ui-elements-container .contents {
+	font-size: 1.3rem;
+}
 
 .contents-head {
 	text-align: center;
