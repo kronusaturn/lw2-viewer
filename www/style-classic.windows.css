@@ -5610,7 +5610,8 @@ h1.listing.own-post-listing {
 /*==================*/
 
 .post-body,
-.comment-body {
+.comment-body,
+#ui-elements-container .contents {
 	font-family: 'Arial', sans-serif;
 	font-size: 1rem;
 }

@@ -677,7 +677,8 @@ h1.listing.own-post-listing {
 /* POSTS */
 /*=======*/
 
-.post-body {
+.post-body,
+#ui-elements-container .contents {
 	font-size: 1.25rem;
 }
 

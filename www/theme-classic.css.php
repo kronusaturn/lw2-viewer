@@ -791,7 +791,8 @@ h1.listing.own-post-listing {
 /*==================*/
 
 .post-body,
-.comment-body {
+.comment-body,
+#ui-elements-container .contents {
 	font-family: <?php echo $text_font; ?>;
 	font-size: 1rem;
 }

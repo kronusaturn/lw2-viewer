@@ -772,12 +772,14 @@ h1.listing + .post-meta .link-post-domain {
 		0.5px 0.5px 1px #bbb;
 }
 
-.post-body {
+.post-body,
+#ui-elements-container .contents {
 	font-size: 1.1875rem;
 	line-height: 1.6;
 }
 @media (-webkit-max-device-pixel-ratio: 1), (max-resolution: 191dpi) { 
-	.post-body {
+	.post-body,
+	#ui-elements-container .contents {
 		font-size: 1.125rem;
 	}
 }

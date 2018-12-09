@@ -928,7 +928,8 @@ a.post-section.alignment-forum:hover::before {
 /* POSTS */
 /*=======*/
 
-.post-body {
+.post-body,
+#ui-elements-container .contents {
 	font-size: 1.375rem;
 }
 .post-page .post-meta::after {

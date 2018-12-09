@@ -1233,7 +1233,8 @@ h1.listing.own-post-listing {
 	padding: 2em 0 0 0;
 }
 
-.post-body {
+.post-body,
+#ui-elements-container .contents {
 	font-size: 1.25rem;
 }
 

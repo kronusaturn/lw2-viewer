@@ -5552,8 +5552,11 @@ a.post-section:hover::before {
 /* POSTS */
 /*=======*/
 
-.post-body {
+.post-body,
+#ui-elements-container .contents {
 	font-size: 1.125rem;
+}
+.post-body {
 	margin-top: 1em;
 }
 .post > h1:first-child {
