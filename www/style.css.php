@@ -498,10 +498,10 @@ a#inbox-indicator.new-messages:hover::before {
 /* COMMENTS SORT MODE SELECTOR */
 /*******************************/
 
-#comments > .sublevel-nav.sort {
+.comments > .sublevel-nav.sort {
 	margin: 1em auto 0 auto;
 }
-<?php fit_content("#comments > .sublevel-nav.sort"); ?>
+<?php fit_content(".comments > .sublevel-nav.sort"); ?>
 
 /******************/
 /* WIDTH SELECTOR */
@@ -1734,8 +1734,8 @@ ul.comment-thread {
 	margin-bottom: 0;
 }
 
-#comments:empty::after,
-#comments > .comment-controls:last-child::after {
+.comments:empty::after,
+.comments > .comment-controls:last-child::after {
 	content: "No comments.";
 	display: block;
 	width: 100%;
@@ -2202,7 +2202,7 @@ a.comment-parent-link:hover::after {
 	line-height: 1;
 	margin: 0.75em 0 3px 0;
 }
-.individual-thread-page #comments {
+.individual-thread-page .comments {
 	border: none;
 }
 
@@ -2245,10 +2245,10 @@ a.comment-parent-link:hover::after {
 .comment-thread .comment-controls + .comment-thread > li:first-child {
 	margin-top: 8px;
 }
-#comments > .comment-controls {
+.comments > .comment-controls {
 	margin: 8px 0 0 0;
 }
-#comments > .comment-controls:last-child {
+.comments > .comment-controls:last-child {
 	margin: 8px 0 16px 0;
 }
 
@@ -3166,7 +3166,7 @@ li {
 /* QUALIFIED HYPERLINKING */
 /**************************/
 
-#content.no-comments #comments, 
+#content.no-comments .comments, 
 #content.no-comments .post-meta .comment-count,
 #content.no-comments .post-meta .karma,
 #content.no-comments + #ui-elements-container #new-comment-nav-ui,

@@ -974,7 +974,7 @@ a.comment-parent-link::after {
 	.comment-controls .edit-button::before {
 		font-size: 0.9375em;
 	}
-	#comments > .comment-controls .cancel-comment-button {
+	.comments > .comment-controls .cancel-comment-button {
 		right: 8px;	
 	}
 	.comment-controls .cancel-comment-button::before {

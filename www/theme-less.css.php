@@ -1419,7 +1419,7 @@ a.post-section.alignment-forum:hover::before {
 /* COMMENTS */
 /*==========*/
 
-#comments {
+.comments {
 	padding: 0 0 0 10px;
 }
 #content > .comment-thread .comment-meta a.date:focus,
@@ -1799,7 +1799,7 @@ div.comment-child-links a {
 	font-weight: 300;
 	font-family: <?php echo $headings_font; ?>;
 }
-.individual-thread-page > #comments {
+.individual-thread-page > .comments {
 	padding: 0 0 0 30px;
 }
 .individual-thread-page > #bottom-bar.decorative::before {
@@ -2875,7 +2875,7 @@ strong, b {
 			line-height: 1.3;
 		}
 
-		#comments {
+		.comments {
 			padding: 0;
 		}
 		.comment-item .comment-item {
@@ -2889,7 +2889,7 @@ strong, b {
 			position: relative;
 		}
 		.comment-controls .cancel-comment-button,
-		#comments > .comment-controls .cancel-comment-button {
+		.comments > .comment-controls .cancel-comment-button {
 			right: 4px;
 		}
 

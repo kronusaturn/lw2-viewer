@@ -476,16 +476,16 @@ a#inbox-indicator.new-messages:hover::before {
 /* COMMENTS SORT MODE SELECTOR */
 /*******************************/
 
-#comments > .sublevel-nav.sort {
+.comments > .sublevel-nav.sort {
 	margin: 1em auto 0 auto;
 }
 @supports (width: -moz-fit-content) {
-	#comments > .sublevel-nav.sort {
+	.comments > .sublevel-nav.sort {
 		width: -moz-fit-content;
 	}
 }
 @supports (width: fit-content) {
-	#comments > .sublevel-nav.sort {
+	.comments > .sublevel-nav.sort {
 		width: fit-content;
 	}
 }
@@ -1723,8 +1723,8 @@ ul.comment-thread {
 	margin-bottom: 0;
 }
 
-#comments:empty::after,
-#comments > .comment-controls:last-child::after {
+.comments:empty::after,
+.comments > .comment-controls:last-child::after {
 	content: "No comments.";
 	display: block;
 	width: 100%;
@@ -2191,7 +2191,7 @@ a.comment-parent-link:hover::after {
 	line-height: 1;
 	margin: 0.75em 0 3px 0;
 }
-.individual-thread-page #comments {
+.individual-thread-page .comments {
 	border: none;
 }
 
@@ -2234,10 +2234,10 @@ a.comment-parent-link:hover::after {
 .comment-thread .comment-controls + .comment-thread > li:first-child {
 	margin-top: 8px;
 }
-#comments > .comment-controls {
+.comments > .comment-controls {
 	margin: 8px 0 0 0;
 }
-#comments > .comment-controls:last-child {
+.comments > .comment-controls:last-child {
 	margin: 8px 0 16px 0;
 }
 
@@ -3173,7 +3173,7 @@ li {
 /* QUALIFIED HYPERLINKING */
 /**************************/
 
-#content.no-comments #comments, 
+#content.no-comments .comments, 
 #content.no-comments .post-meta .comment-count,
 #content.no-comments .post-meta .karma,
 #content.no-comments + #ui-elements-container #new-comment-nav-ui,
@@ -4615,7 +4615,7 @@ a.comment-parent-link::after {
 	.comment-controls .edit-button::before {
 		font-size: 0.9375em;
 	}
-	#comments > .comment-controls .cancel-comment-button {
+	.comments > .comment-controls .cancel-comment-button {
 		right: 8px;	
 	}
 	.comment-controls .cancel-comment-button::before {

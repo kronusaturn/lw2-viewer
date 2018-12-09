@@ -991,7 +991,7 @@ div.comment-child-links a {
 	text-decoration: dotted underline;
 }
 
-.individual-thread-page > #comments {
+.individual-thread-page > .comments {
 	border-top: 2px solid #000;
 }
 

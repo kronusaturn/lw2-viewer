@@ -3091,7 +3091,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	});
 
 	// If we're on a comment thread page...
-	if (query("#comments") != null) {
+	if (query(".comments") != null) {
 		// Add comment-minimize buttons to every comment.
 		queryAll(".comment-meta").forEach(commentMeta => {
 			if (!commentMeta.lastChild.hasClass("comment-minimize-button"))

@@ -1316,7 +1316,7 @@ a.comment-parent-link:hover::before {
 /* COMMENTING AND POSTING UI */
 /*===========================*/
 
-#comments > .comment-controls {
+.comments > .comment-controls {
 	margin: 0;
 }
 .posting-controls input[type='submit'] {
