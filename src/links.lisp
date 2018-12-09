@@ -45,7 +45,7 @@
 
 (defun match-ea1-link (link) (match-values "^(?:https?://(?:www\\.)?(?:effective-altruism\\.com|forum\\.effectivealtruism\\.org))?(/ea/.*)" link (0)))
 
-(defun match-lw2-link (link) (match-values "^(?:https?://[^/]+)?/posts/([^/]+)/([^/#]*)(?:/comment/([^/#]+)|/?#?([^/#]+)?)?" link (0 (or 2 3) 1)))
+(defun match-lw2-link (link) (match-values "^(?:https?://[^/]+)?/posts/([^/]+)/([^/#]*)(?:/(comment|answer)/([^/#]+)|/?#?([^/#]+)?)?" link (0 (or 3 4) 1 2)))
 
 (defun match-lw2-slug-link (link) (match-values "^(?:https?://(?:www.)?less(?:er)?wrong.com)?/(?:codex|hpmor)/([^/#]+)(?:/?#?([^/#]+)?)?" link (0 1)))
 

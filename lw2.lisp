@@ -199,6 +199,8 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
 
 (defparameter *comment-individual-link* nil)
 
+(defparameter *comment-thread-type* :comment)
+
 (defun comment-to-html (out-stream comment &key with-post-title)
   (if (or (cdr (assoc :deleted comment)) (cdr (assoc :deleted-public comment)))
       (format out-stream "<div class=\"comment deleted-comment\"><div class=\"comment-meta\"><span class=\"deleted-meta\">[ ]</span></div><div class=\"comment-body\">[deleted]</div></div>")
@@ -236,7 +238,7 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
 			<div class="karma">
 			  <span class="karma-value" title=(votes-to-tooltip vote-count)> (safe (pretty-number base-score "point")) </span>
 			</div>
-			<a class="permalink" href=("~A/comment/~A" (generate-post-link post-id) comment-id) title="Permalink"></a>
+			<a class="permalink" href=("~A/~A/~A" (generate-post-link post-id) (string-downcase *comment-thread-type*) comment-id) title="Permalink"></a>
 			(with-html-stream-output
 			  (when page-url
 			    <a class="lw2-link" href=(clean-lw-link page-url) title=(main-site-abbreviation *current-site*)></a>)
@@ -913,6 +915,18 @@ signaled condition to OUT-STREAM."
   (setf (hunchentoot:return-code*) (ecase type (:see-other 303) (:permanent 301))
         (hunchentoot:header-out "Location") uri))
 
+(defmacro ignorable-multiple-value-bind ((&rest bindings) value-form &body body)
+  (let (new-bindings ignores)
+    (dolist (binding (reverse bindings))
+      (if (eq binding '*)
+	  (let ((gensym (gensym)))
+	    (push gensym new-bindings)
+	    (push gensym ignores))
+	  (push binding new-bindings)))
+    `(multiple-value-bind ,new-bindings ,value-form
+	 (declare (ignore ,.ignores))
+       ,@body)))
+
 (defmacro define-page (name path-specifier additional-vars &body body)
   (labels ((make-lambda (args)
              (loop for a in args
@@ -925,41 +939,43 @@ signaled condition to OUT-STREAM."
                    collect (if (atom x) x
                                (cons (first x) (filter-plist (rest x) :request-type :real-name)))))
            (make-binding-form (additional-vars body &aux var-bindings additional-declarations additional-preamble)
-             (loop for x in additional-vars do
-                   (destructuring-bind (name &key member type default required request-type real-name) (if (atom x) (list x) x)
-                     (declare (ignore request-type real-name))
-                     (let* ((inner-form
-                              (cond
-                                (member
-                                  `(let ((sym (find-symbol (string-upcase ,name) ,(find-package '#:keyword))))
-                                     (if (member sym (quote ,member)) sym)))
-                                ((and type (subtypep type 'integer))
-                                 `(if ,name (parse-integer ,name)))))
-                            (inner-form
-                              (if default
-                                  `(or ,inner-form ,default)
-                                  inner-form)))
-                       (when required
-                         (push `(unless (and ,name (not (equal ,name ""))) (error "Missing required parameter: ~A" (quote ,name)))
-                               additional-preamble))
-                       (if member
-                           (if type (error "Cannot specify both member and type.")
-                               (push `(type (or null symbol) ,name) additional-declarations))
-                           (if type
-                               (push `(type (or null ,type) ,name) additional-declarations)
-                               (push `(type (or null simple-string) ,name) additional-declarations)))
-                       (when inner-form
-                         (push `(,name ,inner-form) var-bindings)))))
-             `(let ,var-bindings (declare ,@additional-declarations) ,@additional-preamble ,@body)))
+             (loop for x in additional-vars
+		when (not (eq x '*))
+		do
+		  (destructuring-bind (name &key member type default required request-type real-name) (if (atom x) (list x) x)
+		    (declare (ignore request-type real-name))
+		    (let* ((inner-form
+			    (cond
+			      (member
+			       `(let ((sym (find-symbol (string-upcase ,name) ,(find-package '#:keyword))))
+				  (if (member sym (quote ,member)) sym)))
+			      ((and type (subtypep type 'integer))
+			       `(if ,name (parse-integer ,name)))))
+			   (inner-form
+			    (if default
+				`(or ,inner-form ,default)
+				inner-form)))
+		      (when required
+			(push `(unless (and ,name (not (equal ,name ""))) (error "Missing required parameter: ~A" (quote ,name)))
+			      additional-preamble))
+		      (if member
+			  (if type (error "Cannot specify both member and type.")
+			      (push `(type (or null symbol) ,name) additional-declarations))
+			  (if type
+			      (push `(type (or null ,type) ,name) additional-declarations)
+			      (push `(type (or null simple-string) ,name) additional-declarations)))
+		      (when inner-form
+			(push `(,name ,inner-form) var-bindings)))))
+	     `(let ,var-bindings (declare ,@additional-declarations) ,@additional-preamble ,@body)))
    (multiple-value-bind (path-specifier-form path-bindings-wrapper specifier-vars)
     (if (stringp path-specifier)
-        (values path-specifier #'identity)
-        (destructuring-bind (specifier-type specifier-body &rest specifier-args) path-specifier
-          (ecase specifier-type
-            (:function
-              (values `(lambda (r) (funcall ,specifier-body (hunchentoot:request-uri r)))
-                      (if specifier-args
-                          (lambda (body) `(multiple-value-bind ,(make-lambda specifier-args) (funcall ,specifier-body (hunchentoot:request-uri*)) ,body))
+	(values path-specifier #'identity)
+	(destructuring-bind (specifier-type specifier-body &rest specifier-args) path-specifier
+	  (ecase specifier-type
+	    (:function
+	      (values `(lambda (r) (funcall ,specifier-body (hunchentoot:request-uri r)))
+		      (if specifier-args
+                          (lambda (body) `(ignorable-multiple-value-bind ,(make-lambda specifier-args) (funcall ,specifier-body (hunchentoot:request-uri*)) ,body))
                           #'identity)
                       specifier-args))
             (:regex
@@ -973,40 +989,40 @@ signaled condition to OUT-STREAM."
                                  ,(loop for v in (make-lambda specifier-args) as x from 0 collecting `(,v (if (> (length ,result-vector) ,x) (aref ,result-vector ,x)))) 
                                  ,body))))
                         specifier-args))))))
-    (let* ((rewritten-body
-             (if (string= (ignore-errors (caar body)) "REQUEST-METHOD")
-                 (progn
-                   (unless (= (length body) 1)
-                     (error "REQUEST-METHOD must be the only form when it appears in DEFINE-PAGE."))
-                   `((ecase (hunchentoot:request-method*)
-                       ,.(loop for method-body in (cdar body)
-                               collect (destructuring-bind (method args &body inner-body) method-body
-                                         (unless (eq method :get)
-                                           (alexandria:with-gensyms (csrf-token)
-                                             (push `(,csrf-token :real-name "csrf-token" :required t) args)
-                                             (push `(check-csrf-token ,csrf-token) inner-body)))
-                                         (loop for a in args
-                                               do (push (append (if (atom a) (list a) (cons (first a) (filter-plist (rest a) :real-name))) (list :request-type method)) additional-vars))
-                                         `(,method ,(make-binding-form args inner-body)))))))
-                 body)))
-      `(hunchentoot:define-easy-handler (,name :uri ,path-specifier-form) ,(make-hunchentoot-lambda additional-vars)
-                                        (with-error-page
-                                          (block nil
-                                                 ,(funcall path-bindings-wrapper
-                                                           (make-binding-form (append specifier-vars additional-vars)
-                                                                              rewritten-body)))))))))
+     (let* ((rewritten-body
+	     (if (eq (ignore-errors (caar body)) 'request-method)
+		 (progn
+		   (unless (= (length body) 1)
+		     (error "REQUEST-METHOD must be the only form when it appears in DEFINE-PAGE."))
+		   `((ecase (hunchentoot:request-method*)
+		       ,.(loop for method-body in (cdar body)
+			    collect (destructuring-bind (method args &body inner-body) method-body
+				      (unless (eq method :get)
+					(alexandria:with-gensyms (csrf-token)
+					  (push `(,csrf-token :real-name "csrf-token" :required t) args)
+					  (push `(check-csrf-token ,csrf-token) inner-body)))
+				      (loop for a in args
+					 do (push (append (if (atom a) (list a) (cons (first a) (filter-plist (rest a) :real-name))) (list :request-type method)) additional-vars))
+				      `(,method ,(make-binding-form args inner-body)))))))
+		 body)))
+       `(hunchentoot:define-easy-handler (,name :uri ,path-specifier-form) ,(make-hunchentoot-lambda additional-vars)
+	  (with-error-page
+	      (block nil
+		,(funcall path-bindings-wrapper
+			  (make-binding-form (append specifier-vars additional-vars)
+					     rewritten-body)))))))))
 
 (define-component sort-widget (&key (sort-options '(:new :hot)) (pref :default-sort) (param-name "sort") (html-class "sort"))
   (:http-args '((sort :alias param-name :member sort-options)))
   (let ((sort-string (if sort (string-downcase sort))))
     (if sort-string
-        (set-user-pref :default-sort sort-string))
+	(set-user-pref :default-sort sort-string))
     (renderer (out-stream)
       (sublevel-nav-to-html out-stream
-                            sort-options
-                            (user-pref pref)
-                            :param-name param-name
-                            :extra-class html-class))
+			    sort-options
+			    (user-pref pref)
+			    :param-name param-name
+			    :extra-class html-class))
     (or sort-string (user-pref pref))))
 
 (define-page view-root "/" ((offset :type fixnum)
@@ -1058,7 +1074,7 @@ signaled condition to OUT-STREAM."
 (define-page view-feed "/feed" ()
   (redirect "/?format=rss" :type :permanent))
 
-(define-page view-post-lw2-link (:function #'match-lw2-link post-id comment-id) (need-auth chrono)
+(define-page view-post-lw2-link (:function #'match-lw2-link post-id comment-id * comment-link-type) (need-auth chrono)
   (request-method
     (:get ()
      (let ((lw2-auth-token *current-auth-token*))
@@ -1094,22 +1110,32 @@ signaled condition to OUT-STREAM."
              (serious-condition (c) (values nil "Error" c))
              (:no-error (post) (values post (cdr (assoc :title post)) nil)))
            (if comment-id
-             (let* ((*comment-individual-link* t)
-                    (comments (get-post-comments post-id))
-                    (target-comment (find comment-id comments :key (lambda (c) (cdr (assoc :--id c))) :test #'string=))
-                    (display-name (get-username (cdr (assoc :user-id target-comment)))))
-               (emit-page (out-stream :title (format nil "~A comments on ~A" display-name title) :content-class "individual-thread-page comment-thread-page")
-                          (format out-stream "<h1 class=\"post-title\">~A comments on <a href=\"~A\">~A</a></h1>"
-                                  (encode-entities display-name)
-                                  (generate-post-link post-id)
-                                  (clean-text-to-html title))
-                          (output-comments out-stream "comments" comments target-comment)
-                          (when lw2-auth-token
-                            (force-output out-stream)
-                            (output-comments-votes out-stream))))
-             (emit-page (out-stream :title title :content-class (format nil "post-page comment-thread-page~:[~; question-post-page~]" (cdr (assoc :question post))))
-                        (cond
-                          (condition
+	       (let* ((*comment-individual-link* t)
+		      (*comment-thread-type* (if (string= comment-link-type "answer") :answer :comment))
+		      (comments (case *comment-thread-type*
+				  (:comment (get-post-comments post-id))
+				  (:answer (get-post-answers post-id))))
+		      (target-comment (find comment-id comments :key (lambda (c) (cdr (assoc :--id c))) :test #'string=))
+		      (display-name (get-username (cdr (assoc :user-id target-comment))))
+		      (verb-phrase (cond
+				     ((and (eq *comment-thread-type* :answer)
+					   (not (cdr (assoc :parent-comment-id target-comment))))
+				      "answers")
+				     (t "comments on"))))
+		 (emit-page (out-stream :title (format nil "~A ~A ~A" display-name verb-phrase title)
+					:content-class "individual-thread-page comment-thread-page")
+			    (format out-stream "<h1 class=\"post-title\">~A ~A <a href=\"~A\">~A</a></h1>"
+				    (encode-entities display-name)
+				    verb-phrase
+				    (generate-post-link post-id)
+				    (clean-text-to-html title :hyphenation nil))
+			    (output-comments out-stream "comments" comments target-comment)
+			    (when lw2-auth-token
+			      (force-output out-stream)
+			      (output-comments-votes out-stream))))
+	     (emit-page (out-stream :title title :content-class (format nil "post-page comment-thread-page~:[~; question-post-page~]" (cdr (assoc :question post))))
+			(cond
+			  (condition
                             (error-to-html out-stream condition))
                           (t
                            (post-body-to-html out-stream post)))
@@ -1123,7 +1149,8 @@ signaled condition to OUT-STREAM."
 					      (get-post-answers post-id)))
 				   (comments (get-post-comments post-id)))
 			      (when question
-				(output-comments out-stream "answers" answers nil))
+				(let ((*comment-thread-type* :answer))
+				  (output-comments out-stream "answers" answers nil)))
 			      (output-comments out-stream "comments" comments nil))
 			  (serious-condition (c) (error-to-html out-stream c)))
 			(when lw2-auth-token
