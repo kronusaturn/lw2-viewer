@@ -888,7 +888,7 @@ h1.listing.own-post-listing {
 /* POSTS */
 /*=======*/
 
-.post > h1:first-child {
+h1.post-title {
 	font-family: <?php echo $listings_font; ?>;
 	font-weight: <?php echo ($platform == 'Mac') ? "700" : "800"; ?>;
 }

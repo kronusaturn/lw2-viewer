@@ -814,7 +814,7 @@ h1.listing.own-post-listing {
 .comment-body {
 	font-family: <?php echo $text_font; ?>;
 }
-.post > h1:first-child {
+h1.post-title {
 	font-family: <?php echo $text_font; ?>;
 	font-weight: 600;
 }

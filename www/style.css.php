@@ -1635,7 +1635,7 @@ h1.listing + .post-meta .read-time {
 	overflow: auto;
 	margin: 0.5em 0 0 0;
 }
-.post > h1:first-child {
+h1.post-title {
 	margin: 1.1em 0 0.35em 0;
 	padding: 0 30px;
 	text-align: center;

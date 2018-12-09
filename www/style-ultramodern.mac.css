@@ -1624,7 +1624,7 @@ h1.listing + .post-meta .read-time {
 	overflow: auto;
 	margin: 0.5em 0 0 0;
 }
-.post > h1:first-child {
+h1.post-title {
 	margin: 1.1em 0 0.35em 0;
 	padding: 0 30px;
 	text-align: center;
@@ -4492,7 +4492,7 @@ h1.listing {
 
 @media only screen and (max-width: 900px) {
 	.post-body,
-	.post > h1:first-child {
+	h1.post-title {
 		padding: 0 6px;
 	}
 }
@@ -4501,7 +4501,7 @@ h1.listing {
 		font-size: 1.2rem;
 		line-height: 1.45;
 	}
-	.post > h1:first-child {
+	h1.post-title {
 		font-size: 2em;
 	}
 }
@@ -5580,7 +5580,7 @@ h1.listing + .post-meta .link-post-domain {
 		0px 0px 5px #f60;
 }
 
-.post > h1:first-child {
+h1.post-title {
 	margin: 1.1em 0 0.25em 0;
 	font-family: 'Raleway', 'Helvetica', 'Arial', 'Verdana', sans-serif;;
 	font-weight: 100;

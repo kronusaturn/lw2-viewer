@@ -726,7 +726,7 @@ a.post-section:hover::before {
 	font-size: 1.125rem;
 	margin-top: 1em;
 }
-.post > h1:first-child {
+h1.post-title {
 	font-size: 2.25rem;
 	margin-top: 1.375em;
 }

@@ -790,7 +790,7 @@ h1.listing.own-post-listing {
 	}
 }
 
-.post > h1:first-child {
+h1.post-title {
 	margin: 1.1em 0 0.25em 0;
 	font-weight: 400;
 	color: #222;

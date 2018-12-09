@@ -930,7 +930,7 @@ a.post-section.alignment-forum:hover::before {
 /* POSTS */
 /*=======*/
 
-.post > h1:first-child {
+h1.post-title {
 	font-size: 1.375rem;
 	text-align: left;
 	margin: 2em 0 0.5em 0;

@@ -1234,7 +1234,7 @@ h1.listing.own-post-listing {
 	font-size: 1.25rem;
 }
 
-.post > h1:first-child {
+h1.post-title {
 	font-size: 2.75rem;
 	font-family: <?php echo $headings_font; ?>;
 	font-weight: 300;
@@ -2871,7 +2871,7 @@ strong, b {
 			display: initial;
 			position: static;
 		}
-		.post > h1:first-child {
+		h1.post-title {
 			line-height: 1.3;
 		}
 

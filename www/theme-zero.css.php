@@ -680,7 +680,7 @@ h1.listing.own-post-listing {
 	font-size: 1.25rem;
 }
 
-.post > h1:first-child {
+h1.post-title {
 	font-size: 2rem;
 	line-height: 1.1;
 	margin: 1em 0 0.25em 0;

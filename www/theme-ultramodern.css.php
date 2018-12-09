@@ -759,7 +759,7 @@ h1.listing + .post-meta .link-post-domain {
 		0px 0px 5px #f60;
 }
 
-.post > h1:first-child {
+h1.post-title {
 	margin: 1.1em 0 0.25em 0;
 	font-family: <?php echo $text_font; ?>;
 	font-weight: <?php global $platform; echo ($platform == 'Mac' ? '100' : '200'); ?>;

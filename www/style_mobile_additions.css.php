@@ -845,7 +845,7 @@ h1.listing {
 
 @media only screen and (max-width: 900px) {
 	.post-body,
-	.post > h1:first-child {
+	h1.post-title {
 		padding: 0 6px;
 	}
 }
@@ -854,7 +854,7 @@ h1.listing {
 		font-size: 1.2rem;
 		line-height: 1.45;
 	}
-	.post > h1:first-child {
+	h1.post-title {
 		font-size: 2em;
 	}
 }
