@@ -199,8 +199,6 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
 
 (defparameter *comment-individual-link* nil)
 
-(defparameter *comment-thread-type* :comment)
-
 (defun comment-to-html (out-stream comment &key with-post-title)
   (if (or (cdr (assoc :deleted comment)) (cdr (assoc :deleted-public comment)))
       (format out-stream "<div class=\"comment deleted-comment\"><div class=\"comment-meta\"><span class=\"deleted-meta\">[ ]</span></div><div class=\"comment-body\">[deleted]</div></div>")
@@ -217,6 +215,8 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
                    (children list)
                    (vote-count (or null fixnum))
 		   (retracted boolean)
+		   (answer boolean)
+		   (parent-answer-id (or null string))
                    (html-body string))
                   comment
                   (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
@@ -238,7 +238,11 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
 			<div class="karma">
 			  <span class="karma-value" title=(votes-to-tooltip vote-count)> (safe (pretty-number base-score "point")) </span>
 			</div>
-			<a class="permalink" href=("~A/~A/~A" (generate-post-link post-id) (string-downcase *comment-thread-type*) comment-id) title="Permalink"></a>
+			<a class="permalink" href=("~A/~A/~A"
+						   (generate-post-link post-id)
+						   (cond ((or answer parent-answer-id) "answer") (t "comment"))
+						   comment-id)
+			   title="Permalink"></a>
 			(with-html-stream-output
 			  (when page-url
 			    <a class="lw2-link" href=(clean-lw-link page-url) title=(main-site-abbreviation *current-site*)></a>)
@@ -1111,14 +1115,14 @@ signaled condition to OUT-STREAM."
              (:no-error (post) (values post (cdr (assoc :title post)) nil)))
            (if comment-id
 	       (let* ((*comment-individual-link* t)
-		      (*comment-thread-type* (if (string= comment-link-type "answer") :answer :comment))
-		      (comments (case *comment-thread-type*
+		      (comment-thread-type (if (string= comment-link-type "answer") :answer :comment))
+		      (comments (case comment-thread-type
 				  (:comment (get-post-comments post-id))
 				  (:answer (get-post-answers post-id))))
 		      (target-comment (find comment-id comments :key (lambda (c) (cdr (assoc :--id c))) :test #'string=))
 		      (display-name (get-username (cdr (assoc :user-id target-comment))))
 		      (verb-phrase (cond
-				     ((and (eq *comment-thread-type* :answer)
+				     ((and (eq comment-thread-type :answer)
 					   (not (cdr (assoc :parent-comment-id target-comment))))
 				      "answers")
 				     (t "comments on"))))
@@ -1149,8 +1153,7 @@ signaled condition to OUT-STREAM."
 					      (get-post-answers post-id)))
 				   (comments (get-post-comments post-id)))
 			      (when question
-				(let ((*comment-thread-type* :answer))
-				  (output-comments out-stream "answers" answers nil)))
+				(output-comments out-stream "answers" answers nil))
 			      (output-comments out-stream "comments" comments nil))
 			  (serious-condition (c) (error-to-html out-stream c)))
 			(when lw2-auth-token
