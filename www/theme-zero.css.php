@@ -641,15 +641,15 @@ h1.listing.own-post-listing {
 .contents-head {
 	font-weight: bold;
 }
-.post-body .contents li::before {
+.contents li::before {
 	color: #999;
 	font-feature-settings: "tnum";
 }
-.post-body .contents a,
-.post-body .contents a:hover {
+.contents ul.contents-list a,
+.contents ul.contents-list a:hover {
 	border: none;
 }
-.post-body .contents a:hover {
+.contents ul.contents-list a:hover {
 	text-decoration: underline;
 }
 

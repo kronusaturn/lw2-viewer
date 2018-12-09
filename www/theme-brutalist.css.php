@@ -627,13 +627,13 @@ h1.listing.own-post-listing {
 	font-weight: bold;
 	font-size: 1.125em;
 }
-.post-body .contents ul {
+.contents ul.contents-list {
 	font-size: 0.9375em;
 }
-.contents ul a {
+.contents ul.contents-list a {
 	border-bottom: 2px dotted #999;
 }
-.post-body .contents li::before {
+.contents li::before {
 	color: #999;
 	font-feature-settings: "tnum";
 }

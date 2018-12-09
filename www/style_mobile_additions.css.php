@@ -1152,7 +1152,7 @@ a.comment-parent-link::after {
 	.contents-head {
 		font-size: 1.2em;
 	}
-	div.post-body .contents ul {
+	.contents ul.contents-list {
 		font-size: unset;
 	}
 }

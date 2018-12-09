@@ -1203,10 +1203,10 @@ h1.listing.own-post-listing {
 	margin-top: 1em;
 	background-color: #fff;
 }
-.post-body .contents ul {
+.contents ul.contents-list {
 	font-size: 0.8125em;
 }
-.post-body .contents li::before {
+.contents li::before {
 	color: #bbb;
 }
 

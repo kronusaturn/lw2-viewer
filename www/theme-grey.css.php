@@ -766,7 +766,7 @@ h1.listing.own-post-listing {
 .contents a:link {
 	color: #d64400;
 }
-.post-body .contents ul {
+.contents ul.contents-list {
 	font-size: 0.875em;
 }
 .contents li::before {

@@ -785,23 +785,23 @@ h1.listing.own-post-listing {
 .contents a::after {
 	display: none;
 }
-.post-body .contents ul {
+.contents ul.contents-list {
 	margin: 0 0.5em;
 	padding: 0 1em;
 }
-.post-body .contents a,
-.post-body .contents a:visited {
+.contents ul.contents-list a,
+.contents ul.contents-list a:visited {
 	color: #690010;
 	font-weight: 600;
 }
-.post-body .contents a:hover {
+.contents ul.contents-list a:hover {
 	color: #690010;
 	text-shadow: 
 		0px 0px 0.5px #ff987b, 
 		0px 0px 1px #c05651;
 	border: none;
 }
-.post-body .contents li::before {
+.contents li::before {
 	color: #999;
 	font-feature-settings: 'onum';
 }
