@@ -1450,13 +1450,15 @@ button.guiedit:hover {
 	border: 1px solid #999;
 	color: #aaa;
 }
-#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover,
-#edit-post-form .post-meta-fields input[type='checkbox']:focus + label {
-	text-decoration: underline;
-}
-#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover::before,
-#edit-post-form .post-meta-fields input[type='checkbox']:focus + label::before {
-	border-color: #ccc;
+@media only screen and (hover:hover), not screen and (-moz-touch-enabled) {
+	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover,
+	#edit-post-form .post-meta-fields input[type='checkbox']:focus + label {
+		text-decoration: underline;
+	}
+	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover::before,
+	#edit-post-form .post-meta-fields input[type='checkbox']:focus + label::before {
+		border-color: #ccc;
+	}
 }
 #edit-post-form .post-meta-fields input[type='checkbox']:checked + label::before {
 	content: "\F00C";
@@ -2068,13 +2070,12 @@ input::selection {
 		#markdown-hints::after {
 			color: #0f0;
 		}
-		
-		#edit-post-form label[for='section'] {
-			width: 4.3em;
+
+		#edit-post-form .post-meta-fields input[type='checkbox'] + label {
+			top: 2px;
 		}
-		#edit-post-form input[name='title'],
-		#edit-post-form input[name='url'] {
-			max-width: calc(100% - 6.75em);
+		#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
+			top: 1px;
 		}
 	}
 }

@@ -1263,16 +1263,18 @@ h1.listing .edit-post-link:hover,
 	border: 1px solid #ddd;
 	color: #777;
 }
-#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover,
-#edit-post-form .post-meta-fields input[type='checkbox']:focus + label {
-	text-shadow: 
-		0 0 1px #fff,
-		0 0 2px #fff,
-		0 0 2.5px #aaa;
-}
-#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover::before,
-#edit-post-form .post-meta-fields input[type='checkbox']:focus + label::before {
-	border-color: #aaa;
+@media only screen and (hover:hover), not screen and (-moz-touch-enabled) {
+	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover,
+	#edit-post-form .post-meta-fields input[type='checkbox']:focus + label {
+		text-shadow: 
+			0 0 1px #fff,
+			0 0 2px #fff,
+			0 0 2.5px #aaa;
+	}
+	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover::before,
+	#edit-post-form .post-meta-fields input[type='checkbox']:focus + label::before {
+		border-color: #aaa;
+	}
 }
 #edit-post-form .post-meta-fields input[type='checkbox']:checked + label::before {
 	content: "\F00C";
@@ -1869,6 +1871,13 @@ select {
 		}
 		#markdown-hints::after {
 			color: #090;
+		}
+
+		#edit-post-form .post-meta-fields input[type='checkbox'] + label {
+			top: 2px;
+		}
+		#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
+			top: 1px;
 		}
 	}
 }

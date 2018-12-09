@@ -6022,11 +6022,13 @@ button.guiedit::after {
 	border: 1px solid #000;
 	top: 2px;
 }
-#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover::before,
-#edit-post-form .post-meta-fields input[type='checkbox']:focus + label::before {
-	box-shadow: 
-		0 0 0 1px #fff inset,
-		0 0 0 2px #000 inset;
+@media only screen and (hover:hover), not screen and (-moz-touch-enabled) {
+	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover::before,
+	#edit-post-form .post-meta-fields input[type='checkbox']:focus + label::before {
+		box-shadow: 
+			0 0 0 1px #fff inset,
+			0 0 0 2px #000 inset;
+	}
 }
 #edit-post-form .post-meta-fields input[type='checkbox']:active + label::before,
 #edit-post-form .post-meta-fields input[type='checkbox']:checked:active + label::before {
@@ -6685,9 +6687,12 @@ select {
 		#markdown-hints::after {
 			color: #000;
 		}
-		
-		#edit-post-form .textarea-container:focus-within textarea {
-			margin: 3px 0;
+
+		#edit-post-form .post-meta-fields input[type='checkbox'] + label {
+			top: 0;
+		}
+		#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
+			top: 1px;
 		}
 	}
 }

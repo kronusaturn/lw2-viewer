@@ -1563,16 +1563,18 @@ h1.listing .edit-post-link:hover,
 	color: #777;
 	top: 2px;
 }
-#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover,
-#edit-post-form .post-meta-fields input[type='checkbox']:focus + label {
-	text-shadow: 
-		0 0 1px #fff,
-		0 0 2px #fff,
-		0 0 2.5px #aaa;
-}
-#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover::before,
-#edit-post-form .post-meta-fields input[type='checkbox']:focus + label::before {
-	border-color: #aaa;
+@media only screen and (hover:hover), not screen and (-moz-touch-enabled) {
+	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover,
+	#edit-post-form .post-meta-fields input[type='checkbox']:focus + label {
+		text-shadow: 
+			0 0 1px #fff,
+			0 0 2px #fff,
+			0 0 2.5px #aaa;
+	}
+	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover::before,
+	#edit-post-form .post-meta-fields input[type='checkbox']:focus + label::before {
+		border-color: #aaa;
+	}
 }
 #edit-post-form .post-meta-fields input[type='checkbox']:checked + label::before {
 	content: "\F00C";
@@ -2186,6 +2188,13 @@ select {
 		.textarea-container:focus-within button.guiedit {
 			border: 1px solid #6a8a6b;
 			border-radius: 6px;
+		}
+
+		#edit-post-form .post-meta-fields input[type='checkbox'] + label {
+			top: 1px;
+		}
+		#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
+			top: 1px;
 		}
 		
 		#edit-post-form textarea {

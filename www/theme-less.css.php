@@ -2054,8 +2054,10 @@ div.comment-child-links a {
 		box-shadow 0.3s ease,
 		border-color 0.15s ease;
 }
-#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover::before {
-	border-color: #c4dbc4;
+@media only screen and (hover:hover), not screen and (-moz-touch-enabled) {
+	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover::before {
+		border-color: #c4dbc4;
+	}
 }
 #edit-post-form .post-meta-fields input[type='checkbox']:checked + label::before {
 	border-color: #c4dbc4;
@@ -2993,6 +2995,14 @@ strong, b {
 		}
 		#markdown-hints::after {
 			color: #090;
+		}
+
+		#edit-post-form .post-meta-fields input[type='checkbox'] + label {
+			top: 2px;
+			font-weight: 400;
+		}
+		#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
+			top: 1px;
 		}
 	}
 }
