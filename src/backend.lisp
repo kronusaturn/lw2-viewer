@@ -1,6 +1,5 @@
 (uiop:define-package #:lw2.backend
-  (:use #:cl #:sb-thread #:flexi-streams #:alexandria #:lw2-viewer.config #:lw2.sites #:lw2.graphql #:lw2.lmdb #:lw2.utils #:lw2.hash-utils #:lw2.backend-modules)
-  (:import-from #:lw2.context #:*current-backend*)
+  (:use #:cl #:sb-thread #:flexi-streams #:alexandria #:lw2-viewer.config #:lw2.sites #:lw2.context #:lw2.graphql #:lw2.lmdb #:lw2.utils #:lw2.hash-utils #:lw2.backend-modules)
   (:reexport #:lw2.backend-modules)
   (:export #:*graphql-debug-output*
            #:*posts-index-fields* #:*comments-index-fields* #:*messages-index-fields*
