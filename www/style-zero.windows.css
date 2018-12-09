@@ -2511,6 +2511,7 @@ a.comment-parent-link:hover::after {
 #edit-post-form .question-checkbox + label {
 	grid-row: 3;
 	grid-column: 5 / span 2;
+	justify-self: flex-end;
 }
 
 #edit-post-form .post-meta-fields input[type='checkbox'] {
