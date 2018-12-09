@@ -1102,7 +1102,7 @@ a.comment-parent-link::after {
 	#edit-post-form label[for='title'] {
 		padding-left: 0;
 	}
-	#edit-post-form label[for='link-post'] {
+	#edit-post-form .post-meta-fields input[type='checkbox'] + label {
 		white-space: normal;
 		line-height: 0.9;
 		top: -1px;

@@ -2510,7 +2510,7 @@ a.comment-parent-link:hover::after {
 #edit-post-form .question-checkbox,
 #edit-post-form .question-checkbox + label {
 	grid-row: 3;
-	grid-column: 5 / span 2;
+	grid-column: 5;
 	justify-self: flex-end;
 }
 
@@ -4749,7 +4749,7 @@ a.comment-parent-link::after {
 	#edit-post-form label[for='title'] {
 		padding-left: 0;
 	}
-	#edit-post-form label[for='link-post'] {
+	#edit-post-form .post-meta-fields input[type='checkbox'] + label {
 		white-space: normal;
 		line-height: 0.9;
 		top: -1px;
