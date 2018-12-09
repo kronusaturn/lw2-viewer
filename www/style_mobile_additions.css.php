@@ -1107,6 +1107,13 @@ a.comment-parent-link::after {
 		line-height: 0.9;
 		top: -1px;
 	}
+	#edit-post-form .post-meta-fields .question-checkbox,
+	#edit-post-form .post-meta-fields .question-checkbox + label {
+		grid-column: 6;
+	}
+	#edit-post-form .post-meta-fields input[type='radio'] + label {
+		align-self: start;
+	}
 	#edit-post-form .textarea-container:focus-within textarea {
 		height: calc(100% - 101px);
 		min-height: unset;

@@ -2511,7 +2511,7 @@ a.comment-parent-link:hover::after {
 #edit-post-form .question-checkbox + label {
 	grid-row: 3;
 	grid-column: 5;
-	justify-self: flex-end;
+	justify-self: end;
 }
 
 #edit-post-form .post-meta-fields input[type='checkbox'] {
@@ -4753,6 +4753,13 @@ a.comment-parent-link::after {
 		white-space: normal;
 		line-height: 0.9;
 		top: -1px;
+	}
+	#edit-post-form .post-meta-fields .question-checkbox,
+	#edit-post-form .post-meta-fields .question-checkbox + label {
+		grid-column: 6;
+	}
+	#edit-post-form .post-meta-fields input[type='radio'] + label {
+		align-self: start;
 	}
 	#edit-post-form .textarea-container:focus-within textarea {
 		height: calc(100% - 101px);

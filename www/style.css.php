@@ -2522,7 +2522,7 @@ a.comment-parent-link:hover::after {
 #edit-post-form .question-checkbox + label {
 	grid-row: 3;
 	grid-column: 5;
-	justify-self: flex-end;
+	justify-self: end;
 }
 
 #edit-post-form .post-meta-fields input[type='checkbox'] {
