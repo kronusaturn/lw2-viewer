@@ -128,8 +128,9 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
                (draft boolean))
     post
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      (format out-stream "<h1 class=\"listing~:[~; link-post-listing~]~:[~; own-post-listing~]\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~:[~;[Question] ~]~A</a>~@[<a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\"></a>~]</h1>"
+      (format out-stream "<h1 class=\"listing~:[~; link-post-listing~]~:[~; question-post-listing~]~:[~; own-post-listing~]\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~:[~;<span class=\"post-type-prefix\">[Question] </span>~]~A</a>~@[<a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\"></a>~]</h1>"
               url
+	      question
               (logged-in-userid user-id)
               (if url (encode-entities (convert-any-link (string-trim " " url))))
               (generate-post-auth-link post nil nil need-auth)
@@ -174,7 +175,7 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
                (html-body (or null string)))
     post
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      (format out-stream "<div class=\"post~:[~; link-post~]~:[~; question-post~]\"><h1>~:*~:[~;[Question] ~]~A</h1><div class=\"post-meta\"><a class=\"author~:[~; own-user-author~]\" href=\"/users/~A\" data-userid=\"~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A</a>~:[~*~;~:*<a class=\"lw2-link\" href=\"~A\">~A<span> link</span></a>~]"
+      (format out-stream "<div class=\"post~:[~; link-post~]~:[~; question-post~]\"><h1 class=\"post-title\">~:*~:[~;<span class=\"post-type-prefix\">[Question] </span>~]~A</h1><div class=\"post-meta\"><a class=\"author~:[~; own-user-author~]\" href=\"/users/~A\" data-userid=\"~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A</a>~:[~*~;~:*<a class=\"lw2-link\" href=\"~A\">~A<span> link</span></a>~]"
               url
 	      question
               (clean-text-to-html title :hyphenation nil)
@@ -217,38 +218,37 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
                    (html-body string))
                   comment
                   (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-		    (let ((*html-output* out-stream))
-		      <div class=("comment~{ ~A~}"
-					 (let ((l nil))
-					   (if (and (logged-in-userid user-id)
-						    (< (* 1000 (local-time:timestamp-to-unix (local-time:now))) (+ js-time 15000)))
-					       (push "just-posted-comment" l))
-					   (if highlight-new (push "comment-item-highlight" l))
-					   (if retracted (push "retracted" l))
-					   l))>
-			<div class="comment-meta">
-			  <a class=("author~:[~; own-user-author~]" (logged-in-userid user-id))
-			     href=("/users/~A" (encode-entities (get-user-slug user-id)))
-			     data-userid=user-id>
-			    (get-username user-id)
-			  </a>
-			  <a class="date" href=(generate-post-link post-id comment-id) data-js-date=js-time> (safe pretty-time) </a>
-			  <div class="karma">
-			    <span class="karma-value" title=(votes-to-tooltip vote-count)> (safe (pretty-number base-score "point")) </span>
-			  </div>
-			  <a class="permalink" href=("~A/comment/~A" (generate-post-link post-id) comment-id) title="Permalink"></a>
-			  (with-html-stream-output
-			    (when page-url
-			      <a class="lw2-link" href=(clean-lw-link page-url) title=(main-site-abbreviation *current-site*)></a>)
-			    (if with-post-title
-			        <div class="comment-post-title">
-				  (with-html-stream-output
+		    <div class=("comment~{ ~A~}"
+				       (let ((l nil))
+					 (if (and (logged-in-userid user-id)
+						  (< (* 1000 (local-time:timestamp-to-unix (local-time:now))) (+ js-time 15000)))
+					     (push "just-posted-comment" l))
+					 (if highlight-new (push "comment-item-highlight" l))
+					 (if retracted (push "retracted" l))
+					 l))>
+		      <div class="comment-meta">
+			<a class=("author~:[~; own-user-author~]" (logged-in-userid user-id))
+			   href=("/users/~A" (encode-entities (get-user-slug user-id)))
+			   data-userid=user-id>
+			  (get-username user-id)
+			</a>
+			<a class="date" href=(generate-post-link post-id comment-id) data-js-date=js-time> (safe pretty-time) </a>
+			<div class="karma">
+			  <span class="karma-value" title=(votes-to-tooltip vote-count)> (safe (pretty-number base-score "point")) </span>
+			</div>
+			<a class="permalink" href=("~A/comment/~A" (generate-post-link post-id) comment-id) title="Permalink"></a>
+			(with-html-stream-output
+			  (when page-url
+			    <a class="lw2-link" href=(clean-lw-link page-url) title=(main-site-abbreviation *current-site*)></a>)
+		          (if with-post-title
+			      <div class="comment-post-title">
+			        (with-html-stream-output
 				    (when parent-comment
 				      (alist-bind ((user-id string)
 						   (post-id string)
 						   (parent-id string :--id))
 						  parent-comment
-				        <span class="comment-in-reply-to">in reply to:
+					<span class="comment-in-reply-to">in reply to:
 					  <a href=("/users/~A" (get-user-slug user-id))
 					     class=("inline-author~:[~; own-user-author~]" (logged-in-userid user-id))
 					     data-userid=(progn user-id)>
@@ -256,35 +256,34 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
 					  <a href=(generate-post-link post-id parent-id)>comment</a>
 					  (progn " ")
 			                </span>)))
-				    <span class="comment-post-title2">on: <a href=(generate-post-link post-id)>(safe (clean-text-to-html (get-post-title post-id)))</a></span>
-				  </div>
-			      (when parent-comment-id
-			        (if *comment-individual-link*
-				    <a class="comment-parent-link" href=(progn parent-comment-id) title="Parent"></a>
-				    <a class="comment-parent-link" href=("#comment-~A" parent-comment-id)>Parent</a>)))
-			    (when children
-			      <div class="comment-child-links">
-				Replies:
-				(with-html-stream-output
-				  (dolist (child children)
-				    (alist-bind ((comment-id string)
-						 (user-id string))
-						child
-				      <a href=("#comment-~A" comment-id)>(">~A" (get-username user-id))</a>)))
-			      </div>)
-			    <div class="comment-minimize-button"
-			         data-child-count=(progn child-count)>
+				  <span class="comment-post-title2">on: <a href=(generate-post-link post-id)>(safe (clean-text-to-html (get-post-title post-id)))</a></span>
+				</div>
+			    (when parent-comment-id
+			      (if *comment-individual-link*
+				  <a class="comment-parent-link" href=(progn parent-comment-id) title="Parent"></a>
+				  <a class="comment-parent-link" href=("#comment-~A" parent-comment-id)>Parent</a>)))
+			  (when children
+			    <div class="comment-child-links">
+			      Replies:
+			      (with-html-stream-output
+				(dolist (child children)
+				  (alist-bind ((comment-id string)
+					       (user-id string))
+					      child
+				    <a href=("#comment-~A" comment-id)>(">~A" (get-username user-id))</a>)))
 			    </div>)
-			  </div>
-			  (with-html-stream-output
-			    (format out-stream "<div class=\"comment-body\"~@[ data-markdown-source=\"~A\"~]>"
-				    (if (logged-in-userid user-id)
-					(encode-entities
-					 (or (cache-get "comment-markdown-source" comment-id)
-					     html-body))))
-			    (write-sequence (clean-html* html-body) out-stream)
-			    (write-string "</div>" out-stream))
-			</div>)))))
+			  <div class="comment-minimize-button"
+			       data-child-count=(progn child-count)>
+			  </div>)
+			</div>
+			<div class="comment-body" (safe ("~@[ data-markdown-source=\"~A\"~]"
+							 (if (logged-in-userid user-id)
+							     (encode-entities
+							      (or (cache-get "comment-markdown-source" comment-id)
+								  html-body)))))>
+			  (with-html-stream-output (write-sequence (clean-html* html-body) out-stream))
+                        </div>
+		      </div>))))
 
 (defun postprocess-conversation-title (title)
   (if (or (null title) (string= title ""))
@@ -788,7 +787,8 @@ signaled condition to OUT-STREAM."
 (defmacro with-response-stream ((out-stream) &body body) `(call-with-response-stream (lambda (,out-stream) ,.body)))
 
 (defun call-with-response-stream (fn)
-  (funcall fn (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8)))
+  (let ((*html-output* (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8)))
+    (funcall fn *html-output*)))
 
 (defmacro emit-page ((out-stream &rest args &key (return-code 200) &allow-other-keys) &body body)
   (alexandria:once-only (return-code)
@@ -1099,7 +1099,7 @@ signaled condition to OUT-STREAM."
                     (target-comment (find comment-id comments :key (lambda (c) (cdr (assoc :--id c))) :test #'string=))
                     (display-name (get-username (cdr (assoc :user-id target-comment)))))
                (emit-page (out-stream :title (format nil "~A comments on ~A" display-name title) :content-class "individual-thread-page comment-thread-page")
-                          (format out-stream "<h1>~A comments on <a href=\"~A\">~A</a></h1>"
+                          (format out-stream "<h1 class=\"post-title\">~A comments on <a href=\"~A\">~A</a></h1>"
                                   (encode-entities display-name)
                                   (generate-post-link post-id)
                                   (clean-text-to-html title))
