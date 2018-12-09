@@ -902,6 +902,7 @@ function injectThemeSelector() {
 		button.addActivateEvent(GW.themeSelectButtonClicked = (event) => {
 			let themeName = /select-theme-([^\s]+)/.exec(event.target.className)[1];
 			setSelectedTheme(themeName);
+			if (GW.isMobile) toggleAppearanceAdjustUI();
 		});
 	});
 
