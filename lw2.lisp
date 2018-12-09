@@ -128,8 +128,9 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
                (draft boolean))
     post
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      (format out-stream "<h1 class=\"listing~:[~; link-post-listing~]~:[~; own-post-listing~]\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~:[~;[Question] ~]~A</a>~@[<a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\"></a>~]</h1>"
+      (format out-stream "<h1 class=\"listing~:[~; link-post-listing~]~:[~; question-post-listing~]~:[~; own-post-listing~]\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~:[~;<span class=\"post-type-prefix\">[Question] </span>~]~A</a>~@[<a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\"></a>~]</h1>"
               url
+	      question
               (logged-in-userid user-id)
               (if url (encode-entities (convert-any-link (string-trim " " url))))
               (generate-post-auth-link post nil nil need-auth)
@@ -174,7 +175,7 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
                (html-body (or null string)))
     post
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      (format out-stream "<div class=\"post~:[~; link-post~]~:[~; question-post~]\"><h1>~:*~:[~;[Question] ~]~A</h1><div class=\"post-meta\"><a class=\"author~:[~; own-user-author~]\" href=\"/users/~A\" data-userid=\"~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A</a>~:[~*~;~:*<a class=\"lw2-link\" href=\"~A\">~A<span> link</span></a>~]"
+      (format out-stream "<div class=\"post~:[~; link-post~]~:[~; question-post~]\"><h1>~:*~:[~;<span class=\"post-type-prefix\">[Question] </span>~]~A</h1><div class=\"post-meta\"><a class=\"author~:[~; own-user-author~]\" href=\"/users/~A\" data-userid=\"~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A</a>~:[~*~;~:*<a class=\"lw2-link\" href=\"~A\">~A<span> link</span></a>~]"
               url
 	      question
               (clean-text-to-html title :hyphenation nil)
