@@ -2255,6 +2255,13 @@ EOT;
 		#markdown-hints::after {
 			color: #090;
 		}
+
+		#edit-post-form .post-meta-fields input[type='checkbox'] + label {
+			top: 2px;
+		}
+		#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
+			top: 1px;
+		}
 	/*******************************************/
 	} @media only screen and (max-width: 320px) {
 	/*******************************************/

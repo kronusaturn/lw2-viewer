@@ -3116,6 +3116,13 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		GW.needHashRealignment = true;
 	}
 
+	// On mobile, replace the labels for the checkboxes on the edit post form
+	// with icons, to save space.
+	if (GW.isMobile && query(".edit-post-page")) {
+		query("label[for='link-post']").innerHTML = "&#xf0c1";
+		query("label[for='question']").innerHTML = "&#xf128";
+	}
+
 	// Add error message (as placeholder) if user tries to click Search with
 	// an empty search field.
 	query("#nav-item-search form").addEventListener("submit", GW.siteSearchFormSubmitted = (event) => {

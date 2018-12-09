@@ -1095,7 +1095,7 @@ a.comment-parent-link::after {
 		padding-bottom: 0;
 	}
 	#edit-post-form .post-meta-fields {
-		grid-template-columns: 4.5em auto auto auto 1fr 4.5em;
+		grid-template-columns: 4.5em auto auto auto 1fr auto;
 	}
 	#edit-post-form label[for='url'], 
 	#edit-post-form label[for='section'],
@@ -1106,6 +1106,8 @@ a.comment-parent-link::after {
 		white-space: normal;
 		line-height: 0.9;
 		top: -1px;
+		font-family: Font Awesome;
+		font-weight: 900;
 	}
 	#edit-post-form .post-meta-fields .question-checkbox,
 	#edit-post-form .post-meta-fields .question-checkbox + label {
