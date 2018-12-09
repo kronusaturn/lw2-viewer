@@ -23,7 +23,7 @@
                                                               (copy-file "config-example.lisp" "config.lisp"))))
                              (:file "../config" :depends-on ("config-copy" "config-package"))
                              (:file "lmdb" :depends-on ("hash-utils" "sites" "context" "../config"))
-                             (:file "backend" :depends-on ("utils" "backend-modules" "lmdb" "graphql" "context"))
+                             (:file "backend" :depends-on ("utils" "backend-modules" "lmdb" "graphql" "context" "sites"))
                              (:file "components" :depends-on ("utils"))
                              (:file "links" :depends-on ("lmdb" "backend" "sites" "context"))
 			     (:static-file "../text-clean-regexps.js")

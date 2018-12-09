@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.backend
-  (:use #:cl #:sb-thread #:flexi-streams #:alexandria #:lw2-viewer.config #:lw2.graphql #:lw2.lmdb #:lw2.utils #:lw2.hash-utils #:lw2.backend-modules)
+  (:use #:cl #:sb-thread #:flexi-streams #:alexandria #:lw2-viewer.config #:lw2.sites #:lw2.graphql #:lw2.lmdb #:lw2.utils #:lw2.hash-utils #:lw2.backend-modules)
   (:import-from #:lw2.context #:*current-backend*)
   (:reexport #:lw2.backend-modules)
   (:export #:*graphql-debug-output*
@@ -70,14 +70,6 @@
        (((or warning serious-condition) (lambda (c) (log-condition c))))
        (progn ,@body))))
 
-(defvar *background-loader-thread* nil)
-(defvar *background-loader-semaphore* (make-semaphore :count 1))
-
-(defun background-loader-running-p ()
-  (case (semaphore-count *background-loader-semaphore*)
-    (0 t)
-    (1 nil)))
-
 (define-backend-function comments-list-to-graphql-json (comments-list))
 
 (define-backend-operation comments-list-to-graphql-json backend-lw2-legacy (comments-list)
@@ -90,41 +82,68 @@
     (json:with-local-class-registry ()
       (json:make-object `((data . ,(json:make-object `((*comments-list . ,(json:make-object `((results . ,comments-list)) nil))) nil))) nil))))
 
-(defun background-loader ()
+(defvar *background-loader-thread* nil)
+(defvar *background-loader-semaphore* (make-semaphore :count 1))
+(defvar *background-loader-ready* nil)
+
+(defun background-loader-running-p ()
+  (case (semaphore-count *background-loader-semaphore*)
+    (0 t)
+    (1 nil)))
+
+(defun background-loader-ready-p ()
+  (and (background-loader-running-p)
+       (background-loader-enabled *current-site*)
+       *background-loader-ready*))
+
+(defun make-site-background-loader-fn (site)
   (let (last-comment-processed)
+    (lambda ()
+      (with-site-context (site)
+	(handler-case
+	    (log-conditions
+	     (let ((posts-json (sb-sys:with-deadline (:seconds 120) (get-posts-json))))
+	       (when (and posts-json (ignore-errors (json:decode-json-from-string posts-json)))
+		 (cache-put "index-json" "new-not-meta" posts-json)
+		 (let ((posts-list (decode-graphql-json posts-json)))
+		   (with-db (db "postid-to-title")
+		     (dolist (post posts-list)
+		       (lmdb-put-string db (cdr (assoc :--id post)) (cdr (assoc :title post)))))
+		   (with-db (db "postid-to-slug")
+		     (dolist (post posts-list)
+		       (lmdb-put-string db (cdr (assoc :--id post)) (cdr (assoc :slug post)))))))))
+	  (t (condition) (values nil condition)))
+	(handler-case
+	    (log-conditions
+	     (let ((recent-comments-json (sb-sys:with-deadline (:seconds 120) (get-recent-comments-json))))
+	       (when-let (recent-comments (ignore-errors (decode-graphql-json recent-comments-json)))
+			 (cache-put "index-json" "recent-comments" recent-comments-json)
+			 (loop for comment in recent-comments
+			    as comment-id = (cdr (assoc :--id comment))
+			    if (string= comment-id last-comment-processed) return nil
+			    do
+			      (with-cache-transaction
+				  (let* ((post-id (cdr (assoc :post-id comment)))
+					 (post-comments (ignore-errors (decode-graphql-json (cache-get "post-comments-json" post-id))))
+					 (new-post-comments (sort (cons comment (delete-if (lambda (c) (string= comment-id (cdr (assoc :--id c)))) post-comments))
+								  #'> :key (lambda (c) (cdr (assoc :base-score c))))))
+				    (cache-update "post-comments-json" post-id (comments-list-to-graphql-json new-post-comments)))))
+			 (setf last-comment-processed (cdr (assoc :--id (first recent-comments)))))))
+	  (t (condition) (values nil condition)))))))
+
+(defun background-loader ()
+  (let (sites loader-functions)
     (loop
-      (handler-case
-        (log-conditions
-          (let ((posts-json (sb-sys:with-deadline (:seconds 120) (get-posts-json))))
-            (when (and posts-json (ignore-errors (json:decode-json-from-string posts-json)))
-              (cache-put "index-json" "new-not-meta" posts-json)
-              (let ((posts-list (decode-graphql-json posts-json)))
-                (with-db (db "postid-to-title")
-                         (dolist (post posts-list)
-                           (lmdb-put-string db (cdr (assoc :--id post)) (cdr (assoc :title post)))))
-                (with-db (db "postid-to-slug")
-                         (dolist (post posts-list)
-                           (lmdb-put-string db (cdr (assoc :--id post)) (cdr (assoc :slug post)))))))))
-        (t (condition) (values nil condition)))
-      (handler-case
-        (log-conditions
-          (let ((recent-comments-json (sb-sys:with-deadline (:seconds 120) (get-recent-comments-json))))
-            (when-let (recent-comments (ignore-errors (decode-graphql-json recent-comments-json)))
-                      (cache-put "index-json" "recent-comments" recent-comments-json)
-                      (loop for comment in recent-comments
-                            as comment-id = (cdr (assoc :--id comment))
-                            if (string= comment-id last-comment-processed) return nil
-                            do
-                            (with-cache-transaction
-                              (let* ((post-id (cdr (assoc :post-id comment)))
-                                     (post-comments (ignore-errors (decode-graphql-json (cache-get "post-comments-json" post-id))))
-                                     (new-post-comments (sort (cons comment (delete-if (lambda (c) (string= comment-id (cdr (assoc :--id c)))) post-comments))
-                                                              #'> :key (lambda (c) (cdr (assoc :base-score c))))))
-                                (cache-update "post-comments-json" post-id (comments-list-to-graphql-json new-post-comments)))))
-                      (setf last-comment-processed (cdr (assoc :--id (first recent-comments)))))))
-        (t (condition) (values nil condition)))
-      (if (wait-on-semaphore *background-loader-semaphore* :timeout 60)
-          (return)))))
+       (unless (eq sites *sites*)
+	 (setf sites *sites*
+	       loader-functions (loop for site in sites
+				   when (background-loader-enabled site)
+				   collect (make-site-background-loader-fn site))))
+       (dolist (loader-fn loader-functions)
+	 (funcall loader-fn))
+       (setf *background-loader-ready* t)
+       (if (wait-on-semaphore *background-loader-semaphore* :timeout 60)
+	   (return)))))
 
 (defun start-background-loader ()
   (if (background-loader-running-p)
@@ -138,7 +157,8 @@
       (progn
         (signal-semaphore *background-loader-semaphore*)
         (join-thread *background-loader-thread*)
-        (setf *background-loader-thread* nil)
+        (setf *background-loader-thread* nil
+	      *background-loader-ready* nil)
         (signal-semaphore *background-loader-semaphore*))
       (warn "Background loader not running.")))
 
@@ -345,7 +365,7 @@
                (cache-put "index-json" cache-id result)
                (values-list decoded-result))))
     (let ((cached-result (cache-get "index-json" cache-id)))
-      (if (and cached-result (background-loader-running-p))
+      (if (and cached-result (background-loader-ready-p))
         (decode-graphql-json cached-result)
         (if cached-result
             (handler-case
