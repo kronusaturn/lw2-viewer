@@ -2524,6 +2524,7 @@ a.comment-parent-link:hover::after {
 	position: relative;
 	cursor: pointer;
 	padding: 0.25em 0.5em 0.25em calc(20px + 0.25em + 0.3725em);
+	align-self: start;
 }
 #edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
 	content: "";
