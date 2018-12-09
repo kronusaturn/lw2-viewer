@@ -4,7 +4,7 @@
   (:export
     #:*sites*
     #:site #:alternate-frontend-site #:lesswrong-viewer-site #:ea-forum-viewer-site
-    #:site-uri #:site-host #:site-secure #:site-backend #:site-title #:site-description
+    #:site-uri #:site-host #:site-secure #:site-backend #:site-title #:site-description #:background-loader-enabled
     #:main-site-title #:main-site-abbreviation
     #:host-matches #:find-site
     #:call-with-site-context #:with-site-context
@@ -21,7 +21,8 @@
    (secure :accessor site-secure :initarg :secure)
    (backend :accessor site-backend :initarg :backend :type backend-base)
    (title :accessor site-title :initarg :title :type simple-string)
-   (description :accessor site-description :initarg :description :type simple-string)))
+   (description :accessor site-description :initarg :description :type simple-string)
+   (background-loader-enabled :accessor background-loader-enabled :initarg :use-background-loader :initform nil :type boolean)))
 
 (defmethod main-site-title ((s site)) nil)
 
