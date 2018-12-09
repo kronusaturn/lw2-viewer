@@ -175,7 +175,7 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
                (html-body (or null string)))
     post
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      (format out-stream "<div class=\"post~:[~; link-post~]~:[~; question-post~]\"><h1>~:*~:[~;<span class=\"post-type-prefix\">[Question] </span>~]~A</h1><div class=\"post-meta\"><a class=\"author~:[~; own-user-author~]\" href=\"/users/~A\" data-userid=\"~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A</a>~:[~*~;~:*<a class=\"lw2-link\" href=\"~A\">~A<span> link</span></a>~]"
+      (format out-stream "<div class=\"post~:[~; link-post~]~:[~; question-post~]\"><h1 class=\"post-title\">~:*~:[~;<span class=\"post-type-prefix\">[Question] </span>~]~A</h1><div class=\"post-meta\"><a class=\"author~:[~; own-user-author~]\" href=\"/users/~A\" data-userid=\"~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A</a>~:[~*~;~:*<a class=\"lw2-link\" href=\"~A\">~A<span> link</span></a>~]"
               url
 	      question
               (clean-text-to-html title :hyphenation nil)
@@ -1099,7 +1099,7 @@ signaled condition to OUT-STREAM."
                     (target-comment (find comment-id comments :key (lambda (c) (cdr (assoc :--id c))) :test #'string=))
                     (display-name (get-username (cdr (assoc :user-id target-comment)))))
                (emit-page (out-stream :title (format nil "~A comments on ~A" display-name title) :content-class "individual-thread-page comment-thread-page")
-                          (format out-stream "<h1>~A comments on <a href=\"~A\">~A</a></h1>"
+                          (format out-stream "<h1 class=\"post-title\">~A comments on <a href=\"~A\">~A</a></h1>"
                                   (encode-entities display-name)
                                   (generate-post-link post-id)
                                   (clean-text-to-html title))
