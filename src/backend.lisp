@@ -474,11 +474,23 @@
 	 nconc (get-post-comments-list post-id "repliesToAnswer" :parent-answer-id (cdr (assoc :--id a)) :auth-token auth-token :fields fields))
       answers))))
 
-(defun get-post-comments (post-id &key (revalidate t) force-revalidate)
+(define-backend-function get-post-comments (post-id &key (revalidate t) force-revalidate))
+
+(define-backend-operation get-post-comments backend-graphql (post-id &key (revalidate t) force-revalidate)
   (let ((fn (lambda ()
 	      (comments-list-to-graphql-json
 	       (get-post-comments-list post-id "postCommentsTop")))))
     (lw2-graphql-query-timeout-cached fn "post-comments-json" post-id :revalidate revalidate :force-revalidate force-revalidate)))
+
+;;; Work around bizarre parent comment bug in EA forum
+(define-backend-operation get-post-comments backend-ea-forum (post-id &key &allow-other-keys)
+  (let ((comments (call-next-method)))
+    (dolist (c comments)
+      (if-let (parent-id-cons (assoc :parent-comment-id c))
+	      (if (and (string= (cdr parent-id-cons) "rjgZaK8uzHG3jAu2p")
+		       (not (string= post-id "h26Kx7uGfQfNewi7d")))
+		  (setf (cdr parent-id-cons) nil))))
+    comments))
 
 (defun get-post-answers (post-id &key (revalidate t) force-revalidate)
   (let ((fn (lambda ()
