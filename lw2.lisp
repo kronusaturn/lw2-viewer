@@ -1160,7 +1160,7 @@ signaled condition to OUT-STREAM."
                           (force-output out-stream)
                           (output-post-vote out-stream)
                           (output-comments-votes out-stream))))))))
-    (:post (csrf-token text answer parent-comment-id edit-comment-id retract-comment-id unretract-comment-id delete-comment-id)
+    (:post (csrf-token text answer parent-answer-id parent-comment-id edit-comment-id retract-comment-id unretract-comment-id delete-comment-id)
      (let ((lw2-auth-token *current-auth-token*))
        (check-csrf-token csrf-token)
        (assert lw2-auth-token)
@@ -1173,7 +1173,8 @@ signaled condition to OUT-STREAM."
 				     (:last-edited-as . "markdown")
 				     ,(if (not edit-comment-id) `(:post-id . ,post-id))
 				     ,(if parent-comment-id `(:parent-comment-id . ,parent-comment-id))
-				     ,(if answer `(:answer . t))))))
+				     ,(if answer `(:answer . t))
+				     ,(if parent-answer-id `(:parent-answer-id . ,parent-answer-id))))))
 		   (if edit-comment-id
 		       (prog1 edit-comment-id
 			 (do-lw2-comment-edit lw2-auth-token edit-comment-id comment-data))
