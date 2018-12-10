@@ -401,6 +401,7 @@
                        ("meta" (alist :view "new" :meta t :all t))
                        ("community" (alist :view "new" :meta t :all t))
                        ("alignment-forum" (alist :view "new" :af t))
+		       ("questions" (alist :view "questions"))
                        (t (values (alist :view (if (string= sort "hot") "frontpage" "frontpage-rss")) (if (not (or (string/= sort "new") (/= limit 20) offset before after)) "new-not-meta"))))
     (let* ((extra-terms
              (remove-if (lambda (x) (null (cdr x)))

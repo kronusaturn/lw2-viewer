@@ -1043,7 +1043,7 @@ signaled condition to OUT-STREAM."
                                                          :new-post t)
                                    (funcall sort-widget out-stream))))))
 
-(define-page view-index "/index" ((view :member (:all :new :frontpage :featured :meta :community :alignment-forum) :default :all)
+(define-page view-index "/index" ((view :member (:all :new :frontpage :featured :meta :community :alignment-forum :questions) :default :all)
                                   before after
                                   (offset :type fixnum)
                                   (limit :type fixnum))
