@@ -1253,7 +1253,7 @@ signaled condition to OUT-STREAM."
           (lw2-graphql-query (lw2-query-string :comment :list
                                                (remove nil (alist :view "postCommentsNew" :limit (or limit (user-pref :items-per-page)) :offset offset)
                                                        :key #'cdr)
-                                               *comments-index-fields*
+                                               (comments-index-fields)
                                                :with-total want-total))
           (get-recent-comments :with-total want-total))
       (view-items-index recent-comments :title "Recent comments" :pagination (pagination-nav-bars :offset (or offset 0) :with-next (not want-total) :total (if want-total total))))))
@@ -1274,7 +1274,7 @@ signaled condition to OUT-STREAM."
                             (error (make-condition 'lw2-user-not-found-error)))))
                     (user-id (cdr (assoc :--id user-info)))
                     (own-user-page (logged-in-userid user-id))
-                    (comments-index-fields (remove :page-url *comments-index-fields*)) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
+                    (comments-index-fields (remove :page-url (comments-index-fields))) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
                     (display-name (if user-slug (cdr (assoc :display-name user-info)) user-id))
                     (show-text (if (not (eq show :all)) (string-capitalize show)))
                     (title (format nil "~A~@['s ~A~]" display-name show-text))
@@ -1318,7 +1318,7 @@ signaled condition to OUT-STREAM."
                                                   ("comment"
                                                    (lw2-query-string* :comment :single
                                                                       (alist :document-id (cdr (assoc :document-id n)))
-                                                                      *comments-index-fields*))
+                                                                      (comments-index-fields)))
                                                   ("post"
                                                    (lw2-query-string* :post :single (alist :document-id (cdr (assoc :document-id n)))
                                                                       *posts-index-fields*))

@@ -6,7 +6,8 @@
     #:backend-lmdb-cache #:backend-lmdb-environment #:backend-cache-db-path
     #:backend-graphql
     #:graphql-uri #:websocket-uri #:algolia-search-uri
-    #:backend-lw2-legacy #:backend-lw2-modernized #:backend-lw2 #:backend-accordius
+    #:backend-q-and-a
+    #:backend-lw2-legacy #:backend-lw2-modernized #:backend-lw2 #:backend-ea-forum #:backend-accordius
     #:make-backend #:define-backend-function #:define-backend-operation #:backend)
   (:unintern #:declare-backend-function)
   (:recycle #:lw2.backend #:lw2.login))
@@ -28,11 +29,15 @@
 (defclass backend-algolia-search (backend-base)
   ((algolia-search-uri :accessor algolia-search-uri :initarg :algolia-search-uri :type simple-string)))
 
+(defclass backend-q-and-a (backend-graphql) ())
+
 (defclass backend-lw2-legacy (backend-graphql) ())
 
 (defclass backend-lw2-modernized (backend-graphql) ())
 
-(defclass backend-lw2 (backend-websocket-login backend-lw2-modernized backend-lw2-legacy backend-algolia-search) ())
+(defclass backend-lw2 (backend-websocket-login backend-lw2-modernized backend-lw2-legacy backend-algolia-search backend-q-and-a) ())
+
+(defclass backend-ea-forum (backend-websocket-login backend-lw2-modernized backend-lw2-legacy backend-algolia-search) ())
 
 (defclass backend-accordius (backend-lw2-modernized backend-lw2-legacy) ())
 

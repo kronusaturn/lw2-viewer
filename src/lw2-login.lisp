@@ -161,7 +161,7 @@
                                      "s" mutation-type-string)))
     (values (graphql-mutation-string mutation-name terms fields) mutation-name)))
 
-(define-backend-operation lw2-mutation-string backend-lw2 (target-type mutation-type terms fields)
+(define-backend-operation lw2-mutation-string backend-lw2-modernized (target-type mutation-type terms fields)
   (let* ((mutation-name (concatenate 'string (string-downcase mutation-type) (string-capitalize target-type)))
          (data (append
                  (cdr (assoc :document terms))
@@ -188,7 +188,7 @@
     (do-lw2-post-query auth-token `(("query" . ,mutation-string)
                                     ("operationName" . ,operation-name)))))
 
-(define-backend-operation do-lw2-mutation backend-lw2 (auth-token target-type mutation-type terms fields)
+(define-backend-operation do-lw2-mutation backend-lw2-modernized (auth-token target-type mutation-type terms fields)
   (cdr (assoc :data (call-next-method))))
 
 (defun do-lw2-post (auth-token data)

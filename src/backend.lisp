@@ -2,7 +2,8 @@
   (:use #:cl #:sb-thread #:flexi-streams #:alexandria #:lw2-viewer.config #:lw2.sites #:lw2.context #:lw2.graphql #:lw2.lmdb #:lw2.utils #:lw2.hash-utils #:lw2.backend-modules)
   (:reexport #:lw2.backend-modules)
   (:export #:*graphql-debug-output*
-           #:*posts-index-fields* #:*comments-index-fields* #:*messages-index-fields*
+           #:*posts-index-fields* #:*messages-index-fields*
+	   #:comments-index-fields 
            #:*notifications-base-terms*
            #:condition-http-return-code
            #:lw2-error #:lw2-client-error #:lw2-not-found-error #:lw2-user-not-found-error #:lw2-not-allowed-error #:lw2-server-error #:lw2-connection-error #:lw2-unknown-error
@@ -23,11 +24,29 @@
 (defvar *graphql-debug-output* nil)
 
 (defparameter *posts-index-fields* '(:title :--id :slug :user-id :posted-at :base-score :comment-count :page-url :url :word-count :frontpage-date :curated-date :meta :draft :af :vote-count :question))
-(defparameter *comments-index-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id (:parent-comment :--id :user-id :post-id) :base-score :page-url :vote-count :retracted :deleted-public :answer :parent-answer-id :html-body))
-(defparameter *post-comments-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id :base-score :page-url :vote-count :retracted :deleted-public :answer :parent-answer-id :html-body))
+(defparameter *comments-index-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id (:parent-comment :--id :user-id :post-id) :base-score :page-url :vote-count :retracted :deleted-public :html-body))
+(defparameter *post-comments-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id :base-score :page-url :vote-count :retracted :deleted-public :html-body))
 (defparameter *messages-index-fields* '(:--id :user-id :created-at :content (:conversation :--id :title) :----typename))
 
 (defparameter *notifications-base-terms* (alist :view "userNotifications" :created-at :null :viewed :null))
+
+(defmacro define-backend-fields ())
+
+(define-backend-function comments-index-fields ())
+
+(define-backend-operation comments-index-fields backend-graphql ()
+			  (load-time-value *comments-index-fields*))
+
+(define-backend-operation comments-index-fields backend-q-and-a ()
+			  (load-time-value (append *comments-index-fields* '(:answer :parent-answer-id))))
+
+(define-backend-function post-comments-fields ())
+
+(define-backend-operation post-comments-fields backend-graphql ()
+			  (load-time-value *post-comments-fields*))
+
+(define-backend-operation post-comments-fields backend-q-and-a ()
+			  (load-time-value (append *post-comments-fields* '(:answer :parent-answer-id))))
 
 (define-cache-database "index-json" "post-comments-json" "post-comments-json-meta" "post-answers-json" "post-answers-json-meta" "post-body-json" "post-body-json-meta")
 
@@ -76,7 +95,7 @@
     (json:with-local-class-registry ()
       (json:make-object `((data . ,(json:make-object `((*comments-list . ,comments-list)) nil))) nil))))
 
-(define-backend-operation comments-list-to-graphql-json backend-lw2 (comments-list)
+(define-backend-operation comments-list-to-graphql-json backend-lw2-modernized (comments-list)
   (json:encode-json-to-string
     (json:with-local-class-registry ()
       (json:make-object `((data . ,(json:make-object `((*comments-list . ,(json:make-object `((results . ,comments-list)) nil))) nil))) nil))))
@@ -207,7 +226,7 @@
 (define-backend-operation fixup-lw2-return-value backend-lw2-legacy (value)
   value)
 
-(define-backend-operation fixup-lw2-return-value backend-lw2 (value)
+(define-backend-operation fixup-lw2-return-value backend-lw2-modernized (value)
   (values-list
     (map 'list
          (lambda (x)
@@ -338,7 +357,7 @@
         (alist :terms args))
     fields))
 
-(define-backend-operation lw2-query-string* backend-lw2 (query-type return-type args fields &key (with-total t))
+(define-backend-operation lw2-query-string* backend-lw2-modernized (query-type return-type args fields &key (with-total t))
   (graphql-query-string*
     (if (eq return-type :single)
         (string-downcase query-type)
@@ -403,10 +422,10 @@
   (lw2-graphql-query-noparse (get-posts-index-query-string)))
 
 (defun get-recent-comments (&key with-total)
-  (get-cached-index-query "recent-comments" (lw2-query-string :comment :list '((:view . "recentComments") (:limit . 20)) *comments-index-fields* :with-total with-total)))
+  (get-cached-index-query "recent-comments" (lw2-query-string :comment :list '((:view . "recentComments") (:limit . 20)) (comments-index-fields) :with-total with-total)))
 
 (defun get-recent-comments-json ()
-  (lw2-graphql-query-noparse (lw2-query-string :comment :list '((:view . "recentComments") (:limit . 20)) *comments-index-fields*)))
+  (lw2-graphql-query-noparse (lw2-query-string :comment :list '((:view . "recentComments") (:limit . 20)) (comments-index-fields))))
 
 (defun process-vote-result (res)
   (let ((id (cdr (assoc :--id res)))
@@ -437,7 +456,7 @@
        do (setf items-list (nconc items-list items-next)))
     items-list))
 
-(defun get-post-comments-list (post-id view &key auth-token parent-answer-id (fields *post-comments-fields*))
+(defun get-post-comments-list (post-id view &key auth-token parent-answer-id (fields (post-comments-fields)))
   (let ((terms (alist :view view :post-id post-id)))
     (when parent-answer-id
       (setf terms (acons :parent-answer-id parent-answer-id terms)))
@@ -528,7 +547,7 @@
       (lw2-query-string* :message :list (alist :view "messagesConversation" :conversation-id conversation-id) *messages-index-fields*))
     :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
 
-(define-backend-operation get-conversation-messages backend-lw2 (conversation-id auth-token)
+(define-backend-operation get-conversation-messages backend-lw2-modernized (conversation-id auth-token)
   (declare (ignore conversation-id auth-token))
   (let ((*messages-index-fields* (cons :html-body *messages-index-fields*)))
     (call-next-method)))
