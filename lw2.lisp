@@ -1164,7 +1164,8 @@ signaled condition to OUT-STREAM."
      (let ((lw2-auth-token *current-auth-token*))
        (check-csrf-token csrf-token)
        (assert lw2-auth-token)
-       (let ((new-comment-id
+       (let ((question (cdr (assoc :question (get-post-body post-id :auth-token lw2-auth-token))))
+	     (new-comment-id
 	      (cond
 		(text
 		 (let ((comment-data
@@ -1187,7 +1188,10 @@ signaled condition to OUT-STREAM."
 		 (do-lw2-comment-edit lw2-auth-token delete-comment-id '((:deleted . t) (:deleted-public . t)
 									 (:deleted-reason . "Comment deleted by its author.")))
 		 nil))))
-	 (ignore-errors (get-post-comments post-id :force-revalidate t))
+	 (ignore-errors
+	   (get-post-comments post-id :force-revalidate t)
+	   (when question
+	     (get-post-answers post-id :force-revalidate t)))
 	 (when text
 	   (cache-put "comment-markdown-source" new-comment-id text)
 	   (redirect (generate-post-link (match-lw2-link (hunchentoot:request-uri*)) new-comment-id))))))))

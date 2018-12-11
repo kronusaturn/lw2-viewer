@@ -138,14 +138,17 @@
 			 (cache-put "index-json" "recent-comments" recent-comments-json)
 			 (loop for comment in recent-comments
 			    as comment-id = (cdr (assoc :--id comment))
+			    as cache-database = (if (or (cdr (assoc :answer comment)) (cdr (assoc :parent-answer-id comment)))
+						    "post-answers-json"
+						    "post-comments-json")
 			    if (string= comment-id last-comment-processed) return nil
 			    do
 			      (with-cache-transaction
 				  (let* ((post-id (cdr (assoc :post-id comment)))
-					 (post-comments (ignore-errors (decode-graphql-json (cache-get "post-comments-json" post-id))))
+					 (post-comments (ignore-errors (decode-graphql-json (cache-get cache-database post-id))))
 					 (new-post-comments (sort (cons comment (delete-if (lambda (c) (string= comment-id (cdr (assoc :--id c)))) post-comments))
 								  #'> :key (lambda (c) (cdr (assoc :base-score c))))))
-				    (cache-update "post-comments-json" post-id (comments-list-to-graphql-json new-post-comments)))))
+				    (cache-update cache-database post-id (comments-list-to-graphql-json new-post-comments)))))
 			 (setf last-comment-processed (cdr (assoc :--id (first recent-comments)))))))
 	  (t (condition) (values nil condition)))))))
 
