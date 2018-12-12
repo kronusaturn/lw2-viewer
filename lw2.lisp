@@ -1216,7 +1216,7 @@ signaled condition to OUT-STREAM."
                                     :section-list (loop for (name desc) in '(("all" "All") ("meta" "Meta") ("drafts" "Drafts"))
                                                         collect (alist :name name :desc desc :selected (string= name section)))
                                     :markdown-source (or (and post-id (cache-get "post-markdown-source" post-id)) (cdr (assoc :html-body post-body)) "")))))
-    (:post ((text :required t) question)
+    (:post (text question)
      (let ((lw2-auth-token *current-auth-token*)
            (url (if (string= url "") nil url)))
        (assert lw2-auth-token)
