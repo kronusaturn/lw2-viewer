@@ -1734,10 +1734,7 @@ ul.comment-thread {
 	margin-bottom: 0;
 }
 
-.comments:empty::after,
-.comments > .comment-controls:last-child::after {
-	content: "No comments.";
-	display: block;
+.comments-empty-message {
 	width: 100%;
 	text-align: center;
 	padding: 0.75em 0 0.9em 0;

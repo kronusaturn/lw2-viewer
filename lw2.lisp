@@ -1066,11 +1066,13 @@ signaled condition to OUT-STREAM."
                                                     :extra-html-fn (lambda (c-id)
                                                                      (let ((*comment-individual-link* nil))
                                                                        (comment-tree-to-html out-stream (make-comment-parent-hash comments) c-id))))))
-                        (if chrono
-                            (comment-chrono-to-html out-stream comments)
-                            (comment-tree-to-html out-stream (make-comment-parent-hash comments)))))
-                  (format out-stream "</div>"))
-                (output-comments-votes (out-stream)
+                        (if comments
+			    (if chrono
+				(comment-chrono-to-html out-stream comments)
+				(comment-tree-to-html out-stream (make-comment-parent-hash comments)))
+			    <div class="comments-empty-message">(if (string= id "answers") "No answers." "No comments.")</div>)))
+		  (format out-stream "</div>"))
+		(output-comments-votes (out-stream)
                   (handler-case
                     (when lw2-auth-token
                       (format out-stream "<script>commentVotes=~A</script>"
