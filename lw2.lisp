@@ -1221,8 +1221,8 @@ signaled condition to OUT-STREAM."
            (url (if (string= url "") nil url)))
        (assert lw2-auth-token)
        (let* ((post-data `(("body" . ,(postprocess-markdown text)) ("title" . ,title) (:last-edited-as . "markdown") ("url" . ,(if link-post url))
-			   ("meta" . ,(string= section "meta")) ("draft" . ,(string= section "drafts"))
-			   ("question" . ,(if question t nil))))
+			   ("meta" . ,(string= section "meta")) ("draft" . ,(string= section "drafts"))))
+	      (post-data (if post-id post-data (acons "question" (and question t) post-data)))
               (post-set (loop for item in post-data when (cdr item) collect item))
               (post-unset (loop for item in post-data when (not (cdr item)) collect (cons (car item) t))))
          (let* ((new-post-data
