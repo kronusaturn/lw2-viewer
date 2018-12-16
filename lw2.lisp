@@ -57,34 +57,6 @@
   (when url
     (ppcre:regex-replace "([^/]*//[^/]*)lesserwrong\.com" url "\\1lesswrong.com")))
 
-(defmacro alist-bind (bindings alist &body body)
-  "Binds elements of ALIST so they can be used as if they were lexical variables.
-
-Syntax: alist-bind (binding-entry*) alist forms*
-=> result*
-binding-entry ::= (variable-name &optional type alist-key)
-
-Each VARIABLE-NAME is bound to the corresponding datum in ALIST. Modifying these
-bindings with SETF will also update the ALIST.
-TYPE: type designator, not evaluated.
-ALIST-KEY: the alist key, as in the first argument to ASSOC. If it is not
-specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
-  (alexandria:once-only (alist)
-    (let ((inner-bindings (loop for x in bindings collect
-                                (destructuring-bind (bind &optional type key) (if (consp x) x (list x))
-                                  (list (gensym (string bind)) (gensym (string bind)) (gensym (string bind)) bind (or type t) (or key (intern (string bind) '#:keyword)))))))
-      (macrolet ((inner-loop (&body body)
-                   `(loop for (fn-gensym cons-gensym value-gensym bind type key) in inner-bindings collect
-                          (progn fn-gensym cons-gensym value-gensym bind type key ,@body))))
-        `(let* (,@(inner-loop `(,cons-gensym (assoc ,key ,alist)))
-                ,@(inner-loop `(,value-gensym (cdr ,cons-gensym))))
-             (declare ,@(inner-loop `(type ,type ,value-gensym)))
-             (flet (,@(inner-loop `(,fn-gensym () ,value-gensym))
-                    ,@(inner-loop `((setf ,fn-gensym) (new) (setf (cdr ,cons-gensym) new ,value-gensym new))))
-               (declare (inline ,@(inner-loop fn-gensym)))
-               (symbol-macrolet ,(inner-loop `(,bind (,fn-gensym)))
-                 ,@body)))))))
-
 (defun votes-to-tooltip (votes)
   (if votes
       (format nil "~A vote~:*~P"
@@ -221,13 +193,12 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
                   comment
                   (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
 		    <div class=("comment~{ ~A~}"
-				       (let ((l nil))
-					 (if (and (logged-in-userid user-id)
-						  (< (* 1000 (local-time:timestamp-to-unix (local-time:now))) (+ js-time 15000)))
-					     (push "just-posted-comment" l))
-					 (if highlight-new (push "comment-item-highlight" l))
-					 (if retracted (push "retracted" l))
-					 l))>
+				(list-cond
+				 ((and (logged-in-userid user-id)
+				       (< (* 1000 (local-time:timestamp-to-unix (local-time:now))) (+ js-time 15000)))
+				  "just-posted-comment")
+				 (highlight-new "comment-item-highlight")
+				 (retracted "retracted")))>
 		      <div class="comment-meta">
 			<a class=("author~:[~; own-user-author~]" (logged-in-userid user-id))
 			   href=("/users/~A" (encode-entities (get-user-slug user-id)))
@@ -739,13 +710,14 @@ signaled condition to OUT-STREAM."
             (write-item last-uri "last" "Last page" "/")
             (format out-stream "</div>")))
         (funcall fn)
-        (nav-bar-outer out-stream nil `(:bottom-bar
-                                         (,@(if first-uri `(("first" ,first-uri "Back to first")))
-                                           ,@(if prev-uri `(("prev" ,prev-uri "Previous" :nofollow t)))
-                                           ("top" "#top" "Back to top")
-                                           ,@(if next-uri `(("next" ,next-uri "Next" :nofollow t)))
-                                           ,@(if last-uri `(("last" ,last-uri "Last" :nofollow t))))))
-        (format out-stream "<script>document.querySelectorAll('#bottom-bar').forEach(bb => { bb.classList.add('decorative'); });</script>")))))
+	(nav-bar-outer out-stream nil (list :bottom-bar
+					    (list-cond
+					     (first-uri `("first" ,first-uri "Back to first"))
+					     (prev-uri `("prev" ,prev-uri "Previous" :nofollow t))
+					     (t `("top" "#top" "Back to top"))
+					     (next-uri `("next" ,next-uri "Next" :nofollow t))
+					     (last-uri `("last" ,last-uri "Last" :nofollow t)))))
+	(format out-stream "<script>document.querySelectorAll('#bottom-bar').forEach(bb => { bb.classList.add('decorative'); });</script>")))))
 
 (defun map-output (out-stream fn list)
   (loop for item in list do (write-string (funcall fn item) out-stream))) 
@@ -1169,13 +1141,13 @@ signaled condition to OUT-STREAM."
 	      (cond
 		(text
 		 (let ((comment-data
-			(remove-if #'null
-				   `(("body" . ,(postprocess-markdown text))
-				     (:last-edited-as . "markdown")
-				     ,(if (not edit-comment-id) `(:post-id . ,post-id))
-				     ,(if parent-comment-id `(:parent-comment-id . ,parent-comment-id))
-				     ,(if answer `(:answer . t))
-				     ,(if parent-answer-id `(:parent-answer-id . ,parent-answer-id))))))
+			(list-cond
+			 (t :body (postprocess-markdown text))
+			 (t :last-edited-as "markdown")
+			 ((not edit-comment-id) :post-id post-id)
+			 (parent-comment-id :parent-comment-id parent-comment-id)
+			 (answer :answer t)
+			 (parent-answer-id :parent-answer-id parent-answer-id))))
 		   (if edit-comment-id
 		       (prog1 edit-comment-id
 			 (do-lw2-comment-edit lw2-auth-token edit-comment-id comment-data))
@@ -1220,10 +1192,16 @@ signaled condition to OUT-STREAM."
      (let ((lw2-auth-token *current-auth-token*)
            (url (if (string= url "") nil url)))
        (assert lw2-auth-token)
-       (let* ((post-data `(("body" . ,(postprocess-markdown text)) ("title" . ,title) (:last-edited-as . "markdown") ("url" . ,(if link-post url))
-			   ("meta" . ,(string= section "meta")) ("draft" . ,(string= section "drafts"))))
-	      (post-data (if post-id post-data (acons "question" (and question t) post-data)))
-              (post-set (loop for item in post-data when (cdr item) collect item))
+       (let* ((post-data
+	       (list-cond
+		(t :body (postprocess-markdown text))
+		(t :title title)
+		(t :last-edited-as "markdown")
+		(t :url (if link-post url))
+		(t :meta (string= section "meta"))
+		(t :draft (string= section "drafts"))
+		((not post-id) :question (and question t))))
+	      (post-set (loop for item in post-data when (cdr item) collect item))
               (post-unset (loop for item in post-data when (not (cdr item)) collect (cons (car item) t))))
          (let* ((new-post-data
                   (if post-id
@@ -1343,12 +1321,16 @@ signaled condition to OUT-STREAM."
                                                   result)
                                                 n))
                              :auth-token auth-token)))
-                       (do-user-edit (hunchentoot:cookie-in "lw2-auth-token") user-id (alist :last-notifications-check (local-time:format-timestring nil (local-time:now)
-                                                                                                                                                     :format lw2.graphql:+graphql-timestamp-format+
-                                                                                                                                                     :timezone local-time:+utc-zone+)))))
-                   (t
-                     (let ((user-posts (get-user-posts user-id :limit (+ 1 (user-pref :items-per-page) offset)))
-                           (user-comments (lw2-graphql-query (lw2-query-string :comment :list (nconc (alist :limit (+ 1 (user-pref :items-per-page) offset) :user-id user-id) comments-base-terms) 
+		       (do-user-edit
+			 (hunchentoot:cookie-in "lw2-auth-token")
+			 user-id
+			 (alist :last-notifications-check
+				(local-time:format-timestring nil (local-time:now)
+							      :format lw2.graphql:+graphql-timestamp-format+
+							      :timezone local-time:+utc-zone+)))))
+		   (t
+		     (let ((user-posts (get-user-posts user-id :limit (+ 1 (user-pref :items-per-page) offset)))
+			   (user-comments (lw2-graphql-query (lw2-query-string :comment :list (nconc (alist :limit (+ 1 (user-pref :items-per-page) offset) :user-id user-id) comments-base-terms) 
                                                                                comments-index-fields))))
                        (concatenate 'list user-posts user-comments))))
                  (let ((with-next (> (length items) (+ (if (eq show :all) offset 0) (user-pref :items-per-page))))
