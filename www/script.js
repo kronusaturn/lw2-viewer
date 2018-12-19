@@ -401,6 +401,7 @@ Element.prototype.constructCommentControls = function() {
 	// Replicate karma controls at the bottom of comments.
 	if (commentControls.parentElement.hasClass("comments")) return;
 	let karmaControls = commentControls.parentElement.query(".comment-meta .karma");
+	if (!karmaControls) return;
 	let karmaControlsCloned = karmaControls.cloneNode(true);
 	commentControls.appendChild(karmaControlsCloned);
 	commentControls.queryAll("button.vote").forEach(voteButton => {
@@ -682,7 +683,8 @@ Element.prototype.setCommentThreadMaximized = function(toggle, userOriginated = 
 
 Element.prototype.getCommentDate = function() {
 	let item = (this.className == "comment-item") ? this : this.closest(".comment-item");
-	return (item ? parseInt(item.query(".date").dataset["jsDate"]) : false);
+	let dateElement = item && item.query(".date");
+	return (dateElement && parseInt(dateElement.dataset["jsDate"]));
 }
 function getCurrentVisibleComment() {
 	let px = window.innerWidth/2, py = 5;
