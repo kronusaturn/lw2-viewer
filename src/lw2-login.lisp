@@ -87,7 +87,7 @@
 
 (define-backend-function do-login (user-designator-type user-designator password))
 
-(define-backend-operation do-login backend-lw2-legacy (user-designator-type user-designator password)
+(define-backend-operation do-login backend-websocket-login (user-designator-type user-designator password)
   (let ((result (do-lw2-sockjs-method "login"
                                       `((("user" (,user-designator-type . ,user-designator))
                                          ("password"
@@ -95,7 +95,9 @@
                                           ("algorithm" . "sha-256")))))))
     (parse-login-result result)))
 
-(defun do-lw2-create-user (username email password)
+(define-backend-function do-lw2-create-user (username email password))
+
+(define-backend-operation do-lw2-create-user backend-websocket-login (username email password)
   (let ((result (do-lw2-sockjs-method "createUser"
                                       `((("username" . ,username)
                                          ("email" . ,email)
@@ -104,14 +106,18 @@
                                           ("algorithm" . "sha-256")))))))
     (parse-login-result result))) 
 
-(defun do-lw2-forgot-password (email)
+(define-backend-function do-lw2-forgot-password (email))
+
+(define-backend-operation do-lw2-forgot-password backend-websocket-login (email)
   (let ((result (do-lw2-sockjs-method "forgotPassword"
                                       `((("email" . ,email))))))
     (if-let (error-data (cdr (assoc :error result)))
             (values nil (cdr (assoc :reason error-data)))
             t)))
 
-(defun do-lw2-reset-password (auth-token password)
+(define-backend-function do-lw2-reset-password (auth-token password))
+
+(define-backend-operation do-lw2-reset-password backend-websocket-login (auth-token password)
   (let ((result (do-lw2-sockjs-method "resetPassword"
                                       `(,auth-token
                                          ((digest . ,(password-digest password))

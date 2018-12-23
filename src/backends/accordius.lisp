@@ -27,3 +27,17 @@
          (expiration (truncate (* 1000 (cdr (assoc :expiration response))))))
     (values user-id auth-token nil expiration)))
 
+(define-backend-operation do-lw2-create-user backend-accordius (username email password)
+  ;; TODO: Add actual code
+  (let (user-id auth-token error-message expiration)
+    (values user-id auth-token error-message expiration)))
+
+(define-backend-operation do-lw2-forgot-password backend-accordius (email)
+  ;; TODO: Add actual code
+  (let (successfulp error-message)
+    (values successfulp error-message)))
+
+(define-backend-operation do-lw2-reset-password backend-accordius (auth-token password)
+  ;; TODO: Add actual code
+  (let (user-id auth-token error-message expiration)
+    (values user-id auth-token error-message expiration)))

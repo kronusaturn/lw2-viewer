@@ -5,6 +5,7 @@
     #:backend-base
     #:backend-lmdb-cache #:backend-lmdb-environment #:backend-cache-db-path
     #:backend-graphql
+    #:backend-websocket-login
     #:graphql-uri #:websocket-uri #:algolia-search-uri
     #:backend-q-and-a
     #:backend-lw2-legacy #:backend-lw2-modernized #:backend-lw2 #:backend-ea-forum #:backend-accordius
