@@ -1442,7 +1442,7 @@ signaled condition to OUT-STREAM."
                       (format out-stream "<div class=\"login-tip\"><span>Tip:</span> You can log in with the same username and password that you use on ~A~:*. Creating an account here also creates one on ~A.</div>"
                               main-site-title))
                     (format out-stream "</div>"))))
-     (finish-login (username user-id auth-token error-message expires)
+     (finish-login (username user-id auth-token error-message &optional expires)
        (cond
          (auth-token
            (set-cookie "lw2-auth-token" auth-token :max-age (and expires (+ (- expires (get-unix-time)) (* 24 60 60))))
