@@ -474,7 +474,13 @@
       (setf terms (acons :parent-answer-id parent-answer-id terms)))
     (lw2-query-list-limit-workaround :comment terms fields :auth-token auth-token)))
 
-(defun get-post-comments-votes (post-id auth-token)
+(define-backend-function get-post-comments-votes (post-id auth-token))
+
+(define-backend-operation get-post-comments-votes backend-graphql (post-id auth-token)
+  (let ((fields '(:--id (:current-user-votes :vote-type))))
+    (get-post-comments-list post-id "postCommentsTop" :auth-token auth-token :fields fields)))
+
+(define-backend-operation get-post-comments-votes backend-q-and-a (post-id auth-token)
   (let* ((fields '(:--id (:current-user-votes :vote-type)))
 	 (answers (get-post-comments-list post-id "questionAnswers" :auth-token auth-token :fields fields)))
     (process-votes-result
