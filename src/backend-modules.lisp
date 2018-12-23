@@ -40,7 +40,7 @@
 
 (defclass backend-ea-forum (backend-websocket-login backend-lw2-modernized backend-lw2-legacy backend-algolia-search) ())
 
-(defclass backend-accordius (backend-lw2-modernized backend-lw2-legacy) ())
+(defclass backend-accordius (backend-lw2-legacy backend-lw2-modernized) ())
 
 (defun make-backend (type-string &rest args)
   (apply #'make-instance (symbolicate "BACKEND-" (string-upcase type-string)) args))

@@ -2,7 +2,7 @@
   (:use #:cl #:sb-thread #:flexi-streams #:alexandria #:lw2-viewer.config #:lw2.sites #:lw2.context #:lw2.graphql #:lw2.lmdb #:lw2.utils #:lw2.hash-utils #:lw2.backend-modules)
   (:reexport #:lw2.backend-modules)
   (:export #:*graphql-debug-output*
-           #:*posts-index-fields* #:*messages-index-fields*
+           #:posts-index-fields #:*messages-index-fields*
 	   #:comments-index-fields 
            #:*notifications-base-terms*
            #:condition-http-return-code
@@ -23,7 +23,7 @@
 
 (defvar *graphql-debug-output* nil)
 
-(defparameter *posts-index-fields* '(:title :--id :slug :user-id :posted-at :base-score :comment-count :page-url :url :word-count :frontpage-date :curated-date :meta :draft :af :vote-count :question))
+(defparameter *posts-index-fields* '(:title :--id :slug :user-id :posted-at :base-score :comment-count :page-url :url :word-count :frontpage-date :curated-date :meta :draft :af :vote-count))
 (defparameter *comments-index-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id (:parent-comment :--id :user-id :post-id) :base-score :page-url :vote-count :retracted :deleted-public :html-body))
 (defparameter *post-comments-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id :base-score :page-url :vote-count :retracted :deleted-public :html-body))
 (defparameter *messages-index-fields* '(:--id :user-id :created-at :content (:conversation :--id :title) :----typename))
@@ -31,6 +31,14 @@
 (defparameter *notifications-base-terms* (alist :view "userNotifications" :created-at :null :viewed :null))
 
 (defmacro define-backend-fields ())
+
+(define-backend-function posts-index-fields ())
+
+(define-backend-operation posts-index-fields backend-graphql ()
+			  (load-time-value *posts-index-fields*))
+
+(define-backend-operation posts-index-fields backend-q-and-a ()
+			  (load-time-value (append *posts-index-fields* '(:question))))
 
 (define-backend-function comments-index-fields ())
 
@@ -409,7 +417,7 @@
     (let* ((extra-terms
              (remove-if (lambda (x) (null (cdr x)))
                         (alist :before before :after after :limit limit :offset offset)))
-           (query-string (lw2-query-string :post :list (nconc view-terms extra-terms) *posts-index-fields*)))
+           (query-string (lw2-query-string :post :list (nconc view-terms extra-terms) (posts-index-fields))))
       (values query-string cache-key))))
 
 (define-backend-function get-posts-index (&rest args &key &allow-other-keys))
@@ -444,7 +452,7 @@
   (process-vote-result (lw2-graphql-query (lw2-query-string :post :single (alist :document-id post-id) '(:--id (:current-user-votes :vote-type))) :auth-token auth-token))) 
 
 (defun get-post-body (post-id &key (revalidate t) force-revalidate auth-token)
-  (let ((query-string (lw2-query-string :post :single (alist :document-id post-id) (cons :html-body *posts-index-fields*))))
+  (let ((query-string (lw2-query-string :post :single (alist :document-id post-id) (cons :html-body (posts-index-fields)))))
     (if auth-token
         (lw2-graphql-query query-string :auth-token auth-token)
         (lw2-graphql-query-timeout-cached query-string "post-body-json" post-id :revalidate revalidate :force-revalidate force-revalidate))))
@@ -551,7 +559,7 @@
                (cons '(:meta . :null) posts-base-terms))))
     (lw2-graphql-query (lw2-query-string :post :list
                                          (nconc (remove nil (alist :offset offset :limit limit :user-id user-id) :key #'cdr) posts-base-terms)
-                                         *posts-index-fields*)
+                                         (posts-index-fields))
                        :auth-token auth-token)))
 
 (define-backend-function get-conversation-messages (conversation-id auth-token))

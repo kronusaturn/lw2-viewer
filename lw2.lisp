@@ -1306,7 +1306,7 @@ signaled condition to OUT-STREAM."
                                                                       (comments-index-fields)))
                                                   ("post"
                                                    (lw2-query-string* :post :single (alist :document-id (cdr (assoc :document-id n)))
-                                                                      *posts-index-fields*))
+                                                                      (posts-index-fields)))
                                                   ("message"
                                                    (lw2-query-string* :message :single (alist :document-id (cdr (assoc :document-id n)))
                                                                       *messages-index-fields*))
@@ -1565,7 +1565,7 @@ signaled condition to OUT-STREAM."
                                                       :after (if (and year (not day)) (format nil "~A-~A-~A" (or year earliest-year) (or month 1) (or day 1)))
                                                       :before (if year (format nil "~A-~A-~A" (or year current-year) (or month 12)
                                                                                (or day (local-time:days-in-month (or month 12) (or year current-year))))))
-                                               *posts-index-fields*))
+                                               (posts-index-fields)))
           (emit-page (out-stream :title "Archive" :current-uri "/archive" :content-class "archive-page"
                                  :top-nav #'archive-nav
                                  :pagination (pagination-nav-bars :items-per-page 50 :offset offset :total total :with-next (if total nil (> (length posts) 50))))
