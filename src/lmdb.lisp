@@ -64,7 +64,8 @@
 
 (define-backend-operation get-current-environment backend-lmdb-cache ()
   (with-mutex (*db-environments-lock*)
-    (unless (and (backend-lmdb-environment backend) (eq *sites* *environments-sites*))
+    (unless (and (backend-lmdb-environment backend) (eq *sites* *environments-sites*)
+		 (eq *cache-databases-list* (environment-container-databases-list (backend-lmdb-environment backend))))
       (dolist (env *db-environments*)
         (wait-on-semaphore (environment-container-semaphore env) :n (expt 2 20))
         (close-environment (environment-container-environment env) (environment-container-open-databases env)))
