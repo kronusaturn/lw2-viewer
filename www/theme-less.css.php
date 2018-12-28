@@ -85,11 +85,18 @@ body {
 	}
 	#primary-bar {
 		position: fixed;
-		width: 112px;
+		width: inherit;
+		min-width: inherit;
+		max-width: inherit;
+		left: 0;
+		right: 0;
+		margin: auto;
+		align-items: flex-start;
 	}
 	#primary-bar > * {
 		position: relative;
 		right: 47px;
+		width: 112px;
 	}
 	#nav-item-archive,
 	#nav-item-about {
@@ -250,7 +257,6 @@ body {
 	position: fixed;
 	width: 120px;
 }
-
 .page-toolbar > * {
 	display: block;
 	text-align: right;
@@ -258,6 +264,23 @@ body {
 	padding: 0.5rem 0.75rem;
 	position: relative;
 	right: 56px;
+}
+@media not screen and (hover: none), not screen and (-moz-touch-enabled) {
+	.page-toolbar {
+		width: inherit;
+		min-width: inherit;
+		max-width: inherit;
+		left: 0;
+		right: 0;
+		margin-right: unset;
+		margin: auto;
+		align-items: flex-start;
+	}
+	.page-toolbar > * {
+		right: 47px;
+		width: 112px;
+		margin-left: unset;
+	}
 }
 
 .page-toolbar button {

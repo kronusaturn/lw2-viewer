@@ -340,17 +340,17 @@ a#inbox-indicator.new-messages:hover::before {
 /* PAGE TOOLBAR */
 /****************/
 
-#content > .page-toolbar {
-	grid-column: 3;
-	text-align: right;
-	margin-right: -20px;
-}
-#content.user-page > .page-toolbar {
-	grid-column: 2 / span 2;
-}
 .page-toolbar {
 	font-size: 0.9em;
 	line-height: 1.8;
+	text-align: right;
+	margin-right: -20px;
+}
+#content > .page-toolbar {
+	grid-column: 3;
+}
+#content.user-page > .page-toolbar {
+	grid-column: 2 / span 2;
 }
 
 /*=--------------------------=*/
