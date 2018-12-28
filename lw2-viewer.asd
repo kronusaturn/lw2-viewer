@@ -11,7 +11,7 @@
                              (:file "backend-modules")
                              (:module "backends"
                               :components ((:file "accordius"))
-                              :depends-on ("backend-modules" "lw2-login"))
+                              :depends-on ("backend-modules" "backend" "lw2-login"))
                              (:file "sites" :depends-on ("utils" "backend-modules"))
                              (:file "config-package" :depends-on ("sites" "backend-modules"))
                              (module "config-copy"
