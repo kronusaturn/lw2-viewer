@@ -1008,7 +1008,7 @@ signaled condition to OUT-STREAM."
       (get-posts-index :offset offset :limit (or limit (user-pref :items-per-page)) :sort sort-string)
       (view-items-index posts
                         :section :frontpage :title "Frontpage posts" :hide-title t
-                        :pagination (pagination-nav-bars :offset (or offset 0) :total total)
+                        :pagination (pagination-nav-bars :offset (or offset 0) :total total :with-next (not total))
                         :top-nav (lambda (out-stream)
                                    (page-toolbar-to-html out-stream
                                                          :title "Frontpage posts"
@@ -1026,7 +1026,7 @@ signaled condition to OUT-STREAM."
       (let ((page-title (format nil "~@(~A posts~)" view)))
         (view-items-index posts
                           :section view :title page-title
-                          :pagination (pagination-nav-bars :offset (or offset 0) :total total)
+                          :pagination (pagination-nav-bars :offset (or offset 0) :total total :with-next (not total))
                           :content-class (format nil "index-page ~(~A~)-index-page" view)
                           :top-nav (lambda (out-stream)
                                      (page-toolbar-to-html out-stream

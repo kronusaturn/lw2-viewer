@@ -352,7 +352,7 @@
         (alist :terms args))
     fields))
 
-(define-backend-operation lw2-query-string* backend-lw2-modernized (query-type return-type args fields &key (with-total t))
+(define-backend-operation lw2-query-string* backend-lw2-modernized (query-type return-type args fields &key with-total)
   (graphql-query-string*
     (if (eq return-type :single)
         (string-downcase query-type)
@@ -368,7 +368,7 @@
 
 (define-backend-function lw2-query-string (query-type return-type args fields &key with-total))
 
-(define-backend-operation lw2-query-string backend-lw2-legacy (query-type return-type args fields &key (with-total t))
+(define-backend-operation lw2-query-string backend-lw2-legacy (query-type return-type args fields &key with-total)
   (format nil "{~A}" (lw2-query-string* query-type return-type args fields :with-total with-total)))
 
 (defun get-cached-index-query (cache-id query)
@@ -440,13 +440,11 @@
         (lw2-graphql-query-timeout-cached query-string "post-body-json" post-id :revalidate revalidate :force-revalidate force-revalidate))))
 
 (defun lw2-query-list-limit-workaround (query-type terms fields &key auth-token)
-  (multiple-value-bind (items-total items-list)
-      (lw2-graphql-query-multi (list (lw2-query-string* query-type :total terms nil)
-				     (lw2-query-string* query-type :list (nconc (alist :limit 500) terms) fields))
-			       :auth-token auth-token)
-    (loop for offset from 500 to items-total by 500
+  (let (items-list)
+    (loop for offset from 0 by 500
        as items-next = (lw2-graphql-query (lw2-query-string query-type :list (nconc (alist :limit 500 :offset offset) terms) fields)
 					  :auth-token auth-token)
+       while items-next
        do (setf items-list (nconc items-list items-next)))
     items-list))
 
