@@ -45,18 +45,27 @@
 (defun make-backend (type-string &rest args)
   (apply #'make-instance (symbolicate "BACKEND-" (string-upcase type-string)) args))
 
-(defmacro define-backend-function (name lambda-list)
+(defun process-operation-definition (args)
+  (let* ((latter-args (member-if #'listp args))
+	 (method-qualifiers (ldiff args latter-args))
+	 (method-args (first latter-args))
+	 (body (rest latter-args)))
+    (values method-qualifiers method-args body)))
+
+(defmacro define-backend-function (name lambda-list &rest operations)
   (let ((inner-name (symbolicate "%" name))
-        (lambda-list (map 'list (lambda (x) (if (atom x) x (first x))) lambda-list)))
+        (lambda-list (map 'list (lambda (x) (if (atom x) x (first x))) lambda-list))
+	(method-definitions
+	 (mapcar (lambda (op)
+		   (destructuring-bind (backend &rest body) op
+		     `(:method ((backend ,backend) ,@lambda-list) ,@body)))
+		 operations)))
    `(progn
       (export '(,name ,inner-name))
-      (defgeneric ,inner-name (backend ,@lambda-list))
+      (defgeneric ,inner-name (backend ,@lambda-list) ,.method-definitions)
       (defmacro ,name (&rest args) (list* ',inner-name 'lw2.context:*current-backend*  args)))))
 
 (defmacro define-backend-operation (name backend &rest args)
-  (let* ((inner-name (symbolicate "%" name))
-         (latter-args (member-if #'listp args))
-         (method-qualifiers (ldiff args latter-args))
-         (method-args (first latter-args))
-         (body (rest latter-args)))
-    `(defmethod ,inner-name ,.method-qualifiers ((backend ,backend) ,@method-args) ,@body)))
+  (let* ((inner-name (symbolicate "%" name)))
+    (multiple-value-bind (method-qualifiers method-args body) (process-operation-definition args)
+      `(defmethod ,inner-name ,.method-qualifiers ((backend ,backend) ,@method-args) ,@body))))

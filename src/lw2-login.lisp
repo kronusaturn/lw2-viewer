@@ -85,44 +85,40 @@
   (let ((result (do-lw2-sockjs-method "login" `((("resume" . ,auth-token))))))
     (parse-login-result result)))
 
-(define-backend-function do-login (user-designator-type user-designator password))
+(define-backend-function do-login (user-designator-type user-designator password)
+  (backend-websocket-login
+   (let ((result (do-lw2-sockjs-method "login"
+		   `((("user" (,user-designator-type . ,user-designator))
+		      ("password"
+		       (digest . ,(password-digest password))
+		       ("algorithm" . "sha-256")))))))
+     (parse-login-result result))))
 
-(define-backend-operation do-login backend-websocket-login (user-designator-type user-designator password)
-  (let ((result (do-lw2-sockjs-method "login"
-                                      `((("user" (,user-designator-type . ,user-designator))
-                                         ("password"
-                                          (digest . ,(password-digest password))
-                                          ("algorithm" . "sha-256")))))))
-    (parse-login-result result)))
+(define-backend-function do-lw2-create-user (username email password)
+  (backend-websocket-login
+   (let ((result (do-lw2-sockjs-method "createUser"
+		   `((("username" . ,username)
+		      ("email" . ,email)
+		      ("password"
+		       (digest . ,(password-digest password))
+		       ("algorithm" . "sha-256")))))))
+     (parse-login-result result)))) 
 
-(define-backend-function do-lw2-create-user (username email password))
+(define-backend-function do-lw2-forgot-password (email)
+  (backend-websocket-login
+   (let ((result (do-lw2-sockjs-method "forgotPassword"
+		   `((("email" . ,email))))))
+     (if-let (error-data (cdr (assoc :error result)))
+	     (values nil (cdr (assoc :reason error-data)))
+	     t))))
 
-(define-backend-operation do-lw2-create-user backend-websocket-login (username email password)
-  (let ((result (do-lw2-sockjs-method "createUser"
-                                      `((("username" . ,username)
-                                         ("email" . ,email)
-                                         ("password"
-                                          (digest . ,(password-digest password))
-                                          ("algorithm" . "sha-256")))))))
-    (parse-login-result result))) 
-
-(define-backend-function do-lw2-forgot-password (email))
-
-(define-backend-operation do-lw2-forgot-password backend-websocket-login (email)
-  (let ((result (do-lw2-sockjs-method "forgotPassword"
-                                      `((("email" . ,email))))))
-    (if-let (error-data (cdr (assoc :error result)))
-            (values nil (cdr (assoc :reason error-data)))
-            t)))
-
-(define-backend-function do-lw2-reset-password (auth-token password))
-
-(define-backend-operation do-lw2-reset-password backend-websocket-login (auth-token password)
-  (let ((result (do-lw2-sockjs-method "resetPassword"
-                                      `(,auth-token
-                                         ((digest . ,(password-digest password))
-                                          ("algorithm" . "sha-256"))))))
-    (parse-login-result result)))
+(define-backend-function do-lw2-reset-password (auth-token password)
+  (backend-websocket-login
+   (let ((result (do-lw2-sockjs-method "resetPassword"
+		   `(,auth-token
+		     ((digest . ,(password-digest password))
+		      ("algorithm" . "sha-256"))))))
+     (parse-login-result result))))
 
 ; resume session ["{\"msg\":\"connect\",\"session\":\"mKvhev8p2f4WfKd6k\",\"version\":\"1\",\"support\":[\"1\",\"pre2\",\"pre1\"]}"]
 ;
@@ -153,49 +149,45 @@
 (defun do-lw2-post-query* (auth-token data)
   (cdr (assoc :--id (do-lw2-post-query auth-token data))))
 
-(define-backend-function lw2-mutation-string (target-type mutation-type terms fields))
-
-(define-backend-operation lw2-mutation-string backend-lw2-legacy (target-type mutation-type terms fields)
-  (let* ((mutation-type-string (case mutation-type
-                                 (:create "New")
-                                 (:update "Edit")
-                                 (:delete "Remove")))
-         (mutation-name (concatenate 'string
-                                     (if (eq target-type :user)
-                                         (string-downcase target-type)
-                                         (string-capitalize target-type))
-                                     "s" mutation-type-string)))
-    (values (graphql-mutation-string mutation-name terms fields) mutation-name)))
-
-(define-backend-operation lw2-mutation-string backend-lw2-modernized (target-type mutation-type terms fields)
-  (let* ((mutation-name (concatenate 'string (string-downcase mutation-type) (string-capitalize target-type)))
-         (data (append
-                 (cdr (assoc :document terms))
-                 (cdr (assoc :set terms))
-                 (map 'list (lambda (x) (cons (car x) :null)) (cdr (assoc :unset terms)))))
-         (terms (nconc
-                  (loop for (k . v) in terms collect
-                        (case k
-                          (:document (values))
-                          (:set (values))
-                          (:unset (values))
-                          (:document-id (cons :selector (alist :document-id v)))
-                          (t (cons k v))))
-                  (when data
+(define-backend-function lw2-mutation-string (target-type mutation-type terms fields)
+  (backend-lw2-legacy
+   (let* ((mutation-type-string (case mutation-type
+				  (:create "New")
+				  (:update "Edit")
+				  (:delete "Remove")))
+	  (mutation-name (concatenate 'string
+				      (if (eq target-type :user)
+					  (string-downcase target-type)
+					  (string-capitalize target-type))
+				      "s" mutation-type-string)))
+     (values (graphql-mutation-string mutation-name terms fields) mutation-name)))
+  (backend-lw2-modernized
+   (let* ((mutation-name (concatenate 'string (string-downcase mutation-type) (string-capitalize target-type)))
+	  (data (append
+		 (cdr (assoc :document terms))
+		 (cdr (assoc :set terms))
+		 (map 'list (lambda (x) (cons (car x) :null)) (cdr (assoc :unset terms)))))
+	  (terms (nconc
+		  (loop for (k . v) in terms collect
+		       (case k
+			 (:document (values))
+			 (:set (values))
+			 (:unset (values))
+			 (:document-id (cons :selector (alist :document-id v)))
+			 (t (cons k v))))
+		  (when data
 		    (list (cons :data data)))))
-         (fields (list (list* :data fields))))
-    (values (graphql-mutation-string mutation-name terms fields) mutation-name)))
+	  (fields (list (list* :data fields))))
+     (values (graphql-mutation-string mutation-name terms fields) mutation-name))))
 
-(define-backend-function do-lw2-mutation (auth-token target-type mutation-type terms fields))
-
-(define-backend-operation do-lw2-mutation backend-lw2-legacy (auth-token target-type mutation-type terms fields)
-  (multiple-value-bind (mutation-string operation-name)
-    (lw2-mutation-string target-type mutation-type terms fields)
-    (do-lw2-post-query auth-token `(("query" . ,mutation-string)
-                                    ("operationName" . ,operation-name)))))
-
-(define-backend-operation do-lw2-mutation backend-lw2-modernized (auth-token target-type mutation-type terms fields)
-  (cdr (assoc :data (call-next-method))))
+(define-backend-function do-lw2-mutation (auth-token target-type mutation-type terms fields)
+  (backend-lw2-legacy
+   (multiple-value-bind (mutation-string operation-name)
+       (lw2-mutation-string target-type mutation-type terms fields)
+     (do-lw2-post-query auth-token `(("query" . ,mutation-string)
+				     ("operationName" . ,operation-name)))))
+  (backend-lw2-modernized
+   (cdr (assoc :data (call-next-method)))))
 
 (defun do-lw2-post (auth-token data)
   (do-lw2-mutation auth-token :post :create (alist :document data) '(:--id :slug)))
@@ -226,25 +218,21 @@
 (defun do-user-edit (auth-token user-id data)
   (do-lw2-mutation auth-token :user :update (alist :document-id user-id :set data) '(--id)))
 
-(define-backend-function do-create-conversation (auth-token data))
+(define-backend-function do-create-conversation (auth-token data)
+  (backend-lw2-legacy
+   (cdr (assoc :--id (do-lw2-mutation auth-token :conversation :create (alist :document data) '(:--id))))))
 
-(define-backend-operation do-create-conversation backend-lw2-legacy (auth-token data)
-  (cdr (assoc :--id (do-lw2-mutation auth-token :conversation :create (alist :document data) '(:--id)))))
+(define-backend-function generate-message-document (conversation-id text)
+  (backend-lw2-legacy
+   (alist :content
+	  (alist :blocks (loop for para in (ppcre:split "\\n+" text)
+			    collect (alist :text para :type "unstyled"))
+		 :entity-map (make-hash-table))
+	  :conversation-id conversation-id))
+  (backend-lw2-modernized
+   (alist :body text
+	  :conversation-id conversation-id)))
 
-(define-backend-function generate-message-document (conversation-id text))
-
-(define-backend-operation generate-message-document backend-lw2-legacy (conversation-id text)
-  (alist :content
-         (alist :blocks (loop for para in (ppcre:split "\\n+" text)
-                              collect (alist :text para :type "unstyled"))
-                :entity-map (make-hash-table))
-         :conversation-id conversation-id))
-
-(define-backend-operation generate-message-document backend-lw2-modernized (conversation-id text)
-  (alist :body text
-         :conversation-id conversation-id))
-
-(define-backend-function do-create-message (auth-token conversation-id text))
-
-(define-backend-operation do-create-message backend-lw2-legacy (auth-token conversation-id text)
-  (do-lw2-mutation auth-token :message :create (alist :document (generate-message-document conversation-id text)) '(:--id)))
+(define-backend-function do-create-message (auth-token conversation-id text)
+  (backend-lw2-legacy
+   (do-lw2-mutation auth-token :message :create (alist :document (generate-message-document conversation-id text)) '(:--id))))
