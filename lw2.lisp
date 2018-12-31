@@ -129,7 +129,7 @@
         (if url <div class="link-post-domain">("(~A)" (puri:uri-host (puri:parse-uri (string-trim " " url))))</div>)
       </div>)))
 
-(defun post-body-to-html (out-stream post)
+(defun post-body-to-html (post)
   (alist-bind ((post-id string :--id)
                (title string)
                (user-id string)
@@ -148,27 +148,34 @@
                (html-body (or null string)))
     post
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      (format out-stream "<div class=\"post~:[~; link-post~]~:[~; question-post~]\"><h1 class=\"post-title\">~:*~:[~;<span class=\"post-type-prefix\">[Question] </span>~]~A</h1><div class=\"post-meta\"><a class=\"author~:[~; own-user-author~]\" href=\"/users/~A\" data-userid=\"~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\" data-post-id=\"~A\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"comment-count\" href=\"#comments\">~A</a>~:[~*~;~:*<a class=\"lw2-link\" href=\"~A\">~A<span> link</span></a>~]"
-              url
-	      question
-              (clean-text-to-html title :hyphenation nil)
-              (logged-in-userid user-id)
-              (encode-entities (get-user-slug user-id))
-              (encode-entities user-id)
-              (encode-entities (get-username user-id))
-              js-time
-              pretty-time
-              post-id
-              (votes-to-tooltip vote-count)
-              (pretty-number base-score "point")
-              (pretty-number (or comment-count 0) "comment")
-              (clean-lw-link page-url)
-              (main-site-abbreviation *current-site*)))
-    (post-section-to-html post)
-    (format out-stream "</div><div class=\"post-body\">")
-    (if url (format out-stream "<p><a href=\"~A\" class=\"link-post-link\">Link post</a></p>" (encode-entities (convert-any-link (string-trim " " url)))))
-    (write-sequence (clean-html* (or html-body "") :with-toc t :post-id post-id) out-stream)
-    (format out-stream "</div></div>")))
+      <div class=("post~{ ~A~}" (list-cond
+				 (url "link-post")
+				 (question "question-post")))>
+        <h1 class="post-title">
+          (if question <span class="post-type-prefix">[Question] </span>)
+          (safe (clean-text-to-html title :hyphenation nil))
+        </h1>
+        <div class="post-meta">
+          <a class=("author~{ ~A~}" (list-cond
+				     ((logged-in-userid user-id) "own-user-author")))
+             href=("/users/~A" (get-user-slug user-id))
+             data-userid=user-id>
+            (get-username user-id)
+          </a>
+          <div class="date" data-js-date=js-time>(progn pretty-time)</div>
+          <div class="karma" data-post-id=post-id>
+            <span class="karma-value" title=(votes-to-tooltip vote-count)>(safe (pretty-number base-score "point"))</span>
+          </div>
+          <a class="comment-count" href="#comments">(safe (pretty-number (or comment-count 0) "comment"))</a>
+          (if page-url <a class="lw2-link" href=(clean-lw-link page-url)>(main-site-abbreviation *current-site*)<span> link</span></a>)
+          (with-html-stream-output (post-section-to-html post))
+	</div>
+	<div class="post-body">
+          (if url <p><a class="link-post-link" href=(convert-any-link (string-trim " " url))>Link post</a></p>)
+          (with-html-stream-output
+	      (write-sequence (clean-html* (or html-body "") :with-toc t :post-id post-id) *html-output*))
+        </div>
+      </div>)))
 
 (defparameter *comment-individual-link* nil)
 
@@ -1117,7 +1124,7 @@ signaled condition to OUT-STREAM."
 			  (condition
                             (error-to-html out-stream condition))
                           (t
-                           (post-body-to-html out-stream post)))
+                           (post-body-to-html post)))
                         (when (and lw2-auth-token (equal (logged-in-userid) (cdr (assoc :user-id post))))
                           (format out-stream "<div class=\"post-controls\"><a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\" accesskey=\"e\" title=\"Edit post [e]\">Edit post</a></div>"
                                   (cdr (assoc :--id post))))

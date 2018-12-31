@@ -61,8 +61,12 @@
 		(return-from html-reader (find-symbol "<" *package*)))
 	    (setf element (coerce buffer 'simple-string))
 	    (output-strings "<" element)
-	    (loop with need-whitespace = t
+	    (loop
+	       with need-whitespace = t
+	       with in-leading-whitespace = nil
 	       for c = (read-char stream)
+	       when (eq c #\Newline) do (setf in-leading-whitespace t)
+	       else when (not (member c '(#\Space #\Tab))) do (setf in-leading-whitespace nil)
 	       when (eq c #\>)
 	       do (progn
 		    (output-strings ">")
@@ -94,7 +98,7 @@
 		    (unread-char c stream)
 		    (output-read-object))
 	       else when (member c '(#\Space #\Newline #\Tab))
-	       do (when need-whitespace
+	       do (when (or need-whitespace (not in-leading-whitespace))
 		    (output-strings " ")
 		    (setf need-whitespace nil))
 	       else do (progn
