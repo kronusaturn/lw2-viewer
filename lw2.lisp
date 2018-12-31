@@ -82,7 +82,7 @@
 			(t (if (eq skip-section :personal) nil (values "personal" (format nil "View posts by ~A" (get-username user-id)) (format nil "/users/~A?show=posts" (get-user-slug user-id))))))
 		<a class=("post-section ~A" class) title=title href=href></a>)))
 
-(defun post-headline-to-html (out-stream post &key skip-section need-auth)
+(defun post-headline-to-html (post &key skip-section need-auth)
   (alist-bind ((post-id string :--id)
                (title string)
                (user-id string)
@@ -101,33 +101,33 @@
                (draft boolean))
     post
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      (format out-stream "<h1 class=\"listing~:[~; link-post-listing~]~:[~; question-post-listing~]~:[~; own-post-listing~]\">~@[<a href=\"~A\">&#xf0c1;</a>~]<a href=\"~A\">~:[~;<span class=\"post-type-prefix\">[Question] </span>~]~A</a>~@[<a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\"></a>~]</h1>"
-              url
-	      question
-              (logged-in-userid user-id)
-              (if url (encode-entities (convert-any-link (string-trim " " url))))
-              (generate-post-auth-link post nil nil need-auth)
-	      question
-              (clean-text-to-html title)
-              (if (logged-in-userid user-id) post-id))
-      (format out-stream "<div class=\"post-meta\"><a class=\"author~:[~; own-user-author~]\" href=\"/users/~A\" data-userid=\"~A\">~A</a> <div class=\"date\" data-js-date=\"~A\">~A</div><div class=\"karma\"><span class=\"karma-value\" title=\"~A\">~A</span></div><a class=\"comment-count\" href=\"~A#comments\">~A</a>~:[~*~;~:*<span class=\"read-time\" title=\"~:D word~:P\">~:D<span> min read</span></span>~]~:[~*~;~:*<a class=\"lw2-link\" href=\"~A\">~A<span> link</span></a>~]"
-              (logged-in-userid user-id)
-              (encode-entities (get-user-slug user-id))
-              (encode-entities user-id)
-              (encode-entities (get-username user-id))
-              js-time
-              pretty-time
-              (votes-to-tooltip vote-count)
-              (pretty-number base-score "point")
-              (generate-post-link post)
-              (pretty-number (or comment-count 0) "comment")
-              word-count
-              (and word-count (max 1 (round word-count 300)))
-              (clean-lw-link page-url)
-              (main-site-abbreviation *current-site*)))
-    (post-section-to-html post :skip-section skip-section)
-    (if url (format out-stream "<div class=\"link-post-domain\">(~A)</div>" (encode-entities (puri:uri-host (puri:parse-uri (string-trim " " url))))))
-    (format out-stream "</div>")))
+      <h1 class=("listing~{ ~A~}" (list-cond
+				   (url "link-post-listing")
+				   (question "question-post-listing")
+				   ((logged-in-userid user-id) "own-post-listing")))>
+        (if url <a href=(convert-any-link (string-trim " " url))>&#xf0c1;</a>)
+	<a href=(generate-post-auth-link post nil nil need-auth)>
+	  (if question <span class="post-type-prefix">[Question] </span>)
+	  (safe (clean-text-to-html title))
+	</a>
+	(if (logged-in-userid user-id) <a class="edit-post-link button" href=("/edit-post?post-id=~A" post-id)</a>)
+      </h1>
+      <div class="post-meta">
+        <a class=("author~{ ~A~}" (list-cond ((logged-in-userid user-id) "own-user-author")))
+	   href=("/users/~A" (get-user-slug user-id))
+	   data-userid=user-id>
+	  (get-username user-id)
+        </a>
+        <div class="date" data-js-date=js-time>(progn pretty-time)</div>
+        <div class="karma">
+          <span class="karma-value" title=(votes-to-tooltip vote-count)>(safe (pretty-number base-score "point"))</span>
+        </div>
+        <a class="comment-count" href=("~A#comments" (generate-post-link post))>(safe (pretty-number (or comment-count 0) "comment"))</a>
+        (if word-count <span class="read-time" title=(safe (pretty-number word-count "word"))>(max 1 (round word-count 300))<span> min read</span></span>)
+        (if page-url <a class="lw2-link" href=(clean-lw-link page-url)>(main-site-abbreviation *current-site*)<span> link</span></a>)
+        (with-html-stream-output (post-section-to-html post :skip-section skip-section))
+        (if url <div class="link-post-domain">("(~A)" (puri:uri-host (puri:parse-uri (string-trim " " url))))</div>)
+      </div>)))
 
 (defun post-body-to-html (out-stream post)
   (alist-bind ((post-id string :--id)
@@ -415,7 +415,7 @@ signaled condition to OUT-STREAM."
             ((string= (cdr (assoc :----typename x)) "Conversation")
              (conversation-index-to-html out-stream x))
             ((assoc :comment-count x)
-             (post-headline-to-html out-stream x :need-auth need-auth :skip-section skip-section))
+             (post-headline-to-html x :need-auth need-auth :skip-section skip-section))
             (t
              (format out-stream "<ul class=\"comment-thread\"><li class=\"comment-item\" id=\"comment-~A\">" (cdr (assoc :--id x)))
              (unwind-protect
