@@ -63,23 +63,24 @@
               (typecase votes (integer votes) (list (length votes))))
       ""))
 
-(defun post-section-to-html (out-stream post &key skip-section)
+(defun post-section-to-html (post &key skip-section)
   (alist-bind ((user-id string)
-               (frontpage-date (or null string))
-               (curated-date (or null string))
-               (meta boolean)
-               (af boolean)
-               (draft boolean))
-    post
-    (format out-stream "~1{<a class=\"post-section ~A\" title=\"~A\"~1@{ href=\"~A\"~}></a>~}"
-            (cond (af (if (eq skip-section :alignment-forum) nil (list "alignment-forum" "View Alignment Forum posts" "/index?view=alignment-forum")))
-                  ; show alignment forum even if skip-section is t
-                  ((eq skip-section t) nil)
-                  (draft nil)
-                  (curated-date (if (eq skip-section :featured) nil (list "featured" "View Featured posts" "/index?view=featured")))
-                  (frontpage-date (if (eq skip-section :frontpage) nil (list "frontpage" "View Frontpage posts" "/")))
-                  (meta (if (eq skip-section :meta) nil (list "meta" "View Meta posts" "/index?view=meta")))
-                  (t (if (eq skip-section :personal) nil (list "personal" (format nil "View posts by ~A" (get-username user-id)) (format nil "/users/~A?show=posts" (get-user-slug user-id)))))))))
+	       (frontpage-date (or null string))
+	       (curated-date (or null string))
+	       (meta boolean)
+	       (af boolean)
+	       (draft boolean))
+	      post
+	      (multiple-value-bind (class title href)
+		  (cond (af (if (eq skip-section :alignment-forum) nil (values "alignment-forum" "View Alignment Forum posts" "/index?view=alignment-forum")))
+					; show alignment forum even if skip-section is t
+			((eq skip-section t) nil)
+			(draft nil)
+			(curated-date (if (eq skip-section :featured) nil (values "featured" "View Featured posts" "/index?view=featured")))
+			(frontpage-date (if (eq skip-section :frontpage) nil (values "frontpage" "View Frontpage posts" "/")))
+			(meta (if (eq skip-section :meta) nil (values "meta" "View Meta posts" "/index?view=meta")))
+			(t (if (eq skip-section :personal) nil (values "personal" (format nil "View posts by ~A" (get-username user-id)) (format nil "/users/~A?show=posts" (get-user-slug user-id))))))
+		<a class=("post-section ~A" class) title=title href=href></a>)))
 
 (defun post-headline-to-html (out-stream post &key skip-section need-auth)
   (alist-bind ((post-id string :--id)
@@ -124,7 +125,7 @@
               (and word-count (max 1 (round word-count 300)))
               (clean-lw-link page-url)
               (main-site-abbreviation *current-site*)))
-    (post-section-to-html out-stream post :skip-section skip-section)
+    (post-section-to-html post :skip-section skip-section)
     (if url (format out-stream "<div class=\"link-post-domain\">(~A)</div>" (encode-entities (puri:uri-host (puri:parse-uri (string-trim " " url))))))
     (format out-stream "</div>")))
 
@@ -163,7 +164,7 @@
               (pretty-number (or comment-count 0) "comment")
               (clean-lw-link page-url)
               (main-site-abbreviation *current-site*)))
-    (post-section-to-html out-stream post)
+    (post-section-to-html post)
     (format out-stream "</div><div class=\"post-body\">")
     (if url (format out-stream "<p><a href=\"~A\" class=\"link-post-link\">Link post</a></p>" (encode-entities (convert-any-link (string-trim " " url)))))
     (write-sequence (clean-html* (or html-body "") :with-toc t :post-id post-id) out-stream)
