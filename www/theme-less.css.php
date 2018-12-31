@@ -92,11 +92,13 @@ body {
 		right: 0;
 		margin: auto;
 		align-items: flex-start;
+		pointer-events: none;
 	}
 	#primary-bar > * {
 		position: relative;
 		right: 47px;
 		width: 112px;
+		pointer-events: auto;
 	}
 	#nav-item-archive,
 	#nav-item-about {
@@ -275,11 +277,13 @@ body {
 		margin-right: unset;
 		margin: auto;
 		align-items: flex-start;
+		pointer-events: none;
 	}
 	.page-toolbar > * {
 		right: 47px;
 		width: 112px;
 		margin-left: unset;
+		pointer-events: auto;
 	}
 }
 
