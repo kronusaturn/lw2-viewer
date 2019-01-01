@@ -1,5 +1,18 @@
 (in-package #:lw2.backend)
 
+
+;;; REST API
+
+(defun do-wl-rest-query (auth-token endpoint filters)
+  (multiple-value-bind (response-body status-code headers final-uri reuse-stream want-close status-string)
+   (drakma:http-request
+     (quri:render-uri (quri:merge-uris (quri:make-uri :path endpoint :query filters) (quri:uri (rest-api-uri *current-backend*))))
+     :additional-headers (if auth-token `(("authorization" . ,auth-token)) nil))
+   (json:decode-json-from-string (octets-to-string response-body :external-format :utf-8)))
+  )
+
+;;;; BACKEND SPECIFIC GRAPHQL
+
 (define-backend-operation get-user-posts backend-accordius (user-id &key offset limit (sort-type :date) drafts auth-token)
   (declare (ignore user-id offset limit sort-type drafts auth-token))
   (let ((*graphql-correct* t))
