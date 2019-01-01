@@ -433,11 +433,12 @@
 (defun get-post-vote (post-id auth-token)
   (process-vote-result (lw2-graphql-query (lw2-query-string :post :single (alist :document-id post-id) '(:--id (:current-user-votes :vote-type))) :auth-token auth-token))) 
 
-(defun get-post-body (post-id &key (revalidate t) force-revalidate auth-token)
-  (let ((query-string (lw2-query-string :post :single (alist :document-id post-id) (cons :html-body (posts-index-fields)))))
-    (if auth-token
-        (lw2-graphql-query query-string :auth-token auth-token)
-        (lw2-graphql-query-timeout-cached query-string "post-body-json" post-id :revalidate revalidate :force-revalidate force-revalidate))))
+(define-backend-function get-post-body (post-id &key (revalidate t) force-revalidate auth-token)
+  (backend-graphql
+   (let ((query-string (lw2-query-string :post :single (alist :document-id post-id) (cons :html-body (posts-index-fields)))))
+     (if auth-token
+	 (lw2-graphql-query query-string :auth-token auth-token)
+	 (lw2-graphql-query-timeout-cached query-string "post-body-json" post-id :revalidate revalidate :force-revalidate force-revalidate)))))
 
 (defun lw2-query-list-limit-workaround (query-type terms fields &key auth-token)
   (let (items-list)
