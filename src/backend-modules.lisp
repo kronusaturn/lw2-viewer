@@ -6,7 +6,7 @@
     #:backend-lmdb-cache #:backend-lmdb-environment #:backend-cache-db-path
     #:backend-graphql
     #:backend-websocket-login
-    #:graphql-uri #:websocket-uri #:algolia-search-uri
+    #:graphql-uri #:websocket-uri #:algolia-search-uri #:rest-api-uri
     #:backend-q-and-a
     #:backend-lw2-legacy #:backend-lw2-modernized #:backend-lw2 #:backend-ea-forum #:backend-accordius
     #:make-backend #:define-backend-function #:define-backend-operation #:backend)
@@ -40,7 +40,8 @@
 
 (defclass backend-ea-forum (backend-websocket-login backend-lw2-modernized backend-lw2-legacy backend-algolia-search) ())
 
-(defclass backend-accordius (backend-lw2-legacy backend-lw2-modernized) ())
+(defclass backend-accordius (backend-lw2-legacy backend-lw2-modernized)
+  ((rest-api-uri :accessor rest-api-uri :initarg :rest-api-uri :type simple-string)))
 
 (defun make-backend (type-string &rest args)
   (apply #'make-instance (symbolicate "BACKEND-" (string-upcase type-string)) args))
