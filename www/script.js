@@ -2,12 +2,14 @@
 /* INITIALIZATION REGISTRY */
 /***************************/
 
+/*	Polyfill for requestIdleCallback in Apple and Microsoft browsers. */
 if (!window.requestIdleCallback) {
 	window.requestIdleCallback = (fn) => { setTimeout(fn, 0) };
 }
 
-GW.initializersDone = {};
-GW.initializers = {};
+/*	TBC. */
+GW.initializersDone = { };
+GW.initializers = { };
 function registerInitializer(name, tryEarly, precondition, fn) {
 	GW.initializersDone[name] = false;
 	GW.initializers[name] = fn;
@@ -41,6 +43,7 @@ function forceInitializer(name) {
 /* COOKIES */
 /***********/
 
+/*	Sets a cookie. */
 function setCookie(name, value, days) {
 	var expires = "";
 	if (!days) days = 36500;
@@ -51,6 +54,9 @@ function setCookie(name, value, days) {
 	}
 	document.cookie = name + "=" + (value || "")  + expires + "; path=/";
 }
+
+/*	Reads the value of named cookie.
+	Returns the cookie as a string, or null if no such cookie exists. */
 function readCookie(name) {
 	var nameEQ = name + "=";
 	var ca = document.cookie.split(';');
@@ -66,6 +72,10 @@ function readCookie(name) {
 /* EVENT LISTENER MANIPULATION */
 /*******************************/
 
+/*	Adds an event listener to a button (or other clickable element), attaching 
+	it to both "click" and "keyup" events (for use with keyboard navigation).
+	Optionally also attaches the listener to the 'mousedown' event, making the 
+	element activate on mouse down instead of mouse up. */
 Element.prototype.addActivateEvent = function(func, includeMouseDown) {
 	let ael = this.activateEventListener = (event) => { if (event.button === 0 || event.key === ' ') func(event) };
 	if (includeMouseDown) this.addEventListener("mousedown", ael);
@@ -73,6 +83,8 @@ Element.prototype.addActivateEvent = function(func, includeMouseDown) {
 	this.addEventListener("keyup", ael);
 }
 
+/*	Removes event listener from a clickable element, automatically detaching it
+	from all relevant event types. */
 Element.prototype.removeActivateEvent = function() {
 	let ael = this.activateEventListener;
 	this.removeEventListener("mousedown", ael);
@@ -80,6 +92,7 @@ Element.prototype.removeActivateEvent = function() {
 	this.removeEventListener("keyup", ael);
 }
 
+/*	Adds a scroll event listener to the page. */
 function addScrollListener(fn, name) {
 	let wrapper = (event) => {
 		requestAnimationFrame(() => {
@@ -113,23 +126,6 @@ Element.prototype.getCommentId = function() {
 	}
 }
 
-function GWLog (string) {
-	if (GW.loggingEnabled || localStorage.getItem("logging-enabled") == "true")
-		console.log(string);
-}
-GW.enableLogging = (permanently = false) => {
-	if (permanently)
-		localStorage.setItem("logging-enabled", "true");
-	else
-		GW.loggingEnabled = true;
-};
-GW.disableLogging = (permanently = false) => {
-	if (permanently)
-		localStorage.removeItem("logging-enabled");
-	else
-		GW.loggingEnabled = false;
-};
-
 function doAjax(params) {
 	let req = new XMLHttpRequest();
 	req.addEventListener("load", (event) => {
@@ -154,6 +150,27 @@ function getSelectionHTML() {
 	container.appendChild(window.getSelection().getRangeAt(0).cloneContents());
 	return container.innerHTML;
 }
+
+/********************/
+/* DEBUGGING OUTPUT */
+/********************/
+
+function GWLog (string) {
+	if (GW.loggingEnabled || localStorage.getItem("logging-enabled") == "true")
+		console.log(string);
+}
+GW.enableLogging = (permanently = false) => {
+	if (permanently)
+		localStorage.setItem("logging-enabled", "true");
+	else
+		GW.loggingEnabled = true;
+};
+GW.disableLogging = (permanently = false) => {
+	if (permanently)
+		localStorage.removeItem("logging-enabled");
+	else
+		GW.loggingEnabled = false;
+};
 
 /*******************/
 /* INBOX INDICATOR */
