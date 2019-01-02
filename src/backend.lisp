@@ -440,8 +440,6 @@
 	 (lw2-graphql-query query-string :auth-token auth-token)
 	 (lw2-graphql-query-timeout-cached query-string "post-body-json" post-id :revalidate revalidate :force-revalidate force-revalidate)))))
 
-(define-backend-operation get-post-body backend-accordius (post-id &key &allow-other-keys) (acons :tags (do-wl-rest-query "tags" `(("document_id" . ,post-id))) (call-next-method)))
-
 (defun lw2-query-list-limit-workaround (query-type terms fields &key auth-token)
   (let (items-list)
     (loop for offset from 0 by 500

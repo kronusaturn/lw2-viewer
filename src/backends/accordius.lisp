@@ -8,8 +8,11 @@
    (drakma:http-request
      (quri:render-uri (quri:merge-uris (quri:make-uri :path endpoint :query filters) (quri:uri (rest-api-uri *current-backend*))))
      :additional-headers (if auth-token `(("authorization" . ,auth-token)) nil))
-   (json:decode-json-from-string (octets-to-string response-body :external-format :utf-8)))
-  )
+   (declare (ignore status-code headers final-uri reuse-stream want-close status-string))
+   (json:decode-json-from-string (octets-to-string response-body :external-format :utf-8))))
+
+(define-backend-operation get-post-body backend-accordius (post-id &key &allow-other-keys)
+  (acons :tags (do-wl-rest-query "tags" `(("document_id" . ,post-id))) (call-next-method)))
 
 ;;;; BACKEND SPECIFIC GRAPHQL
 
