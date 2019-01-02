@@ -3,7 +3,7 @@
 
 ;;; REST API
 
-(defun do-wl-rest-query (auth-token endpoint filters)
+(defun do-wl-rest-query (endpoint filters &key auth-token)
   (multiple-value-bind (response-body status-code headers final-uri reuse-stream want-close status-string)
    (drakma:http-request
      (quri:render-uri (quri:merge-uris (quri:make-uri :path endpoint :query filters) (quri:uri (rest-api-uri *current-backend*))))
