@@ -111,8 +111,11 @@ function addScrollListener(fn, name) {
 /* MISC HELPERS */
 /****************/
 
+/*	If top of element is not at or above the top of the screen, scroll it into
+	view. */
 Element.prototype.scrollIntoViewIfNeeded = function() {
-	if (this.getBoundingClientRect().bottom > window.innerHeight) {
+	if (this.getBoundingClientRect().bottom > window.innerHeight && 
+		this.getBoundingClientRect().top > 0) {
 		this.scrollIntoView(false);
 	}
 }
