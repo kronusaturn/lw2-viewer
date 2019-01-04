@@ -440,14 +440,17 @@
 	 (lw2-graphql-query query-string :auth-token auth-token)
 	 (lw2-graphql-query-timeout-cached query-string "post-body-json" post-id :revalidate revalidate :force-revalidate force-revalidate)))))
 
-(defun lw2-query-list-limit-workaround (query-type terms fields &key auth-token)
-  (let (items-list)
-    (loop for offset from 0 by 500
-       as items-next = (lw2-graphql-query (lw2-query-string query-type :list (nconc (alist :limit 500 :offset offset) terms) fields)
-					  :auth-token auth-token)
-       while items-next
-       do (setf items-list (nconc items-list items-next)))
-    items-list))
+(define-backend-function lw2-query-list-limit-workaround (query-type terms fields &key auth-token)
+  (backend-graphql
+   (let (items-list)
+     (loop for offset from 0 by 500
+	as items-next = (lw2-graphql-query (lw2-query-string query-type :list (nconc (alist :limit 500 :offset offset) terms) fields)
+					   :auth-token auth-token)
+	while items-next
+	do (setf items-list (nconc items-list items-next)))
+     items-list))
+  (backend-accordius
+   (lw2-graphql-query (lw2-query-string query-type terms fields) :auth-token auth-token)))
 
 (defun get-post-comments-list (post-id view &key auth-token parent-answer-id (fields (post-comments-fields)))
   (let ((terms (alist :view view :post-id post-id)))
