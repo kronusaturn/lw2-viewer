@@ -136,6 +136,7 @@
                (url (or null string))
                (posted-at string)
                (base-score fixnum)
+	       (tags (or null list))
                (comment-count (or null fixnum))
                (page-url (or null string))
                (frontpage-date (or null string))
@@ -169,6 +170,10 @@
           <a class="comment-count" href="#comments">(safe (pretty-number (or comment-count 0) "comment"))</a>
           (if page-url <a class="lw2-link" href=(clean-lw-link page-url)>(main-site-abbreviation *current-site*)<span> link</span></a>)
           (with-html-stream-output (post-section-to-html post))
+	  (when tags
+	    <ul id="tags">
+	      (dolist (tag tags) (alist-bind ((text string)) tag <li><a href=("/tags/~A" text)>(progn text)</a></li>))
+	    </ul>)
 	</div>
 	<div class="post-body">
           (if url <p><a class="link-post-link" href=(convert-any-link (string-trim " " url))>Link post</a></p>)
