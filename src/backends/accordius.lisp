@@ -14,6 +14,18 @@
 (define-backend-operation get-post-body backend-accordius (post-id &key &allow-other-keys)
   (acons :tags (do-wl-rest-query "tags" `(("document_id" . ,post-id))) (call-next-method)))
 
+(defun do-wl-rest-post (endpoint post-params auth-token)
+  (drakma:http-request
+   (quri:render-uri (quri:merge-uris (quri:make-uri :path endpoint :query "") (quri:uri (rest-api-uri *current-backend*))))
+   :method :post
+   :parameters post-params
+   :additional-headers `(("authorization" . ,auth-token)))
+  )
+
+(defun do-wl-create-tag (document-id text auth-token)
+  (do-wl-rest-post "tags/" `(("document_id" . ,document-id) ("text" . ,text)) auth-token))
+  
+
 ;;;; BACKEND SPECIFIC GRAPHQL
 
 (define-backend-operation get-user-posts backend-accordius (user-id &key offset limit (sort-type :date) drafts auth-token)
