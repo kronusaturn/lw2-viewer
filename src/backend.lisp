@@ -450,7 +450,7 @@
 	do (setf items-list (nconc items-list items-next)))
      items-list))
   (backend-accordius
-   (lw2-graphql-query (lw2-query-string query-type terms fields) :auth-token auth-token)))
+   (lw2-graphql-query (lw2-query-string query-type :list terms fields) :auth-token auth-token)))
 
 (defun get-post-comments-list (post-id view &key auth-token parent-answer-id (fields (post-comments-fields)))
   (let ((terms (alist :view view :post-id post-id)))
