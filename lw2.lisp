@@ -530,6 +530,7 @@ signaled condition to OUT-STREAM."
 (defmethod site-nav-bars ((site site))
   '((:secondary-bar (("archive" "/archive" "Archive" :accesskey "r")
                      ("about" "/about" "About" :accesskey "t")
+                     ("search" "/search" "Search" :html search-bar-to-html)
                      user-nav-item))
     (:primary-bar (("home" "/" "Home" :description "Latest frontpage posts" :accesskey "h")
                    ("recent-comments" "/recentcomments" "<span>Recent </span>Comments" :description "Latest comments" :accesskey "c")))))
