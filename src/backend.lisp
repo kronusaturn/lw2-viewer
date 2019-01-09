@@ -391,7 +391,7 @@
    (multiple-value-bind (view-terms cache-key)
     (alexandria:switch (view :test #'string=)
                        ("featured" (alist :view "curated"))
-                       ("all" (alist :view (if (string= sort "hot") "community" "new") :meta :null))
+                       ("all" (alist :view (if (string= sort "hot") "community" "community-rss" #| or "new" |#) :meta :null))
                        ("meta" (alist :view "new" :meta t :all t))
                        ("community" (alist :view "new" :meta t :all t))
                        ("alignment-forum" (alist :view "new" :af t))
