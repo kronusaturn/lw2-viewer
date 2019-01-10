@@ -7167,11 +7167,10 @@ select {
     order: 12;
     display: flex;
     flex-basis: 100%;
-    list-style-type: none;
     justify-content: center;
     margin: 0;
 }
-#tags li a {
+#tags a {
     display: inline-block;
 }
 
@@ -7192,7 +7191,7 @@ select {
     margin: 0 0.25em 0 0;
     opacity: 0.5;
 }
-#tags li a {
+#tags a {
     border-radius: 8px;
     background-color: #110c06;
     border: 1px solid #2e2416;

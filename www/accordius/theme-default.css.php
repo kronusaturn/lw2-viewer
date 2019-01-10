@@ -15,7 +15,7 @@
     margin: 0 0.25em 0 0;
     opacity: 0.5;
 }
-#tags li a {
+#tags a {
     border-radius: 8px;
     background-color: #f0f5fa;
     border: 1px solid #c5d6e9;
