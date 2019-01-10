@@ -641,7 +641,7 @@ signaled condition to OUT-STREAM."
 
 (defun generate-css-link ()
   (labels ((gen-inner (theme os)
-             (generate-versioned-link (format nil "/style~@[-~A~].~A.css" (if (and theme (> (length theme) 0)) theme) os))))
+             (generate-versioned-link (format nil "/css/style~@[-~A~].~A.css" (if (and theme (> (length theme) 0)) theme) os))))
     (let* ((ua (hunchentoot:header-in* :user-agent))
            (theme (hunchentoot:cookie-in "theme"))
            (os (cond ((search "Windows" ua) "windows")
@@ -665,7 +665,7 @@ signaled condition to OUT-STREAM."
             *html-head*
             (generate-css-link)
             (generate-fonts-links)
-            (generate-versioned-link "/favicon.ico"))
+            (generate-versioned-link "/assets/favicon.ico"))
     (format out-stream "<script src=\"~A\" async></script>~A"
             (generate-versioned-link "/script.js")
             *extra-external-scripts*)
@@ -1598,10 +1598,10 @@ signaled condition to OUT-STREAM."
                                                                                     '(alexandria:switch ((hunchentoot:script-name r) :test #'string=))
                                                                                     (loop for system in '("mac" "windows" "linux") nconc
                                                                                       (loop for theme in '(nil "dark" "grey" "ultramodern" "zero" "brutalist" "rts")
-                                                                                            collect (defres (format nil "/style~@[-~A~].~A.css" theme system) "text/css")))
+                                                                                            collect (defres (format nil "/css/style~@[-~A~].~A.css" theme system) "text/css")))
                                                                                     (loop for (uri content-type) in
                                                                                       '(("/script.js" "text/javascript")
-                                                                                        ("/favicon.ico" "image/x-icon"))
+                                                                                        ("/assets/favicon.ico" "image/x-icon"))
                                                                                       collect (defres uri content-type))))
                                                                    (when file
                                                                      (when (assoc "v" (hunchentoot:get-parameters r) :test #'string=)

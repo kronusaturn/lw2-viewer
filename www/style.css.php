@@ -3613,3 +3613,30 @@ li {
 <?php include("style_mobile_additions.css.php"); ?>
 
 <?php if (isset($argv[2]) && preg_match("/\\.css(.php)?$/", $argv[2])) include($argv[2]); ?>
+
+<?php
+
+## TO BE IMPLEMENTED:
+## This will be specified via command-line argument; but for now, we just 
+## include all available additions (currently, only 'accordius').
+
+$additions = [
+	'accordius'
+];
+
+foreach ($additions as $addition) {
+	$potential_includes = [
+		"style.css.php",
+		"style_mobile_additions.css.php"
+	];
+	if (isset($argv[2]) && preg_match("/\\.css(.php)?$/", $argv[2]))
+		$potential_includes[] = $argv[2];
+
+	foreach ($potential_includes as $include) {
+		$include_path = "{$addition}/{$include}";
+		if (file_exists($include_path))
+			include ($include_path);
+	}
+}
+
+?>
