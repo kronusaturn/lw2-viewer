@@ -2018,7 +2018,7 @@ input::selection {
 			margin: 2px;
 		}
 	/*****************************************/
-	@media only screen and (max-width: 720px) {
+	} @media only screen and (max-width: 720px) {
 	/*****************************************/
 	/*******************************************/
 	} @media only screen and (max-width: 520px) {
