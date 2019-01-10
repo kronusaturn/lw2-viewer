@@ -983,7 +983,7 @@ function setTheme(newThemeName) {
 
 	let newStyle = document.createElement('link');
 	newStyle.setAttribute('rel', 'stylesheet');
-	newStyle.setAttribute('href', '/style' + styleSheetNameSuffix + currentStyleSheetNameComponents[1]);
+	newStyle.setAttribute('href', '/css/style' + styleSheetNameSuffix + currentStyleSheetNameComponents[1]);
 
 	let oldStyle = query("head link[href*='.css']");
 	newStyle.addEventListener('load', () => { removeElement(oldStyle); });
@@ -1495,13 +1495,13 @@ function injectThemeTweaker() {
 			event.target.disabled = true;
 		};
 
-		if (query("link[href^='/theme_tweaker.css']")) {
+		if (query("link[href^='/css/theme_tweaker.css']")) {
 			GW.themeTweakerStyleSheetAvailable();
 		} else {
 			// Load the theme tweaker CSS (if not loaded).
 			let themeTweakerStyleSheet = document.createElement('link');
 			themeTweakerStyleSheet.setAttribute('rel', 'stylesheet');
-			themeTweakerStyleSheet.setAttribute('href', '/theme_tweaker.css');
+			themeTweakerStyleSheet.setAttribute('href', '/css/theme_tweaker.css');
 			themeTweakerStyleSheet.addEventListener('load', GW.themeTweakerStyleSheetAvailable);
 			query("head").appendChild(themeTweakerStyleSheet);
 		}
