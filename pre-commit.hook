@@ -5,7 +5,7 @@ set -e
 SYSTEMS=(Mac Windows Linux)
 SUFFIXES=(.mac.css .windows.css .linux.css)
 
-if [[ "$1" = "--force" ]] || ! git diff-index --quiet --cached HEAD -- www/style.css.php www/style_mobile_additions.css.php color-scheme-convert.php www/theme\* ; then
+if [[ "$1" = "--force" ]] || ! git diff-index --quiet --cached HEAD -- www/style.css.php www/style_mobile_additions.css.php color-scheme-convert.php www/theme\* www/ea/\*.css.php www/accordius/\*.css.php ; then
 	git ls-files --cached HEAD 'www/theme-*' |while read F; do
 		IN="${F#www/}"
 		OUTBASE="css/style${IN#theme}"

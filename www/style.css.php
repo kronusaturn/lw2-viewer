@@ -3629,9 +3629,6 @@ foreach ($additions as $addition) {
 		"style.css.php",
 		"style_mobile_additions.css.php"
 	];
-	if (isset($argv[2]) && preg_match("/\\.css(.php)?$/", $argv[2]))
-		$potential_includes[] = $argv[2];
-
 	foreach ($potential_includes as $include) {
 		$include_path = "{$addition}/{$include}";
 		if (file_exists($include_path))

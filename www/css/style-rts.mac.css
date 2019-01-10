@@ -6953,3 +6953,19 @@ select {
 /* ACCORDIUS */
 /*************/
 
+/*======*/
+/* TAGS */
+/*======*/
+
+#tags {
+    order: 12;
+    display: flex;
+    flex-basis: 100%;
+    list-style-type: none;
+    justify-content: center;
+    margin: 0;
+}
+#tags li a {
+    display: inline-block;
+}
+
