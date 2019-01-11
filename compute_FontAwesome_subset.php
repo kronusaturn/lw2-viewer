@@ -1,30 +1,51 @@
 <?php
 
+$directories = [
+	"www/",
+	"www/accordius/",
+	"www/ea/"
+];
 $files = [ 
-	"www/script.js",
-	"www/style.css.php",
-	"www/style_mobile_additions.css.php",
-	"www/theme_tweaker.css.php",
-	"www/theme-brutalist.css.php",
-	"www/theme-classic.css.php",
-	"www/theme-default.css.php",
-	"www/theme-grey.css.php",
-	"www/theme-less.css.php",
-	"www/theme-rts.css.php",
-	"www/theme-ultramodern.css.php",
-	"www/theme-zero.css.php",
+	"script.js",
+	"style.css.php",
+	"style_mobile_additions.css.php",
+	"theme_tweaker.css.php",
+	"theme-brutalist.css.php",
+	"theme-classic.css.php",
+	"theme-default.css.php",
+	"theme-grey.css.php",
+	"theme-less.css.php",
+	"theme-rts.css.php",
+	"theme-ultramodern.css.php",
+	"theme-zero.css.php",
+];
+$additional_files = [
 	"lw2.lisp"
 ];
 $characters = [ ];
 
-foreach ($files as $file) {
-	$contents = file_get_contents("{$file}");
+function process_file($filename) {
+	if (!file_exists($filename))
+		return;
+
+	global $characters;
+	
+	$contents = file_get_contents($filename);
 
 	preg_match_all('/&#x(.{4})/', $contents, $matches);	
 	$characters = array_merge($characters, $matches[1]);
-	
+
 	preg_match_all('/\\\(F.{3})/', $contents, $matches);
 	$characters = array_merge($characters, $matches[1]);
+}
+
+foreach ($directories as $directory) {
+	foreach ($files as $file) {
+		process_file($directory.$file);
+	}
+}
+foreach ($additional_files as $file) {
+	process_file($file);
 }
 
 foreach ($characters as $key => $value) {
