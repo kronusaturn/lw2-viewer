@@ -19,7 +19,7 @@
   (loop for x in additional-vars
      when (not (eq (first (ensure-list x)) '*))
      do
-       (destructuring-bind (name &key member type default required (request-type :get) (real-name (string-downcase name)) passthrough) (ensure-list x)
+       (destructuring-bind (name &key member type default required (request-type '(:post :get)) (real-name (string-downcase name)) passthrough) (ensure-list x)
 	 (let* ((inner-form
 		 (if passthrough
 		     name
