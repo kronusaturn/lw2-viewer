@@ -899,9 +899,6 @@ signaled condition to OUT-STREAM."
                                                    (substring target-string (aref reg-starts n) (aref reg-ends n)))))
                                (format nil "https://www.lesswrong.com/posts/~A/~A~@[#~A~]" (reg 0) (reg 1) (or (reg 2) (reg 3)))))))
 
-(defun post-or-get-parameter (name)
-  (or (hunchentoot:post-parameter name) (hunchentoot:get-parameter name)))
-
 (defun redirect (uri &key (type :see-other))
   (setf (hunchentoot:return-code*) (ecase type (:see-other 303) (:permanent 301))
         (hunchentoot:header-out "Location") uri))
@@ -1354,29 +1351,26 @@ signaled condition to OUT-STREAM."
 
 (defparameter *conversation-template* (compile-template* "conversation.html"))
 
-(define-page view-conversation "/conversation" (id)
+(define-page view-conversation "/conversation" (id to subject)
   (request-method
-    (:get ()
-     (let ((to (post-or-get-parameter "to")))
-       (cond
-         ((and id to) (error "This is an invalid URL."))
-         (id
-           (multiple-value-bind (conversation messages)
-             (get-conversation-messages id (hunchentoot:cookie-in "lw2-auth-token"))
-             (view-items-index (nreverse messages) :content-class "conversation-page" :need-auth t :title (encode-entities (postprocess-conversation-title (cdr (assoc :title conversation))))
-                               :top-nav (lambda (out-stream) (render-template* *conversation-template* out-stream
-                                                                               :conversation conversation :csrf-token (make-csrf-token))))))
-         (t
-          (emit-page (out-stream :title "New conversation" :content-class "conversation-page")
-                     (render-template* *conversation-template* out-stream
-                                       :to to
-                                       :csrf-token (make-csrf-token)))))))
-    (:post ((text :required t))
-     (let* ((subject (post-or-get-parameter "subject"))
-            (to (post-or-get-parameter "to"))
-            (id (or id
-                    (let ((participant-ids (list (logged-in-userid) (cdar (lw2-graphql-query (lw2-query-string :user :single (alist :slug to) '(:--id)))))))
-                      (do-create-conversation (hunchentoot:cookie-in "lw2-auth-token") (alist :participant-ids participant-ids :title subject))))))
+   (:get ()
+     (cond
+       ((and id to) (error "This is an invalid URL."))
+       (id
+	(multiple-value-bind (conversation messages)
+	    (get-conversation-messages id (hunchentoot:cookie-in "lw2-auth-token"))
+	  (view-items-index (nreverse messages) :content-class "conversation-page" :need-auth t :title (encode-entities (postprocess-conversation-title (cdr (assoc :title conversation))))
+			    :top-nav (lambda (out-stream) (render-template* *conversation-template* out-stream
+									    :conversation conversation :csrf-token (make-csrf-token))))))
+       (t
+	(emit-page (out-stream :title "New conversation" :content-class "conversation-page")
+		   (render-template* *conversation-template* out-stream
+				     :to to
+				     :csrf-token (make-csrf-token))))))
+   (:post ((text :required t))
+     (let* ((id (or id
+		    (let ((participant-ids (list (logged-in-userid) (cdar (lw2-graphql-query (lw2-query-string :user :single (alist :slug to) '(:--id)))))))
+		      (do-create-conversation (hunchentoot:cookie-in "lw2-auth-token") (alist :participant-ids participant-ids :title subject))))))
        (do-create-message (hunchentoot:cookie-in "lw2-auth-token") id text)
        (redirect (format nil "/conversation?id=~A" id))))))
 
