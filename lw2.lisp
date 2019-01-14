@@ -1,6 +1,7 @@
 (uiop:define-package #:lw2-viewer
   (:use #:cl #:sb-thread #:flexi-streams #:djula
 	#:lw2-viewer.config #:lw2.utils #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login #:lw2.context #:lw2.sites #:lw2.components #:lw2.html-reader)
+  (:import-from #:alexandria #:ensure-list)
   (:unintern
     #:define-regex-handler #:*fonts-stylesheet-uri* #:generate-fonts-link
     #:user-nav-bar #:*primary-nav* #:*secondary-nav* #:*nav-bars*
@@ -923,40 +924,7 @@ signaled condition to OUT-STREAM."
                    collect (if (atom a) a (first a))))
            (filter-plist (plist &rest args)
              (declare (dynamic-extent args))
-             (map-plist (lambda (key val) (when (member key args) (list key val))) plist))
-           (make-hunchentoot-lambda (args)
-             (loop for x in args
-                   collect (if (atom x) x
-                               (cons (first x) (filter-plist (rest x) :request-type :real-name)))))
-           (make-binding-form (additional-vars body &aux var-bindings additional-declarations additional-preamble)
-             (loop for x in additional-vars
-		when (not (eq x '*))
-		do
-		  (destructuring-bind (name &key member type default required request-type real-name) (if (atom x) (list x) x)
-		    (declare (ignore request-type real-name))
-		    (let* ((inner-form
-			    (cond
-			      (member
-			       `(let ((sym (find-symbol (string-upcase ,name) ,(find-package '#:keyword))))
-				  (if (member sym (quote ,member)) sym)))
-			      ((and type (subtypep type 'integer))
-			       `(if ,name (parse-integer ,name)))))
-			   (inner-form
-			    (if default
-				`(or ,inner-form ,default)
-				inner-form)))
-		      (when required
-			(push `(unless (and ,name (not (equal ,name ""))) (error "Missing required parameter: ~A" (quote ,name)))
-			      additional-preamble))
-		      (if member
-			  (if type (error "Cannot specify both member and type.")
-			      (push `(type (or null symbol) ,name) additional-declarations))
-			  (if type
-			      (push `(type (or null ,type) ,name) additional-declarations)
-			      (push `(type (or null simple-string) ,name) additional-declarations)))
-		      (when inner-form
-			(push `(,name ,inner-form) var-bindings)))))
-	     `(let ,var-bindings (declare ,@additional-declarations) ,@additional-preamble ,@body)))
+             (map-plist (lambda (key val) (when (member key args) (list key val))) plist)))
    (multiple-value-bind (path-specifier-form path-bindings-wrapper specifier-vars)
     (if (stringp path-specifier)
 	(values path-specifier #'identity)
@@ -991,19 +959,18 @@ signaled condition to OUT-STREAM."
 					(alexandria:with-gensyms (csrf-token)
 					  (push `(,csrf-token :real-name "csrf-token" :required t) args)
 					  (push `(check-csrf-token ,csrf-token) inner-body)))
-				      (loop for a in args
-					 do (push (append (if (atom a) (list a) (cons (first a) (filter-plist (rest a) :real-name))) (list :request-type method)) additional-vars))
-				      `(,method ,(make-binding-form args inner-body)))))))
+				      `(,method ,(make-binding-form (mapcar (lambda (x) (append (ensure-list x) `(:request-type ,method))) args)
+								    inner-body)))))))
 		 body)))
-       `(hunchentoot:define-easy-handler (,name :uri ,path-specifier-form) ,(make-hunchentoot-lambda additional-vars)
+       `(hunchentoot:define-easy-handler (,name :uri ,path-specifier-form) ()
 	  (with-error-page
 	      (block nil
 		,(funcall path-bindings-wrapper
-			  (make-binding-form (append specifier-vars additional-vars)
+			  (make-binding-form (append (mapcar (lambda (x) (append (ensure-list x) '(:passthrough t))) specifier-vars) additional-vars)
 					     rewritten-body)))))))))
 
 (define-component sort-widget (&key (sort-options '(:new :hot)) (pref :default-sort) (param-name "sort") (html-class "sort"))
-  (:http-args '((sort :alias param-name :member sort-options)))
+  (:http-args '((sort :real-name param-name :member sort-options)))
   (let ((sort-string (if sort (string-downcase sort))))
     (if sort-string
 	(set-user-pref :default-sort sort-string))
@@ -1029,7 +996,7 @@ signaled condition to OUT-STREAM."
                                                          :new-post t)
                                    (funcall sort-widget out-stream))))))
 
-(define-page view-index "/index" ((view :member (:all :new :frontpage :featured :meta :community :alignment-forum :questions) :default :all)
+(define-page view-index "/index" ((view :member '(:all :new :frontpage :featured :meta :community :alignment-forum :questions) :default :all)
                                   before after
                                   (offset :type fixnum)
                                   (limit :type fixnum))
@@ -1259,8 +1226,8 @@ signaled condition to OUT-STREAM."
 
 (define-page view-user (:regex "^/users/(.*?)(?:$|\\?)|^/user" user-slug) (id
                                                                              (offset :type fixnum :default 0)
-                                                                             (show :member (:all :posts :comments :drafts :conversations :inbox) :default :all)
-                                                                             (sort :member (:top :new) :default :new))
+                                                                             (show :member '(:all :posts :comments :drafts :conversations :inbox) :default :all)
+                                                                             (sort :member '(:top :new) :default :new))
              (let* ((auth-token (if (eq show :inbox) *current-auth-token*))
                     (user-query-terms (cond
                                         (user-slug (alist :slug user-slug))
