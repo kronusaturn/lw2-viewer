@@ -412,11 +412,12 @@
                                         (when
                                           (every (lambda (a) (if-let (attr (plump:attribute node a)) (ignore-errors (<= (parse-integer attr) 1)))) (list "width" "height"))
                                           (plump:remove-child node))
-                                        (when
-                                          (string= "/" (plump:attribute node "src") :end2 1)
-                                          (setf (plump:attribute node "src") (concatenate 'string "https://www.lesswrong.com" (plump:attribute node "src")))))
-                                       ((tag-is node "p" "blockquote" "div")
-                                        (if (string-is-whitespace (plump:text node))
+					(let ((src (plump:attribute node "src")))
+					  (when
+					      (and (> (length src) 0) (string= "/" src :end2 1))
+					    (setf (plump:attribute node "src") (concatenate 'string "https://www.lesswrong.com" (plump:attribute node "src"))))))
+				       ((tag-is node "p" "blockquote" "div")
+					(if (string-is-whitespace (plump:text node))
                                             (if (plump:get-elements-by-tag-name node "img")
                                                 (add-class node "imgonly")
                                                 (plump:remove-child node))
