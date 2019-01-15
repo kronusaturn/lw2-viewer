@@ -7125,14 +7125,14 @@ select {
 }
 #tags a {
     border-radius: 6px;
-    background-color: #ffd;
-    border: 1px solid #ecc700;
+    background-color: #fffec2;
+    border: 1px solid #d9b600;
     padding: 3px 6px;
     line-height: 1;
     margin: 0 0.25em;
     font-size: 0.9375em;
     text-decoration: none;
-    color: #6a8a6b;
+    color: #537254;
 }
 #tags a:hover {
     text-decoration: none;
