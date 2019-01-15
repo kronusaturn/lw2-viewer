@@ -891,17 +891,22 @@ signaled condition to OUT-STREAM."
       (format stream "<span class=\"~A\">~A</span>" class text)))
 
 (defun postprocess-markdown (markdown)
-  (ppcre:regex-replace-all (concatenate 'string (ppcre:regex-replace-all "\\." (site-uri *current-site*) "\\.") "posts/([^/ ]{17})/([^/# ]*)(?:#comment-([^/ ]{17})|/comment/([^/ ]{17}))?")
-                           markdown
-                           (lambda (target-string start end match-start match-end reg-starts reg-ends)
-                             (declare (ignore start end match-start match-end))
-                             (labels ((reg (n) (if (and (> (length reg-starts) n) (aref reg-starts n))
-                                                   (substring target-string (aref reg-starts n) (aref reg-ends n)))))
-                               (format nil "https://www.lesswrong.com/posts/~A/~A~@[#~A~]" (reg 0) (reg 1) (or (reg 2) (reg 3)))))))
+  (when (typep *current-site* 'alternate-frontend-site)
+    (ppcre:regex-replace-all
+     (concatenate 'string (ppcre:regex-replace-all "\\." (site-uri *current-site*) "\\.") "posts/([^/ ]{17})/([^/# ]*)(?:#comment-([^/ ]{17})|/comment/([^/ ]{17}))?")
+     markdown
+     (lambda (target-string start end match-start match-end reg-starts reg-ends)
+       (declare (ignore start end match-start match-end))
+       (labels ((reg (n) (if (and (> (length reg-starts) n) (aref reg-starts n))
+			     (substring target-string (aref reg-starts n) (aref reg-ends n)))))
+	 (quri:render-uri
+	  (quri:merge-uris
+	   (format nil "/posts/~A/~A~@[#~A~]" (reg 0) (reg 1) (or (reg 2) (reg 3)))
+	   (main-site-uri *current-site*))))))))
 
 (defun redirect (uri &key (type :see-other))
   (setf (hunchentoot:return-code*) (ecase type (:see-other 303) (:permanent 301))
-        (hunchentoot:header-out "Location") uri))
+	(hunchentoot:header-out "Location") uri))
 
 (defmacro ignorable-multiple-value-bind ((&rest bindings) value-form &body body)
   (let (new-bindings ignores)

@@ -5,7 +5,7 @@
     #:*sites*
     #:site #:alternate-frontend-site #:lesswrong-viewer-site #:ea-forum-viewer-site
     #:site-uri #:site-host #:site-secure #:site-backend #:site-title #:site-description #:background-loader-enabled
-    #:main-site-title #:main-site-abbreviation
+    #:main-site-title #:main-site-abbreviation #:main-site-uri
     #:host-matches #:find-site
     #:call-with-site-context #:with-site-context
     #:reset-site-definitions
@@ -30,7 +30,8 @@
 
 (defclass alternate-frontend-site (site)
   ((main-site-title :accessor main-site-title :initarg :main-site-title :type simple-string)
-   (main-site-abbreviation :accessor main-site-abbreviation :initarg :main-site-abbreviation :type simple-string)))
+   (main-site-abbreviation :accessor main-site-abbreviation :initarg :main-site-abbreviation :type simple-string)
+   (main-site-uri :accessor main-site-uri :initarg :main-site-uri :type simple-string)))
 
 (defclass lesswrong-viewer-site (alternate-frontend-site) ())
 
