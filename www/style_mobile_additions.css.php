@@ -4,7 +4,7 @@
 
 /* Hide the mobile elements on desktop screens: */
 
-@media not screen and (hover: none), not screen and (-moz-touch-enabled) {
+@media not screen and (hover: none) {
 	#post-nav-ui-toggle,
 	#appearance-adjust-ui-toggle,
 	#theme-selector .theme-selector-close-button {
@@ -12,7 +12,7 @@
 	}
 }
 
-@media only screen and (hover: none), only screen and (-moz-touch-enabled) {
+@media only screen and (hover: none) {
 
 /*====================*/
 /* MOBILE UI ELEMENTS */
@@ -84,7 +84,7 @@
 
 } /* End media query */
 
-@media only screen and (hover: none), only screen and (-moz-touch-enabled) {
+@media only screen and (hover: none) {
 
 /*=========*/
 /* GENERAL */
@@ -104,7 +104,7 @@
 
 } /* End media query */
 
-@media only screen and (hover: none), only screen and (-moz-touch-enabled) {
+@media only screen and (hover: none) {
 
 /*================*/
 /* THEME SELECTOR */

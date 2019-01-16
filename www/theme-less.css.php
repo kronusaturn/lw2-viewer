@@ -65,7 +65,7 @@ body {
 
 /*= Layout (desktop) =*/
 
-@media not screen and (hover: none), not screen and (-moz-touch-enabled) {
+@media not screen and (hover: none) {
 	.nav-inner {
 		font-size: 1.125em;
 		padding: 0.5rem 0.75rem;
@@ -281,7 +281,7 @@ body {
 	position: relative;
 	right: 56px;
 }
-@media not screen and (hover: none), not screen and (-moz-touch-enabled) {
+@media not screen and (hover: none) {
 	.page-toolbar {
 		width: inherit;
 		min-width: inherit;
@@ -433,7 +433,7 @@ body {
 /* UI TOGGLES */
 /*============*/
 
-@media not screen and (hover: none), not screen and (-moz-touch-enabled) {
+@media not screen and (hover: none) {
 	#site-nav-ui-toggle,
 	#post-nav-ui-toggle,
 	#appearance-adjust-ui-toggle {
@@ -879,7 +879,7 @@ body {
 	opacity: 0.4;
 	color: #ddd;
 }
-@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover) {
 	#quick-nav-ui a:hover {
 		color: #79a97e;
 		box-shadow: 
@@ -1050,7 +1050,7 @@ h1.listing a[href^="/posts"] {
 	}
 }}
 
-@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover) {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		color: #92c396;
@@ -1180,7 +1180,7 @@ h1.listing + .post-meta .post-section::before {
 h1.listing.own-post-listing {
 	padding-right: 36px;
 }
-@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover) {
 	#content.user-page h1.listing:focus-within::before {
 		left: -0.625em;
 	}
@@ -1765,7 +1765,7 @@ div.comment-child-links a {
 	background: linear-gradient(to right, transparent 0%, #fff 50%, #fff 100%);
 }
 
-@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover) {
 	#content.compact > .comment-thread .comment-item:hover .comment,
 	#content.compact > .comment-thread .comment-item.expanded .comment {
 		background-color: #fff;
@@ -1784,7 +1784,7 @@ div.comment-child-links a {
 			0 0 40px #fff;
 	}
 }
-@media only screen and (hover: none), only screen and (-moz-touch-enabled) {
+@media only screen and (hover: none) {
 	#content.compact > .comment-thread.expanded .comment-item .comment {
 		background-color: #fff;
 		outline: 1px solid #92c396;
@@ -2120,7 +2120,7 @@ div.comment-child-links a {
 		box-shadow 0.3s ease,
 		border-color 0.15s ease;
 }
-@media only screen and (hover:hover), not screen and (-moz-touch-enabled) {
+@media only screen and (hover:hover) {
 	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover::before {
 		border-color: #c4dbc4;
 	}
@@ -2498,7 +2498,7 @@ strong, b {
 /* FOR NARROW SCREENS */
 /*====================*/
 
-@media not screen and (hover: none), not screen and (-moz-touch-enabled) {
+@media not screen and (hover: none) {
 	@media only screen and (max-width: 1080px) {
 		#site-nav-ui-toggle button.engaged {
 			left: -72px;
@@ -2535,7 +2535,7 @@ strong, b {
 /* MOBILE */
 /*========*/
 
-@media only screen and (hover: none), only screen and (-moz-touch-enabled) {
+@media only screen and (hover: none) {
 	#site-nav-ui-toggle {
 		top: 10px;
 		left: 10px;

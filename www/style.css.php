@@ -1213,7 +1213,7 @@ h1.listing a[href^="http"] {
 /*=----------------------=*/
 /*	(On desktops, hover over a multi-line listing to reveal all of it) */
 
-@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover) {
 	h1.listing a {
 		max-width: 100%;
 		display: inline-block;
@@ -1785,7 +1785,7 @@ article {
 
 /*= Karma controls hover tooltips =*/
 
-@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover) {
 	.post .karma,
 	.comment-item .karma {
 		position: relative;
@@ -2291,7 +2291,7 @@ a.comment-parent-link:hover::after {
 	padding: 0 16px 10px 64px;
 	pointer-events: auto;
 }
-@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover) {
 	#content.compact:not(:focus-within) > .comment-thread .comment-item:hover,
 	#content.compact > .comment-thread .comment-item.expanded {
 		overflow: visible;
@@ -2299,7 +2299,7 @@ a.comment-parent-link:hover::after {
 		z-index: 10;
 	}
 }
-@media only screen and (hover: none), only screen and (-moz-touch-enabled) {
+@media only screen and (hover: none) {
 	#content.compact > .comment-thread.expanded .comment-item {
 		overflow: visible;
 		pointer-events: auto;
@@ -2324,7 +2324,7 @@ a.comment-parent-link:hover::after {
 #content.compact > .comment-thread .comment-item .comment-meta .karma + .comment-post-title {
 	margin-left: 0.75em;
 }
-@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover) {
 	#content.compact > .comment-thread:last-of-type .comment-item:hover,
 	#content.compact > .comment-thread:last-of-type .comment-item.expanded {
 		max-height: unset;
@@ -2352,7 +2352,7 @@ a.comment-parent-link:hover::after {
 		margin: 0;
 	}
 }
-@media only screen and (hover: none), only screen and (-moz-touch-enabled) {
+@media only screen and (hover: none) {
 	#content.compact > .comment-thread.expanded:last-of-type .comment-item {
 		max-height: unset;
 	}
@@ -3490,7 +3490,7 @@ li {
 #image-focus-overlay .slideshow-buttons button::selection {
 	background-color: transparent;
 }
-@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover) {
 	#image-focus-overlay .slideshow-buttons button:hover {
 		background-color: rgba(0,0,0,0.1);
 		color: #777;
@@ -3903,7 +3903,7 @@ li {
 		top: 100px;
 		right: -12px;
 	}
-	@media not screen and (hover: none), not screen and (-moz-touch-enabled) {
+	@media not screen and (hover: none) {
 		#quick-nav-ui,
 		#new-comment-nav-ui,
 		#new-comment-nav-ui + #hns-date-picker,

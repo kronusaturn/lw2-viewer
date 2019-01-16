@@ -725,7 +725,7 @@ input[type='range']::-ms-thumb {
 /* MOBILE */
 /*========*/
 
-@media only screen and (hover: none), only screen and (-moz-touch-enabled) {
+@media only screen and (hover: none) {
 	#theme-tweaker-ui {
 		z-index: 12000;
 	}

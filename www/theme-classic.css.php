@@ -312,7 +312,7 @@ body {
 	opacity: 0.4;
 	color: #bbb;
 }
-@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover) {
 	#quick-nav-ui a:hover {
 		color: #000;
 		background-color: #eee;
@@ -340,7 +340,7 @@ body {
 	color: #bbb;
 	text-shadow: none;
 }
-@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover) {
 	#new-comment-nav-ui .new-comments-count:hover {
 		text-shadow: 
 			0 0 1px #fff,
@@ -496,7 +496,7 @@ h1.listing a[href^="http"] {
 	top: 2px;
 }
 
-@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover) {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		color: #3d3d3e;
@@ -1214,7 +1214,7 @@ div.comment-child-links a {
 	background: linear-gradient(to right, transparent 0%, #fff 50%, #fff 100%);
 }
 
-@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover) {
 	#content.compact > .comment-thread .comment-item:hover .comment,
 	#content.compact > .comment-thread .comment-item.expanded .comment {
 		background-color: #fff;
@@ -1233,7 +1233,7 @@ div.comment-child-links a {
 			0 0 40px #fff;
 	}
 }
-@media only screen and (hover: none), only screen and (-moz-touch-enabled) {
+@media only screen and (hover: none) {
 	#content.compact > .comment-thread.expanded .comment-item .comment {
 		background-color: #fff;
 		outline: 3px solid <?php echo $hyperlink_color; ?>;
@@ -1576,7 +1576,7 @@ h1.listing .edit-post-link:hover,
 	color: #777;
 	top: 2px;
 }
-@media only screen and (hover:hover), not screen and (-moz-touch-enabled) {
+@media only screen and (hover:hover) {
 	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover,
 	#edit-post-form .post-meta-fields input[type='checkbox']:focus + label {
 		text-shadow: 
@@ -1879,7 +1879,7 @@ select {
 	text-shadow: 
 		rgba(255,255,255,0.5) 0px 3px 3px;
 }
-@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover) {
 	#content.alignment-forum-index-page h1.listing a:hover,
 	#content.alignment-forum-index-page h1.listing a:focus {
 		background-color: rgba(244,245,255,0.85);
@@ -1974,7 +1974,7 @@ select {
 /* MOBILE */
 /*========*/
 
-@media only screen and (hover: none), only screen and (-moz-touch-enabled) {
+@media only screen and (hover: none) {
 	#ui-elements-container > div[id$='-ui-toggle'] button  {
 		color: #aaa;
 		text-shadow:
