@@ -3762,6 +3762,11 @@ li {
 		width: 50%;
 	}
 }
+@media only screen and (max-width: 1220px) {
+	#width-selector {
+		display: none;
+	}
+}
 @media only screen and (max-width: 1160px) {
 	#new-comment-nav-ui {
 		bottom: 180px;
