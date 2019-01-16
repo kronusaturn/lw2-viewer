@@ -4,10 +4,12 @@
 
 /* Hide the mobile elements on desktop screens: */
 
-head:not(.touch-ui) #post-nav-ui-toggle,
-head:not(.touch-ui) #appearance-adjust-ui-toggle,
-head:not(.touch-ui) #theme-selector .theme-selector-close-button {
-	display: none;
+@media not screen and (hover: none), not screen and (-moz-touch-enabled) {
+	#post-nav-ui-toggle,
+	#appearance-adjust-ui-toggle,
+	#theme-selector .theme-selector-close-button {
+		display: none;
+	}
 }
 
 @media only screen and (hover: none), only screen and (-moz-touch-enabled) {

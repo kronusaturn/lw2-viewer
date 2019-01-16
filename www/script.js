@@ -3281,9 +3281,6 @@ registerInitializer('earlyInitialize', true, () => query("#content") != null, fu
 	GW.isMobile = ('ontouchstart' in document.documentElement);
 	GW.isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
 
-	if (GW.isMobile)
-		query("head").addClass("touch-ui");
-
 	// Backward compatibility
 	let storedTheme = localStorage.getItem('selected-theme');
 	if (storedTheme) {
