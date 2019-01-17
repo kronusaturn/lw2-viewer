@@ -1124,10 +1124,6 @@ function pageFadeTransition(fadeIn) {
 GW.themeLoadCallback_less = (fromTheme = "") => {
 	GWLog("themeLoadCallback_less");
 	injectSiteNavUIToggle();
-	if (!GW.isMobile) {
-		injectPostNavUIToggle();
-		injectAppearanceAdjustUIToggle();
-	}
 
 	registerInitializer('shortenDate', true, () => query(".top-post-meta") != null, function () {
 		let dtf = new Intl.DateTimeFormat([], 
@@ -1252,10 +1248,6 @@ function updateSiteNavUIState(event) {
 GW.themeUnloadCallback_less = (toTheme = "") => {
 	GWLog("themeUnloadCallback_less");
 	removeSiteNavUIToggle();
-	if (!GW.isMobile) {
-		removePostNavUIToggle();
-		removeAppearanceAdjustUIToggle();
-	}
 	window.removeEventListener('resize', updatePostNavUIVisibility);
 
 	document.removeEventListener("scroll", GW["updateSiteNavUIStateScrollListener"]);
@@ -3539,11 +3531,11 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	// Add the comments sort mode selector (top, hot, new, old).
 	injectCommentsSortModeSelector();
 
-	// Add the toggle for the post nav UI elements on mobile.
-	if (GW.isMobile) injectPostNavUIToggle();
+	// Add the toggle for the post nav UI elements on mobile layouts.
+	injectPostNavUIToggle();
 
-	// Add the toggle for the appearance adjustment UI elements on mobile.
-	if (GW.isMobile) injectAppearanceAdjustUIToggle();
+	// Add the toggle for the appearance adjustment UI elements on mobile layouts.
+	injectAppearanceAdjustUIToggle();
 
 	// Add the antikibitzer.
 	injectAntiKibitzer();
@@ -3805,10 +3797,18 @@ function recomputeUIElementsContainerHeight(force = false) {
 	GWLog("recomputeUIElementsContainerHeight");
 	if (!GW.isMobile &&
 		(force || query("#ui-elements-container").style.height != "")) {
-		let bottomBarOffset = query("#bottom-bar").hasClass("decorative") ? 16 : 30;
-		query("#ui-elements-container").style.height = (query("#content").clientHeight <= window.innerHeight + bottomBarOffset) ? 
-														query("#content").clientHeight + "px" :
-														"100vh";
+		// At viewport width 960px and below, we show the mobile versions of the
+		// fixed UI elements. In these cases, #ui-elements-container is static,
+		// not fixed; and its children are fixed, not absolute. This is done in
+		// order to prevent position jitter during scrolling on mobile devices.
+		if (window.innerWidth > 960) {
+			let bottomBarOffset = query("#bottom-bar").hasClass("decorative") ? 16 : 30;
+			query("#ui-elements-container").style.height = (query("#content").clientHeight <= window.innerHeight + bottomBarOffset) ? 
+															query("#content").clientHeight + "px" :
+															"100vh";
+		} else {
+			query("#ui-elements-container").style.height = "";
+		}
 	}
 }
 

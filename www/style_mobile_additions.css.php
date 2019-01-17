@@ -84,6 +84,13 @@
 
 } /* End media query */
 
+@media only screen and (max-width: 960px) and (min-width: 901px) {
+	body {
+		overflow-x: hidden;
+		margin: 0 -5px;
+	}
+}
+
 /*=========*/
 /* GENERAL */
 /*=========*/
@@ -391,6 +398,10 @@
 	width: calc(100% + 2px);
 	border-width: 1px !important;
 }
+
+} /* End media query */
+
+@media only screen and (hover: none), only screen and (max-width: 960px) {
 
 /*=========*/
 /* NAV BAR */
