@@ -3751,7 +3751,9 @@ li {
 /* FOR NARROW SCREENS */
 /**********************/
 
+/*=---------------------------------------=*/
 @media only screen and (max-width: 1440px) {
+/*=---------------------------------------=*/
 	#hns-date-picker {
 		right: -81px;
 		padding: 8px 10px 10px 10px;
@@ -3768,13 +3770,15 @@ li {
 		left: -1px;
 		width: 50%;
 	}
-}
-@media only screen and (max-width: 1220px) {
+/*=----------------------------------------=*/
+} @media only screen and (max-width: 1220px) {
+/*=----------------------------------------=*/
 	#width-selector {
 		display: none;
 	}
-}
-@media only screen and (max-width: 1160px) {
+/*=----------------------------------------=*/
+} @media only screen and (max-width: 1160px) {
+/*=----------------------------------------=*/
 	#new-comment-nav-ui {
 		bottom: 180px;
 		right: -68px;
@@ -3802,8 +3806,9 @@ li {
 	#anti-kibitzer-toggle {
 		bottom: 330px;
 	}
-}
-@media only screen and (max-width: 1080px) {
+/*=----------------------------------------=*/
+} @media only screen and (max-width: 1080px) {
+/*=----------------------------------------=*/
 	#width-selector {
 		right: -30px;
 	}
@@ -3855,8 +3860,9 @@ li {
 	#anti-kibitzer-toggle {
 		right: -54px;
 	}
-}
-@media only screen and (max-width: 1040px) {
+/*=----------------------------------------=*/
+} @media only screen and (max-width: 1040px) {
+/*=----------------------------------------=*/
 	#quick-nav-ui {
 		right: -49px;
 	}
@@ -3872,8 +3878,9 @@ li {
 	#anti-kibitzer-toggle {
 		right: -50px;
 	}
-}
-@media only screen and (max-width: 1020px) {
+/*=----------------------------------------=*/
+} @media only screen and (max-width: 1020px) {
+/*=----------------------------------------=*/
 	#quick-nav-ui {
 		right: -20px;
 	}
@@ -3898,8 +3905,9 @@ li {
 	#anti-kibitzer-toggle {
 		right: -20px;
 	}
-}
-@media only screen and (max-width: 1000px) {
+/*=----------------------------------------=*/
+} @media only screen and (max-width: 1000px) {
+/*=----------------------------------------=*/
 	#theme-selector {
 		left: -17px;
 		top: 120px;
@@ -3932,14 +3940,16 @@ li {
 		top: 70px;
 		left: -21px;
 	}
-}
-@media only screen and (max-width: 960px) and (min-width: 901px) {
+/*=--------------------------------------------------------------=*/
+} @media only screen and (max-width: 960px) and (min-width: 901px) {
+/*=--------------------------------------------------------------=*/
 	body {
 		overflow-x: hidden;
 		margin: 0 -5px;
 	}
-}
-@media only screen and (max-width: 900px) {
+/*=---------------------------------------=*/
+} @media only screen and (max-width: 900px) {
+/*=---------------------------------------=*/
 	#content,
 	#images-overlay,
 	#ui-elements-container {
