@@ -109,6 +109,10 @@ body > * {
 #ui-elements-container > * {
 	pointer-events: auto;
 }
+#post-nav-ui-toggle,
+#appearance-adjust-ui-toggle {
+	display: none;
+}
 
 /*=----------------=*/
 /*= Images overlay =*/
@@ -618,6 +622,9 @@ foreach ($content_width_settings as $name => $setting) {
 }
 #theme-selector:hover {
 	opacity: 1.0;
+}
+#theme-selector .theme-selector-close-button {
+	display: none;
 }
 
 /*=----------------------=*/
@@ -3924,6 +3931,23 @@ li {
 	#theme-tweaker-toggle {
 		top: 70px;
 		left: -21px;
+	}
+}
+@media only screen and (max-width: 960px) and (min-width: 901px) {
+	body {
+		overflow-x: hidden;
+		margin: 0 -5px;
+	}
+}
+@media only screen and (max-width: 900px) {
+	#content,
+	#images-overlay,
+	#ui-elements-container {
+		min-width: unset;
+		width: unset;
+	}
+	#content {
+		padding: 0 4px;
 	}
 }
 

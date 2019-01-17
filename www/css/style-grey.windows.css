@@ -87,6 +87,10 @@ body > * {
 #ui-elements-container > * {
 	pointer-events: auto;
 }
+#post-nav-ui-toggle,
+#appearance-adjust-ui-toggle {
+	display: none;
+}
 
 /*=----------------=*/
 /*= Images overlay =*/
@@ -608,6 +612,9 @@ head.content-width-fluid + body > * {
 }
 #theme-selector:hover {
 	opacity: 1.0;
+}
+#theme-selector .theme-selector-close-button {
+	display: none;
 }
 
 /*=----------------------=*/
@@ -3942,6 +3949,23 @@ li {
 		left: -21px;
 	}
 }
+@media only screen and (max-width: 960px) and (min-width: 901px) {
+	body {
+		overflow-x: hidden;
+		margin: 0 -5px;
+	}
+}
+@media only screen and (max-width: 900px) {
+	#content,
+	#images-overlay,
+	#ui-elements-container {
+		min-width: unset;
+		width: unset;
+	}
+	#content {
+		padding: 0 4px;
+	}
+}
 
 /**************/
 /* PRINT VIEW */
@@ -3992,108 +4016,79 @@ li {
 /* MOBILE LAYOUT */
 /*****************/
 
-/* Hide the mobile elements on desktop screens: */
-
-@media only screen and (hover: hover) and (min-width: 961px) {
-	#post-nav-ui-toggle,
-	#appearance-adjust-ui-toggle,
-	#theme-selector .theme-selector-close-button {
-		display: none;
-	}
-}
-
-@media only screen and (hover: none), only screen and (max-width: 960px) {
-
 /*====================*/
 /* MOBILE UI ELEMENTS */
 /*====================*/
 
-#ui-elements-container {
-	height: unset;
-	position: unset;
-}
-#ui-elements-container > * {
-	position: fixed;
-	visibility: hidden;
-	opacity: 1.0;
-	z-index: 10000;
-}
-
-#ui-elements-container > div[id$='-ui-toggle'] {
-	visibility: visible;
-	display: inline-block;
-	border-radius: 50%;
-	z-index: 10000;
-}
-#ui-elements-container > div[id$='-ui-toggle'] button,
-#theme-selector .theme-selector-close-button {
-	font-family: Font Awesome;
-	font-weight: 900;
-	font-size: 32px;
-	padding: 10px;
-	opacity: 0.8;
-	-webkit-tap-highlight-color: transparent;
-	transition: transform 0.2s ease;
-}
-#ui-elements-container > div[id$='-ui-toggle'] button::selection,
-#theme-selector .theme-selector-close-button::selection {
-	background-color: transparent;
-}
-#ui-elements-container > div[id$='-ui-toggle'] button::-moz-focus-inner,
-#theme-selector .theme-selector-close-button::-moz-focus-inner {
-	border: none;
-}
-#ui-elements-container > div[id$='-ui-toggle'] button.engaged {
-	transform: rotate(-90deg);
-	opacity: 1.0;
-}
-
-#appearance-adjust-ui-toggle {
-	bottom: 10px;
-	left: 10px;
-}
-
-#post-nav-ui-toggle {
-	bottom: 10px;
-	right: 10px;
-}
-	
-#theme-selector.engaged,
-#quick-nav-ui.engaged,
-#new-comment-nav-ui.engaged,
-#hns-date-picker.engaged {
-	visibility: visible;
-}
-
-#image-focus-overlay.engaged {
-	visibility: visible;
-}
-#image-focus-overlay .help-overlay {
-	display: none;
-}
-
-} /* End media query */
-
-@media only screen and (max-width: 960px) and (min-width: 901px) {
-	body {
-		overflow-x: hidden;
-		margin: 0 -5px;
-	}
-}
-
-/*=========*/
-/* GENERAL */
-/*=========*/
-
-@media only screen and (max-width: 900px) {
-	#content,
-	#images-overlay,
+@media only screen and (hover: none), only screen and (max-width: 960px) {
 	#ui-elements-container {
-		min-width: unset;
-		width: unset;
+		height: unset;
+		position: unset;
 	}
-	#content {
-		padding: 0 4px;
+	#ui-elements-container > * {
+		position: fixed;
+		visibility: hidden;
+		opacity: 1.0;
+		z-index: 10000;
+	}
+
+	#ui-elements-container > div[id$='-ui-toggle'] {
+		visibility: visible;
+		display: inline-block;
+		border-radius: 50%;
+		z-index: 10000;
+	}
+	#ui-elements-container > div[id$='-ui-toggle'] button,
+	#theme-selector .theme-selector-close-button {
+		font-family: Font Awesome;
+		font-weight: 900;
+		font-size: 32px;
+		padding: 10px;
+		opacity: 0.8;
+		-webkit-tap-highlight-color: transparent;
+		transition: transform 0.2s ease;
+	}
+	#ui-elements-container > div[id$='-ui-toggle'] button::selection,
+	#theme-selector .theme-selector-close-button::selection {
+		background-color: transparent;
+	}
+	#ui-elements-container > div[id$='-ui-toggle'] button::-moz-focus-inner,
+	#theme-selector .theme-selector-close-button::-moz-focus-inner {
+		border: none;
+	}
+	#ui-elements-container > div[id$='-ui-toggle'] button.engaged {
+		transform: rotate(-90deg);
+		opacity: 1.0;
+	}
+
+	#post-nav-ui-toggle,
+	#appearance-adjust-ui-toggle,
+	#theme-selector .theme-selector-close-button {
+		display: initial;
+	}
+
+	#appearance-adjust-ui-toggle {
+		bottom: 10px;
+		left: 10px;
+	}
+
+	#post-nav-ui-toggle {
+		bottom: 10px;
+		right: 10px;
+	}
+	
+	#theme-selector.engaged,
+	#quick-nav-ui.engaged,
+	#new-comment-nav-ui.engaged,
+	#hns-date-picker.engaged {
+		visibility: visible;
+	}
+
+	#image-focus-overlay.engaged {
+		visibility: visible;
+	}
+	#image-focus-overlay .help-overlay {
+		display: none;
 	}
 }
 
