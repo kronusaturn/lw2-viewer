@@ -3804,7 +3804,7 @@ li {
 		display: block;
 	}
 	#text-size-adjustment-ui {
-		top: 90px;
+		top: 112px;
 		right: -30px;
 	}
 	#text-size-adjustment-ui button {
@@ -3816,6 +3816,9 @@ li {
 	}
 	#text-size-adjustment-ui button.decrease {
 		top: 50px;
+	}
+	#text-size-adjustment-ui::after {
+		display: none;
 	}
 	#theme-selector {
 		top: 46px;
@@ -3900,7 +3903,6 @@ li {
 		margin: 1px 4px;
 	}
 	#text-size-adjustment-ui {
-		top: 100px;
 		right: -12px;
 	}
 	@media not screen and (hover: none) {
