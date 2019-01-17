@@ -2901,6 +2901,21 @@ li {
 }
 
 /**************/
+/* ERROR PAGE */
+/**************/
+
+.error-retry-form {
+	margin: 0.5em 0;
+}
+
+.error-retry-form input[type="submit"] {
+	border: 1px solid #484848;
+	font-weight: bold;
+	font-size: 1.125rem;
+	padding: 0.5em 1.25em;
+}
+
+/**************/
 /* ABOUT PAGE */
 /**************/
 
