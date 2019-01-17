@@ -70,7 +70,10 @@
 	       when (eq c #\>)
 	       do (progn
 		    (output-strings ">")
-		    (setf need-whitespace nil))
+		    (if (member element '("area" "base" "br" "col" "embed" "hr" "img" "input" "link" "meta" "param" "source" "track" "wbr")
+				:test #'string-equal)
+			(return nil)
+			(setf need-whitespace nil)))
 	       else when (eq c #\=)
 	       do (progn
 		    (output-strings "=\"")
