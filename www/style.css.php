@@ -580,6 +580,12 @@ a#inbox-indicator.new-messages:hover::before {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/fluid.gif")) ?>');
 }
 
+@media only screen and (max-width: 1220px) {
+	#width-selector {
+		display: none;
+	}
+}
+
 /*=----------------=*/
 /*= Hover tooltips =*/
 /*=----------------=*/
@@ -764,9 +770,9 @@ foreach ($content_width_settings as $name => $setting) {
 	visibility: visible;
 }
 
-/************************/
-/* NEW COMMENT QUICKNAV */
-/************************/
+/**********************/
+/* NEW COMMENT NAV UI */
+/**********************/
 
 #new-comment-nav-ui {
 	position: absolute;
@@ -779,6 +785,37 @@ foreach ($content_width_settings as $name => $setting) {
 }
 #new-comment-nav-ui.no-comments {
 	display: none;
+}
+
+@media only screen and (max-width: 1160px) {
+	#new-comment-nav-ui {
+		bottom: 180px;
+		right: -68px;
+	}
+}
+@media only screen and (max-width: 1080px) {
+	#new-comment-nav-ui {
+		right: -55px;
+	}
+}
+@media only screen and (max-width: 1040px) {
+	#new-comment-nav-ui {
+		right: -50px;
+	}
+}
+@media only screen and (max-width: 1020px) {
+	#new-comment-nav-ui {
+		right: -21px;
+	}
+	#new-comment-nav-ui .new-comments-count::before {
+		content: "";
+		position: absolute;
+		width: 100%;
+		height: calc(100% + 45px);
+		z-index: -1;
+		left: 0;
+		top: -22px;
+	}
 }
 
 /*=--------------------=*/
@@ -3803,19 +3840,9 @@ li {
 /* FOR NARROW SCREENS */
 /**********************/
 
-/*=----------------------------------------=*/
-@media only screen and (max-width: 1220px) {
-/*=----------------------------------------=*/
-	#width-selector {
-		display: none;
-	}
-/*=----------------------------------------=*/
-} @media only screen and (max-width: 1160px) {
-/*=----------------------------------------=*/
-	#new-comment-nav-ui {
-		bottom: 180px;
-		right: -68px;
-	}
+/*=--------------------------------------=*/
+@media only screen and (max-width: 1160px) {
+/*=--------------------------------------=*/
 	#theme-selector button::before {
 		right: unset;
 		left: 100%;
@@ -3835,12 +3862,6 @@ li {
 /*=----------------------------------------=*/
 } @media only screen and (max-width: 1080px) {
 /*=----------------------------------------=*/
-	#width-selector {
-		right: -30px;
-	}
-	#width-selector button {
-		display: block;
-	}
 	#text-size-adjustment-ui {
 		top: 112px;
 		right: -30px;
@@ -3874,9 +3895,6 @@ li {
 	#quick-nav-ui {
 		right: -54px;
 	}
-	#new-comment-nav-ui {
-		right: -55px;
-	}
 	#anti-kibitzer-toggle {
 		right: -54px;
 	}
@@ -3886,9 +3904,6 @@ li {
 	#quick-nav-ui {
 		right: -49px;
 	}
-	#new-comment-nav-ui {
-		right: -50px;
-	}
 	#anti-kibitzer-toggle {
 		right: -50px;
 	}
@@ -3897,18 +3912,6 @@ li {
 /*=----------------------------------------=*/
 	#quick-nav-ui {
 		right: -20px;
-	}
-	#new-comment-nav-ui {
-		right: -21px;
-	}
-	#new-comment-nav-ui .new-comments-count::before {
-		content: "";
-		position: absolute;
-		width: 100%;
-		height: calc(100% + 45px);
-		z-index: -1;
-		left: 0;
-		top: -22px;
 	}
 	#anti-kibitzer-toggle {
 		right: -20px;
