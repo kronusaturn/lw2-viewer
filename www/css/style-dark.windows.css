@@ -661,6 +661,32 @@ head.content-width-fluid + body > * {
 	display: none;
 }
 
+@media only screen and (max-width: 1160px) {
+	#theme-selector:hover::after {
+		content: "";
+		display: block;
+		position: absolute;
+		width: calc(6em - 7px);
+		height: calc(100% + 2px);
+		top: 0;
+		left: calc(100% + 1px);
+	}
+}
+@media only screen and (max-width: 1080px) {
+	#theme-selector {
+		top: 46px;
+		left: -44px;
+	}
+}
+@media only screen and (max-width: 1000px) {
+	#theme-selector {
+		left: -17px;
+		top: 120px;
+		padding: 3px 0;
+		max-width: 32px;
+	}
+}
+
 /*=----------------------=*/
 /*= Theme select buttons =*/
 /*=----------------------=*/
@@ -684,6 +710,12 @@ head.content-width-fluid + body > * {
 }	
 .theme-selector button:disabled {
 	cursor: auto;
+}
+
+@media only screen and (max-width: 1000px) {
+	#theme-selector button {
+		margin: 1px 4px;
+	}
 }
 
 /*=----------------------------=*/
@@ -748,6 +780,13 @@ head.content-width-fluid + body > * {
 	z-index: -1;
 }
 
+@media only screen and (max-width: 1160px) {
+	#theme-selector button::before {
+		right: unset;
+		left: 100%;
+	}
+}
+
 /************************/
 /* THEME TWEAKER TOGGLE */
 /************************/
@@ -770,6 +809,24 @@ head.content-width-fluid + body > * {
 }
 #theme-tweaker-toggle button:hover {
 	opacity: 1.0;
+}
+
+@media only screen and (max-width: 1080px) {
+	#theme-tweaker-toggle {
+		left: -44px;
+		top: 2px;
+	}
+	#theme-tweaker-toggle button {
+		height: 2em;
+		width: 2em;
+		padding: 7px;
+	}
+}
+@media only screen and (max-width: 1000px) {
+	#theme-tweaker-toggle {
+		top: 70px;
+		left: -21px;
+	}
 }
 
 /*******************/
@@ -4199,6 +4256,7 @@ li {
 /*=--------------------------------------=*/
 @media only screen and (max-width: 1160px) {
 /*=--------------------------------------=*/
+<<<<<<< HEAD
 >>>>>>> Minor refactor of content width CSS
 	#theme-selector button::before {
 		right: unset;
@@ -4213,6 +4271,8 @@ li {
 		top: 0;
 		left: calc(100% + 1px);
 	}
+=======
+>>>>>>> Media query rewrite, part VII
 	#anti-kibitzer-toggle {
 		bottom: 330px;
 	}
@@ -4246,19 +4306,6 @@ li {
 	}
 	#text-size-adjustment-ui::after {
 		display: none;
-	}
-	#theme-selector {
-		top: 46px;
-		left: -44px;
-	}
-	#theme-tweaker-toggle {
-		left: -44px;
-		top: 2px;
-	}
-	#theme-tweaker-toggle button {
-		height: 2em;
-		width: 2em;
-		padding: 7px;
 	}
 	#quick-nav-ui {
 		right: -54px;
@@ -4346,6 +4393,7 @@ li {
 /*=----------------------------------------=*/
 } @media only screen and (max-width: 1000px) {
 /*=----------------------------------------=*/
+<<<<<<< HEAD
 >>>>>>> Minor refactor of content width CSS
 	#theme-selector {
 		left: -17px;
@@ -4386,6 +4434,11 @@ li {
 }
 @media only screen and (max-width: 960px) and (min-width: 901px) {
 =======
+=======
+	#text-size-adjustment-ui {
+		right: -12px;
+	}
+>>>>>>> Media query rewrite, part VII
 /*=--------------------------------------------------------------=*/
 } @media only screen and (max-width: 960px) and (min-width: 901px) {
 /*=--------------------------------------------------------------=*/

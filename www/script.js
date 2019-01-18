@@ -3805,7 +3805,7 @@ function recomputeUIElementsContainerHeight(force = false) {
 			let bottomBarOffset = query("#bottom-bar").hasClass("decorative") ? 16 : 30;
 			query("#ui-elements-container").style.height = (query("#content").clientHeight <= window.innerHeight + bottomBarOffset) ? 
 															query("#content").clientHeight + "px" :
-															"100vh";
+															"";
 		} else {
 			query("#ui-elements-container").style.height = "";
 		}
