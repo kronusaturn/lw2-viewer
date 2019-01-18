@@ -28,7 +28,7 @@
                              (:file "links" :depends-on ("lmdb" "backend" "sites" "context"))
 			     (:static-file "../text-clean-regexps.js")
 			     (:static-file "../html-clean-regexps.js")
-                             (:file "clean-html" :depends-on ("utils" "links" "lmdb" "../text-clean-regexps.js" "../html-clean-regexps.js"))
+                             (:file "clean-html" :depends-on ("utils" "links" "lmdb" "context" "sites" "../text-clean-regexps.js" "../html-clean-regexps.js"))
                              (:file "lw2-login" :depends-on ("utils" "backend" "backend-modules" "context")))
                 :depends-on ())
                (:module "templates"

@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.clean-html
-  (:use #:cl #:alexandria #:split-sequence #:lw2.lmdb #:lw2.links #:lw2.utils)
+  (:use #:cl #:alexandria #:split-sequence #:lw2.lmdb #:lw2.links #:lw2.utils #:lw2.context #:lw2.sites)
   (:export #:clean-text #:clean-text-to-html #:clean-html #:clean-html*)
   (:unintern #:*text-clean-regexps* #:*html-clean-regexps*))
 
@@ -412,10 +412,12 @@
                                         (when
                                           (every (lambda (a) (if-let (attr (plump:attribute node a)) (ignore-errors (<= (parse-integer attr) 1)))) (list "width" "height"))
                                           (plump:remove-child node))
-					(let ((src (plump:attribute node "src")))
-					  (when
-					      (and (> (length src) 0) (string= "/" src :end2 1))
-					    (setf (plump:attribute node "src") (concatenate 'string "https://www.lesswrong.com" (plump:attribute node "src"))))))
+					(when (typep *current-site* 'alternate-frontend-site)
+					  (let ((src (plump:attribute node "src")))
+					    (when
+						(and (> (length src) 0) (string= "/" src :end2 1))
+					      (setf (plump:attribute node "src") (quri:render-uri
+										  (quri:merge-uris src (main-site-uri *current-site*))))))))
 				       ((tag-is node "p" "blockquote" "div")
 					(if (string-is-whitespace (plump:text node))
                                             (if (plump:get-elements-by-tag-name node "img")
