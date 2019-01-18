@@ -329,15 +329,19 @@
 
 (defun lw2-graphql-query-timeout-cached (query cache-db cache-key &key (revalidate t) force-revalidate)
     (multiple-value-bind (cached-result is-fresh) (with-cache-readonly-transaction (values (cache-get cache-db cache-key) (cache-is-fresh cache-db cache-key)))
-      (if (and cached-result (if force-revalidate (not revalidate) (or is-fresh (not revalidate))))
+      (if (and cached-result (not revalidate))
           (decode-graphql-json cached-result)
-          (let ((timeout (if cached-result (if force-revalidate nil 3) nil))
+          (let ((timeout (if cached-result
+			     (if force-revalidate nil 3)
+			     nil))
                 (thread (ensure-cache-update-thread query cache-db cache-key)))
             (decode-graphql-json
-              (handler-case
-                (sb-thread:join-thread thread :timeout timeout)
-                (t () (or cached-result
-                          (error "Failed to load ~A ~A and no cached version available." cache-db cache-key)))))))))
+	     (if (and cached-result (if force-revalidate (not revalidate) (or is-fresh (not revalidate))))
+		 cached-result
+		 (handler-case
+		     (sb-thread:join-thread thread :timeout timeout)
+		   (t () (or cached-result
+			     (error "Failed to load ~A ~A and no cached version available." cache-db cache-key))))))))))
 
 (define-backend-function lw2-query-string* (query-type return-type args fields &key with-total))
 
