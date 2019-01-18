@@ -1202,7 +1202,7 @@ signaled condition to OUT-STREAM."
            (assert new-post-id)
            (cache-put "post-markdown-source" new-post-id text)
            (ignore-errors (get-post-body post-id :force-revalidate t))
-           (redirect (if (cdr (assoc "draft" post-data :test #'equal))
+           (redirect (if (cdr (assoc :draft post-data))
                          (concatenate 'string (generate-post-link new-post-data) "?need-auth=y")
                          (generate-post-link new-post-data)))))))))
 
@@ -1264,7 +1264,7 @@ signaled condition to OUT-STREAM."
                                                                  comments-base-terms)
                                                           comments-index-fields)))
                    (:drafts
-                     (get-user-posts user-id :drafts t :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
+                     (get-user-posts user-id :drafts t :offset offset :limit (+ 1 (user-pref :items-per-page)) :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
                    (:conversations
                      (let ((conversations
                              (lw2-graphql-query (lw2-query-string :conversation :list
