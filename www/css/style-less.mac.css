@@ -26,12 +26,15 @@ body::before {
 	height: 100%;
 }
 
+<<<<<<< HEAD
 body.no-scroll {
 	overflow-y: scroll;
 	position: fixed;
 	width: 100%;
 }
 
+=======
+>>>>>>> Minor refactor of content width CSS
 /*=----------------------------=*/
 /*= Immediate children of body =*/
 /*=----------------------------=*/
@@ -39,7 +42,10 @@ body.no-scroll {
 body > * {
 	width: calc(100% - 300px);
 	min-width: 900px;
+<<<<<<< HEAD
 	max-width: 900px;
+=======
+>>>>>>> Minor refactor of content width CSS
 }
 #content {
 	margin: 0 auto;
@@ -138,6 +144,7 @@ body > * {
 	padding: 4px 0;
 }
 
+<<<<<<< HEAD
 #nav-item-sequences .nav-inner::before {
 	font-family: "Font Awesome", "Font Awesome 5 Free";
 	content: "\F5DB";
@@ -156,6 +163,8 @@ body > * {
 	}
 }
 
+=======
+>>>>>>> Minor refactor of content width CSS
 /*=------------=*/
 /*= Bottom bar =*/
 /*=------------=*/
@@ -182,7 +191,11 @@ h1.listing ~ #bottom-bar {
 
 #bottom-bar .nav-item a::before,
 #top-nav-bar a::before {
+<<<<<<< HEAD
 	font-family: "Font Awesome", "Font Awesome 5 Free";
+=======
+	font-family: Font Awesome;
+>>>>>>> Minor refactor of content width CSS
 	font-weight: 900;
 	font-size: 0.8em;
 	position: relative;
@@ -269,7 +282,11 @@ h1.listing ~ #bottom-bar {
 }
 #nav-item-search form::before {
 	content: "\F002";
+<<<<<<< HEAD
 	font-family: "Font Awesome", "Font Awesome 5 Free";
+=======
+	font-family: Font Awesome;
+>>>>>>> Minor refactor of content width CSS
 	font-weight: 900;
 	display: inline-block;
 	vertical-align: top;
@@ -307,7 +324,11 @@ h1.listing ~ #bottom-bar {
 }
 #inbox-indicator::before {
 	content: "\F0E0";
+<<<<<<< HEAD
 	font-family: "Font Awesome", "Font Awesome 5 Free";
+=======
+	font-family: "Font Awesome";
+>>>>>>> Minor refactor of content width CSS
 	color: #bbb;
 	font-size: 1.1875rem;
 	position: absolute;
@@ -368,7 +389,11 @@ a#inbox-indicator.new-messages:hover::before {
 	margin-left: 1.5em;
 }
 .page-toolbar .button::before {
+<<<<<<< HEAD
 	font-family: "Font Awesome", "Font Awesome 5 Free";
+=======
+	font-family: "Font Awesome";
+>>>>>>> Minor refactor of content width CSS
 	font-size: 0.9em;
 	padding-right: 0.3em;
 }
@@ -389,6 +414,7 @@ a#inbox-indicator.new-messages:hover::before {
 	content: '\F2F5';
 	font-weight: 900;
 }
+<<<<<<< HEAD
 .ignore-button::before {
 	content: "\F070";
 	font-weight: 400;
@@ -397,6 +423,8 @@ a#inbox-indicator.new-messages:hover::before {
 	content: "\F06E";
 	font-weight: 400;
 }
+=======
+>>>>>>> Minor refactor of content width CSS
 .rss::before {
 	content: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIj8+DQo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPiANCjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiIGlkPSJSU1NpY29uIiB2aWV3Qm94PSIwIDAgMjU2IDI1NiI+DQo8ZGVmcz4NCjxsaW5lYXJHcmFkaWVudCB4MT0iMC4wODUiIHkxPSIwLjA4NSIgeDI9IjAuOTE1IiB5Mj0iMC45MTUiIGlkPSJSU1NnIj4NCjxzdG9wICBvZmZzZXQ9IjAuMCIgc3RvcC1jb2xvcj0iI0UzNzAyRCIvPjxzdG9wICBvZmZzZXQ9IjAuMTA3MSIgc3RvcC1jb2xvcj0iI0VBN0QzMSIvPg0KPHN0b3AgIG9mZnNldD0iMC4zNTAzIiBzdG9wLWNvbG9yPSIjRjY5NTM3Ii8+PHN0b3AgIG9mZnNldD0iMC41IiBzdG9wLWNvbG9yPSIjRkI5RTNBIi8+DQo8c3RvcCAgb2Zmc2V0PSIwLjcwMTYiIHN0b3AtY29sb3I9IiNFQTdDMzEiLz48c3RvcCAgb2Zmc2V0PSIwLjg4NjYiIHN0b3AtY29sb3I9IiNERTY0MkIiLz4NCjxzdG9wICBvZmZzZXQ9IjEuMCIgc3RvcC1jb2xvcj0iI0Q5NUIyOSIvPg0KPC9saW5lYXJHcmFkaWVudD4NCjwvZGVmcz4NCjxyZWN0IHdpZHRoPSIyNTYiIGhlaWdodD0iMjU2IiByeD0iNTUiIHJ5PSI1NSIgeD0iMCIgIHk9IjAiICBmaWxsPSIjQ0M1RDE1Ii8+DQo8cmVjdCB3aWR0aD0iMjQ2IiBoZWlnaHQ9IjI0NiIgcng9IjUwIiByeT0iNTAiIHg9IjUiICB5PSI1IiAgZmlsbD0iI0Y0OUM1MiIvPg0KPHJlY3Qgd2lkdGg9IjIzNiIgaGVpZ2h0PSIyMzYiIHJ4PSI0NyIgcnk9IjQ3IiB4PSIxMCIgeT0iMTAiIGZpbGw9InVybCgjUlNTZykiLz4NCjxjaXJjbGUgY3g9IjY4IiBjeT0iMTg5IiByPSIyNCIgZmlsbD0iI0ZGRiIvPg0KPHBhdGggZD0iTTE2MCAyMTNoLTM0YTgyIDgyIDAgMCAwIC04MiAtODJ2LTM0YTExNiAxMTYgMCAwIDEgMTE2IDExNnoiIGZpbGw9IiNGRkYiLz4NCjxwYXRoIGQ9Ik0xODQgMjEzQTE0MCAxNDAgMCAwIDAgNDQgNzMgViAzOGExNzUgMTc1IDAgMCAxIDE3NSAxNzV6IiBmaWxsPSIjRkZGIi8+DQo8L3N2Zz4NCg==');
 	display: inline-block;
@@ -459,9 +487,12 @@ a#inbox-indicator.new-messages:hover::before {
 	grid-column: 2;
 	align-self: start;
 }
+<<<<<<< HEAD
 #content.sequences-page > .sublevel-nav {
 	grid-row: unset;
 }
+=======
+>>>>>>> Minor refactor of content width CSS
 .sublevel-nav .sublevel-item {
 	flex: 0 0 6em;
 	padding: 0.125em 0.5em;
@@ -567,6 +598,15 @@ a#inbox-indicator.new-messages:hover::before {
 	background-image: url('data:image/gif;base64,R0lGODdhFAAUAJEAAAAAAKqqqv///wAAACH5BAkAAAMALAAAAAAUABQAAAIwnI+py+0/ApIwUGOfvTGzzYELGIoTiZpdylJte7xoQp7beMc5XnL4CYlMgsSisVEAADs=');
 }
 
+<<<<<<< HEAD
+=======
+@media only screen and (max-width: 1220px) {
+	#width-selector {
+		display: none;
+	}
+}
+
+>>>>>>> Minor refactor of content width CSS
 /*=----------------=*/
 /*= Hover tooltips =*/
 /*=----------------=*/
@@ -595,7 +635,11 @@ head.content-width-wide + body > * {
 	max-width: 1150px;
 }
 head.content-width-fluid + body > * {
+<<<<<<< HEAD
 	max-width: calc(100% - 300px);
+=======
+	max-width: unset;
+>>>>>>> Minor refactor of content width CSS
 }
 
 /******************/
@@ -714,7 +758,11 @@ head.content-width-fluid + body > * {
 	left: -75px;
 }
 #theme-tweaker-toggle button {
+<<<<<<< HEAD
 	font-family: "Font Awesome", "Font Awesome 5 Free";
+=======
+	font-family: Font Awesome;
+>>>>>>> Minor refactor of content width CSS
 	font-weight: 900;
 	font-size: 1.25rem;
 	opacity: 0.4;
@@ -734,7 +782,11 @@ head.content-width-fluid + body > * {
 	bottom: 20px;
 }
 #quick-nav-ui a {
+<<<<<<< HEAD
 	font-family: "Font Awesome", "Font Awesome 5 Free";
+=======
+	font-family: 'Font Awesome';
+>>>>>>> Minor refactor of content width CSS
 	font-weight: 900;
 	font-size: 1.5rem;
 	line-height: 1.7;
@@ -754,9 +806,15 @@ head.content-width-fluid + body > * {
 	visibility: visible;
 }
 
+<<<<<<< HEAD
 /************************/
 /* NEW COMMENT QUICKNAV */
 /************************/
+=======
+/**********************/
+/* NEW COMMENT NAV UI */
+/**********************/
+>>>>>>> Minor refactor of content width CSS
 
 #new-comment-nav-ui {
 	position: absolute;
@@ -771,6 +829,40 @@ head.content-width-fluid + body > * {
 	display: none;
 }
 
+<<<<<<< HEAD
+=======
+@media only screen and (max-width: 1160px) {
+	#new-comment-nav-ui {
+		bottom: 180px;
+		right: -68px;
+	}
+}
+@media only screen and (max-width: 1080px) {
+	#new-comment-nav-ui {
+		right: -55px;
+	}
+}
+@media only screen and (max-width: 1040px) {
+	#new-comment-nav-ui {
+		right: -50px;
+	}
+}
+@media only screen and (max-width: 1020px) {
+	#new-comment-nav-ui {
+		right: -21px;
+	}
+	#new-comment-nav-ui .new-comments-count::before {
+		content: "";
+		position: absolute;
+		width: 100%;
+		height: calc(100% + 45px);
+		z-index: -1;
+		left: 0;
+		top: -22px;
+	}
+}
+
+>>>>>>> Minor refactor of content width CSS
 /*=--------------------=*/
 /*= New comments count =*/
 /*=--------------------=*/
@@ -798,7 +890,11 @@ head.content-width-fluid + body > * {
 
 #new-comment-nav-ui .new-comment-sequential-nav-button {
 	font-size: 1.75rem;
+<<<<<<< HEAD
 	font-family: "Font Awesome", "Font Awesome 5 Free";
+=======
+	font-family: 'Font Awesome';
+>>>>>>> Minor refactor of content width CSS
 	font-weight: 900;
 	width: 1.5em;
 	z-index: 5001;
@@ -832,6 +928,61 @@ head.content-width-fluid + body > * {
 	display: none;
 }
 
+<<<<<<< HEAD
+=======
+@media only screen and (max-width: 1440px) {
+	#hns-date-picker {
+		right: -81px;
+		padding: 8px 10px 10px 10px;
+		bottom: 62px;
+		display: none;
+	}
+	#hns-date-picker::before {
+		content: "";
+		position: absolute;
+		display: block;
+		z-index: -1;
+		height: calc(100% + 2px);
+		top: -1px;
+		left: -1px;
+		width: 50%;
+	}
+}
+@media only screen and (max-width: 1160px) {
+	#hns-date-picker {
+		bottom: 200px;
+		right: -36px;
+	}
+	#hns-date-picker::before {
+		width: calc(100% - 35px);
+	}
+}
+@media only screen and (max-width: 1080px) {
+	#hns-date-picker {
+		right: -23px;
+	}
+	#hns-date-picker::before {
+		width: calc(100% - 22px);
+	}
+}
+@media only screen and (max-width: 1040px) {
+	#hns-date-picker {
+		right: -18px;
+	}
+	#hns-date-picker::before {
+		width: calc(100% - 17px);
+	}
+}
+@media only screen and (max-width: 1020px) {
+	#hns-date-picker {
+		right: 19px;
+	}
+	#hns-date-picker::before {
+		width: 100%;
+	}
+}
+
+>>>>>>> Minor refactor of content width CSS
 /*=---------------=*/
 /*= "Since" label =*/
 /*=---------------=*/
@@ -871,7 +1022,11 @@ head.content-width-fluid + body > * {
 }
 #anti-kibitzer-toggle button::before,
 #anti-kibitzer-toggle button::after {
+<<<<<<< HEAD
 	font-family: "Font Awesome", "Font Awesome 5 Free";
+=======
+	font-family: Font Awesome;
+>>>>>>> Minor refactor of content width CSS
 }
 #anti-kibitzer-toggle button::before {
 	content: "\F06E";	
@@ -915,7 +1070,11 @@ head.content-width-fluid + body > * {
 
 #text-size-adjustment-ui button {
 	font-weight: 900;
+<<<<<<< HEAD
 	font-family: "Font Awesome", "Font Awesome 5 Free";
+=======
+	font-family: Font Awesome;
+>>>>>>> Minor refactor of content width CSS
 	font-size: 0.75rem;
 	width: 24px;
 	height: 24px;
@@ -973,7 +1132,11 @@ head.content-width-fluid + body > * {
 
 #comments-view-mode-selector a {
 	display: block;
+<<<<<<< HEAD
 	font-family: "Font Awesome", "Font Awesome 5 Free";
+=======
+	font-family: Font Awesome;
+>>>>>>> Minor refactor of content width CSS
 	font-size: 1.25rem;
 	text-align: center;
 	opacity: 0.4;
@@ -996,6 +1159,7 @@ head.content-width-fluid + body > * {
 	cursor: default;
 }
 
+<<<<<<< HEAD
 /*****************/
 /* KEYBOARD HELP */
 /*****************/
@@ -1145,6 +1309,8 @@ head.content-width-fluid + body > * {
 	flex-basis: 10%;
 }
 
+=======
+>>>>>>> Minor refactor of content width CSS
 /************/
 /* ARCHIVES */
 /************/
@@ -1237,7 +1403,11 @@ h1.listing a[href^="http"] {
 	}	
 	h1.listing:focus-within::before {
 		content: "\F105";
+<<<<<<< HEAD
 		font-family: "Font Awesome", "Font Awesome 5 Free";
+=======
+		font-family: Font Awesome;
+>>>>>>> Minor refactor of content width CSS
 		display: block;
 		position: absolute;
 		left: -0.75em;
@@ -1308,6 +1478,7 @@ h1.listing + .post-meta .read-time {
 	cursor: default;
 }
 
+<<<<<<< HEAD
 /*************/
 /* SEQUENCES */
 /*************/
@@ -1330,6 +1501,8 @@ article {
 	max-width: 100%;
 }
 
+=======
+>>>>>>> Minor refactor of content width CSS
 /**************/
 /* USER PAGES */
 /**************/
@@ -1363,10 +1536,13 @@ article {
 	align-self: end;
 }
 
+<<<<<<< HEAD
 #content.user-page .user-stats .karma-type {
 	white-space: nowrap;
 }
 
+=======
+>>>>>>> Minor refactor of content width CSS
 /*=----------------------=*/
 /*= Expanded vs. compact =*/
 /*=----------------------=*/
@@ -1487,8 +1663,12 @@ article {
 /* SEARCH RESULTS */
 /******************/
 
+<<<<<<< HEAD
 #content.search-results-page h1.listing,
 #content.sequence-page h1.listing {
+=======
+#content.search-results-page h1.listing {
+>>>>>>> Minor refactor of content width CSS
 	font-size: 1.625em;
 }
 
@@ -1714,6 +1894,7 @@ article {
 	font-size: 1.0625em;
 	white-space: nowrap;
 }
+<<<<<<< HEAD
 .body-text {
 	overflow-wrap: break-word;
 	text-align: justify;
@@ -1730,6 +1911,22 @@ article {
 	hyphens: auto;
 }
 
+=======
+.post-body,
+.comment-body {
+	overflow-wrap: break-word;
+	text-align: justify;
+}
+.post-body p,
+.comment-body p {
+	margin: 1em 0;
+}
+.retracted .post-body,
+.retracted .comment-body {
+	text-decoration: line-through;
+}
+
+>>>>>>> Minor refactor of content width CSS
 /*************/
 /* POST-META */
 /*************/
@@ -1752,10 +1949,16 @@ article {
 	margin: 0;
 	visibility: hidden;
 }
+<<<<<<< HEAD
 .post-meta .post-section::before,
 .comment-meta .alignment-forum {
 	visibility: visible;
 	font-family: "Font Awesome", "Font Awesome 5 Free";
+=======
+.post-meta .post-section::before {
+	visibility: visible;
+	font-family: "Font Awesome";
+>>>>>>> Minor refactor of content width CSS
 	font-weight: 900;
 }
 .post-section.frontpage::before {
@@ -1773,10 +1976,16 @@ article {
 .post-section.draft::before {
 	content: "\F15B";
 }
+<<<<<<< HEAD
 .post-section.alignment-forum::before,
 .comment-meta .alignment-forum {
 	content: "AF";
 	font-family: Concourse, 'Changa One';
+=======
+.post-section.alignment-forum::before {
+	content: "AF";
+	font-family: Concourse;
+>>>>>>> Minor refactor of content width CSS
 }
 
 /*= Karma controls hover tooltips =*/
@@ -1828,6 +2037,7 @@ article {
 	.comment-item .karma .karma-value:hover::after {
 		z-index: 5001;
 	}
+<<<<<<< HEAD
 
 	.author {
 		position: relative;
@@ -1852,6 +2062,8 @@ article {
 	.author:hover::before {
 		opacity: 1.0;
 	}
+=======
+>>>>>>> Minor refactor of content width CSS
 }
 
 /*********/
@@ -1905,7 +2117,11 @@ h1.post-title {
 }
 .post.link-post a.link-post-link::before {
 	content: "\F0C1";
+<<<<<<< HEAD
 	font-family: "Font Awesome", "Font Awesome 5 Free";
+=======
+	font-family: Font Awesome;
+>>>>>>> Minor refactor of content width CSS
 	font-weight: 900;
 	font-size: 0.75em;
 	position: relative;
@@ -2065,7 +2281,11 @@ a.comment-parent-link:hover {
 }
 a.comment-parent-link::before {
 	content: "\F062";
+<<<<<<< HEAD
 	font-family: "Font Awesome", "Font Awesome 5 Free";
+=======
+	font-family: "Font Awesome";
+>>>>>>> Minor refactor of content width CSS
 	font-weight: 900;
 	font-size: 0.75rem;
 	line-height: 1;
@@ -2266,15 +2486,22 @@ a.comment-parent-link:hover::after {
 #content.compact > .comment-thread .comment-body {
 	font-size: 1.0625rem;
 }
+<<<<<<< HEAD
 #content.compact > .comment-thread .comment-item,
 #content.index-page .comment-item.ignored,
 #content.inbox-user-page .comment-item.ignored {
+=======
+#content.compact > .comment-thread .comment-item {
+>>>>>>> Minor refactor of content width CSS
 	max-height: 61px;
 	margin-top: 1em;
 	overflow: hidden;
 	position: relative;
+<<<<<<< HEAD
 }
 #content.compact > .comment-thread .comment-item {
+=======
+>>>>>>> Minor refactor of content width CSS
 	pointer-events: none;
 }
 #content.compact > .comment-thread .comment-item::after {
@@ -2402,7 +2629,11 @@ a.comment-parent-link:hover::after {
 /***********************************/
 
 .comment-minimize-button {
+<<<<<<< HEAD
 	font-family: "Font Awesome", "Font Awesome 5 Free";
+=======
+	font-family: Font Awesome;
+>>>>>>> Minor refactor of content width CSS
 	font-weight: 900;
 	font-size: 1.25rem;
 	line-height: 1;
@@ -2430,6 +2661,7 @@ a.comment-parent-link:hover::after {
 	display: none;
 }
 
+<<<<<<< HEAD
 /*****************/
 /* IGNORE SYSTEM */
 /*****************/
@@ -2442,6 +2674,8 @@ a.comment-parent-link:hover::after {
 	text-decoration: line-through;
 }
 
+=======
+>>>>>>> Minor refactor of content width CSS
 /***********************************/
 /* INDIVIDUAL COMMENT THREAD PAGES */
 /***********************************/
@@ -2462,7 +2696,11 @@ a.comment-parent-link:hover::after {
 	margin: 0;
 }
 .vote {
+<<<<<<< HEAD
 	font-family: "Font Awesome", "Font Awesome 5 Free";
+=======
+	font-family: Font Awesome;
+>>>>>>> Minor refactor of content width CSS
 	font-weight: 900;
 	border: none;
 }
@@ -2516,7 +2754,11 @@ a.comment-parent-link:hover::after {
 	z-index: 1;
 }
 .comment-controls .cancel-comment-button::before {
+<<<<<<< HEAD
 	font-family: "Font Awesome", "Font Awesome 5 Free";
+=======
+	font-family: Font Awesome;
+>>>>>>> Minor refactor of content width CSS
 	margin-right: 3px;
 	content: '\F00D';
 	font-weight: 900;
@@ -2530,7 +2772,11 @@ a.comment-parent-link:hover::after {
 	padding: 1px 6px;
 }
 .comment-controls .action-button::before {
+<<<<<<< HEAD
 	font-family: "Font Awesome", "Font Awesome 5 Free";
+=======
+	font-family: Font Awesome;
+>>>>>>> Minor refactor of content width CSS
 	margin-right: 3px;
 }
 .new-comment-button {
@@ -2565,7 +2811,11 @@ a.comment-parent-link:hover::after {
 .comment-controls .edit-button::before,
 .edit-post-link::before {
 	content: '\F303';
+<<<<<<< HEAD
 	font-family: "Font Awesome", "Font Awesome 5 Free";
+=======
+	font-family: "Font Awesome";
+>>>>>>> Minor refactor of content width CSS
 	font-weight: 900;
 	font-size: 0.75em;
 	position: relative;
@@ -2703,7 +2953,11 @@ a.comment-parent-link:hover::after {
 }
 #markdown-hints-checkbox + label::before {
 	content: '\F059';
+<<<<<<< HEAD
 	font-family: "Font Awesome", "Font Awesome 5 Free";
+=======
+	font-family: Font Awesome;
+>>>>>>> Minor refactor of content width CSS
 	font-weight: 900;
 	margin-right: 3px;
 }
@@ -2788,7 +3042,11 @@ a.comment-parent-link:hover::after {
 }
 #edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
 	content: "";
+<<<<<<< HEAD
 	font-family: "Font Awesome", "Font Awesome 5 Free";
+=======
+	font-family: Font Awesome;
+>>>>>>> Minor refactor of content width CSS
 	font-size: 1.375rem;
 	line-height: 0.7;
 	text-indent: 1px;
@@ -2884,18 +3142,34 @@ input[type='submit'] {
 /* HEADINGS */
 /************/
 
+<<<<<<< HEAD
 .body-text h1,
 .body-text h2,
 .body-text h3,
 .body-text h4,
 .body-text h5,
 .body-text h6 {
+=======
+.post-body h1,
+.post-body h2,
+.post-body h3,
+.post-body h4,
+.post-body h5,
+.post-body h6,
+.comment-body h1,
+.comment-body h2,
+.comment-body h3,
+.comment-body h4,
+.comment-body h5,
+.comment-body h6 {
+>>>>>>> Minor refactor of content width CSS
 	line-height: 1.1;
 	margin: 1em 0 0.75em 0;
 	text-align: left;
 }
 
 .post-body h5,
+<<<<<<< HEAD
 .post-body h6 {
 	font-size: 1em;
 }
@@ -2912,10 +3186,14 @@ input[type='submit'] {
 	font-size: 2.1em;
 }
 
+=======
+.post-body h6,
+>>>>>>> Minor refactor of content width CSS
 .comment-body h5,
 .comment-body h6 {
 	font-size: 1em;
 }
+<<<<<<< HEAD
 .comment-body h4 {
 	font-size: 1.15em;
 }
@@ -2927,6 +3205,23 @@ input[type='submit'] {
 }
 .comment-body h1 {
 	font-size: 1.75em;
+=======
+.post-body h4,
+.comment-body h4 {
+	font-size: 1.2em;
+}
+.post-body h3,
+.comment-body h3 {
+	font-size: 1.4em;
+}
+.post-body h2,
+.comment-body h2 {
+	font-size: 1.75em;
+}
+.post-body h1,
+.comment-body h1 {
+	font-size: 2.1em;
+>>>>>>> Minor refactor of content width CSS
 }
 
 /**********/
@@ -2991,21 +3286,42 @@ div.imgonly {
 /* TABLES */
 /**********/
 
+<<<<<<< HEAD
 .body-text table {
+=======
+.post-body table,
+.comment-body table {
+>>>>>>> Minor refactor of content width CSS
 	border-collapse: collapse;
 	font-family: Inconsolata, Menlo, monospace;
 	font-size: 0.875em;
 }
+<<<<<<< HEAD
 .body-text table th,
 .body-text table td {
+=======
+.post-body table th,
+.post-body table td,
+.comment-body table th,
+.comment-body table td {
+>>>>>>> Minor refactor of content width CSS
 	text-align: left;
 	padding: 4px 6px;
 	line-height: 1.3;
 }
+<<<<<<< HEAD
 .body-text table td:nth-of-type(n+2) {
 	text-align: right;
 }
 .body-text table caption {
+=======
+.post-body table td:nth-of-type(n+2),
+.comment-body table td:nth-of-type(n+2) {
+	text-align: right;
+}
+.post-body table caption,
+.comment-body table caption {
+>>>>>>> Minor refactor of content width CSS
 	margin: 0 0 0.25em 0;
 	font-weight: bold;
 	font-size: 1.125em;
@@ -3038,9 +3354,12 @@ code {
 pre {
 	white-space: pre-wrap;
 }
+<<<<<<< HEAD
 .body-text pre {
 	text-align: left;
 }
+=======
+>>>>>>> Minor refactor of content width CSS
 code {
 	font-size: 0.95em;
 	display: inline-block;
@@ -3117,8 +3436,15 @@ li {
 	margin-bottom: 0.5em;
 }
 
+<<<<<<< HEAD
 .body-text ol p,
 .body-text ul p {
+=======
+.post-body ol p,
+.post-body ul p,
+.comment-body ol p,
+.comment-body ul p {
+>>>>>>> Minor refactor of content width CSS
 	margin: 0.5em 0;
 }
 
@@ -3144,6 +3470,7 @@ li {
 	list-style: none;
 	padding: 0;
 }
+<<<<<<< HEAD
 .post-body ul:not(.contents-list) > li {
 	position: relative;
 	padding: 0 0 0 1.75em;
@@ -3162,6 +3489,20 @@ li {
 .post-body ul:not(.contents-list) > li ul > li::before {
 	width: 1.5em;
 }
+=======
+.post-body ul:not(.contents-list) li {
+	position: relative;
+	padding: 0 0 0 2.5em;
+	margin: 0.25em 0 0 0;
+}
+.post-body ul:not(.contents-list) li::before {
+	content: "•";
+	position: absolute;
+	width: 2em;
+	text-align: right;
+	left: 0;
+}
+>>>>>>> Minor refactor of content width CSS
 .post-body li > ul:first-child > li {
 	padding-left: 0;
 }
@@ -3170,6 +3511,7 @@ li {
 }
 
 /**************/
+<<<<<<< HEAD
 /* ERROR PAGE */
 /**************/
 
@@ -3185,6 +3527,8 @@ li {
 }
 
 /**************/
+=======
+>>>>>>> Minor refactor of content width CSS
 /* ABOUT PAGE */
 /**************/
 
@@ -3260,10 +3604,13 @@ li {
 /* IMAGE FOCUS */
 /***************/
 
+<<<<<<< HEAD
 /*=--------------=*/
 /*= Hover styles =*/ 
 /*=--------------=*/
 
+=======
+>>>>>>> Minor refactor of content width CSS
 #content img:hover,
 #images-overlay img:hover {
 	filter: drop-shadow(0 0 3px #777);
@@ -3274,17 +3621,23 @@ li {
 	transform: scale(0.975);
 }
 
+<<<<<<< HEAD
 /*=---------=*/
 /*= Overlay =*/
 /*=---------=*/
 
+=======
+>>>>>>> Minor refactor of content width CSS
 #image-focus-overlay {
 	position: fixed;
 	top: 0;
 	right: 0;
 	bottom: 0;
 	left: 0;
+<<<<<<< HEAD
 	z-index: 2;
+=======
+>>>>>>> Minor refactor of content width CSS
 	display: none;
 	cursor: zoom-out;
 }
@@ -3312,6 +3665,7 @@ li {
 	transform: translateX(-50%) translateY(-50%);
 }
 
+<<<<<<< HEAD
 /*=-------------------=*/
 /*= Single-image mode =*/
 /*=-------------------=*/
@@ -3377,6 +3731,8 @@ li {
 /*= Help overlay =*/
 /*=--------------=*/
 
+=======
+>>>>>>> Minor refactor of content width CSS
 #image-focus-overlay .help-overlay {
 	position: absolute;
 	display: flex;
@@ -3390,7 +3746,10 @@ li {
 	overflow: hidden;
 	white-space: nowrap;
 	color: transparent;
+<<<<<<< HEAD
 	cursor: default;
+=======
+>>>>>>> Minor refactor of content width CSS
 	visibility: hidden;
 	transition: 
 		visibility 1s ease,
@@ -3399,8 +3758,13 @@ li {
 		bottom 0.3s ease;
 }
 #image-focus-overlay .help-overlay:hover {
+<<<<<<< HEAD
 	max-width: 24em;
 	max-height: 14em;
+=======
+	max-width: 420px;
+	max-height: 300px;
+>>>>>>> Minor refactor of content width CSS
 	background-color: rgba(0,0,0,0.85);
 	color: #fff;
 	visibility: visible;
@@ -3412,7 +3776,11 @@ li {
 
 #image-focus-overlay .help-overlay::after {
 	content: "\F128";
+<<<<<<< HEAD
 	font-family: "Font Awesome", "Font Awesome 5 Free";
+=======
+	font-family: Font Awesome;
+>>>>>>> Minor refactor of content width CSS
 	font-weight: 900;
 	font-size: 2rem;
 	position: absolute;
@@ -3446,10 +3814,13 @@ li {
 	bottom: -2em;
 }
 
+<<<<<<< HEAD
 /*=--------------=*/
 /*= Slide number =*/
 /*=--------------=*/
 
+=======
+>>>>>>> Minor refactor of content width CSS
 #image-focus-overlay .image-number {
 	position: absolute;
 	z-index: 2;
@@ -3483,10 +3854,13 @@ li {
 	bottom: -1.25em;
 }
 
+<<<<<<< HEAD
 /*=-------------------=*/
 /*= Slideshow buttons =*/
 /*=-------------------=*/
 
+=======
+>>>>>>> Minor refactor of content width CSS
 #image-focus-overlay .slideshow-buttons {
 	position: absolute;
 	top: 0;
@@ -3499,7 +3873,11 @@ li {
 	pointer-events: none;
 }
 #image-focus-overlay .slideshow-buttons button {
+<<<<<<< HEAD
 	font-family: "Font Awesome", "Font Awesome 5 Free";
+=======
+	font-family: Font Awesome;
+>>>>>>> Minor refactor of content width CSS
 	font-weight: 900;
 	font-size: 3rem;
 	padding: 0.5em;
@@ -3537,10 +3915,13 @@ li {
 	left: 1.75em;
 }
 
+<<<<<<< HEAD
 /*=-----------------=*/
 /*= Background blur =*/
 /*=-----------------=*/
 
+=======
+>>>>>>> Minor refactor of content width CSS
 .blurred {
 	filter: blur(3px);
 }
@@ -3582,7 +3963,11 @@ li {
 	display: table-cell;
 	width: 100%;
 	vertical-align: middle;
+<<<<<<< HEAD
 	font-family: "Font Awesome", "Font Awesome 5 Free";
+=======
+	font-family: Font Awesome;
+>>>>>>> Minor refactor of content width CSS
 	font-weight: 900;
 	font-size: 1.25rem;
 	opacity: 0.4;
@@ -3600,7 +3985,11 @@ li {
 	margin: 0;
 }
 .qualified-linking label {
+<<<<<<< HEAD
 	font-family: "Font Awesome", "Font Awesome 5 Free";
+=======
+	font-family: Font Awesome;
+>>>>>>> Minor refactor of content width CSS
 	font-weight: 900;
 	font-size: 1rem;
 	padding: 0 0.5em;
@@ -3767,6 +4156,7 @@ li {
 /* FOR NARROW SCREENS */
 /**********************/
 
+<<<<<<< HEAD
 @media only screen and (max-width: 1440px) {
 	#hns-date-picker {
 		right: -81px;
@@ -3802,6 +4192,11 @@ li {
 	#hns-date-picker::before {
 		width: calc(100% - 35px);
 	}
+=======
+/*=--------------------------------------=*/
+@media only screen and (max-width: 1160px) {
+/*=--------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	#theme-selector button::before {
 		right: unset;
 		left: 100%;
@@ -3818,6 +4213,7 @@ li {
 	#anti-kibitzer-toggle {
 		bottom: 330px;
 	}
+<<<<<<< HEAD
 }
 @media only screen and (max-width: 1080px) {
 	#width-selector {
@@ -3826,6 +4222,11 @@ li {
 	#width-selector button {
 		display: block;
 	}
+=======
+/*=----------------------------------------=*/
+} @media only screen and (max-width: 1080px) {
+/*=----------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	#text-size-adjustment-ui {
 		top: 112px;
 		right: -30px;
@@ -3859,6 +4260,7 @@ li {
 	#quick-nav-ui {
 		right: -54px;
 	}
+<<<<<<< HEAD
 	#new-comment-nav-ui {
 		right: -55px;
 	}
@@ -3916,6 +4318,32 @@ li {
 	}
 }
 @media only screen and (max-width: 1000px) {
+=======
+	#anti-kibitzer-toggle {
+		right: -54px;
+	}
+/*=----------------------------------------=*/
+} @media only screen and (max-width: 1040px) {
+/*=----------------------------------------=*/
+	#quick-nav-ui {
+		right: -49px;
+	}
+	#anti-kibitzer-toggle {
+		right: -50px;
+	}
+/*=----------------------------------------=*/
+} @media only screen and (max-width: 1020px) {
+/*=----------------------------------------=*/
+	#quick-nav-ui {
+		right: -20px;
+	}
+	#anti-kibitzer-toggle {
+		right: -20px;
+	}
+/*=----------------------------------------=*/
+} @media only screen and (max-width: 1000px) {
+/*=----------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	#theme-selector {
 		left: -17px;
 		top: 120px;
@@ -3928,6 +4356,7 @@ li {
 	#text-size-adjustment-ui {
 		right: -12px;
 	}
+<<<<<<< HEAD
 	@media not screen and (hover: none) {
 		#quick-nav-ui,
 		#new-comment-nav-ui,
@@ -3944,18 +4373,32 @@ li {
 			opacity: 1.0;
 		}
 	}
+=======
+>>>>>>> Minor refactor of content width CSS
 	#theme-tweaker-toggle {
 		top: 70px;
 		left: -21px;
 	}
+<<<<<<< HEAD
 }
 @media only screen and (max-width: 960px) and (min-width: 901px) {
+=======
+/*=--------------------------------------------------------------=*/
+} @media only screen and (max-width: 960px) and (min-width: 901px) {
+/*=--------------------------------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	body {
 		overflow-x: hidden;
 		margin: 0 -5px;
 	}
+<<<<<<< HEAD
 }
 @media only screen and (max-width: 900px) {
+=======
+/*=---------------------------------------=*/
+} @media only screen and (max-width: 900px) {
+/*=---------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	#content,
 	#images-overlay,
 	#ui-elements-container {
@@ -4020,7 +4463,13 @@ li {
 /* MOBILE UI ELEMENTS */
 /*====================*/
 
+<<<<<<< HEAD
 @media only screen and (hover: none), only screen and (max-width: 960px) {
+=======
+/*=+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=*/
+@media only screen and (hover: none), only screen and (max-width: 960px) {
+/*=+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=*/
+>>>>>>> Minor refactor of content width CSS
 	#ui-elements-container {
 		height: unset;
 		position: unset;
@@ -4092,6 +4541,7 @@ li {
 	}
 }
 
+<<<<<<< HEAD
 @media only screen and (hover: none), only screen and (max-width: 960px) {
 
 /*================*/
@@ -4203,6 +4653,121 @@ li {
 	}
 }
 @supports (width: -moz-fit-content) {
+=======
+/*=+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=*/
+@media only screen and (hover: none), only screen and (max-width: 960px) {
+/*=+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=*/
+
+	/*================*/
+	/* THEME SELECTOR */
+	/*================*/
+
+	#theme-selector {
+		display: flex;
+		flex-flow: column;
+		width: calc(100vw - 20px);
+		max-width: 360px;
+		padding: 0 0 3px 0;
+		overflow: hidden;
+		max-height: 0;
+		transition: 
+			top 0.2s ease,
+			max-height 0.2s ease,
+			visibility 0.2s ease;
+		top: calc(100% + 10px);
+		left: 0;
+		right: 0;
+		margin: auto;
+	}
+	#theme-selector.engaged {
+		max-height: 1000px;
+		top: 10px;
+		z-index: 10001;
+	}
+	#theme-selector::before {
+		content: "Select theme";
+		white-space: nowrap;
+		display: block;
+		font-weight: 600;
+		font-size: 2rem;
+		margin: 0.375em 1em 0.5em 1em;
+		text-align: center;
+	}
+	#theme-selector button {
+		width: calc(100% - 0.5em);
+		background-repeat: no-repeat;
+		padding: 1em 0.875em;
+		margin: 1px 4px;
+		line-height: 1;
+		height: unset;
+		position: relative;
+	}
+	#theme-selector button::after {
+		content: attr(data-theme-description);
+		white-space: nowrap;
+		position: absolute;
+		text-align: left;
+		left: 2.5em;
+		top: 1em;
+	}
+	@media only screen and (max-height: 675px) {
+		#theme-selector button {	
+			padding: 0.875em;
+		}
+		#theme-selector button::after {
+			top: 0.875em;
+		}
+	}
+	#theme-selector .theme-selector-close-button {
+		position: absolute;
+		width: unset;
+		background-color: transparent;
+		top: 0;
+		right: -3px;
+	}
+	#theme-selector .theme-selector-close-button,
+	#theme-selector .theme-selector-close-button:focus,
+	#theme-selector .theme-selector-close-button:active,
+	#theme-selector .theme-selector-close-button:hover {
+		box-shadow: none;
+	}
+	
+	/*===============*/
+	/* THEME TWEAKER */
+	/*===============*/
+
+	#theme-selector {
+		padding: 0 0 64px 0;
+	}
+	#theme-selector ~ #theme-tweaker-toggle {
+		top: 100%;
+	}
+	#theme-selector ~ #theme-tweaker-toggle::after {
+		content: "Open theme tweaker";
+		position: absolute;
+		font-size: 0.625em;
+		white-space: nowrap;
+		left: -50%;
+		top: 100%;
+	}
+	#theme-selector.engaged ~ #theme-tweaker-toggle {
+		visibility: visible;
+		top: 530px;
+		left: 0;
+		right: 0;
+		margin: auto;
+		z-index: 11111;
+		transition: 
+			top 0.2s ease,
+			visibility 0.2s ease;
+	}
+	@media only screen and (max-height: 675px) {
+		#theme-selector.engaged ~ #theme-tweaker-toggle {	
+			top: 492px;
+		}
+	}
+	@supports (width: -moz-fit-content) {
+>>>>>>> Minor refactor of content width CSS
 	#theme-selector.engaged ~ #theme-tweaker-toggle {
 		width: -moz-fit-content;
 	}
@@ -4212,6 +4777,7 @@ li {
 		width: fit-content;
 	}
 }
+<<<<<<< HEAD
 #theme-selector.engaged ~ #theme-tweaker-toggle button {
 	opacity: 1.0;
 }
@@ -4290,6 +4856,86 @@ li {
 	z-index: -1;
 }
 @supports (width: -moz-fit-content) {
+=======
+	#theme-selector.engaged ~ #theme-tweaker-toggle button {
+		opacity: 1.0;
+	}
+
+	#theme-tweaker-ui {
+		visibility: visible;
+	}
+
+	/*======================*/
+	/* ANTI-KIBITZER TOGGLE */
+	/*======================*/
+
+	#theme-selector ~ #anti-kibitzer-toggle {
+		top: 100%;
+		bottom: unset;
+		left: 0;
+		right: 0;
+		margin: auto;
+		box-shadow: none;
+		width: calc(100vw - 44px);
+		max-width: 330px;
+		text-align: right;
+		pointer-events: none;
+	}
+	#theme-selector.engaged ~ #anti-kibitzer-toggle {
+		visibility: visible;
+		z-index: 11110;
+		top: 530px;
+		transition: 
+			top 0.2s ease,
+			visibility 0.2s ease;
+	}
+	@media only screen and (max-height: 675px) {
+		#theme-selector.engaged ~ #anti-kibitzer-toggle {	
+			top: 492px;
+		}
+	}
+	#theme-selector.engaged ~ #anti-kibitzer-toggle button {
+		pointer-events: auto;
+		display: inline-block;
+	}
+
+	/*=================*/
+	/* QUICKNAV WIDGET */
+	/*=================*/
+
+	#quick-nav-ui {
+		max-width: 0px;
+		transition:
+			max-width 0.2s ease,
+			visibility 0.2s ease;
+		display: flex;
+		right: 72px;
+		bottom: 14px;
+	}
+	#quick-nav-ui.engaged {
+		max-width: 1000px;
+	}
+	#quick-nav-ui a {
+		position: relative;
+		margin: 2px;
+	}
+	#quick-nav-ui a + a {
+		margin-left: 5px;
+	}
+	#quick-nav-ui a::after {
+		position: absolute;
+		top: calc(100% + 2px);
+		font-size: 0.375rem;
+		left: 0;
+		right: 0;
+		margin: auto;
+		line-height: 1;
+		padding: 2px;
+		text-transform: uppercase;
+		z-index: -1;
+	}
+	@supports (width: -moz-fit-content) {
+>>>>>>> Minor refactor of content width CSS
 	#quick-nav-ui a::after {
 		width: -moz-fit-content;
 	}
@@ -4299,6 +4945,7 @@ li {
 		width: fit-content;
 	}
 }
+<<<<<<< HEAD
 #quick-nav-ui a[href='#top']::after {
 	content: "Top";
 	left: -1px;
@@ -4345,6 +4992,54 @@ li {
 	z-index: -1;
 }
 @supports (width: -moz-fit-content) {
+=======
+	#quick-nav-ui a[href='#top']::after {
+		content: "Top";
+		left: -1px;
+	}
+	#quick-nav-ui a[href='#comments']::after {
+		content: "Comments";
+	}
+	#content.post-page:not(.individual-thread-page) ~ #ui-elements-container #quick-nav-ui a[href='#comments'] {
+		visibility: hidden;
+		transition: visibility 0.2s ease;
+	}
+	#content.post-page:not(.individual-thread-page) ~ #ui-elements-container #quick-nav-ui.engaged a[href='#comments'] {
+		visibility: visible;
+	}
+	#quick-nav-ui a[href='#bottom-bar']::after {
+		content: "Bottom";
+	}
+	
+	/*======================*/
+	/* NEW COMMENT QUICKNAV */
+	/*======================*/
+
+	#new-comment-nav-ui {
+		max-width: 0px;
+		max-height: 0px;
+		transition: 
+			max-width 0.2s ease,
+			max-height 0.2s ease,
+			visibility 0.2s ease;
+		display: flex;
+		right: 78px;
+		bottom: 70px;
+	}
+	#new-comment-nav-ui::before {
+		content: "New Comments";
+		position: absolute;
+		bottom: 100%;
+		font-size: 0.5625rem;
+		left: 0;
+		right: 0;
+		margin: auto;
+		padding: 2px 3px;
+		text-transform: uppercase;
+		z-index: -1;
+	}
+	@supports (width: -moz-fit-content) {
+>>>>>>> Minor refactor of content width CSS
 	#new-comment-nav-ui::before {
 		width: -moz-fit-content;
 	}
@@ -4354,6 +5049,7 @@ li {
 		width: fit-content;
 	}
 }
+<<<<<<< HEAD
 #new-comment-nav-ui.engaged {
 	max-width: 1000px;
 	max-height: 1000px;
@@ -4415,10 +5111,71 @@ li {
 
 @media only screen and (hover: none), only screen and (max-width: 960px) {
 
+=======
+	#new-comment-nav-ui.engaged {
+		max-width: 1000px;
+		max-height: 1000px;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button {
+		top: unset;
+		bottom: unset;
+		padding: 2px 7px;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-previous {
+		padding: 2px 7px 3px 7px;
+	}
+	#new-comment-nav-ui .new-comments-count {
+		padding: 4px 0 5px 0;
+	}
+	#new-comment-nav-ui .new-comments-count::before {
+		display: none;
+	}
+	#new-comment-nav-ui button::after {
+		position: absolute;
+		font-size: 0.375rem;
+		left: 0;
+		right: 0;
+		margin: auto;
+		line-height: 1;
+		text-transform: uppercase;
+		pointer-events: none;
+	}
+	#new-comment-nav-ui button.new-comment-previous::after {
+		content: "Previous";
+		bottom: 5px;
+	}
+	#new-comment-nav-ui button.new-comment-next::after {
+		content: "Next";
+		top: 7px;
+	}
+
+	/*=================*/
+	/* HNS DATE PICKER */
+	/*=================*/
+
+	#hns-date-picker {
+		max-height: 0px;
+		bottom: 132px;
+		right: 62px;
+		transition:
+			max-height 0.2s ease,
+			visibility 0.2s ease;
+	}
+	#hns-date-picker.engaged {
+		max-height: 1000px;
+	}
+	#hns-date-picker::before {
+		width: calc(100% + 2px);
+		border-width: 1px !important;
+	}
+}
+
+>>>>>>> Minor refactor of content width CSS
 /*=========*/
 /* NAV BAR */
 /*=========*/
 
+<<<<<<< HEAD
 #bottom-bar { 
 	padding: 0 4.5rem;
 }
@@ -4471,6 +5228,64 @@ li {
 }
 
 @media only screen and (max-width: 900px) {
+=======
+/*=-------------------------------------=*/
+@media only screen and (max-width: 960px) {
+/*=-------------------------------------=*/
+	#bottom-bar { 
+		padding: 0 4.5rem;
+	}
+	#bottom-bar .nav-item {
+		box-shadow: none;
+		position: relative;
+	}
+	#bottom-bar .nav-inner {
+		font-size: 2rem;
+		padding: 1rem 0 1.25rem 0;
+		visibility: hidden;
+		position: static;
+		width: 0;
+	}
+	#content #bottom-bar .nav-item .nav-inner::before {
+		margin: 0;
+		visibility: visible;
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		left: 0;
+		top: 0;
+		padding: 1rem 0;
+	}
+	#bottom-bar .nav-inner::after {
+		display: block;
+		visibility: visible;
+		text-transform: uppercase;
+		color: unset;
+		font-size: 0.75rem;
+		top: unset;
+		left: 0;
+		bottom: 1rem;
+		width: 100%;
+	}
+	#bottom-bar #nav-item-first .nav-inner::after {
+		content: "First Page";
+	}
+	#bottom-bar #nav-item-prev .nav-inner::after {
+		content: "Prev. Page";
+	}
+	#bottom-bar #nav-item-top .nav-inner::after {
+		content: "Top";
+	}
+	#bottom-bar #nav-item-next .nav-inner::after {
+		content: "Next Page";
+	}
+	#bottom-bar #nav-item-last .nav-inner::after {
+		content: "Last Page";
+	}
+/*=---------------------------------------=*/
+} @media only screen and (max-width: 900px) {
+/*=---------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	#primary-bar,
 	#secondary-bar {
 		font-size: 0.75rem;
@@ -4560,8 +5375,14 @@ li {
 	#nav-item-login .nav-inner::before {
 		content: "\F007";
 	}
+<<<<<<< HEAD
 }
 @media only screen and (max-width: 520px) {
+=======
+/*=---------------------------------------=*/
+} @media only screen and (max-width: 520px) {
+/*=---------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	#primary-bar,
 	#secondary-bar {
 		font-size: 0.5rem;
@@ -4592,7 +5413,13 @@ li {
 /* INBOX INDICATOR */
 /*=================*/
 
+<<<<<<< HEAD
 @media only screen and (max-width: 900px) {
+=======
+/*=-------------------------------------=*/
+@media only screen and (max-width: 900px) {
+/*=-------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	#inbox-indicator {
 		width: 100%;
 		top: 0;
@@ -4610,14 +5437,26 @@ li {
 	#inbox-indicator.new-messages::before {
 		box-shadow: 0 0 8px 1px #f00 inset;
 	}
+<<<<<<< HEAD
 }
 @media only screen and (max-width: 520px) {
+=======
+/*=---------------------------------------=*/
+} @media only screen and (max-width: 520px) {
+/*=---------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	#inbox-indicator::before {
 		font-size: 0.75rem;
 		padding: 2px 5px;
 	}
+<<<<<<< HEAD
 }
 @media only screen and (max-width: 374px) {
+=======
+/*=---------------------------------------=*/
+} @media only screen and (max-width: 374px) {
+/*=---------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	#inbox-indicator::before {
 		font-size: 0.625rem;
 	}
@@ -4627,15 +5466,30 @@ li {
 /* TOP PAGINATION UI */
 /*===================*/
 
+<<<<<<< HEAD
 #top-nav-bar {
 	font-size: 1.75rem;
+=======
+/*=-------------------------------------=*/
+@media only screen and (max-width: 900px) {
+/*=-------------------------------------=*/
+	#top-nav-bar {
+		font-size: 1.75rem;
+	}
+>>>>>>> Minor refactor of content width CSS
 }
 
 /*==============*/
 /* PAGE TOOLBAR */
 /*==============*/
 
+<<<<<<< HEAD
 @media only screen and (max-width: 900px) {
+=======
+/*=--------------------------------------=*/
+@media only screen and (max-width: 900px) {
+/*=--------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	#content > .page-toolbar {
 		font-size: 1rem;
 		margin-right: 0;
@@ -4644,8 +5498,14 @@ li {
 		grid-column: 2 / span 2;
 		margin: 0 0 6px 0;
 	}
+<<<<<<< HEAD
 }
 @media only screen and (max-width: 520px) {
+=======
+/*=---------------------------------------=*/
+} @media only screen and (max-width: 520px) {
+/*=---------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	#content:not(.user-page) .page-toolbar {
 		display: flex;
 		flex-direction: column-reverse;
@@ -4689,17 +5549,41 @@ li {
 /* SUBLEVEL NAV */
 /*==============*/
 
+<<<<<<< HEAD
 @media only screen and (max-width: 900px) {
 	.sublevel-nav:not(.sort) {
 		flex-wrap: wrap;
 		width: calc(100vw - 200px);
+=======
+/*=-------------------------------------=*/
+@media only screen and (max-width: 900px) {
+/*=-------------------------------------=*/
+	.sublevel-nav:not(.sort) {
+		flex-wrap: wrap;
+		width: calc(100vw - 100px);
+>>>>>>> Minor refactor of content width CSS
 	}
 	.sublevel-nav:not(.sort) .sublevel-item {
 		margin: 1px;
 		flex-basis: 7em;
 	}
+<<<<<<< HEAD
 }
 @media only screen and (max-width: 520px) {
+=======
+/*=---------------------------------------=*/
+} @media only screen and (max-width: 720px) {
+/*=---------------------------------------=*/
+	.sublevel-nav:not(.sort) {
+		width: calc(100vw - 200px);
+	}
+/*=---------------------------------------=*/
+} @media only screen and (max-width: 520px) {
+/*=---------------------------------------=*/
+	.sublevel-nav:not(.sort) {
+		width: calc(100vw - 100px);
+	}
+>>>>>>> Minor refactor of content width CSS
 	.sublevel-nav:not(.sort) .sublevel-item {
 		font-size: 1rem;
 	}
@@ -4709,7 +5593,13 @@ li {
 /* SORT ORDER SELECTOR */
 /*=====================*/
 
+<<<<<<< HEAD
 @media only screen and (max-width: 720px) {
+=======
+/*=-------------------------------------=*/
+@media only screen and (max-width: 720px) {
+/*=-------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	#content.index-page > .sublevel-nav.sort {
 		flex-flow: column;
 		margin-left: 4px;
@@ -4720,7 +5610,13 @@ li {
 /* ARCHIVES */
 /*==========*/
 
+<<<<<<< HEAD
 @media only screen and (max-width: 900px) {
+=======
+/*=-------------------------------------=*/
+@media only screen and (max-width: 900px) {
+/*=-------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	div[class^='archive-nav-'] {
 		flex-wrap: wrap;
 		justify-content: flex-start;
@@ -4749,14 +5645,26 @@ li {
 		left: -4px;
 		top: -4px;
 	}
+<<<<<<< HEAD
 }
 @media only screen and (max-width: 720px) {
+=======
+/*=---------------------------------------=*/
+} @media only screen and (max-width: 720px) {
+/*=---------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	.archive-nav .archive-nav-item-day,
 	.archive-nav .archive-nav-item-day:first-child {
 		flex-basis: calc((100% / 12) - 4px);
 	}
+<<<<<<< HEAD
 }
 @media only screen and (max-width: 520px) {
+=======
+/*=---------------------------------------=*/
+} @media only screen and (max-width: 520px) {
+/*=---------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	.archive-nav *[class^='archive-nav-item'],
 	.archive-nav *[class^='archive-nav-item']:first-child {
 		flex-basis: calc((100% / 5) - 4px);
@@ -4771,14 +5679,24 @@ li {
 /* LISTINGS */
 /*==========*/
 
+<<<<<<< HEAD
 h1.listing {
 	max-height: unset;
+=======
+/*=--------------------------------=*/
+@media only screen and (hover: none) {
+/*=--------------------------------=*/
+	h1.listing {
+		max-height: unset;
+	}
+>>>>>>> Minor refactor of content width CSS
 }
 
 /*============*/
 /* USER PAGES */
 /*============*/
 
+<<<<<<< HEAD
 #content.user-page h1.page-main-heading {
 	align-self: end;
 }
@@ -4793,6 +5711,17 @@ h1.listing {
 	}
 	#content.user-page .user-stats .karma-type {
 		display: block;
+=======
+/*=-------------------------------------=*/
+@media only screen and (max-width: 720px) {
+/*=-------------------------------------=*/
+	#content.user-page h1.page-main-heading {
+		align-self: center;
+	}
+	#content.user-page .user-stats {
+		padding: 4px 0;
+		line-height: 1.3;
+>>>>>>> Minor refactor of content width CSS
 	}
 }
 
@@ -4800,7 +5729,13 @@ h1.listing {
 /* LOGIN PAGE */
 /*============*/
 
+<<<<<<< HEAD
 @media only screen and (max-width: 640px) {
+=======
+/*=-------------------------------------=*/
+@media only screen and (max-width: 640px) {
+/*=-------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	.login-container {
 		flex-flow: column;
 		margin: 0 auto 3em auto;
@@ -4847,10 +5782,22 @@ h1.listing {
 /* POST-META */
 /*===========*/
 
+<<<<<<< HEAD
 .post-meta {
 	line-height: 1.9;
 }
 @media only screen and (max-width: 720px) {
+=======
+/*=-------------------------------------=*/
+@media only screen and (max-width: 960px) {
+/*=-------------------------------------=*/
+	.post-meta {
+		line-height: 1.9;
+	}
+/*=---------------------------------------=*/
+} @media only screen and (max-width: 720px) {
+/*=---------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	.post-meta .lw2-link span,
 	.post-meta .karma-value span,
 	.post-meta .comment-count span {
@@ -4869,13 +5816,25 @@ h1.listing {
 /* POSTS */
 /*=======*/
 
+<<<<<<< HEAD
 @media only screen and (max-width: 900px) {
+=======
+/*=-------------------------------------=*/
+@media only screen and (max-width: 900px) {
+/*=-------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	.post-body,
 	h1.post-title {
 		padding: 0 6px;
 	}
+<<<<<<< HEAD
 }
 @media only screen and (max-width: 520px) {
+=======
+/*=---------------------------------------=*/
+} @media only screen and (max-width: 520px) {
+/*=---------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	.post-body {
 		font-size: 1.2rem;
 		line-height: 1.45;
@@ -4889,7 +5848,13 @@ h1.listing {
 /* COMMENTS */
 /*==========*/
 
+<<<<<<< HEAD
 @media only screen and (max-width: 900px) {
+=======
+/*=-------------------------------------=*/
+@media only screen and (max-width: 900px) {
+/*=-------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	.comment-body ul {
 		padding-left: 30px;
 	}
@@ -4902,6 +5867,7 @@ h1.listing {
 /* COMMENT-META */
 /*==============*/
 
+<<<<<<< HEAD
 a.comment-parent-link::after {
 	display: none;
 }
@@ -4911,14 +5877,39 @@ a.comment-parent-link::after {
 	}
 }
 @media only screen and (max-width: 720px) {
+=======
+/*=--------------------------------=*/
+@media only screen and (hover: none) {
+/*=--------------------------------=*/
+	a.comment-parent-link::after {
+		display: none;
+	}
+}
+
+/*=-------------------------------------=*/
+@media only screen and (max-width: 900px) {
+/*=-------------------------------------=*/
+	.comment-meta {
+		padding: 2px 40px 2px 10px;
+	}
+/*=---------------------------------------=*/
+} @media only screen and (max-width: 720px) {
+/*=---------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	.comment-meta .karma-value span {
 		display: none;
 	}
 	.comment-meta .comment-parent-link {
 		opacity: 1.0;
 	}
+<<<<<<< HEAD
 }
 @media only screen and (max-width: 520px) {
+=======
+/*=---------------------------------------=*/
+} @media only screen and (max-width: 520px) {
+/*=---------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	.comment-meta {
 		padding: 2px 10px;
 		position: relative;
@@ -4944,7 +5935,13 @@ a.comment-parent-link::after {
 /* COMMENT THREAD NAVIGATION */
 /*===========================*/
 
+<<<<<<< HEAD
 @media only screen and (max-width: 900px) {
+=======
+/*=-------------------------------------=*/
+@media only screen and (max-width: 900px) {
+/*=-------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	a.comment-parent-link {
 		width: 0;
 		visibility: hidden;
@@ -4962,8 +5959,14 @@ a.comment-parent-link::after {
 		width: 2em;
 		text-align: center;
 	}
+<<<<<<< HEAD
 }
 @media only screen and (max-width: 520px) {
+=======
+/*=---------------------------------------=*/
+} @media only screen and (max-width: 520px) {
+/*=---------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	a.comment-parent-link {
 		position: static;
 	}
@@ -4981,7 +5984,13 @@ a.comment-parent-link::after {
 /* COMMENT THREAD MINIMIZE BUTTONS */
 /*=================================*/
 
+<<<<<<< HEAD
 @media only screen and (max-width: 520px) {
+=======
+/*=-------------------------------------=*/
+@media only screen and (max-width: 520px) {
+/*=-------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	.comment-minimize-button{
 		right: 2px;
 	}
@@ -4991,7 +6000,13 @@ a.comment-parent-link::after {
 /* COMMENTING AND POSTING UI */
 /*===========================*/
 
+<<<<<<< HEAD
 @media only screen and (max-width: 900px) {
+=======
+/*=-------------------------------------=*/
+@media only screen and (max-width: 900px) {
+/*=-------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	.comment-controls .cancel-comment-button {
 		max-width: 1.3em;
 		overflow: hidden;
@@ -5006,8 +6021,14 @@ a.comment-parent-link::after {
 	.comment-controls .cancel-comment-button::before {
 		font-size: 1.25rem;		
 	}
+<<<<<<< HEAD
 }
 @media only screen and (max-width: 520px) {
+=======
+/*=---------------------------------------=*/
+} @media only screen and (max-width: 520px) {
+/*=---------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	.comment-controls {
 		position: static;
 	}
@@ -5116,7 +6137,13 @@ a.comment-parent-link::after {
 /* EDIT POST FORM */
 /*================*/
 
+<<<<<<< HEAD
 @media only screen and (max-width: 520px) {
+=======
+/*=-------------------------------------=*/
+@media only screen and (max-width: 520px) {
+/*=-------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	#edit-post-form {
 		padding-bottom: 0;
 	}
@@ -5171,7 +6198,13 @@ a.comment-parent-link::after {
 /* TABLE OF CONTENTS */
 /*===================*/
 
+<<<<<<< HEAD
 @media only screen and (max-width: 900px) {
+=======
+/*=-------------------------------------=*/
+@media only screen and (max-width: 900px) {
+/*=-------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	.contents {
 		float: none;
 		display: table;
@@ -5179,8 +6212,14 @@ a.comment-parent-link::after {
 		margin-left: auto;
 		margin-right: auto;
 	}
+<<<<<<< HEAD
 }
 @media only screen and (max-width: 520px) {
+=======
+/*=---------------------------------------=*/
+} @media only screen and (max-width: 520px) {
+/*=---------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	.contents {
 		max-width: 100%;
 		margin: 1em auto 0 auto;
@@ -5198,14 +6237,23 @@ a.comment-parent-link::after {
 /* QUALIFIED HYPERLINKING */
 /*========================*/
 
+<<<<<<< HEAD
 @media only screen and (max-width: 520px) {
+=======
+/*=-------------------------------------=*/
+@media only screen and (max-width: 520px) {
+/*=-------------------------------------=*/
+>>>>>>> Minor refactor of content width CSS
 	.qualified-linking-toolbar {
 		right: -5em;
 	}
 }
 
+<<<<<<< HEAD
 } /* END MOBILE LAYOUT */
 
+=======
+>>>>>>> Minor refactor of content width CSS
 
 /**************/
 /* THEME LESS */
@@ -5239,7 +6287,12 @@ body {
 #nav-item-search > *,
 .page-toolbar > *,
 #top-nav-bar > *,
+<<<<<<< HEAD
 .body-text a {
+=======
+.post-body a,
+.comment-body a {
+>>>>>>> Minor refactor of content width CSS
 	text-shadow: none;
 }
 
@@ -5255,7 +6308,12 @@ body {
 	#nav-item-search > *,
 	.page-toolbar > *,
 	#top-nav-bar > *,
+<<<<<<< HEAD
 	.body-text a {
+=======
+	.post-body a,
+	.comment-body a {
+>>>>>>> Minor refactor of content width CSS
 		text-shadow: 0 0 1px #888;
 	}
 }}
@@ -5299,6 +6357,7 @@ body {
 		width: 112px;
 		pointer-events: auto;
 	}
+<<<<<<< HEAD
 	#secondary-bar #nav-item-sequences .nav-inner {
 		font-size: 0.875em;
 		line-height: unset;
@@ -5324,6 +6383,17 @@ body {
 	#content.comment-thread-page #nav-item-sequences,
 	#content.comment-thread-page #nav-item-about {
 		transform: translateX(-81px);
+=======
+	#nav-item-archive,
+	#nav-item-about {
+		position: fixed;
+		transform: translateX(-106px);
+		width: 80px;
+	}
+	#content.comment-thread-page #nav-item-archive,
+	#content.comment-thread-page #nav-item-about {
+		transform: translateX(-76px);
+>>>>>>> Minor refactor of content width CSS
 	}
 
 	#nav-item-home {
@@ -5730,7 +6800,10 @@ body {
 	
 	#primary-bar,
 	#secondary-bar #nav-item-archive,
+<<<<<<< HEAD
 	#secondary-bar #nav-item-sequences,
+=======
+>>>>>>> Minor refactor of content width CSS
 	#secondary-bar #nav-item-about,
 	.page-toolbar {
 		visibility: hidden;
@@ -5739,14 +6812,20 @@ body {
 	}
 	#primary-bar,
 	#secondary-bar #nav-item-archive,
+<<<<<<< HEAD
 	#secondary-bar #nav-item-sequences,
+=======
+>>>>>>> Minor refactor of content width CSS
 	#secondary-bar #nav-item-about,
 	.page-toolbar {
 		opacity: 0.0;
 	}
 	#primary-bar,
 	#secondary-bar #nav-item-archive,
+<<<<<<< HEAD
 	#secondary-bar #nav-item-sequences,
+=======
+>>>>>>> Minor refactor of content width CSS
 	#secondary-bar #nav-item-about,
 	.page-toolbar {
 		transition:
@@ -5761,7 +6840,10 @@ body {
 	}
 	#primary-bar.engaged,
 	#secondary-bar.engaged #nav-item-archive,
+<<<<<<< HEAD
 	#secondary-bar.engaged #nav-item-sequences,
+=======
+>>>>>>> Minor refactor of content width CSS
 	#secondary-bar.engaged #nav-item-about,
 	.page-toolbar.engaged {
 		visibility: visible;
@@ -5769,7 +6851,10 @@ body {
 	}
 	#primary-bar.engaged,
 	#secondary-bar.engaged #nav-item-archive,
+<<<<<<< HEAD
 	#secondary-bar.engaged #nav-item-sequences,
+=======
+>>>>>>> Minor refactor of content width CSS
 	#secondary-bar.engaged #nav-item-about,
 	.page-toolbar.engaged {
 		opacity: 1.0;
@@ -5780,6 +6865,7 @@ body {
 	#secondary-bar.engaged #nav-item-archive {
 		top: 196px;
 	}
+<<<<<<< HEAD
 	#secondary-bar.engaged #nav-item-sequences {
 		top: 230px;
 	}
@@ -5788,6 +6874,13 @@ body {
 	}
 	.page-toolbar.engaged {	
 		top: 314px;
+=======
+	#secondary-bar.engaged #nav-item-about {
+		top: 230px;
+	}
+	.page-toolbar.engaged {	
+		top: 280px;
+>>>>>>> Minor refactor of content width CSS
 	}
 
 	#post-nav-ui-toggle {
@@ -6183,6 +7276,7 @@ body {
 	opacity: 0.5;
 }
 
+<<<<<<< HEAD
 /*===============*/
 /* KEYBOARD HELP */
 /*===============*/
@@ -6199,6 +7293,8 @@ body {
 	top: -1px;
 }
 
+=======
+>>>>>>> Minor refactor of content width CSS
 /*==========*/
 /* ARCHIVES */
 /*==========*/
@@ -6498,7 +7594,12 @@ h1.listing.own-post-listing {
 /* POSTS & COMMENTS */
 /*==================*/
 
+<<<<<<< HEAD
 .body-text {
+=======
+.post-body,
+.comment-body {
+>>>>>>> Minor refactor of content width CSS
 	font-family: 'Source Serif Pro', 'Helvetica', sans-serif;
 	text-shadow: 0 0 0 rgba(0,0,0,0.7);
 	font-weight: 300;
@@ -6529,8 +7630,12 @@ h1.post-title {
 /* POST-META */
 /*===========*/
 
+<<<<<<< HEAD
 .post-meta .post-section::before,
 .comment-meta .alignment-forum {
+=======
+.post-meta .post-section::before {
+>>>>>>> Minor refactor of content width CSS
 	color: #dfdfdf;
 	font-weight: 400;
 	padding: 1px;
@@ -6879,8 +7984,12 @@ a.post-section.alignment-forum:hover::before {
 }
 
 .comment-item .karma.active-controls::after,
+<<<<<<< HEAD
 .comment-item .karma .karma-value::after,
 .author::before {
+=======
+.comment-item .karma .karma-value::after {
+>>>>>>> Minor refactor of content width CSS
 	background-color: #fff;
 	color: #bbb;
 	border-radius: 4px;
@@ -7540,6 +8649,7 @@ button:focus:not(:hover),
 /* HEADINGS */
 /*==========*/
 
+<<<<<<< HEAD
 .body-text h1, 
 .body-text h2, 
 .body-text h3, 
@@ -7550,12 +8660,36 @@ button:focus:not(:hover),
 	font-weight: 300;
 }
 .body-text h1 {
+=======
+.post-body h1, 
+.post-body h2, 
+.post-body h3, 
+.post-body h4, 
+.post-body h5, 
+.post-body h6,
+.comment-body h1,
+.comment-body h2,
+.comment-body h3,
+.comment-body h4,
+.comment-body h5,
+.comment-body h6 {
+	font-family: 'Caecilia', 'Helvetica', sans-serif;
+	font-weight: 300;
+}
+.post-body h1,
+.comment-body h1 {
+>>>>>>> Minor refactor of content width CSS
 	margin-top: 1.25em;
 	box-shadow:
 		0 -7px 0 0 #fff inset,
 		0 -8px 0 0 #eee inset;
 }
+<<<<<<< HEAD
 .body-text h6 {
+=======
+.post-body h6,
+.comment-body h6 {
+>>>>>>> Minor refactor of content width CSS
 	color: #555;
 }
 
@@ -7571,6 +8705,7 @@ blockquote {
 /* IMAGES */
 /*========*/
 
+<<<<<<< HEAD
 #content img,
 #content figure.image img {
 	border: 1px solid #ccc;
@@ -7590,6 +8725,22 @@ blockquote {
 	font-weight: 400;
 	padding: 10px 12px 6px 12px;
 }
+=======
+.post-body img,
+.comment-body img {
+	border: 1px solid #ccc;
+}
+.post-body img[src$='.svg'],
+.comment-body img[src$='.svg'] {
+	border: none;
+}
+#content figure img {
+	border: 1px solid #000;
+}
+#content figure img[src$='.svg'] {
+	border: none;
+}
+>>>>>>> Minor refactor of content width CSS
 
 /*=============*/
 /* IMAGE FOCUS */
@@ -7599,11 +8750,14 @@ blockquote {
 	visibility: visible;
 }
 
+<<<<<<< HEAD
 #image-focus-overlay .caption p {
 	margin: 1em 1.25em 0.875em 1.25em;
 	font-weight: 400;
 }
 
+=======
+>>>>>>> Minor refactor of content width CSS
 /*======*/
 /* MISC */
 /*======*/
@@ -8011,7 +9165,10 @@ strong, b {
 			padding: 5px 4px 75px 60px;
 		}
 		#secondary-bar #nav-item-archive,
+<<<<<<< HEAD
 		#secondary-bar #nav-item-sequences,
+=======
+>>>>>>> Minor refactor of content width CSS
 		#secondary-bar #nav-item-about {
 			opacity: 0.0;
 			transition:
@@ -8019,7 +9176,10 @@ strong, b {
 				filter 0.2s ease;
 		}
 		#secondary-bar.engaged #nav-item-archive,
+<<<<<<< HEAD
 		#secondary-bar.engaged #nav-item-sequences,
+=======
+>>>>>>> Minor refactor of content width CSS
 		#secondary-bar.engaged #nav-item-about {
 			opacity: 1.0;
 			position: fixed;
@@ -8030,16 +9190,24 @@ strong, b {
 		#secondary-bar.engaged #nav-item-archive {
 			left: 8px;
 		}
+<<<<<<< HEAD
 		#secondary-bar.engaged #nav-item-sequences {
 			left: 72px;
 		}
 		#secondary-bar.engaged #nav-item-about {
 			left: 136px;
+=======
+		#secondary-bar.engaged #nav-item-about {
+			left: 72px;
+>>>>>>> Minor refactor of content width CSS
 		}
 
 		#primary-bar.engaged.translucent-on-scroll,
 		#secondary-bar.engaged.translucent-on-scroll #nav-item-archive,
+<<<<<<< HEAD
 		#secondary-bar.engaged.translucent-on-scroll #nav-item-sequences,
+=======
+>>>>>>> Minor refactor of content width CSS
 		#secondary-bar.engaged.translucent-on-scroll #nav-item-about,
 		.page-toolbar.engaged.translucent-on-scroll {
 			opacity: 0.6;
@@ -8367,6 +9535,7 @@ strong, b {
 /*======*/
 
 #tags {
+<<<<<<< HEAD
 	order: 12;
 	display: flex;
 	flex-basis: 100%;
@@ -8374,6 +9543,16 @@ strong, b {
 	margin: 0;
 	flex-flow: row wrap;
 	align-items: flex-start;
+=======
+    order: 12;
+    display: flex;
+    flex-basis: 100%;
+    justify-content: center;
+    margin: 0;
+}
+#tags a {
+    display: inline-block;
+>>>>>>> Minor refactor of content width CSS
 }
 
 /*============*/
@@ -8385,6 +9564,7 @@ strong, b {
 /*++++++*/
 
 #tags {
+<<<<<<< HEAD
 	padding: 0.25em 0 0.5em 0;
 	align-items: center;
 }
@@ -8397,6 +9577,21 @@ strong, b {
 	opacity: 0.6;
 	position: relative;
 	top: -2px;
+=======
+    padding: 0.25em 0 0.5em 0;
+    align-items: center;
+}
+#tags::before {
+    content: "\F02C";
+    font-family: Font Awesome;
+    font-weight: 300;
+    font-size: 0.875em;
+    display: inline-block;
+    margin: 0 0.5em 0 0;
+    opacity: 0.6;
+    position: relative;
+    top: -2px;
+>>>>>>> Minor refactor of content width CSS
 }
 #tags a {
 	margin: 0 0.375em 0 0;

@@ -7,7 +7,7 @@
 	$content_width_settings = [
 		'normal' => '900px',
 		'wide' => '1150px',
-		'fluid' => 'calc(100% - 300px)'
+		'fluid' => 'unset'
 	];
 
 	function fit_content($selector, $property = "width") {
@@ -61,7 +61,6 @@ body.no-scroll {
 body > * {
 	width: calc(100% - 300px);
 	min-width: 900px;
-	max-width: 900px;
 }
 #content {
 	margin: 0 auto;
