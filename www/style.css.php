@@ -842,6 +842,58 @@ foreach ($content_width_settings as $name => $setting) {
 	display: none;
 }
 
+@media only screen and (max-width: 1440px) {
+	#hns-date-picker {
+		right: -81px;
+		padding: 8px 10px 10px 10px;
+		bottom: 62px;
+		display: none;
+	}
+	#hns-date-picker::before {
+		content: "";
+		position: absolute;
+		display: block;
+		z-index: -1;
+		height: calc(100% + 2px);
+		top: -1px;
+		left: -1px;
+		width: 50%;
+	}
+}
+@media only screen and (max-width: 1160px) {
+	#hns-date-picker {
+		bottom: 200px;
+		right: -36px;
+	}
+	#hns-date-picker::before {
+		width: calc(100% - 35px);
+	}
+}
+@media only screen and (max-width: 1080px) {
+	#hns-date-picker {
+		right: -23px;
+	}
+	#hns-date-picker::before {
+		width: calc(100% - 22px);
+	}
+}
+@media only screen and (max-width: 1040px) {
+	#hns-date-picker {
+		right: -18px;
+	}
+	#hns-date-picker::before {
+		width: calc(100% - 17px);
+	}
+}
+@media only screen and (max-width: 1020px) {
+	#hns-date-picker {
+		right: 19px;
+	}
+	#hns-date-picker::before {
+		width: 100%;
+	}
+}
+
 /*=---------------=*/
 /*= "Since" label =*/
 /*=---------------=*/
@@ -3751,27 +3803,8 @@ li {
 /* FOR NARROW SCREENS */
 /**********************/
 
-/*=---------------------------------------=*/
-@media only screen and (max-width: 1440px) {
-/*=---------------------------------------=*/
-	#hns-date-picker {
-		right: -81px;
-		padding: 8px 10px 10px 10px;
-		bottom: 62px;
-		display: none;
-	}
-	#hns-date-picker::before {
-		content: "";
-		position: absolute;
-		display: block;
-		z-index: -1;
-		height: calc(100% + 2px);
-		top: -1px;
-		left: -1px;
-		width: 50%;
-	}
 /*=----------------------------------------=*/
-} @media only screen and (max-width: 1220px) {
+@media only screen and (max-width: 1220px) {
 /*=----------------------------------------=*/
 	#width-selector {
 		display: none;
@@ -3782,13 +3815,6 @@ li {
 	#new-comment-nav-ui {
 		bottom: 180px;
 		right: -68px;
-	}
-	#hns-date-picker {
-		bottom: 200px;
-		right: -36px;
-	}
-	#hns-date-picker::before {
-		width: calc(100% - 35px);
 	}
 	#theme-selector button::before {
 		right: unset;
@@ -3851,12 +3877,6 @@ li {
 	#new-comment-nav-ui {
 		right: -55px;
 	}
-	#hns-date-picker {
-		right: -23px;
-	}
-	#hns-date-picker::before {
-		width: calc(100% - 22px);
-	}
 	#anti-kibitzer-toggle {
 		right: -54px;
 	}
@@ -3868,12 +3888,6 @@ li {
 	}
 	#new-comment-nav-ui {
 		right: -50px;
-	}
-	#hns-date-picker {
-		right: -18px;
-	}
-	#hns-date-picker::before {
-		width: calc(100% - 17px);
 	}
 	#anti-kibitzer-toggle {
 		right: -50px;
@@ -3896,12 +3910,6 @@ li {
 		left: 0;
 		top: -22px;
 	}
-	#hns-date-picker {
-		right: 19px;
-	}
-	#hns-date-picker::before {
-		width: 100%;
-	}
 	#anti-kibitzer-toggle {
 		right: -20px;
 	}
@@ -3919,22 +3927,6 @@ li {
 	}
 	#text-size-adjustment-ui {
 		right: -12px;
-	}
-	@media not screen and (hover: none) {
-		#quick-nav-ui,
-		#new-comment-nav-ui,
-		#new-comment-nav-ui + #hns-date-picker,
-		#anti-kibitzer-toggle {
-			opacity: 0.4;
-		}
-		#quick-nav-ui:hover,
-		#new-comment-nav-ui:hover,
-		#new-comment-nav-ui + #hns-date-picker:hover,
-		#new-comment-nav-ui + #hns-date-picker:focus-within,
-		#new-comment-nav-ui:hover + #hns-date-picker,
-		#anti-kibitzer-toggle:hover {
-			opacity: 1.0;
-		}
 	}
 	#theme-tweaker-toggle {
 		top: 70px;
