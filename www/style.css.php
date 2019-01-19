@@ -41,6 +41,13 @@ body {
 	padding: 0;
 	margin: 0;
 }
+@media only screen and (max-width: 960px) and (min-width: 901px) {
+	body {
+		overflow-x: hidden;
+		margin: 0 -5px;
+	}
+}
+
 body::before {
 	background-color: inherit;
 	position: fixed;
@@ -81,6 +88,18 @@ body > * {
 	height: 100%;
 	z-index: -1;
 	pointer-events: none;
+}
+
+@media only screen and (max-width: 900px) {
+	#content,
+	#images-overlay,
+	#ui-elements-container {
+		min-width: unset;
+		width: unset;
+	}
+	#content {
+		padding: 0 4px;
+	}
 }
 
 /*=---------=*/
@@ -125,6 +144,7 @@ body > * {
 	right: 0;
 	margin: auto;
 }
+
 
 /***********/
 /* NAV BAR */
@@ -826,6 +846,22 @@ foreach ($content_width_settings as $name => $setting) {
 	visibility: visible;
 }
 
+@media only screen and (max-width: 1080px) {
+	#quick-nav-ui {
+		right: -54px;
+	}
+}
+@media only screen and (max-width: 1040px) {
+	#quick-nav-ui {
+		right: -49px;
+	}
+}
+@media only screen and (max-width: 1020px) {
+	#quick-nav-ui {
+		right: -20px;
+	}
+}
+
 /**********************/
 /* NEW COMMENT NAV UI */
 /**********************/
@@ -1043,6 +1079,27 @@ foreach ($content_width_settings as $name => $setting) {
 	content: "\F070";	
 }
 
+@media only screen and (max-width: 1160px) {
+	#anti-kibitzer-toggle {
+		bottom: 330px;
+	}
+}
+@media only screen and (max-width: 1080px) {
+	#anti-kibitzer-toggle {
+		right: -54px;
+	}
+}
+@media only screen and (max-width: 1040px) {
+	#anti-kibitzer-toggle {
+		right: -50px;
+	}
+}
+@media only screen and (max-width: 1020px) {
+	#anti-kibitzer-toggle {
+		right: -20px;
+	}
+}
+
 /************************/
 /* TEXT SIZE ADJUSTMENT */
 /************************/
@@ -1055,6 +1112,31 @@ foreach ($content_width_settings as $name => $setting) {
 }
 #text-size-adjustment-ui:hover {
 	opacity: 1.0;
+}
+
+@media only screen and (max-width: 1080px) {
+	#text-size-adjustment-ui {
+		top: 112px;
+		right: -30px;
+	}
+	#text-size-adjustment-ui button {
+		display: block;
+		position: relative;
+	}
+	#text-size-adjustment-ui button.increase {
+		bottom: 48px;
+	}
+	#text-size-adjustment-ui button.decrease {
+		top: 50px;
+	}
+	#text-size-adjustment-ui::after {
+		display: none;
+	}
+}
+@media only screen and (max-width: 1000px) {
+	#text-size-adjustment-ui {
+		right: -12px;
+	}
 }
 
 /* This doesn't work in Mozilla browsers, so hide it */
@@ -3890,87 +3972,6 @@ li {
 	grid-row: 3;
 	font-size: 1.5rem;
 	margin: 0.375em 0 0 -0.375em;
-}
-
-/**********************/
-/* FOR NARROW SCREENS */
-/**********************/
-
-/*=--------------------------------------=*/
-@media only screen and (max-width: 1160px) {
-/*=--------------------------------------=*/
-	#anti-kibitzer-toggle {
-		bottom: 330px;
-	}
-/*=----------------------------------------=*/
-} @media only screen and (max-width: 1080px) {
-/*=----------------------------------------=*/
-	#text-size-adjustment-ui {
-		top: 112px;
-		right: -30px;
-	}
-	#text-size-adjustment-ui button {
-		display: block;
-		position: relative;
-	}
-	#text-size-adjustment-ui button.increase {
-		bottom: 48px;
-	}
-	#text-size-adjustment-ui button.decrease {
-		top: 50px;
-	}
-	#text-size-adjustment-ui::after {
-		display: none;
-	}
-	#quick-nav-ui {
-		right: -54px;
-	}
-	#anti-kibitzer-toggle {
-		right: -54px;
-	}
-/*=----------------------------------------=*/
-} @media only screen and (max-width: 1040px) {
-/*=----------------------------------------=*/
-	#quick-nav-ui {
-		right: -49px;
-	}
-	#anti-kibitzer-toggle {
-		right: -50px;
-	}
-/*=----------------------------------------=*/
-} @media only screen and (max-width: 1020px) {
-/*=----------------------------------------=*/
-	#quick-nav-ui {
-		right: -20px;
-	}
-	#anti-kibitzer-toggle {
-		right: -20px;
-	}
-/*=----------------------------------------=*/
-} @media only screen and (max-width: 1000px) {
-/*=----------------------------------------=*/
-	#text-size-adjustment-ui {
-		right: -12px;
-	}
-/*=--------------------------------------------------------------=*/
-} @media only screen and (max-width: 960px) and (min-width: 901px) {
-/*=--------------------------------------------------------------=*/
-	body {
-		overflow-x: hidden;
-		margin: 0 -5px;
-	}
-/*=---------------------------------------=*/
-} @media only screen and (max-width: 900px) {
-/*=---------------------------------------=*/
-	#content,
-	#images-overlay,
-	#ui-elements-container {
-		min-width: unset;
-		width: unset;
-	}
-	#content {
-		padding: 0 4px;
-	}
 }
 
 /**************/
