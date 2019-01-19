@@ -24,7 +24,6 @@
 	#ui-elements-container > * {
 		position: fixed;
 		visibility: hidden;
-		opacity: 1.0;
 		z-index: 10000;
 	}
 
@@ -116,6 +115,11 @@
 		top: 120px;
 		padding: 3px 0;
 		max-width: 32px;
+	}
+}
+@media only screen and (max-width: 960px) {
+	#theme-selector {
+		opacity: 1.0;
 	}
 }
 
@@ -552,6 +556,49 @@ foreach ($content_width_settings as $name => $setting) {
 	display: none;
 }
 
+/*=--------------------=*/
+/*= New comments count =*/
+/*=--------------------=*/
+
+#new-comment-nav-ui .new-comments-count {
+	width: 2em;
+	font-size: 1.25rem;
+	line-height: 1.1;
+	text-align: center;
+	left: 1px;
+	cursor: pointer;
+}
+#new-comment-nav-ui .new-comments-count::selection {
+	background-color: transparent;
+}
+#new-comment-nav-ui .new-comments-count::after {
+	content: "NEW";
+	display: block;
+	font-size: 0.625rem;
+}
+
+/*=-----------------------------------=*/
+/*= Next/previous new comment buttons =*/
+/*=-----------------------------------=*/
+
+#new-comment-nav-ui .new-comment-sequential-nav-button {
+	font-size: 1.75rem;
+	font-family: 'Font Awesome';
+	font-weight: 900;
+	width: 1.5em;
+	z-index: 5001;
+}
+#new-comment-nav-ui .new-comment-previous {
+	top: 8px;
+}
+#new-comment-nav-ui .new-comment-next {
+	bottom: 6px;
+}
+#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
+	cursor: auto;
+	pointer-events: none;
+}
+
 @media only screen and (max-width: 1160px) {
 	#new-comment-nav-ui {
 		bottom: 180px;
@@ -644,49 +691,6 @@ foreach ($content_width_settings as $name => $setting) {
 		content: "Next";
 		top: 7px;
 	}
-}
-
-/*=--------------------=*/
-/*= New comments count =*/
-/*=--------------------=*/
-
-#new-comment-nav-ui .new-comments-count {
-	width: 2em;
-	font-size: 1.25rem;
-	line-height: 1.1;
-	text-align: center;
-	left: 1px;
-	cursor: pointer;
-}
-#new-comment-nav-ui .new-comments-count::selection {
-	background-color: transparent;
-}
-#new-comment-nav-ui .new-comments-count::after {
-	content: "NEW";
-	display: block;
-	font-size: 0.625rem;
-}
-
-/*=-----------------------------------=*/
-/*= Next/previous new comment buttons =*/
-/*=-----------------------------------=*/
-
-#new-comment-nav-ui .new-comment-sequential-nav-button {
-	font-size: 1.75rem;
-	font-family: 'Font Awesome';
-	font-weight: 900;
-	width: 1.5em;
-	z-index: 5001;
-}
-#new-comment-nav-ui .new-comment-previous {
-	top: 8px;
-}
-#new-comment-nav-ui .new-comment-next {
-	bottom: 6px;
-}
-#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
-	cursor: auto;
-	pointer-events: none;
 }
 
 /*******************/
@@ -926,6 +930,11 @@ foreach ($content_width_settings as $name => $setting) {
 @media only screen and (max-width: 1000px) {
 	#text-size-adjustment-ui {
 		right: -12px;
+	}
+}
+@media only screen and (max-width: 960px) {
+	#text-size-adjustment-ui {
+		display: none;
 	}
 }
 
