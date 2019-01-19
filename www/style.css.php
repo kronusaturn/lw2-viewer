@@ -132,6 +132,64 @@ body > * {
 	display: none;
 }
 
+@media only screen and (max-width: 960px) {
+	#ui-elements-container {
+		height: unset;
+		position: unset;
+	}
+	#ui-elements-container > * {
+		position: fixed;
+		visibility: hidden;
+		opacity: 1.0;
+		z-index: 10000;
+	}
+
+	#ui-elements-container > div[id$='-ui-toggle'] {
+		visibility: visible;
+		display: inline-block;
+		border-radius: 50%;
+		z-index: 10000;
+	}
+	#ui-elements-container > div[id$='-ui-toggle'] button,
+	#theme-selector .theme-selector-close-button {
+		font-family: Font Awesome;
+		font-weight: 900;
+		font-size: 32px;
+		padding: 10px;
+		opacity: 0.8;
+		-webkit-tap-highlight-color: transparent;
+		transition: transform 0.2s ease;
+	}
+	#ui-elements-container > div[id$='-ui-toggle'] button::selection,
+	#theme-selector .theme-selector-close-button::selection {
+		background-color: transparent;
+	}
+	#ui-elements-container > div[id$='-ui-toggle'] button::-moz-focus-inner,
+	#theme-selector .theme-selector-close-button::-moz-focus-inner {
+		border: none;
+	}
+	#ui-elements-container > div[id$='-ui-toggle'] button.engaged {
+		transform: rotate(-90deg);
+		opacity: 1.0;
+	}
+
+	#post-nav-ui-toggle,
+	#appearance-adjust-ui-toggle,
+	#theme-selector .theme-selector-close-button {
+		display: initial;
+	}
+
+	#appearance-adjust-ui-toggle {
+		bottom: 10px;
+		left: 10px;
+	}
+
+	#post-nav-ui-toggle {
+		bottom: 10px;
+		right: 10px;
+	}
+}
+
 /*=----------------=*/
 /*= Images overlay =*/
 /*=----------------=*/
@@ -145,6 +203,14 @@ body > * {
 	margin: auto;
 }
 
+@media only screen and (max-width: 960px) {
+	#image-focus-overlay.engaged {
+		visibility: visible;
+	}
+	#image-focus-overlay .help-overlay {
+		display: none;
+	}
+}
 
 /***********/
 /* NAV BAR */

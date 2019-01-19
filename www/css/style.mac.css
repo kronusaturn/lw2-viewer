@@ -120,6 +120,64 @@ body > * {
 	display: none;
 }
 
+@media only screen and (max-width: 960px) {
+	#ui-elements-container {
+		height: unset;
+		position: unset;
+	}
+	#ui-elements-container > * {
+		position: fixed;
+		visibility: hidden;
+		opacity: 1.0;
+		z-index: 10000;
+	}
+
+	#ui-elements-container > div[id$='-ui-toggle'] {
+		visibility: visible;
+		display: inline-block;
+		border-radius: 50%;
+		z-index: 10000;
+	}
+	#ui-elements-container > div[id$='-ui-toggle'] button,
+	#theme-selector .theme-selector-close-button {
+		font-family: Font Awesome;
+		font-weight: 900;
+		font-size: 32px;
+		padding: 10px;
+		opacity: 0.8;
+		-webkit-tap-highlight-color: transparent;
+		transition: transform 0.2s ease;
+	}
+	#ui-elements-container > div[id$='-ui-toggle'] button::selection,
+	#theme-selector .theme-selector-close-button::selection {
+		background-color: transparent;
+	}
+	#ui-elements-container > div[id$='-ui-toggle'] button::-moz-focus-inner,
+	#theme-selector .theme-selector-close-button::-moz-focus-inner {
+		border: none;
+	}
+	#ui-elements-container > div[id$='-ui-toggle'] button.engaged {
+		transform: rotate(-90deg);
+		opacity: 1.0;
+	}
+
+	#post-nav-ui-toggle,
+	#appearance-adjust-ui-toggle,
+	#theme-selector .theme-selector-close-button {
+		display: initial;
+	}
+
+	#appearance-adjust-ui-toggle {
+		bottom: 10px;
+		left: 10px;
+	}
+
+	#post-nav-ui-toggle {
+		bottom: 10px;
+		right: 10px;
+	}
+}
+
 /*=----------------=*/
 /*= Images overlay =*/
 /*=----------------=*/
@@ -133,6 +191,14 @@ body > * {
 	margin: auto;
 }
 
+@media only screen and (max-width: 960px) {
+	#image-focus-overlay.engaged {
+		visibility: visible;
+	}
+	#image-focus-overlay .help-overlay {
+		display: none;
+	}
+}
 
 /***********/
 /* NAV BAR */
@@ -4606,6 +4672,7 @@ li {
 /* MOBILE LAYOUT */
 /*****************/
 
+<<<<<<< HEAD
 /*====================*/
 /* MOBILE UI ELEMENTS */
 /*====================*/
@@ -4801,6 +4868,8 @@ li {
 }
 @supports (width: -moz-fit-content) {
 =======
+=======
+>>>>>>> Media query rewrite, part IX
 /*=+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=*/
 @media only screen and (hover: none), only screen and (max-width: 960px) {
 /*=+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=*/
@@ -4827,6 +4896,7 @@ li {
 		margin: auto;
 	}
 	#theme-selector.engaged {
+		visibility: visible;
 		max-height: 1000px;
 		top: 10px;
 		z-index: 10001;
@@ -5115,6 +5185,7 @@ li {
 		bottom: 14px;
 	}
 	#quick-nav-ui.engaged {
+		visibility: visible;
 		max-width: 1000px;
 	}
 	#quick-nav-ui a {
@@ -5266,6 +5337,7 @@ li {
 
 =======
 	#new-comment-nav-ui.engaged {
+		visibility: visible;
 		max-width: 1000px;
 		max-height: 1000px;
 	}
@@ -5315,6 +5387,7 @@ li {
 			visibility 0.2s ease;
 	}
 	#hns-date-picker.engaged {
+		visibility: visible;
 		max-height: 1000px;
 	}
 	#hns-date-picker::before {
