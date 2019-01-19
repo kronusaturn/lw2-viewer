@@ -110,290 +110,11 @@ body > * {
 	grid-column: 1 / span 3;
 }
 
-/*=----------------------=*/
-/*= Floating UI elements =*/
-/*=----------------------=*/
-
-#ui-elements-container {
-	position: fixed;
-	height: 100vh;
-	top: 0;
-	left: 0;
-	right: 0;
-	margin: auto;
-	z-index: 10000;
-	pointer-events: none;
-}
-#ui-elements-container > * {
-	pointer-events: auto;
-}
-#post-nav-ui-toggle,
-#appearance-adjust-ui-toggle {
-	display: none;
-}
-
-@media only screen and (max-width: 960px) {
-	#ui-elements-container {
-		height: unset;
-		position: unset;
-	}
-	#ui-elements-container > * {
-		position: fixed;
-		visibility: hidden;
-		opacity: 1.0;
-		z-index: 10000;
-	}
-
-	#ui-elements-container > div[id$='-ui-toggle'] {
-		visibility: visible;
-		display: inline-block;
-		border-radius: 50%;
-		z-index: 10000;
-	}
-	#ui-elements-container > div[id$='-ui-toggle'] button,
-	#theme-selector .theme-selector-close-button {
-		font-family: Font Awesome;
-		font-weight: 900;
-		font-size: 32px;
-		padding: 10px;
-		opacity: 0.8;
-		-webkit-tap-highlight-color: transparent;
-		transition: transform 0.2s ease;
-	}
-	#ui-elements-container > div[id$='-ui-toggle'] button::selection,
-	#theme-selector .theme-selector-close-button::selection {
-		background-color: transparent;
-	}
-	#ui-elements-container > div[id$='-ui-toggle'] button::-moz-focus-inner,
-	#theme-selector .theme-selector-close-button::-moz-focus-inner {
-		border: none;
-	}
-	#ui-elements-container > div[id$='-ui-toggle'] button.engaged {
-		transform: rotate(-90deg);
-		opacity: 1.0;
-	}
-
-	#post-nav-ui-toggle,
-	#appearance-adjust-ui-toggle,
-	#theme-selector .theme-selector-close-button {
-		display: initial;
-	}
-
-	#appearance-adjust-ui-toggle {
-		bottom: 10px;
-		left: 10px;
-	}
-
-	#post-nav-ui-toggle {
-		bottom: 10px;
-		right: 10px;
-	}
-}
-
-/*=----------------=*/
-/*= Images overlay =*/
-/*=----------------=*/
-/* (To exclude images in posts from theme tweaks) */
-
-#images-overlay {
-	position: absolute;
-	z-index: 1;
-	left: 0;
-	right: 0;
-	margin: auto;
-}
-
-@media only screen and (max-width: 960px) {
-	#image-focus-overlay.engaged {
-		visibility: visible;
-	}
-	#image-focus-overlay .help-overlay {
-		display: none;
-	}
-}
-
-/******************/
-/* THEME SELECTOR */
-/******************/
-
-#theme-selector {
-	position: absolute;
-	top: 3px;
-	left: -41px;
-	opacity: 0.4;
-	display: table;
-	max-width: 40px;
-}
-#theme-selector:hover {
-	opacity: 1.0;
-}
-#theme-selector .theme-selector-close-button {
-	display: none;
-}
-
-@media only screen and (max-width: 1160px) {
-	#theme-selector:hover::after {
-		content: "";
-		display: block;
-		position: absolute;
-		width: calc(6em - 7px);
-		height: calc(100% + 2px);
-		top: 0;
-		left: calc(100% + 1px);
-	}
-}
-@media only screen and (max-width: 1080px) {
-	#theme-selector {
-		top: 46px;
-		left: -44px;
-	}
-}
-@media only screen and (max-width: 1000px) {
-	#theme-selector {
-		left: -17px;
-		top: 120px;
-		padding: 3px 0;
-		max-width: 32px;
-	}
-}
-
-/*=----------------------=*/
-/*= Theme select buttons =*/
-/*=----------------------=*/
-
-.theme-selector button {
-	display: table-cell;
-	width: 26px;
-	height: 26px;
-	padding: 5px;
-	margin: 1px 7px 0 7px;
-	color: transparent;
-	background-size: 16px 16px;
-	background-origin: content-box;
-}
-.theme-selector button,
-.theme-selector button:hover,
-.theme-selector button:active,
-.theme-selector button:focus {
-	text-shadow: none;
-	color: transparent;
-}
-.theme-selector button:disabled {
-	cursor: auto;
-}
-
-@media only screen and (max-width: 1000px) {
-	#theme-selector button {
-		margin: 1px 4px;
-	}
-}
-
-/*=----------------------------=*/
-/*= Pre-rendered button images =*/
-/*=----------------------------=*/
-/*	(Each is just a capital letter A through whatever) */
-
-.theme-selector button:nth-of-type(1) {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_A.gif")) ?>');
-}
-.theme-selector button:nth-of-type(2) {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_B.gif")) ?>');
-}
-.theme-selector button:nth-of-type(3) {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_C.gif")) ?>');
-}
-.theme-selector button:nth-of-type(4) {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_D.gif")) ?>');
-}
-.theme-selector button:nth-of-type(5) {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_E.gif")) ?>');
-}
-.theme-selector button:nth-of-type(6) {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_F.gif")) ?>');
-}
-.theme-selector button:nth-of-type(7) {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_G.gif")) ?>');
-}
-.theme-selector button:nth-of-type(8) {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_H.gif")) ?>');
-}
-.theme-selector button:nth-of-type(9) {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_I.gif")) ?>');
-}
-
-/*=------------------------------=*/
-/*= Theme select button tooltips =*/
-/*=------------------------------=*/
-/*	(with the name & description of the theme that each button selects) */
-
-#theme-selector button {
-	position: relative;
-	z-index: 1;
-}
-#theme-selector button::before {
-	content: attr(data-theme-name);
-	position: absolute;
-	top: 0;
-	right: 100%;
-	padding: 5px 6px 6px 6px;
-	line-height: 1;
-	width: 6em;
-	text-align: right;
-	z-index: 1;
-	visibility: hidden;
-}
-#theme-selector:hover button::before {
-	visibility: visible;
-}
-#theme-selector:hover ~ #theme-tweaker-toggle,
-#theme-selector:active ~ #theme-tweaker-toggle {
-	z-index: -1;
-}
-
-@media only screen and (max-width: 1160px) {
-	#theme-selector button::before {
-		right: unset;
-		left: 100%;
-	}
-}
-
 /************************/
-/* THEME TWEAKER TOGGLE */
+/* FLOATING UI ELEMENTS */
 /************************/
 
-#theme-tweaker-toggle {
-	position: absolute;
-	top: 7px;
-	left: -75px;
-}
-#theme-tweaker-toggle button {
-	font-family: Font Awesome;
-	font-weight: 900;
-	font-size: 1.25rem;
-	opacity: 0.4;
-	z-index: 1;
-}
-#theme-tweaker-toggle button:hover {
-	opacity: 1.0;
-}
-
-@media only screen and (max-width: 1080px) {
-	#theme-tweaker-toggle {
-		left: -44px;
-		top: 2px;
-	}
-	#theme-tweaker-toggle button {
-		height: 2em;
-		width: 2em;
-		padding: 7px;
-	}
-}
-@media only screen and (max-width: 1000px) {
-	#theme-tweaker-toggle {
-		top: 70px;
-		left: -21px;
-	}
-}
+<?php include("style_floating_ui.css.php"); ?>
 
 /***********/
 /* NAV BAR */
@@ -728,6 +449,7 @@ a#inbox-indicator.new-messages:hover::before {
 	width: 100%;
 	bottom: 90%;
 	left: 0;
+<<<<<<< HEAD
 }
 #top-nav-bar a::before {
 	margin: 0.5em;
@@ -1389,19 +1111,19 @@ foreach ($content_width_settings as $name => $setting) {
 	#text-size-adjustment-ui {
 		right: -12px;
 	}
+=======
+>>>>>>> Miscellaneous CSS refactoring
+}
+#top-nav-bar a::before {
+	margin: 0.5em;
+	display: inline-block;
 }
 
-/* This doesn't work in Mozilla browsers, so hide it */
-@-moz-document url-prefix() {
-	#text-size-adjustment-ui {
-		display: none;
-	}
-}
+/****************/
+/* SUBLEVEL NAV */
+/****************/
 
-/*=---------=*/
-/*= Buttons =*/
-/*=---------=*/
-
+<<<<<<< HEAD
 #text-size-adjustment-ui button {
 	font-weight: 900;
 	font-family: "Font Awesome", "Font Awesome 5 Free";
@@ -1409,38 +1131,76 @@ foreach ($content_width_settings as $name => $setting) {
 	width: 24px;
 	height: 24px;
 	padding: 0;
+=======
+.sublevel-nav {
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	margin: 1em 0 0 0;
+>>>>>>> Miscellaneous CSS refactoring
 }
-#text-size-adjustment-ui button.default {
-	font-family: inherit;
+#content > .sublevel-nav:not(.sort) {
+	grid-row: 5;
+	grid-column: 2;
+	align-self: start;
+}
+.sublevel-nav .sublevel-item {
+	flex: 0 0 6em;
+	padding: 0.125em 0.5em;
 	font-size: 1.125rem;
-	position: relative;
-	top: 1px;
 }
-#text-size-adjustment-ui button:disabled {
-	opacity: 0.5;
+.sublevel-nav .sublevel-item:active {
+	transform: none;
 }
-#text-size-adjustment-ui button:disabled:hover {
+.sublevel-nav .sublevel-item.selected {
 	cursor: default;
 }
 
-/*=----------------=*/
-/*= Hover tooltips =*/
-/*=----------------=*/
+/***********************/
+/* SORT ORDER SELECTOR */
+/***********************/
 
-#text-size-adjustment-ui::after {
-	content: "Adjust text size";
+.sublevel-nav.sort {
+	position: relative;
+	margin-top: 8px;
+	font-size: 0.75em;
+}
+#content > .sublevel-nav.sort {
+	grid-column: 3;
+	grid-row: 5 / span 2;
+	justify-self: end;
+	align-self: start;
+	flex-flow: column;
+}
+#content.index-page > .sublevel-nav.sort {
+	grid-column: 1;
+	grid-row: 3 / span 1;
+	justify-self: start;
+	flex-flow: row;
+}
+
+.sublevel-nav.sort::before {
+	content: "Sort";
+	font-size: 0.75rem;
 	position: absolute;
-	display: block;
+	top: 0;
 	left: 0;
 	width: 100%;
-	text-align: center;
-	top: 32px;
-	visibility: hidden;
-	font-size: 0.9em;
 }
-#text-size-adjustment-ui:hover::after {
-	visibility: visible;
+.sublevel-nav.sort .sublevel-item {
+	line-height: 1;
+	font-size: 0.875rem;
+	flex-basis: unset;
 }
+
+/*******************************/
+/* COMMENTS SORT MODE SELECTOR */
+/*******************************/
+
+.comments > .sublevel-nav.sort {
+	margin: 1em auto 0 auto;
+}
+<?php fit_content(".comments > .sublevel-nav.sort"); ?>
 
 /*******************************/
 /* COMMENTS VIEW MODE SELECTOR */
@@ -3694,6 +3454,24 @@ li {
 /******************/
 /* IMAGES OVERLAY */
 /******************/
+/* (To exclude images in posts from theme tweaks) */
+
+#images-overlay {
+	position: absolute;
+	z-index: 1;
+	left: 0;
+	right: 0;
+	margin: auto;
+}
+
+@media only screen and (max-width: 960px) {
+	#image-focus-overlay.engaged {
+		visibility: visible;
+	}
+	#image-focus-overlay .help-overlay {
+		display: none;
+	}
+}
 
 #images-overlay + #content .post-body img {
 	visibility: hidden;
@@ -3732,6 +3510,7 @@ li {
 /* IMAGE FOCUS */
 /***************/
 
+<<<<<<< HEAD
 /*=--------------=*/
 /*= Hover styles =*/ 
 /*=--------------=*/
@@ -4007,6 +3786,9 @@ li {
 .blurred {
 	filter: blur(3px);
 }
+=======
+<?php include("style_image_focus.css.php"); ?>
+>>>>>>> Miscellaneous CSS refactoring
 
 /**************************/
 /* QUALIFIED HYPERLINKING */

@@ -725,8 +725,9 @@ input[type='range']::-ms-thumb {
 /* MOBILE */
 /*========*/
 
-@media only screen and (hover: none) {
+@media only screen and (max-width: 960px) {
 	#theme-tweaker-ui {
+		visibility: visible;
 		z-index: 12000;
 	}
 	#theme-tweaker-ui::after {
