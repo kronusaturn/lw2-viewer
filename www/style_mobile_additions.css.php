@@ -2,9 +2,9 @@
 /* MOBILE LAYOUT */
 /*****************/
 
-/*=+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=*/
-@media only screen and (hover: none), only screen and (max-width: 960px) {
-/*=+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=*/
+/*=-------------------------------------=*/
+@media only screen and (max-width: 960px) {
+/*=-------------------------------------=*/
 
 	/*================*/
 	/* THEME SELECTOR */
@@ -26,6 +26,7 @@
 		left: 0;
 		right: 0;
 		margin: auto;
+		padding: 0 0 64px 0;
 	}
 	#theme-selector.engaged {
 		visibility: visible;
@@ -85,9 +86,6 @@
 	/* THEME TWEAKER */
 	/*===============*/
 
-	#theme-selector {
-		padding: 0 0 64px 0;
-	}
 	#theme-selector ~ #theme-tweaker-toggle {
 		top: 100%;
 	}

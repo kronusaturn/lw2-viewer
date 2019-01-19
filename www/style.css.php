@@ -1,9 +1,9 @@
 <?php
 	header ('Content-type: text/css; charset=utf-8');
-	
+
 	$platform = @$argv[1] ?: 'Mac';
 	$UI_font = ($platform == 'Windows') ? "'Whitney', 'a_Avante'" : "'Concourse', 'a_Avante'";
-	
+
 	$content_width_settings = [
 		'normal' => '900px',
 		'wide' => '1150px',
@@ -209,6 +209,189 @@ body > * {
 	}
 	#image-focus-overlay .help-overlay {
 		display: none;
+	}
+}
+
+/******************/
+/* THEME SELECTOR */
+/******************/
+
+#theme-selector {
+	position: absolute;
+	top: 3px;
+	left: -41px;
+	opacity: 0.4;
+	display: table;
+	max-width: 40px;
+}
+#theme-selector:hover {
+	opacity: 1.0;
+}
+#theme-selector .theme-selector-close-button {
+	display: none;
+}
+
+@media only screen and (max-width: 1160px) {
+	#theme-selector:hover::after {
+		content: "";
+		display: block;
+		position: absolute;
+		width: calc(6em - 7px);
+		height: calc(100% + 2px);
+		top: 0;
+		left: calc(100% + 1px);
+	}
+}
+@media only screen and (max-width: 1080px) {
+	#theme-selector {
+		top: 46px;
+		left: -44px;
+	}
+}
+@media only screen and (max-width: 1000px) {
+	#theme-selector {
+		left: -17px;
+		top: 120px;
+		padding: 3px 0;
+		max-width: 32px;
+	}
+}
+
+/*=----------------------=*/
+/*= Theme select buttons =*/
+/*=----------------------=*/
+
+.theme-selector button {
+	display: table-cell;
+	width: 26px;
+	height: 26px;
+	padding: 5px;
+	margin: 1px 7px 0 7px;
+	color: transparent;
+	background-size: 16px 16px;
+	background-origin: content-box;
+}
+.theme-selector button,
+.theme-selector button:hover,
+.theme-selector button:active,
+.theme-selector button:focus {
+	text-shadow: none;
+	color: transparent;
+}
+.theme-selector button:disabled {
+	cursor: auto;
+}
+
+@media only screen and (max-width: 1000px) {
+	#theme-selector button {
+		margin: 1px 4px;
+	}
+}
+
+/*=----------------------------=*/
+/*= Pre-rendered button images =*/
+/*=----------------------------=*/
+/*	(Each is just a capital letter A through whatever) */
+
+.theme-selector button:nth-of-type(1) {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_A.gif")) ?>');
+}
+.theme-selector button:nth-of-type(2) {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_B.gif")) ?>');
+}
+.theme-selector button:nth-of-type(3) {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_C.gif")) ?>');
+}
+.theme-selector button:nth-of-type(4) {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_D.gif")) ?>');
+}
+.theme-selector button:nth-of-type(5) {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_E.gif")) ?>');
+}
+.theme-selector button:nth-of-type(6) {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_F.gif")) ?>');
+}
+.theme-selector button:nth-of-type(7) {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_G.gif")) ?>');
+}
+.theme-selector button:nth-of-type(8) {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_H.gif")) ?>');
+}
+.theme-selector button:nth-of-type(9) {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_I.gif")) ?>');
+}
+
+/*=------------------------------=*/
+/*= Theme select button tooltips =*/
+/*=------------------------------=*/
+/*	(with the name & description of the theme that each button selects) */
+
+#theme-selector button {
+	position: relative;
+	z-index: 1;
+}
+#theme-selector button::before {
+	content: attr(data-theme-name);
+	position: absolute;
+	top: 0;
+	right: 100%;
+	padding: 5px 6px 6px 6px;
+	line-height: 1;
+	width: 6em;
+	text-align: right;
+	z-index: 1;
+	visibility: hidden;
+}
+#theme-selector:hover button::before {
+	visibility: visible;
+}
+#theme-selector:hover ~ #theme-tweaker-toggle,
+#theme-selector:active ~ #theme-tweaker-toggle {
+	z-index: -1;
+}
+
+@media only screen and (max-width: 1160px) {
+	#theme-selector button::before {
+		right: unset;
+		left: 100%;
+	}
+}
+
+/************************/
+/* THEME TWEAKER TOGGLE */
+/************************/
+
+#theme-tweaker-toggle {
+	position: absolute;
+	top: 7px;
+	left: -75px;
+}
+#theme-tweaker-toggle button {
+	font-family: Font Awesome;
+	font-weight: 900;
+	font-size: 1.25rem;
+	opacity: 0.4;
+	z-index: 1;
+}
+#theme-tweaker-toggle button:hover {
+	opacity: 1.0;
+}
+
+@media only screen and (max-width: 1080px) {
+	#theme-tweaker-toggle {
+		left: -44px;
+		top: 2px;
+	}
+	#theme-tweaker-toggle button {
+		height: 2em;
+		width: 2em;
+		padding: 7px;
+	}
+}
+@media only screen and (max-width: 1000px) {
+	#theme-tweaker-toggle {
+		top: 70px;
+		left: -21px;
 	}
 }
 
@@ -651,7 +834,7 @@ a#inbox-indicator.new-messages:hover::before {
 #width-selector button:focus {
 	text-shadow: none;
 	color: transparent;
-}	
+}
 #width-selector button:disabled {
 	cursor: auto;
 }
@@ -699,6 +882,7 @@ foreach ($content_width_settings as $name => $setting) {
 }
 ?>
 
+<<<<<<< HEAD
 /******************/
 /* THEME SELECTOR */
 /******************/
@@ -882,6 +1066,8 @@ foreach ($content_width_settings as $name => $setting) {
 	}
 }
 
+=======
+>>>>>>> Media query rewrite, part X
 /*******************/
 /* QUICKNAV WIDGET */
 /*******************/
@@ -1131,7 +1317,7 @@ foreach ($content_width_settings as $name => $setting) {
 	font-family: "Font Awesome", "Font Awesome 5 Free";
 }
 #anti-kibitzer-toggle button::before {
-	content: "\F06E";	
+	content: "\F06E";
 	display: block;
 	font-size: 1.75em;
 	font-weight: 400;
@@ -1142,7 +1328,7 @@ foreach ($content_width_settings as $name => $setting) {
 	font-weight: 900;
 }
 #anti-kibitzer-toggle.engaged button::before {
-	content: "\F070";	
+	content: "\F070";
 }
 
 @media only screen and (max-width: 1160px) {
@@ -1537,7 +1723,7 @@ h1.listing a[href^="http"] {
 		white-space: initial;
 		overflow: visible;
 		z-index: 2;
-	}	
+	}
 	h1.listing:focus-within::before {
 		content: "\F105";
 		font-family: "Font Awesome", "Font Awesome 5 Free";

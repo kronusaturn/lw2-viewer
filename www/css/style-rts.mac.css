@@ -200,6 +200,189 @@ body > * {
 	}
 }
 
+/******************/
+/* THEME SELECTOR */
+/******************/
+
+#theme-selector {
+	position: absolute;
+	top: 3px;
+	left: -41px;
+	opacity: 0.4;
+	display: table;
+	max-width: 40px;
+}
+#theme-selector:hover {
+	opacity: 1.0;
+}
+#theme-selector .theme-selector-close-button {
+	display: none;
+}
+
+@media only screen and (max-width: 1160px) {
+	#theme-selector:hover::after {
+		content: "";
+		display: block;
+		position: absolute;
+		width: calc(6em - 7px);
+		height: calc(100% + 2px);
+		top: 0;
+		left: calc(100% + 1px);
+	}
+}
+@media only screen and (max-width: 1080px) {
+	#theme-selector {
+		top: 46px;
+		left: -44px;
+	}
+}
+@media only screen and (max-width: 1000px) {
+	#theme-selector {
+		left: -17px;
+		top: 120px;
+		padding: 3px 0;
+		max-width: 32px;
+	}
+}
+
+/*=----------------------=*/
+/*= Theme select buttons =*/
+/*=----------------------=*/
+
+.theme-selector button {
+	display: table-cell;
+	width: 26px;
+	height: 26px;
+	padding: 5px;
+	margin: 1px 7px 0 7px;
+	color: transparent;
+	background-size: 16px 16px;
+	background-origin: content-box;
+}
+.theme-selector button,
+.theme-selector button:hover,
+.theme-selector button:active,
+.theme-selector button:focus {
+	text-shadow: none;
+	color: transparent;
+}
+.theme-selector button:disabled {
+	cursor: auto;
+}
+
+@media only screen and (max-width: 1000px) {
+	#theme-selector button {
+		margin: 1px 4px;
+	}
+}
+
+/*=----------------------------=*/
+/*= Pre-rendered button images =*/
+/*=----------------------------=*/
+/*	(Each is just a capital letter A through whatever) */
+
+.theme-selector button:nth-of-type(1) {
+	background-image: url('data:image/gif;base64,R0lGODlhIAAgAPUAMQAAAA0NDRYWFhwcHCIiIioqKjU1NTs7O0BAQEtLS09PT1ZWVlxcXGNjY2VlZWZmZmpqamxsbG1tbXd3d4WFhYeHh46OjpaWlpubm6Ojo6ampqysrK+vr7GxsbKysra2tr29vcDAwMnJyc3NzdLS0tra2tvb293d3d/f3+Tk5Ofn5+rq6uvr6+3t7e7u7vHx8fb29vf39/r6+vv7+/39/f7+/v///38AAA8AAAAAAAAAwKwtDQEAAAAAAAAAAAAAACwAAAAAIAAgAAAGmUCbcEgsGo/IpHLJbDqf0Kh0Sq0eQwHCyVqsKQAACpdYAgMGrrGwYgZs1C9C+zAbc9rgEZeGwAMiXCRmHRdgAipWE4YtJmYYVSwCYBI2NQxgBDBUGWYSHh+SYCBTMgZ+bQs0UiKneCVRNRBmCw61DwlmYlApZnREMQVgaFCFYBpGFmZvTjRfAAIrRihmDTVq19jZ2tvc3d5CQQA7');
+}
+.theme-selector button:nth-of-type(2) {
+	background-image: url('data:image/gif;base64,R0lGODlhIAAgAPUAMQAAAA0NDRwcHCYmJioqKk1NTVVVVV1dXWJiYmNjY3d3d35+foiIiIuLi5aWlq2trbOzs7S0tLm5ucXFxcrKysvLy83NzdLS0tXV1dbW1tra2tvb2+Xl5ebm5ujo6Onp6e3t7e7u7vT09Pb29vf39/j4+Pv7+/39/f7+/v///wAAwKwtDQEAAAAQrAUAAGAAABUAAAAAAAAAEKwFAABgAABQ4VxT/38AAA8AAAAAAAAAwKwtDQEAAAAAAAAAAAAAACwAAAAAIAAgAAAGj0CAcEgsGo/IpHLJbDqf0Kh0Sq0KAx0TaUsqcRzWQChFLpM/BGoAZG5P1OyUiXI5lUeD6ZosEgAWd2lSeykieQllhnpxJAoMH2UZcG1lIYKDcZQhBpOUZCcFi2QjaQgeZRaiKXhCDWUaqn1CD6+qKRIQGGYbtpQoC3pjnikRapBtIhUHVszNzs/Q0dLT1ENBADs=');
+}
+.theme-selector button:nth-of-type(3) {
+	background-image: url('data:image/gif;base64,R0lGODlhIAAgAPUAMe7m4+7n5O7o5e7q6e7t7e7u7u/f2O/f2e/g2u/i3PDa0fDb0/Dc1PDd1fDd1vLAq/LKufLKuvLMvfLQwvO4oPO6o/O7pPO8pfO9pvPAq/PBrfPFsvSylvS4n/Wqi/Wxlfakg/aoiPaqi/eadPeeefiMYPiRZ/iTafiTaviUa/iWbfiXb/iYcfqBUPqCUft0Pft3Qft7RvxvNvxxOPx0PPx1Pf1mKP1nKf1nKv1pLP1pLf1qLv1rL/1sMP1tMgAAACwAAAAAIAAgAAAGnsCCcEgsGo/IpHLJbDqf0Kh0Cl1AIBEHtciR2b5f3wpBNbzA6C+OIVXo0mlcI0qAoWmhi8f1jRGiHWgkRQctInQ1YCZbRQlvNnKMRI5fMwOSQxlgJZhDG2B+nQUJOV88AaIAO2AsogUnaCBFBCojUpRgNR8QGiulPQJSgXBpFVMPpcQ2Nw9UAik3aTcoZIwEEhQWGBN/rt7f4OHi451BADs=');
+}
+.theme-selector button:nth-of-type(4) {
+	background-image: url('data:image/gif;base64,R0lGODlhIAAgAPUAMYiHh4iIiImGhYqGhYuHhYyGg46Gg5CFgJKEfpKFf5WDfJeEfJiCeZmDeZqCeZuCd56BdZ+AdKZ/cKd/bq19abJ8ZbZ6Ybd5YMR1VctzUMxzT8x0UNJxStNxSdNyStRxSddwRthvRNlvRNtvQ99uQOFuPuRsO+ZtO+dsOuhsOOtrNuxrNvBpMfBpMvNoL/ZnLPZoLvhnLPlmKvpmKvtnKvxmKPxmKf1mKA8AAAAAAAAAwKwtDQEAAAAAAAAAAAAAACwAAAAAIAAgAAAGn8CAcEgsGo/IpHLJbDqf0Kh0Sq0KBauX9iVrZRBWBe1GLpM11cSsZplMKqIaOTWYqmsM4uFEBtnXD0UAKDc1EVJ3gUUNNjcjiIBHITcsAlGJRxw3MASXkUYVm3VQmEYbNy6jT6VFHZudpJ9EBjI3JZA1ikQeZBe4ugEAH2QqALgUDQ4QGDFkMgt/ZmYmBVRq0i8kElbc3d7f4OHi4+REQQA7');
+}
+.theme-selector button:nth-of-type(5) {
+	background-image: url('data:image/gif;base64,R0lGODlhIAAgAPQAMQAw5wMy5gc15hI95RQ/5BhC4xtE5CZN4idN4Upo3Zai05um0p2o0qCq0aKr0aqy0Kyz0K200K+10LK4z7q+zru/zry/zr3Azr7Bzr/CzsDDzsHDzcTGzcnJzMrKzMzMzCwAAAAAIAAgAAAFbeAnjmRpnmiqrmzrvnAsz3Q9esmB7Hxh1ZsBYEgEBCo1DkHgmEiez05ymbGZlIKflYRFbkfY6lekBOh4hoitXBwq1kuG5EF/aOAC8Rir3S/7X3xjZEsQGBSIFBdwbUQNU41DC4OUlZaXmJmaViEAOw==');
+}
+.theme-selector button:nth-of-type(6) {
+	background-image: url('data:image/gif;base64,R0lGODlhIAAgAPQAMQAAAA0NDS4uLjU1NTg4OElJSVZWVmNjY21tbaOjo62trbOzs8XFxcvLy8zMzNDQ0Nvb2+Dg4OHh4ePj4+Xl5e7u7vLy8v39/f///4n/fwAAwKwtDQEAAAAeBwAAAAAAACwAAAAAIAAgAAAFWiAmjmRpnmiqrmzrvnAsz3RNJkKh70NlH4CgEBDw1RCABSXCZF5syIfthGxMTdVrKasdIQGGHWEy/Q4BjDJAIYG4IRa1tCvi0u1dvFZ/5asddIGCg4SFhoeDIQA7');
+}
+.theme-selector button:nth-of-type(7) {
+	background-image: url('data:image/gif;base64,R0lGODlhIAAgAPUAMWcEFG4QH3QZKHcfLXslM4AtOYIxPYQ1QYY4Q4tAS5VPWZpYYbKAhrSCh7iJjruPk72RlcWfosikp8qnqsyrrNK1tdO2tta7u9e+vtzExOTS0ebV0+bW1OfX1ejY1ujZ1+na1+nb2Ozf3Ozg3e3h3u7i3+/k4fDm4/Ho5PLq5vPr5/Ts6PXu6vfx7fjz7/j07/n18Pr28fr38vv48/v59Pz69f379v389/79+P//+gAAwKwtDQEAAAAAAAAAAAAAACwAAAAAIAAgAAAGssCccEgsGo/IpHLJbDqf0Kh0CmWhVi5q0TYhAL6AwySmFRXAaEAANOWAIScbjRT5fqQzBEAQMrYoOFIWamxaRTV6DIZGL2cbi0UgAAMtRDAyM5kzMlGSAixDjWkJN1Adk6BComgLgU8nAgEllpg2GgAKrk4yZw9IkrlRD3uzRsC6TioCAAQmRh4ArVIXYBKpMBhepFMZaAYHaBVaLA5pAA0pkDQjISEmM5Dx8vP09fb3UUEAOw==');
+}
+.theme-selector button:nth-of-type(8) {
+	background-image: url('data:image/gif;base64,R0lGODlhIAAgAPQAMVONTVSNTlaPUFeQUViQUlmRU2yeZ3Cga3KhbYKsfqbEo6jGpazIqbLMr7PNsMHWvsHWv8LXwMPXwejw5+nw6Orx6e/07vH28PX49Pf69vn7+fv9+/z9/P7//v///wAAACwAAAAAIAAgAAAFe6AnjmRpnmiqrmzrvnAsz3Rts52zbKamNBxZxwB4mC6CAEWIKJowhECF6SxBpVSjNTqNdZqSJ5fKyFzO58kA620C3nA4G/YFEAr4fAEwf9UhYn0udVokV110TYUjh1mBiH6Kj0IHVYZRS14JABFiAhY3oaKjpKWmp6g2IQA7');
+}
+.theme-selector button:nth-of-type(9) {
+	background-image: url('data:image/gif;base64,R0lGODlhIAAgAPQAMZLDlpPDl5XEmJfFmpfGm5rHnZ3JoKjPq6nPrLXWuL/cwe317e317vb69vz9/P3+/f7//v///wAAQBsmAIBgAAAQhqFS/38AAO86GpX/fwAAwAzpDQEAAAAeBwAAAAAAACwAAAAAIAAgAAAFT2AkjmRpnmiqrmzrvnAsz3RtQsig2OYSAAdeifELCkcNAfA4ghiWzIgTypwaq8/r0RqVZrvcaBhLPT4KZSExzVtrhQ4CINGt2+/4vH4/CwEAOw==');
+}
+
+/*=------------------------------=*/
+/*= Theme select button tooltips =*/
+/*=------------------------------=*/
+/*	(with the name & description of the theme that each button selects) */
+
+#theme-selector button {
+	position: relative;
+	z-index: 1;
+}
+#theme-selector button::before {
+	content: attr(data-theme-name);
+	position: absolute;
+	top: 0;
+	right: 100%;
+	padding: 5px 6px 6px 6px;
+	line-height: 1;
+	width: 6em;
+	text-align: right;
+	z-index: 1;
+	visibility: hidden;
+}
+#theme-selector:hover button::before {
+	visibility: visible;
+}
+#theme-selector:hover ~ #theme-tweaker-toggle,
+#theme-selector:active ~ #theme-tweaker-toggle {
+	z-index: -1;
+}
+
+@media only screen and (max-width: 1160px) {
+	#theme-selector button::before {
+		right: unset;
+		left: 100%;
+	}
+}
+
+/************************/
+/* THEME TWEAKER TOGGLE */
+/************************/
+
+#theme-tweaker-toggle {
+	position: absolute;
+	top: 7px;
+	left: -75px;
+}
+#theme-tweaker-toggle button {
+	font-family: Font Awesome;
+	font-weight: 900;
+	font-size: 1.25rem;
+	opacity: 0.4;
+	z-index: 1;
+}
+#theme-tweaker-toggle button:hover {
+	opacity: 1.0;
+}
+
+@media only screen and (max-width: 1080px) {
+	#theme-tweaker-toggle {
+		left: -44px;
+		top: 2px;
+	}
+	#theme-tweaker-toggle button {
+		height: 2em;
+		width: 2em;
+		padding: 7px;
+	}
+}
+@media only screen and (max-width: 1000px) {
+	#theme-tweaker-toggle {
+		top: 70px;
+		left: -21px;
+	}
+}
+
 /***********/
 /* NAV BAR */
 /***********/
@@ -673,7 +856,7 @@ a#inbox-indicator.new-messages:hover::before {
 #width-selector button:focus {
 	text-shadow: none;
 	color: transparent;
-}	
+}
 #width-selector button:disabled {
 	cursor: auto;
 }
@@ -731,6 +914,7 @@ head.content-width-fluid + body > * {
 >>>>>>> Minor refactor of content width CSS
 }
 
+<<<<<<< HEAD
 /******************/
 /* THEME SELECTOR */
 /******************/
@@ -918,6 +1102,8 @@ head.content-width-fluid + body > * {
 	}
 }
 
+=======
+>>>>>>> Media query rewrite, part X
 /*******************/
 /* QUICKNAV WIDGET */
 /*******************/
@@ -1194,7 +1380,7 @@ head.content-width-fluid + body > * {
 >>>>>>> Minor refactor of content width CSS
 }
 #anti-kibitzer-toggle button::before {
-	content: "\F06E";	
+	content: "\F06E";
 	display: block;
 	font-size: 1.75em;
 	font-weight: 400;
@@ -1205,7 +1391,7 @@ head.content-width-fluid + body > * {
 	font-weight: 900;
 }
 #anti-kibitzer-toggle.engaged button::before {
-	content: "\F070";	
+	content: "\F070";
 }
 
 @media only screen and (max-width: 1160px) {
@@ -1611,7 +1797,7 @@ h1.listing a[href^="http"] {
 		white-space: initial;
 		overflow: visible;
 		z-index: 2;
-	}	
+	}
 	h1.listing:focus-within::before {
 		content: "\F105";
 <<<<<<< HEAD
@@ -4670,6 +4856,7 @@ li {
 /*****************/
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 /*====================*/
 /* MOBILE UI ELEMENTS */
 /*====================*/
@@ -4870,6 +5057,11 @@ li {
 /*=+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=*/
 @media only screen and (hover: none), only screen and (max-width: 960px) {
 /*=+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=*/
+=======
+/*=-------------------------------------=*/
+@media only screen and (max-width: 960px) {
+/*=-------------------------------------=*/
+>>>>>>> Media query rewrite, part X
 
 	/*================*/
 	/* THEME SELECTOR */
@@ -4891,6 +5083,7 @@ li {
 		left: 0;
 		right: 0;
 		margin: auto;
+		padding: 0 0 64px 0;
 	}
 	#theme-selector.engaged {
 		visibility: visible;
@@ -4950,9 +5143,6 @@ li {
 	/* THEME TWEAKER */
 	/*===============*/
 
-	#theme-selector {
-		padding: 0 0 64px 0;
-	}
 	#theme-selector ~ #theme-tweaker-toggle {
 		top: 100%;
 	}
