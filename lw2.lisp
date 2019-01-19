@@ -328,8 +328,9 @@
   "If an error occurs within BODY, write an HTML representation of the
 signaled condition to OUT-STREAM."
   `(handler-case
-     (progn ,@body)
-     (serious-condition (c) (error-to-html ,out-stream c))))
+       (log-conditions (progn ,@body))
+     (serious-condition (c)
+       (error-to-html ,out-stream c))))
 
 (defun make-comment-parent-hash (comments)
   (let ((existing-comment-hash (make-hash-table :test 'equal))
