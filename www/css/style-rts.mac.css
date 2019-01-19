@@ -544,6 +544,9 @@ h1.listing ~ #bottom-bar {
 	background-image: url('data:image/gif;base64,R0lGODdhFAAUAJEAAAAAAKqqqv///wAAACH5BAkAAAMALAAAAAAUABQAAAIwnI+py+0/ApIwUGOfvTGzzYELGIoTiZpdylJte7xoQp7beMc5XnL4CYlMgsSisVEAADs=');
 }
 
+/*	If the viewport is this narrow, then the different width settings do 
+	nothing, so no reason to show the selector.
+	*/
 @media only screen and (max-width: 1220px) {
 	#width-selector {
 		display: none;
@@ -596,9 +599,9 @@ head.content-width-fluid + body > * {
 	max-width: unset;
 }
 
-/*******************/
-/* QUICKNAV WIDGET */
-/*******************/
+/********************/
+/* QUICK NAV WIDGET */
+/********************/
 
 #quick-nav-ui {
 	position: absolute;
@@ -639,6 +642,67 @@ head.content-width-fluid + body > * {
 @media only screen and (max-width: 1020px) {
 	#quick-nav-ui {
 		right: -20px;
+	}
+}
+@media only screen and (max-width: 960px) {
+	#quick-nav-ui {
+		max-width: 0px;
+		transition:
+			max-width 0.2s ease,
+			visibility 0.2s ease;
+		display: flex;
+		right: 72px;
+		bottom: 14px;
+	}
+	#quick-nav-ui.engaged {
+		visibility: visible;
+		max-width: 1000px;
+	}
+	#quick-nav-ui a {
+		position: relative;
+		margin: 2px;
+	}
+	#quick-nav-ui a + a {
+		margin-left: 5px;
+	}
+	#quick-nav-ui a::after {
+		position: absolute;
+		top: calc(100% + 2px);
+		font-size: 0.375rem;
+		left: 0;
+		right: 0;
+		margin: auto;
+		line-height: 1;
+		padding: 2px;
+		text-transform: uppercase;
+		z-index: -1;
+	}
+	@supports (width: -moz-fit-content) {
+	#quick-nav-ui a::after {
+		width: -moz-fit-content;
+	}
+}
+@supports (width: fit-content) {
+	#quick-nav-ui a::after {
+		width: fit-content;
+	}
+}
+	#quick-nav-ui a[href='#top']::after {
+		content: "Top";
+		left: -1px;
+	}
+	#quick-nav-ui a[href='#comments']::after {
+		content: "Comments";
+	}
+	#content.post-page:not(.individual-thread-page) ~ #ui-elements-container #quick-nav-ui a[href='#comments'] {
+		visibility: hidden;
+		transition: visibility 0.2s ease;
+	}
+	#content.post-page:not(.individual-thread-page) ~ #ui-elements-container #quick-nav-ui.engaged a[href='#comments'] {
+		visibility: visible;
+	}
+	#quick-nav-ui a[href='#bottom-bar']::after {
+		content: "Bottom";
 	}
 }
 
@@ -702,6 +766,78 @@ head.content-width-fluid + body > * {
 		z-index: -1;
 		left: 0;
 		top: -22px;
+	}
+}
+@media only screen and (max-width: 960px) {
+	#new-comment-nav-ui {
+		max-width: 0px;
+		max-height: 0px;
+		transition: 
+			max-width 0.2s ease,
+			max-height 0.2s ease,
+			visibility 0.2s ease;
+		display: flex;
+		right: 78px;
+		bottom: 70px;
+	}
+	#new-comment-nav-ui::before {
+		content: "New Comments";
+		position: absolute;
+		bottom: 100%;
+		font-size: 0.5625rem;
+		left: 0;
+		right: 0;
+		margin: auto;
+		padding: 2px 3px;
+		text-transform: uppercase;
+		z-index: -1;
+	}
+	@supports (width: -moz-fit-content) {
+	#new-comment-nav-ui::before {
+		width: -moz-fit-content;
+	}
+}
+@supports (width: fit-content) {
+	#new-comment-nav-ui::before {
+		width: fit-content;
+	}
+}
+	#new-comment-nav-ui.engaged {
+		visibility: visible;
+		max-width: 1000px;
+		max-height: 1000px;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button {
+		top: unset;
+		bottom: unset;
+		padding: 2px 7px;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-previous {
+		padding: 2px 7px 3px 7px;
+	}
+	#new-comment-nav-ui .new-comments-count {
+		padding: 4px 0 5px 0;
+	}
+	#new-comment-nav-ui .new-comments-count::before {
+		display: none;
+	}
+	#new-comment-nav-ui button::after {
+		position: absolute;
+		font-size: 0.375rem;
+		left: 0;
+		right: 0;
+		margin: auto;
+		line-height: 1;
+		text-transform: uppercase;
+		pointer-events: none;
+	}
+	#new-comment-nav-ui button.new-comment-previous::after {
+		content: "Previous";
+		bottom: 5px;
+	}
+	#new-comment-nav-ui button.new-comment-next::after {
+		content: "Next";
+		top: 7px;
 	}
 }
 
@@ -874,6 +1010,24 @@ head.content-width-fluid + body > * {
 	}
 >>>>>>> Miscellaneous CSS refactoring
 }
+@media only screen and (max-width: 960px) {
+	#hns-date-picker {
+		max-height: 0px;
+		bottom: 132px;
+		right: 62px;
+		transition:
+			max-height 0.2s ease,
+			visibility 0.2s ease;
+	}
+	#hns-date-picker.engaged {
+		visibility: visible;
+		max-height: 1000px;
+	}
+	#hns-date-picker::before {
+		width: calc(100% + 2px);
+		border-width: 1px !important;
+	}
+}
 
 /*=---------------=*/
 /*= "Since" label =*/
@@ -979,6 +1133,37 @@ head.content-width-fluid + body > * {
 		right: -20px;
 	}
 }
+@media only screen and (max-width: 960px) {
+	#theme-selector ~ #anti-kibitzer-toggle {
+		top: 100%;
+		bottom: unset;
+		left: 0;
+		right: 0;
+		margin: auto;
+		box-shadow: none;
+		width: calc(100vw - 44px);
+		max-width: 330px;
+		text-align: right;
+		pointer-events: none;
+	}
+	#theme-selector.engaged ~ #anti-kibitzer-toggle {
+		visibility: visible;
+		z-index: 11110;
+		top: 530px;
+		transition: 
+			top 0.2s ease,
+			visibility 0.2s ease;
+	}
+	@media only screen and (max-height: 675px) {
+		#theme-selector.engaged ~ #anti-kibitzer-toggle {	
+			top: 492px;
+		}
+	}
+	#theme-selector.engaged ~ #anti-kibitzer-toggle button {
+		pointer-events: auto;
+		display: inline-block;
+	}
+}
 
 /************************/
 /* TEXT SIZE ADJUSTMENT */
@@ -994,6 +1179,11 @@ head.content-width-fluid + body > * {
 	opacity: 1.0;
 }
 
+@media only screen and (max-width: 1220px) {
+	#text-size-adjustment-ui {
+		top: 4px;
+	}
+}
 @media only screen and (max-width: 1080px) {
 	#text-size-adjustment-ui {
 		top: 112px;
@@ -5653,6 +5843,7 @@ li {
 	#theme-tweaker-ui {
 		visibility: visible;
 	}
+<<<<<<< HEAD
 
 =======
 >>>>>>> Miscellaneous CSS refactoring
@@ -5916,6 +6107,38 @@ li {
 }
 
 >>>>>>> Minor refactor of content width CSS
+=======
+	.comment-controls {
+		display: none;
+	}
+	#comments-sort-mode-selector {
+		display: none;
+	}
+	.comment-minimize-button {
+		display: none;
+	}
+	.post-meta .qualified-linking,
+	.post-meta .lw2-link {
+		display: none;
+	}
+	.comment-meta .permalink,
+	.comment-meta .lw2-link,
+	.comment-meta .comment-parent-link {
+		display: none;
+	}
+	.new-comment::before {
+		display: none;
+	}
+	#content::before {
+		box-shadow: none;
+	}
+}
+
+/*****************/
+/* MOBILE LAYOUT */
+/*****************/
+
+>>>>>>> Media query rewrite, part XI
 /*=========*/
 /* NAV BAR */
 /*=========*/
