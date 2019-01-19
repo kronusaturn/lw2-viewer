@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 	$UI_font = (($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Whitney', 'a_Avante'") . ", 'Assistant', Arial, sans-serif";
 	$listings_font = (($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Mundo Sans', 'a_Avante'") . ", 'Assistant', Arial, sans-serif";
@@ -7,14 +8,28 @@
 	$white_glow = "0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff";
 ?>
 
+=======
+>>>>>>> Media query rewrite, part XII; plus misc. CSS refactoring
 /*****************/
 /* DEFAULT THEME */
 /*****************/
 
 body {
+	--GW-UI-font: <?php echo (($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Whitney', 'a_Avante'") . ", Arial, sans-serif"; ?>;
+	--GW-UI-font-smallcaps: <?php echo (($platform == 'Mac') ? "'Concourse Smallcaps', 'a_Avante'" : "'Whitney Smallcaps', 'a_Avante'") . ", Arial, sans-serif"; ?>;
+	--GW-listings-font: <?php echo (($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Mundo Sans', 'a_Avante'") . ", Arial, sans-serif"; ?>;
+	--GW-text-font: 'Charter', 'Georgia', serif;
+
+	--GW-body-background-color: #d8d8d8;
+	--GW-hyperlink-color: #00e;
+	--GW-shadow-white-glow:
+		0 0 1px #fff,
+		0 0 3px #fff,
+		0 0 5px #fff;
+
 	color: #000;
-	background-color: #d8d8d8;
-	font-family: <?php echo $UI_font; ?>;
+	background-color: var(--GW-body-background-color);
+	font-family: var(--GW-UI-font);
 	font-feature-settings: 'ss07';
 }
 #content {
@@ -48,12 +63,12 @@ body {
 }
 
 .nav-bar a:visited {
-	color: <?php echo $hyperlink_color; ?>;
+	color: var(--GW-hyperlink-color);
 }
 .nav-bar a:hover,
 .nav-bar a:focus {
 	text-decoration: none;
-	text-shadow: <?php echo $white_glow; ?>;
+	text-shadow: var(--GW-shadow-white-glow);
 }
 
 #bottom-bar.decorative::before,
@@ -249,7 +264,7 @@ body {
 /*=====================*/
 
 .sublevel-nav.sort .sublevel-item {
-	font-family: <?php echo $UI_font; ?>;
+	font-family: var(--GW-UI-font);
 	letter-spacing: 0.5px;
 	padding: <?php echo ($platform == 'Mac') ? "7px 7px 5px 7px" : "6px 7px"; ?>;
 	text-transform: uppercase;
@@ -295,7 +310,7 @@ body {
 #width-selector button,
 #theme-selector button {
 	box-shadow:
-		0 0 0 4px #d8d8d8 inset,
+		0 0 0 4px var(--GW-body-background-color) inset,
 		0 0 0 5px #bbb inset;
 }
 #width-selector button:hover,
@@ -308,7 +323,7 @@ body {
 
 #theme-selector button::before {
 	color: #999;
-	background-color: #d8d8d8;
+	background-color: var(--GW-body-background-color);
 }
 #theme-selector button:hover::before,
 #theme-selector button.selected::before {
@@ -318,12 +333,48 @@ body {
 	color: #999;
 }
 
+@media only screen and (max-width: 1160px) {
+	#theme-selector:hover::after {
+		background-color: #999;
+	}
+}
+@media only screen and (max-width: 1000px) {
+	#theme-selector {
+		background-color: var(--GW-body-background-color);
+		box-shadow: 
+			0 0 0 1px #999,
+			0 0 0 2px transparent;
+	}
+	#theme-selector:hover::after {
+		width: calc(6em - 3px);
+		height: calc(100% - 5px);
+		top: 3px;
+		left: 100%;
+	}	
+}
+
 /*======================*/
 /* THEME TWEAKER TOGGLE */
 /*======================*/
 
 #theme-tweaker-toggle button {
 	color: #777;
+}
+
+@media only screen and (max-width: 1080px) {
+	#theme-tweaker-toggle button {
+		border: 1px solid #999;
+		box-shadow: 
+			0 0 10px #999 inset,
+			0 0 0 1px transparent;
+		border-radius: 50%;
+		transform: scale(0.8);
+	}
+}
+@media only screen and (max-width: 1000px) {
+	#theme-tweaker-toggle button {
+		background-color: #ddd;
+	}
 }
 
 /*=================*/
@@ -346,7 +397,8 @@ body {
 	opacity: 0.4;
 	color: #bbb;
 }
-@media only screen and (hover:hover) {
+
+@media only screen and (hover:hover) and (pointer:fine) {
 	#quick-nav-ui a:hover {
 		color: #000;
 		background-color: #eee;
@@ -354,6 +406,14 @@ body {
 	#quick-nav-ui a:focus:not(:hover) {
 		transform: none;
 		text-shadow: none;
+	}
+}
+
+@media only screen and (max-width: 1020px) {
+	#quick-nav-ui a {
+		box-shadow: 
+			0 0 0 1px #999,
+			0 0 0 2px transparent;
 	}
 }
 
@@ -374,7 +434,8 @@ body {
 	color: #bbb;
 	text-shadow: none;
 }
-@media only screen and (hover:hover) {
+
+@media only screen and (hover:hover) and (pointer:fine) {
 	#new-comment-nav-ui .new-comments-count:hover {
 		text-shadow: 
 			0 0 1px #fff,
@@ -385,7 +446,17 @@ body {
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button:focus {
 		color: #d00;
-		text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+		text-shadow: var(--GW-shadow-white-glow);
+	}
+}
+
+@media only screen and (max-width: 1020px) {
+	#new-comment-nav-ui .new-comments-count::before {
+		background-color: var(--GW-body-background-color);
+		box-shadow: 
+			0 0 0 1px #999,
+			0 0 0 2px transparent;
+		border-radius: 8px;
 	}
 }
 
@@ -408,6 +479,17 @@ body {
 	color: #000;
 }
 
+@media only screen and (max-width: 1440px) {
+	#hns-date-picker {
+		background-color: var(--GW-body-background-color);
+		opacity: 1.0;
+	}
+	#hns-date-picker::before {
+		border: 1px solid #999;
+		border-width: 1px 0 1px 1px;
+	}
+}
+
 /*======================*/
 /* ANTI-KIBITZER TOGGLE */
 /*======================*/
@@ -422,6 +504,17 @@ body {
 #anti-kibitzer-toggle button:hover::before,
 #anti-kibitzer-toggle button:hover::after {
 	background-color: #444;
+}
+
+@media only screen and (max-width: 1020px) {
+	#anti-kibitzer-toggle {
+		box-shadow: 
+			0 0 0 1px #999,
+			0 0 0 2px transparent;
+		background-color: var(--GW-body-background-color);
+		border-radius: 6px;
+		overflow: hidden;
+	}
 }
 
 /*======================*/
@@ -439,6 +532,25 @@ body {
 }
 #text-size-adjustment-ui::after {
 	color: #999;
+}
+
+@media only screen and (max-width: 1080px) {
+	#text-size-adjustment-ui button {
+		border: 1px solid #999;
+		padding: 0 0 0 1px;
+		border-radius: 50%;
+		box-shadow: 
+			0 0 6px #999 inset,
+			0 0 0 1px transparent;
+	}
+}
+@media only screen and (max-width: 1000px) {
+	#text-size-adjustment-ui button {
+		background-color: #ddd;
+	}
+	#text-size-adjustment-ui button:hover {
+		background-color: #eee;
+	}
 }
 
 /*=============================*/
@@ -485,7 +597,7 @@ body {
 	text-decoration: none;
 	color: #c00;
 	background-color: #e0e0e0;
-	text-shadow: <?php echo $white_glow; ?>;
+	text-shadow: var(--GW-shadow-white-glow);
 }
 .archive-nav a:active {
 	transform: scale(0.9);
@@ -502,7 +614,11 @@ body {
 /*==========*/
 
 h1.listing {
+<<<<<<< HEAD
 	font-family: <?php echo $listings_font; ?>, 'Font Awesome', 'Font Awesome 5 Free';
+=======
+	font-family: var(--GW-listings-font), 'Font Awesome';
+>>>>>>> Media query rewrite, part XII; plus misc. CSS refactoring
 	font-weight: <?php echo ($platform == 'Mac') ? "700" : "800"; ?>;
 	margin: 0.7em 20px 0 20px;
 	max-width: calc(100% - 40px);
@@ -516,7 +632,7 @@ h1.listing a[href^="http"] {
 	color: #00c;
 }
 
-@media only screen and (hover: hover) {
+@media only screen and (hover:hover) and (pointer:fine) {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		color: #777;
@@ -739,7 +855,7 @@ h1.listing + .post-meta::after {
 h1.listing.own-post-listing {
 	padding-right: 36px;
 }
-@media only screen and (hover: hover) {
+@media only screen and (hover:hover) and (pointer:fine) {
 	#content.user-page h1.listing a:hover,
 	#content.user-page h1.listing a:focus {
 		background-color: #eee;
@@ -847,7 +963,7 @@ h1.listing.own-post-listing {
 /*===================*/
 
 .contents {
-	font-family: <?php echo $UI_font; ?>;
+	font-family: var(--GW-UI-font);
 	border: 1px solid #ddd;
 	background-color: #eee;
 }
@@ -870,8 +986,14 @@ h1.listing.own-post-listing {
 /* POSTS & COMMENTS */
 /*==================*/
 
+<<<<<<< HEAD
 .body-text {
 	font-family: <?php echo $text_font; ?>;
+=======
+.post-body,
+.comment-body {
+	font-family: var(--GW-text-font);
+>>>>>>> Media query rewrite, part XII; plus misc. CSS refactoring
 }
 
 .body-text a {
@@ -887,7 +1009,7 @@ h1.listing.own-post-listing {
 /*=======*/
 
 h1.post-title {
-	font-family: <?php echo $listings_font; ?>;
+	font-family: var(--GW-listings-font);
 	font-weight: <?php echo ($platform == 'Mac') ? "700" : "800"; ?>;
 }
 
@@ -935,7 +1057,7 @@ a.post-section.alignment-forum:hover::before {
 
 .post.link-post a.link-post-link {
 	text-decoration: none;
-	font-family: <?php echo $UI_font; ?>;
+	font-family: var(--GW-UI-font);
 	font-weight: 600;
 }
 .post.link-post a.link-post-link:hover {
@@ -1039,7 +1161,7 @@ a.post-section.alignment-forum:hover::before {
 /*================================*/
 
 .comment-item input[id^="expand"] + label::after {
-	color: <?php echo $hyperlink_color; ?>;
+	color: var(--GW-hyperlink-color);
 	font-weight: 600;
 }
 .comment-item input[id^="expand"] + label:hover::after {
@@ -1176,11 +1298,11 @@ div.comment-child-links a {
 		0 0 0 5px #bbb inset;
 }
 #content.compact > .comment-thread .comment-item::after {
-	color: <?php echo $hyperlink_color; ?>;
+	color: var(--GW-hyperlink-color);
 	background: linear-gradient(to right, transparent 0%, #fff 50%, #fff 100%);
 }
 
-@media only screen and (hover: hover) {
+@media only screen and (hover:hover) and (pointer:fine) {
 	#content.compact > .comment-thread .comment-item:hover .comment,
 	#content.compact > .comment-thread .comment-item.expanded .comment {
 		background-color: #fff;
@@ -1199,7 +1321,7 @@ div.comment-child-links a {
 			0 0 40px #fff;
 	}
 }
-@media only screen and (hover: none) {
+@media not screen and (hover:hover) and (pointer:fine) {
 	#content.compact > .comment-thread.expanded .comment-item .comment {
 		background-color: #fff;
 		outline: 3px solid #00c;
@@ -1245,10 +1367,10 @@ div.comment-child-links a {
 }
 .comment-minimize-button:hover {
 	color: #aaa;
-	text-shadow: <?php echo $white_glow; ?>;
+	text-shadow: var(--GW-shadow-white-glow);
 }
 .comment-minimize-button::after {
-	font-family: <?php echo $UI_font; ?>;
+	font-family: var(--GW-UI-font);
 	color: #777;
 }
 .comment-minimize-button.maximized::after {
@@ -1344,7 +1466,7 @@ div.comment-child-links a {
 }
 .comment-controls .cancel-comment-button:hover {
 	color: #f00;
-	text-shadow: <?php echo $white_glow; ?>;
+	text-shadow: var(--GW-shadow-white-glow);
 }
 
 .new-comment-button {
@@ -1370,7 +1492,7 @@ div.comment-child-links a {
 }
 
 .posting-controls textarea {
-	font-family: <?php echo $text_font; ?>;
+	font-family: var(--GW-text-font);
 	color: #000;
 	background-color: #fff;
 	border-color: #aaa;
@@ -1379,11 +1501,11 @@ div.comment-child-links a {
 }
 .posting-controls textarea:focus {
 	background-color: #ffd;
-	border-color: <?php echo $hyperlink_color; ?>;
+	border-color: var(--GW-hyperlink-color);
 	box-shadow: 
 		0 0 0 1px #ddf inset,
 		0 0 0 1px #fff,
-		0 0 0 2px <?php echo $hyperlink_color; ?>;
+		0 0 0 2px var(--GW-hyperlink-color);
 }
 .posting-controls.edit-existing-post textarea:focus,
 .posting-controls form.edit-existing-comment textarea:focus {
@@ -1443,11 +1565,15 @@ div.comment-child-links a {
 	color: #050;
 }
 .guiedit-buttons-container button {
+<<<<<<< HEAD
 	font-family: 'Font Awesome', 'Font Awesome 5 Free', <?php echo $text_font; ?>;
+=======
+	font-family: Font Awesome, var(--GW-text-font);
+>>>>>>> Media query rewrite, part XII; plus misc. CSS refactoring
 }
 
 .guiedit::after {
-	font-family: <?php echo $UI_font; ?>;
+	font-family: var(--GW-UI-font);
 	color: #777;
 	text-shadow: none;
 }
@@ -1455,11 +1581,11 @@ div.comment-child-links a {
 /* Markdown hints */
 
 #markdown-hints-checkbox + label {
-	color: <?php echo $hyperlink_color; ?>;
+	color: var(--GW-hyperlink-color);
 }
 #markdown-hints-checkbox + label:hover {
 	color: #e00;
-	text-shadow: <?php echo $white_glow; ?>;
+	text-shadow: var(--GW-shadow-white-glow);
 }
 #markdown-hints {
 	border: 1px solid #c00;
@@ -1478,7 +1604,7 @@ div.comment-child-links a {
 	border: 1px solid #ddd;
 	color: #777;
 }
-@media only screen and (hover:hover) {
+@media only screen and (hover:hover) and (pointer:fine) {
 	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover,
 	#edit-post-form .post-meta-fields input[type='checkbox']:focus + label {
 		text-shadow: 
@@ -1506,7 +1632,7 @@ div.comment-child-links a {
 #edit-post-form input[type='radio'][value='drafts'] + label {
 	border-radius: 0 8px 8px 0;
 }
-@media only screen and (hover:hover) {
+@media only screen and (hover:hover) and (pointer:fine) {
 	#edit-post-form input[type='radio'] + label:hover,
 	#edit-post-form input[type='radio']:focus + label {
 		background-color: #ddd;
@@ -1533,7 +1659,7 @@ div.comment-child-links a {
 
 a {
 	text-decoration: none;
-	color: <?php echo $hyperlink_color; ?>;
+	color: var(--GW-hyperlink-color);
 }
 a:visited {
 	color: #551a8b;
@@ -1548,7 +1674,7 @@ a:hover {
 
 button,
 input[type='submit'] {
-	color: <?php echo $hyperlink_color; ?>;
+	color: var(--GW-hyperlink-color);
 }
 
 button:active,
@@ -1557,7 +1683,7 @@ input[type='submit']:active {
 	transform: scale(0.9);
 }
 .button:visited {
-	color: <?php echo $hyperlink_color; ?>;
+	color: var(--GW-hyperlink-color);
 }
 .button:active {
 	transform: scale(0.9);
@@ -1568,18 +1694,18 @@ input[type='submit']:active {
 	}
 }
 
-@media only screen and (hover:hover) {
+@media only screen and (hover:hover) and (pointer:fine) {
 	button:hover,
 	input[type='submit']:hover,
 	button:focus,
 	input[type='submit']:focus {
 		color: #f00;
-		text-shadow: <?php echo $white_glow; ?>;
+		text-shadow: var(--GW-shadow-white-glow);
 	}
 
 	.button:hover {
 		color: #f00;
-		text-shadow: <?php echo $white_glow; ?>;
+		text-shadow: var(--GW-shadow-white-glow);
 		text-decoration: none;
 	}
 	.button:focus:not(:hover) {
@@ -1591,16 +1717,26 @@ input[type='submit']:active {
 /* HEADINGS */
 /*==========*/
 
+<<<<<<< HEAD
 .body-text h1,
 .body-text h2,
 .body-text h4 {
 	font-family: <?php echo $UI_font; ?>;
+=======
+.post-body h1,
+.post-body h2,
+.post-body h4,
+.comment-body h1,
+.comment-body h2,
+.comment-body h4 {
+	font-family: var(--GW-UI-font);
+>>>>>>> Media query rewrite, part XII; plus misc. CSS refactoring
 }
 .body-text h3,
 .body-text h5,
 .body-text h6 {
 	font-weight: 600;
-	font-family: <?php echo $UI_font_smallcaps; ?>;
+	font-family: var(--GW-UI-font-smallcaps);
 }
 .body-text h6 {
 	color: #555;
@@ -1714,7 +1850,7 @@ EOT;
 }
 
 #content.about-page .accesskey-table {
-	font-family: <?php echo $UI_font; ?>;
+	font-family: var(--GW-UI-font);
 	border-color: #ddd;
 }
 
@@ -1731,11 +1867,11 @@ EOT;
 }
 #aux-about-link a:hover {
 	opacity: 1.0;
-	text-shadow: <?php echo $white_glow; ?>;
+	text-shadow: var(--GW-shadow-white-glow);
 }
 
 .qualified-linking label {
-	color: <?php echo $hyperlink_color; ?>;
+	color: var(--GW-hyperlink-color);
 }
 .qualified-linking label:hover {
 	text-shadow:
@@ -1754,15 +1890,15 @@ EOT;
 	border-radius: 4px;
 }
 .qualified-linking-toolbar a:visited {
-	color: <?php echo $hyperlink_color; ?>;
+	color: var(--GW-hyperlink-color);
 }
 .qualified-linking-toolbar a:hover {
 	text-decoration: none;
 	background-color: #ddd;
-	text-shadow: <?php echo $white_glow; ?>;
+	text-shadow: var(--GW-shadow-white-glow);
 }
 .qualified-linking label::after {
-	background-color: #d8d8d8;
+	background-color: var(--GW-body-background-color);
 	opacity: 0.8;
 }
 
@@ -1801,7 +1937,7 @@ EOT;
 	background-color: #eef0ff;
 }
 #content.alignment-forum-index-page::after {
-	font-family: "Concourse SmallCaps";
+	font-family: var(--GW-UI-font-smallcaps);
 	font-weight: bold;
 	background-color: #626dd7;
 	-webkit-background-clip: text;
@@ -1809,103 +1945,18 @@ EOT;
 	text-shadow: 
 		rgba(255,255,255,0.5) 0px 3px 3px;;
 }
-@media only screen and (hover: hover) {
+@media only screen and (hover:hover) and (pointer:fine) {
 	#content.alignment-forum-index-page h1.listing a:hover,
 	#content.alignment-forum-index-page h1.listing a:focus {
 		background-color: rgba(238,240,255,0.85);
 	}	
 }
 
-/*====================*/
-/* FOR NARROW SCREENS */
-/*====================*/
-
-@media only screen and (max-width: 1440px) {
-	#hns-date-picker {
-		background-color: #d8d8d8;
-		opacity: 1.0;
-	}
-	#hns-date-picker::before {
-		border: 1px solid #999;
-		border-width: 1px 0 1px 1px;
-	}
-}
-@media only screen and (max-width: 1160px) {
-	#theme-selector:hover::after {
-		background-color: #999;
-	}
-}
-@media only screen and (max-width: 1080px) {
-	#text-size-adjustment-ui button {
-		border: 1px solid #999;
-		padding: 0 0 0 1px;
-		border-radius: 50%;
-		box-shadow: 
-			0 0 6px #999 inset,
-			0 0 0 1px transparent;
-	}
-	#theme-tweaker-toggle button {
-		border: 1px solid #999;
-		box-shadow: 
-			0 0 10px #999 inset,
-			0 0 0 1px transparent;
-		border-radius: 50%;
-		transform: scale(0.8);
-	}
-}
-@media only screen and (max-width: 1020px) {
-	#quick-nav-ui a {
-		box-shadow: 
-			0 0 0 1px #999,
-			0 0 0 2px transparent;
-	}
-	#new-comment-nav-ui .new-comments-count::before {
-		background-color: #d8d8d8;
-		box-shadow: 
-			0 0 0 1px #999,
-			0 0 0 2px transparent;
-		border-radius: 8px;
-	}
-	#anti-kibitzer-toggle {
-		box-shadow: 
-			0 0 0 1px #999,
-			0 0 0 2px transparent;
-		background-color: #d8d8d8;
-		border-radius: 6px;
-		overflow: hidden;
-	}
-}
-@media only screen and (max-width: 1000px) {
-	#theme-selector {
-		background-color: #d8d8d8;
-		box-shadow: 
-			0 0 0 1px #999,
-			0 0 0 2px transparent;
-	}
-	#theme-selector:hover::after {
-		width: calc(6em - 3px);
-		height: calc(100% - 5px);
-		top: 3px;
-		left: 100%;
-	}	
-	#text-size-adjustment-ui button {
-		background-color: #ddd;
-	}
-	#text-size-adjustment-ui button:hover {
-		background-color: #eee;
-	}
-	#theme-tweaker-toggle button {
-		background-color: #ddd;
-	}
-}
-
 /*========*/
 /* MOBILE */
 /*========*/
 
-/************************************/
-@media only screen and (hover: none) {
-/************************************/
+@media only screen and (max-width: 960px) {
 	#ui-elements-container > div[id$='-ui-toggle'] button  {
 		color: #888;
 		text-shadow:
@@ -1965,7 +2016,7 @@ EOT;
 	}
 	#quick-nav-ui a::after,
 	#new-comment-nav-ui::before {
-		font-family: <?php echo $UI_font; ?>;
+		font-family: var(--GW-UI-font);
 		font-weight: 600;
 		box-shadow:
 			0 0 1px 0 #fff,
@@ -2003,270 +2054,267 @@ EOT;
 		border-radius: 0 7px 7px 0;
 	}
 	#new-comment-nav-ui button::after {
-		font-family: <?php echo $UI_font; ?>;
-	}
-	
-	/*****************************************/
-	@media only screen and (max-width: 900px) {
-	/*****************************************/
-		h1.listing {
-			font-size: 1.75rem;
-			line-height: 1;
-		}
-		h1.listing a[href^='http'] {
-			top: 2px;
-		}
-		h1.listing + .post-meta .karma-value,
-		h1.listing + .post-meta .comment-count,
-		h1.listing + .post-meta .lw2-link,
-		h1.listing + .post-meta .read-time {
-			bottom: 0;
-		}
-		h1.listing + .post-meta .post-section::before {
-			position: unset;
-		}
-		h1.listing + .post-meta .post-section {
-			overflow: visible;
-			order: 1;
-		}
-		h1.listing + .post-meta .link-post-domain {
-			order: 2;
-			line-height: 1;
-			flex-basis: 100%;
-		}
-		h1.listing + .post-meta::after {
-			bottom: -10px;
-		}
-		#content.user-page h1.listing + .post-meta {
-			margin-bottom: 1em;
-		}
-		#content.user-page h1.link-post-listing::after {
-			height: calc(100% + 2em);
-		}
-
-		#nav-item-search button::before {
-			color: #00e;
-		}
-
-		.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
-			background-color: #aaa;
-		}
-
-		.comment-item .comment-item {
-			margin: 0.75em 2px 4px 6px;
-			box-shadow: 
-				0 0 2px #ccc, 
-				0 0 4px #ccc, 
-				0 0 7px #ccc;
-		}
-		.comment-item .comment-item + .comment-item {
-			margin: 1.5em 2px 4px 6px;
-		}
-		.comment-body {
-			font-size: 1.125rem;
-		}
-
-		a.comment-parent-link:hover::before {
-			background-color: unset;
-		}
-
-		.sublevel-nav:not(.sort) .sublevel-item,
-		.sublevel-nav:not(.sort) .sublevel-item:first-child,
-		.sublevel-nav:not(.sort) .sublevel-item:last-child {
-			border-radius: 8px;
-			border-width: 1px;
-			margin: 2px;
-		}
-	/*******************************************/
-	} @media only screen and (max-width: 720px) {
-	/*******************************************/
-		h1.listing {
-			margin: 10px 6px 6px 6px;
-			max-width: calc(100% - 12px);
-			font-size: 1.5rem;
-			padding-right: 35px;
-		}
-		#content.conversations-user-page h1.listing {
-			font-size: 1.5rem;
-		}
-		h1.listing + .post-meta {
-			margin: 0 6px 0 7px;
-			clear: both;
-		}
-		h1.listing + .post-meta {
-			padding: .25em 254px 0 0;
-		}
-		h1.listing + .post-meta::after {
-			bottom: -2px;
-		}
-		h1.listing + .post-meta > * {
-			line-height: 1;
-			display: block;
-		}
-		#content.conversations-user-page h1.listing + .post-meta > * {
-			line-height: 1.5;
-		}
-		h1.listing + .post-meta .date,
-		h1.listing + .post-meta .author {
-			line-height: 1.3;		
-		}
-		h1.listing + .post-meta .karma-value,
-		h1.listing + .post-meta .comment-count,
-		h1.listing + .post-meta .lw2-link,
-		h1.listing + .post-meta .read-time {
-			top: unset;
-			font-size: 1rem;
-			box-shadow: none;
-		}
-		h1.listing + .post-meta .karma-value::before,
-		h1.listing + .post-meta .comment-count::before,
-		h1.listing + .post-meta .lw2-link::before,
-		h1.listing + .post-meta .read-time::before {
-			box-shadow: none;
-		}
-		h1.listing + .post-meta .karma-value,
-		h1.listing + .post-meta .comment-count,
-		h1.listing + .post-meta .read-time,
-		h1.listing + .post-meta .lw2-link {
-			bottom: 4px;
-		}
-
-		h1.listing + .post-meta .karma-value {
-			right: 192px;
-		}
-		h1.listing + .post-meta .karma-value::before {
-			text-shadow: 0.5px 0.5px 0.5px #999;
-		}
-		h1.listing + .post-meta .comment-count {
-			right: 132px;
-		}
-		h1.listing + .post-meta .read-time {
-			right: 56px;
-		}
-		h1.listing + .post-meta .lw2-link {
-			opacity: 1;
-			right: 0;
-		}
-		h1.listing + .post-meta .link-post-domain {
-			margin: 0;
-			line-height: 1.3;
-			overflow: hidden;
-			text-overflow: ellipsis;
-		}
-		h1.listing + .post-meta .post-section::before {
-			position: absolute;
-			left: unset;
-			right: 0;
-			bottom: 30px;
-			top: unset;
-		}
-		h1.listing a {
-			display: inline;
-		}
-	/*******************************************/
-	} @media only screen and (max-width: 520px) {
-	/*******************************************/
-		h1.listing + .post-meta {
-			padding: .25em 144px 0 0;
-			flex-flow: column;
-		}
-		#content.conversations-user-page h1.listing + .post-meta {
-			flex-flow: row wrap;
-		}
-		h1.listing + .post-meta .date {
-			margin: 0.375em 0 0.25em 0;
-			line-height: 1;
-		}
-		#content.user-page h1.listing::after {
-			height: calc(100% + 2.125em);
-		}
-		#content.user-page h1.link-post-listing::after {
-			height: calc(100% + 3.125em);
-		}
-		#content.user-page h1.listing + .post-meta {
-			padding: 0.25em 144px 0.5em 36px;
-		}
-		#content.conversations-user-page h1.listing + .post-meta .date {
-			margin: 0 0 0 1em;
-		}
-
-		h1.listing + .post-meta .karma-value {
-			bottom: 28px;
-			right: 0;
-		}
-		h1.listing + .post-meta .comment-count {
-			bottom: 28px;
-			right: 56px;
-		}
-		h1.listing + .post-meta .read-time {
-			right: 56px;
-			bottom: 4px;
-		}
-		h1.listing + .post-meta .lw2-link {
-			right: 0;
-			bottom: 4px;
-		}
-		h1.listing + .post-meta .link-post-domain {
-			max-width: 100%;
-		}
-		h1.listing + .post-meta .post-section::before {
-			right: 120px;
-		}
-
-		#content.compact > .comment-thread .comment-item {
-			max-height: 110px;
-		}
-	
-		.textarea-container:focus-within button:active {
-			background-color: #ccc;
-		}
-		.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
-			background-color: #eee;
-			border: 1px solid #ddd;
-			border-radius: 6px;
-		}
-		.textarea-container:focus-within .guiedit-mobile-help-button.active {
-			border-color: #c00;
-			box-shadow:
-				0 0 0 1px #fff,
-				0 0 0 2px #c00;
-			color: #c00;
-			font-weight: 600;
-		}
-		#content.conversation-page .textarea-container:focus-within::after {
-			background-color: #fff;
-		}
-		.textarea-container:focus-within .guiedit-buttons-container {
-			background-color: white;
-			border-top: 1px solid #ddf;
-		}
-		.textarea-container:focus-within button.guiedit {
-			background-color: #eee;
-			border: 1px solid #ddd;
-			border-radius: 6px;
-		}
-		#markdown-hints::after {
-			color: #090;
-		}
-
-		#edit-post-form .post-meta-fields input[type='checkbox'] + label {
-			top: 2px;
-		}
-		#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
-			top: 1px;
-		}
-	/*******************************************/
-	} @media only screen and (max-width: 320px) {
-	/*******************************************/
-		h1.listing {
-			font-size: 1.25rem;
-		}
-		#content.user-page h1.listing::after {
-			height: calc(100% + 2.625em);
-		}
-		#content.user-page h1.link-post-listing::after {
-			height: calc(100% + 3.75em);
-		}
+		font-family: var(--GW-UI-font);
 	}
 }
 
+@media only screen and (max-width: 900px) {
+	h1.listing {
+		font-size: 1.75rem;
+		line-height: 1;
+	}
+	h1.listing a[href^='http'] {
+		top: 2px;
+	}
+	h1.listing + .post-meta .karma-value,
+	h1.listing + .post-meta .comment-count,
+	h1.listing + .post-meta .lw2-link,
+	h1.listing + .post-meta .read-time {
+		bottom: 0;
+	}
+	h1.listing + .post-meta .post-section::before {
+		position: unset;
+	}
+	h1.listing + .post-meta .post-section {
+		overflow: visible;
+		order: 1;
+	}
+	h1.listing + .post-meta .link-post-domain {
+		order: 2;
+		line-height: 1;
+		flex-basis: 100%;
+	}
+	h1.listing + .post-meta::after {
+		bottom: -10px;
+	}
+	#content.user-page h1.listing + .post-meta {
+		margin-bottom: 1em;
+	}
+	#content.user-page h1.link-post-listing::after {
+		height: calc(100% + 2em);
+	}
+
+	#nav-item-search button::before {
+		color: #00e;
+	}
+
+	.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
+		background-color: #aaa;
+	}
+
+	.comment-item .comment-item {
+		margin: 0.75em 2px 4px 6px;
+		box-shadow: 
+			0 0 2px #ccc, 
+			0 0 4px #ccc, 
+			0 0 7px #ccc;
+	}
+	.comment-item .comment-item + .comment-item {
+		margin: 1.5em 2px 4px 6px;
+	}
+	.comment-body {
+		font-size: 1.125rem;
+	}
+
+	a.comment-parent-link:hover::before {
+		background-color: unset;
+	}
+
+	.sublevel-nav:not(.sort) .sublevel-item,
+	.sublevel-nav:not(.sort) .sublevel-item:first-child,
+	.sublevel-nav:not(.sort) .sublevel-item:last-child {
+		border-radius: 8px;
+		border-width: 1px;
+		margin: 2px;
+	}
+}
+
+@media only screen and (max-width: 720px) {
+	h1.listing {
+		margin: 10px 6px 6px 6px;
+		max-width: calc(100% - 12px);
+		font-size: 1.5rem;
+		padding-right: 35px;
+	}
+	#content.conversations-user-page h1.listing {
+		font-size: 1.5rem;
+	}
+	h1.listing + .post-meta {
+		margin: 0 6px 0 7px;
+		clear: both;
+	}
+	h1.listing + .post-meta {
+		padding: .25em 254px 0 0;
+	}
+	h1.listing + .post-meta::after {
+		bottom: -2px;
+	}
+	h1.listing + .post-meta > * {
+		line-height: 1;
+		display: block;
+	}
+	#content.conversations-user-page h1.listing + .post-meta > * {
+		line-height: 1.5;
+	}
+	h1.listing + .post-meta .date,
+	h1.listing + .post-meta .author {
+		line-height: 1.3;		
+	}
+	h1.listing + .post-meta .karma-value,
+	h1.listing + .post-meta .comment-count,
+	h1.listing + .post-meta .lw2-link,
+	h1.listing + .post-meta .read-time {
+		top: unset;
+		font-size: 1rem;
+		box-shadow: none;
+	}
+	h1.listing + .post-meta .karma-value::before,
+	h1.listing + .post-meta .comment-count::before,
+	h1.listing + .post-meta .lw2-link::before,
+	h1.listing + .post-meta .read-time::before {
+		box-shadow: none;
+	}
+	h1.listing + .post-meta .karma-value,
+	h1.listing + .post-meta .comment-count,
+	h1.listing + .post-meta .read-time,
+	h1.listing + .post-meta .lw2-link {
+		bottom: 4px;
+	}
+
+	h1.listing + .post-meta .karma-value {
+		right: 192px;
+	}
+	h1.listing + .post-meta .karma-value::before {
+		text-shadow: 0.5px 0.5px 0.5px #999;
+	}
+	h1.listing + .post-meta .comment-count {
+		right: 132px;
+	}
+	h1.listing + .post-meta .read-time {
+		right: 56px;
+	}
+	h1.listing + .post-meta .lw2-link {
+		opacity: 1;
+		right: 0;
+	}
+	h1.listing + .post-meta .link-post-domain {
+		margin: 0;
+		line-height: 1.3;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	h1.listing + .post-meta .post-section::before {
+		position: absolute;
+		left: unset;
+		right: 0;
+		bottom: 30px;
+		top: unset;
+	}
+	h1.listing a {
+		display: inline;
+	}
+}
+
+@media only screen and (max-width: 520px) {
+	h1.listing + .post-meta {
+		padding: .25em 144px 0 0;
+		flex-flow: column;
+	}
+	#content.conversations-user-page h1.listing + .post-meta {
+		flex-flow: row wrap;
+	}
+	h1.listing + .post-meta .date {
+		margin: 0.375em 0 0.25em 0;
+		line-height: 1;
+	}
+	#content.user-page h1.listing::after {
+		height: calc(100% + 2.125em);
+	}
+	#content.user-page h1.link-post-listing::after {
+		height: calc(100% + 3.125em);
+	}
+	#content.user-page h1.listing + .post-meta {
+		padding: 0.25em 144px 0.5em 36px;
+	}
+	#content.conversations-user-page h1.listing + .post-meta .date {
+		margin: 0 0 0 1em;
+	}
+
+	h1.listing + .post-meta .karma-value {
+		bottom: 28px;
+		right: 0;
+	}
+	h1.listing + .post-meta .comment-count {
+		bottom: 28px;
+		right: 56px;
+	}
+	h1.listing + .post-meta .read-time {
+		right: 56px;
+		bottom: 4px;
+	}
+	h1.listing + .post-meta .lw2-link {
+		right: 0;
+		bottom: 4px;
+	}
+	h1.listing + .post-meta .link-post-domain {
+		max-width: 100%;
+	}
+	h1.listing + .post-meta .post-section::before {
+		right: 120px;
+	}
+
+	#content.compact > .comment-thread .comment-item {
+		max-height: 110px;
+	}
+
+	.textarea-container:focus-within button:active {
+		background-color: #ccc;
+	}
+	.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
+		background-color: #eee;
+		border: 1px solid #ddd;
+		border-radius: 6px;
+	}
+	.textarea-container:focus-within .guiedit-mobile-help-button.active {
+		border-color: #c00;
+		box-shadow:
+			0 0 0 1px #fff,
+			0 0 0 2px #c00;
+		color: #c00;
+		font-weight: 600;
+	}
+	#content.conversation-page .textarea-container:focus-within::after {
+		background-color: #fff;
+	}
+	.textarea-container:focus-within .guiedit-buttons-container {
+		background-color: white;
+		border-top: 1px solid #ddf;
+	}
+	.textarea-container:focus-within button.guiedit {
+		background-color: #eee;
+		border: 1px solid #ddd;
+		border-radius: 6px;
+	}
+	#markdown-hints::after {
+		color: #090;
+	}
+
+	#edit-post-form .post-meta-fields input[type='checkbox'] + label {
+		top: 2px;
+	}
+	#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
+		top: 1px;
+	}
+}
+
+@media only screen and (max-width: 320px) {
+	h1.listing {
+		font-size: 1.25rem;
+	}
+	#content.user-page h1.listing::after {
+		height: calc(100% + 2.625em);
+	}
+	#content.user-page h1.link-post-listing::after {
+		height: calc(100% + 3.75em);
+	}
+}
