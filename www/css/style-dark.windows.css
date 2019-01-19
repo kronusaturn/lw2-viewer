@@ -1803,6 +1803,7 @@ h1.listing ~ #bottom-bar {
 =======
 a#inbox-indicator:hover::before {
 	color: #000;
+<<<<<<< HEAD
 	text-shadow: 
 		0 0 1px #fff,
 		0 0 2px #fff,
@@ -1810,7 +1811,10 @@ a#inbox-indicator:hover::before {
 		0 0 1px #777,
 		0.5px 0.5px 1px #777;
 >>>>>>> Miscellaneous CSS refactoring
+=======
+>>>>>>> Miscellaneous CSS refactoring
 }
+a#inbox-indicator:hover::before,
 a#inbox-indicator.new-messages:hover::before {
 	text-shadow: 
 		0 0 1px #0090e0,
@@ -1882,8 +1886,7 @@ a#inbox-indicator.new-messages:hover::before {
 
 #top-nav-bar {
 	grid-column: 2;
-	margin: 0.25em 0 0 0;
-	padding: 0.75em 0 0 0;
+	padding: 1em 0 0 0;
 	text-align: center;
 	font-size: 1.25em;
 	display: flex;
@@ -2974,15 +2977,13 @@ article {
 
 .post-body {
 	min-height: 8em;
-	padding: 0 30px;
 	line-height: 1.5;
 	font-size: 1.3rem;
 	overflow: auto;
-	margin: 0.5em 0 0 0;
+	margin: 0.5em 30px 0 30px;
 }
 h1.post-title {
-	margin: 1.1em 0 0.35em 0;
-	padding: 0 30px;
+	margin: 1.1em 30px 0.35em 30px;
 	text-align: center;
 	font-size: 2.5em;
 	line-height: 1;

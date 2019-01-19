@@ -337,13 +337,8 @@ h1.listing ~ #bottom-bar {
 }
 a#inbox-indicator:hover::before {
 	color: #fff;
-	text-shadow: 
-		0 0 1px #000,
-		0 0 2px #000,
-		0 0 4px #000,
-		0 0 1px #777,
-		0.5px 0.5px 1px #777;
 }
+a#inbox-indicator:hover::before,
 a#inbox-indicator.new-messages:hover::before {
 	text-shadow: 
 		0 0 1px #f00,
@@ -1053,10 +1048,24 @@ foreach ($content_width_settings as $name => $setting) {
 	content: "\F070";
 }
 
+<<<<<<< HEAD
 @media only screen and (max-width: 1160px) {
 	#anti-kibitzer-toggle {
 		bottom: 330px;
 	}
+=======
+/*********************/
+/* TOP PAGINATION UI */
+/*********************/
+
+#top-nav-bar {
+	grid-column: 2;
+	padding: 1em 0 0 0;
+	text-align: center;
+	font-size: 1.25em;
+	display: flex;
+	justify-content: center;
+>>>>>>> Miscellaneous CSS refactoring
 }
 @media only screen and (max-width: 1080px) {
 	#anti-kibitzer-toggle {
@@ -2114,15 +2123,13 @@ article {
 
 .post-body {
 	min-height: 8em;
-	padding: 0 30px;
 	line-height: 1.5;
 	font-size: 1.3rem;
 	overflow: auto;
-	margin: 0.5em 0 0 0;
+	margin: 0.5em 30px 0 30px;
 }
 h1.post-title {
-	margin: 1.1em 0 0.35em 0;
-	padding: 0 30px;
+	margin: 1.1em 30px 0.35em 30px;
 	text-align: center;
 	font-size: 2.5em;
 	line-height: 1;
