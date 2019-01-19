@@ -21,10 +21,11 @@
 		height: unset;
 		position: unset;
 	}
-	#ui-elements-container > * {
+	#ui-elements-container > div {
 		position: fixed;
 		visibility: hidden;
 		z-index: 10000;
+		opacity: 1.0;
 	}
 
 	#ui-elements-container > div[id$='-ui-toggle'] {
@@ -115,11 +116,6 @@
 		top: 120px;
 		padding: 3px 0;
 		max-width: 32px;
-	}
-}
-@media only screen and (max-width: 960px) {
-	#theme-selector {
-		opacity: 1.0;
 	}
 }
 
