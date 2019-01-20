@@ -136,11 +136,14 @@ body > * {
 /*= Nav bar items =*/
 /*=---------------=*/
 
-.nav-item {
-	flex: 1 1 auto;
+.nav-item,
+.nav-inner {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+.nav-item {
+	flex: 1 1 auto;
 	position: relative;
 }
 .nav-item * {
@@ -149,14 +152,11 @@ body > * {
 	overflow: hidden;
 }
 .nav-inner {
-	text-align: center;
-	display: block;
+	width: 100%;
+	height: 100%;
 }
-#primary-bar {
-	height: 4em;
-}
-#secondary-bar .nav-inner {
-	padding: 4px 0;
+#nav-item-recent-comments span {
+	margin: 0 5px 0 0;
 }
 
 #nav-item-sequences .nav-inner::before {
@@ -181,9 +181,6 @@ body > * {
 /*= Bottom bar =*/
 /*=------------=*/
 
-h1.listing ~ #bottom-bar {
-	margin-top: 1.25em;
-}
 #bottom-bar .nav-item {
 	flex: 1 1 0;
 }

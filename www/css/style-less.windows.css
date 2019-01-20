@@ -1360,6 +1360,7 @@ head.content-width-fluid + body > * {
 /******************/
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #theme-selector {
 	position: absolute;
 	top: 3px;
@@ -1370,9 +1371,16 @@ head.content-width-fluid + body > * {
 =======
 .nav-item {
 	flex: 1 1 auto;
+=======
+.nav-item,
+.nav-inner {
+>>>>>>> CSS refactoring: nav bars III
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+.nav-item {
+	flex: 1 1 auto;
 	position: relative;
 >>>>>>> CSS refactoring: nav bars II
 }
@@ -1384,9 +1392,10 @@ head.content-width-fluid + body > * {
 	display: none;
 =======
 .nav-inner {
-	text-align: center;
-	display: block;
+	width: 100%;
+	height: 100%;
 }
+<<<<<<< HEAD
 #primary-bar {
 	height: 4em;
 >>>>>>> CSS refactoring: nav bars II
@@ -1416,12 +1425,17 @@ head.content-width-fluid + body > * {
 		padding: 3px 0;
 		max-width: 32px;
 	}
+=======
+#nav-item-recent-comments span {
+	margin: 0 5px 0 0;
+>>>>>>> CSS refactoring: nav bars III
 }
 
 /*=----------------------=*/
 /*= Theme select buttons =*/
 /*=----------------------=*/
 
+<<<<<<< HEAD
 .theme-selector button {
 	display: table-cell;
 	width: 26px;
@@ -1441,6 +1455,10 @@ head.content-width-fluid + body > * {
 }	
 .theme-selector button:disabled {
 	cursor: auto;
+=======
+#bottom-bar .nav-item {
+	flex: 1 1 0;
+>>>>>>> CSS refactoring: nav bars III
 }
 
 @media only screen and (max-width: 1000px) {

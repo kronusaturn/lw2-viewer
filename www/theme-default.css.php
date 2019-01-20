@@ -45,10 +45,14 @@ body {
 /*=========*/
 
 #primary-bar {
-	height: 3.5rem;
+	height: 3.625rem;
 }
 #secondary-bar {
 	height: 2rem;
+}
+#bottom-bar { 
+	height: 3.625rem;
+	margin-top: 0.375em;
 }
 
 .nav-inner {
@@ -622,14 +626,24 @@ body {
 
 h1.listing {
 <<<<<<< HEAD
+<<<<<<< HEAD
 	font-family: <?php echo $listings_font; ?>, 'Font Awesome', 'Font Awesome 5 Free';
 =======
+=======
+	--GW-listing-side-margin: 20px;
+
+	margin: 7px var(--GW-listing-side-margin) 0 var(--GW-listing-side-margin);
+	max-width: calc(100% - 2 * var(--GW-listing-side-margin));
+
+	top: <?php echo ($platform == 'Mac') ? "0" : "0.125em"; ?>;
+
+>>>>>>> CSS refactoring: nav bars III
 	font-family: var(--GW-listings-font), 'Font Awesome';
 >>>>>>> Media query rewrite, part XII; plus misc. CSS refactoring
 	font-weight: <?php echo ($platform == 'Mac') ? "700" : "800"; ?>;
-	margin: 0.7em 20px 0 20px;
-	max-width: calc(100% - 40px);
-	top: <?php echo ($platform == 'Mac') ? "0" : "0.125em"; ?>; ;
+}
+h1.listing:first-of-type {
+	margin: 21px 20px 0 20px;
 }
 
 h1.listing a[href^='/'] {
@@ -692,7 +706,7 @@ h1.listing.spam:hover + .post-meta {
 /*===================*/
 
 h1.listing + .post-meta {
-	padding-right: 330px;
+	padding: 0 330px 14px 0 ;
 }
 h1.listing + .post-meta .karma-value,
 h1.listing + .post-meta .comment-count,
@@ -704,7 +718,7 @@ h1.listing + .post-meta .read-time {
 	margin: 0 0.25em 0 0.5em;
 	position: absolute;
 	line-height: 1.15;
-	bottom: -6px;
+	bottom: 8px;
 }
 h1.listing + .post-meta .karma-value span,
 h1.listing + .post-meta .comment-count span,
@@ -834,7 +848,7 @@ h1.listing + .post-meta::after {
 	width: 100%;
 	background-color: #ddd;
 	position: absolute;
-	bottom: -14px;
+	bottom: 0;
 }
 
 /*============*/

@@ -1360,6 +1360,7 @@ head.content-width-fluid + body > * {
 /******************/
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #theme-selector {
 	position: absolute;
 	top: 3px;
@@ -1370,9 +1371,16 @@ head.content-width-fluid + body > * {
 =======
 .nav-item {
 	flex: 1 1 auto;
+=======
+.nav-item,
+.nav-inner {
+>>>>>>> CSS refactoring: nav bars III
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+.nav-item {
+	flex: 1 1 auto;
 	position: relative;
 >>>>>>> CSS refactoring: nav bars II
 }
@@ -1384,9 +1392,10 @@ head.content-width-fluid + body > * {
 	display: none;
 =======
 .nav-inner {
-	text-align: center;
-	display: block;
+	width: 100%;
+	height: 100%;
 }
+<<<<<<< HEAD
 #primary-bar {
 	height: 4em;
 >>>>>>> CSS refactoring: nav bars II
@@ -1416,12 +1425,17 @@ head.content-width-fluid + body > * {
 		padding: 3px 0;
 		max-width: 32px;
 	}
+=======
+#nav-item-recent-comments span {
+	margin: 0 5px 0 0;
+>>>>>>> CSS refactoring: nav bars III
 }
 
 /*=----------------------=*/
 /*= Theme select buttons =*/
 /*=----------------------=*/
 
+<<<<<<< HEAD
 .theme-selector button {
 	display: table-cell;
 	width: 26px;
@@ -1441,6 +1455,10 @@ head.content-width-fluid + body > * {
 }	
 .theme-selector button:disabled {
 	cursor: auto;
+=======
+#bottom-bar .nav-item {
+	flex: 1 1 0;
+>>>>>>> CSS refactoring: nav bars III
 }
 
 @media only screen and (max-width: 1000px) {
@@ -7530,10 +7548,14 @@ body {
 /*=========*/
 
 #primary-bar {
-	height: 3.5rem;
+	height: 3.625rem;
 }
 #secondary-bar {
 	height: 2rem;
+}
+#bottom-bar { 
+	height: 3.625rem;
+	margin-top: 0.375em;
 }
 
 .nav-inner {
@@ -8132,17 +8154,27 @@ body {
 h1.listing {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	font-family: 'Concourse', 'a_Avante', 'Assistant', Arial, sans-serif, 'Font Awesome', 'Font Awesome 5 Free';
 =======
 	font-family: 'Concourse', 'a_Avante', Arial, sans-serif, 'Font Awesome';
 >>>>>>> Minor refactor of content width CSS
 =======
+=======
+	--GW-listing-side-margin: 20px;
+
+	margin: 7px var(--GW-listing-side-margin) 0 var(--GW-listing-side-margin);
+	max-width: calc(100% - 2 * var(--GW-listing-side-margin));
+
+	top: 0;
+
+>>>>>>> CSS refactoring: nav bars III
 	font-family: var(--GW-listings-font), 'Font Awesome';
 >>>>>>> Media query rewrite, part XII; plus misc. CSS refactoring
 	font-weight: 700;
-	margin: 0.7em 20px 0 20px;
-	max-width: calc(100% - 40px);
-	top: 0; ;
+}
+h1.listing:first-of-type {
+	margin: 21px 20px 0 20px;
 }
 
 <<<<<<< HEAD
@@ -8209,7 +8241,7 @@ h1.listing.spam:hover + .post-meta {
 /*===================*/
 
 h1.listing + .post-meta {
-	padding-right: 330px;
+	padding: 0 330px 14px 0 ;
 }
 h1.listing + .post-meta .karma-value,
 h1.listing + .post-meta .comment-count,
@@ -8221,7 +8253,7 @@ h1.listing + .post-meta .read-time {
 	margin: 0 0.25em 0 0.5em;
 	position: absolute;
 	line-height: 1.15;
-	bottom: -6px;
+	bottom: 8px;
 }
 h1.listing + .post-meta .karma-value span,
 h1.listing + .post-meta .comment-count span,
@@ -8355,7 +8387,7 @@ h1.listing + .post-meta::after {
 	width: 100%;
 	background-color: #1f1f1f;
 	position: absolute;
-	bottom: -14px;
+	bottom: 0;
 }
 
 /*============*/
