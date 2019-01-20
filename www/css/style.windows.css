@@ -1709,20 +1709,23 @@ h1.listing ~ #bottom-bar {
 	bottom: calc(100% - 3px);
 	content: attr(data-target-page);
 }
-#bottom-bar a:not([href='#top'])::after {
+#bottom-bar a::after {
 	content: "Page " attr(data-target-page);
 	top: unset;
 	left: 0;
 	bottom: 4px;
 }
 #top-nav-bar a::after,
-#bottom-bar a:not([href='#top'])::after {
+#bottom-bar a::after {
 	display: block;
 	position: absolute;
 	font-size: 0.75rem;
 	width: 100%;
 	line-height: 1;
 	visibility: hidden;
+}
+#bottom-bar a[href='#top']::after {
+	display: none;
 }
 #top-nav-bar a:hover::after,
 #bottom-bar a:hover::after {
@@ -1813,12 +1816,15 @@ h1.listing ~ #bottom-bar {
 	padding-right: 0.5em;
 }
 
+/*=----------------=*/
+/*= Responsiveness =*/
+/*=----------------=*/
+
 @media only screen and (max-width: 960px) {
 	#bottom-bar { 
 		padding: 0 4.5rem;
 	}
 	#bottom-bar .nav-item {
-		box-shadow: none;
 		position: relative;
 	}
 	#bottom-bar .nav-inner {
@@ -1863,6 +1869,9 @@ h1.listing ~ #bottom-bar {
 	}
 	#bottom-bar #nav-item-last .nav-inner::after {
 		content: "Last Page";
+	}
+	#bottom-bar #nav-item-top a::after {
+		display: block;
 	}
 }
 @media only screen and (max-width: 900px) {
