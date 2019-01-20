@@ -1813,6 +1813,176 @@ h1.listing ~ #bottom-bar {
 	padding-right: 0.5em;
 }
 
+@media only screen and (max-width: 960px) {
+	#bottom-bar { 
+		padding: 0 4.5rem;
+	}
+	#bottom-bar .nav-item {
+		box-shadow: none;
+		position: relative;
+	}
+	#bottom-bar .nav-inner {
+		font-size: 2rem;
+		padding: 1rem 0 1.25rem 0;
+		visibility: hidden;
+		position: static;
+		width: 0;
+	}
+	#content #bottom-bar .nav-item .nav-inner::before {
+		margin: 0;
+		visibility: visible;
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		left: 0;
+		top: 0;
+		padding: 1rem 0;
+	}
+	#bottom-bar .nav-inner::after {
+		display: block;
+		visibility: visible;
+		text-transform: uppercase;
+		color: unset;
+		font-size: 0.75rem;
+		top: unset;
+		left: 0;
+		bottom: 1rem;
+		width: 100%;
+	}
+	#bottom-bar #nav-item-first .nav-inner::after {
+		content: "First Page";
+	}
+	#bottom-bar #nav-item-prev .nav-inner::after {
+		content: "Prev. Page";
+	}
+	#bottom-bar #nav-item-top .nav-inner::after {
+		content: "Top";
+	}
+	#bottom-bar #nav-item-next .nav-inner::after {
+		content: "Next Page";
+	}
+	#bottom-bar #nav-item-last .nav-inner::after {
+		content: "Last Page";
+	}
+}
+@media only screen and (max-width: 900px) {
+	#primary-bar,
+	#secondary-bar {
+		font-size: 0.75rem;
+	}
+	.nav-bar {
+		width: calc(100% + 8px);
+		margin: 0 -4px;
+	}
+	.nav-bar .nav-inner::after {
+		display: none;
+	}
+
+	#primary-bar .nav-item {
+		flex: 1 1 100%;
+	}
+	#secondary-bar .nav-item:not(#nav-item-search) {
+		flex: 1 1 60px;
+	}
+	#primary-bar .nav-inner,
+	#secondary-bar .nav-inner {
+		text-transform: uppercase;
+		padding: 6px;
+	}
+	#primary-bar .nav-inner::before, 
+	#secondary-bar .nav-inner::before {
+		display: block;
+		font-family: "Font Awesome";
+		font-size: 2em;
+		font-weight: 900;
+	}
+
+	#nav-item-home .nav-inner::before {
+		content: "\F015";
+	}
+	#nav-item-featured .nav-inner::before {
+		content: "\F005";
+	}
+	#nav-item-all .nav-inner::before {
+		content: "\F069";
+	}
+	#nav-item-meta .nav-inner::before {
+		content: "\F077";
+	}
+	#nav-item-recent-comments > * > span {
+		display: none;
+	}
+	#nav-item-recent-comments .nav-inner::before {
+		content: "\F036";
+	}
+	#nav-item-archive .nav-inner::before {
+		content: "\F187";
+	}
+	#nav-item-about .nav-inner::before {
+		content: "\F129";
+	}
+	#nav-item-search {
+		font-size: 2em;
+		padding: 10px;
+	}
+	#nav-item-search .nav-inner::before {
+		content: none;
+	}
+	#nav-item-search .nav-inner {
+		height: 100%;
+		display: flex;
+	}
+	#nav-item-search input {
+		width: 100%;
+		height: 100%;
+	}
+	#nav-item-search button {
+		height: 100%;
+		padding: 5px 5px 5px 10px;
+		width: 40px;
+		overflow: visible;
+		visibility: hidden;
+	}
+	#nav-item-search button::before {
+		content: "\F002";
+		font-family: Font Awesome;
+		font-weight: 900;
+		visibility: visible;
+	}
+	#nav-item-login {
+		padding: 0;
+	}
+	#nav-item-login .nav-inner::before {
+		content: "\F007";
+	}
+}
+@media only screen and (max-width: 520px) {
+	#primary-bar,
+	#secondary-bar {
+		font-size: 0.5rem;
+	}
+
+	#nav-item-search .nav-inner {
+		padding: 0;
+	}
+	#nav-item-search button {
+		width: 31px;
+	}
+
+	#bottom-bar #nav-item-first .nav-inner::after {
+		content: "First";
+	}
+	#bottom-bar #nav-item-prev .nav-inner::after {
+		content: "Prev";
+	}
+	#bottom-bar #nav-item-next .nav-inner::after {
+		content: "Next";
+	}
+	#bottom-bar #nav-item-last .nav-inner::after {
+		content: "Last";
+	}
+}
+
 /*******************/
 /* INBOX INDICATOR */
 /*******************/
@@ -6161,6 +6331,7 @@ li {
 	}
 }
 
+<<<<<<< HEAD
 >>>>>>> Minor refactor of content width CSS
 =======
 >>>>>>> Media query rewrite, part XI
@@ -6401,6 +6572,11 @@ li {
 		content: "Last";
 	}
 }
+=======
+/*****************/
+/* MOBILE LAYOUT */
+/*****************/
+>>>>>>> Media query rewrite, part XIII
 
 /*=================*/
 /* INBOX INDICATOR */
