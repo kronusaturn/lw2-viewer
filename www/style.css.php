@@ -116,15 +116,13 @@ body > * {
 
 <?php include("style_floating_ui.css.php"); ?>
 
-/***********/
-/* NAV BAR */
-/***********/
+/************/
+/* NAV BARS */
+/************/
 
 .nav-bar {
-	margin: 0 -30px;
-}
-.nav-bar {
 	display: flex;
+	margin: 0 -30px;
 }
 
 /*=---------------=*/
@@ -367,12 +365,8 @@ h1.listing ~ #bottom-bar {
 	}
 }
 @media only screen and (max-width: 900px) {
-	#primary-bar,
-	#secondary-bar {
-		font-size: 0.75rem;
-	}
 	.nav-bar {
-		width: calc(100% + 8px);
+		font-size: 0.75rem;
 		margin: 0 -4px;
 	}
 	.nav-bar .nav-inner::after {
@@ -384,18 +378,25 @@ h1.listing ~ #bottom-bar {
 	}
 	#secondary-bar .nav-item:not(#nav-item-search) {
 		flex: 1 1 60px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
-	#primary-bar .nav-inner,
-	#secondary-bar .nav-inner {
+	#nav-item-search {
+		padding: 5px;
+	}
+	.nav-bar .nav-inner {
 		text-transform: uppercase;
 		padding: 6px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
-	#primary-bar .nav-inner::before, 
-	#secondary-bar .nav-inner::before {
-		display: block;
+	.nav-bar .nav-inner::before {
 		font-family: "Font Awesome";
-		font-size: 2em;
+		font-size: 1.5em;
 		font-weight: 900;
+		margin: 0 0.5em 0 0;
 	}
 
 	#nav-item-home .nav-inner::before {
@@ -455,6 +456,17 @@ h1.listing ~ #bottom-bar {
 	}
 	#nav-item-login .nav-inner::before {
 		content: "\F007";
+	}
+}
+@media only screen and (max-width: 720px) {
+	.nav-bar .nav-item:not(#nav-item-search) .nav-inner {
+		flex-flow: column;
+	}
+	.nav-bar .nav-inner::before {
+		margin: 0;
+	}
+	.nav-bar #nav-item-search {
+		padding: 5px;
 	}
 }
 @media only screen and (max-width: 520px) {
