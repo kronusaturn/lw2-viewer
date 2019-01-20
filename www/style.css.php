@@ -38,18 +38,9 @@ html {
 /*=------=*/
 
 body {
-	--GW-content-side-padding: 30px;
-
 	padding: 0;
 	margin: 0;
 }
-@media only screen and (max-width: 960px) and (min-width: 901px) {
-	body {
-		overflow-x: hidden;
-		margin: 0 -5px;
-	}
-}
-
 body::before {
 	background-color: inherit;
 	position: fixed;
@@ -61,6 +52,13 @@ body.no-scroll {
 	overflow-y: scroll;
 	position: fixed;
 	width: 100%;
+}
+
+@media only screen and (max-width: 960px) and (min-width: 901px) {
+	body {
+		overflow-x: hidden;
+		margin: 0 -5px;
+	}
 }
 @media only screen and (max-width: 900px) {
 	body {
@@ -103,9 +101,6 @@ body > * {
 	#ui-elements-container {
 		min-width: unset;
 		width: unset;
-	}
-	#content {
-		padding: 0 4px;
 	}
 }
 
@@ -154,9 +149,6 @@ body > * {
 .nav-inner {
 	width: 100%;
 	height: 100%;
-}
-#nav-item-recent-comments span {
-	margin: 0 5px 0 0;
 }
 
 #nav-item-sequences .nav-inner::before {
@@ -378,9 +370,6 @@ body > * {
 	}
 }
 @media only screen and (max-width: 900px) {
-	.nav-bar {
-		font-size: 0.75rem;
-	}
 	.nav-bar .nav-inner::after {
 		display: none;
 	}
@@ -394,12 +383,8 @@ body > * {
 		justify-content: center;
 		align-items: center;
 	}
-	#nav-item-search {
-		padding: 5px;
-	}
 	.nav-bar .nav-inner {
 		text-transform: uppercase;
-		padding: 6px;
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -437,7 +422,6 @@ body > * {
 	}
 	#nav-item-search {
 		font-size: 2em;
-		padding: 10px;
 	}
 	#nav-item-search .nav-inner::before {
 		content: none;

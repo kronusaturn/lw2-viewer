@@ -27,11 +27,19 @@ body {
 		0 0 3px #fff,
 		0 0 5px #fff;
 
+	--GW-content-side-padding: 30px;
+
 	color: #000;
 	background-color: var(--GW-body-background-color);
 	font-family: var(--GW-UI-font);
 	font-feature-settings: 'ss07';
 }
+@media only screen and (max-width: 900px) {
+	body {
+		--GW-content-side-padding: 4px;
+	}
+}
+
 #content {
 	line-height: 1.55;
 }
@@ -203,7 +211,7 @@ body {
 	}
 }
 
-/* Search tab */
+/*= Search tab =*/
 
 #nav-item-search {
 	padding: 0 0 1px 0;
@@ -215,6 +223,12 @@ body {
 #nav-item-search input::placeholder {
 	color: #d00;
 	font-weight: normal;
+}
+
+/*= Recent Comments tab =*/
+
+#nav-item-recent-comments span {
+	margin: 0 5px 0 0;
 }
 
 /*= Top pagination UI hover tooltips =*/

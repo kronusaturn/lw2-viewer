@@ -16,8 +16,6 @@ html {
 /*=------=*/
 
 body {
-	--GW-content-side-padding: 30px;
-
 	padding: 0;
 	margin: 0;
 }
@@ -28,6 +26,7 @@ body::before {
 	height: 100%;
 }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 body.no-scroll {
@@ -52,6 +51,8 @@ body.no-scroll {
 }
 
 >>>>>>> Media query rewrite, part VIII
+=======
+>>>>>>> Misc. CSS bug fixes, cleanup
 /*=----------------------------=*/
 /*= Immediate children of body =*/
 /*=----------------------------=*/
@@ -91,9 +92,6 @@ body > * {
 	#ui-elements-container {
 		min-width: unset;
 		width: unset;
-	}
-	#content {
-		padding: 0 4px;
 	}
 }
 
@@ -1429,10 +1427,13 @@ head.content-width-fluid + body > * {
 	width: 100%;
 	height: 100%;
 }
+<<<<<<< HEAD
 #nav-item-recent-comments span {
 	margin: 0 5px 0 0;
 >>>>>>> CSS refactoring: nav bars III
 }
+=======
+>>>>>>> Misc. CSS bug fixes, cleanup
 
 /*=----------------------=*/
 /*= Theme select buttons =*/
@@ -1934,9 +1935,6 @@ h1.listing ~ #bottom-bar {
 	}
 }
 @media only screen and (max-width: 900px) {
-	.nav-bar {
-		font-size: 0.75rem;
-	}
 	.nav-bar .nav-inner::after {
 		display: none;
 	}
@@ -1950,12 +1948,8 @@ h1.listing ~ #bottom-bar {
 		justify-content: center;
 		align-items: center;
 	}
-	#nav-item-search {
-		padding: 5px;
-	}
 	.nav-bar .nav-inner {
 		text-transform: uppercase;
-		padding: 6px;
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -1993,7 +1987,6 @@ h1.listing ~ #bottom-bar {
 	}
 	#nav-item-search {
 		font-size: 2em;
-		padding: 10px;
 	}
 	#nav-item-search .nav-inner::before {
 		content: none;
@@ -7525,6 +7518,8 @@ body {
 		0 0 3px #000,
 		0 0 5px #000;
 
+	--GW-content-side-padding: 30px;
+
 	color: #fff;
 <<<<<<< HEAD
 	background-color: #232323;
@@ -7539,6 +7534,12 @@ body {
 >>>>>>> Media query rewrite, part XII; plus misc. CSS refactoring
 	font-feature-settings: 'ss07';
 }
+@media only screen and (max-width: 900px) {
+	body {
+		--GW-content-side-padding: 4px;
+	}
+}
+
 #content {
 	line-height: 1.55;
 }
@@ -7719,7 +7720,7 @@ body {
 	}
 }
 
-/* Search tab */
+/*= Search tab =*/
 
 #nav-item-search {
 	padding: 0 0 1px 0;
@@ -7731,6 +7732,12 @@ body {
 #nav-item-search input::placeholder {
 	color: #00a1e8;
 	font-weight: normal;
+}
+
+/*= Recent Comments tab =*/
+
+#nav-item-recent-comments span {
+	margin: 0 5px 0 0;
 }
 
 /*= Top pagination UI hover tooltips =*/
