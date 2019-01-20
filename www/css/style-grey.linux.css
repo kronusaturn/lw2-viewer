@@ -1473,8 +1473,19 @@ head.content-width-fluid + body > * {
 /*=----------------------------=*/
 /*	(Each is just a capital letter A through whatever) */
 
+<<<<<<< HEAD
 .theme-selector button:nth-of-type(1) {
 	background-image: url('data:image/gif;base64,R0lGODlhIAAgAPUAMQAAAA0NDRYWFhwcHCIiIioqKjU1NTs7O0BAQEtLS09PT1ZWVlxcXGNjY2VlZWZmZmpqamxsbG1tbXd3d4WFhYeHh46OjpaWlpubm6Ojo6ampqysrK+vr7GxsbKysra2tr29vcDAwMnJyc3NzdLS0tra2tvb293d3d/f3+Tk5Ofn5+rq6uvr6+3t7e7u7vHx8fb29vf39/r6+vv7+/39/f7+/v///38AAA8AAAAAAAAAwKwtDQEAAAAAAAAAAAAAACwAAAAAIAAgAAAGmUCbcEgsGo/IpHLJbDqf0Kh0Sq0eQwHCyVqsKQAACpdYAgMGrrGwYgZs1C9C+zAbc9rgEZeGwAMiXCRmHRdgAipWE4YtJmYYVSwCYBI2NQxgBDBUGWYSHh+SYCBTMgZ+bQs0UiKneCVRNRBmCw61DwlmYlApZnREMQVgaFCFYBpGFmZvTjRfAAIrRihmDTVq19jZ2tvc3d5CQQA7');
+=======
+#bottom-bar .nav-item a::before,
+#top-nav-bar a::before {
+	font-family: Font Awesome;
+	font-weight: 900;
+	font-size: 0.8em;
+	position: relative;
+	bottom: 1px;
+	margin: 0.5em;
+>>>>>>> CSS refactoring: nav bars IV
 }
 .theme-selector button:nth-of-type(2) {
 	background-image: url('data:image/gif;base64,R0lGODlhIAAgAPUAMQAAAA0NDRwcHCYmJioqKk1NTVVVVV1dXWJiYmNjY3d3d35+foiIiIuLi5aWlq2trbOzs7S0tLm5ucXFxcrKysvLy83NzdLS0tXV1dbW1tra2tvb2+Xl5ebm5ujo6Onp6e3t7e7u7vT09Pb29vf39/j4+Pv7+/39/f7+/v///wAAwKwtDQEAAAAQrAUAAGAAABUAAAAAAAAAEKwFAABgAABQ4VxT/38AAA8AAAAAAAAAwKwtDQEAAAAAAAAAAAAAACwAAAAAIAAgAAAGj0CAcEgsGo/IpHLJbDqf0Kh0Sq0KAx0TaUsqcRzWQChFLpM/BGoAZG5P1OyUiXI5lUeD6ZosEgAWd2lSeykieQllhnpxJAoMH2UZcG1lIYKDcZQhBpOUZCcFi2QjaQgeZRaiKXhCDWUaqn1CD6+qKRIQGGYbtpQoC3pjnikRapBtIhUHVszNzs/Q0dLT1ENBADs=');
@@ -1729,15 +1740,9 @@ h1.listing ~ #bottom-bar {
 #top-nav-bar a.nav-item-last::before {
 	content: "\F340";
 }
-#bottom-bar #nav-item-next a::before {
-	margin-left: -2em;
-	margin-right: 0;
-	left: 3.8em;
-}
+#bottom-bar #nav-item-next a::before,
 #bottom-bar #nav-item-last a::before {
-	margin-left: -1.8em;
-	margin-right: 0;
-	left: 3.4em;
+	order: 1;
 }
 
 /*= Hover tooltips =*/
@@ -1778,7 +1783,7 @@ h1.listing ~ #bottom-bar {
 	visibility: hidden;
 	text-align: center;
 }
-#bottom-bar a[href='#top']::after {
+#bottom-bar #nav-item-top a::after {
 	display: none;
 }
 #top-nav-bar a:hover::after,
@@ -1839,22 +1844,23 @@ h1.listing ~ #bottom-bar {
 #nav-item-search .nav-inner {
 	flex: 1 1 100%;
 }
+#nav-item-search form {
+	padding: 4px 10px;
+}
 #nav-item-search form::before {
 	content: "\F002";
 	font-family: Font Awesome;
 	font-weight: 900;
-	display: inline-block;
-	vertical-align: top;
-	height: 23px;
-	width: 23px;
+	height: 100%;
+	padding: 0 5px;
 }
 #nav-item-search input {
-	height: 23px;
-	width: calc(95% - 80px);
 	padding: 1px 4px;
+	flex: 1 1 100%;
 }
 #nav-item-search button {
-	height: 21px;
+	height: 100%;
+	flex: 1 0 auto;
 }
 
 <<<<<<< HEAD
@@ -1881,36 +1887,32 @@ h1.listing ~ #bottom-bar {
 	#bottom-bar { 
 		padding: 0 4.5rem;
 	}
-	#bottom-bar .nav-item {
-		position: relative;
-	}
 	#bottom-bar .nav-inner {
-		font-size: 2rem;
-		padding: 1rem 0 1.25rem 0;
-		visibility: hidden;
-		position: static;
-		width: 0;
+		font-size: 2em;
+		flex-flow: column;
+		color: transparent;
+		line-height: 0;
+		text-shadow: none;
+		justify-content: flex-start;
 	}
-	#content #bottom-bar .nav-item .nav-inner::before {
-		margin: 0;
-		visibility: visible;
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		left: 0;
-		top: 0;
-		padding: 1rem 0;
+	#bottom-bar .nav-item a::before {
+		color: var(--GW-hyperlink-color);
+		text-shadow: var(--GW-shadow-white-glow);
+		position: static;
+		line-height: initial;
+	}
+	#bottom-bar #nav-item-next a::before,
+	#bottom-bar #nav-item-last a::before {
+		order: 0;
 	}
 	#bottom-bar .nav-inner::after {
 		display: block;
+		color: var(--GW-hyperlink-color);
+		text-shadow: var(--GW-shadow-white-glow);
 		visibility: visible;
 		text-transform: uppercase;
-		color: unset;
-		font-size: 0.75rem;
-		top: unset;
-		left: 0;
+		font-size: 0.375em;
 		bottom: 1rem;
-		width: 100%;
 	}
 	#bottom-bar #nav-item-first .nav-inner::after {
 		content: "First Page";
@@ -1928,7 +1930,7 @@ h1.listing ~ #bottom-bar {
 		content: "Last Page";
 	}
 	#bottom-bar #nav-item-top a::after {
-		display: block;
+		display: initial;
 	}
 }
 @media only screen and (max-width: 900px) {

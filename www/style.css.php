@@ -197,7 +197,7 @@ body > * {
 	font-size: 0.8em;
 	position: relative;
 	bottom: 1px;
-	margin-right: 0.5em;
+	margin: 0.5em;
 }
 #bottom-bar #nav-item-first a::before,
 #top-nav-bar a.nav-item-first::before {
@@ -218,15 +218,9 @@ body > * {
 #top-nav-bar a.nav-item-last::before {
 	content: "\F340";
 }
-#bottom-bar #nav-item-next a::before {
-	margin-left: -2em;
-	margin-right: 0;
-	left: 3.8em;
-}
+#bottom-bar #nav-item-next a::before,
 #bottom-bar #nav-item-last a::before {
-	margin-left: -1.8em;
-	margin-right: 0;
-	left: 3.4em;
+	order: 1;
 }
 
 /*= Hover tooltips =*/
@@ -254,7 +248,7 @@ body > * {
 	visibility: hidden;
 	text-align: center;
 }
-#bottom-bar a[href='#top']::after {
+#bottom-bar #nav-item-top a::after {
 	display: none;
 }
 #top-nav-bar a:hover::after,
@@ -284,22 +278,23 @@ body > * {
 #nav-item-search .nav-inner {
 	flex: 1 1 100%;
 }
+#nav-item-search form {
+	padding: 4px 10px;
+}
 #nav-item-search form::before {
 	content: "\F002";
 	font-family: "Font Awesome", "Font Awesome 5 Free";
 	font-weight: 900;
-	display: inline-block;
-	vertical-align: top;
-	height: 23px;
-	width: 23px;
+	height: 100%;
+	padding: 0 5px;
 }
 #nav-item-search input {
-	height: 23px;
-	width: calc(95% - 80px);
 	padding: 1px 4px;
+	flex: 1 1 100%;
 }
 #nav-item-search button {
-	height: 21px;
+	height: 100%;
+	flex: 1 0 auto;
 }
 
 /*=-----------=*/
@@ -319,36 +314,32 @@ body > * {
 	#bottom-bar { 
 		padding: 0 4.5rem;
 	}
-	#bottom-bar .nav-item {
-		position: relative;
-	}
 	#bottom-bar .nav-inner {
-		font-size: 2rem;
-		padding: 1rem 0 1.25rem 0;
-		visibility: hidden;
-		position: static;
-		width: 0;
+		font-size: 2em;
+		flex-flow: column;
+		color: transparent;
+		line-height: 0;
+		text-shadow: none;
+		justify-content: flex-start;
 	}
-	#content #bottom-bar .nav-item .nav-inner::before {
-		margin: 0;
-		visibility: visible;
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		left: 0;
-		top: 0;
-		padding: 1rem 0;
+	#bottom-bar .nav-item a::before {
+		color: var(--GW-hyperlink-color);
+		text-shadow: var(--GW-shadow-white-glow);
+		position: static;
+		line-height: initial;
+	}
+	#bottom-bar #nav-item-next a::before,
+	#bottom-bar #nav-item-last a::before {
+		order: 0;
 	}
 	#bottom-bar .nav-inner::after {
 		display: block;
+		color: var(--GW-hyperlink-color);
+		text-shadow: var(--GW-shadow-white-glow);
 		visibility: visible;
 		text-transform: uppercase;
-		color: unset;
-		font-size: 0.75rem;
-		top: unset;
-		left: 0;
+		font-size: 0.375em;
 		bottom: 1rem;
-		width: 100%;
 	}
 	#bottom-bar #nav-item-first .nav-inner::after {
 		content: "First Page";
@@ -366,7 +357,7 @@ body > * {
 		content: "Last Page";
 	}
 	#bottom-bar #nav-item-top a::after {
-		display: block;
+		display: initial;
 	}
 }
 @media only screen and (max-width: 900px) {

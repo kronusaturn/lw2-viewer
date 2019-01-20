@@ -2094,6 +2094,13 @@ EOT;
 	#new-comment-nav-ui button::after {
 		font-family: var(--GW-UI-font);
 	}
+
+	#bottom-bar {
+		height: 5rem;
+	}
+	#bottom-bar .nav-inner {
+		padding: 0.25rem;
+	}
 }
 
 @media only screen and (max-width: 900px) {
