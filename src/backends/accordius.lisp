@@ -15,7 +15,9 @@
   (acons :tags (do-wl-rest-query "tags" `(("document_id" . ,post-id))) (call-next-method)))
 
 (define-backend-operation lw2-search-query backend-accordius (query)
-  (do-wl-rest-query "post_search/" `(("query" . ,query))))
+  (values
+   (do-wl-rest-query "post_search/" `(("query" . ,query)))
+   (do-wl-rest-query "comment_search/" `(("query" . ,query)))))
 
 (defun do-wl-rest-post (endpoint post-params auth-token)
   (drakma:http-request
