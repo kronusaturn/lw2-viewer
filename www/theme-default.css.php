@@ -2099,7 +2099,7 @@ EOT;
 		height: 5rem;
 	}
 	#bottom-bar .nav-inner {
-		padding: 0.25rem;
+		padding: 0.25rem 0 0 0;
 	}
 }
 
@@ -2137,6 +2137,10 @@ EOT;
 	}
 	#content.user-page h1.link-post-listing::after {
 		height: calc(100% + 2em);
+	}
+
+	#secondary-bar {
+		height: 2.5rem;
 	}
 
 	#nav-item-search button::before {

@@ -86,6 +86,11 @@ body > * {
 	pointer-events: none;
 }
 
+@media only screen and (max-width: 960px) and (min-width: 901px) {
+	body {
+		overflow-x: hidden;
+	}
+}
 @media only screen and (max-width: 900px) {
 	#content,
 	#images-overlay,
@@ -1934,30 +1939,20 @@ h1.listing ~ #bottom-bar {
 	}
 }
 @media only screen and (max-width: 900px) {
-	.nav-bar .nav-inner::after {
-		display: none;
-	}
-
 	#primary-bar .nav-item {
 		flex: 1 1 100%;
 	}
-	#secondary-bar .nav-item:not(#nav-item-search) {
-		flex: 1 1 60px;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
 	.nav-bar .nav-inner {
 		text-transform: uppercase;
-		display: flex;
-		justify-content: center;
-		align-items: center;
+		padding: 1px 0 0 0;
+	}
+	.nav-bar .nav-inner::after {
+		display: none;
 	}
 	.nav-bar .nav-inner::before {
 		font-family: "Font Awesome";
-		font-size: 1.5em;
 		font-weight: 900;
-		margin: 0 0.5em 0 0;
+		margin: 0 0.5em 1px 0;
 	}
 
 	#nav-item-home .nav-inner::before {
@@ -1984,25 +1979,16 @@ h1.listing ~ #bottom-bar {
 	#nav-item-about .nav-inner::before {
 		content: "\F129";
 	}
-	#nav-item-search {
-		font-size: 2em;
-	}
 	#nav-item-search .nav-inner::before {
 		content: none;
 	}
-	#nav-item-search .nav-inner {
-		height: 100%;
-		display: flex;
-	}
-	#nav-item-search input {
-		width: 100%;
+	#nav-item-search input,
+	#nav-item-search button {
 		height: 100%;
 	}
 	#nav-item-search button {
-		height: 100%;
-		padding: 5px 5px 5px 10px;
-		width: 40px;
-		overflow: visible;
+		font-size: 1.25em;
+		width: 1.5em;
 		visibility: hidden;
 	}
 	#nav-item-search button::before {
@@ -2016,6 +2002,14 @@ h1.listing ~ #bottom-bar {
 	}
 	#nav-item-login .nav-inner::before {
 		content: "\F007";
+	}
+}
+@media only screen and (max-width: 840px) {
+	#primary-bar .nav-inner {
+		flex-flow: column;
+	}
+	#primary-bar .nav-inner::before {
+		margin: 0;
 	}
 }
 @media only screen and (max-width: 720px) {
