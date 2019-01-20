@@ -44,6 +44,13 @@ body {
 /* NAV BAR */
 /*=========*/
 
+#primary-bar {
+	height: 3.5rem;
+}
+#secondary-bar {
+	height: 2rem;
+}
+
 .nav-inner {
 	font-size: 1.375em;
 	font-weight: 600;

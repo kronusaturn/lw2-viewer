@@ -38,6 +38,8 @@ html {
 /*=------=*/
 
 body {
+	--GW-content-side-padding: 30px;
+
 	padding: 0;
 	margin: 0;
 }
@@ -60,6 +62,11 @@ body.no-scroll {
 	position: fixed;
 	width: 100%;
 }
+@media only screen and (max-width: 900px) {
+	body {
+		--GW-content-side-padding: 4px;
+	}
+}
 
 /*=----------------------------=*/
 /*= Immediate children of body =*/
@@ -71,7 +78,7 @@ body > * {
 }
 #content {
 	margin: 0 auto;
-	padding: 0 30px;
+	padding: 0 var(--GW-content-side-padding);
 	position: relative;
 	overflow: visible;
 	display: grid;
@@ -122,7 +129,7 @@ body > * {
 
 .nav-bar {
 	display: flex;
-	margin: 0 -30px;
+	margin: 0 calc(-1 * var(--GW-content-side-padding));
 }
 
 /*=---------------=*/
@@ -131,6 +138,10 @@ body > * {
 
 .nav-item {
 	flex: 1 1 auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
 }
 .nav-item * {
 	text-overflow: ellipsis;
@@ -138,10 +149,11 @@ body > * {
 	overflow: hidden;
 }
 .nav-inner {
-	padding: 12px 30px;
 	text-align: center;
 	display: block;
-	position: relative;
+}
+#primary-bar {
+	height: 4em;
 }
 #secondary-bar .nav-inner {
 	padding: 4px 0;
@@ -279,6 +291,9 @@ h1.listing ~ #bottom-bar {
 #nav-item-search {
 	flex: 4 1 auto;
 }
+#nav-item-search .nav-inner {
+	flex: 1 1 100%;
+}
 #nav-item-search form::before {
 	content: "\F002";
 	font-family: "Font Awesome", "Font Awesome 5 Free";
@@ -367,7 +382,6 @@ h1.listing ~ #bottom-bar {
 @media only screen and (max-width: 900px) {
 	.nav-bar {
 		font-size: 0.75rem;
-		margin: 0 -4px;
 	}
 	.nav-bar .nav-inner::after {
 		display: none;
