@@ -1397,6 +1397,7 @@ head.content-width-fluid + body > * {
 .nav-inner {
 	width: 100%;
 	height: 100%;
+	padding: 0.5em;
 }
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1849,9 +1850,6 @@ h1.listing ~ #bottom-bar {
 #nav-item-search .nav-inner {
 	flex: 1 1 100%;
 }
-#nav-item-search form {
-	padding: 4px 10px;
-}
 #nav-item-search form::before {
 	content: "\F002";
 	font-family: Font Awesome;
@@ -1862,10 +1860,12 @@ h1.listing ~ #bottom-bar {
 #nav-item-search input {
 	padding: 1px 4px;
 	flex: 1 1 100%;
+	margin: 0 0 1px 0;
 }
 #nav-item-search button {
 	height: 100%;
 	flex: 1 0 auto;
+	padding: 0 0.5em;
 }
 
 <<<<<<< HEAD
@@ -7545,20 +7545,11 @@ body {
 /* NAV BAR */
 /*=========*/
 
-#primary-bar {
-	height: 3.625rem;
-}
-#secondary-bar {
-	height: 2rem;
-}
-#bottom-bar { 
-	height: 3.625rem;
-	margin-top: 0.375em;
-}
-
 .nav-inner {
-	font-size: 1.375em;
 	font-weight: 600;
+}
+#primary bar .nav-inner {
+	font-size: 1.375em;
 }
 #secondary-bar .nav-inner {
 	font-size: 1em;
@@ -9828,13 +9819,6 @@ select {
 =======
 		font-family: var(--GW-UI-font);
 	}
-
-	#bottom-bar {
-		height: 5rem;
-	}
-	#bottom-bar .nav-inner {
-		padding: 0.25rem 0 0 0;
-	}
 }
 >>>>>>> Media query rewrite, part XII; plus misc. CSS refactoring
 
@@ -9872,10 +9856,6 @@ select {
 	}
 	#content.user-page h1.link-post-listing::after {
 		height: calc(100% + 2em);
-	}
-
-	#secondary-bar {
-		height: 2.5rem;
 	}
 
 	#nav-item-search button::before {

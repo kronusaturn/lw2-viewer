@@ -52,20 +52,11 @@ body {
 /* NAV BAR */
 /*=========*/
 
-#primary-bar {
-	height: 3.625rem;
-}
-#secondary-bar {
-	height: 2rem;
-}
-#bottom-bar { 
-	height: 3.625rem;
-	margin-top: 0.375em;
-}
-
 .nav-inner {
-	font-size: 1.375em;
 	font-weight: 600;
+}
+#primary bar .nav-inner {
+	font-size: 1.375em;
 }
 #secondary-bar .nav-inner {
 	font-size: 1em;
@@ -2094,13 +2085,6 @@ EOT;
 	#new-comment-nav-ui button::after {
 		font-family: var(--GW-UI-font);
 	}
-
-	#bottom-bar {
-		height: 5rem;
-	}
-	#bottom-bar .nav-inner {
-		padding: 0.25rem 0 0 0;
-	}
 }
 
 @media only screen and (max-width: 900px) {
@@ -2137,10 +2121,6 @@ EOT;
 	}
 	#content.user-page h1.link-post-listing::after {
 		height: calc(100% + 2em);
-	}
-
-	#secondary-bar {
-		height: 2.5rem;
 	}
 
 	#nav-item-search button::before {

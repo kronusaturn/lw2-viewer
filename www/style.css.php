@@ -154,6 +154,7 @@ body > * {
 .nav-inner {
 	width: 100%;
 	height: 100%;
+	padding: 0.5em;
 }
 
 #nav-item-sequences .nav-inner::before {
@@ -283,9 +284,6 @@ body > * {
 #nav-item-search .nav-inner {
 	flex: 1 1 100%;
 }
-#nav-item-search form {
-	padding: 4px 10px;
-}
 #nav-item-search form::before {
 	content: "\F002";
 	font-family: "Font Awesome", "Font Awesome 5 Free";
@@ -296,10 +294,12 @@ body > * {
 #nav-item-search input {
 	padding: 1px 4px;
 	flex: 1 1 100%;
+	margin: 0 0 1px 0;
 }
 #nav-item-search button {
 	height: 100%;
 	flex: 1 0 auto;
+	padding: 0 0.5em;
 }
 
 /*=-----------=*/
