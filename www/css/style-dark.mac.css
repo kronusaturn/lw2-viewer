@@ -7554,6 +7554,9 @@ body {
 #secondary-bar .nav-inner {
 	font-size: 1em;
 }
+#bottom-bar .nav-inner {
+	font-size: 1.375em;
+}
 
 .nav-bar .nav-item:not(.nav-current):not(#nav-item-search):hover,
 #bottom-bar a:hover,
