@@ -205,6 +205,9 @@ body {
 
 /* Search tab */
 
+#nav-item-search {
+	padding: 0 0 1px 0;
+}
 #nav-item-search button {
 	border: none;
 	font-weight: inherit;

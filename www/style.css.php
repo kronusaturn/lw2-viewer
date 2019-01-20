@@ -260,6 +260,7 @@ body > * {
 	width: 100%;
 	line-height: 1;
 	visibility: hidden;
+	text-align: center;
 }
 #bottom-bar a[href='#top']::after {
 	display: none;
