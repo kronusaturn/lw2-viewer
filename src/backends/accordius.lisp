@@ -14,6 +14,9 @@
 (define-backend-operation get-post-body backend-accordius (post-id &key &allow-other-keys)
   (acons :tags (do-wl-rest-query "tags" `(("document_id" . ,post-id))) (call-next-method)))
 
+(define-backend-operation lw2-search-query backend-accordius (query)
+  (do-wl-rest-query "post_search/" `(("query" . ,query))))
+
 (defun do-wl-rest-post (endpoint post-params auth-token)
   (drakma:http-request
    (quri:render-uri (quri:merge-uris (quri:make-uri :path endpoint :query "") (quri:uri (rest-api-uri *current-backend*))))

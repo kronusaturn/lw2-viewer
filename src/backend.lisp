@@ -560,8 +560,9 @@
    (let ((*messages-index-fields* (cons :html-body *messages-index-fields*)))
      (call-next-method))))
 
-(defun lw2-search-query (query)
-  (multiple-value-bind (req-stream req-status req-headers req-uri req-reuse-stream want-close)
+(define-backend-function lw2-search-query (query)
+  (backend-algolia-search
+   (multiple-value-bind (req-stream req-status req-headers req-uri req-reuse-stream want-close)
     (drakma:http-request (algolia-search-uri *current-backend*)
 			 :method :post :additional-headers '(("Origin" . "https://www.greaterwrong.com") ("Referer" . "https://www.greaterwrong.com/"))
 			 :content (json:encode-json-alist-to-string `(("requests" . ,(loop for index in '("test_posts" "test_comments")
@@ -574,7 +575,7 @@
     (unwind-protect
       (values-list (loop for r in (cdr (assoc :results (json:decode-json req-stream)))
 			 collect (cdr (assoc :hits r))))
-      (if want-close (close req-stream)))))
+      (if want-close (close req-stream))))))
 
 (defun make-rate-limiter (delay)
   (let ((rl-hash (make-hash-table :test 'equal :synchronized t)))
