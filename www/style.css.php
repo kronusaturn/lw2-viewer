@@ -80,12 +80,10 @@ body > * {
 	position: relative;
 	overflow: visible;
 	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	grid-auto-flow: dense;
+	grid-template-columns: 100%;
 }
 #content::before {
 	content: "";
-	display: block;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -207,7 +205,7 @@ body > * {
 }
 #bottom-bar #nav-item-first a::before,
 #top-nav-bar a.nav-item-first::before {
-	content: "\F33e";
+	content: "\F33E";
 }
 #bottom-bar #nav-item-top a::before {
 	content: "\F062";
@@ -531,10 +529,7 @@ a#inbox-indicator.new-messages:hover::before {
 	margin-right: -20px;
 }
 #content > .page-toolbar {
-	grid-column: 3;
-}
-#content.user-page > .page-toolbar {
-	grid-column: 2 / span 2;
+	grid-row: 3;
 }
 
 /*=--------------------------=*/
@@ -663,14 +658,12 @@ a#inbox-indicator.new-messages:hover::before {
 	font-size: 0.75em;
 }
 #content > .sublevel-nav.sort {
-	grid-column: 3;
 	grid-row: 5 / span 2;
 	justify-self: end;
 	align-self: start;
 	flex-flow: column;
 }
 #content.index-page > .sublevel-nav.sort {
-	grid-column: 1;
 	grid-row: 3 / span 1;
 	justify-self: start;
 	flex-flow: row;
@@ -1231,7 +1224,7 @@ foreach ($content_width_settings as $name => $setting) {
 /*********************/
 
 #top-nav-bar {
-	grid-column: 2;
+	grid-row: 3;
 	padding: 1em 0 0 0;
 	text-align: center;
 	font-size: 1.25em;
@@ -1322,7 +1315,6 @@ foreach ($content_width_settings as $name => $setting) {
 }
 #content > .sublevel-nav:not(.sort) {
 	grid-row: 5;
-	grid-column: 2;
 	align-self: start;
 }
 .sublevel-nav .sublevel-item {
@@ -1788,7 +1780,6 @@ article {
 /*=--------------------=*/
 
 #content.user-page .user-stats {
-	grid-column: 3;
 	grid-row: 4;
 	text-align: right;
 	align-self: end;
@@ -1834,7 +1825,6 @@ article {
 /*=----------------------=*/
 
 #content.conversation-page .conversation-participants {
-	grid-column: 2 / span 2;
 	grid-row: 3;
 	text-align: right;
 	margin: 0.5em 0 0 0;
@@ -2642,7 +2632,6 @@ a.comment-parent-link:hover::after {
 #content.index-page #comments-list-mode-selector,
 #content.user-page #comments-list-mode-selector {
 	padding-top: 6px;
-	grid-column: 1;
 	position: unset;
 	z-index: 1;
 	justify-self: start;
