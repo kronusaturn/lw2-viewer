@@ -55,7 +55,7 @@ body {
 .nav-inner {
 	font-weight: 600;
 }
-#primary bar .nav-inner {
+#primary-bar .nav-inner {
 	font-size: 1.375em;
 }
 #secondary-bar .nav-inner {
