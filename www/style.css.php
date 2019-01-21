@@ -224,6 +224,7 @@ echo <<<EOT
 #top-nav-bar a.nav-item-{$k}::before {
 	content: "{$v}";
 }
+
 EOT;
 }
 
@@ -324,7 +325,6 @@ EOT;
 		padding: 0 4.5rem;
 	}
 	#bottom-bar .nav-inner {
-		font-size: 2em;
 		flex-flow: column;
 		color: transparent;
 		line-height: 0;
@@ -458,18 +458,6 @@ EOT;
 	}
 }
 @media only screen and (max-width: 520px) {
-	#primary-bar,
-	#secondary-bar {
-		font-size: 0.5rem;
-	}
-
-	#nav-item-search .nav-inner {
-		padding: 0;
-	}
-	#nav-item-search button {
-		width: 31px;
-	}
-
 	#bottom-bar #nav-item-first .nav-inner::after {
 		content: "First";
 	}

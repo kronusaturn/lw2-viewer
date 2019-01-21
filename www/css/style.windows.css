@@ -1506,6 +1506,7 @@ head.content-width-fluid + body > * {
 >>>>>>> CSS refactoring: nav bars IV
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 .theme-selector button:nth-of-type(2) {
 	background-image: url('data:image/gif;base64,R0lGODlhIAAgAPUAMQAAAA0NDRwcHCYmJioqKk1NTVVVVV1dXWJiYmNjY3d3d35+foiIiIuLi5aWlq2trbOzs7S0tLm5ucXFxcrKysvLy83NzdLS0tXV1dbW1tra2tvb2+Xl5ebm5ujo6Onp6e3t7e7u7vT09Pb29vf39/j4+Pv7+/39/f7+/v///wAAwKwtDQEAAAAQrAUAAGAAABUAAAAAAAAAEKwFAABgAABQ4VxT/38AAA8AAAAAAAAAwKwtDQEAAAAAAAAAAAAAACwAAAAAIAAgAAAGj0CAcEgsGo/IpHLJbDqf0Kh0Sq0KAx0TaUsqcRzWQChFLpM/BGoAZG5P1OyUiXI5lUeD6ZosEgAWd2lSeykieQllhnpxJAoMH2UZcG1lIYKDcZQhBpOUZCcFi2QjaQgeZRaiKXhCDWUaqn1CD6+qKRIQGGYbtpQoC3pjnikRapBtIhUHVszNzs/Q0dLT1ENBADs=');
 }
@@ -1724,17 +1725,24 @@ h1.listing ~ #bottom-bar {
 	margin-right: 0.5em;
 >>>>>>> Miscellaneous CSS refactoring
 }
+=======
+
+>>>>>>> CSS refactoring: nav bars VII
 #bottom-bar #nav-item-first a::before,
 #top-nav-bar a.nav-item-first::before {
 	content: "\F33E";
 }
+<<<<<<< HEAD
 #bottom-bar #nav-item-top a::before {
 	content: "\F062";
 }
+=======
+>>>>>>> CSS refactoring: nav bars VII
 #bottom-bar #nav-item-prev a::before,
 #top-nav-bar a.nav-item-prev::before {
 	content: "\F060";
 }
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 >>>>>>> Minor refactor of content width CSS
@@ -1772,9 +1780,21 @@ h1.listing ~ #bottom-bar {
 	content: "\F061";
 }#bottom-bar #nav-item-last a::before,
 >>>>>>> CSS refactoring: misc
+=======
+#bottom-bar #nav-item-top a::before,
+#top-nav-bar a.nav-item-top::before {
+	content: "\F062";
+}
+#bottom-bar #nav-item-next a::before,
+#top-nav-bar a.nav-item-next::before {
+	content: "\F061";
+}
+#bottom-bar #nav-item-last a::before,
+>>>>>>> CSS refactoring: nav bars VII
 #top-nav-bar a.nav-item-last::before {
 	content: "\F340";
-}#bottom-bar #nav-item-next a::before,
+}
+#bottom-bar #nav-item-next a::before,
 #bottom-bar #nav-item-last a::before {
 	order: 1;
 }
@@ -1921,7 +1941,6 @@ h1.listing ~ #bottom-bar {
 		padding: 0 4.5rem;
 	}
 	#bottom-bar .nav-inner {
-		font-size: 2em;
 		flex-flow: column;
 		color: transparent;
 		line-height: 0;
@@ -2047,18 +2066,6 @@ h1.listing ~ #bottom-bar {
 	}
 }
 @media only screen and (max-width: 520px) {
-	#primary-bar,
-	#secondary-bar {
-		font-size: 0.5rem;
-	}
-
-	#nav-item-search .nav-inner {
-		padding: 0;
-	}
-	#nav-item-search button {
-		width: 31px;
-	}
-
 	#bottom-bar #nav-item-first .nav-inner::after {
 		content: "First";
 	}
