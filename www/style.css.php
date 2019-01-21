@@ -305,6 +305,7 @@ EOT;
 	height: 100%;
 	flex: 1 0 auto;
 	padding: 0 0.5em;
+	line-height: 1;
 }
 #nav-item-search button::before {
 	content: "Search";
@@ -1668,6 +1669,7 @@ h1.listing {
 	max-height: 1.15em;
 	line-height: 1.15;
 	position: relative;
+	display: flex;
 }
 
 h1.listing a {
@@ -1691,9 +1693,7 @@ h1.listing a[href^="http"] {
 /*	(On desktops, hover over a multi-line listing to reveal all of it) */
 
 @media only screen and (hover:hover) and (pointer:fine) {
-	h1.listing a {
-		max-width: 100%;
-		display: inline-block;
+	h1.listing a[href^='/posts/'] {
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		overflow: hidden;
@@ -1704,9 +1704,10 @@ h1.listing a[href^="http"] {
 		hyphens: auto;
 		z-index: 1;
 		padding: 0 0 1px 1px;
+		height: 100%;
 	}
-	h1.listing a:hover,
-	h1.listing a:focus {
+	h1.listing a[href^='/posts/']:hover,
+	h1.listing a[href^='/posts/']:focus {
 		text-decoration: dotted underline;
 		white-space: initial;
 		overflow: visible;
@@ -1724,7 +1725,7 @@ h1.listing a[href^="http"] {
    mouse movements) */
 <?php $margin_of_hover_error = '10px'; ?>
 
-	h1.listing a:not(.edit-post-link):hover::before {
+	h1.listing a[href^='/posts/']:hover::before {
 		content: "";
 		position: absolute;
 		top: -<?php echo $margin_of_hover_error; ?>;
@@ -1732,9 +1733,6 @@ h1.listing a[href^="http"] {
 		bottom: -<?php echo $margin_of_hover_error; ?>;
 		left: -<?php echo $margin_of_hover_error; ?>;
 		z-index: -1;
-	}
-	h1.listing a[href^="http"]:hover {
-		text-decoration: none;
 	}
 }
 
@@ -3537,6 +3535,7 @@ input {
 	font-family: inherit;
 	font-size: inherit;
 	font-weight: inherit;
+	line-height: inherit;
 }
 
 a {
