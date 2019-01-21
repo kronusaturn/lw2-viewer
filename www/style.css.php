@@ -153,10 +153,10 @@ body > * {
 }
 #primary-bar .nav-inner,
 #bottom-bar .nav-inner {
-	padding: 0.5em;
+	padding: 12px 30px;
 }
 #secondary-bar .nav-inner {
-	padding: 0.25em 0.5em;
+	padding: 4px 10px;
 }
 
 #nav-item-sequences .nav-inner::before {
@@ -306,6 +306,9 @@ EOT;
 	flex: 1 0 auto;
 	padding: 0 0.5em;
 }
+#nav-item-search button::before {
+	content: "Search";
+}
 
 /*=-----------=*/
 /*= Login tab =*/
@@ -420,16 +423,10 @@ EOT;
 	#nav-item-search button {
 		height: 100%;
 	}
-	#nav-item-search button {
-		font-size: 1.25em;
-		width: 1.5em;
-		visibility: hidden;
-	}
 	#nav-item-search button::before {
 		content: "\F002";
 		font-family: Font Awesome;
 		font-weight: 900;
-		visibility: visible;
 	}
 	#nav-item-login {
 		padding: 0;
@@ -455,6 +452,9 @@ EOT;
 	}
 	.nav-bar #nav-item-search {
 		padding: 5px;
+	}
+	.nav-bar #nav-item-search button::before {
+		font-size: 1.5rem;
 	}
 }
 @media only screen and (max-width: 520px) {

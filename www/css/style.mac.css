@@ -1400,7 +1400,7 @@ head.content-width-fluid + body > * {
 }
 #primary-bar .nav-inner,
 #bottom-bar .nav-inner {
-	padding: 0.5em;
+	padding: 12px 30px;
 }
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1410,8 +1410,12 @@ head.content-width-fluid + body > * {
 >>>>>>> CSS refactoring: nav bars II
 =======
 #secondary-bar .nav-inner {
+<<<<<<< HEAD
 	padding: 0.25em 0.5em;
 >>>>>>> CSS refactoring: misc
+=======
+	padding: 4px 10px;
+>>>>>>> CSS refactoring: nav bars VIII
 }
 
 @media only screen and (max-width: 1160px) {
@@ -1911,6 +1915,9 @@ h1.listing ~ #bottom-bar {
 	flex: 1 0 auto;
 	padding: 0 0.5em;
 }
+#nav-item-search button::before {
+	content: "Search";
+}
 
 <<<<<<< HEAD
 >>>>>>> Minor refactor of content width CSS
@@ -2024,16 +2031,10 @@ h1.listing ~ #bottom-bar {
 	#nav-item-search button {
 		height: 100%;
 	}
-	#nav-item-search button {
-		font-size: 1.25em;
-		width: 1.5em;
-		visibility: hidden;
-	}
 	#nav-item-search button::before {
 		content: "\F002";
 		font-family: Font Awesome;
 		font-weight: 900;
-		visibility: visible;
 	}
 	#nav-item-login {
 		padding: 0;
@@ -2059,6 +2060,9 @@ h1.listing ~ #bottom-bar {
 	}
 	.nav-bar #nav-item-search {
 		padding: 5px;
+	}
+	.nav-bar #nav-item-search button::before {
+		font-size: 1.5rem;
 	}
 }
 @media only screen and (max-width: 520px) {
@@ -7708,9 +7712,6 @@ body {
 
 /*= Search tab =*/
 
-#nav-item-search {
-	padding: 0 0 1px 0;
-}
 #nav-item-search button {
 	border: none;
 	font-weight: inherit;

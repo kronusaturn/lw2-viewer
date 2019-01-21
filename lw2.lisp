@@ -306,7 +306,7 @@ signaled condition to OUT-STREAM."
 (defun search-bar-to-html (out-stream)
   (declare (special *current-search-query*))
   (let ((query (and (boundp '*current-search-query*) (hunchentoot:escape-for-html *current-search-query*))))
-    (format out-stream "<form action=\"/search\" class=\"nav-inner\"><input name=\"q\" type=\"search\" ~@[value=\"~A\"~] autocomplete=\"off\" accesskey=\"s\" title=\"Search [s]~@[&#10;Tip: Paste a ~A URL here to jump to that page.~]\"><button>Search</button></form>" query (main-site-title *current-site*))))
+    (format out-stream "<form action=\"/search\" class=\"nav-inner\"><input name=\"q\" type=\"search\" ~@[value=\"~A\"~] autocomplete=\"off\" accesskey=\"s\" title=\"Search [s]~@[&#10;Tip: Paste a ~A URL here to jump to that page.~]\"><button></button></form>" query (main-site-title *current-site*))))
 
 (defun inbox-to-html (out-stream user-slug &optional new-messages)
   (let* ((target-uri (format nil "/users/~A?show=inbox" user-slug))
