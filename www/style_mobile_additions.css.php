@@ -3,52 +3,6 @@
 /*****************/
 
 /*==============*/
-/* PAGE TOOLBAR */
-/*==============*/
-
-/*=---------------------------------------=*/
-@media only screen and (max-width: 520px) {
-/*=---------------------------------------=*/
-	#content:not(.user-page) .page-toolbar {
-		display: flex;
-		flex-direction: column-reverse;
-		text-align: right;
-		align-self: start;
-		padding: 4px 0 0 0;
-	}
-	#content.user-page .page-toolbar {
-		display: flex;
-		flex-flow: row;
-		justify-content: flex-end;
-		padding: 2px 0 0 0;
-	}
-	#content.user-page .page-toolbar > form,
-	#content.user-page .page-toolbar > .button {
-		text-align: center;
-		flex-basis: 25%;
-		margin-left: 1.5em;
-	}
-	#content.user-page .page-toolbar .button {
-		text-transform: uppercase;
-		font-size: 0.625rem;
-	}
-	#content.user-page .page-toolbar .button::before {
-		font-size: 1.375rem;
-		display: block;
-		padding: 0;
-	}
-	#content.user-page .page-toolbar .rss {
-		white-space: nowrap;
-		margin: 0 0 0 1.5em;
-	}
-	.page-toolbar > * {
-		line-height: 1.15;
-		padding: 6px 0;
-		margin: 0;
-	}
-}
-
-/*==============*/
 /* SUBLEVEL NAV */
 /*==============*/
 

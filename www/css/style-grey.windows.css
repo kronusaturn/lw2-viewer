@@ -2229,6 +2229,45 @@ a#inbox-indicator.new-messages:hover::before {
 	margin: 0 2px 0 0;
 }
 
+@media only screen and (max-width: 520px) {
+	.page-toolbar {
+		display: flex;
+	}
+	.page-toolbar > * {
+		line-height: 1.15;
+		padding: 6px 0;
+	}
+	#content:not(.user-page) .page-toolbar {
+		flex-direction: column-reverse;
+		align-self: start;
+		font-size: 1.25rem;
+	}
+	#content.user-page .page-toolbar {
+		flex-direction: row;
+		justify-content: flex-end;
+	}
+	#content.user-page .page-toolbar > * {
+		text-align: center;
+		margin-left: 1.5em;
+	}
+	#content.user-page .page-toolbar > *:not(.rss) {
+		flex-basis: 25%;
+	}
+	#content.user-page .page-toolbar > .rss {
+		flex-basis: 15%;
+	}
+	#content.user-page .page-toolbar * {
+		text-transform: uppercase;
+		font-size: 0.625rem;
+	}
+	#content.user-page .page-toolbar *::before {
+		font-size: 1.375rem;
+		display: block;
+		padding: 0;
+		margin: 0 auto;
+	}
+}
+
 /*********************/
 /* TOP PAGINATION UI */
 /*********************/
@@ -6768,6 +6807,7 @@ li {
 =======
 >>>>>>> Bug fixes
 /*==============*/
+<<<<<<< HEAD
 /* PAGE TOOLBAR */
 /*==============*/
 
@@ -6837,6 +6877,8 @@ li {
 }
 
 /*==============*/
+=======
+>>>>>>> CSS refactoring: page toolbar
 /* SUBLEVEL NAV */
 /*==============*/
 
