@@ -7633,6 +7633,19 @@ body {
 	box-shadow: 0px 0px 10px #9b9b9b;
 }
 
+@media only screen and (max-width: 960px) {
+	#ui-elements-container > div[id$='-ui-toggle'] button  {
+		color: #666;
+		text-shadow:
+			0 0 1px #000,
+			0 0 3px #000,
+			0 0 5px #000,
+			0 0 10px #000,
+			0 0 20px #000,
+			0 0 30px #000;
+	}
+}
+
 /*=========*/
 /* NAV BAR */
 /*=========*/
@@ -7980,6 +7993,40 @@ body {
 		left: 100%;
 	}	
 }
+@media only screen and (max-width: 960px) {
+	#theme-selector {
+		background-color: #232323;
+		box-shadow: 
+			0 0 0 1px #575756,
+			0 0 1px 3px #000,
+			0 0 3px 3px #000,
+			0 0 5px 3px #000,
+			0 0 10px 3px #000,
+			0 0 20px 3px #000;
+		border-radius: 12px;
+	}
+	#theme-selector::before,
+	#theme-selector .theme-selector-close-button {
+		color: #888;
+		text-shadow: 0.5px 0.5px 0 #000;
+	}
+	#theme-selector button {
+		background-color: #191919;
+		border-radius: 10px;
+	}
+	#theme-selector button::after {
+		color: #fff;
+		padding-bottom: 2px;
+		max-width: calc(100% - 3.25em);
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	#theme-selector button.selected::after {
+		text-shadow: 
+			0 -1px 0 #000,
+			0 0.5px 0.5px #fff;
+	}
+}
 
 /*======================*/
 /* THEME TWEAKER TOGGLE */
@@ -8115,6 +8162,70 @@ body {
 	#hns-date-picker::before {
 		border: 1px solid #575756;
 		border-width: 1px 0 1px 1px;
+	}
+}
+
+/*--------------------------------*
+	MOBILE VERSIONS OF QUICKNAV,
+	NEW COMMENT NAV, AND HNS
+	DATE PICKER
+ *--------------------------------*/
+	
+@media only screen and (max-width: 960px) {
+	#quick-nav-ui {
+		background-color: #000;
+	}
+	#quick-nav-ui,
+	#new-comment-nav-ui,
+	#hns-date-picker {
+		box-shadow:
+			0 0 1px 3px #000,
+			0 0 3px 3px #000,
+			0 0 5px 3px #000,
+			0 0 10px 3px #000,
+			0 0 20px 3px #000;
+	}
+	#quick-nav-ui a::after,
+	#new-comment-nav-ui::before {
+		font-family: var(--GW-UI-font);
+		font-weight: 600;
+		box-shadow:
+			0 0 1px 0 #000,
+			0 0 3px 0 #000,
+			0 0 5px 0 #000;
+		background-color: #000;
+		border-radius: 4px;
+	}
+	#quick-nav-ui,
+	#new-comment-nav-ui {
+		border-radius: 8px;
+	}
+	#new-comment-nav-ui {
+		background-color: #232323;
+		border: 1px solid #575756;
+	}
+	#new-comment-nav-ui::before {
+		color: #777;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button {
+		box-shadow: 0 0 0 1px #575756;
+		color: #777;
+	}
+	#new-comment-nav-ui .new-comments-count {
+		background-color: inherit;
+		box-shadow: 0 -1px 0 0 #575756;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
+		color: #393939;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-previous {
+		border-radius: 7px 0 0 7px;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-next {
+		border-radius: 0 7px 7px 0;
+	}
+	#new-comment-nav-ui button::after {
+		font-family: var(--GW-UI-font);
 	}
 }
 
@@ -8317,6 +8428,187 @@ h1.listing .edit-post-link:hover {
 }
 #content.user-page h1.listing .edit-post-link {
 	background-color: #131313;
+}
+
+@media only screen and (max-width: 900px) {
+	h1.listing {
+		font-size: 1.75rem;
+		line-height: 1;
+	}
+	h1.listing a[href^='http'] {
+		top: 2px;
+	}
+	h1.listing + .post-meta .karma-value,
+	h1.listing + .post-meta .comment-count,
+	h1.listing + .post-meta .lw2-link,
+	h1.listing + .post-meta .read-time {
+		bottom: 0;
+	}
+	h1.listing + .post-meta .post-section::before {
+		position: unset;
+	}
+	h1.listing + .post-meta .post-section {
+		overflow: visible;
+		order: 1;
+	}
+	h1.listing + .post-meta .link-post-domain {
+		order: 2;
+		line-height: 1;
+		flex-basis: 100%;
+	}
+	h1.listing + .post-meta::after {
+		bottom: -10px;
+	}
+	#content.user-page h1.listing + .post-meta {
+		margin-bottom: 1em;
+	}
+	#content.user-page h1.link-post-listing::after {
+		height: calc(100% + 2em);
+	}
+}
+@media only screen and (max-width: 720px) {
+	h1.listing {
+		margin: 10px 6px 6px 6px;
+		max-width: calc(100% - 12px);
+		font-size: 1.5rem;
+		padding-right: 35px;
+	}
+	#content.conversations-user-page h1.listing {
+		font-size: 1.5rem;
+	}
+	h1.listing + .post-meta {
+		margin: 0 6px 0 7px;
+		clear: both;
+	}
+	h1.listing + .post-meta {
+		padding: .25em 254px 0 0;
+	}
+	h1.listing + .post-meta::after {
+		bottom: -2px;
+	}
+	h1.listing + .post-meta > * {
+		line-height: 1;
+		display: block;
+	}
+	#content.conversations-user-page h1.listing + .post-meta > * {
+		line-height: 1.5;
+	}
+	h1.listing + .post-meta .date,
+	h1.listing + .post-meta .author {
+		line-height: 1.3;		
+	}
+	h1.listing + .post-meta .karma-value,
+	h1.listing + .post-meta .comment-count,
+	h1.listing + .post-meta .lw2-link,
+	h1.listing + .post-meta .read-time {
+		top: unset;
+		font-size: 1rem;
+		box-shadow: none;
+	}
+	h1.listing + .post-meta .karma-value::before,
+	h1.listing + .post-meta .comment-count::before,
+	h1.listing + .post-meta .lw2-link::before,
+	h1.listing + .post-meta .read-time::before {
+		box-shadow: none;
+	}
+	h1.listing + .post-meta .karma-value,
+	h1.listing + .post-meta .comment-count,
+	h1.listing + .post-meta .read-time,
+	h1.listing + .post-meta .lw2-link {
+		bottom: 4px;
+	}
+
+	h1.listing + .post-meta .karma-value {
+		right: 192px;
+	}
+	h1.listing + .post-meta .karma-value::before {
+		text-shadow: 0.5px 0.5px 0.5px #575756;
+	}
+	h1.listing + .post-meta .comment-count {
+		right: 132px;
+	}
+	h1.listing + .post-meta .read-time {
+		right: 56px;
+	}
+	h1.listing + .post-meta .lw2-link {
+		opacity: 1;
+		right: 0;
+	}
+	h1.listing + .post-meta .link-post-domain {
+		margin: 0;
+		line-height: 1.3;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	h1.listing + .post-meta .post-section::before {
+		position: absolute;
+		left: unset;
+		right: 0;
+		bottom: 30px;
+		top: unset;
+	}
+	h1.listing a {
+		display: inline;
+	}
+}
+@media only screen and (max-width: 520px) {
+	h1.listing + .post-meta {
+		padding: .25em 144px 0 0;
+		flex-flow: column;
+	}
+	#content.conversations-user-page h1.listing + .post-meta {
+		flex-flow: row wrap;
+	}
+	h1.listing + .post-meta .date {
+		margin: 0.375em 0 0.25em 0;
+		line-height: 1;
+	}
+	#content.user-page h1.listing::after {
+		height: calc(100% + 2.125em);
+	}
+	#content.user-page h1.link-post-listing::after {
+		height: calc(100% + 3.125em);
+	}
+	#content.user-page h1.listing + .post-meta {
+		padding: 0.25em 144px 0.5em 36px;
+	}
+	#content.conversations-user-page h1.listing + .post-meta .date {
+		margin: 0 0 0 1em;
+	}
+
+	h1.listing + .post-meta .karma-value {
+		bottom: 28px;
+		right: 0;
+	}
+	h1.listing + .post-meta .comment-count {
+		bottom: 28px;
+		right: 56px;
+	}
+	h1.listing + .post-meta .read-time {
+		right: 56px;
+		bottom: 4px;
+	}
+	h1.listing + .post-meta .lw2-link {
+		right: 0;
+		bottom: 4px;
+	}
+	h1.listing + .post-meta .link-post-domain {
+		max-width: 100%;
+	}
+	h1.listing + .post-meta .post-section::before {
+		right: 120px;
+	}
+}
+@media only screen and (max-width: 320px) {
+	h1.listing {
+		font-size: 1.25rem;
+	}
+	#content.user-page h1.listing::after {
+		height: calc(100% + 2.625em);
+	}
+	#content.user-page h1.link-post-listing::after {
+		height: calc(100% + 3.75em);
+	}
 }
 
 /*======*/
@@ -9782,6 +10074,7 @@ select {
 /* MOBILE */
 /*========*/
 
+<<<<<<< HEAD
 @media only screen and (max-width: 960px) {
 	#ui-elements-container > div[id$='-ui-toggle'] button  {
 		color: #666;
@@ -9939,42 +10232,9 @@ select {
 }
 >>>>>>> Media query rewrite, part XII; plus misc. CSS refactoring
 
+=======
+>>>>>>> Media query rewrite: default theme I
 @media only screen and (max-width: 900px) {
-	h1.listing {
-		font-size: 1.75rem;
-		line-height: 1;
-	}
-	h1.listing a[href^='http'] {
-		top: 2px;
-	}
-	h1.listing + .post-meta .karma-value,
-	h1.listing + .post-meta .comment-count,
-	h1.listing + .post-meta .lw2-link,
-	h1.listing + .post-meta .read-time {
-		bottom: 0;
-	}
-	h1.listing + .post-meta .post-section::before {
-		position: unset;
-	}
-	h1.listing + .post-meta .post-section {
-		overflow: visible;
-		order: 1;
-	}
-	h1.listing + .post-meta .link-post-domain {
-		order: 2;
-		line-height: 1;
-		flex-basis: 100%;
-	}
-	h1.listing + .post-meta::after {
-		bottom: -10px;
-	}
-	#content.user-page h1.listing + .post-meta {
-		margin-bottom: 1em;
-	}
-	#content.user-page h1.link-post-listing::after {
-		height: calc(100% + 2em);
-	}
-
 	#nav-item-search button::before {
 		color: #0cc800;
 	}
@@ -10010,140 +10270,7 @@ select {
 	}
 }
 
-@media only screen and (max-width: 720px) {
-	h1.listing {
-		margin: 10px 6px 6px 6px;
-		max-width: calc(100% - 12px);
-		font-size: 1.5rem;
-		padding-right: 35px;
-	}
-	#content.conversations-user-page h1.listing {
-		font-size: 1.5rem;
-	}
-	h1.listing + .post-meta {
-		margin: 0 6px 0 7px;
-		clear: both;
-	}
-	h1.listing + .post-meta {
-		padding: .25em 254px 0 0;
-	}
-	h1.listing + .post-meta::after {
-		bottom: -2px;
-	}
-	h1.listing + .post-meta > * {
-		line-height: 1;
-		display: block;
-	}
-	#content.conversations-user-page h1.listing + .post-meta > * {
-		line-height: 1.5;
-	}
-	h1.listing + .post-meta .date,
-	h1.listing + .post-meta .author {
-		line-height: 1.3;		
-	}
-	h1.listing + .post-meta .karma-value,
-	h1.listing + .post-meta .comment-count,
-	h1.listing + .post-meta .lw2-link,
-	h1.listing + .post-meta .read-time {
-		top: unset;
-		font-size: 1rem;
-		box-shadow: none;
-	}
-	h1.listing + .post-meta .karma-value::before,
-	h1.listing + .post-meta .comment-count::before,
-	h1.listing + .post-meta .lw2-link::before,
-	h1.listing + .post-meta .read-time::before {
-		box-shadow: none;
-	}
-	h1.listing + .post-meta .karma-value,
-	h1.listing + .post-meta .comment-count,
-	h1.listing + .post-meta .read-time,
-	h1.listing + .post-meta .lw2-link {
-		bottom: 4px;
-	}
-
-	h1.listing + .post-meta .karma-value {
-		right: 192px;
-	}
-	h1.listing + .post-meta .karma-value::before {
-		text-shadow: 0.5px 0.5px 0.5px #575756;
-	}
-	h1.listing + .post-meta .comment-count {
-		right: 132px;
-	}
-	h1.listing + .post-meta .read-time {
-		right: 56px;
-	}
-	h1.listing + .post-meta .lw2-link {
-		opacity: 1;
-		right: 0;
-	}
-	h1.listing + .post-meta .link-post-domain {
-		margin: 0;
-		line-height: 1.3;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-	h1.listing + .post-meta .post-section::before {
-		position: absolute;
-		left: unset;
-		right: 0;
-		bottom: 30px;
-		top: unset;
-	}
-	h1.listing a {
-		display: inline;
-	}
-}
-
 @media only screen and (max-width: 520px) {
-	h1.listing + .post-meta {
-		padding: .25em 144px 0 0;
-		flex-flow: column;
-	}
-	#content.conversations-user-page h1.listing + .post-meta {
-		flex-flow: row wrap;
-	}
-	h1.listing + .post-meta .date {
-		margin: 0.375em 0 0.25em 0;
-		line-height: 1;
-	}
-	#content.user-page h1.listing::after {
-		height: calc(100% + 2.125em);
-	}
-	#content.user-page h1.link-post-listing::after {
-		height: calc(100% + 3.125em);
-	}
-	#content.user-page h1.listing + .post-meta {
-		padding: 0.25em 144px 0.5em 36px;
-	}
-	#content.conversations-user-page h1.listing + .post-meta .date {
-		margin: 0 0 0 1em;
-	}
-
-	h1.listing + .post-meta .karma-value {
-		bottom: 28px;
-		right: 0;
-	}
-	h1.listing + .post-meta .comment-count {
-		bottom: 28px;
-		right: 56px;
-	}
-	h1.listing + .post-meta .read-time {
-		right: 56px;
-		bottom: 4px;
-	}
-	h1.listing + .post-meta .lw2-link {
-		right: 0;
-		bottom: 4px;
-	}
-	h1.listing + .post-meta .link-post-domain {
-		max-width: 100%;
-	}
-	h1.listing + .post-meta .post-section::before {
-		right: 120px;
-	}
-
 	#content.compact > .comment-thread .comment-item {
 		max-height: 110px;
 	}
@@ -10185,18 +10312,6 @@ select {
 	}
 	#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
 		top: 1px;
-	}
-}
-
-@media only screen and (max-width: 320px) {
-	h1.listing {
-		font-size: 1.25rem;
-	}
-	#content.user-page h1.listing::after {
-		height: calc(100% + 2.625em);
-	}
-	#content.user-page h1.link-post-listing::after {
-		height: calc(100% + 3.75em);
 	}
 }
 
