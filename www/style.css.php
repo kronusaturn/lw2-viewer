@@ -442,6 +442,7 @@ EOT;
 	}
 	#primary-bar .nav-inner::before {
 		margin: 0;
+		font-size: 1.125em;
 	}
 }
 @media only screen and (max-width: 720px) {
@@ -450,6 +451,7 @@ EOT;
 	}
 	.nav-bar .nav-inner::before {
 		margin: 0;
+		font-size: 1.125em;
 	}
 	.nav-bar #nav-item-search {
 		padding: 5px;
@@ -519,6 +521,9 @@ a#inbox-indicator.new-messages:hover::before {
 }
 
 @media only screen and (max-width: 900px) {
+	#inbox-indicator {
+		padding: 0 0.75em 0 0;
+	}
 	#inbox-indicator::before {
 		width: 100%;
 		text-align: right;
@@ -609,7 +614,7 @@ a#inbox-indicator.new-messages:hover::before {
 	margin: 0.25em 0 0 0;
 	padding: 0.75em 0 0 0;
 	text-align: center;
-	font-size: 1.25em;
+	font-size: 1.25rem;
 	display: flex;
 	justify-content: center;
 }
@@ -636,6 +641,12 @@ a#inbox-indicator.new-messages:hover::before {
 #top-nav-bar a::before {
 	margin: 0.5em;
 	display: inline-block;
+}
+
+@media only screen and (max-width: 900px) {
+	#top-nav-bar {
+		font-size: 1.75rem;
+	}
 }
 
 /****************/
