@@ -412,29 +412,44 @@ signaled condition to OUT-STREAM."
             when (or (not offset) (>= count offset))
             collect x))))
 
+(defun identify-item (x)
+  (cond
+    ((typep x 'condition)
+     :condition)
+    ((assoc :message x)
+     :notification)
+    ((string= (cdr (assoc :----typename x)) "Message")
+     :message)
+    ((string= (cdr (assoc :----typename x)) "Conversation")
+     :conversation)
+    ((assoc :comment-count x)
+     :post)
+    (t
+     :comment)))
+
 (defun write-index-items-to-html (out-stream items &key need-auth (empty-message "No entries.") skip-section)
   (if items
       (dolist (x items)
-        (with-error-html-block (out-stream)
-          (cond
-            ((typep x 'condition)
-             (error-to-html out-stream x))
-            ((assoc :message x)
-             (format out-stream "<p>~A</p>" (cdr (assoc :message x))))
-            ((string= (cdr (assoc :----typename x)) "Message")
-             (format out-stream "<ul class=\"comment-thread\"><li class=\"comment-item\">")
-             (unwind-protect
-               (conversation-message-to-html out-stream x)
-               (format out-stream "</li></ul>")))
-            ((string= (cdr (assoc :----typename x)) "Conversation")
-             (conversation-index-to-html out-stream x))
-            ((assoc :comment-count x)
-             (post-headline-to-html x :need-auth need-auth :skip-section skip-section))
-            (t
-             (format out-stream "<ul class=\"comment-thread\"><li class=\"comment-item\" id=\"comment-~A\">" (cdr (assoc :--id x)))
-             (unwind-protect
-               (comment-to-html out-stream x :with-post-title t)
-               (format out-stream "</li></ul>"))))))
+	(with-error-html-block (out-stream)
+	  (ecase (identify-item x)
+	    (:condition
+	     (error-to-html out-stream x))
+	    (:notification
+	     (format out-stream "<p>~A</p>" (cdr (assoc :message x))))
+	    (:message
+	     (format out-stream "<ul class=\"comment-thread\"><li class=\"comment-item\">")
+	     (unwind-protect
+		  (conversation-message-to-html out-stream x)
+	       (format out-stream "</li></ul>")))
+	    (:conversation
+	     (conversation-index-to-html out-stream x))
+	    (:post
+	     (post-headline-to-html x :need-auth need-auth :skip-section skip-section))
+	    (:comment
+	     (format out-stream "<ul class=\"comment-thread\"><li class=\"comment-item\" id=\"comment-~A\">" (cdr (assoc :--id x)))
+	     (unwind-protect
+		  (comment-to-html out-stream x :with-post-title t)
+	       (format out-stream "</li></ul>"))))))
       (format out-stream "<div class=\"listing-message\">~A</div>" empty-message)))
 
 (defun write-index-items-to-rss (out-stream items &key title need-auth)
@@ -450,18 +465,20 @@ signaled condition to OUT-STREAM."
                             :pubDate date
                             :guid guid
                             :description body)))
-        (dolist (item items)
-          (if (assoc :comment-count item)
-            (let ((author (get-username (cdr (assoc :user-id item)))))
-              (emit-item item
-                         :title (clean-text (format nil "~A by ~A" (cdr (assoc :title item)) author))
-                         :author author
-                         :link (generate-post-auth-link item nil t need-auth)
-                         :body (clean-html (or (cdr (assoc :html-body (get-post-body (cdr (assoc :--id item)) :revalidate nil))) "") :post-id (cdr (assoc :--id item)))))
-            (emit-item item
-                       :title (format nil "Comment by ~A on ~A" (get-username (cdr (assoc :user-id item))) (get-post-title (cdr (assoc :post-id item))))
-                       :link (generate-post-link (cdr (assoc :post-id item)) (cdr (assoc :--id item)) t)
-                       :body (clean-html (cdr (assoc :html-body item))))))))))
+	(dolist (item items)
+	  (ecase (identify-item item)
+	    (:post
+	     (let ((author (get-username (cdr (assoc :user-id item)))))
+	       (emit-item item
+			  :title (clean-text (format nil "~A by ~A" (cdr (assoc :title item)) author))
+			  :author author
+			  :link (generate-post-auth-link item nil t need-auth)
+			  :body (clean-html (or (cdr (assoc :html-body (get-post-body (cdr (assoc :--id item)) :revalidate nil))) "") :post-id (cdr (assoc :--id item))))))
+	    (:comment
+	     (emit-item item
+			:title (format nil "Comment by ~A on ~A" (get-username (cdr (assoc :user-id item))) (get-post-title (cdr (assoc :post-id item))))
+			:link (generate-post-link (cdr (assoc :post-id item)) (cdr (assoc :--id item)) t)
+			:body (clean-html (cdr (assoc :html-body item)))))))))))
 
 (defparameter *fonts-stylesheet-uris*
   '("https://fonts.greaterwrong.com/?fonts=InconsolataGW,CharterGW,ConcourseGW,Whitney,MundoSans,SourceSansPro,Raleway,ProximaNova,TiredOfCourier,AnonymousPro,InputSans,InputSansNarrow,InputSansCondensed,GaramondPremierPro,TriplicateCode,TradeGothic,NewsGothicBT,Caecilia,SourceSerifPro,SourceCodePro"
