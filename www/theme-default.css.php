@@ -794,37 +794,32 @@ h1.listing .edit-post-link:hover {
 @media only screen and (max-width: 900px) {
 	h1.listing {
 		font-size: 1.75rem;
-		line-height: 1;
 	}
 	h1.listing a[href^='http'] {
-		top: 2px;
-	}
-	h1.listing + .post-meta .karma-value,
-	h1.listing + .post-meta .comment-count,
-	h1.listing + .post-meta .lw2-link,
-	h1.listing + .post-meta .read-time {
-		bottom: 0;
-	}
-	h1.listing + .post-meta .post-section::before {
-		position: unset;
-	}
-	h1.listing + .post-meta .post-section {
-		overflow: visible;
-		order: 1;
+		top: 4px;
 	}
 	h1.listing + .post-meta .link-post-domain {
-		order: 2;
 		line-height: 1;
-		flex-basis: 100%;
-	}
-	h1.listing + .post-meta::after {
-		bottom: -10px;
 	}
 	#content.user-page h1.listing + .post-meta {
 		margin-bottom: 1em;
 	}
 	#content.user-page h1.link-post-listing::after {
 		height: calc(100% + 2em);
+	}
+}
+@media only screen and (max-width: 840px) {
+	h1.listing {
+		font-size: 1.625rem;
+	}
+	h1.listing a[href^='http'] {
+		font-size: 0.75em;
+	}
+	h1.listing + .post-meta .date,
+	h1.listing + .post-meta .author,
+	h1.listing + .post-meta .link-post-domain {
+		line-height: 1.6;
+		margin-top: 2px;
 	}
 }
 @media only screen and (max-width: 720px) {
