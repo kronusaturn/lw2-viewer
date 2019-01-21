@@ -1944,21 +1944,16 @@ h1.listing ~ #bottom-bar {
 		bottom: 1rem;
 	}
 	#bottom-bar #nav-item-first .nav-inner::after {
-		content: "First Page";
-	}
-	#bottom-bar #nav-item-prev .nav-inner::after {
-		content: "Prev. Page";
-	}
-	#bottom-bar #nav-item-top .nav-inner::after {
-		content: "Top";
-	}
-	#bottom-bar #nav-item-next .nav-inner::after {
-		content: "Next Page";
-	}
-	#bottom-bar #nav-item-last .nav-inner::after {
-		content: "Last Page";
-	}
-	#bottom-bar #nav-item-top a::after {
+		content: "\F33E";
+	}	#bottom-bar #nav-item-prev .nav-inner::after {
+		content: "\F060";
+	}	#bottom-bar #nav-item-top .nav-inner::after {
+		content: "\F062";
+	}	#bottom-bar #nav-item-next .nav-inner::after {
+		content: "\F061";
+	}	#bottom-bar #nav-item-last .nav-inner::after {
+		content: "\F340";
+	}	#bottom-bar #nav-item-top a::after {
 		display: initial;
 	}
 }
@@ -2551,9 +2546,8 @@ a#inbox-indicator.new-messages:hover::before {
 /************/
 
 h1.listing {
-	font-size: 1.75em;
 	max-height: 1.15em;
-	margin: 1em 0 0.25em 0;
+	line-height: 1.15;
 	position: relative;
 }
 
@@ -2664,7 +2658,7 @@ h1.listing + .post-meta .post-section {
 }
 h1.listing + .post-meta .post-section::before {
 	position: absolute;
-	left: -36px;
+	left: -1.625em;
 }
 
 h1.listing + .post-meta .read-time {

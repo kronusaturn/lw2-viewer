@@ -350,21 +350,24 @@ EOT;
 		font-size: 0.375em;
 		bottom: 1rem;
 	}
-	#bottom-bar #nav-item-first .nav-inner::after {
-		content: "First Page";
+<?php
+
+$pagination_labels = [
+	'first'	=> 'First Page',
+	'prev'	=> 'Prev. Page',
+	'top'	=> 'Top',
+	'next'	=> 'Next Page',
+	'last'	=> 'Last Page',
+];
+foreach ($pagination_icons as $k => $v) {
+echo <<<EOT
+	#bottom-bar #nav-item-{$k} .nav-inner::after {
+		content: "{$v}";
 	}
-	#bottom-bar #nav-item-prev .nav-inner::after {
-		content: "Prev. Page";
-	}
-	#bottom-bar #nav-item-top .nav-inner::after {
-		content: "Top";
-	}
-	#bottom-bar #nav-item-next .nav-inner::after {
-		content: "Next Page";
-	}
-	#bottom-bar #nav-item-last .nav-inner::after {
-		content: "Last Page";
-	}
+EOT;
+}
+
+?>
 	#bottom-bar #nav-item-top a::after {
 		display: initial;
 	}
@@ -1598,9 +1601,8 @@ foreach ($content_width_settings as $name => $setting) {
 /************/
 
 h1.listing {
-	font-size: 1.75em;
 	max-height: 1.15em;
-	margin: 1em 0 0.25em 0;
+	line-height: 1.15;
 	position: relative;
 }
 
@@ -1708,7 +1710,7 @@ h1.listing + .post-meta .post-section {
 }
 h1.listing + .post-meta .post-section::before {
 	position: absolute;
-	left: -36px;
+	left: -1.625em;
 }
 
 h1.listing + .post-meta .read-time {
