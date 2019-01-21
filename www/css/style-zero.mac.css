@@ -2196,13 +2196,12 @@ a#inbox-indicator.new-messages:hover::before {
 /*=--------------------------=*/
 
 .page-toolbar > * {
-	display: inline-block;
 	margin-left: 1.5em;
 }
 .page-toolbar .button::before {
 	font-family: "Font Awesome";
 	font-size: 0.9em;
-	padding-right: 0.3em;
+	padding-right: 4px;
 }
 
 /*=-------------------------------=*/
@@ -2224,10 +2223,10 @@ a#inbox-indicator.new-messages:hover::before {
 .rss::before {
 	content: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIj8+DQo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPiANCjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiIGlkPSJSU1NpY29uIiB2aWV3Qm94PSIwIDAgMjU2IDI1NiI+DQo8ZGVmcz4NCjxsaW5lYXJHcmFkaWVudCB4MT0iMC4wODUiIHkxPSIwLjA4NSIgeDI9IjAuOTE1IiB5Mj0iMC45MTUiIGlkPSJSU1NnIj4NCjxzdG9wICBvZmZzZXQ9IjAuMCIgc3RvcC1jb2xvcj0iI0UzNzAyRCIvPjxzdG9wICBvZmZzZXQ9IjAuMTA3MSIgc3RvcC1jb2xvcj0iI0VBN0QzMSIvPg0KPHN0b3AgIG9mZnNldD0iMC4zNTAzIiBzdG9wLWNvbG9yPSIjRjY5NTM3Ii8+PHN0b3AgIG9mZnNldD0iMC41IiBzdG9wLWNvbG9yPSIjRkI5RTNBIi8+DQo8c3RvcCAgb2Zmc2V0PSIwLjcwMTYiIHN0b3AtY29sb3I9IiNFQTdDMzEiLz48c3RvcCAgb2Zmc2V0PSIwLjg4NjYiIHN0b3AtY29sb3I9IiNERTY0MkIiLz4NCjxzdG9wICBvZmZzZXQ9IjEuMCIgc3RvcC1jb2xvcj0iI0Q5NUIyOSIvPg0KPC9saW5lYXJHcmFkaWVudD4NCjwvZGVmcz4NCjxyZWN0IHdpZHRoPSIyNTYiIGhlaWdodD0iMjU2IiByeD0iNTUiIHJ5PSI1NSIgeD0iMCIgIHk9IjAiICBmaWxsPSIjQ0M1RDE1Ii8+DQo8cmVjdCB3aWR0aD0iMjQ2IiBoZWlnaHQ9IjI0NiIgcng9IjUwIiByeT0iNTAiIHg9IjUiICB5PSI1IiAgZmlsbD0iI0Y0OUM1MiIvPg0KPHJlY3Qgd2lkdGg9IjIzNiIgaGVpZ2h0PSIyMzYiIHJ4PSI0NyIgcnk9IjQ3IiB4PSIxMCIgeT0iMTAiIGZpbGw9InVybCgjUlNTZykiLz4NCjxjaXJjbGUgY3g9IjY4IiBjeT0iMTg5IiByPSIyNCIgZmlsbD0iI0ZGRiIvPg0KPHBhdGggZD0iTTE2MCAyMTNoLTM0YTgyIDgyIDAgMCAwIC04MiAtODJ2LTM0YTExNiAxMTYgMCAwIDEgMTE2IDExNnoiIGZpbGw9IiNGRkYiLz4NCjxwYXRoIGQ9Ik0xODQgMjEzQTE0MCAxNDAgMCAwIDAgNDQgNzMgViAzOGExNzUgMTc1IDAgMCAxIDE3NSAxNzV6IiBmaWxsPSIjRkZGIi8+DQo8L3N2Zz4NCg==');
 	display: inline-block;
-	width: 1em;
-	padding-right: 0.2em;
+	width: 0.8em;
 	position: relative;
 	top: 1px;
+	margin: 0 2px 0 0;
 }
 
 /*********************/
@@ -2263,7 +2262,6 @@ a#inbox-indicator.new-messages:hover::before {
 	left: 0;
 }
 #top-nav-bar a::before {
-	margin: 0.5em;
 	display: inline-block;
 }
 
@@ -6772,6 +6770,7 @@ li {
 /*==============*/
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 @media only screen and (max-width: 900px) {
 =======
 /*=--------------------------------------=*/
@@ -6790,8 +6789,10 @@ li {
 }
 @media only screen and (max-width: 520px) {
 =======
+=======
+>>>>>>> CSS refactoring: page toolbar, top nav bar
 /*=---------------------------------------=*/
-} @media only screen and (max-width: 520px) {
+@media only screen and (max-width: 520px) {
 /*=---------------------------------------=*/
 >>>>>>> Minor refactor of content width CSS
 	#content:not(.user-page) .page-toolbar {

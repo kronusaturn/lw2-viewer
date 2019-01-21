@@ -563,13 +563,12 @@ a#inbox-indicator.new-messages:hover::before {
 /*=--------------------------=*/
 
 .page-toolbar > * {
-	display: inline-block;
 	margin-left: 1.5em;
 }
 .page-toolbar .button::before {
 	font-family: "Font Awesome", "Font Awesome 5 Free";
 	font-size: 0.9em;
-	padding-right: 0.3em;
+	padding-right: 4px;
 }
 
 /*=-------------------------------=*/
@@ -599,10 +598,10 @@ a#inbox-indicator.new-messages:hover::before {
 .rss::before {
 	content: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/rss.svg")) ?>');
 	display: inline-block;
-	width: 1em;
-	padding-right: 0.2em;
+	width: 0.8em;
 	position: relative;
 	top: 1px;
+	margin: 0 2px 0 0;
 }
 
 /*********************/
@@ -639,7 +638,6 @@ a#inbox-indicator.new-messages:hover::before {
 	left: 0;
 }
 #top-nav-bar a::before {
-	margin: 0.5em;
 	display: inline-block;
 }
 

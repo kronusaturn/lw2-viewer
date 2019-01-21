@@ -6,19 +6,8 @@
 /* PAGE TOOLBAR */
 /*==============*/
 
-/*=--------------------------------------=*/
-@media only screen and (max-width: 900px) {
-/*=--------------------------------------=*/
-	#content > .page-toolbar {
-		font-size: 1rem;
-		margin-right: 0;
-	}
-	#content.user-page > .page-toolbar {
-		grid-column: 2 / span 2;
-		margin: 0 0 6px 0;
-	}
 /*=---------------------------------------=*/
-} @media only screen and (max-width: 520px) {
+@media only screen and (max-width: 520px) {
 /*=---------------------------------------=*/
 	#content:not(.user-page) .page-toolbar {
 		display: flex;
