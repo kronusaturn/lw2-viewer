@@ -1397,13 +1397,21 @@ head.content-width-fluid + body > * {
 .nav-inner {
 	width: 100%;
 	height: 100%;
+}
+#primary-bar .nav-inner,
+#bottom-bar .nav-inner {
 	padding: 0.5em;
 }
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 #primary-bar {
 	height: 4em;
 >>>>>>> CSS refactoring: nav bars II
+=======
+#secondary-bar .nav-inner {
+	padding: 0.25em 0.5em;
+>>>>>>> CSS refactoring: misc
 }
 
 @media only screen and (max-width: 1160px) {
@@ -1493,6 +1501,7 @@ head.content-width-fluid + body > * {
 	margin: 0.5em;
 >>>>>>> CSS refactoring: nav bars IV
 }
+<<<<<<< HEAD
 .theme-selector button:nth-of-type(2) {
 	background-image: url('data:image/gif;base64,R0lGODlhIAAgAPUAMQAAAA0NDRwcHCYmJioqKk1NTVVVVV1dXWJiYmNjY3d3d35+foiIiIuLi5aWlq2trbOzs7S0tLm5ucXFxcrKysvLy83NzdLS0tXV1dbW1tra2tvb2+Xl5ebm5ujo6Onp6e3t7e7u7vT09Pb29vf39/j4+Pv7+/39/f7+/v///wAAwKwtDQEAAAAQrAUAAGAAABUAAAAAAAAAEKwFAABgAABQ4VxT/38AAA8AAAAAAAAAwKwtDQEAAAAAAAAAAAAAACwAAAAAIAAgAAAGj0CAcEgsGo/IpHLJbDqf0Kh0Sq0KAx0TaUsqcRzWQChFLpM/BGoAZG5P1OyUiXI5lUeD6ZosEgAWd2lSeykieQllhnpxJAoMH2UZcG1lIYKDcZQhBpOUZCcFi2QjaQgeZRaiKXhCDWUaqn1CD6+qKRIQGGYbtpQoC3pjnikRapBtIhUHVszNzs/Q0dLT1ENBADs=');
 }
@@ -1743,10 +1752,25 @@ h1.listing ~ #bottom-bar {
 >>>>>>> Miscellaneous CSS refactoring
 }
 #bottom-bar #nav-item-last a::before,
+=======
+
+#bottom-bar #nav-item-first a::before,
+#top-nav-bar a.nav-item-first::before {
+	content: "\F33E";
+}#bottom-bar #nav-item-prev a::before,
+#top-nav-bar a.nav-item-prev::before {
+	content: "\F060";
+}#bottom-bar #nav-item-top a::before,
+#top-nav-bar a.nav-item-top::before {
+	content: "\F062";
+}#bottom-bar #nav-item-next a::before,
+#top-nav-bar a.nav-item-next::before {
+	content: "\F061";
+}#bottom-bar #nav-item-last a::before,
+>>>>>>> CSS refactoring: misc
 #top-nav-bar a.nav-item-last::before {
 	content: "\F340";
-}
-#bottom-bar #nav-item-next a::before,
+}#bottom-bar #nav-item-next a::before,
 #bottom-bar #nav-item-last a::before {
 	order: 1;
 }
@@ -2117,10 +2141,9 @@ a#inbox-indicator.new-messages:hover::before {
 /****************/
 
 .page-toolbar {
-	text-align: right;
-}
-#content > .page-toolbar {
 	grid-row: 3;
+	text-align: right;
+	margin: 4px 8px;
 }
 
 /*=--------------------------=*/
@@ -2245,7 +2268,6 @@ a#inbox-indicator.new-messages:hover::before {
 
 .sublevel-nav.sort {
 	position: relative;
-	margin-top: 8px;
 	font-size: 0.75em;
 }
 #content > .sublevel-nav.sort {
@@ -2255,9 +2277,10 @@ a#inbox-indicator.new-messages:hover::before {
 	flex-flow: column;
 }
 #content.index-page > .sublevel-nav.sort {
-	grid-row: 3 / span 1;
+	grid-row: 3;
 	justify-self: start;
 	flex-flow: row;
+	margin: 10px 0 0 30px;
 }
 
 .sublevel-nav.sort::before {
@@ -3107,10 +3130,6 @@ article {
 .post-meta .lw2-link {
 	opacity: 0.5;
 	order: 1;
-}
-.post-meta > *,
-.post-meta .post-section::before {
-	margin: 0 0.5em;
 }
 .post-meta .post-section {
 	order: -1;
@@ -8131,6 +8150,7 @@ body {
 /* LISTINGS */
 /*==========*/
 
+<<<<<<< HEAD
 h1.listing {
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -8145,16 +8165,24 @@ h1.listing {
 
 	margin: 7px var(--GW-listing-side-margin) 0 var(--GW-listing-side-margin);
 	max-width: calc(100% - 2 * var(--GW-listing-side-margin));
+=======
+.listings {
+	padding: 15px 50px 0 50px;
+}
+>>>>>>> CSS refactoring: misc
 
+h1.listing {
+	font-size: 1.875em;
 	top: 0;
+<<<<<<< HEAD
 
 >>>>>>> CSS refactoring: nav bars III
+=======
+>>>>>>> CSS refactoring: misc
 	font-family: var(--GW-listings-font), 'Font Awesome';
 >>>>>>> Media query rewrite, part XII; plus misc. CSS refactoring
 	font-weight: 700;
-}
-h1.listing:first-of-type {
-	margin: 21px 20px 0 20px;
+	margin: 7px 0 0 0;
 }
 
 <<<<<<< HEAD
@@ -8221,7 +8249,7 @@ h1.listing.spam:hover + .post-meta {
 /*===================*/
 
 h1.listing + .post-meta {
-	padding: 0 330px 14px 0 ;
+	padding: 0 330px 14px 1px;
 }
 h1.listing + .post-meta .karma-value,
 h1.listing + .post-meta .comment-count,

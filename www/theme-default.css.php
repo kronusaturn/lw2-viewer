@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php
 	$UI_font = (($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Whitney', 'a_Avante'") . ", 'Assistant', Arial, sans-serif";
 	$listings_font = (($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Mundo Sans', 'a_Avante'") . ", 'Assistant', Arial, sans-serif";
@@ -8,8 +7,6 @@
 	$white_glow = "0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff";
 ?>
 
-=======
->>>>>>> Media query rewrite, part XII; plus misc. CSS refactoring
 /*****************/
 /* DEFAULT THEME */
 /*****************/
@@ -629,25 +626,22 @@ body {
 /*==========*/
 
 h1.listing {
-<<<<<<< HEAD
-<<<<<<< HEAD
 	font-family: <?php echo $listings_font; ?>, 'Font Awesome', 'Font Awesome 5 Free';
-=======
-=======
 	--GW-listing-side-margin: 20px;
 
 	margin: 7px var(--GW-listing-side-margin) 0 var(--GW-listing-side-margin);
 	max-width: calc(100% - 2 * var(--GW-listing-side-margin));
-
-	top: <?php echo ($platform == 'Mac') ? "0" : "0.125em"; ?>;
-
->>>>>>> CSS refactoring: nav bars III
-	font-family: var(--GW-listings-font), 'Font Awesome';
->>>>>>> Media query rewrite, part XII; plus misc. CSS refactoring
-	font-weight: <?php echo ($platform == 'Mac') ? "700" : "800"; ?>;
 }
-h1.listing:first-of-type {
-	margin: 21px 20px 0 20px;
+.listings {
+	padding: 15px 50px 0 50px;
+}
+
+h1.listing {
+	font-size: 1.875em;
+	top: <?php echo ($platform == 'Mac') ? "0" : "0.125em"; ?>;
+	font-family: var(--GW-listings-font), 'Font Awesome';
+	font-weight: <?php echo ($platform == 'Mac') ? "700" : "800"; ?>;
+	margin: 7px 0 0 0;
 }
 
 h1.listing a[href^='/'] {
@@ -710,7 +704,7 @@ h1.listing.spam:hover + .post-meta {
 /*===================*/
 
 h1.listing + .post-meta {
-	padding: 0 330px 14px 0 ;
+	padding: 0 330px 14px 1px;
 }
 h1.listing + .post-meta .karma-value,
 h1.listing + .post-meta .comment-count,
@@ -1011,14 +1005,12 @@ h1.listing.own-post-listing {
 /* POSTS & COMMENTS */
 /*==================*/
 
-<<<<<<< HEAD
 .body-text {
 	font-family: <?php echo $text_font; ?>;
-=======
+}
 .post-body,
 .comment-body {
 	font-family: var(--GW-text-font);
->>>>>>> Media query rewrite, part XII; plus misc. CSS refactoring
 }
 
 .body-text a {
@@ -1590,11 +1582,8 @@ div.comment-child-links a {
 	color: #050;
 }
 .guiedit-buttons-container button {
-<<<<<<< HEAD
 	font-family: 'Font Awesome', 'Font Awesome 5 Free', <?php echo $text_font; ?>;
-=======
 	font-family: Font Awesome, var(--GW-text-font);
->>>>>>> Media query rewrite, part XII; plus misc. CSS refactoring
 }
 
 .guiedit::after {
@@ -1742,20 +1731,10 @@ input[type='submit']:active {
 /* HEADINGS */
 /*==========*/
 
-<<<<<<< HEAD
 .body-text h1,
 .body-text h2,
 .body-text h4 {
-	font-family: <?php echo $UI_font; ?>;
-=======
-.post-body h1,
-.post-body h2,
-.post-body h4,
-.comment-body h1,
-.comment-body h2,
-.comment-body h4 {
 	font-family: var(--GW-UI-font);
->>>>>>> Media query rewrite, part XII; plus misc. CSS refactoring
 }
 .body-text h3,
 .body-text h5,

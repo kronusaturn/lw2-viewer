@@ -150,7 +150,13 @@ body > * {
 .nav-inner {
 	width: 100%;
 	height: 100%;
+}
+#primary-bar .nav-inner,
+#bottom-bar .nav-inner {
 	padding: 0.5em;
+}
+#secondary-bar .nav-inner {
+	padding: 0.25em 0.5em;
 }
 
 #nav-item-sequences .nav-inner::before {
@@ -201,25 +207,27 @@ body > * {
 	bottom: 1px;
 	margin: 0.5em;
 }
-#bottom-bar #nav-item-first a::before,
-#top-nav-bar a.nav-item-first::before {
-	content: "\F33E";
+
+<?php
+
+$pagination_icons = [
+	'first'	=> '\F33E',
+	'prev'	=> '\F060',
+	'top'	=> '\F062',
+	'next'	=> '\F061',
+	'last'	=> '\F340',
+];
+
+foreach ($pagination_icons as $k => $v) {
+echo <<<EOT
+#bottom-bar #nav-item-{$k} a::before,
+#top-nav-bar a.nav-item-{$k}::before {
+	content: "{$v}";
 }
-#bottom-bar #nav-item-top a::before {
-	content: "\F062";
+EOT;
 }
-#bottom-bar #nav-item-prev a::before,
-#top-nav-bar a.nav-item-prev::before {
-	content: "\F060";
-}
-#bottom-bar #nav-item-next a::before,
-#top-nav-bar a.nav-item-next::before {
-	content: "\F061";
-}
-#bottom-bar #nav-item-last a::before,
-#top-nav-bar a.nav-item-last::before {
-	content: "\F340";
-}
+
+?>
 #bottom-bar #nav-item-next a::before,
 #bottom-bar #nav-item-last a::before {
 	order: 1;
@@ -521,10 +529,9 @@ a#inbox-indicator.new-messages:hover::before {
 /****************/
 
 .page-toolbar {
-	text-align: right;
-}
-#content > .page-toolbar {
 	grid-row: 3;
+	text-align: right;
+	margin: 4px 8px;
 }
 
 /*=--------------------------=*/
@@ -606,7 +613,6 @@ a#inbox-indicator.new-messages:hover::before {
 	width: 100%;
 	bottom: 90%;
 	left: 0;
-<<<<<<< HEAD
 }
 #top-nav-bar a::before {
 	margin: 0.5em;
@@ -759,7 +765,6 @@ foreach ($content_width_settings as $name => $setting) {
 }
 ?>
 
-<<<<<<< HEAD
 /******************/
 /* THEME SELECTOR */
 /******************/
@@ -943,8 +948,6 @@ foreach ($content_width_settings as $name => $setting) {
 	}
 }
 
-=======
->>>>>>> Media query rewrite, part X
 /*******************/
 /* QUICKNAV WIDGET */
 /*******************/
@@ -1208,12 +1211,12 @@ foreach ($content_width_settings as $name => $setting) {
 	content: "\F070";
 }
 
-<<<<<<< HEAD
 @media only screen and (max-width: 1160px) {
 	#anti-kibitzer-toggle {
 		bottom: 330px;
 	}
-=======
+}
+
 /*********************/
 /* TOP PAGINATION UI */
 /*********************/
@@ -1225,7 +1228,6 @@ foreach ($content_width_settings as $name => $setting) {
 	font-size: 1.25em;
 	display: flex;
 	justify-content: center;
->>>>>>> Miscellaneous CSS refactoring
 }
 @media only screen and (max-width: 1080px) {
 	#anti-kibitzer-toggle {
@@ -1280,8 +1282,6 @@ foreach ($content_width_settings as $name => $setting) {
 	#text-size-adjustment-ui {
 		right: -12px;
 	}
-=======
->>>>>>> Miscellaneous CSS refactoring
 }
 #top-nav-bar a::before {
 	margin: 0.5em;
@@ -1292,7 +1292,6 @@ foreach ($content_width_settings as $name => $setting) {
 /* SUBLEVEL NAV */
 /****************/
 
-<<<<<<< HEAD
 #text-size-adjustment-ui button {
 	font-weight: 900;
 	font-family: "Font Awesome", "Font Awesome 5 Free";
@@ -1300,13 +1299,12 @@ foreach ($content_width_settings as $name => $setting) {
 	width: 24px;
 	height: 24px;
 	padding: 0;
-=======
+}
 .sublevel-nav {
 	text-align: center;
 	display: flex;
 	justify-content: center;
 	margin: 1em 0 0 0;
->>>>>>> Miscellaneous CSS refactoring
 }
 #content > .sublevel-nav:not(.sort) {
 	grid-row: 5;
@@ -1330,7 +1328,6 @@ foreach ($content_width_settings as $name => $setting) {
 
 .sublevel-nav.sort {
 	position: relative;
-	margin-top: 8px;
 	font-size: 0.75em;
 }
 #content > .sublevel-nav.sort {
@@ -1343,8 +1340,10 @@ foreach ($content_width_settings as $name => $setting) {
 #content.index-page > .sublevel-nav.sort {
 	grid-column: 1;
 	grid-row: 3 / span 1;
+	grid-row: 3;
 	justify-self: start;
 	flex-flow: row;
+	margin: 10px 0 0 30px;
 }
 
 .sublevel-nav.sort::before {
@@ -2148,10 +2147,6 @@ article {
 .post-meta .lw2-link {
 	opacity: 0.5;
 	order: 1;
-}
-.post-meta > *,
-.post-meta .post-section::before {
-	margin: 0 0.5em;
 }
 .post-meta .post-section {
 	order: -1;
@@ -3671,285 +3666,7 @@ li {
 /* IMAGE FOCUS */
 /***************/
 
-<<<<<<< HEAD
-/*=--------------=*/
-/*= Hover styles =*/ 
-/*=--------------=*/
-
-#content img:hover,
-#images-overlay img:hover {
-	filter: drop-shadow(0 0 3px #777);
-	cursor: zoom-in;
-}
-#content img:active,
-#images-overlay img:active {
-	transform: scale(0.975);
-}
-
-/*=---------=*/
-/*= Overlay =*/
-/*=---------=*/
-
-#image-focus-overlay {
-	position: fixed;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	z-index: 2;
-	display: none;
-	cursor: zoom-out;
-}
-#image-focus-overlay::before {
-	content: "";
-	display: block;
-	position: absolute;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	background-color: #000;
-	opacity: 0.5;
-	z-index: -1;
-}
-#image-focus-overlay.engaged {
-	display: initial;
-}
-
-#image-focus-overlay img {
-	margin: auto;
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	transform: translateX(-50%) translateY(-50%);
-}
-
-/*=-------------------=*/
-/*= Single-image mode =*/
-/*=-------------------=*/
-
-#image-focus-overlay:not(.slideshow) .image-number,
-#image-focus-overlay:not(.slideshow) .slideshow-buttons {
-	visibility: hidden;
-}
-
-/*=---------=*/
-/*= Caption =*/
-/*=---------=*/
-
-#image-focus-overlay .caption {
-	position: absolute;
-	bottom: 0.75em;
-	background-color: rgba(0,0,0,0.7);
-	left: 9em;
-	right: 9em;
-	margin: auto;
-	max-width: calc(100% - 18em);
-	text-align: center;
-	font-size: 1.375em;
-	border-radius: 8px;
-	z-index: 1;
-	transition: 
-		bottom 0.2s ease;
-}
-<?php fit_content("#image-focus-overlay .caption"); ?>
-#image-focus-overlay .caption.hidden {
-	bottom: -5em;
-	transition: 
-		bottom 0.5s ease;
-}
-
-#image-focus-overlay .caption p {
-	margin: 1em 1.25em;
-	color: #fff;
-}
-
-#image-focus-overlay .caption:not(:empty)::before {
-	content: "";
-	display: block;
-	position: absolute;
-	width: 100vw;
-	height: calc(100% + 1.5em);
-	z-index: -1;
-	top: -0.75em;
-	left: calc(-50vw + 50%);
-
-}
-
-/*=--------------=*/
-/*= Help overlay =*/
-/*=--------------=*/
-
-#image-focus-overlay .help-overlay {
-	position: absolute;
-	display: flex;
-	flex-flow: column;
-	z-index: 2;
-	font-size: 1.5rem;
-	padding: 1em;
-	border-radius: 10px;
-	bottom: 1em;
-	right: 1em;
-	overflow: hidden;
-	white-space: nowrap;
-	color: transparent;
-	cursor: default;
-	visibility: hidden;
-	transition: 
-		visibility 1s ease,
-		color 1s ease,
-		background-color 1s ease,
-		bottom 0.3s ease;
-}
-#image-focus-overlay .help-overlay:hover {
-	max-width: 24em;
-	max-height: 14em;
-	background-color: rgba(0,0,0,0.85);
-	color: #fff;
-	visibility: visible;
-	transition: 
-		visibility 0.2s ease 0.3s,
-		color 0.2s ease 0.3s,
-		background-color 0.2s ease 0.3s;
-}
-
-#image-focus-overlay .help-overlay::after {
-	content: "\F128";
-	font-family: "Font Awesome", "Font Awesome 5 Free";
-	font-weight: 900;
-	font-size: 2rem;
-	position: absolute;
-	right: 0;
-	bottom: 0;
-	padding: 10px;
-	color: #000;
-	filter: drop-shadow(0 0 6px #fff);
-	visibility: visible;
-	opacity: 0.85;
-	transition: 
-		visibility 1s ease;
-}
-#image-focus-overlay .help-overlay:hover::after {
-	visibility: hidden;
-	transition: 
-		visibility 0.2s ease 0.3s;
-}
-
-#image-focus-overlay .help-overlay p {
-	margin: 0;
-	text-indent: -2em;
-	padding-left: 2em;
-	max-width: 100%;
-	overflow: hidden;
-}
-#image-focus-overlay .help-overlay p + p {
-	margin: 0.75em 0 0 0;
-}
-#image-focus-overlay .help-overlay.hidden {
-	bottom: -2em;
-}
-
-/*=--------------=*/
-/*= Slide number =*/
-/*=--------------=*/
-
-#image-focus-overlay .image-number {
-	position: absolute;
-	z-index: 2;
-	font-size: 1.75rem;
-	left: 1em;
-	bottom: 1em;
-	font-weight: 600;
-	text-shadow:
-		0 0 3px #fff,
-		0 0 5px #fff,
-		0 0 8px #fff,
-		0 0 13px #fff;
-	width: 1.5em;
-	text-align: right;
-	white-space: nowrap;
-	transition: bottom 0.3s ease;
-}
-#image-focus-overlay .image-number::before {
-	content: "#";
-	opacity: 0.3;
-}
-#image-focus-overlay .image-number::after {
-	content: " of " attr(data-number-of-images);
-	opacity: 0.3;
-}
-#image-focus-overlay .image-number:hover::before,
-#image-focus-overlay .image-number:hover::after {
-	opacity: 1.0;
-}
-#image-focus-overlay .image-number.hidden {
-	bottom: -1.25em;
-}
-
-/*=-------------------=*/
-/*= Slideshow buttons =*/
-/*=-------------------=*/
-
-#image-focus-overlay .slideshow-buttons {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	z-index: 1;
-	display: flex;
-	justify-content: space-between;
-	pointer-events: none;
-}
-#image-focus-overlay .slideshow-buttons button {
-	font-family: "Font Awesome", "Font Awesome 5 Free";
-	font-weight: 900;
-	font-size: 3rem;
-	padding: 0.5em;
-	color: #ddd;
-	position: relative;
-	left: 0;
-	transition:
-		left 0.3s ease;
-	pointer-events: auto;
-}
-#image-focus-overlay .slideshow-buttons button::selection {
-	background-color: transparent;
-}
-@media only screen and (hover: hover) {
-	#image-focus-overlay .slideshow-buttons button:hover {
-		background-color: rgba(0,0,0,0.1);
-		color: #777;
-	}
-}
-#image-focus-overlay .slideshow-buttons button:active {
-	transform: none;
-	color: #888;
-}
-#image-focus-overlay .slideshow-buttons button:disabled {
-	text-shadow: none;
-	background-color: transparent;
-	color: #ddd;
-	cursor: default;
-	opacity: 0.4;
-}
-#image-focus-overlay .slideshow-button.previous.hidden {
-	left: -1.75em;
-}
-#image-focus-overlay .slideshow-button.next.hidden {
-	left: 1.75em;
-}
-
-/*=-----------------=*/
-/*= Background blur =*/
-/*=-----------------=*/
-
-.blurred {
-	filter: blur(3px);
-}
-=======
 <?php include("style_image_focus.css.php"); ?>
->>>>>>> Miscellaneous CSS refactoring
 
 /**************************/
 /* QUALIFIED HYPERLINKING */
