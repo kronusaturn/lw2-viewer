@@ -67,7 +67,6 @@ body > * {
 }
 #content {
 	margin: 0 auto;
-	padding: 0 var(--GW-content-side-padding);
 	position: relative;
 	overflow: visible;
 	display: grid;
@@ -103,7 +102,7 @@ body > * {
 /*=---------=*/
 
 #content > * {
-	grid-column: 1 / span 3;
+	grid-column: 1;
 }
 
 /************************/
@@ -1348,11 +1347,14 @@ head.content-width-fluid + body > * {
 =======
 	display: flex;
 <<<<<<< HEAD
+<<<<<<< HEAD
 	margin: 0 -30px;
 >>>>>>> CSS refactoring: nav bars I
 =======
 	margin: 0 calc(-1 * var(--GW-content-side-padding));
 >>>>>>> CSS refactoring: nav bars II
+=======
+>>>>>>> CSS refactoring: listings I
 }
 
 <<<<<<< HEAD
@@ -2115,10 +2117,7 @@ a#inbox-indicator.new-messages:hover::before {
 /****************/
 
 .page-toolbar {
-	font-size: 0.9em;
-	line-height: 1.8;
 	text-align: right;
-	margin-right: -20px;
 }
 #content > .page-toolbar {
 	grid-row: 3;
@@ -2529,9 +2528,9 @@ a#inbox-indicator.new-messages:hover::before {
 /************/
 
 h1.listing {
-	font-size: 1.875rem;
-	line-height: 1.15;
+	font-size: 1.75em;
 	max-height: 1.15em;
+	margin: 1em 0 0.25em 0;
 	position: relative;
 }
 
@@ -2546,9 +2545,7 @@ h1.listing a[href^='http'] + a {
 /* Link-post links */
 h1.listing a[href^="http"] {
 	font-size: 0.8em;
-	display: inline;
 	vertical-align: top;
-	position: relative;
 	top: 4px;
 }
 
@@ -2571,9 +2568,6 @@ h1.listing a[href^="http"] {
 		hyphens: auto;
 		z-index: 1;
 		padding: 0 0 1px 1px;
-	}
-	h1.listing a[href^='http'] + a {
-		max-width: calc(100% - 33px);
 	}
 	h1.listing a:hover,
 	h1.listing a:focus {
@@ -2638,11 +2632,6 @@ h1.listing .edit-post-link {
 h1.listing + .post-meta {
 	position: relative;
 	justify-content: flex-start;
-	margin: 0 20px 0 21px;
-}
-
-h1.listing + .post-meta > * {
-	margin: 0 1em 0 0;
 }
 
 h1.listing + .post-meta .post-section {
@@ -4580,6 +4569,14 @@ input {
 	font-family: inherit;
 	font-size: inherit;
 	font-weight: inherit;
+}
+
+a {
+	text-decoration: none;
+}
+
+h1 {
+	margin: 0;
 }
 
 /*************/
@@ -7500,8 +7497,6 @@ body {
 		0 0 3px #000,
 		0 0 5px #000;
 
-	--GW-content-side-padding: 30px;
-
 	color: #fff;
 <<<<<<< HEAD
 	background-color: #232323;
@@ -7515,11 +7510,6 @@ body {
 	font-family: var(--GW-UI-font);
 >>>>>>> Media query rewrite, part XII; plus misc. CSS refactoring
 	font-feature-settings: 'ss07';
-}
-@media only screen and (max-width: 900px) {
-	body {
-		--GW-content-side-padding: 4px;
-	}
 }
 
 #content {

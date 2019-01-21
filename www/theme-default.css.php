@@ -27,17 +27,10 @@ body {
 		0 0 3px #fff,
 		0 0 5px #fff;
 
-	--GW-content-side-padding: 30px;
-
 	color: #000;
 	background-color: var(--GW-body-background-color);
 	font-family: var(--GW-UI-font);
 	font-feature-settings: 'ss07';
-}
-@media only screen and (max-width: 900px) {
-	body {
-		--GW-content-side-padding: 4px;
-	}
 }
 
 #content {
