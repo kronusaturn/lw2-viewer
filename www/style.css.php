@@ -367,6 +367,7 @@ echo <<<EOT
 	#bottom-bar #nav-item-{$k} .nav-inner::after {
 		content: "{$v}";
 	}
+
 EOT;
 }
 
@@ -477,24 +478,21 @@ EOT;
 /*******************/
 
 #inbox-indicator {
-	position: absolute;
-	top: 1px;
-	right: 0;
 	height: 100%;
-	visibility: hidden;
+	width: 0;
+	color: transparent;
 }
 #inbox-indicator::before {
 	content: "\F0E0";
 	font-family: "Font Awesome", "Font Awesome 5 Free";
+	font-family: "Font Awesome";
+	font-weight: 900;
 	color: #bbb;
 	font-size: 1.1875rem;
 	position: absolute;
-	height: 100%;
 	right: 0;
-	top: 0;
-	padding: 0 0.45em;
-	visibility: visible;
-	font-weight: 900;
+	height: 100%;
+	padding: 1px 0.45em 0 0.45em;
 }
 #inbox-indicator.new-messages::before {
 	color: #f00;
@@ -504,8 +502,13 @@ EOT;
 }
 a#inbox-indicator:hover::before {
 	color: #fff;
+	text-shadow: 
+		0 0 1px #000,
+		0 0 2px #000,
+		0 0 4px #000,
+		0 0 1px #777,
+		0.5px 0.5px 1px #777;
 }
-a#inbox-indicator:hover::before,
 a#inbox-indicator.new-messages:hover::before {
 	text-shadow: 
 		0 0 1px #f00,
@@ -513,6 +516,31 @@ a#inbox-indicator.new-messages:hover::before {
 		0 0 4px #f00,
 		0 0 1px #777,
 		0.5px 0.5px 1px #777;
+}
+
+@media only screen and (max-width: 900px) {
+	#inbox-indicator::before {
+		width: 100%;
+		text-align: right;
+		pointer-events: none;
+	}
+	#inbox-indicator.new-messages::before {
+		pointer-events: auto;
+		box-shadow: 0 0 8px 1px #f00 inset;
+	}
+}
+@media only screen and (max-width: 720px) {
+	#inbox-indicator {
+		padding: 0;
+	}
+	#inbox-indicator::before {
+		font-size: 1em;
+	}
+}
+@media only screen and (max-width: 374px) {
+	#inbox-indicator::before {
+		font-size: 0.875rem;
+	}
 }
 
 /****************/

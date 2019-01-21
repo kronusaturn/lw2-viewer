@@ -2,45 +2,6 @@
 /* MOBILE LAYOUT */
 /*****************/
 
-/*=================*/
-/* INBOX INDICATOR */
-/*=================*/
-
-/*=-------------------------------------=*/
-@media only screen and (max-width: 900px) {
-/*=-------------------------------------=*/
-	#inbox-indicator {
-		width: 100%;
-		top: 0;
-		pointer-events: none;
-	}
-	#inbox-indicator::before {
-		width: 100%;
-		font-size: 1rem;
-		text-align: right;
-		padding: 1px 6px;
-	}
-	#inbox-indicator.new-messages {
-		pointer-events: auto;
-	}
-	#inbox-indicator.new-messages::before {
-		box-shadow: 0 0 8px 1px #f00 inset;
-	}
-/*=---------------------------------------=*/
-} @media only screen and (max-width: 520px) {
-/*=---------------------------------------=*/
-	#inbox-indicator::before {
-		font-size: 0.75rem;
-		padding: 2px 5px;
-	}
-/*=---------------------------------------=*/
-} @media only screen and (max-width: 374px) {
-/*=---------------------------------------=*/
-	#inbox-indicator::before {
-		font-size: 0.625rem;
-	}
-}
-
 /*===================*/
 /* TOP PAGINATION UI */
 /*===================*/
