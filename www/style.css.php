@@ -3535,7 +3535,6 @@ input {
 	font-family: inherit;
 	font-size: inherit;
 	font-weight: inherit;
-	line-height: inherit;
 }
 
 a {
