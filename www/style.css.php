@@ -720,6 +720,30 @@ a#inbox-indicator.new-messages:hover::before {
 	cursor: default;
 }
 
+@media only screen and (max-width: 900px) {
+	.sublevel-nav:not(.sort) {
+		flex-wrap: wrap;
+		width: calc(100vw - 100px);
+	}
+	.sublevel-nav:not(.sort) .sublevel-item {
+		margin: 1px;
+		flex-basis: 7em;
+	}
+}
+@media only screen and (max-width: 720px) {
+	.sublevel-nav:not(.sort) {
+		width: calc(100vw - 200px);
+	}
+}
+@media only screen and (max-width: 520px) {
+	.sublevel-nav:not(.sort) {
+		width: calc(100vw - 100px);
+	}
+	.sublevel-nav:not(.sort) .sublevel-item {
+		font-size: 1rem;
+	}
+}
+
 /***********************/
 /* SORT ORDER SELECTOR */
 /***********************/
@@ -1429,6 +1453,13 @@ foreach ($content_width_settings as $name => $setting) {
 	line-height: 1;
 	font-size: 0.875rem;
 	flex-basis: unset;
+}
+
+@media only screen and (max-width: 720px) {
+	#content.index-page > .sublevel-nav.sort {
+		flex-flow: column;
+		margin-left: 4px;
+	}
 }
 
 /*******************************/
