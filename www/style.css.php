@@ -182,7 +182,7 @@ body > * {
 /*=------------=*/
 
 #bottom-bar .nav-item {
-	flex: 1 1 0;
+	width: 0;
 }
 
 /*=-----------------=*/
@@ -289,11 +289,13 @@ EOT;
 #nav-item-search .nav-inner {
 	flex: 1 1 100%;
 }
+#nav-item-search form {
+	align-items: stretch;
+}
 #nav-item-search form::before {
 	content: "\F002";
 	font-family: "Font Awesome", "Font Awesome 5 Free";
 	font-weight: 900;
-	height: 100%;
 	padding: 0 5px;
 }
 #nav-item-search input {
@@ -422,10 +424,6 @@ EOT;
 	}
 	#nav-item-search .nav-inner::before {
 		content: none;
-	}
-	#nav-item-search input,
-	#nav-item-search button {
-		height: 100%;
 	}
 	#nav-item-search button::before {
 		content: "\F002";

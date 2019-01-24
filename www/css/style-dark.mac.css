@@ -1476,8 +1476,12 @@ head.content-width-fluid + body > * {
 	cursor: auto;
 =======
 #bottom-bar .nav-item {
+<<<<<<< HEAD
 	flex: 1 1 0;
 >>>>>>> CSS refactoring: nav bars III
+=======
+	width: 0;
+>>>>>>> Misc. layout fixes: nav bars
 }
 
 @media only screen and (max-width: 1000px) {
@@ -1898,11 +1902,13 @@ h1.listing ~ #bottom-bar {
 #nav-item-search .nav-inner {
 	flex: 1 1 100%;
 }
+#nav-item-search form {
+	align-items: stretch;
+}
 #nav-item-search form::before {
 	content: "\F002";
 	font-family: Font Awesome;
 	font-weight: 900;
-	height: 100%;
 	padding: 0 5px;
 }
 #nav-item-search input {
@@ -2034,10 +2040,6 @@ h1.listing ~ #bottom-bar {
 	}
 	#nav-item-search .nav-inner::before {
 		content: none;
-	}
-	#nav-item-search input,
-	#nav-item-search button {
-		height: 100%;
 	}
 	#nav-item-search button::before {
 		content: "\F002";
@@ -7654,9 +7656,9 @@ body {
 	}
 }
 
-/*=========*/
-/* NAV BAR */
-/*=========*/
+/*==========*/
+/* NAV BARS */
+/*==========*/
 
 .nav-inner {
 	font-weight: 600;
