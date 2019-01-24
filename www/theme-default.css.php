@@ -792,6 +792,9 @@ h1.listing .edit-post-link:hover {
 }
 
 @media only screen and (max-width: 900px) {
+	.listings {
+		padding: 5px 45px 0 45px;
+	}
 	h1.listing {
 		font-size: 1.75rem;
 	}
@@ -809,6 +812,9 @@ h1.listing .edit-post-link:hover {
 	}
 }
 @media only screen and (max-width: 840px) {
+	.listings {
+		padding: 10px 40px 0 40px;
+	}
 	h1.listing {
 		font-size: 1.625rem;
 	}
@@ -818,11 +824,14 @@ h1.listing .edit-post-link:hover {
 	h1.listing + .post-meta .date,
 	h1.listing + .post-meta .author,
 	h1.listing + .post-meta .link-post-domain {
-		line-height: 1.6;
+		line-height: inherit;
 		margin-top: 2px;
 	}
 }
 @media only screen and (max-width: 720px) {
+	.listings {
+		padding: 0 30px 0 30px;
+	}
 	h1.listing {
 		margin: 10px 6px 6px 6px;
 		max-width: calc(100% - 12px);
@@ -848,10 +857,6 @@ h1.listing .edit-post-link:hover {
 	}
 	#content.conversations-user-page h1.listing + .post-meta > * {
 		line-height: 1.5;
-	}
-	h1.listing + .post-meta .date,
-	h1.listing + .post-meta .author {
-		line-height: 1.3;		
 	}
 	h1.listing + .post-meta .karma-value,
 	h1.listing + .post-meta .comment-count,
@@ -907,7 +912,15 @@ h1.listing .edit-post-link:hover {
 		display: inline;
 	}
 }
+@media only screen and (max-width: 640px) {
+	.listings {
+		padding: 0 20px 0 20px;
+	}
+}
 @media only screen and (max-width: 520px) {
+	.listings {
+		padding: 0 10px 0 10px;
+	}
 	h1.listing + .post-meta {
 		padding: .25em 144px 0 0;
 		flex-flow: column;

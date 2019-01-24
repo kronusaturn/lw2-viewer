@@ -192,14 +192,8 @@
 /*===========*/
 
 /*=-------------------------------------=*/
-@media only screen and (max-width: 960px) {
+@media only screen and (max-width: 720px) {
 /*=-------------------------------------=*/
-	.post-meta {
-		line-height: 1.9;
-	}
-/*=---------------------------------------=*/
-} @media only screen and (max-width: 720px) {
-/*=---------------------------------------=*/
 	.post-meta .lw2-link span,
 	.post-meta .karma-value span,
 	.post-meta .comment-count span {

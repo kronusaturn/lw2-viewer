@@ -363,7 +363,7 @@ $pagination_labels = [
 	'next'	=> 'Next Page',
 	'last'	=> 'Last Page',
 ];
-foreach ($pagination_icons as $k => $v) {
+foreach ($pagination_labels as $k => $v) {
 echo <<<EOT
 	#bottom-bar #nav-item-{$k} .nav-inner::after {
 		content: "{$v}";
@@ -438,6 +438,10 @@ EOT;
 	}
 }
 @media only screen and (max-width: 840px) {
+	#primary-bar .nav-inner,
+	#bottom-bar .nav-inner {
+		padding: 8px 20px;
+	}
 	#primary-bar .nav-inner {
 		flex-flow: column;
 	}

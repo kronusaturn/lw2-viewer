@@ -1974,19 +1974,19 @@ h1.listing ~ #bottom-bar {
 		bottom: 1rem;
 	}
 	#bottom-bar #nav-item-first .nav-inner::after {
-		content: "\F33E";
+		content: "First Page";
 	}
 	#bottom-bar #nav-item-prev .nav-inner::after {
-		content: "\F060";
+		content: "Prev. Page";
 	}
 	#bottom-bar #nav-item-top .nav-inner::after {
-		content: "\F062";
+		content: "Top";
 	}
 	#bottom-bar #nav-item-next .nav-inner::after {
-		content: "\F061";
+		content: "Next Page";
 	}
 	#bottom-bar #nav-item-last .nav-inner::after {
-		content: "\F340";
+		content: "Last Page";
 	}
 	#bottom-bar #nav-item-top a::after {
 		display: initial;
@@ -2053,6 +2053,10 @@ h1.listing ~ #bottom-bar {
 	}
 }
 @media only screen and (max-width: 840px) {
+	#primary-bar .nav-inner,
+	#bottom-bar .nav-inner {
+		padding: 8px 20px;
+	}
 	#primary-bar .nav-inner {
 		flex-flow: column;
 	}
@@ -7120,8 +7124,9 @@ h1.listing {
 @media only screen and (max-width: 720px) {
 =======
 /*=-------------------------------------=*/
-@media only screen and (max-width: 960px) {
+@media only screen and (max-width: 720px) {
 /*=-------------------------------------=*/
+<<<<<<< HEAD
 	.post-meta {
 		line-height: 1.9;
 	}
@@ -7129,6 +7134,8 @@ h1.listing {
 } @media only screen and (max-width: 720px) {
 /*=---------------------------------------=*/
 >>>>>>> Minor refactor of content width CSS
+=======
+>>>>>>> Media query rewrite: default theme III
 	.post-meta .lw2-link span,
 	.post-meta .karma-value span,
 	.post-meta .comment-count span {
