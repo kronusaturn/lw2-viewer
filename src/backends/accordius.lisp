@@ -44,6 +44,9 @@
   (let ((*messages-index-fields* (cons :html-body (remove :content *messages-index-fields*))))
     (call-next-method)))
 
+(define-backend-operation user-fields backend-accordius ()
+  (remove :groups (call-next-method)))
+
 ;;;; LOGIN
 
 (in-package #:lw2.login)
