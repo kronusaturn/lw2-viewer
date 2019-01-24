@@ -665,22 +665,14 @@
 @media only screen and (max-width: 900px) {
 	.sublevel-nav:not(.sort) {
 		flex-wrap: wrap;
-		width: calc(100vw - 100px);
+		width: calc(100vw - 200px);
 	}
 	.sublevel-nav:not(.sort) .sublevel-item {
 		margin: 1px;
 		flex-basis: 7em;
 	}
 }
-@media only screen and (max-width: 720px) {
-	.sublevel-nav:not(.sort) {
-		width: calc(100vw - 200px);
-	}
-}
 @media only screen and (max-width: 520px) {
-	.sublevel-nav:not(.sort) {
-		width: calc(100vw - 100px);
-	}
 	.sublevel-nav:not(.sort) .sublevel-item {
 		font-size: 1rem;
 	}
@@ -760,13 +752,18 @@ h1.listing {
 /* USER PAGES */
 /*============*/
 
-@media only screen and (max-width: 720px) {
+#content.user-page h1.page-main-heading {
+	align-self: end;
+}
+@media only screen and (max-width: 520px) {
 	#content.user-page h1.page-main-heading {
-		align-self: center;
+		padding-right: 100px;
 	}
 	#content.user-page .user-stats {
-		padding: 4px 0;
-		line-height: 1.3;
+		grid-column: 2 / span 2;
+	}
+	#content.user-page .user-stats .karma-type {
+		display: block;
 	}
 }
 
