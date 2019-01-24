@@ -616,12 +616,11 @@ a#inbox-indicator.new-messages:hover::before {
 	}
 	.page-toolbar > * {
 		line-height: 1.15;
-		padding: 6px 0;
+		padding: 8px 0 4px 0;
 	}
 	#content:not(.user-page) .page-toolbar {
 		flex-direction: column-reverse;
 		align-self: start;
-		font-size: 1.25rem;
 	}
 	#content.user-page .page-toolbar > * {
 		text-align: center;
@@ -1441,10 +1440,10 @@ foreach ($content_width_settings as $name => $setting) {
 	flex-basis: unset;
 }
 
-@media only screen and (max-width: 720px) {
+@media only screen and (max-width: 520px) {
 	#content.index-page > .sublevel-nav.sort {
 		flex-flow: column;
-		margin-left: 4px;
+		margin-left: 10px;
 	}
 }
 
