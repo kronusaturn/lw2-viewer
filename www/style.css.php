@@ -325,8 +325,10 @@ EOT;
 /*=----------------=*/
 
 @media only screen and (max-width: 960px) {
-	#bottom-bar { 
+@media only screen and (max-width: 960px) {
+	#bottom-bar {
 		padding: 0 4.5rem;
+		font-size: 1.5em;
 	}
 	#bottom-bar .nav-inner {
 		flex-flow: column;
@@ -334,12 +336,13 @@ EOT;
 		line-height: 0;
 		text-shadow: none;
 		justify-content: flex-start;
+		padding: 20px 30px;
 	}
 	#bottom-bar .nav-item a::before {
 		color: var(--GW-hyperlink-color);
 		text-shadow: var(--GW-shadow-white-glow);
-		position: static;
 		line-height: initial;
+		top: -0.5rem;
 	}
 	#bottom-bar #nav-item-next a::before,
 	#bottom-bar #nav-item-last a::before {
@@ -352,7 +355,7 @@ EOT;
 		visibility: visible;
 		text-transform: uppercase;
 		font-size: 0.375em;
-		bottom: 1rem;
+		bottom: 1.5rem;
 	}
 <?php
 
