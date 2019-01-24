@@ -1521,6 +1521,11 @@ h1.listing + .post-meta .read-time {
 	text-decoration: line-through;
 }
 
+.post-body a,
+.comment-body a {
+	word-break: break-all;
+}
+
 /*************/
 /* POST-META */
 /*************/
