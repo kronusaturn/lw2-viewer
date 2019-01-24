@@ -801,12 +801,6 @@ h1.listing .edit-post-link:hover {
 	h1.listing a[href^='http'] {
 		top: 4px;
 	}
-	h1.listing + .post-meta .link-post-domain {
-		line-height: 1;
-	}
-	#content.user-page h1.listing + .post-meta {
-		margin-bottom: 1em;
-	}
 	#content.user-page h1.link-post-listing::after {
 		height: calc(100% + 2em);
 	}
@@ -820,12 +814,6 @@ h1.listing .edit-post-link:hover {
 	}
 	h1.listing a[href^='http'] {
 		font-size: 0.75em;
-	}
-	h1.listing + .post-meta .date,
-	h1.listing + .post-meta .author,
-	h1.listing + .post-meta .link-post-domain {
-		line-height: inherit;
-		margin-top: 2px;
 	}
 }
 @media only screen and (max-width: 720px) {
@@ -841,73 +829,6 @@ h1.listing .edit-post-link:hover {
 	#content.conversations-user-page h1.listing {
 		font-size: 1.5rem;
 	}
-	h1.listing + .post-meta {
-		margin: 0 6px 0 7px;
-		clear: both;
-	}
-	h1.listing + .post-meta {
-		padding: .25em 254px 0 0;
-	}
-	h1.listing + .post-meta::after {
-		bottom: -2px;
-	}
-	h1.listing + .post-meta > * {
-		line-height: 1;
-		display: block;
-	}
-	#content.conversations-user-page h1.listing + .post-meta > * {
-		line-height: 1.5;
-	}
-	h1.listing + .post-meta .karma-value,
-	h1.listing + .post-meta .comment-count,
-	h1.listing + .post-meta .lw2-link,
-	h1.listing + .post-meta .read-time {
-		top: unset;
-		font-size: 1rem;
-		box-shadow: none;
-	}
-	h1.listing + .post-meta .karma-value::before,
-	h1.listing + .post-meta .comment-count::before,
-	h1.listing + .post-meta .lw2-link::before,
-	h1.listing + .post-meta .read-time::before {
-		box-shadow: none;
-	}
-	h1.listing + .post-meta .karma-value,
-	h1.listing + .post-meta .comment-count,
-	h1.listing + .post-meta .read-time,
-	h1.listing + .post-meta .lw2-link {
-		bottom: 4px;
-	}
-
-	h1.listing + .post-meta .karma-value {
-		right: 192px;
-	}
-	h1.listing + .post-meta .karma-value::before {
-		text-shadow: 0.5px 0.5px 0.5px #999;
-	}
-	h1.listing + .post-meta .comment-count {
-		right: 132px;
-	}
-	h1.listing + .post-meta .read-time {
-		right: 56px;
-	}
-	h1.listing + .post-meta .lw2-link {
-		opacity: 1;
-		right: 0;
-	}
-	h1.listing + .post-meta .link-post-domain {
-		margin: 0;
-		line-height: 1.3;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-	h1.listing + .post-meta .post-section::before {
-		position: absolute;
-		left: unset;
-		right: 0;
-		bottom: 30px;
-		top: unset;
-	}
 	h1.listing a {
 		display: inline;
 	}
@@ -921,51 +842,11 @@ h1.listing .edit-post-link:hover {
 	.listings {
 		padding: 0 10px 0 10px;
 	}
-	h1.listing + .post-meta {
-		padding: .25em 144px 0 0;
-		flex-flow: column;
-	}
-	#content.conversations-user-page h1.listing + .post-meta {
-		flex-flow: row wrap;
-	}
-	h1.listing + .post-meta .date {
-		margin: 0.375em 0 0.25em 0;
-		line-height: 1;
-	}
 	#content.user-page h1.listing::after {
 		height: calc(100% + 2.125em);
 	}
 	#content.user-page h1.link-post-listing::after {
 		height: calc(100% + 3.125em);
-	}
-	#content.user-page h1.listing + .post-meta {
-		padding: 0.25em 144px 0.5em 36px;
-	}
-	#content.conversations-user-page h1.listing + .post-meta .date {
-		margin: 0 0 0 1em;
-	}
-
-	h1.listing + .post-meta .karma-value {
-		bottom: 28px;
-		right: 0;
-	}
-	h1.listing + .post-meta .comment-count {
-		bottom: 28px;
-		right: 56px;
-	}
-	h1.listing + .post-meta .read-time {
-		right: 56px;
-		bottom: 4px;
-	}
-	h1.listing + .post-meta .lw2-link {
-		right: 0;
-		bottom: 4px;
-	}
-	h1.listing + .post-meta .link-post-domain {
-		max-width: 100%;
-	}
-	h1.listing + .post-meta .post-section::before {
-		right: 120px;
 	}
 }
 @media only screen and (max-width: 320px) {
@@ -1144,6 +1025,123 @@ h1.listing + .post-meta::after {
 	background-color: #ddd;
 	position: absolute;
 	bottom: 0;
+}
+
+@media only screen and (max-width: 900px) {
+	#content.user-page h1.listing + .post-meta {
+		margin-bottom: 1em;
+	}
+}
+@media only screen and (max-width: 720px) {
+	h1.listing + .post-meta {
+		margin: 0 6px 0 7px;
+		clear: both;
+	}
+	h1.listing + .post-meta {
+		padding: .25em 254px 0 0;
+	}
+	h1.listing + .post-meta::after {
+		bottom: -2px;
+	}
+	h1.listing + .post-meta > * {
+		line-height: 1;
+		display: block;
+	}
+	#content.conversations-user-page h1.listing + .post-meta > * {
+		line-height: 1.5;
+	}
+	h1.listing + .post-meta .karma-value,
+	h1.listing + .post-meta .comment-count,
+	h1.listing + .post-meta .lw2-link,
+	h1.listing + .post-meta .read-time {
+		top: unset;
+		font-size: 1rem;
+		box-shadow: none;
+	}
+	h1.listing + .post-meta .karma-value::before,
+	h1.listing + .post-meta .comment-count::before,
+	h1.listing + .post-meta .lw2-link::before,
+	h1.listing + .post-meta .read-time::before {
+		box-shadow: none;
+	}
+	h1.listing + .post-meta .karma-value,
+	h1.listing + .post-meta .comment-count,
+	h1.listing + .post-meta .read-time,
+	h1.listing + .post-meta .lw2-link {
+		bottom: 4px;
+	}
+
+	h1.listing + .post-meta .karma-value {
+		right: 192px;
+	}
+	h1.listing + .post-meta .karma-value::before {
+		text-shadow: 0.5px 0.5px 0.5px #999;
+	}
+	h1.listing + .post-meta .comment-count {
+		right: 132px;
+	}
+	h1.listing + .post-meta .read-time {
+		right: 56px;
+	}
+	h1.listing + .post-meta .lw2-link {
+		opacity: 1;
+		right: 0;
+	}
+	h1.listing + .post-meta .link-post-domain {
+		margin: 0;
+		line-height: 1.3;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	h1.listing + .post-meta .post-section::before {
+		position: absolute;
+		left: unset;
+		right: 0;
+		bottom: 30px;
+		top: unset;
+	}
+}
+@media only screen and (max-width: 520px) {
+	h1.listing + .post-meta {
+		padding: .25em 144px 0 0;
+		flex-flow: column;
+	}
+	#content.conversations-user-page h1.listing + .post-meta {
+		flex-flow: row wrap;
+	}
+	h1.listing + .post-meta .date {
+		margin: 0.375em 0 0.25em 0;
+		line-height: 1;
+	}
+	#content.user-page h1.listing + .post-meta {
+		padding: 0.25em 144px 0.5em 36px;
+	}
+	#content.conversations-user-page h1.listing + .post-meta .date {
+		margin: 0 0 0 1em;
+	}
+
+	h1.listing + .post-meta .karma-value {
+		bottom: 28px;
+		right: 0;
+	}
+	h1.listing + .post-meta .comment-count {
+		bottom: 28px;
+		right: 56px;
+	}
+	h1.listing + .post-meta .read-time {
+		right: 56px;
+		bottom: 4px;
+	}
+	h1.listing + .post-meta .lw2-link {
+		right: 0;
+		bottom: 4px;
+	}
+	h1.listing + .post-meta .link-post-domain {
+		max-width: 100%;
+	}
+	h1.listing + .post-meta .post-section::before {
+		right: 120px;
+	}
 }
 
 /*============*/
