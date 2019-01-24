@@ -560,6 +560,8 @@ a#inbox-indicator.new-messages:hover::before {
 	grid-row: 3;
 	text-align: right;
 	margin: 4px 8px;
+	display: flex;
+	justify-content: flex-end;
 }
 
 /*=--------------------------=*/
@@ -620,10 +622,6 @@ a#inbox-indicator.new-messages:hover::before {
 		flex-direction: column-reverse;
 		align-self: start;
 		font-size: 1.25rem;
-	}
-	#content.user-page .page-toolbar {
-		flex-direction: row;
-		justify-content: flex-end;
 	}
 	#content.user-page .page-toolbar > * {
 		text-align: center;
@@ -723,24 +721,10 @@ a#inbox-indicator.new-messages:hover::before {
 @media only screen and (max-width: 900px) {
 	.sublevel-nav:not(.sort) {
 		flex-wrap: wrap;
-		width: calc(100vw - 100px);
 	}
 	.sublevel-nav:not(.sort) .sublevel-item {
 		margin: 1px;
 		flex-basis: 7em;
-	}
-}
-@media only screen and (max-width: 720px) {
-	.sublevel-nav:not(.sort) {
-		width: calc(100vw - 200px);
-	}
-}
-@media only screen and (max-width: 520px) {
-	.sublevel-nav:not(.sort) {
-		width: calc(100vw - 100px);
-	}
-	.sublevel-nav:not(.sort) .sublevel-item {
-		font-size: 1rem;
 	}
 }
 
@@ -1440,13 +1424,15 @@ foreach ($content_width_settings as $name => $setting) {
 	flex-flow: row;
 	margin: 10px 0 0 30px;
 }
+#content.user-page > .sublevel-nav.sort {
+	grid-row: 6;
+}
 
 .sublevel-nav.sort::before {
 	content: "Sort";
 	font-size: 0.75rem;
 	position: absolute;
 	top: 0;
-	left: 0;
 	width: 100%;
 }
 .sublevel-nav.sort .sublevel-item {
