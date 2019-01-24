@@ -818,29 +818,21 @@ h1.listing .edit-post-link:hover {
 }
 @media only screen and (max-width: 720px) {
 	.listings {
-		padding: 0 30px 0 30px;
+		padding: 0 35px 0 35px;
 	}
 	h1.listing {
-		margin: 10px 6px 6px 6px;
-		max-width: calc(100% - 12px);
 		font-size: 1.5rem;
-		padding-right: 35px;
-	}
-	#content.conversations-user-page h1.listing {
-		font-size: 1.5rem;
-	}
-	h1.listing a {
-		display: inline;
+		margin-bottom: 2px;
 	}
 }
 @media only screen and (max-width: 640px) {
 	.listings {
-		padding: 0 20px 0 20px;
+		padding: 0 30px 0 30px;
 	}
 }
 @media only screen and (max-width: 520px) {
 	.listings {
-		padding: 0 10px 0 10px;
+		padding: 0 20px 0 20px;
 	}
 	#content.user-page h1.listing::after {
 		height: calc(100% + 2.125em);
@@ -850,6 +842,9 @@ h1.listing .edit-post-link:hover {
 	}
 }
 @media only screen and (max-width: 320px) {
+	.listings {
+		padding: 0 10px 0 10px;
+	}
 	h1.listing {
 		font-size: 1.25rem;
 	}
@@ -963,7 +958,6 @@ h1.listing + .post-meta .comment-count.new-comments:hover::before {
 	text-shadow: 0.5px 0.5px 0.5px #999;
 }
 
-
 h1.listing + .post-meta .lw2-link {
 	box-shadow: 
 		23px 0 0 0 #ddd inset,
@@ -1034,18 +1028,7 @@ h1.listing + .post-meta::after {
 }
 @media only screen and (max-width: 720px) {
 	h1.listing + .post-meta {
-		margin: 0 6px 0 7px;
-		clear: both;
-	}
-	h1.listing + .post-meta {
-		padding: .25em 254px 0 0;
-	}
-	h1.listing + .post-meta::after {
-		bottom: -2px;
-	}
-	h1.listing + .post-meta > * {
-		line-height: 1;
-		display: block;
+		padding-right: 254px;
 	}
 	#content.conversations-user-page h1.listing + .post-meta > * {
 		line-height: 1.5;
@@ -1054,9 +1037,9 @@ h1.listing + .post-meta::after {
 	h1.listing + .post-meta .comment-count,
 	h1.listing + .post-meta .lw2-link,
 	h1.listing + .post-meta .read-time {
-		top: unset;
 		font-size: 1rem;
 		box-shadow: none;
+		bottom: 5px;
 	}
 	h1.listing + .post-meta .karma-value::before,
 	h1.listing + .post-meta .comment-count::before,
@@ -1064,13 +1047,6 @@ h1.listing + .post-meta::after {
 	h1.listing + .post-meta .read-time::before {
 		box-shadow: none;
 	}
-	h1.listing + .post-meta .karma-value,
-	h1.listing + .post-meta .comment-count,
-	h1.listing + .post-meta .read-time,
-	h1.listing + .post-meta .lw2-link {
-		bottom: 4px;
-	}
-
 	h1.listing + .post-meta .karma-value {
 		right: 192px;
 	}
@@ -1089,21 +1065,12 @@ h1.listing + .post-meta::after {
 	}
 	h1.listing + .post-meta .link-post-domain {
 		margin: 0;
-		line-height: 1.3;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-	h1.listing + .post-meta .post-section::before {
-		position: absolute;
-		left: unset;
-		right: 0;
-		bottom: 30px;
-		top: unset;
 	}
 }
 @media only screen and (max-width: 520px) {
 	h1.listing + .post-meta {
-		padding: .25em 144px 0 0;
+		padding-right: 144px;
+		padding-bottom: 4px;
 		flex-flow: column;
 	}
 	#content.conversations-user-page h1.listing + .post-meta {
@@ -1136,11 +1103,10 @@ h1.listing + .post-meta::after {
 		right: 0;
 		bottom: 4px;
 	}
-	h1.listing + .post-meta .link-post-domain {
-		max-width: 100%;
-	}
 	h1.listing + .post-meta .post-section::before {
 		right: 120px;
+		left: unset;
+		bottom: 23px;
 	}
 }
 

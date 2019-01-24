@@ -440,8 +440,7 @@ EOT;
 	}
 }
 @media only screen and (max-width: 840px) {
-	#primary-bar .nav-inner,
-	#bottom-bar .nav-inner {
+	#primary-bar .nav-inner {
 		padding: 8px 20px;
 	}
 	#primary-bar .nav-inner {
