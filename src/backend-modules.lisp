@@ -64,7 +64,8 @@
    `(progn
       (export '(,name ,inner-name))
       (defgeneric ,inner-name (backend ,@lambda-list) ,.method-definitions)
-      (defmacro ,name (&rest args) (list* ',inner-name 'lw2.context:*current-backend*  args)))))
+      (declaim (inline ,name))
+      (defun ,name (&rest args) (apply ',inner-name lw2.context:*current-backend* args)))))
 
 (defmacro define-backend-operation (name backend &rest args)
   (let* ((inner-name (symbolicate "%" name)))

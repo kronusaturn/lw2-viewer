@@ -13,6 +13,7 @@
            #:lw2-graphql-query-map #:lw2-graphql-query-multi
 	   #:get-posts-index #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-answers #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
 	   #:get-conversation-messages
+	   #:get-user
            #:get-notifications #:check-notifications
 	   #:lw2-search-query #:get-post-title #:get-post-slug #:get-slug-postid #:get-username #:get-user-slug)
   (:recycle #:lw2-viewer)
@@ -28,6 +29,7 @@
 (defparameter *comments-index-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id (:parent-comment :--id :user-id :post-id) :base-score :page-url :vote-count :retracted :deleted-public :html-body))
 (defparameter *post-comments-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id :base-score :page-url :vote-count :retracted :deleted-public :html-body))
 (defparameter *messages-index-fields* '(:--id :user-id :created-at (:contents :html) (:conversation :--id :title) :----typename))
+(defparameter *user-fields* '(:--id :slug :display-name :karma :groups))
 
 (defparameter *notifications-base-terms* (alist :view "userNotifications" :created-at :null :viewed :null))
 
@@ -45,7 +47,11 @@
   (backend-graphql (load-time-value *post-comments-fields*))
   (backend-q-and-a (load-time-value (append *post-comments-fields* '(:answer :parent-answer-id)))))
 
-(define-cache-database "index-json" "post-comments-json" "post-comments-json-meta" "post-answers-json" "post-answers-json-meta" "post-body-json" "post-body-json-meta")
+(define-backend-function user-fields ()
+  (backend-graphql (load-time-value *user-fields*))
+  (backend-lw2 (load-time-value (append *user-fields* '(:af-karma)))))
+
+(define-cache-database "index-json" "post-comments-json" "post-comments-json-meta" "post-answers-json" "post-answers-json-meta" "post-body-json" "post-body-json-meta" "user-json" "user-json-meta")
 
 (defmethod condition-http-return-code ((c condition)) 500)
 
@@ -504,6 +510,20 @@
 			    for a in answers
 			    nconc (get-post-comments-list post-id "repliesToAnswer" :parent-answer-id (cdr (assoc :--id a))))))))))
     (lw2-graphql-query-timeout-cached fn "post-answers-json" post-id :revalidate revalidate :force-revalidate force-revalidate)))
+
+(define-backend-function get-user (&key user-id user-slug (revalidate t) force-revalidate auth-token)
+  (backend-graphql
+   (let* ((terms (cond
+		   (user-id (alist :document-id user-id))
+		   (user-slug (alist :slug user-slug))
+		   (t (error "Must specify user-id or user-slug."))))
+	  (user-designator (cond
+			     (user-id (format nil "id-~A" user-id))
+			     (user-slug (format nil "slug-~A" user-slug))))
+	  (query-string (lw2-query-string :user :single terms (if auth-token (cons :last-notifications-check (user-fields)) (user-fields)))))
+     (if auth-token
+	 (lw2-graphql-query query-string :auth-token auth-token)
+	 (lw2-graphql-query-timeout-cached query-string "user-json" user-designator :revalidate revalidate :force-revalidate force-revalidate)))))
 
 (define-backend-function get-notifications (&key user-id offset auth-token)
   (backend-lw2-legacy

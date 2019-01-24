@@ -1316,6 +1316,10 @@ h1.listing + .post-meta .read-time {
 	align-self: end;
 }
 
+#content.user-page .user-stats .karma-type {
+	white-space: nowrap;
+}
+
 /*=----------------------=*/
 /*= Expanded vs. compact =*/
 /*=----------------------=*/

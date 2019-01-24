@@ -1257,17 +1257,17 @@ signaled condition to OUT-STREAM."
                                                                              (show :member '(:all :posts :comments :drafts :conversations :inbox) :default :all)
                                                                              (sort :member '(:top :new) :default :new))
              (let* ((auth-token (if (eq show :inbox) *current-auth-token*))
-                    (user-query-terms (cond
-                                        (user-slug (alist :slug user-slug))
-                                        (id (alist :document-id id))))
-                    (user-info
-                      (let ((ui (lw2-graphql-query (lw2-query-string :user :single user-query-terms `(:--id :slug :display-name :karma ,@(if (eq show :inbox) '(:last-notifications-check))))
-                                                   :auth-token auth-token)))
-                        (if (cdr (assoc :--id ui))
-                            ui
-                            (error (make-condition 'lw2-user-not-found-error)))))
-                    (user-id (cdr (assoc :--id user-info)))
-                    (own-user-page (logged-in-userid user-id))
+                    (user-query-args
+		     (cond
+		       (user-slug (list :user-slug user-slug))
+		       (id (list :user-id id))))
+		    (user-info
+		     (let ((ui (apply 'get-user :auth-token auth-token user-query-args)))
+		       (if (cdr (assoc :--id ui))
+			   ui
+			   (error (make-condition 'lw2-user-not-found-error)))))
+		    (user-id (cdr (assoc :--id user-info)))
+		    (own-user-page (logged-in-userid user-id))
                     (comments-index-fields (remove :page-url (comments-index-fields))) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
                     (display-name (if user-slug (cdr (assoc :display-name user-info)) user-id))
                     (show-text (if (not (eq show :all)) (string-capitalize show)))
@@ -1359,13 +1359,27 @@ signaled condition to OUT-STREAM."
                                                                       :new-post (if (eq show :drafts) "drafts" t)
                                                                       :new-conversation (if own-user-page t user-slug)
                                                                       :logout own-user-page)
-                                                (format out-stream "<h1 class=\"page-main-heading\"~@[ ~A~]>~A</h1><div class=\"user-stats\">Karma: <span class=\"karma-total\">~A</span></div>"
-                                                        (if (not own-user-page)
-                                                            (if user-slug
-                                                                (format nil "data-anti-kibitzer-redirect=\"/user?id=~A\"" (cdr (assoc :--id user-info)))
-                                                                (format nil "data-kibitzer-redirect=\"/users/~A\"" (cdr (assoc :slug user-info)))))
-                                                        (encode-entities display-name)
-                                                        (if user-slug (pretty-number (or (cdr (assoc :karma user-info)) 0)) "##"))
+						(alist-bind ((actual-id string :--id)
+							     (actual-slug string :slug)
+							     (karma (or null fixnum))
+							     (af-karma (or null fixnum)))
+							    user-info
+						  <h1 class="page-main-heading"
+						      (when (not own-user-page)
+						        (format nil "data-~:[~;anti-~]~:*kibitzer-redirect=~:[/users/~*~A~;/user?id=~A~]"
+								user-slug actual-id actual-slug))>
+						    (progn display-name)
+						  </h1>
+						  <div class="user-stats">
+						    Karma:
+						    <span class="karma-type">
+						      <span class="karma-total">(if user-slug (pretty-number (or karma 0)) "##")</span>(if af-karma " (LW),")
+						    </span>\ 
+						    (when af-karma
+						      <span class="karma-type">
+						        <span class="karma-total af-karma-total">(if user-slug (pretty-number (or af-karma 0)) "##")</span> \(AF\)
+						      </span>)
+						  </div>)
                                                 (sublevel-nav-to-html out-stream
                                                                       `(:all :posts :comments
                                                                         ,@(if own-user-page
