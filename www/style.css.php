@@ -215,7 +215,7 @@ $pagination_icons = [
 	'prev'	=> '\F060',
 	'top'	=> '\F062',
 	'next'	=> '\F061',
-	'last'	=> '\F340',
+	'last'	=> '\F340'
 ];
 
 foreach ($pagination_icons as $k => $v) {
@@ -325,7 +325,6 @@ EOT;
 /*=----------------=*/
 
 @media only screen and (max-width: 960px) {
-@media only screen and (max-width: 960px) {
 	#bottom-bar {
 		padding: 0 4.5rem;
 		font-size: 1.5em;
@@ -364,7 +363,7 @@ $pagination_labels = [
 	'prev'	=> 'Prev. Page',
 	'top'	=> 'Top',
 	'next'	=> 'Next Page',
-	'last'	=> 'Last Page',
+	'last'	=> 'Last Page'
 ];
 foreach ($pagination_labels as $k => $v) {
 echo <<<EOT
