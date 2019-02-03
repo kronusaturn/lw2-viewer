@@ -1,6 +1,5 @@
 (in-package #:lw2.backend)
 
-
 ;;; REST API
 
 (defun do-wl-rest-query (endpoint filters &key auth-token)
@@ -27,18 +26,8 @@
    :additional-headers `(("authorization" . ,auth-token)))
   )
 
-(define-backend-operation do-lw2-mutation backend-accordius (auth-token target-type mutation-type terms fields)
-  (setf endpoint
-   (case target-type
-	 (:post "posts")
-	 (:comment "comments")
-	 ))
-  (cond ((eq mutation-type :post) (do-wl-rest-mutate :post endpoint terms auth-token))
-	((eq mutation-type :delete) (do-wl-rest-mutate :delete endpoint terms auth-token))))
-   
-
 (defun do-wl-create-tag (document-id text auth-token)
-  (do-wl-rest-mutate :post "tags/" `(("document_id" . ,document-id) ("text" . ,text)) auth-token))
+  (do-wl-rest-mutate :post "tags/" `((:DOCUMENT-ID . ,document-id) (:TEXT . ,text)) auth-token))
   
 
 ;;;; BACKEND SPECIFIC GRAPHQL
@@ -60,6 +49,24 @@
 ;;;; LOGIN
 
 (in-package #:lw2.login)
+
+(define-backend-operation do-lw2-mutation backend-accordius (auth-token target-type mutation-type terms fields)
+  (setf endpoint
+   (case target-type
+	 (:post "posts")
+	 (:comment "comments")
+	 ))
+  (print terms)
+  (print mutation-type)
+  (print (concatenate 'string endpoint "/" (cdr (assoc :DOCUMENT-ID terms))))
+  (cond
+   ((eq mutation-type :post) (do-wl-rest-mutate mutation-type endpoint terms auth-token))
+   ((eq mutation-type :delete) (do-wl-rest-mutate mutation-type
+			         (concatenate 'string endpoint "/"
+					      (cdr (assoc :DOCUMENT-ID terms)))
+				 auth-token))))
+
+   
 
 (define-backend-operation do-login backend-accordius (user-designator-type user-designator password)
   (declare (ignore user-designator-type))
