@@ -186,7 +186,19 @@
 		    (list (cons :data data)))))
 	  (fields (list (list* :data fields))))
      (values (graphql-mutation-string mutation-name terms fields) mutation-name))))
+#|
+do-lw2-mutation:
 
+Low level graphQL mutation string builder. This is a good function to override 
+with a define-backend-operation and translate into the semantics of higher level functions,
+that way you can avoid having to recreate them all for each backend service.
+
+auth-token - The authentication token to use with the API, fairly straightforward.
+target-type - The type of object that we're mutating
+mutation-type - The request method (or analogous equivalent) that we're using
+terms - The additional parameters/variables/etc that we're sending to the server with our request
+fields - The return values we want to get from the server after it completes our request
+|#
 (define-backend-function do-lw2-mutation (auth-token target-type mutation-type terms fields)
   (backend-lw2-legacy
    (multiple-value-bind (mutation-string operation-name)

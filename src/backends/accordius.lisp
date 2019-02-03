@@ -19,16 +19,26 @@
    (do-wl-rest-query "post_search/" `(("query" . ,query)))
    (do-wl-rest-query "comment_search/" `(("query" . ,query)))))
 
-(defun do-wl-rest-post (endpoint post-params auth-token)
+(defun do-wl-rest-mutate (mutation-type endpoint post-params auth-token)
   (drakma:http-request
    (quri:render-uri (quri:merge-uris (quri:make-uri :path endpoint :query "") (quri:uri (rest-api-uri *current-backend*))))
-   :method :post
+   :method mutation-type
    :parameters post-params
    :additional-headers `(("authorization" . ,auth-token)))
   )
 
+(define-backend-operation do-lw2-mutation backend-accordius (auth-token target-type mutation-type terms fields)
+  (setf endpoint
+   (case target-type
+	 (:post "posts")
+	 (:comment "comments")
+	 ))
+  (cond ((eq mutation-type :post) (do-wl-rest-mutate :post endpoint terms auth-token))
+	((eq mutation-type :delete) (do-wl-rest-mutate :delete endpoint terms auth-token))))
+   
+
 (defun do-wl-create-tag (document-id text auth-token)
-  (do-wl-rest-post "tags/" `(("document_id" . ,document-id) ("text" . ,text)) auth-token))
+  (do-wl-rest-mutate :post "tags/" `(("document_id" . ,document-id) ("text" . ,text)) auth-token))
   
 
 ;;;; BACKEND SPECIFIC GRAPHQL
