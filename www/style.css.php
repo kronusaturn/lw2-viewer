@@ -1524,6 +1524,7 @@ h1.listing + .post-meta .read-time {
 .post-body a,
 .comment-body a {
 	word-break: break-all;
+	hyphens: auto;
 }
 
 /*************/
