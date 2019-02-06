@@ -51,20 +51,17 @@
 (in-package #:lw2.login)
 
 (define-backend-operation do-lw2-mutation backend-accordius (auth-token target-type mutation-type terms fields)
-  (setf endpoint
-   (case target-type
-	 (:post "posts")
-	 (:comment "comments")
-	 ))
-  (print terms)
-  (print mutation-type)
-  (print (concatenate 'string endpoint "/" (cdr (assoc :DOCUMENT-ID terms))))
+  (let ((endpoint (case target-type
+		       (:post "posts")
+		       (:comment "comments"))))
+  (print #'do-wl-rest-mutate)
   (cond
    ((eq mutation-type :post) (do-wl-rest-mutate mutation-type endpoint terms auth-token))
    ((eq mutation-type :delete) (do-wl-rest-mutate mutation-type
 			         (concatenate 'string endpoint "/"
 					      (cdr (assoc :DOCUMENT-ID terms)))
-				 auth-token))))
+				 terms
+				 auth-token)))))
 
    
 
