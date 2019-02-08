@@ -1240,7 +1240,7 @@ signaled condition to OUT-STREAM."
 
 (define-page view-recent-comments "/recentcomments" ((offset :type fixnum)
                                                      (limit :type fixnum))
-  (let ((want-total (not (typep *current-backend* 'backend-lw2)))) ; jumping to last page causes LW2 to explode
+  (let ((want-total (not (or (typep *current-backend* 'backend-lw2) (typep *current-backend* 'backend-ea-forum))))) ; LW2/EAF can't handle total queries. TODO: handle this in backend.
     (multiple-value-bind (recent-comments total)
       (if (or offset limit (/= (user-pref :items-per-page) 20))
           (lw2-graphql-query (lw2-query-string :comment :list
