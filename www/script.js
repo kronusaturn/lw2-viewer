@@ -2721,7 +2721,7 @@ function resetFocusedImagePosition() {
 
 	// Make sure that initially, the image fits into the viewport.
 	let shrinkRatio = 0.975;
-	focusedImage.style.width = Math.min(focusedImage.clientWidth, window.innerWidth * shrinkRatio) + 'px';
+	focusedImage.style.width = Math.min(focusedImage.naturalWidth, window.innerWidth * shrinkRatio) + 'px';
 	let maxImageHeight = window.innerHeight * shrinkRatio;
 	if (focusedImage.clientHeight > maxImageHeight) {
 		focusedImage.style.height = maxImageHeight + 'px';
