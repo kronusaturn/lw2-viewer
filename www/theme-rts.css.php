@@ -1632,20 +1632,19 @@ blockquote {
 /* IMAGES */
 /*========*/
 
-#content img {
+#content img,
+#content figure.image img {
 	border: 1px solid #ccc;
-}
-#content img[style^='float'] {
-	border: 1px solid transparent;
-}
-#content img[src$='.svg'] {
-	border: none;
 }
 #content figure img {
 	border: 1px solid #000;
 }
+#content img[src$='.svg'],
 #content figure img[src$='.svg'] {
 	border: none;
+}
+#content img[style^='float'] {
+	border: 1px solid transparent;
 }
 
 /*========*/

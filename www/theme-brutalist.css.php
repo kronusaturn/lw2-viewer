@@ -1325,6 +1325,21 @@ blockquote {
 /* IMAGES */
 /*========*/
 
+#content img,
+#content figure.image img {
+	border: 1px dotted #000;
+}
+#content figure img {
+	border: 1px solid #000;
+}
+#content img[src$='.svg'],
+#content figure img[src$='.svg'] {
+	border: none;
+}
+#content img[style^='float'] {
+	border: 1px solid transparent;
+}
+
 /*========*/
 /* TABLES */
 /*========*/
