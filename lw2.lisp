@@ -1094,7 +1094,12 @@ signaled condition to OUT-STREAM."
                   (handler-case
                     (format out-stream "<script>postVote=~A</script>"
                             (json:encode-json-to-string (get-post-vote post-id lw2-auth-token)))
-                    (t () nil))))
+                    (t () nil)))
+		(output-alignment-forum (out-stream post)
+		  (alexandria:if-let (liu (logged-in-userid))
+				     (let ((with-af-option (and (cdr (assoc :af post))
+								(member "alignmentForum" (cdr (assoc :groups (get-user :user-id liu))) :test #'string=))))
+				       (format out-stream "<script>alignmentForumAllowed=~:[false~;true~]</script>" with-af-option)))))
          (multiple-value-bind (post title condition)
            (handler-case (nth-value 0 (get-post-body post-id :auth-token (and need-auth lw2-auth-token)))
              (serious-condition (c) (values nil "Error" c))
@@ -1122,7 +1127,8 @@ signaled condition to OUT-STREAM."
 			    (output-comments out-stream "comments" comments target-comment)
 			    (when lw2-auth-token
 			      (force-output out-stream)
-			      (output-comments-votes out-stream))))
+			      (output-comments-votes out-stream)
+			      (output-alignment-forum out-stream post))))
 	     (emit-page (out-stream :title title :content-class (format nil "post-page comment-thread-page~:[~; question-post-page~]" (cdr (assoc :question post))))
 			(cond
 			  (condition
@@ -1145,7 +1151,8 @@ signaled condition to OUT-STREAM."
 			(when lw2-auth-token
                           (force-output out-stream)
                           (output-post-vote out-stream)
-                          (output-comments-votes out-stream))))))))
+                          (output-comments-votes out-stream)
+			  (output-alignment-forum out-stream post))))))))
     (:post (csrf-token text answer parent-answer-id parent-comment-id edit-comment-id retract-comment-id unretract-comment-id delete-comment-id)
      (let ((lw2-auth-token *current-auth-token*))
        (check-csrf-token csrf-token)
