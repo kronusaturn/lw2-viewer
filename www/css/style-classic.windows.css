@@ -2646,26 +2646,37 @@ input[type='submit'] {
 }
 
 .post-body h5,
-.post-body h6,
+.post-body h6 {
+	font-size: 1em;
+}
+.post-body h4 {
+	font-size: 1.2em;
+}
+.post-body h3 {
+	font-size: 1.4em;
+}
+.post-body h2 {
+	font-size: 1.75em;
+}
+.post-body h1 {
+	font-size: 2.1em;
+}
+
 .comment-body h5,
 .comment-body h6 {
 	font-size: 1em;
 }
-.post-body h4,
 .comment-body h4 {
-	font-size: 1.2em;
+	font-size: 1.15em;
 }
-.post-body h3,
 .comment-body h3 {
-	font-size: 1.4em;
+	font-size: 1.3em;
 }
-.post-body h2,
 .comment-body h2 {
-	font-size: 1.75em;
+	font-size: 1.5em;
 }
-.post-body h1,
 .comment-body h1 {
-	font-size: 2.1em;
+	font-size: 1.75em;
 }
 
 /**********/
