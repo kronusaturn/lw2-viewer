@@ -1264,12 +1264,8 @@ signaled condition to OUT-STREAM."
                                                                              (show :member '(:all :posts :comments :drafts :conversations :inbox) :default :all)
                                                                              (sort :member '(:top :new) :default :new))
              (let* ((auth-token (if (eq show :inbox) *current-auth-token*))
-                    (user-query-args
-		     (cond
-		       (user-slug (list :user-slug user-slug))
-		       (id (list :user-id id))))
 		    (user-info
-		     (let ((ui (apply 'get-user :auth-token auth-token user-query-args)))
+		     (let ((ui (get-user (cond (user-slug :user-slug) (id :user-id)) (or user-slug id) :auth-token auth-token)))
 		       (if (cdr (assoc :--id ui))
 			   ui
 			   (error (make-condition 'lw2-user-not-found-error)))))

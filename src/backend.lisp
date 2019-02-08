@@ -511,19 +511,15 @@
 			    nconc (get-post-comments-list post-id "repliesToAnswer" :parent-answer-id (cdr (assoc :--id a))))))))))
     (lw2-graphql-query-timeout-cached fn "post-answers-json" post-id :revalidate revalidate :force-revalidate force-revalidate)))
 
-(define-backend-function get-user (&key user-id user-slug (revalidate t) force-revalidate auth-token)
+(define-backend-function get-user (user-identifier-type user-identifier &key (revalidate t) force-revalidate auth-token)
   (backend-graphql
-   (let* ((terms (cond
-		   (user-id (alist :document-id user-id))
-		   (user-slug (alist :slug user-slug))
-		   (t (error "Must specify user-id or user-slug."))))
-	  (user-designator (cond
-			     (user-id (format nil "id-~A" user-id))
-			     (user-slug (format nil "slug-~A" user-slug))))
-	  (query-string (lw2-query-string :user :single terms (if auth-token (cons :last-notifications-check (user-fields)) (user-fields)))))
+   (let* ((user-id (ccase user-identifier-type
+		     (:user-id user-identifier)
+		     (:user-slug (get-slug-userid user-identifier))))
+	  (query-string (lw2-query-string :user :single (alist :document-id user-id) (if auth-token (cons :last-notifications-check (user-fields)) (user-fields)))))
      (if auth-token
 	 (lw2-graphql-query query-string :auth-token auth-token)
-	 (lw2-graphql-query-timeout-cached query-string "user-json" user-designator :revalidate revalidate :force-revalidate force-revalidate)))))
+	 (lw2-graphql-query-timeout-cached query-string "user-json" user-id :revalidate revalidate :force-revalidate force-revalidate)))))
 
 (define-backend-function get-notifications (&key user-id offset auth-token)
   (backend-lw2-legacy
@@ -634,6 +630,10 @@
 (with-rate-limit
   (simple-cacheable ("user-slug" "userid-to-slug" user-id)
     (rate-limit (user-id) (cdr (first (lw2-graphql-query (lw2-query-string :user :single (alist :document-id user-id) '(:slug))))))))
+
+(with-rate-limit
+  (simple-cacheable ("slug-userid" "slug-to-userid" slug)
+    (rate-limit (slug) (cdr (first (lw2-graphql-query (lw2-query-string :user :single (alist :slug slug) '(:--id))))))))
 
 (defun preload-username-cache ()
   (let ((user-list (lw2-graphql-query (lw2-query-string :user :list '() '(:--id :display-name)))))
