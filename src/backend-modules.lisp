@@ -8,6 +8,7 @@
     #:backend-websocket-login
     #:graphql-uri #:websocket-uri #:algolia-search-uri #:rest-api-uri
     #:backend-q-and-a
+    #:backend-alignment-forum
     #:backend-lw2-legacy #:backend-lw2-modernized #:backend-lw2 #:backend-algolia-search #:backend-ea-forum #:backend-accordius
     #:make-backend #:define-backend-function #:define-backend-operation #:backend)
   (:unintern #:declare-backend-function)
@@ -32,11 +33,13 @@
 
 (defclass backend-q-and-a (backend-graphql) ())
 
+(defclass backend-alignment-forum (backend-graphql) ())
+
 (defclass backend-lw2-legacy (backend-graphql) ())
 
 (defclass backend-lw2-modernized (backend-graphql) ())
 
-(defclass backend-lw2 (backend-websocket-login backend-lw2-modernized backend-lw2-legacy backend-algolia-search backend-q-and-a) ())
+(defclass backend-lw2 (backend-websocket-login backend-lw2-modernized backend-lw2-legacy backend-algolia-search backend-q-and-a backend-alignment-forum) ())
 
 (defclass backend-ea-forum (backend-websocket-login backend-lw2-modernized backend-lw2-legacy backend-algolia-search) ())
 

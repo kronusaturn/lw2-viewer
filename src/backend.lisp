@@ -25,7 +25,7 @@
 
 (defvar *graphql-debug-output* nil)
 
-(defparameter *posts-index-fields* '(:title :--id :slug :user-id :posted-at :base-score :comment-count :page-url :url :word-count :frontpage-date :curated-date :meta :draft :af :vote-count))
+(defparameter *posts-index-fields* '(:title :--id :slug :user-id :posted-at :base-score :comment-count :page-url :url :word-count :frontpage-date :curated-date :meta :draft :vote-count))
 (defparameter *comments-index-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id (:parent-comment :--id :user-id :post-id) :base-score :page-url :vote-count :retracted :deleted-public :html-body))
 (defparameter *post-comments-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id :base-score :page-url :vote-count :retracted :deleted-public :html-body))
 (defparameter *messages-index-fields* '(:--id :user-id :created-at (:contents :html) (:conversation :--id :title) :----typename))
@@ -37,15 +37,18 @@
 
 (define-backend-function posts-index-fields ()
   (backend-graphql (load-time-value *posts-index-fields*))
-  (backend-q-and-a (load-time-value (append *posts-index-fields* '(:question)))))
+  (backend-q-and-a (list* :question (call-next-method)))
+  (backend-alignment-forum (list* :af (call-next-method))))
 
 (define-backend-function comments-index-fields ()
   (backend-graphql (load-time-value *comments-index-fields*))
-  (backend-q-and-a (load-time-value (append *comments-index-fields* '(:answer :parent-answer-id)))))
+  (backend-q-and-a (list* :answer :parent-answer-id (call-next-method)))
+  (backend-alignment-forum (list* :af (call-next-method))))
 
 (define-backend-function post-comments-fields ()
   (backend-graphql (load-time-value *post-comments-fields*))
-  (backend-q-and-a (load-time-value (append *post-comments-fields* '(:answer :parent-answer-id)))))
+  (backend-q-and-a (list* :answer :parent-answer-id (call-next-method)))
+  (backend-alignment-forum (list* :af (call-next-method))))
 
 (define-backend-function user-fields ()
   (backend-graphql (load-time-value *user-fields*))
