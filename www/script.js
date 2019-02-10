@@ -2858,7 +2858,7 @@ function keyboardHelpSetup() {
 	let keyboardHelpOverlay = addUIElement("<div id='keyboard-help-overlay'>" + `
 		<div class='keyboard-help-container'>
 			<h1>Keyboard shortcuts</h1>
-			<p class='note'><strong>NOTE:</strong> Keys shown in <code class='ak'>yellow</code> are <a href='https://en.wikipedia.org/wiki/Access_key#Access_in_different_browsers' target='_blank'>accesskeys</a>, and require a browser-specific modifier key (or keys). Keys shown in <code>grey</code> do not require any modifier keys.</p>
+			<p class='note'><strong>NOTE:</strong> Keys shown in yellow (e.g., <code class='ak'>]</code>) are <a href='https://en.wikipedia.org/wiki/Access_key#Access_in_different_browsers' target='_blank'>accesskeys</a>, and require a browser-specific modifier key (or keys). Keys shown in grey (e.g., <code>?</code>) do not require any modifier keys.</p>
 			<ul class='keyboard-shortcuts-list'>
 				<li class='section'>General</li>
 				<li>
