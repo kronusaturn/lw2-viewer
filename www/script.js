@@ -2861,7 +2861,7 @@ function keyboardHelpSetup() {
 			<ul class='keyboard-shortcuts-list'>
 				<li>
 					<span class='keys'>
-						<span class='key'>?</span>
+						<code>?</code>
 					</span>
 					<span class='action'>Show keyboard help</span>
 				</li>
@@ -2869,6 +2869,7 @@ function keyboardHelpSetup() {
 		</div>
 	` + "</div>");
 
+	// Add listeners to show and hide the keyboard help overlay.
 	document.addEventListener("keypress", GW.keyboardHelpShowKeyPressed = (event) => {
 		console.log("GW.keyboardHelpShowKeyPressed");
 		if (event.key == '?')
@@ -2879,6 +2880,20 @@ function keyboardHelpSetup() {
 		if (event.key == 'Escape')
 			toggleKeyboardHelpOverlay(false);
 	});
+
+	// Clicking the background overlay closes the theme tweaker.
+	keyboardHelpOverlay.addActivateEvent(GW.keyboardHelpOverlayClicked = (event) => {
+		console.log("GW.keyboardHelpOverlayClicked");
+		if (event.type == 'mousedown') {
+			keyboardHelpOverlay.style.opacity = "0.01";
+		} else {
+			toggleKeyboardHelpOverlay(false);
+			keyboardHelpOverlay.style.opacity = "1.0";
+		}
+	}, true);
+
+	// Intercept clicks, so they don't "fall through" the background overlay.
+	(query("#keyboard-help-overlay .keyboard-help-container")||{}).addActivateEvent((event) => { event.stopPropagation(); }, true);
 
 	// FOR TESTING ONLY; REMOVE WHEN DEPLOYING:
 	toggleKeyboardHelpOverlay(true);
@@ -3225,6 +3240,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	// Prevent conflict between various single-hotkey listeners and text fields
 	queryAll("input[type='text'], input[type='search'], input[type='password']").forEach(inputField => {
 		inputField.addEventListener("keyup", (event) => { event.stopPropagation(); });
+		inputField.addEventListener("keypress", (event) => { event.stopPropagation(); });
 	});
 
 	if (content.hasClass("post-page")) {

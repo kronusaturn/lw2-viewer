@@ -991,6 +991,13 @@ head.content-width-fluid + body > * {
 #keyboard-help-overlay .keyboard-help-container ul {
 	list-style-type: none;
 	padding: 0 20px;
+	font-size: 1.125rem;
+}
+#keyboard-help-overlay .keyboard-help-container .keys code {
+	display: inline-block;
+	background-color: #131313;
+	border: 1px solid #1f1f1f;
+	padding: 4px 8px;
 }
 
 /************/

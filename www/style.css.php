@@ -1001,6 +1001,13 @@ foreach ($content_width_settings as $name => $setting) {
 #keyboard-help-overlay .keyboard-help-container ul {
 	list-style-type: none;
 	padding: 0 20px;
+	font-size: 1.125rem;
+}
+#keyboard-help-overlay .keyboard-help-container .keys code {
+	display: inline-block;
+	background-color: #eee;
+	border: 1px solid #ddd;
+	padding: 4px 8px;
 }
 
 /************/
