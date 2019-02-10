@@ -954,6 +954,20 @@ head.content-width-fluid + body > * {
 	cursor: default;
 }
 
+/*****************/
+/* KEYBOARD HELP */
+/*****************/
+
+#keyboard-help-overlay {
+	width: 100vw;
+	height: 100vh;
+	background-color: rgba(255, 255, 255, 0.7);
+	position: fixed;
+	left: 0;
+	top: 0;
+	visibility: hidden;
+}
+
 /************/
 /* ARCHIVES */
 /************/

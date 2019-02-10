@@ -2850,6 +2850,34 @@ function resetImageFocusHideUITimer(restart) {
 	if (restart) GW.imageFocusHideUITimer = setTimeout(hideImageFocusUI, 1500);
 }
 
+/*****************/
+/* KEYBOARD HELP */
+/*****************/
+
+function keyboardHelpSetup() {
+	let keyboardHelpOverlay = addUIElement("<div id='keyboard-help-overlay'></div>");
+
+	document.addEventListener("keypress", GW.keyboardHelpShowKeyPressed = (event) => {
+		console.log("GW.keyboardHelpShowKeyPressed");
+		if (event.key == '?')
+			toggleKeyboardHelpOverlay(true);
+	});
+	document.addEventListener("keyup", GW.keyboardHelpHideKeyPressed = (event) => {
+		console.log("GW.keyboardHelpHideKeyPressed");
+		if (event.key == 'Escape')
+			toggleKeyboardHelpOverlay(false);
+	});
+
+	// FOR TESTING ONLY; REMOVE WHEN DEPLOYING:
+	toggleKeyboardHelpOverlay(true);
+}
+
+function toggleKeyboardHelpOverlay(show) {
+	console.log("toggleKeyboardHelpOverlay");
+	let keyboardHelpOverlay = query("#keyboard-help-overlay");
+	keyboardHelpOverlay.style.visibility = (show || (typeof show == "undefined" && getComputedStyle(keyboardHelpOverlay) == "hidden")) ? "visible" : "hidden";
+}
+
 /*********************/
 /* MORE MISC HELPERS */
 /*********************/
@@ -3379,6 +3407,9 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 	// Set up Image Focus feature.
 	imageFocusSetup();
+
+	// Set up keyboard shortcuts guide overlay.
+	keyboardHelpSetup();
 });
 
 /*************************/

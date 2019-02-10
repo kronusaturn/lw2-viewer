@@ -964,6 +964,20 @@ foreach ($content_width_settings as $name => $setting) {
 	cursor: default;
 }
 
+/*****************/
+/* KEYBOARD HELP */
+/*****************/
+
+#keyboard-help-overlay {
+	width: 100vw;
+	height: 100vh;
+	background-color: rgba(0,0,0,0.7);
+	position: fixed;
+	left: 0;
+	top: 0;
+	visibility: hidden;
+}
+
 /************/
 /* ARCHIVES */
 /************/
