@@ -971,11 +971,13 @@ head.content-width-fluid + body > * {
 	position: fixed;
 	left: 0;
 	top: 0;
-	visibility: hidden;
 
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	padding: 20px 30px 30px 20px;
+
+	visibility: hidden;
 }
 
 #keyboard-help-overlay .keyboard-help-container {
@@ -991,11 +993,12 @@ head.content-width-fluid + body > * {
 	padding: 10px 20px;
 }
 #keyboard-help-overlay .keyboard-help-container .note {
-	margin: 1em;
+	margin: 0.25em 1em;
 }
 #keyboard-help-overlay .keyboard-help-container ul {
 	list-style-type: none;
-	padding: 0 20px;
+	padding: 10px 20px 0 20px;
+	border-top: 1px solid #1f1f1f;
 }
 #keyboard-help-overlay .keyboard-help-container ul li.section {
 	font-weight: bold;
@@ -1014,6 +1017,10 @@ head.content-width-fluid + body > * {
 #keyboard-help-overlay .keyboard-help-container code.ak {
 	background-color: #001b5f;
 	border-color: #0052bc;
+}
+#keyboard-help-overlay .keyboard-help-container code.ak::before {
+	content: "ak-";
+	opacity: 0.4;
 }
 
 /************/

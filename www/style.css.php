@@ -981,11 +981,13 @@ foreach ($content_width_settings as $name => $setting) {
 	position: fixed;
 	left: 0;
 	top: 0;
-	visibility: hidden;
 
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	padding: 20px 30px 30px 20px;
+
+	visibility: hidden;
 }
 
 #keyboard-help-overlay .keyboard-help-container {
@@ -1001,11 +1003,12 @@ foreach ($content_width_settings as $name => $setting) {
 	padding: 10px 20px;
 }
 #keyboard-help-overlay .keyboard-help-container .note {
-	margin: 1em;
+	margin: 0.25em 1em;
 }
 #keyboard-help-overlay .keyboard-help-container ul {
 	list-style-type: none;
-	padding: 0 20px;
+	padding: 10px 20px 0 20px;
+	border-top: 1px solid #ddd;
 }
 #keyboard-help-overlay .keyboard-help-container ul li.section {
 	font-weight: bold;
@@ -1024,6 +1027,10 @@ foreach ($content_width_settings as $name => $setting) {
 #keyboard-help-overlay .keyboard-help-container code.ak {
 	background-color: #ffeb83;
 	border-color: #d4a500;
+}
+#keyboard-help-overlay .keyboard-help-container code.ak::before {
+	content: "ak-";
+	opacity: 0.4;
 }
 
 /************/
