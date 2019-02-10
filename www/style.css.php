@@ -48,6 +48,12 @@ body::before {
 	height: 100%;
 }
 
+body.no-scroll {
+	overflow-y: scroll;
+	position: fixed;
+	width: 100%;
+}
+
 /*=----------------------------=*/
 /*= Immediate children of body =*/
 /*=----------------------------=*/
@@ -984,18 +990,17 @@ foreach ($content_width_settings as $name => $setting) {
 
 #keyboard-help-overlay .keyboard-help-container {
 	background-color: #fff;
-	padding: 10px 20px;
 	border-radius: 8px;
 }
 #keyboard-help-overlay .keyboard-help-container h1 {
 	text-align: center;
 	border-bottom: 1px solid #ddd;
-	margin: 0.25em 0 0 0;
-	padding: 0 0 4px 0;
+	margin: 0;
+	padding: 10px 20px;
 }
 #keyboard-help-overlay .keyboard-help-container ul {
 	list-style-type: none;
-	padding: 0;
+	padding: 0 20px;
 }
 
 /************/

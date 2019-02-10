@@ -2860,7 +2860,9 @@ function keyboardHelpSetup() {
 			<h1>Keyboard shortcuts</h1>
 			<ul class='keyboard-shortcuts-list'>
 				<li>
-					<span class='keys'>?</span>
+					<span class='keys'>
+						<span class='key'>?</span>
+					</span>
 					<span class='action'>Show keyboard help</span>
 				</li>
 			</ul>			
@@ -2884,8 +2886,14 @@ function keyboardHelpSetup() {
 
 function toggleKeyboardHelpOverlay(show) {
 	console.log("toggleKeyboardHelpOverlay");
+
 	let keyboardHelpOverlay = query("#keyboard-help-overlay");
-	keyboardHelpOverlay.style.visibility = (show || (typeof show == "undefined" && getComputedStyle(keyboardHelpOverlay) == "hidden")) ? "visible" : "hidden";
+	show = (typeof show != "undefined") ? show : (getComputedStyle(keyboardHelpOverlay) == "hidden");
+	keyboardHelpOverlay.style.visibility = show ? "visible" : "hidden";
+
+	// Prevent scrolling the document when the overlay is visible.
+	if (show) query("body").addClass("no-scroll");
+	else query("body").removeClass("no-scroll");
 }
 
 /*********************/
