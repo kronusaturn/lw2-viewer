@@ -991,6 +991,7 @@ foreach ($content_width_settings as $name => $setting) {
 #keyboard-help-overlay .keyboard-help-container {
 	background-color: #fff;
 	border-radius: 8px;
+	filter: drop-shadow(4px 4px 2px #000);
 }
 #keyboard-help-overlay .keyboard-help-container h1 {
 	text-align: center;
@@ -998,10 +999,23 @@ foreach ($content_width_settings as $name => $setting) {
 	margin: 0;
 	padding: 10px 20px;
 }
+#keyboard-help-overlay .keyboard-help-container .note {
+	margin: 1em;
+}
+#keyboard-help-overlay .keyboard-help-container .note a {
+	font-weight: bold;
+}
 #keyboard-help-overlay .keyboard-help-container ul {
 	list-style-type: none;
 	padding: 0 20px;
 	font-size: 1.125rem;
+}
+#keyboard-help-overlay .keyboard-help-container ul li.section {
+	font-weight: bold;
+	font-size: 1.25rem;
+}
+#keyboard-help-overlay .keyboard-help-container .keys {
+	margin: 0 1em 0 0;
 }
 #keyboard-help-overlay .keyboard-help-container .keys code {
 	display: inline-block;

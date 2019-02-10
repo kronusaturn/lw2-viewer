@@ -2858,12 +2858,45 @@ function keyboardHelpSetup() {
 	let keyboardHelpOverlay = addUIElement("<div id='keyboard-help-overlay'>" + `
 		<div class='keyboard-help-container'>
 			<h1>Keyboard shortcuts</h1>
+			<p class='note'><strong>NOTE:</strong> Keys shown in <code class='ak'>yellow</code> are <a href='https://en.wikipedia.org/wiki/Access_key#Access_in_different_browsers' target='_blank'>accesskeys</a>, and require a browser-specific modifier key (or keys). Keys shown in <code>grey</code> do not require any modifier keys.</p>
 			<ul class='keyboard-shortcuts-list'>
+				<li class='section'>General</li>
 				<li>
 					<span class='keys'>
 						<code>?</code>
 					</span>
 					<span class='action'>Show keyboard help</span>
+				</li>
+				<li class='section'>Listings</li>
+				<li>
+					<span class='keys'>
+						<code>.</code>
+					</span>
+					<span class='action'>Focus next post/comment in list</span>
+				</li>
+				<li>
+					<span class='keys'>
+						<code>,</code>
+					</span>
+					<span class='action'>Focus previous post/comment in list</span>
+				</li>
+				<li>
+					<span class='keys'>
+						<code>;</code>
+					</span>
+					<span class='action'>Cycle between links in focused post/comment</span>
+				</li>
+				<li>
+					<span class='keys'>
+						<code class='ak'>]</code>
+					</span>
+					<span class='action'>Load next page</span>
+				</li>
+				<li>
+					<span class='keys'>
+						<code class='ak'>[</code>
+					</span>
+					<span class='action'>Load previous page</span>
 				</li>
 			</ul>			
 		</div>
