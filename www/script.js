@@ -2855,7 +2855,17 @@ function resetImageFocusHideUITimer(restart) {
 /*****************/
 
 function keyboardHelpSetup() {
-	let keyboardHelpOverlay = addUIElement("<div id='keyboard-help-overlay'></div>");
+	let keyboardHelpOverlay = addUIElement("<div id='keyboard-help-overlay'>" + `
+		<div class='keyboard-help-container'>
+			<h1>Keyboard shortcuts</h1>
+			<ul class='keyboard-shortcuts-list'>
+				<li>
+					<span class='keys'>?</span>
+					<span class='action'>Show keyboard help</span>
+				</li>
+			</ul>			
+		</div>
+	` + "</div>");
 
 	document.addEventListener("keypress", GW.keyboardHelpShowKeyPressed = (event) => {
 		console.log("GW.keyboardHelpShowKeyPressed");

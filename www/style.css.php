@@ -976,6 +976,26 @@ foreach ($content_width_settings as $name => $setting) {
 	left: 0;
 	top: 0;
 	visibility: hidden;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#keyboard-help-overlay .keyboard-help-container {
+	background-color: #fff;
+	padding: 10px 20px;
+	border-radius: 8px;
+}
+#keyboard-help-overlay .keyboard-help-container h1 {
+	text-align: center;
+	border-bottom: 1px solid #ddd;
+	margin: 0.25em 0 0 0;
+	padding: 0 0 4px 0;
+}
+#keyboard-help-overlay .keyboard-help-container ul {
+	list-style-type: none;
+	padding: 0;
 }
 
 /************/
