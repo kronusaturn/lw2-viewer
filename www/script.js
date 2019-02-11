@@ -2961,16 +2961,11 @@ function keyboardHelpSetup() {
 		</div>
 	` + "</div>");
 
-	// Add listeners to show and hide the keyboard help overlay.
+	// Add listener to show the keyboard help overlay.
 	document.addEventListener("keypress", GW.keyboardHelpShowKeyPressed = (event) => {
 		console.log("GW.keyboardHelpShowKeyPressed");
 		if (event.key == '?')
 			toggleKeyboardHelpOverlay(true);
-	});
-	document.addEventListener("keyup", GW.keyboardHelpHideKeyPressed = (event) => {
-		console.log("GW.keyboardHelpHideKeyPressed");
-		if (event.key == 'Escape')
-			toggleKeyboardHelpOverlay(false);
 	});
 
 	// Clicking the background overlay closes the keyboard help overlay.
@@ -3014,6 +3009,17 @@ function toggleKeyboardHelpOverlay(show) {
 
 	// Focus the close button as soon as we open.
 	keyboardHelpOverlay.query("button.close-keyboard-help").focus();
+
+	if (show) {
+		// Add listener to show the keyboard help overlay.
+		document.addEventListener("keyup", GW.keyboardHelpHideKeyPressed = (event) => {
+			console.log("GW.keyboardHelpHideKeyPressed");
+			if (event.key == 'Escape')
+				toggleKeyboardHelpOverlay(false);
+		});
+	} else {
+		document.removeEventListener("keyup", GW.keyboardHelpHideKeyPressed);
+	}
 }
 
 /*********************/
