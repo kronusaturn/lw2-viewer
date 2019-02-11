@@ -5394,6 +5394,18 @@ body {
 /* COMMENTS VIEW MODE SELECTOR */
 /*=============================*/
 
+/*===============*/
+/* KEYBOARD HELP */
+/*===============*/
+
+#keyboard-help-overlay {
+	font-family: Concourse;
+}
+
+#nav-item-about button.open-keyboard-help {
+	border: none;
+}
+
 /*==========*/
 /* ARCHIVES */
 /*==========*/

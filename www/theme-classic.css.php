@@ -411,6 +411,14 @@ body {
 	color: #777;
 }
 
+/*===============*/
+/* KEYBOARD HELP */
+/*===============*/
+
+#keyboard-help-overlay .keyboard-help-container .keys {
+	margin: 0;
+}
+
 /*==========*/
 /* ARCHIVES */
 /*==========*/
