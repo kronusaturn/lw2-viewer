@@ -994,7 +994,6 @@ foreach ($content_width_settings as $name => $setting) {
 	background-color: #fff;
 	border-radius: 8px;
 	filter: drop-shadow(4px 4px 2px #000);
-	font-size: 1.125rem;
 	flex: 1 1 auto;
 }
 #keyboard-help-overlay .keyboard-help-container h1 {
@@ -1024,13 +1023,16 @@ foreach ($content_width_settings as $name => $setting) {
 }
 #keyboard-help-overlay .keyboard-help-container ul li.section {
 	font-weight: bold;
-	font-size: 1.25rem;
+	font-size: 1.125rem;
 	break-after: avoid;
 }
 #keyboard-help-overlay .keyboard-help-container .keys {
 	margin: 0 0.5em 0 0;
-	min-width: 3.5em;
+	min-width: 4em;
 	display: inline-block;
+}
+#keyboard-help-overlay .keyboard-help-container .keys code {
+	margin: 0 6px 0 0;
 }
 #keyboard-help-overlay .keyboard-help-container code {
 	display: inline-block;

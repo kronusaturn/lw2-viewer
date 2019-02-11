@@ -2863,6 +2863,7 @@ function keyboardHelpSetup() {
 			<div class='keyboard-shortcuts-lists'>` + [ [
 				"General",
 				[ [ '?' ], "Show keyboard help" ],
+				[ [ 'Esc' ], "Hide keyboard help" ]
 			], [
 				"Site navigation",
 				[ [ 'ak-h' ], "Switch to Home (a.k.a. “Frontpage”) view" ],
@@ -2882,6 +2883,17 @@ function keyboardHelpSetup() {
 				[ [ 'Enter' ], "Go to focused entry" ],
 				[ [ 'ak-]' ], "Load next page of listings" ],
 				[ [ 'ak-[' ], "Load previous page of listings" ],
+				[ [ 'ak-\\' ], "First page of current post/comment listing" ]
+			], [
+				"Page navigation",
+				[ [ 'ak-,' ], "Jump up to top of page" ],
+				[ [ 'ak-.' ], "Jump down to bottom of page" ],
+				[ [ 'ak-/' ], "Jump to top of comments section" ],
+				[ [ 'ak-s' ], "Search" ],
+			], [
+				"Page actions",
+				[ [ 'ak-n' ], "New post or comment" ],
+				[ [ 'ak-e' ], "Edit current post" ]
 			], [
 				"Editor",
 				[ [ 'ak-k' ], "Bold text (in post/comment editor)" ],
@@ -2889,21 +2901,34 @@ function keyboardHelpSetup() {
 				[ [ 'ak-l' ], "Insert hyperlink (in post/comment editor)" ],
 				[ [ 'ak-q' ], "Blockquote text (in post/comment editor)" ]
 			], [
+				"Slide shows",
+				[ [ 'ak-l' ], "Start/resume slideshow" ],
+				[ [ 'Esc' ], "Exit slideshow" ],
+				[ [ '&#x2192;', '&#x2193;' ], "Next slide" ],
+				[ [ '&#x2190;', '&#x2191;' ], "Previous slide" ],
+				[ [ 'Space' ], "Reset slide zoom" ]
+			], [				
 				"Appearance",
-				[ [ 'ak-1' ], "Switch to theme A (default theme)" ],
-				[ [ 'ak-2' ], "Switch to theme B (dark theme)" ],
-				[ [ 'ak-3' ], "Switch to theme C (grey theme)" ],
-				[ [ 'ak-4' ], "Switch to theme D (ultramodern theme)" ],
-				[ [ 'ak-5' ], "Switch to theme E (simple theme)" ],
-				[ [ 'ak-6' ], "Switch to theme F (brutalist theme)" ],
-				[ [ 'ak-7' ], "Switch to theme G (readthesequences.com theme)" ],
-				[ [ 'ak-8' ], "Switch to theme H (classic Less Wrong theme)" ],
-				[ [ 'ak-8' ], "Switch to theme I (modern Less Wrong theme)" ],
-				[ [ 'ak-;' ], "Open theme tweaker" ],
 				[ [ 'ak-=' ], "Increase text size" ],
 				[ [ 'ak--' ], "Decrease text size" ],
 				[ [ 'ak-0' ], "Reset to default text size" ],
-				[ [ 'ak-′' ], "Cycle through content width settings" ]
+				[ [ 'ak-′' ], "Cycle through content width settings" ],
+				[ [ 'ak-1' ], "Switch to default theme [A]" ],
+				[ [ 'ak-2' ], "Switch to dark theme [B]" ],
+				[ [ 'ak-3' ], "Switch to grey theme [C]" ],
+				[ [ 'ak-4' ], "Switch to ultramodern theme [D]" ],
+				[ [ 'ak-5' ], "Switch to simple theme [E]" ],
+				[ [ 'ak-6' ], "Switch to brutalist theme [F]" ],
+				[ [ 'ak-7' ], "Switch to ReadTheSequences theme [G]" ],
+				[ [ 'ak-8' ], "Switch to classic Less Wrong theme [H]" ],
+				[ [ 'ak-9' ], "Switch to modern Less Wrong theme [I]" ],
+				[ [ 'ak-;' ], "Open theme tweaker" ],
+				[ [ 'Esc' ], "Close theme tweaker" ]
+			], [				
+				"Miscellaneous",
+				[ [ 'ak-x' ], "Switch to next view on user page" ],
+				[ [ 'ak-z' ], "Switch to previous view on user page" ],
+				[ [ 'ak-`' ], "Toggle expanded/compact comment list view" ]
 			] ].map(section => 
 			`<ul><li class='section'>${section[0]}</li>` + section.slice(1).map(entry =>
 				`<li>
