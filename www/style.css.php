@@ -995,6 +995,9 @@ foreach ($content_width_settings as $name => $setting) {
 	border-radius: 8px;
 	filter: drop-shadow(4px 4px 2px #000);
 	flex: 1 1 auto;
+	max-width: 1500px;
+	max-height: 100%;
+	overflow-y: auto;
 }
 #keyboard-help-overlay .keyboard-help-container h1 {
 	text-align: center;
@@ -1008,9 +1011,9 @@ foreach ($content_width_settings as $name => $setting) {
 #keyboard-help-overlay .keyboard-help-container .keyboard-shortcuts-lists {
 	column-width: 21em;
 	column-count: auto;
-	column-gap: 1em;
+	column-gap: 1.5em;
 	border-top: 1px solid #ddd;
-	padding: 10px 20px;
+	padding: 15px 20px;
 }
 #keyboard-help-overlay .keyboard-help-container ul {
 	list-style-type: none;
@@ -1028,7 +1031,7 @@ foreach ($content_width_settings as $name => $setting) {
 }
 #keyboard-help-overlay .keyboard-help-container .keys {
 	margin: 0 0.5em 0 0;
-	min-width: 4em;
+	min-width: 4.5em;
 	display: inline-block;
 }
 #keyboard-help-overlay .keyboard-help-container .keys code {

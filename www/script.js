@@ -2866,24 +2866,24 @@ function keyboardHelpSetup() {
 				[ [ 'Esc' ], "Hide keyboard help" ]
 			], [
 				"Site navigation",
-				[ [ 'ak-h' ], "Switch to Home (a.k.a. “Frontpage”) view" ],
-				[ [ 'ak-f' ], "Switch to Featured (a.k.a. “Curated”) view" ],
-				[ [ 'ak-a' ], "Switch to All (a.k.a. “Community”) view" ],
-				[ [ 'ak-m' ], "Switch to Meta view" ],
-				[ [ 'ak-c' ], "Switch to Recent Comments view" ],
-				[ [ 'ak-r' ], "Switch to Archive view" ],
-				[ [ 'ak-t' ], "Switch to About page" ],
-				[ [ 'ak-u' ], "Switch to User or Login page" ],
-				[ [ 'ak-o' ], "Switch to Inbox page" ]
+				[ [ 'ak-h' ], "Go to Home (a.k.a. “Frontpage”) view" ],
+				[ [ 'ak-f' ], "Go to Featured (a.k.a. “Curated”) view" ],
+				[ [ 'ak-a' ], "Go to All (a.k.a. “Community”) view" ],
+				[ [ 'ak-m' ], "Go to Meta view" ],
+				[ [ 'ak-c' ], "Go to Recent Comments view" ],
+				[ [ 'ak-r' ], "Go to Archive view" ],
+				[ [ 'ak-t' ], "Go to About page" ],
+				[ [ 'ak-u' ], "Go to User or Login page" ],
+				[ [ 'ak-o' ], "Go to Inbox page" ]
 			], [
-				"Listings",
-				[ [ '.' ], "Focus next post/comment in list" ],
-				[ [ ',' ], "Focus previous post/comment in list" ],
-				[ [ ';' ], "Cycle between links in focused post/comment" ],
+				"Post/comment list views",
+				[ [ '.' ], "Focus next entry in list" ],
+				[ [ ',' ], "Focus previous entry in list" ],
+				[ [ ';' ], "Cycle between links in focused entry" ],
 				[ [ 'Enter' ], "Go to focused entry" ],
 				[ [ 'ak-]' ], "Load next page of listings" ],
 				[ [ 'ak-[' ], "Load previous page of listings" ],
-				[ [ 'ak-\\' ], "First page of current post/comment listing" ]
+				[ [ 'ak-\\' ], "First page of current view" ]
 			], [
 				"Page navigation",
 				[ [ 'ak-,' ], "Jump up to top of page" ],
@@ -2896,10 +2896,10 @@ function keyboardHelpSetup() {
 				[ [ 'ak-e' ], "Edit current post" ]
 			], [
 				"Editor",
-				[ [ 'ak-k' ], "Bold text (in post/comment editor)" ],
-				[ [ 'ak-i' ], "Italic text (in post/comment editor)" ],
-				[ [ 'ak-l' ], "Insert hyperlink (in post/comment editor)" ],
-				[ [ 'ak-q' ], "Blockquote text (in post/comment editor)" ]
+				[ [ 'ak-k' ], "Bold text" ],
+				[ [ 'ak-i' ], "Italic text" ],
+				[ [ 'ak-l' ], "Insert hyperlink" ],
+				[ [ 'ak-q' ], "Blockquote text" ]
 			], [
 				"Slide shows",
 				[ [ 'ak-l' ], "Start/resume slideshow" ],
@@ -2907,6 +2907,11 @@ function keyboardHelpSetup() {
 				[ [ '&#x2192;', '&#x2193;' ], "Next slide" ],
 				[ [ '&#x2190;', '&#x2191;' ], "Previous slide" ],
 				[ [ 'Space' ], "Reset slide zoom" ]
+			], [				
+				"Miscellaneous",
+				[ [ 'ak-x' ], "Switch to next view on user page" ],
+				[ [ 'ak-z' ], "Switch to previous view on user page" ],
+				[ [ 'ak-`' ], "Toggle compact comment list view" ]
 			], [				
 				"Appearance",
 				[ [ 'ak-=' ], "Increase text size" ],
@@ -2923,12 +2928,8 @@ function keyboardHelpSetup() {
 				[ [ 'ak-8' ], "Switch to classic Less Wrong theme [H]" ],
 				[ [ 'ak-9' ], "Switch to modern Less Wrong theme [I]" ],
 				[ [ 'ak-;' ], "Open theme tweaker" ],
-				[ [ 'Esc' ], "Close theme tweaker" ]
-			], [				
-				"Miscellaneous",
-				[ [ 'ak-x' ], "Switch to next view on user page" ],
-				[ [ 'ak-z' ], "Switch to previous view on user page" ],
-				[ [ 'ak-`' ], "Toggle expanded/compact comment list view" ]
+				[ [ 'Enter' ], "Save changes and close theme tweaker "],
+				[ [ 'Esc' ], "Close theme tweaker (without saving)" ]
 			] ].map(section => 
 			`<ul><li class='section'>${section[0]}</li>` + section.slice(1).map(entry =>
 				`<li>
