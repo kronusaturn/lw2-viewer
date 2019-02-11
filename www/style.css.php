@@ -1003,11 +1003,12 @@ foreach ($content_width_settings as $name => $setting) {
 	padding: 10px 20px;
 }
 #keyboard-help-overlay .keyboard-help-container .note {
-	margin: 0.25em 1em;
+	margin: 0.5em 1em;
 }
 #keyboard-help-overlay .keyboard-help-container ul {
 	list-style-type: none;
-	padding: 10px 20px 0 20px;
+	padding: 10px 20px;
+	margin: 0;
 	border-top: 1px solid #ddd;
 }
 #keyboard-help-overlay .keyboard-help-container ul li.section {
@@ -1016,6 +1017,7 @@ foreach ($content_width_settings as $name => $setting) {
 }
 #keyboard-help-overlay .keyboard-help-container .keys {
 	margin: 0 1em 0 0;
+	min-width: 4em;
 }
 #keyboard-help-overlay .keyboard-help-container code {
 	display: inline-block;

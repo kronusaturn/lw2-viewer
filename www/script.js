@@ -2860,45 +2860,27 @@ function keyboardHelpSetup() {
 			<h1>Keyboard shortcuts</h1>
 			<p class='note'>Keys shown in yellow (e.g., <code class='ak'>]</code>) are <a href='https://en.wikipedia.org/wiki/Access_key#Access_in_different_browsers' target='_blank'>accesskeys</a>, and require a browser-specific modifier key (or keys).</p>
 			<p class='note'>Keys shown in grey (e.g., <code>?</code>) do not require any modifier keys.</p>
-			<ul class='keyboard-shortcuts-list'>
-				<li class='section'>General</li>
-				<li>
-					<span class='keys'>
-						<code>?</code>
-					</span>
-					<span class='action'>Show keyboard help</span>
-				</li>
-				<li class='section'>Listings</li>
-				<li>
-					<span class='keys'>
-						<code>.</code>
-					</span>
-					<span class='action'>Focus next post/comment in list</span>
-				</li>
-				<li>
-					<span class='keys'>
-						<code>,</code>
-					</span>
-					<span class='action'>Focus previous post/comment in list</span>
-				</li>
-				<li>
-					<span class='keys'>
-						<code>;</code>
-					</span>
-					<span class='action'>Cycle between links in focused post/comment</span>
-				</li>
-				<li>
-					<span class='keys'>
-						<code class='ak'>]</code>
-					</span>
-					<span class='action'>Load next page</span>
-				</li>
-				<li>
-					<span class='keys'>
-						<code class='ak'>[</code>
-					</span>
-					<span class='action'>Load previous page</span>
-				</li>
+			<ul class='keyboard-shortcuts-list'>` + [ 
+				[ 'General' ],
+				[ [ '?' ], "Show keyboard help" ],
+				[ 'Listings' ],
+				[ [ '.' ], "Focus next post/comment in list" ],
+				[ [ ',' ], "Focus previous post/comment in list" ],
+				[ [ ';' ], "Cycle between links in focused post/comment" ],
+				[ [ 'Enter' ], "Open focused entry" ],
+				[ [ 'ak-]' ], "Load next page of listings" ],
+				[ [ 'ak-[' ], "Load previous page of listings" ]
+			].map(entry => (entry.length == 1) ? 
+				`<li class='section'>${entry[0]}</li>` : 
+				`<li>
+					<span class='keys'>` + 
+					entry[0].map(key =>
+						(key.hasPrefix("ak-")) ? `<code class='ak'>${key.substring(3)}</code>` : `<code>${key}</code>`
+					).join("") + 
+					`</span>
+					<span class='action'>${entry[1]}</span>
+				</li>`
+			).join("\n") + `
 			</ul>			
 		</div>
 	` + "</div>");
