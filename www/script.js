@@ -3740,6 +3740,8 @@ function insertMarkup(event) {
 
 	// Update textarea contents.
 	textarea.value = textarea.value.substring(0, p0) + str + textarea.value.substring(p1);
+	// Expand textarea, if needed.
+	expandTextarea(textarea);
 
 	// Set selection.
 	textarea.selectionStart = cur0;
