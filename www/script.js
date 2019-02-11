@@ -2860,7 +2860,7 @@ function keyboardHelpSetup() {
 			<h1>Keyboard shortcuts</h1>
 			<p class='note'>Keys shown in yellow (e.g., <code class='ak'>]</code>) are <a href='https://en.wikipedia.org/wiki/Access_key#Access_in_different_browsers' target='_blank'>accesskeys</a>, and require a browser-specific modifier key (or keys).</p>
 			<p class='note'>Keys shown in grey (e.g., <code>?</code>) do not require any modifier keys.</p>
-			<div class='keyboard-shortcuts-lists'><ul>` + [ 
+			<ul class='keyboard-shortcuts-list'>` + [ 
 				[ "General" ],
 				[ [ '?' ], "Show keyboard help" ],
 				[ "Site navigation" ],
@@ -2901,7 +2901,7 @@ function keyboardHelpSetup() {
 				[ [ 'ak-0' ], "Reset to default text size" ],
 				[ [ 'ak-′' ], "Cycle through content width settings" ]
 			].map(entry => (entry.length == 1) ? 
-				`</ul><ul><li class='section'>${entry[0]}</li>` : 
+				`<li class='section'>${entry[0]}</li>` : 
 				`<li>
 					<span class='keys'>` + 
 					entry[0].map(key =>
@@ -2911,7 +2911,7 @@ function keyboardHelpSetup() {
 					<span class='action'>${entry[1]}</span>
 				</li>`
 			).join("\n") + `
-			</ul></div>		
+			</ul>			
 		</div>
 	` + "</div>");
 

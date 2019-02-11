@@ -1006,22 +1006,19 @@ foreach ($content_width_settings as $name => $setting) {
 #keyboard-help-overlay .keyboard-help-container .note {
 	margin: 0.5em 1em;
 }
-#keyboard-help-overlay .keyboard-help-container .keyboard-shortcuts-lists {
+#keyboard-help-overlay .keyboard-help-container ul {
+	list-style-type: none;
+	margin: 0;
 	column-width: 21em;
 	column-count: auto;
 	column-gap: 1em;
 	border-top: 1px solid #ddd;
 	padding: 10px 20px;
 }
-#keyboard-help-overlay .keyboard-help-container ul {
-	list-style-type: none;
-	margin: 0;
-	padding: 0;
-	break-inside: avoid;
-}
 #keyboard-help-overlay .keyboard-help-container ul li.section {
 	font-weight: bold;
 	font-size: 1.25rem;
+	break-after: avoid;
 }
 #keyboard-help-overlay .keyboard-help-container .keys {
 	margin: 0 0.5em 0 0;
@@ -1042,6 +1039,38 @@ foreach ($content_width_settings as $name => $setting) {
 #keyboard-help-overlay .keyboard-help-container code.ak::before {
 	content: "ak+";
 	opacity: 0.3;
+}
+
+/************/
+/* ARCHIVES */
+/************/
+
+.archive-nav {
+	margin: 1.25em 0.5em 0 0.5em;
+	padding: 0.25em;
+}
+.archive-nav > * {
+	display: flex;
+}
+.archive-nav *[class^='archive-nav-item'] {
+	line-height: 1;
+	flex: 1 1 5%;
+	text-align: center;
+	padding: 6px 4px 4px 4px;
+	max-width: 8%;
+}
+@-moz-document url-prefix() {
+	.archive-nav *[class^='archive-nav-item'] {
+		padding: 5px 4px;
+	}
+}
+.archive-nav-days .archive-nav-item-day {
+	font-size: 0.8em;
+	padding: 7px 0 5px 0;
+	max-width: 4%;
+}
+.archive-nav-days .archive-nav-item-day:first-child {
+	flex-basis: 10%;
 }
 
 /************/
