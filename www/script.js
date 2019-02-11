@@ -1524,10 +1524,14 @@ function toggleThemeTweakerUI() {
 		updateThemeTweakerSampleText();
 		// Disable tab-selection of the search box.
 		setSearchBoxTabSelectable(false);
+		// Disable scrolling of the page.
+		query("body").addClass("no-scroll");
 	} else {
 		query("#theme-tweaker-toggle button").disabled = false;
 		// Re-enable tab-selection of the search box.
 		setSearchBoxTabSelectable(true);
+		// Re-enable scrolling of the page.
+		query("body").removeClass("no-scroll");
 	}
 	// Set theme tweaker assistant visibility.
 	query(".clippy-container").style.display = JSON.parse(localStorage.getItem("theme-tweaker-settings") || '{ "showClippy": true }')["showClippy"] ? "block" : "none";
