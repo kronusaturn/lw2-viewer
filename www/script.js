@@ -114,6 +114,7 @@ function addScrollListener(fn, name) {
 /*	If top of element is not at or above the top of the screen, scroll it into
 	view. */
 Element.prototype.scrollIntoViewIfNeeded = function() {
+	GWLog("scrollIntoViewIfNeeded");
 	if (this.getBoundingClientRect().bottom > window.innerHeight && 
 		this.getBoundingClientRect().top > 0) {
 		this.scrollIntoView(false);
@@ -148,6 +149,7 @@ function doAjax(params) {
 	}
 }
 
+// Returns the currently selected text, as HTML (rather than unstyled text).
 function getSelectionHTML() {
 	var container = document.createElement("div");
 	container.appendChild(window.getSelection().getRangeAt(0).cloneContents());
@@ -219,6 +221,7 @@ Element.prototype.addTextareaFeatures = function() {
 
 	textarea.addEventListener("focus", (event) => { event.target.closest("form").scrollIntoViewIfNeeded(); });
 	textarea.addEventListener("input", GW.textareaInputReceived = (event) => {
+		GWLog("GW.textareaInputReceived");
 		if (window.innerWidth > 520) {
 			// Expand textarea if needed.
 			expandTextarea(textarea);
@@ -268,6 +271,7 @@ Element.prototype.addTextareaFeatures = function() {
 
 	textareaContainer.queryAll(".guiedit-mobile-auxiliary-button").forEach(button => {
 		button.addActivateEvent(GW.GUIEditMobileAuxiliaryButtonClicked = (event) => {
+			GWLog("GW.GUIEditMobileAuxiliaryButtonClicked");
 			if (button.hasClass("guiedit-mobile-help-button")) {
 				toggleMarkdownHintsBox();
 				event.target.toggleClass("active");
@@ -334,6 +338,7 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 	commentControls.onsubmit = disableBeforeUnload;
 
 	commentControls.query(".cancel-comment-button").addActivateEvent(GW.cancelCommentButtonClicked = (event) => {
+		GWLog("GW.cancelCommentButtonClicked");
 		hideReplyForm(event.target.closest(".comment-controls"));
 	});
 	commentControls.scrollIntoViewIfNeeded();
@@ -363,7 +368,7 @@ Element.prototype.updateCommentControlButton = function() {
 		"edit-button": () => { return [ "edit-button", "Edit", "Edit this comment" ] }
 	};
 	classMap.keys().forEach((testClass) => {
-		if(this.hasClass(testClass)) {
+		if (this.hasClass(testClass)) {
 			let [ buttonClass, buttonLabel, buttonAltText ] = classMap[testClass]();
 			this.className = "";
 			this.addClasses([ buttonClass, "action-button" ]);
@@ -430,7 +435,7 @@ Element.prototype.constructCommentControls = function() {
 }
 
 GW.commentActionButtonClicked = (event) => {
-	GWLog("commentActionButtonClicked");
+	GWLog("GW.commentActionButtonClicked");
 	if (event.target.hasClass("edit-button") ||
 		event.target.hasClass("reply-button") ||
 		event.target.hasClass("new-comment-button")) {
@@ -618,6 +623,7 @@ function sendVoteRequest(targetId, targetType, voteType, onFinish) {
 }
 
 function voteButtonClicked(event) {
+	GWLog("voteButtonClicked");
 	let voteButton = event.target;
 
 	// 500 ms (0.5 s) double-click timeout.
@@ -644,6 +650,7 @@ function voteButtonClicked(event) {
 	}
 }
 function voteEvent(voteButton, numClicks) {
+	GWLog("voteEvent");
 	voteButton.blur();
 	voteButton.parentNode.addClass("waiting");
 	let targetType = voteButton.dataset.targetType;
@@ -799,6 +806,7 @@ function getLastVisitedDate() {
 	return localStorage.getItem(storageName);
 }
 function setLastVisitedDate(date) {
+	GWLog("setLastVisitedDate");
 	// If NOT posting a comment, save the previous value for the last-visited-date 
 	// (to recover it in case of posting a comment).
 	let aCommentHasJustBeenPosted = (query(".just-posted-comment") != null);
@@ -812,10 +820,12 @@ function setLastVisitedDate(date) {
 }
 
 function updateSavedCommentCount() {
+	GWLog("updateSavedCommentCount");
 	let commentCount = queryAll(".comment").length;
 	localStorage.setItem("comment-count_" + getPostHash(), commentCount);
 }
 function badgePostsWithNewComments() {
+	GWLog("badgePostsWithNewComments");
 	if (getQueryVariable("show") == "conversations") return;
 
 	queryAll("h1.listing a[href^='/posts']").forEach(postLink => {
