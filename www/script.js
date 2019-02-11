@@ -3020,6 +3020,9 @@ function toggleKeyboardHelpOverlay(show) {
 	} else {
 		document.removeEventListener("keyup", GW.keyboardHelpHideKeyPressed);
 	}
+
+	// Disable / enable tab-selection of the search box.
+	setSearchBoxTabSelectable(!show);
 }
 
 /*********************/
