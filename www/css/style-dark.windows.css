@@ -1046,18 +1046,24 @@ head.content-width-fluid + body > * {
 	opacity: 0.3;
 }
 
-#nav-item-about {
-	position: relative;
-	padding-right: 0.25em;
-}
 #nav-item-about button.open-keyboard-help {
-	font-family: Font Awesome;
-	font-weight: 900;
-	position: absolute;
-	top: 0;
-	right: 0;
-	height: 100%;
-	padding: 8px;
+	display: none;
+}
+@media only screen and (hover:hover) and (pointer:fine) {
+	#nav-item-about {
+		position: relative;
+		padding-right: 0.25em;
+	}
+	#nav-item-about button.open-keyboard-help {
+		font-family: Font Awesome;
+		font-weight: 900;
+		position: absolute;
+		top: 0;
+		right: 0;
+		height: 100%;
+		padding: 8px;
+		display: initial;
+	}
 }
 
 #keyboard-help-overlay button.close-keyboard-help {
