@@ -1207,23 +1207,22 @@ signaled condition to OUT-STREAM."
 		(t :body (postprocess-markdown text))
 		(t :title title)
 		(t :last-edited-as "markdown")
-		(t :url (if link-post url))
+		(link-post :url url)
 		(t :meta (string= section "meta"))
 		(t :draft (string= section "drafts"))
 		((not post-id) :question (and question t))))
-	      (post-set (loop for item in post-data when (cdr item) collect item))
-              (post-unset (loop for item in post-data when (not (cdr item)) collect (cons (car item) t))))
-         (let* ((new-post-data
-                  (if post-id
-                      (do-lw2-post-edit lw2-auth-token post-id post-set post-unset)
-                      (do-lw2-post lw2-auth-token post-set)))
-                (new-post-id (cdr (assoc :--id new-post-data))))
-           (assert new-post-id)
-           (cache-put "post-markdown-source" new-post-id text)
-           (ignore-errors (get-post-body post-id :force-revalidate t))
-           (redirect (if (cdr (assoc :draft post-data))
-                         (concatenate 'string (generate-post-link new-post-data) "?need-auth=y")
-                         (generate-post-link new-post-data)))))))))
+	      (post-unset (if link-post nil (alist :url t)))
+	      (new-post-data
+	       (if post-id
+		   (do-lw2-post-edit lw2-auth-token post-id post-data post-unset)
+		   (do-lw2-post lw2-auth-token post-data)))
+	      (new-post-id (cdr (assoc :--id new-post-data))))
+	 (assert new-post-id)
+	 (cache-put "post-markdown-source" new-post-id text)
+	 (ignore-errors (get-post-body post-id :force-revalidate t))
+	 (redirect (if (cdr (assoc :draft post-data))
+		       (concatenate 'string (generate-post-link new-post-data) "?need-auth=y")
+		       (generate-post-link new-post-data))))))))
 
 (hunchentoot:define-easy-handler (view-karma-vote :uri "/karma-vote") ((csrf-token :request-type :post) (target :request-type :post) (target-type :request-type :post) (vote-type :request-type :post))
   (with-error-page
