@@ -2863,8 +2863,8 @@ function keyboardHelpSetup() {
 			<p class='note'>Keys shown in grey (e.g., <code>?</code>) do not require any modifier keys.</p>
 			<div class='keyboard-shortcuts-lists'>` + [ [
 				"General",
-				[ [ '?' ], "Show keyboard help" ],
-				[ [ 'Esc' ], "Hide keyboard help" ]
+				[ [ '?' ], "Show keyboard shortcuts" ],
+				[ [ 'Esc' ], "Hide keyboard shortcuts" ]
 			], [
 				"Site navigation",
 				[ [ 'ak-h' ], "Go to Home (a.k.a. “Frontpage”) view" ],
