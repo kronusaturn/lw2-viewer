@@ -2913,7 +2913,7 @@ function keyboardHelpSetup() {
 				"Miscellaneous",
 				[ [ 'ak-x' ], "Switch to next view on user page" ],
 				[ [ 'ak-z' ], "Switch to previous view on user page" ],
-				[ [ 'ak-`' ], "Toggle compact comment list view" ]
+				[ [ 'ak-`&nbsp;' ], "Toggle compact comment list view" ]
 			], [				
 				"Appearance",
 				[ [ 'ak-=' ], "Increase text size" ],
