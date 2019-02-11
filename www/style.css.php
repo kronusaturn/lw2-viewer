@@ -997,6 +997,7 @@ foreach ($content_width_settings as $name => $setting) {
 	max-width: 1500px;
 	max-height: 100%;
 	overflow-y: auto;
+	position: relative;
 }
 #keyboard-help-overlay .keyboard-help-container h1 {
 	text-align: center;
