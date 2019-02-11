@@ -2881,10 +2881,11 @@ function keyboardHelpSetup() {
 				[ [ '.' ], "Focus next entry in list" ],
 				[ [ ',' ], "Focus previous entry in list" ],
 				[ [ ';' ], "Cycle between links in focused entry" ],
-				[ [ 'Enter' ], "Go to focused entry" ],
-				[ [ 'ak-]' ], "Load next page of listings" ],
-				[ [ 'ak-[' ], "Load previous page of listings" ],
-				[ [ 'ak-\\' ], "First page of current view" ]
+				[ [ 'Enter' ], "Go to currently focused entry" ],
+				[ [ 'Esc' ], "Unfocus currently focused entry" ],
+				[ [ 'ak-]' ], "Go to next page" ],
+				[ [ 'ak-[' ], "Go to previous page" ],
+				[ [ 'ak-\\' ], "Go to first page" ]
 			], [
 				"Page navigation",
 				[ [ 'ak-,' ], "Jump up to top of page" ],
