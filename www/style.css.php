@@ -992,7 +992,6 @@ foreach ($content_width_settings as $name => $setting) {
 
 #keyboard-help-overlay .keyboard-help-container {
 	background-color: #fff;
-	border-radius: 8px;
 	filter: drop-shadow(4px 4px 2px #000);
 	flex: 1 1 auto;
 	max-width: 1500px;
@@ -1006,7 +1005,9 @@ foreach ($content_width_settings as $name => $setting) {
 	padding: 10px 20px;
 }
 #keyboard-help-overlay .keyboard-help-container .note {
-	margin: 0.5em 1em;
+	margin: 0.5em auto;
+	padding: 0 1em;
+	width: fit-content;
 }
 #keyboard-help-overlay .keyboard-help-container .keyboard-shortcuts-lists {
 	column-width: 21em;
@@ -1051,6 +1052,29 @@ foreach ($content_width_settings as $name => $setting) {
 #keyboard-help-overlay .keyboard-help-container code.ak::before {
 	content: "ak+";
 	opacity: 0.3;
+}
+
+#nav-item-about {
+	position: relative;
+	padding-right: 0.25em;
+}
+#nav-item-about button.open-keyboard-help {
+	font-family: Font Awesome;
+	font-weight: 900;
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 100%;
+	padding: 8px;
+}
+
+#keyboard-help-overlay button.close-keyboard-help {
+	position: absolute;
+	right: 0;
+	top: 0;
+	font-family: Font Awesome;
+	font-size: 1.5rem;
+	padding: 10px 12px;
 }
 
 /************/

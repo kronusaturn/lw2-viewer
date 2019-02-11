@@ -2857,6 +2857,7 @@ function resetImageFocusHideUITimer(restart) {
 function keyboardHelpSetup() {
 	let keyboardHelpOverlay = addUIElement("<div id='keyboard-help-overlay'>" + `
 		<div class='keyboard-help-container'>
+			<button type='button' title='Close keyboard shortcuts' class='close-keyboard-help'>&#xf00d;</button>
 			<h1>Keyboard shortcuts</h1>
 			<p class='note'>Keys shown in yellow (e.g., <code class='ak'>]</code>) are <a href='https://en.wikipedia.org/wiki/Access_key#Access_in_different_browsers' target='_blank'>accesskeys</a>, and require a browser-specific modifier key (or keys).</p>
 			<p class='note'>Keys shown in grey (e.g., <code>?</code>) do not require any modifier keys.</p>
@@ -2957,7 +2958,7 @@ function keyboardHelpSetup() {
 			toggleKeyboardHelpOverlay(false);
 	});
 
-	// Clicking the background overlay closes the theme tweaker.
+	// Clicking the background overlay closes the keyboard help overlay.
 	keyboardHelpOverlay.addActivateEvent(GW.keyboardHelpOverlayClicked = (event) => {
 		console.log("GW.keyboardHelpOverlayClicked");
 		if (event.type == 'mousedown') {
@@ -2971,8 +2972,18 @@ function keyboardHelpSetup() {
 	// Intercept clicks, so they don't "fall through" the background overlay.
 	(query("#keyboard-help-overlay .keyboard-help-container")||{}).addActivateEvent((event) => { event.stopPropagation(); }, true);
 
-	// FOR TESTING ONLY; REMOVE WHEN DEPLOYING:
-	toggleKeyboardHelpOverlay(true);
+	// Clicking the close button closes the keyboard help overlay.
+	keyboardHelpOverlay.query("button.close-keyboard-help").addActivateEvent(GW.closeKeyboardHelpButtonClicked = (event) => {
+		toggleKeyboardHelpOverlay(false);
+	});
+
+	// Add button to open keyboard help.
+	query("#nav-item-about").insertAdjacentHTML("beforeend", "<button type='button' tabindex='-1' class='open-keyboard-help' title='Keyboard shortcuts'>&#xf11c;</button>");
+	query("#nav-item-about button.open-keyboard-help").addActivateEvent(GW.openKeyboardHelpButtonClicked = (event) => {
+		console.log("GW.openKeyboardHelpButtonClicked");
+		toggleKeyboardHelpOverlay(true);
+		event.target.blur();
+	});
 }
 
 function toggleKeyboardHelpOverlay(show) {
@@ -2985,6 +2996,9 @@ function toggleKeyboardHelpOverlay(show) {
 	// Prevent scrolling the document when the overlay is visible.
 	if (show) query("body").addClass("no-scroll");
 	else query("body").removeClass("no-scroll");
+
+	// Focus the close button as soon as we open.
+	keyboardHelpOverlay.query("button.close-keyboard-help").focus();
 }
 
 /*********************/
