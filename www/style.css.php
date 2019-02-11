@@ -3047,17 +3047,23 @@ li {
 	list-style: none;
 	padding: 0;
 }
-.post-body ul:not(.contents-list) li {
+.post-body ul:not(.contents-list) > li {
 	position: relative;
-	padding: 0 0 0 2.5em;
+	padding: 0 0 0 1.75em;
 	margin: 0.25em 0 0 0;
 }
-.post-body ul:not(.contents-list) li::before {
+.post-body ul:not(.contents-list) > li ul > li {
+	padding: 0 0 0 2em;
+}
+.post-body ul:not(.contents-list) > li::before {
 	content: "•";
 	position: absolute;
-	width: 2em;
+	width: 1.25em;
 	text-align: right;
 	left: 0;
+}
+.post-body ul:not(.contents-list) > li ul > li::before {
+	width: 1.5em;
 }
 .post-body li > ul:first-child > li {
 	padding-left: 0;
