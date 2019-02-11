@@ -3096,9 +3096,24 @@ function MarkdownFromHTML(text) {
 	});
 
 	// Unordered lists.
-	text = text.replace(/<ul>((?:.|\n)+?)<\/ul>/g, (match, listItems, offset, string) => {
+	text = text.replace(/<ul>\s+?((?:.|\n)+?)\s+?<\/ul>/g, (match, listItems, offset, string) => {
 		return listItems.replace(/<li>((?:.|\n)+?)<\/li>/g, (match, listItem, offset, string) => {
-			return "* " + listItem + "\n";
+			return `* ${listItem}\n`;
+		});
+	});
+
+	// Ordered lists.
+	text = text.replace(/<ol(?:\sstart=["']([0-9]+)["'])?>\s+?((?:.|\n)+?)\s+?<\/ol>/g, (match, start, listItems, offset, string) => {
+		var countedItemValue = 0;
+		return listItems.replace(/<li(?:\svalue=["']([0-9]+)["'])?>((?:.|\n)+?)<\/li>/g, (match, specifiedItemValue, listItem, offset, string) => {
+			var itemValue;
+			if (typeof specifiedItemValue != "undefined") {
+				specifiedItemValue = parseInt(specifiedItemValue);
+				countedItemValue = itemValue = specifiedItemValue;
+			} else {
+				itemValue = (start ? parseInt(start) - 1 : 0) + ++countedItemValue;
+			}
+			return `${itemValue}. ${listItem}\n`;
 		});
 	});
 
@@ -3109,7 +3124,7 @@ function MarkdownFromHTML(text) {
 
 	// Blockquotes.
 	text = text.replace(/<blockquote>((?:.|\n)+?)<\/blockquote>/g, (match, quotedText, offset, string) => {
-		return "> " + quotedText.trim().split("\n").join("\n> ") + "\n";
+		return `> ${quotedText.trim().split("\n").join("\n> ")}\n`;
 	});
 
 	// Links.
