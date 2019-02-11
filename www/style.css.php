@@ -1021,6 +1021,7 @@ foreach ($content_width_settings as $name => $setting) {
 	margin: 0;
 	padding: 0;
 	break-inside: avoid;
+	white-space: nowrap;
 }
 #keyboard-help-overlay .keyboard-help-container ul:nth-of-type(n+2) {
 	margin: 20px 0 0 0;
