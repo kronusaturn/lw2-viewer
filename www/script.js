@@ -2860,10 +2860,11 @@ function keyboardHelpSetup() {
 			<h1>Keyboard shortcuts</h1>
 			<p class='note'>Keys shown in yellow (e.g., <code class='ak'>]</code>) are <a href='https://en.wikipedia.org/wiki/Access_key#Access_in_different_browsers' target='_blank'>accesskeys</a>, and require a browser-specific modifier key (or keys).</p>
 			<p class='note'>Keys shown in grey (e.g., <code>?</code>) do not require any modifier keys.</p>
-			<ul class='keyboard-shortcuts-list'>` + [ 
-				[ "General" ],
+			<div class='keyboard-shortcuts-lists'>` + [ [
+				"General",
 				[ [ '?' ], "Show keyboard help" ],
-				[ "Site navigation" ],
+			], [
+				"Site navigation",
 				[ [ 'ak-h' ], "Switch to Home (a.k.a. “Frontpage”) view" ],
 				[ [ 'ak-f' ], "Switch to Featured (a.k.a. “Curated”) view" ],
 				[ [ 'ak-a' ], "Switch to All (a.k.a. “Community”) view" ],
@@ -2872,20 +2873,23 @@ function keyboardHelpSetup() {
 				[ [ 'ak-r' ], "Switch to Archive view" ],
 				[ [ 'ak-t' ], "Switch to About page" ],
 				[ [ 'ak-u' ], "Switch to User or Login page" ],
-				[ [ 'ak-o' ], "Switch to Inbox page" ],
-				[ "Listings" ],
+				[ [ 'ak-o' ], "Switch to Inbox page" ]
+			], [
+				"Listings",
 				[ [ '.' ], "Focus next post/comment in list" ],
 				[ [ ',' ], "Focus previous post/comment in list" ],
 				[ [ ';' ], "Cycle between links in focused post/comment" ],
 				[ [ 'Enter' ], "Go to focused entry" ],
 				[ [ 'ak-]' ], "Load next page of listings" ],
 				[ [ 'ak-[' ], "Load previous page of listings" ],
-				[ "Editor" ],
+			], [
+				"Editor",
 				[ [ 'ak-k' ], "Bold text (in post/comment editor)" ],
 				[ [ 'ak-i' ], "Italic text (in post/comment editor)" ],
 				[ [ 'ak-l' ], "Insert hyperlink (in post/comment editor)" ],
-				[ [ 'ak-q' ], "Blockquote text (in post/comment editor)" ],
-				[ "Appearance" ],
+				[ [ 'ak-q' ], "Blockquote text (in post/comment editor)" ]
+			], [
+				"Appearance",
 				[ [ 'ak-1' ], "Switch to theme A (default theme)" ],
 				[ [ 'ak-2' ], "Switch to theme B (dark theme)" ],
 				[ [ 'ak-3' ], "Switch to theme C (grey theme)" ],
@@ -2900,8 +2904,8 @@ function keyboardHelpSetup() {
 				[ [ 'ak--' ], "Decrease text size" ],
 				[ [ 'ak-0' ], "Reset to default text size" ],
 				[ [ 'ak-′' ], "Cycle through content width settings" ]
-			].map(entry => (entry.length == 1) ? 
-				`<li class='section'>${entry[0]}</li>` : 
+			] ].map(section => 
+			`<ul><li class='section'>${section[0]}</li>` + section.slice(1).map(entry =>
 				`<li>
 					<span class='keys'>` + 
 					entry[0].map(key =>
@@ -2910,8 +2914,8 @@ function keyboardHelpSetup() {
 					`</span>
 					<span class='action'>${entry[1]}</span>
 				</li>`
-			).join("\n") + `
-			</ul>			
+			).join("\n") + `</ul>`).join("\n") + `
+			</ul></div>		
 		</div>
 	` + "</div>");
 

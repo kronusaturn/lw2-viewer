@@ -996,14 +996,21 @@ head.content-width-fluid + body > * {
 #keyboard-help-overlay .keyboard-help-container .note {
 	margin: 0.5em 1em;
 }
-#keyboard-help-overlay .keyboard-help-container ul {
-	list-style-type: none;
-	margin: 0;
+#keyboard-help-overlay .keyboard-help-container .keyboard-shortcuts-lists {
 	column-width: 21em;
 	column-count: auto;
 	column-gap: 1em;
 	border-top: 1px solid #1f1f1f;
 	padding: 10px 20px;
+}
+#keyboard-help-overlay .keyboard-help-container ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	break-inside: avoid;
+}
+#keyboard-help-overlay .keyboard-help-container ul:nth-of-type(n+2) {
+	margin: 20px 0 0 0;
 }
 #keyboard-help-overlay .keyboard-help-container ul li.section {
 	font-weight: bold;
