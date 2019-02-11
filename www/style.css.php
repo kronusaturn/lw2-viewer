@@ -1006,22 +1006,26 @@ foreach ($content_width_settings as $name => $setting) {
 #keyboard-help-overlay .keyboard-help-container .note {
 	margin: 0.5em 1em;
 }
-#keyboard-help-overlay .keyboard-help-container ul {
-	list-style-type: none;
-	padding: 10px 20px;
-	margin: 0;
-	border-top: 1px solid #ddd;
+#keyboard-help-overlay .keyboard-help-container .keyboard-shortcuts-lists {
 	column-width: 21em;
 	column-count: auto;
 	column-gap: 1em;
+	border-top: 1px solid #ddd;
+	padding: 10px 20px;
+}
+#keyboard-help-overlay .keyboard-help-container ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	break-inside: avoid;
 }
 #keyboard-help-overlay .keyboard-help-container ul li.section {
 	font-weight: bold;
 	font-size: 1.25rem;
 }
 #keyboard-help-overlay .keyboard-help-container .keys {
-	margin: 0 1em 0 0;
-	min-width: 4em;
+	margin: 0 0.5em 0 0;
+	min-width: 3.5em;
 	display: inline-block;
 }
 #keyboard-help-overlay .keyboard-help-container code {
@@ -1036,7 +1040,7 @@ foreach ($content_width_settings as $name => $setting) {
 	border-color: #d4a500;
 }
 #keyboard-help-overlay .keyboard-help-container code.ak::before {
-	content: "ak-";
+	content: "ak+";
 	opacity: 0.3;
 }
 
