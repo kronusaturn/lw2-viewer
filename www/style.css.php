@@ -995,6 +995,7 @@ foreach ($content_width_settings as $name => $setting) {
 	border-radius: 8px;
 	filter: drop-shadow(4px 4px 2px #000);
 	font-size: 1.125rem;
+	flex: 1 1 auto;
 }
 #keyboard-help-overlay .keyboard-help-container h1 {
 	text-align: center;
@@ -1010,6 +1011,9 @@ foreach ($content_width_settings as $name => $setting) {
 	padding: 10px 20px;
 	margin: 0;
 	border-top: 1px solid #ddd;
+	column-width: 21em;
+	column-count: auto;
+	column-gap: 1em;
 }
 #keyboard-help-overlay .keyboard-help-container ul li.section {
 	font-weight: bold;
@@ -1018,6 +1022,7 @@ foreach ($content_width_settings as $name => $setting) {
 #keyboard-help-overlay .keyboard-help-container .keys {
 	margin: 0 1em 0 0;
 	min-width: 4em;
+	display: inline-block;
 }
 #keyboard-help-overlay .keyboard-help-container code {
 	display: inline-block;
@@ -1032,7 +1037,7 @@ foreach ($content_width_settings as $name => $setting) {
 }
 #keyboard-help-overlay .keyboard-help-container code.ak::before {
 	content: "ak-";
-	opacity: 0.4;
+	opacity: 0.3;
 }
 
 /************/

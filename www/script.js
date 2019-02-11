@@ -2861,15 +2861,44 @@ function keyboardHelpSetup() {
 			<p class='note'>Keys shown in yellow (e.g., <code class='ak'>]</code>) are <a href='https://en.wikipedia.org/wiki/Access_key#Access_in_different_browsers' target='_blank'>accesskeys</a>, and require a browser-specific modifier key (or keys).</p>
 			<p class='note'>Keys shown in grey (e.g., <code>?</code>) do not require any modifier keys.</p>
 			<ul class='keyboard-shortcuts-list'>` + [ 
-				[ 'General' ],
+				[ "General" ],
 				[ [ '?' ], "Show keyboard help" ],
-				[ 'Listings' ],
+				[ "Site navigation" ],
+				[ [ 'ak-h' ], "Switch to Home (a.k.a. “Frontpage”) view" ],
+				[ [ 'ak-f' ], "Switch to Featured (a.k.a. “Curated”) view" ],
+				[ [ 'ak-a' ], "Switch to All (a.k.a. “Community”) view" ],
+				[ [ 'ak-m' ], "Switch to Meta view" ],
+				[ [ 'ak-c' ], "Switch to Recent Comments view" ],
+				[ [ 'ak-r' ], "Switch to Archive view" ],
+				[ [ 'ak-t' ], "Switch to About page" ],
+				[ [ 'ak-u' ], "Switch to User or Login page" ],
+				[ [ 'ak-o' ], "Switch to Inbox page" ],
+				[ "Listings" ],
 				[ [ '.' ], "Focus next post/comment in list" ],
 				[ [ ',' ], "Focus previous post/comment in list" ],
 				[ [ ';' ], "Cycle between links in focused post/comment" ],
-				[ [ 'Enter' ], "Open focused entry" ],
+				[ [ 'Enter' ], "Go to focused entry" ],
 				[ [ 'ak-]' ], "Load next page of listings" ],
-				[ [ 'ak-[' ], "Load previous page of listings" ]
+				[ [ 'ak-[' ], "Load previous page of listings" ],
+				[ "Editor" ],
+				[ [ 'ak-k' ], "Bold text (in post/comment editor)" ],
+				[ [ 'ak-i' ], "Italic text (in post/comment editor)" ],
+				[ [ 'ak-l' ], "Insert hyperlink (in post/comment editor)" ],
+				[ [ 'ak-q' ], "Blockquote text (in post/comment editor)" ],
+				[ "Appearance" ],
+				[ [ 'ak-;' ], "Open Customize Appearance window" ],
+				[ [ 'ak-1' ], "Switch to theme A (default theme)" ],
+				[ [ 'ak-2' ], "Switch to theme B (dark theme)" ],
+				[ [ 'ak-3' ], "Switch to theme C (grey theme)" ],
+				[ [ 'ak-4' ], "Switch to theme D (ultramodern theme)" ],
+				[ [ 'ak-5' ], "Switch to theme E (simple theme)" ],
+				[ [ 'ak-6' ], "Switch to theme F (brutalist theme)" ],
+				[ [ 'ak-7' ], "Switch to theme G (readthesequences.com theme)" ],
+				[ [ 'ak-8' ], "Switch to theme H (classic Less Wrong theme)" ],
+				[ [ 'ak-=' ], "Increase text size" ],
+				[ [ 'ak--' ], "Decrease text size" ],
+				[ [ 'ak-0' ], "Reset to default text size" ],
+				[ [ 'ak-′' ], "Cycle through content width settings" ]
 			].map(entry => (entry.length == 1) ? 
 				`<li class='section'>${entry[0]}</li>` : 
 				`<li>
