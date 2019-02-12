@@ -2891,16 +2891,6 @@ function keyboardHelpSetup() {
 				[ [ 'ak-u' ], "Go to User or Login page" ],
 				[ [ 'ak-o' ], "Go to Inbox page" ]
 			], [
-				"Post/comment list views",
-				[ [ '.' ], "Focus next entry in list" ],
-				[ [ ',' ], "Focus previous entry in list" ],
-				[ [ ';' ], "Cycle between links in focused entry" ],
-				[ [ 'Enter' ], "Go to currently focused entry" ],
-				[ [ 'Esc' ], "Unfocus currently focused entry" ],
-				[ [ 'ak-]' ], "Go to next page" ],
-				[ [ 'ak-[' ], "Go to previous page" ],
-				[ [ 'ak-\\' ], "Go to first page" ]
-			], [
 				"Page navigation",
 				[ [ 'ak-,' ], "Jump up to top of page" ],
 				[ [ 'ak-.' ], "Jump down to bottom of page" ],
@@ -2911,23 +2901,22 @@ function keyboardHelpSetup() {
 				[ [ 'ak-n' ], "New post or comment" ],
 				[ [ 'ak-e' ], "Edit current post" ]
 			], [
+				"Post/comment list views",
+				[ [ '.' ], "Focus next entry in list" ],
+				[ [ ',' ], "Focus previous entry in list" ],
+				[ [ ';' ], "Cycle between links in focused entry" ],
+				[ [ 'Enter' ], "Go to currently focused entry" ],
+				[ [ 'Esc' ], "Unfocus currently focused entry" ],
+				[ [ 'ak-]' ], "Go to next page" ],
+				[ [ 'ak-[' ], "Go to previous page" ],
+				[ [ 'ak-\\' ], "Go to first page" ],
+				[ [ 'ak-e' ], "Edit currently focused post" ]
+			], [
 				"Editor",
 				[ [ 'ak-k' ], "Bold text" ],
 				[ [ 'ak-i' ], "Italic text" ],
 				[ [ 'ak-l' ], "Insert hyperlink" ],
 				[ [ 'ak-q' ], "Blockquote text" ]
-			], [
-				"Slide shows",
-				[ [ 'ak-l' ], "Start/resume slideshow" ],
-				[ [ 'Esc' ], "Exit slideshow" ],
-				[ [ '&#x2192;', '&#x2193;' ], "Next slide" ],
-				[ [ '&#x2190;', '&#x2191;' ], "Previous slide" ],
-				[ [ 'Space' ], "Reset slide zoom" ]
-			], [				
-				"Miscellaneous",
-				[ [ 'ak-x' ], "Switch to next view on user page" ],
-				[ [ 'ak-z' ], "Switch to previous view on user page" ],
-				[ [ 'ak-`&nbsp;' ], "Toggle compact comment list view" ]
 			], [				
 				"Appearance",
 				[ [ 'ak-=' ], "Increase text size" ],
@@ -2946,6 +2935,18 @@ function keyboardHelpSetup() {
 				[ [ 'ak-;' ], "Open theme tweaker" ],
 				[ [ 'Enter' ], "Save changes and close theme tweaker "],
 				[ [ 'Esc' ], "Close theme tweaker (without saving)" ]
+			], [
+				"Slide shows",
+				[ [ 'ak-l' ], "Start/resume slideshow" ],
+				[ [ 'Esc' ], "Exit slideshow" ],
+				[ [ '&#x2192;', '&#x2193;' ], "Next slide" ],
+				[ [ '&#x2190;', '&#x2191;' ], "Previous slide" ],
+				[ [ 'Space' ], "Reset slide zoom" ]
+			], [
+				"Miscellaneous",
+				[ [ 'ak-x' ], "Switch to next view on user page" ],
+				[ [ 'ak-z' ], "Switch to previous view on user page" ],
+				[ [ 'ak-`&nbsp;' ], "Toggle compact comment list view" ]
 			] ].map(section => 
 			`<ul><li class='section'>${section[0]}</li>` + section.slice(1).map(entry =>
 				`<li>
@@ -3499,6 +3500,10 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 					break;
 				}
 			}
+			// Remove edit accesskey from currently highlighted post by active user, if applicable.
+			if (indexOfActiveListing > -1) {
+				delete (listings[indexOfActiveListing].parentElement.query(".edit-post-link")||{}).accessKey;
+			}
 			let indexOfNextListing = (event.key == "." ? ++indexOfActiveListing : (--indexOfActiveListing + listings.length + 1)) % (listings.length + 1);
 			if (indexOfNextListing < listings.length) {
 				listings[indexOfNextListing].focus();
@@ -3510,6 +3515,8 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 			} else {
 				document.activeElement.blur();
 			}
+			// Add edit accesskey to newly highlighted post by active user, if applicable.
+			(listings[indexOfActiveListing].parentElement.query(".edit-post-link")||{}).accessKey = 'e';
 		});
 		queryAll("#content > .comment-thread .comment-meta a.date, #content > .comment-thread .comment-meta a.permalink").forEach(link => {
 			link.addEventListener("blur", GW.commentListingsHyperlinkUnfocused = (event) => {
