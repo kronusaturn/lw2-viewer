@@ -3150,6 +3150,7 @@ registerInitializer('earlyInitialize', true, () => query("#content") != null, fu
 	// Check to see whether we're on a mobile device (which we define as a touchscreen)
 // 	GW.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 	GW.isMobile = ('ontouchstart' in document.documentElement);
+	GW.isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
 
 	// Backward compatibility
 	let storedTheme = localStorage.getItem('selected-theme');
@@ -3744,7 +3745,14 @@ function insertMarkup(event) {
 	}
 
 	// Update textarea contents.
-	textarea.value = textarea.value.substring(0, p0) + str + textarea.value.substring(p1);
+	// The document.execCommand API is broken in Firefox 
+	// ( https://bugzilla.mozilla.org/show_bug.cgi?id=1220696 ), but using it
+	// allows native undo/redo to work; so we enable it in other browsers.
+	if (GW.isFirefox) {
+		textarea.value = textarea.value.substring(0, p0) + str + textarea.value.substring(p1);
+	} else {
+		document.execCommand("insertText", false, str);
+	}
 	// Expand textarea, if needed.
 	expandTextarea(textarea);
 
