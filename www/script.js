@@ -3444,8 +3444,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	let themeTweakerHelpWindow = query("#theme-tweaker-ui .help-window");
 	let themeTweakerUI = query("#theme-tweaker-ui");
 	document.addEventListener("keyup", GW.themeTweaker.keyPressed = (event) => {
-		if (event.keyCode == 27) {
-		// Escape key.
+		if (event.key == "Escape") {
 			if (themeTweakerHelpWindow.style.display != "none") {
 				toggleThemeTweakerHelpWindow();
 				themeTweakerResetSettings();
@@ -3453,8 +3452,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 				toggleThemeTweakerUI();
 				themeTweakReset();
 			}
-		} else if (event.keyCode == 13) {
-		// Enter key.
+		} else if (event.key == "Enter") {
 			if (themeTweakerHelpWindow.style.display != "none") {
 				toggleThemeTweakerHelpWindow();
 				themeTweakerSaveSettings();
@@ -3469,9 +3467,9 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	let listings = queryAll("h1.listing a[href^='/posts'], #content > .comment-thread .comment-meta a.date");
 	if (listings.length > 0) {
 		document.addEventListener("keyup", GW.postListingsNavKeyPressed = (event) => { 
-			if (event.ctrlKey || event.shiftKey || event.altKey || !(event.key == "," || event.key == "." || event.key == ';' || event.keyCode == 27)) return;
+			if (event.ctrlKey || event.shiftKey || event.altKey || !(event.key == "," || event.key == "." || event.key == ';' || event.key == "Escape")) return;
 
-			if (event.keyCode == 27) {
+			if (event.key == "Escape") {
 				if (document.activeElement.parentElement.hasClass("listing"))
 					document.activeElement.blur();
 				return;
