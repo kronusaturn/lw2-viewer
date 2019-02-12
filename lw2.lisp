@@ -111,7 +111,7 @@
 	  (if question <span class="post-type-prefix">[Question] </span>)
 	  (safe (clean-text-to-html title))
 	</a>
-	(if (logged-in-userid user-id) <a class="edit-post-link button" href=("/edit-post?post-id=~A" post-id)</a>)
+	(if (logged-in-userid user-id) <a class="edit-post-link button" href=("/edit-post?post-id=~A" post-id)></a>)
       </h1>
       <div class="post-meta">
         <a class=("author~{ ~A~}" (list-cond ((logged-in-userid user-id) "own-user-author")))
