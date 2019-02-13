@@ -2951,6 +2951,7 @@ function focusNextImage(next = true) {
 }
 
 function hideImageFocusUI() {
+	GWLog("hideImageFocusUI");
 	let imageFocusOverlay = query("#image-focus-overlay");
 	imageFocusOverlay.queryAll(".slideshow-button, .help-overlay, .image-number").forEach(element => {
 		element.addClass("hidden");
@@ -2958,6 +2959,7 @@ function hideImageFocusUI() {
 }
 
 function unhideImageFocusUI() {
+	GWLog("unhideImageFocusUI");
 	let imageFocusOverlay = query("#image-focus-overlay");
 	imageFocusOverlay.queryAll(".slideshow-button, .help-overlay, .image-number").forEach(element => {
 		element.removeClass("hidden");
