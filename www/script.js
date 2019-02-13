@@ -2531,7 +2531,21 @@ function addCommentParentPopups() {
 /***************/
 
 function imageFocusSetup(imagesOverlayOnly = false) {
-	if (typeof GW.imageFocus == "undefined") GW.imageFocus = { };
+	if (typeof GW.imageFocus == "undefined")
+		GW.imageFocus = {
+			hideUITimerDuration:	1500,
+			hideUITimerExpired:		() => {
+				GWLog("GW.imageFocus.hideUITimerExpired");
+				let currentTime = new Date();
+				let timeSinceLastMouseMove = (new Date()) - GW.imageFocus.mouseLastMovedAt;
+				if (timeSinceLastMouseMove < GW.imageFocus.hideUITimerDuration) {
+					GW.imageFocus.hideUITimer = setTimeout(GW.imageFocus.hideUITimerExpired, (GW.imageFocus.hideUITimerDuration - timeSinceLastMouseMove));
+				} else {
+					hideImageFocusUI();
+					cancelImageFocusHideUITimer();
+				}
+			}
+		};
 
 	GWLog("imageFocusSetup");
 	// Create event listener for clicking on images to focus them.
@@ -2543,9 +2557,11 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 			query("#image-focus-overlay .image-number").textContent = (getIndexOfFocusedImage() + 1);
 		}
 
+		if (GW.isMobile) return;
+
 		// Set timer to hide the image focus UI.
-		GW.imageFocus.mouseLastMovedAt = new Date();
-		resetImageFocusHideUITimer(true);
+		unhideImageFocusUI();
+		GW.imageFocus.hideUITimer = setTimeout(GW.imageFocus.hideUITimerExpired, GW.imageFocus.hideUITimerDuration);
 	};
 	// Add the listener to each image in the overlay (i.e., those in the post).
 	queryAll("#images-overlay img").forEach(image => {
@@ -2823,9 +2839,16 @@ function focusImage(imageToFocus) {
 	// Moving mouse unhides image focus UI.
 	window.addEventListener("mousemove", GW.imageFocus.mouseMoved = (event) => {
 		GWLog("GW.imageFocus.mouseMoved");
-		let restartTimer = (event.target.tagName == "IMG" || event.target.id == "image-focus-overlay");
-		if (restartTimer) GW.imageFocus.mouseLastMovedAt = new Date();
-		resetImageFocusHideUITimer(restartTimer);
+		let currentDateTime = new Date();
+		if (!(event.target.tagName == "IMG" || event.target.id == "image-focus-overlay")) {
+			cancelImageFocusHideUITimer();
+		} else {
+			if (!GW.imageFocus.hideUITimer) {
+				unhideImageFocusUI();
+				GW.imageFocus.hideUITimer = setTimeout(GW.imageFocus.hideUITimerExpired, GW.imageFocus.hideUITimerDuration);
+			}
+			GW.imageFocus.mouseLastMovedAt = currentDateTime;
+		}
 	});
 }
 
@@ -2968,12 +2991,9 @@ function unhideImageFocusUI() {
 	});
 }
 
-function resetImageFocusHideUITimer(restart) {
-	if (GW.isMobile) return;
-
+function cancelImageFocusHideUITimer() {
 	clearTimeout(GW.imageFocus.hideUITimer);
-	unhideImageFocusUI();
-	if (restart) GW.imageFocus.hideUITimer = setTimeout(hideImageFocusUI, 1500);
+	GW.imageFocus.hideUITimer = null;
 }
 
 /*****************/
@@ -3779,6 +3799,10 @@ function focusImageSpecifiedByURL() {
 			if (imageToFocus > 0 && imageToFocus <= images.length) {
 				focusImage(images[imageToFocus - 1]);
 				query("#image-focus-overlay .image-number").textContent = imageToFocus;
+
+				// Set timer to hide the image focus UI.
+				unhideImageFocusUI();
+				GW.imageFocus.hideUITimer = setTimeout(GW.imageFocus.hideUITimerExpired, GW.imageFocus.hideUITimerDuration);
 			}
 		});
 	}
