@@ -1343,6 +1343,7 @@ function injectThemeTweaker() {
 
 	// Clicking the background overlay closes the theme tweaker.
 	themeTweakerUI.addActivateEvent(GW.themeTweaker.UIOverlayClicked = (event) => {
+		GWLog("GW.themeTweaker.UIOverlayClicked");
 		if (event.type == 'mousedown') {
 			themeTweakerUI.style.opacity = "0.01";
 		} else {
@@ -1362,6 +1363,7 @@ function injectThemeTweaker() {
 		// event when the user lets go of the handle.) This means we should
 		// update the filters for the entire page, to match the new setting.
 		field.addEventListener("change", GW.themeTweaker.fieldValueChanged = (event) => {
+			GWLog("GW.themeTweaker.fieldValueChanged");
 			if (event.target.id == 'theme-tweak-control-invert') {
 				GW.currentFilters['invert'] = event.target.checked ? '100%' : '0%';
 			} else if (event.target.type == 'range') {
@@ -1383,6 +1385,7 @@ function injectThemeTweaker() {
 		// the filters for the *sample text*, so the user can see what effects
 		// his changes are having, live, without having to let go of the handle.
 		if (field.type == "range") field.addEventListener("input", GW.themeTweaker.fieldInputReceived = (event) => {
+			GWLog("GW.themeTweaker.fieldInputReceived");
 			var sampleTextFilters = GW.currentFilters;
 
 			let sliderName = /^theme-tweak-control-(.+)$/.exec(event.target.id)[1];
@@ -1394,6 +1397,7 @@ function injectThemeTweaker() {
 	});
 
 	themeTweakerUI.query(".minimize-button").addActivateEvent(GW.themeTweaker.minimizeButtonClicked = (event) => {
+		GWLog("GW.themeTweaker.minimizeButtonClicked");
 		let themeTweakerStyle = query("#theme-tweaker-style");
 
 		if (event.target.hasClass("minimize")) {
@@ -1439,10 +1443,12 @@ function injectThemeTweaker() {
 		}
 	});
 	themeTweakerUI.query(".help-button").addActivateEvent(GW.themeTweaker.helpButtonClicked = (event) => {
+		GWLog("GW.themeTweaker.helpButtonClicked");
 		themeTweakerUI.query("#theme-tweak-control-clippy").checked = JSON.parse(localStorage.getItem("theme-tweaker-settings") || '{ "showClippy": true }')["showClippy"];
 		toggleThemeTweakerHelpWindow();
 	});
 	themeTweakerUI.query(".reset-defaults-button").addActivateEvent(GW.themeTweaker.resetDefaultsButtonClicked = (event) => {
+		GWLog("GW.themeTweaker.resetDefaultsButtonClicked");
 		themeTweakerUI.query("#theme-tweak-control-invert").checked = false;
 		[ "saturate", "brightness", "contrast", "hue-rotate" ].forEach(sliderName => {
 			let slider = themeTweakerUI.query("#theme-tweak-control-" + sliderName);
@@ -1458,24 +1464,29 @@ function injectThemeTweaker() {
 		setSelectedTheme("default");
 	});
 	themeTweakerUI.query(".main-theme-tweaker-window .cancel-button").addActivateEvent(GW.themeTweaker.cancelButtonClicked = (event) => {
+		GWLog("GW.themeTweaker.cancelButtonClicked");
 		toggleThemeTweakerUI();
 		themeTweakReset();
 	});
 	themeTweakerUI.query(".main-theme-tweaker-window .ok-button").addActivateEvent(GW.themeTweaker.OKButtonClicked = (event) => {
+		GWLog("GW.themeTweaker.OKButtonClicked");
 		toggleThemeTweakerUI();
 		themeTweakSave();
 	});
 	themeTweakerUI.query(".help-window .cancel-button").addActivateEvent(GW.themeTweaker.helpWindowCancelButtonClicked = (event) => {
+		GWLog("GW.themeTweaker.helpWindowCancelButtonClicked");
 		toggleThemeTweakerHelpWindow();
 		themeTweakerResetSettings();
 	});
 	themeTweakerUI.query(".help-window .ok-button").addActivateEvent(GW.themeTweaker.helpWindowOKButtonClicked = (event) => {
+		GWLog("GW.themeTweaker.helpWindowOKButtonClicked");
 		toggleThemeTweakerHelpWindow();
 		themeTweakerSaveSettings();
 	});
 
 	themeTweakerUI.queryAll(".notch").forEach(notch => {
-		notch.addActivateEvent(function (event) {
+		notch.addActivateEvent(GW.themeTweaker.sliderNotchClicked = (event) => {
+			GWLog("GW.themeTweaker.sliderNotchClicked");
 			let slider = event.target.parentElement.query("input[type='range']");
 			slider.value = slider.dataset['defaultValue'];
 			event.target.parentElement.query(".theme-tweak-control-label").innerText = slider.value + slider.dataset['labelSuffix'];
@@ -1485,6 +1496,7 @@ function injectThemeTweaker() {
 	});
 
 	themeTweakerUI.query(".clippy-close-button").addActivateEvent(GW.themeTweaker.clippyCloseButtonClicked = (event) => {
+		GWLog("GW.themeTweaker.clippyCloseButtonClicked");
 		themeTweakerUI.query(".clippy-container").style.display = "none";
 		localStorage.setItem("theme-tweaker-settings", JSON.stringify({ 'showClippy': false }));
 		themeTweakerUI.query("#theme-tweak-control-clippy").checked = false;
@@ -1503,7 +1515,9 @@ function injectThemeTweaker() {
 
 	let themeTweakerToggle = addUIElement(`<div id='theme-tweaker-toggle'><button type='button' tabindex='-1' title="Customize appearance [;]" accesskey=';'>&#xf1de;</button></div>`);
 	themeTweakerToggle.query("button").addActivateEvent(GW.themeTweaker.toggleButtonClicked = (event) => {
+		GWLog("GW.themeTweaker.toggleButtonClicked");
 		GW.themeTweakerStyleSheetAvailable = () => {
+			GWLog("GW.themeTweakerStyleSheetAvailable");
 			themeTweakerUI.query(".current-theme span").innerText = (readCookie("theme") || "default");
 
 			themeTweakerUI.query("#theme-tweak-control-invert").checked = (GW.currentFilters['invert'] == "100%");
@@ -1518,6 +1532,7 @@ function injectThemeTweaker() {
 		};
 
 		if (query("link[href^='/css/theme_tweaker.css']")) {
+			// Theme tweaker CSS is already loaded.
 			GW.themeTweakerStyleSheetAvailable();
 		} else {
 			// Load the theme tweaker CSS (if not loaded).
@@ -1674,12 +1689,14 @@ function injectNewCommentNavUI(newCommentsCount) {
 	+ "</div>");
 
 	hnsDatePicker.query("input").addEventListener("input", GW.hnsDatePickerValueChanged = (event) => {
+		GWLog("GW.hnsDatePickerValueChanged");
 		let hnsDate = time_fromHuman(event.target.value);
 		let newCommentsCount = highlightCommentsSince(hnsDate);
 		updateNewCommentNavUI(newCommentsCount);
 	}, false);
 
 	newCommentUIContainer.query(".new-comments-count").addActivateEvent(GW.newCommentsCountClicked = (event) => {
+		GWLog("GW.newCommentsCountClicked");
 		let hnsDatePickerVisible = (getComputedStyle(hnsDatePicker).display != "none");
 		hnsDatePicker.style.display = hnsDatePickerVisible ? "none" : "block";
 	});
@@ -1879,6 +1896,7 @@ function injectCommentsListModeSelector() {
 
 	commentsListModeSelector.queryAll("button").forEach(button => {
 		button.addActivateEvent(GW.commentsListModeSelectButtonClicked = (event) => {
+			GWLog("GW.commentsListModeSelectButtonClicked");
 			event.target.parentElement.queryAll("button").forEach(button => {
 				button.removeClass("selected");
 				button.disabled = false;
@@ -1922,6 +1940,7 @@ function injectSiteNavUIToggle() {
 	GWLog("injectSiteNavUIToggle");
 	let siteNavUIToggle = addUIElement("<div id='site-nav-ui-toggle'><button type='button' tabindex='-1'>&#xf0c9;</button></div>");
 	siteNavUIToggle.query("button").addActivateEvent(GW.siteNavUIToggleButtonClicked = (event) => {
+		GWLog("GW.siteNavUIToggleButtonClicked");
 		toggleSiteNavUI();
 		localStorage.setItem("site-nav-ui-toggle-engaged", event.target.hasClass("engaged"));
 	});
@@ -1951,6 +1970,7 @@ function injectPostNavUIToggle() {
 	GWLog("injectPostNavUIToggle");
 	let postNavUIToggle = addUIElement("<div id='post-nav-ui-toggle'><button type='button' tabindex='-1'>&#xf14e;</button></div>");
 	postNavUIToggle.query("button").addActivateEvent(GW.postNavUIToggleButtonClicked = (event) => {
+		GWLog("GW.postNavUIToggleButtonClicked");
 		togglePostNavUI();
 		localStorage.setItem("post-nav-ui-toggle-engaged", localStorage.getItem("post-nav-ui-toggle-engaged") != "true");
 	});
@@ -1979,6 +1999,7 @@ function injectAppearanceAdjustUIToggle() {
 	GWLog("injectAppearanceAdjustUIToggle");
 	let appearanceAdjustUIToggle = addUIElement("<div id='appearance-adjust-ui-toggle'><button type='button' tabindex='-1'>&#xf013;</button></div>");
 	appearanceAdjustUIToggle.query("button").addActivateEvent(GW.appearanceAdjustUIToggleButtonClicked = (event) => {
+		GWLog("GW.appearanceAdjustUIToggleButtonClicked");
 		toggleAppearanceAdjustUI();
 		localStorage.setItem("appearance-adjust-ui-toggle-engaged", event.target.hasClass("engaged"));
 	});
@@ -2085,6 +2106,7 @@ function setEditPostPageSubmitButtonText() {
 
 	queryAll("input[type='radio'][name='section'], .question-checkbox").forEach(radio => {
 		radio.addEventListener("change", GW.postSectionSelectorValueChanged = (event) => {
+			GWLog("GW.postSectionSelectorValueChanged");
 			updateEditPostPageSubmitButtonText();
 		});
 	});
@@ -2120,6 +2142,7 @@ function injectAntiKibitzer() {
 	// Inject anti-kibitzer toggle controls.
 	let antiKibitzerToggle = addUIElement("<div id='anti-kibitzer-toggle'><button type='button' tabindex='-1' accesskey='g' title='Toggle anti-kibitzer (show/hide authors & karma values) [g]'></button>");
 	antiKibitzerToggle.query("button").addActivateEvent(GW.antiKibitzerToggleButtonClicked = (event) => {
+		GWLog("GW.antiKibitzerToggleButtonClicked");
 		if (query("#anti-kibitzer-toggle").hasClass("engaged") && 
 			!event.shiftKey &&
 			!confirm("Are you sure you want to turn OFF the anti-kibitzer?\n\n(This will reveal the authors and karma values of all posts and comments!)")) {
@@ -2364,6 +2387,7 @@ function injectCommentsSortModeSelector() {
 
 	commentsSortModeSelector.queryAll("button").forEach(button => {
 		button.addActivateEvent(GW.commentsSortModeSelectButtonClicked = (event) => {
+			GWLog("GW.commentsSortModeSelectButtonClicked");
 			event.target.parentElement.queryAll("button").forEach(button => {
 				button.removeClass("selected");
 				button.disabled = false;
@@ -2408,6 +2432,7 @@ function addCommentParentPopups() {
 
 	queryAll(".comment-meta a.comment-parent-link, .comment-meta a.comment-child-link").forEach(commentParentLink => {
 		commentParentLink.addEventListener("mouseover", GW.commentParentLinkMouseOver = (event) => {
+			GWLog("GW.commentParentLinkMouseOver");
 			let parentID = commentParentLink.getAttribute("href");
 			var parent, popup;
 			if (!(parent = (query(parentID)||{}).firstChild)) return;
