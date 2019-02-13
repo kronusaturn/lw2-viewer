@@ -186,7 +186,8 @@ function updateInbox() {
 	if (!loggedInUserId) return;
 
 	let request = new XMLHttpRequest();
-	request.addEventListener("load", (event) => {
+	request.addEventListener("load", GW.updateInboxRequestLoaded = (event) => {
+		GWLog("GW.updateInboxRequestLoaded");
 		if (event.target.status != 200) return;
 
 		let response = JSON.parse(event.target.responseText);
@@ -219,7 +220,10 @@ Element.prototype.addTextareaFeatures = function() {
 	GWLog("addTextareaFeatures");
 	let textarea = this;
 
-	textarea.addEventListener("focus", (event) => { event.target.closest("form").scrollIntoViewIfNeeded(); });
+	textarea.addEventListener("focus", GW.textareaFocused = (event) => {
+		GWLog("GW.textareaFocused");
+		event.target.closest("form").scrollIntoViewIfNeeded();
+	});
 	textarea.addEventListener("input", GW.textareaInputReceived = (event) => {
 		GWLog("GW.textareaInputReceived");
 		if (window.innerWidth > 520) {
@@ -291,7 +295,8 @@ Element.prototype.addTextareaFeatures = function() {
 	// fixed" issue".
 	if (GW.isMobile && window.innerWidth <= 520) {
 		let fixedEditorElements = textareaContainer.queryAll("textarea, .guiedit-buttons-container, .guiedit-mobile-auxiliary-button, #markdown-hints");
-		textarea.addEventListener("focus", (event) => {
+		textarea.addEventListener("focus", GW.textareaFocusedMobile = (event) => {
+			GWLog("GW.textareaFocusedMobile");
 			GW.savedFilters = GW.currentFilters;
 			GW.currentFilters = { };
 			applyFilters(GW.currentFilters);
@@ -299,7 +304,8 @@ Element.prototype.addTextareaFeatures = function() {
 				element.style.filter = filterStringFromFilters(GW.savedFilters);
 			});
 		});
-		textarea.addEventListener("blur", (event) => {
+		textarea.addEventListener("blur", GW.textareaBlurredMobile = (event) => {
+			GWLog("GW.textareaBlurredMobile");
 			GW.currentFilters = GW.savedFilters;
 			GW.savedFilters = { };
 			requestAnimationFrame(() => {
@@ -521,7 +527,8 @@ function doCommentAction(action, commentItem) {
 	doAjax({
 		method: "POST",
 		params: params,
-		onSuccess: (event) => {
+		onSuccess: GW.commentActionPostSucceeded = (event) => {
+			GWLog("GW.commentActionPostSucceeded");
 			let fn = {
 				retract: () => { commentItem.firstChild.addClass("retracted") },
 				unretract: () => { commentItem.firstChild.removeClass("retracted") },
@@ -575,7 +582,8 @@ function addVoteButtons(element, voteType, targetType) {
 
 function makeVoteCompleteEvent(target) {
 	GWLog("makeVoteCompleteEvent");
-	return (event) => {
+	return (GW.voteComplete = (event) => {
+		GWLog("GW.voteComplete");
 		var buttonTargets, karmaTargets;
 		if (target === null) {
 			buttonTargets = queryAll(".post-meta .karma");
@@ -610,7 +618,7 @@ function makeVoteCompleteEvent(target) {
 				});
 			});
 		}
-	}
+	});
 }
 
 function sendVoteRequest(targetId, targetType, voteType, onFinish) {
@@ -861,6 +869,8 @@ function injectContentWidthSelector() {
 		"</div>");
 	widthSelector.queryAll("button").forEach(button => {
 		button.addActivateEvent(GW.widthAdjustButtonClicked = (event) => {
+			GWLog("GW.widthAdjustButtonClicked");
+
 			// Determine which setting was chosen (i.e., which button was clicked).
 			let selectedWidth = event.target.dataset.name;
 
@@ -935,6 +945,7 @@ function injectThemeSelector() {
 		"</div>");
 	themeSelector.queryAll("button").forEach(button => {
 		button.addActivateEvent(GW.themeSelectButtonClicked = (event) => {
+			GWLog("GW.themeSelectButtonClicked");
 			let themeName = /select-theme-([^\s]+)/.exec(event.target.className)[1];
 			setSelectedTheme(themeName);
 			if (GW.isMobile) toggleAppearanceAdjustUI();
@@ -1017,6 +1028,7 @@ function postSetThemeHousekeeping(oldThemeName = "", newThemeName = (readCookie(
 	recomputeUIElementsContainerHeight();
 	adjustUIForWindowSize();
 	window.addEventListener('resize', GW.windowResized = (event) => {
+		GWLog("GW.windowResized");
 		adjustUIForWindowSize();
 		recomputeUIElementsContainerHeight();
 	});
@@ -1643,12 +1655,14 @@ function injectNewCommentNavUI(newCommentsCount) {
 
 	newCommentUIContainer.queryAll(".new-comment-sequential-nav-button").forEach(button => {
 		button.addActivateEvent(GW.commentQuicknavButtonClicked = (event) => {
+			GWLog("GW.commentQuicknavButtonClicked");
 			scrollToNewComment(/next/.test(event.target.className));
 			event.target.blur();
 		});
 	});
 
-	document.addEventListener("keyup", (event) => { 
+	document.addEventListener("keyup", GW.commentQuicknavKeyPressed = (event) => { 
+		GWLog("GW.commentQuicknavKeyPressed");
 		if (event.shiftKey || event.ctrlKey || event.altKey) return;
 		if (event.key == ",") scrollToNewComment(false);
 		if (event.key == ".") scrollToNewComment(true)
@@ -2962,14 +2976,14 @@ function keyboardHelpSetup() {
 
 	// Add listener to show the keyboard help overlay.
 	document.addEventListener("keypress", GW.keyboardHelpShowKeyPressed = (event) => {
-		console.log("GW.keyboardHelpShowKeyPressed");
+		GWLog("GW.keyboardHelpShowKeyPressed");
 		if (event.key == '?')
 			toggleKeyboardHelpOverlay(true);
 	});
 
 	// Clicking the background overlay closes the keyboard help overlay.
 	keyboardHelpOverlay.addActivateEvent(GW.keyboardHelpOverlayClicked = (event) => {
-		console.log("GW.keyboardHelpOverlayClicked");
+		GWLog("GW.keyboardHelpOverlayClicked");
 		if (event.type == 'mousedown') {
 			keyboardHelpOverlay.style.opacity = "0.01";
 		} else {
@@ -2989,7 +3003,7 @@ function keyboardHelpSetup() {
 	// Add button to open keyboard help.
 	query("#nav-item-about").insertAdjacentHTML("beforeend", "<button type='button' tabindex='-1' class='open-keyboard-help' title='Keyboard shortcuts'>&#xf11c;</button>");
 	query("#nav-item-about button.open-keyboard-help").addActivateEvent(GW.openKeyboardHelpButtonClicked = (event) => {
-		console.log("GW.openKeyboardHelpButtonClicked");
+		GWLog("GW.openKeyboardHelpButtonClicked");
 		toggleKeyboardHelpOverlay(true);
 		event.target.blur();
 	});
@@ -3012,7 +3026,7 @@ function toggleKeyboardHelpOverlay(show) {
 	if (show) {
 		// Add listener to show the keyboard help overlay.
 		document.addEventListener("keyup", GW.keyboardHelpHideKeyPressed = (event) => {
-			console.log("GW.keyboardHelpHideKeyPressed");
+			GWLog("GW.keyboardHelpHideKeyPressed");
 			if (event.key == 'Escape')
 				toggleKeyboardHelpOverlay(false);
 		});
