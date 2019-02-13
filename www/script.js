@@ -2756,8 +2756,8 @@ function focusImage(imageToFocus) {
 		}
 	});
 
-	// Double-click unfocuses, always.
-	window.addEventListener('dblclick', GW.imageFocusDoubleClick = (event) => {
+	// Double-click on the image unfocuses.
+	clonedImage.addEventListener('dblclick', GW.imageFocusDoubleClick = (event) => {
 		GWLog("GW.imageFocusDoubleClick");
 		if (event.target.hasClass("slideshow-button")) return;
 
@@ -2857,7 +2857,8 @@ function unfocusImageOverlay() {
 	// Remove event listeners.
 	window.removeEventListener("wheel", GW.imageFocusScroll);
 	window.removeEventListener("MozMousePixelScroll", GW.imageFocusOldFirefoxCompatibilityScrollEventFired);
-	window.removeEventListener("dblclick", GW.imageFocusDoubleClick);
+	// NOTE: The double-click listener does not need to be removed manually,
+	// because the focused (cloned) image will be removed anyway.
 	document.removeEventListener("keyup", GW.imageFocusKeyUp);
 	document.removeEventListener("keydown", GW.imageFocusKeyDown);
 	window.removeEventListener("mousemove", GW.imageFocusMouseMoved);
