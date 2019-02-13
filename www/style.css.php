@@ -3160,6 +3160,10 @@ li {
 /* IMAGE FOCUS */
 /***************/
 
+/*=--------------=*/
+/*= Hover styles =*/ 
+/*=--------------=*/
+
 #content img:hover,
 #images-overlay img:hover {
 	filter: drop-shadow(0 0 3px #777);
@@ -3169,6 +3173,10 @@ li {
 #images-overlay img:active {
 	transform: scale(0.975);
 }
+
+/*=---------=*/
+/*= Overlay =*/
+/*=---------=*/
 
 #image-focus-overlay {
 	position: fixed;
@@ -3202,6 +3210,19 @@ li {
 	top: 50%;
 	transform: translateX(-50%) translateY(-50%);
 }
+
+/*=-------------------=*/
+/*= Single-image mode =*/
+/*=-------------------=*/
+
+#image-focus-overlay:not(.slideshow) .image-number,
+#image-focus-overlay:not(.slideshow) .slideshow-buttons {
+	visibility: hidden;
+}
+
+/*=--------------=*/
+/*= Help overlay =*/
+/*=--------------=*/
 
 #image-focus-overlay .help-overlay {
 	position: absolute;
@@ -3271,6 +3292,10 @@ li {
 	bottom: -2em;
 }
 
+/*=--------------=*/
+/*= Slide number =*/
+/*=--------------=*/
+
 #image-focus-overlay .image-number {
 	position: absolute;
 	z-index: 2;
@@ -3303,6 +3328,10 @@ li {
 #image-focus-overlay .image-number.hidden {
 	bottom: -1.25em;
 }
+
+/*=-------------------=*/
+/*= Slideshow buttons =*/
+/*=-------------------=*/
 
 #image-focus-overlay .slideshow-buttons {
 	position: absolute;
@@ -3353,6 +3382,10 @@ li {
 #image-focus-overlay .slideshow-button.next.hidden {
 	left: 1.75em;
 }
+
+/*=-----------------=*/
+/*= Background blur =*/
+/*=-----------------=*/
 
 .blurred {
 	filter: blur(3px);

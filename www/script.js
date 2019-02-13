@@ -2539,10 +2539,10 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 
 		if (event.target.closest("#images-overlay")) {
 			query("#image-focus-overlay .image-number").textContent = (getIndexOfFocusedImage() + 1);
-
-			// Set timer to hide the image focus UI.
-			resetImageFocusHideUITimer(true);
 		}
+
+		// Set timer to hide the image focus UI.
+		resetImageFocusHideUITimer(true);
 	};
 	// Add the listener to each image in the overlay (i.e., those in the post).
 	queryAll("#images-overlay img").forEach(image => {
@@ -2804,22 +2804,27 @@ function focusImage(imageToFocus) {
 	togglePageScrolling(false);
 
 	if (imageToFocus.closest("#images-overlay")) {
+		// Mark the overlay as being in slide show mode (to show buttons/count).
+		imageFocusOverlay.addClass("slideshow");
+
 		// Set state of next/previous buttons.
 		let images = queryAll("#images-overlay img");
 		var indexOfFocusedImage = getIndexOfFocusedImage();
 		imageFocusOverlay.query(".slideshow-button.previous").disabled = (indexOfFocusedImage == 0);
 		imageFocusOverlay.query(".slideshow-button.next").disabled = (indexOfFocusedImage == images.length - 1);
 
-		// Moving mouse unhides image focus UI.
-		window.addEventListener("mousemove", GW.imageFocusMouseMoved = (event) => {
-			GWLog("GW.imageFocusMouseMoved");
-			let restartTimer = (event.target.tagName == "IMG" || event.target.id == "image-focus-overlay");
-			resetImageFocusHideUITimer(restartTimer);
-		});
-
 		// Replace the hash.
 		history.replaceState(null, null, "#if_slide_" + (indexOfFocusedImage + 1));
+	} else {
+		imageFocusOverlay.removeClass("slideshow");
 	}
+
+	// Moving mouse unhides image focus UI.
+	window.addEventListener("mousemove", GW.imageFocusMouseMoved = (event) => {
+		GWLog("GW.imageFocusMouseMoved");
+		let restartTimer = (event.target.tagName == "IMG" || event.target.id == "image-focus-overlay");
+		resetImageFocusHideUITimer(restartTimer);
+	});
 }
 
 function resetFocusedImagePosition() {
