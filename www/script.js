@@ -3670,7 +3670,6 @@ function generateImagesOverlay() {
 		clonedImageContainer.style.left = image.getBoundingClientRect().left * zoomLevel - parseFloat(getComputedStyle(image).marginLeft) - imagesOverlayLeftOffset + "px";
 		clonedImageContainer.style.width = image.getBoundingClientRect().width * zoomLevel + "px";
 		clonedImageContainer.style.height = image.getBoundingClientRect().height * zoomLevel + "px";
-		GWLog(clonedImageContainer);
 
 		imagesOverlay.appendChild(clonedImageContainer);
 	});
