@@ -2531,6 +2531,8 @@ function addCommentParentPopups() {
 /***************/
 
 function imageFocusSetup(imagesOverlayOnly = false) {
+	if (typeof GW.imageFocus == "undefined") GW.imageFocus = { };
+
 	GWLog("imageFocusSetup");
 	// Create event listener for clicking on images to focus them.
 	GW.imageClickedToFocus = (event) => {
@@ -2542,6 +2544,7 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 		}
 
 		// Set timer to hide the image focus UI.
+		GW.imageFocus.mouseLastMovedAt = new Date();
 		resetImageFocusHideUITimer(true);
 	};
 	// Add the listener to each image in the overlay (i.e., those in the post).
@@ -2576,8 +2579,8 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 	imageFocusOverlay.dropShadowFilterForImages = " drop-shadow(10px 10px 10px #000) drop-shadow(0 0 10px #444)";
 
 	imageFocusOverlay.queryAll(".slideshow-button").forEach(button => {
-		button.addActivateEvent(GW.imageFocusSlideshowButtonClicked = (event) => {
-			GWLog("GW.imageFocusSlideshowButtonClicked");
+		button.addActivateEvent(GW.imageFocus.slideshowButtonClicked = (event) => {
+			GWLog("GW.imageFocus.slideshowButtonClicked");
 			focusNextImage(event.target.hasClass("next"));
 			event.target.blur();
 		});
@@ -2621,8 +2624,8 @@ function focusImage(imageToFocus) {
 	});
 
 	// Add listener to zoom image with scroll wheel.
-	window.addEventListener("wheel", GW.imageFocusScroll = (event) => {
-		GWLog("GW.imageFocusScroll");
+	window.addEventListener("wheel", GW.imageFocus.scrollEvent = (event) => {
+		GWLog("GW.imageFocus.scrollEvent");
 		event.preventDefault();
 
 		let image = query("#image-focus-overlay img");
@@ -2702,40 +2705,38 @@ function focusImage(imageToFocus) {
 		// Set the cursor appropriately.
 		setFocusedImageCursor();
 	});
-	window.addEventListener("MozMousePixelScroll", GW.imageFocusOldFirefoxCompatibilityScrollEventFired = (event) => {
-		GWLog("GW.imageFocusOldFirefoxCompatibilityScrollEventFired");
+	window.addEventListener("MozMousePixelScroll", GW.imageFocus.oldFirefoxCompatibilityScrollEvent = (event) => {
+		GWLog("GW.imageFocus.oldFirefoxCompatibilityScrollEvent");
 		event.preventDefault();
 	});
 
 	// If image is bigger than viewport, it's draggable. Otherwise, click unfocuses.
-	window.addEventListener("mouseup", GW.imageFocusMouseUp = (event) => {
-		GWLog("GW.imageFocusMouseUp");
+	window.addEventListener("mouseup", GW.imageFocus.mouseUp = (event) => {
+		GWLog("GW.imageFocus.mouseUp");
 		window.onmousemove = '';
 
 		// We only want to do anything on left-clicks.
 		if (event.button != 0) return;
 
+		// Don't unfocus if click was on a slideshow next/prev button!
 		if (event.target.hasClass("slideshow-button")) {
-			resetImageFocusHideUITimer(false);
 			return;
 		}
 
 		let focusedImage = query("#image-focus-overlay img");
 
-		if (event.target != focusedImage) {
-			unfocusImageOverlay();
-			return;
-		}
-
-		if (focusedImage.height >= window.innerHeight || focusedImage.width >= window.innerWidth) {
-			// Put the filter back.
+		if (event.target == focusedImage && 
+			(focusedImage.height >= window.innerHeight || focusedImage.width >= window.innerWidth)) {
+			// If the mouseup event was the end of a pan of an overside image,
+			// put the filter back; do not unfocus.
 			focusedImage.style.filter = focusedImage.savedFilter;
 		} else {
 			unfocusImageOverlay();
+			return;
 		}
 	});
-	window.addEventListener("mousedown", GW.imageFocusMouseDown = (event) => {
-		GWLog("GW.imageFocusMouseDown");
+	window.addEventListener("mousedown", GW.imageFocus.mouseDown = (event) => {
+		GWLog("GW.imageFocus.mouseDown");
 		event.preventDefault();
 
 		let focusedImage = query("#image-focus-overlay img");
@@ -2760,16 +2761,16 @@ function focusImage(imageToFocus) {
 	});
 
 	// Double-click on the image unfocuses.
-	clonedImage.addEventListener('dblclick', GW.imageFocusDoubleClick = (event) => {
-		GWLog("GW.imageFocusDoubleClick");
+	clonedImage.addEventListener('dblclick', GW.imageFocus.doubleClick = (event) => {
+		GWLog("GW.imageFocus.doubleClick");
 		if (event.target.hasClass("slideshow-button")) return;
 
 		unfocusImageOverlay();
 	});
 
 	// Escape key unfocuses, spacebar resets.
-	document.addEventListener("keyup", GW.imageFocusKeyUp = (event) => {
-		GWLog("GW.imageFocusKeyUp");
+	document.addEventListener("keyup", GW.imageFocus.keyUp = (event) => {
+		GWLog("GW.imageFocus.keyUp");
 		let allowedKeys = [ " ", "Spacebar", "Escape", "Esc", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Up", "Down", "Left", "Right" ];
 		if (!allowedKeys.contains(event.key) || 
 			getComputedStyle(query("#image-focus-overlay")).display == "none") return;
@@ -2820,9 +2821,10 @@ function focusImage(imageToFocus) {
 	}
 
 	// Moving mouse unhides image focus UI.
-	window.addEventListener("mousemove", GW.imageFocusMouseMoved = (event) => {
-		GWLog("GW.imageFocusMouseMoved");
+	window.addEventListener("mousemove", GW.imageFocus.mouseMoved = (event) => {
+		GWLog("GW.imageFocus.mouseMoved");
 		let restartTimer = (event.target.tagName == "IMG" || event.target.id == "image-focus-overlay");
+		if (restartTimer) GW.imageFocus.mouseLastMovedAt = new Date();
 		resetImageFocusHideUITimer(restartTimer);
 	});
 }
@@ -2863,15 +2865,15 @@ function unfocusImageOverlay() {
 	GWLog("unfocusImageOverlay");
 
 	// Remove event listeners.
-	window.removeEventListener("wheel", GW.imageFocusScroll);
-	window.removeEventListener("MozMousePixelScroll", GW.imageFocusOldFirefoxCompatibilityScrollEventFired);
+	window.removeEventListener("wheel", GW.imageFocus.scrollEvent);
+	window.removeEventListener("MozMousePixelScroll", GW.imageFocus.oldFirefoxCompatibilityScrollEvent);
 	// NOTE: The double-click listener does not need to be removed manually,
 	// because the focused (cloned) image will be removed anyway.
-	document.removeEventListener("keyup", GW.imageFocusKeyUp);
-	document.removeEventListener("keydown", GW.imageFocusKeyDown);
-	window.removeEventListener("mousemove", GW.imageFocusMouseMoved);
-	window.removeEventListener("mousedown", GW.imageFocusMouseDown);
-	window.removeEventListener("mouseup", GW.imageFocusMouseUp);
+	document.removeEventListener("keyup", GW.imageFocus.keyUp);
+	document.removeEventListener("keydown", GW.imageFocus.keyDown);
+	window.removeEventListener("mousemove", GW.imageFocus.mouseMoved);
+	window.removeEventListener("mousedown", GW.imageFocus.mouseDown);
+	window.removeEventListener("mouseup", GW.imageFocus.mouseUp);
 
 	// Set accesskey of currently focused image (if it's in the images overlay).
 	let currentlyFocusedImage = query("#images-overlay img.focused");
@@ -2969,9 +2971,9 @@ function unhideImageFocusUI() {
 function resetImageFocusHideUITimer(restart) {
 	if (GW.isMobile) return;
 
-	clearTimeout(GW.imageFocusHideUITimer);
+	clearTimeout(GW.imageFocus.hideUITimer);
 	unhideImageFocusUI();
-	if (restart) GW.imageFocusHideUITimer = setTimeout(hideImageFocusUI, 1500);
+	if (restart) GW.imageFocus.hideUITimer = setTimeout(hideImageFocusUI, 1500);
 }
 
 /*****************/
