@@ -121,6 +121,9 @@ Element.prototype.scrollIntoViewIfNeeded = function() {
 	}
 }
 
+/*	Get the comment ID of the item (if it's a comment) or of its containing 
+	comment (if it's a child of a comment).
+	*/
 Element.prototype.getCommentId = function() {
 	let item = (this.className == "comment-item" ? this : this.closest(".comment-item"));
 	if (item) {
@@ -149,11 +152,64 @@ function doAjax(params) {
 	}
 }
 
-// Returns the currently selected text, as HTML (rather than unstyled text).
+/*	Return the currently selected text, as HTML (rather than unstyled text).
+	*/
 function getSelectionHTML() {
 	var container = document.createElement("div");
 	container.appendChild(window.getSelection().getRangeAt(0).cloneContents());
 	return container.innerHTML;
+}
+
+/*	Return the value of a GET (i.e., URL) parameter.
+	*/
+function getQueryVariable(variable) {
+	var query = window.location.search.substring(1);
+	var vars = query.split("&");
+	for (var i = 0; i < vars.length; i++) {
+		var pair = vars[i].split("=");
+		if (pair[0] == variable)
+			return pair[1];
+	}
+
+	return false;
+}
+
+/*	Given an HTML string, creates an element from that HTML, adds it to 
+	#ui-elements-container (creating the latter if it does not exist), and 
+	returns the created element.
+	*/
+function addUIElement(element_html) {
+	var ui_elements_container = query("#ui-elements-container");
+	if (!ui_elements_container) {
+		ui_elements_container = document.createElement("div");
+		ui_elements_container.id = "ui-elements-container";
+		query("body").appendChild(ui_elements_container);
+	}
+
+	ui_elements_container.insertAdjacentHTML("beforeend", element_html);
+	return ui_elements_container.lastElementChild;
+}
+
+/*	Given an element or a selector, removes that element (or the element 
+	identified by the selector).
+	If multiple elements match the selector, only the first is removed.
+	*/
+function removeElement(elementOrSelector, ancestor = document) {
+	if (typeof elementOrSelector == "string") elementOrSelector = ancestor.query(elementOrSelector);
+	if (elementOrSelector) elementOrSelector.parentElement.removeChild(elementOrSelector);
+}
+
+/*	Returns true if the string begins with the given prefix.
+	*/
+String.prototype.hasPrefix = function (prefix) {
+	return (this.lastIndexOf(prefix, 0) === 0);
+}
+
+/*	Toggles whether the page is scrollable.
+	*/
+function togglePageScrolling(enable) {
+	if (enable) query("body").removeClass("no-scroll");
+	else query("body").addClass("no-scroll");
 }
 
 /********************/
@@ -1562,13 +1618,13 @@ function toggleThemeTweakerUI() {
 		// Disable tab-selection of the search box.
 		setSearchBoxTabSelectable(false);
 		// Disable scrolling of the page.
-		query("body").addClass("no-scroll");
+		togglePageScrolling(false);
 	} else {
 		query("#theme-tweaker-toggle button").disabled = false;
 		// Re-enable tab-selection of the search box.
 		setSearchBoxTabSelectable(true);
 		// Re-enable scrolling of the page.
-		query("body").removeClass("no-scroll");
+		togglePageScrolling(true);
 	}
 	// Set theme tweaker assistant visibility.
 	query(".clippy-container").style.display = JSON.parse(localStorage.getItem("theme-tweaker-settings") || '{ "showClippy": true }')["showClippy"] ? "block" : "none";
@@ -2737,7 +2793,7 @@ function focusImage(imageToFocus) {
 	});
 
 	// Prevent spacebar or arrow keys from scrolling page when image focused.
-	query("body").addClass("no-scroll");
+	togglePageScrolling(false);
 
 	if (imageToFocus.closest("#images-overlay")) {
 		// Set state of next/previous buttons.
@@ -2825,7 +2881,7 @@ function unfocusImageOverlay() {
 	window.removeEventListener("mouseup", GW.imageFocusMouseUp);
 
 	// Re-enable page scrolling.
-	query("body").removeClass("no-scroll");
+	togglePageScrolling(true);
 
 	// Reset the hash, if needed.
 	if (location.hash.hasPrefix("#if_slide_"))
@@ -3042,8 +3098,7 @@ function toggleKeyboardHelpOverlay(show) {
 	keyboardHelpOverlay.style.visibility = show ? "visible" : "hidden";
 
 	// Prevent scrolling the document when the overlay is visible.
-	if (show) query("body").addClass("no-scroll");
-	else query("body").removeClass("no-scroll");
+	togglePageScrolling(!show);
 
 	// Focus the close button as soon as we open.
 	keyboardHelpOverlay.query("button.close-keyboard-help").focus();
@@ -3061,43 +3116,6 @@ function toggleKeyboardHelpOverlay(show) {
 
 	// Disable / enable tab-selection of the search box.
 	setSearchBoxTabSelectable(!show);
-}
-
-/*********************/
-/* MORE MISC HELPERS */
-/*********************/
-
-function getQueryVariable(variable) {
-	var query = window.location.search.substring(1);
-	var vars = query.split("&");
-	for (var i = 0; i < vars.length; i++) {
-		var pair = vars[i].split("=");
-		if (pair[0] == variable)
-			return pair[1];
-	}
-
-	return false;
-}
-
-function addUIElement(element_html) {
-	var ui_elements_container = query("#ui-elements-container");
-	if (!ui_elements_container) {
-		ui_elements_container = document.createElement("div");
-		ui_elements_container.id = "ui-elements-container";
-		query("body").appendChild(ui_elements_container);
-	}
-
-	ui_elements_container.insertAdjacentHTML("beforeend", element_html);
-	return ui_elements_container.lastElementChild;
-}
-
-function removeElement(elementOrSelector, ancestor = document) {
-	if (typeof elementOrSelector == "string") elementOrSelector = ancestor.query(elementOrSelector);
-	if (elementOrSelector) elementOrSelector.parentElement.removeChild(elementOrSelector);
-}
-
-String.prototype.hasPrefix = function (prefix) {
-	return (this.lastIndexOf(prefix, 0) === 0);
 }
 
 /*******************************/
