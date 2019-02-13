@@ -208,11 +208,14 @@ String.prototype.hasPrefix = function (prefix) {
 /*	Toggles whether the page is scrollable.
 	*/
 function togglePageScrolling(enable) {
+	let body = query("body");
 	if (!enable) {
 		GW.scrollPositionBeforeScrollingDisabled = window.scrollY;
-		query("body").addClass("no-scroll");
+		body.addClass("no-scroll");
+		body.style.top = `-${GW.scrollPositionBeforeScrollingDisabled}px`;
 	} else {
-		query("body").removeClass("no-scroll");
+		body.removeClass("no-scroll");
+		body.removeAttribute("style");
 		window.scrollTo(0, GW.scrollPositionBeforeScrollingDisabled);
 	}
 }
