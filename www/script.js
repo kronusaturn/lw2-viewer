@@ -2698,12 +2698,7 @@ function focusImage(imageToFocus) {
 	});
 
 	// Prevent spacebar or arrow keys from scrolling page when image focused.
-	document.addEventListener("keydown", GW.imageFocusKeyDown = (event) => {
-		GWLog("GW.imageFocusKeyDown");
-		let disabledKeys = [ " ", "Spacebar", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Up", "Down", "Left", "Right" ];
-		if (disabledKeys.contains(event.key))
-			event.preventDefault();
-	});
+	query("body").addClass("no-scroll");
 
 	if (imageToFocus.closest("#images-overlay")) {
 		// Set state of next/previous buttons.
@@ -2789,6 +2784,9 @@ function unfocusImageOverlay() {
 	window.removeEventListener("mousemove", GW.imageFocusMouseMoved);
 	window.removeEventListener("mousedown", GW.imageFocusMouseDown);
 	window.removeEventListener("mouseup", GW.imageFocusMouseUp);
+
+	// Re-enable page scrolling.
+	query("body").removeClass("no-scroll");
 
 	// Reset the hash, if needed.
 	if (location.hash.hasPrefix("#if_slide_"))
