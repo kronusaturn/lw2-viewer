@@ -2853,6 +2853,17 @@ function setFocusedImageCursor() {
 
 function unfocusImageOverlay() {
 	GWLog("unfocusImageOverlay");
+
+	// Remove event listeners.
+	window.removeEventListener("wheel", GW.imageFocusScroll);
+	window.removeEventListener("MozMousePixelScroll", GW.imageFocusOldFirefoxCompatibilityScrollEventFired);
+	window.removeEventListener("dblclick", GW.imageFocusDoubleClick);
+	document.removeEventListener("keyup", GW.imageFocusKeyUp);
+	document.removeEventListener("keydown", GW.imageFocusKeyDown);
+	window.removeEventListener("mousemove", GW.imageFocusMouseMoved);
+	window.removeEventListener("mousedown", GW.imageFocusMouseDown);
+	window.removeEventListener("mouseup", GW.imageFocusMouseUp);
+
 	// Set accesskey of currently focused image (if it's in the images overlay).
 	let currentlyFocusedImage = query("#images-overlay img.focused");
 	if (currentlyFocusedImage) {
@@ -2874,16 +2885,6 @@ function unfocusImageOverlay() {
 	queryAll("#content img.focused, #images-overlay img.focused").forEach(image => {
 		image.removeClass("focused");
 	});
-
-	// Remove event listeners.
-	window.removeEventListener("wheel", GW.imageFocusScroll);
-	window.removeEventListener("MozMousePixelScroll", GW.imageFocusOldFirefoxCompatibilityScrollEventFired);
-	window.removeEventListener("dblclick", GW.imageFocusDoubleClick);
-	document.removeEventListener("keyup", GW.imageFocusKeyUp);
-	document.removeEventListener("keydown", GW.imageFocusKeyDown);
-	window.removeEventListener("mousemove", GW.imageFocusMouseMoved);
-	window.removeEventListener("mousedown", GW.imageFocusMouseDown);
-	window.removeEventListener("mouseup", GW.imageFocusMouseUp);
 
 	// Re-enable page scrolling.
 	togglePageScrolling(true);
