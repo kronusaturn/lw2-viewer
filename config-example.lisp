@@ -3,7 +3,7 @@
 (reset-site-definitions)
 
 (define-site
-  :uri "http://www.example.com/"
+  :uri "http://localhost:4242/"
   :title "Example Site"
   :description "This is an example."
   :class lesswrong-viewer-site
