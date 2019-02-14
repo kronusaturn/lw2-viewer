@@ -947,7 +947,6 @@ body {
 /*===============*/
 
 #keyboard-help-overlay {
-	z-index: 2;
 	font-weight: 400;
 }
 #keyboard-help-overlay .keyboard-help-container h1 {

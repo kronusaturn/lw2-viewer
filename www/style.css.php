@@ -981,6 +981,7 @@ foreach ($content_width_settings as $name => $setting) {
 	position: fixed;
 	left: 0;
 	top: 0;
+	z-index: 5001;
 
 	display: flex;
 	justify-content: center;
@@ -3184,6 +3185,7 @@ li {
 	right: 0;
 	bottom: 0;
 	left: 0;
+	z-index: 2;
 	display: none;
 	cursor: zoom-out;
 }
