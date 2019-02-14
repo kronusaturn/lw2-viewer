@@ -3249,6 +3249,18 @@ li {
 	color: #fff;
 }
 
+#image-focus-overlay .caption:not(:empty)::before {
+	content: "";
+	display: block;
+	position: absolute;
+	width: 100vw;
+	height: calc(100% + 1.5em);
+	z-index: -1;
+	top: -0.75em;
+	left: calc(-50vw + 50%);
+
+}
+
 /*=--------------=*/
 /*= Help overlay =*/
 /*=--------------=*/
