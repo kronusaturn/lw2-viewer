@@ -3220,6 +3220,32 @@ li {
 	visibility: hidden;
 }
 
+/*=---------=*/
+/*= Caption =*/
+/*=---------=*/
+
+#image-focus-overlay .caption {
+	position: absolute;
+	bottom: 0.75em;
+	background-color: rgba(0,0,0,0.7);
+	left: 9em;
+	right: 9em;
+	margin: auto;
+	font-size: 1.375em;
+	border-radius: 8px;
+	transition: 
+		bottom 0.3s ease;
+}
+<?php fit_content("#image-focus-overlay .caption"); ?>
+#image-focus-overlay .caption.hidden {
+	bottom: -100%;
+}
+
+#image-focus-overlay .caption p {
+	margin: 1em 1.25em;
+	color: #fff;
+}
+
 /*=--------------=*/
 /*= Help overlay =*/
 /*=--------------=*/

@@ -2580,17 +2580,20 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 	// Create the image focus overlay.
 	let imageFocusOverlay = addUIElement("<div id='image-focus-overlay'>" + 
 	`<div class='help-overlay'>
-	 <p><strong>Arrow keys:</strong> Next/previous image</p>
-	 <p><strong>Escape</strong> or <strong>click</strong>: Hide zoomed image</p>
-	 <p><strong>Space bar:</strong> Reset image size & position</p>
-	 <p><strong>Scroll</strong> to zoom in/out</p>
-	 <p>(When zoomed in, <strong>drag</strong> to pan; <br/><strong>double-click</strong> to close)</p>
-	 </div>` + 
-	`<div class='image-number'></div>` + 
-	`<div class='slideshow-buttons'>
-	 <button type='button' class='slideshow-button previous' tabindex='-1' title='Previous image'>&#xf053;</button>
-	 <button type='button' class='slideshow-button next' tabindex='-1' title='Next image'>&#xf054;</button>
-	 </div>` + 
+		 <p><strong>Arrow keys:</strong> Next/previous image</p>
+		 <p><strong>Escape</strong> or <strong>click</strong>: Hide zoomed image</p>
+		 <p><strong>Space bar:</strong> Reset image size & position</p>
+		 <p><strong>Scroll</strong> to zoom in/out</p>
+		 <p>(When zoomed in, <strong>drag</strong> to pan; <br/><strong>double-click</strong> to close)</p>
+	</div>
+	<div class='image-number'></div>
+	<div class='slideshow-buttons'>
+		 <button type='button' class='slideshow-button previous' tabindex='-1' title='Previous image'>&#xf053;</button>
+		 <button type='button' class='slideshow-button next' tabindex='-1' title='Next image'>&#xf054;</button>
+	</div>
+	<div class='caption'>
+		<p>Sample caption. This gives information about the image.</p>
+	</div>` + 
 	"</div>");
 	imageFocusOverlay.dropShadowFilterForImages = " drop-shadow(10px 10px 10px #000) drop-shadow(0 0 10px #444)";
 
@@ -2978,7 +2981,7 @@ function focusNextImage(next = true) {
 function hideImageFocusUI() {
 	GWLog("hideImageFocusUI");
 	let imageFocusOverlay = query("#image-focus-overlay");
-	imageFocusOverlay.queryAll(".slideshow-button, .help-overlay, .image-number").forEach(element => {
+	imageFocusOverlay.queryAll(".slideshow-button, .help-overlay, .image-number, .caption").forEach(element => {
 		element.addClass("hidden");
 	});
 }
@@ -2986,7 +2989,7 @@ function hideImageFocusUI() {
 function unhideImageFocusUI() {
 	GWLog("unhideImageFocusUI");
 	let imageFocusOverlay = query("#image-focus-overlay");
-	imageFocusOverlay.queryAll(".slideshow-button, .help-overlay, .image-number").forEach(element => {
+	imageFocusOverlay.queryAll(".slideshow-button, .help-overlay, .image-number, .caption").forEach(element => {
 		element.removeClass("hidden");
 	});
 }
