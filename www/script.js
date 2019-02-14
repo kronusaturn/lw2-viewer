@@ -2990,7 +2990,7 @@ function setImageFocusCaption() {
 	// Determine caption.
 	let currentlyFocusedImage = query("#content img.focused, #images-overlay img.focused");
 	var captionHTML;
-	if (currentlyFocusedImage.parentElement.tag == "FIGURE") {
+	if (currentlyFocusedImage.parentElement.tagName == "FIGURE") {
 		captionHTML = (currentlyFocusedImage.parentElement.query("figcaption")||{}).innerHTML;
 	} else if (currentlyFocusedImage.title != "") {
 		captionHTML = `<p>${currentlyFocusedImage.title}</p>`;
