@@ -3282,6 +3282,7 @@ li {
 	overflow: hidden;
 	white-space: nowrap;
 	color: transparent;
+	cursor: default;
 	visibility: hidden;
 	transition: 
 		visibility 1s ease,

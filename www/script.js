@@ -2733,12 +2733,14 @@ function focusImage(imageToFocus) {
 		if (event.button != 0) return;
 
 		// Don't unfocus if click was on a slideshow next/prev button!
-		if (event.target.hasClass("slideshow-button")) {
+		if (event.target.hasClass("slideshow-button")) return;
+
+		// We also don't want to do anything if clicked on the help overlay.
+		if (event.target.classList.contains("help-overlay") ||
+			event.target.closest(".help-overlay"))
 			return;
-		}
 
 		let focusedImage = query("#image-focus-overlay img");
-
 		if (event.target == focusedImage && 
 			(focusedImage.height >= window.innerHeight || focusedImage.width >= window.innerWidth)) {
 			// If the mouseup event was the end of a pan of an overside image,
@@ -2982,6 +2984,7 @@ function focusNextImage(next = true) {
 
 function setImageFocusCaption() {
 	GWLog("setImageFocusCaption");
+	var T = { }; // Temporary storage.
 
 	// Clear existing caption, if any.
 	let captionContainer = query("#image-focus-overlay .caption");
@@ -2990,8 +2993,11 @@ function setImageFocusCaption() {
 	// Determine caption.
 	let currentlyFocusedImage = query("#content img.focused, #images-overlay img.focused");
 	var captionHTML;
-	if (currentlyFocusedImage.parentElement.tagName == "FIGURE") {
-		captionHTML = (currentlyFocusedImage.parentElement.query("figcaption")||{}).innerHTML;
+	if ((T.enclosingFigure = currentlyFocusedImage.closest("figure")) && 
+		(T.figcaption = T.enclosingFigure.query("figcaption"))) {
+		captionHTML = (T.figcaption.query("p")) ? 
+					  T.figcaption.innerHTML : 
+					  "<p>" + T.figcaption.innerHTML + "</p>"; 
 	} else if (currentlyFocusedImage.title != "") {
 		captionHTML = `<p>${currentlyFocusedImage.title}</p>`;
 	}
