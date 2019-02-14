@@ -1280,7 +1280,7 @@ GW.themeLoadCallback_dark = (fromTheme = "") => {
 		`#bottom-bar.decorative::before { filter: invert(100%); }` +
 		"</style>");
 	registerInitializer('makeImagesGlow', true, () => query("#images-overlay") != null, () => {
-		queryAll("#images-overlay img").forEach(image => {
+		queryAll(GW.imageFocus.overlayImagesSelector).forEach(image => {
 			image.style.filter = "drop-shadow(0 0 0 #000) drop-shadow(0 0 0.5px #fff) drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #fff)";
 			image.style.width = parseInt(image.style.width) + 12 + "px";
 			image.style.height = parseInt(image.style.height) + 12 + "px";
@@ -2533,6 +2533,10 @@ function addCommentParentPopups() {
 function imageFocusSetup(imagesOverlayOnly = false) {
 	if (typeof GW.imageFocus == "undefined")
 		GW.imageFocus = {
+			contentImagesSelector:	"#content img",
+			overlayImagesSelector:	"#images-overlay img",
+			focusedImageSelector:	"#content img.focused, #images-overlay img.focused",
+			pageContentSelector:	"#content, #ui-elements-container > *:not(#image-focus-overlay), #images-overlay",
 			shrinkRatio:			0.975,
 			hideUITimerDuration:	1500,
 			hideUITimerExpired:		() => {
@@ -2561,16 +2565,16 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 		}
 	};
 	// Add the listener to each image in the overlay (i.e., those in the post).
-	queryAll("#images-overlay img").forEach(image => {
+	queryAll(GW.imageFocus.overlayImagesSelector).forEach(image => {
 		image.addActivateEvent(GW.imageClickedToFocus);
 	});
 	// Accesskey-L starts the slideshow.
-	(query("#images-overlay img")||{}).accessKey = 'l';
+	(query(GW.imageFocus.overlayImagesSelector)||{}).accessKey = 'l';
 	// Count how many images there are in the post, and set the "… of X" label to that.
-	((query("#image-focus-overlay .image-number")||{}).dataset||{}).numberOfImages = queryAll("#images-overlay img").length;
+	((query("#image-focus-overlay .image-number")||{}).dataset||{}).numberOfImages = queryAll(GW.imageFocus.overlayImagesSelector).length;
 	if (imagesOverlayOnly) return;
 	// Add the listener to all other content images (including those in comments).
-	queryAll("#content img").forEach(image => {
+	queryAll(GW.imageFocus.contentImagesSelector).forEach(image => {
 		image.addActivateEvent(GW.imageClickedToFocus);
 	});
 
@@ -2633,7 +2637,7 @@ function focusImage(imageToFocus) {
 	resetFocusedImagePosition();
 
 	// Blur everything else.
-	queryAll("#content, #ui-elements-container > *:not(#image-focus-overlay), #images-overlay").forEach(element => {
+	queryAll(GW.imageFocus.pageContentSelector).forEach(element => {
 		element.addClass("blurred");
 	});
 
@@ -2826,7 +2830,7 @@ function focusImage(imageToFocus) {
 		imageFocusOverlay.addClass("slideshow");
 
 		// Set state of next/previous buttons.
-		let images = queryAll("#images-overlay img");
+		let images = queryAll(GW.imageFocus.overlayImagesSelector);
 		var indexOfFocusedImage = getIndexOfFocusedImage();
 		imageFocusOverlay.query(".slideshow-button.previous").disabled = (indexOfFocusedImage == 0);
 		imageFocusOverlay.query(".slideshow-button.next").disabled = (indexOfFocusedImage == images.length - 1);
@@ -2864,7 +2868,7 @@ function resetFocusedImagePosition() {
 	let focusedImage = query("#image-focus-overlay img");
 	if (!focusedImage) return;
 
-	let sourceImage = query("#content img.focused, #images-overlay img.focused");
+	let sourceImage = query(GW.imageFocus.focusedImageSelector);
 
 	// Make sure that initially, the image fits into the viewport.
 	let constrainedWidth = Math.min(sourceImage.naturalWidth, window.innerWidth * GW.imageFocus.shrinkRatio);
@@ -2916,14 +2920,12 @@ function unfocusImageOverlay() {
 	removeElement(imageFocusOverlay.query("img"));
 
 	// Un-blur content/etc.
-	queryAll("#content, #ui-elements-container > *:not(#image-focus-overlay), #images-overlay").forEach(element => {
+	queryAll(GW.imageFocus.pageContentSelector).forEach(element => {
 		element.removeClass("blurred");
 	});
 
 	// Unset "focused" class of focused image.
-	queryAll("#content img.focused, #images-overlay img.focused").forEach(image => {
-		image.removeClass("focused");
-	});
+	query(GW.imageFocus.focusedImageSelector).removeClass("focused");
 
 	// Re-enable page scrolling.
 	togglePageScrolling(true);
@@ -2934,7 +2936,7 @@ function unfocusImageOverlay() {
 }
 
 function getIndexOfFocusedImage() {
-	let images = queryAll("#images-overlay img");
+	let images = queryAll(GW.imageFocus.overlayImagesSelector);
 	var indexOfFocusedImage = -1;
 	for (i = 0; i < images.length; i++) {
 		if (images[i].hasClass("focused")) {
@@ -2947,7 +2949,7 @@ function getIndexOfFocusedImage() {
 
 function focusNextImage(next = true) {
 	GWLog("focusNextImage");
-	let images = queryAll("#images-overlay img");
+	let images = queryAll(GW.imageFocus.overlayImagesSelector);
 	var indexOfFocusedImage = getIndexOfFocusedImage();
 
 	if (next ? (++indexOfFocusedImage == images.length) : (--indexOfFocusedImage == -1)) return;
@@ -2955,9 +2957,7 @@ function focusNextImage(next = true) {
 	// Remove existing image.
 	removeElement("#image-focus-overlay img");
 	// Unset "focused" class of just-removed image.
-	queryAll("#content img.focused, #images-overlay img.focused").forEach(image => {
-		image.removeClass("focused");
-	});
+	query(GW.imageFocus.focusedImageSelector).removeClass("focused");
 
 	// Create the focused version of the image.
 	images[indexOfFocusedImage].addClass("focused");
@@ -2991,7 +2991,7 @@ function setImageFocusCaption() {
 	Array.from(captionContainer.children).forEach(child => { child.remove(); });
 
 	// Determine caption.
-	let currentlyFocusedImage = query("#content img.focused, #images-overlay img.focused");
+	let currentlyFocusedImage = query(GW.imageFocus.focusedImageSelector);
 	var captionHTML;
 	if ((T.enclosingFigure = currentlyFocusedImage.closest("figure")) && 
 		(T.figcaption = T.enclosingFigure.query("figcaption"))) {
@@ -3824,7 +3824,7 @@ function focusImageSpecifiedByURL() {
 	GWLog("focusImageSpecifiedByURL");
 	if (location.hash.hasPrefix("#if_slide_")) {
 		registerInitializer('focusImageSpecifiedByURL', true, () => query("#images-overlay") != null, () => {
-			let images = queryAll("#images-overlay img");
+			let images = queryAll(GW.imageFocus.overlayImagesSelector);
 			let imageToFocus = (/#if_slide_([0-9]+)/.exec(location.hash)||{})[1];
 			if (imageToFocus > 0 && imageToFocus <= images.length) {
 				focusImage(images[imageToFocus - 1]);
