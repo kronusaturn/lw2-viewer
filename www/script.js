@@ -2533,6 +2533,7 @@ function addCommentParentPopups() {
 function imageFocusSetup(imagesOverlayOnly = false) {
 	if (typeof GW.imageFocus == "undefined")
 		GW.imageFocus = {
+			shrinkRatio:			0.975,
 			hideUITimerDuration:	1500,
 			hideUITimerExpired:		() => {
 				GWLog("GW.imageFocus.hideUITimerExpired");
@@ -2861,18 +2862,16 @@ function resetFocusedImagePosition() {
 	let focusedImage = query("#image-focus-overlay img");
 	if (!focusedImage) return;
 
-	// Reset modifications to size.
-	focusedImage.style.width = "";
-	focusedImage.style.height = "";
+	let sourceImage = query("#content img.focused, #images-overlay img.focused");
 
 	// Make sure that initially, the image fits into the viewport.
-	let shrinkRatio = 0.975;
-	focusedImage.style.width = Math.min(focusedImage.naturalWidth, window.innerWidth * shrinkRatio) + 'px';
-	let maxImageHeight = window.innerHeight * shrinkRatio;
-	if (focusedImage.clientHeight > maxImageHeight) {
-		focusedImage.style.height = maxImageHeight + 'px';
-		focusedImage.style.width = "";
-	}
+	let constrainedWidth = Math.min(sourceImage.naturalWidth, window.innerWidth * GW.imageFocus.shrinkRatio);
+	let widthShrinkRatio = constrainedWidth / sourceImage.naturalWidth;
+	var constrainedHeight = Math.min(sourceImage.naturalHeight, window.innerHeight * GW.imageFocus.shrinkRatio);
+	let heightShrinkRatio = constrainedHeight / sourceImage.naturalHeight;
+	let shrinkRatio = Math.min(widthShrinkRatio, heightShrinkRatio);
+	focusedImage.style.width = (sourceImage.naturalWidth * shrinkRatio) + "px";
+	focusedImage.style.height = (sourceImage.naturalHeight * shrinkRatio) + "px";
 
 	// Remove modifications to position.
 	focusedImage.style.left = "";

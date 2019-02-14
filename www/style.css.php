@@ -3233,6 +3233,8 @@ li {
 	left: 9em;
 	right: 9em;
 	margin: auto;
+	max-width: calc(100% - 18em);
+	text-align: center;
 	font-size: 1.375em;
 	border-radius: 8px;
 	z-index: 1;
