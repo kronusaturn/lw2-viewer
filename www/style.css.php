@@ -3286,8 +3286,8 @@ li {
 		bottom 0.3s ease;
 }
 #image-focus-overlay .help-overlay:hover {
-	max-width: 420px;
-	max-height: 300px;
+	max-width: 24em;
+	max-height: 14em;
 	background-color: rgba(0,0,0,0.85);
 	color: #fff;
 	visibility: visible;
