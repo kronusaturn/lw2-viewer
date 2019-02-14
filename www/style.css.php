@@ -3233,12 +3233,15 @@ li {
 	margin: auto;
 	font-size: 1.375em;
 	border-radius: 8px;
+	z-index: 1;
 	transition: 
-		bottom 0.3s ease;
+		bottom 0.2s ease;
 }
 <?php fit_content("#image-focus-overlay .caption"); ?>
 #image-focus-overlay .caption.hidden {
-	bottom: -100%;
+	bottom: -5em;
+	transition: 
+		bottom 0.5s ease;
 }
 
 #image-focus-overlay .caption p {

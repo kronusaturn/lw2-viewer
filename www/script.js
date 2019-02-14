@@ -2553,15 +2553,11 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 		GWLog("GW.imageClickedToFocus");
 		focusImage(event.target);
 
-		if (event.target.closest("#images-overlay")) {
-			query("#image-focus-overlay .image-number").textContent = (getIndexOfFocusedImage() + 1);
+		if (!GW.isMobile) {
+			// Set timer to hide the image focus UI.
+			unhideImageFocusUI();
+			GW.imageFocus.hideUITimer = setTimeout(GW.imageFocus.hideUITimerExpired, GW.imageFocus.hideUITimerDuration);
 		}
-
-		if (GW.isMobile) return;
-
-		// Set timer to hide the image focus UI.
-		unhideImageFocusUI();
-		GW.imageFocus.hideUITimer = setTimeout(GW.imageFocus.hideUITimerExpired, GW.imageFocus.hideUITimerDuration);
 	};
 	// Add the listener to each image in the overlay (i.e., those in the post).
 	queryAll("#images-overlay img").forEach(image => {
@@ -2591,9 +2587,7 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 		 <button type='button' class='slideshow-button previous' tabindex='-1' title='Previous image'>&#xf053;</button>
 		 <button type='button' class='slideshow-button next' tabindex='-1' title='Next image'>&#xf054;</button>
 	</div>
-	<div class='caption'>
-		<p>Sample caption. This gives information about the image.</p>
-	</div>` + 
+	<div class='caption'></div>` + 
 	"</div>");
 	imageFocusOverlay.dropShadowFilterForImages = " drop-shadow(10px 10px 10px #000) drop-shadow(0 0 10px #444)";
 
@@ -2823,6 +2817,7 @@ function focusImage(imageToFocus) {
 	// Prevent spacebar or arrow keys from scrolling page when image focused.
 	togglePageScrolling(false);
 
+	// If the image comes from the images overlay, for the main post...
 	if (imageToFocus.closest("#images-overlay")) {
 		// Mark the overlay as being in slide show mode (to show buttons/count).
 		imageFocusOverlay.addClass("slideshow");
@@ -2833,11 +2828,17 @@ function focusImage(imageToFocus) {
 		imageFocusOverlay.query(".slideshow-button.previous").disabled = (indexOfFocusedImage == 0);
 		imageFocusOverlay.query(".slideshow-button.next").disabled = (indexOfFocusedImage == images.length - 1);
 
+		// Set the image number.
+		query("#image-focus-overlay .image-number").textContent = (indexOfFocusedImage + 1);
+
 		// Replace the hash.
 		history.replaceState(null, null, "#if_slide_" + (indexOfFocusedImage + 1));
 	} else {
 		imageFocusOverlay.removeClass("slideshow");
 	}
+
+	// Set the caption.
+	setImageFocusCaption();
 
 	// Moving mouse unhides image focus UI.
 	window.addEventListener("mousemove", GW.imageFocus.mouseMoved = (event) => {
@@ -2974,8 +2975,29 @@ function focusNextImage(next = true) {
 	imageFocusOverlay.query(".slideshow-button.next").disabled = (indexOfFocusedImage == images.length - 1);
 	// Set the image number display.
 	query("#image-focus-overlay .image-number").textContent = (indexOfFocusedImage + 1);
+	// Set the caption.
+	setImageFocusCaption();
 	// Replace the hash.
 	history.replaceState(null, null, "#if_slide_" + (indexOfFocusedImage + 1));
+}
+
+function setImageFocusCaption() {
+	GWLog("setImageFocusCaption");
+
+	// Clear existing caption, if any.
+	let captionContainer = query("#image-focus-overlay .caption");
+	Array.from(captionContainer.children).forEach(child => { child.remove(); });
+
+	// Determine caption.
+	let currentlyFocusedImage = query("#content img.focused, #images-overlay img.focused");
+	var captionHTML;
+	if (currentlyFocusedImage.parentElement.tag == "FIGURE") {
+		captionHTML = (currentlyFocusedImage.parentElement.query("figcaption")||{}).innerHTML;
+	} else if (currentlyFocusedImage.title != "") {
+		captionHTML = `<p>${currentlyFocusedImage.title}</p>`;
+	}
+	// Insert the caption, if any.
+	if (captionHTML) captionContainer.insertAdjacentHTML("beforeend", captionHTML);
 }
 
 function hideImageFocusUI() {
@@ -3801,7 +3823,6 @@ function focusImageSpecifiedByURL() {
 			let imageToFocus = (/#if_slide_([0-9]+)/.exec(location.hash)||{})[1];
 			if (imageToFocus > 0 && imageToFocus <= images.length) {
 				focusImage(images[imageToFocus - 1]);
-				query("#image-focus-overlay .image-number").textContent = imageToFocus;
 
 				// Set timer to hide the image focus UI.
 				unhideImageFocusUI();
