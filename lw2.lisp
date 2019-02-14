@@ -622,13 +622,14 @@ signaled condition to OUT-STREAM."
 
 (defun user-nav-item (&optional current-uri)
   (if *read-only-mode*
-      `("login" "/login" "Read Only Mode" :html ,(lambda () (format nil "<span class=\"nav-inner\" title=\"~A\">[Read Only Mode]</span>"
-                                                                    (typecase *read-only-mode*
-                                                                      (string *read-only-mode*)
-                                                                      (t *read-only-default-message*)))))
+      `("login" "/login" "Read Only Mode" :html ,(lambda (out-stream)
+							 (format out-stream "<span class=\"nav-inner\" title=\"~A\">[Read Only Mode]</span>"
+								 (typecase *read-only-mode*
+								   (string *read-only-mode*)
+								   (t *read-only-default-message*)))))
       (alexandria:if-let (username (logged-in-username))
-          (let ((user-slug (encode-entities (logged-in-user-slug))))
-            `("login" ,(format nil "/users/~A" user-slug) ,(plump:encode-entities username) :description "User page" :accesskey "u"
+	  (let ((user-slug (encode-entities (logged-in-user-slug))))
+	    `("login" ,(format nil "/users/~A" user-slug) ,(plump:encode-entities username) :description "User page" :accesskey "u"
               :trailing-html ,(lambda (out-stream) (inbox-to-html out-stream user-slug))))
           `("login" ,(format nil "/login?return=~A" (url-rewrite:url-encode current-uri)) "Log In" :accesskey "u" :nofollow t :override-uri "/login"))))
 
