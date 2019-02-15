@@ -1154,7 +1154,6 @@ signaled condition to OUT-STREAM."
 		 (let ((comment-data
 			(list-cond
 			 (t :body (postprocess-markdown text))
-			 (t :last-edited-as "markdown")
 			 ((not edit-comment-id) :post-id post-id)
 			 (parent-comment-id :parent-comment-id parent-comment-id)
 			 (answer :answer t)
@@ -1207,7 +1206,6 @@ signaled condition to OUT-STREAM."
 	       (list-cond
 		(t :body (postprocess-markdown text))
 		(t :title title)
-		(t :last-edited-as "markdown")
 		(link-post :url url)
 		(t :meta (string= section "meta"))
 		(t :draft (string= section "drafts"))
