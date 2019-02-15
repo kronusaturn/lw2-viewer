@@ -2303,6 +2303,11 @@ blockquote {
 	visibility: visible;
 }
 
+#image-focus-overlay .caption p {
+	margin: 1em 1.25em 0.875em 1.25em;
+	font-weight: 400;
+}
+
 /*======*/
 /* MISC */
 /*======*/
