@@ -1074,6 +1074,7 @@ foreach ($content_width_settings as $name => $setting) {
 		height: 100%;
 		padding: 8px;
 		display: initial;
+		line-height: 1;
 	}
 }
 
