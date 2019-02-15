@@ -300,6 +300,7 @@ Element.prototype.addTextareaFeatures = function() {
 		}
 	}, false);
 	textarea.addEventListener("keyup", (event) => { event.stopPropagation(); });
+	textarea.addEventListener("keypress", (event) => { event.stopPropagation(); });
 
 	textarea.insertAdjacentHTML("beforebegin", "<div class='guiedit-buttons-container'></div>");
 	let textareaContainer = textarea.closest(".textarea-container");
