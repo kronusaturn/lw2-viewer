@@ -287,6 +287,7 @@
                (highlight-new boolean)
                (conversation list)
                (content list)
+	       (contents list)
                (html-body (or string null)))
     message
     (multiple-value-bind (pretty-time js-time) (pretty-time created-at)
@@ -298,9 +299,11 @@
               pretty-time
               (encode-entities (cdr (assoc :--id conversation)))
               (encode-entities (postprocess-conversation-title (cdr (assoc :title conversation))))))
-    (if html-body
-        (write-sequence (clean-html* html-body) out-stream)
-        (format out-stream "~{<p>~A</p>~}" (loop for block in (cdr (assoc :blocks content)) collect (encode-entities (cdr (assoc :text block))))))
+    (labels ((ws (html-body) (write-sequence (clean-html* html-body) out-stream)))
+      (cond
+	(contents (ws (cdr (assoc :html contents))))
+	(html-body (ws html-body))
+	(t (format out-stream "~{<p>~A</p>~}" (loop for block in (cdr (assoc :blocks content)) collect (encode-entities (cdr (assoc :text block))))))))
     (format out-stream "</div></div>")))
 
 (defun conversation-index-to-html (out-stream conversation)
