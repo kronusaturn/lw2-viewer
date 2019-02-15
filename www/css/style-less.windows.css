@@ -7470,6 +7470,11 @@ blockquote {
 	border: 1px solid transparent;
 }
 
+#images-overlay div::after {
+	font-weight: 400;
+	padding: 10px 12px 6px 12px;
+}
+
 /*=============*/
 /* IMAGE FOCUS */
 /*=============*/
