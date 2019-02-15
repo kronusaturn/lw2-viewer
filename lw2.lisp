@@ -287,6 +287,7 @@
                (highlight-new boolean)
                (conversation list)
                (content list)
+	       (contents list)
                (html-body (or string null)))
     message
     (multiple-value-bind (pretty-time js-time) (pretty-time created-at)
@@ -298,9 +299,11 @@
               pretty-time
               (encode-entities (cdr (assoc :--id conversation)))
               (encode-entities (postprocess-conversation-title (cdr (assoc :title conversation))))))
-    (if html-body
-        (write-sequence (clean-html* html-body) out-stream)
-        (format out-stream "~{<p>~A</p>~}" (loop for block in (cdr (assoc :blocks content)) collect (encode-entities (cdr (assoc :text block))))))
+    (labels ((ws (html-body) (write-sequence (clean-html* html-body) out-stream)))
+      (cond
+	(contents (ws (cdr (assoc :html contents))))
+	(html-body (ws html-body))
+	(t (format out-stream "~{<p>~A</p>~}" (loop for block in (cdr (assoc :blocks content)) collect (encode-entities (cdr (assoc :text block))))))))
     (format out-stream "</div></div>")))
 
 (defun conversation-index-to-html (out-stream conversation)
@@ -622,13 +625,14 @@ signaled condition to OUT-STREAM."
 
 (defun user-nav-item (&optional current-uri)
   (if *read-only-mode*
-      `("login" "/login" "Read Only Mode" :html ,(lambda () (format nil "<span class=\"nav-inner\" title=\"~A\">[Read Only Mode]</span>"
-                                                                    (typecase *read-only-mode*
-                                                                      (string *read-only-mode*)
-                                                                      (t *read-only-default-message*)))))
+      `("login" "/login" "Read Only Mode" :html ,(lambda (out-stream)
+							 (format out-stream "<span class=\"nav-inner\" title=\"~A\">[Read Only Mode]</span>"
+								 (typecase *read-only-mode*
+								   (string *read-only-mode*)
+								   (t *read-only-default-message*)))))
       (alexandria:if-let (username (logged-in-username))
-          (let ((user-slug (encode-entities (logged-in-user-slug))))
-            `("login" ,(format nil "/users/~A" user-slug) ,(plump:encode-entities username) :description "User page" :accesskey "u"
+	  (let ((user-slug (encode-entities (logged-in-user-slug))))
+	    `("login" ,(format nil "/users/~A" user-slug) ,(plump:encode-entities username) :description "User page" :accesskey "u"
               :trailing-html ,(lambda (out-stream) (inbox-to-html out-stream user-slug))))
           `("login" ,(format nil "/login?return=~A" (url-rewrite:url-encode current-uri)) "Log In" :accesskey "u" :nofollow t :override-uri "/login"))))
 
@@ -1153,7 +1157,6 @@ signaled condition to OUT-STREAM."
 		 (let ((comment-data
 			(list-cond
 			 (t :body (postprocess-markdown text))
-			 (t :last-edited-as "markdown")
 			 ((not edit-comment-id) :post-id post-id)
 			 (parent-comment-id :parent-comment-id parent-comment-id)
 			 (answer :answer t)
@@ -1206,7 +1209,6 @@ signaled condition to OUT-STREAM."
 	       (list-cond
 		(t :body (postprocess-markdown text))
 		(t :title title)
-		(t :last-edited-as "markdown")
 		(link-post :url url)
 		(t :meta (string= section "meta"))
 		(t :draft (string= section "drafts"))

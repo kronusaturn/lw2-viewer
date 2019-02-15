@@ -167,6 +167,13 @@
 		 (cdr (assoc :document terms))
 		 (cdr (assoc :set terms))
 		 (map 'list (lambda (x) (cons (car x) :null)) (cdr (assoc :unset terms)))))
+	  (data (map 'list (lambda (x) (destructuring-bind (k . v) x
+					 (if (eq k :body)
+					     (cons :contents
+						   (alist :update-type "major"
+							  :original-contents (alist :type "markdown" :data v)))
+					     x)))
+		     data))
 	  (terms (nconc
 		  (loop for (k . v) in terms collect
 		       (case k
