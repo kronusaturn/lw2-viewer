@@ -186,6 +186,7 @@ a.nav-inner,
 
 .page-toolbar {
 	grid-row: 3;
+	z-index: 1;
 }
 .page-toolbar * {
 	color: #888;
