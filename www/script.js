@@ -390,7 +390,9 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 	let withparent = (!editMarkdownSource && commentControls.getCommentId());
 	let answer = commentControls.parentElement.id == "answers";
 	let parentAnswer = commentControls.closest("#answers > .comment-thread > .comment-item");
-	let withParentAnswer = (!editMarkdownSource && parentAnswer && parentAnswer.getCommentId())
+	let withParentAnswer = (!editMarkdownSource && parentAnswer && parentAnswer.getCommentId());
+	let parentCommentItem = commentControls.closest(".comment-item");
+	let alignmentForum = alignmentForumAllowed && (!parentCommentItem || parentCommentItem.firstChild.querySelector(".comment-meta .alignment-forum"));
 	commentControls.innerHTML = "<button class='cancel-comment-button' tabindex='-1'>Cancel</button>" +
 		"<form method='post'>" + 
 		"<div class='textarea-container'>" + 
@@ -399,6 +401,7 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 		(withParentAnswer ? "<input type='hidden' name='parent-answer-id' value='" + withParentAnswer + "'>" : "") +
 		(editCommentId ? "<input type='hidden' name='edit-comment-id' value='" + editCommentId + "'>" : "") +
 		(answer ? "<input type='hidden' name='answer' value='t'>" : "") +
+		(alignmentForum ? "<input type='hidden' name='af' value='t'>" : "") +
 		"<span class='markdown-reference-link'>You can use <a href='http://commonmark.org/help/' target='_blank'>Markdown</a> here.</span>" + 
 		`<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-help-button">Help</button>` + 
 		`<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-exit-button">Exit</button>` + 
