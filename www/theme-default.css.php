@@ -897,7 +897,8 @@ h1.post-title {
 /* POST-META */
 /*===========*/
 
-.post-meta .post-section::before {
+.post-meta .post-section::before,
+.comment-meta .alignment-forum {
 	color: #fff;
 	text-shadow: 
 		1px 1px 0 #090, 
@@ -910,7 +911,8 @@ a.post-section:hover {
 a.post-section:hover::before {
 	color: #97ff7c;
 }
-.post-meta .post-section.alignment-forum::before {
+.post-meta .post-section.alignment-forum::before,
+.comment-meta .alignment-forum {
 	text-shadow:
 		1px 1px 0   #626dd7, 
 		0   1px 0   #626dd7, 

@@ -676,7 +676,8 @@ h1.listing.own-post-listing {
 /* POST-META */
 /*===========*/
 
-.post-meta .post-section::before {
+.post-meta .post-section::before,
+.comment-meta .alignment-forum {
 	color: #fff;
 	top: -1px;
 	text-shadow: 

@@ -880,7 +880,8 @@ h1.post-title {
 	margin: 0 0.5em 0 1em;
 }
 
-.post-meta .post-section::before {
+.post-meta .post-section::before,
+.comment-meta .alignment-forum {
 	color: #888;
 	text-shadow: 
 		1px 1px 0 #ccc, 

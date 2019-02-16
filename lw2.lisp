@@ -199,6 +199,7 @@
                    (parent-comment-id (or null string))
                    (child-count (or null fixnum))
                    (children list)
+		   (af boolean)
                    (vote-count (or null fixnum))
 		   (retracted boolean)
 		   (answer boolean)
@@ -223,6 +224,7 @@
 			<div class="karma">
 			  <span class="karma-value" title=(votes-to-tooltip vote-count)> (safe (pretty-number base-score "point")) </span>
 			</div>
+			(when af <span class="alignment-forum">AF</span>)     
 			<a class="permalink" href=("~A/~A/~A"
 						   (generate-post-link post-id)
 						   (cond ((or answer parent-answer-id) "answer") (t "comment"))

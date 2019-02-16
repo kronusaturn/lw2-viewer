@@ -1697,7 +1697,8 @@ h1.listing + .post-meta .read-time {
 	margin: 0;
 	visibility: hidden;
 }
-.post-meta .post-section::before {
+.post-meta .post-section::before,
+.comment-meta .alignment-forum {
 	visibility: visible;
 	font-family: "Font Awesome";
 	font-weight: 900;
@@ -1717,7 +1718,8 @@ h1.listing + .post-meta .read-time {
 .post-section.draft::before {
 	content: "\F15B";
 }
-.post-section.alignment-forum::before {
+.post-section.alignment-forum::before,
+.comment-meta .alignment-forum {
 	content: "AF";
 	font-family: Concourse;
 }
@@ -5972,7 +5974,8 @@ h1.listing + .post-meta {
 	text-align: center;
 	font-weight: 300;
 }
-.post-meta .post-section::before {
+.post-meta .post-section::before,
+.comment-meta .alignment-forum {
 	color: #fff;
 	top: -1px;
 	text-shadow: 
@@ -5980,6 +5983,9 @@ h1.listing + .post-meta {
 		0 1px 0 #999, 
 		0 0 5px #999;
 	margin: 0 0 0 0.5em;
+}
+.comment-meta .alignment-forum {
+	margin: 0 1em 0 0;
 }
 a.post-section:hover {
 	text-decoration: none;
