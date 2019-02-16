@@ -1193,7 +1193,7 @@ signaled condition to OUT-STREAM."
 
 (defparameter *edit-post-template* (compile-template* "edit-post.html"))
 
-(define-page view-edit-post "/edit-post" (title url section post-id link-post)
+(define-page view-edit-post "/edit-post" (title url section tags post-id link-post)
   (request-method
     (:get ()
      (let* ((csrf-token (make-csrf-token))
@@ -1207,6 +1207,8 @@ signaled condition to OUT-STREAM."
                                     :title (cdr (assoc :title post-body))
                                     :url (cdr (assoc :url post-body))
 				    :question (cdr (assoc :question post-body))
+				    :tags-supported (typep *current-backend* 'backend-accordius)
+				    :tags  (when (typep *current-backend* 'backend-accordius) (do-wl-rest-query (format nil "posts/~a/update_tagset/" post-id) ()))
                                     :post-id post-id
                                     :section-list (loop for (name desc) in '(("all" "All") ("meta" "Meta") ("drafts" "Drafts"))
                                                         collect (alist :name name :desc desc :selected (string= name section)))
@@ -1230,6 +1232,11 @@ signaled condition to OUT-STREAM."
 		   (do-lw2-post lw2-auth-token post-data)))
 	      (new-post-id (cdr (assoc :--id new-post-data))))
 	 (assert new-post-id)
+	 (when (typep *current-backend* 'backend-accordius)
+	   (do-wl-rest-mutate :post
+	     (format nil "posts/~a/update_tagset/" post-id)
+	     (alist "tags" tags)
+	     lw2-auth-token))
 	 (cache-put "post-markdown-source" new-post-id text)
 	 (ignore-errors (get-post-body post-id :force-revalidate t))
 	 (redirect (if (cdr (assoc :draft post-data))
