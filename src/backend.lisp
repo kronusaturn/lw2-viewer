@@ -13,6 +13,7 @@
            #:lw2-graphql-query-map #:lw2-graphql-query-multi
 	   #:get-posts-index #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-answers #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
 	   #:get-conversation-messages
+	   #:get-user
            #:get-notifications #:check-notifications
 	   #:lw2-search-query #:get-post-title #:get-post-slug #:get-slug-postid #:get-username #:get-user-slug)
   (:recycle #:lw2-viewer)
@@ -24,10 +25,11 @@
 
 (defvar *graphql-debug-output* nil)
 
-(defparameter *posts-index-fields* '(:title :--id :slug :user-id :posted-at :base-score :comment-count :page-url :url :word-count :frontpage-date :curated-date :meta :draft :af :vote-count))
+(defparameter *posts-index-fields* '(:title :--id :slug :user-id :posted-at :base-score :comment-count :page-url :url :word-count :frontpage-date :curated-date :meta :draft :vote-count))
 (defparameter *comments-index-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id (:parent-comment :--id :user-id :post-id) :base-score :page-url :vote-count :retracted :deleted-public :html-body))
 (defparameter *post-comments-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id :base-score :page-url :vote-count :retracted :deleted-public :html-body))
 (defparameter *messages-index-fields* '(:--id :user-id :created-at (:contents :html) (:conversation :--id :title) :----typename))
+(defparameter *user-fields* '(:--id :slug :display-name :karma :groups))
 
 (defparameter *notifications-base-terms* (alist :view "userNotifications" :created-at :null :viewed :null))
 
@@ -35,17 +37,24 @@
 
 (define-backend-function posts-index-fields ()
   (backend-graphql (load-time-value *posts-index-fields*))
-  (backend-q-and-a (load-time-value (append *posts-index-fields* '(:question)))))
+  (backend-q-and-a (list* :question (call-next-method)))
+  (backend-alignment-forum (list* :af (call-next-method))))
 
 (define-backend-function comments-index-fields ()
   (backend-graphql (load-time-value *comments-index-fields*))
-  (backend-q-and-a (load-time-value (append *comments-index-fields* '(:answer :parent-answer-id)))))
+  (backend-q-and-a (list* :answer :parent-answer-id (call-next-method)))
+  (backend-alignment-forum (list* :af (call-next-method))))
 
 (define-backend-function post-comments-fields ()
   (backend-graphql (load-time-value *post-comments-fields*))
-  (backend-q-and-a (load-time-value (append *post-comments-fields* '(:answer :parent-answer-id)))))
+  (backend-q-and-a (list* :answer :parent-answer-id (call-next-method)))
+  (backend-alignment-forum (list* :af (call-next-method))))
 
-(define-cache-database "index-json" "post-comments-json" "post-comments-json-meta" "post-answers-json" "post-answers-json-meta" "post-body-json" "post-body-json-meta")
+(define-backend-function user-fields ()
+  (backend-graphql (load-time-value *user-fields*))
+  (backend-lw2 (load-time-value (append *user-fields* '(:af-karma)))))
+
+(define-cache-database "index-json" "post-comments-json" "post-comments-json-meta" "post-answers-json" "post-answers-json-meta" "post-body-json" "post-body-json-meta" "user-json" "user-json-meta")
 
 (defmethod condition-http-return-code ((c condition)) 500)
 
@@ -505,6 +514,16 @@
 			    nconc (get-post-comments-list post-id "repliesToAnswer" :parent-answer-id (cdr (assoc :--id a))))))))))
     (lw2-graphql-query-timeout-cached fn "post-answers-json" post-id :revalidate revalidate :force-revalidate force-revalidate)))
 
+(define-backend-function get-user (user-identifier-type user-identifier &key (revalidate t) force-revalidate auth-token)
+  (backend-graphql
+   (let* ((user-id (ccase user-identifier-type
+		     (:user-id user-identifier)
+		     (:user-slug (get-slug-userid user-identifier))))
+	  (query-string (lw2-query-string :user :single (alist :document-id user-id) (if auth-token (cons :last-notifications-check (user-fields)) (user-fields)))))
+     (if auth-token
+	 (lw2-graphql-query query-string :auth-token auth-token)
+	 (lw2-graphql-query-timeout-cached query-string "user-json" user-id :revalidate revalidate :force-revalidate force-revalidate)))))
+
 (define-backend-function get-notifications (&key user-id offset auth-token)
   (backend-lw2-legacy
    (lw2-graphql-query (lw2-query-string :notification :list
@@ -614,6 +633,10 @@
 (with-rate-limit
   (simple-cacheable ("user-slug" "userid-to-slug" user-id)
     (rate-limit (user-id) (cdr (first (lw2-graphql-query (lw2-query-string :user :single (alist :document-id user-id) '(:slug))))))))
+
+(with-rate-limit
+  (simple-cacheable ("slug-userid" "slug-to-userid" slug)
+    (rate-limit (slug) (cdr (first (lw2-graphql-query (lw2-query-string :user :single (alist :slug slug) '(:--id))))))))
 
 (defun preload-username-cache ()
   (let ((user-list (lw2-graphql-query (lw2-query-string :user :list '() '(:--id :display-name)))))

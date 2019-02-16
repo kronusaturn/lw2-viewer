@@ -1316,6 +1316,10 @@ h1.listing + .post-meta .read-time {
 	align-self: end;
 }
 
+#content.user-page .user-stats .karma-type {
+	white-space: nowrap;
+}
+
 /*=----------------------=*/
 /*= Expanded vs. compact =*/
 /*=----------------------=*/
@@ -1704,7 +1708,8 @@ h1.listing + .post-meta .read-time {
 	margin: 0;
 	visibility: hidden;
 }
-.post-meta .post-section::before {
+.post-meta .post-section::before,
+.comment-meta .alignment-forum {
 	visibility: visible;
 	font-family: "Font Awesome";
 	font-weight: 900;
@@ -1724,7 +1729,8 @@ h1.listing + .post-meta .read-time {
 .post-section.draft::before {
 	content: "\F15B";
 }
-.post-section.alignment-forum::before {
+.post-section.alignment-forum::before,
+.comment-meta .alignment-forum {
 	content: "AF";
 	font-family: Concourse;
 }

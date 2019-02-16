@@ -857,7 +857,8 @@ h1.listing + .post-meta {
 	text-align: center;
 	font-weight: <?php echo ($platform == 'Mac') ? '300' : '400'; ?>;
 }
-.post-meta .post-section::before {
+.post-meta .post-section::before,
+.comment-meta .alignment-forum {
 	color: #fff;
 	top: -1px;
 	text-shadow: 
@@ -865,6 +866,9 @@ h1.listing + .post-meta {
 		0 1px 0 #999, 
 		0 0 5px #999;
 	margin: 0 0 0 0.5em;
+}
+.comment-meta .alignment-forum {
+	margin: 0 1em 0 0;
 }
 a.post-section:hover {
 	text-decoration: none;

@@ -96,6 +96,8 @@
 		    (t
 		     (unread-char c stream)
 		     (output-read-object)))
+	       else when (eq c #\\)
+	       do (output-strings (string (read-char stream)))
 	       else when (eq c #\()
 	       do (progn
 		    (unread-char c stream)

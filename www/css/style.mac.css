@@ -1305,6 +1305,10 @@ h1.listing + .post-meta .read-time {
 	align-self: end;
 }
 
+#content.user-page .user-stats .karma-type {
+	white-space: nowrap;
+}
+
 /*=----------------------=*/
 /*= Expanded vs. compact =*/
 /*=----------------------=*/
@@ -1693,7 +1697,8 @@ h1.listing + .post-meta .read-time {
 	margin: 0;
 	visibility: hidden;
 }
-.post-meta .post-section::before {
+.post-meta .post-section::before,
+.comment-meta .alignment-forum {
 	visibility: visible;
 	font-family: "Font Awesome";
 	font-weight: 900;
@@ -1713,7 +1718,8 @@ h1.listing + .post-meta .read-time {
 .post-section.draft::before {
 	content: "\F15B";
 }
-.post-section.alignment-forum::before {
+.post-section.alignment-forum::before,
+.comment-meta .alignment-forum {
 	content: "AF";
 	font-family: Concourse;
 }
@@ -4591,22 +4597,14 @@ li {
 @media only screen and (max-width: 900px) {
 	.sublevel-nav:not(.sort) {
 		flex-wrap: wrap;
-		width: calc(100vw - 100px);
+		width: calc(100vw - 200px);
 	}
 	.sublevel-nav:not(.sort) .sublevel-item {
 		margin: 1px;
 		flex-basis: 7em;
 	}
 }
-@media only screen and (max-width: 720px) {
-	.sublevel-nav:not(.sort) {
-		width: calc(100vw - 200px);
-	}
-}
 @media only screen and (max-width: 520px) {
-	.sublevel-nav:not(.sort) {
-		width: calc(100vw - 100px);
-	}
 	.sublevel-nav:not(.sort) .sublevel-item {
 		font-size: 1rem;
 	}
@@ -4686,13 +4684,20 @@ h1.listing {
 /* USER PAGES */
 /*============*/
 
-@media only screen and (max-width: 720px) {
+#content.user-page h1.page-main-heading {
+	align-self: end;
+}
+@media only screen and (max-width: 520px) {
 	#content.user-page h1.page-main-heading {
-		align-self: center;
+		padding-right: 100px;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 	#content.user-page .user-stats {
-		padding: 4px 0;
-		line-height: 1.3;
+		grid-column: 2 / span 2;
+	}
+	#content.user-page .user-stats .karma-type {
+		display: block;
 	}
 }
 
@@ -6006,7 +6011,8 @@ h1.post-title {
 /* POST-META */
 /*===========*/
 
-.post-meta .post-section::before {
+.post-meta .post-section::before,
+.comment-meta .alignment-forum {
 	color: #fff;
 	text-shadow: 
 		1px 1px 0 #090, 
@@ -6019,7 +6025,8 @@ a.post-section:hover {
 a.post-section:hover::before {
 	color: #97ff7c;
 }
-.post-meta .post-section.alignment-forum::before {
+.post-meta .post-section.alignment-forum::before,
+.comment-meta .alignment-forum {
 	text-shadow:
 		1px 1px 0   #626dd7, 
 		0   1px 0   #626dd7, 

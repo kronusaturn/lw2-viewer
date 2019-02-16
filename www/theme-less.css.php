@@ -1289,7 +1289,8 @@ h1.post-title {
 /* POST-META */
 /*===========*/
 
-.post-meta .post-section::before {
+.post-meta .post-section::before,
+.comment-meta .alignment-forum {
 	color: #dfdfdf;
 	font-weight: 400;
 	padding: 1px;

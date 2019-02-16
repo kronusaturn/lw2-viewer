@@ -8,6 +8,7 @@
     #:backend-websocket-login
     #:graphql-uri #:websocket-uri #:algolia-search-uri #:rest-api-uri
     #:backend-q-and-a
+    #:backend-alignment-forum
     #:backend-lw2-legacy #:backend-lw2-modernized #:backend-lw2 #:backend-algolia-search #:backend-ea-forum #:backend-accordius
     #:make-backend #:define-backend-function #:define-backend-operation #:backend)
   (:unintern #:declare-backend-function)
@@ -32,11 +33,13 @@
 
 (defclass backend-q-and-a (backend-graphql) ())
 
+(defclass backend-alignment-forum (backend-graphql) ())
+
 (defclass backend-lw2-legacy (backend-graphql) ())
 
 (defclass backend-lw2-modernized (backend-graphql) ())
 
-(defclass backend-lw2 (backend-websocket-login backend-lw2-modernized backend-lw2-legacy backend-algolia-search backend-q-and-a) ())
+(defclass backend-lw2 (backend-websocket-login backend-lw2-modernized backend-lw2-legacy backend-algolia-search backend-q-and-a backend-alignment-forum) ())
 
 (defclass backend-ea-forum (backend-websocket-login backend-lw2-modernized backend-lw2-legacy backend-algolia-search) ())
 
@@ -64,7 +67,8 @@
    `(progn
       (export '(,name ,inner-name))
       (defgeneric ,inner-name (backend ,@lambda-list) ,.method-definitions)
-      (defmacro ,name (&rest args) (list* ',inner-name 'lw2.context:*current-backend*  args)))))
+      (declaim (inline ,name))
+      (defun ,name (&rest args) (apply ',inner-name lw2.context:*current-backend* args)))))
 
 (defmacro define-backend-operation (name backend &rest args)
   (let* ((inner-name (symbolicate "%" name)))

@@ -199,6 +199,7 @@
                    (parent-comment-id (or null string))
                    (child-count (or null fixnum))
                    (children list)
+		   (af boolean)
                    (vote-count (or null fixnum))
 		   (retracted boolean)
 		   (answer boolean)
@@ -223,6 +224,7 @@
 			<div class="karma">
 			  <span class="karma-value" title=(votes-to-tooltip vote-count)> (safe (pretty-number base-score "point")) </span>
 			</div>
+			(when af <span class="alignment-forum">AF</span>)     
 			<a class="permalink" href=("~A/~A/~A"
 						   (generate-post-link post-id)
 						   (cond ((or answer parent-answer-id) "answer") (t "comment"))
@@ -1094,7 +1096,12 @@ signaled condition to OUT-STREAM."
                   (handler-case
                     (format out-stream "<script>postVote=~A</script>"
                             (json:encode-json-to-string (get-post-vote post-id lw2-auth-token)))
-                    (t () nil))))
+                    (t () nil)))
+		(output-alignment-forum (out-stream post)
+		  (alexandria:if-let (liu (logged-in-userid))
+				     (let ((with-af-option (and (cdr (assoc :af post))
+								(member "alignmentForum" (cdr (assoc :groups (get-user :user-id liu))) :test #'string=))))
+				       (format out-stream "<script>alignmentForumAllowed=~:[false~;true~]</script>" with-af-option)))))
          (multiple-value-bind (post title condition)
            (handler-case (nth-value 0 (get-post-body post-id :auth-token (and need-auth lw2-auth-token)))
              (serious-condition (c) (values nil "Error" c))
@@ -1122,7 +1129,8 @@ signaled condition to OUT-STREAM."
 			    (output-comments out-stream "comments" comments target-comment)
 			    (when lw2-auth-token
 			      (force-output out-stream)
-			      (output-comments-votes out-stream))))
+			      (output-comments-votes out-stream)
+			      (output-alignment-forum out-stream post))))
 	     (emit-page (out-stream :title title :content-class (format nil "post-page comment-thread-page~:[~; question-post-page~]" (cdr (assoc :question post))))
 			(cond
 			  (condition
@@ -1145,8 +1153,9 @@ signaled condition to OUT-STREAM."
 			(when lw2-auth-token
                           (force-output out-stream)
                           (output-post-vote out-stream)
-                          (output-comments-votes out-stream))))))))
-    (:post (csrf-token text answer parent-answer-id parent-comment-id edit-comment-id retract-comment-id unretract-comment-id delete-comment-id)
+                          (output-comments-votes out-stream)
+			  (output-alignment-forum out-stream post))))))))
+    (:post (csrf-token text answer af parent-answer-id parent-comment-id edit-comment-id retract-comment-id unretract-comment-id delete-comment-id)
      (let ((lw2-auth-token *current-auth-token*))
        (check-csrf-token csrf-token)
        (assert lw2-auth-token)
@@ -1160,7 +1169,8 @@ signaled condition to OUT-STREAM."
 			 ((not edit-comment-id) :post-id post-id)
 			 (parent-comment-id :parent-comment-id parent-comment-id)
 			 (answer :answer t)
-			 (parent-answer-id :parent-answer-id parent-answer-id))))
+			 (parent-answer-id :parent-answer-id parent-answer-id)
+			 (af :af t))))
 		   (if edit-comment-id
 		       (prog1 edit-comment-id
 			 (do-lw2-comment-edit lw2-auth-token edit-comment-id comment-data))
@@ -1257,17 +1267,13 @@ signaled condition to OUT-STREAM."
                                                                              (show :member '(:all :posts :comments :drafts :conversations :inbox) :default :all)
                                                                              (sort :member '(:top :new) :default :new))
              (let* ((auth-token (if (eq show :inbox) *current-auth-token*))
-                    (user-query-terms (cond
-                                        (user-slug (alist :slug user-slug))
-                                        (id (alist :document-id id))))
-                    (user-info
-                      (let ((ui (lw2-graphql-query (lw2-query-string :user :single user-query-terms `(:--id :slug :display-name :karma ,@(if (eq show :inbox) '(:last-notifications-check))))
-                                                   :auth-token auth-token)))
-                        (if (cdr (assoc :--id ui))
-                            ui
-                            (error (make-condition 'lw2-user-not-found-error)))))
-                    (user-id (cdr (assoc :--id user-info)))
-                    (own-user-page (logged-in-userid user-id))
+		    (user-info
+		     (let ((ui (get-user (cond (user-slug :user-slug) (id :user-id)) (or user-slug id) :auth-token auth-token)))
+		       (if (cdr (assoc :--id ui))
+			   ui
+			   (error (make-condition 'lw2-user-not-found-error)))))
+		    (user-id (cdr (assoc :--id user-info)))
+		    (own-user-page (logged-in-userid user-id))
                     (comments-index-fields (remove :page-url (comments-index-fields))) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
                     (display-name (if user-slug (cdr (assoc :display-name user-info)) user-id))
                     (show-text (if (not (eq show :all)) (string-capitalize show)))
@@ -1359,13 +1365,27 @@ signaled condition to OUT-STREAM."
                                                                       :new-post (if (eq show :drafts) "drafts" t)
                                                                       :new-conversation (if own-user-page t user-slug)
                                                                       :logout own-user-page)
-                                                (format out-stream "<h1 class=\"page-main-heading\"~@[ ~A~]>~A</h1><div class=\"user-stats\">Karma: <span class=\"karma-total\">~A</span></div>"
-                                                        (if (not own-user-page)
-                                                            (if user-slug
-                                                                (format nil "data-anti-kibitzer-redirect=\"/user?id=~A\"" (cdr (assoc :--id user-info)))
-                                                                (format nil "data-kibitzer-redirect=\"/users/~A\"" (cdr (assoc :slug user-info)))))
-                                                        (encode-entities display-name)
-                                                        (if user-slug (pretty-number (or (cdr (assoc :karma user-info)) 0)) "##"))
+						(alist-bind ((actual-id string :--id)
+							     (actual-slug string :slug)
+							     (karma (or null fixnum))
+							     (af-karma (or null fixnum)))
+							    user-info
+						  <h1 class="page-main-heading"
+						      (when (not own-user-page)
+						        (format nil "data-~:[~;anti-~]~:*kibitzer-redirect=~:[/users/~*~A~;/user?id=~A~]"
+								user-slug actual-id actual-slug))>
+						    (progn display-name)
+						  </h1>
+						  <div class="user-stats">
+						    Karma:
+						    <span class="karma-type">
+						      <span class="karma-total">(if user-slug (pretty-number (or karma 0)) "##")</span>(if af-karma " (LW),")
+						    </span>\ 
+						    (when af-karma
+						      <span class="karma-type">
+						        <span class="karma-total af-karma-total">(if user-slug (pretty-number (or af-karma 0)) "##")</span> \(AF\)
+						      </span>)
+						  </div>)
                                                 (sublevel-nav-to-html out-stream
                                                                       `(:all :posts :comments
                                                                         ,@(if own-user-page
