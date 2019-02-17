@@ -1680,8 +1680,7 @@ h1.listing + .post-meta .read-time {
 	text-decoration: line-through;
 }
 
-.post-body a,
-.comment-body a {
+.bare-url {
 	word-break: break-all;
 	hyphens: auto;
 }
