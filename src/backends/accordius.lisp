@@ -1,6 +1,5 @@
 (in-package #:lw2.backend)
 
-
 ;;; REST API
 
 (defun do-wl-rest-query (endpoint filters &key auth-token)
@@ -19,16 +18,16 @@
    (do-wl-rest-query "post_search/" `(("query" . ,query)))
    (do-wl-rest-query "comment_search/" `(("query" . ,query)))))
 
-(defun do-wl-rest-post (endpoint post-params auth-token)
+(defun do-wl-rest-mutate (mutation-type endpoint post-params auth-token)
   (drakma:http-request
    (quri:render-uri (quri:merge-uris (quri:make-uri :path endpoint :query "") (quri:uri (rest-api-uri *current-backend*))))
-   :method :post
+   :method mutation-type
    :parameters post-params
    :additional-headers `(("authorization" . ,auth-token)))
   )
 
 (defun do-wl-create-tag (document-id text auth-token)
-  (do-wl-rest-post "tags/" `(("document_id" . ,document-id) ("text" . ,text)) auth-token))
+  (do-wl-rest-mutate :post "tags/" `((:DOCUMENT-ID . ,document-id) (:TEXT . ,text)) auth-token))
   
 
 ;;;; BACKEND SPECIFIC GRAPHQL
@@ -50,6 +49,21 @@
 ;;;; LOGIN
 
 (in-package #:lw2.login)
+
+(define-backend-operation do-lw2-mutation backend-accordius (auth-token target-type mutation-type terms fields)
+  (let ((endpoint
+	 (case target-type
+	   (:post "posts")
+	   (:comment "comments")
+	   )))
+    (cond
+      ((eq mutation-type :delete) (do-wl-rest-mutate mutation-type
+				    (concatenate 'string endpoint "/"
+						 (cdr (assoc :DOCUMENT-ID terms)))
+				    nil
+				    auth-token))
+      (t (call-next-method)))))
+   
 
 (define-backend-operation do-login backend-accordius (user-designator-type user-designator password)
   (declare (ignore user-designator-type))

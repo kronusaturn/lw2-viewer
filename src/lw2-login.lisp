@@ -186,7 +186,19 @@
 		    (list (cons :data data)))))
 	  (fields (list (list* :data fields))))
      (values (graphql-mutation-string mutation-name terms fields) mutation-name))))
+#|
+do-lw2-mutation:
 
+Low level graphQL mutation string builder. This is a good function to override 
+with a define-backend-operation and translate into the semantics of higher level functions,
+that way you can avoid having to recreate them all for each backend service.
+
+auth-token - The authentication token to use with the API, fairly straightforward.
+target-type - The type of object that we're mutating
+mutation-type - The request method (or analogous equivalent) that we're using
+terms - The additional parameters/variables/etc that we're sending to the server with our request
+fields - The return values we want to get from the server after it completes our request
+|#
 (define-backend-function do-lw2-mutation (auth-token target-type mutation-type terms fields)
   (backend-lw2-legacy
    (multiple-value-bind (mutation-string operation-name)
@@ -213,8 +225,13 @@
 (defun do-lw2-comment-edit (auth-token comment-id set)
   (cdr (assoc :--id (do-lw2-mutation auth-token :comment :update (alist :document-id comment-id :set set) '(:--id)))))
 
-(defun do-lw2-comment-remove (auth-token comment-id)
-  (do-lw2-mutation auth-token :comment :delete (alist :document-id comment-id) '(----typename)))
+(define-backend-function do-lw2-comment-remove (auth-token comment-id &key reason)
+  (backend-lw2-legacy
+   (declare (ignore reason)) ; reasons not supported
+   (do-lw2-mutation auth-token :comment :delete (alist :document-id comment-id) '(----typename)))
+  (backend-lw2-modernized
+   (do-lw2-comment-edit auth-token comment-id '((:deleted . t) (:deleted-public . t)
+						(:deleted-reason . reason)))))
 
 (defun do-lw2-vote (auth-token target target-type vote-type)
   (let ((ret (do-lw2-post-query auth-token

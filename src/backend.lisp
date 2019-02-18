@@ -15,7 +15,8 @@
 	   #:get-conversation-messages
 	   #:get-user
            #:get-notifications #:check-notifications
-	   #:lw2-search-query #:get-post-title #:get-post-slug #:get-slug-postid #:get-username #:get-user-slug)
+	   #:lw2-search-query #:get-post-title #:get-post-slug #:get-slug-postid #:get-username #:get-user-slug
+	   #:do-wl-rest-mutate #:do-wl-rest-query #:do-wl-create-tag)
   (:recycle #:lw2-viewer)
   (:unintern #:get-posts #:make-posts-list-query))
 
