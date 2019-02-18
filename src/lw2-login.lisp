@@ -225,8 +225,13 @@ fields - The return values we want to get from the server after it completes our
 (defun do-lw2-comment-edit (auth-token comment-id set)
   (cdr (assoc :--id (do-lw2-mutation auth-token :comment :update (alist :document-id comment-id :set set) '(:--id)))))
 
-(defun do-lw2-comment-remove (auth-token comment-id)
-  (do-lw2-mutation auth-token :comment :delete (alist :document-id comment-id) '(----typename)))
+(define-backend-function do-lw2-comment-remove (auth-token comment-id &key reason)
+  (backend-lw2-legacy
+   (declare (ignore reason)) ; reasons not supported
+   (do-lw2-mutation auth-token :comment :delete (alist :document-id comment-id) '(----typename)))
+  (backend-lw2-modernized
+   (do-lw2-comment-edit auth-token comment-id '((:deleted . t) (:deleted-public . t)
+						(:deleted-reason . reason)))))
 
 (defun do-lw2-vote (auth-token target target-type vote-type)
   (let ((ret (do-lw2-post-query auth-token
