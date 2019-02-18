@@ -57,12 +57,12 @@
 	   (:comment "comments")
 	   )))
     (cond
-      ((eq mutation-type :post) (do-wl-rest-mutate mutation-type endpoint terms auth-token))
       ((eq mutation-type :delete) (do-wl-rest-mutate mutation-type
 				    (concatenate 'string endpoint "/"
 						 (cdr (assoc :DOCUMENT-ID terms)))
 				    nil
-				    auth-token)))))
+				    auth-token))
+      (t (call-next-method)))))
    
 
 (define-backend-operation do-login backend-accordius (user-designator-type user-designator password)
