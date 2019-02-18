@@ -1207,7 +1207,7 @@ signaled condition to OUT-STREAM."
                                     :url (cdr (assoc :url post-body))
 				    :question (cdr (assoc :question post-body))
 				    :tags-supported (typep *current-backend* 'backend-accordius)
-				    :tags  (when (typep *current-backend* 'backend-accordius) (do-wl-rest-query (format nil "posts/~a/update_tagset/" post-id) ()))
+				    :tags (when (and post-id (typep *current-backend* 'backend-accordius)) (do-wl-rest-query (format nil "posts/~a/update_tagset/" post-id) '()))
                                     :post-id post-id
                                     :section-list (loop for (name desc) in '(("all" "All") ("meta" "Meta") ("drafts" "Drafts"))
                                                         collect (alist :name name :desc desc :selected (string= name section)))
