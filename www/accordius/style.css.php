@@ -7,14 +7,13 @@
 /*======*/
 
 #tags {
-    order: 12;
-    display: flex;
-    flex-basis: 100%;
-    justify-content: center;
-    margin: 0;
-}
-#tags a {
-    display: inline-block;
+	order: 12;
+	display: flex;
+	flex-basis: 100%;
+	justify-content: center;
+	margin: 0;
+	flex-flow: row wrap;
+	align-items: flex-start;
 }
 
 <?php

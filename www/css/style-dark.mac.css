@@ -7433,14 +7433,13 @@ select {
 /*======*/
 
 #tags {
-    order: 12;
-    display: flex;
-    flex-basis: 100%;
-    justify-content: center;
-    margin: 0;
-}
-#tags a {
-    display: inline-block;
+	order: 12;
+	display: flex;
+	flex-basis: 100%;
+	justify-content: center;
+	margin: 0;
+	flex-flow: row wrap;
+	align-items: flex-start;
 }
 
 /*===============*/
@@ -7452,27 +7451,28 @@ select {
 /*++++++*/
 
 #tags {
-    padding: 0.5em;
+	padding: 0.5em;
 }
 #tags::before {
-    content: "Tags:";
-    display: inline-block;
-    margin: 0 0.25em 0 0;
-    opacity: 0.5;
+	content: "Tags:";
+	margin: 0 0.25em 0 0;
+	opacity: 0.5;
+	line-height: 1;
+	align-self: center;
 }
 #tags a {
-    border-radius: 8px;
-    background-color: #110c06;
-    border: 1px solid #2e2416;
-    padding: 4px 8px 5px 8px;
-    line-height: 1;
-    margin: 0 0.25em;
-    font-size: 0.9375em;
+	border-radius: 8px;
+	background-color: #110c06;
+	border: 1px solid #2e2416;
+	padding: 4px 8px 5px 8px;
+	line-height: 1;
+	margin: 0.25em;
+	font-size: 0.9375em;
 }
 #tags a:hover {
-    text-decoration: none;
-    background-color: #221806;
+	text-decoration: none;
+	background-color: #221806;
 }
 #tags a:active {
-    color: #00a1e8;
+	color: #00a1e8;
 }
