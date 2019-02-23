@@ -2955,6 +2955,10 @@ code {
 pre {
 	white-space: pre-wrap;
 }
+.post-body pre,
+.comment-body pre {
+	text-align: left;
+}
 code {
 	font-size: 0.95em;
 	display: inline-block;
