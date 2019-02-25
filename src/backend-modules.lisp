@@ -41,7 +41,7 @@
 
 (defclass backend-lw2 (backend-websocket-login backend-lw2-modernized backend-lw2-legacy backend-algolia-search backend-q-and-a backend-alignment-forum) ())
 
-(defclass backend-ea-forum (backend-websocket-login backend-lw2-modernized backend-lw2-legacy backend-algolia-search) ())
+(defclass backend-ea-forum (backend-websocket-login backend-lw2-modernized backend-lw2-legacy backend-algolia-search backend-q-and-a) ())
 
 (defclass backend-accordius (backend-lw2-legacy backend-lw2-modernized)
   ((rest-api-uri :accessor rest-api-uri :initarg :rest-api-uri :type simple-string)))
