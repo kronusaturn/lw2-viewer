@@ -60,30 +60,47 @@
           (setf (gethash db-name open-databases) db))))
     (setf (environment-container-databases-list environment-container) *cache-databases-list*)))
 
+(defun find-environment-with-path (path environment-list)
+  (find-if
+   (lambda (env) (string= path (lmdb:environment-directory (environment-container-environment env))))
+   environment-list))
+
+(defun find-site-with-environment-path (path site-list)
+  (find path site-list
+	:test #'string=
+	:key (lambda (site) (backend-cache-db-path (site-backend site)))))
+
 (define-backend-function get-current-environment ())
 
 (define-backend-operation get-current-environment backend-lmdb-cache ()
   (with-mutex (*db-environments-lock*)
     (unless (and (backend-lmdb-environment backend) (eq *sites* *environments-sites*)
 		 (eq *cache-databases-list* (environment-container-databases-list (backend-lmdb-environment backend))))
-      (dolist (env *db-environments*)
-        (wait-on-semaphore (environment-container-semaphore env) :n (expt 2 20))
-        (close-environment (environment-container-environment env) (environment-container-open-databases env)))
-      (setf *db-environments* nil
-            *environments-sites* *sites*)
-      (uiop:ensure-all-directories-exist (map 'list
-                                              (lambda (site)
-                                                (backend-cache-db-path (site-backend site)))
-                                              *environments-sites*))
-      (dolist (site *environments-sites*)
-        (let ((new-environment
-                (make-environment-container
-                  :semaphore (make-semaphore :name (format nil "LMDB environment semaphore for ~A" (site-host site)) :count (expt 2 20))
-                  :environment (lmdb:make-environment (backend-cache-db-path (site-backend site)) :max-databases 1024 :max-readers 126 :open-flags 0 :mapsize *lmdb-mapsize*))))
-          (lmdb:open-environment (environment-container-environment new-environment) :create t)
-          (prepare-environment new-environment)
-          (setf (backend-lmdb-environment (site-backend site)) new-environment)
-          (push new-environment *db-environments*))))
+      (let ((old-environments *db-environments*))
+	(dolist (env old-environments)
+	  (unless (find-site-with-environment-path (lmdb:environment-directory (environment-container-environment env)) *sites*)
+	    (wait-on-semaphore (environment-container-semaphore env) :n (expt 2 20))
+	    (close-environment (environment-container-environment env) (environment-container-open-databases env))))
+	(setf *db-environments* nil
+	      *environments-sites* *sites*)
+	(uiop:ensure-all-directories-exist (map 'list
+						(lambda (site)
+						  (backend-cache-db-path (site-backend site)))
+						*environments-sites*))
+	(dolist (site *environments-sites*)
+	  (if-let (existing-environment (find-environment-with-path (backend-cache-db-path (site-backend site)) old-environments))
+		  (progn
+		    (push existing-environment *db-environments*)
+		    (setf (backend-lmdb-environment (site-backend site)) existing-environment))
+		  (let ((new-environment
+			 (make-environment-container
+			  :semaphore (make-semaphore :name (format nil "LMDB environment semaphore for ~A" (site-host site)) :count (expt 2 20))
+			  :environment (lmdb:make-environment (backend-cache-db-path (site-backend site))
+							      :max-databases 1024 :max-readers 126 :open-flags 0 :mapsize *lmdb-mapsize*))))
+		    (lmdb:open-environment (environment-container-environment new-environment) :create t)
+		    (prepare-environment new-environment)
+		    (setf (backend-lmdb-environment (site-backend site)) new-environment)
+		    (push new-environment *db-environments*))))))
     (backend-lmdb-environment backend)))
 
 (uiop:chdir (asdf:system-source-directory "lw2-viewer"))
