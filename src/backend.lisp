@@ -520,10 +520,21 @@
    (let* ((user-id (ccase user-identifier-type
 		     (:user-id user-identifier)
 		     (:user-slug (get-slug-userid user-identifier))))
-	  (query-string (lw2-query-string :user :single (alist :document-id user-id) (if auth-token (cons :last-notifications-check (user-fields)) (user-fields)))))
-     (if auth-token
-	 (lw2-graphql-query query-string :auth-token auth-token)
-	 (lw2-graphql-query-timeout-cached query-string "user-json" user-id :revalidate revalidate :force-revalidate force-revalidate)))))
+	  (query-string (lw2-query-string :user :single (alist :document-id user-id) (if auth-token (cons :last-notifications-check (user-fields)) (user-fields))))
+	  (result (if auth-token
+		      (lw2-graphql-query query-string :auth-token auth-token)
+		      (lw2-graphql-query-timeout-cached query-string "user-json" user-id :revalidate revalidate :force-revalidate force-revalidate))))
+     (alist-bind ((user-id (or simple-string null) :--id)
+		  (display-name (or simple-string null))
+		  (slug (or simple-string null)))
+		 result
+       (when user-id
+	 (when display-name
+	   (cache-username user-id display-name))
+	 (when slug
+	   (cache-user-slug user-id slug)
+	   (cache-slug-userid slug user-id))))
+     result)))
 
 (define-backend-function get-notifications (&key user-id offset auth-token)
   (backend-lw2-legacy
