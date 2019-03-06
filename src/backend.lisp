@@ -653,4 +653,8 @@
 (defun preload-username-cache ()
   (let ((user-list (lw2-graphql-query (lw2-query-string :user :list '() '(:--id :display-name)))))
     (loop for user in user-list
-	  do (cache-username (cdr (assoc :--id user)) (cdr (assoc :display-name user)))))) 
+       do (alist-bind ((user-id (or simple-string null) :--id)
+		       (display-name (or simple-string null)))
+		      user
+	    (when (and user-id display-name)
+	      (cache-username user-id display-name))))))
