@@ -528,12 +528,13 @@
 		  (display-name (or simple-string null))
 		  (slug (or simple-string null)))
 		 result
-       (when user-id
-	 (when display-name
-	   (cache-username user-id display-name))
-	 (when slug
-	   (cache-user-slug user-id slug)
-	   (cache-slug-userid slug user-id))))
+		 (when user-id
+	 (with-cache-transaction
+	   (when display-name
+	     (cache-username user-id display-name))
+	   (when slug
+	     (cache-user-slug user-id slug)
+	     (cache-slug-userid slug user-id)))))
      result)))
 
 (define-backend-function get-notifications (&key user-id offset auth-token)
@@ -651,10 +652,16 @@
     (rate-limit (slug) (cdr (first (lw2-graphql-query (lw2-query-string :user :single (alist :slug slug) '(:--id))))))))
 
 (defun preload-username-cache ()
-  (let ((user-list (lw2-graphql-query (lw2-query-string :user :list '() '(:--id :display-name)))))
-    (loop for user in user-list
-       do (alist-bind ((user-id (or simple-string null) :--id)
-		       (display-name (or simple-string null)))
-		      user
-	    (when (and user-id display-name)
-	      (cache-username user-id display-name))))))
+  (let ((user-list (lw2-graphql-query (lw2-query-string :user :list '() '(:--id :slug :display-name)))))
+    (with-cache-transaction
+	(loop for user in user-list
+	   do (alist-bind ((user-id (or simple-string null) :--id)
+			   (slug (or simple-string null))
+			   (display-name (or simple-string null)))
+			  user
+		(when user-id
+		  (when display-name
+		    (cache-username user-id display-name))
+		  (when slug
+		    (cache-user-slug user-id slug)
+		    (cache-slug-userid slug user-id))))))))
