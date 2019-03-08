@@ -325,6 +325,25 @@
               js-time
               pretty-time))))
 
+(defun sequence-index-to-html (sequence)
+  (alist-bind ((sequence-id string :--id)
+	       (title string)
+	       (created-at string)
+	       (user-id string))
+	      sequence
+    (multiple-value-bind (pretty-time js-time) (pretty-time created-at)
+      <h1 class="listing">
+        <a href=("/s/~A" sequence-id)>(safe (clean-text-to-html title :hyphenation nil))</a>
+      </h1>
+      <div class="post-meta">
+        <a class=("author~{ ~A~}" (list-cond ((logged-in-userid user-id) "own-user-author")))
+	   href=("/users/~A" (get-user-slug user-id))
+	   data-userid=user-id>
+	  (get-username user-id)
+        </a>
+        <div class="date" data-js-date=js-time>(progn pretty-time)</div>
+      </div>)))
+
 (defun error-to-html (out-stream condition)
   (format out-stream "<div class=\"gw-error\"><h1>Error</h1><p>~A</p></div>"
           (encode-entities (princ-to-string condition))))
@@ -452,7 +471,9 @@ signaled condition to OUT-STREAM."
 	     (format out-stream "<ul class=\"comment-thread\"><li class=\"comment-item\" id=\"comment-~A\">" (cdr (assoc :--id x)))
 	     (unwind-protect
 		  (comment-to-html out-stream x :with-post-title t)
-	       (format out-stream "</li></ul>"))))))
+	       (format out-stream "</li></ul>")))
+	    (:sequence
+	     (sequence-index-to-html x)))))
       (format out-stream "<div class=\"listing-message\">~A</div>" empty-message)))
 
 (defun write-index-items-to-rss (out-stream items &key title need-auth)
@@ -1551,6 +1572,19 @@ signaled condition to OUT-STREAM."
                                                                         (format out-stream "<h1>Password reset complete</h1><p>You can now <a href=\"/login\">log in</a> with your new password.</p>"))))))))))
       (t
        (emit-rpw-page)))))
+
+(define-page view-sequences "/library"
+                            ((view :member '(:featured :community) :default :featured))
+  (let ((sequences
+	 (lw2-graphql-query
+	  (lw2-query-string :sequence :list
+			    (alist :view (case view
+					   (:featured "curatedSequences")
+					   (:community "communitySequences")))
+			    '(:--id :created-at :user-id :title :----typename)))))
+    (view-items-index
+     sequences
+     :title "Sequences Library")))
 
 (defun firstn (list n)
   (loop for x in list
