@@ -418,19 +418,17 @@ signaled condition to OUT-STREAM."
             collect x))))
 
 (defun identify-item (x)
-  (cond
-    ((typep x 'condition)
-     :condition)
-    ((assoc :message x)
-     :notification)
-    ((string= (cdr (assoc :----typename x)) "Message")
-     :message)
-    ((string= (cdr (assoc :----typename x)) "Conversation")
-     :conversation)
-    ((assoc :comment-count x)
-     :post)
-    (t
-     :comment)))
+  (typecase x
+    (list
+     (alexandria:if-let (typename (cdr (assoc :----typename x)))
+			(find-symbol (string-upcase typename) (find-package :keyword))
+			(cond
+			  ((assoc :message x)
+			   :notification)
+			  ((assoc :comment-count x)
+			   :post)
+			  (t
+			   :comment))))))
 
 (defun write-index-items-to-html (out-stream items &key need-auth (empty-message "No entries.") skip-section)
   (if items
