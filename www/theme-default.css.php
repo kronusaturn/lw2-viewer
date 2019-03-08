@@ -508,7 +508,7 @@ h1.listing {
 	top: <?php echo ($platform == 'Mac') ? "0" : "0.125em"; ?>; ;
 }
 
-h1.listing a[href^='/posts'] {
+h1.listing a[href^='/'] {
 	color: #000;
 }
 h1.listing a[href^="http"] {

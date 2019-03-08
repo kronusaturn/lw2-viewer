@@ -429,6 +429,9 @@ a#inbox-indicator.new-messages:hover::before {
 	grid-column: 2;
 	align-self: start;
 }
+#content.sequences-page > .sublevel-nav {
+	grid-row: unset;
+}
 .sublevel-nav .sublevel-item {
 	flex: 0 0 6em;
 	padding: 0.125em 0.5em;

@@ -1,7 +1,7 @@
 (uiop:define-package #:lw2-viewer
   (:use #:cl #:sb-thread #:flexi-streams #:djula
 	#:lw2-viewer.config #:lw2.utils #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login #:lw2.context #:lw2.sites #:lw2.components #:lw2.html-reader)
-  (:import-from #:alexandria #:ensure-list)
+  (:import-from #:alexandria #:ensure-list #:when-let)
   (:unintern
     #:define-regex-handler #:*fonts-stylesheet-uri* #:generate-fonts-link
     #:user-nav-bar #:*primary-nav* #:*secondary-nav* #:*nav-bars*
@@ -325,14 +325,33 @@
               js-time
               pretty-time))))
 
-(defun sequence-index-to-html (sequence)
+(defun sequence-to-html (sequence)
+  (labels ((contents-to-html (contents)
+	     (when-let ((html-body (cdr (assoc :html contents))))
+		       (write-sequence (clean-html* html-body) *html-output*)))
+	   (chapter-to-html (chapter)
+	     (alist-bind ((title (or string null))
+			   (subtitle (or string null))
+			   (number (or fixnum null))
+			   (contents list)
+			   (posts list))
+			  chapter
+		(when title
+		  <h2>(safe (format nil "~@[~A. ~]~A" number (clean-text-to-html title :hyphenation nil)))</h2>)
+		(when subtitle
+		  <div class="sequence-subtitle">(clean-text-to-html subtitle)</div>)
+		(contents-to-html contents)
+		(dolist (post posts)
+		  (post-headline-to-html post)))))
   (alist-bind ((sequence-id string :--id)
 	       (title string)
 	       (created-at string)
-	       (user-id string))
+	       (user-id string)
+	       (chapters list)
+	       (contents list))
 	      sequence
     (multiple-value-bind (pretty-time js-time) (pretty-time created-at)
-      <h1 class="listing">
+      <h1 class=(if chapters "post-title" "listing")>
         <a href=("/s/~A" sequence-id)>(safe (clean-text-to-html title :hyphenation nil))</a>
       </h1>
       <div class="post-meta">
@@ -342,7 +361,12 @@
 	  (get-username user-id)
         </a>
         <div class="date" data-js-date=js-time>(progn pretty-time)</div>
-      </div>)))
+      </div>
+      (with-html-stream-output
+	  (when chapters
+	    (contents-to-html contents)
+	    (dolist (chapter chapters)
+	      (chapter-to-html chapter))))))))
 
 (defun error-to-html (out-stream condition)
   (format out-stream "<div class=\"gw-error\"><h1>Error</h1><p>~A</p></div>"
@@ -473,7 +497,7 @@ signaled condition to OUT-STREAM."
 		  (comment-to-html out-stream x :with-post-title t)
 	       (format out-stream "</li></ul>")))
 	    (:sequence
-	     (sequence-index-to-html x)))))
+	     (sequence-to-html x)))))
       (format out-stream "<div class=\"listing-message\">~A</div>" empty-message)))
 
 (defun write-index-items-to-rss (out-stream items &key title need-auth)
@@ -1584,7 +1608,31 @@ signaled condition to OUT-STREAM."
 			    '(:--id :created-at :user-id :title :----typename)))))
     (view-items-index
      sequences
-     :title "Sequences Library")))
+     :title "Sequences Library"
+     :content-class "sequences-page"
+     :top-nav (lambda (out-stream)
+		(sublevel-nav-to-html out-stream
+				      '(:featured :community)
+				      view
+				      :default :featured
+				      :param-name "view"
+				      :extra-class "sequences-view")))))
+
+(define-page view-sequence (:regex "^/s(?:equences)?/([^/]+)" sequence-id) ()
+  (let ((sequence
+	 (lw2-graphql-query
+	  (lw2-query-string :sequence :single
+			    (alist :document-id sequence-id)
+			    `(:--id :title :created-at :user-id
+				    (:contents :html)
+				    (:chapters :title :subtitle :number (:contents :html) (:posts ,@(posts-index-fields)))
+				    :grid-image-id :----typename)))))
+    (alist-bind ((title string))
+		sequence
+      (emit-page (out-stream
+		  :title title
+		  :content-class "sequence-page")
+		 (sequence-to-html sequence)))))
 
 (defun firstn (list n)
   (loop for x in list
