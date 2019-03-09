@@ -38,8 +38,7 @@ body {
 #nav-item-search > *,
 .page-toolbar > *,
 #top-nav-bar > *,
-.post-body a,
-.comment-body a {
+.body-text a {
 	text-shadow: <?php global $platform; echo ($platform == 'Mac' ? 'none' : '0 0 0 #aaa'); ?>;
 }
 
@@ -55,8 +54,7 @@ body {
 	#nav-item-search > *,
 	.page-toolbar > *,
 	#top-nav-bar > *,
-	.post-body a,
-	.comment-body a {
+	.body-text a {
 		text-shadow: 0 0 1px #888;
 	}
 }}
@@ -1257,8 +1255,7 @@ h1.listing.own-post-listing {
 /* POSTS & COMMENTS */
 /*==================*/
 
-.post-body,
-.comment-body {
+.body-text {
 	font-family: <?php echo $text_font; ?>;
 	text-shadow: <?php global $platform; echo ($platform == 'Mac' ? '0 0 0 rgba(0,0,0,0.7)' : 'none'); ?>;
 	font-weight: <?php global $platform; echo ($platform == 'Mac' ? '300' : '400'); ?>;
@@ -2242,30 +2239,22 @@ button:focus:not(:hover),
 /* HEADINGS */
 /*==========*/
 
-.post-body h1, 
-.post-body h2, 
-.post-body h3, 
-.post-body h4, 
-.post-body h5, 
-.post-body h6,
-.comment-body h1,
-.comment-body h2,
-.comment-body h3,
-.comment-body h4,
-.comment-body h5,
-.comment-body h6 {
+.body-text h1, 
+.body-text h2, 
+.body-text h3, 
+.body-text h4, 
+.body-text h5, 
+.body-text h6 {
 	font-family: <?php echo $headings_font; ?>;
 	font-weight: 300;
 }
-.post-body h1,
-.comment-body h1 {
+.body-text h1 {
 	margin-top: 1.25em;
 	box-shadow:
 		0 -7px 0 0 #fff inset,
 		0 -8px 0 0 #eee inset;
 }
-.post-body h6,
-.comment-body h6 {
+.body-text h6 {
 	color: #555;
 }
 

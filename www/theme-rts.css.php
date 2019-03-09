@@ -811,40 +811,33 @@ h1.listing.own-post-listing {
 /* POSTS & COMMENTS */
 /*==================*/
 
-.post-body,
-.comment-body {
+.body-text {
 	font-family: <?php echo $text_font; ?>;
 }
 h1.post-title {
 	font-family: <?php echo $text_font; ?>;
 	font-weight: 600;
 }
-.post-body,
-.comment-body {
+.body-text {
 	font-family: <?php echo $text_font; ?>;
 	font-weight: 500;
 	line-height: 1.45;
 }
 
-.post-body a,
-.post-body a:visited,
-.comment-body a,
-.comment-body a:visited {
+.body-text a,
+.body-text a:visited {
 	text-decoration: none;
 	color: inherit;
 }
-.post-body a:link::after,
-.post-body a:visited::after,
-.comment-body a:link::after,
-.comment-body a:visited::after {
+.body-text a:link::after,
+.body-text a:visited::after {
 	position: relative;
 	content: "﻿°";
 	margin-left: 2px;
 	margin-right: 1px;
 	color: #933;
 }
-.post-body a:hover,
-.comment-body a:hover {
+.body-text a:hover {
 	color: #999;
 	border-bottom: 1px dotted #999;
 }
@@ -1563,36 +1556,26 @@ input[type='submit']:active {
 /* HEADINGS */
 /*==========*/
 
-.post-body h1, 
-.post-body h2, 
-.post-body h3, 
-.post-body h4, 
-.post-body h5, 
-.post-body h6, 
-.comment-body h1, 
-.comment-body h2, 
-.comment-body h3, 
-.comment-body h4, 
-.comment-body h5, 
-.comment-body h6 {
+.body-text h1, 
+.body-text h2, 
+.body-text h3, 
+.body-text h4, 
+.body-text h5, 
+.body-text h6 {
 	margin: 1.5em 0 0.25em 0;
 }
-.post-body h4,
-.comment-body h4 {
+.body-text h4 {
 	font-size: 1.15em;
 }
-.post-body h3, 
-.comment-body h3 {
+.body-text h3 {
 	font-variant: small-caps;
 	font-size: 1.3em;
 }
-.post-body h2, 
-.comment-body h2 {
+.body-text h2 {
 	font-style: italic;
 	font-size: 1.5em;
 }
-.post-body h1,
-.comment-body h1 {
+.body-text h1 {
 	font-size: 1.9em;
 	border: none;
 }
@@ -1656,12 +1639,9 @@ blockquote {
 /* TABLES */
 /*========*/
 
-.post-body table,
-.comment-body table,
-.post-body table th,
-.post-body table td,
-.comment-body table th,
-.comment-body table td {
+.body-text table,
+.body-text table th,
+.body-text table td {
 	border: 1px solid #ddd;
 }
 

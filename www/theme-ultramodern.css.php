@@ -718,8 +718,7 @@ h1.listing + .post-meta .link-post-domain {
 /* POSTS & COMMENTS */
 /*==================*/
 
-.post-body,
-.comment-body {
+.body-text {
 	font-family: <?php echo $text_font; ?>;
 	font-weight: <?php global $platform; echo ($platform == 'Mac' ? '300' : '400'); ?>;
 	color: #000;
@@ -728,29 +727,25 @@ h1.listing + .post-meta .link-post-domain {
 		0.5px 0.5px 1px #aaa,
 		0.5px 0.5px 1px #bbb;
 }
-.post-body strong,
-.comment-body strong {
+.body-text strong {
 	font-weight: 500;
 }
 
-.post-body a:link,
-.comment-body a:link {
+.body-text a:link {
 	color: inherit;
 	text-shadow: 
 		0px 0px 1px #bd5984, 
 		0.5px 0.5px 1px #f68a84, 
 		0.5px 0.5px 1px #ff9b8c;
 }
-.post-body a:visited,
-.comment-body a:visited {
+.body-text a:visited {
 	color: inherit;
 	text-shadow:
 		0px 0px 1px #a766dd, 
 		0.5px 0.5px 1px #d9f, 
 		0.5px 0.5px 1px #efa9ff;
 }
-.post-body a:hover,
-.comment-body a:hover {
+.body-text a:hover {
 	color: #f60;
 	text-shadow:
 		0px 0px 1px #bd5984, 
@@ -1550,18 +1545,12 @@ input[type='submit']:active {
 /* HEADINGS */
 /*==========*/
 
-.post-body h1,
-.post-body h2,
-.post-body h3,
-.post-body h4,
-.post-body h5,
-.post-body h6,
-.comment-body h1,
-.comment-body h2,
-.comment-body h3,
-.comment-body h4,
-.comment-body h5,
-.comment-body h6 {
+.body-text h1,
+.body-text h2,
+.body-text h3,
+.body-text h4,
+.body-text h5,
+.body-text h6 {
 	font-weight: <?php global $platform; echo ($platform == 'Mac' ? '100' : '200'); ?>;
 	text-shadow: 
 		0px 0px 1px #777,
@@ -1576,12 +1565,10 @@ input[type='submit']:active {
 .post-body h6 strong {
 	font-weight: normal;
 }
-.post-body h6,
-.comment-body h6 {
+.body-text h6 {
 	color: #555;
 }
-.post-body h1,
-.comment-body h1 {
+.body-text h1 {
 	padding-bottom: 2px;
 	border-bottom-color: #777;
 }
@@ -1620,12 +1607,9 @@ blockquote {
 /* TABLES */
 /*========*/
 
-.post-body table,
-.comment-body table,
-.post-body table th,
-.post-body table td,
-.comment-body table th,
-.comment-body table td {
+.body-text table,
+.body-text table th,
+.body-text table td {
 	border: 1px solid #ccc;
 }
 
@@ -1682,8 +1666,7 @@ select {
 	left: -0.5px;
 }
 
-.post-body *::selection,
-.comment-body *::selection,
+.body-text *::selection,
 textarea::selection,
 input::selection {
 	background-color: #d8d8d8;
