@@ -176,7 +176,7 @@
 	      (dolist (tag tags) (alist-bind ((text string)) tag <a href=("/tags/~A" text)>(progn text)</a>))
 	    </div>)
 	</div>
-	<div class="post-body">
+	<div class="body-text post-body">
           (if url <p><a class="link-post-link" href=(convert-any-link (string-trim " " url))>Link post</a></p>)
           (with-html-stream-output
 	      (write-sequence (clean-html* (or html-body "") :with-toc t :post-id post-id) *html-output*))
@@ -187,7 +187,7 @@
 
 (defun comment-to-html (out-stream comment &key with-post-title)
   (if (or (cdr (assoc :deleted comment)) (cdr (assoc :deleted-public comment)))
-      (format out-stream "<div class=\"comment deleted-comment\"><div class=\"comment-meta\"><span class=\"deleted-meta\">[ ]</span></div><div class=\"comment-body\">[deleted]</div></div>")
+      (format out-stream "<div class=\"comment deleted-comment\"><div class=\"comment-meta\"><span class=\"deleted-meta\">[ ]</span></div><div class=\"body-text comment-body\">[deleted]</div></div>")
       (alist-bind ((comment-id string :--id)
                    (user-id string)
                    (posted-at string)
@@ -269,7 +269,7 @@
 			       data-child-count=(progn child-count)>
 			  </div>)
 			</div>
-			<div class="comment-body" (safe ("~@[ data-markdown-source=\"~A\"~]"
+			<div class="body-text comment-body" (safe ("~@[ data-markdown-source=\"~A\"~]"
 							 (if (logged-in-userid user-id)
 							     (encode-entities
 							      (or (cache-get "comment-markdown-source" comment-id)
@@ -293,7 +293,7 @@
                (html-body (or string null)))
     message
     (multiple-value-bind (pretty-time js-time) (pretty-time created-at)
-      (format out-stream "<div class=\"comment private-message~A\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <span class=\"date\" data-js-date=\"~A\">~A</span><div class=\"comment-post-title\">Private message in: <a href=\"/conversation?id=~A\">~A</a></div></div><div class=\"comment-body\">"
+      (format out-stream "<div class=\"comment private-message~A\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <span class=\"date\" data-js-date=\"~A\">~A</span><div class=\"comment-post-title\">Private message in: <a href=\"/conversation?id=~A\">~A</a></div></div><div class=\"body-text comment-body\">"
               (if highlight-new " comment-item-highlight" "")
               (encode-entities (get-user-slug user-id))
               (encode-entities (get-username user-id))
@@ -328,21 +328,30 @@
 (defun sequence-to-html (sequence)
   (labels ((contents-to-html (contents)
 	     (when-let ((html-body (cdr (assoc :html contents))))
-		       (write-sequence (clean-html* html-body) *html-output*)))
+		       <div class="body-text sequence-text">
+		         (with-html-stream-output
+			     (write-sequence (clean-html* html-body) *html-output*))
+		       </div>))
 	   (chapter-to-html (chapter)
 	     (alist-bind ((title (or string null))
 			   (subtitle (or string null))
 			   (number (or fixnum null))
 			   (contents list)
 			   (posts list))
-			  chapter
-		(when title
-		  <h2>(safe (format nil "~@[~A. ~]~A" number (clean-text-to-html title :hyphenation nil)))</h2>)
-		(when subtitle
-		  <div class="sequence-subtitle">(clean-text-to-html subtitle)</div>)
-		(contents-to-html contents)
-		(dolist (post posts)
-		  (post-headline-to-html post)))))
+			 chapter
+		<section>
+		  (with-html-stream-output
+		      (when title
+			<h1 class="sequence-chapter">(safe (format nil "~@[~A. ~]~A" number (clean-text-to-html title :hyphenation nil)))</h1>)
+		    (when subtitle
+		      <div class="sequence-subtitle">(clean-text-to-html subtitle)</div>)
+		    (contents-to-html contents)
+		    <section>
+		      (with-html-stream-output
+			  (dolist (post posts)
+			    (post-headline-to-html post)))
+		    </section>)
+		</section>)))
   (alist-bind ((sequence-id string :--id)
 	       (title string)
 	       (created-at string)
@@ -351,22 +360,24 @@
 	       (contents list))
 	      sequence
     (multiple-value-bind (pretty-time js-time) (pretty-time created-at)
-      <h1 class=(if chapters "post-title" "listing")>
-        <a href=("/s/~A" sequence-id)>(safe (clean-text-to-html title :hyphenation nil))</a>
-      </h1>
-      <div class="post-meta">
-        <a class=("author~{ ~A~}" (list-cond ((logged-in-userid user-id) "own-user-author")))
-	   href=("/users/~A" (get-user-slug user-id))
-	   data-userid=user-id>
-	  (get-username user-id)
-        </a>
-        <div class="date" data-js-date=js-time>(progn pretty-time)</div>
-      </div>
-      (with-html-stream-output
-	  (when chapters
-	    (contents-to-html contents)
-	    (dolist (chapter chapters)
-	      (chapter-to-html chapter))))))))
+      <article>		
+        (if chapters
+	  <h1 class="post-title">(safe (clean-text-to-html title :hyphenation nil))</h1>
+	  <h1 class="listing"><a href=("/s/~A" sequence-id)>(safe (clean-text-to-html title :hyphenation nil))</a></h1>)
+        <div class="post-meta">
+          <a class=("author~{ ~A~}" (list-cond ((logged-in-userid user-id) "own-user-author")))
+	     href=("/users/~A" (get-user-slug user-id))
+	     data-userid=user-id>
+	    (get-username user-id)
+          </a>
+          <div class="date" data-js-date=js-time>(progn pretty-time)</div>
+        </div>
+        (with-html-stream-output
+	    (when chapters
+	      (contents-to-html contents)
+	      (dolist (chapter chapters)
+	        (chapter-to-html chapter))))
+      </article>))))
 
 (defun error-to-html (out-stream condition)
   (format out-stream "<div class=\"gw-error\"><h1>Error</h1><p>~A</p></div>"

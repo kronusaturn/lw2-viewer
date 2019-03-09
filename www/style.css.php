@@ -1286,6 +1286,31 @@ h1.listing + .post-meta .read-time {
 	cursor: default;
 }
 
+/*************/
+/* SEQUENCES */
+/*************/
+
+.sequence-text {
+	font-size: 1.2rem;
+	padding: 0 22px;
+}
+
+section {
+	margin-top: 2em;
+	margin-bottom: 4em;
+}
+
+h1.sequence-chapter {
+	font-size: 2.3rem;
+	margin-bottom: 0;
+	line-height: 1;
+	padding: 0 21px;
+}
+
+article {
+	max-width: 100%;
+}
+
 /**************/
 /* USER PAGES */
 /**************/
@@ -1443,7 +1468,8 @@ h1.listing + .post-meta .read-time {
 /* SEARCH RESULTS */
 /******************/
 
-#content.search-results-page h1.listing {
+#content.search-results-page h1.listing,
+#content.sequence-page h1.listing {
 	font-size: 1.625em;
 }
 
@@ -1669,17 +1695,14 @@ h1.listing + .post-meta .read-time {
 	font-size: 1.0625em;
 	white-space: nowrap;
 }
-.post-body,
-.comment-body {
+.body-text {
 	overflow-wrap: break-word;
 	text-align: justify;
 }
-.post-body p,
-.comment-body p {
+.body-text p {
 	margin: 1em 0;
 }
-.retracted .post-body,
-.retracted .comment-body {
+.retracted .body-text {
 	text-decoration: line-through;
 }
 
@@ -2793,18 +2816,12 @@ input[type='submit'] {
 /* HEADINGS */
 /************/
 
-.post-body h1,
-.post-body h2,
-.post-body h3,
-.post-body h4,
-.post-body h5,
-.post-body h6,
-.comment-body h1,
-.comment-body h2,
-.comment-body h3,
-.comment-body h4,
-.comment-body h5,
-.comment-body h6 {
+.body-text h1,
+.body-text h2,
+.body-text h3,
+.body-text h4,
+.body-text h5,
+.body-text h6 {
 	line-height: 1.1;
 	margin: 1em 0 0.75em 0;
 	text-align: left;
@@ -2906,26 +2923,21 @@ div.imgonly {
 /* TABLES */
 /**********/
 
-.post-body table,
-.comment-body table {
+.body-text table {
 	border-collapse: collapse;
 	font-family: Inconsolata, Menlo, monospace;
 	font-size: 0.875em;
 }
-.post-body table th,
-.post-body table td,
-.comment-body table th,
-.comment-body table td {
+.body-text table th,
+.body-text table td {
 	text-align: left;
 	padding: 4px 6px;
 	line-height: 1.3;
 }
-.post-body table td:nth-of-type(n+2),
-.comment-body table td:nth-of-type(n+2) {
+.body-text table td:nth-of-type(n+2) {
 	text-align: right;
 }
-.post-body table caption,
-.comment-body table caption {
+.body-text table caption {
 	margin: 0 0 0.25em 0;
 	font-weight: bold;
 	font-size: 1.125em;
@@ -2958,8 +2970,7 @@ code {
 pre {
 	white-space: pre-wrap;
 }
-.post-body pre,
-.comment-body pre {
+.body-text pre {
 	text-align: left;
 }
 code {
@@ -3038,10 +3049,8 @@ li {
 	margin-bottom: 0.5em;
 }
 
-.post-body ol p,
-.post-body ul p,
-.comment-body ol p,
-.comment-body ul p {
+.body-text ol p,
+.body-text ul p {
 	margin: 0.5em 0;
 }
 

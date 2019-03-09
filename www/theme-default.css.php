@@ -869,17 +869,14 @@ h1.listing.own-post-listing {
 /* POSTS & COMMENTS */
 /*==================*/
 
-.post-body,
-.comment-body {
+.body-text {
 	font-family: <?php echo $text_font; ?>;
 }
 
-.post-body a,
-.comment-body a {
+.body-text a {
 	border-bottom: 1px dotted #bbb;
 }
-.post-body a:hover,
-.comment-body a:hover {
+.body-text a:hover {
 	text-decoration: none;
 	border-bottom: 1px solid currentColor;
 }
@@ -1592,29 +1589,21 @@ input[type='submit']:active {
 /* HEADINGS */
 /*==========*/
 
-.post-body h1,
-.post-body h2,
-.post-body h4,
-.comment-body h1,
-.comment-body h2,
-.comment-body h4 {
+.body-text h1,
+.body-text h2,
+.body-text h4 {
 	font-family: <?php echo $UI_font; ?>;
 }
-.post-body h3,
-.comment-body h3,
-.post-body h5,
-.post-body h6,
-.comment-body h5,
-.comment-body h6 {
+.body-text h3,
+.body-text h5,
+.body-text h6 {
 	font-weight: 600;
 	font-family: <?php echo $UI_font_smallcaps; ?>;
 }
-.post-body h6,
-.comment-body h6 {
+.body-text h6 {
 	color: #555;
 }
-.post-body h1,
-.comment-body h1 {
+.body-text h1 {
 	border-bottom: 1px solid #aaa;
 }
 
@@ -1649,12 +1638,9 @@ blockquote {
 /* TABLES */
 /*========*/
 
-.post-body table,
-.comment-body table,
-.post-body table th,
-.post-body table td,
-.comment-body table th,
-.comment-body table td {
+.body-text table,
+.body-text table th,
+.body-text table td {
 	border: 1px solid #ccc;
 }
 
