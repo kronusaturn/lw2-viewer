@@ -170,7 +170,7 @@
 	  (data (map 'list (lambda (x) (destructuring-bind (k . v) x
 					 (if (eq k :body)
 					     (cons :contents
-						   (alist :update-type "major"
+						   (alist :update-type "minor"
 							  :original-contents (alist :type "markdown" :data v)))
 					     x)))
 		     data))
