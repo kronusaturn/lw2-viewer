@@ -45,6 +45,8 @@
 
 (defun match-ea1-link (link) (match-values "^(?:https?://(?:www\\.)?(?:effective-altruism\\.com|forum\\.effectivealtruism\\.org))?(/ea/.*)" link (0)))
 
+(defun match-agentfoundations-link (link) (match-values "^(?:https?://(?:www\\.)?agentfoundations\\.org)?(/item\\?id=.*)" link (0)))
+
 (defun match-lw2-link (link) (match-values "^(?:https?://[^/]+)?/posts/([^/]+)/([^/#]*)(?:/(comment|answer)/([^/#]+)|/?#?([^/#]+)?)?" link (0 (or 3 4) 1 2)))
 
 (defun match-lw2-slug-link (link) (match-values "^(?:https?://(?:www.)?less(?:er)?wrong.com)?/(?:codex|hpmor)/([^/#]+)(?:/?#?([^/#]+)?)?" link (0 1)))
@@ -110,6 +112,12 @@
             nil
             (convert-lw1-link lw1-link))))))
 
+(simple-cacheable ("agentfoundations-link" "agentfoundations-link" link :catch-errors nil)
+  (process-redirect-link link "https://www.lesswrong.com" "Agent Foundations"))
+
+(defun convert-agentfoundations-link (link)
+  (convert-redirect-link link #'match-agentfoundations-link #'get-agentfoundations-link "https://www.lesswrong.com"))
+
 (defun gen-internal (post-id slug comment-id &optional absolute-uri)
   (format nil "~Aposts/~A/~A~@[#comment-~A~]" (or absolute-uri "/") post-id (or slug "-") comment-id))
 
@@ -139,7 +147,14 @@
           (gen-internal story-id (or (cdr (assoc :slug story)) (get-post-slug story-id)) comment-id absolute-uri))))))
 
 (defun convert-any-link* (url)
-  (or (convert-lw2-link url) (convert-lw2-slug-link url) (convert-lw2-sequence-link url) (convert-lw1-link url) (convert-ea1-link url) (convert-overcomingbias-link url) (convert-lw2-user-link url)))
+  (or (convert-lw2-link url)
+      (convert-lw2-slug-link url)
+      (convert-lw2-sequence-link url)
+      (convert-lw1-link url)
+      (convert-ea1-link url)
+      (convert-agentfoundations-link url)
+      (convert-overcomingbias-link url)
+      (convert-lw2-user-link url)))
 
 (defun convert-any-link (url)
   (or (convert-any-link* url) url))
