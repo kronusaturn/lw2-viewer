@@ -294,7 +294,7 @@
 	   (scan-for-urls (text-node)
 			  (declare (type plump:text-node text-node)) 
 			  (let ((text (plump:text text-node)))
-			    (multiple-value-bind (url-start url-end) (ppcre:scan "(https?://[-a-zA-Z0-9]+\\.[-a-zA-Z0-9.]+|[-a-zA-Z0-9.]+\\.(com|edu|gov|mil|net|org|biz|info|name|museum|us|ca|uk))(\\:[0-9]+){0,1}(/[-a-zA-Z0-9.,;:?'\\\\+&%$#=~_/]*)?" text)
+			    (multiple-value-bind (url-start url-end) (ppcre:scan "(?:(?<=(\\())|(?<= )|^)(?>https?://[-a-zA-Z0-9]+\\.[-a-zA-Z0-9.]+|[-a-zA-Z0-9.]+\\.(?:com|edu|gov|mil|net|org|int|biz|info|name|museum|us|ca|uk|io|ly))(?:\\:[0-9]+){0,1}(?:/(?:[-a-zA-Z0-9.,;:?'\\\\+&%$#=~_()/]*[-a-zA-Z0-9\\\\+&%$#=~_()/])?)?(?(1)(?=\\)))" text)
                               (declare (type simple-string text)
                                        (type (or null fixnum) url-start url-end))
 			      (when url-start
