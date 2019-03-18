@@ -98,15 +98,31 @@ body {
 		width: 112px;
 		pointer-events: auto;
 	}
+	#secondary-bar #nav-item-sequences .nav-inner {
+		font-size: 0.875em;
+		line-height: unset;
+		text-overflow: unset;
+	}
+	#nav-item-sequences .nav-inner::before {
+		content: unset;
+	}
+	#secondary-bar #nav-item-about {
+		padding-right: unset;
+	}
+	#secondary-bar #nav-item-about .nav-inner {
+		margin-right: unset;
+	}
 	#nav-item-archive,
+	#nav-item-sequences,
 	#nav-item-about {
 		position: fixed;
-		transform: translateX(-106px);
-		width: 80px;
+		transform: translateX(-111px);
+		width: 85px;
 	}
 	#content.comment-thread-page #nav-item-archive,
+	#content.comment-thread-page #nav-item-sequences,
 	#content.comment-thread-page #nav-item-about {
-		transform: translateX(-76px);
+		transform: translateX(-81px);
 	}
 
 	#nav-item-home {
@@ -504,6 +520,7 @@ body {
 	
 	#primary-bar,
 	#secondary-bar #nav-item-archive,
+	#secondary-bar #nav-item-sequences,
 	#secondary-bar #nav-item-about,
 	.page-toolbar {
 		visibility: hidden;
@@ -512,12 +529,14 @@ body {
 	}
 	#primary-bar,
 	#secondary-bar #nav-item-archive,
+	#secondary-bar #nav-item-sequences,
 	#secondary-bar #nav-item-about,
 	.page-toolbar {
 		opacity: 0.0;
 	}
 	#primary-bar,
 	#secondary-bar #nav-item-archive,
+	#secondary-bar #nav-item-sequences,
 	#secondary-bar #nav-item-about,
 	.page-toolbar {
 		transition:
@@ -532,6 +551,7 @@ body {
 	}
 	#primary-bar.engaged,
 	#secondary-bar.engaged #nav-item-archive,
+	#secondary-bar.engaged #nav-item-sequences,
 	#secondary-bar.engaged #nav-item-about,
 	.page-toolbar.engaged {
 		visibility: visible;
@@ -539,6 +559,7 @@ body {
 	}
 	#primary-bar.engaged,
 	#secondary-bar.engaged #nav-item-archive,
+	#secondary-bar.engaged #nav-item-sequences,
 	#secondary-bar.engaged #nav-item-about,
 	.page-toolbar.engaged {
 		opacity: 1.0;
@@ -549,11 +570,14 @@ body {
 	#secondary-bar.engaged #nav-item-archive {
 		top: 196px;
 	}
-	#secondary-bar.engaged #nav-item-about {
+	#secondary-bar.engaged #nav-item-sequences {
 		top: 230px;
 	}
+	#secondary-bar.engaged #nav-item-about {
+		top: 264px;
+	}
 	.page-toolbar.engaged {	
-		top: 280px;
+		top: 314px;
 	}
 
 	#post-nav-ui-toggle {
@@ -2710,6 +2734,7 @@ strong, b {
 			padding: 5px 4px 75px 60px;
 		}
 		#secondary-bar #nav-item-archive,
+		#secondary-bar #nav-item-sequences,
 		#secondary-bar #nav-item-about {
 			opacity: 0.0;
 			transition:
@@ -2717,6 +2742,7 @@ strong, b {
 				filter 0.2s ease;
 		}
 		#secondary-bar.engaged #nav-item-archive,
+		#secondary-bar.engaged #nav-item-sequences,
 		#secondary-bar.engaged #nav-item-about {
 			opacity: 1.0;
 			position: fixed;
@@ -2727,12 +2753,16 @@ strong, b {
 		#secondary-bar.engaged #nav-item-archive {
 			left: 8px;
 		}
-		#secondary-bar.engaged #nav-item-about {
+		#secondary-bar.engaged #nav-item-sequences {
 			left: 72px;
+		}
+		#secondary-bar.engaged #nav-item-about {
+			left: 136px;
 		}
 
 		#primary-bar.engaged.translucent-on-scroll,
 		#secondary-bar.engaged.translucent-on-scroll #nav-item-archive,
+		#secondary-bar.engaged.translucent-on-scroll #nav-item-sequences,
 		#secondary-bar.engaged.translucent-on-scroll #nav-item-about,
 		.page-toolbar.engaged.translucent-on-scroll {
 			opacity: 0.6;

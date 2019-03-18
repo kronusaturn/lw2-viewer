@@ -35,6 +35,11 @@ body {
 #secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
 	padding: 6px 0 3px 0;
 }
+@media only screen and (min-width: 901px) {
+	#secondary-bar #nav-item-sequences .nav-inner {
+		line-height: 1.1;
+	}
+}
 .active-bar {
 	border-top: 2px solid #eee;
 }

@@ -617,6 +617,7 @@ signaled condition to OUT-STREAM."
 
 (defmethod site-nav-bars ((site lesswrong-viewer-site))
   '((:secondary-bar (("archive" "/archive" "Archive" :accesskey "r")
+		     ("sequences" "/library" "Sequences" :description "Sequences" :accesskey "s")
                      ("about" "/about" "About" :accesskey "t")
                      ("search" "/search" "Search" :html search-bar-to-html)
                      user-nav-item))
@@ -1623,6 +1624,7 @@ signaled condition to OUT-STREAM."
      sequences
      :title "Sequences Library"
      :content-class "sequences-page"
+     :current-uri "/library"
      :top-nav (lambda (out-stream)
 		(sublevel-nav-to-html out-stream
 				      '(:featured :community)

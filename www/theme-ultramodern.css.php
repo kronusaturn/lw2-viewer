@@ -47,6 +47,11 @@ body {
 #secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
 	padding: 5px 0 3px 0;
 }
+@media only screen and (min-width: 901px) {
+	#secondary-bar #nav-item-sequences .nav-inner {
+		line-height: 1.1;
+	}
+}
 
 #bottom-bar.decorative::before,
 #bottom-bar.decorative::after {

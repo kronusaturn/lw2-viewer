@@ -134,6 +134,24 @@ body > * {
 	padding: 4px 0;
 }
 
+#nav-item-sequences .nav-inner::before {
+	font-family: "Font Awesome";
+	content: "\F5DB";
+}
+@media only screen and (min-width: 901px) {
+	#nav-item-about .nav-inner {
+		margin-right: 0.5em;
+	}
+	#nav-item-sequences .nav-inner::before {
+		font-size: 1rem;
+		display: block;
+	}
+	#secondary-bar #nav-item-sequences .nav-inner {
+		font-size: 0;
+		line-height: 1.4;
+	}
+}
+
 /*=------------=*/
 /*= Bottom bar =*/
 /*=------------=*/
@@ -5165,6 +5183,11 @@ body {
 }
 #secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
 	padding: 5px 0 3px 0;
+}
+@media only screen and (min-width: 901px) {
+	#secondary-bar #nav-item-sequences .nav-inner {
+		line-height: 1.1;
+	}
 }
 
 #bottom-bar.decorative::before,
