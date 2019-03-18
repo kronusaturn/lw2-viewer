@@ -360,7 +360,9 @@
                                         (unless wayward-li-container
                                           (setf wayward-li-container (make-element-before node "ul")))
                                         (plump:remove-child node)
-                                        (plump:append-child wayward-li-container node)))))
+                                        (plump:append-child wayward-li-container node)))
+				     ((tag-is node "p" "blockquote" "div")
+				      (setf wayward-li-container nil))))
                             :test #'plump:element-p))
           (loop while (and (= 1 (length (plump:children root))) (typep (plump:first-child root) 'plump:element) (tag-is (plump:first-child root) "div"))
                 do (setf (plump:children root) (plump:children (plump:first-child root)))) 
