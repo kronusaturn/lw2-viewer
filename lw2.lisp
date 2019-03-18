@@ -326,12 +326,18 @@
               pretty-time))))
 
 (defun sequence-to-html (sequence)
-  (labels ((contents-to-html (contents)
-	     (when-let ((html-body (cdr (assoc :html contents))))
-		       <div class="body-text sequence-text">
-		         (with-html-stream-output
-			     (write-sequence (clean-html* html-body) *html-output*))
-		       </div>))
+  (labels ((contents-to-html (contents &key title subtitle number)
+	     (let ((html-body (cdr (assoc :html contents))))
+	       (when (or html-body title subtitle)
+		 <div class="body-text sequence-text">
+		   (when title
+		     <h1 class="sequence-chapter">(safe (format nil "~@[~A. ~]~A" number (clean-text-to-html title :hyphenation nil)))</h1>)
+		   (when subtitle
+		     <div class="sequence-subtitle">(clean-text-to-html subtitle)</div>)
+		   (with-html-stream-output
+		       (when html-body
+			 (write-sequence (clean-html* html-body) *html-output*)))
+		 </div>)))
 	   (chapter-to-html (chapter)
 	     (alist-bind ((title (or string null))
 			   (subtitle (or string null))
@@ -341,11 +347,7 @@
 			 chapter
 		<section>
 		  (with-html-stream-output
-		      (when title
-			<h1 class="sequence-chapter">(safe (format nil "~@[~A. ~]~A" number (clean-text-to-html title :hyphenation nil)))</h1>)
-		    (when subtitle
-		      <div class="sequence-subtitle">(clean-text-to-html subtitle)</div>)
-		    (contents-to-html contents)
+		    (contents-to-html contents :title title :subtitle subtitle :number number)
 		    <section>
 		      (with-html-stream-output
 			  (dolist (post posts)

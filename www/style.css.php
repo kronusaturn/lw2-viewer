@@ -1302,9 +1302,6 @@ section {
 
 h1.sequence-chapter {
 	font-size: 2.3rem;
-	margin-bottom: 0;
-	line-height: 1;
-	padding: 0 21px;
 }
 
 article {
