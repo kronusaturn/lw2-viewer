@@ -617,7 +617,7 @@ signaled condition to OUT-STREAM."
 
 (defmethod site-nav-bars ((site lesswrong-viewer-site))
   '((:secondary-bar (("archive" "/archive" "Archive" :accesskey "r")
-		     ("sequences" "/library" "Sequences" :description "Sequences" :accesskey "s")
+		     ("sequences" "/library" "Sequences" :description "Sequences" :accesskey "l")
                      ("about" "/about" "About" :accesskey "t")
                      ("search" "/search" "Search" :html search-bar-to-html)
                      user-nav-item))
