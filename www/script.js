@@ -3053,7 +3053,7 @@ function keyboardHelpSetup() {
 				[ [ 'ak-m' ], "Go to Meta view" ],
 				[ [ 'ak-c' ], "Go to Recent Comments view" ],
 				[ [ 'ak-r' ], "Go to Archive view" ],
-				[ [ 'ak-l' ], "Go to Sequences view" ],
+				[ [ 'ak-q' ], "Go to Sequences view" ],
 				[ [ 'ak-t' ], "Go to About page" ],
 				[ [ 'ak-u' ], "Go to User or Login page" ],
 				[ [ 'ak-o' ], "Go to Inbox page" ]
