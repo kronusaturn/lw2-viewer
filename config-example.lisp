@@ -10,6 +10,12 @@
   :main-site-title "LessWrong"
   :main-site-abbreviation "LW"
   :main-site-uri "https://www.lesswrong.com/"
+
+; The following line will enable use of fonts.obormot.net.
+; This will not work unless you have permission to use these fonts.
+
+; :fonts-source (make-instance 'obormot-fonts-source)
+
   :backend ("lw2" ; Supported backends: lw2 lw2-legacy accordius
             :graphql-uri "https://www.lesswrong.com/graphql"
             :websocket-uri "wss://www.lesswrong.com/"
