@@ -1,11 +1,12 @@
 (uiop:define-package #:lw2-viewer
   (:use #:cl #:sb-thread #:flexi-streams #:djula
-	#:lw2-viewer.config #:lw2.utils #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login #:lw2.context #:lw2.sites #:lw2.components #:lw2.html-reader)
+	#:lw2-viewer.config #:lw2.utils #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login #:lw2.context #:lw2.sites #:lw2.components #:lw2.html-reader #:lw2.fonts)
   (:import-from #:alexandria #:ensure-list #:when-let)
   (:unintern
     #:define-regex-handler #:*fonts-stylesheet-uri* #:generate-fonts-link
     #:user-nav-bar #:*primary-nav* #:*secondary-nav* #:*nav-bars*
-    #:begin-html #:end-html))
+    #:begin-html #:end-html
+    #:*fonts-stylesheet-uris* #:*fonts-redirect-data* #:*fonts-redirect-lock* #:*fonts-redirect-thread*))
 
 (in-package #:lw2-viewer) 
 
@@ -541,48 +542,6 @@ signaled condition to OUT-STREAM."
 			:link (generate-post-link (cdr (assoc :post-id item)) (cdr (assoc :--id item)) t)
 			:body (clean-html (cdr (assoc :html-body item)))))))))))
 
-(defparameter *fonts-stylesheet-uris*
-  '("https://fonts.greaterwrong.com/?fonts=InconsolataGW,CharterGW,ConcourseGW,Whitney,MundoSans,SourceSansPro,Raleway,ProximaNova,TiredOfCourier,AnonymousPro,InputSans,InputSansNarrow,InputSansCondensed,GaramondPremierPro,TriplicateCode,TradeGothic,NewsGothicBT,Caecilia,SourceSerifPro,SourceCodePro"
-    "https://fonts.greaterwrong.com/?fonts=BitmapFonts,FontAwesomeGW&base64encode=1"))
-;(defparameter *fonts-stylesheet-uris* '("https://fonts.greaterwrong.com/?fonts=*"))
-
-(defvar *fonts-redirect-data* nil)
-(sb-ext:defglobal *fonts-redirect-lock* (make-mutex))
-(sb-ext:defglobal *fonts-redirect-thread* nil)
-
-(defun generate-fonts-links ()
-  (let ((current-time (get-unix-time)))
-    (labels ((get-redirects (uri-list)
-               (loop for request-uri in uri-list collect
-                     (multiple-value-bind (body status headers uri)
-                       (drakma:http-request request-uri :method :head :close t :redirect nil :additional-headers (alist :referer (site-uri (first *sites*)) :accept "text/css,*/*;q=0.1"))
-                       (declare (ignore body uri))
-                       (let ((location (cdr (assoc :location headers))))
-                         (if (and (typep status 'integer) (< 300 status 400) location)
-                             location
-                             nil)))))
-             (update-redirects ()
-               (handler-case
-                 (let* ((new-redirects (get-redirects *fonts-stylesheet-uris*))
-                        (new-redirects (loop for new-redirect in new-redirects
-                                             for original-uri in *fonts-stylesheet-uris*
-                                             collect (if new-redirect (quri:render-uri (quri:merge-uris (quri:uri new-redirect) (quri:uri original-uri))) original-uri))))
-                   (with-mutex (*fonts-redirect-lock*) (setf *fonts-redirect-data* (list *fonts-stylesheet-uris* new-redirects current-time)
-                                                             *fonts-redirect-thread* nil))
-                   new-redirects)
-                 (serious-condition () *fonts-stylesheet-uris*)))
-             (ensure-update-thread ()
-               (with-mutex (*fonts-redirect-lock*)
-                 (or *fonts-redirect-thread*
-                     (setf *fonts-redirect-thread* (make-thread #'update-redirects :name "fonts redirect update"))))))
-      (destructuring-bind (&optional base-uris redirect-uris timestamp) (with-mutex (*fonts-redirect-lock*) *fonts-redirect-data*)
-        (if (and (eq base-uris *fonts-stylesheet-uris*) timestamp)
-          (progn
-            (if (>= current-time (+ timestamp 60))
-                (ensure-update-thread))
-            (or redirect-uris *fonts-stylesheet-uris*))
-          (update-redirects))))))
-
 (defparameter *html-head*
   (format nil
 "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
@@ -743,11 +702,12 @@ signaled condition to OUT-STREAM."
             csrf-token
             (load-time-value (with-open-file (s "www/head.js") (uiop:slurp-stream-string s)) t)
             *extra-inline-scripts*)
-    (format out-stream "~A<link rel=\"stylesheet\" href=\"~A\">~{<link rel=\"stylesheet\" href=\"~A\">~}<link rel=\"shortcut icon\" href=\"~A\">"
+    (format out-stream "~A<link rel=\"stylesheet\" href=\"~A\">"
             *html-head*
-            (generate-css-link)
-            (generate-fonts-links)
-            (generate-versioned-link "/assets/favicon.ico"))
+            (generate-css-link))
+    (generate-fonts-html-headers (site-fonts-source *current-site*))
+    (format out-stream "<link rel=\"shortcut icon\" href=\"~A\">"
+	    (generate-versioned-link "/assets/favicon.ico"))
     (format out-stream "<script src=\"~A\" async></script>~A"
             (generate-versioned-link "/script.js")
             *extra-external-scripts*)
@@ -844,8 +804,6 @@ signaled condition to OUT-STREAM."
           (hunchentoot:return-code*) return-code
           (hunchentoot:header-out :link) (format nil "~:{<~A>;rel=preload;type=~A;as=~A~@{;~A~}~:^,~}"
                                                  `((,(generate-css-link) "text/css" "style" ,.push-option)
-                                                   ,.(loop for link in (generate-fonts-links)
-                                                           collect (list* link "text/css" "style" push-option))
                                                    (,(generate-versioned-link "/script.js") "text/javascript" "script" ,.push-option))))
     (unless push-option (set-cookie "push" "t" :max-age (* 4 60 60)))))
 

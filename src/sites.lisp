@@ -1,10 +1,10 @@
 (uiop:define-package #:lw2.sites
-  (:use #:cl #:lw2.utils #:lw2.context #:lw2.backend-modules)
+  (:use #:cl #:lw2.utils #:lw2.context #:lw2.backend-modules #:lw2.fonts)
   (:import-from #:sb-ext #:defglobal)
   (:export
     #:*sites*
     #:site #:alternate-frontend-site #:lesswrong-viewer-site #:ea-forum-viewer-site
-    #:site-uri #:site-host #:site-secure #:site-backend #:site-title #:site-description #:background-loader-enabled
+    #:site-uri #:site-host #:site-secure #:site-backend #:site-title #:site-description #:background-loader-enabled #:site-fonts-source
     #:main-site-title #:main-site-abbreviation #:main-site-uri
     #:host-matches #:find-site
     #:call-with-site-context #:with-site-context
@@ -22,7 +22,8 @@
    (backend :accessor site-backend :initarg :backend :type backend-base)
    (title :accessor site-title :initarg :title :type simple-string)
    (description :accessor site-description :initarg :description :type simple-string)
-   (background-loader-enabled :accessor background-loader-enabled :initarg :use-background-loader :initform nil :type boolean)))
+   (background-loader-enabled :accessor background-loader-enabled :initarg :use-background-loader :initform nil :type boolean)
+   (fonts-source :accessor site-fonts-source :initarg :fonts-source :initform (make-instance 'lw2.fonts:google-fonts-source) :type fonts-source)))
 
 (defmethod main-site-title ((s site)) nil)
 
