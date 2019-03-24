@@ -200,7 +200,7 @@ h1.listing ~ #bottom-bar {
 
 #bottom-bar .nav-item a::before,
 #top-nav-bar a::before {
-	font-family:"Font Awesome", "Font Awesome 5 Free";
+	font-family: "Font Awesome", "Font Awesome 5 Free";
 	font-weight: 900;
 	font-size: 0.8em;
 	position: relative;
@@ -287,7 +287,7 @@ h1.listing ~ #bottom-bar {
 }
 #nav-item-search form::before {
 	content: "\F002";
-	font-family:"Font Awesome", "Font Awesome 5 Free";
+	font-family: "Font Awesome", "Font Awesome 5 Free";
 	font-weight: 900;
 	display: inline-block;
 	vertical-align: top;
@@ -709,7 +709,7 @@ foreach ($content_width_settings as $name => $setting) {
 	left: -75px;
 }
 #theme-tweaker-toggle button {
-	font-family:"Font Awesome", "Font Awesome 5 Free";
+	font-family: "Font Awesome", "Font Awesome 5 Free";
 	font-weight: 900;
 	font-size: 1.25rem;
 	opacity: 0.4;
@@ -866,7 +866,7 @@ foreach ($content_width_settings as $name => $setting) {
 }
 #anti-kibitzer-toggle button::before,
 #anti-kibitzer-toggle button::after {
-	font-family:"Font Awesome", "Font Awesome 5 Free";
+	font-family: "Font Awesome", "Font Awesome 5 Free";
 }
 #anti-kibitzer-toggle button::before {
 	content: "\F06E";	
@@ -910,7 +910,7 @@ foreach ($content_width_settings as $name => $setting) {
 
 #text-size-adjustment-ui button {
 	font-weight: 900;
-	font-family:"Font Awesome", "Font Awesome 5 Free";
+	font-family: "Font Awesome", "Font Awesome 5 Free";
 	font-size: 0.75rem;
 	width: 24px;
 	height: 24px;
@@ -968,7 +968,7 @@ foreach ($content_width_settings as $name => $setting) {
 
 #comments-view-mode-selector a {
 	display: block;
-	font-family:"Font Awesome", "Font Awesome 5 Free";
+	font-family: "Font Awesome", "Font Awesome 5 Free";
 	font-size: 1.25rem;
 	text-align: center;
 	opacity: 0.4;
@@ -1087,7 +1087,7 @@ foreach ($content_width_settings as $name => $setting) {
 		padding-right: 0.25em;
 	}
 	#nav-item-about button.open-keyboard-help {
-		font-family:"Font Awesome", "Font Awesome 5 Free";
+		font-family: "Font Awesome", "Font Awesome 5 Free";
 		font-weight: 900;
 		position: absolute;
 		top: 0;
@@ -1103,7 +1103,7 @@ foreach ($content_width_settings as $name => $setting) {
 	position: absolute;
 	right: 0;
 	top: 0;
-	font-family:"Font Awesome", "Font Awesome 5 Free";
+	font-family: "Font Awesome", "Font Awesome 5 Free";
 	font-size: 1.5rem;
 	padding: 10px 12px;
 }
@@ -1232,7 +1232,7 @@ h1.listing a[href^="http"] {
 	}	
 	h1.listing:focus-within::before {
 		content: "\F105";
-		font-family:"Font Awesome", "Font Awesome 5 Free";
+		font-family: "Font Awesome", "Font Awesome 5 Free";
 		display: block;
 		position: absolute;
 		left: -0.75em;
@@ -1877,7 +1877,7 @@ h1.post-title {
 }
 .post.link-post a.link-post-link::before {
 	content: "\F0C1";
-	font-family:"Font Awesome", "Font Awesome 5 Free"
+	font-family: "Font Awesome", "Font Awesome 5 Free";
 	font-weight: 900;
 	font-size: 0.75em;
 	position: relative;
@@ -2370,7 +2370,7 @@ a.comment-parent-link:hover::after {
 /***********************************/
 
 .comment-minimize-button {
-	font-family:"Font Awesome", "Font Awesome 5 Free"
+	font-family: "Font Awesome", "Font Awesome 5 Free";
 	font-weight: 900;
 	font-size: 1.25rem;
 	line-height: 1;
@@ -2418,7 +2418,7 @@ a.comment-parent-link:hover::after {
 	margin: 0;
 }
 .vote {
-	font-family:"Font Awesome", "Font Awesome 5 Free"
+	font-family: "Font Awesome", "Font Awesome 5 Free";
 	font-weight: 900;
 	border: none;
 }
@@ -2472,7 +2472,7 @@ a.comment-parent-link:hover::after {
 	z-index: 1;
 }
 .comment-controls .cancel-comment-button::before {
-	font-family:"Font Awesome", "Font Awesome 5 Free"
+	font-family: "Font Awesome", "Font Awesome 5 Free";
 	margin-right: 3px;
 	content: '\F00D';
 	font-weight: 900;
@@ -2486,7 +2486,7 @@ a.comment-parent-link:hover::after {
 	padding: 1px 6px;
 }
 .comment-controls .action-button::before {
-	font-family:"Font Awesome", "Font Awesome 5 Free"
+	font-family: "Font Awesome", "Font Awesome 5 Free";
 	margin-right: 3px;
 }
 .new-comment-button {
@@ -2659,7 +2659,7 @@ a.comment-parent-link:hover::after {
 }
 #markdown-hints-checkbox + label::before {
 	content: '\F059';
-	font-family:"Font Awesome", "Font Awesome 5 Free"
+	font-family: "Font Awesome", "Font Awesome 5 Free";
 	font-weight: 900;
 	margin-right: 3px;
 }
@@ -2744,7 +2744,7 @@ a.comment-parent-link:hover::after {
 }
 #edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
 	content: "";
-	font-family:"Font Awesome", "Font Awesome 5 Free"
+	font-family: "Font Awesome", "Font Awesome 5 Free";
 	font-size: 1.375rem;
 	line-height: 0.7;
 	text-indent: 1px;
@@ -3341,7 +3341,7 @@ li {
 
 #image-focus-overlay .help-overlay::after {
 	content: "\F128";
-	font-family:"Font Awesome", "Font Awesome 5 Free"
+	font-family: "Font Awesome", "Font Awesome 5 Free";
 	font-weight: 900;
 	font-size: 2rem;
 	position: absolute;
@@ -3428,7 +3428,7 @@ li {
 	pointer-events: none;
 }
 #image-focus-overlay .slideshow-buttons button {
-	font-family:"Font Awesome", "Font Awesome 5 Free"
+	font-family: "Font Awesome", "Font Awesome 5 Free";
 	font-weight: 900;
 	font-size: 3rem;
 	padding: 0.5em;
@@ -3511,7 +3511,7 @@ li {
 	display: table-cell;
 	width: 100%;
 	vertical-align: middle;
-	font-family:"Font Awesome", "Font Awesome 5 Free"
+	font-family: "Font Awesome", "Font Awesome 5 Free";
 	font-weight: 900;
 	font-size: 1.25rem;
 	opacity: 0.4;
@@ -3529,7 +3529,7 @@ li {
 	margin: 0;
 }
 .qualified-linking label {
-	font-family:"Font Awesome", "Font Awesome 5 Free"
+	font-family: "Font Awesome", "Font Awesome 5 Free";
 	font-weight: 900;
 	font-size: 1rem;
 	padding: 0 0.5em;
