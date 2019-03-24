@@ -743,10 +743,10 @@ signaled condition to OUT-STREAM."
             csrf-token
             (load-time-value (with-open-file (s "www/head.js") (uiop:slurp-stream-string s)) t)
             *extra-inline-scripts*)
-    (format out-stream "~A<link rel=\"stylesheet\" href=\"~A\">~{<link rel=\"stylesheet\" href=\"~A\">~}<link rel=\"shortcut icon\" href=\"~A\">"
+    (format out-stream "~A<link rel=\"stylesheet\" href=\"~A\">~{<link rel=\"stylesheet\" href=\"~A\">~}<link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.2/css/all.css' integrity='sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr' crossorigin='anonymous'><link rel=\"shortcut icon\" href=\"~A\">"
             *html-head*
             (generate-css-link)
-            (generate-fonts-links)
+            '("https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i|Assistant:400,600,800")
             (generate-versioned-link "/assets/favicon.ico"))
     (format out-stream "<script src=\"~A\" async></script>~A"
             (generate-versioned-link "/script.js")

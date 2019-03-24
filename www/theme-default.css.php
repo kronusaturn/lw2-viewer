@@ -1,8 +1,8 @@
 <?php
-	$UI_font = (($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Whitney', 'a_Avante'") . ", Arial, sans-serif";
-	$listings_font = (($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Mundo Sans', 'a_Avante'") . ", Arial, sans-serif";
-	$UI_font_smallcaps = (($platform == 'Mac') ? "'Concourse Smallcaps', 'a_Avante'" : "'Whitney Smallcaps', 'a_Avante'") . ", Arial, sans-serif";
-	$text_font = "'Charter', 'Georgia', serif";
+	$UI_font = (($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Whitney', 'a_Avante'") . ", 'Assistant', Arial, sans-serif";
+	$listings_font = (($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Mundo Sans', 'a_Avante'") . ", 'Assistant', Arial, sans-serif";
+	$UI_font_smallcaps = (($platform == 'Mac') ? "'Concourse Smallcaps', 'a_Avante'" : "'Whitney Smallcaps', 'a_Avante'") . ", 'Assistant', Arial, sans-serif";
+	$text_font = "'Charter', 'PT Serif', 'Georgia', serif";
 	$hyperlink_color = "#00e";
 	$white_glow = "0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff";
 ?>
@@ -501,7 +501,7 @@ body {
 /*==========*/
 
 h1.listing {
-	font-family: <?php echo $listings_font; ?>, 'Font Awesome';
+	font-family: <?php echo $listings_font; ?>, 'Font Awesome', 'Font Awesome 5 Free';
 	font-weight: <?php echo ($platform == 'Mac') ? "700" : "800"; ?>;
 	margin: 0.7em 20px 0 20px;
 	max-width: calc(100% - 40px);
@@ -593,7 +593,7 @@ h1.listing + .post-meta .comment-count::before,
 h1.listing + .post-meta .lw2-link::before,
 h1.listing + .post-meta .read-time::before {
 	color: #fff;
-	font-family: Font Awesome;
+	font-family: 'Font Awesome', 'Font Awesome 5 Free';
 	font-weight: 900;
 	margin: 0 8px 0 0;
 	box-shadow: 0 0 0 2px #ddd;
@@ -1441,7 +1441,7 @@ div.comment-child-links a {
 	color: #050;
 }
 .guiedit-buttons-container button {
-	font-family: Font Awesome, <?php echo $text_font; ?>;
+	font-family: 'Font Awesome', 'Font Awesome 5 Free', <?php echo $text_font; ?>;
 }
 
 .guiedit::after {
