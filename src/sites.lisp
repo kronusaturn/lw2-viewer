@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.sites
-  (:use #:cl #:lw2.utils #:lw2.context #:lw2.backend-modules #:lw2.fonts)
+  (:use #:cl #:lw2.utils #:lw2.context #:lw2.backend-modules #:lw2.fonts-modules)
   (:import-from #:sb-ext #:defglobal)
   (:export
     #:*sites*

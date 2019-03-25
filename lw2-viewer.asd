@@ -12,9 +12,10 @@
                              (:module "backends"
                               :components ((:file "accordius"))
                               :depends-on ("backend-modules" "backend" "lw2-login"))
-			     (:file "fonts" :depends-on ("html-reader" "utils"))
-                             (:file "sites" :depends-on ("utils" "backend-modules" "fonts"))
-                             (:file "config-package" :depends-on ("sites" "backend-modules"))
+                             (:file "sites" :depends-on ("utils" "backend-modules" "fonts-modules"))
+			     (:file "fonts-modules")
+			     (:file "fonts" :depends-on ("html-reader" "utils" "sites" "fonts-modules"))
+                             (:file "config-package" :depends-on ("sites" "backend-modules" "fonts-modules"))
                              (module "config-copy"
                                      :pathname "../"
                                      :output-files (compile-op (o c) (if (file-exists-p "config.lisp") nil (list "config.lisp")))

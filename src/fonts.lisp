@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.fonts
-  (:use #:cl #:sb-thread #:lw2.html-reader #:lw2.utils)
+  (:use #:cl #:sb-thread #:lw2.fonts-modules #:lw2.html-reader #:lw2.utils)
   (:export #:fonts-source #:google-fonts-source #:obormot-fonts-source
 	   #:generate-fonts-html-headers)
   (:recycle #:lw2-viewer))
@@ -8,15 +8,13 @@
 
 (named-readtables:in-readtable html-reader)
 
-(defclass fonts-source () ())
-
-(defclass google-fonts-source (fonts-source) ())
+;;;; google-fonts-source
 
 (defmethod generate-fonts-html-headers ((fonts-source google-fonts-source))
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i|Assistant:400,600,800">)
 
-(defclass obormot-fonts-source (fonts-source) ())
+;;;; obormot-fonts-source
 
 (defparameter *obormot-fonts-stylesheet-uris*
   '("https://fonts.greaterwrong.com/?fonts=InconsolataGW,CharterGW,ConcourseGW,Whitney,MundoSans,SourceSansPro,Raleway,ProximaNova,TiredOfCourier,AnonymousPro,InputSans,InputSansNarrow,InputSansCondensed,GaramondPremierPro,TriplicateCode,TradeGothic,NewsGothicBT,Caecilia,SourceSerifPro,SourceCodePro"
