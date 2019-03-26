@@ -18,7 +18,7 @@
 	   #:lw2-search-query #:get-post-title #:get-post-slug #:get-slug-postid #:get-username #:get-user-slug
 	   #:do-wl-rest-mutate #:do-wl-rest-query #:do-wl-create-tag)
   (:recycle #:lw2-viewer)
-  (:unintern #:get-posts #:make-posts-list-query))
+  (:unintern #:get-posts #:make-posts-list-query #:define-backend-fields))
 
 (in-package #:lw2.backend)
 
@@ -33,8 +33,6 @@
 (defparameter *user-fields* '(:--id :slug :display-name :karma :groups))
 
 (defparameter *notifications-base-terms* (alist :view "userNotifications" :created-at :null :viewed :null))
-
-(defmacro define-backend-fields ())
 
 (define-backend-function posts-index-fields ()
   (backend-graphql (load-time-value *posts-index-fields*))
