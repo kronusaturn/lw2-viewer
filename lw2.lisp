@@ -86,33 +86,29 @@
 				     (tags list :qualifier :body))))
 
 (defmacro schema-bind ((schema-type datum bindings &key qualifier) &body body)
-  (declare (ignore schema-type bindings))
+  (declare (ignore schema-type))
   `(alist-bind
     ,(loop for type-slot in *post-schema-type*
 	nconc (destructuring-bind (binding-sym type &key alias ((:qualifier slot-qualifier)) &allow-other-keys) type-slot
-		(if (or (not slot-qualifier) (eq slot-qualifier qualifier))
+		(if (if (eq bindings :auto)
+			(or (not slot-qualifier) (eq slot-qualifier qualifier))
+			(member binding-sym bindings :test #'string=))
 		    (list (list* binding-sym type (if alias (list alias)))))))
     ,datum
     ,@body))
 
 (defun post-section-to-html (post &key skip-section)
-  (alist-bind ((user-id string)
-	       (frontpage-date (or null string))
-	       (curated-date (or null string))
-	       (meta boolean)
-	       (af boolean)
-	       (draft boolean))
-	      post
-	      (multiple-value-bind (class title href)
-		  (cond (af (if (eq skip-section :alignment-forum) nil (values "alignment-forum" "View Alignment Forum posts" "/index?view=alignment-forum")))
-					; show alignment forum even if skip-section is t
-			((eq skip-section t) nil)
-			(draft nil)
-			(curated-date (if (eq skip-section :featured) nil (values "featured" "View Featured posts" "/index?view=featured")))
-			(frontpage-date (if (eq skip-section :frontpage) nil (values "frontpage" "View Frontpage posts" "/")))
-			(meta (if (eq skip-section :meta) nil (values "meta" "View Meta posts" "/index?view=meta")))
-			(t (if (eq skip-section :personal) nil (values "personal" (format nil "View posts by ~A" (get-username user-id)) (format nil "/users/~A?show=posts" (get-user-slug user-id))))))
-		<a class=("post-section ~A" class) title=title href=href></a>)))
+  (schema-bind (:post post (user-id frontpage-date curated-date meta af draft))
+    (multiple-value-bind (class title href)
+	(cond (af (if (eq skip-section :alignment-forum) nil (values "alignment-forum" "View Alignment Forum posts" "/index?view=alignment-forum")))
+	      ; show alignment forum even if skip-section is t
+	      ((eq skip-section t) nil)
+	      (draft nil)
+	      (curated-date (if (eq skip-section :featured) nil (values "featured" "View Featured posts" "/index?view=featured")))
+	      (frontpage-date (if (eq skip-section :frontpage) nil (values "frontpage" "View Frontpage posts" "/")))
+	      (meta (if (eq skip-section :meta) nil (values "meta" "View Meta posts" "/index?view=meta")))
+	      (t (if (eq skip-section :personal) nil (values "personal" (format nil "View posts by ~A" (get-username user-id)) (format nil "/users/~A?show=posts" (get-user-slug user-id))))))
+      <a class=("post-section ~A" class) title=title href=href></a>)))
 
 (defun post-headline-to-html (post &key skip-section need-auth)
   (schema-bind (:post post :auto)
