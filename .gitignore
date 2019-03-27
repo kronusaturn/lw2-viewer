@@ -1,6 +1,8 @@
 cache*
 local
 .*
+*~
+*#
 post-commit.hook
 config.lisp
 www/robots.txt
