@@ -3,6 +3,8 @@
   (:export #:*current-auth-token* #:*current-userid* #:*current-username* #:*current-user-slug*
 	   #:logged-in-userid #:logged-in-username #:logged-in-user-slug))
 
+(in-package #:lw2.user-context)
+
 (defvar *current-auth-token*)
 (defvar *current-userid*)
 (defvar *current-username*)

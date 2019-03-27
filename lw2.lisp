@@ -2,6 +2,7 @@
   (:use #:cl #:sb-thread #:flexi-streams #:djula
 	#:lw2-viewer.config #:lw2.utils #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login #:lw2.context #:lw2.sites #:lw2.components #:lw2.html-reader #:lw2.fonts
 	#:lw2.schema-type #:lw2.schema-types
+	#:lw2.interface-utils
 	#:lw2.user-context
 	#:lw2.data-viewers.post
 	#:lw2.data-viewers.comment)

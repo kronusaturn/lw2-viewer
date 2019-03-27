@@ -23,7 +23,7 @@
    (title :accessor site-title :initarg :title :type simple-string)
    (description :accessor site-description :initarg :description :type simple-string)
    (background-loader-enabled :accessor background-loader-enabled :initarg :use-background-loader :initform nil :type boolean)
-   (fonts-source :accessor site-fonts-source :initarg :fonts-source :initform (make-instance 'lw2.fonts:google-fonts-source) :type fonts-source)))
+   (fonts-source :accessor site-fonts-source :initarg :fonts-source :initform (make-instance 'google-fonts-source) :type fonts-source)))
 
 (defmethod main-site-title ((s site)) nil)
 
