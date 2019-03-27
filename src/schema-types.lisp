@@ -20,5 +20,5 @@
    (draft boolean)
    (question boolean :backend-type backend-q-and-a)
    (vote-count (or null fixnum))
-   (tags list)
+   (tags list :graphql-ignore t)
    (html-body (or null string) :qualifier :body)))

@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.backend
-  (:use #:cl #:sb-thread #:flexi-streams #:alexandria #:lw2-viewer.config #:lw2.sites #:lw2.context #:lw2.graphql #:lw2.lmdb #:lw2.utils #:lw2.hash-utils #:lw2.backend-modules)
+  (:use #:cl #:sb-thread #:flexi-streams #:alexandria #:lw2-viewer.config #:lw2.sites #:lw2.context #:lw2.graphql #:lw2.lmdb #:lw2.utils #:lw2.hash-utils #:lw2.backend-modules #:lw2.schema-type)
   (:reexport #:lw2.backend-modules)
   (:export #:*graphql-debug-output*
            #:posts-index-fields #:*messages-index-fields*
@@ -18,7 +18,8 @@
 	   #:lw2-search-query #:get-post-title #:get-post-slug #:get-slug-postid #:get-username #:get-user-slug
 	   #:do-wl-rest-mutate #:do-wl-rest-query #:do-wl-create-tag)
   (:recycle #:lw2-viewer)
-  (:unintern #:get-posts #:make-posts-list-query #:define-backend-fields))
+  (:unintern #:get-posts #:make-posts-list-query #:define-backend-fields
+	     #:*posts-index-fields*))
 
 (in-package #:lw2.backend)
 
@@ -26,7 +27,6 @@
 
 (defvar *graphql-debug-output* nil)
 
-(defparameter *posts-index-fields* '(:title :--id :slug :user-id :posted-at :base-score :comment-count :page-url :url :word-count :frontpage-date :curated-date :meta :draft :vote-count))
 (defparameter *comments-index-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id (:parent-comment :--id :user-id :post-id) :base-score :page-url :vote-count :retracted :deleted-public :html-body))
 (defparameter *post-comments-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id :base-score :page-url :vote-count :retracted :deleted-public :html-body))
 (defparameter *messages-index-fields* '(:--id :user-id :created-at (:contents :html) (:conversation :--id :title) :----typename))
@@ -34,10 +34,28 @@
 
 (defparameter *notifications-base-terms* (alist :view "userNotifications" :created-at :null :viewed :null))
 
-(define-backend-function posts-index-fields ()
-  (backend-graphql (load-time-value *posts-index-fields*))
-  (backend-q-and-a (list* :question (call-next-method)))
-  (backend-alignment-forum (list* :af (call-next-method))))
+(defmacro define-index-fields (function-name schema-type-name)
+  (let (main-fields
+	backend-specific-fields
+	(schema-type (find-schema-type schema-type-name)))
+    (dolist (field (cdr (assoc :fields schema-type)))
+      (destructuring-bind (field-name field-type &key alias backend-type graphql-ignore &allow-other-keys) field
+	(declare (ignore field-type))
+	(let ((field-name (or alias field-name)))
+	  (when (not graphql-ignore)
+	    (if backend-type
+		(let ((cons (or (assoc backend-type backend-specific-fields)
+				(first (push (cons backend-type nil) backend-specific-fields)))))
+		  (push (intern (string field-name) '#:keyword) (cdr cons)))
+		(push (intern (string field-name) '#:keyword) main-fields))))))
+    `(define-backend-function ,function-name ()
+       (backend-graphql ',main-fields)
+       ,@(mapcar (lambda (fitem)
+		   (destructuring-bind (backend-name . fields) fitem
+		   `(,(intern (string backend-name) *package*) (list* ,@fields (call-next-method)))))
+		 backend-specific-fields))))
+
+(define-index-fields posts-index-fields :post)
 
 (define-backend-function comments-index-fields ()
   (backend-graphql (load-time-value *comments-index-fields*))
