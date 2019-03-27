@@ -34,20 +34,23 @@
 
 (defparameter *notifications-base-terms* (alist :view "userNotifications" :created-at :null :viewed :null))
 
-(defmacro define-index-fields (function-name schema-type-name)
+(defmacro define-index-fields (function-name schema-type-name &key qualifier)
   (let (main-fields
 	backend-specific-fields
 	(schema-type (find-schema-type schema-type-name)))
     (dolist (field (cdr (assoc :fields schema-type)))
-      (destructuring-bind (field-name field-type &key alias backend-type graphql-ignore &allow-other-keys) field
+      (destructuring-bind (field-name field-type &key alias backend-type graphql-ignore subfields ((:qualifier field-qualifier)) &allow-other-keys) field
 	(declare (ignore field-type))
-	(let ((field-name (or alias field-name)))
-	  (when (not graphql-ignore)
+	(let* ((field-name (intern (string (or alias field-name)) '#:keyword))
+	       (field-designator (if subfields
+				     (list* field-name subfields)
+				     field-name)))
+	  (when (and (not graphql-ignore) (not (and qualifier (string= qualifier field-qualifier))))
 	    (if backend-type
 		(let ((cons (or (assoc backend-type backend-specific-fields)
 				(first (push (cons backend-type nil) backend-specific-fields)))))
-		  (push (intern (string field-name) '#:keyword) (cdr cons)))
-		(push (intern (string field-name) '#:keyword) main-fields))))))
+		  (push field-designator (cdr cons)))
+		(push field-designator main-fields))))))
     `(define-backend-function ,function-name ()
        (backend-graphql ',main-fields)
        ,@(mapcar (lambda (fitem)
@@ -56,16 +59,8 @@
 		 backend-specific-fields))))
 
 (define-index-fields posts-index-fields :post)
-
-(define-backend-function comments-index-fields ()
-  (backend-graphql (load-time-value *comments-index-fields*))
-  (backend-q-and-a (list* :answer :parent-answer-id (call-next-method)))
-  (backend-alignment-forum (list* :af (call-next-method))))
-
-(define-backend-function post-comments-fields ()
-  (backend-graphql (load-time-value *post-comments-fields*))
-  (backend-q-and-a (list* :answer :parent-answer-id (call-next-method)))
-  (backend-alignment-forum (list* :af (call-next-method))))
+(define-index-fields comments-index-fields :comment :qualifier :index)
+(define-index-fields post-comments-fields :comment)
 
 (define-backend-function user-fields ()
   (backend-graphql (load-time-value *user-fields*))
