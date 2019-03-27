@@ -1,6 +1,9 @@
 (uiop:define-package #:lw2-viewer
   (:use #:cl #:sb-thread #:flexi-streams #:djula
-	#:lw2-viewer.config #:lw2.utils #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login #:lw2.context #:lw2.sites #:lw2.components #:lw2.html-reader #:lw2.fonts)
+	#:lw2-viewer.config #:lw2.utils #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login #:lw2.context #:lw2.sites #:lw2.components #:lw2.html-reader #:lw2.fonts
+	#:lw2.schema-type #:lw2.schema-types
+	#:lw2.user-context
+	#:lw2.data-viewers.post)
   (:import-from #:alexandria #:ensure-list #:when-let)
   (:unintern
     #:define-regex-handler #:*fonts-stylesheet-uri* #:generate-fonts-link
@@ -16,166 +19,11 @@
 
 (define-cache-database "auth-token-to-userid" "auth-token-to-username" "comment-markdown-source" "post-markdown-source")
 
-(defvar *current-auth-token*)
-(defvar *current-userid*)
-(defvar *current-username*)
-(defvar *current-user-slug*)
-
 (defvar *read-only-mode* nil)
 (defvar *read-only-default-message* "Due to a system outage, you cannot log in or post at this time.")
 
 (defparameter *default-prefs* (alist :items-per-page 20 :default-sort "new"))
 (defvar *current-prefs* nil)
-
-(defun logged-in-userid (&optional is-userid)
-  (let ((current-userid *current-userid*))
-    (if is-userid
-        (string= current-userid is-userid)
-        current-userid))) 
-
-(defun logged-in-username ()
-  *current-username*)
-
-(defun logged-in-user-slug ()
-  *current-user-slug*)
-
-(defun pretty-time (timestring &key format)
-  (let ((time (local-time:parse-timestring timestring)))
-  (values (local-time:format-timestring nil time :timezone local-time:+utc-zone+ :format (or format '(:day #\  :short-month #\  :year #\  :hour #\: (:min 2) #\  :timezone)))
-	  (* (local-time:timestamp-to-unix time) 1000))))
-
-(defun pretty-number (number &optional object)
-  (let ((str (coerce (format nil "~:D~@[<span> ~A~P</span>~]" number object number) '(vector character))))
-    (if (eq (aref str 0) #\-)
-      (setf (aref str 0) #\MINUS_SIGN))
-    str))
-
-(defun generate-post-auth-link (post &optional comment-id absolute need-auth)
-  (if need-auth
-      (concatenate 'string (generate-post-link post comment-id absolute) "?need-auth=y")
-      (generate-post-link post comment-id absolute)))
-
-(defun clean-lw-link (url)
-  (when url
-    (ppcre:regex-replace "([^/]*//[^/]*)lesserwrong\.com" url "\\1lesswrong.com")))
-
-(defun votes-to-tooltip (votes)
-  (if votes
-      (format nil "~A vote~:*~P"
-              (typecase votes (integer votes) (list (length votes))))
-      ""))
-
-(eval-when (:compile-toplevel :load-toplevel :execute)
-  (defparameter *post-schema-type* '((post-id string :alias :--id)
-				     (title string)
-				     (user-id string)
-				     (url (or null string))
-				     (posted-at string)
-				     (base-score fixnum)
-				     (comment-count (or null fixnum))
-				     (page-url (or null string))
-				     (word-count (or null fixnum))
-				     (frontpage-date (or null string))
-				     (curated-date (or null string))
-				     (meta boolean)
-				     (af boolean :backend-type backend-alignment-forum)
-				     (draft boolean)
-				     (question boolean :backend-type backend-q-and-a)
-				     (vote-count (or null fixnum))
-				     (html-body (or null string) :qualifier :body)
-				     (tags list :qualifier :body))))
-
-(defmacro schema-bind ((schema-type datum bindings &key qualifier) &body body)
-  (declare (ignore schema-type))
-  `(alist-bind
-    ,(loop for type-slot in *post-schema-type*
-	nconc (destructuring-bind (binding-sym type &key alias ((:qualifier slot-qualifier)) &allow-other-keys) type-slot
-		(if (if (eq bindings :auto)
-			(or (not slot-qualifier) (eq slot-qualifier qualifier))
-			(member binding-sym bindings :test #'string=))
-		    (list (list* binding-sym type (if alias (list alias)))))))
-    ,datum
-    ,@body))
-
-(defun post-section-to-html (post &key skip-section)
-  (schema-bind (:post post (user-id frontpage-date curated-date meta af draft))
-    (multiple-value-bind (class title href)
-	(cond (af (if (eq skip-section :alignment-forum) nil (values "alignment-forum" "View Alignment Forum posts" "/index?view=alignment-forum")))
-	      ; show alignment forum even if skip-section is t
-	      ((eq skip-section t) nil)
-	      (draft nil)
-	      (curated-date (if (eq skip-section :featured) nil (values "featured" "View Featured posts" "/index?view=featured")))
-	      (frontpage-date (if (eq skip-section :frontpage) nil (values "frontpage" "View Frontpage posts" "/")))
-	      (meta (if (eq skip-section :meta) nil (values "meta" "View Meta posts" "/index?view=meta")))
-	      (t (if (eq skip-section :personal) nil (values "personal" (format nil "View posts by ~A" (get-username user-id)) (format nil "/users/~A?show=posts" (get-user-slug user-id))))))
-      <a class=("post-section ~A" class) title=title href=href></a>)))
-
-(defun post-headline-to-html (post &key skip-section need-auth)
-  (schema-bind (:post post :auto)
-    (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      <h1 class=("listing~{ ~A~}" (list-cond
-				   (url "link-post-listing")
-				   (question "question-post-listing")
-				   ((logged-in-userid user-id) "own-post-listing")))>
-        (if url <a href=(convert-any-link (string-trim " " url))>&#xf0c1;</a>)
-	<a href=(generate-post-auth-link post nil nil need-auth)>
-	  (if question <span class="post-type-prefix">[Question] </span>)
-	  (safe (clean-text-to-html title))
-	</a>
-	(if (logged-in-userid user-id) <a class="edit-post-link button" href=("/edit-post?post-id=~A" post-id)></a>)
-      </h1>
-      <div class="post-meta">
-        <a class=("author~{ ~A~}" (list-cond ((logged-in-userid user-id) "own-user-author")))
-	   href=("/users/~A" (get-user-slug user-id))
-	   data-userid=user-id>
-	  (get-username user-id)
-        </a>
-        <div class="date" data-js-date=js-time>(progn pretty-time)</div>
-        <div class="karma">
-          <span class="karma-value" title=(votes-to-tooltip vote-count)>(safe (pretty-number base-score "point"))</span>
-        </div>
-        <a class="comment-count" href=("~A#comments" (generate-post-link post))>(safe (pretty-number (or comment-count 0) "comment"))</a>
-        (if word-count <span class="read-time" title=(safe (pretty-number word-count "word"))>(max 1 (round word-count 300))<span> min read</span></span>)
-        (if page-url <a class="lw2-link" href=(clean-lw-link page-url)>(main-site-abbreviation *current-site*)<span> link</span></a>)
-        (with-html-stream-output (post-section-to-html post :skip-section skip-section))
-        (if url <div class="link-post-domain">("(~A)" (puri:uri-host (puri:parse-uri (string-trim " " url))))</div>)
-      </div>)))
-
-(defun post-body-to-html (post)
-  (schema-bind (:post post :auto :qualifier :body)
-    (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      <div class=("post~{ ~A~}" (list-cond
-				 (url "link-post")
-				 (question "question-post")))>
-        <h1 class="post-title">
-          (if question <span class="post-type-prefix">[Question] </span>)
-          (safe (clean-text-to-html title :hyphenation nil))
-        </h1>
-        <div class="post-meta">
-          <a class=("author~{ ~A~}" (list-cond
-				     ((logged-in-userid user-id) "own-user-author")))
-             href=("/users/~A" (get-user-slug user-id))
-             data-userid=user-id>
-            (get-username user-id)
-          </a>
-          <div class="date" data-js-date=js-time>(progn pretty-time)</div>
-          <div class="karma" data-post-id=post-id>
-            <span class="karma-value" title=(votes-to-tooltip vote-count)>(safe (pretty-number base-score "point"))</span>
-          </div>
-          <a class="comment-count" href="#comments">(safe (pretty-number (or comment-count 0) "comment"))</a>
-          (if page-url <a class="lw2-link" href=(clean-lw-link page-url)>(main-site-abbreviation *current-site*)<span> link</span></a>)
-          (with-html-stream-output (post-section-to-html post))
-	  (when tags
-	    <div id="tags">
-	      (dolist (tag tags) (alist-bind ((text string)) tag <a href=("/tags/~A" text)>(progn text)</a>))
-	    </div>)
-	</div>
-	<div class="body-text post-body">
-          (if url <p><a class="link-post-link" href=(convert-any-link (string-trim " " url))>Link post</a></p>)
-          (with-html-stream-output
-	      (write-sequence (clean-html* (or html-body "") :with-toc t :post-id post-id) *html-output*))
-        </div>
-      </div>)))
 
 (defparameter *comment-individual-link* nil)
 

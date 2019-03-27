@@ -8,6 +8,10 @@
                              (:file "hash-utils")
                              (:file "context")
 			     (:file "html-reader")
+			     (:file "interface-utils" :depends-on ("links"))
+			     (:file "user-context")
+			     (:file "schema-type" :depends-on ("utils"))
+			     (:file "schema-types" :depends-on ("schema-type"))
                              (:file "backend-modules")
                              (:module "backends"
                               :components ((:file "accordius"))
@@ -31,7 +35,10 @@
 			     (:static-file "../text-clean-regexps.js")
 			     (:static-file "../html-clean-regexps.js")
                              (:file "clean-html" :depends-on ("utils" "links" "lmdb" "context" "sites" "../text-clean-regexps.js" "../html-clean-regexps.js"))
-                             (:file "lw2-login" :depends-on ("utils" "backend" "backend-modules" "context")))
+                             (:file "lw2-login" :depends-on ("utils" "backend" "backend-modules" "context"))
+			     (:module "data-viewers"
+				      :components ((:file "post"))
+				      :depends-on ("schema-type" "schema-types" "utils" "backend" "context" "user-context" "sites" "clean-html" "html-reader" "interface-utils" "links")))
                 :depends-on ())
                (:module "templates"
                 :components ((:static-file "conversation.html")
