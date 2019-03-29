@@ -45,7 +45,7 @@
 	       (field-designator (if subfields
 				     (list* field-name subfields)
 				     field-name)))
-	  (when (and (not graphql-ignore) (not (and qualifier (string= qualifier field-qualifier))))
+	  (when (and (not graphql-ignore) (or (not field-qualifier) (string= qualifier field-qualifier)))
 	    (if backend-type
 		(let ((cons (or (assoc backend-type backend-specific-fields)
 				(first (push (cons backend-type nil) backend-specific-fields)))))
