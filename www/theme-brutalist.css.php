@@ -803,7 +803,8 @@ h1.post-title {
 .comment-item .karma.active-controls::after,
 .comment-item .karma .karma-value::after,
 .post .karma.active-controls::after,
-.post .karma .karma-value::after {
+.post .karma .karma-value::after,
+.author::before {
 	background-color: #fff;
 	color: #000;
 	box-shadow: 0 0 0 1px #000 inset;

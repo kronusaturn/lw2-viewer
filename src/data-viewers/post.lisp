@@ -26,9 +26,10 @@
         <a class=("author~{ ~A~}" (list-cond
 		     ((logged-in-userid user-id) "own-user-author")))
            href=("/users/~A" (get-user-slug user-id))
-           data-userid=user-id>
+           data-userid=user-id
+	   data-full-name=(get-user-full-name user-id)>
           (get-username user-id)
-        </a>
+	</a>
         <div class="date" data-js-date=js-time>(progn pretty-time)</div>
         <div class="karma" data-post-id=post-id>
           <span class="karma-value" title=(votes-to-tooltip vote-count)>(safe (pretty-number base-score "point"))</span>

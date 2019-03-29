@@ -1085,7 +1085,8 @@ a.comment-parent-link::after {
 .comment-item .karma.active-controls::after,
 .comment-item .karma .karma-value::after,
 .post .karma.active-controls::after,
-.post .karma .karma-value::after {
+.post .karma .karma-value::after,
+.author::before {
 	background-color: #fff;
 	color: #888;
 	box-shadow: 0 0 0 1px #ccc inset;

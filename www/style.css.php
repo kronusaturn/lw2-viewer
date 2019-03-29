@@ -1824,6 +1824,30 @@ article {
 	.comment-item .karma .karma-value:hover::after {
 		z-index: 5001;
 	}
+
+	.author {
+		position: relative;
+	}
+	.author:not(.redacted)::before {
+		content: attr(data-full-name);
+		position: absolute;
+		pointer-events: none;
+		display: block;
+		padding: 0 1em;
+		left: 50%;
+		bottom: 2em;
+		transform: translateX(-50%);
+		white-space: nowrap;
+		text-align: center;
+		font-size: 0.875rem;
+		font-weight: normal;
+		opacity: 0;
+		transition: opacity 0.2s ease;
+		z-index: 5001;
+	}
+	.author:hover::before {
+		opacity: 1.0;
+	}
 }
 
 /*********/

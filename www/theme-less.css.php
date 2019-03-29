@@ -1603,7 +1603,8 @@ a.post-section.alignment-forum:hover::before {
 }
 
 .comment-item .karma.active-controls::after,
-.comment-item .karma .karma-value::after {
+.comment-item .karma .karma-value::after,
+.author::before {
 	background-color: #fff;
 	color: #bbb;
 	border-radius: 4px;

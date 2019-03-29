@@ -15,7 +15,7 @@
 	   #:get-conversation-messages
 	   #:get-user
            #:get-notifications #:check-notifications
-	   #:lw2-search-query #:get-post-title #:get-post-slug #:get-slug-postid #:get-username #:get-user-slug
+	   #:lw2-search-query #:get-post-title #:get-post-slug #:get-slug-postid #:get-username #:get-user-full-name #:get-user-slug
 	   #:do-wl-rest-mutate #:do-wl-rest-query #:do-wl-create-tag)
   (:recycle #:lw2-viewer)
   (:unintern #:get-posts #:make-posts-list-query #:define-backend-fields
@@ -64,7 +64,7 @@
 
 (define-backend-function user-fields ()
   (backend-graphql (load-time-value *user-fields*))
-  (backend-lw2 (load-time-value (append *user-fields* '(:af-karma)))))
+  (backend-alignment-forum (load-time-value (append *user-fields* '(:af-karma :full-name)))))
 
 (define-cache-database "index-json" "post-comments-json" "post-comments-json-meta" "post-answers-json" "post-answers-json-meta" "post-body-json" "post-body-json-meta" "user-json" "user-json-meta")
 
@@ -537,12 +537,15 @@
 		      (lw2-graphql-query-timeout-cached query-string "user-json" user-id :revalidate revalidate :force-revalidate force-revalidate))))
      (alist-bind ((user-id (or simple-string null) :--id)
 		  (display-name (or simple-string null))
+		  (full-name (or simple-string null))
 		  (slug (or simple-string null)))
 		 result
 		 (when user-id
 	 (with-cache-transaction
 	   (when display-name
 	     (cache-username user-id display-name))
+	   (when full-name
+	     (cache-user-full-name user-id full-name))
 	   (when slug
 	     (cache-user-slug user-id slug)
 	     (cache-slug-userid slug user-id)))))
@@ -657,6 +660,11 @@
 (with-rate-limit
   (simple-cacheable ("user-slug" "userid-to-slug" user-id)
     (rate-limit (user-id) (cdr (first (lw2-graphql-query (lw2-query-string :user :single (alist :document-id user-id) '(:slug))))))))
+
+(with-rate-limit
+  (simple-cacheable ("user-full-name" "userid-to-full-name" user-id)
+    (rate-limit (user-id) (or (cdr (first (lw2-graphql-query (lw2-query-string :user :single (alist :document-id user-id) '(:full-name)))))
+			      ""))))
 
 (with-rate-limit
   (simple-cacheable ("slug-userid" "slug-to-userid" slug)

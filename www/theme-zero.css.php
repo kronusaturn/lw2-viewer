@@ -853,7 +853,8 @@ a.post-section.alignment-forum:hover::before {
 .comment-item .karma.active-controls::after,
 .comment-item .karma .karma-value::after,
 .post .karma.active-controls::after,
-.post .karma .karma-value::after {
+.post .karma .karma-value::after,
+.author::before {
 	background-color: #eee;
 	color: #777;
 	border-radius: 4px;

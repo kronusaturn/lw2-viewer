@@ -23,7 +23,8 @@
 	    <div class="comment-meta">
 	      <a class=("author~:[~; own-user-author~]" (logged-in-userid user-id))
 		 href=("/users/~A" (encode-entities (get-user-slug user-id)))
-		 data-userid=user-id>
+		 data-userid=user-id
+		 data-full-name=(get-user-full-name user-id)>
 		(get-username user-id)
 	      </a>
 	      <a class="date" href=(generate-post-link post-id comment-id) data-js-date=js-time> (safe pretty-time) </a>
