@@ -2271,7 +2271,8 @@ a.comment-parent-link:hover::after {
 	font-size: 1.0625rem;
 }
 #content.compact > .comment-thread .comment-item,
-#content.index-page .comment-item.ignored {
+#content.index-page .comment-item.ignored,
+#content.inbox-user-page .comment-item.ignored {
 	max-height: 61px;
 	margin-top: 1em;
 	overflow: hidden;
@@ -2440,6 +2441,9 @@ a.comment-parent-link:hover::after {
 #content.comment-thread-page .comment-item.ignored {
 	height: 38px;
 	overflow: hidden;
+}
+.comment-item.ignored .author:not(#fake) {
+	text-decoration: line-through;
 }
 
 /***********************************/
