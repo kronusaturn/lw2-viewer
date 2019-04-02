@@ -2437,7 +2437,7 @@ a.comment-parent-link:hover::after {
 /* IGNORE SYSTEM */
 /*****************/
 
-.comment-item.ignored {
+#content.comment-thread-page .comment-item.ignored {
 	height: 38px;
 	overflow: hidden;
 }

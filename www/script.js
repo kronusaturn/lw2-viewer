@@ -3455,7 +3455,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 			if (!commentMeta.lastChild.hasClass("comment-minimize-button"))
 				commentMeta.insertAdjacentHTML("beforeend", "<div class='comment-minimize-button maximized'>&#xf146;</div>");
 		});
-		if (!query("#content").hasClass("individual-thread-page")) {
+		if (query("#content.comment-thread-page") && !query("#content").hasClass("individual-thread-page")) {
 			// Format and activate comment-minimize buttons.
 			queryAll(".comment-minimize-button").forEach(button => {
 				button.closest(".comment-item").setCommentThreadMaximized(false);
