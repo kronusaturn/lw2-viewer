@@ -407,6 +407,14 @@ a#inbox-indicator.new-messages:hover::before {
 	content: '\F2F5';
 	font-weight: 900;
 }
+.ignore-button::before {
+	content: "\F070";
+	font-weight: 400;
+}
+.unignore-button::before {
+	content: "\F06E";
+	font-weight: 400;
+}
 .rss::before {
 	content: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/rss.svg")) ?>');
 	display: inline-block;
@@ -2262,11 +2270,14 @@ a.comment-parent-link:hover::after {
 #content.compact > .comment-thread .comment-body {
 	font-size: 1.0625rem;
 }
-#content.compact > .comment-thread .comment-item {
+#content.compact > .comment-thread .comment-item,
+#content.index-page .comment-item.ignored {
 	max-height: 61px;
 	margin-top: 1em;
 	overflow: hidden;
 	position: relative;
+}
+#content.compact > .comment-thread .comment-item {
 	pointer-events: none;
 }
 #content.compact > .comment-thread .comment-item::after {
@@ -2420,6 +2431,15 @@ a.comment-parent-link:hover::after {
 }
 #content.individual-thread-page .comment-minimize-button {
 	display: none;
+}
+
+/*****************/
+/* IGNORE SYSTEM */
+/*****************/
+
+.comment-item.ignored {
+	height: 38px;
+	overflow: hidden;
 }
 
 /***********************************/

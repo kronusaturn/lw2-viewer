@@ -760,7 +760,7 @@ Element.prototype.setCommentThreadMaximized = function(toggle, userOriginated = 
 	let commentItem = this;
 	let storageName = "thread-minimized-" + commentItem.getCommentId();
 	let minimize_button = commentItem.query(".comment-minimize-button");
-	let maximize = force || (toggle ? /minimized/.test(minimize_button.className) : !localStorage.getItem(storageName));
+	let maximize = force || (toggle ? /minimized/.test(minimize_button.className) : !(localStorage.getItem(storageName) || commentItem.hasClass("ignored")));
 	if (userOriginated) {
 		if (maximize) {
 			localStorage.removeItem(storageName);

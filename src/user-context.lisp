@@ -1,6 +1,6 @@
 (uiop:define-package #:lw2.user-context
   (:use #:cl)
-  (:export #:*current-auth-token* #:*current-userid* #:*current-username* #:*current-user-slug*
+  (:export #:*current-auth-token* #:*current-userid* #:*current-username* #:*current-user-slug* #:*current-ignore-hash*
 	   #:logged-in-userid #:logged-in-username #:logged-in-user-slug))
 
 (in-package #:lw2.user-context)
@@ -9,6 +9,7 @@
 (defvar *current-userid*)
 (defvar *current-username*)
 (defvar *current-user-slug*)
+(defvar *current-ignore-hash*)
 
 (defun logged-in-userid (&optional is-userid)
   (let ((current-userid *current-userid*))

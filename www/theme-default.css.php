@@ -200,10 +200,11 @@ body {
 /*==============*/
 
 .button.new-post:not(:hover),
-.button.new-private-message:not(:hover) {
+.button.new-private-message:not(:hover),
+.button.unignore-button:not(:hover){
 	color: #090;
 }
-.button.logout-button {
+.button.logout-button, .button.ignore-button {
 	color: #d33;
 }
 

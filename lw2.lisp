@@ -6,7 +6,7 @@
 	#:lw2.user-context
 	#:lw2.data-viewers.post
 	#:lw2.data-viewers.comment)
-  (:import-from #:alexandria #:ensure-list #:when-let)
+  (:import-from #:alexandria #:ensure-list #:when-let #:if-let)
   (:unintern
     #:define-regex-handler #:*fonts-stylesheet-uri* #:generate-fonts-link
     #:user-nav-bar #:*primary-nav* #:*secondary-nav* #:*nav-bars*
@@ -19,7 +19,7 @@
 
 (add-template-directory (asdf:system-relative-pathname "lw2-viewer" "templates/"))
 
-(define-cache-database "auth-token-to-userid" "auth-token-to-username" "comment-markdown-source" "post-markdown-source")
+(define-cache-database "auth-token-to-userid" "auth-token-to-username" "comment-markdown-source" "post-markdown-source" "user-ignore-list")
 
 (defvar *read-only-mode* nil)
 (defvar *read-only-default-message* "Due to a system outage, you cannot log in or post at this time.")
@@ -146,8 +146,8 @@ signaled condition to OUT-STREAM."
   (let ((existing-comment-hash (make-hash-table :test 'equal))
         (hash (make-hash-table :test 'equal)))
     (dolist (c comments)
-      (alexandria:if-let (id (cdr (assoc :--id c)))
-                         (setf (gethash id existing-comment-hash) t)))
+      (if-let (id (cdr (assoc :--id c)))
+	      (setf (gethash id existing-comment-hash) t)))
     (dolist (c comments)
       (let* ((parent-id (cdr (assoc :parent-comment-id c)))
 	     (old (gethash parent-id hash)))
@@ -176,12 +176,14 @@ signaled condition to OUT-STREAM."
   (funcall emit-comment-item-fn)
   (format out-stream "</ul>"))
 
-(defun comment-item-to-html (out-stream comment &key extra-html-fn)
+(defun comment-item-to-html (out-stream comment &key extra-html-fn with-post-title)
   (with-error-html-block (out-stream)
-    (let ((c-id (cdr (assoc :--id comment))))
-      (format out-stream "<li id=\"comment-~A\" class=\"comment-item\">" c-id)
+    (let ((c-id (cdr (assoc :--id comment)))
+	  (user-id (cdr (assoc :user-id comment))))
+      (format out-stream "<li id=\"comment-~A\" class=\"comment-item~{ ~A~}\">" c-id (list-cond
+										      ((and *current-ignore-hash* (gethash user-id *current-ignore-hash*)) "ignored")))
       (unwind-protect
-        (comment-to-html out-stream comment)
+        (comment-to-html out-stream comment :with-post-title with-post-title)
         (if extra-html-fn (funcall extra-html-fn c-id))
         (format out-stream "</li>")))))
 
@@ -225,15 +227,15 @@ signaled condition to OUT-STREAM."
 (defun identify-item (x)
   (typecase x
     (list
-     (alexandria:if-let (typename (cdr (assoc :----typename x)))
-			(find-symbol (string-upcase typename) (find-package :keyword))
-			(cond
-			  ((assoc :message x)
-			   :notification)
-			  ((assoc :comment-count x)
-			   :post)
-			  (t
-			   :comment))))))
+     (if-let (typename (cdr (assoc :----typename x)))
+	     (find-symbol (string-upcase typename) (find-package :keyword))
+	     (cond
+	       ((assoc :message x)
+		:notification)
+	       ((assoc :comment-count x)
+		:post)
+	       (t
+		:comment))))))
 
 (defun write-index-items-to-html (out-stream items &key need-auth (empty-message "No entries.") skip-section)
   (if items
@@ -254,10 +256,8 @@ signaled condition to OUT-STREAM."
 	    (:post
 	     (post-headline-to-html x :need-auth need-auth :skip-section skip-section))
 	    (:comment
-	     (format out-stream "<ul class=\"comment-thread\"><li class=\"comment-item\" id=\"comment-~A\">" (cdr (assoc :--id x)))
-	     (unwind-protect
-		  (comment-to-html out-stream x :with-post-title t)
-	       (format out-stream "</li></ul>")))
+	     (comment-thread-to-html out-stream
+				     (lambda () (comment-item-to-html out-stream x :with-post-title t))))
 	    (:sequence
 	     (sequence-to-html x)))))
       (format out-stream "<div class=\"listing-message\">~A</div>" empty-message)))
@@ -396,11 +396,11 @@ signaled condition to OUT-STREAM."
 								 (typecase *read-only-mode*
 								   (string *read-only-mode*)
 								   (t *read-only-default-message*)))))
-      (alexandria:if-let (username (logged-in-username))
-	  (let ((user-slug (encode-entities (logged-in-user-slug))))
-	    `("login" ,(format nil "/users/~A" user-slug) ,(plump:encode-entities username) :description "User page" :accesskey "u"
-              :trailing-html ,(lambda (out-stream) (inbox-to-html out-stream user-slug))))
-          `("login" ,(format nil "/login?return=~A" (url-rewrite:url-encode current-uri)) "Log In" :accesskey "u" :nofollow t :override-uri "/login"))))
+      (if-let (username (logged-in-username))
+	      (let ((user-slug (encode-entities (logged-in-user-slug))))
+		`("login" ,(format nil "/users/~A" user-slug) ,(plump:encode-entities username) :description "User page" :accesskey "u"
+			  :trailing-html ,(lambda (out-stream) (inbox-to-html out-stream user-slug))))
+	      `("login" ,(format nil "/login?return=~A" (url-rewrite:url-encode current-uri)) "Log In" :accesskey "u" :nofollow t :override-uri "/login"))))
 
 (defun sublevel-nav-to-html (out-stream options current &key default (base-uri (hunchentoot:request-uri*)) (param-name "show") (remove-params '("offset")) extra-class)
   (declare (type (or null string) extra-class))
@@ -480,10 +480,10 @@ signaled condition to OUT-STREAM."
          (new-params (loop with out = old-params
                            for (param value) on params by #'cddr
                            do (if value
-                                  (alexandria:if-let (old-cons (assoc param out :test #'equal))
-                                                     (setf (cdr old-cons) value)
-                                                     (setf out (nconc out (list (cons param value)))))
-                                  (setf out (remove-if (lambda (x) (equal (car x) param)) out)))
+                                  (if-let (old-cons (assoc param out :test #'equal))
+					  (setf (cdr old-cons) value)
+					  (setf out (nconc out (list (cons param value)))))
+				  (setf out (remove-if (lambda (x) (equal (car x) param)) out)))
                            finally (return out))))
     (if new-params 
       (setf (quri:uri-query-params quri) new-params)
@@ -522,6 +522,22 @@ signaled condition to OUT-STREAM."
 					     (next-uri `("next" ,next-uri "Next" :nofollow t))
 					     (last-uri `("last" ,last-uri "Last" :nofollow t)))))
 	(format out-stream "<script>document.querySelectorAll('#bottom-bar').forEach(bb => { bb.classList.add('decorative'); });</script>")))))
+
+(defun decode-json-as-hash-table (json-source)
+  (let (current-hash-table current-key)
+    (declare (special current-hash-table current-key))
+    (json:bind-custom-vars
+     (:beginning-of-object (lambda () (setf current-hash-table (make-hash-table :test 'equal)))
+      :object-key (lambda (x) (setf current-key x))
+      :object-value (lambda (x) (setf (gethash current-key current-hash-table) x))
+      :end-of-object (lambda () current-hash-table)
+      :aggregate-scope '(current-hash-table current-key))
+     (json:decode-json-from-source json-source))))
+
+(defun get-ignore-hash (&optional (user-id (logged-in-userid)))
+  (if-let (ignore-json (and user-id (cache-get "user-ignore-list" user-id)))
+	  (decode-json-as-hash-table ignore-json)
+	  (make-hash-table :test 'equal)))
 
 (defun map-output (out-stream fn list)
   (loop for item in list do (write-string (funcall fn item) out-stream))) 
@@ -581,23 +597,23 @@ signaled condition to OUT-STREAM."
 
 (defun call-with-error-page (fn)
   (let* ((lw2-status
-           (alexandria:if-let (status-string (hunchentoot:cookie-in "lw2-status"))
-             (if (string= status-string "") nil
-                 (let ((json:*identifier-name-to-key* #'json:safe-json-intern))
-                   (json:decode-json-from-string status-string)))))
-         (*current-prefs*
-           (alexandria:if-let (prefs-string (hunchentoot:cookie-in "prefs"))
-             (let ((json:*identifier-name-to-key* 'json:safe-json-intern))
-               (ignore-errors (json:decode-json-from-string (quri:url-decode prefs-string)))))))
+           (if-let (status-string (hunchentoot:cookie-in "lw2-status"))
+		   (if (string= status-string "") nil
+		       (let ((json:*identifier-name-to-key* #'json:safe-json-intern))
+			 (json:decode-json-from-string status-string)))))
+	 (*current-prefs*
+	   (if-let (prefs-string (hunchentoot:cookie-in "prefs"))
+		   (let ((json:*identifier-name-to-key* 'json:safe-json-intern))
+		     (ignore-errors (json:decode-json-from-string (quri:url-decode prefs-string)))))))
     (with-site-context ((let ((host (or (hunchentoot:header-in* :x-forwarded-host) (hunchentoot:header-in* :host))))
                           (or (find-site host)
                               (error "Unknown site: ~A" host))))
       (multiple-value-bind (*current-auth-token* *current-userid* *current-username*)
         (if *read-only-mode*
             (values)
-            (alexandria:if-let
+            (if-let
               (auth-token
-                (alexandria:if-let
+                (if-let
                   (at (hunchentoot:cookie-in "lw2-auth-token"))
                   (if (or (string= at "") (not lw2-status) (> (get-unix-time) (- (cdr (assoc :expires lw2-status)) (* 60 60 24))))
                       nil at)))
@@ -606,7 +622,8 @@ signaled condition to OUT-STREAM."
                   auth-token
                   (cache-get "auth-token-to-userid" auth-token)
                   (cache-get "auth-token-to-username" auth-token)))))
-        (let ((*current-user-slug* (and *current-userid* (get-user-slug *current-userid*))))
+        (let ((*current-user-slug* (and *current-userid* (get-user-slug *current-userid*)))
+	      (*current-ignore-hash* (get-ignore-hash)))
           (handler-case
             (log-conditions
               (funcall fn))
@@ -644,12 +661,14 @@ signaled condition to OUT-STREAM."
   (format out-stream "<input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><input type=\"submit\" value=\"~A\">~@[~A~]</form>"
 	  csrf-token button-label end-html))
 
-(defun page-toolbar-to-html (out-stream &key title new-post new-conversation logout (rss t))
+(defun page-toolbar-to-html (out-stream &key title new-post new-conversation logout (rss t) ignore)
   (let ((liu (logged-in-userid)))
     (format out-stream "<div class=\"page-toolbar\">")
     (when logout
       (format out-stream "<form method=\"post\" action=\"/logout\"><button class=\"logout-button button\" name=\"logout\" value=\"~A\">Log out</button></form>"
               (make-csrf-token)))
+    (when ignore
+      (funcall ignore))
     (when (and new-conversation liu)
       (multiple-value-bind (text to)
         (typecase new-conversation (string (values "Send private message" new-conversation)) (t "New conversation"))
@@ -861,11 +880,11 @@ signaled condition to OUT-STREAM."
                             (json:encode-json-to-string (get-post-vote post-id lw2-auth-token)))
                     (t () nil)))
 		(output-alignment-forum (out-stream post)
-		  (alexandria:if-let (liu (logged-in-userid))
-				     (let ((with-af-option (and (cdr (assoc :af post))
-								(member "alignmentForum" (cdr (assoc :groups (get-user :user-id liu))) :test #'string=))))
-				       (format out-stream "<script>alignmentForumAllowed=~:[false~;true~]</script>" with-af-option)))))
-         (multiple-value-bind (post title condition)
+		  (if-let (liu (logged-in-userid))
+			  (let ((with-af-option (and (cdr (assoc :af post))
+						     (member "alignmentForum" (cdr (assoc :groups (get-user :user-id liu))) :test #'string=))))
+			    (format out-stream "<script>alignmentForumAllowed=~:[false~;true~]</script>" with-af-option)))))
+	 (multiple-value-bind (post title condition)
            (handler-case (nth-value 0 (get-post-body post-id :auth-token (and need-auth lw2-auth-token)))
              (serious-condition (c) (values nil "Error" c))
              (:no-error (post) (values post (cdr (assoc :title post)) nil)))
@@ -1018,6 +1037,20 @@ signaled condition to OUT-STREAM."
                                        (let ((notifications-status (check-notifications (logged-in-userid) *current-auth-token*)))
                                          (json:encode-json-to-string notifications-status)))))
 
+(hunchentoot:define-easy-handler (view-ignore-user :uri "/ignore-user") ((csrf-token :request-type :post) (target-id :request-type :post) (state :request-type :post) return)
+  (with-error-page
+      (check-csrf-token csrf-token)
+      (let ((user-id (logged-in-userid)))
+	(unless user-id (error "Not logged in."))
+	(with-cache-transaction
+	    (let ((ignore-hash (get-ignore-hash user-id)))
+	      (if (string= state "ignore")
+		  (setf (gethash target-id ignore-hash) t)
+		  (remhash target-id ignore-hash))
+	      (cache-put "user-ignore-list" user-id (json:encode-json-to-string ignore-hash)))))
+      (when return
+	(redirect return))))
+
 (define-page view-recent-comments "/recentcomments" ((offset :type fixnum)
                                                      (limit :type fixnum))
   (let ((want-total (not (or (typep *current-backend* 'backend-lw2) (typep *current-backend* 'backend-ea-forum))))) ; LW2/EAF can't handle total queries. TODO: handle this in backend.
@@ -1133,6 +1166,16 @@ signaled condition to OUT-STREAM."
                                                                       :rss (not (member show '(:drafts :conversations :inbox)))
                                                                       :new-post (if (eq show :drafts) "drafts" t)
                                                                       :new-conversation (if own-user-page t user-slug)
+								      :ignore (if (and (logged-in-userid) (not own-user-page))
+										  (lambda ()
+										    (let ((ignored (gethash user-id *current-ignore-hash*)))
+										      <form method="post" action="/ignore-user">
+										        <button class=("button ~A" (if ignored "unignore-button" "ignore-button"))>(if ignored "Unignore user" "Ignore user")</button>
+										        <input type="hidden" name="csrf-token" value=(make-csrf-token)>
+										        <input type="hidden" name="target-id" value=user-id>
+											<input type="hidden" name="state" value=(if ignored "unignore" "ignore")>
+											<input type="hidden" name="return" value=(hunchentoot:request-uri*)>
+										      </form>)))
                                                                       :logout own-user-page)
 						(alist-bind ((actual-id string :--id)
 							     (actual-slug string :slug)
@@ -1233,10 +1276,10 @@ signaled condition to OUT-STREAM."
                                    ("signup-password" "Password" "password" "new-password")
                                    ("signup-password2" "Confirm password" "password" "new-password"))
                                  "Create account")
-                    (alexandria:if-let (main-site-title (main-site-title *current-site*))
-                      (format out-stream "<div class=\"login-tip\"><span>Tip:</span> You can log in with the same username and password that you use on ~A~:*. Creating an account here also creates one on ~A.</div>"
-                              main-site-title))
-                    (format out-stream "</div>"))))
+                    (if-let (main-site-title (main-site-title *current-site*))
+			    (format out-stream "<div class=\"login-tip\"><span>Tip:</span> You can log in with the same username and password that you use on ~A~:*. Creating an account here also creates one on ~A.</div>"
+				    main-site-title))
+		    (format out-stream "</div>"))))
      (finish-login (username user-id auth-token error-message &optional expires)
        (cond
          (auth-token
