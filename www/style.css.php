@@ -2442,7 +2442,7 @@ a.comment-parent-link:hover::after {
 	height: 38px;
 	overflow: hidden;
 }
-.comment-item.ignored .author:not(#fake) {
+.comment-item.ignored > .comment > .comment-meta > .author {
 	text-decoration: line-through;
 }
 
