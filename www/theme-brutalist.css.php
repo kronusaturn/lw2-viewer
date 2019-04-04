@@ -1,16 +1,45 @@
-<?php
-	$UI_font = "'Anonymous Pro', monospace";
-	$text_font = "'Input Sans', sans-serif"
-?>
-
 /*******************/
 /* BRUTALIST THEME */
 /*******************/
 
+/*===========*/
+/* VARIABLES */
+/*===========*/
+
+:root {
+	--GW-UI-font: 'Anonymous Pro', monospace;
+	--GW-UI-font-weight-light: 400;
+	--GW-UI-font-weight-heavy: 600;
+
+	--GW-body-text-font: 'Input Sans', sans-serif;
+	--GW-body-text-font-weight: 200;
+
+	--GW-listings-post-meta-font: 'Anonymous Pro';
+	--GW-listings-post-meta-font-weight: 400;
+
+	--GW-link-post-link-font-weight: 600;
+
+	--GW-TOC-heading-font-weight: 700;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	:root {
+		--GW-listings-post-meta-font: 'Input Sans';
+		--GW-listings-post-meta-font-weight: 300;
+	}
+}
+
+/*=============*/
+/* BASE LAYOUT */
+/*=============*/
+
 body {
 	color: #000;
 	background-color: #fff;
-	font-family: <?php echo $UI_font; ?>;
 }
 #content {
 	line-height: 1.55;
@@ -41,7 +70,6 @@ body {
 }
 .nav-inner {
 	font-size: 1.375em;
-	font-weight: 600;
 	border-style: solid;
 	border-color: transparent;
 	border-width: 0 2px;
@@ -97,7 +125,6 @@ body {
 	position: absolute;
 	left: 8px;
 	top: 3px;
-	font-weight: 400;
 	font-size: 0.7em;
 	color: #d8d8d8;
 }
@@ -112,11 +139,9 @@ body {
 
 #nav-item-search button {
 	border: none;
-	font-weight: inherit;
 }
 #nav-item-search input::placeholder {
 	color: #d00;
-	font-weight: normal;
 }
 
 /* Inbox indicator */
@@ -170,14 +195,12 @@ body {
 	box-shadow: 
 		0 0 0 4px #fff inset,
 		0 0 0 5px #000 inset;
-	font-weight: normal;
 }
 .sublevel-nav .sublevel-item:disabled,
 .sublevel-nav span.sublevel-item {
 	box-shadow: 
 		0 0 0 2px #fff inset,
 		0 0 0 3px #000 inset;
-	font-weight: bold;
 	color: inherit;
 }
 
@@ -191,7 +214,6 @@ body {
 }
 .sublevel-nav.sort::before {
 	text-transform: uppercase;
-	font-weight: 600;
 }
 .sublevel-nav.sort .sublevel-item {
 	padding: 7px 8px 6px 9px;
@@ -305,7 +327,7 @@ body {
 #quick-nav-ui a[href='#bottom-bar'] {
 	line-height: 1.8;
 }
-@media only screen and (hover: hover) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	#quick-nav-ui a:hover {
 		box-shadow: 
 			0 0 0 1px #fff inset,
@@ -351,7 +373,6 @@ body {
 }
 #hns-date-picker span {
 	color: #777;
-	font-weight: 600;
 	text-indent: 0px;
 }
 #hns-date-picker input {
@@ -374,10 +395,6 @@ body {
 /* KEYBOARD HELP */
 /*===============*/
 
-#keyboard-help-overlay {
-	font-family: Concourse;
-}
-
 #nav-item-about button.open-keyboard-help {
 	border: none;
 }
@@ -391,7 +408,6 @@ body {
 }
 .archive-nav span[class^='archive-nav-item'],
 .archive-nav a:hover {
-	font-weight: bold;
 	box-shadow: 
 		0 0 0 1px #fff inset,
 		0 0 0 3px #000 inset;
@@ -410,7 +426,6 @@ body {
 h1.listing {
 	margin: 0.7em 20px 0.1em 20px;
 	max-width: calc(100% - 40px);
-	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
 	font-size: 1.625rem;
 }
 
@@ -424,7 +439,7 @@ h1.listing a[href^="http"] {
 		 0 0 2px #000;
 }
 
-@media only screen and (hover: hover) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		color: #777;
@@ -511,6 +526,21 @@ h1.listing + .post-meta .read-time {
 	opacity: 0.5;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	h1.listing + .post-meta {
+		font-stretch: semi-condensed;
+	}
+}
+@media only screen and (max-width: 520px) {
+	h1.listing + .post-meta {
+		font-stretch: condensed;
+	}
+}
+
 /*============*/
 /* USER PAGES */
 /*============*/
@@ -535,7 +565,7 @@ h1.listing + .post-meta .read-time {
 h1.listing.own-post-listing {
 	padding-right: 36px;
 }
-@media only screen and (hover: hover) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	#content.user-page h1.listing:focus-within::before {
 		left: -0.625em;
 	}
@@ -559,10 +589,6 @@ h1.listing.own-post-listing {
 	margin: 0;
 }
 
-.user-stats .karma-total {
-	font-weight: bold;
-}
-
 /*===============*/
 /* CONVERSATIONS */
 /*===============*/
@@ -574,10 +600,6 @@ h1.listing.own-post-listing {
 /*============*/
 /* LOGIN PAGE */
 /*============*/
-
-.login-container form input[type='submit'] {
-	font-weight: bold;
-}
 
 /* “Log in” form */
 #login-form {
@@ -622,21 +644,16 @@ h1.listing.own-post-listing {
 .reset-password-container label {
 	width: 12em;
 }
-.reset-password-container input[type='submit'] {
-	font-weight: bold;
-}
 
 /*===================*/
 /* TABLE OF CONTENTS */
 /*===================*/
 
 .contents {
-	font-family: <?php echo $UI_font; ?>;
 	border: 2px solid #000;
 	background-color: #fff;
 }
 .contents-head {
-	font-weight: bold;
 	font-size: 1.125em;
 }
 .post-body .contents ul {
@@ -654,10 +671,6 @@ h1.listing.own-post-listing {
 /* POSTS & COMMENTS */
 /*==================*/
 
-.body-text {
-	font-family: <?php echo $text_font; ?>;
-	font-weight: 200;
-}
 .body-text a {
 	border-bottom: 2px dotted #000;
 }
@@ -700,8 +713,6 @@ a.post-section:hover::before {
 /*============*/
 
 .post.link-post a.link-post-link {
-	font-family: <?php echo $UI_font; ?>;
-	font-weight: 600;
 	font-size: 1.25em;
 	border: none;
 }
@@ -774,9 +785,6 @@ h1.post-title {
 /* DEEP COMMENT THREAD COLLAPSING */
 /*================================*/
 
-.comment-item input[id^="expand"] + label::after {
-	font-weight: 600;
-}
 .comment-item input[id^="expand"] + label:hover::after {
 	color: #c00;
 }
@@ -793,7 +801,6 @@ h1.post-title {
 /*==============*/
 
 .comment-meta .author {
-	font-weight: bold;
 	font-size: 1.25em;
 }
 .comment-item .author:not(.redacted).original-poster::after {
@@ -830,7 +837,6 @@ h1.post-title {
 .author.redacted,
 .inline-author.redacted {
 	opacity: 0.5;
-	font-weight: 400;
 }
 
 .karma-value.redacted {
@@ -845,12 +851,6 @@ h1.post-title {
 /* COMMENT THREAD NAVIGATION */
 /*===========================*/
 
-div.comment-parent-link {
-	font-weight: 600;
-}
-a.comment-parent-link {
-	font-weight: 400;
-}
 a.comment-parent-link::after {
 	display: none;
 }
@@ -862,12 +862,6 @@ a.comment-parent-link:hover::before {
 	color: #999;
 }
 
-div.comment-child-links {
-	font-weight: 600;
-}
-div.comment-child-links a {
-	font-weight: 400;
-}
 .comment-child-link::before {
 	color: #aaa;
 }
@@ -917,7 +911,7 @@ div.comment-child-links a {
 	background: linear-gradient(to right, transparent 0%, #fff 50%, #fff 100%);
 }
 
-@media only screen and (hover: hover) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	#content.compact > .comment-thread .comment-item:hover .comment,
 	#content.compact > .comment-thread .comment-item.expanded .comment {
 		background-color: #fff;
@@ -936,7 +930,7 @@ div.comment-child-links a {
 			0 0 40px #fff;
 	}
 }
-@media only screen and (hover: none) {
+@media not screen and (hover: hover) and (pointer: fine) {
 	#content.compact > .comment-thread.expanded .comment-item .comment {
 		background-color: #fff;
 		outline: 3px solid #000;
@@ -978,7 +972,6 @@ div.comment-child-links a {
 
 .comment-minimize-button {
 	color: #ccc;
-	font-family: Font Awesome, <?php echo $UI_font; ?>;
 }
 .comment-minimize-button:hover {
 	color: #aaa;
@@ -1073,12 +1066,6 @@ div.comment-child-links a {
 	padding: 4px 6px 2px 6px;
 }
 
-.posting-controls input[type='submit'],
-.comment-controls .cancel-comment-button,
-.new-comment-button {
-	font-weight: 600;
-}
-
 .comment-controls .delete-button::before,
 .comment-controls .retract-button::before,
 .comment-controls .unretract-button::before {
@@ -1099,8 +1086,6 @@ div.comment-child-links a {
 }
 
 .posting-controls textarea {
-	font-family: <?php echo $text_font; ?>;
-	font-weight: 200;
 	font-size: 1rem;
 	line-height: 1.4;
 	color: #000;
@@ -1154,7 +1139,6 @@ div.comment-child-links a {
 }
 
 button.guiedit {
-	font-family: Font Awesome, <?php echo $UI_font; ?>;
 	color: #fff;
 	border: none;
 }
@@ -1190,7 +1174,7 @@ button.guiedit::after {
 	border: 1px solid #000;
 	top: 2px;
 }
-@media only screen and (hover:hover) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover::before,
 	#edit-post-form .post-meta-fields input[type='checkbox']:focus + label::before {
 		box-shadow: 
@@ -1241,7 +1225,6 @@ button.guiedit::after {
 	box-shadow: 
 		0 0 0 1px #fff inset,
 		0 0 0 2px #000 inset;
-	font-weight: bold;
 }
 
 #edit-post-form #markdown-hints-checkbox + label {
@@ -1295,16 +1278,6 @@ input[type='submit']:active {
 /* HEADINGS */
 /*==========*/
 
-.body-text h1,
-.body-text h2,
-.body-text h4 {
-	font-family: <?php echo $UI_font; ?>;
-}
-.body-text h3,
-.body-text h5,
-.body-text h6 {
-	font-weight: 600;
-}
 .body-text h6 {
 	color: #555;
 }
@@ -1407,7 +1380,6 @@ select {
 }
 
 #content.about-page .accesskey-table {
-	font-family: <?php echo $UI_font; ?>;
 	border-color: #ddd;
 }
 
@@ -1479,15 +1451,13 @@ select {
 	background-color: #f2f6ff;
 }
 #content.alignment-forum-index-page::after {
-	font-family: "Concourse SmallCaps";
-	font-weight: 600;
 	background-color: #7f85b2;
 	color: transparent;
 	-webkit-background-clip: text;
 	text-shadow: 
 		rgba(255,255,255,0.5) 0px 3px 3px;
 }
-@media only screen and (hover: hover) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	#content.alignment-forum-index-page h1.listing a:hover,
 	#content.alignment-forum-index-page h1.listing a:focus {
 		background-color: rgba(242,246,255,0.85);
@@ -1657,9 +1627,6 @@ select {
 			0 0 0 5px #fff inset, 
 			0 0 0 7px #000 inset;
 	}
-	#theme-selector button.selected::after {
-		font-weight: bold;
-	}
 	#theme-selector .theme-selector-close-button {
 		font-weight: 400;
 	}
@@ -1673,8 +1640,6 @@ select {
 	}
 	#quick-nav-ui a::after,
 	#new-comment-nav-ui::before {
-		font-family: <?php echo $UI_font; ?>;
-		font-weight: bold;
 		font-size: 0.5rem;
 		background-color: #fff;
 	}
@@ -1686,7 +1651,6 @@ select {
 	#new-comment-nav-ui::before {
 		color: #000;
 		font-size: 0.6875rem;
-		font-weight: bold;
 		bottom: calc(100% + 2px);
 		padding: 2px 0 0 0;
 	}
@@ -1699,9 +1663,6 @@ select {
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
 		color: #bbb;
-	}
-	#new-comment-nav-ui button::after {
-		font-family: <?php echo $UI_font; ?>;
 	}
 
 	#hns-date-picker {
@@ -1716,10 +1677,6 @@ select {
 		h1.listing {
 			line-height: 1;
 			margin-bottom: 6px;
-		}
-		h1.listing + .post-meta {
-			font-family: Input Sans Narrow;
-			font-weight: 300;
 		}
 		h1.listing + .post-meta .post-section {
 			overflow: visible;
@@ -1793,8 +1750,6 @@ select {
 		}
 		h1.listing + .post-meta {
 			margin: 4px 6px;
-			font-family: Input Sans Condensed;
-			font-weight: 300;
 		}
 		h1.listing + .post-meta .post-section {
 			order: 1;
@@ -1828,7 +1783,6 @@ select {
 		.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
 			padding: 5px 6px 6px 6px;
 			color: #fff;
-			font-weight: bold;
 			box-shadow: none;
 		}
 		.textarea-container:focus-within .guiedit-mobile-help-button.active {

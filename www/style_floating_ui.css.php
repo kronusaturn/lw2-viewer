@@ -1,3 +1,7 @@
+/*************************/
+/* UI ELEMENTS CONTAINER */
+/*************************/
+
 #ui-elements-container {
 	position: fixed;
 	height: 100vh;
@@ -15,6 +19,10 @@
 #appearance-adjust-ui-toggle {
 	display: none;
 }
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
 
 @media only screen and (max-width: 960px) {
 	#ui-elements-container {
@@ -36,7 +44,7 @@
 	}
 	#ui-elements-container > div[id$='-ui-toggle'] button,
 	#theme-selector .theme-selector-close-button {
-		font-family: Font Awesome;
+		font-family: var(--GW-Font-Awesome);
 		font-weight: 900;
 		font-size: 32px;
 		padding: 10px;
@@ -93,32 +101,6 @@
 	display: none;
 }
 
-@media only screen and (max-width: 1160px) {
-	#theme-selector:hover::after {
-		content: "";
-		display: block;
-		position: absolute;
-		width: calc(6em - 7px);
-		height: calc(100% + 2px);
-		top: 0;
-		left: calc(100% + 1px);
-	}
-}
-@media only screen and (max-width: 1080px) {
-	#theme-selector {
-		top: 46px;
-		left: -44px;
-	}
-}
-@media only screen and (max-width: 1000px) {
-	#theme-selector {
-		left: -17px;
-		top: 120px;
-		padding: 3px 0;
-		max-width: 32px;
-	}
-}
-
 /*=----------------------=*/
 /*= Theme select buttons =*/
 /*=----------------------=*/
@@ -142,12 +124,6 @@
 }
 .theme-selector button:disabled {
 	cursor: auto;
-}
-
-@media only screen and (max-width: 1000px) {
-	#theme-selector button {
-		margin: 1px 4px;
-	}
 }
 
 /*=----------------------------=*/
@@ -212,10 +188,40 @@
 	z-index: -1;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
 @media only screen and (max-width: 1160px) {
+	#theme-selector:hover::after {
+		content: "";
+		display: block;
+		position: absolute;
+		width: calc(6em - 7px);
+		height: calc(100% + 2px);
+		top: 0;
+		left: calc(100% + 1px);
+	}
 	#theme-selector button::before {
 		right: unset;
 		left: 100%;
+	}
+}
+@media only screen and (max-width: 1080px) {
+	#theme-selector {
+		top: 46px;
+		left: -44px;
+	}
+}
+@media only screen and (max-width: 1000px) {
+	#theme-selector {
+		left: -17px;
+		top: 120px;
+		padding: 3px 0;
+		max-width: 32px;
+	}
+	#theme-selector button {
+		margin: 1px 4px;
 	}
 }
 @media only screen and (max-width: 960px) {
@@ -246,7 +252,7 @@
 		content: "Select theme";
 		white-space: nowrap;
 		display: block;
-		font-weight: 600;
+		font-weight: var(--GW-UI-font-weight-heavy);
 		font-size: 2rem;
 		margin: 0.375em 1em 0.5em 1em;
 		text-align: center;
@@ -267,6 +273,9 @@
 		text-align: left;
 		left: 2.5em;
 		top: 1em;
+	}
+	#theme-selector button.selected::after {
+		font-weight: var(--GW-UI-font-weight-heavy);
 	}
 	@media only screen and (max-height: 675px) {
 		#theme-selector button {	
@@ -301,7 +310,7 @@
 	left: -75px;
 }
 #theme-tweaker-toggle button {
-	font-family: Font Awesome;
+	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
 	font-size: 1.25rem;
 	opacity: 0.4;
@@ -310,6 +319,10 @@
 #theme-tweaker-toggle button:hover {
 	opacity: 1.0;
 }
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
 
 @media only screen and (max-width: 1080px) {
 	#theme-tweaker-toggle {
@@ -447,7 +460,7 @@ foreach ($content_width_settings as $name => $setting) {
 	bottom: 20px;
 }
 #quick-nav-ui a {
-	font-family: 'Font Awesome';
+	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
 	font-size: 1.5rem;
 	line-height: 1.7;
@@ -466,6 +479,10 @@ foreach ($content_width_settings as $name => $setting) {
 #content.post-page ~ #ui-elements-container #quick-nav-ui a[href='#comments'] {
 	visibility: visible;
 }
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
 
 @media only screen and (max-width: 1080px) {
 	#quick-nav-ui {
@@ -514,6 +531,9 @@ foreach ($content_width_settings as $name => $setting) {
 		padding: 2px;
 		text-transform: uppercase;
 		z-index: -1;
+
+		font-family: var(--GW-UI-font);
+		font-weight: var(--GW-UI-font-weight-heavy);
 	}
 	<?php fit_content("#quick-nav-ui a::after"); ?>
 	#quick-nav-ui a[href='#top']::after {
@@ -563,6 +583,8 @@ foreach ($content_width_settings as $name => $setting) {
 	text-align: center;
 	left: 1px;
 	cursor: pointer;
+
+	font-weight: var(--GW-UI-font-weight-heavy);
 }
 #new-comment-nav-ui .new-comments-count::selection {
 	background-color: transparent;
@@ -571,6 +593,8 @@ foreach ($content_width_settings as $name => $setting) {
 	content: "NEW";
 	display: block;
 	font-size: 0.625rem;
+
+	font-weight: var(--GW-UI-font-weight-heavy);
 }
 
 /*=-----------------------------------=*/
@@ -579,7 +603,7 @@ foreach ($content_width_settings as $name => $setting) {
 
 #new-comment-nav-ui .new-comment-sequential-nav-button {
 	font-size: 1.75rem;
-	font-family: 'Font Awesome';
+	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
 	width: 1.5em;
 	z-index: 5001;
@@ -594,6 +618,10 @@ foreach ($content_width_settings as $name => $setting) {
 	cursor: auto;
 	pointer-events: none;
 }
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
 
 @media only screen and (max-width: 1160px) {
 	#new-comment-nav-ui {
@@ -648,6 +676,9 @@ foreach ($content_width_settings as $name => $setting) {
 		padding: 2px 3px;
 		text-transform: uppercase;
 		z-index: -1;
+
+		font-family: var(--GW-UI-font);
+		font-weight: var(--GW-UI-font-weight-heavy);
 	}
 	<?php fit_content("#new-comment-nav-ui::before"); ?>
 	#new-comment-nav-ui.engaged {
@@ -678,6 +709,8 @@ foreach ($content_width_settings as $name => $setting) {
 		line-height: 1;
 		text-transform: uppercase;
 		pointer-events: none;
+		
+		font-family: var(--GW-UI-font);
 	}
 	#new-comment-nav-ui button.new-comment-previous::after {
 		content: "Previous";
@@ -706,6 +739,10 @@ foreach ($content_width_settings as $name => $setting) {
 #hns-date-picker.no-comments {
 	display: none;
 }
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
 
 @media only screen and (max-width: 1440px) {
 	#hns-date-picker {
@@ -785,6 +822,8 @@ foreach ($content_width_settings as $name => $setting) {
 	display: block;
 	font-size: 0.75rem;
 	text-transform: uppercase;
+
+	font-weight: var(--GW-UI-font-weight-heavy);
 }
 
 /*=--------------------=*/
@@ -816,7 +855,7 @@ foreach ($content_width_settings as $name => $setting) {
 }
 #anti-kibitzer-toggle button::before,
 #anti-kibitzer-toggle button::after {
-	font-family: Font Awesome;
+	font-family: var(--GW-Font-Awesome);
 }
 #anti-kibitzer-toggle button::before {
 	content: "\F06E";
@@ -832,6 +871,10 @@ foreach ($content_width_settings as $name => $setting) {
 #anti-kibitzer-toggle.engaged button::before {
 	content: "\F070";
 }
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
 
 @media only screen and (max-width: 1160px) {
 	#anti-kibitzer-toggle {
@@ -899,6 +942,10 @@ foreach ($content_width_settings as $name => $setting) {
 	opacity: 1.0;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
 @media only screen and (max-width: 1220px) {
 	#text-size-adjustment-ui {
 		top: 4px;
@@ -947,7 +994,7 @@ foreach ($content_width_settings as $name => $setting) {
 
 #text-size-adjustment-ui button {
 	font-weight: 900;
-	font-family: Font Awesome;
+	font-family: var(--GW-Font-Awesome);
 	font-size: 0.75rem;
 	width: 24px;
 	height: 24px;
@@ -958,6 +1005,8 @@ foreach ($content_width_settings as $name => $setting) {
 	font-size: 1.125rem;
 	position: relative;
 	top: 1px;
+
+	font-weight: var(--GW-UI-font-weight-heavy);
 }
 #text-size-adjustment-ui button:disabled {
 	opacity: 0.5;
@@ -984,3 +1033,178 @@ foreach ($content_width_settings as $name => $setting) {
 #text-size-adjustment-ui:hover::after {
 	visibility: visible;
 }
+
+/*****************/
+/* KEYBOARD HELP */
+/*****************/
+
+#keyboard-help-overlay {
+	width: 100vw;
+	height: 100vh;
+	background-color: rgba(0,0,0,0.7);
+	position: fixed;
+	left: 0;
+	top: 0;
+	z-index: 5001;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 20px 30px 30px 20px;
+
+	visibility: hidden;
+
+	font-family: var(--GW-keyboard-help-overlay-font);
+}
+
+#keyboard-help-overlay .keyboard-help-container {
+	background-color: #fff;
+	filter: drop-shadow(4px 4px 2px #000);
+	flex: 1 1 auto;
+	max-width: 1500px;
+	max-height: 100%;
+	overflow-y: auto;
+	position: relative;
+}
+#keyboard-help-overlay .keyboard-help-container h1 {
+	text-align: center;
+	border-bottom: 1px solid #ddd;
+	margin: 0;
+	padding: 10px 20px;
+}
+#keyboard-help-overlay .keyboard-help-container .note {
+	margin: 0.5em auto;
+	padding: 0 1em;
+	width: fit-content;
+}
+#keyboard-help-overlay .keyboard-help-container .keyboard-shortcuts-lists {
+	column-width: 21em;
+	column-count: auto;
+	column-gap: 1.5em;
+	border-top: 1px solid #ddd;
+	padding: 15px 20px;
+}
+#keyboard-help-overlay .keyboard-help-container ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	break-inside: avoid;
+	white-space: nowrap;
+}
+#keyboard-help-overlay .keyboard-help-container ul:nth-of-type(n+2) {
+	margin: 20px 0 0 0;
+}
+#keyboard-help-overlay .keyboard-help-container ul li.section {
+	font-weight: bold;
+	font-size: 1.125rem;
+	break-after: avoid;
+}
+#keyboard-help-overlay .keyboard-help-container .keys {
+	margin: 0 0.5em 0 0;
+	min-width: 4.5em;
+	display: inline-block;
+}
+#keyboard-help-overlay .keyboard-help-container .keys code {
+	margin: 0 6px 0 0;
+}
+#keyboard-help-overlay .keyboard-help-container code {
+	display: inline-block;
+	background-color: #eee;
+	border: 1px solid #ccc;
+	padding: 3px 8px 4px 8px;
+	margin: 0 1px;
+}
+#keyboard-help-overlay .keyboard-help-container code.ak {
+	background-color: #ffeb83;
+	border-color: #d4a500;
+}
+#keyboard-help-overlay .keyboard-help-container code.ak::before {
+	content: "ak+";
+	opacity: 0.3;
+}
+
+#nav-item-about button.open-keyboard-help {
+	display: none;
+}
+@media only screen and (hover:hover) and (pointer:fine) {
+	#nav-item-about {
+		position: relative;
+		padding-right: 0.25em;
+	}
+	#nav-item-about button.open-keyboard-help {
+		font-family: var(--GW-Font-Awesome);
+		font-weight: 900;
+		position: absolute;
+		top: 0;
+		right: 0;
+		height: 100%;
+		padding: 8px;
+		display: initial;
+		line-height: 1;
+	}
+}
+
+#keyboard-help-overlay button.close-keyboard-help {
+	position: absolute;
+	right: 0;
+	top: 0;
+	font-family: var(--GW-Font-Awesome);
+	font-size: 1.5rem;
+	padding: 10px 12px;
+}
+
+/******************/
+/* IMAGES OVERLAY */
+/******************/
+/* (To exclude images in posts from theme tweaks) */
+
+#images-overlay {
+	position: absolute;
+	z-index: 1;
+	left: 0;
+	right: 0;
+	margin: auto;
+}
+
+@media only screen and (max-width: 960px) {
+	#image-focus-overlay.engaged {
+		visibility: visible;
+	}
+	#image-focus-overlay .help-overlay {
+		display: none;
+	}
+}
+
+#images-overlay + #content .post-body img {
+	visibility: hidden;
+}
+
+#images-overlay div {
+	position: absolute;
+}
+#images-overlay div::after {
+	content: "Click to enlarge";
+	display: block;
+	position: absolute;
+	margin: auto;
+	left: 0;
+	right: 0;
+	bottom: 10px;
+	padding: 6px 10px;
+	font-size: 1.25rem;
+	background-color: rgba(0,0,0,0.6);
+	color: #fff;
+	border-radius: 5px;
+	opacity: 0.0;
+	transition: opacity 0.15s ease;
+	pointer-events: none;
+}
+<?php fit_content("#images-overlay div::after"); ?>
+#images-overlay div:hover::after {
+	opacity: 1.0;
+}
+
+#images-overlay img {
+	width: 100%;
+}
+

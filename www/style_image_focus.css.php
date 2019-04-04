@@ -75,7 +75,7 @@
 
 #image-focus-overlay .help-overlay::after {
 	content: "\F128";
-	font-family: Font Awesome;
+	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
 	font-size: 2rem;
 	position: absolute;
@@ -115,7 +115,7 @@
 	font-size: 1.75rem;
 	left: 1em;
 	bottom: 1em;
-	font-weight: 600;
+	font-weight: var(--GW-UI-font-weight-heavy);
 	text-shadow:
 		0 0 3px #fff,
 		0 0 5px #fff,
@@ -154,7 +154,7 @@
 	pointer-events: none;
 }
 #image-focus-overlay .slideshow-buttons button {
-	font-family: Font Awesome;
+	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
 	font-size: 3rem;
 	padding: 0.5em;

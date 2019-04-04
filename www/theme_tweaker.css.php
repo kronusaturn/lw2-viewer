@@ -3,7 +3,7 @@
 /*****************/
 
 :root {
-    --basilisk: url('data:image/png;base64,<?php echo base64_encode(file_get_contents("assets/basilisk.png")) ?>');
+    --GW-basilisk: url('data:image/png;base64,<?php echo base64_encode(file_get_contents("assets/basilisk.png")) ?>');
 }
 
 #theme-tweaker-ui {
@@ -629,7 +629,7 @@ input[type='range']::-ms-thumb {
 #theme-tweaker-ui .clippy-container .clippy {
 	width: 200px;
 	height: 125px;
-	background-image: var(--basilisk); 
+	background-image: var(--GW-basilisk); 
 	background-size: 100%;
 	position: absolute;
 	bottom: -150px;
@@ -684,7 +684,7 @@ input[type='range']::-ms-thumb {
 }
 #theme-tweaker-ui #theme-tweak-control-clippy + label::after {
 	content: "";
-	background-image: var(--basilisk); 
+	background-image: var(--GW-basilisk); 
 	background-size: 75px;
 	background-repeat: no-repeat;
 	background-position: center right;
