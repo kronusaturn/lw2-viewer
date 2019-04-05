@@ -119,7 +119,7 @@ button:hover,
 input[type='submit']:hover,
 .button:hover,
 button:focus,
-input[type='submit':focus,
+input[type='submit']:focus,
 .button:focus {
 	color: var(--GW-button-hover-color);
 	background-color: var(--GW-button-hover-background-color);
@@ -199,4 +199,3 @@ a {
 		box-shadow: none;
 	}
 }
-
