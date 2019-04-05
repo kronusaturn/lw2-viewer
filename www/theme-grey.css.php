@@ -1,19 +1,41 @@
-<?php
-	$UI_font = (($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Whitney', 'a_Avante'") . ", Arial, sans-serif";
-	$UI_font_smallcaps = (($platform == 'Mac') ? "'Concourse Smallcaps', 'a_Avante'" : "'Whitney Smallcaps', 'a_Avante'") . ", Arial, sans-serif";
-	$text_font = "'Source Sans Pro', 'Trebuchet MS', 'Helvetica', 'Arial', 'Verdana', sans-serif";
-	$hyperlink_color = "#f60";
-	$white_glow = "0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff";
-?>
-
 /**************/
 /* GREY THEME */
 /**************/
 
+/*===========*/
+/* VARIABLES */
+/*===========*/
+
+:root {
+	--GW-UI-font: <?php echo (($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Whitney', 'a_Avante'"); ?>, 'Open Sans', 'Arial', sans-serif;
+	--GW-UI-font-smallcaps: <?php echo (($platform == 'Mac') ? "'Concourse Smallcaps', 'a_Avante'" : "'Whitney Smallcaps', 'a_Avante'"); ?>, 'Open Sans', 'Arial', sans-serif;
+	--GW-UI-font-weight-light: 400;
+	--GW-UI-font-weight-heavy: 600;
+
+	--GW-body-text-font: 'Source Sans Pro', 'Trebuchet MS', 'Helvetica', 'Arial', 'Verdana', sans-serif;
+
+	--GW-link-post-link-font-weight: 600;
+
+	--GW-body-background-color: #eee;
+	--GW-hyperlink-color: #00e;
+	--GW-shadow-white-glow:
+		0 0 1px #fff,
+		0 0 3px #fff,
+		0 0 5px #fff;
+}
+@-moz-document url-prefix() {
+	:root {
+		--GW-body-text-font-weight: <?php echo ($platform == 'Windows' ? '300' : '400'); ?>;
+	}
+}
+
+
+/*=============*/
+/* BASE LAYOUT */
+/*=============*/
+
 body {
 	color: #000;
-	background-color: #eee;
-	font-family: <?php echo $UI_font; ?>;
 	font-feature-settings: 'ss07';
 }
 #content {
@@ -92,7 +114,7 @@ body {
 .nav-bar a:hover,
 .nav-bar a:focus {
 	text-decoration: none;
-	text-shadow: <?php echo $white_glow; ?>;
+	text-shadow: var(--GW-shadow-white-glow);
 }
 
 /* Accesskey hints */
@@ -267,7 +289,6 @@ body {
 /*=====================*/
 
 .sublevel-nav.sort .sublevel-item {
-	font-family: <?php echo $UI_font; ?>;
 	letter-spacing: 0.5px;
 	padding: <?php echo ($platform == 'Mac') ? "7px 7px 5px 7px" : "6px 7px"; ?>;
 	text-transform: uppercase;
@@ -503,7 +524,7 @@ body {
 	text-decoration: none;
 	color: #c00;
 	background-color: #e0e0e0;
-	text-shadow: <?php echo $white_glow; ?>;
+	text-shadow: var(--GW-shadow-white-glow);
 }
 .archive-nav a:active {
 	transform: scale(0.9);
@@ -523,7 +544,6 @@ h1.listing {
 	margin: 0.6em 20px 0 20px;
 	max-width: calc(100% - 40px);
 	line-height: 1.1;
-	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
 	font-size: 1.5rem;
 }
 h1.listing a[href^='/posts'] {
@@ -761,7 +781,6 @@ h1.listing.own-post-listing {
 /*===================*/
 
 .contents {
-	font-family: <?php echo $UI_font; ?>;
 	border: 1px solid #ddd;
 	background-color: #eee;
 }
@@ -782,16 +801,6 @@ h1.listing.own-post-listing {
 /*==================*/
 /* POSTS & COMMENTS */
 /*==================*/
-
-.body-text {
-	font-family: <?php echo $text_font; ?>;
-	font-weight: 400;
-}
-@-moz-document url-prefix() {
-	.body-text {
-		font-weight: <?php global $platform; echo ($platform == 'Windows' ? '300' : '400'); ?>;
-	}
-}
 
 h1.post-title {
 	margin: 1.1em 0 0.25em 0;
@@ -938,8 +947,6 @@ a.post-section.alignment-forum:hover::before {
 
 .post.link-post a.link-post-link {
 	text-decoration: none;
-	font-family: <?php echo $UI_font; ?>;
-	font-weight: 600;
 }
 .post.link-post a.link-post-link:hover {
 	color: #c00;
@@ -1182,7 +1189,6 @@ div.comment-child-links a {
 		0 0 0 5px #bbb inset;
 }
 #content.compact > .comment-thread .comment-item::after {
-	color: <?php echo $hyperlink_color; ?>;
 	background: linear-gradient(to right, transparent 0%, #fff 50%, #fff 100%);
 }
 
@@ -1190,7 +1196,7 @@ div.comment-child-links a {
 	#content.compact > .comment-thread .comment-item:hover .comment,
 	#content.compact > .comment-thread .comment-item.expanded .comment {
 		background-color: #fff;
-		outline: 3px solid <?php echo $hyperlink_color; ?>;
+		outline: 3px solid var(--GW-hyperlink-color);
 	}
 	#content.compact > .comment-thread .comment-item:hover .comment::before,
 	#content.compact > .comment-thread .comment-item.expanded .comment::before {
@@ -1208,7 +1214,7 @@ div.comment-child-links a {
 @media only screen and (hover: none) {
 	#content.compact > .comment-thread.expanded .comment-item .comment {
 		background-color: #fff;
-		outline: 3px solid <?php echo $hyperlink_color; ?>;
+		outline: 3px solid var(--GW-hyperlink-color);
 	}
 	#content.compact > .comment-thread.expanded .comment-item .comment::before {
 		background-color: #fff;

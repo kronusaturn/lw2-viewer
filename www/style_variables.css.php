@@ -2,6 +2,8 @@
 /* VARIABLES */
 /*************/
 
+/*	Typography.
+	*/
 :root {
 	--GW-Font-Awesome: 'Font Awesome', 'Font Awesome 5 Free';
 	--GW-monospaced-font: 'Inconsolata', 'Menlo', monospace;
@@ -24,6 +26,8 @@
 	--GW-editor-font-weight: var(--GW-body-text-font-weight);
 
 	--GW-hyperlink-color: #00e;
+	--GW-hyperlink-hover-color: #c00;
+	--GW-hyperlink-active-color: #e00;
 
 	--GW-post-listings-font: var(--GW-UI-font);
 	--GW-post-listings-font-weight: var(--GW-UI-font-weight-heavy);
@@ -50,7 +54,11 @@
 	--GW-user-page-karma-font-weight: 700;
 
 	--GW-login-page-tip-label-font-weight: 700;
-	
+}
+
+/*	Layout.
+	*/
+:root {
 	--GW-content-side-padding: 30px;
 }
 
@@ -58,6 +66,8 @@
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
+/*	Layout.
+	*/
 @media only screen and (max-width: 900px) {
 	:root {
 		--GW-content-side-padding: 4px;

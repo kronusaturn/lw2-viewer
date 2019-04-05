@@ -7,6 +7,8 @@
 /* VARIABLES */
 /*************/
 
+/*	Typography.
+	*/
 :root {
 	--GW-Font-Awesome: 'Font Awesome', 'Font Awesome 5 Free';
 	--GW-monospaced-font: 'Inconsolata', 'Menlo', monospace;
@@ -29,6 +31,8 @@
 	--GW-editor-font-weight: var(--GW-body-text-font-weight);
 
 	--GW-hyperlink-color: #00e;
+	--GW-hyperlink-hover-color: #c00;
+	--GW-hyperlink-active-color: #e00;
 
 	--GW-post-listings-font: var(--GW-UI-font);
 	--GW-post-listings-font-weight: var(--GW-UI-font-weight-heavy);
@@ -55,7 +59,11 @@
 	--GW-user-page-karma-font-weight: 700;
 
 	--GW-login-page-tip-label-font-weight: 700;
-	
+}
+
+/*	Layout.
+	*/
+:root {
 	--GW-content-side-padding: 30px;
 }
 
@@ -63,6 +71,8 @@
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
+/*	Layout.
+	*/
 @media only screen and (max-width: 900px) {
 	:root {
 		--GW-content-side-padding: 4px;
@@ -151,17 +161,15 @@ body > * {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-@media only screen and (max-width: 960px) and (min-width: 901px) {
-	body {
-		overflow-x: hidden;
-	}
-}
 @media only screen and (max-width: 900px) {
 	#content,
 	#images-overlay,
 	#ui-elements-container {
 		min-width: unset;
 		width: unset;
+	}
+	#content {
+		padding: 0 4px;
 	}
 }
 
@@ -2966,6 +2974,7 @@ ul.comment-thread {
 	white-space: nowrap;
 	cursor: pointer;
 
+	color: var(--GW-hyperlink-color);
 	font-weight: var(--GW-UI-font-weight-heavy);
 }
 .comment-item input[id^="expand"]:checked + label::after {
@@ -3359,6 +3368,8 @@ a.comment-child-link::before {
 	line-height: 1;
 	padding: 0 16px 10px 64px;
 	pointer-events: auto;
+
+	color: var(--GW-hyperlink-color);
 }
 @media only screen and (hover: hover) and (pointer: fine) {
 	#content.compact:not(:focus-within) > .comment-thread .comment-item:hover,

@@ -481,6 +481,7 @@ ul.comment-thread {
 	white-space: nowrap;
 	cursor: pointer;
 
+	color: var(--GW-hyperlink-color);
 	font-weight: var(--GW-UI-font-weight-heavy);
 }
 .comment-item input[id^="expand"]:checked + label::after {
@@ -874,6 +875,8 @@ a.comment-child-link::before {
 	line-height: 1;
 	padding: 0 16px 10px 64px;
 	pointer-events: auto;
+
+	color: var(--GW-hyperlink-color);
 }
 @media only screen and (hover: hover) and (pointer: fine) {
 	#content.compact:not(:focus-within) > .comment-thread .comment-item:hover,

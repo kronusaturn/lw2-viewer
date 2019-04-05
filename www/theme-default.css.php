@@ -22,7 +22,11 @@
 	--GW-comment-meta-author-font-weight: 700;
 
 	--GW-body-background-color: #d8d8d8;
+
 	--GW-hyperlink-color: #00e;
+	--GW-hyperlink-hover-color: #c00;
+	--GW-hyperlink-active-color: #e00;
+	
 	--GW-shadow-white-glow:
 		0 0 1px #fff,
 		0 0 3px #fff,
@@ -798,7 +802,6 @@ h1.listing {
 
 h1.listing {
 	font-size: 1.875em;
-	top: <?php echo ($platform == 'Mac') ? "0" : "0.125em"; ?>;
 	margin: 7px 0 0 0;
 }
 
@@ -1501,9 +1504,6 @@ a.post-section.alignment-forum:hover::before {
 /* DEEP COMMENT THREAD COLLAPSING */
 /*================================*/
 
-.comment-item input[id^="expand"] + label::after {
-	color: var(--GW-hyperlink-color);
-}
 .comment-item input[id^="expand"] + label:hover::after {
 	color: #c00;
 }

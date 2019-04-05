@@ -75,17 +75,15 @@ body > * {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-@media only screen and (max-width: 960px) and (min-width: 901px) {
-	body {
-		overflow-x: hidden;
-	}
-}
 @media only screen and (max-width: 900px) {
 	#content,
 	#images-overlay,
 	#ui-elements-container {
 		min-width: unset;
 		width: unset;
+	}
+	#content {
+		padding: 0 4px;
 	}
 }
 

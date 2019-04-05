@@ -7,6 +7,8 @@
 /* VARIABLES */
 /*************/
 
+/*	Typography.
+	*/
 :root {
 	--GW-Font-Awesome: 'Font Awesome', 'Font Awesome 5 Free';
 	--GW-monospaced-font: 'Inconsolata', 'Menlo', monospace;
@@ -29,6 +31,8 @@
 	--GW-editor-font-weight: var(--GW-body-text-font-weight);
 
 	--GW-hyperlink-color: #00e;
+	--GW-hyperlink-hover-color: #c00;
+	--GW-hyperlink-active-color: #e00;
 
 	--GW-post-listings-font: var(--GW-UI-font);
 	--GW-post-listings-font-weight: var(--GW-UI-font-weight-heavy);
@@ -55,7 +59,11 @@
 	--GW-user-page-karma-font-weight: 700;
 
 	--GW-login-page-tip-label-font-weight: 700;
-	
+}
+
+/*	Layout.
+	*/
+:root {
 	--GW-content-side-padding: 30px;
 }
 
@@ -63,6 +71,8 @@
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
+/*	Layout.
+	*/
 @media only screen and (max-width: 900px) {
 	:root {
 		--GW-content-side-padding: 4px;
@@ -151,17 +161,15 @@ body > * {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-@media only screen and (max-width: 960px) and (min-width: 901px) {
-	body {
-		overflow-x: hidden;
-	}
-}
 @media only screen and (max-width: 900px) {
 	#content,
 	#images-overlay,
 	#ui-elements-container {
 		min-width: unset;
 		width: unset;
+	}
+	#content {
+		padding: 0 4px;
 	}
 }
 
@@ -2966,6 +2974,7 @@ ul.comment-thread {
 	white-space: nowrap;
 	cursor: pointer;
 
+	color: var(--GW-hyperlink-color);
 	font-weight: var(--GW-UI-font-weight-heavy);
 }
 .comment-item input[id^="expand"]:checked + label::after {
@@ -3359,6 +3368,8 @@ a.comment-child-link::before {
 	line-height: 1;
 	padding: 0 16px 10px 64px;
 	pointer-events: auto;
+
+	color: var(--GW-hyperlink-color);
 }
 @media only screen and (hover: hover) and (pointer: fine) {
 	#content.compact:not(:focus-within) > .comment-thread .comment-item:hover,
@@ -5402,15 +5413,44 @@ article {
 /*%% THEME %%*/
 /*%%%%%%%%%%%*/
 
-
 /**************/
 /* GREY THEME */
 /**************/
 
+/*===========*/
+/* VARIABLES */
+/*===========*/
+
+:root {
+	--GW-UI-font: 'Concourse', 'a_Avante', 'Open Sans', 'Arial', sans-serif;
+	--GW-UI-font-smallcaps: 'Concourse Smallcaps', 'a_Avante', 'Open Sans', 'Arial', sans-serif;
+	--GW-UI-font-weight-light: 400;
+	--GW-UI-font-weight-heavy: 600;
+
+	--GW-body-text-font: 'Source Sans Pro', 'Trebuchet MS', 'Helvetica', 'Arial', 'Verdana', sans-serif;
+
+	--GW-link-post-link-font-weight: 600;
+
+	--GW-body-background-color: #eee;
+	--GW-hyperlink-color: #00e;
+	--GW-shadow-white-glow:
+		0 0 1px #fff,
+		0 0 3px #fff,
+		0 0 5px #fff;
+}
+@-moz-document url-prefix() {
+	:root {
+		--GW-body-text-font-weight: 400;
+	}
+}
+
+
+/*=============*/
+/* BASE LAYOUT */
+/*=============*/
+
 body {
 	color: #000;
-	background-color: #eee;
-	font-family: 'Concourse', 'a_Avante', Arial, sans-serif;
 	font-feature-settings: 'ss07';
 }
 #content {
@@ -5498,7 +5538,7 @@ body {
 .nav-bar a:hover,
 .nav-bar a:focus {
 	text-decoration: none;
-	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+	text-shadow: var(--GW-shadow-white-glow);
 }
 
 /* Accesskey hints */
@@ -5673,7 +5713,6 @@ body {
 /*=====================*/
 
 .sublevel-nav.sort .sublevel-item {
-	font-family: 'Concourse', 'a_Avante', Arial, sans-serif;
 	letter-spacing: 0.5px;
 	padding: 7px 7px 5px 7px;
 	text-transform: uppercase;
@@ -5909,7 +5948,7 @@ body {
 	text-decoration: none;
 	color: #c00;
 	background-color: #e0e0e0;
-	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+	text-shadow: var(--GW-shadow-white-glow);
 }
 .archive-nav a:active {
 	transform: scale(0.9);
@@ -5929,7 +5968,6 @@ h1.listing {
 	margin: 0.6em 20px 0 20px;
 	max-width: calc(100% - 40px);
 	line-height: 1.1;
-	font-family: 'Concourse', 'a_Avante', Arial, sans-serif, 'Font Awesome';
 	font-size: 1.5rem;
 }
 h1.listing a[href^='/posts'] {
@@ -6167,7 +6205,6 @@ h1.listing.own-post-listing {
 /*===================*/
 
 .contents {
-	font-family: 'Concourse', 'a_Avante', Arial, sans-serif;
 	border: 1px solid #ddd;
 	background-color: #eee;
 }
@@ -6188,16 +6225,6 @@ h1.listing.own-post-listing {
 /*==================*/
 /* POSTS & COMMENTS */
 /*==================*/
-
-.body-text {
-	font-family: 'Source Sans Pro', 'Trebuchet MS', 'Helvetica', 'Arial', 'Verdana', sans-serif;
-	font-weight: 400;
-}
-@-moz-document url-prefix() {
-	.body-text {
-		font-weight: 400;
-	}
-}
 
 h1.post-title {
 	margin: 1.1em 0 0.25em 0;
@@ -6344,8 +6371,6 @@ a.post-section.alignment-forum:hover::before {
 
 .post.link-post a.link-post-link {
 	text-decoration: none;
-	font-family: 'Concourse', 'a_Avante', Arial, sans-serif;
-	font-weight: 600;
 }
 .post.link-post a.link-post-link:hover {
 	color: #c00;
@@ -6496,7 +6521,7 @@ a.post-section.alignment-forum:hover::before {
 /*================================*/
 
 .comment-item input[id^="expand"] + label::after {
-	color: #f60;
+	color: ;
 	font-weight: 600;
 }
 .comment-item input[id^="expand"] + label:hover::after {
@@ -6636,7 +6661,6 @@ div.comment-child-links a {
 		0 0 0 5px #bbb inset;
 }
 #content.compact > .comment-thread .comment-item::after {
-	color: #f60;
 	background: linear-gradient(to right, transparent 0%, #fff 50%, #fff 100%);
 }
 
@@ -6644,7 +6668,7 @@ div.comment-child-links a {
 	#content.compact > .comment-thread .comment-item:hover .comment,
 	#content.compact > .comment-thread .comment-item.expanded .comment {
 		background-color: #fff;
-		outline: 3px solid #f60;
+		outline: 3px solid var(--GW-hyperlink-color);
 	}
 	#content.compact > .comment-thread .comment-item:hover .comment::before,
 	#content.compact > .comment-thread .comment-item.expanded .comment::before {
@@ -6662,7 +6686,7 @@ div.comment-child-links a {
 @media only screen and (hover: none) {
 	#content.compact > .comment-thread.expanded .comment-item .comment {
 		background-color: #fff;
-		outline: 3px solid #f60;
+		outline: 3px solid var(--GW-hyperlink-color);
 	}
 	#content.compact > .comment-thread.expanded .comment-item .comment::before {
 		background-color: #fff;
@@ -6705,10 +6729,10 @@ div.comment-child-links a {
 }
 .comment-minimize-button:hover {
 	color: #aaa;
-	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+	text-shadow: ;
 }
 .comment-minimize-button::after {
-	font-family: 'Concourse', 'a_Avante', Arial, sans-serif;
+	font-family: ;
 	color: #777;
 }
 .comment-minimize-button.maximized::after {
@@ -6819,7 +6843,7 @@ div.comment-child-links a {
 }
 .comment-controls .cancel-comment-button:hover {
 	color: #f00;
-	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+	text-shadow: ;
 }
 
 .new-comment-button {
@@ -6845,7 +6869,7 @@ div.comment-child-links a {
 
 .posting-controls textarea {
 	font-weight: 400;
-	font-family: 'Source Sans Pro', 'Trebuchet MS', 'Helvetica', 'Arial', 'Verdana', sans-serif;
+	font-family: ;
 	color: #000;
 	background-color: #fff;
 	border-color: #aaa;
@@ -6859,11 +6883,11 @@ div.comment-child-links a {
 }
 .posting-controls textarea:focus {
 	background-color: #ffe;
-	border-color: #f60;
+	border-color: ;
 	box-shadow: 
 		0 0 0 1px #ddf inset,
 		0 0 0 1px #fff,
-		0 0 0 2px #f60;
+		0 0 0 2px ;
 }
 .posting-controls.edit-existing-post textarea:focus,
 .posting-controls form.edit-existing-comment textarea:focus {
@@ -6923,11 +6947,11 @@ div.comment-child-links a {
 	color: #050;
 }
 button.guiedit {
-	font-family: Font Awesome, 'Source Sans Pro', 'Trebuchet MS', 'Helvetica', 'Arial', 'Verdana', sans-serif;
+	font-family: Font Awesome, ;
 }
 
 button.guiedit::after {
-	font-family: 'Concourse', 'a_Avante', Arial, sans-serif;
+	font-family: ;
 	color: #777;
 	text-shadow: none;
 }
@@ -6939,7 +6963,7 @@ button.guiedit::after {
 }
 #markdown-hints-checkbox + label:hover {
 	color: #e00;
-	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+	text-shadow: ;
 }
 #markdown-hints {
 	border: 1px solid #c00;
@@ -7011,7 +7035,7 @@ button.guiedit::after {
 
 a {
 	text-decoration: none;
-	color: #f60;
+	color: ;
 }
 a:visited {
 	color: #ff943b;
@@ -7026,7 +7050,7 @@ a:hover {
 
 button,
 input[type='submit'] {
-	color: #f60;
+	color: ;
 }
 
 .button,
@@ -7039,7 +7063,7 @@ input[type='submit']:hover,
 button:focus,
 input[type='submit']:focus {
 	color: #d00;
-	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+	text-shadow: ;
 }
 button:active,
 input[type='submit']:active {
@@ -7048,7 +7072,7 @@ input[type='submit']:active {
 }
 .button:hover {
 	color: #d00;
-	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+	text-shadow: ;
 	text-decoration: none;
 }
 .button:active {
@@ -7070,12 +7094,12 @@ input[type='submit']:active {
 .body-text h1,
 .body-text h2,
 .body-text h4 {
-	font-family: 'Concourse', 'a_Avante', Arial, sans-serif;
+	font-family: ;
 }
 .body-text h3,
 .body-text h5,
 .body-text h6 {
-	font-family: 'Concourse Smallcaps', 'a_Avante', Arial, sans-serif;
+	font-family: ;
 }
 .body-text h1,
 .body-text h2,
@@ -7191,7 +7215,7 @@ select {
 }
 
 #content.about-page .accesskey-table {
-	font-family: 'Concourse', 'a_Avante', Arial, sans-serif;
+	font-family: ;
 	border-color: #ddd;
 }
 
@@ -7208,11 +7232,11 @@ select {
 }
 #aux-about-link a:hover {
 	opacity: 1.0;
-	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+	text-shadow: ;
 }
 
 .qualified-linking label {
-	color: #f60;
+	color: ;
 }
 .qualified-linking label:hover {
 	text-shadow:
@@ -7229,15 +7253,15 @@ select {
 	background-color: #eee;
 	border: 1px solid #ccc;
 	border-radius: 4px;
-	color: #f60;
+	color: ;
 }
 .qualified-linking-toolbar a:visited {
-	color: #f60;
+	color: ;
 }
 .qualified-linking-toolbar a:hover {
 	text-decoration: none;
 	background-color: #ddd;
-	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+	text-shadow: ;
 }
 .qualified-linking label::after {
 	background-color: #eee;
@@ -7279,7 +7303,7 @@ select {
 	background-color: #f1f3ff;
 }
 #content.alignment-forum-index-page::after {
-	font-family: 'Concourse Smallcaps', 'a_Avante', Arial, sans-serif;
+	font-family: ;
 	font-weight: 600;
 	background-color: #626dd7;
 	-webkit-background-clip: text;
@@ -7448,7 +7472,7 @@ select {
 	}
 	#quick-nav-ui a::after,
 	#new-comment-nav-ui::before {
-		font-family: 'Concourse', 'a_Avante', Arial, sans-serif;
+		font-family: ;
 		font-weight: 600;
 		box-shadow:
 			0 0 1px 0 #fff,
@@ -7484,7 +7508,7 @@ select {
 		border-radius: 7px 0 0 7px;
 	}
 	#new-comment-nav-ui button::after {
-		font-family: 'Concourse', 'a_Avante', Arial, sans-serif;
+		font-family: ;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-next {
 		border-radius: 0 7px 7px 0;
