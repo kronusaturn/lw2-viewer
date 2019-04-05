@@ -290,6 +290,10 @@ EOT;
 	}
 }
 @media only screen and (max-width: 900px) {
+	#primary-bar,
+	#secondary-bar {
+		font-size: 0.9375em;
+	}
 	#primary-bar .nav-item {
 		flex: 1 1 100%;
 	}
@@ -358,10 +362,15 @@ EOT;
 	}
 }
 @media only screen and (max-width: 720px) {
+	#primary-bar,
+	#secondary-bar {
+		font-size: 0.875em;
+	}
 	.nav-bar .nav-item:not(#nav-item-search) .nav-inner {
 		flex-flow: column;
 	}
-	.nav-bar .nav-inner::before {
+	#primary-bar .nav-inner::before,
+	#secondary-bar .nav-inner::before {
 		margin: 0;
 		font-size: 1.125em;
 	}
@@ -372,7 +381,43 @@ EOT;
 		font-size: 1.5rem;
 	}
 }
+@media only screen and (max-width: 640px) {
+	#primary-bar,
+	#secondary-bar {
+		font-size: 0.8125em;
+	}
+	#primary-bar .nav-inner {
+		padding: 8px 12px;
+	}
+	#secondary-bar .nav-inner {
+		padding: 4px 6px;
+	}
+	#primary-bar .nav-inner::before,
+	#secondary-bar .nav-inner::before {
+		font-size: 1.25em;
+	}
+	.nav-bar #nav-item-search button::before {
+		font-size: 1.25rem;
+	}
+}
 @media only screen and (max-width: 520px) {
+	#primary-bar,
+	#secondary-bar {
+		font-size: 0.625em;
+	}
+	#primary-bar .nav-inner {
+		padding: 6px 12px;
+	}
+	#primary-bar .nav-inner::before,
+	#secondary-bar .nav-inner::before {
+		font-size: 1.75em;
+	}
+	.nav-bar #nav-item-search {
+		padding: 3px;
+	}
+	.nav-bar #nav-item-search button::before {
+		margin: 0 -0.25em 0 0;
+	}
 	#bottom-bar #nav-item-first .nav-inner::after {
 		content: "First";
 	}
@@ -384,6 +429,51 @@ EOT;
 	}
 	#bottom-bar #nav-item-last .nav-inner::after {
 		content: "Last";
+	}
+}
+@media only screen and (max-width: 420px) {
+	#primary-bar,
+	#secondary-bar {
+		font-size: 0.5em;
+	}
+	#primary-bar .nav-inner {
+		padding: 4px 8px;
+	}
+	#primary-bar .nav-inner::before,
+	#secondary-bar .nav-inner::before {
+		font-size: 2.25em;
+	}
+	.nav-bar #nav-item-search {
+		padding: 2px;
+	}
+	.nav-bar #nav-item-search button::before {
+		font-size: 1rem;
+	}
+}
+@media only screen and (max-width: 360px) {
+	#primary-bar .nav-inner {
+		padding: 4px 6px;
+	}
+	#primary-bar .nav-inner::before,
+	#secondary-bar .nav-inner::before {
+		font-size: 1.75em;
+	}
+	.nav-bar #nav-item-search {
+		padding: 1px;
+		width: 12em;
+	}
+	#nav-item-search input {
+		padding: 1px 3em 1px 4px;
+	}
+	.nav-bar #nav-item-search button {
+		position: absolute;
+		top: 0;
+		right: 1em;
+		width: 3em;
+		text-align: left;
+	}
+	.nav-bar #nav-item-search button::before {
+		font-size: 0.875rem;
 	}
 }
 
@@ -401,7 +491,7 @@ EOT;
 	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
 	color: #bbb;
-	font-size: 1.1875rem;
+	font-size: 1.1875em;
 	position: absolute;
 	right: 0;
 	height: 100%;
@@ -437,16 +527,24 @@ a#inbox-indicator.new-messages:hover::before {
 
 @media only screen and (max-width: 900px) {
 	#inbox-indicator {
-		padding: 0 0.75em 0 0;
+		padding: 0 1em 0 0;
+		pointer-events: none;
 	}
 	#inbox-indicator::before {
 		width: 100%;
 		text-align: right;
-		pointer-events: none;
+		font-size: 1.25em;
+	}
+	#inbox-indicator.new-messages {
+		pointer-events: auto;
 	}
 	#inbox-indicator.new-messages::before {
-		pointer-events: auto;
 		box-shadow: 0 0 8px 1px #f00 inset;
+	}
+}
+@media only screen and (max-width: 840px) {
+	#inbox-indicator {
+		padding: 0 1.5em 0 0;
 	}
 }
 @media only screen and (max-width: 720px) {
