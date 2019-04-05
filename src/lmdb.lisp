@@ -95,7 +95,9 @@
 					      *environments-sites*))
       (dolist (site *environments-sites*)
 	(if-let (existing-environment (find-environment-with-path (backend-cache-db-path (site-backend site)) *db-environments*))
-		(setf (backend-lmdb-environment (site-backend site)) existing-environment)
+		(progn
+		  (setf (backend-lmdb-environment (site-backend site)) existing-environment)
+		  (prepare-environment existing-environment))
 		(let ((new-environment
 		       (make-environment-container
 			:semaphore (make-semaphore :name (format nil "LMDB environment semaphore for ~A" (site-host site)) :count (expt 2 20))
