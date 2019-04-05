@@ -1043,6 +1043,9 @@ h1.listing + .post-meta::after {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 900px) {
+	h1.listing + .post-meta .link-post-domain {
+		margin: 0;
+	}
 	#content.user-page h1.listing + .post-meta {
 		margin-bottom: 1em;
 	}
@@ -1083,9 +1086,6 @@ h1.listing + .post-meta::after {
 	h1.listing + .post-meta .lw2-link {
 		opacity: 1;
 		right: 0;
-	}
-	h1.listing + .post-meta .link-post-domain {
-		margin: 0;
 	}
 }
 @media only screen and (max-width: 520px) {

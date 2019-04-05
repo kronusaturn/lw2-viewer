@@ -1127,9 +1127,10 @@ foreach ($content_width_settings as $name => $setting) {
 	display: none;
 }
 
-/*	Probably only devices with mice also have keyboards.
+/*	Show the “open keyboard help” button on the “About” tab only on wide
+	(i.e., assumed-to-be-desktop) viewports.
 	*/
-@media only screen and (hover: hover) and (pointer: fine) {
+@media only screen and (min-width: 961px) {
 	#nav-item-about {
 		position: relative;
 		padding-right: 0.25em;

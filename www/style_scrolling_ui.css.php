@@ -567,8 +567,9 @@ a#inbox-indicator.new-messages:hover::before {
 /*********************/
 
 #top-nav-bar {
+	grid-row: 3;
 	margin: 0.25em 0 0 0;
-	padding: 0.75em 0 0 0;
+	padding: 1em 0 0 0;
 	text-align: center;
 	font-size: 1.25rem;
 	display: flex;
@@ -671,7 +672,6 @@ a#inbox-indicator.new-messages:hover::before {
 
 .sublevel-nav.sort {
 	position: relative;
-	margin-top: 8px;
 	font-size: 0.75em;
 }
 #content > .sublevel-nav.sort {
@@ -684,6 +684,9 @@ a#inbox-indicator.new-messages:hover::before {
 	grid-row: 3 / span 1;
 	justify-self: start;
 	flex-flow: row;
+}
+#content.user-page > .sublevel-nav.sort {
+	grid-row: 6;
 }
 
 .sublevel-nav.sort::before {
@@ -714,116 +717,6 @@ a#inbox-indicator.new-messages:hover::before {
 		margin-left: 4px;
 	}
 }
-
-/*******************************/
-/* COMMENTS SORT MODE SELECTOR */
-/*******************************/
-
-.comments > .sublevel-nav.sort {
-	margin: 1em auto 0 auto;
-}
-<?php fit_content(".comments > .sublevel-nav.sort"); ?>
-
-/*********************/
-/* TOP PAGINATION UI */
-/*********************/
-
-#top-nav-bar {
-	grid-row: 3;
-	padding: 1em 0 0 0;
-	text-align: center;
-	font-size: 1.25em;
-	display: flex;
-	justify-content: center;
-}
-
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
-@media only screen and (max-width: 1080px) {
-	#anti-kibitzer-toggle {
-		right: -54px;
-	}
-}
-@media only screen and (max-width: 1040px) {
-	#anti-kibitzer-toggle {
-		right: -50px;
-	}
-}
-@media only screen and (max-width: 1020px) {
-	#anti-kibitzer-toggle {
-		right: -20px;
-	}
-}
-
-/****************/
-/* SUBLEVEL NAV */
-/****************/
-
-.sublevel-nav {
-	text-align: center;
-	display: flex;
-	justify-content: center;
-	margin: 1em 0 0 0;
-}
-#content > .sublevel-nav:not(.sort) {
-	grid-row: 5;
-	align-self: start;
-}
-.sublevel-nav .sublevel-item {
-	flex: 0 0 6em;
-	padding: 0.125em 0.5em;
-	font-size: 1.125rem;
-}
-.sublevel-nav .sublevel-item:active {
-	transform: none;
-}
-.sublevel-nav .sublevel-item.selected {
-	cursor: default;
-}
-
-/***********************/
-/* SORT ORDER SELECTOR */
-/***********************/
-
-.sublevel-nav.sort {
-	position: relative;
-	font-size: 0.75em;
-}
-#content > .sublevel-nav.sort {
-	grid-row: 5 / span 2;
-	justify-self: end;
-	align-self: start;
-	flex-flow: column;
-}
-#content.index-page > .sublevel-nav.sort {
-	grid-row: 3 / span 1;
-	grid-row: 3;
-	justify-self: start;
-	flex-flow: row;
-}
-#content.user-page > .sublevel-nav.sort {
-	grid-row: 6;
-}
-
-.sublevel-nav.sort::before {
-	content: "Sort";
-	font-size: 0.75rem;
-	position: absolute;
-	top: 0;
-	width: 100%;
-}
-.sublevel-nav.sort .sublevel-item {
-	line-height: 1;
-	font-size: 0.875rem;
-	flex-basis: unset;
-}
-
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
 @media only screen and (max-width: 520px) {
 	#content.index-page > .sublevel-nav.sort {
 		flex-flow: column;
