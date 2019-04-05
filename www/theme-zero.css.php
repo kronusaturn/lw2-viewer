@@ -1,18 +1,43 @@
-<?php
-	$UI_font = "Trade Gothic, Helvetica, sans-serif";
-	$text_font = "'News Gothic BT', 'Helvetica', sans-serif";
-	$hyperlink_color = "#00e";
-	$white_glow = "0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff";
-?>
-
 /**************/
 /* THEME ZERO */
 /**************/
 
+/*===========*/
+/* VARIABLES */
+/*===========*/
+
+/*	Typography.
+	*/
+:root {
+	--GW-UI-font: 'Trade Gothic', 'Clear Sans', 'Helvetica', sans-serif;
+	--GW-UI-font-weight-light: 400;
+	--GW-UI-font-weight-heavy: 400;
+
+	--GW-body-text-font: 'News Gothic BT', 'Clear Sans', 'Helvetica', sans-serif;
+}
+
+/*	Color scheme.
+	*/
+:root {
+	--GW-body-background-color: #eee;
+
+	--GW-hyperlink-color: #00e;
+	--GW-hyperlink-visited-color: #551a8b;
+	--GW-hyperlink-hover-color: #c00;
+	--GW-hyperlink-active-color: #e00;
+	
+	--GW-shadow-white-glow:
+		0 0 1px #fff,
+		0 0 3px #fff,
+		0 0 5px #fff;
+}
+
+/*=============*/
+/* BASE LAYOUT */
+/*=============*/
+
 body {
 	color: #000;
-	font-family: <?php echo $UI_font; ?>;
-	background-color: #eee;
 }
 #content {
 	line-height: 1.55;
@@ -42,10 +67,6 @@ body {
 }
 .active-bar {
 	border-top: 2px solid #eee;
-}
-
-.nav-bar a:visited {
-	color: <?php echo $hyperlink_color; ?>;
 }
 
 #bottom-bar.decorative {
@@ -259,6 +280,26 @@ body {
 	color: #666;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1000px) {
+	#theme-selector {
+		background-color: #eee;
+		box-shadow: 
+			0 0 0 1px #999,
+			0 0 0 2px transparent;
+	}
+	#theme-selector:hover::after {
+		background-color: #999;
+		width: calc(6em - 3px);
+		height: calc(100% - 5px);
+		top: 3px;
+		left: 100%;
+	}	
+}
+
 /*======================*/
 /* THEME TWEAKER TOGGLE */
 /*======================*/
@@ -267,9 +308,29 @@ body {
 	color: #777;
 }
 
-/*=================*/
-/* QUICKNAV WIDGET */
-/*=================*/
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1080px) {
+	#theme-tweaker-toggle button {
+		border: 1px solid #999;
+		box-shadow: 
+			0 0 10px #999 inset,
+			0 0 0 1px transparent;
+		border-radius: 50%;
+		transform: scale(0.8);
+	}
+}
+@media only screen and (max-width: 1000px) {
+	#theme-tweaker-toggle button {
+		background-color: #ddd;
+	}
+}
+
+/*==============*/
+/* QUICK NAV UI */
+/*==============*/
 
 #quick-nav-ui a {
 	color: #00c;
@@ -287,7 +348,10 @@ body {
 	opacity: 0.4;
 	color: #bbb;
 }
-@media only screen and (hover: hover) {
+
+/*	Hover styles.
+	*/
+@media only screen and (hover: hover) and (pointer: fine) {
 	#quick-nav-ui a:hover {
 		color: #f00;
 		box-shadow: 0 0 0 1px #faa;
@@ -295,6 +359,18 @@ body {
 	#quick-nav-ui a:focus:not(:hover) {
 		transform: none;
 		text-shadow: none;
+	}
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1020px) {
+	#quick-nav-ui a {
+		box-shadow: 
+			0 0 0 1px #999,
+			0 0 0 2px transparent;
 	}
 }
 
@@ -315,7 +391,10 @@ body {
 	color: #bbb;
 	text-shadow: none;
 }
-@media only screen and (hover: hover) {
+
+/*	Hover styles.
+	*/
+@media only screen and (hover: hover) and (pointer: fine) {
 	#new-comment-nav-ui .new-comments-count:hover {
 		text-shadow: 
 			0 0 1px #fff,
@@ -330,6 +409,20 @@ body {
 			0 0 1px #fff,
 			0 0 3px #fff,
 			0 0 5px #fff;
+	}
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1020px) {
+	#new-comment-nav-ui .new-comments-count::before {
+		background-color: #d8d8d8;
+		box-shadow: 
+			0 0 0 1px #999,
+			0 0 0 2px transparent;
+		border-radius: 8px;
 	}
 }
 
@@ -349,6 +442,29 @@ body {
 }
 #hns-date-picker input:focus {
 	color: #000;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1440px) {
+	#hns-date-picker {
+		background-color: #d8d8d8;
+		opacity: 1.0;
+	}
+	#hns-date-picker::before {
+		border: 1px solid #999;
+		border-width: 1px 0 1px 1px;
+	}
+}
+@media only screen and (max-width: 1200px) {
+	#hns-date-picker {
+		background-color: #eee;
+	}
+	#hns-date-picker::before {
+		display: none;
+	}
 }
 
 /*======================*/
@@ -382,6 +498,29 @@ body {
 }
 #text-size-adjustment-ui::after {
 	color: #999;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1080px) {
+	#text-size-adjustment-ui button {
+		border: 1px solid #999;
+		padding: 0 0 0 1px;
+		border-radius: 50%;
+		box-shadow: 
+			0 0 6px #999 inset,
+			0 0 0 1px transparent;
+	}
+}
+@media only screen and (max-width: 1000px) {
+	#text-size-adjustment-ui button {
+		background-color: #ddd;
+	}
+	#text-size-adjustment-ui button:hover {
+		background-color: #eee;
+	}
 }
 
 /*=============================*/
@@ -428,7 +567,7 @@ body {
 	text-decoration: none;
 	color: #c00;
 	background-color: #e0e0e0;
-	text-shadow: <?php echo $white_glow; ?>;
+	text-shadow: var(--GW-shadow-white-glow);
 }
 .archive-nav a:active {
 	transform: scale(0.9);
@@ -447,7 +586,6 @@ body {
 h1.listing {
 	margin: 0.7em 20px 0.1em 20px;
 	max-width: calc(100% - 40px);
-	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
 	font-size: 1.375rem;
 	line-height: 1.2;
 }
@@ -461,7 +599,9 @@ h1.listing a[href^="/posts"] {
 	font-weight: bold;
 }
 
-@media only screen and (hover: hover) {
+/*	Listings hover reveal.
+	*/
+@media only screen and (hover: hover) and (pointer: fine) {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		color: #777;
@@ -546,7 +686,10 @@ h1.listing + .post-meta .karma-value {
 h1.listing.own-post-listing {
 	padding-right: 36px;
 }
-@media only screen and (hover: hover) {
+
+/*	Listings hover reveal.
+	*/
+@media only screen and (hover: hover) and (pointer: fine) {
 	#content.user-page h1.listing:focus-within::before {
 		left: -0.625em;
 		top: 6px;
@@ -640,7 +783,6 @@ h1.listing.own-post-listing {
 /*===================*/
 
 .contents {
-	font-family: <?php echo $UI_font; ?>;
 	background-color: #eee;
 }
 .contents-head {
@@ -661,10 +803,6 @@ h1.listing.own-post-listing {
 /*==================*/
 /* POSTS & COMMENTS */
 /*==================*/
-
-.body-text {
-	font-family: <?php echo $text_font; ?>;
-}
 
 .body-text a {
 	border-bottom: 1px dotted #bbb;
@@ -732,8 +870,6 @@ a.post-section.alignment-forum:hover::before {
 
 .post.link-post a.link-post-link {
 	text-decoration: none;
-	font-family: <?php echo $UI_font; ?>;
-	font-weight: 600;
 }
 .post.link-post a.link-post-link:hover {
 	color: #c00;
@@ -822,10 +958,6 @@ a.post-section.alignment-forum:hover::before {
 /* DEEP COMMENT THREAD COLLAPSING */
 /*================================*/
 
-.comment-item input[id^="expand"] + label::after {
-	color: <?php echo $hyperlink_color; ?>;
-	font-weight: 600;
-}
 .comment-item input[id^="expand"] + label:hover::after {
 	color: #c00;
 }
@@ -962,11 +1094,10 @@ div.comment-child-links a {
 	max-height: 58px;
 }
 #content.compact > .comment-thread .comment-item::after {
-	color: <?php echo $hyperlink_color; ?>;
 	background: linear-gradient(to right, transparent 0%, #fff 50%, #fff 100%);
 }
 
-@media only screen and (hover: hover) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	#content.compact > .comment-thread .comment-item:hover .comment,
 	#content.compact > .comment-thread .comment-item.expanded .comment {
 		background-color: #fff;
@@ -985,7 +1116,7 @@ div.comment-child-links a {
 			0 0 40px #fff;
 	}
 }
-@media only screen and (hover: none) {
+@media not screen and (hover: hover) and (pointer: fine) {
 	#content.compact > .comment-thread.expanded .comment-item .comment {
 		background-color: #fff;
 		outline: 3px solid #00c;
@@ -1031,10 +1162,9 @@ div.comment-child-links a {
 }
 .comment-minimize-button:hover {
 	color: #aaa;
-	text-shadow: <?php echo $white_glow; ?>;
+	text-shadow: var(--GW-shadow-white-glow)
 }
 .comment-minimize-button::after {
-	font-family: <?php echo $UI_font; ?>;
 	color: #777;
 }
 .comment-minimize-button.maximized::after {
@@ -1130,7 +1260,7 @@ div.comment-child-links a {
 }
 .comment-controls .cancel-comment-button:hover {
 	color: #f00;
-	text-shadow: <?php echo $white_glow; ?>;
+	text-shadow: var(--GW-shadow-white-glow);
 }
 
 .new-comment-button {
@@ -1169,7 +1299,6 @@ h1.listing .edit-post-link:hover,
 }
 
 .posting-controls textarea {
-	font-family: <?php echo $text_font; ?>;
 	color: #000;
 	border-color: #00e;
 }
@@ -1231,24 +1360,16 @@ h1.listing .edit-post-link:hover,
 .posting-controls form.edit-existing-comment .guiedit-buttons-container button {
 	color: #050;
 }
-.guiedit-buttons-container button {
-	font-family: Font Awesome, <?php echo $text_font; ?>;
-}
 
 .guiedit::after {
-	font-family: <?php echo $UI_font; ?>;
 	color: #777;
 	text-shadow: none;
 }
 
 /* Markdown hints */
 
-#markdown-hints-checkbox + label {
-	color: <?php echo $hyperlink_color; ?>;
-}
 #markdown-hints-checkbox + label:hover {
-	color: #e00;
-	text-shadow: <?php echo $white_glow; ?>;
+	text-shadow: var(--GW-shadow-white-glow);
 }
 #markdown-hints {
 	border: 1px solid #c00;
@@ -1267,7 +1388,7 @@ h1.listing .edit-post-link:hover,
 	border: 1px solid #ddd;
 	color: #777;
 }
-@media only screen and (hover:hover) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover,
 	#edit-post-form .post-meta-fields input[type='checkbox']:focus + label {
 		text-shadow: 
@@ -1319,10 +1440,6 @@ h1.listing .edit-post-link:hover,
 
 a {
 	text-decoration: none;
-	color: <?php echo $hyperlink_color; ?>;
-}
-a:visited {
-	color: #551a8b;
 }
 a:hover {
 	text-decoration: underline;
@@ -1563,90 +1680,14 @@ select {
 	text-shadow: 
 		rgba(255,255,255,0.5) 0px 3px 3px;
 }
-@media only screen and (hover: hover) {
+
+/*	Hover styles.
+	*/
+@media only screen and (hover: hover) and (pointer: fine) {
 	#content.alignment-forum-index-page h1.listing a:hover,
 	#content.alignment-forum-index-page h1.listing a:focus {
 		background-color: rgba(234,237,255,0.85);
 	}	
-}
-
-/*====================*/
-/* FOR NARROW SCREENS */
-/*====================*/
-
-@media only screen and (max-width: 1440px) {
-	#hns-date-picker {
-		background-color: #d8d8d8;
-		opacity: 1.0;
-	}
-	#hns-date-picker::before {
-		border: 1px solid #999;
-		border-width: 1px 0 1px 1px;
-	}
-}
-@media only screen and (max-width: 1200px) {
-	#hns-date-picker {
-		background-color: #eee;
-	}
-	#hns-date-picker::before {
-		display: none;
-	}
-}
-@media only screen and (max-width: 1080px) {
-	#text-size-adjustment-ui button {
-		border: 1px solid #999;
-		padding: 0 0 0 1px;
-		border-radius: 50%;
-		box-shadow: 
-			0 0 6px #999 inset,
-			0 0 0 1px transparent;
-	}
-	#theme-tweaker-toggle button {
-		border: 1px solid #999;
-		box-shadow: 
-			0 0 10px #999 inset,
-			0 0 0 1px transparent;
-		border-radius: 50%;
-		transform: scale(0.8);
-	}
-}
-@media only screen and (max-width: 1020px) {
-	#quick-nav-ui a {
-		box-shadow: 
-			0 0 0 1px #999,
-			0 0 0 2px transparent;
-	}
-	#new-comment-nav-ui .new-comments-count::before {
-		background-color: #d8d8d8;
-		box-shadow: 
-			0 0 0 1px #999,
-			0 0 0 2px transparent;
-		border-radius: 8px;
-	}
-}
-@media only screen and (max-width: 1000px) {
-	#theme-selector {
-		background-color: #eee;
-		box-shadow: 
-			0 0 0 1px #999,
-			0 0 0 2px transparent;
-	}
-	#theme-selector:hover::after {
-		background-color: #999;
-		width: calc(6em - 3px);
-		height: calc(100% - 5px);
-		top: 3px;
-		left: 100%;
-	}	
-	#text-size-adjustment-ui button {
-		background-color: #ddd;
-	}
-	#text-size-adjustment-ui button:hover {
-		background-color: #eee;
-	}
-	#theme-tweaker-toggle button {
-		background-color: #ddd;
-	}
 }
 
 /*========*/

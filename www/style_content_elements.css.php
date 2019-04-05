@@ -1,3 +1,21 @@
+/*********/
+/* LINKS */
+/*********/
+
+a {
+	color: var(--GW-hyperlink-color);
+}
+a:visited {
+	color: var(--GW-hyperlink-visited-color);
+}
+a:hover,
+a:focus {
+	color: var(--GW-hyperlink-hover-color);
+}
+a:active {
+	color: var(--GW-hyperlink-active-color);
+}
+
 /*********************/
 /* TABLE OF CONTENTS */
 /*********************/
@@ -137,6 +155,7 @@
 	text-align: left;
 
 	font-family: var(--GW-content-headings-font);
+	font-weight: var(--GW-content-headings-font-weight);
 }
 
 .post-body h5,

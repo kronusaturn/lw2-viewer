@@ -40,22 +40,20 @@
 	padding: 4px 10px;
 }
 
-#nav-item-sequences .nav-inner::before {
-	font-family: var(--GW-Font-Awesome);
-	content: "\F5DB";
+/*=---------=*/
+/*= Styling =*/
+/*=---------=*/
+
+.nav-bar a,
+.nav-bar a:visited {
+	color: var(--GW-nav-bar-item-color);
 }
-@media only screen and (min-width: 901px) {
-	#nav-item-about .nav-inner {
-		margin-right: 0.5em;
-	}
-	#nav-item-sequences .nav-inner::before {
-		font-size: 1rem;
-		display: block;
-	}
-	#secondary-bar #nav-item-sequences .nav-inner {
-		font-size: 0;
-		line-height: 1.4;
-	}
+.nav-bar a:hover,
+.nav-bar a:focus {
+	color: var(--GW-nar-bar-item-hover-color);
+}
+.nav-bar a:active {
+	color: var(--GW-nav-bar-item-active-color);
 }
 
 /*=------------=*/
@@ -204,6 +202,28 @@ EOT;
 #nav-item-login {
 	position: relative;
 	padding-right: 0.5em;
+}
+
+/*=---------------=*/
+/*= Sequences tab =*/
+/*=---------------=*/
+
+#nav-item-sequences .nav-inner::before {
+	font-family: var(--GW-Font-Awesome);
+	content: "\F5DB";
+}
+@media only screen and (min-width: 901px) {
+	#nav-item-about .nav-inner {
+		margin-right: 0.5em;
+	}
+	#nav-item-sequences .nav-inner::before {
+		font-size: 1rem;
+		display: block;
+	}
+	#secondary-bar #nav-item-sequences .nav-inner {
+		font-size: 0;
+		line-height: 1.4;
+	}
 }
 
 /*=----------------------------=*/

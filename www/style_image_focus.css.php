@@ -168,7 +168,7 @@
 #image-focus-overlay .slideshow-buttons button::selection {
 	background-color: transparent;
 }
-@media only screen and (hover: hover) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	#image-focus-overlay .slideshow-buttons button:hover {
 		background-color: rgba(0,0,0,0.1);
 		color: #777;
@@ -194,4 +194,17 @@
 
 .blurred {
 	filter: blur(3px);
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 960px) {
+	#image-focus-overlay.engaged {
+		visibility: visible;
+	}
+	#image-focus-overlay .help-overlay {
+		display: none;
+	}
 }

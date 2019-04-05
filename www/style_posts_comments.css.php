@@ -3,7 +3,6 @@
 /************/
 
 h1.listing {
-	max-height: 1.15em;
 	line-height: 1.15;
 	position: relative;
 	display: flex;
@@ -32,6 +31,9 @@ h1.listing a[href^="http"] {
 /*	(On desktops, hover over a multi-line listing to reveal all of it) */
 
 @media only screen and (hover: hover) and (pointer: fine) {
+	h1.listing {
+		max-height: 1.15em;
+	}
 	h1.listing a[href^='/posts/'] {
 		white-space: nowrap;
 		text-overflow: ellipsis;
@@ -72,11 +74,6 @@ h1.listing a[href^="http"] {
 		bottom: -<?php echo $margin_of_hover_error; ?>;
 		left: -<?php echo $margin_of_hover_error; ?>;
 		z-index: -1;
-	}
-}
-@media not screen and (hover: hover) and (pointer: fine) {
-	h1.listing {
-		max-height: unset;
 	}
 }
 
@@ -543,12 +540,6 @@ ul.comment-thread {
 	font-weight: var(--GW-comment-meta-author-font-weight);
 }
 
-@media not screen and (hover: hover) and (pointer: fine) {
-	a.comment-parent-link::after {
-		display: none;
-	}
-}
-
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
@@ -609,39 +600,44 @@ a.comment-parent-link:not(.inline-author),
 a.comment-parent-link.inline-author::before {
 	opacity: 0.5;
 }
-a.comment-parent-link:hover {
-	opacity: 1.0;
-}
-a.comment-parent-link::before {
-	content: "\F062";
-	font-family: var(--GW-Font-Awesome);
-	font-weight: 900;
-	font-size: 0.75rem;
-	line-height: 1;
-	position: absolute;
-	z-index: 1;
-	display: block;
-	padding: 3px 3px 0 3px;
-	width: 16px;
-	height: calc(100% + 2px);
-	top: -1px;
-	left: -17px;
-}
-a.comment-parent-link::after {
-	content: "";
-	position: absolute;
-	z-index: 0;
-	display: block;
-	width: calc(100% + 26px);
-	height: calc(100% + 38px);
-	top: -29px;
-	left: -17px;
-	pointer-events: none;
-	overflow: hidden;
-	visibility: hidden;
-}
-a.comment-parent-link:hover::after {
-	visibility: visible;
+
+/*	Hover highlighting.
+	*/
+@media only screen and (hover: hover) and (pointer: fine) {
+	a.comment-parent-link:hover {
+		opacity: 1.0;
+	}
+	a.comment-parent-link::before {
+		content: "\F062";
+		font-family: var(--GW-Font-Awesome);
+		font-weight: 900;
+		font-size: 0.75rem;
+		line-height: 1;
+		position: absolute;
+		z-index: 1;
+		display: block;
+		padding: 3px 3px 0 3px;
+		width: 16px;
+		height: calc(100% + 2px);
+		top: -1px;
+		left: -17px;
+	}
+	a.comment-parent-link::after {
+		content: "";
+		position: absolute;
+		z-index: 0;
+		display: block;
+		width: calc(100% + 26px);
+		height: calc(100% + 38px);
+		top: -29px;
+		left: -17px;
+		pointer-events: none;
+		overflow: hidden;
+		visibility: hidden;
+	}
+	a.comment-parent-link:hover::after {
+		visibility: visible;
+	}
 }
 
 .comment-child-links {
@@ -661,21 +657,25 @@ a.comment-child-link::before {
 	margin: 0 2px 0 0;
 }
 
-.comment-popup {
-	position: fixed;
-	top: 10%;
-	right: 10%;
-	max-width: 700px;
-	z-index: 10001;
-	font-size: 1rem;
-	white-space: unset;
-	pointer-events: none;
-}
-.comment-popup .comment-parent-link {
-	display: none;
-}
-.comment-popup .comment-body {
-	font-size: 1.0625rem;
+/*	Comment popups.
+	*/
+@media only screen and (hover: hover) and (pointer: fine) {
+	.comment-popup {
+		position: fixed;
+		top: 10%;
+		right: 10%;
+		max-width: 700px;
+		z-index: 10001;
+		font-size: 1rem;
+		white-space: unset;
+		pointer-events: none;
+	}
+	.comment-popup .comment-parent-link {
+		display: none;
+	}
+	.comment-popup .comment-body {
+		font-size: 1.0625rem;
+	}
 }
 
 /*=----------------------------=*/
@@ -1306,6 +1306,15 @@ button.guiedit {
 	margin: 2px 0 0 1em;
 	line-height: 1.3;
 	cursor: pointer;
+
+	color: var(--GW-hyperlink-color);
+}
+#markdown-hints-checkbox + label:hover,
+#markdown-hints-checkbox + label:focus {
+	color: var(--GW-hyperlink-hover-color);
+}
+#markdown-hints-checkbox + label:active {
+	color: var(--GW-hyperlink-active-color);
 }
 #edit-post-form #markdown-hints-checkbox + label {
 	padding: 0;

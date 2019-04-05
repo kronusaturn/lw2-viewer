@@ -55,6 +55,7 @@ body > * {
 }
 #content {
 	margin: 0 auto;
+	padding: 0 var(--GW-content-side-padding);
 	position: relative;
 	overflow: visible;
 	display: grid;
@@ -82,9 +83,6 @@ body > * {
 		min-width: unset;
 		width: unset;
 	}
-	#content {
-		padding: 0 4px;
-	}
 }
 
 /*=---------=*/
@@ -102,13 +100,35 @@ body > * {
 	*/
 
 button,
-input[type='submit'] {
+input[type='submit'],
+.button {
 	font-family: inherit;
 	font-size: inherit;
-	background-color: inherit;
 	cursor: pointer;
 	border: none;
 	border-radius: 0;
+}
+button,
+input[type='submit'],
+.button,
+.button:visited {
+	color: var(--GW-button-color);
+	background-color: var(--GW-button-background-color);
+}
+button:hover,
+input[type='submit']:hover,
+.button:hover,
+button:focus,
+input[type='submit':focus,
+.button:focus {
+	color: var(--GW-button-hover-color);
+	background-color: var(--GW-button-hover-background-color);
+}
+button:active,
+input[type='submit']:active,
+.button:active {
+	color: var(--GW-button-active-color);
+	background-color: var(--GW-button-active-background-color);
 }
 
 input,

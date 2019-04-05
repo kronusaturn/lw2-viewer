@@ -6,6 +6,8 @@
 /* VARIABLES */
 /*===========*/
 
+/*	Typography.
+	*/
 :root {
 	--GW-UI-font: <?php echo (($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Whitney', 'a_Avante'"); ?>, 'Open Sans', 'Arial', sans-serif;
 	--GW-UI-font-smallcaps: <?php echo (($platform == 'Mac') ? "'Concourse Smallcaps', 'a_Avante'" : "'Whitney Smallcaps', 'a_Avante'"); ?>, 'Open Sans', 'Arial', sans-serif;
@@ -17,13 +19,16 @@
 
 	--GW-body-text-font: 'Charter', 'PT Serif', 'Georgia', serif;
 
-	--GW-link-post-link-font-weight: 600;
-
 	--GW-comment-meta-author-font-weight: 700;
+}
 
+/*	Color scheme.
+	*/
+:root {
 	--GW-body-background-color: #d8d8d8;
 
 	--GW-hyperlink-color: #00e;
+	--GW-hyperlink-visited-color: #551a8b;
 	--GW-hyperlink-hover-color: #c00;
 	--GW-hyperlink-active-color: #e00;
 	
@@ -91,9 +96,6 @@ body {
 	background-color: #d8d8d8;
 }
 
-.nav-bar a:visited {
-	color: var(--GW-hyperlink-color);
-}
 .nav-bar a:hover,
 .nav-bar a:focus {
 	text-decoration: none;
@@ -1910,11 +1912,7 @@ a.comment-parent-link:hover::before {
 
 /* Markdown hints */
 
-#markdown-hints-checkbox + label {
-	color: var(--GW-hyperlink-color);
-}
 #markdown-hints-checkbox + label:hover {
-	color: #e00;
 	text-shadow: var(--GW-shadow-white-glow);
 }
 #markdown-hints {
@@ -2036,10 +2034,6 @@ a.comment-parent-link:hover::before {
 
 a {
 	text-decoration: none;
-	color: var(--GW-hyperlink-color);
-}
-a:visited {
-	color: #551a8b;
 }
 a:hover {
 	text-decoration: underline;
@@ -2049,18 +2043,9 @@ a:hover {
 /* BUTTONS */
 /*=========*/
 
-button,
-input[type='submit'] {
-	color: var(--GW-hyperlink-color);
-}
-
 button:active,
 input[type='submit']:active {
-	color: #f00;
 	transform: scale(0.9);
-}
-.button:visited {
-	color: var(--GW-hyperlink-color);
 }
 .button:active {
 	transform: scale(0.9);
@@ -2076,12 +2061,10 @@ input[type='submit']:active {
 	input[type='submit']:hover,
 	button:focus,
 	input[type='submit']:focus {
-		color: #f00;
 		text-shadow: var(--GW-shadow-white-glow);
 	}
 
 	.button:hover {
-		color: #f00;
 		text-shadow: var(--GW-shadow-white-glow);
 		text-decoration: none;
 	}

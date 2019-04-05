@@ -1126,7 +1126,10 @@ foreach ($content_width_settings as $name => $setting) {
 #nav-item-about button.open-keyboard-help {
 	display: none;
 }
-@media only screen and (hover:hover) and (pointer:fine) {
+
+/*	Probably only devices with mice also have keyboards.
+	*/
+@media only screen and (hover: hover) and (pointer: fine) {
 	#nav-item-about {
 		position: relative;
 		padding-right: 0.25em;
@@ -1164,15 +1167,6 @@ foreach ($content_width_settings as $name => $setting) {
 	left: 0;
 	right: 0;
 	margin: auto;
-}
-
-@media only screen and (max-width: 960px) {
-	#image-focus-overlay.engaged {
-		visibility: visible;
-	}
-	#image-focus-overlay .help-overlay {
-		display: none;
-	}
 }
 
 #images-overlay + #content .post-body img {

@@ -30,10 +30,6 @@
 	--GW-editor-font: var(--GW-body-text-font);
 	--GW-editor-font-weight: var(--GW-body-text-font-weight);
 
-	--GW-hyperlink-color: #00e;
-	--GW-hyperlink-hover-color: #c00;
-	--GW-hyperlink-active-color: #e00;
-
 	--GW-post-listings-font: var(--GW-UI-font);
 	--GW-post-listings-font-weight: var(--GW-UI-font-weight-heavy);
 	--GW-listings-post-meta-font: var(--GW-UI-font);
@@ -43,16 +39,17 @@
 	--GW-post-title-font-weight: var(--GW-post-listings-font-weight);
 
 	--GW-content-headings-font: var(--GW-post-listings-font);
+	--GW-content-headings-font-weight: var(--GW-post-listings-font-weight);
 
 	--GW-tables-font: var(--GW-monospaced-font);
 
 	--GW-footnote-numbers-font-weight: 700;
 
 	--GW-TOC-font: var(--GW-UI-font);
-	--GW-TOC-heading-font-weight: 400;
+	--GW-TOC-heading-font-weight: var(--GW-UI-font-weight-light);
 
 	--GW-link-post-link-font: var(--GW-UI-font);
-	--GW-link-post-link-font-weight: 700;
+	--GW-link-post-link-font-weight: var(--GW-UI-font-weight-heavy);
 
 	--GW-comment-meta-author-font-weight: var(--GW-UI-font-weight-heavy);
 
@@ -65,6 +62,27 @@
 	*/
 :root {
 	--GW-content-side-padding: 30px;
+}
+
+/*	Color scheme.
+	*/
+:root {
+	--GW-hyperlink-color: #00e;
+	--GW-hyperlink-visited-color: var(--GW-hyperlink-color);
+	--GW-hyperlink-hover-color: var(--GW-hyperlink-color);
+	--GW-hyperlink-active-color: var(--GW-hyperlink-color);
+
+	--GW-nav-bar-item-color: var(--GW-hyperlink-color);
+	--GW-nav-bar-item-hover-color: var(--GW-hyperlink-hover-color);
+	--GW-nav-bar-item-active-color: var(--GW-hyperlink-active-color);
+
+	--GW-button-color: var(--GW-hyperlink-color);
+	--GW-button-hover-color: var(--GW-hyperlink-hover-color);
+	--GW-button-active-color: var(--GW-hyperlink-active-color);
+
+	--GW-button-background-color: transparent;
+	--GW-button-hover-background-color: transparent;
+	--GW-button-active-background-color: transparent;
 }
 
 /*=----------------------------=*/
@@ -141,6 +159,7 @@ body > * {
 }
 #content {
 	margin: 0 auto;
+	padding: 0 var(--GW-content-side-padding);
 	position: relative;
 	overflow: visible;
 	display: grid;
@@ -168,9 +187,6 @@ body > * {
 		min-width: unset;
 		width: unset;
 	}
-	#content {
-		padding: 0 4px;
-	}
 }
 
 /*=---------=*/
@@ -188,13 +204,35 @@ body > * {
 	*/
 
 button,
-input[type='submit'] {
+input[type='submit'],
+.button {
 	font-family: inherit;
 	font-size: inherit;
-	background-color: inherit;
 	cursor: pointer;
 	border: none;
 	border-radius: 0;
+}
+button,
+input[type='submit'],
+.button,
+.button:visited {
+	color: var(--GW-button-color);
+	background-color: var(--GW-button-background-color);
+}
+button:hover,
+input[type='submit']:hover,
+.button:hover,
+button:focus,
+input[type='submit':focus,
+.button:focus {
+	color: var(--GW-button-hover-color);
+	background-color: var(--GW-button-hover-background-color);
+}
+button:active,
+input[type='submit']:active,
+.button:active {
+	color: var(--GW-button-active-color);
+	background-color: var(--GW-button-active-background-color);
 }
 
 input,
@@ -1429,7 +1467,10 @@ head.content-width-fluid + body > * {
 #nav-item-about button.open-keyboard-help {
 	display: none;
 }
-@media only screen and (hover:hover) and (pointer:fine) {
+
+/*	Probably only devices with mice also have keyboards.
+	*/
+@media only screen and (hover: hover) and (pointer: fine) {
 	#nav-item-about {
 		position: relative;
 		padding-right: 0.25em;
@@ -1467,15 +1508,6 @@ head.content-width-fluid + body > * {
 	left: 0;
 	right: 0;
 	margin: auto;
-}
-
-@media only screen and (max-width: 960px) {
-	#image-focus-overlay.engaged {
-		visibility: visible;
-	}
-	#image-focus-overlay .help-overlay {
-		display: none;
-	}
 }
 
 #images-overlay + #content .post-body img {
@@ -1567,22 +1599,20 @@ head.content-width-fluid + body > * {
 	padding: 4px 10px;
 }
 
-#nav-item-sequences .nav-inner::before {
-	font-family: var(--GW-Font-Awesome);
-	content: "\F5DB";
+/*=---------=*/
+/*= Styling =*/
+/*=---------=*/
+
+.nav-bar a,
+.nav-bar a:visited {
+	color: var(--GW-nav-bar-item-color);
 }
-@media only screen and (min-width: 901px) {
-	#nav-item-about .nav-inner {
-		margin-right: 0.5em;
-	}
-	#nav-item-sequences .nav-inner::before {
-		font-size: 1rem;
-		display: block;
-	}
-	#secondary-bar #nav-item-sequences .nav-inner {
-		font-size: 0;
-		line-height: 1.4;
-	}
+.nav-bar a:hover,
+.nav-bar a:focus {
+	color: var(--GW-nar-bar-item-hover-color);
+}
+.nav-bar a:active {
+	color: var(--GW-nav-bar-item-active-color);
 }
 
 /*=------------=*/
@@ -1730,6 +1760,28 @@ head.content-width-fluid + body > * {
 #nav-item-login {
 	position: relative;
 	padding-right: 0.5em;
+}
+
+/*=---------------=*/
+/*= Sequences tab =*/
+/*=---------------=*/
+
+#nav-item-sequences .nav-inner::before {
+	font-family: var(--GW-Font-Awesome);
+	content: "\F5DB";
+}
+@media only screen and (min-width: 901px) {
+	#nav-item-about .nav-inner {
+		margin-right: 0.5em;
+	}
+	#nav-item-sequences .nav-inner::before {
+		font-size: 1rem;
+		display: block;
+	}
+	#secondary-bar #nav-item-sequences .nav-inner {
+		font-size: 0;
+		line-height: 1.4;
+	}
 }
 
 /*=----------------------------=*/
@@ -2497,7 +2549,6 @@ a#inbox-indicator.new-messages:hover::before {
 /************/
 
 h1.listing {
-	max-height: 1.15em;
 	line-height: 1.15;
 	position: relative;
 	display: flex;
@@ -2526,6 +2577,9 @@ h1.listing a[href^="http"] {
 /*	(On desktops, hover over a multi-line listing to reveal all of it) */
 
 @media only screen and (hover: hover) and (pointer: fine) {
+	h1.listing {
+		max-height: 1.15em;
+	}
 	h1.listing a[href^='/posts/'] {
 		white-space: nowrap;
 		text-overflow: ellipsis;
@@ -2565,11 +2619,6 @@ h1.listing a[href^="http"] {
 		bottom: -10px;
 		left: -10px;
 		z-index: -1;
-	}
-}
-@media not screen and (hover: hover) and (pointer: fine) {
-	h1.listing {
-		max-height: unset;
 	}
 }
 
@@ -3036,12 +3085,6 @@ ul.comment-thread {
 	font-weight: var(--GW-comment-meta-author-font-weight);
 }
 
-@media not screen and (hover: hover) and (pointer: fine) {
-	a.comment-parent-link::after {
-		display: none;
-	}
-}
-
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
@@ -3102,39 +3145,44 @@ a.comment-parent-link:not(.inline-author),
 a.comment-parent-link.inline-author::before {
 	opacity: 0.5;
 }
-a.comment-parent-link:hover {
-	opacity: 1.0;
-}
-a.comment-parent-link::before {
-	content: "\F062";
-	font-family: var(--GW-Font-Awesome);
-	font-weight: 900;
-	font-size: 0.75rem;
-	line-height: 1;
-	position: absolute;
-	z-index: 1;
-	display: block;
-	padding: 3px 3px 0 3px;
-	width: 16px;
-	height: calc(100% + 2px);
-	top: -1px;
-	left: -17px;
-}
-a.comment-parent-link::after {
-	content: "";
-	position: absolute;
-	z-index: 0;
-	display: block;
-	width: calc(100% + 26px);
-	height: calc(100% + 38px);
-	top: -29px;
-	left: -17px;
-	pointer-events: none;
-	overflow: hidden;
-	visibility: hidden;
-}
-a.comment-parent-link:hover::after {
-	visibility: visible;
+
+/*	Hover highlighting.
+	*/
+@media only screen and (hover: hover) and (pointer: fine) {
+	a.comment-parent-link:hover {
+		opacity: 1.0;
+	}
+	a.comment-parent-link::before {
+		content: "\F062";
+		font-family: var(--GW-Font-Awesome);
+		font-weight: 900;
+		font-size: 0.75rem;
+		line-height: 1;
+		position: absolute;
+		z-index: 1;
+		display: block;
+		padding: 3px 3px 0 3px;
+		width: 16px;
+		height: calc(100% + 2px);
+		top: -1px;
+		left: -17px;
+	}
+	a.comment-parent-link::after {
+		content: "";
+		position: absolute;
+		z-index: 0;
+		display: block;
+		width: calc(100% + 26px);
+		height: calc(100% + 38px);
+		top: -29px;
+		left: -17px;
+		pointer-events: none;
+		overflow: hidden;
+		visibility: hidden;
+	}
+	a.comment-parent-link:hover::after {
+		visibility: visible;
+	}
 }
 
 .comment-child-links {
@@ -3154,21 +3202,25 @@ a.comment-child-link::before {
 	margin: 0 2px 0 0;
 }
 
-.comment-popup {
-	position: fixed;
-	top: 10%;
-	right: 10%;
-	max-width: 700px;
-	z-index: 10001;
-	font-size: 1rem;
-	white-space: unset;
-	pointer-events: none;
-}
-.comment-popup .comment-parent-link {
-	display: none;
-}
-.comment-popup .comment-body {
-	font-size: 1.0625rem;
+/*	Comment popups.
+	*/
+@media only screen and (hover: hover) and (pointer: fine) {
+	.comment-popup {
+		position: fixed;
+		top: 10%;
+		right: 10%;
+		max-width: 700px;
+		z-index: 10001;
+		font-size: 1rem;
+		white-space: unset;
+		pointer-events: none;
+	}
+	.comment-popup .comment-parent-link {
+		display: none;
+	}
+	.comment-popup .comment-body {
+		font-size: 1.0625rem;
+	}
 }
 
 /*=----------------------------=*/
@@ -3799,6 +3851,15 @@ button.guiedit {
 	margin: 2px 0 0 1em;
 	line-height: 1.3;
 	cursor: pointer;
+
+	color: var(--GW-hyperlink-color);
+}
+#markdown-hints-checkbox + label:hover,
+#markdown-hints-checkbox + label:focus {
+	color: var(--GW-hyperlink-hover-color);
+}
+#markdown-hints-checkbox + label:active {
+	color: var(--GW-hyperlink-active-color);
 }
 #edit-post-form #markdown-hints-checkbox + label {
 	padding: 0;
@@ -4289,6 +4350,24 @@ button.guiedit {
 /*%% CONTENT ELEMENTS %%*/
 /*%%%%%%%%%%%%%%%%%%%%%%*/
 
+/*********/
+/* LINKS */
+/*********/
+
+a {
+	color: var(--GW-hyperlink-color);
+}
+a:visited {
+	color: var(--GW-hyperlink-visited-color);
+}
+a:hover,
+a:focus {
+	color: var(--GW-hyperlink-hover-color);
+}
+a:active {
+	color: var(--GW-hyperlink-active-color);
+}
+
 /*********************/
 /* TABLE OF CONTENTS */
 /*********************/
@@ -4428,6 +4507,7 @@ button.guiedit {
 	text-align: left;
 
 	font-family: var(--GW-content-headings-font);
+	font-weight: var(--GW-content-headings-font-weight);
 }
 
 .post-body h5,
@@ -5381,7 +5461,7 @@ article {
 #image-focus-overlay .slideshow-buttons button::selection {
 	background-color: transparent;
 }
-@media only screen and (hover: hover) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	#image-focus-overlay .slideshow-buttons button:hover {
 		background-color: rgba(0,0,0,0.1);
 		color: #777;
@@ -5409,6 +5489,19 @@ article {
 	filter: blur(3px);
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 960px) {
+	#image-focus-overlay.engaged {
+		visibility: visible;
+	}
+	#image-focus-overlay .help-overlay {
+		display: none;
+	}
+}
+
 /*%%%%%%%%%%%*/
 /*%% THEME %%*/
 /*%%%%%%%%%%%*/
@@ -5421,6 +5514,8 @@ article {
 /* VARIABLES */
 /*===========*/
 
+/*	Typography.
+	*/
 :root {
 	--GW-UI-font: 'Whitney', 'a_Avante', 'Open Sans', 'Arial', sans-serif;
 	--GW-UI-font-smallcaps: 'Whitney Smallcaps', 'a_Avante', 'Open Sans', 'Arial', sans-serif;
@@ -5432,13 +5527,16 @@ article {
 
 	--GW-body-text-font: 'Charter', 'PT Serif', 'Georgia', serif;
 
-	--GW-link-post-link-font-weight: 600;
-
 	--GW-comment-meta-author-font-weight: 700;
+}
 
+/*	Color scheme.
+	*/
+:root {
 	--GW-body-background-color: #d8d8d8;
 
 	--GW-hyperlink-color: #00e;
+	--GW-hyperlink-visited-color: #551a8b;
 	--GW-hyperlink-hover-color: #c00;
 	--GW-hyperlink-active-color: #e00;
 	
@@ -5506,9 +5604,6 @@ body {
 	background-color: #d8d8d8;
 }
 
-.nav-bar a:visited {
-	color: var(--GW-hyperlink-color);
-}
 .nav-bar a:hover,
 .nav-bar a:focus {
 	text-decoration: none;
@@ -7382,11 +7477,7 @@ a.comment-parent-link:hover::before {
 
 /* Markdown hints */
 
-#markdown-hints-checkbox + label {
-	color: var(--GW-hyperlink-color);
-}
 #markdown-hints-checkbox + label:hover {
-	color: #e00;
 	text-shadow: var(--GW-shadow-white-glow);
 }
 #markdown-hints {
@@ -7508,10 +7599,6 @@ a.comment-parent-link:hover::before {
 
 a {
 	text-decoration: none;
-	color: var(--GW-hyperlink-color);
-}
-a:visited {
-	color: #551a8b;
 }
 a:hover {
 	text-decoration: underline;
@@ -7521,18 +7608,9 @@ a:hover {
 /* BUTTONS */
 /*=========*/
 
-button,
-input[type='submit'] {
-	color: var(--GW-hyperlink-color);
-}
-
 button:active,
 input[type='submit']:active {
-	color: #f00;
 	transform: scale(0.9);
-}
-.button:visited {
-	color: var(--GW-hyperlink-color);
 }
 .button:active {
 	transform: scale(0.9);
@@ -7548,12 +7626,10 @@ input[type='submit']:active {
 	input[type='submit']:hover,
 	button:focus,
 	input[type='submit']:focus {
-		color: #f00;
 		text-shadow: var(--GW-shadow-white-glow);
 	}
 
 	.button:hover {
-		color: #f00;
 		text-shadow: var(--GW-shadow-white-glow);
 		text-decoration: none;
 	}
