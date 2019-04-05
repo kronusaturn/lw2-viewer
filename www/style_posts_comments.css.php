@@ -34,7 +34,7 @@ h1.listing a[href^="http"] {
 	h1.listing {
 		max-height: 1.15em;
 	}
-	h1.listing a[href^='/posts/'] {
+	h1.listing a {
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		overflow: hidden;
@@ -53,6 +53,9 @@ h1.listing a[href^="http"] {
 		white-space: initial;
 		overflow: visible;
 		z-index: 2;
+	}
+	h1.listing a[href^="http"]:hover {
+		text-decoration: none;
 	}
 	h1.listing:focus-within::before {
 		content: "\F105";

@@ -466,9 +466,12 @@ a#inbox-indicator.new-messages:hover::before {
 .page-toolbar {
 	grid-row: 3;
 	text-align: right;
-	margin: 4px 8px;
 	display: flex;
 	justify-content: flex-end;
+	padding: 4px 8px;
+	margin: 0 calc(-1 * var(--GW-content-side-padding));
+	align-self: start;
+	justify-self: end;
 }
 
 /*=--------------------------=*/
@@ -795,7 +798,6 @@ a#inbox-indicator.new-messages:hover::before {
 	grid-row: 3;
 	justify-self: start;
 	flex-flow: row;
-	margin: 10px 0 0 30px;
 }
 #content.user-page > .sublevel-nav.sort {
 	grid-row: 6;
