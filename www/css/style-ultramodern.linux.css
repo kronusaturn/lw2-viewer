@@ -1322,7 +1322,7 @@ head.content-width-fluid + body > * {
 }
 
 /* This doesn't work in Mozilla browsers, so hide it */
-@-moz-document url-prefix() {
+@supports (-moz-user-focus: normal) {
 	#text-size-adjustment-ui {
 		display: none;
 	}
@@ -2472,7 +2472,7 @@ a#inbox-indicator.new-messages:hover::before {
 	padding: 6px 4px 4px 4px;
 	max-width: 8%;
 }
-@-moz-document url-prefix() {
+@supports (-moz-user-focus: normal) {
 	.archive-nav *[class^='archive-nav-item'] {
 		padding: 5px 4px;
 	}
@@ -6479,7 +6479,7 @@ a.post-section.alignment-forum:hover::before {
 		1.5px 0 1.5px -1.5px #bbb inset, 
 		1px 0 1px -1px #777 inset;
 }
-@-moz-document url-prefix() {
+@supports (-moz-user-focus: normal) {
 	.comment-item {
 		box-shadow:
 			1.5px 0 1.5px -1px #bbb inset, 
@@ -6809,7 +6809,7 @@ div.comment-child-links a {
 	left: 5px;
 	top: 4px;
 }
-@-moz-document url-prefix() {
+@supports (-moz-user-focus: normal) {
 	.upvote::after {
 		bottom: 3px;
 		left: 8px;
@@ -6872,7 +6872,7 @@ div.comment-child-links a {
 		0.5px 0.5px 1px #aaa,
 		0.5px 0.5px 1px #bbb;
 }
-@-moz-document url-prefix() {
+@supports (-moz-user-focus: normal) {
 	.posting-controls textarea {
 		font-weight: 400;
 	}
@@ -7041,7 +7041,7 @@ input[type='submit']:active {
 .button:focus:not(:hover) {
 	transform: none;
 }
-@-moz-document url-prefix() {
+@supports (-moz-user-focus: normal) {
 	.button:active {
 		transform: none;
 	}

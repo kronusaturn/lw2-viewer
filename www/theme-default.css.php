@@ -159,67 +159,32 @@ body {
 .inactive-bar .nav-inactive {
 	background-color: #e4e4e4;
 }
-.active-bar .nav-inactive {
-	background-color: #eee;
-}
 .active-bar {
 	position: relative;
-}
-
-/* For Webkit: */
-.active-bar {
-	box-shadow: 0 -3px 8px -2px #ccc;
+	box-shadow: 0 -3px 4px -2px #ccc;
 }
 .active-bar .nav-inactive {
+	background-color: #eee;
 	box-shadow: 
-		0 -4px 8px -4px #bbb inset,
+		0 -4px 4px -4px #bbb inset,
 		1px 0 #fff inset;
 }
 .active-bar .nav-inactive:first-child {
 	box-shadow: 
-		0 -4px 8px -4px #bbb inset;
+		0 -4px 4px -4px #bbb inset;
 }
 .active-bar .nav-current + .nav-inactive {
 	box-shadow: 
-		5px -4px 8px -4px #bbb inset;
+		5px -4px 4px -4px #bbb inset;
 }
 .active-bar .nav-item-last-before-current {
 	box-shadow: 
-		-5px -4px 8px -4px #bbb inset,
+		-5px -4px 4px -4px #bbb inset,
 		1px 0 #fff inset;
 }
 .active-bar .nav-item-last-before-current:first-child {
 	box-shadow: 
-		-5px -4px 8px -4px #bbb inset;
-}
-/* And for Gecko: */
-@-moz-document url-prefix() {
-	.active-bar {
-		box-shadow: 0 -3px 4px -2px #ccc;
-	}
-
-	.active-bar .nav-inactive {
-		box-shadow: 
-			0 -4px 4px -4px #bbb inset,
-			1px 0 #fff inset;
-	}
-	.active-bar .nav-inactive:first-child {
-		box-shadow: 
-			0 -4px 4px -4px #bbb inset;
-	}
-	.active-bar .nav-current + .nav-inactive {
-		box-shadow: 
-			5px -4px 4px -4px #bbb inset;
-	}
-	.active-bar .nav-item-last-before-current {
-		box-shadow: 
-			-5px -4px 4px -4px #bbb inset,
-			1px 0 #fff inset;
-	}
-	.active-bar .nav-item-last-before-current:first-child {
-		box-shadow: 
-			-5px -4px 4px -4px #bbb inset;
-	}
+		-5px -4px 4px -4px #bbb inset;
 }
 
 /*= Search tab =*/
@@ -1401,12 +1366,7 @@ a.post-section.alignment-forum:hover::before {
 
 #comments::before {
 	border-top: 1px solid #000;
-	box-shadow: 0 3px 4px -4px #000 inset;
-}
-@-moz-document url-prefix() {
-	#comments::before {
-		box-shadow: 0 3px 3px -4px #000 inset;
-	}
+	box-shadow: 0 3px 3px -4px #000 inset;
 }
 #content > .comment-thread .comment-meta a.date:focus,
 #content > .comment-thread .comment-meta a.permalink:focus {
@@ -2043,7 +2003,7 @@ input[type='submit']:active {
 .button:active {
 	transform: scale(0.9);
 }
-@-moz-document url-prefix() {
+<?php echo $firefox_exclusive; ?> {
 	.button:active {
 		transform: none;
 	}
@@ -2159,7 +2119,7 @@ select {
 }
 
 <?php if ($platform != 'Mac') echo <<<EOT
-@-moz-document url-prefix() {
+<?php echo $firefox_exclusive; ?> {
 	h1.listing s,
 	.post > h1:first-of-type s {
 	  position: relative;

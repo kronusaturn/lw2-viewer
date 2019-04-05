@@ -1322,7 +1322,7 @@ head.content-width-fluid + body > * {
 }
 
 /* This doesn't work in Mozilla browsers, so hide it */
-@-moz-document url-prefix() {
+@supports (-moz-user-focus: normal) {
 	#text-size-adjustment-ui {
 		display: none;
 	}
@@ -2472,7 +2472,7 @@ a#inbox-indicator.new-messages:hover::before {
 	padding: 6px 4px 4px 4px;
 	max-width: 8%;
 }
-@-moz-document url-prefix() {
+@supports (-moz-user-focus: normal) {
 	.archive-nav *[class^='archive-nav-item'] {
 		padding: 5px 4px;
 	}
@@ -6467,12 +6467,7 @@ h1.post-title {
 
 #comments::before {
 	border-top: 1px solid #000;
-	box-shadow: 0 3px 4px -4px #000 inset;
-}
-@-moz-document url-prefix() {
-	#comments::before {
-		box-shadow: 0 3px 3px -4px #000 inset;
-	}
+	box-shadow: 0 3px 3px -4px #000 inset;
 }
 #content > .comment-thread .comment-meta a.date:focus,
 #content > .comment-thread .comment-meta a.permalink:focus {
@@ -7233,7 +7228,7 @@ input[type='submit']:active {
 .button:focus:not(:hover) {
 	transform: none;
 }
-@-moz-document url-prefix() {
+@supports (-moz-user-focus: normal) {
 	.button:active {
 		transform: none;
 	}

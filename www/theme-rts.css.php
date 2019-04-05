@@ -1299,7 +1299,7 @@ a.comment-parent-link:hover::before {
 	left: 5px;
 	top: 4px;
 }
-@-moz-document url-prefix() {
+<?php echo $firefox_exclusive; ?> {
 	.upvote::after {
 		bottom: 2px;
 		left: 8px;
@@ -1528,7 +1528,7 @@ input[type='submit']:active {
 .button:active {
 	transform: scale(0.9);
 }
-@-moz-document url-prefix() {
+<?php echo $firefox_exclusive; ?> {
 	.button:active {
 		transform: none;
 	}

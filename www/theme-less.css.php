@@ -784,7 +784,7 @@ body {
 	#theme-tweaker-toggle.engaged {
 		visibility: visible;
 	}
-	@-moz-document url-prefix() {
+	<?php echo $firefox_exclusive; ?> {
 		#theme-tweaker-toggle {
 			left: 18px;
 		}
@@ -1036,7 +1036,7 @@ h1.listing a[href^="/posts"] {
 	text-shadow: <?php global $platform; echo ($platform == 'Mac' ? 'none' : '0 0 0 #444'); ?>;
 	color: <?php global $platform; echo ($platform == 'Mac' ? '#444' : '#000'); ?>;
 }
-@-moz-document url-prefix() {
+<?php echo $firefox_exclusive; ?> {
 	h1.listing a[href^="/posts"] {
 		text-shadow: none;
 	}
@@ -1931,7 +1931,7 @@ div.comment-child-links a {
 	top: 5px;
 	left: 7px;
 }
-@-moz-document url-prefix() {
+<?php echo $firefox_exclusive; ?> {
 	.upvote::after {
 		bottom: 3px;
 		left: 8px;
@@ -2250,7 +2250,7 @@ button:focus:not(:hover),
 .button:focus:not(:hover) {
 	transform: none;
 }
-@-moz-document url-prefix() {
+<?php echo $firefox_exclusive; ?> {
 	.button:active {
 		transform: none;
 	}

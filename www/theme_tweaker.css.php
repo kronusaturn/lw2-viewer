@@ -247,7 +247,7 @@
 	opacity: 0.5;
 }
 /* This doesn't work in Mozilla browsers, so hide it */
-@-moz-document url-prefix() {
+<?php echo $firefox_exclusive; ?> {
 	#theme-tweaker-ui #theme-tweak-section-text-size-adjust {
 /* 
 		height: 0;

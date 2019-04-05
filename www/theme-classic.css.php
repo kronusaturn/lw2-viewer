@@ -955,12 +955,7 @@ h1.post-title {
 
 #comments::before {
 	border-top: 1px solid #000;
-	box-shadow: 0 3px 4px -4px #000 inset;
-}
-@-moz-document url-prefix() {
-	#comments::before {
-		box-shadow: 0 3px 3px -4px #000 inset;
-	}
+	box-shadow: 0 3px 3px -4px #000 inset;
 }
 #content > .comment-thread .comment-meta a.date:focus,
 #content > .comment-thread .comment-meta a.permalink:focus {
@@ -1673,7 +1668,7 @@ input[type='submit']:active {
 .button:focus:not(:hover) {
 	transform: none;
 }
-@-moz-document url-prefix() {
+<?php echo $firefox_exclusive; ?> {
 	.button:active {
 		transform: none;
 	}

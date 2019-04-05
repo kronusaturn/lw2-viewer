@@ -1480,7 +1480,7 @@ input[type='submit']:active {
 .button:focus:not(:hover) {
 	transform: none;
 }
-@-moz-document url-prefix() {
+<?php echo $firefox_exclusive; ?> {
 	.button:active {
 		transform: none;
 	}

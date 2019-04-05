@@ -1322,7 +1322,7 @@ head.content-width-fluid + body > * {
 }
 
 /* This doesn't work in Mozilla browsers, so hide it */
-@-moz-document url-prefix() {
+@supports (-moz-user-focus: normal) {
 	#text-size-adjustment-ui {
 		display: none;
 	}
@@ -2472,7 +2472,7 @@ a#inbox-indicator.new-messages:hover::before {
 	padding: 6px 4px 4px 4px;
 	max-width: 8%;
 }
-@-moz-document url-prefix() {
+@supports (-moz-user-focus: normal) {
 	.archive-nav *[class^='archive-nav-item'] {
 		padding: 5px 4px;
 	}
@@ -5676,67 +5676,32 @@ body {
 .inactive-bar .nav-inactive {
 	background-color: #e4e4e4;
 }
-.active-bar .nav-inactive {
-	background-color: #eee;
-}
 .active-bar {
 	position: relative;
-}
-
-/* For Webkit: */
-.active-bar {
-	box-shadow: 0 -3px 8px -2px #ccc;
+	box-shadow: 0 -3px 4px -2px #ccc;
 }
 .active-bar .nav-inactive {
+	background-color: #eee;
 	box-shadow: 
-		0 -4px 8px -4px #bbb inset,
+		0 -4px 4px -4px #bbb inset,
 		1px 0 #fff inset;
 }
 .active-bar .nav-inactive:first-child {
 	box-shadow: 
-		0 -4px 8px -4px #bbb inset;
+		0 -4px 4px -4px #bbb inset;
 }
 .active-bar .nav-current + .nav-inactive {
 	box-shadow: 
-		5px -4px 8px -4px #bbb inset;
+		5px -4px 4px -4px #bbb inset;
 }
 .active-bar .nav-item-last-before-current {
 	box-shadow: 
-		-5px -4px 8px -4px #bbb inset,
+		-5px -4px 4px -4px #bbb inset,
 		1px 0 #fff inset;
 }
 .active-bar .nav-item-last-before-current:first-child {
 	box-shadow: 
-		-5px -4px 8px -4px #bbb inset;
-}
-/* And for Gecko: */
-@-moz-document url-prefix() {
-	.active-bar {
-		box-shadow: 0 -3px 4px -2px #ccc;
-	}
-
-	.active-bar .nav-inactive {
-		box-shadow: 
-			0 -4px 4px -4px #bbb inset,
-			1px 0 #fff inset;
-	}
-	.active-bar .nav-inactive:first-child {
-		box-shadow: 
-			0 -4px 4px -4px #bbb inset;
-	}
-	.active-bar .nav-current + .nav-inactive {
-		box-shadow: 
-			5px -4px 4px -4px #bbb inset;
-	}
-	.active-bar .nav-item-last-before-current {
-		box-shadow: 
-			-5px -4px 4px -4px #bbb inset,
-			1px 0 #fff inset;
-	}
-	.active-bar .nav-item-last-before-current:first-child {
-		box-shadow: 
-			-5px -4px 4px -4px #bbb inset;
-	}
+		-5px -4px 4px -4px #bbb inset;
 }
 
 /*= Search tab =*/
@@ -6918,12 +6883,7 @@ a.post-section.alignment-forum:hover::before {
 
 #comments::before {
 	border-top: 1px solid #000;
-	box-shadow: 0 3px 4px -4px #000 inset;
-}
-@-moz-document url-prefix() {
-	#comments::before {
-		box-shadow: 0 3px 3px -4px #000 inset;
-	}
+	box-shadow: 0 3px 3px -4px #000 inset;
 }
 #content > .comment-thread .comment-meta a.date:focus,
 #content > .comment-thread .comment-meta a.permalink:focus {
@@ -7608,7 +7568,7 @@ input[type='submit']:active {
 .button:active {
 	transform: scale(0.9);
 }
-@-moz-document url-prefix() {
+@supports (-moz-user-focus: normal) {
 	.button:active {
 		transform: none;
 	}

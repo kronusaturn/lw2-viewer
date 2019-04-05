@@ -18,6 +18,8 @@
 }
 ";
 	}
+
+	$firefox_exclusive = "@supports (-moz-user-focus: normal)";
 ?>
 
 /*%%%%%%%%%%%%%%%*/

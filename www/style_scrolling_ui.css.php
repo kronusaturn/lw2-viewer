@@ -901,7 +901,7 @@ a#inbox-indicator.new-messages:hover::before {
 	padding: 6px 4px 4px 4px;
 	max-width: 8%;
 }
-@-moz-document url-prefix() {
+<?php echo $firefox_exclusive; ?> {
 	.archive-nav *[class^='archive-nav-item'] {
 		padding: 5px 4px;
 	}

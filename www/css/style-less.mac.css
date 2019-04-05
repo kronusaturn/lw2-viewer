@@ -1322,7 +1322,7 @@ head.content-width-fluid + body > * {
 }
 
 /* This doesn't work in Mozilla browsers, so hide it */
-@-moz-document url-prefix() {
+@supports (-moz-user-focus: normal) {
 	#text-size-adjustment-ui {
 		display: none;
 	}
@@ -2472,7 +2472,7 @@ a#inbox-indicator.new-messages:hover::before {
 	padding: 6px 4px 4px 4px;
 	max-width: 8%;
 }
-@-moz-document url-prefix() {
+@supports (-moz-user-focus: normal) {
 	.archive-nav *[class^='archive-nav-item'] {
 		padding: 5px 4px;
 	}
@@ -6303,7 +6303,7 @@ body {
 	#theme-tweaker-toggle.engaged {
 		visibility: visible;
 	}
-	@-moz-document url-prefix() {
+	@supports (-moz-user-focus: normal) {
 		#theme-tweaker-toggle {
 			left: 18px;
 		}
@@ -6555,7 +6555,7 @@ h1.listing a[href^="/posts"] {
 	text-shadow: none;
 	color: #444;
 }
-@-moz-document url-prefix() {
+@supports (-moz-user-focus: normal) {
 	h1.listing a[href^="/posts"] {
 		text-shadow: none;
 	}
@@ -7507,7 +7507,7 @@ div.comment-child-links a {
 	top: 5px;
 	left: 7px;
 }
-@-moz-document url-prefix() {
+@supports (-moz-user-focus: normal) {
 	.upvote::after {
 		bottom: 3px;
 		left: 8px;
@@ -7826,7 +7826,7 @@ button:focus:not(:hover),
 .button:focus:not(:hover) {
 	transform: none;
 }
-@-moz-document url-prefix() {
+@supports (-moz-user-focus: normal) {
 	.button:active {
 		transform: none;
 	}

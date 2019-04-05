@@ -982,7 +982,7 @@ foreach ($content_width_settings as $name => $setting) {
 }
 
 /* This doesn't work in Mozilla browsers, so hide it */
-@-moz-document url-prefix() {
+<?php echo $firefox_exclusive; ?> {
 	#text-size-adjustment-ui {
 		display: none;
 	}
