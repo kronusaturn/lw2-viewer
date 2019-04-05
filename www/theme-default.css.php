@@ -793,18 +793,11 @@ body {
 /*==========*/
 
 h1.listing {
-	--GW-listing-side-margin: 20px;
-
-	margin: 7px var(--GW-listing-side-margin) 0 var(--GW-listing-side-margin);
-	max-width: calc(100% - 2 * var(--GW-listing-side-margin));
-}
-.listings {
-	padding: 15px 50px 0 50px;
-}
-
-h1.listing {
 	font-size: 1.875em;
 	margin: 7px 0 0 0;
+}
+.listings {
+	padding: 15px 20px 0 20px;
 }
 
 h1.listing a[href^='/'] {

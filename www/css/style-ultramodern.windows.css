@@ -2113,7 +2113,6 @@ a#inbox-indicator.new-messages:hover::before {
 /*********************/
 
 #top-nav-bar {
-	grid-column: 2;
 	margin: 0.25em 0 0 0;
 	padding: 0.75em 0 0 0;
 	text-align: center;
@@ -2167,7 +2166,6 @@ a#inbox-indicator.new-messages:hover::before {
 }
 #content > .sublevel-nav:not(.sort) {
 	grid-row: 5;
-	grid-column: 2;
 	align-self: start;
 }
 #content.sequences-page > .sublevel-nav {
@@ -2349,14 +2347,12 @@ a#inbox-indicator.new-messages:hover::before {
 	font-size: 0.75em;
 }
 #content > .sublevel-nav.sort {
-	grid-column: 3;
 	grid-row: 5 / span 2;
 	justify-self: end;
 	align-self: start;
 	flex-flow: column;
 }
 #content.index-page > .sublevel-nav.sort {
-	grid-column: 1;
 	grid-row: 3 / span 1;
 	grid-row: 3;
 	justify-self: start;
@@ -4963,9 +4959,6 @@ article {
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
-	#content.user-page .user-stats {
-		grid-column: 2 / span 2;
-	}
 	#content.user-page .user-stats .karma-type {
 		display: block;
 	}
@@ -5277,12 +5270,11 @@ article {
 
 #content.alignment-forum-index-page::after {
 	content: "Alignment Forum";
+	font-family: var(--GW-Alignment-Forum-logotype-font);
+	font-weight: var(--GW-Alignment-Forum-logotype-font-weight);
 	grid-row: 3;
 	font-size: 1.5rem;
 	margin: 0.375em 0 0 -0.375em;
-
-	font-family: var(--GW-Alignment-Forum-logotype-font);
-	font-weight: var(--GW-Alignment-Forum-logotype-font-weight);
 }
 
 

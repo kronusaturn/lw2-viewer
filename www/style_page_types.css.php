@@ -96,9 +96,6 @@ article {
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
-	#content.user-page .user-stats {
-		grid-column: 2 / span 2;
-	}
 	#content.user-page .user-stats .karma-type {
 		display: block;
 	}
@@ -410,11 +407,10 @@ article {
 
 #content.alignment-forum-index-page::after {
 	content: "Alignment Forum";
+	font-family: var(--GW-Alignment-Forum-logotype-font);
+	font-weight: var(--GW-Alignment-Forum-logotype-font-weight);
 	grid-row: 3;
 	font-size: 1.5rem;
 	margin: 0.375em 0 0 -0.375em;
-
-	font-family: var(--GW-Alignment-Forum-logotype-font);
-	font-weight: var(--GW-Alignment-Forum-logotype-font-weight);
 }
 

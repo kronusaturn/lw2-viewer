@@ -560,7 +560,6 @@ a#inbox-indicator.new-messages:hover::before {
 /*********************/
 
 #top-nav-bar {
-	grid-column: 2;
 	margin: 0.25em 0 0 0;
 	padding: 0.75em 0 0 0;
 	text-align: center;
@@ -614,7 +613,6 @@ a#inbox-indicator.new-messages:hover::before {
 }
 #content > .sublevel-nav:not(.sort) {
 	grid-row: 5;
-	grid-column: 2;
 	align-self: start;
 }
 #content.sequences-page > .sublevel-nav {
@@ -787,14 +785,12 @@ a#inbox-indicator.new-messages:hover::before {
 	font-size: 0.75em;
 }
 #content > .sublevel-nav.sort {
-	grid-column: 3;
 	grid-row: 5 / span 2;
 	justify-self: end;
 	align-self: start;
 	flex-flow: column;
 }
 #content.index-page > .sublevel-nav.sort {
-	grid-column: 1;
 	grid-row: 3 / span 1;
 	grid-row: 3;
 	justify-self: start;

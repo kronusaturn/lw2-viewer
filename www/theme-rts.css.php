@@ -207,7 +207,6 @@ a.nav-inner,
 #top-nav-bar {
 	margin: 0;
 	flex-wrap: wrap;
-	grid-column: 1 / span 3;
 	grid-row: 3;
 }
 #top-nav-bar .page-number {
@@ -647,7 +646,6 @@ h1.listing + .post-meta .link-post-domain {
 
 #content.user-page #top-nav-bar {
 	margin: -0.5em 0 0.25em 0;
-	grid-column: 1 / span 3;
 }
 
 #content.user-page h1.listing {
@@ -1788,7 +1786,6 @@ select {
 	border-width: 0 1px;
 }
 #content.alignment-forum-index-page::after {
-	grid-column: 1;
 	font-family: "Concourse SmallCaps";
 	font-weight: 600;
 	background-color: #7f85b2;

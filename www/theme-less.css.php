@@ -332,7 +332,6 @@ body {
 	padding: 1em 0 0.25em 0;
 	font-size: 1em;
 	margin: 0 0 0 -4px;
-	grid-column: 1;
 }
 #top-nav-bar .page-number {
 	line-height: 1.5;
@@ -350,7 +349,6 @@ body {
 
 #content.user-page > #top-nav-bar {
 	justify-content: center;
-	grid-column: 2;
 	padding: 0;
 }
 .archive-nav + #top-nav-bar {
@@ -394,7 +392,6 @@ body {
 /*=====================*/
 #content.index-page .sublevel-nav.sort {
 	grid-row: 2;
-	grid-column: 3;
 	justify-self: right;
 }
 
@@ -1734,7 +1731,6 @@ div.comment-child-links a {
 	transition: opacity 0.15s ease;
 }
 #content.index-page #comments-list-mode-selector {
-	grid-column: 3;
 	justify-self: end;
 }
 #comments-list-mode-selector:hover {
@@ -2484,7 +2480,6 @@ strong, b {
 #content.alignment-forum-index-page::after {
 	margin: -0.25em 0 0.25em 0;
 	text-align: center;
-	grid-column: 2;
 	font-family: "Concourse SmallCaps";
 	font-weight: 600;
 	background-color: #7f85b2;
@@ -2684,7 +2679,6 @@ strong, b {
 		font-size: 1.625rem;
 		margin: 0;
 		grid-row: 2;
-		grid-column: 2;
 	}
 	#top-nav-bar .page-number {
 		line-height: 1.7;
@@ -2701,7 +2695,6 @@ strong, b {
 	/*****************************************/
 		#theme-less-mobile-first-row-placeholder {
 			grid-row: 1;
-			grid-column: 2 / span 2;
 			height: 50px;
 		}
 
@@ -2901,7 +2894,6 @@ strong, b {
 		}
 
 		#content.search-results-page #comments-list-mode-selector {
-			grid-column: 3;
 			grid-row: 2;
 			justify-self: end;
 		}
