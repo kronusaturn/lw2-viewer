@@ -50,7 +50,7 @@
 }
 .nav-bar a:hover,
 .nav-bar a:focus {
-	color: var(--GW-nar-bar-item-hover-color);
+	color: var(--GW-nav-bar-item-hover-color);
 }
 .nav-bar a:active {
 	color: var(--GW-nav-bar-item-active-color);
@@ -213,16 +213,20 @@ EOT;
 	content: "\F5DB";
 }
 @media only screen and (min-width: 901px) {
-	#nav-item-about .nav-inner {
-		margin-right: 0.5em;
+	#nav-item-sequences .nav-inner {
+		max-width: 0;
+		text-align: left;
+		visibility: hidden;
 	}
 	#nav-item-sequences .nav-inner::before {
-		font-size: 1rem;
+		font-size: 0.9375em;
 		display: block;
+		position: absolute;
+		visibility: visible;
+		padding: 0 0 1px 2px;
 	}
-	#secondary-bar #nav-item-sequences .nav-inner {
-		font-size: 0;
-		line-height: 1.4;
+	#nav-item-sequences .nav-inner::after {
+		visibility: visible;
 	}
 }
 
