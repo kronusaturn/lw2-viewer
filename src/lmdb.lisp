@@ -56,9 +56,10 @@
         (open-databases (environment-container-open-databases environment-container)))
     (with-environment-transaction (environment)
       (dolist (db-name *cache-databases-list*)
-        (let ((db (lmdb:make-database db-name)))
-          (lmdb:open-database db :create t)
-          (setf (gethash db-name open-databases) db))))
+	(unless (gethash db-name open-databases)
+	  (let ((db (lmdb:make-database db-name)))
+	    (lmdb:open-database db :create t)
+	    (setf (gethash db-name open-databases) db)))))
     (setf (environment-container-databases-list environment-container) *cache-databases-list*)))
 
 (defun find-environment-with-path (path environment-list)

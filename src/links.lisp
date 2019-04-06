@@ -9,6 +9,9 @@
 
 (in-package #:lw2.links)
 
+(defun sanitize-link (link)
+  (substitute #\+ #\Space (string-trim '(#\Space) link)))
+
 (defun get-redirect (uri)
   (multiple-value-bind (body status headers uri)
     (drakma:http-request uri :method :head :close t :redirect nil)
@@ -147,14 +150,15 @@
           (gen-internal story-id (or (cdr (assoc :slug story)) (get-post-slug story-id)) comment-id absolute-uri))))))
 
 (defun convert-any-link* (url)
-  (or (convert-lw2-link url)
-      (convert-lw2-slug-link url)
-      (convert-lw2-sequence-link url)
-      (convert-lw1-link url)
-      (convert-ea1-link url)
-      (convert-agentfoundations-link url)
-      (convert-overcomingbias-link url)
-      (convert-lw2-user-link url)))
+  (let ((url (sanitize-link url)))
+    (or (convert-lw2-link url)
+	(convert-lw2-slug-link url)
+	(convert-lw2-sequence-link url)
+	(convert-lw1-link url)
+	(convert-ea1-link url)
+	(convert-agentfoundations-link url)
+	(convert-overcomingbias-link url)
+	(convert-lw2-user-link url))))
 
 (defun convert-any-link (url)
   (or (convert-any-link* url) url))
