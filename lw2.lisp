@@ -1057,7 +1057,7 @@ signaled condition to OUT-STREAM."
     (multiple-value-bind (recent-comments total)
       (if (or offset limit (/= (user-pref :items-per-page) 20))
           (lw2-graphql-query (lw2-query-string :comment :list
-                                               (remove nil (alist :view "postCommentsNew" :limit (or limit (user-pref :items-per-page)) :offset offset)
+                                               (remove nil (alist :view "allRecentComments" :limit (or limit (user-pref :items-per-page)) :offset offset)
                                                        :key #'cdr)
                                                (comments-index-fields)
                                                :with-total want-total))

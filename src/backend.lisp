@@ -442,10 +442,10 @@
   (lw2-graphql-query-noparse (get-posts-index-query-string)))
 
 (defun get-recent-comments (&key with-total)
-  (get-cached-index-query "recent-comments" (lw2-query-string :comment :list '((:view . "recentComments") (:limit . 20)) (comments-index-fields) :with-total with-total)))
+  (get-cached-index-query "recent-comments" (lw2-query-string :comment :list '((:view . "allRecentComments") (:limit . 20)) (comments-index-fields) :with-total with-total)))
 
 (defun get-recent-comments-json ()
-  (lw2-graphql-query-noparse (lw2-query-string :comment :list '((:view . "recentComments") (:limit . 20)) (comments-index-fields))))
+  (lw2-graphql-query-noparse (lw2-query-string :comment :list '((:view . "allRecentComments") (:limit . 20)) (comments-index-fields))))
 
 (defun process-vote-result (res)
   (let ((id (cdr (assoc :--id res)))
