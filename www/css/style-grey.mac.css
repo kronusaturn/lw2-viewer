@@ -2110,8 +2110,10 @@ a#inbox-indicator.new-messages:hover::before {
 	#inbox-indicator {
 		padding: 0;
 	}
+}
+@media only screen and (max-width: 520px) {
 	#inbox-indicator::before {
-		font-size: 1em;
+		font-size: 1.5em;
 	}
 }
 @media only screen and (max-width: 374px) {
