@@ -97,7 +97,7 @@
 #theme-selector:hover {
 	opacity: 1.0;
 }
-#theme-selector .theme-selector-close-button {
+.theme-selector-close-button {
 	display: none;
 }
 

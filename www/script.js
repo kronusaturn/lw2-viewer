@@ -1146,11 +1146,15 @@ GW.themeLoadCallback_less = (fromTheme = "") => {
 		});
 
 		if (localStorage.getItem("appearance-adjust-ui-toggle-engaged") == null) {
-			// If state is not set (user has never clicked on the Less theme's appearance
+			// If state is not set (user has never clicked on the Less theme’s appearance
 			// adjustment UI toggle) then show it, but then hide it after a short time.
 			registerInitializer('engageAppearanceAdjustUI', true, () => query("#ui-elements-container") != null, function () {
 				toggleAppearanceAdjustUI();
 				setTimeout(toggleAppearanceAdjustUI, 3000);
+			});
+		} else if (localStorage.getItem("appearance-adjust-ui-toggle-engaged") == "true") {
+			registerInitializer('engageAppearanceAdjustUI', true, () => query("#ui-elements-container") != null, function () {
+				toggleAppearanceAdjustUI();
 			});
 		}
 
@@ -2064,15 +2068,11 @@ function injectAppearanceAdjustUIToggle() {
 		localStorage.setItem("appearance-adjust-ui-toggle-engaged", event.target.hasClass("engaged"));
 	});
 
-	if (GW.isMobile) {
-		let themeSelectorCloseButton = appearanceAdjustUIToggle.query("button").cloneNode(true);
-		themeSelectorCloseButton.addClass("theme-selector-close-button");
-		themeSelectorCloseButton.innerHTML = "&#xf057;";
-		query("#theme-selector").appendChild(themeSelectorCloseButton);
-		themeSelectorCloseButton.addActivateEvent(GW.appearanceAdjustUIToggleButtonClicked);
-	} else {
-		if (localStorage.getItem("appearance-adjust-ui-toggle-engaged") == "true") toggleAppearanceAdjustUI();
-	}
+	let themeSelectorCloseButton = appearanceAdjustUIToggle.query("button").cloneNode(true);
+	themeSelectorCloseButton.addClass("theme-selector-close-button");
+	themeSelectorCloseButton.innerHTML = "&#xf057;";
+	query("#theme-selector").appendChild(themeSelectorCloseButton);
+	themeSelectorCloseButton.addActivateEvent(GW.appearanceAdjustUIToggleButtonClicked);
 }
 function removeAppearanceAdjustUIToggle() {
 	GWLog("removeAppearanceAdjustUIToggle");
