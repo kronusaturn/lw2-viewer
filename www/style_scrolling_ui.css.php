@@ -773,6 +773,7 @@ a#inbox-indicator.new-messages:hover::before {
 .sublevel-nav.sort {
 	position: relative;
 	font-size: 0.75em;
+	margin: 1em 0 0 20px;
 }
 #content > .sublevel-nav.sort {
 	grid-row: 5 / span 2;
@@ -811,16 +812,19 @@ a#inbox-indicator.new-messages:hover::before {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
+@media only screen and (max-width: 900px) {
+	.sublevel-nav.sort {
+		margin: 1em 0 0 calc(100% / 45);
+	}
+}
 @media only screen and (max-width: 720px) {
 	#content.index-page > .sublevel-nav.sort {
 		flex-flow: column;
-		margin-left: 4px;
 	}
 }
 @media only screen and (max-width: 520px) {
 	#content.index-page > .sublevel-nav.sort {
 		flex-flow: column;
-		margin-left: 10px;
 	}
 }
 

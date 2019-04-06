@@ -17,13 +17,11 @@ h1.listing a {
 
 /* Links to link-posts (not the link-post links themselves; that’s below) */
 h1.listing a[href^='http'] + a {
-	margin-left: 0.25em;
+	margin-left: 0.125em;
 }
 /* Link-post links */
 h1.listing a[href^="http"] {
-	font-size: 0.8em;
-	vertical-align: top;
-	top: 4px;
+	transform: scale(0.75);
 }
 
 /*=----------------------=*/

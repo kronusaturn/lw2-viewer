@@ -757,12 +757,13 @@ body {
 /* LISTINGS */
 /*==========*/
 
+.listings {
+	padding: 15px 40px 0 40px;
+}
+
 h1.listing {
 	font-size: 1.875em;
 	margin: 7px 0 0 0;
-}
-.listings {
-	padding: 15px 20px 0 20px;
 }
 
 h1.listing a[href^='/'] {
@@ -809,11 +810,12 @@ h1.listing .edit-post-link:hover {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 900px) {
+	.listings {
+		padding: 15px calc(100% / 45) 0 calc(100% / 45);
+	}
+
 	h1.listing {
 		font-size: 1.75rem;
-	}
-	h1.listing a[href^='http'] {
-		top: 4px;
 	}
 	#content.user-page h1.link-post-listing::after {
 		height: calc(100% + 2em);
@@ -822,9 +824,6 @@ h1.listing .edit-post-link:hover {
 @media only screen and (max-width: 840px) {
 	h1.listing {
 		font-size: 1.625rem;
-	}
-	h1.listing a[href^='http'] {
-		font-size: 0.75em;
 	}
 }
 @media only screen and (max-width: 720px) {
@@ -875,18 +874,16 @@ h1.listing.spam:hover + .post-meta {
 
 h1.listing + .post-meta {
 	padding: 0 330px 14px 1px;
+	box-shadow: 0 -1px 0 0 #ddd inset;
 }
 h1.listing + .post-meta .karma-value,
 h1.listing + .post-meta .comment-count,
 h1.listing + .post-meta .lw2-link,
 h1.listing + .post-meta .read-time {
-	border-radius: 4px;
-	padding: 0 4px 0 2px;
 	text-shadow: 0.5px 0.5px 0.5px #999;
-	margin: 0 0.25em 0 0.5em;
 	position: absolute;
-	line-height: 1.15;
-	bottom: 8px;
+	bottom: 2px;
+	margin: 0;
 }
 h1.listing + .post-meta .karma-value span,
 h1.listing + .post-meta .comment-count span,
@@ -902,7 +899,9 @@ h1.listing + .post-meta .read-time::before {
 	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
 	margin: 0 8px 0 0;
-	box-shadow: 0 0 0 2px #ddd;
+	text-shadow:
+		0.5px 0.5px 0.5px #999,
+		0     0     2px #999;
 }
 _::-webkit-full-page-media, _:future, :root h1.listing + .post-meta .karma-value::before,
 _::-webkit-full-page-media, _:future, :root h1.listing + .post-meta .comment-count::before,
@@ -911,54 +910,43 @@ _::-webkit-full-page-media, _:future, :root h1.listing + .post-meta .read-time::
 	text-shadow: 0 0 3px #999;
 }
 
-h1.listing + .post-meta .karma {
-	margin: 0;
-}
+/*	Karma value.
+	*/
 h1.listing + .post-meta .karma-value {
-	box-shadow: 
-		22px 0 0 0 #ddd inset,
-		0 0 0 3px #ddd;
 	cursor: default;
 	color: #c00;
-	right: 264px;
+	right: 232px;
 }
 h1.listing + .post-meta .karma-value::before {
 	content: "\F139";
-	text-shadow: none;
 	font-size: 0.9375em;
-	line-height: 1.3;
 }
 
+/*	Comment count.
+	*/
+h1.listing + .post-meta .comment-count {
+	color: #009100;
+	right: 160px;
+}
 h1.listing + .post-meta .comment-count::before {
 	content: "\F086";
 }
-h1.listing + .post-meta .comment-count {
-	box-shadow: 
-		25px 0 0 0 #ddd inset,
-		0 0 0 3px #ddd;
-	color: #009100;
-	right: 176px;
-}
 h1.listing + .post-meta .comment-count:hover {
 	text-decoration: none;
-	color: #fff;
-	background-color: #009100;
 }
 h1.listing + .post-meta .comment-count:hover::before {
 	color: #009100;
+	text-shadow: 0.5px 0.5px 0.5px #fff;
+	font-weight: 400;
 }
 h1.listing + .post-meta .comment-count.new-comments::before {
 	color: #009100;
 	text-shadow: 0.5px 0.5px 0.5px #fff;
 }
-h1.listing + .post-meta .comment-count.new-comments:hover::before {
-	text-shadow: 0.5px 0.5px 0.5px #999;
-}
 
+/*	LW2 link.
+	*/
 h1.listing + .post-meta .lw2-link {
-	box-shadow: 
-		23px 0 0 0 #ddd inset,
-		0 0 0 3px #ddd;
 	right: 0;
 }
 h1.listing + .post-meta .lw2-link::before {
@@ -966,18 +954,15 @@ h1.listing + .post-meta .lw2-link::before {
 }
 h1.listing + .post-meta .lw2-link:hover {
 	text-decoration: none;
-	color: #fff;
-	background-color: #00f;
 }
 h1.listing + .post-meta .lw2-link:hover::before {
 	color: #00f;
 }
 
+/*	Read time.
+	*/
 h1.listing + .post-meta .read-time {
-	box-shadow: 
-		21px 0 0 0 #ddd inset,
-		0 0 0 3px #ddd;
-	right: 80px;
+	right: 70px;
 }
 h1.listing + .post-meta .read-time::before {
 	content: "\F2F2";
@@ -990,32 +975,13 @@ h1.listing + .post-meta .read-time:hover::before {
 	color: #777;
 }
 
-h1.listing + .post-meta .word-count {
-	box-shadow: 
-		22px 0 0 0 #ddd inset,
-		0 0 0 3px #ddd;
-	padding: 0 4px 0 4px;
-}
+/*	Word count.
+	*/
 h1.listing + .post-meta .word-count::before {
 	content: "\F15C";
-	margin: 0 10px 0 0;
 }
 h1.listing + .post-meta .read-time.word-count::after {
 	content: none;
-}
-
-h1.listing + .post-meta .link-post-domain {
-	margin: 0 0 0 0.5em;
-}
-
-h1.listing + .post-meta::after {
-	content: "";
-	display: block;
-	height: 1px;
-	width: 100%;
-	background-color: #ddd;
-	position: absolute;
-	bottom: 0;
 }
 
 /*=----------------------------=*/
@@ -1023,8 +989,13 @@ h1.listing + .post-meta::after {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 900px) {
-	h1.listing + .post-meta .link-post-domain {
-		margin: 0;
+	h1.listing + .post-meta .post-section {
+		width: auto;
+		overflow: visible;
+		order: 5;
+	}
+	h1.listing + .post-meta .post-section::before {
+		position: static;
 	}
 	#content.user-page h1.listing + .post-meta {
 		margin-bottom: 1em;
