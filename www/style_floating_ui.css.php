@@ -66,8 +66,7 @@
 	}
 
 	#post-nav-ui-toggle,
-	#appearance-adjust-ui-toggle,
-	#theme-selector .theme-selector-close-button {
+	#appearance-adjust-ui-toggle {
 		display: initial;
 	}
 
@@ -97,7 +96,7 @@
 #theme-selector:hover {
 	opacity: 1.0;
 }
-.theme-selector-close-button {
+#theme-selector .theme-selector-close-button {
 	display: none;
 }
 
@@ -286,6 +285,7 @@
 		}
 	}
 	#theme-selector .theme-selector-close-button {
+		display: initial;
 		position: absolute;
 		width: unset;
 		background-color: transparent;
