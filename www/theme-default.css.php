@@ -809,9 +809,6 @@ h1.listing .edit-post-link:hover {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 900px) {
-	.listings {
-		padding: 5px 45px 0 45px;
-	}
 	h1.listing {
 		font-size: 1.75rem;
 	}
@@ -823,9 +820,6 @@ h1.listing .edit-post-link:hover {
 	}
 }
 @media only screen and (max-width: 840px) {
-	.listings {
-		padding: 10px 40px 0 40px;
-	}
 	h1.listing {
 		font-size: 1.625rem;
 	}
@@ -834,23 +828,12 @@ h1.listing .edit-post-link:hover {
 	}
 }
 @media only screen and (max-width: 720px) {
-	.listings {
-		padding: 0 35px 0 35px;
-	}
 	h1.listing {
 		font-size: 1.5rem;
 		margin-bottom: 2px;
 	}
 }
-@media only screen and (max-width: 640px) {
-	.listings {
-		padding: 0 30px 0 30px;
-	}
-}
 @media only screen and (max-width: 520px) {
-	.listings {
-		padding: 0 20px 0 20px;
-	}
 	#content.user-page h1.listing::after {
 		height: calc(100% + 2.125em);
 	}
@@ -859,9 +842,6 @@ h1.listing .edit-post-link:hover {
 	}
 }
 @media only screen and (max-width: 320px) {
-	.listings {
-		padding: 0 10px 0 10px;
-	}
 	h1.listing {
 		font-size: 1.25rem;
 	}

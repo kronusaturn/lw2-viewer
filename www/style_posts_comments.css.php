@@ -30,11 +30,15 @@ h1.listing a[href^="http"] {
 /*=----------------------=*/
 /*	(On desktops, hover over a multi-line listing to reveal all of it) */
 
-@media only screen and (hover: hover) and (pointer: fine) {
+@media only screen and (hover: hover) and (pointer: fine) and (min-width: 961px) {
 	h1.listing {
 		max-height: 1.15em;
 	}
 	h1.listing a {
+		z-index: 1;
+		padding: 0 0 1px 1px;
+	}
+	h1.listing a[href^='/posts/'] {
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		overflow: hidden;
@@ -43,10 +47,10 @@ h1.listing a[href^="http"] {
 		-moz-hyphens: auto;
 		-ms-hyphens: auto;
 		hyphens: auto;
-		z-index: 1;
-		padding: 0 0 1px 1px;
 		height: 100%;
 	}
+}
+@media only screen and (hover: hover) and (pointer: fine) {
 	h1.listing a[href^='/posts/']:hover,
 	h1.listing a[href^='/posts/']:focus {
 		text-decoration: dotted underline;

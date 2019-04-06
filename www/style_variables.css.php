@@ -88,7 +88,12 @@
 	*/
 @media only screen and (max-width: 900px) {
 	:root {
-		--GW-content-side-padding: 4px;
+		--GW-content-side-padding: 20px;
+	}
+}
+@media only screen and (max-width: 520px) {
+	:root {
+		--GW-content-side-padding: 0;
 	}
 }
 
