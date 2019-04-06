@@ -8,6 +8,7 @@ h1.listing {
 	display: flex;
 
 	font-family: var(--GW-post-listings-font), var(--GW-Font-Awesome);
+	font-weight: var(--GW-post-listings-font-weight);
 }
 
 h1.listing a {
