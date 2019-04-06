@@ -4,7 +4,7 @@
 
 .nav-bar {
 	display: flex;
-	margin: 0 calc(-1 * var(--GW-content-side-padding));
+	margin: 0;
 }
 
 /*=---------------=*/
@@ -573,7 +573,7 @@ a#inbox-indicator.new-messages:hover::before {
 	display: flex;
 	justify-content: flex-end;
 	padding: 4px 8px;
-	margin: 0 calc(-1 * var(--GW-content-side-padding));
+	margin: 0;
 	align-self: start;
 	justify-self: end;
 }

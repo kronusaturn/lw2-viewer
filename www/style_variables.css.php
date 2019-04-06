@@ -56,7 +56,6 @@
 /*	Layout.
 	*/
 :root {
-	--GW-content-side-padding: 30px;
 }
 
 /*	Color scheme.
@@ -88,12 +87,10 @@
 	*/
 @media only screen and (max-width: 900px) {
 	:root {
-		--GW-content-side-padding: 20px;
 	}
 }
 @media only screen and (max-width: 520px) {
 	:root {
-		--GW-content-side-padding: 0;
 	}
 }
 

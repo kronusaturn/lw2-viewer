@@ -61,7 +61,6 @@
 /*	Layout.
 	*/
 :root {
-	--GW-content-side-padding: 30px;
 }
 
 /*	Color scheme.
@@ -93,12 +92,10 @@
 	*/
 @media only screen and (max-width: 900px) {
 	:root {
-		--GW-content-side-padding: 20px;
 	}
 }
 @media only screen and (max-width: 520px) {
 	:root {
-		--GW-content-side-padding: 0;
 	}
 }
 
@@ -164,7 +161,7 @@ body > * {
 }
 #content {
 	margin: 0 auto;
-	padding: 0 var(--GW-content-side-padding);
+	padding: 0;
 	position: relative;
 	overflow: visible;
 	display: grid;
@@ -1568,7 +1565,7 @@ head.content-width-fluid + body > * {
 
 .nav-bar {
 	display: flex;
-	margin: 0 calc(-1 * var(--GW-content-side-padding));
+	margin: 0;
 }
 
 /*=---------------=*/
@@ -2132,7 +2129,7 @@ a#inbox-indicator.new-messages:hover::before {
 	display: flex;
 	justify-content: flex-end;
 	padding: 4px 8px;
-	margin: 0 calc(-1 * var(--GW-content-side-padding));
+	margin: 0;
 	align-self: start;
 	justify-self: end;
 }

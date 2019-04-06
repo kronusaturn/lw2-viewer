@@ -55,7 +55,7 @@ body > * {
 }
 #content {
 	margin: 0 auto;
-	padding: 0 var(--GW-content-side-padding);
+	padding: 0;
 	position: relative;
 	overflow: visible;
 	display: grid;
