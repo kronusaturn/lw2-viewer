@@ -14,8 +14,8 @@
 	--GW-UI-font-weight-light: 400;
 	--GW-UI-font-weight-heavy: 600;
 
-	--GW-post-listings-font: <?php echo (($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Mundo Sans', 'a_Avante'"); ?>, 'Open Sans', 'Arial', sans-serif;
-	--GW-post-listings-font-weight: <?php echo ($platform == 'Mac') ? "700" : "800"; ?>;
+	--GW-post-listings-font: 'Concourse', 'a_Avante', 'Open Sans', 'Arial', sans-serif;
+	--GW-post-listings-font-weight: 700;
 
 	--GW-body-text-font: 'Charter', 'PT Serif', 'Georgia', serif;
 
