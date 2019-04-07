@@ -235,7 +235,7 @@ EOT;
 /*=----------------------------=*/
 
 @media only screen and (max-width: 960px) {
-	#bottom-bar {
+	#bottom-bar:not(.decorative) {
 		padding: 0 4.5rem;
 		font-size: 1.5em;
 	}

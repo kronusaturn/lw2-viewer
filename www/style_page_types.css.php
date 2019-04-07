@@ -151,8 +151,7 @@
 /**************/
 
 .login-container {
-	margin: 2em 0;
-	padding: 1em;
+	padding: 3em;
 	display: flex;
 	flex-flow: row wrap;
 }
@@ -166,11 +165,8 @@
 .login-container form label {
 	text-align: right;
 	padding: 0.25em 0.5em;
-	white-space: nowrap;
-	grid-column: 1;
 }
 .login-container form input {
-	grid-column: 2;
 	padding: 0.25em;
 }
 .login-container form input[type='submit'],
@@ -180,13 +176,10 @@
 }
 .login-container form input[type='submit'] {
 	width: 10em;
-	padding: 0.35em;
-	line-height: 1;
 	margin: 0.5em 0 0 0;
 }
 .login-container form h1 {
 	text-align: center;
-	margin: 0;
 	grid-column: 2;
 }
 
@@ -237,19 +230,21 @@
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-@media only screen and (max-width: 640px) {
+@media only screen and (max-width: 900px) {
 	.login-container {
 		flex-flow: column;
-		margin: 0 auto 3em auto;
-		max-width: 400px;
+		margin: auto;
+		padding: 2em 1em;
+		max-width: 54ch;
+		font-size: 1.125rem;
 	}
 	.login-container #login-form,
 	.login-container #signup-form {
-		padding: 0 1em 1.25em 1em;
+		padding: 0 1em 4em 1em;
 		grid-row-gap: 0;
 	}
 	.login-container #signup-form {
-		padding-top: 1em;
+		padding: 1em;
 	}
 	.login-container #login-form > *,
 	.login-container #signup-form > * {
@@ -259,20 +254,22 @@
 		text-align: left;
 		padding: 0;
 		line-height: 1;
+		font-size: 1.25em;
 	}
 	.login-container form input {
 		margin: 0.25em 0 0.75em 0;
 		padding: 0.5em;
+		font-size: 1.25em;
 	}
 	.login-container form h1 {
-		grid-column: 1 / span 2;
-		margin: 0 0 0.25em 0;
+		margin: 0 0 0.5em 0;
 	}
 	.login-container form a {
 		margin: 0.75em 0 0 0;
+		font-size: 1.25em;
 	}
 	.login-container .login-tip {
-		margin: 1.5em 1em 0 1em;
+		margin: 3em 0 0 0;
 	}
 }
 
@@ -281,29 +278,59 @@
 /***********************/
 
 .reset-password-container {
-	margin-bottom: 2em;
+	padding: 1.5em 2.5em;
+	font-size: 1.125em;
+}
+
+.reset-password-container h1 {
+	text-align: center;
+}
+.reset-password-container h2 {
+	margin: 1.25em 0 0.25em 0;
+}
+
+.reset-password-container form {
+	text-align: center;
+	display: flex;
+	flex-flow: column;
+	max-width: 40ch;
+	margin: auto;
+}
+.reset-password-container input[type='text'],
+.reset-password-container input[type='password'] {
+	padding: 0.25em;
+	margin: 0.75em 0 1em 0;
 }
 .reset-password-container input[type='submit'] {
-	padding: 0.2em 0.5em;
-	width: unset;
+	padding: 0.5em 1em;
+	display: block;
+	margin: auto;
+	grid-column: 1 / span 2;
 }
-.reset-password-container input {
-	margin-left: 0.5em;
-	width: 12em;
+
+.reset-password-container form:nth-of-type(2) {
+	margin: 2em auto 0 auto;
 }
-.reset-password-container label {
-	display: inline-block;
-	width: 9em;
+.reset-password-container form div {
+	display: flex;
+	flex-flow: column;
 }
-.reset-password-container form > div {
-	margin: 0.2em;
+.reset-password-container div input[type='text'],
+.reset-password-container div input[type='password'] {
+	margin: 0.25em 0 0.75em 0;
 }
-.reset-password-container .action-container {
-	padding-left: 11em;
-	padding-top: 0.2em;
+.reset-password-container div input[type='submit'] {
+	margin: 1em auto 0 auto;
 }
-.reset-password-container .error-box {
-	margin: unset;
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 520px) {
+	.reset-password-container {
+		padding: 1.5em;
+	}
 }
 
 /**************/
