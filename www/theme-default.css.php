@@ -810,9 +810,6 @@ h1.listing .edit-post-link {
 h1.listing .edit-post-link:hover {
 	text-decoration: none;
 }
-#content.user-page h1.listing .edit-post-link {
-	background-color: #eee;
-}
 
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
@@ -826,9 +823,6 @@ h1.listing .edit-post-link:hover {
 	h1.listing {
 		font-size: 1.75rem;
 	}
-	#content.user-page h1.link-post-listing::after {
-		height: calc(100% + 2em);
-	}
 }
 @media only screen and (max-width: 840px) {
 	h1.listing {
@@ -841,23 +835,9 @@ h1.listing .edit-post-link:hover {
 		margin-bottom: 2px;
 	}
 }
-@media only screen and (max-width: 520px) {
-	#content.user-page h1.listing::after {
-		height: calc(100% + 2.125em);
-	}
-	#content.user-page h1.link-post-listing::after {
-		height: calc(100% + 3.125em);
-	}
-}
 @media only screen and (max-width: 320px) {
 	h1.listing {
 		font-size: 1.25rem;
-	}
-	#content.user-page h1.listing::after {
-		height: calc(100% + 2.625em);
-	}
-	#content.user-page h1.link-post-listing::after {
-		height: calc(100% + 3.75em);
 	}
 }
 
@@ -1009,9 +989,6 @@ h1.listing + .post-meta .read-time.word-count::after {
 	h1.listing + .post-meta .post-section::before {
 		position: static;
 	}
-	#content.user-page h1.listing + .post-meta {
-		margin-bottom: 1em;
-	}
 }
 @media only screen and (max-width: 720px) {
 	h1.listing + .post-meta {
@@ -1069,8 +1046,7 @@ h1.listing + .post-meta .read-time.word-count::after {
 	border-color: #ccc;
 }
 #content.user-page h1.listing {
-	padding: 0 6px;
-	padding-top: 0.125em;
+	padding: 3px 6px 0 6px;
 	border-width: 1px 1px 0 1px;
 	margin: 1rem 0 0 0;
 	max-width: 100%;
@@ -1089,23 +1065,22 @@ h1.listing.own-post-listing {
 	}
 }
 #content.user-page h1.listing + .post-meta {
-	padding: 0.125em 6px 1em 36px;
+	padding-left: 7px;
+	padding-top: 3px;
 	border-width: 0 1px 1px 1px;
 	margin: 0 0 1rem 0;
+	box-shadow: none;
 }
-#content.user-page h1.listing + .post-meta::after {
-	display: none;
+h1.listing + .post-meta .post-section {
+	width: auto;
+	overflow: visible;
+	order: 5;
 }
-@media only screen and (min-width: 521px) {
-	#content.user-page h1.listing + .post-meta .karma-value,
-	#content.user-page h1.listing + .post-meta .comment-count,
-	#content.user-page h1.listing + .post-meta .lw2-link,
-	#content.user-page h1.listing + .post-meta .read-time {
-		bottom: 10px;
-	}
+h1.listing + .post-meta .post-section::before {
+	position: static;
 }
-#content.user-page h1.listing + .post-meta .post-section::before {
-	left: -1px;
+#content.user-page h1.listing + .post-meta .lw2-link {
+	right: 6px;
 }
 
 #content.conversations-user-page h1.listing {

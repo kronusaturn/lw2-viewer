@@ -725,7 +725,6 @@ a#inbox-indicator.new-messages:hover::before {
 	text-align: center;
 	display: flex;
 	justify-content: center;
-	margin: 1em 0 0 0;
 }
 
 .sublevel-nav:not(.sort) {
@@ -733,7 +732,7 @@ a#inbox-indicator.new-messages:hover::before {
 	align-self: start;
 }
 #content.user-page .sublevel-nav:not(.sort) {
-	justify-self: center;
+	margin: 1em var(--GW-user-page-content-side-padding) 0 var(--GW-user-page-content-side-padding);
 }
 #content.sequences-page .sublevel-nav:not(.sort) {
 	grid-row: unset;
@@ -789,8 +788,7 @@ a#inbox-indicator.new-messages:hover::before {
 	flex-flow: row;
 }
 #content.user-page .sublevel-nav.sort {
-	margin: 0 var(--GW-user-page-content-side-padding) 0 0;
-	align-self: center;
+	margin: 1em var(--GW-user-page-content-side-padding) 1em 0;
 }
 
 .sublevel-nav.sort::before {
@@ -844,7 +842,7 @@ a#inbox-indicator.new-messages:hover::before {
 #comments-list-mode-selector {
 	z-index: 1;
 	justify-self: start;
-	align-self: #content.recent-comments-page #comments-list-mode-selector;
+	align-self: end;
 	grid-row: 3 / span 2;
 	display: flex;
 }
@@ -853,8 +851,8 @@ a#inbox-indicator.new-messages:hover::before {
 }
 #content.user-page #comments-list-mode-selector {
 	grid-row: 5 / span 2;
-	align-self: center;
-	margin: 0 0 0 var(--GW-user-page-content-side-padding);
+	margin: 1em 0 1em var(--GW-user-page-content-side-padding);
+	flex-flow: column;
 }
 
 /*=----------------------------=*/
@@ -864,6 +862,7 @@ a#inbox-indicator.new-messages:hover::before {
 @media only screen and (max-width: 900px) {
 	#content.user-page #comments-list-mode-selector {
 		grid-row: 6;
+		flex-flow: row;
 	}
 	#content.recent-comments-page #comments-list-mode-selector {
 		flex-flow: column;
@@ -889,9 +888,6 @@ a#inbox-indicator.new-messages:hover::before {
 	background-repeat: no-repeat;
 	background-size: 100%;
 	background-origin: content-box;
-}
-#content.user-page #comments-list-mode-selector button {
-	display: block;
 }
 #comments-list-mode-selector button:disabled {
 	cursor: auto;

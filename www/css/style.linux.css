@@ -2268,7 +2268,6 @@ a#inbox-indicator.new-messages:hover::before {
 	text-align: center;
 	display: flex;
 	justify-content: center;
-	margin: 1em 0 0 0;
 }
 
 .sublevel-nav:not(.sort) {
@@ -2276,7 +2275,7 @@ a#inbox-indicator.new-messages:hover::before {
 	align-self: start;
 }
 #content.user-page .sublevel-nav:not(.sort) {
-	justify-self: center;
+	margin: 1em var(--GW-user-page-content-side-padding) 0 var(--GW-user-page-content-side-padding);
 }
 #content.sequences-page .sublevel-nav:not(.sort) {
 	grid-row: unset;
@@ -2332,8 +2331,7 @@ a#inbox-indicator.new-messages:hover::before {
 	flex-flow: row;
 }
 #content.user-page .sublevel-nav.sort {
-	margin: 0 var(--GW-user-page-content-side-padding) 0 0;
-	align-self: center;
+	margin: 1em var(--GW-user-page-content-side-padding) 1em 0;
 }
 
 .sublevel-nav.sort::before {
@@ -2387,7 +2385,7 @@ a#inbox-indicator.new-messages:hover::before {
 #comments-list-mode-selector {
 	z-index: 1;
 	justify-self: start;
-	align-self: #content.recent-comments-page #comments-list-mode-selector;
+	align-self: end;
 	grid-row: 3 / span 2;
 	display: flex;
 }
@@ -2396,8 +2394,8 @@ a#inbox-indicator.new-messages:hover::before {
 }
 #content.user-page #comments-list-mode-selector {
 	grid-row: 5 / span 2;
-	align-self: center;
-	margin: 0 0 0 var(--GW-user-page-content-side-padding);
+	margin: 1em 0 1em var(--GW-user-page-content-side-padding);
+	flex-flow: column;
 }
 
 /*=----------------------------=*/
@@ -2407,6 +2405,7 @@ a#inbox-indicator.new-messages:hover::before {
 @media only screen and (max-width: 900px) {
 	#content.user-page #comments-list-mode-selector {
 		grid-row: 6;
+		flex-flow: row;
 	}
 	#content.recent-comments-page #comments-list-mode-selector {
 		flex-flow: column;
@@ -2432,9 +2431,6 @@ a#inbox-indicator.new-messages:hover::before {
 	background-repeat: no-repeat;
 	background-size: 100%;
 	background-origin: content-box;
-}
-#content.user-page #comments-list-mode-selector button {
-	display: block;
 }
 #comments-list-mode-selector button:disabled {
 	cursor: auto;
@@ -4912,7 +4908,7 @@ li {
 /*=---------------------=*/
 
 #content.user-page h1.page-main-heading {
-	margin: 0.25em 0 0 var(--GW-user-page-content-side-padding);
+	margin: 0.25em var(--GW-user-page-content-side-padding) 0 var(--GW-user-page-content-side-padding);
 	line-height: 1.1;
 	grid-row: 4;
 	align-self: end;
@@ -6306,9 +6302,6 @@ h1.listing .edit-post-link {
 h1.listing .edit-post-link:hover {
 	text-decoration: none;
 }
-#content.user-page h1.listing .edit-post-link {
-	background-color: #eee;
-}
 
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
@@ -6322,9 +6315,6 @@ h1.listing .edit-post-link:hover {
 	h1.listing {
 		font-size: 1.75rem;
 	}
-	#content.user-page h1.link-post-listing::after {
-		height: calc(100% + 2em);
-	}
 }
 @media only screen and (max-width: 840px) {
 	h1.listing {
@@ -6337,23 +6327,9 @@ h1.listing .edit-post-link:hover {
 		margin-bottom: 2px;
 	}
 }
-@media only screen and (max-width: 520px) {
-	#content.user-page h1.listing::after {
-		height: calc(100% + 2.125em);
-	}
-	#content.user-page h1.link-post-listing::after {
-		height: calc(100% + 3.125em);
-	}
-}
 @media only screen and (max-width: 320px) {
 	h1.listing {
 		font-size: 1.25rem;
-	}
-	#content.user-page h1.listing::after {
-		height: calc(100% + 2.625em);
-	}
-	#content.user-page h1.link-post-listing::after {
-		height: calc(100% + 3.75em);
 	}
 }
 
@@ -6505,9 +6481,6 @@ h1.listing + .post-meta .read-time.word-count::after {
 	h1.listing + .post-meta .post-section::before {
 		position: static;
 	}
-	#content.user-page h1.listing + .post-meta {
-		margin-bottom: 1em;
-	}
 }
 @media only screen and (max-width: 720px) {
 	h1.listing + .post-meta {
@@ -6565,8 +6538,7 @@ h1.listing + .post-meta .read-time.word-count::after {
 	border-color: #ccc;
 }
 #content.user-page h1.listing {
-	padding: 0 6px;
-	padding-top: 0.125em;
+	padding: 3px 6px 0 6px;
 	border-width: 1px 1px 0 1px;
 	margin: 1rem 0 0 0;
 	max-width: 100%;
@@ -6585,23 +6557,22 @@ h1.listing.own-post-listing {
 	}
 }
 #content.user-page h1.listing + .post-meta {
-	padding: 0.125em 6px 1em 36px;
+	padding-left: 7px;
+	padding-top: 3px;
 	border-width: 0 1px 1px 1px;
 	margin: 0 0 1rem 0;
+	box-shadow: none;
 }
-#content.user-page h1.listing + .post-meta::after {
-	display: none;
+h1.listing + .post-meta .post-section {
+	width: auto;
+	overflow: visible;
+	order: 5;
 }
-@media only screen and (min-width: 521px) {
-	#content.user-page h1.listing + .post-meta .karma-value,
-	#content.user-page h1.listing + .post-meta .comment-count,
-	#content.user-page h1.listing + .post-meta .lw2-link,
-	#content.user-page h1.listing + .post-meta .read-time {
-		bottom: 10px;
-	}
+h1.listing + .post-meta .post-section::before {
+	position: static;
 }
-#content.user-page h1.listing + .post-meta .post-section::before {
-	left: -1px;
+#content.user-page h1.listing + .post-meta .lw2-link {
+	right: 6px;
 }
 
 #content.conversations-user-page h1.listing {

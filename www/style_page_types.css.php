@@ -7,7 +7,7 @@
 /*=---------------------=*/
 
 #content.user-page h1.page-main-heading {
-	margin: 0.25em 0 0 var(--GW-user-page-content-side-padding);
+	margin: 0.25em var(--GW-user-page-content-side-padding) 0 var(--GW-user-page-content-side-padding);
 	line-height: 1.1;
 	grid-row: 4;
 	align-self: end;
