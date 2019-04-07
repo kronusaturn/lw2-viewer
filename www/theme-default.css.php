@@ -26,10 +26,12 @@
 	*/
 :root {
 	--GW-user-page-content-side-padding: 30px;
+	--GW-recent-comments-page-content-side-padding: 30px;
 }
 @media only screen and (max-width: 900px) {
 	:root {
 		--GW-user-page-content-side-padding: calc(100% / 30);
+		--GW-recent-comments-page-content-side-padding: calc(100% / 30);
 	}
 }
 

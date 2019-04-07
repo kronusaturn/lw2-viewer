@@ -789,7 +789,8 @@ a#inbox-indicator.new-messages:hover::before {
 	flex-flow: row;
 }
 #content.user-page .sublevel-nav.sort {
-	margin: 1em var(--GW-user-page-content-side-padding) 0 0;
+	margin: 0 var(--GW-user-page-content-side-padding) 0 0;
+	align-self: center;
 }
 
 .sublevel-nav.sort::before {
@@ -843,11 +844,17 @@ a#inbox-indicator.new-messages:hover::before {
 #comments-list-mode-selector {
 	z-index: 1;
 	justify-self: start;
-	align-self: start;
+	align-self: #content.recent-comments-page #comments-list-mode-selector;
+	grid-row: 3 / span 2;
+	display: flex;
+}
+#content.recent-comments-page #comments-list-mode-selector {
+	margin: 0 0 0 var(--GW-recent-comments-page-content-side-padding);
 }
 #content.user-page #comments-list-mode-selector {
-	grid-row: 5;
-	margin: 6px 0 0 var(--GW-user-page-content-side-padding);
+	grid-row: 5 / span 2;
+	align-self: center;
+	margin: 0 0 0 var(--GW-user-page-content-side-padding);
 }
 
 /*=----------------------------=*/
@@ -857,7 +864,9 @@ a#inbox-indicator.new-messages:hover::before {
 @media only screen and (max-width: 900px) {
 	#content.user-page #comments-list-mode-selector {
 		grid-row: 6;
-		flex-flow: row;
+	}
+	#content.recent-comments-page #comments-list-mode-selector {
+		flex-flow: column;
 	}
 }
 @media only screen and (max-width: 520px) {

@@ -57,6 +57,7 @@
 	*/
 :root {
 	--GW-user-page-content-side-padding: 0;
+	--GW-recent-comments-page-content-side-padding: 0;
 }
 
 /*	Color scheme.
