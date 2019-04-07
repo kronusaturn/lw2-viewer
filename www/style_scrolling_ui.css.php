@@ -853,6 +853,7 @@ a#inbox-indicator.new-messages:hover::before {
 	grid-row: 5 / span 2;
 	margin: 1em 0 1em var(--GW-user-page-content-side-padding);
 	flex-flow: column;
+	align-self: start;
 }
 
 /*=----------------------------=*/

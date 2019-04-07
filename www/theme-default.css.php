@@ -702,6 +702,21 @@ body {
 }
 
 /*=============================*/
+/* COMMENTS LIST MODE SELECTOR */
+/*=============================*/
+
+#comments-list-mode-selector button {
+	box-shadow:
+		0 0 0 4px #fff inset,
+		0 0 0 5px #bbb inset;
+}
+#comments-list-mode-selector button:hover,
+#comments-list-mode-selector button.selected {
+	box-shadow:
+		0 0 0 5px #bbb inset;
+}
+
+/*=============================*/
 /* COMMENTS VIEW MODE SELECTOR */
 /*=============================*/
 
@@ -1476,29 +1491,19 @@ a.comment-parent-link:hover::before {
 /* COMMENTS COMPACT VIEW */
 /*=======================*/
 
-#comments-list-mode-selector button {
-	box-shadow:
-		0 0 0 4px #fff inset,
-		0 0 0 5px #bbb inset;
-}
-#comments-list-mode-selector button:hover,
-#comments-list-mode-selector button.selected {
-	box-shadow:
-		0 0 0 5px #bbb inset;
-}
-#content.compact > .comment-thread .comment-item::after {
+#content.compact .comment-thread .comment-item::after {
 	color: var(--GW-hyperlink-color);
 	background: linear-gradient(to right, transparent 0%, #fff 50%, #fff 100%);
 }
 
 @media only screen and (hover: hover) and (pointer: fine) {
-	#content.compact > .comment-thread .comment-item:hover .comment,
-	#content.compact > .comment-thread .comment-item.expanded .comment {
+	#content.compact .comment-thread .comment-item:hover .comment,
+	#content.compact .comment-thread .comment-item.expanded .comment {
 		background-color: #fff;
 		outline: 3px solid #00c;
 	}
-	#content.compact > .comment-thread .comment-item:hover .comment::before,
-	#content.compact > .comment-thread .comment-item.expanded .comment::before {
+	#content.compact .comment-thread .comment-item:hover .comment::before,
+	#content.compact .comment-thread .comment-item.expanded .comment::before {
 		background-color: #fff;
 		box-shadow: 
 			0 0  3px #fff,
@@ -1511,11 +1516,11 @@ a.comment-parent-link:hover::before {
 	}
 }
 @media not screen and (hover: hover) and (pointer: fine) {
-	#content.compact > .comment-thread.expanded .comment-item .comment {
+	#content.compact .comment-thread.expanded .comment-item .comment {
 		background-color: #fff;
 		outline: 3px solid #00c;
 	}
-	#content.compact > .comment-thread.expanded .comment-item .comment::before {
+	#content.compact .comment-thread.expanded .comment-item .comment::before {
 		background-color: #fff;
 		box-shadow: 
 			0 0  3px #fff,
