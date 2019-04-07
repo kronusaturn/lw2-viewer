@@ -49,6 +49,25 @@
 	}
 }
 
+/*=--------------------=*/
+/*= Conversations list =*/
+/*=--------------------=*/
+
+/*	List of participants.
+	*/
+#content.conversations-user-page .post-meta .conversation-participants ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+#content.conversations-user-page .post-meta .conversation-participants li {
+	display: inline;
+}
+#content.conversations-user-page .post-meta .conversation-participants li:nth-last-of-type(n+2)::after {
+	content: ", ";
+	margin: 0 0.125em 0 0;
+}
+
 /*****************/
 /* CONVERSATIONS */
 /*****************/
@@ -141,8 +160,7 @@
 /* SEARCH RESULTS */
 /******************/
 
-#content.search-results-page h1.listing,
-#content.sequence-page h1.listing {
+#content.search-results-page h1.listing {
 	font-size: 1.625em;
 }
 
@@ -337,15 +355,20 @@
 /* ERROR PAGE */
 /**************/
 
-.error-retry-form {
-	margin: 0.5em 0;
+.error-container {
+	padding: 2em;
 }
 
-.error-retry-form input[type="submit"] {
-	border: 1px solid #aaa;
+.error-container h1 {
+	text-align: center;
+}
+
+.error-container input[type="submit"] {
 	font-weight: var(--GW-UI-font-weight-heavy);
 	font-size: 1.125rem;
 	padding: 0.5em 1.25em;
+	margin: 2em auto 0 auto;
+	display: block;
 }
 
 /**************/

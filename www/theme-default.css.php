@@ -831,10 +831,6 @@ h1.listing .edit-post-link:hover {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 900px) {
-	.listings {
-		padding: 15px calc(100% / 45) 0 calc(100% / 45);
-	}
-
 	h1.listing {
 		font-size: 1.75rem;
 	}
@@ -1009,9 +1005,6 @@ h1.listing + .post-meta .read-time.word-count::after {
 	h1.listing + .post-meta {
 		padding-right: 254px;
 	}
-	#content.conversations-user-page h1.listing + .post-meta > * {
-		line-height: 1.5;
-	}
 	h1.listing + .post-meta .karma-value {
 		right: 192px;
 	}
@@ -1086,7 +1079,7 @@ h1.listing.own-post-listing {
 	}
 }
 #content.user-page h1.listing + .post-meta {
-	padding-left: 7px;
+	padding-left: 8px;
 	padding-top: 3px;
 	border-width: 0 1px 1px 1px;
 	margin: 0 0 1rem 0;
@@ -1104,13 +1097,12 @@ h1.listing.own-post-listing {
 	right: 6px;
 }
 
-#content.conversations-user-page h1.listing {
-	padding: 4px 6px;
-	font-size: 1.75rem;
-}
-#content.conversations-user-page h1.listing + .post-meta {
-	padding: 6px 4px;
-	margin: 0 0 0.25rem 0;
+/*=--------------------=*/
+/*= Conversations list =*/
+/*=--------------------=*/
+
+#content.user-page.conversations-user-page h1.listing + .post-meta {
+	padding: 5px 6px 5px 8px;
 }
 
 /*===============*/
@@ -1178,6 +1170,15 @@ h1.listing.own-post-listing {
 /*=====================*/
 
 .reset-password-container input[type='submit'] {
+	background-color: #e4e4e4;
+	border: 1px solid #ccc;
+}
+
+/*============*/
+/* ERROR PAGE */
+/*============*/
+
+.error-container input[type="submit"] {
 	background-color: #e4e4e4;
 	border: 1px solid #ccc;
 }
@@ -1894,10 +1895,6 @@ a.comment-parent-link:hover::before {
 h1.sequence-chapter {
 	font-size: 2.25rem;
 	margin: 0;
-}
-
-#content.sequence-page article {
-	padding: 0 50px 15px 50px;
 }
 
 #content.sequence-page section {

@@ -1,3 +1,21 @@
+/*************/
+/* SEQUENCES */
+/*************/
+
+#content.sequence-page article {
+	padding: 0 50px 15px 50px;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	#content.sequence-page article {
+		padding: 15px calc(100% / 36) 0 calc(100% / 36);
+	}
+}
+
 /************/
 /* LISTINGS */
 /************/
@@ -47,7 +65,8 @@ h1.listing a[href^="http"] {
 		z-index: 1;
 		padding: 0 0 1px 1px;
 	}
-	h1.listing a[href^='/posts/'] {
+	h1.listing a[href^='/posts/'],
+	h1.listing a[href^='/conversation?id'] {
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		overflow: hidden;
@@ -61,7 +80,9 @@ h1.listing a[href^="http"] {
 }
 @media only screen and (hover: hover) and (pointer: fine) {
 	h1.listing a[href^='/posts/']:hover,
-	h1.listing a[href^='/posts/']:focus {
+	h1.listing a[href^='/posts/']:focus,
+	h1.listing a[href^='/conversation?id']:hover,
+	h1.listing a[href^='/conversation?id']:focus {
 		text-decoration: dotted underline;
 		white-space: initial;
 		overflow: visible;
@@ -80,15 +101,15 @@ h1.listing a[href^="http"] {
 
 /* Adds hysteresis to the hover area (i.e., prevents oscillation due to small
    mouse movements) */
-<?php $margin_of_hover_error = '10px'; ?>
 
-	h1.listing a[href^='/posts/']:hover::before {
+	h1.listing a[href^='/posts/']:hover::before,
+	h1.listing a[href^='/conversation?id']:hover::before {
 		content: "";
 		position: absolute;
-		top: -<?php echo $margin_of_hover_error; ?>;
-		right: -<?php echo $margin_of_hover_error; ?>;
-		bottom: -<?php echo $margin_of_hover_error; ?>;
-		left: -<?php echo $margin_of_hover_error; ?>;
+		top: -10px;
+		right: -10px;
+		bottom: -10px;
+		left: -10px;
 		z-index: -1;
 	}
 }
@@ -111,6 +132,16 @@ h1.listing .edit-post-link {
 	text-align: center;
 	padding: 1.25em 0 1.25em 0;
 	font-size: 1.375em;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	.listings {
+		padding: 15px calc(100% / 45) 0 calc(100% / 45);
+	}
 }
 
 /*********************/

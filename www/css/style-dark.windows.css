@@ -2608,6 +2608,24 @@ a#inbox-indicator.new-messages:hover::before {
 /*%% POSTS & COMMENTS %%*/
 /*%%%%%%%%%%%%%%%%%%%%%%*/
 
+/*************/
+/* SEQUENCES */
+/*************/
+
+#content.sequence-page article {
+	padding: 0 50px 15px 50px;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	#content.sequence-page article {
+		padding: 15px calc(100% / 36) 0 calc(100% / 36);
+	}
+}
+
 /************/
 /* LISTINGS */
 /************/
@@ -2657,7 +2675,8 @@ h1.listing a[href^="http"] {
 		z-index: 1;
 		padding: 0 0 1px 1px;
 	}
-	h1.listing a[href^='/posts/'] {
+	h1.listing a[href^='/posts/'],
+	h1.listing a[href^='/conversation?id'] {
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		overflow: hidden;
@@ -2671,7 +2690,9 @@ h1.listing a[href^="http"] {
 }
 @media only screen and (hover: hover) and (pointer: fine) {
 	h1.listing a[href^='/posts/']:hover,
-	h1.listing a[href^='/posts/']:focus {
+	h1.listing a[href^='/posts/']:focus,
+	h1.listing a[href^='/conversation?id']:hover,
+	h1.listing a[href^='/conversation?id']:focus {
 		text-decoration: dotted underline;
 		white-space: initial;
 		overflow: visible;
@@ -2691,7 +2712,8 @@ h1.listing a[href^="http"] {
 /* Adds hysteresis to the hover area (i.e., prevents oscillation due to small
    mouse movements) */
 
-	h1.listing a[href^='/posts/']:hover::before {
+	h1.listing a[href^='/posts/']:hover::before,
+	h1.listing a[href^='/conversation?id']:hover::before {
 		content: "";
 		position: absolute;
 		top: -10px;
@@ -2720,6 +2742,16 @@ h1.listing .edit-post-link {
 	text-align: center;
 	padding: 1.25em 0 1.25em 0;
 	font-size: 1.375em;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	.listings {
+		padding: 15px calc(100% / 45) 0 calc(100% / 45);
+	}
 }
 
 /*********************/
@@ -4950,6 +4982,25 @@ li {
 	}
 }
 
+/*=--------------------=*/
+/*= Conversations list =*/
+/*=--------------------=*/
+
+/*	List of participants.
+	*/
+#content.conversations-user-page .post-meta .conversation-participants ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+#content.conversations-user-page .post-meta .conversation-participants li {
+	display: inline;
+}
+#content.conversations-user-page .post-meta .conversation-participants li:nth-last-of-type(n+2)::after {
+	content: ", ";
+	margin: 0 0.125em 0 0;
+}
+
 /*****************/
 /* CONVERSATIONS */
 /*****************/
@@ -5042,8 +5093,7 @@ li {
 /* SEARCH RESULTS */
 /******************/
 
-#content.search-results-page h1.listing,
-#content.sequence-page h1.listing {
+#content.search-results-page h1.listing {
 	font-size: 1.625em;
 }
 
@@ -5238,15 +5288,20 @@ li {
 /* ERROR PAGE */
 /**************/
 
-.error-retry-form {
-	margin: 0.5em 0;
+.error-container {
+	padding: 2em;
 }
 
-.error-retry-form input[type="submit"] {
-	border: 1px solid #484848;
+.error-container h1 {
+	text-align: center;
+}
+
+.error-container input[type="submit"] {
 	font-weight: var(--GW-UI-font-weight-heavy);
 	font-size: 1.125rem;
 	padding: 0.5em 1.25em;
+	margin: 2em auto 0 auto;
+	display: block;
 }
 
 /**************/
@@ -6346,10 +6401,6 @@ h1.listing .edit-post-link:hover {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 900px) {
-	.listings {
-		padding: 15px calc(100% / 45) 0 calc(100% / 45);
-	}
-
 	h1.listing {
 		font-size: 1.75rem;
 	}
@@ -6524,9 +6575,6 @@ h1.listing + .post-meta .read-time.word-count::after {
 	h1.listing + .post-meta {
 		padding-right: 254px;
 	}
-	#content.conversations-user-page h1.listing + .post-meta > * {
-		line-height: 1.5;
-	}
 	h1.listing + .post-meta .karma-value {
 		right: 192px;
 	}
@@ -6601,7 +6649,7 @@ h1.listing.own-post-listing {
 	}
 }
 #content.user-page h1.listing + .post-meta {
-	padding-left: 7px;
+	padding-left: 8px;
 	padding-top: 3px;
 	border-width: 0 1px 1px 1px;
 	margin: 0 0 1rem 0;
@@ -6619,13 +6667,12 @@ h1.listing.own-post-listing {
 	right: 6px;
 }
 
-#content.conversations-user-page h1.listing {
-	padding: 4px 6px;
-	font-size: 1.75rem;
-}
-#content.conversations-user-page h1.listing + .post-meta {
-	padding: 6px 4px;
-	margin: 0 0 0.25rem 0;
+/*=--------------------=*/
+/*= Conversations list =*/
+/*=--------------------=*/
+
+#content.user-page.conversations-user-page h1.listing + .post-meta {
+	padding: 5px 6px 5px 8px;
 }
 
 /*===============*/
@@ -6693,6 +6740,15 @@ h1.listing.own-post-listing {
 /*=====================*/
 
 .reset-password-container input[type='submit'] {
+	background-color: #1a1a1a;
+	border: 1px solid #2c2c2c;
+}
+
+/*============*/
+/* ERROR PAGE */
+/*============*/
+
+.error-container input[type="submit"] {
 	background-color: #1a1a1a;
 	border: 1px solid #2c2c2c;
 }
@@ -7457,10 +7513,6 @@ a.comment-parent-link:hover::before {
 h1.sequence-chapter {
 	font-size: 2.25rem;
 	margin: 0;
-}
-
-#content.sequence-page article {
-	padding: 0 50px 15px 50px;
 }
 
 #content.sequence-page section {
