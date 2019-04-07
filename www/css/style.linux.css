@@ -2613,6 +2613,9 @@ a#inbox-indicator.new-messages:hover::before {
 #content.user-page .listings {
 	padding: 0 var(--GW-user-page-content-side-padding);
 }
+#content.recent-comments-page .listings {
+	padding: 0 var(--GW-recent-comments-page-content-side-padding);
+}
 
 h1.listing {
 	line-height: 1.15;
@@ -6550,6 +6553,12 @@ h1.listing + .post-meta .read-time.word-count::after {
 	margin: 1rem 0 0 0;
 	max-width: 100%;
 }
+#content.user-page.all-user-page h1.listing {
+	margin: 2rem 0 0 0;
+}
+#content.user-page.all-user-page.compact h1.listing {
+	margin: 1rem 0 0 0;
+}
 #content.own-user-page h1.listing,
 h1.listing.own-post-listing {
 	padding-right: 36px;
@@ -7063,13 +7072,6 @@ a.comment-parent-link:hover::before {
 			0 0 30px #fff,
 			0 0 40px #fff;
 	}
-}
-
-#content.user-page.compact > h1.listing {
-	margin-top: 0.5rem;
-}
-#content.user-page.compact > h1.listing + .post-meta {
-	margin-bottom: 0.5rem;
 }
 
 /*=----------------------------=*/
