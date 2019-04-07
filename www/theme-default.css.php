@@ -912,6 +912,9 @@ _::-webkit-full-page-media, _:future, :root h1.listing + .post-meta .read-time::
 
 /*	Karma value.
 	*/
+h1.listing + .post-meta .karma {
+	margin: 0;
+}
 h1.listing + .post-meta .karma-value {
 	cursor: default;
 	color: #c00;
@@ -1008,25 +1011,8 @@ h1.listing + .post-meta .read-time.word-count::after {
 	#content.conversations-user-page h1.listing + .post-meta > * {
 		line-height: 1.5;
 	}
-	h1.listing + .post-meta .karma-value,
-	h1.listing + .post-meta .comment-count,
-	h1.listing + .post-meta .lw2-link,
-	h1.listing + .post-meta .read-time {
-		font-size: 1rem;
-		box-shadow: none;
-		bottom: 5px;
-	}
-	h1.listing + .post-meta .karma-value::before,
-	h1.listing + .post-meta .comment-count::before,
-	h1.listing + .post-meta .lw2-link::before,
-	h1.listing + .post-meta .read-time::before {
-		box-shadow: none;
-	}
 	h1.listing + .post-meta .karma-value {
 		right: 192px;
-	}
-	h1.listing + .post-meta .karma-value::before {
-		text-shadow: 0.5px 0.5px 0.5px #999;
 	}
 	h1.listing + .post-meta .comment-count {
 		right: 132px;
@@ -1034,51 +1020,28 @@ h1.listing + .post-meta .read-time.word-count::after {
 	h1.listing + .post-meta .read-time {
 		right: 56px;
 	}
-	h1.listing + .post-meta .lw2-link {
-		opacity: 1;
-		right: 0;
-	}
 }
 @media only screen and (max-width: 520px) {
 	h1.listing + .post-meta {
-		padding-right: 144px;
-		padding-bottom: 4px;
-		flex-flow: column;
+		padding: 0 192px 6px 1px;
 	}
-	#content.conversations-user-page h1.listing + .post-meta {
-		flex-flow: row wrap;
-	}
-	h1.listing + .post-meta .date {
-		margin: 0.375em 0 0.25em 0;
-		line-height: 1;
-	}
-	#content.user-page h1.listing + .post-meta {
-		padding: 0.25em 144px 0.5em 36px;
-	}
-	#content.conversations-user-page h1.listing + .post-meta .date {
-		margin: 0 0 0 1em;
-	}
-
 	h1.listing + .post-meta .karma-value {
-		bottom: 28px;
-		right: 0;
+		right: 136px;
 	}
 	h1.listing + .post-meta .comment-count {
-		bottom: 28px;
-		right: 56px;
+		right: 76px;
 	}
 	h1.listing + .post-meta .read-time {
-		right: 56px;
-		bottom: 4px;
+		right: 0;
 	}
 	h1.listing + .post-meta .lw2-link {
-		right: 0;
-		bottom: 4px;
+		display: none;
 	}
-	h1.listing + .post-meta .post-section::before {
-		right: 120px;
-		left: unset;
-		bottom: 23px;
+	h1.listing + .post-meta .post-section[href^='/'] {
+		order: -1;
+		margin-right: 0.75em;
+		position: relative;
+		top: 1px;
 	}
 }
 
