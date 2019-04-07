@@ -1,25 +1,3 @@
-/*************/
-/* SEQUENCES */
-/*************/
-
-.sequence-text {
-	font-size: 1.2rem;
-	padding: 0 22px;
-}
-
-section {
-	margin-top: 2em;
-	margin-bottom: 4em;
-}
-
-h1.sequence-chapter {
-	font-size: 2.3rem;
-}
-
-article {
-	max-width: 100%;
-}
-
 /**************/
 /* USER PAGES */
 /**************/

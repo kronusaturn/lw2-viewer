@@ -4863,28 +4863,6 @@ li {
 /*%% PAGE TYPES %%*/
 /*%%%%%%%%%%%%%%%%*/
 
-/*************/
-/* SEQUENCES */
-/*************/
-
-.sequence-text {
-	font-size: 1.2rem;
-	padding: 0 22px;
-}
-
-section {
-	margin-top: 2em;
-	margin-bottom: 4em;
-}
-
-h1.sequence-chapter {
-	font-size: 2.3rem;
-}
-
-article {
-	max-width: 100%;
-}
-
 /**************/
 /* USER PAGES */
 /**************/
@@ -7450,6 +7428,30 @@ a.comment-parent-link:hover::before {
 	#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
 		top: 1px;
 	}
+}
+
+/*=============*/
+/*= SEQUENCES =*/
+/*=============*/
+
+.sequence-text {
+	font-size: 1.25rem;
+}
+
+h1.sequence-chapter {
+	font-size: 2.25rem;
+	margin: 0;
+}
+
+#content.sequence-page article {
+	padding: 0 50px 15px 50px;
+}
+
+#content.sequence-page section {
+	margin: 3em 0 0 0;
+}
+#content.sequence-page section section {
+	margin: 2em 0 0 0;
 }
 
 /*=======*/

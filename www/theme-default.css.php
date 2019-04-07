@@ -1898,6 +1898,30 @@ a.comment-parent-link:hover::before {
 	}
 }
 
+/*=============*/
+/*= SEQUENCES =*/
+/*=============*/
+
+.sequence-text {
+	font-size: 1.25rem;
+}
+
+h1.sequence-chapter {
+	font-size: 2.25rem;
+	margin: 0;
+}
+
+#content.sequence-page article {
+	padding: 0 50px 15px 50px;
+}
+
+#content.sequence-page section {
+	margin: 3em 0 0 0;
+}
+#content.sequence-page section section {
+	margin: 2em 0 0 0;
+}
+
 /*=======*/
 /* LINKS */
 /*=======*/
