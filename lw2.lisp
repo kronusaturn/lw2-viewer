@@ -631,13 +631,15 @@ signaled condition to OUT-STREAM."
               (funcall fn))
             (serious-condition (condition)
               (emit-page (out-stream :title "Error" :return-code (condition-http-return-code condition) :content-class "error-page")
-                         (error-to-html out-stream condition)
-			 (when (eq (hunchentoot:request-method*) :post)
-			   <form method="post" class="error-retry-form">
-  			     (loop for (key . value) in (hunchentoot:post-parameters*)
-				do <input type="hidden" name=key value=value>)
-			     <input type="submit" value="Retry">
-			   </form>)))))))))
+			 <div class="error-container">
+                           (error-to-html out-stream condition)
+			   (when (eq (hunchentoot:request-method*) :post)
+			     <form method="post" class="error-retry-form">
+  			       (loop for (key . value) in (hunchentoot:post-parameters*)
+				  do <input type="hidden" name=key value=value>)
+			       <input type="submit" value="Retry">
+			       </form>)
+			 </div>))))))))
 
 (defmacro with-error-page (&body body)
   `(call-with-error-page (lambda () ,@body)))
