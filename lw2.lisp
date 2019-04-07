@@ -1064,7 +1064,8 @@ signaled condition to OUT-STREAM."
                                                (comments-index-fields)
                                                :with-total want-total))
           (get-recent-comments :with-total want-total))
-      (view-items-index recent-comments :title "Recent comments" :pagination (pagination-nav-bars :offset (or offset 0) :with-next (not want-total) :total (if want-total total))))))
+      (view-items-index recent-comments :title "Recent comments" :content-class "index-page recent-comments-page"
+			:pagination (pagination-nav-bars :offset (or offset 0) :with-next (not want-total) :total (if want-total total))))))
 
 (define-page view-user (:regex "^/users/(.*?)(?:$|\\?)|^/user" user-slug) (id
                                                                              (offset :type fixnum :default 0)
