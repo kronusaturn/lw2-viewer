@@ -22,6 +22,17 @@
 	--GW-comment-meta-author-font-weight: 700;
 }
 
+/*	Layout.
+	*/
+:root {
+	--GW-user-page-content-side-padding: 30px;
+}
+@media only screen and (max-width: 900px) {
+	:root {
+		--GW-user-page-content-side-padding: calc(100% / 30);
+	}
+}
+
 /*	Color scheme.
 	*/
 :root {
@@ -756,13 +767,6 @@ body {
 /*==========*/
 /* LISTINGS */
 /*==========*/
-
-.listings {
-	padding: 15px 40px 0 40px;
-}
-#content.user-page .listings {
-	padding: 0 30px;
-}
 
 h1.listing {
 	font-size: 1.875em;

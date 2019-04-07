@@ -11,30 +11,33 @@
 }
 
 /*=---------------------=*/
-/*= User's display name =*/
+/*= User’s display name =*/
 /*=---------------------=*/
 
 #content.user-page h1.page-main-heading {
-	margin: 0.25em 0 0 0;
+	margin: 0.25em 0 0 var(--GW-user-page-content-side-padding);
 	line-height: 1.1;
 	grid-row: 4;
 	align-self: end;
 }
 
 /*=--------------------=*/
-/*= User's karma total =*/
+/*= User’s karma total =*/
 /*=--------------------=*/
 
 #content.user-page .user-stats {
 	grid-row: 4;
+	margin: 0 var(--GW-user-page-content-side-padding) 0 0;
 	text-align: right;
 	align-self: end;
-
-	font-weight: var(--GW-user-page-karma-font-weight);
 }
 
 #content.user-page .user-stats .karma-type {
 	white-space: nowrap;
+}
+
+#content.user-page .user-stats .karma-total {
+	font-weight: var(--GW-user-page-karma-font-weight);
 }
 
 /*=----------------------=*/
@@ -43,6 +46,7 @@
 
 #content.user-page #comments-list-mode-selector {
 	grid-row: 5 / span 2;
+	margin: 0 0 0 var(--GW-user-page-content-side-padding);
 }
 #content.user-page #comments-list-mode-selector button {
 	display: block;

@@ -1949,7 +1949,7 @@ function childrenOfComment(commentID) {
 
 function injectCommentsListModeSelector() {
 	GWLog("injectCommentsListModeSelector");
-	if (query("#content > .comment-thread") == null) return;
+	if (query("#content > .listings > .comment-thread") == null) return;
 
 	let commentsListModeSelectorHTML = "<div id='comments-list-mode-selector'>"
 	+ `<button type='button' class='expanded' title='Expanded comments view' tabindex='-1'></button>`

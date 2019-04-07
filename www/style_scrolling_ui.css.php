@@ -689,7 +689,7 @@ a#inbox-indicator.new-messages:hover::before {
 	display: inline-block;
 	width: 1.5em;
 
-	font-weight: var(--GW-UI-font-weight-heavy);
+	font-weight: var(--GW-UI-font-weight-light);
 }
 #top-nav-bar .page-number-label {
 	position: absolute;
@@ -789,7 +789,7 @@ a#inbox-indicator.new-messages:hover::before {
 	flex-flow: row;
 }
 #content.user-page .sublevel-nav.sort {
-	margin: 1em 30px 0 0;
+	margin: 1em var(--GW-user-page-content-side-padding) 0 0;
 }
 
 .sublevel-nav.sort::before {

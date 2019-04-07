@@ -2,6 +2,13 @@
 /* LISTINGS */
 /************/
 
+.listings {
+	padding: 15px 40px 0 40px;
+}
+#content.user-page .listings {
+	padding: 0 var(--GW-user-page-content-side-padding);
+}
+
 h1.listing {
 	line-height: 1.15;
 	position: relative;

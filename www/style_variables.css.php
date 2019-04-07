@@ -56,6 +56,7 @@
 /*	Layout.
 	*/
 :root {
+	--GW-user-page-content-side-padding: 0;
 }
 
 /*	Color scheme.
@@ -77,20 +78,5 @@
 	--GW-button-background-color: transparent;
 	--GW-button-hover-background-color: transparent;
 	--GW-button-active-background-color: transparent;
-}
-
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
-/*	Layout.
-	*/
-@media only screen and (max-width: 900px) {
-	:root {
-	}
-}
-@media only screen and (max-width: 520px) {
-	:root {
-	}
 }
 
