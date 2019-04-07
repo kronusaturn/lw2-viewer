@@ -242,25 +242,25 @@ signaled condition to OUT-STREAM."
     (if items
 	(dolist (x items)
 	  (with-error-html-block (out-stream)
-	    (cond
-	      ((typep x 'condition)
+	    (ecase (identify-item x)
+	      (:condition
 	       (error-to-html out-stream x))
-	      ((assoc :message x)
+	      (:notification
 	       (format out-stream "<p>~A</p>" (cdr (assoc :message x))))
-	      ((string= (cdr (assoc :----typename x)) "Message")
+	      (:message
 	       (format out-stream "<ul class=\"comment-thread\"><li class=\"comment-item\">")
 	       (unwind-protect
 		    (conversation-message-to-html out-stream x)
 		 (format out-stream "</li></ul>")))
-	      ((string= (cdr (assoc :----typename x)) "Conversation")
+	      (:conversation
 	       (conversation-index-to-html out-stream x))
-	      ((assoc :comment-count x)
+	      (:post
 	       (post-headline-to-html x :need-auth need-auth :skip-section skip-section))
-	      (t
-	       (format out-stream "<ul class=\"comment-thread\"><li class=\"comment-item\" id=\"comment-~A\">" (cdr (assoc :--id x)))
-	       (unwind-protect
-		    (comment-to-html out-stream x :with-post-title t)
-		 (format out-stream "</li></ul>"))))))
+	      (:comment
+	       (comment-thread-to-html out-stream
+				       (lambda () (comment-item-to-html out-stream x :with-post-title t))))
+	      (:sequence
+	       (sequence-to-html x)))))
 	(format out-stream "<div class=\"listing-message\">~A</div>" empty-message))
   </div>)
 
