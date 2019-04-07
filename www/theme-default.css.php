@@ -1092,12 +1092,12 @@ h1.listing.own-post-listing {
 	margin: 0 0 1rem 0;
 	box-shadow: none;
 }
-h1.listing + .post-meta .post-section {
+#content.user-page h1.listing + .post-meta .post-section {
 	width: auto;
 	overflow: visible;
 	order: 5;
 }
-h1.listing + .post-meta .post-section::before {
+#content.user-page h1.listing + .post-meta .post-section::before {
 	position: static;
 }
 #content.user-page h1.listing + .post-meta .lw2-link {

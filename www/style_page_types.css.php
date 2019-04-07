@@ -42,8 +42,10 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
-	#content.user-page .user-stats .karma-type {
-		display: block;
+	#content.user-page .user-stats {
+		grid-row: 3;
+		justify-self: start;
+		margin: 0.5em 0 0 var(--GW-user-page-content-side-padding);
 	}
 }
 
@@ -326,23 +328,7 @@
 #content.about-page .contents {
 	margin-top: 0.25em;
 }
-#content.about-page .accesskey-table {
-	border-collapse: collapse;
-	margin: auto;
 
-	font-family: var(--GW-UI-font);
-}
-#content.about-page .accesskey-table th,
-#content.about-page .accesskey-table td {
-	padding: 2px 6px;
-}
-#content.about-page .accesskey-table td:first-child {
-	padding-right: 1.5em;
-}
-#content.about-page .accesskey-table td:last-child {
-	text-align: center;
-	font-family: var(--GW-monospaced-font);
-}
 #content.about-page h3:nth-of-type(n+2) {
 	clear: both;
 }
@@ -355,8 +341,18 @@
 	content: "Alignment Forum";
 	font-family: var(--GW-Alignment-Forum-logotype-font);
 	font-weight: var(--GW-Alignment-Forum-logotype-font-weight);
-	grid-row: 3;
-	font-size: 1.5rem;
-	margin: 0.375em 0 0 -0.375em;
+	grid-row: 4;
+	font-size: 1.75rem;
+	margin: 0 0 0 40px;
+}
+@media only screen and (max-width: 900px) {
+	#content.alignment-forum-index-page::after {
+		margin: 0 0 0 calc(100% / 45);
+	}
+}
+@media only screen and (max-width: 720px) {
+	#content.alignment-forum-index-page::after {
+		margin: 15px 0 0 calc(100% / 45);
+	}
 }
 

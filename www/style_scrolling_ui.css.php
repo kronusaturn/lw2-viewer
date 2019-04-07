@@ -630,27 +630,21 @@ a#inbox-indicator.new-messages:hover::before {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-@media only screen and (max-width: 520px) {
-	.page-toolbar {
-		display: flex;
-	}
+@media only screen and (max-width: 720px) {
 	.page-toolbar > * {
 		line-height: 1.15;
+	}
+	#content:not(.user-page) .page-toolbar > * {
 		padding: 8px 0 4px 0;
 	}
-	#content:not(.user-page) .page-toolbar {
-		flex-direction: column-reverse;
-		align-self: start;
+	#content.user-page .page-toolbar {
+		padding-left: 240px;
+		grid-row: 3 / span 2;
+		hyphens: auto;
 	}
 	#content.user-page .page-toolbar > * {
 		text-align: center;
 		margin-left: 1.5em;
-	}
-	#content.user-page .page-toolbar > *:not(.rss) {
-		flex-basis: 25%;
-	}
-	#content.user-page .page-toolbar > .rss {
-		flex-basis: 15%;
 	}
 	#content.user-page .page-toolbar * {
 		text-transform: uppercase;
@@ -661,6 +655,17 @@ a#inbox-indicator.new-messages:hover::before {
 		display: block;
 		padding: 0;
 		margin: 0 auto;
+	}
+}
+@media only screen and (max-width: 520px) {
+	#content:not(.user-page) .page-toolbar {
+		flex-direction: column-reverse;
+		align-self: start;
+	}
+}
+@media only screen and (max-width: 420px) {
+	#content.user-page .page-toolbar * {
+		font-size: 0.5rem;
 	}
 }
 

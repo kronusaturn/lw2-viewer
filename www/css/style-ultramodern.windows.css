@@ -2173,27 +2173,21 @@ a#inbox-indicator.new-messages:hover::before {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-@media only screen and (max-width: 520px) {
-	.page-toolbar {
-		display: flex;
-	}
+@media only screen and (max-width: 720px) {
 	.page-toolbar > * {
 		line-height: 1.15;
+	}
+	#content:not(.user-page) .page-toolbar > * {
 		padding: 8px 0 4px 0;
 	}
-	#content:not(.user-page) .page-toolbar {
-		flex-direction: column-reverse;
-		align-self: start;
+	#content.user-page .page-toolbar {
+		padding-left: 240px;
+		grid-row: 3 / span 2;
+		hyphens: auto;
 	}
 	#content.user-page .page-toolbar > * {
 		text-align: center;
 		margin-left: 1.5em;
-	}
-	#content.user-page .page-toolbar > *:not(.rss) {
-		flex-basis: 25%;
-	}
-	#content.user-page .page-toolbar > .rss {
-		flex-basis: 15%;
 	}
 	#content.user-page .page-toolbar * {
 		text-transform: uppercase;
@@ -2204,6 +2198,17 @@ a#inbox-indicator.new-messages:hover::before {
 		display: block;
 		padding: 0;
 		margin: 0 auto;
+	}
+}
+@media only screen and (max-width: 520px) {
+	#content:not(.user-page) .page-toolbar {
+		flex-direction: column-reverse;
+		align-self: start;
+	}
+}
+@media only screen and (max-width: 420px) {
+	#content.user-page .page-toolbar * {
+		font-size: 0.5rem;
 	}
 }
 
@@ -4938,8 +4943,10 @@ li {
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
-	#content.user-page .user-stats .karma-type {
-		display: block;
+	#content.user-page .user-stats {
+		grid-row: 3;
+		justify-self: start;
+		margin: 0.5em 0 0 var(--GW-user-page-content-side-padding);
 	}
 }
 
@@ -5222,23 +5229,7 @@ li {
 #content.about-page .contents {
 	margin-top: 0.25em;
 }
-#content.about-page .accesskey-table {
-	border-collapse: collapse;
-	margin: auto;
 
-	font-family: var(--GW-UI-font);
-}
-#content.about-page .accesskey-table th,
-#content.about-page .accesskey-table td {
-	padding: 2px 6px;
-}
-#content.about-page .accesskey-table td:first-child {
-	padding-right: 1.5em;
-}
-#content.about-page .accesskey-table td:last-child {
-	text-align: center;
-	font-family: var(--GW-monospaced-font);
-}
 #content.about-page h3:nth-of-type(n+2) {
 	clear: both;
 }
@@ -5251,9 +5242,19 @@ li {
 	content: "Alignment Forum";
 	font-family: var(--GW-Alignment-Forum-logotype-font);
 	font-weight: var(--GW-Alignment-Forum-logotype-font-weight);
-	grid-row: 3;
-	font-size: 1.5rem;
-	margin: 0.375em 0 0 -0.375em;
+	grid-row: 4;
+	font-size: 1.75rem;
+	margin: 0 0 0 40px;
+}
+@media only screen and (max-width: 900px) {
+	#content.alignment-forum-index-page::after {
+		margin: 0 0 0 calc(100% / 45);
+	}
+}
+@media only screen and (max-width: 720px) {
+	#content.alignment-forum-index-page::after {
+		margin: 15px 0 0 calc(100% / 45);
+	}
 }
 
 
