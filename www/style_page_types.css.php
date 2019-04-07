@@ -74,10 +74,6 @@ article {
 /*= All, Posts, Comments, Drafts, Conversations, Inbox =*/
 /*=----------------------------------------------------=*/
 
-#content.user-page .sublevel-nav {
-	margin-bottom: 0.5em;
-}
-
 /*=--------------=*/
 /*= User's posts =*/
 /*=--------------=*/

@@ -414,7 +414,7 @@ ul.comment-thread {
 .comments .comment-thread > li {
 	position: relative;
 }
-#content > #top-nav-bar + .comment-thread .comment-item {
+.listings > .comment-thread:first-child > .comment-item {
 	margin-top: 0;
 }
 

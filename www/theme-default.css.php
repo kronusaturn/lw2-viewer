@@ -760,6 +760,9 @@ body {
 .listings {
 	padding: 15px 40px 0 40px;
 }
+#content.user-page .listings {
+	padding: 0 30px;
+}
 
 h1.listing {
 	font-size: 1.875em;

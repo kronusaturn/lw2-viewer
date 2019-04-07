@@ -576,6 +576,8 @@ a#inbox-indicator.new-messages:hover::before {
 	margin: 0;
 	align-self: start;
 	justify-self: end;
+
+	font-weight: var(--GW-UI-font-weight-light);
 }
 
 /*=--------------------------=*/
@@ -686,6 +688,8 @@ a#inbox-indicator.new-messages:hover::before {
 	position: relative;
 	display: inline-block;
 	width: 1.5em;
+
+	font-weight: var(--GW-UI-font-weight-heavy);
 }
 #top-nav-bar .page-number-label {
 	position: absolute;
@@ -774,20 +778,18 @@ a#inbox-indicator.new-messages:hover::before {
 	position: relative;
 	font-size: 0.75em;
 	margin: 1em 0 0 20px;
-}
-#content > .sublevel-nav.sort {
 	grid-row: 5 / span 2;
 	justify-self: end;
 	align-self: start;
 	flex-flow: column;
 }
-#content.index-page > .sublevel-nav.sort {
+#content.index-page .sublevel-nav.sort {
 	grid-row: 3 / span 1;
 	justify-self: start;
 	flex-flow: row;
 }
-#content.user-page > .sublevel-nav.sort {
-	grid-row: 6;
+#content.user-page .sublevel-nav.sort {
+	margin: 1em 30px 0 0;
 }
 
 .sublevel-nav.sort::before {
@@ -800,12 +802,14 @@ a#inbox-indicator.new-messages:hover::before {
 
 	font-weight: var(--GW-UI-font-weight-heavy);
 }
+
 .sublevel-nav.sort .sublevel-item {
 	line-height: 1;
 	font-size: 0.875rem;
 	flex-basis: unset;
 
 	font-family: var(--GW-UI-font);
+	font-weight: var(--GW-UI-font-weight-light);
 }
 
 /*=----------------------------=*/
@@ -818,12 +822,7 @@ a#inbox-indicator.new-messages:hover::before {
 	}
 }
 @media only screen and (max-width: 720px) {
-	#content.index-page > .sublevel-nav.sort {
-		flex-flow: column;
-	}
-}
-@media only screen and (max-width: 520px) {
-	#content.index-page > .sublevel-nav.sort {
+	#content.index-page .sublevel-nav.sort {
 		flex-flow: column;
 	}
 }
