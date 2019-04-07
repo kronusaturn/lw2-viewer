@@ -2,14 +2,6 @@
 /* USER PAGES */
 /**************/
 
-/*=------------=*/
-/*= Pagination =*/
-/*=------------=*/
-
-#content.user-page > #top-nav-bar {
-	grid-row: 6;
-}
-
 /*=---------------------=*/
 /*= User’s display name =*/
 /*=---------------------=*/
@@ -38,30 +30,6 @@
 
 #content.user-page .user-stats .karma-total {
 	font-weight: var(--GW-user-page-karma-font-weight);
-}
-
-/*=----------------------=*/
-/*= Expanded vs. compact =*/
-/*=----------------------=*/
-
-#content.user-page #comments-list-mode-selector {
-	grid-row: 5 / span 2;
-	margin: 0 0 0 var(--GW-user-page-content-side-padding);
-}
-#content.user-page #comments-list-mode-selector button {
-	display: block;
-}
-
-/*=----------------------------------------------------=*/
-/*= All, Posts, Comments, Drafts, Conversations, Inbox =*/
-/*=----------------------------------------------------=*/
-
-/*=--------------=*/
-/*= User's posts =*/
-/*=--------------=*/
-
-#content.user-page h1.listing {
-	margin: 0.5em 0 0 0;
 }
 
 /*=----------------------------=*/

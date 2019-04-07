@@ -2219,6 +2219,10 @@ a#inbox-indicator.new-messages:hover::before {
 	display: flex;
 	justify-content: center;
 }
+#content.user-page > #top-nav-bar {
+	grid-row: 6;
+}
+
 #top-nav-bar a {
 	line-height: 1;
 }
@@ -3337,12 +3341,16 @@ a.comment-child-link::before {
 #comments-list-mode-selector,
 #content.index-page #comments-list-mode-selector,
 #content.user-page #comments-list-mode-selector {
-	padding-top: 6px;
 	position: unset;
 	z-index: 1;
 	justify-self: start;
 	align-self: start;
 }
+#content.user-page #comments-list-mode-selector {
+	grid-row: 5 / span 2;
+	margin: 6px 0 0 var(--GW-user-page-content-side-padding);
+}
+
 #comments-list-mode-selector button {
 	color: transparent;
 	width: 32px;
@@ -3353,6 +3361,9 @@ a.comment-child-link::before {
 	background-repeat: no-repeat;
 	background-size: 100%;
 	background-origin: content-box;
+}
+#content.user-page #comments-list-mode-selector button {
+	display: block;
 }
 #comments-list-mode-selector button:disabled {
 	cursor: auto;
@@ -4860,14 +4871,6 @@ li {
 /* USER PAGES */
 /**************/
 
-/*=------------=*/
-/*= Pagination =*/
-/*=------------=*/
-
-#content.user-page > #top-nav-bar {
-	grid-row: 6;
-}
-
 /*=---------------------=*/
 /*= User’s display name =*/
 /*=---------------------=*/
@@ -4896,30 +4899,6 @@ li {
 
 #content.user-page .user-stats .karma-total {
 	font-weight: var(--GW-user-page-karma-font-weight);
-}
-
-/*=----------------------=*/
-/*= Expanded vs. compact =*/
-/*=----------------------=*/
-
-#content.user-page #comments-list-mode-selector {
-	grid-row: 5 / span 2;
-	margin: 0 0 0 var(--GW-user-page-content-side-padding);
-}
-#content.user-page #comments-list-mode-selector button {
-	display: block;
-}
-
-/*=----------------------------------------------------=*/
-/*= All, Posts, Comments, Drafts, Conversations, Inbox =*/
-/*=----------------------------------------------------=*/
-
-/*=--------------=*/
-/*= User's posts =*/
-/*=--------------=*/
-
-#content.user-page h1.listing {
-	margin: 0.5em 0 0 0;
 }
 
 /*=----------------------------=*/

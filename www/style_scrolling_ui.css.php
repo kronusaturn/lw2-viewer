@@ -677,6 +677,10 @@ a#inbox-indicator.new-messages:hover::before {
 	display: flex;
 	justify-content: center;
 }
+#content.user-page > #top-nav-bar {
+	grid-row: 6;
+}
+
 #top-nav-bar a {
 	line-height: 1;
 }

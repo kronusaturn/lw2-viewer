@@ -815,12 +815,16 @@ a.comment-child-link::before {
 #comments-list-mode-selector,
 #content.index-page #comments-list-mode-selector,
 #content.user-page #comments-list-mode-selector {
-	padding-top: 6px;
 	position: unset;
 	z-index: 1;
 	justify-self: start;
 	align-self: start;
 }
+#content.user-page #comments-list-mode-selector {
+	grid-row: 5 / span 2;
+	margin: 6px 0 0 var(--GW-user-page-content-side-padding);
+}
+
 #comments-list-mode-selector button {
 	color: transparent;
 	width: 32px;
@@ -831,6 +835,9 @@ a.comment-child-link::before {
 	background-repeat: no-repeat;
 	background-size: 100%;
 	background-origin: content-box;
+}
+#content.user-page #comments-list-mode-selector button {
+	display: block;
 }
 #comments-list-mode-selector button:disabled {
 	cursor: auto;
