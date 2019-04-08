@@ -1490,19 +1490,14 @@ a.comment-parent-link:hover::before {
 /* COMMENTS COMPACT VIEW */
 /*=======================*/
 
-#content.compact .comment-thread .comment-item::after {
-	color: var(--GW-hyperlink-color);
-	background: linear-gradient(to right, transparent 0%, #fff 50%, #fff 100%);
-}
-
 @media only screen and (hover: hover) and (pointer: fine) {
-	#content.compact .comment-thread .comment-item:hover .comment,
-	#content.compact .comment-thread .comment-item.expanded .comment {
+	#content.compact .comment-item:hover .comment,
+	#content.compact .comment-item.expanded .comment {
 		background-color: #fff;
 		outline: 3px solid #00c;
 	}
-	#content.compact .comment-thread .comment-item:hover .comment::before,
-	#content.compact .comment-thread .comment-item.expanded .comment::before {
+	#content.compact .comment-item:hover .comment::before,
+	#content.compact .comment-item.expanded .comment::before {
 		background-color: #fff;
 		box-shadow: 
 			0 0  3px #fff,
@@ -1515,11 +1510,11 @@ a.comment-parent-link:hover::before {
 	}
 }
 @media not screen and (hover: hover) and (pointer: fine) {
-	#content.compact .comment-thread.expanded .comment-item .comment {
+	#content.compact .comment-thread.expanded .comment {
 		background-color: #fff;
 		outline: 3px solid #00c;
 	}
-	#content.compact .comment-thread.expanded .comment-item .comment::before {
+	#content.compact .comment-thread.expanded .comment::before {
 		background-color: #fff;
 		box-shadow: 
 			0 0  3px #fff,

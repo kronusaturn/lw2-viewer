@@ -843,7 +843,7 @@ a.comment-child-link::before {
 #content.compact .comment-thread .comment-body {
 	font-size: 1.0625rem;
 }
-#content.compact .comment-thread .comment-item,
+#content.compact .comment-item,
 #content.index-page .comment-item.ignored,
 #content.inbox-user-page .comment-item.ignored {
 	max-height: 61px;
@@ -851,13 +851,13 @@ a.comment-child-link::before {
 	overflow: hidden;
 	position: relative;
 }
-#content.conversation-page.compact .comment-thread .comment-item {
+#content.conversation-page.compact .comment-item {
 	max-height: 36px;
 }
-#content.compact .comment-thread .comment-item {
+#content.compact .comment-item {
 	pointer-events: none;
 }
-#content.compact .comment-thread .comment-item::after {
+#content.compact .comment-item::after {
 	content: "…";
 	position: absolute;
 	right: 0;
@@ -870,8 +870,8 @@ a.comment-child-link::before {
 	color: var(--GW-hyperlink-color);
 }
 @media only screen and (hover: hover) and (pointer: fine) {
-	#content.compact .listings:not(:focus-within) .comment-thread .comment-item:hover,
-	#content.compact .comment-thread .comment-item.expanded {
+	#content.compact:not(:focus-within) .comment-item:hover,
+	#content.compact .comment-item.expanded {
 		overflow: visible;
 		pointer-events: auto;
 		z-index: 10;
@@ -884,38 +884,32 @@ a.comment-child-link::before {
 		z-index: 10;
 	}
 }
-#content.compact .comment-thread .comment-item .comment-meta {
+#content.compact .comment-meta {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	padding: 2px 10px;
 }
-#content.compact .comment-thread .comment-item:hover .comment-meta {
+#content.compact .comment-item:hover .comment-meta {
 	white-space: unset;
 }
-#content.compact .comment-thread .comment-item .comment-meta a {
+#content.compact .comment-meta a {
 	pointer-events: auto;
-}
-#content.compact .comment-thread .comment-item .comment-meta .comment-post-title {
-	display: inline;
-}
-#content.compact .comment-thread .comment-item .comment-meta .karma + .comment-post-title {
-	margin-left: 0.75em;
 }
 @media only screen and (hover: hover) and (pointer: fine) {
 	#content.compact .comment-thread:last-of-type .comment-item:hover,
 	#content.compact .comment-thread:last-of-type .comment-item.expanded {
 		max-height: unset;
 	}
-	#content.compact .comment-thread .comment-item:hover .comment,
-	#content.compact .comment-thread .comment-item.expanded .comment {
+	#content.compact .comment-item:hover .comment,
+	#content.compact .comment-item.expanded .comment {
 		position: relative;
 		z-index: 1;
 		margin-bottom: 2em;
 		bottom: 0;
 	}
-	#content.compact .comment-thread .comment-item:hover .comment::before,
-	#content.compact .comment-thread .comment-item.expanded .comment::before{
+	#content.compact .comment-item:hover .comment::before,
+	#content.compact .comment-item.expanded .comment::before {
 		content: "";
 		position: absolute;
 		display: block;
@@ -934,13 +928,13 @@ a.comment-child-link::before {
 	#content.compact .comment-thread.expanded:last-of-type .comment-item {
 		max-height: unset;
 	}
-	#content.compact .comment-thread.expanded .comment-item .comment {
+	#content.compact .comment-thread.expanded .comment {
 		position: relative;
 		z-index: 1;
 		margin-bottom: 2em;
 		bottom: 0;
 	}
-	#content.compact .comment-thread.expanded .comment-item .comment::before {
+	#content.compact .comment-thread.expanded .comment::before {
 		content: "";
 		position: absolute;
 		display: block;
@@ -950,10 +944,10 @@ a.comment-child-link::before {
 		top: -10px;
 		left: -10px;
 	}
-	#content.compact .comment-thread.expanded:last-of-type .comment-item .comment {
+	#content.compact .comment-thread.expanded:last-of-type .comment {
 		margin: 0;
 	}
-	#content.compact .comment-thread.expanded .comment-item .comment::after {
+	#content.compact .comment-thread.expanded .comment::after {
 		content: "";
 		display: block;
 		position: fixed;
