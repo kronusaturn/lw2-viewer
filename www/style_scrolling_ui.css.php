@@ -224,6 +224,11 @@ EOT;
 		position: absolute;
 		visibility: visible;
 		padding: 0 0 1px 2px;
+		width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 	#nav-item-sequences .nav-inner::after {
 		visibility: visible;

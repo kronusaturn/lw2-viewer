@@ -432,7 +432,7 @@ h1.post-title {
 
 .comments {
 	max-width: 100%;
-	padding: 0 var(--GW-post-page-content-right-side-padding) 1px var(--GW-post-page-content-right-side-padding);
+	margin: 0 var(--GW-post-page-content-right-side-padding) 1px var(--GW-post-page-content-right-side-padding);
 	position: relative;
 }
 .comments::before {
@@ -1043,9 +1043,11 @@ a.comment-child-link::before {
 /* INDIVIDUAL COMMENT THREAD PAGES */
 /***********************************/
 
-.individual-thread-page > h1 {
+.individual-thread-page h1.post-title {
 	line-height: 1;
-	margin: 0.75em 0 3px 0;
+	margin: 0.75em var(--GW-post-page-content-right-side-padding) 3px var(--GW-post-page-content-right-side-padding);
+	text-align: left;
+	font-size: 2.25em;
 }
 .individual-thread-page .comments {
 	border: none;

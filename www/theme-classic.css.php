@@ -953,7 +953,7 @@ h1.post-title {
 /* COMMENTS */
 /*==========*/
 
-#comments::before {
+.comments::before {
 	border-top: 1px solid #000;
 	box-shadow: 0 3px 3px -4px #000 inset;
 }

@@ -756,7 +756,7 @@ h1.post-title {
 /* COMMENTS */
 /*==========*/
 
-#comments::before {
+.comments::before {
 	border-top: 2px solid #000;
 }
 #content > .comment-thread .comment-meta a.date:focus,
