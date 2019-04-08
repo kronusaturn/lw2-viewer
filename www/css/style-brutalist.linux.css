@@ -2410,6 +2410,9 @@ a#inbox-indicator.new-messages:hover::before {
 	grid-row: 6;
 	margin: 0 0 0 var(--GW-conversation-page-content-side-padding);
 }
+#content.search-results-page #comments-list-mode-selector {
+	margin: 1.5em var(--GW-content-side-padding) 0 var(--GW-content-side-padding);
+}
 
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
@@ -2621,6 +2624,9 @@ a#inbox-indicator.new-messages:hover::before {
 
 .listings {
 	padding: 15px var(--GW-content-side-padding) 0 var(--GW-content-side-padding);
+}
+#content.search-results-page .listings {
+	padding: 0 var(--GW-content-side-padding);
 }
 #content.user-page .listings {
 	padding: 0 var(--GW-user-page-content-side-padding);
@@ -3070,6 +3076,9 @@ ul.comment-thread {
 
 .comment-item {
 	margin: 2em 0 0 0;
+}
+#content.search-results-page .comment-item {
+	margin: 1em 0 0 0;
 }
 .comment-item .comment-item {
 	margin: 1em 8px 8px 16px;
@@ -5068,14 +5077,6 @@ li {
 	top: calc(100% + 2em);
 }
 
-/******************/
-/* SEARCH RESULTS */
-/******************/
-
-#content.search-results-page h1.listing {
-	font-size: 1.625em;
-}
-
 /**************/
 /* LOGIN PAGE */
 /**************/
@@ -5317,7 +5318,6 @@ li {
 		margin: 15px 0 0 calc(100% / 45);
 	}
 }
-
 
 /*%%%%%%%%%%%%%%%%%*/
 /*%% IMAGE FOCUS %%*/

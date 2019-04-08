@@ -864,6 +864,9 @@ a#inbox-indicator.new-messages:hover::before {
 	grid-row: 6;
 	margin: 0 0 0 var(--GW-conversation-page-content-side-padding);
 }
+#content.search-results-page #comments-list-mode-selector {
+	margin: 1.5em var(--GW-content-side-padding) 0 var(--GW-content-side-padding);
+}
 
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/

@@ -143,14 +143,6 @@
 	top: calc(100% + 2em);
 }
 
-/******************/
-/* SEARCH RESULTS */
-/******************/
-
-#content.search-results-page h1.listing {
-	font-size: 1.625em;
-}
-
 /**************/
 /* LOGIN PAGE */
 /**************/
@@ -392,4 +384,3 @@
 		margin: 15px 0 0 calc(100% / 45);
 	}
 }
-

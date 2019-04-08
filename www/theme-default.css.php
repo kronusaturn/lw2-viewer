@@ -1048,18 +1048,24 @@ h1.listing + .post-meta .read-time.word-count::after {
 /*============*/
 /* USER PAGES */
 /*============*/
+/*======================*/
+/* SEARCH RESULTS PAGES */
+/*======================*/
 
 #content.user-page h1.page-main-heading {
 	border-bottom: 1px solid #ccc;
 }
 
 #content.user-page h1.listing,
-#content.user-page h1.listing + .post-meta {
+#content.user-page h1.listing + .post-meta,
+#content.search-results-page h1.listing,
+#content.search-results-page h1.listing + .post-meta {
 	background-color: #eee;
 	border-style: solid;
 	border-color: #ccc;
 }
-#content.user-page h1.listing {
+#content.user-page h1.listing,
+#content.search-results-page h1.listing {
 	padding: 3px 6px 0 6px;
 	border-width: 1px 1px 0 1px;
 	margin: 1rem 0 0 0;
@@ -1068,7 +1074,8 @@ h1.listing + .post-meta .read-time.word-count::after {
 #content.user-page.all-user-page h1.listing {
 	margin: 2rem 0 0 0;
 }
-#content.user-page.all-user-page.compact h1.listing {
+#content.user-page.all-user-page.compact h1.listing,
+#content.search-results-page.compact h1.listing {
 	margin: 1rem 0 0 0;
 }
 #content.own-user-page h1.listing,
@@ -1077,29 +1084,36 @@ h1.listing.own-post-listing {
 }
 @media only screen and (hover: hover) and (pointer: fine) {
 	#content.user-page h1.listing a:hover,
-	#content.user-page h1.listing a:focus {
+	#content.user-page h1.listing a:focus,
+	#content.search-results-page h1.listing a:hover,
+	#content.search-results-page h1.listing a:focus {
 		background-color: #eee;
 	}
-	#content.user-page h1.listing:focus-within::before {
+	#content.user-page h1.listing:focus-within::before,
+	#content.search-results-page h1.listing:focus-within::before {
 		left: -0.625em;
 	}
 }
-#content.user-page h1.listing + .post-meta {
+#content.user-page h1.listing + .post-meta,
+#content.search-results-page h1.listing + .post-meta {
 	padding-left: 8px;
 	padding-top: 3px;
 	border-width: 0 1px 1px 1px;
 	margin: 0 0 1rem 0;
 	box-shadow: none;
 }
-#content.user-page h1.listing + .post-meta .post-section {
+#content.user-page h1.listing + .post-meta .post-section,
+#content.search-results-page h1.listing + .post-meta .post-section {
 	width: auto;
 	overflow: visible;
 	order: 5;
 }
-#content.user-page h1.listing + .post-meta .post-section::before {
+#content.user-page h1.listing + .post-meta .post-section::before,
+#content.search-results-page h1.listing + .post-meta .post-section::before {
 	position: static;
 }
-#content.user-page h1.listing + .post-meta .lw2-link {
+#content.user-page h1.listing + .post-meta .lw2-link,
+#content.search-results-page h1.listing + .post-meta .lw2-link {
 	right: 6px;
 }
 

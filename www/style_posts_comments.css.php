@@ -5,6 +5,9 @@
 .listings {
 	padding: 15px var(--GW-content-side-padding) 0 var(--GW-content-side-padding);
 }
+#content.search-results-page .listings {
+	padding: 0 var(--GW-content-side-padding);
+}
 #content.user-page .listings {
 	padding: 0 var(--GW-user-page-content-side-padding);
 }
@@ -453,6 +456,9 @@ ul.comment-thread {
 
 .comment-item {
 	margin: 2em 0 0 0;
+}
+#content.search-results-page .comment-item {
+	margin: 1em 0 0 0;
 }
 .comment-item .comment-item {
 	margin: 1em 8px 8px 16px;
