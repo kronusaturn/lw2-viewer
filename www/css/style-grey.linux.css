@@ -159,7 +159,6 @@ body.no-scroll {
 @media only screen and (max-width: 960px) and (min-width: 901px) {
 	body {
 		overflow-x: hidden;
-		margin: 0 -5px;
 	}
 }
 
@@ -298,22 +297,23 @@ a {
 	#comments-sort-mode-selector {
 		display: none;
 	}
-	.comment-minimize-button {
-		display: none;
-	}
 	.post-meta .qualified-linking,
 	.post-meta .lw2-link {
 		display: none;
 	}
 	.comment-meta .permalink,
 	.comment-meta .lw2-link,
-	.comment-meta .comment-parent-link {
+	.comment-meta .comment-parent-link,
+	.comment-meta .comment-minimize-button {
+		display: none;
+	}
+	.vote {
 		display: none;
 	}
 	.new-comment::before {
 		display: none;
 	}
-	#content::before {
+	body #content::before {
 		box-shadow: none;
 	}
 }
@@ -2680,7 +2680,6 @@ a#inbox-indicator.new-messages:hover::before {
 	padding: 0 var(--GW-sequence-page-content-right-side-padding) 15px var(--GW-sequence-page-content-left-side-padding);
 }
 
-
 /************/
 /* LISTINGS */
 /************/
@@ -2789,10 +2788,6 @@ h1.listing .edit-post-link {
 	font-size: 1.375em;
 }
 
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
 /*********************/
 /* LISTING POST-META */
 /*********************/
@@ -2807,6 +2802,7 @@ h1.listing + .post-meta {
 
 h1.listing + .post-meta .post-section {
 	width: 0;
+	margin: 0;
 	overflow: hidden;
 }
 h1.listing + .post-meta .post-section::before {
@@ -4371,7 +4367,6 @@ button.guiedit {
 /*=--------------------------=*/
 
 .post-meta .qualified-linking {
-	margin: 0;
 	position: relative;
 }
 .post-meta .qualified-linking input[type='checkbox'] {
@@ -4437,6 +4432,7 @@ button.guiedit {
 	display: block;
 	padding: 0 6px;
 	margin: 4px;
+	text-align: center;
 }
 .post-meta .qualified-linking-toolbar a::selection {
 	background-color: transparent;

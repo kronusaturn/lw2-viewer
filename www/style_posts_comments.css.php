@@ -29,7 +29,6 @@
 	padding: 0 var(--GW-sequence-page-content-right-side-padding) 15px var(--GW-sequence-page-content-left-side-padding);
 }
 
-
 /************/
 /* LISTINGS */
 /************/
@@ -138,10 +137,6 @@ h1.listing .edit-post-link {
 	font-size: 1.375em;
 }
 
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
 /*********************/
 /* LISTING POST-META */
 /*********************/
@@ -156,6 +151,7 @@ h1.listing + .post-meta {
 
 h1.listing + .post-meta .post-section {
 	width: 0;
+	margin: 0;
 	overflow: hidden;
 }
 h1.listing + .post-meta .post-section::before {
@@ -1711,7 +1707,6 @@ button.guiedit {
 /*=--------------------------=*/
 
 .post-meta .qualified-linking {
-	margin: 0;
 	position: relative;
 }
 .post-meta .qualified-linking input[type='checkbox'] {
@@ -1777,6 +1772,7 @@ button.guiedit {
 	display: block;
 	padding: 0 6px;
 	margin: 4px;
+	text-align: center;
 }
 .post-meta .qualified-linking-toolbar a::selection {
 	background-color: transparent;

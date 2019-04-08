@@ -41,7 +41,6 @@ body.no-scroll {
 @media only screen and (max-width: 960px) and (min-width: 901px) {
 	body {
 		overflow-x: hidden;
-		margin: 0 -5px;
 	}
 }
 
@@ -180,22 +179,23 @@ a {
 	#comments-sort-mode-selector {
 		display: none;
 	}
-	.comment-minimize-button {
-		display: none;
-	}
 	.post-meta .qualified-linking,
 	.post-meta .lw2-link {
 		display: none;
 	}
 	.comment-meta .permalink,
 	.comment-meta .lw2-link,
-	.comment-meta .comment-parent-link {
+	.comment-meta .comment-parent-link,
+	.comment-meta .comment-minimize-button {
+		display: none;
+	}
+	.vote {
 		display: none;
 	}
 	.new-comment::before {
 		display: none;
 	}
-	#content::before {
+	body #content::before {
 		box-shadow: none;
 	}
 }
