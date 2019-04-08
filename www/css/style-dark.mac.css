@@ -5621,7 +5621,7 @@ li {
 		--GW-recent-comments-page-content-side-padding: calc(100% / 30);
 		--GW-conversation-page-content-side-padding: calc(100% / 30);
 		--GW-post-page-content-side-padding: calc(100% / 30);
-		--GW-post-side-padding: 0;
+		--GW-post-side-padding: 0px;
 	}
 }
 
