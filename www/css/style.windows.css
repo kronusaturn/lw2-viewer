@@ -3180,12 +3180,8 @@ ul.comment-thread {
 	text-overflow: ellipsis;
 	line-height: 1.3;
 }
-.conversation-page .comment-meta .comment-post-title {
-	margin: 0;
-	flex-basis: unset;
-	flex: 1 0 auto;
-	text-align: right;
-	display: none;	/* Not sure if we need to display this... */
+#content.conversation-page .comment-meta .comment-post-title {
+	display: none;
 }
 .comment-item .author:not(.redacted).original-poster::after {
 	content: "\2004(OP)";
@@ -3471,6 +3467,9 @@ a.comment-child-link::before {
 	margin-top: 1em;
 	overflow: hidden;
 	position: relative;
+}
+#content.conversation-page.compact .comment-thread .comment-item {
+	max-height: 36px;
 }
 #content.compact .comment-thread .comment-item {
 	pointer-events: none;
@@ -5030,7 +5029,7 @@ li {
 
 #content.conversation-page .conversation-participants ul,
 #content.conversation-page .conversation-participants li {
-	display: inline-block;
+	display: inline;
 	margin: 0;
 	padding: 0;
 }
@@ -6665,20 +6664,6 @@ h1.listing.own-post-listing {
 
 #content.user-page.conversations-user-page h1.listing + .post-meta {
 	padding: 5px 6px 5px 8px;
-}
-
-/*===============*/
-/* CONVERSATIONS */
-/*===============*/
-
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
-@media only screen and (max-width: 520px) {
-	#content.conversation-page .textarea-container:focus-within::after {
-		background-color: #fff;
-	}
 }
 
 /*============*/

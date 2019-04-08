@@ -98,7 +98,7 @@
 
 #content.conversation-page .conversation-participants ul,
 #content.conversation-page .conversation-participants li {
-	display: inline-block;
+	display: inline;
 	margin: 0;
 	padding: 0;
 }

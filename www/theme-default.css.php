@@ -1111,20 +1111,6 @@ h1.listing.own-post-listing {
 	padding: 5px 6px 5px 8px;
 }
 
-/*===============*/
-/* CONVERSATIONS */
-/*===============*/
-
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
-@media only screen and (max-width: 520px) {
-	#content.conversation-page .textarea-container:focus-within::after {
-		background-color: #fff;
-	}
-}
-
 /*============*/
 /* LOGIN PAGE */
 /*============*/
