@@ -682,8 +682,11 @@ a#inbox-indicator.new-messages:hover::before {
 	display: flex;
 	justify-content: center;
 }
-#content.user-page > #top-nav-bar {
+#content.user-page #top-nav-bar {
 	grid-row: 6;
+}
+#content.archive-page #top-nav-bar {
+	grid-row: 4;
 }
 
 #top-nav-bar a {
@@ -737,7 +740,7 @@ a#inbox-indicator.new-messages:hover::before {
 	align-self: start;
 }
 #content.user-page .sublevel-nav:not(.sort) {
-	margin: 1em var(--GW-user-page-content-side-padding) 0 var(--GW-user-page-content-side-padding);
+	margin: 1em var(--GW-user-page-content-right-side-padding) 0 var(--GW-user-page-content-left-side-padding);
 }
 #content.sequences-page .sublevel-nav:not(.sort) {
 	grid-row: unset;
@@ -793,7 +796,7 @@ a#inbox-indicator.new-messages:hover::before {
 	flex-flow: row;
 }
 #content.user-page .sublevel-nav.sort {
-	margin: 1em var(--GW-user-page-content-side-padding) 1em 0;
+	margin: 1em var(--GW-user-page-content-right-side-padding) 1em 0;
 }
 
 .sublevel-nav.sort::before {
@@ -852,20 +855,20 @@ a#inbox-indicator.new-messages:hover::before {
 	display: flex;
 }
 #content.recent-comments-page #comments-list-mode-selector {
-	margin: 0 0 0 var(--GW-recent-comments-page-content-side-padding);
+	margin: 0 0 0 var(--GW-recent-comments-page-content-left-side-padding);
 }
 #content.user-page #comments-list-mode-selector {
 	grid-row: 5 / span 2;
-	margin: 1em 0 1em var(--GW-user-page-content-side-padding);
+	margin: 1em 0 1em var(--GW-user-page-content-left-side-padding);
 	flex-flow: column;
 	align-self: start;
 }
 #content.conversation-page #comments-list-mode-selector {
 	grid-row: 6;
-	margin: 0 0 0 var(--GW-conversation-page-content-side-padding);
+	margin: 0 0 0 var(--GW-conversation-page-content-left-side-padding);
 }
 #content.search-results-page #comments-list-mode-selector {
-	margin: 1.5em var(--GW-content-side-padding) 0 var(--GW-content-side-padding);
+	margin: 1.5em var(--GW-content-right-side-padding) 0 var(--GW-content-left-side-padding);
 }
 
 /*=----------------------------=*/
@@ -926,6 +929,7 @@ a#inbox-indicator.new-messages:hover::before {
 
 .comments > .sublevel-nav.sort {
 	margin: 1em auto 0 auto;
+	flex-flow: row;
 }
 <?php fit_content(".comments > .sublevel-nav.sort"); ?>
 
@@ -977,7 +981,7 @@ a#inbox-indicator.new-messages:hover::before {
 /************/
 
 .archive-nav {
-	margin: 1.25em 0.5em 0 0.5em;
+	margin: 1.5em var(--GW-content-right-side-padding) 0 var(--GW-content-left-side-padding);
 	padding: 0.25em;
 }
 .archive-nav > * {

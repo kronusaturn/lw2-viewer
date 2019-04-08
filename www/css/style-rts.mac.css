@@ -62,10 +62,24 @@
 	*/
 :root {
 	--GW-content-side-padding: 0;
+	--GW-content-left-side-padding: var(--GW-content-side-padding);
+	--GW-content-right-side-padding: var(--GW-content-side-padding);
+
 	--GW-sequence-page-content-side-padding: 0;
+	--GW-sequence-page-content-left-side-padding: var(--GW-sequence-page-content-side-padding);
+	--GW-sequence-page-content-right-side-padding: var(--GW-sequence-page-content-side-padding);
+
 	--GW-user-page-content-side-padding: 0;
+	--GW-user-page-content-left-side-padding: var(--GW-user-page-content-side-padding);
+	--GW-user-page-content-right-side-padding: var(--GW-user-page-content-right-side-padding);
+
 	--GW-recent-comments-page-content-side-padding: 0;
+	--GW-recent-comments-page-content-left-side-padding: var(--GW-recent-comments-page-content-left-side-padding);
+	--GW-recent-comments-page-content-right-side-padding: var(--GW-recent-comments-page-content-right-side-padding);
+
 	--GW-conversation-page-content-side-padding: 0;
+	--GW-conversation-page-content-left-side-padding: var(--GW-conversation-page-content-side-padding);
+	--GW-conversation-page-content-right-side-padding: var(--GW-conversation-page-content-right-side-padding);
 }
 
 /*	Color scheme.
@@ -2228,8 +2242,11 @@ a#inbox-indicator.new-messages:hover::before {
 	display: flex;
 	justify-content: center;
 }
-#content.user-page > #top-nav-bar {
+#content.user-page #top-nav-bar {
 	grid-row: 6;
+}
+#content.archive-page #top-nav-bar {
+	grid-row: 4;
 }
 
 #top-nav-bar a {
@@ -2283,7 +2300,7 @@ a#inbox-indicator.new-messages:hover::before {
 	align-self: start;
 }
 #content.user-page .sublevel-nav:not(.sort) {
-	margin: 1em var(--GW-user-page-content-side-padding) 0 var(--GW-user-page-content-side-padding);
+	margin: 1em var(--GW-user-page-content-right-side-padding) 0 var(--GW-user-page-content-left-side-padding);
 }
 #content.sequences-page .sublevel-nav:not(.sort) {
 	grid-row: unset;
@@ -2339,7 +2356,7 @@ a#inbox-indicator.new-messages:hover::before {
 	flex-flow: row;
 }
 #content.user-page .sublevel-nav.sort {
-	margin: 1em var(--GW-user-page-content-side-padding) 1em 0;
+	margin: 1em var(--GW-user-page-content-right-side-padding) 1em 0;
 }
 
 .sublevel-nav.sort::before {
@@ -2398,20 +2415,20 @@ a#inbox-indicator.new-messages:hover::before {
 	display: flex;
 }
 #content.recent-comments-page #comments-list-mode-selector {
-	margin: 0 0 0 var(--GW-recent-comments-page-content-side-padding);
+	margin: 0 0 0 var(--GW-recent-comments-page-content-left-side-padding);
 }
 #content.user-page #comments-list-mode-selector {
 	grid-row: 5 / span 2;
-	margin: 1em 0 1em var(--GW-user-page-content-side-padding);
+	margin: 1em 0 1em var(--GW-user-page-content-left-side-padding);
 	flex-flow: column;
 	align-self: start;
 }
 #content.conversation-page #comments-list-mode-selector {
 	grid-row: 6;
-	margin: 0 0 0 var(--GW-conversation-page-content-side-padding);
+	margin: 0 0 0 var(--GW-conversation-page-content-left-side-padding);
 }
 #content.search-results-page #comments-list-mode-selector {
-	margin: 1.5em var(--GW-content-side-padding) 0 var(--GW-content-side-padding);
+	margin: 1.5em var(--GW-content-right-side-padding) 0 var(--GW-content-left-side-padding);
 }
 
 /*=----------------------------=*/
@@ -2472,6 +2489,7 @@ a#inbox-indicator.new-messages:hover::before {
 
 .comments > .sublevel-nav.sort {
 	margin: 1em auto 0 auto;
+	flex-flow: row;
 }
 @supports (width: -moz-fit-content) {
 	.comments > .sublevel-nav.sort {
@@ -2532,7 +2550,7 @@ a#inbox-indicator.new-messages:hover::before {
 /************/
 
 .archive-nav {
-	margin: 1.25em 0.5em 0 0.5em;
+	margin: 1.5em var(--GW-content-right-side-padding) 0 var(--GW-content-left-side-padding);
 	padding: 0.25em;
 }
 .archive-nav > * {
@@ -2623,19 +2641,22 @@ a#inbox-indicator.new-messages:hover::before {
 /******************/
 
 .listings {
-	padding: 15px var(--GW-content-side-padding) 0 var(--GW-content-side-padding);
+	padding: 15px var(--GW-content-right-side-padding) 0 var(--GW-content-left-side-padding);
+}
+#content.archive-page .listings {
+	padding: 0 var(--GW-content-right-side-padding) 0 var(--GW-content-left-side-padding);
 }
 #content.search-results-page .listings {
-	padding: 0 var(--GW-content-side-padding);
+	padding: 0 var(--GW-content-right-side-padding) 0 var(--GW-content-left-side-padding);
 }
 #content.user-page .listings {
-	padding: 0 var(--GW-user-page-content-side-padding);
+	padding: 0 var(--GW-user-page-content-right-side-padding) 0 var(--GW-user-page-content-left-side-padding);
 }
 #content.recent-comments-page .listings {
-	padding: 0 var(--GW-recent-comments-page-content-side-padding);
+	padding: 0 var(--GW-recent-comments-page-content-right-side-padding) 0 var(--GW-recent-comments-page-content-left-side-padding);
 }
 #content.conversation-page .listings {
-	padding: 0 var(--GW-conversation-page-content-side-padding) 0 var(--GW-conversation-page-content-side-padding);
+	padding: 0 var(--GW-conversation-page-content-right-side-padding) 0 var(--GW-conversation-page-content-left-side-padding);
 }
 
 /*=----------------=*/
@@ -2643,7 +2664,7 @@ a#inbox-indicator.new-messages:hover::before {
 /*=----------------=*/
 
 #content.sequence-page article {
-	padding: 0 var(--GW-sequence-page-content-side-padding) 15px var(--GW-sequence-page-content-side-padding);
+	padding: 0 var(--GW-sequence-page-content-right-side-padding) 15px var(--GW-sequence-page-content-left-side-padding);
 }
 
 
@@ -4941,7 +4962,7 @@ li {
 /*=---------------------=*/
 
 #content.user-page h1.page-main-heading {
-	margin: 0.25em var(--GW-user-page-content-side-padding) 0 var(--GW-user-page-content-side-padding);
+	margin: 0.25em var(--GW-user-page-content-right-side-padding) 0 var(--GW-user-page-content-left-side-padding);
 	line-height: 1.1;
 	grid-row: 4;
 	align-self: end;
@@ -4953,7 +4974,7 @@ li {
 
 #content.user-page .user-stats {
 	grid-row: 4;
-	margin: 0 var(--GW-user-page-content-side-padding) 0 0;
+	margin: 0 var(--GW-user-page-content-right-side-padding) 0 0;
 	text-align: right;
 	align-self: end;
 }
@@ -4979,7 +5000,7 @@ li {
 	#content.user-page .user-stats {
 		grid-row: 3;
 		justify-self: start;
-		margin: 0.5em 0 0 var(--GW-user-page-content-side-padding);
+		margin: 0.5em 0 0 var(--GW-user-page-content-left-side-padding);
 	}
 }
 
@@ -5026,7 +5047,7 @@ li {
 
 #content.conversation-page .conversation-participants {
 	text-align: center;
-	padding: 0 var(--GW-conversation-page-content-side-padding);
+	padding: 0 var(--GW-conversation-page-content-right-side-padding) 0 var(--GW-conversation-page-content-left-side-padding);
 	margin: 0 0 0.5em 0;
 }
 
@@ -5048,7 +5069,7 @@ li {
 /*=-------------------------=*/
 
 #content.conversation-page .posting-controls {
-	padding: 1em var(--GW-conversation-page-content-side-padding) 1em var(--GW-conversation-page-content-side-padding);
+	padding: 1em var(--GW-conversation-page-content-right-side-padding) 1em var(--GW-conversation-page-content-left-side-padding);
 }
 #content.conversation-page .post-meta-fields {
 	overflow: auto;

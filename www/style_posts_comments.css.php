@@ -3,19 +3,22 @@
 /******************/
 
 .listings {
-	padding: 15px var(--GW-content-side-padding) 0 var(--GW-content-side-padding);
+	padding: 15px var(--GW-content-right-side-padding) 0 var(--GW-content-left-side-padding);
+}
+#content.archive-page .listings {
+	padding: 0 var(--GW-content-right-side-padding) 0 var(--GW-content-left-side-padding);
 }
 #content.search-results-page .listings {
-	padding: 0 var(--GW-content-side-padding);
+	padding: 0 var(--GW-content-right-side-padding) 0 var(--GW-content-left-side-padding);
 }
 #content.user-page .listings {
-	padding: 0 var(--GW-user-page-content-side-padding);
+	padding: 0 var(--GW-user-page-content-right-side-padding) 0 var(--GW-user-page-content-left-side-padding);
 }
 #content.recent-comments-page .listings {
-	padding: 0 var(--GW-recent-comments-page-content-side-padding);
+	padding: 0 var(--GW-recent-comments-page-content-right-side-padding) 0 var(--GW-recent-comments-page-content-left-side-padding);
 }
 #content.conversation-page .listings {
-	padding: 0 var(--GW-conversation-page-content-side-padding) 0 var(--GW-conversation-page-content-side-padding);
+	padding: 0 var(--GW-conversation-page-content-right-side-padding) 0 var(--GW-conversation-page-content-left-side-padding);
 }
 
 /*=----------------=*/
@@ -23,7 +26,7 @@
 /*=----------------=*/
 
 #content.sequence-page article {
-	padding: 0 var(--GW-sequence-page-content-side-padding) 15px var(--GW-sequence-page-content-side-padding);
+	padding: 0 var(--GW-sequence-page-content-right-side-padding) 15px var(--GW-sequence-page-content-left-side-padding);
 }
 
 

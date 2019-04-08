@@ -7,7 +7,7 @@
 /*=---------------------=*/
 
 #content.user-page h1.page-main-heading {
-	margin: 0.25em var(--GW-user-page-content-side-padding) 0 var(--GW-user-page-content-side-padding);
+	margin: 0.25em var(--GW-user-page-content-right-side-padding) 0 var(--GW-user-page-content-left-side-padding);
 	line-height: 1.1;
 	grid-row: 4;
 	align-self: end;
@@ -19,7 +19,7 @@
 
 #content.user-page .user-stats {
 	grid-row: 4;
-	margin: 0 var(--GW-user-page-content-side-padding) 0 0;
+	margin: 0 var(--GW-user-page-content-right-side-padding) 0 0;
 	text-align: right;
 	align-self: end;
 }
@@ -45,7 +45,7 @@
 	#content.user-page .user-stats {
 		grid-row: 3;
 		justify-self: start;
-		margin: 0.5em 0 0 var(--GW-user-page-content-side-padding);
+		margin: 0.5em 0 0 var(--GW-user-page-content-left-side-padding);
 	}
 }
 
@@ -92,7 +92,7 @@
 
 #content.conversation-page .conversation-participants {
 	text-align: center;
-	padding: 0 var(--GW-conversation-page-content-side-padding);
+	padding: 0 var(--GW-conversation-page-content-right-side-padding) 0 var(--GW-conversation-page-content-left-side-padding);
 	margin: 0 0 0.5em 0;
 }
 
@@ -114,7 +114,7 @@
 /*=-------------------------=*/
 
 #content.conversation-page .posting-controls {
-	padding: 1em var(--GW-conversation-page-content-side-padding) 1em var(--GW-conversation-page-content-side-padding);
+	padding: 1em var(--GW-conversation-page-content-right-side-padding) 1em var(--GW-conversation-page-content-left-side-padding);
 }
 #content.conversation-page .post-meta-fields {
 	overflow: auto;

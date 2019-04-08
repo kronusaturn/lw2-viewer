@@ -57,10 +57,24 @@
 	*/
 :root {
 	--GW-content-side-padding: 0;
+	--GW-content-left-side-padding: var(--GW-content-side-padding);
+	--GW-content-right-side-padding: var(--GW-content-side-padding);
+
 	--GW-sequence-page-content-side-padding: 0;
+	--GW-sequence-page-content-left-side-padding: var(--GW-sequence-page-content-side-padding);
+	--GW-sequence-page-content-right-side-padding: var(--GW-sequence-page-content-side-padding);
+
 	--GW-user-page-content-side-padding: 0;
+	--GW-user-page-content-left-side-padding: var(--GW-user-page-content-side-padding);
+	--GW-user-page-content-right-side-padding: var(--GW-user-page-content-right-side-padding);
+
 	--GW-recent-comments-page-content-side-padding: 0;
+	--GW-recent-comments-page-content-left-side-padding: var(--GW-recent-comments-page-content-left-side-padding);
+	--GW-recent-comments-page-content-right-side-padding: var(--GW-recent-comments-page-content-right-side-padding);
+
 	--GW-conversation-page-content-side-padding: 0;
+	--GW-conversation-page-content-left-side-padding: var(--GW-conversation-page-content-side-padding);
+	--GW-conversation-page-content-right-side-padding: var(--GW-conversation-page-content-right-side-padding);
 }
 
 /*	Color scheme.
