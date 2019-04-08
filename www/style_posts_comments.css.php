@@ -207,18 +207,21 @@ h1.listing + .post-meta .read-time {
 	flex-flow: row wrap;
 	justify-content: center;
 }
+
+.post-meta a,
+.post-meta a:visited {
+	color: var(--GW-hyperlink-color);
+}
+
 .post-meta .lw2-link {
 	opacity: 0.5;
 	order: 1;
 }
 .post-meta .post-section {
 	order: -1;
-	margin: 0;
-	visibility: hidden;
 }
 .post-meta .post-section::before,
 .comment-meta .alignment-forum {
-	visibility: visible;
 	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
 }
@@ -333,10 +336,9 @@ h1.listing + .post-meta .read-time {
 		display: none;
 	}
 	.post-meta .comment-count::before {
-		content: "\F086";
+		content: "\F086\2004";
 		font-family: var(--GW-Font-Awesome);
 		font-size: 0.875em;
-		margin: 0 0.25em 0 0;
 		font-weight: 400;
 	}
 }
@@ -371,15 +373,10 @@ h1.post-title {
 	font-weight: var(--GW-post-title-font-weight);
 }
 .post .post-meta {
-	text-align: center;
 	position: relative;
 	z-index: 2;
 }
-.post .top-post-meta:last-child {
-	margin-bottom: 40px;
-}
 .post .bottom-post-meta {
-	margin: 0;
 	padding: 20px 0 22px 0;
 }
 
@@ -387,12 +384,6 @@ h1.post-title {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-@media only screen and (max-width: 900px) {
-	.post-body,
-	h1.post-title {
-		padding: 0 6px;
-	}
-}
 @media only screen and (max-width: 520px) {
 	.post-body {
 		font-size: 1.2rem;
