@@ -79,6 +79,10 @@
 	--GW-post-page-content-side-padding: 0;
 	--GW-post-page-content-left-side-padding: var(--GW-post-page-content-side-padding);
 	--GW-post-page-content-right-side-padding: var(--GW-post-page-content-side-padding);
+
+	--GW-post-side-padding: 0;
+	--GW-post-left-side-padding: var(--GW-post-side-padding);
+	--GW-post-right-side-padding: var(--GW-post-side-padding);
 }
 
 /*	Color scheme.
