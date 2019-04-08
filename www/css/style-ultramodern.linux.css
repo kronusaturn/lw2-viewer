@@ -71,15 +71,19 @@
 
 	--GW-user-page-content-side-padding: 0;
 	--GW-user-page-content-left-side-padding: var(--GW-user-page-content-side-padding);
-	--GW-user-page-content-right-side-padding: var(--GW-user-page-content-right-side-padding);
+	--GW-user-page-content-right-side-padding: var(--GW-user-page-content-side-padding);
 
 	--GW-recent-comments-page-content-side-padding: 0;
-	--GW-recent-comments-page-content-left-side-padding: var(--GW-recent-comments-page-content-left-side-padding);
-	--GW-recent-comments-page-content-right-side-padding: var(--GW-recent-comments-page-content-right-side-padding);
+	--GW-recent-comments-page-content-left-side-padding: var(--GW-recent-comments-page-content-side-padding);
+	--GW-recent-comments-page-content-right-side-padding: var(--GW-recent-comments-page-content-side-padding);
 
 	--GW-conversation-page-content-side-padding: 0;
 	--GW-conversation-page-content-left-side-padding: var(--GW-conversation-page-content-side-padding);
-	--GW-conversation-page-content-right-side-padding: var(--GW-conversation-page-content-right-side-padding);
+	--GW-conversation-page-content-right-side-padding: var(--GW-conversation-page-content-side-padding);
+
+	--GW-post-page-content-side-padding: 0;
+	--GW-post-page-content-left-side-padding: var(--GW-post-page-content-side-padding);
+	--GW-post-page-content-right-side-padding: var(--GW-post-page-content-side-padding);
 }
 
 /*	Color scheme.
@@ -2794,7 +2798,6 @@ h1.listing + .post-meta {
 
 h1.listing + .post-meta .post-section {
 	width: 0;
-	margin: 0;
 	overflow: hidden;
 }
 h1.listing + .post-meta .post-section::before {
@@ -2986,6 +2989,7 @@ h1.listing + .post-meta .read-time {
 
 .post {
 	max-width: 100%;
+	padding: 0 var(--GW-post-page-content-right-side-padding) 0 var(--GW-post-page-content-right-side-padding);
 }
 
 .post-body {
@@ -3070,7 +3074,7 @@ h1.post-title {
 
 .comments {
 	max-width: 100%;
-	padding: 0 0 1px 0;
+	padding: 0 var(--GW-post-page-content-right-side-padding) 1px var(--GW-post-page-content-right-side-padding);
 	position: relative;
 }
 .comments::before {

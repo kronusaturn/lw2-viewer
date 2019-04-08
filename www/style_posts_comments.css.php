@@ -156,7 +156,6 @@ h1.listing + .post-meta {
 
 h1.listing + .post-meta .post-section {
 	width: 0;
-	margin: 0;
 	overflow: hidden;
 }
 h1.listing + .post-meta .post-section::before {
@@ -348,6 +347,7 @@ h1.listing + .post-meta .read-time {
 
 .post {
 	max-width: 100%;
+	padding: 0 var(--GW-post-page-content-right-side-padding) 0 var(--GW-post-page-content-right-side-padding);
 }
 
 .post-body {
@@ -432,7 +432,7 @@ h1.post-title {
 
 .comments {
 	max-width: 100%;
-	padding: 0 0 1px 0;
+	padding: 0 var(--GW-post-page-content-right-side-padding) 1px var(--GW-post-page-content-right-side-padding);
 	position: relative;
 }
 .comments::before {
