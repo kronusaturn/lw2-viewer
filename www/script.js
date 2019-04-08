@@ -3587,13 +3587,14 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	});
 
 	// Add event listener for . , ; (for navigating listings pages).
-	let listings = queryAll("h1.listing a[href^='/posts'], #content > .comment-thread .comment-meta a.date");
+	let listings = queryAll("h1.listing a[href^='/posts'], .listings .comment-thread .comment-meta a.date");
 	if (listings.length > 0) {
 		document.addEventListener("keyup", GW.postListingsNavKeyPressed = (event) => { 
 			if (event.ctrlKey || event.shiftKey || event.altKey || !(event.key == "," || event.key == "." || event.key == ';' || event.key == "Escape")) return;
 
 			if (event.key == "Escape") {
-				if (document.activeElement.parentElement.hasClass("listing"))
+				if (document.activeElement.parentElement.hasClass("listing") || 
+					document.activeElement.closest(".expanded"))
 					document.activeElement.blur();
 				return;
 			}
@@ -3640,7 +3641,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 			// Add edit accesskey to newly highlighted post by active user, if applicable.
 			(listings[indexOfActiveListing].parentElement.query(".edit-post-link")||{}).accessKey = 'e';
 		});
-		queryAll("#content > .comment-thread .comment-meta a.date, #content > .comment-thread .comment-meta a.permalink").forEach(link => {
+		queryAll(".listings .comment-thread .comment-meta a.date, .listings .comment-thread .comment-meta a.permalink").forEach(link => {
 			link.addEventListener("blur", GW.commentListingsHyperlinkUnfocused = (event) => {
 				event.target.closest(".comment-item").removeClasses([ "expanded", "comment-item-highlight" ]);
 			});

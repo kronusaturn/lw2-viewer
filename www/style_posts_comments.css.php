@@ -870,7 +870,7 @@ a.comment-child-link::before {
 	color: var(--GW-hyperlink-color);
 }
 @media only screen and (hover: hover) and (pointer: fine) {
-	#content.compact:not(:focus-within) .comment-thread .comment-item:hover,
+	#content.compact .listings:not(:focus-within) .comment-thread .comment-item:hover,
 	#content.compact .comment-thread .comment-item.expanded {
 		overflow: visible;
 		pointer-events: auto;

@@ -1280,25 +1280,25 @@ a.post-section.alignment-forum:hover::before {
 	border-top: 1px solid #000;
 	box-shadow: 0 3px 3px -4px #000 inset;
 }
-#content > .comment-thread .comment-meta a.date:focus,
-#content > .comment-thread .comment-meta a.permalink:focus {
+.listings .comment-thread .comment-meta a.date:focus,
+.listings .comment-thread .comment-meta a.permalink:focus {
 	color: #888;
 	outline: 2px dotted #999;
 	position: relative;
 	background-color: #fff;
 }
-#content > .comment-thread .comment-meta a.date:focus {
+.listings .comment-thread .comment-meta a.date:focus {
 	padding: 0 4px;
 	left: -4px;
 }
-#content > .comment-thread .comment-meta a.date:focus + * {
+.listings .comment-thread .comment-meta a.date:focus + * {
 	margin-left: -8px;
 }
-#content > .comment-thread .comment-meta a.permalink:focus {
+.listings .comment-thread .comment-meta a.permalink:focus {
 	padding: 0 5px;
 	left: -5px;
 }
-#content > .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
+.listings .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
 	margin-left: -10px;
 }
 .comment-item {
