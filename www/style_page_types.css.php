@@ -76,28 +76,37 @@
 /* CONVERSATIONS */
 /*****************/
 
+/*=--------------------=*/
+/*= Conversation title =*/
+/*=--------------------=*/
+
+#content.conversation-page h1.page-main-heading {
+	text-align: center;
+	margin: 1em 1em 0.25em 1em;
+	line-height: 1.15;
+}
+
 /*=----------------------=*/
 /*= List of participants =*/
 /*=----------------------=*/
 
 #content.conversation-page .conversation-participants {
-	grid-row: 3;
-	text-align: right;
-	margin: 0.5em 0 0 0;
+	text-align: center;
+	padding: 0 var(--GW-conversation-page-content-side-padding);
+	margin: 0 0 0.5em 0;
 }
 
-.conversation-participants ul,
-.conversation-participants li {
-	list-style-type: none;
+#content.conversation-page .conversation-participants ul,
+#content.conversation-page .conversation-participants li {
 	display: inline-block;
 	margin: 0;
 	padding: 0;
 }
-.conversation-participants li {
+#content.conversation-page .conversation-participants li {
 	margin-left: 0.375em;
 }
-.conversation-participants li:not(:last-of-type)::after {
-	content: ",";
+#content.conversation-page .conversation-participants li:not(:last-of-type)::after {
+	content: ", ";
 }
 
 /*=-------------------------=*/
@@ -105,24 +114,19 @@
 /*=-------------------------=*/
 
 #content.conversation-page .posting-controls {
-	padding: 0 0 1em 0;
+	padding: 1em var(--GW-conversation-page-content-side-padding) 1em var(--GW-conversation-page-content-side-padding);
 }
 #content.conversation-page .post-meta-fields {
 	overflow: auto;
 	display: flex;
 	flex-flow: row wrap;
+	margin: 0 0 0.5em 0;
 }
-#content.conversation-page textarea {
-	margin-top: 0.375em;
-}
-#conversation-form {
-	padding: 0 1em 3em 1em;
-}
-#conversation-form input[type='text'],
-#conversation-form label {
+#conversation-form .post-meta-fields input[type='text'],
+#conversation-form .post-meta-fields label {
 	margin: 0.25em 0;
 }
-#conversation-form label {
+#conversation-form .post-meta-fields label {
 	width: 4em;
 	text-align: right;
 	padding: 2px 6px;
@@ -135,29 +139,8 @@
 #conversation-form input[type='submit'] {
 	float: right;
 }
-#content.conversation-page #markdown-hints-checkbox ~ label {
-	white-space: nowrap;
-}
 #content.conversation-page #markdown-hints {
 	top: calc(100% + 2em);
-}
-
-/*=--------------------=*/
-/*= Conversation title =*/
-/*=--------------------=*/
-
-#content.conversation-page h1.page-main-heading {
-	text-align: center;
-	margin: 0.5em 0;
-	line-height: 1.15;
-}
-
-/*=----------=*/
-/*= Messages =*/
-/*=----------=*/
-
-#content.conversation-page > ul.comment-thread:last-of-type {
-	margin-bottom: 2em;
 }
 
 /******************/

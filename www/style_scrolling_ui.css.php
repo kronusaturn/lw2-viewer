@@ -860,6 +860,10 @@ a#inbox-indicator.new-messages:hover::before {
 	flex-flow: column;
 	align-self: start;
 }
+#content.conversation-page #comments-list-mode-selector {
+	grid-row: 6;
+	margin: 0 0 0 var(--GW-conversation-page-content-side-padding);
+}
 
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/

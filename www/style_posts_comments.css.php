@@ -12,7 +12,7 @@
 	padding: 0 var(--GW-recent-comments-page-content-side-padding);
 }
 #content.conversation-page .listings {
-	padding: 0 var(--GW-conversation-page-content-side-padding);
+	padding: 0 var(--GW-conversation-page-content-side-padding) 0 var(--GW-conversation-page-content-side-padding);
 }
 
 /*=----------------=*/

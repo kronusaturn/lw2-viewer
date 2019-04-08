@@ -26,6 +26,7 @@
 	*/
 :root {
 	--GW-content-side-padding: 40px;
+	--GW-sequence-page-content-side-padding: 50px;
 	--GW-user-page-content-side-padding: 30px;
 	--GW-recent-comments-page-content-side-padding: 30px;
 	--GW-conversation-page-content-side-padding: 30px;
@@ -33,6 +34,7 @@
 @media only screen and (max-width: 900px) {
 	:root {
 		--GW-content-side-padding: calc(100% / 45);
+		--GW-sequence-page-content-side-padding: calc(100% / 36);
 		--GW-user-page-content-side-padding: calc(100% / 30);
 		--GW-recent-comments-page-content-side-padding: calc(100% / 30);
 		--GW-conversation-page-content-side-padding: calc(100% / 30);
