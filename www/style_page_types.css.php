@@ -55,17 +55,21 @@
 
 /*	List of participants.
 	*/
+#content.conversations-user-page .post-meta .conversation-participants {
+	white-space: normal;
+}
 #content.conversations-user-page .post-meta .conversation-participants ul {
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
 }
+#content.conversations-user-page .post-meta .conversation-participants ul,
 #content.conversations-user-page .post-meta .conversation-participants li {
 	display: inline;
 }
 #content.conversations-user-page .post-meta .conversation-participants li:nth-last-of-type(n+2)::after {
 	content: ", ";
-	margin: 0 0.125em 0 0;
+	margin: 0 0.25em 0 0;
 }
 
 /*****************/

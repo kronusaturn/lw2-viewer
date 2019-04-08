@@ -1,27 +1,9 @@
-/*************/
-/* SEQUENCES */
-/*************/
-
-#content.sequence-page article {
-	padding: 0 50px 15px 50px;
-}
-
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
-@media only screen and (max-width: 900px) {
-	#content.sequence-page article {
-		padding: 15px calc(100% / 36) 0 calc(100% / 36);
-	}
-}
-
-/************/
-/* LISTINGS */
-/************/
+/******************/
+/* LISTINGS PAGES */
+/******************/
 
 .listings {
-	padding: 15px 40px 0 40px;
+	padding: 15px var(--GW-content-side-padding) 0 var(--GW-content-side-padding);
 }
 #content.user-page .listings {
 	padding: 0 var(--GW-user-page-content-side-padding);
@@ -29,6 +11,22 @@
 #content.recent-comments-page .listings {
 	padding: 0 var(--GW-recent-comments-page-content-side-padding);
 }
+#content.conversation-page .listings {
+	padding: 0 var(--GW-conversation-page-content-side-padding);
+}
+
+/*=----------------=*/
+/*= Sequence pages =*/
+/*=----------------=*/
+
+#content.sequence-page article {
+	padding: 0 var(--GW-sequence-page-content-side-padding) 15px var(--GW-sequence-page-content-side-padding);
+}
+
+
+/************/
+/* LISTINGS */
+/************/
 
 h1.listing {
 	line-height: 1.15;
@@ -137,12 +135,6 @@ h1.listing .edit-post-link {
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
-
-@media only screen and (max-width: 900px) {
-	.listings {
-		padding: 15px calc(100% / 45) 0 calc(100% / 45);
-	}
-}
 
 /*********************/
 /* LISTING POST-META */

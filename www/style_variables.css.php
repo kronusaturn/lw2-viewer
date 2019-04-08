@@ -56,8 +56,11 @@
 /*	Layout.
 	*/
 :root {
+	--GW-content-side-padding: 0;
+	--GW-sequence-page-content-side-padding: 0;
 	--GW-user-page-content-side-padding: 0;
 	--GW-recent-comments-page-content-side-padding: 0;
+	--GW-conversation-page-content-side-padding: 0;
 }
 
 /*	Color scheme.
