@@ -1260,7 +1260,8 @@ a.post-section.alignment-forum:hover::before {
 .post-meta .date {
 	color: #888;
 }
-.post-meta .author {
+.post-meta a.author,
+.post-meta a.author:visited {
 	color: #090;
 }
 .bottom-post-meta {

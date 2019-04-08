@@ -3049,12 +3049,12 @@ h1.post-title {
 /* LINK POSTS */
 /**************/
 
-.post.link-post > .post-body > p:first-child {
+.post.link-post .post-body > p:first-child {
 	text-align: center;
 	font-size: 1.125em;
 	margin: 0.5em 0 0 0;
 }
-.post.link-post > .post-body > p:only-child {
+.post.link-post .post-body > p:only-child {
 	font-size: 1.5em;
 	margin: 1em 0;
 }
@@ -3066,10 +3066,8 @@ h1.post-title {
 	content: "\F0C1";
 	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
-	font-size: 0.75em;
-	position: relative;
-	top: -2px;
-	margin-right: 0.25em;
+	display: inline-block;
+	transform: scale(0.75) translateX(-0.1em);
 }
 
 /************/
@@ -4344,6 +4342,10 @@ button.guiedit {
 	padding-top: 8px;
 }
 
+/*=---------------------------------------------------------=*/
+/*= Auxiliary “About” link in qualified link page view mode =*/
+/*=---------------------------------------------------------=*/
+
 #aux-about-link {
 	position: fixed;
 	top: 40px;
@@ -4364,36 +4366,39 @@ button.guiedit {
 	z-index: 1;
 }
 
-.qualified-linking {
+/*=--------------------------=*/
+/*= Qualified linking button =*/
+/*=--------------------------=*/
+
+.post-meta .qualified-linking {
 	margin: 0;
 	position: relative;
 }
-.qualified-linking input[type='checkbox'] {
+.post-meta .qualified-linking input[type='checkbox'] {
 	visibility: hidden;
 	width: 0;
 	height: 0;
 	margin: 0;
 }
-.qualified-linking label {
+.post-meta .qualified-linking label {
 	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
 	font-size: 1rem;
 	padding: 0 0.5em;
 	display: inline-block;
-	margin-left: 0.25em;
 }
-.qualified-linking label:hover {
+.post-meta .qualified-linking label:hover {
 	cursor: pointer;
 }
-.qualified-linking label:active span {
+.post-meta .qualified-linking label:active span {
 	display: inline-block;
 	transform: scale(0.9);
 }
-.qualified-linking label::selection {
+.post-meta .qualified-linking label::selection {
 	background-color: transparent;
 }
 
-.qualified-linking label::after {
+.post-meta .qualified-linking label::after {
 	content: "";
 	width: 100vw;
 	height: 0;
@@ -4403,20 +4408,24 @@ button.guiedit {
 	z-index: 1;
 	cursor: default;
 }
-.qualified-linking input[type='checkbox']:checked + label::after {
+.post-meta .qualified-linking input[type='checkbox']:checked + label::after {
 	height: 100vh;
 }
 
-.qualified-linking-toolbar {
+/*=---------------------------=*/
+/*= Qualified linking toolbar =*/
+/*=---------------------------=*/
+
+.post-meta .qualified-linking-toolbar {
 	position: absolute;
 	right: 0.25em;
 	top: 110%;
 	z-index: 1;
 }
-.qualified-linking input[type='checkbox'] ~ .qualified-linking-toolbar {
+.post-meta .qualified-linking input[type='checkbox'] ~ .qualified-linking-toolbar {
 	display: none;
 }
-.qualified-linking input[type='checkbox']:checked ~ .qualified-linking-toolbar {
+.post-meta .qualified-linking input[type='checkbox']:checked ~ .qualified-linking-toolbar {
 	display: block;
 }
 #qualified-linking-toolbar-toggle-checkbox-bottom ~ .qualified-linking-toolbar {
@@ -4424,12 +4433,12 @@ button.guiedit {
 	bottom: 125%;
 }
 
-.qualified-linking-toolbar a {
+.post-meta .qualified-linking-toolbar a {
 	display: block;
 	padding: 0 6px;
 	margin: 4px;
 }
-.qualified-linking-toolbar a::selection {
+.post-meta .qualified-linking-toolbar a::selection {
 	background-color: transparent;
 }
 
@@ -4438,7 +4447,7 @@ button.guiedit {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 520px) {
-	.qualified-linking-toolbar {
+	.post-meta .qualified-linking-toolbar {
 		right: -5em;
 	}
 }
