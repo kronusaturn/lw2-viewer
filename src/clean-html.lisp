@@ -239,7 +239,7 @@
 
 (define-lmdb-memoized clean-html (:sources ("src/clean-html.lisp" "src/links.lisp" "text-clean-regexps.js" "html-clean-regexps.js")) (in-html &key with-toc post-id)
   (declare (ftype (function (plump:node) fixnum) plump:child-position)
-           (ftype (function (plump:node) simple-array) plump:family)
+           (ftype (function (plump:node) (and vector (not simple-array))) plump:family)
            (ftype (function (plump:node) simple-string) plump:text plump:tag-name))
   (labels ((only-child-is (node &rest args)
 			  (declare (type plump:node node)
