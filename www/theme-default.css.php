@@ -1438,6 +1438,9 @@ a.post-section.alignment-forum:hover::before {
 	top: -25px;
 	min-width: 56px;
 }
+.author::before {
+	padding: 3px 0.5em 1px 0.5em;
+}
 
 /*====================*/
 /* ANTI-KIBITZER MODE */

@@ -216,8 +216,7 @@ h1.listing + .post-meta .read-time {
 .post-meta .post-section {
 	order: -1;
 }
-.post-meta .post-section::before,
-.comment-meta .alignment-forum {
+.post-meta .post-section::before {
 	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
 }
@@ -240,6 +239,7 @@ h1.listing + .post-meta .read-time {
 .comment-meta .alignment-forum {
 	content: "AF";
 	font-family: var(--GW-Alignment-Forum-logotype-font);
+	font-weight: bold;
 }
 
 /*= Karma controls hover tooltips =*/
@@ -304,13 +304,12 @@ h1.listing + .post-meta .read-time {
 		position: absolute;
 		pointer-events: none;
 		display: block;
-		padding: 0 1em;
 		left: 50%;
 		bottom: 2em;
 		transform: translateX(-50%);
 		white-space: nowrap;
 		text-align: center;
-		font-size: 0.875rem;
+		font-size: 0.75em;
 		font-weight: var(--GW-UI-font-weight-light);
 		opacity: 0;
 		transition: opacity 0.2s ease;
@@ -634,17 +633,9 @@ a.comment-parent-link {
 	font-weight: var(--GW-UI-font-weight-light);
 }
 
-a.comment-parent-link:not(.inline-author),
-a.comment-parent-link.inline-author::before {
-	opacity: 0.5;
-}
-
 /*	Hover highlighting.
 	*/
 @media only screen and (hover: hover) and (pointer: fine) {
-	a.comment-parent-link:hover {
-		opacity: 1.0;
-	}
 	a.comment-parent-link::before {
 		content: "\F062";
 		font-family: var(--GW-Font-Awesome);
@@ -721,35 +712,9 @@ a.comment-child-link::before {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 900px) {
-	a.comment-parent-link {
-		width: 0;
-		visibility: hidden;
-		position: relative;
-	}
-	a.comment-parent-link::before {
-		padding: 0;
-		font-size: 1em;
-		left: 0;
-		top: 0;
-		line-height: inherit;
-		visibility: visible;
-		content: "\F3BF";
-		transform: scaleX(-1);
-		width: 2em;
-		text-align: center;
-	}
-}
-@media only screen and (max-width: 520px) {
-	a.comment-parent-link {
-		position: static;
-	}
-	a.comment-parent-link::before {
-		padding: 6px;
-		left: unset;
-		right: 0;
-		top: unset;
-		bottom: 0;
-		height: 2em;
+	a.comment-parent-link::before,
+	a.comment-parent-link::after {
+		display: none;
 	}
 }
 
@@ -762,7 +727,7 @@ a.comment-child-link::before {
 
 .comment-meta .permalink::before,
 .comment-meta .lw2-link::before,
-.individual-thread-page a.comment-parent-link:empty::before {
+.comment-meta a.comment-parent-link span::before {
 	content: "";
 	display: inline-block;
 	width: 1rem;
@@ -784,7 +749,7 @@ a.comment-child-link::before {
 .comment-meta .lw2-link::before {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/lw-white-on-blue.gif")) ?>');
 }
-.individual-thread-page a.comment-parent-link:empty::before {
+.comment-meta a.comment-parent-link span::before {
 	left: unset;
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/up-arrow-white-on-blue.gif")) ?>');
 }
@@ -794,12 +759,12 @@ a.comment-child-link::before {
 .comment-meta .lw2-link:hover::before {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/lw-blue-on-white.gif")) ?>');
 }
-.individual-thread-page a.comment-parent-link:empty:hover::before {
+.comment-meta a.comment-parent-link span:hover::before {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/up-arrow-blue-on-white.gif")) ?>');
 }
 .comment-meta .permalink:hover::before,
 .comment-meta .lw2-link:hover::before,
-.individual-thread-page a.comment-parent-link:empty:hover::before {
+.comment-meta a.comment-parent-link span:hover::before {
 	box-shadow: 
 		0 0 0 2px #00e,
 		0 0 0 3px transparent;
@@ -808,19 +773,19 @@ a.comment-child-link::before {
 }
 .comment-meta .permalink:active::before,
 .comment-meta .lw2-link:active::before,
-.individual-thread-page a.comment-parent-link:empty:active::before {
+.comment-meta a.comment-parent-link span:active::before {
 	transform: scale(0.9);
 }
 
 .comment-meta .permalink,
 .comment-meta .lw2-link,
-.individual-thread-page .comment-parent-link:empty {
+.comment-meta a.comment-parent-link span {
 	position: relative;
 	opacity: 1.0;
 }
 .comment-meta .permalink::after,
 .comment-meta .lw2-link::after,
-.individual-thread-page .comment-parent-link:empty::after {
+.comment-meta a.comment-parent-link span::after {
 	content: "";
 	width: 30px;
 	height: 30px;
@@ -987,7 +952,7 @@ a.comment-child-link::before {
 	line-height: 1;
 	position: absolute;
 	right: 1px;
-	top: 1px;
+	top: 2px;
 	width: 18px;
 	margin: 0;
 	cursor: pointer;

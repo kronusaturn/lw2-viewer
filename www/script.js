@@ -2514,6 +2514,10 @@ function addCommentParentPopups() {
 			}, {once: true});
 		});
 	});
+	
+	queryAll(".comment-meta a.comment-parent-link").forEach(commentParentLink => {
+		commentParentLink.innerHTML = "<span></span>";
+	});
 
 	// Due to filters vs. fixed elements, we need to be smarter about selecting which elements to filter...
 	GW.themeTweaker.filtersExclusionPaths.commentParentPopups = [
