@@ -67,16 +67,16 @@
 (defun post-body-to-html (post)
   (schema-bind (:post post (post-id url question title html-body) :qualifier :body)
     <main class=("post~{ ~A~}" (list-cond
-			       (url "link-post")
-			       (question "question-post")))>
+				(url "link-post")
+				(question "question-post")))>
       <h1 class="post-title">
         (if question <span class="post-type-prefix">[Question] </span>)
         (safe (clean-text-to-html title :hyphenation nil))
       </h1>
-	(with-html-stream-output (post-meta-to-html post :body nil))
-	<div class="body-text post-body">
+      (with-html-stream-output (post-meta-to-html post :body nil))
+      <div class="body-text post-body">
         (if url <p><a class="link-post-link" href=(convert-any-link (string-trim " " url))>Link post</a></p>)
-        (with-html-stream-output
+	(with-html-stream-output
 	    (write-sequence (clean-html* (or html-body "") :with-toc t :post-id post-id) *html-output*))
       </div>
       (with-html-stream-output #|(post-meta-to-html post :body nil) TODO: don't use js to insert bottom-post-meta|#)
