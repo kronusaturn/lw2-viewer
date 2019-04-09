@@ -377,9 +377,9 @@ signaled condition to OUT-STREAM."
            items))
 
 (defun nav-bar-outer (out-stream class nav-bar &optional current-uri)
-  (format out-stream "<div id=\"~A\" class=\"nav-bar~@[ ~A~]\">" (string-downcase (first nav-bar)) class)
+  (format out-stream "<nav id=\"~A\" class=\"nav-bar~@[ ~A~]\">" (string-downcase (first nav-bar)) class)
   (nav-bar-inner out-stream (second nav-bar) current-uri)
-  (format out-stream "</div>"))
+  (format out-stream "</nav>"))
 
 (defun nav-bar-to-html (out-stream &optional current-uri)
   (let* ((nav-bars (map 'list (lambda (x) (prepare-nav-bar x current-uri)) (site-nav-bars *current-site*)))
@@ -404,7 +404,7 @@ signaled condition to OUT-STREAM."
 
 (defun sublevel-nav-to-html (out-stream options current &key default (base-uri (hunchentoot:request-uri*)) (param-name "show") (remove-params '("offset")) extra-class)
   (declare (type (or null string) extra-class))
-  (format out-stream "<div class=\"sublevel-nav~@[ ~A~]\">" extra-class)
+  (format out-stream "<nav class=\"sublevel-nav~@[ ~A~]\">" extra-class)
   (loop for item in options
         do (multiple-value-bind (param-value text) (if (atom item)
                                                        (values (string-downcase item) (string-capitalize item))
@@ -414,7 +414,7 @@ signaled condition to OUT-STREAM."
                (link-if-not out-stream selected (apply #'replace-query-params base-uri param-name (unless (string-equal param-value default) param-value)
                                                        (loop for x in remove-params nconc (list x nil)))
                             class text))))
-  (format out-stream "</div>"))
+  (format out-stream "</nav>"))
 
 (defun make-csrf-token (&optional (session-token (hunchentoot:cookie-in "session-token")) (nonce (ironclad:make-random-salt)))
   (if (typep session-token 'string) (setf session-token (base64:base64-string-to-usb8-array session-token)))

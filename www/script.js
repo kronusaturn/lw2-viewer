@@ -181,7 +181,7 @@ function getQueryVariable(variable) {
 function addUIElement(element_html) {
 	var ui_elements_container = query("#ui-elements-container");
 	if (!ui_elements_container) {
-		ui_elements_container = document.createElement("div");
+		ui_elements_container = document.createElement("nav");
 		ui_elements_container.id = "ui-elements-container";
 		query("body").appendChild(ui_elements_container);
 	}
@@ -3035,7 +3035,7 @@ function cancelImageFocusHideUITimer() {
 /*****************/
 
 function keyboardHelpSetup() {
-	let keyboardHelpOverlay = addUIElement("<div id='keyboard-help-overlay'>" + `
+	let keyboardHelpOverlay = addUIElement("<nav id='keyboard-help-overlay'>" + `
 		<div class='keyboard-help-container'>
 			<button type='button' title='Close keyboard shortcuts' class='close-keyboard-help'>&#xf00d;</button>
 			<h1>Keyboard shortcuts</h1>
@@ -3127,7 +3127,7 @@ function keyboardHelpSetup() {
 			).join("\n") + `</ul>`).join("\n") + `
 			</ul></div>		
 		</div>
-	` + "</div>");
+	` + "</nav>");
 
 	// Add listener to show the keyboard help overlay.
 	document.addEventListener("keypress", GW.keyboardHelpShowKeyPressed = (event) => {
