@@ -1669,28 +1669,31 @@ button.guiedit {
 	padding-top: 8px;
 }
 
+/*	Viewport width adjustments.
+	*/
+@media only screen and (max-width: 900px) {
+	#content.no-nav-bars {
+		margin: 0;
+	}
+}
+
 /*=---------------------------------------------------------=*/
 /*= Auxiliary “About” link in qualified link page view mode =*/
 /*=---------------------------------------------------------=*/
 
 #aux-about-link {
-	position: fixed;
+	position: absolute;
 	top: 40px;
-	left: calc((100% - 900px) / 2 - 69px);
+	left: -70px;
 	width: 1.5em;
-	height: 1.5em;
-	text-align: center;
-	display: table;
 }
 #aux-about-link a {
-	display: table-cell;
-	width: 100%;
-	vertical-align: middle;
 	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
 	font-size: 1.25rem;
 	opacity: 0.4;
-	z-index: 1;
+	display: flex;
+	justify-content: center;
 }
 
 /*=--------------------------=*/
@@ -1762,14 +1765,4 @@ button.guiedit {
 	margin: 4px;
 	text-align: center;
 	user-select: none;
-}
-
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
-@media only screen and (max-width: 520px) {
-	.post-meta .qualified-linking-toolbar {
-		right: -5em;
-	}
 }
