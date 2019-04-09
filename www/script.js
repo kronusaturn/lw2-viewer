@@ -1630,8 +1630,8 @@ function toggleThemeTweakerUI() {
 		// Disable scrolling of the page.
 		togglePageScrolling(false);
 		// Set the minimize button state.
-		query("#theme-tweaker-ui .minimize-button").removeClass("maximize");
-		query("#theme-tweaker-ui .minimize-button").addClass("minimize");
+		themeTweakerUI.query(".minimize-button").removeClass("maximize");
+		themeTweakerUI.query(".minimize-button").addClass("minimize");
 	} else {
 		query("#theme-tweaker-toggle button").disabled = false;
 		// Re-enable tab-selection of the search box.
