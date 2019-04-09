@@ -1346,7 +1346,7 @@ function injectThemeTweaker() {
 		<p class='theme-selector'></p>
 		<div class='controls-container'>
 			<div id='theme-tweak-section-sample-text' class='section' data-label='Sample text'>
-				<div class='sample-text-container'><span class='sample-text'>
+				<div class='sample-text-container'><span class='sample-text body-text'>
 					<p>Less Wrong (text)</p>
 					<p><a href="#">Less Wrong (link)</a></p>
 				</span></div>
@@ -1687,9 +1687,7 @@ function updateThemeTweakerSampleText() {
 	let sampleText = query("#theme-tweaker-ui #theme-tweak-section-sample-text .sample-text");
 
 	// This causes the sample text to take on the properties of the body text of a post.
-	sampleText.removeClass("post-body");
 	let bodyTextElement = query(".post-body") || query(".comment-body");
-	sampleText.addClass("post-body");
 	sampleText.style.color = bodyTextElement ? 
 								getComputedStyle(bodyTextElement).color : 
 									getComputedStyle(query("#content")).color;

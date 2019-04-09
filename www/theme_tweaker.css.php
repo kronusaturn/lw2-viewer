@@ -219,6 +219,7 @@
 	width: 100%;
 	text-align: center;
 	vertical-align: middle;
+	font-size: 1.3rem;
 }
 
 #theme-tweaker-ui #theme-tweak-section-text-size-adjust {
@@ -481,6 +482,7 @@ input[type='range']::-ms-thumb {
 	margin: 10px 3px 0 0;
 }
 #theme-tweaker-ui button {
+	background-color: #bfb8bf;
 	box-shadow: 
 		0 -1px 0 0 #fff8ff,
 		-1px 0 0 0 #fff8ff,

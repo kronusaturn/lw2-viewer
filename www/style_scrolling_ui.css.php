@@ -829,7 +829,7 @@ a#inbox-indicator.new-messages:hover::before {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 900px) {
-	.sublevel-nav.sort {
+	#content.user-page .sublevel-nav.sort {
 		margin: 1em 0 0 var(--GW-content-left-side-padding);
 	}
 	#content.user-page .sublevel-nav.sort {

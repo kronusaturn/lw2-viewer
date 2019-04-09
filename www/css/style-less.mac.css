@@ -2392,7 +2392,7 @@ a#inbox-indicator.new-messages:hover::before {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 900px) {
-	.sublevel-nav.sort {
+	#content.user-page .sublevel-nav.sort {
 		margin: 1em 0 0 var(--GW-content-left-side-padding);
 	}
 	#content.user-page .sublevel-nav.sort {
@@ -2973,7 +2973,8 @@ h1.listing + .post-meta .read-time {
 
 @media only screen and (max-width: 720px) {
 	.post-meta .karma-value span,
-	.post-meta .comment-count span {
+	.post-meta .comment-count span,
+	.post-meta .lw2-link span {
 		display: none;
 	}
 	.post-meta .comment-count::before {

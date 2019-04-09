@@ -327,7 +327,8 @@ h1.listing + .post-meta .read-time {
 
 @media only screen and (max-width: 720px) {
 	.post-meta .karma-value span,
-	.post-meta .comment-count span {
+	.post-meta .comment-count span,
+	.post-meta .lw2-link span {
 		display: none;
 	}
 	.post-meta .comment-count::before {
