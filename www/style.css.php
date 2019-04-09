@@ -1733,7 +1733,16 @@ article {
 	word-break: break-all;
 	hyphens: auto;
 }
-
+.body-text a:not([href]),
+.body-text a:not([href]):hover,
+.body-text a:not([href])::before,
+.body-text a:not([href])::after {
+	text-decoration: none;
+	text-shadow: unset;
+	border: unset;
+	color: unset;
+	content: unset;
+}
 /*************/
 /* POST-META */
 /*************/
