@@ -352,13 +352,6 @@ h1.listing + .post-meta .read-time {
 		calc(var(--GW-post-page-content-left-side-padding) + var(--GW-post-left-side-padding));
 }
 
-.post-body {
-	min-height: 8em;
-	line-height: 1.5;
-	font-size: 1.3rem;
-	overflow: auto;
-	margin: 0.5em 0 0 0;
-}
 h1.post-title {
 	margin: 1.1em 0 0.35em 0;
 	text-align: center;
@@ -374,6 +367,18 @@ h1.post-title {
 }
 .post .bottom-post-meta {
 	padding: 20px 0 22px 0;
+}
+
+.post-body {
+	min-height: 8em;
+	line-height: 1.5;
+	font-size: 1.3rem;
+	overflow: auto;
+	margin: 1.5em 0 0 0;
+}
+.post-body > *:first-child:not(.contents),
+.post-body .contents + * {
+	margin-top: 0;
 }
 
 /*=----------------------------=*/

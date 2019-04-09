@@ -46,7 +46,7 @@
 	--GW-footnote-numbers-font-weight: 700;
 
 	--GW-TOC-font: var(--GW-UI-font);
-	--GW-TOC-heading-font-weight: var(--GW-UI-font-weight-light);
+	--GW-TOC-heading-font-weight: var(--GW-UI-font-weight-heavy);
 
 	--GW-link-post-link-font: var(--GW-UI-font);
 	--GW-link-post-link-font-weight: var(--GW-UI-font-weight-heavy);
@@ -3003,13 +3003,6 @@ h1.listing + .post-meta .read-time {
 		calc(var(--GW-post-page-content-left-side-padding) + var(--GW-post-left-side-padding));
 }
 
-.post-body {
-	min-height: 8em;
-	line-height: 1.5;
-	font-size: 1.3rem;
-	overflow: auto;
-	margin: 0.5em 0 0 0;
-}
 h1.post-title {
 	margin: 1.1em 0 0.35em 0;
 	text-align: center;
@@ -3025,6 +3018,18 @@ h1.post-title {
 }
 .post .bottom-post-meta {
 	padding: 20px 0 22px 0;
+}
+
+.post-body {
+	min-height: 8em;
+	line-height: 1.5;
+	font-size: 1.3rem;
+	overflow: auto;
+	margin: 1.5em 0 0 0;
+}
+.post-body > *:first-child:not(.contents),
+.post-body .contents + * {
+	margin-top: 0;
 }
 
 /*=----------------------------=*/
@@ -4478,18 +4483,18 @@ a:active {
 	float: right;
 	min-width: 6em;
 	max-width: 40%;
-	margin: 1.25em 0 0.75em 1.25em;
-	padding: 7px 14px 10px 10px;
+	margin: 0.375em 0 0.75em 1.5em;
+	padding: 0.375em 0.75em 0.375em 0.5em;
 	position: relative;
 	z-index: 1;
 
 	font-family: var(--GW-TOC-font);
-	font-weight: var(--GW-TOC-heading-font-weight);
 }
 
 .contents-head {
 	text-align: center;
-	margin-bottom: 0.25em;
+	margin: 0 0 0.25em 0;
+	font-weight: var(--GW-TOC-heading-font-weight);
 }
 
 .post-body .contents ul {
@@ -4578,19 +4583,13 @@ a:active {
 		max-width: none;
 		margin-left: auto;
 		margin-right: auto;
+		margin-bottom: 1.5em;
+		font-size: 1.25em;
 	}
 }
 @media only screen and (max-width: 520px) {
 	.contents {
-		max-width: 100%;
-		margin: 1em auto 0 auto;
-		display: table;
-	}
-	.contents-head {
-		font-size: 1.2em;
-	}
-	div.post-body .contents ul {
-		font-size: unset;
+		font-size: 1.5em;
 	}
 }
 
@@ -4653,10 +4652,8 @@ a:active {
 blockquote,
 .post-body .comment-box .comment-body {
 	font-size: 0.9em;
-	margin: 1em 0;
-	padding-left: 0.5em;
-	margin-left: 1px;
-	padding-bottom: 3px;
+	margin: 1em 0 1em 1px;
+	padding: 0 0 0.1em 0.5em;
 }
 blockquote *:first-child {
 	margin-top: 0;
@@ -4738,15 +4735,17 @@ div.imgonly {
 sup, sub {
 	vertical-align: baseline;
 	position: relative;
-	top: -0.5em;
 	left: 0.05em;
 	font-size: 0.8em;
+}
+sup {
+	top: -0.5em;
 }
 sub {
 	top: 0.3em;
 }
 
-/*= Code blocks & other "unstyled" text. =*/
+/*= Code blocks & other “unstyled” text. =*/
 
 pre,
 code {
@@ -4778,10 +4777,6 @@ pre > code {
 /*	Remove "embossed" appearance of horizontal rules. */
 hr {
 	border: none;
-}
-
-h1 {
-	margin: 0;
 }
 
 /*************/
@@ -4873,27 +4868,16 @@ li {
 /* MATH */
 /********/
 
-.mathjax-block-container {
+.mathjax-block-container .mjx-chtml {
 	overflow-y: hidden;
-	border-radius: 6px;
-	margin: 1em 0 1.5em 0;
+	margin: 1.5em 0;
 }
 .mathjax-inline-container {
 	max-width: 100%;
-	display: inline-block;
+	display: inline;
 	overflow-x: auto;
 	overflow-y: hidden;
-	position: relative;
-	vertical-align: text-top;
 	padding: 0 1px;
-}
-.post .mathjax-inline-container {
-	line-height: 1.1;
-	top: 2px;
-}
-.comment .mathjax-inline-container {
-	top: 3px;
-	line-height: 1;
 }
 .mathjax-inline-container .mjx-chtml {
 	padding: 0;

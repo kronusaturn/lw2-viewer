@@ -41,7 +41,7 @@
 	--GW-footnote-numbers-font-weight: 700;
 
 	--GW-TOC-font: var(--GW-UI-font);
-	--GW-TOC-heading-font-weight: var(--GW-UI-font-weight-light);
+	--GW-TOC-heading-font-weight: var(--GW-UI-font-weight-heavy);
 
 	--GW-link-post-link-font: var(--GW-UI-font);
 	--GW-link-post-link-font-weight: var(--GW-UI-font-weight-heavy);
