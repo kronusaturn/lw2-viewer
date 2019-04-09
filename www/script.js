@@ -1417,8 +1417,10 @@ function injectThemeTweaker() {
 		}
 	}, true);
 
-	// Intercept clicks, so they don't "fall through" the background overlay.
-	(query("#theme-tweaker-ui > div")||{}).addActivateEvent((event) => { event.stopPropagation(); }, true);
+	// Intercept clicks, so they don’t “fall through” the background overlay.
+	queryAll("#theme-tweaker-ui > div").forEach(div => {
+		div.addActivateEvent((event) => { event.stopPropagation(); }, true);
+	});
 
 	let sampleTextContainer = query("#theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container");
 	themeTweakerUI.queryAll("input").forEach(field => {
@@ -1627,6 +1629,9 @@ function toggleThemeTweakerUI() {
 		setSearchBoxTabSelectable(false);
 		// Disable scrolling of the page.
 		togglePageScrolling(false);
+		// Set the minimize button state.
+		query("#theme-tweaker-ui .minimize-button").removeClass("maximize");
+		query("#theme-tweaker-ui .minimize-button").addClass("minimize");
 	} else {
 		query("#theme-tweaker-toggle button").disabled = false;
 		// Re-enable tab-selection of the search box.

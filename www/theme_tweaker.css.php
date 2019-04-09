@@ -3,7 +3,7 @@
 /*****************/
 
 :root {
-    --GW-basilisk: url('data:image/png;base64,<?php echo base64_encode(file_get_contents("assets/basilisk.png")) ?>');
+	--GW-basilisk: url('data:image/png;base64,<?php echo base64_encode(file_get_contents("assets/basilisk.png")) ?>');
 }
 
 #theme-tweaker-ui {
@@ -628,6 +628,9 @@ input[type='range']::-ms-thumb {
 	line-height: 1.3;
 	color: #000;
 }
+#theme-tweaker-ui .clippy-container .hint img {
+	vertical-align: bottom;
+}
 #theme-tweaker-ui .clippy-container .clippy {
 	width: 200px;
 	height: 125px;
@@ -671,7 +674,7 @@ input[type='range']::-ms-thumb {
 		-1px -1px 0 1px #dfd8df,
 		0 0 0 2px #030303;
 	top: 200px;
-	left: calc((100% - 300px) / 2);
+	left: calc((100% - 333px) / 2);
 	padding: 40px 10px 10px 10px;
 	pointer-events: auto;
 }
@@ -721,6 +724,7 @@ input[type='range']::-ms-thumb {
 		-2px 0 0 1px #dfd8df,
 		-1px -2px 0 1px #dfd8df,
 		0 0 0 3px #030303;
+	background-color: transparent;
 }
 
 /*========*/
@@ -728,7 +732,7 @@ input[type='range']::-ms-thumb {
 /*========*/
 
 @media only screen and (max-width: 960px) {
-	#theme-tweaker-ui {
+	#ui-elements-container #theme-tweaker-ui {
 		visibility: visible;
 		z-index: 12000;
 	}
@@ -737,7 +741,6 @@ input[type='range']::-ms-thumb {
 		right: 8px;
 	}
 	#theme-tweaker-ui .main-theme-tweaker-window {
-		max-width: unset;
 		max-height: unset;
 		left: 3px;
 		top: 3px;
@@ -745,44 +748,68 @@ input[type='range']::-ms-thumb {
 		height: calc(100% - 5px)
 	}
 	#theme-tweaker-ui .controls-container {
-		max-height: calc(100% - 192px);
+		max-height: calc(100% - 132px);
 		padding: 0.75em;
-	}
-	#theme-tweaker-ui .current-theme {
-		margin: 0.75em -8px 0 -8px;
-		box-shadow: none;
-		padding: 0 12px;
-	}
-	#theme-tweaker-ui .theme-selector {
-		position: unset;
-		margin: 0.5em 0 1em 0;
-		white-space: nowrap;
-	}
-	#theme-tweaker-ui .clippy-container .clippy {
-		transform: scale(0.375) translate(-215px, 215px);
-	}
-
-	#theme-tweaker-ui .controls-container {
 		margin-right: -12px;
 	}
 	#theme-tweaker-ui .controls-container::-webkit-scrollbar {
 		width: 32px;
 	}
-
-	@media only screen and (max-width: 369px) {
-		#theme-tweaker-ui .theme-selector button {
-			margin: 0.5em 0.25em 0.5em 0.5em;
-		}
-		#theme-tweaker-ui .reset-defaults-button {
-			width: 9em;
-		}
-		#theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container {
-			width: 12em;
-		}
+	#theme-tweaker-ui .current-theme {
+		margin: 0.625em -8px -6px -8px;
+		box-shadow: none;
 	}
-	@media only screen and (max-width: 333px) {
-		#theme-tweaker-ui .theme-selector button {
-			margin: 0.5em 0.125em 0.5em 0.5em;
-		}
+	#theme-tweaker-ui .theme-selector {
+		margin: 0.5em 0 1em 0;
+	}
+	#theme-tweaker-ui .clippy-container .clippy {
+		transform: scale(0.375) translate(-215px, 190px);
+	}
+}
+@media only screen and (max-width: 640px) {
+	#theme-tweaker-ui .controls-container {
+		max-height: calc(100% - 176px);
+	}
+	#theme-tweaker-ui .current-theme {
+		margin: 0.625em -8px -4px -8px;
+		padding: 0 12px;
+	}
+	#theme-tweaker-ui .theme-selector {
+		position: unset;
+		margin: 0.5em 0;
+	}
+}
+@media only screen and (max-width: 420px) {
+	#theme-tweaker-ui .main-theme-tweaker-window {
+		padding: 30px 6px 10px 6px;
+	}
+	#theme-tweaker-ui .theme-selector button {
+		margin: 0.5em 0.125em 0.5em 0.5em;
+	}
+	#theme-tweaker-ui .reset-defaults-button {
+		width: 9em;
+	}
+	#theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container {
+		width: 15em;
+	}
+}
+@media only screen and (max-width: 360px) {
+	#theme-tweaker-ui .theme-selector button {
+		margin: 0.5em 0.125em 0.5em 0.25em;
+	}
+	#theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container {
+		width: 13.5em;
+	}
+	#theme-tweaker-ui .reset-defaults-button {
+		margin: 0.5em 1px 0.5em 0.25em;
+	}
+	#theme-tweaker-ui .help-window {
+		max-width: calc(100% - 20px);
+		left: 10px;
+	}
+	#theme-tweaker-ui #theme-tweak-control-clippy + label::after {
+		transform: scaleX(-0.625) scaleY(0.625);
+		right: -73px;
+		bottom: -3px;
 	}
 }
