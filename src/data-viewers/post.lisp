@@ -66,7 +66,7 @@
 
 (defun post-body-to-html (post)
   (schema-bind (:post post (post-id url question title html-body) :qualifier :body)
-    <div class=("post~{ ~A~}" (list-cond
+    <main class=("post~{ ~A~}" (list-cond
 			       (url "link-post")
 			       (question "question-post")))>
       <h1 class="post-title">
@@ -80,4 +80,4 @@
 	    (write-sequence (clean-html* (or html-body "") :with-toc t :post-id post-id) *html-output*))
       </div>
       (with-html-stream-output #|(post-meta-to-html post :body nil) TODO: don't use js to insert bottom-post-meta|#)
-    </div>))
+    </main>))
