@@ -1008,9 +1008,6 @@ a.comment-child-link::before {
 	text-align: left;
 	font-size: 2.25em;
 }
-.individual-thread-page .comments {
-	border: none;
-}
 
 /****************/
 /* VOTE BUTTONS */
@@ -1085,7 +1082,6 @@ a.comment-child-link::before {
 	content: '\F00D';
 	font-weight: 900;
 	font-size: 0.9em;
-	opacity: 0.7;
 }
 
 .comment + .comment-controls .action-button {
@@ -1115,9 +1111,7 @@ a.comment-child-link::before {
 	align-self: start;
 	justify-self: end;
 }
-.post {
-	grid-row: 3;
-}
+
 .edit-post-link {
 	display: inline-block;
 	margin-bottom: 0.25em;
@@ -1195,7 +1189,7 @@ a.comment-child-link::before {
 	width: calc(100% - 2px);
 	height: 28px;
 	text-align: left;
-	padding: 1px 4px 0 4px;
+	padding: 2px 4px 0 4px;
 	overflow: hidden;
 }
 .comment-thread-page .guiedit-buttons-container {
@@ -1207,7 +1201,6 @@ a.comment-child-link::before {
 	font-weight: 900;
 	font-size: 0.875rem;
 	line-height: 1;
-	position: static;
 
 	font-family: var(--GW-Font-Awesome), var(--GW-body-text-font);
 }
@@ -1326,36 +1319,29 @@ button.guiedit {
 
 @media only screen and (max-width: 900px) {
 	.comment-controls .cancel-comment-button {
-		max-width: 1.3em;
+		max-width: 1.2em;
 		overflow: hidden;
-		margin-right: 0.125em;
+		top: -1px;
+		right: 6px;
+	}
+	.comment-controls .cancel-comment-button::before {
+		font-size: 1.375em;
 	}
 	.comment-controls .edit-button::before {
 		font-size: 0.9375em;
 	}
-	.comments > .comment-controls .cancel-comment-button {
-		right: 8px;	
-	}
-	.comment-controls .cancel-comment-button::before {
-		font-size: 1.25rem;		
-	}
 }
 @media only screen and (max-width: 520px) {
-	.comment-controls {
-		position: static;
-	}
 	.comment-controls:focus-within {
+		position: static;
 		z-index: 10001;
-	}
-	.comment-controls .cancel-comment-button {
-		right: 10px;
 	}
 	.textarea-container:focus-within textarea {
 		position: fixed;
-		top: 0;
+		top: 1px;
 		left: 2px;
-		width: calc(100vw - 4px);
-		height: calc(100% - 100px);
+		width: calc(100% - 4px);
+		height: calc(100% - 99px);
 		min-height: unset;
 		max-height: unset;
 		border-width: 1px;
@@ -1378,11 +1364,10 @@ button.guiedit {
 		position: fixed;
 		z-index: 11002;
 		left: 0;
-		width: 100vw;
+		width: 100%;
 		height: auto;
 		background-image: none;
 		padding: 3px 4px 4px 4px;
-		margin: 0;
 		text-align: center;
 		top: auto;
 		bottom: 0;
@@ -1395,6 +1380,14 @@ button.guiedit {
 		padding: 10px 1px 8px 0;
 		position: relative;
 		margin: 1px;
+	}
+	.textarea-container:focus-within button.guiedit::before {
+		content: "";
+		position: absolute;
+		left: -2px;
+		right: -2px;
+		top: -2px;
+		bottom: -2px;
 	}
 	.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
 		z-index: 11011;
@@ -1412,17 +1405,31 @@ button.guiedit {
 		left: calc(50% + 0.65em);
 		top: calc(50% - 1.3em);
 	}
+	.textarea-container:focus-within .guiedit-mobile-auxiliary-button::before {
+		content: "";
+		position: absolute;
+		top: -5px;
+		bottom: -4px;
+	}
 	.textarea-container:focus-within .guiedit-mobile-help-button {
 		left: 8px;
 	}
+	.textarea-container:focus-within .guiedit-mobile-help-button::before {
+		left: -5px;
+		right: -6px;
+	}
 	.textarea-container:focus-within .guiedit-mobile-exit-button {
 		right: 8px;
+	}
+	.textarea-container:focus-within .guiedit-mobile-exit-button::before {
+		left: -6px;
+		right: -5px;
 	}
 	.guiedit::after {
 		display: none;
 	}
 
-	#markdown-hints,
+	.comment-controls #markdown-hints,
 	#edit-post-form #markdown-hints {
 		z-index: 11111;
 		position: fixed;
@@ -1430,19 +1437,20 @@ button.guiedit {
 		left: 0;
 		right: 0;
 		margin: auto;
-		padding: 4px 0 4px 8px;
-		width: 310px;
+		max-width: calc(100% - 12px);
+		padding: 0.25em 0.5em;
 		border-width: 3px;
 		border-style: double;
 		pointer-events: none;
+		font-size: 1.125rem;
 	}
+	<?php fit_content(".comment-controls #markdown-hints, #edit-post-form #markdown-hints"); ?>
 	#markdown-hints::after {
 		content: "(Type to hide this help box.)";
 		color: #090;
 		display: block;
-		margin: 12px 18px 13px 10px;
+		margin: 0.5em;
 		padding: 5px;
-		font-size: 0.9em;
 		text-align: center;
 	}
 }
