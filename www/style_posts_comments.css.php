@@ -53,6 +53,7 @@ h1.listing a[href^='http'] + a {
 /* Link-post links */
 h1.listing a[href^="http"] {
 	transform: scale(0.75);
+	margin: 0 0 0 -0.125em;
 }
 
 /*=----------------------=*/
@@ -398,6 +399,9 @@ h1.post-title {
 	}
 	h1.post-title {
 		font-size: 2em;
+	}
+	.post .post-meta {
+		line-height: 1.9;
 	}
 }
 
@@ -1349,27 +1353,14 @@ button.guiedit {
 	}
 	.textarea-container:focus-within textarea {
 		position: fixed;
-		top: 1px;
+		top: 0;
 		left: 2px;
 		width: calc(100% - 4px);
-		height: calc(100% - 99px);
+		height: calc(100% - 100px);
 		min-height: unset;
 		max-height: unset;
 		border-width: 1px;
 		z-index: 11001;
-	}
-	#content.conversation-page .textarea-container:focus-within textarea {
-		height: calc(100% - 54px);
-	}
-	#content.conversation-page .textarea-container:focus-within::after {
-		content: "";
-		display: block;
-		width: 100%;
-		height: 50px;
-		position: fixed;
-		left: 0;
-		bottom: 0;
-		z-index: 11000;
 	}
 	.textarea-container:focus-within .guiedit-buttons-container {
 		position: fixed;
@@ -1471,7 +1462,7 @@ button.guiedit {
 /******************/
 
 #edit-post-form {
-	padding: 1em 1em 4em 1em;
+	padding: 2em;
 }
 #edit-post-form .post-meta-fields {
 	display: grid;
@@ -1514,6 +1505,7 @@ button.guiedit {
 	cursor: pointer;
 	padding: 0.25em 0.5em 0.25em calc(20px + 0.25em + 0.3725em);
 	align-self: start;
+	user-select: none;
 }
 #edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
 	content: "";
@@ -1551,9 +1543,6 @@ button.guiedit {
 	font-weight: var(--GW-UI-font-weight-heavy);
 }
 #edit-post-form input[type='radio'] + label {
-	padding: 4px 12px;
-	text-align: center;
-	border-style: solid;
 	border-width: 1px 1px 1px 0;
 	cursor: pointer;
 }
@@ -1592,33 +1581,46 @@ button.guiedit {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-@media only screen and (max-width: 520px) {
+@media only screen and (max-width: 900px) {
 	#edit-post-form {
-		padding-bottom: 0;
+		padding: 1.5em;
 	}
+}
+@media only screen and (max-width: 840px) {
+	#edit-post-form {
+		padding: 1.25em;
+	}
+}
+@media only screen and (max-width: 720px) {
+	#edit-post-form {
+		padding: 1em;
+	}
+}
+@media only screen and (max-width: 520px) {
 	#edit-post-form .post-meta-fields {
 		grid-template-columns: 4.5em auto auto auto 1fr auto;
 	}
-	#edit-post-form label[for='url'], 
-	#edit-post-form label[for='section'],
-	#edit-post-form label[for='title'] {
-		padding-left: 0;
+	#edit-post-form .post-meta-fields input[type='checkbox'][name='question'] + label {
+		top: 0;
 	}
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label {
-		white-space: normal;
-		line-height: 0.9;
-		top: -1px;
+	#edit-post-form .post-meta-fields input[name='link-post'] + label {
+		width: 3.375em;
+		visibility: hidden;
+		position: relative;
+		overflow: hidden;
+	}
+	#edit-post-form .post-meta-fields input[name='link-post'] + label::before,
+	#edit-post-form .post-meta-fields input[name='link-post'] + label::after {
+		visibility: visible;
+	}
+	#edit-post-form .post-meta-fields input[name='link-post'] + label::after {
 		font-family: var(--GW-Font-Awesome);
 		font-weight: 900;
-		justify-self: start;
-	}
-	#edit-post-form .post-meta-fields .question-checkbox,
-	#edit-post-form .post-meta-fields .question-checkbox + label {
-		grid-column: 6;
-		margin-left: unset;
-	}
-	#edit-post-form .post-meta-fields input[type='radio'] + label {
-		align-self: start;
+		position: absolute;
+		left: 32px;
+		font-size: 1.125em;
+		content: "\F0C1";
+		opacity: 0.7;
 	}
 	#edit-post-form .textarea-container:focus-within textarea {
 		height: calc(100% - 101px);
@@ -1638,8 +1640,8 @@ button.guiedit {
 		float: none;
 		display: block;
 		font-size: 1.5rem;
-		margin: 1rem auto 1.5rem auto;
-		padding: 6px 12px 8px 12px;
+		margin: 1.25rem auto 0 auto;
+		padding: 0.5em 0.75em;
 	}
 }
 
@@ -1709,6 +1711,7 @@ button.guiedit {
 	font-weight: 900;
 	padding: 0 0.5em;
 	display: inline-block;
+	user-select: none;
 }
 .post-meta .qualified-linking label:hover {
 	cursor: pointer;
@@ -1716,9 +1719,6 @@ button.guiedit {
 .post-meta .qualified-linking label:active span {
 	display: inline-block;
 	transform: scale(0.9);
-}
-.post-meta .qualified-linking label::selection {
-	background-color: transparent;
 }
 
 .post-meta .qualified-linking label::after {
@@ -1761,9 +1761,7 @@ button.guiedit {
 	padding: 0 6px;
 	margin: 4px;
 	text-align: center;
-}
-.post-meta .qualified-linking-toolbar a::selection {
-	background-color: transparent;
+	user-select: none;
 }
 
 /*=----------------------------=*/

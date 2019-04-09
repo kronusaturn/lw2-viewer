@@ -789,7 +789,6 @@ a#inbox-indicator.new-messages:hover::before {
 .sublevel-nav.sort {
 	position: relative;
 	font-size: 0.75em;
-	margin: 1em 0 0 20px;
 	grid-row: 5 / span 2;
 	justify-self: end;
 	align-self: start;
@@ -799,6 +798,7 @@ a#inbox-indicator.new-messages:hover::before {
 	grid-row: 3 / span 1;
 	justify-self: start;
 	flex-flow: row;
+	margin: 1em 0 0 calc(var(--GW-content-left-side-padding) - 20px);
 }
 #content.user-page .sublevel-nav.sort {
 	margin: 1em var(--GW-user-page-content-right-side-padding) 1em 0;
@@ -830,7 +830,7 @@ a#inbox-indicator.new-messages:hover::before {
 
 @media only screen and (max-width: 900px) {
 	.sublevel-nav.sort {
-		margin: 1em 0 0 calc(100% / 45);
+		margin: 1em 0 0 var(--GW-content-left-side-padding);
 	}
 	#content.user-page .sublevel-nav.sort {
 		grid-row: 6;

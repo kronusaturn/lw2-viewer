@@ -42,13 +42,11 @@ a:active {
 	list-style-type: none;
 	margin: 0 0 0 0.5em;
 	counter-reset: toc-item-1 toc-item-2 toc-item-3;
-	padding-left: 1em;
 	font-size: 0.75em;
 }
 .post-body .contents li {
-	margin: 0.15em 0 0.3em 1em;
+	margin: 0 0 0 1em;
 	text-align: left;
-	text-indent: -1em;
 	line-height: 1.2;
 	position: relative;
 }
@@ -57,7 +55,8 @@ a:active {
 	width: 3em;
 	display: block;
 	text-align: right;
-	left: -4.5em;
+	left: -3.25em;
+	top: 0.15em;
 }
 .contents .toc-item-1 {
 	counter-increment: toc-item-1;
@@ -111,6 +110,13 @@ a:active {
 .contents .toc-item-5,
 .contents .toc-item-6 {
 	display: none;
+}
+
+.post-body .contents a {
+	display: inline-block;
+	text-indent: 0;
+	width: 100%;
+	padding: 0.15em 0.5em 0.15em 0.25em;
 }
 
 /*=----------------------------=*/

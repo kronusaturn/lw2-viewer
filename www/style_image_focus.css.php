@@ -164,9 +164,7 @@
 	transition:
 		left 0.3s ease;
 	pointer-events: auto;
-}
-#image-focus-overlay .slideshow-buttons button::selection {
-	background-color: transparent;
+	user-select: none;
 }
 @media only screen and (hover: hover) and (pointer: fine) {
 	#image-focus-overlay .slideshow-buttons button:hover {

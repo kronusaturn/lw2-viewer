@@ -51,10 +51,7 @@
 		opacity: 0.8;
 		-webkit-tap-highlight-color: transparent;
 		transition: transform 0.2s ease;
-	}
-	#ui-elements-container > div[id$='-ui-toggle'] button::selection,
-	#theme-selector .theme-selector-close-button::selection {
-		background-color: transparent;
+		user-select: none;
 	}
 	#ui-elements-container > div[id$='-ui-toggle'] button::-moz-focus-inner,
 	#theme-selector .theme-selector-close-button::-moz-focus-inner {
@@ -585,9 +582,7 @@ foreach ($content_width_settings as $name => $setting) {
 	cursor: pointer;
 
 	font-weight: var(--GW-UI-font-weight-heavy);
-}
-#new-comment-nav-ui .new-comments-count::selection {
-	background-color: transparent;
+	user-select: none;
 }
 #new-comment-nav-ui .new-comments-count::after {
 	content: "NEW";

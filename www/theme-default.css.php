@@ -25,7 +25,7 @@
 /*	Layout.
 	*/
 :root {
-	--GW-content-side-padding: 40px;
+	--GW-content-side-padding: 50px;
 	--GW-sequence-page-content-side-padding: 50px;
 	--GW-user-page-content-side-padding: 30px;
 	--GW-recent-comments-page-content-side-padding: 30px;
@@ -1210,7 +1210,11 @@ h1.listing.own-post-listing {
 	border: none;
 }
 .post-body .contents a:hover {
-	text-decoration: underline;
+	background-color: #ddd;
+	box-shadow: 5px 0 0 0 #ccc;
+}
+.post-body .contents li:hover::before {
+	color: #000;
 }
 
 /*==================*/

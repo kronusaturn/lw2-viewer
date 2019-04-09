@@ -375,10 +375,7 @@ a {
 		opacity: 0.8;
 		-webkit-tap-highlight-color: transparent;
 		transition: transform 0.2s ease;
-	}
-	#ui-elements-container > div[id$='-ui-toggle'] button::selection,
-	#theme-selector .theme-selector-close-button::selection {
-		background-color: transparent;
+		user-select: none;
 	}
 	#ui-elements-container > div[id$='-ui-toggle'] button::-moz-focus-inner,
 	#theme-selector .theme-selector-close-button::-moz-focus-inner {
@@ -930,9 +927,7 @@ head.content-width-fluid + body > * {
 	cursor: pointer;
 
 	font-weight: var(--GW-UI-font-weight-heavy);
-}
-#new-comment-nav-ui .new-comments-count::selection {
-	background-color: transparent;
+	user-select: none;
 }
 #new-comment-nav-ui .new-comments-count::after {
 	content: "NEW";
@@ -2357,7 +2352,6 @@ a#inbox-indicator.new-messages:hover::before {
 .sublevel-nav.sort {
 	position: relative;
 	font-size: 0.75em;
-	margin: 1em 0 0 20px;
 	grid-row: 5 / span 2;
 	justify-self: end;
 	align-self: start;
@@ -2367,6 +2361,7 @@ a#inbox-indicator.new-messages:hover::before {
 	grid-row: 3 / span 1;
 	justify-self: start;
 	flex-flow: row;
+	margin: 1em 0 0 calc(var(--GW-content-left-side-padding) - 20px);
 }
 #content.user-page .sublevel-nav.sort {
 	margin: 1em var(--GW-user-page-content-right-side-padding) 1em 0;
@@ -2398,7 +2393,7 @@ a#inbox-indicator.new-messages:hover::before {
 
 @media only screen and (max-width: 900px) {
 	.sublevel-nav.sort {
-		margin: 1em 0 0 calc(100% / 45);
+		margin: 1em 0 0 var(--GW-content-left-side-padding);
 	}
 	#content.user-page .sublevel-nav.sort {
 		grid-row: 6;
@@ -2704,6 +2699,7 @@ h1.listing a[href^='http'] + a {
 /* Link-post links */
 h1.listing a[href^="http"] {
 	transform: scale(0.75);
+	margin: 0 0 0 -0.125em;
 }
 
 /*=----------------------=*/
@@ -3049,6 +3045,9 @@ h1.post-title {
 	}
 	h1.post-title {
 		font-size: 2em;
+	}
+	.post .post-meta {
+		line-height: 1.9;
 	}
 }
 
@@ -4000,27 +3999,14 @@ button.guiedit {
 	}
 	.textarea-container:focus-within textarea {
 		position: fixed;
-		top: 1px;
+		top: 0;
 		left: 2px;
 		width: calc(100% - 4px);
-		height: calc(100% - 99px);
+		height: calc(100% - 100px);
 		min-height: unset;
 		max-height: unset;
 		border-width: 1px;
 		z-index: 11001;
-	}
-	#content.conversation-page .textarea-container:focus-within textarea {
-		height: calc(100% - 54px);
-	}
-	#content.conversation-page .textarea-container:focus-within::after {
-		content: "";
-		display: block;
-		width: 100%;
-		height: 50px;
-		position: fixed;
-		left: 0;
-		bottom: 0;
-		z-index: 11000;
 	}
 	.textarea-container:focus-within .guiedit-buttons-container {
 		position: fixed;
@@ -4131,7 +4117,7 @@ button.guiedit {
 /******************/
 
 #edit-post-form {
-	padding: 1em 1em 4em 1em;
+	padding: 2em;
 }
 #edit-post-form .post-meta-fields {
 	display: grid;
@@ -4174,6 +4160,7 @@ button.guiedit {
 	cursor: pointer;
 	padding: 0.25em 0.5em 0.25em calc(20px + 0.25em + 0.3725em);
 	align-self: start;
+	user-select: none;
 }
 #edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
 	content: "";
@@ -4211,9 +4198,6 @@ button.guiedit {
 	font-weight: var(--GW-UI-font-weight-heavy);
 }
 #edit-post-form input[type='radio'] + label {
-	padding: 4px 12px;
-	text-align: center;
-	border-style: solid;
 	border-width: 1px 1px 1px 0;
 	cursor: pointer;
 }
@@ -4261,33 +4245,46 @@ button.guiedit {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-@media only screen and (max-width: 520px) {
+@media only screen and (max-width: 900px) {
 	#edit-post-form {
-		padding-bottom: 0;
+		padding: 1.5em;
 	}
+}
+@media only screen and (max-width: 840px) {
+	#edit-post-form {
+		padding: 1.25em;
+	}
+}
+@media only screen and (max-width: 720px) {
+	#edit-post-form {
+		padding: 1em;
+	}
+}
+@media only screen and (max-width: 520px) {
 	#edit-post-form .post-meta-fields {
 		grid-template-columns: 4.5em auto auto auto 1fr auto;
 	}
-	#edit-post-form label[for='url'], 
-	#edit-post-form label[for='section'],
-	#edit-post-form label[for='title'] {
-		padding-left: 0;
+	#edit-post-form .post-meta-fields input[type='checkbox'][name='question'] + label {
+		top: 0;
 	}
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label {
-		white-space: normal;
-		line-height: 0.9;
-		top: -1px;
+	#edit-post-form .post-meta-fields input[name='link-post'] + label {
+		width: 3.375em;
+		visibility: hidden;
+		position: relative;
+		overflow: hidden;
+	}
+	#edit-post-form .post-meta-fields input[name='link-post'] + label::before,
+	#edit-post-form .post-meta-fields input[name='link-post'] + label::after {
+		visibility: visible;
+	}
+	#edit-post-form .post-meta-fields input[name='link-post'] + label::after {
 		font-family: var(--GW-Font-Awesome);
 		font-weight: 900;
-		justify-self: start;
-	}
-	#edit-post-form .post-meta-fields .question-checkbox,
-	#edit-post-form .post-meta-fields .question-checkbox + label {
-		grid-column: 6;
-		margin-left: unset;
-	}
-	#edit-post-form .post-meta-fields input[type='radio'] + label {
-		align-self: start;
+		position: absolute;
+		left: 32px;
+		font-size: 1.125em;
+		content: "\F0C1";
+		opacity: 0.7;
 	}
 	#edit-post-form .textarea-container:focus-within textarea {
 		height: calc(100% - 101px);
@@ -4307,8 +4304,8 @@ button.guiedit {
 		float: none;
 		display: block;
 		font-size: 1.5rem;
-		margin: 1rem auto 1.5rem auto;
-		padding: 6px 12px 8px 12px;
+		margin: 1.25rem auto 0 auto;
+		padding: 0.5em 0.75em;
 	}
 }
 
@@ -4378,6 +4375,7 @@ button.guiedit {
 	font-weight: 900;
 	padding: 0 0.5em;
 	display: inline-block;
+	user-select: none;
 }
 .post-meta .qualified-linking label:hover {
 	cursor: pointer;
@@ -4385,9 +4383,6 @@ button.guiedit {
 .post-meta .qualified-linking label:active span {
 	display: inline-block;
 	transform: scale(0.9);
-}
-.post-meta .qualified-linking label::selection {
-	background-color: transparent;
 }
 
 .post-meta .qualified-linking label::after {
@@ -4430,9 +4425,7 @@ button.guiedit {
 	padding: 0 6px;
 	margin: 4px;
 	text-align: center;
-}
-.post-meta .qualified-linking-toolbar a::selection {
-	background-color: transparent;
+	user-select: none;
 }
 
 /*=----------------------------=*/
@@ -4493,13 +4486,11 @@ a:active {
 	list-style-type: none;
 	margin: 0 0 0 0.5em;
 	counter-reset: toc-item-1 toc-item-2 toc-item-3;
-	padding-left: 1em;
 	font-size: 0.75em;
 }
 .post-body .contents li {
-	margin: 0.15em 0 0.3em 1em;
+	margin: 0 0 0 1em;
 	text-align: left;
-	text-indent: -1em;
 	line-height: 1.2;
 	position: relative;
 }
@@ -4508,7 +4499,8 @@ a:active {
 	width: 3em;
 	display: block;
 	text-align: right;
-	left: -4.5em;
+	left: -3.25em;
+	top: 0.15em;
 }
 .contents .toc-item-1 {
 	counter-increment: toc-item-1;
@@ -4562,6 +4554,13 @@ a:active {
 .contents .toc-item-5,
 .contents .toc-item-6 {
 	display: none;
+}
+
+.post-body .contents a {
+	display: inline-block;
+	text-indent: 0;
+	width: 100%;
+	padding: 0.15em 0.5em 0.15em 0.25em;
 }
 
 /*=----------------------------=*/
@@ -5501,9 +5500,7 @@ li {
 	transition:
 		left 0.3s ease;
 	pointer-events: auto;
-}
-#image-focus-overlay .slideshow-buttons button::selection {
-	background-color: transparent;
+	user-select: none;
 }
 @media only screen and (hover: hover) and (pointer: fine) {
 	#image-focus-overlay .slideshow-buttons button:hover {
@@ -5577,7 +5574,7 @@ li {
 /*	Layout.
 	*/
 :root {
-	--GW-content-side-padding: 40px;
+	--GW-content-side-padding: 50px;
 	--GW-sequence-page-content-side-padding: 50px;
 	--GW-user-page-content-side-padding: 30px;
 	--GW-recent-comments-page-content-side-padding: 30px;
@@ -6771,7 +6768,11 @@ h1.listing.own-post-listing {
 	border: none;
 }
 .post-body .contents a:hover {
-	text-decoration: underline;
+	background-color: #ddd;
+	box-shadow: 5px 0 0 0 #ccc;
+}
+.post-body .contents li:hover::before {
+	color: #000;
 }
 
 /*==================*/
