@@ -325,7 +325,6 @@ h1.listing + .post-meta .read-time {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 720px) {
-	.post-meta .lw2-link span,
 	.post-meta .karma-value span,
 	.post-meta .comment-count span {
 		display: none;
@@ -378,6 +377,14 @@ h1.post-title {
 .post-body > *:first-child:not(.contents),
 .post-body .contents + * {
 	margin-top: 0;
+}
+
+.post .post-meta .lw2-link {
+	width: 0;
+	visibility: hidden;
+}
+.post .post-meta .lw2-link::before {
+	visibility: visible;
 }
 
 /*=----------------------------=*/
@@ -590,9 +597,6 @@ ul.comment-thread {
 	.comment-meta .karma-value span {
 		display: none;
 	}
-	.comment-meta .comment-parent-link {
-		opacity: 1.0;
-	}
 }
 @media only screen and (max-width: 520px) {
 	.comment-meta {
@@ -727,7 +731,8 @@ a.comment-child-link::before {
 
 .comment-meta .permalink::before,
 .comment-meta .lw2-link::before,
-.comment-meta a.comment-parent-link span::before {
+.comment-meta a.comment-parent-link span::before,
+.post .post-meta .lw2-link::before {
 	content: "";
 	display: inline-block;
 	width: 1rem;
@@ -746,7 +751,8 @@ a.comment-child-link::before {
 .comment-meta .permalink::before {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/anchor-white-on-blue.gif")) ?>');
 }
-.comment-meta .lw2-link::before {
+.comment-meta .lw2-link::before,
+.post .post-meta .lw2-link::before {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/lw-white-on-blue.gif")) ?>');
 }
 .comment-meta a.comment-parent-link span::before {
@@ -756,7 +762,8 @@ a.comment-child-link::before {
 .comment-meta .permalink:hover::before {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/anchor-blue-on-white.gif")) ?>');
 }
-.comment-meta .lw2-link:hover::before {
+.comment-meta .lw2-link:hover::before,
+.post .post-meta .lw2-link:hover::before {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/lw-blue-on-white.gif")) ?>');
 }
 .comment-meta a.comment-parent-link span:hover::before {
@@ -764,7 +771,8 @@ a.comment-child-link::before {
 }
 .comment-meta .permalink:hover::before,
 .comment-meta .lw2-link:hover::before,
-.comment-meta a.comment-parent-link span:hover::before {
+.comment-meta a.comment-parent-link span:hover::before,
+.post .post-meta .lw2-link:hover::before {
 	box-shadow: 
 		0 0 0 2px #00e,
 		0 0 0 3px transparent;
@@ -773,19 +781,22 @@ a.comment-child-link::before {
 }
 .comment-meta .permalink:active::before,
 .comment-meta .lw2-link:active::before,
-.comment-meta a.comment-parent-link span:active::before {
+.comment-meta a.comment-parent-link span:active::before,
+.post .post-meta .lw2-link:active::before {
 	transform: scale(0.9);
 }
 
 .comment-meta .permalink,
 .comment-meta .lw2-link,
-.comment-meta a.comment-parent-link span {
+.comment-meta a.comment-parent-link span,
+.post .post-meta .lw2-link {
 	position: relative;
 	opacity: 1.0;
 }
 .comment-meta .permalink::after,
 .comment-meta .lw2-link::after,
-.comment-meta a.comment-parent-link span::after {
+.comment-meta a.comment-parent-link span::after,
+.post .post-meta .lw2-link::after {
 	content: "";
 	width: 30px;
 	height: 30px;
@@ -1696,7 +1707,6 @@ button.guiedit {
 .post-meta .qualified-linking label {
 	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
-	font-size: 1rem;
 	padding: 0 0.5em;
 	display: inline-block;
 }
