@@ -205,8 +205,9 @@ h1.listing + .post-meta .read-time {
 	justify-content: center;
 }
 
-.post-meta a,
-.post-meta a:visited {
+/*	Visited links not marked in this context.
+	*/
+.post-meta a:visited:not(:hover):not(:active) {
 	color: var(--GW-hyperlink-color);
 }
 
@@ -1769,7 +1770,4 @@ button.guiedit {
 	margin: 4px;
 	text-align: center;
 	user-select: none;
-}
-.post-meta .qualified-linking-toolbar a:visited {
-	color: var(--GW-hyperlink-color);
 }
