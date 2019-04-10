@@ -1713,6 +1713,7 @@ button.guiedit {
 .post-meta .qualified-linking label {
 	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
+	color: var(--GW-hyperlink-color);
 	padding: 0 0.5em;
 	display: inline-block;
 	user-select: none;
@@ -1737,6 +1738,8 @@ button.guiedit {
 }
 .post-meta .qualified-linking input[type='checkbox']:checked + label::after {
 	height: 100vh;
+	background-color: var(--GW-body-background-color);
+	opacity: 0.8;
 }
 
 /*=---------------------------=*/
@@ -1766,4 +1769,7 @@ button.guiedit {
 	margin: 4px;
 	text-align: center;
 	user-select: none;
+}
+.post-meta .qualified-linking-toolbar a:visited {
+	color: var(--GW-hyperlink-color);
 }

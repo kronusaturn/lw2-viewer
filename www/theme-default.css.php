@@ -1688,11 +1688,11 @@ a.comment-parent-link:hover::before {
 }
 .posting-controls textarea:focus {
 	background-color: #ffd;
-	border-color: var(--GW-hyperlink-color);
+	border-color: #00e;
 	box-shadow: 
 		0 0 0 1px #ddf inset,
 		0 0 0 1px #fff,
-		0 0 0 2px var(--GW-hyperlink-color);
+		0 0 0 2px #00e;
 }
 .posting-controls.edit-existing-post textarea:focus,
 .posting-controls form.edit-existing-comment textarea:focus {
@@ -2086,14 +2086,11 @@ EOT;
 	text-shadow: var(--GW-shadow-white-glow);
 }
 
-.qualified-linking label {
-	color: var(--GW-hyperlink-color);
-}
 .qualified-linking label:hover {
 	text-shadow:
 		0 0 1px #fff,
 		0 0 3px #fff,
-		0 0 5px #00e;
+		0 0 5px currentColor;
 }
 
 .qualified-linking-toolbar {
@@ -2105,17 +2102,10 @@ EOT;
 	border: 1px solid #ccc;
 	border-radius: 4px;
 }
-.qualified-linking-toolbar a:visited {
-	color: var(--GW-hyperlink-color);
-}
 .qualified-linking-toolbar a:hover {
 	text-decoration: none;
 	background-color: #ddd;
 	text-shadow: var(--GW-shadow-white-glow);
-}
-.qualified-linking label::after {
-	background-color: var(--GW-body-background-color);
-	opacity: 0.8;
 }
 
 /*======*/

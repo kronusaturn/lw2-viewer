@@ -4420,6 +4420,7 @@ button.guiedit {
 .post-meta .qualified-linking label {
 	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
+	color: var(--GW-hyperlink-color);
 	padding: 0 0.5em;
 	display: inline-block;
 	user-select: none;
@@ -4444,6 +4445,8 @@ button.guiedit {
 }
 .post-meta .qualified-linking input[type='checkbox']:checked + label::after {
 	height: 100vh;
+	background-color: var(--GW-body-background-color);
+	opacity: 0.8;
 }
 
 /*=---------------------------=*/
@@ -4473,6 +4476,9 @@ button.guiedit {
 	margin: 4px;
 	text-align: center;
 	user-select: none;
+}
+.post-meta .qualified-linking-toolbar a:visited {
+	color: var(--GW-hyperlink-color);
 }
 
 /*%%%%%%%%%%%%%%%%%%%%%%*/
@@ -5608,6 +5614,29 @@ li {
 @supports (-moz-user-focus: normal) {
 	:root {
 		--GW-body-text-font-weight: 300;
+	}
+}
+
+/*	Layout.
+	*/
+:root {
+	--GW-content-side-padding: 50px;
+	--GW-sequence-page-content-side-padding: 50px;
+	--GW-user-page-content-side-padding: 30px;
+	--GW-recent-comments-page-content-side-padding: 30px;
+	--GW-conversation-page-content-side-padding: 30px;
+	--GW-post-page-content-side-padding: 30px;
+	--GW-post-side-padding: 30px;
+}
+@media only screen and (max-width: 900px) {
+	:root {
+		--GW-content-side-padding: calc(100% / 45);
+		--GW-sequence-page-content-side-padding: calc(100% / 36);
+		--GW-user-page-content-side-padding: calc(100% / 30);
+		--GW-recent-comments-page-content-side-padding: calc(100% / 30);
+		--GW-conversation-page-content-side-padding: calc(100% / 30);
+		--GW-post-page-content-side-padding: calc(100% / 30);
+		--GW-post-side-padding: 0px;
 	}
 }
 

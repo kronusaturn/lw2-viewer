@@ -4420,6 +4420,7 @@ button.guiedit {
 .post-meta .qualified-linking label {
 	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
+	color: var(--GW-hyperlink-color);
 	padding: 0 0.5em;
 	display: inline-block;
 	user-select: none;
@@ -4444,6 +4445,8 @@ button.guiedit {
 }
 .post-meta .qualified-linking input[type='checkbox']:checked + label::after {
 	height: 100vh;
+	background-color: var(--GW-body-background-color);
+	opacity: 0.8;
 }
 
 /*=---------------------------=*/
@@ -4473,6 +4476,9 @@ button.guiedit {
 	margin: 4px;
 	text-align: center;
 	user-select: none;
+}
+.post-meta .qualified-linking-toolbar a:visited {
+	color: var(--GW-hyperlink-color);
 }
 
 /*%%%%%%%%%%%%%%%%%%%%%%*/
@@ -7322,11 +7328,11 @@ a.comment-parent-link:hover::before {
 }
 .posting-controls textarea:focus {
 	background-color: #00001e;
-	border-color: var(--GW-hyperlink-color);
+	border-color: #0cc800;
 	box-shadow: 
 		0 0 0 1px #1d1f00 inset,
 		0 0 0 1px #000,
-		0 0 0 2px var(--GW-hyperlink-color);
+		0 0 0 2px #0cc800;
 }
 .posting-controls.edit-existing-post textarea:focus,
 .posting-controls form.edit-existing-comment textarea:focus {
@@ -7716,14 +7722,11 @@ select {
 	text-shadow: var(--GW-shadow-white-glow);
 }
 
-.qualified-linking label {
-	color: var(--GW-hyperlink-color);
-}
 .qualified-linking label:hover {
 	text-shadow:
 		0 0 1px #000,
 		0 0 3px #000,
-		0 0 5px #0cc800;
+		0 0 5px currentColor;
 }
 
 .qualified-linking-toolbar {
@@ -7735,17 +7738,10 @@ select {
 	border: 1px solid #2c2c2c;
 	border-radius: 4px;
 }
-.qualified-linking-toolbar a:visited {
-	color: var(--GW-hyperlink-color);
-}
 .qualified-linking-toolbar a:hover {
 	text-decoration: none;
 	background-color: #1f1f1f;
 	text-shadow: var(--GW-shadow-white-glow);
-}
-.qualified-linking label::after {
-	background-color: var(--GW-body-background-color);
-	opacity: 0.8;
 }
 
 /*======*/
