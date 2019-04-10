@@ -1608,7 +1608,7 @@ function injectThemeTweaker() {
 			themeTweakerStyleSheet.setAttribute('rel', 'stylesheet');
 			themeTweakerStyleSheet.setAttribute('href', '/css/theme_tweaker.css');
 			themeTweakerStyleSheet.addEventListener('load', GW.themeTweakerStyleSheetAvailable);
-			query("head").appendChild(themeTweakerStyleSheet);
+			query("head").insertBefore(themeTweakerStyleSheet, query("head").firstElementChild);
 		}
 	});
 }
