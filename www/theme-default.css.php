@@ -1849,19 +1849,6 @@ a.comment-parent-link:hover::before {
 		0 0.5px 0.5px #000;
 }
 
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
-@media only screen and (max-width: 520px) {
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label {
-		top: 2px;
-	}
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
-		top: 1px;
-	}
-}
-
 /*=============*/
 /*= SEQUENCES =*/
 /*=============*/

@@ -1621,28 +1621,6 @@ button.guiedit {
 	#edit-post-form .post-meta-fields {
 		grid-template-columns: 4.5em auto auto auto 1fr auto;
 	}
-	#edit-post-form .post-meta-fields input[type='checkbox'][name='question'] + label {
-		top: 0;
-	}
-	#edit-post-form .post-meta-fields input[name='link-post'] + label {
-		width: 3.375em;
-		visibility: hidden;
-		position: relative;
-		overflow: hidden;
-	}
-	#edit-post-form .post-meta-fields input[name='link-post'] + label::before,
-	#edit-post-form .post-meta-fields input[name='link-post'] + label::after {
-		visibility: visible;
-	}
-	#edit-post-form .post-meta-fields input[name='link-post'] + label::after {
-		font-family: var(--GW-Font-Awesome);
-		font-weight: 900;
-		position: absolute;
-		left: 32px;
-		font-size: 1.125em;
-		content: "\F0C1";
-		opacity: 0.7;
-	}
 	#edit-post-form .textarea-container:focus-within textarea {
 		height: calc(100% - 101px);
 		min-height: unset;
