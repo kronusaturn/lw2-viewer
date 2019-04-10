@@ -1902,14 +1902,29 @@ head.content-width-fluid + body > * {
 	#nav-item-about .nav-inner::before {
 		content: "\F129";
 	}
+
 	#nav-item-search .nav-inner::before {
 		content: none;
+	}
+	#nav-item-search input {
+		padding: 1px 1.75em 1px 4px;
+	}
+	#nav-item-search button {
+		position: absolute;
+		top: 0;
+		right: 10px;
+		width: 2em;
+		padding: 0 0 0 0.375em;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 	#nav-item-search button::before {
 		content: "\F002";
 		font-family: var(--GW-Font-Awesome);
 		font-weight: 900;
 	}
+
 	#nav-item-login {
 		padding: 0;
 	}
@@ -1942,11 +1957,13 @@ head.content-width-fluid + body > * {
 		margin: 0;
 		font-size: 1.125em;
 	}
-	.nav-bar #nav-item-search {
-		padding: 5px;
+
+	#nav-item-search {
+		padding: 4px 0;
+		font-size: 1.5em;
 	}
-	.nav-bar #nav-item-search button::before {
-		font-size: 1.5rem;
+	#nav-item-search input {
+		font-weight: var(--GW-UI-font-weight-light);
 	}
 }
 @media only screen and (max-width: 640px) {
@@ -1964,9 +1981,13 @@ head.content-width-fluid + body > * {
 	#secondary-bar .nav-inner::before {
 		font-size: 1.25em;
 	}
-	.nav-bar #nav-item-search button::before {
-		font-size: 1.25rem;
+
+	#nav-item-search {
+		padding: 2px 0;
 	}
+	 #nav-item-search input {
+	 	width: 9em;
+	 }
 }
 @media only screen and (max-width: 520px) {
 	#primary-bar,
@@ -1998,6 +2019,10 @@ head.content-width-fluid + body > * {
 	#bottom-bar #nav-item-last .nav-inner::after {
 		content: "Last";
 	}
+
+	#nav-item-search {
+		font-size: 1.75em;
+	}
 }
 @media only screen and (max-width: 420px) {
 	#primary-bar,
@@ -2011,11 +2036,13 @@ head.content-width-fluid + body > * {
 	#secondary-bar .nav-inner::before {
 		font-size: 2.25em;
 	}
-	.nav-bar #nav-item-search {
-		padding: 2px;
+
+	#nav-item-search {
+		padding: 0;
+		font-size: 2em;
 	}
-	.nav-bar #nav-item-search button::before {
-		font-size: 1rem;
+	#nav-item-search input {
+		width: 6em;
 	}
 }
 @media only screen and (max-width: 360px) {
@@ -2025,23 +2052,6 @@ head.content-width-fluid + body > * {
 	#primary-bar .nav-inner::before,
 	#secondary-bar .nav-inner::before {
 		font-size: 1.75em;
-	}
-	.nav-bar #nav-item-search {
-		padding: 1px;
-		width: 12em;
-	}
-	#nav-item-search input {
-		padding: 1px 3em 1px 4px;
-	}
-	.nav-bar #nav-item-search button {
-		position: absolute;
-		top: 0;
-		right: 1em;
-		width: 3em;
-		text-align: left;
-	}
-	.nav-bar #nav-item-search button::before {
-		font-size: 0.875rem;
 	}
 }
 
@@ -2392,7 +2402,7 @@ a#inbox-indicator.new-messages:hover::before {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 900px) {
-	#content.user-page .sublevel-nav.sort {
+	#content.index-page .sublevel-nav.sort {
 		margin: 1em 0 0 var(--GW-content-left-side-padding);
 	}
 	#content.user-page .sublevel-nav.sort {
