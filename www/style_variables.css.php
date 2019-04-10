@@ -20,7 +20,6 @@
 
 	--GW-body-text-font: 'PT Serif', 'Georgia', serif;
 	--GW-body-text-font-weight: 400;
-	--GW-body-background-color: transparent;
 
 	--GW-editor-font: var(--GW-body-text-font);
 	--GW-editor-font-weight: var(--GW-body-text-font-weight);
@@ -88,6 +87,9 @@
 /*	Color scheme.
 	*/
 :root {
+	--GW-body-background-color: transparent;
+	--GW-content-background-color: transparent;
+	
 	--GW-hyperlink-color: #00e;
 	--GW-hyperlink-visited-color: var(--GW-hyperlink-color);
 	--GW-hyperlink-hover-color: var(--GW-hyperlink-color);

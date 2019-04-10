@@ -182,6 +182,7 @@ EOT;
 	margin: auto;
 	padding-right: 4px;
 	padding-left: 4px;
+	background-color: var(--GW-content-background-color);
 }
 <?php fit_content("#bottom-bar.decorative::after"); ?>
 

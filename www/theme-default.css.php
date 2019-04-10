@@ -49,6 +49,7 @@
 	*/
 :root {
 	--GW-body-background-color: #d8d8d8;
+	--GW-content-background-color: #fff;
 
 	--GW-hyperlink-color: #00e;
 	--GW-hyperlink-visited-color: #551a8b;
@@ -74,7 +75,6 @@ body {
 	line-height: 1.55;
 }
 #content::before {
-	background-color: #fff;
 	box-shadow: 0px 0px 10px #555;
 }
 
@@ -127,7 +127,6 @@ body {
 
 #bottom-bar.decorative::after {
 	color: #d8d8d8;
-	background-color: #fff;
 }
 
 /* Accesskey hints */
@@ -239,7 +238,6 @@ body {
 
 .sublevel-nav .sublevel-item {
 	color: #777;
-	background-color: #fff;
 }
 .sublevel-nav .sublevel-item:not(.selected):hover {
 	background-color: #ddd;
@@ -576,18 +574,13 @@ body {
 	#new-comment-nav-ui,
 	#hns-date-picker {
 		box-shadow:
-			0 0 1px 3px #fff,
-			0 0 3px 3px #fff,
-			0 0 5px 3px #fff,
-			0 0 10px 3px #fff,
-			0 0 20px 3px #fff;
+			0 0 1px 3px #fff;
+		filter:
+			drop-shadow(0 0 1px #fff)
+			drop-shadow(0 0 1px #fff);
 	}
 	#quick-nav-ui a::after,
 	#new-comment-nav-ui::before {
-		box-shadow:
-			0 0 1px 0 #fff,
-			0 0 3px 0 #fff,
-			0 0 5px 0 #fff;
 		background-color: #fff;
 		border-radius: 4px;
 	}
@@ -1372,13 +1365,6 @@ a.post-section.alignment-forum:hover::before {
 /* DEEP COMMENT THREAD COLLAPSING */
 /*================================*/
 
-.comment-item input[id^="expand"] + label:hover::after {
-	color: #c00;
-}
-.comment-item input[id^="expand"] + label:active::after,
-.comment-item input[id^="expand"] + label:focus::after{
-	color: #c00;
-}
 .comment-item input[id^="expand"]:checked ~ .comment-thread .comment-thread .comment-item {
 	border-width: 1px 0 0 0;
 }
@@ -1888,13 +1874,6 @@ h1.sequence-chapter {
 	margin: 0;
 }
 
-#content.sequence-page section {
-	margin: 3em 0 0 0;
-}
-#content.sequence-page section section {
-	margin: 2em 0 0 0;
-}
-
 /*=======*/
 /* LINKS */
 /*=======*/
@@ -2056,19 +2035,6 @@ EOT;
 /*============*/
 /* ABOUT PAGE */
 /*============*/
-
-.about-page mark {
-	background-color: #e6e6e6;
-	text-decoration: none;
-	box-shadow: 
-		0 -1px 0 0 #000 inset, 
-		0 -3px 1px -2px #000 inset;
-	padding: 0 1px;
-}
-
-#content.about-page .accesskey-table {
-	border-color: #ddd;
-}
 
 #content.about-page img {
 	border: 1px solid #000;

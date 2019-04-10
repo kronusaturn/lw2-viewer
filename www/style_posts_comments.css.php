@@ -29,6 +29,13 @@
 	padding: 0 var(--GW-sequence-page-content-right-side-padding) 15px var(--GW-sequence-page-content-left-side-padding);
 }
 
+#content.sequence-page section {
+	margin: 3em 0 0 0;
+}
+#content.sequence-page section section {
+	margin: 2em 0 0 0;
+}
+
 /************/
 /* LISTINGS */
 /************/
@@ -534,6 +541,13 @@ ul.comment-thread {
 
 	color: var(--GW-hyperlink-color);
 	font-weight: var(--GW-UI-font-weight-heavy);
+}
+.comment-item input[id^="expand"] + label:hover::after,
+.comment-item input[id^="expand"] + label:focus::after {
+	color: var(--GW-hyperlink-hover-color);
+}
+.comment-item input[id^="expand"] + label:active::after {
+	color: var(--GW-hyperlink-active-color);
 }
 .comment-item input[id^="expand"]:checked + label::after {
 	content: "(Collapse " attr(data-child-count) "	below)";
@@ -1123,7 +1137,7 @@ a.comment-child-link::before {
 
 .post-controls {
 	text-align: right;
-	margin: 0.75em 0 0 0;
+	margin: 0.75em var(--GW-post-page-content-right-side-padding) 0 0;
 	grid-row: 3;
 	align-self: start;
 	justify-self: end;

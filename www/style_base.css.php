@@ -69,6 +69,7 @@ body > * {
 	height: 100%;
 	z-index: -1;
 	pointer-events: none;
+	background-color: var(--GW-content-background-color);
 }
 
 /*=----------------------------=*/
