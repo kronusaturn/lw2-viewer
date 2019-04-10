@@ -1069,7 +1069,7 @@ function setTheme(newThemeName) {
 	if (themeUnloadCallback != null) themeUnloadCallback(newThemeName);
 
 	let styleSheetNameSuffix = (newThemeName == 'default') ? '' : ('-' + newThemeName);
-	let currentStyleSheetNameComponents = /style[^\.]*(\..+)$/.exec(query("head link[href*='.css']").href);
+	let currentStyleSheetNameComponents = /style[^\.]*(\..+)$/.exec(query("head link[href*='/css/style'][href*='.css']").href);
 
 	let newStyle = document.createElement('link');
 	newStyle.setAttribute('rel', 'stylesheet');
