@@ -73,8 +73,8 @@ function readCookie(name) {
 /*******************************/
 
 /*	Adds an event listener to a button (or other clickable element), attaching 
-	it to both "click" and "keyup" events (for use with keyboard navigation).
-	Optionally also attaches the listener to the 'mousedown' event, making the 
+	it to both ‘click’ and ‘keyup’ events (for use with keyboard navigation).
+	Optionally also attaches the listener to the ‘mousedown’ event, making the 
 	element activate on mouse down instead of mouse up. */
 Element.prototype.addActivateEvent = function(func, includeMouseDown) {
 	let ael = this.activateEventListener = (event) => { if (event.button === 0 || event.key === ' ') func(event) };
@@ -121,8 +121,8 @@ Element.prototype.scrollIntoViewIfNeeded = function() {
 	}
 }
 
-/*	Get the comment ID of the item (if it's a comment) or of its containing 
-	comment (if it's a child of a comment).
+/*	Get the comment ID of the item (if it’s a comment) or of its containing 
+	comment (if it’s a child of a comment).
 	*/
 Element.prototype.getCommentId = function() {
 	let item = (this.className == "comment-item" ? this : this.closest(".comment-item"));
@@ -192,6 +192,7 @@ function addUIElement(element_html) {
 
 /*	Given an element or a selector, removes that element (or the element 
 	identified by the selector).
+
 	If multiple elements match the selector, only the first is removed.
 	*/
 function removeElement(elementOrSelector, ancestor = document) {
@@ -356,8 +357,8 @@ Element.prototype.addTextareaFeatures = function() {
 	// On smartphone (narrow mobile) screens, when a textarea is focused (and
 	// automatically fullscreened), remove all the filters from the page, and 
 	// then apply them *just* to the fixed editor UI elements. This is in order
-	// to get around the "children of elements with a filter applied cannot be
-	// fixed" issue".
+	// to get around the “children of elements with a filter applied cannot be
+	// fixed” issue.
 	if (GW.isMobile && window.innerWidth <= 520) {
 		let fixedEditorElements = textareaContainer.queryAll("textarea, .guiedit-buttons-container, .guiedit-mobile-auxiliary-button, #markdown-hints");
 		textarea.addEventListener("focus", GW.textareaFocusedMobile = (event) => {
@@ -1171,7 +1172,8 @@ GW.themeLoadCallback_less = (fromTheme = "") => {
 		// Unset the height of the #ui-elements-container.
 		query("#ui-elements-container").style.height = "";
 
-		// Due to filters vs. fixed elements, we need to be smarter about selecting which elements to filter...
+		// Due to filters vs. fixed elements, we need to be smarter about 
+		// selecting which elements to filter...
 		GW.themeTweaker.filtersExclusionPaths.themeLess = [
 			"#content #secondary-bar",
 			"#content .post .top-post-meta .date",
@@ -1180,8 +1182,8 @@ GW.themeLoadCallback_less = (fromTheme = "") => {
 		applyFilters(GW.currentFilters);
 	}
 
-	// We pre-query the relevant elements, so we don't have to run querySelectorAll
-	// on every firing of the scroll listener.
+	// We pre-query the relevant elements, so we don’t have to run queryAll on
+	// every firing of the scroll listener.
 	GW.scrollState = {
 		"lastScrollTop":					window.pageYOffset || document.documentElement.scrollTop,
 		"unbrokenDownScrollDistance":		0,
@@ -1193,8 +1195,8 @@ GW.themeLoadCallback_less = (fromTheme = "") => {
 	addScrollListener(updateSiteNavUIState, "updateSiteNavUIStateScrollListener");
 }
 
-// Hide the post-nav-ui toggle if none of the elements to be toggled are visible; 
-// otherwise, show it.
+// Hide the post-nav-ui toggle if none of the elements to be toggled are 
+// visible; otherwise, show it.
 function updatePostNavUIVisibility() {
 	GWLog("updatePostNavUIVisibility");
 	var hidePostNavUIToggle = true;
@@ -1259,7 +1261,7 @@ GW.themeUnloadCallback_less = (toTheme = "") => {
 	removeElement("#theme-less-mobile-first-row-placeholder");
 
 	if (!GW.isMobile) {
-		// Remove spans
+		// Remove spans.
 		queryAll(".top-post-meta .date, .top-post-meta .comment-count").forEach(element => {
 			element.innerHTML = element.firstChild.innerHTML;
 		});
@@ -1424,7 +1426,7 @@ function injectThemeTweaker() {
 
 	let sampleTextContainer = query("#theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container");
 	themeTweakerUI.queryAll("input").forEach(field => {
-		// All input types in the theme tweaker receive a 'change' event when
+		// All input types in the theme tweaker receive a ‘change’ event when
 		// their value is changed. (Range inputs, in particular, receive this 
 		// event when the user lets go of the handle.) This means we should
 		// update the filters for the entire page, to match the new setting.
@@ -1445,8 +1447,8 @@ function injectThemeTweaker() {
 			applyFilters(GW.currentFilters);
 		});
 
-		// Range inputs receive an 'input' event while being scrubbed, updating
-		// "live" as the handle is moved. We don't want to change the filters 
+		// Range inputs receive an ‘input’ event while being scrubbed, updating
+		// “live” as the handle is moved. We don’t want to change the filters 
 		// for the actual page while this is happening, but we do want to change
 		// the filters for the *sample text*, so the user can see what effects
 		// his changes are having, live, without having to let go of the handle.
@@ -1697,8 +1699,8 @@ function updateThemeTweakerSampleText() {
 								getComputedStyle(bodyTextElement).color : 
 									getComputedStyle(query("#content")).color;
 
-	// Here we find out what is the actual background color that will be visible behind
-	// the body text of posts, and set the sample text’s background to that.
+	// Here we find out what is the actual background color that will be visible
+	// behind the body text of posts, and set the sample text’s background to that.
 	var backgroundElement = query("#content");
 	let searchField = query("#nav-item-search input");
 	if (!(getComputedStyle(searchField).backgroundColor == "" || 
@@ -2227,7 +2229,7 @@ function injectAntiKibitzer() {
 
 function toggleAntiKibitzerMode() {
 	GWLog("toggleAntiKibitzerMode");
-	// This will be the URL of the user's own page, if logged in, or the URL of
+	// This will be the URL of the user’s own page, if logged in, or the URL of
 	// the login page otherwise.
 	let userTabTarget = query("#nav-item-login .nav-inner").href;
 	let pageHeadingElement = query("h1.page-main-heading");
@@ -2250,7 +2252,7 @@ function toggleAntiKibitzerMode() {
 			return;
 		}
 
-		// Individual comment page title and header
+		// Individual comment page title and header.
 		if (query(".individual-thread-page")) {
 			let replacer = (node) => {
 				if (!node) return;
@@ -2463,7 +2465,7 @@ function injectCommentsSortModeSelector() {
 		});
 	});
 
-	// TODO: Make this actually get the current sort mode (if that's saved).
+	// TODO: Make this actually get the current sort mode (if that’s saved).
 	// TODO: Also change the condition here to properly get chrono/threaded mode,
 	// when that is properly done with cookies.
 	let currentSortMode = (location.href.search("chrono=t") == -1) ? CommentSortMode.TOP : CommentSortMode.OLD;
@@ -2573,7 +2575,7 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 	});
 	// Accesskey-L starts the slideshow.
 	(query(GW.imageFocus.overlayImagesSelector)||{}).accessKey = 'l';
-	// Count how many images there are in the post, and set the "… of X" label to that.
+	// Count how many images there are in the post, and set the “… of X” label to that.
 	((query("#image-focus-overlay .image-number")||{}).dataset||{}).numberOfImages = queryAll(GW.imageFocus.overlayImagesSelector).length;
 	if (imagesOverlayOnly) return;
 	// Add the listener to all other content images (including those in comments).
@@ -2618,7 +2620,7 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 
 function focusImage(imageToFocus) {
 	GWLog("focusImage");
-	// Clear 'last-focused' class of last focused image.
+	// Clear “last-focused” class of last focused image.
 	let lastFocusedImage = query("img.last-focused");
 	if (lastFocusedImage) {
 		lastFocusedImage.removeClass("last-focused");
@@ -2672,15 +2674,15 @@ function focusImage(imageToFocus) {
 
 		// Designate zoom origin.
 		var zoomOrigin;
-		// Zoom from cursor if we're zoomed in to where image exceeds screen, AND
-		// the cursor is over the image.
+		// Zoom from cursor if we’re zoomed in to where image exceeds screen,
+		// AND the cursor is over the image.
 		let imageSizeExceedsWindowBounds = (image.getBoundingClientRect().width > window.innerWidth || image.getBoundingClientRect().height > window.innerHeight);
 		let zoomingFromCursor = imageSizeExceedsWindowBounds &&
 								(imageBoundingBox.left <= event.clientX &&
 								 event.clientX <= imageBoundingBox.right && 
 								 imageBoundingBox.top <= event.clientY &&
 								 event.clientY <= imageBoundingBox.bottom);
-		// Otherwise, if we're zooming OUT, zoom from window center; if we're 
+		// Otherwise, if we’re zooming OUT, zoom from window center; if we’re 
 		// zooming IN, zoom from image center.
 		let zoomingFromWindowCenter = event.deltaY > 0;
 		if (zoomingFromCursor)
@@ -2714,8 +2716,8 @@ function focusImage(imageToFocus) {
 								 y: window.innerHeight / 2 }
 			let imageOffsetFromCenter = { x: windowCenter.x - imageCenter.x,
 										  y: windowCenter.y - imageCenter.y }
-			// Divide the offset by 10 because we're nudging the image toward center,
-			// not jumping it there.
+			// Divide the offset by 10 because we’re nudging the image toward,
+			// center not jumping it there.
 			image.style.left = parseInt(getComputedStyle(image).left) + imageOffsetFromCenter.x / 10 + "px";
 			image.style.top = parseInt(getComputedStyle(image).top) + imageOffsetFromCenter.y / 10 + "px";
 		}
@@ -2731,7 +2733,7 @@ function focusImage(imageToFocus) {
 		event.preventDefault();
 	});
 
-	// If image is bigger than viewport, it's draggable. Otherwise, click unfocuses.
+	// If image is bigger than viewport, it’s draggable. Otherwise, click unfocuses.
 	window.addEventListener("mouseup", GW.imageFocus.mouseUp = (event) => {
 		GWLog("GW.imageFocus.mouseUp");
 		window.onmousemove = '';
@@ -2739,10 +2741,10 @@ function focusImage(imageToFocus) {
 		// We only want to do anything on left-clicks.
 		if (event.button != 0) return;
 
-		// Don't unfocus if click was on a slideshow next/prev button!
+		// Don’t unfocus if click was on a slideshow next/prev button!
 		if (event.target.hasClass("slideshow-button")) return;
 
-		// We also don't want to do anything if clicked on the help overlay.
+		// We also don’t want to do anything if clicked on the help overlay.
 		if (event.target.classList.contains("help-overlay") ||
 			event.target.closest(".help-overlay"))
 			return;
@@ -2910,7 +2912,7 @@ function unfocusImageOverlay() {
 	window.removeEventListener("mousedown", GW.imageFocus.mouseDown);
 	window.removeEventListener("mouseup", GW.imageFocus.mouseUp);
 
-	// Set accesskey of currently focused image (if it's in the images overlay).
+	// Set accesskey of currently focused image (if it’s in the images overlay).
 	let currentlyFocusedImage = query("#images-overlay img.focused");
 	if (currentlyFocusedImage) {
 		currentlyFocusedImage.addClass("last-focused");
@@ -2927,7 +2929,7 @@ function unfocusImageOverlay() {
 		element.removeClass("blurred");
 	});
 
-	// Unset "focused" class of focused image.
+	// Unset “focused” class of focused image.
 	query(GW.imageFocus.focusedImageSelector).removeClass("focused");
 
 	// Re-enable page scrolling.
@@ -2959,7 +2961,7 @@ function focusNextImage(next = true) {
 
 	// Remove existing image.
 	removeElement("#image-focus-overlay img");
-	// Unset "focused" class of just-removed image.
+	// Unset “focused” class of just-removed image.
 	query(GW.imageFocus.focusedImageSelector).removeClass("focused");
 
 	// Create the focused version of the image.
@@ -3099,7 +3101,7 @@ function keyboardHelpSetup() {
 				[ [ 'ak-8' ], "Switch to classic Less Wrong theme [H]" ],
 				[ [ 'ak-9' ], "Switch to modern Less Wrong theme [I]" ],
 				[ [ 'ak-;' ], "Open theme tweaker" ],
-				[ [ 'Enter' ], "Save changes and close theme tweaker "],
+				[ [ 'Enter' ], "Save changes and close theme tweaker"],
 				[ [ 'Esc' ], "Close theme tweaker (without saving)" ]
 			], [
 				"Slide shows",
@@ -3146,7 +3148,7 @@ function keyboardHelpSetup() {
 		}
 	}, true);
 
-	// Intercept clicks, so they don't "fall through" the background overlay.
+	// Intercept clicks, so they don’t “fall through” the background overlay.
 	(query("#keyboard-help-overlay .keyboard-help-container")||{}).addActivateEvent((event) => { event.stopPropagation(); }, true);
 
 	// Clicking the close button closes the keyboard help overlay.
@@ -3275,12 +3277,12 @@ function MarkdownFromHTML(text) {
 
 registerInitializer('earlyInitialize', true, () => query("#content") != null, function () {
 	GWLog("INITIALIZER earlyInitialize");
-	// Check to see whether we're on a mobile device (which we define as a touchscreen)
+	// Check to see whether we’re on a mobile device (which we define as a touchscreen)
 // 	GW.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 	GW.isMobile = ('ontouchstart' in document.documentElement);
 	GW.isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
 
-	// Backward compatibility
+	// Backward compatibility.
 	let storedTheme = localStorage.getItem('selected-theme');
 	if (storedTheme) {
 		setTheme(storedTheme);
@@ -3308,8 +3310,8 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	GWLog("INITIALIZER initialize");
 	forceInitializer('earlyInitialize');
 
-	// This is for "qualified hyperlinking", i.e. "link without comments" and/or
-	// "link without nav bars".
+	// This is for “qualified hyperlinking”, i.e. “link without comments” and/or
+	// “link without nav bars”.
 	if (getQueryVariable("comments") == "false")
 		query("#content").addClass("no-comments");
 	if (getQueryVariable("hide-nav-bars") == "true") {
@@ -3328,7 +3330,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	}
 
 	// Links to comments generated by LW have a hash that consists of just the 
-	// comment ID, which can start with a number. Prefix it with "comment-".
+	// comment ID, which can start with a number. Prefix it with “comment-”.
 	if (location.hash.length == 18) {
 		location.hash = "#comment-" + location.hash.substring(1);
 	}
@@ -3361,7 +3363,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	// If this is a post page...
 	let postMeta = query(".post .post-meta");
 	if (postMeta) {
-		// Add "qualified hyperlinking" toolbar.
+		// Add “qualified hyperlinking” toolbar.
 		let postPermalink = location.protocol + "//" + location.host + location.pathname;
 		postMeta.insertAdjacentHTML("beforeend", "<div class='qualified-linking'>" + 
 		"<input type='checkbox' tabindex='-1' id='qualified-linking-toolbar-toggle-checkbox'><label for='qualified-linking-toolbar-toggle-checkbox'><span>&#xf141;</span></label>" + 
@@ -3439,7 +3441,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		GW.needHashRealignment = true;
 	}
 
-	// Clean up ToC
+	// Clean up ToC.
 	queryAll(".contents-list li a").forEach(tocLink => {
 		tocLink.innerText = tocLink.innerText.replace(/^[0-9]+\. /, '');
 		tocLink.innerText = tocLink.innerText.replace(/^[0-9]+: /, '');
@@ -3447,7 +3449,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		tocLink.innerText = tocLink.innerText.replace(/^[A-Z]\. /, '');
 	});
 
-	// If we're on a comment thread page...
+	// If we’re on a comment thread page...
 	if (query(".comments") != null) {
 		// Add comment-minimize buttons to every comment.
 		queryAll(".comment-meta").forEach(commentMeta => {
@@ -3496,7 +3498,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		event.target.placeholder = "";
 	});
 
-	// Prevent conflict between various single-hotkey listeners and text fields
+	// Prevent conflict between various single-hotkey listeners and text fields.
 	queryAll("input[type='text'], input[type='search'], input[type='password']").forEach(inputField => {
 		inputField.addEventListener("keyup", (event) => { event.stopPropagation(); });
 		inputField.addEventListener("keypress", (event) => { event.stopPropagation(); });
@@ -3562,7 +3564,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		});
 	}
 
-	// Set the "submit" button on the edit post page to something more helpful.
+	// Set the “submit” button on the edit post page to something more helpful.
 	setEditPostPageSubmitButtonText();
 
 	// Compute the text of the pagination UI tooltip text.
