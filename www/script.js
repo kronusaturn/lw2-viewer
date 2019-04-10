@@ -3703,6 +3703,11 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		event.clipboardData.setData("text/html", selectedHTML.replace(/\u00AD|\u200b/g, ""));
 	});
 
+	// Unwrap folds.
+	queryAll("a#more:not([href])").forEach(foldAnchor => {
+		foldAnchor.outerHTML = foldAnchor.innerHTML;
+	});
+
 	// Set up Image Focus feature.
 	imageFocusSetup();
 
@@ -3734,7 +3739,7 @@ registerInitializer('pageLayoutFinished', false, () => document.readyState == "c
 
 function generateImagesOverlay() {
 	GWLog("generateImagesOverlay");
-	// Don't do this on the about page.
+	// Don’t do this on the about page.
 	if (query(".about-page") != null) return;
 
 	// Remove existing, if any.
