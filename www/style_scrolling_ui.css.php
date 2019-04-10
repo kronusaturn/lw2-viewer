@@ -369,14 +369,14 @@ EOT;
 		content: none;
 	}
 	#nav-item-search input {
-		padding: 1px 1.75em 1px 4px;
+		padding: 1px 2.25em 1px 4px;
 	}
 	#nav-item-search button {
 		position: absolute;
 		top: 0;
 		right: 10px;
 		width: 2em;
-		padding: 0 0 0 0.375em;
+		padding: 0 0.375em;
 		display: flex;
 		align-items: center;
 		justify-content: center;
