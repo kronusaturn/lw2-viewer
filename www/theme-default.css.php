@@ -238,6 +238,7 @@ body {
 
 .sublevel-nav .sublevel-item {
 	color: #777;
+	background-color: #fff;
 }
 .sublevel-nav .sublevel-item:not(.selected):hover {
 	background-color: #ddd;

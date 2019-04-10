@@ -212,10 +212,15 @@ h1.listing + .post-meta .read-time {
 	justify-content: center;
 }
 
-/*	Visited links not marked in this context.
-	*/
-.post-meta a:visited:not(:hover):not(:active) {
+.post-meta a:visited {
 	color: var(--GW-hyperlink-color);
+}
+.post-meta a:hover,
+.post-meta a:focus {
+	color: var(--GW-hyperlink-hover-color);
+}
+.post-meta a:active {
+	color: var(--GW-hyperlink-active-color);
 }
 
 .post-meta .lw2-link {
