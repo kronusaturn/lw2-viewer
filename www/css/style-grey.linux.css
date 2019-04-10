@@ -1727,6 +1727,39 @@ head.content-width-fluid + body > * {
 #bottom-bar.decorative .nav-item {
 	display: none;
 }
+#bottom-bar.decorative::before,
+#bottom-bar.decorative::after {
+	content: "GW";
+	display: block;
+	text-align: center;
+	padding: 0.25em 0 1em 0;
+}
+#bottom-bar.decorative::before {
+	width: 100%;
+	color: transparent;
+	background-image: url('data:image/gif;base64,R0lGODlhAQABAPAAMdXV1QUAACwAAAAAAQABAAACAkQBADs=');
+	background-repeat: repeat-x;
+	background-position: center 35%;
+	margin: 0 30px;
+}
+#bottom-bar.decorative::after {
+	position: absolute;
+	left: 0;
+	right: 0;
+	margin: auto;
+	padding-right: 4px;
+	padding-left: 4px;
+}
+@supports (width: -moz-fit-content) {
+	#bottom-bar.decorative::after {
+		width: -moz-fit-content;
+	}
+}
+@supports (width: fit-content) {
+	#bottom-bar.decorative::after {
+		width: fit-content;
+	}
+}
 
 /*=------------=*/
 /*= Search tab =*/
@@ -5559,6 +5592,8 @@ li {
 /* VARIABLES */
 /*===========*/
 
+/*	Typography.
+	*/
 :root {
 	--GW-UI-font: 'Whitney', 'a_Avante', 'Open Sans', 'Arial', sans-serif;
 	--GW-UI-font-smallcaps: 'Whitney Smallcaps', 'a_Avante', 'Open Sans', 'Arial', sans-serif;
@@ -5569,12 +5604,6 @@ li {
 
 	--GW-link-post-link-font-weight: 600;
 
-	--GW-body-background-color: #eee;
-	--GW-hyperlink-color: #00e;
-	--GW-shadow-white-glow:
-		0 0 1px #fff,
-		0 0 3px #fff,
-		0 0 5px #fff;
 }
 @supports (-moz-user-focus: normal) {
 	:root {
@@ -5582,6 +5611,18 @@ li {
 	}
 }
 
+/*	Color scheme.
+	*/
+:root {
+	--GW-body-background-color: #eee;
+
+	--GW-hyperlink-color: #00e;
+
+	--GW-shadow-white-glow:
+		0 0 1px #fff,
+		0 0 3px #fff,
+		0 0 5px #fff;
+}
 
 /*=============*/
 /* BASE LAYOUT */
@@ -5597,6 +5638,23 @@ body {
 #content::before {
 	background-color: #fff;
 	box-shadow: 0px 0px 10px #bbb;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 960px) {
+	#ui-elements-container > div[id$='-ui-toggle'] button  {
+		color: #aaa;
+		text-shadow:
+			0 0 1px #fff,
+			0 0 3px #fff,
+			0 0 5px #fff,
+			0 0 10px #fff,
+			0 0 20px #fff,
+			0 0 30px #fff;
+	}
 }
 
 /*=========*/
@@ -5623,40 +5681,9 @@ body {
 	}
 }
 
-#bottom-bar.decorative::before,
-#bottom-bar.decorative::after {
-	content: "GW";
-	display: block;
-	text-align: center;
-	padding: 0.25em 0 1em 0;
-}
-#bottom-bar.decorative::before {
-	width: 100%;
-	color: transparent;
-	background-image: url('data:image/gif;base64,R0lGODlhAQABAPAAMdXV1QUAACwAAAAAAQABAAACAkQBADs=');
-	background-repeat: repeat-x;
-	background-position: center 35%;
-	margin: 0 30px;
-}
 #bottom-bar.decorative::after {
 	color: #d8d8d8;
-	position: absolute;
-	left: 0;
-	right: 0;
-	margin: auto;
 	background-color: #fff;
-	padding-right: 4px;
-	padding-left: 4px;
-}
-@supports (width: -moz-fit-content) {
-	#bottom-bar.decorative::after {
-		width: -moz-fit-content;
-	}
-}
-@supports (width: fit-content) {
-	#bottom-bar.decorative::after {
-		width: fit-content;
-	}
 }
 
 .nav-bar .nav-item:not(.nav-current):not(#nav-item-search):hover,

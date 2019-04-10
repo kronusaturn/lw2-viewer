@@ -50,32 +50,16 @@ body {
 }
 #bottom-bar.decorative::before,
 #bottom-bar.decorative::after {
-	content: "GW";
 	font-weight: 200;
-	display: block;
-	text-align: center;
-	padding: 0.5em 0 0.75em 0;
 }
 #bottom-bar.decorative::before {
-	width: 100%;
-	color: transparent;
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/one_pixel_DDD.gif")) ?>');
-	background-repeat: repeat-x;
 	background-position: center 44%;
-	margin: 0 30px;
 	filter: opacity(0.7);
 }
 #bottom-bar.decorative::after {
 	color: #eee;
-	position: absolute;
-	left: 0;
-	right: 0;
-	margin: auto;
 	background-color: #fff;
-	padding-right: 4px;
-	padding-left: 4px;
 }
-<?php fit_content("#bottom-bar.decorative::after"); ?>
 
 /* Accesskey hints */
 

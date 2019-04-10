@@ -6,6 +6,8 @@
 /* VARIABLES */
 /*===========*/
 
+/*	Typography.
+	*/
 :root {
 	--GW-UI-font: <?php echo (($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Whitney', 'a_Avante'"); ?>, 'Open Sans', 'Arial', sans-serif;
 	--GW-UI-font-smallcaps: <?php echo (($platform == 'Mac') ? "'Concourse Smallcaps', 'a_Avante'" : "'Whitney Smallcaps', 'a_Avante'"); ?>, 'Open Sans', 'Arial', sans-serif;
@@ -16,12 +18,6 @@
 
 	--GW-link-post-link-font-weight: 600;
 
-	--GW-body-background-color: #eee;
-	--GW-hyperlink-color: #00e;
-	--GW-shadow-white-glow:
-		0 0 1px #fff,
-		0 0 3px #fff,
-		0 0 5px #fff;
 }
 <?php echo $firefox_exclusive; ?> {
 	:root {
@@ -29,6 +25,18 @@
 	}
 }
 
+/*	Color scheme.
+	*/
+:root {
+	--GW-body-background-color: #eee;
+
+	--GW-hyperlink-color: #00e;
+
+	--GW-shadow-white-glow:
+		0 0 1px #fff,
+		0 0 3px #fff,
+		0 0 5px #fff;
+}
 
 /*=============*/
 /* BASE LAYOUT */
@@ -44,6 +52,23 @@ body {
 #content::before {
 	background-color: #fff;
 	box-shadow: 0px 0px 10px #bbb;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 960px) {
+	#ui-elements-container > div[id$='-ui-toggle'] button  {
+		color: #aaa;
+		text-shadow:
+			0 0 1px #fff,
+			0 0 3px #fff,
+			0 0 5px #fff,
+			0 0 10px #fff,
+			0 0 20px #fff,
+			0 0 30px #fff;
+	}
 }
 
 /*=========*/
@@ -70,32 +95,10 @@ body {
 	}
 }
 
-#bottom-bar.decorative::before,
-#bottom-bar.decorative::after {
-	content: "GW";
-	display: block;
-	text-align: center;
-	padding: 0.25em 0 1em 0;
-}
-#bottom-bar.decorative::before {
-	width: 100%;
-	color: transparent;
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/one_pixel_DDD.gif")) ?>');
-	background-repeat: repeat-x;
-	background-position: center 35%;
-	margin: 0 30px;
-}
 #bottom-bar.decorative::after {
 	color: #d8d8d8;
-	position: absolute;
-	left: 0;
-	right: 0;
-	margin: auto;
 	background-color: #fff;
-	padding-right: 4px;
-	padding-left: 4px;
 }
-<?php fit_content("#bottom-bar.decorative::after"); ?>
 
 .nav-bar .nav-item:not(.nav-current):not(#nav-item-search):hover,
 #bottom-bar a:hover,
