@@ -2177,10 +2177,26 @@ a#inbox-indicator.new-messages:hover::before {
 		font-size: 0.875rem;
 	}
 }
+<<<<<<< HEAD
 
 /****************/
 /* PAGE TOOLBAR */
 /****************/
+=======
+.body-text a:not([href]),
+.body-text a:not([href]):hover,
+.body-text a:not([href])::before,
+.body-text a:not([href])::after {
+	text-decoration: none;
+	text-shadow: unset;
+	border: unset;
+	color: unset;
+	content: unset;
+}
+/*************/
+/* POST-META */
+/*************/
+>>>>>>> origin/next
 
 .page-toolbar {
 	grid-row: 3;

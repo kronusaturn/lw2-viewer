@@ -2457,10 +2457,26 @@ a#inbox-indicator.new-messages:hover::before {
 		flex-flow: column;
 	}
 }
+<<<<<<< HEAD
 
 /*******************************/
 /* COMMENTS LIST MODE SELECTOR */
 /*******************************/
+=======
+.body-text a:not([href]),
+.body-text a:not([href]):hover,
+.body-text a:not([href])::before,
+.body-text a:not([href])::after {
+	text-decoration: none;
+	text-shadow: unset;
+	border: unset;
+	color: unset;
+	content: unset;
+}
+/*************/
+/* POST-META */
+/*************/
+>>>>>>> origin/next
 
 #comments-list-mode-selector {
 	z-index: 1;

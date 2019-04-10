@@ -2424,11 +2424,27 @@ a#inbox-indicator.new-messages:hover::before {
 
 	font-weight: var(--GW-UI-font-weight-heavy);
 }
+<<<<<<< HEAD
 
 .sublevel-nav.sort .sublevel-item {
 	line-height: 1;
 	font-size: 0.875rem;
 	flex-basis: unset;
+=======
+.body-text a:not([href]),
+.body-text a:not([href]):hover,
+.body-text a:not([href])::before,
+.body-text a:not([href])::after {
+	text-decoration: none;
+	text-shadow: unset;
+	border: unset;
+	color: unset;
+	content: unset;
+}
+/*************/
+/* POST-META */
+/*************/
+>>>>>>> origin/next
 
 	font-family: var(--GW-UI-font);
 	font-weight: var(--GW-UI-font-weight-light);
