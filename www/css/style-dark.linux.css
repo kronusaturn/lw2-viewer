@@ -5376,6 +5376,10 @@ li {
 /*%% IMAGE FOCUS %%*/
 /*%%%%%%%%%%%%%%%%%*/
 
+/*=--------------=*/
+/*= Hover styles =*/ 
+/*=--------------=*/
+
 #content img:hover,
 #images-overlay img:hover {
 	filter: drop-shadow(0 0 3px #777);
@@ -5386,12 +5390,17 @@ li {
 	transform: scale(0.975);
 }
 
+/*=---------=*/
+/*= Overlay =*/
+/*=---------=*/
+
 #image-focus-overlay {
 	position: fixed;
 	top: 0;
 	right: 0;
 	bottom: 0;
 	left: 0;
+	z-index: 2;
 	display: none;
 	cursor: zoom-out;
 }
@@ -5419,6 +5428,71 @@ li {
 	transform: translateX(-50%) translateY(-50%);
 }
 
+/*=-------------------=*/
+/*= Single-image mode =*/
+/*=-------------------=*/
+
+#image-focus-overlay:not(.slideshow) .image-number,
+#image-focus-overlay:not(.slideshow) .slideshow-buttons {
+	visibility: hidden;
+}
+
+/*=---------=*/
+/*= Caption =*/
+/*=---------=*/
+
+#image-focus-overlay .caption {
+	position: absolute;
+	bottom: 0.75em;
+	background-color: rgba(255, 255, 255, 0.7);
+	left: 9em;
+	right: 9em;
+	margin: auto;
+	max-width: calc(100% - 18em);
+	text-align: center;
+	font-size: 1.375em;
+	border-radius: 8px;
+	z-index: 1;
+	transition: 
+		bottom 0.2s ease;
+}
+@supports (width: -moz-fit-content) {
+	#image-focus-overlay .caption {
+		width: -moz-fit-content;
+	}
+}
+@supports (width: fit-content) {
+	#image-focus-overlay .caption {
+		width: fit-content;
+	}
+}
+#image-focus-overlay .caption.hidden {
+	bottom: -5em;
+	transition: 
+		bottom 0.5s ease;
+}
+
+#image-focus-overlay .caption p {
+	margin: 1em 1.25em;
+	color: #000;
+}
+
+#image-focus-overlay .caption:not(:empty)::before {
+	content: "";
+	display: block;
+	position: absolute;
+	width: 100vw;
+	height: calc(100% + 1.5em);
+	z-index: -1;
+	top: -0.75em;
+	left: calc(-50vw + 50%);
+
+}
+
+/*=--------------=*/
+/*= Help overlay =*/
+/*=--------------=*/
+
 #image-focus-overlay .help-overlay {
 	position: absolute;
 	display: flex;
@@ -5432,6 +5506,7 @@ li {
 	overflow: hidden;
 	white-space: nowrap;
 	color: transparent;
+	cursor: default;
 	visibility: hidden;
 	transition: 
 		visibility 1s ease,
@@ -5440,8 +5515,8 @@ li {
 		bottom 0.3s ease;
 }
 #image-focus-overlay .help-overlay:hover {
-	max-width: 420px;
-	max-height: 300px;
+	max-width: 24em;
+	max-height: 14em;
 	background-color: rgba(255, 255, 255, 0.85);
 	color: #000;
 	visibility: visible;
@@ -5487,6 +5562,10 @@ li {
 	bottom: -2em;
 }
 
+/*=--------------=*/
+/*= Slide number =*/
+/*=--------------=*/
+
 #image-focus-overlay .image-number {
 	position: absolute;
 	z-index: 2;
@@ -5519,6 +5598,10 @@ li {
 #image-focus-overlay .image-number.hidden {
 	bottom: -1.25em;
 }
+
+/*=-------------------=*/
+/*= Slideshow buttons =*/
+/*=-------------------=*/
 
 #image-focus-overlay .slideshow-buttons {
 	position: absolute;
@@ -5567,6 +5650,10 @@ li {
 #image-focus-overlay .slideshow-button.next.hidden {
 	left: 1.75em;
 }
+
+/*=-----------------=*/
+/*= Background blur =*/
+/*=-----------------=*/
 
 .blurred {
 	filter: blur(3px);
