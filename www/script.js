@@ -386,7 +386,7 @@ Element.prototype.addTextareaFeatures = function() {
 	// then apply them *just* to the fixed editor UI elements. This is in order
 	// to get around the “children of elements with a filter applied cannot be
 	// fixed” issue.
-	if (matchMedia("(max-width: 520px)") {
+	if (matchMedia("(max-width: 520px)")) {
 		let fixedEditorElements = textareaContainer.queryAll("textarea, .guiedit-buttons-container, .guiedit-mobile-auxiliary-button, #markdown-hints");
 		textarea.addEventListener("focus", GW.textareaFocusedMobile = (event) => {
 			GWLog("GW.textareaFocusedMobile");
