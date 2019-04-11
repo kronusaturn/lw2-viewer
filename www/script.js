@@ -3297,6 +3297,7 @@ registerInitializer('earlyInitialize', true, () => query("#content") != null, fu
 	// Add the quick-nav UI.
 	injectQuickNavUI();
 
+	// Check for notifications.
 	setTimeout(() => { updateInbox(); }, 0);
 });
 
