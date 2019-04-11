@@ -1099,9 +1099,13 @@ function postSetThemeHousekeeping(oldThemeName = "", newThemeName = (readCookie(
 	generateImagesOverlay();
 	window.addEventListener('resize', GW.windowResized = (event) => {
 		GWLog("GW.windowResized");
-		adjustUIForWindowSize();
-		recomputeUIElementsContainerHeight();
-		recomputeImagesOverlayLayout();
+
+		requestAnimationFrame(() => {
+			adjustUIForWindowSize();
+			recomputeUIElementsContainerHeight();
+			recomputeImagesOverlayLayout();
+			resetFocusedImagePosition();
+		});
 	});
 
 	if (window.adjustmentTransitions) pageFadeTransition(true);
@@ -1209,7 +1213,7 @@ function updatePostNavUIVisibility() {
 
 // Hide the site nav and appearance adjust UIs on scroll down; show them on scroll up.
 // NOTE: The UIs are re-shown on scroll up ONLY if the user has them set to be 
-// engaged; if they're manually disengaged, they are not re-engaged by scroll.
+// engaged; if they’re manually disengaged, they are not re-engaged by scroll.
 function updateSiteNavUIState(event) {
 	GWLog("updateSiteNavUIState");
 	let newScrollTop = window.pageYOffset || document.documentElement.scrollTop;
@@ -1249,9 +1253,8 @@ function updateSiteNavUIState(event) {
 
 GW.themeUnloadCallback_less = (toTheme = "") => {
 	GWLog("themeUnloadCallback_less");
-	removeSiteNavUIToggle();
-	window.removeEventListener('resize', updatePostNavUIVisibility);
 
+	removeSiteNavUIToggle();
 	document.removeEventListener("scroll", GW["updateSiteNavUIStateScrollListener"]);
 
 	removeElement("#theme-less-mobile-first-row-placeholder");
@@ -2604,11 +2607,6 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 			event.target.blur();
 		});
 	});
-
-	// On orientation change, reset the size & position.
-	if (typeof(window.msMatchMedia || window.MozMatchMedia || window.WebkitMatchMedia || window.matchMedia) !== 'undefined') {
-		window.matchMedia('(orientation: portrait)').addListener(() => { setTimeout(resetFocusedImagePosition, 0); });
-	}
 
 	// UI starts out hidden.
 	hideImageFocusUI();
