@@ -52,6 +52,12 @@
 
 <?php include("style_posts_comments.css.php"); ?>
 
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+/*%% COMMENTING & POSTING %%*/
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+
+<?php include("style_commenting_posting.css.php"); ?>
+
 /*%%%%%%%%%%%%%%%%%%%%%%*/
 /*%% CONTENT ELEMENTS %%*/
 /*%%%%%%%%%%%%%%%%%%%%%%*/

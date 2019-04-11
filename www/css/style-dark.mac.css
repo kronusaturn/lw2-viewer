@@ -3765,6 +3765,135 @@ a.comment-child-link::before {
 	font-size: 0.9375em;
 }
 
+/**************************/
+/* QUALIFIED HYPERLINKING */
+/**************************/
+
+#content.no-comments .comments, 
+#content.no-comments .post-meta .comment-count,
+#content.no-comments .post-meta .karma,
+#content.no-comments + #ui-elements-container #new-comment-nav-ui,
+#content.no-comments + #ui-elements-container #hns-date-picker,
+#content.no-comments + #ui-elements-container #quick-nav-ui {
+	display: none;
+}
+
+#content.no-nav-bars #primary-bar,
+#content.no-nav-bars #secondary-bar {
+	display: none;
+}
+#content.no-nav-bars {
+	margin: 8px auto;
+}
+#content.no-nav-bars + #ui-elements-container > * {
+	padding-top: 8px;
+}
+
+/*	Viewport width adjustments.
+	*/
+@media only screen and (max-width: 900px) {
+	#content.no-nav-bars {
+		margin: 0;
+	}
+}
+
+/*=---------------------------------------------------------=*/
+/*= Auxiliary “About” link in qualified link page view mode =*/
+/*=---------------------------------------------------------=*/
+
+#aux-about-link {
+	position: absolute;
+	top: 40px;
+	left: -70px;
+	width: 1.5em;
+}
+#aux-about-link a {
+	font-family: var(--GW-Font-Awesome);
+	font-weight: 900;
+	font-size: 1.25rem;
+	opacity: 0.4;
+	display: flex;
+	justify-content: center;
+}
+
+/*=--------------------------=*/
+/*= Qualified linking button =*/
+/*=--------------------------=*/
+
+.post-meta .qualified-linking {
+	position: relative;
+}
+.post-meta .qualified-linking input[type='checkbox'] {
+	visibility: hidden;
+	width: 0;
+	height: 0;
+	margin: 0;
+}
+.post-meta .qualified-linking label {
+	font-family: var(--GW-Font-Awesome);
+	font-weight: 900;
+	color: var(--GW-hyperlink-color);
+	padding: 0 0.5em;
+	display: inline-block;
+	user-select: none;
+}
+.post-meta .qualified-linking label:hover {
+	cursor: pointer;
+}
+.post-meta .qualified-linking label:active span {
+	display: inline-block;
+	transform: scale(0.9);
+}
+
+.post-meta .qualified-linking label::after {
+	content: "";
+	width: 100vw;
+	height: 0;
+	left: 0;
+	top: 0;
+	position: fixed;
+	z-index: 1;
+	cursor: default;
+}
+.post-meta .qualified-linking input[type='checkbox']:checked + label::after {
+	height: 100vh;
+	background-color: var(--GW-body-background-color);
+	opacity: 0.8;
+}
+
+/*=---------------------------=*/
+/*= Qualified linking toolbar =*/
+/*=---------------------------=*/
+
+.post-meta .qualified-linking-toolbar {
+	position: absolute;
+	right: 0.25em;
+	top: 110%;
+	z-index: 1;
+}
+.post-meta .qualified-linking input[type='checkbox'] ~ .qualified-linking-toolbar {
+	display: none;
+}
+.post-meta .qualified-linking input[type='checkbox']:checked ~ .qualified-linking-toolbar {
+	display: block;
+}
+#qualified-linking-toolbar-toggle-checkbox-bottom ~ .qualified-linking-toolbar {
+	top: unset;
+	bottom: 125%;
+}
+
+.post-meta .qualified-linking-toolbar a {
+	display: block;
+	padding: 0 6px;
+	margin: 4px;
+	text-align: center;
+	user-select: none;
+}
+
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+/*%% COMMENTING & POSTING %%*/
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+
 /*****************************/
 /* COMMENTING AND POSTING UI */
 /*****************************/
@@ -4357,131 +4486,6 @@ button.guiedit {
 		margin: 1.25rem auto 0 auto;
 		padding: 0.5em 0.75em;
 	}
-}
-
-/**************************/
-/* QUALIFIED HYPERLINKING */
-/**************************/
-
-#content.no-comments .comments, 
-#content.no-comments .post-meta .comment-count,
-#content.no-comments .post-meta .karma,
-#content.no-comments + #ui-elements-container #new-comment-nav-ui,
-#content.no-comments + #ui-elements-container #hns-date-picker,
-#content.no-comments + #ui-elements-container #quick-nav-ui {
-	display: none;
-}
-
-#content.no-nav-bars #primary-bar,
-#content.no-nav-bars #secondary-bar {
-	display: none;
-}
-#content.no-nav-bars {
-	margin: 8px auto;
-}
-#content.no-nav-bars + #ui-elements-container > * {
-	padding-top: 8px;
-}
-
-/*	Viewport width adjustments.
-	*/
-@media only screen and (max-width: 900px) {
-	#content.no-nav-bars {
-		margin: 0;
-	}
-}
-
-/*=---------------------------------------------------------=*/
-/*= Auxiliary “About” link in qualified link page view mode =*/
-/*=---------------------------------------------------------=*/
-
-#aux-about-link {
-	position: absolute;
-	top: 40px;
-	left: -70px;
-	width: 1.5em;
-}
-#aux-about-link a {
-	font-family: var(--GW-Font-Awesome);
-	font-weight: 900;
-	font-size: 1.25rem;
-	opacity: 0.4;
-	display: flex;
-	justify-content: center;
-}
-
-/*=--------------------------=*/
-/*= Qualified linking button =*/
-/*=--------------------------=*/
-
-.post-meta .qualified-linking {
-	position: relative;
-}
-.post-meta .qualified-linking input[type='checkbox'] {
-	visibility: hidden;
-	width: 0;
-	height: 0;
-	margin: 0;
-}
-.post-meta .qualified-linking label {
-	font-family: var(--GW-Font-Awesome);
-	font-weight: 900;
-	color: var(--GW-hyperlink-color);
-	padding: 0 0.5em;
-	display: inline-block;
-	user-select: none;
-}
-.post-meta .qualified-linking label:hover {
-	cursor: pointer;
-}
-.post-meta .qualified-linking label:active span {
-	display: inline-block;
-	transform: scale(0.9);
-}
-
-.post-meta .qualified-linking label::after {
-	content: "";
-	width: 100vw;
-	height: 0;
-	left: 0;
-	top: 0;
-	position: fixed;
-	z-index: 1;
-	cursor: default;
-}
-.post-meta .qualified-linking input[type='checkbox']:checked + label::after {
-	height: 100vh;
-	background-color: var(--GW-body-background-color);
-	opacity: 0.8;
-}
-
-/*=---------------------------=*/
-/*= Qualified linking toolbar =*/
-/*=---------------------------=*/
-
-.post-meta .qualified-linking-toolbar {
-	position: absolute;
-	right: 0.25em;
-	top: 110%;
-	z-index: 1;
-}
-.post-meta .qualified-linking input[type='checkbox'] ~ .qualified-linking-toolbar {
-	display: none;
-}
-.post-meta .qualified-linking input[type='checkbox']:checked ~ .qualified-linking-toolbar {
-	display: block;
-}
-#qualified-linking-toolbar-toggle-checkbox-bottom ~ .qualified-linking-toolbar {
-	top: unset;
-	bottom: 125%;
-}
-
-.post-meta .qualified-linking-toolbar a {
-	display: block;
-	padding: 0 6px;
-	margin: 4px;
-	text-align: center;
-	user-select: none;
 }
 
 /*%%%%%%%%%%%%%%%%%%%%%%*/
