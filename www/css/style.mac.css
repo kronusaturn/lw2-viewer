@@ -7560,6 +7560,7 @@ input[type='submit']:active {
 .body-text h6 {
 	font-weight: 600;
 	font-family: var(--GW-UI-font-smallcaps);
+	letter-spacing: -0.02em;
 }
 .body-text h6 {
 	color: #555;
