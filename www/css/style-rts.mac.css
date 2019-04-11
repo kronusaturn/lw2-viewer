@@ -4466,7 +4466,6 @@ button.guiedit {
 		grid-template-columns: 4.5em auto auto auto 1fr auto;
 	}
 	#edit-post-form .textarea-container:focus-within textarea {
-		height: calc(100% - 101px);
 		min-height: unset;
 	}
 

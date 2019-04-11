@@ -107,6 +107,33 @@ function addScrollListener(fn, name) {
 		GW[name] = wrapper;
 }
 
+/*************************/
+/* DYNAMIC MEDIA QUERIES */
+/*************************/
+
+/*	This function provides two slightly different versions of its functionality,
+	depending on whether it gets two arguments or three.
+
+	If two arguments are given (a media query string and a function), then the
+	function is called whenever the media query changes (in either direction).
+
+	If three arguments are given (a media query string and two functions), then
+	the first function is called whenever the media query starts matching, and
+	the section function is called whenever the media query stops matching.
+
+	If you want to call a function for a change in one direction only, pass an
+	empty closure (NOT null!) as one of the function arguments.
+
+	There is also an optional fourth argument, which is TRUE by default. If 
+	FALSE is passed instead, then the listener is added, but the function(s) 
+	provided do NOT get called immediately based on the current state of the
+	provided media query. (This is useful if what you want to do when a media
+	query changes is not exactly the same as what you want to do initially.)
+	*/
+function doWhenMatchMedia(mediaQueryString, ifMatchesDo, otherwiseDo = null, immediately = true) {
+	
+}
+
 /****************/
 /* MISC HELPERS */
 /****************/
@@ -359,10 +386,11 @@ Element.prototype.addTextareaFeatures = function() {
 	// then apply them *just* to the fixed editor UI elements. This is in order
 	// to get around the “children of elements with a filter applied cannot be
 	// fixed” issue.
-	if (GW.isMobile && window.innerWidth <= 520) {
+	if (matchMedia("(max-width: 520px)") {
 		let fixedEditorElements = textareaContainer.queryAll("textarea, .guiedit-buttons-container, .guiedit-mobile-auxiliary-button, #markdown-hints");
 		textarea.addEventListener("focus", GW.textareaFocusedMobile = (event) => {
 			GWLog("GW.textareaFocusedMobile");
+
 			GW.savedFilters = GW.currentFilters;
 			GW.currentFilters = { };
 			applyFilters(GW.currentFilters);
@@ -372,6 +400,7 @@ Element.prototype.addTextareaFeatures = function() {
 		});
 		textarea.addEventListener("blur", GW.textareaBlurredMobile = (event) => {
 			GWLog("GW.textareaBlurredMobile");
+
 			GW.currentFilters = GW.savedFilters;
 			GW.savedFilters = { };
 			requestAnimationFrame(() => {
@@ -3273,7 +3302,7 @@ registerInitializer('earlyInitialize', true, () => query("#content") != null, fu
 	// Check to see whether we’re on a mobile device (which we define as a touchscreen^W narrow viewport).
 // 	GW.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 // 	GW.isMobile = ('ontouchstart' in document.documentElement);
-	GW.isMobile = window.matchMedia("(max-width: 960px)").matches;
+	GW.isMobile = matchMedia("(max-width: 960px)").matches;
 	GW.isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
 
 	// Backward compatibility.
