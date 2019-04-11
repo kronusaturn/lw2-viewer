@@ -959,8 +959,8 @@ function injectContentWidthSelector() {
 			// Make sure the accesskey (to cycle to the next width) is on the right button.
 			setWidthAdjustButtonsAccesskey();
 
-			// Regenerate images overlay.
-			generateImagesOverlay();
+			// Recompute position & styling of images in overlay.
+			recomputeImagesOverlayLayout();
 
 			// Realign hash.
 			realignHash();
@@ -1096,20 +1096,16 @@ function postSetThemeHousekeeping(oldThemeName = "", newThemeName = (readCookie(
 
 	recomputeUIElementsContainerHeight();
 	adjustUIForWindowSize();
+	generateImagesOverlay();
 	window.addEventListener('resize', GW.windowResized = (event) => {
 		GWLog("GW.windowResized");
 		adjustUIForWindowSize();
 		recomputeUIElementsContainerHeight();
+		recomputeImagesOverlayLayout();
 	});
-
-	generateImagesOverlay();
 
 	if (window.adjustmentTransitions) pageFadeTransition(true);
 	updateThemeTweakerSampleText();
-
-	if (typeof(window.msMatchMedia || window.MozMatchMedia || window.WebkitMatchMedia || window.matchMedia) !== 'undefined') {
-		window.matchMedia('(orientation: portrait)').addListener(generateImagesOverlay);
-	}
 
 	setTimeout(realignHash, 0);
 }
@@ -2649,13 +2645,12 @@ function focusImage(imageToFocus) {
 	// Add listener to zoom image with scroll wheel.
 	window.addEventListener("wheel", GW.imageFocus.scrollEvent = (event) => {
 		GWLog("GW.imageFocus.scrollEvent");
-		event.preventDefault();
 
 		let image = query("#image-focus-overlay img");
 
 		// Remove the filter.
 		image.savedFilter = image.style.filter;
-		image.style.filter = 'none';
+		image.style.filter = "none";
 
 		// Locate point under cursor.
 		let imageBoundingBox = image.getBoundingClientRect();
@@ -3718,27 +3713,9 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	keyboardHelpSetup();
 });
 
-/*************************/
-/* POST-LOAD ADJUSTMENTS */
-/*************************/
-
-registerInitializer('pageLayoutFinished', false, () => document.readyState == "complete", function () {
-	GWLog("INITIALIZER pageLayoutFinished");
-	forceInitializer('initialize');
-
-	realignHashIfNeeded();
-
-	postSetThemeHousekeeping();
-
-	focusImageSpecifiedByURL();
-
-	// FOR TESTING ONLY, COMMENT WHEN DEPLOYING.
-// 	query("input[type='search']").value = GW.isMobile;
-// 	query("head").insertAdjacentHTML("beforeend", "<style>" + 
-// 		`@media only screen and (hover:none) { #nav-item-search input { background-color: red; }}` + 
-// 		`@media only screen and (hover:hover) { #nav-item-search input { background-color: LightGreen; }}` + 
-// 		"</style>");
-});
+/******************/
+/* IMAGES OVERLAY */
+/******************/
 
 function generateImagesOverlay() {
 	GWLog("generateImagesOverlay");
@@ -3757,19 +3734,10 @@ function generateImagesOverlay() {
 		image.className = "";
 
 		let clonedImageContainer = document.createElement("div");
-
 		let clonedImage = image.cloneNode(true);
-		clonedImage.style.borderStyle = getComputedStyle(image).borderStyle;
-		clonedImage.style.borderColor = getComputedStyle(image).borderColor;
-		clonedImage.style.borderWidth = Math.round(parseFloat(getComputedStyle(image).borderWidth)) + "px";
 		clonedImageContainer.appendChild(clonedImage);
 
-		let zoomLevel = parseFloat(GW.currentTextZoom);
-
-		clonedImageContainer.style.top = image.getBoundingClientRect().top * zoomLevel - parseFloat(getComputedStyle(image).marginTop) + window.scrollY + "px";
-		clonedImageContainer.style.left = image.getBoundingClientRect().left * zoomLevel - parseFloat(getComputedStyle(image).marginLeft) - imagesOverlayLeftOffset + "px";
-		clonedImageContainer.style.width = image.getBoundingClientRect().width * zoomLevel + "px";
-		clonedImageContainer.style.height = image.getBoundingClientRect().height * zoomLevel + "px";
+		replicateImageStyle(image, clonedImage, imagesOverlayLeftOffset);
 
 		imagesOverlay.appendChild(clonedImageContainer);
 	});
@@ -3777,6 +3745,57 @@ function generateImagesOverlay() {
 	// Add the event listeners to focus each image.
 	imageFocusSetup(true);
 }
+
+function recomputeImagesOverlayLayout() {
+	GWLog("recomputeImagesOverlayLayout");
+
+	let imagesOverlay = query("#images-overlay");
+	if (imagesOverlay == null) return;
+
+	let imagesOverlayLeftOffset = imagesOverlay.getBoundingClientRect().left;
+	let overlayImages = imagesOverlay.queryAll("img");
+	queryAll(".post-body img").forEach((image, index) => {
+		replicateImageStyle(image, overlayImages[index], imagesOverlayLeftOffset);
+	});
+}
+
+function replicateImageStyle(image, clonedImage, imagesOverlayLeftOffset) {
+	GWLog("replicateImageStyle");
+
+	clonedImage.style.borderStyle = getComputedStyle(image).borderStyle;
+	clonedImage.style.borderColor = getComputedStyle(image).borderColor;
+	clonedImage.style.borderWidth = Math.round(parseFloat(getComputedStyle(image).borderWidth)) + "px";
+
+	let zoomLevel = parseFloat(GW.currentTextZoom);
+
+	clonedImage.parentElement.style.top = image.getBoundingClientRect().top * zoomLevel - parseFloat(getComputedStyle(image).marginTop) + window.scrollY + "px";
+	clonedImage.parentElement.style.left = image.getBoundingClientRect().left * zoomLevel - parseFloat(getComputedStyle(image).marginLeft) - imagesOverlayLeftOffset + "px";
+	clonedImage.parentElement.style.width = image.getBoundingClientRect().width * zoomLevel + "px";
+	clonedImage.parentElement.style.height = image.getBoundingClientRect().height * zoomLevel + "px";
+}
+
+/*************************/
+/* POST-LOAD ADJUSTMENTS */
+/*************************/
+
+registerInitializer('pageLayoutFinished', false, () => document.readyState == "complete", function () {
+	GWLog("INITIALIZER pageLayoutFinished");
+	forceInitializer('initialize');
+
+	realignHashIfNeeded();
+
+	postSetThemeHousekeeping();
+
+	// If the URL hash specifies an image to focus, focus it.
+	focusImageSpecifiedByURL();
+
+	// FOR TESTING ONLY, COMMENT WHEN DEPLOYING.
+// 	query("input[type='search']").value = GW.isMobile;
+// 	query("head").insertAdjacentHTML("beforeend", "<style>" + 
+// 		`@media only screen and (hover:none) { #nav-item-search input { background-color: red; }}` + 
+// 		`@media only screen and (hover:hover) { #nav-item-search input { background-color: LightGreen; }}` + 
+// 		"</style>");
+});
 
 function adjustUIForWindowSize() {
 	GWLog("adjustUIForWindowSize");
