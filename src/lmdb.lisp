@@ -2,7 +2,9 @@
   (:use #:cl #:sb-ext #:sb-thread #:alexandria #:lw2.sites #:lw2.context #:lw2.backend-modules #:lw2-viewer.config #:lw2.hash-utils)
   (:export
    #:close-unused-environments
-   #:define-cache-database #:with-cache-mutex #:with-cache-transaction #:with-cache-readonly-transaction #:with-db #:lmdb-put-string #:cache-put #:cache-get #:simple-cacheable #:define-lmdb-memoized)
+   #:define-cache-database #:with-cache-mutex #:with-cache-transaction #:with-cache-readonly-transaction #:with-db #:lmdb-put-string #:cache-put #:cache-get
+   #:call-with-cursor
+   #:simple-cacheable #:define-lmdb-memoized)
   (:unintern #:lmdb-clear-db #:*db-mutex* #:*cache-environment-databases-list*))
 
 (in-package #:lw2.lmdb) 
@@ -155,6 +157,12 @@
 (defun cache-get (db-name key)
   (with-db (db db-name :read-only t)
 	   (lmdb:get db (string-to-octets key :external-format :utf-8) :return-type :string)))
+
+(defun call-with-cursor (db-name fn &key read-only)
+  (with-db (db db-name :read-only read-only)
+    (let ((cursor (lmdb:make-cursor db)))
+      (lmdb:with-cursor (cursor)
+	(funcall fn db cursor)))))
 
 (defun make-simple-cache (cache-db)
   (lambda (key value) (cache-put cache-db key value))) 
