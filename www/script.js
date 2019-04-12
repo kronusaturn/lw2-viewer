@@ -107,9 +107,9 @@ function addScrollListener(fn, name) {
 		GW[name] = wrapper;
 }
 
-/*************************/
-/* DYNAMIC MEDIA QUERIES */
-/*************************/
+/************************/
+/* ACTIVE MEDIA QUERIES */
+/************************/
 
 /*	This function provides two slightly different versions of its functionality,
 	depending on whether it gets two arguments or three.
@@ -123,16 +123,42 @@ function addScrollListener(fn, name) {
 
 	If you want to call a function for a change in one direction only, pass an
 	empty closure (NOT null!) as one of the function arguments.
+
+	There is also an optional fourth argument: whenCanceled. This should be a
+	function to be called when the active media query is canceled.
 	*/
-function doWhenMatchMedia(mediaQueryString, ifMatchesDo, otherwiseDo = null) {
-	let mediaQuery = matchMedia(mediaQueryString);
-	let mediaQueryResponder = (event) => {
-		let matches = typeof event == "undefined" ? mediaQuery.matches : event.matches;
-		if (otherwiseDo == null || matches) ifMatchesDo(mediaQuery);
-		else otherwiseDo(mediaQuery);
+function doWhenMatchMedia(mediaQuery, name, ifMatchesDo, otherwiseDo = null, whenCanceled = null) {
+	if (typeof GW.mediaQueryResponders == "undefined")
+		GW.mediaQueryResponders = { };
+
+	let mediaQueryResponder = (event, canceling = false) => {
+		if (canceling) {
+			GWLog(`Canceling media query “${name}”`);
+
+			if (whenCanceled != null)
+				whenCanceled(mediaQuery);
+		} else {
+			let matches = (typeof event == "undefined") ? mediaQuery.matches : event.matches;
+
+			GWLog(`Media query “${name}” triggered (matches: ${matches ? "YES" : "NO"})`);
+
+			if (otherwiseDo == null || matches) ifMatchesDo(mediaQuery);
+			else otherwiseDo(mediaQuery);
+		}
 	};
 	mediaQueryResponder();
 	mediaQuery.addListener(mediaQueryResponder);
+
+	GW.mediaQueryResponders[name] = mediaQueryResponder;
+}
+
+function cancelDoWhenMatchMedia(name) {
+	GW.mediaQueryResponders[name](null, true);
+
+	for ([ key, mediaQuery ] of Object.entries(GW.mediaQueries))
+		mediaQuery.removeListener(GW.mediaQueryResponders[name]);
+
+	GW.mediaQueryResponders[name] = null;
 }
 
 /****************/
@@ -323,7 +349,7 @@ Element.prototype.addTextareaFeatures = function() {
 	textarea.addEventListener("input", GW.textareaInputReceived = (event) => {
 		GWLog("GW.textareaInputReceived");
 
-		if (matchMedia("(max-width: 520px)").matches) {
+		if (matchMedia(GW.mediaQueries.mobileNarrow).matches) {
 			// Remove markdown hints.
 			hideMarkdownHintsBox();
 			query(".guiedit-mobile-help-button").removeClass("active");
@@ -370,7 +396,7 @@ Element.prototype.addTextareaFeatures = function() {
 		"<span>Blockquote</span><code>&gt; Blockquote</code>" ].map(row => "<div class='markdown-hints-row'>" + row + "</div>").join("") +
 	`</div>`;
 	textareaContainer.query("span").insertAdjacentHTML("afterend", markdown_hints);
-	doWhenMatchMedia("(max-width: 520px)", () => {
+	doWhenMatchMedia(GW.mediaQueries.mobileNarrow, "hideMarkdownHintsBox", () => {
 		hideMarkdownHintsBox();
 		query(".guiedit-mobile-help-button").removeClass("active");
 	});
@@ -390,13 +416,14 @@ Element.prototype.addTextareaFeatures = function() {
 		});
 	});
 
-	// On smartphone (narrow mobile) screens, when a textarea is focused (and
-	// automatically fullscreened), remove all the filters from the page, and 
-	// then apply them *just* to the fixed editor UI elements. This is in order
-	// to get around the “children of elements with a filter applied cannot be
-	// fixed” issue.
+	/*	On smartphone (narrow mobile) screens, when a textarea is focused (and
+		automatically fullscreened), remove all the filters from the page, and 
+		then apply them *just* to the fixed editor UI elements. This is in order
+		to get around the “children of elements with a filter applied cannot be
+		fixed” issue.
+		*/
 	let fixedEditorElements = textareaContainer.queryAll("textarea, .guiedit-buttons-container, .guiedit-mobile-auxiliary-button, #markdown-hints");
-	doWhenMatchMedia("(max-width: 520px)", () => {
+	doWhenMatchMedia(GW.mediaQueries.mobileNarrow, "mobileEditorFilterBugFix", () => {
 		textarea.addEventListener("focus", GW.textareaFocusedMobile = (event) => {
 			GWLog("GW.textareaFocusedMobile");
 
@@ -543,7 +570,7 @@ Element.prototype.constructCommentControls = function() {
 	replyButton.tabIndex = '-1';
 
 	// On mobile, hide labels for all but the Reply button.
-	doWhenMatchMedia("(max-width: 900px)", (mediaQuery) => {
+	doWhenMatchMedia(GW.mediaQueries.mobileNarrow, "mobileActionButtonLabels", (mediaQuery) => {
 		commentControls.queryAll(".delete-button, .retract-button, .unretract-button, .edit-button").forEach(button => {
 			button.innerHTML = mediaQuery.matches ? "" : button.dataset.label;
 		});
@@ -633,7 +660,7 @@ function hideReplyForm(commentControls) {
 function expandTextarea(textarea) {
 	GWLog("expandTextarea");
 
-	if (matchMedia("(max-width: 520px)").matches) {
+	if (matchMedia(GW.mediaQueries.mobileNarrow).matches) {
 		textarea.style.height = "";
 		return;
 	}
@@ -1095,7 +1122,7 @@ function injectThemeSelector() {
 
 			let themeName = /select-theme-([^\s]+)/.exec(event.target.className)[1];
 			setSelectedTheme(themeName);
-			if (matchMedia("(max-width: 900px)").matches) toggleAppearanceAdjustUI();
+			if (matchMedia(GW.mediaQueries.mobileWide).matches) toggleAppearanceAdjustUI();
 		});
 	});
 
@@ -1220,8 +1247,10 @@ GW.themeLoadCallback_less = (fromTheme = "") => {
 		postDate.innerHTML = dtf.format(new Date(+ postDate.dataset.jsDate));
 	});
 
-	doWhenMatchMedia("(max-width: 520px)", () => {
+	doWhenMatchMedia(GW.mediaQueries.mobileNarrow, "themeLessMobileFirstRowPlaceholder", () => {
 		query("#content").insertAdjacentHTML("beforeend", "<div id='theme-less-mobile-first-row-placeholder'></div>");
+	}, () => {
+		removeElement("#theme-less-mobile-first-row-placeholder");
 	}, () => {
 		removeElement("#theme-less-mobile-first-row-placeholder");
 	});
@@ -1299,9 +1328,14 @@ function updatePostNavUIVisibility() {
 	});
 }
 
-// Hide the site nav and appearance adjust UIs on scroll down; show them on scroll up.
-// NOTE: The UIs are re-shown on scroll up ONLY if the user has them set to be 
-// engaged; if they’re manually disengaged, they are not re-engaged by scroll.
+/*	Hide the site nav and appearance adjust UIs on scroll down; show them on 
+	scroll up.
+
+	NOTE: The UIs are re-shown on scroll up ONLY if the user has them set to be 
+	engaged; if they’re manually disengaged, they are not re-engaged by scroll.
+
+	Called by the ‘updateSiteNavUIStateScrollListener’ scroll listener.
+	*/
 function updateSiteNavUIState(event) {
 	GWLog("updateSiteNavUIState");
 
@@ -1321,7 +1355,7 @@ function updateSiteNavUIState(event) {
 	}
 
 	// On mobile, make site nav UI translucent on ANY scroll down.
-	if (GW.isMobile)
+	if (matchMedia(GW.mediaQueries.mobileNarrow).matches)
 		GW.scrollState.siteNavUIElements.forEach(element => {
 			if (GW.scrollState.unbrokenDownScrollDistance > 0) element.addClass("translucent-on-scroll");
 			else element.removeClass("translucent-on-scroll");
@@ -1334,7 +1368,7 @@ function updateSiteNavUIState(event) {
 		 localStorage.getItem("site-nav-ui-toggle-engaged") != "false")) toggleSiteNavUI();
 
 	// On desktop, show appearance adjust UI when scrolling to the top.
-	if ((!GW.isMobile) && 
+	if ((!matchMedia(GW.mediaQueries.mobileNarrow).matches) && 
 		(GW.scrollState.lastScrollTop == 0) &&
 		(!GW.scrollState.appearanceAdjustUIToggleButton.hasClass("engaged")) && 
 		(localStorage.getItem("appearance-adjust-ui-toggle-engaged") != "false")) toggleAppearanceAdjustUI();
@@ -1346,7 +1380,7 @@ GW.themeUnloadCallback_less = (toTheme = "") => {
 	removeSiteNavUIToggle();
 	document.removeEventListener("scroll", GW["updateSiteNavUIStateScrollListener"]);
 
-	removeElement("#theme-less-mobile-first-row-placeholder");
+	cancelDoWhenMatchMedia("themeLessMobileFirstRowPlaceholder");
 
 	if (!GW.isMobile) {
 		// Remove spans.
@@ -1419,7 +1453,6 @@ GW.themeLoadCallback_classic = (fromTheme = "") => {
 GW.themeUnloadCallback_classic = (toTheme = "") => {
 	GWLog("themeUnloadCallback_classic");
 
-	if (GW.isMobile && window.innerWidth <= 900) return;
 	queryAll(".comment-item .comment-controls .action-button").forEach(button => {
 		button.innerHTML = button.dataset.label;
 	});
@@ -2559,7 +2592,7 @@ function sortComments(mode) {
 
 	// Re-add comment parent popups.
 	addCommentParentPopups();
-	
+
 	// Redo new-comments highlighting.
 	highlightCommentsSince(time_fromHuman(query("#hns-date-picker input").value));
 
@@ -2664,7 +2697,7 @@ function addCommentParentPopups() {
 			}, {once: true});
 		});
 	});
-	
+
 	queryAll(".comment-meta a.comment-parent-link").forEach(commentParentLink => {
 		commentParentLink.innerHTML = "<span></span>";
 	});
@@ -3224,7 +3257,7 @@ function keyboardHelpSetup() {
 				[ [ 'ak-i' ], "Italic text" ],
 				[ [ 'ak-l' ], "Insert hyperlink" ],
 				[ [ 'ak-q' ], "Blockquote text" ]
-			], [				
+			], [
 				"Appearance",
 				[ [ 'ak-=' ], "Increase text size" ],
 				[ [ 'ak--' ], "Decrease text size" ],
@@ -3265,7 +3298,7 @@ function keyboardHelpSetup() {
 					<span class='action'>${entry[1]}</span>
 				</li>`
 			).join("\n") + `</ul>`).join("\n") + `
-			</ul></div>		
+			</ul></div>
 		</div>
 	` + "</nav>");
 
@@ -3419,7 +3452,12 @@ registerInitializer('earlyInitialize', true, () => query("#content") != null, fu
 	// Check to see whether we’re on a mobile device (which we define as a touchscreen^W narrow viewport).
 // 	GW.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 // 	GW.isMobile = ('ontouchstart' in document.documentElement);
-	GW.isMobile = matchMedia("(max-width: 960px)").matches;
+	GW.mediaQueries = {
+		mobileNarrow: matchMedia("(max-width: 520px)"),
+		mobileWide: matchMedia("(max-width: 900px)"),
+		mobileMax: matchMedia("(max-width: 960px)")
+	};
+	GW.isMobile = GW.mediaQueries.mobileMax.matches;
 	GW.isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
 
 	// Backward compatibility.
@@ -3616,7 +3654,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	// On mobile, replace the labels for the checkboxes on the edit post form
 	// with icons, to save space.
 	if (query(".edit-post-page")) {
-		doWhenMatchMedia("(max-width: 520px)", (mediaQuery) => {
+		doWhenMatchMedia(GW.mediaQueries.mobileNarrow, "editPostFormCheckboxLabels", (mediaQuery) => {
 			query("label[for='link-post']").innerHTML = mediaQuery.matches ? "&#xf0c1" : "Link post";
 			query("label[for='question']").innerHTML = mediaQuery.matches ? "&#xf128" : "Question post";
 		});
@@ -3694,7 +3732,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 	// Mark original poster's comments with a special class.
 	markOriginalPosterComments();
-	
+
 	// On the All view, mark posts with non-positive karma with a special class.
 	if (query("#content").hasClass("all-index-page")) {
 		queryAll("#content.index-page h1.listing + .post-meta .karma-value").forEach(karmaValue => {
@@ -3937,7 +3975,7 @@ registerInitializer('pageLayoutFinished', false, () => document.readyState == "c
 	focusImageSpecifiedByURL();
 
 	// Adjust state of text input fields.
-	doWhenMatchMedia("(max-width: 520px)", () => {
+	doWhenMatchMedia(GW.mediaQueries.mobileNarrow, "editorInputFields", () => {
 		queryAll("textarea").forEach(textarea => {
 			textarea.blur();
 			expandTextarea(textarea);
