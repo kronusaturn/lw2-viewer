@@ -3006,7 +3006,7 @@ h1.listing + .post-meta .read-time {
 	.author {
 		position: relative;
 	}
-	.author:not(.redacted)::before {
+	.author:not(.redacted)[data-full-name]::before {
 		content: attr(data-full-name);
 		position: absolute;
 		pointer-events: none;
