@@ -843,7 +843,7 @@ a.post-section.alignment-forum:hover::before {
 }
 
 .bottom-post-meta {
-	border-top: 1px solid #ddd;
+	border-color: #ddd;
 }
 
 .post .post-meta {

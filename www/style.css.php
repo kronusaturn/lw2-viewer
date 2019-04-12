@@ -1900,7 +1900,11 @@ h1.post-title {
 }
 .post .bottom-post-meta {
 	margin: 0;
-	padding: 20px 0 22px 0;
+	padding: 20px 0;
+}
+.bottom-post-meta {
+	border-style: solid;
+	border-width: 1px 0;
 }
 
 /*******************/

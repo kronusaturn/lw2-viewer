@@ -926,7 +926,7 @@ a.post-section.alignment-forum:hover::before {
 	color: #090;
 }
 .bottom-post-meta {
-	border-top: 1px solid #ddd;
+	border-color: #ddd;
 }
 
 /*============*/

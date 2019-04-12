@@ -1448,18 +1448,24 @@ a.post-section.alignment-forum:hover::before {
 }
 
 .post .bottom-post-meta {
-	padding: 1.75em 0 0 0;
+	padding: 1.5em 0;
 	margin: 0.5em 0 1.5em 0;
 	position: relative;
 }
-.post .bottom-post-meta::before {
+.post .bottom-post-meta::before,
+.post .bottom-post-meta::after {
 	content: "";
 	position: absolute;
 	display: block;
 	background-color: #ddd;
 	height: 1px;
 	width: calc(100% - 60px);
+}
+.post .bottom-post-meta::before {
 	top: 0;
+}
+.post .bottom-post-meta::after {
+	bottom: 0;
 }
 
 /*============*/

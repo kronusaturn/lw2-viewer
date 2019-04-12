@@ -692,7 +692,8 @@ a.post-section:hover::before {
 	color: #888;
 }
 .bottom-post-meta {
-	border-top: 1px dotted #000;
+	border-color: #000;
+	border-style: dotted;
 }
 
 /*============*/

@@ -886,7 +886,7 @@ a.post-section.alignment-forum:hover::before {
 	text-shadow: 0px 0px 0.5px #333;=
 }
 .bottom-post-meta {
-	border-top: 1px solid #ddd;
+	border-color: #ddd;
 }
 
 /*============*/
