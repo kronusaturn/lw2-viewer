@@ -1283,14 +1283,14 @@ a.post-section.alignment-forum:hover::before {
 	background-color: #fff;
 }
 .listings .comment-thread .comment-meta a.date:focus {
-	padding: 0 4px;
-	left: -4px;
+	padding: 2px 5px 0 5px;
+	left: -5px;
 }
 .listings .comment-thread .comment-meta a.date:focus + * {
 	margin-left: -8px;
 }
 .listings .comment-thread .comment-meta a.permalink:focus {
-	padding: 0 5px;
+	padding: 2px 5px 0 5px;
 	left: -5px;
 }
 .listings .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {

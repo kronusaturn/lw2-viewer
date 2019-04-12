@@ -3797,7 +3797,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 				} else if (document.activeElement.parentElement.hasClass("comment-meta")) {
 					let links = document.activeElement.parentElement.queryAll("a.date, a.permalink");
 					links[document.activeElement == links[0] ? 1 : 0].focus();
-					document.activeElement.closest(".comment-item").addClass("comment-item-highlight");
+					document.activeElement.closest(".comment-item").addClasses([ "comment-item-highlight", "expanded" ]);
 				}
 				return;
 			}
