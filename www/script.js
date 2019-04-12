@@ -303,16 +303,12 @@ function toggleMarkdownHintsBox() {
 
 	let checkbox = query("#markdown-hints-checkbox");
 	checkbox.checked = !checkbox.checked;
-// 	let markdownHintsBox = query("#markdown-hints");
-// 	markdownHintsBox.style.display = (getComputedStyle(markdownHintsBox).display == "none") ? "block" : "none";
 }
 function hideMarkdownHintsBox() {
 	GWLog("hideMarkdownHintsBox");
 
 	let checkbox = query("#markdown-hints-checkbox");
 	checkbox.checked = false;
-// 	let markdownHintsBox = query("#markdown-hints");
-// 	if (getComputedStyle(markdownHintsBox).display != "none") markdownHintsBox.style.display = "none";
 }
 
 Element.prototype.addTextareaFeatures = function() {
@@ -376,6 +372,7 @@ Element.prototype.addTextareaFeatures = function() {
 	textareaContainer.query("span").insertAdjacentHTML("afterend", markdown_hints);
 	doWhenMatchMedia("(max-width: 520px)", () => {
 		hideMarkdownHintsBox();
+		query(".guiedit-mobile-help-button").removeClass("active");
 	});
 
 	textareaContainer.queryAll(".guiedit-mobile-auxiliary-button").forEach(button => {

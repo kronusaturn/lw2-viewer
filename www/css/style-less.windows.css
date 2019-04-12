@@ -4150,7 +4150,7 @@ button.guiedit {
 	top: calc(100% + 1.75em);
 }
 #markdown-hints-checkbox:checked ~ #markdown-hints {
-	display: table;
+	display: block;
 }
 .markdown-hints-row {
 	display: table-row;
@@ -4161,7 +4161,10 @@ button.guiedit {
 	display: table-cell;
 	border: none;
 	background-color: inherit;
-	padding: 0 12px 0 0;
+}
+#markdown-hints .markdown-hints-row span:first-child,
+#markdown-hints .markdown-hints-row code:first-child {
+	padding: 0 1.5em 0 0;
 }
 
 /*=----------------------------=*/
@@ -4294,11 +4297,10 @@ button.guiedit {
 }
 	#markdown-hints::after {
 		content: "(Type to hide this help box.)";
-		color: #090;
 		display: block;
-		margin: 0.5em;
-		padding: 5px;
+		margin: 0.5em auto;
 		text-align: center;
+		padding: 5px;
 	}
 }
 
