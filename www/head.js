@@ -33,11 +33,13 @@ Element.prototype.removeClasses = function(classNames) {
 Element.prototype.hasClass = function(className) {
 	return (new RegExp("(^|\\s+)" + className + "(\\s+|$)")).test(this.className);
 }
-Element.prototype.toggleClass = function(className) {
-	if (this.hasClass(className))
-		this.removeClass(className);
-	else
+Element.prototype.toggleClass = function(className, on) {
+	if ((typeof on == "undefined" && !this.hasClass(className)) || 
+		on == true) {
 		this.addClass(className);
+	} else {
+		this.removeClass(className);
+	}
 }
 
 /********************/
