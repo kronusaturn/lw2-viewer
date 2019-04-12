@@ -891,6 +891,29 @@ h1.post-title {
 	font-weight: <?php echo ($platform == 'Mac') ? "700" : "800"; ?>;
 }
 
+/*=================*/
+/* POST NAVIGATION */
+/*=================*/
+
+.post-nav-links a,
+.post-nav-links a:visited {
+	color: #000;
+}
+.post-nav-links a:hover {
+	text-decoration: none;
+}
+.post-nav-label {
+	color: #777;
+}
+.post-nav-links a:hover .post-nav-label {
+	font-weight: 600;
+	color: #000;
+}
+.post-nav-links a:hover .post-nav-title {
+	color: #777;
+	border-bottom: 1px dotted currentColor;
+}
+
 /*===========*/
 /* POST-META */
 /*===========*/

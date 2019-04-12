@@ -1912,37 +1912,44 @@ h1.post-title {
 /*******************/
 
 .post-nav-item {
-	display: grid;
-	grid-template-columns: max-content auto max-content;
-	margin-bottom: 1em;
+	margin: 1em 0;
+	display: flex;
+	justify-content: stretch;
+	align-items: flex-end;
 }
-.post-nav-item a {
-	color: #000;
-}
-.post-nav-title {
-	font-weight: 900;
-	font-size: 130%;
-}
-.post-nav-links span {
+
+.post-nav-links .post-nav-label {
 	display: block;
+	padding: 0 0 0.25em 0;
 }
+
 .sequence-title {
-	grid-column: 2;
 	text-align: center;
-}
-.post-nav.prev {
-	grid-column: 1;
-	grid-row: 1;
-}
-.post-nav.next {
-	grid-column: 3;
-	text-align: right;
+	flex: 1 1 40%;
 }
 .sequence-title .post-nav-title {
-	font-size:170%;
+	font-size: 1.625em;
 }
-.post-nav .post-nav-title {
-	margin-top:0.35em;
+
+.post-nav-title {
+	font-size: 1.25em;
+	font-weight: 600;
+	line-height: 1;
+	display: inline;
+}
+
+.post-nav.prev,
+.post-nav.next {
+	flex: 1 1 30%;
+}
+
+.post-nav.prev {
+	order: -1;
+	margin: 0 1.5em 0 0;
+}
+.post-nav.next {
+	margin: 0 0 0 1.5em;
+	text-align: right;
 }
 
 /**************/
