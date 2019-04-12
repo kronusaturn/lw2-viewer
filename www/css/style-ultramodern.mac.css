@@ -3592,8 +3592,29 @@ a.comment-child-link::before {
 		overflow: visible;
 		pointer-events: auto;
 	}
+
+	#content.compact .comment-thread:last-child .comment-item.expanded {
+		max-height: unset;
+	}
+
 	#content.compact .comment-item:hover .comment-meta {
 		white-space: unset;
+	}
+
+	#content.compact .comment-item:hover .comment,
+	#content.compact .comment-item.expanded .comment {
+		position: relative;
+		z-index: 1;
+	}
+	#content.compact .comment-item:hover .comment::before,
+	#content.compact .comment-item.expanded .comment::before {
+		content: "";
+		position: absolute;
+		width: calc(100% + 20px);
+		height: calc(100% + 20px);
+		z-index: -1;
+		top: -10px;
+		left: -10px;
 	}
 }
 @media not screen and (hover: hover) and (pointer: fine) {
@@ -3602,37 +3623,8 @@ a.comment-child-link::before {
 		pointer-events: auto;
 		z-index: 10;
 	}
-}
-@media only screen and (hover: hover) and (pointer: fine) {
-	#content.compact .comment-thread:last-of-type .comment-item:hover,
-	#content.compact .comment-thread:last-of-type .comment-item.expanded {
-		max-height: unset;
-	}
-	#content.compact .comment-item:hover .comment,
-	#content.compact .comment-item.expanded .comment {
-		position: relative;
-		z-index: 1;
-		margin-bottom: 2em;
-		bottom: 0;
-	}
-	#content.compact .comment-item:hover .comment::before,
-	#content.compact .comment-item.expanded .comment::before {
-		content: "";
-		position: absolute;
-		display: block;
-		width: calc(100% + 20px);
-		height: calc(100% + 20px);
-		z-index: -1;
-		top: -10px;
-		left: -10px;
-	}
-	#content.compact .comment-thread:last-of-type .comment-item:hover .comment,
-	#content.compact .comment-thread:last-of-type .comment-item.expanded .comment{
-		margin: 0;
-	}
-}
-@media not screen and (hover: hover) and (pointer: fine) {
-	#content.compact .comment-thread.expanded:last-of-type .comment-item {
+
+	#content.compact .comment-thread.expanded:last-child .comment-item {
 		max-height: unset;
 	}
 	#content.compact .comment-thread.expanded .comment {
@@ -3651,7 +3643,7 @@ a.comment-child-link::before {
 		top: -10px;
 		left: -10px;
 	}
-	#content.compact .comment-thread.expanded:last-of-type .comment {
+	#content.compact .comment-thread.expanded:last-child .comment {
 		margin: 0;
 	}
 	#content.compact .comment-thread.expanded .comment::after {
