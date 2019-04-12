@@ -866,10 +866,11 @@ Element.prototype.setCommentThreadMaximized = function(toggle, userOriginated = 
 		}
 	}
 
-	commentItem.style.height = maximize ? 'auto' : '38px';
-	commentItem.style.overflow = maximize ? 'visible' : 'hidden';
+	[ commentItem, minimize_button ].forEach(element => {
+		element.removeClass(maximize ? "minimized" : "maximized");
+		element.addClass(maximize ? "maximized" : "minimized");
+	});
 
-	minimize_button.className = "comment-minimize-button " + (maximize ? "maximized" : "minimized");
 	minimize_button.innerHTML = maximize ? "&#xf146;" : "&#xf0fe;";
 	minimize_button.title = `${(maximize ? "Collapse" : "Expand")} comment`;
 	if (getQueryVariable("chrono") != "t") {

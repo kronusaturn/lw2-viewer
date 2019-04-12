@@ -1013,6 +1013,15 @@ a.comment-child-link::before {
 	display: none;
 }
 
+/*=--------------------=*/
+/*= Minimized comments =*/
+/*=--------------------=*/
+
+.comment-item.minimized {
+	height: 38px;
+	overflow: hidden;
+}
+
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
@@ -1027,11 +1036,20 @@ a.comment-child-link::before {
 /* IGNORE SYSTEM */
 /*****************/
 
-#content.comment-thread-page .comment-item.ignored {
-	height: 38px;
+.comment-item.ignored {
 	overflow: hidden;
 }
-.comment-item.ignored > .comment > .comment-meta > .author {
+#content.index-page .comment-item.ignored,
+#content.inbox-user-page .comment-item.ignored {
+	max-height: 63px;
+}
+#content.comment-thread-page .comment-item.ignored:not(.maximized) {
+	height: 38px;
+}
+
+/*	Ignored comment author.
+	*/
+.comment-item.ignored .author {
 	text-decoration: line-through;
 }
 
