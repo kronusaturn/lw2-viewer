@@ -1383,14 +1383,7 @@ signaled condition to OUT-STREAM."
 				      :extra-class "sequences-view")))))
 
 (define-page view-sequence (:regex "^/s(?:equences)?/([^/]+)" sequence-id) ()
-  (let ((sequence
-	 (lw2-graphql-query
-	  (lw2-query-string :sequence :single
-			    (alist :document-id sequence-id)
-			    `(:--id :title :created-at :user-id
-				    (:contents :html)
-				    (:chapters :title :subtitle :number (:contents :html) (:posts ,@(posts-index-fields)))
-				    :grid-image-id :----typename)))))
+  (let ((sequence (get-sequence sequence-id)))
     (alist-bind ((title string))
 		sequence
       (emit-page (out-stream

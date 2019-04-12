@@ -12,6 +12,7 @@
            #:lw2-query-string* #:lw2-query-string
            #:lw2-graphql-query-map #:lw2-graphql-query-multi
 	   #:get-posts-index #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-answers #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
+	   #:get-sequence
 	   #:get-conversation-messages
 	   #:get-user
            #:get-notifications #:check-notifications
@@ -66,7 +67,12 @@
   (backend-graphql (load-time-value *user-fields*))
   (backend-alignment-forum (load-time-value (append *user-fields* '(:af-karma :full-name)))))
 
-(define-cache-database "index-json" "post-comments-json" "post-comments-json-meta" "post-answers-json" "post-answers-json-meta" "post-body-json" "post-body-json-meta" "user-json" "user-json-meta")
+(define-cache-database
+    "index-json"
+    "post-comments-json" "post-comments-json-meta" "post-answers-json" "post-answers-json-meta"
+    "post-body-json" "post-body-json-meta"
+    "sequence-json" "sequence-json-meta" "post-sequence"
+    "user-json" "user-json-meta")
 
 (defmethod condition-http-return-code ((c condition)) 500)
 
@@ -525,6 +531,16 @@
 			    for a in answers
 			    nconc (get-post-comments-list post-id "repliesToAnswer" :parent-answer-id (cdr (assoc :--id a))))))))))
     (lw2-graphql-query-timeout-cached fn "post-answers-json" post-id :revalidate revalidate :force-revalidate force-revalidate)))
+
+(define-backend-function get-sequence (sequence-id)
+  (backend-graphql
+   (let ((query-string (lw2-query-string :sequence :single
+					 (alist :document-id sequence-id)
+					 `(:--id :title :created-at :user-id
+						 (:contents :html)
+						 (:chapters :title :subtitle :number (:contents :html) (:posts ,@(posts-index-fields)))
+						 :grid-image-id :----typename))))
+     (lw2-graphql-query-timeout-cached query-string "sequence-json" sequence-id))))
 
 (define-backend-function get-user (user-identifier-type user-identifier &key (revalidate t) force-revalidate auth-token)
   (backend-graphql
