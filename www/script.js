@@ -300,13 +300,19 @@ function updateInbox() {
 
 function toggleMarkdownHintsBox() {
 	GWLog("toggleMarkdownHintsBox");
-	let markdownHintsBox = query("#markdown-hints");
-	markdownHintsBox.style.display = (getComputedStyle(markdownHintsBox).display == "none") ? "block" : "none";
+
+	let checkbox = query("#markdown-hints-checkbox");
+	checkbox.checked = !checkbox.checked;
+// 	let markdownHintsBox = query("#markdown-hints");
+// 	markdownHintsBox.style.display = (getComputedStyle(markdownHintsBox).display == "none") ? "block" : "none";
 }
 function hideMarkdownHintsBox() {
 	GWLog("hideMarkdownHintsBox");
-	let markdownHintsBox = query("#markdown-hints");
-	if (getComputedStyle(markdownHintsBox).display != "none") markdownHintsBox.style.display = "none";
+
+	let checkbox = query("#markdown-hints-checkbox");
+	checkbox.checked = false;
+// 	let markdownHintsBox = query("#markdown-hints");
+// 	if (getComputedStyle(markdownHintsBox).display != "none") markdownHintsBox.style.display = "none";
 }
 
 Element.prototype.addTextareaFeatures = function() {
@@ -368,6 +374,9 @@ Element.prototype.addTextareaFeatures = function() {
 		"<span>Blockquote</span><code>&gt; Blockquote</code>" ].map(row => "<div class='markdown-hints-row'>" + row + "</div>").join("") +
 	`</div>`;
 	textareaContainer.query("span").insertAdjacentHTML("afterend", markdown_hints);
+	doWhenMatchMedia("(max-width: 520px)", () => {
+		hideMarkdownHintsBox();
+	});
 
 	textareaContainer.queryAll(".guiedit-mobile-auxiliary-button").forEach(button => {
 		button.addActivateEvent(GW.GUIEditMobileAuxiliaryButtonClicked = (event) => {

@@ -4428,7 +4428,7 @@ button.guiedit {
 	padding: 6px 12px;
 	float: right;
 }
-#edit-post-form #markdown-hints {
+.posting-controls #markdown-hints {
 	top: calc(100% + 2em);
 }
 
