@@ -1952,6 +1952,33 @@ h1.post-title {
 	text-align: right;
 }
 
+@media only screen and (max-width: 520px) {
+	.post-nav-item {
+		flex-flow: row wrap;
+		font-size: 0.875em;
+		margin: 0 0.5em;
+	}
+	.post-nav.prev,
+	.post-nav.next {
+		flex-basis: 50%;
+	}
+	.post-nav.next {
+		margin: 0;
+		padding: 0.5em 0 0.5em 0.5em;
+	}
+	.post-nav.prev {
+		margin: 0 0 0 -1px;
+		padding: 0.5em 0.5em 0.5em 0;
+		position: relative;
+		left: 1px;
+	}
+	.sequence-title {
+		flex-basis: 100%;
+		order: 2;
+		padding: 0.5em 0 0.75em 0;
+	}
+}
+
 /**************/
 /* LINK POSTS */
 /**************/

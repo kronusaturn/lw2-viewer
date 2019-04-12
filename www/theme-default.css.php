@@ -914,6 +914,18 @@ h1.post-title {
 	border-bottom: 1px dotted currentColor;
 }
 
+@media only screen and (max-width: 520px) {
+	.sequence-title {
+		border-top: 1px dotted #777;
+	}
+	.post-nav.prev {
+		border-right: 1px dotted #777;
+	}
+	.post-nav.next {
+		border-left: 1px dotted #777;
+	}
+}
+
 /*===========*/
 /* POST-META */
 /*===========*/
