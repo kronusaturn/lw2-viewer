@@ -1095,7 +1095,7 @@ function injectThemeSelector() {
 
 			let themeName = /select-theme-([^\s]+)/.exec(event.target.className)[1];
 			setSelectedTheme(themeName);
-			if (GW.isMobile) toggleAppearanceAdjustUI();
+			if (matchMedia("(max-width: 900px)").matches) toggleAppearanceAdjustUI();
 		});
 	});
 
@@ -1220,9 +1220,11 @@ GW.themeLoadCallback_less = (fromTheme = "") => {
 		postDate.innerHTML = dtf.format(new Date(+ postDate.dataset.jsDate));
 	});
 
-	if (GW.isMobile) {
+	doWhenMatchMedia("(max-width: 520px)", () => {
 		query("#content").insertAdjacentHTML("beforeend", "<div id='theme-less-mobile-first-row-placeholder'></div>");
-	}
+	}, () => {
+		removeElement("#theme-less-mobile-first-row-placeholder");
+	});
 
 	if (!GW.isMobile) {
 		registerInitializer('addSpans', true, () => query(".top-post-meta") != null, function () {
