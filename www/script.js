@@ -114,20 +114,20 @@ function addScrollListener(fn, name) {
 /*	This function provides two slightly different versions of its functionality,
 	depending on whether it gets two arguments or three.
 
-	If two arguments are given (a media query string and a function), then the
-	function is called whenever the media query changes (in either direction).
+	If two arguments are given (a media query and a function), then the function 
+	is called whenever the media query changes (in either direction).
 
-	If three arguments are given (a media query string and two functions), then
-	the first function is called whenever the media query starts matching, and
-	the section function is called whenever the media query stops matching.
+	If three arguments are given (a media query and two functions), then the 
+	first function is called whenever the media query starts matching, and the 
+	second function is called whenever the media query stops matching.
 
 	If you want to call a function for a change in one direction only, pass an
 	empty closure (NOT null!) as one of the function arguments.
 
-	There is also an optional fourth argument: whenCanceled. This should be a
-	function to be called when the active media query is canceled.
+	There is also an optional fourth argument. This should be a function to be 
+	called when the active media query is canceled.
 	*/
-function doWhenMatchMedia(mediaQuery, name, ifMatchesDo, otherwiseDo = null, whenCanceled = null) {
+function doWhenMatchMedia(mediaQuery, name, ifMatchesOrAlwaysDo, otherwiseDo = null, whenCanceledDo = null) {
 	if (typeof GW.mediaQueryResponders == "undefined")
 		GW.mediaQueryResponders = { };
 
@@ -135,14 +135,14 @@ function doWhenMatchMedia(mediaQuery, name, ifMatchesDo, otherwiseDo = null, whe
 		if (canceling) {
 			GWLog(`Canceling media query “${name}”`);
 
-			if (whenCanceled != null)
-				whenCanceled(mediaQuery);
+			if (whenCanceledDo != null)
+				whenCanceledDo(mediaQuery);
 		} else {
 			let matches = (typeof event == "undefined") ? mediaQuery.matches : event.matches;
 
 			GWLog(`Media query “${name}” triggered (matches: ${matches ? "YES" : "NO"})`);
 
-			if (otherwiseDo == null || matches) ifMatchesDo(mediaQuery);
+			if (otherwiseDo == null || matches) ifMatchesOrAlwaysDo(mediaQuery);
 			else otherwiseDo(mediaQuery);
 		}
 	};
@@ -2153,9 +2153,11 @@ function injectCommentsListModeSelector() {
 	commentsListModeSelector.query(`.${savedMode}`).disabled = true;
 	commentsListModeSelector.query(`.${(savedMode == "compact" ? "expanded" : "compact")}`).accessKey = '`';
 
-	if (GW.isMobile) {
-		queryAll("#comments-list-mode-selector ~ .comment-thread").forEach(commentParentLink => {
-			commentParentLink.addActivateEvent(function (event) {
+	if (!GW.mediaQueries.hover.matches) {
+		queryAll("#comments-list-mode-selector ~ .listings > .comment-thread").forEach(commentThread => {
+			commentThread.addActivateEvent(GW.commentThreadInListingTouched = (event) => {
+				GWLog("commentThreadInListingTouched");
+
 				let parentCommentThread = event.target.closest("#content.compact .comment-thread");
 				if (parentCommentThread) parentCommentThread.toggleClass("expanded");
 			}, false);
@@ -3451,11 +3453,12 @@ registerInitializer('earlyInitialize', true, () => query("#content") != null, fu
 	GWLog("INITIALIZER earlyInitialize");
 	// Check to see whether we’re on a mobile device (which we define as a touchscreen^W narrow viewport).
 // 	GW.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-// 	GW.isMobile = ('ontouchstart' in document.documentElement);
+//	GW.isMobile = ('ontouchstart' in document.documentElement);
 	GW.mediaQueries = {
 		mobileNarrow: matchMedia("(max-width: 520px)"),
 		mobileWide: matchMedia("(max-width: 900px)"),
-		mobileMax: matchMedia("(max-width: 960px)")
+		mobileMax: matchMedia("(max-width: 960px)"),
+		hover: matchMedia("only screen and (hover: hover) and (pointer: fine)")
 	};
 	GW.isMobile = GW.mediaQueries.mobileMax.matches;
 	GW.isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
@@ -3730,7 +3733,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	// Add comment parent popups.
 	addCommentParentPopups();
 
-	// Mark original poster's comments with a special class.
+	// Mark original poster’s comments with a special class.
 	markOriginalPosterComments();
 
 	// On the All view, mark posts with non-positive karma with a special class.
@@ -4027,19 +4030,19 @@ function adjustUIForWindowSize() {
 
 function recomputeUIElementsContainerHeight(force = false) {
 	GWLog("recomputeUIElementsContainerHeight");
-	if (!GW.isMobile &&
-		(force || query("#ui-elements-container").style.height != "")) {
-		// At viewport width 960px and below, we show the mobile versions of the
-		// fixed UI elements. In these cases, #ui-elements-container is static,
-		// not fixed; and its children are fixed, not absolute. This is done in
-		// order to prevent position jitter during scrolling on mobile devices.
-		if (window.innerWidth > 960) {
+	if (force || query("#ui-elements-container").style.height != "") {
+		/*	At viewport width where we show the mobile versions of the fixed UI 
+			elements, #ui-elements-container is static, not fixed; and its 
+			children are fixed, not absolute. This is done in order to prevent 
+			position jitter during scrolling on mobile devices.
+			*/
+		if (GW.mediaQueries.mobileMax.matches) {
+			query("#ui-elements-container").style.height = "";
+		} else {
 			let bottomBarOffset = query("#bottom-bar").hasClass("decorative") ? 16 : 30;
 			query("#ui-elements-container").style.height = (query("#content").clientHeight <= window.innerHeight + bottomBarOffset) ? 
 															query("#content").clientHeight + "px" :
 															"";
-		} else {
-			query("#ui-elements-container").style.height = "";
 		}
 	}
 }
