@@ -218,7 +218,8 @@ function setTextZoom(zoomFactor) {
 			zoom: ${zoomFactor};
 		}`;
 
-	if (window.generateImagesOverlay) setTimeout(generateImagesOverlay);
+	if (window.recomputeImagesOverlayLayout) 
+		requestAnimationFrame(recomputeImagesOverlayLayout);
 }
 GW.currentTextZoom = localStorage.getItem('text-zoom');
 setTextZoom(GW.currentTextZoom);

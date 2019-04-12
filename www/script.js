@@ -123,15 +123,16 @@ function addScrollListener(fn, name) {
 
 	If you want to call a function for a change in one direction only, pass an
 	empty closure (NOT null!) as one of the function arguments.
-
-	There is also an optional fourth argument, which is TRUE by default. If 
-	FALSE is passed instead, then the listener is added, but the function(s) 
-	provided do NOT get called immediately based on the current state of the
-	provided media query. (This is useful if what you want to do when a media
-	query changes is not exactly the same as what you want to do initially.)
 	*/
-function doWhenMatchMedia(mediaQueryString, ifMatchesDo, otherwiseDo = null, immediately = true) {
-	
+function doWhenMatchMedia(mediaQueryString, ifMatchesDo, otherwiseDo = null) {
+	let mediaQuery = matchMedia(mediaQueryString);
+	let mediaQueryResponder = (event) => {
+		let matches = typeof event == "undefined" ? mediaQuery.matches : event.matches;
+		if (otherwiseDo == null || matches) ifMatchesDo();
+		else otherwiseDo();
+	};
+	mediaQueryResponder();
+	mediaQuery.addListener(mediaQueryResponder);
 }
 
 /****************/
@@ -253,7 +254,7 @@ function togglePageScrolling(enable) {
 /********************/
 
 function GWLog (string) {
-	if (GW.loggingEnabled || localStorage.getItem("logging-enabled") == "true")
+	if (GW.loggingEnabled == true || (GW.loggingEnabled == null && localStorage.getItem("logging-enabled") == "true"))
 		console.log(string);
 }
 GW.enableLogging = (permanently = false) => {
@@ -314,18 +315,20 @@ Element.prototype.addTextareaFeatures = function() {
 
 	textarea.addEventListener("focus", GW.textareaFocused = (event) => {
 		GWLog("GW.textareaFocused");
+
 		event.target.closest("form").scrollIntoViewIfNeeded();
 	});
 	textarea.addEventListener("input", GW.textareaInputReceived = (event) => {
 		GWLog("GW.textareaInputReceived");
-		if (window.innerWidth > 520) {
-			// Expand textarea if needed.
-			expandTextarea(textarea);
-		} else {
+
+		if (matchMedia("(max-width: 520px)").matches) {
 			// Remove markdown hints.
 			hideMarkdownHintsBox();
 			query(".guiedit-mobile-help-button").removeClass("active");
 		}
+
+		// Expand textarea if needed.
+		expandTextarea(textarea);
 	}, false);
 	textarea.addEventListener("keyup", (event) => { event.stopPropagation(); });
 	textarea.addEventListener("keypress", (event) => { event.stopPropagation(); });
@@ -386,8 +389,8 @@ Element.prototype.addTextareaFeatures = function() {
 	// then apply them *just* to the fixed editor UI elements. This is in order
 	// to get around the “children of elements with a filter applied cannot be
 	// fixed” issue.
-	if (matchMedia("(max-width: 520px)")) {
-		let fixedEditorElements = textareaContainer.queryAll("textarea, .guiedit-buttons-container, .guiedit-mobile-auxiliary-button, #markdown-hints");
+	let fixedEditorElements = textareaContainer.queryAll("textarea, .guiedit-buttons-container, .guiedit-mobile-auxiliary-button, #markdown-hints");
+	doWhenMatchMedia("(max-width: 520px)", () => {
 		textarea.addEventListener("focus", GW.textareaFocusedMobile = (event) => {
 			GWLog("GW.textareaFocusedMobile");
 
@@ -409,8 +412,18 @@ Element.prototype.addTextareaFeatures = function() {
 					element.style.filter = filterStringFromFilters(GW.savedFilters);
 				});
 			});
+		})
+	}, () => {
+		textarea.removeEventListener("focus", GW.textareaFocusedMobile);
+		textarea.removeEventListener("blur", GW.textareaBlurredMobile);
+		requestAnimationFrame(() => {
+			if (GW.savedFilters) GW.currentFilters = GW.savedFilters;
+			applyFilters(GW.currentFilters);
+			fixedEditorElements.forEach(element => {
+				element.style.filter = "";
+			});
 		});
-	}
+	});
 }
 
 Element.prototype.injectReplyForm = function(editMarkdownSource) {
@@ -591,6 +604,7 @@ function showReplyForm(commentItem) {
 
 function hideReplyForm(commentControls) {
 	GWLog("hideReplyForm");
+
 	// Are we editing a comment? If so, un-hide the existing comment body.
 	let containingComment = commentControls.closest(".comment-item");
 	if (containingComment) containingComment.query(".comment-body").style.display = "";
@@ -604,7 +618,11 @@ function hideReplyForm(commentControls) {
 
 function expandTextarea(textarea) {
 	GWLog("expandTextarea");
-	if (window.innerWidth <= 520) return;
+
+	if (matchMedia("(max-width: 520px)").matches) {
+		textarea.style.height = "";
+		return;
+	}
 
 	let totalBorderHeight = 30;
 	if (textarea.clientHeight == textarea.scrollHeight + totalBorderHeight) return;
@@ -612,14 +630,13 @@ function expandTextarea(textarea) {
 	requestAnimationFrame(() => {
 		textarea.style.height = 'auto';
 		textarea.style.height = textarea.scrollHeight + totalBorderHeight + 'px';
-		if (textarea.clientHeight < window.innerHeight) {
-			textarea.parentElement.parentElement.scrollIntoViewIfNeeded();
-		}
+		textarea.closest("form").scrollIntoView();
 	});
 }
 
 function doCommentAction(action, commentItem) {
 	GWLog("doCommentAction");
+
 	let params = {};
 	params[(action + "-comment-id")] = commentItem.getCommentId();
 	doAjax({
@@ -648,6 +665,7 @@ function doCommentAction(action, commentItem) {
 
 function parseVoteType(voteType) {
 	GWLog("parseVoteType");
+
 	let value = {};
 	if (!voteType) return value;
 	value.up = /[Uu]pvote$/.test(voteType);
@@ -658,11 +676,13 @@ function parseVoteType(voteType) {
 
 function makeVoteType(value) {
 	GWLog("makeVoteType");
+
 	return (value.big ? 'big' : 'small') + (value.up ? 'Up' : 'Down') + 'vote';
 }
 
 function makeVoteClass(vote) {
 	GWLog("makeVoteClass");
+
 	if (vote.up || vote.down) {
 		return (vote.big ? 'selected big-vote' : 'selected');
 	} else {
@@ -672,6 +692,7 @@ function makeVoteClass(vote) {
 
 function addVoteButtons(element, voteType, targetType) {
 	GWLog("addVoteButtons");
+
 	let vote = parseVoteType(voteType);
 	let voteClass = makeVoteClass(vote);
 	element.insertAdjacentHTML('beforebegin', "<button type='button' class='vote upvote"+(vote.up ?' '+voteClass:'')+"' data-vote-type='upvote' data-target-type='"+targetType+"' tabindex='-1'></button>");
@@ -680,6 +701,7 @@ function addVoteButtons(element, voteType, targetType) {
 
 function makeVoteCompleteEvent(target) {
 	GWLog("makeVoteCompleteEvent");
+
 	return (GW.voteComplete = (event) => {
 		GWLog("GW.voteComplete");
 		var buttonTargets, karmaTargets;
@@ -721,6 +743,7 @@ function makeVoteCompleteEvent(target) {
 
 function sendVoteRequest(targetId, targetType, voteType, onFinish) {
 	GWLog("sendVoteRequest");
+
 	let req = new XMLHttpRequest();
 	req.addEventListener("load", onFinish);
 	req.open("POST", "/karma-vote");
@@ -730,6 +753,7 @@ function sendVoteRequest(targetId, targetType, voteType, onFinish) {
 
 function voteButtonClicked(event) {
 	GWLog("voteButtonClicked");
+
 	let voteButton = event.target;
 
 	// 500 ms (0.5 s) double-click timeout.
@@ -757,6 +781,7 @@ function voteButtonClicked(event) {
 }
 function voteEvent(voteButton, numClicks) {
 	GWLog("voteEvent");
+
 	voteButton.blur();
 	voteButton.parentNode.addClass("waiting");
 	let targetType = voteButton.dataset.targetType;
@@ -787,6 +812,7 @@ function voteEvent(voteButton, numClicks) {
 
 Element.prototype.setCommentThreadMaximized = function(toggle, userOriginated = true, force) {
 	GWLog("setCommentThreadMaximized");
+
 	let commentItem = this;
 	let storageName = "thread-minimized-" + commentItem.getCommentId();
 	let minimize_button = commentItem.query(".comment-minimize-button");
@@ -834,6 +860,7 @@ function getCurrentVisibleComment() {
 
 function highlightCommentsSince(date) {
 	GWLog("highlightCommentsSince");
+
 	var newCommentsCount = 0;
 	GW.newComments = [ ];
 	let oldCommentsStack = [ ];
@@ -878,6 +905,7 @@ function highlightCommentsSince(date) {
 
 function scrollToNewComment(next) {
 	GWLog("scrollToNewComment");
+
 	let commentItem = getCurrentVisibleComment();
 	let targetComment = null;
 	let targetCommentID = null;
@@ -913,6 +941,7 @@ function getLastVisitedDate() {
 }
 function setLastVisitedDate(date) {
 	GWLog("setLastVisitedDate");
+
 	// If NOT posting a comment, save the previous value for the last-visited-date 
 	// (to recover it in case of posting a comment).
 	let aCommentHasJustBeenPosted = (query(".just-posted-comment") != null);
@@ -927,11 +956,13 @@ function setLastVisitedDate(date) {
 
 function updateSavedCommentCount() {
 	GWLog("updateSavedCommentCount");
+
 	let commentCount = queryAll(".comment").length;
 	localStorage.setItem("comment-count_" + getPostHash(), commentCount);
 }
 function badgePostsWithNewComments() {
 	GWLog("badgePostsWithNewComments");
+
 	if (getQueryVariable("show") == "conversations") return;
 
 	queryAll("h1.listing a[href^='/posts']").forEach(postLink => {
@@ -953,6 +984,7 @@ function badgePostsWithNewComments() {
 
 function injectContentWidthSelector() {
 	GWLog("injectContentWidthSelector");
+
 	// Get saved width setting (or default).
 	let currentWidth = localStorage.getItem("selected-width") || 'normal';
 
@@ -1014,6 +1046,7 @@ function injectContentWidthSelector() {
 }
 function setWidthAdjustButtonsAccesskey() {
 	GWLog("setWidthAdjustButtonsAccesskey");
+
 	let widthSelector = query("#width-selector");
 	widthSelector.queryAll("button").forEach(button => {
 		button.removeAttribute("accesskey");
@@ -1031,6 +1064,7 @@ function setWidthAdjustButtonsAccesskey() {
 
 function injectThemeSelector() {
 	GWLog("injectThemeSelector");
+
 	let currentTheme = readCookie("theme") || "default";
 	let themeSelector = addUIElement(
 		"<div id='theme-selector' class='theme-selector'>" +
@@ -1044,6 +1078,7 @@ function injectThemeSelector() {
 	themeSelector.queryAll("button").forEach(button => {
 		button.addActivateEvent(GW.themeSelectButtonClicked = (event) => {
 			GWLog("GW.themeSelectButtonClicked");
+
 			let themeName = /select-theme-([^\s]+)/.exec(event.target.className)[1];
 			setSelectedTheme(themeName);
 			if (GW.isMobile) toggleAppearanceAdjustUI();
@@ -1071,6 +1106,7 @@ function injectThemeSelector() {
 }
 function setSelectedTheme(themeName) {
 	GWLog("setSelectedTheme");
+
 	queryAll(".theme-selector button").forEach(button => {
 		button.removeClass("selected");
 		button.disabled = false;
@@ -1083,6 +1119,8 @@ function setSelectedTheme(themeName) {
 	query("#theme-tweaker-ui .current-theme span").innerText = themeName;
 }
 function setTheme(newThemeName) {
+	GWLog("setTheme");
+
 	var themeUnloadCallback = '';
 	var oldThemeName = '';
 	if (typeof(newThemeName) == 'undefined') {
@@ -1104,7 +1142,7 @@ function setTheme(newThemeName) {
 	newStyle.setAttribute('rel', 'stylesheet');
 	newStyle.setAttribute('href', '/css/style' + styleSheetNameSuffix + currentStyleSheetNameComponents[1]);
 
-	let oldStyle = query("head link[href*='.css']");
+	let oldStyle = query("head link[href*='/css/style'][href*='.css']");
 	newStyle.addEventListener('load', () => { removeElement(oldStyle); });
 	newStyle.addEventListener('load', () => { postSetThemeHousekeeping(oldThemeName, newThemeName); });
 
@@ -1118,6 +1156,8 @@ function setTheme(newThemeName) {
 	}
 }
 function postSetThemeHousekeeping(oldThemeName = "", newThemeName = (readCookie('theme') || 'default')) {
+	GWLog("postSetThemeHousekeeping");
+
 	recomputeUIElementsContainerHeight(true);
 
 	let themeLoadCallback = GW['themeLoadCallback_' + newThemeName];
@@ -1125,7 +1165,7 @@ function postSetThemeHousekeeping(oldThemeName = "", newThemeName = (readCookie(
 
 	recomputeUIElementsContainerHeight();
 	adjustUIForWindowSize();
-	generateImagesOverlay();
+	recomputeImagesOverlayLayout();
 	window.addEventListener('resize', GW.windowResized = (event) => {
 		GWLog("GW.windowResized");
 
@@ -1133,6 +1173,7 @@ function postSetThemeHousekeeping(oldThemeName = "", newThemeName = (readCookie(
 			adjustUIForWindowSize();
 			recomputeUIElementsContainerHeight();
 			recomputeImagesOverlayLayout();
+
 			resetFocusedImagePosition();
 		});
 	});
@@ -1153,6 +1194,7 @@ function pageFadeTransition(fadeIn) {
 
 GW.themeLoadCallback_less = (fromTheme = "") => {
 	GWLog("themeLoadCallback_less");
+
 	injectSiteNavUIToggle();
 
 	registerInitializer('shortenDate', true, () => query(".top-post-meta") != null, function () {
@@ -1228,6 +1270,7 @@ GW.themeLoadCallback_less = (fromTheme = "") => {
 // visible; otherwise, show it.
 function updatePostNavUIVisibility() {
 	GWLog("updatePostNavUIVisibility");
+
 	var hidePostNavUIToggle = true;
 	queryAll("#quick-nav-ui a, #new-comment-nav-ui").forEach(element => {
 		if (getComputedStyle(element).visibility == "visible" ||
@@ -1245,6 +1288,7 @@ function updatePostNavUIVisibility() {
 // engaged; if they’re manually disengaged, they are not re-engaged by scroll.
 function updateSiteNavUIState(event) {
 	GWLog("updateSiteNavUIState");
+
 	let newScrollTop = window.pageYOffset || document.documentElement.scrollTop;
 	GW.scrollState.unbrokenDownScrollDistance = (newScrollTop > GW.scrollState.lastScrollTop) ? 
 														(GW.scrollState.unbrokenDownScrollDistance + newScrollTop - GW.scrollState.lastScrollTop) : 
@@ -1304,6 +1348,7 @@ GW.themeUnloadCallback_less = (toTheme = "") => {
 
 GW.themeLoadCallback_dark = (fromTheme = "") => {
 	GWLog("themeLoadCallback_dark");
+
 	query("head").insertAdjacentHTML("beforeend", 
 		"<style id='dark-theme-adjustments'>" + 
 		`.markdown-reference-link a { color: #d200cf; filter: invert(100%); }` + 
@@ -1321,11 +1366,13 @@ GW.themeLoadCallback_dark = (fromTheme = "") => {
 }
 GW.themeUnloadCallback_dark = (toTheme = "") => {
 	GWLog("themeUnloadCallback_dark");
+
 	removeElement("#dark-theme-adjustments");
 }
 
 GW.themeLoadCallback_brutalist = (fromTheme = "") => {
 	GWLog("themeLoadCallback_brutalist");
+
 	let bottomBarLinks = queryAll("#bottom-bar a");
 	if (!GW.isMobile && bottomBarLinks.length == 5) {
 		let newLinkTexts = [ "First", "Previous", "Top", "Next", "Last" ];
@@ -1337,6 +1384,7 @@ GW.themeLoadCallback_brutalist = (fromTheme = "") => {
 }
 GW.themeUnloadCallback_brutalist = (toTheme = "") => {
 	GWLog("themeUnloadCallback_brutalist");
+
 	let bottomBarLinks = queryAll("#bottom-bar a");
 	if (!GW.isMobile && bottomBarLinks.length == 5) {
 		bottomBarLinks.forEach(link => {
@@ -1347,12 +1395,14 @@ GW.themeUnloadCallback_brutalist = (toTheme = "") => {
 
 GW.themeLoadCallback_classic = (fromTheme = "") => {
 	GWLog("themeLoadCallback_classic");
+
 	queryAll(".comment-item .comment-controls .action-button").forEach(button => {
 		button.innerHTML = "";
 	});
 }
 GW.themeUnloadCallback_classic = (toTheme = "") => {
 	GWLog("themeUnloadCallback_classic");
+
 	if (GW.isMobile && window.innerWidth <= 900) return;
 	queryAll(".comment-item .comment-controls .action-button").forEach(button => {
 		button.innerHTML = button.dataset.label;
@@ -1365,6 +1415,7 @@ GW.themeUnloadCallback_classic = (toTheme = "") => {
 
 function injectThemeTweaker() {
 	GWLog("injectThemeTweaker");
+
 	let themeTweakerUI = addUIElement("<div id='theme-tweaker-ui' style='display: none;'>" + 
 	`<div class='main-theme-tweaker-window'>
 		<h1>Customize appearance</h1>
@@ -1438,6 +1489,7 @@ function injectThemeTweaker() {
 	// Clicking the background overlay closes the theme tweaker.
 	themeTweakerUI.addActivateEvent(GW.themeTweaker.UIOverlayClicked = (event) => {
 		GWLog("GW.themeTweaker.UIOverlayClicked");
+
 		if (event.type == 'mousedown') {
 			themeTweakerUI.style.opacity = "0.01";
 		} else {
@@ -1460,6 +1512,7 @@ function injectThemeTweaker() {
 		// update the filters for the entire page, to match the new setting.
 		field.addEventListener("change", GW.themeTweaker.fieldValueChanged = (event) => {
 			GWLog("GW.themeTweaker.fieldValueChanged");
+
 			if (event.target.id == 'theme-tweak-control-invert') {
 				GW.currentFilters['invert'] = event.target.checked ? '100%' : '0%';
 			} else if (event.target.type == 'range') {
@@ -1482,6 +1535,7 @@ function injectThemeTweaker() {
 		// his changes are having, live, without having to let go of the handle.
 		if (field.type == "range") field.addEventListener("input", GW.themeTweaker.fieldInputReceived = (event) => {
 			GWLog("GW.themeTweaker.fieldInputReceived");
+
 			var sampleTextFilters = GW.currentFilters;
 
 			let sliderName = /^theme-tweak-control-(.+)$/.exec(event.target.id)[1];
@@ -1494,6 +1548,7 @@ function injectThemeTweaker() {
 
 	themeTweakerUI.query(".minimize-button").addActivateEvent(GW.themeTweaker.minimizeButtonClicked = (event) => {
 		GWLog("GW.themeTweaker.minimizeButtonClicked");
+
 		let themeTweakerStyle = query("#theme-tweaker-style");
 
 		if (event.target.hasClass("minimize")) {
@@ -1540,11 +1595,13 @@ function injectThemeTweaker() {
 	});
 	themeTweakerUI.query(".help-button").addActivateEvent(GW.themeTweaker.helpButtonClicked = (event) => {
 		GWLog("GW.themeTweaker.helpButtonClicked");
+
 		themeTweakerUI.query("#theme-tweak-control-clippy").checked = JSON.parse(localStorage.getItem("theme-tweaker-settings") || '{ "showClippy": true }')["showClippy"];
 		toggleThemeTweakerHelpWindow();
 	});
 	themeTweakerUI.query(".reset-defaults-button").addActivateEvent(GW.themeTweaker.resetDefaultsButtonClicked = (event) => {
 		GWLog("GW.themeTweaker.resetDefaultsButtonClicked");
+
 		themeTweakerUI.query("#theme-tweak-control-invert").checked = false;
 		[ "saturate", "brightness", "contrast", "hue-rotate" ].forEach(sliderName => {
 			let slider = themeTweakerUI.query("#theme-tweak-control-" + sliderName);
@@ -1561,21 +1618,25 @@ function injectThemeTweaker() {
 	});
 	themeTweakerUI.query(".main-theme-tweaker-window .cancel-button").addActivateEvent(GW.themeTweaker.cancelButtonClicked = (event) => {
 		GWLog("GW.themeTweaker.cancelButtonClicked");
+
 		toggleThemeTweakerUI();
 		themeTweakReset();
 	});
 	themeTweakerUI.query(".main-theme-tweaker-window .ok-button").addActivateEvent(GW.themeTweaker.OKButtonClicked = (event) => {
 		GWLog("GW.themeTweaker.OKButtonClicked");
+
 		toggleThemeTweakerUI();
 		themeTweakSave();
 	});
 	themeTweakerUI.query(".help-window .cancel-button").addActivateEvent(GW.themeTweaker.helpWindowCancelButtonClicked = (event) => {
 		GWLog("GW.themeTweaker.helpWindowCancelButtonClicked");
+
 		toggleThemeTweakerHelpWindow();
 		themeTweakerResetSettings();
 	});
 	themeTweakerUI.query(".help-window .ok-button").addActivateEvent(GW.themeTweaker.helpWindowOKButtonClicked = (event) => {
 		GWLog("GW.themeTweaker.helpWindowOKButtonClicked");
+
 		toggleThemeTweakerHelpWindow();
 		themeTweakerSaveSettings();
 	});
@@ -1583,6 +1644,7 @@ function injectThemeTweaker() {
 	themeTweakerUI.queryAll(".notch").forEach(notch => {
 		notch.addActivateEvent(GW.themeTweaker.sliderNotchClicked = (event) => {
 			GWLog("GW.themeTweaker.sliderNotchClicked");
+
 			let slider = event.target.parentElement.query("input[type='range']");
 			slider.value = slider.dataset['defaultValue'];
 			event.target.parentElement.query(".theme-tweak-control-label").innerText = slider.value + slider.dataset['labelSuffix'];
@@ -1593,6 +1655,7 @@ function injectThemeTweaker() {
 
 	themeTweakerUI.query(".clippy-close-button").addActivateEvent(GW.themeTweaker.clippyCloseButtonClicked = (event) => {
 		GWLog("GW.themeTweaker.clippyCloseButtonClicked");
+
 		themeTweakerUI.query(".clippy-container").style.display = "none";
 		localStorage.setItem("theme-tweaker-settings", JSON.stringify({ 'showClippy': false }));
 		themeTweakerUI.query("#theme-tweak-control-clippy").checked = false;
@@ -1612,8 +1675,10 @@ function injectThemeTweaker() {
 	let themeTweakerToggle = addUIElement(`<div id='theme-tweaker-toggle'><button type='button' tabindex='-1' title="Customize appearance [;]" accesskey=';'>&#xf1de;</button></div>`);
 	themeTweakerToggle.query("button").addActivateEvent(GW.themeTweaker.toggleButtonClicked = (event) => {
 		GWLog("GW.themeTweaker.toggleButtonClicked");
+
 		GW.themeTweakerStyleSheetAvailable = () => {
 			GWLog("GW.themeTweakerStyleSheetAvailable");
+
 			themeTweakerUI.query(".current-theme span").innerText = (readCookie("theme") || "default");
 
 			themeTweakerUI.query("#theme-tweak-control-invert").checked = (GW.currentFilters['invert'] == "100%");
@@ -1642,6 +1707,7 @@ function injectThemeTweaker() {
 }
 function toggleThemeTweakerUI() {
 	GWLog("toggleThemeTweakerUI");
+
 	let themeTweakerUI = query("#theme-tweaker-ui");
 	themeTweakerUI.style.display = (themeTweakerUI.style.display == "none") ? "block" : "none";
 	query("#theme-tweaker-style").innerHTML = (themeTweakerUI.style.display == "none") ? "" : 
@@ -1674,11 +1740,13 @@ function toggleThemeTweakerUI() {
 }
 function setSearchBoxTabSelectable(selectable) {
 	GWLog("setSearchBoxTabSelectable");
+
 	query("input[type='search']").tabIndex = selectable ? "" : "-1";
 	query("input[type='search'] + button").tabIndex = selectable ? "" : "-1";
 }
 function toggleThemeTweakerHelpWindow() {
 	GWLog("toggleThemeTweakerHelpWindow");
+
 	let themeTweakerHelpWindow = query("#theme-tweaker-ui .help-window");
 	themeTweakerHelpWindow.style.display = (themeTweakerHelpWindow.style.display == "none") ? "block" : "none";
 	if (themeTweakerHelpWindow.style.display != "none") {
@@ -1695,6 +1763,7 @@ function toggleThemeTweakerHelpWindow() {
 }
 function themeTweakReset() {
 	GWLog("themeTweakReset");
+
 	setSelectedTheme(GW.currentTheme);
 	GW.currentFilters = JSON.parse(localStorage.getItem("theme-tweaks") || "{ }");
 	applyFilters(GW.currentFilters);
@@ -1703,6 +1772,7 @@ function themeTweakReset() {
 }
 function themeTweakSave() {
 	GWLog("themeTweakSave");
+
 	GW.currentTheme = (readCookie("theme") || "default");
 	localStorage.setItem("theme-tweaks", JSON.stringify(GW.currentFilters));
 	localStorage.setItem("text-zoom", GW.currentTextZoom);
@@ -1710,15 +1780,18 @@ function themeTweakSave() {
 
 function themeTweakerResetSettings() {
 	GWLog("themeTweakerResetSettings");
+
 	query("#theme-tweak-control-clippy").checked = JSON.parse(localStorage.getItem("theme-tweaker-settings") || '{ "showClippy": true }')['showClippy'];
 	query(".clippy-container").style.display = query("#theme-tweak-control-clippy").checked ? "block" : "none";
 }
 function themeTweakerSaveSettings() {
 	GWLog("themeTweakerSaveSettings");
+
 	localStorage.setItem("theme-tweaker-settings", JSON.stringify({ 'showClippy': query("#theme-tweak-control-clippy").checked }));
 }
 function updateThemeTweakerSampleText() {
 	GWLog("updateThemeTweakerSampleText");
+
 	let sampleText = query("#theme-tweaker-ui #theme-tweak-section-sample-text .sample-text");
 
 	// This causes the sample text to take on the properties of the body text of a post.
@@ -1746,6 +1819,7 @@ function updateThemeTweakerSampleText() {
 
 function injectQuickNavUI() {
 	GWLog("injectQuickNavUI");
+
 	let quickNavContainer = addUIElement("<div id='quick-nav-ui'>" +
 	`<a href='#top' title="Up to top [,]" accesskey=','>&#xf106;</a>
 	<a href='#comments' title="Comments [/]" accesskey='/'>&#xf036;</a>
@@ -1759,6 +1833,7 @@ function injectQuickNavUI() {
 
 function injectNewCommentNavUI(newCommentsCount) {
 	GWLog("injectNewCommentNavUI");
+
 	let newCommentUIContainer = addUIElement("<div id='new-comment-nav-ui'>" + 
 	`<button type='button' class='new-comment-sequential-nav-button new-comment-previous' title='Previous new comment (,)' tabindex='-1'>&#xf0d8;</button>
 	<span class='new-comments-count'></span>
@@ -1787,6 +1862,7 @@ function injectNewCommentNavUI(newCommentsCount) {
 
 	hnsDatePicker.query("input").addEventListener("input", GW.hnsDatePickerValueChanged = (event) => {
 		GWLog("GW.hnsDatePickerValueChanged");
+
 		let hnsDate = time_fromHuman(event.target.value);
 		let newCommentsCount = highlightCommentsSince(hnsDate);
 		updateNewCommentNavUI(newCommentsCount);
@@ -1794,6 +1870,7 @@ function injectNewCommentNavUI(newCommentsCount) {
 
 	newCommentUIContainer.query(".new-comments-count").addActivateEvent(GW.newCommentsCountClicked = (event) => {
 		GWLog("GW.newCommentsCountClicked");
+
 		let hnsDatePickerVisible = (getComputedStyle(hnsDatePicker).display != "none");
 		hnsDatePicker.style.display = hnsDatePickerVisible ? "none" : "block";
 	});
@@ -1819,6 +1896,7 @@ function time_fromHuman(string) {
 
 function updateNewCommentNavUI(newCommentsCount, hnsDate = -1) {
 	GWLog("updateNewCommentNavUI");
+
 	// Update the new comments count.
 	let newCommentsCountLabel = query("#new-comment-nav-ui .new-comments-count");
 	newCommentsCountLabel.innerText = newCommentsCount;
@@ -1836,6 +1914,7 @@ function updateNewCommentNavUI(newCommentsCount, hnsDate = -1) {
 
 GW.themeTweaker.textSizeAdjustButtonClicked = (event) => {
 	GWLog("GW.themeTweaker.textSizeAdjustButtonClicked");
+
 	var zoomFactor = parseFloat(GW.currentTextZoom) || 1.0;
 	if (event.target.hasClass("decrease")) {
 		zoomFactor = (zoomFactor - 0.05).toFixed(2);
@@ -1854,6 +1933,7 @@ GW.themeTweaker.textSizeAdjustButtonClicked = (event) => {
 
 function injectTextSizeAdjustmentUIReal() {
 	GWLog("injectTextSizeAdjustmentUIReal");
+
 	let textSizeAdjustmentUIContainer = addUIElement("<div id='text-size-adjustment-ui'>"
 	+ `<button type='button' class='text-size-adjust-button decrease' title="Decrease text size [-]" tabindex='-1' accesskey='-'>&#xf068;</button>`
 	+ `<button type='button' class='text-size-adjust-button default' title="Reset to default text size [0]" tabindex='-1' accesskey='0'>A</button>`
@@ -1869,6 +1949,7 @@ function injectTextSizeAdjustmentUIReal() {
 
 function injectTextSizeAdjustmentUI() {
 	GWLog("injectTextSizeAdjustmentUI");
+
 	if (query("#text-size-adjustment-ui") != null) return;
 	if (query("#content.post-page") != null) injectTextSizeAdjustmentUIReal();
 	else document.addEventListener("DOMContentLoaded", () => {
@@ -1882,6 +1963,7 @@ function injectTextSizeAdjustmentUI() {
 
 function injectCommentsViewModeSelector() {
 	GWLog("injectCommentsViewModeSelector");
+
 	let commentsContainer = query("#comments");
 	if (commentsContainer == null) return;
 
@@ -1956,6 +2038,7 @@ function injectCommentsViewModeSelector() {
 
 function rectifyChronoModeCommentChildLinks() {
 	GWLog("rectifyChronoModeCommentChildLinks");
+
 	queryAll(".comment-child-links").forEach(commentChildLinksContainer => {
 		let children = childrenOfComment(commentChildLinksContainer.closest(".comment-item").id);
 		let childLinks = commentChildLinksContainer.queryAll("a");
@@ -1982,6 +2065,7 @@ function childrenOfComment(commentID) {
 
 function injectCommentsListModeSelector() {
 	GWLog("injectCommentsListModeSelector");
+
 	if (query("#content > .listings > .comment-thread") == null) return;
 
 	let commentsListModeSelectorHTML = "<div id='comments-list-mode-selector'>"
@@ -1994,6 +2078,7 @@ function injectCommentsListModeSelector() {
 	commentsListModeSelector.queryAll("button").forEach(button => {
 		button.addActivateEvent(GW.commentsListModeSelectButtonClicked = (event) => {
 			GWLog("GW.commentsListModeSelectButtonClicked");
+
 			event.target.parentElement.queryAll("button").forEach(button => {
 				button.removeClass("selected");
 				button.disabled = false;
@@ -2035,6 +2120,7 @@ function injectCommentsListModeSelector() {
 
 function injectSiteNavUIToggle() {
 	GWLog("injectSiteNavUIToggle");
+
 	let siteNavUIToggle = addUIElement("<div id='site-nav-ui-toggle'><button type='button' tabindex='-1'>&#xf0c9;</button></div>");
 	siteNavUIToggle.query("button").addActivateEvent(GW.siteNavUIToggleButtonClicked = (event) => {
 		GWLog("GW.siteNavUIToggleButtonClicked");
@@ -2046,6 +2132,7 @@ function injectSiteNavUIToggle() {
 }
 function removeSiteNavUIToggle() {
 	GWLog("removeSiteNavUIToggle");
+
 	queryAll("#primary-bar, #secondary-bar, .page-toolbar, #site-nav-ui-toggle button").forEach(element => {
 		element.removeClass("engaged");
 	});
@@ -2053,6 +2140,7 @@ function removeSiteNavUIToggle() {
 }
 function toggleSiteNavUI() {
 	GWLog("toggleSiteNavUI");
+
 	queryAll("#primary-bar, #secondary-bar, .page-toolbar, #site-nav-ui-toggle button").forEach(element => {
 		element.toggleClass("engaged");
 		element.removeClass("translucent-on-scroll");
@@ -2065,6 +2153,7 @@ function toggleSiteNavUI() {
 
 function injectPostNavUIToggle() {
 	GWLog("injectPostNavUIToggle");
+
 	let postNavUIToggle = addUIElement("<div id='post-nav-ui-toggle'><button type='button' tabindex='-1'>&#xf14e;</button></div>");
 	postNavUIToggle.query("button").addActivateEvent(GW.postNavUIToggleButtonClicked = (event) => {
 		GWLog("GW.postNavUIToggleButtonClicked");
@@ -2076,6 +2165,7 @@ function injectPostNavUIToggle() {
 }
 function removePostNavUIToggle() {
 	GWLog("removePostNavUIToggle");
+
 	queryAll("#quick-nav-ui, #new-comment-nav-ui, #hns-date-picker, #post-nav-ui-toggle button").forEach(element => {
 		element.removeClass("engaged");
 	});
@@ -2083,6 +2173,7 @@ function removePostNavUIToggle() {
 }
 function togglePostNavUI() {
 	GWLog("togglePostNavUI");
+
 	queryAll("#quick-nav-ui, #new-comment-nav-ui, #hns-date-picker, #post-nav-ui-toggle button").forEach(element => {
 		element.toggleClass("engaged");
 	});
@@ -2094,6 +2185,7 @@ function togglePostNavUI() {
 
 function injectAppearanceAdjustUIToggle() {
 	GWLog("injectAppearanceAdjustUIToggle");
+
 	let appearanceAdjustUIToggle = addUIElement("<div id='appearance-adjust-ui-toggle'><button type='button' tabindex='-1'>&#xf013;</button></div>");
 	appearanceAdjustUIToggle.query("button").addActivateEvent(GW.appearanceAdjustUIToggleButtonClicked = (event) => {
 		GWLog("GW.appearanceAdjustUIToggleButtonClicked");
@@ -2109,6 +2201,7 @@ function injectAppearanceAdjustUIToggle() {
 }
 function removeAppearanceAdjustUIToggle() {
 	GWLog("removeAppearanceAdjustUIToggle");
+
 	queryAll("#comments-view-mode-selector, #theme-selector, #width-selector, #text-size-adjustment-ui, #theme-tweaker-toggle, #appearance-adjust-ui-toggle button").forEach(element => {
 		element.removeClass("engaged");
 	});
@@ -2116,6 +2209,7 @@ function removeAppearanceAdjustUIToggle() {
 }
 function toggleAppearanceAdjustUI() {
 	GWLog("toggleAppearanceAdjustUI");
+
 	queryAll("#comments-view-mode-selector, #theme-selector, #width-selector, #text-size-adjustment-ui, #theme-tweaker-toggle, #appearance-adjust-ui-toggle button").forEach(element => {
 		element.toggleClass("engaged");
 	});
@@ -2127,6 +2221,7 @@ function toggleAppearanceAdjustUI() {
 
 function expandAncestorsOf(comment) {
 	GWLog("expandAncestorsOf");
+
 	if (typeof comment == "string") {
 		comment = /(?:comment-)?(.+)/.exec(comment)[1];
 		comment = query("#comment-" + comment);
@@ -2151,6 +2246,7 @@ function expandAncestorsOf(comment) {
 
 function toggleReadTimeOrWordCount(addWordCountClass) {
 	GWLog("toggleReadTimeOrWordCount");
+
 	queryAll(".post-meta .read-time").forEach(element => {
 		if (addWordCountClass) element.addClass("word-count");
 		else element.removeClass("word-count");
@@ -2177,6 +2273,7 @@ function disableBeforeUnload() {
 
 function markOriginalPosterComments() {
 	GWLog("markOriginalPosterComments");
+
 	let postAuthor = query(".post .author");
 	if (postAuthor == null) return;
 
@@ -2195,6 +2292,7 @@ function markOriginalPosterComments() {
 
 function setEditPostPageSubmitButtonText() {
 	GWLog("setEditPostPageSubmitButtonText");
+
 	if (!query("#content").hasClass("edit-post-page")) return;
 
 	queryAll("input[type='radio'][name='section'], .question-checkbox").forEach(radio => {
@@ -2208,6 +2306,7 @@ function setEditPostPageSubmitButtonText() {
 }
 function updateEditPostPageSubmitButtonText() {
 	GWLog("updateEditPostPageSubmitButtonText");
+
 	let submitButton = query("input[type='submit']");
 	if (query("input#drafts").checked == true) 
 		submitButton.value = "Save Draft";
@@ -2232,6 +2331,7 @@ function numToAlpha(n) {
 
 function injectAntiKibitzer() {
 	GWLog("injectAntiKibitzer");
+
 	// Inject anti-kibitzer toggle controls.
 	let antiKibitzerToggle = addUIElement("<div id='anti-kibitzer-toggle'><button type='button' tabindex='-1' accesskey='g' title='Toggle anti-kibitzer (show/hide authors & karma values) [g]'></button>");
 	antiKibitzerToggle.query("button").addActivateEvent(GW.antiKibitzerToggleButtonClicked = (event) => {
@@ -2257,6 +2357,7 @@ function injectAntiKibitzer() {
 
 function toggleAntiKibitzerMode() {
 	GWLog("toggleAntiKibitzerMode");
+
 	// This will be the URL of the user’s own page, if logged in, or the URL of
 	// the login page otherwise.
 	let userTabTarget = query("#nav-item-login .nav-inner").href;
@@ -3374,15 +3475,12 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	GW.needHashRealignment = false;
 
 	// On edit post pages and conversation pages, add GUIEdit buttons to the 
-	// textarea, expand it, and markdownify the existing text, if any (this is
-	// needed if a post was last edited on LW).
+	// textarea, and markdownify the existing text, if any (this is needed if a 
+	// post was last edited on LW).
 	queryAll(".with-markdown-editor textarea").forEach(textarea => {
 		textarea.addTextareaFeatures();
-		expandTextarea(textarea);
 		textarea.value = MarkdownFromHTML(textarea.value);
 	});
-	// Focus the textarea.
-	queryAll(((getQueryVariable("post-id")) ? "#edit-post-form textarea" : "#edit-post-form input[name='title']") + (GW.isMobile ? "" : ", .conversation-page textarea")).forEach(field => { field.focus(); });
 
 	// If this is a post page...
 	let postMeta = query(".post .post-meta");
@@ -3501,9 +3599,14 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 	// On mobile, replace the labels for the checkboxes on the edit post form
 	// with icons, to save space.
-	if (GW.isMobile && query(".edit-post-page")) {
-		query("label[for='link-post']").innerHTML = "&#xf0c1";
-		query("label[for='question']").innerHTML = "&#xf128";
+	if (query(".edit-post-page")) {
+		doWhenMatchMedia("(max-width: 520px)", () => {
+			query("label[for='link-post']").innerHTML = "&#xf0c1";
+			query("label[for='question']").innerHTML = "&#xf128";
+		}, () => {
+			query("label[for='link-post']").innerHTML = "Link post";
+			query("label[for='question']").innerHTML = "Question post";
+		});
 	}
 
 	// Add error message (as placeholder) if user tries to click Search with
@@ -3814,15 +3917,30 @@ registerInitializer('pageLayoutFinished', false, () => document.readyState == "c
 
 	postSetThemeHousekeeping();
 
+	// Construct the images overlay (which also calls imageFocusSetup() again).
+	generateImagesOverlay();
+
 	// If the URL hash specifies an image to focus, focus it.
 	focusImageSpecifiedByURL();
 
-	// FOR TESTING ONLY, COMMENT WHEN DEPLOYING.
-// 	query("input[type='search']").value = GW.isMobile;
-// 	query("head").insertAdjacentHTML("beforeend", "<style>" + 
-// 		`@media only screen and (hover:none) { #nav-item-search input { background-color: red; }}` + 
-// 		`@media only screen and (hover:hover) { #nav-item-search input { background-color: LightGreen; }}` + 
-// 		"</style>");
+	// Adjust state of text input fields.
+	doWhenMatchMedia("(max-width: 520px)", () => {
+		queryAll("textarea").forEach(textarea => {
+			textarea.blur();
+			expandTextarea(textarea);
+		});
+	}, () => {
+		queryAll(".with-markdown-editor textarea").forEach(textarea => {
+			expandTextarea(textarea);
+		});
+
+		// Focus appropriate input field.
+		let appropriateInputField = (getQueryVariable("post-id") ? "#edit-post-form textarea" : "#edit-post-form input[name='title']") + 
+									", .conversation-page textarea";
+		queryAll(appropriateInputField).forEach(field => {
+			field.focus();
+		});
+	});
 });
 
 function adjustUIForWindowSize() {

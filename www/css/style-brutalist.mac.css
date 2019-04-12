@@ -4019,7 +4019,7 @@ a.comment-child-link::before {
 	width: 100%;
 	height: 15em;
 	min-height: 15em;
-	max-height: calc(100vh - 7em);
+	max-height: calc(100vh - 8em);
 	margin: 2px 0 0 0;
 	padding: 4px 5px;
 	font-size: 1.2rem;
@@ -4467,6 +4467,12 @@ button.guiedit {
 	}
 	#edit-post-form .textarea-container:focus-within textarea {
 		min-height: unset;
+	}
+	#edit-post-form label[for='link-post'],
+	#edit-post-form label[for='question'] {
+		font-family: var(--GW-Font-Awesome);
+		font-weight: 900;
+		line-height: 1.25;
 	}
 
 	#markdown-hints-checkbox,
