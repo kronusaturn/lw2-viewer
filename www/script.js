@@ -400,15 +400,19 @@ Element.prototype.addTextareaFeatures = function() {
 		textarea.addEventListener("focus", GW.textareaFocusedMobile = (event) => {
 			GWLog("GW.textareaFocusedMobile");
 
-			GW.savedFilters = GW.currentFilters;
-			GW.currentFilters = { };
-			applyFilters(GW.currentFilters);
-			fixedEditorElements.forEach(element => {
-				element.style.filter = filterStringFromFilters(GW.savedFilters);
-			});
+			if (!textarea.hasClass("full-screen")) {
+				GW.savedFilters = GW.currentFilters;
+				GW.currentFilters = { };
+				applyFilters(GW.currentFilters);
+				fixedEditorElements.forEach(element => {
+					element.style.filter = filterStringFromFilters(GW.savedFilters);
+				});
+
+				textarea.addClass("full-screen");
+			}
 		});
-		textarea.addEventListener("blur", GW.textareaBlurredMobile = (event) => {
-			GWLog("GW.textareaBlurredMobile");
+		query(".guiedit-mobile-exit-button").addEventListener("blur", GW.textareaClosedMobile = (event) => {
+			GWLog("GW.textareaClosedMobile");
 
 			GW.currentFilters = GW.savedFilters;
 			GW.savedFilters = { };
@@ -418,10 +422,13 @@ Element.prototype.addTextareaFeatures = function() {
 					element.style.filter = filterStringFromFilters(GW.savedFilters);
 				});
 			});
+
+			textarea.removeClass("full-screen");
 		})
 	}, () => {
+		textarea.removeClass("full-screen");
 		textarea.removeEventListener("focus", GW.textareaFocusedMobile);
-		textarea.removeEventListener("blur", GW.textareaBlurredMobile);
+		query(".guiedit-mobile-exit-button").removeEventListener("blur", GW.textareaClosedMobile);
 		requestAnimationFrame(() => {
 			if (GW.savedFilters) GW.currentFilters = GW.savedFilters;
 			applyFilters(GW.currentFilters);

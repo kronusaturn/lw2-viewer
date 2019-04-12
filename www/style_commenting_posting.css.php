@@ -403,6 +403,11 @@ button.guiedit {
 /* EDIT POST FORM */
 /******************/
 
+#content.edit-post-page {
+	min-height: 100vh;
+	grid-template-rows: auto auto 1fr auto;
+}
+
 .post-controls {
 	text-align: right;
 	margin: 0.75em var(--GW-post-page-content-right-side-padding) 0 0;
@@ -481,8 +486,8 @@ button.guiedit {
 	line-height: normal;
 	border: 1px solid transparent;
 	text-align: right;
-    padding: 0.25em 0.5em;
     white-space: nowrap;
+    padding: 0.25em 0.5em;
 }
 #edit-post-form input[type='radio'] {
 	width: 0;
@@ -508,7 +513,7 @@ button.guiedit {
 }
 <?php fit_content("#edit-post-form input[type='radio'] + label"); ?>
 
-#edit-post-form textarea {
+.comment-controls textarea {
 	min-height: 24em;
 }
 
@@ -547,11 +552,14 @@ button.guiedit {
 	}
 }
 @media only screen and (max-width: 520px) {
+	#edit-post-form {
+		padding: 0.75em;
+	}
 	.post-controls {
 		margin: 0.5em var(--GW-post-page-content-right-side-padding) 0 0;
 	}
 	#edit-post-form .post-meta-fields {
-		grid-template-columns: 4.5em auto auto auto 1fr auto;
+		grid-template-columns: 3.75em auto auto auto 1fr auto;
 	}
 	#edit-post-form .textarea-container:focus-within textarea {
 		min-height: unset;
@@ -578,5 +586,21 @@ button.guiedit {
 		font-size: 1.5rem;
 		margin: 1.25rem auto 0 auto;
 		padding: 0.5em 0.75em;
+	}
+}
+@media only screen and (max-width: 420px) {
+	#edit-post-form {
+		padding: 0.5em;
+	}
+	#edit-post-form .post-meta-fields {
+		grid-template-columns: 3.75em auto auto auto 1fr auto;
+	}
+	#edit-post-form label {
+		padding-right: 0.25em;
+		padding-left: 0;
+	}
+	#edit-post-form label[for='question'] {
+		grid-column: 5 / span 2;
+		margin: 0;
 	}
 }
