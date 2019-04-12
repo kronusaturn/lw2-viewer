@@ -1952,7 +1952,7 @@ h1.post-title {
 	text-align: right;
 }
 
-@media only screen and (max-width: 520px) {
+@media only screen and (max-width: 900px) {
 	.post-nav-item {
 		flex-flow: row wrap;
 		font-size: 0.875em;

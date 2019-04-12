@@ -914,7 +914,7 @@ h1.post-title {
 	border-bottom: 1px dotted currentColor;
 }
 
-@media only screen and (max-width: 520px) {
+@media only screen and (max-width: 900px) {
 	.sequence-title {
 		border-top: 1px dotted #777;
 	}
