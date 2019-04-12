@@ -403,11 +403,6 @@ button.guiedit {
 /* EDIT POST FORM */
 /******************/
 
-#content.edit-post-page {
-	min-height: 100vh;
-	grid-template-rows: auto auto 1fr auto;
-}
-
 .post-controls {
 	text-align: right;
 	margin: 0.75em var(--GW-post-page-content-right-side-padding) 0 0;
@@ -513,15 +508,17 @@ button.guiedit {
 }
 <?php fit_content("#edit-post-form input[type='radio'] + label"); ?>
 
-.comment-controls textarea {
+#edit-post-form textarea {
 	min-height: 24em;
+	margin: 0;
 }
+
 
 #edit-post-form input[type='submit'] {
 	padding: 6px 12px;
 	float: right;
 }
-.posting-controls #markdown-hints {
+#edit-post-form #markdown-hints {
 	top: calc(100% + 2em);
 }
 
@@ -552,8 +549,21 @@ button.guiedit {
 	}
 }
 @media only screen and (max-width: 520px) {
+	#content.edit-post-page {
+		min-height: 100vh;
+		grid-template-rows: auto auto 1fr auto;
+	}
 	#edit-post-form {
 		padding: 0.75em;
+		height: 100%;
+		display: flex;
+		flex-flow: column;
+	}
+	#edit-post-form .textarea-container {
+		 flex: 1 1 auto;
+	}
+	#edit-post-form textarea {
+		height: calc(100% - 1em);
 	}
 	.post-controls {
 		margin: 0.5em var(--GW-post-page-content-right-side-padding) 0 0;
