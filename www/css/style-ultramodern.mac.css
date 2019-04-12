@@ -3535,26 +3535,24 @@ a.comment-child-link::before {
 #content.compact .comment-thread {
 	font-size: 0.9375rem;
 }
-#content.compact .comment-thread:hover {
-	z-index: 1;
-}
 #content.compact .comment-thread .comment-body {
 	font-size: 1.0625rem;
 }
-#content.compact .comment-item,
-#content.index-page .comment-item.ignored,
-#content.inbox-user-page .comment-item.ignored {
-	max-height: 61px;
+#content.compact .comment-item {
+	max-height: 60px;
 	margin-top: 1em;
 	overflow: hidden;
 	position: relative;
+	pointer-events: none;
 }
 #content.conversation-page.compact .comment-item {
 	max-height: 36px;
 }
-#content.compact .comment-item {
-	pointer-events: none;
-}
+
+/*=-----------------------------=*/
+/*= Ellipsis (“...”) hover area =*/
+/*=-----------------------------=*/
+
 #content.compact .comment-item::after {
 	content: "…";
 	position: absolute;
@@ -3567,12 +3565,35 @@ a.comment-child-link::before {
 
 	color: var(--GW-hyperlink-color);
 }
+
+#content.compact .comment-meta {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding: 2px 10px;
+}
+#content.compact .comment-meta a {
+	pointer-events: auto;
+}
+
+/*=---------------------------=*/
+/*= Expand on hover/focus/tap =*/
+/*=---------------------------=*/
+
 @media only screen and (hover: hover) and (pointer: fine) {
-	#content.compact:not(:focus-within) .comment-item:hover,
+	#content.compact .comment-item:hover {
+		z-index: 11;
+	}
+	#content.compact .comment-item.expanded {
+		z-index: 10;
+	}
+	#content.compact .comment-item:hover,
 	#content.compact .comment-item.expanded {
 		overflow: visible;
 		pointer-events: auto;
-		z-index: 10;
+	}
+	#content.compact .comment-item:hover .comment-meta {
+		white-space: unset;
 	}
 }
 @media not screen and (hover: hover) and (pointer: fine) {
@@ -3581,18 +3602,6 @@ a.comment-child-link::before {
 		pointer-events: auto;
 		z-index: 10;
 	}
-}
-#content.compact .comment-meta {
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	padding: 2px 10px;
-}
-#content.compact .comment-item:hover .comment-meta {
-	white-space: unset;
-}
-#content.compact .comment-meta a {
-	pointer-events: auto;
 }
 @media only screen and (hover: hover) and (pointer: fine) {
 	#content.compact .comment-thread:last-of-type .comment-item:hover,
