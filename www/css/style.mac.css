@@ -6179,12 +6179,16 @@ h1.post-title {
 .post-nav-links a:hover {
 	text-decoration: none;
 }
+.post-nav-title {
+	font-weight: 600;
+}
+
 .post-nav-label {
 	color: #777;
 }
 .post-nav-links a:hover .post-nav-label {
 	font-weight: 600;
-	color: #000;
+	color: #888;
 }
 .post-nav-links a:hover .post-nav-title {
 	color: #777;

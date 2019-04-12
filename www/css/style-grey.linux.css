@@ -6057,6 +6057,39 @@ h1.listing.own-post-listing {
 	font-feature-settings: "tnum";
 }
 
+/*=================*/
+/* POST NAVIGATION */
+/*=================*/
+
+.post-nav-links a,
+.post-nav-links a:visited {
+	color: #888;
+}
+.post-nav-links a:hover {
+	text-decoration: none;
+}
+
+.post-nav-label {
+	color: #999;
+}
+
+.post-nav-links a:hover .post-nav-title {
+	color: #777;
+	border-bottom: 1px dotted currentColor;
+}
+
+@media only screen and (max-width: 900px) {
+	.sequence-title {
+		border-top: 1px dotted #aaa;
+	}
+	.post-nav.prev {
+		border-right: 1px dotted #aaa;
+	}
+	.post-nav.next {
+		border-left: 1px dotted #aaa;
+	}
+}
+
 /*==================*/
 /* POSTS & COMMENTS */
 /*==================*/
