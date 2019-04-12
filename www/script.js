@@ -128,8 +128,8 @@ function doWhenMatchMedia(mediaQueryString, ifMatchesDo, otherwiseDo = null) {
 	let mediaQuery = matchMedia(mediaQueryString);
 	let mediaQueryResponder = (event) => {
 		let matches = typeof event == "undefined" ? mediaQuery.matches : event.matches;
-		if (otherwiseDo == null || matches) ifMatchesDo();
-		else otherwiseDo();
+		if (otherwiseDo == null || matches) ifMatchesDo(mediaQuery);
+		else otherwiseDo(mediaQuery);
 	};
 	mediaQueryResponder();
 	mediaQuery.addListener(mediaQueryResponder);
@@ -513,6 +513,7 @@ Element.prototype.updateCommentControlButton = function() {
 
 Element.prototype.constructCommentControls = function() {
 	GWLog("constructCommentControls");
+
 	let commentControls = this;
 	let commentType = (commentControls.parentElement.id == "answers" ? "answer" : "comment");
 	commentControls.innerHTML = "";
@@ -542,11 +543,11 @@ Element.prototype.constructCommentControls = function() {
 	replyButton.tabIndex = '-1';
 
 	// On mobile, hide labels for all but the Reply button.
-	if (GW.isMobile && window.innerWidth <= 900) {
+	doWhenMatchMedia("(max-width: 900px)", (mediaQuery) => {
 		commentControls.queryAll(".delete-button, .retract-button, .unretract-button, .edit-button").forEach(button => {
-			button.innerHTML = "";
+			button.innerHTML = mediaQuery.matches ? "" : button.dataset.label;
 		});
-	}
+	});
 
 	// Activate buttons.
 	commentControls.queryAll(".action-button").forEach(button => {
@@ -3613,12 +3614,9 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	// On mobile, replace the labels for the checkboxes on the edit post form
 	// with icons, to save space.
 	if (query(".edit-post-page")) {
-		doWhenMatchMedia("(max-width: 520px)", () => {
-			query("label[for='link-post']").innerHTML = "&#xf0c1";
-			query("label[for='question']").innerHTML = "&#xf128";
-		}, () => {
-			query("label[for='link-post']").innerHTML = "Link post";
-			query("label[for='question']").innerHTML = "Question post";
+		doWhenMatchMedia("(max-width: 520px)", (mediaQuery) => {
+			query("label[for='link-post']").innerHTML = mediaQuery.matches ? "&#xf0c1" : "Link post";
+			query("label[for='question']").innerHTML = mediaQuery.matches ? "&#xf128" : "Question post";
 		});
 	}
 
