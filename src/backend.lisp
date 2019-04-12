@@ -1,5 +1,6 @@
 (uiop:define-package #:lw2.backend
   (:use #:cl #:sb-thread #:flexi-streams #:alexandria #:lw2-viewer.config #:lw2.sites #:lw2.context #:lw2.graphql #:lw2.lmdb #:lw2.utils #:lw2.hash-utils #:lw2.backend-modules #:lw2.schema-type)
+  (:import-from #:collectors #:with-collector)
   (:reexport #:lw2.backend-modules)
   (:export #:*graphql-debug-output*
            #:posts-index-fields #:*messages-index-fields*
@@ -12,7 +13,7 @@
            #:lw2-query-string* #:lw2-query-string
            #:lw2-graphql-query-map #:lw2-graphql-query-multi
 	   #:get-posts-index #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-answers #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
-	   #:get-sequence
+	   #:sequence-post-ids #:get-sequence #:get-post-sequences #:get-sequence-post
 	   #:get-conversation-messages
 	   #:get-user
            #:get-notifications #:check-notifications
@@ -533,15 +534,51 @@
 			    nconc (get-post-comments-list post-id "repliesToAnswer" :parent-answer-id (cdr (assoc :--id a))))))))))
     (lw2-graphql-query-timeout-cached fn "post-answers-json" post-id :revalidate revalidate :force-revalidate force-revalidate)))
 
+(defun sequence-iterate (sequence fn)
+  (dolist (chapter (cdr (assoc :chapters sequence)))
+    (dolist (post (cdr (assoc :posts chapter)))
+      (funcall fn post))))
+
+(defun sequence-post-ids (sequence)
+  (with-collector (col)
+    (sequence-iterate sequence
+		      (lambda (post)
+			(col (cdr (assoc :--id post)))))
+    (col)))
+
+(defun get-sequence-post (sequence post-id)
+  (sequence-iterate sequence
+		    (lambda (post)
+		      (when (string= (cdr (assoc :--id post)) post-id)
+			(return-from get-sequence-post post))))
+  nil)
+
 (define-backend-function get-sequence (sequence-id)
   (backend-graphql
-   (let ((query-string (lw2-query-string :sequence :single
-					 (alist :document-id sequence-id)
-					 `(:--id :title :created-at :user-id
-						 (:contents :html)
-						 (:chapters :title :subtitle :number (:contents :html) (:posts ,@(posts-index-fields)))
-						 :grid-image-id :----typename))))
-     (lw2-graphql-query-timeout-cached query-string "sequence-json" sequence-id))))
+   (let ((fn (lambda ()
+	       (let* ((sequence-json
+		       (lw2-graphql-query-noparse
+			(lw2-query-string :sequence :single
+					  (alist :document-id sequence-id)
+					  `(:--id :title :created-at :user-id
+						  (:contents :html)
+						  (:chapters :title :subtitle :number (:contents :html) (:posts ,@(posts-index-fields)))
+						  :grid-image-id :----typename))))
+		      (sequence (decode-graphql-json sequence-json))
+		      (posts (sequence-post-ids sequence)))
+		 (with-cache-transaction
+		     (dolist (post-id posts)
+		       (let ((old-seqs (if-let (json (cache-get "post-sequence" post-id))
+					       (json:decode-json-from-string json))))
+			 (unless (member sequence-id old-seqs :test #'string=)
+			   (cache-put "post-sequence" post-id (json:encode-json-to-string (cons sequence-id old-seqs)))))))
+		 sequence-json))))
+     (lw2-graphql-query-timeout-cached fn "sequence-json" sequence-id))))
+
+(define-backend-function get-post-sequences (post-id)
+  (backend-graphql
+   (if-let (json (cache-get "post-sequence" post-id))
+	   (json:decode-json-from-string json))))
 
 (define-backend-function get-user (user-identifier-type user-identifier &key (revalidate t) force-revalidate auth-token)
   (backend-graphql

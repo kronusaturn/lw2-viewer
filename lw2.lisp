@@ -27,6 +27,34 @@
 (defparameter *default-prefs* (alist :items-per-page 20 :default-sort "new"))
 (defvar *current-prefs* nil)
 
+(defun post-nav-links (post-id)
+  <nav class="post-nav-links">
+    (when-let (sequence-ids (get-post-sequences post-id))
+      (dolist (sequence-id sequence-ids)
+	(let* ((sequence (get-sequence sequence-id))
+	       (posts (sequence-post-ids sequence)))
+	  (multiple-value-bind (prev next)
+	      (loop for prev = nil then (car current)
+		 for current on posts
+		 when (string= (car current) post-id)
+		   return (values prev (second current)))
+	    (when (or prev next)
+	      <div class="post-nav-item sequence">
+	        <div class="sequence-title">
+	          <span class="post-nav-label">Part of the sequence:</span>
+	          <span class="post-nav-title">(safe (clean-text-to-html (cdr (assoc :title sequence))))</span>
+	        </div>
+	        (labels ((post-nav-link (direction id)
+		  	   (let ((post (get-sequence-post sequence id)))
+			     <a class=("post-nav ~A" (string-downcase direction)) href=(generate-post-link post)>
+			       <span class="post-nav-label">(case direction (:prev "Previous: ") (:next "Next: "))</span>
+			       <span class="post-nav-title">(safe (clean-text-to-html (cdr (assoc :title post))))</span>
+			     </a>)))
+		  (when prev (post-nav-link :prev prev))
+		  (when next (post-nav-link :next next)))
+	      </div>)))))
+  </nav>)
+
 (defun postprocess-conversation-title (title)
   (if (or (null title) (string= title ""))
       "[Untitled conversation]"
@@ -922,6 +950,7 @@ signaled condition to OUT-STREAM."
                         (when (and lw2-auth-token (equal (logged-in-userid) (cdr (assoc :user-id post))))
                           (format out-stream "<div class=\"post-controls\"><a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\" accesskey=\"e\" title=\"Edit post [e]\">Edit post</a></div>"
                                   (cdr (assoc :--id post))))
+			(post-nav-links post-id)
                         (force-output out-stream)
 			(handler-case
 			    (let* ((question (cdr (assoc :question post)))

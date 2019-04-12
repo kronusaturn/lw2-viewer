@@ -1892,6 +1892,44 @@ h1.post-title {
 	padding: 20px 0 22px 0;
 }
 
+/*******************/
+/* POST NAVIGATION */
+/*******************/
+
+.post-nav-item {
+	display: grid;
+	grid-template-columns: max-content auto max-content;
+	margin-bottom: 1em;
+}
+.post-nav-item a {
+	color: #000;
+}
+.post-nav-title {
+	font-weight: 900;
+	font-size: 130%;
+}
+.post-nav-links span {
+	display: block;
+}
+.sequence-title {
+	grid-column: 2;
+	text-align: center;
+}
+.post-nav.prev {
+	grid-column: 1;
+	grid-row: 1;
+}
+.post-nav.next {
+	grid-column: 3;
+	text-align: right;
+}
+.sequence-title .post-nav-title {
+	font-size:170%;
+}
+.post-nav .post-nav-title {
+	margin-top:0.35em;
+}
+
 /**************/
 /* LINK POSTS */
 /**************/
