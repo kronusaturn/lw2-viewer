@@ -345,10 +345,10 @@
 			      (prog1
 				(cache-update cache-db cache-key (run-query query))
 				(remhash key *background-cache-update-threads*))
-			      (t (c)
+			      (serious-condition (c)
 				 (remhash key *background-cache-update-threads*)
 				 (log-condition c)
-				 (sb-thread:abort-thread))))) 
+				 (sb-thread:return-from-thread c))))) 
       (sb-ext:with-locked-hash-table (*background-cache-update-threads*)
 				     (let ((thread (gethash key *background-cache-update-threads*)))
 				       (if thread thread
@@ -366,10 +366,11 @@
             (decode-graphql-json
 	     (if (and cached-result (if force-revalidate (not revalidate) (or is-fresh (not revalidate))))
 		 cached-result
-		 (handler-case
-		     (sb-thread:join-thread thread :timeout timeout)
-		   (t () (or cached-result
-			     (error "Failed to load ~A ~A and no cached version available." cache-db cache-key))))))))))
+		 (let ((new-result (sb-thread:join-thread thread :timeout timeout)))
+		   (typecase new-result
+		     (condition (or cached-result
+				    (error "Failed to load ~A ~A and no cached version available: ~A" cache-db cache-key new-result)))
+		     (t new-result)))))))))
 
 (define-backend-function lw2-query-string* (query-type return-type args fields &key with-total))
 
