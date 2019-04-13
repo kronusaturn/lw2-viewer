@@ -1901,13 +1901,13 @@ h1.post-title {
 /*******************/
 
 .post-nav-item {
-	margin: 1em 0;
 	display: flex;
 }
 .post-nav-item > * {
 	display: flex;
 	flex-flow: column;
 	justify-content: flex-start;
+	padding: 0.5em;
 }
 
 .post-nav-title {
@@ -1938,14 +1938,12 @@ h1.post-title {
 
 .post-nav.prev {
 	order: -1;
-	margin: 0 1.5em 0 0;
 	align-items: flex-start;
 }
 .post-nav.prev .post-nav-title::before {
 	content: "\F0D9\2005";
 }
 .post-nav.next {
-	margin: 0 0 0 1.5em;
 	text-align: right;
 	align-items: flex-end;
 }
@@ -1964,15 +1962,10 @@ h1.post-title {
 	.post-nav-item {
 		flex-flow: row wrap;
 		font-size: 0.875em;
-		margin: 0;
 	}
 	.post-nav.prev,
 	.post-nav.next {
 		flex-basis: 50%;
-		padding: 0.5em;
-	}
-	.post-nav.next {
-		margin: 0;
 	}
 	.post-nav.prev {
 		margin: 0 0 0 -1px;
@@ -5580,6 +5573,10 @@ a.nav-inner,
 	pointer-events: none;
 	background-color: #bbb;
 	overflow: hidden;
+	box-shadow:
+		0 0 1px #aaa,
+		0 0 3px #aaa,
+		0 0 5px #aaa;
 }
 .sublevel-nav.sort::before {
 	text-transform: uppercase;
@@ -5828,6 +5825,14 @@ a.nav-inner,
 }
 .archive-nav a.archive-nav-item-day:hover {
 	background-color: #ddd;
+}
+
+/*===============*/
+/* KEYBOARD HELP */
+/*===============*/
+
+#nav-item-about button.open-keyboard-help {
+	font-weight: 400;
 }
 
 /*==========*/
@@ -6236,18 +6241,65 @@ a.post-section.alignment-forum:hover::before {
 .post-page .post-meta:first-of-type::after {
 	content: "❦";
 }
-.post-page .post-meta:last-of-type::after {
-	content: "❖";
-	font-size: 1.75rem;
-	margin: 0.625em 0 0 0;
-}
 .post-body {
 	margin: 0;
+}
+
+.post .bottom-post-meta {
+	border-color: #bbb;
+	padding-bottom: 17px;
+}
+
+/*=================*/
+/* POST NAVIGATION */
+/*=================*/
+
+.post-nav-links a,
+.post-nav-links a:visited {
+	color: #888;
+	font-weight: 200;
+}
+.post-nav-links a:hover {
+	text-decoration: none;
+	color: #333;
+	text-shadow: 
+		0px 0px 0.5px #333;
+	background-color: #f0f0eb;	
+}
+
+.post-nav-label {
+	opacity: 0.75;
+	font-weight: 300;
+}
+
+.post-nav.prev, .sequence-title {
+	border-right: 1px solid #bbb;
+}
+
+@media only screen and (max-width: 900px) {
+	.post-nav.prev,
+	.post-nav.next {
+		padding: 0.75em 0.5em 0.5em 0.5em;
+	}
+	.sequence-title {
+		border-top: 1px solid #bbb;
+		border-right: none;
+	}
+	.post-nav.prev {
+		border-right: 1px solid #bbb;
+	}
+	.post-nav.next {
+		border-left: 1px solid #bbb;
+	}
 }
 
 /*==========*/
 /* COMMENTS */
 /*==========*/
+
+.comments::before {
+	border-top: 1px solid #bbb;
+}
 
 #content > .comment-thread .comment-meta a.date:focus,
 #content > .comment-thread .comment-meta a.permalink:focus {
@@ -6614,9 +6666,6 @@ a.comment-parent-link:hover::before {
 /* COMMENTING AND POSTING UI */
 /*===========================*/
 
-.comments > .comment-controls {
-	margin: 0;
-}
 .posting-controls input[type='submit'] {
 	background-color: #fff;
 	border: 1px solid #aaa;
