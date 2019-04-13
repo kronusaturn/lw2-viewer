@@ -1931,6 +1931,7 @@ h1.post-title {
 .sequence-title {
 	flex: 1 1 36%;
 	align-items: center;
+	text-align: center;
 }
 .sequence-title .post-nav-title {
 	font-size: 1.5em;
