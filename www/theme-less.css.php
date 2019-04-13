@@ -1306,6 +1306,30 @@ h1.post-title {
 	margin: 1.375em 0 0.5em 0;
 }
 
+/*=================*/
+/* POST NAVIGATION */
+/*=================*/
+
+.post-nav-item {
+	padding: 0 0 0 10px;	
+}
+
+@media only screen and (max-width: 900px) {
+	.post-nav-item {
+		padding: 0;
+	}
+	.sequence-title {
+		border-top: 1px solid #ddd;
+		padding: 0.375em 0.5em 0.125em 0.5em
+	}
+	.post-nav.prev {
+		border-right: 1px solid #ddd;
+	}
+	.post-nav.next {
+		border-left: 1px solid #ddd;
+	}
+}
+
 /*===========*/
 /* POST-META */
 /*===========*/
@@ -1448,9 +1472,10 @@ a.post-section.alignment-forum:hover::before {
 }
 
 .post .bottom-post-meta {
-	padding: 1.5em 0;
-	margin: 0.5em 0 1.5em 0;
+	padding: 1.5em 0 1em 0;
+	margin: 0.5em 0 0 0;
 	position: relative;
+	border-color: transparent;
 }
 .post .bottom-post-meta::before,
 .post .bottom-post-meta::after {
@@ -1466,6 +1491,12 @@ a.post-section.alignment-forum:hover::before {
 }
 .post .bottom-post-meta::after {
 	bottom: 0;
+}
+
+@media only screen and (max-width: 520px) {
+	.post .bottom-post-meta {
+		padding: 0.75em 0 0.125em 0;
+	}
 }
 
 /*============*/
@@ -1489,6 +1520,10 @@ a.post-section.alignment-forum:hover::before {
 /*==========*/
 /* COMMENTS */
 /*==========*/
+
+.comments::before {
+	border-top: 1px solid #ddd;
+}
 
 .comments {
 	padding: 0 0 0 10px;

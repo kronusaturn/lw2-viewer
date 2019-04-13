@@ -1989,6 +1989,11 @@ h1.post-title {
 		padding: 0.75em 0;
 	}
 }
+@media only screen and (max-width: 520px) {
+	.post-nav-links + .comments {
+		padding: 1em 0 0 0;
+	}
+}
 
 /**************/
 /* LINK POSTS */
