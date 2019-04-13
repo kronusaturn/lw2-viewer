@@ -1915,36 +1915,35 @@ h1.post-title {
 	line-height: 1.15;
 	display: inline;
 }
-.post-nav .post-nav-title {
-	padding: 0 0 0.125em 0;
+.post-nav-label {
+	padding: 0 0 0.25em 0;
+}
+
+.sequence-title {
+	flex: 1 1 36%;
+	align-items: center;
 }
 .sequence-title .post-nav-title {
 	font-size: 1.5em;
 }
 
-.sequence-title {
-	text-align: center;
-	flex: 1 1 36%;
-}
-
-.post-nav.prev,
-.post-nav.next {
+.post-nav {
 	flex: 1 1 32%;
 	display: flex;
 	flex-flow: column;
 	justify-content: flex-end;
 }
-
-.post-nav-label {
-	padding: 0 0 0.25em 0;
-}
 .post-nav .post-nav-label {
 	display: none;
+}
+.post-nav .post-nav-title {
+	padding: 0 0 0.125em 0;
 }
 
 .post-nav.prev {
 	order: -1;
 	margin: 0 1.5em 0 0;
+	align-items: flex-start;
 }
 .post-nav.prev .post-nav-title::before {
 	content: "\F0D9\2005";
@@ -1952,6 +1951,7 @@ h1.post-title {
 .post-nav.next {
 	margin: 0 0 0 1.5em;
 	text-align: right;
+	align-items: flex-end;
 }
 .post-nav.next .post-nav-title::after {
 	content: "\2004\F0DA";
