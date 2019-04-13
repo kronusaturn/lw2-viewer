@@ -915,7 +915,6 @@ h1.post-title {
 }
 .post-nav-links a:hover .post-nav-title {
 	color: #777;
-	border-color: currentColor;
 }
 
 @media only screen and (max-width: 900px) {

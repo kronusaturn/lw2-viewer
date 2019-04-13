@@ -6049,13 +6049,13 @@ h1.post-title {
 
 .post-nav-links a:hover {
 	box-shadow: 
-		0 0 0 6px #fff,
-		0 0 0 8px #000;
+		0 0 0 2px #fff inset,
+		0 0 0 4px #000 inset;
 }
 .post-nav-links a:active {
 	box-shadow: 
-		0 0 0 2px #fff,
-		0 0 0 4px #000;
+		0 0 0 6px #fff inset,
+		0 0 0 8px #000 inset;
 }
 
 .post-nav-label {

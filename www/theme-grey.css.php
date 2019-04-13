@@ -796,8 +796,7 @@ h1.listing.own-post-listing {
 }
 
 .post-nav-links a:hover .post-nav-title {
-	color: #777;
-	border-color: currentColor;
+	color: #222;
 }
 
 @media only screen and (max-width: 900px) {

@@ -726,7 +726,7 @@ h1.listing + .post-meta .link-post-domain {
 .post-nav-links a,
 .post-nav-links a:visited {
 	color: #444;
-	font-weight: normal;
+	font-weight: 300;
 }
 .post-nav-links a:hover {
 	text-decoration: none;
