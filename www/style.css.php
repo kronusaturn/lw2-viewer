@@ -1925,9 +1925,7 @@ h1.post-title {
 	font-size: 1.125em;
 	line-height: 1.15;
 	display: inline;
-}
-.post-nav-label {
-	padding: 0 0 0.25em 0;
+	border-bottom: 1px dotted transparent;
 }
 
 .sequence-title {
