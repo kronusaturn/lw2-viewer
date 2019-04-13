@@ -1914,49 +1914,72 @@ h1.post-title {
 .post-nav-item {
 	margin: 1em 0;
 	display: flex;
-	justify-content: stretch;
-	align-items: flex-end;
+}
+.post-nav-item > * {
+	display: flex;
+	flex-flow: column;
+	justify-content: flex-start;
 }
 
-.post-nav-links .post-nav-label {
-	display: block;
-	padding: 0 0 0.25em 0;
+.post-nav-title {
+	font-size: 1.125em;
+	line-height: 1.15;
+	display: inline;
+}
+.post-nav .post-nav-title {
+	padding: 0 0 0.125em 0;
+}
+.sequence-title .post-nav-title {
+	font-size: 1.5em;
 }
 
 .sequence-title {
 	text-align: center;
-	flex: 1 1 40%;
-}
-.sequence-title .post-nav-title {
-	font-size: 1.625em;
-}
-
-.post-nav-title {
-	font-size: 1.25em;
-	font-weight: 600;
-	line-height: 1;
-	display: inline;
+	flex: 1 1 36%;
 }
 
 .post-nav.prev,
 .post-nav.next {
-	flex: 1 1 30%;
+	flex: 1 1 32%;
+	display: flex;
+	flex-flow: column;
+	justify-content: flex-end;
+}
+
+.post-nav-label {
+	padding: 0 0 0.25em 0;
+}
+.post-nav .post-nav-label {
+	display: none;
 }
 
 .post-nav.prev {
 	order: -1;
 	margin: 0 1.5em 0 0;
 }
+.post-nav.prev .post-nav-title::before {
+	content: "\F0D9\2005";
+}
 .post-nav.next {
 	margin: 0 0 0 1.5em;
 	text-align: right;
+}
+.post-nav.next .post-nav-title::after {
+	content: "\2004\F0DA";
+}
+.post-nav.prev .post-nav-title::before,
+.post-nav.next .post-nav-title::after {
+	font-family: Font Awesome;
+	font-weight: 900;
+	vertical-align: text-bottom;
+	opacity: 0.75;
 }
 
 @media only screen and (max-width: 900px) {
 	.post-nav-item {
 		flex-flow: row wrap;
 		font-size: 0.875em;
-		margin: 0 0.5em;
+		margin: 0;
 	}
 	.post-nav.prev,
 	.post-nav.next {
@@ -1964,11 +1987,11 @@ h1.post-title {
 	}
 	.post-nav.next {
 		margin: 0;
-		padding: 0.5em 0 0.5em 0.5em;
+		padding: 0.5em;
 	}
 	.post-nav.prev {
 		margin: 0 0 0 -1px;
-		padding: 0.5em 0.5em 0.5em 0;
+		padding: 0.5em;
 		position: relative;
 		left: 1px;
 	}

@@ -755,6 +755,10 @@ a.post-section.alignment-forum:hover::before {
 /* COMMENTS */
 /*==========*/
 
+.comments::before {
+	border-top: 1px solid #ddd;
+}
+
 #content > .comment-thread .comment-meta a.date:focus,
 #content > .comment-thread .comment-meta a.permalink:focus {
 	color: #888;

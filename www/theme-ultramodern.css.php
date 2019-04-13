@@ -737,9 +737,6 @@ h1.listing + .post-meta .link-post-domain {
 	opacity: 0.75;
 }
 
-.post-nav-links a:hover .post-nav-title {
-}
-
 @media only screen and (max-width: 900px) {
 	.sequence-title {
 		border-top: 1px solid #777;
