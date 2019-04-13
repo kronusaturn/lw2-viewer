@@ -688,6 +688,42 @@ h1.post-title {
 	margin: 1em 0 0.25em 0;
 }
 
+/*=================*/
+/* POST NAVIGATION */
+/*=================*/
+
+.post-nav-links a,
+.post-nav-links a:visited {
+	color: #00e;
+	font-weight: normal;
+}
+.post-nav-links a:hover {
+	text-decoration: none;
+	color: #c00;
+}
+.post-nav-links a:active {
+	color: #e00;
+}
+
+.post-nav-label {
+	opacity: 0.75;
+}
+
+@media only screen and (max-width: 900px) {
+	.post-nav-item > * {
+		background-color: #e4e4e4;
+	}
+	.sequence-title {
+		border-top: 1px solid #fff;
+	}
+	.post-nav.prev {
+		border-right: 1px solid #fff;
+	}
+	.post-nav.next {
+		border-left: 1px solid #fff;
+	}
+}
+
 /*===========*/
 /* POST-META */
 /*===========*/

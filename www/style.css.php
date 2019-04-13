@@ -1945,9 +1945,6 @@ h1.post-title {
 .post-nav .post-nav-label {
 	display: none;
 }
-.post-nav .post-nav-title {
-	padding: 0 0 0.125em 0;
-}
 
 .post-nav.prev {
 	order: -1;
@@ -1996,7 +1993,7 @@ h1.post-title {
 	.sequence-title {
 		flex-basis: 100%;
 		order: 2;
-		padding: 0.5em 0 0.75em 0;
+		padding: 0.75em 0;
 	}
 }
 
