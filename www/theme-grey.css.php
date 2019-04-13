@@ -515,6 +515,16 @@ body {
 	background-color: #ddd;
 }
 
+/*===============*/
+/* KEYBOARD HELP */
+/*===============*/
+
+#nav-item-about button.open-keyboard-help {
+	font-weight: 400;
+	top: -1px;
+	color: #888;
+}
+
 /*==========*/
 /* LISTINGS */
 /*==========*/
