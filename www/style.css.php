@@ -1979,14 +1979,13 @@ h1.post-title {
 	.post-nav.prev,
 	.post-nav.next {
 		flex-basis: 50%;
+		padding: 0.5em;
 	}
 	.post-nav.next {
 		margin: 0;
-		padding: 0.5em;
 	}
 	.post-nav.prev {
 		margin: 0 0 0 -1px;
-		padding: 0.5em;
 		position: relative;
 		left: 1px;
 	}
