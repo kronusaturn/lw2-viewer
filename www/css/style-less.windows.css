@@ -1094,6 +1094,7 @@ head.content-width-fluid + body > * {
 		padding: 8px;
 		display: initial;
 		line-height: 1;
+		background-color: transparent;
 	}
 }
 

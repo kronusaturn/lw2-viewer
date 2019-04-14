@@ -1104,6 +1104,7 @@ foreach ($content_width_settings as $name => $setting) {
 		padding: 8px;
 		display: initial;
 		line-height: 1;
+		background-color: transparent;
 	}
 }
 
