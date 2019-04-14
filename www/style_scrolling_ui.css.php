@@ -4,7 +4,6 @@
 
 .nav-bar {
 	display: flex;
-	margin: 0;
 }
 
 /*=---------------=*/
@@ -70,83 +69,7 @@
 
 .nav-inner::after {
 	content: attr(accesskey);
-	display: none;
-
 	font-weight: var(--GW-UI-font-weight-light);
-}
-
-/*=---------------=*/
-/*= Pagination UI =*/
-/*=---------------=*/
-
-#bottom-bar .nav-item a::before,
-#top-nav-bar a::before {
-	font-family: var(--GW-Font-Awesome);
-	font-weight: 900;
-	font-size: 0.8em;
-	position: relative;
-	bottom: 1px;
-	margin: 0.5em;
-	display: inline-block;
-}
-
-<?php
-
-$pagination_icons = [
-	'first'	=> '\F33E',
-	'prev'	=> '\F060',
-	'top'	=> '\F062',
-	'next'	=> '\F061',
-	'last'	=> '\F340'
-];
-
-foreach ($pagination_icons as $k => $v) {
-echo <<<EOT
-#bottom-bar #nav-item-{$k} a::before,
-#top-nav-bar a.nav-item-{$k}::before {
-	content: "{$v}";
-}
-
-EOT;
-}
-
-?>
-#bottom-bar #nav-item-next a::before,
-#bottom-bar #nav-item-last a::before {
-	order: 1;
-}
-
-/*= Hover tooltips =*/
-
-#top-nav-bar a {
-	position: relative;
-}
-#top-nav-bar a::after {
-	bottom: calc(100% - 3px);
-	content: attr(data-target-page);
-}
-#bottom-bar a::after {
-	content: "Page " attr(data-target-page);
-	top: unset;
-	left: 0;
-	bottom: 4px;
-}
-#top-nav-bar a::after,
-#bottom-bar a::after {
-	display: block;
-	position: absolute;
-	font-size: 0.75rem;
-	width: 100%;
-	line-height: 1;
-	visibility: hidden;
-	text-align: center;
-}
-#bottom-bar #nav-item-top a::after {
-	display: none;
-}
-#top-nav-bar a:hover::after,
-#bottom-bar a:hover::after {
-	visibility: visible;
 }
 
 /*=-----------------------=*/
@@ -264,61 +187,6 @@ EOT;
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-@media only screen and (max-width: 960px) {
-	#bottom-bar:not(.decorative) {
-		padding: 0 4.5rem;
-		font-size: 1.5em;
-	}
-	#bottom-bar .nav-inner {
-		flex-flow: column;
-		color: transparent;
-		line-height: 0;
-		text-shadow: none;
-		justify-content: flex-start;
-		padding: 20px 30px;
-	}
-	#bottom-bar .nav-item a::before {
-		color: var(--GW-hyperlink-color);
-		text-shadow: var(--GW-shadow-white-glow);
-		line-height: initial;
-		top: -0.5rem;
-	}
-	#bottom-bar #nav-item-next a::before,
-	#bottom-bar #nav-item-last a::before {
-		order: 0;
-	}
-	#bottom-bar .nav-inner::after {
-		display: block;
-		color: var(--GW-hyperlink-color);
-		text-shadow: var(--GW-shadow-white-glow);
-		visibility: visible;
-		text-transform: uppercase;
-		font-size: 0.375em;
-		bottom: 1.5rem;
-	}
-<?php
-
-$pagination_labels = [
-	'first'	=> 'First Page',
-	'prev'	=> 'Prev. Page',
-	'top'	=> 'Top',
-	'next'	=> 'Next Page',
-	'last'	=> 'Last Page'
-];
-foreach ($pagination_labels as $k => $v) {
-echo <<<EOT
-	#bottom-bar #nav-item-{$k} .nav-inner::after {
-		content: "{$v}";
-	}
-
-EOT;
-}
-
-?>
-	#bottom-bar #nav-item-top a::after {
-		display: initial;
-	}
-}
 @media only screen and (max-width: 900px) {
 	#primary-bar,
 	#secondary-bar {
@@ -469,18 +337,6 @@ EOT;
 	.nav-bar #nav-item-search button::before {
 		margin: 0 -0.25em 0 0;
 	}
-	#bottom-bar #nav-item-first .nav-inner::after {
-		content: "First";
-	}
-	#bottom-bar #nav-item-prev .nav-inner::after {
-		content: "Prev";
-	}
-	#bottom-bar #nav-item-next .nav-inner::after {
-		content: "Next";
-	}
-	#bottom-bar #nav-item-last .nav-inner::after {
-		content: "Last";
-	}
 
 	#nav-item-search {
 		font-size: 1.75em;
@@ -514,6 +370,203 @@ EOT;
 	#primary-bar .nav-inner::before,
 	#secondary-bar .nav-inner::before {
 		font-size: 1.75em;
+	}
+}
+
+/*****************/
+/* PAGINATION UI */
+/*****************/
+
+#bottom-bar .nav-item a::before,
+#top-nav-bar a::before {
+	font-family: var(--GW-Font-Awesome);
+	font-weight: 900;
+	font-size: 0.8em;
+	position: relative;
+	bottom: 1px;
+	margin: 0.5em;
+}
+
+<?php
+
+$pagination_icons = [
+	'first'	=> '\F33E',
+	'prev'	=> '\F060',
+	'top'	=> '\F062',
+	'next'	=> '\F061',
+	'last'	=> '\F340'
+];
+
+foreach ($pagination_icons as $k => $v) {
+echo <<<EOT
+#bottom-bar #nav-item-{$k} a::before,
+#top-nav-bar a.nav-item-{$k}::before {
+	content: "{$v}";
+}
+
+EOT;
+}
+
+?>
+#bottom-bar #nav-item-next a::before,
+#bottom-bar #nav-item-last a::before {
+	order: 1;
+}
+
+/*= Hover tooltips =*/
+
+#top-nav-bar a {
+	position: relative;
+}
+#top-nav-bar a::after {
+	bottom: calc(100% - 3px);
+	content: attr(data-target-page);
+}
+#bottom-bar a::after {
+	content: "Page " attr(data-target-page);
+	top: unset;
+	left: 0;
+	bottom: 2px;
+}
+#top-nav-bar a::after,
+#bottom-bar a::after {
+	display: block;
+	position: absolute;
+	font-size: 0.75rem;
+	width: 100%;
+	text-align: center;
+	visibility: hidden;
+}
+#bottom-bar #nav-item-top a::after {
+	display: none;
+}
+#top-nav-bar a:hover::after,
+#bottom-bar a:hover::after {
+	visibility: visible;
+}
+
+/*=-------------------=*/
+/*= Top pagination UI =*/
+/*=-------------------=*/
+
+#top-nav-bar {
+	grid-row: 3;
+	margin: 0.25em 0 0 0;
+	padding: 1em 0 0 0;
+	text-align: center;
+	font-size: 1.25rem;
+	display: flex;
+	justify-content: center;
+}
+#content.user-page #top-nav-bar {
+	grid-row: 6;
+}
+#content.archive-page #top-nav-bar {
+	grid-row: 4;
+}
+
+#top-nav-bar a {
+	line-height: 1;
+}
+#top-nav-bar a.disabled {
+	pointer-events: none;
+	visibility: hidden;
+}
+#top-nav-bar .page-number {
+	position: relative;
+	display: inline-block;
+	width: 1.5em;
+
+	font-weight: var(--GW-UI-font-weight-light);
+}
+#top-nav-bar .page-number-label {
+	position: absolute;
+	font-size: 0.5em;
+	text-transform: uppercase;
+	width: 100%;
+	bottom: 90%;
+	left: 0;
+}
+#top-nav-bar a::before {
+	display: inline-block;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 960px) {
+	#bottom-bar:not(.decorative) {
+		padding: 0 4.5rem;
+		font-size: 1.5em;
+	}
+	#bottom-bar .nav-inner {
+		flex-flow: column;
+		color: transparent;
+		line-height: 0;
+		text-shadow: none;
+		justify-content: flex-start;
+		padding: 20px 30px;
+	}
+	#bottom-bar .nav-item a::before {
+		color: var(--GW-hyperlink-color);
+		text-shadow: var(--GW-shadow-white-glow);
+		line-height: initial;
+		top: -0.5rem;
+	}
+	#bottom-bar #nav-item-next a::before,
+	#bottom-bar #nav-item-last a::before {
+		order: 0;
+	}
+	#bottom-bar .nav-inner::after {
+		display: block;
+		color: var(--GW-hyperlink-color);
+		text-shadow: var(--GW-shadow-white-glow);
+		visibility: visible;
+		text-transform: uppercase;
+		font-size: 0.375em;
+		bottom: 1.5rem;
+	}
+<?php
+
+$pagination_labels = [
+	'first'	=> 'First Page',
+	'prev'	=> 'Prev. Page',
+	'top'	=> 'Top',
+	'next'	=> 'Next Page',
+	'last'	=> 'Last Page'
+];
+foreach ($pagination_labels as $k => $v) {
+echo <<<EOT
+	#bottom-bar #nav-item-{$k} .nav-inner::after {
+		content: "{$v}";
+	}
+
+EOT;
+}
+
+?>
+	#bottom-bar #nav-item-top a::after {
+		display: initial;
+	}
+}
+@media only screen and (max-width: 900px) {
+	#top-nav-bar {
+		font-size: 1.75rem;
+	}
+}
+@media only screen and (max-width: 520px) {
+	#bottom-bar #nav-item-first .nav-inner::after {
+		content: "First";
+	}
+	#bottom-bar #nav-item-prev .nav-inner::after {
+		content: "Prev";
+	}
+	#bottom-bar #nav-item-next .nav-inner::after {
+		content: "Next";
+	}
+	#bottom-bar #nav-item-last .nav-inner::after {
+		content: "Last";
 	}
 }
 
@@ -706,62 +759,6 @@ a#inbox-indicator.new-messages:hover::before {
 @media only screen and (max-width: 420px) {
 	#content.user-page .page-toolbar * {
 		font-size: 0.5rem;
-	}
-}
-
-/*********************/
-/* TOP PAGINATION UI */
-/*********************/
-
-#top-nav-bar {
-	grid-row: 3;
-	margin: 0.25em 0 0 0;
-	padding: 1em 0 0 0;
-	text-align: center;
-	font-size: 1.25rem;
-	display: flex;
-	justify-content: center;
-}
-#content.user-page #top-nav-bar {
-	grid-row: 6;
-}
-#content.archive-page #top-nav-bar {
-	grid-row: 4;
-}
-
-#top-nav-bar a {
-	line-height: 1;
-}
-#top-nav-bar a.disabled {
-	pointer-events: none;
-	visibility: hidden;
-}
-#top-nav-bar .page-number {
-	position: relative;
-	display: inline-block;
-	width: 1.5em;
-
-	font-weight: var(--GW-UI-font-weight-light);
-}
-#top-nav-bar .page-number-label {
-	position: absolute;
-	font-size: 0.5em;
-	text-transform: uppercase;
-	width: 100%;
-	bottom: 90%;
-	left: 0;
-}
-#top-nav-bar a::before {
-	display: inline-block;
-}
-
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
-@media only screen and (max-width: 900px) {
-	#top-nav-bar {
-		font-size: 1.75rem;
 	}
 }
 
