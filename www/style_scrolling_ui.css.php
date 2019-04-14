@@ -92,7 +92,7 @@
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/one_pixel_DDD.gif")) ?>');
 	background-repeat: repeat-x;
 	background-position: center 35%;
-	margin: 0 30px;
+	margin: 0 var(--GW-current-page-content-right-side-padding) 0 var(--GW-current-page-content-left-side-padding);
 }
 #bottom-bar.decorative::after {
 	position: absolute;

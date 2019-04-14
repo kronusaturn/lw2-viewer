@@ -405,14 +405,14 @@ button.guiedit {
 
 .post-controls {
 	text-align: right;
-	margin: 0.75em var(--GW-post-page-content-right-side-padding) 0 0;
+	margin: 0.75em var(--GW-current-page-content-right-side-padding) 0 0;
 	grid-row: 3;
 	align-self: start;
 	justify-self: end;
 }
 
 #edit-post-form {
-	padding: 2em;
+	padding: 2em var(--GW-current-page-content-right-side-padding) 2em var(--GW-current-page-content-left-side-padding);
 }
 #edit-post-form .post-meta-fields {
 	display: grid;
@@ -535,17 +535,20 @@ button.guiedit {
 
 @media only screen and (max-width: 900px) {
 	#edit-post-form {
-		padding: 1.5em;
+		padding-top: 1.5em;
+		padding-bottom: 1.5em;
 	}
 }
 @media only screen and (max-width: 840px) {
 	#edit-post-form {
-		padding: 1.25em;
+		padding-top: 1.25em;
+		padding-bottom: 1.25em;
 	}
 }
 @media only screen and (max-width: 720px) {
 	#edit-post-form {
-		padding: 1em;
+		padding-top: 1em;
+		padding-bottom: 1em;
 	}
 }
 @media only screen and (max-width: 520px) {
@@ -600,7 +603,8 @@ button.guiedit {
 }
 @media only screen and (max-width: 420px) {
 	#edit-post-form {
-		padding: 0.5em;
+		padding-top: 0.5em;
+		padding-bottom: 0.5em;
 	}
 	#edit-post-form .post-meta-fields {
 		grid-template-columns: 3.75em auto auto auto 1fr auto;
