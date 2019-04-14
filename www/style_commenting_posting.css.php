@@ -566,7 +566,7 @@ button.guiedit {
 		height: calc(100% - 1em);
 	}
 	.post-controls {
-		margin: 0.5em var(--GW-post-page-content-right-side-padding) 0 0;
+		margin-top: 0.5em;
 	}
 	#edit-post-form .post-meta-fields {
 		grid-template-columns: 3.75em auto auto auto 1fr auto;

@@ -2,32 +2,14 @@
 /* LISTINGS PAGES */
 /******************/
 
-.listings {
-	padding: 15px var(--GW-content-right-side-padding) 0 var(--GW-content-left-side-padding);
-}
-#content.archive-page .listings {
-	padding: 0 var(--GW-content-right-side-padding) 0 var(--GW-content-left-side-padding);
-}
-#content.search-results-page .listings {
-	padding: 0 var(--GW-content-right-side-padding) 0 var(--GW-content-left-side-padding);
-}
-#content.user-page .listings {
-	padding: 0 var(--GW-user-page-content-right-side-padding) 0 var(--GW-user-page-content-left-side-padding);
-}
-#content.recent-comments-page .listings {
-	padding: 0 var(--GW-recent-comments-page-content-right-side-padding) 0 var(--GW-recent-comments-page-content-left-side-padding);
-}
-#content.conversation-page .listings {
-	padding: 0 var(--GW-conversation-page-content-right-side-padding) 0 var(--GW-conversation-page-content-left-side-padding);
+.listings,
+#content.sequence-page article {
+	padding: 0 var(--GW-current-page-content-right-side-padding) 0 var(--GW-current-page-content-left-side-padding);
 }
 
 /*=----------------=*/
 /*= Sequence pages =*/
 /*=----------------=*/
-
-#content.sequence-page article {
-	padding: 0 var(--GW-sequence-page-content-right-side-padding) 15px var(--GW-sequence-page-content-left-side-padding);
-}
 
 #content.sequence-page section {
 	margin: 3em 0 0 0;
@@ -361,9 +343,9 @@ h1.listing + .post-meta .read-time {
 	max-width: 100%;
 	padding: 
 		0 
-		calc(var(--GW-post-page-content-right-side-padding) + var(--GW-post-right-side-padding))
+		calc(var(--GW-current-page-content-right-side-padding) + var(--GW-post-right-side-padding))
 		0 
-		calc(var(--GW-post-page-content-left-side-padding) + var(--GW-post-left-side-padding));
+		calc(var(--GW-current-page-content-left-side-padding) + var(--GW-post-left-side-padding));
 }
 
 h1.post-title {
@@ -451,7 +433,7 @@ h1.post-title {
 
 .comments {
 	max-width: 100%;
-	margin: 0 var(--GW-post-page-content-right-side-padding) 1px var(--GW-post-page-content-right-side-padding);
+	margin: 0 var(--GW-current-page-content-right-side-padding) 1px var(--GW-current-page-content-right-side-padding);
 	position: relative;
 }
 .comments::before {
@@ -1064,7 +1046,7 @@ a.comment-child-link::before {
 /***********************************/
 
 .individual-thread-page h1.post-title {
-	margin: 0.75em var(--GW-post-page-content-right-side-padding) 3px var(--GW-post-page-content-right-side-padding);
+	margin: 0.75em var(--GW-current-page-content-right-side-padding) 3px var(--GW-current-page-content-right-side-padding);
 	text-align: left;
 	font-size: 2.25em;
 }

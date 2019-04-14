@@ -77,16 +77,12 @@
 /*=-----------------------=*/
 /* (On short pages with no pagination) */
 
-#bottom-bar.decorative {
-	position: relative;
-}
 #bottom-bar.decorative .nav-item {
 	display: none;
 }
 #bottom-bar.decorative::before,
 #bottom-bar.decorative::after {
 	content: "GW";
-	display: block;
 	text-align: center;
 	padding: 0.25em 0 1em 0;
 }
@@ -451,7 +447,7 @@ EOT;
 
 #top-nav-bar {
 	grid-row: 3;
-	margin: 0.25em 0 0 0;
+	margin: 0.25em 0 0.75em 0;
 	padding: 1em 0 0 0;
 	text-align: center;
 	font-size: 1.25rem;
@@ -777,7 +773,7 @@ a#inbox-indicator.new-messages:hover::before {
 	align-self: start;
 }
 #content.user-page .sublevel-nav:not(.sort) {
-	margin: 1em var(--GW-user-page-content-right-side-padding) 0 var(--GW-user-page-content-left-side-padding);
+	margin: 1em var(--GW-current-page-content-right-side-padding) 0 var(--GW-current-page-content-left-side-padding);
 }
 #content.sequences-page .sublevel-nav:not(.sort) {
 	grid-row: unset;
@@ -830,10 +826,10 @@ a#inbox-indicator.new-messages:hover::before {
 	grid-row: 3 / span 1;
 	justify-self: start;
 	flex-flow: row;
-	margin: 1em 0 0 calc(var(--GW-content-left-side-padding) - 20px);
+	margin: 1em 0 0 calc(var(--GW-current-page-content-left-side-padding) - 20px);
 }
 #content.user-page .sublevel-nav.sort {
-	margin: 1em var(--GW-user-page-content-right-side-padding) 1em 0;
+	margin: 1em var(--GW-current-page-content-right-side-padding) 1em 0;
 }
 
 .sublevel-nav.sort::before {
@@ -862,7 +858,7 @@ a#inbox-indicator.new-messages:hover::before {
 
 @media only screen and (max-width: 900px) {
 	#content.index-page .sublevel-nav.sort {
-		margin: 1em 0 0 var(--GW-content-left-side-padding);
+		margin: 1em 0 0 var(--GW-current-page-content-left-side-padding);
 	}
 	#content.user-page .sublevel-nav.sort {
 		grid-row: 6;
@@ -890,22 +886,19 @@ a#inbox-indicator.new-messages:hover::before {
 	align-self: end;
 	grid-row: 3 / span 2;
 	display: flex;
-}
-#content.recent-comments-page #comments-list-mode-selector {
-	margin: 0 0 0 var(--GW-recent-comments-page-content-left-side-padding);
+	margin: 0 0 0 var(--GW-current-page-content-left-side-padding);
 }
 #content.user-page #comments-list-mode-selector {
 	grid-row: 5 / span 2;
-	margin: 1em 0 1em var(--GW-user-page-content-left-side-padding);
+	margin: 1em 0 1em var(--GW-current-page-content-left-side-padding);
 	flex-flow: column;
 	align-self: start;
 }
 #content.conversation-page #comments-list-mode-selector {
 	grid-row: 6;
-	margin: 0 0 0 var(--GW-conversation-page-content-left-side-padding);
 }
 #content.search-results-page #comments-list-mode-selector {
-	margin: 1.5em var(--GW-content-right-side-padding) 0 var(--GW-content-left-side-padding);
+	margin: 1.5em var(--GW-current-page-content-right-side-padding) 0 var(--GW-current-page-content-left-side-padding);
 }
 
 /*=----------------------------=*/
@@ -1018,7 +1011,7 @@ a#inbox-indicator.new-messages:hover::before {
 /************/
 
 .archive-nav {
-	margin: 1.5em var(--GW-content-right-side-padding) 0 var(--GW-content-left-side-padding);
+	margin: 1.5em var(--GW-current-page-content-right-side-padding) 0 var(--GW-current-page-content-left-side-padding);
 	padding: 0.25em;
 }
 .archive-nav > * {

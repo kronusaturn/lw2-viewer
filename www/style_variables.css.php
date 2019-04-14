@@ -86,6 +86,36 @@
 	--GW-comment-compact-height: auto;
 	--GW-comment-minimized-height: auto;
 }
+:root #content {
+	--GW-current-page-content-side-padding: var(--GW-content-side-padding);
+	--GW-current-page-content-left-side-padding: var(--GW-content-left-side-padding);
+	--GW-current-page-content-right-side-padding: var(--GW-content-right-side-padding);
+}
+:root #content.sequence-page {
+	--GW-current-page-content-side-padding: var(--GW-sequence-page-content-side-padding);
+	--GW-current-page-content-left-side-padding: var(--GW-sequence-page-content-left-side-padding);
+	--GW-current-page-content-right-side-padding: var(--GW-sequence-page-content-right-side-padding);
+}
+:root #content.user-page {
+	--GW-current-page-content-side-padding: var(--GW-user-page-content-side-padding);
+	--GW-current-page-content-left-side-padding: var(--GW-user-page-content-left-side-padding);
+	--GW-current-page-content-right-side-padding: var(--GW-user-page-content-right-side-padding);
+}
+:root #content.recent-comments-page {
+	--GW-current-page-content-side-padding: var(--GW-recent-comments-page-content-side-padding);
+	--GW-current-page-content-left-side-padding: var(--GW-recent-comments-page-content-left-side-padding);
+	--GW-current-page-content-right-side-padding: var(--GW-recent-comments-page-content-right-side-padding);
+}
+:root #content.conversation-page {
+	--GW-current-page-content-side-padding: var(--GW-conversation-page-content-side-padding);
+	--GW-current-page-content-left-side-padding: var(--GW-conversation-page-content-left-side-padding);
+	--GW-current-page-content-right-side-padding: var(--GW-conversation-page-content-right-side-padding);
+}
+:root #content.post-page {
+	--GW-current-page-content-side-padding: var(--GW-post-page-content-side-padding);
+	--GW-current-page-content-left-side-padding: var(--GW-post-page-content-left-side-padding);
+	--GW-current-page-content-right-side-padding: var(--GW-post-page-content-right-side-padding);
+}
 
 /*	Color scheme.
 	*/
