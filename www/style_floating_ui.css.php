@@ -1172,27 +1172,6 @@ foreach ($content_width_settings as $name => $setting) {
 #images-overlay div {
 	position: absolute;
 }
-#images-overlay div::after {
-	content: "Click to enlarge";
-	display: block;
-	position: absolute;
-	margin: auto;
-	left: 0;
-	right: 0;
-	bottom: 10px;
-	padding: 6px 10px;
-	font-size: 1.25rem;
-	background-color: rgba(0,0,0,0.75);
-	color: #fff;
-	border-radius: 5px;
-	opacity: 0.0;
-	transition: opacity 0.15s ease;
-	pointer-events: none;
-}
-<?php fit_content("#images-overlay div::after"); ?>
-#images-overlay div:hover::after {
-	opacity: 1.0;
-}
 
 #images-overlay img {
 	width: 100%;

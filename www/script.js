@@ -2791,7 +2791,9 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 	});
 
 	// UI starts out hidden.
-	hideImageFocusUI();
+	if (GW.mediaQueries.hover.matches) {
+		hideImageFocusUI();
+	}
 }
 
 function focusImage(imageToFocus) {
@@ -4083,9 +4085,11 @@ function focusImageSpecifiedByURL() {
 			if (imageToFocus > 0 && imageToFocus <= images.length) {
 				focusImage(images[imageToFocus - 1]);
 
-				// Set timer to hide the image focus UI.
 				unhideImageFocusUI();
-				GW.imageFocus.hideUITimer = setTimeout(GW.imageFocus.hideUITimerExpired, GW.imageFocus.hideUITimerDuration);
+				if (GW.mediaQueries.hover.matches) {
+					// Set timer to hide the image focus UI.
+					GW.imageFocus.hideUITimer = setTimeout(GW.imageFocus.hideUITimerExpired, GW.imageFocus.hideUITimerDuration);
+				}
 			}
 		});
 	}
