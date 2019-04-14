@@ -112,12 +112,6 @@
 #nav-item-search {
 	flex: 4 1 auto;
 }
-#nav-item-search .nav-inner {
-	flex: 1 1 100%;
-}
-#nav-item-search form {
-	align-items: stretch;
-}
 #nav-item-search form::before {
 	content: "\F002";
 	font-family: var(--GW-Font-Awesome);
@@ -144,7 +138,6 @@
 /*=-----------=*/
 
 #nav-item-login {
-	position: relative;
 	padding-right: 0.5em;
 }
 
@@ -193,7 +186,6 @@
 	}
 	.nav-bar .nav-inner {
 		text-transform: uppercase;
-		padding: 1px 0 0 0;
 	}
 	.nav-bar .nav-inner::after {
 		display: none;
@@ -221,6 +213,7 @@
 	}
 	#nav-item-recent-comments .nav-inner::before {
 		content: "\F036";
+		margin-bottom: 0;
 	}
 	#nav-item-archive .nav-inner::before {
 		content: "\F187";
@@ -229,6 +222,9 @@
 		content: "\F129";
 	}
 
+	#nav-item-search form {
+		align-items: stretch;
+	}
 	#nav-item-search .nav-inner::before {
 		content: none;
 	}
