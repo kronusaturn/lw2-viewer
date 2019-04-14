@@ -629,7 +629,7 @@ ul.comment-thread {
 		padding: 2px 10px;
 		position: relative;
 	}
-	.comment-meta .author {
+	.comment-meta .author-wrapper {
 		flex-basis: 100%;
 	}
 	.comment-post-title2 {
@@ -888,6 +888,9 @@ a.comment-child-link::before {
 /*=---------------------------=*/
 
 @media only screen and (hover: hover) and (pointer: fine) {
+	#content.compact .comment-item::after {
+		padding: 0 16px 10px 64px;
+	}
 	#content.compact .comment-item:hover {
 		z-index: 11;
 	}
@@ -925,6 +928,10 @@ a.comment-child-link::before {
 	}
 }
 @media not screen and (hover: hover) and (pointer: fine) {
+	#content.compact .comment-item::after {
+		height: 100%;
+		padding: 18px 16px 10px 24px;
+	}
 	#content.compact .comment-thread.expanded .comment-item {
 		overflow: visible;
 		pointer-events: auto;

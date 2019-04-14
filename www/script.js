@@ -3520,7 +3520,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 	// If the viewport is wide enough to fit the desktop-size content column,
 	// use a long date format; otherwise, a short one.
-	let useLongDate = window.innerWidth > 900;
+	let useLongDate = (GW.mediaQueries.mobileWide.matches == false);
 	let dtf = new Intl.DateTimeFormat([], 
 		( useLongDate ? 
 			{ month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' }
@@ -3628,6 +3628,19 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		tocLink.innerText = tocLink.innerText.replace(/^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})\. /i, '');
 		tocLink.innerText = tocLink.innerText.replace(/^[A-Z]\. /, '');
 	});
+
+	// On mobile, wrap authors to limit tappable area.
+	if (query(".listings > .comment-thread")) {
+		doWhenMatchMedia(GW.mediaQueries.mobileNarrow, "wrapAuthorsInCommentListings", () => {
+			queryAll(".comment-meta > .author").forEach(author => {
+				author.outerHTML = `<span class='author-wrapper'>${author.outerHTML}</span>`;
+			});
+		}, () => {
+			queryAll(".author-wrapper").forEach(wrapper => {
+				wrapper.outerHTML = wrapper.innerHTML;
+			});
+		});
+	}
 
 	// If we’re on a comment thread page...
 	if (query(".comments") != null) {
