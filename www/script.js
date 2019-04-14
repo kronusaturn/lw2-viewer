@@ -2744,9 +2744,9 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 		GWLog("GW.imageClickedToFocus");
 		focusImage(event.target);
 
-		if (!GW.isMobile) {
+		unhideImageFocusUI();
+		if (GW.mediaQueries.hover.matches) {
 			// Set timer to hide the image focus UI.
-			unhideImageFocusUI();
 			GW.imageFocus.hideUITimer = setTimeout(GW.imageFocus.hideUITimerExpired, GW.imageFocus.hideUITimerDuration);
 		}
 	};

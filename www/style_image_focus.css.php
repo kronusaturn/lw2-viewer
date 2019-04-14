@@ -64,23 +64,25 @@
 /*=---------=*/
 
 #image-focus-overlay .caption {
+	--GW-image-focus-caption-side-spacing: 4.5em;
+
 	position: absolute;
 	bottom: 0.75em;
 	background-color: rgba(0,0,0,0.7);
-	left: 9em;
-	right: 9em;
+	left: var(--GW-image-focus-caption-side-spacing);
+	right: var(--GW-image-focus-caption-side-spacing);
 	margin: auto;
-	max-width: calc(100% - 18em);
+	max-width: calc(100% - 2 * var(--GW-image-focus-caption-side-spacing));
 	text-align: center;
 	font-size: 1.375em;
 	border-radius: 8px;
 	z-index: 1;
 	transition: 
-		bottom 0.2s ease;
+		bottom 0.15s ease;
 }
 <?php fit_content("#image-focus-overlay .caption"); ?>
 #image-focus-overlay .caption.hidden {
-	bottom: -5em;
+	bottom: -50%;
 	transition: 
 		bottom 0.5s ease;
 }
@@ -184,7 +186,7 @@
 	z-index: 2;
 	font-size: 1.75rem;
 	left: 1em;
-	bottom: 1em;
+	top: 1em;
 	font-weight: var(--GW-UI-font-weight-heavy);
 	text-shadow:
 		0 0 3px #fff,
@@ -194,7 +196,7 @@
 	width: 1.5em;
 	text-align: right;
 	white-space: nowrap;
-	transition: bottom 0.3s ease;
+	transition: top 0.2s ease;
 }
 #image-focus-overlay .image-number::before {
 	content: "#";
@@ -209,7 +211,7 @@
 	opacity: 1.0;
 }
 #image-focus-overlay .image-number.hidden {
-	bottom: -1.25em;
+	top: -1.25em;
 }
 
 /*=-------------------=*/

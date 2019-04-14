@@ -1182,7 +1182,7 @@ foreach ($content_width_settings as $name => $setting) {
 	bottom: 10px;
 	padding: 6px 10px;
 	font-size: 1.25rem;
-	background-color: rgba(0,0,0,0.6);
+	background-color: rgba(0,0,0,0.75);
 	color: #fff;
 	border-radius: 5px;
 	opacity: 0.0;
