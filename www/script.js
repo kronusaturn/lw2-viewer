@@ -1241,7 +1241,7 @@ GW.themeLoadCallback_less = (fromTheme = "") => {
 
 	registerInitializer('shortenDate', true, () => query(".top-post-meta") != null, function () {
 		let dtf = new Intl.DateTimeFormat([], 
-			(window.innerWidth < 1100) ? 
+			matchMedia("(max-width: 1100px)").matches ? 
 				{ month: 'short', day: 'numeric', year: 'numeric' } : 
 					{ month: 'long', day: 'numeric', year: 'numeric' });
 		let postDate = query(".top-post-meta .date");

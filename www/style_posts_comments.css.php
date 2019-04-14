@@ -846,7 +846,7 @@ a.comment-child-link::before {
 	font-size: 1.0625rem;
 }
 #content.compact .comment-item {
-	max-height: 60px;
+	max-height: var(--GW-comment-compact-height);
 	margin-top: 1em;
 	overflow: hidden;
 	position: relative;
@@ -945,13 +945,12 @@ a.comment-child-link::before {
 		position: relative;
 		z-index: 1;
 		margin-bottom: 2em;
-		bottom: 0;
 	}
 	#content.compact .comment-thread.expanded .comment::before {
 		content: "";
 		position: absolute;
 		display: block;
-		width: calc(100% + 14px);
+		width: calc(100% + 20px);
 		height: calc(100% + 20px);
 		z-index: -1;
 		top: -10px;
@@ -997,7 +996,6 @@ a.comment-child-link::before {
 	line-height: 1;
 	position: absolute;
 	right: 1px;
-	top: 2px;
 	width: 18px;
 	margin: 0;
 	cursor: pointer;
@@ -1026,7 +1024,7 @@ a.comment-child-link::before {
 /*=--------------------=*/
 
 .comment-item.minimized {
-	height: 38px;
+	height: var(--GW-comment-minimized-height);
 	overflow: hidden;
 }
 
@@ -1036,7 +1034,7 @@ a.comment-child-link::before {
 
 @media only screen and (max-width: 520px) {
 	.comment-minimize-button{
-		right: 2px;
+		right: 3px;
 	}
 }
 
@@ -1049,10 +1047,10 @@ a.comment-child-link::before {
 }
 #content.index-page .comment-item.ignored,
 #content.inbox-user-page .comment-item.ignored {
-	max-height: 63px;
+	max-height: var(--GW-comment-compact-height);
 }
 #content.comment-thread-page .comment-item.ignored:not(.maximized) {
-	height: 38px;
+	height: var(--GW-comment-compact-height);
 }
 
 /*	Ignored comment author.
@@ -1066,7 +1064,6 @@ a.comment-child-link::before {
 /***********************************/
 
 .individual-thread-page h1.post-title {
-	line-height: 1;
 	margin: 0.75em var(--GW-post-page-content-right-side-padding) 3px var(--GW-post-page-content-right-side-padding);
 	text-align: left;
 	font-size: 2.25em;

@@ -82,6 +82,9 @@
 	--GW-post-side-padding: 0;
 	--GW-post-left-side-padding: var(--GW-post-side-padding);
 	--GW-post-right-side-padding: var(--GW-post-side-padding);
+
+	--GW-comment-compact-height: auto;
+	--GW-comment-minimized-height: auto;
 }
 
 /*	Color scheme.

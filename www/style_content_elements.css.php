@@ -306,7 +306,6 @@ pre {
 }
 code {
 	font-size: 0.95em;
-	display: inline-block;
 	padding: 0 4px 1px 5px;
 }
 pre > code {

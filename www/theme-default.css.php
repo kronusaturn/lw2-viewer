@@ -32,6 +32,9 @@
 	--GW-conversation-page-content-side-padding: 30px;
 	--GW-post-page-content-side-padding: 30px;
 	--GW-post-side-padding: 30px;
+
+	--GW-comment-compact-height: 60px;
+	--GW-comment-minimized-height: 38px;
 }
 @media only screen and (max-width: 900px) {
 	:root {
@@ -1981,8 +1984,13 @@ hr {
 
 code {
 	background-color: #f6f6ff;
-	border: 1px solid #ddf;
+	border: 1px solid #f6f6ff;
 	border-radius: 4px;
+	box-shadow: 
+		0 0 0 1px #f6f6ff,
+		0 1px 0 1px #f6f6ff,
+		0 1px 0 2px #ddf,
+		0 0 0 2px #ddf;
 }
 
 input[type='text'],
