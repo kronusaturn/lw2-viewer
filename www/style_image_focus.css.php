@@ -103,11 +103,6 @@
 		bottom 0.15s ease;
 }
 <?php fit_content("#image-focus-overlay .caption"); ?>
-@media not screen and (hover: hover) and (pointer: fine) {
-	#image-focus-overlay .caption {
-		--GW-image-focus-caption-side-spacing: 0.75em;
-	}
-}
 #image-focus-overlay .caption.hidden {
 	bottom: -50%;
 	transition: 
@@ -321,7 +316,30 @@
 	#image-focus-overlay.engaged {
 		visibility: visible;
 	}
-	#image-focus-overlay .help-overlay {
-		display: none;
+}
+@media only screen and (max-width: 900px) {
+	#image-focus-overlay .caption p {
+		margin: 0.75em 1em;
+	}
+}
+@media only screen and (max-width: 720px) {
+	#image-focus-overlay .caption {
+		font-size: 1.25em;
+	}
+}
+@media only screen and (max-width: 640px) {
+	#image-focus-overlay .caption {
+		font-size: 1.125em;
+		--GW-image-focus-caption-side-spacing: 5em;
+	}
+}
+
+/*=--------------------------=*/
+/*= Touch screen adjustments =*/
+/*=--------------------------=*/
+
+@media not screen and (hover: hover) and (pointer: fine) {
+	#image-focus-overlay .caption {
+		--GW-image-focus-caption-side-spacing: 0.75em;
 	}
 }
