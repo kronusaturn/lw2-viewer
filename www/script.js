@@ -2761,6 +2761,8 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 	if (imagesOverlayOnly) return;
 	// Add the listener to all other content images (including those in comments).
 	queryAll(GW.imageFocus.contentImagesSelector).forEach(image => {
+		image.removeAttribute("width");
+		image.removeAttribute("height");
 		image.addActivateEvent(GW.imageClickedToFocus);
 	});
 

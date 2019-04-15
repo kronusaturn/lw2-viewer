@@ -238,14 +238,15 @@ img.inline-latex {
 	margin: 0 2px;
 }
 
-#content figure {
+#content figure,
+#content .imgonly {
 	text-align: center;
 	margin: 1.5em auto;
 }
 
-p.imgonly,
-div.imgonly {
-	text-align: center;
+.imgonly img {
+	display: block;
+	margin: auto;
 }
 
 /**********/
