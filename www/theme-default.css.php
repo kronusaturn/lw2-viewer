@@ -374,12 +374,6 @@ body {
 			0 0 0 1px #999,
 			0 0 0 2px transparent;
 	}
-	#theme-selector:hover::after {
-		width: calc(6em - 3px);
-		height: calc(100% - 5px);
-		top: 3px;
-		left: 100%;
-	}	
 }
 @media only screen and (max-width: 960px) {
 	#theme-selector {

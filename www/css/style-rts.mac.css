@@ -427,6 +427,16 @@ a {
 		bottom: 10px;
 		left: 10px;
 	}
+	#appearance-adjust-ui-toggle.engaged::after {
+		content: "";
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		pointer-events: none;
+		background-color: rgba(0,0,0,0.5)
+	}
 
 	#post-nav-ui-toggle {
 		bottom: 10px;
@@ -563,8 +573,21 @@ a {
 }
 @media only screen and (max-width: 1000px) {
 	#theme-selector {
-		margin: 124px -20px 0 0;
-		padding: 3px 0 1px 0;
+		margin: 124px -16px 0 0;
+		padding: 3px 0;
+	}
+	#theme-selector:hover::after {
+		height: calc(100% - 4px);
+		width: calc(6em - 4px);
+		top: 3px;
+	}
+	#theme-selector button {
+		margin: 1px 4px;
+	}
+	#theme-selector button::before {
+		top: 0;
+		right: 100%;
+		padding: 6px;
 	}
 }
 @media only screen and (max-width: 960px) {
@@ -572,7 +595,6 @@ a {
 		display: flex;
 		flex-flow: column;
 		width: calc(100vw - 20px);
-		overflow: hidden;
 		max-width: 360px;
 		max-height: 0;
 		top: calc(100% + 10px);
@@ -597,8 +619,21 @@ a {
 		display: block;
 		font-weight: var(--GW-UI-font-weight-heavy);
 		font-size: 2rem;
-		margin: 0.375em 1em 0.5em 1em;
+		padding: 0.375em 1em 0.5em 2.5em;
+		margin: 0 1.5em 0 0;
 		text-align: center;
+		z-index: 1;
+	}
+	#theme-selector:not(#dummy)::after {
+		content: "";
+		background-color: transparent;
+		position: absolute;
+		width: 100%;
+		height: calc(100% - 48px);
+		top: 48px;
+		left: 0;
+		display: initial;
+		visibility: visible;
 	}
 	#theme-selector button {
 		width: calc(100% - 0.5em);
@@ -608,6 +643,9 @@ a {
 		line-height: 1;
 		height: unset;
 		position: relative;
+	}
+	#theme-selector button::before {
+		display: none;
 	}
 	#theme-selector button::after {
 		content: attr(data-theme-description);
@@ -635,12 +673,23 @@ a {
 		background-color: transparent;
 		top: 0;
 		right: -3px;
+		z-index: 0;
 	}
 	#theme-selector .theme-selector-close-button,
 	#theme-selector .theme-selector-close-button:focus,
 	#theme-selector .theme-selector-close-button:active,
 	#theme-selector .theme-selector-close-button:hover {
 		box-shadow: none;
+		transform: none;
+	}
+	#theme-selector .theme-selector-close-button::after {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		max-width: unset;
+		z-index: -1;
 	}
 }
 
