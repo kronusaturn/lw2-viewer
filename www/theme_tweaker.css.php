@@ -30,7 +30,7 @@
 #theme-tweaker-ui::after {
 	content: "";
 	position: fixed;
-	top: 87px;
+	top: 67px;
 	right: calc((100% - 900px) / 2 + 26px);
 	background-color: #bfb8bf;
 	width: 18px;
@@ -67,14 +67,14 @@
 		0 0 0 2px #030303;
 	width: calc(900px - 40px);
 	max-width: calc(100vw - 20px);
-	max-height: calc(100vh - 160px);
-	top: 80px;
+	max-height: calc(100vh - 120px);
+	top: 60px;
 	left: calc((100% - 900px) / 2 + 20px);
 	padding: 30px 10px 10px 10px;
 }
 #theme-tweaker-ui .controls-container {
 	overflow-y: scroll;
-	max-height: calc(100vh - 320px);
+	max-height: calc(100vh - 280px);
 	box-shadow: 
 		0 -1px 0 0 #030303,
 		-1px 0 0 0 #030303,
@@ -745,7 +745,8 @@ input[type='range']::-ms-thumb {
 		left: 3px;
 		top: 3px;
 		width: calc(100% - 5px);
-		height: calc(100% - 5px)
+		height: calc(100% - 5px);
+		max-width: unset;
 	}
 	#theme-tweaker-ui .controls-container {
 		max-height: calc(100% - 132px);

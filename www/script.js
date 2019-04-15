@@ -1757,6 +1757,9 @@ function injectThemeTweaker() {
 			themeTweakerStyleSheet.addEventListener('load', GW.themeTweakerStyleSheetAvailable);
 			query("head").insertBefore(themeTweakerStyleSheet, query("head").firstElementChild);
 		}
+
+		if (GW.mediaQueries.mobileMax.matches)
+			toggleAppearanceAdjustUI();
 	});
 }
 function toggleThemeTweakerUI() {
@@ -2276,6 +2279,7 @@ function injectAppearanceAdjustUIToggle() {
 			setTimeout(() => {
 				element.style.transition = "";
 			});
+			element.toggleClass("engaged", false);
 		});
 	});
 }
@@ -2287,11 +2291,14 @@ function removeAppearanceAdjustUIToggle() {
 	});
 	removeElement("#appearance-adjust-ui-toggle");
 }
-function toggleAppearanceAdjustUI() {
+function toggleAppearanceAdjustUI(show) {
 	GWLog("toggleAppearanceAdjustUI");
 
 	queryAll(GW.appearanceAdjustUIToggleTargetsSelector).forEach(element => {
-		element.toggleClass("engaged");
+		if (typeof show == "undefined")
+			element.toggleClass("engaged");
+		else
+			element.toggleClass("engaged", show);
 	});
 }
 

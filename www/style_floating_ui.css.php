@@ -334,6 +334,7 @@
 		height: 100vh;
 		max-width: unset;
 		z-index: -1;
+		cursor: default;
 	}
 }
 
