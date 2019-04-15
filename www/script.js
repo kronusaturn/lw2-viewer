@@ -2761,8 +2761,6 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 	if (imagesOverlayOnly) return;
 	// Add the listener to all other content images (including those in comments).
 	queryAll(GW.imageFocus.contentImagesSelector).forEach(image => {
-		image.removeAttribute("width");
-		image.removeAttribute("height");
 		image.addActivateEvent(GW.imageClickedToFocus);
 	});
 
@@ -3933,8 +3931,10 @@ function generateImagesOverlay() {
 	let imagesOverlay = query("#images-overlay");
 	let imagesOverlayLeftOffset = imagesOverlay.getBoundingClientRect().left;
 	queryAll(".post-body img").forEach(image => {
-		image.style = "";
-		image.className = "";
+		image.removeAttribute("width");
+		image.removeAttribute("height");
+		image.removeAttribute("style");
+		image.removeAttribute("class");
 
 		let clonedImageContainer = document.createElement("div");
 		let clonedImage = image.cloneNode(true);
@@ -3972,7 +3972,7 @@ function replicateImageStyle(image, clonedImage, imagesOverlayLeftOffset) {
 	let zoomLevel = parseFloat(GW.currentTextZoom);
 
 	clonedImage.parentElement.style.top = image.getBoundingClientRect().top * zoomLevel - parseFloat(getComputedStyle(image).marginTop) + window.scrollY + "px";
-	clonedImage.parentElement.style.left = image.getBoundingClientRect().left * zoomLevel - parseFloat(getComputedStyle(image).marginLeft) - imagesOverlayLeftOffset + "px";
+	clonedImage.parentElement.style.left = image.getBoundingClientRect().left * zoomLevel - imagesOverlayLeftOffset + "px";
 	clonedImage.parentElement.style.width = image.getBoundingClientRect().width * zoomLevel + "px";
 	clonedImage.parentElement.style.height = image.getBoundingClientRect().height * zoomLevel + "px";
 }

@@ -240,10 +240,10 @@ img.inline-latex {
 
 #content figure,
 #content .imgonly {
-	text-align: center;
 	margin: 1.5em auto;
 }
 
+figure img,
 .imgonly img {
 	display: block;
 	margin: auto;
