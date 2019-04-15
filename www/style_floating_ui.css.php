@@ -84,11 +84,10 @@
 
 #theme-selector {
 	position: absolute;
-	top: 3px;
-	left: -41px;
+	top: 0;
+	right: 100%;
+	margin: 3px 2px 0 0;
 	opacity: 0.4;
-	display: table;
-	max-width: 40px;
 }
 #theme-selector:hover {
 	opacity: 1.0;
@@ -102,7 +101,6 @@
 /*=----------------------=*/
 
 .theme-selector button {
-	display: table-cell;
 	width: 26px;
 	height: 26px;
 	padding: 5px;
@@ -191,7 +189,6 @@
 @media only screen and (max-width: 1160px) {
 	#theme-selector:hover::after {
 		content: "";
-		display: block;
 		position: absolute;
 		width: calc(6em - 7px);
 		height: calc(100% + 2px);
@@ -205,19 +202,13 @@
 }
 @media only screen and (max-width: 1080px) {
 	#theme-selector {
-		top: 46px;
-		left: -44px;
+		margin: 48px 4px 0 0;
 	}
 }
 @media only screen and (max-width: 1000px) {
 	#theme-selector {
-		left: -17px;
-		top: 120px;
-		padding: 3px 0;
-		max-width: 32px;
-	}
-	#theme-selector button {
-		margin: 1px 4px;
+		margin: 124px -20px 0 0;
+		padding: 3px 0 1px 0;
 	}
 }
 @media only screen and (max-width: 960px) {
@@ -454,7 +445,7 @@ foreach ($content_width_settings as $name => $setting) {
 #quick-nav-ui {
 	position: absolute;
 	right: -67px;
-	bottom: 20px;
+	bottom: 24px;
 }
 #quick-nav-ui a {
 	font-family: var(--GW-Font-Awesome);
