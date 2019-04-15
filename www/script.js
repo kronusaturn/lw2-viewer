@@ -384,6 +384,7 @@ Element.prototype.addTextareaFeatures = function() {
 		);
 	}
 
+	// Inject markdown hints box (hidden unless user clicks to show).
 	var markdown_hints = 
 	`<input type='checkbox' id='markdown-hints-checkbox'>
 	<label for='markdown-hints-checkbox'></label>
@@ -397,6 +398,8 @@ Element.prototype.addTextareaFeatures = function() {
 		"<span>Blockquote</span><code>&gt; Blockquote</code>" ].map(row => "<div class='markdown-hints-row'>" + row + "</div>").join("") +
 	`</div>`;
 	textareaContainer.query("span").insertAdjacentHTML("afterend", markdown_hints);
+
+	// Hide markdown hints box when transitioning to/from narrow-mobile.
 	doWhenMatchMedia(GW.mediaQueries.mobileNarrow, "hideMarkdownHintsBox", () => {
 		hideMarkdownHintsBox();
 		query(".guiedit-mobile-help-button").removeClass("active");
@@ -2214,12 +2217,24 @@ function injectPostNavUIToggle() {
 		localStorage.setItem("post-nav-ui-toggle-engaged", localStorage.getItem("post-nav-ui-toggle-engaged") != "true");
 	});
 
+	GW.postNavUIToggleTargetsSelector = "#quick-nav-ui, #new-comment-nav-ui, #hns-date-picker, #post-nav-ui-toggle button";
+
+	// Prevent “flashing” of elements when resizing window.
+	doWhenMatchMedia(GW.mediaQueries.mobileMax, "preventPostNavUIFlashingWhenWindowResized", () => {
+		queryAll(GW.postNavUIToggleTargetsSelector + ", #quick-nav-ui > *").forEach(element => {
+			element.style.transition = "none";
+			setTimeout(() => {
+				element.style.transition = "";
+			});
+		});
+	});
+
 	if (localStorage.getItem("post-nav-ui-toggle-engaged") == "true") togglePostNavUI();
 }
 function removePostNavUIToggle() {
 	GWLog("removePostNavUIToggle");
 
-	queryAll("#quick-nav-ui, #new-comment-nav-ui, #hns-date-picker, #post-nav-ui-toggle button").forEach(element => {
+	queryAll(GW.postNavUIToggleTargetsSelector).forEach(element => {
 		element.removeClass("engaged");
 	});
 	removeElement("#post-nav-ui-toggle");
@@ -2227,7 +2242,7 @@ function removePostNavUIToggle() {
 function togglePostNavUI() {
 	GWLog("togglePostNavUI");
 
-	queryAll("#quick-nav-ui, #new-comment-nav-ui, #hns-date-picker, #post-nav-ui-toggle button").forEach(element => {
+	queryAll(GW.postNavUIToggleTargetsSelector).forEach(element => {
 		element.toggleClass("engaged");
 	});
 }
@@ -2251,11 +2266,23 @@ function injectAppearanceAdjustUIToggle() {
 	themeSelectorCloseButton.innerHTML = "&#xf057;";
 	query("#theme-selector").appendChild(themeSelectorCloseButton);
 	themeSelectorCloseButton.addActivateEvent(GW.appearanceAdjustUIToggleButtonClicked);
+
+	GW.appearanceAdjustUIToggleTargetsSelector = "#comments-view-mode-selector, #theme-selector, #width-selector, #text-size-adjustment-ui, #theme-tweaker-toggle, #appearance-adjust-ui-toggle button";
+
+	// Prevent “flashing” of elements when resizing window.
+	doWhenMatchMedia(GW.mediaQueries.mobileMax, "preventAppearanceAdjustUIFlashingWhenWindowResized", () => {
+		queryAll(GW.appearanceAdjustUIToggleTargetsSelector).forEach(element => {
+			element.style.transition = "none";
+			setTimeout(() => {
+				element.style.transition = "";
+			});
+		});
+	});
 }
 function removeAppearanceAdjustUIToggle() {
 	GWLog("removeAppearanceAdjustUIToggle");
 
-	queryAll("#comments-view-mode-selector, #theme-selector, #width-selector, #text-size-adjustment-ui, #theme-tweaker-toggle, #appearance-adjust-ui-toggle button").forEach(element => {
+	queryAll(GW.appearanceAdjustUIToggleTargetsSelector).forEach(element => {
 		element.removeClass("engaged");
 	});
 	removeElement("#appearance-adjust-ui-toggle");
@@ -2263,7 +2290,7 @@ function removeAppearanceAdjustUIToggle() {
 function toggleAppearanceAdjustUI() {
 	GWLog("toggleAppearanceAdjustUI");
 
-	queryAll("#comments-view-mode-selector, #theme-selector, #width-selector, #text-size-adjustment-ui, #theme-tweaker-toggle, #appearance-adjust-ui-toggle button").forEach(element => {
+	queryAll(GW.appearanceAdjustUIToggleTargetsSelector).forEach(element => {
 		element.toggleClass("engaged");
 	});
 }
@@ -3688,8 +3715,8 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		GW.needHashRealignment = true;
 	}
 
-	// On mobile, replace the labels for the checkboxes on the edit post form
-	// with icons, to save space.
+	/*	On mobile, replace the labels for the checkboxes on the edit post form with icons, to save space.
+		*/
 	if (query(".edit-post-page")) {
 		doWhenMatchMedia(GW.mediaQueries.mobileNarrow, "editPostFormCheckboxLabels", (mediaQuery) => {
 			query("label[for='link-post']").innerHTML = mediaQuery.matches ? "&#xf0c1" : "Link post";
