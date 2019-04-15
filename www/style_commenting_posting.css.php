@@ -409,6 +409,7 @@ button.guiedit {
 	grid-row: 3;
 	align-self: start;
 	justify-self: end;
+	font-weight: var(--GW-UI-font-weight-heavy);
 }
 
 #edit-post-form {

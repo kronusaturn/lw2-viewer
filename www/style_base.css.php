@@ -28,12 +28,6 @@ body::before {
 	height: 100%;
 }
 
-body.no-scroll {
-	overflow-y: scroll;
-	position: fixed;
-	width: 100%;
-}
-
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/

@@ -250,7 +250,7 @@
 	left: 0;
 	width: 100%;
 	height: 100%;
-	z-index: 1;
+	z-index: 2;
 	display: flex;
 	justify-content: space-between;
 	pointer-events: none;
@@ -341,5 +341,8 @@
 @media not screen and (hover: hover) and (pointer: fine) {
 	#image-focus-overlay .caption {
 		--GW-image-focus-caption-side-spacing: 0.75em;
+	}
+	#image-focus-overlay .help-overlay {
+		display: none;
 	}
 }
