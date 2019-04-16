@@ -59,6 +59,7 @@ h1.listing a[href^="http"] {
 		padding: 0 0 1px 1px;
 	}
 	h1.listing a[href^='/posts/'],
+	h1.listing a[href^='/s/'],
 	h1.listing a[href^='/conversation?id'] {
 		white-space: nowrap;
 		text-overflow: ellipsis;
@@ -74,6 +75,8 @@ h1.listing a[href^="http"] {
 @media only screen and (hover: hover) and (pointer: fine) {
 	h1.listing a[href^='/posts/']:hover,
 	h1.listing a[href^='/posts/']:focus,
+	h1.listing a[href^='/s/']:hover,
+	h1.listing a[href^='/s/']:focus,
 	h1.listing a[href^='/conversation?id']:hover,
 	h1.listing a[href^='/conversation?id']:focus {
 		text-decoration: dotted underline;
@@ -92,10 +95,11 @@ h1.listing a[href^="http"] {
 		left: -0.75em;
 	}
 
-/* Adds hysteresis to the hover area (i.e., prevents oscillation due to small
-   mouse movements) */
-
+/*	Adds hysteresis to the hover area (i.e., prevents oscillation due to small
+	mouse movements).
+	*/
 	h1.listing a[href^='/posts/']:hover::before,
+	h1.listing a[href^='/s/']:hover::before,
 	h1.listing a[href^='/conversation?id']:hover::before {
 		content: "";
 		position: absolute;

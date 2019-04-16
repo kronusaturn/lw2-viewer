@@ -3845,7 +3845,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	});
 
 	// Add event listener for . , ; (for navigating listings pages).
-	let listings = queryAll("h1.listing a[href^='/posts'], .listings .comment-thread .comment-meta a.date");
+	let listings = queryAll("h1.listing a[href^='/posts/'], h1.listing a[href^='/s/'], .listings .comment-thread .comment-meta a.date");
 	if (listings.length > 0) {
 		document.addEventListener("keyup", GW.postListingsNavKeyPressed = (event) => { 
 			if (event.ctrlKey || event.shiftKey || event.altKey || !(event.key == "," || event.key == "." || event.key == ';' || event.key == "Escape")) return;
@@ -3871,12 +3871,13 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 			var indexOfActiveListing = -1;
 			for (i = 0; i < listings.length; i++) {
-				if (document.activeElement.parentElement.hasClass("listing") && 
-					listings[i] === document.activeElement.parentElement.query("a[href^='/posts']")) {
+				let parentOfFocusedElement = document.activeElement.parentElement;
+				if (parentOfFocusedElement.hasClass("listing") && 
+					listings[i] === parentOfFocusedElement.query("a[href^='/posts/'], a[href^='/s/']")) {
 					indexOfActiveListing = i;
 					break;
-				} else if (document.activeElement.parentElement.hasClass("comment-meta") && 
-					listings[i] === document.activeElement.parentElement.query("a.date")) {
+				} else if (parentOfFocusedElement.hasClass("comment-meta") && 
+					listings[i] === parentOfFocusedElement.query("a.date")) {
 					indexOfActiveListing = i;
 					break;
 				}

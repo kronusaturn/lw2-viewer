@@ -774,7 +774,7 @@ a#inbox-indicator.new-messages:hover::before {
 }
 #content.sequences-page .sublevel-nav:not(.sort) {
 	grid-row: unset;
-	margin: 2em 0 0 0;
+	margin: 2em 0 0.5em 0;
 }
 
 .sublevel-nav .sublevel-item {
