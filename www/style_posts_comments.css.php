@@ -374,7 +374,11 @@ h1.post-title {
 	line-height: 1.5;
 	font-size: 1.3rem;
 	overflow: auto;
-	margin: 1.5em 0 0 0;
+
+	/*	Corrects for protruding italics, etc.
+		*/
+	margin: 1.5em -2px 0 -2px;
+	padding: 0 2px;
 }
 .post-body > *:first-child:not(.contents),
 .post-body .contents + * {

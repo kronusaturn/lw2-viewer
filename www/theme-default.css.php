@@ -857,6 +857,9 @@ h1.listing + .post-meta {
 	padding: 0 330px 14px 1px;
 	box-shadow: 0 -1px 0 0 #ddd inset;
 }
+article h1.listing + .post-meta {
+	padding-bottom: 8px;
+}
 h1.listing + .post-meta .karma-value,
 h1.listing + .post-meta .comment-count,
 h1.listing + .post-meta .lw2-link,
@@ -999,6 +1002,9 @@ h1.listing + .post-meta .read-time.word-count::after {
 @media only screen and (max-width: 520px) {
 	h1.listing + .post-meta {
 		padding: 0 192px 6px 1px;
+	}
+	article h1.listing + .post-meta {
+		padding-bottom: 6px;
 	}
 	h1.listing + .post-meta .karma-value {
 		right: 136px;

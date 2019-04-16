@@ -2229,6 +2229,7 @@ function injectPostNavUIToggle() {
 			setTimeout(() => {
 				element.style.transition = "";
 			});
+			element.toggleClass("engaged", false);
 		});
 	});
 
@@ -4068,6 +4069,23 @@ function rectifyMarkup() {
 	// Unwrap folds.
 	content.queryAll("a#more:not([href])").forEach(foldAnchor => {
 		foldAnchor.outerHTML = foldAnchor.innerHTML;
+	});
+
+	// Convert bold paragraphs into headings.
+	// NOTE: This will not result in a ToC (as that is generated server-side).
+	content.queryAll("p > strong:only-child, p > b:only-child").forEach(strong => {
+		if (strong === strong.parentElement.firstChild &&
+			strong === strong.parentElement.lastChild)
+			strong.parentElement.outerHTML = `<h3>${strong.innerHTML}</h3>`;
+	});
+
+	// Trim headings of <br> tags.
+	content.queryAll("h1, h2, h3").forEach(heading => {
+		heading.queryAll("br").forEach(br => {
+			if (br === br.parentElement.firstChild || 
+				br === br.parentElement.lastChild)
+				removeElement(br);
+		});
 	});
 }
 
