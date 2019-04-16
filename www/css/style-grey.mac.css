@@ -1902,9 +1902,12 @@ h1.post-title {
 /*******************/
 
 .post-nav-item {
-	display: flex;
+	display: grid;
+	grid-template: 100% / 32% 36% 32%;
+	grid-template-areas:
+		"prev seq next";
 }
-.post-nav-item > * {
+.post-nav {
 	display: flex;
 	flex-flow: column;
 	justify-content: flex-start;
@@ -1915,36 +1918,38 @@ h1.post-title {
 	font-size: 1.125em;
 	line-height: 1.15;
 	display: inline;
-	border-bottom: 1px dotted transparent;
+	border-top: 1px solid transparent;
 }
 
 .sequence-title {
-	flex: 1 1 36%;
 	align-items: center;
 	text-align: center;
+	grid-area: seq;
 }
 .sequence-title .post-nav-title {
 	font-size: 1.5em;
 }
 
-.post-nav {
-	flex: 1 1 32%;
+.post-nav.next,
+.post-nav.prev {
 	display: flex;
 	flex-flow: column;
 	justify-content: flex-end;
 }
-.post-nav .post-nav-label {
+.post-nav.prev .post-nav-label,
+.post-nav.next .post-nav-label {
 	display: none;
 }
 
 .post-nav.prev {
-	order: -1;
+	grid-area: prev;
 	align-items: flex-start;
 }
 .post-nav.prev .post-nav-title::before {
 	content: "\F0D9\2005";
 }
 .post-nav.next {
+	grid-area: next;
 	text-align: right;
 	align-items: flex-end;
 }
@@ -1961,12 +1966,15 @@ h1.post-title {
 
 @media only screen and (max-width: 900px) {
 	.post-nav-item {
-		flex-flow: row wrap;
 		font-size: 0.875em;
+		grid-template: auto auto / 50% 50%;
+		grid-template-areas:
+			"prev next"
+			"seq seq";
 	}
 	.post-nav.prev,
 	.post-nav.next {
-		flex-basis: 50%;
+		line-height: 1;
 	}
 	.post-nav.prev {
 		margin: 0 0 0 -1px;
@@ -1974,8 +1982,6 @@ h1.post-title {
 		left: 1px;
 	}
 	.sequence-title {
-		flex-basis: 100%;
-		order: 2;
 		padding: 0.75em 0;
 	}
 }
