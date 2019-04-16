@@ -40,7 +40,7 @@
 		   return (values prev (second current)))
 	    (when (or prev next)
 	      <div class="post-nav-item sequence">
-	        <a class="sequence-title" href=("/s/~A" (cdr (assoc :--id sequence)))>
+	        <a class="post-nav sequence-title" href=("/s/~A" (cdr (assoc :--id sequence)))>
 	          <span class="post-nav-label">Part of the sequence:</span>
 	          <span class="post-nav-title">(safe (clean-text-to-html (cdr (assoc :title sequence))))</span>
 	        </a>
