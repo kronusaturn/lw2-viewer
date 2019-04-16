@@ -1931,6 +1931,10 @@ h1.post-title {
 	display: inline;
 	border-top: 1px solid transparent;
 }
+.post-nav.prev .post-nav-title,
+.post-nav.next .post-nav-title {
+	border-bottom: 1px solid transparent;
+}
 
 .sequence-title {
 	align-items: center;
@@ -1975,6 +1979,10 @@ h1.post-title {
 		grid-template-areas:
 			"prev next"
 			"seq seq";
+	}
+	.post-nav.prev .post-nav-title,
+	.post-nav.next .post-nav-title {
+		border-bottom: none;
 	}
 	.post-nav.prev {
 		margin: 0 0 0 -1px;
