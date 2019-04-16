@@ -388,7 +388,7 @@ li {
 }
 .post-body ul:not(.contents-list) > li {
 	position: relative;
-	padding: 0 0 0 1.125em;
+	padding: 0 0 0 1.75em;
 	margin: 0.25em 0 0 0;
 }
 .post-body ul:not(.contents-list) > li ul > li {
@@ -397,7 +397,7 @@ li {
 .post-body ul:not(.contents-list) > li::before {
 	content: "•";
 	position: absolute;
-	width: 0.5em;
+	width: 1.25em;
 	text-align: right;
 	left: 0;
 }

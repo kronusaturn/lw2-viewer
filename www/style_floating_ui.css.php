@@ -496,8 +496,9 @@
 
 #quick-nav-ui {
 	position: absolute;
-	right: -67px;
-	bottom: 24px;
+	bottom: 0;
+	left: 100%;
+	margin: 0 0 24px 28px;
 }
 #quick-nav-ui a {
 	font-family: var(--GW-Font-Awesome);
@@ -526,17 +527,17 @@
 
 @media only screen and (max-width: 1080px) {
 	#quick-nav-ui {
-		right: -54px;
+		margin: 0 0 24px 16px;
 	}
 }
 @media only screen and (max-width: 1040px) {
 	#quick-nav-ui {
-		right: -49px;
+		margin: 0 0 24px 8px;
 	}
 }
 @media only screen and (max-width: 1020px) {
 	#quick-nav-ui {
-		right: -20px;
+		margin: 0 0 24px -20px;
 	}
 }
 @media only screen and (max-width: 960px) {
@@ -546,6 +547,8 @@
 			max-width 0.2s ease,
 			visibility 0.2s ease;
 		display: flex;
+		margin: 0;
+		left: unset;
 		right: 72px;
 		bottom: 14px;
 	}
@@ -575,7 +578,7 @@
 		font-family: var(--GW-UI-font);
 		font-weight: var(--GW-UI-font-weight-heavy);
 	}
-	<?php fit_content("#quick-nav-ui a::after"); ?>
+<?php fit_content("#quick-nav-ui a::after", "width", "\t"); ?>
 	#quick-nav-ui a[href='#top']::after {
 		content: "Top";
 		left: -1px;

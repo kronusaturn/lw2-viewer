@@ -3,13 +3,13 @@
 
 	$platform = @$argv[1] ?: 'Mac';
 
-	function fit_content($selector, $property = "width") {
+	function fit_content($selector, $property = "width", $line_prefix = "") {
 		foreach (["-moz-fit-content", "fit-content"] as $pvalue) echo 
-"@supports (width: {$pvalue}) {
-	{$selector} {
-		{$property}: {$pvalue};
-	}
-}
+"{$line_prefix}@supports (width: {$pvalue}) {
+{$line_prefix}	{$selector} {
+{$line_prefix}		{$property}: {$pvalue};
+{$line_prefix}	}
+{$line_prefix}}
 ";
 	}
 

@@ -204,6 +204,7 @@
 	}
 	#nav-item-all .nav-inner::before {
 		content: "\F069";
+		margin-bottom: 0;
 	}
 	#nav-item-meta .nav-inner::before {
 		content: "\F077";

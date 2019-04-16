@@ -107,7 +107,7 @@
 	--GW-content-width: 1150px;
 }
 :root head.content-width-fluid + body {
-	--GW-content-width: unset;
+	--GW-content-width: none;
 }
 
 /*	Page side padding.
@@ -879,8 +879,9 @@ a {
 
 #quick-nav-ui {
 	position: absolute;
-	right: -67px;
-	bottom: 24px;
+	bottom: 0;
+	left: 100%;
+	margin: 0 0 24px 28px;
 }
 #quick-nav-ui a {
 	font-family: var(--GW-Font-Awesome);
@@ -909,17 +910,17 @@ a {
 
 @media only screen and (max-width: 1080px) {
 	#quick-nav-ui {
-		right: -54px;
+		margin: 0 0 24px 16px;
 	}
 }
 @media only screen and (max-width: 1040px) {
 	#quick-nav-ui {
-		right: -49px;
+		margin: 0 0 24px 8px;
 	}
 }
 @media only screen and (max-width: 1020px) {
 	#quick-nav-ui {
-		right: -20px;
+		margin: 0 0 24px -20px;
 	}
 }
 @media only screen and (max-width: 960px) {
@@ -929,6 +930,8 @@ a {
 			max-width 0.2s ease,
 			visibility 0.2s ease;
 		display: flex;
+		margin: 0;
+		left: unset;
 		right: 72px;
 		bottom: 14px;
 	}
@@ -959,15 +962,15 @@ a {
 		font-weight: var(--GW-UI-font-weight-heavy);
 	}
 	@supports (width: -moz-fit-content) {
-	#quick-nav-ui a::after {
-		width: -moz-fit-content;
+		#quick-nav-ui a::after {
+			width: -moz-fit-content;
+		}
 	}
-}
-@supports (width: fit-content) {
-	#quick-nav-ui a::after {
-		width: fit-content;
+	@supports (width: fit-content) {
+		#quick-nav-ui a::after {
+			width: fit-content;
+		}
 	}
-}
 	#quick-nav-ui a[href='#top']::after {
 		content: "Top";
 		left: -1px;
@@ -1841,6 +1844,7 @@ a {
 	}
 	#nav-item-all .nav-inner::before {
 		content: "\F069";
+		margin-bottom: 0;
 	}
 	#nav-item-meta .nav-inner::before {
 		content: "\F077";
@@ -4981,7 +4985,7 @@ li {
 }
 .post-body ul:not(.contents-list) > li {
 	position: relative;
-	padding: 0 0 0 1.125em;
+	padding: 0 0 0 1.75em;
 	margin: 0.25em 0 0 0;
 }
 .post-body ul:not(.contents-list) > li ul > li {
@@ -4990,7 +4994,7 @@ li {
 .post-body ul:not(.contents-list) > li::before {
 	content: "•";
 	position: absolute;
-	width: 0.5em;
+	width: 1.25em;
 	text-align: right;
 	left: 0;
 }

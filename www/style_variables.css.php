@@ -102,7 +102,7 @@
 	--GW-content-width: 1150px;
 }
 :root head.content-width-fluid + body {
-	--GW-content-width: unset;
+	--GW-content-width: none;
 }
 
 /*	Page side padding.
