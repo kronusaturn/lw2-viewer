@@ -1852,6 +1852,24 @@ a.comment-parent-link:hover::before {
 		0 0.5px 0.5px #000;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 520px) {
+	.post-controls .edit-post-link {
+		text-shadow:
+			0 0 1px #fff,
+			0 0 3px #0f0;
+	}
+	.post-controls .edit-post-link:hover,
+	.post-controls .edit-post-link:active {
+		text-shadow:
+			0 0 1px #fff,
+			0 0 3px #f88;
+	}
+}
+
 /*=============*/
 /*= SEQUENCES =*/
 /*=============*/

@@ -405,11 +405,15 @@ button.guiedit {
 
 .post-controls {
 	text-align: right;
-	margin: 0.75em var(--GW-current-page-content-right-side-padding) 0 0;
 	grid-row: 3;
 	align-self: start;
 	justify-self: end;
 	font-weight: var(--GW-UI-font-weight-heavy);
+}
+.post-controls .edit-post-link {
+	font-size: 1.375em;
+	white-space: nowrap;
+	padding: 0.375em 1em 0 0.375em;
 }
 
 #edit-post-form {
@@ -553,6 +557,10 @@ button.guiedit {
 	}
 }
 @media only screen and (max-width: 520px) {
+	.post-controls .edit-post-link {
+		padding: 0.25em 0.5em 0 0.25em;
+	}
+
 	#content.edit-post-page {
 		min-height: 100vh;
 		grid-template-rows: auto auto 1fr auto;
@@ -568,9 +576,6 @@ button.guiedit {
 	}
 	#edit-post-form textarea {
 		height: calc(100% - 1em);
-	}
-	.post-controls {
-		margin-top: 0.5em;
 	}
 	#edit-post-form .post-meta-fields {
 		grid-template-columns: 3.75em auto auto auto 1fr auto;

@@ -268,7 +268,7 @@
 		text-align: center;
 		z-index: 1;
 	}
-	#theme-selector:not(#dummy)::after {
+	#theme-selector:not(#DUMMY)::after {
 		content: "";
 		background-color: transparent;
 		position: absolute;
