@@ -1910,7 +1910,7 @@ h1.post-title {
 .post-nav {
 	display: flex;
 	flex-flow: column;
-	justify-content: flex-start;
+	justify-content: flex-end;
 	padding: 0.5em;
 }
 
@@ -1930,17 +1930,6 @@ h1.post-title {
 	font-size: 1.5em;
 }
 
-.post-nav.next,
-.post-nav.prev {
-	display: flex;
-	flex-flow: column;
-	justify-content: flex-end;
-}
-.post-nav.prev .post-nav-label,
-.post-nav.next .post-nav-label {
-	display: none;
-}
-
 .post-nav.prev {
 	grid-area: prev;
 	align-items: flex-start;
@@ -1952,6 +1941,10 @@ h1.post-title {
 	grid-area: next;
 	text-align: right;
 	align-items: flex-end;
+}
+.post-nav.prev .post-nav-label,
+.post-nav.next .post-nav-label {
+	display: none;
 }
 .post-nav.next .post-nav-title::after {
 	content: "\2004\F0DA";
@@ -1971,10 +1964,6 @@ h1.post-title {
 		grid-template-areas:
 			"prev next"
 			"seq seq";
-	}
-	.post-nav.prev,
-	.post-nav.next {
-		line-height: 1;
 	}
 	.post-nav.prev {
 		margin: 0 0 0 -1px;
