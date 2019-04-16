@@ -1,3 +1,16 @@
+/********************/
+/* SEQUENCE LIBRARY */
+/********************/
+
+#content.sequences-page::after {
+	content: "Sequence Library";
+	font-family: var(--GW-UI-font-smallcaps);
+	font-weight: var(--GW-UI-font-weight-heavy);
+	grid-row: 3;
+	font-size: 1.5rem;
+	margin: 0.375em 0 0 var(--GW-current-page-content-left-side-padding);
+}
+
 /**************/
 /* USER PAGES */
 /**************/
@@ -374,6 +387,14 @@
 	font-size: 1.75rem;
 	margin: 0 0 0 40px;
 }
+#content.alignment-forum-index-page #top-nav-bar {
+	margin: 0.25em 0 0 0;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
 @media only screen and (max-width: 900px) {
 	#content.alignment-forum-index-page::after {
 		margin: 0 0 0 calc(100% / 45);
