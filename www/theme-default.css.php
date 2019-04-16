@@ -1889,6 +1889,14 @@ h1.sequence-chapter {
 	margin: 0;
 }
 
+#content.sequences-page::after {
+	background-color: #333;
+	-webkit-background-clip: text;
+	color: transparent;
+	text-shadow: 
+		rgba(255,255,255,0.5) 0px 3px 3px;
+}
+
 /*=======*/
 /* LINKS */
 /*=======*/
@@ -2134,7 +2142,7 @@ EOT;
 	-webkit-background-clip: text;
 	color: transparent;
 	text-shadow: 
-		rgba(255,255,255,0.5) 0px 3px 3px;;
+		rgba(255,255,255,0.5) 0px 3px 3px;
 }
 
 @media only screen and (hover: hover) and (pointer: fine) {

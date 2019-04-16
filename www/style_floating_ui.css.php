@@ -1154,6 +1154,7 @@
 	border: 1px solid #ccc;
 	padding: 3px 8px 4px 8px;
 	margin: 0 1px;
+	box-shadow: none;
 }
 #keyboard-help-overlay .keyboard-help-container code.ak {
 	background-color: #ffeb83;
@@ -1195,7 +1196,7 @@
 	top: 0;
 	font-family: var(--GW-Font-Awesome);
 	font-size: 1.5rem;
-	padding: 10px 12px;
+	padding: 9px 16px;
 }
 
 /******************/
