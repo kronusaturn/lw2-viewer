@@ -45,6 +45,7 @@ body::before {
 body > * {
 	width: calc(100% - 300px);
 	min-width: 900px;
+	max-width: var(--GW-content-width);
 }
 #content {
 	margin: 0 auto;

@@ -3,12 +3,6 @@
 
 	$platform = @$argv[1] ?: 'Mac';
 
-	$content_width_settings = [
-		'normal' => '900px',
-		'wide' => '1150px',
-		'fluid' => 'unset'
-	];
-
 	function fit_content($selector, $property = "width") {
 		foreach (["-moz-fit-content", "fit-content"] as $pvalue) echo 
 "@supports (width: {$pvalue}) {

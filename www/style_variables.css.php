@@ -55,6 +55,8 @@
 /*	Layout.
 	*/
 :root {
+	--GW-content-width: 0;
+
 	--GW-content-side-padding: 0;
 	--GW-content-left-side-padding: var(--GW-content-side-padding);
 	--GW-content-right-side-padding: var(--GW-content-side-padding);
@@ -90,6 +92,21 @@
 	--GW-comment-compact-height: auto;
 	--GW-comment-minimized-height: auto;
 }
+
+/*	Content column width.
+	*/
+:root head.content-width-normal + body {
+	--GW-content-width: 900px;
+}
+:root head.content-width-wide + body {
+	--GW-content-width: 1150px;
+}
+:root head.content-width-fluid + body {
+	--GW-content-width: unset;
+}
+
+/*	Page side padding.
+	*/
 :root #content {
 	--GW-current-page-content-left-side-padding: var(--GW-content-left-side-padding);
 	--GW-current-page-content-right-side-padding: var(--GW-content-right-side-padding);

@@ -60,6 +60,8 @@
 /*	Layout.
 	*/
 :root {
+	--GW-content-width: 0;
+
 	--GW-content-side-padding: 0;
 	--GW-content-left-side-padding: var(--GW-content-side-padding);
 	--GW-content-right-side-padding: var(--GW-content-side-padding);
@@ -95,6 +97,21 @@
 	--GW-comment-compact-height: auto;
 	--GW-comment-minimized-height: auto;
 }
+
+/*	Content column width.
+	*/
+:root head.content-width-normal + body {
+	--GW-content-width: 900px;
+}
+:root head.content-width-wide + body {
+	--GW-content-width: 1150px;
+}
+:root head.content-width-fluid + body {
+	--GW-content-width: unset;
+}
+
+/*	Page side padding.
+	*/
 :root #content {
 	--GW-current-page-content-left-side-padding: var(--GW-content-left-side-padding);
 	--GW-current-page-content-right-side-padding: var(--GW-content-right-side-padding);
@@ -200,6 +217,7 @@ body::before {
 body > * {
 	width: calc(100% - 300px);
 	min-width: 900px;
+	max-width: var(--GW-content-width);
 }
 #content {
 	margin: 0 auto;
@@ -427,7 +445,7 @@ a {
 		bottom: 10px;
 		left: 10px;
 	}
-	#appearance-adjust-ui-toggle.engaged::after {
+	#appearance-adjust-ui-toggle::after {
 		content: "";
 		position: fixed;
 		top: 0;
@@ -435,7 +453,16 @@ a {
 		width: 100vw;
 		height: 100vh;
 		pointer-events: none;
-		background-color: rgba(255, 255, 255, 0.5)
+		background-color: rgba(255, 255, 255, 0.5);
+		opacity: 0.0;
+		visibility: hidden;
+		transition: 
+			visibility 0.15s ease,
+			opacity 0.15s ease;
+	}
+	#appearance-adjust-ui-toggle.engaged::after {
+		visibility: visible;
+		opacity: 1.0;
 	}
 
 	#post-nav-ui-toggle {
@@ -700,8 +727,9 @@ a {
 
 #theme-tweaker-toggle {
 	position: absolute;
-	top: 7px;
-	left: -75px;
+	top: 0;
+	right: 100%;
+	margin: 8px 40px 0 0;
 }
 #theme-tweaker-toggle button {
 	font-family: var(--GW-Font-Awesome);
@@ -720,19 +748,16 @@ a {
 
 @media only screen and (max-width: 1080px) {
 	#theme-tweaker-toggle {
-		left: -44px;
-		top: 2px;
+		margin: 4px 4px 0 0;
 	}
 	#theme-tweaker-toggle button {
 		height: 2em;
 		width: 2em;
-		padding: 7px;
 	}
 }
 @media only screen and (max-width: 1000px) {
 	#theme-tweaker-toggle {
-		top: 70px;
-		left: -21px;
+		margin: 70px -20px 0 0;
 	}
 }
 @media only screen and (max-width: 960px) {
@@ -784,8 +809,10 @@ a {
 
 #width-selector {
 	position: absolute;
-	top: 4px;
-	right: -78px;
+	top: 0;
+	left: 100%;
+	display: flex;
+	margin: 4px 0 0 6px;
 }
 #width-selector button {
 	width: 22px;
@@ -844,16 +871,6 @@ a {
 }
 #width-selector button:hover:not(:active)::after {
 	visibility: visible;
-}
-
-head.content-width-normal + body > * {
-	max-width: 900px;
-}
-head.content-width-wide + body > * {
-	max-width: 1150px;
-}
-head.content-width-fluid + body > * {
-	max-width: unset;
 }
 
 /********************/

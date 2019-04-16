@@ -71,7 +71,7 @@
 		bottom: 10px;
 		left: 10px;
 	}
-	#appearance-adjust-ui-toggle.engaged::after {
+	#appearance-adjust-ui-toggle::after {
 		content: "";
 		position: fixed;
 		top: 0;
@@ -79,7 +79,16 @@
 		width: 100vw;
 		height: 100vh;
 		pointer-events: none;
-		background-color: rgba(0,0,0,0.5)
+		background-color: rgba(0,0,0,0.5);
+		opacity: 0.0;
+		visibility: hidden;
+		transition: 
+			visibility 0.15s ease,
+			opacity 0.15s ease;
+	}
+	#appearance-adjust-ui-toggle.engaged::after {
+		visibility: visible;
+		opacity: 1.0;
 	}
 
 	#post-nav-ui-toggle {
@@ -344,8 +353,9 @@
 
 #theme-tweaker-toggle {
 	position: absolute;
-	top: 7px;
-	left: -75px;
+	top: 0;
+	right: 100%;
+	margin: 8px 40px 0 0;
 }
 #theme-tweaker-toggle button {
 	font-family: var(--GW-Font-Awesome);
@@ -364,19 +374,16 @@
 
 @media only screen and (max-width: 1080px) {
 	#theme-tweaker-toggle {
-		left: -44px;
-		top: 2px;
+		margin: 4px 4px 0 0;
 	}
 	#theme-tweaker-toggle button {
 		height: 2em;
 		width: 2em;
-		padding: 7px;
 	}
 }
 @media only screen and (max-width: 1000px) {
 	#theme-tweaker-toggle {
-		top: 70px;
-		left: -21px;
+		margin: 70px -20px 0 0;
 	}
 }
 @media only screen and (max-width: 960px) {
@@ -419,8 +426,10 @@
 
 #width-selector {
 	position: absolute;
-	top: 4px;
-	right: -78px;
+	top: 0;
+	left: 100%;
+	display: flex;
+	margin: 4px 0 0 6px;
 }
 #width-selector button {
 	width: 22px;
@@ -480,13 +489,6 @@
 #width-selector button:hover:not(:active)::after {
 	visibility: visible;
 }
-
-<?php
-global $content_width_settings;
-foreach ($content_width_settings as $name => $setting) {
-	echo "head.content-width-{$name} + body > * {\n	max-width: {$setting};\n}\n";
-}
-?>
 
 /********************/
 /* QUICK NAV WIDGET */
