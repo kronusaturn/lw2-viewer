@@ -385,7 +385,7 @@
 	font-weight: var(--GW-Alignment-Forum-logotype-font-weight);
 	grid-row: 4;
 	font-size: 1.75rem;
-	margin: 0 0 0 40px;
+	margin: 0 0 0 calc(var(--GW-current-page-content-left-side-padding) - 0.75em);
 }
 #content.alignment-forum-index-page #top-nav-bar {
 	margin: 0.25em 0 0 0;
@@ -397,11 +397,11 @@
 
 @media only screen and (max-width: 900px) {
 	#content.alignment-forum-index-page::after {
-		margin: 0 0 0 calc(100% / 45);
+		margin: 0 0 0 var(--GW-current-page-content-left-side-padding);
 	}
 }
 @media only screen and (max-width: 720px) {
 	#content.alignment-forum-index-page::after {
-		margin: 15px 0 0 calc(100% / 45);
+		margin: 0.375em 0 0 var(--GW-current-page-content-left-side-padding);
 	}
 }
