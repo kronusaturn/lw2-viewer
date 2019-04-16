@@ -515,6 +515,16 @@ body {
 	background-color: #ddd;
 }
 
+/*===============*/
+/* KEYBOARD HELP */
+/*===============*/
+
+#nav-item-about button.open-keyboard-help {
+	font-weight: 400;
+	top: -1px;
+	color: #888;
+}
+
 /*==========*/
 /* LISTINGS */
 /*==========*/
@@ -779,6 +789,38 @@ h1.listing.own-post-listing {
 	font-feature-settings: "tnum";
 }
 
+/*=================*/
+/* POST NAVIGATION */
+/*=================*/
+
+.post-nav-links a,
+.post-nav-links a:visited {
+	color: #888;
+}
+.post-nav-links a:hover {
+	text-decoration: none;
+}
+
+.post-nav-label {
+	color: #999;
+}
+
+.post-nav-links a:hover .post-nav-title {
+	color: #222;
+}
+
+@media only screen and (max-width: 900px) {
+	.sequence-title {
+		border-top: 1px dotted #aaa;
+	}
+	.post-nav.prev {
+		border-right: 1px dotted #aaa;
+	}
+	.post-nav.next {
+		border-left: 1px dotted #aaa;
+	}
+}
+
 /*==================*/
 /* POSTS & COMMENTS */
 /*==================*/
@@ -929,7 +971,7 @@ a.post-section.alignment-forum:hover::before {
 }
 
 .bottom-post-meta {
-	border-top: 1px solid #ddd;
+	border-color: #ddd;
 }
 
 /*============*/

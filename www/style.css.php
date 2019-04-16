@@ -1104,6 +1104,7 @@ foreach ($content_width_settings as $name => $setting) {
 		padding: 8px;
 		display: initial;
 		line-height: 1;
+		background-color: transparent;
 	}
 }
 
@@ -1900,7 +1901,94 @@ h1.post-title {
 }
 .post .bottom-post-meta {
 	margin: 0;
-	padding: 20px 0 22px 0;
+	padding: 20px 0;
+}
+.bottom-post-meta {
+	border-style: solid;
+	border-width: 1px 0;
+}
+
+/*******************/
+/* POST NAVIGATION */
+/*******************/
+
+.post-nav-item {
+	display: grid;
+	grid-template: 100% / 32% 36% 32%;
+	grid-template-areas:
+		"prev seq next";
+}
+.post-nav {
+	display: flex;
+	flex-flow: column;
+	justify-content: flex-end;
+	padding: 0.5em;
+}
+
+.post-nav-title {
+	font-size: 1.125em;
+	line-height: 1.15;
+	display: inline;
+	border-top: 1px solid transparent;
+}
+
+.sequence-title {
+	align-items: center;
+	text-align: center;
+	grid-area: seq;
+}
+.sequence-title .post-nav-title {
+	font-size: 1.5em;
+}
+
+.post-nav.prev {
+	grid-area: prev;
+	align-items: flex-start;
+}
+.post-nav.prev .post-nav-title::before {
+	content: "\F0D9\2005";
+}
+.post-nav.next {
+	grid-area: next;
+	text-align: right;
+	align-items: flex-end;
+}
+.post-nav.prev .post-nav-label,
+.post-nav.next .post-nav-label {
+	display: none;
+}
+.post-nav.next .post-nav-title::after {
+	content: "\2004\F0DA";
+}
+.post-nav.prev .post-nav-title::before,
+.post-nav.next .post-nav-title::after {
+	font-family: Font Awesome;
+	font-weight: 900;
+	vertical-align: text-bottom;
+	opacity: 0.75;
+}
+
+@media only screen and (max-width: 900px) {
+	.post-nav-item {
+		font-size: 0.875em;
+		grid-template: auto auto / 50% 50%;
+		grid-template-areas:
+			"prev next"
+			"seq seq";
+	}
+	.post-nav.prev {
+		margin: 0 0 0 -1px;
+		position: relative;
+		left: 1px;
+	}
+	.sequence-title {
+		padding: 0.75em 0;
+	}
+}
+@media only screen and (max-width: 520px) {
+	.post-nav-links + .comments {
+		padding: 1em 0 0 0;
+	}
 }
 
 /**************/

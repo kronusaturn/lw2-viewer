@@ -719,6 +719,36 @@ h1.listing + .post-meta .link-post-domain {
 	font-feature-settings: "tnum";
 }
 
+/*=================*/
+/* POST NAVIGATION */
+/*=================*/
+
+.post-nav-links a,
+.post-nav-links a:visited {
+	color: #444;
+	font-weight: 300;
+}
+.post-nav-links a:hover {
+	text-decoration: none;
+	color: #ccc;
+}
+
+.post-nav-label {
+	opacity: 0.75;
+}
+
+@media only screen and (max-width: 900px) {
+	.sequence-title {
+		border-top: 1px solid #777;
+	}
+	.post-nav.prev {
+		border-right: 1px solid #777;
+	}
+	.post-nav.next {
+		border-left: 1px solid #777;
+	}
+}
+
 /*==================*/
 /* POSTS & COMMENTS */
 /*==================*/
@@ -782,6 +812,14 @@ h1.post-title {
 }
 .comment-body {
 	font-size: 1.125rem;
+}
+
+/*=======*/
+/* POSTS */
+/*=======*/
+
+.bottom-post-meta {
+	border-color: #777;
 }
 
 /*===========*/
@@ -939,6 +977,13 @@ a.post-section.alignment-forum:hover::before {
 /*==========*/
 /* COMMENTS */
 /*==========*/
+
+.comments::before {
+	border-top: 1px solid #666;
+	box-shadow:
+		0 1.5px 1.5px -1.5px #bbb inset,
+		0 1px 1px -1px #777 inset;
+}
 
 #content > .comment-thread .comment-meta a.date:focus,
 #content > .comment-thread .comment-meta a.permalink:focus {

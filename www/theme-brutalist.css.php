@@ -692,7 +692,8 @@ a.post-section:hover::before {
 	color: #888;
 }
 .bottom-post-meta {
-	border-top: 1px dotted #000;
+	border-color: #000;
+	border-style: dotted;
 }
 
 /*============*/
@@ -739,6 +740,37 @@ a.post-section:hover::before {
 h1.post-title {
 	font-size: 2.25rem;
 	margin-top: 1.375em;
+}
+
+/*=================*/
+/* POST NAVIGATION */
+/*=================*/
+
+.post-nav-links a:hover {
+	box-shadow: 
+		0 0 0 2px #fff inset,
+		0 0 0 4px #000 inset;
+}
+.post-nav-links a:active {
+	box-shadow: 
+		0 0 0 6px #fff inset,
+		0 0 0 8px #000 inset;
+}
+
+.post-nav-label {
+	opacity: 0.75;
+}
+
+@media only screen and (max-width: 900px) {
+	.sequence-title {
+		border-top: 1px dotted #000;
+	}
+	.post-nav.prev {
+		border-right: 1px dotted #000;
+	}
+	.post-nav.next {
+		border-left: 1px dotted #000;
+	}
 }
 
 /*==========*/

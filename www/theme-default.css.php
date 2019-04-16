@@ -891,6 +891,44 @@ h1.post-title {
 	font-weight: <?php echo ($platform == 'Mac') ? "700" : "800"; ?>;
 }
 
+/*=================*/
+/* POST NAVIGATION */
+/*=================*/
+
+.post-nav-links a,
+.post-nav-links a:visited {
+	color: #000;
+}
+.post-nav-links a:hover {
+	text-decoration: none;
+}
+.post-nav-title {
+	font-weight: 600;
+}
+
+.post-nav-label {
+	color: #777;
+}
+.post-nav-links a:hover .post-nav-label {
+	font-weight: 600;
+	color: #888;
+}
+.post-nav-links a:hover .post-nav-title {
+	color: #777;
+}
+
+@media only screen and (max-width: 900px) {
+	.sequence-title {
+		border-top: 1px dotted #777;
+	}
+	.post-nav.prev {
+		border-right: 1px dotted #777;
+	}
+	.post-nav.next {
+		border-left: 1px dotted #777;
+	}
+}
+
 /*===========*/
 /* POST-META */
 /*===========*/
@@ -926,7 +964,7 @@ a.post-section.alignment-forum:hover::before {
 	color: #090;
 }
 .bottom-post-meta {
-	border-top: 1px solid #ddd;
+	border-color: #ddd;
 }
 
 /*============*/
