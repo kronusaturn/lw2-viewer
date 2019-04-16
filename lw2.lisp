@@ -550,6 +550,8 @@ signaled condition to OUT-STREAM."
 
 (defun call-with-emit-page (out-stream fn &key title description current-uri content-class (return-code 200) robots (pagination (pagination-nav-bars)) top-nav)
   (declare (ignore return-code))
+  (when (eq (hunchentoot:request-method*) :head)
+    (return-from call-with-emit-page))
   (ignore-errors
     (log-conditions
       (html-body out-stream
@@ -767,15 +769,18 @@ signaled condition to OUT-STREAM."
 		 (progn
 		   (unless (= (length body) 1)
 		     (error "REQUEST-METHOD must be the only form when it appears in DEFINE-PAGE."))
-		   `((ecase (hunchentoot:request-method*)
-		       ,.(loop for method-body in (cdar body)
-			    collect (destructuring-bind (method args &body inner-body) method-body
-				      (unless (eq method :get)
-					(alexandria:with-gensyms (csrf-token)
-					  (push `(,csrf-token :real-name "csrf-token" :required t) args)
-					  (push `(check-csrf-token ,csrf-token) inner-body)))
-				      `(,method ,(make-binding-form (mapcar (lambda (x) (append (ensure-list x) `(:request-type ,method))) args)
-								    inner-body)))))))
+		   (alexandria:with-gensyms (request-method)
+		     `((let ((,request-method (hunchentoot:request-method*)))
+			 (cond
+			   ,.(loop for method-body in (cdar body)
+				collect (destructuring-bind (method args &body inner-body) method-body
+					  (unless (eq method :get)
+					    (alexandria:with-gensyms (csrf-token)
+					      (push `(,csrf-token :real-name "csrf-token" :required t) args)
+					      (push `(check-csrf-token ,csrf-token) inner-body)))
+					  `(,(if (eq method :get) `(member ,request-method '(:get :head)) `(eq ,request-method ,method))
+					     ,(make-binding-form (mapcar (lambda (x) (append (ensure-list x) `(:request-type ,method))) args)
+								 inner-body)))))))))
 		 body)))
        `(hunchentoot:define-easy-handler (,name :uri ,path-specifier-form) ()
 	  (with-error-page
