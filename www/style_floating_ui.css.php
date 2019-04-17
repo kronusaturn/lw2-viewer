@@ -604,8 +604,9 @@
 
 #new-comment-nav-ui {
 	position: absolute;
-	right: -112px;
-	bottom: 42px;
+	left: 100%;
+	bottom: 0;
+	margin: 0 0 42px 70px;
 }
 #new-comment-nav-ui > * {
 	display: block;
@@ -666,23 +667,22 @@
 
 @media only screen and (max-width: 1160px) {
 	#new-comment-nav-ui {
-		bottom: 180px;
-		right: -68px;
+		margin: 0 0 184px 26px;
 	}
 }
 @media only screen and (max-width: 1080px) {
 	#new-comment-nav-ui {
-		right: -55px;
+		margin: 0 0 184px 15px;
 	}
 }
 @media only screen and (max-width: 1040px) {
 	#new-comment-nav-ui {
-		right: -50px;
+		margin: 0 0 184px 7px;
 	}
 }
 @media only screen and (max-width: 1020px) {
 	#new-comment-nav-ui {
-		right: -21px;
+		margin: 0 0 184px -21px;
 	}
 	#new-comment-nav-ui .new-comments-count::before {
 		content: "";
@@ -721,7 +721,7 @@
 		font-family: var(--GW-UI-font);
 		font-weight: var(--GW-UI-font-weight-heavy);
 	}
-	<?php fit_content("#new-comment-nav-ui::before"); ?>
+<?php fit_content("#new-comment-nav-ui::before", "width", "\t"); ?>
 	#new-comment-nav-ui.engaged {
 		visibility: visible;
 		max-width: 1000px;
