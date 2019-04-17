@@ -20,7 +20,7 @@
 	left: 0;
 	right: 0;
 	bottom: 10px;
-	padding: 6px 10px;
+	padding: 8px 15px 9px 15px;
 	font-size: 1.25rem;
 	background-color: rgba(0,0,0,0.75);
 	color: #fff;
@@ -67,9 +67,10 @@
 #image-focus-overlay img {
 	margin: auto;
 	position: absolute;
-	left: 50%;
-	top: 50%;
-	transform: translateX(-50%) translateY(-50%);
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
 }
 
 /*=-------------------=*/
@@ -90,7 +91,7 @@
 
 	position: absolute;
 	bottom: 0.75em;
-	background-color: rgba(0,0,0,0.7);
+	background-color: rgba(0, 0, 0, 0.7);
 	left: var(--GW-image-focus-caption-side-spacing);
 	right: var(--GW-image-focus-caption-side-spacing);
 	margin: auto;
@@ -123,7 +124,6 @@
 	z-index: -1;
 	top: -0.75em;
 	left: calc(-50vw + 50%);
-
 }
 
 /*=--------------=*/
@@ -154,7 +154,7 @@
 #image-focus-overlay .help-overlay:hover {
 	max-width: 24em;
 	max-height: 14em;
-	background-color: rgba(0,0,0,0.85);
+	background-color: rgba(0, 0, 0, 0.85);
 	color: #fff;
 	visibility: visible;
 	transition: 
@@ -270,13 +270,13 @@
 }
 @media only screen and (hover: hover) and (pointer: fine) {
 	#image-focus-overlay .slideshow-buttons button:hover {
-		background-color: rgba(0,0,0,0.1);
+		background-color: rgba(0, 0, 0, 0.1);
 		color: #777;
 	}
 }
 @media not screen and (hover: hover) and (pointer: fine) {
 	#image-focus-overlay .slideshow-buttons button {
-		background-color: rgba(0,0,0,0.1);
+		background-color: rgba(0, 0, 0, 0.1);
 		color: #fff;
 		text-shadow: 
 			0 0 1px #777;
