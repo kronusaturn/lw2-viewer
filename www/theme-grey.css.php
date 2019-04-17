@@ -35,6 +35,10 @@
 	--GW-conversation-page-content-side-padding: 30px;
 	--GW-post-page-content-side-padding: 30px;
 	--GW-post-side-padding: 30px;
+	--GW-edit-post-page-content-side-padding: 30px;
+
+	--GW-comment-compact-height: 60px;
+	--GW-comment-minimized-height: 38px;
 }
 @media only screen and (max-width: 900px) {
 	:root {
@@ -45,6 +49,7 @@
 		--GW-conversation-page-content-side-padding: calc(100% / 30);
 		--GW-post-page-content-side-padding: calc(100% / 30);
 		--GW-post-side-padding: 0px;
+		--GW-edit-post-page-content-side-padding: calc(100% / 30);
 	}
 }
 
@@ -52,8 +57,12 @@
 	*/
 :root {
 	--GW-body-background-color: #eee;
+	--GW-content-background-color: #fff;
 
 	--GW-hyperlink-color: #00e;
+	--GW-hyperlink-visited-color: #551a8b;
+	--GW-hyperlink-hover-color: #c00;
+	--GW-hyperlink-active-color: #e00;
 
 	--GW-shadow-white-glow:
 		0 0 1px #fff,
@@ -69,11 +78,11 @@ body {
 	color: #000;
 	font-feature-settings: 'ss07';
 }
+
 #content {
 	line-height: 1.55;
 }
 #content::before {
-	background-color: #fff;
 	box-shadow: 0px 0px 10px #bbb;
 }
 

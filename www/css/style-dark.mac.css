@@ -1599,6 +1599,11 @@ a {
 	font-size: 1.5rem;
 	padding: 9px 16px;
 }
+#keyboard-help-overlay button.close-keyboard-help:hover {
+	background-color: #131313;
+	box-shadow:
+		0 0 0 1px #1f1f1f inset;
+}
 
 /******************/
 /* IMAGES OVERLAY */
