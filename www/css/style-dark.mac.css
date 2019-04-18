@@ -2684,33 +2684,34 @@ a#inbox-indicator.new-messages:hover::before {
 
 .archive-nav {
 	margin: 1.5em var(--GW-current-page-content-right-side-padding) 0 var(--GW-current-page-content-left-side-padding);
-	padding: 0.25em;
+	border-width: 0.25em;
+	border-style: solid;
+	padding: 1px 0 1px 1px;
 }
+
 .archive-nav > * {
-	display: flex;
+	display: grid;
+	grid-gap: 1px;
 }
+.archive-nav-years {
+	grid-template-columns: 6% repeat(auto-fit, minmax(5%, auto));
+}
+.archive-nav-months {
+	grid-template-columns: 7% repeat(auto-fit, minmax(5%, auto));
+}
+.archive-nav-days {
+	grid-template-columns: 5% repeat(auto-fit, minmax(2.5%, auto));
+}
+
 .archive-nav *[class^='archive-nav-item'] {
 	line-height: 1;
-	flex: 1 1 5%;
 	text-align: center;
-	padding: 6px 4px 4px 4px;
-	max-width: 8%;
-}
-@supports (-moz-user-focus: normal) {
-	.archive-nav *[class^='archive-nav-item'] {
-		padding: 5px 4px;
-	}
 }
 .archive-nav span[class^='archive-nav-item'] {
 	font-weight: var(--GW-UI-font-weight-heavy);
 }
-.archive-nav-days .archive-nav-item-day {
+.archive-nav-item-day {
 	font-size: 0.8em;
-	padding: 7px 0 5px 0;
-	max-width: 4%;
-}
-.archive-nav-days .archive-nav-item-day:first-child {
-	flex-basis: 10%;
 }
 
 /*=----------------------------=*/
@@ -6665,37 +6666,38 @@ body {
 /*==========*/
 
 .archive-nav {
-	border: 1px solid #484848;
+	outline: 1px solid #484848;
+	border-color: #000;
+	background-color: #1f1f1f;
+}
+.archive-nav > *:nth-child(n+2) {
+	margin: 1px 0 0 0;
 }
 .archive-nav *[class^='archive-nav-item'] {
-	border-style: solid;
-	border-color: #232323;
-	border-width: 1px 0 1px 1px;
-	background-color: #161616;
-	margin: 0 -1px 0 0;
+	padding: 6px 4px 4px 4px;
+	background-color: #131313;
 }
-.archive-nav *[class^='archive-nav-item']:last-child {
-	border-width: 1px;
+@supports (-moz-user-focus: normal) {
+	.archive-nav *[class^='archive-nav-item'] {
+		padding: 5px 4px;
+	}
 }
-.archive-nav *[class^='archive-nav-']:nth-of-type(2) *[class^='archive-nav-item'] {
-	margin: -1px -1px -1px 0;
+.archive-nav-days .archive-nav-item-day {
+	padding: 7px 0 5px 0;
 }
 .archive-nav a:hover,
 .archive-nav span[class^='archive-nav-item'] {
-	background-color: #232323;
+	background-color: #1f1f1f;
 }
 
 .archive-nav a,
 .archive-nav a:visited {
-	opacity: 0.7;
 	color: var(--GW-hyperlink-color);
 }
 .archive-nav a:hover {
 	text-decoration: none;
 	color: var(--GW-hyperlink-hover-color);
 	text-shadow: var(--GW-shadow-white-glow);
-	opacity: 1;
-	z-index: 1;
 }
 .archive-nav a:active,
 .archive-nav a:focus {

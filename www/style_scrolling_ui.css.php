@@ -1026,33 +1026,34 @@ a#inbox-indicator.new-messages:hover::before {
 
 .archive-nav {
 	margin: 1.5em var(--GW-current-page-content-right-side-padding) 0 var(--GW-current-page-content-left-side-padding);
-	padding: 0.25em;
+	border-width: 0.25em;
+	border-style: solid;
+	padding: 1px 0 1px 1px;
 }
+
 .archive-nav > * {
-	display: flex;
+	display: grid;
+	grid-gap: 1px;
 }
+.archive-nav-years {
+	grid-template-columns: 6% repeat(auto-fit, minmax(5%, auto));
+}
+.archive-nav-months {
+	grid-template-columns: 7% repeat(auto-fit, minmax(5%, auto));
+}
+.archive-nav-days {
+	grid-template-columns: 5% repeat(auto-fit, minmax(2.5%, auto));
+}
+
 .archive-nav *[class^='archive-nav-item'] {
 	line-height: 1;
-	flex: 1 1 5%;
 	text-align: center;
-	padding: 6px 4px 4px 4px;
-	max-width: 8%;
-}
-<?php echo $firefox_exclusive; ?> {
-	.archive-nav *[class^='archive-nav-item'] {
-		padding: 5px 4px;
-	}
 }
 .archive-nav span[class^='archive-nav-item'] {
 	font-weight: var(--GW-UI-font-weight-heavy);
 }
-.archive-nav-days .archive-nav-item-day {
+.archive-nav-item-day {
 	font-size: 0.8em;
-	padding: 7px 0 5px 0;
-	max-width: 4%;
-}
-.archive-nav-days .archive-nav-item-day:first-child {
-	flex-basis: 10%;
 }
 
 /*=----------------------------=*/
