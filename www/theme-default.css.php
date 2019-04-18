@@ -755,9 +755,14 @@ body {
 	border: 1px solid #aaa;
 }
 .archive-nav *[class^='archive-nav-item'] {
-	border: 1px solid #d8d8d8;
+	border-style: solid;
+	border-color: #d8d8d8;
+	border-width: 1px 0 1px 1px;
 	background-color: #eaeaea;
 	margin: 0 -1px 0 0;
+}
+.archive-nav *[class^='archive-nav-item']:last-child {
+	border-width: 1px;
 }
 .archive-nav *[class^='archive-nav-']:nth-of-type(2) *[class^='archive-nav-item'] {
 	margin: -1px -1px -1px 0;

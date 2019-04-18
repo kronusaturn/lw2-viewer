@@ -1030,6 +1030,7 @@ a#inbox-indicator.new-messages:hover::before {
 }
 .archive-nav > * {
 	display: flex;
+	overflow: hidden;
 }
 .archive-nav *[class^='archive-nav-item'] {
 	line-height: 1;

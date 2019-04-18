@@ -2688,6 +2688,7 @@ a#inbox-indicator.new-messages:hover::before {
 }
 .archive-nav > * {
 	display: flex;
+	overflow: hidden;
 }
 .archive-nav *[class^='archive-nav-item'] {
 	line-height: 1;
@@ -6668,9 +6669,14 @@ body {
 	border: 1px solid #484848;
 }
 .archive-nav *[class^='archive-nav-item'] {
-	border: 1px solid #232323;
+	border-style: solid;
+	border-color: #232323;
+	border-width: 1px 0 1px 1px;
 	background-color: #161616;
 	margin: 0 -1px 0 0;
+}
+.archive-nav *[class^='archive-nav-item']:last-child {
+	border-width: 1px;
 }
 .archive-nav *[class^='archive-nav-']:nth-of-type(2) *[class^='archive-nav-item'] {
 	margin: -1px -1px -1px 0;
