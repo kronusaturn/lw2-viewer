@@ -435,10 +435,22 @@ body {
 	#theme-selector button::after {
 		color: #000;
 	}
+	#theme-selector button.selected {
+		box-shadow:
+			0 0 0 5px #aaa inset;
+		background-color: #fff;
+	}
 	#theme-selector button.selected::after {
 		text-shadow: 
 			0 -1px 0 #fff,
 			0 0.5px 0.5px #000;
+	}
+	@media (-webkit-max-device-pixel-ratio: 1), (max-resolution: 191dpi) {
+		#theme-selector button.selected::after {
+			text-shadow: 
+				0 -1px 0 #fff,
+				0 0.5px 0.5px #bbb;
+		}
 	}
 }
 

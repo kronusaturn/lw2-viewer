@@ -6306,10 +6306,22 @@ body {
 		color: #fff;
 		padding-bottom: 2px;
 	}
+	#theme-selector button.selected {
+		box-shadow:
+			0 0 0 5px #484848 inset;
+		background-color: #000;
+	}
 	#theme-selector button.selected::after {
 		text-shadow: 
 			0 -1px 0 #000,
 			0 0.5px 0.5px #fff;
+	}
+	@media (-webkit-max-device-pixel-ratio: 1), (max-resolution: 191dpi) {
+		#theme-selector button.selected::after {
+			text-shadow: 
+				0 -1px 0 #000,
+				0 0.5px 0.5px #393939;
+		}
 	}
 }
 
