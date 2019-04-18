@@ -1224,6 +1224,8 @@ function postSetThemeHousekeeping(oldThemeName = "", newThemeName = (readCookie(
 		});
 	});
 
+	updateTopNavBarType();
+
 	if (window.adjustmentTransitions) pageFadeTransition(true);
 	updateThemeTweakerSampleText();
 
@@ -4186,6 +4188,12 @@ function recomputeUIElementsContainerHeight(force = false) {
 															"";
 		}
 	}
+}
+
+function updateTopNavBarType() {
+	let topNavBar = query("#top-nav-bar");
+	if (topNavBar.query("a:not(.disabled)"))
+		topNavBar.removeClass("decorative");
 }
 
 function realignHashIfNeeded() {

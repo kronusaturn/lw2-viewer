@@ -736,6 +736,21 @@ body {
 }
 
 /*=============================*/
+/* COMMENTS LIST MODE SELECTOR */
+/*=============================*/
+
+#comments-list-mode-selector button {
+	box-shadow:
+		0 0 0 4px #fff inset,
+		0 0 0 5px #bbb inset;
+	opacity: 0.8;
+}
+#comments-list-mode-selector button:hover,
+#comments-list-mode-selector button.selected {
+	box-shadow:
+		0 0 0 5px #bbb inset;
+}
+/*=============================*/
 /* COMMENTS VIEW MODE SELECTOR */
 /*=============================*/
 
@@ -1483,16 +1498,6 @@ div.comment-child-links a {
 /* COMMENTS COMPACT VIEW */
 /*=======================*/
 
-#comments-list-mode-selector button {
-	box-shadow:
-		0 0 0 4px #fff inset,
-		0 0 0 5px #bbb inset;
-}
-#comments-list-mode-selector button:hover,
-#comments-list-mode-selector button.selected {
-	box-shadow:
-		0 0 0 5px #bbb inset;
-}
 #content.compact > .comment-thread .comment-item::after {
 	background: linear-gradient(to right, transparent 0%, #fff 50%, #fff 100%);
 }

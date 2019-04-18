@@ -77,6 +77,10 @@
 /*=-----------------------=*/
 /* (On short pages with no pagination) */
 
+#content.archive-page #bottom-bar.decorative {
+	margin: 1em 0 0 0;
+}
+
 #bottom-bar.decorative .nav-item {
 	display: none;
 }
@@ -488,6 +492,16 @@ EOT;
 }
 #top-nav-bar a::before {
 	display: inline-block;
+}
+
+/*=------------------------=*/
+/*= Decorative top nav bar =*/
+/*=------------------------=*/
+/* (On short pages with no pagination) */
+
+#top-nav-bar.decorative .button,
+#top-nav-bar.decorative .page-number {
+	display: none;
 }
 
 /*=----------------------------=*/

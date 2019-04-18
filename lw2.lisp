@@ -504,17 +504,16 @@ signaled condition to OUT-STREAM."
              (next-uri (if next (replace-query-params request-uri "offset" next)))
              (last-uri (if (and total offset (pages-to-end 2))
                            (replace-query-params request-uri "offset" (- total (mod (- total 1) items-per-page) 1)))))
-        (if (or next prev last-uri)
-          (labels ((write-item (uri class title accesskey)
-                     (format out-stream "<a href=\"~A\" class=\"button nav-item-~A~:[ disabled~;~]\" title=\"~A [~A]\" accesskey=\"~A\"></a>"
-                             (or uri "#") class uri title accesskey accesskey)))
-            (format out-stream "<div id='top-nav-bar'>")
-            (write-item first-uri "first" "First page" "\\")
-            (write-item prev-uri "prev" "Previous page" "[")
-            (format out-stream "<span class='page-number'><span class='page-number-label'>Page</span> ~A</span>" (+ 1 (/ (or offset 0) items-per-page)))
-            (write-item next-uri "next" "Next page" "]")
-            (write-item last-uri "last" "Last page" "/")
-            (format out-stream "</div>")))
+        (labels ((write-item (uri class title accesskey)
+                   (format out-stream "<a href=\"~A\" class=\"button nav-item-~A~:[ disabled~;~]\" title=\"~A [~A]\" accesskey=\"~A\"></a>"
+                           (or uri "#") class uri title accesskey accesskey)))
+          (format out-stream "<div id='top-nav-bar'>")
+          (write-item first-uri "first" "First page" "\\")
+          (write-item prev-uri "prev" "Previous page" "[")
+          (format out-stream "<span class='page-number'><span class='page-number-label'>Page</span> ~A</span>" (+ 1 (/ (or offset 0) items-per-page)))
+          (write-item next-uri "next" "Next page" "]")
+          (write-item last-uri "last" "Last page" "/")
+          (format out-stream "</div>"))
         (funcall fn)
 	(nav-bar-outer out-stream nil (list :bottom-bar
 					    (list-cond
@@ -523,7 +522,7 @@ signaled condition to OUT-STREAM."
 					     (t `("top" "#top" "Back to top"))
 					     (next-uri `("next" ,next-uri "Next" :nofollow t))
 					     (last-uri `("last" ,last-uri "Last" :nofollow t)))))
-	(format out-stream "<script>document.querySelectorAll('#bottom-bar').forEach(bb => { bb.classList.add('decorative'); });</script>")))))
+	(format out-stream "<script>document.querySelectorAll('#bottom-bar, #top-nav-bar').forEach(bar => { bar.classList.add('decorative'); });</script>")))))
 
 (defun decode-json-as-hash-table (json-source)
   (let (current-hash-table current-key)
