@@ -249,15 +249,15 @@ body {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 900px) {
-	#secondary-bar .nav-inner {
-		font-size: 1em;
-	}
 	#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
 		padding: 6px 10px;
 	}
 	#primary-bar .nav-inner::before, 
 	#secondary-bar .nav-inner::before {
 		opacity: 0.8;
+	}
+	#inbox-indicator::before {
+		padding-top: 3px;
 	}
 }
 
@@ -266,7 +266,7 @@ body {
 /*==============*/
 
 .page-toolbar > * {
-	color: #999;
+	color: var(--GW-button-color);
 }
 
 /*==============*/
@@ -339,7 +339,6 @@ body {
 }
 .sublevel-nav.sort::before {
 	text-transform: uppercase;
-	font-weight: 600;
 	color: #444;
 	text-shadow: 0.5px 0.5px 0 #fff;
 	z-index: 1;
@@ -369,7 +368,7 @@ body {
 #theme-selector button,
 #width-selector button {
 	box-shadow:
-		0 0 0 4px #eee inset,
+		0 0 0 4px var(--GW-body-background-color) inset,
 		0 0 0 5px #ccc inset;
 }
 #theme-selector button:hover,
@@ -383,7 +382,7 @@ body {
 
 #theme-selector button::before {
 	color: #aaa;
-	background-color: #eee;
+	background-color: var(--GW-body-background-color);
 }
 #theme-selector button:hover::before,
 #theme-selector button.selected::before {
@@ -404,7 +403,7 @@ body {
 }
 @media only screen and (max-width: 1000px) {
 	#theme-selector {
-		background-color: #eee;
+		background-color: var(--GW-body-background-color);
 		box-shadow: 
 			0 0 0 1px #999,
 			0 0 0 2px transparent;
