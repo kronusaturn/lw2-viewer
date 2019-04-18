@@ -2098,7 +2098,7 @@ a {
 
 #top-nav-bar {
 	grid-row: 3;
-	margin: 0.25em 0 0.75em 0;
+	margin: 0.25em 0;
 	padding: 1em 0 0 0;
 	text-align: center;
 	font-size: 1.25rem;
@@ -2201,7 +2201,15 @@ a {
 		font-size: 1.75rem;
 	}
 }
+@media only screen and (max-width: 720px) {
+	#top-nav-bar {
+		margin: 0.75em 0 0.5em 0;
+	}
+}
 @media only screen and (max-width: 520px) {
+	#top-nav-bar {
+		margin: 1.25em 0 0.5em 0;
+	}
 	#bottom-bar #nav-item-first .nav-inner::after {
 		content: "First";
 	}
@@ -2308,13 +2316,12 @@ a#inbox-indicator.new-messages:hover::before {
 
 .page-toolbar {
 	grid-row: 3;
-	text-align: right;
-	display: flex;
-	justify-content: flex-end;
-	padding: 4px 8px;
-	margin: 0;
 	align-self: start;
 	justify-self: end;
+
+	padding: 4px 8px;
+	display: flex;
+	justify-content: flex-end;
 
 	font-weight: var(--GW-UI-font-weight-light);
 }
@@ -2323,7 +2330,7 @@ a#inbox-indicator.new-messages:hover::before {
 /*= Page toolbar items (all) =*/
 /*=--------------------------=*/
 
-.page-toolbar > * {
+.page-toolbar > *:nth-child(n+2) {
 	margin-left: 1.5em;
 }
 .page-toolbar .button::before {
@@ -2370,41 +2377,9 @@ a#inbox-indicator.new-messages:hover::before {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 720px) {
-	.page-toolbar > * {
-		line-height: 1.15;
-	}
-	#content:not(.user-page) .page-toolbar > * {
-		padding: 8px 0 4px 0;
-	}
-	#content.user-page .page-toolbar {
-		padding-left: 240px;
-		grid-row: 3 / span 2;
-		hyphens: auto;
-	}
-	#content.user-page .page-toolbar > * {
-		text-align: center;
-		margin-left: 1.5em;
-	}
-	#content.user-page .page-toolbar * {
-		text-transform: uppercase;
-		font-size: 0.625rem;
-	}
-	#content.user-page .page-toolbar *::before {
-		font-size: 1.375rem;
-		display: block;
-		padding: 0;
-		margin: 0 auto;
-	}
-}
-@media only screen and (max-width: 520px) {
-	#content:not(.user-page) .page-toolbar {
-		flex-direction: column-reverse;
-		align-self: start;
-	}
-}
-@media only screen and (max-width: 420px) {
-	#content.user-page .page-toolbar * {
-		font-size: 0.5rem;
+	.page-toolbar {
+		padding: 0.5em var(--GW-current-page-content-right-side-padding) 0.5em var(--GW-current-page-content-left-side-padding);
+		font-size: 1.25em;
 	}
 }
 
@@ -2518,6 +2493,8 @@ a#inbox-indicator.new-messages:hover::before {
 @media only screen and (max-width: 720px) {
 	#content.index-page .sublevel-nav.sort {
 		flex-flow: column;
+		align-self: center;
+		margin: 0 0 0 var(--GW-current-page-content-left-side-padding);
 	}
 }
 @media only screen and (max-width: 520px) {
