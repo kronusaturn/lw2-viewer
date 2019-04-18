@@ -580,6 +580,16 @@
    (if-let (json (cache-get "post-sequence" post-id))
 	   (json:decode-json-from-string json))))
 
+(defun preload-sequences-cache ()
+  (declare (optimize space (compilation-speed 2) (speed 0)))
+  (let ((sequences (apply #'append
+			  (loop for view in '("curatedSequences" "communitySequences")
+			     collect (lw2-graphql-query (lw2-query-string :sequence :list (alist :view view) '(:--id)))))))
+    (dolist (sequence sequences)
+      (get-sequence (cdr (assoc :--id sequence))))
+    (format t "Retrieved ~A sequences." (length sequences)))
+  (values))
+
 (define-backend-function get-user (user-identifier-type user-identifier &key (revalidate t) force-revalidate auth-token)
   (backend-graphql
    (let* ((user-id (ccase user-identifier-type
