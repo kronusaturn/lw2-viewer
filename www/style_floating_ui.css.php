@@ -771,8 +771,9 @@
 
 #hns-date-picker {
 	position: absolute;
-	bottom: 72px;
-	right: -253px;
+	bottom: 0;
+	left: 100%;
+	margin: 0 0 77px 112px;
 	opacity: 0.6;
 }
 #hns-date-picker:hover, 
@@ -789,9 +790,8 @@
 
 @media only screen and (max-width: 1440px) {
 	#hns-date-picker {
-		right: -81px;
 		padding: 8px 10px 10px 10px;
-		bottom: 62px;
+		margin: 0 0 66px -79px;
 		display: none;
 	}
 	#hns-date-picker::before {
@@ -807,8 +807,7 @@
 }
 @media only screen and (max-width: 1160px) {
 	#hns-date-picker {
-		bottom: 200px;
-		right: -36px;
+		margin: 0 0 206px -124px;
 	}
 	#hns-date-picker::before {
 		width: calc(100% - 35px);
@@ -816,7 +815,7 @@
 }
 @media only screen and (max-width: 1080px) {
 	#hns-date-picker {
-		right: -23px;
+		margin: 0 0 206px -137px;
 	}
 	#hns-date-picker::before {
 		width: calc(100% - 22px);
@@ -824,7 +823,7 @@
 }
 @media only screen and (max-width: 1040px) {
 	#hns-date-picker {
-		right: -18px;
+		margin: 0 0 206px -142px;
 	}
 	#hns-date-picker::before {
 		width: calc(100% - 17px);
@@ -832,7 +831,7 @@
 }
 @media only screen and (max-width: 1020px) {
 	#hns-date-picker {
-		right: 19px;
+		margin: 0 0 206px -179px;
 	}
 	#hns-date-picker::before {
 		width: 100%;
