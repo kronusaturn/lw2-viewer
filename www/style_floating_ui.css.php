@@ -221,7 +221,7 @@
 }
 @media only screen and (max-width: 1080px) {
 	#theme-selector {
-		margin: 48px 4px 0 0;
+		margin: 46px 4px 0 0;
 	}
 }
 @media only screen and (max-width: 1000px) {
@@ -374,7 +374,7 @@
 
 @media only screen and (max-width: 1080px) {
 	#theme-tweaker-toggle {
-		margin: 4px 4px 0 0;
+		margin: 2px 4px 0 0;
 	}
 	#theme-tweaker-toggle button {
 		height: 2em;
@@ -696,6 +696,7 @@
 }
 @media only screen and (max-width: 960px) {
 	#new-comment-nav-ui {
+		margin: 0;
 		max-width: 0px;
 		max-height: 0px;
 		transition: 
@@ -703,6 +704,7 @@
 			max-height 0.2s ease,
 			visibility 0.2s ease;
 		display: flex;
+		left: unset;
 		right: 78px;
 		bottom: 70px;
 	}
@@ -730,7 +732,7 @@
 	#new-comment-nav-ui .new-comment-sequential-nav-button {
 		top: unset;
 		bottom: unset;
-		padding: 2px 7px;
+		padding: 2px 7px 2px 7px;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-previous {
 		padding: 2px 7px 3px 7px;

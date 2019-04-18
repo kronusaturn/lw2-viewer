@@ -459,7 +459,7 @@ button.guiedit {
 	position: relative;
 	cursor: pointer;
 	padding: 0.25em 0.5em 0.25em calc(20px + 0.25em + 0.3725em);
-	align-self: start;
+	align-self: stretch;
 	user-select: none;
 }
 #edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
@@ -517,7 +517,6 @@ button.guiedit {
 	min-height: 24em;
 	margin: 0;
 }
-
 
 #edit-post-form input[type='submit'] {
 	padding: 6px 12px;

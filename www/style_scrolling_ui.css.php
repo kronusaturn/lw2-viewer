@@ -96,6 +96,7 @@
 }
 #bottom-bar.decorative::after {
 	position: absolute;
+	bottom: 0;
 	left: 0;
 	right: 0;
 	margin: auto;
@@ -450,6 +451,9 @@ EOT;
 	font-size: 1.25rem;
 	display: flex;
 	justify-content: center;
+}
+#content.recent-comments-page #top-nav-bar {
+	margin: 0.25em 0;
 }
 #content.user-page #top-nav-bar {
 	grid-row: 6;

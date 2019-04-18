@@ -754,7 +754,7 @@ function makeVoteCompleteEvent(target) {
 			buttonTargets = queryAll(".post-meta .karma");
 			karmaTargets = queryAll(".post-meta .karma-value");
 		} else {
-			let commentItem = target.closest(".comment-item")
+			let commentItem = target.closest(".comment-item");
 			buttonTargets = [ commentItem.query(".comment-meta .karma"), commentItem.query(".comment-controls .karma") ];
 			karmaTargets = [ commentItem.query(".comment-meta .karma-value"), commentItem.query(".comment-controls .karma-value") ];
 		}

@@ -595,7 +595,7 @@ a {
 }
 @media only screen and (max-width: 1080px) {
 	#theme-selector {
-		margin: 48px 4px 0 0;
+		margin: 46px 4px 0 0;
 	}
 }
 @media only screen and (max-width: 1000px) {
@@ -748,7 +748,7 @@ a {
 
 @media only screen and (max-width: 1080px) {
 	#theme-tweaker-toggle {
-		margin: 4px 4px 0 0;
+		margin: 2px 4px 0 0;
 	}
 	#theme-tweaker-toggle button {
 		height: 2em;
@@ -1088,6 +1088,7 @@ a {
 }
 @media only screen and (max-width: 960px) {
 	#new-comment-nav-ui {
+		margin: 0;
 		max-width: 0px;
 		max-height: 0px;
 		transition: 
@@ -1095,6 +1096,7 @@ a {
 			max-height 0.2s ease,
 			visibility 0.2s ease;
 		display: flex;
+		left: unset;
 		right: 78px;
 		bottom: 70px;
 	}
@@ -1131,7 +1133,7 @@ a {
 	#new-comment-nav-ui .new-comment-sequential-nav-button {
 		top: unset;
 		bottom: unset;
-		padding: 2px 7px;
+		padding: 2px 7px 2px 7px;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-previous {
 		padding: 2px 7px 3px 7px;
@@ -1733,6 +1735,7 @@ a {
 }
 #bottom-bar.decorative::after {
 	position: absolute;
+	bottom: 0;
 	left: 0;
 	right: 0;
 	margin: auto;
@@ -2095,6 +2098,9 @@ a {
 	font-size: 1.25rem;
 	display: flex;
 	justify-content: center;
+}
+#content.recent-comments-page #top-nav-bar {
+	margin: 0.25em 0;
 }
 #content.user-page #top-nav-bar {
 	grid-row: 6;
@@ -4430,7 +4436,7 @@ button.guiedit {
 	position: relative;
 	cursor: pointer;
 	padding: 0.25em 0.5em 0.25em calc(20px + 0.25em + 0.3725em);
-	align-self: start;
+	align-self: stretch;
 	user-select: none;
 }
 #edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
@@ -4497,7 +4503,6 @@ button.guiedit {
 	min-height: 24em;
 	margin: 0;
 }
-
 
 #edit-post-form input[type='submit'] {
 	padding: 6px 12px;
@@ -4604,7 +4609,6 @@ button.guiedit {
 		margin: 0;
 	}
 }
-
 /*%%%%%%%%%%%%%%%%%%%%%%*/
 /*%% CONTENT ELEMENTS %%*/
 /*%%%%%%%%%%%%%%%%%%%%%%*/
@@ -7740,9 +7744,6 @@ a.comment-parent-link:hover::before {
 /* EDIT POST FORM */
 /*================*/
 
-#edit-post-form .post-meta-fields input[type='checkbox'] + label {
-	top: -1px;
-}
 #edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
 	border-radius: 3px;
 	border: 1px solid #1f1f1f;
