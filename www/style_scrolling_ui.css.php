@@ -556,6 +556,9 @@ EOT;
 	#top-nav-bar {
 		margin: 0.75em 0 0.5em 0;
 	}
+	#content.user-page #top-nav-bar {
+		margin: 0.25em 0 0 0 ;
+	}
 }
 @media only screen and (max-width: 520px) {
 	#top-nav-bar {
@@ -731,6 +734,19 @@ a#inbox-indicator.new-messages:hover::before {
 	.page-toolbar {
 		padding: 0.5em var(--GW-current-page-content-right-side-padding) 0.5em var(--GW-current-page-content-left-side-padding);
 		font-size: 1.25em;
+	}
+}
+@media only screen and (max-width: 640px) {
+	#content.user-page .page-toolbar {
+		justify-self: stretch;
+		justify-content: center;
+		flex-wrap: wrap;
+		font-size: 1.125em;
+	}
+	#content.user-page .page-toolbar > * {
+		padding: 0.25em 0.75em;
+		white-space: nowrap;
+		margin: 0.25em 0.5em;
 	}
 }
 

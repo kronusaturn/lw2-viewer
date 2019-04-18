@@ -51,14 +51,9 @@
 
 @media only screen and (max-width: 720px) {
 	#content.user-page h1.page-main-heading {
-		padding-right: 100px;
+		padding-right: 200px;
 		overflow: hidden;
 		text-overflow: ellipsis;
-	}
-	#content.user-page .user-stats {
-		grid-row: 3;
-		justify-self: start;
-		margin-top: 0.5em;
 	}
 }
 
