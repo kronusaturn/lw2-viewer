@@ -1191,7 +1191,6 @@ a {
 
 #hns-date-picker.flipped {
 	padding: 8px 10px 10px 10px;
-	margin: 0 0 66px -79px;
 	display: none;
 }
 #hns-date-picker.flipped::before {
@@ -1202,9 +1201,16 @@ a {
 	height: calc(100% + 2px);
 	top: -1px;
 	left: -1px;
-	width: 50%;
 }
 
+@media only screen and (min-width: 1161px) {
+	#hns-date-picker.flipped {
+		margin: 0 0 66px -79px;
+	}
+	#hns-date-picker.flipped::before {
+		width: 50%;
+	}
+}
 @media only screen and (max-width: 1160px) {
 	#hns-date-picker {
 		margin: 0 0 206px -124px;
@@ -1288,13 +1294,13 @@ a {
 
 #anti-kibitzer-toggle {
 	position: absolute;
-	right: -67px;
-	bottom: 225px;
+	left: 100%;
+	bottom: 0;
+	margin: 0 0 225px 28px;
 }
 #anti-kibitzer-toggle button {
 	display: block;
 	width: 40px;
-	height: 54px;
 	padding: 0;
 }
 #anti-kibitzer-toggle button::before,
@@ -1322,22 +1328,22 @@ a {
 
 @media only screen and (max-width: 1160px) {
 	#anti-kibitzer-toggle {
-		bottom: 330px;
+		margin: 0 0 350px 28px;
 	}
 }
 @media only screen and (max-width: 1080px) {
 	#anti-kibitzer-toggle {
-		right: -54px;
+		margin: 0 0 350px 16px;
 	}
 }
 @media only screen and (max-width: 1040px) {
 	#anti-kibitzer-toggle {
-		right: -50px;
+		margin: 0 0 350px 8px;
 	}
 }
 @media only screen and (max-width: 1020px) {
 	#anti-kibitzer-toggle {
-		right: -20px;
+		margin: 0 0 350px -20px;
 	}
 }
 @media only screen and (max-width: 960px) {
