@@ -6448,15 +6448,13 @@ body {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-@media only screen and (max-width: 1440px) {
-	#hns-date-picker {
-		background-color: var(--GW-body-background-color);
-		opacity: 1.0;
-	}
-	#hns-date-picker::before {
-		border: 1px solid #999;
-		border-width: 1px 0 1px 1px;
-	}
+#hns-date-picker.flipped {
+	background-color: var(--GW-body-background-color);
+	opacity: 1.0;
+}
+#hns-date-picker.flipped::before {
+	border: 1px solid #999;
+	border-width: 1px 0 1px 1px;
 }
 
 /*--------------------------------*
