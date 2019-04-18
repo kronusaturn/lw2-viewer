@@ -757,20 +757,8 @@ body {
 }
 
 .archive-nav *[class^='archive-nav-item'] {
-	padding: 6px 4px 4px 4px;
 	background-color: #eee;
 	outline: 1px solid #ddd;
-}
-@supports (-moz-user-focus: normal) {
-	.archive-nav *[class^='archive-nav-item'] {
-		padding: 5px 4px;
-	}
-}
-.archive-nav-days .archive-nav-item-day {
-	padding: 7px 0 5px 0;
-}
-.archive-nav-days .archive-nav-item-day:first-child {
-	padding: 7px 10px 5px 9px;
 }
 
 .archive-nav a:hover,
@@ -778,18 +766,9 @@ body {
 	background-color: #ddd;
 }
 
-.archive-nav a,
-.archive-nav a:visited {
-	color: var(--GW-hyperlink-color);
-}
 .archive-nav a:hover {
 	text-decoration: none;
-	color: var(--GW-hyperlink-hover-color);
 	text-shadow: var(--GW-shadow-white-glow);
-}
-.archive-nav a:active,
-.archive-nav a:focus {
-	color: var(--GW-hyperlink-active-color);
 }
 
 /*=----------------------------=*/
