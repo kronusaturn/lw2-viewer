@@ -447,7 +447,7 @@ body {
 /*======================*/
 
 #theme-tweaker-toggle button {
-	color: #777;
+	color: #888;
 }
 
 /*=----------------------------=*/
@@ -456,9 +456,9 @@ body {
 
 @media only screen and (max-width: 1080px) {
 	#theme-tweaker-toggle button {
-		border: 1px solid #999;
+		border: 1px solid #888;
 		box-shadow: 
-			0 0 10px #999 inset,
+			0 0 10px #888 inset,
 			0 0 0 1px transparent;
 		border-radius: 50%;
 		transform: scale(0.8);
@@ -466,7 +466,7 @@ body {
 }
 @media only screen and (max-width: 1000px) {
 	#theme-tweaker-toggle button {
-		background-color: #ddd;
+		background-color: #eee;
 	}
 }
 
@@ -479,9 +479,6 @@ body {
 	background-color: #e4e4e4;
 	border-radius: 4px;
 	text-decoration: none;
-}
-#quick-nav-ui a[href='#bottom-bar'] {
-	line-height: 1.8;
 }
 #quick-nav-ui a:active {
 	transform: scale(0.9);
@@ -518,16 +515,14 @@ body {
 /*======================*/
 
 #new-comment-nav-ui .new-comments-count {
-	font-weight: 600;
 	color: #666;
 	text-shadow: 0.5px 0.5px 0 #fff;
 }
 #new-comment-nav-ui .new-comments-count::after {
-	font-weight: 600;
 	color: #777;
 }
 #new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
-	color: #bbb;
+	color: #ccc;
 	text-shadow: none;
 }
 @media only screen and (hover: hover) and (pointer: fine) {
@@ -540,7 +535,6 @@ body {
 			0.5px 0.5px 0 #fff;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button:focus {
-		color: #d00;
 		text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
 	}
 }
@@ -551,7 +545,7 @@ body {
 
 @media only screen and (max-width: 1020px) {
 	#new-comment-nav-ui .new-comments-count::before {
-		background-color: #eee;
+		background-color: #e4e4e4;
 		box-shadow: 
 			0 0 0 1px #ccc,
 			0 0 0 2px transparent;
@@ -564,14 +558,14 @@ body {
 /*=================*/
 
 #hns-date-picker span {
-	color: #777;
+	color: #999;
 	text-shadow: 0.5px 0.5px 0 #fff;
 	font-weight: 600;
 }
 #hns-date-picker input {
-	border: 1px solid #777;
+	border: 1px solid #aaa;
 	background-color: transparent;
-	color: #666;
+	color: #777;
 }
 #hns-date-picker input:focus {
 	color: #000;
@@ -581,14 +575,19 @@ body {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-@media only screen and (max-width: 1440px) {
-	#hns-date-picker {
-		background-color: #eee;
-		opacity: 1.0;
-	}
+#hns-date-picker.flipped {
+	background-color: var(--GW-body-background-color);
+	opacity: 1.0;
+}
+#hns-date-picker.flipped::before {
+	border: 1px solid #ccc;
+	border-width: 1px 0 1px 1px;
+}
+
+@media only screen and (max-width: 1020px) and (min-width: 961px) {
+	#hns-date-picker,
 	#hns-date-picker::before {
-		border: 1px solid #ccc;
-		border-width: 1px 0 1px 1px;
+		border-radius: 8px 0 0 8px;
 	}
 }
 

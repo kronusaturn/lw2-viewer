@@ -6351,9 +6351,6 @@ body {
 	border-radius: 4px;
 	text-decoration: none;
 }
-#quick-nav-ui a[href='#bottom-bar'] {
-	line-height: 1.8;
-}
 #quick-nav-ui a:active {
 	transform: scale(0.9);
 }
@@ -6411,7 +6408,6 @@ body {
 			0.5px 0.5px 0 #fff;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button:focus {
-		color: #d00;
 		text-shadow: var(--GW-shadow-white-glow);
 	}
 }
@@ -6459,6 +6455,13 @@ body {
 #hns-date-picker.flipped::before {
 	border: 1px solid #999;
 	border-width: 1px 0 1px 1px;
+}
+
+@media only screen and (max-width: 1020px) and (min-width: 961px) {
+	#hns-date-picker,
+	#hns-date-picker::before {
+		border-radius: 8px 0 0 8px;
+	}
 }
 
 /*================================*
