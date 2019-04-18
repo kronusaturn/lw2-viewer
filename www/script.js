@@ -1917,6 +1917,13 @@ function injectNewCommentNavUI(newCommentsCount) {
 	+ `<input type='text' class='hns-date'></input>`
 	+ "</div>");
 
+	window.addEventListener("resize", GW.hnsDatePickerFlipToFit = (event) => {
+		GWLog("hnsDatePickerFlipToFit");
+
+		hnsDatePicker.toggleClass("flipped", (query("#content").clientWidth > (window.innerWidth - 535)));
+	});
+	GW.hnsDatePickerFlipToFit();
+
 	hnsDatePicker.query("input").addEventListener("input", GW.hnsDatePickerValueChanged = (event) => {
 		GWLog("GW.hnsDatePickerValueChanged");
 

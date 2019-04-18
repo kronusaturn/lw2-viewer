@@ -788,23 +788,22 @@
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-@media only screen and (max-width: 1440px) {
-	#hns-date-picker {
-		padding: 8px 10px 10px 10px;
-		margin: 0 0 66px -79px;
-		display: none;
-	}
-	#hns-date-picker::before {
-		content: "";
-		position: absolute;
-		display: block;
-		z-index: -1;
-		height: calc(100% + 2px);
-		top: -1px;
-		left: -1px;
-		width: 50%;
-	}
+#hns-date-picker.flipped {
+	padding: 8px 10px 10px 10px;
+	margin: 0 0 66px -79px;
+	display: none;
 }
+#hns-date-picker.flipped::before {
+	content: "";
+	position: absolute;
+	display: block;
+	z-index: -1;
+	height: calc(100% + 2px);
+	top: -1px;
+	left: -1px;
+	width: 50%;
+}
+
 @media only screen and (max-width: 1160px) {
 	#hns-date-picker {
 		margin: 0 0 206px -124px;
@@ -840,6 +839,8 @@
 @media only screen and (max-width: 960px) {
 	#hns-date-picker {
 		max-height: 0px;
+		left: unset;
+		margin: 0;
 		bottom: 132px;
 		right: 62px;
 		transition:
@@ -874,7 +875,7 @@
 
 #hns-date-picker input {
 	margin-top: 1px;
-	padding: 1px 3px;
+	padding: 2px 3px 1px 3px;
 	width: 140px;
 	text-align: center;
 	box-shadow: 0 0 0 1px transparent;

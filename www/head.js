@@ -95,6 +95,9 @@ function setContentWidth(widthOption) {
 	let head = query('head');
 	head.removeClasses(GW.widthOptions.map(wo => 'content-width-' + wo[0]));
 	head.addClass('content-width-' + (widthOption || 'normal'));
+
+	if (GW.hnsDatePickerFlipToFit)
+		GW.hnsDatePickerFlipToFit();
 }
 setContentWidth(localStorage.getItem('selected-width'));
 
