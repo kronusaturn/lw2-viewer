@@ -621,11 +621,7 @@ body {
 		color: #777;
 	}
 	#new-comment-nav-ui .new-comments-count {
-		background-color: inherit;
 		box-shadow: 0 -1px 0 0 #999;
-	}
-	#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
-		color: #bbb;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-previous {
 		border-radius: 7px 0 0 7px;

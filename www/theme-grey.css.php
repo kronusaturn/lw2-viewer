@@ -621,20 +621,13 @@ body {
 	#new-comment-nav-ui,
 	#hns-date-picker {
 		box-shadow:
-			0 0 1px 3px #fff,
-			0 0 3px 3px #fff,
-			0 0 5px 3px #fff,
-			0 0 10px 3px #fff,
-			0 0 20px 3px #fff;
+			0 0 1px 3px #fff;
+		filter:
+			drop-shadow(0 0 1px #fff)
+			drop-shadow(0 0 1px #fff);
 	}
 	#quick-nav-ui a::after,
 	#new-comment-nav-ui::before {
-		font-family: <?php echo $UI_font; ?>;
-		font-weight: 600;
-		box-shadow:
-			0 0 1px 0 #fff,
-			0 0 3px 0 #fff,
-			0 0 5px 0 #fff;
 		background-color: #fff;
 		border-radius: 4px;
 	}
@@ -648,24 +641,16 @@ body {
 	}
 	#new-comment-nav-ui::before {
 		color: #777;
-		font-weight: 600;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button {
 		box-shadow: 0 0 0 1px #999;
 		color: #777;
 	}
 	#new-comment-nav-ui .new-comments-count {
-		background-color: inherit;
 		box-shadow: 0 -1px 0 0 #999;
-	}
-	#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
-		color: #bbb;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-previous {
 		border-radius: 7px 0 0 7px;
-	}
-	#new-comment-nav-ui button::after {
-		font-family: <?php echo $UI_font; ?>;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-next {
 		border-radius: 0 7px 7px 0;
