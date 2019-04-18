@@ -640,7 +640,7 @@ body {
 	background-color: #888;
 	-webkit-background-clip: text;
 	color: transparent;
-	text-shadow: rgba(255,255,255,0.5) 0px 1px 1px;
+	text-shadow: rgba(255, 255, 255, 0.5) 0px 1px 1px;
 }
 #anti-kibitzer-toggle button:hover::before,
 #anti-kibitzer-toggle button:hover::after {
@@ -654,10 +654,13 @@ body {
 @media only screen and (max-width: 1020px) {
 	#anti-kibitzer-toggle {
 		box-shadow: 
-			0 0 0 1px #999,
-			0 0 0 2px transparent;
+			0  2px 0 1px var(--GW-body-background-color),
+			0  0   0 1px var(--GW-body-background-color),
+			0  2px 0 2px #999,
+			0  0   0 2px #999,
+			0  0   0 3px transparent;
 		background-color: var(--GW-body-background-color);
-		border-radius: 6px;
+		border-radius: 8px;
 		overflow: hidden;
 	}
 }
@@ -802,7 +805,7 @@ h1.listing a[href^="http"] {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		color: #777;
-		background-color: rgba(255,255,255,0.85);
+		background-color: rgba(255, 255, 255, 0.85);
 	}	
 	h1.listing:focus-within::before {
 		color: #00f;
@@ -1911,7 +1914,7 @@ h1.sequence-chapter {
 	-webkit-background-clip: text;
 	color: transparent;
 	text-shadow: 
-		rgba(255,255,255,0.5) 0px 3px 3px;
+		rgba(255, 255, 255, 0.5) 0px 3px 3px;
 }
 
 /*=======*/
@@ -2160,12 +2163,12 @@ EOT;
 	-webkit-background-clip: text;
 	color: transparent;
 	text-shadow: 
-		rgba(255,255,255,0.5) 0px 3px 3px;
+		rgba(255, 255, 255, 0.5) 0px 3px 3px;
 }
 
 @media only screen and (hover: hover) and (pointer: fine) {
 	#content.alignment-forum-index-page h1.listing a:hover,
 	#content.alignment-forum-index-page h1.listing a:focus {
-		background-color: rgba(238,240,255,0.85);
+		background-color: rgba(238, 240, 255, 0.85);
 	}	
 }

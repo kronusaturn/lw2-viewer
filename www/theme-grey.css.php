@@ -666,7 +666,7 @@ body {
 	background-color: #aaa;
 	-webkit-background-clip: text;
 	color: transparent;
-	text-shadow: rgba(255,255,255,0.5) 0px 1px 1px;
+	text-shadow: rgba(255, 255, 255, 0.5) 0px 1px 1px;
 }
 #anti-kibitzer-toggle button:hover::before,
 #anti-kibitzer-toggle button:hover::after {
@@ -678,12 +678,19 @@ body {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 1020px) {
+	#anti-kibitzer-toggle button::before,
+	#anti-kibitzer-toggle button::after {
+		background-color: #999;
+	}
 	#anti-kibitzer-toggle {
 		box-shadow: 
-			0 0 0 1px #ccc,
-			0 0 0 2px transparent;
-		background-color: #eee;
-		border-radius: 6px;
+			0  2px 0 1px #e4e4e4,
+			0  0   0 1px #e4e4e4,
+			0  2px 0 2px #ccc,
+			0  0   0 2px #ccc,
+			0  0   0 3px transparent;
+		background-color: #e4e4e4;
+		border-radius: 8px;
 		overflow: hidden;
 	}
 }
@@ -693,10 +700,7 @@ body {
 /*======================*/
 
 #text-size-adjustment-ui button {
-	color: #777;
-}
-#text-size-adjustment-ui button.default {
-	font-weight: 600;
+	color: #888;
 }
 #text-size-adjustment-ui button:disabled:hover {
 	text-shadow: none;
@@ -711,12 +715,15 @@ body {
 
 @media only screen and (max-width: 1080px) {
 	#text-size-adjustment-ui button {
-		border: 1px solid #999;
-		padding: 0 0 0 1px;
+		border: 1px solid #aaa;
 		border-radius: 50%;
 		box-shadow: 
-			0 0 6px #999 inset,
+			0 0 6px #aaa inset,
 			0 0 0 1px transparent;
+	}
+	#text-size-adjustment-ui button.decrease,
+	#text-size-adjustment-ui button.increase {
+		padding: 1px 0 0 0;
 	}
 }
 @media only screen and (max-width: 1000px) {
@@ -816,7 +823,7 @@ h1.listing a[href^="http"] {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		color: #777;
-		background-color: rgba(255,255,255,0.85);
+		background-color: rgba(255, 255, 255, 0.85);
 	}	
 	h1.listing:focus-within::before {
 		color: #00f;
@@ -2132,11 +2139,11 @@ select {
 	-webkit-background-clip: text;
 	color: transparent;
 	text-shadow: 
-		rgba(255,255,255,0.5) 0px 3px 3px;;
+		rgba(255, 255, 255, 0.5) 0px 3px 3px;
 }
 @media only screen and (hover: hover) and (pointer: fine) {
 	#content.alignment-forum-index-page h1.listing a:hover,
 	#content.alignment-forum-index-page h1.listing a:focus {
-		background-color: rgba(241,243,255,0.85);
+		background-color: rgba(241, 243, 255, 0.85);
 	}	
 }

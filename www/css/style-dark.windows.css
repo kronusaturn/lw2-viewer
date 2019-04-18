@@ -6549,10 +6549,13 @@ body {
 @media only screen and (max-width: 1020px) {
 	#anti-kibitzer-toggle {
 		box-shadow: 
-			0 0 0 1px #575756,
-			0 0 0 2px transparent;
+			0  2px 0 1px var(--GW-body-background-color),
+			0  0   0 1px var(--GW-body-background-color),
+			0  2px 0 2px #575756,
+			0  0   0 2px #575756,
+			0  0   0 3px transparent;
 		background-color: var(--GW-body-background-color);
-		border-radius: 6px;
+		border-radius: 8px;
 		overflow: hidden;
 	}
 }
