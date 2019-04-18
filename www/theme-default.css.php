@@ -132,7 +132,7 @@ body {
 	color: #d8d8d8;
 }
 
-/* Accesskey hints */
+/*= Accesskey hints =*/
 
 .nav-inner::after {
 	display: block;
@@ -149,7 +149,7 @@ body {
 	color: #bbb;
 }
 
-/* This makes the navbar items look like tabs: */
+/*= This makes the navbar items look like tabs: =*/
 
 .nav-inactive {
 	box-shadow: 
@@ -199,6 +199,12 @@ body {
 #nav-item-search input::placeholder {
 	color: #d00;
 	font-weight: normal;
+}
+
+/*= Inbox indicator =*/
+
+#inbox-indicator::before {
+	padding-top: 1px;
 }
 
 /*	Viewport width adjustments.

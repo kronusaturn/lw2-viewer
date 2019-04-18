@@ -2234,7 +2234,7 @@ a {
 	position: absolute;
 	right: 0;
 	height: 100%;
-	padding: 1px 0.45em 0 0.45em;
+	padding: 0 0.45em;
 }
 #inbox-indicator.new-messages::before {
 	color: #f00;
@@ -6048,7 +6048,7 @@ body {
 	color: #d8d8d8;
 }
 
-/* Accesskey hints */
+/*= Accesskey hints =*/
 
 .nav-inner::after {
 	display: block;
@@ -6065,7 +6065,7 @@ body {
 	color: #bbb;
 }
 
-/* This makes the navbar items look like tabs: */
+/*= This makes the navbar items look like tabs: =*/
 
 .nav-inactive {
 	box-shadow: 
@@ -6106,7 +6106,7 @@ body {
 		-5px -4px 4px -4px #bbb inset;
 }
 
-/* Search tab */
+/*= Search tab =*/
 
 #nav-item-search form::before {
 	opacity: 0.4;

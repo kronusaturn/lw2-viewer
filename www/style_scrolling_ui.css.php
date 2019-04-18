@@ -585,7 +585,7 @@ EOT;
 	position: absolute;
 	right: 0;
 	height: 100%;
-	padding: 1px 0.45em 0 0.45em;
+	padding: 0 0.45em;
 }
 #inbox-indicator.new-messages::before {
 	color: #f00;

@@ -143,7 +143,7 @@ body {
 	color: #d8d8d8;
 }
 
-/* Accesskey hints */
+/*= Accesskey hints =*/
 
 .nav-inner::after {
 	display: block;
@@ -160,7 +160,7 @@ body {
 	color: #bbb;
 }
 
-/* This makes the navbar items look like tabs: */
+/*= This makes the navbar items look like tabs: =*/
 
 .nav-inactive {
 	box-shadow: 
@@ -201,7 +201,7 @@ body {
 		-5px -4px 4px -4px #bbb inset;
 }
 
-/* Search tab */
+/*= Search tab =*/
 
 #nav-item-search form::before {
 	opacity: 0.4;
