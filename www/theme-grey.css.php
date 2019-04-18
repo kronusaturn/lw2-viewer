@@ -376,12 +376,57 @@ body {
 	color: #aaa;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1160px) {
+	#theme-selector:hover::after {
+		background-color: #ddd;
+	}
+}
+@media only screen and (max-width: 1000px) {
+	#theme-selector {
+		background-color: #eee;
+		box-shadow: 
+			0 0 0 1px #999,
+			0 0 0 2px transparent;
+	}
+	#theme-selector:hover::after {
+		background-color: #999;
+		width: calc(6em - 3px);
+		height: calc(100% - 5px);
+		top: 3px;
+		left: 100%;
+	}	
+}
+
 /*======================*/
 /* THEME TWEAKER TOGGLE */
 /*======================*/
 
 #theme-tweaker-toggle button {
 	color: #777;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1080px) {
+	#theme-tweaker-toggle button {
+		border: 1px solid #999;
+		box-shadow: 
+			0 0 10px #999 inset,
+			0 0 0 1px transparent;
+		border-radius: 50%;
+		transform: scale(0.8);
+	}
+}
+@media only screen and (max-width: 1000px) {
+	#theme-tweaker-toggle button {
+		background-color: #ddd;
+	}
 }
 
 /*=================*/
@@ -412,6 +457,18 @@ body {
 	#quick-nav-ui a:focus:not(:hover) {
 		transform: none;
 		text-shadow: none;
+	}
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1020px) {
+	#quick-nav-ui a {
+		box-shadow: 
+			0 0 0 1px #ccc,
+			0 0 0 2px transparent;
 	}
 }
 
@@ -447,6 +504,20 @@ body {
 	}
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1020px) {
+	#new-comment-nav-ui .new-comments-count::before {
+		background-color: #eee;
+		box-shadow: 
+			0 0 0 1px #ccc,
+			0 0 0 2px transparent;
+		border-radius: 8px;
+	}
+}
+
 /*=================*/
 /* HNS DATE PICKER */
 /*=================*/
@@ -465,6 +536,21 @@ body {
 	color: #000;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1440px) {
+	#hns-date-picker {
+		background-color: #eee;
+		opacity: 1.0;
+	}
+	#hns-date-picker::before {
+		border: 1px solid #ccc;
+		border-width: 1px 0 1px 1px;
+	}
+}
+
 /*======================*/
 /* ANTI-KIBITZER TOGGLE */
 /*======================*/
@@ -479,6 +565,21 @@ body {
 #anti-kibitzer-toggle button:hover::before,
 #anti-kibitzer-toggle button:hover::after {
 	background-color: #555;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1020px) {
+	#anti-kibitzer-toggle {
+		box-shadow: 
+			0 0 0 1px #ccc,
+			0 0 0 2px transparent;
+		background-color: #eee;
+		border-radius: 6px;
+		overflow: hidden;
+	}
 }
 
 /*======================*/
@@ -496,6 +597,29 @@ body {
 }
 #text-size-adjustment-ui::after {
 	color: #aaa;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1080px) {
+	#text-size-adjustment-ui button {
+		border: 1px solid #999;
+		padding: 0 0 0 1px;
+		border-radius: 50%;
+		box-shadow: 
+			0 0 6px #999 inset,
+			0 0 0 1px transparent;
+	}
+}
+@media only screen and (max-width: 1000px) {
+	#text-size-adjustment-ui button {
+		background-color: #ddd;
+	}
+	#text-size-adjustment-ui button:hover {
+		background-color: #eee;
+	}
 }
 
 /*=============================*/
@@ -1711,17 +1835,14 @@ select {
 }
 #aux-about-link a:hover {
 	opacity: 1.0;
-	text-shadow: <?php echo $white_glow; ?>;
+	text-shadow: var(--GW-shadow-white-glow);
 }
 
-.qualified-linking label {
-	color: <?php echo $hyperlink_color; ?>;
-}
 .qualified-linking label:hover {
 	text-shadow:
 		0 0 1px #fff,
 		0 0 3px #fff,
-		0 0 5px #00e;
+		0 0 5px currentColor;
 }
 
 .qualified-linking-toolbar {
@@ -1732,19 +1853,11 @@ select {
 	background-color: #eee;
 	border: 1px solid #ccc;
 	border-radius: 4px;
-	color: <?php echo $hyperlink_color; ?>;
-}
-.qualified-linking-toolbar a:visited {
-	color: <?php echo $hyperlink_color; ?>;
 }
 .qualified-linking-toolbar a:hover {
 	text-decoration: none;
 	background-color: #ddd;
-	text-shadow: <?php echo $white_glow; ?>;
-}
-.qualified-linking label::after {
-	background-color: #eee;
-	opacity: 0.8;
+	text-shadow: var(--GW-shadow-white-glow);
 }
 
 /*======*/
@@ -1782,8 +1895,6 @@ select {
 	background-color: #f1f3ff;
 }
 #content.alignment-forum-index-page::after {
-	font-family: <?php echo $UI_font_smallcaps; ?>;
-	font-weight: 600;
 	background-color: #626dd7;
 	-webkit-background-clip: text;
 	color: transparent;
@@ -1795,90 +1906,6 @@ select {
 	#content.alignment-forum-index-page h1.listing a:focus {
 		background-color: rgba(241,243,255,0.85);
 	}	
-}
-
-/*====================*/
-/* FOR NARROW SCREENS */
-/*====================*/
-
-@media only screen and (max-width: 1440px) {
-	#hns-date-picker {
-		background-color: #eee;
-		opacity: 1.0;
-	}
-	#hns-date-picker::before {
-		border: 1px solid #ccc;
-		border-width: 1px 0 1px 1px;
-	}
-}
-@media only screen and (max-width: 1160px) {
-	#theme-selector:hover::after {
-		background-color: #ddd;
-	}
-}
-@media only screen and (max-width: 1080px) {
-	#text-size-adjustment-ui button {
-		border: 1px solid #999;
-		padding: 0 0 0 1px;
-		border-radius: 50%;
-		box-shadow: 
-			0 0 6px #999 inset,
-			0 0 0 1px transparent;
-	}
-	#theme-tweaker-toggle button {
-		border: 1px solid #999;
-		box-shadow: 
-			0 0 10px #999 inset,
-			0 0 0 1px transparent;
-		border-radius: 50%;
-		transform: scale(0.8);
-	}
-}
-@media only screen and (max-width: 1020px) {
-	#quick-nav-ui a {
-		box-shadow: 
-			0 0 0 1px #ccc,
-			0 0 0 2px transparent;
-	}
-	#new-comment-nav-ui .new-comments-count::before {
-		background-color: #eee;
-		box-shadow: 
-			0 0 0 1px #ccc,
-			0 0 0 2px transparent;
-		border-radius: 8px;
-	}
-	#anti-kibitzer-toggle {
-		box-shadow: 
-			0 0 0 1px #ccc,
-			0 0 0 2px transparent;
-		background-color: #eee;
-		border-radius: 6px;
-		overflow: hidden;
-	}
-}
-@media only screen and (max-width: 1000px) {
-	#theme-selector {
-		background-color: #eee;
-		box-shadow: 
-			0 0 0 1px #999,
-			0 0 0 2px transparent;
-	}
-	#theme-selector:hover::after {
-		background-color: #999;
-		width: calc(6em - 3px);
-		height: calc(100% - 5px);
-		top: 3px;
-		left: 100%;
-	}	
-	#text-size-adjustment-ui button {
-		background-color: #ddd;
-	}
-	#text-size-adjustment-ui button:hover {
-		background-color: #eee;
-	}
-	#theme-tweaker-toggle button {
-		background-color: #ddd;
-	}
 }
 
 /*========*/

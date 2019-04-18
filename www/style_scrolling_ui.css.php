@@ -445,7 +445,7 @@ EOT;
 
 #top-nav-bar {
 	grid-row: 3;
-	margin: 0.25em 0 0.5em 0;
+	margin: 0.25em 0 0.75em 0;
 	padding: 1em 0 0 0;
 	text-align: center;
 	font-size: 1.25rem;
@@ -461,6 +461,7 @@ EOT;
 }
 #content.archive-page #top-nav-bar {
 	grid-row: 4;
+	margin: 0.25em 0 0 0;
 }
 
 #top-nav-bar a {
