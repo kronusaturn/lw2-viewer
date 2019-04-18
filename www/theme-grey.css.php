@@ -220,6 +220,15 @@ body {
 	margin: 0 5px 0 0;
 }
 
+/*= Keyboard help button =*/
+
+@media only screen and (min-width: 961px) {
+	#nav-item-about button.open-keyboard-help {
+		padding: 7px 8px 9px 7px;
+		font-weight: 400;
+	}
+}
+
 /*= Top pagination UI hover tooltips =*/
 
 #top-nav-bar a::after,
@@ -269,6 +278,20 @@ body {
 .sublevel-nav:not(.sort) .sublevel-item:last-child {
 	border-width: 1px;
 	border-radius: 0 8px 8px 0;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	.sublevel-nav:not(.sort) .sublevel-item,
+	.sublevel-nav:not(.sort) .sublevel-item:first-child,
+	.sublevel-nav:not(.sort) .sublevel-item:last-child {
+		border-radius: 8px;
+		border-width: 1px;
+		margin: 2px;
+	}
 }
 
 /*=====================*/

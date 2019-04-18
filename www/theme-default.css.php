@@ -232,11 +232,17 @@ body {
 /* PAGE TOOLBAR */
 /*==============*/
 
-.button.new-post:not(:hover),
-.button.new-private-message:not(:hover),
-.button.unignore-button:not(:hover) {
+.page-toolbar .button {
 	color: #090;
 }
+.page-toolbar .button:hover {
+	color: var(--GW-hyperlink-hover-color);
+}
+.page-toolbar .button:active,
+.page-toolbar .button:focus {
+	color: var(--GW-hyperlink-active-color);
+}
+
 .button.logout-button,
 .button.ignore-button {
 	color: #d33;
@@ -291,6 +297,7 @@ body {
 		margin: 2px;
 	}
 }
+
 /*=====================*/
 /* SORT ORDER SELECTOR */
 /*=====================*/
