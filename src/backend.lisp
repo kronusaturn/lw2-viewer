@@ -735,6 +735,7 @@
     (rate-limit (slug) (cdr (first (lw2-graphql-query (lw2-query-string :user :single (alist :slug slug) '(:--id))))))))
 
 (defun preload-username-cache ()
+  (declare (optimize space (compilation-speed 2) (speed 0)))
   (let ((user-list (lw2-graphql-query (lw2-query-string :user :list '() '(:--id :slug :display-name)))))
     (with-cache-transaction
 	(loop for user in user-list
