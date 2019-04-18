@@ -859,6 +859,21 @@ h1.listing .edit-post-link:hover {
 	background-color: #eee;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 520px) {
+	h1.listing {
+		font-size: 1.25rem;
+		margin: 18px 6px 4px 6px;
+		max-width: calc(100% - 12px);
+	}
+	h1.listing a[href^='http'] {
+		top: 2px;
+	}
+}
+
 /*======*/
 /* SPAM */
 /*======*/
@@ -933,6 +948,11 @@ h1.listing + .post-meta .link-post-domain {
 	}
 	h1.listing + .post-meta .post-section::before {
 		position: unset;
+	}
+}
+@media only screen and (max-width: 520px) {
+	h1.listing + .post-meta {
+		margin: 4px 6px;
 	}
 }
 
@@ -1528,6 +1548,16 @@ div.comment-child-links a {
 	margin-bottom: 0.5rem;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 520px) {
+	#content.compact > .comment-thread .comment-item {
+		max-height: 108px;
+	}
+}
+
 /*===========================*/
 /* HIGHLIGHTING NEW COMMENTS */
 /*===========================*/
@@ -1783,6 +1813,44 @@ button.guiedit::after {
 	background-color: #ffa;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 520px) {
+	.textarea-container:focus-within button:active {
+		background-color: #ccc;
+	}
+	.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
+		background-color: #eee;
+		border: 1px solid #ddd;
+		border-radius: 6px;
+	}
+	.textarea-container:focus-within .guiedit-mobile-help-button.active {
+		border-color: #c00;
+		box-shadow:
+			0 0 0 1px #fff,
+			0 0 0 2px #c00;
+		color: #c00;
+		font-weight: 600;
+	}
+	.textarea-container:focus-within .guiedit-buttons-container {
+		background-color: #fff;
+		border-top: 1px solid #ddf;
+	}
+	#content.conversation-page .textarea-container:focus-within::after {
+		background-color: #fff;
+	}
+	.textarea-container:focus-within button.guiedit {
+		background-color: #eee;
+		border: 1px solid #ddd;
+		border-radius: 6px;
+	}
+	#markdown-hints::after {
+		color: #090;
+	}
+}
+
 /*================*/
 /* EDIT POST FORM */
 /*================*/
@@ -1840,6 +1908,19 @@ button.guiedit::after {
 	text-shadow: 
 		0 -1px 0 #fff,
 		0 0.5px 0.5px #000;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 520px) {
+	#edit-post-form .post-meta-fields input[type='checkbox'] + label {
+		top: 2px;
+	}
+	#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
+		top: 1px;
+	}
 }
 
 /*=======*/
@@ -2072,67 +2153,4 @@ select {
 	#content.alignment-forum-index-page h1.listing a:focus {
 		background-color: rgba(241,243,255,0.85);
 	}	
-}
-
-/*========*/
-/* MOBILE */
-/*========*/
-
-/*******************************************/
-@media only screen and (max-width: 520px) {
-/*******************************************/
-	h1.listing {
-		font-size: 1.25rem;
-		margin: 18px 6px 4px 6px;
-		max-width: calc(100% - 12px);
-	}
-	h1.listing + .post-meta {
-		margin: 4px 6px;
-	}
-	h1.listing a[href^='http'] {
-		top: 2px;
-	}
-
-	#content.compact > .comment-thread .comment-item {
-		max-height: 108px;
-	}
-
-	.textarea-container:focus-within button:active {
-		background-color: #ccc;
-	}
-	.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
-		background-color: #eee;
-		border: 1px solid #ddd;
-		border-radius: 6px;
-	}
-	.textarea-container:focus-within .guiedit-mobile-help-button.active {
-		border-color: #c00;
-		box-shadow:
-			0 0 0 1px #fff,
-			0 0 0 2px #c00;
-		color: #c00;
-		font-weight: 600;
-	}
-	.textarea-container:focus-within .guiedit-buttons-container {
-		background-color: #fff;
-		border-top: 1px solid #ddf;
-	}
-	#content.conversation-page .textarea-container:focus-within::after {
-		background-color: #fff;
-	}
-	.textarea-container:focus-within button.guiedit {
-		background-color: #eee;
-		border: 1px solid #ddd;
-		border-radius: 6px;
-	}
-	#markdown-hints::after {
-		color: #090;
-	}
-
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label {
-		top: 2px;
-	}
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
-		top: 1px;
-	}
 }
