@@ -2684,32 +2684,30 @@ a#inbox-indicator.new-messages:hover::before {
 
 .archive-nav {
 	margin: 1.5em var(--GW-current-page-content-right-side-padding) 0 var(--GW-current-page-content-left-side-padding);
+	padding: 1px;
 	border-width: 0.25em;
 	border-style: solid;
 }
 
 .archive-nav > * {
 	display: flex;
-	overflow: hidden;
-	position: relative;
 }
-.archive-nav > *::after {
-	content: "";
-	width: 1px;
-	height: calc(100% + 1px);
-	position: absolute;
-	top: -1px;
-	right: 0;
+.archive-nav > *:nth-child(n+2) {
+	margin: 1px 0 0 0;
 }
 
 .archive-nav *[class^='archive-nav-item'] {
 	line-height: 1;
 	text-align: center;
 	flex: 1 1 5%;
+	max-width: 8%;
 }
 
 .archive-nav span[class^='archive-nav-item'] {
 	font-weight: var(--GW-UI-font-weight-heavy);
+}
+.archive-nav-item-year {
+	font-size: 0.9375em;
 }
 .archive-nav-item-day {
 	font-size: 0.8em;
@@ -6669,16 +6667,8 @@ body {
 .archive-nav {
 	outline: 1px solid #aaa;
 	border-color: #fff;
-	background-color: #ddd;
-	padding: 1px 0 1px 1px;
 }
 
-.archive-nav > *::after {
-	background-color: #ddd;
-}
-.archive-nav > *:nth-child(n+2) {
-	margin: 1px 0 0 0;
-}
 .archive-nav *[class^='archive-nav-item'] {
 	padding: 6px 4px 4px 4px;
 	background-color: #eee;
