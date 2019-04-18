@@ -1033,6 +1033,7 @@ a#inbox-indicator.new-messages:hover::before {
 
 .archive-nav > * {
 	display: flex;
+	justify-content: flex-start;
 }
 .archive-nav > *:nth-child(n+2) {
 	margin: 1px 0 0 0;
@@ -1085,11 +1086,9 @@ a#inbox-indicator.new-messages:hover::before {
 @media only screen and (max-width: 900px) {
 	div[class^='archive-nav-'] {
 		flex-wrap: wrap;
-		justify-content: flex-start;
 	}
 	.archive-nav *[class^='archive-nav-item'],
 	.archive-nav *[class^='archive-nav-item']:first-child {
-		padding: 10px;
 		margin: 2px;
 		max-width: unset;
 		flex: 0 1 calc((100% / 8) - 4px);
@@ -1099,7 +1098,7 @@ a#inbox-indicator.new-messages:hover::before {
 		flex-basis: calc((100% / 16) - 4px);
 	}
 	.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-'] {
-		margin-top: 8px;
+		margin-top: 9px;
 		position: relative;
 	}
 	.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
@@ -1107,9 +1106,9 @@ a#inbox-indicator.new-messages:hover::before {
 		display: block;
 		position: absolute;
 		height: 1px;
-		width: calc(100% + 8px);
-		left: -4px;
-		top: -4px;
+		width: calc(100% + 10px);
+		left: -5px;
+		top: -5px;
 	}
 }
 @media only screen and (max-width: 720px) {
