@@ -14,6 +14,8 @@
 	--GW-UI-font-weight-light: 400;
 	--GW-UI-font-weight-heavy: 600;
 
+	--GW-post-listings-font-weight: 400;
+
 	--GW-body-text-font: 'Source Sans Pro', 'Trebuchet MS', 'Helvetica', 'Arial', 'Verdana', sans-serif;
 
 	--GW-link-post-link-font-weight: 600;
@@ -70,7 +72,7 @@
 	--GW-button-hover-color: #d00;
 	--GW-button-active-color: #f00;
 
-	--GW-archive-nav-item-color: rgba(136, 136, 136, 0.75);
+	--GW-archive-nav-item-color: rgba(119, 119, 119, 0.75);
 
 	--GW-shadow-white-glow:
 		0 0 1px #fff,
@@ -817,17 +819,12 @@ body {
 /*==========*/
 
 h1.listing {
-	margin: 0.6em 20px 0 20px;
-	max-width: calc(100% - 40px);
-	line-height: 1.1;
 	font-size: 1.5rem;
+	margin: 0.6em 0 0 0;
 }
-h1.listing a[href^='/posts'] {
-	font-weight: normal;
-}
+
 h1.listing a[href^="http"] {
-	color: #ccc;
-	top: 3px;
+	color: #bbb;
 }
 
 @media only screen and (hover: hover) and (pointer: fine) {
@@ -851,16 +848,12 @@ h1.listing a[href^="http"] {
 }
 
 h1.listing .edit-post-link {
-	padding: 5px 3px 36px 0.5em;
+	padding: 5px 3px 12px 0.5em;
 	top: 0;
 	right: 0;
-	background-color: #eee;
 }
 h1.listing .edit-post-link:hover {
 	text-decoration: none;
-}
-#content.user-page h1.listing .edit-post-link {
-	background-color: #eee;
 }
 
 /*=----------------------------=*/
