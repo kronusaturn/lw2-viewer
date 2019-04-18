@@ -414,7 +414,7 @@
 			top: 492px;
 		}
 	}
-	<?php fit_content("#theme-selector.engaged ~ #theme-tweaker-toggle"); ?>
+<?php fit_content("#theme-selector.engaged ~ #theme-tweaker-toggle", "width", "\t"); ?>
 	#theme-selector.engaged ~ #theme-tweaker-toggle button {
 		opacity: 1.0;
 	}
@@ -864,7 +864,7 @@
 }
 
 /*=---------------=*/
-/*= "Since" label =*/
+/*= “Since” label =*/
 /*=---------------=*/
 
 #hns-date-picker span {
@@ -876,7 +876,7 @@
 }
 
 /*=--------------------=*/
-/*= "Since" text field =*/
+/*= “Since” text field =*/
 /*=--------------------=*/
 
 #hns-date-picker input {
@@ -983,55 +983,18 @@
 
 #text-size-adjustment-ui {
 	position: absolute;
-	top: 30px;
-	right: -78px;
+	top: 0;
+	left: 100%;
+	margin: 32px 0 0 6px;
 	opacity: 0.4;
+	display: flex;
 }
 #text-size-adjustment-ui:hover {
 	opacity: 1.0;
 }
 
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
-@media only screen and (max-width: 1220px) {
-	#text-size-adjustment-ui {
-		top: 4px;
-	}
-}
-@media only screen and (max-width: 1080px) {
-	#text-size-adjustment-ui {
-		top: 112px;
-		right: -30px;
-	}
-	#text-size-adjustment-ui button {
-		display: block;
-		position: relative;
-	}
-	#text-size-adjustment-ui button.increase {
-		bottom: 48px;
-	}
-	#text-size-adjustment-ui button.decrease {
-		top: 50px;
-	}
-	#text-size-adjustment-ui::after {
-		display: none;
-	}
-}
-@media only screen and (max-width: 1000px) {
-	#text-size-adjustment-ui {
-		right: -12px;
-	}
-}
-@media only screen and (max-width: 960px) {
-	#text-size-adjustment-ui {
-		display: none;
-	}
-}
-
-/* This doesn't work in Mozilla browsers, so hide it */
-<?php echo $firefox_exclusive; ?> {
+/* This doesn’t work in Mozilla browsers, so hide it */
+@supports (-moz-user-focus: normal) {
 	#text-size-adjustment-ui {
 		display: none;
 	}
@@ -1052,8 +1015,6 @@
 #text-size-adjustment-ui button.default {
 	font-family: inherit;
 	font-size: 1.125rem;
-	position: relative;
-	top: 1px;
 
 	font-weight: var(--GW-UI-font-weight-heavy);
 }
@@ -1081,6 +1042,45 @@
 }
 #text-size-adjustment-ui:hover::after {
 	visibility: visible;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1220px) {
+	#text-size-adjustment-ui {
+		margin: 4px 0 0 6px;
+	}
+}
+@media only screen and (max-width: 1080px) {
+	#text-size-adjustment-ui {
+		margin: 136px 0 0 12px;
+		flex-flow: column;
+	}
+	#text-size-adjustment-ui button {
+		margin: 1px 0;
+	}
+	#text-size-adjustment-ui button.increase {
+		order: -1;
+	}
+	#text-size-adjustment-ui button.decrease {
+		order: 1;
+	}
+	#text-size-adjustment-ui::after {
+		display: none;
+	}
+}
+@media only screen and (max-width: 1000px) {
+	#text-size-adjustment-ui {
+		margin: 136px 0 0 -12px;
+		opacity: 0.75;
+	}
+}
+@media only screen and (max-width: 960px) {
+	#text-size-adjustment-ui {
+		display: none;
+	}
 }
 
 /*****************/

@@ -664,11 +664,14 @@ body {
 @media only screen and (max-width: 1080px) {
 	#text-size-adjustment-ui button {
 		border: 1px solid #999;
-		padding: 0 0 0 1px;
 		border-radius: 50%;
 		box-shadow: 
 			0 0 6px #999 inset,
 			0 0 0 1px transparent;
+	}
+	#text-size-adjustment-ui button.decrease,
+	#text-size-adjustment-ui button.increase {
+		padding: 1px 0 0 0;
 	}
 }
 @media only screen and (max-width: 1000px) {
