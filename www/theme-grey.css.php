@@ -64,6 +64,10 @@
 	--GW-hyperlink-hover-color: #c00;
 	--GW-hyperlink-active-color: #e00;
 
+	--GW-nav-bar-item-color: #888;
+	--GW-nav-bar-item-hover-color: #888;
+	--GW-nav-bar-item-active-color: #888;
+
 	--GW-shadow-white-glow:
 		0 0 1px #fff,
 		0 0 3px #fff,
@@ -103,33 +107,20 @@ body {
 	}
 }
 
-/*=========*/
-/* NAV BAR */
-/*=========*/
+/*==========*/
+/* NAV BARS */
+/*==========*/
 
-.nav-inner {
-	font-weight: normal;
+#primary-bar .nav-inner,
+#bottom-bar .nav-inner {
 	font-size: 1.1875em;
-	padding: 11px 30px 13px 30px;
-}
-.nav-current .nav-inner {
-	font-weight: 600;
 }
 #secondary-bar .nav-inner {
 	font-size: 0.875rem;
 }
-#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
-	padding: 5px 0 3px 0;
-}
-@media only screen and (min-width: 901px) {
-	#secondary-bar #nav-item-sequences .nav-inner {
-		line-height: 1.2;
-	}
-}
 
-#bottom-bar.decorative::after {
-	color: #d8d8d8;
-	background-color: #fff;
+.nav-item:not(.nav-current) .nav-inner {
+	font-weight: var(--GW-UI-font-weight-light);
 }
 
 .nav-bar .nav-item:not(.nav-current):not(#nav-item-search):hover,
@@ -142,14 +133,14 @@ body {
 	background-color: #d8d8d8;
 }
 
-.nav-bar a:link,
-.nav-bar a:visited {
-	color: #888;
-}
 .nav-bar a:hover,
 .nav-bar a:focus {
 	text-decoration: none;
 	text-shadow: var(--GW-shadow-white-glow);
+}
+
+#bottom-bar.decorative::after {
+	color: #d8d8d8;
 }
 
 /* Accesskey hints */
@@ -159,7 +150,6 @@ body {
 	position: absolute;
 	left: 5px;
 	top: -2px;
-	font-weight: 400;
 	font-size: 0.7em;
 	color: #d8d8d8;
 }
@@ -215,22 +205,19 @@ body {
 
 #nav-item-search form::before {
 	opacity: 0.4;
-	font-size: 0.9375rem;
 }
 #nav-item-search button {
 	color: #999;
-	border: none;
-	font-weight: 600;
 }
 #nav-item-search input::placeholder {
 	color: #d00;
 	font-weight: normal;
 }
 
-/* Inbox indicator */
+/*= Recent Comments tab =*/
 
-#inbox-indicator {
-	top: 0;
+#nav-item-recent-comments span {
+	margin: 0 5px 0 0;
 }
 
 /*= Top pagination UI hover tooltips =*/

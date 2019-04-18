@@ -104,14 +104,12 @@ body {
 /* NAV BARS */
 /*==========*/
 
-#primary-bar .nav-inner {
+#primary-bar .nav-inner,
+#bottom-bar .nav-inner {
 	font-size: 1.375em;
 }
 #secondary-bar .nav-inner {
 	font-size: 1em;
-}
-#bottom-bar .nav-inner {
-	font-size: 1.375em;
 }
 
 .nav-bar .nav-item:not(.nav-current):not(#nav-item-search):hover,
@@ -230,10 +228,11 @@ body {
 
 .button.new-post:not(:hover),
 .button.new-private-message:not(:hover),
-.button.unignore-button:not(:hover){
+.button.unignore-button:not(:hover) {
 	color: #090;
 }
-.button.logout-button, .button.ignore-button {
+.button.logout-button,
+.button.ignore-button {
 	color: #d33;
 }
 
