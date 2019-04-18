@@ -2928,7 +2928,7 @@ function focusImage(imageToFocus) {
 		// Adjust image position appropriately.
 		image.style.left = parseInt(getComputedStyle(image).left) - deltaFromCenteredZoom.x + "px";
 		image.style.top = parseInt(getComputedStyle(image).top) - deltaFromCenteredZoom.y + "px";
-		// Gradually re-center image, if it's smaller than the window.
+		// Gradually re-center image, if it’s smaller than the window.
 		if (!imageSizeExceedsWindowBounds) {
 			let imageCenter = { x: image.getBoundingClientRect().x + image.getBoundingClientRect().width / 2, 
 								y: image.getBoundingClientRect().y + image.getBoundingClientRect().height / 2 }
@@ -2936,10 +2936,14 @@ function focusImage(imageToFocus) {
 								 y: window.innerHeight / 2 }
 			let imageOffsetFromCenter = { x: windowCenter.x - imageCenter.x,
 										  y: windowCenter.y - imageCenter.y }
-			// Divide the offset by 10 because we’re nudging the image toward,
-			// center not jumping it there.
-			image.style.left = parseInt(getComputedStyle(image).left) + imageOffsetFromCenter.x / 10 + "px";
-			image.style.top = parseInt(getComputedStyle(image).top) + imageOffsetFromCenter.y / 10 + "px";
+			// Divide the offset by 10 because we’re nudging the image toward
+			// center, not jumping it there.
+			image.style.left = Math.abs(imageOffsetFromCenter.x) < 10 ? 
+							   windowCenter.x : 
+							   parseInt(getComputedStyle(image).left) + imageOffsetFromCenter.x / 10 + "px";
+			image.style.top = Math.abs(imageOffsetFromCenter.y) < 10 ? 
+							  windowCenter.y : 
+							  parseInt(getComputedStyle(image).top) + imageOffsetFromCenter.y / 10 + "px";
 		}
 
 		// Put the filter back.
