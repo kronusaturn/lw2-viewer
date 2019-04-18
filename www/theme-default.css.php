@@ -754,6 +754,12 @@ body {
 .archive-nav {
 	outline: 1px solid #aaa;
 	border-color: #fff;
+	background-color: #ddd;
+	padding: 1px 0 1px 1px;
+}
+
+.archive-nav > *::after {
+	background-color: #ddd;
 }
 .archive-nav > *:nth-child(n+2) {
 	margin: 1px 0 0 0;
@@ -771,6 +777,10 @@ body {
 .archive-nav-days .archive-nav-item-day {
 	padding: 7px 0 5px 0;
 }
+.archive-nav-days .archive-nav-item-day:first-child {
+	padding: 7px 10px 5px 9px;
+}
+
 .archive-nav a:hover,
 .archive-nav span[class^='archive-nav-item'] {
 	background-color: #ddd;

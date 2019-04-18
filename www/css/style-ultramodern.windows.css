@@ -2689,24 +2689,25 @@ a#inbox-indicator.new-messages:hover::before {
 }
 
 .archive-nav > * {
-	display: grid;
-	grid-gap: 1px;
-	justify-content: start;
+	display: flex;
+	overflow: hidden;
+	position: relative;
 }
-.archive-nav-years {
-	grid-template-columns: 6% repeat(auto-fit, minmax(5%, auto));
-}
-.archive-nav-months {
-	grid-template-columns: 7% repeat(auto-fit, minmax(5%, auto));
-}
-.archive-nav-days {
-	grid-template-columns: 5% repeat(auto-fit, minmax(2.5%, auto));
+.archive-nav > *::after {
+	content: "";
+	width: 1px;
+	height: calc(100% + 1px);
+	position: absolute;
+	top: -1px;
+	right: 0;
 }
 
 .archive-nav *[class^='archive-nav-item'] {
 	line-height: 1;
 	text-align: center;
+	flex: 1 1 5%;
 }
+
 .archive-nav span[class^='archive-nav-item'] {
 	font-weight: var(--GW-UI-font-weight-heavy);
 }
