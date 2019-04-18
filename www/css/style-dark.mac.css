@@ -2407,11 +2407,15 @@ a#inbox-indicator.new-messages:hover::before {
 		justify-content: center;
 		flex-wrap: wrap;
 		font-size: 1.125em;
+		padding-top: 0.25em;
 	}
 	#content.user-page .page-toolbar > * {
-		padding: 0.25em 0.75em;
+		padding: 0.5em 1em;
 		white-space: nowrap;
-		margin: 0.25em 0.5em;
+		margin: 1em 0.5em 0 0.5em;
+	}
+	#content.user-page .page-toolbar button {
+		padding: 0;
 	}
 }
 
@@ -6155,6 +6159,25 @@ body {
 .button.logout-button,
 .button.ignore-button {
 	color: #0094be;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 640px) {
+	#content.user-page .page-toolbar > * {
+		border: 1px solid #2c2c2c;
+		border-radius: 8px;
+	}
+	#content.user-page .page-toolbar > .rss {
+		padding-top: calc(0.5em + 1px);
+		padding-bottom: calc(0.5em - 1px);
+	}
+	#content.user-page .page-toolbar > *:hover {
+		background-color: #131313;
+		border-color: #393939;
+	}
 }
 
 /*==============*/

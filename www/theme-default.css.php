@@ -248,6 +248,25 @@ body {
 	color: #d33;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 640px) {
+	#content.user-page .page-toolbar > * {
+		border: 1px solid #ccc;
+		border-radius: 8px;
+	}
+	#content.user-page .page-toolbar > .rss {
+		padding-top: calc(0.5em + 1px);
+		padding-bottom: calc(0.5em - 1px);
+	}
+	#content.user-page .page-toolbar > *:hover {
+		background-color: #eee;
+		border-color: #bbb;
+	}
+}
+
 /*==============*/
 /* SUBLEVEL NAV */
 /*==============*/
