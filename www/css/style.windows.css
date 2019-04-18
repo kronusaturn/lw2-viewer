@@ -2686,12 +2686,12 @@ a#inbox-indicator.new-messages:hover::before {
 	margin: 1.5em var(--GW-current-page-content-right-side-padding) 0 var(--GW-current-page-content-left-side-padding);
 	border-width: 0.25em;
 	border-style: solid;
-	padding: 1px 0 1px 1px;
 }
 
 .archive-nav > * {
 	display: grid;
 	grid-gap: 1px;
+	justify-content: start;
 }
 .archive-nav-years {
 	grid-template-columns: 6% repeat(auto-fit, minmax(5%, auto));
@@ -6668,7 +6668,6 @@ body {
 .archive-nav {
 	outline: 1px solid #aaa;
 	border-color: #fff;
-	background-color: #ddd;
 }
 .archive-nav > *:nth-child(n+2) {
 	margin: 1px 0 0 0;
@@ -6676,6 +6675,7 @@ body {
 .archive-nav *[class^='archive-nav-item'] {
 	padding: 6px 4px 4px 4px;
 	background-color: #eee;
+	outline: 1px solid #ddd;
 }
 @supports (-moz-user-focus: normal) {
 	.archive-nav *[class^='archive-nav-item'] {

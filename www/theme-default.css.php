@@ -754,7 +754,6 @@ body {
 .archive-nav {
 	outline: 1px solid #aaa;
 	border-color: #fff;
-	background-color: #ddd;
 }
 .archive-nav > *:nth-child(n+2) {
 	margin: 1px 0 0 0;
@@ -762,6 +761,7 @@ body {
 .archive-nav *[class^='archive-nav-item'] {
 	padding: 6px 4px 4px 4px;
 	background-color: #eee;
+	outline: 1px solid #ddd;
 }
 @supports (-moz-user-focus: normal) {
 	.archive-nav *[class^='archive-nav-item'] {
