@@ -6139,6 +6139,23 @@ body {
 	color: #000;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	#secondary-bar .nav-inner {
+		font-size: 1em;
+	}
+	#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
+		padding: 6px 10px;
+	}
+	#primary-bar .nav-inner::before, 
+	#secondary-bar .nav-inner::before {
+		opacity: 0.8;
+	}
+}
+
 /*==============*/
 /* PAGE TOOLBAR */
 /*==============*/
@@ -6295,6 +6312,40 @@ body {
 		left: 100%;
 	}	
 }
+@media only screen and (max-width: 960px) {
+	#theme-selector {
+		background-color: #eee;
+		box-shadow: 
+			0 0 0 1px #999,
+			0 0 1px 3px #fff,
+			0 0 3px 3px #fff,
+			0 0 5px 3px #fff,
+			0 0 10px 3px #fff,
+			0 0 20px 3px #fff;
+		border-radius: 12px;
+	}
+	#theme-selector::before,
+	#theme-selector .theme-selector-close-button {
+		color: #888;
+		text-shadow: 0.5px 0.5px 0 #fff;
+	}
+	#theme-selector button {
+		background-color: #e6e6e6;
+		border-radius: 10px;
+	}
+	#theme-selector button::after {
+		color: #000;
+		padding-bottom: 2px;
+		max-width: calc(100% - 3.25em);
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	#theme-selector button.selected::after {
+		text-shadow: 
+			0 -1px 0 #fff,
+			0 0.5px 0.5px #000;
+	}
+}
 
 /*======================*/
 /* THEME TWEAKER TOGGLE */
@@ -6344,7 +6395,7 @@ body {
 	opacity: 0.4;
 	color: #bbb;
 }
-@media only screen and (hover:hover) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	#quick-nav-ui a:hover  {
 		color: #000;
 		background-color: #d8d8d8;
@@ -6384,7 +6435,7 @@ body {
 	color: #bbb;
 	text-shadow: none;
 }
-@media only screen and (hover:hover) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	#new-comment-nav-ui .new-comments-count:hover {
 		text-shadow: 
 			0 0 1px #fff,
@@ -6443,6 +6494,75 @@ body {
 	#hns-date-picker::before {
 		border: 1px solid #ccc;
 		border-width: 1px 0 1px 1px;
+	}
+}
+
+/*================================*
+	MOBILE VERSIONS OF QUICKNAV,
+	NEW COMMENT NAV, AND HNS
+	DATE PICKER
+ *================================*/
+	
+@media only screen and (max-width: 960px) {
+	#quick-nav-ui {
+		background-color: #fff;
+	}
+	#quick-nav-ui a {
+		background-color: #eee;
+		box-shadow: 0 0 0 1px #999;
+	}
+	#quick-nav-ui,
+	#new-comment-nav-ui,
+	#hns-date-picker {
+		box-shadow:
+			0 0 1px 3px #fff,
+			0 0 3px 3px #fff,
+			0 0 5px 3px #fff,
+			0 0 10px 3px #fff,
+			0 0 20px 3px #fff;
+	}
+	#quick-nav-ui a::after,
+	#new-comment-nav-ui::before {
+		font-family: ;
+		font-weight: 600;
+		box-shadow:
+			0 0 1px 0 #fff,
+			0 0 3px 0 #fff,
+			0 0 5px 0 #fff;
+		background-color: #fff;
+		border-radius: 4px;
+	}
+	#quick-nav-ui,
+	#new-comment-nav-ui {
+		border-radius: 8px;
+	}
+	#new-comment-nav-ui {
+		background-color: #eee;
+		border: 1px solid #999;
+	}
+	#new-comment-nav-ui::before {
+		color: #777;
+		font-weight: 600;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button {
+		box-shadow: 0 0 0 1px #999;
+		color: #777;
+	}
+	#new-comment-nav-ui .new-comments-count {
+		background-color: inherit;
+		box-shadow: 0 -1px 0 0 #999;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
+		color: #bbb;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-previous {
+		border-radius: 7px 0 0 7px;
+	}
+	#new-comment-nav-ui button::after {
+		font-family: ;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-next {
+		border-radius: 0 7px 7px 0;
 	}
 }
 
@@ -6573,6 +6693,16 @@ body {
 	background-color: #ddd;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
+		background-color: #aaa;
+	}
+}
+
 /*==========*/
 /* LISTINGS */
 /*==========*/
@@ -6591,7 +6721,7 @@ h1.listing a[href^="http"] {
 	top: 3px;
 }
 
-@media only screen and (hover: hover) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		color: #777;
@@ -6688,6 +6818,19 @@ h1.listing + .post-meta .link-post-domain {
 	order: 1;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	h1.listing + .post-meta > * {
+		line-height: 1.5;
+	}
+	h1.listing + .post-meta .post-section::before {
+		position: unset;
+	}
+}
+
 /*============*/
 /* USER PAGES */
 /*============*/
@@ -6712,7 +6855,7 @@ h1.listing + .post-meta .link-post-domain {
 h1.listing.own-post-listing {
 	padding-right: 36px;
 }
-@media only screen and (hover: hover) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	#content.user-page h1.listing a:hover,
 	#content.user-page h1.listing a:focus {
 		background-color: #eee;
@@ -7124,6 +7267,19 @@ a.post-section.alignment-forum:hover::before {
 		4px	4px 0 12px #ffd inset !important;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	.comment-item .comment-item {
+		margin: 0.75em 2px 4px 6px;
+	}
+	.comment-item .comment-item + .comment-item {
+		margin: 1.5em 2px 4px 6px;
+	}
+}
+
 /*================================*/
 /* DEEP COMMENT THREAD COLLAPSING */
 /*================================*/
@@ -7243,6 +7399,16 @@ div.comment-child-links a {
 	background-color: #fff;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	a.comment-parent-link:hover::before {
+		background-color: unset;
+	}
+}
+
 /*=======================*/
 /* COMMENTS COMPACT VIEW */
 /*=======================*/
@@ -7261,7 +7427,7 @@ div.comment-child-links a {
 	background: linear-gradient(to right, transparent 0%, #fff 50%, #fff 100%);
 }
 
-@media only screen and (hover: hover) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	#content.compact > .comment-thread .comment-item:hover .comment,
 	#content.compact > .comment-thread .comment-item.expanded .comment {
 		background-color: #fff;
@@ -7280,7 +7446,7 @@ div.comment-child-links a {
 			0 0 40px #fff;
 	}
 }
-@media only screen and (hover: none) {
+@media not screen and (hover: hover) and (pointer: fine) {
 	#content.compact > .comment-thread.expanded .comment-item .comment {
 		background-color: #fff;
 		outline: 3px solid var(--GW-hyperlink-color);
@@ -7572,7 +7738,7 @@ button.guiedit::after {
 	border: 1px solid #ddd;
 	color: #777;
 }
-@media only screen and (hover:hover) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover,
 	#edit-post-form .post-meta-fields input[type='checkbox']:focus + label {
 		text-shadow: 
@@ -7844,7 +8010,7 @@ select {
 	text-shadow: 
 		rgba(255,255,255,0.5) 0px 3px 3px;;
 }
-@media only screen and (hover: hover) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	#content.alignment-forum-index-page h1.listing a:hover,
 	#content.alignment-forum-index-page h1.listing a:focus {
 		background-color: rgba(241,243,255,0.85);
@@ -7855,217 +8021,62 @@ select {
 /* MOBILE */
 /*========*/
 
-/*************************************/
-@media only screen and (hover: none) {
-/*************************************/
-	#ui-elements-container > div[id$='-ui-toggle'] button  {
-		color: #aaa;
-		text-shadow:
-			0 0 1px #fff,
-			0 0 3px #fff,
-			0 0 5px #fff,
-			0 0 10px #fff,
-			0 0 20px #fff,
-			0 0 30px #fff;
+/*******************************************/
+@media only screen and (max-width: 520px) {
+/*******************************************/
+	h1.listing {
+		font-size: 1.25rem;
+		margin: 18px 6px 4px 6px;
+		max-width: calc(100% - 12px);
+	}
+	h1.listing + .post-meta {
+		margin: 4px 6px;
+	}
+	h1.listing a[href^='http'] {
+		top: 2px;
 	}
 
-	#theme-selector {
-		background-color: #eee;
-		box-shadow: 
-			0 0 0 1px #999,
-			0 0 1px 3px #fff,
-			0 0 3px 3px #fff,
-			0 0 5px 3px #fff,
-			0 0 10px 3px #fff,
-			0 0 20px 3px #fff;
-		border-radius: 12px;
-	}
-	#theme-selector::before,
-	#theme-selector .theme-selector-close-button {
-		color: #888;
-		text-shadow: 0.5px 0.5px 0 #fff;
-	}
-	#theme-selector button {
-		background-color: #e6e6e6;
-		border-radius: 10px;
-	}
-	#theme-selector button::after {
-		color: #000;
-		padding-bottom: 2px;
-		max-width: calc(100% - 3.25em);
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-	#theme-selector button.selected::after {
-		text-shadow: 
-			0 -1px 0 #fff,
-			0 0.5px 0.5px #000;
+	#content.compact > .comment-thread .comment-item {
+		max-height: 108px;
 	}
 
-	#quick-nav-ui {
-		background-color: #fff;
+	.textarea-container:focus-within button:active {
+		background-color: #ccc;
 	}
-	#quick-nav-ui a {
+	.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
 		background-color: #eee;
-		box-shadow: 0 0 0 1px #999;
+		border: 1px solid #ddd;
+		border-radius: 6px;
 	}
-	#quick-nav-ui,
-	#new-comment-nav-ui,
-	#hns-date-picker {
+	.textarea-container:focus-within .guiedit-mobile-help-button.active {
+		border-color: #c00;
 		box-shadow:
-			0 0 1px 3px #fff,
-			0 0 3px 3px #fff,
-			0 0 5px 3px #fff,
-			0 0 10px 3px #fff,
-			0 0 20px 3px #fff;
-	}
-	#quick-nav-ui a::after,
-	#new-comment-nav-ui::before {
-		font-family: ;
-		font-weight: 600;
-		box-shadow:
-			0 0 1px 0 #fff,
-			0 0 3px 0 #fff,
-			0 0 5px 0 #fff;
-		background-color: #fff;
-		border-radius: 4px;
-	}
-	#quick-nav-ui,
-	#new-comment-nav-ui {
-		border-radius: 8px;
-	}
-	#new-comment-nav-ui {
-		background-color: #eee;
-		border: 1px solid #999;
-	}
-	#new-comment-nav-ui::before {
-		color: #777;
+			0 0 0 1px #fff,
+			0 0 0 2px #c00;
+		color: #c00;
 		font-weight: 600;
 	}
-	#new-comment-nav-ui .new-comment-sequential-nav-button {
-		box-shadow: 0 0 0 1px #999;
-		color: #777;
+	.textarea-container:focus-within .guiedit-buttons-container {
+		background-color: #fff;
+		border-top: 1px solid #ddf;
 	}
-	#new-comment-nav-ui .new-comments-count {
-		background-color: inherit;
-		box-shadow: 0 -1px 0 0 #999;
+	#content.conversation-page .textarea-container:focus-within::after {
+		background-color: #fff;
 	}
-	#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
-		color: #bbb;
+	.textarea-container:focus-within button.guiedit {
+		background-color: #eee;
+		border: 1px solid #ddd;
+		border-radius: 6px;
 	}
-	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-previous {
-		border-radius: 7px 0 0 7px;
-	}
-	#new-comment-nav-ui button::after {
-		font-family: ;
-	}
-	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-next {
-		border-radius: 0 7px 7px 0;
+	#markdown-hints::after {
+		color: #090;
 	}
 
-	/*****************************************/
-	@media only screen and (max-width: 900px) {
-	/*****************************************/
-		h1.listing + .post-meta > * {
-			line-height: 1.5;
-		}
-		h1.listing + .post-meta .post-section::before {
-			position: unset;
-		}
-
-		#secondary-bar .nav-inner {
-			font-size: 1em;
-		}
-		#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
-			padding: 6px 10px;
-		}
-		#primary-bar .nav-inner::before, 
-		#secondary-bar .nav-inner::before {
-			opacity: 0.8;
-		}
-
-		.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
-			background-color: #aaa;
-		}
-
-		.comment-item .comment-item {
-			margin: 0.75em 2px 4px 6px;
-		}
-		.comment-item .comment-item + .comment-item {
-			margin: 1.5em 2px 4px 6px;
-		}
-
-		a.comment-parent-link:hover::before {
-			background-color: unset;
-		}
-
-		.sublevel-nav:not(.sort) .sublevel-item,
-		.sublevel-nav:not(.sort) .sublevel-item:first-child,
-		.sublevel-nav:not(.sort) .sublevel-item:last-child {
-			border-radius: 8px;
-			border-width: 1px;
-			margin: 2px;
-		}
-	/*******************************************/
-	} @media only screen and (max-width: 720px) {
-	/*******************************************/
-	/*******************************************/
-	} @media only screen and (max-width: 520px) {
-	/*******************************************/
-		h1.listing {
-			font-size: 1.25rem;
-			margin: 18px 6px 4px 6px;
-			max-width: calc(100% - 12px);
-		}
-		h1.listing + .post-meta {
-			margin: 4px 6px;
-		}
-		h1.listing a[href^='http'] {
-			top: 2px;
-		}
-
-		#content.compact > .comment-thread .comment-item {
-			max-height: 108px;
-		}
-	
-		.textarea-container:focus-within button:active {
-			background-color: #ccc;
-		}
-		.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
-			background-color: #eee;
-			border: 1px solid #ddd;
-			border-radius: 6px;
-		}
-		.textarea-container:focus-within .guiedit-mobile-help-button.active {
-			border-color: #c00;
-			box-shadow:
-				0 0 0 1px #fff,
-				0 0 0 2px #c00;
-			color: #c00;
-			font-weight: 600;
-		}
-		.textarea-container:focus-within .guiedit-buttons-container {
-			background-color: #fff;
-			border-top: 1px solid #ddf;
-		}
-		#content.conversation-page .textarea-container:focus-within::after {
-			background-color: #fff;
-		}
-		.textarea-container:focus-within button.guiedit {
-			background-color: #eee;
-			border: 1px solid #ddd;
-			border-radius: 6px;
-		}
-		#markdown-hints::after {
-			color: #090;
-		}
-
-		#edit-post-form .post-meta-fields input[type='checkbox'] + label {
-			top: 2px;
-		}
-		#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
-			top: 1px;
-		}
+	#edit-post-form .post-meta-fields input[type='checkbox'] + label {
+		top: 2px;
+	}
+	#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
+		top: 1px;
 	}
 }
 

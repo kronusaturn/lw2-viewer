@@ -570,11 +570,11 @@ body {
 	border-width: 1px 0 1px 1px;
 }
 
-/*--------------------------------*
+/*================================*
 	MOBILE VERSIONS OF QUICKNAV,
 	NEW COMMENT NAV, AND HNS
 	DATE PICKER
- *--------------------------------*/
+ *================================*/
 	
 @media only screen and (max-width: 960px) {
 	#quick-nav-ui {
