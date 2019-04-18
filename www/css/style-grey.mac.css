@@ -6300,20 +6300,15 @@ body {
 	#theme-selector {
 		background-color: var(--GW-body-background-color);
 		box-shadow: 
-			0 0 0 1px #999,
+			0 0 0 1px #bbb,
 			0 0 0 2px transparent;
 	}
 	#theme-selector:hover::after {
-		background-color: #999;
-		width: calc(6em - 3px);
-		height: calc(100% - 5px);
-		top: 3px;
-		left: 100%;
+		background-color: #bbb;
 	}	
 }
 @media only screen and (max-width: 960px) {
 	#theme-selector {
-		background-color: #eee;
 		box-shadow: 
 			0 0 0 1px #999,
 			0 0 1px 3px #fff,
@@ -6334,10 +6329,6 @@ body {
 	}
 	#theme-selector button::after {
 		color: #000;
-		padding-bottom: 2px;
-		max-width: calc(100% - 3.25em);
-		overflow: hidden;
-		text-overflow: ellipsis;
 	}
 	#theme-selector button.selected::after {
 		text-shadow: 

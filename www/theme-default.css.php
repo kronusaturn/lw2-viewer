@@ -389,7 +389,6 @@ body {
 }
 @media only screen and (max-width: 960px) {
 	#theme-selector {
-		background-color: #d8d8d8;
 		box-shadow: 
 			0 0 0 1px #999,
 			0 0 1px 3px #fff,
@@ -411,9 +410,6 @@ body {
 	#theme-selector button::after {
 		color: #000;
 		padding-bottom: 2px;
-		max-width: calc(100% - 3.25em);
-		overflow: hidden;
-		text-overflow: ellipsis;
 	}
 	#theme-selector button.selected::after {
 		text-shadow: 
