@@ -158,5 +158,9 @@
 	--GW-button-background-color: transparent;
 	--GW-button-hover-background-color: transparent;
 	--GW-button-active-background-color: transparent;
+
+	--GW-archive-nav-item-color: var(--GW-hyperlink-color);
+	--GW-archive-nav-item-hover-color: var(--GW-hyperlink-hover-color);
+	--GW-archive-nav-item-active-color: var(--GW-hyperlink-active-color);
 }
 

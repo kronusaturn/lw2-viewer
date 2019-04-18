@@ -60,6 +60,8 @@
 	--GW-hyperlink-visited-color: #551a8b;
 	--GW-hyperlink-hover-color: #c00;
 	--GW-hyperlink-active-color: #e00;
+
+	--GW-archive-nav-item-color: rgba(0, 0, 238, 0.75);
 	
 	--GW-shadow-white-glow:
 		0 0 1px #fff,

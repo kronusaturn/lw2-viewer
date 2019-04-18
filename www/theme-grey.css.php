@@ -70,6 +70,8 @@
 	--GW-button-hover-color: #d00;
 	--GW-button-active-color: #f00;
 
+	--GW-archive-nav-item-color: rgba(136, 136, 136, 0.75);
+
 	--GW-shadow-white-glow:
 		0 0 1px #fff,
 		0 0 3px #fff,
@@ -782,41 +784,22 @@ body {
 /*==========*/
 
 .archive-nav {
-	border: 1px solid #aaa;
+	outline: 1px solid #aaa;
+	border-color: #fff;
 }
+
 .archive-nav *[class^='archive-nav-item'] {
-	border-style: solid;
-	border-color: #d8d8d8;
-	border-width: 1px 0 1px 1px;
-	background-color: #eaeaea;
-	margin: 0 -1px 0 0;
-}
-.archive-nav *[class^='archive-nav-item']:last-child {
-	border-width: 1px;
-}
-.archive-nav *[class^='archive-nav-']:nth-of-type(2) *[class^='archive-nav-item'] {
-	margin: -1px -1px -1px 0;
+	background-color: #eee;
+	outline: 1px solid #ddd;
 }
 .archive-nav a:hover,
 .archive-nav span[class^='archive-nav-item'] {
-	background-color: #d8d8d8;
+	background-color: #ddd;
 }
 
-.archive-nav a:link,
-.archive-nav a:visited {
-	opacity: 0.7;
-	color: #888;
-}
 .archive-nav a:hover {
 	text-decoration: none;
-	color: var(--GW-hyperlink-hover-color);
 	text-shadow: var(--GW-shadow-white-glow);
-	opacity: 1;
-	z-index: 1;
-}
-.archive-nav a:active,
-.archive-nav a:focus {
-	color: var(--GW-hyperlink-active-color);
 }
 
 /*=----------------------------=*/

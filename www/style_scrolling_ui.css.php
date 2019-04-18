@@ -1067,16 +1067,14 @@ a#inbox-indicator.new-messages:hover::before {
 
 .archive-nav a,
 .archive-nav a:visited {
-	color: var(--GW-hyperlink-color);
+	color: var(--GW-archive-nav-item-color);
 }
 .archive-nav a:hover {
-	text-decoration: none;
-	color: var(--GW-hyperlink-hover-color);
-	text-shadow: var(--GW-shadow-white-glow);
+	color: var(--GW-archive-nav-item-hover-color);
 }
 .archive-nav a:active,
 .archive-nav a:focus {
-	color: var(--GW-hyperlink-active-color);
+	color: var(--GW-archive-nav-item-active-color);
 }
 
 /*=----------------------------=*/
