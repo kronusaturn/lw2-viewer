@@ -6182,6 +6182,25 @@ body {
 	color: var(--GW-button-color);
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 640px) {
+	#content.user-page .page-toolbar > * {
+		border: 1px solid #ddd;
+		border-radius: 8px;
+	}
+	#content.user-page .page-toolbar > .rss {
+		padding-top: calc(0.5em + 1px);
+		padding-bottom: calc(0.5em - 1px);
+	}
+	#content.user-page .page-toolbar > *:hover {
+		background-color: #f6f6f6;
+		border-color: #ccc;
+	}
+}
+
 /*==============*/
 /* SUBLEVEL NAV */
 /*==============*/
