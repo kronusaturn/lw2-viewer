@@ -2098,7 +2098,7 @@ a {
 
 #top-nav-bar {
 	grid-row: 3;
-	margin: 0.25em 0;
+	margin: 0.25em 0 0.5em 0;
 	padding: 1em 0 0 0;
 	text-align: center;
 	font-size: 1.25rem;
@@ -2110,6 +2110,7 @@ a {
 }
 #content.user-page #top-nav-bar {
 	grid-row: 6;
+	margin: 0.25em 0 0 0;
 }
 #content.archive-page #top-nav-bar {
 	grid-row: 4;
@@ -2466,8 +2467,9 @@ a#inbox-indicator.new-messages:hover::before {
 #content.index-page .sublevel-nav.sort {
 	grid-row: 3 / span 1;
 	justify-self: start;
+	align-self: center;
 	flex-flow: row;
-	margin: 1em 0 0 calc(var(--GW-current-page-content-left-side-padding) - 20px);
+	margin: 0 0 0 calc(var(--GW-current-page-content-left-side-padding) - 20px);
 }
 #content.user-page .sublevel-nav.sort {
 	margin: 1em var(--GW-current-page-content-right-side-padding) 1em 0;
@@ -2499,7 +2501,7 @@ a#inbox-indicator.new-messages:hover::before {
 
 @media only screen and (max-width: 900px) {
 	#content.index-page .sublevel-nav.sort {
-		margin: 1em 0 0 var(--GW-current-page-content-left-side-padding);
+		margin: 0 0 0 var(--GW-current-page-content-left-side-padding);
 	}
 	#content.user-page .sublevel-nav.sort {
 		grid-row: 6;
@@ -2509,8 +2511,6 @@ a#inbox-indicator.new-messages:hover::before {
 @media only screen and (max-width: 720px) {
 	#content.index-page .sublevel-nav.sort {
 		flex-flow: column;
-		align-self: center;
-		margin: 0 0 0 var(--GW-current-page-content-left-side-padding);
 	}
 }
 @media only screen and (max-width: 520px) {
@@ -2552,6 +2552,7 @@ a#inbox-indicator.new-messages:hover::before {
 	#content.user-page #comments-list-mode-selector {
 		grid-row: 6;
 		flex-flow: row;
+		align-self: end;
 	}
 	#content.recent-comments-page #comments-list-mode-selector {
 		flex-flow: column;
@@ -5959,6 +5960,10 @@ li {
 	--GW-nav-bar-item-hover-color: #888;
 	--GW-nav-bar-item-active-color: #888;
 
+	--GW-button-color: #999;
+	--GW-button-hover-color: #d00;
+	--GW-button-active-color: #f00;
+
 	--GW-shadow-white-glow:
 		0 0 1px #fff,
 		0 0 3px #fff,
@@ -7504,38 +7509,19 @@ a:hover {
 /* BUTTONS */
 /*=========*/
 
-button,
-input[type='submit'] {
-	color: ;
-}
-
-.button,
-.button:visited {
-	color: #999;
-}
-
 button:hover,
 input[type='submit']:hover,
 button:focus,
-input[type='submit']:focus {
-	color: #d00;
-	text-shadow: ;
-}
-button:active,
-input[type='submit']:active {
-	color: #f00;
-	transform: scale(0.9);
-}
-.button:hover {
-	color: #d00;
-	text-shadow: ;
+input[type='submit']:focus,
+.button:hover,
+.button:focus {
+	text-shadow: var(--GW-shadow-white-glow);
 	text-decoration: none;
 }
+button:active,
+input[type='submit']:active,
 .button:active {
 	transform: scale(0.9);
-}
-.button:focus:not(:hover) {
-	transform: none;
 }
 @supports (-moz-user-focus: normal) {
 	.button:active {
@@ -7550,20 +7536,13 @@ input[type='submit']:active {
 .body-text h1,
 .body-text h2,
 .body-text h4 {
-	font-family: ;
+	font-family: var(--GW-UI-font);
 }
 .body-text h3,
 .body-text h5,
 .body-text h6 {
-	font-family: ;
-}
-.body-text h1,
-.body-text h2,
-.body-text h3,
-.body-text h4,
-.body-text h5,
-.body-text h6 {
-	font-weight: 400;
+	font-family: var(--GW-UI-font-smallcaps);
+	letter-spacing: -0.02em;
 }
 .body-text h6 {
 	color: #555;
@@ -7660,20 +7639,6 @@ select {
 /*============*/
 /* ABOUT PAGE */
 /*============*/
-
-.about-page mark {
-	background-color: #e6e6e6;
-	text-decoration: none;
-	box-shadow: 
-		0 -1px 0 0 #000 inset, 
-		0 -3px 1px -2px #000 inset;
-	padding: 0 1px;
-}
-
-#content.about-page .accesskey-table {
-	font-family: ;
-	border-color: #ddd;
-}
 
 #content.about-page img {
 	border: 1px solid #000;

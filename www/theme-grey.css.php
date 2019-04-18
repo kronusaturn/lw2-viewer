@@ -66,6 +66,10 @@
 	--GW-nav-bar-item-hover-color: #888;
 	--GW-nav-bar-item-active-color: #888;
 
+	--GW-button-color: #999;
+	--GW-button-hover-color: #d00;
+	--GW-button-active-color: #f00;
+
 	--GW-shadow-white-glow:
 		0 0 1px #fff,
 		0 0 3px #fff,
@@ -1563,38 +1567,19 @@ a:hover {
 /* BUTTONS */
 /*=========*/
 
-button,
-input[type='submit'] {
-	color: <?php echo $hyperlink_color; ?>;
-}
-
-.button,
-.button:visited {
-	color: #999;
-}
-
 button:hover,
 input[type='submit']:hover,
 button:focus,
-input[type='submit']:focus {
-	color: #d00;
-	text-shadow: <?php echo $white_glow; ?>;
-}
-button:active,
-input[type='submit']:active {
-	color: #f00;
-	transform: scale(0.9);
-}
-.button:hover {
-	color: #d00;
-	text-shadow: <?php echo $white_glow; ?>;
+input[type='submit']:focus,
+.button:hover,
+.button:focus {
+	text-shadow: var(--GW-shadow-white-glow);
 	text-decoration: none;
 }
+button:active,
+input[type='submit']:active,
 .button:active {
 	transform: scale(0.9);
-}
-.button:focus:not(:hover) {
-	transform: none;
 }
 <?php echo $firefox_exclusive; ?> {
 	.button:active {
@@ -1609,20 +1594,13 @@ input[type='submit']:active {
 .body-text h1,
 .body-text h2,
 .body-text h4 {
-	font-family: <?php echo $UI_font; ?>;
+	font-family: var(--GW-UI-font);
 }
 .body-text h3,
 .body-text h5,
 .body-text h6 {
-	font-family: <?php echo $UI_font_smallcaps; ?>;
-}
-.body-text h1,
-.body-text h2,
-.body-text h3,
-.body-text h4,
-.body-text h5,
-.body-text h6 {
-	font-weight: 400;
+	font-family: var(--GW-UI-font-smallcaps);
+	letter-spacing: -0.02em;
 }
 .body-text h6 {
 	color: #555;
@@ -1719,20 +1697,6 @@ select {
 /*============*/
 /* ABOUT PAGE */
 /*============*/
-
-.about-page mark {
-	background-color: #e6e6e6;
-	text-decoration: none;
-	box-shadow: 
-		0 -1px 0 0 #000 inset, 
-		0 -3px 1px -2px #000 inset;
-	padding: 0 1px;
-}
-
-#content.about-page .accesskey-table {
-	font-family: <?php echo $UI_font; ?>;
-	border-color: #ddd;
-}
 
 #content.about-page img {
 	border: 1px solid #000;

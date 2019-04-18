@@ -2050,9 +2050,10 @@ select {
 	color: #000;
 }
 
-<?php if ($platform != 'Mac') echo <<<EOT
-<?php echo $firefox_exclusive; ?> {
-	h1.listing s,
+<?php if ($platform != 'Mac')
+echo "{$firefox_exclusive} {";
+echo <<<EOT
+h1.listing s,
 	.post > h1:first-of-type s {
 	  position: relative;
 	  text-decoration: none;
@@ -2065,7 +2066,7 @@ select {
 	  top: 0;
 	  left: 0;
 	  width: 100%;
-	  height: 50%;
+	  height: calc(50% + 6px)
 	}
 }
 EOT;

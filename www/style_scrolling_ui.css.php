@@ -445,7 +445,7 @@ EOT;
 
 #top-nav-bar {
 	grid-row: 3;
-	margin: 0.25em 0;
+	margin: 0.25em 0 0.5em 0;
 	padding: 1em 0 0 0;
 	text-align: center;
 	font-size: 1.25rem;
@@ -457,6 +457,7 @@ EOT;
 }
 #content.user-page #top-nav-bar {
 	grid-row: 6;
+	margin: 0.25em 0 0 0;
 }
 #content.archive-page #top-nav-bar {
 	grid-row: 4;
@@ -817,8 +818,9 @@ a#inbox-indicator.new-messages:hover::before {
 #content.index-page .sublevel-nav.sort {
 	grid-row: 3 / span 1;
 	justify-self: start;
+	align-self: center;
 	flex-flow: row;
-	margin: 1em 0 0 calc(var(--GW-current-page-content-left-side-padding) - 20px);
+	margin: 0 0 0 calc(var(--GW-current-page-content-left-side-padding) - 20px);
 }
 #content.user-page .sublevel-nav.sort {
 	margin: 1em var(--GW-current-page-content-right-side-padding) 1em 0;
@@ -850,7 +852,7 @@ a#inbox-indicator.new-messages:hover::before {
 
 @media only screen and (max-width: 900px) {
 	#content.index-page .sublevel-nav.sort {
-		margin: 1em 0 0 var(--GW-current-page-content-left-side-padding);
+		margin: 0 0 0 var(--GW-current-page-content-left-side-padding);
 	}
 	#content.user-page .sublevel-nav.sort {
 		grid-row: 6;
@@ -860,8 +862,6 @@ a#inbox-indicator.new-messages:hover::before {
 @media only screen and (max-width: 720px) {
 	#content.index-page .sublevel-nav.sort {
 		flex-flow: column;
-		align-self: center;
-		margin: 0 0 0 var(--GW-current-page-content-left-side-padding);
 	}
 }
 @media only screen and (max-width: 520px) {
@@ -903,6 +903,7 @@ a#inbox-indicator.new-messages:hover::before {
 	#content.user-page #comments-list-mode-selector {
 		grid-row: 6;
 		flex-flow: row;
+		align-self: end;
 	}
 	#content.recent-comments-page #comments-list-mode-selector {
 		flex-flow: column;
