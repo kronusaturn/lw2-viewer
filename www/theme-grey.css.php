@@ -59,10 +59,8 @@
 	--GW-body-background-color: #eee;
 	--GW-content-background-color: #fff;
 
-	--GW-hyperlink-color: #00e;
-	--GW-hyperlink-visited-color: #551a8b;
-	--GW-hyperlink-hover-color: #c00;
-	--GW-hyperlink-active-color: #e00;
+	--GW-hyperlink-color: #f60;
+	--GW-hyperlink-visited-color: #ff943b;
 
 	--GW-nav-bar-item-color: #888;
 	--GW-nav-bar-item-hover-color: #888;
@@ -113,10 +111,10 @@ body {
 
 #primary-bar .nav-inner,
 #bottom-bar .nav-inner {
-	font-size: 1.1875em;
+	font-size: 1.25em;
 }
 #secondary-bar .nav-inner {
-	font-size: 0.875rem;
+	font-size: 0.9375em;
 }
 
 .nav-item:not(.nav-current) .nav-inner {
@@ -225,8 +223,14 @@ body {
 @media only screen and (min-width: 961px) {
 	#nav-item-about button.open-keyboard-help {
 		padding: 7px 8px 9px 7px;
-		font-weight: 400;
+		font-weight: 300;
 	}
+}
+
+/*= Sequences tab =*/
+
+#nav-item-sequences .nav-inner {
+	font-weight: 300;
 }
 
 /*= Top pagination UI hover tooltips =*/
@@ -1053,17 +1057,6 @@ a.post-section.alignment-forum:hover::before {
 /* DEEP COMMENT THREAD COLLAPSING */
 /*================================*/
 
-.comment-item input[id^="expand"] + label::after {
-	color: <?php echo $hyperlink_color; ?>;
-	font-weight: 600;
-}
-.comment-item input[id^="expand"] + label:hover::after {
-	color: #c00;
-}
-.comment-item input[id^="expand"] + label:active::after,
-.comment-item input[id^="expand"] + label:focus::after{
-	color: #c00;
-}
 .comment-item input[id^="expand"]:checked ~ .comment-thread .comment-thread .comment-item {
 	border-width: 1px 0 0 0;
 }
@@ -1262,10 +1255,9 @@ div.comment-child-links a {
 }
 .comment-minimize-button:hover {
 	color: #aaa;
-	text-shadow: <?php echo $white_glow; ?>;
+	text-shadow: var(--GW-shadow-white-glow);
 }
 .comment-minimize-button::after {
-	font-family: <?php echo $UI_font; ?>;
 	color: #777;
 }
 .comment-minimize-button.maximized::after {
@@ -1376,7 +1368,7 @@ div.comment-child-links a {
 }
 .comment-controls .cancel-comment-button:hover {
 	color: #f00;
-	text-shadow: <?php echo $white_glow; ?>;
+	text-shadow: var(--GW-shadow-white-glow);
 }
 
 .new-comment-button {
@@ -1402,7 +1394,6 @@ div.comment-child-links a {
 
 .posting-controls textarea {
 	font-weight: 400;
-	font-family: <?php echo $text_font; ?>;
 	color: #000;
 	background-color: #fff;
 	border-color: #aaa;
@@ -1479,12 +1470,8 @@ div.comment-child-links a {
 .posting-controls form.edit-existing-comment .guiedit-buttons-container button {
 	color: #050;
 }
-button.guiedit {
-	font-family: Font Awesome, <?php echo $text_font; ?>;
-}
 
 button.guiedit::after {
-	font-family: <?php echo $UI_font; ?>;
 	color: #777;
 	text-shadow: none;
 }
@@ -1495,8 +1482,7 @@ button.guiedit::after {
 	color: #999;
 }
 #markdown-hints-checkbox + label:hover {
-	color: #e00;
-	text-shadow: <?php echo $white_glow; ?>;
+	text-shadow: var(--GW-shadow-white-glow);
 }
 #markdown-hints {
 	border: 1px solid #c00;
@@ -1568,10 +1554,6 @@ button.guiedit::after {
 
 a {
 	text-decoration: none;
-	color: <?php echo $hyperlink_color; ?>;
-}
-a:visited {
-	color: #ff943b;
 }
 a:hover {
 	text-decoration: underline;
