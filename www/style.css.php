@@ -2245,10 +2245,10 @@ a.comment-parent-link:hover::after {
 }
 
 .comment-item:target {
-	--GW-comment-background-color: var(--GW-comment-target-background-color);
+	--GW-comment-background-color: var(--GW-comment-background-color-target);
 }
 .comment-item:target > .comment-thread > .comment-item {
-	--GW-comment-parent-background-color: var(--GW-comment-target-background-color);
+	--GW-comment-parent-background-color: var(--GW-comment-background-color-target);
 }
 
 .comment-item.depth-odd {

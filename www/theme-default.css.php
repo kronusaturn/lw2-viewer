@@ -1049,8 +1049,8 @@ a.post-section.alignment-forum:hover::before {
 .comment-parent-link::after {
 	box-shadow: 
 		0 28px 16px -16px var(--GW-comment-parent-background-color) inset,
-		4px 16px 0 12px var(--GW-comment-target-background-color) inset,
-		4px	4px 0 12px var(--GW-comment-target-background-color) inset;
+		4px 16px 0 12px var(--GW-comment-background-color-target) inset,
+		4px	4px 0 12px var(--GW-comment-background-color-target) inset;
 }
 
 /*================================*/
