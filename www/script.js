@@ -2333,8 +2333,8 @@ function expandAncestorsOf(comment) {
 	if (parentOfContainingCollapseCheckbox) parentOfContainingCollapseCheckbox.query("input[id^='expand']").checked = true;
 
 	// Expand collapsed comments.
-	let containingTopLevelCommentItem = comment.closest(".comments > ul > li");
-	if (containingTopLevelCommentItem) containingTopLevelCommentItem.setCommentThreadMaximized(true, false, true);
+	let containingMinimizedCommentItem = comment.closest(".comments .comment-item.minimized");
+	if (containingMinimizedCommentItem) containingMinimizedCommentItem.setCommentThreadMaximized(true, false, true);
 }
 
 /**************************/

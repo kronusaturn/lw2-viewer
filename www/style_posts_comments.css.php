@@ -1029,7 +1029,7 @@ a.comment-child-link::before {
 /*= Minimized comments =*/
 /*=--------------------=*/
 
-.comment-item.minimized {
+.comment-item.minimized:not(:target) {
 	height: var(--GW-comment-minimized-height);
 	overflow: hidden;
 }
@@ -1040,7 +1040,7 @@ a.comment-child-link::before {
 
 
 @media only screen and (max-width: 520px) {
-	.comment-item.minimized {
+	.comment-item.minimized:not(:target) {
 		height: var(--GW-comment-minimized-height-mobile);
 	}
 	.comment-minimize-button {
