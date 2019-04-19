@@ -1617,14 +1617,6 @@ a.comment-parent-link:hover::before {
 	color: #ccc;
 }
 
-/*=================================*/
-/* INDIVIDUAL COMMENT THREAD PAGES */
-/*=================================*/
-
-.individual-thread-page > h1 {
-	font-weight: normal;
-}
-
 /*==============*/
 /* VOTE BUTTONS */
 /*==============*/
@@ -1704,7 +1696,6 @@ a.comment-parent-link:hover::before {
 .posting-controls input[type='submit'] {
 	background-color: #fff;
 	border: 1px solid #aaa;
-	font-weight: bold;
 }
 .posting-controls input[type='submit']:hover,
 .posting-controls input[type='submit']:focus {
@@ -1713,7 +1704,6 @@ a.comment-parent-link:hover::before {
 }
 
 .comment-controls .cancel-comment-button {
-	font-weight: 600;
 	color: #c00;
 	text-shadow: 
 		0 0 1px #fff,
@@ -1722,10 +1712,6 @@ a.comment-parent-link:hover::before {
 .comment-controls .cancel-comment-button:hover {
 	color: #f00;
 	text-shadow: var(--GW-shadow-white-glow);
-}
-
-.new-comment-button {
-	font-weight: 600;
 }
 
 .comment-controls .delete-button,

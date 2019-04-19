@@ -1079,6 +1079,11 @@ a.comment-child-link::before {
 	font-size: 2.25em;
 }
 
+.comments > .comment-thread > .comment-item > .comment .comment-parent-link::before,
+.comments > .comment-thread > .comment-item > .comment .comment-parent-link::after {
+	display: none;
+}
+
 /****************/
 /* VOTE BUTTONS */
 /****************/
