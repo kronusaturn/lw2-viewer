@@ -25,7 +25,7 @@ a:active {
 	min-width: 6em;
 	max-width: 40%;
 	margin: 0.375em 0 0.75em 1.5em;
-	padding: 0.375em 0.75em 0.375em 0.5em;
+	padding: 0.625em 0.75em 0.5em 0.5em;
 	position: relative;
 	z-index: 1;
 
@@ -34,8 +34,9 @@ a:active {
 
 .contents-head {
 	text-align: center;
-	margin: 0 0 0.25em 0;
+	margin: 0 0 0.375em 0;
 	font-weight: var(--GW-TOC-heading-font-weight);
+	line-height: 1;
 }
 
 .post-body .contents ul {
