@@ -276,7 +276,7 @@
                (plump:append-child node new-element)))
 	   (move-children-out-of-node (node)
 	     (iterate (for c in-vector (plump:children node) downto 0)
-		      (plump:remove-child c)
+		      (setf (plump:parent c) (plump:parent node))
 		      (plump:insert-after node c)))
 	   (text-node-is-not (node &rest args)
 			     (declare (type plump:node node) 
@@ -310,7 +310,7 @@
 							 (funcall fn c))))))))
 	       (declare (dynamic-extent iterator))
 	     (cond
-	       ((plump:text-node-p node)
+	       ((and (plump:text-node-p node) (plump:parent node))
 		node)
 	       ((plump:nesting-node-p node)
 		(block nil
@@ -394,7 +394,9 @@
 				    (scan-for-urls new-text)
 				    (setf (plump:text new-text) (clean-text (plump:text new-text))))
 				  (loop for item across other-children
-					do (plump:append-child (plump:parent text-node) item)))))))
+				     do (plump:append-child (plump:parent text-node) item))
+				  (when (= (length (plump:text text-node)) 0)
+				    (plump:remove-child text-node)))))))
 	   (contents-to-html (contents min-header-level)
 			     (declare (type cons contents)) 
 			     (format nil "<nav class=\"contents\"><div class=\"contents-head\">Contents</div><ul class=\"contents-list\">~{~A~}</ul></nav>"
@@ -470,15 +472,20 @@
 		  (setf wayward-li-container nil))))
 			    :test #'plump:element-p))
 	  (loop while (and (= 1 (length (plump:children root))) (typep (plump:first-child root) 'plump:element) (tag-is (plump:first-child root) "div"))
-		do (setf (plump:children root) (plump:children (plump:first-child root)))) 
+	     do (setf (plump:children root) (plump:children (plump:first-child root))))
+	  (plump:traverse
+	   root
+	   (lambda (node)
+	     (when (and (plump:text-node-p node)
+			(plump:parent node)
+			(text-node-is-not node "a" "style" "pre"))
+	       (scan-for-urls node))))
 	  (plump:traverse
 	   root
 	   (lambda (node)
 	     (when (and (not (plump:root-p node)) (plump:parent node))
 	       (typecase node
 		 (plump:text-node 
-		  (when (text-node-is-not node "a" "style" "pre")
-		    (scan-for-urls node))
 		  (when (and (text-node-is-not node "style" "pre" "code")
 			     (text-class-is-not node "mjx-math"))
 		    (let ((new-root (plump:parse (clean-html-regexps (plump:serialize node nil))))
@@ -566,8 +573,10 @@
 						(plump:append-child new-container e))))))))))
 		    ((tag-is node "u")
 		     (vacuum-whitespace node)
-		     (when (only-child-is node "a")
-		       (plump:replace-child node (plump:first-child node))))
+		     (when (loop for c across (plump:children node)
+			      thereis (and (plump:element-p c) (tag-is c "a")))
+		       (move-children-out-of-node node)
+		       (plump:remove-child node)))
 		    ((tag-is node "ol")
 		     (when-let (start-string (plump:attribute node "start"))
 			       (when-let (start (ignore-errors (parse-integer start-string)))
