@@ -365,6 +365,10 @@
 		 ((not (plump:parent node)) nil)
 		 ((tag-is node "a")
 		  (cond
+		    ((not (plump:attribute node "href"))
+		     (loop for c across (plump:children node)
+			do (progn (plump:remove-child c)
+				  (plump:insert-after node c))))
 		    ((ppcre:scan "^https?://" (plump:text node))
 		     (flatten-element node))
 		    (t (tagbody start
