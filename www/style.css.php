@@ -2244,13 +2244,6 @@ a.comment-parent-link:hover::after {
 	font-size: 1.0625rem;
 }
 
-.comment-item:target {
-	--GW-comment-background-color: var(--GW-comment-background-color-target);
-}
-.comment-item:target > .comment-thread > .comment-item {
-	--GW-comment-parent-background-color: var(--GW-comment-background-color-target);
-}
-
 .comment-item.depth-odd {
 	--GW-comment-background-color: var(--GW-comment-background-color-odd);
 	--GW-comment-parent-background-color: var(--GW-comment-background-color-even);
@@ -2258,6 +2251,13 @@ a.comment-parent-link:hover::after {
 .comment-item.depth-even {
 	--GW-comment-background-color: var(--GW-comment-background-color-even);
 	--GW-comment-parent-background-color: var(--GW-comment-background-color-odd);
+}
+
+.comment-item:target {
+	--GW-comment-background-color: var(--GW-comment-background-color-target);
+}
+.comment-item:target > .comment-thread > .comment-item {
+	--GW-comment-parent-background-color: var(--GW-comment-background-color-target);
 }
 
 /**********************/
