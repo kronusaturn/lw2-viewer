@@ -1217,6 +1217,10 @@ h1.post-title {
 	margin: 0 0.25em;
 }
 
+.post .post-meta a {
+	color: #222;
+}
+
 .post .post-meta .author,
 .post .post-meta .lw2-link {
 	margin: 0 0.5em;
@@ -1424,10 +1428,12 @@ a.post-section.alignment-forum:hover::before {
 .comment-meta a {
 	color: #222;
 }
+
+/*	Comment author.
+	*/
 .comment-meta .author {
 	color: #999;
 	font-size: 1.25em;
-	font-weight: 600;
 }
 .comment-meta .author:hover {
 	text-decoration: none;
@@ -1437,6 +1443,12 @@ a.post-section.alignment-forum:hover::before {
 	opacity: 0.8;
 }
 
+.author:not(.redacted)::before {
+	padding: 2px 0.5em;
+}
+
+/*	Karma controls.
+	*/
 .comment-item .karma.active-controls::after, 
 .comment-item .karma .karma-value::after,
 .post .karma.active-controls::after,
@@ -1456,7 +1468,6 @@ a.post-section.alignment-forum:hover::before {
 .post .karma .karma-value::after {
 	padding: 2px 8px 1px 8px;
 	top: -25px;
-	min-width: 56px;
 }
 
 /*====================*/
@@ -1466,7 +1477,6 @@ a.post-section.alignment-forum:hover::before {
 .author.redacted,
 .inline-author.redacted {
 	opacity: 0.8;
-	font-weight: 400;
 }
 
 .karma-value.redacted {
@@ -1481,12 +1491,6 @@ a.post-section.alignment-forum:hover::before {
 /* COMMENT THREAD NAVIGATION */
 /*===========================*/
 
-div.comment-parent-link {
-	font-weight: 600;
-}
-a.comment-parent-link {
-	font-weight: 400;
-}
 a.comment-parent-link::before {
 	color: #bbb;
 }
@@ -1495,12 +1499,6 @@ a.comment-parent-link:hover::before {
 	color: #999;
 }
 
-div.comment-child-links {
-	font-weight: 600;
-}
-div.comment-child-links a {
-	font-weight: 400;
-}
 .comment-child-link::before {
 	color: #aaa;
 }

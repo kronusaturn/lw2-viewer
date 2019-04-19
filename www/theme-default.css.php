@@ -1402,6 +1402,8 @@ a.post-section.alignment-forum:hover::before {
 /* COMMENT-META */
 /*==============*/
 
+/*	Comment author.
+	*/
 .comment-meta .author {
 	font-size: 1.25em;
 	color: #000;
@@ -1414,6 +1416,12 @@ a.post-section.alignment-forum:hover::before {
 	opacity: 0.5;
 }
 
+.author:not(.redacted)::before {
+	padding: 3px 0.5em 1px 0.5em;
+}
+
+/*	Karma controls.
+	*/
 .comment-item .karma.active-controls::after,
 .comment-item .karma .karma-value::after,
 .post .karma.active-controls::after,
@@ -1433,10 +1441,6 @@ a.post-section.alignment-forum:hover::before {
 .post .karma .karma-value::after {
 	padding: 2px 8px 1px 8px;
 	top: -25px;
-	min-width: 56px;
-}
-.author::before {
-	padding: 3px 0.5em 1px 0.5em;
 }
 
 /*====================*/
