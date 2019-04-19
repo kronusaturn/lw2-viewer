@@ -6215,12 +6215,24 @@ body {
 	}
 }
 
+/*===============*/
+/* PAGINATION UI */
+/*===============*/
+
+#bottom-bar .nav-item a::before,
+#top-nav-bar a::before {
+	font-weight: 400;
+}
+
 /*==============*/
 /* PAGE TOOLBAR */
 /*==============*/
 
 .page-toolbar > * {
 	color: var(--GW-button-color);
+}
+.page-toolbar .button::before {
+	font-weight: 400;
 }
 
 /*=----------------------------=*/
@@ -6301,18 +6313,17 @@ body {
 	padding: 6px 7px;
 	text-transform: uppercase;
 	pointer-events: auto;
-	box-shadow: 1px 1px 0 0 #aaa inset;
+	box-shadow: 1px 1px 0 0 #ccc inset;
 }
 .sublevel-nav.sort {
 	border: 2px solid transparent;
 	padding: 18px 0 0 0;
 	border-radius: 8px;
 	pointer-events: none;
-	background-color: #bbb;
 }
 .sublevel-nav.sort::before {
 	text-transform: uppercase;
-	color: #444;
+	color: #777;
 	text-shadow: 0.5px 0.5px 0 #fff;
 	z-index: 1;
 }
@@ -6326,10 +6337,10 @@ body {
 	height: 100%;
 	border-radius: 6px;
 	box-shadow:
-		0 18px 0 0 #bbb inset,
-		0 0 0 1px #aaa inset,
-		0 18px 0 1px #aaa inset,
-		0 0 0 2px #bbb;
+		0 18px 0 0 #fff inset,
+		0 0 0 1px #ccc inset,
+		0 18px 0 1px #ccc inset,
+		0 0 0 2px #fff;
 }
 
 /*================*/
@@ -6996,6 +7007,7 @@ h1.listing + .post-meta .post-section::before {
 
 @media only screen and (max-width: 900px) {
 	h1.listing + .post-meta .post-section {
+		width: auto;
 		overflow: visible;
 		order: 3;
 		margin: 0 0 0 0.5em;
@@ -7179,7 +7191,7 @@ h1.listing.own-post-listing {
 
 h1.post-title {
 	color: #222;
-	font-size: 2.75em;
+	font-size: 3em;
 }
 
 .post-body {
