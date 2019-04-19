@@ -8,6 +8,22 @@
 /* CLASSIC THEME */
 /*****************/
 
+/*===========*/
+/* VARIABLES */
+/*===========*/
+
+/*	Color scheme.
+	*/
+:root {
+	--GW-comment-background-color-odd: #f7f7f8;
+	--GW-comment-background-color-even: #fff;
+	--GW-comment-background-color-target: #ffd;
+}
+
+/*======*/
+/* BASE */
+/*======*/
+
 body {
 	color: #000;
 	background-color: #d8d8d8;
@@ -1007,6 +1023,7 @@ h1.post-title {
 }
 .comment-item {
 	border: 1px solid #bbbcbf;
+	background-color: var(--GW-comment-background-color);
 }
 .comment-item .comment-item {
 	margin: 1em -1px 8px 16px;
@@ -1014,39 +1031,11 @@ h1.post-title {
 .comment-item .comment-item + .comment-item {
 	margin: 2em -1px 8px 16px;
 }
-
-.comment-item.depth-odd {
-	background-color: #f7f7f8;
-}
-.comment-item.depth-odd a.comment-parent-link::after {
+.comment-parent-link::after {
 	box-shadow: 
-		0 28px 16px -16px #fff inset,
-		4px 16px 0 12px #ffd inset,
-		4px	4px 0 12px #ffd inset;
-}
-
-.comment-item.depth-even {
-	background-color: #fff;
-}
-.comment-item.depth-even a.comment-parent-link::after {
-	box-shadow: 
-		0 28px 16px -16px #eee inset,
-		4px 16px 0 12px #ffd inset,
-		4px	4px 0 12px #ffd inset;
-}
-
-.comment-item.depth-odd:target, .comment-item.depth-even:target {
-	background-color: #ffd;
-}
-.comment-item:target > .comment-thread > .comment-item > .comment > .comment-meta > a.comment-parent-link::after {
-	box-shadow: 
-		0 28px 16px -16px #ffd inset,
-		4px 16px 0 12px #ffd inset,
-		4px	4px 0 12px #ffd inset !important;
-}
-
-a.comment-parent-link::after {
-	display: none;
+		0 28px 16px -16px var(--GW-comment-parent-background-color) inset,
+		4px 16px 0 12px var(--GW-comment-background-color-target) inset,
+		4px	4px 0 12px var(--GW-comment-background-color-target) inset;
 }
 
 /*================================*/

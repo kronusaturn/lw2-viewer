@@ -9,6 +9,19 @@
 /* ULTRAMODERN THEME */
 /*********************/
 
+/*===========*/
+/* VARIABLES */
+/*===========*/
+
+/*	Color scheme.
+	*/
+:root {
+}
+
+/*======*/
+/* BASE */
+/*======*/
+
 body {
 	color: #444;
 	background-color: #888;

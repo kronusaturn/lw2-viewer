@@ -8,6 +8,19 @@
 /* READTHESEQUENCES.COM THEME */
 /******************************/
 
+/*===========*/
+/* VARIABLES */
+/*===========*/
+
+/*	Color scheme.
+	*/
+:root {
+}
+
+/*======*/
+/* BASE */
+/*======*/
+
 body {
 	color: #000;
 	background-color: #fffffa;
