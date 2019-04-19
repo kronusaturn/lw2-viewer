@@ -367,11 +367,14 @@
             (decode-graphql-json
 	     (if (and cached-result (if force-revalidate (not revalidate) (or is-fresh (not revalidate))))
 		 cached-result
-		 (let ((new-result (sb-thread:join-thread thread :timeout timeout)))
-		   (typecase new-result
-		     (condition (or cached-result
-				    (error "Failed to load ~A ~A and no cached version available: ~A" cache-db cache-key new-result)))
-		     (t new-result)))))))))
+		 (handler-case
+		     (let ((new-result (sb-thread:join-thread thread :timeout timeout)))
+		       (typecase new-result
+			 (condition (signal new-result))
+			 (t new-result)))
+		   (condition (c)
+		     (or cached-result
+			 (error "Failed to load ~A ~A and no cached version available: ~A" cache-db cache-key c))))))))))
 
 (define-backend-function lw2-query-string* (query-type return-type args fields &key with-total))
 
