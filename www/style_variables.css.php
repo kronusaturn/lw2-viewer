@@ -90,7 +90,9 @@
 	--GW-post-right-side-padding: var(--GW-post-side-padding);
 
 	--GW-comment-compact-height: auto;
+	--GW-comment-compact-height-mobile: auto;
 	--GW-comment-minimized-height: auto;
+	--GW-comment-minimized-height-mobile: auto;
 }
 
 /*	Content column width.

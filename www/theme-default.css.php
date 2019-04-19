@@ -35,7 +35,9 @@
 	--GW-edit-post-page-content-side-padding: 30px;
 
 	--GW-comment-compact-height: 60px;
+	--GW-comment-compact-height-mobile: 110px;
 	--GW-comment-minimized-height: 38px;
+	--GW-comment-minimized-height-mobile: 38px;
 }
 @media only screen and (max-width: 900px) {
 	:root {
@@ -1234,6 +1236,8 @@ h1.listing.own-post-listing {
 .post-meta .post-section::before,
 .comment-meta .alignment-forum {
 	color: #fff;
+}
+.post-meta .post-section::before {
 	text-shadow: 
 		1px 1px 0 #090, 
 		0 1px 0 #090, 
@@ -1547,16 +1551,6 @@ a.comment-parent-link:hover::before {
 			0 0 20px #fff,
 			0 0 30px #fff,
 			0 0 40px #fff;
-	}
-}
-
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
-@media only screen and (max-width: 520px) {
-	#content.compact > .comment-thread .comment-item {
-		max-height: 110px;
 	}
 }
 

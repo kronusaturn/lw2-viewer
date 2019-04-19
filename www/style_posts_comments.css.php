@@ -965,6 +965,16 @@ a.comment-child-link::before {
 	}
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 520px) {
+	#content.compact > .comment-thread .comment-item {
+		max-height: var(--GW-comments-compact-height-mobile);
+	}
+}
+
 /*****************************/
 /* HIGHLIGHTING NEW COMMENTS */
 /*****************************/
