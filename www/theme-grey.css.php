@@ -910,9 +910,6 @@ h1.listing + .post-meta .date::after {
 h1.listing + .post-meta .comment-count.new-comments::before {
 	color: #0c0;
 }
-h1.listing:last-of-type + .post-meta {
-	margin-bottom: 0;
-}
 h1.listing + .post-meta .karma {
 	order: -1;
 	margin-right: 0.25em;
@@ -920,20 +917,14 @@ h1.listing + .post-meta .karma {
 h1.listing + .post-meta .author {
 	margin-right: 0.25em;
 }
-h1.listing + .post-meta .date {
-	margin: 0;
-}
-h1.listing + .post-meta .post-section {
-	overflow: visible;
-	order: 2;
-}
 h1.listing + .post-meta .post-section::before {
 	font-size: 0.9375em;
 	top: 1px;
-	left: -32px;
+	left: -2em;
 }
 h1.listing + .post-meta .link-post-domain {
 	order: 1;
+	margin-left: 0.5em;
 }
 
 /*=----------------------------=*/
@@ -941,22 +932,22 @@ h1.listing + .post-meta .link-post-domain {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 900px) {
-	h1.listing + .post-meta > * {
-		line-height: 1.5;
+	h1.listing + .post-meta .post-section {
+		overflow: visible;
+		order: 3;
+		margin: 0 0 0 0.5em;
 	}
 	h1.listing + .post-meta .post-section::before {
 		position: unset;
-	}
-}
-@media only screen and (max-width: 520px) {
-	h1.listing + .post-meta {
-		margin: 4px 6px;
 	}
 }
 
 /*============*/
 /* USER PAGES */
 /*============*/
+/*======================*/
+/* SEARCH RESULTS PAGES */
+/*======================*/
 
 #content.user-page h1.page-main-heading {
 	border-bottom: 1px solid #ccc;
