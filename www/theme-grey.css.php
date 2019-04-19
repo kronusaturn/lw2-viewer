@@ -894,16 +894,139 @@ h1.listing.spam:hover + .post-meta {
 
 h1.listing + .post-meta > * {
 	font-size: 1em;
-}
-h1.listing + .post-meta > * {
 	color: #666;
 }
 h1.listing + .post-meta a {
 	color: #222;
 }
+
+h1.listing + .post-meta .comment-count::before,
+h1.listing + .post-meta .read-time::before,
+h1.listing + .post-meta .word-count::before,
+h1.listing + .post-meta .lw2-link::before {
+	font-family: var(--GW-Font-Awesome);
+	margin: 0 0.25em 0 0;
+	font-size: 0.875em;
+	color: #ccc;
+}
+h1.listing + .post-meta .read-time,
+h1.listing + .post-meta .word-count,
+h1.listing + .post-meta .lw2-link {
+	margin: 0 0.25em 0 0.5em;
+}
+h1.listing + .post-meta .comment-count:hover,
+h1.listing + .post-meta .lw2-link:hover {
+	text-decoration: none;
+	text-shadow: 
+		0 0 0.5px #fff,
+		0 0 1px #fff,
+		0 0 5px #777;
+	color: #777;
+}
+
+/*	Karma value.
+	*/
+h1.listing + .post-meta .karma {
+	margin: 0 0.25em 0 0.5em;
+	order: -1;
+}
 h1.listing + .post-meta .karma::after {
 	content: " by";
 }
+
+/*	Comment count.
+	*/
+h1.listing + .post-meta .comment-count {
+	margin: 0 0.5em;
+}
+h1.listing + .post-meta .comment-count::before {
+	content: "\F086";
+}
+h1.listing + .post-meta .comment-count.new-comments::before {
+	color: #0c0;
+}
+h1.listing + .post-meta .comment-count span {
+	display: none;
+}
+h1.listing + .post-meta .comment-count:hover::before {
+	color: #777;
+}
+
+/*	LW2 link.
+	*/
+h1.listing + .post .post-meta .lw2-link {
+	margin: 0 1em 0 0.5em;
+}
+h1.listing + .post-meta .lw2-link::before {
+	content: "\F0C1";
+	font-weight: 900;
+	opacity: 0.8;
+	font-size: 0.75em;
+	position: relative;
+	bottom: 1px;
+}
+h1.listing + .post-meta .lw2-link span {
+	display: none;
+}
+h1.listing + .post-meta .lw2-link:hover::before {
+	color: #777;
+}
+
+/*	Read time.
+	*/
+h1.listing + .post-meta .read-time:hover::before {
+	color: #777;
+	cursor: pointer;
+}
+h1.listing + .post-meta .read-time::before {
+	content: "\F017";
+}
+h1.listing + .post-meta .read-time::after {
+	content: " min";
+}
+
+/*	Word count.
+	*/
+h1.listing + .post-meta .word-count::before {
+	content: "\F15C";
+}
+h1.listing + .post-meta .word-count::after {
+	content: "";
+}
+
+/*	Post section.
+	*/
+h1.listing + .post-meta .post-section::before,
+.comment-meta .alignment-forum {
+	color: #fff;
+	text-shadow: 
+		1px 1px 0 #090, 
+		0 1px 0 #090, 
+		0 0 5px #090;
+}
+a.post-section:hover {
+	text-decoration: none;
+}
+a.post-section:hover::before {
+	color: #97ff7c;
+}
+h1.listing + .post-meta .post-section.alignment-forum::before {
+	text-shadow:
+		1px 1px 0   #626dd7,
+		0   1px 0   #626dd7,
+		0   0   5px #626dd7;
+}
+h1.listing + .post-meta .post-section.alignment-forum:hover::before {
+	color: #e6e5ff;
+}
+h1.listing + .post-meta .post-section::before {
+	font-size: 0.9375em;
+	top: 1px;
+	left: -2em;
+}
+
+/*	Date.
+	*/
 h1.listing + .post-meta .date::before {
 	content: "on ";
 }
@@ -912,21 +1035,18 @@ h1.listing + .post-meta .date::after {
 	opacity: 0.5;
 	margin: 0 0.5em 0 0.125em;
 }
-h1.listing + .post-meta .comment-count.new-comments::before {
-	color: #0c0;
-}
-h1.listing + .post-meta .karma {
-	order: -1;
-	margin-right: 0.25em;
+
+/*	Author.
+	*/
+h1.listing + .post .post-meta .author {
+	margin: 0 0.75em 0 0;
 }
 h1.listing + .post-meta .author {
 	margin-right: 0.25em;
 }
-h1.listing + .post-meta .post-section::before {
-	font-size: 0.9375em;
-	top: 1px;
-	left: -2em;
-}
+
+/*	Link post domain.
+	*/
 h1.listing + .post-meta .link-post-domain {
 	order: 1;
 	margin-left: 0.5em;
@@ -1099,8 +1219,8 @@ h1.listing.own-post-listing {
 	border: 1px solid #ddd;
 	background-color: #eee;
 }
-.post-body .contents ul {
-	font-size: 0.875em;
+.post-body .contents {
+	font-size: 1.1875em;
 }
 .contents li::before {
 	color: #999;
@@ -1109,6 +1229,7 @@ h1.listing.own-post-listing {
 .post-body .contents a:hover {
 	background-color: #e6e6e6;
 	box-shadow: 5px 0 0 0 #d8d8d8;
+	text-decoration: none;
 }
 .post-body .contents li:hover::before {
 	color: #000;
@@ -1152,12 +1273,7 @@ h1.post-title {
 	color: #222;
 }
 
-.post-meta > * {
-	margin: 0;
-}
 .post-meta .comment-count span,
-.post-meta .read-time span,
-.post-meta .word-count span,
 .post-meta .lw2-link span {
 	display: none;
 }
@@ -1169,9 +1285,6 @@ h1.post-title {
 	margin: 0 0.25em 0 0;
 	font-size: 0.875em;
 	color: #ccc;
-}
-.post-meta .comment-count {
-	margin: 0 0.25em 0 0;
 }
 .post-meta .read-time,
 .post-meta .word-count,
