@@ -211,7 +211,7 @@ signaled condition to OUT-STREAM."
       (format out-stream "<li id=\"comment-~A\" class=\"comment-item~{ ~A~}\">"
 	      c-id
 	      (list-cond
-	       (level (if (evenp level) "depth-odd" "depth-even")) ;inverted because level counts from 0
+	       (t (if (or (not level) (evenp level)) "depth-odd" "depth-even")) ;inverted because level counts from 0
 	       ((and *current-ignore-hash* (gethash user-id *current-ignore-hash*)) "ignored")))
       (unwind-protect
         (comment-to-html out-stream comment :with-post-title with-post-title)
@@ -279,7 +279,7 @@ signaled condition to OUT-STREAM."
 	    (:notification
 	     (format out-stream "<p>~A</p>" (cdr (assoc :message x))))
 	    (:message
-	     (format out-stream "<ul class=\"comment-thread\"><li class=\"comment-item\">")
+	     (format out-stream "<ul class=\"comment-thread\"><li class=\"comment-item depth-odd\">")
 	     (unwind-protect
 		  (conversation-message-to-html out-stream x)
 	       (format out-stream "</li></ul>")))
