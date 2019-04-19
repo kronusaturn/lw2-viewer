@@ -164,7 +164,6 @@ h1.listing + .post-meta .read-time {
 .post-meta > *,
 .comment-meta > * {
 	display: inline-block;
-	margin-right: 1em;
 	font-size: 1.0625em;
 	white-space: nowrap;
 }
@@ -582,6 +581,11 @@ ul.comment-thread {
 .conversation-page .comment-meta {
 	padding-right: 10px;
 }
+
+.comment-meta > * {
+	margin-right: 1em;
+}
+
 .comment-meta .comment-post-title {
 	flex-basis: 100%;
 	overflow: hidden;
