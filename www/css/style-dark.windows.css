@@ -7103,11 +7103,11 @@ h1.listing.own-post-listing {
 /* Message box */
 
 .error-box {
-	border: 1px solid red;
+	border: 1px solid #0098e4;
 	background-color: #004147;
 }
 .success-box {
-	border: 1px solid green;
+	border: 1px solid #6d00b3;
 	background-color: #320042;
 }
 
