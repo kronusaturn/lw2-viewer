@@ -6900,7 +6900,7 @@ h1.listing + .post-meta .link-post-domain {
 }
 #content.user-page h1.listing,
 #content.search-results-page h1.listing {
-	padding: 6px;
+	padding: 3px 6px 0 6px;
 	border-width: 1px 1px 0 1px;
 	margin: 1rem 0 0 0;
 }
@@ -6922,22 +6922,27 @@ h1.listing.own-post-listing {
 	#content.search-results-page h1.listing a:focus {
 		background-color: #eee;
 	}	
-	#content.user-page h1.listing:focus-within::before,
-	#content.search-results-page h1.listing:focus-within::before {
-		left: -0.625em;
-	}
 }
 #content.user-page h1.listing + .post-meta,
 #content.search-results-page h1.listing + .post-meta {
-	margin: 0 0 1rem 0;
 	padding-left: 8px;
 	padding-top: 0.5em;
 	border-width: 0 1px 1px 1px;
 }
-#content.user-page h1.listing + .post-meta .post-section::before {
-	left: 1px;
-	top: unset;
+#content.user-page h1.listing + .post-meta .post-section,
+#content.search-results-page h1.listing + .post-meta .post-section {
+	overflow: visible;
+	order: 5;
+	margin: 0 0 0 0.75em;
 }
+#content.user-page h1.listing + .post-meta .post-section::before,
+#content.search-results-page h1.listing + .post-meta .post-section::before {
+	position: static;
+}
+
+/*=--------------------=*/
+/*= Conversations list =*/
+/*=--------------------=*/
 
 #content.conversations-user-page h1.listing {
 	padding: 6px 6px 4px 8px;

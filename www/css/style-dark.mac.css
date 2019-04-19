@@ -7027,22 +7027,16 @@ h1.listing.own-post-listing {
 	#content.search-results-page h1.listing a:focus {
 		background-color: #131313;
 	}
-	#content.user-page h1.listing:focus-within::before,
-	#content.search-results-page h1.listing:focus-within::before {
-		left: -0.625em;
-	}
 }
 #content.user-page h1.listing + .post-meta,
 #content.search-results-page h1.listing + .post-meta {
 	padding-left: 8px;
 	padding-top: 3px;
 	border-width: 0 1px 1px 1px;
-	margin: 0 0 1rem 0;
 	box-shadow: none;
 }
 #content.user-page h1.listing + .post-meta .post-section,
 #content.search-results-page h1.listing + .post-meta .post-section {
-	width: auto;
 	overflow: visible;
 	order: 5;
 }
