@@ -131,6 +131,7 @@
               (ppcre:scan "^(?:p|div|blockquote|li|h[0-6])$" (plump:tag-name node))))
        (cleanablep (node)
          (and (plump:text-node-p node)
+	      (plump:parent node)
               (text-class-is-not node "mjx-math")))
        (traverse (node main-fn &optional recurse-fn)
          (when (cleanablep node) (funcall main-fn node))
@@ -267,7 +268,8 @@
                  (make-element-before (plump:parent node) tag)
                  (let ((e (plump:make-element (plump:parent node) tag)))
                    (plump:remove-child e)
-                   (plump:insert-before node e))))
+                   (plump:insert-before node e)
+		   (setf (plump:parent e) (plump:parent node)))))
            (wrap-children (node element-name)
              (let ((new-element (plump:make-element node element-name)))
                (plump:remove-child new-element)
@@ -395,7 +397,7 @@
 				    (setf (plump:text new-text) (clean-text (plump:text new-text))))
 				  (loop for item across other-children
 				     do (plump:append-child (plump:parent text-node) item))
-				  (when (= (length (plump:text text-node)) 0)
+				  (when (= url-start 0)
 				    (plump:remove-child text-node)))))))
 	   (contents-to-html (contents min-header-level)
 			     (declare (type cons contents)) 
@@ -470,9 +472,10 @@
 		    (plump:append-child wayward-li-container node)))
 		 ((tag-is node "p" "blockquote" "div")
 		  (setf wayward-li-container nil))))
-			    :test #'plump:element-p))
+	     :test #'plump:element-p))
 	  (loop while (and (= 1 (length (plump:children root))) (typep (plump:first-child root) 'plump:element) (tag-is (plump:first-child root) "div"))
-	     do (setf (plump:children root) (plump:children (plump:first-child root))))
+	     do (setf (plump:children root) (plump:children (plump:first-child root)))
+	     do (loop for c across (plump:children root) do (setf (plump:parent c) root)))
 	  (plump:traverse
 	   root
 	   (lambda (node)
@@ -532,7 +535,8 @@
 			   (when href
 			     (setf (plump:attribute node "href") href)))))
 		     (when (only-child-is node "u")
-		       (setf (plump:children node) (plump:children (plump:first-child node)))))
+		       (setf (plump:children node) (plump:children (plump:first-child node)))
+		       (loop for c across (plump:children node) do (setf (plump:parent c) node))))
 		    ((tag-is node "img")
 		     (when
 			 (every (lambda (a) (if-let (attr (plump:attribute node a)) (ignore-errors (<= (parse-integer attr) 1)))) (list "width" "height"))
@@ -563,6 +567,7 @@
 				      (let ((new-container (plump:make-element parent "div")))
 					(setf (plump:attribute new-container "class") "spoiler")
 					(plump:remove-child new-container)
+					(setf (plump:parent new-container) (plump:parent node))
 					(plump:insert-before node new-container)
 					(loop for e = node then ns
 					   while (and (plump:element-p e) (spoilerp e))
