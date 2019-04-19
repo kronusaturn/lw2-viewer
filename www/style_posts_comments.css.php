@@ -1035,8 +1035,12 @@ a.comment-child-link::before {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
+
 @media only screen and (max-width: 520px) {
-	.comment-minimize-button{
+	.comment-item.minimized {
+		height: var(--GW-comment-minimized-height-mobile);
+	}
+	.comment-minimize-button {
 		right: 3px;
 	}
 }
