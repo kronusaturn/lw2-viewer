@@ -274,10 +274,6 @@ body {
 	font-weight: 400;
 }
 
-#top-nav-bar {
-	margin: 0.25em 0;
-}
-
 /*==============*/
 /* PAGE TOOLBAR */
 /*==============*/
@@ -835,7 +831,7 @@ body {
 
 h1.listing {
 	font-size: 1.5rem;
-	margin: 0.6em 0 0 0;
+	margin: 7px 0 0 0;
 }
 
 h1.listing a[href^="http"] {
@@ -907,8 +903,16 @@ h1.listing.spam:hover + .post-meta {
 /* LISTING POST-META */
 /*===================*/
 
+h1.listing + .post-meta {
+	margin: 0 0 0.875em 0;
+}
+
 h1.listing + .post-meta > * {
 	margin: 0 0.25em 0 0;
+}
+h1.listing + .post-meta a,
+h1.listing + .post-meta a:visited {
+	color: #222;
 }
 
 h1.listing + .post-meta .comment-count,
@@ -1230,10 +1234,6 @@ h1.post-title {
 	font-size: 1em;
 	color: #666;
 }
-.post-meta a,
-.post-meta a:visited {
-	color: #222;
-}
 
 .post-meta .comment-count span,
 .post-meta .lw2-link span {
@@ -1382,6 +1382,7 @@ a.post-section.alignment-forum:hover::before {
 		margin: 1.5em 2px 4px 6px;
 	}
 }
+
 /*==================*/
 /* COMMENT LISTINGS */
 /*==================*/

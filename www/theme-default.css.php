@@ -1363,6 +1363,7 @@ a.post-section.alignment-forum:hover::before {
 		font-size: 1.125rem;
 	}
 }
+
 /*==================*/
 /* COMMENT LISTINGS */
 /*==================*/
