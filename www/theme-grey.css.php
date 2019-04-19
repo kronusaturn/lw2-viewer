@@ -893,8 +893,13 @@ h1.listing.spam:hover + .post-meta {
 /*===================*/
 
 h1.listing + .post-meta > * {
-	color: #222;
 	font-size: 1em;
+}
+h1.listing + .post-meta > * {
+	color: #666;
+}
+h1.listing + .post-meta a {
+	color: #222;
 }
 h1.listing + .post-meta .karma::after {
 	content: " by";
@@ -988,8 +993,7 @@ h1.listing.own-post-listing {
 }
 #content.user-page h1.listing + .post-meta,
 #content.search-results-page h1.listing + .post-meta {
-	padding-left: 8px;
-	padding-top: 0.5em;
+	padding: 8px 8px 3px 8px;
 	border-width: 0 1px 1px 1px;
 }
 #content.user-page h1.listing + .post-meta .post-section,
@@ -1007,13 +1011,11 @@ h1.listing.own-post-listing {
 /*= Conversations list =*/
 /*=--------------------=*/
 
-#content.conversations-user-page h1.listing {
-	padding: 6px 6px 4px 8px;
-	font-size: 1.5rem;
+#content.conversations-user-page h1.listing + .post-meta > * {
+	margin: 0 0.75em 0 0;
 }
-#content.conversations-user-page h1.listing + .post-meta {
-	padding: 6px 4px;
-	margin: 0 0 0.25rem 0;
+#content.conversations-user-page h1.listing + .post-meta .date::after {
+	content: none;
 }
 
 /*===============*/

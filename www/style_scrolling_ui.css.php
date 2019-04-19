@@ -504,6 +504,14 @@ EOT;
 	display: none;
 }
 
+#top-nav-bar.decorative {
+	display: none;
+}
+#content.archive-page #top-nav-bar.decorative,
+#content.user-page #top-nav-bar.decorative {
+	display: initial;
+}
+
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
