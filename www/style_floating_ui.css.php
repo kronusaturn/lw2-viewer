@@ -248,7 +248,7 @@
 		display: flex;
 		flex-flow: column;
 		width: calc(100vw - 20px);
-		max-width: 360px;
+		max-width: 384px;
 		max-height: 0;
 		top: calc(100% + 10px);
 		left: 0;
@@ -307,6 +307,10 @@
 		text-align: left;
 		left: 2.5em;
 		top: 1em;
+		max-width: calc(100% - 3.5em);
+		overflow: hidden;
+		text-overflow: ellipsis;
+		padding: 0 0 2px 0;
 	}
 	#theme-selector button.selected::after {
 		font-weight: var(--GW-UI-font-weight-heavy);
