@@ -11,6 +11,22 @@
 /* DEFAULT THEME */
 /*****************/
 
+/*===========*/
+/* VARIABLES */
+/*===========*/
+
+/*	Color scheme.
+	*/
+:root {
+	--GW-comment-background-color-odd: #eee;
+	--GW-comment-background-color-even: #fff;
+	--GW-comment-background-color-target: #ffd;
+}
+
+/*======*/
+/* BASE */
+/*======*/
+
 body {
 	color: #000;
 	background-color: #d8d8d8;
@@ -1028,36 +1044,13 @@ a.post-section.alignment-forum:hover::before {
 }
 .comment-item {
 	border: 1px solid #ccc;
+	background-color: var(--GW-comment-background-color);
 }
-
-.comment-item.depth-odd {
-	background-color: #eee;
-}
-.comment-item.depth-odd a.comment-parent-link::after {
+.comment-parent-link::after {
 	box-shadow: 
-		0 28px 16px -16px #fff inset,
-		4px 16px 0 12px #ffd inset,
-		4px	4px 0 12px #ffd inset;
-}
-
-.comment-item.depth-even {
-	background-color: #fff;
-}
-.comment-item.depth-even a.comment-parent-link::after {
-	box-shadow: 
-		0 28px 16px -16px #eee inset,
-		4px 16px 0 12px #ffd inset,
-		4px	4px 0 12px #ffd inset;
-}
-
-.comment-item.depth-odd:target, .comment-item.depth-even:target {
-	background-color: #ffd;
-}
-.comment-item:target > .comment-thread > .comment-item > .comment > .comment-meta > a.comment-parent-link::after {
-	box-shadow: 
-		0 28px 16px -16px #ffd inset,
-		4px 16px 0 12px #ffd inset,
-		4px	4px 0 12px #ffd inset !important;
+		0 28px 16px -16px var(--GW-comment-parent-background-color) inset,
+		4px 16px 0 12px var(--GW-comment-target-background-color) inset,
+		4px	4px 0 12px var(--GW-comment-target-background-color) inset;
 }
 
 /*================================*/

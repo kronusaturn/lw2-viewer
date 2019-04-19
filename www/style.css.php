@@ -21,6 +21,16 @@
 	}
 ?>
 
+/*************/
+/* VARIABLES */
+/*************/
+
+:root {
+	--GW-comment-background-color-odd: transparent;
+	--GW-comment-background-color-even: transparent;
+	--GW-comment-background-color-target: transparent;
+}
+
 /***************/
 /* BASE LAYOUT */
 /***************/
@@ -2232,6 +2242,22 @@ a.comment-parent-link:hover::after {
 }
 .comment-popup .comment-body {
 	font-size: 1.0625rem;
+}
+
+.comment-item:target {
+	--GW-comment-background-color: var(--GW-comment-target-background-color);
+}
+.comment-item:target > .comment-thread > .comment-item {
+	--GW-comment-parent-background-color: var(--GW-comment-target-background-color);
+}
+
+.comment-item.depth-odd {
+	--GW-comment-background-color: var(--GW-comment-background-color-odd);
+	--GW-comment-parent-background-color: var(--GW-comment-background-color-even);
+}
+.comment-item.depth-even {
+	--GW-comment-background-color: var(--GW-comment-background-color-even);
+	--GW-comment-parent-background-color: var(--GW-comment-background-color-odd);
 }
 
 /**********************/
