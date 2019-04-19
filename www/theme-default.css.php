@@ -1818,6 +1818,10 @@ a.comment-parent-link:hover::before {
 /* EDIT POST FORM */
 /*================*/
 
+.post-controls {
+	font-weight: var(--GW-UI-font-weight-heavy);
+}
+
 #edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
 	border-radius: 3px;
 	border: 1px solid #ddd;

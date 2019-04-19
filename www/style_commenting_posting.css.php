@@ -416,7 +416,6 @@ button.guiedit {
 	grid-row: 3;
 	align-self: start;
 	justify-self: end;
-	font-weight: var(--GW-UI-font-weight-heavy);
 }
 .post-controls .edit-post-link {
 	font-size: 1.375em;

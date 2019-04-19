@@ -1726,13 +1726,11 @@ a.comment-parent-link:hover::before {
 	color: #f00;
 }
 
-.edit-post-link,
-.edit-post-link:visited {
+.button.edit-post-link:not(:hover) {
 	color: #090;
 }
 
 .posting-controls textarea {
-	font-weight: 400;
 	color: #000;
 	background-color: #fff;
 	border-color: #aaa;
@@ -1746,11 +1744,11 @@ a.comment-parent-link:hover::before {
 }
 .posting-controls textarea:focus {
 	background-color: #ffe;
-	border-color: <?php echo $hyperlink_color; ?>;
+	border-color: var(--GW-hyperlink-color);
 	box-shadow: 
 		0 0 0 1px #ddf inset,
 		0 0 0 1px #fff,
-		0 0 0 2px <?php echo $hyperlink_color; ?>;
+		0 0 0 2px var(--GW-hyperlink-color);
 }
 .posting-controls.edit-existing-post textarea:focus,
 .posting-controls form.edit-existing-comment textarea:focus {
@@ -1807,7 +1805,7 @@ a.comment-parent-link:hover::before {
 
 .posting-controls.edit-existing-post .guiedit-buttons-container button,
 .posting-controls form.edit-existing-comment .guiedit-buttons-container button {
-	color: #050;
+	color: #080;
 }
 
 button.guiedit::after {
@@ -1817,9 +1815,6 @@ button.guiedit::after {
 
 /* Markdown hints */
 
-#markdown-hints-checkbox + label {
-	color: #999;
-}
 #markdown-hints-checkbox + label:hover {
 	text-shadow: var(--GW-shadow-white-glow);
 }
@@ -1847,14 +1842,10 @@ button.guiedit::after {
 			0 0 0 1px #fff,
 			0 0 0 2px #c00;
 		color: #c00;
-		font-weight: 600;
 	}
 	.textarea-container:focus-within .guiedit-buttons-container {
 		background-color: #fff;
 		border-top: 1px solid #ddf;
-	}
-	#content.conversation-page .textarea-container:focus-within::after {
-		background-color: #fff;
 	}
 	.textarea-container:focus-within button.guiedit {
 		background-color: #eee;
@@ -1869,6 +1860,10 @@ button.guiedit::after {
 /*================*/
 /* EDIT POST FORM */
 /*================*/
+
+.post-controls {
+	font-weight: var(--GW-UI-font-weight-light);
+}
 
 #edit-post-form .post-meta-fields input[type='checkbox'] + label {
 	top: -2px;

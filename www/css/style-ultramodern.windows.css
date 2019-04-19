@@ -2983,6 +2983,8 @@ h1.listing + .post-meta .read-time {
 
 	font-family: var(--GW-body-text-font);
 	font-weight: var(--GW-body-text-font-weight);
+
+	text-shadow: 0 0 1px var(--GW-content-background-color);
 }
 .body-text p {
 	margin: 1em 0;
@@ -4475,7 +4477,6 @@ button.guiedit {
 	grid-row: 3;
 	align-self: start;
 	justify-self: end;
-	font-weight: var(--GW-UI-font-weight-heavy);
 }
 .post-controls .edit-post-link {
 	font-size: 1.375em;
