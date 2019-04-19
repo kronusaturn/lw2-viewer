@@ -1297,27 +1297,7 @@ a.post-section.alignment-forum:hover::before {
 	border-top: 1px solid #000;
 	box-shadow: 0 3px 3px -4px #000 inset;
 }
-.listings .comment-thread .comment-meta a.date:focus,
-.listings .comment-thread .comment-meta a.permalink:focus {
-	color: #888;
-	outline: 2px dotted #999;
-	position: relative;
-	background-color: #fff;
-}
-.listings .comment-thread .comment-meta a.date:focus {
-	padding: 2px 5px 0 5px;
-	left: -5px;
-}
-.listings .comment-thread .comment-meta a.date:focus + * {
-	margin-left: -8px;
-}
-.listings .comment-thread .comment-meta a.permalink:focus {
-	padding: 2px 5px 0 5px;
-	left: -5px;
-}
-.listings .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
-	margin-left: -10px;
-}
+
 .comment-item {
 	border: 1px solid #ccc;
 }
@@ -1382,6 +1362,31 @@ a.post-section.alignment-forum:hover::before {
 	.comment-body {
 		font-size: 1.125rem;
 	}
+}
+/*==================*/
+/* COMMENT LISTINGS */
+/*==================*/
+
+.listings .comment-thread .comment-meta a.date:focus,
+.listings .comment-thread .comment-meta a.permalink:focus {
+	color: #888;
+	outline: 2px dotted #999;
+	position: relative;
+	background-color: #fff;
+}
+.listings .comment-thread .comment-meta a.date:focus {
+	padding: 2px 5px 0 5px;
+	left: -5px;
+}
+.listings .comment-thread .comment-meta a.date:focus + * {
+	margin-left: -8px;
+}
+.listings .comment-thread .comment-meta a.permalink:focus {
+	padding: 2px 5px 0 5px;
+	left: -5px;
+}
+.listings .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
+	margin-left: -10px;
 }
 
 /*================================*/

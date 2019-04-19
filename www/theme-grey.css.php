@@ -1213,6 +1213,11 @@ h1.post-title {
 	margin: 0 0.25em;
 }
 
+.post .post-meta .author,
+.post .post-meta .lw2-link {
+	margin: 0 0.5em;
+}
+
 .post .bottom-post-meta {
 	border-top: 1px solid #ddd;
 }
@@ -1291,11 +1296,8 @@ a.post-section.alignment-forum:hover::before {
 /* LINK POSTS */
 /*============*/
 
-.post.link-post a.link-post-link {
-	text-decoration: none;
-}
 .post.link-post a.link-post-link:hover {
-	color: #c00;
+	text-decoration: none;
 }
 .post.link-post a.link-post-link:hover::before {
 	color: #4879ec;
@@ -1305,9 +1307,12 @@ a.post-section.alignment-forum:hover::before {
 		0 0 2px #fff,
 		0 0 3px #00c;
 }
+.post.link-post a.link-post-link:hover,
+.post.link-post a.link-post-link:focus {
+	border-bottom: 2px dotted currentColor;
+}
 .post.link-post a.link-post-link:focus {
 	color: #777;
-	border-bottom: 2px dotted #777;
 }
 
 /*==========*/
@@ -1315,30 +1320,10 @@ a.post-section.alignment-forum:hover::before {
 /*==========*/
 
 .comments::before {
-	border-top: 1px solid #000;
-	box-shadow: 0 3px 3px -4px #000 inset;
+	border-top: 1px solid #777;
+	box-shadow: 0 3px 3px -4px #444 inset;
 }
-#content > .comment-thread .comment-meta a.date:focus,
-#content > .comment-thread .comment-meta a.permalink:focus {
-	color: #999;
-	outline: 2px dotted #aaa;
-	position: relative;
-	background-color: #fff;
-}
-#content > .comment-thread .comment-meta a.date:focus {
-	padding: 0 4px;
-	left: -4px;
-}
-#content > .comment-thread .comment-meta a.date:focus + * {
-	margin-left: -8px;
-}
-#content > .comment-thread .comment-meta a.permalink:focus {
-	padding: 0 5px;
-	left: -5px;
-}
-#content > .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
-	margin-left: -10px;
-}
+
 .comment-item {
 	border: 1px solid #ccc;
 }
@@ -1396,6 +1381,31 @@ a.post-section.alignment-forum:hover::before {
 	.comment-item .comment-item + .comment-item {
 		margin: 1.5em 2px 4px 6px;
 	}
+}
+/*==================*/
+/* COMMENT LISTINGS */
+/*==================*/
+
+.listings .comment-thread .comment-meta a.date:focus,
+.listings .comment-thread .comment-meta a.permalink:focus {
+	color: #999;
+	outline: 2px dotted #aaa;
+	position: relative;
+	background-color: #fff;
+}
+.listings .comment-thread .comment-meta a.date:focus {
+	padding: 0 4px;
+	left: -4px;
+}
+.listings .comment-thread .comment-meta a.date:focus + * {
+	margin-left: -8px;
+}
+.listings .comment-thread .comment-meta a.permalink:focus {
+	padding: 0 5px;
+	left: -5px;
+}
+.listings .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
+	margin-left: -10px;
 }
 
 /*================================*/

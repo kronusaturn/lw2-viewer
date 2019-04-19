@@ -3218,12 +3218,11 @@ h1.post-title {
 
 .post.link-post .post-body > p:first-child {
 	text-align: center;
-	font-size: 1.125em;
-	margin: 0.5em 0 0 0;
+	font-size: 1.25em;
 }
 .post.link-post .post-body > p:only-child {
 	font-size: 1.5em;
-	margin: 1em 0;
+	margin: 0 0 1em 0;
 }
 .post.link-post a.link-post-link {
 	font-family: var(--GW-link-post-link-font);
