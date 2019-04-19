@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.clean-html
-  (:use #:cl #:alexandria #:split-sequence #:lw2.lmdb #:lw2.links #:lw2.utils #:lw2.context #:lw2.sites)
+  (:use #:cl #:alexandria #:iterate #:split-sequence #:lw2.lmdb #:lw2.links #:lw2.utils #:lw2.context #:lw2.sites)
   (:export #:clean-text #:clean-text-to-html #:clean-html #:clean-html*)
   (:unintern #:*text-clean-regexps* #:*html-clean-regexps*))
 
@@ -280,11 +280,71 @@
 			     (or
 			       (typep (plump:parent node) 'plump:root)
 			       (every (lambda (x) (string/= (plump:tag-name (plump:parent node)) x)) args)))
+	   (adjacent-text-node (node direction)
+	     (multiple-value-bind (get-sibling insert-sibling)
+		 (ecase direction
+		   (:previous (values #'plump:previous-sibling #'plump:insert-before))
+		   (:next (values #'plump:next-sibling #'plump:insert-after)))
+	       (let ((candidate (funcall get-sibling node)))
+		 (if (plump:text-node-p candidate)
+		     candidate
+		     (let ((new-node (plump:make-text-node (plump:parent node))))
+		       (funcall insert-sibling node new-node)
+		       new-node)))))
+	   (char-is-whitespace (c)
+	     (cl-unicode:has-binary-property c "White_Space"))
 	   (string-is-whitespace (string)
-				 (every (lambda (c) (cl-unicode:has-binary-property c "White_Space")) string))
+	     (every #'char-is-whitespace string))
            (first-non-whitespace-child (node)
              (loop for e across (plump:children node)
 		when (or (typep e 'plump:element) (not (string-is-whitespace (plump:text e)))) return e))
+	   (find-text-node (node direction)
+	     (let ((iterator #.`(case direction
+				  ,@(loop for d in '(:first :last) collect
+					 `(,d (lambda (fn)
+						(iterate (for c in-vector (plump:children node) ,@(if (eq d :last) '(downto 0)))
+							 (funcall fn c))))))))
+	       (declare (dynamic-extent iterator))
+	     (cond
+	       ((plump:text-node-p node)
+		node)
+	       ((plump:nesting-node-p node)
+		(block nil
+		  (funcall iterator (lambda (c)
+				      (when-let (tn (find-text-node c direction)) (return tn)))))))))
+	   (vacuum-whitespace (node)
+	     (dolist (direction '(:first :last))
+	       (let ((displaced-text (make-string 0)))
+		 (loop for lt = (find-text-node node direction) do
+		      (cond
+			((not lt)
+			 (return-from vacuum-whitespace node))
+			((string-is-whitespace (plump:text lt))
+			 (setf displaced-text (case direction
+						(:first (concatenate 'string displaced-text (plump:text lt)))
+						(:last (concatenate 'string (plump:text lt) displaced-text))))
+			 (plump:remove-child lt))
+			(t
+			 (let* ((text (plump:text lt)))
+			   (case direction
+			     (:first
+			      (let ((boundary (loop for i from 0 to (- (length text) 1)
+					     unless (char-is-whitespace (aref text i))
+						 return i)))
+				(setf displaced-text (concatenate 'string displaced-text (subseq text 0 boundary))
+				      (plump:text lt) (subseq text boundary))))
+			     (:last
+			      (let ((boundary (loop for i from (- (length text) 1) downto 0
+						 unless (char-is-whitespace (aref text i))
+						 return i)))
+				(setf displaced-text (concatenate 'string (subseq text (+ 1 boundary) (length text)))
+				      (plump:text lt) (subseq text 0 (+ 1 boundary)))))))
+			 (return))))
+		 (when (> (length displaced-text) 0)
+		   (let ((atn (adjacent-text-node node (case direction (:first :previous) (:last :next)))))
+		     (setf (plump:text atn) (case direction
+					      (:first (concatenate 'string (plump:text atn) displaced-text))
+					      (:last (concatenate 'string displaced-text (plump:text atn))))))))))
 	   (add-element-style (node attribute value)
 	     (let ((old-style (plump:attribute node "style")))
 	       (setf (plump:attribute node "style")
@@ -455,6 +515,7 @@
 				 (return))))
 		  (cond
 		    ((tag-is node "a")
+		     (vacuum-whitespace node)
 		     (let ((href (plump:attribute node "href")))
 		       (when href
 			 (let* ((href (if (ppcre:scan "^(?:[a-z]+:)?//" href) href (format nil "http://~A" href)))
@@ -502,6 +563,7 @@
 						(plump:remove-child e)
 						(plump:append-child new-container e))))))))))
 		    ((tag-is node "u")
+		     (vacuum-whitespace node)
 		     (when (only-child-is node "a")
 		       (plump:replace-child node (plump:first-child node))))
 		    ((tag-is node "ol")
