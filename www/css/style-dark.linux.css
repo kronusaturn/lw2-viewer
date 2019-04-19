@@ -7008,7 +7008,6 @@ h1.listing + .post-meta .read-time.word-count::after {
 	padding: 3px 6px 0 6px;
 	border-width: 1px 1px 0 1px;
 	margin: 1rem 0 0 0;
-	max-width: 100%;
 }
 #content.user-page.all-user-page h1.listing {
 	margin: 2rem 0 0 0;
