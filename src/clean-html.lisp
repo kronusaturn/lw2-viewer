@@ -362,9 +362,27 @@
 	     root
 	     (lambda (node)
 	       (cond
+		 ((not (plump:parent node)) nil)
 		 ((tag-is node "a")
-		  (when (ppcre:scan "^https?://" (plump:text node))
-		    (flatten-element node)))
+		  (cond
+		    ((ppcre:scan "^https?://" (plump:text node))
+		     (flatten-element node))
+		    (t (tagbody start
+			  (let* ((next-sibling (plump:next-sibling node))
+				 (next-text-node (if (plump:text-node-p next-sibling) next-sibling))
+				 (next-next-sibling (if next-text-node (plump:next-sibling next-text-node) next-sibling))
+				 (next-a (if (and next-next-sibling (tag-is next-next-sibling "a")) next-next-sibling)))
+			    (when (and next-a
+				       (or (not next-text-node) (string-is-whitespace (plump:text next-text-node)))
+				       (string= (plump:attribute node "href") (plump:attribute next-a "href")))
+			      (when next-text-node
+				(plump:remove-child next-text-node)
+				(plump:append-child node next-text-node))
+			      (loop for c across (plump:children next-a)
+				 do (progn (plump:remove-child c)
+					   (plump:append-child node c)))
+			      (plump:remove-child next-a)
+			      (go start)))))))
 		 ((tag-is node "ul" "ol")
 		  (setf wayward-li-container node)
 		  (let ((new-children (plump:make-child-array)))
