@@ -274,6 +274,10 @@
                (setf (plump:children new-element) (plump:clone-children node t new-element)
                      (plump:children node) (plump:make-child-array))
                (plump:append-child node new-element)))
+	   (move-children-out-of-node (node)
+	     (iterate (for c in-vector (plump:children node) downto 0)
+		      (plump:remove-child c)
+		      (plump:insert-after node c)))
 	   (text-node-is-not (node &rest args)
 			     (declare (type plump:node node) 
 				      (dynamic-extent args)) 
@@ -426,9 +430,7 @@
 		 ((tag-is node "a")
 		  (cond
 		    ((not (plump:attribute node "href"))
-		     (loop for c across (plump:children node)
-			do (progn (plump:remove-child c)
-				  (plump:insert-after node c))))
+		     (move-children-out-of-node node))
 		    ((ppcre:scan "^https?://" (plump:text node))
 		     (flatten-element node))
 		    (t (tagbody start
@@ -579,8 +581,7 @@
 		       ((string-is-whitespace (plump:text node))
 			(plump:remove-child node))
 		       ((plump:get-elements-by-tag-name node "p")
-			(loop for c across (reverse (plump:children node))
-			   do (plump:insert-after node c))
+			(move-children-out-of-node node)
 			(plump:remove-child node))
 		       (with-toc
 			   (incf section-count) 
