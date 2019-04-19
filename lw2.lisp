@@ -204,12 +204,15 @@ signaled condition to OUT-STREAM."
   (funcall emit-comment-item-fn)
   (format out-stream "</ul>"))
 
-(defun comment-item-to-html (out-stream comment &key extra-html-fn with-post-title)
+(defun comment-item-to-html (out-stream comment &key extra-html-fn with-post-title level)
   (with-error-html-block (out-stream)
     (let ((c-id (cdr (assoc :--id comment)))
 	  (user-id (cdr (assoc :user-id comment))))
-      (format out-stream "<li id=\"comment-~A\" class=\"comment-item~{ ~A~}\">" c-id (list-cond
-										      ((and *current-ignore-hash* (gethash user-id *current-ignore-hash*)) "ignored")))
+      (format out-stream "<li id=\"comment-~A\" class=\"comment-item~{ ~A~}\">"
+	      c-id
+	      (list-cond
+	       (level (if (evenp level) "depth-odd" "depth-even")) ;inverted because level counts from 0
+	       ((and *current-ignore-hash* (gethash user-id *current-ignore-hash*)) "ignored")))
       (unwind-protect
         (comment-to-html out-stream comment :with-post-title with-post-title)
         (if extra-html-fn (funcall extra-html-fn c-id))
@@ -221,17 +224,18 @@ signaled condition to OUT-STREAM."
       (comment-thread-to-html out-stream
         (lambda ()
           (loop for c in comments do
-                (comment-item-to-html out-stream c
-                  :extra-html-fn (lambda (c-id)
-                                   (if (and (= level 10) (gethash c-id comment-hash))
-                                       (format out-stream "<input type=\"checkbox\" id=\"expand-~A\"><label for=\"expand-~:*~A\" data-child-count=\"~A comment~:P\">Expand this thread</label>"
-                                               c-id
-                                               (cdr (assoc :child-count c))))
-                                   (comment-tree-to-html out-stream comment-hash c-id (1+ level))))))))))
+	       (comment-item-to-html out-stream c
+		 :level level
+                 :extra-html-fn (lambda (c-id)
+				  (if (and (= level 10) (gethash c-id comment-hash))
+				      (format out-stream "<input type=\"checkbox\" id=\"expand-~A\"><label for=\"expand-~:*~A\" data-child-count=\"~A comment~:P\">Expand this thread</label>"
+					      c-id
+					      (cdr (assoc :child-count c))))
+				  (comment-tree-to-html out-stream comment-hash c-id (1+ level))))))))))
 
 (defun comment-chrono-to-html (out-stream comments)
   (let ((comment-hash (make-comment-parent-hash comments)) 
-        (comments-sorted (sort comments #'local-time:timestamp< :key (lambda (c) (local-time:parse-timestring (cdr (assoc :posted-at c)))))))
+	(comments-sorted (sort comments #'local-time:timestamp< :key (lambda (c) (local-time:parse-timestring (cdr (assoc :posted-at c)))))))
     (comment-thread-to-html out-stream
       (lambda ()
         (loop for c in comments-sorted do

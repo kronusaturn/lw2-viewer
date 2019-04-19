@@ -812,39 +812,27 @@ a.post-section.alignment-forum:hover::before {
 	border: 1px solid #ccc;
 }
 
-<?php
-	function nested_stuff($segment, $tip, $last_tip, $nesting_levels) {
-		for ($i = $nesting_levels; $i > 0; $i--) {
-			for ($j = $i; $j > 0; $j--)
-				echo $segment;
-			echo $tip;
-		}
-		echo $last_tip;
-	}
-	$comment_nesting_depth = 10;
-?>
-
-<?php nested_stuff(".comment-item .comment-item ", ".comment-item,\n", ".comment-item", $comment_nesting_depth); ?> {
+.comment-item.depth-odd {
 	background-color: #eee;
 }
-<?php nested_stuff("#comments.threaded .comment-item .comment-item ", ".comment-item a.comment-parent-link::after,\n", ".comment-item a.comment-parent-link::after", $comment_nesting_depth); ?> {
+.comment-item.depth-odd a.comment-parent-link::after {
 	box-shadow: 
 		0 28px 16px -16px #fff inset,
 		4px 16px 0 12px #ffd inset,
 		4px	4px 0 12px #ffd inset;
 }
 
-<?php nested_stuff(".comment-item .comment-item ", ".comment-item .comment-item,\n", ".comment-item .comment-item", $comment_nesting_depth); ?> {
+.comment-item.depth-even {
 	background-color: #fff;
 }
-<?php nested_stuff(".comment-item .comment-item ", ".comment-item .comment-item a.comment-parent-link::after,\n", ".comment-item .comment-item a.comment-parent-link::after", $comment_nesting_depth); ?> {
+.comment-item.depth-even a.comment-parent-link::after {
 	box-shadow: 
 		0 28px 16px -16px #eee inset,
 		4px 16px 0 12px #ffd inset,
 		4px	4px 0 12px #ffd inset;
 }
 
-<?php nested_stuff(".comment-item ", ".comment-item:target,\n", ".comment-item:target", (2 * $comment_nesting_depth) - 1); ?> {
+.comment-item.depth-odd:target, .comment-item.depth-even:target {
 	background-color: #ffd;
 }
 .comment-item:target > .comment-thread > .comment-item > .comment > .comment-meta > a.comment-parent-link::after {

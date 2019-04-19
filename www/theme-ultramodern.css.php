@@ -1021,18 +1021,6 @@ a.post-section.alignment-forum:hover::before {
 	}
 }
 
-<?php
-	function nested_stuff($segment, $tip, $last_tip, $nesting_levels) {
-		for ($i = $nesting_levels; $i > 0; $i--) {
-			for ($j = $i; $j > 0; $j--)
-				echo $segment;
-			echo $tip;
-		}
-		echo $last_tip;
-	}
-	$comment_nesting_depth = 10;
-?>
-
 a.comment-parent-link::after {
 	display: none;
 }
