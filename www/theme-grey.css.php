@@ -895,17 +895,24 @@ h1.listing.spam:hover + .post-meta {
 h1.listing + .post-meta > * {
 	font-size: 1em;
 	color: #666;
+	margin: 0 0.25em 0 0;
 }
 h1.listing + .post-meta a {
 	color: #222;
 }
 
+h1.listing + .post-meta .comment-count,
+h1.listing + .post-meta .read-time,
+h1.listing + .post-meta .word-count,
+h1.listing + .post-meta .lw2-link {
+	margin: 0 0.75em 0 0;
+}
 h1.listing + .post-meta .comment-count::before,
 h1.listing + .post-meta .read-time::before,
 h1.listing + .post-meta .word-count::before,
 h1.listing + .post-meta .lw2-link::before {
 	font-family: var(--GW-Font-Awesome);
-	margin: 0 0.25em 0 0;
+	margin: 0 0.25em;
 	font-size: 0.875em;
 	color: #ccc;
 }
@@ -922,7 +929,6 @@ h1.listing + .post-meta .lw2-link:hover {
 /*	Karma value.
 	*/
 h1.listing + .post-meta .karma {
-	margin: 0 0.25em 0 0;
 	order: -1;
 }
 h1.listing + .post-meta .karma::after {
@@ -943,6 +949,7 @@ h1.listing + .post-meta .comment-count span {
 }
 h1.listing + .post-meta .comment-count:hover::before {
 	color: #777;
+	text-shadow: inherit;
 }
 
 /*	LW2 link.
@@ -987,28 +994,20 @@ h1.listing + .post-meta .word-count::before {
 
 /*	Date.
 	*/
-h1.listing + .post-meta .date {
-	margin: 0;
-}
 h1.listing + .post-meta .date::before {
 	content: "on ";
 }
 h1.listing + .post-meta .date::after {
-	content: "—";
+	content: " — ";
 	opacity: 0.5;
-	margin: 0 0.625em 0 0.5em;
-}
-
-/*	Author.
-	*/
-h1.listing + .post-meta .author {
-	margin: 0 0.25em 0 0;
+	margin: 0 0 0 0.25em;
 }
 
 /*	Link post domain.
 	*/
 h1.listing + .post-meta .link-post-domain {
 	order: 1;
+	margin: 0 0 0 0.5em;
 }
 
 /*	Post section.
@@ -1038,7 +1037,6 @@ h1.listing + .post-meta .post-section.alignment-forum:hover::before {
 }
 h1.listing + .post-meta .post-section::before {
 	font-size: 0.9375em;
-	top: 1px;
 	left: -2em;
 }
 

@@ -1228,6 +1228,9 @@ h1.listing.own-post-listing {
 /* POST-META */
 /*===========*/
 
+.post-meta > * {
+	margin: 0 1em 0 0;
+}
 .post-meta .post-section::before,
 .comment-meta .alignment-forum {
 	color: #fff;
