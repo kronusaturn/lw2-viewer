@@ -42,7 +42,7 @@
 	--GW-comment-compact-height: 59px;
 	--GW-comment-compact-height-mobile: 108px;
 	--GW-comment-minimized-height: 38px;
-	--GW-comment-minimized-height-mobile: 76px;
+	--GW-comment-minimized-height-mobile: 68px;
 }
 @media only screen and (max-width: 900px) {
 	:root {

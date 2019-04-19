@@ -613,6 +613,9 @@ ul.comment-thread {
 	}
 }
 @media only screen and (max-width: 720px) {
+	.comment-meta > * {
+		margin-bottom: 0.125em;
+	}
 	.comment-meta .karma-value span {
 		display: none;
 	}

@@ -3422,6 +3422,9 @@ ul.comment-thread {
 	}
 }
 @media only screen and (max-width: 720px) {
+	.comment-meta > * {
+		margin-bottom: 0.125em;
+	}
 	.comment-meta .karma-value span {
 		display: none;
 	}
@@ -4329,6 +4332,14 @@ button.guiedit {
 	}
 	.comment-controls .edit-button::before {
 		font-size: 0.9375em;
+	}
+}
+@media only screen and (max-width: 720px) {
+	.comment-controls {
+		margin: 4px 8px 8px 16px;
+	}
+	.comment-controls .karma {
+		display: none;
 	}
 }
 @media only screen and (max-width: 520px) {
@@ -6006,7 +6017,7 @@ li {
 	--GW-comment-compact-height: 60px;
 	--GW-comment-compact-height-mobile: 110px;
 	--GW-comment-minimized-height: 38px;
-	--GW-comment-minimized-height-mobile: 76px;
+	--GW-comment-minimized-height-mobile: 68px;
 }
 @media only screen and (max-width: 900px) {
 	:root {

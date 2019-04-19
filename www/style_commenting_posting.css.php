@@ -289,6 +289,14 @@ button.guiedit {
 		font-size: 0.9375em;
 	}
 }
+@media only screen and (max-width: 720px) {
+	.comment-controls {
+		margin: 4px 8px 8px 16px;
+	}
+	.comment-controls .karma {
+		display: none;
+	}
+}
 @media only screen and (max-width: 520px) {
 	.comment-controls:focus-within {
 		position: static;
