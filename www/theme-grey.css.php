@@ -1520,7 +1520,6 @@ a.comment-parent-link::before {
 	color: #bbb;
 }
 a.comment-parent-link:hover::before {
-	background-color: #ffd;
 	color: #999;
 }
 
@@ -1549,16 +1548,6 @@ a.comment-parent-link:hover::before {
 
 .comment-popup {
 	background-color: #fff;
-}
-
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
-@media only screen and (max-width: 900px) {
-	a.comment-parent-link:hover::before {
-		background-color: unset;
-	}
 }
 
 /*=======================*/
@@ -1743,6 +1732,10 @@ a.comment-parent-link:hover::before {
 
 .button.edit-post-link:not(:hover) {
 	color: #090;
+}
+.comment-controls .edit-button::before,
+.post-controls .edit-post-link::before {
+	font-weight: 400;
 }
 
 .posting-controls textarea {

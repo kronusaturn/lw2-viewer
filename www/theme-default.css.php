@@ -1479,7 +1479,6 @@ a.comment-parent-link::before {
 	color: #bbb;
 }
 a.comment-parent-link:hover::before {
-	background-color: #ffd;
 	color: #999;
 }
 
@@ -1508,16 +1507,6 @@ a.comment-parent-link:hover::before {
 
 .comment-popup {
 	background-color: #fff;
-}
-
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
-@media only screen and (max-width: 900px) {
-	a.comment-parent-link:hover::before {
-		background-color: unset;
-	}
 }
 
 /*=======================*/

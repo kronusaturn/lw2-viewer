@@ -681,6 +681,9 @@ div.comment-parent-link {
 a.comment-parent-link {
 	font-weight: var(--GW-UI-font-weight-light);
 }
+a.comment-parent-link:hover::before {
+	background-color: var(--GW-comment-background-color-target);
+}
 
 /*	Hover highlighting.
 	*/
@@ -759,7 +762,6 @@ a.comment-child-link::before {
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
-
 @media only screen and (max-width: 900px) {
 	a.comment-parent-link::before,
 	a.comment-parent-link::after {
