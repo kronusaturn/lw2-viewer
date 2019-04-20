@@ -361,6 +361,7 @@ body {
 	#theme-tweaker-toggle {
 		left: -19px;
 	}
+}
 
 /*=================*/
 /* QUICKNAV WIDGET */
