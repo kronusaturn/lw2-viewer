@@ -4060,15 +4060,6 @@ function rectifyMarkup() {
 			strong === strong.parentElement.lastChild)
 			strong.parentElement.outerHTML = `<h3>${strong.innerHTML}</h3>`;
 	});
-
-	// Trim headings of <br> tags.
-	content.queryAll("h1, h2, h3").forEach(heading => {
-		heading.queryAll("br").forEach(br => {
-			if (br === br.parentElement.firstChild || 
-				br === br.parentElement.lastChild)
-				removeElement(br);
-		});
-	});
 }
 
 /*************************/
