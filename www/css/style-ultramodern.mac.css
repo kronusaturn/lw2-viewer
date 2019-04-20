@@ -6468,7 +6468,8 @@ body {
 	box-shadow: 0 0 0 1px #aaa;
 	text-decoration: none;
 }
-#quick-nav-ui a[href='#bottom-bar'] {
+#quick-nav-ui a[href='#bottom-bar'],
+#quick-nav-ui a[href='#comments'] {
 	line-height: 1.8;
 }
 #quick-nav-ui a:active {
@@ -6490,12 +6491,10 @@ body {
 /*======================*/
 
 #new-comment-nav-ui .new-comments-count {
-	font-weight: 600;
-	color: #666;
+	color: #555;
 }
 #new-comment-nav-ui .new-comments-count::after {
-	font-weight: 600;
-	color: #666;
+	color: #333;
 }
 #new-comment-nav-ui .new-comment-sequential-nav-button {
 	color: #bbb;
@@ -6505,20 +6504,14 @@ body {
 }
 @media only screen and (hover: hover) {
 	#new-comment-nav-ui .new-comments-count:hover {
-		text-shadow: 
-			0 0 1px #fff,
-			0 0 3px #fff,
-			0 0 5px #fff,
-			0 0 8px #fff,
-			0.5px 0.5px 0 #fff;
+		text-shadow: var(--GW-shadow-white-glow);
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button:hover {
 		color: #444;
 		text-decoration: none;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button:focus {
-		color: #d00;
-		text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+		text-shadow: var(--GW-shadow-white-glow);
 	}
 }
 
