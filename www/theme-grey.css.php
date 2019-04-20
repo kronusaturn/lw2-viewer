@@ -158,8 +158,6 @@ body {
 /*= Accesskey hints =*/
 
 .nav-inner::after {
-	display: block;
-	position: absolute;
 	left: 5px;
 	top: -2px;
 	font-size: 0.7em;

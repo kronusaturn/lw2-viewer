@@ -122,41 +122,32 @@ body {
 /* Accesskey hints */
 
 .nav-inner::after {
-	display: block;
-	position: absolute;
-	left: 5px;
-	top: -2px;
-	font-weight: 400;
-	font-size: 0.7em;
-	color: #7c7c7c;
-}
-.inactive-bar .nav-inner::after {
-	color: #777;
-	top: 0;
-}
-.nav-inner:hover::after {
-	color: #666;
+	display: none;
 }
 
 /* Search tab */
 
 #nav-item-search form::before {
-	opacity: 0.4;
-	font-size: 0.9375rem;
-}
-#nav-item-search button {
-	border: none;
-	font-weight: 300;
+	opacity: 0.6;
 }
 #nav-item-search input::placeholder {
-	color: #f00;
-	font-weight: normal;
+	color: #faa;
+	font-weight: var(--GW-UI-font-weight-heavy);
 }
 
-/* Inbox indicator */
+/*= Recent Comments tab =*/
 
-#inbox-indicator {
-	top: 0;
+#nav-item-recent-comments span {
+	margin: 0 5px 0 0;
+}
+
+/*= Keyboard help button =*/
+
+@media only screen and (min-width: 961px) {
+	#nav-item-about button.open-keyboard-help {
+		padding: 7px 8px 9px 7px;
+		font-weight: 300;
+	}
 }
 
 /*= Top pagination UI =*/
@@ -176,6 +167,28 @@ body {
 #top-nav-bar a::after,
 #bottom-bar a::after {
 	color: #222;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
+		padding: 6px 10px;
+	}
+	#primary-bar .nav-inner::before, 
+	#secondary-bar .nav-inner::before {
+		opacity: 0.8;
+		font-weight: 400;
+	}
+	#inbox-indicator {
+		visibility: hidden;
+	}
+	#inbox-indicator::before {
+		visibility: visible;
+		padding-top: 2px;
+	}
 }
 
 /*==============*/

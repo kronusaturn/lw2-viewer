@@ -83,6 +83,8 @@
 .nav-inner::after {
 	content: attr(accesskey);
 	font-weight: var(--GW-UI-font-weight-light);
+	display: block;
+	position: absolute;
 }
 
 /*=-----------------------=*/
