@@ -207,14 +207,18 @@ body {
 
 .page-toolbar > * {
 	color: #444;
-	font-weight: 300;
 }
 .new-post::before,
 .logout-button::before {
-	opacity: 0.8;
+	font-weight: 400;
 }
-.page-toolbar .button:hover {
+.page-toolbar a:hover {
 	text-decoration: none;
+	color: #444;
+	text-shadow:
+		0.0px 0.0px 1.0px #777,
+		0.5px 0.5px 1.0px #ccc,
+		0.5px 0.5px 1.0px #bbb;
 }
 
 /*==============*/
