@@ -27,6 +27,34 @@
 (defparameter *default-prefs* (alist :items-per-page 20 :default-sort "new"))
 (defvar *current-prefs* nil)
 
+(defun post-nav-links (post-id)
+  <nav class="post-nav-links">
+    (when-let (sequence-ids (get-post-sequences post-id))
+      (dolist (sequence-id sequence-ids)
+	(let* ((sequence (get-sequence sequence-id))
+	       (posts (sequence-post-ids sequence)))
+	  (multiple-value-bind (prev next)
+	      (loop for prev = nil then (car current)
+		 for current on posts
+		 when (string= (car current) post-id)
+		   return (values prev (second current)))
+	    (when (or prev next)
+	      <div class="post-nav-item sequence">
+	        <a class="post-nav sequence-title" href=("/s/~A" (cdr (assoc :--id sequence)))>
+	          <span class="post-nav-label">Part of the sequence:</span>
+	          <span class="post-nav-title">(safe (clean-text-to-html (cdr (assoc :title sequence))))</span>
+	        </a>
+	        (labels ((post-nav-link (direction id)
+		  	   (let ((post (get-sequence-post sequence id)))
+			     <a class=("post-nav ~A" (string-downcase direction)) href=(generate-post-link post)>
+			       <span class="post-nav-label">(case direction (:prev "Previous: ") (:next "Next: "))</span>
+			       <span class="post-nav-title">(safe (clean-text-to-html (cdr (assoc :title post))))</span>
+			     </a>)))
+		  (when prev (post-nav-link :prev prev))
+		  (when next (post-nav-link :next next)))
+	      </div>)))))
+  </nav>)
+
 (defun postprocess-conversation-title (title)
   (if (or (null title) (string= title ""))
       "[Untitled conversation]"
@@ -176,12 +204,15 @@ signaled condition to OUT-STREAM."
   (funcall emit-comment-item-fn)
   (format out-stream "</ul>"))
 
-(defun comment-item-to-html (out-stream comment &key extra-html-fn with-post-title)
+(defun comment-item-to-html (out-stream comment &key extra-html-fn with-post-title level)
   (with-error-html-block (out-stream)
     (let ((c-id (cdr (assoc :--id comment)))
 	  (user-id (cdr (assoc :user-id comment))))
-      (format out-stream "<li id=\"comment-~A\" class=\"comment-item~{ ~A~}\">" c-id (list-cond
-										      ((and *current-ignore-hash* (gethash user-id *current-ignore-hash*)) "ignored")))
+      (format out-stream "<li id=\"comment-~A\" class=\"comment-item~{ ~A~}\">"
+	      c-id
+	      (list-cond
+	       (t (if (or (not level) (evenp level)) "depth-odd" "depth-even")) ;inverted because level counts from 0
+	       ((and *current-ignore-hash* (gethash user-id *current-ignore-hash*)) "ignored")))
       (unwind-protect
         (comment-to-html out-stream comment :with-post-title with-post-title)
         (if extra-html-fn (funcall extra-html-fn c-id))
@@ -193,17 +224,18 @@ signaled condition to OUT-STREAM."
       (comment-thread-to-html out-stream
         (lambda ()
           (loop for c in comments do
-                (comment-item-to-html out-stream c
-                  :extra-html-fn (lambda (c-id)
-                                   (if (and (= level 10) (gethash c-id comment-hash))
-                                       (format out-stream "<input type=\"checkbox\" id=\"expand-~A\"><label for=\"expand-~:*~A\" data-child-count=\"~A comment~:P\">Expand this thread</label>"
-                                               c-id
-                                               (cdr (assoc :child-count c))))
-                                   (comment-tree-to-html out-stream comment-hash c-id (1+ level))))))))))
+	       (comment-item-to-html out-stream c
+		 :level level
+                 :extra-html-fn (lambda (c-id)
+				  (if (and (= level 10) (gethash c-id comment-hash))
+				      (format out-stream "<input type=\"checkbox\" id=\"expand-~A\"><label for=\"expand-~:*~A\" data-child-count=\"~A comment~:P\">Expand this thread</label>"
+					      c-id
+					      (cdr (assoc :child-count c))))
+				  (comment-tree-to-html out-stream comment-hash c-id (1+ level))))))))))
 
 (defun comment-chrono-to-html (out-stream comments)
   (let ((comment-hash (make-comment-parent-hash comments)) 
-        (comments-sorted (sort comments #'local-time:timestamp< :key (lambda (c) (local-time:parse-timestring (cdr (assoc :posted-at c)))))))
+	(comments-sorted (sort comments #'local-time:timestamp< :key (lambda (c) (local-time:parse-timestring (cdr (assoc :posted-at c)))))))
     (comment-thread-to-html out-stream
       (lambda ()
         (loop for c in comments-sorted do
@@ -248,7 +280,7 @@ signaled condition to OUT-STREAM."
 	      (:notification
 	       (format out-stream "<p>~A</p>" (cdr (assoc :message x))))
 	      (:message
-	       (format out-stream "<ul class=\"comment-thread\"><li class=\"comment-item\">")
+	       (format out-stream "<ul class=\"comment-thread\"><li class=\"comment-item depth-odd\">")
 	       (unwind-protect
 		    (conversation-message-to-html out-stream x)
 		 (format out-stream "</li></ul>")))
@@ -551,6 +583,8 @@ signaled condition to OUT-STREAM."
 
 (defun call-with-emit-page (out-stream fn &key title description current-uri content-class (return-code 200) robots (pagination (pagination-nav-bars)) top-nav)
   (declare (ignore return-code))
+  (when (eq (hunchentoot:request-method*) :head)
+    (return-from call-with-emit-page))
   (ignore-errors
     (log-conditions
       (html-body out-stream
@@ -770,15 +804,18 @@ signaled condition to OUT-STREAM."
 		 (progn
 		   (unless (= (length body) 1)
 		     (error "REQUEST-METHOD must be the only form when it appears in DEFINE-PAGE."))
-		   `((ecase (hunchentoot:request-method*)
-		       ,.(loop for method-body in (cdar body)
-			    collect (destructuring-bind (method args &body inner-body) method-body
-				      (unless (eq method :get)
-					(alexandria:with-gensyms (csrf-token)
-					  (push `(,csrf-token :real-name "csrf-token" :required t) args)
-					  (push `(check-csrf-token ,csrf-token) inner-body)))
-				      `(,method ,(make-binding-form (mapcar (lambda (x) (append (ensure-list x) `(:request-type ,method))) args)
-								    inner-body)))))))
+		   (alexandria:with-gensyms (request-method)
+		     `((let ((,request-method (hunchentoot:request-method*)))
+			 (cond
+			   ,.(loop for method-body in (cdar body)
+				collect (destructuring-bind (method args &body inner-body) method-body
+					  (unless (eq method :get)
+					    (alexandria:with-gensyms (csrf-token)
+					      (push `(,csrf-token :real-name "csrf-token" :required t) args)
+					      (push `(check-csrf-token ,csrf-token) inner-body)))
+					  `(,(if (eq method :get) `(member ,request-method '(:get :head)) `(eq ,request-method ,method))
+					     ,(make-binding-form (mapcar (lambda (x) (append (ensure-list x) `(:request-type ,method))) args)
+								 inner-body)))))))))
 		 body)))
        `(hunchentoot:define-easy-handler (,name :uri ,path-specifier-form) ()
 	  (with-error-page
@@ -925,6 +962,7 @@ signaled condition to OUT-STREAM."
                         (when (and lw2-auth-token (equal (logged-in-userid) (cdr (assoc :user-id post))))
                           (format out-stream "<div class=\"post-controls\"><a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\" accesskey=\"e\" title=\"Edit post [e]\">Edit post</a></div>"
                                   (cdr (assoc :--id post))))
+			(post-nav-links post-id)
                         (force-output out-stream)
 			(handler-case
 			    (let* ((question (cdr (assoc :question post)))
@@ -1387,14 +1425,7 @@ signaled condition to OUT-STREAM."
 				      :extra-class "sequences-view")))))
 
 (define-page view-sequence (:regex "^/s(?:equences)?/([^/]+)" sequence-id) ()
-  (let ((sequence
-	 (lw2-graphql-query
-	  (lw2-query-string :sequence :single
-			    (alist :document-id sequence-id)
-			    `(:--id :title :created-at :user-id
-				    (:contents :html)
-				    (:chapters :title :subtitle :number (:contents :html) (:posts ,@(posts-index-fields)))
-				    :grid-image-id :----typename)))))
+  (let ((sequence (get-sequence sequence-id)))
     (alist-bind ((title string))
 		sequence
       (emit-page (out-stream

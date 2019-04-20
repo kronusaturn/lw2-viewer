@@ -8,6 +8,19 @@
 /* READTHESEQUENCES.COM THEME */
 /******************************/
 
+/*===========*/
+/* VARIABLES */
+/*===========*/
+
+/*	Color scheme.
+	*/
+:root {
+}
+
+/*======*/
+/* BASE */
+/*======*/
+
 body {
 	color: #000;
 	background-color: #fffffa;
@@ -262,6 +275,10 @@ a.nav-inner,
 	pointer-events: none;
 	background-color: #bbb;
 	overflow: hidden;
+	box-shadow:
+		0 0 1px #aaa,
+		0 0 3px #aaa,
+		0 0 5px #aaa;
 }
 .sublevel-nav.sort::before {
 	text-transform: uppercase;
@@ -510,6 +527,14 @@ a.nav-inner,
 }
 .archive-nav a.archive-nav-item-day:hover {
 	background-color: #ddd;
+}
+
+/*===============*/
+/* KEYBOARD HELP */
+/*===============*/
+
+#nav-item-about button.open-keyboard-help {
+	font-weight: 400;
 }
 
 /*==========*/
@@ -865,7 +890,7 @@ a.post-section.alignment-forum:hover::before {
 	text-shadow: 0px 0px 0.5px #333;=
 }
 .bottom-post-meta {
-	border-top: 1px solid #ddd;
+	border-color: #ddd;
 }
 
 /*============*/
@@ -917,18 +942,65 @@ a.post-section.alignment-forum:hover::before {
 .post-page .post-meta:first-of-type::after {
 	content: "❦";
 }
-.post-page .post-meta:last-of-type::after {
-	content: "❖";
-	font-size: 1.75rem;
-	margin: 0.625em 0 0 0;
-}
 .post-body {
 	margin: 0;
+}
+
+.post .bottom-post-meta {
+	border-color: #bbb;
+	padding-bottom: 17px;
+}
+
+/*=================*/
+/* POST NAVIGATION */
+/*=================*/
+
+.post-nav-links a,
+.post-nav-links a:visited {
+	color: #888;
+	font-weight: 200;
+}
+.post-nav-links a:hover {
+	text-decoration: none;
+	color: #333;
+	text-shadow: 
+		0px 0px 0.5px #333;
+	background-color: #f0f0eb;	
+}
+
+.post-nav-label {
+	opacity: 0.75;
+	font-weight: 300;
+}
+
+.post-nav.prev, .sequence-title {
+	border-right: 1px solid #bbb;
+}
+
+@media only screen and (max-width: 900px) {
+	.post-nav.prev,
+	.post-nav.next {
+		padding: 0.75em 0.5em 0.5em 0.5em;
+	}
+	.sequence-title {
+		border-top: 1px solid #bbb;
+		border-right: none;
+	}
+	.post-nav.prev {
+		border-right: 1px solid #bbb;
+	}
+	.post-nav.next {
+		border-left: 1px solid #bbb;
+	}
 }
 
 /*==========*/
 /* COMMENTS */
 /*==========*/
+
+.comments::before {
+	border-top: 1px solid #bbb;
+}
 
 #content > .comment-thread .comment-meta a.date:focus,
 #content > .comment-thread .comment-meta a.permalink:focus {
@@ -1295,9 +1367,6 @@ a.comment-parent-link:hover::before {
 /* COMMENTING AND POSTING UI */
 /*===========================*/
 
-.comments > .comment-controls {
-	margin: 0;
-}
 .posting-controls input[type='submit'] {
 	background-color: #fff;
 	border: 1px solid #aaa;

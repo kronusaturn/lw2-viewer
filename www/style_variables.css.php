@@ -164,5 +164,9 @@
 	--GW-archive-nav-item-color: var(--GW-hyperlink-color);
 	--GW-archive-nav-item-hover-color: var(--GW-hyperlink-hover-color);
 	--GW-archive-nav-item-active-color: var(--GW-hyperlink-active-color);
+
+	--GW-comment-background-color-odd: transparent;
+	--GW-comment-background-color-even: transparent;
+	--GW-comment-background-color-target: transparent;
 }
 

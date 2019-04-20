@@ -367,7 +367,12 @@ h1.post-title {
 	z-index: 2;
 }
 .post .bottom-post-meta {
-	padding: 20px 0 22px 0;
+	padding: 20px 0;
+}
+
+.bottom-post-meta {
+	border-style: solid;
+	border-width: 1px 0;
 }
 
 .post-body {
@@ -652,6 +657,22 @@ ul.comment-thread {
 /*****************************/
 /* COMMENT THREAD NAVIGATION */
 /*****************************/
+
+.comment-item.depth-odd {
+	--GW-comment-background-color: var(--GW-comment-background-color-odd);
+	--GW-comment-parent-background-color: var(--GW-comment-background-color-even);
+}
+.comment-item.depth-even {
+	--GW-comment-background-color: var(--GW-comment-background-color-even);
+	--GW-comment-parent-background-color: var(--GW-comment-background-color-odd);
+}
+
+.comment-item:target {
+	--GW-comment-background-color: var(--GW-comment-background-color-target);
+}
+.comment-item:target > .comment-thread > .comment-item {
+	--GW-comment-parent-background-color: var(--GW-comment-background-color-target);
+}
 
 div.comment-parent-link {
 	font-weight: var(--GW-UI-font-weight-heavy);

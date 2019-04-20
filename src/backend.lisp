@@ -1,5 +1,6 @@
 (uiop:define-package #:lw2.backend
   (:use #:cl #:sb-thread #:flexi-streams #:alexandria #:lw2-viewer.config #:lw2.sites #:lw2.context #:lw2.graphql #:lw2.lmdb #:lw2.utils #:lw2.hash-utils #:lw2.backend-modules #:lw2.schema-type)
+  (:import-from #:collectors #:with-collector)
   (:reexport #:lw2.backend-modules)
   (:export #:*graphql-debug-output*
            #:posts-index-fields #:*messages-index-fields*
@@ -12,6 +13,7 @@
            #:lw2-query-string* #:lw2-query-string
            #:lw2-graphql-query-map #:lw2-graphql-query-multi
 	   #:get-posts-index #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-answers #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
+	   #:sequence-post-ids #:get-sequence #:get-post-sequences #:get-sequence-post
 	   #:get-conversation-messages
 	   #:get-user
            #:get-notifications #:check-notifications
@@ -66,7 +68,12 @@
   (backend-graphql (load-time-value *user-fields*))
   (backend-alignment-forum (load-time-value (append *user-fields* '(:af-karma :full-name)))))
 
-(define-cache-database "index-json" "post-comments-json" "post-comments-json-meta" "post-answers-json" "post-answers-json-meta" "post-body-json" "post-body-json-meta" "user-json" "user-json-meta")
+(define-cache-database
+    "index-json"
+    "post-comments-json" "post-comments-json-meta" "post-answers-json" "post-answers-json-meta"
+    "post-body-json" "post-body-json-meta"
+    "sequence-json" "sequence-json-meta" "post-sequence"
+    "user-json" "user-json-meta")
 
 (defmethod condition-http-return-code ((c condition)) 500)
 
@@ -339,10 +346,10 @@
 			      (prog1
 				(cache-update cache-db cache-key (run-query query))
 				(remhash key *background-cache-update-threads*))
-			      (t (c)
+			      (serious-condition (c)
 				 (remhash key *background-cache-update-threads*)
 				 (log-condition c)
-				 (sb-thread:abort-thread))))) 
+				 (sb-thread:return-from-thread c))))) 
       (sb-ext:with-locked-hash-table (*background-cache-update-threads*)
 				     (let ((thread (gethash key *background-cache-update-threads*)))
 				       (if thread thread
@@ -361,9 +368,13 @@
 	     (if (and cached-result (if force-revalidate (not revalidate) (or is-fresh (not revalidate))))
 		 cached-result
 		 (handler-case
-		     (sb-thread:join-thread thread :timeout timeout)
-		   (t () (or cached-result
-			     (error "Failed to load ~A ~A and no cached version available." cache-db cache-key))))))))))
+		     (let ((new-result (sb-thread:join-thread thread :timeout timeout)))
+		       (typecase new-result
+			 (condition (signal new-result))
+			 (t new-result)))
+		   (condition (c)
+		     (or cached-result
+			 (error "Failed to load ~A ~A and no cached version available: ~A" cache-db cache-key c))))))))))
 
 (define-backend-function lw2-query-string* (query-type return-type args fields &key with-total))
 
@@ -526,6 +537,62 @@
 			    nconc (get-post-comments-list post-id "repliesToAnswer" :parent-answer-id (cdr (assoc :--id a))))))))))
     (lw2-graphql-query-timeout-cached fn "post-answers-json" post-id :revalidate revalidate :force-revalidate force-revalidate)))
 
+(defun sequence-iterate (sequence fn)
+  (dolist (chapter (cdr (assoc :chapters sequence)))
+    (dolist (post (cdr (assoc :posts chapter)))
+      (funcall fn post))))
+
+(defun sequence-post-ids (sequence)
+  (with-collector (col)
+    (sequence-iterate sequence
+		      (lambda (post)
+			(col (cdr (assoc :--id post)))))
+    (col)))
+
+(defun get-sequence-post (sequence post-id)
+  (sequence-iterate sequence
+		    (lambda (post)
+		      (when (string= (cdr (assoc :--id post)) post-id)
+			(return-from get-sequence-post post))))
+  nil)
+
+(define-backend-function get-sequence (sequence-id)
+  (backend-graphql
+   (let ((fn (lambda ()
+	       (let* ((sequence-json
+		       (lw2-graphql-query-noparse
+			(lw2-query-string :sequence :single
+					  (alist :document-id sequence-id)
+					  `(:--id :title :created-at :user-id
+						  (:contents :html)
+						  (:chapters :title :subtitle :number (:contents :html) (:posts ,@(posts-index-fields)))
+						  :grid-image-id :----typename))))
+		      (sequence (decode-graphql-json sequence-json))
+		      (posts (sequence-post-ids sequence)))
+		 (with-cache-transaction
+		     (dolist (post-id posts)
+		       (let ((old-seqs (if-let (json (cache-get "post-sequence" post-id))
+					       (json:decode-json-from-string json))))
+			 (unless (member sequence-id old-seqs :test #'string=)
+			   (cache-put "post-sequence" post-id (json:encode-json-to-string (cons sequence-id old-seqs)))))))
+		 sequence-json))))
+     (lw2-graphql-query-timeout-cached fn "sequence-json" sequence-id))))
+
+(define-backend-function get-post-sequences (post-id)
+  (backend-graphql
+   (if-let (json (cache-get "post-sequence" post-id))
+	   (json:decode-json-from-string json))))
+
+(defun preload-sequences-cache ()
+  (declare (optimize space (compilation-speed 2) (speed 0)))
+  (let ((sequences (apply #'append
+			  (loop for view in '("curatedSequences" "communitySequences")
+			     collect (lw2-graphql-query (lw2-query-string :sequence :list (alist :view view) '(:--id)))))))
+    (dolist (sequence sequences)
+      (get-sequence (cdr (assoc :--id sequence))))
+    (format t "Retrieved ~A sequences." (length sequences)))
+  (values))
+
 (define-backend-function get-user (user-identifier-type user-identifier &key (revalidate t) force-revalidate auth-token)
   (backend-graphql
    (let* ((user-id (ccase user-identifier-type
@@ -671,6 +738,7 @@
     (rate-limit (slug) (cdr (first (lw2-graphql-query (lw2-query-string :user :single (alist :slug slug) '(:--id))))))))
 
 (defun preload-username-cache ()
+  (declare (optimize space (compilation-speed 2) (speed 0)))
   (let ((user-list (lw2-graphql-query (lw2-query-string :user :list '() '(:--id :slug :display-name)))))
     (with-cache-transaction
 	(loop for user in user-list

@@ -10,6 +10,22 @@
 /* THEME LESS */
 /**************/
 
+/*===========*/
+/* VARIABLES */
+/*===========*/
+
+/*	Color scheme.
+	*/
+:root {
+	--GW-comment-background-color-odd: #f6f6f6;
+	--GW-comment-background-color-even: #fff;
+	--GW-comment-background-color-target: #ffd;
+}
+
+/*======*/
+/* BASE */
+/*======*/
+
 body {
 	color: #000;
 	font-family: <?php echo $UI_font; ?>;
@@ -1283,6 +1299,30 @@ h1.post-title {
 	margin: 1.375em 0 0.5em 0;
 }
 
+/*=================*/
+/* POST NAVIGATION */
+/*=================*/
+
+.post-nav-item {
+	padding: 0 0 0 10px;	
+}
+
+@media only screen and (max-width: 900px) {
+	.post-nav-item {
+		padding: 0;
+	}
+	.sequence-title {
+		border-top: 1px solid #ddd;
+		padding: 0.375em 0.5em 0.125em 0.5em
+	}
+	.post-nav.prev {
+		border-right: 1px solid #ddd;
+	}
+	.post-nav.next {
+		border-left: 1px solid #ddd;
+	}
+}
+
 /*===========*/
 /* POST-META */
 /*===========*/
@@ -1425,18 +1465,31 @@ a.post-section.alignment-forum:hover::before {
 }
 
 .post .bottom-post-meta {
-	padding: 1.75em 0 0 0;
-	margin: 0.5em 0 1.5em 0;
+	padding: 1.5em 0 1em 0;
+	margin: 0.5em 0 0 0;
 	position: relative;
+	border-color: transparent;
 }
-.post .bottom-post-meta::before {
+.post .bottom-post-meta::before,
+.post .bottom-post-meta::after {
 	content: "";
 	position: absolute;
 	display: block;
 	background-color: #ddd;
 	height: 1px;
 	width: calc(100% - 60px);
+}
+.post .bottom-post-meta::before {
 	top: 0;
+}
+.post .bottom-post-meta::after {
+	bottom: 0;
+}
+
+@media only screen and (max-width: 520px) {
+	.post .bottom-post-meta {
+		padding: 0.75em 0 0.125em 0;
+	}
 }
 
 /*============*/
@@ -1461,6 +1514,10 @@ a.post-section.alignment-forum:hover::before {
 /* COMMENTS */
 /*==========*/
 
+.comments::before {
+	border-top: 1px solid #ddd;
+}
+
 .comments {
 	padding: 0 0 0 10px;
 }
@@ -1482,48 +1539,13 @@ a.post-section.alignment-forum:hover::before {
 }
 .comment-item {
 	border: 1px solid #ddd;
+	background-color: var(--GW-comment-background-color);
 }
-
-<?php
-	function nested_stuff($segment, $tip, $last_tip, $nesting_levels) {
-		for ($i = $nesting_levels; $i > 0; $i--) {
-			for ($j = $i; $j > 0; $j--)
-				echo $segment;
-			echo $tip;
-		}
-		echo $last_tip;
-	}
-	$comment_nesting_depth = 10;
-?>
-
-<?php nested_stuff(".comment-item .comment-item ", ".comment-item,\n", ".comment-item", $comment_nesting_depth); ?> {
-	background-color: #f6f6f6;
-}
-<?php nested_stuff(".comment-item .comment-item ", ".comment-item a.comment-parent-link::after,\n", ".comment-item a.comment-parent-link::after", $comment_nesting_depth); ?> {
+.comment-parent-link::after {
 	box-shadow: 
-		0 28px 16px -16px #fff inset,
-		4px 16px 0 12px #ffd inset,
-		4px	4px 0 12px #ffd inset;
-}
-
-<?php nested_stuff(".comment-item .comment-item ", ".comment-item .comment-item,\n", ".comment-item .comment-item", $comment_nesting_depth); ?> {
-	background-color: #fff;
-}
-<?php nested_stuff(".comment-item .comment-item ", ".comment-item .comment-item a.comment-parent-link::after,\n", ".comment-item .comment-item a.comment-parent-link::after", $comment_nesting_depth); ?> {
-	box-shadow: 
-		0 28px 16px -16px #f6f6f6 inset,
-		4px 16px 0 12px #ffd inset,
-		4px	4px 0 12px #ffd inset;
-}
-
-<?php nested_stuff(".comment-item ", ".comment-item:target,\n", ".comment-item:target", (2 * $comment_nesting_depth) - 1); ?> {
-	background-color: #ffd;
-}
-.comment-item:target > .comment-thread > .comment-item > .comment > .comment-meta > a.comment-parent-link::after {
-	box-shadow: 
-		0 28px 16px -16px #ffd inset,
-		4px 16px 0 12px #ffd inset,
-		4px	4px 0 12px #ffd inset !important;
+		0 28px 16px -16px var(--GW-comment-parent-background-color) inset,
+		4px 16px 0 12px var(--GW-comment-background-color-target) inset,
+		4px	4px 0 12px var(--GW-comment-background-color-target) inset;
 }
 
 .comment-body {
