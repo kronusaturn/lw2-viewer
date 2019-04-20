@@ -11,6 +11,9 @@
 	margin: auto;
 	z-index: 10000;
 	pointer-events: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
 }
 #ui-elements-container > * {
 	pointer-events: auto;
@@ -48,7 +51,7 @@
 		font-weight: 900;
 		font-size: 32px;
 		padding: 10px;
-		opacity: 0.8;
+		opacity: 0.95;
 		-webkit-tap-highlight-color: transparent;
 		transition: transform 0.2s ease;
 		user-select: none;
@@ -1124,6 +1127,9 @@
 	max-height: 100%;
 	overflow-y: auto;
 	position: relative;
+	-webkit-user-select: auto;
+	-moz-user-select: auto;
+	user-select: auto;
 }
 #keyboard-help-overlay .keyboard-help-container h1 {
 	text-align: center;

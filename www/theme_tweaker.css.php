@@ -220,6 +220,9 @@
 	text-align: center;
 	vertical-align: middle;
 	font-size: 1.3rem;
+	-webkit-user-select: auto;
+	-moz-user-select: auto;
+	user-select: auto;
 }
 
 #theme-tweaker-ui #theme-tweak-section-text-size-adjust {
@@ -627,6 +630,9 @@ input[type='range']::-ms-thumb {
 #theme-tweaker-ui .clippy-container .hint {
 	line-height: 1.3;
 	color: #000;
+	-webkit-user-select: auto;
+	-moz-user-select: auto;
+	user-select: auto;
 }
 #theme-tweaker-ui .clippy-container .hint img {
 	vertical-align: bottom;
