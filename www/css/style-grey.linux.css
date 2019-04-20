@@ -7378,14 +7378,17 @@ h1.post-title {
 /* POSTS */
 /*=======*/
 
-.post .post-meta > * {
+.post .post-meta > *,
+article .post-meta > * {
 	margin: 0 0.25em;
 }
 
+article .post-meta a,
 .post .post-meta a {
 	color: #222;
 }
 
+article .post-meta .author,
 .post .post-meta .author,
 .post .post-meta .lw2-link {
 	margin: 0 0.5em;
@@ -8201,8 +8204,13 @@ hr {
 
 code {
 	background-color: #f6f6ff;
-	border: 1px solid #ddf;
+	border: 1px solid #f6f6ff;
 	border-radius: 4px;
+	box-shadow:
+		0 0 0 1px #f6f6ff,
+		0 1px 0 1px #f6f6ff,
+		0 1px 0 2px #ddf,
+		0 0 0 2px #ddf;
 }
 
 input[type='text'],
