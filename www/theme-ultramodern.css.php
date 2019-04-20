@@ -13,7 +13,11 @@
 	--GW-UI-font-weight-light: 300;
 	--GW-UI-font-weight-heavy: 400;
 
+	--GW-post-listings-font: 'Raleway', 'Helvetica', 'Arial', 'Verdana', sans-serif;
+	--GW-post-listings-font-weight: <?php echo ($platform == 'Mac' ? '100' : '200'); ?>;
+
 	--GW-body-text-font: 'Raleway', 'Helvetica', 'Arial', 'Verdana', sans-serif;
+	--GW-body-text-font-weight: <?php echo ($platform == 'Mac' ? '300' : '400'); ?>;
 }
 
 /*	Layout.
@@ -71,9 +75,9 @@ body {
 	line-height: 1.55;
 }
 
-/*=========*/
-/* NAV BAR */
-/*=========*/
+/*==========*/
+/* NAV BARS */
+/*==========*/
 
 .active-bar {
 	border: 1px solid transparent;
@@ -237,7 +241,6 @@ body {
 /*=====================*/
 
 .sublevel-nav.sort .sublevel-item {
-	font-family: <?php echo $UI_font; ?>;
 	padding: 8px 8px 6px 8px;
 	text-transform: uppercase;
 	pointer-events: auto;
@@ -508,12 +511,9 @@ body {
 h1.listing {
 	margin: 0.7em 20px 0.1em 20px;
 	max-width: calc(100% - 40px);
-	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
 	font-size: 1.5rem;
 }
 h1.listing a[href^='/posts'] {
-	font-family: <?php echo $text_font; ?>;
-	font-weight: <?php global $platform; echo ($platform == 'Mac' ? '100' : '200'); ?>;
 	text-shadow: 
 		0px 0px 1px #777,
 		0.5px 0.5px 1px #aaa,
@@ -683,8 +683,6 @@ h1.listing + .post-meta .link-post-domain {
 /*===============*/
 
 #content.conversation-page h1.page-main-heading {
-	font-family: <?php echo $text_font; ?>;
-	font-weight: <?php global $platform; echo ($platform == 'Mac' ? '100' : '200'); ?>;
 	color: #000;
 	text-shadow: 
 		0px 0px 1px #777,
@@ -786,8 +784,6 @@ h1.listing + .post-meta .link-post-domain {
 /*==================*/
 
 .body-text {
-	font-family: <?php echo $text_font; ?>;
-	font-weight: <?php global $platform; echo ($platform == 'Mac' ? '300' : '400'); ?>;
 	color: #000;
 	text-shadow: 
 		0px 0px 1px #777,
@@ -823,8 +819,6 @@ h1.listing + .post-meta .link-post-domain {
 
 h1.post-title {
 	margin: 1.1em 0 0.25em 0;
-	font-family: <?php echo $text_font; ?>;
-	font-weight: <?php global $platform; echo ($platform == 'Mac' ? '100' : '200'); ?>;
 	color: #000;
 	font-size: 3em;
 	text-shadow: 
@@ -980,8 +974,6 @@ a.post-section.alignment-forum:hover::before {
 
 .post.link-post a.link-post-link {
 	text-decoration: none;
-	font-family: <?php echo $UI_font; ?>;
-	font-weight: 600;
 }
 .post.link-post a.link-post-link:hover {
 	color: #f60;
@@ -1064,10 +1056,6 @@ a.comment-parent-link::before {
 /* DEEP COMMENT THREAD COLLAPSING */
 /*================================*/
 
-.comment-item input[id^="expand"] + label::after {
-	color: <?php echo $hyperlink_color; ?>;
-	font-weight: 600;
-}
 .comment-item input[id^="expand"] + label:hover::after {
 	color: #c00;
 }
@@ -1275,10 +1263,9 @@ div.comment-child-links a {
 }
 .comment-minimize-button:hover {
 	color: #aaa;
-	text-shadow: <?php echo $white_glow; ?>;
+	text-shadow: var(--GW-shadow-white-glow)
 }
 .comment-minimize-button::after {
-	font-family: <?php echo $UI_font; ?>;
 	color: #777;
 }
 .comment-minimize-button.maximized::after {
@@ -1302,11 +1289,6 @@ div.comment-child-links a {
 /*=================================*/
 /* INDIVIDUAL COMMENT THREAD PAGES */
 /*=================================*/
-
-.individual-thread-page > h1 {
-	font-family: <?php echo $text_font; ?>;
-	font-weight: <?php global $platform; echo ($platform == 'Mac' ? '200' : '300'); ?>;
-}
 
 /*==============*/
 /* VOTE BUTTONS */
@@ -1395,7 +1377,7 @@ div.comment-child-links a {
 }
 .comment-controls .cancel-comment-button:hover {
 	color: #f00;
-	text-shadow: <?php echo $white_glow; ?>;
+	text-shadow: var(--GW-shadow-white-glow);
 }
 
 .posting-controls .action-button,
@@ -1427,8 +1409,6 @@ div.comment-child-links a {
 }
 
 .posting-controls textarea {
-	font-weight: 300;
-	font-family: <?php echo $text_font; ?>;
 	color: #000;
 	background-color: transparent;
 	border-color: #999;
@@ -1436,11 +1416,6 @@ div.comment-child-links a {
 		0px 0px 1px #777,
 		0.5px 0.5px 1px #aaa,
 		0.5px 0.5px 1px #bbb;
-}
-<?php echo $firefox_exclusive; ?> {
-	.posting-controls textarea {
-		font-weight: <?php global $platform; echo ($platform == 'Windows' ? '300' : '400'); ?>;
-	}
 }
 .posting-controls textarea:focus {
 	border-color: #ccc;
@@ -1561,7 +1536,6 @@ button.guiedit:hover {
 
 a {
 	text-decoration: none;
-	color: <?php echo $hyperlink_color; ?>;
 }
 a:hover {
 	text-decoration: underline;
@@ -1622,7 +1596,6 @@ input[type='submit']:active {
 .body-text h4,
 .body-text h5,
 .body-text h6 {
-	font-weight: <?php global $platform; echo ($platform == 'Mac' ? '100' : '200'); ?>;
 	text-shadow: 
 		0px 0px 1px #777,
 		0.5px 0.5px 1px #aaa,
@@ -1747,20 +1720,6 @@ input::selection {
 /* ABOUT PAGE */
 /*============*/
 
-.about-page mark {
-	background-color: #e6e6e6;
-	text-decoration: none;
-	box-shadow: 
-		0 -1px 0 0 #000 inset, 
-		0 -3px 1px -2px #000 inset;
-	padding: 0 1px;
-}
-
-#content.about-page .accesskey-table {
-	font-family: <?php echo $UI_font; ?>;
-	border-color: #ddd;
-}
-
 #content.about-page img {
 	border: 1px solid #000;
 }
@@ -1774,11 +1733,11 @@ input::selection {
 }
 #aux-about-link a:hover {
 	opacity: 1.0;
-	text-shadow: <?php echo $white_glow; ?>;
+	text-shadow: var(--GW-shadow-white-glow);
 }
 
 .qualified-linking label:hover {
-	text-shadow: <?php echo $white_glow; ?>;
+	text-shadow: var(--GW-shadow-white-glow);
 }
 
 .qualified-linking-toolbar {
@@ -1793,7 +1752,7 @@ input::selection {
 .qualified-linking-toolbar a:hover {
 	border: 1px solid #999;
 	text-decoration: none;
-	text-shadow: <?php echo $white_glow; ?>;
+	text-shadow: var(--GW-shadow-white-glow);
 }
 .qualified-linking label::after {
 	background-color: #888;
@@ -1977,8 +1936,6 @@ input::selection {
 	}
 	#quick-nav-ui a::after,
 	#new-comment-nav-ui::before {
-		font-family: <?php echo $UI_font; ?>;
-		font-weight: bold;
 		box-shadow:
 			0 0 1px 0 #999,
 			0 0 3px 0 #999,
@@ -2018,9 +1975,6 @@ input::selection {
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-next {
 		border-radius: 0 7px 7px 0;
-	}
-	#new-comment-nav-ui button::after {
-		font-family: <?php echo $UI_font; ?>;
 	}
 
 	#hns-date-picker.engaged {
