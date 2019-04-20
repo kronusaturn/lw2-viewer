@@ -90,7 +90,8 @@ body {
 	font-size: 0.875em;
 }
 
-.active-bar {
+#primary-bar,
+#secondary-bar {
 	border: 1px solid transparent;
 	border-bottom-color: #666;
 	box-shadow:
@@ -109,6 +110,13 @@ body {
 .nav-bar a:link,
 .nav-bar a:visited {
 	color: #222;
+}
+.nav-bar a:hover {
+	text-decoration: none;
+	text-shadow:
+		0.0px 0.0px 1.0px #777,
+		0.5px 0.5px 1.0px #ccc,
+		0.5px 0.5px 1.0px #bbb;
 }
 
 #bottom-bar.decorative::before {
