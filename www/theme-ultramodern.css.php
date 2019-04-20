@@ -301,19 +301,19 @@ body {
 #width-selector button {
 	box-shadow:
 		0 0 0 4px #888 inset,
-		0 0 0 5px #ccc inset;
+		0 0 0 5px #bbb inset;
 }
 #width-selector button:hover,
 #width-selector button.selected {
 	box-shadow:
 		0 0 0 1px #888 inset,
-		0 0 0 2px #ccc inset,
+		0 0 0 2px #bbb inset,
 		0 0 0 4px #888 inset,
-		0 0 0 5px #ccc inset;
+		0 0 0 5px #bbb inset;
 }
 #width-selector button::after {
-	color: #ccc;
-	font-weight: 300;
+	color: #bbb;
+	font-weight: var(--GW-UI-font-weight-light);
 }
 
 /*================*/
@@ -333,18 +333,22 @@ body {
 }
 
 #theme-selector button::before {
-	color: #aaa;
+	color: #bbb;
 	background-color: #888;
+	font-weight: var(--GW-UI-font-weight-light);
 }
 #theme-selector button:hover::before,
 #theme-selector button.selected::before {
-	color: #ccc;
+	color: #ddd;
 }
 
 /*======================*/
 /* THEME TWEAKER TOGGLE */
 /*======================*/
 
+#theme-tweaker-toggle button {
+	font-weight: 400;
+}
 #theme-tweaker-toggle button:hover {
 	text-decoration: none;
 }
@@ -356,7 +360,7 @@ body {
 #quick-nav-ui a {
 	color: #666;
 	border-radius: 4px;
-	box-shadow: 0 0 0 1px #999;
+	box-shadow: 0 0 0 1px #aaa;
 	text-decoration: none;
 }
 #quick-nav-ui a[href='#bottom-bar'] {
@@ -373,10 +377,6 @@ body {
 	#quick-nav-ui a:hover  {
 		color: #444;
 		box-shadow: 0 0 0 1px #ccc;
-	}
-	#quick-nav-ui a:focus:not(:hover) {
-		transform: none;
-		text-shadow: none;
 	}
 }
 
