@@ -3454,7 +3454,8 @@ ul.comment-thread {
 	width: 100%;
 	text-align: center;
 	padding: 0.75em 0 0.9em 0;
-	font-size: 1.375em;
+	font-size: 1.5em;
+	font-weight: var(--GW-UI-font-weight-light);
 }
 
 /*=----------------------------=*/
@@ -6180,6 +6181,14 @@ body {
 /* NAV BARS */
 /*==========*/
 
+#primary-bar .nav-inner,
+#bottom-bar .nav-inner {
+	font-size: 1.1875em;
+}
+#secondary-bar .nav-inner {
+	font-size: 0.875em;
+}
+
 .active-bar {
 	border: 1px solid transparent;
 	border-bottom-color: #666;
@@ -6190,16 +6199,10 @@ body {
 }
 
 .nav-inner {
-	font-weight: normal;
-	font-size: 1.1875em;
 	padding: 11px 30px 13px 30px;
 }
 .nav-current .nav-inner {
-	font-weight: 300;
 	color: #ccc;
-}
-#secondary-bar .nav-inner {
-	font-size: 0.875rem;
 }
 #secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
 	padding: 5px 0 3px 0;
@@ -6210,14 +6213,6 @@ body {
 	}
 }
 
-#bottom-bar.decorative::before {
-	filter: brightness(50%) opacity(0.6);
-}
-#bottom-bar.decorative::after {
-	color: #777;
-	background-color: #888;
-}
-
 .nav-bar a:link,
 .nav-bar a:visited {
 	color: #444;
@@ -6226,6 +6221,14 @@ body {
 .nav-bar a:hover,
 .nav-bar a:focus {
 	text-decoration: underline;
+}
+
+#bottom-bar.decorative::before {
+	filter: brightness(50%) opacity(0.6);
+}
+#bottom-bar.decorative::after {
+	color: #777;
+	background-color: #888;
 }
 
 /* Accesskey hints */

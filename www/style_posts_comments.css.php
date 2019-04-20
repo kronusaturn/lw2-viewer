@@ -517,7 +517,8 @@ ul.comment-thread {
 	width: 100%;
 	text-align: center;
 	padding: 0.75em 0 0.9em 0;
-	font-size: 1.375em;
+	font-size: 1.5em;
+	font-weight: var(--GW-UI-font-weight-light);
 }
 
 /*=----------------------------=*/
