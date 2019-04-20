@@ -1894,9 +1894,9 @@ a.comment-parent-link:hover::before {
 	}
 }
 
-/*=============*/
-/*= SEQUENCES =*/
-/*=============*/
+/*===========*/
+/* SEQUENCES */
+/*===========*/
 
 .sequence-text {
 	font-size: 1.25rem;
@@ -1904,7 +1904,6 @@ a.comment-parent-link:hover::before {
 
 h1.sequence-chapter {
 	font-size: 2.25rem;
-	margin: 0;
 }
 
 #content.sequences-page::after {
@@ -1931,9 +1930,7 @@ a:hover {
 /*=========*/
 
 button:active,
-input[type='submit']:active {
-	transform: scale(0.9);
-}
+input[type='submit']:active,
 .button:active {
 	transform: scale(0.9);
 }

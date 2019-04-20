@@ -1953,6 +1953,27 @@ button.guiedit::after {
 	}
 }
 
+/*===========*/
+/* SEQUENCES */
+/*===========*/
+
+.sequence-text {
+	font-size: 1.125rem;
+}
+
+h1.sequence-chapter {
+	font-size: 2rem;
+	margin: 0;
+}
+
+#content.sequences-page::after {
+	background-color: #777;
+	-webkit-background-clip: text;
+	color: transparent;
+	text-shadow: 
+		rgba(255, 255, 255, 0.5) 0px 3px 3px;
+}
+
 /*=======*/
 /* LINKS */
 /*=======*/
@@ -1968,15 +1989,6 @@ a:hover {
 /* BUTTONS */
 /*=========*/
 
-button:hover,
-input[type='submit']:hover,
-button:focus,
-input[type='submit']:focus,
-.button:hover,
-.button:focus {
-	text-shadow: var(--GW-shadow-white-glow);
-	text-decoration: none;
-}
 button:active,
 input[type='submit']:active,
 .button:active {
@@ -1984,6 +1996,23 @@ input[type='submit']:active,
 }
 <?php echo $firefox_exclusive; ?> {
 	.button:active {
+		transform: none;
+	}
+}
+
+@media only screen and (hover: hover) and (pointer: fine) {
+	button:hover,
+	input[type='submit']:hover,
+	button:focus,
+	input[type='submit']:focus {
+		text-shadow: var(--GW-shadow-white-glow);
+	}
+
+	.button:hover {
+		text-shadow: var(--GW-shadow-white-glow);
+		text-decoration: none;
+	}
+	.button:focus:not(:hover) {
 		transform: none;
 	}
 }
