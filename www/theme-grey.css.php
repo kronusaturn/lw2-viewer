@@ -765,15 +765,11 @@ body {
 		box-shadow: 
 			0 0 6px #aaa inset,
 			0 0 0 1px transparent;
+		background-color: #ddd;
 	}
 	#text-size-adjustment-ui button.decrease,
 	#text-size-adjustment-ui button.increase {
 		padding: 1px 0 0 0;
-	}
-}
-@media only screen and (max-width: 1000px) {
-	#text-size-adjustment-ui button {
-		background-color: #ddd;
 	}
 	#text-size-adjustment-ui button:hover {
 		background-color: #eee;

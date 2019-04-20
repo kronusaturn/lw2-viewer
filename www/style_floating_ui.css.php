@@ -1065,8 +1065,9 @@
 }
 @media only screen and (max-width: 1080px) {
 	#text-size-adjustment-ui {
-		margin: 136px 0 0 12px;
+		margin: 136px 0 0 -12px;
 		flex-flow: column;
+		opacity: 0.75;
 	}
 	#text-size-adjustment-ui button {
 		margin: 1px 0;
@@ -1079,12 +1080,6 @@
 	}
 	#text-size-adjustment-ui::after {
 		display: none;
-	}
-}
-@media only screen and (max-width: 1000px) {
-	#text-size-adjustment-ui {
-		margin-left: -12px;
-		opacity: 0.75;
 	}
 	@media only screen and (max-height: 720px) {
 		#text-size-adjustment-ui {
