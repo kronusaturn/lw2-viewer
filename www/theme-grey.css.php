@@ -1873,8 +1873,9 @@ button.guiedit::after {
 	font-weight: var(--GW-UI-font-weight-light);
 }
 
-#edit-post-form .post-meta-fields input[type='checkbox'] + label {
-	top: -2px;
+#edit-post-form .post-meta-fields label[for='link-post'] {
+	margin: 0 0 0.5em 0.125em;
+	border: none;
 }
 #edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
 	border-radius: 3px;
@@ -1900,7 +1901,11 @@ button.guiedit::after {
 #edit-post-form input[type='radio'] + label {
 	color: #777;
 	border-color: #ddd;
-	padding: 4px 12px 5px 12px;
+	padding: 5px 12px;
+}
+#edit-post-form label[for='section'] {
+	padding-top: 5px;
+	padding-bottom: 5px;
 }
 #edit-post-form input[type='radio'][value='all'] + label {
 	border-radius: 8px 0 0 8px;
@@ -1909,10 +1914,12 @@ button.guiedit::after {
 #edit-post-form input[type='radio'][value='drafts'] + label {
 	border-radius: 0 8px 8px 0;
 }
-#edit-post-form input[type='radio'] + label:hover,
-#edit-post-form input[type='radio']:focus + label {
-	background-color: #ddd;
-	color: #000;
+@media only screen and (hover: hover) and (pointer: fine) {
+	#edit-post-form input[type='radio'] + label:hover,
+	#edit-post-form input[type='radio']:focus + label {
+		background-color: #ddd;
+		color: #000;
+	}
 }
 #edit-post-form input[type='radio']:focus + label {
 	color: #000;
@@ -1933,11 +1940,16 @@ button.guiedit::after {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 520px) {
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label {
-		top: 2px;
+	.post-controls .edit-post-link {
+		text-shadow:
+			0 0 1px #fff,
+			0 0 3px #0f0;
 	}
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
-		top: 1px;
+	.post-controls .edit-post-link:hover,
+	.post-controls .edit-post-link:active {
+		text-shadow:
+			0 0 1px #fff,
+			0 0 3px #f88;
 	}
 }
 
