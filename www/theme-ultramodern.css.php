@@ -69,7 +69,10 @@
 
 body {
 	color: #444;
-	background-color: #888;
+	text-shadow:
+		0.0px 0.0px 1.0px #777,
+		0.5px 0.5px 1.0px #aaa,
+		0.5px 0.5px 1.0px #bbb;
 }
 #content {
 	line-height: 1.55;
@@ -516,10 +519,12 @@ h1.listing {
 	font-size: 1.5rem;
 }
 h1.listing a[href^='/posts'] {
+	color: #a2f2f1;
+	font-weight: 200;
 	text-shadow: 
-		0px 0px 1px #777,
-		0.5px 0.5px 1px #aaa,
-		0.5px 0.5px 1px #bbb;
+		0.0px 0.0px 2.0px #777,
+		0.5px 0.5px 2.0px #444,
+		0.5px 0.5px 2.0px #333;
 }
 h1.listing a[href^="http"] {
 	color: #aaa;
