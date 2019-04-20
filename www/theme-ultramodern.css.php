@@ -353,6 +353,15 @@ body {
 	text-decoration: none;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1000px) {
+	#theme-tweaker-toggle {
+		left: -19px;
+	}
+
 /*=================*/
 /* QUICKNAV WIDGET */
 /*=================*/
@@ -374,10 +383,22 @@ body {
 	opacity: 0.4;
 	color: #777;
 }
-@media only screen and (hover: hover) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	#quick-nav-ui a:hover  {
 		color: #444;
 		box-shadow: 0 0 0 1px #ccc;
+	}
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1000px) {
+	#quick-nav-ui,
+	#new-comment-nav-ui,
+	#new-comment-nav-ui + #hns-date-picker {
+		opacity: 1.0;
 	}
 }
 
@@ -397,7 +418,7 @@ body {
 #new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
 	color: #929292;
 }
-@media only screen and (hover: hover) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	#new-comment-nav-ui .new-comments-count:hover {
 		text-shadow: var(--GW-shadow-white-glow);
 	}
@@ -427,6 +448,49 @@ body {
 	color: #000;
 	border: 1px solid #ccc;
 }
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1440px) {
+	#hns-date-picker {
+		background-color: #888;
+		bottom: 61px;
+		opacity: 1.0;
+		right: -77px;
+	}
+	#hns-date-picker::before {
+		display: none;
+	}
+}
+@media only screen and (max-width: 1160px) {
+	#hns-date-picker {
+		bottom: 204px;
+		right: -30px;
+	}
+}
+@media only screen and (max-width: 1080px) {
+	#hns-date-picker {
+		right: -18px;
+	}
+}
+@media only screen and (max-width: 1040px) {
+	#hns-date-picker {
+		right: -13px;
+	}
+}
+@media only screen and (max-width: 1020px) {
+	#hns-date-picker {
+		right: 15px;
+	}
+}
+
+/*================================*
+	MOBILE VERSIONS OF QUICKNAV,
+	NEW COMMENT NAV, AND HNS
+	DATE PICKER
+ *================================*/
 
 /*======================*/
 /* ANTI-KIBITZER TOGGLE */
@@ -462,6 +526,20 @@ body {
 	color: #ccc;
 	font-weight: 300;
 }
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1080px) {
+	#text-size-adjustment-ui button {
+		border: 1px solid #999;
+		padding: 0 0 0 1px;
+		border-radius: 50%;
+		box-shadow: 
+			0 0 6px #999 inset,
+			0 0 0 1px transparent;
+	}
 
 /*=============================*/
 /* COMMENTS VIEW MODE SELECTOR */
@@ -537,7 +615,7 @@ h1.listing a[href^="http"] {
 	color: #aaa;
 }
 
-@media only screen and (hover: hover) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		background-color: rgba(136,136,136,0.85);
@@ -662,7 +740,7 @@ h1.listing + .post-meta .link-post-domain {
 	margin: 1rem 0 0 0;
 	padding: 6px;
 }
-@media only screen and (hover: hover) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	#content.user-page h1.listing:focus-within::before {
 		left: -0.625em;
 		top: 8px;
@@ -1210,7 +1288,7 @@ div.comment-child-links a {
 	background: linear-gradient(to right, transparent 0%, #888 50%, #888 100%);
 }
 
-@media only screen and (hover: hover) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	#content.compact > .comment-thread .comment-item:hover .comment,
 	#content.compact > .comment-thread .comment-item.expanded .comment {
 		background-color: #999;
@@ -1229,7 +1307,7 @@ div.comment-child-links a {
 			0 0 40px #999;
 	}
 }
-@media only screen and (hover: none) {
+@media not screen and (hover: hover) and (pointer: fine) {
 	#content.compact > .comment-thread.expanded .comment-item .comment {
 		background-color: #999;
 		outline: 3px solid #ccc;
@@ -1506,7 +1584,7 @@ button.guiedit:hover {
 	border: 1px solid #999;
 	color: #aaa;
 }
-@media only screen and (hover:hover) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover,
 	#edit-post-form .post-meta-fields input[type='checkbox']:focus + label {
 		text-decoration: underline;
@@ -1816,7 +1894,7 @@ input::selection {
 	text-shadow: 
 		rgba(136,136,136,0.5) 0px 3px 3px;
 }
-@media only screen and (hover: hover) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	#content.alignment-forum-index-page h1.listing a:hover,
 	#content.alignment-forum-index-page h1.listing a:focus {
 		background-color: rgba(135,138,159,0.85);
@@ -1827,62 +1905,11 @@ input::selection {
 /* FOR NARROW SCREENS */
 /*====================*/
 
-@media only screen and (max-width: 1440px) {
-	#hns-date-picker {
-		background-color: #888;
-		bottom: 61px;
-		opacity: 1.0;
-		right: -77px;
-	}
-	#hns-date-picker::before {
-		display: none;
-	}
-}
-@media only screen and (max-width: 1160px) {
-	#hns-date-picker {
-		bottom: 204px;
-		right: -30px;
-	}
-}
-@media only screen and (max-width: 1080px) {
-	#text-size-adjustment-ui button {
-		border: 1px solid #999;
-		padding: 0 0 0 1px;
-		border-radius: 50%;
-		box-shadow: 
-			0 0 6px #999 inset,
-			0 0 0 1px transparent;
-	}
-	#hns-date-picker {
-		right: -18px;
-	}
-}
-@media only screen and (max-width: 1040px) {
-	#hns-date-picker {
-		right: -13px;
-	}
-}
-@media only screen and (max-width: 1020px) {
-	#hns-date-picker {
-		right: 15px;
-	}
-}
-@media only screen and (max-width: 1000px) {
-	#theme-tweaker-toggle {
-		left: -19px;
-	}
-	#quick-nav-ui,
-	#new-comment-nav-ui,
-	#new-comment-nav-ui + #hns-date-picker {
-		opacity: 1.0;
-	}
-}
-
 /*========*/
 /* MOBILE */
 /*========*/
 
-@media only screen and (hover: none) {
+@media not screen and (hover: hover) and (pointer: fine) {
 	#ui-elements-container > div[id$='-ui-toggle'] button,
 	#theme-selector .theme-selector-close-button  {
 		color: #444;
