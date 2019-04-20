@@ -1138,6 +1138,10 @@ a#inbox-indicator.new-messages:hover::before {
 /* POST NAVIGATION */
 /*******************/
 
+.post-nav-links {
+	padding: 0 var(--GW-current-page-content-right-side-padding) 0 var(--GW-current-page-content-left-side-padding);
+}
+
 .post-nav-item {
 	display: grid;
 	grid-template: 100% / 32% 36% 32%;
@@ -1174,6 +1178,7 @@ a#inbox-indicator.new-messages:hover::before {
 .post-nav.prev {
 	grid-area: prev;
 	align-items: flex-start;
+	padding-left: 1px;
 }
 .post-nav.prev .post-nav-title::before {
 	content: "\F0D9\2005";
@@ -1182,6 +1187,7 @@ a#inbox-indicator.new-messages:hover::before {
 	grid-area: next;
 	text-align: right;
 	align-items: flex-end;
+	padding-right: 1px;
 }
 .post-nav.prev .post-nav-label,
 .post-nav.next .post-nav-label {
@@ -1205,6 +1211,9 @@ a#inbox-indicator.new-messages:hover::before {
 		grid-template-areas:
 			"prev next"
 			"seq seq";
+	}
+	.post-nav.next {
+		padding-right: 2px;
 	}
 	.post-nav.prev .post-nav-title,
 	.post-nav.next .post-nav-title {
