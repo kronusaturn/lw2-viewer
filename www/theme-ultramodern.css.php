@@ -1,10 +1,3 @@
-<?php
-	$UI_font = "'Proxima Nova'";
-	$text_font = "'Raleway', 'Helvetica', 'Arial', 'Verdana', sans-serif;";
-	$hyperlink_color = "#f60";
-	$white_glow = "0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff";
-?>
-
 /*********************/
 /* ULTRAMODERN THEME */
 /*********************/
@@ -13,9 +6,57 @@
 /* VARIABLES */
 /*===========*/
 
+/*	Typography.
+	*/
+:root {
+	--GW-UI-font: 'Proxima Nova', sans-serif;
+	--GW-UI-font-weight-light: 300;
+	--GW-UI-font-weight-heavy: 400;
+
+	--GW-body-text-font: 'Raleway', 'Helvetica', 'Arial', 'Verdana', sans-serif;
+}
+
+/*	Layout.
+	*/
+:root {
+	--GW-content-side-padding: 50px;
+	--GW-sequence-page-content-side-padding: 50px;
+	--GW-user-page-content-side-padding: 30px;
+	--GW-recent-comments-page-content-side-padding: 30px;
+	--GW-conversation-page-content-side-padding: 30px;
+	--GW-post-page-content-side-padding: 30px;
+	--GW-post-side-padding: 30px;
+	--GW-edit-post-page-content-side-padding: 30px;
+
+	--GW-comment-compact-height: 60px;
+	--GW-comment-compact-height-mobile: 110px;
+	--GW-comment-minimized-height: 38px;
+	--GW-comment-minimized-height-mobile: 68px;
+}
+@media only screen and (max-width: 900px) {
+	:root {
+		--GW-content-side-padding: calc(100% / 45);
+		--GW-sequence-page-content-side-padding: calc(100% / 36);
+		--GW-user-page-content-side-padding: calc(100% / 30);
+		--GW-recent-comments-page-content-side-padding: calc(100% / 30);
+		--GW-conversation-page-content-side-padding: calc(100% / 30);
+		--GW-post-page-content-side-padding: calc(100% / 30);
+		--GW-post-side-padding: 0px;
+		--GW-edit-post-page-content-side-padding: calc(100% / 30);
+	}
+}
+
 /*	Color scheme.
 	*/
 :root {
+	--GW-body-background-color: #888;
+
+	--GW-hyperlink-color: #f60;
+	
+	--GW-shadow-white-glow:
+		0 0 1px #fff,
+		0 0 3px #fff,
+		0 0 5px #fff;
 }
 
 /*======*/
@@ -25,8 +66,6 @@
 body {
 	color: #444;
 	background-color: #888;
-	font-family: <?php echo $UI_font; ?>;
-	font-weight: 300;
 }
 #content {
 	line-height: 1.55;

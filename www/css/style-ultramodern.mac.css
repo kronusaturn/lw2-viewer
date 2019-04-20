@@ -147,7 +147,7 @@
 	*/
 :root {
 	--GW-body-background-color: transparent;
-	--GW-content-background-color: transparent;
+	--GW-content-background-color: var(--GW-body-background-color);
 	
 	--GW-hyperlink-color: #00e;
 	--GW-hyperlink-visited-color: var(--GW-hyperlink-color);
@@ -6116,7 +6116,6 @@ li {
 /*%% THEME %%*/
 /*%%%%%%%%%%%*/
 
-
 /*********************/
 /* ULTRAMODERN THEME */
 /*********************/
@@ -6125,9 +6124,57 @@ li {
 /* VARIABLES */
 /*===========*/
 
+/*	Typography.
+	*/
+:root {
+	--GW-UI-font: 'Proxima Nova', sans-serif;
+	--GW-UI-font-weight-light: 300;
+	--GW-UI-font-weight-heavy: 400;
+
+	--GW-body-text-font: 'Raleway', 'Helvetica', 'Arial', 'Verdana', sans-serif;
+}
+
+/*	Layout.
+	*/
+:root {
+	--GW-content-side-padding: 50px;
+	--GW-sequence-page-content-side-padding: 50px;
+	--GW-user-page-content-side-padding: 30px;
+	--GW-recent-comments-page-content-side-padding: 30px;
+	--GW-conversation-page-content-side-padding: 30px;
+	--GW-post-page-content-side-padding: 30px;
+	--GW-post-side-padding: 30px;
+	--GW-edit-post-page-content-side-padding: 30px;
+
+	--GW-comment-compact-height: 60px;
+	--GW-comment-compact-height-mobile: 110px;
+	--GW-comment-minimized-height: 38px;
+	--GW-comment-minimized-height-mobile: 68px;
+}
+@media only screen and (max-width: 900px) {
+	:root {
+		--GW-content-side-padding: calc(100% / 45);
+		--GW-sequence-page-content-side-padding: calc(100% / 36);
+		--GW-user-page-content-side-padding: calc(100% / 30);
+		--GW-recent-comments-page-content-side-padding: calc(100% / 30);
+		--GW-conversation-page-content-side-padding: calc(100% / 30);
+		--GW-post-page-content-side-padding: calc(100% / 30);
+		--GW-post-side-padding: 0px;
+		--GW-edit-post-page-content-side-padding: calc(100% / 30);
+	}
+}
+
 /*	Color scheme.
 	*/
 :root {
+	--GW-body-background-color: #888;
+
+	--GW-hyperlink-color: #f60;
+	
+	--GW-shadow-white-glow:
+		0 0 1px #fff,
+		0 0 3px #fff,
+		0 0 5px #fff;
 }
 
 /*======*/
@@ -6137,8 +6184,6 @@ li {
 body {
 	color: #444;
 	background-color: #888;
-	font-family: 'Proxima Nova';
-	font-weight: 300;
 }
 #content {
 	line-height: 1.55;
@@ -6310,7 +6355,7 @@ body {
 /*=====================*/
 
 .sublevel-nav.sort .sublevel-item {
-	font-family: 'Proxima Nova';
+	font-family: ;
 	padding: 8px 8px 6px 8px;
 	text-transform: uppercase;
 	pointer-events: auto;
@@ -6581,11 +6626,11 @@ body {
 h1.listing {
 	margin: 0.7em 20px 0.1em 20px;
 	max-width: calc(100% - 40px);
-	font-family: 'Proxima Nova', 'Font Awesome';
+	font-family: , 'Font Awesome';
 	font-size: 1.5rem;
 }
 h1.listing a[href^='/posts'] {
-	font-family: 'Raleway', 'Helvetica', 'Arial', 'Verdana', sans-serif;;
+	font-family: ;
 	font-weight: 100;
 	text-shadow: 
 		0px 0px 1px #777,
@@ -6756,7 +6801,7 @@ h1.listing + .post-meta .link-post-domain {
 /*===============*/
 
 #content.conversation-page h1.page-main-heading {
-	font-family: 'Raleway', 'Helvetica', 'Arial', 'Verdana', sans-serif;;
+	font-family: ;
 	font-weight: 100;
 	color: #000;
 	text-shadow: 
@@ -6859,7 +6904,7 @@ h1.listing + .post-meta .link-post-domain {
 /*==================*/
 
 .body-text {
-	font-family: 'Raleway', 'Helvetica', 'Arial', 'Verdana', sans-serif;;
+	font-family: ;
 	font-weight: 300;
 	color: #000;
 	text-shadow: 
@@ -6896,7 +6941,7 @@ h1.listing + .post-meta .link-post-domain {
 
 h1.post-title {
 	margin: 1.1em 0 0.25em 0;
-	font-family: 'Raleway', 'Helvetica', 'Arial', 'Verdana', sans-serif;;
+	font-family: ;
 	font-weight: 100;
 	color: #000;
 	font-size: 3em;
@@ -7053,7 +7098,7 @@ a.post-section.alignment-forum:hover::before {
 
 .post.link-post a.link-post-link {
 	text-decoration: none;
-	font-family: 'Proxima Nova';
+	font-family: ;
 	font-weight: 600;
 }
 .post.link-post a.link-post-link:hover {
@@ -7138,7 +7183,7 @@ a.comment-parent-link::before {
 /*================================*/
 
 .comment-item input[id^="expand"] + label::after {
-	color: #f60;
+	color: ;
 	font-weight: 600;
 }
 .comment-item input[id^="expand"] + label:hover::after {
@@ -7348,10 +7393,10 @@ div.comment-child-links a {
 }
 .comment-minimize-button:hover {
 	color: #aaa;
-	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+	text-shadow: ;
 }
 .comment-minimize-button::after {
-	font-family: 'Proxima Nova';
+	font-family: ;
 	color: #777;
 }
 .comment-minimize-button.maximized::after {
@@ -7377,7 +7422,7 @@ div.comment-child-links a {
 /*=================================*/
 
 .individual-thread-page > h1 {
-	font-family: 'Raleway', 'Helvetica', 'Arial', 'Verdana', sans-serif;;
+	font-family: ;
 	font-weight: 200;
 }
 
@@ -7468,7 +7513,7 @@ div.comment-child-links a {
 }
 .comment-controls .cancel-comment-button:hover {
 	color: #f00;
-	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+	text-shadow: ;
 }
 
 .posting-controls .action-button,
@@ -7501,7 +7546,7 @@ div.comment-child-links a {
 
 .posting-controls textarea {
 	font-weight: 300;
-	font-family: 'Raleway', 'Helvetica', 'Arial', 'Verdana', sans-serif;;
+	font-family: ;
 	color: #000;
 	background-color: transparent;
 	border-color: #999;
@@ -7634,7 +7679,7 @@ button.guiedit:hover {
 
 a {
 	text-decoration: none;
-	color: #f60;
+	color: ;
 }
 a:hover {
 	text-decoration: underline;
@@ -7830,7 +7875,7 @@ input::selection {
 }
 
 #content.about-page .accesskey-table {
-	font-family: 'Proxima Nova';
+	font-family: ;
 	border-color: #ddd;
 }
 
@@ -7847,11 +7892,11 @@ input::selection {
 }
 #aux-about-link a:hover {
 	opacity: 1.0;
-	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+	text-shadow: ;
 }
 
 .qualified-linking label:hover {
-	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+	text-shadow: ;
 }
 
 .qualified-linking-toolbar {
@@ -7866,7 +7911,7 @@ input::selection {
 .qualified-linking-toolbar a:hover {
 	border: 1px solid #999;
 	text-decoration: none;
-	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+	text-shadow: ;
 }
 .qualified-linking label::after {
 	background-color: #888;
@@ -8050,7 +8095,7 @@ input::selection {
 	}
 	#quick-nav-ui a::after,
 	#new-comment-nav-ui::before {
-		font-family: 'Proxima Nova';
+		font-family: ;
 		font-weight: bold;
 		box-shadow:
 			0 0 1px 0 #999,
@@ -8093,7 +8138,7 @@ input::selection {
 		border-radius: 0 7px 7px 0;
 	}
 	#new-comment-nav-ui button::after {
-		font-family: 'Proxima Nova';
+		font-family: ;
 	}
 
 	#hns-date-picker.engaged {
