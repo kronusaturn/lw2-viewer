@@ -4053,37 +4053,6 @@ function rectifyMarkup() {
 
 	let content = query("#content");
 
-	// Unify shattered links.
-	content.queryAll("a + a").forEach(aa => {
-		let a = aa.previousElementSibling;
-		if (a.href != aa.href) return;
-
-		let allSiblings = Array.from(a.parentElement.childNodes);
-		var interveningText = "";
-		for (var i = allSiblings.indexOf(a) + 1; i < allSiblings.indexOf(aa); i++) {
-			if (allSiblings[i].nodeType != 3) return;
-			interveningText += allSiblings[i].textContent;
-		}
-
-		// Check if it’s all just whitespace.
-		if (/\S/.test(interveningText)) return;
-
-		// Unify.
-		aa.innerHTML = a.innerHTML + interveningText + aa.innerHTML;
-		removeElement(a);
-	});
-
-	// Remove spurious underlining.
-	content.queryAll("u:only-child").forEach(u => {
-		if (u.parentElement.tagName != "P")
-			u.outerHTML = u.innerHTML;
-	});
-
-	// Unwrap folds.
-	content.queryAll("a#more:not([href])").forEach(foldAnchor => {
-		foldAnchor.outerHTML = foldAnchor.innerHTML;
-	});
-
 	// Convert bold paragraphs into headings.
 	// NOTE: This will not result in a ToC (as that is generated server-side).
 	content.queryAll("p > strong:only-child, p > b:only-child").forEach(strong => {
