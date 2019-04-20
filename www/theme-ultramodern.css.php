@@ -158,6 +158,12 @@ body {
 	}
 }
 
+/*= Inbox indicator =*/
+
+#inbox-indicator {
+	text-shadow: none;
+}
+
 /*= Top pagination UI =*/
 
 #top-nav-bar a::before {
@@ -190,11 +196,7 @@ body {
 		opacity: 0.8;
 		font-weight: 400;
 	}
-	#inbox-indicator {
-		visibility: hidden;
-	}
 	#inbox-indicator::before {
-		visibility: visible;
 		padding-top: 2px;
 	}
 }
