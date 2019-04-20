@@ -226,25 +226,30 @@ body {
 /*==============*/
 
 .sublevel-nav .sublevel-item {
-	color: #444;
-	background-color: #888;
+	color: #222;
+	font-weight: var(--GW-UI-font-weight-light);
 }
-.sublevel-nav .sublevel-item:not(.selected):hover {
-	color: #000;
+.sublevel-nav .sublevel-item:not(.selected):hover,
+.sublevel-nav .sublevel-item:not(.selected).selected {
 	text-decoration: none;
+	color: #444;
+	text-shadow:
+		0.0px 0.0px 1.0px #777,
+		0.5px 0.5px 1.0px #ccc,
+		0.5px 0.5px 1.0px #bbb;
 }
-.sublevel-nav .sublevel-item:hover,
 .sublevel-nav .sublevel-item.selected {
-	background-color: #999;
+	color: #000;
+	font-weight: var(--GW-UI-font-weight-heavy);
 }
 .sublevel-nav .sublevel-item:not(.selected):active,
 .sublevel-nav .sublevel-item.selected {
-	color: #fff;
+	background-color: #777;
 }
 
 .sublevel-nav:not(.sort) .sublevel-item {
 	border-style: solid;
-	border-color: #999;
+	border-color: #666;
 	border-width: 1px 0 1px 1px;
 }
 .sublevel-nav:not(.sort) .sublevel-item:first-child {
@@ -260,23 +265,18 @@ body {
 /*=====================*/
 
 .sublevel-nav.sort .sublevel-item {
-	padding: 8px 8px 6px 8px;
+	padding: 9px 8px 6px 8px;
 	text-transform: uppercase;
-	pointer-events: auto;
-	box-shadow: 1px 1px 0 0 #777 inset;
+	box-shadow: 1px 1px 0 0 #666 inset;
 }
 .sublevel-nav.sort {
 	border: 2px solid transparent;
 	padding: 18px 0 0 0;
 	border-radius: 8px;
-	pointer-events: none;
-	background-color: #999;
 }
 .sublevel-nav.sort::before {
 	text-transform: uppercase;
-	font-weight: 600;
-	color: #444;
-	z-index: 1;
+	color: #222;
 }
 .sublevel-nav.sort::after {
 	content: "";
@@ -289,8 +289,8 @@ body {
 	border-radius: 6px;
 	box-shadow:
 		0 18px 0 0 #888 inset,
-		0 0 0 1px #777 inset,
-		0 18px 0 1px #777 inset,
+		0 0 0 1px #666 inset,
+		0 18px 0 1px #666 inset,
 		0 0 0 2px #888;
 }
 

@@ -2531,6 +2531,7 @@ a#inbox-indicator.new-messages:hover::before {
 	justify-self: end;
 	align-self: start;
 	flex-flow: column;
+	pointer-events: none;
 }
 #content.index-page .sublevel-nav.sort {
 	grid-row: 3 / span 1;
@@ -2546,19 +2547,19 @@ a#inbox-indicator.new-messages:hover::before {
 .sublevel-nav.sort::before {
 	content: "Sort";
 	font-size: 0.75rem;
+	font-weight: var(--GW-UI-font-weight-heavy);
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100%;
-
-	font-weight: var(--GW-UI-font-weight-heavy);
+	z-index: 1;
 }
 
 .sublevel-nav.sort .sublevel-item {
 	line-height: 1;
 	font-size: 0.875rem;
 	flex-basis: unset;
-
+	pointer-events: auto;
 	font-family: var(--GW-UI-font);
 	font-weight: var(--GW-UI-font-weight-light);
 }

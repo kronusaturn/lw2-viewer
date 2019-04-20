@@ -366,20 +366,17 @@ body {
 	letter-spacing: 0.5px;
 	padding: <?php echo ($platform == 'Mac') ? "7px 7px 5px 7px" : "6px 7px"; ?>;
 	text-transform: uppercase;
-	pointer-events: auto;
 	box-shadow: 1px 1px 0 0 #ccc inset;
 }
 .sublevel-nav.sort {
 	border: 2px solid transparent;
 	padding: 18px 0 0 0;
 	border-radius: 8px;
-	pointer-events: none;
 }
 .sublevel-nav.sort::before {
 	text-transform: uppercase;
 	color: #777;
 	text-shadow: 0.5px 0.5px 0 #fff;
-	z-index: 1;
 }
 .sublevel-nav.sort::after {
 	content: "";
