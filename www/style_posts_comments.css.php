@@ -157,6 +157,14 @@ h1.listing + .post-meta .read-time {
 	cursor: default;
 }
 
+h1.listing a[href^='http'],
+h1.listing + .post-meta .lw2-link,
+h1.listing + .post-meta .post-section {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+}
+
 /********************/
 /* POSTS & COMMENTS */
 /********************/

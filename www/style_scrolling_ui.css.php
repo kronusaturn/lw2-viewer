@@ -1,3 +1,16 @@
+/********************/
+/* UI SELECTABILITY */
+/********************/
+
+.nav-bar,
+.sublevel-nav.sort,
+.page-toolbar,
+.archive-nav {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+}
+
 /************/
 /* NAV BARS */
 /************/
