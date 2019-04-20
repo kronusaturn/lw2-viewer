@@ -111,6 +111,12 @@ h1.listing a[href^="http"] {
 	}
 }
 
+h1.listing a[href^='http'] {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+}
+
 /*=-----------------------=*/
 /*= In-listing edit links =*/
 /*=-----------------------=*/
@@ -157,14 +163,6 @@ h1.listing + .post-meta .read-time {
 	cursor: default;
 }
 
-h1.listing a[href^='http'],
-h1.listing + .post-meta .lw2-link,
-h1.listing + .post-meta .post-section {
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	user-select: none;
-}
-
 /********************/
 /* POSTS & COMMENTS */
 /********************/
@@ -205,6 +203,14 @@ h1.listing + .post-meta .post-section {
 	display: flex;
 	flex-flow: row wrap;
 	justify-content: center;
+}
+
+.post-meta .lw2-link,
+.post-meta .post-section,
+.post-meta .qualified-linking {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
 }
 
 .post-meta a:visited {
