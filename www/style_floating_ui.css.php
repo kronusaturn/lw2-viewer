@@ -931,22 +931,28 @@
 
 @media only screen and (max-width: 1160px) {
 	#anti-kibitzer-toggle {
-		margin: 0 0 350px 28px;
+		margin-bottom: 350px;
+		margin-left: 28px;
+	}
+	@media only screen and (max-height: 720px) {
+		#anti-kibitzer-toggle {
+			margin-bottom: 300px;
+		}
 	}
 }
 @media only screen and (max-width: 1080px) {
 	#anti-kibitzer-toggle {
-		margin: 0 0 350px 16px;
+		margin-left: 16px;
 	}
 }
 @media only screen and (max-width: 1040px) {
 	#anti-kibitzer-toggle {
-		margin: 0 0 350px 8px;
+		margin-left: 8px;
 	}
 }
 @media only screen and (max-width: 1020px) {
 	#anti-kibitzer-toggle {
-		margin: 0 0 350px -20px;
+		margin-left: -20px;
 	}
 }
 @media only screen and (max-width: 960px) {
@@ -1054,7 +1060,7 @@
 
 @media only screen and (max-width: 1220px) {
 	#text-size-adjustment-ui {
-		margin: 4px 0 0 6px;
+		margin-top: 4px;
 	}
 }
 @media only screen and (max-width: 1080px) {
@@ -1077,8 +1083,13 @@
 }
 @media only screen and (max-width: 1000px) {
 	#text-size-adjustment-ui {
-		margin: 136px 0 0 -12px;
+		margin-left: -12px;
 		opacity: 0.75;
+	}
+	@media only screen and (max-height: 720px) {
+		#text-size-adjustment-ui {
+			margin-top: 112px;
+		}
 	}
 }
 @media only screen and (max-width: 960px) {
