@@ -52,7 +52,7 @@
 				<a href=("/users/~A" (get-user-slug user-id))
 				   class=("inline-author~:[~; own-user-author~]" (logged-in-userid user-id))
 				   data-userid=(progn user-id)>
-				   (get-username user-id)</a>'s
+				   (get-username user-id)</a>’s
 				<a href=(generate-post-link post-id parent-id)>comment</a>
 				(progn " ")
 			      </span>)))
