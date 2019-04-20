@@ -219,7 +219,7 @@ function setTextZoom(zoomFactor) {
 
 	let textZoomStyle = query("#text-zoom");
 	textZoomStyle.innerHTML = 
-		`.post, .comment, .comment-controls {
+		`.post, .comment, .comment-controls, #theme-tweaker-ui .sample-text {
 			zoom: ${zoomFactor};
 		}`;
 
