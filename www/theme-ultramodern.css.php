@@ -55,7 +55,7 @@
 :root {
 	--GW-body-background-color: #888;
 
-	--GW-hyperlink-color: #f60;
+	--GW-hyperlink-color: #a2f2f1;
 	
 	--GW-shadow-white-glow:
 		0 0 1px #fff,
@@ -96,32 +96,19 @@ body {
 	box-shadow:
 		0 1.5px 1.5px -1.5px #bbb,
 		0 1px 1px -1px #777;
-	margin: 0 -30px 0 -2px;
 }
 
 .nav-inner {
-	padding: 11px 30px 13px 30px;
+	font-weight: var(--GW-UI-font-weight-light);
 }
 .nav-current .nav-inner {
-	color: #ccc;
-}
-#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
-	padding: 5px 0 3px 0;
-}
-@media only screen and (min-width: 901px) {
-	#secondary-bar #nav-item-sequences .nav-inner {
-		line-height: 1.1;
-	}
+	filter: invert(100%) contrast(200%);
+	font-weight: var(--GW-UI-font-weight-heavy);
 }
 
 .nav-bar a:link,
 .nav-bar a:visited {
-	color: #444;
-	font-weight: 300;
-}
-.nav-bar a:hover,
-.nav-bar a:focus {
-	text-decoration: underline;
+	color: #222;
 }
 
 #bottom-bar.decorative::before {
