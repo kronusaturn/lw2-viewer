@@ -1038,6 +1038,9 @@ a.comment-child-link::before {
 	width: 18px;
 	margin: 0;
 	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
 }
 .comment-minimize-button:active {
 	transform: scale(0.9);
