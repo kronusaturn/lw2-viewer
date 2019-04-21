@@ -1774,41 +1774,13 @@ a:hover {
 /* BUTTONS */
 /*=========*/
 
-button,
-input[type='submit'] {
-	color: #444;
-	font-weight: normal;
-}
-
-.button,
-.button:visited {
-	color: #444;
-}
-
-button:hover,
-input[type='submit']:hover,
-button:focus,
-input[type='submit']:focus {
-	color: #aaa;
-}
 button:active,
-input[type='submit']:active {
-	color: #ccc;
-	transform: scale(0.9);
-}
-.button:hover {
-	color: #aaa;
-}
+input[type='submit']:active,
 .button:active {
 	transform: scale(0.9);
 }
 .button:focus:not(:hover) {
 	transform: none;
-}
-<?php echo $firefox_exclusive; ?> {
-	.button:active {
-		transform: none;
-	}
 }
 
 /*==========*/
