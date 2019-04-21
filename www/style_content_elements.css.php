@@ -431,6 +431,13 @@ li {
 	padding: 0;
 }
 
+/*	Fix for LessWrong being weird.
+	*/
+td.mathjax-inline-container,
+th.mathjax-inline-container {
+	display: table-cell;
+}
+
 /************/
 /* SPOILERS */
 /************/
