@@ -55,7 +55,7 @@
 :root {
 	--GW-body-background-color: #888;
 
-	--GW-hyperlink-color: #a2f2f1;
+	--GW-hyperlink-color: inherit;
 	
 	--GW-shadow-white-glow:
 		0 0 1px #fff,
@@ -730,6 +730,7 @@ h1.listing {
 }
 
 h1.listing a {
+	color: #a2f2f1;
 	text-shadow: 
 		0.0px 0.0px 2.0px #777,
 		0.5px 0.5px 2.0px #444,
