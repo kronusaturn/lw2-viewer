@@ -61,6 +61,10 @@
 		0 0 1px #fff,
 		0 0 3px #fff,
 		0 0 5px #fff;
+	--GW-shadow-link-glow:
+		0.0px 0.0px 1.0px #777,
+		0.5px 0.5px 1.0px #ccc,
+		0.5px 0.5px 1.0px #bbb;
 }
 
 /*======*/
@@ -1764,21 +1768,30 @@ a {
 	text-decoration: none;
 }
 a:hover {
-	text-shadow:
-		0.0px 0.0px 1.0px #777,
-		0.5px 0.5px 1.0px #ccc,
-		0.5px 0.5px 1.0px #bbb;
+	text-shadow: var(--GW-shadow-link-glow);
 }
 
 /*=========*/
 /* BUTTONS */
 /*=========*/
 
+button,
+input[type='submit'],
+.button {
+	text-shadow: inherit;
+}
+button,
+input[type='submit'],
+.button {
+	text-shadow:  var(--GW-shadow-link-glow);
+}
 button:active,
 input[type='submit']:active,
 .button:active {
 	transform: scale(0.9);
 }
+button:focus:not(:hover),
+input[type='submit']:focus:not(:hover),
 .button:focus:not(:hover) {
 	transform: none;
 }
