@@ -540,11 +540,11 @@ EOT;
 		flex-flow: column;
 		color: transparent;
 		line-height: 0;
-		text-shadow: none;
 		justify-content: flex-start;
 		padding: 20px 30px;
+		visibility: visible;
 	}
-	#bottom-bar .nav-item a::before {
+	#bottom-bar .nav-inner::before {
 		color: var(--GW-hyperlink-color);
 		line-height: initial;
 		top: -0.5rem;

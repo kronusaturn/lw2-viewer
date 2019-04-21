@@ -256,6 +256,12 @@ body {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
+@media only screen and (max-width: 960px) {
+	#bottom-bar .nav-inner:hover::before,
+	#bottom-bar .nav-inner:hover::after {
+		text-shadow: var(--GW-shadow-white-glow);
+	}
+}
 @media only screen and (max-width: 900px) {
 	#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
 		padding: 6px 10px;
@@ -266,10 +272,6 @@ body {
 	}
 	#inbox-indicator::before {
 		padding-top: 3px;
-	}
-	#bottom-bar .nav-inner::before,
-	#bottom-bar .nav-inner::after {
-		text-shadow: var(--GW-shadow-white-glow);
 	}
 }
 

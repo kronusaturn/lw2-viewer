@@ -2219,11 +2219,11 @@ a {
 		flex-flow: column;
 		color: transparent;
 		line-height: 0;
-		text-shadow: none;
 		justify-content: flex-start;
 		padding: 20px 30px;
+		visibility: visible;
 	}
-	#bottom-bar .nav-item a::before {
+	#bottom-bar .nav-inner::before {
 		color: var(--GW-hyperlink-color);
 		line-height: initial;
 		top: -0.5rem;
@@ -6362,6 +6362,12 @@ body {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
+@media only screen and (max-width: 960px) {
+	#bottom-bar .nav-inner:hover::before,
+	#bottom-bar .nav-inner:hover::after {
+		text-shadow: var(--GW-shadow-white-glow);
+	}
+}
 @media only screen and (max-width: 900px) {
 	#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
 		padding: 6px 10px;
@@ -6372,10 +6378,6 @@ body {
 	}
 	#inbox-indicator::before {
 		padding-top: 3px;
-	}
-	#bottom-bar .nav-inner::before,
-	#bottom-bar .nav-inner::after {
-		text-shadow: var(--GW-shadow-white-glow);
 	}
 }
 

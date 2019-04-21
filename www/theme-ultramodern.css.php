@@ -61,6 +61,10 @@
 		0 0 1px #fff,
 		0 0 3px #fff,
 		0 0 5px #fff;
+	--GW-shadow-text-glow:
+		0.0px 0.0px 1.0px #777,
+		0.5px 0.5px 1.0px #aaa,
+		0.5px 0.5px 1.0px #bbb;
 	--GW-shadow-link-glow:
 		0.0px 0.0px 1.0px #777,
 		0.5px 0.5px 1.0px #ccc,
@@ -73,10 +77,7 @@
 
 body {
 	color: #444;
-	text-shadow:
-		0.0px 0.0px 1.0px #777,
-		0.5px 0.5px 1.0px #aaa,
-		0.5px 0.5px 1.0px #bbb;
+	text-shadow: var(--GW-shadow-text-glow);
 }
 #content {
 	line-height: 1.55;
@@ -195,6 +196,19 @@ body {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
+@media only screen and (max-width: 960px) {
+	#bottom-bar .nav-inner {
+		text-shadow: none;
+	}
+	#bottom-bar .nav-inner::before,
+	#bottom-bar .nav-inner::after {
+		text-shadow: var(--GW-shadow-text-glow);
+	}
+	#bottom-bar .nav-inner:hover::before,
+	#bottom-bar .nav-inner:hover::after {
+		text-shadow: var(--GW-shadow-white-glow);
+	}
+}
 @media only screen and (max-width: 900px) {
 	#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
 		padding: 6px 10px;

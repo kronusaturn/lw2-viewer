@@ -230,13 +230,15 @@ body {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
+@media only screen and (max-width: 960px) {
+	#bottom-bar .nav-inner:hover::before,
+	#bottom-bar .nav-inner:hover::after {
+		text-shadow: var(--GW-shadow-white-glow);
+	}
+}
 @media only screen and (max-width: 900px) {
 	#nav-item-search button::before {
 		color: #00e;
-	}
-	#bottom-bar .nav-inner::before,
-	#bottom-bar .nav-inner::after {
-		text-shadow: var(--GW-shadow-white-glow);
 	}
 }
 
