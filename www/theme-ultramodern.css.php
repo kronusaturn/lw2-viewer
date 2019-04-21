@@ -378,7 +378,7 @@ body {
 	}
 	#theme-selector::before {
 		color: #222;
-		font-weight: 300;
+		font-weight: var(--GW-UI-font-weight-light);
 		text-shadow: 
 			0px 0px 1px #777, 
 			0.5px 0.5px 1px #aaa, 
@@ -388,16 +388,23 @@ body {
 		border-radius: 10px;
 	}
 	#theme-selector button::after {
-		color: #444;
-		max-width: calc(100% - 3.5em);
-		overflow: hidden;
-		text-overflow: ellipsis;
+		color: #222;
+		text-shadow: 
+			0px 0px 0.5px #777, 
+			0.5px 0.5px 0.5px #aaa, 
+			0.5px 0.5px 0.5px #bbb;
+	}
+	#theme-selector button:hover,
+	#theme-selector button.selected {
+		box-shadow:
+			0 0 4px 1px #ccc inset;
 	}
 	#theme-selector button.selected::after {
-		color: #000;
 		text-shadow: 
-			0 -1px 0 #fff,
-			0 0.5px 0.5px #000;
+			0px 0px 1px #777, 
+			0.5px 0.5px 1px #aaa, 
+			0.5px 0.5px 1px #bbb;
+		filter: invert(100%) contrast(150%);
 	}
 }
 
