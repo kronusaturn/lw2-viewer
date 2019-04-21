@@ -38,7 +38,7 @@
 	--GW-post-page-content-side-padding: 30px;
 	--GW-post-side-padding: 30px;
 	--GW-edit-post-page-content-side-padding: 30px;
-	--GW-individual-thread-side-padding: 30px;
+	--GW-individual-thread-content-side-padding: 30px;
 
 	--GW-comment-compact-height: 59px;
 	--GW-comment-compact-height-mobile: 108px;
