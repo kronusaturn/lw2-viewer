@@ -3924,7 +3924,13 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	if (query("#content").hasClass("post-page") && 
 		query(".post").hasClass("link-post")) {
 		document.addEventListener("keyup", GW.linkPostLinkFocusKeyPressed = (event) => {
-			if (event.key == ';') query("a.link-post-link").focus();
+			if (!(event.key == ';' || event.key == 'Escape')) return;
+			GWLog("GW.linkPostLinkFocusKeyPressed");
+
+			let linkPostLink = query("a.link-post-link");
+
+			if (document.activeElement === linkPostLink) linkPostLink.blur();
+			else if (event.key == ';') linkPostLink.focus();
 		});
 	}
 
