@@ -1067,13 +1067,11 @@ h1.post-title {
 
 article > .post-meta > *,
 .post .post-meta > * {
-	margin: 0 0.25em;
+	margin: 0 0.5em;
 }
 
-article > .post-meta .author,
-.post .post-meta .author,
-.post .post-meta .lw2-link {
-	margin: 0 0.5em;
+.post .post-meta .qualified-linking {
+	margin: 0 0.5em 0 0.25em;
 }
 
 .bottom-post-meta {
