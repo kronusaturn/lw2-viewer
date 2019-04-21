@@ -6742,6 +6742,7 @@ body {
 
 @media only screen and (max-width: 1080px) {
 	#text-size-adjustment-ui {
+		margin-left: 4px;
 		box-shadow: 
 			0 0 6px #999 inset,
 			0 0 0 1px transparent;
@@ -6779,44 +6780,40 @@ body {
 /*==========*/
 
 .archive-nav {
-	border: 1px solid #ccc;
-}
-.archive-nav div[class^='archive-nav-']:nth-of-type(2) *[class^='archive-nav-item'] {
-	border-top-width: 0;
-	border-bottom-width: 0;
-}
-.archive-nav div[class^='archive-nav-']:last-of-type *[class^='archive-nav-item'] {
-	border-bottom-width: 1px;
-}
-.archive-nav *[class^='archive-nav-item']:last-child {
-	border-right-width: 1px;
-}
-.archive-nav span[class^='archive-nav-item'] {
-	font-weight: bold;
+	outline: 1px solid #ccc;
+	border-color: #888;
 }
 
+.archive-nav *[class^="archive-nav-item"] {
+	text-shadow: none;
+	font-weight: var(--GW-UI-font-weight-light);
+	background-color: #888;
+}
 .archive-nav span[class^="archive-nav-item"],
 .archive-nav a:hover {
-	color: #ffb359;
-	box-shadow: 
-		0 0 0 3px #888 inset,
-		0 0 0 4px #ccc inset,
-		0 0 0 5px #888 inset;
 	text-decoration: none;
+	color: #fff;
+	z-index: 1;
+	outline: 1px solid #ccc;
+	transition: box-shadow 0.05s ease;
+	font-weight: var(--GW-UI-font-weight-light);
 }
-.archive-nav span[class^="archive-nav-item"] {
-	font-weight: normal;
+.archive-nav span[class^="archive-nav-item"],
+.archive-nav a[class^="archive-nav-item"]:active {
 	box-shadow: 
-		0 0 0 1px #ccc inset,
-		0 0 0 3px #888 inset,
-		0 0 0 4px #ccc inset,
-		0 0 0 5px #888 inset;
+		0 0 0 2px #888 inset,
+		0 0 0 3px #ccc inset,
+		0 0 0 4px #888 inset;
 }
-.archive-nav a:active {
-	transform: scale(0.9);
-}
-.archive-nav a:focus:not(:hover) {
-	transform: none;
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
+		background-color: #ccc;
+	}
 }
 
 /*==========*/
