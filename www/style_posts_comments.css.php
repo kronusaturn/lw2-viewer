@@ -796,7 +796,7 @@ a.comment-child-link::before {
 
 .comment-meta .permalink::before,
 .comment-meta .lw2-link::before,
-.comment-meta a.comment-parent-link span::before,
+.comment-meta .comment-parent-link span::before,
 .post .post-meta .lw2-link::before {
 	content: "";
 	display: inline-block;
@@ -807,7 +807,6 @@ a.comment-child-link::before {
 		0 0 0 1px #fff,
 		0 0 0 2px #00e,
 		0 0 0 3px transparent;
-	padding: 0 0 0 2px;
 	background-size: 100%;
 	position: relative;
 	top: 2px;
@@ -820,7 +819,7 @@ a.comment-child-link::before {
 .post .post-meta .lw2-link::before {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/lw-white-on-blue.gif")) ?>');
 }
-.comment-meta a.comment-parent-link span::before {
+.comment-meta .comment-parent-link span::before {
 	left: unset;
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/up-arrow-white-on-blue.gif")) ?>');
 }
@@ -831,12 +830,12 @@ a.comment-child-link::before {
 .post .post-meta .lw2-link:hover::before {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/lw-blue-on-white.gif")) ?>');
 }
-.comment-meta a.comment-parent-link span:hover::before {
+.comment-meta .comment-parent-link span:hover::before {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/up-arrow-blue-on-white.gif")) ?>');
 }
 .comment-meta .permalink:hover::before,
 .comment-meta .lw2-link:hover::before,
-.comment-meta a.comment-parent-link span:hover::before,
+.comment-meta .comment-parent-link span:hover::before,
 .post .post-meta .lw2-link:hover::before {
 	box-shadow: 
 		0 0 0 2px #00e,
@@ -846,21 +845,21 @@ a.comment-child-link::before {
 }
 .comment-meta .permalink:active::before,
 .comment-meta .lw2-link:active::before,
-.comment-meta a.comment-parent-link span:active::before,
+.comment-meta .comment-parent-link span:active::before,
 .post .post-meta .lw2-link:active::before {
 	transform: scale(0.9);
 }
 
 .comment-meta .permalink,
 .comment-meta .lw2-link,
-.comment-meta a.comment-parent-link span,
+.comment-meta .comment-parent-link span,
 .post .post-meta .lw2-link {
 	position: relative;
 	opacity: 1.0;
 }
 .comment-meta .permalink::after,
 .comment-meta .lw2-link::after,
-.comment-meta a.comment-parent-link span::after,
+.comment-meta .comment-parent-link span::after,
 .post .post-meta .lw2-link::after {
 	content: "";
 	width: 30px;
@@ -872,6 +871,9 @@ a.comment-child-link::before {
 	box-shadow: none;
 	pointer-events: auto;
 	visibility: visible;
+}
+.comment-meta .comment-parent-link span::after {
+	top: -5px;
 }
 
 /*************************/

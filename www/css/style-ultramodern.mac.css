@@ -3736,7 +3736,7 @@ a.comment-child-link::before {
 
 .comment-meta .permalink::before,
 .comment-meta .lw2-link::before,
-.comment-meta a.comment-parent-link span::before,
+.comment-meta .comment-parent-link span::before,
 .post .post-meta .lw2-link::before {
 	content: "";
 	display: inline-block;
@@ -3747,7 +3747,6 @@ a.comment-child-link::before {
 		0 0 0 1px #fff,
 		0 0 0 2px #00e,
 		0 0 0 3px transparent;
-	padding: 0 0 0 2px;
 	background-size: 100%;
 	position: relative;
 	top: 2px;
@@ -3760,7 +3759,7 @@ a.comment-child-link::before {
 .post .post-meta .lw2-link::before {
 	background-image: url('data:image/gif;base64,R0lGODlhIAAgAPYAMQAw5w066BZB6RxG6SJL6iZO6ipS6zJY6zhd7D1h7EBk7UJl7Ulr7kts7lFx7mB+8GJ/8GmF8WyH8XON8naP8niR8n+X84GY84+k9JOn9ZSo9ZWp9Zut9qS196W296e396q6962896+++LTC+LzI+b3J+cDM+cXQ+sjS+srU+s7X+9La+9bd+9jf/Nng/Nvh/Nzi/N7k/OXq/efr/ent/eru/e3w/vDz/vHz/vL0/vT2/vb3//f4//r7//z8//39//7+/////wAAt4pHif9/AAAAAAAAAAAAAAAAAAAAAAAAwMyACwEAAAAPAAAAAAAAAOC8CVX/fwAAZYtHif9/AAAAPywAAGAAAHA/LAAAYAAAIJ8FAABgAAAg8A0AgGEAAJDwDQCAYQAAEOQJAABhAADYvAlV/38AAJDtsXL/fwAAkO2xcv9/AABvHvb//57//7C8CVX/fwAAG2Zyjf9/AACQ8A0AAGEAAKDkC7PFfwAAkAAAAAAAAACA7bFy/38AACwAAAAAIAAgAAAH5YAAgoOEhYaHiImKi4yNjo+QkZKTlJWWl5EHBwoBgwuaB56hgpqciAE3QUE6BQAIPao9BgAmqiAADT6qNac2qjuzAC2qQBQBNaovABqqQSi9v60AHM0iCbpBsifEFtBBO9IM2CwYzUAVNL/BhgG+39IAMqo4w80qPKorie3RgyHNAANu2OcO3CAIPwIG/IGAoCodAwbxawZjBsAYiiYC8dDhQwYAJQB6IAGwQ0Z3AIFEmACE2IMLzX44OKkQiAQBOVTdGEAAVhAanRwGVAkghaoUglyoGoGpqdOnUKNKnUq1qlVEgQAAOw==');
 }
-.comment-meta a.comment-parent-link span::before {
+.comment-meta .comment-parent-link span::before {
 	left: unset;
 	background-image: url('data:image/gif;base64,R0lGODlhIAAgAPUAMQAw5wAw9QAw9gBj9gB39gB99i8w5y+R9y+R+T8w51eq+V8w51+R9Jeq85eq9ZfY/s/E89fL+dfl/N/E8N/L9N/L9d/4/+fL9OfY9+f4/u/R9e/4/u////fY9ffe9ffe9vfr+/f//////P////9/AAABAAAAAAAAAAAAAAAAAAAAwMyACwEAAAAwaAUAAGEAABUAAAAAAAAAMGgFAABhAABAuwlV/38AAA8AAAAAAAAAwMyACwEAAAAAAAAAAAAAACwAAAAAIAAgAAAGi0CAcEgsGo/IpHLJbDqf0Kh0Ci1IIFRkgTMaXbLFbbf7BQPEYzIYnVZP2W13lRtvl53wSKgLsqTvSwR0XRMCeyMeAYNeTQ9pFAAEhx+RgyILTAhjGkIDk0IFn00KGxVDnl2UQgcZGAZUqCOqZp2itACxs7S5t7Wpvbi2u4cdwAAMDg0JxszNzs/QZkEAOw==');
 }
@@ -3771,12 +3770,12 @@ a.comment-child-link::before {
 .post .post-meta .lw2-link:hover::before {
 	background-image: url('data:image/gif;base64,R0lGODlhIAAgAPYAMQAw5wAw6AAw6gBD6gBW6gBd6wBq6gBq6wB97S8w5y997Ucw50ed70ek708w50+k7U+q8F8w51+x8G+38Xcw53dD53e38Ye37JdW55fL9ZfR9p/Y9p/e9qdW56dd56dq56d356fe9rdq57ed57fl+b9357/Y8L/y/8eR58+R58/R78/y9s/y/8/4/9eq59fR79fe9df4/9+x59///+e36O/L6u////fY6vfe6vfe6/f////l7P/r7f/y7v/47//48P/4+f/4+v//7///8f//9f//9v//+v///wAAAAAAAAAAwMyACwEAAAAPAAAAAAAAALDBCVX/fwAAZYtHif9/AAAAPywAAGAAAHA/LAAAYAAAIJ8FAABgAAAg8A0AgGEAAJDwDQCAYQAAEOQJAABhAACowQlV/38AAJDtsXL/fwAAkO2xcv9/AABvHvb//57//4DBCVX/fwAAG2Zyjf9/AACQ8A0AAGEAAJDkC7PFfwAAkAAAAAAAAACA7bFy/38AACwAAAAAIAAgAAAH2YBHgoOEhYaHiImKi4yNjo+QkZKTlJWWl5FGRkGDRkCaRoOfnZuJRR0AAAU6R0MUqQOsNKkbRz4RqQiIRR6pBKxHKakALEUfqQ1HOcMWu70Av4I3wxpCDrA6MsMnzr7AP7gAEDjDACsi3t3QwEYlqQYj5RcVqRKmz9GCNeX8wyT36QT1WNCvnAAbAFUR4lXuAYhyDBQxTGXihQoYR2YN46AxVQiJz/jF4JFgWIwdwwLMAFmwBREMqQ60egVAwaKJIo+4SDXhiBEUqTJgGkq0qNGjSJMqXcoUUSAAOw==');
 }
-.comment-meta a.comment-parent-link span:hover::before {
+.comment-meta .comment-parent-link span:hover::before {
 	background-image: url('data:image/gif;base64,R0lGODlhIAAgAPUAMQAw5wBD5wBD6i8w50cw50+E6k+k70+q8F8w51+x8G8w529d53cw53e38Idq54ex7oe+8Y9d54/E8Ze+8JfL9aeR6qe+7K/L8t+359/e8N/e8vfe7ffr8ff////r7f/r7v/y7//y8P/47///8P///wABAAAAAAAAAAAAAAAAAAAAwMyACwEAAAAwaAUAAGEAABUAAAAAAAAAMGgFAABhAAAQwAlV/38AAA8AAAAAAAAAwMyACwEAAAAAAAAAAAAAACwAAAAAIAAgAAAGjECScEgsGo/IpHLJbDqf0Kh0Cg1VLlQkSAEAQLLFbbf7BZPEYzIYnVZP2ePAuAyFt+d17tiC6BYiaXRLInpdFCN9AAcjDIFNGGkSJCKJBpOFAh1MHgNdDUKUXZZnlU4bCxNDoQCjJB8OD1mrrWaTpbWgt7izuLmivba/vSIEXQnAJBwZGsjNzs/Q0bVBADs=');
 }
 .comment-meta .permalink:hover::before,
 .comment-meta .lw2-link:hover::before,
-.comment-meta a.comment-parent-link span:hover::before,
+.comment-meta .comment-parent-link span:hover::before,
 .post .post-meta .lw2-link:hover::before {
 	box-shadow: 
 		0 0 0 2px #00e,
@@ -3786,21 +3785,21 @@ a.comment-child-link::before {
 }
 .comment-meta .permalink:active::before,
 .comment-meta .lw2-link:active::before,
-.comment-meta a.comment-parent-link span:active::before,
+.comment-meta .comment-parent-link span:active::before,
 .post .post-meta .lw2-link:active::before {
 	transform: scale(0.9);
 }
 
 .comment-meta .permalink,
 .comment-meta .lw2-link,
-.comment-meta a.comment-parent-link span,
+.comment-meta .comment-parent-link span,
 .post .post-meta .lw2-link {
 	position: relative;
 	opacity: 1.0;
 }
 .comment-meta .permalink::after,
 .comment-meta .lw2-link::after,
-.comment-meta a.comment-parent-link span::after,
+.comment-meta .comment-parent-link span::after,
 .post .post-meta .lw2-link::after {
 	content: "";
 	width: 30px;
@@ -3812,6 +3811,9 @@ a.comment-child-link::before {
 	box-shadow: none;
 	pointer-events: auto;
 	visibility: visible;
+}
+.comment-meta .comment-parent-link span::after {
+	top: -5px;
 }
 
 /*************************/
@@ -7334,33 +7336,14 @@ a.comment-parent-link::after {
 }
 a.comment-parent-link::before {
 	padding: 2px 3px 0 4px;
-}
-
-/*===========================*/
-/* COMMENT THREAD NAVIGATION */
-/*===========================*/
-
-div.comment-parent-link {
-	font-weight: 400;
-}
-a.comment-parent-link {
-	font-weight: 300;
-}
-a.comment-parent-link::before {
-	color: #666;
+	opacity: 0.3;
 }
 a.comment-parent-link:hover::before {
-	color: #aaa;
+	opacity: 1.0;
 }
 
-div.comment-child-links {
-	font-weight: 400;
-}
-div.comment-child-links a {
-	font-weight: 300;
-}
 .comment-child-link::before {
-	color: #666;
+	opacity: 0.4;
 }
 
 .comment-item-highlight {
@@ -7416,6 +7399,7 @@ div.comment-child-links a {
 .author::before {
 	border-radius: 4px;
 	box-shadow: 0 0 0 1px #bbb inset;
+	background-color: var(--GW-body-background-color);
 }
 .comment-item .karma.active-controls::after,
 .post .karma.active-controls::after {
@@ -7537,10 +7521,14 @@ div.comment-child-links a {
 /* COMMENT LW LINKS */
 /*==================*/
 
+.comment-meta .permalink,
+.comment-meta .lw2-link,
+.comment-meta .comment-parent-link {
+	opacity: 1.0;
+}
 .comment-meta .permalink::before,
 .comment-meta .lw2-link::before,
-.individual-thread-page a.comment-parent-link:empty::before {
-	opacity: 1.0;
+.comment-meta .comment-parent-link span::before {
 	filter: saturate(10%) contrast(20%);
 }
 

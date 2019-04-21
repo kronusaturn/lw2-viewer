@@ -1226,33 +1226,14 @@ a.comment-parent-link::after {
 }
 a.comment-parent-link::before {
 	padding: 2px 3px 0 4px;
-}
-
-/*===========================*/
-/* COMMENT THREAD NAVIGATION */
-/*===========================*/
-
-div.comment-parent-link {
-	font-weight: 400;
-}
-a.comment-parent-link {
-	font-weight: 300;
-}
-a.comment-parent-link::before {
-	color: #666;
+	opacity: 0.3;
 }
 a.comment-parent-link:hover::before {
-	color: #aaa;
+	opacity: 1.0;
 }
 
-div.comment-child-links {
-	font-weight: 400;
-}
-div.comment-child-links a {
-	font-weight: 300;
-}
 .comment-child-link::before {
-	color: #666;
+	opacity: 0.4;
 }
 
 .comment-item-highlight {
@@ -1308,6 +1289,7 @@ div.comment-child-links a {
 .author::before {
 	border-radius: 4px;
 	box-shadow: 0 0 0 1px #bbb inset;
+	background-color: var(--GW-body-background-color);
 }
 .comment-item .karma.active-controls::after,
 .post .karma.active-controls::after {
@@ -1429,10 +1411,14 @@ div.comment-child-links a {
 /* COMMENT LW LINKS */
 /*==================*/
 
+.comment-meta .permalink,
+.comment-meta .lw2-link,
+.comment-meta .comment-parent-link {
+	opacity: 1.0;
+}
 .comment-meta .permalink::before,
 .comment-meta .lw2-link::before,
-.individual-thread-page a.comment-parent-link:empty::before {
-	opacity: 1.0;
+.comment-meta .comment-parent-link span::before {
 	filter: saturate(10%) contrast(20%);
 }
 
