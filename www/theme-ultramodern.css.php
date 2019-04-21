@@ -716,44 +716,38 @@ body {
 /*==========*/
 
 h1.listing {
-	margin: 7px 0 3px 0;
 	font-size: 1.5rem;
+	margin: 7px 0 3px 0;
 }
-h1.listing a[href^='/posts'] {
+
+h1.listing a {
 	text-shadow: 
 		0.0px 0.0px 2.0px #777,
 		0.5px 0.5px 2.0px #444,
 		0.5px 0.5px 2.0px #333;
 }
 h1.listing a[href^="http"] {
-	color: #aaa;
+	color: #a2cbf2;
 }
 
 @media only screen and (hover: hover) and (pointer: fine) {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		background-color: rgba(136,136,136,0.85);
-		color: #f60;
 		text-shadow: 
 			0px 0px 1px #777,
 			0.5px 0.5px 1px #aaa,
 			0.5px 0.5px 1px #bbb,
-			0 0 1px #f60,
-			0 0 2px #f60,
-			0 0 3px #f60;
+			0 0 1px #a2cbf2,
+			0 0 2px #a2cbf2,
+			0 0 3px #a2cbf2;
 	}	
 	h1.listing:focus-within::before {
-		color: #f60;
-		left: -0.625em;
-		top: 1px;
+		color: #a2f2f1;
+		font-weight: 400;
 	}
 	h1.listing a[href^="http"]:hover {
-		color: #4879ec;
-		text-shadow: 
-			 0.5px 0.5px 0 #fff,
-			 -0.5px -0.5px 0 #fff,
-			 0 0 2px #fff,
-			 0 0 3px #00c;
+		color: #a2f2c9;
 	}
 }
 
@@ -764,9 +758,6 @@ h1.listing .edit-post-link {
 }
 h1.listing .edit-post-link:hover {
 	text-decoration: none;
-}
-#content.user-page h1.listing .edit-post-link {
-	background-color: #888;
 }
 
 /*======*/
