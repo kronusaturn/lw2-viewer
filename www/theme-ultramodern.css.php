@@ -153,6 +153,9 @@ p {
 #nav-item-search form::before {
 	font-weight: 400;
 }
+#nav-item-search button {
+	padding-top: 1px;
+}
 #nav-item-search input::placeholder {
 	color: #faa;
 	font-weight: var(--GW-UI-font-weight-heavy);
@@ -162,6 +165,12 @@ p {
 
 #nav-item-recent-comments span {
 	margin: 0 5px 0 0;
+}
+
+/*= About tab =*/
+
+#nav-item-about {
+	margin-right: 0.5em;
 }
 
 /*= Keyboard help button =*/
@@ -203,6 +212,9 @@ p {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 960px) {
+	#nav-item-about {
+		margin-right: unset;
+	}
 	#bottom-bar .nav-inner {
 		text-shadow: none;
 	}
@@ -218,6 +230,9 @@ p {
 @media only screen and (max-width: 900px) {
 	#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
 		padding: 6px 10px;
+	}
+	#nav-item-search button {
+		padding-top: 0;
 	}
 	#primary-bar .nav-inner::before, 
 	#secondary-bar .nav-inner::before {
@@ -1070,8 +1085,8 @@ article > .post-meta > *,
 	margin: 0 0.5em;
 }
 
-.post .post-meta .qualified-linking {
-	margin: 0 0.5em 0 0.25em;
+.post .post-meta .comment-count {
+	margin: 0 0.125em 0 0.625em;
 }
 
 .bottom-post-meta {
@@ -1182,25 +1197,26 @@ a.post-section.alignment-forum:hover::before {
 
 .listings .comment-thread .comment-meta a.date:focus,
 .listings .comment-thread .comment-meta a.permalink:focus {
-	color: #ccc;
-	outline: 2px dotted #ccc;
+	outline: 2px dotted #222;
 	position: relative;
-	background-color: #444;
+	filter: invert(100%) contrast(150%);
+	line-height: 1;
 }
 .listings .comment-thread .comment-meta a.date:focus {
-	padding: 0 6px;
+	padding: 4px 6px 3px 6px;
 	left: -6px;
 }
 .listings .comment-thread .comment-meta a.date:focus + * {
 	margin-left: -12px;
 }
 .listings .comment-thread .comment-meta a.permalink:focus {
-	padding: 0 5px;
+	padding: 2px 5px 3px 5px;
 	left: -5px;
 }
 .listings .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
 	margin-left: -10px;
 }
+
 /*===========================*/
 /* COMMENT THREAD NAVIGATION */
 /*===========================*/
@@ -1224,6 +1240,8 @@ a.comment-parent-link::before {
 /* COMMENT-META */
 /*==============*/
 
+/*	Comment author.
+	*/
 .comment-meta .author {
 	font-size: 1.125em;
 	color: #444;
@@ -1233,6 +1251,8 @@ a.comment-parent-link::before {
 	opacity: 0.8;
 }
 
+/*	Karma controls.
+	*/
 .comment-item .karma.active-controls::after,
 .comment-item .karma .karma-value::after,
 .post .karma.active-controls::after,
