@@ -7433,19 +7433,14 @@ a.comment-parent-link:hover::before {
 /* COMMENTS COMPACT VIEW */
 /*=======================*/
 
-#content.compact > .comment-thread .comment-item::after {
-	color: #ccc;
-	background: linear-gradient(to right, transparent 0%, #888 50%, #888 100%);
-}
-
 @media only screen and (hover: hover) and (pointer: fine) {
-	#content.compact > .comment-thread .comment-item:hover .comment,
-	#content.compact > .comment-thread .comment-item.expanded .comment {
+	#content.compact .comment-item:hover .comment,
+	#content.compact .comment-item.expanded .comment {
 		background-color: #999;
 		outline: 3px solid #ccc;
 	}
-	#content.compact > .comment-thread .comment-item:hover .comment::before,
-	#content.compact > .comment-thread .comment-item.expanded .comment::before {
+	#content.compact .comment-item:hover .comment::before,
+	#content.compact .comment-item.expanded .comment::before {
 		background-color: #999;
 		box-shadow: 
 			0 0  3px #999,
@@ -7458,11 +7453,11 @@ a.comment-parent-link:hover::before {
 	}
 }
 @media not screen and (hover: hover) and (pointer: fine) {
-	#content.compact > .comment-thread.expanded .comment-item .comment {
+	#content.compact .comment-thread.expanded .comment {
 		background-color: #999;
 		outline: 3px solid #ccc;
 	}
-	#content.compact > .comment-thread.expanded .comment-item .comment::before {
+	#content.compact .comment-thread.expanded .comment::before {
 		background-color: #999;
 		box-shadow: 
 			0 0  3px #999,
@@ -7473,13 +7468,6 @@ a.comment-parent-link:hover::before {
 			0 0 30px #999,
 			0 0 40px #999;
 	}
-}
-
-#content.user-page.compact > h1.listing {
-	margin-top: 0.5rem;
-}
-#content.user-page.compact > h1.listing + .post-meta {
-	margin-bottom: 0.5rem;
 }
 
 /*===========================*/
@@ -7521,15 +7509,12 @@ a.comment-parent-link:hover::before {
 /* COMMENT LW LINKS */
 /*==================*/
 
-.comment-meta .permalink,
-.comment-meta .lw2-link,
-.comment-meta .comment-parent-link {
-	opacity: 1.0;
-}
 .comment-meta .permalink::before,
 .comment-meta .lw2-link::before,
-.comment-meta .comment-parent-link span::before {
-	filter: saturate(10%) contrast(20%);
+.comment-meta .comment-parent-link span::before,
+.post .post-meta .lw2-link::before {
+	filter: saturate(10%) contrast(25%);
+	opacity: 1.0;
 }
 
 /*=================================*/
