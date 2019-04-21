@@ -86,6 +86,7 @@
 		0 0 0 2px #fff8ff;
 	padding: 16px;
 	margin: 4px;
+	overscroll-behavior: none;
 }
 
 #theme-tweaker-ui h1 {
