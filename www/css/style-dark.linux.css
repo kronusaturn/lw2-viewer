@@ -6439,21 +6439,18 @@ body {
 	letter-spacing: 0.5px;
 	padding: 6px 7px;
 	text-transform: uppercase;
-	pointer-events: auto;
 	box-shadow: 1px 1px 0 0 #484848 inset;
 }
 .sublevel-nav.sort {
 	border: 2px solid transparent;
 	padding: 18px 0 0 0;
 	border-radius: 8px;
-	pointer-events: none;
 	background-color: #393939;
 }
 .sublevel-nav.sort::before {
 	text-transform: uppercase;
 	color: #aeaeae;
 	text-shadow: 0.5px 0.5px 0 #000;
-	z-index: 1;
 }
 .sublevel-nav.sort::after {
 	content: "";

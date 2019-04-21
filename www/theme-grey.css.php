@@ -388,6 +388,9 @@ body {
 	height: 100%;
 	border-radius: 6px;
 	box-shadow:
+		0 1px 0.5px 0 #fff inset,
+		0 1px 0.5px 0 #fff inset,
+		0 1px 0.5px 0 #fff inset,
 		0 18px 0 0 #fff inset,
 		0 0 0 1px #ccc inset,
 		0 18px 0 1px #ccc inset,
