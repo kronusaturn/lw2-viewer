@@ -128,7 +128,6 @@ body {
 	color: #222;
 }
 .nav-bar a:hover {
-	text-decoration: none;
 	text-shadow:
 		0.0px 0.0px 1.0px #777,
 		0.5px 0.5px 1.0px #ccc,
@@ -229,7 +228,6 @@ body {
 	font-weight: 400;
 }
 .page-toolbar a:hover {
-	text-decoration: none;
 	color: #444;
 	text-shadow:
 		0.0px 0.0px 1.0px #777,
@@ -253,7 +251,6 @@ body {
 }
 .sublevel-nav .sublevel-item:not(.selected):hover,
 .sublevel-nav .sublevel-item:not(.selected).selected {
-	text-decoration: none;
 	color: #444;
 	text-shadow:
 		0.0px 0.0px 1.0px #777,
@@ -436,9 +433,6 @@ body {
 #theme-tweaker-toggle button {
 	font-weight: 400;
 }
-#theme-tweaker-toggle button:hover {
-	text-decoration: none;
-}
 
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
@@ -465,7 +459,6 @@ body {
 	color: #666;
 	border-radius: 4px;
 	box-shadow: 0 0 0 1px #aaa;
-	text-decoration: none;
 }
 #quick-nav-ui a[href='#bottom-bar'],
 #quick-nav-ui a[href='#comments'] {
@@ -507,7 +500,6 @@ body {
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button:hover {
 		color: #444;
-		text-decoration: none;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button:focus {
 		text-shadow: var(--GW-shadow-white-glow);
@@ -695,7 +687,6 @@ body {
 }
 .archive-nav span[class^="archive-nav-item"],
 .archive-nav a:hover {
-	text-decoration: none;
 	color: #fff;
 	z-index: 1;
 	outline: 1px solid #ccc;
@@ -765,9 +756,6 @@ h1.listing .edit-post-link {
 	padding: 10px 3px 30px 0.5em;
 	top: 0;
 	right: -1.5em;
-}
-h1.listing .edit-post-link:hover {
-	text-decoration: none;
 }
 
 /*=----------------------------=*/
@@ -1035,7 +1023,6 @@ h1.listing.own-post-listing {
 	font-weight: 300;
 }
 .post-nav-links a:hover {
-	text-decoration: none;
 	color: #ccc;
 }
 
@@ -1166,11 +1153,6 @@ article > .post-meta .author,
 }
 .post-meta .comment-count:hover,
 .post-meta .lw2-link:hover {
-	text-decoration: none;
-	text-shadow: 
-		0 0 0.5px #000,
-		0 0 1px #fff,
-		0 0 8px #000;
 	color: #000;
 }
 .post-meta .comment-count::before {
@@ -1192,9 +1174,6 @@ article > .post-meta .author,
 		0 1px 0 #ccc, 
 		0 0 5px #ccc;
 }
-a.post-section:hover {
-	text-decoration: none;
-}
 a.post-section:hover::before {
 	color: #999;
 }
@@ -1213,9 +1192,6 @@ a.post-section.alignment-forum:hover::before {
 /* LINK POSTS */
 /*============*/
 
-.post.link-post a.link-post-link {
-	text-decoration: none;
-}
 .post.link-post a.link-post-link:hover {
 	color: #f60;
 }
@@ -1631,7 +1607,6 @@ div.comment-child-links a {
 }
 .posting-controls .action-button:hover,
 .posting-controls input[type='submit']:hover {
-	text-decoration: underline;
 	color: #444;
 }
 
@@ -1645,7 +1620,6 @@ div.comment-child-links a {
 }
 .comment-controls .action-button:hover {
 	color: #bbb;
-	text-decoration: none;
 }
 
 .edit-post-link,
@@ -1720,9 +1694,6 @@ button.guiedit:hover {
 #markdown-hints-checkbox + label {
 	color: #444;
 }
-#markdown-hints-checkbox + label:hover {
-	text-decoration: underline;
-}
 #markdown-hints {
 	background-color: #888;
 	border: 1px solid #ccc;
@@ -1780,10 +1751,6 @@ button.guiedit:hover {
 	color: #aaa;
 }
 @media only screen and (hover: hover) and (pointer: fine) {
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover,
-	#edit-post-form .post-meta-fields input[type='checkbox']:focus + label {
-		text-decoration: underline;
-	}
 	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover::before,
 	#edit-post-form .post-meta-fields input[type='checkbox']:focus + label::before {
 		border-color: #ccc;
@@ -1837,9 +1804,6 @@ button.guiedit:hover {
 a {
 	text-decoration: none;
 }
-a:hover {
-	text-decoration: underline;
-}
 
 /*=========*/
 /* BUTTONS */
@@ -1861,10 +1825,6 @@ input[type='submit']:hover,
 button:focus,
 input[type='submit']:focus {
 	color: #aaa;
-}
-input[type='submit']:hover,
-input[type='submit']:focus {
-	text-decoration: underline;
 }
 button:active,
 input[type='submit']:active {
@@ -2051,7 +2011,6 @@ input::selection {
 }
 .qualified-linking-toolbar a:hover {
 	border: 1px solid #999;
-	text-decoration: none;
 	text-shadow: var(--GW-shadow-white-glow);
 }
 .qualified-linking label::after {
