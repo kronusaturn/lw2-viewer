@@ -803,7 +803,6 @@ h1.listing + .post-meta .lw2-link {
 	*/
 h1.listing + .post-meta .karma {
 	order: -1;
-	margin-right: 0.25em;
 }
 h1.listing + .post-meta .karma::after {
 	content: " by";
@@ -812,7 +811,12 @@ h1.listing + .post-meta .karma::after {
 /*	Comment count.
 	*/
 h1.listing + .post-meta .comment-count.new-comments::before {
-	color: #0f0;
+	color: #00f;
+	opacity: 0.5;
+}
+h1.listing + .post-meta .comment-count.new-comments:hover::before {
+	opacity: 1.0;
+	font-weight: 900;
 }
 
 /*	LW2 link.
@@ -1152,16 +1156,8 @@ article > .post-meta .author,
 	content: "\F086";
 }
 .post-meta .comment-count:hover::before {
-	color: #ccc;
+	color: #444;
 }
-
-/* 
-.post-meta .author:hover,
-.comment-meta .author:hover {
-	text-decoration: none;
-	color: #090;
-}
- */
 
 /*	Post section.
 	*/
