@@ -38,6 +38,7 @@
 	--GW-post-page-content-side-padding: 30px;
 	--GW-post-side-padding: 30px;
 	--GW-edit-post-page-content-side-padding: 30px;
+	--GW-individual-thread-side-padding: 30px;
 
 	--GW-comment-compact-height: 59px;
 	--GW-comment-compact-height-mobile: 108px;
@@ -54,6 +55,7 @@
 		--GW-post-page-content-side-padding: calc(100% / 30);
 		--GW-post-side-padding: 0px;
 		--GW-edit-post-page-content-side-padding: calc(100% / 30);
+		--GW-individual-thread-page-content-side-padding: calc(100% / 30);
 	}
 }
 

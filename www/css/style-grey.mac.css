@@ -90,6 +90,10 @@
 	--GW-edit-post-page-content-left-side-padding: var(--GW-edit-post-page-content-side-padding);
 	--GW-edit-post-page-content-right-side-padding: var(--GW-edit-post-page-content-side-padding);
 
+	--GW-individual-thread-page-content-side-padding: 0;
+	--GW-individual-thread-page-content-left-side-padding: var(--GW-individual-thread-page-content-side-padding);
+	--GW-individual-thread-page-content-right-side-padding: var(--GW-individual-thread-page-content-side-padding);
+
 	--GW-post-side-padding: 0;
 	--GW-post-left-side-padding: var(--GW-post-side-padding);
 	--GW-post-right-side-padding: var(--GW-post-side-padding);
@@ -141,6 +145,10 @@
 :root #content.edit-post-page {
 	--GW-current-page-content-left-side-padding: var(--GW-edit-post-page-content-left-side-padding);
 	--GW-current-page-content-right-side-padding: var(--GW-edit-post-page-content-right-side-padding);
+}
+:root #content.individual-thread-page {
+	--GW-current-page-content-left-side-padding: var(--GW-individual-thread-page-content-left-side-padding);
+	--GW-current-page-content-right-side-padding: var(--GW-individual-thread-page-content-right-side-padding);
 }
 
 /*	Color scheme.
@@ -6155,6 +6163,7 @@ th.mathjax-inline-container {
 	--GW-post-page-content-side-padding: 30px;
 	--GW-post-side-padding: 30px;
 	--GW-edit-post-page-content-side-padding: 30px;
+	--GW-individual-thread-side-padding: 30px;
 
 	--GW-comment-compact-height: 59px;
 	--GW-comment-compact-height-mobile: 108px;
@@ -6171,6 +6180,7 @@ th.mathjax-inline-container {
 		--GW-post-page-content-side-padding: calc(100% / 30);
 		--GW-post-side-padding: 0px;
 		--GW-edit-post-page-content-side-padding: calc(100% / 30);
+		--GW-individual-thread-page-content-side-padding: calc(100% / 30);
 	}
 }
 
