@@ -218,7 +218,7 @@ signaled condition to OUT-STREAM."
         (if extra-html-fn (funcall extra-html-fn c-id))
         (format out-stream "</li>")))))
 
-(defun comment-tree-to-html (out-stream comment-hash &optional (target nil) (level 0))
+(defun comment-tree-to-html (out-stream comment-hash &optional (target nil) (level (if target 1 0)))
   (let ((comments (gethash target comment-hash)))
     (when comments
       (comment-thread-to-html out-stream
