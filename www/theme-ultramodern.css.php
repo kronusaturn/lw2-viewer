@@ -1414,6 +1414,10 @@ a.comment-parent-link:hover::before {
 /* INDIVIDUAL COMMENT THREAD PAGES */
 /*=================================*/
 
+.individual-thread-page h1.post-title {
+	color: unset;
+}
+
 /*==============*/
 /* VOTE BUTTONS */
 /*==============*/
