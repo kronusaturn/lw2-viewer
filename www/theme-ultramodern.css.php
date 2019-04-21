@@ -32,10 +32,10 @@
 	--GW-post-side-padding: 30px;
 	--GW-edit-post-page-content-side-padding: 30px;
 
-	--GW-comment-compact-height: 60px;
-	--GW-comment-compact-height-mobile: 110px;
-	--GW-comment-minimized-height: 38px;
-	--GW-comment-minimized-height-mobile: 68px;
+	--GW-comment-compact-height: 54px;
+	--GW-comment-compact-height-mobile: 105px;
+	--GW-comment-minimized-height: 34px;
+	--GW-comment-minimized-height-mobile: 64px;
 }
 @media only screen and (max-width: 900px) {
 	:root {
@@ -982,19 +982,13 @@ h1.listing.own-post-listing {
 /*============*/
 
 .login-container h1 {
-	font-weight: 300;
+	font-weight: var(--GW-UI-font-weight-heavy);
 }
 
 /* “Create account” form */
 
 #signup-form {
 	border: 1px solid #aaa;
-}
-
-/* Log in tip */
-
-.login-container .login-tip {
-	border: 1px solid transparent;
 }
 
 /* Message box */
@@ -1011,12 +1005,6 @@ h1.listing.own-post-listing {
 /*=====================*/
 /* PASSWORD RESET PAGE */
 /*=====================*/
-
-.reset-password-container input[type='submit'] {
-	background-color: #e4e4e4;
-	border: 1px solid #ccc;
-	font-weight: 600;
-}
 
 /*===================*/
 /* TABLE OF CONTENTS */
@@ -1296,6 +1284,23 @@ a.post-section.alignment-forum:hover::before {
 			1px 0 1px -1px #777 inset;
 	}
 }
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	.comment-item .comment-item {
+		margin: 0.75em 0 4px 6px;
+	}
+	.comment-item .comment-item + .comment-item {
+		margin: 1.5em 0 4px 6px;
+	}
+}
+
+/*===========================*/
+/* COMMENT THREAD NAVIGATION */
+/*===========================*/
 
 a.comment-parent-link::after {
 	display: none;
@@ -1722,6 +1727,48 @@ button.guiedit:hover {
 	border: 1px solid #ccc;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	.comment-controls .cancel-comment-button::before {
+		text-shadow:
+			0 0 1px #fff,
+			0 0 3px #fff;
+	}
+}
+@media only screen and (max-width: 520px) {
+	.textarea-container:focus-within textarea {
+		background-color: #888;
+	}
+	.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
+		border: 1px solid transparent;
+		padding: 6px;
+	}
+	.textarea-container:focus-within .guiedit-mobile-help-button.active {
+		box-shadow:
+			0 0 0 1px #ccc,
+			0 0 0 2px #888,
+			0 0 0 3px #ccc;
+		color: #ccc;
+		font-weight: 600;
+	}
+	.textarea-container:focus-within .guiedit-buttons-container {
+		background-color: #888;
+		border-top: 1px solid #ddf;
+	}
+	#content.conversation-page .textarea-container:focus-within::after {
+		background-color: #888;
+	}
+	.textarea-container:focus-within button.guiedit {
+		border: 1px solid transparent;
+	}
+	#markdown-hints::after {
+		color: #0f0;
+	}
+}
+
 /*================*/
 /* EDIT POST FORM */
 /*================*/
@@ -1767,6 +1814,19 @@ button.guiedit:hover {
 #edit-post-form input[type='radio']:active + label,
 #edit-post-form input[type='radio']:checked + label {
 	color: #fff;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 520px) {
+	#edit-post-form .post-meta-fields input[type='checkbox'] + label {
+		top: 2px;
+	}
+	#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
+		top: 1px;
+	}
 }
 
 /*=======*/
@@ -2046,76 +2106,4 @@ input::selection {
 	#content.alignment-forum-index-page h1.listing a:focus {
 		background-color: rgba(135,138,159,0.85);
 	}	
-}
-
-/*====================*/
-/* FOR NARROW SCREENS */
-/*====================*/
-
-/*========*/
-/* MOBILE */
-/*========*/
-
-@media not screen and (hover: hover) and (pointer: fine) {
-	/*****************************************/
-	@media only screen and (max-width: 900px) {
-	/*****************************************/
-		.comment-item .comment-item {
-			margin: 0.75em 0 4px 6px;
-		}
-		.comment-item .comment-item + .comment-item {
-			margin: 1.5em 0 4px 6px;
-		}
-
-		.comment-controls .cancel-comment-button::before {
-			text-shadow:
-				0 0 1px #fff,
-				0 0 3px #fff;
-		}
-	/*****************************************/
-	} @media only screen and (max-width: 720px) {
-	/*****************************************/
-	/*******************************************/
-	} @media only screen and (max-width: 520px) {
-	/*******************************************/
-		#content.compact > .comment-thread .comment-item {
-			max-height: 105px;
-		}
-		
-		.textarea-container:focus-within textarea {
-			background-color: #888;
-		}
-		.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
-			border: 1px solid transparent;
-			padding: 6px;
-		}
-		.textarea-container:focus-within .guiedit-mobile-help-button.active {
-			box-shadow:
-				0 0 0 1px #ccc,
-				0 0 0 2px #888,
-				0 0 0 3px #ccc;
-			color: #ccc;
-			font-weight: 600;
-		}
-		.textarea-container:focus-within .guiedit-buttons-container {
-			background-color: #888;
-			border-top: 1px solid #ddf;
-		}
-		#content.conversation-page .textarea-container:focus-within::after {
-			background-color: #888;
-		}
-		.textarea-container:focus-within button.guiedit {
-			border: 1px solid transparent;
-		}
-		#markdown-hints::after {
-			color: #0f0;
-		}
-
-		#edit-post-form .post-meta-fields input[type='checkbox'] + label {
-			top: 2px;
-		}
-		#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
-			top: 1px;
-		}
-	}
 }
