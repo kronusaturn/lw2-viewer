@@ -1387,7 +1387,7 @@ a.post-section.alignment-forum:hover::before {
 	left: -5px;
 }
 .listings .comment-thread .comment-meta a.date:focus + * {
-	margin-left: -8px;
+	margin-left: -10px;
 }
 .listings .comment-thread .comment-meta a.permalink:focus {
 	padding: 2px 5px 0 5px;

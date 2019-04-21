@@ -1421,16 +1421,17 @@ a.post-section.alignment-forum:hover::before {
 	outline: 2px dotted #aaa;
 	position: relative;
 	background-color: #fff;
+	line-height: 1;
 }
 .listings .comment-thread .comment-meta a.date:focus {
-	padding: 0 4px;
+	padding: 5px 4px 5px 4px;
 	left: -4px;
 }
 .listings .comment-thread .comment-meta a.date:focus + * {
 	margin-left: -8px;
 }
 .listings .comment-thread .comment-meta a.permalink:focus {
-	padding: 0 5px;
+	padding: 3px 5px 5px 5px;
 	left: -5px;
 }
 .listings .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {

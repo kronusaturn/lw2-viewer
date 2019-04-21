@@ -1213,6 +1213,9 @@ a.post-section.alignment-forum:hover::before {
 	padding: 2px 5px 3px 5px;
 	left: -5px;
 }
+.listings .comment-thread .comment-meta a.permalink:focus::before {
+	filter: invert(100%);
+}
 .listings .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
 	margin-left: -10px;
 }
