@@ -770,14 +770,14 @@ h1.listing .edit-post-link:hover {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
+@media only screen and (max-width: 720px) {
+	h1.listing {
+		font-size: 1.375rem;
+	}
+}
 @media only screen and (max-width: 520px) {
 	h1.listing {
 		font-size: 1.25rem;
-		margin: 18px 6px 4px 6px;
-		max-width: calc(100% - 12px);
-	}
-	h1.listing a[href^='http'] {
-		top: 3px;
 	}
 }
 
@@ -907,16 +907,14 @@ h1.listing + .post-meta .post-section::before {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 900px) {
+	h1.listing + .post-meta .post-section {
+		width: auto;
+		overflow: visible;
+		order: 3;
+		margin: 0 0 0 0.5em;
+	}
 	h1.listing + .post-meta .post-section::before {
 		position: unset;
-	}
-}
-@media only screen and (max-width: 520px) {
-	h1.listing + .post-meta {
-		margin: 4px 6px;
-	}
-	h1.listing + .post-meta > * {
-		line-height: 1.5;
 	}
 }
 
