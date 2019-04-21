@@ -72,7 +72,6 @@
 
 .edit-post-link {
 	display: inline-block;
-	margin-bottom: 0.25em;
 	font-size: 1.125rem;
 }
 .edit-post-link::before {
@@ -406,10 +405,14 @@ button.guiedit {
 
 .post-controls {
 	text-align: right;
-	margin: 0.75em var(--GW-post-page-content-right-side-padding) 0 0;
 	grid-row: 3;
 	align-self: start;
 	justify-self: end;
+}
+.post-controls .edit-post-link {
+	font-size: 1.375em;
+	white-space: nowrap;
+	padding: 0.375em 1em 0 0.375em;
 }
 
 #edit-post-form {
@@ -548,9 +551,6 @@ button.guiedit {
 	}
 }
 @media only screen and (max-width: 520px) {
-	.post-controls {
-		margin: 0.5em var(--GW-post-page-content-right-side-padding) 0 0;
-	}
 	#edit-post-form .post-meta-fields {
 		grid-template-columns: 4.5em auto auto auto 1fr auto;
 	}
