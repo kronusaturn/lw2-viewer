@@ -3998,7 +3998,7 @@ function generateImagesOverlay() {
 	removeElement("#images-overlay");
 
 	// Create new.
-	query("body").insertAdjacentHTML("beforeend", "<div id='images-overlay'></div>");
+	query("body").insertAdjacentHTML("afterbegin", "<div id='images-overlay'></div>");
 	let imagesOverlay = query("#images-overlay");
 	let imagesOverlayLeftOffset = imagesOverlay.getBoundingClientRect().left;
 	queryAll(".post-body img").forEach(image => {
