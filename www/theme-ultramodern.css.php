@@ -1228,71 +1228,6 @@ a.comment-parent-link::before {
 	padding: 2px 3px 0 4px;
 }
 
-/*================================*/
-/* DEEP COMMENT THREAD COLLAPSING */
-/*================================*/
-
-.comment-item input[id^="expand"]:checked ~ .comment-thread .comment-thread .comment-item {
-	border-width: 1px 0 0 0;
-}
-
-/*==============*/
-/* COMMENT-META */
-/*==============*/
-
-/*	Comment author.
-	*/
-.comment-meta .author {
-	font-size: 1.125em;
-	color: #444;
-	font-weight: normal;
-}
-.comment-item .author:not(.redacted).original-poster::after {
-	opacity: 0.8;
-}
-
-/*	Karma controls.
-	*/
-.comment-item .karma.active-controls::after,
-.comment-item .karma .karma-value::after,
-.post .karma.active-controls::after,
-.post .karma .karma-value::after,
-.author::before {
-	background-color: #888;
-	color: #ccc;
-	border-radius: 4px;
-	box-shadow: 0 0 0 1px #bbb inset;
-}
-.comment-item .karma.active-controls::after,
-.post .karma.active-controls::after {
-	padding: 6px;
-	bottom: -46px;
-}
-.comment-item .karma .karma-value::after,
-.post .karma .karma-value::after {
-	padding: 2px 8px;
-	top: -28px;
-	min-width: 64px;
-}
-
-/*====================*/
-/* ANTI-KIBITZER MODE */
-/*====================*/
-
-.author.redacted,
-.inline-author.redacted {
-	opacity: 0.8;
-	font-weight: 300;
-}
-
-.karma-value.redacted {
-	opacity: 0.6;
-}
-
-.link-post-domain.redacted {
-	opacity: 0.6;
-}
-
 /*===========================*/
 /* COMMENT THREAD NAVIGATION */
 /*===========================*/
@@ -1341,6 +1276,65 @@ div.comment-child-links a {
 
 .comment-popup {
 	background-color: #949494;
+}
+
+/*================================*/
+/* DEEP COMMENT THREAD COLLAPSING */
+/*================================*/
+
+.comment-item input[id^="expand"]:checked ~ .comment-thread .comment-thread .comment-item {
+	border-width: 1px 0 0 0;
+}
+
+/*==============*/
+/* COMMENT-META */
+/*==============*/
+
+/*	Comment author.
+	*/
+.comment-meta .author {
+	font-size: 1.125em;
+}
+.comment-item .author:not(.redacted).original-poster::after {
+	opacity: 0.8;
+}
+
+/*	Karma controls.
+	*/
+.comment-item .karma.active-controls::after,
+.comment-item .karma .karma-value::after,
+.post .karma.active-controls::after,
+.post .karma .karma-value::after,
+.author::before {
+	border-radius: 4px;
+	box-shadow: 0 0 0 1px #bbb inset;
+}
+.comment-item .karma.active-controls::after,
+.post .karma.active-controls::after {
+	padding: 6px;
+	bottom: -46px;
+}
+.comment-item .karma .karma-value::after,
+.post .karma .karma-value::after {
+	padding: 2px 8px;
+	top: -28px;
+}
+
+/*====================*/
+/* ANTI-KIBITZER MODE */
+/*====================*/
+
+.author.redacted,
+.inline-author.redacted {
+	opacity: 0.8;
+}
+
+.karma-value.redacted {
+	opacity: 0.6;
+}
+
+.link-post-domain.redacted {
+	opacity: 0.6;
 }
 
 /*=======================*/

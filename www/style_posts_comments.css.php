@@ -299,7 +299,6 @@ h1.listing + .post-meta .read-time {
 		white-space: nowrap;
 		text-align: center;
 		font-size: 0.875rem;
-		color: #bbb;
 		opacity: 0;
 		transition: opacity 0.2s ease;
 	}
