@@ -921,7 +921,6 @@ h1.listing + .post-meta .karma {
 	margin: 0;
 }
 h1.listing + .post-meta .karma-value {
-	cursor: default;
 	color: #c00;
 	right: 232px;
 }
@@ -974,7 +973,6 @@ h1.listing + .post-meta .read-time {
 }
 h1.listing + .post-meta .read-time::before {
 	content: "\F2F2";
-	cursor: pointer;
 }
 h1.listing + .post-meta .read-time::after {
 	content: " min";

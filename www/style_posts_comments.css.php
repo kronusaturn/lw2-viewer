@@ -149,6 +149,9 @@ h1.listing + .post-meta {
 	font-weight: var(--GW-listings-post-meta-font-weight);
 }
 
+h1.listing + .post-meta .karma-value {
+	cursor: default;
+}
 h1.listing + .post-meta .post-section {
 	width: 0;
 	margin: 0;
@@ -160,7 +163,7 @@ h1.listing + .post-meta .post-section::before {
 }
 
 h1.listing + .post-meta .read-time {
-	cursor: default;
+	cursor: pointer;
 }
 
 /********************/
