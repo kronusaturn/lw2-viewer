@@ -14,7 +14,7 @@
 	--GW-UI-font-weight-heavy: 400;
 
 	--GW-post-listings-font: 'Raleway', 'Helvetica', 'Arial', 'Verdana', sans-serif;
-	--GW-post-listings-font-weight: <?php echo ($platform == 'Mac' ? '100' : '200'); ?>;
+	--GW-post-listings-font-weight: 200;
 
 	--GW-body-text-font: 'Raleway', 'Helvetica', 'Arial', 'Verdana', sans-serif;
 	--GW-body-text-font-weight: <?php echo ($platform == 'Mac' ? '300' : '400'); ?>;
@@ -716,13 +716,10 @@ body {
 /*==========*/
 
 h1.listing {
-	margin: 0.7em 20px 0.1em 20px;
-	max-width: calc(100% - 40px);
+	margin: 7px 0 3px 0;
 	font-size: 1.5rem;
 }
 h1.listing a[href^='/posts'] {
-	color: #a2f2f1;
-	font-weight: 200;
 	text-shadow: 
 		0.0px 0.0px 2.0px #777,
 		0.5px 0.5px 2.0px #444,
@@ -792,6 +789,9 @@ h1.listing.spam:hover + .post-meta {
 /* LISTING POST-META */
 /*===================*/
 
+h1.listing + .post-meta {
+	margin: 0 0 16px 0;
+}
 h1.listing + .post-meta > * {
 	color: #222;
 	font-size: 1em;
