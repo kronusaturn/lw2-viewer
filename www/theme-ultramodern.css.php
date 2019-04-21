@@ -1157,41 +1157,12 @@ a.post-section.alignment-forum:hover::before {
 		0 1.5px 1.5px -1.5px #bbb inset,
 		0 1px 1px -1px #777 inset;
 }
-
-#content > .comment-thread .comment-meta a.date:focus,
-#content > .comment-thread .comment-meta a.permalink:focus {
-	color: #ccc;
-	outline: 2px dotted #ccc;
-	position: relative;
-	background-color: #444;
-}
-#content > .comment-thread .comment-meta a.date:focus {
-	padding: 0 6px;
-	left: -6px;
-}
-#content > .comment-thread .comment-meta a.date:focus + * {
-	margin-left: -12px;
-}
-#content > .comment-thread .comment-meta a.permalink:focus {
-	padding: 0 5px;
-	left: -5px;
-}
-#content > .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
-	margin-left: -10px;
-}
 .comment-item {
 	border: 1px solid transparent;
 	border-left-color: #666;
 	box-shadow:
-		1.5px 0 1.5px -1.5px #bbb inset, 
+		1.5px 0 1.5px -1px #bbb inset, 
 		1px 0 1px -1px #777 inset;
-}
-<?php echo $firefox_exclusive; ?> {
-	.comment-item {
-		box-shadow:
-			1.5px 0 1.5px -1px #bbb inset, 
-			1px 0 1px -1px #777 inset;
-	}
 }
 
 /*=----------------------------=*/
@@ -1207,6 +1178,31 @@ a.post-section.alignment-forum:hover::before {
 	}
 }
 
+/*==================*/
+/* COMMENT LISTINGS */
+/*==================*/
+
+.listings .comment-thread .comment-meta a.date:focus,
+.listings .comment-thread .comment-meta a.permalink:focus {
+	color: #ccc;
+	outline: 2px dotted #ccc;
+	position: relative;
+	background-color: #444;
+}
+.listings .comment-thread .comment-meta a.date:focus {
+	padding: 0 6px;
+	left: -6px;
+}
+.listings .comment-thread .comment-meta a.date:focus + * {
+	margin-left: -12px;
+}
+.listings .comment-thread .comment-meta a.permalink:focus {
+	padding: 0 5px;
+	left: -5px;
+}
+.listings .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
+	margin-left: -10px;
+}
 /*===========================*/
 /* COMMENT THREAD NAVIGATION */
 /*===========================*/

@@ -7348,14 +7348,13 @@ h1.listing.own-post-listing {
 	text-decoration: none;
 }
 .post-nav-title {
-	font-weight: 600;
+	font-weight: var(--GW-UI-font-weight-heavy);
 }
 
 .post-nav-label {
 	color: #777;
 }
 .post-nav-links a:hover .post-nav-label {
-	font-weight: 600;
 	color: #888;
 }
 .post-nav-links a:hover .post-nav-title {
