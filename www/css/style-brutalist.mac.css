@@ -3866,7 +3866,7 @@ a.comment-child-link::before {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	padding: 2px 10px;
+	padding: 2px 40px 2px 10px;
 }
 #content.compact .comment-meta a {
 	pointer-events: auto;
@@ -3878,7 +3878,8 @@ a.comment-child-link::before {
 
 @media only screen and (hover: hover) and (pointer: fine) {
 	#content.compact .comment-item::after {
-		padding: 0 16px 10px 64px;
+		height: 100%;
+		padding: 16px 16px 12px 64px;
 	}
 	#content.compact .comment-item:hover {
 		z-index: 11;

@@ -31,7 +31,7 @@
 	--GW-post-page-content-side-padding: 30px;
 	--GW-post-side-padding: 30px;
 	--GW-edit-post-page-content-side-padding: 30px;
-	--GW-individual-thread-page-content-side-padding: 30px;
+	--GW-individual-thread-content-side-padding: 30px;
 
 	--GW-comment-compact-height: 54px;
 	--GW-comment-compact-height-mobile: 105px;
@@ -1373,10 +1373,12 @@ a.comment-parent-link:hover::before {
 	display: none;
 }
 .new-comment {
-	border: 1px solid #e00;
+	border: 1px solid #f00;
 	box-shadow: 
-		0 0 1px #f00, 
-		0 0 1px #f00 inset;
+		0 0 1px 0 #f00, 
+		0 0 2px 0 #f00, 
+		0 0 1px 0 #f00 inset,
+		0 0 2px 0 #f00 inset;
 }
 
 /*=================================*/
@@ -1384,14 +1386,15 @@ a.comment-parent-link:hover::before {
 /*=================================*/
 
 .comment-minimize-button {
-	color: #777;
+	color: #666;
+	text-shadow: none;
 }
 .comment-minimize-button:hover {
-	color: #aaa;
+	color: #999;
 	text-shadow: var(--GW-shadow-white-glow)
 }
 .comment-minimize-button::after {
-	color: #777;
+	color: #444;
 }
 .comment-minimize-button.maximized::after {
 	color: #ccc;
