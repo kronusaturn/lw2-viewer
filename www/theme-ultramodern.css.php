@@ -1780,9 +1780,9 @@ input[type='submit'],
 .button {
 	text-shadow: inherit;
 }
-button,
-input[type='submit'],
-.button {
+button:hover,
+input[type='submit']:hover,
+.button:hover {
 	text-shadow:  var(--GW-shadow-link-glow);
 }
 button:active,
