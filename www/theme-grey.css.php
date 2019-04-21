@@ -1967,6 +1967,10 @@ h1.sequence-chapter {
 	margin: 0;
 }
 
+#content.sequences-page h1.listing + .post-meta .author {
+	margin-left: 0;
+}
+
 #content.sequences-page::after {
 	background-color: #777;
 	-webkit-background-clip: text;
