@@ -1275,7 +1275,7 @@ article > .post-meta .author,
 }
 
 .post .bottom-post-meta {
-	border-top: 1px solid #ddd;
+	border-color: #ddd;
 }
 
 /*===========*/
@@ -1345,10 +1345,6 @@ a.post-section:hover::before {
 }
 a.post-section.alignment-forum:hover::before {
 	color: #e6e5ff;
-}
-
-.bottom-post-meta {
-	border-color: #ddd;
 }
 
 /*============*/

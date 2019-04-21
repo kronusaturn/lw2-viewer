@@ -768,7 +768,7 @@ h1.listing.spam {
 	opacity: 0.35;
 }
 h1.listing.spam + .post-meta {
-	opacity: 0.3;
+	opacity: 0.35;
 }
 h1.listing.spam:hover,
 h1.listing.spam + .post-meta:hover,
@@ -783,47 +783,98 @@ h1.listing.spam:hover + .post-meta {
 h1.listing + .post-meta {
 	margin: 0 0 16px 0;
 }
+
 h1.listing + .post-meta > * {
+	margin: 0 0.25em 0 0;
+}
+h1.listing + .post-meta a,
+h1.listing + .post-meta a:visited {
 	color: #222;
-	font-size: 1em;
+}
+
+h1.listing + .post-meta .comment-count,
+h1.listing + .post-meta .read-time,
+h1.listing + .post-meta .word-count,
+h1.listing + .post-meta .lw2-link {
+	margin: 0 0.75em 0 0;
+}
+
+/*	Karma value.
+	*/
+h1.listing + .post-meta .karma {
+	order: -1;
+	margin-right: 0.25em;
 }
 h1.listing + .post-meta .karma::after {
 	content: " by";
 }
+
+/*	Comment count.
+	*/
+h1.listing + .post-meta .comment-count.new-comments::before {
+	color: #0f0;
+}
+
+/*	LW2 link.
+	*/
+h1.listing + .post-meta .lw2-link {
+	opacity: 0.75;
+}
+h1.listing + .post-meta .lw2-link::before {
+	content: "\F0C1";
+	font-weight: 400;
+}
+h1.listing + .post-meta .lw2-link:hover::before {
+	color: #000;
+}
+
+/*	Read time.
+	*/
+h1.listing + .post-meta .read-time span {
+	display: none;
+}
+h1.listing + .post-meta .read-time::after {
+	content: " min";
+}
+h1.listing + .post-meta .read-time:hover::before {
+	color: #000;
+}
+h1.listing + .post-meta .read-time::before {
+	content: "\F017";
+}
+
+/*	Word count.
+	*/
+h1.listing + .post-meta .word-count::after {
+	content: "";
+}
+h1.listing + .post-meta .word-count::before {
+	content: "\F15C";
+}
+
+/*	Date.
+	*/
 h1.listing + .post-meta .date::before {
 	content: "on ";
 }
 h1.listing + .post-meta .date::after {
 	content: " — ";
 	opacity: 0.5;
-	margin: 0 0.5em 0 0.125em;
+	margin: 0 0 0 0.25em;
 }
-h1.listing + .post-meta .comment-count.new-comments::before {
-	color: #0f0;
-}
-h1.listing:last-of-type + .post-meta {
-	margin-bottom: 0;
-}
-h1.listing + .post-meta .karma {
-	order: -1;
-	margin-right: 0.25em;
-}
-h1.listing + .post-meta .author {
-	margin-right: 0.25em;
-}
-h1.listing + .post-meta .date {
-	margin: 0;
-}
-h1.listing + .post-meta .post-section {
-	overflow: visible;
-	order: 2;
-}
-h1.listing + .post-meta .post-section::before {
-	font-size: 0.9375em;
-	left: -32px;
-}
+
+/*	Link post domain.
+	*/
 h1.listing + .post-meta .link-post-domain {
 	order: 1;
+	margin: 0 0 0 0.5em;
+}
+
+/*	Post section.
+	*/
+h1.listing + .post-meta .post-section::before {
+	font-size: 0.9375em;
+	left: -2em;
 }
 
 /*============*/
@@ -1044,6 +1095,23 @@ h1.post-title {
 /* POSTS */
 /*=======*/
 
+article > .post-meta > *,
+.post .post-meta > * {
+	margin: 0 0.25em;
+}
+
+article > .post-meta a,
+article > .post-meta a:visited,
+.post .post-meta a {
+	color: #222;
+}
+
+article > .post-meta .author,
+.post .post-meta .author,
+.post .post-meta .lw2-link {
+	margin: 0 0.5em;
+}
+
 .bottom-post-meta {
 	border-color: #777;
 }
@@ -1052,40 +1120,24 @@ h1.post-title {
 /* POST-META */
 /*===========*/
 
-.post-meta a,
-.post-meta .date {
+.post-meta > * {
+	font-size: 1em;
 	color: #444;
 }
 
-.post-meta > * {
-	margin: 0;
-	text-shadow:
-		0px 0px 1px #777,
-		0.5px 0.5px 1px #aaa,
-		0.5px 0.5px 1px #bbb;
-}
 .post-meta .comment-count span,
-.post-meta .read-time span,
-.post-meta .word-count span,
 .post-meta .lw2-link span {
 	display: none;
 }
+
 .post-meta .comment-count::before,
 .post-meta .read-time::before,
 .post-meta .word-count::before,
 .post-meta .lw2-link::before {
-	font-family: Font Awesome;
+	font-family: var(--GW-Font-Awesome);
 	margin: 0 0.25em 0 0;
 	font-size: 0.875em;
 	color: #666;
-}
-.post-meta .comment-count {
-	margin: 0 0.25em 0 0;
-}
-.post-meta .read-time,
-.post-meta .word-count,
-.post-meta .lw2-link {
-	margin: 0 0.25em 0 0.5em;
 }
 .post-meta .comment-count:hover,
 .post-meta .lw2-link:hover {
@@ -1094,59 +1146,30 @@ h1.post-title {
 		0 0 0.5px #000,
 		0 0 1px #fff,
 		0 0 8px #000;
-}
-.post-meta .comment-count:hover::before,
-.post-meta .lw2-link:hover::before,
-.post-meta .read-time:hover::before {
-	color: #ccc;
-}
-.post-meta .read-time:hover::before {
-	cursor: pointer;
+	color: #000;
 }
 .post-meta .comment-count::before {
 	content: "\F086";
 }
-.post-meta .read-time::before {
-	content: "\F017";
-}
-.post-meta .read-time::after {
-	content: " min";
-}
-.post-meta .word-count::before {
-	content: "\F15C";
-}
-.post-meta .word-count::after {
-	content: "";
-}
-.post-meta .lw2-link::before {
-	content: "\F0C1";
-	font-weight: 900;
-	font-size: 0.75em;
-	position: relative;
-	bottom: 1px;
+.post-meta .comment-count:hover::before {
+	color: #ccc;
 }
 
-.post .post-meta .author {
-	margin: 0 0.75em 0 0;
-}
+/* 
 .post-meta .author:hover,
 .comment-meta .author:hover {
 	text-decoration: none;
 	color: #090;
 }
-.post .post-meta .comment-count {
-	margin: 0 0.5em;
-}
-.post .post-meta .lw2-link {
-	margin: 0 1em 0 0.5em;
-}
-.post .post-meta .karma {
-	margin: 0 0.5em 0 1em;
-}
+ */
 
+/*	Post section.
+	*/
 .post-meta .post-section::before,
 .comment-meta .alignment-forum {
 	color: #888;
+}
+.post-meta .post-section::before {
 	text-shadow: 
 		1px 1px 0 #ccc, 
 		0 1px 0 #ccc, 
@@ -1158,7 +1181,8 @@ a.post-section:hover {
 a.post-section:hover::before {
 	color: #999;
 }
-.post-meta .post-section.alignment-forum::before {
+.post-meta .post-section.alignment-forum::before,
+.comment-meta .alignment-forum {
 	text-shadow:
 		1px 1px 0   #b9bbff,
 		0   1px 0   #b9bbff,
