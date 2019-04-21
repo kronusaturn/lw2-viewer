@@ -85,15 +85,12 @@ body {
 @media only screen and (max-width: 960px) {
 	#ui-elements-container > div[id$='-ui-toggle'] button,
 	#theme-selector .theme-selector-close-button  {
-		color: #444;
+		color: #555;
 		text-shadow:
-			0 0 1px #999,
-			0 0 3px #999,
-			0 0 5px #999,
-			0 0 10px #999,
-			0 0 20px #999,
-			0 0 30px #999;
-	}
+			0 0 1px #aaa,
+			0 0 3px #aaa,
+			0 0 5px #aaa,
+			0 0 10px #aaa;
 }
 
 /*==========*/
@@ -561,14 +558,6 @@ body {
 		background-color: #888;
 		border: 1px solid #444;
 	}
-	#new-comment-nav-ui::before {
-		color: #444;
-		font-weight: bold;
-	}
-	#new-comment-nav-ui .new-comments-count,
-	#new-comment-nav-ui .new-comments-count::after {
-		color: #444;
-	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button {
 		box-shadow: 0 0 0 1px #444;
 		color: #444;
@@ -588,8 +577,6 @@ body {
 	}
 
 	#hns-date-picker.engaged {
-		bottom: 124px;
-		right: 61px;
 		border: 1px solid #444;
 	}
 	#hns-date-picker span,
