@@ -183,6 +183,7 @@ h1.listing + .post-meta .read-time {
 
 	font-family: var(--GW-body-text-font);
 	font-weight: var(--GW-body-text-font-weight);
+	color: var(--GW-body-text-color);
 
 	text-shadow: 0 0 1px var(--GW-content-background-color);
 }

@@ -148,6 +148,8 @@
 :root {
 	--GW-body-background-color: transparent;
 	--GW-content-background-color: var(--GW-body-background-color);
+
+	--GW-body-text-color: #fff;
 	
 	--GW-hyperlink-color: #0cc800;
 	--GW-hyperlink-visited-color: var(--GW-hyperlink-color);
@@ -3121,6 +3123,7 @@ h1.listing + .post-meta .read-time {
 
 	font-family: var(--GW-body-text-font);
 	font-weight: var(--GW-body-text-font-weight);
+	color: var(--GW-body-text-color);
 
 	text-shadow: 0 0 1px var(--GW-content-background-color);
 }

@@ -143,6 +143,8 @@
 :root {
 	--GW-body-background-color: transparent;
 	--GW-content-background-color: var(--GW-body-background-color);
+
+	--GW-body-text-color: #000;
 	
 	--GW-hyperlink-color: #00e;
 	--GW-hyperlink-visited-color: var(--GW-hyperlink-color);

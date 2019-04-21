@@ -83,6 +83,12 @@ body {
 	line-height: 1.55;
 }
 
+p {
+	font-family: var(--GW-body-text-font);
+	font-weight: var(--GW-body-text-font-weight);
+	color: var(--GW-body-text-color);
+}
+
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
@@ -1894,14 +1900,14 @@ pre {
 input[type='text'],
 input[type='search'],
 input[type='password'] {
-	border: 1px solid #999;
+	border: 1px solid #aaa;
 	color: #000;
 	background-color: transparent;
 }
 input[type='text']:focus,
 input[type='search']:focus,
 input[type='password']:focus {
-	border: 1px solid #ccc;
+	border: 1px solid #ddd;
 }
 
 select {
