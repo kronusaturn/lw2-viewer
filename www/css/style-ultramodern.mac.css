@@ -6852,12 +6852,12 @@ h1.listing a[href^="http"] {
 	h1.listing a:focus {
 		background-color: rgba(136,136,136,0.85);
 		text-shadow: 
-			0px 0px 1px #777,
-			0.5px 0.5px 1px #aaa,
-			0.5px 0.5px 1px #bbb,
 			0 0 1px #a2cbf2,
 			0 0 2px #a2cbf2,
-			0 0 3px #a2cbf2;
+			0 0 3px #a2cbf2,
+			0.0px 0.0px 2.0px #777,
+			0.5px 0.5px 2.0px #444,
+			0.5px 0.5px 2.0px #333;
 	}	
 	h1.listing:focus-within::before {
 		color: #a2f2f1;
@@ -7032,13 +7032,18 @@ h1.listing + .post-meta .post-section::before {
 /*============*/
 /* USER PAGES */
 /*============*/
+/*======================*/
+/* SEARCH RESULTS PAGES */
+/*======================*/
 
 #content.user-page h1.page-main-heading {
 	border-bottom: 1px solid #777;
 }
 
 #content.user-page h1.listing,
-#content.user-page h1.listing + .post-meta {
+#content.user-page h1.listing + .post-meta,
+#content.search-results-page h1.listing,
+#content.search-results-page h1.listing + .post-meta {
 	border-style: solid;
 	border-color: #666;
 	border-width: 0 0 0 1px;
@@ -7046,24 +7051,31 @@ h1.listing + .post-meta .post-section::before {
 		1.5px 0 1.5px -1.5px #bbb inset,
 		1px 0 1px -1px #777 inset;
 }
-#content.user-page h1.listing {
-	max-width: 100%;
+#content.user-page h1.listing,
+#content.search-results-page h1.listing {
+	padding: 3px 6px 0 6px;
 	margin: 1rem 0 0 0;
-	padding: 6px;
 }
-@media only screen and (hover: hover) and (pointer: fine) {
-	#content.user-page h1.listing:focus-within::before {
-		left: -0.625em;
-		top: 8px;
-	}
+#content.user-page.all-user-page h1.listing {
+	margin: 2rem 0 0 0;
 }
-#content.user-page h1.listing + .post-meta {
-	margin: 0 0 1rem 0;
+#content.own-user-page h1.listing,
+h1.listing.own-post-listing {
+	padding-right: 36px;
+}
+
+#content.user-page h1.listing + .post-meta,
+#content.search-results-page h1.listing + .post-meta {
 	padding: 0.5em 6px 6px 34px;
 }
-#content.user-page h1.listing + .post-meta .post-section::before {
-	left: 1px;
+#content.user-page h1.listing + .post-meta .post-section::before,
+#content.search-results-page h1.listing + .post-meta .post-section::before {
+	left: 10px;
 }
+
+/*=--------------------=*/
+/*= Conversations list =*/
+/*=--------------------=*/
 
 #content.conversations-user-page h1.listing {
 	padding: 6px 6px 4px 8px;
@@ -7075,10 +7087,6 @@ h1.listing + .post-meta .post-section::before {
 }
 #content.conversations-user-page h1.listing + .post-meta .date::after {
 	display: none;
-}
-
-.user-stats .karma-total {
-	font-weight: bold;
 }
 
 /*===============*/

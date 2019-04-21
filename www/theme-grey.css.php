@@ -1075,6 +1075,7 @@ h1.listing.own-post-listing {
 		background-color: #eee;
 	}	
 }
+
 #content.user-page h1.listing + .post-meta,
 #content.search-results-page h1.listing + .post-meta {
 	padding: 8px 8px 3px 8px;
