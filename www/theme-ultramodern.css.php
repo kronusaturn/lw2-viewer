@@ -236,6 +236,12 @@ body {
 		0.5px 0.5px 1.0px #ccc,
 		0.5px 0.5px 1.0px #bbb;
 }
+.page-toolbar .rss::before {
+	filter: grayscale(100%) 
+}
+.page-toolbar .rss:hover::before {
+	filter: none;
+}
 
 /*==============*/
 /* SUBLEVEL NAV */
@@ -760,6 +766,21 @@ h1.listing .edit-post-link:hover {
 	text-decoration: none;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 520px) {
+	h1.listing {
+		font-size: 1.25rem;
+		margin: 18px 6px 4px 6px;
+		max-width: calc(100% - 12px);
+	}
+	h1.listing a[href^='http'] {
+		top: 3px;
+	}
+}
+
 /*======*/
 /* SPAM */
 /*======*/
@@ -879,6 +900,24 @@ h1.listing + .post-meta .link-post-domain {
 h1.listing + .post-meta .post-section::before {
 	font-size: 0.9375em;
 	left: -2em;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	h1.listing + .post-meta .post-section::before {
+		position: unset;
+	}
+}
+@media only screen and (max-width: 520px) {
+	h1.listing + .post-meta {
+		margin: 4px 6px;
+	}
+	h1.listing + .post-meta > * {
+		line-height: 1.5;
+	}
 }
 
 /*============*/
@@ -2028,21 +2067,6 @@ input::selection {
 	/*****************************************/
 	@media only screen and (max-width: 900px) {
 	/*****************************************/
-		h1.listing + .post-meta .post-section::before {
-			position: unset;
-		}
-
-		#secondary-bar .nav-inner {
-			font-size: 1em;
-		}
-		#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
-			padding: 6px 10px;
-		}
-
-		.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
-			background-color: #ccc;
-		}
-
 		.comment-item .comment-item {
 			margin: 0.75em 0 4px 6px;
 		}
@@ -2061,21 +2085,6 @@ input::selection {
 	/*******************************************/
 	} @media only screen and (max-width: 520px) {
 	/*******************************************/
-		h1.listing {
-			font-size: 1.25rem;
-			margin: 18px 6px 4px 6px;
-			max-width: calc(100% - 12px);
-		}
-		h1.listing + .post-meta {
-			margin: 4px 6px;
-		}
-		h1.listing + .post-meta > * {
-			line-height: 1.5;
-		}
-		h1.listing a[href^='http'] {
-			top: 3px;
-		}
-
 		#content.compact > .comment-thread .comment-item {
 			max-height: 105px;
 		}
