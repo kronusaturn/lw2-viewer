@@ -119,7 +119,7 @@ body {
 	font-weight: var(--GW-UI-font-weight-light);
 }
 .nav-current .nav-inner {
-	filter: invert(100%) contrast(200%);
+	filter: invert(100%) contrast(175%);
 	font-weight: var(--GW-UI-font-weight-heavy);
 }
 
@@ -274,6 +274,20 @@ body {
 .sublevel-nav:not(.sort) .sublevel-item:last-child {
 	border-width: 1px;
 	border-radius: 0 8px 8px 0;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	.sublevel-nav:not(.sort) .sublevel-item,
+	.sublevel-nav:not(.sort) .sublevel-item:first-child,
+	.sublevel-nav:not(.sort) .sublevel-item:last-child {
+		border-radius: 8px;
+		border-width: 1px;
+		margin: 2px;
+	}
 }
 
 /*=====================*/
@@ -607,18 +621,14 @@ body {
 /*======================*/
 
 #text-size-adjustment-ui button {
-	color: #444;
-}
-#text-size-adjustment-ui button.default {
-	font-weight: 600;
+	color: #222;
 }
 #text-size-adjustment-ui button:hover {
-	text-decoration: none;
-	color: #aaa;
+	color: #ccc;
 }
 #text-size-adjustment-ui::after {
 	color: #ccc;
-	font-weight: 300;
+	text-shadow: none;
 }
 
 /*=----------------------------=*/
@@ -626,14 +636,29 @@ body {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 1080px) {
-	#text-size-adjustment-ui button {
-		border: 1px solid #999;
-		padding: 0 0 0 1px;
-		border-radius: 50%;
+	#text-size-adjustment-ui {
 		box-shadow: 
 			0 0 6px #999 inset,
 			0 0 0 1px transparent;
 	}
+}
+
+/*=============================*/
+/* COMMENTS LIST MODE SELECTOR */
+/*=============================*/
+
+#comments-list-mode-selector button {
+	box-shadow:
+		0 0 0 4px #888 inset,
+		0 0 0 5px #bbb inset;
+}
+#comments-list-mode-selector button:hover,
+#comments-list-mode-selector button.selected {
+	box-shadow:
+		0 0 0 1px #888 inset,
+		0 0 0 2px #bbb inset,
+		0 0 0 4px #888 inset,
+		0 0 0 5px #bbb inset;
 }
 
 /*=============================*/
@@ -1365,19 +1390,6 @@ div.comment-child-links a {
 /* COMMENTS COMPACT VIEW */
 /*=======================*/
 
-#comments-list-mode-selector button {
-	box-shadow:
-		0 0 0 4px #888 inset,
-		0 0 0 5px #ccc inset;
-}
-#comments-list-mode-selector button:hover,
-#comments-list-mode-selector button.selected {
-	box-shadow:
-		0 0 0 1px #888 inset,
-		0 0 0 2px #ccc inset,
-		0 0 0 4px #888 inset,
-		0 0 0 5px #ccc inset;
-}
 #content.compact > .comment-thread .comment-item::after {
 	color: #ccc;
 	background: linear-gradient(to right, transparent 0%, #888 50%, #888 100%);
@@ -2034,14 +2046,6 @@ input::selection {
 			text-shadow:
 				0 0 1px #fff,
 				0 0 3px #fff;
-		}
-
-		.sublevel-nav:not(.sort) .sublevel-item,
-		.sublevel-nav:not(.sort) .sublevel-item:first-child,
-		.sublevel-nav:not(.sort) .sublevel-item:last-child {
-			border-radius: 8px;
-			border-width: 1px;
-			margin: 2px;
 		}
 	/*****************************************/
 	} @media only screen and (max-width: 720px) {
