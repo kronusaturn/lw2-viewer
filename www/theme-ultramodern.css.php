@@ -144,7 +144,7 @@ body {
 /* Search tab */
 
 #nav-item-search form::before {
-	opacity: 0.6;
+	font-weight: 400;
 }
 #nav-item-search input::placeholder {
 	color: #faa;
@@ -485,9 +485,6 @@ body {
 /* HNS DATE PICKER */
 /*=================*/
 
-#hns-date-picker span {
-	color: #444;
-}
 #hns-date-picker input {
 	border: 1px solid #aaa;
 	color: #555;
@@ -569,10 +566,6 @@ body {
 
 	#hns-date-picker.engaged {
 		border: 1px solid #444;
-	}
-	#hns-date-picker span,
-	#hns-date-picker input {
-		color: #444;
 	}
 }
 
@@ -1104,7 +1097,6 @@ article > .post-meta .author,
 
 .post-meta > * {
 	font-size: 1em;
-	color: #444;
 }
 
 .post-meta .comment-count span,
@@ -1268,11 +1260,7 @@ a.comment-parent-link::before {
 /* COMMENT-META */
 /*==============*/
 
-.comment-meta a {
-	color: #222;
-}
 .comment-meta .author {
-	font-weight: 300;
 	font-size: 1.125em;
 	color: #444;
 	font-weight: normal;

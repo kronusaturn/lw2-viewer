@@ -213,14 +213,6 @@ body {
 	padding-top: 1px;
 }
 
-/*	Viewport width adjustments.
-	*/
-@media only screen and (max-width: 900px) {
-	#nav-item-search button::before {
-		color: #00e;
-	}
-}
-
 /*= Recent Comments tab =*/
 
 #nav-item-recent-comments span {
@@ -232,6 +224,20 @@ body {
 #top-nav-bar a::after,
 #bottom-bar a::after {
 	color: #000;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	#nav-item-search button::before {
+		color: #00e;
+	}
+	#bottom-bar .nav-inner::before,
+	#bottom-bar .nav-inner::after {
+		text-shadow: var(--GW-shadow-white-glow);
+	}
 }
 
 /*==============*/

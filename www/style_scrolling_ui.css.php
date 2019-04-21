@@ -546,7 +546,6 @@ EOT;
 	}
 	#bottom-bar .nav-item a::before {
 		color: var(--GW-hyperlink-color);
-		text-shadow: var(--GW-shadow-white-glow);
 		line-height: initial;
 		top: -0.5rem;
 	}
@@ -557,7 +556,6 @@ EOT;
 	#bottom-bar .nav-inner::after {
 		display: block;
 		color: var(--GW-hyperlink-color);
-		text-shadow: var(--GW-shadow-white-glow);
 		visibility: visible;
 		text-transform: uppercase;
 		font-size: 0.375em;

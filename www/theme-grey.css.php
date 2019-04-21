@@ -267,6 +267,10 @@ body {
 	#inbox-indicator::before {
 		padding-top: 3px;
 	}
+	#bottom-bar .nav-inner::before,
+	#bottom-bar .nav-inner::after {
+		text-shadow: var(--GW-shadow-white-glow);
+	}
 }
 
 /*===============*/
@@ -1989,10 +1993,8 @@ input[type='submit']:active,
 .button:active {
 	transform: scale(0.9);
 }
-<?php echo $firefox_exclusive; ?> {
-	.button:active {
-		transform: none;
-	}
+.button:focus:not(:hover) {
+	transform: none;
 }
 
 @media only screen and (hover: hover) and (pointer: fine) {
@@ -2006,9 +2008,6 @@ input[type='submit']:active,
 	.button:hover {
 		text-shadow: var(--GW-shadow-white-glow);
 		text-decoration: none;
-	}
-	.button:focus:not(:hover) {
-		transform: none;
 	}
 }
 
