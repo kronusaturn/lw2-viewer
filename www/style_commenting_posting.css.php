@@ -10,7 +10,7 @@
 	-moz-user-select: none;
 	user-select: none;
 }
-.comment-controls:focus-within {
+.comment-controls.active {
 	z-index: 9999;
 }
 .comment-thread .comment-controls + .comment-thread > li:first-child {

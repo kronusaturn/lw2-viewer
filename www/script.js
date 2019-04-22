@@ -498,6 +498,8 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 		"</div></form>";
 	commentControls.onsubmit = disableBeforeUnload;
 
+	commentControls.addClass("active");
+
 	commentControls.query(".cancel-comment-button").addActivateEvent(GW.cancelCommentButtonClicked = (event) => {
 		GWLog("GW.cancelCommentButtonClicked");
 		hideReplyForm(event.target.closest(".comment-controls"));
@@ -659,6 +661,8 @@ function hideReplyForm(commentControls) {
 
 	disableBeforeUnload();
 	commentControls.constructCommentControls();
+
+	commentControls.removeClass("active");
 }
 
 function expandTextarea(textarea) {
