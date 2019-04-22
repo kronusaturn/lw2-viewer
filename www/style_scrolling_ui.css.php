@@ -1051,6 +1051,7 @@ a#inbox-indicator.new-messages:hover::before {
 	padding: 1px;
 	border-width: 0.25em;
 	border-style: solid;
+	border-color: var(--GW-content-background-color);
 }
 
 .archive-nav > * {

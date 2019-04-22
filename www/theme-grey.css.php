@@ -811,7 +811,6 @@ body {
 
 .archive-nav {
 	outline: 1px solid #aaa;
-	border-color: #fff;
 }
 
 .archive-nav *[class^='archive-nav-item'] {

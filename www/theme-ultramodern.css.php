@@ -141,7 +141,6 @@ p {
 }
 #bottom-bar.decorative::after {
 	color: #777;
-	background-color: #888;
 }
 
 /* Accesskey hints */
@@ -704,7 +703,6 @@ p {
 
 .archive-nav {
 	outline: 1px solid #ccc;
-	border-color: #888;
 }
 
 .archive-nav *[class^="archive-nav-item"] {
@@ -1551,12 +1549,12 @@ a.comment-parent-link:hover::before {
 }
 .comment-controls .edit-button,
 .comment-controls .unretract-button {
-	color: #070;
+	color: #050;
 }
 
 .edit-post-link,
 .edit-post-link:visited {
-	color: #070;
+	color: #050;
 }
 
 .comment-controls .action-button::before {
