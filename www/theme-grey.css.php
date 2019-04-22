@@ -1878,10 +1878,6 @@ button.guiedit::after {
 	font-weight: var(--GW-UI-font-weight-light);
 }
 
-#edit-post-form .post-meta-fields label[for='link-post'] {
-	margin: 0 0 0.5em 0.125em;
-	border: none;
-}
 #edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
 	border-radius: 3px;
 	border: 1px solid #ddd;

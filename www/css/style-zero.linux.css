@@ -4691,6 +4691,10 @@ button.guiedit {
 	grid-row: 1;
 	grid-column: 6;
 }
+#edit-post-form .link-post-checkbox + label {
+	margin: 0 0 0.5em 0.125em;
+	border: none;
+}
 #edit-post-form .question-checkbox,
 #edit-post-form .question-checkbox + label {
 	grid-row: 3;

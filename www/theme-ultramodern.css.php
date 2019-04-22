@@ -1671,11 +1671,16 @@ button.guiedit {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 520px) {
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label {
-		top: 2px;
+	.post-controls .edit-post-link {
+		text-shadow:
+			0 0 1px #fff,
+			0 0 3px #0f0;
 	}
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
-		top: 1px;
+	.post-controls .edit-post-link:hover,
+	.post-controls .edit-post-link:active {
+		text-shadow:
+			0 0 1px #fff,
+			0 0 3px #f88;
 	}
 }
 

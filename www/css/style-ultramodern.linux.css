@@ -4691,6 +4691,10 @@ button.guiedit {
 	grid-row: 1;
 	grid-column: 6;
 }
+#edit-post-form .link-post-checkbox + label {
+	margin: 0 0 0.5em 0.125em;
+	border: none;
+}
 #edit-post-form .question-checkbox,
 #edit-post-form .question-checkbox + label {
 	grid-row: 3;
@@ -7841,11 +7845,16 @@ button.guiedit {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 520px) {
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label {
-		top: 2px;
+	.post-controls .edit-post-link {
+		text-shadow:
+			0 0 1px #fff,
+			0 0 3px #0f0;
 	}
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
-		top: 1px;
+	.post-controls .edit-post-link:hover,
+	.post-controls .edit-post-link:active {
+		text-shadow:
+			0 0 1px #fff,
+			0 0 3px #f88;
 	}
 }
 
