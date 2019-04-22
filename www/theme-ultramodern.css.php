@@ -1897,15 +1897,10 @@ select {
 .qualified-linking-toolbar a {
 	border: 1px solid #888;
 	border-radius: 4px;
-	color: #444;
 }
 .qualified-linking-toolbar a:hover {
 	border: 1px solid #999;
 	text-shadow: var(--GW-shadow-white-glow);
-}
-.qualified-linking label::after {
-	background-color: #888;
-	opacity: 0.8;
 }
 
 /*======*/
@@ -1939,21 +1934,16 @@ select {
 /* ALIGNMENT FORUM */
 /*=================*/
 
-#content.alignment-forum-index-page::before {
-	background-color: #878a9f;
-}
 #content.alignment-forum-index-page::after {
-	font-family: "Concourse SmallCaps";
-	font-weight: 600;
 	background-color: #222d4b;
 	color: transparent;
 	-webkit-background-clip: text;
 	text-shadow: 
-		rgba(136,136,136,0.5) 0px 3px 3px;
+		rgba(136, 136, 136, 0.5) 0px 3px 3px;
 }
 @media only screen and (hover: hover) and (pointer: fine) {
 	#content.alignment-forum-index-page h1.listing a:hover,
 	#content.alignment-forum-index-page h1.listing a:focus {
-		background-color: rgba(135,138,159,0.85);
+		background-color: rgba(135, 138, 159, 0.85);
 	}	
 }

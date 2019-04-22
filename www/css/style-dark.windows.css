@@ -8320,8 +8320,8 @@ select {
 /* ALIGNMENT FORUM */
 /*=================*/
 
-#content.alignment-forum-index-page::before {
-	background-color: #131100;
+#content.alignment-forum-index-page {
+	var(--GW-content-background-color): #131100;
 }
 #content.alignment-forum-index-page::after {
 	background-color: #658100;
