@@ -1128,6 +1128,7 @@
 	max-height: 100%;
 	overflow-y: auto;
 	position: relative;
+	overscroll-behavior: none;
 	-webkit-user-select: auto;
 	-moz-user-select: auto;
 	user-select: auto;
