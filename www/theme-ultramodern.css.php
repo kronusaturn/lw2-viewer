@@ -1731,6 +1731,7 @@ button,
 input[type='submit'],
 .button {
 	text-shadow: inherit;
+	font-weight: inherit;
 }
 button:hover,
 input[type='submit']:hover,
