@@ -4539,7 +4539,6 @@ button.guiedit {
 }
 @media only screen and (max-width: 520px) {
 	.comment-controls:focus-within {
-		position: static;
 		z-index: 10001;
 	}
 	.textarea-container:focus-within textarea {
@@ -4838,6 +4837,10 @@ button.guiedit {
 	#edit-post-form textarea {
 		height: calc(100% - 1em);
 		margin: 0;
+	}
+	#edit-post-form .textarea-container:focus-within textarea {
+		height: calc(100% - 100px);
+		top: 2px;
 	}
 
 	#edit-post-form .post-meta-fields {
