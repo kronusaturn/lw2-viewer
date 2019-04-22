@@ -543,7 +543,8 @@ button.guiedit {
 
 @media only screen and (max-width: 900px) {
 	#edit-post-form {
-		padding: 1.5em;
+		padding-top: 1.5em;
+		padding-bottom: 1.5em;
 	}
 }
 @media only screen and (max-width: 840px) {
@@ -559,6 +560,9 @@ button.guiedit {
 	}
 }
 @media only screen and (max-width: 520px) {
+	.post-controls {
+		margin: 0.5em var(--GW-post-page-content-right-side-padding) 0 0;
+	}
 	.post-controls .edit-post-link {
 		padding: 0.25em 0.5em 0 0.25em;
 	}
@@ -568,8 +572,6 @@ button.guiedit {
 		grid-template-rows: auto auto 1fr auto;
 	}
 	#edit-post-form {
-		padding-top: 0.75em;
-		padding-bottom: 0.75em;
 		height: 100%;
 		display: flex;
 		flex-flow: column;
@@ -579,34 +581,23 @@ button.guiedit {
 	}
 	#edit-post-form textarea {
 		height: calc(100% - 1em);
-	}
-
-	.post-controls {
-		margin: 0.5em var(--GW-post-page-content-right-side-padding) 0 0;
+		margin: 0;
 	}
 
 	#edit-post-form .post-meta-fields {
-		grid-template-columns: 3.75em auto auto auto 1fr auto;
-	}
-	#edit-post-form .textarea-container:focus-within textarea {
-		height: calc(100% - 101px);
-		min-height: unset;
+		grid-template-columns: 4.5em auto auto auto 1fr auto;
 	}
 	#edit-post-form label[for='link-post'],
 	#edit-post-form label[for='question'] {
-			font-family: var(--GW-Font-Awesome);
-			font-weight: 900;
-			line-height: 1.25;
+		font-family: var(--GW-Font-Awesome);
+		font-weight: 900;
+		line-height: 1.25;
 	}
 	#markdown-hints-checkbox,
 	#markdown-hints-checkbox + label {
 		display: none;
 	}
 
-	#edit-post-form div:last-child {
-		clear: both;
-		overflow: auto;
-	}
 	#edit-post-form input[type='submit'] {
 		float: none;
 		display: block;
@@ -616,10 +607,6 @@ button.guiedit {
 	}
 }
 @media only screen and (max-width: 420px) {
-	#edit-post-form {
-		padding-top: 0.5em;
-		padding-bottom: 0.5em;
-	}
 	#edit-post-form .post-meta-fields {
 		grid-template-columns: 3.75em auto auto auto 1fr auto;
 	}
