@@ -1386,8 +1386,7 @@ a.comment-parent-link:hover::before {
 /*=================================*/
 
 .comment-minimize-button {
-	color: #666;
-	text-shadow: none;
+	font-weight: 300;
 }
 .comment-minimize-button:hover {
 	color: #999;
@@ -1398,6 +1397,7 @@ a.comment-parent-link:hover::before {
 }
 .comment-minimize-button.maximized::after {
 	color: #ccc;
+	text-shadow: none;
 }
 
 /*====================*/
@@ -1505,21 +1505,14 @@ a.comment-parent-link:hover::before {
 /*===========================*/
 
 .comment-controls .cancel-comment-button {
-	font-weight: normal;
-	color: #f00;
+	color: #800;
 }
 .comment-controls .cancel-comment-button:hover {
-	color: #f00;
+	color: #c00;
 	text-shadow: var(--GW-shadow-white-glow);
 }
-
-.posting-controls .action-button,
-.posting-controls input[type='submit'] {
-	font-weight: normal;
-}
-.posting-controls .action-button:hover,
-.posting-controls input[type='submit']:hover {
-	color: #444;
+.comment-controls .cancel-comment-button::before {
+	font-weight: 400;
 }
 
 .comment-controls .delete-button,
@@ -1530,23 +1523,21 @@ a.comment-parent-link:hover::before {
 .comment-controls .unretract-button {
 	color: #070;
 }
-.comment-controls .action-button:hover {
-	color: #bbb;
-}
 
 .edit-post-link,
 .edit-post-link:visited {
-	color: #090;
+	color: #070;
+}
+
+.comment-controls .action-button::before {
+	font-weight: 400;
+	opacity: 0.75;
 }
 
 .posting-controls textarea {
-	color: #000;
 	background-color: transparent;
-	border-color: #999;
-	text-shadow: 
-		0px 0px 1px #777,
-		0.5px 0.5px 1px #aaa,
-		0.5px 0.5px 1px #bbb;
+	border-color: #aaa;
+	text-shadow: var(--GW-UI-shadow-text-glow);
 }
 .posting-controls textarea:focus {
 	border-color: #ccc;
@@ -1579,7 +1570,7 @@ a.comment-parent-link:hover::before {
 
 .guiedit-buttons-container {
 	background-color: #888;
-	box-shadow: 0 -1px 0 0 #999 inset;
+	box-shadow: 0 -1px 0 0 #aaa inset;
 }
 .textarea-container:focus-within .guiedit-buttons-container {
 	box-shadow: 0 -1px 0 0 #ccc inset;
@@ -1587,27 +1578,12 @@ a.comment-parent-link:hover::before {
 
 button.guiedit {
 	color: #444;
-	background-color: transparent;
-	font-family: Font Awesome, Source Sans Pro, Trebuchet MS, Helvetica, Arial, Verdana, sans-serif;
-}
-button.guiedit::after {
-	font-family: Proxima Nova;
-	font-weight: 300;
-	color: #444;
-	top: 2px;
-	height: 25px;
-}
-button.guiedit:hover {
-	color: #ccc;
 }
 
 /* Markdown hints */
 
-#markdown-hints-checkbox + label {
-	color: #444;
-}
 #markdown-hints {
-	background-color: #888;
+	background-color: var(--GW-body-background-color);
 	border: 1px solid #ccc;
 }
 
@@ -1869,10 +1845,8 @@ select {
 	left: -0.5px;
 }
 
-.body-text *::selection,
-textarea::selection,
-input::selection {
-	background-color: #d8d8d8;
+*::selection {
+	background-color: #eee;
 }
 
 /*============*/
