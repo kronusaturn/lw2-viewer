@@ -1727,6 +1727,18 @@ button.guiedit {
 	}
 }
 
+/*===========*/
+/* SEQUENCES */
+/*===========*/
+
+.sequence-text {
+	font-size: 1.125rem;
+}
+
+h1.sequence-chapter {
+	font-size: 2rem;
+}
+
 /*=======*/
 /* LINKS */
 /*=======*/

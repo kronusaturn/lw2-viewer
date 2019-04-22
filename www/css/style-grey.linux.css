@@ -8165,11 +8165,6 @@ button.guiedit::after {
 
 h1.sequence-chapter {
 	font-size: 2rem;
-	margin: 0;
-}
-
-#content.sequences-page h1.listing + .post-meta .author {
-	margin-left: 0;
 }
 
 #content.sequences-page::after {
