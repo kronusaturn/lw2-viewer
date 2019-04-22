@@ -1938,6 +1938,46 @@ select {
 	border: 1px solid #cce;
 }
 
+/*=======================*/
+/* KEYBOARD HELP OVERLAY */
+/*=======================*/
+
+#keyboard-help-overlay .keyboard-help-container {
+	background-color: #888;
+}
+#keyboard-help-overlay .keyboard-help-container code {
+	text-shadow: none;
+	background-color: #999;
+	color: #000;
+}
+#keyboard-help-overlay .keyboard-help-container code.ak {
+	background-color: #a89a35;
+}
+
+#keyboard-help-overlay .keyboard-help-container ul {
+	font-weight: var(--GW-UI-font-weight-light);
+	color: #222;
+}
+
+#keyboard-help-overlay .keyboard-help-container h1,
+#keyboard-help-overlay .keyboard-help-container .keyboard-shortcuts-lists {
+	border-color: #aaa;
+}
+#keyboard-help-overlay .keyboard-help-container h1 {
+	font-size: 1.25em;
+}
+
+#keyboard-help-overlay button.close-keyboard-help:hover {
+	background-color: #999;
+	box-shadow:
+		0 0 0 1px #aaa,
+		0 1px 0 0 #aaa inset;
+}
+#keyboard-help-overlay button.close-keyboard-help:active {
+	box-shadow:
+		0 0 0 1px #ccc;
+}
+
 /*=================*/
 /* ALIGNMENT FORUM */
 /*=================*/
