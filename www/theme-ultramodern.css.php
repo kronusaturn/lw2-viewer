@@ -1841,14 +1841,14 @@ pre {
 input[type='text'],
 input[type='search'],
 input[type='password'] {
-	border: 1px solid #aaa;
+	border: 1px solid #999;
 	color: #000;
 	background-color: transparent;
 }
 input[type='text']:focus,
 input[type='search']:focus,
 input[type='password']:focus {
-	border: 1px solid #ddd;
+	border: 1px solid #ccc;
 }
 
 select {
