@@ -668,7 +668,7 @@ function hideReplyForm(commentControls) {
 function expandTextarea(textarea) {
 	GWLog("expandTextarea");
 
-	if (matchMedia(GW.mediaQueries.mobileNarrow).matches) {
+	if (GW.mediaQueries.mobileNarrow.matches) {
 		textarea.style.height = "";
 		return;
 	}
