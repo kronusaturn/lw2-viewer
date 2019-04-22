@@ -6955,7 +6955,7 @@ h1.listing a[href^="http"] {
 }
 
 h1.listing .edit-post-link {
-	padding: 10px 3px 30px 0.5em;
+	padding: 10px 3px 30px 1em;
 	top: 0;
 	right: -1.5em;
 }
@@ -7144,7 +7144,7 @@ h1.listing + .post-meta .post-section::before {
 }
 #content.own-user-page h1.listing,
 h1.listing.own-post-listing {
-	padding-right: 36px;
+	padding-right: 12px;
 }
 
 #content.user-page h1.listing + .post-meta,
@@ -7162,6 +7162,17 @@ h1.listing.own-post-listing {
 
 #content.conversations-user-page h1.listing + .post-meta {
 	padding: 0.5em 6px 2px 8px;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 960px) {
+	#content.own-user-page h1.listing,
+	h1.listing.own-post-listing {
+		padding-right: 12px;
+	}
 }
 
 /*===============*/
@@ -7729,9 +7740,13 @@ a.comment-parent-link:hover::before {
 	color: #050;
 }
 
-.edit-post-link,
-.edit-post-link:visited {
+.edit-post-link::before {
 	color: #050;
+	font-weight: 400;
+	text-shadow: none;
+}
+.edit-post-link:hover::before {
+	text-shadow: var(--GW-shadow-white-glow);
 }
 
 .comment-controls .action-button::before {
