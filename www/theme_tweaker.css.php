@@ -16,6 +16,7 @@
 	font-family: MS Sans Serif;
 	font-size: 1rem;
 	line-height: 1.15;
+	text-shadow: none;
 }
 #theme-tweaker-ui::before {
 	content: "";
@@ -112,7 +113,7 @@
 }
 
 #theme-tweaker-ui .current-theme {
-	margin: 1em -8px 1.25em -8px;
+	margin: 17px -8px 20px -8px;
 	padding: 0 12px 1em 12px;
 	box-shadow: 
 		0 1px 0 #7f787f,
@@ -127,7 +128,7 @@
 #theme-tweaker-ui .theme-selector {
 	position: absolute;
 	top: 19px;
-	left: 225px;
+	left: 240px;
 }
 #theme-tweaker-ui .theme-selector button {
 	width: 26px;
