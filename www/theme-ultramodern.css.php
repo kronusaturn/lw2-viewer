@@ -261,6 +261,24 @@ p {
 	filter: none;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 640px) {
+	#content.user-page .page-toolbar > * {
+		border: 1px solid #aaa;
+		border-radius: 8px;
+	}
+	#content.user-page .page-toolbar > .rss {
+		padding-top: calc(0.5em + 1px);
+		padding-bottom: calc(0.5em - 1px);
+	}
+	#content.user-page .page-toolbar > *:hover {
+		border-color: #ccc;
+	}
+}
+
 /*==============*/
 /* SUBLEVEL NAV */
 /*==============*/
@@ -767,6 +785,11 @@ h1.listing .edit-post-link {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
+@media only screen and (max-width: 960px) {
+	h1.listing .edit-post-link {
+		right: 0;
+	}
+}
 @media only screen and (max-width: 720px) {
 	h1.listing {
 		font-size: 1.375rem;
@@ -1003,6 +1026,9 @@ h1.listing.own-post-listing {
 /* TABLE OF CONTENTS */
 /*===================*/
 
+.post-body .contents {
+	background-color: var(--GW-body-background-color);
+}
 .post-body .contents ul {
 	font-size: 0.85em;
 }
@@ -1724,34 +1750,22 @@ input[type='submit']:focus:not(:hover),
 /* HEADINGS */
 /*==========*/
 
-.body-text h1,
-.body-text h2,
-.body-text h3,
-.body-text h4,
-.body-text h5,
-.body-text h6 {
-	text-shadow: 
-		0px 0px 1px #777,
-		0.5px 0.5px 1px #aaa,
-		0.5px 0.5px 1px #bbb;
-}
-.post-body h1 strong,
-.post-body h2 strong,
-.post-body h3 strong,
-.post-body h4 strong,
-.post-body h5 strong,
-.post-body h6 strong {
+.body-text h1 strong,
+.body-text h2 strong,
+.body-text h3 strong,
+.body-text h4 strong,
+.body-text h5 strong,
+.body-text h6 strong {
 	font-weight: normal;
 }
 .body-text h6 {
 	color: #555;
 }
 .body-text h1 {
-	padding-bottom: 2px;
-	border-bottom-color: #777;
+	border-bottom: 1px solid #666;
 }
-.post-body h2 {
-	border-bottom: 1px dotted #ccc;
+.body-text h2 {
+	border-bottom: 1px dotted #666;
 }
 
 /*========*/
@@ -1759,7 +1773,7 @@ input[type='submit']:focus:not(:hover),
 /*========*/
 
 blockquote {
-	border-left: 5px solid #777;
+	border-left: 5px solid #666;
 }
 
 /*========*/
