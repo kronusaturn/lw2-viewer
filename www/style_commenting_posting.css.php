@@ -633,9 +633,10 @@ button.guiedit {
 }
 @media only screen and (max-width: 420px) {
 	#edit-post-form .post-meta-fields {
-		grid-template-columns: 3.75em auto auto auto 1fr auto;
+		grid-template-columns: 4em auto auto auto 1fr auto;
 	}
-	#edit-post-form label {
+	#edit-post-form label[for='title'],
+	#edit-post-form label[for='section'] {
 		padding-right: 0.25em;
 		padding-left: 0;
 	}
