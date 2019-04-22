@@ -251,7 +251,6 @@ button.guiedit {
 	padding: 4px 8px;
 	position: absolute;
 	text-align: left;
-	top: calc(100% - 1em);
 	z-index: 1;
 	display: none;
 }
@@ -525,7 +524,7 @@ button.guiedit {
 	padding: 6px 12px;
 	float: right;
 }
-#edit-post-form #markdown-hints {
+.posting-controls:not(.comment-controls) #markdown-hints {
 	top: calc(100% + 2em);
 }
 

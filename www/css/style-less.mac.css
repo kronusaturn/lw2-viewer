@@ -2937,7 +2937,7 @@ a#inbox-indicator.new-messages:hover::before {
 	}
 }
 @media only screen and (max-width: 520px) {
-	.post-nav-links + .comments {
+	.post-nav-links:not(:empty) + .comments {
 		padding: 1em 0 0 0;
 	}
 }
@@ -4489,7 +4489,6 @@ button.guiedit {
 	padding: 4px 8px;
 	position: absolute;
 	text-align: left;
-	top: calc(100% - 1em);
 	z-index: 1;
 	display: none;
 }
@@ -4781,7 +4780,7 @@ button.guiedit {
 	padding: 6px 12px;
 	float: right;
 }
-#edit-post-form #markdown-hints {
+.posting-controls:not(.comment-controls) #markdown-hints {
 	top: calc(100% + 2em);
 }
 

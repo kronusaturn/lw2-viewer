@@ -1243,7 +1243,7 @@ a#inbox-indicator.new-messages:hover::before {
 	}
 }
 @media only screen and (max-width: 520px) {
-	.post-nav-links + .comments {
+	.post-nav-links:not(:empty) + .comments {
 		padding: 1em 0 0 0;
 	}
 }
