@@ -850,10 +850,11 @@ h1.listing + .post-meta .karma::after {
 /*	Comment count.
 	*/
 h1.listing + .post-meta .comment-count.new-comments::before {
-	color: #00f;
-	opacity: 0.5;
+	color: #004abe;
+	opacity: 0.75;
 }
 h1.listing + .post-meta .comment-count.new-comments:hover::before {
+	color: #00f;
 	opacity: 1.0;
 }
 
