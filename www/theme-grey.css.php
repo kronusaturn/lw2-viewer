@@ -259,6 +259,9 @@ body {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 960px) {
+	#bottom-bar .nav-inner {
+		text-shadow: none;
+	}
 	#bottom-bar .nav-inner:hover::before,
 	#bottom-bar .nav-inner:hover::after {
 		text-shadow: var(--GW-shadow-white-glow);
