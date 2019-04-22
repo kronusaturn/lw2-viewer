@@ -8377,8 +8377,8 @@ select {
 /* ALIGNMENT FORUM */
 /*=================*/
 
-#content.alignment-forum-index-page::before {
-	background-color: #f1f3ff;
+#content.alignment-forum-index-page {
+	var(--GW-content-background-color): #f1f3ff;
 }
 #content.alignment-forum-index-page::after {
 	background-color: #626dd7;

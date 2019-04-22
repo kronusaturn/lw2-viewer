@@ -1799,6 +1799,15 @@ blockquote {
 	border: 1px solid transparent;
 }
 
+/*=============*/
+/* IMAGE FOCUS */
+/*=============*/
+
+#images-overlay div::after {
+	text-shadow: none;
+	padding: 10px 16px 9px 16px;
+}
+
 /*========*/
 /* TABLES */
 /*========*/
