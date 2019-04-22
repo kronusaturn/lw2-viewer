@@ -5979,12 +5979,14 @@ th.mathjax-inline-container {
 	max-width: 24em;
 	max-height: 14em;
 	background-color: rgba(0, 0, 0, 0.85);
-	color: #fff;
 	visibility: visible;
 	transition: 
 		visibility 0.2s ease 0.3s,
 		color 0.2s ease 0.3s,
 		background-color 0.2s ease 0.3s;
+}
+#image-focus-overlay .help-overlay:hover p {
+	color: #fff;
 }
 
 #image-focus-overlay .help-overlay::after {
@@ -7997,6 +7999,11 @@ blockquote {
 #images-overlay div::after {
 	text-shadow: none;
 	padding: 10px 16px 9px 16px;
+}
+
+#image-focus-overlay .caption,
+#image-focus-overlay .help-overlay {
+	text-shadow: none;
 }
 
 /*========*/

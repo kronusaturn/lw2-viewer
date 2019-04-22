@@ -1822,6 +1822,11 @@ blockquote {
 	padding: 10px 16px 9px 16px;
 }
 
+#image-focus-overlay .caption,
+#image-focus-overlay .help-overlay {
+	text-shadow: none;
+}
+
 /*========*/
 /* TABLES */
 /*========*/

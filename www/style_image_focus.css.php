@@ -156,12 +156,14 @@
 	max-width: 24em;
 	max-height: 14em;
 	background-color: rgba(0, 0, 0, 0.85);
-	color: #fff;
 	visibility: visible;
 	transition: 
 		visibility 0.2s ease 0.3s,
 		color 0.2s ease 0.3s,
 		background-color 0.2s ease 0.3s;
+}
+#image-focus-overlay .help-overlay:hover p {
+	color: #fff;
 }
 
 #image-focus-overlay .help-overlay::after {
