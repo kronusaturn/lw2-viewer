@@ -1773,6 +1773,9 @@ a.comment-parent-link:hover::before {
 	border: 1px solid #c00;
 	background-color: #ffa;
 }
+#markdown-hints .markdown-hints-row code {
+	box-shadow: none;
+}
 
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/

@@ -1585,6 +1585,7 @@ button.guiedit {
 #markdown-hints {
 	background-color: var(--GW-body-background-color);
 	border: 1px solid #ccc;
+	color: #000;
 }
 
 /*=----------------------------=*/
