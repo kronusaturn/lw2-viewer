@@ -24,12 +24,14 @@
 }
 
 .posting-controls input[type='submit'],
+.posting-controls .button.cancel-post-editing-button,
 .comment-controls .cancel-comment-button,
 .new-comment-button {
 	font-weight: var(--GW-UI-font-weight-heavy);
 }
 
-.posting-controls input[type='submit'] {
+.posting-controls input[type='submit'],
+.posting-controls .button.cancel-post-editing-button {
 	margin: 6px;
 	padding: 4px 10px;
 	font-size: 1.125rem;
@@ -230,6 +232,7 @@ button.guiedit {
 }
 #markdown-hints-checkbox {
 	visibility: hidden;
+	margin: 0;
 	float: left;
 }
 #markdown-hints-checkbox + label::after {
@@ -525,10 +528,13 @@ button.guiedit {
 	min-height: 24em;
 }
 
-#edit-post-form input[type='submit'] {
+#edit-post-form input[type='submit'],
+.posting-controls .button.cancel-post-editing-button {
 	padding: 6px 12px;
 	float: right;
+	line-height: normal;
 }
+
 .posting-controls:not(.comment-controls) #markdown-hints {
 	top: calc(100% + 2em);
 }
@@ -561,6 +567,29 @@ button.guiedit {
 		padding-top: 1em;
 		padding-bottom: 1em;
 	}
+	#edit-post-form > div:last-of-type {
+		display: flex;
+		clear: both;
+		justify-content: center;
+	}
+	#edit-post-form input[type='submit'],
+	#edit-post-form .button.cancel-post-editing-button {
+		font-size: 1.5rem;
+		margin: 1.25rem 0.75em 0 0.75em;
+		padding: 0.5em 0.75em;
+	}
+	#edit-post-form .button.cancel-post-editing-button {
+		order: -1;
+	}
+}
+@media only screen and (max-width: 640px) {
+	#edit-post-form label[for='title'],
+	#edit-post-form label[for='section'] {
+		padding: 0.25em 0.5em 0.25em 0.25em;
+	}
+	#edit-post-form .post-meta-fields {
+		grid-template-columns: 4.5em auto auto auto 1fr auto;
+	}
 }
 @media only screen and (max-width: 520px) {
 	.post-controls {
@@ -591,9 +620,6 @@ button.guiedit {
 		top: 2px;
 	}
 
-	#edit-post-form .post-meta-fields {
-		grid-template-columns: 4.5em auto auto auto 1fr auto;
-	}
 	#edit-post-form label[for='link-post'],
 	#edit-post-form label[for='question'] {
 		font-family: var(--GW-Font-Awesome);
@@ -603,14 +629,6 @@ button.guiedit {
 	#markdown-hints-checkbox,
 	#markdown-hints-checkbox + label {
 		display: none;
-	}
-
-	#edit-post-form input[type='submit'] {
-		float: none;
-		display: block;
-		font-size: 1.5rem;
-		margin: 1.25rem auto 0 auto;
-		padding: 0.5em 0.75em;
 	}
 }
 @media only screen and (max-width: 420px) {
