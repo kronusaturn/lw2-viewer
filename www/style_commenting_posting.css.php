@@ -135,6 +135,7 @@
 	border-style: solid;
 	border-width: 29px 1px 1px 1px;
 	resize: none;
+	overscroll-behavior: none;
 
 	font-family: var(--GW-editor-font);
 	font-weight: var(--GW-editor-font-weight);

@@ -4375,6 +4375,7 @@ a.comment-child-link::before {
 	border-style: solid;
 	border-width: 29px 1px 1px 1px;
 	resize: none;
+	overscroll-behavior: none;
 
 	font-family: var(--GW-editor-font);
 	font-weight: var(--GW-editor-font-weight);
@@ -8004,6 +8005,11 @@ blockquote {
 #image-focus-overlay .caption,
 #image-focus-overlay .help-overlay {
 	text-shadow: none;
+}
+
+#content img:hover,
+#images-overlay img:hover {
+	filter: drop-shadow(0 0 3px #222);
 }
 
 /*========*/

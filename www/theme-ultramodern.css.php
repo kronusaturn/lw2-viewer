@@ -1827,6 +1827,11 @@ blockquote {
 	text-shadow: none;
 }
 
+#content img:hover,
+#images-overlay img:hover {
+	filter: drop-shadow(0 0 3px #222);
+}
+
 /*========*/
 /* TABLES */
 /*========*/
