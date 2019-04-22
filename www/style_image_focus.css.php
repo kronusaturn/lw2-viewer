@@ -17,8 +17,8 @@
 	display: block;
 	position: absolute;
 	margin: auto;
-	left: 0;
-	right: 0;
+	left: 50%;
+	transform: translateX(-50%);
 	bottom: 10px;
 	padding: 8px 15px 9px 15px;
 	font-size: 1.25rem;
@@ -28,6 +28,7 @@
 	opacity: 0.0;
 	transition: opacity 0.15s ease;
 	pointer-events: none;
+	white-space: nowrap;
 }
 <?php fit_content("#images-overlay div::after"); ?>
 #images-overlay div:hover::after {
