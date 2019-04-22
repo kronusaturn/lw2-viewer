@@ -1623,7 +1623,7 @@ button.guiedit {
 
 #edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
 	border-radius: 3px;
-	border: 1px solid #999;
+	border: 1px solid #aaa;
 	color: #aaa;
 }
 @media only screen and (hover: hover) and (pointer: fine) {
@@ -1636,8 +1636,9 @@ button.guiedit {
 	content: "\F00C";
 }
 #edit-post-form input[type='radio'] + label {
-	color: #444;
-	border-color: #999;
+	color: #222;
+	border-color: #aaa;
+	font-weight: var(--GW-UI-font-weight-light);
 }
 #edit-post-form input[type='radio'][value='all'] + label {
 	border-radius: 8px 0 0 8px;
@@ -1650,6 +1651,7 @@ button.guiedit {
 #edit-post-form input[type='radio']:focus + label,
 #edit-post-form input[type='radio']:checked + label {
 	background-color: #999;
+	text-shadow: var(--GW-shadow-link-glow);
 }
 #edit-post-form input[type='radio'] + label:hover,
 #edit-post-form input[type='radio']:focus + label {
@@ -1657,7 +1659,11 @@ button.guiedit {
 }
 #edit-post-form input[type='radio']:active + label,
 #edit-post-form input[type='radio']:checked + label {
-	color: #fff;
+	background-color: #aaa;
+}
+#edit-post-form input[type='radio']:checked + label {
+	color: #000;
+	font-weight: var(--GW-UI-font-weight-heavy);
 }
 
 /*=----------------------------=*/
