@@ -612,6 +612,9 @@ p {
 	#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
 		color: #999;
 	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button:disabled::after {
+		text-shadow: none;
+	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-previous {
 		border-radius: 7px 0 0 7px;
 	}
@@ -620,6 +623,7 @@ p {
 	}
 
 	#hns-date-picker.engaged {
+		margin-bottom: 2px;
 		border: 1px solid #444;
 	}
 }
@@ -1113,8 +1117,8 @@ article > .post-meta > *,
 	margin: 0 0.5em;
 }
 
-.post .post-meta .comment-count {
-	margin: 0 0.125em 0 0.625em;
+.post .post-meta .qualified-linking {
+	margin: 0 0.75em 0 0.5em;
 }
 
 .bottom-post-meta {

@@ -1274,8 +1274,8 @@ article > .post-meta > *,
 	margin: 0 0.5em;
 }
 
-.post .post-meta .comment-count {
-	margin: 0 0.125em 0 0.625em;
+.post .post-meta .qualified-linking {
+	margin: 0 0.75em 0 0.5em;
 }
 
 article > .post-meta a,

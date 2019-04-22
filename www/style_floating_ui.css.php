@@ -745,7 +745,8 @@
 		padding: 2px 7px 3px 7px;
 	}
 	#new-comment-nav-ui .new-comments-count {
-		padding: 4px 0 5px 0;
+		padding: 5px 0;
+		left: 0;
 	}
 	#new-comment-nav-ui .new-comments-count::before {
 		display: none;
