@@ -350,7 +350,7 @@ Element.prototype.addTextareaFeatures = function() {
 	textarea.addEventListener("input", GW.textareaInputReceived = (event) => {
 		GWLog("GW.textareaInputReceived");
 
-		if (matchMedia(GW.mediaQueries.mobileNarrow).matches) {
+		if (GW.mediaQueries.mobileNarrow.matches) {
 			// Remove markdown hints.
 			hideMarkdownHintsBox();
 			query(".guiedit-mobile-help-button").removeClass("active");
@@ -1131,7 +1131,7 @@ function injectThemeSelector() {
 
 			let themeName = /select-theme-([^\s]+)/.exec(event.target.className)[1];
 			setSelectedTheme(themeName);
-			if (matchMedia(GW.mediaQueries.mobileWide).matches) toggleAppearanceAdjustUI();
+			if (GW.mediaQueries.mobileWide.matches) toggleAppearanceAdjustUI();
 		});
 	});
 
@@ -1366,7 +1366,7 @@ function updateSiteNavUIState(event) {
 	}
 
 	// On mobile, make site nav UI translucent on ANY scroll down.
-	if (matchMedia(GW.mediaQueries.mobileNarrow).matches)
+	if (GW.mediaQueries.mobileNarrow.matches)
 		GW.scrollState.siteNavUIElements.forEach(element => {
 			if (GW.scrollState.unbrokenDownScrollDistance > 0) element.addClass("translucent-on-scroll");
 			else element.removeClass("translucent-on-scroll");
@@ -1379,7 +1379,7 @@ function updateSiteNavUIState(event) {
 		 localStorage.getItem("site-nav-ui-toggle-engaged") != "false")) toggleSiteNavUI();
 
 	// On desktop, show appearance adjust UI when scrolling to the top.
-	if ((!matchMedia(GW.mediaQueries.mobileNarrow).matches) && 
+	if ((!GW.mediaQueries.mobileNarrow.matches) && 
 		(GW.scrollState.lastScrollTop == 0) &&
 		(!GW.scrollState.appearanceAdjustUIToggleButton.hasClass("engaged")) && 
 		(localStorage.getItem("appearance-adjust-ui-toggle-engaged") != "false")) toggleAppearanceAdjustUI();
