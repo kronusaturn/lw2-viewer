@@ -1592,16 +1592,9 @@ button.guiedit {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-@media only screen and (max-width: 900px) {
-	.comment-controls .cancel-comment-button::before {
-		text-shadow:
-			0 0 1px #fff,
-			0 0 3px #fff;
-	}
-}
 @media only screen and (max-width: 520px) {
 	.textarea-container:focus-within textarea {
-		background-color: #888;
+		background-color: var(--GW-body-background-color);
 	}
 	.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
 		border: 1px solid transparent;
@@ -1610,23 +1603,17 @@ button.guiedit {
 	.textarea-container:focus-within .guiedit-mobile-help-button.active {
 		box-shadow:
 			0 0 0 1px #ccc,
-			0 0 0 2px #888,
-			0 0 0 3px #ccc;
-		color: #ccc;
-		font-weight: 600;
+			0 0 0 3px var(--GW-body-background-color),
+			0 0 0 4px #ccc;
 	}
 	.textarea-container:focus-within .guiedit-buttons-container {
-		background-color: #888;
 		border-top: 1px solid #ddf;
-	}
-	#content.conversation-page .textarea-container:focus-within::after {
-		background-color: #888;
 	}
 	.textarea-container:focus-within button.guiedit {
 		border: 1px solid transparent;
 	}
 	#markdown-hints::after {
-		color: #0f0;
+		color: #050;
 	}
 }
 
