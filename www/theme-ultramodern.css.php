@@ -1319,7 +1319,8 @@ a.comment-parent-link:hover::before {
 	opacity: 0.4;
 }
 
-.comment-item-highlight {
+.comment-item-highlight,
+.comment-item-highlight-faint {
 	box-shadow:
 		0 0	2px var(--GW-comment-highlight-color),
 		0 0	3px var(--GW-comment-highlight-color),
@@ -1327,7 +1328,8 @@ a.comment-parent-link:hover::before {
 		0 0	7px var(--GW-comment-highlight-color),
 		0 0 10px var(--GW-comment-highlight-color);
 	border: 1px solid var(--GW-comment-highlight-color);
-
+}
+.comment-item-highlight {
 	--GW-comment-highlight-color: #e7b200;
 }
 .comment-item-highlight-faint {

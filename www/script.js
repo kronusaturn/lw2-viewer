@@ -971,9 +971,15 @@ function scrollToNewComment(next) {
 		}
 	}
 	if (targetComment) {
+		queryAll(".comment-item-highlight-faint").forEach(highlightedCommentItem => {
+			highlightedCommentItem.removeClass("comment-item-highlight-faint");
+		});
+
 		expandAncestorsOf(targetCommentID);
 		history.replaceState(null, null, "#comment-" + targetCommentID);
 		targetComment.scrollIntoView();
+
+		targetComment.addClass("comment-item-highlight-faint");
 	}
 
 	GW.newCommentScrollListener();
