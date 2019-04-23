@@ -287,6 +287,9 @@ h1.listing + .post-meta .read-time {
 	.comment-item .karma.active-controls:hover::after {
 		opacity: 1.0;
 	}
+	.comment-item .karma.active-controls:hover::after {
+		z-index: 5001;
+	}
 
 	.post .karma .karma-value::after,
 	.comment-item .karma .karma-value::after {

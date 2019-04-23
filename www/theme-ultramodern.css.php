@@ -1321,21 +1321,17 @@ a.comment-parent-link:hover::before {
 
 .comment-item-highlight {
 	box-shadow:
-		0 0	2px #e7b200,
-		0 0	3px #e7b200,
-		0 0	5px #e7b200,
-		0 0	7px #e7b200,
-		0 0 10px #e7b200;
-	border: 1px solid #e7b200;
+		0 0	2px var(--GW-comment-highlight-color),
+		0 0	3px var(--GW-comment-highlight-color),
+		0 0	5px var(--GW-comment-highlight-color),
+		0 0	7px var(--GW-comment-highlight-color),
+		0 0 10px var(--GW-comment-highlight-color);
+	border: 1px solid var(--GW-comment-highlight-color);
+
+	--GW-comment-highlight-color: #e7b200;
 }
 .comment-item-highlight-faint {
-	box-shadow:
-		0 0	2px #f8e7b5,
-		0 0	3px #f8e7b5,
-		0 0	5px #f8e7b5,
-		0 0	7px #f8e7b5,
-		0 0 10px #f8e7b5;
-	border: 1px solid #f8e7b5;
+	--GW-comment-highlight-color: #f8e7b5;
 }
 
 .comment-popup {
@@ -1458,11 +1454,9 @@ a.comment-parent-link:hover::before {
 .new-comment {
 	--GW-new-comment-highlight-color: #f00;
 }
-.new-comment.comment-item-highlight {
-	--GW-new-comment-highlight-color: #e7b200;
-}
+.new-comment.comment-item-highlight,
 .new-comment.comment-item-highlight-faint {
-	--GW-new-comment-highlight-color: #f8e7b5;
+	--GW-new-comment-highlight-color: var(--GW-comment-highlight-color);
 }
 
 /*=================================*/

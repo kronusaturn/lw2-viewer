@@ -9,6 +9,7 @@
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	user-select: none;
+	z-index: 5001;
 }
 .comment-controls.active {
 	z-index: 9999;
