@@ -276,6 +276,15 @@ function togglePageScrolling(enable) {
 	}
 }
 
+/*	Copies a string to the clipboard.
+	*/
+function copyTextToClipboard(string) {
+	let scratchpad = query("#scratchpad");
+	scratchpad.value = string;
+	scratchpad.select();
+	document.execCommand("copy");
+}
+
 /********************/
 /* DEBUGGING OUTPUT */
 /********************/
@@ -3573,6 +3582,9 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	GWLog("INITIALIZER initialize");
 	forceInitializer('earlyInitialize');
 
+	// Create scratchpad for copy operations.
+	addUIElement("<textarea id='scratchpad'></textarea>");
+
 	// This is for “qualified hyperlinking”, i.e. “link without comments” and/or
 	// “link without nav bars”.
 	if (getQueryVariable("comments") == "false")
@@ -3633,9 +3645,9 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 			<a href='${postPermalink}?comments=false'>Link without comments</a>
 			<button type='button' tabindex='-1' class='copy-link no-comments' title='Copy link without comments to clipboard'>&#xf0c5;</button>
 			<a href='${postPermalink}?hide-nav-bars=true'>Link without top nav bars</a>
-			<button type='button' tabindex='-1' class='copy-link permalink hide-nav-bars' title='Copy link without top nav bars to clipboard'>&#xf0c5;</button>
+			<button type='button' tabindex='-1' class='copy-link hide-nav-bars' title='Copy link without top nav bars to clipboard'>&#xf0c5;</button>
 			<a href='${postPermalink}?comments=false&hide-nav-bars=true'>Link without comments or top nav bars</a>
-			<button type='button' tabindex='-1' class='copy-link permalink no-comments hide-nav-bars' title='Copy link without comments or top nav bars to clipboard'>&#xf0c5;</button>
+			<button type='button' tabindex='-1' class='copy-link no-comments hide-nav-bars' title='Copy link without comments or top nav bars to clipboard'>&#xf0c5;</button>
 			</div>
 		` + "</div>");
 
@@ -3647,11 +3659,11 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		clonedPostMeta.query("label").htmlFor += "-bottom";
 		query(".post").appendChild(clonedPostMeta);
 
-		queryAll(".qualified-linking button.permalink").forEach(button => {
+		queryAll(".qualified-linking button.copy-link").forEach(button => {
 			button.addActivateEvent(GW.copyQualifiedLinkButtonClicked = (event) => {
 				GWLog("GW.copyQualifiedLinkButtonClicked");
 
-				GWLog(event.target.previousElementSibling.href);
+				copyTextToClipboard(event.target.previousElementSibling.href);
 			});
 		});
 	}
