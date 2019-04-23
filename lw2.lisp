@@ -961,7 +961,10 @@ signaled condition to OUT-STREAM."
 			      (output-comments-votes out-stream)
 			      (output-alignment-forum out-stream post))))
 	       (let ((post-sequences (get-post-sequences post-id)))
-		 (emit-page (out-stream :title title :content-class (format nil "post-page comment-thread-page~:[~; question-post-page~]" (cdr (assoc :question post))))
+		 (emit-page (out-stream :title title
+					:content-class (format nil "post-page comment-thread-page~{ ~A~}"
+							       (list-cond ((cdr (assoc :question post)) "question-post-page")
+									  (post-sequences "in-sequence"))))
 			    (cond
 			      (condition
 			       (error-to-html out-stream condition))
