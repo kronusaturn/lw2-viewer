@@ -1448,15 +1448,21 @@ a.comment-parent-link:hover::before {
 /*===========================*/
 
 .new-comment::before {
-	display: none;
+	border: 1px solid var(--GW-new-comment-highlight-color);
+	box-shadow: 
+		0 0 1px 0 var(--GW-new-comment-highlight-color), 
+		0 0 2px 0 var(--GW-new-comment-highlight-color), 
+		0 0 1px 0 var(--GW-new-comment-highlight-color) inset,
+		0 0 2px 0 var(--GW-new-comment-highlight-color) inset;
 }
 .new-comment {
-	border: 1px solid #f00;
-	box-shadow: 
-		0 0 1px 0 #f00, 
-		0 0 2px 0 #f00, 
-		0 0 1px 0 #f00 inset,
-		0 0 2px 0 #f00 inset;
+	--GW-new-comment-highlight-color: #f00;
+}
+.new-comment.comment-item-highlight {
+	--GW-new-comment-highlight-color: #e7b200;
+}
+.new-comment.comment-item-highlight-faint {
+	--GW-new-comment-highlight-color: #f8e7b5;
 }
 
 /*=================================*/
@@ -1474,7 +1480,7 @@ a.comment-parent-link:hover::before {
 .comment-minimize-button::after {
 	color: #444;
 }
-.comment-minimize-button.maximized::after {
+.comment-minimize-button:hover::after {
 	color: #ccc;
 	text-shadow: none;
 }
