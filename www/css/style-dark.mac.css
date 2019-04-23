@@ -4278,7 +4278,7 @@ a.comment-child-link::before {
 .qualified-linking-toolbar button {
 	font-family: var(--GW-Font-Awesome);
 	grid-column: 2;
-	padding: 0 8px;
+	padding: 2px 8px 0 8px;
 	font-size: 0.875em;
 	font-weight: 400;
 }
@@ -8356,12 +8356,14 @@ h1.listing s,
 	border: 1px solid #fff;
 	background-color: #000;
 }
-.qualified-linking-toolbar a {
+.qualified-linking-toolbar a,
+.qualified-linking-toolbar button {
 	background-color: #131313;
 	border: 1px solid #2c2c2c;
 	border-radius: 4px;
 }
-.qualified-linking-toolbar a:hover {
+.qualified-linking-toolbar a:hover,
+.qualified-linking-toolbar button:hover {
 	text-decoration: none;
 	background-color: #1f1f1f;
 	text-shadow: var(--GW-shadow-white-glow);

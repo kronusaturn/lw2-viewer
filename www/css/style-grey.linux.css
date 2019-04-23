@@ -4278,7 +4278,7 @@ a.comment-child-link::before {
 .qualified-linking-toolbar button {
 	font-family: var(--GW-Font-Awesome);
 	grid-column: 2;
-	padding: 0 8px;
+	padding: 2px 8px 0 8px;
 	font-size: 0.875em;
 	font-weight: 400;
 }
@@ -8408,12 +8408,14 @@ select {
 	border: 1px solid #000;
 	background-color: #fff;
 }
-.qualified-linking-toolbar a {
+.qualified-linking-toolbar a,
+.qualified-linking-toolbar button {
 	background-color: #eee;
 	border: 1px solid #ccc;
 	border-radius: 4px;
 }
-.qualified-linking-toolbar a:hover {
+.qualified-linking-toolbar a:hover,
+.qualified-linking-toolbar button:hover {
 	text-decoration: none;
 	background-color: #ddd;
 	text-shadow: var(--GW-shadow-white-glow);

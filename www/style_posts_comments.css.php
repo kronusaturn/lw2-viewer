@@ -1297,7 +1297,7 @@ a.comment-child-link::before {
 .qualified-linking-toolbar button {
 	font-family: var(--GW-Font-Awesome);
 	grid-column: 2;
-	padding: 0 8px;
+	padding: 2px 8px 0 8px;
 	font-size: 0.875em;
 	font-weight: 400;
 }

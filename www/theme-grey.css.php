@@ -2158,12 +2158,14 @@ select {
 	border: 1px solid #000;
 	background-color: #fff;
 }
-.qualified-linking-toolbar a {
+.qualified-linking-toolbar a,
+.qualified-linking-toolbar button {
 	background-color: #eee;
 	border: 1px solid #ccc;
 	border-radius: 4px;
 }
-.qualified-linking-toolbar a:hover {
+.qualified-linking-toolbar a:hover,
+.qualified-linking-toolbar button:hover {
 	text-decoration: none;
 	background-color: #ddd;
 	text-shadow: var(--GW-shadow-white-glow);
