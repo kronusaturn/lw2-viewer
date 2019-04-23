@@ -37,7 +37,7 @@
 
 	--GW-comment-compact-height: 54px;
 	--GW-comment-compact-height-mobile: 105px;
-	--GW-comment-minimized-height: 34px;
+	--GW-comment-minimized-height: 36px;
 	--GW-comment-minimized-height-mobile: 64px;
 }
 @media only screen and (max-width: 900px) {
