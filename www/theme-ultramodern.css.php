@@ -18,6 +18,8 @@
 
 	--GW-body-text-font: 'Raleway', 'Helvetica', 'Arial', 'Verdana', sans-serif;
 	--GW-body-text-font-weight: <?php echo ($platform == 'Mac' ? '300' : '400'); ?>;
+
+	--GW-content-headings-font-weight: 400;
 }
 
 /*	Layout.
@@ -1831,7 +1833,22 @@ input[type='submit']:focus:not(:hover),
 /*========*/
 
 blockquote {
-	border-left: 5px solid #666;
+	position: relative;
+	padding-left: 1.125em;
+}
+blockquote::before {
+	content: "";
+	position: absolute;
+	height: 100%;
+	width: 8px;
+	border: 1px solid #333;
+	left: 0;
+	top: 0;
+	box-shadow:
+		1.5px 1.5px 1.5px -1px #bbb inset,
+		1.5px 1.5px 1.5px -1px #777 inset,
+		1.5px 1.5px 1.5px -1px #bbb,
+		1.5px 1.5px 1.5px -1px #777;
 }
 
 /*========*/
