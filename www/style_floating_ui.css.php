@@ -1137,7 +1137,7 @@
 	text-align: center;
 	border-bottom: 1px solid #ddd;
 	margin: 0;
-	padding: 10px 20px;
+	padding: 12px 20px 10px 20px;
 }
 #keyboard-help-overlay .keyboard-help-container .note {
 	margin: 0.5em auto;
@@ -1162,7 +1162,7 @@
 	margin: 20px 0 0 0;
 }
 #keyboard-help-overlay .keyboard-help-container ul li.section {
-	font-weight: bold;
+	font-weight: var(--GW-UI-font-weight-heavy);
 	font-size: 1.125rem;
 	break-after: avoid;
 }
@@ -1222,7 +1222,7 @@
 	top: 0;
 	font-family: var(--GW-Font-Awesome);
 	font-size: 1.5rem;
-	padding: 9px 16px;
+	padding: 10px 16px;
 }
 #keyboard-help-overlay button.close-keyboard-help:hover {
 	background-color: #eee;

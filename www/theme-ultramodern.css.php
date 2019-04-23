@@ -2075,6 +2075,9 @@ select {
 	font-weight: var(--GW-UI-font-weight-light);
 	color: #222;
 }
+#keyboard-help-overlay .keyboard-help-container ul li.section {
+	font-size: 1.25rem;
+}
 
 #keyboard-help-overlay .keyboard-help-container h1,
 #keyboard-help-overlay .keyboard-help-container .keyboard-shortcuts-lists {
