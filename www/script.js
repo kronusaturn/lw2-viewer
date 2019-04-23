@@ -3310,6 +3310,7 @@ function keyboardHelpSetup() {
 				[ [ 'ak-,' ], "Jump up to top of page" ],
 				[ [ 'ak-.' ], "Jump down to bottom of page" ],
 				[ [ 'ak-/' ], "Jump to top of comments section" ],
+				[ [ ';' ], "Focus external link (on link posts)" ],
 				[ [ 'ak-s' ], "Search" ],
 			], [
 				"Page actions",
@@ -3317,8 +3318,8 @@ function keyboardHelpSetup() {
 				[ [ 'ak-e' ], "Edit current post" ]
 			], [
 				"Post/comment list views",
-				[ [ '.' ], "Focus next entry in list" ],
-				[ [ ',' ], "Focus previous entry in list" ],
+				[ [ '.' ], "Focus next entry (post/comment)" ],
+				[ [ ',' ], "Focus previous entry (post/comment)" ],
 				[ [ ';' ], "Cycle between links in focused entry" ],
 				[ [ 'Enter' ], "Go to currently focused entry" ],
 				[ [ 'Esc' ], "Unfocus currently focused entry" ],
@@ -3835,9 +3836,19 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	setEditPostPageSubmitButtonText();
 
 	// Compute the text of the pagination UI tooltip text.
-	queryAll("#top-nav-bar a:not(.disabled), #bottom-bar a").forEach(link => {
-		link.dataset.targetPage = parseInt((/=([0-9]+)/.exec(link.href)||{})[1]||0)/20 + 1;
-	});
+	var currentPage = query("#top-nav-bar .page-number");
+	if (currentPage) {
+		currentPage = parseInt(currentPage.lastChild.textContent);
+		queryAll("#top-nav-bar a.nav-item-next, #bottom-bar #nav-item-next a").forEach(nextPageLink => {
+			nextPageLink.dataset.targetPage = currentPage + 1;
+		});
+		queryAll("#top-nav-bar a.nav-item-prev, #bottom-bar #nav-item-prev a").forEach(prevPageLink => {
+			prevPageLink.dataset.targetPage = currentPage - 1;
+		});
+		queryAll("#top-nav-bar a.nav-item-first, #bottom-bar #nav-item-first a").forEach(prevPageLink => {
+			prevPageLink.dataset.targetPage = 1;
+		});
+	}
 
 	// Add event listeners for Escape and Enter, for the theme tweaker.
 	let themeTweakerHelpWindow = query("#theme-tweaker-ui .help-window");
