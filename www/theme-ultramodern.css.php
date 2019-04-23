@@ -1454,10 +1454,6 @@ a.comment-parent-link:hover::before {
 .new-comment {
 	--GW-new-comment-highlight-color: #f00;
 }
-.new-comment.comment-item-highlight,
-.new-comment.comment-item-highlight-faint {
-	--GW-new-comment-highlight-color: var(--GW-comment-highlight-color);
-}
 
 /*=================================*/
 /* COMMENT THREAD MINIMIZE BUTTONS */

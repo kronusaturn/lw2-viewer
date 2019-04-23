@@ -4011,6 +4011,11 @@ a.comment-child-link::before {
 	pointer-events: none;
 }
 
+.new-comment.comment-item-highlight,
+.new-comment.comment-item-highlight-faint {
+	--GW-new-comment-highlight-color: var(--GW-comment-highlight-color);
+}
+
 /***********************************/
 /* COMMENT THREAD MINIMIZE BUTTONS */
 /***********************************/
@@ -7713,21 +7718,17 @@ a.comment-parent-link:hover::before {
 
 .comment-item-highlight {
 	box-shadow:
-		0 0	2px #0047b5,
-		0 0	3px #0047b5,
-		0 0	5px #0047b5,
-		0 0	7px #0047b5,
-		0 0 10px #0047b5;
-	border: 1px solid #0047b5;
+		0 0	2px var(--GW-comment-highlight-color),
+		0 0	3px var(--GW-comment-highlight-color),
+		0 0	5px var(--GW-comment-highlight-color),
+		0 0	7px var(--GW-comment-highlight-color),
+		0 0 10px var(--GW-comment-highlight-color);
+	border: 1px solid var(--GW-comment-highlight-color);
+
+	--GW-comment-highlight-color: #0047b5;
 }
 .comment-item-highlight-faint {
-	box-shadow:
-		0 0	2px #00193b,
-		0 0	3px #00193b,
-		0 0	5px #00193b,
-		0 0	7px #00193b,
-		0 0 10px #00193b;
-	border: 1px solid #00193b;
+	--GW-comment-highlight-color: #00193b;
 }
 
 .comment-popup {
@@ -7780,11 +7781,14 @@ a.comment-parent-link:hover::before {
 /*===========================*/
 
 .new-comment::before {
-	outline: 2px solid #7f3b92;
+	outline: 2px solid var(--GW-new-comment-highlight-color);
 	box-shadow:
-		0 0 6px -2px #7f3b92 inset, 
-		0 0 4px #7f3b92, 
-		0 0 6px #7f3b92;
+		0 0 6px -2px var(--GW-new-comment-highlight-color) inset, 
+		0 0 4px var(--GW-new-comment-highlight-color), 
+		0 0 6px var(--GW-new-comment-highlight-color);
+}
+.new-comment {
+	--GW-new-comment-highlight-color: #7f3b92;
 }
 
 /*=================================*/
