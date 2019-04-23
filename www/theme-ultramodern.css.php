@@ -1213,7 +1213,7 @@ article > .post-meta > *,
 		0 0 5px #ccc;
 }
 a.post-section:hover::before {
-	color: #999;
+	color: #aaa;
 }
 .post-meta .post-section.alignment-forum::before,
 .comment-meta .alignment-forum {
@@ -1577,7 +1577,7 @@ a.comment-parent-link:hover::before {
 /*===========================*/
 
 .comment-controls .cancel-comment-button {
-	color: #800;
+	color: #700;
 }
 .comment-controls .cancel-comment-button:hover {
 	color: #c00;
@@ -1907,7 +1907,11 @@ blockquote::before {
 /*======*/
 
 hr {
-	border-bottom: 1px solid #999;
+	height: 3px;
+	border-top: 1px solid #666;
+	box-shadow:
+		0 1.5px 1.5px -1.5px #bbb inset, 
+		0 1.5px 1.5px -1.5px #777 inset;
 }
 
 code,

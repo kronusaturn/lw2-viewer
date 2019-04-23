@@ -119,6 +119,7 @@
 		0 1px 0 #7f787f,
 		0 2px 0 #fff8ff;
 	cursor: default;
+	font-family: MS Sans Serif;
 }
 #theme-tweaker-ui .current-theme span {
 	text-shadow: 1px 0 0 #000;

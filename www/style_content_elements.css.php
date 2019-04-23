@@ -325,6 +325,7 @@ pre > code {
 /*	Remove "embossed" appearance of horizontal rules. */
 hr {
 	border: none;
+	margin: 1em 0;
 }
 
 /*************/
