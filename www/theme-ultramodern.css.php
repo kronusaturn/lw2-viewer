@@ -98,7 +98,7 @@ p {
 @media only screen and (max-width: 960px) {
 	#ui-elements-container > div[id$='-ui-toggle'] button,
 	#theme-selector .theme-selector-close-button  {
-		color: #555;
+		color: #666;
 		text-shadow:
 			0 0 1px #aaa,
 			0 0 3px #aaa,
@@ -540,6 +540,9 @@ p {
 #new-comment-nav-ui .new-comment-sequential-nav-button {
 	color: #bbb;
 }
+#new-comment-nav-ui .new-comment-sequential-nav-button:not(:hover) {
+	text-shadow: none;
+}
 #new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
 	color: #929292;
 }
@@ -621,6 +624,7 @@ p {
 		border: 1px solid #444;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button {
+		background-color: inherit;
 		box-shadow: 0 0 0 1px #444;
 		color: #444;
 	}
@@ -630,9 +634,6 @@ p {
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
 		color: #999;
-	}
-	#new-comment-nav-ui .new-comment-sequential-nav-button:disabled::after {
-		text-shadow: none;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-previous {
 		border-radius: 7px 0 0 7px;

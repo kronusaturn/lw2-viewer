@@ -152,7 +152,7 @@ a:active {
 .body-text h5,
 .body-text h6 {
 	line-height: 1.1;
-	margin: 1em 0 0.75em 0;
+	margin: 1.5em 0 0.5em 0;
 	text-align: left;
 
 	font-family: var(--GW-content-headings-font);
