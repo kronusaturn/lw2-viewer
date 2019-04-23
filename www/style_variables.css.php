@@ -85,6 +85,10 @@
 	--GW-edit-post-page-content-left-side-padding: var(--GW-edit-post-page-content-side-padding);
 	--GW-edit-post-page-content-right-side-padding: var(--GW-edit-post-page-content-side-padding);
 
+	--GW-about-page-content-side-padding: var(--GW-post-page-content-side-padding);
+	--GW-about-page-content-left-side-padding: var(--GW-post-page-content-side-padding);
+	--GW-about-page-content-right-side-padding: var(--GW-post-page-content-side-padding);
+
 	--GW-individual-thread-page-content-side-padding: 0;
 	--GW-individual-thread-page-content-left-side-padding: var(--GW-individual-thread-page-content-side-padding);
 	--GW-individual-thread-page-content-right-side-padding: var(--GW-individual-thread-page-content-side-padding);
@@ -140,6 +144,10 @@
 :root #content.edit-post-page {
 	--GW-current-page-content-left-side-padding: var(--GW-edit-post-page-content-left-side-padding);
 	--GW-current-page-content-right-side-padding: var(--GW-edit-post-page-content-right-side-padding);
+}
+:root #content.about-page {
+	--GW-current-page-content-left-side-padding: var(--GW-about-page-content-left-side-padding);
+	--GW-current-page-content-right-side-padding: var(--GW-about-page-content-right-side-padding);
 }
 :root #content.individual-thread-page {
 	--GW-current-page-content-left-side-padding: var(--GW-individual-thread-page-content-left-side-padding);
