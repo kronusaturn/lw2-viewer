@@ -3334,6 +3334,12 @@ function keyboardHelpSetup() {
 				[ [ 'ak-l' ], "Insert hyperlink" ],
 				[ [ 'ak-q' ], "Blockquote text" ]
 			], [
+				"Miscellaneous",
+				[ [ 'ak-x' ], "Switch to next view on user page" ],
+				[ [ 'ak-z' ], "Switch to previous view on user page" ],
+				[ [ 'ak-`&nbsp;' ], "Toggle compact comment list view" ],
+				[ [ 'ak-g' ], "Toggle anti-kibitzer mode" ]
+			], [
 				"Appearance",
 				[ [ 'ak-=' ], "Increase text size" ],
 				[ [ 'ak--' ], "Decrease text size" ],
@@ -3358,11 +3364,6 @@ function keyboardHelpSetup() {
 				[ [ '&#x2192;', '&#x2193;' ], "Next slide" ],
 				[ [ '&#x2190;', '&#x2191;' ], "Previous slide" ],
 				[ [ 'Space' ], "Reset slide zoom" ]
-			], [
-				"Miscellaneous",
-				[ [ 'ak-x' ], "Switch to next view on user page" ],
-				[ [ 'ak-z' ], "Switch to previous view on user page" ],
-				[ [ 'ak-`&nbsp;' ], "Toggle compact comment list view" ]
 			] ].map(section => 
 			`<ul><li class='section'>${section[0]}</li>` + section.slice(1).map(entry =>
 				`<li>

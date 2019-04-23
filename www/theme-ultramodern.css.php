@@ -660,7 +660,7 @@ p {
 	background-color: #222;
 	-webkit-background-clip: text;
 	color: transparent;
-	text-shadow: rgba(255,255,255,0.4) 0px 1px 1px;
+	text-shadow: rgba(255,255,255,0.35) 0px 0.5px 0.5px;
 }
 #anti-kibitzer-toggle button:hover::before,
 #anti-kibitzer-toggle button:hover::after {
@@ -1106,8 +1106,9 @@ h1.listing.own-post-listing {
 .body-text {
 	text-shadow: var(--GW-shadow-text-glow);
 }
-.body-text strong {
-	font-weight: 500;
+.body-text strong,
+.body-text b {
+	font-weight: 600;
 }
 
 .body-text a:link,
@@ -1164,7 +1165,12 @@ article > .post-meta > *,
 }
 
 .bottom-post-meta {
-	border-color: #777;
+	border-color: #666;
+	box-shadow:
+		0 1.5px 1.5px -1.5px #bbb,
+		0 1.5px 1.5px -1.5px #777,
+		0 1.5px 1.5px -1.5px #bbb inset,
+		0 1.5px 1.5px -1.5px #777 inset;
 }
 
 /*===========*/
@@ -1461,6 +1467,7 @@ a.comment-parent-link:hover::before {
 	font-weight: 300;
 }
 .comment-minimize-button:hover {
+	font-weight: 900;
 	color: #999;
 	text-shadow: var(--GW-shadow-white-glow)
 }
