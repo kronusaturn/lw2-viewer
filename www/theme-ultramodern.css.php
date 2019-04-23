@@ -140,7 +140,8 @@ p {
 	filter: brightness(50%) opacity(0.6);
 }
 #bottom-bar.decorative::after {
-	color: #777;
+	color: #666;
+	font-weight: 200;
 }
 
 /* Accesskey hints */
@@ -235,10 +236,18 @@ p {
 	#nav-item-search button {
 		padding-top: 0;
 	}
+	#nav-item-search button::before {
+		font-weight: 400;
+	}
 	#primary-bar .nav-inner::before, 
 	#secondary-bar .nav-inner::before {
 		opacity: 0.8;
+		font-weight: 300;
+	}
+	#primary-bar .nav-current .nav-inner::before, 
+	#secondary-bar .nav-current .nav-inner::before {
 		font-weight: 400;
+		opacity: 1.0;
 	}
 	#inbox-indicator::before {
 		padding-top: 2px;
@@ -250,8 +259,9 @@ p {
 /*==============*/
 
 .new-post::before,
+.new-private-message::before,
 .logout-button::before {
-	font-weight: 400;
+	font-weight: 300;
 }
 .page-toolbar .rss::before {
 	filter: grayscale(100%) 
@@ -944,7 +954,11 @@ h1.listing + .post-meta .post-section::before {
 /*======================*/
 
 #content.user-page h1.page-main-heading {
-	border-bottom: 1px solid #777;
+	font-weight: var(--GW-UI-font-weight-heavy);
+	border-bottom: 1px solid #666;
+	box-shadow:
+		0 1.5px 1.5px -1.5px #bbb,
+		0 1px 1px -1px #777;
 }
 
 #content.user-page h1.listing,

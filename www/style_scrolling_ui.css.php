@@ -104,6 +104,7 @@
 	content: "GW";
 	text-align: center;
 	padding: 0.25em 0 1em 0;
+	font-weight: var(--GW-UI-font-weight-light);
 }
 #bottom-bar.decorative::before {
 	width: 100%;
