@@ -153,6 +153,8 @@ body {
 	text-shadow: var(--GW-shadow-white-glow);
 }
 
+/*= Decorative bottom bar =*/
+
 #bottom-bar.decorative::after {
 	color: #d8d8d8;
 }

@@ -79,9 +79,9 @@ body {
 	line-height: 1.55;
 }
 
-/*=========*/
-/* NAV BAR */
-/*=========*/
+/*==========*/
+/* NAV BARS */
+/*==========*/
 
 #primary-bar .nav-inner,
 #bottom-bar .nav-inner {
@@ -94,32 +94,24 @@ body {
 .nav-bar {
 	background-color: #e4e4e4;
 }
-#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
-	padding: 6px 0 3px 0;
-}
 .active-bar {
-	border-top: 2px solid #eee;
+	border-top: 2px solid var(--GW-body-background-color);
 }
+
+/*= Decorative bottom bar =*/
 
 #bottom-bar.decorative {
 	background-color: transparent;
 }
-#bottom-bar.decorative::before {
-	filter: contrast(90%);
-}
 #bottom-bar.decorative::after {
 	color: #d8d8d8;
-	background-color: #eee;
 }
 
 /* Accesskey hints */
 
 .nav-inner::after {
-	display: block;
-	position: absolute;
 	left: 5px;
 	top: -1px;
-	font-weight: 400;
 	font-size: 0.7em;
 	color: #d8d8d8;
 }
@@ -130,24 +122,31 @@ body {
 	color: #bbb;
 }
 
-/* "Tabs" */
+/*= This makes the navbar items look like tabs: =*/
 
 .nav-current {
-	background-color: #eee;
+	background-color: var(--GW-body-background-color);
 }
 
 /* Search tab */
 
-#nav-item-search form::before {
-	font-size: 1.125em;
-}
-#nav-item-search button {
-	border: none;
-	font-weight: inherit;
-}
 #nav-item-search input::placeholder {
 	color: #d00;
-	font-weight: normal;
+}
+
+/*= Recent Comments tab =*/
+
+#nav-item-recent-comments span {
+	margin: 0 5px 0 0;
+}
+
+/*= Keyboard help button =*/
+
+@media only screen and (min-width: 961px) {
+	#nav-item-about button.open-keyboard-help {
+		padding: 6px 8px 8px 8px;
+		font-weight: 400;
+	}
 }
 
 /*= Top pagination UI hover tooltips =*/

@@ -138,6 +138,8 @@ p {
 	font-weight: var(--GW-UI-font-weight-heavy);
 }
 
+/*= Decorative bottom bar =*/
+
 #bottom-bar.decorative::before {
 	background: none;
 	box-shadow:
@@ -2077,6 +2079,7 @@ select {
 }
 #keyboard-help-overlay .keyboard-help-container ul li.section {
 	font-size: 1.25rem;
+	color: #222;
 }
 
 #keyboard-help-overlay .keyboard-help-container h1,
