@@ -505,7 +505,8 @@ p {
 /*=================*/
 
 #quick-nav-ui a {
-	color: #666;
+	color: #555;
+	font-weight: 400;
 	border-radius: 4px;
 	box-shadow: 0 0 0 1px #aaa;
 }
@@ -1583,11 +1584,11 @@ a.comment-parent-link:hover::before {
 
 .comment-controls .delete-button,
 .comment-controls .retract-button {
-	color: #900;
+	color: #700;
 }
 .comment-controls .edit-button,
 .comment-controls .unretract-button {
-	color: #050;
+	color: #004a00;
 }
 
 .edit-post-link::before {
@@ -1600,8 +1601,8 @@ a.comment-parent-link:hover::before {
 }
 
 .comment-controls .action-button::before {
-	font-weight: 400;
-	opacity: 0.75;
+	font-weight: 300;
+	opacity: 1;
 }
 
 .posting-controls textarea {
