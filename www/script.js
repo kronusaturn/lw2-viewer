@@ -3625,15 +3625,19 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	if (postMeta) {
 		// Add “qualified hyperlinking” toolbar.
 		let postPermalink = location.protocol + "//" + location.host + location.pathname;
-		postMeta.insertAdjacentHTML("beforeend", "<div class='qualified-linking'>" + 
-		"<input type='checkbox' tabindex='-1' id='qualified-linking-toolbar-toggle-checkbox'><label for='qualified-linking-toolbar-toggle-checkbox'><span>&#xf141;</span></label>" + 
-		"<div class='qualified-linking-toolbar'>" +
-		`<a href='${postPermalink}'>Post permalink</a>` +
-		`<a href='${postPermalink}?comments=false'>Link without comments</a>` +
-		`<a href='${postPermalink}?hide-nav-bars=true'>Link without top nav bars</a>` +
-		`<a href='${postPermalink}?comments=false&hide-nav-bars=true'>Link without comments or top nav bars</a>` +
-		"</div>" +
-		"</div>");
+		postMeta.insertAdjacentHTML("beforeend", "<div class='qualified-linking'>" + `
+			<input type='checkbox' tabindex='-1' id='qualified-linking-toolbar-toggle-checkbox'><label for='qualified-linking-toolbar-toggle-checkbox'><span>&#xf141;</span></label>
+			<div class='qualified-linking-toolbar'>
+			<a href='${postPermalink}'>Post permalink</a>
+			<button type='button' tabindex='-1' class='copy-link permalink' title='Copy post permalink to clipboard'>&#xf0c5;</button>
+			<a href='${postPermalink}?comments=false'>Link without comments</a>
+			<button type='button' tabindex='-1' class='copy-link no-comments' title='Copy link without comments to clipboard'>&#xf0c5;</button>
+			<a href='${postPermalink}?hide-nav-bars=true'>Link without top nav bars</a>
+			<button type='button' tabindex='-1' class='copy-link permalink hide-nav-bars' title='Copy link without top nav bars to clipboard'>&#xf0c5;</button>
+			<a href='${postPermalink}?comments=false&hide-nav-bars=true'>Link without comments or top nav bars</a>
+			<button type='button' tabindex='-1' class='copy-link permalink no-comments hide-nav-bars' title='Copy link without comments or top nav bars to clipboard'>&#xf0c5;</button>
+			</div>
+		` + "</div>");
 
 		// Replicate .post-meta at bottom of post.
 		let clonedPostMeta = postMeta.cloneNode(true);
@@ -3642,6 +3646,14 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		clonedPostMeta.query("input[type='checkbox']").id += "-bottom";
 		clonedPostMeta.query("label").htmlFor += "-bottom";
 		query(".post").appendChild(clonedPostMeta);
+
+		queryAll(".qualified-linking button.permalink").forEach(button => {
+			button.addActivateEvent(GW.copyQualifiedLinkButtonClicked = (event) => {
+				GWLog("GW.copyQualifiedLinkButtonClicked");
+
+				GWLog(event.target.previousElementSibling.href);
+			});
+		});
 	}
 
 	// If client is logged in...

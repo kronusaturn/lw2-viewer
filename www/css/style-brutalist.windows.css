@@ -4244,12 +4244,15 @@ a.comment-child-link::before {
 	right: 0.25em;
 	top: 110%;
 	z-index: 1;
+	grid-template-columns: 1fr auto;
+	grid-gap: 4px;
+	padding: 4px;
 }
 .post-meta .qualified-linking input[type='checkbox'] ~ .qualified-linking-toolbar {
 	display: none;
 }
 .post-meta .qualified-linking input[type='checkbox']:checked ~ .qualified-linking-toolbar {
-	display: block;
+	display: grid;
 }
 #qualified-linking-toolbar-toggle-checkbox-bottom ~ .qualified-linking-toolbar {
 	top: unset;
@@ -4257,11 +4260,17 @@ a.comment-child-link::before {
 }
 
 .post-meta .qualified-linking-toolbar a {
-	display: block;
-	padding: 0 6px;
-	margin: 4px;
+	padding: 1px 6px;
 	text-align: center;
 	user-select: none;
+	grid-column: 1;
+}
+.qualified-linking-toolbar button {
+	font-family: var(--GW-Font-Awesome);
+	grid-column: 2;
+	padding: 0 8px;
+	font-size: 0.875em;
+	font-weight: 400;
 }
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%*/

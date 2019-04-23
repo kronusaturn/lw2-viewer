@@ -1996,11 +1996,13 @@ select {
 	border: 1px solid #000;
 	background-color: #777;
 }
-.qualified-linking-toolbar a {
+.qualified-linking-toolbar a,
+.qualified-linking-toolbar button {
 	border: 1px solid #888;
 	border-radius: 4px;
 }
-.qualified-linking-toolbar a:hover {
+.qualified-linking-toolbar a:hover,
+.qualified-linking-toolbar button:hover {
 	border: 1px solid #999;
 	text-shadow: var(--GW-shadow-white-glow);
 }
