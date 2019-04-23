@@ -274,8 +274,9 @@ h1.listing + .post-meta .read-time {
 		position: absolute;
 		pointer-events: none;
 		display: block;
-		left: 6px;
-		max-width: calc(100% - 12px);
+		left: 50%;
+		transform: translateX(-50%);
+		min-width: 108px;
 		line-height: 1.15;
 		white-space: normal;
 		text-align: center;
