@@ -1118,7 +1118,8 @@ p a:link {
 		0.5px 0.5px 1px #f68a84, 
 		0.5px 0.5px 1px #ff9b8c;
 }
-.body-text a:visited {
+.body-text a:visited,
+p a:visited {
 	color: inherit;
 	text-shadow:
 		0px 0px 1px #a766dd, 
@@ -1126,7 +1127,9 @@ p a:link {
 		0.5px 0.5px 1px #efa9ff;
 }
 .body-text a:hover,
-.body-text a:focus {
+.body-text a:focus,
+p a:hover,
+p a:focus {
 	color: #444;
 	text-shadow:
 		0px 0px 1px #bd5984, 

@@ -6236,6 +6236,38 @@ th.mathjax-inline-container {
 	--GW-body-text-font: 'News Gothic BT', 'Clear Sans', 'Helvetica', sans-serif;
 }
 
+/*	Layout.
+	*/
+:root {
+	--GW-content-side-padding: 50px;
+	--GW-sequence-page-content-side-padding: 50px;
+	--GW-user-page-content-side-padding: 30px;
+	--GW-recent-comments-page-content-side-padding: 30px;
+	--GW-conversation-page-content-side-padding: 30px;
+	--GW-post-page-content-side-padding: 30px;
+	--GW-post-side-padding: 30px;
+	--GW-edit-post-page-content-side-padding: 30px;
+	--GW-individual-thread-page-content-side-padding: 30px;
+
+	--GW-comment-compact-height: 59px;
+	--GW-comment-compact-height-mobile: 108px;
+	--GW-comment-minimized-height: 38px;
+	--GW-comment-minimized-height-mobile: 68px;
+}
+@media only screen and (max-width: 900px) {
+	:root {
+		--GW-content-side-padding: calc(100% / 45);
+		--GW-sequence-page-content-side-padding: calc(100% / 36);
+		--GW-user-page-content-side-padding: calc(100% / 30);
+		--GW-recent-comments-page-content-side-padding: calc(100% / 30);
+		--GW-conversation-page-content-side-padding: calc(100% / 30);
+		--GW-post-page-content-side-padding: calc(100% / 30);
+		--GW-post-side-padding: 0px;
+		--GW-edit-post-page-content-side-padding: calc(100% / 30);
+		--GW-individual-thread-page-content-side-padding: calc(100% / 30);
+	}
+}
+
 /*	Color scheme.
 	*/
 :root {
@@ -6271,23 +6303,19 @@ body {
 /* NAV BAR */
 /*=========*/
 
-.nav-bar {
-	background-color: #e4e4e4;
-}
-.nav-inner {
+#primary-bar .nav-inner,
+#bottom-bar .nav-inner {
 	font-size: 1.125em;
-	padding: 11px 30px 13px 30px;
 }
 #secondary-bar .nav-inner {
 	font-size: 0.875em;
 }
+
+.nav-bar {
+	background-color: #e4e4e4;
+}
 #secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
 	padding: 6px 0 3px 0;
-}
-@media only screen and (min-width: 901px) {
-	#secondary-bar #nav-item-sequences .nav-inner {
-		line-height: 1.1;
-	}
 }
 .active-bar {
 	border-top: 2px solid #eee;
