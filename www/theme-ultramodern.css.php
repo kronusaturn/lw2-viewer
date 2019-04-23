@@ -1446,15 +1446,24 @@ a.comment-parent-link:hover::before {
 /*===========================*/
 
 .new-comment::before {
-	border: 1px solid var(--GW-new-comment-highlight-color);
+	border: 1px solid var(--GW-new-comment-highlight-border-color);
 	box-shadow: 
-		0 0 1px 0 var(--GW-new-comment-highlight-color), 
-		0 0 2px 0 var(--GW-new-comment-highlight-color), 
-		0 0 1px 0 var(--GW-new-comment-highlight-color) inset,
-		0 0 2px 0 var(--GW-new-comment-highlight-color) inset;
+		0 0 1px 0 var(--GW-new-comment-highlight-shadow-color), 
+		0 0 2px 0 var(--GW-new-comment-highlight-shadow-color), 
+		0 0 1px 0 var(--GW-new-comment-highlight-shadow-color) inset,
+		0 0 2px 0 var(--GW-new-comment-highlight-shadow-color) inset;
 }
 .new-comment {
-	--GW-new-comment-highlight-color: #f00;
+	--GW-new-comment-highlight-border-color: var(--GW-comment-highlight-color, #f00);
+	--GW-new-comment-highlight-shadow-color: var(--GW-comment-highlight-color, #f00);
+}
+.comment-item-highlight-faint .new-comment:not(.comment-item-highlight):not(.comment-item-highlight-faint) {
+	--GW-comment-highlight-color: initial;
+}
+@media (-webkit-max-device-pixel-ratio: 1), (max-resolution: 191dpi) {
+	.new-comment {
+		--GW-new-comment-highlight-shadow-color: var(--GW-comment-highlight-color, #900);
+	}
 }
 
 /*=================================*/
@@ -1466,15 +1475,6 @@ a.comment-parent-link:hover::before {
 }
 .comment-minimize-button:hover {
 	font-weight: 900;
-	color: #999;
-	text-shadow: var(--GW-shadow-white-glow)
-}
-.comment-minimize-button::after {
-	color: #444;
-}
-.comment-minimize-button:hover::after {
-	color: #ccc;
-	text-shadow: none;
 }
 
 /*====================*/

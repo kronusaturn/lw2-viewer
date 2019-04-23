@@ -7727,10 +7727,10 @@ a.comment-parent-link:hover::before {
 	border: 1px solid var(--GW-comment-highlight-color);
 }
 .comment-item-highlight {
-	--GW-comment-highlight-color: #0047b5;
+	--GW-comment-highlight-color: #005dc3;
 }
 .comment-item-highlight-faint {
-	--GW-comment-highlight-color: #00193b;
+	--GW-comment-highlight-color: #0047b5;
 }
 
 .comment-popup {

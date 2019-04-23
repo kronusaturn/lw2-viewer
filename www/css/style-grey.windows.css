@@ -7698,10 +7698,10 @@ a.comment-parent-link:hover::before {
 	border: 1px solid var(--GW-comment-highlight-color);
 }
 .comment-item-highlight {
-	--GW-comment-highlight-color: #e7b200;
+	--GW-comment-highlight-color: #c79700;
 }
 .comment-item-highlight-faint {
-	--GW-comment-highlight-color: #f8e7b5;
+	--GW-comment-highlight-color: #e7b200;
 }
 
 .comment-popup {
