@@ -6338,7 +6338,7 @@ body {
 	font-size: 1.125em;
 }
 #secondary-bar .nav-inner {
-	font-size: 0.875em;
+	font-size: 0.9375em;
 }
 
 .nav-bar {
@@ -6394,7 +6394,7 @@ body {
 
 @media only screen and (min-width: 961px) {
 	#nav-item-about button.open-keyboard-help {
-		padding: 6px 8px 8px 8px;
+		padding: 7px 8px;
 		font-weight: 400;
 	}
 }
