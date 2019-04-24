@@ -3369,7 +3369,7 @@ h1.post-title {
 	z-index: 2;
 }
 .post .bottom-post-meta {
-	padding: 20px 0;
+	padding: 22px 0 20px 0;
 }
 
 .bottom-post-meta {
@@ -7426,6 +7426,9 @@ article > .post-meta > *,
 		0 1.5px 1.5px -1.5px #777,
 		0 1.5px 1.5px -1.5px #bbb inset,
 		0 1.5px 1.5px -1.5px #777 inset;
+}
+#content:not(.in-sequence) .bottom-post-meta {
+	box-shadow: none;
 }
 
 /*===========*/

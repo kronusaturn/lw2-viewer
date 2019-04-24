@@ -388,7 +388,7 @@ h1.post-title {
 	z-index: 2;
 }
 .post .bottom-post-meta {
-	padding: 20px 0;
+	padding: 22px 0 20px 0;
 }
 
 .bottom-post-meta {

@@ -1174,6 +1174,9 @@ article > .post-meta > *,
 		0 1.5px 1.5px -1.5px #bbb inset,
 		0 1.5px 1.5px -1.5px #777 inset;
 }
+#content:not(.in-sequence) .bottom-post-meta {
+	box-shadow: none;
+}
 
 /*===========*/
 /* POST-META */
