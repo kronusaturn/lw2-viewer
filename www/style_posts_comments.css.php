@@ -137,6 +137,16 @@ h1.listing .edit-post-link {
 	font-size: 1.375em;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-with: 960px) {
+	h1.listing:focus-within::before {
+		display: none;
+	}
+}
+
 /*********************/
 /* LISTING POST-META */
 /*********************/
