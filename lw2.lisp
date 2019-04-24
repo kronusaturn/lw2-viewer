@@ -7,11 +7,13 @@
 	#:lw2.data-viewers.post
 	#:lw2.data-viewers.comment)
   (:import-from #:alexandria #:ensure-list #:when-let #:if-let)
+  (:import-from #:collectors #:with-collector)
   (:unintern
     #:define-regex-handler #:*fonts-stylesheet-uri* #:generate-fonts-link
     #:user-nav-bar #:*primary-nav* #:*secondary-nav* #:*nav-bars*
     #:begin-html #:end-html
-    #:*fonts-stylesheet-uris* #:*fonts-redirect-data* #:*fonts-redirect-lock* #:*fonts-redirect-thread*))
+    #:*fonts-stylesheet-uris* #:*fonts-redirect-data* #:*fonts-redirect-lock* #:*fonts-redirect-thread*)
+  (:recycle #:lw2-viewer #:lw2.backend))
 
 (in-package #:lw2-viewer) 
 
@@ -27,9 +29,9 @@
 (defparameter *default-prefs* (alist :items-per-page 20 :default-sort "new"))
 (defvar *current-prefs* nil)
 
-(defun post-nav-links (post-id)
-  <nav class="post-nav-links">
-    (when-let (sequence-ids (get-post-sequences post-id))
+(defun get-post-sequences (post-id)
+  (when-let (sequence-ids (get-post-sequence-ids post-id))
+    (with-collector (col)
       (dolist (sequence-id sequence-ids)
 	(let* ((sequence (get-sequence sequence-id))
 	       (posts (sequence-post-ids sequence)))
@@ -37,22 +39,30 @@
 	      (loop for prev = nil then (car current)
 		 for current on posts
 		 when (string= (car current) post-id)
-		   return (values prev (second current)))
+		 return (values prev (second current)))
 	    (when (or prev next)
-	      <div class="post-nav-item sequence">
-	        <a class="post-nav sequence-title" href=("/s/~A" (cdr (assoc :--id sequence)))>
-	          <span class="post-nav-label">Part of the sequence:</span>
-	          <span class="post-nav-title">(safe (clean-text-to-html (cdr (assoc :title sequence))))</span>
-	        </a>
-	        (labels ((post-nav-link (direction id)
-		  	   (let ((post (get-sequence-post sequence id)))
-			     <a class=("post-nav ~A" (string-downcase direction)) href=(generate-post-link post)>
-			       <span class="post-nav-label">(case direction (:prev "Previous: ") (:next "Next: "))</span>
-			       <span class="post-nav-title">(safe (clean-text-to-html (cdr (assoc :title post))))</span>
-			     </a>)))
-		  (when prev (post-nav-link :prev prev))
-		  (when next (post-nav-link :next next)))
-	      </div>)))))
+	      (col (list sequence
+			 (and prev (get-sequence-post sequence prev))
+			 (and next (get-sequence-post sequence next))))))))
+      (col))))
+
+(defun post-nav-links (post-sequences)
+  <nav class="post-nav-links">
+    (loop for (sequence prev next) in post-sequences do
+      (progn 
+	<div class="post-nav-item sequence">
+	  <a class="post-nav sequence-title" href=("/s/~A" (cdr (assoc :--id sequence)))>
+	    <span class="post-nav-label">Part of the sequence:</span>
+	    <span class="post-nav-title">(safe (clean-text-to-html (cdr (assoc :title sequence))))</span>
+	  </a>
+	  (labels ((post-nav-link (direction post)
+		     <a class=("post-nav ~A" (string-downcase direction)) href=(generate-post-link post)>
+		       <span class="post-nav-label">(case direction (:prev "Previous: ") (:next "Next: "))</span>
+		       <span class="post-nav-title">(safe (clean-text-to-html (cdr (assoc :title post))))</span>
+		     </a>))
+	    (when prev (post-nav-link :prev prev))
+	    (when next (post-nav-link :next next)))
+      </div>))
   </nav>)
 
 (defun postprocess-conversation-title (title)
@@ -953,31 +963,35 @@ signaled condition to OUT-STREAM."
 			      (force-output out-stream)
 			      (output-comments-votes out-stream)
 			      (output-alignment-forum out-stream post))))
-	     (emit-page (out-stream :title title :content-class (format nil "post-page comment-thread-page~:[~; question-post-page~]" (cdr (assoc :question post))))
-			(cond
-			  (condition
-                            (error-to-html out-stream condition))
-                          (t
-                           (post-body-to-html post)))
-                        (when (and lw2-auth-token (equal (logged-in-userid) (cdr (assoc :user-id post))))
-                          (format out-stream "<div class=\"post-controls\"><a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\" accesskey=\"e\" title=\"Edit post [e]\">Edit post</a></div>"
-                                  (cdr (assoc :--id post))))
-			(post-nav-links post-id)
-                        (force-output out-stream)
-			(handler-case
-			    (let* ((question (cdr (assoc :question post)))
-				   (answers (when question
-					      (get-post-answers post-id)))
-				   (comments (get-post-comments post-id)))
-			      (when question
-				(output-comments out-stream "answers" answers nil))
-			      (output-comments out-stream "comments" comments nil))
-			  (serious-condition (c) (error-to-html out-stream c)))
-			(when lw2-auth-token
-                          (force-output out-stream)
-                          (output-post-vote out-stream)
-                          (output-comments-votes out-stream)
-			  (output-alignment-forum out-stream post))))))))
+	       (let ((post-sequences (get-post-sequences post-id)))
+		 (emit-page (out-stream :title title
+					:content-class (format nil "post-page comment-thread-page~{ ~A~}"
+							       (list-cond ((cdr (assoc :question post)) "question-post-page")
+									  (post-sequences "in-sequence"))))
+			    (cond
+			      (condition
+			       (error-to-html out-stream condition))
+			      (t
+			       (post-body-to-html post)))
+			    (when (and lw2-auth-token (equal (logged-in-userid) (cdr (assoc :user-id post))))
+			      (format out-stream "<div class=\"post-controls\"><a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\" accesskey=\"e\" title=\"Edit post [e]\">Edit post</a></div>"
+				      (cdr (assoc :--id post))))
+			    (post-nav-links post-sequences)
+			    (force-output out-stream)
+			    (handler-case
+				(let* ((question (cdr (assoc :question post)))
+				       (answers (when question
+						  (get-post-answers post-id)))
+				       (comments (get-post-comments post-id)))
+				  (when question
+				    (output-comments out-stream "answers" answers nil))
+				  (output-comments out-stream "comments" comments nil))
+			      (serious-condition (c) (error-to-html out-stream c)))
+			    (when lw2-auth-token
+			      (force-output out-stream)
+			      (output-post-vote out-stream)
+			      (output-comments-votes out-stream)
+			      (output-alignment-forum out-stream post)))))))))
     (:post (csrf-token text answer af parent-answer-id parent-comment-id edit-comment-id retract-comment-id unretract-comment-id delete-comment-id)
      (let ((lw2-auth-token *current-auth-token*))
        (check-csrf-token csrf-token)

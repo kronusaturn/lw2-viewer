@@ -13,7 +13,7 @@
            #:lw2-query-string* #:lw2-query-string
            #:lw2-graphql-query-map #:lw2-graphql-query-multi
 	   #:get-posts-index #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-answers #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
-	   #:sequence-post-ids #:get-sequence #:get-post-sequences #:get-sequence-post
+	   #:sequence-post-ids #:get-sequence #:get-post-sequence-ids #:get-sequence-post
 	   #:get-conversation-messages
 	   #:get-user
            #:get-notifications #:check-notifications
@@ -578,7 +578,7 @@
 		 sequence-json))))
      (lw2-graphql-query-timeout-cached fn "sequence-json" sequence-id))))
 
-(define-backend-function get-post-sequences (post-id)
+(define-backend-function get-post-sequence-ids (post-id)
   (backend-graphql
    (if-let (json (cache-get "post-sequence" post-id))
 	   (json:decode-json-from-string json))))
