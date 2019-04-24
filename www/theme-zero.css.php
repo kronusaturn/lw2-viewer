@@ -331,6 +331,11 @@ body {
 
 #theme-selector {
 	opacity: 1.0;
+	background-color: #e4e4e4;
+	box-shadow:
+		0 1px 0 0 #eee inset,
+		-7px 0 0 0 #eee inset,
+		7px 0 0 0 #eee inset;
 }
 #theme-selector button {
 	background-color: #e4e4e4;
@@ -338,11 +343,8 @@ body {
 }
 #theme-selector button.selected,
 #theme-selector button:hover {
-	background-color: transparent;
-}
-#theme-selector button:hover {
+	background-color: #eee;
 	box-shadow:
-		0 0 0 1px #ddd inset,
 		0 0 0 4px #eee inset,
 		0 0 0 5px #ddd inset;
 }
@@ -366,8 +368,12 @@ body {
 @media only screen and (max-width: 1000px) {
 	#theme-selector {
 		box-shadow:
-			0 0 0 1px #ddd,
-			0 0 0 2px transparent;
+			0 1px 0 0 #eee inset,
+			-7px 0 0 0 #eee inset,
+			7px 0 0 0 #eee inset;
+	}
+	#theme-selector button {
+		outline: 1px solid #e4e4e4;
 	}
 	#theme-selector:hover::after {
 		background-color: #ddd;
@@ -412,17 +418,15 @@ body {
 
 @media only screen and (max-width: 1080px) {
 	#theme-tweaker-toggle button {
-		border: 1px solid #999;
-		box-shadow:
-			0 0 10px #999 inset,
-			0 0 0 1px transparent;
-		border-radius: 50%;
 		transform: scale(0.8);
+		background-color: #e4e4e4;
+		opacity: 1.0;
+		color: #aaa;
 	}
 }
 @media only screen and (max-width: 1000px) {
 	#theme-tweaker-toggle button {
-		background-color: #ddd;
+		border: 1px solid #ddd;
 	}
 }
 
