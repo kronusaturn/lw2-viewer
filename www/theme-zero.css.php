@@ -98,6 +98,10 @@ body {
 	border-top: 2px solid var(--GW-body-background-color);
 }
 
+.nav-inner:hover {
+	text-decoration: none;
+}
+
 /*= Decorative bottom bar =*/
 
 #bottom-bar.decorative {
@@ -179,6 +183,7 @@ body {
 }
 .sublevel-nav .sublevel-item.selected {
 	background-color: transparent;
+	box-shadow: 0 0 0 1px #ddd inset;
 }
 .sublevel-nav .sublevel-item:not(.selected):hover {
 	background-color: #ddd;
