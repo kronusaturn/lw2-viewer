@@ -67,7 +67,7 @@
 	--GW-comment-background-color-even: #fff;
 	--GW-comment-background-color-target: #ffd;
 
-	--GW-theme-selector-outline-color: #ddd;
+	--GW-theme-selector-outline-color: transparent;
 }
 
 /*======*/
@@ -373,14 +373,14 @@ body {
 	}
 	#theme-selector button.selected,
 	#theme-selector button:hover {
-		outline: 1px solid var(--GW-theme-selector-outline-color);
+		outline: 1px solid #ddd;
 	}
 }
 @media only screen and (max-width: 960px) {
 	#theme-selector {
 		background-color: #eee;
 		box-shadow:
-			0 0 0 1px var(--GW-theme-selector-outline-color),
+			0 0 0 1px #ddd,
 			0 0 1px 3px #fff,
 			0 0 3px 3px #fff,
 			0 0 5px 3px #fff;
@@ -388,8 +388,11 @@ body {
 	#theme-selector::before {
 		color: #777;
 	}
-	#theme-selector button {
-		background-color: #e4e4e4;
+	#theme-selector button:hover,
+	#theme-selector button.selected {
+		outline: none;
+		box-shadow:
+			0 0 0 2px #e4e4e4 inset;
 	}
 	#theme-selector button::after {
 		color: #000;
@@ -417,6 +420,10 @@ body {
 		background-color: #e4e4e4;
 		opacity: 1.0;
 		color: #aaa;
+	}
+	#theme-tweaker-toggle button:active {
+		box-shadow:
+			0 0 10px #ccc inset;
 	}
 }
 @media only screen and (max-width: 1000px) {
