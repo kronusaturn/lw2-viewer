@@ -395,6 +395,9 @@ h1.post-title {
 	border-style: solid;
 	border-width: 1px 0;
 }
+#content:not(.in-sequence) .bottom-post-meta {
+	border-bottom: none;
+}
 
 .post-body {
 	min-height: 8em;
