@@ -474,11 +474,11 @@
 		 ((tag-is node "p" "blockquote" "div")
 		  (setf wayward-li-container nil))))
 	     :test #'plump:element-p))
-	  (loop while (and (= 1 (length (plump:children root))) (typep (plump:first-child root) 'plump:element) (tag-is (plump:first-child root) "div" "html" "body"))
+	  (loop while (and (= 1 (length (plump:children root))) (plump:element-p (plump:first-child root)) (tag-is (plump:first-child root) "div" "html" "body"))
 	     do (setf (plump:children root) (plump:children (plump:first-child root)))
 	     do (loop for c across (plump:children root) do (setf (plump:parent c) root))
 	     do (when-let (fc (plump:first-child root))
-			  (when (tag-is fc "head") (plump:remove-child fc))))
+			  (when (and (plump:element-p fc) (tag-is fc "head")) (plump:remove-child fc))))
 	  (plump:traverse
 	   root
 	   (lambda (node)
