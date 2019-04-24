@@ -2312,6 +2312,7 @@ function injectAppearanceAdjustUIToggle() {
 		});
 	});
 }
+
 function removeAppearanceAdjustUIToggle() {
 	GWLog("removeAppearanceAdjustUIToggle");
 
@@ -2320,14 +2321,28 @@ function removeAppearanceAdjustUIToggle() {
 	});
 	removeElement("#appearance-adjust-ui-toggle");
 }
+
 function toggleAppearanceAdjustUI(show) {
 	GWLog("toggleAppearanceAdjustUI");
 
+	if (query(GW.appearanceAdjustUIToggleTargetsSelector).hasClass("engaged")) {
+		document.removeEventListener("keyup", GW.mobileThemeTweakerHideKeyPressed);
+	} else {
+		document.addEventListener("keyup", GW.mobileThemeTweakerHideKeyPressed = (event) => {
+			if (event.key == 'Escape') {
+				GWLog("GW.mobileThemeTweakerHideKeyPressed");
+
+				toggleAppearanceAdjustUI(false);
+			}
+		});
+	}
+
 	queryAll(GW.appearanceAdjustUIToggleTargetsSelector).forEach(element => {
-		if (typeof show == "undefined")
+		if (typeof show == "undefined") {
 			element.toggleClass("engaged");
-		else
+		} else {
 			element.toggleClass("engaged", show);
+		}
 	});
 }
 
