@@ -463,18 +463,6 @@ body {
 	}
 }
 
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
-@media only screen and (max-width: 1020px) {
-	#quick-nav-ui a {
-		box-shadow:
-			0 0 0 1px #999,
-			0 0 0 2px transparent;
-	}
-}
-
 /*======================*/
 /* NEW COMMENT QUICKNAV */
 /*======================*/
@@ -505,33 +493,21 @@ body {
 	}
 }
 
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
-@media only screen and (max-width: 1020px) {
-	#new-comment-nav-ui .new-comments-count::before {
-		background-color: #d8d8d8;
-		box-shadow:
-			0 0 0 1px #999,
-			0 0 0 2px transparent;
-		border-radius: 8px;
-	}
-}
-
 /*=================*/
 /* HNS DATE PICKER */
 /*=================*/
 
+#hns-date-picker {
+	--GW-HNS-date-picker-text-field-width: 150px;
+}
 #hns-date-picker span {
 	color: #777;
-	text-shadow: 0.5px 0.5px 0 #fff;
-	font-weight: 600;
 }
 #hns-date-picker input {
-	border: 1px solid #777;
+	border: 1px solid #bbb;
 	background-color: transparent;
-	color: #666;
+	color: #888;
+	width: 150px;
 }
 #hns-date-picker input:focus {
 	color: #000;
@@ -541,23 +517,9 @@ body {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-@media only screen and (max-width: 1440px) {
-	#hns-date-picker {
-		background-color: #d8d8d8;
-		opacity: 1.0;
-	}
-	#hns-date-picker::before {
-		border: 1px solid #999;
-		border-width: 1px 0 1px 1px;
-	}
-}
-@media only screen and (max-width: 1200px) {
-	#hns-date-picker {
-		background-color: #eee;
-	}
-	#hns-date-picker::before {
-		display: none;
-	}
+#hns-date-picker.flipped {
+	background-color: #e4e4e4;
+	opacity: 1.0;
 }
 
 /*================================*
