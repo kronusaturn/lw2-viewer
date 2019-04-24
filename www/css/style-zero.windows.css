@@ -6819,8 +6819,6 @@ body {
 	}
 	#quick-nav-ui a::after,
 	#new-comment-nav-ui::before {
-		font-family: ;
-		font-weight: bold;
 		box-shadow:
 			0 0 1px 0 #fff,
 			0 0 3px 0 #fff,
@@ -6856,9 +6854,6 @@ body {
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-next {
 		border-radius: 0 7px 7px 0;
-	}
-	#new-comment-nav-ui button::after {
-		font-family: ;
 	}
 	#hns-date-picker {
 		background-color: #fff;
@@ -7986,7 +7981,7 @@ a:hover {
 
 button,
 input[type='submit'] {
-	color: ;
+	color: var(--GW-hyperlink-color);
 }
 
 button:hover,
@@ -7994,7 +7989,7 @@ input[type='submit']:hover,
 button:focus,
 input[type='submit']:focus {
 	color: #d00;
-	text-shadow: ;
+	text-shadow: var(--GW-shadow-white-glow);
 }
 button:active,
 input[type='submit']:active {
@@ -8002,11 +7997,11 @@ input[type='submit']:active {
 	transform: scale(0.9);
 }
 .button:visited {
-	color: ;
+	color: var(--GW-hyperlink-color);
 }
 .button:hover {
 	color: #d00;
-	text-shadow: ;
+	text-shadow: var(--GW-shadow-white-glow);
 	text-decoration: none;
 }
 .button:active {
@@ -8025,14 +8020,6 @@ input[type='submit']:active {
 /* HEADINGS */
 /*==========*/
 
-.body-text h1,
-.body-text h2,
-.body-text h3,
-.body-text h4,
-.body-text h5,
-.body-text h6 {
-	font-family: ;
-}
 .body-text h6 {
 	color: #555;
 }
@@ -8098,6 +8085,7 @@ input[type='password'] {
 input[type='text']:focus,
 input[type='search']:focus,
 input[type='password']:focus {
+	background-color: var(--GW-body-background-color);
 	border: 1px solid #00e;
 	outline: 1px solid #00e;
 }
@@ -8109,20 +8097,6 @@ select {
 /*============*/
 /* ABOUT PAGE */
 /*============*/
-
-.about-page mark {
-	background-color: #e6e6e6;
-	text-decoration: none;
-	box-shadow:
-		0 -1px 0 0 #000 inset,
-		0 -3px 1px -2px #000 inset;
-	padding: 0 1px;
-}
-
-#content.about-page .accesskey-table {
-	font-family: ;
-	border-color: #ddd;
-}
 
 #content.about-page img {
 	border: 1px solid #000;
@@ -8137,11 +8111,11 @@ select {
 }
 #aux-about-link a:hover {
 	opacity: 1.0;
-	text-shadow: ;
+	text-shadow: var(--GW-shadow-white-glow);
 }
 
 .qualified-linking label {
-	color: ;
+	color: var(--GW-hyperlink-color);
 }
 .qualified-linking label:hover {
 	text-shadow:
@@ -8160,12 +8134,12 @@ select {
 	border-radius: 4px;
 }
 .qualified-linking-toolbar a:visited {
-	color: ;
+	color: var(--GW-hyperlink-color);
 }
 .qualified-linking-toolbar a:hover {
 	text-decoration: none;
 	background-color: #ddd;
-	text-shadow: ;
+	text-shadow: var(--GW-shadow-white-glow);
 }
 .qualified-linking label::after {
 	background-color: #eee;
