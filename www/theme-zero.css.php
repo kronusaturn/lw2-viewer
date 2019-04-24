@@ -66,6 +66,8 @@
 	--GW-comment-background-color-odd: #eee;
 	--GW-comment-background-color-even: #fff;
 	--GW-comment-background-color-target: #ffd;
+
+	--GW-theme-selector-outline-color: #ddd;
 }
 
 /*======*/
@@ -332,10 +334,6 @@ body {
 #theme-selector {
 	opacity: 1.0;
 	background-color: #e4e4e4;
-	box-shadow:
-		0 1px 0 0 #eee inset,
-		-7px 0 0 0 #eee inset,
-		7px 0 0 0 #eee inset;
 }
 #theme-selector button {
 	background-color: #e4e4e4;
@@ -346,10 +344,11 @@ body {
 	background-color: #eee;
 	box-shadow:
 		0 0 0 4px #eee inset,
-		0 0 0 5px #ddd inset;
+		0 0 0 5px #ddd inset,
+		0 0 0 1px #eee;
 }
 #theme-selector button.selected {
-	box-shadow: none;
+		0 0 0 1px #eee;
 }
 
 #theme-selector button::before {
@@ -358,7 +357,7 @@ body {
 }
 #theme-selector button:hover::before,
 #theme-selector button.selected::before {
-	color: #444;
+	color: #000;
 }
 
 /*=----------------------------=*/
@@ -366,26 +365,22 @@ body {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 1000px) {
-	#theme-selector {
-		box-shadow:
-			0 1px 0 0 #eee inset,
-			-7px 0 0 0 #eee inset,
-			7px 0 0 0 #eee inset;
-	}
-	#theme-selector button {
-		outline: 1px solid #e4e4e4;
-	}
 	#theme-selector:hover::after {
-		background-color: #ddd;
-		width: calc(6em - 3px);
-		left: 100%;
+		background-color: #e4e4e4;
+	}
+	#theme-selector button::before {
+		background-color: #e4e4e4;
+	}
+	#theme-selector button.selected,
+	#theme-selector button:hover {
+		outline: 1px solid var(--GW-theme-selector-outline-color);
 	}
 }
 @media only screen and (max-width: 960px) {
 	#theme-selector {
 		background-color: #eee;
 		box-shadow:
-			0 0 0 1px #eee,
+			0 0 0 1px var(--GW-theme-selector-outline-color),
 			0 0 1px 3px #fff,
 			0 0 3px 3px #fff,
 			0 0 5px 3px #fff;
