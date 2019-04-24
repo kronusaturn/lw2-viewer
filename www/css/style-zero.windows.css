@@ -6397,6 +6397,12 @@ body {
 	margin: 0 5px 0 0;
 }
 
+/*= About tab =*/
+
+#nav-item-about {
+	margin-right: 0.5em;
+}
+
 /*= Keyboard help button =*/
 
 @media only screen and (min-width: 961px) {
@@ -6406,11 +6412,23 @@ body {
 	}
 }
 
-/*= Top pagination UI hover tooltips =*/
+/*===============*/
+/* PAGINATION UI */
+/*===============*/
 
 #top-nav-bar a::after,
 #bottom-bar a::after {
 	color: #000;
+}
+
+#bottom-bar .nav-item a::before,
+#top-nav-bar a::before {
+	font-weight: 400;
+}
+
+#bottom-bar .nav-item a::before {
+	font-size: 0.875em;
+	bottom: 0;
 }
 
 /*==============*/
@@ -6436,7 +6454,7 @@ body {
 }
 .sublevel-nav .sublevel-item.selected {
 	background-color: transparent;
-	box-shadow: 0 0 0 1px #ddd inset;
+	box-shadow: 0 0 0 2px #ddd inset;
 }
 .sublevel-nav .sublevel-item:not(.selected):hover {
 	background-color: #ddd;
