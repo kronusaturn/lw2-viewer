@@ -402,7 +402,7 @@ body {
 }
 #theme-selector button:hover::before,
 #theme-selector button.selected::before {
-	color: #666;
+	color: #000;
 }
 #width-selector button::after {
 	color: #999;

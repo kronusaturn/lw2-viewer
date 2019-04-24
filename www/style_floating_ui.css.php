@@ -257,7 +257,6 @@
 	}
 	#theme-selector::after {
 		background-color: var(--GW-body-background-color);
-		z-index: -1;
 	}
 }
 @media only screen and (max-width: 960px) {
