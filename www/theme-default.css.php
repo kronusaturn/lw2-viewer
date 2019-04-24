@@ -75,6 +75,8 @@
 	--GW-comment-background-color-odd: #eee;
 	--GW-comment-background-color-even: #fff;
 	--GW-comment-background-color-target: #ffd;
+
+	--GW-theme-selector-outline-color: #999;
 }
 
 /*======*/
@@ -397,7 +399,6 @@ body {
 
 #theme-selector button::before {
 	color: #999;
-	background-color: var(--GW-body-background-color);
 }
 #theme-selector button:hover::before,
 #theme-selector button.selected::before {
@@ -411,19 +412,6 @@ body {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-@media only screen and (max-width: 1160px) {
-	#theme-selector:hover::after {
-		background-color: #999;
-	}
-}
-@media only screen and (max-width: 1000px) {
-	#theme-selector {
-		background-color: var(--GW-body-background-color);
-		box-shadow: 
-			0 0 0 1px #999,
-			0 0 0 2px transparent;
-	}
-}
 @media only screen and (max-width: 960px) {
 	#theme-selector {
 		box-shadow: 

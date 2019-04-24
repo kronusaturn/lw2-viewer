@@ -108,8 +108,12 @@
 	position: absolute;
 	top: 0;
 	right: 100%;
-	margin: 3px 2px 0 0;
+	margin: 4px var(--GW-theme-selector-right-margin) 0 0;
 	opacity: 0.4;
+
+	--GW-theme-selector-right-margin: 9px;
+	--GW-theme-selector-button-tooltip-width: 6em;
+	--GW-theme-selector-button-spacing: 1px;
 }
 #theme-selector:hover {
 	opacity: 1.0;
@@ -126,10 +130,12 @@
 	width: 26px;
 	height: 26px;
 	padding: 5px;
-	margin: 1px 7px 0 7px;
 	color: transparent;
 	background-size: 16px 16px;
 	background-origin: content-box;
+}
+#theme-selector button:nth-of-type(n+2) {
+	margin: var(--GW-theme-selector-button-spacing) 0 0 0;
 }
 .theme-selector button,
 .theme-selector button:hover,
@@ -189,12 +195,18 @@
 	position: absolute;
 	top: 0;
 	right: 100%;
-	padding: 5px 6px 6px 6px;
+	width: var(--GW-theme-selector-button-tooltip-width);
+	padding: 5px;
 	line-height: 1;
-	width: 6em;
 	text-align: right;
 	z-index: 1;
 	visibility: hidden;
+
+	background-color: var(--GW-body-background-color);
+}
+#theme-selector button:nth-of-type(n+2)::before {
+	top: calc(-1 * var(--GW-theme-selector-button-spacing));
+	border-top: 1px solid transparent;
 }
 #theme-selector:hover button::before {
 	visibility: visible;
@@ -212,10 +224,14 @@
 	#theme-selector:hover::after {
 		content: "";
 		position: absolute;
-		width: calc(6em - 7px);
-		height: calc(100% + 2px);
+		width: calc(var(--GW-theme-selector-button-tooltip-width) - var(--GW-theme-selector-right-margin));
+		height: 100%;
 		top: 0;
-		left: calc(100% + 1px);
+		left: calc(100% + var(--GW-theme-selector-right-margin));
+
+		box-shadow:
+			-1px 0 0 0 var(--GW-body-background-color),
+			0 0 0 1px var(--GW-theme-selector-outline-color);
 	}
 	#theme-selector button::before {
 		right: unset;
@@ -224,26 +240,24 @@
 }
 @media only screen and (max-width: 1080px) {
 	#theme-selector {
-		margin: 46px 4px 0 0;
+		margin-top: 48px;
+		--GW-theme-selector-right-margin: 11px;
 	}
 }
 @media only screen and (max-width: 1000px) {
 	#theme-selector {
-		margin: 124px -16px 0 0;
-		padding: 3px 0;
+		margin-top: 124px;
+		--GW-theme-selector-right-margin: -16px;
+		padding: 3px;
+
+		background-color: var(--GW-body-background-color);
+		box-shadow: 
+			0 0 0 1px var(--GW-theme-selector-outline-color),
+			0 0 0 2px transparent;
 	}
-	#theme-selector:hover::after {
-		height: calc(100% - 4px);
-		width: calc(6em - 4px);
-		top: 3px;
-	}
-	#theme-selector button {
-		margin: 1px 4px;
-	}
-	#theme-selector button::before {
-		top: 0;
-		right: 100%;
-		padding: 6px;
+	#theme-selector::after {
+		background-color: var(--GW-body-background-color);
+		z-index: -1;
 	}
 }
 @media only screen and (max-width: 960px) {
