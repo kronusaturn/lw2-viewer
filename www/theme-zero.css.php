@@ -432,9 +432,9 @@ body {
 	}
 }
 
-/*==============*/
-/* QUICK NAV UI */
-/*==============*/
+/*=================*/
+/* QUICKNAV WIDGET */
+/*=================*/
 
 #quick-nav-ui a {
 	color: #00c;
@@ -452,8 +452,6 @@ body {
 	color: #bbb;
 }
 
-/*	Hover styles.
-	*/
 @media only screen and (hover: hover) and (pointer: fine) {
 	#quick-nav-ui a:hover {
 		color: #f00;
@@ -482,12 +480,10 @@ body {
 /*======================*/
 
 #new-comment-nav-ui .new-comments-count {
-	font-weight: 600;
 	color: #666;
 	text-shadow: 0.5px 0.5px 0 #fff;
 }
 #new-comment-nav-ui .new-comments-count::after {
-	font-weight: 600;
 	color: #777;
 }
 #new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
@@ -495,8 +491,6 @@ body {
 	text-shadow: none;
 }
 
-/*	Hover styles.
-	*/
 @media only screen and (hover: hover) and (pointer: fine) {
 	#new-comment-nav-ui .new-comments-count:hover {
 		text-shadow:
@@ -507,11 +501,7 @@ body {
 			0.5px 0.5px 0 #fff;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button:focus {
-		color: #d00;
-		text-shadow:
-			0 0 1px #fff,
-			0 0 3px #fff,
-			0 0 5px #fff;
+		text-shadow: var(--GW-shadow-white-glow);
 	}
 }
 
