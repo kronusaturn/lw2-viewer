@@ -310,38 +310,44 @@ body {
 /*================*/
 
 #width-selector button {
-	box-shadow:
-		0 0 0 4px #eee inset,
-		0 0 0 5px #aaa inset;
+	background-color: #e4e4e4;
 }
-#width-selector button:hover,
-#width-selector button.selected {
+#width-selector button.selected,
+#width-selector button:hover {
+	background-color: transparent;
+}
+#width-selector button:hover:not(.selected) {
 	box-shadow:
-		0 0 0 1px #eee inset,
-		0 0 0 2px #aaa inset,
-		0 0 0 4px #eee inset,
-		0 0 0 5px #aaa inset;
+		0 0 0 2px #ddd inset,
+		0 0 0 3px #eee inset;
 }
 #width-selector button::after {
-	color: #999;
+	color: #aaa;
 }
 
 /*================*/
 /* THEME SELECTOR */
 /*================*/
 
-#theme-selector button {
-	box-shadow:
-		0 0 0 4px #eee inset,
-		0 0 0 5px #999 inset;
+#theme-selector {
+	opacity: 1.0;
 }
-#theme-selector button:hover,
-#theme-selector button.selected {
+#theme-selector button {
+	background-color: #e4e4e4;
+	background-repeat: no-repeat;
+}
+#theme-selector button.selected,
+#theme-selector button:hover {
+	background-color: transparent;
+}
+#theme-selector button:hover {
 	box-shadow:
-		0 0 0 1px #eee inset,
-		0 0 0 2px #999 inset,
+		0 0 0 1px #ddd inset,
 		0 0 0 4px #eee inset,
-		0 0 0 5px #999 inset;
+		0 0 0 5px #ddd inset;
+}
+#theme-selector button.selected {
+	box-shadow: none;
 }
 
 #theme-selector button::before {
@@ -350,7 +356,7 @@ body {
 }
 #theme-selector button:hover::before,
 #theme-selector button.selected::before {
-	color: #666;
+	color: #444;
 }
 
 /*=----------------------------=*/
@@ -359,16 +365,13 @@ body {
 
 @media only screen and (max-width: 1000px) {
 	#theme-selector {
-		background-color: #eee;
 		box-shadow:
-			0 0 0 1px #999,
+			0 0 0 1px #ddd,
 			0 0 0 2px transparent;
 	}
 	#theme-selector:hover::after {
-		background-color: #999;
+		background-color: #ddd;
 		width: calc(6em - 3px);
-		height: calc(100% - 5px);
-		top: 3px;
 		left: 100%;
 	}
 }
@@ -376,34 +379,22 @@ body {
 	#theme-selector {
 		background-color: #eee;
 		box-shadow:
-			0 0 0 1px #999,
+			0 0 0 1px #eee,
 			0 0 1px 3px #fff,
 			0 0 3px 3px #fff,
-			0 0 5px 3px #fff,
-			0 0 10px 3px #fff,
-			0 0 20px 3px #fff;
-		border-radius: 12px;
+			0 0 5px 3px #fff;
 	}
 	#theme-selector::before {
 		color: #777;
-		font-weight: normal;
-		text-shadow: 0.5px 0.5px 0 #aaa;
 	}
 	#theme-selector button {
-		background-color: #e6e6e6;
-		border-radius: 10px;
+		background-color: #e4e4e4;
 	}
 	#theme-selector button::after {
 		color: #000;
-		max-width: calc(100% - 3.5em);
-		overflow: hidden;
-		text-overflow: ellipsis;
-		padding: 0 0 2px 0;
 	}
 	#theme-selector button.selected::after {
-		text-shadow:
-			0 -1px 0 #fff,
-			0 0.5px 0.5px #000;
+		font-weight: bold;
 	}
 }
 
