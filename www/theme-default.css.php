@@ -476,6 +476,11 @@ body {
 		border-radius: 50%;
 		transform: scale(0.8);
 	}
+	#theme-tweaker-toggle button:active {
+		box-shadow: 
+			0 0 10px #666 inset,
+			0 0 0 1px transparent;
+	}
 }
 @media only screen and (max-width: 1000px) {
 	#theme-tweaker-toggle button {
