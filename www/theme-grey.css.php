@@ -451,7 +451,7 @@ body {
 @media only screen and (max-width: 960px) {
 	#theme-selector {
 		box-shadow: 
-			0 0 0 1px #999,
+			0 0 0 1px var(--GW-theme-selector-outline-color),
 			0 0 1px 3px #fff,
 			0 0 3px 3px #fff,
 			0 0 5px 3px #fff,
@@ -510,6 +510,11 @@ body {
 			0 0 0 1px transparent;
 		border-radius: 50%;
 		transform: scale(0.8);
+	}
+	#theme-tweaker-toggle button:active {
+		box-shadow: 
+			0 0 10px #555 inset,
+			0 0 0 1px transparent;
 	}
 }
 @media only screen and (max-width: 1000px) {

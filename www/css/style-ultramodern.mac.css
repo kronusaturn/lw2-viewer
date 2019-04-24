@@ -6708,7 +6708,7 @@ p {
 }
 #theme-selector button:hover::before,
 #theme-selector button.selected::before {
-	color: #ddd;
+	color: #fff;
 }
 
 /*=----------------------------=*/
@@ -6719,7 +6719,7 @@ p {
 	#theme-selector {
 		background-color: #888;
 		box-shadow: 
-			0 0 0 1px #444,
+			0 0 0 1px #666,
 			0 0 1px 3px #999,
 			0 0 3px 3px #999,
 			0 0 5px 3px #999,
@@ -6780,7 +6780,13 @@ p {
 		border-radius: 50%;
 		transform: scale(0.8);
 		background-color: #888;
-		opacity: 1.0;
+		opacity: 0.6;
+	}
+	#theme-tweaker-toggle button:active {
+		border: 1px solid #bbb;
+		box-shadow: 
+			0 0 10px #aaa inset,
+			0 0 0 1px transparent;
 	}
 }
 
