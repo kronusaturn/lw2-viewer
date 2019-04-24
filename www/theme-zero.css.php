@@ -146,6 +146,7 @@ body {
 
 .nav-current {
 	background-color: var(--GW-body-background-color);
+	text-shadow: 0 0 0 currentColor;
 }
 
 /* Search tab */
@@ -230,12 +231,20 @@ body {
 	background-color: #ddd;
 	text-decoration: none;
 }
-.sublevel-nav .sublevel-item:not(.selected):active,
 .sublevel-nav .sublevel-item.selected {
 	color: #000;
-	text-shadow:
-		0 -1px 0 #fff,
-		0 0.5px 0.5px #000;
+	text-shadow: 0 0 0 currentColor;
+}
+.sublevel-nav a:link,
+.sublevel-nav a:visited {
+	color: var(--GW-hyperlink-color);
+}
+.sublevel-nav a:hover,
+.sublevel-nav a:focus {
+	color: var(--GW-hyperlink-hover-color);
+}
+.sublevel-nav a:active {
+	color: var(--GW-hyperlink-active-color);
 }
 
 /*=----------------------------=*/
