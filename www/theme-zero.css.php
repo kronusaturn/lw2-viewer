@@ -116,6 +116,7 @@ body {
 
 .nav-inner:hover {
 	text-decoration: none;
+	text-shadow: var(--GW-shadow-white-glow);
 }
 
 /*= Decorative bottom bar =*/
@@ -199,7 +200,8 @@ body {
 /* PAGE TOOLBAR */
 /*==============*/
 
-.page-toolbar .button {
+.page-toolbar .button,
+.page-toolbar .button:visited {
 	color: #090;
 }
 .page-toolbar .button:hover {
@@ -210,9 +212,36 @@ body {
 	color: var(--GW-hyperlink-active-color);
 }
 
+.page-toolbar .button::before {
+	font-weight: 400;
+}
+
 .button.logout-button,
 .button.ignore-button {
 	color: #d33;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 640px) {
+	#content.user-page .page-toolbar > * {
+		padding: 0.5em 1em;
+		white-space: nowrap;
+		margin: 1em 2px 0.5em 2px;
+	}
+	#content.user-page .page-toolbar > * {
+		background-color: #ddd;
+	}
+	.button.logout-button,
+	.button.ignore-button {
+		color: #c00;
+	}
+	#content.user-page .page-toolbar > .rss {
+		padding-top: calc(0.5em + 1px);
+		padding-bottom: calc(0.5em - 1px);
+	}
 }
 
 /*==============*/
@@ -230,6 +259,7 @@ body {
 .sublevel-nav .sublevel-item:not(.selected):hover {
 	background-color: #ddd;
 	text-decoration: none;
+	text-shadow: var(--GW-shadow-white-glow);
 }
 .sublevel-nav .sublevel-item.selected {
 	color: #000;
@@ -255,9 +285,7 @@ body {
 	.sublevel-nav:not(.sort) .sublevel-item,
 	.sublevel-nav:not(.sort) .sublevel-item:first-child,
 	.sublevel-nav:not(.sort) .sublevel-item:last-child {
-		border-radius: 8px;
-		border-width: 1px;
-		margin: 2px;
+		margin: 3px;
 	}
 }
 
@@ -432,6 +460,7 @@ body {
 @media only screen and (hover: hover) and (pointer: fine) {
 	#quick-nav-ui a:hover {
 		color: #f00;
+		text-shadow: var(--GW-shadow-white-glow);
 	}
 	#quick-nav-ui a:focus:not(:hover) {
 		transform: none;
