@@ -6300,6 +6300,8 @@ th.mathjax-inline-container {
 	--GW-UI-font-weight-heavy: 400;
 
 	--GW-body-text-font: 'News Gothic BT', 'Clear Sans', 'Helvetica', sans-serif;
+
+	--GW-post-listings-font-weight: 700;
 }
 
 /*	Layout.
