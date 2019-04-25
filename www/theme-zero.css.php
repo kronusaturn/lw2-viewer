@@ -762,6 +762,25 @@ h1.listing + .post-meta > * {
 	margin: 0 1em 0 0;
 }
 
+/*	Comment count.
+	*/
+h1.listing + .post-meta .comment-count:not(.new-comments) {
+	color: #000;
+}
+h1.listing + .post-meta .comment-count:not(.new-comments) span:nth-of-type(2) {
+	display: none;
+}
+
+/*	Post section.
+	*/
+h1.listing + .post-meta .post-section::before {
+	width: 1.25em;
+	text-align: center;
+}
+h1.listing + .post-meta .post-section.alignment-forum::before {
+	padding-top: 1px;
+}
+
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
@@ -810,8 +829,6 @@ h1.listing.own-post-listing {
 #content.user-page h1.listing + .post-meta .post-section::before,
 #content.search-results-page h1.listing + .post-meta .post-section::before {
 	left: 0.375em;
-	width: 1.25em;
-	text-align: center;
 }
 
 /*=--------------------=*/
@@ -986,9 +1003,15 @@ h1.post-title {
 	border-color: #ddd;
 }
 
+article > .post-meta > *,
+.post .post-meta > * {
+	margin: 0 0.5em;
+}
+
 /*	Author.
 	*/
-.post-meta .author {
+.post-meta .author,
+.post-meta .author:visited {
 	color: #090;
 }
 

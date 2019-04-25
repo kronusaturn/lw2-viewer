@@ -1444,6 +1444,19 @@ GW.themeUnloadCallback_dark = (toTheme = "") => {
 	removeElement("#dark-theme-adjustments");
 }
 
+GW.themeLoadCallback_zero = (fromTheme = "") => {
+	queryAll("h1.listing + .post-meta .comment-count").forEach(commentCount => {
+		let parts = /(.+?)( comments)(.+)/.exec(commentCount.title);
+		commentCount.innerHTML = `${parts[1]}<span>${parts[2]}</span><span>${parts[3]}</span>`;
+	});
+}
+GW.themeUnloadCallback_zero = (toTheme = "") => {
+	queryAll("h1.listing + .post-meta .comment-count").forEach(commentCount => {
+		let parts = /(.+?)( comments)(.+)/.exec(commentCount.title);
+		commentCount.innerHTML = `${parts[1]}<span>${parts[2]}</span>`;
+	});
+}
+
 GW.themeLoadCallback_brutalist = (fromTheme = "") => {
 	GWLog("themeLoadCallback_brutalist");
 
