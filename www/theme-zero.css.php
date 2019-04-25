@@ -438,6 +438,10 @@ body {
 /* QUICKNAV WIDGET */
 /*=================*/
 
+#quick-nav-ui {
+	box-shadow:
+		0 0 0 6px var(--GW-body-background-color);
+}
 #quick-nav-ui a {
 	color: #00c;
 	text-decoration: none;
@@ -575,14 +579,11 @@ body {
 	}
 
 	#hns-date-picker {
-		right: 56px;
+		right: 60px;
 	}
 	#hns-date-picker,
 	#hns-date-picker::before {
 		background-color: #e4e4e4;
-	}
-	#hns-date-picker::before {
-		border: 1px solid #999;
 	}
 }
 
@@ -606,14 +607,32 @@ body {
 /* TEXT SIZE ADJUSTMENT */
 /*======================*/
 
+#text-size-adjustment-ui {
+	opacity: 1.0;
+}
 #text-size-adjustment-ui button {
 	color: #777;
+	font-weight: 400;
+	background-color: #e4e4e4;
+	box-shadow: 0 0 0 1px var(--GW-body-background-color) inset;
+}
+#text-size-adjustment-ui button.decrease,
+#text-size-adjustment-ui button.increase {
+	padding-top: 1px;
 }
 #text-size-adjustment-ui button.default {
-	font-weight: 600;
+	font-size: 1em;
 }
-#text-size-adjustment-ui button:disabled:hover {
+#text-size-adjustment-ui button:hover {
 	text-shadow: none;
+	background-color: var(--GW-body-background-color);
+	box-shadow: 
+		0 0 0 1px var(--GW-body-background-color) inset,
+		0 0 0 3px #e4e4e4 inset;
+}
+#text-size-adjustment-ui button:disabled {
+	box-shadow: none;
+	background-color: var(--GW-body-background-color);
 }
 #text-size-adjustment-ui::after {
 	color: #999;
@@ -625,21 +644,27 @@ body {
 
 @media only screen and (max-width: 1080px) {
 	#text-size-adjustment-ui button {
-		border: 1px solid #999;
-		padding: 0 0 0 1px;
-		border-radius: 50%;
-		box-shadow:
-			0 0 6px #999 inset,
-			0 0 0 1px transparent;
-	}
-}
-@media only screen and (max-width: 1000px) {
-	#text-size-adjustment-ui button {
+		padding-left: 1px;
 		background-color: #ddd;
 	}
-	#text-size-adjustment-ui button:hover {
-		background-color: #eee;
-	}
+}
+
+/*=============================*/
+/* COMMENTS LIST MODE SELECTOR */
+/*=============================*/
+
+#comments-list-mode-selector button {
+	box-shadow:
+		0 0 0 4px #eee inset,
+		0 0 0 5px #aaa inset;
+}
+#comments-list-mode-selector button:hover,
+#comments-list-mode-selector button.selected {
+	box-shadow:
+		0 0 0 1px #eee inset,
+		0 0 0 2px #aaa inset,
+		0 0 0 4px #eee inset,
+		0 0 0 5px #aaa inset;
 }
 
 /*=============================*/
@@ -1282,19 +1307,6 @@ div.comment-child-links a {
 /* COMMENTS COMPACT VIEW */
 /*=======================*/
 
-#comments-list-mode-selector button {
-	box-shadow:
-		0 0 0 4px #eee inset,
-		0 0 0 5px #aaa inset;
-}
-#comments-list-mode-selector button:hover,
-#comments-list-mode-selector button.selected {
-	box-shadow:
-		0 0 0 1px #eee inset,
-		0 0 0 2px #aaa inset,
-		0 0 0 4px #eee inset,
-		0 0 0 5px #aaa inset;
-}
 #content.compact > .comment-thread .comment-item {
 	max-height: 58px;
 }
