@@ -14,6 +14,8 @@
 	--GW-new-comment-quicknav-bottom-margin: 42px;
 
 	--GW-HNS-date-picker-left-margin: calc(var(--GW-new-comment-quicknav-left-margin) + 42px);
+	--GW-HNS-date-picker-flipped-left-margin: calc(var(--GW-new-comment-quicknav-left-margin) - 12px - var(--GW-HNS-date-picker-text-field-width));
+	--GW-HNS-date-picker-bottom-margin: calc(var(--GW-new-comment-quicknav-bottom-margin) + 33px);
 	--GW-HNS-date-picker-text-field-width: 140px;
 }
 
@@ -25,8 +27,6 @@
 	:root {
 		--GW-new-comment-quicknav-left-margin: calc(var(--GW-quick-nav-ui-left-margin) - 2px);
 		--GW-new-comment-quicknav-bottom-margin: 184px;
-
-		--GW-HNS-date-picker-left-margin: calc(var(--GW-new-comment-quicknav-left-margin) - 12px - var(--GW-HNS-date-picker-text-field-width));
 	}
 }
 @media only screen and (max-width: 1080px) {
@@ -813,7 +813,7 @@
 	position: absolute;
 	bottom: 0;
 	left: 100%;
-	margin-bottom: 77px;
+	margin-bottom: var(--GW-HNS-date-picker-bottom-margin);
 	margin-left: var(--GW-HNS-date-picker-left-margin);
 	opacity: 0.6;
 }
@@ -832,6 +832,7 @@
 #hns-date-picker.flipped {
 	padding: 8px 10px 10px 10px;
 	display: none;
+	margin-left: var(--GW-HNS-date-picker-flipped-left-margin);
 }
 #hns-date-picker.flipped::before {
 	content: "";
