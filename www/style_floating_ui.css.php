@@ -773,6 +773,7 @@
 		top: unset;
 		bottom: unset;
 		padding: 2px 7px 2px 7px;
+		background-color: inherit;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-previous {
 		padding: 2px 7px 3px 7px;
@@ -780,6 +781,7 @@
 	#new-comment-nav-ui .new-comments-count {
 		padding: 5px 0;
 		left: 0;
+		background-color: inherit;
 	}
 	#new-comment-nav-ui .new-comments-count::before {
 		display: none;
