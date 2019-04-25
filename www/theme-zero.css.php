@@ -520,16 +520,6 @@ body {
 	background-color: #e4e4e4;
 }
 
-@media only screen and (max-width: 960px) {
-	#hns-date-picker {
-		right: 56px;
-	}
-	#hns-date-picker,
-	#hns-date-picker::before {
-		background-color: #e4e4e4;
-	}
-}
-
 /*================================*
 	MOBILE VERSIONS OF QUICKNAV,
 	NEW COMMENT NAV, AND HNS
@@ -537,9 +527,6 @@ body {
  *================================*/
 
 @media only screen and (max-width: 960px) {
-	#quick-nav-ui {
-		background-color: #fff;
-	}
 	#quick-nav-ui,
 	#new-comment-nav-ui,
 	#hns-date-picker {
@@ -559,9 +546,14 @@ body {
 		background-color: #fff;
 		border-radius: 4px;
 	}
+
+	#quick-nav-ui {
+		background-color: #fff;
+	}
 	#quick-nav-ui a::after {
 		text-shadow: 0 0 0 currentColor;
 	}
+
 	#new-comment-nav-ui {
 		background-color: #fff;
 		border: 1px solid transparent;
@@ -581,7 +573,15 @@ body {
 	#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
 		color: #ccc;
 	}
+
 	#hns-date-picker {
+		right: 56px;
+	}
+	#hns-date-picker,
+	#hns-date-picker::before {
+		background-color: #e4e4e4;
+	}
+	#hns-date-picker::before {
 		border: 1px solid #999;
 	}
 }

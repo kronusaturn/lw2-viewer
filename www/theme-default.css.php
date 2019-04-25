@@ -605,12 +605,6 @@ body {
 		border-radius: 8px 0 0 8px;
 	}
 }
-@media only screen and (max-width: 960px) {
-	#hns-date-picker,
-	#hns-date-picker::before {
-		border-radius: 0;
-	}
-}
 
 /*================================*
 	MOBILE VERSIONS OF QUICKNAV,
@@ -619,9 +613,6 @@ body {
  *================================*/
 	
 @media only screen and (max-width: 960px) {
-	#quick-nav-ui {
-		background-color: #fff;
-	}
 	#quick-nav-ui,
 	#new-comment-nav-ui,
 	#hns-date-picker {
@@ -640,6 +631,11 @@ body {
 	#new-comment-nav-ui {
 		border-radius: 8px;
 	}
+
+	#quick-nav-ui {
+		background-color: #fff;
+	}
+
 	#new-comment-nav-ui {
 		background-color: #d8d8d8;
 		border: 1px solid #999;
@@ -659,6 +655,11 @@ body {
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-next {
 		border-radius: 0 7px 7px 0;
+	}
+
+	#hns-date-picker,
+	#hns-date-picker::before {
+		border-radius: 0;
 	}
 }
 

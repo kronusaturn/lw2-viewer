@@ -590,14 +590,6 @@ p {
  *================================*/
 
 @media only screen and (max-width: 960px) {
-	#quick-nav-ui {
-		background-color: #999;
-	}
-	#quick-nav-ui a {
-		background-color: #888;
-		box-shadow: 0 0 0 1px #444;
-		color: #444;
-	}
 	#quick-nav-ui,
 	#new-comment-nav-ui,
 	#hns-date-picker {
@@ -621,6 +613,16 @@ p {
 	#new-comment-nav-ui {
 		border-radius: 8px;
 	}
+
+	#quick-nav-ui {
+		background-color: #999;
+	}
+	#quick-nav-ui a {
+		background-color: #888;
+		box-shadow: 0 0 0 1px #444;
+		color: #444;
+	}
+
 	#new-comment-nav-ui {
 		background-color: #888;
 		border: 1px solid #444;
@@ -644,6 +646,8 @@ p {
 
 	#hns-date-picker.engaged {
 		margin-bottom: 2px;
+	}
+	#hns-date-picker::before {
 		border: 1px solid #444;
 	}
 }

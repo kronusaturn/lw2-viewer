@@ -598,7 +598,7 @@ body {
 
 @media only screen and (max-width: 1020px) {
 	#new-comment-nav-ui .new-comments-count::before {
-		background-color: #e4e4e4;
+		background-color: var(--GW-body-background-color);
 		box-shadow: 
 			0 0 0 1px #ccc,
 			0 0 0 2px transparent;
@@ -629,19 +629,12 @@ body {
 
 #hns-date-picker::before {
 	border: 1px solid #ccc;
-	border-width: 1px 0 1px 1px;
 }
 
 @media only screen and (max-width: 1020px) {
 	#hns-date-picker,
 	#hns-date-picker::before {
 		border-radius: 8px 0 0 8px;
-	}
-}
-@media only screen and (max-width: 960px) {
-	#hns-date-picker,
-	#hns-date-picker::before {
-		border-radius: 0;
 	}
 }
 
@@ -652,13 +645,6 @@ body {
  *================================*/
 	
 @media only screen and (max-width: 960px) {
-	#quick-nav-ui {
-		background-color: #fff;
-	}
-	#quick-nav-ui a {
-		background-color: #eee;
-		box-shadow: 0 0 0 1px #999;
-	}
 	#quick-nav-ui,
 	#new-comment-nav-ui,
 	#hns-date-picker {
@@ -677,6 +663,15 @@ body {
 	#new-comment-nav-ui {
 		border-radius: 8px;
 	}
+
+	#quick-nav-ui {
+		background-color: #fff;
+	}
+	#quick-nav-ui a {
+		background-color: #eee;
+		box-shadow: 0 0 0 1px #999;
+	}
+
 	#new-comment-nav-ui {
 		background-color: #eee;
 		border: 1px solid #999;
@@ -696,6 +691,11 @@ body {
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-next {
 		border-radius: 0 7px 7px 0;
+	}
+
+	#hns-date-picker,
+	#hns-date-picker::before {
+		border-radius: 0;
 	}
 }
 
