@@ -435,7 +435,7 @@ Element.prototype.addTextareaFeatures = function() {
 		to get around the “children of elements with a filter applied cannot be
 		fixed” issue.
 		*/
-	let fixedEditorElements = textareaContainer.queryAll("textarea, .guiedit-buttons-container, .guiedit-mobile-auxiliary-button, #markdown-hints");
+	let fixedEditorElements = textareaContainer.queryAll("#content textarea, .guiedit-buttons-container, .guiedit-mobile-auxiliary-button, #markdown-hints");
 	doWhenMatchMedia(GW.mediaQueries.mobileNarrow, "mobileEditorFilterBugFix", () => {
 		textarea.addEventListener("focus", GW.textareaFocusedMobile = (event) => {
 			GWLog("GW.textareaFocusedMobile");
@@ -612,7 +612,7 @@ GW.commentActionButtonClicked = (event) => {
 	if (event.target.hasClass("edit-button") ||
 		event.target.hasClass("reply-button") ||
 		event.target.hasClass("new-comment-button")) {
-		queryAll("textarea").forEach(textarea => {
+		queryAll("#content textarea").forEach(textarea => {
 			hideReplyForm(textarea.closest(".comment-controls"));
 		});
 	}
@@ -1943,8 +1943,11 @@ function injectNewCommentNavUI(newCommentsCount) {
 	});
 
 	document.addEventListener("keyup", GW.commentQuicknavKeyPressed = (event) => { 
-		GWLog("GW.commentQuicknavKeyPressed");
 		if (event.shiftKey || event.ctrlKey || event.altKey) return;
+		if (!(event.key == "," || event.key == ".")) return;
+
+		GWLog("GW.commentQuicknavKeyPressed");
+
 		if (event.key == ",") scrollToNewComment(false);
 		if (event.key == ".") scrollToNewComment(true)
 	});
@@ -3427,9 +3430,11 @@ function keyboardHelpSetup() {
 
 	// Add listener to show the keyboard help overlay.
 	document.addEventListener("keypress", GW.keyboardHelpShowKeyPressed = (event) => {
+		if (event.key != '?') return;
+
 		GWLog("GW.keyboardHelpShowKeyPressed");
-		if (event.key == '?')
-			toggleKeyboardHelpOverlay(true);
+
+		toggleKeyboardHelpOverlay(true);
 	});
 
 	// Clicking the background overlay closes the keyboard help overlay.
@@ -4177,7 +4182,7 @@ registerInitializer('pageLayoutFinished', false, () => document.readyState == "c
 
 	// Adjust state of text input fields.
 	doWhenMatchMedia(GW.mediaQueries.mobileNarrow, "editorInputFields", () => {
-		queryAll("textarea").forEach(textarea => {
+		queryAll("#content textarea").forEach(textarea => {
 			textarea.blur();
 			expandTextarea(textarea);
 		});
