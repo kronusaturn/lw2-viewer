@@ -14,8 +14,9 @@
 	--GW-new-comment-quicknav-bottom-margin: 42px;
 
 	--GW-HNS-date-picker-left-margin: calc(var(--GW-new-comment-quicknav-left-margin) + 42px);
-	--GW-HNS-date-picker-flipped-left-margin: calc(var(--GW-new-comment-quicknav-left-margin) - 12px - var(--GW-HNS-date-picker-text-field-width));
 	--GW-HNS-date-picker-bottom-margin: calc(var(--GW-new-comment-quicknav-bottom-margin) + 33px);
+	--GW-HNS-date-picker-flipped-left-margin: calc(var(--GW-new-comment-quicknav-left-margin) - 12px - var(--GW-HNS-date-picker-text-field-width));
+	--GW-HNS-date-picker-flipped-bottom-margin: calc(var(--GW-new-comment-quicknav-bottom-margin) + 22px);
 	--GW-HNS-date-picker-text-field-width: 140px;
 }
 
@@ -825,14 +826,15 @@
 	display: none;
 }
 
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
+/*=---------------------------------------=*/
+/*= Flipped (on left of new comments nav) =*/
+/*=---------------------------------------=*/
 
 #hns-date-picker.flipped {
 	padding: 8px 10px 10px 10px;
 	display: none;
 	margin-left: var(--GW-HNS-date-picker-flipped-left-margin);
+	margin-bottom: var(--GW-HNS-date-picker-flipped-bottom-margin);
 }
 #hns-date-picker.flipped::before {
 	content: "";
@@ -840,24 +842,18 @@
 	display: block;
 	z-index: -1;
 	height: calc(100% + 2px);
-	width: calc(1px - var(--GW-HNS-date-picker-left-margin));
+	width: calc(1px - var(--GW-HNS-date-picker-flipped-left-margin));
 	top: -1px;
 	left: -1px;
 }
 
-@media only screen and (min-width: 1161px) {
-	#hns-date-picker.flipped {
-		margin-bottom: 66px;
-	}
-}
-@media only screen and (max-width: 1160px) {
-	#hns-date-picker {
-		margin-bottom: 206px;
-	}
-}
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
 @media only screen and (max-width: 1020px) {
 	#hns-date-picker.flipped::before {
-		width: calc(-20px - var(--GW-HNS-date-picker-left-margin));
+		width: calc(-20px - var(--GW-HNS-date-picker-flipped-left-margin));
 	}
 }
 @media only screen and (max-width: 960px) {
