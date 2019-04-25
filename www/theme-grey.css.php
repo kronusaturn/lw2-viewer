@@ -902,7 +902,8 @@ h1.listing.spam:hover + .post-meta {
 /*===================*/
 
 h1.listing + .post-meta {
-	margin: 0 0 0.875em 1px;
+	margin: 0 0 0.875em 0;
+	padding: 0 0 0 1px;
 }
 
 h1.listing + .post-meta > * {

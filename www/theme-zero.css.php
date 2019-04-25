@@ -762,7 +762,8 @@ h1.listing.spam:hover + .post-meta {
 
 h1.listing + .post-meta {
 	font-size: 0.875rem;
-	margin: 0 0 1em 1px;
+	margin: 0 0 1em 0;
+	padding: 0 0 0 1px;
 }
 
 h1.listing + .post-meta > * {
@@ -803,11 +804,9 @@ h1.listing + .post-meta > * {
 }
 #content.user-page h1.listing,
 #content.search-results-page h1.listing {
-	padding: 0 6px;
-	padding-top: 0.25em;
+	padding: 6px 6px 0 6px;
 	border-width: 1px 1px 0 1px;
 	margin: 1rem 0 0 0;
-	max-width: 100%;
 }
 #content.own-user-page h1.listing,
 h1.listing.own-post-listing {
@@ -816,13 +815,14 @@ h1.listing.own-post-listing {
 
 #content.user-page h1.listing + .post-meta,
 #content.search-results-page h1.listing + .post-meta {
-	padding: 0.75em 6px 0.5em 32px;
+	padding: 8px 8px 3px 36px;
 	border-width: 0 1px 1px 1px;
-	margin: 0 0 1rem 0;
 }
 #content.user-page h1.listing + .post-meta .post-section::before,
 #content.search-results-page h1.listing + .post-meta .post-section::before {
-	left: 0;
+	left: 0.375em;
+	width: 1.25em;
+	text-align: center;
 }
 
 /*=--------------------=*/
