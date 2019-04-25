@@ -688,7 +688,7 @@ function expandTextarea(textarea) {
 	requestAnimationFrame(() => {
 		textarea.style.height = 'auto';
 		textarea.style.height = textarea.scrollHeight + totalBorderHeight + 'px';
-		textarea.closest("form").scrollIntoView();
+		textarea.closest("form").scrollIntoViewIfNeeded();
 	});
 }
 
