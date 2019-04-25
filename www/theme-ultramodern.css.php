@@ -626,12 +626,10 @@ p {
 		border: 1px solid #444;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button {
-		background-color: inherit;
 		box-shadow: 0 0 0 1px #444;
 		color: #444;
 	}
 	#new-comment-nav-ui .new-comments-count {
-		background-color: inherit;
 		box-shadow: 0 -1px 0 0 #444;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {

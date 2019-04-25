@@ -6798,6 +6798,9 @@ body {
 }
 
 @media only screen and (max-width: 960px) {
+	#hns-date-picker {
+		right: 56px;
+	}
 	#hns-date-picker,
 	#hns-date-picker::before {
 		background-color: #e4e4e4;
@@ -6833,37 +6836,29 @@ body {
 		background-color: #fff;
 		border-radius: 4px;
 	}
-	#quick-nav-ui,
-	#new-comment-nav-ui {
-		border-radius: 8px;
+	#quick-nav-ui a::after {
+		text-shadow: 0 0 0 currentColor;
 	}
 	#new-comment-nav-ui {
 		background-color: #fff;
-		border: 1px solid #999;
+		border: 1px solid transparent;
 	}
 	#new-comment-nav-ui::before {
 		color: #777;
 		font-weight: bold;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button {
-		box-shadow: 0 0 0 1px #999;
 		color: #00c;
+		background-color: #e4e4e4;
+		outline: 2px solid #fff;
 	}
 	#new-comment-nav-ui .new-comments-count {
-		background-color: inherit;
-		box-shadow: 0 -1px 0 0 #999;
+		background-color: #e4e4e4;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
-		color: #bbb;
-	}
-	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-previous {
-		border-radius: 7px 0 0 7px;
-	}
-	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-next {
-		border-radius: 0 7px 7px 0;
+		color: #ccc;
 	}
 	#hns-date-picker {
-		background-color: #fff;
 		border: 1px solid #999;
 	}
 }
