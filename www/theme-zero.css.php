@@ -774,10 +774,15 @@ h1.listing.spam:hover + .post-meta {
 
 h1.listing + .post-meta {
 	font-size: 0.875rem;
+	margin: 0 0 1em 1px;
 }
 
-h1.listing + .post-meta .karma-value {
-	cursor: default;
+h1.listing + .post-meta > * {
+	margin: 0 1em 0 0;
+}
+
+h1.listing + .post-meta .comment-count:not(.new-comments) {
+	color: #00a9ff;
 }
 
 /*=----------------------------=*/
@@ -785,9 +790,6 @@ h1.listing + .post-meta .karma-value {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 900px) {
-	h1.listing + .post-meta > * {
-		line-height: 1.5;
-	}
 	h1.listing + .post-meta .post-section {
 		overflow: visible;
 		order: 1;
@@ -796,15 +798,13 @@ h1.listing + .post-meta .karma-value {
 		position: unset;
 	}
 }
-@media only screen and (max-width: 520px) {
-	h1.listing + .post-meta {
-		margin: 4px 6px;
-	}
-}
 
 /*============*/
 /* USER PAGES */
 /*============*/
+/*======================*/
+/* SEARCH RESULTS PAGES */
+/*======================*/
 
 #content.user-page h1.page-main-heading {
 	border-bottom: 1px solid #ccc;

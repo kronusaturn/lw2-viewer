@@ -7213,14 +7213,13 @@ h1.listing + .post-meta .date::before {
 h1.listing + .post-meta .date::after {
 	content: " — ";
 	opacity: 0.5;
-	margin: 0 0 0 0.25em;
+	margin: 0 0.5em;
 }
 
 /*	Link post domain.
 	*/
 h1.listing + .post-meta .link-post-domain {
 	order: 1;
-	margin: 0 0 0 0.5em;
 }
 
 /*	Post section.

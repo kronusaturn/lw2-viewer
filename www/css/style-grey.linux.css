@@ -7188,7 +7188,7 @@ h1.listing.spam:hover + .post-meta {
 /*===================*/
 
 h1.listing + .post-meta {
-	margin: 0 0 0.875em 0;
+	margin: 0 0 0.875em 1px;
 }
 
 h1.listing + .post-meta > * {
@@ -7273,14 +7273,13 @@ h1.listing + .post-meta .date::before {
 h1.listing + .post-meta .date::after {
 	content: " — ";
 	opacity: 0.5;
-	margin: 0 0 0 0.25em;
+	margin: 0 0.5em;
 }
 
 /*	Link post domain.
 	*/
 h1.listing + .post-meta .link-post-domain {
 	order: 1;
-	margin: 0 0 0 0.5em;
 }
 
 /*	Post section.
@@ -7599,15 +7598,15 @@ article > .post-meta a:visited,
 }
 .post-meta .post-section::before {
 	text-shadow: 
-		1px 1px 0 #090, 
-		0 1px 0 #090, 
-		0 0 5px #090;
+		1px 1px 0 #af8e00, 
+		0 1px 0 #af8e00, 
+		0 0 5px #af8e00;
 }
 a.post-section:hover {
 	text-decoration: none;
 }
 a.post-section:hover::before {
-	color: #97ff7c;
+	color: #ffdf00;
 }
 .post-meta .post-section.alignment-forum::before,
 .comment-meta .alignment-forum {
