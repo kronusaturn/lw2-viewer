@@ -7536,9 +7536,29 @@ h1.listing.own-post-listing {
 /* POST-META */
 /*===========*/
 
+.bottom-post-meta {
+	border-color: #1f1f1f;
+}
+
 .post-meta > * {
 	margin: 0 1em 0 0;
 }
+
+/*	Author.
+	*/
+.post-meta a.author,
+.post-meta a.author:visited {
+	color: #9740cb;
+}
+
+/*	Date.
+	*/
+.post-meta .date {
+	color: #666;
+}
+
+/*	Post section.
+	*/
 .post-meta .post-section::before,
 .comment-meta .alignment-forum {
 	color: #000;
@@ -7564,16 +7584,6 @@ a.post-section:hover::before {
 }
 a.post-section.alignment-forum:hover::before {
 	color: #181a00;
-}
-.post-meta .date {
-	color: #666;
-}
-.post-meta a.author,
-.post-meta a.author:visited {
-	color: #9740cb;
-}
-.bottom-post-meta {
-	border-color: #1f1f1f;
 }
 
 /*============*/

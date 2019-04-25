@@ -964,7 +964,6 @@ h1.listing + .post-meta .lw2-link:hover {
 h1.listing + .post-meta .lw2-link::before {
 	content: "\F0C1";
 	font-weight: 400;
-	margin: 0 0.25em 0 0;
 }
 h1.listing + .post-meta .lw2-link:hover::before {
 	color: #777;
@@ -1267,13 +1266,13 @@ h1.post-title {
 /* POST-META */
 /*===========*/
 
+.post .bottom-post-meta {
+	border-color: #ddd;
+}
+
 article > .post-meta > *,
 .post .post-meta > * {
 	margin: 0 0.5em;
-}
-
-.post .post-meta .qualified-linking {
-	margin: 0 0.75em 0 0.5em;
 }
 
 article > .post-meta a,
@@ -1282,15 +1281,19 @@ article > .post-meta a:visited,
 	color: #222;
 }
 
-.post .bottom-post-meta {
-	border-color: #ddd;
-}
-
 .post-meta > * {
 	font-size: 1em;
 	color: #666;
 }
 
+/*	LW2 link.
+	*/
+.post .post-meta .lw2-link {
+	padding: 0 0.25em;
+}
+
+/*	Comment count.
+	*/
 .post-meta .comment-count span {
 	display: none;
 }

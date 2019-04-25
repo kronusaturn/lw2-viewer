@@ -1258,9 +1258,29 @@ h1.listing.own-post-listing {
 /* POST-META */
 /*===========*/
 
+.bottom-post-meta {
+	border-color: #ddd;
+}
+
 .post-meta > * {
 	margin: 0 1em 0 0;
 }
+
+/*	Author.
+	*/
+.post-meta a.author,
+.post-meta a.author:visited {
+	color: #090;
+}
+
+/*	Date.
+	*/
+.post-meta .date {
+	color: #888;
+}
+
+/*	Post section.
+	*/
 .post-meta .post-section::before,
 .comment-meta .alignment-forum {
 	color: #fff;
@@ -1286,16 +1306,6 @@ a.post-section:hover::before {
 }
 a.post-section.alignment-forum:hover::before {
 	color: #e6e5ff;
-}
-.post-meta .date {
-	color: #888;
-}
-.post-meta a.author,
-.post-meta a.author:visited {
-	color: #090;
-}
-.bottom-post-meta {
-	border-color: #ddd;
 }
 
 /*============*/

@@ -852,6 +852,7 @@ h1.listing.spam:hover + .post-meta {
 
 h1.listing + .post-meta {
 	margin: 0 0 16px 0;
+	padding: 0 0 0 1px;
 }
 
 h1.listing + .post-meta > * {
@@ -863,6 +864,15 @@ h1.listing + .post-meta .read-time,
 h1.listing + .post-meta .word-count,
 h1.listing + .post-meta .lw2-link {
 	margin: 0 0.75em 0 0;
+}
+h1.listing + .post-meta .comment-count::before,
+h1.listing + .post-meta .read-time::before,
+h1.listing + .post-meta .word-count::before,
+h1.listing + .post-meta .lw2-link::before {
+	margin: 0 0.25em 0 0;
+	font-family: var(--GW-Font-Awesome);
+	font-size: 0.875em;
+	color: #666;
 }
 
 /*	Karma value.
@@ -896,6 +906,9 @@ h1.listing + .post-meta .lw2-link::before {
 }
 h1.listing + .post-meta .lw2-link:hover::before {
 	color: inherit;
+}
+h1.listing + .post-meta .lw2-link span {
+	display: none;
 }
 
 /*	Read time.
@@ -1141,11 +1154,6 @@ p a:focus {
 		0px 0px 5px #f60;
 }
 
-h1.post-title {
-	color: #000;
-	font-size: 3em;
-}
-
 .post-body {
 	font-size: 1.1875rem;
 }
@@ -1157,14 +1165,14 @@ h1.post-title {
 /* POSTS */
 /*=======*/
 
-article > .post-meta > *,
-.post .post-meta > * {
-	margin: 0 0.5em;
+h1.post-title {
+	color: #000;
+	font-size: 3em;
 }
 
-.post .post-meta .qualified-linking {
-	margin: 0 0.75em 0 0.5em;
-}
+/*===========*/
+/* POST-META */
+/*===========*/
 
 .bottom-post-meta {
 	border-color: #666;
@@ -1178,30 +1186,29 @@ article > .post-meta > *,
 	box-shadow: none;
 }
 
-/*===========*/
-/* POST-META */
-/*===========*/
+article > .post-meta > *,
+.post .post-meta > * {
+	margin: 0 0.5em;
+}
 
 .post-meta > * {
 	font-size: 1em;
 }
 
-.post-meta .comment-count span,
-.post-meta .lw2-link span {
-	display: none;
+.post-meta a:hover {
+	color: #000;
 }
 
-.post-meta .comment-count::before,
-.post-meta .read-time::before,
-.post-meta .word-count::before,
-.post-meta .lw2-link::before {
+/*	Comment count.
+	*/
+.post-meta .comment-count span {
+	display: none;
+}
+.post-meta .comment-count::before {
 	font-family: var(--GW-Font-Awesome);
 	margin: 0 0.25em 0 0;
 	font-size: 0.875em;
 	color: #666;
-}
-.post-meta a:hover {
-	color: #000;
 }
 .post-meta .comment-count::before {
 	content: "\F086";

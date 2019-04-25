@@ -7239,6 +7239,14 @@ h1.listing.own-post-listing {
 	border-bottom: 1px solid currentColor;
 }
 
+.post-body {
+	font-size: 1.25rem;
+}
+
+.comment-body {
+	font-size: 1.1875rem;
+}
+
 /*=======*/
 /* POSTS */
 /*=======*/
@@ -7248,14 +7256,28 @@ h1.post-title {
 	margin: 1.5em 0 0.5em 0;
 }
 
-.post-body {
-	font-size: 1.25rem;
-}
-
 /*===========*/
 /* POST-META */
 /*===========*/
 
+.bottom-post-meta {
+	border-color: #ddd;
+}
+
+/*	Author.
+	*/
+.post-meta .author {
+	color: #090;
+}
+
+/*	Date.
+	*/
+.post-meta .date {
+	color: #888;
+}
+
+/*	Post section.
+	*/
 .post-meta .post-section::before,
 .comment-meta .alignment-forum {
 	color: #fff;
@@ -7275,15 +7297,6 @@ a.post-section:hover::before {
 }
 a.post-section.alignment-forum:hover::before {
 	color: #e6e5ff;
-}
-.post-meta .date {
-	color: #888;
-}
-.post-meta .author {
-	color: #090;
-}
-.bottom-post-meta {
-	border-color: #ddd;
 }
 
 /*============*/
@@ -7336,10 +7349,6 @@ a.post-section.alignment-forum:hover::before {
 		0 28px 16px -16px var(--GW-comment-parent-background-color) inset,
 		4px 16px 0 12px var(--GW-comment-background-color-target) inset,
 		4px	4px 0 12px var(--GW-comment-background-color-target) inset;
-}
-
-.comment-body {
-	font-size: 1.1875rem;
 }
 
 /*=----------------------------=*/
