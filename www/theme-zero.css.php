@@ -67,8 +67,8 @@
 		0 0 3px #fff,
 		0 0 5px #fff;
 
-	--GW-comment-background-color-odd: #eee;
-	--GW-comment-background-color-even: #fff;
+	--GW-comment-background-color-odd: #fff;
+	--GW-comment-background-color-even: #eee;
 	--GW-comment-background-color-target: #ffd;
 
 	--GW-theme-selector-outline-color: transparent;
@@ -1048,8 +1048,8 @@ a.post-section.alignment-forum:hover::before {
 /* LINK POSTS */
 /*============*/
 
-.post.link-post a.link-post-link:hover {
-	color: #c00;
+.post.link-post a.link-post-link::before {
+	font-weight: 400;
 }
 .post.link-post a.link-post-link:hover::before {
 	color: #4879ec;
@@ -1072,21 +1072,8 @@ a.post-section.alignment-forum:hover::before {
 	border-top: 1px solid #ddd;
 }
 
-#content > .comment-thread .comment-meta a.date:focus,
-#content > .comment-thread .comment-meta a.permalink:focus {
-	color: #888;
-	outline: 2px dotted #999;
-	position: relative;
-	background-color: #fff;
-	padding: 0 5px;
-	left: -5px;
-}
-#content > .comment-thread .comment-meta a.date:focus + *,
-#content > .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
-	margin-left: -10px;
-}
 .comment-item {
-	border: 1px solid #ccc;
+	border: 1px solid transparent;
 	background-color: var(--GW-comment-background-color);
 }
 .comment-parent-link::after {
@@ -1096,6 +1083,23 @@ a.post-section.alignment-forum:hover::before {
 		4px	4px 0 12px var(--GW-comment-background-color-target) inset;
 }
 
+/*==================*/
+/* COMMENT LISTINGS */
+/*==================*/
+
+.listings .comment-thread .comment-meta a.date:focus,
+.listings .comment-thread .comment-meta a.permalink:focus {
+	color: #888;
+	outline: 2px dotted #999;
+	position: relative;
+	background-color: #fff;
+	padding: 0 5px;
+	left: -5px;
+}
+.listings .comment-thread .comment-meta a.date:focus + *,
+.listings .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
+	margin-left: -10px;
+}
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
