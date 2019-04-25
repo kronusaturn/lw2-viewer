@@ -832,9 +832,11 @@
 
 #hns-date-picker.flipped {
 	padding: 8px 10px 10px 10px;
-	display: none;
 	margin-left: var(--GW-HNS-date-picker-flipped-left-margin);
 	margin-bottom: var(--GW-HNS-date-picker-flipped-bottom-margin);
+	opacity: 1.0;
+	background-color: var(--GW-body-background-color);
+	display: none;
 }
 #hns-date-picker::before {
 	content: "";
@@ -843,6 +845,7 @@
 	height: calc(100% + 2px);
 	top: -1px;
 	left: -1px;
+	background-color: var(--GW-body-background-color);
 	display: none;
 }
 #hns-date-picker.flipped::before {

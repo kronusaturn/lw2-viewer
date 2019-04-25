@@ -1282,9 +1282,11 @@ a {
 
 #hns-date-picker.flipped {
 	padding: 8px 10px 10px 10px;
-	display: none;
 	margin-left: var(--GW-HNS-date-picker-flipped-left-margin);
 	margin-bottom: var(--GW-HNS-date-picker-flipped-bottom-margin);
+	opacity: 1.0;
+	background-color: var(--GW-body-background-color);
+	display: none;
 }
 #hns-date-picker::before {
 	content: "";
@@ -1293,6 +1295,7 @@ a {
 	height: calc(100% + 2px);
 	top: -1px;
 	left: -1px;
+	background-color: var(--GW-body-background-color);
 	display: none;
 }
 #hns-date-picker.flipped::before {
@@ -6868,13 +6871,8 @@ body {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-#hns-date-picker.flipped {
-	background-color: var(--GW-body-background-color);
-	opacity: 1.0;
-}
 #hns-date-picker::before {
 	border: 1px solid #575756;
-	border-width: 1px 0 1px 1px;
 }
 
 @media only screen and (max-width: 1020px) {
