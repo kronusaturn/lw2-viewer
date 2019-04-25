@@ -187,6 +187,7 @@
 .login-container form h1 {
 	text-align: center;
 	grid-column: 2;
+	margin: 0.25em 0 0.125em;
 }
 
 /* “Log in” form */
