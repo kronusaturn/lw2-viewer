@@ -7434,7 +7434,7 @@ a.post-section.alignment-forum:hover::before {
 /*===========================*/
 
 a.comment-parent-link::before {
-	color: #bbb;
+	color: #ccc;
 }
 a.comment-parent-link:hover::before {
 	color: #999;
@@ -7577,29 +7577,28 @@ a.comment-parent-link:hover::before {
 /*===========================*/
 
 .new-comment::before {
-	display: none;
+	outline: 2px solid var(--GW-new-comment-highlight-color);
 }
 .new-comment {
-	border: 1px solid #e00;
-	outline: 1px solid #e00;
+	--GW-new-comment-highlight-color: #e00;
 }
 
 /*=================================*/
 /* COMMENT THREAD MINIMIZE BUTTONS */
 /*=================================*/
 
-.comment-minimize-button {
+.comment-item.depth-odd > .comment > .comment-meta .comment-minimize-button {
+	color: #ddd;
+}
+.comment-item.depth-even > .comment > .comment-meta .comment-minimize-button {
 	color: #ccc;
 }
-.comment-minimize-button:hover {
+.comment-item > .comment > .comment-meta .comment-minimize-button:hover,
+.comment-item > .comment > .comment-meta .comment-minimize-button:hover::after {
 	color: #aaa;
-	text-shadow: var(--GW-shadow-white-glow)
 }
 .comment-minimize-button::after {
-	color: #777;
-}
-.comment-minimize-button.maximized::after {
-	color: #ccc;
+	color: #bbb;
 }
 
 /*==============*/
