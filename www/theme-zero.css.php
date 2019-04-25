@@ -708,19 +708,15 @@ body {
 /*==========*/
 
 h1.listing {
-	margin: 0.7em 20px 0.1em 20px;
-	max-width: calc(100% - 40px);
 	font-size: 1.375rem;
-	line-height: 1.2;
+	margin: 7px 0 0 0;
 }
 
 h1.listing a[href^="http"] {
 	color: #00c;
-	font-size: 0.75em;
 }
 h1.listing a[href^="/posts"] {
 	color: #000;
-	font-weight: bold;
 }
 
 /*	Listings hover reveal.
@@ -733,8 +729,6 @@ h1.listing a[href^="/posts"] {
 	}
 	h1.listing:focus-within::before {
 		color: #00f;
-		left: -0.625em;
-		top: 1px;
 	}
 	h1.listing a[href^="http"]:hover {
 		color: #4879ec;
@@ -744,18 +738,6 @@ h1.listing a[href^="/posts"] {
 			 0 0 2px #fff,
 			 0 0 3px #00c;
 	}
-}
-
-h1.listing .edit-post-link {
-	padding: 6px 3px 32px 0.5em;
-	top: 0;
-	right: 0;
-}
-h1.listing .edit-post-link:hover {
-	text-decoration: none;
-}
-#content.user-page h1.listing .edit-post-link {
-	background-color: #eee;
 }
 
 /*=----------------------------=*/

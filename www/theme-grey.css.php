@@ -854,7 +854,6 @@ h1.listing a[href^="http"] {
 	}	
 	h1.listing:focus-within::before {
 		color: #00f;
-		left: -0.625em;
 	}
 	h1.listing a[href^="http"]:hover {
 		color: #4879ec;
@@ -864,15 +863,6 @@ h1.listing a[href^="http"] {
 			 0 0 2px #fff,
 			 0 0 3px #00c;
 	}
-}
-
-h1.listing .edit-post-link {
-	padding: 5px 3px 12px 0.5em;
-	top: 0;
-	right: 0;
-}
-h1.listing .edit-post-link:hover {
-	text-decoration: none;
 }
 
 /*=----------------------------=*/

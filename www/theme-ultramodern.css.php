@@ -804,7 +804,6 @@ h1.listing a[href^="http"] {
 
 h1.listing .edit-post-link {
 	padding: 10px 3px 30px 1em;
-	top: 0;
 	right: -1.5em;
 }
 
