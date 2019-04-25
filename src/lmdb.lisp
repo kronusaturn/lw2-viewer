@@ -118,9 +118,9 @@
   (let ((env (get-current-environment)))
     (with-mutex (*db-environments-lock*)
       (unless (eq *cache-databases-list* (environment-container-databases-list env))
-        (prepare-environment env)))
-    (or (gethash db-name (environment-container-open-databases env))
-        (error "The database '~A' is not defined." db-name))))
+	(prepare-environment env))
+      (or (gethash db-name (environment-container-open-databases env))
+	  (error "The database '~A' is not defined." db-name)))))
 
 (defun call-with-cache-transaction (fn &key read-only)
   (let ((env (get-current-environment)))
