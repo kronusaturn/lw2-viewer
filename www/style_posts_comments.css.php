@@ -582,7 +582,7 @@ ul.comment-thread {
 	margin: 8px 9px;
 }
 .comment-item input[id^="expand"] + label::after {
-	content: "(Expand " attr(data-child-count) "	below)";
+	content: "(Expand " attr(data-child-count) " below)";
 	visibility: visible;
 	position: absolute;
 	left: 0;
@@ -907,7 +907,10 @@ a.comment-child-link::before {
 	top: -5px;
 }
 .post .post-meta .lw2-link {
-	padding: 0 0.25em;
+	padding: 0 3px;
+}
+.post .post-meta .lw2-link::after {
+	left: -4px;
 }
 
 /*************************/

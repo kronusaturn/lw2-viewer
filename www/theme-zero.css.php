@@ -157,8 +157,14 @@ body {
 
 /* Search tab */
 
+#nav-item-search input:not(:focus) {
+	background-color: #f4f4f4;
+}
 #nav-item-search input::placeholder {
 	color: #d00;
+}
+#nav-item-search .nav-inner:hover {
+	text-shadow: none;
 }
 
 /*= Recent Comments tab =*/
@@ -864,6 +870,10 @@ h1.listing.own-post-listing {
 #signup-form {
 	background-color: #e4e4e4;
 }
+#signup-form input[type='text']:not(:focus),
+#signup-form input[type='password']:not(:focus) {
+	background-color: #f4f4f4;
+}
 #signup-form input[type='submit'] {
 	background-color: #eee;
 }
@@ -876,7 +886,7 @@ h1.listing.own-post-listing {
 /* Log in tip */
 
 .login-container .login-tip {
-	border: 1px solid #ddd;
+	background-color: #e4e4e4;
 }
 
 /* Message box */
@@ -1006,6 +1016,10 @@ h1.post-title {
 article > .post-meta > *,
 .post .post-meta > * {
 	margin: 0 0.5em;
+}
+
+.post-meta a:hover {
+	text-decoration: underline;
 }
 
 /*	Author.
@@ -1721,16 +1735,14 @@ code {
 input[type='text'],
 input[type='search'],
 input[type='password'] {
-	border: 1px solid #ccc;
+	border: 1px solid transparent;
 	color: #000;
-	background-color: transparent;
+	background-color: #fff;
 }
 input[type='text']:focus,
 input[type='search']:focus,
 input[type='password']:focus {
-	background-color: var(--GW-body-background-color);
-	border: 1px solid #00e;
-	outline: 1px solid #00e;
+	outline: 2px solid #00e;
 }
 
 select {
