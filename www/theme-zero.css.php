@@ -33,6 +33,8 @@
 	--GW-comment-compact-height-mobile: 105px;
 	--GW-comment-minimized-height: 38px;
 	--GW-comment-minimized-height-mobile: 68px;
+
+	--GW-HNS-date-picker-text-field-width: 160px;
 }
 @media only screen and (max-width: 900px) {
 	:root {
@@ -497,9 +499,6 @@ body {
 /* HNS DATE PICKER */
 /*=================*/
 
-#hns-date-picker {
-	--GW-HNS-date-picker-text-field-width: 150px;
-}
 #hns-date-picker span {
 	color: #777;
 }

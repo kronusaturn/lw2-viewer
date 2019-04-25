@@ -1,3 +1,44 @@
+/****************/
+/* UI VARIABLES */
+/****************/
+
+:root {
+	--GW-theme-selector-right-margin: 9px;
+	--GW-theme-selector-button-tooltip-width: 6em;
+	--GW-theme-selector-button-spacing: 1px;
+
+	--GW-quick-nav-ui-left-margin: 28px;
+
+	--GW-HNS-date-picker-text-field-width: 140px;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1080px) {
+	:root {
+		--GW-theme-selector-right-margin: 11px;
+
+		--GW-quick-nav-ui-left-margin: 16px;
+	}
+}
+@media only screen and (max-width: 1040px) {
+	:root {
+		--GW-quick-nav-ui-left-margin: 8px;
+	}
+}
+@media only screen and (max-width: 1020px) {
+	:root {
+		--GW-quick-nav-ui-left-margin: -20px;
+	}
+}
+@media only screen and (max-width: 1000px) {
+	:root {
+		--GW-theme-selector-right-margin: -16px;
+	}
+}
+
 /*************************/
 /* UI ELEMENTS CONTAINER */
 /*************************/
@@ -110,10 +151,6 @@
 	right: 100%;
 	margin: 4px var(--GW-theme-selector-right-margin) 0 0;
 	opacity: 0.4;
-
-	--GW-theme-selector-right-margin: 9px;
-	--GW-theme-selector-button-tooltip-width: 6em;
-	--GW-theme-selector-button-spacing: 1px;
 }
 #theme-selector:hover {
 	opacity: 1.0;
@@ -241,13 +278,11 @@
 @media only screen and (max-width: 1080px) {
 	#theme-selector {
 		margin-top: 48px;
-		--GW-theme-selector-right-margin: 11px;
 	}
 }
 @media only screen and (max-width: 1000px) {
 	#theme-selector {
 		margin-top: 124px;
-		--GW-theme-selector-right-margin: -16px;
 		padding: 3px;
 
 		background-color: var(--GW-body-background-color);
@@ -522,7 +557,7 @@
 	position: absolute;
 	bottom: 0;
 	left: 100%;
-	margin: 0 0 24px 28px;
+	margin: 0 0 24px var(--GW-quick-nav-ui-left-margin);
 }
 #quick-nav-ui a {
 	font-family: var(--GW-Font-Awesome);
@@ -549,21 +584,6 @@
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-@media only screen and (max-width: 1080px) {
-	#quick-nav-ui {
-		margin: 0 0 24px 16px;
-	}
-}
-@media only screen and (max-width: 1040px) {
-	#quick-nav-ui {
-		margin: 0 0 24px 8px;
-	}
-}
-@media only screen and (max-width: 1020px) {
-	#quick-nav-ui {
-		margin: 0 0 24px -20px;
-	}
-}
 @media only screen and (max-width: 960px) {
 	#quick-nav-ui {
 		max-width: 0px;
@@ -630,7 +650,7 @@
 	position: absolute;
 	left: 100%;
 	bottom: 0;
-	margin: 0 0 42px 70px;
+	margin: 0 0 42px calc(var(--GW-quick-nav-ui-left-margin) + 42px);
 }
 #new-comment-nav-ui > * {
 	display: block;
@@ -691,23 +711,11 @@
 
 @media only screen and (max-width: 1160px) {
 	#new-comment-nav-ui {
-		margin: 0 0 184px 26px;
-	}
-}
-@media only screen and (max-width: 1080px) {
-	#new-comment-nav-ui {
-		margin: 0 0 184px 15px;
-	}
-}
-@media only screen and (max-width: 1040px) {
-	#new-comment-nav-ui {
-		margin: 0 0 184px 7px;
+		margin-bottom: 184px;
+		margin-left: calc(var(--GW-quick-nav-ui-left-margin) - 2px);
 	}
 }
 @media only screen and (max-width: 1020px) {
-	#new-comment-nav-ui {
-		margin: 0 0 184px -21px;
-	}
 	#new-comment-nav-ui .new-comments-count::before {
 		content: "";
 		position: absolute;
@@ -798,10 +806,9 @@
 	position: absolute;
 	bottom: 0;
 	left: 100%;
-	margin: 0 0 77px 112px;
+	margin-bottom: 77px;
+	margin-left: calc(var(--GW-quick-nav-ui-left-margin) + 84px);
 	opacity: 0.6;
-
-	--GW-HNS-date-picker-text-field-width: 140px;
 }
 #hns-date-picker:hover, 
 #hns-date-picker:focus-within {
