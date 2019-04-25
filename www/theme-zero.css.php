@@ -1378,22 +1378,20 @@ a.comment-parent-link:hover::before {
 /*===========================*/
 
 .posting-controls input[type='submit'] {
-	background-color: #fff;
-	border: 1px solid #aaa;
-	font-weight: bold;
+	background-color: #e4e4e4;
+	border: 2px solid #e4e4e4;
 }
 .posting-controls input[type='submit']:hover,
 .posting-controls input[type='submit']:focus {
-	background-color: #ddd;
-	border: 1px solid #999;
+	background-color: transparent;
 }
 
 .comment-controls .cancel-comment-button {
-	font-weight: 600;
 	color: #c00;
-	text-shadow:
-		0 0 1px #fff,
-		0 0 2px #fff;
+	text-shadow: 0 0 1px #fff;
+}
+.comment-controls .cancel-comment-button::before {
+	font-weight: 400;
 }
 .comment-controls .cancel-comment-button:hover {
 	color: #f00;
@@ -1401,7 +1399,9 @@ a.comment-parent-link:hover::before {
 }
 
 .new-comment-button {
-	font-weight: 600;
+	background-color: #e4e4e4;
+	padding: 8px 12px 9px 12px;
+	border: 2px solid #e4e4e4;
 }
 
 .comment-controls .delete-button,
