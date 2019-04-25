@@ -651,7 +651,7 @@ body {
 	background-color: var(--GW-body-background-color);
 }
 #comments-list-mode-selector button:not(.selected):hover {
-	box-shadow: 0 0 0 3px #e4e4e4 inset;
+	box-shadow: 0 0 0 2px #e4e4e4 inset;
 }
 
 /*=============================*/
@@ -791,15 +791,18 @@ h1.listing + .post-meta > * {
 /*======================*/
 
 #content.user-page h1.page-main-heading {
-	border-bottom: 1px solid #ccc;
+	border-bottom: 1px solid #ddd;
 }
 
 #content.user-page h1.listing,
-#content.user-page h1.listing + .post-meta {
+#content.user-page h1.listing + .post-meta,
+#content.search-results-page h1.listing,
+#content.search-results-page h1.listing + .post-meta {
 	border-style: solid;
 	border-color: #ccc;
 }
-#content.user-page h1.listing {
+#content.user-page h1.listing,
+#content.search-results-page h1.listing {
 	padding: 0 6px;
 	padding-top: 0.25em;
 	border-width: 1px 1px 0 1px;
@@ -811,22 +814,20 @@ h1.listing.own-post-listing {
 	padding-right: 36px;
 }
 
-/*	Listings hover reveal.
-	*/
-@media only screen and (hover: hover) and (pointer: fine) {
-	#content.user-page h1.listing:focus-within::before {
-		left: -0.625em;
-		top: 6px;
-	}
-}
-#content.user-page h1.listing + .post-meta {
+#content.user-page h1.listing + .post-meta,
+#content.search-results-page h1.listing + .post-meta {
 	padding: 0.75em 6px 0.5em 32px;
 	border-width: 0 1px 1px 1px;
 	margin: 0 0 1rem 0;
 }
-#content.user-page h1.listing + .post-meta .post-section::before {
+#content.user-page h1.listing + .post-meta .post-section::before,
+#content.search-results-page h1.listing + .post-meta .post-section::before {
 	left: 0;
 }
+
+/*=--------------------=*/
+/*= Conversations list =*/
+/*=--------------------=*/
 
 #content.conversations-user-page h1.listing {
 	padding: 6px 6px 4px 9px;
@@ -835,10 +836,6 @@ h1.listing.own-post-listing {
 #content.conversations-user-page h1.listing + .post-meta {
 	padding: 6px 4px;
 	margin: 0;
-}
-
-.user-stats .karma-total {
-	font-weight: bold;
 }
 
 /*=----------------------------=*/
