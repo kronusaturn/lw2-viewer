@@ -8,9 +8,12 @@
 	--GW-theme-selector-button-spacing: 1px;
 
 	--GW-quick-nav-ui-left-margin: 28px;
-	--GW-new-comment-quicknav-left-margin: calc(var(--GW-quick-nav-ui-left-margin) + 42px);
+	--GW-quick-nav-ui-bottom-margin: 24px;
 
-	--GW-HNS-date-picker-left-margin: calc(var(--GW-new-comment-quicknav-left-margin) - 12px - var(--GW-HNS-date-picker-text-field-width));
+	--GW-new-comment-quicknav-left-margin: calc(var(--GW-quick-nav-ui-left-margin) + 42px);
+	--GW-new-comment-quicknav-bottom-margin: 42px;
+
+	--GW-HNS-date-picker-left-margin: calc(var(--GW-new-comment-quicknav-left-margin) + 42px);
 	--GW-HNS-date-picker-text-field-width: 140px;
 }
 
@@ -21,6 +24,9 @@
 @media only screen and (max-width: 1160px) {
 	:root {
 		--GW-new-comment-quicknav-left-margin: calc(var(--GW-quick-nav-ui-left-margin) - 2px);
+		--GW-new-comment-quicknav-bottom-margin: 184px;
+
+		--GW-HNS-date-picker-left-margin: calc(var(--GW-new-comment-quicknav-left-margin) - 12px - var(--GW-HNS-date-picker-text-field-width));
 	}
 }
 @media only screen and (max-width: 1080px) {
@@ -657,7 +663,7 @@
 	position: absolute;
 	left: 100%;
 	bottom: 0;
-	margin: 0 0 42px var(--GW-new-comment-quicknav-left-margin);
+	margin: 0 0 var(--GW-new-comment-quicknav-bottom-margin) var(--GW-new-comment-quicknav-left-margin);
 }
 #new-comment-nav-ui > * {
 	display: block;
@@ -716,11 +722,6 @@
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-@media only screen and (max-width: 1160px) {
-	#new-comment-nav-ui {
-		margin-bottom: 184px;
-	}
-}
 @media only screen and (max-width: 1020px) {
 	#new-comment-nav-ui .new-comments-count::before {
 		content: "";
@@ -813,7 +814,7 @@
 	bottom: 0;
 	left: 100%;
 	margin-bottom: 77px;
-	margin-left: calc(var(--GW-new-comment-quicknav-left-margin) + 42px);
+	margin-left: var(--GW-HNS-date-picker-left-margin);
 	opacity: 0.6;
 }
 #hns-date-picker:hover, 
@@ -838,6 +839,7 @@
 	display: block;
 	z-index: -1;
 	height: calc(100% + 2px);
+	width: calc(1px - var(--GW-HNS-date-picker-left-margin));
 	top: -1px;
 	left: -1px;
 }
@@ -845,43 +847,16 @@
 @media only screen and (min-width: 1161px) {
 	#hns-date-picker.flipped {
 		margin-bottom: 66px;
-		margin-left: var(--GW-HNS-date-picker-left-margin);
-	}
-	#hns-date-picker.flipped::before {
-		width: calc(1px - var(--GW-HNS-date-picker-left-margin));
 	}
 }
 @media only screen and (max-width: 1160px) {
 	#hns-date-picker {
 		margin-bottom: 206px;
-		margin-left: calc(12px - var(--GW-HNS-date-picker-text-field-width));
-	}
-	#hns-date-picker::before {
-		width: calc(100% - 35px);
-	}
-}
-@media only screen and (max-width: 1080px) {
-	#hns-date-picker {
-		margin-left: calc(0px - var(--GW-HNS-date-picker-text-field-width));
-	}
-	#hns-date-picker::before {
-		width: calc(100% - 22px);
-	}
-}
-@media only screen and (max-width: 1040px) {
-	#hns-date-picker {
-		margin-left: calc(-8px - var(--GW-HNS-date-picker-text-field-width));
-	}
-	#hns-date-picker::before {
-		width: calc(100% - 17px);
 	}
 }
 @media only screen and (max-width: 1020px) {
-	#hns-date-picker {
-		margin-left: calc(-36px - var(--GW-HNS-date-picker-text-field-width));
-	}
-	#hns-date-picker::before {
-		width: 100%;
+	#hns-date-picker.flipped::before {
+		width: calc(-20px - var(--GW-HNS-date-picker-left-margin));
 	}
 }
 @media only screen and (max-width: 960px) {
