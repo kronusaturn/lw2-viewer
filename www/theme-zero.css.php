@@ -749,11 +749,6 @@ h1.listing a[href^="/posts"] {
 @media only screen and (max-width: 520px) {
 	h1.listing {
 		font-size: 1.25rem;
-		margin: 18px 6px 4px 6px;
-		max-width: calc(100% - 12px);
-	}
-	h1.listing a[href^='http'] {
-		top: 2px;
 	}
 }
 
