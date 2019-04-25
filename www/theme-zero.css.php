@@ -121,7 +121,6 @@ body {
 }
 
 .nav-inner:hover {
-	text-decoration: none;
 	text-shadow: var(--GW-shadow-white-glow);
 }
 
@@ -262,7 +261,6 @@ body {
 .sublevel-nav .sublevel-item.selected {
 	background-color: transparent;
 	box-shadow: 0 0 0 1px #e4e4e4 inset;
-	text-decoration: none;
 }
 .sublevel-nav .sublevel-item.selected {
 	color: #000;
@@ -437,7 +435,6 @@ body {
 }
 #quick-nav-ui a {
 	color: var(--GW-hyperlink-color);
-	text-decoration: none;
 	background-color: #e4e4e4;
 }
 #quick-nav-ui a:hover,
@@ -676,9 +673,6 @@ body {
 .archive-nav span[class^='archive-nav-item'] {
 	background-color: var(--GW-body-background-color);
 	box-shadow: 0 0 0 1px #e4e4e4 inset;
-}
-.archive-nav a:hover {
-	text-decoration: none;
 }
 
 /*=----------------------------=*/
@@ -919,9 +913,6 @@ h1.listing.own-post-listing {
 .post-body .contents a:hover {
 	border: none;
 }
-.post-body .contents a:hover {
-	text-decoration: underline;
-}
 
 /*=================*/
 /* POST NAVIGATION */
@@ -934,7 +925,6 @@ h1.listing.own-post-listing {
 }
 .post-nav-links a:hover,
 .post-nav-links a:focus {
-	text-decoration: none;
 	color: var(--GW-hyperlink-color-hover);
 }
 .post-nav-links a:active {
@@ -968,7 +958,6 @@ h1.listing.own-post-listing {
 	border-bottom: 1px dotted #bbb;
 }
 .body-text a:hover {
-	text-decoration: none;
 	border-bottom: 1px solid currentColor;
 }
 
@@ -998,9 +987,6 @@ h1.post-title {
 		0 1px 0 #090,
 		0 0 5px #090;
 }
-a.post-section:hover {
-	text-decoration: none;
-}
 a.post-section:hover::before {
 	color: #97ff7c;
 }
@@ -1012,7 +998,6 @@ a.post-section:hover::before {
 }
 a.post-section.alignment-forum:hover::before {
 	color: #e6e5ff;
-	text-decoration: none;
 }
 .post-meta .date {
 	color: #888;
@@ -1028,9 +1013,6 @@ a.post-section.alignment-forum:hover::before {
 /* LINK POSTS */
 /*============*/
 
-.post.link-post a.link-post-link {
-	text-decoration: none;
-}
 .post.link-post a.link-post-link:hover {
 	color: #c00;
 }
@@ -1653,7 +1635,6 @@ input[type='submit']:active {
 .button:hover {
 	color: #d00;
 	text-shadow: var(--GW-shadow-white-glow);
-	text-decoration: none;
 }
 .button:active {
 	transform: scale(0.9);
@@ -1788,7 +1769,6 @@ select {
 	color: var(--GW-hyperlink-color);
 }
 .qualified-linking-toolbar a:hover {
-	text-decoration: none;
 	background-color: #ddd;
 	text-shadow: var(--GW-shadow-white-glow);
 }
