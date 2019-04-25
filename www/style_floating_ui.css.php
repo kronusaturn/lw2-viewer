@@ -8,7 +8,9 @@
 	--GW-theme-selector-button-spacing: 1px;
 
 	--GW-quick-nav-ui-left-margin: 28px;
+	--GW-new-comment-quicknav-left-margin: calc(var(--GW-quick-nav-ui-left-margin) + 42px);
 
+	--GW-HNS-date-picker-left-margin: calc(var(--GW-new-comment-quicknav-left-margin) - 12px - var(--GW-HNS-date-picker-text-field-width));
 	--GW-HNS-date-picker-text-field-width: 140px;
 }
 
@@ -16,6 +18,11 @@
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
+@media only screen and (max-width: 1160px) {
+	:root {
+		--GW-new-comment-quicknav-left-margin: calc(var(--GW-quick-nav-ui-left-margin) - 2px);
+	}
+}
 @media only screen and (max-width: 1080px) {
 	:root {
 		--GW-theme-selector-right-margin: 11px;
@@ -650,7 +657,7 @@
 	position: absolute;
 	left: 100%;
 	bottom: 0;
-	margin: 0 0 42px calc(var(--GW-quick-nav-ui-left-margin) + 42px);
+	margin: 0 0 42px var(--GW-new-comment-quicknav-left-margin);
 }
 #new-comment-nav-ui > * {
 	display: block;
@@ -712,7 +719,6 @@
 @media only screen and (max-width: 1160px) {
 	#new-comment-nav-ui {
 		margin-bottom: 184px;
-		margin-left: calc(var(--GW-quick-nav-ui-left-margin) - 2px);
 	}
 }
 @media only screen and (max-width: 1020px) {
@@ -807,7 +813,7 @@
 	bottom: 0;
 	left: 100%;
 	margin-bottom: 77px;
-	margin-left: calc(var(--GW-quick-nav-ui-left-margin) + 84px);
+	margin-left: calc(var(--GW-new-comment-quicknav-left-margin) + 42px);
 	opacity: 0.6;
 }
 #hns-date-picker:hover, 
@@ -839,10 +845,10 @@
 @media only screen and (min-width: 1161px) {
 	#hns-date-picker.flipped {
 		margin-bottom: 66px;
-		margin-left: calc(56px - var(--GW-HNS-date-picker-text-field-width));
+		margin-left: var(--GW-HNS-date-picker-left-margin);
 	}
 	#hns-date-picker.flipped::before {
-		width: 50%;
+		width: calc(1px - var(--GW-HNS-date-picker-left-margin));
 	}
 }
 @media only screen and (max-width: 1160px) {
