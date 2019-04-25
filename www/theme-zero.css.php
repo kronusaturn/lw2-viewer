@@ -892,6 +892,19 @@ h1.listing.own-post-listing {
 	box-shadow: 0 0 0 2px #e4e4e4 inset;
 }
 
+/*============*/
+/* ERROR PAGE */
+/*============*/
+
+.error-container input[type="submit"] {
+	background-color: #e4e4e4;
+}
+.error-container input[type='submit']:hover,
+.error-container input[type='submit']:focus {
+	background-color: var(--GW-body-background-color);
+	box-shadow: 0 0 0 2px #e4e4e4 inset;
+}
+
 /*===================*/
 /* TABLE OF CONTENTS */
 /*===================*/
@@ -912,32 +925,6 @@ h1.listing.own-post-listing {
 }
 .post-body .contents a:hover {
 	text-decoration: underline;
-}
-
-/*==================*/
-/* POSTS & COMMENTS */
-/*==================*/
-
-.body-text a {
-	border-bottom: 1px dotted #bbb;
-}
-.body-text a:hover {
-	text-decoration: none;
-	border-bottom: 1px solid currentColor;
-}
-
-/*=======*/
-/* POSTS */
-/*=======*/
-
-.post-body {
-	font-size: 1.25rem;
-}
-
-h1.post-title {
-	font-size: 2rem;
-	line-height: 1.1;
-	margin: 1em 0 0.25em 0;
 }
 
 /*=================*/
@@ -974,6 +961,32 @@ h1.post-title {
 	.post-nav.next {
 		border-left: 1px solid #fff;
 	}
+}
+
+/*==================*/
+/* POSTS & COMMENTS */
+/*==================*/
+
+.body-text a {
+	border-bottom: 1px dotted #bbb;
+}
+.body-text a:hover {
+	text-decoration: none;
+	border-bottom: 1px solid currentColor;
+}
+
+/*=======*/
+/* POSTS */
+/*=======*/
+
+.post-body {
+	font-size: 1.25rem;
+}
+
+h1.post-title {
+	font-size: 2rem;
+	line-height: 1.1;
+	margin: 1em 0 0.25em 0;
 }
 
 /*===========*/
