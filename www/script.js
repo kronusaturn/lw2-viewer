@@ -1903,6 +1903,11 @@ function injectQuickNavUI() {
 	<a href='#comments' title="Comments [/]" accesskey='/'>&#xf036;</a>
 	<a href='#bottom-bar' title="Down to bottom [.]" accesskey='.'>&#xf107;</a>
 	` + "</div>");
+
+	// Correct for bug where this stays focused when clicked.
+	query("#quick-nav-ui a[href='#top']").addActivateEvent(GW.quickNavTopButtonClicked = (event) => {
+		event.target.blur();
+	});
 }
 
 /**********************/
