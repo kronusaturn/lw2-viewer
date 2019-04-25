@@ -7217,9 +7217,15 @@ h1.listing + .post-meta .karma::after {
 
 /*	Comment count.
 	*/
+h1.listing + .post-meta .comment-count:hover::before {
+	font-weight: 900;
+}
 h1.listing + .post-meta .comment-count.new-comments::before {
-	color: #0c0;
-	text-shadow: 0.5px 0.5px 1.5px #7fff64;
+	color: #af8e00;
+	text-shadow: 0.5px 0.5px 1.5px #ffdf00;
+}
+h1.listing + .post-meta .comment-count.new-comments:hover::before {
+	text-shadow: none;
 }
 
 /*	LW2 link.
@@ -7575,10 +7581,6 @@ article > .post-meta a:visited,
 .post-meta .comment-count:hover,
 .post-meta .lw2-link:hover {
 	text-decoration: none;
-	text-shadow: 
-		0 0 0.5px #fff,
-		0 0 1px #fff,
-		0 0 8px #777;
 	color: #777;
 }
 .post-meta .comment-count::before {
