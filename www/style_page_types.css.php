@@ -170,6 +170,7 @@
 .login-container form label {
 	text-align: right;
 	padding: 0.25em 0.5em;
+	white-space: nowrap;
 }
 .login-container form input {
 	padding: 0.25em;
@@ -191,7 +192,7 @@
 /* “Log in” form */
 
 #login-form {
-	grid-template-columns: 5.5em 1fr;
+	grid-template-columns: 6em 1fr;
 	padding: 0.5em 2em 0.5em 0;
 }
 
@@ -199,7 +200,7 @@
 
 #signup-form {
 	font-size: 0.9em;
-	grid-template-columns: 8.5em 1fr;
+	grid-template-columns: 9em 1fr;
 	padding: 0.5em 1em 1em 1em;
 }
 #signup-form h1 {
