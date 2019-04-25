@@ -238,7 +238,7 @@ body {
 		margin: 1em 2px 0.5em 2px;
 	}
 	#content.user-page .page-toolbar > * {
-		background-color: #ddd;
+		background-color: #e4e4e4;
 	}
 	.button.logout-button,
 	.button.ignore-button {
@@ -471,7 +471,7 @@ body {
 	color: #777;
 }
 #new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
-	color: #bbb;
+	color: #ddd;
 	text-shadow: none;
 }
 
@@ -649,8 +649,6 @@ body {
 #comments-list-mode-selector button:hover,
 #comments-list-mode-selector button.selected {
 	background-color: var(--GW-body-background-color);
-}
-#comments-list-mode-selector button:not(.selected):hover {
 	box-shadow: 0 0 0 2px #e4e4e4 inset;
 }
 
