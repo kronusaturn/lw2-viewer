@@ -912,12 +912,8 @@ h1.listing.own-post-listing {
 .contents {
 	background-color: #eee;
 }
-.contents-head {
-	font-weight: bold;
-}
-.post-body .contents li::before {
+.contents li::before {
 	color: #999;
-	font-feature-settings: "tnum";
 }
 .post-body .contents a,
 .post-body .contents a:hover {
@@ -933,15 +929,16 @@ h1.listing.own-post-listing {
 
 .post-nav-links a,
 .post-nav-links a:visited {
-	color: #00e;
+	color: var(--GW-hyperlink-color);
 	font-weight: normal;
 }
-.post-nav-links a:hover {
+.post-nav-links a:hover,
+.post-nav-links a:focus {
 	text-decoration: none;
-	color: #c00;
+	color: var(--GW-hyperlink-color-hover);
 }
 .post-nav-links a:active {
-	color: #e00;
+	color: var(--GW-hyperlink-color-active);
 }
 
 .post-nav-label {
@@ -1627,9 +1624,6 @@ h1.listing .edit-post-link:hover,
 
 a {
 	text-decoration: none;
-}
-a:hover {
-	text-decoration: underline;
 }
 
 /*=========*/

@@ -24,7 +24,7 @@ a:active {
 	float: right;
 	min-width: 6em;
 	max-width: 40%;
-	margin: 0.375em 0 0.75em 1.5em;
+	margin: 0.25em 0 0.75em 1.5em;
 	padding: 0.625em 0.75em 0.5em 0.5em;
 	position: relative;
 	z-index: 1;
