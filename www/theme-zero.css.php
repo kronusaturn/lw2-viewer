@@ -829,26 +829,11 @@ h1.listing.own-post-listing {
 /*= Conversations list =*/
 /*=--------------------=*/
 
-#content.conversations-user-page h1.listing {
-	padding: 6px 6px 4px 9px;
-	font-size: 1.5rem;
-}
 #content.conversations-user-page h1.listing + .post-meta {
-	padding: 6px 4px;
-	margin: 0;
+	padding: 8px 8px 3px 8px;
 }
-
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
-@media only screen and (max-width: 520px) {
-	#content.conversations-user-page h1.listing::after {
-		height: calc(100% + 2.25em);
-	}
-	#content.conversations-user-page h1.listing + .post-meta .date {
-		margin: 0 0 0 1em;
-	}
+#content.conversations-user-page h1.listing + .post-meta > * {
+	margin: 0 1em 0 0;
 }
 
 /*===============*/
