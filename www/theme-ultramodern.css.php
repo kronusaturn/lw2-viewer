@@ -802,8 +802,11 @@ h1.listing a[href^="http"] {
 	}
 }
 
+/*=-----------------------=*/
+/*= In-listing edit links =*/
+/*=-----------------------=*/
+
 h1.listing .edit-post-link {
-	padding: 10px 3px 30px 1em;
 	right: -1.5em;
 }
 

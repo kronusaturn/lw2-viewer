@@ -3122,9 +3122,10 @@ h1.listing a[href^='http'] {
 h1.listing .edit-post-link {
 	position: absolute;
 	margin: 0;
-	padding: 5px 3px 12px 0.5em;
+	padding: 5px 3px 0 10px;
 	top: 0;
 	right: 0;
+	height: calc(100% + 0.5em);
 }
 h1.listing .edit-post-link:hover {
 	text-decoration: none;
@@ -7083,13 +7084,11 @@ h1.listing + .post-meta > * {
 #content.user-page h1.listing + .post-meta,
 #content.search-results-page h1.listing,
 #content.search-results-page h1.listing + .post-meta {
-	border-style: solid;
-	border-color: #ccc;
+	background-color: #e4e4e4;
 }
 #content.user-page h1.listing,
 #content.search-results-page h1.listing {
 	padding: 6px 6px 0 6px;
-	border-width: 1px 1px 0 1px;
 	margin: 1rem 0 0 0;
 }
 #content.own-user-page h1.listing,
@@ -7100,7 +7099,6 @@ h1.listing.own-post-listing {
 #content.user-page h1.listing + .post-meta,
 #content.search-results-page h1.listing + .post-meta {
 	padding: 8px 8px 3px 36px;
-	border-width: 0 1px 1px 1px;
 }
 #content.user-page h1.listing + .post-meta .post-section::before,
 #content.search-results-page h1.listing + .post-meta .post-section::before {
@@ -7129,45 +7127,42 @@ h1.listing.own-post-listing {
 /*============*/
 
 .login-container form input[type='submit'] {
-	font-weight: bold;
-	background-color: #eee;
-	border: 1px solid #ccc;
+	background-color: #e4e4e4;
 }
 .login-container form input[type='submit']:hover,
 .login-container form input[type='submit']:focus {
-	background-color: #ddd;
-	border: 1px solid #aaa;
+	background-color: var(--GW-body-background-color);
+	box-shadow: 0 0 0 2px #e4e4e4 inset;
 }
 
 /* “Create account” form */
 
 #signup-form {
-	background-color: #f3f3f3;
-	border: 1px solid #ddd;
+	background-color: #e4e4e4;
 }
 #signup-form input[type='submit'] {
-	background-color: #e4e4e4;
-	border: 1px solid #ccc;
+	background-color: #eee;
 }
-#signup-form input[type='submit']:hover {
-	background-color: #d8d8d8;
-	border: 1px solid #aaa;
+#signup-form input[type='submit']:hover,
+#signup-form input[type='submit']:focus {
+	background-color: #e4e4e4;
+	box-shadow: 0 0 0 2px #eee inset;
 }
 
 /* Log in tip */
 
 .login-container .login-tip {
-	border: 1px solid #eee;
+	border: 1px solid #ddd;
 }
 
 /* Message box */
 
 .error-box {
-	border: 1px solid red;
+	border: 1px solid #e00;
 	background-color: #faa;
 }
 .success-box {
-	border: 1px solid green;
+	border: 1px solid #0c0;
 	background-color: #afa;
 }
 
@@ -7177,8 +7172,11 @@ h1.listing.own-post-listing {
 
 .reset-password-container input[type='submit'] {
 	background-color: #e4e4e4;
-	border: 1px solid #ccc;
-	font-weight: bold;
+}
+.reset-password-container input[type='submit']:hover,
+.reset-password-container input[type='submit']:focus {
+	background-color: var(--GW-body-background-color);
+	box-shadow: 0 0 0 2px #e4e4e4 inset;
 }
 
 /*===================*/
@@ -8011,7 +8009,7 @@ code {
 input[type='text'],
 input[type='search'],
 input[type='password'] {
-	border: 1px solid #999;
+	border: 1px solid #ccc;
 	color: #000;
 	background-color: transparent;
 }
