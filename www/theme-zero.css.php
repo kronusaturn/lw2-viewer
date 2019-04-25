@@ -1408,22 +1408,21 @@ a.comment-parent-link:hover::before {
 .comment-controls .retract-button {
 	color: #c00;
 }
-.comment-controls .delete-button::before {
-	font-size: 1em;
+.comment-controls .delete-button::before,
+.comment-controls .retract-button::before, 
+.comment-controls .unretract-button::before {
+	font-size: 0.9375em;
 	font-weight: 400;
-	opacity: 0.7;
+	opacity: 0.65;
 }
 .comment-controls .edit-button,
 .comment-controls .unretract-button {
-	color: #0a0;
+	color: #090;
 }
 .comment-controls .action-button:hover {
-	color: #f00
+	color: #f00;
 }
 
-.post-controls {
-	margin: 0.25em -1em 0 0;
-}
 h1.listing .edit-post-link,
 h1.listing .edit-post-link:visited,
 .post-controls .edit-post-link,
@@ -1437,10 +1436,10 @@ h1.listing .edit-post-link:hover,
 
 .posting-controls textarea {
 	color: #000;
-	border-color: #00e;
+	border-color: #ccc;
 }
 .posting-controls textarea:focus {
-	border-width: 29px 1px 1px 1px;
+	border-color: #00e;
 	box-shadow: 0 0 0 1px #00e;
 }
 .posting-controls.edit-existing-post textarea:focus,
