@@ -925,6 +925,7 @@ h1.listing + .post-meta .read-time::before,
 h1.listing + .post-meta .word-count::before,
 h1.listing + .post-meta .lw2-link::before {
 	margin: 0 0.25em 0 0;
+	font-family: var(--GW-Font-Awesome);
 }
 
 /*	Karma value.
@@ -1297,6 +1298,7 @@ article > .post-meta a:visited,
 }
 .post-meta .comment-count::before {
 	content: "\F086";
+	font-family: var(--GW-Font-Awesome);
 	margin: 0 0.25em 0 0;
 }
 .post-meta .comment-count:hover::before {
