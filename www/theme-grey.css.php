@@ -1844,6 +1844,8 @@ button.guiedit::after {
 	font-weight: var(--GW-UI-font-weight-light);
 }
 
+/*	Checkboxes.
+	*/
 #edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
 	border-radius: 3px;
 	border: 1px solid #ddd;
@@ -1865,6 +1867,9 @@ button.guiedit::after {
 #edit-post-form .post-meta-fields input[type='checkbox']:checked + label::before {
 	content: "\F00C";
 }
+
+/*	Section selector.
+	*/
 #edit-post-form input[type='radio'] + label {
 	color: #777;
 	border-color: #ddd;

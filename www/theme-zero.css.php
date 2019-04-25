@@ -1436,7 +1436,7 @@ h1.listing .edit-post-link:hover,
 
 .posting-controls textarea {
 	color: #000;
-	border-color: #ccc;
+	border-color: #fff;
 }
 .posting-controls textarea:focus {
 	border-color: #00e;
@@ -1456,7 +1456,7 @@ h1.listing .edit-post-link:hover,
 }
 .posting-controls textarea::-webkit-scrollbar-track {
 	background-color: #fff;
-	border-left: 1px solid #0040ff;
+	border-left: 1px solid #ccc;
 	border-top: 1px solid #eee;
 }
 .posting-controls textarea:focus::-webkit-scrollbar-track {
@@ -1466,7 +1466,7 @@ h1.listing .edit-post-link:hover,
 .posting-controls textarea::-webkit-scrollbar-thumb {
 	background-color: #acacff;
 	box-shadow: 0 0 0 1px #eee inset;
-	border-left: 1px solid #0040ff;
+	border-left: 1px solid #ccc;
 }
 .posting-controls textarea:focus::-webkit-scrollbar-thumb {
 	background-color: #0040ff;
@@ -1489,7 +1489,7 @@ h1.listing .edit-post-link:hover,
 /* GUIEdit buttons */
 
 .guiedit-buttons-container {
-	background-image: linear-gradient(to bottom, #fff 0%, #ddf 50%, #ccf 75%, #aaf 100%);
+	background-color: #e4e4e4;
 }
 
 .posting-controls.edit-existing-post .guiedit-buttons-container button,
@@ -1497,6 +1497,9 @@ h1.listing .edit-post-link:hover,
 	color: #050;
 }
 
+button.guiedit sup {
+	font-weight: bold;
+}
 .guiedit::after {
 	color: #777;
 	text-shadow: none;
@@ -1518,12 +1521,12 @@ h1.listing .edit-post-link:hover,
 
 @media only screen and (max-width: 520px) {
 	.textarea-container:focus-within textarea {
-		background-color: #fff;
-		border-width: 1px;
+		box-shadow:
+			0 0 0 1px #00e,
+			0 0 0 2px #fff;
 	}
 	.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
-		padding: 5px 6px 6px 6px;
-		font-weight: bold;
+		padding: 5px 6px 7px 6px;
 	}
 	.textarea-container:focus-within .guiedit-mobile-help-button.active {
 		box-shadow:
@@ -1534,15 +1537,9 @@ h1.listing .edit-post-link:hover,
 		background-color: #fff;
 		border-top: 1px solid #ddf;
 	}
-	.posting-controls .textarea-container:focus-within .guiedit-buttons-container {
-		box-shadow: none;
-	}
-	#content.conversation-page .textarea-container:focus-within::after {
-		background-color: #fff;
-	}
 	.textarea-container:focus-within button.guiedit {
+		padding: 9px 1px 9px 0;
 		border: 1px solid #00c;
-		border-radius: 6px;
 	}
 	#markdown-hints::after {
 		color: #090;
@@ -1553,21 +1550,16 @@ h1.listing .edit-post-link:hover,
 /* EDIT POST FORM */
 /*================*/
 
-#edit-post-form .post-meta-fields input[type='checkbox'] + label {
-	top: -2px;
-}
+/*	Checkboxes.
+	*/
 #edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
-	border-radius: 3px;
-	border: 1px solid #ddd;
+	background-color: #fff;
 	color: #777;
 }
 @media only screen and (hover: hover) and (pointer: fine) {
 	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover,
 	#edit-post-form .post-meta-fields input[type='checkbox']:focus + label {
-		text-shadow:
-			0 0 1px #fff,
-			0 0 2px #fff,
-			0 0 2.5px #aaa;
+		box-shadow: 0 0 0 2px #fff inset;
 	}
 	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover::before,
 	#edit-post-form .post-meta-fields input[type='checkbox']:focus + label::before {
@@ -1575,8 +1567,12 @@ h1.listing .edit-post-link:hover,
 	}
 }
 #edit-post-form .post-meta-fields input[type='checkbox']:checked + label::before {
-	content: "\F00C";
+	background-color: #e4e4e4;
+	box-shadow: 0 0 0 3px #fff inset;
 }
+
+/*	Section selector.
+	*/
 #edit-post-form input[type='radio'] + label {
 	color: #777;
 	border-color: #ddd;
