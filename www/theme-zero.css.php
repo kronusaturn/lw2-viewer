@@ -965,14 +965,13 @@ h1.listing.own-post-listing {
 /* POSTS */
 /*=======*/
 
-.post-body {
-	font-size: 1.25rem;
+h1.post-title {
+	font-size: 2em;
+	margin: 1.5em 0 0.5em 0;
 }
 
-h1.post-title {
-	font-size: 2rem;
-	line-height: 1.1;
-	margin: 1em 0 0.25em 0;
+.post-body {
+	font-size: 1.25rem;
 }
 
 /*===========*/

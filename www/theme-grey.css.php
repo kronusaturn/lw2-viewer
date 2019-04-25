@@ -1221,11 +1221,6 @@ h1.listing.own-post-listing {
 /* POSTS & COMMENTS */
 /*==================*/
 
-h1.post-title {
-	color: #222;
-	font-size: 3em;
-}
-
 .post-body {
 	font-size: 1.1875rem;
 	line-height: 1.6;
@@ -1246,6 +1241,15 @@ h1.post-title {
 /* POSTS */
 /*=======*/
 
+h1.post-title {
+	color: #222;
+	font-size: 3em;
+}
+
+/*===========*/
+/* POST-META */
+/*===========*/
+
 article > .post-meta > *,
 .post .post-meta > * {
 	margin: 0 0.5em;
@@ -1264,10 +1268,6 @@ article > .post-meta a:visited,
 .post .bottom-post-meta {
 	border-color: #ddd;
 }
-
-/*===========*/
-/* POST-META */
-/*===========*/
 
 .post-meta > * {
 	font-size: 1em;

@@ -3363,8 +3363,7 @@ h1.listing + .post-meta .read-time {
 
 @media only screen and (max-width: 720px) {
 	.post-meta .karma-value span,
-	.post-meta .comment-count span,
-	.post-meta .lw2-link span {
+	.post-meta .comment-count span {
 		display: none;
 	}
 	.post-meta .comment-count::before {
@@ -3428,14 +3427,6 @@ h1.post-title {
 .post-body > *:first-child:not(.contents),
 .post-body .contents + * {
 	margin-top: 0;
-}
-
-.post .post-meta .lw2-link {
-	width: 0;
-	visibility: hidden;
-}
-.post .post-meta .lw2-link::before {
-	visibility: visible;
 }
 
 /*=----------------------------=*/

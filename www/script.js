@@ -1243,6 +1243,8 @@ function postSetThemeHousekeeping(oldThemeName = "", newThemeName = (readCookie(
 		});
 	});
 
+	updateLW2Link();
+
 	updateTopNavBarType();
 
 	if (window.adjustmentTransitions) pageFadeTransition(true);
@@ -4232,6 +4234,12 @@ function updateTopNavBarType() {
 	let topNavBar = query("#top-nav-bar");
 	if (topNavBar.query("a:not(.disabled)"))
 		topNavBar.removeClass("decorative");
+}
+
+function updateLW2Link() {
+	queryAll(".post .post-meta .lw2-link").forEach(lw2Link => {
+		lw2Link.innerHTML = "";
+	});
 }
 
 function realignHashIfNeeded() {
