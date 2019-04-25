@@ -148,7 +148,7 @@ h1.listing .edit-post-link:hover {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-@media only screen and (max-with: 960px) {
+@media only screen and (max-width: 960px) {
 	h1.listing:focus-within::before {
 		display: none;
 	}
