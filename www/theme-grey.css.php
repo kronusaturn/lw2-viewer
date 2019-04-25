@@ -1286,12 +1286,6 @@ article > .post-meta a:visited,
 	color: #666;
 }
 
-/*	LW2 link.
-	*/
-.post .post-meta .lw2-link {
-	padding: 0 0.25em;
-}
-
 /*	Comment count.
 	*/
 .post-meta .comment-count span {

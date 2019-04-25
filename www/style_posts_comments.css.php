@@ -891,6 +891,9 @@ a.comment-child-link::before {
 .comment-meta .comment-parent-link span::after {
 	top: -5px;
 }
+.post .post-meta .lw2-link {
+	padding: 0 0.25em;
+}
 
 /*************************/
 /* COMMENTS COMPACT VIEW */
