@@ -500,9 +500,6 @@ ul.comment-thread {
 .comments .comment-thread > li {
 	position: relative;
 }
-.listings > .comment-thread:first-child > .comment-item {
-	margin-top: 0;
-}
 
 .comment-item {
 	margin: 2em 0 0 0;
@@ -545,12 +542,30 @@ ul.comment-thread {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 900px) {
+	.comment-item .comment-item {
+		margin: 0.75em 2px 4px 6px;
+	}
+	.comment-item .comment-item + .comment-item {
+		margin: 1.5em 2px 4px 6px;
+	}
 	.comment-body ul {
 		padding-left: 30px;
 	}
 	.comment-body ol {
 		padding-left: 30px;
 	}
+}
+
+/********************/
+/* COMMENT LISTINGS */
+/********************/
+
+.listings .comment-thread:first-child > .comment-item {
+	margin-top: 0;
+}
+.listings .comment-thread .comment-meta a.date:focus,
+.listings .comment-thread .comment-meta a.permalink:focus {
+	position: relative;
 }
 
 /**********************************/

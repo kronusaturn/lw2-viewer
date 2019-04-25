@@ -1213,6 +1213,16 @@ h1.listing.own-post-listing {
 	border-bottom: 1px solid currentColor;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	.comment-body {
+		font-size: 1.125rem;
+	}
+}
+
 /*=======*/
 /* POSTS */
 /*=======*/
@@ -1357,17 +1367,10 @@ a.post-section.alignment-forum:hover::before {
 
 @media only screen and (max-width: 900px) {
 	.comment-item .comment-item {
-		margin: 0.75em 2px 4px 6px;
 		box-shadow: 
 			0 0 2px #ccc, 
 			0 0 4px #ccc, 
 			0 0 7px #ccc;
-	}
-	.comment-item .comment-item + .comment-item {
-		margin: 1.5em 2px 4px 6px;
-	}
-	.comment-body {
-		font-size: 1.125rem;
 	}
 }
 
@@ -1379,7 +1382,6 @@ a.post-section.alignment-forum:hover::before {
 .listings .comment-thread .comment-meta a.permalink:focus {
 	color: #888;
 	outline: 2px dotted #999;
-	position: relative;
 	background-color: #fff;
 }
 .listings .comment-thread .comment-meta a.date:focus {

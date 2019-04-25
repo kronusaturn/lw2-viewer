@@ -1275,11 +1275,9 @@ a.post-section.alignment-forum:hover::before {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 900px) {
-	.comment-item .comment-item {
-		margin: 0.75em 0 4px 6px;
-	}
+	.comment-item .comment-item,
 	.comment-item .comment-item + .comment-item {
-		margin: 1.5em 0 4px 6px;
+		margin-right: 0;
 	}
 }
 
@@ -1290,7 +1288,6 @@ a.post-section.alignment-forum:hover::before {
 .listings .comment-thread .comment-meta a.date:focus,
 .listings .comment-thread .comment-meta a.permalink:focus {
 	outline: 2px dotted #222;
-	position: relative;
 	filter: invert(100%) contrast(150%);
 	line-height: 1;
 }

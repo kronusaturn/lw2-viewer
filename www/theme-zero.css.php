@@ -1073,7 +1073,7 @@ a.post-section.alignment-forum:hover::before {
 }
 
 .comment-item {
-	border: 1px solid transparent;
+	border: 1px solid var(--GW-comment-parent-background-color);
 	background-color: var(--GW-comment-background-color);
 }
 .comment-parent-link::after {
@@ -1081,6 +1081,22 @@ a.post-section.alignment-forum:hover::before {
 		0 28px 16px -16px var(--GW-comment-parent-background-color) inset,
 		4px 16px 0 12px var(--GW-comment-background-color-target) inset,
 		4px	4px 0 12px var(--GW-comment-background-color-target) inset;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	.comment-item .comment-item,
+	.comment-item .comment-item + .comment-item {
+		border-width: 1px 2px 0 1px;
+	}
+}
+@media only screen and (max-width: 520px) {
+	.comment-body {
+		font-size: 1.125rem;
+	}
 }
 
 /*==================*/
@@ -1091,7 +1107,6 @@ a.post-section.alignment-forum:hover::before {
 .listings .comment-thread .comment-meta a.permalink:focus {
 	color: #888;
 	outline: 2px dotted #999;
-	position: relative;
 	background-color: #fff;
 	padding: 0 5px;
 	left: -5px;
@@ -1099,23 +1114,6 @@ a.post-section.alignment-forum:hover::before {
 .listings .comment-thread .comment-meta a.date:focus + *,
 .listings .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
 	margin-left: -10px;
-}
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
-@media only screen and (max-width: 900px) {
-	.comment-item .comment-item {
-		margin: 0.75em 3px 3px 6px;
-	}
-	.comment-item .comment-item + .comment-item {
-		margin: 1.5em 3px 3px 6px;
-	}
-}
-@media only screen and (max-width: 520px) {
-	.comment-body {
-		font-size: 1.125rem;
-	}
 }
 
 /*================================*/

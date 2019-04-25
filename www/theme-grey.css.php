@@ -1379,19 +1379,6 @@ a.post-section.alignment-forum:hover::before {
 		4px	4px 0 12px var(--GW-comment-background-color-target) inset;
 }
 
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
-@media only screen and (max-width: 900px) {
-	.comment-item .comment-item {
-		margin: 0.75em 2px 4px 6px;
-	}
-	.comment-item .comment-item + .comment-item {
-		margin: 1.5em 2px 4px 6px;
-	}
-}
-
 /*==================*/
 /* COMMENT LISTINGS */
 /*==================*/
@@ -1400,12 +1387,11 @@ a.post-section.alignment-forum:hover::before {
 .listings .comment-thread .comment-meta a.permalink:focus {
 	color: #999;
 	outline: 2px dotted #aaa;
-	position: relative;
 	background-color: #fff;
 	line-height: 1;
 }
 .listings .comment-thread .comment-meta a.date:focus {
-	padding: 5px 4px 5px 4px;
+	padding: 5px 4px;
 	left: -4px;
 }
 .listings .comment-thread .comment-meta a.date:focus + * {
