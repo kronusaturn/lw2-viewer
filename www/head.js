@@ -127,7 +127,10 @@ function exclusionTreeFromExclusionPaths(paths) {
 	if (!paths) return null;
 
 	let tree = GW.themeTweaker.defaultFiltersExclusionTree.clone();
-	paths.keys().flatMap(key => paths[key]).forEach(path => {
+	let flatPaths = Array.prototype.flatMap ?
+					paths.keys().flatMap(key => paths[key]) :
+					paths.keys().reduce((acc, key) => acc.concat(paths[key]), []);
+	flatPaths.forEach(path => {
 		var currentNodeInTree = tree;
 		path.split(" ").slice(1).forEach(step => {
 			if (currentNodeInTree[1] == null)
