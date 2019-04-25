@@ -6933,17 +6933,14 @@ body {
 /*=============================*/
 
 #comments-list-mode-selector button {
-	box-shadow:
-		0 0 0 4px #eee inset,
-		0 0 0 5px #aaa inset;
+	background-color: #e4e4e4;
 }
 #comments-list-mode-selector button:hover,
 #comments-list-mode-selector button.selected {
-	box-shadow:
-		0 0 0 1px #eee inset,
-		0 0 0 2px #aaa inset,
-		0 0 0 4px #eee inset,
-		0 0 0 5px #aaa inset;
+	background-color: var(--GW-body-background-color);
+}
+#comments-list-mode-selector button:not(.selected):hover {
+	box-shadow: 0 0 0 3px #e4e4e4 inset;
 }
 
 /*=============================*/
@@ -6959,47 +6956,20 @@ body {
 /*==========*/
 
 .archive-nav {
-	border: 1px solid #aaa;
-}
-.archive-nav *[class^='archive-nav-item'] {
-	border-style: solid;
-	border-color: #ddd;
-	border-width: 1px 0 1px 1px;
-	background-color: #eee;
-}
-.archive-nav div[class^='archive-nav-']:nth-of-type(2) *[class^='archive-nav-item'] {
-	border-top-width: 0;
-	border-bottom-width: 0;
-}
-.archive-nav div[class^='archive-nav-']:last-of-type *[class^='archive-nav-item'] {
-	border-bottom-width: 1px;
-}
-.archive-nav *[class^='archive-nav-item']:last-child {
-	border-right-width: 1px;
-}
-.archive-nav span[class^='archive-nav-item'] {
-	font-weight: bold;
-	background-color: #ddd;
+	outline: 2px solid #e4e4e4;
 }
 
-.archive-nav a:link,
-.archive-nav a:visited {
-	color: rgba(0, 0, 238, 0.7);
+.archive-nav *[class^='archive-nav-item'] {
+	background-color: #e4e4e4;
+	outline: 1px solid #e4e4e4;
+}
+.archive-nav a:hover,
+.archive-nav span[class^='archive-nav-item'] {
+	background-color: var(--GW-body-background-color);
+	box-shadow: 0 0 0 1px #e4e4e4 inset;
 }
 .archive-nav a:hover {
 	text-decoration: none;
-	color: #c00;
-	background-color: #e0e0e0;
-	text-shadow: var(--GW-shadow-white-glow);
-}
-.archive-nav a:active {
-	transform: scale(0.9);
-}
-.archive-nav a:focus:not(:hover) {
-	transform: none;
-}
-.archive-nav a.archive-nav-item-day:hover {
-	background-color: #ddd;
 }
 
 /*=----------------------------=*/
@@ -7007,11 +6977,8 @@ body {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 900px) {
-	.archive-nav *[class^='archive-nav-item-'] {
-		border-width: 1px !important;
-	}
 	.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
-		background-color: #aaa;
+		background-color: #e4e4e4;
 	}
 }
 
