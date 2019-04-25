@@ -16,7 +16,7 @@
 	--GW-HNS-date-picker-left-margin: calc(var(--GW-new-comment-quicknav-left-margin) + 42px);
 	--GW-HNS-date-picker-bottom-margin: calc(var(--GW-new-comment-quicknav-bottom-margin) + 33px);
 	--GW-HNS-date-picker-flipped-left-margin: calc(var(--GW-new-comment-quicknav-left-margin) - 12px - var(--GW-HNS-date-picker-text-field-width));
-	--GW-HNS-date-picker-flipped-bottom-margin: calc(var(--GW-new-comment-quicknav-bottom-margin) + 22px);
+	--GW-HNS-date-picker-flipped-bottom-margin: calc(var(--GW-new-comment-quicknav-bottom-margin) + 23px);
 	--GW-HNS-date-picker-text-field-width: 140px;
 }
 
@@ -836,15 +836,18 @@
 	margin-left: var(--GW-HNS-date-picker-flipped-left-margin);
 	margin-bottom: var(--GW-HNS-date-picker-flipped-bottom-margin);
 }
-#hns-date-picker.flipped::before {
+#hns-date-picker::before {
 	content: "";
 	position: absolute;
-	display: block;
 	z-index: -1;
 	height: calc(100% + 2px);
-	width: calc(1px - var(--GW-HNS-date-picker-flipped-left-margin));
 	top: -1px;
 	left: -1px;
+	display: none;
+}
+#hns-date-picker.flipped::before {
+	width: calc(1px - var(--GW-HNS-date-picker-flipped-left-margin));
+	display: block;
 }
 
 /*=----------------------------=*/
@@ -873,7 +876,8 @@
 	}
 	#hns-date-picker::before {
 		width: calc(100% + 2px);
-		border-width: 1px !important;
+		border-width: 1px;
+		display: block;
 	}
 }
 

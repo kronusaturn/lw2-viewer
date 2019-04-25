@@ -1941,7 +1941,7 @@ function injectNewCommentNavUI(newCommentsCount) {
 	window.addEventListener("resize", GW.hnsDatePickerFlipToFit = (event) => {
 		GWLog("hnsDatePickerFlipToFit");
 
-		hnsDatePicker.toggleClass("flipped", (query("#content").clientWidth > (window.innerWidth - 535)));
+		hnsDatePicker.toggleClass("flipped", (GW.mediaQueries.mobileMax.matches == false) && (query("#content").clientWidth > (window.innerWidth - 535)));
 	});
 	GW.hnsDatePickerFlipToFit();
 
