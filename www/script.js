@@ -1243,10 +1243,6 @@ function postSetThemeHousekeeping(oldThemeName = "", newThemeName = (readCookie(
 		});
 	});
 
-	updateLW2Link();
-
-	updateTopNavBarType();
-
 	if (window.adjustmentTransitions) pageFadeTransition(true);
 	updateThemeTweakerSampleText();
 
@@ -3746,6 +3742,12 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		// scrolled to the place indicated by the hash.
 		GW.needHashRealignment = true;
 	}
+
+	// Clean up LW2 link in .post-meta.
+	updateLW2Link();
+
+	// Set state of top nav bar.
+	updateTopNavBarType();
 
 	// Clean up ToC.
 	queryAll(".contents-list li a").forEach(tocLink => {

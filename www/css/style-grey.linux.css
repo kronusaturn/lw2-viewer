@@ -7198,6 +7198,12 @@ h1.listing + .post-meta .word-count,
 h1.listing + .post-meta .lw2-link {
 	margin: 0 0.75em 0 0;
 }
+h1.listing + .post-meta .comment-count::before,
+h1.listing + .post-meta .read-time::before,
+h1.listing + .post-meta .word-count::before,
+h1.listing + .post-meta .lw2-link::before {
+	margin: 0 0.25em 0 0;
+}
 
 /*	Karma value.
 	*/
@@ -7226,12 +7232,20 @@ h1.listing + .post-meta .comment-count.new-comments:hover::before {
 h1.listing + .post-meta .lw2-link {
 	opacity: 0.75;
 }
+h1.listing + .post-meta .lw2-link:hover {
+	text-decoration: none;
+	color: #777;
+}
 h1.listing + .post-meta .lw2-link::before {
 	content: "\F0C1";
 	font-weight: 400;
+	margin: 0 0.25em 0 0;
 }
 h1.listing + .post-meta .lw2-link:hover::before {
 	color: #777;
+}
+h1.listing + .post-meta .lw2-link span {
+	display: none;
 }
 
 /*	Read time.
@@ -7552,27 +7566,16 @@ article > .post-meta a:visited,
 	color: #666;
 }
 
-.post-meta .comment-count span,
-.post-meta .lw2-link span {
+.post-meta .comment-count span {
 	display: none;
 }
-
-.post-meta .comment-count::before,
-.post-meta .read-time::before,
-.post-meta .word-count::before,
-.post-meta .lw2-link::before {
-	font-family: var(--GW-Font-Awesome);
-	margin: 0 0.25em 0 0;
-	font-size: 0.875em;
-	color: #ccc;
-}
-.post-meta .comment-count:hover,
-.post-meta .lw2-link:hover {
+.post-meta .comment-count:hover {
 	text-decoration: none;
 	color: #777;
 }
 .post-meta .comment-count::before {
 	content: "\F086";
+	margin: 0 0.25em 0 0;
 }
 .post-meta .comment-count:hover::before {
 	color: #777;
