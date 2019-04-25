@@ -864,6 +864,7 @@
 }
 @media only screen and (max-width: 960px) {
 	#hns-date-picker {
+		padding: 8px 10px 10px 10px;
 		max-height: 0px;
 		left: unset;
 		margin: 0;

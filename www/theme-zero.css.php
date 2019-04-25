@@ -518,7 +518,13 @@ body {
 
 #hns-date-picker.flipped {
 	background-color: #e4e4e4;
-	opacity: 1.0;
+}
+
+@media only screen and (max-width: 960px) {
+	#hns-date-picker,
+	#hns-date-picker::before {
+		background-color: #e4e4e4;
+	}
 }
 
 /*================================*

@@ -613,7 +613,6 @@ body {
 #hns-date-picker span {
 	color: #999;
 	text-shadow: 0.5px 0.5px 0 #fff;
-	font-weight: 600;
 }
 #hns-date-picker input {
 	border: 1px solid #aaa;
@@ -628,19 +627,21 @@ body {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-#hns-date-picker.flipped {
-	background-color: var(--GW-body-background-color);
-	opacity: 1.0;
-}
-#hns-date-picker.flipped::before {
+#hns-date-picker::before {
 	border: 1px solid #ccc;
 	border-width: 1px 0 1px 1px;
 }
 
-@media only screen and (max-width: 1020px) and (min-width: 961px) {
+@media only screen and (max-width: 1020px) {
 	#hns-date-picker,
 	#hns-date-picker::before {
 		border-radius: 8px 0 0 8px;
+	}
+}
+@media only screen and (max-width: 960px) {
+	#hns-date-picker,
+	#hns-date-picker::before {
+		border-radius: 0;
 	}
 }
 

@@ -583,15 +583,6 @@ p {
 	border: 1px solid #ccc;
 }
 
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
-#hns-date-picker.flipped {
-	background-color: var(--GW-body-background-color);
-	opacity: 1.0;
-}
-
 /*================================*
 	MOBILE VERSIONS OF QUICKNAV,
 	NEW COMMENT NAV, AND HNS

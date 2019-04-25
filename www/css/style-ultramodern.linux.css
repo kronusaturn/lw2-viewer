@@ -1314,6 +1314,7 @@ a {
 }
 @media only screen and (max-width: 960px) {
 	#hns-date-picker {
+		padding: 8px 10px 10px 10px;
 		max-height: 0px;
 		left: unset;
 		margin: 0;
@@ -6857,15 +6858,6 @@ p {
 #hns-date-picker input:focus {
 	color: #000;
 	border: 1px solid #ccc;
-}
-
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
-#hns-date-picker.flipped {
-	background-color: var(--GW-body-background-color);
-	opacity: 1.0;
 }
 
 /*================================*
