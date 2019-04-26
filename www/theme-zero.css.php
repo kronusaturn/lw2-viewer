@@ -69,7 +69,7 @@
 
 	--GW-comment-background-color-odd: #fff;
 	--GW-comment-background-color-even: #eee;
-	--GW-comment-background-color-target: #ffd;
+	--GW-comment-background-color-target: #ffc;
 
 	--GW-theme-selector-outline-color: transparent;
 }
