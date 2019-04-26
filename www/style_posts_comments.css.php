@@ -800,7 +800,8 @@ a.comment-child-link::before {
 		white-space: unset;
 		pointer-events: none;
 	}
-	.comment-popup .comment-parent-link {
+	.comment-popup .comment-parent-link,
+	.comment-popup .comment-minimize-button {
 		display: none;
 	}
 	.comment-popup .comment-body {

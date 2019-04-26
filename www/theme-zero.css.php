@@ -1163,19 +1163,14 @@ a.comment-parent-link:hover::before {
 
 .comment-item-highlight,
 .comment-item-highlight-faint {
-	box-shadow:
-		0 0	2px var(--GW-comment-highlight-color),
-		0 0	3px var(--GW-comment-highlight-color),
-		0 0	5px var(--GW-comment-highlight-color),
-		0 0	7px var(--GW-comment-highlight-color),
-		0 0 10px var(--GW-comment-highlight-color);
+	outline: 1px solid var(--GW-comment-highlight-color);
 	border: 1px solid var(--GW-comment-highlight-color);
 }
 .comment-item-highlight {
-	--GW-comment-highlight-color: #c79700;
+	--GW-comment-highlight-color: #ccc;
 }
 .comment-item-highlight-faint {
-	--GW-comment-highlight-color: #e7b200;
+	--GW-comment-highlight-color: #ddd;
 }
 
 .comment-popup {
