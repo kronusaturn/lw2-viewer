@@ -1412,6 +1412,9 @@ h1.listing .edit-post-link:hover,
 	color: #000;
 	border-color: #fff;
 }
+.comment-item.depth-odd > .posting-controls textarea {
+	border-color: #ddd;
+}
 .posting-controls textarea:focus {
 	border-color: #00e;
 	box-shadow: 0 0 0 1px #00e;
