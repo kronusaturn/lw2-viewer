@@ -4781,6 +4781,7 @@ button.guiedit {
 
 #edit-post-form {
 	padding: 2em var(--GW-current-page-content-right-side-padding) 2em var(--GW-current-page-content-left-side-padding);
+	margin: 0 0 3em 0;
 }
 #edit-post-form .post-meta-fields {
 	display: grid;
@@ -4931,10 +4932,12 @@ button.guiedit {
 	#edit-post-form {
 		padding-top: 1em;
 		padding-bottom: 1em;
+		margin: 0 0 1em 0;
 	}
 	#edit-post-form > div:last-of-type {
 		display: flex;
 		justify-content: center;
+		clear: both;
 	}
 	#edit-post-form input[type='submit'],
 	#edit-post-form .button.cancel-post-editing-button {

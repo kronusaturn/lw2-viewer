@@ -4781,6 +4781,7 @@ button.guiedit {
 
 #edit-post-form {
 	padding: 2em var(--GW-current-page-content-right-side-padding) 2em var(--GW-current-page-content-left-side-padding);
+	margin: 0 0 3em 0;
 }
 #edit-post-form .post-meta-fields {
 	display: grid;
@@ -4931,10 +4932,12 @@ button.guiedit {
 	#edit-post-form {
 		padding-top: 1em;
 		padding-bottom: 1em;
+		margin: 0 0 1em 0;
 	}
 	#edit-post-form > div:last-of-type {
 		display: flex;
 		justify-content: center;
+		clear: both;
 	}
 	#edit-post-form input[type='submit'],
 	#edit-post-form .button.cancel-post-editing-button {
@@ -7770,35 +7773,37 @@ h1.listing .edit-post-link:hover,
 	background-color: transparent;
 }
 .posting-controls textarea::-webkit-scrollbar-track {
-	background-color: #fff;
-	border-left: 1px solid #ccc;
-	border-top: 1px solid #eee;
+	border-left: 1px solid #e4e4e4;
 }
 .posting-controls textarea:focus::-webkit-scrollbar-track {
-	border-top: 1px solid #ddf;
-	border-left: 2px solid #0040ff;
+	box-shadow: -2px 0 0 0 #0040ff;
 }
 .posting-controls textarea::-webkit-scrollbar-thumb {
 	background-color: #acacff;
-	box-shadow: 0 0 0 1px #eee inset;
-	border-left: 1px solid #ccc;
+	box-shadow:
+		1px 0 0 0 #acacff,
+		1px 0 0 0 #e4e4e4 inset,
+		2px 0 0 0 #fff inset;
 }
 .posting-controls textarea:focus::-webkit-scrollbar-thumb {
 	background-color: #0040ff;
-	border-left: 2px solid #0040ff;
 	box-shadow:
-		0 1px 0 0 #ddf inset,
-		0 0 0 1px #eee inset;
+		1px 0 0 0 #fff,
+		1px 0 0 0 #fff inset,
+		-2px 0 0 0 #0040ff;
 }
 
 .posting-controls.edit-existing-post textarea:focus::-webkit-scrollbar-track,
 .posting-controls form.edit-existing-comment textarea:focus::-webkit-scrollbar-track {
-	border-left: 2px solid #090;
+	box-shadow: -2px 0 0 0 #090;
 }
 .posting-controls.edit-existing-post textarea:focus::-webkit-scrollbar-thumb,
 .posting-controls form.edit-existing-comment textarea:focus::-webkit-scrollbar-thumb {
-	border-left: 2px solid #090;
-	background-color: #28a708;
+	background-color: #090;
+	box-shadow:
+		1px 0 0 0 #fff,
+		1px 0 0 0 #fff inset,
+		-2px 0 0 0 #090;
 }
 
 /* GUIEdit buttons */
