@@ -1710,10 +1710,10 @@ blockquote {
 
 #content img,
 #content figure.image img {
-	border: 1px solid #ccc;
+	border: 1px solid #fff;
 }
 #content figure img {
-	border: 1px solid #000;
+	border: 1px solid #fff;
 }
 #content img[src$='.svg'],
 #content figure img[src$='.svg'] {
@@ -1730,7 +1730,7 @@ blockquote {
 .body-text table,
 .body-text table th,
 .body-text table td {
-	border: 1px solid #ccc;
+	border: 1px solid #ddd;
 }
 
 /*======*/
@@ -1742,9 +1742,12 @@ hr {
 }
 
 code {
-	background-color: #f6f6ff;
-	border: 1px solid #ddf;
-	border-radius: 4px;
+	background-color: #eee;
+	border: 1px solid #eee;
+	box-shadow: 0 0 0 1px #e4e4e4;
+	text-shadow:
+		0 0 1px #fff,
+		0 0 2px #fff;
 }
 
 input[type='text'],
@@ -1784,9 +1787,6 @@ select {
 	text-shadow: var(--GW-shadow-white-glow);
 }
 
-.qualified-linking label {
-	color: var(--GW-hyperlink-color);
-}
 .qualified-linking label:hover {
 	text-shadow:
 		0 0 1px #fff,
@@ -1795,20 +1795,19 @@ select {
 }
 
 .qualified-linking-toolbar {
-	border: 1px solid #000;
+	border: 1px solid #fff;
 	background-color: #fff;
 }
-.qualified-linking-toolbar a {
+.qualified-linking-toolbar a,
+.qualified-linking-toolbar button {
 	background-color: #eee;
-	border: 1px solid #ccc;
-	border-radius: 4px;
+	border: 1px solid #eee;
 }
-.qualified-linking-toolbar a:visited {
-	color: var(--GW-hyperlink-color);
-}
-.qualified-linking-toolbar a:hover {
-	background-color: #ddd;
-	text-shadow: var(--GW-shadow-white-glow);
+.qualified-linking-toolbar a:hover,
+.qualified-linking-toolbar button:hover {
+	text-decoration: none;
+	background-color: #fff;
+	box-shadow: 0 0 0 1px #eee inset;
 }
 .qualified-linking label::after {
 	background-color: #eee;
@@ -1846,15 +1845,13 @@ select {
 /* ALIGNMENT FORUM */
 /*=================*/
 
-#content.alignment-forum-index-page::before {
-	background-color: #eaedff;
+#content.alignment-forum-index-page {
+	var(--GW-content-background-color): #eaedff;
 }
 #content.alignment-forum-index-page::after {
-	font-family: "Concourse SmallCaps";
-	font-weight: 600;
 	background-color: #7f85b2;
-	color: transparent;
 	-webkit-background-clip: text;
+	color: transparent;
 	text-shadow:
 		rgba(255, 255, 255, 0.5) 0px 3px 3px;
 }
