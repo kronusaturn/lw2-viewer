@@ -158,6 +158,12 @@ body {
 
 /* Search tab */
 
+#nav-item-search form::before {
+	opacity: 0.3;
+}
+#nav-item-search form:focus-within::before {
+	opacity: 1.0;
+}
 #nav-item-search input:not(:focus) {
 	background-color: #f4f4f4;
 }
@@ -504,8 +510,8 @@ body {
 	color: #777;
 }
 #hns-date-picker input {
-	border: 1px solid #bbb;
-	background-color: transparent;
+	border: 1px solid transparent;
+	background-color: #fff;
 	color: #888;
 	width: 150px;
 }
@@ -1216,10 +1222,9 @@ a.comment-parent-link:hover::before {
 .post .karma.active-controls::after,
 .post .karma .karma-value::after,
 .author::before {
-	background-color: #eee;
-	color: #777;
-	border-radius: 4px;
-	box-shadow: 0 0 0 1px #bbb inset;
+	background-color: #e4e4e4;
+	color: #444;
+	box-shadow: 0 0 0 1px #fff inset;
 }
 .comment-item .karma.active-controls::after,
 .post .karma.active-controls::after {
@@ -1715,7 +1720,7 @@ input[type='submit']:active,
 /*========*/
 
 blockquote {
-	border-left: 5px solid #e4e4e4;
+	border-left: 5px solid #ddd;
 }
 
 /*========*/
