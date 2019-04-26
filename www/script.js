@@ -3775,6 +3775,11 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		tocLink.innerText = tocLink.innerText.replace(/^[A-Z]\. /, '');
 	});
 
+	// Rectify mathjax block container heights.
+	queryAll(".mathjax-block-container .mjx-chtml").forEach(mjxContainer => {
+		mjxContainer.style.height = mjxContainer.offsetHeight + "px";
+	});
+
 	// On mobile, wrap authors to limit tappable area.
 	if (query(".listings > .comment-thread")) {
 		doWhenMatchMedia(GW.mediaQueries.mobileNarrow, "wrapAuthorsInCommentListings", () => {

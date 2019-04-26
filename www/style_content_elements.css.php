@@ -417,11 +417,6 @@ li {
 /* MATH */
 /********/
 
-.mathjax-block-container .mjx-chtml {
-	overflow-y: hidden;
-	margin: 1.5em 0;
-	display: block;
-}
 .mathjax-inline-container {
 	max-width: 100%;
 	display: inline;
@@ -429,8 +424,13 @@ li {
 	overflow-y: hidden;
 	padding: 0 1px;
 }
-.mathjax-inline-container .mjx-chtml {
+
+.mathjax-block-container .mjx-chtml {
+	overflow-y: hidden;
+	margin: 2em 0;
 	padding: 0;
+	display: block;
+	padding: 0 0 0.375em 0;
 }
 
 /*	Fix for LessWrong being weird.
