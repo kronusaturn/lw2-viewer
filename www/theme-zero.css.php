@@ -593,7 +593,7 @@ body {
 	background-color: #aaa;
 	-webkit-background-clip: text;
 	color: transparent;
-	text-shadow: rgba(255,255,255,0.5) 0px 1px 1px;
+	text-shadow: rgba(255, 255, 255, 0.5) 0px 1px 1px;
 }
 #anti-kibitzer-toggle button:hover::before,
 #anti-kibitzer-toggle button:hover::after {
@@ -717,7 +717,7 @@ h1.listing a[href^="/posts"] {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		color: #777;
-		background-color: rgba(238,238,238,0.85);
+		background-color: rgba(228, 228, 228, 0.85);
 	}
 	h1.listing:focus-within::before {
 		color: #00f;
@@ -1829,7 +1829,7 @@ select {
 	color: transparent;
 	-webkit-background-clip: text;
 	text-shadow:
-		rgba(255,255,255,0.5) 0px 3px 3px;
+		rgba(255, 255, 255, 0.5) 0px 3px 3px;
 }
 
 /*	Hover styles.
@@ -1837,6 +1837,6 @@ select {
 @media only screen and (hover: hover) and (pointer: fine) {
 	#content.alignment-forum-index-page h1.listing a:hover,
 	#content.alignment-forum-index-page h1.listing a:focus {
-		background-color: rgba(234,237,255,0.85);
+		background-color: rgba(234, 237, 255, 0.85);
 	}
 }

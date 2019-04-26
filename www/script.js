@@ -4147,12 +4147,6 @@ function rectifyMarkup() {
 
 	let content = query("#content");
 
-	// Remove paragraphs of only whitespace.
-	content.queryAll("p").forEach(p => {
-		if (!/[^\s\u2800]/.test(p.textContent))
-			removeElement(p);
-	});
-
 	// Convert bold paragraphs into headings.
 	// NOTE: This will not result in a ToC (as that is generated server-side).
 	content.queryAll("p > strong:only-child, p > b:only-child").forEach(strong => {
