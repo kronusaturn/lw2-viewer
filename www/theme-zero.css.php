@@ -1668,39 +1668,23 @@ a {
 /* BUTTONS */
 /*=========*/
 
-button,
-input[type='submit'] {
-	color: var(--GW-hyperlink-color);
-}
-
-button:hover,
-input[type='submit']:hover,
-button:focus,
-input[type='submit']:focus {
-	color: #d00;
-	text-shadow: var(--GW-shadow-white-glow);
-}
 button:active,
-input[type='submit']:active {
-	color: #f00;
-	transform: scale(0.9);
-}
-.button:visited {
-	color: var(--GW-hyperlink-color);
-}
-.button:hover {
-	color: #d00;
-	text-shadow: var(--GW-shadow-white-glow);
-}
+input[type='submit']:active, 
 .button:active {
 	transform: scale(0.9);
 }
 .button:focus:not(:hover) {
 	transform: none;
 }
-<?php echo $firefox_exclusive; ?> {
-	.button:active {
-		transform: none;
+
+@media only screen and (hover: hover) and (pointer: fine) {
+	button:hover,
+	button:focus,
+	input[type='submit']:hover,
+	input[type='submit']:focus,
+	.button:hover,
+	.button:focus {
+		text-shadow: var(--GW-shadow-white-glow);
 	}
 }
 

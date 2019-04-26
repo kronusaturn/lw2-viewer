@@ -8286,13 +8286,14 @@ input[type='submit']:active,
 @media only screen and (hover: hover) and (pointer: fine) {
 	button:hover,
 	input[type='submit']:hover,
+	.button:hover,
 	button:focus,
-	input[type='submit']:focus {
+	input[type='submit']:focus,
+	.button:focus {
 		text-shadow: var(--GW-shadow-white-glow);
 	}
 
 	.button:hover {
-		text-shadow: var(--GW-shadow-white-glow);
 		text-decoration: none;
 	}
 }
