@@ -530,7 +530,7 @@
 				 (return))
 		       when (or (tag-is parent "p" "blockquote" "div")
 				(if-let (class (plump:attribute parent "class")) (search "mjpage__block" class)))
-		       do (progn (add-class parent "mathjax-block-container")
+		       do (progn (add-class current "mathjax-block-container")
 				 (return))))
 		  (cond
 		    ((tag-is node "a")
