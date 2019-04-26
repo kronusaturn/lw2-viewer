@@ -1446,12 +1446,12 @@ GW.themeUnloadCallback_dark = (toTheme = "") => {
 
 GW.themeLoadCallback_ultramodern = (fromTheme = "") => {
 	let prefix = query("h1.post-title .post-type-prefix");
-	if (/Question/.test(prefix.textContent))
+	if (prefix && /Question/.test(prefix.textContent))
 		prefix.textContent = "Question";
 }
 GW.themeUnloadCallback_ultramodern = (toTheme = "") => {
 	let prefix = query("h1.post-title .post-type-prefix");
-	if (/Question/.test(prefix.textContent))
+	if (prefix && /Question/.test(prefix.textContent))
 		prefix.textContent = "[Question] ";
 }
 
