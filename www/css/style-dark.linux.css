@@ -5135,7 +5135,22 @@ a:active {
 	display: none;
 }
 
+<<<<<<< HEAD
 .post-body .contents a {
+=======
+/********/
+/* MATH */
+/********/
+
+.mathjax-block-container {
+	display: block;
+	overflow-y: hidden;
+	border-radius: 6px;
+	margin: 1em 0 1.5em 0;
+}
+.mathjax-inline-container {
+	max-width: 100%;
+>>>>>>> origin/next
 	display: inline-block;
 	text-indent: 0;
 	width: 100%;
