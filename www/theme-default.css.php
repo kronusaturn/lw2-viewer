@@ -2127,24 +2127,24 @@ EOT;
 /* MATH */
 /*======*/
 
-.mathjax-block-container::-webkit-scrollbar {
+.mathjax-block-container .mjx-chtml::-webkit-scrollbar {
 	height: 12px;
 	background-color: #f6f6ff;
 	border-radius: 6px;
 	border: 1px solid #ddf;
 }
-.mathjax-block-container::-webkit-scrollbar-thumb {
+.mathjax-block-container .mjx-chtml::-webkit-scrollbar-thumb {
 	background-color: #dde;
 	border-radius: 6px;
 	border: 1px solid #cce;
 }
-.mathjax-inline-container::-webkit-scrollbar {
+.mathjax-inline-container .mjx-chtml::-webkit-scrollbar {
 	height: 8px;
 	background-color: #f6f6ff;
 	border-radius: 4px;
 	border: 1px solid #ddf;
 }
-.mathjax-inline-container::-webkit-scrollbar-thumb {
+.mathjax-inline-container .mjx-chtml::-webkit-scrollbar-thumb {
 	background-color: #dde;
 	border-radius: 4px;
 	border: 1px solid #cce;

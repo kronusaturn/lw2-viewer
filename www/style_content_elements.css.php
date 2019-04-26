@@ -420,6 +420,7 @@ li {
 .mathjax-block-container .mjx-chtml {
 	overflow-y: hidden;
 	margin: 1.5em 0;
+	display: block;
 }
 .mathjax-inline-container {
 	max-width: 100%;
