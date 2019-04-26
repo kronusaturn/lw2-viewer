@@ -7124,6 +7124,15 @@ h1.listing a[href^="http"] {
 	}
 }
 
+h1.listing a:not(:hover) .post-type-prefix {
+	color: #8fd2ff;
+	text-shadow: 
+		0.0px 0.0px 2.0px #777,
+		0.5px 0.5px 2.0px #444,
+		0.5px 0.5px 2.0px #333,
+		0.5px 0.5px 2.0px #a2f2f1;
+}
+
 /*=-----------------------=*/
 /*= In-listing edit links =*/
 /*=-----------------------=*/
@@ -7504,6 +7513,11 @@ p a:focus {
 h1.post-title {
 	color: #000;
 	font-size: 3em;
+}
+
+h1.post-title .post-type-prefix {
+	font-variant: small-caps;
+	font-size: 0.625em;
 }
 
 /*===========*/
