@@ -5174,7 +5174,7 @@ a:active {
 .body-text h5,
 .body-text h6 {
 	line-height: 1.1;
-	margin: 1.5em 0 0.5em 0;
+	margin: 1.25em 0 0.5em 0;
 	text-align: left;
 
 	font-family: var(--GW-content-headings-font);
@@ -7277,6 +7277,9 @@ h1.listing.own-post-listing {
 	background-color: #e4e4e4;
 	box-shadow: 5px 0 0 0 #ddd;
 }
+.post-body .contents li:hover::before {
+	color: #000;
+}
 
 /*=================*/
 /* POST NAVIGATION */
@@ -8160,7 +8163,6 @@ select {
 	background-color: #ccc;
 	border-top: 1px solid #ccc;
 	border-bottom: 1px solid #ccc;
-	box-shadow:
 	box-shadow:
 		 0  -1px 0 0 #fff inset,
 		 0   1px 0 0 #fff inset,

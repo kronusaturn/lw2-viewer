@@ -962,6 +962,9 @@ h1.listing.own-post-listing {
 	background-color: #e4e4e4;
 	box-shadow: 5px 0 0 0 #ddd;
 }
+.post-body .contents li:hover::before {
+	color: #000;
+}
 
 /*=================*/
 /* POST NAVIGATION */
@@ -1845,7 +1848,6 @@ select {
 	background-color: #ccc;
 	border-top: 1px solid #ccc;
 	border-bottom: 1px solid #ccc;
-	box-shadow:
 	box-shadow:
 		 0  -1px 0 0 #fff inset,
 		 0   1px 0 0 #fff inset,
