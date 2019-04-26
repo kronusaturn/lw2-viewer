@@ -563,7 +563,7 @@ Element.prototype.constructCommentControls = function() {
 	if (commentControls.parentElement.hasClass("comments")) {
 		replyButton.className = "new-comment-button action-button";
 		replyButton.innerHTML = "Post new " + commentType;
-		replyButton.setAttribute("accesskey", (commentType == "comment" ? "n" : ""));
+		replyButton.setAttribute("accesskey", (commentType == "comment" ? "n" : "w"));
 		replyButton.setAttribute("title", "Post new " + commentType + (commentType == "comment" ? " [n]" : ""));
 	} else {
 		if (commentControls.parentElement.query(".comment-body").hasAttribute("data-markdown-source")) {
@@ -3377,6 +3377,7 @@ function keyboardHelpSetup() {
 			], [
 				"Page actions",
 				[ [ 'ak-n' ], "New post or comment" ],
+				[ [ 'ak-w' ], "New answer (on question posts)" ],
 				[ [ 'ak-e' ], "Edit current post" ]
 			], [
 				"Sequences",
