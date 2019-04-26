@@ -740,6 +740,10 @@ h1.listing a[href^="/posts"] {
 	}
 }
 
+h1.listing a:not(:hover) .post-type-prefix {
+	opacity: 0.4;
+}
+
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
@@ -994,6 +998,11 @@ h1.listing.own-post-listing {
 h1.post-title {
 	font-size: 2em;
 	margin: 1.5em 0 0.5em 0;
+}
+
+h1.post-title .post-type-prefix {
+	opacity: 0.35;
+	font-weight: normal;
 }
 
 /*===========*/
