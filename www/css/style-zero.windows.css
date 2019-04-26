@@ -4765,10 +4765,13 @@ button.guiedit {
 
 .post-controls {
 	text-align: right;
-	margin: 0.75em var(--GW-post-page-content-right-side-padding) 0 0;
+	margin: 0;
 	grid-row: 3;
 	align-self: start;
 	justify-self: end;
+}
+.post-controls .edit-post-link {
+	padding: 0.25em 0.5em 0 0.25em;
 }
 
 #edit-post-form {
@@ -4964,6 +4967,8 @@ button.guiedit {
 		height: 100%;
 		display: flex;
 		flex-flow: column;
+		padding-top: 0.75em;
+		padding-bottom: 0.75em;
 	}
 	#edit-post-form .textarea-container {
 		 flex: 1 1 auto;
@@ -4989,6 +4994,10 @@ button.guiedit {
 	}
 }
 @media only screen and (max-width: 420px) {
+	#edit-post-form {
+		padding-top: 0.5em;
+		padding-bottom: 0.5em;
+	}
 	#edit-post-form .post-meta-fields {
 		grid-template-columns: 4em auto auto auto 1fr auto;
 	}
@@ -6453,6 +6462,7 @@ body {
 
 .nav-current {
 	background-color: var(--GW-body-background-color);
+	box-shadow: 1px 0 0 0 var(--GW-body-background-color);
 	text-shadow: 0 0 0 currentColor;
 }
 
@@ -6538,10 +6548,13 @@ body {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 640px) {
+	#content.user-page .page-toolbar {
+		margin-top: 1em;
+	}
 	#content.user-page .page-toolbar > * {
 		padding: 0.5em 1em;
 		white-space: nowrap;
-		margin: 1em 2px 0.5em 2px;
+		margin: 0 2px 0.25em 2px;
 	}
 	#content.user-page .page-toolbar > * {
 		background-color: #e4e4e4;
@@ -7906,12 +7919,6 @@ button.guiedit sup {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 520px) {
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label {
-		top: 2px;
-	}
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
-		top: 1px;
-	}
 }
 
 /*=======*/

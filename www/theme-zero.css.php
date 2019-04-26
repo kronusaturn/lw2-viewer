@@ -152,6 +152,7 @@ body {
 
 .nav-current {
 	background-color: var(--GW-body-background-color);
+	box-shadow: 1px 0 0 0 var(--GW-body-background-color);
 	text-shadow: 0 0 0 currentColor;
 }
 
@@ -237,10 +238,13 @@ body {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 640px) {
+	#content.user-page .page-toolbar {
+		margin-top: 1em;
+	}
 	#content.user-page .page-toolbar > * {
 		padding: 0.5em 1em;
 		white-space: nowrap;
-		margin: 1em 2px 0.5em 2px;
+		margin: 0 2px 0.25em 2px;
 	}
 	#content.user-page .page-toolbar > * {
 		background-color: #e4e4e4;
@@ -1605,12 +1609,6 @@ button.guiedit sup {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 520px) {
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label {
-		top: 2px;
-	}
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
-		top: 1px;
-	}
 }
 
 /*=======*/
