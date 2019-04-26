@@ -4864,32 +4864,7 @@ button.guiedit {
 	opacity: 0;
 	pointer-events: none;
 
-<<<<<<< HEAD
 	font-weight: var(--GW-UI-font-weight-heavy);
-=======
-/********/
-/* MATH */
-/********/
-
-.mathjax-block-container {
-	display: block;
-	overflow-y: hidden;
-	border-radius: 6px;
-	margin: 1em 0 1.5em 0;
-}
-.mathjax-inline-container {
-	max-width: 100%;
-	display: inline-block;
-	overflow-x: auto;
-	overflow-y: hidden;
-	position: relative;
-	vertical-align: text-top;
-	padding: 0 1px;
-}
-.post .mathjax-inline-container {
-	line-height: 1.1;
-	top: 2px;
->>>>>>> origin/next
 }
 #edit-post-form input[type='radio'] + label {
 	border-width: 1px 1px 1px 0;

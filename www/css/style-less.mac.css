@@ -4340,7 +4340,6 @@ a.comment-child-link::before {
 /*%% COMMENTING & POSTING %%*/
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 
-<<<<<<< HEAD
 /*****************************/
 /* COMMENTING AND POSTING UI */
 /*****************************/
@@ -4348,19 +4347,6 @@ a.comment-child-link::before {
 .comment-controls {
 	text-align: right;
 	margin: 0 8px 8px 16px;
-=======
-.mathjax-block-container {
-	display: block;
-	overflow-y: hidden;
-	border-radius: 6px;
-	margin: 1em 0 1.5em 0;
-}
-.mathjax-inline-container {
-	max-width: 100%;
-	display: inline-block;
-	overflow-x: auto;
-	overflow-y: hidden;
->>>>>>> origin/next
 	position: relative;
 	-webkit-user-select: none;
 	-moz-user-select: none;
