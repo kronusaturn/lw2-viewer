@@ -430,7 +430,7 @@ li {
 	margin: 2em 0;
 	padding: 0;
 	display: block;
-	padding: 0 0 0.375em 0;
+	padding: 0 0 8px 0;
 }
 
 /*	Fix for LessWrong being weird.
