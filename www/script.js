@@ -4000,10 +4000,12 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 					break;
 				}
 			}
+
 			// Remove edit accesskey from currently highlighted post by active user, if applicable.
 			if (indexOfActiveListing > -1) {
 				delete (listings[indexOfActiveListing].parentElement.query(".edit-post-link")||{}).accessKey;
 			}
+
 			let indexOfNextListing = (event.key == "." ? ++indexOfActiveListing : (--indexOfActiveListing + listings.length + 1)) % (listings.length + 1);
 			if (indexOfNextListing < listings.length) {
 				listings[indexOfNextListing].focus();
@@ -4015,8 +4017,10 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 			} else {
 				document.activeElement.blur();
 			}
+
 			// Add edit accesskey to newly highlighted post by active user, if applicable.
-			(listings[indexOfActiveListing].parentElement.query(".edit-post-link")||{}).accessKey = 'e';
+			if (listings[indexOfActiveListing] != null)
+				(listings[indexOfActiveListing].parentElement.query(".edit-post-link")||{}).accessKey = 'e';
 		});
 		queryAll(".listings .comment-thread .comment-meta a.date, .listings .comment-thread .comment-meta a.permalink").forEach(link => {
 			link.addEventListener("blur", GW.commentListingsHyperlinkUnfocused = (event) => {
