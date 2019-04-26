@@ -8463,7 +8463,7 @@ select {
 /*=================*/
 
 #content.alignment-forum-index-page {
-	var(--GW-content-background-color): #131100;
+	--GW-content-background-color: #131100;
 }
 #content.alignment-forum-index-page::after {
 	background-color: #658100;

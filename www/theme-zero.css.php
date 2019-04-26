@@ -1846,7 +1846,7 @@ select {
 /*=================*/
 
 #content.alignment-forum-index-page {
-	var(--GW-content-background-color): #eaedff;
+	--GW-content-background-color: #eaedff;
 }
 #content.alignment-forum-index-page::after {
 	background-color: #7f85b2;

@@ -2155,7 +2155,7 @@ EOT;
 /*=================*/
 
 #content.alignment-forum-index-page {
-	var(--GW-content-background-color): #eef0ff;
+	--GW-content-background-color: #eef0ff;
 }
 #content.alignment-forum-index-page::after {
 	background-color: #626dd7;
