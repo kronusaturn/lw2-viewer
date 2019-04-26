@@ -3780,6 +3780,12 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		tocLink.innerText = tocLink.innerText.replace(/^[A-Z]\. /, '');
 	});
 
+	// Shorten post prefixes.
+	queryAll(".listing .post-type-prefix").forEach(prefix => {
+		if (/Question/.test(prefix.textContent))
+			prefix.textContent = "[Q] ";
+	});
+
 	// Rectify mathjax block container heights.
 	queryAll(".mathjax-block-container .mjx-chtml").forEach(mjxContainer => {
 		mjxContainer.style.height = mjxContainer.offsetHeight + "px";

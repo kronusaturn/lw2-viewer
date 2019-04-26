@@ -3400,6 +3400,13 @@ h1.post-title {
 	font-family: var(--GW-post-title-font);
 	font-weight: var(--GW-post-title-font-weight);
 }
+
+h1.post-title .post-type-prefix {
+	display: block;
+	font-size: 0.75em;
+	margin: -0.5em 0 0.125em 0;
+}
+
 .post .post-meta {
 	position: relative;
 	z-index: 2;
@@ -7180,6 +7187,13 @@ h1.listing a[href^="http"] {
 	}
 }
 
+h1.listing:not(:hover) .post-type-prefix {
+	color: #e3c600;
+	text-shadow:
+		0 0 0 #ffdf00,
+		0 0 1px #ffdf00;
+}
+
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
@@ -7575,6 +7589,10 @@ h1.listing.own-post-listing {
 h1.post-title {
 	color: #222;
 	font-size: 3em;
+}
+
+h1.post-title .post-type-prefix {
+	opacity: 0.5;
 }
 
 /*===========*/

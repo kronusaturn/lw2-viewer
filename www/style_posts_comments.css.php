@@ -400,6 +400,13 @@ h1.post-title {
 	font-family: var(--GW-post-title-font);
 	font-weight: var(--GW-post-title-font-weight);
 }
+
+h1.post-title .post-type-prefix {
+	display: block;
+	font-size: 0.75em;
+	margin: -0.5em 0 0.125em 0;
+}
+
 .post .post-meta {
 	position: relative;
 	z-index: 2;

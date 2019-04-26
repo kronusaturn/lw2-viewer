@@ -824,6 +824,10 @@ h1.listing a[href^="http"] {
 	}
 }
 
+h1.listing .post-type-prefix {
+	opacity: 0.35;
+}
+
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
@@ -862,6 +866,9 @@ h1.listing.spam + .post-meta {
 h1.listing.spam:hover,
 h1.listing.spam + .post-meta:hover,
 h1.listing.spam:hover + .post-meta {
+	opacity: 1.0;
+}
+h1.listing.spam .post-type-prefix {
 	opacity: 1.0;
 }
 
@@ -1226,6 +1233,10 @@ h1.listing.own-post-listing {
 /*=======*/
 /* POSTS */
 /*=======*/
+
+h1.post-title .post-type-prefix {
+	opacity: 0.35;
+}
 
 /*=================*/
 /* POST NAVIGATION */

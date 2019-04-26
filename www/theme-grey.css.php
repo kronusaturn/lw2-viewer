@@ -865,6 +865,13 @@ h1.listing a[href^="http"] {
 	}
 }
 
+h1.listing:not(:hover) .post-type-prefix {
+	color: #e3c600;
+	text-shadow:
+		0 0 0 #ffdf00,
+		0 0 1px #ffdf00;
+}
+
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
@@ -1260,6 +1267,10 @@ h1.listing.own-post-listing {
 h1.post-title {
 	color: #222;
 	font-size: 3em;
+}
+
+h1.post-title .post-type-prefix {
+	opacity: 0.5;
 }
 
 /*===========*/
