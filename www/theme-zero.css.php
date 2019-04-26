@@ -73,7 +73,7 @@
 
 	--GW-theme-selector-outline-color: transparent;
 
-	--GW-button-background-color: #e4e4e4;
+	--GW-submit-button-background-color: #e4e4e4;
 }
 
 /*======*/
@@ -886,7 +886,7 @@ h1.listing.own-post-listing {
 
 #signup-form {
 	background-color: #e4e4e4;
-	--GW-button-background-color: #eee;
+	--GW-submit-button-background-color: #eee;
 }
 #signup-form input[type='text']:not(:focus),
 #signup-form input[type='password']:not(:focus) {
@@ -1648,12 +1648,12 @@ input[type='submit']:active,
 }
 
 input[type='submit'] {
-	background-color: var(--GW-button-background-color);
+	background-color: var(--GW-submit-button-background-color);
 }
 input[type='submit']:hover,
 input[type='submit']:focus {
 	background-color: inherit;
-	box-shadow: 0 0 0 2px var(--GW-button-background-color) inset;
+	box-shadow: 0 0 0 2px var(--GW-submit-button-background-color) inset;
 }
 
 /*==========*/
