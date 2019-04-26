@@ -7402,15 +7402,10 @@ a.post-section.alignment-forum:hover::before {
 }
 .post.link-post a.link-post-link:hover::before {
 	color: #4879ec;
-	text-shadow:
-		0.5px 0.5px 0 #fff,
-		-0.5px -0.5px 0 #fff,
-		0 0 2px #fff,
-		0 0 3px #00c;
 }
 .post.link-post a.link-post-link:focus {
 	color: #999;
-	border-bottom: 2px dotted #999;
+	border-bottom: 2px dotted currentColor;
 }
 
 /*==========*/
