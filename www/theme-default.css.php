@@ -2057,7 +2057,7 @@ select {
 	color: #000;
 }
 
-<?php if ($platform != 'Mac')
+<?php if ($platform != 'Mac') {
 echo "{$firefox_exclusive} {";
 echo <<<EOT
 h1.listing s,
@@ -2077,6 +2077,7 @@ h1.listing s,
 	}
 }
 EOT;
+}
 ?>
 
 u {
