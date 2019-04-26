@@ -427,10 +427,9 @@ li {
 
 .mathjax-block-container .mjx-chtml {
 	overflow-y: hidden;
-	margin: 2em 0;
-	padding: 0;
+	margin: 2em 0 1.75em 0;
 	display: block;
-	padding: 0 0 8px 0;
+	padding: 1px 0 8px 0;
 }
 
 /*	Fix for LessWrong being weird.

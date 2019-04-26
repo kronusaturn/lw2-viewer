@@ -1093,6 +1093,20 @@ h1.listing.own-post-listing {
 .post-body .contents li::before {
 	font-feature-settings: "tnum";
 }
+.post-body .contents a:hover {
+	box-shadow:
+		0 0 0 1px #666,
+		4px 0 0 1px #666,
+		1.5px 1.5px 1.5px -1.5px #bbb inset,
+		1.5px 1.5px 1.5px -1.5px #777 inset,
+		2.5px 2.5px 1.5px -1.5px #bbb,
+		2.5px 2.5px 1.5px -1.5px #777,
+		6.5px 2.5px 1.5px -1.5px #bbb,
+		6.5px 2.5px 1.5px -1.5px #777
+}
+.post-body .contents li:hover::before {
+	text-shadow: var(--GW-shadow-link-glow);
+}
 
 /*=================*/
 /* POST NAVIGATION */
@@ -2022,25 +2036,35 @@ select {
 
 .mathjax-block-container .mjx-chtml::-webkit-scrollbar {
 	height: 12px;
-	background-color: #f6f6ff;
 	border-radius: 6px;
-	border: 1px solid #ddf;
 }
 .mathjax-block-container .mjx-chtml::-webkit-scrollbar-thumb {
-	background-color: #dde;
 	border-radius: 6px;
-	border: 1px solid #cce;
 }
+
+.mjx-chtml::-webkit-scrollbar {
+	background-color: #888;
+	border: 1px solid #666;
+	box-shadow:
+		1.5px 1.5px 1.5px -1.5px #bbb inset,
+		1.5px 1.5px 1.5px -1.5px #777 inset,
+		1.5px 1.5px 1.5px -1.5px #bbb,
+		1.5px 1.5px 1.5px -1.5px #777;
+}
+.mjx-chtml::-webkit-scrollbar-thumb {
+	background-color: #666;
+	border: 1px solid #666;
+	box-shadow:
+		1.5px 1.5px 1.5px -1.5px #bbb inset,
+		1.5px 1.5px 1.5px -1.5px #777 inset;
+}
+
 .mathjax-inline-container .mjx-chtml::-webkit-scrollbar {
 	height: 8px;
-	background-color: #f6f6ff;
 	border-radius: 4px;
-	border: 1px solid #ddf;
 }
 .mathjax-inline-container .mjx-chtml::-webkit-scrollbar-thumb {
-	background-color: #dde;
 	border-radius: 4px;
-	border: 1px solid #cce;
 }
 
 /*=======================*/

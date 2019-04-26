@@ -2129,20 +2129,14 @@ EOT;
 
 .mathjax-block-container .mjx-chtml::-webkit-scrollbar {
 	height: 12px;
-	background-color: rgba(246, 246, 255, var(--GW-math-scrollbar-opacity));
+	background-color: #f6f6ff;
 	border-radius: 6px;
-	border: 1px solid rgba(221, 221, 255, var(--GW-math-scrollbar-opacity));
+	border: 1px solid #ddf;
 }
 .mathjax-block-container .mjx-chtml::-webkit-scrollbar-thumb {
-	background-color: rgba(221, 221, 238, var(--GW-math-scrollbar-opacity));
+	background-color: #dde;
 	border-radius: 6px;
-	border: 1px solid rgba(204, 204, 238), var(--GW-math-scrollbar-opacity));
-}
-.mathjax-block-container {
-	--GW-math-scrollbar-opacity: 0.5;
-}
-.mathjax-block-container:hover  {
-	--GW-math-scrollbar-opacity: 1.0;
+	border: 1px solid #cce;
 }
 
 .mathjax-inline-container .mjx-chtml::-webkit-scrollbar {

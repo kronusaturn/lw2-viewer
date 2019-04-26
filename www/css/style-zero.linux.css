@@ -5449,10 +5449,9 @@ li {
 
 .mathjax-block-container .mjx-chtml {
 	overflow-y: hidden;
-	margin: 2em 0;
-	padding: 0;
+	margin: 2em 0 1.75em 0;
 	display: block;
-	padding: 0 0 8px 0;
+	padding: 1px 0 8px 0;
 }
 
 /*	Fix for LessWrong being weird.
@@ -7274,6 +7273,10 @@ h1.listing.own-post-listing {
 .post-body .contents a:hover {
 	border: none;
 }
+.post-body .contents a:hover {
+	background-color: #e4e4e4;
+	box-shadow: 5px 0 0 0 #ddd;
+}
 
 /*=================*/
 /* POST NAVIGATION */
@@ -7998,6 +8001,23 @@ input[type='submit']:active,
 /* HEADINGS */
 /*==========*/
 
+.body-text h5,
+.body-text h6 {
+	font-size: 1em;
+}
+.body-text h4 {
+	font-size: 1.15em;
+}
+.body-text h3 {
+	font-size: 1.3em;
+}
+.body-text h2 {
+	font-size: 1.5em;
+}
+.body-text h1 {
+	font-size: 1.75em;
+}
+
 .body-text h6 {
 	color: #555;
 }
@@ -8126,25 +8146,30 @@ select {
 
 .mathjax-block-container .mjx-chtml::-webkit-scrollbar {
 	height: 12px;
-	background-color: #f6f6ff;
-	border-radius: 6px;
-	border: 1px solid #ddf;
 }
-.mathjax-block-container .mjx-chtml::-webkit-scrollbar-thumb {
-	background-color: #dde;
-	border-radius: 6px;
-	border: 1px solid #cce;
+
+.mjx-chtml::-webkit-scrollbar {
+	background-color: #fff;
+	border-top: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+	box-shadow:
+		-1px 0 0 0 #ccc,
+		1px 0 0 0 #ccc;
 }
+.mjx-chtml::-webkit-scrollbar-thumb {
+	background-color: #ccc;
+	border-top: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+	box-shadow:
+	box-shadow:
+		 0  -1px 0 0 #fff inset,
+		 0   1px 0 0 #fff inset,
+		 1px 0   0 0 #fff inset,
+		-1px 0   0 0 #fff inset;
+}
+
 .mathjax-inline-container .mjx-chtml::-webkit-scrollbar {
 	height: 8px;
-	background-color: #f6f6ff;
-	border-radius: 4px;
-	border: 1px solid #ddf;
-}
-.mathjax-inline-container .mjx-chtml::-webkit-scrollbar-thumb {
-	background-color: #dde;
-	border-radius: 4px;
-	border: 1px solid #cce;
 }
 
 /*=================*/
