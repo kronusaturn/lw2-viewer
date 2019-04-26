@@ -7031,7 +7031,7 @@ h1.listing a[href^="/posts"] {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		color: #777;
-		background-color: rgba(228, 228, 228, 0.85);
+		background-color: rgba(238, 238, 238, 0.85);
 	}
 	h1.listing:focus-within::before {
 		color: #00f;
@@ -7147,6 +7147,17 @@ h1.listing + .post-meta .post-section.alignment-forum::before {
 #content.own-user-page h1.listing,
 h1.listing.own-post-listing {
 	padding-right: 36px;
+}
+
+/*	Listings hover reveal.
+	*/
+@media only screen and (hover: hover) and (pointer: fine) {
+	#content.user-page h1.listing a:hover,
+	#content.user-page h1.listing a:focus,
+	#content.search-results-page h1.listing a:hover,
+	#content.search-results-page h1.listing a:focus {
+		background-color: rgba(228, 228, 228, 0.85);
+	}
 }
 
 #content.user-page h1.listing + .post-meta,
@@ -7925,6 +7936,38 @@ button.guiedit sup {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 520px) {
+	.post-controls .edit-post-link {
+		text-shadow:
+			0 0 1px #fff,
+			0 0 3px #0f0;
+	}
+	.post-controls .edit-post-link:hover,
+	.post-controls .edit-post-link:active {
+		text-shadow:
+			0 0 1px #fff,
+			0 0 3px #f88;
+	}
+}
+
+/*===========*/
+/* SEQUENCES */
+/*===========*/
+
+.sequence-text {
+	font-size: 1.125rem;
+}
+
+h1.sequence-chapter {
+	font-size: 2rem;
+}
+
+#content.sequences-page::after {
+	font-weight: bold;
+	background-color: #444;
+	-webkit-background-clip: text;
+	color: transparent;
+	text-shadow: 
+		rgba(255, 255, 255, 0.5) 0px 3px 3px;
 }
 
 /*=======*/
