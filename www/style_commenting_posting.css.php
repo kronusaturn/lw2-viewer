@@ -575,7 +575,6 @@ button.guiedit {
 	}
 	#edit-post-form > div:last-of-type {
 		display: flex;
-		clear: both;
 		justify-content: center;
 	}
 	#edit-post-form input[type='submit'],
@@ -598,11 +597,8 @@ button.guiedit {
 	}
 }
 @media only screen and (max-width: 520px) {
-	.post-controls {
-		margin: 0.5em var(--GW-post-page-content-right-side-padding) 0 0;
-	}
 	.post-controls .edit-post-link {
-		padding: 0.25em 0.5em 0 0.25em;
+		padding-top: 0.25em;
 	}
 
 	#content.edit-post-page {

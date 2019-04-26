@@ -155,6 +155,9 @@ a {
 /**************/
 
 #ui-elements-container #scratchpad {
+	position: fixed;
+	right: 0;
+	top: 0;
 	opacity: 0;
 	z-index: -1;
 	pointer-events: none;
