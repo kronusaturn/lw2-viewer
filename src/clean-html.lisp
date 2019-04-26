@@ -537,10 +537,7 @@
 			 (let* ((href (if (ppcre:scan "^(?:(?:[a-z]+:)?//|/|#)" href) href (format nil "http://~A" href)))
 				(href (or (with-direct-link (convert-any-link href)) href)))
 			   (when href
-			     (setf (plump:attribute node "href") href)))))
-		     (when (only-child-is node "u")
-		       (setf (plump:children node) (plump:children (plump:first-child node)))
-		       (loop for c across (plump:children node) do (setf (plump:parent c) node))))
+			     (setf (plump:attribute node "href") href))))))
 		    ((tag-is node "img")
 		     (when
 			 (every (lambda (a) (if-let (attr (plump:attribute node a)) (ignore-errors (<= (parse-integer attr) 1)))) (list "width" "height"))
@@ -581,11 +578,14 @@
 						(plump:remove-child e)
 						(plump:append-child new-container e))))))))))
 		    ((tag-is node "u")
-		     (vacuum-whitespace node)
-		     (when (loop for c across (plump:children node)
-			      thereis (and (plump:element-p c) (tag-is c "a")))
-		       (move-children-out-of-node node)
-		       (plump:remove-child node)))
+		     (let ((parent (plump:parent node)))
+		       (cond
+			 ((and (or (plump:root-p parent) (and (plump:element-p parent) (tag-is parent "p" "blockquote" "div")))
+			       (loop for c across (plump:children node) never (and (plump:element-p c) (tag-is c "a"))))
+			  (vacuum-whitespace node))
+			 (t
+			  (move-children-out-of-node node)
+			  (plump:remove-child node)))))
 		    ((tag-is node "ol")
 		     (when-let (start-string (plump:attribute node "start"))
 			       (when-let (start (ignore-errors (parse-integer start-string)))
