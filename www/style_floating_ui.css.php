@@ -26,8 +26,8 @@
 
 @media only screen and (max-width: 1160px) {
 	:root {
-		--GW-new-comment-quicknav-left-margin: calc(var(--GW-quick-nav-ui-left-margin) - 2px);
-		--GW-new-comment-quicknav-bottom-margin: 184px;
+		--GW-new-comment-quicknav-left-margin: calc(var(--GW-quick-nav-ui-left-margin) - 1px);
+		--GW-new-comment-quicknav-bottom-margin: 230px;
 	}
 }
 @media only screen and (max-width: 1080px) {
@@ -588,6 +588,10 @@
 #quick-nav-ui a[href='#answers'] {
 	font-weight: 400;
 	padding: 2px 0 0 1px;
+	display: none;
+}
+#content.question-post-page + #ui-elements-container #quick-nav-ui a[href='#answers'] {
+	display: block;
 }
 #quick-nav-ui a[href='#comments'].no-comments,
 #quick-nav-ui a[href='#answers'].no-answers {
@@ -929,7 +933,7 @@
 	position: absolute;
 	left: 100%;
 	bottom: 0;
-	margin: 0 0 225px 28px;
+	margin: 0 0 275px 28px;
 }
 #anti-kibitzer-toggle button {
 	display: block;
@@ -961,12 +965,12 @@
 
 @media only screen and (max-width: 1160px) {
 	#anti-kibitzer-toggle {
-		margin-bottom: 350px;
+		margin-bottom: 400px;
 		margin-left: 28px;
 	}
 	@media only screen and (max-height: 720px) {
 		#anti-kibitzer-toggle {
-			margin-bottom: 300px;
+			margin-bottom: 350px;
 		}
 	}
 }
