@@ -72,6 +72,8 @@
 	--GW-comment-background-color-target: #ffc;
 
 	--GW-theme-selector-outline-color: transparent;
+
+	--GW-button-background-color: #e4e4e4;
 }
 
 /*======*/
@@ -880,31 +882,15 @@ h1.listing.own-post-listing {
 /* LOGIN PAGE */
 /*============*/
 
-.login-container form input[type='submit'] {
-	background-color: #e4e4e4;
-}
-.login-container form input[type='submit']:hover,
-.login-container form input[type='submit']:focus {
-	background-color: var(--GW-body-background-color);
-	box-shadow: 0 0 0 2px #e4e4e4 inset;
-}
-
 /* “Create account” form */
 
 #signup-form {
 	background-color: #e4e4e4;
+	--GW-button-background-color: #eee;
 }
 #signup-form input[type='text']:not(:focus),
 #signup-form input[type='password']:not(:focus) {
 	background-color: #f4f4f4;
-}
-#signup-form input[type='submit'] {
-	background-color: #eee;
-}
-#signup-form input[type='submit']:hover,
-#signup-form input[type='submit']:focus {
-	background-color: #e4e4e4;
-	box-shadow: 0 0 0 2px #eee inset;
 }
 
 /* Log in tip */
@@ -922,32 +908,6 @@ h1.listing.own-post-listing {
 .success-box {
 	border: 1px solid #0c0;
 	background-color: #afa;
-}
-
-/*=====================*/
-/* PASSWORD RESET PAGE */
-/*=====================*/
-
-.reset-password-container input[type='submit'] {
-	background-color: #e4e4e4;
-}
-.reset-password-container input[type='submit']:hover,
-.reset-password-container input[type='submit']:focus {
-	background-color: var(--GW-body-background-color);
-	box-shadow: 0 0 0 2px #e4e4e4 inset;
-}
-
-/*============*/
-/* ERROR PAGE */
-/*============*/
-
-.error-container input[type="submit"] {
-	background-color: #e4e4e4;
-}
-.error-container input[type='submit']:hover,
-.error-container input[type='submit']:focus {
-	background-color: var(--GW-body-background-color);
-	box-shadow: 0 0 0 2px #e4e4e4 inset;
 }
 
 /*===================*/
@@ -1395,12 +1355,7 @@ a.comment-parent-link:hover::before {
 /*===========================*/
 
 .posting-controls input[type='submit'] {
-	background-color: #e4e4e4;
-	border: 2px solid #e4e4e4;
-}
-.posting-controls input[type='submit']:hover,
-.posting-controls input[type='submit']:focus {
-	background-color: transparent;
+	padding: 6px 12px;
 }
 
 .comment-controls .cancel-comment-button {
@@ -1417,8 +1372,10 @@ a.comment-parent-link:hover::before {
 
 .new-comment-button {
 	background-color: #e4e4e4;
-	padding: 8px 12px 9px 12px;
-	border: 2px solid #e4e4e4;
+	padding: 10px 14px 11px 14px;
+}
+.new-comment-button:hover {
+	box-shadow: 0 0 0 2px #e4e4e4 inset;
 }
 
 .comment-controls .delete-button,
@@ -1688,6 +1645,15 @@ input[type='submit']:active,
 	.button:focus {
 		text-shadow: var(--GW-shadow-white-glow);
 	}
+}
+
+input[type='submit'] {
+	background-color: var(--GW-button-background-color);
+}
+input[type='submit']:hover,
+input[type='submit']:focus {
+	background-color: inherit;
+	box-shadow: 0 0 0 2px var(--GW-button-background-color) inset;
 }
 
 /*==========*/
