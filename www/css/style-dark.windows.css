@@ -8388,6 +8388,11 @@ select {
 	  height: calc(50% + 6px)
 	}
 }
+u {
+	text-decoration: none;
+	border-bottom: 0.05em solid currentColor;
+}
+
 /*============*/
 /* ABOUT PAGE */
 /*============*/

@@ -2079,6 +2079,11 @@ h1.listing s,
 EOT;
 ?>
 
+u {
+	text-decoration: none;
+	border-bottom: 0.05em solid currentColor;
+}
+
 /*============*/
 /* ABOUT PAGE */
 /*============*/

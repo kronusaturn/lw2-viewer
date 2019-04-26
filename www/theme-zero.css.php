@@ -1755,6 +1755,11 @@ select {
 	color: #000;
 }
 
+u {
+	text-decoration: none;
+	border-bottom: 0.05em solid currentColor;
+}
+
 /*============*/
 /* ABOUT PAGE */
 /*============*/
