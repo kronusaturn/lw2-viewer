@@ -1552,9 +1552,16 @@ button.guiedit sup {
 
 /*	Checkboxes.
 	*/
+#edit-post-form .post-meta-fields input[type='checkbox'] + label {
+	border: none;
+	padding-top: 5px;
+}
 #edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
 	background-color: #fff;
 	color: #777;
+	border-color: var(--GW-body-background-color);
+	border-style: solid;
+	border-width: 0 1px 1px 0;
 }
 @media only screen and (hover: hover) and (pointer: fine) {
 	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover,
@@ -1567,40 +1574,30 @@ button.guiedit sup {
 	}
 }
 #edit-post-form .post-meta-fields input[type='checkbox']:checked + label::before {
-	background-color: #e4e4e4;
+	background-color: #999;
 	box-shadow: 0 0 0 3px #fff inset;
 }
 
 /*	Section selector.
 	*/
 #edit-post-form input[type='radio'] + label {
-	color: #777;
-	border-color: #ddd;
+	color: var(--GW-hyperlink-color);
+	background-color: #e4e4e4;
+	border: 1px solid #e4e4e4;
 }
-#edit-post-form input[type='radio'][value='all'] + label {
-	border-radius: 8px 0 0 8px;
-	border-width: 1px;
-}
-#edit-post-form input[type='radio'][value='drafts'] + label {
-	border-radius: 0 8px 8px 0;
+#edit-post-form input[type='radio']#meta + label,
+#edit-post-form input[type='radio']#drafts + label {
+	border-left-width: 0;
 }
 #edit-post-form input[type='radio'] + label:hover,
-#edit-post-form input[type='radio']:focus + label {
-	background-color: #ddd;
-	color: #000;
-}
-#edit-post-form input[type='radio']:focus + label {
-	color: #000;
-	box-shadow:
-		0 0 0 1px #aaa;
+#edit-post-form input[type='radio']:focus + label,
+#edit-post-form input[type='radio']:checked + label {
+	background-color: transparent;
+	box-shadow: 0 0 0 1px #e4e4e4 inset;
 }
 #edit-post-form input[type='radio']:checked + label {
-	background-color: #ddd;
-	border-color: #ddd;
 	color: #000;
-	text-shadow:
-		0 -1px 0 #fff,
-		0 0.5px 0.5px #000;
+	text-shadow: 0 0 0 currentColor;
 }
 
 /*=----------------------------=*/
