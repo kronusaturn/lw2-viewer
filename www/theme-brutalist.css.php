@@ -325,7 +325,8 @@ body {
 		0 0 0 1px #fff,
 		0 0 0 3px #000;
 }
-#quick-nav-ui a[href='#comments'].no-comments {
+#quick-nav-ui a[href='#comments'].no-comments,
+#quick-nav-ui a[href='#answers'].no-answers {
 	opacity: 0.4;
 	color: #bbb;
 }

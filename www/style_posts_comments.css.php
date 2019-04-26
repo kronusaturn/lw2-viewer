@@ -256,6 +256,7 @@ h1.listing + .post-meta .read-time {
 .post-meta .post-section::before {
 	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
+	padding: 0 1px;
 }
 .post-section.frontpage::before {
 	content: "\F015";

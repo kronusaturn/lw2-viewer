@@ -469,7 +469,8 @@ body {
 #quick-nav-ui a[href='#bottom-bar'] {
 	line-height: 1.8;
 }
-#quick-nav-ui a[href='#comments'].no-comments {
+#quick-nav-ui a[href='#comments'].no-comments,
+#quick-nav-ui a[href='#answers'].no-answers {
 	opacity: 0.4;
 	color: #bbb;
 }

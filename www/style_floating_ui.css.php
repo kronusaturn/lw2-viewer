@@ -573,6 +573,7 @@
 	left: 100%;
 	margin: 0 0 24px var(--GW-quick-nav-ui-left-margin);
 }
+
 #quick-nav-ui a {
 	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
@@ -584,13 +585,22 @@
 	height: 40px;
 	margin: 10px 0 0 0;
 }
-#quick-nav-ui a[href='#comments'].no-comments {
+#quick-nav-ui a[href='#answers'] {
+	font-weight: 400;
+	padding: 2px 0 0 1px;
+}
+#quick-nav-ui a[href='#comments'].no-comments,
+#quick-nav-ui a[href='#answers'].no-answers {
 	pointer-events: none;
 }
+
 #quick-nav-ui a {
 	visibility: hidden;
 }
 #content.post-page ~ #ui-elements-container #quick-nav-ui a[href='#comments'] {
+	visibility: visible;
+}
+#content.question-post-page ~ #ui-elements-container #quick-nav-ui a[href='#answers'] {
 	visibility: visible;
 }
 

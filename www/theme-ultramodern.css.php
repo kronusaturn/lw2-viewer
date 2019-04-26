@@ -527,7 +527,8 @@ p {
 #quick-nav-ui a:active {
 	transform: scale(0.9);
 }
-#quick-nav-ui a[href='#comments'].no-comments {
+#quick-nav-ui a[href='#comments'].no-comments,
+#quick-nav-ui a[href='#answers'].no-answers {
 	opacity: 0.4;
 	color: #777;
 }
