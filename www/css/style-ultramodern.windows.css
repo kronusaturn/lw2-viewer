@@ -3787,6 +3787,7 @@ li {
 /********/
 
 .mathjax-block-container {
+	display: block;
 	overflow-y: hidden;
 	border-radius: 6px;
 	margin: 1em 0 1.5em 0;
