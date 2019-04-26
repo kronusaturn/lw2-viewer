@@ -3366,6 +3366,11 @@ function keyboardHelpSetup() {
 				[ [ 'ak-n' ], "New post or comment" ],
 				[ [ 'ak-e' ], "Edit current post" ]
 			], [
+				"Sequences",
+				[ [ 'ak-]' ], "Go to next post in sequence" ],
+				[ [ 'ak-[' ], "Go to previous post in sequence" ],
+				[ [ 'ak-\\' ], "Go to sequence index" ]
+			], [
 				"Post/comment list views",
 				[ [ '.' ], "Focus next entry (post/comment)" ],
 				[ [ ',' ], "Focus previous entry (post/comment)" ],

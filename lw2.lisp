@@ -51,12 +51,12 @@
     (loop for (sequence prev next) in post-sequences do
       (progn 
 	<div class="post-nav-item sequence">
-	  <a class="post-nav sequence-title" href=("/s/~A" (cdr (assoc :--id sequence)))>
+	  <a class="post-nav sequence-title" href=("/s/~A" (cdr (assoc :--id sequence))) accesskey="\\">
 	    <span class="post-nav-label">Part of the sequence:</span>
 	    <span class="post-nav-title">(safe (clean-text-to-html (cdr (assoc :title sequence))))</span>
 	  </a>
 	  (labels ((post-nav-link (direction post)
-		     <a class=("post-nav ~A" (string-downcase direction)) href=(generate-post-link post)>
+		     <a class=("post-nav ~A" (string-downcase direction)) href=(generate-post-link post) accesskey=(case direction (:prev "[") (:next "]"))>
 		       <span class="post-nav-label">(case direction (:prev "Previous: ") (:next "Next: "))</span>
 		       <span class="post-nav-title">(safe (clean-text-to-html (cdr (assoc :title post))))</span>
 		     </a>))
