@@ -88,8 +88,6 @@
 	--GW-comment-item-expanded-outline-color: #00c;
 	--GW-comment-item-expanded-outline: 3px solid var(--GW-comment-item-expanded-outline-color);
 
-	--GW-comment-item-focused-outline-color: var(--GW-comment-item-expanded-outline-color);
-
 	--GW-theme-selector-outline-color: #999;
 }
 
@@ -1423,6 +1421,11 @@ a.post-section.alignment-forum:hover::before {
 	margin-left: -10px;
 }
 
+.comment-item-focused .comment {
+	background-color: var(--GW-comment-item-focused-background-color);
+	outline: var(--GW-comment-item-focused-outline);
+}
+
 /*================================*/
 /* DEEP COMMENT THREAD COLLAPSING */
 /*================================*/
@@ -1523,11 +1526,6 @@ a.comment-parent-link:hover::before {
 }
 .comment-item-highlight-faint {
 	--GW-comment-highlight-color: #e7b200;
-}
-
-.comment-item-focused .comment {
-	background-color: var(--GW-comment-item-focused-background-color);
-	outline: var(--GW-comment-item-focused-outline);
 }
 
 /*===========================*/

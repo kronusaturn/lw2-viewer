@@ -192,7 +192,15 @@
 	--GW-comment-background-color-even: transparent;
 	--GW-comment-background-color-target: transparent;
 
-	--GW-comment-item-focused-background-color: transparent;
+	--GW-comment-item-expanded-background-color: transparent;
+	--GW-comment-item-expanded-box-shadow: none;
+	--GW-comment-item-expanded-outline-color: transparent;
+	--GW-comment-item-expanded-outline: 0px solid var(--GW-comment-item-expanded-outline-color);
+
+	--GW-comment-item-focused-background-color: var(--GW-comment-item-expanded-background-color);
+	--GW-comment-item-focused-outline-color: var(--GW-comment-item-expanded-outline-color);
+	--GW-comment-item-focused-outline: var(--GW-comment-item-expanded-outline);
+
 	--GW-comment-popup-background-color: var(--GW-comment-item-focused-background-color);
 }
 
@@ -6459,8 +6467,6 @@ th.mathjax-inline-container {
 	--GW-comment-item-expanded-outline-color: #54d400;
 	--GW-comment-item-expanded-outline: 3px solid var(--GW-comment-item-expanded-outline-color);
 
-	--GW-comment-item-focused-outline-color: var(--GW-comment-item-expanded-outline-color);
-
 	--GW-theme-selector-outline-color: #575756;
 }
 
@@ -7794,6 +7800,11 @@ a.post-section.alignment-forum:hover::before {
 	margin-left: -10px;
 }
 
+.comment-item-focused .comment {
+	background-color: var(--GW-comment-item-focused-background-color);
+	outline: var(--GW-comment-item-focused-outline);
+}
+
 /*================================*/
 /* DEEP COMMENT THREAD COLLAPSING */
 /*================================*/
@@ -7894,11 +7905,6 @@ a.comment-parent-link:hover::before {
 }
 .comment-item-highlight-faint {
 	--GW-comment-highlight-color: #0047b5;
-}
-
-.comment-item-focused .comment {
-	background-color: var(--GW-comment-item-focused-background-color);
-	outline: var(--GW-comment-item-focused-outline);
 }
 
 /*===========================*/
