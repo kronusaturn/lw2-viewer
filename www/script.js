@@ -2654,10 +2654,10 @@ var CommentSortMode = Object.freeze({
 	OLD:		"old",
 	HOT:		"hot"
 });
-function sortComments(mode) {
+function sortComments(section, mode) {
 	GWLog("sortComments");
 
-	let commentsContainer = query("#comments");
+	let commentsContainer = query(`#${section}`);
 
 	commentsContainer.removeClass(/(sorted-\S+)/.exec(commentsContainer.className)[1]);
 	commentsContainer.addClass("sorting");
@@ -2700,7 +2700,7 @@ function sortComments(mode) {
 	}
 
 	// Re-activate comment-minimize buttons.
-	queryAll(".comment-minimize-button").forEach(button => {
+	commentsContainer.queryAll(".comment-minimize-button").forEach(button => {
 		button.addActivateEvent(GW.commentMinimizeButtonClicked);
 	});
 
@@ -2731,55 +2731,60 @@ function commentVoteCount(commentOrSelector) {
 function injectCommentsSortModeSelector() {
 	GWLog("injectCommentsSortModeSelector");
 
-	let topCommentThread = query("#comments > .comment-thread");
-	if (topCommentThread == null) return;
+	[ "comments", "answers" ].forEach(section => {
+		let topThread = query(`#${section} > .comment-thread`);
+		if (topThread == null) return;
 
-	// Do not show sort mode selector if there is no branching in comment tree.
-	if (topCommentThread.query(".comment-item + .comment-item") == null) return;
+		// Do not show sort mode selector if there is no branching in comment tree.
+		if (topThread.query(".comment-item + .comment-item") == null) return;
 
-	let commentsSortModeSelectorHTML = "<div id='comments-sort-mode-selector' class='sublevel-nav sort'>" + 
-		Object.values(CommentSortMode).map(sortMode => `<button type='button' class='sublevel-item sort-mode-${sortMode}' tabindex='-1' title='Sort by ${sortMode}'>${sortMode}</button>`).join("") +  
-		"</div>";
-	topCommentThread.insertAdjacentHTML("beforebegin", commentsSortModeSelectorHTML);
-	let commentsSortModeSelector = query("#comments-sort-mode-selector");
+		let sortModeSelectorHTML = `<div id='${section}-sort-mode-selector' class='sublevel-nav sort'>` + 
+			Object.values(CommentSortMode).map(sortMode => `<button type='button' class='sublevel-item sort-mode-${sortMode}' tabindex='-1' title='Sort by ${sortMode}'>${sortMode}</button>`).join("") +  
+			"</div>";
+		topThread.insertAdjacentHTML("beforebegin", sortModeSelectorHTML);
 
-	commentsSortModeSelector.queryAll("button").forEach(button => {
-		button.addActivateEvent(GW.commentsSortModeSelectButtonClicked = (event) => {
-			GWLog("GW.commentsSortModeSelectButtonClicked");
+		queryAll(`#${section}-sort-mode-selector button`).forEach(button => {
+			button.addActivateEvent(GW[`${section}SortModeSelectButtonClicked`] = (event) => {
+				GWLog(`GW.${section}SortModeSelectButtonClicked`);
 
-			event.target.parentElement.queryAll("button").forEach(button => {
-				button.removeClass("selected");
-				button.disabled = false;
+				event.target.parentElement.queryAll("button").forEach(button => {
+					button.removeClass("selected");
+					button.disabled = false;
+				});
+				event.target.addClass("selected");
+				event.target.disabled = true;
+
+				setTimeout(() => { sortComments(section, /sort-mode-(\S+)/.exec(event.target.className)[1]); });
+				setCommentsSortModeSelectButtonsAccesskey(section);
 			});
-			event.target.addClass("selected");
-			event.target.disabled = true;
-
-			setTimeout(() => { sortComments(/sort-mode-(\S+)/.exec(event.target.className)[1]); });
-			setCommentsSortModeSelectButtonsAccesskey();
 		});
 	});
 
-	// TODO: Make this actually get the current sort mode (if that’s saved).
-	// TODO: Also change the condition here to properly get chrono/threaded mode,
-	// when that is properly done with cookies.
-	let currentSortMode = (location.href.search("chrono=t") == -1) ? CommentSortMode.TOP : CommentSortMode.OLD;
-	topCommentThread.parentElement.addClass("sorted-" + currentSortMode);
-	commentsSortModeSelector.query(".sort-mode-" + currentSortMode).disabled = true;
-	commentsSortModeSelector.query(".sort-mode-" + currentSortMode).addClass("selected");
-	setCommentsSortModeSelectButtonsAccesskey();
+	[ "comments", "answers" ].forEach(section => {
+		if (query(`#${section}`) == null) return;
+
+		// TODO: Make this actually get the current sort mode (if that’s saved).
+		// TODO: Also change the condition here to properly get chrono/threaded mode,
+		// when that is properly done with cookies.
+		let currentSortMode = (location.href.search("chrono=t") == -1) ? CommentSortMode.TOP : CommentSortMode.OLD;
+		query(`#${section}`).addClass("sorted-" + currentSortMode);
+		query(`#${section}-sort-mode-selector .sort-mode-${currentSortMode}`).disabled = true;
+		query(`#${section}-sort-mode-selector .sort-mode-${currentSortMode}`).addClass("selected");
+		setCommentsSortModeSelectButtonsAccesskey(section);
+	});
 }
 
-function setCommentsSortModeSelectButtonsAccesskey() {
+function setCommentsSortModeSelectButtonsAccesskey(section) {
 	GWLog("setCommentsSortModeSelectButtonsAccesskey");
 
-	queryAll("#comments-sort-mode-selector button").forEach(button => {
+	queryAll(`#${section}-sort-mode-selector button`).forEach(button => {
 		button.removeAttribute("accesskey");
-		button.title = /(.+?)( \[z\])?$/.exec(button.title)[1];
+		button.title = /(.+?)( \[[zx]\])?$/.exec(button.title)[1];
 	});
-	let selectedButton = query("#comments-sort-mode-selector button.selected");
+	let selectedButton = query(`#${section}-sort-mode-selector button.selected`);
 	let nextButtonInCycle = (selectedButton == selectedButton.parentElement.lastChild) ? selectedButton.parentElement.firstChild : selectedButton.nextSibling;
-	nextButtonInCycle.accessKey = "z";
-	nextButtonInCycle.title += " [z]";
+	nextButtonInCycle.accessKey = (section == "comments") ? 'z' : 'x';
+	nextButtonInCycle.title += ` [${nextButtonInCycle.accessKey}]`;
 }
 
 /*************************/

@@ -1000,6 +1000,13 @@ a#inbox-indicator.new-messages:hover::before {
 }
 <?php fit_content(".comments > .sublevel-nav.sort"); ?>
 
+#comments > .sublevel-nav.sort::before {
+	content: "Sort comments";
+}
+#answers > .sublevel-nav.sort::before {
+	content: "Sort answers";
+}
+
 /*******************************/
 /* COMMENTS VIEW MODE SELECTOR */
 /*******************************/
