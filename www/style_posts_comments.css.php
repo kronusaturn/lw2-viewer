@@ -943,6 +943,11 @@ a.comment-child-link::before {
 	max-height: calc(var(--GW-comment-minimized-height) - 2px);
 }
 
+.comment-item .karma.active-controls::after, 
+.comment-item .karma .karma-value::after {
+	display: none;
+}
+
 /*=-----------------------------=*/
 /*= Ellipsis (“...”) hover area =*/
 /*=-----------------------------=*/
@@ -961,6 +966,9 @@ a.comment-child-link::before {
 	line-height: 1;
 	pointer-events: auto;
 	color: var(--GW-hyperlink-color);
+}
+#content.conversation-page.compact .comment-item::after {
+	padding: 0 0 0.25em 0;
 }
 
 #content.compact .comment-meta {
@@ -1051,7 +1059,7 @@ a.comment-child-link::before {
 		width: 100%;
 		height: 100%;
 		z-index: -2;
-		background-color: rgba(0,0,0,0.5);
+		background-color: rgba(0, 0, 0, 0.5);
 	}
 }
 
