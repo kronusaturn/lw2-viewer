@@ -6488,7 +6488,7 @@ th.mathjax-inline-container {
 	--GW-new-comment-item-outline-color: #7f3b92;
 
 	--GW-comment-highlight-color: #005dc3;
-	--GW-comment-highlight-color: #0047b5;
+	--GW-comment-highlight-color-faint: #0047b5;
 
 	--GW-theme-selector-outline-color: #575756;
 }

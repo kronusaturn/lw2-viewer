@@ -101,7 +101,7 @@
 	--GW-new-comment-item-outline-color: #9037ff;
 
 	--GW-comment-highlight-color: #c79700;
-	--GW-comment-highlight-color: #e7b200;
+	--GW-comment-highlight-color-faint: #e7b200;
 
 	--GW-theme-selector-outline-color: #ddd;
 }

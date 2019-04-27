@@ -85,7 +85,7 @@
 	--GW-new-comment-item-outline-color: #e00;
 
 	--GW-comment-highlight-color: #00f;
-	--GW-comment-highlight-color: #0090ff;
+	--GW-comment-highlight-color-faint: #0090ff;
 
 	--GW-theme-selector-outline-color: transparent;
 
