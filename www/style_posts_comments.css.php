@@ -943,8 +943,8 @@ a.comment-child-link::before {
 	max-height: calc(var(--GW-comment-minimized-height) - 2px);
 }
 
-.comment-item .karma.active-controls::after, 
-.comment-item .karma .karma-value::after {
+.comment-item.minimized .karma.active-controls::after,
+.comment-item.minimized .karma .karma-value::after {
 	display: none;
 }
 
