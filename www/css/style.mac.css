@@ -376,17 +376,6 @@ a {
 	pointer-events: none;
 }
 
-/**********/
-/* ERRORS */
-/**********/
-
-.gw-error {
-	padding: 0 var(--GW-current-page-content-right-side-padding) 0 var(--GW-current-page-content-left-side-padding);
-}
-.gw-error p {
-	font-size: 1.25em;
-}
-
 /**************/
 /* PRINT VIEW */
 /**************/
@@ -5991,7 +5980,7 @@ th.mathjax-inline-container {
 /**************/
 
 .error-container {
-	padding: 2em;
+	padding: 1em var(--GW-current-page-content-right-side-padding) 2em var(--GW-current-page-content-left-side-padding);
 }
 
 .error-container h1 {
@@ -6000,10 +5989,28 @@ th.mathjax-inline-container {
 
 .error-container input[type="submit"] {
 	font-weight: var(--GW-UI-font-weight-heavy);
-	font-size: 1.125rem;
-	padding: 0.5em 1.25em;
+	font-size: 1.5rem;
+	padding: 0.375em 1em;
 	margin: 2em auto 0 auto;
 	display: block;
+}
+
+.gw-error p {
+	font-size: 1.25em;
+}
+
+/*=------------=*/
+/*= Retry form =*/
+/*=------------=*/
+
+.reassurance .message {
+	text-align: center;
+	font-size: 1.375em;
+}
+.reassurance .saved-comment-content {
+	white-space: pre-wrap;
+	text-align: left;
+	padding: 0.75em 1em;
 }
 
 /**************/
@@ -7652,6 +7659,17 @@ h1.listing.own-post-listing {
 .error-container input[type="submit"] {
 	background-color: #e4e4e4;
 	border: 1px solid #ccc;
+}
+/*=------------=*/
+/*= Retry form =*/
+/*=------------=*/
+
+.reassurance {
+	border-top: 1px solid #ddd;
+}
+.reassurance .saved-comment-content {
+	border: 1px solid #ddd;
+	background-color: #ffd;
 }
 
 /*===================*/

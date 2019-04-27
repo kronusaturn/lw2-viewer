@@ -4005,6 +4005,17 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		});
 	}
 
+	// On the comment retry form, add reassurance message.
+	let retryForm = query(".error-retry-form");
+	if (retryForm) {
+		let savedCommentContent = retryForm.query("input[name='text']").value;
+		let reassuranceHTML = `<div class='reassurance'>
+			<p class='message'><strong>Your comment was not lost!</strong> Click the “<strong>Retry</strong>” button below to try posting it again.</p>
+			<p class='saved-comment-content body-text'>${savedCommentContent}</p>
+		</div>`;
+		query(".gw-error").insertAdjacentHTML("beforeend", reassuranceHTML);
+	}
+
 	// Add event listeners for Escape and Enter, for the theme tweaker.
 	let themeTweakerHelpWindow = query("#theme-tweaker-ui .help-window");
 	let themeTweakerUI = query("#theme-tweaker-ui");

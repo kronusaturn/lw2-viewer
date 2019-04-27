@@ -345,7 +345,7 @@
 /**************/
 
 .error-container {
-	padding: 2em;
+	padding: 1em var(--GW-current-page-content-right-side-padding) 2em var(--GW-current-page-content-left-side-padding);
 }
 
 .error-container h1 {
@@ -354,10 +354,28 @@
 
 .error-container input[type="submit"] {
 	font-weight: var(--GW-UI-font-weight-heavy);
-	font-size: 1.125rem;
-	padding: 0.5em 1.25em;
+	font-size: 1.5rem;
+	padding: 0.375em 1em;
 	margin: 2em auto 0 auto;
 	display: block;
+}
+
+.gw-error p {
+	font-size: 1.25em;
+}
+
+/*=------------=*/
+/*= Retry form =*/
+/*=------------=*/
+
+.reassurance .message {
+	text-align: center;
+	font-size: 1.375em;
+}
+.reassurance .saved-comment-content {
+	white-space: pre-wrap;
+	text-align: left;
+	padding: 0.75em 1em;
 }
 
 /**************/

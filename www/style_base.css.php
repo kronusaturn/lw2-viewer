@@ -163,17 +163,6 @@ a {
 	pointer-events: none;
 }
 
-/**********/
-/* ERRORS */
-/**********/
-
-.gw-error {
-	padding: 0 var(--GW-current-page-content-right-side-padding) 0 var(--GW-current-page-content-left-side-padding);
-}
-.gw-error p {
-	font-size: 1.25em;
-}
-
 /**************/
 /* PRINT VIEW */
 /**************/
