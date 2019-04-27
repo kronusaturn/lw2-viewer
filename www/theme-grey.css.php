@@ -558,9 +558,22 @@ body {
 	color: #bbb;
 }
 @media only screen and (hover: hover) and (pointer: fine) {
-	#quick-nav-ui a:hover  {
+	#quick-nav-ui a:hover,
+	#quick-nav-ui a.highlighted {
 		color: #000;
 		background-color: #d8d8d8;
+	}
+	#quick-nav-ui a.highlighted {
+		transform: scale(0.9);
+	}
+	#quick-nav-ui a {
+		transition:
+			color 0.1s ease,
+			background-color 0.1s ease,
+			transform 0.1s ease;
+	}
+	#quick-nav-ui a:hover {
+		transition: none;
 	}
 	#quick-nav-ui a:focus:not(:hover) {
 		transform: none;
@@ -592,7 +605,7 @@ body {
 	color: #777;
 }
 #new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
-	color: #ccc;
+	color: #ddd;
 	text-shadow: none;
 }
 @media only screen and (hover: hover) and (pointer: fine) {
@@ -606,6 +619,17 @@ body {
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button:focus {
 		text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button.highlighted {
+		color: var(--GW-hyperlink-active-color);
+		text-shadow: var(--GW-shadow-white-glow);
+		transform: scale(0.9);
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button {
+		transition:
+			color 0.1s ease,
+			text-shadow 0.1s ease,
+			transform 0.1s ease;
 	}
 }
 
