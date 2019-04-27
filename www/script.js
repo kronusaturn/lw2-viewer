@@ -2783,15 +2783,16 @@ function injectCommentsSortModeSelector() {
 	});
 
 	[ "comments", "answers" ].forEach(section => {
-		if (query(`#${section} > .comment-thread`) == null) return;
+		let sortModeSelector = query(`#${section}-sort-mode-selector`);
+		if (sortModeSelector == null) return;
 
 		// TODO: Make this actually get the current sort mode (if that’s saved).
 		// TODO: Also change the condition here to properly get chrono/threaded mode,
 		// when that is properly done with cookies.
 		let currentSortMode = (location.href.search("chrono=t") == -1) ? CommentSortMode.TOP : CommentSortMode.OLD;
 		query(`#${section}`).addClass("sorted-" + currentSortMode);
-		query(`#${section}-sort-mode-selector .sort-mode-${currentSortMode}`).disabled = true;
-		query(`#${section}-sort-mode-selector .sort-mode-${currentSortMode}`).addClass("selected");
+		sortModeSelector.query(`.sort-mode-${currentSortMode}`).disabled = true;
+		sortModeSelector.query(`.sort-mode-${currentSortMode}`).addClass("selected");
 		setCommentsSortModeSelectButtonsAccesskey(section);
 	});
 }
