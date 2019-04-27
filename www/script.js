@@ -2761,7 +2761,7 @@ function injectCommentsSortModeSelector() {
 	});
 
 	[ "comments", "answers" ].forEach(section => {
-		if (query(`#${section}`) == null) return;
+		if (query(`#${section} > .comment-thread`) == null) return;
 
 		// TODO: Make this actually get the current sort mode (if that’s saved).
 		// TODO: Also change the condition here to properly get chrono/threaded mode,
