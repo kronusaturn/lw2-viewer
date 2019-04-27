@@ -1931,6 +1931,17 @@ function injectQuickNavUI() {
 	quickNavContainer.query("a[href='#top']").addActivateEvent(GW.quickNavTopButtonClicked = (event) => {
 		event.target.blur();
 	});
+
+	// Add flash indicator for accesskey activation.
+	quickNavContainer.queryAll("a").forEach(button => {
+		button.addActivateEvent(GW.quickNavButtonClicked = (event) => {
+			clearTimeout(button.fadeOutTimer);
+			button.addClass("highlighted");
+			button.fadeOutTimer = setTimeout(() => {
+				button.removeClass("highlighted");
+			}, 150);
+		});
+	});
 }
 
 /**********************/

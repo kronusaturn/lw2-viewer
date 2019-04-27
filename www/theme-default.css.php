@@ -524,9 +524,18 @@ body {
 }
 
 @media only screen and (hover: hover) and (pointer: fine) {
-	#quick-nav-ui a:hover {
+	#quick-nav-ui a:hover,
+	#quick-nav-ui a.highlighted {
 		color: #000;
 		background-color: #eee;
+	}
+	#quick-nav-ui a {
+		transition:
+			color 0.15s ease,
+			background-color 0.15s ease;
+	}
+	#quick-nav-ui a:hover {
+		transition: none;
 	}
 	#quick-nav-ui a:focus:not(:hover) {
 		transform: none;
