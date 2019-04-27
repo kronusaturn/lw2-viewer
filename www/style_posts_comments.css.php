@@ -783,6 +783,10 @@ a.comment-parent-link:hover::before {
 	}
 }
 
+.comment-item-highlight-faint {
+	--GW-comment-highlight-color: var(--GW-comment-highlight-color-faint);
+}
+
 .comment-child-links {
 	flex-basis: 100%;
 
@@ -826,6 +830,7 @@ a.comment-child-link::before {
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
+
 @media only screen and (max-width: 900px) {
 	a.comment-parent-link::before,
 	a.comment-parent-link::after {
@@ -1117,6 +1122,13 @@ a.comment-child-link::before {
 	height: 100%;
 	z-index: 5000;
 	pointer-events: none;
+}
+
+.new-comment {
+	--GW-comment-item-outline-color: var(--GW-new-comment-item-outline-color);
+}
+.new-comment.comment-item-focused {
+	--GW-comment-item-outline-color: var(--GW-comment-item-focused-outline-color);
 }
 
 /***********************************/

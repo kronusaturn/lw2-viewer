@@ -84,6 +84,11 @@
 		0 0 30px #999,
 		0 0 40px #999;
 	--GW-comment-item-expanded-outline-color: #ccc;
+
+	--GW-comment-highlight-color: #e7b200;
+	--GW-comment-highlight-color: #f8e7b5;
+
+	--GW-new-comment-item-outline-color: #f00;
 }
 
 /*======*/
@@ -1381,12 +1386,6 @@ a.comment-parent-link:hover::before {
 		0 0 10px var(--GW-comment-highlight-color);
 	border: 1px solid var(--GW-comment-highlight-color);
 }
-.comment-item-highlight {
-	--GW-comment-highlight-color: #e7b200;
-}
-.comment-item-highlight-faint {
-	--GW-comment-highlight-color: #f8e7b5;
-}
 
 /*================================*/
 /* DEEP COMMENT THREAD COLLAPSING */
@@ -1459,12 +1458,6 @@ a.comment-parent-link:hover::before {
 		0 0 2px 0 var(--GW-comment-item-outline-color), 
 		0 0 1px 0 var(--GW-comment-item-outline-color) inset,
 		0 0 2px 0 var(--GW-comment-item-outline-color) inset;
-}
-.new-comment {
-	--GW-comment-item-outline-color: #f00;
-}
-.new-comment.comment-item-focused {
-	--GW-comment-item-outline-color: var(--GW-comment-item-focused-outline-color);
 }
 
 /*=================================*/
