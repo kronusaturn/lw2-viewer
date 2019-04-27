@@ -190,7 +190,7 @@
 	--GW-comment-item-expanded-background-color: transparent;
 	--GW-comment-item-expanded-box-shadow: none;
 	--GW-comment-item-expanded-outline-color: transparent;
-	--GW-comment-item-expanded-outline: 0px solid var(--GW-comment-item-expanded-outline-color);
+	--GW-comment-item-expanded-outline: 3px solid var(--GW-comment-item-expanded-outline-color);
 
 	--GW-comment-item-focused-background-color: var(--GW-comment-item-expanded-background-color);
 	--GW-comment-item-focused-outline-color: var(--GW-comment-item-expanded-outline-color);

@@ -87,6 +87,17 @@
 	--GW-comment-background-color-even: #fff;
 	--GW-comment-background-color-target: #ffd;
 
+	--GW-comment-item-expanded-background-color: #fff;
+	--GW-comment-item-expanded-box-shadow:
+		0 0  3px #fff,
+		0 0  5px #fff,
+		0 0  7px #fff,
+		0 0 10px #fff,
+		0 0 20px #fff,
+		0 0 30px #fff,
+		0 0 40px #fff;
+	--GW-comment-item-expanded-outline-color: #f60;
+
 	--GW-theme-selector-outline-color: #ddd;
 }
 
@@ -1455,10 +1466,6 @@ a.comment-parent-link:hover::before {
 	--GW-comment-highlight-color: #e7b200;
 }
 
-.comment-popup {
-	background-color: #fff;
-}
-
 /*================================*/
 /* DEEP COMMENT THREAD COLLAPSING */
 /*================================*/
@@ -1533,60 +1540,22 @@ a.comment-parent-link:hover::before {
 	opacity: 0.7;
 }
 
-/*=======================*/
-/* COMMENTS COMPACT VIEW */
-/*=======================*/
-
-@media only screen and (hover: hover) and (pointer: fine) {
-	#content.compact .comment-item:hover .comment,
-	#content.compact .comment-item.expanded .comment {
-		background-color: #fff;
-		outline: 3px solid var(--GW-hyperlink-color);
-	}
-	#content.compact .comment-item:hover .comment::before,
-	#content.compact .comment-item.expanded .comment::before {
-		background-color: #fff;
-		box-shadow: 
-			0 0  3px #fff,
-			0 0  5px #fff,
-			0 0  7px #fff,
-			0 0 10px #fff,
-			0 0 20px #fff,
-			0 0 30px #fff,
-			0 0 40px #fff;
-	}
-}
-@media not screen and (hover: hover) and (pointer: fine) {
-	#content.compact .comment-thread.expanded .comment {
-		background-color: #fff;
-		outline: 3px solid var(--GW-hyperlink-color);
-	}
-	#content.compact .comment-thread.expanded .comment::before {
-		background-color: #fff;
-		box-shadow: 
-			0 0  3px #fff,
-			0 0  5px #fff,
-			0 0  7px #fff,
-			0 0 10px #fff,
-			0 0 20px #fff,
-			0 0 30px #fff,
-			0 0 40px #fff;
-	}
-}
-
 /*===========================*/
 /* HIGHLIGHTING NEW COMMENTS */
 /*===========================*/
 
 .new-comment::before {
-	outline: 2px solid var(--GW-new-comment-highlight-color);
+	outline: 2px solid var(--GW-comment-item-outline-color);
 	box-shadow:
-		0 0 6px -2px var(--GW-new-comment-highlight-color) inset, 
-		0 0 4px var(--GW-new-comment-highlight-color), 
-		0 0 6px var(--GW-new-comment-highlight-color);
+		0 0 6px -2px var(--GW-comment-item-outline-color) inset, 
+		0 0 4px var(--GW-comment-item-outline-color), 
+		0 0 6px var(--GW-comment-item-outline-color);
 }
 .new-comment {
-	--GW-new-comment-highlight-color: #9037ff;
+	--GW-comment-item-outline-color: #9037ff;
+}
+.new-comment.comment-item-focused {
+	--GW-comment-item-outline-color: var(--GW-comment-item-focused-outline-color);
 }
 
 /*=================================*/
