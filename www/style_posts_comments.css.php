@@ -576,7 +576,7 @@ ul.comment-thread {
 	position: relative;
 }
 
-.comment-item-focused .comment {
+.listings .comment-item-focused .comment {
 	background-color: var(--GW-comment-item-focused-background-color);
 	outline: var(--GW-comment-item-focused-outline);
 }
