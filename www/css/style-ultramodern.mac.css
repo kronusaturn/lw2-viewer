@@ -6960,9 +6960,26 @@ p {
 	color: #777;
 }
 @media only screen and (hover: hover) and (pointer: fine) {
-	#quick-nav-ui a:hover  {
+	#quick-nav-ui a:hover,
+	#quick-nav-ui a.highlighted   {
 		color: #444;
 		box-shadow: 0 0 0 1px #ccc;
+	}
+	#quick-nav-ui a.highlighted {
+		transform: scale(0.9);
+	}
+	#quick-nav-ui a {
+		transition:
+			color 0.1s ease,
+			background-color 0.1s ease,
+			box-shadow 0.1s ease;
+	}
+	#quick-nav-ui a:hover {
+		transition: none;
+	}
+	#quick-nav-ui a:focus:not(:hover) {
+		transform: none;
+		text-shadow: none;
 	}
 }
 
@@ -6989,8 +7006,19 @@ p {
 	#new-comment-nav-ui .new-comments-count:hover {
 		text-shadow: var(--GW-shadow-white-glow);
 	}
-	#new-comment-nav-ui .new-comment-sequential-nav-button:hover {
+	#new-comment-nav-ui .new-comment-sequential-nav-button:hover,
+	#new-comment-nav-ui .new-comment-sequential-nav-button.highlighted {
 		color: #444;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button.highlighted {
+		text-shadow: var(--GW-shadow-link-glow);
+		transform: scale(0.9);
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button {
+		transition:
+			color 0.1s ease,
+			text-shadow 0.1s ease,
+			transform 0.1s ease;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button:focus {
 		text-shadow: var(--GW-shadow-white-glow);
