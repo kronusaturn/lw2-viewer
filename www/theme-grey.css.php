@@ -907,7 +907,7 @@ h1.listing a[href^="http"] {
 }
 
 h1.listing:not(:focus-within) a:not(:hover) .post-type-prefix {
-	color: #e3c600;
+	color: #ffb21a;
 	text-shadow:
 		0 0 0 #ffdf00,
 		0 0 1px #ffdf00;
@@ -2169,6 +2169,74 @@ select {
 	background-color: #dde;
 	border-radius: 4px;
 	border: 1px solid #cce;
+}
+
+/*===============*/
+/* KEYBOARD HELP */
+/*===============*/
+
+#keyboard-help-overlay .keyboard-help-container {
+	background-color: #fff;
+}
+
+/*=-------------=*/
+/*= Scroll bars =*/
+/*=-------------=*/
+
+#keyboard-help-overlay .keyboard-help-container::-webkit-scrollbar {
+	width: 14px;
+	background-color: transparent;
+}
+#keyboard-help-overlay .keyboard-help-container::-webkit-scrollbar-track {
+	border-left: 1px solid #ddd;
+}
+#keyboard-help-overlay .keyboard-help-container::-webkit-scrollbar-thumb {
+	background-color: #ccc;
+	box-shadow:
+		1px 0 0 0 #fff inset,
+		-1px 0 0 0 #fff inset,
+		0 1px 0 0 #fff inset,
+		0 -1px 0 0 #fff inset;
+	border-left: 1px solid #ddd;
+}
+#keyboard-help-overlay .keyboard-help-container::-webkit-scrollbar-thumb:hover {
+	background-color: #aaa;
+}
+
+/*=--------------------=*/
+/*= Dividers & heading =*/
+/*=--------------------=*/
+
+#keyboard-help-overlay .keyboard-help-container h1,
+#keyboard-help-overlay .keyboard-help-container .keyboard-shortcuts-lists {
+	border-color: #ddd;
+}
+
+/*=------=*/
+/*= Keys =*/
+/*=------=*/
+
+#keyboard-help-overlay .keyboard-help-container code {
+	background-color: #eee;
+	border: 1px solid #ccc;
+}
+#keyboard-help-overlay .keyboard-help-container code.ak {
+	background-color: #ffeb83;
+	border-color: #d4a500;
+}
+
+/*=--------------=*/
+/*= Close button =*/
+/*=--------------=*/
+
+#keyboard-help-overlay button.close-keyboard-help:hover {
+	background-color: #eee;
+	box-shadow:
+		1px -1px 0 0 #ddd inset;
+}
+#keyboard-help-overlay button.close-keyboard-help:active {
+	box-shadow:
+		0 0 0 1px #ddd;
 }
 
 /*=================*/
