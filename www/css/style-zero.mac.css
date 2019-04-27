@@ -8274,6 +8274,80 @@ u {
 	height: 8px;
 }
 
+#keyboard-help-overlay .keyboard-help-container {
+	background-color: #eee;
+}
+
+/*=-------------=*/
+/*= Scroll bars =*/
+/*=-------------=*/
+
+#keyboard-help-overlay .keyboard-help-container::-webkit-scrollbar {
+	width: 14px;
+	background-color: transparent;
+}
+#keyboard-help-overlay .keyboard-help-container::-webkit-scrollbar-track {
+	border-left: 1px solid #ddd;
+}
+#keyboard-help-overlay .keyboard-help-container::-webkit-scrollbar-thumb {
+	background-color: #ccc;
+	box-shadow:
+		1px 0 0 0 #eee inset,
+		-1px 0 0 0 #eee inset,
+		0 1px 0 0 #eee inset,
+		0 -1px 0 0 #eee inset;
+	border-left: 1px solid #ddd;
+}
+#keyboard-help-overlay .keyboard-help-container::-webkit-scrollbar-thumb:hover {
+	background-color: #aaa;
+}
+
+/*=--------------------=*/
+/*= Dividers & heading =*/
+/*=--------------------=*/
+
+#keyboard-help-overlay .keyboard-help-container h1 {
+	font-size: 1.25em;
+}
+#keyboard-help-overlay .keyboard-help-container h1,
+#keyboard-help-overlay .keyboard-help-container .keyboard-shortcuts-lists {
+	border-color: #ddd;
+}
+
+/*=------=*/
+/*= Keys =*/
+/*=------=*/
+
+#keyboard-help-overlay .keyboard-help-container code {
+	background-color: #fff;
+	border: 1px solid #ccc;
+}
+#keyboard-help-overlay .keyboard-help-container code.ak {
+	background-color: #fff289;
+	border-color: #d4a500;
+}
+
+/*=--------=*/
+/*= Labels =*/
+/*=--------=*/
+#keyboard-help-overlay .keyboard-help-container ul li.section {
+	font-weight: bold;
+}
+
+/*=--------------=*/
+/*= Close button =*/
+/*=--------------=*/
+
+#keyboard-help-overlay button.close-keyboard-help:hover {
+	background-color: #eee;
+	box-shadow:
+		0 1px 0 0 #eee,
+		0 1px 0 1px #ddd;
+}
+#keyboard-help-overlay button.close-keyboard-help:active {
+	box-shadow:
+		0 0 0 1px #ddd;
+}
 /*=================*/
 /* ALIGNMENT FORUM */
 /*=================*/
