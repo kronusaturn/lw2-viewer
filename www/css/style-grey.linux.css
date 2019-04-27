@@ -5991,7 +5991,7 @@ th.mathjax-inline-container {
 	font-weight: var(--GW-UI-font-weight-heavy);
 	font-size: 1.5rem;
 	padding: 0.375em 1em;
-	margin: 2em auto 0 auto;
+	margin: 1.25em auto 0 auto;
 	display: block;
 }
 
@@ -7659,6 +7659,18 @@ h1.listing.own-post-listing {
 .error-container input[type="submit"] {
 	background-color: #e4e4e4;
 	border: 1px solid #ccc;
+}
+
+/*=------------=*/
+/*= Retry form =*/
+/*=------------=*/
+
+.reassurance {
+	border-top: 1px solid #ddd;
+}
+.reassurance .saved-comment-content {
+	border: 1px solid #ddd;
+	background-color: #ffd;
 }
 
 /*===================*/

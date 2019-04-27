@@ -1224,6 +1224,7 @@ h1.listing.own-post-listing {
 	background-color: #e4e4e4;
 	border: 1px solid #ccc;
 }
+
 /*=------------=*/
 /*= Retry form =*/
 /*=------------=*/

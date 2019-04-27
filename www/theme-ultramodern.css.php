@@ -1134,6 +1134,20 @@ h1.listing.own-post-listing {
 /* ERROR PAGE */
 /*============*/
 
+/*=------------=*/
+/*= Retry form =*/
+/*=------------=*/
+
+.reassurance {
+	border-top: 1px solid #666;
+	box-shadow:
+		0 1.5px 1.5px -1.5px #bbb inset,
+		0 1.5px 1.5px -1.5px #777 inset;
+}
+.reassurance .saved-comment-content {
+	border: 1px solid #ddd;
+}
+
 /*===================*/
 /* TABLE OF CONTENTS */
 /*===================*/

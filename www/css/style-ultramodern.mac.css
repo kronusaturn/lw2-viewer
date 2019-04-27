@@ -5991,7 +5991,7 @@ th.mathjax-inline-container {
 	font-weight: var(--GW-UI-font-weight-heavy);
 	font-size: 1.5rem;
 	padding: 0.375em 1em;
-	margin: 2em auto 0 auto;
+	margin: 1.25em auto 0 auto;
 	display: block;
 }
 
@@ -7569,6 +7569,20 @@ h1.listing.own-post-listing {
 /*============*/
 /* ERROR PAGE */
 /*============*/
+
+/*=------------=*/
+/*= Retry form =*/
+/*=------------=*/
+
+.reassurance {
+	border-top: 1px solid #666;
+	box-shadow:
+		0 1.5px 1.5px -1.5px #bbb inset,
+		0 1.5px 1.5px -1.5px #777 inset;
+}
+.reassurance .saved-comment-content {
+	border: 1px solid #ddd;
+}
 
 /*===================*/
 /* TABLE OF CONTENTS */

@@ -356,7 +356,7 @@
 	font-weight: var(--GW-UI-font-weight-heavy);
 	font-size: 1.5rem;
 	padding: 0.375em 1em;
-	margin: 2em auto 0 auto;
+	margin: 1.25em auto 0 auto;
 	display: block;
 }
 

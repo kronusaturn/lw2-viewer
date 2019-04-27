@@ -1225,6 +1225,18 @@ h1.listing.own-post-listing {
 	border: 1px solid #ccc;
 }
 
+/*=------------=*/
+/*= Retry form =*/
+/*=------------=*/
+
+.reassurance {
+	border-top: 1px solid #ddd;
+}
+.reassurance .saved-comment-content {
+	border: 1px solid #ddd;
+	background-color: #ffd;
+}
+
 /*===================*/
 /* TABLE OF CONTENTS */
 /*===================*/

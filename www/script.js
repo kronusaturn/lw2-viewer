@@ -4010,7 +4010,8 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	if (retryForm) {
 		let savedCommentContent = retryForm.query("input[name='text']").value;
 		let reassuranceHTML = `<div class='reassurance'>
-			<p class='message'><strong>Your comment was not lost!</strong> Click the “<strong>Retry</strong>” button below to try posting it again.</p>
+			<p class='message'><strong>Your comment was not lost!</strong></p>
+			<p class='message'>Click the “<strong>Retry</strong>” button below to try posting it again.</p>
 			<p class='saved-comment-content body-text'>${savedCommentContent}</p>
 		</div>`;
 		query(".gw-error").insertAdjacentHTML("beforeend", reassuranceHTML);
