@@ -7740,15 +7740,21 @@ a.post-section.alignment-forum:hover::before {
 	line-height: 1;
 }
 .listings .comment-thread .comment-meta a.date:focus {
-	padding: 5px 4px;
+	padding: 5px 4px 4px 4px;
 	left: -4px;
+}
+#content.compact .listings .comment-thread .comment-meta a.date:focus {
+	padding: 5px 4px 5px 4px;
 }
 .listings .comment-thread .comment-meta a.date:focus + * {
 	margin-left: -8px;
 }
 .listings .comment-thread .comment-meta a.permalink:focus {
-	padding: 3px 5px 5px 5px;
+	padding: 3px 5px 4px 5px;
 	left: -5px;
+}
+#content.compact .listings .comment-thread .comment-meta a.permalink:focus {
+	padding: 3px 5px 5px 5px;
 }
 .listings .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
 	margin-left: -10px;

@@ -1124,6 +1124,10 @@ a.post-section.alignment-forum:hover::before {
 	padding: 0 5px;
 	left: -5px;
 }
+#content.compact .listings .comment-thread .comment-meta a.date:focus,
+#content.compact .listings .comment-thread .comment-meta a.permalink:focus {
+	padding: 2px 5px 0 5px;
+}
 .listings .comment-thread .comment-meta a.date:focus + *,
 .listings .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
 	margin-left: -10px;
@@ -1146,14 +1150,14 @@ a.comment-parent-link:hover::before {
 
 .comment-item-highlight,
 .comment-item-highlight-faint {
-	outline: 1px solid var(--GW-comment-highlight-color);
+	outline: 2px solid var(--GW-comment-highlight-color);
 	border: 1px solid var(--GW-comment-highlight-color);
 }
 .comment-item-highlight {
-	--GW-comment-highlight-color: #ccc;
+	--GW-comment-highlight-color: #00f;
 }
 .comment-item-highlight-faint {
-	--GW-comment-highlight-color: #ddd;
+	--GW-comment-highlight-color: #0090ff;
 }
 
 .comment-popup {

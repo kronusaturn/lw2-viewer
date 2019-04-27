@@ -1321,8 +1321,11 @@ a.post-section.alignment-forum:hover::before {
 	line-height: 1;
 }
 .listings .comment-thread .comment-meta a.date:focus {
-	padding: 4px 6px 3px 6px;
+	padding: 5px 6px 4px 6px;
 	left: -6px;
+}
+#content.compact .listings .comment-thread .comment-meta a.date:focus {
+	padding: 6px 6px 4px 6px;
 }
 .listings .comment-thread .comment-meta a.date:focus + * {
 	margin-left: -12px;
