@@ -1065,8 +1065,8 @@ a.comment-child-link::before {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 520px) {
-	#content.compact > .comment-thread .comment-item {
-		max-height: var(--GW-comments-compact-height-mobile);
+	#content.compact .comment-item {
+		max-height: var(--GW-comment-compact-height-mobile);
 	}
 }
 
@@ -1138,7 +1138,6 @@ a.comment-child-link::before {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-
 @media only screen and (max-width: 520px) {
 	.comment-item.minimized {
 		height: var(--GW-comment-minimized-height-mobile);
@@ -1155,18 +1154,24 @@ a.comment-child-link::before {
 .comment-item.ignored {
 	overflow: hidden;
 }
-#content.index-page .comment-item.ignored,
-#content.inbox-user-page .comment-item.ignored {
-	max-height: var(--GW-comment-compact-height);
-}
 #content.comment-thread-page .comment-item.ignored:not(.maximized) {
-	height: var(--GW-comment-compact-height);
+	height: var(--GW-comment-minimized-height);
 }
 
 /*	Ignored comment author.
 	*/
 .comment-item.ignored .author {
 	text-decoration: line-through;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 520px) {
+	#content.comment-thread-page .comment-item.ignored:not(.maximized) {
+		height: var(--GW-comment-compact-minimized-height);
+	}
 }
 
 /***********************************/
