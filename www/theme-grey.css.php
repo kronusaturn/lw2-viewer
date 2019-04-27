@@ -909,10 +909,10 @@ h1.listing a:not(:hover) .post-type-prefix {
 /* SPAM */
 /*======*/
 
-h1.listing.spam {
+h1.listing:not(:focus-within).spam {
 	opacity: 0.3;
 }
-h1.listing.spam + .post-meta {
+h1.listing:not(:focus-within).spam + .post-meta {
 	opacity: 0.15;
 }
 h1.listing.spam:hover,

@@ -486,10 +486,10 @@ h1.listing .edit-post-link:hover {
 /* SPAM */
 /*======*/
 
-h1.listing.spam {
+h1.listing:not(:focus-within).spam {
 	opacity: 0.1;
 }
-h1.listing.spam + .post-meta {
+h1.listing:not(:focus-within).spam + .post-meta {
 	opacity: 0.2;
 }
 h1.listing.spam:hover,
