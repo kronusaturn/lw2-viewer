@@ -191,6 +191,9 @@
 	--GW-comment-background-color-odd: transparent;
 	--GW-comment-background-color-even: transparent;
 	--GW-comment-background-color-target: transparent;
+
+	--GW-comment-item-focused-background-color: transparent;
+	--GW-comment-popup-background-color: var(--GW-comment-item-focused-background-color);
 }
 
 
@@ -3821,6 +3824,7 @@ a.comment-child-link::before {
 		font-size: 1rem;
 		white-space: unset;
 		pointer-events: none;
+		background-color: var(--GW-comment-popup-background-color);
 	}
 	.comment-popup .comment-parent-link,
 	.comment-popup .comment-minimize-button {

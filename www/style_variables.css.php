@@ -186,5 +186,8 @@
 	--GW-comment-background-color-odd: transparent;
 	--GW-comment-background-color-even: transparent;
 	--GW-comment-background-color-target: transparent;
+
+	--GW-comment-item-focused-background-color: transparent;
+	--GW-comment-popup-background-color: var(--GW-comment-item-focused-background-color);
 }
 

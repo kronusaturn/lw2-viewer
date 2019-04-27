@@ -807,6 +807,7 @@ a.comment-child-link::before {
 		font-size: 1rem;
 		white-space: unset;
 		pointer-events: none;
+		background-color: var(--GW-comment-popup-background-color);
 	}
 	.comment-popup .comment-parent-link,
 	.comment-popup .comment-minimize-button {

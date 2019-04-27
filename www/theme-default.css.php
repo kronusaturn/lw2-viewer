@@ -1511,48 +1511,45 @@ a.comment-parent-link:hover::before {
 	--GW-comment-highlight-color: #e7b200;
 }
 
-.comment-popup {
-	background-color: #fff;
+.comment-item-focused .comment {
+	background-color: var(--GW-comment-item-focused-background-color);
+	outline: var(--GW-comment-item-focused-outline);
 }
 
 /*=======================*/
 /* COMMENTS COMPACT VIEW */
 /*=======================*/
 
+:root {
+	--GW-comment-item-focused-background-color: #fff;
+	--GW-comment-item-focused-box-shadow:
+		0 0  3px #fff,
+		0 0  5px #fff,
+		0 0  7px #fff,
+		0 0 10px #fff,
+		0 0 20px #fff,
+		0 0 30px #fff,
+		0 0 40px #fff;
+	--GW-comment-item-focused-outline: 3px solid #00c;
+}
+
 @media only screen and (hover: hover) and (pointer: fine) {
-	#content.compact .comment-item:hover .comment,
-	#content.compact .comment-item.expanded .comment {
-		background-color: #fff;
-		outline: 3px solid #00c;
+	#content.compact .comment-item:hover .comment {
+		outline: var(--GW-comment-item-focused-outline);
 	}
 	#content.compact .comment-item:hover .comment::before,
 	#content.compact .comment-item.expanded .comment::before {
-		background-color: #fff;
-		box-shadow: 
-			0 0  3px #fff,
-			0 0  5px #fff,
-			0 0  7px #fff,
-			0 0 10px #fff,
-			0 0 20px #fff,
-			0 0 30px #fff,
-			0 0 40px #fff;
+		background-color: var(--GW-comment-item-focused-background-color);
+		box-shadow: var(--GW-comment-item-focused-box-shadow);
 	}
 }
 @media not screen and (hover: hover) and (pointer: fine) {
 	#content.compact .comment-thread.expanded .comment {
-		background-color: #fff;
-		outline: 3px solid #00c;
+		outline: var(--GW-comment-item-focused-outline);
 	}
 	#content.compact .comment-thread.expanded .comment::before {
-		background-color: #fff;
-		box-shadow: 
-			0 0  3px #fff,
-			0 0  5px #fff,
-			0 0  7px #fff,
-			0 0 10px #fff,
-			0 0 20px #fff,
-			0 0 30px #fff,
-			0 0 40px #fff;
+		background-color: var(--GW-comment-item-focused-background-color);
+		box-shadow: var(--GW-comment-item-focused-box-shadow);
 	}
 }
 

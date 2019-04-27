@@ -980,8 +980,8 @@ function scrollToNewComment(next) {
 		}
 	}
 	if (targetComment) {
-		queryAll(".comment-item-focused").forEach(highlightedCommentItem => {
-			highlightedCommentItem.removeClass("comment-item-focused");
+		queryAll(".comment-item-focused").forEach(focusedCommentItem => {
+			focusedCommentItem.removeClass("comment-item-focused");
 		});
 
 		expandAncestorsOf(targetCommentID);
@@ -4052,7 +4052,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		});
 		queryAll(".listings .comment-thread .comment-meta a.date, .listings .comment-thread .comment-meta a.permalink").forEach(link => {
 			link.addEventListener("blur", GW.commentListingsHyperlinkUnfocused = (event) => {
-				event.target.closest(".comment-item").removeClasses([ "expanded", "comment-item-highlight" ]);
+				event.target.closest(".comment-item").removeClasses([ "expanded", "comment-item-focused" ]);
 			});
 		});
 	}
