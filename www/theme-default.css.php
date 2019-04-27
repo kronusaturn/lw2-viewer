@@ -865,7 +865,7 @@ h1.listing a[href^="http"] {
 	}
 }
 
-h1.listing a:not(:hover) .post-type-prefix {
+h1.listing:not(:focus-within) a:not(:hover) .post-type-prefix {
 	opacity: 0.35;
 }
 

@@ -7230,7 +7230,7 @@ h1.listing a[href^="http"] {
 	}
 }
 
-h1.listing a:not(:hover) .post-type-prefix {
+h1.listing:not(:focus-within) a:not(:hover) .post-type-prefix {
 	color: #8fd2ff;
 	text-shadow: 
 		0.0px 0.0px 2.0px #777,
