@@ -529,10 +529,14 @@ body {
 		color: #000;
 		background-color: #eee;
 	}
+	#quick-nav-ui a.highlighted {
+		transform: scale(0.9);
+	}
 	#quick-nav-ui a {
 		transition:
-			color 0.15s ease,
-			background-color 0.15s ease;
+			color 0.1s ease,
+			background-color 0.1s ease,
+			transform 0.1s ease;
 	}
 	#quick-nav-ui a:hover {
 		transition: none;
@@ -582,6 +586,17 @@ body {
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button:focus {
 		text-shadow: var(--GW-shadow-white-glow);
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button.highlighted {
+		color: var(--GW-hyperlink-active-color);
+		text-shadow: var(--GW-shadow-white-glow);
+		transform: scale(0.9);
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button {
+		transition:
+			color 0.1s ease,
+			text-shadow 0.1s ease,
+			transform 0.1s ease;
 	}
 }
 

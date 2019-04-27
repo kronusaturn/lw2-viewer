@@ -1935,6 +1935,8 @@ function injectQuickNavUI() {
 	// Add flash indicator for accesskey activation.
 	quickNavContainer.queryAll("a").forEach(button => {
 		button.addActivateEvent(GW.quickNavButtonClicked = (event) => {
+			GWLog("GW.quickNavButtonClicked");
+
 			clearTimeout(button.fadeOutTimer);
 			button.addClass("highlighted");
 			button.fadeOutTimer = setTimeout(() => {
@@ -1973,6 +1975,13 @@ function injectNewCommentNavUI(newCommentsCount) {
 
 		if (event.key == ",") scrollToNewComment(false);
 		if (event.key == ".") scrollToNewComment(true)
+
+		let button = query("#new-comment-nav-ui .new-comment-" + (event.key == "," ? "previous" : "next"));
+		clearTimeout(button.fadeOutTimer);
+		button.addClass("highlighted");
+		button.fadeOutTimer = setTimeout(() => {
+			button.removeClass("highlighted");
+		}, 150);
 	});
 
 	let hnsDatePicker = addUIElement("<div id='hns-date-picker'>"
