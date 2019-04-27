@@ -940,7 +940,7 @@ a.comment-child-link::before {
 	pointer-events: none;
 }
 #content.conversation-page.compact .comment-item {
-	max-height: 36px;
+	max-height: calc(var(--GW-comment-minimized-height) - 2px);
 }
 
 /*=-----------------------------=*/
@@ -952,11 +952,14 @@ a.comment-child-link::before {
 	position: absolute;
 	right: 0;
 	bottom: 0;
+	height: 100%;
+	width: 2em;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	font-size: 2rem;
 	line-height: 1;
-	padding: 0 16px 10px 64px;
 	pointer-events: auto;
-
 	color: var(--GW-hyperlink-color);
 }
 
@@ -964,7 +967,7 @@ a.comment-child-link::before {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	padding: 2px 40px 2px 10px;
+	padding: 2px 4rem 2px 10px;
 }
 #content.compact .comment-meta a {
 	pointer-events: auto;
@@ -975,10 +978,6 @@ a.comment-child-link::before {
 /*=---------------------------=*/
 
 @media only screen and (hover: hover) and (pointer: fine) {
-	#content.compact .comment-item::after {
-		height: 100%;
-		padding: 16px 16px 12px 64px;
-	}
 	#content.compact .comment-item:hover {
 		z-index: 11;
 	}
@@ -1016,10 +1015,6 @@ a.comment-child-link::before {
 	}
 }
 @media not screen and (hover: hover) and (pointer: fine) {
-	#content.compact .comment-item::after {
-		height: 100%;
-		padding: 18px 16px 10px 24px;
-	}
 	#content.compact .comment-thread.expanded .comment-item {
 		overflow: visible;
 		pointer-events: auto;
@@ -1067,6 +1062,9 @@ a.comment-child-link::before {
 @media only screen and (max-width: 520px) {
 	#content.compact .comment-item {
 		max-height: var(--GW-comment-compact-height-mobile);
+	}
+	#content.conversation-page.compact .comment-item {
+		max-height: var(--GW-comment-minimized-height-mobile);
 	}
 }
 
