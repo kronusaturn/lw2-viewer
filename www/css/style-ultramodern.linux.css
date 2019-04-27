@@ -6457,6 +6457,17 @@ th.mathjax-inline-container {
 		0.0px 0.0px 1.0px #777,
 		0.5px 0.5px 1.0px #ccc,
 		0.5px 0.5px 1.0px #bbb;
+
+	--GW-comment-item-expanded-background-color: #999;
+	--GW-comment-item-expanded-box-shadow:
+		0 0  3px #999,
+		0 0  5px #999,
+		0 0  7px #999,
+		0 0 10px #999,
+		0 0 20px #999,
+		0 0 30px #999,
+		0 0 40px #999;
+	--GW-comment-item-expanded-outline-color: #ccc;
 }
 
 /*======*/
@@ -7761,10 +7772,6 @@ a.comment-parent-link:hover::before {
 	--GW-comment-highlight-color: #f8e7b5;
 }
 
-.comment-popup {
-	background-color: #949494;
-}
-
 /*================================*/
 /* DEEP COMMENT THREAD COLLAPSING */
 /*================================*/
@@ -7825,70 +7832,23 @@ a.comment-parent-link:hover::before {
 	opacity: 0.6;
 }
 
-/*=======================*/
-/* COMMENTS COMPACT VIEW */
-/*=======================*/
-
-@media only screen and (hover: hover) and (pointer: fine) {
-	#content.compact .comment-item:hover .comment,
-	#content.compact .comment-item.expanded .comment {
-		background-color: #999;
-		outline: 3px solid #ccc;
-	}
-	#content.compact .comment-item:hover .comment::before,
-	#content.compact .comment-item.expanded .comment::before {
-		background-color: #999;
-		box-shadow: 
-			0 0  3px #999,
-			0 0  5px #999,
-			0 0  7px #999,
-			0 0 10px #999,
-			0 0 20px #999,
-			0 0 30px #999,
-			0 0 40px #999;
-	}
-}
-@media not screen and (hover: hover) and (pointer: fine) {
-	#content.compact .comment-thread.expanded .comment {
-		background-color: #999;
-		outline: 3px solid #ccc;
-	}
-	#content.compact .comment-thread.expanded .comment::before {
-		background-color: #999;
-		box-shadow: 
-			0 0  3px #999,
-			0 0  5px #999,
-			0 0  7px #999,
-			0 0 10px #999,
-			0 0 20px #999,
-			0 0 30px #999,
-			0 0 40px #999;
-	}
-}
-
 /*===========================*/
 /* HIGHLIGHTING NEW COMMENTS */
 /*===========================*/
 
 .new-comment::before {
-	border: 1px solid var(--GW-new-comment-highlight-border-color);
+	border: 1px solid var(--GW-comment-item-outline-color);
 	box-shadow: 
-		0 0 1px 0 var(--GW-new-comment-highlight-shadow-color), 
-		0 0 2px 0 var(--GW-new-comment-highlight-shadow-color), 
-		0 0 1px 0 var(--GW-new-comment-highlight-shadow-color) inset,
-		0 0 2px 0 var(--GW-new-comment-highlight-shadow-color) inset;
+		0 0 1px 0 var(--GW-comment-item-outline-color), 
+		0 0 2px 0 var(--GW-comment-item-outline-color), 
+		0 0 1px 0 var(--GW-comment-item-outline-color) inset,
+		0 0 2px 0 var(--GW-comment-item-outline-color) inset;
 }
 .new-comment {
-	--GW-new-comment-highlight-border-color: var(--GW-comment-highlight-color, #f00);
-	--GW-new-comment-highlight-shadow-color: var(--GW-comment-highlight-color, #f00);
+	--GW-comment-item-outline-color: #f00;
 }
-.comment-item-highlight-faint .new-comment:not(.comment-item-highlight):not(.comment-item-highlight-faint) {
-	--GW-comment-highlight-color: initial;
-}
-@media (-webkit-max-device-pixel-ratio: 1), (max-resolution: 191dpi) {
-	.new-comment {
-		--GW-new-comment-highlight-shadow-color: var(--GW-comment-highlight-color, #900);
-	}
+.new-comment.comment-item-focused {
+	--GW-comment-item-outline-color: var(--GW-comment-item-focused-outline-color);
 }
 
 /*=================================*/
