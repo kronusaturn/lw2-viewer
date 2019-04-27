@@ -1937,6 +1937,7 @@ function injectQuickNavUI() {
 		button.addActivateEvent(GW.quickNavButtonClicked = (event) => {
 			GWLog("GW.quickNavButtonClicked");
 
+			if (/no-/.test(button.className) == true) return;
 			clearTimeout(button.fadeOutTimer);
 			button.addClass("highlighted");
 			button.fadeOutTimer = setTimeout(() => {
@@ -1977,6 +1978,7 @@ function injectNewCommentNavUI(newCommentsCount) {
 		if (event.key == ".") scrollToNewComment(true)
 
 		let button = query("#new-comment-nav-ui .new-comment-" + (event.key == "," ? "previous" : "next"));
+		if (button.disabled == true) return;
 		clearTimeout(button.fadeOutTimer);
 		button.addClass("highlighted");
 		button.fadeOutTimer = setTimeout(() => {
