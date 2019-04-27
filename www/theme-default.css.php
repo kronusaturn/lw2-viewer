@@ -2157,14 +2157,8 @@ u {
 /* KEYBOARD HELP */
 /*===============*/
 
-#keyboard-help-overlay button.close-keyboard-help:hover {
-	background-color: #eee;
-	box-shadow:
-		1px -1px 0 0 #ddd inset;
-}
-#keyboard-help-overlay button.close-keyboard-help:active {
-	box-shadow:
-		0 0 0 1px #ddd;
+#keyboard-help-overlay .keyboard-help-container {
+	background-color: #fff;
 }
 
 /*=-------------=*/
@@ -2220,7 +2214,11 @@ u {
 #keyboard-help-overlay button.close-keyboard-help:hover {
 	background-color: #eee;
 	box-shadow:
-		0 0 0 1px #ddd inset;
+		1px -1px 0 0 #ddd inset;
+}
+#keyboard-help-overlay button.close-keyboard-help:active {
+	box-shadow:
+		0 0 0 1px #ddd;
 }
 
 /*=================*/
