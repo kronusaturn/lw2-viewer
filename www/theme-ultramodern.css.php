@@ -2066,13 +2066,17 @@ select {
 	border-radius: 4px;
 }
 
-/*=======================*/
-/* KEYBOARD HELP OVERLAY */
-/*=======================*/
+/*===============*/
+/* KEYBOARD HELP */
+/*===============*/
 
 #keyboard-help-overlay .keyboard-help-container {
 	background-color: #888;
 }
+
+/*=-------------=*/
+/*= Scroll bars =*/
+/*=-------------=*/
 
 #keyboard-help-overlay .keyboard-help-container::-webkit-scrollbar {
 	width: 16px;
@@ -2094,14 +2098,36 @@ select {
 	background-color: #ccc;
 }
 
+/*=--------------------=*/
+/*= Dividers & heading =*/
+/*=--------------------=*/
+
+#keyboard-help-overlay .keyboard-help-container h1,
+#keyboard-help-overlay .keyboard-help-container .keyboard-shortcuts-lists {
+	border-color: #aaa;
+}
+#keyboard-help-overlay .keyboard-help-container h1 {
+	font-size: 1.25em;
+}
+
+/*=------=*/
+/*= Keys =*/
+/*=------=*/
+
 #keyboard-help-overlay .keyboard-help-container code {
-	text-shadow: 0 0 0 currentColor;
 	background-color: #999;
+	border: 1px solid #ccc;
 	color: #000;
+	text-shadow: 0 0 0 currentColor;
 }
 #keyboard-help-overlay .keyboard-help-container code.ak {
 	background-color: #a89a35;
+	border-color: #d4a500;
 }
+
+/*=--------=*/
+/*= Labels =*/
+/*=--------=*/
 
 #keyboard-help-overlay .keyboard-help-container ul {
 	font-weight: var(--GW-UI-font-weight-light);
@@ -2112,13 +2138,9 @@ select {
 	color: #222;
 }
 
-#keyboard-help-overlay .keyboard-help-container h1,
-#keyboard-help-overlay .keyboard-help-container .keyboard-shortcuts-lists {
-	border-color: #aaa;
-}
-#keyboard-help-overlay .keyboard-help-container h1 {
-	font-size: 1.25em;
-}
+/*=--------------=*/
+/*= Close button =*/
+/*=--------------=*/
 
 #keyboard-help-overlay button.close-keyboard-help:hover {
 	background-color: #999;

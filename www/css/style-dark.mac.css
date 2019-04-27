@@ -1623,7 +1623,6 @@ a {
 }
 
 #keyboard-help-overlay .keyboard-help-container {
-	background-color: #000;
 	filter: drop-shadow(4px 4px 2px #000);
 	flex: 1 1 auto;
 	max-width: 1500px;
@@ -1635,24 +1634,41 @@ a {
 	-moz-user-select: auto;
 	user-select: auto;
 }
+
+/*=----------------=*/
+/*= Heading & note =*/
+/*=----------------=*/
+
 #keyboard-help-overlay .keyboard-help-container h1 {
 	text-align: center;
-	border-bottom: 1px solid #1f1f1f;
 	margin: 0;
 	padding: 12px 20px 10px 20px;
+	border-width: 0 0 1px 0;
+	border-style: solid;
 }
 #keyboard-help-overlay .keyboard-help-container .note {
 	margin: 0.5em auto;
 	padding: 0 1em;
 	width: fit-content;
 }
+
+/*=----------------=*/
+/*= Shortcuts list =*/
+/*=----------------=*/
+
 #keyboard-help-overlay .keyboard-help-container .keyboard-shortcuts-lists {
 	column-width: 21em;
 	column-count: auto;
 	column-gap: 1.5em;
-	border-top: 1px solid #1f1f1f;
 	padding: 15px 20px;
+	border-width: 1px 0 0 0;
+	border-style: solid;
 }
+
+/*=--------=*/
+/*= Labels =*/
+/*=--------=*/
+
 #keyboard-help-overlay .keyboard-help-container ul {
 	list-style-type: none;
 	margin: 0;
@@ -1668,7 +1684,12 @@ a {
 	font-size: 1.125rem;
 	break-after: avoid;
 }
-#keyboard-help-overlay .keyboard-help-container .keys {
+
+/*=------=*/
+/*= Keys =*/
+/*=------=*/
+
+##keyboard-help-overlay .keyboard-help-container .keys {
 	margin: 0 0.5em 0 0;
 	min-width: 4.5em;
 	display: inline-block;
@@ -1678,20 +1699,18 @@ a {
 }
 #keyboard-help-overlay .keyboard-help-container code {
 	display: inline-block;
-	background-color: #131313;
-	border: 1px solid #2c2c2c;
 	padding: 3px 8px 4px 8px;
 	margin: 0 1px;
 	box-shadow: none;
-}
-#keyboard-help-overlay .keyboard-help-container code.ak {
-	background-color: #001b5f;
-	border-color: #0052bc;
 }
 #keyboard-help-overlay .keyboard-help-container code.ak::before {
 	content: "ak+";
 	opacity: 0.3;
 }
+
+/*=---------------------------=*/
+/*= Open keyboard help button =*/
+/*=---------------------------=*/
 
 #nav-item-about button.open-keyboard-help {
 	display: none;
@@ -1718,6 +1737,10 @@ a {
 	}
 }
 
+/*=--------------=*/
+/*= Close button =*/
+/*=--------------=*/
+
 #keyboard-help-overlay button.close-keyboard-help {
 	position: absolute;
 	right: 0;
@@ -1725,11 +1748,6 @@ a {
 	font-family: var(--GW-Font-Awesome);
 	font-size: 1.5rem;
 	padding: 10px 16px;
-}
-#keyboard-help-overlay button.close-keyboard-help:hover {
-	background-color: #131313;
-	box-shadow:
-		0 0 0 1px #1f1f1f inset;
 }
 
 /******************/
@@ -8540,6 +8558,46 @@ u {
 	background-color: #1e1f13;
 	border-radius: 4px;
 	border: 1px solid #282c11;
+}
+
+/*===============*/
+/* KEYBOARD HELP */
+/*===============*/
+
+#keyboard-help-overlay .keyboard-help-container {
+	background-color: #000;
+}
+
+/*=--------------------=*/
+/*= Dividers & heading =*/
+/*=--------------------=*/
+
+#keyboard-help-overlay .keyboard-help-container h1,
+#keyboard-help-overlay .keyboard-help-container .keyboard-shortcuts-lists {
+	border-color: #1f1f1f;
+}
+
+/*=------=*/
+/*= Keys =*/
+/*=------=*/
+
+#keyboard-help-overlay .keyboard-help-container code {
+	background-color: #131313;
+	border: 1px solid #2c2c2c;
+}
+#keyboard-help-overlay .keyboard-help-container code.ak {
+	background-color: #001b5f;
+	border-color: #0052bc;
+}
+
+/*=--------------=*/
+/*= Close button =*/
+/*=--------------=*/
+
+#keyboard-help-overlay button.close-keyboard-help:hover {
+	background-color: #131313;
+	box-shadow:
+		0 0 0 1px #1f1f1f inset;
 }
 
 /*=================*/

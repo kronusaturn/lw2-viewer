@@ -2153,6 +2153,46 @@ u {
 	border: 1px solid #cce;
 }
 
+/*===============*/
+/* KEYBOARD HELP */
+/*===============*/
+
+#keyboard-help-overlay .keyboard-help-container {
+	background-color: #fff;
+}
+
+/*=--------------------=*/
+/*= Dividers & heading =*/
+/*=--------------------=*/
+
+#keyboard-help-overlay .keyboard-help-container h1,
+#keyboard-help-overlay .keyboard-help-container .keyboard-shortcuts-lists {
+	border-color: #ddd;
+}
+
+/*=------=*/
+/*= Keys =*/
+/*=------=*/
+
+#keyboard-help-overlay .keyboard-help-container code {
+	background-color: #eee;
+	border: 1px solid #ccc;
+}
+#keyboard-help-overlay .keyboard-help-container code.ak {
+	background-color: #ffeb83;
+	border-color: #d4a500;
+}
+
+/*=--------------=*/
+/*= Close button =*/
+/*=--------------=*/
+
+#keyboard-help-overlay button.close-keyboard-help:hover {
+	background-color: #eee;
+	box-shadow:
+		0 0 0 1px #ddd inset;
+}
+
 /*=================*/
 /* ALIGNMENT FORUM */
 /*=================*/
