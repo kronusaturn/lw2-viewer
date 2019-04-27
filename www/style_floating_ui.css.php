@@ -584,7 +584,21 @@
 	width: 40px;
 	height: 40px;
 	margin: 10px 0 0 0;
+	visibility: hidden;
 }
+
+/*=--------------------=*/
+/*= Comments & Answers =*/
+/*=--------------------=*/
+
+#quick-nav-ui a[href='#comments'] {
+	display: none;
+}
+#content.post-page + #ui-elements-container #quick-nav-ui a[href='#comments'] {
+	display: block;
+	visibility: visible;
+}
+
 #quick-nav-ui a[href='#answers'] {
 	font-weight: 400;
 	padding: 2px 0 0 1px;
@@ -592,20 +606,12 @@
 }
 #content.question-post-page + #ui-elements-container #quick-nav-ui a[href='#answers'] {
 	display: block;
+	visibility: visible;
 }
+
 #quick-nav-ui a[href='#comments'].no-comments,
 #quick-nav-ui a[href='#answers'].no-answers {
 	pointer-events: none;
-}
-
-#quick-nav-ui a {
-	visibility: hidden;
-}
-#content.post-page ~ #ui-elements-container #quick-nav-ui a[href='#comments'] {
-	visibility: visible;
-}
-#content.question-post-page ~ #ui-elements-container #quick-nav-ui a[href='#answers'] {
-	visibility: visible;
 }
 
 /*=----------------------------=*/
