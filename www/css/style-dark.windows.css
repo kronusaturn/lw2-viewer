@@ -8579,8 +8579,38 @@ u {
 /* KEYBOARD HELP */
 /*===============*/
 
-#keyboard-help-overlay .keyboard-help-container {
-	background-color: #000;
+#keyboard-help-overlay button.close-keyboard-help:hover {
+	background-color: #131313;
+	box-shadow:
+		1px -1px 0 0 #1f1f1f inset;
+}
+#keyboard-help-overlay button.close-keyboard-help:active {
+	box-shadow:
+		0 0 0 1px #1f1f1f;
+}
+
+/*=-------------=*/
+/*= Scroll bars =*/
+/*=-------------=*/
+
+#keyboard-help-overlay .keyboard-help-container::-webkit-scrollbar {
+	width: 14px;
+	background-color: transparent;
+}
+#keyboard-help-overlay .keyboard-help-container::-webkit-scrollbar-track {
+	border-left: 1px solid #1f1f1f;
+}
+#keyboard-help-overlay .keyboard-help-container::-webkit-scrollbar-thumb {
+	background-color: #2c2c2c;
+	box-shadow:
+		1px 0 0 0 #000 inset,
+		-1px 0 0 0 #000 inset,
+		0 1px 0 0 #000 inset,
+		0 -1px 0 0 #000 inset;
+	border-left: 1px solid #1f1f1f;
+}
+#keyboard-help-overlay .keyboard-help-container::-webkit-scrollbar-thumb:hover {
+	background-color: #484848;
 }
 
 /*=--------------------=*/
