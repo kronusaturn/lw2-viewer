@@ -1271,7 +1271,7 @@ a.comment-parent-link:hover::before {
 /*===========================*/
 
 .new-comment::before {
-	outline: 2px solid var(--GW-comment-item-highlight-color);
+	outline: 2px solid var(--GW-comment-item-outline-color);
 }
 
 /*=================================*/
