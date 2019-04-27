@@ -1561,14 +1561,11 @@ a.comment-parent-link:hover::before {
 /*===========================*/
 
 .new-comment::before {
-	outline: 2px solid var(--GW-new-comment-highlight-color);
+	outline: 2px solid #5a5;
 	box-shadow:
-		0 0 6px -2px var(--GW-new-comment-highlight-color) inset, 
-		0 0 4px var(--GW-new-comment-highlight-color), 
-		0 0 6px var(--GW-new-comment-highlight-color);
-}
-.new-comment {
-	--GW-new-comment-highlight-color: #5a5;
+		0 0 6px -2px #5a5 inset, 
+		0 0 4px #5a5, 
+		0 0 6px #5a5;
 }
 
 /*=================================*/
