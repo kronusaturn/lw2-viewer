@@ -2656,6 +2656,7 @@ var CommentSortMode = Object.freeze({
 });
 function sortComments(mode) {
 	GWLog("sortComments");
+
 	let commentsContainer = query("#comments");
 
 	commentsContainer.removeClass(/(sorted-\S+)/.exec(commentsContainer.className)[1]);
@@ -2729,6 +2730,7 @@ function commentVoteCount(commentOrSelector) {
 
 function injectCommentsSortModeSelector() {
 	GWLog("injectCommentsSortModeSelector");
+
 	let topCommentThread = query("#comments > .comment-thread");
 	if (topCommentThread == null) return;
 
@@ -2744,6 +2746,7 @@ function injectCommentsSortModeSelector() {
 	commentsSortModeSelector.queryAll("button").forEach(button => {
 		button.addActivateEvent(GW.commentsSortModeSelectButtonClicked = (event) => {
 			GWLog("GW.commentsSortModeSelectButtonClicked");
+
 			event.target.parentElement.queryAll("button").forEach(button => {
 				button.removeClass("selected");
 				button.disabled = false;
@@ -2768,6 +2771,7 @@ function injectCommentsSortModeSelector() {
 
 function setCommentsSortModeSelectButtonsAccesskey() {
 	GWLog("setCommentsSortModeSelectButtonsAccesskey");
+
 	queryAll("#comments-sort-mode-selector button").forEach(button => {
 		button.removeAttribute("accesskey");
 		button.title = /(.+?)( \[z\])?$/.exec(button.title)[1];
@@ -2784,11 +2788,13 @@ function setCommentsSortModeSelectButtonsAccesskey() {
 
 function addCommentParentPopups() {
 	GWLog("addCommentParentPopups");
+
 	if (!query("#content").hasClass("comment-thread-page")) return;
 
 	queryAll(".comment-meta a.comment-parent-link, .comment-meta a.comment-child-link").forEach(commentParentLink => {
 		commentParentLink.addEventListener("mouseover", GW.commentParentLinkMouseOver = (event) => {
 			GWLog("GW.commentParentLinkMouseOver");
+
 			let parentID = commentParentLink.getAttribute("href");
 			var parent, popup;
 			if (!(parent = (query(parentID)||{}).firstChild)) return;
@@ -2853,6 +2859,7 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 	// Create event listener for clicking on images to focus them.
 	GW.imageClickedToFocus = (event) => {
 		GWLog("GW.imageClickedToFocus");
+
 		focusImage(event.target);
 
 		unhideImageFocusUI();
@@ -3373,12 +3380,14 @@ function keyboardHelpSetup() {
 				[ [ 'ak-/' ], "Jump to top of answers section" ],
 				[ [ 'ak-/' ], "Jump to top of comments section" ],
 				[ [ ';' ], "Focus external link (on link posts)" ],
-				[ [ 'ak-s' ], "Search" ],
+				[ [ 'ak-s' ], "Search" ]
 			], [
 				"Page actions",
 				[ [ 'ak-n' ], "New post or comment" ],
 				[ [ 'ak-w' ], "New answer (on question posts)" ],
-				[ [ 'ak-e' ], "Edit current post" ]
+				[ [ 'ak-e' ], "Edit current post" ],
+				[ [ 'ak-z' ], "Switch to next sort order (comments)" ],
+				[ [ 'ak-x' ], "Switch to next sort order (answers)" ]
 			], [
 				"Sequences",
 				[ [ 'ak-]' ], "Go to next post in sequence" ],
@@ -3394,7 +3403,8 @@ function keyboardHelpSetup() {
 				[ [ 'ak-]' ], "Go to next page" ],
 				[ [ 'ak-[' ], "Go to previous page" ],
 				[ [ 'ak-\\' ], "Go to first page" ],
-				[ [ 'ak-e' ], "Edit currently focused post" ]
+				[ [ 'ak-e' ], "Edit currently focused post" ],
+				[ [ 'ak-z' ], "Switch post sort order" ]
 			], [
 				"Editor",
 				[ [ 'ak-k' ], "Bold text" ],
@@ -4079,7 +4089,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	}
 
 	// Add accesskey to index page sort selector.
-	(query("#content.index-page > .sublevel-nav.sort a")||{}).accessKey = 'z';
+	(query("#content.index-page .sublevel-nav.sort a")||{}).accessKey = 'z';
 
 	// Move MathJax style tags to <head>.
 	var aggregatedStyles = "";
