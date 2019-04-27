@@ -35,10 +35,10 @@
 	--GW-edit-post-page-content-side-padding: 30px;
 	--GW-individual-thread-content-side-padding: 30px;
 
-	--GW-comment-compact-height: 54px;
-	--GW-comment-compact-height-mobile: 105px;
+	--GW-comment-compact-height: 55px;
+	--GW-comment-compact-height-mobile: 104px;
 	--GW-comment-minimized-height: 36px;
-	--GW-comment-minimized-height-mobile: 64px;
+	--GW-comment-minimized-height-mobile: 61px;
 }
 @media only screen and (max-width: 900px) {
 	:root {

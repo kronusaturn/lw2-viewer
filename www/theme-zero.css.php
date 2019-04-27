@@ -31,12 +31,12 @@
 	--GW-edit-post-page-content-side-padding: 30px;
 	--GW-individual-thread-page-content-side-padding: 30px;
 
-	--GW-comment-compact-height: 58px;
+	--GW-comment-compact-height: 55px;
 	--GW-comment-compact-height-mobile: 105px;
 	--GW-comment-minimized-height: 38px;
-	--GW-comment-minimized-height-mobile: 68px;
+	--GW-comment-minimized-height-mobile: 64px;
 
-	--GW-HNS-date-picker-text-field-width: 160px;
+	--GW-HNS-date-picker-text-field-width: 154px;
 }
 @media only screen and (max-width: 900px) {
 	:root {
@@ -528,6 +528,7 @@ body {
 
 #hns-date-picker.flipped {
 	background-color: #e4e4e4;
+	left: calc(100% - 10px);
 }
 
 /*================================*
@@ -585,7 +586,7 @@ body {
 	}
 
 	#hns-date-picker {
-		right: 60px;
+		right: 54px;
 	}
 	#hns-date-picker,
 	#hns-date-picker::before {
