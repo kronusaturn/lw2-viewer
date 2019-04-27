@@ -4247,7 +4247,7 @@ function rectifyMarkup() {
 
 	// Convert bold paragraphs into headings.
 	// NOTE: This will not result in a ToC (as that is generated server-side).
-	content.queryAll("p > strong:only-child, p > b:only-child").forEach(strong => {
+	content.queryAll(".body-text p > strong:only-child, .body-text p > b:only-child").forEach(strong => {
 		if (strong === strong.parentElement.firstChild &&
 			strong === strong.parentElement.lastChild)
 			strong.parentElement.outerHTML = `<h3>${strong.innerHTML}</h3>`;
