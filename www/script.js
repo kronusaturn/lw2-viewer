@@ -1923,9 +1923,12 @@ function injectQuickNavUI() {
 	let quickNavContainer = addUIElement("<div id='quick-nav-ui'>" +
 	`<a href='#top' title="Up to top [,]" accesskey=','>&#xf106;</a>
 	 <a href='#answers' title="Answers [/]">&#xf4a2;</a>
-	 <a href='#comments' title="Comments [/]" accesskey='/'>&#xf036;</a>
+	 <a href='#comments' title="Comments [/]">&#xf036;</a>
 	 <a href='#bottom-bar' title="Down to bottom [.]" accesskey='.'>&#xf107;</a>
 	` + "</div>");
+
+	// Set initial accesskey.
+	quickNavContainer.query(`a[href='${query("#answers") ? "#answers" : "#comments"}']`).accessKey = '/';
 
 	// Correct for bug where this stays focused when clicked.
 	quickNavContainer.query("a[href='#top']").addActivateEvent(GW.quickNavTopButtonClicked = (event) => {
@@ -4010,7 +4013,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	if (retryForm) {
 		let savedCommentContent = retryForm.query("input[name='text']").value;
 		let reassuranceHTML = `<div class='reassurance'>
-			<p class='message'><strong>Your comment was not lost!</strong></p>
+			<p class='message'><strong>Your comment could not be posted, but it was <em>not</em> lost!</strong></p>
 			<p class='message'>Click the “<strong>Retry</strong>” button below to try posting it again.</p>
 			<p class='saved-comment-content body-text'>${savedCommentContent}</p>
 		</div>`;

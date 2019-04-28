@@ -7319,7 +7319,7 @@ h1.listing + .post-meta .post-section.alignment-forum::before {
 #content.user-page h1.listing + .post-meta,
 #content.search-results-page h1.listing,
 #content.search-results-page h1.listing + .post-meta {
-	background-color: #e4e4e4;
+	background-color: #fff;
 }
 #content.user-page h1.listing,
 #content.search-results-page h1.listing {
