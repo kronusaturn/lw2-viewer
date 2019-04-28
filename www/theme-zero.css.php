@@ -902,7 +902,7 @@ h1.listing.own-post-listing {
 	#content.user-page h1.listing a:focus,
 	#content.search-results-page h1.listing a:hover,
 	#content.search-results-page h1.listing a:focus {
-		background-color: rgba(228, 228, 228, 0.85);
+		background-color: rgba(255, 255, 255, 0.85);
 	}
 }
 

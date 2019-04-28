@@ -881,12 +881,12 @@ a.comment-child-link::before {
 .post .post-meta .lw2-link:hover::before {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/lw-blue-on-white.gif")) ?>');
 }
-.comment-meta .comment-parent-link span:hover::before {
+.comment-meta .comment-parent-link:hover span::before {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/up-arrow-blue-on-white.gif")) ?>');
 }
 .comment-meta .permalink:hover::before,
 .comment-meta .lw2-link:hover::before,
-.comment-meta .comment-parent-link span:hover::before,
+.comment-meta .comment-parent-link:hover span::before,
 .post .post-meta .lw2-link:hover::before {
 	box-shadow: 
 		0 0 0 2px #00e,
