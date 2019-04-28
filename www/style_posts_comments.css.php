@@ -564,6 +564,27 @@ ul.comment-thread {
 	}
 }
 
+/***********/
+/* ANSWERS */
+/***********/
+
+#answers > .comment-thread > .comment-item {
+	margin-top: 3.5em;
+}
+#answers > .comment-thread > .comment-item::after {
+	content: "Answer";
+	position: absolute;
+	text-align: center;
+	padding: 0.125em 0.375em 0 0.375em;
+	border-style: solid;
+	bottom: 100%;
+	font-size: 1.25rem;
+	z-index: 5000;
+}
+#answers > .comment-thread > .comment-item.new-comment::after {
+	border-color: var(--GW-comment-item-outline-color);
+}
+
 /********************/
 /* COMMENT LISTINGS */
 /********************/
@@ -1255,9 +1276,8 @@ a.comment-child-link::before {
 .comment-controls .karma {
 	float: left;
 	margin-left: -14px;
-	font-size: 0.9375em;
 	position: relative;
-	bottom: 2px;
+	bottom: 1px;
 }
 
 /**************************/
