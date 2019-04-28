@@ -1443,6 +1443,26 @@ a.post-section.alignment-forum:hover::before {
 		4px	4px 0 12px var(--GW-comment-background-color-target) inset;
 }
 
+/*=========*/
+/* ANSWERS */
+/*=========*/
+
+#answers > .comment-thread > .comment-item {
+	border-width: 2px;
+	border-color: #bbb;
+}
+#answers > .comment-thread > .comment-item::after {
+	left: -2px;
+	text-transform: uppercase;
+	color: #bbb;
+}
+#answers > .comment-thread > .comment-item.new-comment::before {
+	box-shadow: none;
+}
+#answers > .comment-thread > .comment-item.new-comment {
+	filter: drop-shadow(0 0 2px var(--GW-comment-item-outline-color));
+}
+
 /*==================*/
 /* COMMENT LISTINGS */
 /*==================*/

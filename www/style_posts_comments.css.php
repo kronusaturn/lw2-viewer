@@ -579,6 +579,11 @@ ul.comment-thread {
 	border-style: solid;
 	bottom: 100%;
 	font-size: 1.25rem;
+
+	background-color: inherit;
+	border-width: 2px 2px 0 2px;
+	border-color: inherit;
+
 	z-index: 5000;
 }
 #answers > .comment-thread > .comment-item.new-comment::after {

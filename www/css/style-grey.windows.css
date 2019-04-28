@@ -3626,6 +3626,11 @@ ul.comment-thread {
 	border-style: solid;
 	bottom: 100%;
 	font-size: 1.25rem;
+
+	background-color: inherit;
+	border-width: 2px 2px 0 2px;
+	border-color: inherit;
+
 	z-index: 5000;
 }
 #answers > .comment-thread > .comment-item.new-comment::after {
@@ -7899,6 +7904,26 @@ a.post-section.alignment-forum:hover::before {
 		0 28px 16px -16px var(--GW-comment-parent-background-color) inset,
 		4px 16px 0 12px var(--GW-comment-background-color-target) inset,
 		4px	4px 0 12px var(--GW-comment-background-color-target) inset;
+}
+
+/*=========*/
+/* ANSWERS */
+/*=========*/
+
+#answers > .comment-thread > .comment-item {
+	border-width: 2px;
+	border-color: #bbb;
+}
+#answers > .comment-thread > .comment-item::after {
+	left: -2px;
+	text-transform: uppercase;
+	color: #bbb;
+}
+#answers > .comment-thread > .comment-item.new-comment::before {
+	box-shadow: none;
+}
+#answers > .comment-thread > .comment-item.new-comment {
+	filter: drop-shadow(0 0 2px var(--GW-comment-item-outline-color));
 }
 
 /*==================*/

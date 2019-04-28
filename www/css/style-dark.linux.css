@@ -3626,6 +3626,11 @@ ul.comment-thread {
 	border-style: solid;
 	bottom: 100%;
 	font-size: 1.25rem;
+
+	background-color: inherit;
+	border-width: 2px 2px 0 2px;
+	border-color: inherit;
+
 	z-index: 5000;
 }
 #answers > .comment-thread > .comment-item.new-comment::after {
@@ -7907,9 +7912,6 @@ a.post-section.alignment-forum:hover::before {
 #answers > .comment-thread > .comment-item::after {
 	left: -2px;
 	text-transform: uppercase;
-	background-color: #131313;
-	border-color: #393939;
-	border-width: 2px 2px 0 2px;
 	color: #484848;
 }
 #answers > .comment-thread > .comment-item.new-comment::before {

@@ -1449,9 +1449,6 @@ a.post-section.alignment-forum:hover::before {
 #answers > .comment-thread > .comment-item::after {
 	left: -2px;
 	text-transform: uppercase;
-	background-color: #eee;
-	border-color: #bbb;
-	border-width: 2px 2px 0 2px;
 	color: #aaa;
 }
 #answers > .comment-thread > .comment-item.new-comment::before {
