@@ -1649,10 +1649,12 @@ a.comment-parent-link:hover::before {
 /* COMMENTING AND POSTING UI */
 /*===========================*/
 
-.comment-controls .cancel-comment-button {
+.comment-controls .cancel-comment-button,
+.posting-controls .cancel-post-editing-button {
 	color: #700;
 }
-.comment-controls .cancel-comment-button:hover {
+.comment-controls .cancel-comment-button:hover,
+.posting-controls .cancel-post-editing-button:hover {
 	color: #c00;
 	text-shadow: var(--GW-shadow-white-glow);
 }

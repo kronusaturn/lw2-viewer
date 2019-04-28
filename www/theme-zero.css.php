@@ -1436,14 +1436,16 @@ a.comment-parent-link:hover::before {
 	}
 }
 
-.comment-controls .cancel-comment-button {
+.comment-controls .cancel-comment-button,
+.posting-controls .button.cancel-post-editing-button {
 	color: #c00;
 	text-shadow: 0 0 1px #fff;
 }
 .comment-controls .cancel-comment-button::before {
 	font-weight: 400;
 }
-.comment-controls .cancel-comment-button:hover {
+.comment-controls .cancel-comment-button:hover,
+.posting-controls .button.cancel-post-editing-button:hover {
 	color: #f00;
 	text-shadow: var(--GW-shadow-white-glow);
 }
@@ -1607,6 +1609,11 @@ button.guiedit sup {
 /* EDIT POST FORM */
 /*================*/
 
+#edit-post-form input[type='submit'],
+.posting-controls .button.cancel-post-editing-button {
+	padding: 8px 14px;
+}
+
 /*	Checkboxes.
 	*/
 #edit-post-form .post-meta-fields input[type='checkbox'] + label {
@@ -1728,11 +1735,14 @@ input[type='submit']:active,
 	}
 }
 
-input[type='submit'] {
+input[type='submit'],
+.posting-controls .button.cancel-post-editing-button {
 	background-color: var(--GW-submit-button-background-color);
 }
 input[type='submit']:hover,
-input[type='submit']:focus {
+input[type='submit']:focus,
+.posting-controls .button.cancel-post-editing-button:hover,
+.posting-controls .button.cancel-post-editing-button:focus {
 	background-color: inherit;
 	box-shadow: 0 0 0 2px var(--GW-submit-button-background-color) inset;
 }
