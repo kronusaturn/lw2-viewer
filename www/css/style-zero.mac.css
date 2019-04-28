@@ -7786,6 +7786,17 @@ a.comment-parent-link:hover::before {
 	filter: drop-shadow(0 0 1px #fff);
 }
 
+@media only screen and (hover: hover) and (pointer: fine) {
+	.vote {
+		filter: saturate(50%) opacity(50%);
+	}
+	.comment:hover .vote,
+	.comment:hover + .comment-controls .vote,
+	.karma.active-controls:hover .vote {
+		filter: none;
+	}
+}
+
 .upvote::before,
 .waiting .upvote.big-vote.clicked-twice::before {
 	background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBkPSJNMjU2IDhDMTE5IDggOCAxMTkgOCAyNTZzMTExIDI0OCAyNDggMjQ4IDI0OC0xMTEgMjQ4LTI0OFMzOTMgOCAyNTYgOHptMTQ0IDI3NmMwIDYuNi01LjQgMTItMTIgMTJoLTkydjkyYzAgNi42LTUuNCAxMi0xMiAxMmgtNTZjLTYuNiAwLTEyLTUuNC0xMi0xMnYtOTJoLTkyYy02LjYgMC0xMi01LjQtMTItMTJ2LTU2YzAtNi42IDUuNC0xMiAxMi0xMmg5MnYtOTJjMC02LjYgNS40LTEyIDEyLTEyaDU2YzYuNiAwIDEyIDUuNCAxMiAxMnY5Mmg5MmM2LjYgMCAxMiA1LjQgMTIgMTJ2NTZ6IiAgIGZpbGw9IiMwMEQ4MDAiLz48L3N2Zz4=');
@@ -7835,11 +7846,14 @@ a.comment-parent-link:hover::before {
 	padding: 6px 12px;
 }
 
-.comment-controls .action-button {
-	opacity: 0.6;
-}
-.comment-controls:hover .action-button {
-	opacity: 1.0;
+@media only screen and (hover: hover) and (pointer: fine) {
+	.comment-item .comment-controls .action-button {
+		filter: saturate(50%) opacity(50%);
+	}
+	.comment-item .comment:hover + .comment-controls .action-button,
+	.comment-item .comment-controls:hover .action-button {
+		filter: none;
+	}
 }
 
 .comment-controls .cancel-comment-button {

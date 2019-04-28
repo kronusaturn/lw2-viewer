@@ -1350,6 +1350,17 @@ a.comment-parent-link:hover::before {
 	filter: drop-shadow(0 0 1px #fff);
 }
 
+@media only screen and (hover: hover) and (pointer: fine) {
+	.vote {
+		filter: saturate(50%) opacity(50%);
+	}
+	.comment:hover .vote,
+	.comment:hover + .comment-controls .vote,
+	.karma.active-controls:hover .vote {
+		filter: none;
+	}
+}
+
 .upvote::before,
 .waiting .upvote.big-vote.clicked-twice::before {
 	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/upvote-green-circle-plus.svg")) ?>');
@@ -1399,11 +1410,14 @@ a.comment-parent-link:hover::before {
 	padding: 6px 12px;
 }
 
-.comment-controls .action-button {
-	opacity: 0.6;
-}
-.comment-controls:hover .action-button {
-	opacity: 1.0;
+@media only screen and (hover: hover) and (pointer: fine) {
+	.comment-item .comment-controls .action-button {
+		filter: saturate(50%) opacity(50%);
+	}
+	.comment-item .comment:hover + .comment-controls .action-button,
+	.comment-item .comment-controls:hover .action-button {
+		filter: none;
+	}
 }
 
 .comment-controls .cancel-comment-button {
