@@ -3895,6 +3895,9 @@ a.comment-child-link::before {
 		white-space: unset;
 		pointer-events: none;
 		background-color: var(--GW-comment-popup-background-color);
+		border-width: 1px;
+		border-style: solid;
+		border-color: transparent;
 	}
 	.comment-popup .comment-parent-link,
 	.comment-popup .comment-minimize-button {
