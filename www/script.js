@@ -578,8 +578,8 @@ Element.prototype.constructCommentControls = function() {
 			});
 		}
 		replyButton.className = "reply-button action-button";
-		replyButton.innerHTML = "Reply";
-		replyButton.dataset.label = "Reply";
+		replyButton.innerHTML = commentControls.parentElement.hasClass("answer-item") ? "Add comment" : "Reply";
+		replyButton.dataset.label = commentControls.parentElement.hasClass("answer-item") ? "Add comment" : "Reply";
 	}
 	commentControls.appendChild(replyButton);
 	replyButton.tabIndex = '-1';
@@ -3812,6 +3812,11 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		// Activate the vote buttons.
 		queryAll("button.vote").forEach(voteButton => {
 			voteButton.addActivateEvent(voteButtonClicked);
+		});
+
+		// Mark answers as such.
+		queryAll("#answers > .comment-thread > .comment-item").forEach(answerItem => {
+			answerItem.addClass("answer-item");
 		});
 
 		// For all comment containers...
