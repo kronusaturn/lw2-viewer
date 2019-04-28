@@ -1230,6 +1230,10 @@ a.comment-parent-link:hover::before {
 
 .comment-meta .author {
 	font-size: 1.125em;
+	color: var(--GW-hyperlink-color);
+	text-shadow: 0 0 0 currentColor;
+}
+.comment-meta .author:hover {
 	color: #090;
 }
 .comment-item .author:not(.redacted).original-poster::after {
@@ -1287,6 +1291,21 @@ a.comment-parent-link:hover::before {
 
 .new-comment::before {
 	outline: 2px solid var(--GW-comment-item-outline-color);
+}
+
+/*====================*/
+/* COMMENT PERMALINKS */
+/*====================*/
+/*==================*/
+/* COMMENT LW LINKS */
+/*==================*/
+
+.comment-meta .permalink::before,
+.comment-meta .lw2-link::before,
+.comment-meta .comment-parent-link span::before,
+.post .post-meta .lw2-link::before {
+	filter: saturate(25%) opacity(0.25);
+	opacity: 1.0;
 }
 
 /*=================================*/
@@ -1378,6 +1397,13 @@ a.comment-parent-link:hover::before {
 
 .posting-controls input[type='submit'] {
 	padding: 6px 12px;
+}
+
+.comment-controls .action-button {
+	opacity: 0.6;
+}
+.comment-controls:hover .action-button {
+	opacity: 1.0;
 }
 
 .comment-controls .cancel-comment-button {
