@@ -183,11 +183,11 @@
 	--GW-archive-nav-item-hover-color: var(--GW-hyperlink-hover-color);
 	--GW-archive-nav-item-active-color: var(--GW-hyperlink-active-color);
 
-	--GW-comment-background-color-odd: transparent;
-	--GW-comment-background-color-even: transparent;
-	--GW-comment-background-color-target: transparent;
+	--GW-comment-background-color-odd: var(--GW-body-background-color);
+	--GW-comment-background-color-even: var(--GW-body-background-color);
+	--GW-comment-background-color-target: var(--GW-body-background-color);
 
-	--GW-comment-item-expanded-background-color: transparent;
+	--GW-comment-item-expanded-background-color: var(--GW-body-background-color);
 	--GW-comment-item-expanded-box-shadow: none;
 	--GW-comment-item-expanded-outline-color: transparent;
 	--GW-comment-item-expanded-outline: 3px solid var(--GW-comment-item-expanded-outline-color);
