@@ -7666,15 +7666,15 @@ a.comment-parent-link:hover::before {
 
 .comment-meta .author {
 	font-size: 1.125em;
-	color: var(--GW-hyperlink-color);
+	color: #3e9535;
 	text-shadow: 0 0 0 currentColor;
 }
-.comment-meta .author:hover {
-	color: #090;
-}
 .comment-item .author:not(.redacted).original-poster::after {
-	opacity: 0.6;
-	filter: brightness(60%);
+	filter: brightness(60%) opacity(60%);
+}
+
+.comment-meta .date {
+	color: #666;
 }
 
 .comment-meta a:hover {
