@@ -2834,7 +2834,7 @@ function addCommentParentPopups() {
 				parentHighlightClassName = "comment-item-highlight-faint";
 				popup = parent.cloneNode(true);
 				popup.addClasses([ "comment-popup", "comment-item-highlight" ]);
-				commentParentLink.addEventListener("mouseout", (event) => {
+				commentParentLink.addEventListener("mouseout", GW.commentParentLinkMouseOut = (event) => {
 					removeElement(popup);
 				}, {once: true});
 				commentParentLink.closest(".comments > .comment-thread").appendChild(popup);
