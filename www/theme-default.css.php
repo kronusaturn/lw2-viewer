@@ -1442,20 +1442,14 @@ a.post-section.alignment-forum:hover::before {
 /* ANSWERS */
 /*=========*/
 
-#answers > .comment-thread > .comment-item {
+.answer-item {
 	border-width: 2px;
 	border-color: #bbb;
 }
-#answers > .comment-thread > .comment-item::after {
+.answer-item::after {
 	left: -2px;
 	text-transform: uppercase;
 	color: #aaa;
-}
-#answers > .comment-thread > .comment-item.new-comment::before {
-	box-shadow: none;
-}
-#answers > .comment-thread > .comment-item.new-comment {
-	filter: drop-shadow(0 0 2px var(--GW-comment-item-outline-color));
 }
 
 /*==================*/
@@ -1496,15 +1490,12 @@ a.comment-parent-link:hover::before {
 	color: #aaa;
 }
 
-.comment-item-highlight,
-.comment-item-highlight-faint {
-	box-shadow:
-		0 0	2px var(--GW-comment-highlight-color),
-		0 0	3px var(--GW-comment-highlight-color),
-		0 0	5px var(--GW-comment-highlight-color),
-		0 0	7px var(--GW-comment-highlight-color),
-		0 0 10px var(--GW-comment-highlight-color);
-	border: 1px solid var(--GW-comment-highlight-color);
+.comment-thread > .comment-item.comment-item-highlight,
+.comment-thread > .comment-item.comment-item-highlight-faint {
+	border-color: var(--GW-comment-highlight-color);
+	filter:
+		drop-shadow(0 0 4px var(--GW-comment-highlight-color))
+		drop-shadow(0 0 4px var(--GW-comment-highlight-color));
 }
 
 /*================================*/
@@ -1587,6 +1578,13 @@ a.comment-parent-link:hover::before {
 		0 0 6px -2px var(--GW-comment-item-outline-color) inset, 
 		0 0 4px var(--GW-comment-item-outline-color), 
 		0 0 6px var(--GW-comment-item-outline-color);
+}
+
+.answer-item.new-comment::before {
+	box-shadow: none;
+}
+.answer-item.new-comment {
+	filter: drop-shadow(0 0 2px var(--GW-comment-item-outline-color));
 }
 
 /*=================================*/

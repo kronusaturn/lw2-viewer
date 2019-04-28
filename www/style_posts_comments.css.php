@@ -568,10 +568,10 @@ ul.comment-thread {
 /* ANSWERS */
 /***********/
 
-#answers > .comment-thread > .comment-item {
+.answer-item {
 	margin-top: 3.5em;
 }
-#answers > .comment-thread > .comment-item::after {
+.answer-item::after {
 	content: "Answer";
 	position: absolute;
 	text-align: center;
@@ -586,7 +586,7 @@ ul.comment-thread {
 
 	z-index: 5000;
 }
-#answers > .comment-thread > .comment-item.new-comment::after {
+.answer-item.new-comment::after {
 	border-color: var(--GW-comment-item-outline-color);
 }
 

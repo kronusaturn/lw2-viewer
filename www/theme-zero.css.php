@@ -1181,7 +1181,7 @@ a.post-section.alignment-forum:hover::before {
 
 #answers > .comment-thread > .comment-item {
 	border-width: 2px;
-	border-color: #ccc;
+	border-color: #ddd;
 }
 #answers > .comment-thread > .comment-item::after {
 	left: -2px;

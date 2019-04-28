@@ -661,6 +661,9 @@
 		content: "Top";
 		left: -1px;
 	}
+	#quick-nav-ui a[href='#answers']::after {
+		content: "Answers";
+	}
 	#quick-nav-ui a[href='#comments']::after {
 		content: "Comments";
 	}
