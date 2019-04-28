@@ -787,10 +787,14 @@ a.comment-parent-link:hover::before {
 		z-index: 1;
 		display: block;
 		padding: 3px 3px 0 3px;
-		width: 16px;
+		width: 17px;
 		height: calc(100% + 2px);
 		top: -1px;
-		left: -17px;
+		left: -18px;
+		border-left: 1px solid transparent;
+	}
+	a.comment-parent-link:hover::before {
+		border-left: 1px solid var(--GW-comment-highlight-color);
 	}
 	a.comment-parent-link::after {
 		content: "";
