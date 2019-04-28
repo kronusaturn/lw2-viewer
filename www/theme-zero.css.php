@@ -1820,7 +1820,7 @@ hr {
 code {
 	background-color: #eee;
 	border: 1px solid #eee;
-	box-shadow: 0 0 0 1px #e4e4e4;
+	box-shadow: 0 0 0 1px #ddd;
 	text-shadow:
 		0 0 1px #fff,
 		0 0 2px #fff;
