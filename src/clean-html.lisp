@@ -210,12 +210,12 @@
                   (declare (type fixnum length-difference length-change))
                   (offset-loop
                     (current-replacement replacement-list)
-                    ((setf length-change (round length-difference replacements)
+                    ((setf length-change (ceiling length-difference replacements)
                            length-difference (- length-difference length-change)
                            replacements (- replacements 1)))
                     ((destructuring-bind (start end) current-replacement
                        (declare (type fixnum start end))
-                       (round (+ start end) 2)))
+                       (ceiling (+ start end) 2)))
                     ((output-offset) (max 0 (+ output-offset length-change)))))))
             (multiple-value-bind (hyphenated-string hyphenation-list) (hyphenate-string whole-string-output)
               (setf whole-string-output hyphenated-string)
