@@ -1674,23 +1674,28 @@ a.comment-parent-link:hover::before {
 /* COMMENTING AND POSTING UI */
 /*===========================*/
 
-.posting-controls input[type='submit'] {
+.posting-controls input[type='submit'],
+.posting-controls .cancel-post-editing-button {
 	background-color: #fff;
 	border: 1px solid #aaa;
 }
 .posting-controls input[type='submit']:hover,
-.posting-controls input[type='submit']:focus {
+.posting-controls input[type='submit']:focus,
+.posting-controls .cancel-post-editing-button:hover,
+.posting-controls .cancel-post-editing-button:focus {
 	background-color: #ddd;
 	border: 1px solid #999;
 }
 
-.comment-controls .cancel-comment-button {
+.comment-controls .cancel-comment-button,
+.posting-controls .cancel-post-editing-button {
 	color: #c00;
 	text-shadow: 
 		0 0 1px #fff,
 		0 0 2px #fff;
 }
-.comment-controls .cancel-comment-button:hover {
+.comment-controls .cancel-comment-button:hover,
+.posting-controls .cancel-post-editing-button:hover {
 	color: #f00;
 	text-shadow: var(--GW-shadow-white-glow);
 }

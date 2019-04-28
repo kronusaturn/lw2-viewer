@@ -8150,23 +8150,28 @@ a.comment-parent-link:hover::before {
 /* COMMENTING AND POSTING UI */
 /*===========================*/
 
-.posting-controls input[type='submit'] {
+.posting-controls input[type='submit'],
+.posting-controls .cancel-post-editing-button {
 	background-color: #000;
 	border: 1px solid #484848;
 }
 .posting-controls input[type='submit']:hover,
-.posting-controls input[type='submit']:focus {
+.posting-controls input[type='submit']:focus,
+.posting-controls .cancel-post-editing-button:hover,
+.posting-controls .cancel-post-editing-button:focus {
 	background-color: #1f1f1f;
 	border: 1px solid #575756;
 }
 
-.comment-controls .cancel-comment-button {
+.comment-controls .cancel-comment-button,
+.posting-controls .cancel-post-editing-button {
 	color: #00a9ed;
 	text-shadow: 
 		0 0 1px #000,
 		0 0 2px #000;
 }
-.comment-controls .cancel-comment-button:hover {
+.comment-controls .cancel-comment-button:hover,
+.posting-controls .cancel-post-editing-button:hover {
 	color: #0090e0;
 	text-shadow: var(--GW-shadow-white-glow);
 }
