@@ -1256,6 +1256,8 @@ a.comment-child-link::before {
 	float: left;
 	margin-left: -14px;
 	font-size: 0.9375em;
+	position: relative;
+	bottom: 2px;
 }
 
 /**************************/

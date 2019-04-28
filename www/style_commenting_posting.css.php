@@ -4,7 +4,7 @@
 
 .comment-controls {
 	text-align: right;
-	margin: 0 8px 8px 16px;
+	margin: 4px 8px 8px 16px;
 	position: relative;
 	-webkit-user-select: none;
 	-moz-user-select: none;

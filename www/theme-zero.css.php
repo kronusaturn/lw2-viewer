@@ -849,6 +849,7 @@ h1.listing + .post-meta .comment-count:not(.new-comments) span:nth-of-type(2) {
 h1.listing + .post-meta .post-section::before {
 	width: 1.25em;
 	text-align: center;
+	left: -1.75em;
 }
 h1.listing + .post-meta .post-section.alignment-forum::before {
 	padding-top: 1px;

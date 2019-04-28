@@ -4303,6 +4303,8 @@ a.comment-child-link::before {
 	float: left;
 	margin-left: -14px;
 	font-size: 0.9375em;
+	position: relative;
+	bottom: 2px;
 }
 
 /**************************/
@@ -4449,7 +4451,7 @@ a.comment-child-link::before {
 
 .comment-controls {
 	text-align: right;
-	margin: 0 8px 8px 16px;
+	margin: 4px 8px 8px 16px;
 	position: relative;
 	-webkit-user-select: none;
 	-moz-user-select: none;
@@ -7285,6 +7287,7 @@ h1.listing + .post-meta .comment-count:not(.new-comments) span:nth-of-type(2) {
 h1.listing + .post-meta .post-section::before {
 	width: 1.25em;
 	text-align: center;
+	left: -1.75em;
 }
 h1.listing + .post-meta .post-section.alignment-forum::before {
 	padding-top: 1px;
