@@ -1178,11 +1178,7 @@ a.post-section.alignment-forum:hover::before {
 /* ANSWERS */
 /*=========*/
 
-#answers > .comment-thread > .comment-item {
-	border-width: 2px;
-	border-color: #ddd;
-}
-#answers > .comment-thread > .comment-item::after {
+.answer-item::after {
 	left: -2px;
 	text-transform: uppercase;
 	color: #ccc;
@@ -1227,7 +1223,13 @@ a.comment-parent-link:hover::before {
 .comment-item-highlight,
 .comment-item-highlight-faint {
 	outline: 2px solid var(--GW-comment-highlight-color);
-	border: 1px solid var(--GW-comment-highlight-color);
+	border-color: var(--GW-comment-highlight-color);
+
+	--GW-comment-item-outline-color: var(--GW-comment-highlight-color);
+}
+.answer-item.comment-item-highlight::after {
+	border-width: 3px 3px 0 3px;
+	left: -3px;
 }
 
 /*================================*/
