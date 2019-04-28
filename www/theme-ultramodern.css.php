@@ -1385,10 +1385,6 @@ a.post-section.alignment-forum:hover::before {
 	font-weight: 300;
 	color: #555;
 }
-.answer-item.new-comment::after {
-	border-color: transparent;
-	box-shadow: none;
-}
 
 /*==================*/
 /* COMMENT LISTINGS */
@@ -1513,8 +1509,11 @@ a.comment-parent-link:hover::before {
 /* HIGHLIGHTING NEW COMMENTS */
 /*===========================*/
 
+.new-comment {
+	border-color: var(--GW-comment-item-outline-color);;
+	box-shadow: none;
+}
 .new-comment::before {
-	border: 1px solid var(--GW-comment-item-outline-color);
 	box-shadow: 
 		0 0 1px 0 var(--GW-comment-item-outline-color), 
 		0 0 2px 0 var(--GW-comment-item-outline-color), 
@@ -1522,11 +1521,17 @@ a.comment-parent-link:hover::before {
 		0 0 2px 0 var(--GW-comment-item-outline-color) inset;
 }
 
-.answer-item.new-comment::before {
+.answer-item.new-comment {
+	filter:
+		drop-shadow(0 0 2px var(--GW-comment-item-outline-color));
+}
+.answer-item.new-comment::after {
+	border-width: 1px 1px 0 1px;
+	left: -1px;
 	box-shadow: none;
 }
-.answer-item.new-comment {
-	filter: drop-shadow(0 0 2px var(--GW-comment-item-outline-color));
+.answer-item.new-comment::before {
+	box-shadow: none;
 }
 
 /*=================================*/
