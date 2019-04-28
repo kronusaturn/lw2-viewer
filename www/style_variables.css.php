@@ -192,6 +192,8 @@
 	--GW-comment-item-expanded-outline-color: transparent;
 	--GW-comment-item-expanded-outline: 3px solid var(--GW-comment-item-expanded-outline-color);
 
+	--GW-comment-item-outline-color: transparent;
+
 	--GW-new-comment-item-outline-color: transparent;
 
 	--GW-comment-item-focused-background-color: var(--GW-comment-item-expanded-background-color);

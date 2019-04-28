@@ -1494,6 +1494,7 @@ a.comment-parent-link:hover::before {
 .comment-thread > .comment-item.comment-item-highlight-faint {
 	border-color: var(--GW-comment-highlight-color);
 	filter:
+		drop-shadow(0 0 2px var(--GW-comment-item-outline-color))
 		drop-shadow(0 0 4px var(--GW-comment-highlight-color))
 		drop-shadow(0 0 4px var(--GW-comment-highlight-color));
 }
