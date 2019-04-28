@@ -7733,7 +7733,9 @@ h1.post-title .post-type-prefix {
 		0 1.5px 1.5px -1.5px #777 inset;
 }
 #content:not(.in-sequence) .bottom-post-meta {
-	box-shadow: none;
+	box-shadow:
+		0 1.5px 1.5px -1.5px #bbb inset,
+		0 1.5px 1.5px -1.5px #777 inset;
 }
 
 article > .post-meta > *,
@@ -7829,6 +7831,26 @@ a.post-section.alignment-forum:hover::before {
 	.comment-item .comment-item + .comment-item {
 		margin-right: 0;
 	}
+}
+
+/*=========*/
+/* ANSWERS */
+/*=========*/
+
+#answers > .comment-thread > .comment-item::after {
+	left: 0;
+	text-transform: uppercase;
+	border-width: 0 0 1px 0;
+	border-color: #666;
+	box-shadow:
+		0 1.5px 1.5px -1.5px #bbb, 
+		0 1.5px 1.5px -1.5px #777;
+	font-weight: 300;
+	color: #555;
+}
+#answers > .comment-thread > .comment-item.new-comment::after {
+	border-color: transparent;
+	box-shadow: none;
 }
 
 /*==================*/
