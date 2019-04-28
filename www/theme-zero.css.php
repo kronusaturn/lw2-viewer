@@ -1175,6 +1175,20 @@ a.post-section.alignment-forum:hover::before {
 	}
 }
 
+/*=========*/
+/* ANSWERS */
+/*=========*/
+
+#answers > .comment-thread > .comment-item {
+	border-width: 2px;
+	border-color: #ccc;
+}
+#answers > .comment-thread > .comment-item::after {
+	left: -2px;
+	text-transform: uppercase;
+	color: #ccc;
+}
+
 /*==================*/
 /* COMMENT LISTINGS */
 /*==================*/
