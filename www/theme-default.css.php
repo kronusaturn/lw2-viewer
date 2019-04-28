@@ -1416,7 +1416,6 @@ a.post-section.alignment-forum:hover::before {
 
 .comment-item {
 	border: 1px solid #ccc;
-	background-color: var(--GW-comment-background-color);
 }
 .comment-parent-link::after {
 	box-shadow: 

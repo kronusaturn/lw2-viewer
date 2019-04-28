@@ -511,6 +511,7 @@ ul.comment-thread {
 
 .comment-item {
 	margin: 2em 0 0 0;
+	background-color: var(--GW-comment-background-color);
 }
 #content.search-results-page .comment-item {
 	margin: 1em 0 0 0;
