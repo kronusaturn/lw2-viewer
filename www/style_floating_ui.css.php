@@ -584,29 +584,22 @@
 	width: 40px;
 	height: 40px;
 	margin: 10px 0 0 0;
-	visibility: hidden;
 }
 
 /*=--------------------=*/
 /*= Comments & Answers =*/
 /*=--------------------=*/
 
-#quick-nav-ui a[href='#comments'] {
+#content:not(.post-page) + #ui-elements-container #quick-nav-ui a[href='#comments'] {
 	display: none;
-}
-#content.post-page + #ui-elements-container #quick-nav-ui a[href='#comments'] {
-	display: block;
-	visibility: visible;
 }
 
 #quick-nav-ui a[href='#answers'] {
 	font-weight: 400;
 	padding: 2px 0 0 1px;
-	display: none;
 }
-#content.question-post-page + #ui-elements-container #quick-nav-ui a[href='#answers'] {
-	display: block;
-	visibility: visible;
+#content:not(.question-post-page) + #ui-elements-container #quick-nav-ui a[href='#answers'] {
+	display: none;
 }
 
 #quick-nav-ui a[href='#comments'].no-comments,
@@ -666,13 +659,6 @@
 	}
 	#quick-nav-ui a[href='#comments']::after {
 		content: "Comments";
-	}
-	#content.post-page:not(.individual-thread-page) ~ #ui-elements-container #quick-nav-ui a[href='#comments'] {
-		visibility: hidden;
-		transition: visibility 0.2s ease;
-	}
-	#content.post-page:not(.individual-thread-page) ~ #ui-elements-container #quick-nav-ui.engaged a[href='#comments'] {
-		visibility: visible;
 	}
 	#quick-nav-ui a[href='#bottom-bar']::after {
 		content: "Bottom";

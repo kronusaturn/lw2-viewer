@@ -4326,7 +4326,7 @@ function adjustUIForWindowSize() {
 	// Show quick-nav UI up/down buttons if content is taller than window.
 	bottomBarOffset = bottomBar.hasClass("decorative") ? 16 : 30;
 	queryAll("#quick-nav-ui a[href='#top'], #quick-nav-ui a[href='#bottom-bar']").forEach(element => {
-		element.style.visibility = (query("#content").clientHeight > window.innerHeight + bottomBarOffset) ? "unset" : "hidden";
+		element.style.visibility = (query("#content").clientHeight > window.innerHeight + bottomBarOffset) ? "" : "hidden";
 	});
 
 	// Move anti-kibitzer toggle if content is very short.
