@@ -4258,11 +4258,6 @@ function rectifyMarkup() {
 		pre.parentElement.outerHTML = pre.parentElement.innerHTML;
 	});
 
-	// Trim whitespace from HTML structure of code blocks.
-	content.queryAll("pre > code").forEach(preCode => {
-		preCode.parentElement.innerHTML = preCode.parentElement.innerHTML.trim();
-	});
-
 	// Convert bold paragraphs into headings.
 	// NOTE: This will not result in a ToC (as that is generated server-side).
 	content.queryAll(".body-text p > strong:only-child, .body-text p > b:only-child").forEach(strong => {
