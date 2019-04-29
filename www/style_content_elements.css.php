@@ -305,6 +305,8 @@ pre {
 }
 .body-text pre {
 	text-align: left;
+	margin: 1.5em 0;
+	line-height: 1.45;
 }
 code {
 	font-size: 0.95em;
@@ -313,7 +315,7 @@ code {
 pre > code {
 	display: block;
 	border-radius: 0;
-	padding: 3px 4px 5px 8px;
+	padding: 6px 5px 5px 10px;
 }
 
 /*= Fractions =*/
