@@ -1342,9 +1342,7 @@ function updatePostNavUIVisibility() {
 
 	var hidePostNavUIToggle = true;
 	queryAll("#quick-nav-ui a, #new-comment-nav-ui").forEach(element => {
-		if (getComputedStyle(element).visibility == "visible" ||
-			element.style.visibility == "visible" ||
-			element.style.visibility == "unset")
+		if (!(element.style.visibility == "hidden" || getComputedStyle(element).display == "none"))
 			hidePostNavUIToggle = false;
 	});
 	queryAll("#quick-nav-ui, #post-nav-ui-toggle").forEach(element => {
