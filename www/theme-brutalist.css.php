@@ -262,7 +262,6 @@ body {
 }
 
 #theme-selector button::before {
-	font-size: 0.9375em;
 	color: #aaa;
 }
 #theme-selector button:hover::before,

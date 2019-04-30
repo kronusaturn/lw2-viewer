@@ -19,6 +19,8 @@
 
 	--GW-keyboard-help-overlay-font: var(--GW-UI-font);
 
+	--GW-theme-selector-tooltip-font: var(--GW-UI-font);
+
 	--GW-body-text-font: 'PT Serif', 'Georgia', serif;
 	--GW-body-text-font-weight: 400;
 

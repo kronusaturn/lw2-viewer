@@ -247,6 +247,7 @@
 	top: 0;
 	right: 100%;
 	width: var(--GW-theme-selector-button-tooltip-width);
+	font-family: var(--GW-theme-selector-tooltip-font);
 	padding: 5px;
 	line-height: 1;
 	text-align: right;
