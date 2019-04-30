@@ -726,6 +726,7 @@ a#inbox-indicator.new-messages:hover::before {
 .page-toolbar > *:nth-child(n+2) {
 	margin-left: 1.5em;
 }
+.page-toolbar .button::before {
 	font-family: var(--GW-Font-Awesome);
 	font-size: 0.9em;
 	width: 1.5em;
