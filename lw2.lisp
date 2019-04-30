@@ -670,8 +670,10 @@ signaled condition to OUT-STREAM."
 	      (*current-ignore-hash* (get-ignore-hash)))
           (handler-case
 	      (log-conditions
-	       (sb-sys:with-deadline (:seconds 5)
-		 (funcall fn)))
+	       (if (eq (hunchentoot:request-method*) :post)
+		   (funcall fn)
+		   (sb-sys:with-deadline (:seconds 5)
+		     (funcall fn))))
 	    (serious-condition (condition)
               (emit-page (out-stream :title "Error" :return-code (condition-http-return-code condition) :content-class "error-page")
                          (error-to-html out-stream condition)
