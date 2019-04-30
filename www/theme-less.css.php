@@ -632,7 +632,7 @@ body {
 	}
 	@media only screen and (max-width: 1440px) {
 		#hns-date-picker {
-			background-color: rgba(255,255,255,0.95);
+			background-color: rgba(255, 255, 255, 0.95);
 			right: -18px;
 		}
 		#hns-date-picker::before {
@@ -1048,7 +1048,7 @@ h1.listing a[href^="/posts"] {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		color: #92c396;
-		background-color: rgba(255,255,255,0.85);
+		background-color: rgba(255, 255, 255, 0.85);
 	}	
 	h1.listing:focus-within::before {
 		color: #79a97e;
@@ -2489,7 +2489,7 @@ strong, b {
 	color: transparent;
 	-webkit-background-clip: text;
 	text-shadow: 
-		rgba(255,255,255,0.5) 0px 3px 3px;
+		rgba(255, 255, 255, 0.5) 0px 3px 3px;
 }
 
 /*====================*/

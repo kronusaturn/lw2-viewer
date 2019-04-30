@@ -6494,7 +6494,7 @@ th.mathjax-inline-container {
 /*	Typography.
 	*/
 :root {
-	--GW-UI-font: 'Anonymous Pro', monospace;
+	--GW-UI-font: 'Anonymous Pro', 'Courier', monospace;
 	--GW-UI-font-weight-light: 400;
 	--GW-UI-font-weight-heavy: 600;
 
@@ -6521,6 +6521,8 @@ th.mathjax-inline-container {
 /*	Color scheme.
 	*/
 :root {
+	--GW-body-background-color: #fff;
+	--GW-content-background-color: #fff;
 }
 
 /*=----------------------------=*/
@@ -6540,13 +6542,11 @@ th.mathjax-inline-container {
 
 body {
 	color: #000;
-	background-color: #fff;
 }
 #content {
 	line-height: 1.55;
 }
 #content::before {
-	background-color: #fff;
 	box-shadow: 
 		-1px 0 0 #000 inset,
 		0 2px 0 #000;
@@ -6754,6 +6754,17 @@ body {
 	color: #000;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1160px) {
+	#theme-selector:hover::after {
+		width: calc(6.5em - 6px);
+		background-color: #000;
+	}
+}
+
 /*======================*/
 /* ANTI-KIBITZER TOGGLE */
 /*======================*/
@@ -6763,7 +6774,7 @@ body {
 	background-color: #999;
 	-webkit-background-clip: text;
 	color: transparent;
-	text-shadow: rgba(255,255,255,0.5) 0px 1px 1px;
+	text-shadow: rgba(255, 255, 255, 0.5) 0px 1px 1px;
 }
 #anti-kibitzer-toggle button:hover {
 	box-shadow: none;
@@ -6771,7 +6782,20 @@ body {
 #anti-kibitzer-toggle button:hover::before,
 #anti-kibitzer-toggle button:hover::after {
 	background-color: #000;
-	text-shadow: rgba(255,255,255,0.2) 0px 1px 1px;
+	text-shadow: rgba(255, 255, 255, 0.2) 0px 1px 1px;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1020px) {
+	#anti-kibitzer-toggle {
+		background-color: #fff;
+		box-shadow: 
+			0 0 0 2px #000,
+			0 0 0 10px #fff;
+	}
 }
 
 /*=========================*/
@@ -6795,6 +6819,20 @@ body {
 #theme-tweaker-toggle button:hover,
 #theme-tweaker-toggle button:active {
 	box-shadow: none;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1080px) {
+	#theme-tweaker-toggle button {
+		border: 1px solid #999;
+		box-shadow: 
+			0 0 10px #999 inset,
+			0 0 0 1px transparent;
+		transform: scale(0.8);
+	}
 }
 
 /*=================*/
@@ -6832,6 +6870,17 @@ body {
 	color: #bbb;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1020px) {
+	#quick-nav-ui {
+		background-color: #fff;
+		box-shadow: 0 9px 0 0px #fff;
+	}
+}
+
 /*======================*/
 /* NEW COMMENT QUICKNAV */
 /*======================*/
@@ -6845,6 +6894,19 @@ body {
 }
 #new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
 	color: #bbb;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1020px) {
+	#new-comment-nav-ui .new-comments-count::before {
+		background-color: #fff;
+		box-shadow: 
+			0 0 0 2px #000,
+			0 0 0 10px #fff;
+	}
 }
 
 /*=================*/
@@ -6865,6 +6927,152 @@ body {
 }
 #hns-date-picker input:focus {
 	color: #000;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1440px) {
+	#hns-date-picker {
+		right: -70px;
+		bottom: 64px;
+		background-color: #fff;
+		opacity: 1.0;
+	}
+	#hns-date-picker::before {
+		width: 56%;
+		border: 2px solid #000;
+		box-shadow: 0 0 0 1px #000;
+	}
+}
+@media only screen and (max-width: 1160px) {
+	#hns-date-picker {
+		bottom: 203px;
+		right: -24px;
+	}
+	#hns-date-picker::before {
+		width: 85%;
+	}
+}
+@media only screen and (max-width: 1080px) {
+	#hns-date-picker {
+		right: -14px;
+	}
+	#hns-date-picker::before {
+		width: 92%;
+	}
+}
+@media only screen and (max-width: 1040px) {
+	#hns-date-picker {
+		right: -8px;
+	}
+	#hns-date-picker::before {
+		width: 94%;
+	}
+}
+@media only screen and (max-width: 1020px) {
+	#hns-date-picker {
+		right: 19px;
+	}
+	#hns-date-picker::before {
+		width: 100%;
+	}
+}
+
+/*================================*
+	MOBILE VERSIONS OF QUICKNAV,
+	NEW COMMENT NAV, AND HNS
+	DATE PICKER
+ *================================*/
+
+@media only screen and (max-width: 960px) {
+	#ui-elements-container > div[id$='-ui-toggle'] button,
+	#theme-selector .theme-selector-close-button  {
+		color: #000;
+		opacity: 1.0;
+	}
+	#appearance-adjust-ui-toggle button,
+	#post-nav-ui-toggle button {
+		background-color: #fff;
+		box-shadow:
+			0 0 0 2px #fff,
+			0 0 0 2px #000 inset;
+	}
+
+	#theme-selector {
+		background-color: #fff;
+		box-shadow: 
+			0 0 0 1px #000,
+			0 0 0 7px #fff;
+	}
+	#theme-selector::before {
+		color: #000;
+	}
+	#theme-selector button {
+		background-color: #fff;
+		box-shadow: 
+			0 0 0 1px #fff inset, 
+			0 0 0 3px #000 inset, 
+			0 0 0 5px #fff inset;
+	}
+	#theme-selector button::after {
+		color: #000;
+		max-width: calc(100% - 3.5em);
+		overflow: hidden;
+		text-overflow: ellipsis;
+		padding-left: 1px;
+	}
+	#theme-selector button.selected {
+		box-shadow: 
+			0 0 0 1px #fff inset, 
+			0 0 0 3px #000 inset, 
+			0 0 0 5px #fff inset, 
+			0 0 0 7px #000 inset;
+	}
+	#theme-selector .theme-selector-close-button {
+		font-weight: 400;
+	}
+
+	#quick-nav-ui {
+		background-color: #fff;
+	}
+	#quick-nav-ui a {
+		box-shadow: 
+			0 0 0 2px #000;
+	}
+	#quick-nav-ui a::after,
+	#new-comment-nav-ui::before {
+		font-size: 0.5rem;
+		background-color: #fff;
+	}
+	#new-comment-nav-ui {
+		background-color: #fff;
+		border: 1px solid #000;
+		box-shadow: 0 0 0 1px #000;
+	}
+	#new-comment-nav-ui::before {
+		color: #000;
+		font-size: 0.6875rem;
+		bottom: calc(100% + 2px);
+		padding: 2px 0 0 0;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button {
+		color: #000;
+	}
+	#new-comment-nav-ui .new-comments-count,
+	#new-comment-nav-ui .new-comments-count::after {
+		color: #000;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
+		color: #bbb;
+	}
+
+	#hns-date-picker {
+		bottom: 130px;
+		right: 52px;
+		text-indent: 0;
+	}
 }
 
 /*======================*/
@@ -6927,8 +7135,8 @@ h1.listing a[href^="http"] {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		color: #777;
-		background-color: rgba(255,255,255,0.85);
-	}	
+		background-color: rgba(255, 255, 255, 0.85);
+	}
 	h1.listing:focus-within::before {
 		color: #000;
 		left: -0.625em;
@@ -7980,92 +8188,19 @@ select {
 	color: transparent;
 	-webkit-background-clip: text;
 	text-shadow: 
-		rgba(255,255,255,0.5) 0px 3px 3px;
+		rgba(255, 255, 255, 0.5) 0px 3px 3px;
 }
 @media only screen and (hover: hover) and (pointer: fine) {
 	#content.alignment-forum-index-page h1.listing a:hover,
 	#content.alignment-forum-index-page h1.listing a:focus {
-		background-color: rgba(242,246,255,0.85);
-	}	
+		background-color: rgba(242, 246, 255, 0.85);
+	}
 }
 
 /*====================*/
 /* FOR NARROW SCREENS */
 /*====================*/
 
-@media only screen and (max-width: 1440px) {
-	#hns-date-picker {
-		right: -70px;
-		bottom: 64px;
-		background-color: #fff;
-		opacity: 1.0;
-	}
-	#hns-date-picker::before {
-		width: 56%;
-		border: 2px solid #000;
-		box-shadow: 0 0 0 1px #000;
-	}
-}
-@media only screen and (max-width: 1160px) {
-	#hns-date-picker {
-		bottom: 203px;
-		right: -24px;
-	}
-	#hns-date-picker::before {
-		width: 85%;
-	}
-	#theme-selector:hover::after {
-		width: calc(6.5em - 6px);
-		background-color: #000;
-	}
-}
-@media only screen and (max-width: 1080px) {
-	#theme-tweaker-toggle button {
-		border: 1px solid #999;
-		box-shadow: 
-			0 0 10px #999 inset,
-			0 0 0 1px transparent;
-		transform: scale(0.8);
-	}
-	#hns-date-picker {
-		right: -14px;
-	}
-	#hns-date-picker::before {
-		width: 92%;
-	}
-}
-@media only screen and (max-width: 1040px) {
-	#hns-date-picker {
-		right: -8px;
-	}
-	#hns-date-picker::before {
-		width: 94%;
-	}
-}
-@media only screen and (max-width: 1020px) {
-	#hns-date-picker {
-		right: 19px;
-	}
-	#hns-date-picker::before {
-		width: 100%;
-	}
-	#quick-nav-ui {
-		background-color: #fff;
-		box-shadow: 0 9px 0 0px #fff;
-	}
-	#new-comment-nav-ui .new-comments-count::before {
-		background-color: #fff;
-		box-shadow: 
-			0 0 0 2px #000,
-			0 0 0 10px #fff;
-	}
-	#anti-kibitzer-toggle {
-		background-color: #fff;
-		box-shadow: 
-			0 0 0 2px #000,
-			0 0 0 10px #fff;
-	}
-}
 @media only screen and (max-width: 1000px) {
 	#theme-selector,
 	#quick-nav-ui,
@@ -8085,7 +8220,7 @@ select {
 		height: calc(100% - 5px);
 		top: 3px;
 		left: 100%;
-	}	
+	}
 	#text-size-adjustment-ui {
 		background-color: #fff;
 		box-shadow: 0 0 0 1px #000;
@@ -8108,243 +8243,148 @@ select {
 /* MOBILE */
 /*========*/
 
-@media only screen and (hover: none) {
-	#ui-elements-container > div[id$='-ui-toggle'] button,
-	#theme-selector .theme-selector-close-button  {
-		color: #000;
+@media only screen and (max-width: 900px) {
+	h1.listing {
+		line-height: 1;
+		margin-bottom: 6px;
+	}
+	h1.listing + .post-meta .post-section {
+		overflow: visible;
+		order: 1;
+	}
+	h1.listing + .post-meta .post-section::before {
+		position: unset;
+	}
+
+	.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
+		background-color: #000;
+		height: 2px;
+	}
+
+	.comment-item .comment-item {
+		margin: 0.75em 2px 3px 6px;
+	}
+	.comment-item .comment-item + .comment-item {
+		margin: 1.5em 2px 3px 6px;
+	}
+
+	a.comment-parent-link::before {
+		line-height: 1;
+	}
+
+	#edit-post-form textarea {
+		min-height: calc(100vh - 400px)
+	}
+	#edit-post-form #markdown-hints {
+		position: fixed;
+		top: 74px;
+		left: 0;
+		right: 0;
+		max-width: 330px;
+		margin: auto;
+	}
+	#edit-post-form input[type='submit'] {
+		background-color: #fff;
+	}
+
+	.comment-controls .cancel-comment-button {
+		max-width: 1.4em;
+	}
+	.comment-controls .cancel-comment-button::before {
 		opacity: 1.0;
+		position: relative;
+		top: -1px;
 	}
-	#appearance-adjust-ui-toggle button,
-	#post-nav-ui-toggle button {
+
+	.sublevel-nav .sublevel-item,
+	.sublevel-nav .sublevel-item:first-child,
+	.sublevel-nav .sublevel-item:last-child {
+		border-width: 1px;
+	}
+} @media only screen and (max-width: 720px) {
+	#content.conversations-user-page h1.listing + .post-meta .date {
+		margin: 0 0 0 1em;
+	}
+} @media only screen and (max-width: 520px) {
+	h1.listing {
+		font-size: 1.375rem;
+		margin: 18px 6px 4px 6px;
+		max-width: calc(100% - 12px);
+	}
+	h1.listing a[href^='http'] {
+		top: 4px;
+	}
+	h1.listing + .post-meta {
+		margin: 4px 6px;
+	}
+	h1.listing + .post-meta .post-section {
+		order: 1;
+		overflow: visible;
+	}
+	h1.listing + .post-meta .post-section::before {
+		position: relative;
+		top: -1px;
+		left: 0;
+	}
+	#content.conversations-user-page h1.listing {
+		font-size: 1.375rem;
+	}
+	#content.conversations-user-page h1.listing + .post-meta .conversation-participants {
+		margin: 0;
+	}
+	#content.conversations-user-page h1.listing + .post-meta .messages-count {
+		margin: 0 0 0 1em;
+	}
+
+	#content.compact > .comment-thread .comment-item {
+		max-height: 110px;
+	}
+
+	.textarea-container:focus-within textarea {
 		background-color: #fff;
+		border: none;
 		box-shadow:
-			0 0 0 2px #fff,
-			0 0 0 2px #000 inset;
-	}
-
-	#theme-selector {
-		background-color: #fff;
-		box-shadow: 
-			0 0 0 1px #000,
-			0 0 0 7px #fff;
-	}
-	#theme-selector::before {
-		color: #000;
-	}
-	#theme-selector button {
-		background-color: #fff;
-		box-shadow: 
-			0 0 0 1px #fff inset, 
-			0 0 0 3px #000 inset, 
-			0 0 0 5px #fff inset;
-	}
-	#theme-selector button::after {
-		color: #000;
-		max-width: calc(100% - 3.5em);
-		overflow: hidden;
-		text-overflow: ellipsis;
-		padding-left: 1px;
-	}
-	#theme-selector button.selected {
-		box-shadow: 
-			0 0 0 1px #fff inset, 
-			0 0 0 3px #000 inset, 
-			0 0 0 5px #fff inset, 
-			0 0 0 7px #000 inset;
-	}
-	#theme-selector .theme-selector-close-button {
-		font-weight: 400;
-	}
-
-	#quick-nav-ui {
-		background-color: #fff;
-	}
-	#quick-nav-ui a {
-		box-shadow: 
 			0 0 0 2px #000;
 	}
-	#quick-nav-ui a::after,
-	#new-comment-nav-ui::before {
-		font-size: 0.5rem;
-		background-color: #fff;
+	.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
+		padding: 5px 6px 6px 6px;
+		color: #fff;
+		box-shadow: none;
 	}
-	#new-comment-nav-ui {
-		background-color: #fff;
-		border: 1px solid #000;
-		box-shadow: 0 0 0 1px #000;
+	.textarea-container:focus-within .guiedit-mobile-help-button.active {
+		box-shadow:
+			0 0 0 1px #000 inset,
+			0 0 0 3px #fff inset,
+			0 0 0 2px #fff;
 	}
-	#new-comment-nav-ui::before {
+	.textarea-container:focus-within .guiedit-buttons-container {
+		border-top: 2px solid #000;
+	}
+	.posting-controls .textarea-container:focus-within .guiedit-buttons-container {
+		padding-bottom: 5px;
+	}
+	#content.conversation-page .textarea-container:focus-within::after {
+		background-color: #000;
+	}
+	.textarea-container:focus-within button.guiedit {
+		border: 1px solid transparent;
+	}
+	#markdown-hints,
+	#edit-post-form #markdown-hints {
+		border: 2px solid #000;
+		box-shadow:
+			0 0 0 2px #fff,
+			0 0 0 4px #000;
+	}
+	#markdown-hints::after {
 		color: #000;
-		font-size: 0.6875rem;
-		bottom: calc(100% + 2px);
-		padding: 2px 0 0 0;
-	}
-	#new-comment-nav-ui .new-comment-sequential-nav-button {
-		color: #000;
-	}
-	#new-comment-nav-ui .new-comments-count,
-	#new-comment-nav-ui .new-comments-count::after {
-		color: #000;
-	}
-	#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
-		color: #bbb;
 	}
 
-	#hns-date-picker {
-		bottom: 130px;
-		right: 52px;
-		text-indent: 0;
+	#edit-post-form .post-meta-fields input[type='checkbox'] + label {
+		top: 0;
 	}
-
-	/*****************************************/
-	@media only screen and (max-width: 900px) {
-	/*****************************************/
-		h1.listing {
-			line-height: 1;
-			margin-bottom: 6px;
-		}
-		h1.listing + .post-meta .post-section {
-			overflow: visible;
-			order: 1;
-		}
-		h1.listing + .post-meta .post-section::before {
-			position: unset;
-		}
-
-		.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
-			background-color: #000;
-			height: 2px;
-		}
-
-		.comment-item .comment-item {
-			margin: 0.75em 2px 3px 6px;
-		}
-		.comment-item .comment-item + .comment-item {
-			margin: 1.5em 2px 3px 6px;
-		}
-
-		a.comment-parent-link::before {
-			line-height: 1;
-		}
-
-		#edit-post-form textarea {
-			min-height: calc(100vh - 400px)
-		}
-		#edit-post-form #markdown-hints {
-			position: fixed;
-			top: 74px;
-			left: 0;
-			right: 0;
-			max-width: 330px;
-			margin: auto;
-		}
-		#edit-post-form input[type='submit'] {
-			background-color: #fff;
-		}
-		
-		.comment-controls .cancel-comment-button {
-			max-width: 1.4em;
-		}
-		.comment-controls .cancel-comment-button::before {
-			opacity: 1.0;
-			position: relative;
-			top: -1px;
-		}
-		
-		.sublevel-nav .sublevel-item,
-		.sublevel-nav .sublevel-item:first-child,
-		.sublevel-nav .sublevel-item:last-child {
-			border-width: 1px;
-		}
-	/*******************************************/
-	} @media only screen and (max-width: 720px) {
-	/*******************************************/
-		#content.conversations-user-page h1.listing + .post-meta .date {
-			margin: 0 0 0 1em;
-		}
-	/*******************************************/
-	} @media only screen and (max-width: 520px) {
-	/*******************************************/
-		h1.listing {
-			font-size: 1.375rem;
-			margin: 18px 6px 4px 6px;
-			max-width: calc(100% - 12px);
-		}
-		h1.listing a[href^='http'] {
-			top: 4px;
-		}
-		h1.listing + .post-meta {
-			margin: 4px 6px;
-		}
-		h1.listing + .post-meta .post-section {
-			order: 1;
-			overflow: visible;
-		}
-		h1.listing + .post-meta .post-section::before {
-			position: relative;
-			top: -1px;
-			left: 0;
-		}
-		#content.conversations-user-page h1.listing {
-			font-size: 1.375rem;
-		}
-		#content.conversations-user-page h1.listing + .post-meta .conversation-participants {
-			margin: 0;
-		}
-		#content.conversations-user-page h1.listing + .post-meta .messages-count {
-			margin: 0 0 0 1em;
-		}
-
-		#content.compact > .comment-thread .comment-item {
-			max-height: 110px;
-		}
-		
-		.textarea-container:focus-within textarea {
-			background-color: #fff;
-			border: none;
-			box-shadow:
-				0 0 0 2px #000;
-		}
-		.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
-			padding: 5px 6px 6px 6px;
-			color: #fff;
-			box-shadow: none;
-		}
-		.textarea-container:focus-within .guiedit-mobile-help-button.active {
-			box-shadow:
-				0 0 0 1px #000 inset,
-				0 0 0 3px #fff inset,
-				0 0 0 2px #fff;
-		}
-		.textarea-container:focus-within .guiedit-buttons-container {
-			border-top: 2px solid #000;
-		}
-		.posting-controls .textarea-container:focus-within .guiedit-buttons-container {
-			padding-bottom: 5px;
-		}
-		#content.conversation-page .textarea-container:focus-within::after {
-			background-color: #000;
-		}
-		.textarea-container:focus-within button.guiedit {
-			border: 1px solid transparent;
-		}
-		#markdown-hints,
-		#edit-post-form #markdown-hints {
-			border: 2px solid #000;
-			box-shadow:
-				0 0 0 2px #fff,
-				0 0 0 4px #000;
-		}
-		#markdown-hints::after {
-			color: #000;
-		}
-
-		#edit-post-form .post-meta-fields input[type='checkbox'] + label {
-			top: 0;
-		}
-		#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
-			top: 1px;
-		}
+	#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
+		top: 1px;
 	}
 }
 

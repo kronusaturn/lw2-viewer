@@ -382,7 +382,7 @@ body {
 	background-color: #888;
 	-webkit-background-clip: text;
 	color: transparent;
-	text-shadow: rgba(255,255,255,0.5) 0px 1px 1px;
+	text-shadow: rgba(255, 255, 255, 0.5) 0px 1px 1px;
 }
 #anti-kibitzer-toggle button:hover::before,
 #anti-kibitzer-toggle button:hover::after {
@@ -1864,12 +1864,12 @@ select {
 	color: transparent;
 	-webkit-background-clip: text;
 	text-shadow: 
-		rgba(255,255,255,0.5) 0px 3px 3px;
+		rgba(255, 255, 255, 0.5) 0px 3px 3px;
 }
 @media only screen and (hover: hover) {
 	#content.alignment-forum-index-page h1.listing a:hover,
 	#content.alignment-forum-index-page h1.listing a:focus {
-		background-color: rgba(244,245,255,0.85);
+		background-color: rgba(244, 245, 255, 0.85);
 	}	
 }
 

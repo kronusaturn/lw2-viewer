@@ -7171,7 +7171,7 @@ p {
 	background-color: #222;
 	-webkit-background-clip: text;
 	color: transparent;
-	text-shadow: rgba(255,255,255,0.35) 0px 0.5px 0.5px;
+	text-shadow: rgba(255, 255, 255, 0.35) 0px 0.5px 0.5px;
 }
 #anti-kibitzer-toggle button:hover::before,
 #anti-kibitzer-toggle button:hover::after {
@@ -7294,7 +7294,7 @@ h1.listing a[href^="http"] {
 @media only screen and (hover: hover) and (pointer: fine) {
 	h1.listing a:hover,
 	h1.listing a:focus {
-		background-color: rgba(136,136,136,0.85);
+		background-color: rgba(136, 136, 136, 0.85);
 		text-shadow: 
 			0 0 1px #a2cbf2,
 			0 0 2px #a2cbf2,
