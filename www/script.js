@@ -4252,7 +4252,7 @@ function rectifyMarkup() {
 	let content = query("#content");
 
 	// Unwrap <pre> blocks from extraneous divs.
-	content.queryAll("div > pre").forEach(pre => {
+	content.queryAll(".body-text div > pre").forEach(pre => {
 		pre.parentElement.outerHTML = pre.parentElement.innerHTML;
 	});
 
