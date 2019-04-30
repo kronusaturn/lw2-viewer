@@ -731,7 +731,7 @@ signaled condition to OUT-STREAM."
               title (replace-query-params (hunchentoot:request-uri*) "offset" nil "format" "rss")))
     (format out-stream "</div>")))
 
-(defun view-items-index (items &key section title current-uri hide-title need-auth (pagination (pagination-nav-bars)) (top-nav (lambda (s) (page-toolbar-to-html s :title title))) (content-class "index-page"))
+(defun view-items-index (items &key section title current-uri hide-title need-auth html-override (pagination (pagination-nav-bars)) (top-nav (lambda (s) (page-toolbar-to-html s :title title))) (content-class "index-page"))
   (alexandria:switch ((hunchentoot:get-parameter "format") :test #'string=)
                      ("rss" 
                       (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
@@ -741,9 +741,11 @@ signaled condition to OUT-STREAM."
                        (emit-page (out-stream :title (if hide-title nil title) :description (site-description *current-site*) :content-class content-class
                                               :current-uri current-uri :robots (if (hunchentoot:get-parameter :offset) "noindex, nofollow")
                                               :pagination pagination :top-nav top-nav)
-                                  (write-index-items-to-html out-stream items
-                                                             :need-auth need-auth
-                                                             :skip-section section)))))
+				  (if html-override
+				      (funcall html-override)
+				      (write-index-items-to-html out-stream items
+								 :need-auth need-auth
+								 :skip-section section))))))
 
 (defun link-if-not (stream linkp url class text &key accesskey nofollow)
   (declare (dynamic-extent linkp url text))
@@ -1123,7 +1125,7 @@ signaled condition to OUT-STREAM."
 
 (define-page view-user (:regex "^/users/(.*?)(?:$|\\?)|^/user" user-slug) (id
                                                                              (offset :type fixnum :default 0)
-                                                                             (show :member '(:all :posts :comments :drafts :conversations :inbox) :default :all)
+                                                                             (show :member '(:all :posts :comments :drafts :conversations :inbox :preferences) :default :all)
                                                                              (sort :member '(:top :new) :default :new))
              (let* ((auth-token (if (eq show :inbox) *current-auth-token*))
 		    (user-info
@@ -1204,6 +1206,7 @@ signaled condition to OUT-STREAM."
 				(local-time:format-timestring nil (local-time:now)
 							      :format lw2.graphql:+graphql-timestamp-format+
 							      :timezone local-time:+utc-zone+)))))
+		   (:preferences nil)
 		   (t
 		     (let ((user-posts (get-user-posts user-id :limit (+ 1 (user-pref :items-per-page) offset)))
 			   (user-comments (lw2-graphql-query (lw2-query-string :comment :list (nconc (alist :limit (+ 1 (user-pref :items-per-page) offset) :user-id user-id) comments-base-terms) 
@@ -1215,8 +1218,16 @@ signaled condition to OUT-STREAM."
                                      :content-class (format nil "user-page~@[ ~A-user-page~]~:[~; own-user-page~]" (string-downcase show) own-user-page)
                                      :current-uri (format nil "/users/~A" user-slug)
                                      :section :personal
-                                     :pagination (pagination-nav-bars :offset offset :total total :with-next (if (not total) with-next))
+                                     :pagination (if (eq show :preferences)
+						     (pagination-nav-bars)
+						     (pagination-nav-bars :offset offset :total total :with-next (if (not total) with-next)))
                                      :need-auth (eq show :drafts) :section (if (eq show :drafts) "drafts" nil)
+				     :html-override (if (eq show :preferences)
+							(lambda ()
+							  <h1>Preferences</h1>
+							  <form>
+							    <input type="checkbox" id="stuff">Do stuff
+							  </form>))
                                      :top-nav (lambda (out-stream)
                                                 (page-toolbar-to-html out-stream
                                                                       :title title
@@ -1258,7 +1269,7 @@ signaled condition to OUT-STREAM."
                                                 (sublevel-nav-to-html out-stream
                                                                       `(:all :posts :comments
                                                                         ,@(if own-user-page
-                                                                              '(:drafts :conversations :inbox)))
+                                                                              '(:drafts :conversations :inbox :preferences)))
                                                                       show
                                                                       :default :all)
                                                 (when (member show '(:all :posts :comments))
