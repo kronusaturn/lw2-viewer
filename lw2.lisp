@@ -1129,6 +1129,36 @@ signaled condition to OUT-STREAM."
     <input type="checkbox" id="stuff">Do stuff
   </form>)
 
+(defmethod preferences-annotations-html
+    ((backend backend-hypothesis-annotations))
+
+  <h2> Annotation Preferences </h2>
+  <p class="optionset-overview"> These settings are used to link your account to a <a href="https://hypothes.is">hypothes.is</a> instance so that annotations made during research can be broadcast to others.</p>
+  <form action="/preferences" method="post">
+  
+    <div class="option"> 
+      <label>Hypothesis API Key</label>
+      <p class="option-description">This is needed to access your account and read private groups. Note the API doesn't implement access control, so be sure you trust this server with full access to your account.</p>
+      <input type="text" id="hypothesis-api-key" name="hypothesis-api-key"> 
+    </div>
+  
+  <div class="option">
+    <label>Hypothesis Username</label>
+    <p class="option-description">The username of your account.</p>
+    <input type="text" id="hypothesis-username" name="hypothesis-username">
+  </div>
+  
+  <div class="option">
+    <label>Hypothesis Group ID</label>
+    <p class="option-description">The ID of the annotation group you want to pull from. This is optional, but it's highly recommended you set a specific group you want to take your annotations from. Otherwise the tool will pull all annotations made on your account, even ones from private groups and personal notes.</p>
+    <input type="text" id="hypothesis-group-id" name="hypothesis-group-id">
+  </div>
+  
+    
+  </form>)
+
+(defmethod preferences-annotations-html ((backend backend-base)) nil)
+
 (define-page view-user (:regex "^/users/(.*?)(?:$|\\?)|^/user" user-slug) (id
                                                                              (offset :type fixnum :default 0)
                                                                              (show :member '(:all :posts :comments :drafts :conversations :inbox :preferences) :default :all)
@@ -1212,7 +1242,8 @@ signaled condition to OUT-STREAM."
 				(local-time:format-timestring nil (local-time:now)
 							      :format lw2.graphql:+graphql-timestamp-format+
 							      :timezone local-time:+utc-zone+)))))
-		   (:preferences nil)
+		   (:preferences
+		    )
 		   (t
 		     (let ((user-posts (get-user-posts user-id :limit (+ 1 (user-pref :items-per-page) offset)))
 			   (user-comments (lw2-graphql-query (lw2-query-string :comment :list (nconc (alist :limit (+ 1 (user-pref :items-per-page) offset) :user-id user-id) comments-base-terms) 
