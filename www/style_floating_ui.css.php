@@ -279,7 +279,7 @@
 		width: calc(var(--GW-theme-selector-button-tooltip-width) - var(--GW-theme-selector-right-margin));
 		height: 100%;
 		top: 0;
-		left: calc(100% + var(--GW-theme-selector-right-margin));
+		left: calc(100% + var(--GW-theme-selector-right-margin) + 1px);
 
 		box-shadow:
 			-1px 0 0 0 var(--GW-body-background-color),
@@ -288,6 +288,7 @@
 	#theme-selector button::before {
 		right: unset;
 		left: 100%;
+		width: calc(var(--GW-theme-selector-button-tooltip-width) + 1px);
 	}
 }
 @media only screen and (max-width: 1080px) {

@@ -13,6 +13,8 @@
 	--GW-UI-font-weight-light: 400;
 	--GW-UI-font-weight-heavy: 600;
 
+	--GW-theme-selector-tooltip-font: <?php echo (($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Whitney', 'a_Avante'"); ?>, 'Open Sans', 'Arial', sans-serif;
+
 	--GW-body-text-font: 'Input Sans', sans-serif;
 	--GW-body-text-font-weight: 200;
 
@@ -31,8 +33,6 @@
 	--GW-comment-compact-height-mobile: 108px;
 	--GW-comment-minimized-height: 38px;
 	--GW-comment-minimized-height-mobile: 68px;
-
-	--GW-theme-selector-button-tooltip-width: 7em;
 }
 
 /*	Color scheme.
