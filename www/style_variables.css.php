@@ -7,6 +7,7 @@
 :root {
 	--GW-Font-Awesome: 'Font Awesome', 'Font Awesome 5 Free';
 	--GW-monospaced-font: 'Inconsolata', 'Menlo', monospace;
+	--GW-monospaced-font-weight: 400;
 	
 	--GW-Alignment-Forum-logotype-font: 'Concourse SmallCaps', 'Changa One';
 	--GW-Alignment-Forum-logotype-font-weight: 600;
@@ -21,8 +22,8 @@
 	--GW-body-text-font: 'PT Serif', 'Georgia', serif;
 	--GW-body-text-font-weight: 400;
 
-	--GW-editor-font: var(--GW-body-text-font);
-	--GW-editor-font-weight: var(--GW-body-text-font-weight);
+	--GW-editor-font: var(--GW-monospaced-font);
+	--GW-editor-font-weight: var(--GW-monospaced-font-weight);
 
 	--GW-post-listings-font: var(--GW-UI-font);
 	--GW-post-listings-font-weight: var(--GW-UI-font-weight-heavy);
@@ -36,6 +37,7 @@
 	--GW-content-headings-font-weight: var(--GW-post-listings-font-weight);
 
 	--GW-tables-font: var(--GW-monospaced-font);
+	--GW-tables-font-weight: var(--GW-monospaced-font-weight);
 
 	--GW-footnote-numbers-font-weight: 700;
 

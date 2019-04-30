@@ -257,6 +257,7 @@ figure img,
 .body-text table {
 	border-collapse: collapse;
 	font-family: var(--GW-tables-font);
+	font-weight: var(--GW-tables-font-weight);
 	font-size: 0.875em;
 }
 .body-text table th,
@@ -299,6 +300,7 @@ sub {
 pre,
 code {
 	font-family: var(--GW-monospaced-font);
+	font-weight: var(--GW-monospaced-font-weight);
 }
 pre {
 	white-space: pre-wrap;

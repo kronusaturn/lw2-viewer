@@ -238,11 +238,6 @@ body {
 		text-shadow: var(--GW-shadow-white-glow);
 	}
 }
-@media only screen and (max-width: 900px) {
-	#nav-item-search button::before {
-		color: #00e;
-	}
-}
 
 /*==============*/
 /* PAGE TOOLBAR */

@@ -12,6 +12,7 @@
 :root {
 	--GW-Font-Awesome: 'Font Awesome', 'Font Awesome 5 Free';
 	--GW-monospaced-font: 'Inconsolata', 'Menlo', monospace;
+	--GW-monospaced-font-weight: 400;
 	
 	--GW-Alignment-Forum-logotype-font: 'Concourse SmallCaps', 'Changa One';
 	--GW-Alignment-Forum-logotype-font-weight: 600;
@@ -26,8 +27,8 @@
 	--GW-body-text-font: 'PT Serif', 'Georgia', serif;
 	--GW-body-text-font-weight: 400;
 
-	--GW-editor-font: var(--GW-body-text-font);
-	--GW-editor-font-weight: var(--GW-body-text-font-weight);
+	--GW-editor-font: var(--GW-monospaced-font);
+	--GW-editor-font-weight: var(--GW-monospaced-font-weight);
 
 	--GW-post-listings-font: var(--GW-UI-font);
 	--GW-post-listings-font-weight: var(--GW-UI-font-weight-heavy);
@@ -41,6 +42,7 @@
 	--GW-content-headings-font-weight: var(--GW-post-listings-font-weight);
 
 	--GW-tables-font: var(--GW-monospaced-font);
+	--GW-tables-font-weight: var(--GW-monospaced-font-weight);
 
 	--GW-footnote-numbers-font-weight: 700;
 
@@ -5414,6 +5416,7 @@ figure img,
 .body-text table {
 	border-collapse: collapse;
 	font-family: var(--GW-tables-font);
+	font-weight: var(--GW-tables-font-weight);
 	font-size: 0.875em;
 }
 .body-text table th,
@@ -5456,6 +5459,7 @@ sub {
 pre,
 code {
 	font-family: var(--GW-monospaced-font);
+	font-weight: var(--GW-monospaced-font-weight);
 }
 pre {
 	white-space: pre-wrap;
@@ -6042,9 +6046,11 @@ th.mathjax-inline-container {
 	font-size: 1.375em;
 }
 .reassurance .saved-comment-content {
-	white-space: pre-wrap;
-	text-align: left;
 	padding: 0.75em 1em;
+	text-align: left;
+	white-space: pre-wrap;
+	font-family: var(--GW-editor-font);
+	font-weight: var(--GW-editor-font-weight);
 }
 
 /**************/
@@ -6706,11 +6712,6 @@ body {
 	#bottom-bar .nav-inner:hover::before,
 	#bottom-bar .nav-inner:hover::after {
 		text-shadow: var(--GW-shadow-white-glow);
-	}
-}
-@media only screen and (max-width: 900px) {
-	#nav-item-search button::before {
-		color: #0cc800;
 	}
 }
 

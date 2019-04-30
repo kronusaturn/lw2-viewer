@@ -373,9 +373,11 @@
 	font-size: 1.375em;
 }
 .reassurance .saved-comment-content {
-	white-space: pre-wrap;
-	text-align: left;
 	padding: 0.75em 1em;
+	text-align: left;
+	white-space: pre-wrap;
+	font-family: var(--GW-editor-font);
+	font-weight: var(--GW-editor-font-weight);
 }
 
 /**************/

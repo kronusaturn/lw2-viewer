@@ -215,9 +215,6 @@ body {
 #nav-item-search form::before {
 	opacity: 0.4;
 }
-#nav-item-search button {
-	color: #999;
-}
 #nav-item-search input::placeholder {
 	color: #d00;
 	font-weight: normal;
