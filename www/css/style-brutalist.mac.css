@@ -6516,6 +6516,8 @@ th.mathjax-inline-container {
 	--GW-comment-compact-height-mobile: 108px;
 	--GW-comment-minimized-height: 38px;
 	--GW-comment-minimized-height-mobile: 68px;
+
+	--GW-theme-selector-button-tooltip-width: 7em;
 }
 
 /*	Color scheme.
@@ -6523,6 +6525,8 @@ th.mathjax-inline-container {
 :root {
 	--GW-body-background-color: #fff;
 	--GW-content-background-color: #fff;
+
+	--GW-theme-selector-outline-color: #000;
 }
 
 /*=----------------------------=*/
@@ -6710,15 +6714,15 @@ body {
 
 #width-selector button {
 	box-shadow:
-		0 0 0 4px #fff inset,
+		0 0 0 4px var(--GW-body-background-color) inset,
 		0 0 0 5px #000 inset;
 }
 #width-selector button:hover,
 #width-selector button.selected {
 	box-shadow:
-		0 0 0 1px #fff inset,
+		0 0 0 1px var(--GW-body-background-color) inset,
 		0 0 0 2px #000 inset,
-		0 0 0 4px #fff inset,
+		0 0 0 4px var(--GW-body-background-color) inset,
 		0 0 0 5px #000 inset;
 }
 #width-selector button::after {
@@ -6732,22 +6736,19 @@ body {
 
 #theme-selector button {
 	box-shadow:
-		0 0 0 5px #fff inset;
+		0 0 0 5px var(--GW-body-background-color) inset;
 }
 #theme-selector button:hover,
 #theme-selector button.selected {
 	box-shadow:
-		0 0 0 2px #fff inset,
+		0 0 0 2px var(--GW-body-background-color) inset,
 		0 0 0 3px #000 inset,
-		0 0 0 5px #fff inset;
+		0 0 0 5px var(--GW-body-background-color) inset;
 }
 
 #theme-selector button::before {
 	font-size: 0.9375em;
-	padding: 6px;
-	width: 7em;
 	color: #aaa;
-	background-color: #fff;
 }
 #theme-selector button:hover::before,
 #theme-selector button.selected::before {
@@ -6758,12 +6759,6 @@ body {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-@media only screen and (max-width: 1160px) {
-	#theme-selector:hover::after {
-		width: calc(6.5em - 6px);
-		background-color: #000;
-	}
-}
 
 /*======================*/
 /* ANTI-KIBITZER TOGGLE */
