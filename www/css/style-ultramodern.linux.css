@@ -62,31 +62,35 @@
 :root {
 	--GW-content-width: 0;
 
-	--GW-content-side-padding: 0;
+	--GW-content-side-padding: 50px;
 	--GW-content-left-side-padding: var(--GW-content-side-padding);
 	--GW-content-right-side-padding: var(--GW-content-side-padding);
 
-	--GW-sequence-page-content-side-padding: 0;
+	--GW-sequence-page-content-side-padding: 50px;
 	--GW-sequence-page-content-left-side-padding: var(--GW-sequence-page-content-side-padding);
 	--GW-sequence-page-content-right-side-padding: var(--GW-sequence-page-content-side-padding);
 
-	--GW-user-page-content-side-padding: 0;
+	--GW-user-page-content-side-padding: 30px;
 	--GW-user-page-content-left-side-padding: var(--GW-user-page-content-side-padding);
 	--GW-user-page-content-right-side-padding: var(--GW-user-page-content-side-padding);
 
-	--GW-recent-comments-page-content-side-padding: 0;
+	--GW-recent-comments-page-content-side-padding: 30px;
 	--GW-recent-comments-page-content-left-side-padding: var(--GW-recent-comments-page-content-side-padding);
 	--GW-recent-comments-page-content-right-side-padding: var(--GW-recent-comments-page-content-side-padding);
 
-	--GW-conversation-page-content-side-padding: 0;
+	--GW-conversation-page-content-side-padding: 30px;
 	--GW-conversation-page-content-left-side-padding: var(--GW-conversation-page-content-side-padding);
 	--GW-conversation-page-content-right-side-padding: var(--GW-conversation-page-content-side-padding);
 
-	--GW-post-page-content-side-padding: 0;
+	--GW-post-page-content-side-padding: 30px;
 	--GW-post-page-content-left-side-padding: var(--GW-post-page-content-side-padding);
 	--GW-post-page-content-right-side-padding: var(--GW-post-page-content-side-padding);
 
-	--GW-edit-post-page-content-side-padding: 0;
+	--GW-post-side-padding: 30px;
+	--GW-post-left-side-padding: var(--GW-post-side-padding);
+	--GW-post-right-side-padding: var(--GW-post-side-padding);
+
+	--GW-edit-post-page-content-side-padding: 30px;
 	--GW-edit-post-page-content-left-side-padding: var(--GW-edit-post-page-content-side-padding);
 	--GW-edit-post-page-content-right-side-padding: var(--GW-edit-post-page-content-side-padding);
 
@@ -94,18 +98,27 @@
 	--GW-about-page-content-left-side-padding: var(--GW-post-page-content-side-padding);
 	--GW-about-page-content-right-side-padding: var(--GW-post-page-content-side-padding);
 
-	--GW-individual-thread-page-content-side-padding: 0;
+	--GW-individual-thread-page-content-side-padding: 30px;
 	--GW-individual-thread-page-content-left-side-padding: var(--GW-individual-thread-page-content-side-padding);
 	--GW-individual-thread-page-content-right-side-padding: var(--GW-individual-thread-page-content-side-padding);
-
-	--GW-post-side-padding: 0;
-	--GW-post-left-side-padding: var(--GW-post-side-padding);
-	--GW-post-right-side-padding: var(--GW-post-side-padding);
 
 	--GW-comment-compact-height: auto;
 	--GW-comment-compact-height-mobile: auto;
 	--GW-comment-minimized-height: auto;
 	--GW-comment-minimized-height-mobile: auto;
+}
+@media only screen and (max-width: 900px) {
+	:root {
+		--GW-content-side-padding: calc(100% / 45);
+		--GW-sequence-page-content-side-padding: calc(100% / 36);
+		--GW-user-page-content-side-padding: calc(100% / 30);
+		--GW-recent-comments-page-content-side-padding: calc(100% / 30);
+		--GW-conversation-page-content-side-padding: calc(100% / 30);
+		--GW-post-page-content-side-padding: calc(100% / 30);
+		--GW-post-side-padding: 0px;
+		--GW-edit-post-page-content-side-padding: calc(100% / 30);
+		--GW-individual-thread-page-content-side-padding: calc(100% / 30);
+	}
 }
 
 /*	Content column width.
@@ -6482,33 +6495,10 @@ th.mathjax-inline-container {
 /*	Layout.
 	*/
 :root {
-	--GW-content-side-padding: 50px;
-	--GW-sequence-page-content-side-padding: 50px;
-	--GW-user-page-content-side-padding: 30px;
-	--GW-recent-comments-page-content-side-padding: 30px;
-	--GW-conversation-page-content-side-padding: 30px;
-	--GW-post-page-content-side-padding: 30px;
-	--GW-post-side-padding: 30px;
-	--GW-edit-post-page-content-side-padding: 30px;
-	--GW-individual-thread-content-side-padding: 30px;
-
 	--GW-comment-compact-height: 55px;
 	--GW-comment-compact-height-mobile: 104px;
 	--GW-comment-minimized-height: 36px;
 	--GW-comment-minimized-height-mobile: 61px;
-}
-@media only screen and (max-width: 900px) {
-	:root {
-		--GW-content-side-padding: calc(100% / 45);
-		--GW-sequence-page-content-side-padding: calc(100% / 36);
-		--GW-user-page-content-side-padding: calc(100% / 30);
-		--GW-recent-comments-page-content-side-padding: calc(100% / 30);
-		--GW-conversation-page-content-side-padding: calc(100% / 30);
-		--GW-post-page-content-side-padding: calc(100% / 30);
-		--GW-post-side-padding: 0px;
-		--GW-edit-post-page-content-side-padding: calc(100% / 30);
-		--GW-individual-thread-page-content-side-padding: calc(100% / 30);
-	}
 }
 
 /*	Color scheme.

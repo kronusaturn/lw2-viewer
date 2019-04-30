@@ -21,35 +21,12 @@
 /*	Layout.
 	*/
 :root {
-	--GW-content-side-padding: 50px;
-	--GW-sequence-page-content-side-padding: 50px;
-	--GW-user-page-content-side-padding: 30px;
-	--GW-recent-comments-page-content-side-padding: 30px;
-	--GW-conversation-page-content-side-padding: 30px;
-	--GW-post-page-content-side-padding: 30px;
-	--GW-post-side-padding: 30px;
-	--GW-edit-post-page-content-side-padding: 30px;
-	--GW-individual-thread-page-content-side-padding: 30px;
-
 	--GW-comment-compact-height: 55px;
 	--GW-comment-compact-height-mobile: 105px;
 	--GW-comment-minimized-height: 38px;
 	--GW-comment-minimized-height-mobile: 64px;
 
 	--GW-HNS-date-picker-text-field-width: 154px;
-}
-@media only screen and (max-width: 900px) {
-	:root {
-		--GW-content-side-padding: calc(100% / 45);
-		--GW-sequence-page-content-side-padding: calc(100% / 36);
-		--GW-user-page-content-side-padding: calc(100% / 30);
-		--GW-recent-comments-page-content-side-padding: calc(100% / 30);
-		--GW-conversation-page-content-side-padding: calc(100% / 30);
-		--GW-post-page-content-side-padding: calc(100% / 30);
-		--GW-post-side-padding: 0px;
-		--GW-edit-post-page-content-side-padding: calc(100% / 30);
-		--GW-individual-thread-page-content-side-padding: calc(100% / 30);
-	}
 }
 
 /*	Color scheme.
