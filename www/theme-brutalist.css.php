@@ -33,6 +33,8 @@
 	--GW-comment-compact-height-mobile: 108px;
 	--GW-comment-minimized-height: 38px;
 	--GW-comment-minimized-height-mobile: 68px;
+
+	--GW-HNS-date-picker-text-field-width: 160px;
 }
 
 /*	Color scheme.
@@ -67,11 +69,8 @@ body {
 }
 #content::before {
 	box-shadow: 
-		-1px 0 0 #000 inset,
-		0 2px 0 #000;
-	border-style: solid;
-	border-color: #000;
-	border-width: 0 1px 0 2px;
+		2px 0 0 #000,
+		-2px 0 0 #000;
 }
 #content.no-nav-bars::before {
 	border-width: 2px;
@@ -273,6 +272,15 @@ body {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
+@media only screen and (max-width: 1160px) {
+	#theme-selector:hover::after {
+		box-shadow:
+			-1px  0   0 0   var(--GW-body-background-color),
+			 1px  1px 0 1px var(--GW-theme-selector-outline-color),
+			 1px -1px 0 1px var(--GW-theme-selector-outline-color),
+			 1px  0   0 1px var(--GW-theme-selector-outline-color);
+	}
+}
 
 /*======================*/
 /* ANTI-KIBITZER TOGGLE */
@@ -422,17 +430,11 @@ body {
 /* HNS DATE PICKER */
 /*=================*/
 
-#hns-date-picker {
-	bottom: 75px;
-	text-indent: -16px;
-}
 #hns-date-picker span {
 	color: #777;
-	text-indent: 0px;
 }
 #hns-date-picker input {
 	color: #666;
-	width: 160px;
 }
 #hns-date-picker input:focus {
 	color: #000;
@@ -444,48 +446,12 @@ body {
 
 @media only screen and (max-width: 1440px) {
 	#hns-date-picker {
-		right: -70px;
-		bottom: 64px;
 		background-color: #fff;
 		opacity: 1.0;
 	}
 	#hns-date-picker::before {
-		width: 56%;
 		border: 2px solid #000;
 		box-shadow: 0 0 0 1px #000;
-	}
-}
-@media only screen and (max-width: 1160px) {
-	#hns-date-picker {
-		bottom: 203px;
-		right: -24px;
-	}
-	#hns-date-picker::before {
-		width: 85%;
-	}
-}
-@media only screen and (max-width: 1080px) {
-	#hns-date-picker {
-		right: -14px;
-	}
-	#hns-date-picker::before {
-		width: 92%;
-	}
-}
-@media only screen and (max-width: 1040px) {
-	#hns-date-picker {
-		right: -8px;
-	}
-	#hns-date-picker::before {
-		width: 94%;
-	}
-}
-@media only screen and (max-width: 1020px) {
-	#hns-date-picker {
-		right: 19px;
-	}
-	#hns-date-picker::before {
-		width: 100%;
 	}
 }
 
@@ -1703,31 +1669,17 @@ select {
 
 @media only screen and (max-width: 1000px) {
 	#theme-selector,
-	#quick-nav-ui,
-	#new-comment-nav-ui,
-	#new-comment-nav-ui + #hns-date-picker,
 	#theme-tweaker-toggle button,
-	#text-size-adjustment-ui,
-	#anti-kibitzer-toggle {
+	#text-size-adjustment-ui {
 		opacity: 1.0;
 	}
 	#theme-selector {
-		background-color: #fff;
 		border: 1px solid #000;
-	}
-	#theme-selector:hover::after {
-		width: calc(6em + 6px);
-		height: calc(100% - 5px);
-		top: 3px;
-		left: 100%;
 	}
 	#text-size-adjustment-ui {
 		background-color: #fff;
 		box-shadow: 0 0 0 1px #000;
 		padding: 2px 0 4px 0;
-	}
-	#theme-tweaker-toggle {
-		left: -19px;
 	}
 	#theme-tweaker-toggle button {
 		background-color: #fff;
