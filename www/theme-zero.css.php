@@ -222,8 +222,7 @@ body {
 	color: #000;
 }
 
-#bottom-bar .nav-item a::before,
-#top-nav-bar a::before {
+#bottom-bar .nav-item a::before {
 	font-weight: 400;
 }
 

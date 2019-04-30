@@ -508,6 +508,7 @@ EOT;
 }
 #top-nav-bar a::before {
 	display: inline-block;
+	font-weight: 400;
 }
 
 /*=------------------------=*/
