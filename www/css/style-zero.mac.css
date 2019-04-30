@@ -6616,7 +6616,7 @@ body {
 	color: #d8d8d8;
 }
 
-/* Accesskey hints */
+/*= Accesskey hints =*/
 
 .nav-inner::after {
 	left: 5px;
@@ -6639,7 +6639,7 @@ body {
 	text-shadow: 0 0 0 currentColor;
 }
 
-/* Search tab */
+/*= Search tab =*/
 
 #nav-item-search form::before {
 	opacity: 0.3;

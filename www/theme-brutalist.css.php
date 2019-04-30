@@ -68,11 +68,6 @@ body {
 	line-height: 1.55;
 }
 #content::before {
-	box-shadow: 
-		2px 0 0 #000,
-		-2px 0 0 #000;
-}
-#content.no-nav-bars::before {
 	box-shadow:
 		0 0 0 2px #000;
 }
@@ -112,16 +107,13 @@ body {
 }
 #bottom-bar.decorative::after {
 	color: #d8d8d8;
-	background-color: #fff;
 	padding-right: 5px;
 	padding-left: 6px;
 }
 
-/* Accesskey hints */
+/*= Accesskey hints =*/
 
 .nav-inner::after {
-	display: block;
-	position: absolute;
 	left: 8px;
 	top: 3px;
 	font-size: 0.7em;
@@ -131,10 +123,10 @@ body {
 	color: #ccc;
 }
 .nav-inner:hover::after {
-	color: #bbb;
+	color: #aaa;
 }
 
-/* Search tab */
+/*= Search tab =*/
 
 #nav-item-search button {
 	border: none;
@@ -143,10 +135,12 @@ body {
 	color: #d00;
 }
 
-/* Inbox indicator */
+/*= Inbox indicator =*/
 
 #inbox-indicator {
-	text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff;
+	text-shadow:
+		 1px  1px 0 #fff,
+		-1px -1px 0 #fff;
 }
 
 /*==============*/
