@@ -282,15 +282,17 @@ p {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 640px) {
-	#content.user-page .page-toolbar > * {
+	#content.user-page .page-toolbar .button,
+	#content.user-page .page-toolbar .rss {
 		border: 1px solid #aaa;
 		border-radius: 8px;
 	}
-	#content.user-page .page-toolbar > .rss {
+	#content.user-page .page-toolbar .rss {
 		padding-top: calc(0.5em + 1px);
 		padding-bottom: calc(0.5em - 1px);
 	}
-	#content.user-page .page-toolbar > *:hover {
+	#content.user-page .page-toolbar .button:hover,
+	#content.user-page .page-toolbar .rss:hover {
 		border-color: #ccc;
 	}
 }

@@ -2507,11 +2507,15 @@ a#inbox-indicator.new-messages:hover::before {
 .page-toolbar > *:nth-child(n+2) {
 	margin-left: 1.5em;
 }
-.page-toolbar .button::before {
 	font-family: var(--GW-Font-Awesome);
 	font-size: 0.9em;
-	padding-right: 4px;
+	width: 1.5em;
+	display: inline-block;
 	font-weight: 400;
+	text-align: center;
+}
+.page-toolbar .button:hover::before {
+	font-weight: 900;
 }
 
 /*=-------------------------------=*/
@@ -2561,9 +2565,13 @@ a#inbox-indicator.new-messages:hover::before {
 		padding-top: 0.25em;
 	}
 	#content.user-page .page-toolbar > * {
+		margin: 1em 0.5em 0 0.5em;
+	}
+	#content.user-page .page-toolbar .button,
+	#content.user-page .page-toolbar .rss {
 		padding: 0.5em 1em;
 		white-space: nowrap;
-		margin: 1em 0.5em 0 0.5em;
+		height: 100%;
 	}
 	#content.user-page .page-toolbar button {
 		padding: 0;
@@ -6714,18 +6722,17 @@ body {
 		margin-top: 1em;
 	}
 	#content.user-page .page-toolbar > * {
-		padding: 0.5em 1em;
-		white-space: nowrap;
 		margin: 0 2px 0.25em 2px;
 	}
-	#content.user-page .page-toolbar > * {
+	#content.user-page .page-toolbar .button,
+	#content.user-page .page-toolbar .rss {
 		background-color: #e4e4e4;
 	}
 	.button.logout-button,
 	.button.ignore-button {
 		color: #c00;
 	}
-	#content.user-page .page-toolbar > .rss {
+	#content.user-page .page-toolbar .rss {
 		padding-top: calc(0.5em + 1px);
 		padding-bottom: calc(0.5em - 1px);
 	}

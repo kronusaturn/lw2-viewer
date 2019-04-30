@@ -238,18 +238,17 @@ body {
 		margin-top: 1em;
 	}
 	#content.user-page .page-toolbar > * {
-		padding: 0.5em 1em;
-		white-space: nowrap;
 		margin: 0 2px 0.25em 2px;
 	}
-	#content.user-page .page-toolbar > * {
+	#content.user-page .page-toolbar .button,
+	#content.user-page .page-toolbar .rss {
 		background-color: #e4e4e4;
 	}
 	.button.logout-button,
 	.button.ignore-button {
 		color: #c00;
 	}
-	#content.user-page .page-toolbar > .rss {
+	#content.user-page .page-toolbar .rss {
 		padding-top: calc(0.5em + 1px);
 		padding-bottom: calc(0.5em - 1px);
 	}

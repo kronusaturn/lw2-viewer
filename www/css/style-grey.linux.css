@@ -2507,11 +2507,15 @@ a#inbox-indicator.new-messages:hover::before {
 .page-toolbar > *:nth-child(n+2) {
 	margin-left: 1.5em;
 }
-.page-toolbar .button::before {
 	font-family: var(--GW-Font-Awesome);
 	font-size: 0.9em;
-	padding-right: 4px;
+	width: 1.5em;
+	display: inline-block;
 	font-weight: 400;
+	text-align: center;
+}
+.page-toolbar .button:hover::before {
+	font-weight: 900;
 }
 
 /*=-------------------------------=*/
@@ -2561,9 +2565,13 @@ a#inbox-indicator.new-messages:hover::before {
 		padding-top: 0.25em;
 	}
 	#content.user-page .page-toolbar > * {
+		margin: 1em 0.5em 0 0.5em;
+	}
+	#content.user-page .page-toolbar .button,
+	#content.user-page .page-toolbar .rss {
 		padding: 0.5em 1em;
 		white-space: nowrap;
-		margin: 1em 0.5em 0 0.5em;
+		height: 100%;
 	}
 	#content.user-page .page-toolbar button {
 		padding: 0;
@@ -6771,15 +6779,17 @@ body {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 640px) {
-	#content.user-page .page-toolbar > * {
+	#content.user-page .page-toolbar .button,
+	#content.user-page .page-toolbar .rss {
 		border: 1px solid #ddd;
 		border-radius: 8px;
 	}
-	#content.user-page .page-toolbar > .rss {
+	#content.user-page .page-toolbar .rss {
 		padding-top: calc(0.5em + 1px);
 		padding-bottom: calc(0.5em - 1px);
 	}
-	#content.user-page .page-toolbar > *:hover {
+	#content.user-page .page-toolbar .button:hover,
+	#content.user-page .page-toolbar .rss:hover {
 		background-color: #f6f6f6;
 		border-color: #ccc;
 	}

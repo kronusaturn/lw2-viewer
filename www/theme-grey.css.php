@@ -295,15 +295,17 @@ body {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 640px) {
-	#content.user-page .page-toolbar > * {
+	#content.user-page .page-toolbar .button,
+	#content.user-page .page-toolbar .rss {
 		border: 1px solid #ddd;
 		border-radius: 8px;
 	}
-	#content.user-page .page-toolbar > .rss {
+	#content.user-page .page-toolbar .rss {
 		padding-top: calc(0.5em + 1px);
 		padding-bottom: calc(0.5em - 1px);
 	}
-	#content.user-page .page-toolbar > *:hover {
+	#content.user-page .page-toolbar .button:hover,
+	#content.user-page .page-toolbar .rss:hover {
 		background-color: #f6f6f6;
 		border-color: #ccc;
 	}
