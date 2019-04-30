@@ -393,7 +393,7 @@ body {
 	letter-spacing: 0.5px;
 	padding: <?php echo ($platform == 'Mac') ? "7px 7px 5px 7px" : "6px 7px"; ?>;
 	text-transform: uppercase;
-	box-shadow: 1px 1px 0 0 #ccc inset;
+	box-shadow: 1px 1px 0 0 #d8d8d8 inset;
 }
 .sublevel-nav.sort {
 	border: 2px solid transparent;
@@ -402,7 +402,7 @@ body {
 }
 .sublevel-nav.sort::before {
 	text-transform: uppercase;
-	color: #777;
+	color: #aaa;
 	text-shadow: 0.5px 0.5px 0 #fff;
 }
 .sublevel-nav.sort::after {
@@ -419,8 +419,8 @@ body {
 		0 1px 0.5px 0 #fff inset,
 		0 1px 0.5px 0 #fff inset,
 		0 18px 0 0 #fff inset,
-		0 0 0 1px #ccc inset,
-		0 18px 0 1px #ccc inset,
+		0 0 0 1px #d8d8d8 inset,
+		0 18px 0 1px #d8d8d8 inset,
 		0 0 0 2px #fff;
 }
 

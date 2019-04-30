@@ -325,6 +325,7 @@ p {
 .sublevel-nav .sublevel-item {
 	color: #222;
 	font-weight: var(--GW-UI-font-weight-light);
+	line-height: 1.6;
 }
 .sublevel-nav .sublevel-item.selected {
 	color: #000;

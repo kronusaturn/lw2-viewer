@@ -4903,7 +4903,7 @@ button.guiedit {
 
 #edit-post-form {
 	padding: 2em var(--GW-current-page-content-right-side-padding) 2em var(--GW-current-page-content-left-side-padding);
-	margin: 0 0 3em 0;
+	margin: 0 0 2em 0;
 }
 #edit-post-form .post-meta-fields {
 	display: grid;
@@ -5100,6 +5100,7 @@ button.guiedit {
 		 flex: 1 1 auto;
 	}
 	#edit-post-form textarea {
+		min-height: unset;
 		height: calc(100% - 1em);
 		margin: 0;
 	}
@@ -6849,7 +6850,7 @@ body {
 	letter-spacing: 0.5px;
 	padding: 7px 7px 5px 7px;
 	text-transform: uppercase;
-	box-shadow: 1px 1px 0 0 #ccc inset;
+	box-shadow: 1px 1px 0 0 #d8d8d8 inset;
 }
 .sublevel-nav.sort {
 	border: 2px solid transparent;
@@ -6858,7 +6859,7 @@ body {
 }
 .sublevel-nav.sort::before {
 	text-transform: uppercase;
-	color: #777;
+	color: #aaa;
 	text-shadow: 0.5px 0.5px 0 #fff;
 }
 .sublevel-nav.sort::after {
@@ -6875,8 +6876,8 @@ body {
 		0 1px 0.5px 0 #fff inset,
 		0 1px 0.5px 0 #fff inset,
 		0 18px 0 0 #fff inset,
-		0 0 0 1px #ccc inset,
-		0 18px 0 1px #ccc inset,
+		0 0 0 1px #d8d8d8 inset,
+		0 18px 0 1px #d8d8d8 inset,
 		0 0 0 2px #fff;
 }
 

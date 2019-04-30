@@ -431,7 +431,7 @@ button.guiedit {
 
 #edit-post-form {
 	padding: 2em var(--GW-current-page-content-right-side-padding) 2em var(--GW-current-page-content-left-side-padding);
-	margin: 0 0 3em 0;
+	margin: 0 0 2em 0;
 }
 #edit-post-form .post-meta-fields {
 	display: grid;
@@ -619,6 +619,7 @@ button.guiedit {
 		 flex: 1 1 auto;
 	}
 	#edit-post-form textarea {
+		min-height: unset;
 		height: calc(100% - 1em);
 		margin: 0;
 	}
