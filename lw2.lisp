@@ -1123,6 +1123,12 @@ signaled condition to OUT-STREAM."
           (get-recent-comments :with-total want-total))
       (view-items-index recent-comments :title "Recent comments" :pagination (pagination-nav-bars :offset (or offset 0) :with-next (not want-total) :total (if want-total total))))))
 
+(defun preferences-page-html ()
+  <h1>Preferences</h1>
+  <form>
+    <input type="checkbox" id="stuff">Do stuff
+  </form>)
+
 (define-page view-user (:regex "^/users/(.*?)(?:$|\\?)|^/user" user-slug) (id
                                                                              (offset :type fixnum :default 0)
                                                                              (show :member '(:all :posts :comments :drafts :conversations :inbox :preferences) :default :all)
@@ -1222,12 +1228,7 @@ signaled condition to OUT-STREAM."
 						     (pagination-nav-bars)
 						     (pagination-nav-bars :offset offset :total total :with-next (if (not total) with-next)))
                                      :need-auth (eq show :drafts) :section (if (eq show :drafts) "drafts" nil)
-				     :html-override (if (eq show :preferences)
-							(lambda ()
-							  <h1>Preferences</h1>
-							  <form>
-							    <input type="checkbox" id="stuff">Do stuff
-							  </form>))
+				     :html-override (if (eq show :preferences) #'preferences-page-html)
                                      :top-nav (lambda (out-stream)
                                                 (page-toolbar-to-html out-stream
                                                                       :title title
