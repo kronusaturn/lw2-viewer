@@ -4821,10 +4821,10 @@ button.guiedit {
 	.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
 		z-index: 11011;
 		position: fixed;
-		bottom: 7px;
-		width: calc(((100% - 16px) / 10) * 2.5 - 7px);
+		bottom: 6px;
+		width: calc(((100% - 16px) / 12.5) * 2.5 - 7px);
 		font-size: 1.25rem;
-		padding: 5px 5px 6px 5px;
+		padding: 6px 5px;
 		display: block;
 
 		font-weight: var(--GW-UI-font-weight-heavy);
@@ -6470,6 +6470,8 @@ th.mathjax-inline-container {
 /* VARIABLES */
 /*===========*/
 
+/*	Typography.
+	*/
 :root {
 	--GW-UI-font: 'Anonymous Pro', monospace;
 	--GW-UI-font-weight-light: 400;
@@ -6484,6 +6486,43 @@ th.mathjax-inline-container {
 	--GW-link-post-link-font-weight: 600;
 
 	--GW-TOC-heading-font-weight: 700;
+}
+
+/*	Layout.
+	*/
+:root {
+	--GW-content-side-padding: 50px;
+	--GW-sequence-page-content-side-padding: 50px;
+	--GW-user-page-content-side-padding: 30px;
+	--GW-recent-comments-page-content-side-padding: 30px;
+	--GW-conversation-page-content-side-padding: 30px;
+	--GW-post-page-content-side-padding: 30px;
+	--GW-post-side-padding: 30px;
+	--GW-edit-post-page-content-side-padding: 30px;
+	--GW-individual-thread-page-content-side-padding: 30px;
+
+	--GW-comment-compact-height: 59px;
+	--GW-comment-compact-height-mobile: 108px;
+	--GW-comment-minimized-height: 38px;
+	--GW-comment-minimized-height-mobile: 68px;
+}
+@media only screen and (max-width: 900px) {
+	:root {
+		--GW-content-side-padding: calc(100% / 45);
+		--GW-sequence-page-content-side-padding: calc(100% / 36);
+		--GW-user-page-content-side-padding: calc(100% / 30);
+		--GW-recent-comments-page-content-side-padding: calc(100% / 30);
+		--GW-conversation-page-content-side-padding: calc(100% / 30);
+		--GW-post-page-content-side-padding: calc(100% / 30);
+		--GW-post-side-padding: 0px;
+		--GW-edit-post-page-content-side-padding: calc(100% / 30);
+		--GW-individual-thread-page-content-side-padding: calc(100% / 30);
+	}
+}
+
+/*	Color scheme.
+	*/
+:root {
 }
 
 /*=----------------------------=*/

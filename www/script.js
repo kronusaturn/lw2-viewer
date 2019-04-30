@@ -4452,6 +4452,7 @@ function insertMarkup(event) {
 GW.guiEditButtons = [
 	[ 'strong', 'Strong (bold)', 'k', '**', '**', 'Bold text', '&#xf032;' ],
 	[ 'em', 'Emphasized (italic)', 'i', '*', '*', 'Italicized text', '&#xf033;' ],
+	[ 'strikethrough', 'Strike-through', '', '~~', '~~', 'Struck-out text', '&#xf0cc;' ],
 	[ 'link', 'Hyperlink', 'l', hyperlink, '', '', '&#xf0c1;' ],
 	[ 'image', 'Image', '', '![', '](image url)', 'Image alt-text', '&#xf03e;' ],
 	[ 'heading1', 'Heading level 1', '', '\\n# ', '', 'Heading', '&#xf1dc;<sup>1</sup>' ],
