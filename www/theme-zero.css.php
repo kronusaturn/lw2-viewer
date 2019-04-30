@@ -247,10 +247,6 @@ body {
 	color: var(--GW-hyperlink-active-color);
 }
 
-.page-toolbar .button::before {
-	font-weight: 400;
-}
-
 .button.logout-button,
 .button.ignore-button {
 	color: #d33;

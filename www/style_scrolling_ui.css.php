@@ -730,6 +730,7 @@ a#inbox-indicator.new-messages:hover::before {
 	font-family: var(--GW-Font-Awesome);
 	font-size: 0.9em;
 	padding-right: 4px;
+	font-weight: 400;
 }
 
 /*=-------------------------------=*/
@@ -738,23 +739,18 @@ a#inbox-indicator.new-messages:hover::before {
 
 .new-post::before {
 	content: '\F067';
-	font-weight: 900;
 }
 .new-private-message::before {
 	content: '\F075';
-	font-weight: 400;
 }
 .logout-button::before {
 	content: '\F2F5';
-	font-weight: 900;
 }
 .ignore-button::before {
 	content: "\F070";
-	font-weight: 400;
 }
 .unignore-button::before {
 	content: "\F06E";
-	font-weight: 400;
 }
 .rss::before {
 	content: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/rss.svg")) ?>');

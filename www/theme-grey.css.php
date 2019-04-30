@@ -315,9 +315,6 @@ body {
 .page-toolbar > * {
 	color: var(--GW-button-color);
 }
-.page-toolbar .button::before {
-	font-weight: 400;
-}
 
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
