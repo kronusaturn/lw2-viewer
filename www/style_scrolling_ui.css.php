@@ -816,7 +816,7 @@ a#inbox-indicator.new-messages:hover::before {
 
 .sublevel-nav .sublevel-item {
 	flex: 0 0 6em;
-	padding: 0.25em 0.5em;
+	padding: 5px 10px;
 	font-size: 1.125rem;
 }
 .sublevel-nav .sublevel-item:active {
@@ -836,11 +836,6 @@ a#inbox-indicator.new-messages:hover::before {
 	}
 	.sublevel-nav:not(.sort) .sublevel-item {
 		margin: 1px;
-	}
-}
-@media only screen and (max-width: 520px) {
-	.sublevel-nav:not(.sort) .sublevel-item {
-		font-size: 1rem;
 	}
 }
 
