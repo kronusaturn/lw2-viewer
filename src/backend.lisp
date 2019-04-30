@@ -143,10 +143,11 @@
       (with-site-context (site)
 	(handler-case
 	    (log-conditions
-	     (let ((posts-json (sb-sys:with-deadline (:seconds 120) (get-posts-json))))
-	       (when (and posts-json (ignore-errors (json:decode-json-from-string posts-json)))
-		 (cache-put "index-json" "new-not-meta" posts-json)
-		 (let ((posts-list (decode-graphql-json posts-json)))
+	     (let* ((posts-json (sb-sys:with-deadline (:seconds 120) (get-posts-json)))
+		    (posts-list (decode-graphql-json posts-json)))
+	       (when posts-list
+		 (with-cache-transaction
+		   (cache-put "index-json" "new-not-meta" posts-json)
 		   (with-db (db "postid-to-title")
 		     (dolist (post posts-list)
 		       (lmdb-put-string db (cdr (assoc :--id post)) (cdr (assoc :title post)))))
