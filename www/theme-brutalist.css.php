@@ -537,34 +537,32 @@ body {
 	}
 
 	#theme-selector {
-		background-color: #fff;
 		box-shadow: 
-			0 0 0 1px #000,
-			0 0 0 7px #fff;
-	}
-	#theme-selector::before {
-		color: #000;
+			0 0 0 1px #000;
 	}
 	#theme-selector button {
-		background-color: #fff;
 		box-shadow: 
 			0 0 0 1px #fff inset, 
-			0 0 0 3px #000 inset, 
-			0 0 0 5px #fff inset;
+			0 0 0 3px #000 inset;
 	}
-	#theme-selector button::after {
-		color: #000;
-		max-width: calc(100% - 3.5em);
-		overflow: hidden;
-		text-overflow: ellipsis;
-		padding-left: 1px;
-	}
+	#theme-selector button:hover,
 	#theme-selector button.selected {
 		box-shadow: 
 			0 0 0 1px #fff inset, 
 			0 0 0 3px #000 inset, 
 			0 0 0 5px #fff inset, 
 			0 0 0 7px #000 inset;
+	}
+	#theme-selector button:active {
+		box-shadow: 
+			0 0 0  1px #fff inset, 
+			0 0 0  3px #000 inset, 
+			0 0 0  8px #fff inset, 
+			0 0 0 10px #000 inset;
+	}
+	#theme-selector button::after {
+		color: #000;
+		padding-left: 1px;
 	}
 	#theme-selector .theme-selector-close-button {
 		font-weight: 400;

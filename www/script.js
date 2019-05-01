@@ -1470,23 +1470,32 @@ GW.themeLoadCallback_brutalist = (fromTheme = "") => {
 	GWLog("themeLoadCallback_brutalist");
 
 	let bottomBarLinks = queryAll("#bottom-bar a");
-	if (!GW.isMobile && bottomBarLinks.length == 5) {
-		let newLinkTexts = [ "First", "Previous", "Top", "Next", "Last" ];
+	if (bottomBarLinks.length != 5) return;
+	let newLinkTexts = [ "First", "Previous", "Top", "Next", "Last" ];
+	bottomBarLinks.forEach((link, i) => {
+		link.dataset.originalText = link.textContent;
+		link.dataset.shortText = newLinkTexts[i];
+	});
+
+	doWhenMatchMedia(GW.mediaQueries.mobileNarrow, "brutalistThemeBottomNavBarItems", (mediaQuery) => {
 		bottomBarLinks.forEach((link, i) => {
-			link.dataset.originalText = link.textContent;
-			link.textContent = newLinkTexts[i];
+			link.textContent = link.dataset.shortText;
 		});
-	}
+	}, (mediaQuery) => {
+		bottomBarLinks.forEach(link => {
+			link.textContent = link.dataset.originalText;
+		});
+	}, (mediaQuery) => {
+		bottomBarLinks.forEach(link => {
+			link.textContent = link.dataset.originalText;
+		});
+	});
 }
 GW.themeUnloadCallback_brutalist = (toTheme = "") => {
 	GWLog("themeUnloadCallback_brutalist");
 
-	let bottomBarLinks = queryAll("#bottom-bar a");
-	if (!GW.isMobile && bottomBarLinks.length == 5) {
-		bottomBarLinks.forEach(link => {
-			link.textContent = link.dataset.originalText;
-		});
-	}
+	if (queryAll("#bottom-bar a").length == 5)
+		cancelDoWhenMatchMedia("brutalistThemeBottomNavBarItems");
 }
 
 GW.themeLoadCallback_classic = (fromTheme = "") => {
