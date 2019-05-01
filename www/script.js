@@ -3911,8 +3911,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		});
 	}
 
-	/*	Replace the “Sequences” tab name with the book icon, except on narrow
-		(mobile) screens.
+	/*	On desktop, replace the “Sequences” tab name with the book icon.
 		*/
 	doWhenMatchMedia(GW.mediaQueries.mobileWide, "setSequencesNavTabText", (mediaQuery) => {
 		query("#nav-item-sequences .nav-inner").innerHTML = mediaQuery.matches ? "Sequences" : "&#xf5db;";

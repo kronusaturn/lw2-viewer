@@ -304,6 +304,16 @@ body {
 			 1px  0   0 1px var(--GW-theme-selector-outline-color);
 	}
 }
+@media only screen and (max-width: 1000px) {
+	#theme-selector,
+	#theme-tweaker-toggle button,
+	#text-size-adjustment-ui {
+		opacity: 1.0;
+	}
+	#theme-selector {
+		border: 1px solid #000;
+	}
+}
 
 /*======================*/
 /* ANTI-KIBITZER TOGGLE */
@@ -352,6 +362,21 @@ body {
 	color: #000;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1000px) {
+	#text-size-adjustment-ui {
+		opacity: 1.0;
+	}
+	#text-size-adjustment-ui {
+		background-color: #fff;
+		box-shadow: 0 0 0 1px #000;
+		padding: 2px 0 4px 0;
+	}
+}
+
 /*======================*/
 /* THEME TWEAKER TOGGLE */
 /*======================*/
@@ -372,6 +397,19 @@ body {
 			0 0 10px #999 inset,
 			0 0 0 1px transparent;
 		transform: scale(0.8);
+	}
+}
+@media only screen and (max-width: 1000px) {
+	#theme-tweaker-toggle button {
+		opacity: 1.0;
+	}
+	#theme-tweaker-toggle button {
+		background-color: #fff;
+		box-shadow: none;
+		border: 1px solid #000;
+	}
+	#theme-tweaker-toggle button:hover {
+		color: #777;
 	}
 }
 
@@ -1655,34 +1693,6 @@ select {
 	#content.alignment-forum-index-page h1.listing a:hover,
 	#content.alignment-forum-index-page h1.listing a:focus {
 		background-color: rgba(242, 246, 255, 0.85);
-	}
-}
-
-/*====================*/
-/* FOR NARROW SCREENS */
-/*====================*/
-
-@media only screen and (max-width: 1000px) {
-	#theme-selector,
-	#theme-tweaker-toggle button,
-	#text-size-adjustment-ui {
-		opacity: 1.0;
-	}
-	#theme-selector {
-		border: 1px solid #000;
-	}
-	#text-size-adjustment-ui {
-		background-color: #fff;
-		box-shadow: 0 0 0 1px #000;
-		padding: 2px 0 4px 0;
-	}
-	#theme-tweaker-toggle button {
-		background-color: #fff;
-		box-shadow: none;
-		border: 1px solid #000;
-	}
-	#theme-tweaker-toggle button:hover {
-		color: #777;
 	}
 }
 

@@ -167,8 +167,9 @@
 /*=---------------=*/
 
 @media only screen and (min-width: 901px) {
-	#nav-item-sequences .nav-inner {
+	#nav-item-sequences a.nav-inner {
 		font-family: var(--GW-Font-Awesome);
+		font-size: 0.9375em;
 	}
 }
 
