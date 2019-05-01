@@ -6869,10 +6869,10 @@ body {
 
 @media only screen and (max-width: 1020px) {
 	#anti-kibitzer-toggle {
-		background-color: #fff;
+		background-color: var(--GW-body-background-color);
 		box-shadow: 
-			0 0 0 2px #000,
-			0 0 0 10px #fff;
+			0 0 0 2px var(--GW-primary-color),
+			0 0 0 10px var(--GW-body-background-color);
 	}
 }
 
@@ -6911,8 +6911,8 @@ body {
 
 #quick-nav-ui a {
 	box-shadow: 
-		0 0 0 1px #fff,
-		0 0 0 3px #000;
+		0 0 0 1px var(--GW-body-background-color),
+		0 0 0 3px var(--GW-primary-color);
 }
 #quick-nav-ui a[href='#bottom-bar'] {
 	line-height: 1.8;
@@ -6920,18 +6920,18 @@ body {
 @media only screen and (hover: hover) and (pointer: fine) {
 	#quick-nav-ui a:hover {
 		box-shadow: 
-			0 0 0 1px #fff inset,
-			0 0 0 3px #000 inset,
-			0 0 0 1px #fff,
-			0 0 0 3px #000;
+			0 0 0 1px var(--GW-body-background-color) inset,
+			0 0 0 3px var(--GW-primary-color) inset,
+			0 0 0 1px var(--GW-body-background-color),
+			0 0 0 3px var(--GW-primary-color);
 	}
 }
 #quick-nav-ui a:active {
 	box-shadow: 
-		0 0 0 3px #fff inset,
-		0 0 0 5px #000 inset,
-		0 0 0 1px #fff,
-		0 0 0 3px #000;
+		0 0 0 3px var(--GW-body-background-color) inset,
+		0 0 0 5px var(--GW-primary-color) inset,
+		0 0 0 1px var(--GW-body-background-color),
+		0 0 0 3px var(--GW-primary-color);
 }
 #quick-nav-ui a[href='#comments'].no-comments,
 #quick-nav-ui a[href='#answers'].no-answers {
@@ -6945,8 +6945,8 @@ body {
 
 @media only screen and (max-width: 1020px) {
 	#quick-nav-ui {
-		background-color: #fff;
-		box-shadow: 0 9px 0 0px #fff;
+		background-color: var(--GW-body-background-color);
+		box-shadow: 0 9px 0 0px var(--GW-body-background-color);
 	}
 }
 
