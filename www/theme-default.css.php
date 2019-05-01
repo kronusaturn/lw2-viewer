@@ -218,7 +218,9 @@ body {
 	margin: 0 5px 0 0;
 }
 
-/*= Top pagination UI hover tooltips =*/
+/*===============*/
+/* PAGINATION UI */
+/*===============*/
 
 #top-nav-bar a::after,
 #bottom-bar a::after {

@@ -192,25 +192,6 @@ p {
 	text-shadow: none;
 }
 
-/*= Top pagination UI =*/
-
-#top-nav-bar a::before {
-	font-weight: 300;
-}
-
-/*= Bottom pagination UI =*/
-
-#bottom-bar .nav-item a::before {
-	font-weight: 400;
-}
-
-/*= Pagination UI hover tooltips =*/
-
-#top-nav-bar a::after,
-#bottom-bar a::after {
-	color: #222;
-}
-
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
@@ -218,17 +199,6 @@ p {
 @media only screen and (max-width: 960px) {
 	#nav-item-about {
 		margin-right: unset;
-	}
-	#bottom-bar .nav-inner {
-		text-shadow: none;
-	}
-	#bottom-bar .nav-inner::before,
-	#bottom-bar .nav-inner::after {
-		text-shadow: var(--GW-shadow-text-glow);
-	}
-	#bottom-bar .nav-inner:hover::before,
-	#bottom-bar .nav-inner:hover::after {
-		text-shadow: var(--GW-shadow-link-glow);
 	}
 }
 @media only screen and (max-width: 900px) {
@@ -258,6 +228,41 @@ p {
 	}
 	#inbox-indicator::before {
 		padding-top: 2px;
+	}
+}
+
+/*===============*/
+/* PAGINATION UI */
+/*===============*/
+
+#top-nav-bar a::before {
+	font-weight: 300;
+}
+
+#bottom-bar .nav-item a::before {
+	font-weight: 400;
+}
+
+#top-nav-bar a::after,
+#bottom-bar a::after {
+	color: #222;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 960px) {
+	#bottom-bar .nav-inner {
+		text-shadow: none;
+	}
+	#bottom-bar .nav-inner::before,
+	#bottom-bar .nav-inner::after {
+		text-shadow: var(--GW-shadow-text-glow);
+	}
+	#bottom-bar .nav-inner:hover::before,
+	#bottom-bar .nav-inner:hover::after {
+		text-shadow: var(--GW-shadow-link-glow);
 	}
 }
 
