@@ -1469,33 +1469,44 @@ GW.themeUnloadCallback_zero = (toTheme = "") => {
 GW.themeLoadCallback_brutalist = (fromTheme = "") => {
 	GWLog("themeLoadCallback_brutalist");
 
+	// Bottom bar links.
+	// TODO: Check if this is necessary?
 	let bottomBarLinks = queryAll("#bottom-bar a");
-	if (bottomBarLinks.length != 5) return;
-	let newLinkTexts = [ "First", "Previous", "Top", "Next", "Last" ];
-	bottomBarLinks.forEach((link, i) => {
-		link.dataset.originalText = link.textContent;
-		link.dataset.shortText = newLinkTexts[i];
-	});
-
-	doWhenMatchMedia(GW.mediaQueries.mobileNarrow, "brutalistThemeBottomNavBarItems", (mediaQuery) => {
+	if (bottomBarLinks.length == 5) {
+		let newLinkTexts = [ "First", "Previous", "Top", "Next", "Last" ];
 		bottomBarLinks.forEach((link, i) => {
-			link.textContent = link.dataset.shortText;
+			link.dataset.originalText = link.textContent;
+			link.dataset.shortText = newLinkTexts[i];
 		});
-	}, (mediaQuery) => {
-		bottomBarLinks.forEach(link => {
-			link.textContent = link.dataset.originalText;
+
+		doWhenMatchMedia(GW.mediaQueries.mobileNarrow, "brutalistThemeBottomNavBarItems", (mediaQuery) => {
+			bottomBarLinks.forEach((link, i) => {
+				link.textContent = link.dataset.shortText;
+			});
+		}, (mediaQuery) => {
+			bottomBarLinks.forEach(link => {
+				link.textContent = link.dataset.originalText;
+			});
+		}, (mediaQuery) => {
+			bottomBarLinks.forEach(link => {
+				link.textContent = link.dataset.originalText;
+			});
 		});
-	}, (mediaQuery) => {
-		bottomBarLinks.forEach(link => {
-			link.textContent = link.dataset.originalText;
-		});
-	});
+	}
+
+	// Theme selector close button.
+	query("#theme-selector .theme-selector-close-button").innerHTML = "&#xf00d;";
 }
 GW.themeUnloadCallback_brutalist = (toTheme = "") => {
 	GWLog("themeUnloadCallback_brutalist");
 
+	// Bottom bar links.
+	// TODO: Check if this is necessary?
 	if (queryAll("#bottom-bar a").length == 5)
 		cancelDoWhenMatchMedia("brutalistThemeBottomNavBarItems");
+
+	// Theme selector close button.
+	query("#theme-selector .theme-selector-close-button").innerHTML = "&#xf057;";
 }
 
 GW.themeLoadCallback_classic = (fromTheme = "") => {

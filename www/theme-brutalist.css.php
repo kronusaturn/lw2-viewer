@@ -43,6 +43,8 @@
 	--GW-body-background-color: #fff;
 	--GW-content-background-color: #fff;
 
+	--GW-hyperlink-color: #000;
+
 	--GW-theme-selector-outline-color: #000;
 }
 
@@ -418,7 +420,6 @@ body {
 /*=================*/
 
 #quick-nav-ui a {
-	color: #000;
 	box-shadow: 
 		0 0 0 1px #fff,
 		0 0 0 3px #000;
@@ -564,8 +565,14 @@ body {
 		color: #000;
 		padding-left: 1px;
 	}
-	#theme-selector .theme-selector-close-button {
-		font-weight: 400;
+	#theme-selector .theme-selector-close-button,
+	#theme-selector .theme-selector-close-button:hover {
+		font-weight: 300;
+		width: 54px;
+		box-shadow:
+			0 0 0 4px #fff inset,
+			0 0 0 6px #000 inset;
+		padding: 12px 10px 10px 12px;
 	}
 
 	#quick-nav-ui {
@@ -870,14 +877,15 @@ h1.listing.own-post-listing {
 /*==================*/
 
 .body-text a {
-	border-bottom: 2px dotted #000;
+	border-bottom: 2px dotted currentColor;
 }
-.body-text a:hover {
-	color: #999;
+.body-text {
+	--GW-hyperlink-hover-color: #999;
+	--GW-hyperlink-active-color: #999;
 }
 .post-meta a:hover,
 .comment-meta a:hover {
-	text-decoration: dotted underline;
+	border-bottom: 1px dotted currentColor;
 }
 
 /*===========*/
@@ -1465,9 +1473,7 @@ button.guiedit::after {
 /* LINKS */
 /*=======*/
 
-a:link,
-a:visited {
-	color: inherit;
+a {
 	text-decoration: none;
 }
 
@@ -1632,8 +1638,6 @@ select {
 .qualified-linking-toolbar {
 	border: 2px solid #000;
 	background-color: #fff;
-}
-.qualified-linking-toolbar a {
 }
 .qualified-linking-toolbar a:hover {
 	box-shadow: 0 0 0 2px #000;
