@@ -6513,15 +6513,33 @@ th.mathjax-inline-container {
 /*	Color scheme.
 	*/
 :root {
-	--GW-body-background-color: #fff;
-	--GW-body-background-color-components: 255, 255, 255;
+	--GW-C0-R: 255;
+	--GW-C0-G: 255;
+	--GW-C0-B: 255;
+	--GW-C0-V: 1.0;
+	--GW-body-background-color:
+		rgb(
+			calc(var(--GW-C0-R) * var(--GW-C0-V)),
+			calc(var(--GW-C0-G) * var(--GW-C0-V)),
+			calc(var(--GW-C0-B) * var(--GW-C0-V))
+		);
+	--GW-C0: var(--GW-body-background-color);
 
-	--GW-primary-color: #000;
-	--GW-primary-color-components: 0, 0, 0;
+	--GW-C1-R: 0;
+	--GW-C1-G: 0;
+	--GW-C1-B: 0;
+	--GW-C1-V: 1.0;
+	--GW-primary-color:
+		rgb(
+			calc(var(--GW-C1-R) * var(--GW-C1-V)),
+			calc(var(--GW-C1-G) * var(--GW-C1-V)),
+			calc(var(--GW-C1-B) * var(--GW-C1-V))
+		);
+	--GW-C1: var(--GW-primary-color);
 
-	--GW-hyperlink-color: var(--GW-primary-color);
+	--GW-hyperlink-color: var(--GW-C1);
 
-	--GW-theme-selector-outline-color: var(--GW-primary-color);
+	--GW-theme-selector-outline-color: var(--GW-C1);
 }
 
 /*=----------------------------=*/
@@ -6540,14 +6558,14 @@ th.mathjax-inline-container {
 /*======*/
 
 body {
-	color: var(--GW-primary-color);
+	color: var(--GW-C1);
 }
 #content {
 	line-height: 1.55;
 }
 #content::before {
 	box-shadow:
-		0 0 0 2px var(--GW-primary-color);
+		0 0 0 2px var(--GW-C1);
 }
 
 /*==========*/
@@ -6563,30 +6581,32 @@ body {
 }
 
 .nav-bar:nth-of-type(2) {
-	border-bottom: 2px solid var(--GW-primary-color);
+	border-bottom: 2px solid var(--GW-C1);
 }
 
 .nav-current:not(#nav-item-search) .nav-inner,
 .nav-bar a.nav-inner:hover {
 	box-shadow: 
-		0 0 0 4px var(--GW-body-background-color) inset,
-		0 0 0 6px var(--GW-primary-color) inset;
+		0 0 0 4px var(--GW-C0) inset,
+		0 0 0 6px var(--GW-C1) inset;
 }
 .nav-bar a.nav-inner:active {
 	box-shadow: 
-		0 0 0 8px var(--GW-body-background-color) inset,
-		0 0 0 10px var(--GW-primary-color) inset;
+		0 0 0 8px var(--GW-C0) inset,
+		0 0 0 10px var(--GW-C1) inset;
 }
 
 /*= Decorative bottom bar =*/
 
-#bottom-bar.decorative::before {
-	filter: contrast(90%);
-}
 #bottom-bar.decorative::after {
-	color: #d8d8d8;
 	padding-right: 5px;
 	padding-left: 6px;
+	color:
+		rgb(
+			calc(var(--GW-C0-R) * 0.85),
+			calc(var(--GW-C0-G) * 0.85),
+			calc(var(--GW-C0-B) * 0.85)
+		)
 }
 
 /*= Accesskey hints =*/
@@ -6595,13 +6615,24 @@ body {
 	left: 8px;
 	top: 3px;
 	font-size: 0.7em;
-	color: #d8d8d8;
+	color:
+		rgb(
+			calc(var(--GW-C0-R) * 0.8),
+			calc(var(--GW-C0-G) * 0.8),
+			calc(var(--GW-C0-B) * 0.8)
+		)
 }
-.inactive-bar .nav-inner::after {
-	color: #ccc;
+
+/*= About tag =*/
+
+#nav-item-about .nav-inner {
+	margin: 0 0.5em 0 0;
 }
-.nav-inner:hover::after {
-	color: #aaa;
+#nav-item-about button.open-keyboard-help {
+	border: none;
+	text-shadow:
+		 2px  2px 0 var(--GW-C0),
+		-2px -2px 0 var(--GW-C0);
 }
 
 /*= Search tab =*/
@@ -6623,8 +6654,8 @@ body {
 
 #inbox-indicator {
 	text-shadow:
-		 1px  1px 0 var(--GW-body-background-color),
-		-1px -1px 0 var(--GW-body-background-color);
+		 1px  1px 0 var(--GW-C0),
+		-1px -1px 0 var(--GW-C0);
 }
 #inbox-indicator::before {
 	padding-top: 1px
@@ -6640,11 +6671,11 @@ body {
 
 #top-nav-bar a::after,
 #bottom-bar a::after {
-	color: var(--GW-primary-color);
+	color: var(--GW-C1);
 }
 
 #bottom-bar a:not([href='#top'])::after {
-	background-color: var(--GW-body-background-color);
+	background-color: var(--GW-C0);
 	left: 0;
 	right: 0;
 	margin: auto;
@@ -6690,7 +6721,7 @@ body {
 /*==============*/
 
 .sublevel-nav .sublevel-item {
-	border-color: var(--GW-primary-color);
+	border-color: var(--GW-C1);
 	border-style: solid;
 	border-width: 1px 1px 1px 0;
 }
@@ -6699,19 +6730,19 @@ body {
 }
 .sublevel-nav .sublevel-item:hover {
 	box-shadow: 
-		0 0 0 2px var(--GW-body-background-color) inset,
-		0 0 0 3px var(--GW-primary-color) inset;
+		0 0 0 2px var(--GW-C0) inset,
+		0 0 0 3px var(--GW-C1) inset;
 }
 .sublevel-nav .sublevel-item:active {
 	box-shadow: 
-		0 0 0 4px var(--GW-body-background-color) inset,
-		0 0 0 5px var(--GW-primary-color) inset;
+		0 0 0 4px var(--GW-C0) inset,
+		0 0 0 5px var(--GW-C1) inset;
 }
 .sublevel-nav .sublevel-item:disabled,
 .sublevel-nav span.sublevel-item {
 	box-shadow: 
-		0 0 0 2px var(--GW-body-background-color) inset,
-		0 0 0 3px var(--GW-primary-color) inset;
+		0 0 0 2px var(--GW-C0) inset,
+		0 0 0 3px var(--GW-C1) inset;
 	color: inherit;
 }
 
@@ -6721,7 +6752,7 @@ body {
 
 .sublevel-nav.sort {
 	padding: 18px 0 0 0;
-	border: 2px solid var(--GW-primary-color);
+	border: 2px solid var(--GW-C1);
 }
 .sublevel-nav.sort::before {
 	text-transform: uppercase;
@@ -6738,19 +6769,19 @@ body {
 
 #width-selector button {
 	box-shadow:
-		0 0 0 4px var(--GW-body-background-color) inset,
-		0 0 0 5px var(--GW-primary-color) inset;
+		0 0 0 4px var(--GW-C0) inset,
+		0 0 0 5px var(--GW-C1) inset;
 }
 #width-selector button:hover,
 #width-selector button.selected {
 	box-shadow:
-		0 0 0 1px var(--GW-body-background-color) inset,
-		0 0 0 2px var(--GW-primary-color) inset,
-		0 0 0 4px var(--GW-body-background-color) inset,
-		0 0 0 5px var(--GW-primary-color) inset;
+		0 0 0 1px var(--GW-C0) inset,
+		0 0 0 2px var(--GW-C1) inset,
+		0 0 0 4px var(--GW-C0) inset,
+		0 0 0 5px var(--GW-C1) inset;
 }
 #width-selector button::after {
-	color: var(--GW-primary-color);
+	color: var(--GW-C1);
 	font-size: 0.9em;
 }
 
@@ -6760,14 +6791,14 @@ body {
 
 #theme-selector button {
 	box-shadow:
-		0 0 0 5px var(--GW-body-background-color) inset;
+		0 0 0 5px var(--GW-C0) inset;
 }
 #theme-selector button:hover,
 #theme-selector button.selected {
 	box-shadow:
-		0 0 0 2px var(--GW-body-background-color) inset,
-		0 0 0 3px var(--GW-primary-color) inset,
-		0 0 0 5px var(--GW-body-background-color) inset;
+		0 0 0 2px var(--GW-C0) inset,
+		0 0 0 3px var(--GW-C1) inset,
+		0 0 0 5px var(--GW-C0) inset;
 }
 
 #theme-selector button::before {
@@ -6775,7 +6806,7 @@ body {
 }
 #theme-selector button:hover::before,
 #theme-selector button.selected::before {
-	color: var(--GW-primary-color);
+	color: var(--GW-C1);
 }
 
 /*=----------------------------=*/
@@ -6785,7 +6816,7 @@ body {
 @media only screen and (max-width: 1160px) {
 	#theme-selector:hover::after {
 		box-shadow:
-			-1px  0   0 0   var(--GW-body-background-color),
+			-1px  0   0 0   var(--GW-C0),
 			 1px  1px 0 1px var(--GW-theme-selector-outline-color),
 			 1px -1px 0 1px var(--GW-theme-selector-outline-color),
 			 1px  0   0 1px var(--GW-theme-selector-outline-color);
@@ -6798,8 +6829,8 @@ body {
 	#theme-selector {
 		border: 1px solid transparent;
 		box-shadow: 
-			0 0 0 2px var(--GW-primary-color),
-			0 0 0 6px var(--GW-body-background-color);
+			0 0 0 2px var(--GW-C1),
+			0 0 0 6px var(--GW-C0);
 	}
 }
 
@@ -6821,27 +6852,27 @@ body {
 		margin-right: -19px;
 	}
 	#theme-tweaker-toggle button {
-		background-color: var(--GW-body-background-color);
+		background-color: var(--GW-C0);
 		opacity: 1.0;
 		box-shadow:
-			0 0 0 2px var(--GW-primary-color) inset,
-			0 0 0 4px var(--GW-body-background-color);
+			0 0 0 2px var(--GW-C1) inset,
+			0 0 0 4px var(--GW-C0);
 		padding: 1px 1px 1px 2px;
 	}
 	#theme-tweaker-toggle button:hover,
 	#theme-tweaker-toggle button:focus {
 		box-shadow:
-			0 0 0 2px var(--GW-primary-color) inset,
-			0 0 0 4px var(--GW-body-background-color) inset,
-			0 0 0 6px var(--GW-primary-color) inset,
-			0 0 0 4px var(--GW-body-background-color);
+			0 0 0 2px var(--GW-C1) inset,
+			0 0 0 4px var(--GW-C0) inset,
+			0 0 0 6px var(--GW-C1) inset,
+			0 0 0 4px var(--GW-C0);
 	}
 	#theme-tweaker-toggle button:active {
 		box-shadow:
-			0 0 0 2px var(--GW-primary-color) inset,
-			0 0 0 6px var(--GW-body-background-color) inset,
-			0 0 0 8px var(--GW-primary-color) inset,
-			0 0 0 4px var(--GW-body-background-color);
+			0 0 0 2px var(--GW-C1) inset,
+			0 0 0 6px var(--GW-C0) inset,
+			0 0 0 8px var(--GW-C1) inset,
+			0 0 0 4px var(--GW-C0);
 	}
 }
 
@@ -6871,10 +6902,10 @@ body {
 
 @media only screen and (max-width: 1020px) {
 	#anti-kibitzer-toggle {
-		background-color: var(--GW-body-background-color);
+		background-color: var(--GW-C0);
 		box-shadow: 
-			0 0 0 2px var(--GW-primary-color),
-			0 0 0 10px var(--GW-body-background-color);
+			0 0 0 2px var(--GW-C1),
+			0 0 0 10px var(--GW-C0);
 	}
 }
 
@@ -6913,8 +6944,8 @@ body {
 
 #quick-nav-ui a {
 	box-shadow: 
-		0 0 0 1px var(--GW-body-background-color),
-		0 0 0 3px var(--GW-primary-color);
+		0 0 0 1px var(--GW-C0),
+		0 0 0 3px var(--GW-C1);
 }
 #quick-nav-ui a[href='#bottom-bar'] {
 	line-height: 1.8;
@@ -6922,18 +6953,18 @@ body {
 @media only screen and (hover: hover) and (pointer: fine) {
 	#quick-nav-ui a:hover {
 		box-shadow: 
-			0 0 0 1px var(--GW-body-background-color) inset,
-			0 0 0 3px var(--GW-primary-color) inset,
-			0 0 0 1px var(--GW-body-background-color),
-			0 0 0 3px var(--GW-primary-color);
+			0 0 0 1px var(--GW-C0) inset,
+			0 0 0 3px var(--GW-C1) inset,
+			0 0 0 1px var(--GW-C0),
+			0 0 0 3px var(--GW-C1);
 	}
 }
 #quick-nav-ui a:active {
 	box-shadow: 
-		0 0 0 3px var(--GW-body-background-color) inset,
-		0 0 0 5px var(--GW-primary-color) inset,
-		0 0 0 1px var(--GW-body-background-color),
-		0 0 0 3px var(--GW-primary-color);
+		0 0 0 3px var(--GW-C0) inset,
+		0 0 0 5px var(--GW-C1) inset,
+		0 0 0 1px var(--GW-C0),
+		0 0 0 3px var(--GW-C1);
 }
 #quick-nav-ui a[href='#comments'].no-comments,
 #quick-nav-ui a[href='#answers'].no-answers {
@@ -6947,8 +6978,8 @@ body {
 
 @media only screen and (max-width: 1020px) {
 	#quick-nav-ui {
-		background-color: var(--GW-body-background-color);
-		box-shadow: 0 9px 0 0px var(--GW-body-background-color);
+		background-color: var(--GW-C0);
+		box-shadow: 0 9px 0 0px var(--GW-C0);
 	}
 }
 
@@ -7119,10 +7150,6 @@ body {
 /*===============*/
 /* KEYBOARD HELP */
 /*===============*/
-
-#nav-item-about button.open-keyboard-help {
-	border: none;
-}
 
 /*==========*/
 /* ARCHIVES */
@@ -8071,7 +8098,7 @@ input[type='search'],
 input[type='password'],
 textarea {
 	background-color: transparent;
-	border: 1px solid var(--GW-primary-color);
+	border: 1px solid var(--GW-C1);
 	color: #000;
 }
 input[type='text']:focus,
@@ -8082,7 +8109,7 @@ textarea:focus {
 }
 
 select {
-	color: var(--GW-primary-color);
+	color: var(--GW-C1);
 }
 
 .frac sup {
