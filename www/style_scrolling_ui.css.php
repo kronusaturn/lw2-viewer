@@ -166,30 +166,9 @@
 /*= Sequences tab =*/
 /*=---------------=*/
 
-#nav-item-sequences .nav-inner::before {
-	font-family: var(--GW-Font-Awesome);
-	content: "\F5DB";
-}
 @media only screen and (min-width: 901px) {
 	#nav-item-sequences .nav-inner {
-		max-width: 0;
-		text-align: left;
-		visibility: hidden;
-	}
-	#nav-item-sequences .nav-inner::before {
-		font-size: 0.9375em;
-		display: block;
-		position: absolute;
-		visibility: visible;
-		padding: 0 0 1px 2px;
-		width: 100%;
-		height: 100%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-	#nav-item-sequences .nav-inner::after {
-		visibility: visible;
+		font-family: var(--GW-Font-Awesome);
 	}
 }
 
@@ -236,6 +215,9 @@
 	#nav-item-recent-comments .nav-inner::before {
 		content: "\F036";
 		margin-bottom: 0;
+	}
+	#nav-item-sequences .nav-inner::before {
+		content: "\F5DB";
 	}
 	#nav-item-archive .nav-inner::before {
 		content: "\F187";

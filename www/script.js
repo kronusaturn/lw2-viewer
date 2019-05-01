@@ -3911,6 +3911,13 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		});
 	}
 
+	/*	Replace the “Sequences” tab name with the book icon, except on narrow
+		(mobile) screens.
+		*/
+	doWhenMatchMedia(GW.mediaQueries.mobileWide, "setSequencesNavTabText", (mediaQuery) => {
+		query("#nav-item-sequences .nav-inner").innerHTML = mediaQuery.matches ? "Sequences" : "&#xf5db;";
+	});
+
 	// Add error message (as placeholder) if user tries to click Search with
 	// an empty search field.
 	query("#nav-item-search form").addEventListener("submit", GW.siteSearchFormSubmitted = (event) => {

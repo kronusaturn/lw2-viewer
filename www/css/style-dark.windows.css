@@ -1955,30 +1955,9 @@ a {
 /*= Sequences tab =*/
 /*=---------------=*/
 
-#nav-item-sequences .nav-inner::before {
-	font-family: var(--GW-Font-Awesome);
-	content: "\F5DB";
-}
 @media only screen and (min-width: 901px) {
 	#nav-item-sequences .nav-inner {
-		max-width: 0;
-		text-align: left;
-		visibility: hidden;
-	}
-	#nav-item-sequences .nav-inner::before {
-		font-size: 0.9375em;
-		display: block;
-		position: absolute;
-		visibility: visible;
-		padding: 0 0 1px 2px;
-		width: 100%;
-		height: 100%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-	#nav-item-sequences .nav-inner::after {
-		visibility: visible;
+		font-family: var(--GW-Font-Awesome);
 	}
 }
 
@@ -2025,6 +2004,9 @@ a {
 	#nav-item-recent-comments .nav-inner::before {
 		content: "\F036";
 		margin-bottom: 0;
+	}
+	#nav-item-sequences .nav-inner::before {
+		content: "\F5DB";
 	}
 	#nav-item-archive .nav-inner::before {
 		content: "\F187";
@@ -4626,6 +4608,7 @@ a.comment-child-link::before {
 	margin: 2px 0 0 0;
 	padding: 4px 5px;
 	font-size: 1.2rem;
+	line-height: 1.2;
 	border-style: solid;
 	border-width: 29px 1px 1px 1px;
 	resize: none;
@@ -6800,6 +6783,7 @@ body {
 	border-style: solid;
 	border-color: #1f1f1f;
 	border-width: 1px 0 1px 1px;
+	line-height: 1.6;
 }
 .sublevel-nav:not(.sort) .sublevel-item:first-child {
 	border-radius: 8px 0 0 8px;

@@ -311,6 +311,7 @@ body {
 	border-style: solid;
 	border-color: #ddd;
 	border-width: 1px 0 1px 1px;
+	line-height: 1.6;
 }
 .sublevel-nav:not(.sort) .sublevel-item:first-child {
 	border-radius: 8px 0 0 8px;

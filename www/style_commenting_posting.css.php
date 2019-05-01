@@ -135,6 +135,7 @@
 	margin: 2px 0 0 0;
 	padding: 4px 5px;
 	font-size: 1.2rem;
+	line-height: 1.2;
 	border-style: solid;
 	border-width: 29px 1px 1px 1px;
 	resize: none;
