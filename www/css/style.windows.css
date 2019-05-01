@@ -8695,6 +8695,7 @@ u {
 #keyboard-help-overlay .keyboard-help-container code {
 	background-color: #eee;
 	border: 1px solid #ccc;
+	padding: 5px 8px 2px 8px;
 }
 #keyboard-help-overlay .keyboard-help-container code.ak {
 	background-color: #ffeb83;

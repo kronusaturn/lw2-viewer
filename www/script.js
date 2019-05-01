@@ -3444,14 +3444,14 @@ function keyboardHelpSetup() {
 				"Miscellaneous",
 				[ [ 'ak-x' ], "Switch to next view on user page" ],
 				[ [ 'ak-z' ], "Switch to previous view on user page" ],
-				[ [ 'ak-`&nbsp;' ], "Toggle compact comment list view" ],
+				[ [ 'ak-`' ], "Toggle compact comment list view" ],
 				[ [ 'ak-g' ], "Toggle anti-kibitzer mode" ]
 			], [
 				"Appearance",
 				[ [ 'ak-=' ], "Increase text size" ],
 				[ [ 'ak--' ], "Decrease text size" ],
 				[ [ 'ak-0' ], "Reset to default text size" ],
-				[ [ 'ak-′' ], "Cycle through content width settings" ],
+				[ [ 'ak-\'' ], "Cycle through content width settings" ],
 				[ [ 'ak-1' ], "Switch to default theme [A]" ],
 				[ [ 'ak-2' ], "Switch to dark theme [B]" ],
 				[ [ 'ak-3' ], "Switch to grey theme [C]" ],
