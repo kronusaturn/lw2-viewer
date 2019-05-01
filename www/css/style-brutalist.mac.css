@@ -6513,27 +6513,25 @@ th.mathjax-inline-container {
 /*	Color scheme.
 	*/
 :root {
-	--GW-C0-R: 255;
-	--GW-C0-G: 255;
-	--GW-C0-B: 255;
-	--GW-C0-V: 1.0;
+	--GW-C0-H: 0;
+	--GW-C0-S: 0%;
+	--GW-C0-L: 100%;
 	--GW-body-background-color:
-		rgb(
-			calc(var(--GW-C0-R) * var(--GW-C0-V)),
-			calc(var(--GW-C0-G) * var(--GW-C0-V)),
-			calc(var(--GW-C0-B) * var(--GW-C0-V))
+		hsl(
+			var(--GW-C0-H),
+			var(--GW-C0-S),
+			var(--GW-C0-L)
 		);
 	--GW-C0: var(--GW-body-background-color);
 
-	--GW-C1-R: 0;
-	--GW-C1-G: 0;
-	--GW-C1-B: 0;
-	--GW-C1-V: 1.0;
+	--GW-C1-H: 0;
+	--GW-C1-S: 0%;
+	--GW-C1-L: 0%;
 	--GW-primary-color:
-		rgb(
-			calc(var(--GW-C1-R) * var(--GW-C1-V)),
-			calc(var(--GW-C1-G) * var(--GW-C1-V)),
-			calc(var(--GW-C1-B) * var(--GW-C1-V))
+		hsl(
+			var(--GW-C1-H),
+			var(--GW-C1-S),
+			var(--GW-C1-L)
 		);
 	--GW-C1: var(--GW-primary-color);
 
@@ -6601,12 +6599,8 @@ body {
 #bottom-bar.decorative::after {
 	padding-right: 5px;
 	padding-left: 6px;
-	color:
-		rgb(
-			calc(var(--GW-C0-R) * 0.85),
-			calc(var(--GW-C0-G) * 0.85),
-			calc(var(--GW-C0-B) * 0.85)
-		)
+
+	--GW-C1-L: 85%;
 }
 
 /*= Accesskey hints =*/
@@ -6615,12 +6609,8 @@ body {
 	left: 8px;
 	top: 3px;
 	font-size: 0.7em;
-	color:
-		rgb(
-			calc(var(--GW-C0-R) * 0.8),
-			calc(var(--GW-C0-G) * 0.8),
-			calc(var(--GW-C0-B) * 0.8)
-		)
+
+	--GW-C1-L: 80%;
 }
 
 /*= About tag =*/
