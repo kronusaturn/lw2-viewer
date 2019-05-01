@@ -711,6 +711,7 @@ a#inbox-indicator.new-messages:hover::before {
 	grid-row: 3;
 	align-self: start;
 	justify-self: end;
+	z-index: 1;
 
 	padding: 4px 8px;
 	display: flex;
