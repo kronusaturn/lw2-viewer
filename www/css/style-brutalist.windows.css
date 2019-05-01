@@ -11,7 +11,7 @@
 	*/
 :root {
 	--GW-Font-Awesome: 'Font Awesome', 'Font Awesome 5 Free';
-	--GW-monospaced-font: 'Inconsolata', 'Menlo', monospace;
+	--GW-monospaced-font: 'Source Code Pro', 'Menlo', monospace;
 	--GW-monospaced-font-weight: 400;
 	
 	--GW-Alignment-Forum-logotype-font: 'Concourse SmallCaps', 'Changa One';
@@ -6621,6 +6621,12 @@ body {
 }
 #nav-item-search input::placeholder {
 	color: #d00;
+}
+
+/*= Recent Comments tab =*/
+
+#nav-item-recent-comments span {
+	margin: 0 5px 0 0;
 }
 
 /*= Inbox indicator =*/

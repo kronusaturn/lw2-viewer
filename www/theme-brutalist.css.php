@@ -135,6 +135,12 @@ body {
 	color: #d00;
 }
 
+/*= Recent Comments tab =*/
+
+#nav-item-recent-comments span {
+	margin: 0 5px 0 0;
+}
+
 /*= Inbox indicator =*/
 
 #inbox-indicator {
