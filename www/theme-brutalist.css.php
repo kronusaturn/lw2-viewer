@@ -43,24 +43,14 @@
 	--GW-C0-H: 0;
 	--GW-C0-S: 0%;
 	--GW-C0-L: 100%;
-	--GW-body-background-color:
-		hsl(
-			var(--GW-C0-H),
-			var(--GW-C0-S),
-			var(--GW-C0-L)
-		);
-	--GW-C0: var(--GW-body-background-color);
+	--GW-C0: hsl(var(--GW-C0-H), var(--GW-C0-S), var(--GW-C0-L));
+	--GW-body-background-color: var(--GW-C0);
 
 	--GW-C1-H: 0;
 	--GW-C1-S: 0%;
 	--GW-C1-L: 0%;
-	--GW-primary-color:
-		hsl(
-			var(--GW-C1-H),
-			var(--GW-C1-S),
-			var(--GW-C1-L)
-		);
-	--GW-C1: var(--GW-primary-color);
+	--GW-C1: hsl(var(--GW-C1-H), var(--GW-C1-S), var(--GW-C1-L));
+	--GW-primary-color: var(--GW-C1);
 
 	--GW-hyperlink-color: var(--GW-C1);
 
@@ -126,8 +116,13 @@ body {
 #bottom-bar.decorative::after {
 	padding-right: 5px;
 	padding-left: 6px;
-
-	--GW-C1-L: 85%;
+	color: hsla(var(--GW-C1-H), var(--GW-C1-S), var(--GW-C1-L), 0.15);
+}
+#bottom-bar.decorative::before {
+	background: none;
+	box-shadow:
+		0 calc(1em - 1px) 0 0 var(--GW-C0) inset,
+		0 calc(1em) 0 0 hsla(var(--GW-C1-H), var(--GW-C1-S), var(--GW-C1-L), 0.15) inset;
 }
 
 /*= Accesskey hints =*/
@@ -136,8 +131,11 @@ body {
 	left: 8px;
 	top: 3px;
 	font-size: 0.7em;
-
-	--GW-C1-L: 80%;
+	color: hsla(var(--GW-C1-H), var(--GW-C1-S), var(--GW-C1-L), 0.15);
+	text-shadow: 0 0 0 currentColor;
+}
+.nav-inner:hover::after {
+	color: hsla(var(--GW-C1-H), var(--GW-C1-S), var(--GW-C1-L), 0.4);
 }
 
 /*= About tag =*/
