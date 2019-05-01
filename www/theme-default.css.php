@@ -14,6 +14,8 @@
 	--GW-UI-font-weight-light: 400;
 	--GW-UI-font-weight-heavy: 600;
 
+	--GW-monospaced-font: 'Consolas', 'Menlo', monospace;
+
 	--GW-post-listings-font: 'Concourse', 'a_Avante', 'Open Sans', 'Arial', sans-serif;
 	--GW-post-listings-font-weight: 700;
 

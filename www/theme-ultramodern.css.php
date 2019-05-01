@@ -13,6 +13,8 @@
 	--GW-UI-font-weight-light: 300;
 	--GW-UI-font-weight-heavy: 400;
 
+	--GW-monospaced-font: 'Tired of Courier', 'Courier', 'Courier New', monospace;
+
 	--GW-post-listings-font: 'Raleway', 'Helvetica', 'Arial', 'Verdana', sans-serif;
 	--GW-post-listings-font-weight: 200;
 
@@ -1976,7 +1978,6 @@ hr {
 
 code,
 pre {
-	font-family: 'Tired of Courier', Courier, Courier New, monospace;
 	font-size: 0.9375em;
 }
 

@@ -6,7 +6,7 @@
 	*/
 :root {
 	--GW-Font-Awesome: 'Font Awesome', 'Font Awesome 5 Free';
-	--GW-monospaced-font: 'Inconsolata', 'Menlo', monospace;
+	--GW-monospaced-font: 'Source Code Pro', 'Menlo', monospace;
 	--GW-monospaced-font-weight: 400;
 	
 	--GW-Alignment-Forum-logotype-font: 'Concourse SmallCaps', 'Changa One';
