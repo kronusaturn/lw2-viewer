@@ -1897,6 +1897,10 @@ u {
 	height: 8px;
 }
 
+/*===============*/
+/* KEYBOARD HELP */
+/*===============*/
+
 #keyboard-help-overlay .keyboard-help-container {
 	background-color: #eee;
 }
@@ -1953,6 +1957,7 @@ u {
 /*=--------=*/
 /*= Labels =*/
 /*=--------=*/
+
 #keyboard-help-overlay .keyboard-help-container ul li.section {
 	font-weight: bold;
 }

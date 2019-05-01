@@ -153,12 +153,6 @@ body {
 #top-nav-bar a:hover {
 	color: #777;
 }
-#bottom-bar #nav-item-last a::before {
-	margin-left: -2.3em;
-	left: 3.9em;
-}
-
-/*= Top pagination UI hover tooltips =*/
 
 #top-nav-bar a::after,
 #bottom-bar a::after {
@@ -171,7 +165,6 @@ body {
 	right: 0;
 	margin: auto;
 	padding: 1px 6px;
-	bottom: 2px;
 }
 <?php fit_content("#bottom-bar a:not([href='#top'])::after"); ?>
 
