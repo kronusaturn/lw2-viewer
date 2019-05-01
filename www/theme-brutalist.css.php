@@ -41,11 +41,12 @@
 	*/
 :root {
 	--GW-body-background-color: #fff;
-	--GW-content-background-color: #fff;
 
-	--GW-hyperlink-color: #000;
+	--GW-primary-color: #000;
 
-	--GW-theme-selector-outline-color: #000;
+	--GW-hyperlink-color: var(--GW-primary-color);
+
+	--GW-theme-selector-outline-color: var(--GW-primary-color);
 }
 
 /*=----------------------------=*/
@@ -64,14 +65,14 @@
 /*======*/
 
 body {
-	color: #000;
+	color: var(--GW-primary-color);
 }
 #content {
 	line-height: 1.55;
 }
 #content::before {
 	box-shadow:
-		0 0 0 2px #000;
+		0 0 0 2px var(--GW-primary-color);
 }
 
 /*==========*/
@@ -87,19 +88,19 @@ body {
 }
 
 .nav-bar:nth-of-type(2) {
-	border-bottom: 2px solid #000;
+	border-bottom: 2px solid var(--GW-primary-color);
 }
 
 .nav-current:not(#nav-item-search) .nav-inner,
 .nav-bar a.nav-inner:hover {
 	box-shadow: 
-		0 0 0 4px #fff inset,
-		0 0 0 6px #000 inset;
+		0 0 0 4px var(--GW-body-background-color) inset,
+		0 0 0 6px var(--GW-primary-color) inset;
 }
 .nav-bar a.nav-inner:active {
 	box-shadow: 
-		0 0 0 8px #fff inset,
-		0 0 0 10px #000 inset;
+		0 0 0 8px var(--GW-body-background-color) inset,
+		0 0 0 10px var(--GW-primary-color) inset;
 }
 
 /*= Decorative bottom bar =*/
@@ -147,8 +148,8 @@ body {
 
 #inbox-indicator {
 	text-shadow:
-		 1px  1px 0 #fff,
-		-1px -1px 0 #fff;
+		 1px  1px 0 var(--GW-body-background-color),
+		-1px -1px 0 var(--GW-body-background-color);
 }
 #inbox-indicator::before {
 	padding-top: 1px
@@ -164,11 +165,11 @@ body {
 
 #top-nav-bar a::after,
 #bottom-bar a::after {
-	color: #000;
+	color: var(--GW-primary-color);
 }
 
 #bottom-bar a:not([href='#top'])::after {
-	background-color: #fff;
+	background-color: var(--GW-body-background-color);
 	left: 0;
 	right: 0;
 	margin: auto;
@@ -205,7 +206,7 @@ body {
 /*==============*/
 
 .sublevel-nav .sublevel-item {
-	border-color: #000;
+	border-color: var(--GW-primary-color);
 	border-style: solid;
 	border-width: 1px 1px 1px 0;
 }
@@ -214,19 +215,19 @@ body {
 }
 .sublevel-nav .sublevel-item:hover {
 	box-shadow: 
-		0 0 0 2px #fff inset,
-		0 0 0 3px #000 inset;
+		0 0 0 2px var(--GW-body-background-color) inset,
+		0 0 0 3px var(--GW-primary-color) inset;
 }
 .sublevel-nav .sublevel-item:active {
 	box-shadow: 
-		0 0 0 4px #fff inset,
-		0 0 0 5px #000 inset;
+		0 0 0 4px var(--GW-body-background-color) inset,
+		0 0 0 5px var(--GW-primary-color) inset;
 }
 .sublevel-nav .sublevel-item:disabled,
 .sublevel-nav span.sublevel-item {
 	box-shadow: 
-		0 0 0 2px #fff inset,
-		0 0 0 3px #000 inset;
+		0 0 0 2px var(--GW-body-background-color) inset,
+		0 0 0 3px var(--GW-primary-color) inset;
 	color: inherit;
 }
 
@@ -236,7 +237,7 @@ body {
 
 .sublevel-nav.sort {
 	padding: 18px 0 0 0;
-	border: 2px solid #000;
+	border: 2px solid var(--GW-primary-color);
 }
 .sublevel-nav.sort::before {
 	text-transform: uppercase;
@@ -254,18 +255,18 @@ body {
 #width-selector button {
 	box-shadow:
 		0 0 0 4px var(--GW-body-background-color) inset,
-		0 0 0 5px #000 inset;
+		0 0 0 5px var(--GW-primary-color) inset;
 }
 #width-selector button:hover,
 #width-selector button.selected {
 	box-shadow:
 		0 0 0 1px var(--GW-body-background-color) inset,
-		0 0 0 2px #000 inset,
+		0 0 0 2px var(--GW-primary-color) inset,
 		0 0 0 4px var(--GW-body-background-color) inset,
-		0 0 0 5px #000 inset;
+		0 0 0 5px var(--GW-primary-color) inset;
 }
 #width-selector button::after {
-	color: #000;
+	color: var(--GW-primary-color);
 	font-size: 0.9em;
 }
 
@@ -281,7 +282,7 @@ body {
 #theme-selector button.selected {
 	box-shadow:
 		0 0 0 2px var(--GW-body-background-color) inset,
-		0 0 0 3px #000 inset,
+		0 0 0 3px var(--GW-primary-color) inset,
 		0 0 0 5px var(--GW-body-background-color) inset;
 }
 
@@ -290,7 +291,7 @@ body {
 }
 #theme-selector button:hover::before,
 #theme-selector button.selected::before {
-	color: #000;
+	color: var(--GW-primary-color);
 }
 
 /*=----------------------------=*/
@@ -307,13 +308,56 @@ body {
 	}
 }
 @media only screen and (max-width: 1000px) {
-	#theme-selector,
-	#theme-tweaker-toggle button,
-	#text-size-adjustment-ui {
+	#theme-selector {
 		opacity: 1.0;
 	}
 	#theme-selector {
-		border: 1px solid #000;
+		border: 1px solid transparent;
+		box-shadow: 
+			0 0 0 2px var(--GW-primary-color),
+			0 0 0 6px var(--GW-body-background-color);
+	}
+}
+
+/*======================*/
+/* THEME TWEAKER TOGGLE */
+/*======================*/
+
+#theme-tweaker-toggle button:hover,
+#theme-tweaker-toggle button:active {
+	box-shadow: none;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1000px) {
+	#theme-tweaker-toggle {
+		margin-right: -19px;
+	}
+	#theme-tweaker-toggle button {
+		background-color: var(--GW-body-background-color);
+		opacity: 1.0;
+		box-shadow:
+			0 0 0 2px var(--GW-primary-color) inset,
+			0 0 0 4px var(--GW-body-background-color);
+		padding: 1px 1px 1px 2px;
+	}
+	#theme-tweaker-toggle button:hover,
+	#theme-tweaker-toggle button:focus {
+		box-shadow:
+			0 0 0 2px var(--GW-primary-color) inset,
+			0 0 0 4px var(--GW-body-background-color) inset,
+			0 0 0 6px var(--GW-primary-color) inset,
+			0 0 0 4px var(--GW-body-background-color);
+	}
+	#theme-tweaker-toggle button:active {
+		box-shadow:
+			0 0 0 2px var(--GW-primary-color) inset,
+			0 0 0 6px var(--GW-body-background-color) inset,
+			0 0 0 8px var(--GW-primary-color) inset,
+			0 0 0 4px var(--GW-body-background-color);
 	}
 }
 
@@ -376,42 +420,6 @@ body {
 		background-color: #fff;
 		box-shadow: 0 0 0 1px #000;
 		padding: 2px 0 4px 0;
-	}
-}
-
-/*======================*/
-/* THEME TWEAKER TOGGLE */
-/*======================*/
-
-#theme-tweaker-toggle button:hover,
-#theme-tweaker-toggle button:active {
-	box-shadow: none;
-}
-
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
-@media only screen and (max-width: 1080px) {
-	#theme-tweaker-toggle button {
-		border: 1px solid #999;
-		box-shadow: 
-			0 0 10px #999 inset,
-			0 0 0 1px transparent;
-		transform: scale(0.8);
-	}
-}
-@media only screen and (max-width: 1000px) {
-	#theme-tweaker-toggle button {
-		opacity: 1.0;
-	}
-	#theme-tweaker-toggle button {
-		background-color: #fff;
-		box-shadow: none;
-		border: 1px solid #000;
-	}
-	#theme-tweaker-toggle button:hover {
-		color: #777;
 	}
 }
 
