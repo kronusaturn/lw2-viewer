@@ -41,8 +41,10 @@
 	*/
 :root {
 	--GW-body-background-color: #fff;
+	--GW-body-background-color-components: 255, 255, 255;
 
 	--GW-primary-color: #000;
+	--GW-primary-color-components: 0, 0, 0;
 
 	--GW-hyperlink-color: var(--GW-primary-color);
 
@@ -1587,18 +1589,18 @@ input[type='search'],
 input[type='password'],
 textarea {
 	background-color: transparent;
-	border: 1px solid #000;
+	border: 1px solid var(--GW-primary-color);
 	color: #000;
 }
 input[type='text']:focus,
 input[type='search']:focus,
 input[type='password']:focus,
 textarea:focus {
-	border: 1px dashed #000;
+	border-style: dashed;
 }
 
 select {
-	color: #000;
+	color: var(--GW-primary-color);
 }
 
 .frac sup {
