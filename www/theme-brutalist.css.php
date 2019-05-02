@@ -51,9 +51,9 @@
 /*	Color scheme.
 	*/
 :root {
-	--GW-body-background-color: #fff;
+	--GW-body-background-color: var(--GW-C0);
 
-	--GW-primary-color: #000;
+	--GW-primary-color: var(--GW-C1);
 
 	--GW-hyperlink-color: var(--GW-primary-color);
 
@@ -61,8 +61,8 @@
 
 	--GW-search-field-placeholder-color: #d00;
 
-	--GW-C0: var(--GW-body-background-color);
-	--GW-C1: var(--GW-primary-color);
+	--GW-C0: #fff;
+	--GW-C1: #000;
 	--GW-C2: #d8d8d8;
 	--GW-C3: #ccc;
 	--GW-C4: #bbb;
@@ -562,7 +562,7 @@ body {
 /*======================*/
 
 #anti-kibitzer-toggle button {
-	color: var(--GW-C2);
+	opacity: 0.15;
 	box-shadow: none;
 }
 #anti-kibitzer-toggle button::before,
@@ -570,10 +570,10 @@ body {
 	color: inherit;
 }
 #anti-kibitzer-toggle.engaged button {
-	color: var(--GW-C5);
+	opacity: 0.3;
 }
 #anti-kibitzer-toggle button:hover {
-	color: var(--GW-C6);
+	opacity: 0.5;
 }
 
 /*=----------------------------=*/
@@ -590,6 +590,11 @@ body {
 	#anti-kibitzer-toggle button {
 		padding: 0 0 0 1px;
 		width: 41px;
+	}
+}
+@media only screen and (max-width: 960px) {
+	#anti-kibitzer-toggle button {
+		margin: -5px -15px 0 0;
 	}
 }
 
