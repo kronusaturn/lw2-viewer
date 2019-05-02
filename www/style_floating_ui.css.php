@@ -592,6 +592,8 @@
 	display: block;
 	width: 40px;
 	height: 40px;
+}
+#quick-nav-ui a:nth-of-type(n+2) {
 	margin: 10px 0 0 0;
 }
 
@@ -937,7 +939,7 @@
 	position: absolute;
 	left: 100%;
 	bottom: 0;
-	margin: 0 0 275px 28px;
+	margin: 0 0 275px var(--GW-quick-nav-ui-left-margin);
 }
 #anti-kibitzer-toggle button {
 	display: block;
@@ -970,27 +972,11 @@
 @media only screen and (max-width: 1160px) {
 	#anti-kibitzer-toggle {
 		margin-bottom: 400px;
-		margin-left: 28px;
 	}
 	@media only screen and (max-height: 720px) {
 		#anti-kibitzer-toggle {
 			margin-bottom: 350px;
 		}
-	}
-}
-@media only screen and (max-width: 1080px) {
-	#anti-kibitzer-toggle {
-		margin-left: 16px;
-	}
-}
-@media only screen and (max-width: 1040px) {
-	#anti-kibitzer-toggle {
-		margin-left: 8px;
-	}
-}
-@media only screen and (max-width: 1020px) {
-	#anti-kibitzer-toggle {
-		margin-left: -20px;
 	}
 }
 @media only screen and (max-width: 960px) {

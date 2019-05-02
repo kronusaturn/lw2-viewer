@@ -42,6 +42,11 @@
 
 	--GW-HNS-date-picker-text-field-width: 160px;
 }
+@media only screen and (max-width: 1020px) {
+	:root {
+		--GW-quick-nav-ui-left-margin: -19px;
+	}
+}
 
 /*	Color scheme.
 	*/
@@ -61,6 +66,7 @@
 	--GW-C2: #d8d8d8;
 	--GW-C3: #ccc;
 	--GW-C4: #aaa;
+	--GW-C5: #999;
 }
 
 /*=----------------------------=*/
@@ -198,8 +204,11 @@ body {
 	box-shadow:
 		0 -2px 0 0 var(--GW-C1);
 }
+#bottom-bar a {
+	line-height: 1.9;
+}
 #bottom-bar a::after {
-	bottom: 0;
+	bottom: -2px;
 }
 #bottom-bar a:not([href='#top'])::after {
 	background-color: var(--GW-C0);
@@ -458,12 +467,11 @@ body {
 @media only screen and (max-width: 1000px) {
 	#theme-selector {
 		opacity: 1.0;
-	}
-	#theme-selector {
-		border: 1px solid transparent;
+		border: 1px solid var(--GW-C1);
 		box-shadow: 
-			0 0 0 2px var(--GW-C1),
-			0 0 0 6px var(--GW-C0);
+			0 0 0 1px var(--GW-C1),
+			0 0 0 7px var(--GW-C0);
+		margin-top: 136px;
 	}
 }
 
@@ -489,7 +497,7 @@ body {
 		opacity: 1.0;
 		box-shadow:
 			0 0 0 2px var(--GW-C1) inset,
-			0 0 0 4px var(--GW-C0);
+			0 0 0 6px var(--GW-C0);
 		padding: 1px 1px 1px 2px;
 	}
 	#theme-tweaker-toggle button:hover,
@@ -513,20 +521,19 @@ body {
 /* ANTI-KIBITZER TOGGLE */
 /*======================*/
 
-#anti-kibitzer-toggle button::before,
-#anti-kibitzer-toggle button::after {
-	background-color: #999;
-	-webkit-background-clip: text;
-	color: transparent;
-	text-shadow: rgba(255, 255, 255, 0.5) 0px 1px 1px;
-}
-#anti-kibitzer-toggle button:hover {
+#anti-kibitzer-toggle button {
+	color: var(--GW-C2);
 	box-shadow: none;
 }
-#anti-kibitzer-toggle button:hover::before,
-#anti-kibitzer-toggle button:hover::after {
-	background-color: #000;
-	text-shadow: rgba(255, 255, 255, 0.2) 0px 1px 1px;
+#anti-kibitzer-toggle button::before,
+#anti-kibitzer-toggle button::after {
+	color: inherit;
+}
+#anti-kibitzer-toggle.engaged button {
+	color: var(--GW-C4);
+}
+#anti-kibitzer-toggle button:hover {
+	color: var(--GW-C5);
 }
 
 /*=----------------------------=*/
@@ -538,7 +545,11 @@ body {
 		background-color: var(--GW-C0);
 		box-shadow: 
 			0 0 0 2px var(--GW-C1),
-			0 0 0 10px var(--GW-C0);
+			0 0 0 8px var(--GW-C0);
+	}
+	#anti-kibitzer-toggle button {
+		padding: 0 0 0 1px;
+		width: 41px;
 	}
 }
 
@@ -635,7 +646,9 @@ body {
 @media only screen and (max-width: 1020px) {
 	#quick-nav-ui {
 		background-color: var(--GW-C0);
-		box-shadow: 0 9px 0 0px var(--GW-C0);
+		box-shadow:
+			-1px 0 0 8px var(--GW-C0),
+			 0   0 0 8px var(--GW-C0);
 	}
 }
 
