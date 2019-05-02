@@ -65,8 +65,9 @@
 	--GW-C1: var(--GW-primary-color);
 	--GW-C2: #d8d8d8;
 	--GW-C3: #ccc;
-	--GW-C4: #aaa;
-	--GW-C5: #999;
+	--GW-C4: #bbb;
+	--GW-C5: #aaa;
+	--GW-C6: #999;
 }
 
 /*=----------------------------=*/
@@ -146,7 +147,7 @@ body {
 	color: var(--GW-C2);
 }
 .nav-inner:hover::after {
-	color: var(--GW-C4);
+	color: var(--GW-C5);
 }
 
 /*= About tag =*/
@@ -424,7 +425,7 @@ body {
 }
 
 #theme-selector button::before {
-	color: #aaa;
+	color: var(--GW-C5);
 }
 #theme-selector button:hover::before,
 #theme-selector button.selected::before {
@@ -530,10 +531,10 @@ body {
 	color: inherit;
 }
 #anti-kibitzer-toggle.engaged button {
-	color: var(--GW-C4);
+	color: var(--GW-C5);
 }
 #anti-kibitzer-toggle button:hover {
-	color: var(--GW-C5);
+	color: var(--GW-C6);
 }
 
 /*=----------------------------=*/
@@ -636,7 +637,7 @@ body {
 #quick-nav-ui a[href='#comments'].no-comments,
 #quick-nav-ui a[href='#answers'].no-answers {
 	opacity: 0.4;
-	color: #bbb;
+	color: var(--GW-C4);
 }
 
 /*=----------------------------=*/
@@ -664,7 +665,7 @@ body {
 	right: 1px;
 }
 #new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
-	color: #bbb;
+	color: var(--GW-C4);
 }
 
 /*=----------------------------=*/
@@ -798,7 +799,7 @@ body {
 		color: #000;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
-		color: #bbb;
+		color: var(--GW-C4);
 	}
 
 	#hns-date-picker {
@@ -1300,7 +1301,7 @@ a.comment-parent-link::after {
 	display: none;
 }
 a.comment-parent-link::before {
-	color: #bbb;
+	color: var(--GW-C4);
 	padding: 4px 3px 0 2px;
 }
 a.comment-parent-link:hover::before {
