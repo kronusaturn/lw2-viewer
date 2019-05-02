@@ -160,6 +160,7 @@ body {
 
 #nav-item-search button {
 	border: none;
+	font-weight: var(--GW-UI-font-weight-heavy);
 }
 
 /*= Recent Comments tab =*/
@@ -250,6 +251,9 @@ body {
 .rss::before {
 	filter: grayscale(100%);
 }
+.rss:hover::before {
+	filter: grayscale(100%) brightness(65%) contrast(400%);
+}
 
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
@@ -320,6 +324,9 @@ body {
 		0 0 0 4px var(--GW-C1) inset;
 	color: inherit;
 }
+.sublevel-nav span.sublevel-item {
+	font-weight: var(--GW-UI-font-weight-heavy);
+}
 .sublevel-nav:not(.sort) .sublevel-item {
 	line-height: 1.6;
 }
@@ -334,9 +341,6 @@ body {
 	.sublevel-nav:not(.sort) .sublevel-item:last-child {
 		border-width: 2px;
 		margin: 2px;
-	}
-	.sublevel-nav:not(.sort) span.sublevel-item {
-		font-weight: var(--GW-UI-font-weight-heavy);
 	}
 }
 
@@ -355,6 +359,9 @@ body {
 	padding: 7px 8px 6px 9px;
 	text-transform: uppercase;
 	border: none;
+}
+.sublevel-nav.sort span.sublevel-item {
+	font-weight: var(--GW-UI-font-weight-heavy)
 }
 
 /*================*/
@@ -577,7 +584,13 @@ body {
 		box-shadow:
 			0 0 0 2px var(--GW-C1),
 			0 0 0 8px var(--GW-C0);
-		margin: 142px 0 0 -11px
+		margin: 142px 0 0 -11px;
+	}
+	#text-size-adjustment-ui button {
+		font-weight: 900;
+	}
+	#text-size-adjustment-ui button.default {
+		font-weight: var(--GW-UI-font-weight-heavy);
 	}
 }
 
@@ -647,10 +660,10 @@ body {
 
 @media only screen and (max-width: 1020px) {
 	#new-comment-nav-ui .new-comments-count::before {
-		background-color: #fff;
+		background-color: var(--GW-C0);
 		box-shadow: 
 			0 0 0 2px #000,
-			0 0 0 10px #fff;
+			0 0 0 10px var(--GW-C0);
 	}
 }
 
@@ -674,7 +687,7 @@ body {
 
 @media only screen and (max-width: 1440px) {
 	#hns-date-picker {
-		background-color: #fff;
+		background-color: var(--GW-C0);
 		opacity: 1.0;
 	}
 	#hns-date-picker::before {
@@ -697,9 +710,9 @@ body {
 	}
 	#appearance-adjust-ui-toggle button,
 	#post-nav-ui-toggle button {
-		background-color: #fff;
+		background-color: var(--GW-C0);
 		box-shadow:
-			0 0 0 2px #fff,
+			0 0 0 2px var(--GW-C0),
 			0 0 0 2px #000 inset;
 	}
 
@@ -709,22 +722,22 @@ body {
 	}
 	#theme-selector button {
 		box-shadow: 
-			0 0 0 1px #fff inset, 
+			0 0 0 1px var(--GW-C0) inset, 
 			0 0 0 3px #000 inset;
 	}
 	#theme-selector button:hover,
 	#theme-selector button.selected {
 		box-shadow: 
-			0 0 0 1px #fff inset, 
+			0 0 0 1px var(--GW-C0) inset, 
 			0 0 0 3px #000 inset, 
-			0 0 0 5px #fff inset, 
+			0 0 0 5px var(--GW-C0) inset, 
 			0 0 0 7px #000 inset;
 	}
 	#theme-selector button:active {
 		box-shadow: 
-			0 0 0  1px #fff inset, 
+			0 0 0  1px var(--GW-C0) inset, 
 			0 0 0  3px #000 inset, 
-			0 0 0  8px #fff inset, 
+			0 0 0  8px var(--GW-C0) inset, 
 			0 0 0 10px #000 inset;
 	}
 	#theme-selector button::after {
@@ -736,13 +749,13 @@ body {
 		font-weight: 300;
 		width: 54px;
 		box-shadow:
-			0 0 0 4px #fff inset,
+			0 0 0 4px var(--GW-C0) inset,
 			0 0 0 6px #000 inset;
 		padding: 12px 10px 10px 12px;
 	}
 
 	#quick-nav-ui {
-		background-color: #fff;
+		background-color: var(--GW-C0);
 	}
 	#quick-nav-ui a {
 		box-shadow: 
@@ -751,10 +764,10 @@ body {
 	#quick-nav-ui a::after,
 	#new-comment-nav-ui::before {
 		font-size: 0.5rem;
-		background-color: #fff;
+		background-color: var(--GW-C0);
 	}
 	#new-comment-nav-ui {
-		background-color: #fff;
+		background-color: var(--GW-C0);
 		border: 1px solid #000;
 		box-shadow: 0 0 0 1px #000;
 	}
@@ -823,13 +836,13 @@ body {
 .archive-nav span[class^='archive-nav-item'],
 .archive-nav a:hover {
 	box-shadow: 
-		0 0 0 1px #fff inset,
+		0 0 0 1px var(--GW-C0) inset,
 		0 0 0 3px #000 inset;
 }
 .archive-nav a:active {
 	transform: none;
 	box-shadow: 
-		0 0 0 3px #fff inset,
+		0 0 0 3px var(--GW-C0) inset,
 		0 0 0 5px #000 inset;
 }
 
@@ -846,7 +859,7 @@ h1.listing {
 h1.listing a[href^="http"] {
 	font-size: 0.7em;
 	top: 6px;
-	color: #fff;
+	color: var(--GW-C0);
 	text-shadow: 
 		 0.5px 0.5px 0 #000, 
 		-0.5px -0.5px 0 #000,
@@ -864,7 +877,7 @@ h1.listing a[href^="http"] {
 		left: -0.625em;
 	}
 	h1.listing a[href^="http"]:hover {
-		color: #fff;
+		color: var(--GW-C0);
 		text-shadow: 
 			 0.5px 0.5px 0 #000, 
 			-0.5px -0.5px 0 #000,
@@ -882,7 +895,7 @@ h1.listing .edit-post-link:hover {
 	text-decoration: none;
 }
 #content.user-page h1.listing .edit-post-link {
-	background-color: #fff;
+	background-color: var(--GW-C0);
 }
 
 /*======*/
@@ -1037,7 +1050,7 @@ h1.listing.own-post-listing {
 
 .contents {
 	border: 2px solid #000;
-	background-color: #fff;
+	background-color: var(--GW-C0);
 }
 .contents-head {
 	font-size: 1.125em;
@@ -1075,7 +1088,7 @@ h1.listing.own-post-listing {
 
 .post-meta .post-section::before,
 .comment-meta .alignment-forum {
-	color: #fff;
+	color: var(--GW-C0);
 	top: -1px;
 	text-shadow: 
 		1px 1px 0 #777, 
@@ -1105,7 +1118,7 @@ a.post-section:hover::before {
 	border: none;
 }
 .post.link-post a.link-post-link::before {
-	color: #fff;
+	color: var(--GW-C0);
 	text-shadow: 
 		 0.5px 0.5px 0 #000, 
 		-0.5px -0.5px 0 #000,
@@ -1146,12 +1159,12 @@ h1.post-title {
 
 .post-nav-links a:hover {
 	box-shadow: 
-		0 0 0 2px #fff inset,
+		0 0 0 2px var(--GW-C0) inset,
 		0 0 0 4px #000 inset;
 }
 .post-nav-links a:active {
 	box-shadow: 
-		0 0 0 6px #fff inset,
+		0 0 0 6px var(--GW-C0) inset,
 		0 0 0 8px #000 inset;
 }
 
@@ -1183,7 +1196,7 @@ h1.post-title {
 	color: #999;
 	outline: 2px dotted #999;
 	position: relative;
-	background-color: #fff;
+	background-color: var(--GW-C0);
 	padding: 0 5px;
 	left: -5px;
 }
@@ -1231,7 +1244,7 @@ h1.post-title {
 .post .karma.active-controls::after,
 .post .karma .karma-value::after,
 .author::before {
-	background-color: #fff;
+	background-color: var(--GW-C0);
 	color: #000;
 	box-shadow: 0 0 0 1px #000 inset;
 }
@@ -1292,7 +1305,7 @@ a.comment-parent-link:hover::before {
 
 .comment-popup {
 	border: 2px solid #000;
-	background-color: #fff;
+	background-color: var(--GW-C0);
 }
 .comment-popup .comment-body {
 	font-size: 0.9375rem;
@@ -1312,44 +1325,40 @@ a.comment-parent-link:hover::before {
 /* COMMENTS COMPACT VIEW */
 /*=======================*/
 
-#content.compact > .comment-thread .comment-item::after {
-	background: linear-gradient(to right, transparent 0%, #fff 50%, #fff 100%);
-}
-
 @media only screen and (hover: hover) and (pointer: fine) {
 	#content.compact > .comment-thread .comment-item:hover .comment,
 	#content.compact > .comment-thread .comment-item.expanded .comment {
-		background-color: #fff;
+		background-color: var(--GW-C0);
 		outline: 3px solid #000;
 	}
 	#content.compact > .comment-thread .comment-item:hover .comment::before,
 	#content.compact > .comment-thread .comment-item.expanded .comment::before {
-		background-color: #fff;
+		background-color: var(--GW-C0);
 		box-shadow: 
-			0 0  3px #fff,
-			0 0  5px #fff,
-			0 0  7px #fff,
-			0 0 10px #fff,
-			0 0 20px #fff,
-			0 0 30px #fff,
-			0 0 40px #fff;
+			0 0  3px var(--GW-C0),
+			0 0  5px var(--GW-C0),
+			0 0  7px var(--GW-C0),
+			0 0 10px var(--GW-C0),
+			0 0 20px var(--GW-C0),
+			0 0 30px var(--GW-C0),
+			0 0 40px var(--GW-C0);
 	}
 }
 @media not screen and (hover: hover) and (pointer: fine) {
 	#content.compact > .comment-thread.expanded .comment-item .comment {
-		background-color: #fff;
+		background-color: var(--GW-C0);
 		outline: 3px solid #000;
 	}
 	#content.compact > .comment-thread.expanded .comment-item .comment::before {
-		background-color: #fff;
+		background-color: var(--GW-C0);
 		box-shadow: 
-			0 0  3px #fff,
-			0 0  5px #fff,
-			0 0  7px #fff,
-			0 0 10px #fff,
-			0 0 20px #fff,
-			0 0 30px #fff,
-			0 0 40px #fff;
+			0 0  3px var(--GW-C0),
+			0 0  5px var(--GW-C0),
+			0 0  7px var(--GW-C0),
+			0 0 10px var(--GW-C0),
+			0 0 20px var(--GW-C0),
+			0 0 30px var(--GW-C0),
+			0 0 40px var(--GW-C0);
 	}
 }
 
@@ -1430,7 +1439,7 @@ a.comment-parent-link:hover::before {
 .vote.selected::before,
 .vote.clicked-once::before,
 .vote.clicked-twice::before {
-	filter: drop-shadow(0 0 1px #fff);
+	filter: drop-shadow(0 0 1px var(--GW-C0));
 }
 .vote::before,
 .waiting .vote.big-vote.clicked-twice::before {
@@ -1467,7 +1476,7 @@ a.comment-parent-link:hover::before {
 
 .comment-controls .cancel-comment-button {
 	height: 28px;
-	color: #fff;
+	color: var(--GW-C0);
 	padding: 4px 6px 2px 6px;
 }
 
@@ -1494,7 +1503,7 @@ a.comment-parent-link:hover::before {
 	font-size: 1rem;
 	line-height: 1.4;
 	color: #000;
-	background-color: #fff;
+	background-color: var(--GW-C0);
 	border-color: #000;
 	border-width: 28px 2px 2px 2px;
 }
@@ -1504,29 +1513,29 @@ a.comment-parent-link:hover::before {
 }
 .posting-controls textarea::selection {
 	background-color: #000;
-	color: #fff;
+	color: var(--GW-C0);
 }
 .posting-controls textarea::-webkit-scrollbar {
 	width: 18px;
 }
 .posting-controls textarea::-webkit-scrollbar-track {
-	background-color: #fff;
+	background-color: var(--GW-C0);
 }
 .posting-controls textarea::-webkit-scrollbar-thumb {
 	background-color: #000;
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/checkerboard2_1px_gray.gif")) ?>');
 	background-size: 2px 2px;
 	box-shadow: 
-		0 2px 0 1px #fff inset,
-		0 0 0 1px #fff inset,
+		0 2px 0 1px var(--GW-C0) inset,
+		0 0 0 1px var(--GW-C0) inset,
 		0 2px 0 1.5px #777 inset,
 		0 0 0 1.5px #777 inset;
 }
 .posting-controls textarea::-webkit-scrollbar-thumb:active {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/checkerboard2_1px.gif")) ?>');
 	box-shadow: 
-		0 2px 0 1px #fff inset,
-		0 0 0 1px #fff inset,
+		0 2px 0 1px var(--GW-C0) inset,
+		0 0 0 1px var(--GW-C0) inset,
 		0 2px 0 1.5px #000 inset,
 		0 0 0 1.5px #000 inset;
 }
@@ -1544,7 +1553,7 @@ a.comment-parent-link:hover::before {
 }
 
 button.guiedit {
-	color: #fff;
+	color: var(--GW-C0);
 	border: none;
 }
 button.guiedit:hover,
@@ -1554,7 +1563,7 @@ button.guiedit:focus {
 	color: #777;
 }
 button.guiedit::after {
-	color: #fff;
+	color: var(--GW-C0);
 	top: 2px;
 	height: 25px;
 	text-shadow: none;
@@ -1564,7 +1573,7 @@ button.guiedit::after {
 
 #markdown-hints {
 	border: 2px solid #000;
-	background-color: #fff;
+	background-color: var(--GW-C0);
 }
 
 /*================*/
@@ -1583,22 +1592,22 @@ button.guiedit::after {
 	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover::before,
 	#edit-post-form .post-meta-fields input[type='checkbox']:focus + label::before {
 		box-shadow: 
-			0 0 0 1px #fff inset,
+			0 0 0 1px var(--GW-C0) inset,
 			0 0 0 2px #000 inset;
 	}
 }
 #edit-post-form .post-meta-fields input[type='checkbox']:active + label::before,
 #edit-post-form .post-meta-fields input[type='checkbox']:checked:active + label::before {
-	background-color: #fff;
+	background-color: var(--GW-C0);
 	box-shadow: 
-		0 0 0 3px #fff inset,
+		0 0 0 3px var(--GW-C0) inset,
 		0 0 0 4px #000 inset;
 }
 #edit-post-form .post-meta-fields input[type='checkbox']:checked + label::before {
 	content: "";
 	background-color: #000;
 	box-shadow: 
-		0 0 0 4px #fff inset;
+		0 0 0 4px var(--GW-C0) inset;
 }
 #edit-post-form input[type='radio'] + label {
 	border-color: #000;
@@ -1613,12 +1622,12 @@ button.guiedit::after {
 #edit-post-form input[type='radio']:focus + label {
 	color: #000;
 	box-shadow: 
-		0 0 0 1px #fff inset,
+		0 0 0 1px var(--GW-C0) inset,
 		0 0 0 2px #000 inset;
 }
 #edit-post-form input[type='radio']:active + label {
 	box-shadow: 
-		0 0 0 2px #fff inset,
+		0 0 0 2px var(--GW-C0) inset,
 		0 0 0 3px #000 inset;
 }
 #edit-post-form input[type='radio']:focus + label {
@@ -1628,7 +1637,7 @@ button.guiedit::after {
 #edit-post-form input[type='radio']:checked + label {
 	border-color: #000;
 	box-shadow: 
-		0 0 0 1px #fff inset,
+		0 0 0 1px var(--GW-C0) inset,
 		0 0 0 2px #000 inset;
 }
 
@@ -1650,7 +1659,7 @@ a {
 
 button,
 input[type='submit'] {
-	border: 2px solid #000;
+	border: 2px solid var(--GW-C1);
 	box-shadow: 0 0 0 1px transparent;
 }
 #ui-elements-container button {
@@ -1665,15 +1674,15 @@ input[type='submit']:focus {
 	background-color: transparent;
 	color: inherit;
 	box-shadow: 
-		0 0 0 2px #fff inset,
-		0 0 0 4px #000 inset,
+		0 0 0 2px var(--GW-C0) inset,
+		0 0 0 4px var(--GW-C1) inset,
 		0 0 0 1px transparent;
 }
 button:active,
 input[type='submit']:active {
 	box-shadow: 
-		0 0 0 4px #fff inset,
-		0 0 0 6px #000 inset,
+		0 0 0 4px var(--GW-C0) inset,
+		0 0 0 6px var(--GW-C1) inset,
 		0 0 0 1px transparent;
 }
 
@@ -1685,7 +1694,7 @@ input[type='submit']:active {
 	color: #555;
 }
 .body-text h1 {
-	border-bottom: 2px solid #000;
+	border-bottom: 2px solid var(--GW-C1);
 }
 
 /*========*/
@@ -1706,10 +1715,10 @@ blockquote {
 
 #content img,
 #content figure.image img {
-	border: 1px dotted #000;
+	border: 1px dotted var(--GW-C1);
 }
 #content figure img {
-	border: 1px solid #000;
+	border: 1px solid var(--GW-C1);
 }
 #content img[src$='.svg'],
 #content figure img[src$='.svg'] {
@@ -1726,7 +1735,7 @@ blockquote {
 .body-text table,
 .body-text table th,
 .body-text table td {
-	border: 1px solid #000;
+	border: 1px solid var(--GW-C1);
 }
 
 /*======*/
@@ -1738,7 +1747,7 @@ hr {
 }
 
 code {
-	border: 1px dotted #000;
+	border: 1px dotted var(--GW-C1);
 }
 
 input[type='text'],
@@ -1747,7 +1756,7 @@ input[type='password'],
 textarea {
 	background-color: transparent;
 	border: 1px solid var(--GW-C1);
-	color: #000;
+	color: var(--GW-C1);
 }
 input[type='text']:focus,
 input[type='search']:focus,
@@ -1804,7 +1813,7 @@ select {
 
 .qualified-linking-toolbar {
 	border: 2px solid #000;
-	background-color: #fff;
+	background-color: var(--GW-C0);
 }
 .qualified-linking-toolbar a:hover {
 	box-shadow: 0 0 0 2px #000;
@@ -1813,7 +1822,7 @@ select {
 	box-shadow: 0 0 0 2px #000 inset;
 }
 .qualified-linking label::after {
-	background-color: #fff;
+	background-color: var(--GW-C0);
 	opacity: 0.8;
 }
 
@@ -1910,7 +1919,7 @@ select {
 		margin: auto;
 	}
 	#edit-post-form input[type='submit'] {
-		background-color: #fff;
+		background-color: var(--GW-C0);
 	}
 
 	.comment-controls .cancel-comment-button {
@@ -1920,12 +1929,6 @@ select {
 		opacity: 1.0;
 		position: relative;
 		top: -1px;
-	}
-
-	.sublevel-nav .sublevel-item,
-	.sublevel-nav .sublevel-item:first-child,
-	.sublevel-nav .sublevel-item:last-child {
-		border-width: 1px;
 	}
 } @media only screen and (max-width: 720px) {
 	#content.conversations-user-page h1.listing + .post-meta .date {
@@ -1967,21 +1970,21 @@ select {
 	}
 
 	.textarea-container:focus-within textarea {
-		background-color: #fff;
+		background-color: var(--GW-C0);
 		border: none;
 		box-shadow:
 			0 0 0 2px #000;
 	}
 	.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
 		padding: 5px 6px 6px 6px;
-		color: #fff;
+		color: var(--GW-C0);
 		box-shadow: none;
 	}
 	.textarea-container:focus-within .guiedit-mobile-help-button.active {
 		box-shadow:
 			0 0 0 1px #000 inset,
-			0 0 0 3px #fff inset,
-			0 0 0 2px #fff;
+			0 0 0 3px var(--GW-C0) inset,
+			0 0 0 2px var(--GW-C0);
 	}
 	.textarea-container:focus-within .guiedit-buttons-container {
 		border-top: 2px solid #000;
@@ -1999,7 +2002,7 @@ select {
 	#edit-post-form #markdown-hints {
 		border: 2px solid #000;
 		box-shadow:
-			0 0 0 2px #fff,
+			0 0 0 2px var(--GW-C0),
 			0 0 0 4px #000;
 	}
 	#markdown-hints::after {
