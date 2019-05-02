@@ -44,13 +44,12 @@
 
 	--GW-primary-color: #000;
 
-	--GW-hyperlink-color: var(--primary-color);
+	--GW-hyperlink-color: var(--GW-primary-color);
 
-	--GW-theme-selector-outline-color: var(--primary-color);
+	--GW-theme-selector-outline-color: var(--GW-primary-color);
 
-	--GW-C0: var(--body-background-color);
-	--GW-C1: var(--primary-color);
-
+	--GW-C0: var(--GW-body-background-color);
+	--GW-C1: var(--GW-primary-color);
 	--GW-C2: #d8d8d8;
 	--GW-C3: #ccc;
 	--GW-C4: #aaa;
