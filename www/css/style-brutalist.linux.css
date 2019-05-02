@@ -6684,6 +6684,21 @@ body {
 	color: var(--GW-C2);
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	#inbox-indicator::before {
+		padding-top: 2px;
+	}
+}
+@media only screen and (max-width: 840px) {
+	#inbox-indicator {
+		padding-right: 1em;
+	}
+}
+
 /*===============*/
 /* PAGINATION UI */
 /*===============*/
@@ -7242,8 +7257,11 @@ body {
 	#post-nav-ui-toggle button {
 		background-color: var(--GW-C0);
 		box-shadow:
-			0 0 0 2px var(--GW-C0),
+			0 0 0 6px var(--GW-C0),
 			0 0 0 2px #000 inset;
+		width: 53px;
+		height: 53px;
+		padding: 10px 10px 11px 11px;
 	}
 
 	#theme-selector {
