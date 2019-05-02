@@ -185,6 +185,12 @@ body {
 	color: var(--GW-C1);
 }
 
+#bottom-bar {
+	margin: 0.75em 0 0 0;
+}
+#bottom-bar a::after {
+	bottom: 0;
+}
 #bottom-bar a:not([href='#top'])::after {
 	background-color: var(--GW-C0);
 	left: 0;
@@ -198,24 +204,51 @@ body {
 /* PAGE TOOLBAR */
 /*==============*/
 
-.page-toolbar button,
-.page-toolbar button:hover,
-.page-toolbar button:active,
-.page-toolbar button:focus {
-	border: none;
-	box-shadow: none;
+.page-toolbar {
+	border-style: solid;
+	border-color: var(--GW-C1);
+	border-width: 0 0 2px 2px;
 }
-.page-toolbar a:hover,
-.page-toolbar button:hover {
-	text-decoration: dotted underline;
+.page-toolbar > *:nth-child(n+2) {
+	margin-left: 0.5em;
 }
-.page-toolbar a:active,
-.page-toolbar button:active {
-	transform: scale(0.9);
+.page-toolbar > * {
+	padding: 0 4px 0 0;
+}
+.page-toolbar .rss {
+	padding: 0 4px;
+}
+.page-toolbar .rss::before {
+	width: 0.75em;
+	margin: 0 3px 0 0;
+}
+.page-toolbar > *:hover {
+	box-shadow:
+		0 0 0 2px var(--GW-C1);
+}
+.page-toolbar > *:active {
+	box-shadow:
+		0 0 0 2px var(--GW-C1) inset;
 }
 
 .rss::before {
 	filter: grayscale(100%);
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 720px) {
+	.page-toolbar {
+		border: none;
+		box-shadow:
+			4px -2px 0 0 var(--GW-C0) inset,
+			6px -4px 0 0 var(--GW-C1) inset;
+		line-height: 1.4;
+		padding-top: 0.25em;
+		padding-bottom: 0.45em;
+	}
 }
 
 /*==============*/
