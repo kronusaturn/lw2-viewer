@@ -6743,6 +6743,13 @@ body {
 		0 0 0 2px var(--GW-C1) inset;
 }
 
+.page-toolbar button,
+.page-toolbar button:hover,
+.page-toolbar button:focus,
+.page-toolbar button:active {
+	box-shadow: none;
+}
+
 .rss::before {
 	filter: grayscale(100%);
 }
@@ -6760,6 +6767,27 @@ body {
 		line-height: 1.4;
 		padding-top: 0.25em;
 		padding-bottom: 0.45em;
+	}
+}
+@media only screen and (max-width: 640px) {
+	#content.user-page .page-toolbar {
+		box-shadow: none;
+	}
+	#content.user-page .page-toolbar > * {
+		box-shadow:
+			0 0 0 2px var(--GW-C1);
+	}
+	#content.user-page .page-toolbar > *:hover {
+		box-shadow:
+			0 0 0 2px var(--GW-C1),
+			0 0 0 2px var(--GW-C0) inset,
+			0 0 0 4px var(--GW-C1) inset;
+	}
+	#content.user-page .page-toolbar > *:active {
+		box-shadow:
+			0 0 0 2px var(--GW-C1),
+			0 0 0 4px var(--GW-C0) inset,
+			0 0 0 6px var(--GW-C1) inset;
 	}
 }
 
@@ -6797,6 +6825,22 @@ body {
 }
 .sublevel-nav:not(.sort) .sublevel-item {
 	line-height: 1.6;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	.sublevel-nav:not(.sort) .sublevel-item,
+	.sublevel-nav:not(.sort) .sublevel-item:first-child,
+	.sublevel-nav:not(.sort) .sublevel-item:last-child {
+		border-width: 2px;
+		margin: 2px;
+	}
+	.sublevel-nav:not(.sort) span.sublevel-item {
+		font-weight: var(--GW-UI-font-weight-heavy);
+	}
 }
 
 /*=====================*/
