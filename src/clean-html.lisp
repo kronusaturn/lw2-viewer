@@ -611,7 +611,7 @@
 		     (let ((fc (plump:first-child node))
 			   (lc (plump:last-child node)))
 		       (when (and (plump:element-p fc) (tag-is fc "br")) (plump:remove-child fc))
-		       (when (and (plump:element-p lc) (tag-is fc "br")) (plump:remove-child lc)))
+		       (when (and (not (eql fc lc)) (plump:element-p lc) (tag-is lc "br")) (plump:remove-child lc)))
 		     (when with-toc
 		       (incf section-count) 
 		       (unless (plump:attribute node "id") (setf (plump:attribute node "id") (format nil "section-~A" section-count))) 
