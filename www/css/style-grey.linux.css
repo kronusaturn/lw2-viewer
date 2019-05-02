@@ -11,13 +11,18 @@
 	*/
 :root {
 	--GW-Font-Awesome: 'Font Awesome', 'Font Awesome 5 Free';
-	--GW-monospaced-font: 'Source Code Pro', 'Menlo', monospace;
+
+	--GW-monospaced-fallback-font-stack: 'Source Code Pro', 'Menlo', 'Courier', 'Courier New', monospace;
+	--GW-sans-serif-fallback-font-stack: 'Open Sans', 'Trebuchet MS', 'Verdana', 'Helvetica', 'Arial', sans-serif;
+	--GW-serif-fallback-font-stack:  'PT Serif', 'Georgia', serif;
+
+	--GW-monospaced-font: var(--GW-monospaced-fallback-font-stack);
 	--GW-monospaced-font-weight: 400;
 	
 	--GW-Alignment-Forum-logotype-font: 'Concourse SmallCaps', 'Changa One';
 	--GW-Alignment-Forum-logotype-font-weight: 600;
 
-	--GW-UI-font: 'Open Sans', 'Arial', sans-serif;
+	--GW-UI-font: var(--GW-sans-serif-fallback-font-stack);
 	--GW-UI-font-smallcaps: var(--GW-UI-font);
 	--GW-UI-font-weight-light: 400;
 	--GW-UI-font-weight-heavy: 700;
@@ -26,7 +31,7 @@
 
 	--GW-theme-selector-tooltip-font: var(--GW-UI-font);
 
-	--GW-body-text-font: 'PT Serif', 'Georgia', serif;
+	--GW-body-text-font: var(--GW-serif-fallback-font-stack);
 	--GW-body-text-font-weight: 400;
 
 	--GW-editor-font: var(--GW-monospaced-font);
@@ -452,6 +457,12 @@ a {
 /****************/
 
 :root {
+	--GW-width-selector-tooltip-font: var(--GW-UI-font);
+	--GW-width-selector-tooltip-font-weight: var(--GW-UI-font-weight-light);
+
+	--GW-text-size-adjustment-tooltip-font: var(--GW-UI-font);
+	--GW-text-size-adjustment-tooltip-font-weight: var(--GW-UI-font-weight-light);
+
 	--GW-theme-selector-right-margin: 9px;
 	--GW-theme-selector-button-tooltip-width: 6em;
 	--GW-theme-selector-button-spacing: 1px;
@@ -1014,6 +1025,8 @@ a {
 	text-align: center;
 	top: 56px;
 	visibility: hidden;
+	font-family: var(--GW-width-selector-tooltip-font);
+	font-weight: var(--GW-width-selector-tooltip-font-weight);
 }
 #width-selector button.selected::after {
 	content: attr(data-name) " (selected)";
@@ -1555,6 +1568,8 @@ a {
 	top: 32px;
 	visibility: hidden;
 	font-size: 0.9em;
+	font-family: var(--GW-text-size-adjustment-tooltip-font);
+	font-weight: var(--GW-text-size-adjustment-tooltip-font-weight);
 }
 #text-size-adjustment-ui:hover::after {
 	visibility: visible;
@@ -6488,14 +6503,14 @@ th.mathjax-inline-container {
 /*	Typography.
 	*/
 :root {
-	--GW-UI-font: 'Whitney', 'a_Avante', 'Open Sans', 'Arial', sans-serif;
-	--GW-UI-font-smallcaps: 'Whitney Smallcaps', 'a_Avante', 'Open Sans', 'Arial', sans-serif;
+	--GW-UI-font: 'Whitney', var(--GW-sans-serif-fallback-font-stack);
+	--GW-UI-font-smallcaps: 'Whitney Smallcaps', var(--GW-sans-serif-fallback-font-stack);
 	--GW-UI-font-weight-light: 400;
 	--GW-UI-font-weight-heavy: 600;
 
 	--GW-post-listings-font-weight: 400;
 
-	--GW-body-text-font: 'Source Sans Pro', 'Trebuchet MS', 'Helvetica', 'Arial', 'Verdana', sans-serif;
+	--GW-body-text-font: 'Source Sans Pro', var(--GW-sans-serif-fallback-font-stack);
 
 	--GW-link-post-link-font-weight: 600;
 

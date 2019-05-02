@@ -9,14 +9,14 @@
 /*	Typography.
 	*/
 :root {
-	--GW-UI-font: <?php echo (($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Whitney', 'a_Avante'"); ?>, 'Open Sans', 'Arial', sans-serif;
-	--GW-UI-font-smallcaps: <?php echo (($platform == 'Mac') ? "'Concourse Smallcaps', 'a_Avante'" : "'Whitney Smallcaps', 'a_Avante'"); ?>, 'Open Sans', 'Arial', sans-serif;
+	--GW-UI-font: <?php echo (($platform == 'Mac') ? "'Concourse'" : "'Whitney'"); ?>, var(--GW-sans-serif-fallback-font-stack);
+	--GW-UI-font-smallcaps: <?php echo (($platform == 'Mac') ? "'Concourse Smallcaps'" : "'Whitney Smallcaps'"); ?>, var(--GW-sans-serif-fallback-font-stack);
 	--GW-UI-font-weight-light: 400;
 	--GW-UI-font-weight-heavy: 600;
 
 	--GW-post-listings-font-weight: 400;
 
-	--GW-body-text-font: 'Source Sans Pro', 'Trebuchet MS', 'Helvetica', 'Arial', 'Verdana', sans-serif;
+	--GW-body-text-font: 'Source Sans Pro', var(--GW-sans-serif-fallback-font-stack);
 
 	--GW-link-post-link-font-weight: 600;
 

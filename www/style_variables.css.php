@@ -6,13 +6,18 @@
 	*/
 :root {
 	--GW-Font-Awesome: 'Font Awesome', 'Font Awesome 5 Free';
-	--GW-monospaced-font: 'Source Code Pro', 'Menlo', monospace;
+
+	--GW-monospaced-fallback-font-stack: 'Source Code Pro', 'Menlo', 'Courier', 'Courier New', monospace;
+	--GW-sans-serif-fallback-font-stack: 'Open Sans', 'Trebuchet MS', 'Verdana', 'Helvetica', 'Arial', sans-serif;
+	--GW-serif-fallback-font-stack:  'PT Serif', 'Georgia', serif;
+
+	--GW-monospaced-font: var(--GW-monospaced-fallback-font-stack);
 	--GW-monospaced-font-weight: 400;
 	
 	--GW-Alignment-Forum-logotype-font: 'Concourse SmallCaps', 'Changa One';
 	--GW-Alignment-Forum-logotype-font-weight: 600;
 
-	--GW-UI-font: 'Open Sans', 'Arial', sans-serif;
+	--GW-UI-font: var(--GW-sans-serif-fallback-font-stack);
 	--GW-UI-font-smallcaps: var(--GW-UI-font);
 	--GW-UI-font-weight-light: 400;
 	--GW-UI-font-weight-heavy: 700;
@@ -21,7 +26,7 @@
 
 	--GW-theme-selector-tooltip-font: var(--GW-UI-font);
 
-	--GW-body-text-font: 'PT Serif', 'Georgia', serif;
+	--GW-body-text-font: var(--GW-serif-fallback-font-stack);
 	--GW-body-text-font-weight: 400;
 
 	--GW-editor-font: var(--GW-monospaced-font);

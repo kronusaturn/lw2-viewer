@@ -9,16 +9,22 @@
 /*	Typography.
 	*/
 :root {
-	--GW-UI-font: 'Anonymous Pro', 'Courier', monospace;
+	--GW-UI-font: 'Anonymous Pro', var(--GW-monospaced-fallback-font-stack);
 	--GW-UI-font-weight-light: 400;
 	--GW-UI-font-weight-heavy: 600;
 
-	--GW-theme-selector-tooltip-font: <?php echo (($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Whitney', 'a_Avante'"); ?>, 'Open Sans', 'Arial', sans-serif;
+	--GW-width-selector-tooltip-font: 'Input Sans', var(--GW-sans-serif-fallback-font-stack);
+	--GW-width-selector-tooltip-font-weight: 200;
 
-	--GW-body-text-font: 'Input Sans', sans-serif;
+	--GW-text-size-adjustment-tooltip-font: 'Input Sans', var(--GW-sans-serif-fallback-font-stack);
+	--GW-text-size-adjustment-tooltip-font-weight: 200;
+
+	--GW-theme-selector-tooltip-font: <?php echo (($platform == 'Mac') ? "'Concourse'" : "'Whitney'"); ?>, var(--GW-sans-serif-fallback-font-stack);
+
+	--GW-body-text-font: 'Input Sans', var(--GW-sans-serif-fallback-font-stack);
 	--GW-body-text-font-weight: 200;
 
-	--GW-listings-post-meta-font: 'Anonymous Pro';
+	--GW-listings-post-meta-font: 'Anonymous Pro', var(--GW-monospaced-fallback-font-stack);
 	--GW-listings-post-meta-font-weight: 400;
 
 	--GW-link-post-link-font-weight: 600;
@@ -147,6 +153,7 @@ body {
 	text-shadow:
 		 2px  2px 0 var(--GW-C0),
 		-2px -2px 0 var(--GW-C0);
+	padding: 8px 9px 8px 8px;
 }
 
 /*= Search tab =*/
@@ -258,27 +265,33 @@ body {
 .sublevel-nav .sublevel-item {
 	border-color: var(--GW-C1);
 	border-style: solid;
-	border-width: 1px 1px 1px 0;
+	border-width: 2px 0;
 }
 .sublevel-nav .sublevel-item:first-child {
-	border-width: 1px;
+	border-width: 2px 0 2px 2px;
+}
+.sublevel-nav .sublevel-item:last-child {
+	border-width: 2px 2px 2px 0;
 }
 .sublevel-nav .sublevel-item:hover {
 	box-shadow: 
 		0 0 0 2px var(--GW-C0) inset,
-		0 0 0 3px var(--GW-C1) inset;
+		0 0 0 4px var(--GW-C1) inset;
 }
 .sublevel-nav .sublevel-item:active {
 	box-shadow: 
 		0 0 0 4px var(--GW-C0) inset,
-		0 0 0 5px var(--GW-C1) inset;
+		0 0 0 6px var(--GW-C1) inset;
 }
 .sublevel-nav .sublevel-item:disabled,
 .sublevel-nav span.sublevel-item {
 	box-shadow: 
 		0 0 0 2px var(--GW-C0) inset,
-		0 0 0 3px var(--GW-C1) inset;
+		0 0 0 4px var(--GW-C1) inset;
 	color: inherit;
+}
+.sublevel-nav:not(.sort) .sublevel-item {
+	line-height: 1.6;
 }
 
 /*=====================*/
@@ -302,22 +315,35 @@ body {
 /* WIDTH SELECTOR */
 /*================*/
 
-#width-selector button {
+#width-selector:hover {
 	box-shadow:
-		0 0 0 4px var(--GW-C0) inset,
-		0 0 0 5px var(--GW-C1) inset;
+		0 0 0 1px var(--GW-C1);
 }
 #width-selector button:hover,
+#width-selector button:focus,
 #width-selector button.selected {
 	box-shadow:
 		0 0 0 1px var(--GW-C0) inset,
-		0 0 0 2px var(--GW-C1) inset,
-		0 0 0 4px var(--GW-C0) inset,
-		0 0 0 5px var(--GW-C1) inset;
+		0 0 0 2px var(--GW-C1) inset;
+}
+#width-selector button:active {
+	box-shadow:
+		0 0 0 3px var(--GW-C0) inset,
+		0 0 0 4px var(--GW-C1) inset;
 }
 #width-selector button::after {
 	color: var(--GW-C1);
 	font-size: 0.9em;
+	top: 25px;
+	background-color: var(--GW-C0);
+	z-index: 1;
+	font-weight: 200;
+	font-size: 0.75em;
+	font-stretch: semi-condensed;
+	box-shadow: 
+		0 -1px 0 0 var(--GW-C0),
+		0 0 0 1px var(--GW-C1);
+	padding: 4px 0 2px 0;
 }
 
 /*================*/
@@ -348,6 +374,26 @@ body {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
+@media only screen and (min-width: 1161px) {
+	#theme-selector:hover {
+		box-shadow:
+			0 0 0 1px var(--GW-C1);
+	}
+	#theme-selector:hover button::before {
+		box-shadow: 
+			-1px 0 0 0 var(--GW-C1);
+	}
+	#theme-selector:hover button:first-child::before {
+		box-shadow: 
+			 0  -1px 0 0 var(--GW-C1),
+			-1px 0   0 0 var(--GW-C1);
+	}
+	#theme-selector:hover button:nth-last-child(2)::before {
+		box-shadow: 
+			 0   1px 0 0 var(--GW-C1),
+			-1px 0   0 0 var(--GW-C1);
+	}
+}
 @media only screen and (max-width: 1160px) {
 	#theme-selector:hover::after {
 		box-shadow:

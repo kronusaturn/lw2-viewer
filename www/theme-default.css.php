@@ -9,17 +9,17 @@
 /*	Typography.
 	*/
 :root {
-	--GW-UI-font: <?php echo (($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Whitney', 'a_Avante'"); ?>, 'Open Sans', 'Arial', sans-serif;
-	--GW-UI-font-smallcaps: <?php echo (($platform == 'Mac') ? "'Concourse Smallcaps', 'a_Avante'" : "'Whitney Smallcaps', 'a_Avante'"); ?>, 'Open Sans', 'Arial', sans-serif;
+	--GW-UI-font: <?php echo (($platform == 'Mac') ? "'Concourse'" : "'Whitney'"); ?>, var(--GW-sans-serif-fallback-font-stack);
+	--GW-UI-font-smallcaps: <?php echo (($platform == 'Mac') ? "'Concourse Smallcaps'" : "'Whitney Smallcaps'"); ?>, var(--GW-sans-serif-fallback-font-stack);
 	--GW-UI-font-weight-light: 400;
 	--GW-UI-font-weight-heavy: 600;
 
-	--GW-monospaced-font: 'Consolas', 'Menlo', monospace;
+	--GW-monospaced-font: 'Consolas', var(--GW-monospaced-fallback-font-stack);
 
-	--GW-post-listings-font: 'Concourse', 'a_Avante', 'Open Sans', 'Arial', sans-serif;
+	--GW-post-listings-font: 'Concourse', var(--GW-sans-serif-fallback-font-stack);
 	--GW-post-listings-font-weight: 700;
 
-	--GW-body-text-font: 'Charter', 'PT Serif', 'Georgia', serif;
+	--GW-body-text-font: 'Charter', var(--GW-serif-fallback-font-stack);
 
 	--GW-comment-meta-author-font-weight: 700;
 }

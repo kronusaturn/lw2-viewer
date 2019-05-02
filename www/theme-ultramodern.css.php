@@ -9,16 +9,16 @@
 /*	Typography.
 	*/
 :root {
-	--GW-UI-font: 'Proxima Nova', sans-serif;
+	--GW-UI-font: 'Proxima Nova', var(--GW-sans-serif-fallback-font-stack);
 	--GW-UI-font-weight-light: 300;
 	--GW-UI-font-weight-heavy: 400;
 
-	--GW-monospaced-font: 'Tired of Courier', 'Courier', 'Courier New', monospace;
+	--GW-monospaced-font: 'Tired of Courier', var(--GW-monospaced-fallback-font-stack);
 
-	--GW-post-listings-font: 'Raleway', 'Helvetica', 'Arial', 'Verdana', sans-serif;
+	--GW-post-listings-font: 'Raleway', var(--GW-sans-serif-fallback-font-stack);
 	--GW-post-listings-font-weight: 200;
 
-	--GW-body-text-font: 'Raleway', 'Helvetica', 'Arial', 'Verdana', sans-serif;
+	--GW-body-text-font: 'Raleway', var(--GW-sans-serif-fallback-font-stack);
 	--GW-body-text-font-weight: <?php echo ($platform == 'Mac' ? '300' : '400'); ?>;
 
 	--GW-content-headings-font-weight: 400;

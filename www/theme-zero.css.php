@@ -9,11 +9,11 @@
 /*	Typography.
 	*/
 :root {
-	--GW-UI-font: 'Trade Gothic', 'Clear Sans', 'Helvetica', sans-serif;
+	--GW-UI-font: 'Trade Gothic', 'Clear Sans', var(--GW-sans-serif-fallback-font-stack);
 	--GW-UI-font-weight-light: 400;
 	--GW-UI-font-weight-heavy: 400;
 
-	--GW-body-text-font: 'News Gothic BT', 'Clear Sans', 'Helvetica', sans-serif;
+	--GW-body-text-font: 'News Gothic BT', 'Clear Sans', var(--GW-sans-serif-fallback-font-stack);
 
 	--GW-post-listings-font-weight: 700;
 }

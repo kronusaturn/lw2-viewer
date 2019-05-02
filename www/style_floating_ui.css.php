@@ -3,6 +3,12 @@
 /****************/
 
 :root {
+	--GW-width-selector-tooltip-font: var(--GW-UI-font);
+	--GW-width-selector-tooltip-font-weight: var(--GW-UI-font-weight-light);
+
+	--GW-text-size-adjustment-tooltip-font: var(--GW-UI-font);
+	--GW-text-size-adjustment-tooltip-font-weight: var(--GW-UI-font-weight-light);
+
 	--GW-theme-selector-right-margin: 9px;
 	--GW-theme-selector-button-tooltip-width: 6em;
 	--GW-theme-selector-button-spacing: 1px;
@@ -556,6 +562,8 @@
 	text-align: center;
 	top: 56px;
 	visibility: hidden;
+	font-family: var(--GW-width-selector-tooltip-font);
+	font-weight: var(--GW-width-selector-tooltip-font-weight);
 }
 #width-selector button.selected::after {
 	content: attr(data-name) " (selected)";
@@ -1079,6 +1087,8 @@
 	top: 32px;
 	visibility: hidden;
 	font-size: 0.9em;
+	font-family: var(--GW-text-size-adjustment-tooltip-font);
+	font-weight: var(--GW-text-size-adjustment-tooltip-font-weight);
 }
 #text-size-adjustment-ui:hover::after {
 	visibility: visible;
