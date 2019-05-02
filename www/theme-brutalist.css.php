@@ -194,6 +194,8 @@ body {
 
 #bottom-bar {
 	margin: 0.75em 0 0 0;
+	box-shadow:
+		0 -2px 0 0 var(--GW-C1);
 }
 #bottom-bar a::after {
 	bottom: 0;
@@ -337,7 +339,6 @@ body {
 	top: 25px;
 	background-color: var(--GW-C0);
 	z-index: 1;
-	font-weight: 200;
 	font-size: 0.75em;
 	font-stretch: semi-condensed;
 	box-shadow: 
@@ -494,28 +495,45 @@ body {
 /* TEXT SIZE ADJUSTMENT UI */
 /*=========================*/
 
+#text-size-adjustment-ui button {
+	font-weight: 400;
+	padding: 1px 0 0 1px;
+}
+#text-size-adjustment-ui button.default {
+	padding: 0 0 0 2px;
+	font-weight: var(--GW-UI-font-weight-light);
+}
 #text-size-adjustment-ui button:hover,
-#text-size-adjustment-ui button:active,
 #text-size-adjustment-ui button:focus {
-	box-shadow: none;
-	color: #777;
+	box-shadow: 
+		0 0 0 2px var(--GW-C0) inset,
+		0 0 0 3px var(--GW-C1) inset;
+}
+#text-size-adjustment-ui button:active {
+	box-shadow: 
+		0 0 0 4px var(--GW-C0) inset,
+		0 0 0 5px var(--GW-C1) inset;
 }
 #text-size-adjustment-ui::after {
-	color: #000;
+	color: var(--GW-C1);
+	font-size: 0.75em;
+	font-stretch: semi-condensed;
 }
 
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-@media only screen and (max-width: 1000px) {
+@media only screen and (max-width: 1080px) {
 	#text-size-adjustment-ui {
 		opacity: 1.0;
 	}
 	#text-size-adjustment-ui {
-		background-color: #fff;
-		box-shadow: 0 0 0 1px #000;
-		padding: 2px 0 4px 0;
+		background-color: var(--GW-C0);
+		box-shadow:
+			0 0 0 2px var(--GW-C1),
+			0 0 0 8px var(--GW-C0);
+		margin: 142px 0 0 -11px
 	}
 }
 
@@ -720,13 +738,32 @@ body {
 	}
 }
 
-/*======================*/
-/* TEXT SIZE ADJUSTMENT */
-/*======================*/
-
 /*=============================*/
 /* COMMENTS VIEW MODE SELECTOR */
 /*=============================*/
+
+/*=============================*/
+/* COMMENTS LIST MODE SELECTOR */
+/*=============================*/
+
+#comments-list-mode-selector {
+	border: 2px solid var(--GW-C1);
+}
+#comments-list-mode-selector button {
+	border: none;
+}
+#comments-list-mode-selector button:hover,
+#comments-list-mode-selector button:focus,
+#comments-list-mode-selector button.selected {
+	box-shadow:
+		0 0 0 1px var(--GW-C0) inset,
+		0 0 0 3px var(--GW-C1) inset;
+}
+#comments-list-mode-selector button:active {
+	box-shadow:
+		0 0 0 3px var(--GW-C0) inset,
+		0 0 0 5px var(--GW-C1) inset;
+}
 
 /*===============*/
 /* KEYBOARD HELP */
@@ -1231,20 +1268,6 @@ a.comment-parent-link:hover::before {
 /* COMMENTS COMPACT VIEW */
 /*=======================*/
 
-#comments-list-mode-selector button {
-	box-shadow:
-		0 0 0 4px #fff inset,
-		0 0 0 5px #000 inset;
-	border: none;
-}
-#comments-list-mode-selector button:hover,
-#comments-list-mode-selector button.selected {
-	box-shadow:
-		0 0 0 1px #fff inset,
-		0 0 0 2px #000 inset,
-		0 0 0 4px #fff inset,
-		0 0 0 5px #000 inset;
-}
 #content.compact > .comment-thread .comment-item::after {
 	background: linear-gradient(to right, transparent 0%, #fff 50%, #fff 100%);
 }
