@@ -184,15 +184,26 @@ body {
 		-1px -1px 0 var(--GW-C0);
 }
 #inbox-indicator::before {
-	padding-top: 1px
+	padding-top: 1px;
+	color: var(--GW-C2);
 }
 
 /*===============*/
 /* PAGINATION UI */
 /*===============*/
 
-#top-nav-bar a:hover {
-	color: #777;
+#top-nav-bar a:hover::before {
+	box-shadow: 
+		0 0 0 7px var(--GW-C0),
+		0 0 0 8px var(--GW-C1);
+}
+#top-nav-bar a:hover::after {
+	background-color: var(--GW-C0);
+}
+#top-nav-bar a:active::before {
+	box-shadow: 
+		0 0 0 5px var(--GW-C0),
+		0 0 0 6px var(--GW-C1);
 }
 
 #top-nav-bar a::after,

@@ -438,6 +438,13 @@ EOT;
 	text-align: center;
 	visibility: hidden;
 }
+#top-nav-bar a::after {
+	left: 0;
+	right: 0;
+	margin: auto;
+	padding: 0 4px;
+}
+<?php fit_content("#top-nav-bar a::after"); ?>
 #bottom-bar #nav-item-top a::after {
 	display: none;
 }

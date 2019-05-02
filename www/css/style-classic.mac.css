@@ -2229,6 +2229,22 @@ a {
 	text-align: center;
 	visibility: hidden;
 }
+#top-nav-bar a::after {
+	left: 0;
+	right: 0;
+	margin: auto;
+	padding: 0 4px;
+}
+@supports (width: -moz-fit-content) {
+	#top-nav-bar a::after {
+		width: -moz-fit-content;
+	}
+}
+@supports (width: fit-content) {
+	#top-nav-bar a::after {
+		width: fit-content;
+	}
+}
 #bottom-bar #nav-item-top a::after {
 	display: none;
 }
