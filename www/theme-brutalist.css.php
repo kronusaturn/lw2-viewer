@@ -40,7 +40,7 @@
 /*	Color scheme.
 	*/
 :root {
-	--GW-body-background-color: #fff
+	--GW-body-background-color: #fff;
 
 	--GW-primary-color: #000;
 
