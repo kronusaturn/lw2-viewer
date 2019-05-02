@@ -378,6 +378,7 @@
 	}
 	#theme-selector button::after {
 		content: attr(data-theme-description);
+		font-family: var(--GW-theme-selector-tooltip-font);
 		white-space: nowrap;
 		position: absolute;
 		text-align: left;
@@ -475,8 +476,11 @@
 		position: absolute;
 		font-size: 0.625em;
 		white-space: nowrap;
-		left: -50%;
+		left: 50%;
+		transform: translateX(-50%);
+		text-align: center;
 		top: 100%;
+		width: 100px;
 	}
 	#theme-selector.engaged ~ #theme-tweaker-toggle {
 		visibility: visible;

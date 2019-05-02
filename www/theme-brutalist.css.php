@@ -233,6 +233,7 @@ body {
 }
 #bottom-bar a {
 	line-height: 1.9;
+	position: relative;
 }
 #bottom-bar a::after {
 	bottom: -2px;
@@ -498,7 +499,11 @@ body {
 		box-shadow: 
 			0 0 0 1px var(--GW-C1),
 			0 0 0 7px var(--GW-C0);
-		margin-top: 136px;
+	}
+	@media only screen and (min-width: 961px) {
+		#theme-selector {
+			margin-top: 136px;
+		}
 	}
 }
 
@@ -543,6 +548,14 @@ body {
 			0 0 0 4px var(--GW-C0);
 	}
 }
+@media only screen and (max-width: 960px) {
+	#theme-selector.engaged ~ #theme-tweaker-toggle {
+		margin: -3px auto 0 auto;
+	}
+	#theme-selector ~ #theme-tweaker-toggle::after {
+		padding: 4px 0 0 0;
+	}
+}
 
 /*======================*/
 /* ANTI-KIBITZER TOGGLE */
@@ -584,6 +597,9 @@ body {
 /* TEXT SIZE ADJUSTMENT UI */
 /*=========================*/
 
+#text-size-adjustment-ui {
+	opacity: 1.0;
+}
 #text-size-adjustment-ui button {
 	font-weight: 400;
 	padding: 1px 0 0 1px;
