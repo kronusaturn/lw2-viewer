@@ -188,6 +188,8 @@
 	--GW-nav-bar-item-hover-color: var(--GW-hyperlink-hover-color);
 	--GW-nav-bar-item-active-color: var(--GW-hyperlink-active-color);
 
+	--GW-search-field-placeholder-color: #f00;
+
 	--GW-button-color: var(--GW-hyperlink-color);
 	--GW-button-hover-color: var(--GW-hyperlink-hover-color);
 	--GW-button-active-color: var(--GW-hyperlink-active-color);

@@ -144,6 +144,10 @@
 	flex: 1 1 100%;
 	margin: 0 0 1px 0;
 }
+#nav-item-search input::placeholder {
+	color: var(--GW-search-field-placeholder-color);
+	font-weight: var(--GW-UI-font-weight-light);
+}
 #nav-item-search button {
 	height: 100%;
 	flex: 1 0 auto;

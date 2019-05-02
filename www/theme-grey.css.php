@@ -80,6 +80,8 @@
 	--GW-comment-highlight-color: #c79700;
 	--GW-comment-highlight-color-faint: #e7b200;
 
+	--GW-search-field-placeholder-color: #d00;
+
 	--GW-theme-selector-outline-color: #ddd;
 }
 
@@ -214,10 +216,6 @@ body {
 
 #nav-item-search form::before {
 	opacity: 0.4;
-}
-#nav-item-search input::placeholder {
-	color: #d00;
-	font-weight: normal;
 }
 
 /*= Recent Comments tab =*/

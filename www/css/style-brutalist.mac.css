@@ -193,6 +193,8 @@
 	--GW-nav-bar-item-hover-color: var(--GW-hyperlink-hover-color);
 	--GW-nav-bar-item-active-color: var(--GW-hyperlink-active-color);
 
+	--GW-search-field-placeholder-color: #f00;
+
 	--GW-button-color: var(--GW-hyperlink-color);
 	--GW-button-hover-color: var(--GW-hyperlink-hover-color);
 	--GW-button-active-color: var(--GW-hyperlink-active-color);
@@ -1932,6 +1934,10 @@ a {
 	padding: 1px 4px;
 	flex: 1 1 100%;
 	margin: 0 0 1px 0;
+}
+#nav-item-search input::placeholder {
+	color: var(--GW-search-field-placeholder-color);
+	font-weight: var(--GW-UI-font-weight-light);
 }
 #nav-item-search button {
 	height: 100%;
@@ -6521,6 +6527,8 @@ th.mathjax-inline-container {
 
 	--GW-theme-selector-outline-color: var(--GW-primary-color);
 
+	--GW-search-field-placeholder-color: #d00;
+
 	--GW-C0: var(--GW-body-background-color);
 	--GW-C1: var(--GW-primary-color);
 	--GW-C2: #d8d8d8;
@@ -6602,7 +6610,7 @@ body {
 	left: 8px;
 	top: 3px;
 	font-size: 0.7em;
-	color: var(--GW-C3);
+	color: var(--GW-C2);
 }
 .nav-inner:hover::after {
 	color: var(--GW-C4);
@@ -6624,9 +6632,6 @@ body {
 
 #nav-item-search button {
 	border: none;
-}
-#nav-item-search input::placeholder {
-	color: #d00;
 }
 
 /*= Recent Comments tab =*/

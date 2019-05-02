@@ -66,6 +66,8 @@
 
 	--GW-theme-selector-outline-color: transparent;
 
+	--GW-search-field-placeholder-color: #d00;
+
 	--GW-submit-button-background-color: #e4e4e4;
 }
 
@@ -161,9 +163,6 @@ body {
 }
 #nav-item-search input:not(:focus) {
 	background-color: #f4f4f4;
-}
-#nav-item-search input::placeholder {
-	color: #d00;
 }
 #nav-item-search .nav-inner:hover {
 	text-shadow: none;

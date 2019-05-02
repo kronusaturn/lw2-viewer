@@ -193,6 +193,8 @@
 	--GW-nav-bar-item-hover-color: var(--GW-hyperlink-hover-color);
 	--GW-nav-bar-item-active-color: var(--GW-hyperlink-active-color);
 
+	--GW-search-field-placeholder-color: #0090e0;
+
 	--GW-button-color: var(--GW-hyperlink-color);
 	--GW-button-hover-color: var(--GW-hyperlink-hover-color);
 	--GW-button-active-color: var(--GW-hyperlink-active-color);
@@ -1932,6 +1934,10 @@ a {
 	padding: 1px 4px;
 	flex: 1 1 100%;
 	margin: 0 0 1px 0;
+}
+#nav-item-search input::placeholder {
+	color: var(--GW-search-field-placeholder-color);
+	font-weight: var(--GW-UI-font-weight-light);
 }
 #nav-item-search button {
 	height: 100%;
@@ -6544,6 +6550,8 @@ th.mathjax-inline-container {
 	--GW-comment-highlight-color: #005dc3;
 	--GW-comment-highlight-color-faint: #0047b5;
 
+	--GW-search-field-placeholder-color: #00a1e8;
+
 	--GW-theme-selector-outline-color: #575756;
 }
 
@@ -6675,10 +6683,6 @@ body {
 #nav-item-search button {
 	border: none;
 	font-weight: inherit;
-}
-#nav-item-search input::placeholder {
-	color: #00a1e8;
-	font-weight: normal;
 }
 
 /*= Inbox indicator =*/

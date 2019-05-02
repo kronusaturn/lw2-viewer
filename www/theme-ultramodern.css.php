@@ -68,6 +68,8 @@
 	--GW-comment-highlight-color-faint: #f8e7b5;
 
 	--GW-new-comment-item-outline-color: #f00;
+
+	--GW-search-field-placeholder-color: #faa;
 }
 
 /*======*/
@@ -163,7 +165,6 @@ p {
 	padding-top: 1px;
 }
 #nav-item-search input::placeholder {
-	color: #faa;
 	font-weight: var(--GW-UI-font-weight-heavy);
 }
 

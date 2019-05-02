@@ -48,6 +48,8 @@
 
 	--GW-theme-selector-outline-color: var(--GW-primary-color);
 
+	--GW-search-field-placeholder-color: #d00;
+
 	--GW-C0: var(--GW-body-background-color);
 	--GW-C1: var(--GW-primary-color);
 	--GW-C2: #d8d8d8;
@@ -129,7 +131,7 @@ body {
 	left: 8px;
 	top: 3px;
 	font-size: 0.7em;
-	color: var(--GW-C3);
+	color: var(--GW-C2);
 }
 .nav-inner:hover::after {
 	color: var(--GW-C4);
@@ -151,9 +153,6 @@ body {
 
 #nav-item-search button {
 	border: none;
-}
-#nav-item-search input::placeholder {
-	color: #d00;
 }
 
 /*= Recent Comments tab =*/
