@@ -9,7 +9,7 @@
 	--GW-text-size-adjustment-tooltip-font: var(--GW-UI-font);
 	--GW-text-size-adjustment-tooltip-font-weight: var(--GW-UI-font-weight-light);
 
-	--GW-theme-selector-right-margin: 9px;
+	--GW-theme-selector-right-margin: 12px;
 	--GW-theme-selector-button-tooltip-width: 6em;
 	--GW-theme-selector-button-spacing: 1px;
 
@@ -169,7 +169,7 @@
 	position: absolute;
 	top: 0;
 	right: 100%;
-	margin: 4px var(--GW-theme-selector-right-margin) 0 0;
+	margin: 48px var(--GW-theme-selector-right-margin) 0 0;
 	opacity: 0.4;
 }
 #theme-selector:hover {
@@ -294,11 +294,6 @@
 	#theme-selector button::before {
 		right: unset;
 		left: 100%;
-	}
-}
-@media only screen and (max-width: 1080px) {
-	#theme-selector {
-		margin-top: 48px;
 	}
 }
 @media only screen and (max-width: 1000px) {
@@ -436,7 +431,7 @@
 	position: absolute;
 	top: 0;
 	right: 100%;
-	margin: 8px 40px 0 0;
+	margin: 2px calc(var(--GW-theme-selector-right-margin) - 5px) 0 0;
 }
 #theme-tweaker-toggle button {
 	width: 36px;
@@ -456,18 +451,9 @@
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-@media only screen and (max-width: 1080px) {
-	#theme-tweaker-toggle {
-		margin: 2px 4px 0 0;
-	}
-	#theme-tweaker-toggle button {
-		height: 2em;
-		width: 2em;
-	}
-}
 @media only screen and (max-width: 1000px) {
 	#theme-tweaker-toggle {
-		margin: 70px -20px 0 0;
+		margin: 76px var(--GW-theme-selector-right-margin) 0 0;
 	}
 }
 @media only screen and (max-width: 960px) {
