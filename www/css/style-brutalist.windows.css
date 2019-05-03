@@ -983,28 +983,14 @@ a {
 	height: 22px;
 	padding: 6px;
 	margin: 1px;
-	overflow: hidden;
-	background-repeat: no-repeat;
-	background-size: 100%;
-	background-origin: content-box;
 }
-#width-selector button,
-#width-selector button:active,
-#width-selector button:focus {
-	text-shadow: none;
-	color: transparent;
+#width-selector button svg {
+	width: 100%;
+	height: 100%;
+	display: block;
 }
 #width-selector button:disabled {
 	cursor: auto;
-}
-#width-selector button.select-width-normal {
-	background-image: url('data:image/gif;base64,R0lGODdhFAAUAJEAAAAAAKqqqv///wAAACH5BAkAAAMALAAAAAAUABQAAAIqnI+py+0PU5hB0Sqp1Xlu32HI9YkHGZZqyo6cC8Kmgcqr3Z5vxPf+nygAADs=');
-}
-#width-selector button.select-width-wide {
-	background-image: url('data:image/gif;base64,R0lGODdhFAAUAJEAAAAAAKqqqv///wAAACH5BAkAAAMALAAAAAAUABQAAAIrnI+py+0PT5jB0TqupUY37zEg95HhMk6bmpGi6aIw+7KnkmK1HvX+DzwUAAA7');
-}
-#width-selector button.select-width-fluid {
-	background-image: url('data:image/gif;base64,R0lGODdhFAAUAJEAAAAAAKqqqv///wAAACH5BAkAAAMALAAAAAAUABQAAAIwnI+py+0/ApIwUGOfvTGzzYELGIoTiZpdylJte7xoQp7beMc5XnL4CYlMgsSisVEAADs=');
 }
 
 /*	If the viewport is this narrow, then the different width settings do 
@@ -7071,7 +7057,7 @@ body {
 /*======================*/
 
 #anti-kibitzer-toggle button {
-	opacity: 0.15;
+	color: var(--GW-C2);
 	box-shadow: none;
 }
 #anti-kibitzer-toggle button::before,
@@ -7079,10 +7065,10 @@ body {
 	color: inherit;
 }
 #anti-kibitzer-toggle.engaged button {
-	opacity: 0.3;
+	color: var(--GW-C3);
 }
 #anti-kibitzer-toggle button:hover {
-	opacity: 0.5;
+	color: var(--GW-C5);
 }
 
 /*=----------------------------=*/

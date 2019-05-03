@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+	<symbol id="width-normal" viewBox="0 0 200 200">
+		<rect width="35" height="110" x="40" y="45" />
+		<rect y="45" x="125" height="110" width="35" />
+	</symbol>
+	<symbol id="width-wide" viewBox="0 0 200 200">
+		<rect width="35" height="110" x="15" y="45" />
+		<rect y="45" x="150" height="110" width="35" />
+	</symbol>
+	<symbol id="width-fluid" viewBox="0 0 200 200">
+		<path d="M 75,40 V 160 L 15,100 Z" />
+		<rect y="-155" x="80" height="110" width="40" transform="rotate(90)" />
+		<path d="m 125,40 v 120 l 60,-60 z" />
+	</symbol>
+</svg>

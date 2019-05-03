@@ -562,7 +562,7 @@ body {
 /*======================*/
 
 #anti-kibitzer-toggle button {
-	opacity: 0.15;
+	color: var(--GW-C2);
 	box-shadow: none;
 }
 #anti-kibitzer-toggle button::before,
@@ -570,10 +570,10 @@ body {
 	color: inherit;
 }
 #anti-kibitzer-toggle.engaged button {
-	opacity: 0.3;
+	color: var(--GW-C3);
 }
 #anti-kibitzer-toggle button:hover {
-	opacity: 0.5;
+	color: var(--GW-C5);
 }
 
 /*=----------------------------=*/

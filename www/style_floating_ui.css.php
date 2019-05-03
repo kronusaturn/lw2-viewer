@@ -520,28 +520,14 @@
 	height: 22px;
 	padding: 6px;
 	margin: 1px;
-	overflow: hidden;
-	background-repeat: no-repeat;
-	background-size: 100%;
-	background-origin: content-box;
 }
-#width-selector button,
-#width-selector button:active,
-#width-selector button:focus {
-	text-shadow: none;
-	color: transparent;
+#width-selector button svg {
+	width: 100%;
+	height: 100%;
+	display: block;
 }
 #width-selector button:disabled {
 	cursor: auto;
-}
-#width-selector button.select-width-normal {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/normal.gif")) ?>');
-}
-#width-selector button.select-width-wide {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/wide.gif")) ?>');
-}
-#width-selector button.select-width-fluid {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/fluid.gif")) ?>');
 }
 
 /*	If the viewport is this narrow, then the different width settings do 
