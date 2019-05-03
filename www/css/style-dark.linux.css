@@ -2745,7 +2745,6 @@ a#inbox-indicator.new-messages:hover::before {
 /*=---------=*/
 
 #comments-list-mode-selector button {
-	color: transparent;
 	width: 32px;
 	height: 32px;
 	padding: 6px;
@@ -6870,9 +6869,6 @@ body {
 	color: #fff;
 }
 #width-selector button {
-	fill: #575756;
-}
-#width-selector button::after {
 	color: #575756;
 }
 
@@ -7231,6 +7227,7 @@ body {
 /*=============================*/
 
 #comments-list-mode-selector button {
+	color: #484848;
 	box-shadow:
 		0 0 0 4px #000 inset,
 		0 0 0 5px #393939 inset;

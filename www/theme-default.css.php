@@ -401,9 +401,6 @@ body {
 	color: #000;
 }
 #width-selector button {
-	fill: #999;
-}
-#width-selector button::after {
 	color: #999;
 }
 
@@ -762,6 +759,7 @@ body {
 /*=============================*/
 
 #comments-list-mode-selector button {
+	color: #aaa;
 	box-shadow:
 		0 0 0 4px #fff inset,
 		0 0 0 5px #bbb inset;

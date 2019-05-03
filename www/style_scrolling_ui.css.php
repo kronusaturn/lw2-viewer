@@ -957,7 +957,6 @@ a#inbox-indicator.new-messages:hover::before {
 /*=---------=*/
 
 #comments-list-mode-selector button {
-	color: transparent;
 	width: 32px;
 	height: 32px;
 	padding: 6px;

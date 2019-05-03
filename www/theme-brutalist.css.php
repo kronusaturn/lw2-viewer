@@ -124,6 +124,9 @@ body {
 
 /*= Decorative bottom bar =*/
 
+#bottom-bar.decorative {
+	box-shadow: none;
+}
 #bottom-bar.decorative::after {
 	padding-right: 5px;
 	padding-left: 6px;
