@@ -262,13 +262,6 @@ body {
 .page-toolbar > * {
 	padding: 0 4px 0 0;
 }
-.page-toolbar .rss {
-	padding: 0 4px;
-}
-.page-toolbar .rss::before {
-	width: 0.75em;
-	margin: 0 3px 0 0;
-}
 .page-toolbar > *:hover {
 	box-shadow:
 		0 0 0 2px var(--GW-C1);
@@ -286,10 +279,10 @@ body {
 }
 
 .rss::before {
-	filter: grayscale(100%);
+	opacity: 0.65;
 }
 .rss:hover::before {
-	filter: grayscale(100%) brightness(65%) contrast(400%);
+	opacity: 1.0;
 }
 
 /*=----------------------------=*/

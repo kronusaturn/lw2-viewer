@@ -278,11 +278,12 @@ p {
 .logout-button::before {
 	font-weight: 300;
 }
-.page-toolbar .rss::before {
-	filter: grayscale(100%) 
+
+.rss::before {
+	opacity: 0.65;
 }
-.page-toolbar .rss:hover::before {
-	filter: none;
+.rss:hover::before {
+	opacity: 1.0;
 }
 
 /*=----------------------------=*/
@@ -294,10 +295,6 @@ p {
 	#content.user-page .page-toolbar .rss {
 		border: 1px solid #aaa;
 		border-radius: 8px;
-	}
-	#content.user-page .page-toolbar .rss {
-		padding-top: calc(0.5em + 1px);
-		padding-bottom: calc(0.5em - 1px);
 	}
 	#content.user-page .page-toolbar .button:hover,
 	#content.user-page .page-toolbar .rss:hover {

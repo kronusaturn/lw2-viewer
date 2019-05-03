@@ -228,6 +228,13 @@ body {
 	color: #d33;
 }
 
+.rss::before {
+	opacity: 0.5;
+}
+.rss:hover::before {
+	opacity: 1.0;
+}
+
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
@@ -246,10 +253,6 @@ body {
 	.button.logout-button,
 	.button.ignore-button {
 		color: #c00;
-	}
-	#content.user-page .page-toolbar .rss {
-		padding-top: calc(0.5em + 1px);
-		padding-bottom: calc(0.5em - 1px);
 	}
 }
 

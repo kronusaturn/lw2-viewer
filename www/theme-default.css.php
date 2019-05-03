@@ -278,10 +278,6 @@ body {
 		border: 1px solid #ccc;
 		border-radius: 8px;
 	}
-	#content.user-page .page-toolbar .rss {
-		padding-top: calc(0.5em + 1px);
-		padding-bottom: calc(0.5em - 1px);
-	}
 	#content.user-page .page-toolbar .button:hover,
 	#content.user-page .page-toolbar .rss:hover {
 		background-color: #eee;

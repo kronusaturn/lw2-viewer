@@ -2569,7 +2569,7 @@ a#inbox-indicator.new-messages:hover::before {
 	}
 	#content.user-page .page-toolbar .button,
 	#content.user-page .page-toolbar .rss {
-		padding: 0.5em 1em;
+		padding: 0.625em 1em 0.5em 1em;
 		white-space: nowrap;
 		height: 100%;
 	}

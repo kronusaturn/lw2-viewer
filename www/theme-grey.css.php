@@ -291,6 +291,13 @@ body {
 	color: var(--GW-button-color);
 }
 
+.rss::before {
+	opacity: 0.5;
+}
+.rss:hover::before {
+	opacity: 1.0;
+}
+
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
@@ -300,10 +307,6 @@ body {
 	#content.user-page .page-toolbar .rss {
 		border: 1px solid #ddd;
 		border-radius: 8px;
-	}
-	#content.user-page .page-toolbar .rss {
-		padding-top: calc(0.5em + 1px);
-		padding-bottom: calc(0.5em - 1px);
 	}
 	#content.user-page .page-toolbar .button:hover,
 	#content.user-page .page-toolbar .rss:hover {
