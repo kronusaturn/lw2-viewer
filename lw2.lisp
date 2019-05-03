@@ -1125,17 +1125,15 @@ signaled condition to OUT-STREAM."
 
 (defun preferences-page-html ()
   <h1>Preferences</h1>
-  <form>
-    <input type="checkbox" id="stuff">Do stuff
+  <form action="/preferences" method="post">
+  (preferences-annotations-html *current-backend*)
   </form>)
 
 (defmethod preferences-annotations-html
     ((backend backend-hypothesis-annotations))
 
   <h2> Annotation Preferences </h2>
-  <p class="optionset-overview"> These settings are used to link your account to a <a href="https://hypothes.is">hypothes.is</a> instance so that annotations made during research can be broadcast to others.</p>
-  <form action="/preferences" method="post">
-  
+  <p class="optionset-overview"> These settings are used to link your account to a <a href="https://hypothes.is">hypothes.is</a> instance so that annotations made during research can be broadcast to others.</p>  
     <div class="option"> 
       <label>Hypothesis API Key</label>
       <p class="option-description">This is needed to access your account and read private groups. Note the API doesn't implement access control, so be sure you trust this server with full access to your account.</p>
@@ -1154,8 +1152,7 @@ signaled condition to OUT-STREAM."
     <input type="text" id="hypothesis-group-id" name="hypothesis-group-id">
   </div>
   
-    
-  </form>)
+    )
 
 (defmethod preferences-annotations-html ((backend backend-base)) nil)
 
@@ -1301,7 +1298,9 @@ signaled condition to OUT-STREAM."
                                                 (sublevel-nav-to-html out-stream
                                                                       `(:all :posts :comments
                                                                         ,@(if own-user-page
-                                                                              '(:drafts :conversations :inbox :preferences)))
+                                                                              '(:drafts :conversations :inbox :preferences))
+									,@(if (typep *current-backend* 'backend-annotations) '(:annotations)))
+								      
                                                                       show
                                                                       :default :all)
                                                 (when (member show '(:all :posts :comments))

@@ -8,6 +8,7 @@
     #:backend-websocket-login
     #:graphql-uri #:websocket-uri #:algolia-search-uri #:rest-api-uri
     #:backend-q-and-a
+    #:backend-annotations #:backend-hypothesis-annotations
     #:backend-alignment-forum
     #:backend-lw2-legacy #:backend-lw2-modernized #:backend-lw2 #:backend-algolia-search #:backend-ea-forum #:backend-accordius
     #:make-backend #:define-backend-function #:define-backend-operation #:backend)
@@ -33,6 +34,11 @@
 
 (defclass backend-q-and-a (backend-graphql) ())
 
+(defclass backend-annotations (backend-base) ())
+
+; For when we want to refer to hypothesis-specific features
+(defclass backend-hypothesis-annotations (backend-annotations) ())
+
 (defclass backend-alignment-forum (backend-graphql) ())
 
 (defclass backend-lw2-legacy (backend-graphql) ())
@@ -43,7 +49,7 @@
 
 (defclass backend-ea-forum (backend-websocket-login backend-lw2-modernized backend-lw2-legacy backend-algolia-search backend-q-and-a) ())
 
-(defclass backend-accordius (backend-lw2-legacy backend-lw2-modernized)
+(defclass backend-accordius (backend-lw2-legacy backend-lw2-modernized backend-hypothesis-annotations)
   ((rest-api-uri :accessor rest-api-uri :initarg :rest-api-uri :type simple-string)))
 
 (defun make-backend (type-string &rest args)
