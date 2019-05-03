@@ -2228,8 +2228,8 @@ function injectCommentsListModeSelector() {
 	if (query("#content > .listings > .comment-thread") == null) return;
 
 	let commentsListModeSelectorHTML = "<div id='comments-list-mode-selector'>"
-	+ `<button type='button' class='expanded' title='Expanded comments view' tabindex='-1'></button>`
-	+ `<button type='button' class='compact' title='Compact comments view' tabindex='-1'></button>`
+	+ `<button type='button' class='expanded' title='Expanded comments view' tabindex='-1'><svg><use xlink:href='/assets/icons.svg#comments-expanded'/></svg></button>`
+	+ `<button type='button' class='compact' title='Compact comments view' tabindex='-1'><svg><use xlink:href='/assets/icons.svg#comments-compact'/></svg></button>`
 	+ "</div>";
 	(query("#content.user-page .user-stats") || query(".page-toolbar") || query(".active-bar")).insertAdjacentHTML("afterend", commentsListModeSelectorHTML);
 	let commentsListModeSelector = query("#comments-list-mode-selector");

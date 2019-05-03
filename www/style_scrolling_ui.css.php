@@ -962,27 +962,9 @@ a#inbox-indicator.new-messages:hover::before {
 	height: 32px;
 	padding: 6px;
 	margin: 1px;
-	overflow: hidden;
-	background-repeat: no-repeat;
-	background-size: 100%;
-	background-origin: content-box;
 }
 #comments-list-mode-selector button:disabled {
 	cursor: auto;
-}
-#comments-list-mode-selector button.expanded {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/expanded_2x.gif")) ?>');
-}
-#comments-list-mode-selector button.compact {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/compact_2x.gif")) ?>');
-}
-@media only screen and (max-resolution: 1dppx) {
-	#comments-list-mode-selector button.expanded {
-		background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/expanded_1x.gif")) ?>');
-	}
-	#comments-list-mode-selector button.compact {
-		background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/compact_1x.gif")) ?>');
-	}
 }
 
 /*******************************/

@@ -12,4 +12,14 @@
 		<rect y="-155" x="80" height="110" width="40" transform="rotate(90)" />
 		<path d="m 125,40 v 120 l 60,-60 z" />
 	</symbol>
+	<symbol id="comments-expanded" viewBox="0 0 200 200">
+		<rect width="160" height="60" x="20" y="20"/>
+		<rect y="120" x="20" height="60" width="160" />
+	</symbol>
+	<symbol id="comments-compact" viewBox="0 0 200 200">
+		<rect width="160" height="28" x="20" y="19" />
+		<rect y="63" x="20" height="28" width="160" />
+		<rect width="160" height="28" x="20" y="107" />
+		<rect y="152" x="20" height="28" width="160" />
+	</symbol>
 </svg>
