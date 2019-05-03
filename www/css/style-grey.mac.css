@@ -365,6 +365,13 @@ input[type='submit']:active,
 	background-color: var(--GW-button-active-background-color);
 }
 
+button svg {
+	width: 100%;
+	height: 100%;
+	display: block;
+	fill: currentColor;
+}
+
 input,
 button,
 textarea {
@@ -983,11 +990,6 @@ a {
 	height: 22px;
 	padding: 6px;
 	margin: 1px;
-}
-#width-selector button svg {
-	width: 100%;
-	height: 100%;
-	display: block;
 }
 #width-selector button:disabled {
 	cursor: auto;

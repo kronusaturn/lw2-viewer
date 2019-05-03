@@ -521,11 +521,6 @@
 	padding: 6px;
 	margin: 1px;
 }
-#width-selector button svg {
-	width: 100%;
-	height: 100%;
-	display: block;
-}
 #width-selector button:disabled {
 	cursor: auto;
 }
