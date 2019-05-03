@@ -1060,7 +1060,7 @@ function injectContentWidthSelector() {
 			let [name, desc, abbr] = widthOption;
 			let selected = (name == currentWidth ? ' selected' : '');
 			let disabled = (name == currentWidth ? ' disabled' : '');
-			return `<button type='button' class='select-width-${name}${selected}'${disabled} title='${desc}' tabindex='-1' data-name='${name}'><svg><use xlink:href='assets/icons.svg#width-${name}'/></svg></button>`})) +
+			return `<button type='button' class='select-width-${name}${selected}'${disabled} title='${desc}' tabindex='-1' data-name='${name}'><svg><use xlink:href='/assets/icons.svg#width-${name}'/></svg></button>`})) +
 		"</div>");
 	widthSelector.queryAll("button").forEach(button => {
 		button.addActivateEvent(GW.widthAdjustButtonClicked = (event) => {
