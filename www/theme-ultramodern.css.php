@@ -404,6 +404,9 @@ p {
 		0 0 0 4px #888 inset,
 		0 0 0 5px #bbb inset;
 }
+#width-selector button {
+	fill: #ccc;
+}
 #width-selector button::after {
 	color: #bbb;
 	font-weight: var(--GW-UI-font-weight-light);

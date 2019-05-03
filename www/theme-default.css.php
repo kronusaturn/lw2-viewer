@@ -397,6 +397,9 @@ body {
 #theme-selector button.selected::before {
 	color: #000;
 }
+#width-selector button {
+	fill: #999;
+}
 #width-selector button::after {
 	color: #999;
 }

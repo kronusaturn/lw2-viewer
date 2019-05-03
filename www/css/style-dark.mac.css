@@ -6883,6 +6883,9 @@ body {
 #theme-selector button.selected::before {
 	color: #fff;
 }
+#width-selector button {
+	fill: #575756;
+}
 #width-selector button::after {
 	color: #575756;
 }

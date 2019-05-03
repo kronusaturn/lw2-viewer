@@ -6916,6 +6916,9 @@ body {
 		0 0 0 3px var(--GW-C0) inset,
 		0 0 0 4px var(--GW-C1) inset;
 }
+#width-selector button {
+	fill: var(--GW-C1);
+}
 #width-selector button::after {
 	color: var(--GW-C1);
 	font-size: 0.9em;

@@ -6809,6 +6809,9 @@ body {
 	box-shadow:
 		0 0 0 2px #e4e4e4 inset;
 }
+#width-selector button {
+	fill: #999;
+}
 #width-selector button::after {
 	color: #aaa;
 }

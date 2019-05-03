@@ -429,6 +429,9 @@ body {
 #theme-selector button.selected::before {
 	color: #222;
 }
+#width-selector button {
+	fill: #aaa;
+}
 #width-selector button::after {
 	color: #aaa;
 }
