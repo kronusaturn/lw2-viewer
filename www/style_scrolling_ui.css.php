@@ -721,13 +721,16 @@ a#inbox-indicator.new-messages:hover::before {
 .page-toolbar > *:nth-child(n+2) {
 	margin-left: 1.5em;
 }
-.page-toolbar .button::before {
+.page-toolbar .button::before,
+.page-toolbar .rss::before {
 	font-family: var(--GW-Font-Awesome);
 	font-size: 0.9em;
 	width: 1.5em;
 	display: inline-block;
-	font-weight: 400;
 	text-align: center;
+}
+.page-toolbar .button::before {
+	font-weight: 400;
 }
 .page-toolbar .button:hover::before {
 	font-weight: 900;
@@ -753,12 +756,8 @@ a#inbox-indicator.new-messages:hover::before {
 	content: "\F06E";
 }
 .rss::before {
-	content: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/rss.svg")) ?>');
-	display: inline-block;
-	width: 0.8em;
-	position: relative;
-	top: 1px;
-	margin: 0 2px 0 0;
+	content: '\F143';
+	font-weight: 900;
 }
 
 /*=----------------------------=*/

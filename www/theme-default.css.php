@@ -261,6 +261,13 @@ body {
 	color: #d33;
 }
 
+.rss::before {
+	opacity: 0.5;
+}
+.rss:hover::before {
+	opacity: 1.0;
+}
+
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
