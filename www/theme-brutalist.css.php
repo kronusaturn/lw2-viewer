@@ -31,6 +31,12 @@
 
 	--GW-TOC-heading-font-weight: 700;
 }
+@media only screen and (max-width: 900px) {
+	:root {
+		--GW-listings-post-meta-font: 'Input Sans';
+		--GW-listings-post-meta-font-weight: 300;
+	}
+}
 
 /*	Layout.
 	*/
@@ -51,16 +57,6 @@
 /*	Color scheme.
 	*/
 :root {
-	--GW-body-background-color: var(--GW-C0);
-
-	--GW-primary-color: var(--GW-C1);
-
-	--GW-hyperlink-color: var(--GW-primary-color);
-
-	--GW-theme-selector-outline-color: var(--GW-primary-color);
-
-	--GW-search-field-placeholder-color: #d00;
-
 	--GW-C0: #fff;
 	--GW-C1: #000;
 	--GW-C2: #d8d8d8;
@@ -68,17 +64,19 @@
 	--GW-C4: #bbb;
 	--GW-C5: #aaa;
 	--GW-C6: #999;
-}
+	--GW-C7: #888;
+	--GW-C8: #777;
 
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
+	--GW-body-background-color: var(--GW-C0);
+	--GW-primary-color: var(--GW-C1);
 
-@media only screen and (max-width: 900px) {
-	:root {
-		--GW-listings-post-meta-font: 'Input Sans';
-		--GW-listings-post-meta-font-weight: 300;
-	}
+	--GW-body-text-color: var(--GW-primary-color);
+
+	--GW-hyperlink-color: var(--GW-primary-color);
+
+	--GW-theme-selector-outline-color: var(--GW-primary-color);
+
+	--GW-search-field-placeholder-color: #d00;
 }
 
 /*======*/
@@ -717,10 +715,15 @@ body {
 
 @media only screen and (max-width: 1020px) {
 	#new-comment-nav-ui .new-comments-count::before {
+		left: -1px;
 		background-color: var(--GW-C0);
 		box-shadow: 
-			0 0 0 2px #000,
+			0 0 0 2px var(--GW-C1),
 			0 0 0 10px var(--GW-C0);
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button:hover {
+		background-color: var(--GW-C0);
+		outline: 2px solid var(--GW-C0);
 	}
 }
 
@@ -729,13 +732,13 @@ body {
 /*=================*/
 
 #hns-date-picker span {
-	color: #777;
+	color: var(--GW-C7);
 }
 #hns-date-picker input {
-	color: #666;
+	color: var(--GW-C8);
 }
 #hns-date-picker input:focus {
-	color: #000;
+	color: var(--GW-C1);
 }
 
 /*=----------------------------=*/
