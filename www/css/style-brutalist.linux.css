@@ -900,6 +900,9 @@ a {
 	margin: 8px 40px 0 0;
 }
 #theme-tweaker-toggle button {
+	width: 36px;
+	height: 36px;
+	padding: 0 0 0 2px;
 	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
 	font-size: 1.25rem;
@@ -6986,11 +6989,6 @@ body {
 /* THEME TWEAKER TOGGLE */
 /*======================*/
 
-#theme-tweaker-toggle button:hover,
-#theme-tweaker-toggle button:active {
-	box-shadow: none;
-}
-
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
@@ -7951,10 +7949,6 @@ a.comment-parent-link:hover::before {
 .individual-thread-page > h1 a:hover {
 	color: #777;
 	text-decoration: dotted underline;
-}
-
-.individual-thread-page > .comments {
-	border-top: 2px solid #000;
 }
 
 /*==============*/

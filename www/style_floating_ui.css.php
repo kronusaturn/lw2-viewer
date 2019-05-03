@@ -439,6 +439,9 @@
 	margin: 8px 40px 0 0;
 }
 #theme-tweaker-toggle button {
+	width: 36px;
+	height: 36px;
+	padding: 0 0 0 2px;
 	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
 	font-size: 1.25rem;

@@ -327,7 +327,7 @@ body {
 		0 0 0 2px #e4e4e4 inset;
 }
 #width-selector button {
-	color: #999;
+	color: #888;
 }
 #width-selector button::after {
 	color: #aaa;

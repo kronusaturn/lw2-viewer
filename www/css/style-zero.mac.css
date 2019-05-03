@@ -900,6 +900,9 @@ a {
 	margin: 8px 40px 0 0;
 }
 #theme-tweaker-toggle button {
+	width: 36px;
+	height: 36px;
+	padding: 0 0 0 2px;
 	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
 	font-size: 1.25rem;
@@ -6796,7 +6799,7 @@ body {
 		0 0 0 2px #e4e4e4 inset;
 }
 #width-selector button {
-	color: #999;
+	color: #888;
 }
 #width-selector button::after {
 	color: #aaa;

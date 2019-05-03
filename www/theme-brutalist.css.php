@@ -508,11 +508,6 @@ body {
 /* THEME TWEAKER TOGGLE */
 /*======================*/
 
-#theme-tweaker-toggle button:hover,
-#theme-tweaker-toggle button:active {
-	box-shadow: none;
-}
-
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
@@ -1473,10 +1468,6 @@ a.comment-parent-link:hover::before {
 .individual-thread-page > h1 a:hover {
 	color: #777;
 	text-decoration: dotted underline;
-}
-
-.individual-thread-page > .comments {
-	border-top: 2px solid #000;
 }
 
 /*==============*/
