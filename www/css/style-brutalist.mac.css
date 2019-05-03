@@ -1019,6 +1019,7 @@ a {
 	visibility: hidden;
 	font-family: var(--GW-width-selector-tooltip-font);
 	font-weight: var(--GW-width-selector-tooltip-font-weight);
+	text-shadow: none;
 }
 #width-selector button.selected::after {
 	content: attr(data-name) " (selected)";
@@ -6893,7 +6894,7 @@ body {
 		0 0 0 4px var(--GW-C1) inset;
 }
 #width-selector button {
-	fill: var(--GW-C1);
+	color: var(--GW-C1);
 }
 #width-selector button::after {
 	color: var(--GW-C1);

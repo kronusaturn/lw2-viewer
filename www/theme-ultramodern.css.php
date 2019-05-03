@@ -402,7 +402,7 @@ p {
 		0 0 0 5px #bbb inset;
 }
 #width-selector button {
-	fill: #ccc;
+	color: #ccc;
 }
 #width-selector button::after {
 	color: #bbb;
@@ -737,6 +737,7 @@ p {
 	box-shadow:
 		0 0 0 4px #888 inset,
 		0 0 0 5px #bbb inset;
+	color: #bbb;
 }
 #comments-list-mode-selector button:hover,
 #comments-list-mode-selector button.selected {

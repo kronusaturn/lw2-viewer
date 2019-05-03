@@ -327,7 +327,7 @@ body {
 		0 0 0 2px #e4e4e4 inset;
 }
 #width-selector button {
-	fill: #999;
+	color: #999;
 }
 #width-selector button::after {
 	color: #aaa;
@@ -684,6 +684,7 @@ body {
 
 #comments-list-mode-selector button {
 	background-color: #e4e4e4;
+	color: #bbb;
 }
 #comments-list-mode-selector button:hover,
 #comments-list-mode-selector button.selected {

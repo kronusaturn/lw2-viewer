@@ -549,6 +549,7 @@
 	visibility: hidden;
 	font-family: var(--GW-width-selector-tooltip-font);
 	font-weight: var(--GW-width-selector-tooltip-font-weight);
+	text-shadow: none;
 }
 #width-selector button.selected::after {
 	content: attr(data-name) " (selected)";

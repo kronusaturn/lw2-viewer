@@ -433,9 +433,6 @@ body {
 	color: #222;
 }
 #width-selector button {
-	fill: #aaa;
-}
-#width-selector button::after {
 	color: #aaa;
 }
 
@@ -805,14 +802,15 @@ body {
 #comments-list-mode-selector button {
 	box-shadow:
 		0 0 0 4px #fff inset,
-		0 0 0 5px #bbb inset;
-	opacity: 0.8;
+		0 0 0 5px #ccc inset;
+	color: #bbb;
 }
 #comments-list-mode-selector button:hover,
 #comments-list-mode-selector button.selected {
 	box-shadow:
-		0 0 0 5px #bbb inset;
+		0 0 0 5px #ccc inset;
 }
+
 /*=============================*/
 /* COMMENTS VIEW MODE SELECTOR */
 /*=============================*/

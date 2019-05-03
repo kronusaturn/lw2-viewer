@@ -416,7 +416,7 @@ body {
 		0 0 0 4px var(--GW-C1) inset;
 }
 #width-selector button {
-	fill: var(--GW-C1);
+	color: var(--GW-C1);
 }
 #width-selector button::after {
 	color: var(--GW-C1);
