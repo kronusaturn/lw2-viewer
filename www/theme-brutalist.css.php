@@ -1009,35 +1009,39 @@ h1.listing + .post-meta .lw2-link {
 }
 
 #content.user-page h1.listing,
-#content.user-page h1.listing + .post-meta {
-	border-style: solid;
-	border-color: #000;
+#content.user-page h1.listing + .post-meta,
+#content.search-results-page h1.listing,
+#content.search-results-page h1.listing + .post-meta {
+	border-style: dotted;
+	border-color: var(--GW-C1);
 }
-#content.user-page h1.listing {
-	padding: 0 6px;
-	padding-top: 0.25em;
+#content.user-page h1.listing,
+#content.search-results-page h1.listing {
+	padding: 8px 8px 0 10px;
 	border-width: 2px 2px 0 2px;
 	margin: 1rem 0 0 0;
-	max-width: 100%;
 }
 #content.own-user-page h1.listing,
 h1.listing.own-post-listing {
 	padding-right: 36px;
 }
-@media only screen and (hover: hover) and (pointer: fine) {
-	#content.user-page h1.listing:focus-within::before {
-		left: -0.625em;
-	}
-}
-#content.user-page h1.listing + .post-meta {
-	padding: 0.75em 6px 0.5em 33px;
+
+#content.user-page h1.listing + .post-meta,
+#content.search-results-page h1.listing + .post-meta {
 	border-width: 0 2px 2px 2px;
-	margin: 0 0 1rem 0;
+	padding: 10px 8px 4px 36px;
 }
-#content.user-page h1.listing + .post-meta .post-section::before {
-	left: -2px;
-	top: unset;
+#content.user-page h1.listing + .post-meta .post-section::before,
+#content.search-results-page h1.listing + .post-meta .post-section::before {
+	left: 0.625em;
+	top: 0.75em;
+	width: 1.25em;
+	text-align: center;
 }
+
+/*=--------------------=*/
+/*= Conversations list =*/
+/*=--------------------=*/
 
 #content.conversations-user-page h1.listing {
 	padding: 8px 6px 8px 10px;
