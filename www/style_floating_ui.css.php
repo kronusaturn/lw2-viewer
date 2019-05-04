@@ -301,6 +301,7 @@
 		margin-top: 124px;
 		padding: 3px;
 
+		opacity: 1.0;
 		background-color: var(--GW-body-background-color);
 		box-shadow: 
 			0 0 0 1px var(--GW-theme-selector-outline-color),
@@ -435,12 +436,12 @@
 }
 #theme-tweaker-toggle button {
 	width: 37px;
-	height: 37px;
-	padding: 0 0 0 2px;
+	height: 36px;
+	padding: 0 0 0 3px;
 	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
 	font-size: 1.25rem;
-	opacity: 0.4;
+	opacity: 0.5;
 	z-index: 1;
 }
 #theme-tweaker-toggle button:hover {
@@ -454,6 +455,9 @@
 @media only screen and (max-width: 1000px) {
 	#theme-tweaker-toggle {
 		margin: 76px calc(var(--GW-theme-selector-right-margin) - 2px) 0 0;
+	}
+	#theme-tweaker-toggle button {
+		opacity: 1.0;
 	}
 }
 @media only screen and (max-width: 960px) {
