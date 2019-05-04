@@ -7311,19 +7311,20 @@ body {
 /*==========*/
 
 .archive-nav {
-	border: 2px solid #000;
+	border: 2px solid var(--GW-C1);
 }
+
 .archive-nav span[class^='archive-nav-item'],
 .archive-nav a:hover {
 	box-shadow: 
 		0 0 0 1px var(--GW-C0) inset,
-		0 0 0 3px #000 inset;
+		0 0 0 3px var(--GW-C1) inset;
 }
 .archive-nav a:active {
 	transform: none;
 	box-shadow: 
 		0 0 0 3px var(--GW-C0) inset,
-		0 0 0 5px #000 inset;
+		0 0 0 5px var(--GW-C1) inset;
 }
 
 /*=----------------------------=*/
@@ -7332,7 +7333,7 @@ body {
 
 @media only screen and (max-width: 900px) {
 	.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
-		background-color: #000;
+		background-color: var(--GW-C1);
 		height: 2px;
 	}
 }
@@ -7416,6 +7417,32 @@ h1.listing.spam .post-type-prefix {
 /*===================*/
 /* LISTING POST-META */
 /*===================*/
+
+h1.listing + .post-meta {
+	margin: 2px 0 1em 0;
+}
+
+h1.listing + .post-meta > * {
+	margin: 3px 1em 1px 0;
+	line-height: 1.2;
+	color: var(--GW-C7);
+}
+
+h1.listing + .post-meta a {
+	border-bottom: 2px dotted transparent;
+}
+h1.listing + .post-meta a:hover {
+	border-color: currentColor;
+}
+
+h1.listing + .post-meta .author,
+h1.listing + .post-meta .comment-count.new-comments {
+	color: var(--GW-C1);
+}
+
+h1.listing + .post-meta .lw2-link {
+	opacity: 1.0;
+}
 
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/

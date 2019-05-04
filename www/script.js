@@ -1469,6 +1469,12 @@ GW.themeUnloadCallback_zero = (toTheme = "") => {
 GW.themeLoadCallback_brutalist = (fromTheme = "") => {
 	GWLog("themeLoadCallback_brutalist");
 
+	// “N comments (M new)”
+	queryAll("h1.listing + .post-meta .comment-count").forEach(commentCount => {
+		let parts = /(.+?)( comments)(.+)/.exec(commentCount.title);
+		commentCount.innerHTML = `${parts[1]}<span>${parts[2]}</span><span>${parts[3]}</span>`;
+	});
+
 	// Bottom bar links.
 	// TODO: Check if this is necessary?
 	let bottomBarLinks = queryAll("#bottom-bar a");
@@ -1499,6 +1505,12 @@ GW.themeLoadCallback_brutalist = (fromTheme = "") => {
 }
 GW.themeUnloadCallback_brutalist = (toTheme = "") => {
 	GWLog("themeUnloadCallback_brutalist");
+
+	// “N comments”
+	queryAll("h1.listing + .post-meta .comment-count").forEach(commentCount => {
+		let parts = /(.+?)( comments)(.+)/.exec(commentCount.title);
+		commentCount.innerHTML = `${parts[1]}<span>${parts[2]}</span>`;
+	});
 
 	// Bottom bar links.
 	// TODO: Check if this is necessary?
