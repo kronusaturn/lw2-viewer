@@ -1021,6 +1021,11 @@ h1.listing + .post-meta .lw2-link {
 	border-width: 2px 2px 0 2px;
 	margin: 1rem 0 0 0;
 }
+#content.user-page h1.listing a[href^='http'],
+#content.search-results-page h1.listing a[href^='http'] {
+	margin-top: 0.125em;
+}
+
 #content.own-user-page h1.listing,
 h1.listing.own-post-listing {
 	padding-right: 36px;
@@ -1043,22 +1048,13 @@ h1.listing.own-post-listing {
 /*= Conversations list =*/
 /*=--------------------=*/
 
-#content.conversations-user-page h1.listing {
-	padding: 8px 6px 8px 10px;
-	font-size: 1.5rem;
-}
 #content.conversations-user-page h1.listing + .post-meta {
-	padding: 10px 4px 6px 4px;
-	margin: 0;
+	padding: 10px 8px 4px 10px;
 }
 
 /*===============*/
 /* CONVERSATIONS */
 /*===============*/
-
-#content.conversation-page textarea {
-	border-top-width: 2px;
-}
 
 /*============*/
 /* LOGIN PAGE */
