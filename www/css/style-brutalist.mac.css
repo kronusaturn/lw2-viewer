@@ -7711,27 +7711,35 @@ h1.post-title .post-type-prefix {
 /* POST-META */
 /*===========*/
 
+.bottom-post-meta {
+	border-color: var(--GW-C1);
+	border-style: dotted;
+}
+
+article > .post-meta > *,
+.post .post-meta > * {
+	margin: 0 0.5em;
+}
+
+/*	Post section.
+	*/
 .post-meta .post-section::before,
 .comment-meta .alignment-forum {
 	color: var(--GW-C0);
 	top: -1px;
 	text-shadow: 
-		1px 1px 0 #777, 
-		0 1px 0 #777, 
-		0 0 5px #777;
+		1px 1px 0   var(--GW-C8),
+		0   1px 0   var(--GW-C8), 
+		0   0   5px var(--GW-C8);
 }
-a.post-section:hover {
-	text-decoration: none;
+.post-section:hover::before {
+	color: var(--GW-C2);
 }
-a.post-section:hover::before {
-	color: #eee;
-}
+
+/*	Date.
+	*/
 .post-meta .date {
-	color: #888;
-}
-.bottom-post-meta {
-	border-color: #000;
-	border-style: dotted;
+	color: var(--GW-C7);
 }
 
 /*============*/
