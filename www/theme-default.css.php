@@ -463,24 +463,13 @@ body {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-@media only screen and (max-width: 1080px) {
-	#theme-tweaker-toggle button {
-		border: 1px solid #999;
-		box-shadow: 
-			0 0 10px #999 inset,
-			0 0 0 1px transparent;
-		border-radius: 50%;
-		transform: scale(0.8);
-	}
-	#theme-tweaker-toggle button:active {
-		box-shadow: 
-			0 0 10px #666 inset,
-			0 0 0 1px transparent;
-	}
-}
 @media only screen and (max-width: 1000px) {
 	#theme-tweaker-toggle button {
 		background-color: #ddd;
+		box-shadow:
+			1px 0 0 0   #ddd inset,
+			1px 0 0 1px #999 inset,
+			0   0 0 1px #999 inset;
 	}
 }
 

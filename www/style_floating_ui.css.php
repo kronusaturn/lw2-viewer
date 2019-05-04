@@ -434,8 +434,8 @@
 	margin: 2px calc(var(--GW-theme-selector-right-margin) - 5px) 0 0;
 }
 #theme-tweaker-toggle button {
-	width: 36px;
-	height: 36px;
+	width: 37px;
+	height: 37px;
 	padding: 0 0 0 2px;
 	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
@@ -453,7 +453,7 @@
 
 @media only screen and (max-width: 1000px) {
 	#theme-tweaker-toggle {
-		margin: 76px var(--GW-theme-selector-right-margin) 0 0;
+		margin: 76px calc(var(--GW-theme-selector-right-margin) - 2px) 0 0;
 	}
 }
 @media only screen and (max-width: 960px) {

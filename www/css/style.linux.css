@@ -895,8 +895,8 @@ a {
 	margin: 2px calc(var(--GW-theme-selector-right-margin) - 5px) 0 0;
 }
 #theme-tweaker-toggle button {
-	width: 36px;
-	height: 36px;
+	width: 37px;
+	height: 37px;
 	padding: 0 0 0 2px;
 	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
@@ -914,7 +914,7 @@ a {
 
 @media only screen and (max-width: 1000px) {
 	#theme-tweaker-toggle {
-		margin: 76px var(--GW-theme-selector-right-margin) 0 0;
+		margin: 76px calc(var(--GW-theme-selector-right-margin) - 2px) 0 0;
 	}
 }
 @media only screen and (max-width: 960px) {
@@ -6921,24 +6921,13 @@ body {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-@media only screen and (max-width: 1080px) {
-	#theme-tweaker-toggle button {
-		border: 1px solid #999;
-		box-shadow: 
-			0 0 10px #999 inset,
-			0 0 0 1px transparent;
-		border-radius: 50%;
-		transform: scale(0.8);
-	}
-	#theme-tweaker-toggle button:active {
-		box-shadow: 
-			0 0 10px #666 inset,
-			0 0 0 1px transparent;
-	}
-}
 @media only screen and (max-width: 1000px) {
 	#theme-tweaker-toggle button {
 		background-color: #ddd;
+		box-shadow:
+			1px 0 0 0   #ddd inset,
+			1px 0 0 1px #999 inset,
+			0   0 0 1px #999 inset;
 	}
 }
 
