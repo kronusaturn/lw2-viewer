@@ -807,11 +807,11 @@ a#inbox-indicator.new-messages:hover::before {
 	align-self: start;
 }
 #content.user-page .sublevel-nav:not(.sort) {
-	margin: 1em var(--GW-current-page-content-right-side-padding) 0 var(--GW-current-page-content-left-side-padding);
+	margin: 1rem var(--GW-current-page-content-right-side-padding) 0 var(--GW-current-page-content-left-side-padding);
 }
 #content.sequences-page .sublevel-nav:not(.sort) {
 	grid-row: unset;
-	margin: 0.5em 0;
+	margin: 0.5rem 0;
 }
 
 .sublevel-nav .sublevel-item {
@@ -860,7 +860,7 @@ a#inbox-indicator.new-messages:hover::before {
 	margin: 0 0 0 calc(var(--GW-current-page-content-left-side-padding) - 20px);
 }
 #content.user-page .sublevel-nav.sort {
-	margin: 1em var(--GW-current-page-content-right-side-padding) 1em 0;
+	margin: 1rem var(--GW-current-page-content-right-side-padding) 1rem 0;
 }
 
 .sublevel-nav.sort::before {
@@ -921,7 +921,7 @@ a#inbox-indicator.new-messages:hover::before {
 }
 #content.user-page #comments-list-mode-selector {
 	grid-row: 5 / span 2;
-	margin: 1em 0 1em var(--GW-current-page-content-left-side-padding);
+	margin: 1rem 0 1rem var(--GW-current-page-content-left-side-padding);
 	flex-flow: column;
 	align-self: start;
 }
@@ -929,7 +929,7 @@ a#inbox-indicator.new-messages:hover::before {
 	grid-row: 6;
 }
 #content.search-results-page #comments-list-mode-selector {
-	margin: 1.5em var(--GW-current-page-content-right-side-padding) 0 var(--GW-current-page-content-left-side-padding);
+	margin: 1.5rem var(--GW-current-page-content-right-side-padding) 0 var(--GW-current-page-content-left-side-padding);
 }
 
 /*=----------------------------=*/

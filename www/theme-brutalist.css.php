@@ -877,6 +877,7 @@ h1.listing a[href^="http"] {
 		0 0 1px var(--GW-C1),
 		0 0 2px var(--GW-C1),
 		0 0 4px var(--GW-C1);
+	margin-right: 0.125em;
 }
 
 @media only screen and (hover: hover) and (pointer: fine) {
@@ -999,9 +1000,12 @@ h1.listing + .post-meta .lw2-link {
 /*============*/
 /* USER PAGES */
 /*============*/
+/*======================*/
+/* SEARCH RESULTS PAGES */
+/*======================*/
 
 #content.user-page h1.page-main-heading {
-	border-bottom: 1px dotted #000;
+	border-bottom: var(--GW-C1);
 }
 
 #content.user-page h1.listing,
