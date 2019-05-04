@@ -1166,6 +1166,37 @@ h1.listing.own-post-listing {
 	color: var(--GW-C1);
 }
 
+/*=================*/
+/* POST NAVIGATION */
+/*=================*/
+
+.post-nav-links a:hover {
+	box-shadow: 
+		0 0 0 2px var(--GW-C0) inset,
+		0 0 0 4px #000 inset;
+}
+.post-nav-links a:active {
+	box-shadow: 
+		0 0 0 6px var(--GW-C0) inset,
+		0 0 0 8px #000 inset;
+}
+
+.post-nav-label {
+	opacity: 0.75;
+}
+
+@media only screen and (max-width: 900px) {
+	.sequence-title {
+		border-top: 1px dotted #000;
+	}
+	.post-nav.prev {
+		border-right: 1px dotted #000;
+	}
+	.post-nav.next {
+		border-left: 1px dotted #000;
+	}
+}
+
 /*==================*/
 /* POSTS & COMMENTS */
 /*==================*/
@@ -1251,37 +1282,6 @@ a.post-section:hover::before {
 h1.post-title {
 	font-size: 2.25rem;
 	margin-top: 1.375em;
-}
-
-/*=================*/
-/* POST NAVIGATION */
-/*=================*/
-
-.post-nav-links a:hover {
-	box-shadow: 
-		0 0 0 2px var(--GW-C0) inset,
-		0 0 0 4px #000 inset;
-}
-.post-nav-links a:active {
-	box-shadow: 
-		0 0 0 6px var(--GW-C0) inset,
-		0 0 0 8px #000 inset;
-}
-
-.post-nav-label {
-	opacity: 0.75;
-}
-
-@media only screen and (max-width: 900px) {
-	.sequence-title {
-		border-top: 1px dotted #000;
-	}
-	.post-nav.prev {
-		border-right: 1px dotted #000;
-	}
-	.post-nav.next {
-		border-left: 1px dotted #000;
-	}
 }
 
 /*==========*/
