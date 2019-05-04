@@ -6486,18 +6486,12 @@ th.mathjax-inline-container {
 	--GW-body-text-font: 'Input Sans', var(--GW-sans-serif-fallback-font-stack);
 	--GW-body-text-font-weight: 200;
 
-	--GW-listings-post-meta-font: 'Anonymous Pro', var(--GW-monospaced-fallback-font-stack);
-	--GW-listings-post-meta-font-weight: 400;
+	--GW-listings-post-meta-font: 'Input Sans', var(--GW-monospaced-fallback-font-stack);
+	--GW-listings-post-meta-font-weight: 300;
 
 	--GW-link-post-link-font-weight: 600;
 
 	--GW-TOC-heading-font-weight: 700;
-}
-@media only screen and (max-width: 900px) {
-	:root {
-		--GW-listings-post-meta-font: 'Input Sans';
-		--GW-listings-post-meta-font-weight: 300;
-	}
 }
 
 /*	Layout.
@@ -7424,6 +7418,7 @@ h1.listing + .post-meta {
 
 h1.listing + .post-meta > * {
 	margin: 3px 1em 1px 0;
+	font-size: 1em;
 	line-height: 1.2;
 	color: var(--GW-C7);
 }
@@ -7438,6 +7433,10 @@ h1.listing + .post-meta a:hover {
 h1.listing + .post-meta .author,
 h1.listing + .post-meta .comment-count.new-comments {
 	color: var(--GW-C1);
+}
+
+h1.listing + .post-meta .comment-count:not(.new-comments) span:nth-of-type(2) {
+	display: none;
 }
 
 h1.listing + .post-meta .lw2-link {
