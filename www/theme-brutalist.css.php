@@ -1326,12 +1326,19 @@ article > .post-meta > *,
 }
 
 .comment-item {
-	border: 2px solid var(--GW-C1);
+	border: 2px dotted var(--GW-C1);
 }
 
 /*=========*/
 /* ANSWERS */
 /*=========*/
+
+.answer-item::after {
+	left: -2px;
+	text-transform: uppercase;
+	color: var(--GW-C5);
+	border-style: inherit;
+}
 
 /*==================*/
 /* COMMENT LISTINGS */
