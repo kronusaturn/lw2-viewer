@@ -965,12 +965,23 @@ h1.listing + .post-meta .comment-count.new-comments {
 	color: var(--GW-C1);
 }
 
+/*	Comment count.
+	*/
 h1.listing + .post-meta .comment-count:not(.new-comments) span:nth-of-type(2) {
 	display: none;
 }
 
+/*	LW2 link.
+	*/
 h1.listing + .post-meta .lw2-link {
 	opacity: 1.0;
+}
+
+/*	Post section.
+	*/
+h1.listing + .post-meta .post-section::before {
+	left: -1.875em;
+	top: 3px;
 }
 
 /*=----------------------------=*/
@@ -1038,9 +1049,8 @@ h1.listing.own-post-listing {
 }
 #content.user-page h1.listing + .post-meta .post-section::before,
 #content.search-results-page h1.listing + .post-meta .post-section::before {
-	left: 0.625em;
+	left: 0.375em;
 	top: 0.75em;
-	width: 1.25em;
 	text-align: center;
 }
 
