@@ -1170,15 +1170,22 @@ h1.listing.own-post-listing {
 /* POST NAVIGATION */
 /*=================*/
 
+.post-nav.next {
+	padding-right: 8px;
+}
+.post-nav.prev {
+	padding-left: 8px;
+}
+
 .post-nav-links a:hover {
 	box-shadow: 
 		0 0 0 2px var(--GW-C0) inset,
-		0 0 0 4px #000 inset;
+		0 0 0 4px var(--GW-C1) inset;
 }
 .post-nav-links a:active {
 	box-shadow: 
 		0 0 0 6px var(--GW-C0) inset,
-		0 0 0 8px #000 inset;
+		0 0 0 8px var(--GW-C1) inset;
 }
 
 .post-nav-label {
@@ -1187,13 +1194,13 @@ h1.listing.own-post-listing {
 
 @media only screen and (max-width: 900px) {
 	.sequence-title {
-		border-top: 1px dotted #000;
+		border-top: 1px dotted var(--GW-C1);
 	}
 	.post-nav.prev {
-		border-right: 1px dotted #000;
+		border-right: 1px dotted var(--GW-C1);
 	}
 	.post-nav.next {
-		border-left: 1px dotted #000;
+		border-left: 1px dotted var(--GW-C1);
 	}
 }
 
@@ -1205,12 +1212,13 @@ h1.listing.own-post-listing {
 	border-bottom: 2px dotted currentColor;
 }
 .body-text {
-	--GW-hyperlink-hover-color: #999;
-	--GW-hyperlink-active-color: #999;
+	--GW-hyperlink-hover-color: var(--GW-C6);
+	--GW-hyperlink-active-color: var(--GW-C6);
 }
+
 .post-meta a:hover,
 .comment-meta a:hover {
-	border-bottom: 1px dotted currentColor;
+	color: var(--GW-C6);
 }
 
 /*===========*/
