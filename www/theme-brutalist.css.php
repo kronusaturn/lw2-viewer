@@ -909,51 +909,17 @@ h1.listing a[href^="http"] {
 
 @media only screen and (max-width: 900px) {
 	h1.listing {
-		line-height: 1;
-		margin-bottom: 6px;
-	}
-	h1.listing + .post-meta .post-section {
-		overflow: visible;
-		order: 1;
-	}
-	h1.listing + .post-meta .post-section::before {
-		position: unset;
-	}
-}
-@media only screen and (max-width: 720px) {
-	#content.conversations-user-page h1.listing + .post-meta .date {
-		margin: 0 0 0 1em;
+		font-size: 1.5rem;
 	}
 }
 @media only screen and (max-width: 520px) {
 	h1.listing {
 		font-size: 1.375rem;
-		margin: 18px 6px 4px 6px;
-		max-width: calc(100% - 12px);
 	}
-	h1.listing a[href^='http'] {
-		top: 4px;
-	}
-	h1.listing + .post-meta {
-		margin: 4px 6px;
-	}
-	h1.listing + .post-meta .post-section {
-		order: 1;
-		overflow: visible;
-	}
-	h1.listing + .post-meta .post-section::before {
-		position: relative;
-		top: -1px;
-		left: 0;
-	}
-	#content.conversations-user-page h1.listing {
-		font-size: 1.375rem;
-	}
-	#content.conversations-user-page h1.listing + .post-meta .conversation-participants {
-		margin: 0;
-	}
-	#content.conversations-user-page h1.listing + .post-meta .messages-count {
-		margin: 0 0 0 1em;
+}
+@media only screen and (max-width: 320px) {
+	h1.listing {
+		font-size: 1.25rem;
 	}
 }
 
@@ -996,6 +962,45 @@ h1.listing + .post-meta .read-time {
 @media only screen and (max-width: 520px) {
 	h1.listing + .post-meta {
 		font-stretch: condensed;
+	}
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	h1.listing + .post-meta .post-section {
+		overflow: visible;
+		order: 1;
+	}
+	h1.listing + .post-meta .post-section::before {
+		position: unset;
+	}
+}
+@media only screen and (max-width: 720px) {
+	#content.conversations-user-page h1.listing + .post-meta .date {
+		margin: 0 0 0 1em;
+	}
+}
+@media only screen and (max-width: 520px) {
+	h1.listing + .post-meta {
+		margin: 4px 6px;
+	}
+	h1.listing + .post-meta .post-section {
+		order: 1;
+		overflow: visible;
+	}
+	h1.listing + .post-meta .post-section::before {
+		position: relative;
+		top: -1px;
+		left: 0;
+	}
+	#content.conversations-user-page h1.listing + .post-meta .conversation-participants {
+		margin: 0;
+	}
+	#content.conversations-user-page h1.listing + .post-meta .messages-count {
+		margin: 0 0 0 1em;
 	}
 }
 
