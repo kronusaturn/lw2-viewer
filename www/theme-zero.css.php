@@ -411,7 +411,7 @@ body {
 /*======================*/
 
 #theme-tweaker-toggle button {
-	color: #999;
+	color: #aaa;
 }
 
 /*=----------------------------=*/
@@ -419,7 +419,7 @@ body {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 1000px) {
-	#theme-tweaker-toggle button {
+	#theme-tweaker-toggle {
 		background-color: var(--GW-body-background-color);
 	}
 }

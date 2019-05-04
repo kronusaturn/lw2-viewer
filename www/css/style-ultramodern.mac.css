@@ -6948,17 +6948,15 @@ p {
 /* THEME TWEAKER TOGGLE */
 /*======================*/
 
-#theme-tweaker-toggle button {
-	font-weight: 400;
-}
-
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
 @media only screen and (max-width: 1000px) {
 	#theme-tweaker-toggle button {
-		color: #444;
+		color: #555;
+	}
+	#theme-tweaker-toggle {
 		background-color: var(--GW-body-background-color);
 	}
 }

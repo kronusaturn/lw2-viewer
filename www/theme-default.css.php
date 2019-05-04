@@ -464,11 +464,9 @@ body {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 1000px) {
-	#theme-tweaker-toggle button {
+	#theme-tweaker-toggle {
 		background-color: #ddd;
 		box-shadow:
-			1px 0 0 0   #ddd inset,
-			1px 0 0 1px #999 inset,
 			0   0 0 1px #999 inset;
 	}
 }

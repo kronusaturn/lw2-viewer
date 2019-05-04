@@ -6978,45 +6978,13 @@ body {
 /* THEME TWEAKER TOGGLE */
 /*======================*/
 
-#theme-tweaker-toggle button {
-	padding: 0;
-	transform: translateX(1px);
-}
-
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
 @media only screen and (max-width: 1000px) {
-	#theme-tweaker-toggle button {
-		transform: none;
+	#theme-tweaker-toggle {
 		background-color: var(--GW-C0);
-		box-shadow:
-			0 0 0 2px var(--GW-C1) inset,
-			0 0 0 6px var(--GW-C0);
-	}
-	#theme-tweaker-toggle button:hover,
-	#theme-tweaker-toggle button:focus {
-		box-shadow:
-			0 0 0 2px var(--GW-C1) inset,
-			0 0 0 4px var(--GW-C0) inset,
-			0 0 0 6px var(--GW-C1) inset,
-			0 0 0 4px var(--GW-C0);
-	}
-	#theme-tweaker-toggle button:active {
-		box-shadow:
-			0 0 0 2px var(--GW-C1) inset,
-			0 0 0 6px var(--GW-C0) inset,
-			0 0 0 8px var(--GW-C1) inset,
-			0 0 0 4px var(--GW-C0);
-	}
-}
-@media only screen and (max-width: 960px) {
-	#theme-selector.engaged ~ #theme-tweaker-toggle {
-		margin: -3px auto 0 auto;
-	}
-	#theme-selector ~ #theme-tweaker-toggle::after {
-		padding: 4px 0 0 0;
 	}
 }
 
