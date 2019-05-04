@@ -1143,21 +1143,27 @@ h1.listing.own-post-listing {
 /*===================*/
 
 .contents {
-	border: 2px solid #000;
+	border: 2px solid var(--GW-C1);
 	background-color: var(--GW-C0);
 }
 .contents-head {
-	font-size: 1.125em;
+	font-size: 1.25em;
 }
 .post-body .contents ul {
 	font-size: 0.9375em;
 }
 .contents ul a {
-	border-bottom: 2px dotted #999;
+	border: none;
 }
-.post-body .contents li::before {
-	color: #999;
+.contents ul a:hover {
+	border-right: 5px solid var(--GW-C3);
+}
+.contents li::before {
+	color: var(--GW-C6);
 	font-feature-settings: "tnum";
+}
+.contents li:hover::before {
+	color: var(--GW-C1);
 }
 
 /*==================*/
@@ -1866,6 +1872,12 @@ select {
 .frac sub {
 	position: relative;
 	left: -0.5px;
+}
+
+*::selection {
+	background-color: var(--GW-C1);
+	color: var(--GW-C0);
+	text-shadow: none;
 }
 
 /*============*/
