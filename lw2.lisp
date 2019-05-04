@@ -1459,7 +1459,7 @@ signaled condition to OUT-STREAM."
                                                                        (concatenate 'list
                                                                                     '(alexandria:switch ((hunchentoot:script-name r) :test #'string=))
                                                                                     (loop for system in '("mac" "windows" "linux") nconc
-                                                                                      (loop for theme in '(nil "dark" "grey" "ultramodern" "zero" "brutalist" "rts")
+                                                                                      (loop for theme in '(nil "dark" "grey" "ultramodern" "zero" "brutalist" "rts" "classic" "less")
                                                                                             collect (defres (format nil "/css/style~@[-~A~].~A.css" theme system) "text/css")))
                                                                                     (loop for (uri content-type) in
                                                                                       '(("/script.js" "text/javascript")
