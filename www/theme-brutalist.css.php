@@ -1288,6 +1288,7 @@ article > .post-meta > *,
 /* LINK POSTS */
 /*============*/
 
+.post.link-post a.link-post-link {
 	font-size: 1.25em;
 	border: none;
 }
