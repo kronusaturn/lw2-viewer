@@ -1,6 +1,7 @@
 (uiop:define-package #:lw2-viewer
   (:use #:cl #:sb-thread #:flexi-streams #:djula
 	#:lw2-viewer.config #:lw2.utils #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login #:lw2.context #:lw2.sites #:lw2.components #:lw2.html-reader #:lw2.fonts
+	#:lw2.assets
 	#:lw2.schema-type #:lw2.schema-types
 	#:lw2.interface-utils
 	#:lw2.user-context
@@ -342,9 +343,6 @@ signaled condition to OUT-STREAM."
 (defparameter *extra-external-scripts* "")
 (defparameter *extra-inline-scripts* "")
 
-(defun generate-versioned-link (file)
-  (format nil "~A?v=~A" file (sb-posix:stat-mtime (sb-posix:stat (format nil "www~A" file))))) 
-
 (defun search-bar-to-html (out-stream)
   (declare (special *current-search-query*))
   (let ((query (and (boundp '*current-search-query*) (hunchentoot:escape-for-html *current-search-query*))))
@@ -487,10 +485,11 @@ signaled condition to OUT-STREAM."
   (let* ((session-token (hunchentoot:cookie-in "session-token"))
          (csrf-token (and session-token (make-csrf-token session-token))))
     (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head>")
-    (format out-stream "<script>window.GW = { }; loggedInUserId=\"~A\"; loggedInUserDisplayName=\"~A\"; loggedInUserSlug=\"~A\"; ~@[GW.csrfToken=\"~A\"; ~]~A</script>~A"
+    (format out-stream "<script>window.GW = { }; loggedInUserId=\"~A\"; loggedInUserDisplayName=\"~A\"; loggedInUserSlug=\"~A\"; assetVersions=~A; ~@[GW.csrfToken=\"~A\"; ~]~A</script>~A"
             (or (logged-in-userid) "")
             (or (logged-in-username) "")
             (or (logged-in-user-slug) "")
+	    (json:encode-json-to-string (get-asset-versions))
             csrf-token
             (load-time-value (with-open-file (s "www/head.js") (uiop:slurp-stream-string s)) t)
             *extra-inline-scripts*)
@@ -1500,23 +1499,3 @@ signaled condition to OUT-STREAM."
   (emit-page (out-stream :title "About" :current-uri "/about" :content-class "about-page")
              (alexandria:with-input-from-file (in-stream "www/about.html" :element-type '(unsigned-byte 8))
                                               (alexandria:copy-stream in-stream out-stream))))
-
-(hunchentoot:define-easy-handler (view-versioned-resource :uri (lambda (r)
-                                                                 (multiple-value-bind (file content-type)
-                                                                   #.(labels ((defres (uri content-type)
-                                                                                `(,uri (values (concatenate 'string "www" ,uri) ,content-type))))
-                                                                       (concatenate 'list
-                                                                                    '(alexandria:switch ((hunchentoot:script-name r) :test #'string=))
-                                                                                    (loop for system in '("mac" "windows" "linux") nconc
-                                                                                      (loop for theme in '(nil "dark" "grey" "ultramodern" "zero" "brutalist" "rts")
-                                                                                            collect (defres (format nil "/css/style~@[-~A~].~A.css" theme system) "text/css")))
-                                                                                    (loop for (uri content-type) in
-                                                                                      '(("/script.js" "text/javascript")
-                                                                                        ("/assets/favicon.ico" "image/x-icon"))
-                                                                                      collect (defres uri content-type))))
-                                                                   (when file
-                                                                     (when (assoc "v" (hunchentoot:get-parameters r) :test #'string=)
-                                                                       (setf (hunchentoot:header-out "Cache-Control") (format nil "public, max-age=~A, immutable" (- (expt 2 31) 1))))
-                                                                     (hunchentoot:handle-static-file file content-type)
-                                                                     t))))
-                                 nil)
