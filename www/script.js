@@ -1201,11 +1201,11 @@ function setTheme(newThemeName) {
 	if (themeUnloadCallback != null) themeUnloadCallback(newThemeName);
 
 	let styleSheetNameSuffix = (newThemeName == 'default') ? '' : ('-' + newThemeName);
-	let currentStyleSheetNameComponents = /style[^\.]*(\..+)$/.exec(query("head link[href*='/css/style'][href*='.css']").href);
+	let currentStyleSheetNameComponents = /style[^\.]*(\.[^?]+)/.exec(query("head link[href*='/css/style'][href*='.css']").href);
 
 	let newStyle = document.createElement('link');
 	newStyle.setAttribute('rel', 'stylesheet');
-	newStyle.setAttribute('href', '/css/style' + styleSheetNameSuffix + currentStyleSheetNameComponents[1]);
+	newStyle.setAttribute('href', assetVersions['/css/style' + styleSheetNameSuffix + currentStyleSheetNameComponents[1]]);
 
 	let oldStyle = query("head link[href*='/css/style'][href*='.css']");
 	newStyle.addEventListener('load', () => { removeElement(oldStyle); });
