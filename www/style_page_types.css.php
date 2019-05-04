@@ -92,6 +92,9 @@
 	text-align: center;
 	margin: 1em 1em 0.25em 1em;
 	line-height: 1.15;
+	font-size: 2.25em;
+	font-family: var(--GW-post-title-font);
+	font-weight: var(--GW-post-title-font-weight);
 }
 
 /*=----------------------=*/
