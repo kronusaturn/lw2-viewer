@@ -47,6 +47,8 @@
 	--GW-comment-minimized-height-mobile: 68px;
 
 	--GW-HNS-date-picker-text-field-width: 160px;
+	--GW-HNS-date-picker-bottom-margin: calc(var(--GW-new-comment-quicknav-bottom-margin) + 36px);
+	--GW-HNS-date-picker-flipped-bottom-margin: calc(var(--GW-new-comment-quicknav-bottom-margin) + 26px);
 }
 @media only screen and (max-width: 1020px) {
 	:root {
@@ -712,15 +714,12 @@ body {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-@media only screen and (max-width: 1440px) {
-	#hns-date-picker {
-		background-color: var(--GW-C0);
-		opacity: 1.0;
-	}
-	#hns-date-picker::before {
-		border: 2px solid #000;
-		box-shadow: 0 0 0 1px #000;
-	}
+#hns-date-picker::before {
+	border: 2px solid var(--GW-C1);
+	box-shadow: 0 0 0 1px var(--GW-C1);
+}
+#hns-date-picker.flipped {
+	background-color: var(--GW-C0);
 }
 
 /*================================*
