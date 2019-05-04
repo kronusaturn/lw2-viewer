@@ -30,8 +30,12 @@
 		(inner-form
 		 (cond
 		   (member
-		    `(let ((sym (find-symbol (string-upcase ,inner-form) ,(find-package '#:keyword))))
-		       (if (member sym ,member) sym)))
+		    `(let* ((raw-value ,inner-form)
+			    (sym (find-symbol (string-upcase raw-value) ,(find-package '#:keyword))))
+		       (when raw-value
+			 (if (member sym ,member)
+			     sym
+			     (error "The ~A parameter has an unrecognized value." ',name)))))
 		   ((and type (subtypep type 'integer))
 		    `(let ((,name ,inner-form))
 		       (declare (type (or null simple-string) ,name))
