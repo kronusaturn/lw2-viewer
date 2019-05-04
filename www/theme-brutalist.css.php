@@ -510,6 +510,7 @@ body {
 
 #theme-tweaker-toggle button {
 	padding: 0;
+	transform: translateX(1px);
 }
 
 /*=----------------------------=*/
@@ -518,6 +519,7 @@ body {
 
 @media only screen and (max-width: 1000px) {
 	#theme-tweaker-toggle button {
+		transform: none;
 		background-color: var(--GW-C0);
 		box-shadow:
 			0 0 0 2px var(--GW-C1) inset,
@@ -579,7 +581,7 @@ body {
 			0 0 0 8px var(--GW-C0);
 	}
 	#anti-kibitzer-toggle button {
-		padding: 0 0 0 1px;
+		padding: 0 0 2px 1px;
 		width: 41px;
 	}
 }
