@@ -616,11 +616,11 @@
 		visibility: visible;
 		max-width: 1000px;
 	}
-	#quick-nav-ui a {
+	#quick-nav-ui a:nth-of-type(n) {
 		position: relative;
 		margin: 2px;
 	}
-	#quick-nav-ui a + a {
+	#quick-nav-ui a:nth-of-type(n+2) {
 		margin-left: 5px;
 	}
 	#quick-nav-ui a::after {
