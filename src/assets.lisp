@@ -12,7 +12,9 @@
 		  collect (list uri filename "text/css")))
 	  (loop for (uri content-type) in
 	       '(("/script.js" "text/javascript")
-		 ("/assets/favicon.ico" "image/x-icon"))
+	         ("/assets/favicon.ico" "image/x-icon")
+	         ("/css/theme_tweaker.css" "text/css")
+	         ("/assets/icons.svg" "image/svg+xml"))
 	     for filename = (format nil "www~A" uri)
 	     collect (list uri filename content-type))))
 
