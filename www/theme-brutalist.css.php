@@ -60,6 +60,7 @@
 	*/
 :root {
 	--GW-C0: #fff;
+	--GW-C0a085: rgba(255, 255, 255, 0.85);
 	--GW-C1: #000;
 	--GW-C2: #d8d8d8;
 	--GW-C3: #ccc;
@@ -870,38 +871,35 @@ body {
 /*==========*/
 
 h1.listing {
-	margin: 0.7em 20px 0.1em 20px;
-	max-width: calc(100% - 40px);
+	margin: 7px 0 0 0;
 	font-size: 1.625rem;
 }
 
 h1.listing a[href^="http"] {
-	font-size: 0.7em;
-	top: 6px;
+	font-size: 0.875em;
 	color: var(--GW-C0);
 	text-shadow: 
-		 0.5px 0.5px 0 #000, 
-		-0.5px -0.5px 0 #000,
-		 0 0 2px #000;
+		0 0 1px var(--GW-C1),
+		0 0 2px var(--GW-C1),
+		0 0 4px var(--GW-C1);
 }
 
 @media only screen and (hover: hover) and (pointer: fine) {
 	h1.listing a:hover,
 	h1.listing a:focus {
-		color: #777;
-		background-color: rgba(255, 255, 255, 0.85);
+		color: var(--GW-C8);
+		background-color: var(--GW-C0a085);
 	}
 	h1.listing:focus-within::before {
-		color: #000;
-		left: -0.625em;
+		color: var(--GW-C1);
 	}
 	h1.listing a[href^="http"]:hover {
 		color: var(--GW-C0);
 		text-shadow: 
-			 0.5px 0.5px 0 #000, 
-			-0.5px -0.5px 0 #000,
-			 0 0 2px #000,
-			 0 0 3px #000;
+			0 0 1px var(--GW-C1),
+			0 0 2px var(--GW-C1),
+			0 0 4px var(--GW-C1),
+			0 0 8px var(--GW-C1);
 	}
 }
 
