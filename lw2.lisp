@@ -266,6 +266,10 @@ signaled condition to OUT-STREAM."
             when (or (not offset) (>= count offset))
             collect x))))
 
+(defun hypothesis-annotations-to-html (out-stream annotations)
+  (with-error-html-block (out-stream)
+    (format out-stream "<p>Mango!</p>")))
+
 (defun identify-item (x)
   (typecase x
     (list
@@ -276,6 +280,8 @@ signaled condition to OUT-STREAM."
 		:notification)
 	       ((assoc :comment-count x)
 		:post)
+	       ((assoc :annotation x)
+		:annotation)
 	       (t
 		:comment))))))
 
@@ -300,6 +306,8 @@ signaled condition to OUT-STREAM."
 	    (:comment
 	     (comment-thread-to-html out-stream
 				     (lambda () (comment-item-to-html out-stream x :with-post-title t))))
+	    (:annotation
+	     (hypothesis-annotations-to-html out-stream x))
 	    (:sequence
 	     (sequence-to-html x)))))
       (format out-stream "<div class=\"listing-message\">~A</div>" empty-message)))
@@ -1158,7 +1166,7 @@ signaled condition to OUT-STREAM."
 
 (define-page view-user (:regex "^/users/(.*?)(?:$|\\?)|^/user" user-slug) (id
                                                                              (offset :type fixnum :default 0)
-                                                                             (show :member '(:all :posts :comments :drafts :conversations :inbox :preferences) :default :all)
+                                                                             (show :member '(:all :posts :comments :drafts :conversations :inbox :preferences :annotations) :default :all)
                                                                              (sort :member '(:top :new) :default :new))
              (let* ((auth-token (if (eq show :inbox) *current-auth-token*))
 		    (user-info
@@ -1177,7 +1185,7 @@ signaled condition to OUT-STREAM."
                (multiple-value-bind (items total)
                  (case show
                    (:posts
-                     (get-user-posts user-id :offset offset :limit (+ 1 (user-pref :items-per-page)) :sort-type sort-type))
+		    (get-user-posts user-id :offset offset :limit (+ 1 (user-pref :items-per-page)) :sort-type sort-type))
                    (:comments
                      (lw2-graphql-query (lw2-query-string :comment :list
                                                           (nconc (alist :offset offset :limit (+ 1 (user-pref :items-per-page)) :user-id user-id)
@@ -1239,8 +1247,9 @@ signaled condition to OUT-STREAM."
 				(local-time:format-timestring nil (local-time:now)
 							      :format lw2.graphql:+graphql-timestamp-format+
 							      :timezone local-time:+utc-zone+)))))
-		   (:preferences
-		    )
+		   (:preferences)
+		   (:annotations
+		    (list (acons :----typename :annotation nil)))
 		   (t
 		     (let ((user-posts (get-user-posts user-id :limit (+ 1 (user-pref :items-per-page) offset)))
 			   (user-comments (lw2-graphql-query (lw2-query-string :comment :list (nconc (alist :limit (+ 1 (user-pref :items-per-page) offset) :user-id user-id) comments-base-terms) 
@@ -1303,7 +1312,7 @@ signaled condition to OUT-STREAM."
 								      
                                                                       show
                                                                       :default :all)
-                                                (when (member show '(:all :posts :comments))
+                                                (when (member show '(:all :posts :comments :annotations))
                                                   (sublevel-nav-to-html out-stream
                                                                         '(:new :top)
                                                                         sort
