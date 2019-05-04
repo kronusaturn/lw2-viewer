@@ -7702,9 +7702,19 @@ h1.listing.own-post-listing {
 /* POSTS */
 /*=======*/
 
+h1.post-title {
+	font-size: 2.25rem;
+	margin-top: 1.375em;
+}
+
 h1.post-title .post-type-prefix {
 	opacity: 0.4;
 	text-shadow: 0 0 0 currentColor;
+}
+
+.post-body {
+	font-size: 1.125rem;
+	margin-top: 1em;
 }
 
 /*===========*/
@@ -7746,44 +7756,32 @@ article > .post-meta > *,
 /* LINK POSTS */
 /*============*/
 
-.post.link-post a.link-post-link {
 	font-size: 1.25em;
 	border: none;
 }
 .post.link-post a.link-post-link::before {
 	color: var(--GW-C0);
 	text-shadow: 
-		 0.5px 0.5px 0 #000, 
-		-0.5px -0.5px 0 #000,
-		 0 0 2px #000;
+		0 0 1px var(--GW-C1),
+		0 0 2px var(--GW-C1),
+		0 0 4px var(--GW-C1);
+	margin-right: 0.125em;
 }
-.post.link-post a.link-post-link:hover {
+.post.link-post a.link-post-link:hover,
+.post.link-post a.link-post-link:focus {
 	color: inherit;
-	border-bottom: 2px dotted #000;
+	border-bottom: 2px dotted currentColor;
 }
-.post.link-post a.link-post-link:hover::before {
+.post.link-post a.link-post-link:hover::before,
+.post.link-post a.link-post-link:focus::before {
 	text-shadow: 
-		 0.5px 0.5px 0 #000, 
-		-0.5px -0.5px 0 #000,
-		 0 0 2px #000,
-		 0 0 3px #000;
+		0 0 1px var(--GW-C1),
+		0 0 2px var(--GW-C1),
+		0 0 4px var(--GW-C1),
+		0 0 8px var(--GW-C1);
 }
 .post.link-post a.link-post-link:focus {
-	color: #999;
-	border-bottom: 2px dotted #999;
-}
-
-/*=======*/
-/* POSTS */
-/*=======*/
-
-.post-body {
-	font-size: 1.125rem;
-	margin-top: 1em;
-}
-h1.post-title {
-	font-size: 2.25rem;
-	margin-top: 1.375em;
+	color: var(--GW-C6);
 }
 
 /*==========*/
@@ -8305,6 +8303,10 @@ blockquote {
 	background-repeat: repeat-y;
 	background-position: top left;
 	padding-left: calc(0.5em + 5px);
+}
+
+.post-body blockquote {
+	line-height: 1.65;
 }
 
 /*========*/
