@@ -7362,7 +7362,9 @@ h1.listing.own-post-listing {
 /* LOGIN PAGE */
 /*============*/
 
-/* “Create account” form */
+/*=-----------------------=*/
+/*= “Create account” form =*/
+/*=-----------------------=*/
 
 #signup-form {
 	background-color: #e4e4e4;
@@ -7373,13 +7375,17 @@ h1.listing.own-post-listing {
 	background-color: #f4f4f4;
 }
 
-/* Log in tip */
+/*=------------=*/
+/*= Log in tip =*/
+/*=------------=*/
 
 .login-container .login-tip {
 	background-color: #e4e4e4;
 }
 
-/* Message box */
+/*=-------------=*/
+/*= Message box =*/
+/*=-------------=*/
 
 .error-box {
 	border: 1px solid #e00;

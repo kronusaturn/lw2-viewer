@@ -1056,53 +1056,62 @@ h1.listing.own-post-listing {
 /* CONVERSATIONS */
 /*===============*/
 
+#content.conversation-page .conversation-participants a:hover {
+	border-bottom: 2px dotted currentColor;
+}
+
 /*============*/
 /* LOGIN PAGE */
 /*============*/
 
-/* “Log in” form */
+.login-container input[type='submit'] {
+	line-height: 1.4;
+}
+
+/*=---------------=*/
+/*= “Log in” form =*/
+/*=---------------=*/
+
 #login-form {
     grid-template-columns: 5.75em 1fr;
 }
-
 #login-form a:hover {
-	text-decoration: dotted underline;
-}
-#login-form a:active {
-	transform: scale(0.9);
+	border-bottom: 2px dotted currentColor;
 }
 
-/* “Create account” form */
+/*=-----------------------=*/
+/*= “Create account” form =*/
+/*=-----------------------=*/
 
 #signup-form {
     grid-template-columns: 10.5em 1fr;
-	border: 2px solid #000;
+	border: 2px solid var(--GW-C1);
 }
 
-/* Log in tip */
+/*=------------=*/
+/*= Log in tip =*/
+/*=------------=*/
 
 .login-container .login-tip {
-	border: 1px solid #000;
+	border: 2px solid var(--GW-C1);
+	text-indent: -2.875em;
+	padding-left: 3.875em;
 }
 
-/* Message box */
+/*=-------------=*/
+/*= Message box =*/
+/*=-------------=*/
 
 .error-box {
-	border: 1px solid red;
-	background-color: #faa;
+	border: 2px dotted var(--GW-C1);
 }
 .success-box {
-	border: 1px solid green;
-	background-color: #afa;
+	border: 2px solid var(--GW-C1);
 }
 
 /*=====================*/
 /* PASSWORD RESET PAGE */
 /*=====================*/
-
-.reset-password-container label {
-	width: 12em;
-}
 
 /*===================*/
 /* TABLE OF CONTENTS */
@@ -1811,14 +1820,14 @@ input[type='search'],
 input[type='password'],
 textarea {
 	background-color: transparent;
-	border: 1px solid var(--GW-C1);
+	border: 2px dotted var(--GW-C1);
 	color: var(--GW-C1);
 }
 input[type='text']:focus,
 input[type='search']:focus,
 input[type='password']:focus,
 textarea:focus {
-	border-style: dashed;
+	border-style: solid;
 }
 
 select {
