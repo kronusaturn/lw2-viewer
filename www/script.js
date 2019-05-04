@@ -1067,7 +1067,7 @@ function injectContentWidthSelector() {
 			GWLog("GW.widthAdjustButtonClicked");
 
 			// Determine which setting was chosen (i.e., which button was clicked).
-			let selectedWidth = event.target.dataset.name;
+			let selectedWidth = button.dataset.name;
 
 			// Save the new setting.
 			if (selectedWidth == "normal") localStorage.removeItem("selected-width");
@@ -1075,12 +1075,12 @@ function injectContentWidthSelector() {
 
 			// Actually change the content width.
 			setContentWidth(selectedWidth);
-			event.target.parentElement.childNodes.forEach(button => {
-				button.removeClass("selected");
-				button.disabled = false;
+			button.parentElement.childNodes.forEach(aButton => {
+				aButton.removeClass("selected");
+				aButton.disabled = false;
 			});
-			event.target.addClass("selected");
-			event.target.disabled = true;
+			button.addClass("selected");
+			button.disabled = true;
 
 			// Make sure the accesskey (to cycle to the next width) is on the right button.
 			setWidthAdjustButtonsAccesskey();
@@ -2238,17 +2238,17 @@ function injectCommentsListModeSelector() {
 		button.addActivateEvent(GW.commentsListModeSelectButtonClicked = (event) => {
 			GWLog("GW.commentsListModeSelectButtonClicked");
 
-			event.target.parentElement.queryAll("button").forEach(button => {
-				button.removeClass("selected");
-				button.disabled = false;
-				button.accessKey = '`';
+			button.parentElement.queryAll("button").forEach(aButton => {
+				aButton.removeClass("selected");
+				aButton.disabled = false;
+				aButton.accessKey = '`';
 			});
-			localStorage.setItem("comments-list-mode", event.target.className);
-			event.target.addClass("selected");
-			event.target.disabled = true;
-			event.target.removeAttribute("accesskey");
+			localStorage.setItem("comments-list-mode", button.className);
+			button.addClass("selected");
+			button.disabled = true;
+			button.removeAttribute("accesskey");
 
-			if (event.target.hasClass("expanded")) {
+			if (button.hasClass("expanded")) {
 				query("#content").removeClass("compact");
 			} else {
 				query("#content").addClass("compact");
