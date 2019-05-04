@@ -899,6 +899,11 @@ h1.listing a[href^="http"] {
 	}
 }
 
+h1.listing:not(:focus-within) a:not(:hover) .post-type-prefix {
+	opacity: 0.4;
+	text-shadow: 0 0 0 currentColor;
+}
+
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
@@ -1219,6 +1224,15 @@ h1.listing.own-post-listing {
 .post-meta a:hover,
 .comment-meta a:hover {
 	color: var(--GW-C6);
+}
+
+/*=======*/
+/* POSTS */
+/*=======*/
+
+h1.post-title .post-type-prefix {
+	opacity: 0.4;
+	text-shadow: 0 0 0 currentColor;
 }
 
 /*===========*/

@@ -1036,7 +1036,7 @@ h1.post-title {
 
 h1.post-title .post-type-prefix {
 	opacity: 0.35;
-	font-weight: normal;
+	font-weight: var(--GW-UI-font-weight-light);
 }
 
 /*===========*/
