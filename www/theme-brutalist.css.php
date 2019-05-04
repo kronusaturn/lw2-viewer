@@ -1226,6 +1226,15 @@ h1.listing.own-post-listing {
 	color: var(--GW-C6);
 }
 
+.post-body {
+	font-size: 1.125rem;
+}
+
+.comment-body {
+	font-size: 1rem;
+	line-height: 1.5;
+}
+
 /*=======*/
 /* POSTS */
 /*=======*/
@@ -1238,11 +1247,6 @@ h1.post-title {
 h1.post-title .post-type-prefix {
 	opacity: 0.4;
 	text-shadow: 0 0 0 currentColor;
-}
-
-.post-body {
-	font-size: 1.125rem;
-	margin-top: 1em;
 }
 
 /*===========*/
@@ -1317,10 +1321,23 @@ article > .post-meta > *,
 /*==========*/
 
 .comments::before {
-	border-top: 2px solid #000;
+	border-top: 2px solid var(--GW-C1);
 }
-#content > .comment-thread .comment-meta a.date:focus,
-#content > .comment-thread .comment-meta a.permalink:focus {
+
+.comment-item {
+	border: 2px solid var(--GW-C1);
+}
+
+/*=========*/
+/* ANSWERS */
+/*=========*/
+
+/*==================*/
+/* COMMENT LISTINGS */
+/*==================*/
+
+.listings .comment-thread .comment-meta a.date:focus,
+.listings .comment-thread .comment-meta a.permalink:focus {
 	color: #999;
 	outline: 2px dotted #999;
 	position: relative;
@@ -1328,17 +1345,9 @@ article > .post-meta > *,
 	padding: 0 5px;
 	left: -5px;
 }
-#content > .comment-thread .comment-meta a.date:focus + *,
-#content > .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
+.listings .comment-thread .comment-meta a.date:focus + *,
+.listings .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
 	margin-left: -10px;
-}
-.comment-item {
-	border: 2px solid #000;
-}
-
-.comment-body {
-	font-size: 1rem;
-	line-height: 1.5;
 }
 
 /*================================*/
