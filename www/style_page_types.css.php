@@ -184,6 +184,8 @@
 .login-container form input[type='submit'] {
 	width: 10em;
 	margin: 0.5em 0 0 0;
+	font-size: 1.125em;
+	padding: 8px;
 }
 .login-container form h1 {
 	text-align: center;
@@ -207,9 +209,6 @@
 }
 #signup-form h1 {
 	font-size: 1.7em;
-}
-#signup-form input[type='submit'] {
-	padding: 0.4em 0.5em 0.5em 0.5em;
 }
 
 /* Log in tip */

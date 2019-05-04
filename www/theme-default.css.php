@@ -1161,7 +1161,7 @@ h1.listing.own-post-listing {
 /* Log in tip */
 
 .login-container .login-tip {
-	border: 1px solid #eee;
+	border: 1px solid #ddd;
 }
 
 /* Message box */

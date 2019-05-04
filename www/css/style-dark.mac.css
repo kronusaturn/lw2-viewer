@@ -5842,6 +5842,8 @@ th.mathjax-inline-container {
 .login-container form input[type='submit'] {
 	width: 10em;
 	margin: 0.5em 0 0 0;
+	font-size: 1.125em;
+	padding: 8px;
 }
 .login-container form h1 {
 	text-align: center;
@@ -5865,9 +5867,6 @@ th.mathjax-inline-container {
 }
 #signup-form h1 {
 	font-size: 1.7em;
-}
-#signup-form input[type='submit'] {
-	padding: 0.4em 0.5em 0.5em 0.5em;
 }
 
 /* Log in tip */
@@ -7623,7 +7622,7 @@ h1.listing.own-post-listing {
 /* Log in tip */
 
 .login-container .login-tip {
-	border: 1px solid #131313;
+	border: 1px solid #1f1f1f;
 }
 
 /* Message box */
