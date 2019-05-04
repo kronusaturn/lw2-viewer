@@ -6949,31 +6949,20 @@ body {
 /*======================*/
 
 #theme-tweaker-toggle button {
-	color: #888;
+	color: #aaa;
 }
 
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-@media only screen and (max-width: 1080px) {
-	#theme-tweaker-toggle button {
-		border: 1px solid #888;
-		box-shadow: 
-			0 0 10px #888 inset,
-			0 0 0 1px transparent;
-		border-radius: 50%;
-		transform: scale(0.8);
-	}
-	#theme-tweaker-toggle button:active {
-		box-shadow: 
-			0 0 10px #555 inset,
-			0 0 0 1px transparent;
-	}
-}
 @media only screen and (max-width: 1000px) {
 	#theme-tweaker-toggle button {
 		background-color: #eee;
+		box-shadow:
+			1px 0 0 0   #eee inset,
+			1px 0 0 1px #d8d8d8 inset,
+			0   0 0 1px #d8d8d8 inset;
 	}
 }
 

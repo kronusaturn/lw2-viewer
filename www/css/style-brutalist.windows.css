@@ -6979,21 +6979,20 @@ body {
 /* THEME TWEAKER TOGGLE */
 /*======================*/
 
+#theme-tweaker-toggle button {
+	padding: 0;
+}
+
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
 @media only screen and (max-width: 1000px) {
-	#theme-tweaker-toggle {
-		margin-right: -19px;
-	}
 	#theme-tweaker-toggle button {
 		background-color: var(--GW-C0);
-		opacity: 1.0;
 		box-shadow:
 			0 0 0 2px var(--GW-C1) inset,
 			0 0 0 6px var(--GW-C0);
-		padding: 1px 1px 1px 2px;
 	}
 	#theme-tweaker-toggle button:hover,
 	#theme-tweaker-toggle button:focus {

@@ -6959,20 +6959,8 @@ p {
 
 @media only screen and (max-width: 1000px) {
 	#theme-tweaker-toggle button {
-		border: 1px solid #aaa;
-		box-shadow: 
-			0 0 10px #999 inset,
-			0 0 0 1px transparent;
-		border-radius: 50%;
-		transform: scale(0.8);
-		background-color: #888;
-		opacity: 0.6;
-	}
-	#theme-tweaker-toggle button:active {
-		border: 1px solid #bbb;
-		box-shadow: 
-			0 0 10px #aaa inset,
-			0 0 0 1px transparent;
+		color: #444;
+		background-color: var(--GW-body-background-color);
 	}
 }
 

@@ -411,28 +411,16 @@ body {
 /*======================*/
 
 #theme-tweaker-toggle button {
-	color: #777;
+	color: #999;
 }
 
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-@media only screen and (max-width: 1080px) {
-	#theme-tweaker-toggle button {
-		transform: scale(0.8);
-		background-color: #e4e4e4;
-		opacity: 1.0;
-		color: #aaa;
-	}
-	#theme-tweaker-toggle button:active {
-		box-shadow:
-			0 0 10px #ccc inset;
-	}
-}
 @media only screen and (max-width: 1000px) {
 	#theme-tweaker-toggle button {
-		border: 1px solid #ddd;
+		background-color: var(--GW-body-background-color);
 	}
 }
 
