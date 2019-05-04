@@ -896,14 +896,13 @@ a {
 	margin: 2px calc(var(--GW-theme-selector-right-margin) - 5px) 0 0;
 }
 #theme-tweaker-toggle button {
-	width: 37px;
-	height: 36px;
-	padding: 0 0 0 3px;
 	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
-	font-size: 1.25rem;
+	font-size: 1.5rem;
 	opacity: 0.5;
 	z-index: 1;
+	padding: 7px 7px 7px 8px;
+	line-height: 0.95;
 }
 #theme-tweaker-toggle button:hover {
 	opacity: 1.0;

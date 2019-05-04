@@ -1787,7 +1787,7 @@ function injectThemeTweaker() {
 		button.addActivateEvent(GW.themeTweaker.textSizeAdjustButtonClicked);
 	});
 
-	let themeTweakerToggle = addUIElement(`<div id='theme-tweaker-toggle'><button type='button' tabindex='-1' title="Customize appearance [;]" accesskey=';'>&#xf1de;</button></div>`);
+	let themeTweakerToggle = addUIElement(`<div id='theme-tweaker-toggle'><button type='button' tabindex='-1' title="Customize appearance [;]" accesskey=';'>&#xf3f0;</button></div>`);
 	themeTweakerToggle.query("button").addActivateEvent(GW.themeTweaker.toggleButtonClicked = (event) => {
 		GWLog("GW.themeTweaker.toggleButtonClicked");
 
