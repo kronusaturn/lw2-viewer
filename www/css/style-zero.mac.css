@@ -3206,7 +3206,9 @@ h1.listing + .post-meta .post-section {
 }
 h1.listing + .post-meta .post-section::before {
 	position: absolute;
-	left: -1.625em;
+	left: -1.75em;
+	width: 1.5em;
+	text-align: center;
 }
 
 h1.listing + .post-meta .read-time {
@@ -7274,8 +7276,6 @@ h1.listing + .post-meta .comment-count:not(.new-comments) span:nth-of-type(2) {
 	*/
 h1.listing + .post-meta .post-section::before {
 	width: 1.25em;
-	text-align: center;
-	left: -1.75em;
 }
 h1.listing + .post-meta .post-section.alignment-forum::before {
 	padding-top: 1px;
@@ -7394,6 +7394,7 @@ h1.listing.own-post-listing {
 	border: 1px solid #0c0;
 	background-color: #afa;
 }
+
 /*============*/
 /* ERROR PAGE */
 /*============*/

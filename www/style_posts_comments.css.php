@@ -177,7 +177,9 @@ h1.listing + .post-meta .post-section {
 }
 h1.listing + .post-meta .post-section::before {
 	position: absolute;
-	left: -1.625em;
+	left: -1.75em;
+	width: 1.5em;
+	text-align: center;
 }
 
 h1.listing + .post-meta .read-time {

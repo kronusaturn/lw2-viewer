@@ -1029,7 +1029,7 @@ h1.listing + .post-meta .link-post-domain {
 	*/
 h1.listing + .post-meta .post-section::before {
 	font-size: 0.9375em;
-	left: -2em;
+	left: -1.875em;
 }
 
 /*=----------------------------=*/

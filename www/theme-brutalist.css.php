@@ -1113,6 +1113,21 @@ h1.listing.own-post-listing {
 /* PASSWORD RESET PAGE */
 /*=====================*/
 
+/*============*/
+/* ERROR PAGE */
+/*============*/
+
+/*=------------=*/
+/*= Retry form =*/
+/*=------------=*/
+
+.reassurance {
+	border-top: 2px solid var(--GW-C1);
+}
+.reassurance .saved-comment-content {
+	border: 2px solid var(--GW-C1);
+}
+
 /*===================*/
 /* TABLE OF CONTENTS */
 /*===================*/
