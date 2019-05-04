@@ -731,7 +731,7 @@ body {
 @media only screen and (max-width: 960px) {
 	#ui-elements-container > div[id$='-ui-toggle'] button,
 	#theme-selector .theme-selector-close-button  {
-		color: #000;
+		color: var(--GW-C1);
 		opacity: 1.0;
 	}
 	#appearance-adjust-ui-toggle button,
@@ -739,7 +739,7 @@ body {
 		background-color: var(--GW-C0);
 		box-shadow:
 			0 0 0 6px var(--GW-C0),
-			0 0 0 2px #000 inset;
+			0 0 0 2px var(--GW-C1) inset;
 		width: 53px;
 		height: 53px;
 		padding: 10px 10px 11px 11px;
@@ -747,30 +747,30 @@ body {
 
 	#theme-selector {
 		box-shadow: 
-			0 0 0 1px #000;
+			0 0 0 1px var(--GW-C1);
 	}
 	#theme-selector button {
 		box-shadow: 
 			0 0 0 1px var(--GW-C0) inset, 
-			0 0 0 3px #000 inset;
+			0 0 0 3px var(--GW-C1) inset;
 	}
 	#theme-selector button:hover,
 	#theme-selector button.selected {
 		box-shadow: 
 			0 0 0 1px var(--GW-C0) inset, 
-			0 0 0 3px #000 inset, 
+			0 0 0 3px var(--GW-C1) inset, 
 			0 0 0 5px var(--GW-C0) inset, 
-			0 0 0 7px #000 inset;
+			0 0 0 7px var(--GW-C1) inset;
 	}
 	#theme-selector button:active {
 		box-shadow: 
 			0 0 0  1px var(--GW-C0) inset, 
-			0 0 0  3px #000 inset, 
+			0 0 0  3px var(--GW-C1) inset, 
 			0 0 0  8px var(--GW-C0) inset, 
-			0 0 0 10px #000 inset;
+			0 0 0 10px var(--GW-C1) inset;
 	}
 	#theme-selector button::after {
-		color: #000;
+		color: var(--GW-C1);
 		padding-left: 1px;
 	}
 	#theme-selector .theme-selector-close-button,
@@ -779,17 +779,10 @@ body {
 		width: 54px;
 		box-shadow:
 			0 0 0 4px var(--GW-C0) inset,
-			0 0 0 6px #000 inset;
+			0 0 0 6px var(--GW-C1) inset;
 		padding: 12px 10px 10px 12px;
 	}
 
-	#quick-nav-ui {
-		background-color: var(--GW-C0);
-	}
-	#quick-nav-ui a {
-		box-shadow: 
-			0 0 0 2px #000;
-	}
 	#quick-nav-ui a::after,
 	#new-comment-nav-ui::before {
 		font-size: 0.5rem;
@@ -797,30 +790,20 @@ body {
 	}
 	#new-comment-nav-ui {
 		background-color: var(--GW-C0);
-		border: 1px solid #000;
-		box-shadow: 0 0 0 1px #000;
+		border: 1px solid var(--GW-C1);
+		box-shadow: 0 0 0 1px var(--GW-C1);
 	}
 	#new-comment-nav-ui::before {
-		color: #000;
 		font-size: 0.6875rem;
 		bottom: calc(100% + 2px);
 		padding: 2px 0 0 0;
 	}
-	#new-comment-nav-ui .new-comment-sequential-nav-button {
-		color: #000;
-	}
-	#new-comment-nav-ui .new-comments-count,
-	#new-comment-nav-ui .new-comments-count::after {
-		color: #000;
-	}
-	#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
-		color: var(--GW-C4);
-	}
 
 	#hns-date-picker {
-		bottom: 130px;
-		right: 52px;
-		text-indent: 0;
+		right: 54px;
+	}
+	#hns-date-picker::before {
+		box-shadow: none;
 	}
 }
 
@@ -851,10 +834,6 @@ body {
 		0 0 0 5px var(--GW-C1) inset;
 }
 
-/*===============*/
-/* KEYBOARD HELP */
-/*===============*/
-
 /*==========*/
 /* ARCHIVES */
 /*==========*/
@@ -873,6 +852,17 @@ body {
 	box-shadow: 
 		0 0 0 3px var(--GW-C0) inset,
 		0 0 0 5px #000 inset;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
+		background-color: #000;
+		height: 2px;
+	}
 }
 
 /*==========*/
@@ -925,6 +915,60 @@ h1.listing .edit-post-link:hover {
 }
 #content.user-page h1.listing .edit-post-link {
 	background-color: var(--GW-C0);
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	h1.listing {
+		line-height: 1;
+		margin-bottom: 6px;
+	}
+	h1.listing + .post-meta .post-section {
+		overflow: visible;
+		order: 1;
+	}
+	h1.listing + .post-meta .post-section::before {
+		position: unset;
+	}
+}
+@media only screen and (max-width: 720px) {
+	#content.conversations-user-page h1.listing + .post-meta .date {
+		margin: 0 0 0 1em;
+	}
+}
+@media only screen and (max-width: 520px) {
+	h1.listing {
+		font-size: 1.375rem;
+		margin: 18px 6px 4px 6px;
+		max-width: calc(100% - 12px);
+	}
+	h1.listing a[href^='http'] {
+		top: 4px;
+	}
+	h1.listing + .post-meta {
+		margin: 4px 6px;
+	}
+	h1.listing + .post-meta .post-section {
+		order: 1;
+		overflow: visible;
+	}
+	h1.listing + .post-meta .post-section::before {
+		position: relative;
+		top: -1px;
+		left: 0;
+	}
+	#content.conversations-user-page h1.listing {
+		font-size: 1.375rem;
+	}
+	#content.conversations-user-page h1.listing + .post-meta .conversation-participants {
+		margin: 0;
+	}
+	#content.conversations-user-page h1.listing + .post-meta .messages-count {
+		margin: 0 0 0 1em;
+	}
 }
 
 /*======*/
@@ -1904,23 +1948,6 @@ select {
 /*========*/
 
 @media only screen and (max-width: 900px) {
-	h1.listing {
-		line-height: 1;
-		margin-bottom: 6px;
-	}
-	h1.listing + .post-meta .post-section {
-		overflow: visible;
-		order: 1;
-	}
-	h1.listing + .post-meta .post-section::before {
-		position: unset;
-	}
-
-	.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
-		background-color: #000;
-		height: 2px;
-	}
-
 	.comment-item .comment-item {
 		margin: 0.75em 2px 3px 6px;
 	}
@@ -1955,41 +1982,8 @@ select {
 		position: relative;
 		top: -1px;
 	}
-} @media only screen and (max-width: 720px) {
-	#content.conversations-user-page h1.listing + .post-meta .date {
-		margin: 0 0 0 1em;
-	}
-} @media only screen and (max-width: 520px) {
-	h1.listing {
-		font-size: 1.375rem;
-		margin: 18px 6px 4px 6px;
-		max-width: calc(100% - 12px);
-	}
-	h1.listing a[href^='http'] {
-		top: 4px;
-	}
-	h1.listing + .post-meta {
-		margin: 4px 6px;
-	}
-	h1.listing + .post-meta .post-section {
-		order: 1;
-		overflow: visible;
-	}
-	h1.listing + .post-meta .post-section::before {
-		position: relative;
-		top: -1px;
-		left: 0;
-	}
-	#content.conversations-user-page h1.listing {
-		font-size: 1.375rem;
-	}
-	#content.conversations-user-page h1.listing + .post-meta .conversation-participants {
-		margin: 0;
-	}
-	#content.conversations-user-page h1.listing + .post-meta .messages-count {
-		margin: 0 0 0 1em;
-	}
-
+}
+@media only screen and (max-width: 520px) {
 	#content.compact > .comment-thread .comment-item {
 		max-height: 110px;
 	}
@@ -2041,3 +2035,7 @@ select {
 		top: 1px;
 	}
 }
+
+/*===============*/
+/* KEYBOARD HELP */
+/*===============*/

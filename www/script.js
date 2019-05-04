@@ -1060,7 +1060,7 @@ function injectContentWidthSelector() {
 			let [name, desc, abbr] = widthOption;
 			let selected = (name == currentWidth ? ' selected' : '');
 			let disabled = (name == currentWidth ? ' disabled' : '');
-			return `<button type='button' class='select-width-${name}${selected}'${disabled} title='${desc}' tabindex='-1' data-name='${name}'><svg><use xlink:href='/assets/icons.svg#width-${name}'/></svg></button>`})) +
+			return `<button type='button' class='select-width-${name}${selected}'${disabled} title='${desc}' tabindex='-1' data-name='${name}'><svg><use xlink:href='${GW.assetVersions['/assets/icons.svg']}#width-${name}'/></svg></button>`})) +
 		"</div>");
 	widthSelector.queryAll("button").forEach(button => {
 		button.addActivateEvent(GW.widthAdjustButtonClicked = (event) => {
@@ -1205,7 +1205,7 @@ function setTheme(newThemeName) {
 
 	let newStyle = document.createElement('link');
 	newStyle.setAttribute('rel', 'stylesheet');
-	newStyle.setAttribute('href', assetVersions['/css/style' + styleSheetNameSuffix + currentStyleSheetNameComponents[1]]);
+	newStyle.setAttribute('href', GW.assetVersions['/css/style' + styleSheetNameSuffix + currentStyleSheetNameComponents[1]]);
 
 	let oldStyle = query("head link[href*='/css/style'][href*='.css']");
 	newStyle.addEventListener('load', () => { removeElement(oldStyle); });
@@ -1814,7 +1814,7 @@ function injectThemeTweaker() {
 			// Load the theme tweaker CSS (if not loaded).
 			let themeTweakerStyleSheet = document.createElement('link');
 			themeTweakerStyleSheet.setAttribute('rel', 'stylesheet');
-			themeTweakerStyleSheet.setAttribute('href', '/css/theme_tweaker.css');
+			themeTweakerStyleSheet.setAttribute('href', GW.assetVersions['/css/theme_tweaker.css']);
 			themeTweakerStyleSheet.addEventListener('load', GW.themeTweakerStyleSheetAvailable);
 			query("head").insertBefore(themeTweakerStyleSheet, query("head").firstElementChild);
 		}
@@ -2228,8 +2228,8 @@ function injectCommentsListModeSelector() {
 	if (query("#content > .listings > .comment-thread") == null) return;
 
 	let commentsListModeSelectorHTML = "<div id='comments-list-mode-selector'>"
-	+ `<button type='button' class='expanded' title='Expanded comments view' tabindex='-1'><svg><use xlink:href='/assets/icons.svg#comments-expanded'/></svg></button>`
-	+ `<button type='button' class='compact' title='Compact comments view' tabindex='-1'><svg><use xlink:href='/assets/icons.svg#comments-compact'/></svg></button>`
+	+ `<button type='button' class='expanded' title='Expanded comments view' tabindex='-1'><svg><use xlink:href='${GW.assetVersions['/assets/icons.svg']}#comments-expanded'/></svg></button>`
+	+ `<button type='button' class='compact' title='Compact comments view' tabindex='-1'><svg><use xlink:href='${GW.assetVersions['/assets/icons.svg']}#comments-compact'/></svg></button>`
 	+ "</div>";
 	(query("#content.user-page .user-stats") || query(".page-toolbar") || query(".active-bar")).insertAdjacentHTML("afterend", commentsListModeSelectorHTML);
 	let commentsListModeSelector = query("#comments-list-mode-selector");

@@ -1086,11 +1086,11 @@ a {
 		visibility: visible;
 		max-width: 1000px;
 	}
-	#quick-nav-ui a {
+	#quick-nav-ui a:nth-of-type(n) {
 		position: relative;
 		margin: 2px;
 	}
-	#quick-nav-ui a + a {
+	#quick-nav-ui a:nth-of-type(n+2) {
 		margin-left: 5px;
 	}
 	#quick-nav-ui a::after {
@@ -5750,6 +5750,9 @@ th.mathjax-inline-container {
 	text-align: center;
 	margin: 1em 1em 0.25em 1em;
 	line-height: 1.15;
+	font-size: 2.25em;
+	font-family: var(--GW-post-title-font);
+	font-weight: var(--GW-post-title-font-weight);
 }
 
 /*=----------------------=*/
@@ -5784,8 +5787,8 @@ th.mathjax-inline-container {
 }
 #content.conversation-page .post-meta-fields {
 	overflow: auto;
-	display: flex;
-	flex-flow: row wrap;
+	display: grid;
+	grid-template-columns: auto 1fr;
 	margin: 0 0 0.5em 0;
 }
 #conversation-form .post-meta-fields input[type='text'],
@@ -5793,13 +5796,11 @@ th.mathjax-inline-container {
 	margin: 0.25em 0;
 }
 #conversation-form .post-meta-fields label {
-	width: 4em;
 	text-align: right;
 	padding: 2px 6px;
 	border: 1px solid transparent;
 }
 #conversation-form input[type='text'] {
-	width: calc(100% - 4em);
 	padding: 0.25em;
 }
 #conversation-form input[type='submit'] {
@@ -7536,6 +7537,10 @@ h1.listing.own-post-listing {
 /*===============*/
 /* CONVERSATIONS */
 /*===============*/
+
+#content.conversation-page h1.page-main-heading {
+	color: #222;
+}
 
 /*============*/
 /* LOGIN PAGE */

@@ -1076,6 +1076,10 @@ h1.listing.own-post-listing {
 /* CONVERSATIONS */
 /*===============*/
 
+#content.conversation-page h1.page-main-heading {
+	color: #222;
+}
+
 /*============*/
 /* LOGIN PAGE */
 /*============*/
