@@ -7409,17 +7409,13 @@ h1.listing.spam + .post-meta:hover,
 h1.listing.spam:hover + .post-meta {
 	opacity: 1.0;
 }
+h1.listing.spam .post-type-prefix {
+	opacity: 1.0;
+}
 
 /*===================*/
 /* LISTING POST-META */
 /*===================*/
-
-h1.listing + .post-meta > * {
-	line-height: 1.5;
-}
-h1.listing + .post-meta .read-time {
-	opacity: 0.5;
-}
 
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
@@ -7429,49 +7425,19 @@ h1.listing + .post-meta .read-time {
 	h1.listing + .post-meta {
 		font-stretch: semi-condensed;
 	}
-}
-@media only screen and (max-width: 520px) {
-	h1.listing + .post-meta {
-		font-stretch: condensed;
-	}
-}
-
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
-@media only screen and (max-width: 900px) {
 	h1.listing + .post-meta .post-section {
 		overflow: visible;
 		order: 1;
-	}
-	h1.listing + .post-meta .post-section::before {
-		position: unset;
-	}
-}
-@media only screen and (max-width: 720px) {
-	#content.conversations-user-page h1.listing + .post-meta .date {
-		margin: 0 0 0 1em;
-	}
-}
-@media only screen and (max-width: 520px) {
-	h1.listing + .post-meta {
-		margin: 4px 6px;
-	}
-	h1.listing + .post-meta .post-section {
-		order: 1;
-		overflow: visible;
 	}
 	h1.listing + .post-meta .post-section::before {
 		position: relative;
 		top: -1px;
 		left: 0;
 	}
-	#content.conversations-user-page h1.listing + .post-meta .conversation-participants {
-		margin: 0;
-	}
-	#content.conversations-user-page h1.listing + .post-meta .messages-count {
-		margin: 0 0 0 1em;
+}
+@media only screen and (max-width: 520px) {
+	h1.listing + .post-meta {
+		font-stretch: condensed;
 	}
 }
 
