@@ -6,7 +6,7 @@
 
 (defparameter *assets*
   (append (loop for system in '("mac" "windows" "linux") nconc
-	       (loop for theme in '(nil "dark" "grey" "ultramodern" "zero" "brutalist" "rts")
+	       (loop for theme in '(nil "dark" "grey" "ultramodern" "zero" "brutalist" "rts" "classic" "less")
 		  for uri = (format nil "/css/style~@[-~A~].~A.css" theme system)
 		  for filename = (format nil "www~A" uri)
 		  collect (list uri filename "text/css")))
