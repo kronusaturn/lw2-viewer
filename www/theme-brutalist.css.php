@@ -1005,7 +1005,7 @@ h1.listing + .post-meta .lw2-link {
 /*======================*/
 
 #content.user-page h1.page-main-heading {
-	border-bottom: var(--GW-C1);
+	border-bottom: 1px dotted var(--GW-C1);
 }
 
 #content.user-page h1.listing,

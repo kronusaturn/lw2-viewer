@@ -6851,23 +6851,29 @@ p {
 /*================*/
 
 #width-selector button {
+	color: #555;
 	box-shadow:
 		0 0 0 4px #888 inset,
-		0 0 0 5px #bbb inset;
+		0 0 0 5px #555 inset;
 }
-#width-selector button:hover,
 #width-selector button.selected {
+	box-shadow:
+		0 0 0 1px #888 inset,
+		0 0 0 2px #555 inset,
+		0 0 0 4px #888 inset,
+		0 0 0 5px #555 inset;
+}
+#width-selector button:not(.selected):hover {
 	box-shadow:
 		0 0 0 1px #888 inset,
 		0 0 0 2px #bbb inset,
 		0 0 0 4px #888 inset,
 		0 0 0 5px #bbb inset;
-}
-#width-selector button {
-	color: #ccc;
-}
-#width-selector button::after {
 	color: #bbb;
+}
+
+#width-selector button::after {
+	color: #ccc;
 	font-weight: var(--GW-UI-font-weight-light);
 }
 
@@ -6879,8 +6885,13 @@ p {
 	box-shadow:
 		0 0 0 5px #888 inset;
 }
-#theme-selector button:hover,
 #theme-selector button.selected {
+	box-shadow:
+		0 0 0 2px #888 inset,
+		0 0 0 3px #444 inset,
+		0 0 0 5px #888 inset;
+}
+#theme-selector button:not(.selected):hover {
 	box-shadow:
 		0 0 0 2px #888 inset,
 		0 0 0 3px #ccc inset,
@@ -6892,9 +6903,11 @@ p {
 	background-color: #888;
 	font-weight: var(--GW-UI-font-weight-light);
 }
-#theme-selector button:hover::before,
-#theme-selector button.selected::before {
+#theme-selector button:hover::before {
 	color: #fff;
+}
+#theme-selector button.selected::before {
+	color: #000;
 }
 
 /*=----------------------------=*/
@@ -7182,13 +7195,20 @@ p {
 /*=============================*/
 
 #comments-list-mode-selector button {
+	color: #555;
 	box-shadow:
 		0 0 0 4px #888 inset,
-		0 0 0 5px #bbb inset;
-	color: #bbb;
+		0 0 0 5px #555 inset;
 }
-#comments-list-mode-selector button:hover,
 #comments-list-mode-selector button.selected {
+	box-shadow:
+		0 0 0 1px #888 inset,
+		0 0 0 2px #555 inset,
+		0 0 0 4px #888 inset,
+		0 0 0 5px #555 inset;
+}
+#comments-list-mode-selector button:not(.selected):hover {
+	color: #bbb;
 	box-shadow:
 		0 0 0 1px #888 inset,
 		0 0 0 2px #bbb inset,
