@@ -834,10 +834,6 @@ body {
 		0 0 0 5px var(--GW-C1) inset;
 }
 
-/*===============*/
-/* KEYBOARD HELP */
-/*===============*/
-
 /*==========*/
 /* ARCHIVES */
 /*==========*/
@@ -856,6 +852,17 @@ body {
 	box-shadow: 
 		0 0 0 3px var(--GW-C0) inset,
 		0 0 0 5px #000 inset;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
+		background-color: #000;
+		height: 2px;
+	}
 }
 
 /*==========*/
@@ -908,6 +915,60 @@ h1.listing .edit-post-link:hover {
 }
 #content.user-page h1.listing .edit-post-link {
 	background-color: var(--GW-C0);
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	h1.listing {
+		line-height: 1;
+		margin-bottom: 6px;
+	}
+	h1.listing + .post-meta .post-section {
+		overflow: visible;
+		order: 1;
+	}
+	h1.listing + .post-meta .post-section::before {
+		position: unset;
+	}
+}
+@media only screen and (max-width: 720px) {
+	#content.conversations-user-page h1.listing + .post-meta .date {
+		margin: 0 0 0 1em;
+	}
+}
+@media only screen and (max-width: 520px) {
+	h1.listing {
+		font-size: 1.375rem;
+		margin: 18px 6px 4px 6px;
+		max-width: calc(100% - 12px);
+	}
+	h1.listing a[href^='http'] {
+		top: 4px;
+	}
+	h1.listing + .post-meta {
+		margin: 4px 6px;
+	}
+	h1.listing + .post-meta .post-section {
+		order: 1;
+		overflow: visible;
+	}
+	h1.listing + .post-meta .post-section::before {
+		position: relative;
+		top: -1px;
+		left: 0;
+	}
+	#content.conversations-user-page h1.listing {
+		font-size: 1.375rem;
+	}
+	#content.conversations-user-page h1.listing + .post-meta .conversation-participants {
+		margin: 0;
+	}
+	#content.conversations-user-page h1.listing + .post-meta .messages-count {
+		margin: 0 0 0 1em;
+	}
 }
 
 /*======*/
@@ -1887,23 +1948,6 @@ select {
 /*========*/
 
 @media only screen and (max-width: 900px) {
-	h1.listing {
-		line-height: 1;
-		margin-bottom: 6px;
-	}
-	h1.listing + .post-meta .post-section {
-		overflow: visible;
-		order: 1;
-	}
-	h1.listing + .post-meta .post-section::before {
-		position: unset;
-	}
-
-	.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
-		background-color: #000;
-		height: 2px;
-	}
-
 	.comment-item .comment-item {
 		margin: 0.75em 2px 3px 6px;
 	}
@@ -1938,41 +1982,8 @@ select {
 		position: relative;
 		top: -1px;
 	}
-} @media only screen and (max-width: 720px) {
-	#content.conversations-user-page h1.listing + .post-meta .date {
-		margin: 0 0 0 1em;
-	}
-} @media only screen and (max-width: 520px) {
-	h1.listing {
-		font-size: 1.375rem;
-		margin: 18px 6px 4px 6px;
-		max-width: calc(100% - 12px);
-	}
-	h1.listing a[href^='http'] {
-		top: 4px;
-	}
-	h1.listing + .post-meta {
-		margin: 4px 6px;
-	}
-	h1.listing + .post-meta .post-section {
-		order: 1;
-		overflow: visible;
-	}
-	h1.listing + .post-meta .post-section::before {
-		position: relative;
-		top: -1px;
-		left: 0;
-	}
-	#content.conversations-user-page h1.listing {
-		font-size: 1.375rem;
-	}
-	#content.conversations-user-page h1.listing + .post-meta .conversation-participants {
-		margin: 0;
-	}
-	#content.conversations-user-page h1.listing + .post-meta .messages-count {
-		margin: 0 0 0 1em;
-	}
-
+}
+@media only screen and (max-width: 520px) {
 	#content.compact > .comment-thread .comment-item {
 		max-height: 110px;
 	}
@@ -2024,3 +2035,7 @@ select {
 		top: 1px;
 	}
 }
+
+/*===============*/
+/* KEYBOARD HELP */
+/*===============*/

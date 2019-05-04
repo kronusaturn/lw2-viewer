@@ -129,8 +129,8 @@
 }
 #content.conversation-page .post-meta-fields {
 	overflow: auto;
-	display: flex;
-	flex-flow: row wrap;
+	display: grid;
+	grid-template-columns: auto 1fr;
 	margin: 0 0 0.5em 0;
 }
 #conversation-form .post-meta-fields input[type='text'],
@@ -138,13 +138,11 @@
 	margin: 0.25em 0;
 }
 #conversation-form .post-meta-fields label {
-	width: 4em;
 	text-align: right;
 	padding: 2px 6px;
 	border: 1px solid transparent;
 }
 #conversation-form input[type='text'] {
-	width: calc(100% - 4em);
 	padding: 0.25em;
 }
 #conversation-form input[type='submit'] {
