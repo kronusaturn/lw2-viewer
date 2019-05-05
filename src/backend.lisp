@@ -17,6 +17,7 @@
 	   #:get-conversation-messages
 	   #:get-user
            #:get-notifications #:check-notifications
+	   #:get-user-annotations
 	   #:lw2-search-query #:get-post-title #:get-post-slug #:get-slug-postid #:get-username #:get-user-full-name #:get-user-slug
 	   #:do-wl-rest-mutate #:do-wl-rest-query #:do-wl-create-tag)
   (:recycle #:lw2-viewer)
@@ -687,6 +688,10 @@
       (values-list (loop for r in (cdr (assoc :results (json:decode-json req-stream)))
 			 collect (cdr (assoc :hits r))))
       (if want-close (close req-stream))))))
+
+(define-backend-function get-user-annotations (userid &key limit)
+  (backend-annotations 
+   nil))
 
 (defun make-rate-limiter (delay)
   (let ((rl-hash (make-hash-table :test 'equal :synchronized t)))

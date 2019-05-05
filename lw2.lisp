@@ -266,7 +266,7 @@ signaled condition to OUT-STREAM."
             when (or (not offset) (>= count offset))
             collect x))))
 
-(defun hypothesis-annotations-to-html (out-stream annotations)
+(defun hypothesis-annotation-to-html (out-stream annotation)
   (with-error-html-block (out-stream)
     (format out-stream "<p>Mango!</p>")))
 
@@ -307,7 +307,7 @@ signaled condition to OUT-STREAM."
 	     (comment-thread-to-html out-stream
 				     (lambda () (comment-item-to-html out-stream x :with-post-title t))))
 	    (:annotation
-	     (hypothesis-annotations-to-html out-stream x))
+	     (hypothesis-annotation-to-html out-stream x))
 	    (:sequence
 	     (sequence-to-html x)))))
       (format out-stream "<div class=\"listing-message\">~A</div>" empty-message)))
@@ -1249,7 +1249,10 @@ signaled condition to OUT-STREAM."
 							      :timezone local-time:+utc-zone+)))))
 		   (:preferences)
 		   (:annotations
-		    (list (acons :----typename :annotation nil)))
+		    (let ((items 
+			   (assoc :ROWS (get-user-annotations user-id :limit 10)))
+			  )
+		      (loop for x in items collect (acons :----typename :annotation x))))
 		   (t
 		     (let ((user-posts (get-user-posts user-id :limit (+ 1 (user-pref :items-per-page) offset)))
 			   (user-comments (lw2-graphql-query (lw2-query-string :comment :list (nconc (alist :limit (+ 1 (user-pref :items-per-page) offset) :user-id user-id) comments-base-terms) 

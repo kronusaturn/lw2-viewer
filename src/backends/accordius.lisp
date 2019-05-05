@@ -28,7 +28,11 @@
 
 (defun do-wl-create-tag (document-id text auth-token)
   (do-wl-rest-mutate :post "tags/" `((:DOCUMENT-ID . ,document-id) (:TEXT . ,text)) auth-token))
-  
+
+(define-backend-operation get-user-annotations backend-accordius (userid &key limit)
+			  (do-wl-rest-query "annotations/" `(("userid" . ,userid) ("limit" . ,limit))
+					    ))
+			  
 
 ;;;; BACKEND SPECIFIC GRAPHQL
 
