@@ -910,7 +910,7 @@ h1.listing a[href^="http"] {
 }
 
 h1.listing:not(:focus-within) a:not(:hover) .post-type-prefix {
-	opacity: 0.4;
+	opacity: 0.35;
 	text-shadow: 0 0 0 currentColor;
 }
 
@@ -959,9 +959,9 @@ h1.listing.spam .post-type-prefix {
 
 h1.listing + .post-meta > * {
 	margin: 3px 1em 1px 0;
-	font-size: 1em;
+	font-size: 0.9375em;
 	line-height: 1.2;
-	color: var(--GW-C7);
+	color: var(--GW-C6);
 }
 
 h1.listing + .post-meta a {

@@ -787,7 +787,6 @@ h1.listing.spam:hover + .post-meta {
 
 h1.listing + .post-meta {
 	font-size: 0.875rem;
-	margin: 0 0 1em 0;
 	padding: 0 0 0 1px;
 }
 

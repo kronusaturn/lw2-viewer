@@ -162,6 +162,7 @@ h1.listing .edit-post-link:hover {
 h1.listing + .post-meta {
 	position: relative;
 	justify-content: flex-start;
+	margin: 0 0 1rem 0;
 
 	font-family: var(--GW-listings-post-meta-font);
 	font-weight: var(--GW-listings-post-meta-font-weight);

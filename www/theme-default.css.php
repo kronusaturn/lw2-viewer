@@ -887,6 +887,7 @@ h1.listing.spam .post-type-prefix {
 
 h1.listing + .post-meta {
 	padding: 0 330px 14px 1px;
+	margin: 0;
 	box-shadow: 0 -1px 0 0 #ddd inset;
 }
 article h1.listing + .post-meta {

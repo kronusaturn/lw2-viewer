@@ -1838,10 +1838,6 @@ a {
 /*= Bottom bar =*/
 /*=------------=*/
 
-#bottom-bar {
-	margin: 0.75em 0 0 0;
-}
-
 #bottom-bar .nav-item {
 	width: 0;
 }
@@ -3192,6 +3188,7 @@ h1.listing .edit-post-link:hover {
 h1.listing + .post-meta {
 	position: relative;
 	justify-content: flex-start;
+	margin: 0 0 1rem 0;
 
 	font-family: var(--GW-listings-post-meta-font);
 	font-weight: var(--GW-listings-post-meta-font-weight);
@@ -7343,6 +7340,7 @@ h1.listing.spam .post-type-prefix {
 
 h1.listing + .post-meta {
 	padding: 0 330px 14px 1px;
+	margin: 0;
 	box-shadow: 0 -1px 0 0 #ddd inset;
 }
 article h1.listing + .post-meta {

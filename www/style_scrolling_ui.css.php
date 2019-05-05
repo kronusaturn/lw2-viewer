@@ -72,10 +72,6 @@
 /*= Bottom bar =*/
 /*=------------=*/
 
-#bottom-bar {
-	margin: 0.75em 0 0 0;
-}
-
 #bottom-bar .nav-item {
 	width: 0;
 }

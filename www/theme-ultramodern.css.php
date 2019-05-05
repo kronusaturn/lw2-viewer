@@ -900,7 +900,6 @@ h1.listing.spam:hover + .post-meta {
 /*===================*/
 
 h1.listing + .post-meta {
-	margin: 0 0 16px 0;
 	padding: 0 0 0 1px;
 }
 

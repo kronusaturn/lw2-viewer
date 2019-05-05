@@ -1838,10 +1838,6 @@ a {
 /*= Bottom bar =*/
 /*=------------=*/
 
-#bottom-bar {
-	margin: 0.75em 0 0 0;
-}
-
 #bottom-bar .nav-item {
 	width: 0;
 }
@@ -3192,6 +3188,7 @@ h1.listing .edit-post-link:hover {
 h1.listing + .post-meta {
 	position: relative;
 	justify-content: flex-start;
+	margin: 0 0 1rem 0;
 
 	font-family: var(--GW-listings-post-meta-font);
 	font-weight: var(--GW-listings-post-meta-font-weight);
@@ -7375,7 +7372,7 @@ h1.listing a[href^="http"] {
 }
 
 h1.listing:not(:focus-within) a:not(:hover) .post-type-prefix {
-	opacity: 0.4;
+	opacity: 0.35;
 	text-shadow: 0 0 0 currentColor;
 }
 
@@ -7424,9 +7421,9 @@ h1.listing.spam .post-type-prefix {
 
 h1.listing + .post-meta > * {
 	margin: 3px 1em 1px 0;
-	font-size: 1em;
+	font-size: 0.9375em;
 	line-height: 1.2;
-	color: var(--GW-C7);
+	color: var(--GW-C6);
 }
 
 h1.listing + .post-meta a {
