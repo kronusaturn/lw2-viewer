@@ -1421,6 +1421,7 @@ GW.themeUnloadCallback_less = (toTheme = "") => {
 GW.themeLoadCallback_dark = (fromTheme = "") => {
 	GWLog("themeLoadCallback_dark");
 
+	// Add white glow to images.
 	registerInitializer('makeImagesGlow', true, () => query("#images-overlay") != null, () => {
 		queryAll(GW.imageFocus.overlayImagesSelector).forEach(image => {
 			image.style.filter = "drop-shadow(0 0 0 #000) drop-shadow(0 0 0.5px #fff) drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #fff)";
@@ -1433,6 +1434,15 @@ GW.themeLoadCallback_dark = (fromTheme = "") => {
 }
 GW.themeUnloadCallback_dark = (toTheme = "") => {
 	GWLog("themeUnloadCallback_dark");
+
+	// Remove image glow.
+	queryAll(GW.imageFocus.overlayImagesSelector).forEach(image => {
+		image.style.filter = "";
+		image.style.width = parseInt(image.style.width) - 12 + "px";
+		image.style.height = parseInt(image.style.height) - 12 + "px";
+		image.style.top = parseInt(image.style.top) + 6 + "px";
+		image.style.left = parseInt(image.style.left) + 6 + "px";
+	});
 }
 
 GW.themeLoadCallback_ultramodern = (fromTheme = "") => {
