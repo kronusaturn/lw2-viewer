@@ -12,6 +12,8 @@
 	--GW-theme-selector-right-margin: 12px;
 	--GW-theme-selector-button-tooltip-width: 6em;
 	--GW-theme-selector-button-spacing: 1px;
+	--GW-theme-selector-button-size: <?php $theme_selector_button_size = 16; echo $theme_selector_button_size . "px"; ?>
+	--GW-theme-selector-button-padding: 5px;
 
 	--GW-quick-nav-ui-left-margin: 28px;
 	--GW-quick-nav-ui-bottom-margin: 24px;
@@ -184,12 +186,13 @@
 /*=----------------------=*/
 
 .theme-selector button {
-	width: 26px;
-	height: 26px;
-	padding: 5px;
+	width: calc(var(--GW-theme-selector-button-size) + 2 * var(--GW-theme-selector-button-padding));
+	height: calc(var(--GW-theme-selector-button-size) + 2 * var(--GW-theme-selector-button-padding));
+	padding: var(--GW-theme-selector-button-padding);
 	color: transparent;
-	background-size: 16px 16px;
 	background-origin: content-box;
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_icons.gif")) ?>');
+	background-size: auto var(--GW-theme-selector-button-size);
 }
 #theme-selector button:nth-of-type(n+2) {
 	margin: var(--GW-theme-selector-button-spacing) 0 0 0;
@@ -205,38 +208,19 @@
 	cursor: auto;
 }
 
-/*=----------------------------=*/
-/*= Pre-rendered button images =*/
-/*=----------------------------=*/
-/*	(Each is just a capital letter A through whatever) */
+<?php
+$num_themes = 9;
 
-.theme-selector button:nth-of-type(1) {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_A.gif")) ?>');
+for ($i = 0; $i < $num_themes; $i++) {
+$offset = ($i + 1) * $theme_selector_button_size;
+$k = $i + 2;
+echo <<<EOT
+.theme-selector button:nth-of-type(n+{$k}) {
+	background-position: -{$offset}px;
 }
-.theme-selector button:nth-of-type(2) {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_B.gif")) ?>');
+EOT;
 }
-.theme-selector button:nth-of-type(3) {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_C.gif")) ?>');
-}
-.theme-selector button:nth-of-type(4) {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_D.gif")) ?>');
-}
-.theme-selector button:nth-of-type(5) {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_E.gif")) ?>');
-}
-.theme-selector button:nth-of-type(6) {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_F.gif")) ?>');
-}
-.theme-selector button:nth-of-type(7) {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_G.gif")) ?>');
-}
-.theme-selector button:nth-of-type(8) {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_H.gif")) ?>');
-}
-.theme-selector button:nth-of-type(9) {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_I.gif")) ?>');
-}
+?>
 
 /*=------------------------------=*/
 /*= Theme select button tooltips =*/
