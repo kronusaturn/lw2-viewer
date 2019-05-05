@@ -8136,7 +8136,9 @@ a.comment-parent-link:hover::before {
 }
 .posting-controls textarea::-webkit-scrollbar-thumb {
 	background-color: #000;
-	background-image: url('data:image/gif;base64,R0lGODlhBAAEAPAAMXd3d////ywAAAAABAAEAAACBgQShqgJBQA7');
+	background-image: url('data:image/gif;base64,
+Warning: file_get_contents(assets/checkerboard2_1px_gray.gif): failed to open stream: No such file or directory in /Users/obormot/quicklisp/local-projects/lw2-viewer/www/theme-brutalist.css.php on line 1667
+');
 	background-size: 2px 2px;
 	box-shadow: 
 		0 2px 0 1px var(--GW-C0) inset,
@@ -8145,7 +8147,9 @@ a.comment-parent-link:hover::before {
 		0 0 0 1.5px #777 inset;
 }
 .posting-controls textarea::-webkit-scrollbar-thumb:active {
-	background-image: url('data:image/gif;base64,R0lGODlhBAAEAPAAMQAAAP///ywAAAAABAAEAAACBgQShqgJBQA7');
+	background-image: url('data:image/gif;base64,
+Warning: file_get_contents(assets/checkerboard2_1px.gif): failed to open stream: No such file or directory in /Users/obormot/quicklisp/local-projects/lw2-viewer/www/theme-brutalist.css.php on line 1676
+');
 	box-shadow: 
 		0 2px 0 1px var(--GW-C0) inset,
 		0 0 0 1px var(--GW-C0) inset,

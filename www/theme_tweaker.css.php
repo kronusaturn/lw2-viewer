@@ -3,7 +3,7 @@
 /*****************/
 
 :root {
-	--GW-basilisk: url('data:image/png;base64,<?php echo base64_encode(file_get_contents("assets/basilisk.png")) ?>');
+	--GW-basilisk: url('data:image/png;base64,<?php echo base64_encode(file_get_contents("assets/theme-tweaker/basilisk.png")) ?>');
 }
 
 #theme-tweaker-ui {
@@ -37,7 +37,7 @@
 	width: 18px;
 	height: 16px;
 	z-index: 2;
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/win95_close_widget.gif")) ?>');
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme-tweaker/win95_close_widget.gif")) ?>');
 	background-size: 100%;
 	background-repeat: no-repeat;
 	background-position: center center;
@@ -109,7 +109,7 @@
 	letter-spacing: 1px;
 }
 #theme-tweaker-ui .main-theme-tweaker-window h1 {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/win95_themes_icon.gif")) ?>');
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme-tweaker/win95_themes_icon.gif")) ?>');
 }
 
 #theme-tweaker-ui .current-theme {
@@ -241,13 +241,13 @@
 	background-size: 100%;
 }
 #theme-tweaker-ui #theme-tweak-section-text-size-adjust .text-size-adjust-button.decrease {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/A_minus.gif")) ?>');
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme-tweaker/A_minus.gif")) ?>');
 }
 #theme-tweaker-ui #theme-tweak-section-text-size-adjust .text-size-adjust-button.default {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/A.gif")) ?>');
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme-tweaker/A.gif")) ?>');
 }
 #theme-tweaker-ui #theme-tweak-section-text-size-adjust .text-size-adjust-button.increase {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/A_plus.gif")) ?>');
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme-tweaker/A_plus.gif")) ?>');
 }
 #theme-tweaker-ui #theme-tweak-section-text-size-adjust .text-size-adjust-button:disabled {
 	cursor: default;
@@ -306,7 +306,7 @@
 	cursor: pointer;
 }
 #theme-tweaker-ui input[type='checkbox']:checked + label::before {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/win95_checkmark.gif")) ?>');	
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme-tweaker/win95_checkmark.gif")) ?>');
 	background-size: 14px;
 	background-repeat: no-repeat;
 	background-position: center center;
@@ -328,7 +328,7 @@ input[type='range']:focus {
 	outline: 1px dotted #000;
 }
 input[type='range']::-webkit-slider-runnable-track {
-	width: 100%;	
+	width: 100%;
 	height: 4px;
 	box-sizing: content-box;
 	box-shadow:
@@ -360,7 +360,7 @@ input[type='range']::-webkit-slider-thumb {
 	margin-top: -16px;
 }
 input[type='range']::-moz-range-track {
-	width: 100%;	
+	width: 100%;
 	height: 4px;
 	box-sizing: content-box;
 	box-shadow:
@@ -390,7 +390,7 @@ input[type='range']::-moz-range-thumb {
 	background: #bfb8bf;
 }
 input[type='range']::-ms-track {
-	width: 100%;	
+	width: 100%;
 	height: 4px;
 	box-sizing: content-box;
 	box-shadow:
@@ -549,10 +549,10 @@ input[type='range']::-ms-thumb {
 	background-position: center center;
 }
 #theme-tweaker-ui .minimize-button.minimize {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/win95_minimize_widget.gif")) ?>');	
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme-tweaker/win95_minimize_widget.gif")) ?>');
 }
 #theme-tweaker-ui .minimize-button.maximize {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/win95_maximize_widget.gif")) ?>');	
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme-tweaker/win95_maximize_widget.gif")) ?>');
 }
 
 #theme-tweaker-ui .help-button {
@@ -561,7 +561,7 @@ input[type='range']::-ms-thumb {
 	position: absolute;
 	top: -1px;
 	right: 55px;
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/win95_help_widget.gif")) ?>');	
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme-tweaker/win95_help_widget.gif")) ?>');
 	background-size: 14px;
 	background-repeat: no-repeat;
 	background-position: center center;
@@ -578,7 +578,7 @@ input[type='range']::-ms-thumb {
 }
 #theme-tweaker-ui .controls-container::-webkit-scrollbar-track {
 	background-color: #fff8ff;
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/win95_scrollbar_track.gif")) ?>');	
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme-tweaker/win95_scrollbar_track.gif")) ?>');
 }
  
 #theme-tweaker-ui .controls-container::-webkit-scrollbar-thumb {
@@ -587,7 +587,7 @@ input[type='range']::-ms-thumb {
 		-1px -1px 0 0 #030303 inset,
 		1px 1px 0 0 #dfd8df inset,
 		-1px -1px 0 1px #7f787f inset,
-		0 0 0 2px #fff8ff inset;	
+		0 0 0 2px #fff8ff inset;
 }
 
 #theme-tweaker-ui .clippy-container {
@@ -688,7 +688,7 @@ input[type='range']::-ms-thumb {
 	pointer-events: auto;
 }
 #theme-tweaker-ui .help-window h1 {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/win95_help_icon.gif")) ?>');
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme-tweaker/win95_help_icon.gif")) ?>');
 }
 #theme-tweaker-ui div.section#theme-tweak-section-clippy {
 	padding: 23px 0 15px 10px;
