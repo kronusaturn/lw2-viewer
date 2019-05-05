@@ -6617,6 +6617,17 @@ body {
 	border: none;
 	font-weight: var(--GW-UI-font-weight-heavy);
 }
+#nav-item-search button:hover,
+#nav-item-search button:focus {
+	box-shadow: 
+		0 0 0 1px var(--GW-C0) inset,
+		0 0 0 3px var(--GW-C1) inset;
+}
+#nav-item-search button:active {
+	box-shadow: 
+		0 0 0 3px var(--GW-C0) inset,
+		0 0 0 5px var(--GW-C1) inset;
+}
 
 /*= Recent Comments tab =*/
 
@@ -7688,6 +7699,9 @@ h1.listing.own-post-listing {
 	font-size: 1rem;
 	line-height: 1.5;
 }
+.comment-popup .comment-body {
+	font-size: 0.9375rem;
+}
 
 /*=======*/
 /* POSTS */
@@ -7827,29 +7841,21 @@ article > .post-meta > *,
 a.comment-parent-link::after {
 	display: none;
 }
+
 a.comment-parent-link::before {
-	color: var(--GW-C4);
+	color: var(--GW-C3);
 	padding: 4px 3px 0 2px;
 }
 a.comment-parent-link:hover::before {
-	color: #999;
+	color: var(--GW-C6);
 }
 
 .comment-child-link::before {
-	color: #aaa;
+	color: var(--GW-C5);
 }
 
 .comment-item-highlight,
 .comment-item-highlight-faint {
-	border: 2px solid #ccc;
-}
-
-.comment-popup {
-	border: 2px solid #000;
-	background-color: var(--GW-C0);
-}
-.comment-popup .comment-body {
-	font-size: 0.9375rem;
 }
 
 /*================================*/
