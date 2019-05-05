@@ -1843,11 +1843,8 @@ input[type='submit']:active {
 /*========*/
 
 blockquote {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/checkerboard_1px.gif")) ?>');
-	background-size: 5px 2px;
-	background-repeat: repeat-y;
-	background-position: top left;
-	padding-left: calc(0.5em + 5px);
+	padding-left: 0.75em;
+	border-left: 5px solid var(--GW-C3);
 }
 
 .post-body blockquote {
