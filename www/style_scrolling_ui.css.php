@@ -108,11 +108,10 @@
 }
 #bottom-bar.decorative::before {
 	width: 100%;
-	color: transparent;
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/one_pixel_DDD.gif")) ?>');
-	background-repeat: repeat-x;
-	background-position: center 35%;
 	margin: 0 var(--GW-current-page-content-right-side-padding) 0 var(--GW-current-page-content-left-side-padding);
+	box-shadow:
+		0 calc(1em - 1px) 0 0 var(--GW-body-background-color) inset,
+		0 calc(1em) 0 0 currentColor inset;
 }
 #bottom-bar.decorative::after {
 	position: absolute;

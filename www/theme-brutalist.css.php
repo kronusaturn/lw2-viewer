@@ -123,17 +123,11 @@ body {
 
 #bottom-bar.decorative {
 	box-shadow: none;
+	color: var(--GW-C2);
 }
 #bottom-bar.decorative::after {
 	padding-right: 5px;
 	padding-left: 6px;
-	color: var(--GW-C2);
-}
-#bottom-bar.decorative::before {
-	background: none;
-	box-shadow:
-		0 calc(1em - 1px) 0 0 var(--GW-C0) inset,
-		0 calc(1em) 0 0 var(--GW-C2) inset;
 }
 
 /*= Accesskey hints =*/
