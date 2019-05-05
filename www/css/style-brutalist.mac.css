@@ -7828,17 +7828,42 @@ article > .post-meta > *,
 	margin-left: -10px;
 }
 
+/*===========================*/
+/* COMMENT THREAD NAVIGATION */
+/*===========================*/
+
+a.comment-parent-link::after {
+	display: none;
+}
+a.comment-parent-link::before {
+	color: var(--GW-C4);
+	padding: 4px 3px 0 2px;
+}
+a.comment-parent-link:hover::before {
+	color: #999;
+}
+
+.comment-child-link::before {
+	color: #aaa;
+}
+
+.comment-item-highlight,
+.comment-item-highlight-faint {
+	border: 2px solid #ccc;
+}
+
+.comment-popup {
+	border: 2px solid #000;
+	background-color: var(--GW-C0);
+}
+.comment-popup .comment-body {
+	font-size: 0.9375rem;
+}
+
 /*================================*/
 /* DEEP COMMENT THREAD COLLAPSING */
 /*================================*/
 
-.comment-item input[id^="expand"] + label:hover::after {
-	color: #c00;
-}
-.comment-item input[id^="expand"] + label:active::after,
-.comment-item input[id^="expand"] + label:focus::after{
-	color: #c00;
-}
 .comment-item input[id^="expand"]:checked ~ .comment-thread .comment-thread .comment-item {
 	border-width: 1px 0 0 0;
 }
@@ -7892,38 +7917,6 @@ article > .post-meta > *,
 
 .link-post-domain.redacted {
 	opacity: 0.3;
-}
-
-/*===========================*/
-/* COMMENT THREAD NAVIGATION */
-/*===========================*/
-
-a.comment-parent-link::after {
-	display: none;
-}
-a.comment-parent-link::before {
-	color: var(--GW-C4);
-	padding: 4px 3px 0 2px;
-}
-a.comment-parent-link:hover::before {
-	color: #999;
-}
-
-.comment-child-link::before {
-	color: #aaa;
-}
-
-.comment-item-highlight,
-.comment-item-highlight-faint {
-	border: 2px solid #ccc;
-}
-
-.comment-popup {
-	border: 2px solid #000;
-	background-color: var(--GW-C0);
-}
-.comment-popup .comment-body {
-	font-size: 0.9375rem;
 }
 
 /*====================*/
