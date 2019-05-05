@@ -42,7 +42,7 @@
 
 	--GW-HNS-date-picker-text-field-width: 160px;
 	--GW-HNS-date-picker-bottom-margin: calc(var(--GW-new-comment-quicknav-bottom-margin) + 36px);
-	--GW-HNS-date-picker-flipped-bottom-margin: calc(var(--GW-new-comment-quicknav-bottom-margin) + 26px);
+	--GW-HNS-date-picker-flipped-bottom-margin: calc(var(--GW-new-comment-quicknav-bottom-margin) + 25px);
 }
 @media only screen and (max-width: 1020px) {
 	:root {
@@ -74,6 +74,11 @@
 	--GW-theme-selector-outline-color: var(--GW-primary-color);
 
 	--GW-search-field-placeholder-color: #d00;
+
+	--GW-new-comment-item-outline-color: var(--GW-C1);
+
+	--GW-comment-highlight-color: var(--GW-C2);
+	--GW-comment-highlight-color-faint: var(--GW-C4);
 }
 
 /*======*/
@@ -1383,6 +1388,8 @@ a.comment-parent-link::before {
 }
 a.comment-parent-link:hover::before {
 	color: var(--GW-C6);
+	border-color: transparent;
+	background-color: transparent;
 }
 
 .comment-child-link::before {
@@ -1391,6 +1398,11 @@ a.comment-parent-link:hover::before {
 
 .comment-item-highlight,
 .comment-item-highlight-faint {
+	border-color: var(--GW-comment-highlight-color);
+	border-style: solid;
+	outline: 2px solid var(--GW-comment-item-outline-color);
+
+	--GW-comment-item-outline-color: var(--GW-comment-highlight-color)
 }
 
 /*================================*/
@@ -1514,11 +1526,8 @@ a.comment-parent-link:hover::before {
 /* HIGHLIGHTING NEW COMMENTS */
 /*===========================*/
 
-.new-comment {
-	border: 2px dotted #000;
-}
 .new-comment::before {
-	display: none;
+	outline: 2px solid var(--GW-comment-item-outline-color);
 }
 
 /*=================================*/
