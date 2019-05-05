@@ -1346,15 +1346,23 @@ article > .post-meta > *,
 
 .listings .comment-thread .comment-meta a.date:focus,
 .listings .comment-thread .comment-meta a.permalink:focus {
-	color: #999;
-	outline: 2px dotted #999;
+	outline: 2px dotted var(--GW-C1);
 	position: relative;
 	background-color: var(--GW-C0);
-	padding: 0 5px;
+	padding: 2px 6px 0 6px;
+	left: -6px;
+}
+#content.compact .listings .comment-thread .comment-meta a.date:focus,
+#content.compact .listings .comment-thread .comment-meta a.permalink:focus {
+	padding: 2px 5px 0 5px;
 	left: -5px;
 }
 .listings .comment-thread .comment-meta a.date:focus + *,
 .listings .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
+	margin-left: -12px;
+}
+#content.compact .listings .comment-thread .comment-meta a.date:focus + *,
+#content.compact .listings .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
 	margin-left: -10px;
 }
 

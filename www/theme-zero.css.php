@@ -341,15 +341,15 @@ body {
 	opacity: 1.0;
 }
 #theme-selector button {
-	background-color: #e4e4e4;
-	background-repeat: no-repeat;
+	box-shadow:
+		0 0 0 5px #e4e4e4 inset;
 }
 #theme-selector button.selected,
 #theme-selector button:hover {
-	background-color: var(--GW-body-background-color);
 	box-shadow:
 		0 0 0 1px #e4e4e4 inset,
-		0 0 0 4px var(--GW-body-background-color) inset;
+		0 0 0 4px var(--GW-body-background-color) inset,
+		0 0 0 5px #e4e4e4 inset;
 }
 
 #theme-selector button::before {
