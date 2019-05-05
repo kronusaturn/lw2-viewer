@@ -125,8 +125,6 @@ body {
 
 #bottom-bar.decorative {
 	background-color: transparent;
-}
-#bottom-bar.decorative::after {
 	color: #d8d8d8;
 }
 

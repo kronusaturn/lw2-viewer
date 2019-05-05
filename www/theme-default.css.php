@@ -139,7 +139,7 @@ body {
 
 /*= Decorative bottom bar =*/
 
-#bottom-bar.decorative::after {
+#bottom-bar.decorative {
 	color: #d8d8d8;
 }
 
