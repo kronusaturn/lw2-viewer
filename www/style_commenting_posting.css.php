@@ -205,14 +205,6 @@ button.guiedit {
 	float: left;
 	padding: 1px 0 0 6px;
 }
-.posting-controls .markdown-reference-link a {
-	padding-right: 1.5em;
-	margin-right: 0.15em;
-	background-image: url('data:image/png;base64,<?php echo base64_encode(file_get_contents("assets/markdown.png")); ?>');
-	background-size: 1.25em;
-	background-repeat: no-repeat;
-	background-position: right center;
-}
 
 #markdown-hints-checkbox + label {
 	float: left;

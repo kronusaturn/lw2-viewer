@@ -1421,11 +1421,6 @@ GW.themeUnloadCallback_less = (toTheme = "") => {
 GW.themeLoadCallback_dark = (fromTheme = "") => {
 	GWLog("themeLoadCallback_dark");
 
-	query("head").insertAdjacentHTML("beforeend", 
-		"<style id='dark-theme-adjustments'>" + 
-		`.markdown-reference-link a { color: #d200cf; filter: invert(100%); }` + 
-		`#bottom-bar.decorative::before { filter: invert(100%); }` +
-		"</style>");
 	registerInitializer('makeImagesGlow', true, () => query("#images-overlay") != null, () => {
 		queryAll(GW.imageFocus.overlayImagesSelector).forEach(image => {
 			image.style.filter = "drop-shadow(0 0 0 #000) drop-shadow(0 0 0.5px #fff) drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #fff)";
@@ -1438,8 +1433,6 @@ GW.themeLoadCallback_dark = (fromTheme = "") => {
 }
 GW.themeUnloadCallback_dark = (toTheme = "") => {
 	GWLog("themeUnloadCallback_dark");
-
-	removeElement("#dark-theme-adjustments");
 }
 
 GW.themeLoadCallback_ultramodern = (fromTheme = "") => {
