@@ -75,6 +75,7 @@
 
 	--GW-search-field-placeholder-color: #d00;
 
+	--GW-comment-item-expanded-outline-color: var(--GW-C8);
 	--GW-new-comment-item-outline-color: var(--GW-C1);
 
 	--GW-comment-highlight-color: var(--GW-C2);
@@ -1526,6 +1527,7 @@ a.comment-parent-link:hover::before {
 /* HIGHLIGHTING NEW COMMENTS */
 /*===========================*/
 
+.new-comment.comment-item-focused,
 .new-comment::before {
 	outline: 2px solid var(--GW-comment-item-outline-color);
 }
