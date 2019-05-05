@@ -1664,8 +1664,6 @@ a.comment-parent-link:hover::before {
 }
 .posting-controls textarea::-webkit-scrollbar-thumb {
 	background-color: #000;
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/checkerboard2_1px_gray.gif")) ?>');
-	background-size: 2px 2px;
 	box-shadow: 
 		0 2px 0 1px var(--GW-C0) inset,
 		0 0 0 1px var(--GW-C0) inset,
@@ -1673,7 +1671,6 @@ a.comment-parent-link:hover::before {
 		0 0 0 1.5px #777 inset;
 }
 .posting-controls textarea::-webkit-scrollbar-thumb:active {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/checkerboard2_1px.gif")) ?>');
 	box-shadow: 
 		0 2px 0 1px var(--GW-C0) inset,
 		0 0 0 1px var(--GW-C0) inset,
