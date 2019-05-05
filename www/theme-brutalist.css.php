@@ -219,7 +219,6 @@ body {
 }
 
 #bottom-bar {
-	margin: 0.75em 0 0 0;
 	box-shadow:
 		0 -2px 0 0 var(--GW-C1);
 }
@@ -941,10 +940,6 @@ h1.listing.spam .post-type-prefix {
 /* LISTING POST-META */
 /*===================*/
 
-h1.listing + .post-meta {
-	margin: 2px 0 1em 0;
-}
-
 h1.listing + .post-meta > * {
 	margin: 3px 1em 1px 0;
 	font-size: 1em;
@@ -1029,7 +1024,7 @@ h1.listing + .post-meta .post-section::before {
 #content.search-results-page h1.listing {
 	padding: 8px 8px 0 10px;
 	border-width: 2px 2px 0 2px;
-	margin: 1rem 0 0 0;
+	margin: 1rem 0 2px 0;
 }
 #content.user-page h1.listing a[href^='http'],
 #content.search-results-page h1.listing a[href^='http'] {

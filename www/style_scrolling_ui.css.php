@@ -72,6 +72,10 @@
 /*= Bottom bar =*/
 /*=------------=*/
 
+#bottom-bar {
+	margin: 0.75em 0 0 0;
+}
+
 #bottom-bar .nav-item {
 	width: 0;
 }
@@ -110,7 +114,7 @@
 	width: 100%;
 	margin: 0 var(--GW-current-page-content-right-side-padding) 0 var(--GW-current-page-content-left-side-padding);
 	box-shadow:
-		0 calc(1em - 1px) 0 0 var(--GW-body-background-color) inset,
+		0 calc(1em - 1px) 0 0 var(--GW-content-background-color) inset,
 		0 calc(1em) 0 0 currentColor inset;
 }
 #bottom-bar.decorative::after {
