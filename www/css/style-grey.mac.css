@@ -473,7 +473,8 @@ a {
 	--GW-theme-selector-right-margin: 12px;
 	--GW-theme-selector-button-tooltip-width: 6em;
 	--GW-theme-selector-button-spacing: 1px;
-	--GW-theme-selector-button-size: 16px	--GW-theme-selector-button-padding: 5px;
+	--GW-theme-selector-button-size: 16px;
+	--GW-theme-selector-button-padding: 5px;
 
 	--GW-quick-nav-ui-left-margin: 28px;
 	--GW-quick-nav-ui-bottom-margin: 24px;
@@ -670,23 +671,32 @@ a {
 
 .theme-selector button:nth-of-type(n+2) {
 	background-position: -16px;
-}.theme-selector button:nth-of-type(n+3) {
+}
+.theme-selector button:nth-of-type(n+3) {
 	background-position: -32px;
-}.theme-selector button:nth-of-type(n+4) {
+}
+.theme-selector button:nth-of-type(n+4) {
 	background-position: -48px;
-}.theme-selector button:nth-of-type(n+5) {
+}
+.theme-selector button:nth-of-type(n+5) {
 	background-position: -64px;
-}.theme-selector button:nth-of-type(n+6) {
+}
+.theme-selector button:nth-of-type(n+6) {
 	background-position: -80px;
-}.theme-selector button:nth-of-type(n+7) {
+}
+.theme-selector button:nth-of-type(n+7) {
 	background-position: -96px;
-}.theme-selector button:nth-of-type(n+8) {
+}
+.theme-selector button:nth-of-type(n+8) {
 	background-position: -112px;
-}.theme-selector button:nth-of-type(n+9) {
+}
+.theme-selector button:nth-of-type(n+9) {
 	background-position: -128px;
-}.theme-selector button:nth-of-type(n+10) {
+}
+.theme-selector button:nth-of-type(n+10) {
 	background-position: -144px;
 }
+
 /*=------------------------------=*/
 /*= Theme select button tooltips =*/
 /*=------------------------------=*/

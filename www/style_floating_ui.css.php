@@ -12,7 +12,7 @@
 	--GW-theme-selector-right-margin: 12px;
 	--GW-theme-selector-button-tooltip-width: 6em;
 	--GW-theme-selector-button-spacing: 1px;
-	--GW-theme-selector-button-size: <?php $theme_selector_button_size = 16; echo $theme_selector_button_size . "px"; ?>
+	--GW-theme-selector-button-size: <?php $theme_selector_button_size = 16; echo $theme_selector_button_size . "px"; ?>;
 	--GW-theme-selector-button-padding: 5px;
 
 	--GW-quick-nav-ui-left-margin: 28px;
@@ -212,12 +212,13 @@
 $num_themes = 9;
 
 for ($i = 0; $i < $num_themes; $i++) {
-$offset = ($i + 1) * $theme_selector_button_size;
-$k = $i + 2;
-echo <<<EOT
+	$offset = ($i + 1) * $theme_selector_button_size;
+	$k = $i + 2;
+	echo <<<EOT
 .theme-selector button:nth-of-type(n+{$k}) {
 	background-position: -{$offset}px;
 }
+
 EOT;
 }
 ?>
