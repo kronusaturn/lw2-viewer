@@ -3929,7 +3929,7 @@ a.comment-child-link::before {
 		0 0 0 1px #fff,
 		0 0 0 2px #00e,
 		0 0 0 3px transparent;
-	background-size: 100%;
+	background-size: auto 16px;
 	position: relative;
 	top: 2px;
 	opacity: 0.5;
@@ -3954,6 +3954,7 @@ a.comment-child-link::before {
 .comment-meta .lw2-link:hover::before,
 .comment-meta .comment-parent-link:hover span::before,
 .post .post-meta .lw2-link:hover::before {
+	background-color: #00e;
 	background-image: var(--GW-comment-meta-icons-hover-sprites);
 	box-shadow: 
 		0 0 0 2px #00e,

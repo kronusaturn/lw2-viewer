@@ -1493,8 +1493,8 @@ a.comment-parent-link:hover::before {
 
 .comment-meta .permalink,
 .comment-meta .lw2-link,
-.comment-meta .comment-parent-link span::before,
-.post .post-meta .lw2-link::before {
+.comment-meta .comment-parent-link span,
+.post .post-meta .lw2-link {
 	filter: grayscale(100%);
 }
 
