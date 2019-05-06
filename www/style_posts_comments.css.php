@@ -305,15 +305,18 @@ h1.listing + .post-meta .read-time {
 		pointer-events: none;
 		display: block;
 		left: 50%;
-		transform: translateX(-50%);
 		min-width: 108px;
 		line-height: 1.15;
 		white-space: normal;
 		text-align: center;
 		font-size: 0.875rem;
+		left: 0;
+		right: 0;
+		margin: auto;
 		opacity: 0;
 		transition: opacity 0.2s ease;
 	}
+<?php fit_content(".post .karma.active-controls::after, \n\t.comment-item .karma.active-controls::after", "width", "\t"); ?>
 	.post .karma.active-controls:hover::after,
 	.comment-item .karma.active-controls:hover::after {
 		opacity: 1.0;

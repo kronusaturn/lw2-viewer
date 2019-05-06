@@ -81,6 +81,7 @@
 	--GW-comment-highlight-color: var(--GW-C1);
 	--GW-comment-highlight-color-faint: var(--GW-C4);
 
+	--GW-comment-item-outline-color: var(--GW-C8);
 	--GW-vote-button-color: var(--GW-C4);
 	--GW-upvote-button-color: var(--GW-C1);
 	--GW-downvote-button-color: var(--GW-C1);
@@ -1451,7 +1452,7 @@ a.comment-parent-link:hover::before {
 }
 .comment-item .karma .karma-value::after,
 .post .karma .karma-value::after {
-	padding: 2px 8px;
+	padding: 2px 8px 1px 8px;
 	top: -26px;
 }
 
