@@ -3300,6 +3300,10 @@ function MarkdownFromHTML(text) {
 			return "<";
 		case "amp":
 			return "&";
+		case "apos":
+			return "'";
+		case "quot":
+			return "\"";
 		default:
 			return match;
 		}
