@@ -8051,6 +8051,20 @@ a.comment-parent-link:hover::before {
 	filter: drop-shadow(0 0 2px var(--GW-comment-item-outline-color));
 }
 
+/*====================*/
+/* COMMENT PERMALINKS */
+/*====================*/
+/*==================*/
+/* COMMENT LW LINKS */
+/*==================*/
+
+.comment-meta .permalink,
+.comment-meta .lw2-link,
+.comment-meta .comment-parent-link span,
+.post .post-meta .lw2-link {
+	filter: hue-rotate(165deg);
+}
+
 /*=================================*/
 /* COMMENT THREAD MINIMIZE BUTTONS */
 /*=================================*/

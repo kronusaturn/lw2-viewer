@@ -64,7 +64,7 @@
 	--GW-comment-highlight-color: #00f;
 	--GW-comment-highlight-color-faint: #0090ff;
 
-	--GW-vote-button-color: #bbb;
+	--GW-vote-button-color: #ccc;
 	--GW-upvote-button-color: #00d800;
 	--GW-downvote-button-color: #eb4c2a;
 
@@ -1291,7 +1291,7 @@ a.comment-parent-link:hover::before {
 .comment-meta .lw2-link::before,
 .comment-meta .comment-parent-link span::before,
 .post .post-meta .lw2-link::before {
-	filter: saturate(25%) opacity(0.25);
+	filter: saturate(25%) opacity(0.35);
 	opacity: 1.0;
 }
 

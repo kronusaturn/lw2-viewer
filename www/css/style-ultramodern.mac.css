@@ -8037,8 +8037,7 @@ a.comment-parent-link:hover::before {
 .comment-meta .lw2-link::before,
 .comment-meta .comment-parent-link span::before,
 .post .post-meta .lw2-link::before {
-	filter: saturate(10%) contrast(25%);
-	opacity: 1.0;
+	filter: grayscale(100%) brightness(55%) contrast(120%);
 }
 
 /*=================================*/
