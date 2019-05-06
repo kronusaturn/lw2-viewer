@@ -1604,7 +1604,8 @@ a.comment-parent-link:hover::before {
 	font-weight: 400;
 }
 .vote.big-vote::before,
-.vote.clicked-twice::before {
+.vote.clicked-twice::before,
+.vote:not(.selected):hover::before  {
 	font-weight: 900;
 }
 

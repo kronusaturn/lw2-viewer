@@ -1948,6 +1948,9 @@ a {
 /*=---------------=*/
 
 @media only screen and (min-width: 901px) {
+	#nav-item-sequences {
+		padding: 0 0 1px 0;
+	}
 	.nav-bar #nav-item-sequences .nav-inner {
 		font-family: var(--GW-Font-Awesome);
 		font-size: 0.9375em;
@@ -8080,7 +8083,8 @@ a.comment-parent-link:hover::before {
 	font-weight: 400;
 }
 .vote.big-vote::before,
-.vote.clicked-twice::before {
+.vote.clicked-twice::before,
+.vote:not(.selected):hover::before  {
 	font-weight: 900;
 }
 
