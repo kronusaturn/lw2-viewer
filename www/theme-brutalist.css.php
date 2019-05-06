@@ -81,8 +81,9 @@
 	--GW-comment-highlight-color: var(--GW-C1);
 	--GW-comment-highlight-color-faint: var(--GW-C4);
 
-	--GW-comment-meta-icons-normal-sprites: var(--GW-comment-meta-icons-outline-sprites-image);
-	--GW-comment-meta-icons-hover-sprites: var(--GW-comment-meta-icons-filled-sprites-image);
+	--GW-vote-button-color: var(--GW-C4);
+	--GW-upvote-button-color: var(--GW-C1);
+	--GW-downvote-button-color: var(--GW-C1);
 }
 
 /*======*/
@@ -1475,6 +1476,11 @@ a.comment-parent-link:hover::before {
 /* HIGHLIGHTING NEW COMMENTS */
 /*===========================*/
 
+.new-comment {
+	border-color: var(--GW-comment-item-outline-color);
+	border-style: solid;
+	outline: 1px solid var(--GW-comment-item-outline-color);
+}
 .new-comment.comment-item-focused {
 	outline: 2px solid var(--GW-comment-item-outline-color);
 }
@@ -1505,17 +1511,19 @@ a.comment-parent-link:hover::before {
 /*=================================*/
 
 .comment-minimize-button {
-	color: var(--GW-C3);
+	color: var(--GW-comment-item-outline-color);
+	font-weight: 300;
+	top: 3px;
 }
 .comment-minimize-button:hover {
-	color: var(--GW-C5);
+	font-weight: 900;
 }
 .comment-minimize-button::after {
 	top: 20px;
 	left: 0.5px;
 }
-.comment-minimize-button.maximized::after {
-	color: var(--GW-C3);
+.comment-item.minimized .comment-minimize-button::after {
+	top: 18px;
 }
 
 /*=================================*/
@@ -1534,57 +1542,49 @@ a.comment-parent-link:hover::before {
 /* VOTE BUTTONS */
 /*==============*/
 
+.vote:hover,
+.vote:focus,
+.vote:active {
+	box-shadow: none;
+}
+
 .vote::before {
 	content: "";
-	border-radius: 2px;
-	background-size: 17px 17px;
 	width: 17px;
 	height: 17px;
 	display: inline-block;
 	position: relative;
-	top: 2.5px;
 }
-.vote:active {
-	transform: none;
-}
-.vote:hover,
-.vote:active,
-.vote:focus {
-	box-shadow: none;
-}
-.vote:hover::before,
-.vote.selected::before,
-.vote.clicked-once::before,
-.vote.clicked-twice::before {
-	filter: drop-shadow(0 0 1px var(--GW-C0));
-}
-.vote::before,
-.waiting .vote.big-vote.clicked-twice::before {
-	filter: contrast(5%) brightness(182%);
-}
-.vote.clicked-once::before,
-.vote.big-vote.clicked-once::before {
-	box-shadow:
-		0 0 0 3px var(--GW-C3),
-		0 0 0 4px transparent;
-}
-.vote.big-vote.clicked-twice::before,
-.waiting .vote.big-vote:not(.clicked-twice)::before,
-.waiting .vote:not(.big-vote).clicked-once::before {
-	box-shadow: none;
-}
-.vote.clicked-twice::before,
-.vote.big-vote::before {
-	box-shadow:
-		0 0 0 3px var(--GW-C1),
-		0 0 0 4px transparent;
+.vote:hover::before {
+	filter: drop-shadow(0 0 1px #fff);
 }
 
-.upvote::before {
-	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/upvote-black-square-plus.svg")); ?>');
+.vote::before,
+.vote.selected:hover::before {
+	content: var(--GW-brutalist-vote-button-icon-plain);
 }
-.downvote::before {
-	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/downvote-black-square-minus.svg")); ?>');
+.vote.selected::before,
+.vote:hover::before,
+.vote.big-vote:hover::before {
+	content: var(--GW-brutalist-vote-button-icon-boxed);
+}
+
+.upvote {
+	--GW-brutalist-vote-button-icon-plain: "\F067";
+	--GW-brutalist-vote-button-icon-boxed: "\F0FE";
+}
+.downvote {
+	--GW-brutalist-vote-button-icon-plain: "\F068";
+	--GW-brutalist-vote-button-icon-boxed: "\F146";
+}
+
+.vote::before,
+.vote.big-vote:hover::before {
+	font-weight: 400;
+}
+.vote.big-vote::before,
+.vote.clicked-once::before {
+	font-weight: 900;
 }
 
 /*===========================*/
