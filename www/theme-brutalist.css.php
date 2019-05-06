@@ -1579,10 +1579,10 @@ a.comment-parent-link:hover::before {
 }
 
 .upvote::before {
-	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/upvote-black-square-plus.svg")) ?>');
+	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/upvote-black-square-plus.svg")); ?>');
 }
 .downvote::before {
-	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/downvote-black-square-minus.svg")) ?>');
+	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/downvote-black-square-minus.svg")); ?>');
 }
 
 /*===========================*/
