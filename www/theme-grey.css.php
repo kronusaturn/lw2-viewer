@@ -80,6 +80,9 @@
 	--GW-comment-highlight-color: #c79700;
 	--GW-comment-highlight-color-faint: #e7b200;
 
+	--GW-upvote-button-color: #00d800;
+	--GW-downvote-button-color: #eb4c2a;
+
 	--GW-search-field-placeholder-color: #d00;
 
 	--GW-theme-selector-outline-color: #ddd;

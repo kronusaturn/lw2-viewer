@@ -115,6 +115,7 @@
 .comment-controls .delete-button::before {
 	content: '\F05E';
 	opacity: 0.7;
+	margin-right: 4px;
 }
 .comment-controls .retract-button::before,
 .comment-controls .unretract-button::before,

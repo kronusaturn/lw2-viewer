@@ -4314,11 +4314,16 @@ a.comment-child-link::before {
 	border: none;
 }
 
+.vote.selected,
+.vote:hover,
+.vote:focus {
+	color: var(--GW-vote-button-color);
+}
 .upvote {
-	color: var(--GW-upvote-button-color);
+	--GW-vote-button-color: var(--GW-upvote-button-color);
 }
 .downvote {
-	color: var(--GW-downvote-button-color);
+	--GW-vote-button-color: var(--GW-downvote-button-color);
 }
 
 .karma.waiting {
@@ -4591,6 +4596,7 @@ a.comment-child-link::before {
 .comment-controls .delete-button::before {
 	content: '\F05E';
 	opacity: 0.7;
+	margin-right: 4px;
 }
 .comment-controls .retract-button::before,
 .comment-controls .unretract-button::before,

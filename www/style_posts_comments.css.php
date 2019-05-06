@@ -1285,11 +1285,16 @@ a.comment-child-link::before {
 	border: none;
 }
 
+.vote.selected,
+.vote:hover,
+.vote:focus {
+	color: var(--GW-vote-button-color);
+}
 .upvote {
-	color: var(--GW-upvote-button-color);
+	--GW-vote-button-color: var(--GW-upvote-button-color);
 }
 .downvote {
-	color: var(--GW-downvote-button-color);
+	--GW-vote-button-color: var(--GW-downvote-button-color);
 }
 
 .karma.waiting {
