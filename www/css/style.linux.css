@@ -4312,18 +4312,18 @@ a.comment-child-link::before {
 	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
 	border: none;
-}
-
-.vote.selected,
-.vote:hover,
-.vote:focus {
 	color: var(--GW-vote-button-color);
 }
-.upvote {
-	--GW-vote-button-color: var(--GW-upvote-button-color);
+
+.upvote.selected,
+.upvote:hover,
+.upvote:focus {
+	color: var(--GW-upvote-button-color);
 }
-.downvote {
-	--GW-vote-button-color: var(--GW-downvote-button-color);
+.downvote.selected,
+.downvote:hover,
+.downvote:focus {
+	color: var(--GW-downvote-button-color);
 }
 
 .karma.waiting {
@@ -6547,8 +6547,9 @@ th.mathjax-inline-container {
 	--GW-comment-highlight-color: #c79700;
 	--GW-comment-highlight-color-faint: #e7b200;
 
-	--GW-upvote-button-color: #00d800;
-	--GW-downvote-button-color: #eb4c2a;
+	--GW-vote-button-color: #bbb;
+	--GW-upvote-button-color: #0b0;
+	--GW-downvote-button-color: #f00;
 
 	--GW-search-field-placeholder-color: #d00;
 
@@ -8057,9 +8058,6 @@ a.comment-parent-link:hover::before {
 /* VOTE BUTTONS */
 /*==============*/
 
-.vote {
-	color: #bbb;
-}
 .vote::before {
 	content: "";
 	width: 17px;

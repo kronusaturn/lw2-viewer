@@ -4312,18 +4312,18 @@ a.comment-child-link::before {
 	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
 	border: none;
-}
-
-.vote.selected,
-.vote:hover,
-.vote:focus {
 	color: var(--GW-vote-button-color);
 }
-.upvote {
-	--GW-vote-button-color: var(--GW-upvote-button-color);
+
+.upvote.selected,
+.upvote:hover,
+.upvote:focus {
+	color: var(--GW-upvote-button-color);
 }
-.downvote {
-	--GW-vote-button-color: var(--GW-downvote-button-color);
+.downvote.selected,
+.downvote:hover,
+.downvote:focus {
+	color: var(--GW-downvote-button-color);
 }
 
 .karma.waiting {

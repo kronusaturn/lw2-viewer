@@ -69,6 +69,7 @@
 
 	--GW-new-comment-item-outline-color: #f00;
 
+	--GW-vote-button-color: #666;
 	--GW-upvote-button-color: #00d800;
 	--GW-downvote-button-color: #eb4c2a;
 
@@ -1574,7 +1575,6 @@ a.comment-parent-link:hover::before {
 /*==============*/
 
 .vote {
-	color: #666;
 	position: relative;	
 }
 .vote::before {
