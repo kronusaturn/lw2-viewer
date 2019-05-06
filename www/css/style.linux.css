@@ -129,6 +129,12 @@
 		--GW-individual-thread-page-content-side-padding: calc(100% / 30);
 	}
 }
+@media only screen and (max-width: 520px) {
+	:root {
+		--GW-post-page-content-side-padding: 4px;
+		--GW-post-side-padding: 6px;
+	}
+}
 
 /*	Content column width.
 	*/

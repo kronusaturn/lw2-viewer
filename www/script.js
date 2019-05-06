@@ -3885,7 +3885,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	});
 
 	// On mobile, wrap authors to limit tappable area.
-	if (query(".listings > .comment-thread")) {
+	if (query(".comment-thread")) {
 		doWhenMatchMedia(GW.mediaQueries.mobileNarrow, "wrapAuthorsInCommentListings", () => {
 			queryAll(".comment-meta > .author").forEach(author => {
 				author.outerHTML = `<span class='author-wrapper'>${author.outerHTML}</span>`;
