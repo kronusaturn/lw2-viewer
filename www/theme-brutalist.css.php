@@ -1404,7 +1404,7 @@ a.comment-parent-link:hover::before {
 .comment-item-highlight-faint {
 	border-color: var(--GW-comment-highlight-color);
 	border-style: solid;
-	outline: 2px solid var(--GW-comment-item-outline-color);
+	outline: 3px solid var(--GW-comment-item-outline-color);
 
 	--GW-comment-item-outline-color: var(--GW-comment-highlight-color)
 }
@@ -1475,9 +1475,11 @@ a.comment-parent-link:hover::before {
 /* HIGHLIGHTING NEW COMMENTS */
 /*===========================*/
 
-.new-comment.comment-item-focused,
-.new-comment::before {
+.new-comment.comment-item-focused {
 	outline: 2px solid var(--GW-comment-item-outline-color);
+}
+.new-comment::before {
+	outline: 3px solid var(--GW-comment-item-outline-color);
 }
 
 .answer-item.new-comment::after {
