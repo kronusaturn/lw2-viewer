@@ -70,9 +70,9 @@
 }
 .comment-controls .reply-button::before {
 	content: '\F3E5';
-	font-weight: 900;
+	font-weight: 400;
 	font-size: 0.9em;
-	opacity: 0.6;
+	opacity: 0.75;
 }
 
 .edit-post-link {
@@ -101,13 +101,16 @@
 .comment-controls .unretract-button {
 	margin-right: 1em;
 }
+.comment-controls .edit-button::before {
+	font-weight: 300;
+}
 .comment-controls .retract-button::before {
 	content: '\F4B3';
-	opacity: 0.6;
+	opacity: 0.7;
 }
 .comment-controls .unretract-button::before {
 	content: '\F075';
-	opacity: 0.9;
+	opacity: 0.8;
 }
 .comment-controls .delete-button::before {
 	content: '\F05E';
@@ -116,7 +119,7 @@
 .comment-controls .retract-button::before,
 .comment-controls .unretract-button::before,
 .comment-controls .delete-button::before {
-	font-weight: 900;
+	font-weight: 400;
 	font-size: 0.9em;
 }
 
