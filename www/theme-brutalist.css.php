@@ -80,6 +80,9 @@
 
 	--GW-comment-highlight-color: var(--GW-C1);
 	--GW-comment-highlight-color-faint: var(--GW-C4);
+
+	--GW-comment-meta-icons-normal-sprites: var(--GW-comment-meta-icons-outline-sprites-image);
+	--GW-comment-meta-icons-hover-sprites: var(--GW-comment-meta-icons-filled-sprites-image);
 }
 
 /*======*/
@@ -973,6 +976,7 @@ h1.listing + .post-meta a:hover {
 h1.listing + .post-meta .author,
 h1.listing + .post-meta .comment-count.new-comments {
 	color: var(--GW-C1);
+	font-weight: var(--GW-UI-font-weight-light);
 }
 
 /*	Comment count.

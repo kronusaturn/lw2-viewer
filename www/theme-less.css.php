@@ -20,6 +20,9 @@
 	--GW-comment-background-color-odd: #f6f6f6;
 	--GW-comment-background-color-even: #fff;
 	--GW-comment-background-color-target: #ffd;
+
+	--GW-comment-meta-icons-normal-sprites: var(--GW-comment-meta-icons-outline-sprites-image);
+	--GW-comment-meta-icons-hover-sprites: var(--GW-comment-meta-icons-filled-sprites-image);
 }
 
 /*======*/
@@ -1693,24 +1696,8 @@ div.comment-child-links a {
 /* COMMENT PERMALINKS */
 /*====================*/
 
-.comment-meta .permalink::before {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/anchor-blue-on-white.gif")) ?>');
-}
-.comment-meta .lw2-link::before {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/lw-blue-on-white.gif")) ?>');
-}
-.individual-thread-page a.comment-parent-link:empty::before {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/up-arrow-blue-on-white.gif")) ?>');
-}
-.comment-meta .permalink:hover::before {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/anchor-white-on-blue.gif")) ?>');
-}
-.comment-meta .lw2-link:hover::before {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/lw-white-on-blue.gif")) ?>');
-}
 .individual-thread-page a.comment-parent-link:hover:empty::before {
 	left: unset;
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/up-arrow-white-on-blue.gif")) ?>');
 }
 
 .comment-meta .permalink,

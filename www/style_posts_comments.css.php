@@ -1,3 +1,11 @@
+:root {
+	--GW-comment-meta-icons-filled-sprites-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/comment_meta_icons_filled.gif")) ?>');
+	--GW-comment-meta-icons-outline-sprites-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/comment_meta_icons_outline.gif")) ?>');
+
+	--GW-comment-meta-icons-normal-sprites: var(--GW-comment-meta-icons-filled-sprites-image);
+	--GW-comment-meta-icons-hover-sprites: var(--GW-comment-meta-icons-outline-sprites-image);
+}
+
 /******************/
 /* LISTINGS PAGES */
 /******************/
@@ -900,31 +908,27 @@ a.comment-child-link::before {
 	top: 2px;
 	opacity: 0.5;
 }
-.comment-meta .permalink::before {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/anchor-white-on-blue.gif")) ?>');
+
+.comment-meta .permalink::before,
+.comment-meta .lw2-link::before,
+.post .post-meta .lw2-link::before,
+.comment-meta .comment-parent-link span::before {
+	background-image: var(--GW-comment-meta-icons-normal-sprites);
 }
 .comment-meta .lw2-link::before,
 .post .post-meta .lw2-link::before {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/lw-white-on-blue.gif")) ?>');
+	background-position: -16px;
 }
 .comment-meta .comment-parent-link span::before {
 	left: unset;
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/up-arrow-white-on-blue.gif")) ?>');
+	background-position: -32px;
 }
-.comment-meta .permalink:hover::before {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/anchor-blue-on-white.gif")) ?>');
-}
-.comment-meta .lw2-link:hover::before,
-.post .post-meta .lw2-link:hover::before {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/lw-blue-on-white.gif")) ?>');
-}
-.comment-meta .comment-parent-link:hover span::before {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/up-arrow-blue-on-white.gif")) ?>');
-}
+
 .comment-meta .permalink:hover::before,
 .comment-meta .lw2-link:hover::before,
 .comment-meta .comment-parent-link:hover span::before,
 .post .post-meta .lw2-link:hover::before {
+	background-image: var(--GW-comment-meta-icons-hover-sprites);
 	box-shadow: 
 		0 0 0 2px #00e,
 		0 0 0 3px transparent;
