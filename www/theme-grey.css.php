@@ -1593,8 +1593,7 @@ a.comment-parent-link:hover::before {
 /* VOTE BUTTONS */
 /*==============*/
 
-.upvote,
-.downvote {
+.vote {
 	color: #c8c8c8;
 	position: relative;	
 }
@@ -1608,7 +1607,6 @@ a.comment-parent-link:hover::before {
 }
 .downvote::before {
 	content: "\F078";
-	position: relative;
 	left: -2px;
 }
 .upvote:hover,

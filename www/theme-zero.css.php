@@ -64,6 +64,9 @@
 	--GW-comment-highlight-color: #00f;
 	--GW-comment-highlight-color-faint: #0090ff;
 
+	--GW-upvote-button-color: #00d800;
+	--GW-downvote-button-color: #eb4c2a;
+
 	--GW-theme-selector-outline-color: transparent;
 
 	--GW-search-field-placeholder-color: #d00;
@@ -1313,76 +1316,37 @@ a.comment-parent-link:hover::before {
 /* VOTE BUTTONS */
 /*==============*/
 
+.vote {
+	color: #bbb;
+}
 .vote::before {
 	content: "";
-	border-radius: 50%;
-	background-size: 17px 17px;
 	width: 17px;
 	height: 17px;
 	display: inline-block;
 	position: relative;
-	top: 2.5px;
-}
-.vote:active {
-	transform: none;
-}
-.vote:hover::before,
-.vote.selected::before,
-.vote.clicked-once::before,
-.vote.clicked-twice::before {
-	filter: drop-shadow(0 0 1px #fff);
 }
 
-@media only screen and (hover: hover) and (pointer: fine) {
-	.vote {
-		filter: saturate(50%) opacity(50%);
-	}
-	.comment:hover .vote,
-	.comment:hover + .comment-controls .vote,
-	.karma.active-controls:hover .vote {
-		filter: none;
-	}
+.upvote::before {
+	content: "\F055";
+}
+.downvote::before {
+	content: "\F056";
 }
 
-.upvote::before,
-.waiting .upvote.big-vote.clicked-twice::before {
-	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/upvote-green-circle-plus.svg")) ?>');
-	filter: grayscale(100%) brightness(128%);
-}
-.downvote::before,
-.waiting .downvote.big-vote.clicked-twice::before {
-	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/downvote-red-circle-minus.svg")) ?>');
-	filter: grayscale(100%) brightness(188%);
-}
-
-.vote.clicked-once::before,
-.vote.big-vote.clicked-once::before {
-	box-shadow:
-		0 0 0 1px #fff,
-		0 0 0 4px #c8c8c8,
-		0 0 0 5px transparent;
-}
-
+.vote::before,
+.vote.big-vote.clicked-once::before,
 .vote.big-vote.clicked-twice::before,
-.waiting .vote.big-vote:not(.clicked-twice)::before,
-.waiting .vote:not(.big-vote).clicked-once::before {
-	box-shadow: none;
+.vote.selected.clicked-once::before {
+	font-weight: 400;
+}
+.vote.big-vote::before,
+.vote.clicked-twice::before {
+	font-weight: 900;
 }
 
-.upvote.clicked-twice::before,
-.upvote.big-vote::before {
-	box-shadow:
-		0 0 0 1px #fff,
-		0 0 0 4px #00d800,
-		0 0 0 5px transparent;
-}
-
-.downvote.clicked-twice::before,
-.downvote.big-vote::before {
-	box-shadow:
-		0 0 0 1px #fff,
-		0 0 0 4px #eb4c2a,
-		0 0 0 5px transparent;
+.vote:hover::before {
+	filter: drop-shadow(0 0 1px #fff);
 }
 
 /*===========================*/

@@ -69,6 +69,9 @@
 
 	--GW-new-comment-item-outline-color: #f00;
 
+	--GW-upvote-button-color: #00d800;
+	--GW-downvote-button-color: #eb4c2a;
+
 	--GW-search-field-placeholder-color: #faa;
 }
 
@@ -1570,8 +1573,7 @@ a.comment-parent-link:hover::before {
 /* VOTE BUTTONS */
 /*==============*/
 
-.upvote,
-.downvote {
+.vote {
 	color: #666;
 	position: relative;	
 }
@@ -1585,7 +1587,6 @@ a.comment-parent-link:hover::before {
 }
 .downvote::before {
 	content: "\F078";
-	position: relative;
 	left: -2px;
 }
 .upvote:hover,
