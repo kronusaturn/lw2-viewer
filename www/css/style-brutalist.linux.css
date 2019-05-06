@@ -6528,11 +6528,10 @@ th.mathjax-inline-container {
 
 	--GW-search-field-placeholder-color: #d00;
 
-	--GW-comment-item-expanded-outline: 4px solid var(--GW-comment-item-expanded-outline-color);
-	--GW-comment-item-expanded-outline-color: var(--GW-C8);
-	--GW-new-comment-item-outline-color: var(--GW-C1);
+	--GW-comment-item-expanded-outline-color: var(--GW-C1);
+	--GW-new-comment-item-outline-color: var(--GW-C4);
 
-	--GW-comment-highlight-color: var(--GW-C2);
+	--GW-comment-highlight-color: var(--GW-C1);
 	--GW-comment-highlight-color-faint: var(--GW-C4);
 }
 
@@ -7114,8 +7113,7 @@ body {
 }
 #quick-nav-ui a[href='#comments'].no-comments,
 #quick-nav-ui a[href='#answers'].no-answers {
-	opacity: 0.4;
-	color: var(--GW-C4);
+	opacity: 0.15;
 }
 
 /*=----------------------------=*/
@@ -7868,6 +7866,12 @@ a.comment-parent-link:hover::before {
 
 	--GW-comment-item-outline-color: var(--GW-comment-highlight-color)
 }
+.answer-item.comment-item-focused::after,
+.answer-item.comment-item-highlight::after {
+	border-width: 4px 4px 0 4px;
+	left: -4px;
+	border-style: solid;
+}
 
 /*================================*/
 /* DEEP COMMENT THREAD COLLAPSING */
@@ -7934,6 +7938,10 @@ a.comment-parent-link:hover::before {
 	outline: 2px solid var(--GW-comment-item-outline-color);
 }
 
+.answer-item.new-comment::after {
+	border-style: solid;
+}
+
 /*====================*/
 /* COMMENT PERMALINKS */
 /*====================*/
@@ -7953,27 +7961,28 @@ a.comment-parent-link:hover::before {
 /*=================================*/
 
 .comment-minimize-button {
-	color: #ccc;
+	color: var(--GW-C3);
 }
 .comment-minimize-button:hover {
-	color: #aaa;
+	color: var(--GW-C5);
 }
 .comment-minimize-button::after {
-	font-size: 0.8125rem;
 	top: 20px;
 	left: 0.5px;
-	color: #777;
 }
 .comment-minimize-button.maximized::after {
-	color: #ccc;
+	color: var(--GW-C3);
 }
 
 /*=================================*/
 /* INDIVIDUAL COMMENT THREAD PAGES */
 /*=================================*/
 
+.individual-thread-page > h1 {
+	color: var(--GW-C8);
+}
 .individual-thread-page > h1 a:hover {
-	color: #777;
+	color: var(--GW-C8);
 	text-decoration: dotted underline;
 }
 
@@ -8012,7 +8021,7 @@ a.comment-parent-link:hover::before {
 .vote.clicked-once::before,
 .vote.big-vote.clicked-once::before {
 	box-shadow:
-		0 0 0 3px #ccc,
+		0 0 0 3px var(--GW-C3),
 		0 0 0 4px transparent;
 }
 .vote.big-vote.clicked-twice::before,
@@ -8023,7 +8032,7 @@ a.comment-parent-link:hover::before {
 .vote.clicked-twice::before,
 .vote.big-vote::before {
 	box-shadow:
-		0 0 0 3px #000,
+		0 0 0 3px var(--GW-C1),
 		0 0 0 4px transparent;
 }
 
