@@ -3217,12 +3217,16 @@ function MarkdownFromHTML(text) {
 		case "em":
 		case "/em":
 			return "*";
-		case "code":
-		case "/code":
-			return "`";
 		default:
 			return match;
 		}
+	});
+
+	// <div> and <span>.
+	text = text.replace(/<div.+?>(.+?)<\/div>/g, (match, text, offset, string) => {
+		return `${text}\n`;
+	}).replace(/<span.+?>(.+?)<\/span>/g, (match, text, offset, string) => {
+		return `${text}\n`;
 	});
 
 	// Unordered lists.
@@ -3233,7 +3237,7 @@ function MarkdownFromHTML(text) {
 	});
 
 	// Ordered lists.
-	text = text.replace(/<ol(?:\sstart=["']([0-9]+)["'])?>\s+?((?:.|\n)+?)\s+?<\/ol>/g, (match, start, listItems, offset, string) => {
+	text = text.replace(/<ol.+?(?:\sstart=["']([0-9]+)["'])?.+?>\s+?((?:.|\n)+?)\s+?<\/ol>/g, (match, start, listItems, offset, string) => {
 		var countedItemValue = 0;
 		return listItems.replace(/<li(?:\svalue=["']([0-9]+)["'])?>((?:.|\n)+?)<\/li>/g, (match, specifiedItemValue, listItem, offset, string) => {
 			var itemValue;
@@ -3243,12 +3247,12 @@ function MarkdownFromHTML(text) {
 			} else {
 				itemValue = (start ? parseInt(start) - 1 : 0) + ++countedItemValue;
 			}
-			return `${itemValue}. ${listItem}\n`;
+			return `${itemValue}. ${listItem.trim()}\n`;
 		});
 	});
 
 	// Headings.
-	text = text.replace(/<h([1-9])>(.+?)<\/h[1-9]>/g, (match, level, headingText, offset, string) => {
+	text = text.replace(/<h([1-9]).+?>(.+?)<\/h[1-9]>/g, (match, level, headingText, offset, string) => {
 		return { "1":"#", "2":"##", "3":"###" }[level] + " " + headingText + "\n";
 	});
 
@@ -3258,13 +3262,47 @@ function MarkdownFromHTML(text) {
 	});
 
 	// Links.
-	text = text.replace(/<a href="(.+?)">(.+?)<\/a>/g, (match, href, text, offset, string) => {
+	text = text.replace(/<a.+?href="(.+?)">(.+?)<\/a>/g, (match, href, text, offset, string) => {
 		return `[${text}](${href})`;
 	}).trim();
+
+	// Images.
+	text = text.replace(/<img.+?src="(.+?)".+?\/>/g, (match, src, offset, string) => {
+		return `![](${src})`;
+	});
 
 	// Horizontal rules.
 	text = text.replace(/<hr(.+?)\/?>/g, (match, offset, string) => {
 		return "\n---\n";
+	});
+
+	// Line breaks.
+	text = text.replace(/<br\s?\/?>/g, (match, offset, string) => {
+		return "\\\n";
+	});
+
+	// Preformatted text (possibly with a code block inside).
+	text = text.replace(/<pre>(?:\s*<code>)?((?:.|\n)+?)(?:<\/code>\s*)?<\/pre>/g, (match, text, offset, string) => {
+		return "```\n" + text + "\n```";
+	});
+
+	// Code blocks.
+	text = text.replace(/<code>(.+?)<\/code>/g, (match, text, offset, string) => {
+		return "`" + text + "`";
+	});
+
+	// HTML entities.
+	text = text.replace(/&(.+?);/g, (match, entity, offset, string) => {
+		switch(entity) {
+		case "gt":
+			return ">";
+		case "lt":
+			return "<";
+		case "amp":
+			return "&";
+		default:
+			return match;
+		}
 	});
 
 	return text;
