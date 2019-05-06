@@ -3828,20 +3828,6 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 			});
 		}
 
-		// Color the upvote/downvote buttons with an embedded style sheet.
-		query("head").insertAdjacentHTML("beforeend","<style id='vote-buttons'>" + 
-		`.upvote:hover,
-		.upvote:focus,
-		.upvote.selected {
-			color: #00d800;
-		}
-		.downvote:hover,
-		.downvote:focus,
-		.downvote.selected {
-			color: #eb4c2a;
-		}` +
-		"</style>");
-
 		// Activate the vote buttons.
 		queryAll("button.vote").forEach(voteButton => {
 			voteButton.addActivateEvent(voteButtonClicked);

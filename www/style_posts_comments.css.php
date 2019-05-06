@@ -1280,12 +1280,18 @@ a.comment-child-link::before {
 
 .vote {
 	margin: 0;
-}
-.vote {
 	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
 	border: none;
 }
+
+.upvote {
+	color: var(--GW-upvote-button-color);
+}
+.downvote {
+	color: var(--GW-downvote-button-color);
+}
+
 .karma.waiting {
 	opacity: 0.5;
 }

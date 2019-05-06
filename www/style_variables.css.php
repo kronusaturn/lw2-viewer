@@ -225,5 +225,8 @@
 	--GW-comment-item-focused-outline: var(--GW-comment-item-expanded-outline);
 
 	--GW-comment-popup-background-color: var(--GW-comment-item-focused-background-color);
+
+	--GW-upvote-button-color: inherit;
+	--GW-downvote-button-color: inherit;
 }
 
