@@ -20,9 +20,6 @@
 	--GW-comment-background-color-odd: #f6f6f6;
 	--GW-comment-background-color-even: #fff;
 	--GW-comment-background-color-target: #ffd;
-
-	--GW-comment-meta-icons-normal-sprites: var(--GW-comment-meta-icons-outline-sprites-image);
-	--GW-comment-meta-icons-hover-sprites: var(--GW-comment-meta-icons-filled-sprites-image);
 }
 
 /*======*/

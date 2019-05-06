@@ -2,8 +2,8 @@
 	--GW-comment-meta-icons-filled-sprites-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/comment_meta_icons_filled.gif")) ?>');
 	--GW-comment-meta-icons-outline-sprites-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/comment_meta_icons_outline.gif")) ?>');
 
-	--GW-comment-meta-icons-normal-sprites: var(--GW-comment-meta-icons-filled-sprites-image);
-	--GW-comment-meta-icons-hover-sprites: var(--GW-comment-meta-icons-outline-sprites-image);
+	--GW-comment-meta-icons-normal-sprites: var(--GW-comment-meta-icons-outline-sprites-image);
+	--GW-comment-meta-icons-hover-sprites: var(--GW-comment-meta-icons-filled-sprites-image);
 }
 
 /******************/
