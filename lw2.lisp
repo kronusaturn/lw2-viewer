@@ -268,7 +268,26 @@ signaled condition to OUT-STREAM."
 
 (defun hypothesis-annotation-to-html (out-stream annotation)
   (with-error-html-block (out-stream)
-    (format out-stream "<p>Mango!</p>")))
+    (format out-stream "<div class='annotation'>")
+    (format out-stream "<a href='~a'>~a</a>"
+	    (cdr (assoc :INCONTEXT (cdr (assoc :LINKS annotation))))
+	    (first (cdr (assoc :TITLE (cdr (assoc :DOCUMENT annotation))))))
+    (format out-stream "<a href='~a'>Original</a>"
+	    (cdr (assoc :URI annotation)))
+    (multiple-value-bind (pretty-time js-time)
+	(pretty-time (cdr (assoc :CREATED annotation))
+		     :FORMAT (list :LONG-MONTH " " :DAY " " :YEAR)) ; TODO: Add HH:MM
+      (format out-stream "<span class='date' data-js-date=~a>~a</span>"
+	      js-time
+	      pretty-time))
+    (dolist (selector
+	      (cdr (assoc :SELECTOR
+			  (first (cdr (assoc :TARGET annotation))))) nil)
+      (if (equal "TextQuoteSelector" (cdr (assoc :TYPE selector)))
+	  (format out-stream "<blockquote>~a</blockquote>" (cdr (assoc :EXACT selector)))
+	  nil))
+    (format out-stream "<p class='annotation-text'> ~a </p>" (cdr (assoc :TEXT annotation)))
+    (format out-stream "</div>")))
 
 (defun identify-item (x)
   (typecase x
