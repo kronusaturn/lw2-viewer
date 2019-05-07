@@ -7848,31 +7848,20 @@ h1.post-title .post-type-prefix {
 
 /*	Post section.
 	*/
-.post-meta .post-section::before,
-.comment-meta .alignment-forum {
-	color: #000;
-}
 .post-meta .post-section::before {
-	text-shadow: 
-		1px 1px 0 #9740cb, 
-		0 1px 0 #9740cb, 
-		0 0 5px #9740cb;
+	color: #1f1f1f;
 }
-a.post-section:hover {
-	text-decoration: none;
-}
-a.post-section:hover::before {
-	color: #2e0062;
+.post-meta .post-section:hover::before {
+	color: #9740cb;
 }
 .post-meta .post-section.alignment-forum::before,
 .comment-meta .alignment-forum {
-	text-shadow:
-		1px 1px 0   #658100, 
-		0   1px 0   #658100, 
-		0   0   5px #658100;
+	color: #262c00;
+	padding: 1px 0 0 0;
 }
-a.post-section.alignment-forum:hover::before {
-	color: #181a00;
+.post-meta .post-section.alignment-forum:hover::before,
+.comment-meta .alignment-forum {
+	color: #658100;
 }
 
 /*============*/

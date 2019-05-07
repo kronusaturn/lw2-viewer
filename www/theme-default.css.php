@@ -1347,31 +1347,20 @@ h1.post-title .post-type-prefix {
 
 /*	Post section.
 	*/
-.post-meta .post-section::before,
-.comment-meta .alignment-forum {
-	color: #fff;
-}
 .post-meta .post-section::before {
-	text-shadow: 
-		1px 1px 0 #090, 
-		0 1px 0 #090, 
-		0 0 5px #090;
+	color: #ddd;
 }
-a.post-section:hover {
-	text-decoration: none;
-}
-a.post-section:hover::before {
-	color: #97ff7c;
+.post-meta .post-section:hover::before {
+	color: #090;
 }
 .post-meta .post-section.alignment-forum::before,
 .comment-meta .alignment-forum {
-	text-shadow:
-		1px 1px 0   #626dd7, 
-		0   1px 0   #626dd7, 
-		0   0   5px #626dd7;
+	color: #cbccff;
+	padding: 1px 0 0 0;
 }
-a.post-section.alignment-forum:hover::before {
-	color: #e6e5ff;
+.post-meta .post-section.alignment-forum:hover::before,
+.comment-meta .alignment-forum {
+	color: #626dd7;
 }
 
 /*============*/
