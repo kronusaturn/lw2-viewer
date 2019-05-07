@@ -1445,17 +1445,6 @@ GW.themeUnloadCallback_dark = (toTheme = "") => {
 	});
 }
 
-GW.themeLoadCallback_ultramodern = (fromTheme = "") => {
-	let prefix = query("h1.post-title .post-type-prefix");
-	if (prefix && /Question/.test(prefix.textContent))
-		prefix.textContent = "Question";
-}
-GW.themeUnloadCallback_ultramodern = (toTheme = "") => {
-	let prefix = query("h1.post-title .post-type-prefix");
-	if (prefix && /Question/.test(prefix.textContent))
-		prefix.textContent = "[Question] ";
-}
-
 GW.themeLoadCallback_zero = (fromTheme = "") => {
 	queryAll("h1.listing + .post-meta .comment-count").forEach(commentCount => {
 		let parts = /(.+?)( comments)(.+)/.exec(commentCount.title);
@@ -3877,6 +3866,10 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	queryAll(".listing .post-type-prefix").forEach(prefix => {
 		if (/Question/.test(prefix.textContent))
 			prefix.textContent = "Q: ";
+	});
+	queryAll("h1.post-title .post-type-prefix").forEach(prefix => {
+		if (/Question/.test(prefix.textContent))
+			prefix.textContent = "Question: ";
 	});
 
 	// Rectify mathjax block container heights.

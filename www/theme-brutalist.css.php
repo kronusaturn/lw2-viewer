@@ -894,7 +894,7 @@ h1.listing a[href^="http"] {
 		0 0 1px var(--GW-C1),
 		0 0 2px var(--GW-C1),
 		0 0 4px var(--GW-C1);
-	width: 1.25em;
+	min-width: 1.375em;
 }
 
 @media only screen and (hover: hover) and (pointer: fine) {
