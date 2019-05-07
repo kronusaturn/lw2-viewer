@@ -6851,35 +6851,30 @@ body {
 	letter-spacing: 0.5px;
 	padding: 6px 7px;
 	text-transform: uppercase;
-	box-shadow: 1px 1px 0 0 #aaa inset;
+	box-shadow:
+		1px 1px 0 0 #aaa inset;
 }
 .sublevel-nav.sort {
 	border: 2px solid transparent;
 	padding: 18px 0 0 0;
 	border-radius: 8px;
-	background-color: #bbb;
 }
 .sublevel-nav.sort::before {
 	text-transform: uppercase;
-	color: #444;
-	text-shadow: 0.5px 0.5px 0 #fff;
+	color: #777;
+	text-shadow:
+		0.5px 0.5px 0 #fff;
 }
 .sublevel-nav.sort::after {
 	content: "";
 	position: absolute;
-	display: block;
-	top: 0;
+	top: 18px;
 	left: 0;
 	width: 100%;
-	height: 100%;
+	height: calc(100% - 18px);
 	border-radius: 6px;
 	box-shadow:
-		0 1px 0.5px 0 #fff inset,
-		0 1px 0.5px 0 #fff inset,
-		0 1px 0.5px 0 #fff inset,
-		0 18px 0 0 #fff inset,
 		0 0 0 1px #aaa inset,
-		0 18px 0 1px #aaa inset,
 		0 0 0 2px #fff;
 }
 
@@ -7825,9 +7820,10 @@ h1.post-title .post-type-prefix {
 	color: #090;
 }
 
-/*	Date.
+/*	Date, link post domain.
 	*/
-.post-meta .date {
+.post-meta .date,
+.post-meta .link-post-domain {
 	color: #888;
 }
 
