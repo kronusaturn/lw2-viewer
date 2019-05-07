@@ -1345,9 +1345,6 @@ article > .post-meta a:visited,
 .post-meta .post-section::before {
 	color: #ddd;
 }
-.post-meta .post-section:hover {
-	text-decoration: none;
-}
 .post-meta .post-section:hover::before {
 	color: #9d7e00;
 }

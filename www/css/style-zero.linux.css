@@ -7592,9 +7592,6 @@ article > .post-meta > *,
 .post-meta .post-section::before {
 	color: #d8d8d8;
 }
-.post-meta .post-section:hover {
-	text-decoration: none;
-}
 .post-meta .post-section:hover::before {
 	color: #090;
 }

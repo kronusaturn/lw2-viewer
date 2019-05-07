@@ -7414,7 +7414,7 @@ h1.listing a[href^="http"] {
 		0 0 1px var(--GW-C1),
 		0 0 2px var(--GW-C1),
 		0 0 4px var(--GW-C1);
-	margin-right: 0.125em;
+	width: 1.25em;
 }
 
 @media only screen and (hover: hover) and (pointer: fine) {
@@ -7434,6 +7434,15 @@ h1.listing a[href^="http"] {
 			0 0 4px var(--GW-C1),
 			0 0 8px var(--GW-C1);
 	}
+}
+
+/*=------------------=*/
+/*= Post type prefix =*/
+/*=------------------=*/
+
+h1.listing .post-type-prefix {
+	width: 1.25em;
+	display: inline-block;
 }
 
 h1.listing:not(:focus-within) a:not(:hover) .post-type-prefix {
@@ -7466,10 +7475,10 @@ h1.listing:not(:focus-within) a:not(:hover) .post-type-prefix {
 /*======*/
 
 h1.listing:not(:focus-within).spam {
-	opacity: 0.1;
+	opacity: 0.15;
 }
 h1.listing:not(:focus-within).spam + .post-meta {
-	opacity: 0.2;
+	opacity: 0.25;
 }
 h1.listing.spam:hover,
 h1.listing.spam + .post-meta:hover,
@@ -7804,15 +7813,10 @@ article > .post-meta > *,
 	*/
 .post-meta .post-section::before,
 .comment-meta .alignment-forum {
-	color: var(--GW-C0);
-	top: -1px;
-	text-shadow: 
-		1px 1px 0   var(--GW-C8),
-		0   1px 0   var(--GW-C8), 
-		0   0   5px var(--GW-C8);
+	color: var(--GW-C2);
 }
 .post-section:hover::before {
-	color: var(--GW-C2);
+	color: var(--GW-C1);
 }
 
 /*	Date.
