@@ -1494,6 +1494,8 @@ a.comment-parent-link:hover::before {
 
 .answer-item.new-comment::after {
 	border-style: solid;
+	border-width: 3px 3px 0 3px;
+	left: -3px;
 }
 
 /*====================*/
