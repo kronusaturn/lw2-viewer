@@ -808,7 +808,7 @@ a.comment-parent-link:hover::before {
 		border-left: 1px solid transparent;
 	}
 	a.comment-parent-link:hover::before {
-		border-left: 1px solid var(--GW-comment-highlight-color);
+		border-left: 1px solid var(--GW-comment-item-outline-color);
 	}
 	a.comment-parent-link::after {
 		content: "";

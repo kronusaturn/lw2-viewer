@@ -824,7 +824,8 @@ h1.listing a[href^='/'] {
 	color: #000;
 }
 h1.listing a[href^="http"] {
-	color: #007eff;
+	color: #19a2e6;
+	width: 1.375em;
 }
 
 @media only screen and (hover: hover) and (pointer: fine) {
@@ -843,6 +844,15 @@ h1.listing a[href^="http"] {
 			 0 0 2px #fff,
 			 0 0 3px #00c;
 	}
+}
+
+/*=------------------=*/
+/*= Post type prefix =*/
+/*=------------------=*/
+
+h1.listing .post-type-prefix {
+	width: 1.375em;
+	display: inline-block;
 }
 
 h1.listing:not(:focus-within) a:not(:hover) .post-type-prefix {
