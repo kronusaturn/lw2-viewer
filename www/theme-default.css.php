@@ -373,10 +373,13 @@ body {
 	height: 100%;
 	border-radius: 6px;
 	box-shadow:
-		0 18px 0 0 #bbb inset,
+		0 1px 0.5px 0 #fff inset,
+		0 1px 0.5px 0 #fff inset,
+		0 1px 0.5px 0 #fff inset,
+		0 18px 0 0 #fff inset,
 		0 0 0 1px #aaa inset,
 		0 18px 0 1px #aaa inset,
-		0 0 0 2px #bbb;
+		0 0 0 2px #fff;
 }
 
 /*================*/
@@ -817,7 +820,7 @@ h1.listing a[href^='/'] {
 	color: #000;
 }
 h1.listing a[href^="http"] {
-	color: #00c;
+	color: #007eff;
 }
 
 @media only screen and (hover: hover) and (pointer: fine) {
@@ -830,7 +833,6 @@ h1.listing a[href^="http"] {
 		color: #00f;
 	}
 	h1.listing a[href^="http"]:hover {
-		color: #4879ec;
 		text-shadow: 
 			 0.5px 0.5px 0 #fff,
 			 -0.5px -0.5px 0 #fff,
