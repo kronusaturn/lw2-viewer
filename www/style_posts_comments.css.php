@@ -302,21 +302,19 @@ h1.listing + .post-meta .read-time {
 	.comment-item .karma.active-controls::after {
 		content: "Double-click for strong vote";
 		position: absolute;
+		left: 0;
+		right: 0;
+		margin: auto;
 		pointer-events: none;
-		display: block;
-		left: 50%;
 		min-width: 108px;
 		line-height: 1.15;
 		white-space: normal;
 		text-align: center;
 		font-size: 0.875rem;
-		left: 0;
-		right: 0;
-		margin: auto;
 		opacity: 0;
 		transition: opacity 0.2s ease;
 	}
-<?php fit_content(".post .karma.active-controls::after, \n\t.comment-item .karma.active-controls::after", "width", "\t"); ?>
+<?php fit_content(".post .karma.active-controls::after, \n\t\t.comment-item .karma.active-controls::after", "width", "\t"); ?>
 	.post .karma.active-controls:hover::after,
 	.comment-item .karma.active-controls:hover::after {
 		opacity: 1.0;
@@ -329,16 +327,17 @@ h1.listing + .post-meta .read-time {
 	.comment-item .karma .karma-value::after {
 		content: attr(title);
 		position: absolute;
+		left: 0;
+		right: 0;
+		margin: auto;
 		pointer-events: none;
-		display: block;
-		left: 50%;
-		transform: translateX(-50%);
 		white-space: nowrap;
 		text-align: center;
 		font-size: 0.875rem;
 		opacity: 0;
 		transition: opacity 0.2s ease;
 	}
+<?php fit_content(".post .karma .karma-value::after, \n\t\t.comment-item .karma .karma-value::after", "width", "\t"); ?>
 	.post .karma .karma-value:hover::after,
 	.comment-item .karma .karma-value:hover::after {
 		opacity: 1.0;
