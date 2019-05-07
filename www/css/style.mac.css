@@ -27,6 +27,8 @@
 	--GW-UI-font-weight-light: 400;
 	--GW-UI-font-weight-heavy: 700;
 
+	--GW-nav-item-font-weight: var(--GW-UI-font-weight-heavy);
+
 	--GW-keyboard-help-overlay-font: var(--GW-UI-font);
 
 	--GW-theme-selector-tooltip-font: var(--GW-UI-font);
@@ -1817,7 +1819,7 @@ a {
 	width: 100%;
 	height: 100%;
 
-	font-weight: var(--GW-UI-font-weight-heavy);
+	font-weight: var(--GW-nav-item-font-weight);
 }
 #primary-bar .nav-inner,
 #bottom-bar .nav-inner {
@@ -6514,6 +6516,8 @@ th.mathjax-inline-container {
 	--GW-UI-font-weight-heavy: 600;
 
 	--GW-monospaced-font: 'Consolas', var(--GW-monospaced-fallback-font-stack);
+
+	--GW-nav-item-font-weight: 500;
 
 	--GW-post-listings-font: 'Concourse', var(--GW-sans-serif-fallback-font-stack);
 	--GW-post-listings-font-weight: 700;

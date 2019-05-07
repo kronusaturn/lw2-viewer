@@ -42,7 +42,7 @@
 	width: 100%;
 	height: 100%;
 
-	font-weight: var(--GW-UI-font-weight-heavy);
+	font-weight: var(--GW-nav-item-font-weight);
 }
 #primary-bar .nav-inner,
 #bottom-bar .nav-inner {

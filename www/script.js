@@ -3884,21 +3884,8 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		mjxContainer.style.height = mjxContainer.offsetHeight + "px";
 	});
 
-	// On mobile, wrap authors to limit tappable area.
-	if (query(".comment-thread")) {
-		doWhenMatchMedia(GW.mediaQueries.mobileNarrow, "wrapAuthorsInCommentListings", () => {
-			queryAll(".comment-meta > .author").forEach(author => {
-				author.outerHTML = `<span class='author-wrapper'>${author.outerHTML}</span>`;
-			});
-		}, () => {
-			queryAll(".author-wrapper").forEach(wrapper => {
-				wrapper.outerHTML = wrapper.innerHTML;
-			});
-		});
-	}
-
 	// If we’re on a comment thread page...
-	if (query(".comments") != null) {
+	if (query(".comments")) {
 		// Add comment-minimize buttons to every comment.
 		queryAll(".comment-meta").forEach(commentMeta => {
 			if (!commentMeta.lastChild.hasClass("comment-minimize-button"))
@@ -3913,6 +3900,17 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 				});
 			});
 		}
+
+		// On mobile, wrap authors to limit tappable area.
+		doWhenMatchMedia(GW.mediaQueries.mobileNarrow, "wrapAuthorsInCommentListings", () => {
+			queryAll(".comment-meta > .author").forEach(author => {
+				author.outerHTML = `<span class='author-wrapper'>${author.outerHTML}</span>`;
+			});
+		}, () => {
+			queryAll(".author-wrapper").forEach(wrapper => {
+				wrapper.outerHTML = wrapper.innerHTML;
+			});
+		});
 	}
 	if (getQueryVariable("chrono") == "t") {
 		query("head").insertAdjacentHTML("beforeend", "<style>.comment-minimize-button::after { display: none; }</style>");

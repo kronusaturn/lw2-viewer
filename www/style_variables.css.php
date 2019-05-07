@@ -22,6 +22,8 @@
 	--GW-UI-font-weight-light: 400;
 	--GW-UI-font-weight-heavy: 700;
 
+	--GW-nav-item-font-weight: var(--GW-UI-font-weight-heavy);
+
 	--GW-keyboard-help-overlay-font: var(--GW-UI-font);
 
 	--GW-theme-selector-tooltip-font: var(--GW-UI-font);

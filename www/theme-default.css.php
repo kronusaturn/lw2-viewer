@@ -16,6 +16,8 @@
 
 	--GW-monospaced-font: 'Consolas', var(--GW-monospaced-fallback-font-stack);
 
+	--GW-nav-item-font-weight: 500;
+
 	--GW-post-listings-font: 'Concourse', var(--GW-sans-serif-fallback-font-stack);
 	--GW-post-listings-font-weight: 700;
 
