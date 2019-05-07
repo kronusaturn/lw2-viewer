@@ -7851,6 +7851,9 @@ h1.post-title .post-type-prefix {
 .post-meta .post-section::before {
 	color: #1f1f1f;
 }
+.post-meta .post-section:hover {
+	text-decoration: none;
+}
 .post-meta .post-section:hover::before {
 	color: #9740cb;
 }
