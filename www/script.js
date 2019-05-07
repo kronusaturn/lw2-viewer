@@ -3876,7 +3876,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	// Shorten post prefixes.
 	queryAll(".listing .post-type-prefix").forEach(prefix => {
 		if (/Question/.test(prefix.textContent))
-			prefix.textContent = "[Q] ";
+			prefix.textContent = "Q: ";
 	});
 
 	// Rectify mathjax block container heights.

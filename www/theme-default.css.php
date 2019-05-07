@@ -25,6 +25,11 @@
 
 	--GW-comment-meta-author-font-weight: 700;
 }
+@media only screen and (max-width: 900px) {
+	:root {
+		--GW-nav-item-font-weight: 600;
+	}
+}
 
 /*	Layout.
 	*/
@@ -135,6 +140,10 @@ body {
 .inactive-bar .nav-item:not(.nav-current):not(#nav-item-search):hover,
 .inactive-bar #nav-item-search:not(.nav-current):focus-within {
 	background-color: #d8d8d8;
+}
+
+.nav-current .nav-inner {
+	font-weight: var(--GW-UI-font-weight-heavy);
 }
 
 .nav-bar a:hover,
