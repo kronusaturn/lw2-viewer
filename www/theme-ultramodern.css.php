@@ -819,6 +819,7 @@ h1.listing a {
 }
 h1.listing a[href^="http"] {
 	color: #a2cbf2;
+	width: 1em;
 }
 
 @media only screen and (hover: hover) and (pointer: fine) {
@@ -840,6 +841,15 @@ h1.listing a[href^="http"] {
 	h1.listing a[href^="http"]:hover {
 		color: #a2f2c9;
 	}
+}
+
+/*=------------------=*/
+/*= Post type prefix =*/
+/*=------------------=*/
+
+h1.listing .post-type-prefix {
+	width: 1.125em;
+	display: inline-block;
 }
 
 h1.listing:not(:focus-within) a:not(:hover) .post-type-prefix {
@@ -1307,28 +1317,20 @@ article > .post-meta > *,
 
 /*	Post section.
 	*/
-.post-meta .post-section::before,
-.comment-meta .alignment-forum {
-	color: #888;
-}
 .post-meta .post-section::before {
-	text-shadow: 
-		1px 1px 0 #ccc, 
-		0 1px 0 #ccc, 
-		0 0 5px #ccc;
+	color: #777;
 }
-a.post-section:hover::before {
-	color: #aaa;
+.post-meta .post-section:hover::before {
+	color: #050;
 }
 .post-meta .post-section.alignment-forum::before,
 .comment-meta .alignment-forum {
-	text-shadow:
-		1px 1px 0   #b9bbff,
-		0   1px 0   #b9bbff,
-		0   0   5px #b9bbff;
+	color: #6f749f;
+	padding: 1px 0 0 0;
 }
-a.post-section.alignment-forum:hover::before {
-	color: #9093d4;
+.post-meta .post-section.alignment-forum:hover::before,
+.comment-meta .alignment-forum {
+	color: #1f3e9f;
 }
 
 /*============*/
