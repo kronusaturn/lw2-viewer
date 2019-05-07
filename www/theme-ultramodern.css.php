@@ -246,10 +246,6 @@ p {
 	font-weight: 300;
 }
 
-#bottom-bar .nav-item a::before {
-	font-weight: 400;
-}
-
 #top-nav-bar a::after,
 #bottom-bar a::after {
 	color: #222;

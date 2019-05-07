@@ -201,10 +201,6 @@ body {
 }
 
 #bottom-bar .nav-item a::before {
-	font-weight: 400;
-}
-
-#bottom-bar .nav-item a::before {
 	font-size: 0.875em;
 	bottom: 0;
 }

@@ -383,7 +383,7 @@
 #bottom-bar .nav-item a::before,
 #top-nav-bar a::before {
 	font-family: var(--GW-Font-Awesome);
-	font-weight: 900;
+	font-weight: 400;
 	font-size: 0.8em;
 	position: relative;
 	bottom: 1px;

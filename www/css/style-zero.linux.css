@@ -2169,7 +2169,7 @@ a {
 #bottom-bar .nav-item a::before,
 #top-nav-bar a::before {
 	font-family: var(--GW-Font-Awesome);
-	font-weight: 900;
+	font-weight: 400;
 	font-size: 0.8em;
 	position: relative;
 	bottom: 1px;
@@ -6699,10 +6699,6 @@ body {
 #top-nav-bar a::after,
 #bottom-bar a::after {
 	color: #000;
-}
-
-#bottom-bar .nav-item a::before {
-	font-weight: 400;
 }
 
 #bottom-bar .nav-item a::before {

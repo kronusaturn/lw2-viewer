@@ -259,6 +259,9 @@ body {
 	padding: 1px 6px;
 }
 <?php fit_content("#bottom-bar a:not([href='#top'])::after"); ?>
+#bottom-bar .nav-item a::before {
+	font-weight: 900;
+}
 
 /*==============*/
 /* PAGE TOOLBAR */

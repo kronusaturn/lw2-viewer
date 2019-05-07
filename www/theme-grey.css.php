@@ -269,10 +269,6 @@ body {
 	color: #000;
 }
 
-#bottom-bar .nav-item a::before {
-	font-weight: 400;
-}
-
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
