@@ -14,6 +14,7 @@
 	--GW-theme-selector-button-spacing: 1px;
 	--GW-theme-selector-button-size: <?php $theme_selector_button_size = 16; echo $theme_selector_button_size . "px"; ?>;
 	--GW-theme-selector-button-padding: 5px;
+	--GW-theme-selector-button-sprites: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_icons.gif")) ?>');
 
 	--GW-quick-nav-ui-left-margin: 28px;
 	--GW-quick-nav-ui-bottom-margin: 24px;
@@ -191,7 +192,7 @@
 	padding: var(--GW-theme-selector-button-padding);
 	color: transparent;
 	background-origin: content-box;
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_icons.gif")) ?>');
+	background-image: var(--GW-theme-selector-button-sprites);
 	background-size: auto var(--GW-theme-selector-button-size);
 }
 #theme-selector button:nth-of-type(n+2) {
@@ -345,7 +346,7 @@ EOT;
 	}
 	#theme-selector button {
 		width: calc(100% - 0.5em);
-		background-repeat: no-repeat;
+		background-image: none;
 		padding: 1em 0.875em;
 		line-height: 1;
 		height: unset;
@@ -354,8 +355,17 @@ EOT;
 	#theme-selector button:nth-of-type(n) {
 		margin: 1px 4px;
 	}
-	#theme-selector button::before {
-		display: none;
+	#theme-selector button:nth-of-type(n)::before {
+		width: var(--GW-theme-selector-button-size);
+		height: var(--GW-theme-selector-button-size);
+		position: absolute;
+		visibility: visible;
+		content: "";
+		background-image: var(--GW-theme-selector-button-sprites);
+		background-size: inherit;
+		background-position: inherit;
+		left: 0.875em;
+		top: 1em;
 	}
 	#theme-selector button::after {
 		content: attr(data-theme-description);
@@ -406,6 +416,9 @@ EOT;
 		max-width: unset;
 		z-index: -1;
 		cursor: default;
+	}
+	#theme-selector .theme-selector-close-button::before {
+		display: none;
 	}
 }
 

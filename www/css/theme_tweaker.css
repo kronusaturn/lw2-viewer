@@ -135,8 +135,8 @@
 	width: 26px;
 	height: 26px;
 	display: inline-block;
-	padding: 1px 0 0 1px;
-	border: 4px solid #bfb8bf;
+	padding: 0;
+	border: 5px solid #bfb8bf;
 	margin: 8px 10px 8px 4px;
 }
 #theme-tweaker-ui .theme-selector button:active,
