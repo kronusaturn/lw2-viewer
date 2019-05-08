@@ -7388,10 +7388,8 @@ h1.listing .post-type-prefix {
 }
 
 h1.listing:not(:focus-within) a:not(:hover) .post-type-prefix {
-	color: #ffb21a;
-	text-shadow:
-		0 0 0 #ffdf00,
-		0 0 1px #ffdf00;
+	opacity: 0.6;
+	text-shadow: 0 0 0 currentColor;
 }
 
 /*=----------------------------=*/

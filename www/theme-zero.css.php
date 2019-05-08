@@ -724,8 +724,8 @@ h1.listing {
 }
 
 h1.listing a[href^="http"] {
-	color: #00c;
-	width: 1.125em;
+	color: #0081ff;
+	width: 1.25em;
 }
 h1.listing a[href^="/posts"] {
 	color: #000;
@@ -1070,9 +1070,10 @@ article > .post-meta > *,
 	color: #090;
 }
 
-/*	Date.
+/*	Date, link post domain.
 	*/
-.post-meta .date {
+.post-meta .date,
+.post-meta .link-post-domain {
 	color: #888;
 }
 
