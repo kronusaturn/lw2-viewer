@@ -7336,7 +7336,7 @@ h1.listing a[href^='/'] {
 }
 h1.listing a[href^="http"] {
 	color: #19a2e6;
-	width: 1.375em;
+	min-width: 1.375em;
 }
 
 @media only screen and (hover: hover) and (pointer: fine) {

@@ -7446,7 +7446,7 @@ h1.listing .post-type-prefix {
 }
 
 h1.listing:not(:focus-within) a:not(:hover) .post-type-prefix {
-	opacity: 0.35;
+	color: var(--GW-C6);
 	text-shadow: 0 0 0 currentColor;
 }
 
