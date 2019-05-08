@@ -30,6 +30,8 @@
 	--GW-link-post-link-font-weight: 600;
 
 	--GW-TOC-heading-font-weight: 700;
+
+	--GW-keyboard-help-overlay-font: 'Concourse', var(--GW-sans-serif-fallback-font-stack);
 }
 
 /*	Layout.
@@ -1702,6 +1704,62 @@ button.guiedit::after {
 	background-color: var(--GW-C0);
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	.comment-controls .cancel-comment-button {
+		max-width: 1.4em;
+	}
+	.comment-controls .cancel-comment-button::before {
+		opacity: 1.0;
+		position: relative;
+		top: -1px;
+	}
+}
+@media only screen and (max-width: 520px) {
+	.textarea-container:focus-within textarea {
+		background-color: var(--GW-C0);
+		border: none;
+		box-shadow:
+			0 0 0 2px #000;
+	}
+	.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
+		padding: 5px 6px 6px 6px;
+		color: var(--GW-C0);
+		box-shadow: none;
+	}
+	.textarea-container:focus-within .guiedit-mobile-help-button.active {
+		box-shadow:
+			0 0 0 1px #000 inset,
+			0 0 0 3px var(--GW-C0) inset,
+			0 0 0 2px var(--GW-C0);
+	}
+	.textarea-container:focus-within .guiedit-buttons-container {
+		border-top: 2px solid #000;
+	}
+	.posting-controls .textarea-container:focus-within .guiedit-buttons-container {
+		padding-bottom: 5px;
+	}
+	#content.conversation-page .textarea-container:focus-within::after {
+		background-color: #000;
+	}
+	.textarea-container:focus-within button.guiedit {
+		border: 1px solid transparent;
+	}
+	#markdown-hints,
+	#edit-post-form #markdown-hints {
+		border: 2px solid #000;
+		box-shadow:
+			0 0 0 2px var(--GW-C0),
+			0 0 0 4px #000;
+	}
+	#markdown-hints::after {
+		color: #000;
+	}
+}
+
 /*================*/
 /* EDIT POST FORM */
 /*================*/
@@ -1769,6 +1827,35 @@ button.guiedit::after {
 
 #edit-post-form #markdown-hints-checkbox + label {
 	padding: 4px 0 0 6px;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	#edit-post-form textarea {
+		min-height: calc(100vh - 400px)
+	}
+	#edit-post-form #markdown-hints {
+		position: fixed;
+		top: 74px;
+		left: 0;
+		right: 0;
+		max-width: 330px;
+		margin: auto;
+	}
+	#edit-post-form input[type='submit'] {
+		background-color: var(--GW-C0);
+	}
+}
+@media only screen and (max-width: 520px) {
+	#edit-post-form .post-meta-fields input[type='checkbox'] + label {
+		top: 0;
+	}
+	#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
+		top: 1px;
+	}
 }
 
 /*===========*/
@@ -2033,7 +2120,73 @@ select {
 /* KEYBOARD HELP */
 /*===============*/
 
+#keyboard-help-overlay .keyboard-help-container {
+	background-color: var(--GW-C0);
+}
 
+/*=-------------=*/
+/*= Scroll bars =*/
+/*=-------------=*/
+
+#keyboard-help-overlay .keyboard-help-container::-webkit-scrollbar {
+	width: 14px;
+	background-color: transparent;
+}
+#keyboard-help-overlay .keyboard-help-container::-webkit-scrollbar-track {
+	border-left: 1px solid var(--GW-C5);
+}
+#keyboard-help-overlay .keyboard-help-container::-webkit-scrollbar-track:hover {
+	border-left: 1px solid var(--GW-C8);
+}
+#keyboard-help-overlay .keyboard-help-container::-webkit-scrollbar-thumb {
+	background-color: var(--GW-C5);
+	box-shadow:
+		1px 0 0 0 var(--GW-C0) inset,
+		-1px 0 0 0 var(--GW-C0) inset,
+		0 1px 0 0 var(--GW-C0) inset,
+		0 -1px 0 0 var(--GW-C0) inset;
+	border-left: 1px solid var(--GW-C5);
+}
+#keyboard-help-overlay .keyboard-help-container::-webkit-scrollbar-thumb:hover {
+	background-color: var(--GW-C8);
+	border-left: 1px solid var(--GW-C8);
+}
+
+/*=--------------------=*/
+/*= Dividers & heading =*/
+/*=--------------------=*/
+
+#keyboard-help-overlay .keyboard-help-container h1 {
+	font-family: var(--GW-UI-font);
+	font-size: 1.5em;
+}
+#keyboard-help-overlay .keyboard-help-container h1,
+#keyboard-help-overlay .keyboard-help-container .keyboard-shortcuts-lists {
+	border-color: var(--GW-C1);
+	border-style: dotted;
+}
+
+/*=------=*/
+/*= Keys =*/
+/*=------=*/
+
+#keyboard-help-overlay .keyboard-help-container code {
+	background-color: var(--GW-C2);
+	border: 1px solid var(--GW-C5);
+}
+#keyboard-help-overlay .keyboard-help-container code.ak {
+	background-color: var(--GW-C0);
+	border-color: var(--GW-C5);
+}
+
+/*=--------=*/
+/*= Labels =*/
+/*=--------=*/
+
+#keyboard-help-overlay .keyboard-help-container ul li.section {
+	font-family: var(--GW-UI-font);
+	font-size: 1.375em;
+}
 
 /*=================*/
 /* ALIGNMENT FORUM */
@@ -2047,82 +2200,4 @@ select {
 	padding-left: var(--GW-current-page-content-left-side-padding);
 	margin: -0.5em 0 0.5em 0;
 	color: var(--GW-C6);
-}
-
-/*========*/
-/* MOBILE */
-/*========*/
-
-@media only screen and (max-width: 900px) {
-	#edit-post-form textarea {
-		min-height: calc(100vh - 400px)
-	}
-	#edit-post-form #markdown-hints {
-		position: fixed;
-		top: 74px;
-		left: 0;
-		right: 0;
-		max-width: 330px;
-		margin: auto;
-	}
-	#edit-post-form input[type='submit'] {
-		background-color: var(--GW-C0);
-	}
-
-	.comment-controls .cancel-comment-button {
-		max-width: 1.4em;
-	}
-	.comment-controls .cancel-comment-button::before {
-		opacity: 1.0;
-		position: relative;
-		top: -1px;
-	}
-}
-@media only screen and (max-width: 520px) {
-	.textarea-container:focus-within textarea {
-		background-color: var(--GW-C0);
-		border: none;
-		box-shadow:
-			0 0 0 2px #000;
-	}
-	.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
-		padding: 5px 6px 6px 6px;
-		color: var(--GW-C0);
-		box-shadow: none;
-	}
-	.textarea-container:focus-within .guiedit-mobile-help-button.active {
-		box-shadow:
-			0 0 0 1px #000 inset,
-			0 0 0 3px var(--GW-C0) inset,
-			0 0 0 2px var(--GW-C0);
-	}
-	.textarea-container:focus-within .guiedit-buttons-container {
-		border-top: 2px solid #000;
-	}
-	.posting-controls .textarea-container:focus-within .guiedit-buttons-container {
-		padding-bottom: 5px;
-	}
-	#content.conversation-page .textarea-container:focus-within::after {
-		background-color: #000;
-	}
-	.textarea-container:focus-within button.guiedit {
-		border: 1px solid transparent;
-	}
-	#markdown-hints,
-	#edit-post-form #markdown-hints {
-		border: 2px solid #000;
-		box-shadow:
-			0 0 0 2px var(--GW-C0),
-			0 0 0 4px #000;
-	}
-	#markdown-hints::after {
-		color: #000;
-	}
-
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label {
-		top: 0;
-	}
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
-		top: 1px;
-	}
 }
