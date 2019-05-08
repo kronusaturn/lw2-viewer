@@ -1350,6 +1350,19 @@ article > .post-meta > *,
 	border: 2px dotted var(--GW-C1);
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	.comment-item .comment-item {
+		margin: 0.75em 2px 3px 6px;
+	}
+	.comment-item .comment-item + .comment-item {
+		margin: 1.5em 2px 3px 6px;
+	}
+}
+
 /*=========*/
 /* ANSWERS */
 /*=========*/
@@ -2031,21 +2044,14 @@ select {
 /* ALIGNMENT FORUM */
 /*=================*/
 
-#content.alignment-forum-index-page::before {
-	background-color: #f2f6ff;
-}
 #content.alignment-forum-index-page::after {
-	background-color: #7f85b2;
-	color: transparent;
-	-webkit-background-clip: text;
-	text-shadow: 
-		rgba(255, 255, 255, 0.5) 0px 3px 3px;
-}
-@media only screen and (hover: hover) and (pointer: fine) {
-	#content.alignment-forum-index-page h1.listing a:hover,
-	#content.alignment-forum-index-page h1.listing a:focus {
-		background-color: rgba(242, 246, 255, 0.85);
-	}
+	font-family: var(--GW-post-listings-font);
+	text-transform: uppercase;
+	font-weight: bold;
+	border-bottom: 2px solid var(--GW-C1);
+	padding-left: var(--GW-current-page-content-left-side-padding);
+	margin: -0.5em 0 0.5em 0;
+	color: var(--GW-C6);
 }
 
 /*========*/
@@ -2053,17 +2059,6 @@ select {
 /*========*/
 
 @media only screen and (max-width: 900px) {
-	.comment-item .comment-item {
-		margin: 0.75em 2px 3px 6px;
-	}
-	.comment-item .comment-item + .comment-item {
-		margin: 1.5em 2px 3px 6px;
-	}
-
-	a.comment-parent-link::before {
-		line-height: 1;
-	}
-
 	#edit-post-form textarea {
 		min-height: calc(100vh - 400px)
 	}
@@ -2089,10 +2084,6 @@ select {
 	}
 }
 @media only screen and (max-width: 520px) {
-	#content.compact > .comment-thread .comment-item {
-		max-height: 110px;
-	}
-
 	.textarea-container:focus-within textarea {
 		background-color: var(--GW-C0);
 		border: none;
