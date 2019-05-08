@@ -1322,9 +1322,9 @@ a.comment-child-link::before {
 #content.no-comments #comments, 
 #content.no-comments .post-meta .comment-count,
 #content.no-comments .post-meta .karma,
+#content.no-comments #answers .comment-controls,
 #content.no-comments .answer-item .comment-thread,
 #content.no-comments .answer-item .karma,
-#content.no-comments .answer-item .comment-controls,
 #content.no-comments + #ui-elements-container #new-comment-nav-ui,
 #content.no-comments + #ui-elements-container #hns-date-picker {
 	display: none;
@@ -1334,14 +1334,16 @@ a.comment-child-link::before {
 #content.no-nav-bars #secondary-bar {
 	display: none;
 }
+#content.no-nav-bars .post,
 #content.no-nav-bars #bottom-bar {
-	grid-row: 4;
+	grid-row: unset;
 }
 #content.no-nav-bars {
 	margin: 8px auto;
 }
-#content.no-nav-bars + #ui-elements-container > * {
-	padding-top: 8px;
+#content.no-nav-bars + #ui-elements-container {
+	top: 8px;
+	height: calc(100vh - 8px);
 }
 
 /*	Viewport width adjustments.
@@ -1358,9 +1360,10 @@ a.comment-child-link::before {
 
 #aux-about-link {
 	position: absolute;
-	top: 40px;
-	left: -70px;
 	width: 1.5em;
+	top: 0;
+	right: 100%;
+	margin: 8px 52px;
 }
 #aux-about-link a {
 	font-family: var(--GW-Font-Awesome);
