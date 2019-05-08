@@ -1769,6 +1769,22 @@ button.guiedit::after {
 	padding: 4px 0 0 6px;
 }
 
+/*===========*/
+/* SEQUENCES */
+/*===========*/
+
+.sequence-text {
+	font-size: 1.125rem;
+}
+
+h1.sequence-chapter {
+	font-size: 2rem;
+}
+
+#content.sequences-page::after {
+	text-transform: uppercase;
+}
+
 /*=======*/
 /* LINKS */
 /*=======*/
@@ -1790,18 +1806,21 @@ input[type='submit'] {
 	border: none;
 }
 
-button:hover,
-input[type='submit']:hover,
-button:focus,
-input[type='submit']:focus {
-	text-decoration: none;
-	background-color: transparent;
-	color: inherit;
-	box-shadow: 
-		0 0 0 2px var(--GW-C0) inset,
-		0 0 0 4px var(--GW-C1) inset,
-		0 0 0 1px transparent;
+@media only screen and (hover: hover) and (pointer: fine) {
+	button:hover,
+	button:focus,
+	input[type='submit']:hover,
+	input[type='submit']:focus {
+		text-decoration: none;
+		background-color: transparent;
+		color: inherit;
+		box-shadow: 
+			0 0 0 2px var(--GW-C0) inset,
+			0 0 0 4px var(--GW-C1) inset,
+			0 0 0 1px transparent;
+	}
 }
+
 button:active,
 input[type='submit']:active {
 	box-shadow: 
@@ -1814,11 +1833,18 @@ input[type='submit']:active {
 /* HEADINGS */
 /*==========*/
 
-.body-text h6 {
-	color: #555;
-}
 .body-text h1 {
 	border-bottom: 2px solid var(--GW-C1);
+}
+.body-text h2 {
+	border-bottom: 1px solid var(--GW-C1);
+}
+.body-text h3 {
+	border-bottom: 1px dotted var(--GW-C1);
+}
+.body-text h6 {
+	font-weight: normal;
+	font-style: italic;
 }
 
 /*========*/
@@ -1868,7 +1894,7 @@ blockquote {
 /*======*/
 
 hr {
-	border-bottom: 1px solid #999;
+	border-bottom: 1px dotted var(--GW-C1);
 }
 
 code {
@@ -1913,21 +1939,8 @@ select {
 /* ABOUT PAGE */
 /*============*/
 
-.about-page mark {
-	background-color: #e6e6e6;
-	text-decoration: none;
-	box-shadow: 
-		0 -1px 0 0 #000 inset, 
-		0 -3px 1px -2px #000 inset;
-	padding: 0 1px;
-}
-
-#content.about-page .accesskey-table {
-	border-color: #ddd;
-}
-
 #content.about-page img {
-	border: 1px solid #000;
+	border: 1px solid var(--GW-C1);
 }
 
 /*========================*/
