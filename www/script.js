@@ -3575,6 +3575,15 @@ function toggleKeyboardHelpOverlay(show) {
 	setSearchBoxTabSelectable(!show);
 }
 
+/**********/
+/* POPUPS */
+/**********/
+
+function popupsSetup() {
+	document.body.insertAdjacentHTML("beforeend", "<div id='popups-overlay-fixed'></div>");
+	document.body.insertAdjacentHTML("beforeend", "<div id='popups-overlay-scrolling'></div>");
+}
+
 /*******************************/
 /* HTML TO MARKDOWN CONVERSION */
 /*******************************/
@@ -4193,6 +4202,9 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 	// Set up keyboard shortcuts guide overlay.
 	keyboardHelpSetup();
+
+	// Set up popups overlay.
+// 	popupsSetup();
 });
 
 /******************/

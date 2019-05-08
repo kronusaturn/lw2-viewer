@@ -17,6 +17,7 @@ html {
 body {
 	padding: 0;
 	margin: 0;
+	position: relative;
 
 	font-family: var(--GW-UI-font);
 	background-color: var(--GW-body-background-color);

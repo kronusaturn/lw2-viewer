@@ -1258,3 +1258,32 @@ EOT;
 	width: 100%;
 }
 
+/**********/
+/* POPUPS */
+/**********/
+
+#popups-overlay-scrolling,
+#popups-overlay-fixed {
+	top: 0;
+	left: 0;
+	width: 100%;
+	max-width: unset;
+	height: 100%;
+	z-index: 11111;
+	pointer-events: none;
+}
+@media only screen and (max-width: 900px) {
+	#popups-overlay-scrolling,
+	#popups-overlay-fixed {
+		min-width: unset;
+	}
+}
+
+#popups-overlay-scrolling {
+	position: absolute;
+}
+
+#popups-overlay-fixed {
+	position: fixed;
+}
+
