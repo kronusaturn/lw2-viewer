@@ -784,9 +784,6 @@ div.comment-parent-link {
 a.comment-parent-link {
 	font-weight: var(--GW-UI-font-weight-light);
 }
-a.comment-parent-link:hover::before {
-	background-color: var(--GW-comment-background-color-target);
-}
 
 /*	Hover highlighting.
 	*/
@@ -806,9 +803,6 @@ a.comment-parent-link:hover::before {
 		top: -1px;
 		left: -18px;
 		border-left: 1px solid transparent;
-	}
-	a.comment-parent-link:hover::before {
-		border-left: 1px solid var(--GW-comment-item-outline-color);
 	}
 	a.comment-parent-link::after {
 		content: "";

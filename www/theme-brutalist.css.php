@@ -1350,19 +1350,6 @@ article > .post-meta > *,
 	border: 2px dotted var(--GW-C1);
 }
 
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
-@media only screen and (max-width: 900px) {
-	.comment-item .comment-item {
-		margin: 0.75em 2px 3px 6px;
-	}
-	.comment-item .comment-item + .comment-item {
-		margin: 1.5em 2px 3px 6px;
-	}
-}
-
 /*=========*/
 /* ANSWERS */
 /*=========*/
@@ -1410,7 +1397,9 @@ a.comment-parent-link::after {
 
 a.comment-parent-link::before {
 	color: var(--GW-C3);
-	padding: 4px 3px 0 2px;
+	padding: 4px 3px 0 1px;
+	width: 18px;
+	border-left: 2px solid transparent;
 }
 a.comment-parent-link:hover::before {
 	color: var(--GW-C6);
@@ -2040,6 +2029,12 @@ select {
 	height: 8px;
 }
 
+/*===============*/
+/* KEYBOARD HELP */
+/*===============*/
+
+
+
 /*=================*/
 /* ALIGNMENT FORUM */
 /*=================*/
@@ -2131,7 +2126,3 @@ select {
 		top: 1px;
 	}
 }
-
-/*===============*/
-/* KEYBOARD HELP */
-/*===============*/
