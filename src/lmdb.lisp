@@ -56,6 +56,7 @@
 (defun prepare-environment (environment-container)
   (let ((environment (environment-container-environment environment-container))
         (open-databases (environment-container-open-databases environment-container)))
+    (assert (not lmdb:*transaction*) () "The transaction in which a database is created must be closed before that database may be used in another thread.")
     (with-environment-transaction (environment)
       (dolist (db-name *cache-databases-list*)
 	(unless (gethash db-name open-databases)
