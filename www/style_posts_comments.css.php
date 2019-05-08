@@ -525,11 +525,9 @@ ul.comment-thread {
 	padding: 0;
 	max-width: 100%;
 }
-.comments .comment-thread > li {
-	position: relative;
-}
 
 .comment-item {
+	position: relative;
 	margin: 2em 0 0 0;
 	background-color: var(--GW-comment-background-color);
 }

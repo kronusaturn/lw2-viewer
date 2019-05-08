@@ -405,7 +405,7 @@
 	margin: 0 0 0 calc(var(--GW-current-page-content-left-side-padding) - 0.75em);
 }
 #content.alignment-forum-index-page #top-nav-bar {
-	margin: 0.25em 0 0 0;
+	margin-bottom: 0.25em;
 }
 
 /*=----------------------------=*/

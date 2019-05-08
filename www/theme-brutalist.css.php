@@ -1691,16 +1691,24 @@ button.guiedit {
 	border: none;
 }
 button.guiedit:hover,
-button.guiedit:active,
-button.guiedit:focus {
+button.guiedit:active {
 	box-shadow: none;
-	color: #777;
+	color: #fff;
+	box-shadow:
+		0 -2px 0 0   #000 inset,
+		0  0   0 2px #fff inset,
+		0 -2px 0 2px #fff inset;
 }
-button.guiedit::after {
-	color: var(--GW-C0);
-	top: 2px;
-	height: 25px;
-	text-shadow: none;
+button.guiedit:active {
+	box-shadow:
+		0  2px 0 0   #000 inset,
+		0 -4px 0 2px #000 inset,
+		0 -4px 0 0   #000 inset,
+		0  0   0 4px #fff inset,
+		0 -4px 0 4px #fff inset;
+}
+button.guiedit:active div {
+	transform: none;
 }
 
 /* Markdown hints */

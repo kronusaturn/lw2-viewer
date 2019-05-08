@@ -374,23 +374,29 @@ Element.prototype.addTextareaFeatures = function() {
 	textarea.insertAdjacentHTML("beforebegin", "<div class='guiedit-buttons-container'></div>");
 	let textareaContainer = textarea.closest(".textarea-container");
 	var buttons_container = textareaContainer.query(".guiedit-buttons-container");
-	for (var button of GW.guiEditButtons) {
-		let [ name, desc, accesskey, m_before_or_func, m_after, placeholder, icon ] = button;
+	for (var buttonSpec of GW.guiEditButtons) {
+		// Get button specification.
+		let [ name, desc, accesskey, m_before_or_func, m_after, placeholder, icon ] = buttonSpec;
+
+		// Construct button.
 		buttons_container.insertAdjacentHTML("beforeend", 
-			"<button type='button' class='guiedit guiedit-" 
-			+ name
-			+ "' tabindex='-1'"
-			+ ((accesskey != "") ? (" accesskey='" + accesskey + "'") : "")
-			+ " title='" + desc + ((accesskey != "") ? (" [" + accesskey + "]") : "") + "'"
-			+ " data-tooltip='" + desc + ((accesskey != "") ? (" [" + accesskey + "]") : "") + "'"
-			+ " onclick='insertMarkup(event,"
-			+ ((typeof m_before_or_func == 'function') ?
-				m_before_or_func.name : 
-				("\"" + m_before_or_func  + "\",\"" + m_after + "\",\"" + placeholder + "\""))
-			+ ");'><div>"
-			+ icon
-			+ "</div></button>"
+			`<button type='button' class='guiedit guiedit-${name}' tabindex='-1' title='${desc}' data-tooltip='${desc}'>
+				<div>${icon}</div>
+			</button>`
 		);
+		let button = buttons_container.lastElementChild;
+
+		// Set accesskey (if specified).
+		if (accesskey != "") {
+			button.accessKey = accesskey;
+			button.title += ` [${accesskey}]`;
+			button.dataset.tooltip += ` [${accesskey}]`;
+		}
+
+		// Add click event handler.
+		button.addActivateEvent(GW.GUIEditButtonClicked = (event) => {
+			insertMarkup(event, m_before_or_func, m_after, placeholder);
+		});
 	}
 
 	// Inject markdown hints box (hidden unless user clicks to show).
