@@ -1249,6 +1249,8 @@ function postSetThemeHousekeeping(oldThemeName = "", newThemeName = (readCookie(
 		});
 	});
 
+	document.body.toggleClass("filter-inverted", GW.currentFilters["inverted"]);
+
 	if (window.adjustmentTransitions) pageFadeTransition(true);
 	updateThemeTweakerSampleText();
 

@@ -30,6 +30,15 @@ body::before {
 }
 
 /*=----------------------------=*/
+/*= Text rendering adjustments =*/
+/*=----------------------------=*/
+
+body.filter-inverted,
+body.filter-inverted .body-text {
+	text-shadow: 0 0 0 currentColor;
+}
+
+/*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 

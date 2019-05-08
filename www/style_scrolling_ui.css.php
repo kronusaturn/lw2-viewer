@@ -853,6 +853,7 @@ a#inbox-indicator.new-messages:hover::before {
 	align-self: start;
 	flex-flow: column;
 	pointer-events: none;
+	z-index: 1;
 }
 #content.index-page .sublevel-nav.sort {
 	grid-row: 3 / span 1;

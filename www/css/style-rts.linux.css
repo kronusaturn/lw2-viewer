@@ -280,6 +280,15 @@ body::before {
 }
 
 /*=----------------------------=*/
+/*= Text rendering adjustments =*/
+/*=----------------------------=*/
+
+body.filter-inverted,
+body.filter-inverted .body-text {
+	text-shadow: 0 0 0 currentColor;
+}
+
+/*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
@@ -2687,6 +2696,7 @@ a#inbox-indicator.new-messages:hover::before {
 	align-self: start;
 	flex-flow: column;
 	pointer-events: none;
+	z-index: 1;
 }
 #content.index-page .sublevel-nav.sort {
 	grid-row: 3 / span 1;
