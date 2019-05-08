@@ -6578,7 +6578,7 @@ th.mathjax-inline-container {
 	--GW-UI-font-weight-light: 400;
 	--GW-UI-font-weight-heavy: 600;
 
-	--GW-monospaced-font: 'Consolas', var(--GW-monospaced-fallback-font-stack);
+	--GW-monospaced-font: 'Triplicate', var(--GW-monospaced-fallback-font-stack);
 
 	--GW-nav-item-font-weight: 500;
 
@@ -8242,6 +8242,9 @@ a.comment-parent-link:hover::before {
 	border-color: #484848;
 	box-shadow: 
 		0 0 0 1px #131313 inset;
+	font-size: 1.125rem;
+	line-height: 1.35;
+	font-feature-settings: 'ss01';
 }
 .posting-controls textarea:focus {
 	background-color: #00001e;
@@ -8577,7 +8580,8 @@ hr {
 }
 
 code {
-	padding: 3px 4px 0 5px;
+	padding: 1px 4px 0 5px;
+	margin: 0 3px;
 	background-color: #0b0b00;
 	border: 1px solid #0b0b00;
 	border-radius: 4px;
@@ -8586,6 +8590,7 @@ code {
 		0 1px 0 1px #0b0b00,
 		0 1px 0 2px #1d1f00,
 		0 0 0 2px #1d1f00;
+	font-feature-settings: 'ss02';
 }
 
 input[type='text'],
@@ -8733,7 +8738,7 @@ u {
 #keyboard-help-overlay .keyboard-help-container code {
 	background-color: #131313;
 	border: 1px solid #2c2c2c;
-	padding: 5px 8px 2px 8px;
+	padding: 4px 8px;
 }
 #keyboard-help-overlay .keyboard-help-container code.ak {
 	background-color: #001b5f;
