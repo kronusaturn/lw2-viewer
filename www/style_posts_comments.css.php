@@ -433,7 +433,8 @@ h1.post-title .post-type-prefix {
 	border-style: solid;
 	border-width: 1px 0;
 }
-#content:not(.in-sequence) .bottom-post-meta {
+#content:not(.in-sequence):not(.no-comments) .bottom-post-meta,
+#content:not(.in-sequence).question-post-page.no-comments .bottom-post-meta {
 	border-bottom: none;
 }
 
@@ -1318,18 +1319,23 @@ a.comment-child-link::before {
 /* QUALIFIED HYPERLINKING */
 /**************************/
 
-#content.no-comments .comments, 
+#content.no-comments #comments, 
 #content.no-comments .post-meta .comment-count,
 #content.no-comments .post-meta .karma,
+#content.no-comments .answer-item .comment-thread,
+#content.no-comments .answer-item .karma,
+#content.no-comments .answer-item .comment-controls,
 #content.no-comments + #ui-elements-container #new-comment-nav-ui,
-#content.no-comments + #ui-elements-container #hns-date-picker,
-#content.no-comments + #ui-elements-container #quick-nav-ui {
+#content.no-comments + #ui-elements-container #hns-date-picker {
 	display: none;
 }
 
 #content.no-nav-bars #primary-bar,
 #content.no-nav-bars #secondary-bar {
 	display: none;
+}
+#content.no-nav-bars #bottom-bar {
+	grid-row: 4;
 }
 #content.no-nav-bars {
 	margin: 8px auto;

@@ -577,7 +577,8 @@ EOT;
 /*= Comments & Answers =*/
 /*=--------------------=*/
 
-#content:not(.post-page) + #ui-elements-container #quick-nav-ui a[href='#comments'] {
+#content:not(.post-page) + #ui-elements-container #quick-nav-ui a[href='#comments'],
+#content.no-comments + #ui-elements-container #quick-nav-ui a[href='#comments'] {
 	display: none;
 }
 

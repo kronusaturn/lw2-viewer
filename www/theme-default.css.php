@@ -2013,6 +2013,7 @@ hr {
 }
 
 code {
+	padding: 3px 4px 0 5px;
 	background-color: #f6f6ff;
 	border: 1px solid #f6f6ff;
 	border-radius: 4px;
