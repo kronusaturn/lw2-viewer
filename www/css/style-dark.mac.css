@@ -3495,6 +3495,12 @@ h1.listing + .post-meta .read-time {
 		font-size: 0.875em;
 		font-weight: 400;
 	}
+	.post .karma.active-controls::after,
+	.comment-item .karma.active-controls::after,
+	.post .karma .karma-value::after,
+	.comment-item .karma .karma-value::after {
+		display: none;
+	}
 }
 
 /*********/
@@ -6592,7 +6598,7 @@ th.mathjax-inline-container {
 /*	Layout.
 	*/
 :root {
-	--GW-comment-compact-height: 59px;
+	--GW-comment-compact-height: 60px;
 	--GW-comment-compact-height-mobile: 108px;
 	--GW-comment-minimized-height: 38px;
 	--GW-comment-minimized-height-mobile: 68px;

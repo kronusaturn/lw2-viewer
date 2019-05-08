@@ -3887,22 +3887,28 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	});
 
 	// If we’re on a comment thread page...
-	if (query(".comments")) {
+	if (query(".comments") && !query("#content").hasClass("individual-thread-page")) {
 		// Add comment-minimize buttons to every comment.
 		queryAll(".comment-meta").forEach(commentMeta => {
 			if (!commentMeta.lastChild.hasClass("comment-minimize-button"))
 				commentMeta.insertAdjacentHTML("beforeend", "<div class='comment-minimize-button maximized'>&#xf146;</div>");
 		});
-		if (query("#content.comment-thread-page") && !query("#content").hasClass("individual-thread-page")) {
-			// Format and activate comment-minimize buttons.
-			queryAll(".comment-minimize-button").forEach(button => {
-				button.closest(".comment-item").setCommentThreadMaximized(false);
-				button.addActivateEvent(GW.commentMinimizeButtonClicked = (event) => {
-					event.target.closest(".comment-item").setCommentThreadMaximized(true);
-				});
-			});
-		}
+		// Format and activate comment-minimize buttons.
+		queryAll(".comment-minimize-button").forEach(button => {
+			button.closest(".comment-item").setCommentThreadMaximized(false);
+			button.addActivateEvent(GW.commentMinimizeButtonClicked = (event) => {
+				GWLog("GW.commentMinimizeButtonClicked");
 
+				event.target.closest(".comment-item").setCommentThreadMaximized(true);
+			});
+		});
+
+		if (getQueryVariable("chrono") == "t") {
+			query("head").insertAdjacentHTML("beforeend", "<style>.comment-minimize-button::after { display: none; }</style>");
+		}
+	}
+
+	if (query(".comment-thread")) {
 		// On mobile, wrap authors to limit tappable area.
 		doWhenMatchMedia(GW.mediaQueries.mobileNarrow, "wrapAuthorsInCommentListings", () => {
 			queryAll(".comment-meta > .author").forEach(author => {
@@ -3914,9 +3920,8 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 			});
 		});
 	}
-	if (getQueryVariable("chrono") == "t") {
-		query("head").insertAdjacentHTML("beforeend", "<style>.comment-minimize-button::after { display: none; }</style>");
-	}
+
+	// Scroll down to a comment, if the URL points to one.
 	let urlParts = document.URL.split('#comment-');
 	if (urlParts.length > 1) {
 		expandAncestorsOf(urlParts[1]);

@@ -37,8 +37,8 @@
 /*	Layout.
 	*/
 :root {
-	--GW-comment-compact-height: 59px;
-	--GW-comment-compact-height-mobile: 108px;
+	--GW-comment-compact-height: 62px;
+	--GW-comment-compact-height-mobile: 110px;
 	--GW-comment-minimized-height: 38px;
 	--GW-comment-minimized-height-mobile: 68px;
 
@@ -885,7 +885,7 @@ body {
 /*==========*/
 
 h1.listing {
-	margin: 7px 0 0 0;
+	margin: 1.125rem 0 0 0;
 	font-size: 1.625rem;
 }
 
@@ -1519,6 +1519,12 @@ a.comment-parent-link:hover::before {
 .post .post-meta .lw2-link {
 	filter: grayscale(100%);
 }
+.comment-meta .permalink::before,
+.comment-meta .lw2-link::before,
+.comment-meta .comment-parent-link span::before,
+.post .post-meta .lw2-link::before {
+	border-radius: 0;
+}
 
 /*=================================*/
 /* COMMENT THREAD MINIMIZE BUTTONS */
@@ -2055,8 +2061,9 @@ select {
 }
 
 .qualified-linking-toolbar {
-	border: 1px solid var(--GW-C1);
+	border: 1px solid var(--GW-C0);
 	background-color: var(--GW-C0);
+	outline: 2px solid var(--GW-C1)
 }
 .qualified-linking-toolbar a,
 .qualified-linking-toolbar button {
