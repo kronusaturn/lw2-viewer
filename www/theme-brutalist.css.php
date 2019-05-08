@@ -1948,22 +1948,50 @@ select {
 /*========================*/
 
 #aux-about-link a:hover {
-	color: #777;
+	opacity: 1.0;
 }
 
+.post-meta .qualified-linking label {
+	padding: 4px 8px 3px 8px;
+	line-height: 1;
+}
 .qualified-linking label:hover {
-	color: #777;
+	box-shadow:
+		0 0 0 1px var(--GW-C1) inset;
+}
+.qualified-linking label:active {
+	box-shadow:
+		0 0 0 2px var(--GW-C0) inset,
+		0 0 0 3px var(--GW-C1) inset;
 }
 
 .qualified-linking-toolbar {
-	border: 2px solid #000;
+	border: 1px solid var(--GW-C1);
 	background-color: var(--GW-C0);
 }
-.qualified-linking-toolbar a:hover {
-	box-shadow: 0 0 0 2px #000;
+.qualified-linking-toolbar a,
+.qualified-linking-toolbar button {
+	box-shadow:
+		0 0 0 1px var(--GW-C1);
+	border: none;
 }
-.qualified-linking-toolbar a:active {
-	box-shadow: 0 0 0 2px #000 inset;
+.qualified-linking-toolbar button {
+	font-weight: 300;
+}
+.qualified-linking-toolbar a:hover,
+.qualified-linking-toolbar button:hover {
+	color: var(--GW-C1);
+	box-shadow:
+		0 0 0 1px var(--GW-C1),
+		0 0 0 2px var(--GW-C0) inset,
+		0 0 0 3px var(--GW-C1) inset;
+}
+.qualified-linking-toolbar a:active,
+.qualified-linking-toolbar button:active {
+	box-shadow:
+		0 0 0 1px var(--GW-C1),
+		0 0 0 4px var(--GW-C0) inset,
+		0 0 0 5px var(--GW-C1) inset;
 }
 .qualified-linking label::after {
 	background-color: var(--GW-C0);
@@ -1976,25 +2004,27 @@ select {
 
 .mathjax-block-container .mjx-chtml::-webkit-scrollbar {
 	height: 12px;
-	background-color: #f6f6ff;
-	border-radius: 6px;
-	border: 1px solid #ddf;
 }
-.mathjax-block-container .mjx-chtml::-webkit-scrollbar-thumb {
-	background-color: #dde;
-	border-radius: 6px;
-	border: 1px solid #cce;
+
+.mjx-chtml::-webkit-scrollbar {
+	background-color: var(--GW-C0);
+	border: 1px dotted var(--GW-C1);
 }
+.mjx-chtml::-webkit-scrollbar-thumb {
+	background-color: var(--GW-C3);
+	border-color: transparent;
+	border-style: solid;
+	border-width: 1px 1px;
+	box-shadow:
+		 0  -1px 0 0 var(--GW-C0) inset,
+		 0   1px 0 0 var(--GW-C0) inset,
+		 1px 0 0 0 var(--GW-C0) inset,
+		-1px 0 0 var(--GW-C0) inset;
+	background-clip: content-box;
+}
+
 .mathjax-inline-container .mjx-chtml::-webkit-scrollbar {
 	height: 8px;
-	background-color: #f6f6ff;
-	border-radius: 4px;
-	border: 1px solid #ddf;
-}
-.mathjax-inline-container .mjx-chtml::-webkit-scrollbar-thumb {
-	background-color: #dde;
-	border-radius: 4px;
-	border: 1px solid #cce;
 }
 
 /*=================*/
