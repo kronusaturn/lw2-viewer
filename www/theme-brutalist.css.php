@@ -525,6 +525,13 @@ body {
 /* THEME TWEAKER TOGGLE */
 /*======================*/
 
+#theme-tweaker-toggle button {
+	box-shadow: none;
+}
+#theme-tweaker-toggle button:active {
+	transform: scale(0.9);
+}
+
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/

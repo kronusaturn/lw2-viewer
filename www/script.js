@@ -1440,6 +1440,12 @@ GW.themeLoadCallback_dark = (fromTheme = "") => {
 			image.style.left = parseInt(image.style.left) - 6 + "px";
 		});
 	});
+
+	// Dark theme should NOT have text rendering adjusted for invert filter.
+	query("head").insertAdjacentHTML("beforeend", "<style id='dark-theme-adjustments'>" + `
+		body.filter-inverted { text-shadow: none; }
+		body.filter-inverted .body-text { text-shadow: 0 0 1px var(--GW-content-background-color); }
+	` + "</style>");
 }
 GW.themeUnloadCallback_dark = (toTheme = "") => {
 	GWLog("themeUnloadCallback_dark");
@@ -1452,6 +1458,9 @@ GW.themeUnloadCallback_dark = (toTheme = "") => {
 		image.style.top = parseInt(image.style.top) + 6 + "px";
 		image.style.left = parseInt(image.style.left) + 6 + "px";
 	});
+
+	// Remove adjustments.
+	removeElement("style#dark-theme-adjustments");
 }
 
 GW.themeLoadCallback_zero = (fromTheme = "") => {

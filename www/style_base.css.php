@@ -149,6 +149,7 @@ textarea {
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
+	text-shadow: inherit;
 }
 
 input {
