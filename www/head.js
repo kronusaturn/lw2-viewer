@@ -150,7 +150,7 @@ function exclusionTreeFromExclusionPaths(paths) {
 }
 function selectorFromExclusionTree(tree) {
 	var selectorParts = [
-		"body::before, #ui-elements-container > div:not(#theme-tweaker-ui), #theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container"
+		"body::before, #ui-elements-container > div:not(#theme-tweaker-ui):not(#image-focus-overlay), #theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container"
 	];
 	
 	function selectorFromExclusionTreeNode(node, path = [ ]) {

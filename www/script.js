@@ -1249,7 +1249,8 @@ function postSetThemeHousekeeping(oldThemeName = "", newThemeName = (readCookie(
 		});
 	});
 
-	document.body.toggleClass("filter-inverted", GW.currentFilters["inverted"]);
+	// Adjust text rendering when inverted.
+	document.body.toggleClass("filter-inverted", GW.currentFilters["invert"] == "100%");
 
 	if (window.adjustmentTransitions) pageFadeTransition(true);
 	updateThemeTweakerSampleText();
@@ -1653,6 +1654,8 @@ function injectThemeTweaker() {
 			sampleTextContainer.style.filter = "";
 			// Apply the new filters globally.
 			applyFilters(GW.currentFilters);
+			// Adjust text rendering when inverted.
+			document.body.toggleClass("filter-inverted", GW.currentFilters["invert"] == "100%");
 		});
 
 		// Range inputs receive an ‘input’ event while being scrubbed, updating
