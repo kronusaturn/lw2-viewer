@@ -4318,6 +4318,11 @@ function rectifyMarkup() {
 			strong === strong.parentElement.lastChild)
 			strong.parentElement.outerHTML = `<h3>${strong.innerHTML}</h3>`;
 	});
+
+	// Remove extraneous rules.
+	content.queryAll(".body-text h1 + hr, .body-text h2 + hr, .body-text h3 + hr").forEach(rule => {
+		removeElement(rule);
+	});
 }
 
 /*************************/
