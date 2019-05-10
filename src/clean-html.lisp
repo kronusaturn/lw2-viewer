@@ -373,7 +373,8 @@
 				       previous-sibling
 				       (plump:insert-before node
 							    (plump:remove-child (plump:make-text-node (plump:parent node)))))))
-	       (setf (plump:text new-text-node) (concatenate 'string
+	       (setf (plump:parent new-text-node) (plump:parent node)
+		     (plump:text new-text-node) (concatenate 'string
 							     (plump:text new-text-node)
 							     (plump:text node)
 							     (if next-sibling
