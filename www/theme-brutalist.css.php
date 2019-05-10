@@ -1749,12 +1749,15 @@ button.guiedit:active div {
 
 @media only screen and (max-width: 900px) {
 	.comment-controls .cancel-comment-button {
-		max-width: 1.4em;
+		max-width: 1.8em;
+		top: 0;
+		padding: 2px 6px 6px 6px;
+		color: transparent;
 	}
 	.comment-controls .cancel-comment-button::before {
 		opacity: 1.0;
-		position: relative;
-		top: -1px;
+		font-weight: 400;
+		color: var(--GW-C0);
 	}
 }
 @media only screen and (max-width: 520px) {
@@ -1762,40 +1765,23 @@ button.guiedit:active div {
 		background-color: var(--GW-C0);
 		border: none;
 		box-shadow:
-			0 0 0 2px #000;
-	}
-	.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
-		padding: 5px 6px 6px 6px;
-		color: var(--GW-C0);
-		box-shadow: none;
-	}
-	.textarea-container:focus-within .guiedit-mobile-help-button.active {
-		box-shadow:
-			0 0 0 1px #000 inset,
-			0 0 0 3px var(--GW-C0) inset,
 			0 0 0 2px var(--GW-C0);
 	}
-	.textarea-container:focus-within .guiedit-buttons-container {
-		border-top: 2px solid #000;
-	}
-	.posting-controls .textarea-container:focus-within .guiedit-buttons-container {
-		padding-bottom: 5px;
+	.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
+		color: var(--GW-C0);
 	}
 	#content.conversation-page .textarea-container:focus-within::after {
-		background-color: #000;
+		background-color: var(--GW-C0);
 	}
 	.textarea-container:focus-within button.guiedit {
 		border: 1px solid transparent;
 	}
 	#markdown-hints,
 	#edit-post-form #markdown-hints {
-		border: 2px solid #000;
+		border: 2px solid var(--GW-C0);
 		box-shadow:
 			0 0 0 2px var(--GW-C0),
-			0 0 0 4px #000;
-	}
-	#markdown-hints::after {
-		color: #000;
+			0 0 0 4px var(--GW-C0);
 	}
 }
 
