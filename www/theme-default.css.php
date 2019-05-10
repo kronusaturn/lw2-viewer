@@ -1802,6 +1802,9 @@ a.comment-parent-link:hover::before {
 	padding: 5px 12px;
 	box-shadow: 0 0 0 1px #ddd;
 }
+#edit-post-form .post-section-selector:focus-within label {
+	background-color: #ffd;
+}
 #edit-post-form .post-section-selector label:nth-of-type(n+2) {
 	margin-left: 1px;
 }
@@ -2014,21 +2017,21 @@ input[type='checkbox'] + label::before {
 	border: 1px solid #ddd;
 	color: #777;
 }
-@media only screen and (hover: hover) and (pointer: fine) {
-	input[type='checkbox'] + label:hover,
-	input[type='checkbox']:focus + label {
-		text-shadow: 
-			0 0 1px #fff,
-			0 0 2px #fff,
-			0 0 2.5px #aaa;
-	}
-	input[type='checkbox'] + label:hover::before,
-	input[type='checkbox']:focus + label::before {
-		border-color: #aaa;
-	}
-}
 input[type='checkbox']:checked + label::before {
 	content: "\F00C";
+}
+
+input[type='checkbox'] + label:hover,
+input[type='checkbox']:focus + label {
+	text-shadow: 
+		0 0 1px #fff,
+		0 0 2px #fff,
+		0 0 2.5px #aaa;
+}
+input[type='checkbox'] + label:hover::before,
+input[type='checkbox']:focus + label::before {
+	background-color: #ffd;
+	border-color: #aaa;
 }
 
 /*=--------------------------------=*/
