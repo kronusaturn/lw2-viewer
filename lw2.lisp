@@ -270,22 +270,22 @@ signaled condition to OUT-STREAM."
   (with-error-html-block (out-stream)
     (format out-stream "<div class='annotation'>")
     (format out-stream "<a href='~a'>~a</a>"
-	    (cdr (assoc :INCONTEXT (cdr (assoc :LINKS annotation))))
-	    (first (cdr (assoc :TITLE (cdr (assoc :DOCUMENT annotation))))))
+	    (cdr (assoc :incontext (cdr (assoc :links annotation))))
+	    (first (cdr (assoc :title (cdr (assoc :document annotation))))))
     (format out-stream "<a href='~a'>Original</a>"
-	    (cdr (assoc :URI annotation)))
+	    (cdr (assoc :uri annotation)))
     (multiple-value-bind (pretty-time js-time)
-	(pretty-time (cdr (assoc :CREATED annotation)))
+	(pretty-time (cdr (assoc :created annotation)))
       (format out-stream "<span class='date' data-js-date=~a>~a</span>"
 	      js-time
 	      pretty-time))
     (dolist (selector
-	      (cdr (assoc :SELECTOR
-			  (first (cdr (assoc :TARGET annotation))))) nil)
-      (if (equal "TextQuoteSelector" (cdr (assoc :TYPE selector)))
-	  (format out-stream "<blockquote>~a</blockquote>" (cdr (assoc :EXACT selector)))
+	      (cdr (assoc :selector
+			  (first (cdr (assoc :target annotation))))) nil)
+      (if (equal "TextQuoteSelector" (cdr (assoc :type selector)))
+	  (format out-stream "<blockquote>~a</blockquote>" (cdr (assoc :exact selector)))
 	  nil))
-    (format out-stream "<p class='annotation-text'> ~a </p>" (cdr (assoc :TEXT annotation)))
+    (format out-stream "<p class='annotation-text'> ~a </p>" (cdr (assoc :text annotation)))
     (format out-stream "</div>")))
 
 (defun identify-item (x)
