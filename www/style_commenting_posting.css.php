@@ -442,6 +442,7 @@ button.guiedit {
 	display: grid;
 	grid-template-columns: 5em auto auto auto 1fr auto;
 	margin-bottom: 0.75em;
+	grid-row-gap: 0.25em;
 }
 
 /*	All labels.
@@ -464,7 +465,6 @@ button.guiedit {
 #edit-post-form input[type='text'] {
 	padding: 0.25em;
 	grid-column: 2 / span 4;
-	margin-bottom: 0.5em;
 }
 
 /*	Checkboxes.
@@ -473,38 +473,15 @@ button.guiedit {
 #edit-post-form .link-post-checkbox + label {
 	grid-row: 1;
 	grid-column: 6;
+	margin: 0 0.25em 0 0.5em;
 }
 #edit-post-form .question-checkbox,
 #edit-post-form .question-checkbox + label {
 	grid-row: 3;
 	grid-column: 5;
-	margin-left: 1.5em;
+	margin: 0 0 0 1.5em;
 }
-#edit-post-form .post-meta-fields input[type='checkbox'] {
-	height: 0;
-	opacity: 0;
-	pointer-events: none;
-}
-#edit-post-form .post-meta-fields input[type='checkbox'] + label {
-	white-space: nowrap;
-	position: relative;
-	cursor: pointer;
-	padding: 0.25em 0.5em 0.25em calc(20px + 0.25em + 0.3725em);
-	align-self: stretch;
-	user-select: none;
-}
-#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
-	content: "";
-	font-family: var(--GW-Font-Awesome);
-	font-size: 1.375rem;
-	line-height: 0.7;
-	text-indent: 1px;
-	font-weight: 900;
-	position: absolute;
-	width: 20px;
-	height: 20px;
-	left: 5px;
-}
+
 #edit-post-form label[for='url'],
 #edit-post-form input[name='url'] {
 	display: none;

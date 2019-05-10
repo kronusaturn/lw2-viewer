@@ -168,6 +168,41 @@ a {
 	outline: none;
 }
 
+/*=------------=*/
+/*= Checkboxes =*/
+/*=------------=*/
+
+input[type='checkbox'] {
+	width: 0;
+	height: 0;
+	margin: 0;
+	padding: 0;
+	opacity: 0;
+	pointer-events: none;
+}
+input[type='checkbox'] + label {
+	white-space: nowrap;
+	position: relative;
+	cursor: pointer;
+	user-select: none;
+	justify-self: flex-start;
+	align-self: center;
+	padding: 0 0 0 1.5em;
+}
+input[type='checkbox'] + label::before {
+	content: "";
+	font-family: var(--GW-Font-Awesome);
+	font-weight: 900;
+	font-size: 1.2em;
+	line-height: 0.7;
+	text-indent: 1px;
+	position: absolute;
+	width: 1em;
+	height: 1em;
+	left: 0;
+	top: 0;
+}
+
 /**************/
 /* SCRATCHPAD */
 /**************/
