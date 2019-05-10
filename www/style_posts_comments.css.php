@@ -1402,6 +1402,10 @@ a.comment-child-link::before {
 	transform: scale(0.9);
 }
 
+.post-meta .qualified-linking label::before {
+	display: none;
+}
+
 .post-meta .qualified-linking label::after {
 	content: "";
 	width: 100vw;

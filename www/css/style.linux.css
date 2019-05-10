@@ -4554,6 +4554,10 @@ a.comment-child-link::before {
 	transform: scale(0.9);
 }
 
+.post-meta .qualified-linking label::before {
+	display: none;
+}
+
 .post-meta .qualified-linking label::after {
 	content: "";
 	width: 100vw;
@@ -4916,15 +4920,15 @@ button.guiedit {
 		font-size: 1.375em;
 	}
 	.comment-controls .edit-button::before {
-		font-size: 0.9375em;
+		font-size: 0.875em;
 	}
 }
 @media only screen and (max-width: 720px) {
 	.comment-controls {
-		   margin: 4px 8px 8px 16px;
+		margin: 4px 8px 8px 16px;
 	}
 	.comment-controls .karma {
-		   display: none;
+		display: none;
 	}
 }
 @media only screen and (max-width: 520px) {
