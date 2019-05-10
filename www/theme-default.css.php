@@ -1808,27 +1808,6 @@ a.comment-parent-link:hover::before {
 /* EDIT POST FORM */
 /*================*/
 
-#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
-	border-radius: 3px;
-	border: 1px solid #ddd;
-	color: #777;
-}
-@media only screen and (hover: hover) and (pointer: fine) {
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover,
-	#edit-post-form .post-meta-fields input[type='checkbox']:focus + label {
-		text-shadow: 
-			0 0 1px #fff,
-			0 0 2px #fff,
-			0 0 2.5px #aaa;
-	}
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover::before,
-	#edit-post-form .post-meta-fields input[type='checkbox']:focus + label::before {
-		border-color: #aaa;
-	}
-}
-#edit-post-form .post-meta-fields input[type='checkbox']:checked + label::before {
-	content: "\F00C";
-}
 #edit-post-form input[type='radio'] + label {
 	color: #777;
 	border-width: 1px 1px 1px 0;
