@@ -3959,8 +3959,10 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 	// Widgets should not stay focused when clicked.
 	if (query(".edit-post-page")) {
-		queryAll("input[type='checkbox'], input[type='radio']").forEach(widget => {
-			widget.addEventListener("click", (event) => { event.target.blur(); });
+		queryAll("input[type='checkbox'] + label, input[type='radio'] + label").forEach(widget => {
+			widget.addEventListener("mouseup", (event) => {
+				setTimeout(() => { event.target.previousElementSibling.blur(); });
+			});
 		});
 	}
 

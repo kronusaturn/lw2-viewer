@@ -11,7 +11,7 @@
 		<label for="tags">Tags:</label>
 		<input type="text" name="tags" id="tags-input" value="{{ tags }}">
 		{% endif %}
-		<input type="checkbox" class="question-checkbox" name="question" id="question"{% if question %} checked{% endif %}>
+		<input type="checkbox" tabindex="1" class="question-checkbox" name="question" id="question"{% if question %} checked{% endif %}>
 		<label for="question">Question post</label>
 		<label for="section">Section:</label>
 		<div class='post-section-selector'>

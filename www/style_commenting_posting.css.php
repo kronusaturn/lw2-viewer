@@ -445,7 +445,7 @@ button.guiedit {
 #edit-post-form .post-meta-fields {
 	display: grid;
 	grid-template-columns: 5em auto auto auto 1fr auto;
-	margin-bottom: 0.75em;
+	margin-bottom: 0.5em;
 	grid-row-gap: 0.25em;
 }
 
