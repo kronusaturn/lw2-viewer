@@ -14,9 +14,11 @@
 		<input type="checkbox" class="question-checkbox" name="question" id="question"{% if question %} checked{% endif %}>
 		<label for="question">Question post</label>
 		<label for="section">Section:</label>
-		{% for section in section-list %}
-		<input type="radio" name="section" id="{{ section.name }}" value="{{ section.name }}"{% if section.selected %} checked{% endif %}><label for="{{ section.name }}">{{ section.desc }}</label>
-		{% endfor %}
+		<div class='post-section-selector'>
+			{% for section in section-list %}
+			<input type="radio" name="section" id="{{ section.name }}" value="{{ section.name }}"{% if section.selected %} checked{% endif %}><label for="{{ section.name }}">{{ section.desc }}</label>
+			{% endfor %}
+		</div>
 		
 	</div>
 	<div class="textarea-container">

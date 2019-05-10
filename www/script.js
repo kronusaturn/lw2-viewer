@@ -3957,6 +3957,13 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		});
 	}
 
+	// Widgets should not stay focused when clicked.
+	if (query(".edit-post-page")) {
+		queryAll("input[type='checkbox'], input[type='radio']").forEach(widget => {
+			widget.addEventListener("click", (event) => { event.target.blur(); });
+		});
+	}
+
 	/*	On desktop, replace the “Sequences” tab name with the book icon.
 		*/
 	doWhenMatchMedia(GW.mediaQueries.mobileWide, "setSequencesNavTabText", (mediaQuery) => {

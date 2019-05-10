@@ -464,6 +464,7 @@ button.guiedit {
 #edit-post-form label[for='section'] {
 	grid-column: 1;
 	text-align: right;
+	align-self: center;
     padding: 0.25em 0.5em;
 }
 #edit-post-form input[type='text'] {
@@ -497,6 +498,14 @@ button.guiedit {
 
 /*	Section selector.
 	*/
+#edit-post-form label[for='section'],
+#edit-post-form .post-section-selector {
+	grid-row: 3;
+}
+#edit-post-form .post-section-selector {
+	display: flex;
+}
+
 #edit-post-form input[type='radio'] {
 	width: 0;
 	margin: 0;
@@ -506,20 +515,11 @@ button.guiedit {
 	font-weight: var(--GW-UI-font-weight-heavy);
 }
 #edit-post-form input[type='radio'] + label {
-	border-width: 1px 1px 1px 0;
 	cursor: pointer;
 }
 #edit-post-form input[type='radio']:checked + label {
 	cursor: default;
 }
-
-#edit-post-form label[for='section'] {
-	grid-row: 3;
-}
-#edit-post-form input[type='radio'] + label {
-	grid-row: 3;
-}
-<?php fit_content("#edit-post-form input[type='radio'] + label"); ?>
 
 /*=----------=*/
 /*= Textarea =*/
