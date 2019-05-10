@@ -82,7 +82,7 @@
 	--GW-search-field-placeholder-color: #d00;
 
 	--GW-comment-item-expanded-outline-color: var(--GW-C1);
-	--GW-new-comment-item-outline-color: var(--GW-C4);
+	--GW-new-comment-item-outline-color: var(--GW-C7);
 
 	--GW-comment-highlight-color: var(--GW-C1);
 	--GW-comment-highlight-color-faint: var(--GW-C4);
@@ -1789,13 +1789,16 @@ button.guiedit:active div {
 /* EDIT POST FORM */
 /*================*/
 
+#edit-post-form input[type='submit'],
+.posting-controls .button.cancel-post-editing-button {
+	padding: 8px 14px;
+}
+
 #edit-post-form .post-meta-fields {
 	grid-template-columns: 6em auto auto auto 1fr auto;
 }
 #edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
-	color: #000;
 	border: 1px solid #000;
-	top: 2px;
 }
 @media only screen and (hover: hover) and (pointer: fine) {
 	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover::before,
@@ -1825,8 +1828,6 @@ button.guiedit:active div {
 #edit-post-form input[type='radio'][value='all'] + label {
 	border-width: 1px;
 }
-#edit-post-form input[type='radio'][value='drafts'] + label {
-}
 #edit-post-form input[type='radio'] + label:hover,
 #edit-post-form input[type='radio']:focus + label {
 	color: #000;
@@ -1848,10 +1849,6 @@ button.guiedit:active div {
 	box-shadow: 
 		0 0 0 1px var(--GW-C0) inset,
 		0 0 0 2px #000 inset;
-}
-
-#edit-post-form #markdown-hints-checkbox + label {
-	padding: 4px 0 0 6px;
 }
 
 /*=----------------------------=*/
