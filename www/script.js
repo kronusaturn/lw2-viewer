@@ -401,7 +401,7 @@ Element.prototype.addTextareaFeatures = function() {
 
 	// Inject markdown hints box (hidden unless user clicks to show).
 	var markdown_hints = 
-	`<input type='checkbox' id='markdown-hints-checkbox'>
+	`<input type='checkbox' id='markdown-hints-checkbox' tabindex='-1'>
 	<label for='markdown-hints-checkbox'></label>
 	<div id='markdown-hints'>` + 
 	[	"<span style='font-weight: bold;'>Bold</span><code>**Bold**</code>", 

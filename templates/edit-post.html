@@ -2,36 +2,36 @@
 <form method="post" action="/edit-post" id="edit-post-form" class="aligned-form">
 	<div class="post-meta-fields">
 		<label for="title">Title:</label>
-		<input name="title" tabindex="1"  autocomplete="off" type="text" value="{{ title }}">
-		<input type="checkbox" class="link-post-checkbox" name="link-post" tabindex="2"{% if url %} checked{% endif %}>
+		<input name="title"  autocomplete="off" type="text" value="{{ title }}">
+		<input type="checkbox" class="link-post-checkbox" name="link-post"{% if url %} checked{% endif %}>
 		<label for="link-post">Link post</label>
 		<label for="url">URL:</label>
-		<input name="url" tabindex="3" autocomplete="off" type="text" value="{{ url }}">
+		<input name="url" autocomplete="off" type="text" value="{{ url }}">
 		{% if tags-supported %}
 		<label for="tags">Tags:</label>
-		<input type="text" name="tags" tabindex="4" value="{{ tags }}">
+		<input type="text" name="tags" value="{{ tags }}">
 		{% endif %}
-		<input type="checkbox" tabindex="8" class="question-checkbox" name="question" id="question"{% if question %} checked{% endif %}>
-		<label for="question">Question post</label>
 		<label for="section">Section:</label>
-		<div class='post-section-selector'>
+		<div class="post-section-selector">
 			{% for section in section-list %}
 			<input type="radio" name="section" id="{{ section.name }}" value="{{ section.name }}"{% if section.selected %} checked{% endif %}><label for="{{ section.name }}">{{ section.desc }}</label>
 			{% endfor %}
 		</div>
+		<input type="checkbox" class="question-checkbox" name="question" id="question"{% if question %} checked{% endif %}>
+		<label for="question">Question post</label>
 		
 	</div>
 	<div class="textarea-container">
-		<textarea name="text" tabindex="9" oninput="enableBeforeUnload();">{{ markdown-source }}</textarea>
+		<textarea name="text" oninput="enableBeforeUnload();">{{ markdown-source }}</textarea>
 		<span class="markdown-reference-link">You can use <a href="http://commonmark.org/help/" target="_blank">Markdown</a> here.</span>
 		<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-help-button">Help</button>
 		<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-exit-button">Exit</button>
 	</div>
-	<div class='submit-form-controls'>
+	<div class="submit-form-controls">
 		{% if post-id %}<input name="post-id" value="{{ post-id }}" type="hidden">{% endif %}
 		<input name="csrf-token" value="{{ csrf-token }}" type="hidden">
 		<input value="Submit" type="submit">
-		<a href='/posts/{{ post-id }}/' class='button cancel-post-editing-button'>Cancel</a>
+		<a href="/posts/{{ post-id }}/" tabindex="0" class="button cancel-post-editing-button">Cancel</a>
 	</div>
 </form>
 </div>
