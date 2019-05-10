@@ -13,6 +13,10 @@
 	--GW-UI-font-weight-light: 400;
 	--GW-UI-font-weight-heavy: 600;
 
+	--GW-monospaced-font: 'Input Sans', var(--GW-monospaced-fallback-font-stack);
+
+	--GW-editor-font-weight: 200;
+
 	--GW-width-selector-tooltip-font: 'Input Sans', var(--GW-sans-serif-fallback-font-stack);
 	--GW-width-selector-tooltip-font-weight: 200;
 
@@ -999,7 +1003,7 @@ h1.listing + .post-meta a:hover {
 h1.listing + .post-meta .author,
 h1.listing + .post-meta .comment-count.new-comments {
 	color: var(--GW-C1);
-	font-weight: var(--GW-UI-font-weight-light);
+	text-shadow: 0 0 0 var(--GW-C8);
 }
 
 /*	Comment count.
@@ -1619,9 +1623,9 @@ a.comment-parent-link:hover::before {
 /*===========================*/
 
 .comment-controls .cancel-comment-button {
-	height: 28px;
+	height: 30px;
 	color: var(--GW-C0);
-	padding: 4px 6px 2px 6px;
+	padding: 4px 6px;
 }
 
 .comment-controls .delete-button::before,
@@ -1633,31 +1637,50 @@ a.comment-parent-link:hover::before {
 .posting-controls .action-button {
 	border: none;
 }
-.posting-controls .action-button:hover,
+.posting-controls .action-button:hover {
+	box-shadow:
+		0 0 0 2px var(--GW-C0),
+		0 0 0 4px var(--GW-C1);
+}
 .posting-controls .action-button:active,
 .posting-controls .action-button:focus {
-	box-shadow: none;
-	text-decoration: dotted underline;
+	box-shadow:
+		0 0 0 2px var(--GW-C1);
 }
-.posting-controls .action-button:active {
-	transform: scale(0.9);
+.posting-controls .new-comment-button {
+	box-shadow:
+		0 0 0 2px var(--GW-C1) inset;
+	padding: 11px 18px 12px 19px;
+	margin-right: 0;
+}
+.posting-controls .new-comment-button:hover,
+.posting-controls .new-comment-button:focus {
+	box-shadow:
+		0 0 0 2px var(--GW-C1) inset,
+		0 0 0 4px var(--GW-C0) inset,
+		0 0 0 6px var(--GW-C1) inset;
+}
+.posting-controls .new-comment-button:active {
+	box-shadow:
+		0 0 0 2px var(--GW-C1) inset,
+		0 0 0 6px var(--GW-C0) inset,
+		0 0 0 8px var(--GW-C1) inset;
+}
+
+.posting-controls input[type='submit'] {
+	padding: 6px 12px;
+	margin: 4px 0;
 }
 
 .posting-controls textarea {
 	font-size: 1rem;
-	line-height: 1.4;
-	color: #000;
-	background-color: var(--GW-C0);
-	border-color: #000;
+	line-height: 1.5;
 	border-width: 28px 2px 2px 2px;
+	border-style: dotted;
 }
 .posting-controls textarea:focus {
-	border-style: dotted;
 	border-width: 28px 2px 2px 2px;
-}
-.posting-controls textarea::selection {
-	background-color: #000;
-	color: var(--GW-C0);
+	border-style: solid;
 }
 .posting-controls textarea::-webkit-scrollbar {
 	width: 18px;
@@ -1666,31 +1689,26 @@ a.comment-parent-link:hover::before {
 	background-color: var(--GW-C0);
 }
 .posting-controls textarea::-webkit-scrollbar-thumb {
-	background-color: #000;
+	background-color: var(--GW-C5);
 	box-shadow: 
 		0 2px 0 1px var(--GW-C0) inset,
 		0 0 0 1px var(--GW-C0) inset,
-		0 2px 0 1.5px #777 inset,
-		0 0 0 1.5px #777 inset;
+		0 2px 0 1.5px var(--GW-C8) inset,
+		0 0 0 1.5px var(--GW-C8) inset;
 }
 .posting-controls textarea::-webkit-scrollbar-thumb:active {
 	box-shadow: 
 		0 2px 0 1px var(--GW-C0) inset,
 		0 0 0 1px var(--GW-C0) inset,
-		0 2px 0 1.5px #000 inset,
-		0 0 0 1.5px #000 inset;
+		0 2px 0 1.5px var(--GW-C1) inset,
+		0 0 0 1.5px var(--GW-C1) inset;
 }
 
 /* GUIEdit buttons */
 
 .guiedit-buttons-container {
-	background-color: #000;
-	box-shadow: 0 0 0 1px #000;
-}
-
-.posting-controls.edit-existing-post .guiedit-buttons-container button,
-.posting-controls form.edit-existing-comment .guiedit-buttons-container button {
-	color: #0c0;
+	background-color: var(--GW-C1);
+	box-shadow: 0 0 0 1px var(--GW-C1);
 }
 
 button.guiedit {
@@ -1700,19 +1718,19 @@ button.guiedit {
 button.guiedit:hover,
 button.guiedit:active {
 	box-shadow: none;
-	color: #fff;
+	color: var(--GW-C0);
 	box-shadow:
-		0 -2px 0 0   #000 inset,
-		0  0   0 2px #fff inset,
-		0 -2px 0 2px #fff inset;
+		0 -2px 0 0   var(--GW-C1) inset,
+		0  0   0 2px var(--GW-C0) inset,
+		0 -2px 0 2px var(--GW-C0) inset;
 }
 button.guiedit:active {
 	box-shadow:
-		0  2px 0 0   #000 inset,
-		0 -4px 0 2px #000 inset,
-		0 -4px 0 0   #000 inset,
-		0  0   0 4px #fff inset,
-		0 -4px 0 4px #fff inset;
+		0  2px 0 0   var(--GW-C1) inset,
+		0 -4px 0 2px var(--GW-C1) inset,
+		0 -4px 0 0   var(--GW-C1) inset,
+		0  0   0 4px var(--GW-C0) inset,
+		0 -4px 0 4px var(--GW-C0) inset;
 }
 button.guiedit:active div {
 	transform: none;
@@ -1721,7 +1739,7 @@ button.guiedit:active div {
 /* Markdown hints */
 
 #markdown-hints {
-	border: 2px solid #000;
+	border: 2px solid var(--GW-C1);
 	background-color: var(--GW-C0);
 }
 

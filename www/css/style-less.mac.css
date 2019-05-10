@@ -3426,7 +3426,7 @@ h1.listing + .post-meta .read-time {
 		opacity: 1.0;
 	}
 	.comment-item .karma.active-controls:hover::after {
-		z-index: 5001;
+		z-index: 10000;
 	}
 
 	.post .karma .karma-value::after,
@@ -4580,6 +4580,10 @@ a.comment-child-link::before {
 /* COMMENTING AND POSTING UI */
 /*****************************/
 
+.posting-controls {
+	z-index: 1;
+}
+
 .comment-controls {
 	text-align: right;
 	margin: 4px 8px 8px 16px;
@@ -5511,6 +5515,7 @@ figure img,
 /**********/
 
 .body-text table {
+	margin: 1.5em auto;
 	border-collapse: collapse;
 	font-family: var(--GW-tables-font);
 	font-weight: var(--GW-tables-font-weight);

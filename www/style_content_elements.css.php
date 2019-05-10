@@ -255,6 +255,7 @@ figure img,
 /**********/
 
 .body-text table {
+	margin: 1.5em auto;
 	border-collapse: collapse;
 	font-family: var(--GW-tables-font);
 	font-weight: var(--GW-tables-font-weight);

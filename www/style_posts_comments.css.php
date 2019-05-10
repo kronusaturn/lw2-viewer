@@ -320,7 +320,7 @@ h1.listing + .post-meta .read-time {
 		opacity: 1.0;
 	}
 	.comment-item .karma.active-controls:hover::after {
-		z-index: 5001;
+		z-index: 10000;
 	}
 
 	.post .karma .karma-value::after,

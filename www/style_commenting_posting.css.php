@@ -2,6 +2,10 @@
 /* COMMENTING AND POSTING UI */
 /*****************************/
 
+.posting-controls {
+	z-index: 1;
+}
+
 .comment-controls {
 	text-align: right;
 	margin: 4px 8px 8px 16px;
