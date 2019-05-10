@@ -431,8 +431,7 @@ button.guiedit {
 /******************/
 
 #edit-post-form {
-	padding: 2em var(--GW-current-page-content-right-side-padding) 2em var(--GW-current-page-content-left-side-padding);
-	margin: 0 0 2em 0;
+	padding: 2em var(--GW-current-page-content-right-side-padding) 1em var(--GW-current-page-content-left-side-padding);
 }
 
 /*=------------------=*/
@@ -442,7 +441,15 @@ button.guiedit {
 #edit-post-form .post-meta-fields {
 	display: grid;
 	grid-template-columns: 5em auto auto auto 1fr auto;
-	margin-bottom: 0.625em;
+	margin-bottom: 0.75em;
+}
+
+/*	All labels.
+	*/
+#edit-post-form .post-meta-fields label {
+	line-height: normal;
+	border: 1px solid transparent;
+    white-space: nowrap;
 }
 
 /*	Text fields & their labels.
@@ -451,6 +458,8 @@ button.guiedit {
 #edit-post-form label[for='url'],
 #edit-post-form label[for='section'] {
 	grid-column: 1;
+	text-align: right;
+    padding: 0.25em 0.5em;
 }
 #edit-post-form input[type='text'] {
 	padding: 0.25em;
@@ -465,15 +474,10 @@ button.guiedit {
 	grid-row: 1;
 	grid-column: 6;
 }
-#edit-post-form .link-post-checkbox + label {
-	margin: 0 0 0.5em 0.125em;
-	border: none;
-}
 #edit-post-form .question-checkbox,
 #edit-post-form .question-checkbox + label {
 	grid-row: 3;
 	grid-column: 5;
-	justify-self: start;
 	margin-left: 1.5em;
 }
 #edit-post-form .post-meta-fields input[type='checkbox'] {
@@ -508,16 +512,6 @@ button.guiedit {
 #edit-post-form .link-post-checkbox:checked ~ label[for='url'],
 #edit-post-form .link-post-checkbox:checked ~ input[name='url'] {
 	display: initial;
-}
-
-/*	REFACTOR THIS.
-	*/
-#edit-post-form label {
-	line-height: normal;
-	border: 1px solid transparent;
-	text-align: right;
-    padding: 0.25em 0.5em;
-    white-space: nowrap;
 }
 
 /*	Section selector.
@@ -569,10 +563,13 @@ button.guiedit {
 /*= Submit controls =*/
 /*=-----------------=*/
 
-#edit-post-form input[type='submit'],
-.posting-controls .button.cancel-post-editing-button {
-	padding: 6px 12px;
+#edit-post-form .submit-form-controls {
+	overflow: auto;
+}
+#edit-post-form .submit-form-controls input[type='submit'],
+#edit-post-form .submit-form-controls .button {
 	float: right;
+	padding: 6px 12px;
 	line-height: normal;
 }
 
@@ -583,22 +580,21 @@ button.guiedit {
 @media only screen and (max-width: 900px) {
 	#edit-post-form {
 		padding-top: 1.5em;
-		padding-bottom: 1.5em;
+		padding-bottom: 0.5em;
 	}
 }
 @media only screen and (max-width: 840px) {
 	#edit-post-form {
 		padding-top: 1.25em;
-		padding-bottom: 1.25em;
+		padding-bottom: 0.25em;
 	}
 }
 @media only screen and (max-width: 720px) {
 	#edit-post-form {
 		padding-top: 1em;
 		padding-bottom: 1em;
-		margin: 0 0 1em 0;
 	}
-	#edit-post-form > div:last-of-type {
+	#edit-post-form > div.submit-form-controls {
 		display: flex;
 		justify-content: center;
 		clear: both;
