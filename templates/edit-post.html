@@ -25,7 +25,7 @@
 		<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-help-button">Help</button>
 		<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-exit-button">Exit</button>
 	</div>
-	<div>
+	<div class='submit-form-controls'>
 		{% if post-id %}<input name="post-id" value="{{ post-id }}" type="hidden">{% endif %}
 		<input name="csrf-token" value="{{ csrf-token }}" type="hidden">
 		<input value="Submit" type="submit">

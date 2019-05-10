@@ -2,6 +2,19 @@
 /* COMMENTING AND POSTING UI */
 /*****************************/
 
+.post-controls {
+	text-align: right;
+	margin: 0;
+	grid-row: 3;
+	align-self: start;
+	justify-self: end;
+}
+.post-controls .edit-post-link {
+	font-size: 1.375em;
+	padding: 0.375em 0.75em 0 0.25em;
+	margin: 0;
+}
+
 .posting-controls {
 	z-index: 1;
 }
@@ -417,29 +430,23 @@ button.guiedit {
 /* EDIT POST FORM */
 /******************/
 
-.post-controls {
-	text-align: right;
-	margin: 0;
-	grid-row: 3;
-	align-self: start;
-	justify-self: end;
-}
-.post-controls .edit-post-link {
-	font-size: 1.375em;
-	padding: 0.375em 0.75em 0 0.25em;
-	margin: 0;
-}
-
 #edit-post-form {
 	padding: 2em var(--GW-current-page-content-right-side-padding) 2em var(--GW-current-page-content-left-side-padding);
 	margin: 0 0 2em 0;
 }
+
+/*=------------------=*/
+/*= Post meta fields =*/
+/*=------------------=*/
+
 #edit-post-form .post-meta-fields {
 	display: grid;
 	grid-template-columns: 5em auto auto auto 1fr auto;
 	margin-bottom: 0.625em;
 }
 
+/*	Text fields & their labels.
+	*/
 #edit-post-form label[for='title'],
 #edit-post-form label[for='url'],
 #edit-post-form label[for='section'] {
@@ -451,6 +458,8 @@ button.guiedit {
 	margin-bottom: 0.5em;
 }
 
+/*	Checkboxes.
+	*/
 #edit-post-form .link-post-checkbox,
 #edit-post-form .link-post-checkbox + label {
 	grid-row: 1;
@@ -467,7 +476,6 @@ button.guiedit {
 	justify-self: start;
 	margin-left: 1.5em;
 }
-
 #edit-post-form .post-meta-fields input[type='checkbox'] {
 	height: 0;
 	opacity: 0;
@@ -501,6 +509,9 @@ button.guiedit {
 #edit-post-form .link-post-checkbox:checked ~ input[name='url'] {
 	display: initial;
 }
+
+/*	REFACTOR THIS.
+	*/
 #edit-post-form label {
 	line-height: normal;
 	border: 1px solid transparent;
@@ -508,6 +519,9 @@ button.guiedit {
     padding: 0.25em 0.5em;
     white-space: nowrap;
 }
+
+/*	Section selector.
+	*/
 #edit-post-form input[type='radio'] {
 	width: 0;
 	margin: 0;
@@ -532,15 +546,12 @@ button.guiedit {
 }
 <?php fit_content("#edit-post-form input[type='radio'] + label"); ?>
 
+/*=----------=*/
+/*= Textarea =*/
+/*=----------=*/
+
 #edit-post-form textarea {
 	min-height: 24em;
-}
-
-#edit-post-form input[type='submit'],
-.posting-controls .button.cancel-post-editing-button {
-	padding: 6px 12px;
-	float: right;
-	line-height: normal;
 }
 
 .posting-controls:not(.comment-controls) #markdown-hints {
@@ -552,6 +563,17 @@ button.guiedit {
 }
 .guiedit-mobile-auxiliary-button {
 	display: none;
+}
+
+/*=-----------------=*/
+/*= Submit controls =*/
+/*=-----------------=*/
+
+#edit-post-form input[type='submit'],
+.posting-controls .button.cancel-post-editing-button {
+	padding: 6px 12px;
+	float: right;
+	line-height: normal;
 }
 
 /*=----------------------------=*/
