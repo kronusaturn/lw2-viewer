@@ -385,7 +385,13 @@
 	   (scan-for-urls (text-node)
 			  (declare (type plump:text-node text-node)) 
 			  (let ((text (plump:text text-node)))
-			    (multiple-value-bind (url-start url-end) (ppcre:scan "(?:(?<=\\s)|^)(?>https?://[-a-zA-Z0-9]+\\.[-a-zA-Z0-9.]+|[-a-zA-Z0-9.]+\\.(?:com|edu|gov|mil|net|org|int|biz|info|name|museum|us|ca|uk|io|ly))(?:\\:[0-9]+){0,1}(?:/(?:(?:(\\()|[-a-zA-Z0-9.,;:?'\\\\+&%$#=~_/])*(?(1)\\)|[-a-zA-Z0-9\\\\+&%$#=~_/]))?)?" text)
+			    (multiple-value-bind (url-start url-end)
+				(ppcre:scan
+				 (load-time-value
+				  (ppcre:create-scanner
+				   "(?:(?<=\\s)|^)(?>https?://[-a-zA-Z0-9]+\\.[-a-zA-Z0-9.]+|[-a-zA-Z0-9.]+\\.(?:com|edu|gov|mil|net|org|int|biz|info|name|museum|us|ca|uk|io|ly))(?:\\:[0-9]+){0,1}(?:/(?:(?:(\\()|[-a-zA-Z0-9.,;:?'\\\\+&%$#=~_/])*(?(1)\\)|[-a-zA-Z0-9\\\\+&%$#=~_/]))?)?"
+				   :single-line-mode t))
+				 text)
                               (declare (type simple-string text)
                                        (type (or null fixnum) url-start url-end))
 			      (when url-start
