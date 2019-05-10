@@ -5059,6 +5059,7 @@ button.guiedit {
 
 #edit-post-form {
 	padding: 2em var(--GW-current-page-content-right-side-padding) 1em var(--GW-current-page-content-left-side-padding);
+	overflow: auto;
 }
 
 /*=------------------=*/
@@ -5167,12 +5168,11 @@ button.guiedit {
 /*= Submit controls =*/
 /*=-----------------=*/
 
-#edit-post-form .submit-form-controls {
-	overflow: auto;
+#edit-post-form .submit-form-controls .buttons {
+	float: right;
 }
 #edit-post-form .submit-form-controls input[type='submit'],
 #edit-post-form .submit-form-controls .button {
-	float: right;
 	padding: 6px 12px;
 	line-height: normal;
 }
@@ -5198,9 +5198,10 @@ button.guiedit {
 		padding-top: 1em;
 		padding-bottom: 1em;
 	}
-	#edit-post-form > div.submit-form-controls {
+	#edit-post-form .submit-form-controls .buttons {
 		display: flex;
 		justify-content: center;
+		float: none;
 		clear: both;
 	}
 	#edit-post-form input[type='submit'],

@@ -30,8 +30,10 @@
 	<div class="submit-form-controls">
 		{% if post-id %}<input name="post-id" value="{{ post-id }}" type="hidden">{% endif %}
 		<input name="csrf-token" value="{{ csrf-token }}" type="hidden">
-		<input value="Submit" type="submit">
-		<a href="/posts/{{ post-id }}/" tabindex="0" class="button cancel-post-editing-button">Cancel</a>
+		<div class='buttons'>
+			<a href="/posts/{{ post-id }}/" tabindex="0" class="button cancel-post-editing-button">Cancel</a>
+			<input value="Submit" type="submit">
+		</div>
 	</div>
 </form>
 </div>
