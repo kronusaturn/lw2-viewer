@@ -222,18 +222,19 @@ button.guiedit {
 
 /* Markdown hints */
 
-.posting-controls .markdown-reference-link {
-	float: left;
-	padding: 1px 0 0 6px;
-}
-
+.posting-controls .markdown-reference-link,
 #markdown-hints-checkbox + label {
 	float: left;
-	margin: 2px 0 0 1em;
-	line-height: 1.3;
-	cursor: pointer;
+	margin: 0.25em;
+}
 
+#markdown-hints-checkbox {
+	float: left;
+}
+#markdown-hints-checkbox + label {
+	cursor: pointer;
 	color: var(--GW-hyperlink-color);
+	margin-left: 1em;
 }
 #markdown-hints-checkbox + label:hover,
 #markdown-hints-checkbox + label:focus {
@@ -242,14 +243,6 @@ button.guiedit {
 #markdown-hints-checkbox + label:active {
 	color: var(--GW-hyperlink-active-color);
 }
-#edit-post-form #markdown-hints-checkbox + label {
-	padding: 0;
-}
-#markdown-hints-checkbox {
-	visibility: hidden;
-	margin: 0;
-	float: left;
-}
 #markdown-hints-checkbox + label::after {
 	content: "(Show Markdown help)";
 }
@@ -257,14 +250,17 @@ button.guiedit {
 	content: "(Hide Markdown help)";
 }
 #markdown-hints-checkbox + label::before {
+	border-color: transparent;
 	content: '\F059';
 	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
-	margin-right: 3px;
+	line-height: 1;
+	color: inherit;
 }
 #markdown-hints-checkbox:checked + label::before {
 	font-weight: 400;
 }
+
 #markdown-hints {
 	margin: 4px 0 0 4px;
 	padding: 4px 8px;
