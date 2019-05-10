@@ -8291,14 +8291,6 @@ a.comment-parent-link:hover::before {
 		0 0 0 1px #000,
 		0 0 0 2px #0cc800;
 }
-.posting-controls.edit-existing-post textarea:focus,
-.posting-controls form.edit-existing-comment textarea:focus {
-	border-color: #9740cb;
-	box-shadow: 
-		0 0 0 1px #3d0061 inset,
-		0 0 0 1px #000,
-		0 0 0 2px #9740cb;
-}
 
 /*= Scroll bars =*/
 
@@ -8328,25 +8320,10 @@ a.comment-parent-link:hover::before {
 		0 0 0 1px #131313 inset;
 }
 
-.posting-controls.edit-existing-post textarea:focus::-webkit-scrollbar-track,
-.posting-controls form.edit-existing-comment textarea:focus::-webkit-scrollbar-track {
-	border-left: 1px solid #9740cb;
-}
-.posting-controls.edit-existing-post textarea:focus::-webkit-scrollbar-thumb,
-.posting-controls form.edit-existing-comment textarea:focus::-webkit-scrollbar-thumb {
-	border-left: 1px solid #9740cb;
-	background-color: #8533c2;
-}
-
 /* GUIEdit buttons */
 
 .guiedit-buttons-container {
 	background-image: linear-gradient(to bottom, #000 0%, #1d1f00 50%, #252c00 75%, #344700 100%);
-}
-
-.posting-controls.edit-existing-post .guiedit-buttons-container button,
-.posting-controls form.edit-existing-comment .guiedit-buttons-container button {
-	color: #ce92ee;
 }
 
 .guiedit::after {

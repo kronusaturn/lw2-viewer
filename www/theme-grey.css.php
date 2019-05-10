@@ -1666,6 +1666,10 @@ a.comment-parent-link:hover::before {
 /* COMMENTING AND POSTING UI */
 /*===========================*/
 
+.post-controls {
+	font-weight: var(--GW-UI-font-weight-light);
+}
+
 .posting-controls input[type='submit'],
 .posting-controls .cancel-post-editing-button {
 	background-color: #fff;
@@ -1732,14 +1736,6 @@ a.comment-parent-link:hover::before {
 		0 0 0 1px #fff,
 		0 0 0 2px var(--GW-hyperlink-color);
 }
-.posting-controls.edit-existing-post textarea:focus,
-.posting-controls form.edit-existing-comment textarea:focus {
-	border-color: #090;
-	box-shadow: 
-		0 0 0 1px #81ff7f inset,
-		0 0 0 1px #fff,
-		0 0 0 2px #090;
-}
 
 /*= Scroll bars =*/
 
@@ -1769,25 +1765,10 @@ a.comment-parent-link:hover::before {
 		0 0 0 1px #eee inset;
 }
 
-.posting-controls.edit-existing-post textarea:focus::-webkit-scrollbar-track,
-.posting-controls form.edit-existing-comment textarea:focus::-webkit-scrollbar-track {
-	border-left: 1px solid #090;
-}
-.posting-controls.edit-existing-post textarea:focus::-webkit-scrollbar-thumb,
-.posting-controls form.edit-existing-comment textarea:focus::-webkit-scrollbar-thumb {
-	border-left: 1px solid #090;
-	background-color: #28a708;
-}
-
 /* GUIEdit buttons */
 
 .guiedit-buttons-container {
 	background-image: linear-gradient(to bottom, #fff 0%, #ddd 50%, #ccc 75%, #aaa 100%);
-}
-
-.posting-controls.edit-existing-post .guiedit-buttons-container button,
-.posting-controls form.edit-existing-comment .guiedit-buttons-container button {
-	color: #080;
 }
 
 button.guiedit::after {
@@ -1813,6 +1794,18 @@ button.guiedit::after {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 520px) {
+	.post-controls .edit-post-link {
+		text-shadow:
+			0 0 1px #fff,
+			0 0 3px #0f0;
+	}
+	.post-controls .edit-post-link:hover,
+	.post-controls .edit-post-link:active {
+		text-shadow:
+			0 0 1px #fff,
+			0 0 3px #f88;
+	}
+
 	.textarea-container:focus-within button:active {
 		background-color: #ccc;
 	}
@@ -1846,50 +1839,18 @@ button.guiedit::after {
 /* EDIT POST FORM */
 /*================*/
 
-.post-controls {
-	font-weight: var(--GW-UI-font-weight-light);
-}
-
-/*	Checkboxes.
-	*/
-#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
-	border-radius: 3px;
-	border: 1px solid #ddd;
+#edit-post-form .post-section-selector label {
 	color: #777;
-}
-@media only screen and (hover: hover) and (pointer: fine) {
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover,
-	#edit-post-form .post-meta-fields input[type='checkbox']:focus + label {
-		text-shadow: 
-			0 0 1px #fff,
-			0 0 2px #fff,
-			0 0 2.5px #aaa;
-	}
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover::before,
-	#edit-post-form .post-meta-fields input[type='checkbox']:focus + label::before {
-		border-color: #aaa;
-	}
-}
-#edit-post-form .post-meta-fields input[type='checkbox']:checked + label::before {
-	content: "\F00C";
-}
-
-/*	Section selector.
-	*/
-#edit-post-form input[type='radio'] + label {
-	color: #777;
-	border-color: #ddd;
 	padding: 5px 12px;
+	box-shadow: 0 0 0 1px #ddd;
 }
-#edit-post-form label[for='section'] {
-	padding-top: 5px;
-	padding-bottom: 5px;
+#edit-post-form .post-section-selector label:nth-of-type(n+2) {
+	margin-left: 1px;
 }
-#edit-post-form input[type='radio'][value='all'] + label {
+#edit-post-form .post-section-selector label:first-of-type {
 	border-radius: 8px 0 0 8px;
-	border-width: 1px;
 }
-#edit-post-form input[type='radio'][value='drafts'] + label {
+#edit-post-form .post-section-selector label:last-of-type {
 	border-radius: 0 8px 8px 0;
 }
 @media only screen and (hover: hover) and (pointer: fine) {
@@ -1903,32 +1864,15 @@ button.guiedit::after {
 	color: #000;
 	box-shadow: 
 		0 0 0 1px #aaa;
+	z-index: 1;
 }
+#edit-post-form input[type='radio']:active + label,
 #edit-post-form input[type='radio']:checked + label {
 	background-color: #ddd;
-	border-color: #ddd;
 	color: #000;
 	text-shadow: 
 		0 -1px 0 #fff,
 		0 0.5px 0.5px #000;
-}
-
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
-@media only screen and (max-width: 520px) {
-	.post-controls .edit-post-link {
-		text-shadow:
-			0 0 1px #fff,
-			0 0 3px #0f0;
-	}
-	.post-controls .edit-post-link:hover,
-	.post-controls .edit-post-link:active {
-		text-shadow:
-			0 0 1px #fff,
-			0 0 3px #f88;
-	}
 }
 
 /*===========*/
@@ -2089,6 +2033,36 @@ input[type='password']:focus {
 select {
 	color: #000;
 }
+
+/*=------------=*/
+/*= Checkboxes =*/
+/*=------------=*/
+
+input[type='checkbox'] + label::before {
+	border-radius: 3px;
+	border: 1px solid #ddd;
+	color: #777;
+}
+@media only screen and (hover: hover) and (pointer: fine) {
+	input[type='checkbox'] + label:hover,
+	input[type='checkbox']:focus + label {
+		text-shadow: 
+			0 0 1px #fff,
+			0 0 2px #fff,
+			0 0 2.5px #aaa;
+	}
+	input[type='checkbox'] + label:hover::before,
+	input[type='checkbox']:focus + label::before {
+		border-color: #aaa;
+	}
+}
+input[type='checkbox']:checked + label::before {
+	content: "\F00C";
+}
+
+/*=-----------=*/
+/*= Fractions =*/
+/*=-----------=*/
 
 .frac {
 	padding-left: 2px;
