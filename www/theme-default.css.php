@@ -1628,6 +1628,10 @@ a.comment-parent-link:hover::before {
 /* COMMENTING AND POSTING UI */
 /*===========================*/
 
+.post-controls {
+	font-weight: var(--GW-UI-font-weight-heavy);
+}
+
 .posting-controls input[type='submit'],
 .posting-controls .cancel-post-editing-button {
 	background-color: #fff;
@@ -1803,10 +1807,6 @@ a.comment-parent-link:hover::before {
 /*================*/
 /* EDIT POST FORM */
 /*================*/
-
-.post-controls {
-	font-weight: var(--GW-UI-font-weight-heavy);
-}
 
 #edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
 	border-radius: 3px;
@@ -2016,6 +2016,10 @@ hr {
 	border-bottom: 1px solid #999;
 }
 
+/*=------=*/
+/*= Code =*/
+/*=------=*/
+
 code {
 	padding: 1px 4px 0 5px;
 	margin: 0 3px;
@@ -2029,6 +2033,10 @@ code {
 		0 0 0 2px #ddf;
 	font-feature-settings: 'ss02';
 }
+
+/*=---------------=*/
+/*= Form elements =*/
+/*=---------------=*/
 
 input[type='text'],
 input[type='search'],
@@ -2048,6 +2056,36 @@ input[type='password']:focus {
 select {
 	color: #000;
 }
+
+/*=------------=*/
+/*= Checkboxes =*/
+/*=------------=*/
+
+input[type='checkbox'] + label::before {
+	border-radius: 3px;
+	border: 1px solid #ddd;
+	color: #777;
+}
+@media only screen and (hover: hover) and (pointer: fine) {
+	input[type='checkbox'] + label:hover,
+	input[type='checkbox']:focus + label {
+		text-shadow: 
+			0 0 1px #fff,
+			0 0 2px #fff,
+			0 0 2.5px #aaa;
+	}
+	input[type='checkbox'] + label:hover::before,
+	input[type='checkbox']:focus + label::before {
+		border-color: #aaa;
+	}
+}
+input[type='checkbox']:checked + label::before {
+	content: "\F00C";
+}
+
+/*=--------------------------------=*/
+/*= Strikethrough in post listings =*/
+/*=--------------------------------=*/
 
 <?php if ($platform != 'Mac') {
 echo "{$firefox_exclusive} {";
@@ -2071,6 +2109,10 @@ h1.listing s,
 EOT;
 }
 ?>
+
+/*=------------------------=*/
+/*= HTML underline element =*/
+/*=------------------------=*/
 
 u {
 	text-decoration: none;
