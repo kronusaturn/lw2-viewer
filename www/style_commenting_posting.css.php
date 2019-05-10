@@ -318,6 +318,10 @@ button.guiedit {
 	}
 }
 @media only screen and (max-width: 520px) {
+	.post-controls .edit-post-link {
+		padding-top: 0.25em;
+	}
+
 	.comment-controls:focus-within {
 		z-index: 10001;
 	}
@@ -580,26 +584,18 @@ button.guiedit {
 	#edit-post-form .button.cancel-post-editing-button {
 		font-size: 1.5rem;
 		margin: 1.25rem 0.75em 0 0.75em;
-		padding: 0.5em 0.75em;
+		padding: 0.5em;
 	}
 	#edit-post-form .button.cancel-post-editing-button {
 		order: -1;
 	}
 }
 @media only screen and (max-width: 640px) {
-	#edit-post-form label[for='title'],
-	#edit-post-form label[for='section'] {
-		padding: 0.25em 0.5em 0.25em 0.25em;
-	}
 	#edit-post-form .post-meta-fields {
 		grid-template-columns: 4.5em auto auto auto 1fr auto;
 	}
 }
 @media only screen and (max-width: 520px) {
-	.post-controls .edit-post-link {
-		padding-top: 0.25em;
-	}
-
 	#content.edit-post-page {
 		min-height: 100vh;
 		grid-template-rows: auto auto 1fr auto;

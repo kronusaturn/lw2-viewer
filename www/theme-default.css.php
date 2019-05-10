@@ -1831,6 +1831,7 @@ a.comment-parent-link:hover::before {
 }
 #edit-post-form input[type='radio'] + label {
 	color: #777;
+	border-width: 1px 1px 1px 0;
 	border-color: #ddd;
 	padding: 5px 12px;
 }
