@@ -275,8 +275,7 @@ signaled condition to OUT-STREAM."
     (format out-stream "<a href='~a'>Original</a>"
 	    (cdr (assoc :URI annotation)))
     (multiple-value-bind (pretty-time js-time)
-	(pretty-time (cdr (assoc :CREATED annotation))
-		     :FORMAT (list :LONG-MONTH " " :DAY " " :YEAR)) ; TODO: Add HH:MM
+	(pretty-time (cdr (assoc :CREATED annotation)))
       (format out-stream "<span class='date' data-js-date=~a>~a</span>"
 	      js-time
 	      pretty-time))
@@ -299,8 +298,6 @@ signaled condition to OUT-STREAM."
 		:notification)
 	       ((assoc :comment-count x)
 		:post)
-	       ((assoc :annotation x)
-		:annotation)
 	       (t
 		:comment))))))
 
@@ -1269,8 +1266,7 @@ signaled condition to OUT-STREAM."
 		   (:preferences)
 		   (:annotations
 		    (let ((items 
-			   (assoc :ROWS (get-user-annotations user-id :limit 10)))
-			  )
+			   (cdr (assoc :rows (get-user-annotations user-id :limit 10)))))
 		      (loop for x in items collect (acons :----typename :annotation x))))
 		   (t
 		     (let ((user-posts (get-user-posts user-id :limit (+ 1 (user-pref :items-per-page) offset)))
