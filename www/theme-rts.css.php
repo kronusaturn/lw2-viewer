@@ -1,9 +1,3 @@
-<?php
-	$UI_font = "'Proxima Nova', sans-serif";
-	$text_font = "'Garamond Premier Pro', 'Georgia', 'Times New Roman', serif";
-	$hyperlink_color = "#888";
-?>
-
 /******************************/
 /* READTHESEQUENCES.COM THEME */
 /******************************/
@@ -12,9 +6,32 @@
 /* VARIABLES */
 /*===========*/
 
+/*	Typography.
+	*/
+:root {
+	--GW-UI-font: 'Proxima Nova', var(--GW-sans-serif-fallback-font-stack);
+	--GW-UI-font-weight-light: 200;
+	--GW-UI-font-weight-heavy: 600;
+
+	--GW-body-text-font: 'Garamond Premier Pro', var(--GW-UI-serif-fallback-font-stack);
+	--GW-body-text-font-weight: 500;
+
+	--GW-monospaced-font: 'Triplicate', var(--GW-monospaced-fallback-font-stack);
+
+	--GW-post-listings-font: 'Garamond Premier Pro', var(--GW-UI-serif-fallback-font-stack);
+}
+
+/*	Layout.
+	*/
+:root {
+}
+
 /*	Color scheme.
 	*/
 :root {
+	--GW-body-background-color: #fffffa;
+
+	--GW-hyperlink-color: #888;
 }
 
 /*======*/
@@ -23,8 +40,6 @@
 
 body {
 	color: #000;
-	background-color: #fffffa;
-	font-family: <?php echo $UI_font; ?>;
 }
 #content {
 	line-height: 1.55;
@@ -204,11 +219,11 @@ a.nav-inner,
 	grid-row: 3;
 }
 #top-nav-bar .page-number {
-	font-family: <?php echo $text_font; ?>;
+	font-family: var(--GW-body-text-font);
 	padding-top: 7px;
 }
 #top-nav-bar .page-number-label {
-	font-family: <?php echo $UI_font; ?>;
+	font-family: var(--GW-UI-font);
 	bottom: 70%;
 }
 #top-nav-bar::after {
@@ -545,7 +560,6 @@ a.nav-inner,
 h1.listing {
 	margin: 0.7em 20px 0.1em 20px;
 	max-width: calc(100% - 40px);
-	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
 	text-align: center;
 }
 
@@ -555,7 +569,6 @@ h1.listing a[href^="http"] {
 	color: #888;
 }
 h1.listing a[href^='/posts'] {
-	font-family: <?php echo $text_font; ?>;
 	text-decoration: none;
 	color: #690010;
 	font-weight: 500;
@@ -706,10 +719,6 @@ h1.listing.own-post-listing {
 /* CONVERSATIONS */
 /*===============*/
 
-#content.conversation-page h1.page-main-heading {
-	font-family: <?php echo $text_font; ?>;
-}
-
 /*============*/
 /* LOGIN PAGE */
 /*============*/
@@ -772,9 +781,8 @@ h1.listing.own-post-listing {
 /*===================*/
 
 .contents {
-	font-family: <?php echo $UI_font; ?>;
 	margin-left: 1.5em;
-	font-family: Garamond Premier Pro;
+	font-family: var(--GW-body-text-font);
 	min-width: unset;
 }
 .contents-head {
@@ -816,16 +824,10 @@ h1.listing.own-post-listing {
 /* POSTS & COMMENTS */
 /*==================*/
 
-.body-text {
-	font-family: <?php echo $text_font; ?>;
-}
 h1.post-title {
-	font-family: <?php echo $text_font; ?>;
 	font-weight: 600;
 }
 .body-text {
-	font-family: <?php echo $text_font; ?>;
-	font-weight: 500;
 	line-height: 1.45;
 }
 
@@ -900,8 +902,6 @@ a.post-section.alignment-forum:hover::before {
 
 .post.link-post a.link-post-link {
 	text-decoration: none;
-	font-family: <?php echo $UI_font; ?>;
-	font-weight: 600;
 	color: #77121a;
 }
 .post.link-post a.link-post-link:hover {
@@ -1265,7 +1265,6 @@ a.comment-parent-link:hover::before {
 	color: #aaa;
 }
 .comment-minimize-button::after {
-	font-family: <?php echo $UI_font; ?>;
 	color: #777;
 }
 .comment-minimize-button.maximized::after {
@@ -1284,10 +1283,6 @@ a.comment-parent-link:hover::before {
 		0px 0px 0.5px #ff987b, 
 		0px 0px 1.5px #c05651, 
 		0.5px 0.5px 0.5px #de7069;
-}
-
-.individual-thread-page > h1 {
-	font-family: <?php echo $text_font; ?>;
 }
 
 /*==============*/
@@ -1433,7 +1428,6 @@ a.comment-parent-link:hover::before {
 }
 
 .posting-controls textarea {
-	font-family: <?php echo $text_font; ?>;
 	font-size: 1.25rem;
 	font-weight: 500;
 	color: #000;
@@ -1441,6 +1435,7 @@ a.comment-parent-link:hover::before {
 	border-color: #aaa;
 	box-shadow: 
 		0 0 0 1px #eee inset;
+	font-feature-settings: 'ss01';
 }
 .posting-controls textarea:focus {
 	background-color: #ffd;
@@ -1469,12 +1464,8 @@ a.comment-parent-link:hover::before {
 .posting-controls form.edit-existing-comment .guiedit-buttons-container button {
 	color: #050;
 }
-.guiedit-buttons-container button {
-	font-family: Font Awesome, <?php echo $text_font; ?>;
-}
 
 .guiedit::after {
-	font-family: <?php echo $UI_font; ?>;
 	color: #777;
 	text-shadow: none;
 }
@@ -1707,7 +1698,7 @@ hr {
 
 code,
 pre {
-	font-family: Triplicate Code, Courier, Courier New, monospace;
+	font-feature-settings: 'ss02';
 	font-size: 0.8125em;
 }
 
@@ -1740,20 +1731,6 @@ select {
 /*============*/
 /* ABOUT PAGE */
 /*============*/
-
-.about-page mark {
-	background-color: #e6e6e6;
-	text-decoration: none;
-	box-shadow: 
-		0 -1px 0 0 #000 inset, 
-		0 -3px 1px -2px #000 inset;
-	padding: 0 1px;
-}
-
-#content.about-page .accesskey-table {
-	font-family: <?php echo $UI_font; ?>;
-	border-color: #ddd;
-}
 
 #content.about-page img {
 	border: 1px solid #000;
@@ -1837,8 +1814,6 @@ select {
 	border-width: 0 1px;
 }
 #content.alignment-forum-index-page::after {
-	font-family: "Concourse SmallCaps";
-	font-weight: 600;
 	background-color: #7f85b2;
 	color: transparent;
 	-webkit-background-clip: text;
@@ -1975,7 +1950,6 @@ select {
 	}
 	#quick-nav-ui a::after,
 	#new-comment-nav-ui::before {
-		font-family: <?php echo $UI_font; ?>;
 		font-weight: bold;
 		box-shadow:
 			0 0 1px 0 #fffffa,
@@ -2009,9 +1983,6 @@ select {
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-next {
 		border-radius: 0 7px 7px 0;
-	}
-	#new-comment-nav-ui button::after {
-		font-family: <?php echo $UI_font; ?>;
 	}
 
 	/*****************************************/

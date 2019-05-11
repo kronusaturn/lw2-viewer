@@ -703,6 +703,9 @@ body {
 	background-color: var(--GW-body-background-color);
 	box-shadow: 0 0 0 1px #e4e4e4 inset;
 }
+.archive-nav span[class^='archive-nav-item'] {
+	text-shadow: 0 0 0 currentColor;
+}
 
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
