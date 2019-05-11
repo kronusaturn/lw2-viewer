@@ -524,6 +524,45 @@ body {
 		}
 	}
 }
+@media only screen and (max-width: 960px) {
+	#theme-selector {
+		box-shadow: 
+			0 0 0 1px var(--GW-C1);
+	}
+	#theme-selector button {
+		box-shadow: 
+			0 0 0 1px var(--GW-C0) inset, 
+			0 0 0 3px var(--GW-C1) inset;
+	}
+	#theme-selector button:hover,
+	#theme-selector button.selected {
+		box-shadow: 
+			0 0 0 1px var(--GW-C0) inset, 
+			0 0 0 3px var(--GW-C1) inset, 
+			0 0 0 5px var(--GW-C0) inset, 
+			0 0 0 7px var(--GW-C1) inset;
+	}
+	#theme-selector button:active {
+		box-shadow: 
+			0 0 0  1px var(--GW-C0) inset, 
+			0 0 0  3px var(--GW-C1) inset, 
+			0 0 0  8px var(--GW-C0) inset, 
+			0 0 0 10px var(--GW-C1) inset;
+	}
+	#theme-selector button::after {
+		color: var(--GW-C1);
+		padding-left: 1px;
+	}
+	#theme-selector .theme-selector-close-button,
+	#theme-selector .theme-selector-close-button:hover {
+		font-weight: 300;
+		width: 54px;
+		box-shadow:
+			0 0 0 4px var(--GW-C0) inset,
+			0 0 0 6px var(--GW-C1) inset;
+		padding: 12px 10px 10px 12px;
+	}
+}
 
 /*======================*/
 /* THEME TWEAKER TOGGLE */
@@ -768,44 +807,6 @@ body {
 		width: 53px;
 		height: 53px;
 		padding: 10px 10px 11px 11px;
-	}
-
-	#theme-selector {
-		box-shadow: 
-			0 0 0 1px var(--GW-C1);
-	}
-	#theme-selector button {
-		box-shadow: 
-			0 0 0 1px var(--GW-C0) inset, 
-			0 0 0 3px var(--GW-C1) inset;
-	}
-	#theme-selector button:hover,
-	#theme-selector button.selected {
-		box-shadow: 
-			0 0 0 1px var(--GW-C0) inset, 
-			0 0 0 3px var(--GW-C1) inset, 
-			0 0 0 5px var(--GW-C0) inset, 
-			0 0 0 7px var(--GW-C1) inset;
-	}
-	#theme-selector button:active {
-		box-shadow: 
-			0 0 0  1px var(--GW-C0) inset, 
-			0 0 0  3px var(--GW-C1) inset, 
-			0 0 0  8px var(--GW-C0) inset, 
-			0 0 0 10px var(--GW-C1) inset;
-	}
-	#theme-selector button::after {
-		color: var(--GW-C1);
-		padding-left: 1px;
-	}
-	#theme-selector .theme-selector-close-button,
-	#theme-selector .theme-selector-close-button:hover {
-		font-weight: 300;
-		width: 54px;
-		box-shadow:
-			0 0 0 4px var(--GW-C0) inset,
-			0 0 0 6px var(--GW-C1) inset;
-		padding: 12px 10px 10px 12px;
 	}
 
 	#quick-nav-ui a::after,

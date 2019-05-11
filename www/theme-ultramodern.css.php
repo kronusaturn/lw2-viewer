@@ -209,11 +209,11 @@ p {
 	}
 }
 @media only screen and (max-width: 900px) {
+	#secondary-bar .nav-inner::before {
+		line-height: 1;
+	}
 	#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
 		padding: 6px 10px;
-	}
-	#nav-item-search button {
-		padding-top: 0;
 	}
 	#nav-item-search button::before {
 		font-weight: 400;
@@ -820,6 +820,14 @@ h1.listing a {
 h1.listing a[href^="http"] {
 	color: #a2cbf2;
 	min-width: 1em;
+}
+
+@media only screen and (hover: hover) and (pointer: fine) and (min-width: 961px) {
+	h1.listing a[href^='/posts/'],
+	h1.listing a[href^='/s/'],
+	h1.listing a[href^='/conversation?id'] {
+		padding-bottom: 2px;
+	}
 }
 
 @media only screen and (hover: hover) and (pointer: fine) {
