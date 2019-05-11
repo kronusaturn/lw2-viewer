@@ -432,7 +432,6 @@ button.guiedit {
 
 #edit-post-form {
 	padding: 2em var(--GW-current-page-content-right-side-padding) 1em var(--GW-current-page-content-left-side-padding);
-	overflow: auto;
 }
 
 /*=------------------=*/
@@ -541,6 +540,9 @@ button.guiedit {
 /*= Submit controls =*/
 /*=-----------------=*/
 
+#edit-post-form .submit-form-controls {
+	overflow: auto;
+}
 #edit-post-form .submit-form-controls .buttons {
 	float: right;
 }
