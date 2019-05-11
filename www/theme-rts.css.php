@@ -65,21 +65,19 @@ body {
 		0 0 30px #fffffa;
 }
 
-/*=========*/
-/* NAV BAR */
-/*=========*/
+/*==========*/
+/* NAV BARS */
+/*==========*/
 
-.nav-inner {
+#primary-bar .nav-inner,
+#bottom-bar .nav-inner {
 	font-size: 1.375em;
 }
 #secondary-bar .nav-inner {
 	font-size: 1em;
 }
 
-a.nav-inner,
-#nav-item-search button {
-	color: #888;
-}
+/*= Decorative bottom bar =*/
 
 #bottom-bar.decorative {
 	border: none;
