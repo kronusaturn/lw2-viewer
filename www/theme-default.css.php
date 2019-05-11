@@ -1090,6 +1090,10 @@ h1.listing + .post-meta .read-time.word-count::after {
 	border-bottom: 1px solid #ccc;
 }
 
+#content.user-page h1.listing + .post-meta,
+#content.search-results-page h1.listing + .post-meta {
+	margin-bottom: 1rem;
+}
 #content.user-page h1.listing,
 #content.user-page h1.listing + .post-meta,
 #content.search-results-page h1.listing,
