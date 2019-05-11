@@ -8347,6 +8347,18 @@ button.guiedit:active div {
 
 /* Markdown hints */
 
+#markdown-hints-checkbox + label::before {
+	line-height: 1.35;
+}
+#markdown-hints-checkbox:focus + label {
+	box-shadow: none;
+}
+#markdown-hints-checkbox + label:hover::before,
+#markdown-hints-checkbox:focus + label::before,
+#markdown-hints-checkbox:checked + label::before {
+	box-shadow: none;
+	background-color: transparent;
+}
 #markdown-hints {
 	border: 2px solid var(--GW-C1);
 	background-color: var(--GW-C0);
@@ -8401,6 +8413,9 @@ button.guiedit:active div {
 #edit-post-form .submit-form-controls input[type='submit'],
 #edit-post-form .submit-form-controls .button {
 	padding: 8px 14px;
+}
+.posting-controls .button.cancel-post-editing-button {
+	font-weight: var(--GW-UI-font-weight-light);
 }
 
 #edit-post-form .post-meta-fields {
