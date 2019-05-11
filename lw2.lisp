@@ -533,7 +533,7 @@ signaled condition to OUT-STREAM."
       (setf (quri:uri-query quri) nil))
     (quri:render-uri quri)))
 
-(defun pagination-nav-bars (&key offset total with-next (items-per-page (user-pref :items-per-page)))
+(defun pagination-nav-bars (&key (offset nil with-pagination) total with-next (items-per-page (user-pref :items-per-page)))
   (lambda (out-stream fn)
     (labels ((pages-to-end (n) (< (+ offset (* items-per-page n)) total)))
       (let* ((with-next (if total (pages-to-end 1) with-next))
@@ -545,17 +545,18 @@ signaled condition to OUT-STREAM."
              (next-uri (if next (replace-query-params request-uri "offset" next)))
              (last-uri (if (and total offset (pages-to-end 2))
                            (replace-query-params request-uri "offset" (- total (mod (- total 1) items-per-page) 1)))))
-        (labels ((write-item (uri class title accesskey)
-                   (format out-stream "<a href=\"~A\" class=\"button nav-item-~A~:[ disabled~;~]\" title=\"~A [~A]\" accesskey=\"~A\"></a>"
-                           (or uri "#") class uri title accesskey accesskey)))
-          (format out-stream "<div id='top-nav-bar'>")
-          (write-item first-uri "first" "First page" "\\")
-          (write-item prev-uri "prev" "Previous page" "[")
-          (format out-stream "<span class='page-number'><span class='page-number-label'>Page</span> ~A</span>" (+ 1 (/ (or offset 0) items-per-page)))
-          (write-item next-uri "next" "Next page" "]")
-          (write-item last-uri "last" "Last page" "/")
-          (format out-stream "</div>"))
-        (funcall fn)
+        (when with-pagination
+	  (labels ((write-item (uri class title accesskey)
+		     (format out-stream "<a href=\"~A\" class=\"button nav-item-~A~:[ disabled~;~]\" title=\"~A [~A]\" accesskey=\"~A\"></a>"
+			     (or uri "#") class uri title accesskey accesskey)))
+	    (format out-stream "<div id='top-nav-bar'>")
+	    (write-item first-uri "first" "First page" "\\")
+	    (write-item prev-uri "prev" "Previous page" "[")
+	    (format out-stream "<span class='page-number'><span class='page-number-label'>Page</span> ~A</span>" (+ 1 (/ (or offset 0) items-per-page)))
+	    (write-item next-uri "next" "Next page" "]")
+	    (write-item last-uri "last" "Last page" "/")
+	    (format out-stream "</div>")))
+	(funcall fn)
 	(nav-bar-outer out-stream nil (list :bottom-bar
 					    (list-cond
 					     (first-uri `("first" ,first-uri "Back to first"))
