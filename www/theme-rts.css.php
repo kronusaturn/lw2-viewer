@@ -10,7 +10,7 @@
 	*/
 :root {
 	--GW-UI-font: 'Proxima Nova', var(--GW-sans-serif-fallback-font-stack);
-	--GW-UI-font-weight-light: 200;
+	--GW-UI-font-weight-light: <?php echo ($platform == 'Mac') ? '200' : '300'; ?>;
 	--GW-UI-font-weight-heavy: 600;
 
 	--GW-body-text-font: 'Garamond Premier Pro', var(--GW-UI-serif-fallback-font-stack);
@@ -18,7 +18,12 @@
 
 	--GW-monospaced-font: 'Triplicate', var(--GW-monospaced-fallback-font-stack);
 
-	--GW-post-listings-font: 'Garamond Premier Pro', var(--GW-UI-serif-fallback-font-stack);
+	--GW-post-listings-font: 'Garamond Premier Pro', var(--GW-serif-fallback-font-stack);
+	--GW-post-listings-font-weight: 500;
+
+	--GW-listings-post-meta-font-weight: <?php echo ($platform == 'Mac') ? '300' : '400'; ?>;
+
+	--GW-post-title-font-weight: 600;
 }
 
 /*	Layout.
@@ -51,7 +56,6 @@ body {
 
 .nav-inner {
 	font-size: 1.375em;
-	font-weight: 600;
 }
 #secondary-bar .nav-inner {
 	font-size: 1em;
@@ -59,16 +63,11 @@ body {
 
 a.nav-inner,
 #nav-item-search button {
-	font-weight: <?php echo ($platform == 'Mac') ? '200' : '300'; ?>;
 	color: #888;
 }
 
 #bottom-bar.decorative {
 	border: none;
-}
-#bottom-bar.decorative::before,
-#bottom-bar.decorative::after {
-	font-weight: 200;
 }
 #bottom-bar.decorative::after {
 	color: #d8d8d8;
@@ -82,7 +81,6 @@ a.nav-inner,
 	position: absolute;
 	left: 5px;
 	top: -2px;
-	font-weight: <?php echo ($platform == 'Mac') ? '200' : '300'; ?>;
 	font-size: 0.7em;
 	color: #d8d8d8;
 }
@@ -172,7 +170,6 @@ a.nav-inner,
 }
 #nav-item-search input::placeholder {
 	color: #d00;
-	font-weight: normal;
 }
 
 /* User/login tab */
@@ -199,7 +196,6 @@ a.nav-inner,
 }
 .page-toolbar * {
 	color: #888;
-	font-weight: <?php echo ($platform == 'Mac') ? '300' : '400'; ?>;
 }
 .page-toolbar a:hover,
 .page-toolbar button:hover {
@@ -297,7 +293,6 @@ a.nav-inner,
 }
 .sublevel-nav.sort::before {
 	text-transform: uppercase;
-	font-weight: 600;
 	color: #444;
 	text-shadow: 0.5px 0.5px 0 #fff;
 	line-height: 2;
@@ -344,7 +339,6 @@ a.nav-inner,
 #theme-selector button::before {
 	font-size: 0.9375em;
 	padding: 6px;
-	font-weight: 300;
 	color: #bbb;
 	background-color: #fff;
 }
@@ -354,7 +348,6 @@ a.nav-inner,
 }
 #width-selector button::after {
 	color: #aaa;
-	font-weight: 300;
 }
 
 /*======================*/
@@ -404,7 +397,6 @@ a.nav-inner,
 #new-comment-nav-ui .new-comments-count,
 #new-comment-nav-ui .new-comments-count::after {
 	color: #999;
-	font-weight: normal;
 }
 #new-comment-nav-ui .new-comments-count {
 	text-shadow: 0.5px 0.5px 0 #fff;
@@ -437,7 +429,6 @@ a.nav-inner,
 #hns-date-picker span {
 	color: #777;
 	text-shadow: 0.5px 0.5px 0 #fff;
-	font-weight: 600;
 }
 #hns-date-picker input[type='text'] {
 }
@@ -477,15 +468,11 @@ a.nav-inner,
 #text-size-adjustment-ui button {
 	color: #777;
 }
-#text-size-adjustment-ui button.default {
-	font-weight: 600;
-}
 #text-size-adjustment-ui button:disabled:hover {
 	text-shadow: none;
 }
 #text-size-adjustment-ui::after {
 	color: #aaa;
-	font-weight: 300;
 }
 
 /*=============================*/
@@ -519,18 +506,15 @@ a.nav-inner,
 	border-right-width: 1px;
 }
 .archive-nav span[class^='archive-nav-item'] {
-	font-weight: bold;
 	background-color: #ddd;
 }
 
 .archive-nav a:link,
 .archive-nav a:visited {
 	color: #999;
-	font-weight: 300;
 }
 .archive-nav a:hover,
 .archive-nav span[class^='archive-nav-item'] {
-	font-weight: 300;
 	background-color: #f0f0eb;
 	color: #333;
 	text-shadow: 0px 0px 0.5px #333;
@@ -548,10 +532,6 @@ a.nav-inner,
 /*===============*/
 /* KEYBOARD HELP */
 /*===============*/
-
-#nav-item-about button.open-keyboard-help {
-	font-weight: 400;
-}
 
 /*==========*/
 /* LISTINGS */
@@ -571,7 +551,6 @@ h1.listing a[href^="http"] {
 h1.listing a[href^='/posts'] {
 	text-decoration: none;
 	color: #690010;
-	font-weight: 500;
 	text-shadow: 0.5px 0.5px 0.5px #de7069;
 	padding: 0 2px 1px 1px;
 }
@@ -711,10 +690,6 @@ h1.listing.own-post-listing {
 	margin: 0;
 }
 
-.user-stats .karma-total {
-	font-weight: bold;
-}
-
 /*===============*/
 /* CONVERSATIONS */
 /*===============*/
@@ -724,7 +699,6 @@ h1.listing.own-post-listing {
 /*============*/
 
 .login-container form input[type='submit'] {
-	font-weight: bold;
 	background-color: #eee;
 	border: 1px solid #ccc;
 }
@@ -773,7 +747,6 @@ h1.listing.own-post-listing {
 .reset-password-container input[type='submit'] {
 	background-color: #e4e4e4;
 	border: 1px solid #ccc;
-	font-weight: bold;
 }
 
 /*===================*/
@@ -784,9 +757,6 @@ h1.listing.own-post-listing {
 	margin-left: 1.5em;
 	font-family: var(--GW-body-text-font);
 	min-width: unset;
-}
-.contents-head {
-	font-weight: bold;
 }
 .contents-head::after {
 	content: "";
@@ -824,9 +794,6 @@ h1.listing.own-post-listing {
 /* POSTS & COMMENTS */
 /*==================*/
 
-h1.post-title {
-	font-weight: 600;
-}
 .body-text {
 	line-height: 1.45;
 }
@@ -856,7 +823,6 @@ h1.post-title {
 .post-meta,
 h1.listing + .post-meta {
 	text-align: center;
-	font-weight: <?php echo ($platform == 'Mac') ? '300' : '400'; ?>;
 }
 .post-meta .post-section::before,
 .comment-meta .alignment-forum {
@@ -1038,7 +1004,6 @@ a.post-section.alignment-forum:hover::before {
 
 .comment-item input[id^="expand"] + label::after {
 	color: <?php echo $hyperlink_color; ?>;
-	font-weight: 600;
 }
 .comment-item input[id^="expand"] + label:hover::after {
 	color: #c00;
