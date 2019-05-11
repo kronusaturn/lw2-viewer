@@ -3880,9 +3880,6 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	// Clean up LW2 link in .post-meta.
 	updateLW2Link();
 
-	// Set state of top nav bar.
-	updateTopNavBarType();
-
 	// Clean up ToC.
 	queryAll(".contents-list li a").forEach(tocLink => {
 		tocLink.innerText = tocLink.innerText.replace(/^[0-9]+\. /, '');
@@ -4410,12 +4407,6 @@ function recomputeUIElementsContainerHeight(force = false) {
 															"";
 		}
 	}
-}
-
-function updateTopNavBarType() {
-	let topNavBar = query("#top-nav-bar");
-	if (topNavBar.query("a:not(.disabled)"))
-		topNavBar.removeClass("decorative");
 }
 
 function updateLW2Link() {

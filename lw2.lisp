@@ -564,7 +564,7 @@ signaled condition to OUT-STREAM."
 					     (t `("top" "#top" "Back to top"))
 					     (next-uri `("next" ,next-uri "Next" :nofollow t))
 					     (last-uri `("last" ,last-uri "Last" :nofollow t)))))
-	(format out-stream "<script>document.querySelectorAll('#bottom-bar, #top-nav-bar').forEach(bar => { bar.classList.add('decorative'); });</script>")))))
+	(format out-stream "<script>document.querySelectorAll('#bottom-bar').forEach(bar => { bar.classList.add('decorative'); });</script>")))))
 
 (defun decode-json-as-hash-table (json-source)
   (let (current-hash-table current-key)
