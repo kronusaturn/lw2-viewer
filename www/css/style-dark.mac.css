@@ -3661,7 +3661,6 @@ h1.post-title .post-type-prefix {
 	max-width: 100%;
 	margin: 0 var(--GW-current-page-content-right-side-padding) 1px var(--GW-current-page-content-right-side-padding);
 	position: relative;
-	z-index: 1;
 }
 .comments::before {
 	content: "";
@@ -6678,7 +6677,7 @@ th.mathjax-inline-container {
 	--GW-comment-highlight-color: #005dc3;
 	--GW-comment-highlight-color-faint: #0047b5;
 
-	--GW-vote-button-color: #393939;
+	--GW-vote-button-color: #2f2f2f;
 	--GW-upvote-button-color: #7b05bb;
 	--GW-downvote-button-color: #0090e0;
 
@@ -8208,6 +8207,12 @@ a.comment-parent-link:hover::before {
 	content: "\F056";
 }
 
+.vote.selected {
+	text-shadow:
+		0 0 2px #3b009c,
+		0 0 2px #000;
+}
+
 .vote::before,
 .vote.big-vote.clicked-once::before,
 .vote.big-vote.clicked-twice::before,
@@ -8338,6 +8343,11 @@ a.comment-parent-link:hover::before {
 
 #markdown-hints-checkbox + label:hover {
 	text-shadow: var(--GW-shadow-white-glow);
+}
+#markdown-hints-checkbox + label::before {
+	background-color: transparent;
+	font-size: 1.125em;
+	line-height: 1.2;
 }
 #markdown-hints {
 	border: 1px solid #00a9ed;

@@ -78,7 +78,7 @@
 	--GW-comment-highlight-color: #c79700;
 	--GW-comment-highlight-color-faint: #e7b200;
 
-	--GW-vote-button-color: #bbb;
+	--GW-vote-button-color: #c8c8c8;
 	--GW-upvote-button-color: #0b0;
 	--GW-downvote-button-color: #f00;
 
@@ -1608,6 +1608,12 @@ a.comment-parent-link:hover::before {
 	content: "\F056";
 }
 
+.vote.selected {
+	text-shadow:
+		0 0 2px #0f0,
+		0 0 2px #fff;
+}
+
 .vote::before,
 .vote.big-vote.clicked-once::before,
 .vote.big-vote.clicked-twice::before,
@@ -1738,6 +1744,11 @@ a.comment-parent-link:hover::before {
 
 #markdown-hints-checkbox + label:hover {
 	text-shadow: var(--GW-shadow-white-glow);
+}
+#markdown-hints-checkbox + label::before {
+	background-color: transparent;
+	font-size: 1.125em;
+	line-height: 1.2;
 }
 #markdown-hints {
 	border: 1px solid #c00;
