@@ -549,13 +549,13 @@ signaled condition to OUT-STREAM."
 	  (labels ((write-item (uri class title accesskey)
 		     (format out-stream "<a href=\"~A\" class=\"button nav-item-~A~:[ disabled~;~]\" title=\"~A [~A]\" accesskey=\"~A\"></a>"
 			     (or uri "#") class uri title accesskey accesskey)))
-	    (format out-stream "<div id='top-nav-bar'>")
-	    (write-item first-uri "first" "First page" "\\")
-	    (write-item prev-uri "prev" "Previous page" "[")
-	    (format out-stream "<span class='page-number'><span class='page-number-label'>Page</span> ~A</span>" (+ 1 (/ (or offset 0) items-per-page)))
-	    (write-item next-uri "next" "Next page" "]")
-	    (write-item last-uri "last" "Last page" "/")
-	    (format out-stream "</div>")))
+	    <div id="top-nav-bar" class=(if (or next prev last-uri) "" "decorative")>
+	      (write-item first-uri "first" "First page" "\\")
+	      (write-item prev-uri "prev" "Previous page" "[")
+	      (format out-stream "<span class='page-number'><span class='page-number-label'>Page</span> ~A</span>" (+ 1 (/ (or offset 0) items-per-page)))
+	      (write-item next-uri "next" "Next page" "]")
+	      (write-item last-uri "last" "Last page" "/")
+	    </div>))
 	(funcall fn)
 	(nav-bar-outer out-stream nil (list :bottom-bar
 					    (list-cond
