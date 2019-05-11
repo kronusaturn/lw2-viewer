@@ -3880,25 +3880,12 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	// Clean up LW2 link in .post-meta.
 	updateLW2Link();
 
-	// Set state of top nav bar.
-	updateTopNavBarType();
-
 	// Clean up ToC.
 	queryAll(".contents-list li a").forEach(tocLink => {
 		tocLink.innerText = tocLink.innerText.replace(/^[0-9]+\. /, '');
 		tocLink.innerText = tocLink.innerText.replace(/^[0-9]+: /, '');
 		tocLink.innerText = tocLink.innerText.replace(/^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})\. /i, '');
 		tocLink.innerText = tocLink.innerText.replace(/^[A-Z]\. /, '');
-	});
-
-	// Shorten post prefixes.
-	queryAll(".listing .post-type-prefix").forEach(prefix => {
-		if (/Question/.test(prefix.textContent))
-			prefix.textContent = "Q: ";
-	});
-	queryAll("h1.post-title .post-type-prefix").forEach(prefix => {
-		if (/Question/.test(prefix.textContent))
-			prefix.textContent = "Question: ";
 	});
 
 	// Rectify mathjax block container heights.
@@ -4420,12 +4407,6 @@ function recomputeUIElementsContainerHeight(force = false) {
 															"";
 		}
 	}
-}
-
-function updateTopNavBarType() {
-	let topNavBar = query("#top-nav-bar");
-	if (topNavBar.query("a:not(.disabled)"))
-		topNavBar.removeClass("decorative");
 }
 
 function updateLW2Link() {
