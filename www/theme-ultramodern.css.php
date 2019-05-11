@@ -1740,6 +1740,18 @@ button.guiedit {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 520px) {
+	.post-controls .edit-post-link {
+		text-shadow:
+			0 0 1px #fff,
+			0 0 3px #0f0;
+	}
+	.post-controls .edit-post-link:hover,
+	.post-controls .edit-post-link:active {
+		text-shadow:
+			0 0 1px #fff,
+			0 0 3px #f88;
+	}
+
 	.textarea-container:focus-within textarea {
 		background-color: var(--GW-body-background-color);
 	}
@@ -1789,6 +1801,16 @@ button.guiedit {
 	background-color: #999;
 	text-shadow: var(--GW-shadow-link-glow);
 }
+#edit-post-form .post-section-selector:focus-within {
+	text-shadow: var(--GW-shadow-link-glow);
+}
+#edit-post-form .post-section-selector:focus-within label {
+	box-shadow: 0 0 0 1px #ccc;
+}
+#edit-post-form .post-section-selector:focus-within input[type='radio']:focus + label,
+#edit-post-form .post-section-selector:focus-within input[type='radio']:checked + label {
+	background-color: #ccc;
+}
 #edit-post-form input[type='radio'] + label:hover,
 #edit-post-form input[type='radio']:focus + label {
 	color: #000;
@@ -1800,24 +1822,6 @@ button.guiedit {
 #edit-post-form input[type='radio']:checked + label {
 	color: #000;
 	font-weight: var(--GW-UI-font-weight-heavy);
-}
-
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
-@media only screen and (max-width: 520px) {
-	.post-controls .edit-post-link {
-		text-shadow:
-			0 0 1px #fff,
-			0 0 3px #0f0;
-	}
-	.post-controls .edit-post-link:hover,
-	.post-controls .edit-post-link:active {
-		text-shadow:
-			0 0 1px #fff,
-			0 0 3px #f88;
-	}
 }
 
 /*===========*/
@@ -1854,19 +1858,17 @@ input[type='submit'],
 	font-weight: inherit;
 }
 button:hover,
+button:focus,
 input[type='submit']:hover,
-.button:hover {
-	text-shadow:  var(--GW-shadow-link-glow);
+input[type='submit']:focus,
+.button:hover,
+.button:focus {
+	text-shadow: var(--GW-shadow-link-glow);
 }
 button:active,
 input[type='submit']:active,
 .button:active {
 	transform: scale(0.9);
-}
-button:focus:not(:hover),
-input[type='submit']:focus:not(:hover),
-.button:focus:not(:hover) {
-	transform: none;
 }
 
 /*==========*/
