@@ -82,16 +82,13 @@ body {
 #bottom-bar.decorative {
 	border: none;
 }
-#bottom-bar.decorative::after {
+#bottom-bar.decorative {
 	color: #d8d8d8;
-	background-color: #fff;
 }
 
 /* Accesskey hints */
 
 .nav-inner::after {
-	display: block;
-	position: absolute;
 	left: 5px;
 	top: -2px;
 	font-size: 0.7em;
