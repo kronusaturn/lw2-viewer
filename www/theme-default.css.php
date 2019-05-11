@@ -1360,6 +1360,7 @@ h1.post-title .post-type-prefix {
 .comment-meta .alignment-forum {
 	color: #cbccff;
 	padding: 1px 0 0 0;
+	top: -1px;
 }
 .post-meta .post-section.alignment-forum:hover::before,
 .comment-meta .alignment-forum {
