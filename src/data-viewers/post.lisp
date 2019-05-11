@@ -57,7 +57,7 @@
 				 ((logged-in-userid user-id) "own-post-listing")))>
       (if url <a href=(convert-any-link (string-trim " " url))>&#xf0c1;</a>)
       <a href=(generate-post-auth-link post nil nil need-auth)>
-	(if question <span class="post-type-prefix">[Question] </span>)
+	(if question <span class="post-type-prefix">Q: </span>)
 	(safe (clean-text-to-html title))
       </a>
       (if (logged-in-userid user-id) <a class="edit-post-link button" href=("/edit-post?post-id=~A" post-id)></a>)
@@ -70,7 +70,7 @@
 				(url "link-post")
 				(question "question-post")))>
       <h1 class="post-title">
-        (if question <span class="post-type-prefix">[Question] </span>)
+        (if question <span class="post-type-prefix">Question: </span>)
         (safe (clean-text-to-html title :hyphenation nil))
       </h1>
       (with-html-stream-output (post-meta-to-html post :body nil))
