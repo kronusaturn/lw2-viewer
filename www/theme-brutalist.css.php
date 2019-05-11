@@ -1587,7 +1587,7 @@ a.comment-parent-link:hover::before {
 	position: relative;
 }
 .vote:hover::before {
-	filter: drop-shadow(0 0 1px #fff);
+	filter: drop-shadow(0 0 1px var(--GW-C0));
 }
 
 .vote::before,
@@ -1789,23 +1789,25 @@ button.guiedit:active div {
 /* EDIT POST FORM */
 /*================*/
 
-#edit-post-form input[type='submit'],
-.posting-controls .button.cancel-post-editing-button {
+#edit-post-form .submit-form-controls input[type='submit'],
+#edit-post-form .submit-form-controls .button {
 	padding: 8px 14px;
 }
 
 #edit-post-form .post-meta-fields {
 	grid-template-columns: 6em auto auto auto 1fr auto;
 }
+
+
 #edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
-	border: 1px solid #000;
+	border: 1px solid var(--GW-C1);
 }
 @media only screen and (hover: hover) and (pointer: fine) {
 	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover::before,
 	#edit-post-form .post-meta-fields input[type='checkbox']:focus + label::before {
 		box-shadow: 
 			0 0 0 1px var(--GW-C0) inset,
-			0 0 0 2px #000 inset;
+			0 0 0 2px var(--GW-C1) inset;
 	}
 }
 #edit-post-form .post-meta-fields input[type='checkbox']:active + label::before,
@@ -1813,42 +1815,38 @@ button.guiedit:active div {
 	background-color: var(--GW-C0);
 	box-shadow: 
 		0 0 0 3px var(--GW-C0) inset,
-		0 0 0 4px #000 inset;
+		0 0 0 4px var(--GW-C1) inset;
 }
 #edit-post-form .post-meta-fields input[type='checkbox']:checked + label::before {
 	content: "";
-	background-color: #000;
+	background-color: var(--GW-C1);
 	box-shadow: 
 		0 0 0 4px var(--GW-C0) inset;
 }
-#edit-post-form input[type='radio'] + label {
-	border-color: #000;
-	color: #000;
+
+/*	Section selector.
+	*/
+#edit-post-form .post-section-selector {
+	border: 1px solid var(--GW-C1);
 }
-#edit-post-form input[type='radio'][value='all'] + label {
-	border-width: 1px;
+#edit-post-form .post-section-selector:focus-within {
+	box-shadow: 0 0 0 1px var(--GW-C1);
 }
-#edit-post-form input[type='radio'] + label:hover,
-#edit-post-form input[type='radio']:focus + label {
-	color: #000;
-	box-shadow: 
-		0 0 0 1px var(--GW-C0) inset,
-		0 0 0 2px #000 inset;
+#edit-post-form .post-section-selector label {
+	padding: 6px 14px;
+	border: none;
 }
 #edit-post-form input[type='radio']:active + label {
 	box-shadow: 
 		0 0 0 2px var(--GW-C0) inset,
-		0 0 0 3px #000 inset;
+		0 0 0 3px var(--GW-C1) inset;
 }
-#edit-post-form input[type='radio']:focus + label {
-	box-shadow: 
-		0 0 0 1px #000;
-}
+#edit-post-form input[type='radio'] + label:hover,
 #edit-post-form input[type='radio']:checked + label {
-	border-color: #000;
 	box-shadow: 
 		0 0 0 1px var(--GW-C0) inset,
-		0 0 0 2px #000 inset;
+		0 0 0 2px var(--GW-C1) inset;
+	font-weight: var(--GW-UI-font-weight-heavy);
 }
 
 /*=----------------------------=*/
@@ -1872,11 +1870,8 @@ button.guiedit:active div {
 	}
 }
 @media only screen and (max-width: 520px) {
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label {
-		top: 0;
-	}
 	#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
-		top: 1px;
+		top: 2px;
 	}
 }
 
@@ -1909,7 +1904,8 @@ a {
 /*=========*/
 
 button,
-input[type='submit'] {
+input[type='submit'],
+.posting-controls .button.cancel-post-editing-button {
 	border: 2px solid var(--GW-C1);
 	box-shadow: 0 0 0 1px transparent;
 }
@@ -1917,21 +1913,20 @@ input[type='submit'] {
 	border: none;
 }
 
-@media only screen and (hover: hover) and (pointer: fine) {
-	button:hover,
-	button:focus,
-	input[type='submit']:hover,
-	input[type='submit']:focus {
-		text-decoration: none;
-		background-color: transparent;
-		color: inherit;
-		box-shadow: 
-			0 0 0 2px var(--GW-C0) inset,
-			0 0 0 4px var(--GW-C1) inset,
-			0 0 0 1px transparent;
-	}
+button:hover,
+button:focus,
+input[type='submit']:hover,
+input[type='submit']:focus,
+.posting-controls .button.cancel-post-editing-button:hover,
+.posting-controls .button.cancel-post-editing-button:focus {
+	text-decoration: none;
+	background-color: transparent;
+	color: inherit;
+	box-shadow: 
+		0 0 0 2px var(--GW-C0) inset,
+		0 0 0 4px var(--GW-C1) inset,
+		0 0 0 1px transparent;
 }
-
 button:active,
 input[type='submit']:active {
 	box-shadow: 
@@ -2031,6 +2026,43 @@ select {
 	color: var(--GW-C1);
 }
 
+/*=------------=*/
+/*= Checkboxes =*/
+/*=------------=*/
+
+input[type='checkbox'] + label::before {
+	border: 1px solid var(--GW-C1);
+	font-size: 1em;
+}
+input[type='checkbox'] + label:hover::before,
+input[type='checkbox']:focus + label::before {
+	box-shadow: 
+		0 0 0 1px var(--GW-C0) inset,
+		0 0 0 2px var(--GW-C1) inset;
+}
+input[type='checkbox']:focus + label {
+	box-shadow:
+		0 0 0 3px var(--GW-C0),
+		0 0 0 5px var(--GW-C1);
+}
+input[type='checkbox']:active + label::before,
+input[type='checkbox']:checked:active + label::before {
+	background-color: var(--GW-C0);
+	box-shadow: 
+		0 0 0 2px var(--GW-C0) inset,
+		0 0 0 3px var(--GW-C1) inset;
+}
+input[type='checkbox']:checked + label::before {
+	content: "";
+	background-color: var(--GW-C1);
+	box-shadow: 
+		0 0 0 3px var(--GW-C0) inset;
+}
+
+/*=-----------=*/
+/*= Fractions =*/
+/*=-----------=*/
+
 .frac sup {
 	position: relative;
 	left: -1px;
@@ -2039,6 +2071,10 @@ select {
 	position: relative;
 	left: -0.5px;
 }
+
+/*=-----------=*/
+/*= Selection =*/
+/*=-----------=*/
 
 *::selection {
 	background-color: var(--GW-C1);

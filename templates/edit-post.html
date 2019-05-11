@@ -3,7 +3,7 @@
 	<div class="post-meta-fields">
 		<label for="title">Title:</label>
 		<input name="title"  autocomplete="off" type="text" value="{{ title }}">
-		<input type="checkbox" class="link-post-checkbox" name="link-post"{% if url %} checked{% endif %}>
+		<input type="checkbox" class="link-post-checkbox" name="link-post" id="link-post"{% if url %} checked{% endif %}>
 		<label for="link-post">Link post</label>
 		<label for="url">URL:</label>
 		<input name="url" autocomplete="off" type="text" value="{{ url }}">
