@@ -1798,8 +1798,8 @@ a.comment-parent-link:hover::before {
 /*================*/
 
 #edit-post-form .post-section-selector label {
-	color: #777;
 	padding: 5px 12px;
+	color: #777;
 	box-shadow: 0 0 0 1px #ddd;
 }
 #edit-post-form .post-section-selector:focus-within label {
@@ -1814,12 +1814,10 @@ a.comment-parent-link:hover::before {
 #edit-post-form .post-section-selector label:last-of-type {
 	border-radius: 0 8px 8px 0;
 }
-@media only screen and (hover: hover) and (pointer: fine) {
-	#edit-post-form input[type='radio'] + label:hover,
-	#edit-post-form input[type='radio']:focus + label {
-		background-color: #ddd;
-		color: #000;
-	}
+#edit-post-form input[type='radio'] + label:hover,
+#edit-post-form input[type='radio']:focus + label {
+	background-color: #ddd;
+	color: #000;
 }
 #edit-post-form input[type='radio']:focus + label {
 	color: #000;

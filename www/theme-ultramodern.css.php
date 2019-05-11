@@ -1768,30 +1768,19 @@ button.guiedit {
 /* EDIT POST FORM */
 /*================*/
 
-#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
-	border-radius: 3px;
-	border: 1px solid #aaa;
-	color: #aaa;
-}
-@media only screen and (hover: hover) and (pointer: fine) {
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover::before,
-	#edit-post-form .post-meta-fields input[type='checkbox']:focus + label::before {
-		border-color: #ccc;
-	}
-}
-#edit-post-form .post-meta-fields input[type='checkbox']:checked + label::before {
-	content: "\F00C";
-}
 #edit-post-form input[type='radio'] + label {
+	padding: 5px 12px;
 	color: #222;
-	border-color: #aaa;
+	box-shadow: 0 0 0 1px #aaa;
 	font-weight: var(--GW-UI-font-weight-light);
 }
-#edit-post-form input[type='radio'][value='all'] + label {
-	border-radius: 8px 0 0 8px;
-	border-width: 1px;
+#edit-post-form .post-section-selector label:nth-of-type(n+2) {
+	margin-left: 1px;
 }
-#edit-post-form input[type='radio'][value='drafts'] + label {
+#edit-post-form .post-section-selector label:first-of-type {
+	border-radius: 8px 0 0 8px;
+}
+#edit-post-form .post-section-selector label:last-of-type {
 	border-radius: 0 8px 8px 0;
 }
 #edit-post-form input[type='radio'] + label:hover,
@@ -2014,6 +2003,32 @@ input[type='password']:focus {
 select {
 	color: #000;
 }
+
+/*=------------=*/
+/*= Checkboxes =*/
+/*=------------=*/
+
+input[type='checkbox'] + label::before {
+	border-radius: 3px;
+	border: 1px solid #aaa;
+	color: #aaa;
+}
+input[type='checkbox']:checked + label::before {
+	content: "\F00C";
+}
+
+input[type='checkbox'] + label:hover,
+input[type='checkbox']:focus + label {
+	text-shadow: var(--GW-shadow-link-glow);
+}
+input[type='checkbox'] + label:hover::before,
+input[type='checkbox']:focus + label::before {
+	border-color: #ccc;
+}
+
+/*=-----------=*/
+/*= Fractions =*/
+/*=-----------=*/
 
 .frac {
 	padding-left: 2px;

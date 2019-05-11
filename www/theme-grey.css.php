@@ -1840,12 +1840,12 @@ button.guiedit::after {
 /*================*/
 
 #edit-post-form .post-section-selector label {
-	color: #777;
 	padding: 5px 12px;
+	color: #777;
 	box-shadow: 0 0 0 1px #ddd;
 }
 #edit-post-form .post-section-selector:focus-within label {
-	background-color: #ffd;
+	background-color: #ffe;
 }
 #edit-post-form .post-section-selector label:nth-of-type(n+2) {
 	margin-left: 1px;
@@ -1856,12 +1856,10 @@ button.guiedit::after {
 #edit-post-form .post-section-selector label:last-of-type {
 	border-radius: 0 8px 8px 0;
 }
-@media only screen and (hover: hover) and (pointer: fine) {
-	#edit-post-form input[type='radio'] + label:hover,
-	#edit-post-form input[type='radio']:focus + label {
-		background-color: #ddd;
-		color: #000;
-	}
+#edit-post-form input[type='radio'] + label:hover,
+#edit-post-form input[type='radio']:focus + label {
+	background-color: #ddd;
+	color: #000;
 }
 #edit-post-form input[type='radio']:focus + label {
 	color: #000;
@@ -2059,7 +2057,7 @@ input[type='checkbox']:focus + label {
 }
 input[type='checkbox'] + label:hover::before,
 input[type='checkbox']:focus + label::before {
-	background-color: #ffd;
+	background-color: #ffe;
 	border-color: #aaa;
 }
 
