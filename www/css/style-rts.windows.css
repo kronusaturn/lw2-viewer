@@ -6614,7 +6614,7 @@ th.mathjax-inline-container {
 	--GW-UI-font-weight-light: 300;
 	--GW-UI-font-weight-heavy: 600;
 
-	--GW-body-text-font: 'Garamond Premier Pro', var(--GW-UI-serif-fallback-font-stack);
+	--GW-body-text-font: 'Garamond Premier Pro', var(--GW-serif-fallback-font-stack);
 	--GW-body-text-font-weight: 500;
 
 	--GW-monospaced-font: 'Triplicate', var(--GW-monospaced-fallback-font-stack);
@@ -6641,6 +6641,8 @@ th.mathjax-inline-container {
 
 	--GW-hyperlink-color: #888;
 	--GW-hyperlink-hover-color: #333;
+
+	--GW-shadow-link-glow: 0px 0px 0.5px #333;
 
 	--GW-search-field-placeholder-color: #d00;
 }
@@ -6734,8 +6736,7 @@ body {
 .nav-bar a:focus,
 .nav-bar button:hover,
 .nav-bar button:focus {
-	color: #333;
-	text-shadow: 0px 0px 0.5px #333;
+	text-shadow: var(--GW-shadow-link-glow);
 }
 
 /* Search tab */
@@ -6784,7 +6785,7 @@ body {
 }
 #bottom-bar .nav-item a:hover::before,
 #top-nav-bar a:hover::before {
-	color: #333;
+	color: var(--GW-hyperlink-hover-color);
 }
 #bottom-bar #nav-item-first a::before,
 #top-nav-bar a.nav-item-first::before {
@@ -6805,46 +6806,22 @@ body {
 #top-nav-bar a.nav-item-last::before {
 	content: "\F0DA\F0DA";
 }
-#bottom-bar #nav-item-next a::before {
-	margin-left: -1em;
-	left: 2.85em;
-}
-
-/*= Top pagination UI hover tooltips =*/
-
 #top-nav-bar a::after,
 #bottom-bar a::after {
 	color: #222;
 	text-shadow: none;
 }
-
-/*==============*/
-/* PAGE TOOLBAR */
-/*==============*/
-
-.page-toolbar {
-	grid-row: 3;
-	z-index: 1;
-}
-.page-toolbar * {
-	color: #888;
-}
-.page-toolbar a:hover,
-.page-toolbar button:hover {
-	text-shadow: 0px 0px 0.5px #333;
-}
-.logout-button {
-	color: #d33;
+#top-nav-bar a::after {
+	bottom: calc(100% - 11px);
 }
 
-/*===================*/
-/* TOP PAGINATION UI */
-/*===================*/
+/*=-------------------=*/
+/*= Top pagination UI =*/
+/*=-------------------=*/
 
 #top-nav-bar {
 	margin: 0;
 	flex-wrap: wrap;
-	grid-row: 3;
 }
 #top-nav-bar .page-number {
 	font-family: var(--GW-body-text-font);
@@ -6859,11 +6836,19 @@ body {
 	background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
 	background-origin: content-box;
 	background-repeat: no-repeat;
-	display: block;
 	margin: 0.125em auto 0 auto;
 	padding: 0 12.5%;
 	height: 1px;
 	flex: 1 0 100%;
+}
+
+/*==============*/
+/* PAGE TOOLBAR */
+/*==============*/
+
+.page-toolbar a:hover,
+.page-toolbar button:hover {
+	text-shadow: var(--GW-shadow-link-glow);
 }
 
 /*==============*/
