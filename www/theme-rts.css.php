@@ -18,6 +18,8 @@
 
 	--GW-monospaced-font: 'Triplicate', var(--GW-monospaced-fallback-font-stack);
 
+	--GW-nav-item-font-weight: var(--GW-UI-font-weight-light);
+
 	--GW-post-listings-font: 'Garamond Premier Pro', var(--GW-serif-fallback-font-stack);
 	--GW-post-listings-font-weight: 500;
 
@@ -37,6 +39,9 @@
 	--GW-body-background-color: #fffffa;
 
 	--GW-hyperlink-color: #888;
+	--GW-hyperlink-hover-color: #333;
+
+	--GW-search-field-placeholder-color: #d00;
 }
 
 /*======*/
@@ -109,9 +114,20 @@ body {
 .nav-bar .nav-item:not(:last-child) {
 	border-right: 1px solid #bbb;
 }
+
+.active-bar {
+	border-style: solid;
+	border-color: #bbb;
+	border-width: 1px 0;
+}
+
 .nav-bar .nav-item:not(.nav-current):not(#nav-item-search):hover,
 #nav-item-search:focus-within {
 	background-color: #f0f0eb;
+}
+
+.nav-current .nav-inner {
+	font-weight: var(--GW-UI-font-weight-heavy);
 }
 .nav-bar a:hover,
 .nav-bar a:focus,
@@ -121,28 +137,35 @@ body {
 	text-shadow: 0px 0px 0.5px #333;
 }
 
-.active-bar {
-	border-style: solid;
-	border-color: #bbb;
-	border-width: 1px 0;
-}
-
 /* Search tab */
 
 #nav-item-search form::before {
 	color: #999;
+	font-weight: 300;
 }
-#nav-item-search button:hover {
-	color: #333;
-}
-#nav-item-search input::placeholder {
-	color: #d00;
+#nav-item-search button {
+	font-weight: var(--GW-UI-font-weight-light);
 }
 
 /* User/login tab */
 
 #inbox-indicator::before {
 	color: #ddd;
+	padding-top: 2px;
+}
+
+/*= Recent Comments tab =*/
+
+#nav-item-recent-comments span {
+	margin: 0 5px 0 0;
+}
+
+/*= Keyboard help button =*/
+
+@media only screen and (min-width: 961px) {
+	#nav-item-about button.open-keyboard-help {
+		font-weight: 300;
+	}
 }
 
 /*===============*/
@@ -152,8 +175,11 @@ body {
 #bottom-bar .nav-item a::before,
 #top-nav-bar a::before {
 	font-size: 1em;
+	color: #bbb;
+	font-weight: 900;
+}
+#top-nav-bar a::before {
 	bottom: -2px;
-	color: #aaa;
 }
 #bottom-bar .nav-item a:hover::before,
 #top-nav-bar a:hover::before {
