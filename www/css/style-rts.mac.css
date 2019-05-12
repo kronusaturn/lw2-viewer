@@ -6893,7 +6893,7 @@ body {
 	background-color: var(--GW-body-background-color);
 }
 .sublevel-nav .sublevel-item:not(.selected):hover {
-	background-color: #ddd;
+	background-color: #f0f0eb;
 	color: #000;
 }
 .sublevel-nav .sublevel-item:not(.selected):active,
@@ -6923,17 +6923,18 @@ body {
 /* SORT ORDER SELECTOR */
 /*=====================*/
 
+.sublevel-nav.sort {
+	padding: 18px 0 0 0;
+}
 .sublevel-nav.sort .sublevel-item {
 	letter-spacing: 0.5px;
 	padding: 7px 6px 5px 7px;
 	text-transform: uppercase;
 	box-shadow:
-		1px 1px 0 0 #ccc inset;
+		1px 1px 0 0 #ddd inset;
 }
-.sublevel-nav.sort {
-	border: 2px solid transparent;
-	padding: 18px 0 0 0;
-	border-radius: 8px;
+.sublevel-nav.sort .sublevel-item.selected {
+	background-color: transparent;
 }
 .sublevel-nav.sort::before {
 	text-transform: uppercase;
@@ -6944,14 +6945,12 @@ body {
 .sublevel-nav.sort::after {
 	content: "";
 	position: absolute;
-	top: 18px;
+	top: 17px;
 	left: 0;
 	width: 100%;
-	height: calc(100% - 18px);
-	border-radius: 6px;
+	height: calc(100% - 17px);
 	box-shadow:
-		0 0 0 1px #ccc inset,
-		0 0 0 2px #fff;
+		0 0 0 1px var(--GW-content-background-color) inset;
 }
 
 /*================*/
@@ -7067,7 +7066,10 @@ body {
 /*======================*/
 
 #theme-tweaker-toggle button {
-	color: #777;
+	color: #aaa;
+}
+#theme-tweaker-toggle button:hover {
+	color: #888;
 }
 
 /*=----------------------------=*/
