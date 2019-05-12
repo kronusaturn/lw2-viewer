@@ -6685,6 +6685,10 @@ body {
 	font-size: 1em;
 }
 
+#primary-bar .nav-inner {
+	line-height: 1.5;
+}
+
 /*= Decorative bottom bar =*/
 
 #bottom-bar.decorative {
@@ -6830,6 +6834,7 @@ body {
 #top-nav-bar .page-number-label {
 	font-family: var(--GW-UI-font);
 	bottom: 70%;
+	font-weight: 300;
 }
 #top-nav-bar::after {
 	content: "";
@@ -6846,9 +6851,21 @@ body {
 /* PAGE TOOLBAR */
 /*==============*/
 
+.page-toolbar {
+	font-weight: 300;
+}
 .page-toolbar a:hover,
 .page-toolbar button:hover {
 	text-shadow: var(--GW-shadow-link-glow);
+}
+.page-toolbar .button::before {
+	font-weight: 300;
+}
+.page-toolbar .rss::before {
+	font-weight: 300;
+}
+.page-toolbar .rss:hover::before {
+	font-weight: 900;
 }
 
 /*==============*/
@@ -6856,7 +6873,6 @@ body {
 /*==============*/
 
 .sublevel-nav .sublevel-item {
-	color: #777;
 	background-color: #fffffa;
 }
 .sublevel-nav .sublevel-item:not(.selected):hover {
@@ -6891,44 +6907,34 @@ body {
 /*=====================*/
 
 .sublevel-nav.sort .sublevel-item {
-	font-feature-settings: 'smcp';
-	padding: 7px 7px 6px 7px;
+	letter-spacing: 0.5px;
+	padding: 7px 6px 5px 7px;
 	text-transform: uppercase;
-	box-shadow: 1px 1px 0 0 #bbb inset;
-	pointer-events: auto;
+	box-shadow:
+		1px 1px 0 0 #bbb inset;
 }
 .sublevel-nav.sort {
-	padding: 20px 0 0 0;
+	border: 2px solid transparent;
+	padding: 18px 0 0 0;
 	border-radius: 8px;
-	pointer-events: none;
-	background-color: #bbb;
-	overflow: hidden;
-	box-shadow:
-		0 0 1px #aaa,
-		0 0 3px #aaa,
-		0 0 5px #aaa;
 }
 .sublevel-nav.sort::before {
 	text-transform: uppercase;
-	color: #444;
-	text-shadow: 0.5px 0.5px 0 #fff;
-	line-height: 2;
-	z-index: 1;
+	color: #888;
+	text-shadow:
+		0.5px 0.5px 0 #fff;
 }
 .sublevel-nav.sort::after {
 	content: "";
 	position: absolute;
-	display: block;
-	top: 0;
+	top: 18px;
 	left: 0;
 	width: 100%;
-	height: 100%;
-	border-radius: 6px 6px 8px 8px;
+	height: calc(100% - 18px);
+	border-radius: 6px;
 	box-shadow:
 		0 0 0 1px #bbb inset,
-		0 20px 0 0 #bbb inset,
-		0 20px 0 1px #aaa inset,
-		0 0 0 3px #fffffa;
+		0 0 0 2px #fff;
 }
 
 /*================*/
