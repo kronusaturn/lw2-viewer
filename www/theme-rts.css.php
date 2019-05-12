@@ -38,7 +38,7 @@
 :root {
 	--GW-body-background-color: #fffffa;
 
-	--GW-hyperlink-color: #888;
+	--GW-hyperlink-color: #999;
 	--GW-hyperlink-hover-color: #333;
 
 	--GW-shadow-link-glow: 0px 0px 0.5px #333;
@@ -115,15 +115,15 @@ body {
 /* This makes the navbar items look like tabs: */
 
 #bottom-bar {
-	border-top: 1px solid #bbb;
+	border-top: 1px solid #ddd;
 }
 .nav-bar .nav-item:not(:last-child) {
-	border-right: 1px solid #bbb;
+	border-right: 1px solid #ddd;
 }
 
 .active-bar {
 	border-style: solid;
-	border-color: #bbb;
+	border-color: #ddd;
 	border-width: 1px 0;
 }
 
@@ -142,21 +142,31 @@ body {
 	text-shadow: var(--GW-shadow-link-glow);
 }
 
-/* Search tab */
+/*= Sequences tab =*/
+
+#nav-item-sequences .nav-inner {
+	opacity: 0.75;
+}
+
+/*= Search tab =*/
 
 #nav-item-search form::before {
-	color: #999;
+	color: #bbb;
 	font-weight: 300;
 }
 #nav-item-search button {
 	font-weight: var(--GW-UI-font-weight-light);
 }
 
-/* User/login tab */
+/*= Inbox indicator =*/
 
 #inbox-indicator::before {
-	color: #ddd;
+	color: #e4e4e4;
 	padding-top: 2px;
+	text-shadow:
+		0 0 1px var(--GW-content-background-color),
+		0 0 2px var(--GW-content-background-color),
+		0 0 3px var(--GW-content-background-color);
 }
 
 /*= Recent Comments tab =*/
@@ -170,6 +180,7 @@ body {
 @media only screen and (min-width: 961px) {
 	#nav-item-about button.open-keyboard-help {
 		font-weight: 300;
+		opacity: 0.75;
 	}
 }
 
@@ -180,7 +191,7 @@ body {
 #bottom-bar .nav-item a::before,
 #top-nav-bar a::before {
 	font-size: 1em;
-	color: #bbb;
+	color: #ccc;
 	font-weight: 900;
 }
 #top-nav-bar a::before {
@@ -229,15 +240,22 @@ body {
 #top-nav-bar .page-number {
 	font-family: var(--GW-body-text-font);
 	padding-top: 7px;
+	color: #777;
 }
 #top-nav-bar .page-number-label {
 	font-family: var(--GW-UI-font);
 	bottom: 70%;
-	font-weight: 300;
+	color: #222;
 }
 #top-nav-bar::after {
 	content: "";
-	background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+	background-image:
+		linear-gradient(
+			to right,
+			rgba(0, 0, 0, 0),
+			rgba(0, 0, 0, 0.25),
+			rgba(0, 0, 0, 0)
+		);
 	background-origin: content-box;
 	background-repeat: no-repeat;
 	margin: 0.125em auto 0 auto;
@@ -250,21 +268,20 @@ body {
 /* PAGE TOOLBAR */
 /*==============*/
 
-.page-toolbar {
-	font-weight: 300;
-}
 .page-toolbar a:hover,
 .page-toolbar button:hover {
 	text-shadow: var(--GW-shadow-link-glow);
 }
-.page-toolbar .button::before {
-	font-weight: 300;
-}
+.page-toolbar .button::before,
 .page-toolbar .rss::before {
 	font-weight: 300;
 }
+.page-toolbar .rss::before {
+	opacity: 0.85;
+}
 .page-toolbar .rss:hover::before {
 	font-weight: 900;
+	opacity: 1.0;
 }
 
 /*==============*/
@@ -310,7 +327,7 @@ body {
 	padding: 7px 6px 5px 7px;
 	text-transform: uppercase;
 	box-shadow:
-		1px 1px 0 0 #bbb inset;
+		1px 1px 0 0 #ccc inset;
 }
 .sublevel-nav.sort {
 	border: 2px solid transparent;
@@ -319,7 +336,7 @@ body {
 }
 .sublevel-nav.sort::before {
 	text-transform: uppercase;
-	color: #666;
+	color: #888;
 	text-shadow:
 		0.5px 0.5px 0 #fff;
 }
@@ -332,30 +349,45 @@ body {
 	height: calc(100% - 18px);
 	border-radius: 6px;
 	box-shadow:
-		0 0 0 1px #bbb inset,
+		0 0 0 1px #ccc inset,
 		0 0 0 2px #fff;
 }
 
 /*================*/
 /* WIDTH SELECTOR */
 /*================*/
+
+#width-selector button {
+	box-shadow: 
+		0 0 0 4px var(--GW-body-background-color) inset, 
+		0 0 0 5px #ddd inset;
+}
+#width-selector button:hover,
+#width-selector button.selected {
+	box-shadow: 
+		0 0 0 1px #ddd inset,
+		0 0 0 4px var(--GW-body-background-color) inset,
+		0 0 0 5px #ddd inset;
+}
+#width-selector button {
+	color: #ccc;
+}
+
+/*================*/
 /* THEME SELECTOR */
 /*================*/
 
-#width-selector button,
 #theme-selector button {
 	box-shadow: 
 		0 0 0 4px var(--GW-body-background-color) inset, 
-		0 0 0 5px #bbb inset;
+		0 0 0 5px #ccc inset;
 }
-#width-selector button:hover,
-#width-selector button.selected,
 #theme-selector button:hover,
 #theme-selector button.selected {
 	box-shadow: 
-		0 0 0 1px #bbb inset,
+		0 0 0 1px #ccc inset,
 		0 0 0 4px var(--GW-body-background-color) inset,
-		0 0 0 5px #bbb inset;
+		0 0 0 5px #ccc inset;
 }
 
 #theme-selector button::before {
@@ -367,9 +399,6 @@ body {
 #theme-selector button:hover::before,
 #theme-selector button.selected::before {
 	color: #444;
-}
-#width-selector button::after {
-	color: #aaa;
 }
 
 /*=----------------------------=*/
@@ -1689,44 +1718,13 @@ a {
 /* BUTTONS */
 /*=========*/
 
-button,
-input[type='submit'] {
-	color: #888;
-}
-
-button:active,
-input[type='submit']:active {
-	color: #f00;
-	transform: scale(0.9);
-}
-.button:visited {
-	color: #888;
-}
-.button:active {
-	transform: scale(0.9);
-}
-<?php echo $firefox_exclusive; ?> {
-	.button:active {
-		transform: none;
-	}
-}
-@media only screen and (hover: hover) {
-	button:hover,
-	input[type='submit']:hover,
-	button:focus,
-	input[type='submit']:focus {
-		color: #333;
-		text-shadow: 0px 0px 0.5px #333;
-	}
-
-	.button:hover {
-		color: #333;
-		text-shadow: 0px 0px 0.5px #333;
-		text-decoration: none;
-	}
-	.button:focus:not(:hover) {
-		transform: none;
-	}
+button:hover,
+button:focus,
+input[type='submit']:hover,
+input[type='submit']:focus,
+.button:hover,
+.button:focus {
+	text-shadow: var(--GW-shadow-link-glow);
 }
 
 /*==========*/
@@ -1848,7 +1846,7 @@ input[type='text'],
 input[type='search'],
 input[type='password'] {
 	background-color: transparent;
-	border: 1px solid #ccc;
+	border: 1px solid #ddd;
 	color: #000;
 }
 input[type='text']:focus,
