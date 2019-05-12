@@ -120,6 +120,35 @@ body {
 	color: #333;
 	text-shadow: 0px 0px 0.5px #333;
 }
+
+.active-bar {
+	border-style: solid;
+	border-color: #bbb;
+	border-width: 1px 0;
+}
+
+/* Search tab */
+
+#nav-item-search form::before {
+	color: #999;
+}
+#nav-item-search button:hover {
+	color: #333;
+}
+#nav-item-search input::placeholder {
+	color: #d00;
+}
+
+/* User/login tab */
+
+#inbox-indicator::before {
+	color: #ddd;
+}
+
+/*===============*/
+/* PAGINATION UI */
+/*===============*/
+
 #bottom-bar .nav-item a::before,
 #top-nav-bar a::before {
 	font-size: 1em;
@@ -152,30 +181,6 @@ body {
 #bottom-bar #nav-item-next a::before {
 	margin-left: -1em;
 	left: 2.85em;
-}
-.active-bar {
-	position: relative;
-	border-style: solid;
-	border-color: #bbb;
-	border-width: 1px 0;
-}
-
-/* Search tab */
-
-#nav-item-search form::before {
-	color: #999;
-}
-#nav-item-search button:hover {
-	color: #333;
-}
-#nav-item-search input::placeholder {
-	color: #d00;
-}
-
-/* User/login tab */
-
-#inbox-indicator::before {
-	color: #ddd;
 }
 
 /*= Top pagination UI hover tooltips =*/
@@ -1174,16 +1179,6 @@ a.post-section.alignment-forum:hover::before {
 /* DEEP COMMENT THREAD COLLAPSING */
 /*================================*/
 
-.comment-item input[id^="expand"] + label::after {
-	color: <?php echo $hyperlink_color; ?>;
-}
-.comment-item input[id^="expand"] + label:hover::after {
-	color: #c00;
-}
-.comment-item input[id^="expand"] + label:active::after,
-.comment-item input[id^="expand"] + label:focus::after{
-	color: #c00;
-}
 .comment-item input[id^="expand"]:checked ~ .comment-thread .comment-thread .comment-item {
 	border-width: 1px 0 0 0;
 }
@@ -1329,10 +1324,6 @@ a.comment-parent-link:hover::before {
 }
 #content.compact > .comment-thread .comment-item {
 	max-height: 56px;
-}
-#content.compact > .comment-thread .comment-item::after {
-	color: <?php echo $hyperlink_color; ?>;
-	background: linear-gradient(to right, transparent 0%, #fff 50%, #fff 100%);
 }
 
 @media only screen and (hover: hover) {
@@ -1576,11 +1567,11 @@ a.comment-parent-link:hover::before {
 }
 .posting-controls textarea:focus {
 	background-color: #ffd;
-	border-color: <?php echo $hyperlink_color; ?>;
+	border-color: var(--GW-hyperlink-color);
 	box-shadow: 
 		0 0 0 1px #ddf inset,
 		0 0 0 1px #fff,
-		0 0 0 2px <?php echo $hyperlink_color; ?>;
+		0 0 0 2px var(--GW-hyperlink-color);
 }
 .posting-controls.edit-existing-post textarea:focus,
 .posting-controls form.edit-existing-comment textarea:focus {
@@ -1609,12 +1600,6 @@ a.comment-parent-link:hover::before {
 
 /* Markdown hints */
 
-#markdown-hints-checkbox + label {
-	color: <?php echo $hyperlink_color; ?>;
-}
-#markdown-hints-checkbox + label:hover {
-	color: #e00;
-}
 #markdown-hints {
 	border: 1px solid #c00;
 	background-color: #ffa;
@@ -1681,10 +1666,6 @@ a.comment-parent-link:hover::before {
 
 a {
 	text-decoration: none;
-	color: <?php echo $hyperlink_color; ?>;
-}
-a:visited {
-	color: <?php echo $hyperlink_color; ?>;
 }
 
 /*=========*/
@@ -1905,9 +1886,6 @@ select {
 	background-color: #eee;
 	border: 1px solid #ccc;
 	border-radius: 4px;
-}
-.qualified-linking-toolbar a:visited {
-	color: <?php echo $hyperlink_color; ?>;
 }
 .qualified-linking-toolbar a:hover {
 	text-decoration: none;
