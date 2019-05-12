@@ -10,15 +10,15 @@
 	*/
 :root {
 	--GW-UI-font: 'Proxima Nova', var(--GW-sans-serif-fallback-font-stack);
-	--GW-UI-font-weight-light: <?php echo ($platform == 'Mac') ? '200' : '300'; ?>;
-	--GW-UI-font-weight-heavy: 600;
+	--GW-UI-font-weight-light: 300;
+	--GW-UI-font-weight-heavy: 400;
 
 	--GW-body-text-font: 'Garamond Premier Pro', var(--GW-serif-fallback-font-stack);
 	--GW-body-text-font-weight: 500;
 
 	--GW-monospaced-font: 'Triplicate', var(--GW-monospaced-fallback-font-stack);
 
-	--GW-nav-item-font-weight: var(--GW-UI-font-weight-light);
+	--GW-nav-item-font-weight: <?php echo ($platform == 'Mac') ? '200' : '300'; ?>;
 
 	--GW-post-listings-font: 'Garamond Premier Pro', var(--GW-serif-fallback-font-stack);
 	--GW-post-listings-font-weight: 500;
@@ -64,12 +64,12 @@ body {
 #ui-elements-container > div[id$='-ui-toggle'] button  {
 	color: #bbb;
 	text-shadow:
-		0 0 1px #fffffa,
-		0 0 3px #fffffa,
-		0 0 5px #fffffa,
-		0 0 10px #fffffa,
-		0 0 20px #fffffa,
-		0 0 30px #fffffa;
+		0 0 1px var(--GW-body-background-color),
+		0 0 3px var(--GW-body-background-color),
+		0 0 5px var(--GW-body-background-color),
+		0 0 10px var(--GW-body-background-color),
+		0 0 20px var(--GW-body-background-color),
+		0 0 30px var(--GW-body-background-color);
 }
 
 /*==========*/
@@ -272,7 +272,7 @@ body {
 /*==============*/
 
 .sublevel-nav .sublevel-item {
-	background-color: #fffffa;
+	background-color: var(--GW-body-background-color);
 }
 .sublevel-nav .sublevel-item:not(.selected):hover {
 	background-color: #ddd;
@@ -319,7 +319,7 @@ body {
 }
 .sublevel-nav.sort::before {
 	text-transform: uppercase;
-	color: #888;
+	color: #666;
 	text-shadow:
 		0.5px 0.5px 0 #fff;
 }
@@ -345,7 +345,7 @@ body {
 #width-selector button,
 #theme-selector button {
 	box-shadow: 
-		0 0 0 4px #fffffa inset, 
+		0 0 0 4px var(--GW-body-background-color) inset, 
 		0 0 0 5px #bbb inset;
 }
 #width-selector button:hover,
@@ -354,7 +354,7 @@ body {
 #theme-selector button.selected {
 	box-shadow: 
 		0 0 0 1px #bbb inset,
-		0 0 0 4px #fffffa inset,
+		0 0 0 4px var(--GW-body-background-color) inset,
 		0 0 0 5px #bbb inset;
 }
 
