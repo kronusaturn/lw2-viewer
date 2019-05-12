@@ -105,16 +105,6 @@ body {
 
 #bottom-bar {
 	border-top: 1px solid #bbb;
-	margin-top: 2em;
-}
-.post-page #bottom-bar {
-	margin-top: 0.5em;
-}
-#content.no-nav-bars {
-	margin: auto;
-}
-#content.no-comments #bottom-bar {
-	margin-top: 0.125em;
 }
 .nav-bar .nav-item:not(:last-child) {
 	border-right: 1px solid #bbb;
@@ -1886,6 +1876,11 @@ select {
 /*========================*/
 /* QUALIFIED HYPERLINKING */
 /*========================*/
+
+#content.no-nav-bars {
+	margin: auto;
+}
+
 
 #aux-about-link a {
 	color: #777;
