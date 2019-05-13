@@ -6748,6 +6748,9 @@ body {
 
 /*= Search tab =*/
 
+#nav-item-search input[type='search'] {
+	margin: 0;
+}
 #nav-item-search form::before {
 	color: #bbb;
 	font-weight: 300;
@@ -6760,7 +6763,7 @@ body {
 
 #inbox-indicator::before {
 	color: #e4e4e4;
-	padding-top: 2px;
+	padding-top: 1px;
 	text-shadow:
 		0 0 1px var(--GW-content-background-color),
 		0 0 2px var(--GW-content-background-color),
@@ -6779,6 +6782,19 @@ body {
 	#nav-item-about button.open-keyboard-help {
 		font-weight: 300;
 		opacity: 0.75;
+	}
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	#secondary-bar .nav-inner {
+		font-size: 1.125em;
+	}
+	#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
+		padding: 6px 10px;
 	}
 }
 
@@ -6860,6 +6876,19 @@ body {
 	padding: 0 12.5%;
 	height: 1px;
 	flex: 1 0 100%;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	#top-nav-bar .page-number {
+		padding-top: 11px;
+	}
+	#top-nav-bar::after {
+		margin: 0 auto;
+	}
 }
 
 /*==============*/
@@ -7312,6 +7341,12 @@ body {
 	.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
 		background-color: #ddd;
 	}
+	.archive-nav *[class^='archive-nav-item-'] {
+		border-width: 1px !important;
+	}
+	.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
+		background-color: #bbb;
+	}
 }
 
 /*==========*/
@@ -7377,6 +7412,48 @@ h1.listing .edit-post-link:hover {
 }
 #content.user-page h1.listing .edit-post-link {
 	background-color: #fff;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	h1.listing {
+		line-height: 1;
+	}
+	h1.listing + .post-meta .post-section::before {
+		position: unset;
+	}
+	h1.listing + .post-meta .post-section {
+		overflow: visible;
+	}
+}
+@media only screen and (max-width: 520px) {
+	h1.listing {
+		font-size: 1.5rem;
+		margin: 18px 6px 4px 6px;
+		max-width: calc(100% - 12px);
+	}
+	h1.listing + .post-meta {
+		margin: 4px 6px;
+	}
+	h1.listing + .post-meta > * {
+		line-height: 1.4;
+	}
+	h1.listing a[href^='http'] {
+		top: 4px;
+	}
+
+	#content.user-page h1.listing::after {
+		height: calc(100% + 2.375em);
+	}
+	#content.user-page h1.listing.link-post-listing::after {
+		height: calc(100% + 3.375em);
+	}
+	#content.user-page h1.listing + .post-meta {
+		margin-bottom: 1.5rem;
+	}
 }
 
 /*======*/
@@ -8515,37 +8592,6 @@ select {
 /*========*/
 
 @media only screen and (max-width: 900px) {
-	h1.listing {
-		line-height: 1;
-	}
-	h1.listing + .post-meta .post-section::before {
-		position: unset;
-	}
-	h1.listing + .post-meta .post-section {
-		overflow: visible;
-	}
-
-	#secondary-bar .nav-inner {
-		font-size: 1.125em;
-	}
-	#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
-		padding: 6px 10px;
-	}
-
-	#top-nav-bar .page-number {
-		padding-top: 11px;
-	}
-	#top-nav-bar::after {
-		margin: 0 auto;
-	}
-
-	.archive-nav *[class^='archive-nav-item-'] {
-		border-width: 1px !important;
-	}
-	.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
-		background-color: #bbb;
-	}
-
 	.comment-item .comment-item {
 		margin: 0.75em 3px 3px 6px;
 	}
@@ -8566,31 +8612,6 @@ select {
 	}
 }
 @media only screen and (max-width: 520px) {
-	h1.listing {
-		font-size: 1.5rem;
-		margin: 18px 6px 4px 6px;
-		max-width: calc(100% - 12px);
-	}
-	h1.listing + .post-meta {
-		margin: 4px 6px;
-	}
-	h1.listing + .post-meta > * {
-		line-height: 1.4;
-	}
-	h1.listing a[href^='http'] {
-		top: 4px;
-	}
-
-	#content.user-page h1.listing::after {
-		height: calc(100% + 2.375em);
-	}
-	#content.user-page h1.listing.link-post-listing::after {
-		height: calc(100% + 3.375em);
-	}
-	#content.user-page h1.listing + .post-meta {
-		margin-bottom: 1.5rem;
-	}
-
 	#content.compact > .comment-thread .comment-item {
 		max-height: 104px;
 	}
