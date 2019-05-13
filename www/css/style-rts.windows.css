@@ -6646,6 +6646,8 @@ th.mathjax-inline-container {
 	--GW-shadow-link-glow: 0px 0px 0.5px #333;
 
 	--GW-search-field-placeholder-color: #d00;
+
+	--GW-theme-selector-outline-color: #ddd;
 }
 
 /*======*/
@@ -6986,10 +6988,7 @@ body {
 }
 
 #theme-selector button::before {
-	font-size: 0.9375em;
-	padding: 6px;
 	color: #bbb;
-	background-color: #fff;
 }
 #theme-selector button:hover::before,
 #theme-selector button.selected::before {
@@ -7000,59 +6999,36 @@ body {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-@media only screen and (max-width: 1160px) {
-	#theme-selector:hover::after {
-		background-color: #bbb;
-		width: calc(6em - 13px);
-	}
-}
-@media only screen and (max-width: 1000px) {
-	#theme-selector:hover::after {
-		width: calc(6em - 9px);
-		height: calc(100% - 5px);
-		top: 3px;
-		left: 100%;
-	}	
-}
 @media only screen and (max-width: 960px) {
 	#theme-selector {
 		background-color: #fffffa;
 		box-shadow: 
-			0 0 0 1px #ccc,
+			0 0 0 1px #ddd,
 			0 0 1px 3px #fffffa,
 			0 0 3px 3px #fffffa,
 			0 0 5px 3px #fffffa,
 			0 0 10px 3px #fffffa,
 			0 0 20px 3px #fffffa;
-		border-radius: 8px;
 	}
 	#theme-selector::before {
 		color: #999;
-		font-weight: 300;
-		text-shadow: 0.5px 0.5px 0 #fff;
-	}
-	#theme-selector button {
-		background-color: #fffffa;
-		border-radius: 8px;
+		font-weight: 200;
 	}
 	#theme-selector button::after {
-		color: #777;
+		color: #888;
 		max-width: calc(100% - 3.5em);
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
+	#theme-selector button:hover::after,
 	#theme-selector button.selected::after {
-		color: #222;
-		text-shadow: 
-			0 -1px 0 #fff,
-			0 0.5px 0.5px #000;
+		color: #000;
 	}
 	#theme-selector .theme-selector-close-button {
-		color: #fffffa;
+		color: var(--GW-content-background-color);
 		text-shadow:
 			1px 1px 0 #ccc,
 			0 0 8px #ccc;
-		opacity: 1.0;
 	}
 }
 
