@@ -511,29 +511,30 @@ body {
 
 #new-comment-nav-ui .new-comments-count,
 #new-comment-nav-ui .new-comments-count::after {
-	color: #999;
+	font-weight: var(--GW-UI-font-weight-light);
 }
 #new-comment-nav-ui .new-comments-count {
-	text-shadow: 0.5px 0.5px 0 #fff;
+	color: #444;
 }
-#new-comment-nav-ui .new-comment-sequential-nav-button {
-	color: #999;
+#new-comment-nav-ui .new-comments-count::after {
+	color: #000;
 }
 #new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
 	color: #e6e6e6;
-	text-shadow: none;
 }
+
 @media only screen and (hover: hover) and (pointer: fine) {
-	#new-comment-nav-ui .new-comments-count:hover {
-		text-shadow: 
-			0 0 1px #fff,
-			0 0 3px #fff,
-			0 0 5px #fff,
-			0 0 8px #fff,
-			0.5px 0.5px 0 #fff;
+	#new-comment-nav-ui .new-comment-sequential-nav-button.highlighted {
+		color: var(--GW-hyperlink-hover-color);
+		transform: scale(0.9);
 	}
-	#new-comment-nav-ui .new-comment-sequential-nav-button:focus {
-		color: #d00;
+	#new-comment-nav-ui .new-comment-sequential-nav-button {
+		transition:
+			color 0.1s ease,
+			transform 0.1s ease;
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button:hover {
+		transition: none;
 	}
 }
 
@@ -541,34 +542,16 @@ body {
 /* HNS DATE PICKER */
 /*=================*/
 
-#hns-date-picker span {
-	color: #777;
-	text-shadow: 0.5px 0.5px 0 #fff;
-}
-#hns-date-picker input[type='text'] {
-}
 #hns-date-picker input {
-	border: 1px solid <?php echo ($platform == 'Mac') ? '#bbb' : '#aaa'; ?>;
-	color: <?php echo ($platform == 'Mac') ? '#888' : '#666'; ?>;
-	background-color: transparent;
+	color: #777;
+	font-weight: var(--GW-UI-font-weight-light);
 }
 #hns-date-picker input:hover,
 #hns-date-picker input:focus {
-	color: <?php echo ($platform == 'Mac') ? '#666' : '#444'; ?>;
+	color: #000;
 }
 #hns-date-picker span {
-	color: <?php echo ($platform == 'Mac') ? '#aaa' : '#888'; ?>;
-}
-
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
-@media only screen and (max-width: 1440px) {
-	#hns-date-picker {
-		background-color: #fffffa;
-		opacity: 1.0;
-	}
+	color: #888;
 }
 
 /*================================*
