@@ -565,8 +565,7 @@ body {
 		background-color: #fffffa;
 	}
 	#quick-nav-ui,
-	#new-comment-nav-ui,
-	#hns-date-picker {
+	#new-comment-nav-ui {
 		box-shadow:
 			0 0 1px 3px #fffffa,
 			0 0 3px 3px #fffffa,
@@ -582,11 +581,9 @@ body {
 			0 0 3px 0 #fffffa,
 			0 0 5px 0 #fffffa;
 		background-color: #fffffa;
-		border-radius: 4px;
 	}
-	#quick-nav-ui,
-	#new-comment-nav-ui {
-		border-radius: 8px;
+	#quick-nav-ui a::after {
+		color: #888;
 	}
 	#new-comment-nav-ui {
 		background-color: #fffffa;
@@ -594,21 +591,16 @@ body {
 	}
 	#new-comment-nav-ui::before {
 		color: #777;
-		font-weight: 600;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button {
 		box-shadow: 0 0 0 1px #ccc;
 		color: #777;
 	}
 	#new-comment-nav-ui .new-comments-count {
-		background-color: inherit;
 		box-shadow: 0 -1px 0 0 #ccc;
 	}
-	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-previous {
-		border-radius: 7px 0 0 7px;
-	}
-	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-next {
-		border-radius: 0 7px 7px 0;
+	#hns-date-picker {
+		box-shadow: 0 0 0 2px #ccc;
 	}
 }
 
@@ -616,16 +608,17 @@ body {
 /* ANTI-KIBITZER TOGGLE */
 /*======================*/
 
-#anti-kibitzer-toggle button::before,
-#anti-kibitzer-toggle button::after {
-	background-color: #bbb;
+#anti-kibitzer-toggle button {
+	background-color: #ccc;
 	-webkit-background-clip: text;
 	color: transparent;
 	text-shadow: rgba(255, 255, 255, 0.5) 0px 1px 1px;
 }
-#anti-kibitzer-toggle button:hover::before,
-#anti-kibitzer-toggle button:hover::after {
+#anti-kibitzer-toggle button:hover {
 	background-color: #777;
+}
+#anti-kibitzer-toggle button:active {
+	background-color: #222;
 }
 
 /*======================*/
@@ -651,21 +644,20 @@ body {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 1080px) {
+	#text-size-adjustment-ui {
+		border-style: solid;
+		border-color: #ccc;
+		border-width: 0 1px;
+	}
 	#text-size-adjustment-ui button {
-		border: 1px solid #999;
+		padding: 1px 0 0 1px;
+	}
+	#text-size-adjustment-ui button.default {
 		padding: 0 0 0 1px;
-		border-radius: 50%;
-		box-shadow: 
-			0 0 6px #999 inset,
-			0 0 0 1px transparent;
 	}
-}
-@media only screen and (max-width: 1000px) {
-	#text-size-adjustment-ui button {
-		background-color: #ddd;
-	}
-	#text-size-adjustment-ui button:hover {
-		background-color: #eee;
+	#text-size-adjustment-ui button:nth-of-type(n+2) {
+		box-shadow:
+			0 1px 0 0 #ccc;
 	}
 }
 
