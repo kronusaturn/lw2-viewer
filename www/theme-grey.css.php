@@ -845,11 +845,8 @@ h1.listing {
 
 h1.listing a[href^="http"] {
 	color: #bbb;
-	min-width: 1.125em;
-	margin-left: 0;
-}
-h1.listing a[href^="http"] + a {
-	margin-left: 0.125em;
+	min-width: 1.25em;
+	left: 1px;
 }
 
 @media only screen and (hover: hover) and (pointer: fine) {
@@ -877,7 +874,6 @@ h1.listing a[href^="http"] + a {
 
 h1.listing .post-type-prefix {
 	width: 1.25em;
-	display: inline-block;
 }
 
 h1.listing:not(:focus-within) a:not(:hover) .post-type-prefix {

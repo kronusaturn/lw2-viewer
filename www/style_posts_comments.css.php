@@ -138,6 +138,14 @@ h1.listing .edit-post-link:hover {
 	text-decoration: none;
 }
 
+/*=------------------=*/
+/*= Post type prefix =*/
+/*=------------------=*/
+
+h1.listing .post-type-prefix {
+	display: inline-block;
+}
+
 /*=---------------------------------=*/
 /*= Error messages on listing pages =*/
 /*=---------------------------------=*/

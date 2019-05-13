@@ -852,7 +852,6 @@ h1.listing a[href^="http"] {
 
 h1.listing .post-type-prefix {
 	width: 1.375em;
-	display: inline-block;
 }
 
 h1.listing:not(:focus-within) a:not(:hover) .post-type-prefix {
