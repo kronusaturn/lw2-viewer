@@ -291,31 +291,33 @@ body {
 .sublevel-nav .sublevel-item {
 	background-color: var(--GW-body-background-color);
 }
+
+.sublevel-nav:not(.sort) .sublevel-item {
+	border-style: solid;
+	border-color: #ddd;
+	border-width: 1px 1px 1px 0;
+	font-weight: var(--GW-UI-font-weight-light);
+}
+.sublevel-nav:not(.sort) .sublevel-item:last-child {
+	border-width: 1px 0;
+}
+
 .sublevel-nav .sublevel-item:not(.selected):hover {
 	background-color: #f0f0eb;
 	color: #000;
 }
-.sublevel-nav .sublevel-item:not(.selected):active,
-.sublevel-nav .sublevel-item.selected {
-	background-color: #ddd;
-	border-color: #ddd;
+.sublevel-nav .sublevel-item:not(.selected):active {
 	color: #000;
 	text-shadow: 
 		0 -1px 0 #fff,
 		0 0.5px 0.5px #000;
 }
-
-.sublevel-nav:not(.sort) .sublevel-item {
-	border-style: solid;
-	border-color: #ddd;
-	border-width: 1px 0 1px 1px;
-}
-.sublevel-nav:not(.sort) .sublevel-item:first-child {
-	border-radius: 8px 0 0 8px;
-}
-.sublevel-nav:not(.sort) .sublevel-item:last-child {
-	border-width: 1px;
-	border-radius: 0 8px 8px 0;
+.sublevel-nav .sublevel-item.selected {
+	font-weight: var(--GW-UI-font-weight-heavy);
+	color: #000;
+	text-shadow: 
+		0 -1px 0 #fff,
+		0 0.5px 0.5px #000;
 }
 
 /*=====================*/
@@ -330,7 +332,7 @@ body {
 	padding: 7px 6px 5px 7px;
 	text-transform: uppercase;
 	box-shadow:
-		1px 1px 0 0 #ddd inset;
+		0 0 0 1px #ddd;
 }
 .sublevel-nav.sort .sublevel-item.selected {
 	background-color: transparent;
@@ -347,9 +349,9 @@ body {
 	top: 17px;
 	left: 0;
 	width: 100%;
-	height: calc(100% - 17px);
+	height: calc(100% - 16px);
 	box-shadow:
-		0 0 0 1px var(--GW-content-background-color) inset;
+		0 0 0 1px var(--GW-content-background-color);
 }
 
 /*================*/

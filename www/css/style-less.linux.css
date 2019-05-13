@@ -359,6 +359,7 @@ input[type='submit'],
 .button {
 	font-family: inherit;
 	font-size: inherit;
+	font-weight: inherit;
 	cursor: pointer;
 	border: none;
 	border-radius: 0;
