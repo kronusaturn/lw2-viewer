@@ -43,18 +43,11 @@ h1.listing a {
 	position: relative;
 }
 
-/*	Links to link-posts
-	(not the link-post links themselves; that’s below)
-	*/
-h1.listing a[href^='http'] + a {
-	margin-left: 0.375em;
-}
-
 /*	Link-post links
 	*/
 h1.listing a[href^="http"] {
-	transform: scale(0.75) scaleX(-1);
-	margin: 0 0 0 -0.375em;
+	transform: scale(0.75) scaleX(-1) translateX(12%);
+	text-align: right;
 }
 
 /*=----------------------=*/

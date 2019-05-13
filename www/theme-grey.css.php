@@ -846,6 +846,10 @@ h1.listing {
 h1.listing a[href^="http"] {
 	color: #bbb;
 	min-width: 1.125em;
+	margin-left: 0;
+}
+h1.listing a[href^="http"] + a {
+	margin-left: 0.125em;
 }
 
 @media only screen and (hover: hover) and (pointer: fine) {
