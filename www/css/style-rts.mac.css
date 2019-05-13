@@ -3176,15 +3176,18 @@ h1.listing a {
 	position: relative;
 }
 
-/* Links to link-posts (not the link-post links themselves; that’s below) */
+/*	Links to link-posts
+	(not the link-post links themselves; that’s below)
+	*/
 h1.listing a[href^='http'] + a {
-	margin-left: 0.125em;
+	margin-left: 0.375em;
 }
 
-/* Link-post links */
+/*	Link-post links
+	*/
 h1.listing a[href^="http"] {
-	transform: scale(0.75);
-	margin: 0 0 0 -0.125em;
+	transform: scale(0.75) scaleX(-1);
+	margin: 0 0 0 -0.375em;
 }
 
 /*=----------------------=*/
@@ -3293,6 +3296,11 @@ h1.listing .edit-post-link:hover {
 @media only screen and (max-width: 960px) {
 	h1.listing:focus-within::before {
 		display: none;
+	}
+	h1.listing a[href^="http"] {
+		align-self: flex-start;
+		position: relative;
+		top: 1px;
 	}
 }
 
