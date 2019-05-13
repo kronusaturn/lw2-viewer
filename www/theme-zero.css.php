@@ -732,6 +732,7 @@ h1.listing {
 h1.listing a[href^="http"] {
 	color: #0081ff;
 	min-width: 1.25em;
+	left: 1px;
 }
 h1.listing a[href^="/posts"] {
 	color: #000;
@@ -764,7 +765,6 @@ h1.listing a[href^="/posts"] {
 
 h1.listing .post-type-prefix {
 	width: 1.25em;
-	display: inline-block;
 }
 
 h1.listing:not(:focus-within) a:not(:hover) .post-type-prefix {

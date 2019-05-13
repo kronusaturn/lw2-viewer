@@ -798,6 +798,9 @@ h1.listing a[href^='/posts'] {
 /*= Post type prefix =*/
 /*=------------------=*/
 
+h1.listing .post-type-prefix {
+	width: 1.5em;
+}
 h1.listing:not(:focus-within) a:not(:hover) .post-type-prefix {
 	opacity: 0.5;
 }
