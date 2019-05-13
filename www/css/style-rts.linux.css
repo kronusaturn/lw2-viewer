@@ -6629,6 +6629,11 @@ th.mathjax-inline-container {
 
 	--GW-post-title-font-weight: 600;
 }
+@media only screen and (max-width: 900px) {
+	:root {
+		--GW-nav-item-font-weight: 400;
+	}
+}
 
 /*	Layout.
 	*/
@@ -6790,11 +6795,14 @@ body {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 900px) {
-	#secondary-bar .nav-inner {
-		font-size: 1.125em;
+	#nav-item-search button::before {
+		font-weight: 400;
 	}
-	#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
-		padding: 6px 10px;
+	.nav-bar .nav-inner::before {
+		font-weight: 300;
+	}
+	.nav-current .nav-inner::before {
+		font-weight: 400;
 	}
 }
 
@@ -6958,7 +6966,7 @@ body {
 }
 .sublevel-nav.sort::before {
 	text-transform: uppercase;
-	color: #888;
+	color: #aaa;
 	text-shadow:
 		0.5px 0.5px 0 #fff;
 }
@@ -7340,12 +7348,6 @@ body {
 @media only screen and (max-width: 900px) {
 	.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
 		background-color: #ddd;
-	}
-	.archive-nav *[class^='archive-nav-item-'] {
-		border-width: 1px !important;
-	}
-	.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
-		background-color: #bbb;
 	}
 }
 
