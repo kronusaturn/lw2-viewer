@@ -1531,6 +1531,25 @@ GW.themeUnloadCallback_brutalist = (toTheme = "") => {
 	query("#theme-selector .theme-selector-close-button").innerHTML = "&#xf057;";
 }
 
+GW.themeLoadCallback_rts = (fromTheme = "") => {
+	GWLog("themeLoadCallback_rts");
+
+	// “N comments (M new)”
+	queryAll("h1.listing + .post-meta .comment-count").forEach(commentCount => {
+		let parts = /(.+?)( comments)(.+)/.exec(commentCount.title);
+		commentCount.innerHTML = `${parts[1]}<span>${parts[2]}</span><span>${parts[3]}</span>`;
+	});
+}
+GW.themeUnloadCallback_rts = (toTheme = "") => {
+	GWLog("themeUnloadCallback_rts");
+
+	// “N comments”
+	queryAll("h1.listing + .post-meta .comment-count").forEach(commentCount => {
+		let parts = /(.+?)( comments)(.+)/.exec(commentCount.title);
+		commentCount.innerHTML = `${parts[1]}<span>${parts[2]}</span>`;
+	});
+}
+
 GW.themeLoadCallback_classic = (fromTheme = "") => {
 	GWLog("themeLoadCallback_classic");
 

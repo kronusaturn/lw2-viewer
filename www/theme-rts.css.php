@@ -20,10 +20,10 @@
 
 	--GW-nav-item-font-weight: <?php echo ($platform == 'Mac') ? '200' : '300'; ?>;
 
-	--GW-post-listings-font: 'Garamond Premier Pro', var(--GW-serif-fallback-font-stack);
-	--GW-post-listings-font-weight: 500;
+	--GW-post-listings-font: 'Garamond Premier Pro Subhead', var(--GW-serif-fallback-font-stack);
+	--GW-post-listings-font-weight: 400;
 
-	--GW-listings-post-meta-font-weight: <?php echo ($platform == 'Mac') ? '300' : '400'; ?>;
+	--GW-listings-post-meta-font-weight: 400;
 
 	--GW-post-title-font-weight: 600;
 }
@@ -769,7 +769,7 @@ h1.listing a[href^="http"] {
 }
 h1.listing a[href^='/posts'] {
 	color: #690010;
-	text-shadow: 0.5px 0.5px 0.5px #de7069;
+	text-shadow: 0.5px 0.5px 0.5px #ffaca5;
 }
 
 @media only screen and (hover: hover) and (pointer: fine) {
@@ -830,6 +830,11 @@ h1.listing + .post-meta {
 }
 h1.listing + .post-meta > * {
 	line-height: 1.5;
+	margin: 0 1em 0 0;
+	opacity: 0.7;
+}
+h1.listing + .post-meta a {
+	opacity: 1.0;
 }
 h1.listing + .post-meta .post-section {
 	order: 1;
@@ -842,17 +847,16 @@ h1.listing + .post-meta .link-post-domain {
 	flex-basis: 100%;
 }
 
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
-@media only screen and (max-width: 520px) {
-	h1.listing + .post-meta {
-		margin: 4px 6px;
-	}
-	h1.listing + .post-meta > * {
-		line-height: 1.4;
-	}
+/*	Comment count.
+	*/
+h1.listing + .post-meta .comment-count:not(.new-comments) {
+	opacity: 0.6;
+}
+h1.listing + .post-meta .comment-count span:nth-of-type(2) {
+	margin: 0 0 0 2px;
+}
+h1.listing + .post-meta .comment-count:not(.new-comments) span:nth-of-type(2) {
+	display: none;
 }
 
 /*============*/
