@@ -45,6 +45,7 @@
 
 	--GW-hyperlink-color: #999;
 	--GW-hyperlink-hover-color: #333;
+	--GW-hyperlink-active-color: #999;
 
 	--GW-shadow-link-glow: 0px 0px 0.5px #333;
 
@@ -110,10 +111,13 @@ body {
 	left: 5px;
 	top: -2px;
 	font-size: 0.7em;
+	color: #ddd;
+}
+#secondary-bar .nav-inner::after {
 	color: #d8d8d8;
 }
-.inactive-bar .nav-inner::after {
-	color: #ccc;
+.nav-inner:hover::after {
+	color: #bbb;
 }
 .nav-inner:hover::after {
 	color: #bbb;
@@ -761,7 +765,7 @@ h1.listing {
 
 h1.listing a[href^="http"] {
 	color: #888;
-	line-height: 1.25;
+	line-height: 1.2;
 }
 h1.listing a[href^='/posts'] {
 	color: #690010;
@@ -790,58 +794,12 @@ h1.listing a[href^='/posts'] {
 	}
 }
 
-h1.listing .edit-post-link {
-	padding: 5px 3px 36px 0.5em;
-	top: 0;
-	right: 0;
-}
-h1.listing .edit-post-link:hover {
-	text-decoration: none;
-}
-#content.user-page h1.listing .edit-post-link {
-	background-color: #fff;
-}
+/*=------------------=*/
+/*= Post type prefix =*/
+/*=------------------=*/
 
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
-@media only screen and (max-width: 900px) {
-	h1.listing {
-		line-height: 1;
-	}
-	h1.listing + .post-meta .post-section::before {
-		position: unset;
-	}
-	h1.listing + .post-meta .post-section {
-		overflow: visible;
-	}
-}
-@media only screen and (max-width: 520px) {
-	h1.listing {
-		font-size: 1.5rem;
-		margin: 18px 6px 4px 6px;
-		max-width: calc(100% - 12px);
-	}
-	h1.listing + .post-meta {
-		margin: 4px 6px;
-	}
-	h1.listing + .post-meta > * {
-		line-height: 1.4;
-	}
-	h1.listing a[href^='http'] {
-		top: 4px;
-	}
-
-	#content.user-page h1.listing::after {
-		height: calc(100% + 2.375em);
-	}
-	#content.user-page h1.listing.link-post-listing::after {
-		height: calc(100% + 3.375em);
-	}
-	#content.user-page h1.listing + .post-meta {
-		margin-bottom: 1.5rem;
-	}
+h1.listing:not(:focus-within) a:not(:hover) .post-type-prefix {
+	opacity: 0.5;
 }
 
 /*======*/
@@ -879,6 +837,19 @@ h1.listing + .post-meta .post-section::before {
 h1.listing + .post-meta .link-post-domain {
 	order: 2;
 	flex-basis: 100%;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 520px) {
+	h1.listing + .post-meta {
+		margin: 4px 6px;
+	}
+	h1.listing + .post-meta > * {
+		line-height: 1.4;
+	}
 }
 
 /*============*/
