@@ -478,7 +478,7 @@ body {
 	opacity: 0.5;
 	color: #d8d8d8;
 }
-@media only screen and (hover: hover) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	#quick-nav-ui a:hover {
 		background-color: #f0f0eb;
 		color: #333;
@@ -504,7 +504,7 @@ body {
 	color: #e6e6e6;
 	text-shadow: none;
 }
-@media only screen and (hover: hover) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	#new-comment-nav-ui .new-comments-count:hover {
 		text-shadow: 
 			0 0 1px #fff,
@@ -765,7 +765,7 @@ h1.listing a[href^='/posts'] {
 	padding: 0 2px 1px 1px;
 }
 
-@media only screen and (hover: hover) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	h1.listing a[href^='/posts'] {
 		max-width: calc(100% - 60px);
 		padding: 2px 2px 1px 1px;
@@ -866,7 +866,7 @@ h1.listing + .post-meta .link-post-domain {
 h1.listing.own-post-listing {
 	padding-right: 36px;
 }
-@media only screen and (hover: hover) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	#content.user-page h1.listing:focus-within::before {
 		top: -2px;
 	}
@@ -1349,7 +1349,7 @@ a.comment-parent-link:hover::before {
 	max-height: 56px;
 }
 
-@media only screen and (hover: hover) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	#content.compact > .comment-thread .comment-item:hover .comment,
 	#content.compact > .comment-thread .comment-item.expanded .comment {
 		background-color: #fff;
@@ -1368,7 +1368,7 @@ a.comment-parent-link:hover::before {
 			0 0 40px #fff;
 	}
 }
-@media only screen and (hover: none) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	#content.compact > .comment-thread.expanded .comment-item .comment {
 		background-color: #fff;
 		outline: 3px solid #888;
@@ -1637,7 +1637,7 @@ a.comment-parent-link:hover::before {
 	border: 1px solid #ddd;
 	color: #777;
 }
-@media only screen and (hover:hover) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover,
 	#edit-post-form .post-meta-fields input[type='checkbox']:focus + label {
 		text-shadow: 
@@ -1932,7 +1932,7 @@ select {
 	text-shadow: 
 		rgba(255, 255, 255, 0.5) 0px 3px 3px;
 }
-@media only screen and (hover: hover) {
+@media only screen and (hover: hover) and (pointer: fine) {
 	#content.alignment-forum-index-page h1.listing a:hover,
 	#content.alignment-forum-index-page h1.listing a:focus {
 		background-color: rgba(244, 245, 255, 0.85);

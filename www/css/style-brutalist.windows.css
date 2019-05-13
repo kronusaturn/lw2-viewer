@@ -7305,12 +7305,21 @@ body {
 	line-height: 1.8;
 }
 @media only screen and (hover: hover) and (pointer: fine) {
-	#quick-nav-ui a:hover {
+	#quick-nav-ui a:hover,
+	#quick-nav-ui a:focus,
+	#quick-nav-ui a.highlighted {
 		box-shadow: 
 			0 0 0 1px var(--GW-C0) inset,
 			0 0 0 3px var(--GW-C1) inset,
 			0 0 0 1px var(--GW-C0),
 			0 0 0 3px var(--GW-C1);
+	}
+	#quick-nav-ui a {
+		transition:
+			box-shadow 0.1s ease,
+	}
+	#quick-nav-ui a:hover {
+		transition: none;
 	}
 }
 #quick-nav-ui a:active {
@@ -7351,6 +7360,16 @@ body {
 }
 #new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
 	color: var(--GW-C4);
+}
+
+@media only screen and (hover: hover) and (pointer: fine) {
+	#new-comment-nav-ui .new-comment-sequential-nav-button.highlighted {
+		color: var(--GW-C2);
+	}
+	#new-comment-nav-ui .new-comment-sequential-nav-button {
+		transition:
+			color 0.1s ease,
+	}
 }
 
 /*=----------------------------=*/
