@@ -7047,19 +7047,9 @@ body {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-@media only screen and (max-width: 1080px) {
-	#theme-tweaker-toggle button {
-		border: 1px solid #999;
-		box-shadow: 
-			0 0 10px #999 inset,
-			0 0 0 1px transparent;
-		border-radius: 50%;
-		transform: scale(0.8);
-	}
-}
 @media only screen and (max-width: 1000px) {
 	#theme-tweaker-toggle button {
-		background-color: #ddd;
+		background-color: var(--GW-content-background-color);
 	}
 }
 
@@ -7070,28 +7060,31 @@ body {
 #quick-nav-ui a {
 	box-shadow: 0 0 0 1px #ccc inset;
 	color: #bbb;
-	border-radius: 4px;
 }
 #quick-nav-ui a[href='#bottom-bar'] {
-	line-height: 1.8;
+	line-height: 1.9;
 }
 #quick-nav-ui a:active {
 	transform: scale(0.9);
 }
+#quick-nav-ui a[href='#top'],
+#quick-nav-ui a[href='#bottom-bar'] {
+	font-weight: 400;
+}
+#quick-nav-ui a[href='#comments'],
+#quick-nav-ui a[href='#answers'] {
+	font-weight: 300;
+}
 #quick-nav-ui a[href='#comments'].no-comments,
 #quick-nav-ui a[href='#answers'].no-answers {
-	opacity: 0.4;
-	color: #bbb;
+	opacity: 0.5;
+	color: #d8d8d8;
 }
 @media only screen and (hover: hover) {
 	#quick-nav-ui a:hover {
 		background-color: #f0f0eb;
 		color: #333;
 		text-shadow: 0px 0px 0.5px #333;
-	}
-	#quick-nav-ui a:focus:not(:hover) {
-		transform: none;
-		text-shadow: none;
 	}
 }
 

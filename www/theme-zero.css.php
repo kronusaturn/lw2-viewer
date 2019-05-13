@@ -431,6 +431,7 @@ body {
 #quick-nav-ui {
 	box-shadow: 0 0 0 6px var(--GW-body-background-color);
 }
+
 #quick-nav-ui a {
 	color: var(--GW-hyperlink-color);
 	background-color: #e4e4e4;
