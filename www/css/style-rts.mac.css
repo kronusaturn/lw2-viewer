@@ -6746,12 +6746,6 @@ body {
 	text-shadow: var(--GW-shadow-link-glow);
 }
 
-/*= Sequences tab =*/
-
-#nav-item-sequences .nav-inner {
-	opacity: 0.75;
-}
-
 /*= Search tab =*/
 
 #nav-item-search form::before {
@@ -7294,50 +7288,31 @@ body {
 /*==========*/
 
 .archive-nav {
-	border: 1px solid transparent;
+	outline: 1px solid transparent;
 }
 .archive-nav *[class^='archive-nav-item'] {
-	border-style: solid;
-	border-color: #ddd;
-	border-width: 1px 0 1px 1px;
-}
-.archive-nav div[class^='archive-nav-']:nth-of-type(2) *[class^='archive-nav-item'] {
-	border-top-width: 0;
-	border-bottom-width: 0;
-}
-.archive-nav div[class^='archive-nav-']:last-of-type *[class^='archive-nav-item'] {
-	border-bottom-width: 1px;
-}
-.archive-nav *[class^='archive-nav-item']:last-child {
-	border-right-width: 1px;
+	background-color: var(--GW-content-background-color);
+	outline: 1px solid #ddd;
+	font-weight: var(--GW-UI-font-weight-light);
 }
 .archive-nav span[class^='archive-nav-item'] {
-	background-color: #ddd;
+	font-weight: var(--GW-UI-font-weight-heavy);
 }
 
-.archive-nav a:link,
-.archive-nav a:visited {
-	color: #999;
-}
-.archive-nav a:hover,
-.archive-nav span[class^='archive-nav-item'] {
+.archive-nav a:hover {
 	background-color: #f0f0eb;
-	color: #333;
-	text-shadow: 0px 0px 0.5px #333;
-}
-.archive-nav a:active {
-	transform: scale(0.9);
-}
-.archive-nav a:focus:not(:hover) {
-	transform: none;
-}
-.archive-nav a.archive-nav-item-day:hover {
-	background-color: #ddd;
+	text-shadow: var(--GW-shadow-link-glow);
 }
 
-/*===============*/
-/* KEYBOARD HELP */
-/*===============*/
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
+		background-color: #ddd;
+	}
+}
 
 /*==========*/
 /* LISTINGS */
@@ -8668,6 +8643,10 @@ select {
 		min-height: calc(100vh - 440px);
 	}
 }
+
+/*===============*/
+/* KEYBOARD HELP */
+/*===============*/
 
 /*%%%%%%%%%%%%%%%*/
 /*%% ADDITIONS %%*/
