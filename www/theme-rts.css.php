@@ -11,7 +11,7 @@
 :root {
 	--GW-UI-font: 'Proxima Nova', var(--GW-sans-serif-fallback-font-stack);
 	--GW-UI-font-weight-light: 300;
-	--GW-UI-font-weight-heavy: 400;
+	--GW-UI-font-weight-heavy: 600;
 
 	--GW-body-text-font: 'Garamond Premier Pro', var(--GW-serif-fallback-font-stack);
 	--GW-body-text-font-weight: 500;
@@ -305,19 +305,11 @@ body {
 .sublevel-nav .sublevel-item:not(.selected):hover {
 	background-color: #f0f0eb;
 	color: #000;
-}
-.sublevel-nav .sublevel-item:not(.selected):active {
-	color: #000;
-	text-shadow: 
-		0 -1px 0 #fff,
-		0 0.5px 0.5px #000;
+	text-shadow: var(--GW-shadow-link-glow);
 }
 .sublevel-nav .sublevel-item.selected {
 	font-weight: var(--GW-UI-font-weight-heavy);
 	color: #000;
-	text-shadow: 
-		0 -1px 0 #fff,
-		0 0.5px 0.5px #000;
 }
 
 /*=====================*/
@@ -671,6 +663,10 @@ body {
 
 #text-size-adjustment-ui button {
 	color: #777;
+	font-weight: 400;
+}
+#text-size-adjustment-ui button.default {
+	font-weight: var(--GW-UI-font-weight-light);
 }
 #text-size-adjustment-ui button:disabled:hover {
 	text-shadow: none;
@@ -700,6 +696,24 @@ body {
 	#text-size-adjustment-ui button:hover {
 		background-color: #eee;
 	}
+}
+
+/*=============================*/
+/* COMMENTS LIST MODE SELECTOR */
+/*=============================*/
+
+#comments-list-mode-selector button {
+	color: #ccc;
+	box-shadow:
+		0 0 0 4px var(--GW-body-background-color) inset,
+		0 0 0 5px #ddd inset;
+}
+#comments-list-mode-selector button:hover,
+#comments-list-mode-selector button.selected {
+	box-shadow: 
+		0 0 0 1px #ddd inset,
+		0 0 0 4px var(--GW-body-background-color) inset,
+		0 0 0 5px #ddd inset;
 }
 
 /*=============================*/
@@ -867,7 +881,7 @@ h1.listing + .post-meta .link-post-domain {
 /*============*/
 
 #content.user-page h1.page-main-heading {
-	border-bottom: 1px solid #ccc;
+	border-bottom: 1px solid #ddd;
 }
 
 #content.user-page #top-nav-bar {
@@ -1362,16 +1376,6 @@ a.comment-parent-link:hover::before {
 /* COMMENTS COMPACT VIEW */
 /*=======================*/
 
-#comments-list-mode-selector button {
-	box-shadow:
-		0 0 0 4px #fff inset,
-		0 0 0 5px #bbb inset;
-}
-#comments-list-mode-selector button:hover,
-#comments-list-mode-selector button.selected {
-	box-shadow:
-		0 0 0 5px #bbb inset;
-}
 #content.compact > .comment-thread .comment-item {
 	max-height: 56px;
 }
