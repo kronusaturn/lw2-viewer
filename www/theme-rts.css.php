@@ -200,7 +200,7 @@ body {
 		font-weight: 300;
 	}
 	.nav-current .nav-inner::before {
-		font-weight: 400;
+		font-weight: 900;
 	}
 }
 
@@ -754,28 +754,21 @@ body {
 /*==========*/
 
 h1.listing {
-	margin: 0.7em 20px 0.1em 20px;
-	max-width: calc(100% - 40px);
+	margin: 0.7em 0 0 0;
+	justify-content: center;
 	text-align: center;
 }
 
 h1.listing a[href^="http"] {
-	font-size: 0.6875em;
-	top: 6px;
 	color: #888;
+	line-height: 1.25;
 }
 h1.listing a[href^='/posts'] {
-	text-decoration: none;
 	color: #690010;
 	text-shadow: 0.5px 0.5px 0.5px #de7069;
-	padding: 0 2px 1px 1px;
 }
 
 @media only screen and (hover: hover) and (pointer: fine) {
-	h1.listing a[href^='/posts'] {
-		max-width: calc(100% - 60px);
-		padding: 2px 2px 1px 1px;
-	}
 	h1.listing a:hover,
 	h1.listing a:focus {
 		text-shadow: 
@@ -785,11 +778,6 @@ h1.listing a[href^='/posts'] {
 		background-color: rgba(255, 255, 250, 0.85);
 	}	
 	h1.listing:focus-within::before {
-		display: inline-block;
-		vertical-align: top;
-		position: relative;
-		left: -0.125em;
-		top: 1px;
 		color: #690010;
 	}
 	h1.listing a[href^="http"]:hover {
