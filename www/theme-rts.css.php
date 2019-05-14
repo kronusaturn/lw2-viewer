@@ -930,29 +930,10 @@ h1.listing.own-post-listing {
 /* LOGIN PAGE */
 /*============*/
 
-.login-container form input[type='submit'] {
-	background-color: #eee;
-	border: 1px solid #ccc;
-}
-.login-container form input[type='submit']:hover,
-.login-container form input[type='submit']:focus {
-	background-color: #ddd;
-	border: 1px solid #aaa;
-}
-
 /* “Create account” form */
 
 #signup-form {
-	background-color: #f3f3f3;
 	border: 1px solid #ddd;
-}
-#signup-form input[type='submit'] {
-	background-color: #e4e4e4;
-	border: 1px solid #ccc;
-}
-#signup-form input[type='submit']:hover {
-	background-color: #d8d8d8;
-	border: 1px solid #aaa;
 }
 
 /* Log in tip */
@@ -1716,6 +1697,10 @@ a {
 /*=========*/
 /* BUTTONS */
 /*=========*/
+
+input[type='submit'] {
+	border: 1px solid #ddd;
+}
 
 button:hover,
 button:focus,
