@@ -1105,13 +1105,16 @@ h1.listing.own-post-listing {
 	border-bottom: 1px dotted #999;
 }
 
-/*=======*/
-/* POSTS */
-/*=======*/
-
 .post-body {
 	font-size: 1.375rem;
 }
+.comment-body {
+	font-size: 1.25rem;
+}
+
+/*=======*/
+/* POSTS */
+/*=======*/
 
 .post-page .top-post-meta::after {
 	content: "❦";
@@ -1120,7 +1123,7 @@ h1.listing.own-post-listing {
 	font-size: 1.5rem;
 	flex-basis: 100%;
 	order: 2;
-	background-color: #999;
+	background-color: #ccc;
 	-webkit-background-clip: text;
 	color: transparent;
 	text-shadow: rgba(255, 255, 255, 0.5) 0px 1px 1px;
@@ -1165,7 +1168,7 @@ h1.post-title {
 	position: relative;
 	top: -1px;
 	margin: 0 0 0 0.5em;
-	background-color: #ccc;
+	background-color: #999;
 	-webkit-background-clip: text;
 	color: transparent;
 	text-shadow: rgba(255, 255, 255, 0.5) 0px 1px 1px;
@@ -1220,7 +1223,7 @@ h1.post-title {
 /*==========*/
 
 .comments::before {
-	border-top: 1px solid #bbb;
+	border-top: 1px solid #ddd;
 }
 
 .comment-item {
@@ -1228,14 +1231,17 @@ h1.post-title {
 }
 
 .comment-item {
-	box-shadow: 
-		0 0  3px #bbb,
-		0 0  5px #bbb,
-		0 0  7px #bbb,
-		0 0 10px #bbb;
+	filter: drop-shadow(0 0 3px #777);
 }
-.comment-body {
-	font-size: 1.25rem;
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 520px) {
+	.comment-body {
+		line-height: 1.3;
+	}
 }
 
 /*==================*/
@@ -1255,25 +1261,6 @@ h1.post-title {
 .listings .comment-thread .comment-meta a.date:focus + *,
 .listings .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
 	margin-left: -10px;
-}
-
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
-@media only screen and (max-width: 900px) {
-	.comment-item .comment-item {
-		margin: 0.75em 3px 3px 6px;
-	}
-	.comment-item .comment-item + .comment-item {
-		margin: 1.5em 3px 3px 6px;
-	}
-}
-@media only screen and (max-width: 520px) {
-	.comment-body {
-		font-size: 1.1875rem;
-		line-height: 1.35;
-	}
 }
 
 /*================================*/
