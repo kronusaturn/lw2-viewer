@@ -221,12 +221,6 @@ body {
 	font-weight: inherit;
 }
 
-/*= Inbox indicator =*/
-
-#inbox-indicator::before {
-	padding-top: 1px;
-}
-
 /*= Recent Comments tab =*/
 
 #nav-item-recent-comments span {

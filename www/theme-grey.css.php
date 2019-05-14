@@ -255,9 +255,6 @@ body {
 	#secondary-bar .nav-inner::before {
 		opacity: 0.8;
 	}
-	#inbox-indicator::before {
-		padding-top: 3px;
-	}
 }
 
 /*===============*/

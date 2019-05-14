@@ -627,11 +627,11 @@ EOT;
 	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
 	color: #bbb;
-	font-size: 1.1875em;
+	font-size: 1.125em;
 	position: absolute;
 	right: 0;
 	height: 100%;
-	padding: 0 0.5em;
+	padding: 0 0.625em;
 	display: flex;
 	align-items: center;
 }
