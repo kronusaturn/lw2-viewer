@@ -23,7 +23,7 @@
 	--GW-post-listings-font: 'Garamond Premier Pro Subhead', var(--GW-serif-fallback-font-stack);
 	--GW-post-listings-font-weight: 400;
 
-	--GW-listings-post-meta-font-weight: 400;
+	--GW-listings-post-meta-font-weight: 300;
 
 	--GW-post-title-font-weight: 500;
 }

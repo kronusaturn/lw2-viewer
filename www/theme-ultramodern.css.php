@@ -198,6 +198,9 @@ p {
 #inbox-indicator {
 	text-shadow: none;
 }
+#inbox-indicator::before {
+	color: #666;
+}
 
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
@@ -422,6 +425,10 @@ p {
 #theme-selector button {
 	box-shadow:
 		0 0 0 5px #888 inset;
+	filter: contrast(50%);
+}
+#theme-selector:hover button {
+	filter: none;
 }
 #theme-selector button.selected {
 	box-shadow:
@@ -474,6 +481,7 @@ p {
 	}
 	#theme-selector button {
 		border-radius: 10px;
+		filter: none;
 	}
 	#theme-selector button::after {
 		color: #222;
@@ -521,7 +529,7 @@ p {
 	color: #555;
 	font-weight: 400;
 	border-radius: 4px;
-	box-shadow: 0 0 0 1px #aaa;
+	box-shadow: 0 0 0 1px #666;
 }
 #quick-nav-ui a[href='#bottom-bar'],
 #quick-nav-ui a[href='#comments'] {
