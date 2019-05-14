@@ -25,7 +25,7 @@
 
 	--GW-listings-post-meta-font-weight: 400;
 
-	--GW-post-title-font-weight: 600;
+	--GW-post-title-font-weight: 500;
 }
 @media only screen and (max-width: 900px) {
 	:root {
@@ -828,14 +828,10 @@ h1.listing.spam:hover + .post-meta {
 
 h1.listing + .post-meta {
 	justify-content: center;
+	text-align: center;
 }
 h1.listing + .post-meta > * {
 	line-height: 1.5;
-	margin: 0 1em 0 0;
-	opacity: 0.7;
-}
-h1.listing + .post-meta a {
-	opacity: 1.0;
 }
 h1.listing + .post-meta .post-section {
 	order: 1;
@@ -1106,69 +1102,65 @@ h1.listing.own-post-listing {
 .post-body {
 	font-size: 1.375rem;
 }
-.post-page .post-meta::after {
+
+.post-page .top-post-meta::after {
+	content: "❦";
 	display: block;
-	margin: 0.625em 0 0 0;
+	margin: 0.625em 0 -0.625em 0;
 	font-size: 1.5rem;
 	flex-basis: 100%;
 	order: 2;
-}
-.post-page .post-meta:first-of-type::after {
-	content: "❦";
-}
-.post-body {
-	margin: 0;
-}
-
-.post .bottom-post-meta {
-	border-color: #bbb;
-	padding-bottom: 17px;
+	background-color: #999;
+	-webkit-background-clip: text;
+	color: transparent;
+	text-shadow: rgba(255, 255, 255, 0.5) 0px 1px 1px;
 }
 
 /*===========*/
 /* POST-META */
 /*===========*/
 
-.post-meta,
-h1.listing + .post-meta {
+.post .bottom-post-meta {
+	border-color: #ddd;
+	padding-bottom: 18px;
+}
+
+.post-meta {
 	text-align: center;
 }
+
+.post-meta > * {
+	color: #999;
+	opacity: 0.7;
+	margin: 0 1em 0 0;
+}
+.post-meta a {
+	opacity: 1.0;
+}
+.post .post-meta .karma {
+	opacity: 1.0;
+}
+
+/*	Post section.
+	*/
 .post-meta .post-section::before,
 .comment-meta .alignment-forum {
-	color: #fff;
+	position: relative;
 	top: -1px;
-	text-shadow: 
-		1px 1px 0 #999, 
-		0 1px 0 #999, 
-		0 0 5px #999;
 	margin: 0 0 0 0.5em;
+	background-color: #999;
+	-webkit-background-clip: text;
+	color: transparent;
+	text-shadow: rgba(255, 255, 255, 0.5) 0px 1px 1px;
 }
 .comment-meta .alignment-forum {
 	margin: 0 1em 0 0;
 }
-a.post-section:hover {
-	text-decoration: none;
-}
 .post-meta .post-section.alignment-forum::before {
-	text-shadow:
-		1px 1px 0   #b9bbff,
-		0   1px 0   #b9bbff,
-		0   0   5px #b9bbff;
+	background-color: #b9bbff;
 }
-a.post-section.alignment-forum:hover::before {
-	color: #e7e8ff;
-}
-.post-meta > *,
-.comment-meta a {
-	color: #999;
-}
-.post-meta a:hover,
-.comment-meta a:hover {
-	color: #333;
-	text-shadow: 0px 0px 0.5px #333;=
-}
-.bottom-post-meta {
-	border-color: #ddd;
+.post-meta .post-section.alignment-forum:hover::before {
+	background-color: #e7e8ff;
 }
 
 /*============*/
