@@ -910,13 +910,21 @@ h1.listing.own-post-listing {
 /*=--------------------=*/
 
 #content.conversations-user-page h1.listing {
-	padding-right: 8px;
+	padding: 8px 8px 0 8px;
 	font-size: 1.75rem;
 }
 
 /*===============*/
 /* CONVERSATIONS */
 /*===============*/
+
+#content.conversation-page h1.page-main-heading {
+	font-weight: var(--GW-post-listings-font-weight);
+	text-shadow: 
+			  0px   0px 0.5px #ddd, 
+			  0px   0px 1.0px #aaa,
+			0.5px 0.5px 0.5px #ddd;
+}
 
 /*============*/
 /* LOGIN PAGE */
@@ -1716,6 +1724,7 @@ input[type='submit']:focus,
 .button:hover,
 .button:focus {
 	text-shadow: var(--GW-shadow-link-glow);
+	background-color: #f0f0eb;
 }
 
 /*==========*/
@@ -1963,14 +1972,6 @@ select {
 	}
 	.comment-item .comment-item + .comment-item {
 		margin: 1.5em 3px 3px 6px;
-	}
-
-	.sublevel-nav:not(.sort) .sublevel-item,
-	.sublevel-nav:not(.sort) .sublevel-item:first-child,
-	.sublevel-nav:not(.sort) .sublevel-item:last-child {
-		border-radius: 8px;
-		border-width: 1px;
-		margin: 2px;
 	}
 
 	.contents {
