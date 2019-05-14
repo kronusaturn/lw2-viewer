@@ -734,7 +734,7 @@ h1.listing a[href^="http"] {
 	min-width: 1.25em;
 	left: 1px;
 }
-h1.listing a[href^="/posts"] {
+h1.listing a[href^="/"] {
 	color: #000;
 }
 

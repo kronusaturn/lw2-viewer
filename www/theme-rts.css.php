@@ -767,7 +767,7 @@ h1.listing a[href^="http"] {
 	color: #888;
 	line-height: 1.2;
 }
-h1.listing a[href^='/posts'] {
+h1.listing a[href^='/'] {
 	color: #690010;
 	text-shadow: 0.5px 0.5px 0.5px #ffaca5;
 }
@@ -902,7 +902,7 @@ h1.listing.own-post-listing {
 
 #content.user-page h1.listing + .post-meta,
 #content.search-results-page h1.listing + .post-meta {
-	padding: 8px 8px 8px 36px;
+	padding: 8px;
 }
 
 /*=--------------------=*/
@@ -910,12 +910,8 @@ h1.listing.own-post-listing {
 /*=--------------------=*/
 
 #content.conversations-user-page h1.listing {
-	padding: 8px 6px;
+	padding-right: 8px;
 	font-size: 1.75rem;
-}
-#content.conversations-user-page h1.listing + .post-meta {
-	padding: 6px 4px;
-	margin: 0;
 }
 
 /*===============*/
