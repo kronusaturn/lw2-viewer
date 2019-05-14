@@ -1019,6 +1019,16 @@ h1.listing.own-post-listing {
 	color: #000;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	.contents {
+		margin-left: auto;
+	}
+}
+
 /*=================*/
 /* POST NAVIGATION */
 /*=================*/
@@ -1116,6 +1126,13 @@ h1.listing.own-post-listing {
 	text-shadow: rgba(255, 255, 255, 0.5) 0px 1px 1px;
 }
 
+h1.post-title {
+	text-shadow:
+		0px 0px 0.5px #eee, 
+		0px 0px 1.5px #ddd,
+		0.5px 0.5px 0.5px #ccc;
+}
+
 /*===========*/
 /* POST-META */
 /*===========*/
@@ -1148,10 +1165,13 @@ h1.listing.own-post-listing {
 	position: relative;
 	top: -1px;
 	margin: 0 0 0 0.5em;
-	background-color: #999;
+	background-color: #ccc;
 	-webkit-background-clip: text;
 	color: transparent;
 	text-shadow: rgba(255, 255, 255, 0.5) 0px 1px 1px;
+}
+.post-meta .post-section:hover::before {
+	background-color: #444;
 }
 .comment-meta .alignment-forum {
 	margin: 0 1em 0 0;
@@ -1171,26 +1191,28 @@ h1.listing.own-post-listing {
 	text-decoration: none;
 	color: #77121a;
 }
-.post.link-post a.link-post-link:hover {
-	color: #942f2f;
-	text-shadow: 
-		0px 0px 0.5px #ff987b, 
-		0px 0px 1.5px #c05651, 
-		0.5px 0.5px 0.5px #de7069;
-}
-.post.link-post a.link-post-link:hover::before {
-	color: #4879ec;
-	text-shadow: 
-		0.5px 0.5px 0 #fff,
-		-0.5px -0.5px 0 #fff,
-		0 0 2px #fff,
-		0 0 3px #00c;
-}
+.post.link-post a.link-post-link:hover,
 .post.link-post a.link-post-link:focus {
 	text-shadow: 
-		0px 0px 0.5px #ff987b, 
-		0px 0px 1.5px #c05651, 
-		0.5px 0.5px 0.5px #de7069;
+		0px 0px 0.5px #ffaca5, 
+		0px 0px 1.5px #de7069,
+		0.5px 0.5px 0.5px #ff988f;
+	text-decoration: dotted underline;
+	border: none;
+}
+.post.link-post a.link-post-link::before {
+	position: relative;
+	top: 1px;
+	color: #999;
+}
+.post.link-post a.link-post-link:hover::before,
+.post.link-post a.link-post-link:focus::before {
+	color: #690010;
+	text-shadow: 
+		 0.5px 0.5px 0 #fff,
+		 -0.5px -0.5px 0 #fff,
+		 0 0 2px #fff,
+		 0 0 3px #00c;
 }
 
 /*==========*/
@@ -1201,20 +1223,6 @@ h1.listing.own-post-listing {
 	border-top: 1px solid #bbb;
 }
 
-#content > .comment-thread .comment-meta a.date:focus,
-#content > .comment-thread .comment-meta a.permalink:focus {
-	color: #444;
-	font-weight: normal;
-	outline: 2px dotted #444;
-	position: relative;
-	background-color: #fff;
-	padding: 0 5px;
-	left: -5px;
-}
-#content > .comment-thread .comment-meta a.date:focus + *,
-#content > .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
-	margin-left: -10px;
-}
 .comment-item {
 	border: 1px solid transparent;
 }
@@ -1228,6 +1236,44 @@ h1.listing.own-post-listing {
 }
 .comment-body {
 	font-size: 1.25rem;
+}
+
+/*==================*/
+/* COMMENT LISTINGS */
+/*==================*/
+
+.listings .comment-thread .comment-meta a.date:focus,
+.listings .comment-thread .comment-meta a.permalink:focus {
+	color: #444;
+	font-weight: normal;
+	outline: 2px dotted #444;
+	position: relative;
+	background-color: #fff;
+	padding: 0 5px;
+	left: -5px;
+}
+.listings .comment-thread .comment-meta a.date:focus + *,
+.listings .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
+	margin-left: -10px;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	.comment-item .comment-item {
+		margin: 0.75em 3px 3px 6px;
+	}
+	.comment-item .comment-item + .comment-item {
+		margin: 1.5em 3px 3px 6px;
+	}
+}
+@media only screen and (max-width: 520px) {
+	.comment-body {
+		font-size: 1.1875rem;
+		line-height: 1.35;
+	}
 }
 
 /*================================*/
@@ -1413,6 +1459,22 @@ a.comment-parent-link:hover::before {
 }
 #content.user-page.compact > h1.listing + .post-meta {
 	margin-bottom: 1rem;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 520px) {
+	#content.compact > .comment-thread .comment-item {
+		max-height: 104px;
+	}
+	#content.compact.user-page h1.listing {
+		margin-top: 0.5rem;
+	}
+	#content.compact.user-page h1.listing + .post-meta {
+		margin-bottom: 0.75rem;
+	}
 }
 
 /*===========================*/
@@ -1970,34 +2032,7 @@ select {
 /* MOBILE */
 /*========*/
 
-@media only screen and (max-width: 900px) {
-	.comment-item .comment-item {
-		margin: 0.75em 3px 3px 6px;
-	}
-	.comment-item .comment-item + .comment-item {
-		margin: 1.5em 3px 3px 6px;
-	}
-
-	.contents {
-		margin-left: auto;
-	}
-}
 @media only screen and (max-width: 520px) {
-	#content.compact > .comment-thread .comment-item {
-		max-height: 104px;
-	}
-	#content.compact.user-page h1.listing {
-		margin-top: 0.5rem;
-	}
-	#content.compact.user-page h1.listing + .post-meta {
-		margin-bottom: 0.75rem;
-	}
-
-	.comment-body {
-		font-size: 1.1875rem;
-		line-height: 1.35;
-	}
-	
 	.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
 		padding: 5px 6px 6px 6px;
 		font-weight: 600;

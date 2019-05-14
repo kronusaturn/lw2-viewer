@@ -507,7 +507,7 @@ h1.post-title .post-type-prefix {
 	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
 	display: inline-block;
-	transform: scale(0.75) translateX(-0.1em);
+	transform: scale(0.75) scaleX(-1) translateX(0.125em);
 }
 
 /************/
