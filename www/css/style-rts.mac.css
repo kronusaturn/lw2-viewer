@@ -7520,7 +7520,10 @@ h1.listing.own-post-listing {
 	width: 100%;
 	height: calc(100% + 1.25em);
 	background-color: var(--GW-content-background-color);
-	filter: drop-shadow(0 0 3px #777);
+	box-shadow:
+		0 0 3px 0 #bbb,
+		0 0 5px 0 #bbb,
+		0 0 8px 0 #bbb;
 }
 #content.user-page h1.listing.link-post-listing::after,
 #content.search-results-page h1.listing.link-post-listing::after{
@@ -7865,7 +7868,10 @@ h1.post-title .post-type-prefix {
 }
 
 .comment-item {
-	filter: drop-shadow(0 0 3px #777);
+	box-shadow:
+		0 0 3px 0 #bbb,
+		0 0 5px 0 #bbb,
+		0 0 8px 0 #bbb;
 }
 
 /*=----------------------------=*/
@@ -7928,10 +7934,6 @@ a.comment-parent-link::before {
 }
 a.comment-parent-link:hover::before {
 	color: #999;
-	text-shadow: none;
-	background-image: linear-gradient(to right, transparent 0%, #bbb 100%);
-	background-repeat: no-repeat;
-	box-shadow: 1px 0 0 0 #bbb;
 }
 
 .comment-child-link::before {
