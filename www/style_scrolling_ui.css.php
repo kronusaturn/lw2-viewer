@@ -631,7 +631,9 @@ EOT;
 	position: absolute;
 	right: 0;
 	height: 100%;
-	padding: 0 0.45em;
+	padding: 0 0.5em;
+	display: flex;
+	align-items: center;
 }
 #inbox-indicator.new-messages::before {
 	color: #f00;
@@ -668,7 +670,7 @@ a#inbox-indicator.new-messages:hover::before {
 	}
 	#inbox-indicator::before {
 		width: 100%;
-		text-align: right;
+		justify-content: flex-end;
 		font-size: 1.25em;
 	}
 	#inbox-indicator.new-messages {
@@ -686,6 +688,10 @@ a#inbox-indicator.new-messages:hover::before {
 @media only screen and (max-width: 720px) {
 	#inbox-indicator {
 		padding: 0;
+	}
+	#inbox-indicator::before {
+		align-items: flex-start;
+		padding: 0 0.375em;
 	}
 }
 @media only screen and (max-width: 520px) {
