@@ -215,11 +215,14 @@ body {
 #bottom-bar .nav-item a::before,
 #top-nav-bar a::before {
 	font-size: 1em;
-	color: #ccc;
+	color: #bbb;
 	font-weight: 900;
 }
 #top-nav-bar a::before {
 	bottom: -2px;
+}
+#top-nav-bar a:hover {
+	background-color: transparent;
 }
 #bottom-bar .nav-item a:hover::before,
 #top-nav-bar a:hover::before {
@@ -1136,6 +1139,10 @@ h1.post-title {
 		0.5px 0.5px 0.5px #ccc;
 }
 
+h1.post-title .post-type-prefix {
+	opacity: 0.35;
+}
+
 /*===========*/
 /* POST-META */
 /*===========*/
@@ -1242,6 +1249,15 @@ h1.post-title {
 	.comment-body {
 		line-height: 1.3;
 	}
+}
+
+/*=========*/
+/* ANSWERS */
+/*=========*/
+
+.answer-item::after {
+	text-transform: uppercase;
+	color: #ccc;
 }
 
 /*==================*/
