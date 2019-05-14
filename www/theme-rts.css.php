@@ -308,6 +308,7 @@ body {
 .page-toolbar a:hover,
 .page-toolbar button:hover {
 	text-shadow: var(--GW-shadow-link-glow);
+	background-color: transparent;
 }
 .page-toolbar .button::before,
 .page-toolbar .rss::before {
@@ -930,19 +931,25 @@ h1.listing.own-post-listing {
 /* LOGIN PAGE */
 /*============*/
 
-/* “Create account” form */
+/*=-----------------------=*/
+/*= “Create account” form =*/
+/*=-----------------------=*/
 
 #signup-form {
 	border: 1px solid #ddd;
 }
 
-/* Log in tip */
+/*=------------=*/
+/*= Log in tip =*/
+/*=------------=*/
 
 .login-container .login-tip {
 	border: 1px solid #eee;
 }
 
-/* Message box */
+/*=-------------=*/
+/*= Message box =*/
+/*=-------------=*/
 
 .error-box {
 	border: 1px solid red;
@@ -953,13 +960,20 @@ h1.listing.own-post-listing {
 	background-color: #afa;
 }
 
-/*=====================*/
-/* PASSWORD RESET PAGE */
-/*=====================*/
+/*============*/
+/* ERROR PAGE */
+/*============*/
 
-.reset-password-container input[type='submit'] {
-	background-color: #e4e4e4;
-	border: 1px solid #ccc;
+/*=------------=*/
+/*= Retry form =*/
+/*=------------=*/
+
+.reassurance {
+	border-top: 1px solid #ddd;
+}
+.reassurance .saved-comment-content {
+	border: 1px solid #ddd;
+	background-color: #ffd;
 }
 
 /*===================*/
@@ -973,7 +987,13 @@ h1.listing.own-post-listing {
 }
 .contents-head::after {
 	content: "";
-	background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+	background-image:
+		linear-gradient(
+			to right,
+			rgba(0, 0, 0, 0),
+			rgba(0, 0, 0, 0.75),
+			rgba(0, 0, 0, 0)
+		);
 	display: block;
 	margin: 0 auto 0.5em auto;
 	width: 75%;
