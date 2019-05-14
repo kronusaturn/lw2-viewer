@@ -221,20 +221,24 @@
 
 	--GW-comment-item-expanded-background-color: var(--GW-body-background-color);
 	--GW-comment-item-expanded-box-shadow: none;
-	--GW-comment-item-expanded-outline-color: transparent;
-	--GW-comment-item-expanded-outline: 3px solid var(--GW-comment-item-expanded-outline-color);
 
-	--GW-comment-item-outline-color: transparent;
+	--GW-comment-popup-background-color: var(--GW-body-background-color);
 
-	--GW-new-comment-item-outline-color: transparent;
-
-	--GW-comment-item-focused-background-color: var(--GW-comment-item-expanded-background-color);
-	--GW-comment-item-focused-outline-color: var(--GW-comment-item-expanded-outline-color);
-	--GW-comment-item-focused-outline: var(--GW-comment-item-expanded-outline);
-
-	--GW-comment-popup-background-color: var(--GW-comment-item-focused-background-color);
+	--GW-comment-item-overlay-border: 1px solid transparent;
+	--GW-comment-item-overlay-outline: none;
+	--GW-comment-item-overlay-box-shadow: none;
+	--GW-comment-item-overlay-filter: none;
 
 	--GW-upvote-button-color: inherit;
 	--GW-downvote-button-color: inherit;
 }
 
+/*	Sprites.
+	*/
+:root {
+	--GW-comment-meta-icons-filled-sprites-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/comment_meta_icons_filled.gif")) ?>');
+	--GW-comment-meta-icons-outline-sprites-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/comment_meta_icons_outline.gif")) ?>');
+
+	--GW-comment-meta-icons-normal-sprites: var(--GW-comment-meta-icons-outline-sprites-image);
+	--GW-comment-meta-icons-hover-sprites: var(--GW-comment-meta-icons-filled-sprites-image);
+}

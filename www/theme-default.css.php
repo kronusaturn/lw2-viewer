@@ -73,8 +73,6 @@
 		0 0 40px #fff;
 	--GW-comment-item-expanded-outline-color: #00c;
 
-	--GW-new-comment-item-outline-color: #5a5;
-
 	--GW-comment-highlight-color: #c79700;
 	--GW-comment-highlight-color-faint: #e7b200;
 
@@ -912,7 +910,7 @@ h1.listing + .post-meta .karma-value,
 h1.listing + .post-meta .comment-count,
 h1.listing + .post-meta .lw2-link,
 h1.listing + .post-meta .read-time {
-	text-shadow: 0.5px 0.5px 0.5px #999;
+	text-shadow: 0.5px 0.5px 0.5px #bbb;
 	position: absolute;
 	bottom: 2px;
 	margin: 0;
@@ -1554,12 +1552,11 @@ a.comment-parent-link:hover::before {
 /* HIGHLIGHTING NEW COMMENTS */
 /*===========================*/
 
-.new-comment::before {
-	outline: 2px solid var(--GW-comment-item-outline-color);
-	box-shadow:
-		0 0 6px -2px var(--GW-comment-item-outline-color) inset, 
-		0 0 4px var(--GW-comment-item-outline-color), 
-		0 0 6px var(--GW-comment-item-outline-color);
+.new-comment {
+	--GW-comment-item-overlay-border: 2px solid #5a5;
+	--GW-comment-item-overlay-box-shadow:
+		0 0 3px #5a5 inset, 
+		0 0 5px #5a5;
 }
 
 .answer-item.new-comment::before {
@@ -1574,17 +1571,19 @@ a.comment-parent-link:hover::before {
 /*=================================*/
 
 .comment-minimize-button {
-	color: #ccc;
+	color: #bbb;
+	font-weight: 300;
 }
 .comment-minimize-button:hover {
 	color: #aaa;
 	text-shadow: var(--GW-shadow-white-glow);
+	font-weight: 900;
 }
 .comment-minimize-button::after {
 	color: #777;
 }
 .comment-minimize-button.maximized::after {
-	color: #ccc;
+	color: #bbb;
 }
 
 /*==============*/

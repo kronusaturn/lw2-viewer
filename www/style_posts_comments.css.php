@@ -1,11 +1,3 @@
-:root {
-	--GW-comment-meta-icons-filled-sprites-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/comment_meta_icons_filled.gif")) ?>');
-	--GW-comment-meta-icons-outline-sprites-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/comment_meta_icons_outline.gif")) ?>');
-
-	--GW-comment-meta-icons-normal-sprites: var(--GW-comment-meta-icons-outline-sprites-image);
-	--GW-comment-meta-icons-hover-sprites: var(--GW-comment-meta-icons-filled-sprites-image);
-}
-
 /******************/
 /* LISTINGS PAGES */
 /******************/
@@ -573,6 +565,26 @@ ul.comment-thread {
 	font-weight: var(--GW-UI-font-weight-light);
 }
 
+/*=---------------------------=*/
+/*= Comment highlight overlay =*/
+/*=---------------------------=*/
+
+.comment-item::before {
+	content: "";
+	position: absolute;
+	width: calc(100% + 2px);
+	height: calc(100% + 2px);
+	z-index: 5000;
+	left: -1px;
+	top: -1px;
+	pointer-events: none;
+	border: var(--GW-comment-item-overlay-border);
+	outline: var(--GW-comment-item-overlay-outline);
+	box-shadow: var(--GW-comment-item-overlay-box-shadow);
+	filter: var(--GW-comment-item-overlay-filter);
+	display: none;
+}
+
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
@@ -616,6 +628,14 @@ ul.comment-thread {
 }
 .answer-item.new-comment::after {
 	border-color: var(--GW-comment-item-outline-color);
+}
+
+/*****************************/
+/* HIGHLIGHTING NEW COMMENTS */
+/*****************************/
+
+.comment-item.new-comment::before {
+	display: initial;
 }
 
 /********************/
@@ -1161,26 +1181,6 @@ a.comment-child-link::before {
 	#content.conversation-page.compact .comment-item {
 		max-height: var(--GW-comment-minimized-height-mobile);
 	}
-}
-
-/*****************************/
-/* HIGHLIGHTING NEW COMMENTS */
-/*****************************/
-
-.new-comment::before {
-	content: "";
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	z-index: 5000;
-	pointer-events: none;
-}
-
-.new-comment {
-	--GW-comment-item-outline-color: var(--GW-new-comment-item-outline-color);
-}
-.new-comment.comment-item-focused {
-	--GW-comment-item-outline-color: var(--GW-comment-item-focused-outline-color);
 }
 
 /***********************************/

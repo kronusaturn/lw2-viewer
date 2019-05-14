@@ -986,15 +986,15 @@ function scrollToNewComment(next) {
 		}
 	}
 	if (targetComment) {
-		queryAll(".comment-item-focused").forEach(focusedCommentItem => {
-			focusedCommentItem.removeClass("comment-item-focused");
+		queryAll(".comment-item.focused").forEach(focusedCommentItem => {
+			focusedCommentItem.removeClass("focused");
 		});
 
 		expandAncestorsOf(targetCommentID);
 		history.replaceState(null, null, "#comment-" + targetCommentID);
 		targetComment.scrollIntoView();
 
-		targetComment.addClass("comment-item-focused");
+		targetComment.addClass("focused");
 	}
 
 	GW.newCommentScrollListener();
@@ -2862,15 +2862,15 @@ function addCommentParentPopups() {
 			if (!(parent = (query(parentID)||{}).firstChild)) return;
 			var highlightClassName;
 			if (parent.getBoundingClientRect().bottom < 10 || parent.getBoundingClientRect().top > window.innerHeight + 10) {
-				parentHighlightClassName = "comment-item-highlight-faint";
+				parentHighlightClassName = "highlight-faint";
 				popup = parent.cloneNode(true);
-				popup.addClasses([ "comment-popup", "comment-item-highlight" ]);
+				popup.addClasses([ "comment-popup", "highlight" ]);
 				commentParentLink.addEventListener("mouseout", GW.commentParentLinkMouseOut = (event) => {
 					removeElement(popup);
 				}, {once: true});
 				commentParentLink.closest(".comments > .comment-thread").appendChild(popup);
 			} else {
-				parentHighlightClassName = "comment-item-highlight";
+				parentHighlightClassName = "highlight";
 			}
 			parent.parentNode.addClass(parentHighlightClassName);
 			commentParentLink.addEventListener("mouseout", (event) => {
@@ -4103,7 +4103,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 				} else if (document.activeElement.parentElement.hasClass("comment-meta")) {
 					let links = document.activeElement.parentElement.queryAll("a.date, a.permalink");
 					links[document.activeElement == links[0] ? 1 : 0].focus();
-					document.activeElement.closest(".comment-item").addClasses([ "comment-item-focused", "expanded" ]);
+					document.activeElement.closest(".comment-item").addClasses([ "focused", "expanded" ]);
 				}
 				return;
 			}
@@ -4132,7 +4132,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 				listings[indexOfNextListing].focus();
 
 				if (listings[indexOfNextListing].closest(".comment-item")) {
-					listings[indexOfNextListing].closest(".comment-item").addClasses([ "expanded", "comment-item-focused" ]);
+					listings[indexOfNextListing].closest(".comment-item").addClasses([ "expanded", "focused" ]);
 					listings[indexOfNextListing].closest(".comment-item").scrollIntoView();
 				}
 			} else {
@@ -4145,7 +4145,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		});
 		queryAll(".listings .comment-thread .comment-meta a.date, .listings .comment-thread .comment-meta a.permalink").forEach(link => {
 			link.addEventListener("blur", GW.commentListingsHyperlinkUnfocused = (event) => {
-				event.target.closest(".comment-item").removeClasses([ "expanded", "comment-item-focused" ]);
+				event.target.closest(".comment-item").removeClasses([ "expanded", "focused" ]);
 			});
 		});
 	}

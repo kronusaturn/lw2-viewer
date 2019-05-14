@@ -1203,7 +1203,7 @@ h1.post-title .post-type-prefix {
 	background-color: #b9bbff;
 }
 .post-meta .post-section.alignment-forum:hover::before {
-	background-color: #e7e8ff;
+	background-color: #4c528d;
 }
 
 /*============*/
@@ -2025,13 +2025,17 @@ select {
 	border: 1px solid #cce;
 }
 
+/*===============*/
+/* KEYBOARD HELP */
+/*===============*/
+
 /*=================*/
 /* ALIGNMENT FORUM */
 /*=================*/
 
 #content.alignment-forum-index-page::before {
-	background-color: #f4f5ff;
-	border-color: #bbb;
+	background-color: #fbfcff;
+	border-color: #ddd;
 	border-style: solid;
 	border-width: 0 1px;
 }
@@ -2045,7 +2049,7 @@ select {
 @media only screen and (hover: hover) and (pointer: fine) {
 	#content.alignment-forum-index-page h1.listing a:hover,
 	#content.alignment-forum-index-page h1.listing a:focus {
-		background-color: rgba(244, 245, 255, 0.85);
+		background-color: rgba(251, 252, 255, 0.85);
 	}	
 }
 
@@ -2091,7 +2095,3 @@ select {
 		min-height: calc(100vh - 440px);
 	}
 }
-
-/*===============*/
-/* KEYBOARD HELP */
-/*===============*/
