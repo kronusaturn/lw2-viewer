@@ -856,7 +856,7 @@ h1.listing + .post-meta .link-post-domain {
 /*	Comment count.
 	*/
 h1.listing + .post-meta .comment-count:not(.new-comments) {
-	opacity: 0.6;
+	color: #bbb;
 }
 h1.listing + .post-meta .comment-count span:nth-of-type(2) {
 	margin: 0 0 0 2px;
@@ -1167,14 +1167,14 @@ h1.post-title .post-type-prefix {
 
 .post-meta > * {
 	color: #999;
-	opacity: 0.7;
 	margin: 0 1em 0 0;
+	text-shadow: 0 0 0 currentColor;
 }
-.post-meta a {
-	opacity: 1.0;
+.post-meta *:not(a) {
+	color: #bbb;
 }
-.post .post-meta .karma {
-	opacity: 1.0;
+.post-meta a * {
+	color: inherit;
 }
 
 /*	Post section.

@@ -123,6 +123,9 @@ body {
 	border-top: 2px solid var(--GW-body-background-color);
 }
 
+.nav-inner {
+	line-height: 1.5;
+}
 .nav-inner:hover {
 	text-shadow: var(--GW-shadow-white-glow);
 }
@@ -191,6 +194,12 @@ body {
 		padding: 7px 8px;
 		font-weight: 400;
 	}
+}
+
+/*= Inbox indicator =*/
+
+#inbox-indicator::before {
+	line-height: 1.6;
 }
 
 /*===============*/
