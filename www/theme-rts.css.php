@@ -981,9 +981,7 @@ h1.listing.own-post-listing {
 /*===================*/
 
 .contents {
-	margin-left: 1.5em;
 	font-family: var(--GW-body-text-font);
-	min-width: unset;
 }
 .contents-head::after {
 	content: "";
@@ -991,36 +989,38 @@ h1.listing.own-post-listing {
 		linear-gradient(
 			to right,
 			rgba(0, 0, 0, 0),
-			rgba(0, 0, 0, 0.75),
+			rgba(0, 0, 0, 0.25),
 			rgba(0, 0, 0, 0)
 		);
 	display: block;
 	margin: 0 auto 0.5em auto;
-	width: 75%;
 	height: 1px;
 }
 .contents a::after {
 	display: none;
 }
 .post-body .contents ul {
-	margin: 0 0.5em;
 	padding: 0 1em;
 }
 .post-body .contents a,
-.post-body .contents a:visited {
-	color: #690010;
-	font-weight: 600;
-}
+.post-body .contents a:visited,
 .post-body .contents a:hover {
 	color: #690010;
-	text-shadow: 
-		0px 0px 0.5px #ff987b, 
-		0px 0px 1px #c05651;
+	font-weight: var(--GW-UI-font-weight-heavy);
+}
+.post-body .contents a:hover {
 	border: none;
+	background-color: #f0f0eb;
+	box-shadow: -1px -1px 0 0 #ddd inset;
+	text-shadow: 
+		0px 0px 0.5px #ffaca5;
 }
 .post-body .contents li::before {
 	color: #999;
 	font-feature-settings: 'onum';
+}
+.post-body .contents li:hover::before {
+	color: #000;
 }
 
 /*==================*/
