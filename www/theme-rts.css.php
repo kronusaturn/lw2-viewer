@@ -36,6 +36,10 @@
 /*	Layout.
 	*/
 :root {
+	--GW-comment-compact-height: 52px;
+	--GW-comment-compact-height-mobile: 103px;
+	--GW-comment-minimized-height: 37px;
+	--GW-comment-minimized-height-mobile: 68px;
 }
 
 /*	Color scheme.
