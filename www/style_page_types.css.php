@@ -165,16 +165,17 @@
 .login-container form {
 	flex-basis: 50%;
 	display: grid;
-	grid-row-gap: 0.5em;
+	grid-row-gap: 0.5rem;
 	align-content: start;
 }
 .login-container form label {
 	text-align: right;
-	padding: 0.25em 0.5em;
+	padding: 0.25rem 0.5rem;
 	white-space: nowrap;
+	border: 1px solid transparent;
 }
 .login-container form input {
-	padding: 0.25em;
+	padding: 0.25rem;
 }
 .login-container form input[type='submit'],
 .login-container form a {
@@ -182,8 +183,8 @@
 	justify-self: center;
 }
 .login-container form input[type='submit'] {
-	width: 10em;
-	margin: 0.5em 0 0 0;
+	width: 12rem;
+	margin: 0.5rem 0 0 0;
 	font-size: 1.125em;
 	padding: 8px;
 }
@@ -196,16 +197,16 @@
 /* “Log in” form */
 
 #login-form {
-	grid-template-columns: 6em 1fr;
-	padding: 0.5em 2em 0.5em 0;
+	grid-template-columns: 6rem 1fr;
+	padding: 0.5rem 2rem 0.5rem 0;
 }
 
 /* “Create account” form */
 
 #signup-form {
 	font-size: 0.9em;
-	grid-template-columns: 9em 1fr;
-	padding: 0.5em 1em 1em 1em;
+	grid-template-columns: 8.5rem 1fr;
+	padding: 0.5rem 1rem 1rem 0.5rem;
 }
 #signup-form h1 {
 	font-size: 1.7em;
@@ -214,8 +215,8 @@
 /* Log in tip */
 
 .login-container .login-tip {
-	padding: 0.5em 0.5em 0.5em 3em;
-	margin: 2em 4em 0 4em;
+	padding: 0.5rem 0.5rem 0.5rem 3rem;
+	margin: 2rem 4rem 0 4rem;
 	text-indent: -2em;
 	line-height: 1.4;
 }
@@ -225,12 +226,14 @@
 
 /* Message box */
 
-#content.login-page .error-box {
-	margin: 1.5em 0.875em -1.5em 0.875em;
-}
-.error-box, .success-box {
-	padding: 0.25em;
+.error-box,
+.success-box {
+	padding: 0.25rem;
 	text-align: center;
+}
+
+#content.login-page .error-box {
+	margin: 1.5rem 0.875rem -1.5rem 0.875rem;
 }
 
 /*=----------------------------=*/

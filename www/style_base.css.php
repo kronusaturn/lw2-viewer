@@ -153,6 +153,13 @@ textarea {
 	text-shadow: inherit;
 }
 
+input[type='text'],
+input[type='search'],
+input[type='password'],
+textarea {
+	line-height: inherit;
+}
+
 input {
 	font-family: inherit;
 	font-size: inherit;
