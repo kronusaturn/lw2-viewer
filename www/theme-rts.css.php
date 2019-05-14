@@ -402,6 +402,7 @@ body {
 		0 0 0 1px #ddd inset,
 		0 0 0 4px var(--GW-body-background-color) inset,
 		0 0 0 5px #ddd inset;
+	background-color: transparent;
 }
 #width-selector button {
 	color: #ccc;
@@ -716,6 +717,7 @@ body {
 		0 0 0 1px #ddd inset,
 		0 0 0 4px var(--GW-body-background-color) inset,
 		0 0 0 5px #ddd inset;
+	background-color: transparent;
 }
 
 /*=============================*/
@@ -1266,17 +1268,68 @@ h1.post-title .post-type-prefix {
 
 .listings .comment-thread .comment-meta a.date:focus,
 .listings .comment-thread .comment-meta a.permalink:focus {
-	color: #444;
-	font-weight: normal;
-	outline: 2px dotted #444;
-	position: relative;
+	color: #000;
+	text-shadow: 0 0 0 currentColor;
+	outline: 2px dotted #000;
 	background-color: #fff;
-	padding: 0 5px;
+	padding: 2px 6px 0 6px;
+	left: -6px;
+	margin-top: -1px;
+}
+#content.compact .listings .comment-thread .comment-meta a.date:focus,
+#content.compact .listings .comment-thread .comment-meta a.permalink:focus {
+	padding: 1px 5px 0 5px;
 	left: -5px;
+	margin-top: 0;
 }
 .listings .comment-thread .comment-meta a.date:focus + *,
 .listings .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
+	margin-left: -12px;
+}
+#content.compact .listings .comment-thread .comment-meta a.date:focus + *,
+#content.compact .listings .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
 	margin-left: -10px;
+}
+
+/*===========================*/
+/* COMMENT THREAD NAVIGATION */
+/*===========================*/
+
+a.comment-parent-link::after {
+	display: none;
+}
+a.comment-parent-link::before {
+	color: #bbb;
+}
+a.comment-parent-link:hover::before {
+	color: #999;
+	text-shadow: none;
+	background-image: linear-gradient(to right, transparent 0%, #bbb 100%);
+	background-repeat: no-repeat;
+	box-shadow: 1px 0 0 0 #bbb;
+}
+
+.comment-child-link::before {
+	color: #ccc;
+}
+
+.comment-item-highlight {
+	box-shadow:
+		0 0	2px #e7b200,
+		0 0	3px #e7b200,
+		0 0	5px #e7b200,
+		0 0	7px #e7b200,
+		0 0 10px #e7b200;
+	border: 1px solid #e7b200;
+}
+.comment-item-highlight-faint {
+	box-shadow:
+		0 0	2px #f8e7b5,
+		0 0	3px #f8e7b5,
+		0 0	5px #f8e7b5,
+		0 0	7px #f8e7b5,
+		0 0 10px #f8e7b5;
+	border: 1px solid #f8e7b5;
 }
 
 /*================================*/
@@ -1350,51 +1403,6 @@ h1.post-title .post-type-prefix {
 
 .link-post-domain.redacted {
 	opacity: 0.5;
-}
-
-/*===========================*/
-/* COMMENT THREAD NAVIGATION */
-/*===========================*/
-
-a.comment-parent-link::after {
-	display: none;
-}
-a.comment-parent-link::before {
-	color: #bbb;
-}
-a.comment-parent-link:hover::before {
-	color: #999;
-	text-shadow: none;
-	background-image: linear-gradient(to right, transparent 0%, #bbb 100%);
-	background-repeat: no-repeat;
-	box-shadow: 1px 0 0 0 #bbb;
-}
-
-.comment-child-link::before {
-	color: #ccc;
-}
-
-.comment-item-highlight {
-	box-shadow:
-		0 0	2px #e7b200,
-		0 0	3px #e7b200,
-		0 0	5px #e7b200,
-		0 0	7px #e7b200,
-		0 0 10px #e7b200;
-	border: 1px solid #e7b200;
-}
-.comment-item-highlight-faint {
-	box-shadow:
-		0 0	2px #f8e7b5,
-		0 0	3px #f8e7b5,
-		0 0	5px #f8e7b5,
-		0 0	7px #f8e7b5,
-		0 0 10px #f8e7b5;
-	border: 1px solid #f8e7b5;
-}
-
-.comment-popup {
-	background-color: #fff;
 }
 
 /*====================*/
