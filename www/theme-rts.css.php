@@ -776,9 +776,9 @@ h1.listing a[href^='/posts'] {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		text-shadow: 
-			0px 0px 0.5px #ff987b, 
-			0px 0px 1.5px #c05651,
-			0.5px 0.5px 0.5px #de7069;
+			0px 0px 0.5px #ffaca5, 
+			0px 0px 1.5px #de7069,
+			0.5px 0.5px 0.5px #ff988f;
 		background-color: rgba(255, 255, 250, 0.85);
 	}	
 	h1.listing:focus-within::before {
@@ -862,48 +862,52 @@ h1.listing + .post-meta .comment-count:not(.new-comments) span:nth-of-type(2) {
 /*============*/
 /* USER PAGES */
 /*============*/
+/*======================*/
+/* SEARCH RESULTS PAGES */
+/*======================*/
 
 #content.user-page h1.page-main-heading {
 	border-bottom: 1px solid #ddd;
 }
 
 #content.user-page #top-nav-bar {
-	margin: -0.5em 0 0.25em 0;
+	margin: 0 0 0.25em 0;
 }
 
-#content.user-page h1.listing {
-	padding: 6px 6px 0 6px;
-	max-width: 100%;
+#content.user-page h1.listing,
+#content.search-results-page h1.listing {
+	padding: 7px 8px 0 8px;
 	margin: 1rem 0 0 0;
 }
 #content.own-user-page h1.listing,
 h1.listing.own-post-listing {
 	padding-right: 36px;
 }
-@media only screen and (hover: hover) and (pointer: fine) {
-	#content.user-page h1.listing:focus-within::before {
-		top: -2px;
-	}
-}
-#content.user-page h1.listing::after {
+
+#content.user-page h1.listing::after,
+#content.search-results-page h1.listing::after{
 	content: "";
-	display: block;
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: calc(100% + 1.25em);
-	box-shadow: 0px 0px 10px #555;
+	background-color: var(--GW-content-background-color);
+	filter: drop-shadow(0 0 3px #777);
 }
-#content.user-page h1.listing.link-post-listing::after {
-	height: calc(100% + 2.125em);
+#content.user-page h1.listing.link-post-listing::after,
+#content.search-results-page h1.listing.link-post-listing::after{
+	height: calc(100% + 2em);
 }
-#content.user-page h1.listing + .post-meta {
-	margin: 6px 6px 1.5rem 35px;
+
+#content.user-page h1.listing + .post-meta,
+#content.search-results-page h1.listing + .post-meta {
+	padding: 8px 8px 8px 36px;
 }
-#content.user-page h1.listing + .post-meta::after {
-	display: none;
-}
+
+/*=--------------------=*/
+/*= Conversations list =*/
+/*=--------------------=*/
 
 #content.conversations-user-page h1.listing {
 	padding: 8px 6px;
