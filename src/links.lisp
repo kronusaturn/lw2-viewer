@@ -131,9 +131,9 @@
 
 (defun convert-lw2-sequence-link (link)
   (multiple-value-bind (sequence-id post-id comment-id) (match-lw2-sequence-link link)
-    (if post-id
-	(gen-internal post-id (get-post-slug post-id) comment-id)
-	(format nil "/s/~A" sequence-id))))
+    (cond
+      (post-id (gen-internal post-id (get-post-slug post-id) comment-id))
+      (sequence-id (format nil "/s/~A" sequence-id)))))
 
 (defun convert-lw2-link (link)
   (multiple-value-bind (post-id comment-id slug) (match-lw2-link link)
