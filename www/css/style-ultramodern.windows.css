@@ -6876,7 +6876,6 @@ p {
 
 @media only screen and (min-width: 961px) {
 	#nav-item-about button.open-keyboard-help {
-		padding: 7px 8px 9px 7px;
 		font-weight: 300;
 	}
 }
@@ -7266,13 +7265,13 @@ p {
 	color: #333;
 }
 #new-comment-nav-ui .new-comment-sequential-nav-button {
-	color: #bbb;
+	color: #444;
 }
 #new-comment-nav-ui .new-comment-sequential-nav-button:not(:hover) {
 	text-shadow: none;
 }
 #new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
-	color: #929292;
+	color: #808080;
 }
 @media only screen and (hover: hover) and (pointer: fine) {
 	#new-comment-nav-ui .new-comments-count:hover {
@@ -7280,10 +7279,11 @@ p {
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button:hover,
 	#new-comment-nav-ui .new-comment-sequential-nav-button.highlighted {
-		color: #444;
+		color: #aaa;
+		text-shadow: none;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button.highlighted {
-		text-shadow: var(--GW-shadow-link-glow);
+		text-shadow: var(--GW-shadow-white-glow);
 		transform: scale(0.9);
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button {
@@ -7302,7 +7302,7 @@ p {
 /*=================*/
 
 #hns-date-picker input {
-	border: 1px solid #aaa;
+	border: 1px solid #666;
 	color: #555;
 	font-size: 0.9375em;
 }
