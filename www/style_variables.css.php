@@ -229,6 +229,7 @@
 	--GW-comment-background-color-target: var(--GW-body-background-color);
 
 	--GW-comment-item-outline-color: transparent;
+	--GW-comment-item-outline-width: 3px;
 
 	--GW-comment-item-new-comment-outline-color: transparent;
 	--GW-comment-item-focused-outline-color: transparent;

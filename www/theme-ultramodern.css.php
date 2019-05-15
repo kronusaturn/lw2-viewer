@@ -53,6 +53,13 @@
 		0.5px 0.5px 1.0px #ccc,
 		0.5px 0.5px 1.0px #bbb;
 
+	--GW-comment-item-outline-width: 2px;
+
+	--GW-comment-item-new-comment-outline-color: #f00;
+	--GW-comment-item-focused-outline-color: #ccc;
+	--GW-comment-item-higlight-color: #e7b200;
+	--GW-comment-item-highlight-faint-color: #f8e7b5;
+
 	--GW-comment-item-expanded-background-color: #999;
 	--GW-comment-item-expanded-box-shadow:
 		0 0  3px #999,
@@ -1455,41 +1462,14 @@ a.comment-parent-link:hover::before {
 .comment-item.highlight,
 .comment-item.highlight-faint,
 .comment-popup {
-	filter: drop-shadow(0 0 2px var(--GW-comment-item-outline-color));
-	border-color: transparent;
-}
-.comment-item.focused::before,
-.comment-item.new-comment::before,
-.comment-item.highlight::before,
-.comment-item.highlight-faint::before,
-.comment-popup {
-	display: initial;
-	outline: 2px solid var(--GW-comment-item-outline-color);
+	filter: drop-shadow(0 0 var(--GW-comment-item-outline-width) var(--GW-comment-item-outline-color));
 }
 
 .comment-item.answer-item.focused::after,
 .comment-item.answer-item.new-comment::after,
 .comment-item.answer-item.highlight::after,
 .comment-item.answer-item.highlight-faint::after {
-	border-width: 2px 2px 0 2px;
-	left: -2px;
-	border-color: var(--GW-comment-item-outline-color);
 	box-shadow: none;
-}
-
-.comment-item.new-comment {
-	--GW-comment-item-outline-color: #f00;
-}
-.comment-item.focused,
-.comment-item.expanded {
-	--GW-comment-item-outline-color: #ccc;
-}
-.comment-item.highlight,
-.comment-popup {
-	--GW-comment-item-outline-color: #e7b200;
-}
-.comment-item.highlight-faint {
-	--GW-comment-item-outline-color: #f8e7b5;
 }
 
 /*================================*/

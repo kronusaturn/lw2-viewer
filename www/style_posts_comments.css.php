@@ -624,14 +624,6 @@ ul.comment-thread {
 	z-index: 5000;
 }
 
-/*****************************/
-/* HIGHLIGHTING NEW COMMENTS */
-/*****************************/
-
-.comment-item.new-comment::before {
-	display: initial;
-}
-
 /********************/
 /* COMMENT LISTINGS */
 /********************/
@@ -859,15 +851,16 @@ a.comment-parent-link {
 .comment-item.highlight-faint::before,
 .comment-popup {
 	display: initial;
-	outline: 3px solid var(--GW-comment-item-outline-color);
+	outline: var(--GW-comment-item-outline-width) solid var(--GW-comment-item-outline-color);
 }
 
 .comment-item.answer-item.focused::after,
 .comment-item.answer-item.new-comment::after,
 .comment-item.answer-item.highlight::after,
 .comment-item.answer-item.highlight-faint::after {
-	border-width: 3px 3px 0 3px;
-	left: -3px;
+	border-width: var(--GW-comment-item-outline-width);
+	border-bottom-width: 0;
+	left: calc(-1 * var(--GW-comment-item-outline-width));
 	border-color: var(--GW-comment-item-outline-color);
 }
 
