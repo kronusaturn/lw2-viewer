@@ -48,6 +48,11 @@
 	--GW-comment-background-color-even: #eee;
 	--GW-comment-background-color-target: #ffc;
 
+	--GW-comment-item-new-comment-outline-color: #e00;
+	--GW-comment-item-focused-outline-color: #00e;
+	--GW-comment-item-higlight-color: #00f;
+	--GW-comment-item-highlight-faint-color: #0090ff;
+
 	--GW-comment-item-expanded-background-color: #fff;
 	--GW-comment-item-expanded-box-shadow:
 		0 0  3px #fff,
@@ -57,12 +62,6 @@
 		0 0 20px #fff,
 		0 0 30px #fff,
 		0 0 40px #fff;
-	--GW-comment-item-expanded-outline-color: #00e;
-
-	--GW-new-comment-item-outline-color: #e00;
-
-	--GW-comment-highlight-color: #00f;
-	--GW-comment-highlight-color-faint: #0090ff;
 
 	--GW-vote-button-color: #ccc;
 	--GW-upvote-button-color: #00d800;
@@ -1205,18 +1204,6 @@ a.comment-parent-link:hover::before {
 	color: #aaa;
 }
 
-.comment-item-highlight,
-.comment-item-highlight-faint {
-	outline: 2px solid var(--GW-comment-highlight-color);
-	border-color: var(--GW-comment-highlight-color);
-
-	--GW-comment-item-outline-color: var(--GW-comment-highlight-color);
-}
-.answer-item.comment-item-highlight::after {
-	border-width: 3px 3px 0 3px;
-	left: -3px;
-}
-
 /*================================*/
 /* DEEP COMMENT THREAD COLLAPSING */
 /*================================*/
@@ -1284,14 +1271,6 @@ a.comment-parent-link:hover::before {
 
 .link-post-domain.redacted {
 	opacity: 0.4;
-}
-
-/*===========================*/
-/* HIGHLIGHTING NEW COMMENTS */
-/*===========================*/
-
-.new-comment::before {
-	outline: 2px solid var(--GW-comment-item-outline-color);
 }
 
 /*====================*/

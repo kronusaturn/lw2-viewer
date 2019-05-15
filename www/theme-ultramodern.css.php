@@ -1886,6 +1886,9 @@ input[type='submit']:active,
 }
 .body-text h1 {
 	border-bottom: 1px solid #666;
+	box-shadow:
+		0 1.5px 1.5px -1.5px #bbb, 
+		0 1.5px 1.5px -1.5px #777;
 }
 .body-text h2 {
 	border-bottom: 1px dotted #666;
