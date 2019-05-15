@@ -1192,7 +1192,8 @@ a.comment-child-link::before {
 /*=--------------=*/
 
 @media only screen and (hover: hover) and (pointer: fine) {
-	#content.compact .comment-item:hover .comment {
+	#content.compact .comment-item:hover .comment,
+	#content.compact .comment-item.expanded .comment {
 		outline: 3px solid var(--GW-comment-item-outline-color);
 	}
 	#content.compact .comment-item:hover .comment::before,
