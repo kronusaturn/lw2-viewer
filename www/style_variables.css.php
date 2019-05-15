@@ -228,14 +228,15 @@
 	--GW-comment-background-color-even: var(--GW-body-background-color);
 	--GW-comment-background-color-target: var(--GW-body-background-color);
 
-	--GW-comment-item-outline-color: transparent;
-	--GW-comment-item-outline-width: 3px;
-
+	--GW-comment-item-default-outline-color: transparent;
 	--GW-comment-item-new-comment-outline-color: transparent;
 	--GW-comment-item-focused-outline-color: transparent;
 	--GW-comment-item-expanded-outline-color: var(--GW-comment-item-focused-outline-color);
 	--GW-comment-item-higlight-color: transparent;
 	--GW-comment-item-highlight-faint-color: transparent;
+
+	--GW-comment-item-outline-color: var(--GW-comment-item-default-outline-color);
+	--GW-comment-item-outline-width: 3px;
 
 	--GW-comment-item-expanded-background-color: var(--GW-body-background-color);
 	--GW-comment-item-expanded-box-shadow: none;

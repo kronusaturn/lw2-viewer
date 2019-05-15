@@ -876,7 +876,7 @@ a.comment-parent-link {
 .comment-item.focused {
 	--GW-comment-item-outline-color: var(--GW-comment-item-focused-outline-color);
 }
-#content.compact .comment-item {
+#content.compact .comment-item:hover {
 	--GW-comment-item-outline-color: var(--GW-comment-item-expanded-outline-color);
 }
 .comment-item.highlight,

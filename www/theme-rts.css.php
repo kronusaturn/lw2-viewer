@@ -57,12 +57,12 @@
 
 	--GW-theme-selector-outline-color: #ddd;
 
-	--GW-comment-item-outline-color: #999;
 	--GW-comment-item-outline-width: 1px;
+	--GW-comment-item-default-outline-color: #999;
 	--GW-comment-item-new-comment-outline-color: #00a91f;
 	--GW-comment-item-focused-outline-color: #00c;
-	--GW-comment-item-higlight-color: #c79700;
-	--GW-comment-item-highlight-faint-color: #e7b200;
+	--GW-comment-item-higlight-color: #8c6400;
+	--GW-comment-item-highlight-faint-color: #c79700;
 }
 
 /*======*/
@@ -587,6 +587,7 @@ body {
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button:hover {
 		transition: none;
+		background-color: transparent;
 	}
 }
 
@@ -1305,6 +1306,18 @@ h1.post-title .post-type-prefix {
 	margin-left: -10px;
 }
 
+@media only screen and (hover: hover) and (pointer: fine) {
+	#content.compact .comment-item:hover .comment,
+	#content.compact .comment-item.expanded .comment {
+		outline: none;
+	}
+}
+@media not screen and (hover: hover) and (pointer: fine) {
+	#content.compact .comment-thread.expanded .comment {
+		outline: none;
+	}
+}
+
 /*===========================*/
 /* COMMENT THREAD NAVIGATION */
 /*===========================*/
@@ -1323,25 +1336,6 @@ a.comment-parent-link:hover::before {
 	color: #ccc;
 }
 
-.comment-item-highlight {
-	box-shadow:
-		0 0	2px #e7b200,
-		0 0	3px #e7b200,
-		0 0	5px #e7b200,
-		0 0	7px #e7b200,
-		0 0 10px #e7b200;
-	border: 1px solid #e7b200;
-}
-.comment-item-highlight-faint {
-	box-shadow:
-		0 0	2px #f8e7b5,
-		0 0	3px #f8e7b5,
-		0 0	5px #f8e7b5,
-		0 0	7px #f8e7b5,
-		0 0 10px #f8e7b5;
-	border: 1px solid #f8e7b5;
-}
-
 /*================================*/
 /* DEEP COMMENT THREAD COLLAPSING */
 /*================================*/
@@ -1349,17 +1343,14 @@ a.comment-parent-link:hover::before {
 .comment-item input[id^="expand"]:checked ~ .comment-thread .comment-thread .comment-item {
 	border-width: 1px 0 0 0;
 }
-.comment-item input[id^="expand"] ~ .comment-thread {
-	max-height: 39px;
-	padding-top: 5px;
-}
 
 /*==============*/
 /* COMMENT-META */
 /*==============*/
 
 .comment-meta {
-	font-weight: <?php echo ($platform == 'Mac') ? '300' : '400'; ?>;
+	font-weight: 300;
+	text-shadow: 0 0 0 currentColor;
 	padding-top: 5px;
 	padding-bottom: 4px;
 	border-bottom: 1px dotted #bbb;
@@ -1367,22 +1358,23 @@ a.comment-parent-link:hover::before {
 
 .comment-meta .author {
 	font-size: 1.125em;
-	color: #666;
-	font-weight: 600;
+	color: #444;
+	text-shadow: none;
 }
 .comment-item .author:not(.redacted).original-poster::after {
 	opacity: 0.8;
 }
 
+/*	Karma controls.
+	*/
 .comment-item .karma.active-controls::after,
 .comment-item .karma .karma-value::after,
 .post .karma.active-controls::after,
 .post .karma .karma-value::after,
 .author::before {
-	background-color: #fff;
+	background-color: var(--GW-content-background-color);
 	color: #777;
 	box-shadow: 0 0 0 1px #ccc inset;
-	text-shadow: none;
 	border-radius: 4px;
 }
 .comment-item .karma.active-controls::after,
@@ -1394,7 +1386,6 @@ a.comment-parent-link:hover::before {
 .post .karma .karma-value::after {
 	padding: 2px 8px;
 	top: -26px;
-	min-width: 64px;
 }
 
 /*====================*/
@@ -1404,7 +1395,6 @@ a.comment-parent-link:hover::before {
 .author.redacted,
 .inline-author.redacted {
 	opacity: 0.8;
-	font-weight: 300;
 }
 
 .karma-value.redacted {
@@ -1418,96 +1408,21 @@ a.comment-parent-link:hover::before {
 /*====================*/
 /* COMMENT PERMALINKS */
 /*====================*/
+/*==================*/
+/* COMMENT LW LINKS */
+/*==================*/
 
 .comment-meta .permalink,
 .comment-meta .lw2-link,
-.individual-thread-page .comment-parent-link:empty {
-	filter: grayscale(50%);
+.comment-meta .comment-parent-link span,
+.post .post-meta .lw2-link {
+	filter: grayscale(75%);
 }
 .comment-meta .permalink:hover,
 .comment-meta .lw2-link:hover,
-.individual-thread-page .comment-parent-link:empty:hover {
+.comment-meta .comment-parent-link:hover span,
+.post .post-meta .lw2-link:hover {
 	filter: unset;
-}
-
-/*=======================*/
-/* COMMENTS COMPACT VIEW */
-/*=======================*/
-
-#content.compact > .comment-thread .comment-item {
-	max-height: 56px;
-}
-
-@media only screen and (hover: hover) and (pointer: fine) {
-	#content.compact > .comment-thread .comment-item:hover .comment,
-	#content.compact > .comment-thread .comment-item.expanded .comment {
-		background-color: #fff;
-		outline: 3px solid #888;
-	}
-	#content.compact > .comment-thread .comment-item:hover .comment::before,
-	#content.compact > .comment-thread .comment-item.expanded .comment::before {
-		background-color: #fff;
-		box-shadow: 
-			0 0  3px #fff,
-			0 0  5px #fff,
-			0 0  7px #fff,
-			0 0 10px #fff,
-			0 0 20px #fff,
-			0 0 30px #fff,
-			0 0 40px #fff;
-	}
-}
-@media only screen and (hover: hover) and (pointer: fine) {
-	#content.compact > .comment-thread.expanded .comment-item .comment {
-		background-color: #fff;
-		outline: 3px solid #888;
-	}
-	#content.compact > .comment-thread.expanded .comment-item .comment::before {
-		background-color: #fff;
-		box-shadow: 
-			0 0  3px #fff,
-			0 0  5px #fff,
-			0 0  7px #fff,
-			0 0 10px #fff,
-			0 0 20px #fff,
-			0 0 30px #fff,
-			0 0 40px #fff;
-	}
-}
-
-#content.user-page.compact > h1.listing {
-	margin-top: 0.5rem;
-}
-#content.user-page.compact > h1.listing + .post-meta {
-	margin-bottom: 1rem;
-}
-
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
-@media only screen and (max-width: 520px) {
-	#content.compact > .comment-thread .comment-item {
-		max-height: 104px;
-	}
-	#content.compact.user-page h1.listing {
-		margin-top: 0.5rem;
-	}
-	#content.compact.user-page h1.listing + .post-meta {
-		margin-bottom: 0.75rem;
-	}
-}
-
-/*===========================*/
-/* HIGHLIGHTING NEW COMMENTS */
-/*===========================*/
-
-.new-comment::before {
-	outline: 2px solid #5a5;
-	box-shadow:
-		0 0 6px -2px #5a5 inset, 
-		0 0 4px #5a5, 
-		0 0 6px #5a5;
 }
 
 /*=================================*/
@@ -1516,9 +1431,11 @@ a.comment-parent-link:hover::before {
 
 .comment-minimize-button {
 	color: #ccc;
+	top: 3px;
+	right: 2px;
 }
 .comment-minimize-button:hover {
-	color: #aaa;
+	color: #999;
 }
 .comment-minimize-button::after {
 	color: #777;
