@@ -1472,7 +1472,8 @@ a.comment-parent-link:hover::before {
 .comment-item.focused::before,
 .comment-item.new-comment::before,
 .comment-item.highlight::before,
-.comment-item.highlight-faint::before {
+.comment-item.highlight-faint::before,
+.comment-popup {
 	display: initial;
 	outline: 3px solid var(--GW-comment-item-outline-color);
 }
@@ -1487,7 +1488,8 @@ a.comment-parent-link:hover::before {
 }
 
 .comment-item.highlight,
-.comment-item.highlight-faint {
+.comment-item.highlight-faint,
+.comment-popup {
 	filter: drop-shadow(0 0 5px var(--GW-comment-item-outline-color));
 }
 
@@ -1498,7 +1500,8 @@ a.comment-parent-link:hover::before {
 .comment-item.expanded {
 	--GW-comment-item-outline-color: #00c;
 }
-.comment-item.highlight {
+.comment-item.highlight,
+.comment-popup {
 	--GW-comment-item-outline-color: #c79700;
 }
 .comment-item.highlight-faint {
