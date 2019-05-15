@@ -1193,7 +1193,7 @@ a.comment-child-link::before {
 
 @media only screen and (hover: hover) and (pointer: fine) {
 	#content.compact .comment-item:hover .comment {
-		outline: var(--GW-comment-item-expanded-outline);
+		outline: var(--GW-comment-item-outline);
 	}
 	#content.compact .comment-item:hover .comment::before,
 	#content.compact .comment-item.expanded .comment::before {
@@ -1203,7 +1203,7 @@ a.comment-child-link::before {
 }
 @media not screen and (hover: hover) and (pointer: fine) {
 	#content.compact .comment-thread.expanded .comment {
-		outline: var(--GW-comment-item-expanded-outline);
+		outline: var(--GW-comment-item-outline);
 	}
 	#content.compact .comment-thread.expanded .comment::before {
 		background-color: var(--GW-comment-item-expanded-background-color);

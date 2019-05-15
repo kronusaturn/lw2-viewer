@@ -238,7 +238,6 @@
 
 	--GW-comment-item-outline: 3px solid var(--GW-comment-item-outline-color);
 
-	--GW-comment-item-expanded-outline: var(--GW-comment-item-outline);
 	--GW-comment-item-expanded-background-color: var(--GW-body-background-color);
 	--GW-comment-item-expanded-box-shadow: none;
 
