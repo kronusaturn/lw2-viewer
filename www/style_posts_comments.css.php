@@ -886,6 +886,10 @@ a.comment-parent-link {
 .comment-item.highlight-faint {
 	--GW-comment-item-outline-color: var(--GW-comment-item-highlight-faint-color);
 }
+.highlight .comment-item:not(.new-comment):not(.focused),
+.highlight-faint .comment-item:not(.new-comment):not(.focused) {
+	--GW-comment-item-outline-color: var(--GW-comment-item-default-outline-color);
+}
 
 /*=----------------=*/
 /*=	Comment popups =*/

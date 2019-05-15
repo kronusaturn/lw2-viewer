@@ -1444,23 +1444,13 @@ a.comment-parent-link:hover::before {
 	color: #ccc;
 }
 
-/*=================================*/
-/* INDIVIDUAL COMMENT THREAD PAGES */
-/*=================================*/
-
-.individual-thread-page > h1 a {
-	color: #690010;
-}
-.individual-thread-page > h1 a:hover {
-	text-shadow: 
-		0px 0px 0.5px #ff987b, 
-		0px 0px 1.5px #c05651, 
-		0.5px 0.5px 0.5px #de7069;
-}
-
 /*==============*/
 /* VOTE BUTTONS */
 /*==============*/
+
+.vote:hover {
+	background-color: transparent;
+}
 
 .upvote,
 .downvote {
@@ -1485,6 +1475,7 @@ a.comment-parent-link:hover::before {
 	text-shadow:
 		0 0 0.5px #fff, 
 		0 0 8px #0f0;
+	background-color: none;
 }
 .downvote:hover,
 .downvote.selected {
