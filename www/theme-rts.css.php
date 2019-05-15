@@ -56,6 +56,13 @@
 	--GW-search-field-placeholder-color: #d00;
 
 	--GW-theme-selector-outline-color: #ddd;
+
+	--GW-comment-item-outline-color: #999;
+	--GW-comment-item-outline-width: 1px;
+	--GW-comment-item-new-comment-outline-color: #00a91f;
+	--GW-comment-item-focused-outline-color: #00c;
+	--GW-comment-item-higlight-color: #c79700;
+	--GW-comment-item-highlight-faint-color: #e7b200;
 }
 
 /*======*/
@@ -483,6 +490,7 @@ body {
 }
 #theme-tweaker-toggle button:hover {
 	color: #888;
+	background-color: transparent;
 }
 
 /*=----------------------------=*/
@@ -899,10 +907,7 @@ h1.listing.own-post-listing {
 	width: 100%;
 	height: calc(100% + 1.25em);
 	background-color: var(--GW-content-background-color);
-	box-shadow:
-		0 0 3px 0 #bbb,
-		0 0 5px 0 #bbb,
-		0 0 8px 0 #bbb;
+	filter: drop-shadow(0 0 3px var(--GW-comment-item-outline-color));
 }
 #content.user-page h1.listing.link-post-listing::after,
 #content.search-results-page h1.listing.link-post-listing::after{
@@ -1248,13 +1253,7 @@ h1.post-title .post-type-prefix {
 
 .comment-item {
 	border: 1px solid transparent;
-}
-
-.comment-item {
-	box-shadow:
-		0 0 3px 0 #bbb,
-		0 0 5px 0 #bbb,
-		0 0 8px 0 #bbb;
+	filter: drop-shadow(0 0 3px var(--GW-comment-item-outline-color));
 }
 
 /*=----------------------------=*/
@@ -1274,6 +1273,7 @@ h1.post-title .post-type-prefix {
 .answer-item::after {
 	text-transform: uppercase;
 	color: #ccc;
+	left: -1px;
 }
 
 /*==================*/
