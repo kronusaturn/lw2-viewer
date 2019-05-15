@@ -196,6 +196,9 @@
 	--GW-content-background-color: var(--GW-body-background-color);
 
 	--GW-body-text-color: #fff;
+
+	/*	UI elements.
+		*/
 	
 	--GW-hyperlink-color: #0cc800;
 	--GW-hyperlink-visited-color: var(--GW-hyperlink-color);
@@ -216,18 +219,38 @@
 	--GW-button-hover-background-color: transparent;
 	--GW-button-active-background-color: transparent;
 
+	/*	Archive.
+		*/
+
 	--GW-archive-nav-item-color: var(--GW-hyperlink-color);
 	--GW-archive-nav-item-hover-color: var(--GW-hyperlink-hover-color);
 	--GW-archive-nav-item-active-color: var(--GW-hyperlink-active-color);
+
+	/*	Comment thread navigation.
+		*/
 
 	--GW-comment-background-color-odd: var(--GW-body-background-color);
 	--GW-comment-background-color-even: var(--GW-body-background-color);
 	--GW-comment-background-color-target: var(--GW-body-background-color);
 
+	--GW-comment-item-outline-color: transparent;
+
+	--GW-comment-item-new-comment-outline-color: transparent;
+	--GW-comment-item-focused-outline-color: transparent;
+	--GW-comment-item-expanded-outline-color: var(--GW-comment-item-focused-outline-color);
+	--GW-comment-item-higlight-color: transparent;
+	--GW-comment-item-highlight-faint-color: transparent;
+
+	--GW-comment-item-outline: 3px solid var(--GW-comment-item-outline-color);
+
+	--GW-comment-item-expanded-outline: var(--GW-comment-item-outline);
 	--GW-comment-item-expanded-background-color: var(--GW-body-background-color);
 	--GW-comment-item-expanded-box-shadow: none;
 
 	--GW-comment-popup-background-color: var(--GW-comment-item-expanded-background-color);
+
+	/*	Vote buttons.
+		*/
 
 	--GW-upvote-button-color: inherit;
 	--GW-downvote-button-color: inherit;
@@ -4015,30 +4038,55 @@ a.comment-parent-link {
 	}
 }
 
+/*=--------------=*/
+/*= Highlighting =*/
+/*=--------------=*/
+
+.comment-item.focused::before,
+.comment-item.new-comment::before,
 .comment-item.highlight::before,
-.comment-item.highlight-faint::before {
+.comment-item.highlight-faint::before,
+.comment-popup {
 	display: initial;
+	outline: 3px solid var(--GW-comment-item-outline-color);
 }
 
-.comment-child-links {
-	flex-basis: 100%;
-
-	font-weight: var(--GW-UI-font-weight-heavy);
-}
-a.comment-child-link {
-	margin: 0 0.25em;
-	display: inline-block;
-
-	font-weight: var(--GW-UI-font-weight-light);
-}
-a.comment-child-link::before {
-	content: ">";
-	display: inline-block;
-	margin: 0 2px 0 0;
+.comment-item.answer-item.focused::after,
+.comment-item.answer-item.new-comment::after,
+.comment-item.answer-item.highlight::after,
+.comment-item.answer-item.highlight-faint::after {
+	border-width: 3px 3px 0 3px;
+	left: -3px;
+	border-color: var(--GW-comment-item-outline-color);
 }
 
-/*	Comment popups.
-	*/
+.comment-item.highlight,
+.comment-item.highlight-faint,
+.comment-popup {
+	filter: drop-shadow(0 0 5px var(--GW-comment-item-outline-color));
+}
+
+.comment-item.new-comment {
+	--GW-comment-item-outline-color: var(--GW-comment-item-new-comment-outline-color);
+}
+.comment-item.focused {
+	--GW-comment-item-outline-color: var(--GW-comment-item-focused-outline-color);
+}
+#content.compact .comment-item {
+	--GW-comment-item-outline-color: var(--GW-comment-item-expanded-outline-color);
+}
+.comment-item.highlight,
+.comment-popup {
+	--GW-comment-item-outline-color: var(--GW-comment-item-higlight-color);
+}
+.comment-item.highlight-faint {
+	--GW-comment-item-outline-color: var(--GW-comment-item-highlight-faint-color);
+}
+
+/*=----------------=*/
+/*=	Comment popups =*/
+/*=----------------=*/
+
 @media only screen and (hover: hover) and (pointer: fine) {
 	.comment-popup {
 		position: fixed;
@@ -4061,6 +4109,27 @@ a.comment-child-link::before {
 	.comment-popup .comment-body {
 		font-size: 1.0625rem;
 	}
+}
+
+/*=---------------------=*/
+/*= Comment child links =*/
+/*=---------------------=*/
+
+.comment-child-links {
+	flex-basis: 100%;
+
+	font-weight: var(--GW-UI-font-weight-heavy);
+}
+a.comment-child-link {
+	margin: 0 0.25em;
+	display: inline-block;
+
+	font-weight: var(--GW-UI-font-weight-light);
+}
+a.comment-child-link::before {
+	content: ">";
+	display: inline-block;
+	margin: 0 2px 0 0;
 }
 
 /*=----------------------------=*/
@@ -4329,6 +4398,12 @@ a.comment-child-link::before {
 		background-color: var(--GW-comment-item-expanded-background-color);
 		box-shadow: var(--GW-comment-item-expanded-box-shadow);
 	}
+}
+
+/*	Hide the overlay pseudo-element.
+	*/
+#content.compact .comment-item::before {
+	display: none;
 }
 
 /*=----------------------------=*/
@@ -6671,16 +6746,21 @@ th.mathjax-inline-container {
 	--GW-hyperlink-hover-color: #00a9ed;
 	--GW-hyperlink-active-color: #0098e4;
 
-	--GW-archive-nav-item-color: rgba(12, 200, 0, 0.75);
-	
 	--GW-shadow-white-glow:
 		0 0 1px #000,
 		0 0 3px #000,
 		0 0 5px #000;
 
+	--GW-archive-nav-item-color: rgba(12, 200, 0, 0.75);
+
 	--GW-comment-background-color-odd: #131313;
 	--GW-comment-background-color-even: #000;
 	--GW-comment-background-color-target: #00001e;
+
+	--GW-comment-item-new-comment-outline-color: #8f2bb9;
+	--GW-comment-item-focused-outline-color: #54d400;
+	--GW-comment-item-higlight-color: #005dc3;
+	--GW-comment-item-highlight-faint-color: #0047b5;
 
 	--GW-comment-item-expanded-background-color: #000;
 	--GW-comment-item-expanded-box-shadow:
@@ -8083,49 +8163,6 @@ a.comment-parent-link:hover::before {
 
 .comment-child-link::before {
 	color: #484848;
-}
-
-/*=--------------=*/
-/*= Highlighting =*/
-/*=--------------=*/
-
-.comment-item.focused::before,
-.comment-item.new-comment::before,
-.comment-item.highlight::before,
-.comment-item.highlight-faint::before,
-.comment-popup {
-	display: initial;
-	outline: 3px solid var(--GW-comment-item-outline-color);
-}
-
-.comment-item.answer-item.focused::after,
-.comment-item.answer-item.new-comment::after,
-.comment-item.answer-item.highlight::after,
-.comment-item.answer-item.highlight-faint::after {
-	border-width: 3px 3px 0 3px;
-	left: -3px;
-	border-color: var(--GW-comment-item-outline-color);
-}
-
-.comment-item.highlight,
-.comment-item.highlight-faint,
-.comment-popup {
-	filter: drop-shadow(0 0 5px var(--GW-comment-item-outline-color));
-}
-
-.comment-item.new-comment {
-	--GW-comment-item-outline-color: #8f2bb9;
-}
-.comment-item.focused,
-.comment-item.expanded {
-	--GW-comment-item-outline-color: #54d400;
-}
-.comment-item.highlight,
-.comment-popup {
-	--GW-comment-item-outline-color: #005dc3;
-}
-.comment-item.highlight-faint {
-	--GW-comment-item-outline-color: #0047b5;
 }
 
 /*================================*/

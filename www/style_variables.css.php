@@ -191,6 +191,9 @@
 	--GW-content-background-color: var(--GW-body-background-color);
 
 	--GW-body-text-color: #000;
+
+	/*	UI elements.
+		*/
 	
 	--GW-hyperlink-color: #00e;
 	--GW-hyperlink-visited-color: var(--GW-hyperlink-color);
@@ -211,18 +214,38 @@
 	--GW-button-hover-background-color: transparent;
 	--GW-button-active-background-color: transparent;
 
+	/*	Archive.
+		*/
+
 	--GW-archive-nav-item-color: var(--GW-hyperlink-color);
 	--GW-archive-nav-item-hover-color: var(--GW-hyperlink-hover-color);
 	--GW-archive-nav-item-active-color: var(--GW-hyperlink-active-color);
+
+	/*	Comment thread navigation.
+		*/
 
 	--GW-comment-background-color-odd: var(--GW-body-background-color);
 	--GW-comment-background-color-even: var(--GW-body-background-color);
 	--GW-comment-background-color-target: var(--GW-body-background-color);
 
+	--GW-comment-item-outline-color: transparent;
+
+	--GW-comment-item-new-comment-outline-color: transparent;
+	--GW-comment-item-focused-outline-color: transparent;
+	--GW-comment-item-expanded-outline-color: var(--GW-comment-item-focused-outline-color);
+	--GW-comment-item-higlight-color: transparent;
+	--GW-comment-item-highlight-faint-color: transparent;
+
+	--GW-comment-item-outline: 3px solid var(--GW-comment-item-outline-color);
+
+	--GW-comment-item-expanded-outline: var(--GW-comment-item-outline);
 	--GW-comment-item-expanded-background-color: var(--GW-body-background-color);
 	--GW-comment-item-expanded-box-shadow: none;
 
 	--GW-comment-popup-background-color: var(--GW-comment-item-expanded-background-color);
+
+	/*	Vote buttons.
+		*/
 
 	--GW-upvote-button-color: inherit;
 	--GW-downvote-button-color: inherit;
