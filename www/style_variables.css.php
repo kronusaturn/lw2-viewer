@@ -222,7 +222,7 @@
 	--GW-comment-item-expanded-background-color: var(--GW-body-background-color);
 	--GW-comment-item-expanded-box-shadow: none;
 
-	--GW-comment-popup-background-color: var(--GW-body-background-color);
+	--GW-comment-popup-background-color: var(--GW-comment-item-expanded-background-color);
 
 	--GW-upvote-button-color: inherit;
 	--GW-downvote-button-color: inherit;

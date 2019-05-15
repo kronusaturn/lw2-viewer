@@ -849,8 +849,9 @@ a.comment-parent-link {
 	}
 }
 
-.comment-item-highlight-faint {
-	--GW-comment-highlight-color: var(--GW-comment-highlight-color-faint);
+.comment-item.highlight::before,
+.comment-item.highlight-faint::before {
+	display: initial;
 }
 
 .comment-child-links {
