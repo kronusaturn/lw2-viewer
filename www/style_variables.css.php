@@ -224,11 +224,6 @@
 
 	--GW-comment-popup-background-color: var(--GW-body-background-color);
 
-	--GW-comment-item-overlay-border: 1px solid transparent;
-	--GW-comment-item-overlay-outline: none;
-	--GW-comment-item-overlay-box-shadow: none;
-	--GW-comment-item-overlay-filter: none;
-
 	--GW-upvote-button-color: inherit;
 	--GW-downvote-button-color: inherit;
 }

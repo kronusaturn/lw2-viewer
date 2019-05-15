@@ -71,7 +71,12 @@
 		0 0 20px #fff,
 		0 0 30px #fff,
 		0 0 40px #fff;
+
 	--GW-comment-item-expanded-outline-color: #00c;
+
+	--GW-comment-item-highlighted-color: #c79700;
+	--GW-comment-item-focused-color: #00c;
+	--GW-comment-item-new-comment-color: #5a5;
 
 	--GW-comment-highlight-color: #c79700;
 	--GW-comment-highlight-color-faint: #e7b200;

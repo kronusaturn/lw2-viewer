@@ -572,16 +572,12 @@ ul.comment-thread {
 .comment-item::before {
 	content: "";
 	position: absolute;
-	width: calc(100% + 2px);
-	height: calc(100% + 2px);
+	width: 100%;
+	height: 100%;
 	z-index: 5000;
-	left: -1px;
-	top: -1px;
+	left: 0;
+	top: 0;
 	pointer-events: none;
-	border: var(--GW-comment-item-overlay-border);
-	outline: var(--GW-comment-item-overlay-outline);
-	box-shadow: var(--GW-comment-item-overlay-box-shadow);
-	filter: var(--GW-comment-item-overlay-filter);
 	display: none;
 }
 
@@ -621,13 +617,11 @@ ul.comment-thread {
 	font-size: 1.25rem;
 
 	background-color: inherit;
-	border-width: 2px 2px 0 2px;
+	border-width: inherit;
+	border-bottom-width: 0;
 	border-color: inherit;
 
 	z-index: 5000;
-}
-.answer-item.new-comment::after {
-	border-color: var(--GW-comment-item-outline-color);
 }
 
 /*****************************/
