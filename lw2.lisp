@@ -1,6 +1,7 @@
 (uiop:define-package #:lw2-viewer
   (:use #:cl #:sb-thread #:flexi-streams #:djula
 	#:lw2-viewer.config #:lw2.utils #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login #:lw2.context #:lw2.sites #:lw2.components #:lw2.html-reader #:lw2.fonts
+	#:lw2.dispatchers
 	#:lw2.schema-type #:lw2.schema-types
 	#:lw2.interface-utils
 	#:lw2.user-context
@@ -851,19 +852,38 @@ signaled condition to OUT-STREAM."
 			    :extra-class html-class))
     (or sort-string (user-pref pref))))
 
-(define-page view-root "/" ((offset :type fixnum)
-                            (limit :type fixnum))
+(define-component view-index ()
+  (:http-args '((offset :type fixnum)
+		(limit :type fixnum)))
   (component-value-bind ((sort-string sort-widget))
     (multiple-value-bind (posts total)
-      (get-posts-index :offset offset :limit (or limit (user-pref :items-per-page)) :sort sort-string)
-      (view-items-index posts
-                        :section :frontpage :title "Frontpage posts" :hide-title t
-                        :pagination (pagination-nav-bars :offset (or offset 0) :total total :with-next (not total))
-                        :top-nav (lambda (out-stream)
-                                   (page-toolbar-to-html out-stream
-                                                         :title "Frontpage posts"
-                                                         :new-post t)
-                                   (funcall sort-widget out-stream))))))
+	(get-posts-index :offset offset :limit (or limit (user-pref :items-per-page)) :sort sort-string)
+      (renderer ()
+		(view-items-index posts
+				  :section :frontpage :title "Frontpage posts" :hide-title t
+				  :pagination (pagination-nav-bars :offset (or offset 0) :total total :with-next (not total))
+				  :top-nav (lambda (out-stream)
+					     (page-toolbar-to-html out-stream
+								   :title "Frontpage posts"
+								   :new-post t)
+					     (funcall sort-widget out-stream)))))))
+
+(setf (lw2.sites::class-dispatchers (find-class 'lw2.sites::forum-site))
+      (cons
+       (make-instance 'standard-dispatcher :name 'view-root :uri "/" :handler (lambda ()
+										(with-error-page
+										    (component-value-bind ((() view-index)) (funcall view-index)))))
+       (remove 'view-root (lw2.sites::class-dispatchers (find-class 'lw2.sites::forum-site)) :key #'dispatcher-name)))
+
+(hunchentoot:define-easy-handler
+    (view-site-dispatchers
+     :uri (lambda (req)
+	    (declare (ignore req))
+	    (with-site-context ((let ((host (or (hunchentoot:header-in* :x-forwarded-host) (hunchentoot:header-in* :host))))
+				  (or (find-site host)
+				      (error "Unknown site: ~A" host))))
+	      (iterate-dispatchers *current-site*))))
+    nil)
 
 (define-page view-index "/index" ((view :member '(:all :new :frontpage :featured :meta :community :alignment-forum :questions) :default :all)
                                   before after
