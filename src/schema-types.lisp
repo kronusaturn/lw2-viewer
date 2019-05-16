@@ -5,6 +5,7 @@
 
 (define-schema-type :post ()
   ((post-id string :alias :--id)
+   (slug string)
    (title string)
    (user-id string)
    (url (or null string))

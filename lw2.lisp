@@ -670,9 +670,16 @@ signaled condition to OUT-STREAM."
         (let ((*current-user-slug* (and *current-userid* (get-user-slug *current-userid*)))
 	      (*current-ignore-hash* (get-ignore-hash)))
           (handler-case
-            (log-conditions
-              (funcall fn))
-            (serious-condition (condition)
+	      (log-conditions
+	       (if (or (eq (hunchentoot:request-method*) :post)
+		       (not (and (boundp '*test-acceptor*) (boundp '*hunchentoot-taskmaster*)))) ; TODO fix this hack
+		   (funcall fn)
+		   (sb-sys:with-deadline (:seconds (expt 1.3
+							 (min (round (log 30 1.3))
+							      (- (hunchentoot:taskmaster-max-thread-count (symbol-value '*hunchentoot-taskmaster*))
+								 (hunchentoot::accessor-requests-in-progress (symbol-value '*test-acceptor*))))))
+		     (funcall fn))))
+	    (serious-condition (condition)
               (emit-page (out-stream :title "Error" :return-code (condition-http-return-code condition) :content-class "error-page")
 			 <div class="error-container">
                            (error-to-html out-stream condition)

@@ -35,7 +35,7 @@
 (defmethod link-for-site-p ((s site) link) nil)
 
 (defmethod link-for-site-p ((s lesswrong-viewer-site) link)
-  (ppcre:scan "^https?://(?:www\\.)?(?:less(?:er)?wrong\\.com|alignmentforum\\.org)" link))
+  (ppcre:scan "^https?://(?:www\\.)?(?:less(?:er|est)?wrong\\.com|alignmentforum\\.org)" link))
 
 (defmethod link-for-site-p ((s ea-forum-viewer-site) link)
   (ppcre:scan "https?://(?:www\\.)?(?:effective-altruism\\.com|forum\\.effectivealtruism\\.org)" link))
@@ -44,7 +44,7 @@
   (loop for s in *sites*
         when (link-for-site-p s link) return s))
 
-(defun match-lw1-link (link) (match-values "(?:^https?://(?:www.)?less(?:er)?wrong.com|^)(?:/r/discussion|/r/lesswrong)?(/lw/.*)" link (0)))
+(defun match-lw1-link (link) (match-values "(?:^https?://(?:www.)?less(?:er|est)?wrong.com|^)(?:/r/discussion|/r/lesswrong)?(/lw/.*)" link (0)))
 
 (defun match-ea1-link (link) (match-values "^(?:https?://(?:www\\.)?(?:effective-altruism\\.com|forum\\.effectivealtruism\\.org))?(/ea/.*)" link (0)))
 
@@ -52,11 +52,11 @@
 
 (defun match-lw2-link (link) (match-values "^(?:https?://[^/]+)?/posts/([^/]+)/([^/#]*)(?:/(comment|answer)/([^/#]+)|/?#?([^/#]+)?)?" link (0 (or 3 4) 1 2)))
 
-(defun match-lw2-slug-link (link) (match-values "^(?:https?://(?:www.)?less(?:er)?wrong.com)?/(?:codex|hpmor)/([^/#]+)(?:/?#?([^/#]+)?)?" link (0 1)))
+(defun match-lw2-slug-link (link) (match-values "^(?:https?://(?:www.)?less(?:er|est)?wrong.com)?/(?:codex|hpmor)/([^/#]+)(?:/?#?([^/#]+)?)?" link (0 1)))
 
-(defun match-lw2-sequence-link (link) (match-values "^(?:https?://(?:www.)?less(?:er)?wrong.com)?/s/(?:[^/#]+)/p/([^/#]+)(?:#([^/#]+)?)?" link (0 1)))
+(defun match-lw2-sequence-link (link) (match-values "^(?:https?://(?:www.)?less(?:er|est)?wrong.com)?/s/([^/#]+)(?:/p/([^/#]+))?(?:#([^/#]+)?)?" link (0 1 2)))
 
-(defun convert-lw2-user-link (link) (match-values "^(?:https?://(?:www.)?less(?:er)?wrong.com)(/users/[^/#]+)" link (0)))
+(defun convert-lw2-user-link (link) (match-values "^(?:https?://(?:www.)?less(?:er|est)?wrong.com)(/users/[^/#]+)" link (0)))
 
 (defmacro with-direct-link-restart ((direct-link) &body body)
   (once-only (direct-link)
@@ -130,9 +130,10 @@
       (gen-internal (get-slug-postid slug) slug comment-id))))
 
 (defun convert-lw2-sequence-link (link)
-  (multiple-value-bind (post-id comment-id) (match-lw2-sequence-link link)
-    (when post-id
-      (gen-internal post-id (get-post-slug post-id) comment-id))))
+  (multiple-value-bind (sequence-id post-id comment-id) (match-lw2-sequence-link link)
+    (cond
+      (post-id (gen-internal post-id (get-post-slug post-id) comment-id))
+      (sequence-id (format nil "/s/~A" sequence-id)))))
 
 (defun convert-lw2-link (link)
   (multiple-value-bind (post-id comment-id slug) (match-lw2-link link)

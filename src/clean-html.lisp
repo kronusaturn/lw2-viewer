@@ -372,8 +372,9 @@
 		    (new-text-node (if (plump:text-node-p previous-sibling)
 				       previous-sibling
 				       (plump:insert-before node
-							    (plump:make-text-node (plump:parent node))))))
-	       (setf (plump:text new-text-node) (concatenate 'string
+							    (plump:remove-child (plump:make-text-node (plump:parent node)))))))
+	       (setf (plump:parent new-text-node) (plump:parent node)
+		     (plump:text new-text-node) (concatenate 'string
 							     (plump:text new-text-node)
 							     (plump:text node)
 							     (if next-sibling
@@ -384,7 +385,13 @@
 	   (scan-for-urls (text-node)
 			  (declare (type plump:text-node text-node)) 
 			  (let ((text (plump:text text-node)))
-			    (multiple-value-bind (url-start url-end) (ppcre:scan "(?:(?<= )|^)(?>https?://[-a-zA-Z0-9]+\\.[-a-zA-Z0-9.]+|[-a-zA-Z0-9.]+\\.(?:com|edu|gov|mil|net|org|int|biz|info|name|museum|us|ca|uk|io|ly))(?:\\:[0-9]+){0,1}(?:/(?:(?:(\\()|[-a-zA-Z0-9.,;:?'\\\\+&%$#=~_/])*(?(1)\\)|[-a-zA-Z0-9\\\\+&%$#=~_/]))?)?" text)
+			    (multiple-value-bind (url-start url-end)
+				(ppcre:scan
+				 (load-time-value
+				  (ppcre:create-scanner
+				   "(?:(?<=\\s)|^)(?>https?://[-a-zA-Z0-9]+\\.[-a-zA-Z0-9.]+|[-a-zA-Z0-9.]+\\.(?:com|edu|gov|mil|net|org|int|biz|info|name|museum|us|ca|uk|io|ly))(?:\\:[0-9]+){0,1}(?:/(?:(?:(\\()|[-a-zA-Z0-9.,;:?'\\\\+&%$#=~_/])*(?(1)\\)|[-a-zA-Z0-9\\\\+&%$#=~_/]))?)?"
+				   :single-line-mode t))
+				 text)
                               (declare (type simple-string text)
                                        (type (or null fixnum) url-start url-end))
 			      (when url-start
@@ -611,7 +618,7 @@
 		     (let ((fc (plump:first-child node))
 			   (lc (plump:last-child node)))
 		       (when (and (plump:element-p fc) (tag-is fc "br")) (plump:remove-child fc))
-		       (when (and (plump:element-p lc) (tag-is fc "br")) (plump:remove-child lc)))
+		       (when (and (not (eql fc lc)) (plump:element-p lc) (tag-is lc "br")) (plump:remove-child lc)))
 		     (when with-toc
 		       (incf section-count) 
 		       (unless (plump:attribute node "id") (setf (plump:attribute node "id") (format nil "section-~A" section-count))) 
