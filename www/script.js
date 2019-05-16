@@ -901,6 +901,35 @@ Element.prototype.setCommentThreadMaximized = function(toggle, userOriginated = 
 	}
 }
 
+/*************************************/
+/* POST LISTINGS KEYBOARD NAVIGATION */
+/*************************************/
+
+function getCurrentVisibleListingsRange(partial = false) {
+	let listings = queryAll(".listings h1, .listings .comment-meta");
+	let range = [ 0, 0 ];
+
+	for (i = 0; i < listings.length; i++) {
+		let listingRect = listings[i].getBoundingClientRect();
+		if (listingRect.top > 0 || 
+			(partial && listingRect.bottom > 0)) {
+			range[0] = i;
+			break;
+		}
+	}
+	for (; i < listings.length; i++) {
+		let listingRect = listings[i].getBoundingClientRect();
+		if (listingRect.bottom < window.innerHeight || 
+			(partial && listingRect.top < window.innerHeight)) {
+			range[1]++;
+		} else {
+			break;
+		}
+	}
+
+	return range;
+}
+
 /*****************************************/
 /* NEW COMMENT HIGHLIGHTING & NAVIGATION */
 /*****************************************/
