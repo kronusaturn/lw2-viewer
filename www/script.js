@@ -2466,15 +2466,12 @@ function toggleAppearanceAdjustUI(show) {
 /* MINIMIZED THREAD HANDLING */
 /*****************************/
 
-function expandAncestorsOf(comment) {
+function expandAncestorsOf(commentID) {
 	GWLog("expandAncestorsOf");
 
-	if (typeof comment == "string") {
-		comment = /(?:comment-)?(.+)/.exec(comment)[1];
-		comment = query("#comment-" + comment);
-	}
+	let comment = query("#comment-" + commentID);
 	if (!comment) {
-		GWLog("Comment with ID " + comment.id + " does not exist, so we can’t expand its ancestors.");
+		GWLog("Comment with ID " + commentID + " does not exist, so we can’t expand its ancestors.");
 		return;
 	}
 
