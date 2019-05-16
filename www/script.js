@@ -943,9 +943,14 @@ function getCurrentVisibleListingsRange(partial = false) {
 /* NEW COMMENT HIGHLIGHTING & NAVIGATION */
 /*****************************************/
 
+/*	Returns the JavaScript timestamp of the comment item associated with the
+	given element (i.e., the closest .comment-item ancestor), or NaN if the
+	given element is not associated with any comment item.
+	*/
 Element.prototype.getCommentDate = function() {
 	return parseInt(Æ(Æ(this.closest(".comment-item")).query(".date")).dataset["jsDate"]);
 }
+
 function getCurrentVisibleComment() {
 	let px = window.innerWidth/2, py = 5;
 	let commentItem = document.elementFromPoint(px, py).closest(".comment-item") || document.elementFromPoint(px, py+60).closest(".comment-item"); // Mind the gap between threads
