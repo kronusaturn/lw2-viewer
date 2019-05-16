@@ -169,9 +169,10 @@ function cancelDoWhenMatchMedia(name) {
 	view. */
 Element.prototype.scrollIntoViewIfNeeded = function() {
 	GWLog("scrollIntoViewIfNeeded");
-	if (this.getBoundingClientRect().bottom > window.innerHeight && 
-		this.getBoundingClientRect().top > 0) {
-		this.scrollIntoView(false);
+	let rect = this.getBoundingClientRect();
+	if ((rect.bottom > window.innerHeight && rect.top > 0) ||
+		rect.top < 0) {
+		this.scrollIntoView(true);
 	}
 }
 
@@ -4193,18 +4194,17 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 			// Remove edit accesskey from currently highlighted post by active user, if applicable.
 			if (indexOfActiveListing > -1) {
 				delete (listings[indexOfActiveListing].parentElement.query(".edit-post-link")||{}).accessKey;
+			} else {
+				let range = getCurrentVisibleListingsRange();
+				indexOfActiveListing = (event.key == "." ? range[0] - 1 : range[0] + range[1]);
 			}
 
-			let indexOfNextListing = (event.key == "." ? ++indexOfActiveListing : (--indexOfActiveListing + listings.length + 1)) % (listings.length + 1);
-			if (indexOfNextListing < listings.length) {
-				listings[indexOfNextListing].focus();
+			let indexOfNextListing = (event.key == "." ? ++indexOfActiveListing % listings.length : (--indexOfActiveListing + listings.length)) % listings.length;
+			listings[indexOfNextListing].focus();
 
-				if (listings[indexOfNextListing].closest(".comment-item")) {
-					listings[indexOfNextListing].closest(".comment-item").addClasses([ "expanded", "focused" ]);
-					listings[indexOfNextListing].closest(".comment-item").scrollIntoView();
-				}
-			} else {
-				document.activeElement.blur();
+			if (listings[indexOfNextListing].closest(".comment-item")) {
+				listings[indexOfNextListing].closest(".comment-item").addClasses([ "expanded", "focused" ]);
+				listings[indexOfNextListing].closest(".comment-item").scrollIntoViewIfNeeded();
 			}
 
 			// Add edit accesskey to newly highlighted post by active user, if applicable.
