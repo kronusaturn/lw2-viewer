@@ -165,6 +165,14 @@ function cancelDoWhenMatchMedia(name) {
 /* MISC HELPERS */
 /****************/
 
+/*	Returns the passed object if it’s truthy, or a newly created DOM object
+	(a div).
+	Æ(x) is the element analogue of (x||{}).
+	*/
+function Æ(x) {
+	return x || document.createElement("div");
+}
+
 /*	If top of element is not at or above the top of the screen, scroll it into
 	view. */
 Element.prototype.scrollIntoViewIfNeeded = function() {
@@ -981,12 +989,14 @@ function highlightCommentsSince(date) {
 	};
 	GW.newCommentScrollListener = () => {
 		let commentItem = getCurrentVisibleComment();
+		Æ(query(".comment-item.focused")).removeClass("focused");
+		if (Æ(commentItem).hasClass("new-comment")) commentItem.addClass("focused");
 		GW.newCommentScrollSet(commentItem);
 	}
 
 	addScrollListener(GW.newCommentScrollListener);
 
-	if (document.readyState=="complete") {
+	if (document.readyState == "complete") {
 		GW.newCommentScrollListener();
 	} else {
 		let commentItem = location.hash && /^#comment-/.test(location.hash) && query(location.hash);
