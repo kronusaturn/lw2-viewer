@@ -944,9 +944,7 @@ function getCurrentVisibleListingsRange(partial = false) {
 /*****************************************/
 
 Element.prototype.getCommentDate = function() {
-	let item = (this.className == "comment-item") ? this : this.closest(".comment-item");
-	let dateElement = item && item.query(".date");
-	return (dateElement && parseInt(dateElement.dataset["jsDate"]));
+	return parseInt(Æ(Æ(this.closest(".comment-item")).query(".date")).dataset["jsDate"]);
 }
 function getCurrentVisibleComment() {
 	let px = window.innerWidth/2, py = 5;
