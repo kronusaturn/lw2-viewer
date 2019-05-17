@@ -1538,16 +1538,21 @@ a.comment-parent-link:hover::before {
 /* COMMENTING AND POSTING UI */
 /*===========================*/
 
+.posting-controls .new-comment-button {
+	border: 1px solid #ddd;
+	padding: 0.5rem 1rem;
+	margin: -0.5rem 0 0 0;
+}
+
 .posting-controls input[type='submit'] {
-	background-color: #fff;
 	border: 1px solid #aaa;
-	font-weight: bold;
 }
 .posting-controls input[type='submit']:hover,
 .posting-controls input[type='submit']:focus {
 	background-color: #ddd;
 	border: 1px solid #999;
 }
+
 .comment + .comment-controls .action-button {
 	font-weight: <?php echo ($platform == 'Mac') ? '300' : '400'; ?>;
 }
@@ -1892,6 +1897,10 @@ blockquote {
 /*======*/
 /* MISC */
 /*======*/
+
+sup {
+	top: -0.4em;
+}
 
 hr {
 	height: 1px;
