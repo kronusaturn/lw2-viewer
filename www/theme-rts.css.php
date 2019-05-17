@@ -1440,9 +1440,9 @@ a.comment-parent-link:hover::before {
 /*=================================*/
 
 .comment-minimize-button {
-	color: #ccc;
-	top: 3px;
-	right: 2px;
+	color: #d8d8d8;
+	top: 1px;
+	right: 1px;
 }
 .comment-minimize-button:hover {
 	color: #999;
@@ -1542,6 +1542,7 @@ a.comment-parent-link:hover::before {
 	border: 1px solid #ddd;
 	padding: 0.5rem 1rem;
 	margin: -0.5rem 0 0 0;
+	font-weight: var(--GW-UI-font-weight-light);
 }
 
 .posting-controls input[type='submit'] {
@@ -1553,12 +1554,7 @@ a.comment-parent-link:hover::before {
 	border: 1px solid #999;
 }
 
-.comment + .comment-controls .action-button {
-	font-weight: <?php echo ($platform == 'Mac') ? '300' : '400'; ?>;
-}
-
 .comment-controls .cancel-comment-button {
-	font-weight: 600;
 	color: #c00;
 	text-shadow: 
 		0 0 1px #fff,
@@ -1566,10 +1562,11 @@ a.comment-parent-link:hover::before {
 }
 .comment-controls .cancel-comment-button:hover {
 	color: #f00;
+	background-color: transparent;
 }
 
-.new-comment-button {
-	font-weight: 600;
+.comment-item .comment-controls .action-button:hover {
+	background-color: transparent;
 }
 
 .comment-controls .delete-button,
@@ -1578,7 +1575,7 @@ a.comment-parent-link:hover::before {
 }
 .comment-controls .delete-button::before {
 	opacity: 0.6;
-	font-weight: 400;
+	font-weight: 300;
 }
 .comment-controls .retract-button::before {
 	opacity: 0.5;
@@ -1590,7 +1587,7 @@ a.comment-parent-link:hover::before {
 }
 .comment-controls .edit-button::before,
 .comment-controls .unretract-button::before {
-	font-weight: 400;
+	font-weight: 300;
 }
 .comment-controls .action-button:hover {
 	color: #f00;
@@ -1599,23 +1596,21 @@ a.comment-parent-link:hover::before {
 		0px 0px 1.5px #800,
 }
 
-.post-controls {
-	margin: 0.5em -0.75em 0 0;
-}
-.edit-post-link,
-.edit-post-link:visited {
+.post-controls .edit-post-link,
+.post-controls .edit-post-link:visited {
 	color: #090;
+	box-shadow: 0 0 0 1px #ddd;
+	padding: 0.25em 0.5em 0.125em 0.5em;
+	font-weight: var(--GW-UI-font-weight-light);
+}
+.post-controls .edit-post-link::before {
+	font-weight: 300;
 }
 
 .posting-controls textarea {
-	font-size: 1.25rem;
-	font-weight: 500;
-	color: #000;
-	background-color: #fff;
 	border-color: #aaa;
 	box-shadow: 
 		0 0 0 1px #eee inset;
-	font-feature-settings: 'ss01';
 }
 .posting-controls textarea:focus {
 	background-color: #ffd;
@@ -1625,32 +1620,40 @@ a.comment-parent-link:hover::before {
 		0 0 0 1px #fff,
 		0 0 0 2px var(--GW-hyperlink-color);
 }
-.posting-controls.edit-existing-post textarea:focus,
-.posting-controls form.edit-existing-comment textarea:focus {
-	border-color: #090;
-	box-shadow: 
-		0 0 0 1px #81ff7f inset,
-		0 0 0 1px #fff,
-		0 0 0 2px #090;
-}
 
 /* GUIEdit buttons */
 
 .guiedit-buttons-container {
-	background-image: linear-gradient(to bottom, #fff 0%, #ddf 50%, #ccf 75%, #aaf 100%);
+	background-image:
+		linear-gradient(
+			to bottom,
+			#fff 0%,
+			#ddf 50%,
+			#ccf 75%,
+			#aaf 100%
+		);
 }
 
-.posting-controls.edit-existing-post .guiedit-buttons-container button,
-.posting-controls form.edit-existing-comment .guiedit-buttons-container button {
-	color: #050;
+.guiedit-buttons-container button {
+	color: #888;
+}
+.guiedit-buttons-container button:hover {
+	background-color: transparent;
+	color: #000;
+	text-shadow: none;
 }
 
 .guiedit::after {
-	color: #777;
+	color: #444;
 	text-shadow: none;
 }
 
 /* Markdown hints */
+
+#markdown-hints-checkbox + label::before {
+	font-size: 1.1em;
+	line-height: 1.4;
+}
 
 #markdown-hints {
 	border: 1px solid #c00;
