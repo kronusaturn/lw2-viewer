@@ -165,12 +165,11 @@ function cancelDoWhenMatchMedia(name) {
 /* MISC HELPERS */
 /****************/
 
-/*	Returns the passed object if it’s truthy, or a newly created DOM object
-	(a div).
+/*	Returns the passed object if it’s truthy, or a newly created HTMLElement.
 	Æ(x) is the element analogue of (x||{}).
 	*/
 function Æ(x) {
-	return x || document.createElement("div");
+	return x || document.createElement();
 }
 
 /*	If top of element is not at or above the top of the screen, scroll it into

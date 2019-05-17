@@ -8276,19 +8276,17 @@ a.comment-parent-link:hover::before {
 
 .comment-controls .delete-button,
 .comment-controls .retract-button {
-	color: #d00;
+	color: #ff694a;
 }
 .comment-controls .delete-button::before {
-	opacity: 0.6;
 	font-weight: 300;
 }
 .comment-controls .retract-button::before {
-	opacity: 0.5;
 	font-weight: 400;
 }
 .comment-controls .edit-button,
 .comment-controls .unretract-button {
-	color: #0a0;
+	color: #1fb414;
 }
 .comment-controls .edit-button::before,
 .comment-controls .unretract-button::before {
@@ -8305,7 +8303,7 @@ a.comment-parent-link:hover::before {
 .post-controls .edit-post-link:visited {
 	color: #090;
 	box-shadow: 0 0 0 1px #ddd;
-	padding: 0.25em 0.5em 0.125em 0.5em;
+	padding: 6px 12px 4px 13px;
 	font-weight: var(--GW-UI-font-weight-light);
 }
 .post-controls .edit-post-link::before {
