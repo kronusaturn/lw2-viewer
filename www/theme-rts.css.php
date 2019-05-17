@@ -887,7 +887,12 @@ h1.listing + .post-meta .comment-count:not(.new-comments) span:nth-of-type(2) {
 /*======================*/
 
 #content.user-page h1.page-main-heading {
+	font-weight: var(--GW-UI-font-weight-heavy);
 	border-bottom: 1px solid #ddd;
+}
+#content.user-page .user-stats {
+	font-weight: var(--GW-UI-font-weight-light);
+	text-shadow: 0 0 0 #999;
 }
 
 #content.user-page #top-nav-bar {
@@ -1973,6 +1978,71 @@ select {
 /*===============*/
 /* KEYBOARD HELP */
 /*===============*/
+
+#keyboard-help-overlay .keyboard-help-container {
+	background-color: var(--GW-content-background-color);
+}
+
+/*=-------------=*/
+/*= Scroll bars =*/
+/*=-------------=*/
+
+#keyboard-help-overlay .keyboard-help-container::-webkit-scrollbar {
+	width: 14px;
+	background-color: transparent;
+}
+#keyboard-help-overlay .keyboard-help-container::-webkit-scrollbar-track {
+	border-left: 1px solid #ddd;
+}
+#keyboard-help-overlay .keyboard-help-container::-webkit-scrollbar-thumb {
+	background-color: #ddd;
+	box-shadow:
+		1px 0 0 0 #fff inset,
+		-1px 0 0 0 #fff inset,
+		0 1px 0 0 #fff inset,
+		0 -1px 0 0 #fff inset;
+	border-left: 1px solid #ddd;
+}
+#keyboard-help-overlay .keyboard-help-container::-webkit-scrollbar-thumb:hover {
+	background-color: #bbb;
+}
+
+/*=--------------------=*/
+/*= Dividers & heading =*/
+/*=--------------------=*/
+
+#keyboard-help-overlay .keyboard-help-container h1,
+#keyboard-help-overlay .keyboard-help-container .keyboard-shortcuts-lists {
+	border-color: #ddd;
+}
+
+/*=------=*/
+/*= Keys =*/
+/*=------=*/
+
+#keyboard-help-overlay .keyboard-help-container code {
+	background-color: #eee;
+	border: 1px solid #ccc;
+	padding: 4px 8px;
+}
+#keyboard-help-overlay .keyboard-help-container code.ak {
+	background-color: #ffeb83;
+	border-color: #d4a500;
+}
+
+/*=--------------=*/
+/*= Close button =*/
+/*=--------------=*/
+
+#keyboard-help-overlay button.close-keyboard-help:hover {
+	background-color: #eee;
+	box-shadow:
+		1px -1px 0 0 #ddd inset;
+}
+#keyboard-help-overlay button.close-keyboard-help:active {
+	box-shadow:
+		0 0 0 1px #ddd;
+}
 
 /*=================*/
 /* ALIGNMENT FORUM */
