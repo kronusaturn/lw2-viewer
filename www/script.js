@@ -169,7 +169,7 @@ function cancelDoWhenMatchMedia(name) {
 	Æ(x) is the element analogue of (x||{}).
 	*/
 function Æ(x) {
-	return x || document.createElement();
+	return x || document.createElement(null);
 }
 
 /*	If top of element is not at or above the top of the screen, scroll it into
@@ -688,7 +688,7 @@ function hideReplyForm(commentControls) {
 
 	commentControls.removeClass("active");
 
-	Æ(commentControls.closest(".comment-item").removeClass("open-for-editing"));
+	Æ(commentControls.closest(".comment-item")).removeClass("open-for-editing");
 }
 
 function expandTextarea(textarea) {
