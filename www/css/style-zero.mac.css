@@ -7950,9 +7950,8 @@ a.comment-parent-link:hover::before {
 }
 .comment-item .karma .karma-value::after,
 .post .karma .karma-value::after {
-	padding: 2px 8px;
+	padding: 3px 8px 2px 8px;
 	top: -26px;
-	min-width: 60px;
 }
 
 /*====================*/
@@ -8177,6 +8176,10 @@ button.guiedit sup {
 #markdown-hints {
 	border: 1px solid #c00;
 	background-color: #ffa;
+}
+#markdown-hints .markdown-hints-row code {
+	box-shadow: none;
+	text-shadow: none;
 }
 
 /*=----------------------------=*/

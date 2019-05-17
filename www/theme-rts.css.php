@@ -180,6 +180,12 @@ body {
 #nav-item-search button {
 	font-weight: var(--GW-UI-font-weight-light);
 }
+#nav-item-search button:hover {
+	box-shadow:
+		-1px 0   0 0 #ddd inset,
+		 0   1px 0 0 #ddd inset,
+		 0  -1px 0 0 #ddd inset;
+}
 
 /*= Inbox indicator =*/
 
@@ -1546,12 +1552,12 @@ a.comment-parent-link:hover::before {
 }
 
 .posting-controls input[type='submit'] {
-	border: 1px solid #aaa;
+	border: 1px solid #bbb;
 }
 .posting-controls input[type='submit']:hover,
 .posting-controls input[type='submit']:focus {
 	background-color: #ddd;
-	border: 1px solid #999;
+	border: 1px solid #aaa;
 }
 
 .comment-controls .cancel-comment-button {
@@ -1608,7 +1614,7 @@ a.comment-parent-link:hover::before {
 }
 
 .posting-controls textarea {
-	border-color: #aaa;
+	border-color: #ccc;
 	box-shadow: 
 		0 0 0 1px #eee inset;
 }
@@ -1653,6 +1659,9 @@ a.comment-parent-link:hover::before {
 #markdown-hints-checkbox + label::before {
 	font-size: 1.1em;
 	line-height: 1.4;
+}
+#markdown-hints-checkbox:checked + label::before {
+	font-weight: 300;
 }
 
 #markdown-hints {
