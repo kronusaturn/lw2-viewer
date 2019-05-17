@@ -1652,6 +1652,39 @@ a.comment-parent-link:hover::before {
 	background-color: #ffa;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 520px) {
+	.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
+		padding: 5px 6px 6px 6px;
+		font-weight: 600;
+	}
+	.textarea-container:focus-within .guiedit-mobile-help-button.active {
+		box-shadow:
+			0 0 0 1px #c00,
+			0 0 0 1px #c00 inset;
+		color: #c00;
+		border-color: transparent;
+	}
+	.textarea-container:focus-within .guiedit-buttons-container {
+		background-color: #fff;
+		border-top: 1px solid #ddf;
+	}
+	#content.conversation-page .textarea-container:focus-within::after {
+		background-color: #fff;
+	}
+	.textarea-container:focus-within .guiedit-mobile-auxiliary-button,
+	.textarea-container:focus-within button.guiedit {
+		border: 1px solid #bbb;
+		border-radius: 6px;
+	}
+	#markdown-hints::after {
+		color: #090;
+	}
+}
+
 /*================*/
 /* EDIT POST FORM */
 /*================*/
@@ -1705,6 +1738,22 @@ a.comment-parent-link:hover::before {
 	text-shadow: 
 		0 -1px 0 #fff,
 		0 0.5px 0.5px #000;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 520px) {
+	#edit-post-form .post-meta-fields input[type='checkbox'] + label {
+		top: 2px;
+	}
+	#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
+		top: 1px;
+	}
+	#edit-post-form textarea {
+		min-height: calc(100vh - 440px);
+	}
 }
 
 /*===========*/
@@ -2066,47 +2115,4 @@ select {
 	#content.alignment-forum-index-page h1.listing a:focus {
 		background-color: rgba(251, 252, 255, 0.85);
 	}	
-}
-
-/*========*/
-/* MOBILE */
-/*========*/
-
-@media only screen and (max-width: 520px) {
-	.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
-		padding: 5px 6px 6px 6px;
-		font-weight: 600;
-	}
-	.textarea-container:focus-within .guiedit-mobile-help-button.active {
-		box-shadow:
-			0 0 0 1px #c00,
-			0 0 0 1px #c00 inset;
-		color: #c00;
-		border-color: transparent;
-	}
-	.textarea-container:focus-within .guiedit-buttons-container {
-		background-color: #fff;
-		border-top: 1px solid #ddf;
-	}
-	#content.conversation-page .textarea-container:focus-within::after {
-		background-color: #fff;
-	}
-	.textarea-container:focus-within .guiedit-mobile-auxiliary-button,
-	.textarea-container:focus-within button.guiedit {
-		border: 1px solid #bbb;
-		border-radius: 6px;
-	}
-	#markdown-hints::after {
-		color: #090;
-	}
-
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label {
-		top: 2px;
-	}
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
-		top: 1px;
-	}
-	#edit-post-form textarea {
-		min-height: calc(100vh - 440px);
-	}
 }
