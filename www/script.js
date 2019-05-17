@@ -964,6 +964,36 @@ function getCurrentVisibleComment() {
 	return commentItem;
 }
 
+function allCommentItems() {
+	if (!GW.allCommentItems) GW.allCommentItems = queryAll(".comment-item");
+	return GW.allCommentItems;
+}
+
+function getCurrentVisibleCommentsRange(partialTop = false, partialBottom = true) {
+	let comments = allCommentItems();
+	let range = [ 0, 0 ];
+
+	for (i = 0; i < comments.length; i++) {
+		let commentRect = comments[i].query(".comment-body").getBoundingClientRect();
+		if (commentRect.top > 0 || 
+			(partialTop && commentRect.bottom > 0)) {
+			range[0] = i;
+			break;
+		}
+	}
+	for (; i < comments.length; i++) {
+		let commentRect = comments[i].query(".comment-body").getBoundingClientRect();
+		if (commentRect.bottom < window.innerHeight || 
+			(partialBottom && commentRect.top < window.innerHeight)) {
+			range[1]++;
+		} else {
+			break;
+		}
+	}
+
+	return range;
+}
+
 function highlightCommentsSince(date) {
 	GWLog("highlightCommentsSince");
 
@@ -971,7 +1001,7 @@ function highlightCommentsSince(date) {
 	GW.newComments = [ ];
 	let oldCommentsStack = [ ];
 	let prevNewComment;
-	queryAll(".comment-item").forEach(commentItem => {
+	allCommentItems().forEach(commentItem => {
 		commentItem.prevNewComment = prevNewComment;
 		if (commentItem.getCommentDate() > date) {
 			commentItem.addClass("new-comment");
@@ -986,15 +1016,18 @@ function highlightCommentsSince(date) {
 		}
 	});
 
-	GW.newCommentScrollSet = (commentItem) => {
+	GW.updateNewCommentNavButtonState = (commentItem) => {
 		query("#new-comment-nav-ui .new-comment-previous").disabled = commentItem ? !commentItem.prevNewComment : true;
 		query("#new-comment-nav-ui .new-comment-next").disabled = commentItem ? !commentItem.nextNewComment : (GW.newComments.length == 0);
 	};
 	GW.newCommentScrollListener = () => {
-		let commentItem = getCurrentVisibleComment();
 		Æ(query(".comment-item.focused")).removeClass("focused");
-		if (Æ(commentItem).hasClass("new-comment")) commentItem.addClass("focused");
-		GW.newCommentScrollSet(commentItem);
+		let visibleCommentsRange = getCurrentVisibleCommentsRange();
+		if (visibleCommentsRange[1] > 0) {
+			let firstVisibleCommentItem = allCommentItems()[visibleCommentsRange[0]];
+			if (firstVisibleCommentItem.hasClass("new-comment")) firstVisibleCommentItem.addClass("focused");
+			GW.updateNewCommentNavButtonState(firstVisibleCommentItem);
+		}
 	}
 
 	addScrollListener(GW.newCommentScrollListener);
@@ -1003,7 +1036,7 @@ function highlightCommentsSince(date) {
 		GW.newCommentScrollListener();
 	} else {
 		let commentItem = location.hash && /^#comment-/.test(location.hash) && query(location.hash);
-		GW.newCommentScrollSet(commentItem);
+		GW.updateNewCommentNavButtonState(commentItem);
 	}
 
 	registerInitializer("initializeCommentScrollPosition", false, () => document.readyState == "complete", GW.newCommentScrollListener);
@@ -2040,7 +2073,7 @@ function injectNewCommentNavUI(newCommentsCount) {
 	newCommentUIContainer.queryAll(".new-comment-sequential-nav-button").forEach(button => {
 		button.addActivateEvent(GW.commentQuicknavButtonClicked = (event) => {
 			GWLog("GW.commentQuicknavButtonClicked");
-			scrollToNewComment(/next/.test(event.target.className));
+			scrollToNewComment(event.target.hasClass("new-comment-next"));
 			event.target.blur();
 		});
 	});
