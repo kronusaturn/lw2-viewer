@@ -497,6 +497,7 @@ th.mathjax-inline-container {
 }
 .spoiler > p:hover ~ p {
 	background-color: currentColor;
+	text-shadow: none;
 }
 .spoiler > p + p {
 	margin-top: -1em;

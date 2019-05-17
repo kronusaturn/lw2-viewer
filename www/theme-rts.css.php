@@ -799,7 +799,8 @@ h1.listing {
 
 h1.listing a[href^="http"] {
 	color: #888;
-	line-height: 1.2;
+	line-height: 1;
+	top: -2px;
 }
 h1.listing a[href^='/'] {
 	color: #690010;
