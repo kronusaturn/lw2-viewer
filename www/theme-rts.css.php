@@ -180,7 +180,8 @@ body {
 #nav-item-search button {
 	font-weight: var(--GW-UI-font-weight-light);
 }
-#nav-item-search button:hover {
+#nav-item-search button:hover,
+#nav-item-search button:focus {
 	box-shadow:
 		-1px 0   0 0 #ddd inset,
 		 0   1px 0 0 #ddd inset,
@@ -1551,16 +1552,20 @@ a.comment-parent-link:hover::before {
 	font-weight: var(--GW-UI-font-weight-light);
 }
 
-.posting-controls input[type='submit'] {
+.posting-controls input[type='submit'],
+.posting-controls .cancel-post-editing-button {
 	border: 1px solid #bbb;
 }
 .posting-controls input[type='submit']:hover,
-.posting-controls input[type='submit']:focus {
+.posting-controls input[type='submit']:focus,
+.posting-controls .cancel-post-editing-button:hover,
+.posting-controls .cancel-post-editing-button:focus {
 	background-color: #ddd;
 	border: 1px solid #aaa;
 }
 
-.comment-controls .cancel-comment-button {
+.comment-controls .cancel-comment-button,
+.posting-controls .cancel-post-editing-button {
 	color: #c00;
 	text-shadow: 
 		0 0 1px #fff,
@@ -1569,6 +1574,10 @@ a.comment-parent-link:hover::before {
 .comment-controls .cancel-comment-button:hover {
 	color: #f00;
 	background-color: transparent;
+}
+.posting-controls .cancel-post-editing-button:hover {
+	color: #f00;
+	text-shadow: var(--GW-shadow-white-glow);
 }
 
 .comment-item .comment-controls .action-button:hover {
