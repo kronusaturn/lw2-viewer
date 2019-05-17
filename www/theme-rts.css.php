@@ -781,6 +781,7 @@ body {
 /*==========*/
 
 h1.listing {
+	font-size: 2rem;
 	margin: 0.7em 0 0 0;
 	justify-content: center;
 	text-align: center;
@@ -1694,6 +1695,25 @@ a.comment-parent-link:hover::before {
 	text-shadow: 
 		0 -1px 0 #fff,
 		0 0.5px 0.5px #000;
+}
+
+/*===========*/
+/* SEQUENCES */
+/*===========*/
+
+.sequence-text {
+	font-size: 1.375rem;
+}
+
+h1.sequence-chapter {
+	text-align: center;
+}
+
+#content.sequences-page::after {
+	text-align: center;
+	font-weight: var(--GW-UI-font-weight-light);
+	color: #000;
+	margin-bottom: -0.25em;
 }
 
 /*=======*/

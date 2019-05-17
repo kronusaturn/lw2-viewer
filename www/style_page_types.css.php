@@ -8,7 +8,7 @@
 	font-weight: var(--GW-UI-font-weight-heavy);
 	grid-row: 3;
 	font-size: 1.5rem;
-	margin: 0.375em 0 0 var(--GW-current-page-content-left-side-padding);
+	margin: 0.375em var(--GW-current-page-content-left-side-padding 0 var(--GW-current-page-content-left-side-padding);
 }
 
 /**************/
