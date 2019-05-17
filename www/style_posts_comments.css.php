@@ -1233,7 +1233,7 @@ a.comment-child-link::before {
 /***********************************/
 
 .comment-minimize-button {
-	font-family: var(--GW-UI-font), var(--GW-Font-Awesome);
+	font-family: var(--GW-Font-Awesome);
 	font-weight: 900;
 	font-size: 1.25rem;
 	line-height: 1;
@@ -1251,6 +1251,7 @@ a.comment-child-link::before {
 }
 .comment-minimize-button::after {
 	content: attr(data-child-count);
+	font-family: var(--GW-UI-font);
 	font-size: 0.8125rem;
 	position: absolute;
 	left: 0;
