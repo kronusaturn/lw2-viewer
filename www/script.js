@@ -539,6 +539,8 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 	textarea.value = MarkdownFromHTML(editMarkdownSource || "");
 	textarea.addTextareaFeatures();
 	textarea.focus();
+
+	Æ(commentControls.closest(".comment-item")).addClass("open-for-editing");
 }
 
 Element.prototype.updateCommentControlButton = function() {
@@ -677,8 +679,7 @@ function hideReplyForm(commentControls) {
 	GWLog("hideReplyForm");
 
 	// Are we editing a comment? If so, un-hide the existing comment body.
-	let containingComment = commentControls.closest(".comment-item");
-	if (containingComment) containingComment.query(".comment-body").style.display = "";
+	Æ(Æ(commentControls.closest(".comment-item")).query(".comment-body")).style.display = "";
 
 	let enteredText = commentControls.query("textarea").value;
 	if (enteredText) commentControls.dataset.enteredText = enteredText;
@@ -687,6 +688,8 @@ function hideReplyForm(commentControls) {
 	commentControls.constructCommentControls();
 
 	commentControls.removeClass("active");
+
+	Æ(commentControls.closest(".comment-item").removeClass("open-for-editing"));
 }
 
 function expandTextarea(textarea) {

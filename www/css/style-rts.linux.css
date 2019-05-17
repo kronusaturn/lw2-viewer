@@ -8298,7 +8298,7 @@ a.comment-parent-link:hover::before {
 	color: #f00;
 	text-shadow:
 		0px 0px 0.5px #fff,
-		0px 0px 1.5px #800,
+		0px 0px 1.0px #800;
 }
 
 .post-controls .edit-post-link,
@@ -8354,6 +8354,10 @@ a.comment-parent-link:hover::before {
 }
 
 /* Markdown hints */
+
+.comment-item.open-for-editing {
+	z-index: 1;
+}
 
 #markdown-hints-checkbox + label::before {
 	font-size: 1.1em;
