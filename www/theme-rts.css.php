@@ -1746,56 +1746,51 @@ input[type='submit']:focus,
 /* HEADINGS */
 /*==========*/
 
-.body-text h1, 
-.body-text h2, 
-.body-text h3, 
-.body-text h4, 
-.body-text h5, 
-.body-text h6 {
-	margin: 1.5em 0 0.25em 0;
-}
-.body-text h4 {
-	font-size: 1.15em;
-}
 .body-text h3 {
 	font-variant: small-caps;
 	font-size: 1.3em;
 }
 .body-text h2 {
 	font-style: italic;
-	font-size: 1.5em;
-}
-.body-text h1 {
-	font-size: 1.9em;
-	border: none;
 }
 .post-body h1 {
 	text-align: center;
-	margin: 1em 0 0 0;
+}
+.post-body h1::before {
+	content: "❦";
+	margin: 0 auto 1em auto;
+	font-size: 0.625em;
 }
 .post-body h2 {
 	margin: 1em 0 0 0;
 }
-.post-body h1::before {
-	content: "❦";
-	display: block;
-	margin: 0 auto 1em auto;
-	font-size: 0.625em;
-	font-weight: normal;
-}
 .post-body h2::before {
 	content: "☙";
 	text-align: center;
-	display: block;
 	margin: 0 auto 0.5em auto;
+}
+.post-body h1::before,
+.post-body h2::before {
+	display: block;
 	font-weight: normal;
 	font-style: normal;
+	background-color: #ccc;
+	-webkit-background-clip: text;
+	color: transparent;
+	text-shadow: rgba(255, 255, 255, 0.5) 0px 1px 1px;
 }
 .post-body h1:first-child::before,
 .post-body .contents + h1::before,
 .post-body h2:first-child::before,
 .post-body .contents + h2::before {
 	content: "";
+}
+
+.body-text h5 {
+	font-weight: bold;
+}
+.body-text h6 {
+	font-style: italic;
 }
 
 /*========*/
