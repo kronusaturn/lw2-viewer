@@ -27,7 +27,7 @@ h1.listing {
 	position: relative;
 	display: flex;
 
-	font-family: var(--GW-post-listings-font), var(--GW-Font-Awesome);
+	font-family: var(--GW-post-listings-font);
 	font-weight: var(--GW-post-listings-font-weight);
 }
 
@@ -38,6 +38,7 @@ h1.listing a {
 /*	Link-post links
 	*/
 h1.listing a[href^="http"] {
+	font-family: var(--GW-Font-Awesome);
 	transform: scale(0.75) scaleX(-1) translateX(12%);
 	text-align: right;
 }
