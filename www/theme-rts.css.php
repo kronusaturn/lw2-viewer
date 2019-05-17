@@ -94,6 +94,9 @@ body {
 		0 0 20px var(--GW-body-background-color),
 		0 0 30px var(--GW-body-background-color);
 }
+#ui-elements-container > div[id$='-ui-toggle'] button:hover {
+	background-color: transparent;
+}
 
 /*==========*/
 /* NAV BARS */
@@ -836,6 +839,16 @@ h1.listing:not(:focus-within) a:not(:hover) .post-type-prefix {
 	opacity: 0.5;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 520px) {
+	h1.listing {
+		font-size: 1.75rem;
+	}
+}
+
 /*======*/
 /* SPAM */
 /*======*/
@@ -1145,6 +1158,10 @@ h1.listing.own-post-listing {
 }
 .comment-body {
 	font-size: 1.25rem;
+}
+
+.comment-popup .comment-body {
+	font-size: 1.1875rem;
 }
 
 /*=======*/
@@ -1576,7 +1593,7 @@ a.comment-parent-link:hover::before {
 	background-color: transparent;
 }
 .posting-controls .cancel-post-editing-button:hover {
-	color: #f00;
+	color: #900;
 	text-shadow: var(--GW-shadow-white-glow);
 }
 

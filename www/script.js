@@ -4424,6 +4424,11 @@ function rectifyMarkup() {
 	content.queryAll(".body-text h1 + hr, .body-text h2 + hr, .body-text h3 + hr").forEach(rule => {
 		removeElement(rule);
 	});
+
+	// Remove extraneous breaks.
+	content.queryAll(".post-body > br").forEach(br => {
+		removeElement(br);
+	});
 }
 
 /*************************/
