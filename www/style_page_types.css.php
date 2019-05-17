@@ -15,6 +15,13 @@
 /* USER PAGES */
 /**************/
 
+#content.user-page.all-user-page h1.listing {
+	margin: 2rem 0 0 0;
+}
+#content.user-page.all-user-page.compact h1.listing {
+	margin: 1rem 0 0 0;
+}
+
 /*=---------------------=*/
 /*= User’s display name =*/
 /*=---------------------=*/

@@ -1080,10 +1080,6 @@ h1.listing + .post-meta .post-section::before {
 #content.user-page h1.listing,
 #content.search-results-page h1.listing {
 	padding: 3px 6px 0 6px;
-	margin: 1rem 0 0 0;
-}
-#content.user-page.all-user-page h1.listing {
-	margin: 2rem 0 0 0;
 }
 #content.own-user-page h1.listing,
 h1.listing.own-post-listing {
