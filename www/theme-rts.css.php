@@ -63,6 +63,10 @@
 	--GW-comment-item-focused-outline-color: #00c;
 	--GW-comment-item-higlight-color: #8c6400;
 	--GW-comment-item-highlight-faint-color: #c79700;
+
+	--GW-vote-button-color: #bbb;
+	--GW-upvote-button-color: #0f0;
+	--GW-downvote-button-color: #f00;
 }
 
 /*======*/
@@ -1448,14 +1452,15 @@ a.comment-parent-link:hover::before {
 /* VOTE BUTTONS */
 /*==============*/
 
-.vote:hover {
+.vote:hover,
+.vote:focus {
 	background-color: transparent;
 }
 
 .upvote,
 .downvote {
-	color: #bbb;
 	position: relative;	
+	text-shadow: none;
 }
 .vote::before {
 	position: relative;
@@ -1467,7 +1472,6 @@ a.comment-parent-link:hover::before {
 }
 .downvote::before {
 	content: "\F078";
-	position: relative;
 	left: -2px;
 }
 .upvote:hover,
@@ -1475,7 +1479,6 @@ a.comment-parent-link:hover::before {
 	text-shadow:
 		0 0 0.5px #fff, 
 		0 0 8px #0f0;
-	background-color: none;
 }
 .downvote:hover,
 .downvote.selected {
@@ -1488,9 +1491,6 @@ a.comment-parent-link:hover::before {
 	position: absolute;
 	color: transparent;
 }
-.vote:not(:hover)::after {
-	text-shadow: none;
-}
 .karma.waiting .vote.big-vote::after {
 	color: transparent;
 }
@@ -1499,7 +1499,7 @@ a.comment-parent-link:hover::before {
 	color: inherit;
 }
 .karma:not(.waiting) .vote.clicked-once::after {
-	color: #bbb;
+	color: var(--GW-vote-button-color);
 }
 
 .upvote::after {
@@ -1512,7 +1512,7 @@ a.comment-parent-link:hover::before {
 	left: 5px;
 	top: 4px;
 }
-<?php echo $firefox_exclusive; ?> {
+@supports (-moz-user-focus: normal) {
 	.upvote::after {
 		bottom: 2px;
 		left: 8px;
