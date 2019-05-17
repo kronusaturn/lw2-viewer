@@ -1708,16 +1708,16 @@ a.comment-parent-link:hover::before {
 /* EDIT POST FORM */
 /*================*/
 
-#edit-post-form input[type='radio'] + label {
+#edit-post-form .post-section-selector label {
+	padding: 5px 12px;
 	color: #777;
-	border-color: #ddd;
+	box-shadow: 0 0 0 1px #ddd;
 }
-#edit-post-form input[type='radio'][value='all'] + label {
-	border-radius: 8px 0 0 8px;
-	border-width: 1px;
+#edit-post-form .post-section-selector:focus-within label {
+	background-color: #ffd;
 }
-#edit-post-form input[type='radio'][value='drafts'] + label {
-	border-radius: 0 8px 8px 0;
+#edit-post-form .post-section-selector label:nth-of-type(n+2) {
+	margin-left: 1px;
 }
 #edit-post-form input[type='radio'] + label:hover,
 #edit-post-form input[type='radio']:focus + label {
@@ -1728,30 +1728,13 @@ a.comment-parent-link:hover::before {
 	color: #000;
 	box-shadow: 
 		0 0 0 1px #aaa;
+	z-index: 1;
 }
+#edit-post-form input[type='radio']:active + label,
 #edit-post-form input[type='radio']:checked + label {
 	background-color: #ddd;
-	border-color: #ddd;
 	color: #000;
-	text-shadow: 
-		0 -1px 0 #fff,
-		0 0.5px 0.5px #000;
-}
-
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
-@media only screen and (max-width: 520px) {
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label {
-		top: 2px;
-	}
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
-		top: 1px;
-	}
-	#edit-post-form textarea {
-		min-height: calc(100vh - 440px);
-	}
+	font-weight: var(--GW-UI-font-weight-heavy);
 }
 
 /*===========*/
