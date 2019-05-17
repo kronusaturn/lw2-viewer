@@ -389,9 +389,9 @@ Element.prototype.addTextareaFeatures = function() {
 
 		// Construct button.
 		buttons_container.insertAdjacentHTML("beforeend", 
-			`<button type='button' class='guiedit guiedit-${name}' tabindex='-1' title='${desc}' data-tooltip='${desc}'>
-				<div>${icon}</div>
-			</button>`
+			`<button type='button' class='guiedit guiedit-${name}' tabindex='-1' title='${desc}' data-tooltip='${desc}'>` + 
+				`<div>${icon}</div>` + 
+			`</button>`
 		);
 		let button = buttons_container.lastElementChild;
 

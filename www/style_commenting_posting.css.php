@@ -175,7 +175,7 @@
 	width: calc(100% - 2px);
 	height: 28px;
 	text-align: left;
-	padding: 2px 4px 0 4px;
+	padding: 1px 4px 0 4px;
 	overflow: hidden;
 }
 .comment-thread-page .guiedit-buttons-container {
@@ -187,8 +187,6 @@
 	font-weight: 900;
 	font-size: 0.875rem;
 	line-height: 1;
-
-	font-family: var(--GW-Font-Awesome), var(--GW-body-text-font);
 }
 .guiedit-buttons-container button:active {
 	transform: none;
@@ -200,7 +198,7 @@
 	font-weight: var(--GW-UI-font-weight-heavy);
 }
 button.guiedit {
-	font-family: var(--GW-UI-font), var(--GW-Font-Awesome);
+	font-family: var(--GW-Font-Awesome), var(--GW-UI-font);
 }
 .guiedit::after {
 	content: attr(data-tooltip);
