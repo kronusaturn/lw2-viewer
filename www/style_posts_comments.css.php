@@ -736,6 +736,10 @@ ul.comment-thread {
 	font-weight: var(--GW-comment-meta-author-font-weight);
 }
 
+.comment-meta .nav-links-container > * {
+	margin: inherit;
+}
+
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
