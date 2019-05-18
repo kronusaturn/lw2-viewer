@@ -548,11 +548,38 @@ input[type='range']::-ms-thumb {
 	background-repeat: no-repeat;
 	background-position: center center;
 }
-#theme-tweaker-ui .minimize-button.minimize {
+#theme-tweaker-ui .minimize-button {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme-tweaker/win95_minimize_widget.gif")) ?>');
 }
-#theme-tweaker-ui .minimize-button.maximize {
+#theme-tweaker-ui.minimized .minimize-button {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme-tweaker/win95_maximize_widget.gif")) ?>');
+}
+
+#theme-tweaker-ui.minimized .main-theme-tweaker-window {
+	width: 320px;
+	height: 31px;
+	overflow: hidden;
+	padding: 30px 0 0 0;
+	top: 20px;
+	right: 20px;
+	left: auto;
+}
+#theme-tweaker-ui.minimized::after {
+	top: 27px;
+	right: 27px;
+}
+#theme-tweaker-ui.minimized::before {
+	opacity: 0.0;
+	height: 0;
+}
+#theme-tweaker-ui.minimized .clippy-container {
+	opacity: 1.0;
+}
+#theme-tweaker-ui.minimized .clippy-container .hint span {
+	color: #c00;
+}
+#theme-tweaker-ui.minimized {
+	height: 0;
 }
 
 #theme-tweaker-ui .help-button {

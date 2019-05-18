@@ -1187,49 +1187,7 @@ function injectThemeTweaker() {
 	themeTweakerUI.query(".minimize-button").addActivateEvent(GW.themeTweaker.minimizeButtonClicked = (event) => {
 		GWLog("GW.themeTweaker.minimizeButtonClicked");
 
-		let themeTweakerStyle = query("#theme-tweaker-style");
-
-		if (event.target.hasClass("minimize")) {
-			event.target.removeClass("minimize");
-			themeTweakerStyle.innerHTML = 
-				`#theme-tweaker-ui .main-theme-tweaker-window {
-					width: 320px;
-					height: 31px;
-					overflow: hidden;
-					padding: 30px 0 0 0;
-					top: 20px;
-					right: 20px;
-					left: auto;
-				}
-				#theme-tweaker-ui::after {
-					top: 27px;
-					right: 27px;
-				}
-				#theme-tweaker-ui::before {
-					opacity: 0.0;
-					height: 0;
-				}
-				#theme-tweaker-ui .clippy-container {
-					opacity: 1.0;
-				}
-				#theme-tweaker-ui .clippy-container .hint span {
-					color: #c00;
-				}
-				#theme-tweaker-ui {
-					height: 0;
-				}
-				#content, #ui-elements-container > div:not(#theme-tweaker-ui) {
-					pointer-events: none;
-				}`;
-			event.target.addClass("maximize");
-		} else {
-			event.target.removeClass("maximize");
-			themeTweakerStyle.innerHTML = 
-				`#content, #ui-elements-container > div:not(#theme-tweaker-ui) {
-					pointer-events: none;
-				}`;
-			event.target.addClass("minimize");
-		}
+		themeTweakerUI.toggleClass("minimized");
 	});
 	themeTweakerUI.query(".help-button").addActivateEvent(GW.themeTweaker.helpButtonClicked = (event) => {
 		GWLog("GW.themeTweaker.helpButtonClicked");
