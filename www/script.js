@@ -888,6 +888,8 @@ function voteEvent(voteButton, numClicks) {
 Element.prototype.setCommentThreadMaximized = function(toggle, userOriginated = true, force) {
 	GWLog("setCommentThreadMaximized");
 
+	if (!this.hasClass("comment-item")) return;
+
 	let commentItem = this;
 	let storageName = "thread-minimized-" + commentItem.getCommentId();
 	let minimize_button = commentItem.query(".comment-minimize-button");
@@ -2525,12 +2527,10 @@ function expandAncestorsOf(commentID) {
 	}
 
 	// Expand collapsed comment threads.
-	let parentOfContainingCollapseCheckbox = (comment.closest("label[for^='expand'] + .comment-thread")||{}).parentElement;
-	if (parentOfContainingCollapseCheckbox) parentOfContainingCollapseCheckbox.query("input[id^='expand']").checked = true;
+	Æ(Æ(Æ(comment.closest("label[for^='expand'] + .comment-thread")).parentElement).query("input[id^='expand']")).checked = true;
 
 	// Expand collapsed comments.
-	let containingMinimizedCommentItem = comment.closest(".comments .comment-item.minimized");
-	if (containingMinimizedCommentItem) containingMinimizedCommentItem.setCommentThreadMaximized(true, false, true);
+	Æ(comment.closest(".comments .comment-item.minimized")).setCommentThreadMaximized(true, false, true);
 }
 
 /**************************/
