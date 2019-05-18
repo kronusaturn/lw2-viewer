@@ -4339,18 +4339,6 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 	// Set up popups overlay.
 // 	popupsSetup();
-
-	// Enclose the nav links buttons in .comment-meta in a span, so that they
-	// will be treated as a single flex item.
-	queryAll(".comment-meta").forEach(commentMeta => {
-		let permalink = commentMeta.query(".permalink");
-		let navLinksContainer = document.createElement("span");
-		navLinksContainer.addClass("nav-links-container");
-		commentMeta.insertBefore(navLinksContainer, permalink);
-		commentMeta.queryAll(".permalink, .lw2-link, .comment-parent-link").forEach(navLink => {
-			navLinksContainer.appendChild(navLink);
-		});
-	});
 });
 
 /******************/

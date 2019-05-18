@@ -31,50 +31,53 @@
 	      <div class="karma">
 		<span class="karma-value" title=(votes-to-tooltip vote-count)>(safe (pretty-number base-score "point"))</span>
 	      </div>
-	      (when af <span class="alignment-forum">AF</span>)     
-	      <a class="permalink" href=("~A/~A/~A"
-					 (generate-post-link post-id)
-					 (cond ((or answer parent-answer-id) "answer") (t "comment"))
-					 comment-id)
-		 title="Permalink"></a>
-	      (with-html-stream-output
-		(when page-url
-		  <a class="lw2-link" href=(clean-lw-link page-url) title=(main-site-abbreviation *current-site*)></a>)
-		(if with-post-title
-		    <div class="comment-post-title">
+	      (when af <span class="alignment-forum">AF</span>)
+	      <span class="nav-links-container">
+	        <a class="permalink" href=("~A/~A/~A"
+					   (generate-post-link post-id)
+					   (cond ((or answer parent-answer-id) "answer") (t "comment"))
+					   comment-id)
+		   title="Permalink"></a>
+	        (with-html-stream-output
+		  (when page-url
+		    <a class="lw2-link" href=(clean-lw-link page-url) title=(main-site-abbreviation *current-site*)></a>)
+		  (unless with-post-title
+		    (when parent-comment-id
+		      (if *comment-individual-link*
+			  <a class="comment-parent-link" href=(progn parent-comment-id) title="Parent"></a>
+			  <a class="comment-parent-link" href=("#comment-~A" parent-comment-id)>Parent</a>)))
+		  (when children
+		    <div class="comment-child-links">
+		      Replies:
 		      (with-html-stream-output
-			  (when parent-comment
-			    (alist-bind ((user-id string)
-					 (post-id string)
-					 (parent-id string :--id))
-					parent-comment
-			      <span class="comment-in-reply-to">in reply to:
-				<a href=("/users/~A" (get-user-slug user-id))
-				   class=("inline-author~:[~; own-user-author~]" (logged-in-userid user-id))
-				   data-userid=(progn user-id)>
-				   (get-username user-id)</a>’s
-				<a href=(generate-post-link post-id parent-id)>comment</a>
-				(progn " ")
-			      </span>)))
-			<span class="comment-post-title2">on: <a href=(generate-post-link post-id)>(safe (clean-text-to-html (get-post-title post-id)))</a></span>
-		      </div>
-		  (when parent-comment-id
-		    (if *comment-individual-link*
-			<a class="comment-parent-link" href=(progn parent-comment-id) title="Parent"></a>
-			<a class="comment-parent-link" href=("#comment-~A" parent-comment-id)>Parent</a>)))
-		(when children
-		  <div class="comment-child-links">
-		    Replies:
-		    (with-html-stream-output
-		      (dolist (child children)
-			(alist-bind ((comment-id string)
-				     (user-id string))
-				    child
-			  <a href=("#comment-~A" comment-id)>(">~A" (get-username user-id))</a>)))
-		  </div>)
-		<div class="comment-minimize-button"
-		     data-child-count=(progn child-count)>
+		        (dolist (child children)
+			  (alist-bind ((comment-id string)
+				       (user-id string))
+				      child
+			    <a href=("#comment-~A" comment-id)>(">~A" (get-username user-id))</a>)))
+		    </div>))
+	      </span>
+	      (when with-post-title
+		<div class="comment-post-title">
+		  (with-html-stream-output
+		      (when parent-comment
+			(alist-bind ((user-id string)
+				     (post-id string)
+				     (parent-id string :--id))
+				    parent-comment
+			  <span class="comment-in-reply-to">in reply to:
+			    <a href=("/users/~A" (get-user-slug user-id))
+			       class=("inline-author~:[~; own-user-author~]" (logged-in-userid user-id))
+			       data-userid=(progn user-id)>
+			       (get-username user-id)</a>’s
+			    <a href=(generate-post-link post-id parent-id)>comment</a>
+			    (progn " ")
+			  </span>)))
+		  <span class="comment-post-title2">on: <a href=(generate-post-link post-id)>(safe (clean-text-to-html (get-post-title post-id)))</a></span>
 		</div>)
+	      <div class="comment-minimize-button"
+		   data-child-count=(progn child-count)>
+	      </div>
 	      </div>
 	      <div class="body-text comment-body" (safe ("~@[ data-markdown-source=\"~A\"~]"
 					       (if (logged-in-userid user-id)
