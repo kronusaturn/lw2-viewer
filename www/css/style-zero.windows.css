@@ -3815,6 +3815,9 @@ ul.comment-thread {
 
 	z-index: 5000;
 }
+.answer-item.focused::after {
+	z-index: 5001;
+}
 
 /********************/
 /* COMMENT LISTINGS */
