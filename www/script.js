@@ -198,17 +198,17 @@ Element.prototype.getCommentId = function() {
 function doAjax(params) {
 	let req = new XMLHttpRequest();
 	req.addEventListener("load", (event) => {
-		if(event.target.status < 400) {
-			if(params["onSuccess"]) params.onSuccess();
+		if (event.target.status < 400) {
+			if (params["onSuccess"]) params.onSuccess();
 		} else {
-			if(params["onFailure"]) params.onFailure();
+			if (params["onFailure"]) params.onFailure();
 		}
 	});
 	req.open((params["method"] || "GET"), (params.location || document.location));
-	if(params["method"] == "POST") {
+	if (params["method"] == "POST") {
 		req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 		params["params"]["csrf-token"] = GW.csrfToken;
-		req.send(params.params.keys().map((x) => {return "" + x + "=" + encodeURIComponent(params.params[x])}).join("&"));
+		req.send(params.params.keys().map((x) => { return "" + x + "=" + encodeURIComponent(params.params[x]); }).join("&"));
 	} else {
 		req.send();
 	}
@@ -544,7 +544,7 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 
 Element.prototype.updateCommentControlButton = function() {
 	let retractFn = () => {
-		if(this.closest(".comment-item").firstChild.hasClass("retracted"))
+		if (this.closest(".comment-item").firstChild.hasClass("retracted"))
 			return [ "unretract-button", "Un-retract", "Un-retract this comment" ];
 		else
 			return [ "retract-button", "Retract", "Retract this comment (without deleting)" ];
@@ -584,7 +584,7 @@ Element.prototype.constructCommentControls = function() {
 	} else {
 		if (commentControls.parentElement.query(".comment-body").hasAttribute("data-markdown-source")) {
 			let buttonsList = [];
-			if(!commentControls.parentElement.query(".comment-thread"))
+			if (!commentControls.parentElement.query(".comment-thread"))
 				buttonsList.push("delete-button");
 			buttonsList.push("retract-button", "edit-button");
 			buttonsList.forEach(buttonClass => {
@@ -727,8 +727,8 @@ function doCommentAction(action, commentItem) {
 					commentItem.removeChild(commentItem.query(".comment-controls"));
 				}
 			}[action];
-			if(fn) fn();
-			if(action != "delete")
+			if (fn) fn();
+			if (action != "delete")
 				commentItem.query(".comment-controls").queryAll(".action-button").forEach(x => {x.updateCommentControlButton()});
 		}
 	});
@@ -4621,12 +4621,12 @@ GW.guiEditButtons = [
 	[ 'strong', 'Strong (bold)', 'k', '**', '**', 'Bold text', '&#xf032;' ],
 	[ 'em', 'Emphasized (italic)', 'i', '*', '*', 'Italicized text', '&#xf033;' ],
 	[ 'strikethrough', 'Strike-through', '', '~~', '~~', 'Struck-out text', '&#xf0cc;' ],
-	[ 'link', 'Hyperlink', 'l', hyperlink, '', '', '&#xf0c1;' ],
-	[ 'image', 'Image', '', '![', '](image url)', 'Image alt-text', '&#xf03e;' ],
+	[ 'link', 'Hyperlink', 'l', GUIEdit_hyperlink, '', '', '&#xf0c1;' ],
+	[ 'image', 'Image', '', GUIEdit_image, '', 'Image alt-text', '&#xf03e;' ],
 	[ 'heading1', 'Heading level 1', '', '\\n# ', '', 'Heading', '&#xf1dc;<sup>1</sup>' ],
 	[ 'heading2', 'Heading level 2', '', '\\n## ', '', 'Heading', '&#xf1dc;<sup>2</sup>' ],
 	[ 'heading3', 'Heading level 3', '', '\\n### ', '', 'Heading', '&#xf1dc;<sup>3</sup>' ],
-	[ 'blockquote', 'Blockquote', 'q', blockquote, '', '', '&#xf10e;' ],
+	[ 'blockquote', 'Blockquote', 'q', GUIEdit_blockquote, '', '', '&#xf10e;' ],
 	[ 'bulleted-list', 'Bulleted list', '', '\\n* ', '', 'List item', '&#xf0ca;' ],
 	[ 'numbered-list', 'Numbered list', '', '\\n1. ', '', 'List item', '&#xf0cb;' ],
 	[ 'horizontal-rule', 'Horizontal rule', '', '\\n\\n---\\n\\n', '', '', '&#xf068;' ],
@@ -4636,7 +4636,7 @@ GW.guiEditButtons = [
 	[ 'spoiler', 'Spoiler block', '', '::: spoiler\\n', '\\n:::', 'Spoiler text', '&#xf2fc;' ]
 ];
 
-function blockquote(text, startpos) {
+function GUIEdit_blockquote(text, startpos) {
 	if (text == '') {
 		text = "> Quoted text";
 		return [ text, startpos + 2, startpos + text.length ];
@@ -4646,22 +4646,53 @@ function blockquote(text, startpos) {
 	}
 }
 
-function hyperlink(text, startpos) {
-	var url = '', link_text = text, endpos = startpos;
+function GUIEdit_hyperlink(text, startpos) {
+	var url = '', link_text = '', endpos = startpos;
 	if (text.search(/^https?/) != -1) {
 		url = text;
-		link_text = "link text";
-		startpos = startpos + 1;
-		endpos = startpos + link_text.length;
 	} else {
+		link_text = text;
 		url = prompt("Link address (URL):");
 		if (!url) {
 			endpos = startpos + text.length;
 			return [ text, startpos, endpos ];
 		}
+	}
+	if (!link_text) {
+		link_text = "link text";
+		startpos = startpos + 1;
+		endpos = startpos + link_text.length;
+	} else {
 		startpos = startpos + text.length + url.length + 4;
 		endpos = startpos;
 	}
 
 	return [ "[" + link_text + "](" + url + ")", startpos, endpos ];
 }
+
+function GUIEdit_image(text, startpos) {
+	var src = '', alt_text = '', title_text = '', endpos = startpos;
+	if (text.search(/^https?/) != -1) {
+		src = text;
+	} else {
+		alt_text = text;
+		src = prompt("Link address (URL):");
+		if (!src) {
+			endpos = startpos + text.length;
+			return [ text, startpos, endpos ];
+		}
+	}
+	if (!alt_text) {
+		alt_text = "image alt text";
+		title_text = "image title text";
+		startpos = startpos + 2;
+		endpos = startpos + alt_text.length;
+	} else {
+		title_text = alt_text;
+		startpos = startpos + text.length + src.length + 5;
+		endpos = startpos;
+	}
+
+	return [ "![" + alt_text + "](" + src + " \"" + title_text + "\")", startpos, endpos ];
+}
+
