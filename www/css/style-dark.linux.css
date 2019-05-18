@@ -4895,7 +4895,7 @@ button.guiedit {
 	position: absolute;
 	font-size: 1rem;
 	top: 2px;
-	left: 464px;
+	left: 500px;
 	height: 25px;
 	padding: 4px 0;
 	white-space: nowrap;
@@ -5036,7 +5036,7 @@ button.guiedit {
 		font-size: 0.9375rem;
 		line-height: 1.5;
 		height: auto;
-		width: calc((100% / 10) - 2px);
+		width: calc((100% / 11) - 2px);
 		padding: 10px 1px 8px 0;
 		position: relative;
 		margin: 1px;

@@ -3554,7 +3554,8 @@ function keyboardHelpSetup() {
 				[ [ 'ak-k' ], "Bold text" ],
 				[ [ 'ak-i' ], "Italic text" ],
 				[ [ 'ak-l' ], "Insert hyperlink" ],
-				[ [ 'ak-q' ], "Blockquote text" ]
+				[ [ 'ak-q' ], "Blockquote text" ],
+				[ [ 'ak-n' ], "Footnote" ]
 			], [
 				"Miscellaneous",
 				[ [ 'ak-x' ], "Switch to next view on user page" ],
@@ -4586,26 +4587,47 @@ function insertMarkup(event) {
 	var cur0 = cur1 = p0;
 
 	var str = (p0 == p1) ? mtext : textarea.value.substring(p0, p1);
-	str = func ? func(str, p0) : (mopen + str + mclose);
+	str = func ? func(str, p0, textarea.value) : (mopen + str + mclose);
 
 	// Determine selection.
+	var opt = { };
 	if (!func) {
 		cur0 += (p0 == p1) ? mopen.length : str.length;
 		cur1 = (p0 == p1) ? (cur0 + mtext.length) : cur0;
 	} else {
 		cur0 = str[1];
 		cur1 = str[2];
+		if (str.length > 3) opt = str[3];
 		str = str[0];
 	}
 
 	// Update textarea contents.
-	// The document.execCommand API is broken in Firefox 
-	// ( https://bugzilla.mozilla.org/show_bug.cgi?id=1220696 ), but using it
-	// allows native undo/redo to work; so we enable it in other browsers.
-	if (GW.isFirefox) {
-		textarea.value = textarea.value.substring(0, p0) + str + textarea.value.substring(p1);
-	} else {
-		document.execCommand("insertText", false, str);
+	insertText(str, textarea, p0, p1);
+	if (opt && opt.where && opt.text) {
+		switch (opt.where) {
+		case "start":
+			insertText(opt.text, textarea, 0, 0);
+			break;
+		case "end":
+			insertText(opt.text, textarea, textarea.value.length, textarea.value.length);
+			break;
+		default:
+			break;
+		}
+		if (opt.cur_pos) {
+			switch (opt.cur_pos) {
+			case "text-start":
+				cur0 = cur1 = 0;
+				break;
+			case "text-end":
+				cur0 = cur1 = textarea.value.length;
+				break;
+			default:
+				cur0 = ((opt.where == "start") ? 0 : (textarea.value.length - opt.text.length)) + opt.cur_pos[0];
+				cur1 = cur0 + opt.cur_pos[1];
+				break;
+			}
+		}
 	}
 	// Expand textarea, if needed.
 	expandTextarea(textarea);
@@ -4615,6 +4637,19 @@ function insertMarkup(event) {
 	textarea.selectionEnd = cur1;
 
 	return;
+}
+
+function insertText(text, textarea, p0, p1) {
+	// The document.execCommand API is broken in Firefox 
+	// ( https://bugzilla.mozilla.org/show_bug.cgi?id=1220696 ), but using it
+	// allows native undo/redo to work; so we enable it in other browsers.
+	if (GW.isFirefox) {
+		textarea.value = textarea.value.substring(0, p0) + text + textarea.value.substring(p1);
+	} else {
+		textarea.selectionStart = p0;
+		textarea.selectionEnd = p1;
+		document.execCommand("insertText", false, text);
+	}
 }
 
 GW.guiEditButtons = [
@@ -4633,7 +4668,8 @@ GW.guiEditButtons = [
 	[ 'inline-code', 'Inline code', '', '`', '`', 'Code', '&#xf121;' ],
 	[ 'code-block', 'Code block', '', '```\\n', '\\n```', 'Code', '&#xf1c9;' ],
 	[ 'formula', 'LaTeX', '', '$', '$', 'LaTeX formula', '&#xf155;' ],
-	[ 'spoiler', 'Spoiler block', '', '::: spoiler\\n', '\\n:::', 'Spoiler text', '&#xf2fc;' ]
+	[ 'spoiler', 'Spoiler block', '', '::: spoiler\\n', '\\n:::', 'Spoiler text', '&#xf2fc;' ],
+	[ 'footnote', 'Footnote', 'n', GUIEdit_footnote, '', '', '&#xf7e9;' ]
 ];
 
 function GUIEdit_blockquote(text, startpos) {
@@ -4696,3 +4732,20 @@ function GUIEdit_image(text, startpos) {
 	return [ "![" + alt_text + "](" + src + " \"" + title_text + "\")", startpos, endpos ];
 }
 
+function GUIEdit_footnote(text, startpos, fulltext) {
+	var footnotes = [...new Set(fulltext.match(/\[\^.+?\]/g))];
+	var fnref = `[^${footnotes.length + 1}]`;
+
+	startpos = startpos + fnref.length;
+	var endpos = startpos;
+	var fntext = text || "Footnote text."
+	var options = { 
+		where:		"end",
+		text:		`\n\n${fnref}: ${fntext}`
+	};
+	if (!text) {
+		options.cur_pos = [ fnref.length + 4, fnref.length + 4 + fntext.length ]
+	}
+
+	return [ fnref, startpos, endpos, options ];
+}
