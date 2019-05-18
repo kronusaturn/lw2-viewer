@@ -581,6 +581,9 @@ ul.comment-thread {
 	pointer-events: none;
 	display: none;
 }
+.comment-item.focused::before {
+	z-index: 5001;
+}
 
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
@@ -1271,9 +1274,12 @@ a.comment-child-link::before {
 /*= Minimized comments =*/
 /*=--------------------=*/
 
-.comment-item.minimized {
+.comment-item.minimized > .comment {
 	height: var(--GW-comment-minimized-height);
 	overflow: hidden;
+}
+.comment-item.minimized > .comment ~ * {
+	display: none;
 }
 
 /*=----------------------------=*/
@@ -1281,7 +1287,7 @@ a.comment-child-link::before {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 520px) {
-	.comment-item.minimized {
+	.comment-item.minimized > .comment {
 		height: var(--GW-comment-minimized-height-mobile);
 	}
 	.comment-minimize-button {
