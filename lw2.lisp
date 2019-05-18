@@ -239,9 +239,7 @@ signaled condition to OUT-STREAM."
 		 :level level
                  :extra-html-fn (lambda (c-id)
 				  (if (and (= level 10) (gethash c-id comment-hash))
-				      (format out-stream "<input type=\"checkbox\" id=\"expand-~A\"><label for=\"expand-~:*~A\" data-child-count=\"~A comment~:P\">Expand this thread</label>"
-					      c-id
-					      (cdr (assoc :child-count c))))
+				      (format out-stream "<span class=\"deep-comment-threshold\"></span>"))
 				  (comment-tree-to-html out-stream comment-hash c-id (1+ level))))))))))
 
 (defun comment-chrono-to-html (out-stream comments)

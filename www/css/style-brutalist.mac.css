@@ -3837,51 +3837,19 @@ ul.comment-thread {
 /* DEEP COMMENT THREAD COLLAPSING */
 /**********************************/
 
-.comment-item input[id^="expand"] {
+.comment-item .deep-comment-threshold {
 	display: none;
 }
-.comment-item input[id^="expand"] + label {
-	display: block;
-	visibility: hidden;
-	position: relative;
-	margin: 8px 9px;
-}
-.comment-item input[id^="expand"] + label::after {
-	content: "(Expand " attr(data-child-count) " below)";
-	visibility: visible;
-	position: absolute;
-	left: 0;
-	white-space: nowrap;
-	cursor: pointer;
 
-	color: var(--GW-hyperlink-color);
-	font-weight: var(--GW-UI-font-weight-heavy);
-}
-.comment-item input[id^="expand"] + label:hover::after,
-.comment-item input[id^="expand"] + label:focus::after {
-	color: var(--GW-hyperlink-hover-color);
-}
-.comment-item input[id^="expand"] + label:active::after {
-	color: var(--GW-hyperlink-active-color);
-}
-.comment-item input[id^="expand"]:checked + label::after {
-	content: "(Collapse " attr(data-child-count) "	below)";
-}
-.comment-item input[id^="expand"] ~ .comment-thread {
-	max-height: 34px;
-	overflow: hidden;
-}
-.comment-item input[id^="expand"] ~ .comment-thread > li:first-child {
+.comment-item .deep-comment-threshold ~ .comment-thread > li:first-child {
 	margin-top: 0;
 }
-.comment-item input[id^="expand"]:checked ~ .comment-thread {
-	max-height: 1000000px;
+.comment-item .deep-comment-threshold ~ .comment-thread .comment-thread .comment-item {
+	margin: 0;
+	border-width: 1px 0 0 0;
 }
 
-.comment-item input[id^="expand"]:checked ~ .comment-thread .comment-thread .comment-item {
-	margin: 0;
-}
-.comment-item input[id^="expand"]:checked ~ .comment-thread .comment-thread .comment-item a.comment-parent-link:hover::after {
+.comment-item .deep-comment-threshold ~ .comment-thread .comment-thread .comment-item a.comment-parent-link:hover::after {
 	display: none;
 }
 
@@ -8167,14 +8135,6 @@ a.comment-parent-link:hover::before {
 .answer-item.highlight::after,
 .answer-item.highlight-faint::after {
 	border-style: solid;
-}
-
-/*================================*/
-/* DEEP COMMENT THREAD COLLAPSING */
-/*================================*/
-
-.comment-item input[id^="expand"]:checked ~ .comment-thread .comment-thread .comment-item {
-	border-width: 1px 0 0 0;
 }
 
 /*==============*/

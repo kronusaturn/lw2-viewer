@@ -1468,14 +1468,6 @@ a.comment-parent-link:hover::before {
 	box-shadow: none;
 }
 
-/*================================*/
-/* DEEP COMMENT THREAD COLLAPSING */
-/*================================*/
-
-.comment-item input[id^="expand"]:checked ~ .comment-thread .comment-thread .comment-item {
-	border-width: 1px 0 0 0;
-}
-
 /*==============*/
 /* COMMENT-META */
 /*==============*/

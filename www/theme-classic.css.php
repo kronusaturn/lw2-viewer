@@ -1018,25 +1018,6 @@ h1.post-title {
 		4px	4px 0 12px var(--GW-comment-background-color-target) inset;
 }
 
-/*================================*/
-/* DEEP COMMENT THREAD COLLAPSING */
-/*================================*/
-
-.comment-item input[id^="expand"] + label::after {
-	color: <?php echo $hyperlink_color; ?>;
-	font-weight: 600;
-}
-.comment-item input[id^="expand"] + label:hover::after {
-	color: #c00;
-}
-.comment-item input[id^="expand"] + label:active::after,
-.comment-item input[id^="expand"] + label:focus::after{
-	color: #c00;
-}
-.comment-item input[id^="expand"]:checked ~ .comment-thread .comment-thread .comment-item {
-	border-width: 1px 0 0 0;
-}
-
 /*==============*/
 /* COMMENT-META */
 /*==============*/

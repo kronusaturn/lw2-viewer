@@ -1557,25 +1557,6 @@ a.post-section.alignment-forum:hover::before {
 	font-size: 1.125rem;
 }
 
-/*================================*/
-/* DEEP COMMENT THREAD COLLAPSING */
-/*================================*/
-
-.comment-item input[id^="expand"] + label::after {
-	color: <?php echo $hyperlink_color; ?>;
-	font-weight: 400;
-}
-.comment-item input[id^="expand"] + label:hover::after {
-	color: #c00;
-}
-.comment-item input[id^="expand"] + label:active::after,
-.comment-item input[id^="expand"] + label:focus::after{
-	color: #c00;
-}
-.comment-item input[id^="expand"]:checked ~ .comment-thread .comment-thread .comment-item {
-	border-width: 1px 0 0 0;
-}
-
 /*==============*/
 /* COMMENT-META */
 /*==============*/

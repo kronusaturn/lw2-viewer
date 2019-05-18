@@ -893,12 +893,22 @@ Element.prototype.setCommentThreadMaximized = function(toggle, userOriginated = 
 	let commentItem = this;
 	let storageName = "thread-minimized-" + commentItem.getCommentId();
 	let minimize_button = commentItem.query(".comment-minimize-button");
-	let maximize = force || (toggle ? /minimized/.test(minimize_button.className) : !(localStorage.getItem(storageName) || commentItem.hasClass("ignored")));
+	let deepComment = Æ(commentItem.parentElement.previousElementSibling).hasClass("deep-comment-threshold");
+	let savedState = localStorage.getItem(storageName);
+	let maximize = force || 
+				   (toggle ? 
+				   		minimize_button.hasClass("minimized") : 
+				   		!(savedState == "true" || 
+				   		  commentItem.hasClass("ignored") ||
+				   		  (deepComment && savedState != "false")
+				   		 )
+				   );
 	if (userOriginated) {
-		if (maximize) {
-			localStorage.removeItem(storageName);
+		var save = (maximize && deepComment) || (!maximize && !deepComment);
+		if (save) {
+			localStorage.setItem(storageName, !maximize);
 		} else {
-			localStorage.setItem(storageName, true);
+			localStorage.removeItem(storageName);
 		}
 	}
 
@@ -2526,9 +2536,6 @@ function expandAncestorsOf(commentID) {
 		return;
 	}
 
-	// Expand collapsed comment threads.
-	Æ(Æ(Æ(comment.closest("label[for^='expand'] + .comment-thread")).parentElement).query("input[id^='expand']")).checked = true;
-
 	// Expand collapsed comments.
 	Æ(comment.closest(".comments .comment-item.minimized")).setCommentThreadMaximized(true, false, true);
 }
@@ -4009,6 +4016,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		// Format and activate comment-minimize buttons.
 		queryAll(".comment-minimize-button").forEach(button => {
 			button.closest(".comment-item").setCommentThreadMaximized(false);
+
 			button.addActivateEvent(GW.commentMinimizeButtonClicked = (event) => {
 				GWLog("GW.commentMinimizeButtonClicked");
 
