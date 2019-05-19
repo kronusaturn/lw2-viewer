@@ -664,7 +664,8 @@ input[type='range']::-ms-thumb {
 	-moz-user-select: auto;
 	user-select: auto;
 }
-#theme-tweaker-ui .clippy-container .hint img {
+#theme-tweaker-ui .clippy-container .hint span:first-of-type::before {
+	content: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme-tweaker/minimize_button_icon.gif")) ?>');
 	vertical-align: bottom;
 }
 #theme-tweaker-ui .clippy-container .clippy {

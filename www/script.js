@@ -1105,7 +1105,7 @@ function injectThemeTweaker() {
 		</div>
 	</div>
 	<div class="clippy-container">
-		<span class="hint">Hi, I'm Bobby the Basilisk! Click on the minimize button (<img src='data:image/gif;base64,R0lGODlhFgAUAPIAMQAAAAMDA394f7+4v9/Y3//4/2JX/38AACwAAAAAFgAUAAADRki63B6kyEkrFbCMzbvnWPSNXqiRqImm2Uqq7gfH3Uxv9p3TNuD/wFqLAywChCKi8Yc83XDD52AXCwmu2KxWG+h6v+BwNwEAOw==' />) to minimize the theme tweaker window, so that you can see what the page looks like with the current tweaked values. (But remember, <span>the changes won't be saved until you click "OK"!</span>)
+		<span class="hint">Hi, I'm Bobby the Basilisk! Click on the minimize button (<span></span>) to minimize the theme tweaker window, so that you can see what the page looks like with the current tweaked values. (But remember, <span>the changes won't be saved until you click "OK"!</span></span>)
 		<div class='clippy'></div>
 		<button type='button' class='clippy-close-button' tabindex='-1' title='Hide theme tweaker assistant (you can bring him back by clicking the ? button in the title bar)'></button>
 	</div>
