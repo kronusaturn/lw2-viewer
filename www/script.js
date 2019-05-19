@@ -564,14 +564,7 @@ function injectContentWidthSelector() {
 	let currentWidth = localStorage.getItem("selected-width") || 'normal';
 
 	// Inject the content width selector widget and activate buttons.
-	let widthSelector = addUIElement(
-		"<div id='width-selector'>" +
-		String.prototype.concat.apply("", GW.widthOptions.map(widthOption => {
-			let [name, desc, abbr] = widthOption;
-			let selected = (name == currentWidth ? ' selected' : '');
-			let disabled = (name == currentWidth ? ' disabled' : '');
-			return `<button type='button' class='select-width-${name}${selected}'${disabled} title='${desc}' tabindex='-1' data-name='${name}'><svg><use xlink:href='${GW.assetVersions['/assets/icons.svg']}#width-${name}'/></svg></button>`})) +
-		"</div>");
+	let widthSelector = addUIElement({{{width_selector}}});
 	widthSelector.queryAll("button").forEach(button => {
 		button.addActivateEvent(GW.widthAdjustButtonClicked = (event) => {
 			GWLog("GW.widthAdjustButtonClicked");
@@ -641,15 +634,7 @@ function injectThemeSelector() {
 	GWLog("injectThemeSelector");
 
 	let currentTheme = readCookie("theme") || "default";
-	let themeSelector = addUIElement(
-		"<div id='theme-selector' class='theme-selector'>" +
-		String.prototype.concat.apply("", GW.themeOptions.map(themeOption => {
-			let [name, desc, letter] = themeOption;
-			let selected = (name == currentTheme ? ' selected' : '');
-			let disabled = (name == currentTheme ? ' disabled' : '');
-			let accesskey = letter.charCodeAt(0) - 'A'.charCodeAt(0) + 1;
-			return `<button type='button' class='select-theme-${name}${selected}'${disabled} title="${desc} [${accesskey}]" data-theme-name="${name}" data-theme-description="${desc}" accesskey='${accesskey}' tabindex='-1'>${letter}</button>`;})) +
-		"</div>");
+	let themeSelector = addUIElement({{{theme_selector}}});
 	themeSelector.queryAll("button").forEach(button => {
 		button.addActivateEvent(GW.themeSelectButtonClicked = (event) => {
 			GWLog("GW.themeSelectButtonClicked");
@@ -662,21 +647,7 @@ function injectThemeSelector() {
 
 	// Inject transitions CSS, if animating changes is enabled.
 	if (GW.adjustmentTransitions) {
-		query("head").insertAdjacentHTML("beforeend", 
-			"<style id='theme-fade-transition'>" + 
-			`body {
-				transition:
-					opacity 0.5s ease-out,
-					background-color 0.3s ease-out;
-			}
-			body.transparent {
-				background-color: #777;
-				opacity: 0.0;
-				transition:
-					opacity 0.5s ease-in,
-					background-color 0.3s ease-in;
-			}` + 
-			"</style>");
+		query("head").insertAdjacentHTML("beforeend", {{{adjustment_transitions_styles}}});
 	}
 }
 function setSelectedTheme(themeName) {
@@ -950,10 +921,7 @@ GW.themeLoadCallback_dark = (fromTheme = "") => {
 	}
 
 	// Dark theme should NOT have text rendering adjusted for invert filter.
-	query("head").insertAdjacentHTML("beforeend", "<style id='dark-theme-adjustments'>" + `
-		body.filter-inverted { text-shadow: none; }
-		body.filter-inverted .body-text { text-shadow: 0 0 1px var(--GW-content-background-color); }
-	` + "</style>");
+	query("head").insertAdjacentHTML("beforeend", {{{dark_theme_adjustments_styles}}});
 }
 GW.themeUnloadCallback_dark = (toTheme = "") => {
 	GWLog("themeUnloadCallback_dark");
@@ -1052,75 +1020,7 @@ GW.themeUnloadCallback_classic = (toTheme = "") => {
 function injectThemeTweaker() {
 	GWLog("injectThemeTweaker");
 
-	let themeTweakerUI = addUIElement("<div id='theme-tweaker-ui' style='display: none;'>" + 
-	`<div class='main-theme-tweaker-window'>
-		<h1>Customize appearance</h1>
-		<button type='button' class='minimize-button minimize' tabindex='-1'></button>
-		<button type='button' class='help-button' tabindex='-1'></button>
-		<p class='current-theme'>Current theme: <span>` + 
-		(readCookie("theme") || "default") + 
-		`</span></p>
-		<p class='theme-selector'></p>
-		<div class='controls-container'>
-			<div id='theme-tweak-section-sample-text' class='section' data-label='Sample text'>
-				<div class='sample-text-container'><span class='sample-text body-text'>
-					<p>Less Wrong (text)</p>
-					<p><a href="#">Less Wrong (link)</a></p>
-				</span></div>
-			</div>
-			<div id='theme-tweak-section-text-size-adjust' class='section' data-label='Text size'>
-				<button type='button' class='text-size-adjust-button decrease' title='Decrease text size'></button>
-				<button type='button' class='text-size-adjust-button default' title='Reset to default text size'></button>
-				<button type='button' class='text-size-adjust-button increase' title='Increase text size'></button>
-			</div>
-			<div id='theme-tweak-section-invert' class='section' data-label='Invert (photo-negative)'>
-				<input type='checkbox' id='theme-tweak-control-invert'></input>
-				<label for='theme-tweak-control-invert'>Invert colors</label>
-			</div>
-			<div id='theme-tweak-section-saturate' class='section' data-label='Saturation'>
-				<input type="range" id="theme-tweak-control-saturate" min="0" max="300" data-default-value="100" data-value-suffix="%" data-label-suffix="%">
-				<p class="theme-tweak-control-label" id="theme-tweak-label-saturate"></p>
-				<div class='notch theme-tweak-slider-notch-saturate' title='Reset saturation to default value (100%)'></div>
-			</div>
-			<div id='theme-tweak-section-brightness' class='section' data-label='Brightness'>
-				<input type="range" id="theme-tweak-control-brightness" min="0" max="300" data-default-value="100" data-value-suffix="%" data-label-suffix="%">
-				<p class="theme-tweak-control-label" id="theme-tweak-label-brightness"></p>
-				<div class='notch theme-tweak-slider-notch-brightness' title='Reset brightness to default value (100%)'></div>
-			</div>
-			<div id='theme-tweak-section-contrast' class='section' data-label='Contrast'>
-				<input type="range" id="theme-tweak-control-contrast" min="0" max="300" data-default-value="100" data-value-suffix="%" data-label-suffix="%">
-				<p class="theme-tweak-control-label" id="theme-tweak-label-contrast"></p>
-				<div class='notch theme-tweak-slider-notch-contrast' title='Reset contrast to default value (100%)'></div>
-			</div>
-			<div id='theme-tweak-section-hue-rotate' class='section' data-label='Hue rotation'>
-				<input type="range" id="theme-tweak-control-hue-rotate" min="0" max="360" data-default-value="0" data-value-suffix="deg" data-label-suffix="°">
-				<p class="theme-tweak-control-label" id="theme-tweak-label-hue-rotate"></p>
-				<div class='notch theme-tweak-slider-notch-hue-rotate' title='Reset hue to default (0° away from standard colors for theme)'></div>
-			</div>
-		</div>
-		<div class='buttons-container'>
-			<button type="button" class="reset-defaults-button">Reset to defaults</button>
-			<button type='button' class='ok-button default-button'>OK</button>
-			<button type='button' class='cancel-button'>Cancel</button>
-		</div>
-	</div>
-	<div class="clippy-container">
-		<span class="hint">Hi, I'm Bobby the Basilisk! Click on the minimize button (<span></span>) to minimize the theme tweaker window, so that you can see what the page looks like with the current tweaked values. (But remember, <span>the changes won't be saved until you click "OK"!</span></span>)
-		<div class='clippy'></div>
-		<button type='button' class='clippy-close-button' tabindex='-1' title='Hide theme tweaker assistant (you can bring him back by clicking the ? button in the title bar)'></button>
-	</div>
-	<div class='help-window' style='display: none;'>
-		<h1>Theme tweaker help</h1>
-		<div id='theme-tweak-section-clippy' class='section' data-label='Theme Tweaker Assistant'>
-			<input type='checkbox' id='theme-tweak-control-clippy' checked='checked'></input>
-			<label for='theme-tweak-control-clippy'>Show Bobby the Basilisk</label>
-		</div>
-		<div class='buttons-container'>
-			<button type='button' class='ok-button default-button'>OK</button>
-			<button type='button' class='cancel-button'>Cancel</button>
-		</div>
-	</div>
-	` + "</div>");
+	let themeTweakerUI = addUIElement({{{theme_tweaker_ui}}});
 
 	// Clicking the background overlay closes the theme tweaker.
 	themeTweakerUI.addActivateEvent(GW.themeTweaker.UIOverlayClicked = (event) => {
@@ -1268,7 +1168,7 @@ function injectThemeTweaker() {
 		button.addActivateEvent(GW.themeTweaker.textSizeAdjustButtonClicked);
 	});
 
-	let themeTweakerToggle = addUIElement(`<div id='theme-tweaker-toggle'><button type='button' tabindex='-1' title="Customize appearance [;]" accesskey=';'>&#xf3f0;</button></div>`);
+	let themeTweakerToggle = addUIElement({{{theme_tweaker_toggle}}});
 	themeTweakerToggle.query("button").addActivateEvent(GW.themeTweaker.toggleButtonClicked = (event) => {
 		GWLog("GW.themeTweaker.toggleButtonClicked");
 
@@ -1419,12 +1319,7 @@ function updateThemeTweakerSampleText() {
 function injectQuickNavUI() {
 	GWLog("injectQuickNavUI");
 
-	let quickNavContainer = addUIElement("<div id='quick-nav-ui'>" +
-	`<a href='#top' title="Up to top [,]" accesskey=','>&#xf106;</a>
-	 <a href='#answers' title="Answers [/]">&#xf4a2;</a>
-	 <a href='#comments' title="Comments [/]">&#xf036;</a>
-	 <a href='#bottom-bar' title="Down to bottom [.]" accesskey='.'>&#xf107;</a>
-	` + "</div>");
+	let quickNavContainer = addUIElement({{{quick_nav_ui}}});
 
 	// Set initial accesskey.
 	quickNavContainer.query(`a[href='${query("#answers") ? "#answers" : "#comments"}']`).accessKey = '/';
@@ -1456,13 +1351,9 @@ function injectQuickNavUI() {
 function injectNewCommentNavUI(newCommentsCount) {
 	GWLog("injectNewCommentNavUI");
 
-	let newCommentUIContainer = addUIElement("<div id='new-comment-nav-ui'>" + 
-	`<button type='button' class='new-comment-sequential-nav-button new-comment-previous' title='Previous new comment (,)' tabindex='-1'>&#xf0d8;</button>
-	<span class='new-comments-count'></span>
-	<button type='button' class='new-comment-sequential-nav-button new-comment-next' title='Next new comment (.)' tabindex='-1'>&#xf0d7;</button>`
-	+ "</div>");
+	let newCommentNavUIContainer = addUIElement({{{new_comment_nav_ui}}});
 
-	newCommentUIContainer.queryAll(".new-comment-sequential-nav-button").forEach(button => {
+	newCommentNavUIContainer.queryAll(".new-comment-sequential-nav-button").forEach(button => {
 		button.addActivateEvent(GW.commentQuicknavButtonClicked = (event) => {
 			GWLog("GW.commentQuicknavButtonClicked");
 			scrollToNewComment(event.target.hasClass("new-comment-next"));
@@ -1488,10 +1379,7 @@ function injectNewCommentNavUI(newCommentsCount) {
 		}, 150);
 	});
 
-	let hnsDatePicker = addUIElement("<div id='hns-date-picker'>"
-	+ `<span>Since:</span>`
-	+ `<input type='text' class='hns-date'></input>`
-	+ "</div>");
+	let hnsDatePicker = addUIElement({{{hns_date_picker}}});
 
 	window.addEventListener("resize", GW.hnsDatePickerFlipToFit = (event) => {
 		GWLog("hnsDatePickerFlipToFit");
@@ -1574,11 +1462,7 @@ GW.themeTweaker.textSizeAdjustButtonClicked = (event) => {
 function injectTextSizeAdjustmentUIReal() {
 	GWLog("injectTextSizeAdjustmentUIReal");
 
-	let textSizeAdjustmentUIContainer = addUIElement("<div id='text-size-adjustment-ui'>"
-	+ `<button type='button' class='text-size-adjust-button decrease' title="Decrease text size [-]" tabindex='-1' accesskey='-'>&#xf068;</button>`
-	+ `<button type='button' class='text-size-adjust-button default' title="Reset to default text size [0]" tabindex='-1' accesskey='0'>A</button>`
-	+ `<button type='button' class='text-size-adjust-button increase' title="Increase text size [=]" tabindex='-1' accesskey='='>&#xf067;</button>`
-	+ "</div>");
+	let textSizeAdjustmentUIContainer = addUIElement({{{text_size_adjustment_ui}}});
 
 	textSizeAdjustmentUIContainer.queryAll("button").forEach(button => {
 		button.addActivateEvent(GW.themeTweaker.textSizeAdjustButtonClicked);
@@ -1610,10 +1494,7 @@ function injectCommentsViewModeSelector() {
 	let currentModeThreaded = (location.href.search("chrono=t") == -1);
 	let newHref = "href='" + location.pathname + location.search.replace("chrono=t","") + (currentModeThreaded ? ((location.search == "" ? "?" : "&") + "chrono=t") : "") + location.hash + "' ";
 
-	let commentsViewModeSelector = addUIElement("<div id='comments-view-mode-selector'>"
-	+ `<a class="threaded ${currentModeThreaded ? 'selected' : ''}" ${currentModeThreaded ? "" : newHref} ${currentModeThreaded ? "" : "accesskey='x' "} title='Comments threaded view${currentModeThreaded ? "" : " [x]"}'>&#xf038;</a>`
-	+ `<a class="chrono ${currentModeThreaded ? '' : 'selected'}" ${currentModeThreaded ? newHref : ""} ${currentModeThreaded ? "accesskey='x' " : ""} title='Comments chronological (flat) view${currentModeThreaded ? " [x]" : ""}'>&#xf017;</a>`
-	+ "</div>");
+	let commentsViewModeSelector = addUIElement({{{comments_view_mode_selector}}});
 
 // 	commentsViewModeSelector.queryAll("a").forEach(button => {
 // 		button.addActivateEvent(commentsViewModeSelectorButtonClicked);
@@ -1708,10 +1589,7 @@ function injectCommentsListModeSelector() {
 
 	if (query("#content > .listings > .comment-thread") == null) return;
 
-	let commentsListModeSelectorHTML = "<div id='comments-list-mode-selector'>"
-	+ `<button type='button' class='expanded' title='Expanded comments view' tabindex='-1'><svg><use xlink:href='${GW.assetVersions['/assets/icons.svg']}#comments-expanded'/></svg></button>`
-	+ `<button type='button' class='compact' title='Compact comments view' tabindex='-1'><svg><use xlink:href='${GW.assetVersions['/assets/icons.svg']}#comments-compact'/></svg></button>`
-	+ "</div>";
+	let commentsListModeSelectorHTML = {{{comments_list_mode_selector}}};
 	(query("#content.user-page .user-stats") || query(".page-toolbar") || query(".active-bar")).insertAdjacentHTML("afterend", commentsListModeSelectorHTML);
 	let commentsListModeSelector = query("#comments-list-mode-selector");
 
@@ -2314,112 +2192,7 @@ function addCommentParentPopups() {
 /*****************/
 
 function keyboardHelpSetup() {
-	let keyboardHelpOverlay = addUIElement("<nav id='keyboard-help-overlay'>" + `
-		<div class='keyboard-help-container'>
-			<button type='button' title='Close keyboard shortcuts' class='close-keyboard-help'>&#xf00d;</button>
-			<h1>Keyboard shortcuts</h1>
-			<p class='note'>Keys shown in yellow (e.g., <code class='ak'>]</code>) are <a href='https://en.wikipedia.org/wiki/Access_key#Access_in_different_browsers' target='_blank'>accesskeys</a>, and require a browser-specific modifier key (or keys).</p>
-			<p class='note'>Keys shown in grey (e.g., <code>?</code>) do not require any modifier keys.</p>
-			<div class='keyboard-shortcuts-lists'>` + [ [
-				"General",
-				[ [ '?' ], "Show keyboard shortcuts" ],
-				[ [ 'Esc' ], "Hide keyboard shortcuts" ]
-			], [
-				"Site navigation",
-				[ [ 'ak-h' ], "Go to Home (a.k.a. “Frontpage”) view" ],
-				[ [ 'ak-f' ], "Go to Featured (a.k.a. “Curated”) view" ],
-				[ [ 'ak-a' ], "Go to All (a.k.a. “Community”) view" ],
-				[ [ 'ak-m' ], "Go to Meta view" ],
-				[ [ 'ak-c' ], "Go to Recent Comments view" ],
-				[ [ 'ak-r' ], "Go to Archive view" ],
-				[ [ 'ak-q' ], "Go to Sequences view" ],
-				[ [ 'ak-t' ], "Go to About page" ],
-				[ [ 'ak-u' ], "Go to User or Login page" ],
-				[ [ 'ak-o' ], "Go to Inbox page" ]
-			], [
-				"Page navigation",
-				[ [ 'ak-,' ], "Jump up to top of page" ],
-				[ [ 'ak-.' ], "Jump down to bottom of page" ],
-				[ [ 'ak-/' ], "Jump to top of answers section" ],
-				[ [ 'ak-/' ], "Jump to top of comments section" ],
-				[ [ ';' ], "Focus external link (on link posts)" ],
-				[ [ 'ak-s' ], "Search" ]
-			], [
-				"Page actions",
-				[ [ 'ak-n' ], "New post or comment" ],
-				[ [ 'ak-w' ], "New answer (on question posts)" ],
-				[ [ 'ak-e' ], "Edit current post" ],
-				[ [ 'ak-z' ], "Switch to next sort order (comments)" ],
-				[ [ 'ak-x' ], "Switch to next sort order (answers)" ]
-			], [
-				"Sequences",
-				[ [ 'ak-]' ], "Go to next post in sequence" ],
-				[ [ 'ak-[' ], "Go to previous post in sequence" ],
-				[ [ 'ak-\\' ], "Go to sequence index" ]
-			], [
-				"Post/comment list views",
-				[ [ '.' ], "Focus next entry (post/comment)" ],
-				[ [ ',' ], "Focus previous entry (post/comment)" ],
-				[ [ ';' ], "Cycle between links in focused entry" ],
-				[ [ 'Enter' ], "Go to currently focused entry" ],
-				[ [ 'Esc' ], "Unfocus currently focused entry" ],
-				[ [ 'ak-]' ], "Go to next page" ],
-				[ [ 'ak-[' ], "Go to previous page" ],
-				[ [ 'ak-\\' ], "Go to first page" ],
-				[ [ 'ak-e' ], "Edit currently focused post" ],
-				[ [ 'ak-z' ], "Switch post sort order" ]
-			], [
-				"Editor",
-				[ [ 'ak-k' ], "Bold text" ],
-				[ [ 'ak-i' ], "Italic text" ],
-				[ [ 'ak-l' ], "Insert hyperlink" ],
-				[ [ 'ak-q' ], "Blockquote text" ],
-				[ [ 'ak-n' ], "Footnote" ]
-			], [
-				"Miscellaneous",
-				[ [ 'ak-x' ], "Switch to next view on user page" ],
-				[ [ 'ak-z' ], "Switch to previous view on user page" ],
-				[ [ 'ak-`' ], "Toggle compact comment list view" ],
-				[ [ 'ak-g' ], "Toggle anti-kibitzer mode" ]
-			], [
-				"Appearance",
-				[ [ 'ak-=' ], "Increase text size" ],
-				[ [ 'ak--' ], "Decrease text size" ],
-				[ [ 'ak-0' ], "Reset to default text size" ],
-				[ [ 'ak-\'' ], "Cycle through content width settings" ],
-				[ [ 'ak-1' ], "Switch to default theme [A]" ],
-				[ [ 'ak-2' ], "Switch to dark theme [B]" ],
-				[ [ 'ak-3' ], "Switch to grey theme [C]" ],
-				[ [ 'ak-4' ], "Switch to ultramodern theme [D]" ],
-				[ [ 'ak-5' ], "Switch to simple theme [E]" ],
-				[ [ 'ak-6' ], "Switch to brutalist theme [F]" ],
-				[ [ 'ak-7' ], "Switch to ReadTheSequences theme [G]" ],
-				[ [ 'ak-8' ], "Switch to classic Less Wrong theme [H]" ],
-				[ [ 'ak-9' ], "Switch to modern Less Wrong theme [I]" ],
-				[ [ 'ak-;' ], "Open theme tweaker" ],
-				[ [ 'Enter' ], "Save changes and close theme tweaker"],
-				[ [ 'Esc' ], "Close theme tweaker (without saving)" ]
-			], [
-				"Slide shows",
-				[ [ 'ak-l' ], "Start/resume slideshow" ],
-				[ [ 'Esc' ], "Exit slideshow" ],
-				[ [ '&#x2192;', '&#x2193;' ], "Next slide" ],
-				[ [ '&#x2190;', '&#x2191;' ], "Previous slide" ],
-				[ [ 'Space' ], "Reset slide zoom" ]
-			] ].map(section => 
-			`<ul><li class='section'>${section[0]}</li>` + section.slice(1).map(entry =>
-				`<li>
-					<span class='keys'>` + 
-					entry[0].map(key =>
-						(key.hasPrefix("ak-")) ? `<code class='ak'>${key.substring(3)}</code>` : `<code>${key}</code>`
-					).join("") + 
-					`</span>
-					<span class='action'>${entry[1]}</span>
-				</li>`
-			).join("\n") + `</ul>`).join("\n") + `
-			</ul></div>
-		</div>
-	` + "</nav>");
+	let keyboardHelpOverlay = addUIElement({{{keyboard_help_overlay}}});
 
 	// Add listener to show the keyboard help overlay.
 	document.addEventListener("keypress", GW.keyboardHelpShowKeyPressed = (event) => {
@@ -2676,19 +2449,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	if (postMeta) {
 		// Add “qualified hyperlinking” toolbar.
 		let postPermalink = location.protocol + "//" + location.host + location.pathname;
-		postMeta.insertAdjacentHTML("beforeend", "<div class='qualified-linking'>" + `
-			<input type='checkbox' tabindex='-1' id='qualified-linking-toolbar-toggle-checkbox'><label for='qualified-linking-toolbar-toggle-checkbox'><span>&#xf141;</span></label>
-			<div class='qualified-linking-toolbar'>
-			<a href='${postPermalink}'>Post permalink</a>
-			<button type='button' tabindex='-1' class='copy-link permalink' title='Copy post permalink to clipboard'>&#xf0c5;</button>
-			<a href='${postPermalink}?comments=false'>Link without comments</a>
-			<button type='button' tabindex='-1' class='copy-link no-comments' title='Copy link without comments to clipboard'>&#xf0c5;</button>
-			<a href='${postPermalink}?hide-nav-bars=true'>Link without top nav bars</a>
-			<button type='button' tabindex='-1' class='copy-link hide-nav-bars' title='Copy link without top nav bars to clipboard'>&#xf0c5;</button>
-			<a href='${postPermalink}?comments=false&hide-nav-bars=true'>Link without comments or top nav bars</a>
-			<button type='button' tabindex='-1' class='copy-link no-comments hide-nav-bars' title='Copy link without comments or top nav bars to clipboard'>&#xf0c5;</button>
-			</div>
-		` + "</div>");
+		postMeta.insertAdjacentHTML("beforeend", {{{qualified_linking_toolbar}}});
 
 		// Replicate .post-meta at bottom of post.
 		let clonedPostMeta = postMeta.cloneNode(true);

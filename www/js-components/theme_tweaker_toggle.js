@@ -1,0 +1,1 @@
+`<div id='theme-tweaker-toggle'><button type='button' tabindex='-1' title="Customize appearance [;]" accesskey=';'>&#xf3f0;</button></div>`
