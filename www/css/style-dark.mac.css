@@ -8236,6 +8236,15 @@ a.comment-parent-link:hover::before {
 	content: "\F056";
 }
 
+.upvote.selected {
+	text-shadow:
+		0 0 2px #290078;
+}
+.downvote.selected {
+	text-shadow:
+		0 0 2px #003d49;
+}
+
 .vote::before,
 .vote.big-vote.clicked-once::before,
 .vote.big-vote.clicked-twice::before,
