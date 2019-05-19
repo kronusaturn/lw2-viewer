@@ -3,21 +3,12 @@
 $directories = [
 	"www/",
 	"www/accordius/",
-	"www/ea/"
+	"www/ea/",
+	"www/js-components"
 ];
-$files = [ 
-	"script.js",
-	"style.css.php",
-	"style_mobile_additions.css.php",
-	"theme_tweaker.css.php",
-	"theme-brutalist.css.php",
-	"theme-classic.css.php",
-	"theme-default.css.php",
-	"theme-grey.css.php",
-	"theme-less.css.php",
-	"theme-rts.css.php",
-	"theme-ultramodern.css.php",
-	"theme-zero.css.php",
+$patterns = [ 
+	"*.js",
+	"*.css.php"
 ];
 $additional_files = [
 	"lw2.lisp"
@@ -40,8 +31,11 @@ function process_file($filename) {
 }
 
 foreach ($directories as $directory) {
-	foreach ($files as $file) {
-		process_file($directory.$file);
+	foreach ($patterns as $pattern) {
+		$files = glob($directory.$pattern);
+		foreach ($files as $file) {
+			process_file($file);
+		}
 	}
 }
 foreach ($additional_files as $file) {
