@@ -1,7 +1,7 @@
 (uiop:define-package #:lw2-viewer
   (:use #:cl #:sb-thread #:flexi-streams #:djula
 	#:lw2-viewer.config #:lw2.utils #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login #:lw2.context #:lw2.sites #:lw2.components #:lw2.html-reader #:lw2.fonts
-	#:lw2.dispatchers
+	#:lw2.routes
 	#:lw2.schema-type #:lw2.schema-types
 	#:lw2.interface-utils
 	#:lw2.user-context
@@ -868,21 +868,21 @@ signaled condition to OUT-STREAM."
 								   :new-post t)
 					     (funcall sort-widget out-stream)))))))
 
-(setf (lw2.sites::class-dispatchers (find-class 'lw2.sites::forum-site))
+(setf (lw2.sites::site-class-routes (find-class 'lw2.sites::forum-site))
       (cons
-       (make-instance 'standard-dispatcher :name 'view-root :uri "/" :handler (lambda ()
-										(with-error-page
-										    (component-value-bind ((() view-index)) (funcall view-index)))))
-       (remove 'view-root (lw2.sites::class-dispatchers (find-class 'lw2.sites::forum-site)) :key #'dispatcher-name)))
+       (make-instance 'standard-route :name 'view-root :uri "/" :handler (lambda ()
+									   (with-error-page
+									       (component-value-bind ((() view-index)) (funcall view-index)))))
+       (remove 'view-root (lw2.sites::site-class-routes (find-class 'lw2.sites::forum-site)) :key #'route-name)))
 
 (hunchentoot:define-easy-handler
-    (view-site-dispatchers
+    (view-site-routes
      :uri (lambda (req)
 	    (declare (ignore req))
 	    (with-site-context ((let ((host (or (hunchentoot:header-in* :x-forwarded-host) (hunchentoot:header-in* :host))))
 				  (or (find-site host)
 				      (error "Unknown site: ~A" host))))
-	      (iterate-dispatchers *current-site*))))
+	      (iterate-routes *current-site*))))
     nil)
 
 (define-page view-index "/index" ((view :member '(:all :new :frontpage :featured :meta :community :alignment-forum :questions) :default :all)

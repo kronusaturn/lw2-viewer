@@ -1,10 +1,10 @@
 (uiop:define-package #:lw2.sites
-  (:use #:cl #:lw2.utils #:lw2.context #:lw2.dispatchers #:lw2.backend-modules #:lw2.fonts-modules)
+  (:use #:cl #:lw2.utils #:lw2.context #:lw2.routes #:lw2.backend-modules #:lw2.fonts-modules)
   (:import-from #:sb-ext #:defglobal)
   (:export
     #:*sites*
     #:site #:alternate-frontend-site #:lesswrong-viewer-site #:ea-forum-viewer-site
-    #:dispatcher-class #:iterate-dispatchers #:class-dispatchers
+    #:site-class #:iterate-routes #:site-class-routes
     #:site-uri #:site-host #:site-secure #:site-backend #:site-title #:site-description #:background-loader-enabled #:site-fonts-source
     #:main-site-title #:main-site-abbreviation #:main-site-uri
     #:host-matches #:find-site
@@ -16,20 +16,20 @@
 
 (defglobal *sites* nil)
 
-(defclass dispatcher-class (standard-class)
-  ((dispatchers :accessor class-dispatchers :initform nil)))
+(defclass site-class (standard-class)
+  ((routes :accessor site-class-routes :initform nil)))
 
-(defmethod closer-mop:validate-superclass ((c dispatcher-class) (sc standard-class))
+(defmethod closer-mop:validate-superclass ((c site-class) (sc standard-class))
   t)
 
-(defmethod class-dispatchers ((c t))
+(defmethod site-class-routes ((c t))
   nil)
 
-(defmethod iterate-dispatchers ((original-class dispatcher-class))
+(defmethod iterate-routes ((original-class site-class))
   (dolist (class (closer-mop:class-precedence-list original-class))
-    (dolist (dispatcher (class-dispatchers class))
-      (when (fire-dispatcher dispatcher)
-	(return-from iterate-dispatchers t)))))
+    (dolist (route (site-class-routes class))
+      (when (execute-route route)
+	(return-from iterate-routes t)))))
 
 (defclass site ()
   ((uri :accessor site-uri :initarg :uri :type simple-string)
@@ -40,35 +40,35 @@
    (description :accessor site-description :initarg :description :type simple-string)
    (background-loader-enabled :accessor background-loader-enabled :initarg :use-background-loader :initform nil :type boolean)
    (fonts-source :accessor site-fonts-source :initarg :fonts-source :initform (make-instance 'google-fonts-source) :type fonts-source))
-  (:metaclass dispatcher-class))
+  (:metaclass site-class))
 
 (defmethod main-site-title ((s site)) nil)
 
 (defmethod main-site-abbreviation ((s site)) nil)
 
-(defmethod iterate-dispatchers ((s site))
-  (iterate-dispatchers (class-of s)))
+(defmethod iterate-routes ((s site))
+  (iterate-routes (class-of s)))
 
 (defclass forum-site (site) ()
-  (:metaclass dispatcher-class))
+  (:metaclass site-class))
 
 (defclass wiki-site (site) ()
-  (:metaclass dispatcher-class))
+  (:metaclass site-class))
 
 (defclass alternate-frontend-site (site)
   ((main-site-title :accessor main-site-title :initarg :main-site-title :type simple-string)
    (main-site-abbreviation :accessor main-site-abbreviation :initarg :main-site-abbreviation :type simple-string)
    (main-site-uri :accessor main-site-uri :initarg :main-site-uri :type simple-string))
-  (:metaclass dispatcher-class))
+  (:metaclass site-class))
 
 (defclass lesswrong-viewer-site (forum-site alternate-frontend-site) ()
-  (:metaclass dispatcher-class))
+  (:metaclass site-class))
 
 (defclass ea-forum-viewer-site (forum-site alternate-frontend-site) ()
-  (:metaclass dispatcher-class))
+  (:metaclass site-class))
 
 (defclass arbital-site (forum-site alternate-frontend-site) ()
-  (:metaclass dispatcher-class))
+  (:metaclass site-class))
 
 (defmethod host-matches ((site site) host)
   (let ((site-host (site-host site)))
