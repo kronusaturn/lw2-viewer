@@ -666,7 +666,11 @@ input[type='range']::-ms-thumb {
 }
 #theme-tweaker-ui .clippy-container .hint span:first-of-type::before {
 	content: url('data:image/gif;base64,R0lGODlhFgAUAPIAMQAAAAMDA394f7+4v9/Y3//4/2JX/38AACwAAAAAFgAUAAADRki63B6kyEkrFbCMzbvnWPSNXqiRqImm2Uqq7gfH3Uxv9p3TNuD/wFqLAywChCKi8Yc83XDD52AXCwmu2KxWG+h6v+BwNwEAOw==');
-	vertical-align: bottom;
+	vertical-align: top;
+	display: inline-block;
+	line-height: 0.75;
+	position: relative;
+	bottom: 1px;
 }
 #theme-tweaker-ui .clippy-container .clippy {
 	width: 200px;

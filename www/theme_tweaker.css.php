@@ -666,7 +666,11 @@ input[type='range']::-ms-thumb {
 }
 #theme-tweaker-ui .clippy-container .hint span:first-of-type::before {
 	content: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme-tweaker/minimize_button_icon.gif")) ?>');
-	vertical-align: bottom;
+	vertical-align: top;
+	display: inline-block;
+	line-height: 0.75;
+	position: relative;
+	bottom: 1px;
 }
 #theme-tweaker-ui .clippy-container .clippy {
 	width: 200px;
