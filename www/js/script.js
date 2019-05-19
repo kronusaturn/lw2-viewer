@@ -3110,7 +3110,7 @@ function rectifyMarkup() {
 	});
 
 	// Remove extraneous breaks.
-	content.queryAll(".post-body > br").forEach(br => {
+	content.queryAll(".body-text > br").forEach(br => {
 		removeElement(br);
 	});
 }
