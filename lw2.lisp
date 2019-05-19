@@ -489,7 +489,7 @@ signaled condition to OUT-STREAM."
             (or (logged-in-user-slug) "")
 	    (json:encode-json-to-string (get-asset-versions))
             csrf-token
-            (load-time-value (with-open-file (s "www/head.js") (uiop:slurp-stream-string s)) t)
+            (load-time-value (with-open-file (s "www/js/head.js") (uiop:slurp-stream-string s)) t)
             *extra-inline-scripts*)
     (format out-stream "~A<link rel=\"stylesheet\" href=\"~A\">"
             *html-head*
@@ -498,7 +498,7 @@ signaled condition to OUT-STREAM."
     (format out-stream "<link rel=\"shortcut icon\" href=\"~A\">"
 	    (generate-versioned-link "/assets/favicon.ico"))
     (format out-stream "<script src=\"~A\" async></script>~A"
-            (generate-versioned-link "/script.js")
+            (generate-versioned-link "/js/script.js")
             *extra-external-scripts*)
     (format out-stream "<title>~@[~A - ~]~A</title>~@[<meta name=\"description\" content=\"~A\">~]~@[<meta name=\"robots\" content=\"~A\">~]"
             (if title (encode-entities title))
@@ -611,7 +611,7 @@ signaled condition to OUT-STREAM."
           (hunchentoot:return-code*) return-code
           (hunchentoot:header-out :link) (format nil "~:{<~A>;rel=preload;type=~A;as=~A~@{;~A~}~:^,~}"
                                                  `((,(generate-css-link) "text/css" "style" ,.push-option)
-                                                   (,(generate-versioned-link "/script.js") "text/javascript" "script" ,.push-option))))
+                                                   (,(generate-versioned-link "/js/script.js") "text/javascript" "script" ,.push-option))))
     (unless push-option (set-cookie "push" "t" :max-age (* 4 60 60)))))
 
 (defun user-pref (key)
