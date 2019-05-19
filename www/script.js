@@ -2310,7 +2310,7 @@ registerInitializer('earlyInitialize', true, () => query("#content") != null, fu
 	// If client is logged in...
 	if (loggedInUserId) {
 		let luserJS = document.createElement("script");
-		luserJS.src = GW.assetVersions['/luser.js'];
+		luserJS.src = GW.assetVersions['/js/luser.js'];
 		luserJS.addEventListener('load', (event) => {
 			GWLog("user.js loaded");
 
@@ -2812,7 +2812,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		GW.contentContainsImages = true;
 
 		let imageFocusJS = document.createElement("script");
-		imageFocusJS.src = GW.assetVersions['/image-focus.js'];
+		imageFocusJS.src = GW.assetVersions['/js/image-focus.js'];
 		imageFocusJS.addEventListener('load', (event) => {
 			GWLog("image-focus.js loaded");
 
