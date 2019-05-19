@@ -4,7 +4,7 @@
   (:export
     #:*sites*
     #:site #:alternate-frontend-site #:lesswrong-viewer-site #:ea-forum-viewer-site
-    #:site-class #:iterate-routes #:site-class-routes
+    #:site-class #:call-route-handler #:site-class-routes
     #:site-uri #:site-host #:site-secure #:site-backend #:site-title #:site-description #:background-loader-enabled #:site-fonts-source
     #:main-site-title #:main-site-abbreviation #:main-site-uri
     #:host-matches #:find-site
@@ -25,11 +25,11 @@
 (defmethod site-class-routes ((c t))
   nil)
 
-(defmethod iterate-routes ((original-class site-class))
+(defmethod call-route-handler ((original-class site-class) request-uri)
   (dolist (class (closer-mop:class-precedence-list original-class))
     (dolist (route (site-class-routes class))
-      (when (execute-route route)
-	(return-from iterate-routes t)))))
+      (when (execute-route route request-uri)
+	(return-from call-route-handler t)))))
 
 (defclass site ()
   ((uri :accessor site-uri :initarg :uri :type simple-string)
@@ -46,8 +46,9 @@
 
 (defmethod main-site-abbreviation ((s site)) nil)
 
-(defmethod iterate-routes ((s site))
-  (iterate-routes (class-of s)))
+(defmethod call-route-handler ((s site) request-uri)
+  (declare (ignore request-uri))
+  (call-route-handler (class-of s) request-uri))
 
 (defclass forum-site (site) ()
   (:metaclass site-class))

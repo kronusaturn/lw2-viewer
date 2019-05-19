@@ -11,9 +11,9 @@
 (defclass standard-route (route)
   ((uri :initarg :uri :type string)))
 
-(defmethod execute-route ((r standard-route))
+(defmethod execute-route ((r standard-route) request-uri)
   (with-slots (uri handler) r
-    (if (string= uri (hunchentoot:script-name*))
+    (if (string= uri request-uri)
 	(progn
 	  (funcall handler)
 	  t)

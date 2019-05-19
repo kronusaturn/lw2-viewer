@@ -882,7 +882,7 @@ signaled condition to OUT-STREAM."
 	    (with-site-context ((let ((host (or (hunchentoot:header-in* :x-forwarded-host) (hunchentoot:header-in* :host))))
 				  (or (find-site host)
 				      (error "Unknown site: ~A" host))))
-	      (iterate-routes *current-site*))))
+	      (call-route-handler *current-site* (hunchentoot:script-name*)))))
     nil)
 
 (define-page view-index "/index" ((view :member '(:all :new :frontpage :featured :meta :community :alignment-forum :questions) :default :all)
