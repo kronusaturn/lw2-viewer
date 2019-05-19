@@ -1396,7 +1396,7 @@ function injectNewCommentNavUI(newCommentsCount) {
 		updateNewCommentNavUI(newCommentsCount);
 	}, false);
 
-	newCommentUIContainer.query(".new-comments-count").addActivateEvent(GW.newCommentsCountClicked = (event) => {
+	newCommentNavUIContainer.query(".new-comments-count").addActivateEvent(GW.newCommentsCountClicked = (event) => {
 		GWLog("GW.newCommentsCountClicked");
 
 		let hnsDatePickerVisible = (getComputedStyle(hnsDatePicker).display != "none");

@@ -1555,12 +1555,6 @@ a.comment-parent-link:hover::before {
 	content: "\F056";
 }
 
-.vote.selected {
-	text-shadow:
-		0 0 2px #0f0,
-		0 0 2px #fff;
-}
-
 .vote::before,
 .vote.big-vote.clicked-once::before,
 .vote.big-vote.clicked-twice::before,

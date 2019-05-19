@@ -1301,14 +1301,6 @@ a.comment-parent-link:hover::before {
 /* VOTE BUTTONS */
 /*==============*/
 
-.vote::before {
-	content: "";
-	width: 17px;
-	height: 17px;
-	display: inline-block;
-	position: relative;
-}
-
 .upvote::before {
 	content: "\F055";
 }
