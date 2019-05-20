@@ -834,6 +834,13 @@ function insertText(text, textarea, p0, p1) {
 	}
 }
 
+GW.guiEditSampleTable = `
+| First Header  | Second Header |
+| ------------- | ------------- |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
+
+`;
 GW.guiEditButtons = [
 	[ 'strong', 'Strong (bold)', 'k', '**', '**', 'Bold text', '&#xf032;' ],
 	[ 'em', 'Emphasized (italic)', 'i', '*', '*', 'Italicized text', '&#xf033;' ],
@@ -851,7 +858,8 @@ GW.guiEditButtons = [
 	[ 'code-block', 'Code block', '', '```\n', '\n```', 'Code', '&#xf1c9;' ],
 	[ 'formula', 'LaTeX', '', '$', '$', 'LaTeX formula', '&#xf155;' ],
 	[ 'spoiler', 'Spoiler block', '', '::: spoiler\n', '\n:::', 'Spoiler text', '&#xf2fc;' ],
-	[ 'footnote', 'Footnote', 'n', GUIEdit_footnote, '', '', '&#xf7e9;' ]
+	[ 'footnote', 'Footnote', 'n', GUIEdit_footnote, '', '', '&#xf7e9;' ],
+	[ 'table', 'Table', '', GW.guiEditSampleTable, '', '', '&#xf0ce;' ]
 ];
 
 function GUIEdit_blockquote(text, startpos) {

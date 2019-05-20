@@ -205,7 +205,7 @@ button.guiedit {
 	position: absolute;
 	font-size: 1rem;
 	top: 2px;
-	left: 500px;
+	left: 528px;
 	height: 25px;
 	padding: 4px 0;
 	white-space: nowrap;

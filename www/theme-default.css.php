@@ -1640,7 +1640,6 @@ a.comment-parent-link:hover::before {
 		0 0 0 1px #eee inset;
 	font-size: 1.125rem;
 	line-height: 1.35;
-	font-feature-settings: 'ss01';
 }
 .posting-controls textarea:focus {
 	background-color: #ffd;

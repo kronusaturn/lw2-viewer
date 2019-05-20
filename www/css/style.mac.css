@@ -4895,7 +4895,7 @@ button.guiedit {
 	position: absolute;
 	font-size: 1rem;
 	top: 2px;
-	left: 500px;
+	left: 528px;
 	height: 25px;
 	padding: 4px 0;
 	white-space: nowrap;
@@ -8321,7 +8321,6 @@ a.comment-parent-link:hover::before {
 		0 0 0 1px #eee inset;
 	font-size: 1.125rem;
 	line-height: 1.35;
-	font-feature-settings: 'ss01';
 }
 .posting-controls textarea:focus {
 	background-color: #ffd;
