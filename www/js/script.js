@@ -4,7 +4,7 @@
 
 /*	Polyfill for requestIdleCallback in Apple and Microsoft browsers. */
 if (!window.requestIdleCallback) {
-	window.requestIdleCallback = (fn) => { setTimeout(fn, 0) };
+	window.requestIdleCallback = (fn) => { setTimeout(fn, 0); };
 }
 
 /*	TBC. */
@@ -17,9 +17,9 @@ function registerInitializer(name, tryEarly, precondition, fn) {
 		if (GW.initializersDone[name]) return;
 		if (!precondition()) {
 			if (tryEarly) {
-				setTimeout(() => requestIdleCallback(wrapper, {timeout: 1000}), 50);
+				setTimeout(() => requestIdleCallback(wrapper, { timeout: 1000 }), 50);
 			} else {
-				document.addEventListener("readystatechange", wrapper, {once: true});
+				document.addEventListener("readystatechange", wrapper, { once: true });
 			}
 			return;
 		}
@@ -27,9 +27,9 @@ function registerInitializer(name, tryEarly, precondition, fn) {
 		fn();
 	};
 	if (tryEarly) {
-		requestIdleCallback(wrapper, {timeout: 1000});
+		requestIdleCallback(wrapper, { timeout: 1000 });
 	} else {
-		document.addEventListener("readystatechange", wrapper, {once: true});
+		document.addEventListener("readystatechange", wrapper, { once: true });
 		requestIdleCallback(wrapper);
 	}
 }
@@ -467,7 +467,7 @@ function highlightCommentsSince(date) {
 		GW.updateNewCommentNavButtonState(commentItem);
 	}
 
-	registerInitializer("initializeCommentScrollPosition", false, () => document.readyState == "complete", GW.newCommentScrollListener);
+	registerInitializer("initializeCommentScrollPosition", false, () => (document.readyState == "complete"), GW.newCommentScrollListener);
 
 	return newCommentsCount;
 }
@@ -776,7 +776,7 @@ GW.themeLoadCallback_less = (fromTheme = "") => {
 
 	injectSiteNavUIToggle();
 
-	registerInitializer('shortenDate', true, () => query(".top-post-meta") != null, function () {
+	registerInitializer('shortenDate', true, () => (query(".top-post-meta") != null), () => {
 		let dtf = new Intl.DateTimeFormat([], 
 			matchMedia("(max-width: 1100px)").matches ? 
 				{ month: 'short', day: 'numeric', year: 'numeric' } : 
@@ -794,7 +794,7 @@ GW.themeLoadCallback_less = (fromTheme = "") => {
 	});
 
 	if (!GW.isMobile) {
-		registerInitializer('addSpans', true, () => query(".top-post-meta") != null, function () {
+		registerInitializer('addSpans', true, () => (query(".top-post-meta") != null), () => {
 			queryAll(".top-post-meta .date, .top-post-meta .comment-count").forEach(element => {
 				element.innerHTML = "<span>" + element.innerHTML + "</span>";
 			});
@@ -803,12 +803,12 @@ GW.themeLoadCallback_less = (fromTheme = "") => {
 		if (localStorage.getItem("appearance-adjust-ui-toggle-engaged") == null) {
 			// If state is not set (user has never clicked on the Less theme’s appearance
 			// adjustment UI toggle) then show it, but then hide it after a short time.
-			registerInitializer('engageAppearanceAdjustUI', true, () => query("#ui-elements-container") != null, function () {
+			registerInitializer('engageAppearanceAdjustUI', true, () => (query("#ui-elements-container") != null), () => {
 				toggleAppearanceAdjustUI();
 				setTimeout(toggleAppearanceAdjustUI, 3000);
 			});
 		} else if (localStorage.getItem("appearance-adjust-ui-toggle-engaged") == "true") {
-			registerInitializer('engageAppearanceAdjustUI', true, () => query("#ui-elements-container") != null, function () {
+			registerInitializer('engageAppearanceAdjustUI', true, () => (query("#ui-elements-container") != null), () => {
 				toggleAppearanceAdjustUI();
 			});
 		}
@@ -937,7 +937,7 @@ GW.themeLoadCallback_dark = (fromTheme = "") => {
 
 	// Add white glow to images.
 	if (GW.contentContainsImages) {
-		registerInitializer('makeImagesGlow', true, () => query("#images-overlay") != null, () => {
+		registerInitializer('makeImagesGlow', true, () => (query("#images-overlay") != null), () => {
 			queryAll(GW.imageFocus.overlayImagesSelector).forEach(image => {
 				image.style.filter = "drop-shadow(0 0 0 #000) drop-shadow(0 0 0.5px #fff) drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #fff)";
 				image.style.width = parseInt(image.style.width) + 12 + "px";
@@ -2502,7 +2502,7 @@ function popupsSetup() {
 /* INITIALIZATION */
 /******************/
 
-registerInitializer('earlyInitialize', true, () => query("#content") != null, function () {
+registerInitializer('earlyInitialize', true, () => (query("#content") != null), () => {
 	GWLog("INITIALIZER earlyInitialize");
 	// Check to see whether we’re on a mobile device (which we define as a touchscreen^W narrow viewport).
 // 	GW.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -2543,12 +2543,13 @@ registerInitializer('earlyInitialize', true, () => query("#content") != null, fu
 		luserJS.src = GW.assetVersions['/js/luser.js'];
 		luserJS.addEventListener('load', (event) => {
 			GWLog("user.js loaded");
+			luserJS.dataset.loaded = 1;
 
 			// Check for notifications.
 			updateInbox();
 
 			// Do various things only relevant to logged-in users.
-			registerInitializer('user-initialize', false, () => document.readyState != 'loading', userInitialize);
+			registerInitializer('user-initialize', false, () => (document.readyState != 'loading'), userInitialize);
 		});
 		query("head").appendChild(luserJS);
 	}
@@ -2614,7 +2615,7 @@ function userInitialize() {
 	GW.needHashRealignment = true;
 }
 
-registerInitializer('initialize', false, () => document.readyState != 'loading', function () {
+registerInitializer('initialize', false, () => (document.readyState != 'loading'), () => {
 	GWLog("INITIALIZER initialize");
 	forceInitializer('earlyInitialize');
 
@@ -3129,21 +3130,23 @@ registerInitializer('pageLayoutFinished', false, () => (document.readyState == "
 	postSetThemeHousekeeping();
 
 	// Adjust state of text input fields.
-	doWhenMatchMedia(GW.mediaQueries.mobileNarrow, "editorInputFields", () => {
-		queryAll("#content textarea").forEach(textarea => {
-			textarea.blur();
-			expandTextarea(textarea);
-		});
-	}, () => {
-		queryAll(".with-markdown-editor textarea").forEach(textarea => {
-			expandTextarea(textarea);
-		});
+	registerInitializer('adjustInputFieldsState', true, () => (query("script[src*='user.js']").dataset.loaded), () => {
+		doWhenMatchMedia(GW.mediaQueries.mobileNarrow, "editorInputFields", () => {
+			queryAll("#content textarea").forEach(textarea => {
+				textarea.blur();
+				expandTextarea(textarea);
+			});
+		}, () => {
+			queryAll(".with-markdown-editor textarea").forEach(textarea => {
+				expandTextarea(textarea);
+			});
 
-		// Focus appropriate input field.
-		let appropriateInputField = (getQueryVariable("post-id") ? "#edit-post-form textarea" : "#edit-post-form input[name='title']") + 
-									", .conversation-page textarea";
-		queryAll(appropriateInputField).forEach(field => {
-			field.focus();
+			// Focus appropriate input field.
+			let appropriateInputField = (getQueryVariable("post-id") ? "#edit-post-form textarea" : "#edit-post-form input[name='title']") + 
+										", .conversation-page textarea";
+			queryAll(appropriateInputField).forEach(field => {
+				field.focus();
+			});
 		});
 	});
 });
