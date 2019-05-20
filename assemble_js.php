@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 
 $js_components_dir = "www/js-components/";
