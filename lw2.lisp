@@ -853,27 +853,44 @@ signaled condition to OUT-STREAM."
     (or sort-string (user-pref pref))))
 
 (define-component view-index ()
-  (:http-args '((offset :type fixnum)
+  (:http-args '((view :member '(:all :new :frontpage :featured :meta :community :alignment-forum :questions) :default :frontpage)
+		before after
+		(offset :type fixnum)
 		(limit :type fixnum)))
+  (when (eq view :new) (redirect (replace-query-params (hunchentoot:request-uri*) "view" "all" "all" nil) :type :permanent) (return))
   (component-value-bind ((sort-string sort-widget))
     (multiple-value-bind (posts total)
-	(get-posts-index :offset offset :limit (or limit (user-pref :items-per-page)) :sort sort-string)
-      (renderer ()
-		(view-items-index posts
-				  :section :frontpage :title "Frontpage posts" :hide-title t
-				  :pagination (pagination-nav-bars :offset (or offset 0) :total total :with-next (not total))
-				  :top-nav (lambda (out-stream)
-					     (page-toolbar-to-html out-stream
-								   :title "Frontpage posts"
-								   :new-post t)
-					     (funcall sort-widget out-stream)))))))
+      (get-posts-index :view (string-downcase view) :before before :after after :offset offset :limit (or limit (user-pref :items-per-page)) :sort sort-string)
+      (let ((page-title (format nil "~@(~A posts~)" view)))
+	(renderer ()
+		  (view-items-index posts
+				    :section view :title page-title :hide-title (eq view :frontpage)
+				    :pagination (pagination-nav-bars :offset (or offset 0) :total total :with-next (not total))
+				    :content-class (format nil "index-page ~(~A~)-index-page" view)
+				    :top-nav (lambda (out-stream)
+					       (page-toolbar-to-html out-stream
+								     :title page-title
+								     :new-post (if (eq view :meta) "meta" t))
+					       (if (member view '(:frontpage :all))
+						   (funcall sort-widget out-stream)))))))))
 
 (setf (lw2.sites::site-class-routes (find-class 'lw2.sites::forum-site))
       (cons
        (make-instance 'standard-route :name 'view-root :uri "/" :handler (lambda ()
 									   (with-error-page
-									       (component-value-bind ((() view-index)) (funcall view-index)))))
+									       (component-value-bind ((() view-index))
+										 (when view-index
+										   (funcall view-index))))))
        (remove 'view-root (lw2.sites::site-class-routes (find-class 'lw2.sites::forum-site)) :key #'route-name)))
+
+(setf (lw2.sites::site-class-routes (find-class 'lw2.sites::forum-site))
+      (cons
+       (make-instance 'standard-route :name 'view-index :uri "/index" :handler (lambda ()
+										 (with-error-page
+										     (component-value-bind ((() view-index))
+										       (when view-index
+											 (funcall view-index))))))
+       (remove 'view-index (lw2.sites::site-class-routes (find-class 'lw2.sites::forum-site)) :key #'route-name)))
 
 (hunchentoot:define-easy-handler
     (view-site-routes
@@ -884,26 +901,6 @@ signaled condition to OUT-STREAM."
 				      (error "Unknown site: ~A" host))))
 	      (call-route-handler *current-site* (hunchentoot:script-name*)))))
     nil)
-
-(define-page view-index "/index" ((view :member '(:all :new :frontpage :featured :meta :community :alignment-forum :questions) :default :all)
-                                  before after
-                                  (offset :type fixnum)
-                                  (limit :type fixnum))
-  (when (eq view :new) (redirect (replace-query-params (hunchentoot:request-uri*) "view" "all" "all" nil) :type :permanent) (return))
-  (component-value-bind ((sort-string sort-widget))
-    (multiple-value-bind (posts total)
-      (get-posts-index :view (string-downcase view) :before before :after after :offset offset :limit (or limit (user-pref :items-per-page)) :sort sort-string)
-      (let ((page-title (format nil "~@(~A posts~)" view)))
-        (view-items-index posts
-                          :section view :title page-title
-                          :pagination (pagination-nav-bars :offset (or offset 0) :total total :with-next (not total))
-                          :content-class (format nil "index-page ~(~A~)-index-page" view)
-                          :top-nav (lambda (out-stream)
-                                     (page-toolbar-to-html out-stream
-                                                           :title page-title
-                                                           :new-post (if (eq view :meta) "meta" t))
-                                     (if (member view '(:all))
-                                         (funcall sort-widget out-stream))))))))
 
 (define-page view-post "/post" ((id :required t))
   (redirect (generate-post-link id) :type :permanent))
