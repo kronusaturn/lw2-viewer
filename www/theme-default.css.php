@@ -217,7 +217,6 @@ body {
 
 #nav-item-search button {
 	border: none;
-	font-weight: inherit;
 }
 
 /*= Recent Comments tab =*/
