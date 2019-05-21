@@ -265,6 +265,15 @@ function togglePageScrolling(enable) {
 	}
 }
 
+/*	Toggles whether the search box in the nav UI is selectable via the tab key.
+	*/
+function setSearchBoxTabSelectable(selectable) {
+	GWLog("setSearchBoxTabSelectable");
+
+	query("input[type='search']").tabIndex = selectable ? "" : "-1";
+	query("input[type='search'] + button").tabIndex = selectable ? "" : "-1";
+}
+
 /*	Copies a string to the clipboard.
 	*/
 function copyTextToClipboard(string) {
@@ -615,7 +624,7 @@ function setWidthAdjustButtonsAccesskey() {
 	let selectedButton = widthSelector.query("button.selected");
 	let nextButtonInCycle = (selectedButton == selectedButton.parentElement.lastChild) ? selectedButton.parentElement.firstChild : selectedButton.nextSibling;
 	nextButtonInCycle.accessKey = "'";
-	nextButtonInCycle.title += ` [\']`;
+	nextButtonInCycle.title += " [']";
 }
 
 /*******************/
@@ -1250,12 +1259,6 @@ function toggleThemeTweakerUI() {
 	// Set theme tweaker assistant visibility.
 	query(".clippy-container").style.display = JSON.parse(localStorage.getItem("theme-tweaker-settings") || '{ "showClippy": true }')["showClippy"] ? "block" : "none";
 }
-function setSearchBoxTabSelectable(selectable) {
-	GWLog("setSearchBoxTabSelectable");
-
-	query("input[type='search']").tabIndex = selectable ? "" : "-1";
-	query("input[type='search'] + button").tabIndex = selectable ? "" : "-1";
-}
 function toggleThemeTweakerHelpWindow() {
 	GWLog("toggleThemeTweakerHelpWindow");
 
@@ -1289,7 +1292,6 @@ function themeTweakSave() {
 	localStorage.setItem("theme-tweaks", JSON.stringify(GW.currentFilters));
 	localStorage.setItem("text-zoom", GW.currentTextZoom);
 }
-
 function themeTweakerResetSettings() {
 	GWLog("themeTweakerResetSettings");
 
