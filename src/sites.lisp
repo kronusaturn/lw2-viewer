@@ -47,7 +47,6 @@
 (defmethod main-site-abbreviation ((s site)) nil)
 
 (defmethod call-route-handler ((s site) request-uri)
-  (declare (ignore request-uri))
   (call-route-handler (class-of s) request-uri))
 
 (defclass forum-site (site) ()
