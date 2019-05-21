@@ -13,7 +13,7 @@
 	--GW-UI-font-weight-light: 400;
 	--GW-UI-font-weight-heavy: 700;
 
-	--GW-text-font: 'Arial', var(--GW-sans-serif-fallback-font-stack);
+	--GW-body-text-font: 'Arial', var(--GW-sans-serif-fallback-font-stack);
 }
 
 /*	Layout.
@@ -28,6 +28,10 @@
 	--GW-content-background-color: #fff;
 
 	--GW-hyperlink-color: #6a8a6b;
+
+	--GW-nav-bar-item-color: #999;
+	--GW-nav-bar-item-hover-color: #777; 
+	--GW-nav-bar-item-active-color: #666;
 
 	--GW-comment-background-color-odd: #f7f7f8;
 	--GW-comment-background-color-even: #fff;
@@ -63,29 +67,16 @@ body {
 /*= Decorative bottom bar =*/
 
 #bottom-bar.decorative {
-	background-color: #fff;
-}
-#bottom-bar.decorative::before,
-#bottom-bar.decorative::after {
-	font-weight: 200;
-}
-#bottom-bar.decorative::before {
-	background-position: center 44%;
-	filter: opacity(0.7);
-}
-#bottom-bar.decorative::after {
-	color: #eee;
-	background-color: #fff;
+	color: #d8d8d8;
+	background-color: var(--GW-content-background-color);
+	border: none;
 }
 
 /* Accesskey hints */
 
 .nav-inner::after {
-	display: block;
-	position: absolute;
 	left: 5px;
 	top: 0;
-	font-weight: normal;
 	font-size: 0.7em;
 	color: #ddd;
 }
@@ -95,22 +86,11 @@ body {
 
 /* This makes the navbar items look like tabs: */
 
-.active-bar {
-	position: relative;
-}
 .nav-bar {
 	background-color: #f5f5f5;
 }
 .nav-bar {
 	border-bottom: 1px solid #d6d5d6;
-}
-.nav-bar a,
-.nav-bar a:visited {
-	color: #999;
-}
-.nav-bar a:hover {
-	color: #777;
-	text-decoration: none;
 }
 .nav-bar .nav-current {
 	color: #666;
@@ -122,23 +102,15 @@ body {
 /* Search tab */
 
 #nav-item-search form::before {
-	position: relative;
-	top: 2px;
-	opacity: 0.3;
-}
-#nav-item-search button {
-	border: none;
-	font-weight: inherit;
+	color: #bbb;
 }
 #nav-item-search input::placeholder {
 	color: #d00;
-	font-weight: normal;
 }
 
 /*= User/login tab =*/
 
 #inbox-indicator::before {
-	top: 1px;
 	color: #ccc;
 }
 
