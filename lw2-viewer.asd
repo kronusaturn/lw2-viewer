@@ -1,7 +1,7 @@
 (in-package :asdf)
 
 (asdf:defsystem :lw2-viewer
-  :depends-on ("uiop" "flexi-streams" "hunchentoot" "drakma" "cl-json" "lmdb" "local-time" "plump" "clss" "cl-ppcre" "xml-emitter" "city-hash" "bit-smasher" "cl-unicode" "parse-js" "markdown.cl" "websocket-driver-client" "ironclad" "cl-base64" "djula" "split-sequence" "cl-typesetting" "named-readtables" "collectors" "closer-mop")
+  :depends-on ("uiop" "flexi-streams" "hunchentoot" "drakma" "cl-json" "lmdb" "local-time" "plump" "clss" "cl-ppcre" "xml-emitter" "city-hash" "bit-smasher" "cl-unicode" "parse-js" "markdown.cl" "websocket-driver-client" "ironclad" "cl-base64" "djula" "split-sequence" "cl-typesetting" "named-readtables" "collectors" "closer-mop" "3bmd")
   :components ((:module "src"
                 :components ((:file "utils")
                              (:file "graphql")
@@ -47,4 +47,5 @@
                              (:static-file "edit-post.html")
                              (:static-file "reset-password.html")))
                (:static-file "www/head.js")
-               (:file "lw2" :depends-on ("src" "www/head.js" "templates"))))
+               (:file "lw2" :depends-on ("src" "www/head.js" "templates"))
+	       (:file "arbital" :depends-on ("lw2"))))
