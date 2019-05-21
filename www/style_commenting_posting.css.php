@@ -370,7 +370,7 @@ button.guiedit {
 		z-index: 11011;
 		position: fixed;
 		bottom: 6px;
-		width: calc(((100% - 16px) / 12.5) * 2.5 - 7px);
+		width: calc(((100% - 16px) / 13) * 2.5 - 7px);
 		font-size: 1.25rem;
 		padding: 6px 5px;
 		display: block;
