@@ -274,15 +274,22 @@ button.guiedit {
 	display: block;
 }
 .markdown-hints-row {
-	display: table-row;
+	display: flex;
+}
+#markdown-hints .markdown-hints-row span {
+	min-width: 7em;
+	padding: 0 1em 0 0;
+}
+#markdown-hints .markdown-hints-row code {
+	padding: 0;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 #markdown-hints .markdown-hints-row span,
 #markdown-hints .markdown-hints-row code {
-	float: none;
-	display: table-cell;
 	border: none;
 	background-color: inherit;
-	padding: 0 1.5em 0 0;
 }
 
 /*=----------------------------=*/
@@ -316,7 +323,7 @@ button.guiedit {
 		padding-top: 0.25em;
 	}
 
-	.comment-controls:focus-within {
+	.posting-controls:focus-within {
 		z-index: 10001;
 	}
 	.textarea-container:focus-within textarea {
@@ -643,6 +650,6 @@ button.guiedit {
 	}
 	#edit-post-form label[for='question'] {
 		grid-column: 5 / span 2;
-		margin: 0;
+		margin: 0 0 0 0.5em;
 	}
 }

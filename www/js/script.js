@@ -1269,6 +1269,27 @@ function injectThemeTweaker() {
 		button.addActivateEvent(GW.themeTweaker.textSizeAdjustButtonClicked);
 	});
 
+	// Add event listeners for Escape and Enter, for the theme tweaker.
+	document.addEventListener("keyup", GW.themeTweaker.keyPressed = (event) => {
+		if (event.key == "Escape") {
+			if (themeTweakerUI.query(".help-window").style.display != "none") {
+				toggleThemeTweakerHelpWindow();
+				themeTweakerResetSettings();
+			} else if (themeTweakerUI.style.display != "none") {
+				toggleThemeTweakerUI();
+				themeTweakReset();
+			}
+		} else if (event.key == "Enter") {
+			if (themeTweakerUI.query(".help-window").style.display != "none") {
+				toggleThemeTweakerHelpWindow();
+				themeTweakerSaveSettings();
+			} else if (themeTweakerUI.style.display != "none") {
+				toggleThemeTweakerUI();
+				themeTweakSave();
+			}
+		}
+	});
+
 	let themeTweakerToggle = addUIElement(`<div id='theme-tweaker-toggle'><button type='button' tabindex='-1' title="Customize appearance [;]" accesskey=';'>&#xf3f0;</button></div>`);
 	themeTweakerToggle.query("button").addActivateEvent(GW.themeTweaker.toggleButtonClicked = (event) => {
 		GWLog("GW.themeTweaker.toggleButtonClicked");
@@ -2433,6 +2454,7 @@ function keyboardHelpSetup() {
 	// Clicking the background overlay closes the keyboard help overlay.
 	keyboardHelpOverlay.addActivateEvent(GW.keyboardHelpOverlayClicked = (event) => {
 		GWLog("GW.keyboardHelpOverlayClicked");
+
 		if (event.type == 'mousedown') {
 			keyboardHelpOverlay.style.opacity = "0.01";
 		} else {
@@ -2442,10 +2464,12 @@ function keyboardHelpSetup() {
 	}, true);
 
 	// Intercept clicks, so they don’t “fall through” the background overlay.
-	(query("#keyboard-help-overlay .keyboard-help-container")||{}).addActivateEvent((event) => { event.stopPropagation(); }, true);
+	Æ(query("#keyboard-help-overlay .keyboard-help-container")).addActivateEvent((event) => { event.stopPropagation(); }, true);
 
 	// Clicking the close button closes the keyboard help overlay.
 	keyboardHelpOverlay.query("button.close-keyboard-help").addActivateEvent(GW.closeKeyboardHelpButtonClicked = (event) => {
+		GWLog("GW.closeKeyboardHelpButtonClicked");
+
 		toggleKeyboardHelpOverlay(false);
 	});
 
@@ -2453,13 +2477,14 @@ function keyboardHelpSetup() {
 	query("#nav-item-about").insertAdjacentHTML("beforeend", "<button type='button' tabindex='-1' class='open-keyboard-help' title='Keyboard shortcuts'>&#xf11c;</button>");
 	query("#nav-item-about button.open-keyboard-help").addActivateEvent(GW.openKeyboardHelpButtonClicked = (event) => {
 		GWLog("GW.openKeyboardHelpButtonClicked");
+
 		toggleKeyboardHelpOverlay(true);
 		event.target.blur();
 	});
 }
 
 function toggleKeyboardHelpOverlay(show) {
-	console.log("toggleKeyboardHelpOverlay");
+	GWLog("toggleKeyboardHelpOverlay");
 
 	let keyboardHelpOverlay = query("#keyboard-help-overlay");
 	show = (typeof show != "undefined") ? show : (getComputedStyle(keyboardHelpOverlay) == "hidden");
@@ -2691,14 +2716,7 @@ registerInitializer('initialize', false, () => (document.readyState != 'loading'
 	</div>
 </div>`);
 
-		// Replicate .post-meta at bottom of post.
-		let clonedPostMeta = postMeta.cloneNode(true);
-		postMeta.addClass("top-post-meta");
-		clonedPostMeta.addClass("bottom-post-meta");
-		clonedPostMeta.query("input[type='checkbox']").id += "-bottom";
-		clonedPostMeta.query("label").htmlFor += "-bottom";
-		query(".post").appendChild(clonedPostMeta);
-
+		// Activate copy-to-clipboard icons in qualified linking toolbar.
 		queryAll(".qualified-linking button.copy-link").forEach(button => {
 			button.addActivateEvent(GW.copyQualifiedLinkButtonClicked = (event) => {
 				GWLog("GW.copyQualifiedLinkButtonClicked");
@@ -2706,6 +2724,14 @@ registerInitializer('initialize', false, () => (document.readyState != 'loading'
 				copyTextToClipboard(event.target.previousElementSibling.href);
 			});
 		});
+
+		// Replicate .post-meta at bottom of post.
+		let clonedPostMeta = postMeta.cloneNode(true);
+		postMeta.addClass("top-post-meta");
+		clonedPostMeta.addClass("bottom-post-meta");
+		clonedPostMeta.query("input[type='checkbox']").id += "-bottom";
+		clonedPostMeta.query("label").htmlFor += "-bottom";
+		query(".post").appendChild(clonedPostMeta);
 	}
 
 	// Clean up LW2 link in .post-meta.
@@ -2893,36 +2919,12 @@ registerInitializer('initialize', false, () => (document.readyState != 'loading'
 	let retryForm = query(".error-retry-form");
 	if (retryForm) {
 		let savedCommentContent = retryForm.query("input[name='text']").value;
-		let reassuranceHTML = `<div class='reassurance'>
-			<p class='message'><strong>Your comment could not be posted, but it was <em>not</em> lost!</strong></p>
-			<p class='message'>Click the “<strong>Retry</strong>” button below to try posting it again.</p>
-			<p class='saved-comment-content body-text'>${savedCommentContent}</p>
-		</div>`;
-		query(".gw-error").insertAdjacentHTML("beforeend", reassuranceHTML);
+		query(".gw-error").insertAdjacentHTML("beforeend", `<div class='reassurance'>
+	<p class='message'><strong>Your comment could not be posted, but it was <em>not</em> lost!</strong></p>
+	<p class='message'>Click the “<strong>Retry</strong>” button below to try posting it again.</p>
+	<p class='saved-comment-content body-text'>${savedCommentContent}</p>
+</div>`);
 	}
-
-	// Add event listeners for Escape and Enter, for the theme tweaker.
-	let themeTweakerHelpWindow = query("#theme-tweaker-ui .help-window");
-	let themeTweakerUI = query("#theme-tweaker-ui");
-	document.addEventListener("keyup", GW.themeTweaker.keyPressed = (event) => {
-		if (event.key == "Escape") {
-			if (themeTweakerHelpWindow.style.display != "none") {
-				toggleThemeTweakerHelpWindow();
-				themeTweakerResetSettings();
-			} else if (themeTweakerUI.style.display != "none") {
-				toggleThemeTweakerUI();
-				themeTweakReset();
-			}
-		} else if (event.key == "Enter") {
-			if (themeTweakerHelpWindow.style.display != "none") {
-				toggleThemeTweakerHelpWindow();
-				themeTweakerSaveSettings();
-			} else if (themeTweakerUI.style.display != "none") {
-				toggleThemeTweakerUI();
-				themeTweakSave();
-			}
-		}
-	});
 
 	// Add event listener for . , ; (for navigating listings pages).
 	let listings = queryAll("h1.listing a[href^='/posts/'], h1.listing a[href^='/s/'], .listings .comment-thread .comment-meta a.date");
