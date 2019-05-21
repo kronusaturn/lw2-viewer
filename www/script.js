@@ -97,10 +97,10 @@ function addScrollListener(fn, name) {
 	let wrapper = (event) => {
 		requestAnimationFrame(() => {
 			fn(event);
-			document.addEventListener("scroll", wrapper, {once: true, passive: true});
+			document.addEventListener("scroll", wrapper, { once: true, passive: true });
 		});
 	}
-	document.addEventListener("scroll", wrapper, {once: true, passive: true});
+	document.addEventListener("scroll", wrapper, { once: true, passive: true });
 
 	// Retain a reference to the scroll listener, if a name is provided.
 	if (typeof name != "undefined")
@@ -601,15 +601,7 @@ function injectContentWidthSelector() {
 
 	// Inject transitions CSS, if animating changes is enabled.
 	if (GW.adjustmentTransitions) {
-		query("head").insertAdjacentHTML("beforeend", 
-			"<style id='width-transition'>" + 
-			`#content,
-			#ui-elements-container,
-			#images-overlay {
-				transition:
-					max-width 0.3s ease;
-			}` + 
-			"</style>");
+		query("head").insertAdjacentHTML("beforeend", {{{width_adjustment_transition}}});
 	}
 }
 function setWidthAdjustButtonsAccesskey() {
@@ -787,10 +779,10 @@ GW.themeLoadCallback_less = (fromTheme = "") => {
 
 		if (fromTheme != "") {
 			allUIToggles = queryAll("#ui-elements-container div[id$='-ui-toggle']");
-			setTimeout(function () {
+			setTimeout(() => {
 				allUIToggles.forEach(toggle => { toggle.addClass("highlighted"); });
 			}, 300);
-			setTimeout(function () {
+			setTimeout(() => {
 				allUIToggles.forEach(toggle => { toggle.removeClass("highlighted"); });
 			}, 1800);
 		}
@@ -1356,6 +1348,7 @@ function injectNewCommentNavUI(newCommentsCount) {
 	newCommentNavUIContainer.queryAll(".new-comment-sequential-nav-button").forEach(button => {
 		button.addActivateEvent(GW.commentQuicknavButtonClicked = (event) => {
 			GWLog("GW.commentQuicknavButtonClicked");
+
 			scrollToNewComment(event.target.hasClass("new-comment-next"));
 			event.target.blur();
 		});
@@ -1587,10 +1580,9 @@ function childrenOfComment(commentID) {
 function injectCommentsListModeSelector() {
 	GWLog("injectCommentsListModeSelector");
 
-	if (query("#content > .listings > .comment-thread") == null) return;
+	if (query(".listings .comment-thread") == null) return;
 
-	let commentsListModeSelectorHTML = {{{comments_list_mode_selector}}};
-	(query("#content.user-page .user-stats") || query(".page-toolbar") || query(".active-bar")).insertAdjacentHTML("afterend", commentsListModeSelectorHTML);
+	query(".listings").insertAdjacentHTML("beforebegin", {{{comments_list_mode_selector}}});
 	let commentsListModeSelector = query("#comments-list-mode-selector");
 
 	commentsListModeSelector.queryAll("button").forEach(button => {
@@ -1623,13 +1615,12 @@ function injectCommentsListModeSelector() {
 	commentsListModeSelector.query(`.${(savedMode == "compact" ? "expanded" : "compact")}`).accessKey = '`';
 
 	if (!GW.mediaQueries.hover.matches) {
-		queryAll("#comments-list-mode-selector ~ .listings > .comment-thread").forEach(commentThread => {
+		queryAll(".comment-thread").forEach(commentThread => {
 			commentThread.addActivateEvent(GW.commentThreadInListingTouched = (event) => {
 				GWLog("commentThreadInListingTouched");
 
-				let parentCommentThread = event.target.closest("#content.compact .comment-thread");
-				if (parentCommentThread) parentCommentThread.toggleClass("expanded");
-			}, false);
+				Æ(event.target.closest("#content.compact .comment-thread")).toggleClass("expanded");
+			});
 		});
 	}
 }
@@ -1793,7 +1784,7 @@ function expandAncestorsOf(commentID) {
 	}
 
 	// Expand collapsed comments.
-	Æ(comment.closest(".comments .comment-item.minimized")).setCommentThreadMaximized(true, false, true);
+	Æ(comment.closest(".comment-item.minimized")).setCommentThreadMaximized(true, false, true);
 }
 
 /**************************/
@@ -1804,8 +1795,7 @@ function toggleReadTimeOrWordCount(addWordCountClass) {
 	GWLog("toggleReadTimeOrWordCount");
 
 	queryAll(".post-meta .read-time").forEach(element => {
-		if (addWordCountClass) element.addClass("word-count");
-		else element.removeClass("word-count");
+		element.toggleClass("word-count", addWordCountClass);
 
 		let titleParts = /(\S+)(.+)$/.exec(element.title);
 		[ element.innerHTML, element.title ] = [ `${titleParts[1]}<span>${titleParts[2]}</span>`, element.textContent ];
