@@ -10,6 +10,9 @@
 	*/
 :root {
 	--GW-UI-font: 'Arial', var(--GW-sans-serif-fallback-font-stack);
+	--GW-UI-font-weight-light: 400;
+	--GW-UI-font-weight-heavy: 700;
+
 	--GW-text-font: 'Arial', var(--GW-sans-serif-fallback-font-stack);
 }
 
@@ -45,29 +48,19 @@ body {
 	box-shadow: 0px 0px 10px #555;
 }
 
-/*=========*/
-/* NAV BAR */
-/*=========*/
+/*==========*/
+/* NAV BARS */
+/*==========*/
 
-.nav-inner {
+#primary-bar .nav-inner,
+#bottom-bar .nav-inner {
 	font-size: 1.125em;
-	font-weight: bold;
-}
-.nav-inner,
-#primary-bar.inactive-bar .nav-inner {
-	padding: 13px 30px 11px 30px;
 }
 #secondary-bar .nav-inner {
 	font-size: 0.875em;
 }
-#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
-	padding: 6px 0 4px 0;
-}
-@media only screen and (min-width: 901px) {
-	#secondary-bar #nav-item-sequences .nav-inner {
-		line-height: 1.1;
-	}
-}
+
+/*= Decorative bottom bar =*/
 
 #bottom-bar.decorative {
 	background-color: #fff;
