@@ -6941,12 +6941,57 @@ body {
 	font-size: 0.9em;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1160px) {
+	#theme-selector:hover::after {
+		background-color: #999;
+		width: calc(6em - 13px);
+	}
+}
+@media only screen and (max-width: 1000px) {
+	#theme-selector {
+		background-color: #d8d8d8;
+		box-shadow: 
+			0 0 0 1px #999,
+			0 0 0 2px transparent;
+	}
+	#theme-selector:hover::after {
+		width: calc(6em - 9px);
+		height: calc(100% - 5px);
+		top: 3px;
+		left: 100%;
+	}	
+}
+
 /*======================*/
 /* THEME TWEAKER TOGGLE */
 /*======================*/
 
 #theme-tweaker-toggle button {
 	color: #777;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1080px) {
+	#theme-tweaker-toggle button {
+		border: 1px solid #999;
+		box-shadow: 
+			0 0 10px #999 inset,
+			0 0 0 1px transparent;
+		border-radius: 50%;
+		transform: scale(0.8);
+	}
+}
+@media only screen and (max-width: 1000px) {
+	#theme-tweaker-toggle button {
+		background-color: #ddd;
+	}
 }
 
 /*=================*/
@@ -6969,7 +7014,7 @@ body {
 	opacity: 0.4;
 	color: #bbb;
 }
-@media only screen and (hover: hover) {
+@media only screen and (hover:hover) and (pointer:fine) {
 	#quick-nav-ui a:hover {
 		color: #000;
 		background-color: #eee;
@@ -6977,6 +7022,18 @@ body {
 	#quick-nav-ui a:focus:not(:hover) {
 		transform: none;
 		text-shadow: none;
+	}
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1020px) {
+	#quick-nav-ui a {
+		box-shadow: 
+			0 0 0 1px #999,
+			0 0 0 2px transparent;
 	}
 }
 
@@ -6997,7 +7054,7 @@ body {
 	color: #bbb;
 	text-shadow: none;
 }
-@media only screen and (hover: hover) {
+@media only screen and (hover:hover) and (pointer:fine) {
 	#new-comment-nav-ui .new-comments-count:hover {
 		text-shadow: 
 			0 0 1px #fff,
@@ -7008,6 +7065,20 @@ body {
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button:focus {
 		color: #d00;
+	}
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1020px) {
+	#new-comment-nav-ui .new-comments-count::before {
+		background-color: #d8d8d8;
+		box-shadow: 
+			0 0 0 1px #999,
+			0 0 0 2px transparent;
+		border-radius: 8px;
 	}
 }
 
@@ -7029,6 +7100,21 @@ body {
 	color: #000;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1440px) {
+	#hns-date-picker {
+		background-color: #d8d8d8;
+		opacity: 1.0;
+	}
+	#hns-date-picker::before {
+		border: 1px solid #999;
+		border-width: 1px 0 1px 1px;
+	}
+}
+
 /*======================*/
 /* ANTI-KIBITZER TOGGLE */
 /*======================*/
@@ -7043,6 +7129,21 @@ body {
 #anti-kibitzer-toggle button:hover::before,
 #anti-kibitzer-toggle button:hover::after {
 	background-color: #444;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1020px) {
+	#anti-kibitzer-toggle {
+		background-color: #d8d8d8;
+		box-shadow: 
+			0 0 0 1px #999,
+			0 0 0 2px transparent;
+		border-radius: 6px;
+		overflow: hidden;
+	}
 }
 
 /*======================*/
@@ -7063,6 +7164,29 @@ body {
 }
 #text-size-adjustment-ui::after {
 	color: #999;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 1080px) {
+	#text-size-adjustment-ui button {
+		border: 1px solid #999;
+		padding: 0 0 0 1px;
+		border-radius: 50%;
+		box-shadow: 
+			0 0 6px #999 inset,
+			0 0 0 1px transparent;
+	}
+}
+@media only screen and (max-width: 1000px) {
+	#text-size-adjustment-ui button {
+		background-color: #ddd;
+	}
+	#text-size-adjustment-ui button:hover {
+		background-color: #eee;
+	}
 }
 
 /*=============================*/
@@ -7152,7 +7276,7 @@ h1.listing a[href^="http"] {
 	top: 2px;
 }
 
-@media only screen and (hover: hover) {
+@media only screen and (hover:hover) and (pointer:fine) {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		color: #3d3d3e;
@@ -7833,7 +7957,7 @@ div.comment-child-links a {
 	background: linear-gradient(to right, transparent 0%, #fff 50%, #fff 100%);
 }
 
-@media only screen and (hover: hover) {
+@media only screen and (hover:hover) and (pointer:fine) {
 	#content.compact > .comment-thread .comment-item:hover .comment,
 	#content.compact > .comment-thread .comment-item.expanded .comment {
 		background-color: #fff;
@@ -7852,7 +7976,7 @@ div.comment-child-links a {
 			0 0 40px #fff;
 	}
 }
-@media only screen and (hover: none) {
+@media not screen and (hover:hover) and (pointer:fine) {
 	#content.compact > .comment-thread.expanded .comment-item .comment {
 		background-color: #fff;
 		outline: 3px solid var(--GW-hyperlink-color);
@@ -8175,7 +8299,7 @@ h1.listing .edit-post-link:hover,
 	color: #777;
 	top: 2px;
 }
-@media only screen and (hover:hover) {
+@media only screen and (hover:hover) and (pointer:fine) {
 	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover,
 	#edit-post-form .post-meta-fields input[type='checkbox']:focus + label {
 		text-shadow: 
@@ -8444,102 +8568,18 @@ select {
 	text-shadow: 
 		rgba(255, 255, 255, 0.5) 0px 3px 3px;
 }
-@media only screen and (hover: hover) {
+@media only screen and (hover:hover) and (pointer:fine) {
 	#content.alignment-forum-index-page h1.listing a:hover,
 	#content.alignment-forum-index-page h1.listing a:focus {
 		background-color: rgba(244, 245, 255, 0.85);
 	}	
 }
 
-/*====================*/
-/* FOR NARROW SCREENS */
-/*====================*/
-
-@media only screen and (max-width: 1440px) {
-	#hns-date-picker {
-		background-color: #d8d8d8;
-		opacity: 1.0;
-	}
-	#hns-date-picker::before {
-		border: 1px solid #999;
-		border-width: 1px 0 1px 1px;
-	}
-}
-@media only screen and (max-width: 1160px) {
-	#theme-selector:hover::after {
-		background-color: #999;
-		width: calc(6em - 13px);
-	}
-}
-@media only screen and (max-width: 1080px) {
-	#text-size-adjustment-ui button {
-		border: 1px solid #999;
-		padding: 0 0 0 1px;
-		border-radius: 50%;
-		box-shadow: 
-			0 0 6px #999 inset,
-			0 0 0 1px transparent;
-	}
-	#theme-tweaker-toggle button {
-		border: 1px solid #999;
-		box-shadow: 
-			0 0 10px #999 inset,
-			0 0 0 1px transparent;
-		border-radius: 50%;
-		transform: scale(0.8);
-	}
-}
-@media only screen and (max-width: 1020px) {
-	#quick-nav-ui a {
-		box-shadow: 
-			0 0 0 1px #999,
-			0 0 0 2px transparent;
-	}
-	#new-comment-nav-ui .new-comments-count::before {
-		background-color: #d8d8d8;
-		box-shadow: 
-			0 0 0 1px #999,
-			0 0 0 2px transparent;
-		border-radius: 8px;
-	}
-	#anti-kibitzer-toggle {
-		background-color: #d8d8d8;
-		box-shadow: 
-			0 0 0 1px #999,
-			0 0 0 2px transparent;
-		border-radius: 6px;
-		overflow: hidden;
-	}
-}
-@media only screen and (max-width: 1000px) {
-	#theme-selector {
-		background-color: #d8d8d8;
-		box-shadow: 
-			0 0 0 1px #999,
-			0 0 0 2px transparent;
-	}
-	#theme-selector:hover::after {
-		width: calc(6em - 9px);
-		height: calc(100% - 5px);
-		top: 3px;
-		left: 100%;
-	}	
-	#text-size-adjustment-ui button {
-		background-color: #ddd;
-	}
-	#text-size-adjustment-ui button:hover {
-		background-color: #eee;
-	}
-	#theme-tweaker-toggle button {
-		background-color: #ddd;
-	}
-}
-
 /*========*/
 /* MOBILE */
 /*========*/
 
-@media only screen and (hover: none) {
+@media not screen and (hover:hover) and (pointer:fine) {
 	#ui-elements-container > div[id$='-ui-toggle'] button  {
 		color: #aaa;
 		text-shadow:
