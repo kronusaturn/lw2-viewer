@@ -80,11 +80,7 @@ Object.prototype.query = function (selector) {
 /* CONTENT COLUMN WIDTH ADJUSTMENT */
 /***********************************/
 
-GW.widthOptions = [
-	['normal', 'Narrow (fixed-width) content column', 'N'],
-	['wide', 'Wide (fixed-width) content column', 'W'],
-	['fluid', 'Full-width (fluid) content column', 'F']
-];
+GW.widthOptions = {{{parts/width_options}}};
 
 function setContentWidth(widthOption) {
 	let currentWidth = localStorage.getItem("selected-width") || 'normal';
@@ -240,11 +236,9 @@ GW.themeOptions = {{{theme_options}}};
 
 // While everything's being loaded, hide the authors and karma values.
 if (localStorage.getItem("antikibitzer") == "true") {
-	query("head").insertAdjacentHTML("beforeend", "<style id='antikibitzer-temp'>" +
-	`.author, .inline-author, .karma-value, .individual-thread-page > h1 { visibility: hidden; }` + 
-	"</style>");
+	query("head").insertAdjacentHTML("beforeend", {{{parts/antikibitzer_temp_styles}}});
 
-	if(document.location.pathname.match(new RegExp("/posts/.*/comment/"))) {
+	if (document.location.pathname.match(new RegExp("/posts/.*/comment/"))) {
 		query("head").insertAdjacentHTML("beforeend", "<"+"title class='fake-title'></title>");
 	}
 }

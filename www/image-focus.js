@@ -53,7 +53,7 @@ function imageFocusSetup(imagesOverlayOnly = false) {
 	});
 
 	// Create the image focus overlay.
-	let imageFocusOverlay = addUIElement({{{image_focus_overlay}}});
+	let imageFocusOverlay = addUIElement({{{parts/image_focus_overlay}}});
 	imageFocusOverlay.dropShadowFilterForImages = " drop-shadow(10px 10px 10px #000) drop-shadow(0 0 10px #444)";
 
 	// Activate the buttons.

@@ -573,7 +573,7 @@ function injectContentWidthSelector() {
 	let currentWidth = localStorage.getItem("selected-width") || 'normal';
 
 	// Inject the content width selector widget and activate buttons.
-	let widthSelector = addUIElement({{{width_selector}}});
+	let widthSelector = addUIElement({{{parts/width_selector}}});
 	widthSelector.queryAll("button").forEach(button => {
 		button.addActivateEvent(GW.widthAdjustButtonClicked = (event) => {
 			GWLog("GW.widthAdjustButtonClicked");
@@ -610,7 +610,7 @@ function injectContentWidthSelector() {
 
 	// Inject transitions CSS, if animating changes is enabled.
 	if (GW.adjustmentTransitions) {
-		query("head").insertAdjacentHTML("beforeend", {{{width_adjustment_transition}}});
+		query("head").insertAdjacentHTML("beforeend", {{{parts/width_adjustment_transition}}});
 	}
 }
 function setWidthAdjustButtonsAccesskey() {
@@ -635,7 +635,7 @@ function injectThemeSelector() {
 	GWLog("injectThemeSelector");
 
 	let currentTheme = readCookie("theme") || "default";
-	let themeSelector = addUIElement({{{theme_selector}}});
+	let themeSelector = addUIElement({{{parts/theme_selector}}});
 	themeSelector.queryAll("button").forEach(button => {
 		button.addActivateEvent(GW.themeSelectButtonClicked = (event) => {
 			GWLog("GW.themeSelectButtonClicked");
@@ -648,7 +648,7 @@ function injectThemeSelector() {
 
 	// Inject transitions CSS, if animating changes is enabled.
 	if (GW.adjustmentTransitions) {
-		query("head").insertAdjacentHTML("beforeend", {{{adjustment_transitions_styles}}});
+		query("head").insertAdjacentHTML("beforeend", {{{parts/adjustment_transitions_styles}}});
 	}
 }
 function setSelectedTheme(themeName) {
@@ -922,7 +922,7 @@ GW.themeLoadCallback_dark = (fromTheme = "") => {
 	}
 
 	// Dark theme should NOT have text rendering adjusted for invert filter.
-	query("head").insertAdjacentHTML("beforeend", {{{dark_theme_adjustments_styles}}});
+	query("head").insertAdjacentHTML("beforeend", {{{parts/dark_theme_adjustments_styles}}});
 }
 GW.themeUnloadCallback_dark = (toTheme = "") => {
 	GWLog("themeUnloadCallback_dark");
@@ -1021,7 +1021,7 @@ GW.themeUnloadCallback_classic = (toTheme = "") => {
 function injectThemeTweaker() {
 	GWLog("injectThemeTweaker");
 
-	let themeTweakerUI = addUIElement({{{theme_tweaker_ui}}});
+	let themeTweakerUI = addUIElement({{{parts/theme_tweaker_ui}}});
 
 	// Clicking the background overlay closes the theme tweaker.
 	themeTweakerUI.addActivateEvent(GW.themeTweaker.UIOverlayClicked = (event) => {
@@ -1190,7 +1190,7 @@ function injectThemeTweaker() {
 		}
 	});
 
-	let themeTweakerToggle = addUIElement({{{theme_tweaker_toggle}}});
+	let themeTweakerToggle = addUIElement({{{parts/theme_tweaker_toggle}}});
 	themeTweakerToggle.query("button").addActivateEvent(GW.themeTweaker.toggleButtonClicked = (event) => {
 		GWLog("GW.themeTweaker.toggleButtonClicked");
 
@@ -1334,7 +1334,7 @@ function updateThemeTweakerSampleText() {
 function injectQuickNavUI() {
 	GWLog("injectQuickNavUI");
 
-	let quickNavContainer = addUIElement({{{quick_nav_ui}}});
+	let quickNavContainer = addUIElement({{{parts/quick_nav_ui}}});
 
 	// Set initial accesskey.
 	quickNavContainer.query(`a[href='${query("#answers") ? "#answers" : "#comments"}']`).accessKey = '/';
@@ -1366,7 +1366,7 @@ function injectQuickNavUI() {
 function injectNewCommentNavUI(newCommentsCount) {
 	GWLog("injectNewCommentNavUI");
 
-	let newCommentNavUIContainer = addUIElement({{{new_comment_nav_ui}}});
+	let newCommentNavUIContainer = addUIElement({{{parts/new_comment_nav_ui}}});
 
 	newCommentNavUIContainer.queryAll(".new-comment-sequential-nav-button").forEach(button => {
 		button.addActivateEvent(GW.commentQuicknavButtonClicked = (event) => {
@@ -1395,7 +1395,7 @@ function injectNewCommentNavUI(newCommentsCount) {
 		}, 150);
 	});
 
-	let hnsDatePicker = addUIElement({{{hns_date_picker}}});
+	let hnsDatePicker = addUIElement({{{parts/hns_date_picker}}});
 
 	window.addEventListener("resize", GW.hnsDatePickerFlipToFit = (event) => {
 		GWLog("hnsDatePickerFlipToFit");
@@ -1478,7 +1478,7 @@ GW.themeTweaker.textSizeAdjustButtonClicked = (event) => {
 function injectTextSizeAdjustmentUIReal() {
 	GWLog("injectTextSizeAdjustmentUIReal");
 
-	let textSizeAdjustmentUIContainer = addUIElement({{{text_size_adjustment_ui}}});
+	let textSizeAdjustmentUIContainer = addUIElement({{{parts/text_size_adjustment_ui}}});
 
 	textSizeAdjustmentUIContainer.queryAll("button").forEach(button => {
 		button.addActivateEvent(GW.themeTweaker.textSizeAdjustButtonClicked);
@@ -1510,7 +1510,7 @@ function injectCommentsViewModeSelector() {
 	let currentModeThreaded = (location.href.search("chrono=t") == -1);
 	let newHref = "href='" + location.pathname + location.search.replace("chrono=t","") + (currentModeThreaded ? ((location.search == "" ? "?" : "&") + "chrono=t") : "") + location.hash + "' ";
 
-	let commentsViewModeSelector = addUIElement({{{comments_view_mode_selector}}});
+	let commentsViewModeSelector = addUIElement({{{parts/comments_view_mode_selector}}});
 
 // 	commentsViewModeSelector.queryAll("a").forEach(button => {
 // 		button.addActivateEvent(commentsViewModeSelectorButtonClicked);
@@ -1605,7 +1605,7 @@ function injectCommentsListModeSelector() {
 
 	if (query(".listings .comment-thread") == null) return;
 
-	query(".listings").insertAdjacentHTML("beforebegin", {{{comments_list_mode_selector}}});
+	query(".listings").insertAdjacentHTML("beforebegin", {{{parts/comments_list_mode_selector}}});
 	let commentsListModeSelector = query("#comments-list-mode-selector");
 
 	commentsListModeSelector.queryAll("button").forEach(button => {
@@ -2205,7 +2205,7 @@ function addCommentParentPopups() {
 /*****************/
 
 function keyboardHelpSetup() {
-	let keyboardHelpOverlay = addUIElement({{{keyboard_help_overlay}}});
+	let keyboardHelpOverlay = addUIElement({{{parts/keyboard_help_overlay}}});
 
 	// Add listener to show the keyboard help overlay.
 	document.addEventListener("keypress", GW.keyboardHelpShowKeyPressed = (event) => {
@@ -2467,7 +2467,7 @@ registerInitializer('initialize', false, () => (document.readyState != 'loading'
 	if (postMeta) {
 		// Add “qualified hyperlinking” toolbar.
 		let postPermalink = location.protocol + "//" + location.host + location.pathname;
-		postMeta.insertAdjacentHTML("beforeend", {{{qualified_linking_toolbar}}});
+		postMeta.insertAdjacentHTML("beforeend", {{{parts/qualified_linking_toolbar}}});
 
 		// Activate copy-to-clipboard icons in qualified linking toolbar.
 		queryAll(".qualified-linking button.copy-link").forEach(button => {
@@ -2672,7 +2672,7 @@ registerInitializer('initialize', false, () => (document.readyState != 'loading'
 	let retryForm = query(".error-retry-form");
 	if (retryForm) {
 		let savedCommentContent = retryForm.query("input[name='text']").value;
-		query(".gw-error").insertAdjacentHTML("beforeend", {{{comment_retry_reassurance_message}}});
+		query(".gw-error").insertAdjacentHTML("beforeend", {{{parts/comment_retry_reassurance_message}}});
 	}
 
 	// Add event listener for . , ; (for navigating listings pages).
