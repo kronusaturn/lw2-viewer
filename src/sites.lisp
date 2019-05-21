@@ -3,7 +3,9 @@
   (:import-from #:sb-ext #:defglobal)
   (:export
     #:*sites*
-    #:site #:alternate-frontend-site #:lesswrong-viewer-site #:ea-forum-viewer-site
+    #:site #:forum-site #:wiki-site
+    #:alternate-frontend-site #:lesswrong-viewer-site #:ea-forum-viewer-site
+    #:arbital-site
     #:site-class #:call-route-handler #:site-class-routes
     #:site-uri #:site-host #:site-secure #:site-backend #:site-title #:site-description #:background-loader-enabled #:site-fonts-source
     #:main-site-title #:main-site-abbreviation #:main-site-uri
@@ -67,7 +69,7 @@
 (defclass ea-forum-viewer-site (forum-site alternate-frontend-site) ()
   (:metaclass site-class))
 
-(defclass arbital-site (forum-site alternate-frontend-site) ()
+(defclass arbital-site (wiki-site alternate-frontend-site) ()
   (:metaclass site-class))
 
 (defmethod host-matches ((site site) host)

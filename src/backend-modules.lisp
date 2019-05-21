@@ -10,6 +10,7 @@
     #:backend-q-and-a
     #:backend-alignment-forum
     #:backend-lw2-legacy #:backend-lw2-modernized #:backend-lw2 #:backend-algolia-search #:backend-ea-forum #:backend-accordius
+    #:backend-arbital
     #:make-backend #:define-backend-function #:define-backend-operation #:backend)
   (:unintern #:declare-backend-function)
   (:recycle #:lw2.backend #:lw2.login))
@@ -45,6 +46,8 @@
 
 (defclass backend-accordius (backend-lw2-legacy backend-lw2-modernized)
   ((rest-api-uri :accessor rest-api-uri :initarg :rest-api-uri :type simple-string)))
+
+(defclass backend-arbital (backend-lmdb-cache) ())
 
 (defun make-backend (type-string &rest args)
   (apply #'make-instance (symbolicate "BACKEND-" (string-upcase type-string)) args))
