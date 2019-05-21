@@ -874,23 +874,16 @@ signaled condition to OUT-STREAM."
 					       (if (member view '(:frontpage :all))
 						   (funcall sort-widget out-stream)))))))))
 
-(setf (lw2.sites::site-class-routes (find-class 'lw2.sites::forum-site))
-      (cons
-       (make-instance 'standard-route :name 'view-root :uri "/" :handler (lambda ()
-									   (with-error-page
-									       (component-value-bind ((() view-index))
-										 (when view-index
-										   (funcall view-index))))))
-       (remove 'view-root (lw2.sites::site-class-routes (find-class 'lw2.sites::forum-site)) :key #'route-name)))
+(defmacro route-component (name &rest args)
+  `(lambda ()
+     (with-error-page
+	 (component-value-bind ((() (,name ,@args)))
+			       (when ,name
+				 (funcall ,name))))))
 
-(setf (lw2.sites::site-class-routes (find-class 'lw2.sites::forum-site))
-      (cons
-       (make-instance 'standard-route :name 'view-index :uri "/index" :handler (lambda ()
-										 (with-error-page
-										     (component-value-bind ((() view-index))
-										       (when view-index
-											 (funcall view-index))))))
-       (remove 'view-index (lw2.sites::site-class-routes (find-class 'lw2.sites::forum-site)) :key #'route-name)))
+(define-route 'forum-site 'standard-route :name 'view-root :uri "/" :handler (route-component view-index))
+
+(define-route 'forum-site 'standard-route :name 'view-index :uri "/index" :handler (route-component view-index))
 
 (hunchentoot:define-easy-handler
     (view-site-routes

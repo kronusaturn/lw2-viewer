@@ -12,7 +12,8 @@
     #:host-matches #:find-site
     #:call-with-site-context #:with-site-context
     #:reset-site-definitions
-    #:define-site))
+    #:define-site
+    #:define-route))
 
 (in-package #:lw2.sites)
 
@@ -115,3 +116,10 @@
                           (t (list key val))))
                       args)))
     `(push (make-instance ',class ,.args2) *sites*)))
+
+(defun define-route (site-class route-class &rest args)
+  (let ((new-route (apply #'make-instance route-class args)))
+    (setf (site-class-routes (find-class site-class))
+	  (cons
+	   new-route
+	   (remove (route-name new-route) (site-class-routes (find-class site-class)) :key #'route-name)))))
