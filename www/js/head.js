@@ -250,11 +250,13 @@ GW.themeOptions = [
 
 // While everything's being loaded, hide the authors and karma values.
 if (localStorage.getItem("antikibitzer") == "true") {
-	query("head").insertAdjacentHTML("beforeend", "<style id='antikibitzer-temp'>" +
-	`.author, .inline-author, .karma-value, .individual-thread-page > h1 { visibility: hidden; }` + 
-	"</style>");
+	query("head").insertAdjacentHTML("beforeend", `<style id='antikibitzer-temp'>
+	.author, .inline-author, .karma-value, .individual-thread-page > h1 {
+		visibility: hidden;
+	}
+</style>`);
 
-	if(document.location.pathname.match(new RegExp("/posts/.*/comment/"))) {
+	if (document.location.pathname.match(new RegExp("/posts/.*/comment/"))) {
 		query("head").insertAdjacentHTML("beforeend", "<"+"title class='fake-title'></title>");
 	}
 }

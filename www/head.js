@@ -228,7 +228,7 @@ setTextZoom(GW.currentTextZoom);
 /* THEMES */
 /**********/
 
-GW.themeOptions = {{{theme_options}}};
+GW.themeOptions = {{{parts/theme_options}}};
 
 /*****************/
 /* ANTI-KIBITZER */
