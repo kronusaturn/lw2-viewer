@@ -131,14 +131,21 @@ body {
 /* PAGE TOOLBAR */
 /*==============*/
 
-.new-post,
-.new-post:visited,
-.new-private-message,
-.new-private-message:visited {
-	color: #090;
-}
-.logout-button {
-	color: #d33;
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 640px) {
+	#content.user-page .page-toolbar .button,
+	#content.user-page .page-toolbar .rss {
+		border: 1px solid #d6d5d6;
+		border-radius: 8px;
+	}
+	#content.user-page .page-toolbar .button:hover,
+	#content.user-page .page-toolbar .rss:hover {
+		background-color: #eee;
+		border-color: #bbb;
+	}
 }
 
 /*==============*/
@@ -152,8 +159,6 @@ body {
 .sublevel-nav .sublevel-item:not(.selected):hover {
 	background-color: #ddd;
 	color: #000;
-	text-decoration: none;
-	text-shadow: none;
 }
 .sublevel-nav .sublevel-item:not(.selected):active,
 .sublevel-nav .sublevel-item.selected {
@@ -168,6 +173,7 @@ body {
 	border-style: solid;
 	border-color: #ddd;
 	border-width: 1px 0 1px 1px;
+	line-height: 1.8;
 }
 .sublevel-nav:not(.sort) .sublevel-item:first-child {
 	border-radius: 8px 0 0 8px;
@@ -175,6 +181,20 @@ body {
 .sublevel-nav:not(.sort) .sublevel-item:last-child {
 	border-width: 1px;
 	border-radius: 0 8px 8px 0;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	.sublevel-nav:not(.sort) .sublevel-item,
+	.sublevel-nav:not(.sort) .sublevel-item:first-child,
+	.sublevel-nav:not(.sort) .sublevel-item:last-child {
+		border-radius: 8px;
+		border-width: 1px;
+		margin: 2px;
+	}
 }
 
 /*=====================*/
