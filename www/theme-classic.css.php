@@ -669,7 +669,7 @@ body {
 /*==========*/
 
 .archive-nav {
-	border: 1px solid #aaa;
+	outline: 1px solid #aaa;
 }
 
 .archive-nav *[class^='archive-nav-item'] {
@@ -760,6 +760,21 @@ h1.listing .edit-post-link:hover {
 }
 #content.user-page h1.listing .edit-post-link {
 	background-color: #f7f7f8;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 520px) {
+	h1.listing {
+		margin: 18px 6px 4px 6px;
+		max-width: calc(100% - 12px);
+		padding: 0;
+	}
+	h1.listing a[href^='http'] {
+		top: 2px;
+	}
 }
 
 /*======*/
@@ -869,6 +884,34 @@ h1.listing + .post-meta .post-section::before {
 h1.listing + .post-meta .link-post-domain {
 	order: -2;
 	margin: 0 1em 0 0;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	h1.listing + .post-meta .post-section {
+		overflow: visible;
+		order: -2;
+		width: unset;
+	}
+	h1.listing + .post-meta .post-section::before {
+		position: unset;
+	}
+}
+@media only screen and (max-width: 520px) {
+	h1.listing + .post-meta {
+		margin: 4px 6px;
+	}
+	h1.listing + .post-meta > *:not(.karma) {
+		line-height: 1.5;
+		width: unset;
+	}
+	h1.listing + .post-meta .karma-value {
+		top: 0;
+		right: calc(100% - 2.25em);
+	}
 }
 
 /*============*/
@@ -1161,6 +1204,18 @@ a.post-section.alignment-forum:hover::before {
 }
 .post .bottom-post-meta .post-section::before {
 	top: 21px;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 720px) {
+	.post-meta .comment-count::before {
+		font-family: inherit;
+		font-size: inherit;
+		margin: 0;
+	}
 }
 
 /*============*/
@@ -2023,15 +2078,6 @@ select {
 /*========*/
 
 @media only screen and (max-width: 900px) {
-	h1.listing + .post-meta .post-section {
-		overflow: visible;
-		order: -2;
-		width: unset;
-	}
-	h1.listing + .post-meta .post-section::before {
-		position: unset;
-	}
-
 	.comment-item .comment-item {
 		margin: 0.75em 0 3px 6px;
 	}
@@ -2039,34 +2085,7 @@ select {
 		margin: 1.5em 0 3px 6px;
 	}
 }
-@media only screen and (max-width: 720px) {
-	.post-meta .comment-count::before {
-		font-family: inherit;
-		font-size: inherit;
-		margin: 0;
-	}
-}
 @media only screen and (max-width: 520px) {
-	h1.listing {
-		margin: 18px 6px 4px 6px;
-		max-width: calc(100% - 12px);
-		padding: 0;
-	}
-	h1.listing a[href^='http'] {
-		top: 2px;
-	}
-	h1.listing + .post-meta {
-		margin: 4px 6px;
-	}
-	h1.listing + .post-meta > *:not(.karma) {
-		line-height: 1.5;
-		width: unset;
-	}
-	h1.listing + .post-meta .karma-value {
-		top: 0;
-		right: calc(100% - 2.25em);
-	}
-
 	#content.compact > .comment-thread .comment-item {
 		max-height: 104px;
 	}
