@@ -338,7 +338,10 @@ signaled condition to OUT-STREAM."
 "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
 <meta name=\"HandheldFriendly\" content=\"True\" />"))
 
-(defparameter *extra-external-scripts* "")
+(defparameter *extra-external-scripts* "
+<script type=\"text/javascript\" async
+  src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML\">
+</script>")
 (defparameter *extra-inline-scripts* "")
 
 (defun generate-versioned-link (file)
