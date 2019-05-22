@@ -355,9 +355,7 @@ body {
 		1px 1px 0 0 #aaa inset;
 }
 .sublevel-nav.sort {
-	border: 2px solid transparent;
 	padding: 18px 0 0 0;
-	border-radius: 8px;
 }
 .sublevel-nav.sort::before {
 	text-transform: uppercase;
@@ -472,7 +470,7 @@ body {
 	#theme-tweaker-toggle {
 		background-color: #ddd;
 		box-shadow:
-			0   0 0 1px #999 inset;
+			0 0 0 1px #999 inset;
 	}
 }
 

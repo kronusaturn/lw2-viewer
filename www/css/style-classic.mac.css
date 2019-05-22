@@ -6724,6 +6724,8 @@ th.mathjax-inline-container {
 	--GW-comment-background-color-odd: #f7f7f8;
 	--GW-comment-background-color-even: #fff;
 	--GW-comment-background-color-target: #ffd;
+
+	--GW-theme-selector-outline-color: #aaa;
 }
 
 /*======*/
@@ -6890,40 +6892,29 @@ body {
 /*=====================*/
 
 .sublevel-nav.sort .sublevel-item {
-	letter-spacing: 0.5px;
 	padding: 7px 7px 6px 8px;
 	text-transform: uppercase;
-	pointer-events: auto;
-	box-shadow: 1px 1px 0 0 #aaa inset;
+	box-shadow: 1px 1px 0 0 #bbb inset;
 }
 .sublevel-nav.sort {
-	border: 2px solid transparent;
 	padding: 18px 0 0 0;
-	border-radius: 8px;
-	pointer-events: none;
-	background-color: #bbb;
 }
 .sublevel-nav.sort::before {
 	text-transform: uppercase;
-	font-weight: 600;
-	color: #444;
+	color: #777;
 	text-shadow: 0.5px 0.5px 0 #fff;
-	z-index: 1;
 }
 .sublevel-nav.sort::after {
 	content: "";
 	position: absolute;
-	display: block;
-	top: 0;
+	top: 18px;
 	left: 0;
 	width: 100%;
-	height: 100%;
+	height: calc(100% - 18px);
 	border-radius: 6px;
 	box-shadow:
-		0 18px 0 0 #bbb inset,
-		0 0 0 1px #aaa inset,
-		0 18px 0 1px #aaa inset,
-		0 0 0 2px #bbb;
+		0 0 0 1px #bbb inset,
+		0 0 0 2px #fff;
 }
 
 /*================*/
@@ -6947,43 +6938,14 @@ body {
 }
 
 #theme-selector button::before {
-	font-size: 0.9375em;
-	padding: 5px 6px 7px 6px;
 	color: #999;
-	background-color: #d8d8d8;
 }
 #theme-selector button:hover::before,
 #theme-selector button.selected::before {
-	color: #222;
+	color: #000;
 }
-#width-selector button::after {
+#width-selector button {
 	color: #999;
-	font-size: 0.9em;
-}
-
-/*=----------------------------=*/
-/*= Viewport width adjustments =*/
-/*=----------------------------=*/
-
-@media only screen and (max-width: 1160px) {
-	#theme-selector:hover::after {
-		background-color: #999;
-		width: calc(6em - 13px);
-	}
-}
-@media only screen and (max-width: 1000px) {
-	#theme-selector {
-		background-color: #d8d8d8;
-		box-shadow: 
-			0 0 0 1px #999,
-			0 0 0 2px transparent;
-	}
-	#theme-selector:hover::after {
-		width: calc(6em - 9px);
-		height: calc(100% - 5px);
-		top: 3px;
-		left: 100%;
-	}	
 }
 
 /*======================*/
@@ -6991,26 +6953,21 @@ body {
 /*======================*/
 
 #theme-tweaker-toggle button {
-	color: #777;
+	color: #999;
+}
+#theme-tweaker-toggle button:hover {
+	color: #666;
 }
 
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
-@media only screen and (max-width: 1080px) {
-	#theme-tweaker-toggle button {
-		border: 1px solid #999;
-		box-shadow: 
-			0 0 10px #999 inset,
-			0 0 0 1px transparent;
-		border-radius: 50%;
-		transform: scale(0.8);
-	}
-}
 @media only screen and (max-width: 1000px) {
-	#theme-tweaker-toggle button {
-		background-color: #ddd;
+	#theme-tweaker-toggle {
+		background-color: var(--GW-body-background-color);
+		box-shadow:
+			0 0 0 1px #aaa inset;
 	}
 }
 
