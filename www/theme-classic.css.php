@@ -281,9 +281,8 @@ body {
 
 @media only screen and (max-width: 960px) {
 	#theme-selector {
-		background-color: #d8d8d8;
 		box-shadow: 
-			0 0 0 1px #999,
+			0 0 0 1px var(--GW-theme-selector-outline-color),
 			0 0 1px 3px #fff,
 			0 0 3px 3px #fff,
 			0 0 5px 3px #fff,
@@ -291,10 +290,13 @@ body {
 			0 0 20px 3px #fff;
 		border-radius: 12px;
 	}
-	#theme-selector::before,
-	#theme-selector .theme-selector-close-button {
+	#theme-selector::before {
 		color: #000;
 		font-weight: normal;
+	}
+	#theme-selector .theme-selector-close-button {
+		color: #777;
+		font-weight: 300;
 	}
 	#theme-selector button {
 		background-color: #e6e6e6;
@@ -302,16 +304,19 @@ body {
 	}
 	#theme-selector button::after {
 		color: #444;
-		max-width: calc(100% - 3.5em);
-		overflow: hidden;
-		text-overflow: ellipsis;
-		padding-bottom: 1px;
 	}
 	#theme-selector button.selected::after {
 		color: #000;
 		text-shadow: 
 			0 -1px 0 #fff,
 			0 0.5px 0.5px #000;
+	}
+	@media (-webkit-max-device-pixel-ratio: 1), (max-resolution: 191dpi) {
+		#theme-selector button.selected::after {
+			text-shadow: 
+				0 -1px 0 #fff,
+				0 0.5px 0.5px #bbb;
+		}
 	}
 }
 
