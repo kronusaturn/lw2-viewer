@@ -7390,34 +7390,36 @@ body {
 /*==========*/
 
 h1.listing {
-	margin: 1.125em 20px 0.25em 20px;
-	max-width: calc(100% - 40px);
+	margin: 1.125em 0 0.25em 0;
 	font-size: 1.125rem;
 	padding-left: 30px;
 	max-height: unset;
 }
 
-h1.listing a[href^='/posts'] {
+h1.listing a[href^='/'] {
 	color: #538d4d;
 	white-space: unset;
-	display: inline;
 }
-h1.listing a[href^='/posts']:visited {
+h1.listing a[href^='/']:visited {
 	color: #5a5a5b;
 }
 h1.listing a[href^="http"] {
-	top: 2px;
+	min-width: 1.25em;
+	line-height: 1;
+	top: -1px;
+	left: 1px;
 }
 
 @media only screen and (hover:hover) and (pointer:fine) {
-	h1.listing a:hover,
-	h1.listing a:focus {
-		color: #3d3d3e;
+	h1.listing a[href^='/posts/']:hover,
+	h1.listing a[href^='/posts/']:focus,
+	h1.listing a[href^='/s/']:hover,
+	h1.listing a[href^='/s/']:focus,
+	h1.listing a[href^='/conversation?id']:hover,
+	h1.listing a[href^='/conversation?id']:focus {
 		text-decoration: none;
-	}	
-	h1.listing a:focus {
-		border-bottom: 1px dotted #999;
-	}	
+		color: #3d3d3e;
+	}
 	h1.listing:focus-within::before {
 		display: none;
 	}
@@ -7438,16 +7440,20 @@ h1.listing a[href^="http"] {
 	}
 }
 
-h1.listing .edit-post-link {
-	padding: 5px 3px 12px 0.5em;
-	top: 0;
-	right: 0;
-}
+/*=----------------------=*/
+/*= In-listing edit link =*/
+/*=----------------------=*/
+
 h1.listing .edit-post-link:hover {
 	text-decoration: none;
 }
-#content.user-page h1.listing .edit-post-link {
-	background-color: #f7f7f8;
+
+/*=------------------=*/
+/*= Post type prefix =*/
+/*=------------------=*/
+
+h1.listing .post-type-prefix {
+	width: 1.25em;
 }
 
 /*=----------------------------=*/
@@ -7455,13 +7461,8 @@ h1.listing .edit-post-link:hover {
 /*=----------------------------=*/
 
 @media only screen and (max-width: 520px) {
-	h1.listing {
-		margin: 18px 6px 4px 6px;
-		max-width: calc(100% - 12px);
-		padding: 0;
-	}
 	h1.listing a[href^='http'] {
-		top: 2px;
+		top: 0;
 	}
 }
 
