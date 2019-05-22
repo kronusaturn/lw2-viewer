@@ -7030,6 +7030,12 @@ body {
 			0 0 0 1px #aaa inset;
 	}
 }
+@media only screen and (max-width: 1000px) {
+	#theme-tweaker-toggle {
+		box-shadow: none;
+		background-color: transparent;
+	}
+}
 
 /*=================*/
 /* QUICKNAV WIDGET */
@@ -7181,26 +7187,17 @@ body {
  *================================*/
 
 @media only screen and (max-width: 960px) {
-	#quick-nav-ui {
-		background-color: #fff;
-	}
 	#quick-nav-ui,
 	#new-comment-nav-ui,
 	#hns-date-picker {
 		box-shadow:
-			0 0 1px 3px #fff,
-			0 0 3px 3px #fff,
-			0 0 5px 3px #fff,
-			0 0 10px 3px #fff,
-			0 0 20px 3px #fff;
+			0 0 1px 3px #fff;
+		filter:
+			drop-shadow(0 0 1px #fff)
+			drop-shadow(0 0 1px #fff);
 	}
 	#quick-nav-ui a::after,
 	#new-comment-nav-ui::before {
-		font-weight: bold;
-		box-shadow:
-			0 0 1px 0 #fff,
-			0 0 3px 0 #fff,
-			0 0 5px 0 #fff;
 		background-color: #fff;
 		border-radius: 4px;
 	}
@@ -7208,23 +7205,23 @@ body {
 	#new-comment-nav-ui {
 		border-radius: 8px;
 	}
+
+	#quick-nav-ui {
+		background-color: #fff;
+	}
+
 	#new-comment-nav-ui {
 		background-color: #e4e4e4;
 		border: 1px solid #999;
 	}
 	#new-comment-nav-ui::before {
 		color: #777;
-		font-weight: bold;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button {
 		box-shadow: 0 0 0 1px #999;
 		color: #538d4d;
 	}
-	#new-comment-nav-ui .new-comment-sequential-nav-button:disabled {
-		color: #bbb;
-	}
 	#new-comment-nav-ui .new-comments-count {
-		background-color: inherit;
 		box-shadow: 0 -1px 0 0 #999;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-previous {
@@ -7233,9 +7230,10 @@ body {
 	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-next {
 		border-radius: 0 7px 7px 0;
 	}
-	#hns-date-picker {
-		background-color: #e4e4e4;
-		border: 1px solid #999;
+
+	#hns-date-picker,
+	#hns-date-picker::before {
+		border-radius: 0;
 	}
 }
 
@@ -7261,10 +7259,13 @@ body {
 
 @media only screen and (max-width: 1020px) {
 	#anti-kibitzer-toggle {
-		background-color: #d8d8d8;
 		box-shadow: 
-			0 0 0 1px #999,
-			0 0 0 2px transparent;
+			0  2px 0 1px var(--GW-body-background-color),
+			0  0   0 1px var(--GW-body-background-color),
+			0  2px 0 2px #999,
+			0  0   0 2px #999,
+			0  0   0 3px transparent;
+		background-color: var(--GW-body-background-color);
 		border-radius: 6px;
 		overflow: hidden;
 	}
