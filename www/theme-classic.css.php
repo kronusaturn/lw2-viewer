@@ -892,7 +892,7 @@ h1.listing + .post-meta .lw2-link {
 h1.listing + .post-meta .post-section::before {
 	left: unset;
 	right: calc(100% + 1.15em);
-	top: -1.75rem;
+	top: -1.8125rem;
 }
 h1.listing + .post-meta .link-post-domain {
 	order: -2;
@@ -932,19 +932,25 @@ h1.listing + .post-meta .link-post-domain {
 /*============*/
 /* USER PAGES */
 /*============*/
+/*======================*/
+/* SEARCH RESULTS PAGES */
+/*======================*/
 
 #content.user-page h1.page-main-heading {
 	border-bottom: 1px solid #ccc;
 }
 
 #content.user-page h1.listing,
-#content.user-page h1.listing + .post-meta {
+#content.user-page h1.listing + .post-meta,
+#content.search-results-page h1.listing,
+#content.search-results-page h1.listing + .post-meta {
 	background-color: #f7f7f8;
 	border-style: solid;
 	border-color: #bbbcbf;
 }
 
-#content.user-page h1.listing {
+#content.user-page h1.listing,
+#content.search-results-page h1.listing {
 	padding: 0.5em 6px 0 48px;
 	border-width: 1px 1px 0 1px;
 	margin: 1rem 0 0 0;
@@ -954,11 +960,20 @@ h1.listing + .post-meta .link-post-domain {
 h1.listing.own-post-listing {
 	padding-right: 36px;
 }
-#content.user-page h1.listing a:hover {
-	background-color: #f7f7f8;
+
+/*	Listings hover reveal.
+	*/
+@media only screen and (hover: hover) and (pointer: fine) {
+	#content.user-page h1.listing a:hover,
+	#content.user-page h1.listing a:focus,
+	#content.search-results-page h1.listing a:hover,
+	#content.search-results-page h1.listing a:focus {
+		background-color: #f7f7f8;
+	}
 }
 
-#content.user-page h1.listing + .post-meta {
+#content.user-page h1.listing + .post-meta,
+#content.search-results-page h1.listing + .post-meta {
 	padding: 0.25em 10px 0.5em 32px;
 	border-width: 0 1px 1px 1px;
 	margin: 0 0 1rem 0;
@@ -972,6 +987,10 @@ h1.listing.own-post-listing {
 	top: 4px;
 }
 
+/*=--------------------=*/
+/*= Conversations list =*/
+/*=--------------------=*/
+
 #content.conversations-user-page h1.listing {
 	padding: 8px 6px 8px 10px;
 	font-size: 1.25rem;
@@ -979,18 +998,6 @@ h1.listing.own-post-listing {
 #content.conversations-user-page h1.listing + .post-meta {
 	padding: 0 10px 6px 4px;
 	margin: 0;
-}
-
-.user-stats .karma-total {
-	font-weight: bold;
-}
-
-/*================*/
-/* SEARCH RESULTS */
-/*================*/
-
-#content.search-results-page h1.listing {
-	font-size: 1.125rem;
 }
 
 /*===============*/

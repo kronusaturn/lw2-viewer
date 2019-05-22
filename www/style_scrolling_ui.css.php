@@ -794,6 +794,7 @@ a#inbox-indicator.new-messages:hover::before {
 		padding: 0.625em 1em 0.5em 1em;
 		white-space: nowrap;
 		height: 100%;
+		line-height: inherit;
 	}
 	#content.user-page .page-toolbar button {
 		padding: 0;
