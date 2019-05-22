@@ -9,11 +9,13 @@
 /*	Typography.
 	*/
 :root {
-	--GW-UI-font: 'Arial', var(--GW-sans-serif-fallback-font-stack);
+	--GW-UI-font: 'Liberation Sans', var(--GW-sans-serif-fallback-font-stack);
 	--GW-UI-font-weight-light: 400;
 	--GW-UI-font-weight-heavy: 700;
 
-	--GW-body-text-font: 'Arial', var(--GW-sans-serif-fallback-font-stack);
+	--GW-monospaced-font: 'Liberation Mono', var(--GW-monospaced-fallback-font-stack);
+
+	--GW-body-text-font: 'Liberation Sans', var(--GW-sans-serif-fallback-font-stack);
 }
 
 /*	Layout.
@@ -109,6 +111,10 @@ body {
 .nav-bar {
 	border-bottom: 1px solid #d6d5d6;
 }
+#bottom-bar {
+	border-bottom: none;
+	border-top: 1px solid #d6d5d6;
+}
 .nav-bar .nav-current {
 	color: #666;
 }
@@ -160,6 +166,14 @@ body {
 	#nav-item-all .nav-inner::before {
 		margin-bottom: 0;
 	}
+}
+
+/*===============*/
+/* PAGINATION UI */
+/*===============*/
+
+#bottom-bar .nav-item a::before {
+	font-weight: 900;
 }
 
 /*==============*/
@@ -793,6 +807,9 @@ h1.listing.spam + .post-meta:hover,
 h1.listing.spam:hover + .post-meta {
 	opacity: 1.0;
 }
+h1.listing.spam .post-type-prefix {
+	opacity: 1.0;
+}
 
 /*===================*/
 /* LISTING POST-META */
@@ -801,7 +818,6 @@ h1.listing.spam:hover + .post-meta {
 h1.listing + .post-meta {
 	font-size: 0.8125rem;
 	padding-left: 30px;
-	display: flex;
 	justify-content: flex-end;
 }
 
@@ -810,7 +826,6 @@ h1.listing + .post-meta .author {
 	color: #6a8a6b;
 	text-decoration: none;
 	margin: 0 0 0 1.5em;
-	order: 0;
 }
 h1.listing + .post-meta .author:hover {
 	color: #3d3d3e;
@@ -832,15 +847,16 @@ h1.listing + .post-meta .karma-value {
 	background-color: #538d4d;
 	color: #fff;
 	font-weight: bold;
-	font-size: 0.8125rem;
-	border-radius: 1.0625em;
-	padding: 2px 6px 1px 6px;
-	text-align: center;
-	display: block;
-	min-width: 2.125em;
+	font-size: 0.875rem;
 	position: absolute;
-	right: calc(100% - 1.75em);
-	top: -2.1em;
+	right: calc(100% - 1.625em);
+	top: -2rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 1.875rem;
+	height: 1.875rem;
+	border-radius: 1rem;
 }
 h1.listing + .post-meta .karma-value span,
 h1.listing + .post-meta .lw2-link span,
@@ -873,14 +889,10 @@ h1.listing + .post-meta .lw2-link {
 	margin: 0 0 0 1em;
 	order: 3;
 }
-h1.listing + .post-meta .post-section {
-	margin: 0;
-	text-decoration: none;
-}
 h1.listing + .post-meta .post-section::before {
 	left: unset;
 	right: calc(100% + 1.15em);
-	top: -1.95em;
+	top: -1.75rem;
 }
 h1.listing + .post-meta .link-post-domain {
 	order: -2;
@@ -893,25 +905,27 @@ h1.listing + .post-meta .link-post-domain {
 
 @media only screen and (max-width: 900px) {
 	h1.listing + .post-meta .post-section {
-		overflow: visible;
 		order: -2;
 		width: unset;
+		text-decoration: none;
+		margin: 0 1em 0 0;
 	}
 	h1.listing + .post-meta .post-section::before {
 		position: unset;
 	}
 }
 @media only screen and (max-width: 520px) {
-	h1.listing + .post-meta {
-		margin: 4px 6px;
+	h1.listing {
+		padding-left: 40px;
 	}
 	h1.listing + .post-meta > *:not(.karma) {
-		line-height: 1.5;
+		line-height: 1.7;
 		width: unset;
+		margin: 0 0 0 1em;
 	}
 	h1.listing + .post-meta .karma-value {
-		top: 0;
 		right: calc(100% - 2.25em);
+		top: -1.875rem;
 	}
 }
 
@@ -2059,8 +2073,6 @@ select {
 	background-color: #f4f5ff;
 }
 #content.alignment-forum-index-page::after {
-	font-family: "Concourse SmallCaps";
-	font-weight: 600;
 	background-color: #7f85b2;
 	color: transparent;
 	-webkit-background-clip: text;
