@@ -6832,6 +6832,28 @@ body {
 	color: #000;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	#primary-bar .nav-inner {
+		font-size: 1.25em;
+	}
+	#secondary-bar .nav-inner {
+		font-size: 1.125em;
+	}
+	#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
+		padding: 6px 10px;
+	}
+}
+@media only screen and (max-width: 520px) {
+	#primary-bar.inactive-bar .nav-inner {
+		padding: 6px 10px;
+		font-size: 1.375em;
+	}
+}
+
 /*==============*/
 /* PAGE TOOLBAR */
 /*==============*/
@@ -7281,9 +7303,6 @@ body {
 #text-size-adjustment-ui button:hover {
 	color: #222;
 }
-#text-size-adjustment-ui button.default {
-	font-weight: 600;
-}
 #text-size-adjustment-ui button:disabled:hover {
 	text-shadow: none;
 }
@@ -7298,20 +7317,35 @@ body {
 @media only screen and (max-width: 1080px) {
 	#text-size-adjustment-ui button {
 		border: 1px solid #999;
-		padding: 0 0 0 1px;
 		border-radius: 50%;
 		box-shadow: 
 			0 0 6px #999 inset,
 			0 0 0 1px transparent;
-	}
-}
-@media only screen and (max-width: 1000px) {
-	#text-size-adjustment-ui button {
 		background-color: #ddd;
 	}
 	#text-size-adjustment-ui button:hover {
 		background-color: #eee;
 	}
+	#text-size-adjustment-ui button.decrease,
+	#text-size-adjustment-ui button.increase {
+		padding: 1px 0 0 0;
+	}
+}
+
+/*=============================*/
+/* COMMENTS LIST MODE SELECTOR */
+/*=============================*/
+
+#comments-list-mode-selector button {
+	color: #aaa;
+	box-shadow:
+		0 0 0 4px #fff inset,
+		0 0 0 5px #bbb inset;
+}
+#comments-list-mode-selector button:hover,
+#comments-list-mode-selector button.selected {
+	box-shadow:
+		0 0 0 5px #bbb inset;
 }
 
 /*=============================*/
@@ -7320,14 +7354,6 @@ body {
 
 #comments-view-mode-selector a {
 	color: #777;
-}
-
-/*===============*/
-/* KEYBOARD HELP */
-/*===============*/
-
-#keyboard-help-overlay .keyboard-help-container .keys {
-	margin: 0;
 }
 
 /*==========*/
@@ -7375,6 +7401,19 @@ body {
 }
 .archive-nav a.archive-nav-item-day:hover {
 	background-color: #ddd;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	.archive-nav *[class^='archive-nav-item-'] {
+		border-width: 1px !important;
+	}
+	.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
+		background-color: #aaa;
+	}
 }
 
 /*==========*/
@@ -8065,16 +8104,6 @@ div.comment-child-links a {
 /* COMMENTS COMPACT VIEW */
 /*=======================*/
 
-#comments-list-mode-selector button {
-	box-shadow:
-		0 0 0 4px #fff inset,
-		0 0 0 5px #bbb inset;
-}
-#comments-list-mode-selector button:hover,
-#comments-list-mode-selector button.selected {
-	box-shadow:
-		0 0 0 5px #bbb inset;
-}
 #content.compact > .comment-thread .comment-item {
     max-height: 57px;
 }
@@ -8677,6 +8706,14 @@ select {
 	border: 1px solid #cce;
 }
 
+/*===============*/
+/* KEYBOARD HELP */
+/*===============*/
+
+#keyboard-help-overlay .keyboard-help-container .keys {
+	margin: 0;
+}
+
 /*=================*/
 /* ALIGNMENT FORUM */
 /*=================*/
@@ -8704,127 +8741,93 @@ select {
 /* MOBILE */
 /*========*/
 
-	/*****************************************/
-	@media only screen and (max-width: 900px) {
-	/*****************************************/
-		h1.listing + .post-meta .post-section {
-			overflow: visible;
-			order: -2;
-			width: unset;
-		}
-		h1.listing + .post-meta .post-section::before {
-			position: unset;
-		}
-
-		#primary-bar .nav-inner {
-			font-size: 1.25em;
-		}
-		#secondary-bar .nav-inner {
-			font-size: 1.125em;
-		}
-		#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
-			padding: 6px 10px;
-		}
-
-		.archive-nav *[class^='archive-nav-item-'] {
-			border-width: 1px !important;
-		}
-		.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
-			background-color: #aaa;
-		}
-
-		.comment-item .comment-item {
-			margin: 0.75em 0 3px 6px;
-		}
-		.comment-item .comment-item + .comment-item {
-			margin: 1.5em 0 3px 6px;
-		}
-
-		.sublevel-nav:not(.sort) .sublevel-item,
-		.sublevel-nav:not(.sort) .sublevel-item:first-child,
-		.sublevel-nav:not(.sort) .sublevel-item:last-child {
-			border-radius: 8px;
-			border-width: 1px;
-			margin: 2px;
-		}
-	/*******************************************/
-	} @media only screen and (max-width: 720px) {
-	/*******************************************/
-		.post-meta .comment-count::before {
-			font-family: inherit;
-			font-size: inherit;
-			margin: 0;
-		}
-	/*******************************************/
-	} @media only screen and (max-width: 520px) {
-	/*******************************************/
-		#primary-bar.inactive-bar .nav-inner {
-			padding: 6px 10px;
-			font-size: 1.375em;
-		}
-
-		h1.listing {
-			margin: 18px 6px 4px 6px;
-			max-width: calc(100% - 12px);
-			padding: 0;
-		}
-		h1.listing a[href^='http'] {
-			top: 2px;
-		}
-		h1.listing + .post-meta {
-			margin: 4px 6px;
-		}
-		h1.listing + .post-meta > *:not(.karma) {
-			line-height: 1.5;
-			width: unset;
-		}
-		h1.listing + .post-meta .karma-value {
-			top: 0;
-			right: calc(100% - 2.25em);
-		}
-
-		#content.compact > .comment-thread .comment-item {
-			max-height: 104px;
-		}
-
-		.textarea-container:focus-within textarea {
-			background-color: #fff;
-		}
-		.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
-			padding: 6px;
-			font-weight: bold;
-		}
-		.textarea-container:focus-within .guiedit-mobile-help-button.active {
-			box-shadow:
-				0 0 0 2px #c00;
-			color: #c00;
-		}
-		.textarea-container:focus-within .guiedit-buttons-container {
-			background-color: #fff;
-			border-top: 1px solid #ddf;
-		}
-		.posting-controls .textarea-container:focus-within .guiedit-buttons-container {
-			box-shadow: none;
-		}
-		#content.conversation-page .textarea-container:focus-within::after {
-			background-color: #fff;
-		}
-		.textarea-container:focus-within button.guiedit {
-			border: 1px solid #6a8a6b;
-			border-radius: 6px;
-		}
-
-		#edit-post-form .post-meta-fields input[type='checkbox'] + label {
-			top: 1px;
-		}
-		#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
-			top: 1px;
-		}
-		
-		#edit-post-form textarea {
-			min-height: calc(100vh - 345px);
-		}
+@media only screen and (max-width: 900px) {
+	h1.listing + .post-meta .post-section {
+		overflow: visible;
+		order: -2;
+		width: unset;
 	}
+	h1.listing + .post-meta .post-section::before {
+		position: unset;
+	}
+
+	.comment-item .comment-item {
+		margin: 0.75em 0 3px 6px;
+	}
+	.comment-item .comment-item + .comment-item {
+		margin: 1.5em 0 3px 6px;
+	}
+}
+@media only screen and (max-width: 720px) {
+	.post-meta .comment-count::before {
+		font-family: inherit;
+		font-size: inherit;
+		margin: 0;
+	}
+}
+@media only screen and (max-width: 520px) {
+	h1.listing {
+		margin: 18px 6px 4px 6px;
+		max-width: calc(100% - 12px);
+		padding: 0;
+	}
+	h1.listing a[href^='http'] {
+		top: 2px;
+	}
+	h1.listing + .post-meta {
+		margin: 4px 6px;
+	}
+	h1.listing + .post-meta > *:not(.karma) {
+		line-height: 1.5;
+		width: unset;
+	}
+	h1.listing + .post-meta .karma-value {
+		top: 0;
+		right: calc(100% - 2.25em);
+	}
+
+	#content.compact > .comment-thread .comment-item {
+		max-height: 104px;
+	}
+
+	.textarea-container:focus-within textarea {
+		background-color: #fff;
+	}
+	.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
+		padding: 6px;
+		font-weight: bold;
+	}
+	.textarea-container:focus-within .guiedit-mobile-help-button.active {
+		box-shadow:
+			0 0 0 2px #c00;
+		color: #c00;
+	}
+	.textarea-container:focus-within .guiedit-buttons-container {
+		background-color: #fff;
+		border-top: 1px solid #ddf;
+	}
+	.posting-controls .textarea-container:focus-within .guiedit-buttons-container {
+		box-shadow: none;
+	}
+	#content.conversation-page .textarea-container:focus-within::after {
+		background-color: #fff;
+	}
+	.textarea-container:focus-within button.guiedit {
+		border: 1px solid #6a8a6b;
+		border-radius: 6px;
+	}
+
+	#edit-post-form .post-meta-fields input[type='checkbox'] + label {
+		top: 1px;
+	}
+	#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
+		top: 1px;
+	}
+	
+	#edit-post-form textarea {
+		min-height: calc(100vh - 345px);
+	}
+}
 
 /*%%%%%%%%%%%%%%%*/
 /*%% ADDITIONS %%*/
