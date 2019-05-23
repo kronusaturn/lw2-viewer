@@ -719,11 +719,18 @@ h1.listing {
 	font-size: 1.125rem;
 	padding-left: 30px;
 	max-height: unset;
+	display: block;
 }
 
 h1.listing a[href^='/'] {
 	color: #538d4d;
 	white-space: unset;
+	display: inline;
+	border-bottom: 2px dotted transparent;
+	line-height: 1.3;
+}
+h1.listing a[href^='/']:hover {
+	border-bottom: 2px dotted currentColor;
 }
 h1.listing a[href^='/']:visited {
 	color: #5a5a5b;
@@ -731,8 +738,8 @@ h1.listing a[href^='/']:visited {
 h1.listing a[href^="http"] {
 	min-width: 1.25em;
 	line-height: 1;
-	top: -1px;
 	left: 1px;
+	display: inline-block;
 }
 
 @media only screen and (hover:hover) and (pointer:fine) {
