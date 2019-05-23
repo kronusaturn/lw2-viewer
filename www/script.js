@@ -2097,7 +2097,7 @@ registerInitializer('pageLayoutFinished', false, () => (document.readyState == "
 	postSetThemeHousekeeping();
 
 	// Adjust state of text input fields.
-	registerInitializer('adjustInputFieldsState', true, () => (query("script[src*='user.js']").dataset.loaded), () => {
+	registerInitializer('adjustInputFieldsState', true, () => (Æ(query("script[src*='user.js']")).dataset.loaded), () => {
 		doWhenMatchMedia(GW.mediaQueries.mobileNarrow, "editorInputFields", () => {
 			queryAll("#content textarea").forEach(textarea => {
 				textarea.blur();
