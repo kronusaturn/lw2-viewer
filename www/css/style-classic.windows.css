@@ -7996,9 +7996,28 @@ a.post-section.alignment-forum:hover::before {
 /*==========*/
 
 .comments::before {
-	border-top: 1px solid #000;
-	box-shadow: 0 3px 3px -4px #000 inset;
+	border-top: 1px solid #777;
+	box-shadow: 0 3px 3px -4px #444 inset;
 }
+
+.comment-item {
+	border: 1px solid #bbbcbf;
+}
+.comment-item .comment-item {
+	margin: 1em -1px 8px 16px;
+}
+.comment-item .comment-item + .comment-item {
+	margin: 2em -1px 8px 16px;
+}
+
+a.comment-parent-link::after {
+	display: none;
+}
+
+/*==================*/
+/* COMMENT LISTINGS */
+/*==================*/
+
 #content > .comment-thread .comment-meta a.date:focus,
 #content > .comment-thread .comment-meta a.permalink:focus {
 	color: #444;
@@ -8011,22 +8030,6 @@ a.post-section.alignment-forum:hover::before {
 #content > .comment-thread .comment-meta a.date:focus + *,
 #content > .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
 	margin-left: -10px;
-}
-.comment-item {
-	border: 1px solid #bbbcbf;
-	background-color: var(--GW-comment-background-color);
-}
-.comment-item .comment-item {
-	margin: 1em -1px 8px 16px;
-}
-.comment-item .comment-item + .comment-item {
-	margin: 2em -1px 8px 16px;
-}
-.comment-parent-link::after {
-	box-shadow: 
-		0 28px 16px -16px var(--GW-comment-parent-background-color) inset,
-		4px 16px 0 12px var(--GW-comment-background-color-target) inset,
-		4px	4px 0 12px var(--GW-comment-background-color-target) inset;
 }
 
 /*==============*/
