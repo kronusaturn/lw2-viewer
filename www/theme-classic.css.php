@@ -1017,7 +1017,6 @@ h1.listing.own-post-listing {
 /*============*/
 
 .login-container form input[type='submit'] {
-	font-weight: bold;
 	background-color: #eee;
 	border: 1px solid #ccc;
 }
@@ -1051,11 +1050,11 @@ h1.listing.own-post-listing {
 /* Message box */
 
 .error-box {
-	border: 1px solid red;
+	border: 1px solid #e00;
 	background-color: #faa;
 }
 .success-box {
-	border: 1px solid green;
+	border: 1px solid #0c0;
 	background-color: #afa;
 }
 
@@ -1066,7 +1065,27 @@ h1.listing.own-post-listing {
 .reset-password-container input[type='submit'] {
 	background-color: #e4e4e4;
 	border: 1px solid #ccc;
-	font-weight: bold;
+}
+
+/*============*/
+/* ERROR PAGE */
+/*============*/
+
+.error-container input[type="submit"] {
+	background-color: #e4e4e4;
+	border: 1px solid #ccc;
+}
+
+/*=------------=*/
+/*= Retry form =*/
+/*=------------=*/
+
+.reassurance {
+	border-top: 1px solid #ddd;
+}
+.reassurance .saved-comment-content {
+	border: 1px solid #ddd;
+	background-color: #ffd;
 }
 
 /*===================*/
@@ -1874,6 +1893,10 @@ a {
 /*=========*/
 /* BUTTONS */
 /*=========*/
+
+input[type='submit'] {
+	font-weight: bold;
+}
 
 button:active,
 input[type='submit']:active,
