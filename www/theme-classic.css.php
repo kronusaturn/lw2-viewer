@@ -948,13 +948,11 @@ h1.listing + .post-meta .link-post-domain {
 	border-style: solid;
 	border-color: #bbbcbf;
 }
-
 #content.user-page h1.listing,
 #content.search-results-page h1.listing {
 	padding: 0.5em 6px 0 48px;
 	border-width: 1px 1px 0 1px;
 	margin: 1rem 0 0 0;
-	max-width: 100%;
 }
 #content.own-user-page h1.listing,
 h1.listing.own-post-listing {
@@ -974,16 +972,15 @@ h1.listing.own-post-listing {
 
 #content.user-page h1.listing + .post-meta,
 #content.search-results-page h1.listing + .post-meta {
-	padding: 0.25em 10px 0.5em 32px;
+	padding: 3px 8px;
 	border-width: 0 1px 1px 1px;
-	margin: 0 0 1rem 0;
 }
 #content.user-page h1.listing + .post-meta .karma-value {
-	right: calc(100% - 3.25em);
-	top: -1.8em;
+	right: calc(100% - 2.75em);
+	top: -2em;
 }
 #content.user-page h1.listing + .post-meta .post-section::before {
-	right: calc(100% - 5.1em);
+	right: calc(100% - 2.5em);
 	top: 4px;
 }
 
