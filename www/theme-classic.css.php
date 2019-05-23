@@ -30,6 +30,11 @@
 	--GW-content-background-color: #fff;
 
 	--GW-hyperlink-color: #6a8a6b;
+	--GW-hyperlink-visited-color: #8a8a8b;
+	--GW-hyperlink-hover-color: #3d3d3e;
+
+	--GW-button-hover-color: #d00;
+	--GW-button-active-color: #f00;
 
 	--GW-nav-bar-item-color: #999;
 	--GW-nav-bar-item-hover-color: #777; 
@@ -461,18 +466,13 @@ body {
 			0 0 8px #fff,
 			0.5px 0.5px 0 #fff;
 	}
-	#new-comment-nav-ui .new-comment-sequential-nav-button:focus {
-		text-shadow: var(--GW-shadow-white-glow);
-	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button.highlighted {
 		color: var(--GW-hyperlink-active-color);
-		text-shadow: var(--GW-shadow-white-glow);
 		transform: scale(0.9);
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button {
 		transition:
 			color 0.1s ease,
-			text-shadow 0.1s ease,
 			transform 0.1s ease;
 	}
 }
@@ -698,7 +698,6 @@ body {
 
 .archive-nav a:hover {
 	text-decoration: none;
-	text-shadow: var(--GW-shadow-white-glow);
 }
 
 /*=----------------------------=*/
@@ -1871,41 +1870,23 @@ h1.listing .edit-post-link:hover,
 a {
 	text-decoration: none;
 }
-a:visited {
-	color: #8a8a8b;
-}
-a:hover {
-	color: #3d3d3e;
-}
 
 /*=========*/
 /* BUTTONS */
 /*=========*/
 
-button:hover,
-input[type='submit']:hover,
-button:focus,
-input[type='submit']:focus {
-	color: #d00;
-}
 button:active,
-input[type='submit']:active {
-	color: #f00;
-	transform: scale(0.9);
-}
-.button:hover {
-	color: #f00;
-	text-decoration: none;
-}
+input[type='submit']:active,
 .button:active {
 	transform: scale(0.9);
 }
 .button:focus:not(:hover) {
 	transform: none;
 }
-<?php echo $firefox_exclusive; ?> {
-	.button:active {
-		transform: none;
+
+@media only screen and (hover: hover) and (pointer: fine) {
+	.button:hover {
+		text-decoration: none;
 	}
 }
 
