@@ -7872,8 +7872,51 @@ h1.post-title {
 /* POST-META */
 /*===========*/
 
+.bottom-post-meta {
+	border-color: #ddd;
+}
+
 .post-meta {
 	line-height: 1.9;
+}
+.post .post-meta {
+	position: relative;
+	font-size: 0.875rem;
+	justify-content: flex-start;
+	padding-left: 30px;
+}
+article > .post-meta > *,
+.post .post-meta > * {
+	margin: 0 0.5em;
+}
+.post .post-meta a {
+	text-decoration: underline;
+}
+
+.post .post-meta .karma-value span,
+.post .post-meta .lw2-link span,
+.post .post-meta .comment-count span {
+	display: none;
+}
+
+/*	Comment count.
+	*/
+.post .post-meta .comment-count::before {
+	content: "Comments ("
+}
+.post .post-meta .comment-count::after {
+	content: ")"
+}
+
+/*	Post section.
+	*/
+.post .post-meta .post-section::before {
+	position: absolute;
+	top: 1px;
+	left: 0;
+}
+.post .bottom-post-meta .post-section::before {
+	top: 21px;
 }
 .post-meta .post-section::before,
 .comment-meta .alignment-forum {
@@ -7893,19 +7936,11 @@ a.post-section:hover::before {
 		0   0   5px #626dd7;
 }
 a.post-section.alignment-forum:hover::before {
-    color: #e6e5ff;
+    color: #538d4d;
 }
 
-.bottom-post-meta {
-	border-color: #ddd;
-}
-
-.post .post-meta {
-	position: relative;
-	font-size: 0.875rem;
-	justify-content: flex-start;
-	padding-left: 30px;
-}
+/*	Author.
+	*/
 .post .post-meta .author {
 	font-weight: bold;
 	color: #6a8a6b;
@@ -7914,54 +7949,30 @@ a.post-section.alignment-forum:hover::before {
 .post .post-meta .author:hover {
 	color: #3d3d3e;
 }
-.post .post-meta .date{
+
+/*	Date.
+	*/
+.post .post-meta .date {
 	color: #999;
 	font-style: italic;
 }
-.post .post-meta a {
-	color: #8a8a8b;
-	text-decoration: underline;
-}
-.post .post-meta a:hover {
-	color: #3d3d3e;
-}
 
+/*	Karma.
+	*/
 .post .post-meta .karma {
 	order: -1;
 }
 .post .post-meta .karma-value {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 1.875rem;
+	height: 1.875rem;
+	border-radius: 1rem;
+	font-size: 0.875rem;
+	font-weight: bold;
 	background-color: #538d4d;
 	color: #fff;
-	font-weight: bold;
-	font-size: 0.8125rem;
-	border-radius: 1.125em;
-	padding: 2px 6px 1px 6px;
-	text-align: center;
-	min-width: 2.125em;
-	display: block;
-	float: left;
-	margin: 0 0.5em 0 0;
-}
-.post .post-meta .karma-value span,
-.post .post-meta .lw2-link span,
-.post .post-meta .comment-count span {
-	display: none;
-}
-
-.post .post-meta .comment-count::before {
-	content: "Comments ("
-}
-.post .post-meta .comment-count::after {
-	content: ")"
-}
-
-.post .post-meta .post-section::before {
-	position: absolute;
-	top: 1px;
-	left: 0;
-}
-.post .bottom-post-meta .post-section::before {
-	top: 21px;
 }
 
 /*=----------------------------=*/

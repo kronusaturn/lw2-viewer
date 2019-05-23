@@ -1244,6 +1244,10 @@ h1.listing.own-post-listing {
 	color: #222;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
 @media only screen and (max-width: 900px) {
 	.sequence-title {
 		border-top: 1px dotted #aaa;
