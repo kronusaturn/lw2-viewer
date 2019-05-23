@@ -7817,6 +7817,8 @@ h1.listing.own-post-listing {
 	font-size: 0.875em;
 	font-weight: bold;
 	background-color: #f5f5f5;
+	box-shadow: 
+		0 -1px 0 0 #d6d5d6;
 }
 .post-nav-label {
 	opacity: 0.75;
@@ -7826,16 +7828,21 @@ h1.listing.own-post-listing {
 .sequence-title {
 	box-shadow: -9px 0 0 -8px #d6d5d6;
 }
+.post-nav.prev {
+	padding: 0.5em 0.75em 0.5em 0.5em;
+}
+
+.post-nav.next {
+	padding: 0.5em 0.5em 0.5em 0.75em;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
 
 @media only screen and (max-width: 900px) {
-	.post-nav.prev {
-		padding: 0.5em 0.75em 0.5em 0.5em;
-	}
 	.sequence-title {
 		box-shadow: 0 -9px 0 -8px #d6d5d6;
-	}
-	.post-nav.next {
-		padding: 0.5em 0.5em 0.5em 0.75em;
 	}
 }
 
@@ -7849,9 +7856,16 @@ h1.listing.own-post-listing {
 .body-text a {
 	text-decoration: underline;
 }
-.post-meta > *,
-.comment-meta > * {
-	white-space: unset;
+
+/*=======*/
+/* POSTS */
+/*=======*/
+
+h1.post-title {
+	font-size: 1.375rem;
+	text-align: left;
+	margin: 2em 0 0.5em 0;
+	line-height: 1.2;
 }
 
 /*===========*/
@@ -7987,17 +8001,6 @@ a.post-section.alignment-forum:hover::before {
 .post.link-post a.link-post-link:focus {
 	color: #aaa;
 	border-bottom: 2px dotted #aaa;
-}
-
-/*=======*/
-/* POSTS */
-/*=======*/
-
-h1.post-title {
-	font-size: 1.375rem;
-	text-align: left;
-	margin: 2em 0 0.5em 0;
-	line-height: 1.2;
 }
 
 /*==========*/
