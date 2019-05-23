@@ -1269,9 +1269,9 @@ a.post-section.alignment-forum:hover::before {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	min-width: 1.875rem;
-	height: 1.875rem;
-	border-radius: 1rem;
+	min-width: 2.125em;
+	height: 2.125em;
+	border-radius: 1.125em;
 	font-size: 0.875rem;
 	font-weight: bold;
 	background-color: #538d4d;
@@ -1294,23 +1294,8 @@ a.post-section.alignment-forum:hover::before {
 /* LINK POSTS */
 /*============*/
 
-.post.link-post > .post-body > p:first-child {
-	margin: 0;
-}
 .post.link-post a.link-post-link {
 	text-decoration: none;
-	font-weight: 600;
-}
-.post.link-post a.link-post-link:hover {
-	color: #c00;
-}
-.post.link-post a.link-post-link:hover::before {
-	color: #4879ec;
-	text-shadow: 
-		0.5px 0.5px 0 #fff,
-		-0.5px -0.5px 0 #fff,
-		0 0 2px #fff,
-		0 0 3px #00c;
 }
 .post.link-post a.link-post-link:focus {
 	color: #aaa;
