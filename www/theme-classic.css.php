@@ -715,7 +715,7 @@ body {
 /*==========*/
 
 h1.listing {
-	margin: 1.125em 0 0.25em 0;
+	margin: 0.25em 0;
 	font-size: 1.125rem;
 	padding-left: 30px;
 	max-height: unset;
@@ -1095,33 +1095,22 @@ h1.listing.own-post-listing {
 .contents {
 	border: 1px solid #ddd;
 	background-color: #eee;
-	padding: 0.75em 0.5em 0.5em 0.5em;
 }
-.contents-head {
-	font-weight: bold;
+.post-body .contents {
 	font-size: 1.25em;
-}
-.post-body .contents ul {
-	font-size: 1em;
 }
 .post-body .contents li::before {
 	color: #999;
-	font-feature-settings: "tnum";
 }
-
-/*==================*/
-/* POSTS & COMMENTS */
-/*==================*/
-
-.body-text {
-	font-size: 1rem;
+.post-body .contents a {
+	text-decoration: none;
 }
-.body-text a {
-	text-decoration: underline;
+.post-body .contents a:hover {
+	background-color: #e6e6e6;
+	box-shadow: 5px 0 0 0 #d8d8d8;
 }
-.post-meta > *,
-.comment-meta > * {
-	white-space: unset;
+.post-body .contents li:hover::before {
+	color: #000;
 }
 
 /*=================*/
@@ -1152,6 +1141,21 @@ h1.listing.own-post-listing {
 	.post-nav.next {
 		padding: 0.5em 0.5em 0.5em 0.75em;
 	}
+}
+
+/*==================*/
+/* POSTS & COMMENTS */
+/*==================*/
+
+.body-text {
+	font-size: 1rem;
+}
+.body-text a {
+	text-decoration: underline;
+}
+.post-meta > *,
+.comment-meta > * {
+	white-space: unset;
 }
 
 /*===========*/
