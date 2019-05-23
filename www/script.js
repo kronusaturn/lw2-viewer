@@ -2081,6 +2081,11 @@ function rectifyMarkup() {
 	content.queryAll(".body-text > br").forEach(br => {
 		removeElement(br);
 	});
+
+	// Remove empty lists.
+	content.queryAll(".body-text ul > li:only-child").forEach(listItem => {
+		if (!/\S/.test(listItem.innerHTML)) removeElement(listItem.parentElement);
+	});
 }
 
 /*************************/
