@@ -979,9 +979,14 @@ h1.listing.own-post-listing {
 	right: calc(100% - 2.75em);
 	top: -2em;
 }
+#content.user-page h1.listing + .post-meta .post-section {
+	overflow: visible;
+	order: -2;
+	margin: 0 2em 0 0;
+	text-decoration: none;
+}
 #content.user-page h1.listing + .post-meta .post-section::before {
-	right: calc(100% - 2.5em);
-	top: 4px;
+	position: unset;
 }
 
 /*=--------------------=*/
@@ -989,12 +994,11 @@ h1.listing.own-post-listing {
 /*=--------------------=*/
 
 #content.conversations-user-page h1.listing {
-	padding: 8px 6px 8px 10px;
+	padding: 8px 8px 0 8px;
 	font-size: 1.25rem;
 }
-#content.conversations-user-page h1.listing + .post-meta {
-	padding: 0 10px 6px 4px;
-	margin: 0;
+#content.conversations-user-page h1.listing + .post-meta > * {
+	margin: 0 0 0 0.75em;
 }
 
 /*===============*/
@@ -1003,6 +1007,9 @@ h1.listing.own-post-listing {
 
 #content.conversation-page h1.page-main-heading {
 	font-size: 1.375em;
+	text-align: left;
+}
+#content.conversation-page .conversation-participants {
 	text-align: left;
 }
 

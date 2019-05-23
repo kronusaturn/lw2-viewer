@@ -97,7 +97,7 @@
 
 #content.conversation-page h1.page-main-heading {
 	text-align: center;
-	margin: 1em 1em 0.25em 1em;
+	margin: 1em var(--GW-current-page-content-right-side-padding) 0.25em var(--GW-current-page-content-left-side-padding);
 	line-height: 1.15;
 	font-size: 2.25em;
 	font-family: var(--GW-post-title-font);
