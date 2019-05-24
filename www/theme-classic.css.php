@@ -45,6 +45,7 @@
 	--GW-comment-background-color-even: #fff;
 	--GW-comment-background-color-target: #ffd;
 
+	--GW-comment-item-outline-width: 2px;
 	--GW-comment-item-new-comment-outline-color: #5a5;
 	--GW-comment-item-focused-outline-color: #6a8a6b;
 	--GW-comment-item-higlight-color: #e7b200;
@@ -1395,21 +1396,38 @@ a.comment-parent-link:hover::before {
 /* COMMENT-META */
 /*==============*/
 
+.comment-meta {
+	padding-top: 4px;
+}
 .comment-meta > * {
 	font-size: 0.9375rem;
-	padding-top: 2px;
 }
+
+/*	Comment author.
+	*/
 .comment-meta .author {
 	font-weight: bold;
 	color: #538d4d;
 }
+.comment-meta .author:hover {
+	color: #444;
+}
+.comment-item .author:not(.redacted).original-poster::after {
+	opacity: 0.8;
+}
+
+/*	Comment date.
+	*/
 .comment-meta .date {
 	color: #999;
 	font-style: italic;
 }
 .comment-meta .date:hover {
-	color: #777;
+	color: #666;
 }
+
+/*	Karma controls.
+	*/
 .comment-meta .karma-value,
 .comment-controls .karma .karma-value {
 	color: #666;
@@ -1418,9 +1436,6 @@ a.comment-parent-link:hover::before {
 }
 .comment-meta .karma-value:only-child {
 	float: none;
-}
-.comment-item .author:not(.redacted).original-poster::after {
-	opacity: 0.8;
 }
 
 .comment-item .karma.active-controls::after,
@@ -1436,16 +1451,12 @@ a.comment-parent-link:hover::before {
 .comment-item .karma.active-controls::after,
 .post .karma.active-controls::after {
 	padding: 6px;
-	max-width: unset;
 	bottom: -46px;
-	width: 110px;
 }
 .comment-item .karma .karma-value::after,
 .post .karma .karma-value::after {
 	padding: 2px 8px;
 	top: -36px;
-	min-width: 64px;
-	font-weight: normal;
 }
 
 /*====================*/
