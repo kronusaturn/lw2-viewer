@@ -41,6 +41,11 @@
 	--GW-nav-bar-item-hover-color: #777; 
 	--GW-nav-bar-item-active-color: #666;
 
+	--GW-shadow-white-glow:
+		0 0 1px #fff,
+		0 0 3px #fff,
+		0 0 5px #fff;
+
 	--GW-comment-background-color-odd: #f7f7f8;
 	--GW-comment-background-color-even: #fff;
 	--GW-comment-background-color-target: #ffd;
@@ -1456,7 +1461,9 @@ a.comment-parent-link:hover::before {
 .comment-item .karma .karma-value::after,
 .post .karma .karma-value::after {
 	padding: 2px 8px;
-	top: -36px;
+	top: -28px;
+	font-weight: normal;
+	line-height: 1.5;
 }
 
 /*====================*/
@@ -1489,6 +1496,28 @@ a.comment-parent-link:hover::before {
 
 .link-post-domain.redacted {
 	opacity: 0.5;
+}
+
+/*=================================*/
+/* COMMENT THREAD MINIMIZE BUTTONS */
+/*=================================*/
+
+.comment-minimize-button {
+	font-size: 1.25rem;
+	font-weight: 300;
+	color: #ccc;
+	top: 2px;
+}
+.comment-minimize-button:hover {
+	font-weight: 900;
+	text-shadow: var(--GW-shadow-white-glow);
+	color: #aaa;
+}
+.comment-minimize-button::after {
+	color: #777;
+}
+.comment-minimize-button.maximized::after {
+	color: #bbb;
 }
 
 /*=======================*/
@@ -1556,30 +1585,6 @@ a.comment-parent-link:hover::before {
 		0 0 6px -2px #5a5 inset, 
 		0 0 4px #5a5, 
 		0 0 6px #5a5;
-}
-
-/*=================================*/
-/* COMMENT THREAD MINIMIZE BUTTONS */
-/*=================================*/
-
-.comment-meta .comment-minimize-button {
-	font-size: 1.25rem;
-	top: -1px;
-}
-.comment-meta .comment-minimize-button::after {
-	top: 23px;
-}
-.comment-minimize-button {
-	color: #ccc;
-}
-.comment-minimize-button:hover {
-	color: #aaa;
-}
-.comment-minimize-button::after {
-	color: #777;
-}
-.comment-minimize-button.maximized::after {
-	color: #ccc;
 }
 
 /*==============*/
