@@ -1407,29 +1407,15 @@ article > .post-meta > *,
 
 .listings .comment-thread .comment-meta a.date:focus,
 .listings .comment-thread .comment-meta a.permalink:focus {
-	outline: 2px dotted #222;
 	filter: invert(100%) contrast(150%);
-	line-height: 1;
 }
-.listings .comment-thread .comment-meta a.date:focus {
-	padding: 5px 6px 4px 6px;
-	left: -6px;
+.listings .comment-thread .comment-meta a.date:focus::after,
+.listings .comment-thread .comment-meta a.permalink:focus::after {
+	outline: 2px dotted #222;
 }
-#content.compact .listings .comment-thread .comment-meta a.date:focus {
-	padding: 6px 6px 4px 6px;
-}
-.listings .comment-thread .comment-meta a.date:focus + * {
-	margin-left: -12px;
-}
-.listings .comment-thread .comment-meta a.permalink:focus {
-	padding: 3px 5px;
-	left: -5px;
-}
+
 .listings .comment-thread .comment-meta a.permalink:focus::before {
 	filter: invert(100%);
-}
-.listings .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
-	margin-left: -10px;
 }
 
 /*===========================*/

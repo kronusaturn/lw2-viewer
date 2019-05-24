@@ -1041,6 +1041,14 @@ a.comment-child-link::before {
 	left: -5px;
 	top: -5px;
 }
+#content.compact .comment-meta .permalink:focus::after,
+#content.compact .comment-meta .lw2-link:focus::after,
+#content.compact .comment-meta .comment-parent-link:focus span::after {
+	width: 24px;
+	height: 24px;
+	left: -4px;
+	top: -4px;
+}
 .comment-meta .comment-parent-link span::after {
 	top: -5px;
 }
