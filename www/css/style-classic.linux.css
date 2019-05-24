@@ -8014,12 +8014,22 @@ a.comment-parent-link::after {
 	display: none;
 }
 
+/*=========*/
+/* ANSWERS */
+/*=========*/
+
+.answer-item::after {
+	left: -1px;
+	text-transform: uppercase;
+	color: #c5c6c9;
+}
+
 /*==================*/
 /* COMMENT LISTINGS */
 /*==================*/
 
-#content > .comment-thread .comment-meta a.date:focus,
-#content > .comment-thread .comment-meta a.permalink:focus {
+.listings .comment-thread .comment-meta a.date:focus,
+.listings .comment-thread .comment-meta a.permalink:focus {
 	color: #444;
 	outline: 2px dotted #444;
 	position: relative;
@@ -8027,8 +8037,8 @@ a.comment-parent-link::after {
 	padding: 0 5px;
 	left: -5px;
 }
-#content > .comment-thread .comment-meta a.date:focus + *,
-#content > .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
+.listings .comment-thread .comment-meta a.date:focus + *,
+.listings .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
 	margin-left: -10px;
 }
 
@@ -8092,17 +8102,15 @@ a.comment-parent-link::after {
 /*====================*/
 /* COMMENT PERMALINKS */
 /*====================*/
+/*==================*/
+/* COMMENT LW LINKS */
+/*==================*/
 
 .comment-meta .permalink,
 .comment-meta .lw2-link,
-.individual-thread-page .comment-parent-link:empty {
-	top: 1px;
-	filter: grayscale(50%);
-}
-.comment-meta .permalink,
-.comment-meta .lw2-link,
-.individual-thread-page .comment-parent-link:empty {
-	filter: unset;
+.comment-meta .comment-parent-link span,
+.post .post-meta .lw2-link {
+	filter: hue-rotate(270deg);
 }
 
 /*====================*/
