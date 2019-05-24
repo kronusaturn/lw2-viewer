@@ -4685,7 +4685,6 @@ a.comment-child-link::before {
 	font-weight: 400;
 }
 
-<<<<<<< HEAD
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 /*%% COMMENTING & POSTING %%*/
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%*/
@@ -4712,42 +4711,6 @@ a.comment-child-link::before {
 }
 
 .comment-controls {
-=======
-.body-text ol {
-	list-style: none;
-	padding: 0;
-	counter-reset: ol;
-}
-.body-text ol > li {
-	position: relative;
-	counter-increment: ol;
-	padding: 0 0 0 2.5em;
-	margin: 0.25em 0 0 0;
-}
-.body-text ol > li::before {
-	content: counter(ol) ".";
-	position: absolute;
-	width: 2em;
-	text-align: right;
-	left: 0;
-}
-.body-text ul {
-	list-style: none;
-	padding: 0;
-}
-.body-text ul:not(.contents-list) > li {
-	position: relative;
-	padding: 0 0 0 1.75em;
-	margin: 0.25em 0 0 0;
-}
-.body-text ul:not(.contents-list) > li ul > li {
-	padding: 0 0 0 2em;
-}
-.body-text ul:not(.contents-list) > li::before {
-	content: "•";
-	position: absolute;
-	width: 1.25em;
->>>>>>> origin/next
 	text-align: right;
 	margin: 4px 8px 8px 16px;
 	position: relative;
@@ -4756,7 +4719,6 @@ a.comment-child-link::before {
 	user-select: none;
 	z-index: 5001;
 }
-<<<<<<< HEAD
 .comment-controls.active {
 	z-index: 9999;
 }
@@ -4768,16 +4730,6 @@ a.comment-child-link::before {
 }
 .comments > .comment-controls:last-child {
 	margin: 8px 0 16px 0;
-=======
-.body-text ul:not(.contents-list) > li ul > li::before {
-	width: 1.5em;
-}
-.body-text li > ul:first-child > li {
-	padding-left: 0;
-}
-.body-text li > ul:first-child > li::before {
-	content: none;
->>>>>>> origin/next
 }
 
 .posting-controls input[type='submit'],

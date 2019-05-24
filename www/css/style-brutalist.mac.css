@@ -4377,7 +4377,6 @@ a.comment-child-link::before {
 	}
 }
 
-<<<<<<< HEAD
 /*	Hide the overlay pseudo-element.
 	*/
 #content.compact .comment-item::before {
@@ -4422,62 +4421,11 @@ a.comment-child-link::before {
 	content: attr(data-child-count);
 	font-family: var(--GW-UI-font);
 	font-size: 0.8125rem;
-=======
-.body-text ol {
-	list-style: none;
-	padding: 0;
-	counter-reset: ol;
-}
-.body-text ol > li {
-	position: relative;
-	counter-increment: ol;
-	padding: 0 0 0 2.5em;
-	margin: 0.25em 0 0 0;
-}
-.body-text ol > li::before {
-	content: counter(ol) ".";
-	position: absolute;
-	width: 2em;
-	text-align: right;
-	left: 0;
-}
-.body-text ul {
-	list-style: none;
-	padding: 0;
-}
-.body-text ul:not(.contents-list) > li {
-	position: relative;
-	padding: 0 0 0 1.75em;
-	margin: 0.25em 0 0 0;
-}
-.body-text ul:not(.contents-list) > li ul > li {
-	padding: 0 0 0 2em;
-}
-.body-text ul:not(.contents-list) > li::before {
-	content: "•";
->>>>>>> origin/next
 	position: absolute;
 	left: 0;
-<<<<<<< HEAD
 	width: 100%;
 	text-align: center;
 	top: 21px;
-=======
-}
-.body-text ul:not(.contents-list) > li ul > li::before {
-	width: 1.5em;
-}
-.body-text li > ul:first-child > li {
-	padding-left: 0;
-}
-.body-text li > ul:first-child > li::before {
-	content: none;
-}
-
-/**************/
-/* ERROR PAGE */
-/**************/
->>>>>>> origin/next
 
 	font-family: var(--GW-UI-font);
 	font-weight: var(--GW-UI-font-weight-light);

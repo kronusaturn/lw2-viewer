@@ -4145,7 +4145,6 @@ a.comment-child-link::before {
 	opacity: 0.5;
 }
 
-<<<<<<< HEAD
 .comment-meta .permalink::before,
 .comment-meta .lw2-link::before,
 .post .post-meta .lw2-link::before,
@@ -4195,40 +4194,6 @@ a.comment-child-link::before {
 	width: 30px;
 	height: 30px;
 	display: block;
-=======
-.body-text ol {
-	list-style: none;
-	padding: 0;
-	counter-reset: ol;
-}
-.body-text ol > li {
-	position: relative;
-	counter-increment: ol;
-	padding: 0 0 0 2.5em;
-	margin: 0.25em 0 0 0;
-}
-.body-text ol > li::before {
-	content: counter(ol) ".";
-	position: absolute;
-	width: 2em;
-	text-align: right;
-	left: 0;
-}
-.body-text ul {
-	list-style: none;
-	padding: 0;
-}
-.body-text ul:not(.contents-list) > li {
-	position: relative;
-	padding: 0 0 0 1.75em;
-	margin: 0.25em 0 0 0;
-}
-.body-text ul:not(.contents-list) > li ul > li {
-	padding: 0 0 0 2em;
-}
-.body-text ul:not(.contents-list) > li::before {
-	content: "•";
->>>>>>> origin/next
 	position: absolute;
 	top: -2px;
 	left: -7px;
@@ -4236,7 +4201,6 @@ a.comment-child-link::before {
 	pointer-events: auto;
 	visibility: visible;
 }
-<<<<<<< HEAD
 .comment-meta .comment-parent-link span::after {
 	top: -5px;
 }
@@ -4245,16 +4209,6 @@ a.comment-child-link::before {
 }
 .post .post-meta .lw2-link::after {
 	left: -4px;
-=======
-.body-text ul:not(.contents-list) > li ul > li::before {
-	width: 1.5em;
-}
-.body-text li > ul:first-child > li {
-	padding-left: 0;
-}
-.body-text li > ul:first-child > li::before {
-	content: none;
->>>>>>> origin/next
 }
 
 /*************************/
