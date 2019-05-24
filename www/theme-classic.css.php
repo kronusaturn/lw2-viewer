@@ -21,6 +21,11 @@
 /*	Layout.
 	*/
 :root {
+	--GW-comment-compact-height: 49px;
+	--GW-comment-compact-height-mobile: 115px;
+	--GW-comment-minimized-height: 38px;
+	--GW-comment-minimized-height-mobile: 68px;
+
 	--GW-comment-listings-date-focused-adjust-y: 2px;
 }
 
@@ -1473,6 +1478,9 @@ a.comment-parent-link:hover::before {
 /* COMMENT LW LINKS */
 /*==================*/
 
+.nav-links-container {
+	padding: 1px 0 0 0;
+}
 .comment-meta .permalink,
 .comment-meta .lw2-link,
 .comment-meta .comment-parent-link span,
@@ -1523,13 +1531,6 @@ a.comment-parent-link:hover::before {
 /*=======================*/
 /* COMMENTS COMPACT VIEW */
 /*=======================*/
-
-#content.compact > .comment-thread .comment-item {
-    max-height: 57px;
-}
-#content.compact > .comment-thread .comment-item::after {
-	background: linear-gradient(to right, transparent 0%, #fff 50%, #fff 100%);
-}
 
 @media only screen and (hover:hover) and (pointer:fine) {
 	#content.compact > .comment-thread .comment-item:hover .comment,

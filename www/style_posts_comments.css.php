@@ -753,7 +753,7 @@ ul.comment-thread {
 		text-overflow: ellipsis;
 		overflow: hidden;
 	}
-	.comment-meta .lw2-link {
+	#content.compact .comment-meta .nav-links-container {
 		display: none;
 	}
 }
