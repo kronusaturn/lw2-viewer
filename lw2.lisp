@@ -12,7 +12,8 @@
     #:define-regex-handler #:*fonts-stylesheet-uri* #:generate-fonts-link
     #:user-nav-bar #:*primary-nav* #:*secondary-nav* #:*nav-bars*
     #:begin-html #:end-html
-    #:*fonts-stylesheet-uris* #:*fonts-redirect-data* #:*fonts-redirect-lock* #:*fonts-redirect-thread*)
+    #:*fonts-stylesheet-uris* #:*fonts-redirect-data* #:*fonts-redirect-lock* #:*fonts-redirect-thread*
+    #:postprocess-conversation-title)
   (:recycle #:lw2-viewer #:lw2.backend))
 
 (in-package #:lw2-viewer) 
@@ -65,10 +66,12 @@
       </div>))
   </nav>)
 
-(defun postprocess-conversation-title (title)
-  (if (or (null title) (string= title ""))
-      "[Untitled conversation]"
-      title))
+(defun rectify-conversation (conversation)
+  (alist-bind ((title (or null string)))
+	      conversation
+    (if (or (null title) (string= title ""))
+        (acons :title "[Untitled conversation]" conversation)
+        conversation)))
 
 (defun conversation-message-to-html (out-stream message)
   (alist-bind ((user-id string)
@@ -78,22 +81,23 @@
                (content list)
 	       (contents list)
                (html-body (or string null)))
-    message
-    (multiple-value-bind (pretty-time js-time) (pretty-time created-at)
-      (format out-stream "<div class=\"comment private-message~A\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <span class=\"date\" data-js-date=\"~A\">~A</span><div class=\"comment-post-title\">Private message in: <a href=\"/conversation?id=~A\">~A</a></div></div><div class=\"body-text comment-body\">"
-              (if highlight-new " comment-item-highlight" "")
-              (encode-entities (get-user-slug user-id))
-              (encode-entities (get-username user-id))
-              js-time
-              pretty-time
-              (encode-entities (cdr (assoc :--id conversation)))
-              (encode-entities (postprocess-conversation-title (cdr (assoc :title conversation))))))
-    (labels ((ws (html-body) (write-sequence (clean-html* html-body) out-stream)))
-      (cond
-	(contents (ws (cdr (assoc :html contents))))
-	(html-body (ws html-body))
-	(t (format out-stream "~{<p>~A</p>~}" (loop for block in (cdr (assoc :blocks content)) collect (encode-entities (cdr (assoc :text block))))))))
-    (format out-stream "</div></div>")))
+	      message
+    (let ((conversation (rectify-conversation conversation)))
+      (multiple-value-bind (pretty-time js-time) (pretty-time created-at)
+	(format out-stream "<div class=\"comment private-message~A\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <span class=\"date\" data-js-date=\"~A\">~A</span><div class=\"comment-post-title\">Private message in: <a href=\"/conversation?id=~A\">~A</a></div></div><div class=\"body-text comment-body\">"
+		(if highlight-new " comment-item-highlight" "")
+		(encode-entities (get-user-slug user-id))
+		(encode-entities (get-username user-id))
+		js-time
+		pretty-time
+		(encode-entities (cdr (assoc :--id conversation)))
+		(encode-entities (cdr (assoc :title conversation)))))
+      (labels ((ws (html-body) (write-sequence (clean-html* html-body) out-stream)))
+	(cond
+	  (contents (ws (cdr (assoc :html contents))))
+	  (html-body (ws html-body))
+	  (t (format out-stream "~{<p>~A</p>~}" (loop for block in (cdr (assoc :blocks content)) collect (encode-entities (cdr (assoc :text block))))))))
+      (format out-stream "</div></div>"))))
 
 (defun conversation-index-to-html (out-stream conversation)
   (alist-bind ((conversation-id string :--id)
@@ -101,11 +105,11 @@
                (created-at (or null string))
                (participants list)
                (messages-total fixnum))
-    conversation
+    (rectify-conversation conversation)
     (multiple-value-bind (pretty-time js-time) (if created-at (pretty-time created-at) (values "[Error]" 0))
       (format out-stream "<h1 class=\"listing\"><a href=\"/conversation?id=~A\">~A</a></h1><div class=\"post-meta\"><div class=\"conversation-participants\"><ul>~:{<li><a href=\"/users/~A\">~A</a></li>~}</ul></div><div class=\"messages-count\">~A</div><div class=\"date\" data-js-date=\"~A\">~A</div></div>"
               (encode-entities conversation-id)
-              (encode-entities (postprocess-conversation-title title))
+              (encode-entities title)
               (loop for p in participants
                     collect (list (encode-entities (cdr (assoc :slug p))) (encode-entities (cdr (assoc :display-name p)))))
               (pretty-number messages-total "message")
@@ -1281,9 +1285,10 @@ signaled condition to OUT-STREAM."
        (id
 	(multiple-value-bind (conversation messages)
 	    (get-conversation-messages id (hunchentoot:cookie-in "lw2-auth-token"))
-	  (view-items-index (nreverse messages) :content-class "conversation-page" :need-auth t :title (encode-entities (postprocess-conversation-title (cdr (assoc :title conversation))))
-			    :top-nav (lambda (out-stream) (render-template* *conversation-template* out-stream
-									    :conversation conversation :csrf-token (make-csrf-token))))))
+	  (let ((conversation (rectify-conversation conversation)))
+	    (view-items-index (nreverse messages) :content-class "conversation-page" :need-auth t :title (encode-entities (cdr (assoc :title conversation)))
+			      :top-nav (lambda (out-stream) (render-template* *conversation-template* out-stream
+									      :conversation conversation :csrf-token (make-csrf-token)))))))
        (t
 	(emit-page (out-stream :title "New conversation" :content-class "conversation-page")
 		   (render-template* *conversation-template* out-stream
