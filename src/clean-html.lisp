@@ -389,7 +389,7 @@
 				(ppcre:scan
 				 (load-time-value
 				  (ppcre:create-scanner
-				   "(?:(?<=\\s)|^)(?>https?://[-a-zA-Z0-9]+\\.[-a-zA-Z0-9.]+|[-a-zA-Z0-9.]+\\.(?:com|edu|gov|mil|net|org|int|biz|info|name|museum|us|ca|uk|io|ly))(?:\\:[0-9]+){0,1}(?:/(?:(?:(\\()|[-a-zA-Z0-9.,;:?'\\\\+&%$#=~_/])*(?(1)\\)|[-a-zA-Z0-9\\\\+&%$#=~_/]))?)?"
+				   "(?:https?://[-a-zA-Z0-9]+\\.[-a-zA-Z0-9.]+|[-a-zA-Z0-9.]+\\.(?:com|edu|gov|mil|net|org|int|biz|info|name|museum|us|ca|uk|io|ly))(?:\\:[0-9]+){0,1}(?:/(?:(?:(\\()|[-a-zA-Z0-9.,;:?'\\\\+&%$#=~_/])*(?(1)\\)|[-a-zA-Z0-9\\\\+&%$#=~_/]))?)?"
 				   :single-line-mode t))
 				 text)
                               (declare (type simple-string text)
@@ -450,7 +450,7 @@
 		  (cond
 		    ((not (plump:attribute node "href"))
 		     (move-children-out-of-node node :keep t))
-		    ((ppcre:scan "^https?://" (plump:text node))
+		    ((ppcre:scan "https?://" (plump:text node))
 		     (flatten-element node))
 		    (t (tagbody start
 			  (let* ((next-sibling (plump:next-sibling node))

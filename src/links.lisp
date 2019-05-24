@@ -122,7 +122,7 @@
   (convert-redirect-link link #'match-agentfoundations-link #'get-agentfoundations-link "https://www.lesswrong.com"))
 
 (defun gen-internal (post-id slug comment-id &optional absolute-uri)
-  (format nil "~Aposts/~A/~A~@[#comment-~A~]" (or absolute-uri "/") post-id (or slug "-") comment-id))
+  (format nil "~Aposts/~A/~A~:[~@[#~A~]~;~@[#comment-~A~]~]" (or absolute-uri "/") post-id (or slug "-") (and comment-id (= (length comment-id) 17)) comment-id))
 
 (defun convert-lw2-slug-link (link)
   (multiple-value-bind (slug comment-id) (match-lw2-slug-link link)

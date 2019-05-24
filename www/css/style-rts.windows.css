@@ -3904,6 +3904,7 @@ ul.comment-thread {
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/
 
+<<<<<<< HEAD
 @media only screen and (max-width: 900px) {
 	.comment-meta {
 		padding: 2px 40px 2px 10px;
@@ -3970,6 +3971,53 @@ div.comment-parent-link {
 
 a.comment-parent-link {
 	font-weight: var(--GW-UI-font-weight-light);
+=======
+.body-text ol {
+	list-style: none;
+	padding: 0;
+	counter-reset: ol;
+}
+.body-text ol > li {
+	position: relative;
+	counter-increment: ol;
+	padding: 0 0 0 2.5em;
+	margin: 0.25em 0 0 0;
+}
+.body-text ol > li::before {
+	content: counter(ol) ".";
+	position: absolute;
+	width: 2em;
+	text-align: right;
+	left: 0;
+}
+.body-text ul {
+	list-style: none;
+	padding: 0;
+}
+.body-text ul:not(.contents-list) > li {
+	position: relative;
+	padding: 0 0 0 1.75em;
+	margin: 0.25em 0 0 0;
+}
+.body-text ul:not(.contents-list) > li ul > li {
+	padding: 0 0 0 2em;
+}
+.body-text ul:not(.contents-list) > li::before {
+	content: "•";
+	position: absolute;
+	width: 1.25em;
+	text-align: right;
+	left: 0;
+}
+.body-text ul:not(.contents-list) > li ul > li::before {
+	width: 1.5em;
+}
+.body-text li > ul:first-child > li {
+	padding-left: 0;
+}
+.body-text li > ul:first-child > li::before {
+	content: none;
+>>>>>>> origin/next
 }
 
 /*	Hover highlighting.
