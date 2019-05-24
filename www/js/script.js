@@ -2858,8 +2858,8 @@ registerInitializer('initialize', false, () => (document.readyState != 'loading'
 					let links = document.activeElement.parentElement.queryAll("a");
 					links[document.activeElement == links[0] ? 1 : 0].focus();
 				} else if (document.activeElement.closest(".comment-meta") != null) {
-					let links = document.activeElement.closest(".comment-meta").queryAll("a.date, a.permalink");
-					links[document.activeElement == links[0] ? 1 : 0].focus();
+					let links = document.activeElement.closest(".comment-meta").queryAll("a");
+					links[(links.indexOf(document.activeElement) + 1) % links.length].focus();
 					document.activeElement.closest(".comment-item").addClasses([ "focused", "expanded" ]);
 				}
 				return;
@@ -2899,7 +2899,7 @@ registerInitializer('initialize', false, () => (document.readyState != 'loading'
 			if (listings[indexOfActiveListing] != null)
 				(listings[indexOfActiveListing].parentElement.query(".edit-post-link")||{}).accessKey = 'e';
 		});
-		queryAll(".listings .comment-thread .comment-meta a.date, .listings .comment-thread .comment-meta a.permalink").forEach(link => {
+		queryAll(".listings .comment-thread .comment-meta a").forEach(link => {
 			link.addEventListener("blur", GW.commentListingsHyperlinkUnfocused = (event) => {
 				event.target.closest(".comment-item").removeClasses([ "expanded", "focused" ]);
 			});
