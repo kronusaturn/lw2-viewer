@@ -3896,6 +3896,9 @@ ul.comment-thread {
 	font-weight: var(--GW-comment-meta-author-font-weight);
 }
 
+.comment-meta .nav-links-container {
+	display: flex;
+}
 .comment-meta .nav-links-container > * {
 	margin: inherit;
 }
@@ -8131,6 +8134,10 @@ article > .post-meta a:visited,
 }
 .listings .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
 	margin-left: -10px;
+}
+
+.listings .comment-post-title {
+	color: #446664;
 }
 
 /*===========================*/

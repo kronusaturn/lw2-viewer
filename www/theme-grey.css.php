@@ -1444,6 +1444,10 @@ article > .post-meta a:visited,
 	margin-left: -10px;
 }
 
+.listings .comment-post-title {
+	color: #446664;
+}
+
 /*===========================*/
 /* COMMENT THREAD NAVIGATION */
 /*===========================*/
