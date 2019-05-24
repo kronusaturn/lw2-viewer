@@ -3948,6 +3948,10 @@ ul.comment-thread {
 	#content.compact .comment-meta .nav-links-container {
 		display: none;
 	}
+	#content.compact .comment-item.expanded .comment-meta .nav-links-container,
+	#content.compact .comment-thread.expanded .comment-meta .nav-links-container {
+		display: flex;
+	}
 }
 
 /**********************/

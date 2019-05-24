@@ -22,9 +22,9 @@
 	*/
 :root {
 	--GW-comment-compact-height: 49px;
-	--GW-comment-compact-height-mobile: 115px;
-	--GW-comment-minimized-height: 38px;
-	--GW-comment-minimized-height-mobile: 68px;
+	--GW-comment-compact-height-mobile: 95px;
+	--GW-comment-minimized-height: 30px;
+	--GW-comment-minimized-height-mobile: 52px;
 
 	--GW-comment-listings-date-focused-adjust-y: 2px;
 }
@@ -57,7 +57,7 @@
 
 	--GW-comment-item-outline-width: 2px;
 	--GW-comment-item-new-comment-outline-color: #5a5;
-	--GW-comment-item-focused-outline-color: #6a8a6b;
+	--GW-comment-item-focused-outline-color: #f00;
 	--GW-comment-item-higlight-color: #e7b200;
 	--GW-comment-item-highlight-faint-color: #f8e7b5;
 
@@ -1524,68 +1524,13 @@ a.comment-parent-link:hover::before {
 .comment-minimize-button::after {
 	color: #777;
 }
+.comment-minimize-button.minimized::after {
+	left: unset;
+	right: calc(100%);
+	top: 3px;
+}
 .comment-minimize-button.maximized::after {
 	color: #bbb;
-}
-
-/*=======================*/
-/* COMMENTS COMPACT VIEW */
-/*=======================*/
-
-@media only screen and (hover:hover) and (pointer:fine) {
-	#content.compact > .comment-thread .comment-item:hover .comment,
-	#content.compact > .comment-thread .comment-item.expanded .comment {
-		background-color: #fff;
-		outline: 3px solid var(--GW-hyperlink-color);
-	}
-	#content.compact > .comment-thread .comment-item:hover .comment::before,
-	#content.compact > .comment-thread .comment-item.expanded .comment::before {
-		background-color: #fff;
-		box-shadow: 
-			0 0  3px #fff,
-			0 0  5px #fff,
-			0 0  7px #fff,
-			0 0 10px #fff,
-			0 0 20px #fff,
-			0 0 30px #fff,
-			0 0 40px #fff;
-	}
-}
-@media not screen and (hover:hover) and (pointer:fine) {
-	#content.compact > .comment-thread.expanded .comment-item .comment {
-		background-color: #fff;
-		outline: 3px solid var(--GW-hyperlink-color);
-	}
-	#content.compact > .comment-thread.expanded .comment-item .comment::before {
-		background-color: #fff;
-		box-shadow: 
-			0 0  3px #fff,
-			0 0  5px #fff,
-			0 0  7px #fff,
-			0 0 10px #fff,
-			0 0 20px #fff,
-			0 0 30px #fff,
-			0 0 40px #fff;
-	}
-}
-
-#content.user-page.compact > h1.listing {
-	margin-top: 0.5rem;
-}
-#content.user-page.compact > h1.listing + .post-meta {
-	margin-bottom: 0.5rem;
-}
-
-/*===========================*/
-/* HIGHLIGHTING NEW COMMENTS */
-/*===========================*/
-
-.new-comment::before {
-	outline: 2px solid #5a5;
-	box-shadow:
-		0 0 6px -2px #5a5 inset, 
-		0 0 4px #5a5, 
-		0 0 6px #5a5;
 }
 
 /*==============*/
