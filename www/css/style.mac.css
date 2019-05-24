@@ -6765,6 +6765,8 @@ th.mathjax-inline-container {
 	--GW-comment-compact-height-mobile: 108px;
 	--GW-comment-minimized-height: 38px;
 	--GW-comment-minimized-height-mobile: 68px;
+
+	--GW-comment-listings-date-focused-adjust-y: -1px;
 }
 
 /*	Color scheme.
@@ -8163,6 +8165,10 @@ h1.post-title .post-type-prefix {
 	outline: 2px dotted #999;
 	box-shadow:
 		0 0 0 3px #fff inset;
+}
+#content.compact .listings .comment-thread .comment-meta a.permalink:focus::after {
+	box-shadow:
+		0 0 0 2px #fff inset;
 }
 .listings .comment-thread .comment-meta a.date:focus,
 .listings .comment-thread .comment-meta a.permalink:focus {

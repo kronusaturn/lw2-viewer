@@ -34,6 +34,8 @@
 	--GW-comment-compact-height-mobile: 108px;
 	--GW-comment-minimized-height: 38px;
 	--GW-comment-minimized-height-mobile: 68px;
+
+	--GW-comment-listings-date-focused-adjust-y: -1px;
 }
 
 /*	Color scheme.
@@ -1416,32 +1418,22 @@ article > .post-meta a:visited,
 /* COMMENT LISTINGS */
 /*==================*/
 
+.listings .comment-thread .comment-meta a.date:focus::after,
+.listings .comment-thread .comment-meta a.permalink:focus::after {
+	outline: 2px dotted #aaa;
+	box-shadow:
+		0 0 0 3px #fff inset;
+}
+#content.compact .listings .comment-thread .comment-meta a.permalink:focus::after {
+	box-shadow:
+		0 0 0 2px #fff inset;
+}
 .listings .comment-thread .comment-meta a.date:focus,
 .listings .comment-thread .comment-meta a.permalink:focus {
 	color: #999;
-	outline: 2px dotted #aaa;
 	background-color: #fff;
-	line-height: 1;
-}
-.listings .comment-thread .comment-meta a.date:focus {
-	padding: 5px 4px 4px 4px;
-	left: -4px;
-}
-#content.compact .listings .comment-thread .comment-meta a.date:focus {
-	padding: 5px 4px 5px 4px;
-}
-.listings .comment-thread .comment-meta a.date:focus + * {
-	margin-left: -8px;
-}
-.listings .comment-thread .comment-meta a.permalink:focus {
-	padding: 3px 5px 4px 5px;
-	left: -5px;
-}
-#content.compact .listings .comment-thread .comment-meta a.permalink:focus {
-	padding: 3px 5px 5px 5px;
-}
-.listings .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
-	margin-left: -10px;
+	box-shadow:
+		0 0 0 3px #fff;
 }
 
 .listings .comment-post-title {
