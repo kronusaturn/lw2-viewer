@@ -3910,8 +3910,6 @@ ul.comment-thread {
 
 .comment-meta .nav-links-container {
 	display: flex;
-	position: relative;
-	top: 2px;
 }
 .comment-meta .nav-links-container > * {
 	margin: inherit;
@@ -4203,11 +4201,20 @@ a.comment-child-link::before {
 .comment-meta .lw2-link,
 .comment-meta .comment-parent-link span,
 .post .post-meta .lw2-link {
+	display: block;
 	position: relative;
 	opacity: 1.0;
 	line-height: 1;
 	width: 1rem;
 	height: 1rem;
+}
+.comment-meta .permalink,
+.comment-meta .lw2-link,
+.comment-meta .comment-parent-link span {
+	top: 2px;
+}
+.post .post-meta .lw2-link {
+	top: 3px;
 }
 .comment-meta .permalink::after,
 .comment-meta .lw2-link::after,
@@ -4240,15 +4247,6 @@ a.comment-child-link::before {
 	height: 24px;
 	left: -4px;
 	top: -4px;
-}
-.comment-meta .comment-parent-link span::after {
-	top: -5px;
-}
-.post .post-meta .lw2-link {
-	padding: 0 3px;
-}
-.post .post-meta .lw2-link::after {
-	left: -4px;
 }
 
 /*************************/
@@ -8160,23 +8158,18 @@ h1.post-title .post-type-prefix {
 /* COMMENT LISTINGS */
 /*==================*/
 
+.listings .comment-thread .comment-meta a.date:focus::after,
+.listings .comment-thread .comment-meta a.permalink:focus::after {
+	outline: 2px dotted #575756;
+	box-shadow:
+		0 0 0 3px #000 inset;
+}
 .listings .comment-thread .comment-meta a.date:focus,
 .listings .comment-thread .comment-meta a.permalink:focus {
 	color: #666;
-	outline: 2px dotted #575756;
 	background-color: #000;
-	padding: 0 5px;
-	left: -5px;
-}
-#content.compact .listings .comment-thread .comment-meta a.date:focus,
-#content.compact .listings .comment-thread .comment-meta a.permalink:focus {
-	padding-top: 2px;
-}
-.listings .comment-thread .comment-meta a.date:focus + * {
-	margin-left: -10px;
-}
-.listings .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
-	margin-left: -10px;
+	box-shadow:
+		0 0 0 3px #000;
 }
 
 /*===========================*/

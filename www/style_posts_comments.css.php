@@ -718,8 +718,6 @@ ul.comment-thread {
 
 .comment-meta .nav-links-container {
 	display: flex;
-	position: relative;
-	top: 2px;
 }
 .comment-meta .nav-links-container > * {
 	margin: inherit;
@@ -1011,11 +1009,20 @@ a.comment-child-link::before {
 .comment-meta .lw2-link,
 .comment-meta .comment-parent-link span,
 .post .post-meta .lw2-link {
+	display: block;
 	position: relative;
 	opacity: 1.0;
 	line-height: 1;
 	width: 1rem;
 	height: 1rem;
+}
+.comment-meta .permalink,
+.comment-meta .lw2-link,
+.comment-meta .comment-parent-link span {
+	top: 2px;
+}
+.post .post-meta .lw2-link {
+	top: 3px;
 }
 .comment-meta .permalink::after,
 .comment-meta .lw2-link::after,
@@ -1048,15 +1055,6 @@ a.comment-child-link::before {
 	height: 24px;
 	left: -4px;
 	top: -4px;
-}
-.comment-meta .comment-parent-link span::after {
-	top: -5px;
-}
-.post .post-meta .lw2-link {
-	padding: 0 3px;
-}
-.post .post-meta .lw2-link::after {
-	left: -4px;
 }
 
 /*************************/
