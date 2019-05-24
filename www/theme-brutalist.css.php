@@ -46,9 +46,14 @@
 	--GW-comment-minimized-height: 38px;
 	--GW-comment-minimized-height-mobile: 68px;
 
+	--GW-comment-listings-date-focused-adjust-y: -1px;
+
 	--GW-HNS-date-picker-text-field-width: 160px;
 	--GW-HNS-date-picker-bottom-margin: calc(var(--GW-new-comment-quicknav-bottom-margin) + 36px);
 	--GW-HNS-date-picker-flipped-bottom-margin: calc(var(--GW-new-comment-quicknav-bottom-margin) + 25px);
+}
+:root #content.compact {
+	--GW-comment-listings-date-focused-adjust-y: -2px;
 }
 @media only screen and (max-width: 1020px) {
 	:root {
@@ -1397,26 +1402,9 @@ article > .post-meta > *,
 /* COMMENT LISTINGS */
 /*==================*/
 
-.listings .comment-thread .comment-meta a.date:focus,
-.listings .comment-thread .comment-meta a.permalink:focus {
+.listings .comment-thread .comment-meta a.date:focus::after,
+.listings .comment-thread .comment-meta a.permalink:focus::after {
 	outline: 2px dotted var(--GW-C1);
-	position: relative;
-	background-color: var(--GW-C0);
-	padding: 2px 6px 0 6px;
-	left: -6px;
-}
-#content.compact .listings .comment-thread .comment-meta a.date:focus,
-#content.compact .listings .comment-thread .comment-meta a.permalink:focus {
-	padding: 2px 5px 0 5px;
-	left: -5px;
-}
-.listings .comment-thread .comment-meta a.date:focus + *,
-.listings .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
-	margin-left: -12px;
-}
-#content.compact .listings .comment-thread .comment-meta a.date:focus + *,
-#content.compact .listings .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
-	margin-left: -10px;
 }
 
 /*===========================*/

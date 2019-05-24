@@ -21,6 +21,7 @@
 /*	Layout.
 	*/
 :root {
+	--GW-comment-listings-date-focused-adjust-y: 2px;
 }
 
 /*	Color scheme.
@@ -1342,18 +1343,22 @@ a.comment-parent-link::after {
 /* COMMENT LISTINGS */
 /*==================*/
 
+.listings .comment-thread .comment-meta a.date:focus::after,
+.listings .comment-thread .comment-meta a.permalink:focus::after {
+	outline: 2px dotted #444;
+	box-shadow:
+		0 0 0 3px #fff inset;
+}
+#content.compact .listings .comment-thread .comment-meta a.permalink:focus::after {
+	box-shadow:
+		0 0 0 2px #fff inset;
+}
 .listings .comment-thread .comment-meta a.date:focus,
 .listings .comment-thread .comment-meta a.permalink:focus {
 	color: #444;
-	outline: 2px dotted #444;
-	position: relative;
 	background-color: #fff;
-	padding: 0 5px;
-	left: -5px;
-}
-.listings .comment-thread .comment-meta a.date:focus + *,
-.listings .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
-	margin-left: -10px;
+	box-shadow:
+		0 0 0 3px #fff;
 }
 
 /*==============*/

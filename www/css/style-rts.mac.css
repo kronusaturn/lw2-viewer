@@ -6767,6 +6767,11 @@ th.mathjax-inline-container {
 	--GW-comment-compact-height-mobile: 103px;
 	--GW-comment-minimized-height: 37px;
 	--GW-comment-minimized-height-mobile: 68px;
+
+	--GW-comment-listings-date-focused-adjust-y: -1px;
+}
+:root #content.compact {
+	--GW-comment-listings-date-focused-adjust-y: -2px;
 }
 
 /*	Color scheme.
@@ -8043,31 +8048,6 @@ h1.post-title .post-type-prefix {
 /* COMMENT LISTINGS */
 /*==================*/
 
-.listings .comment-thread .comment-meta a.date:focus,
-.listings .comment-thread .comment-meta a.permalink:focus {
-	color: #000;
-	text-shadow: 0 0 0 currentColor;
-	outline: 2px dotted #000;
-	background-color: #fff;
-	padding: 2px 6px 0 6px;
-	left: -6px;
-	margin-top: -1px;
-}
-#content.compact .listings .comment-thread .comment-meta a.date:focus,
-#content.compact .listings .comment-thread .comment-meta a.permalink:focus {
-	padding: 1px 5px 0 5px;
-	left: -5px;
-	margin-top: 0;
-}
-.listings .comment-thread .comment-meta a.date:focus + *,
-.listings .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
-	margin-left: -12px;
-}
-#content.compact .listings .comment-thread .comment-meta a.date:focus + *,
-#content.compact .listings .comment-thread .comment-meta a.permalink:focus + *:not(.comment-post-title) {
-	margin-left: -10px;
-}
-
 @media only screen and (hover: hover) and (pointer: fine) {
 	#content.compact .comment-item:hover .comment,
 	#content.compact .comment-item.expanded .comment {
@@ -8078,6 +8058,25 @@ h1.post-title .post-type-prefix {
 	#content.compact .comment-thread.expanded .comment {
 		outline: none;
 	}
+}
+
+.listings .comment-thread .comment-meta a.date:focus::after,
+.listings .comment-thread .comment-meta a.permalink:focus::after {
+	outline: 2px dotted #000;
+	box-shadow:
+		0 0 0 3px #fff inset;
+}
+#content.compact .listings .comment-thread .comment-meta a.permalink:focus::after {
+	box-shadow:
+		0 0 0 2px #fff inset;
+}
+.listings .comment-thread .comment-meta a.date:focus,
+.listings .comment-thread .comment-meta a.permalink:focus {
+	color: #000;
+	text-shadow: 0 0 0 currentColor;
+	background-color: #fff;
+	box-shadow:
+		0 0 0 3px #fff;
 }
 
 /*===========================*/
