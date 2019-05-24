@@ -1595,11 +1595,6 @@ function userInitialize() {
 		voteButton.addActivateEvent(voteButtonClicked);
 	});
 
-	// Mark answers as such.
-	queryAll("#answers > .comment-thread > .comment-item").forEach(answerItem => {
-		answerItem.addClass("answer-item");
-	});
-
 	// For all comment containers...
 	queryAll(".comments").forEach((commentsContainer) => {
 		// Add reply buttons.
@@ -1720,6 +1715,11 @@ registerInitializer('initialize', false, () => (document.readyState != 'loading'
 	// Rectify mathjax block container heights.
 	queryAll(".mathjax-block-container .mjx-chtml").forEach(mjxContainer => {
 		mjxContainer.style.height = mjxContainer.offsetHeight + "px";
+	});
+
+	// Mark answers as such.
+	queryAll("#answers > .comment-thread > .comment-item").forEach(answerItem => {
+		answerItem.addClass("answer-item");
 	});
 
 	// If we’re on a comment thread page...
