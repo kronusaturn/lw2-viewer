@@ -1897,8 +1897,9 @@ registerInitializer('initialize', false, () => (document.readyState != 'loading'
 	// Add event listener for . , ; (for navigating listings pages).
 	let listings = queryAll("h1.listing a[href^='/posts/'], h1.listing a[href^='/s/'], .listings .comment-thread .comment-meta .date");
 	if (listings.length > 0) {
-		document.addEventListener("keyup", GW.postListingsNavKeyPressed = (event) => { 
-			if (event.ctrlKey || event.shiftKey || event.altKey || !(event.key == "," || event.key == "." || event.key == ';' || event.key == "Escape")) return;
+		document.addEventListener("keyup", GW.postListingsNavKeyPressed = (event) => {
+			let allowedKeys = [ ',', '.', ';', 'Escape' ];
+			if (event.ctrlKey || event.shiftKey || event.altKey || !allowedKeys.contains(event.key)) return;
 
 			if (event.key == "Escape") {
 				if (document.activeElement.parentElement.hasClass("listing") || 
@@ -1908,11 +1909,11 @@ registerInitializer('initialize', false, () => (document.readyState != 'loading'
 			}
 
 			if (event.key == ';') {
-				if (document.activeElement.parentElement.hasClass("link-post-listing")) {
+				if (document.activeElement.closest(".link-post-listing") != null) {
 					let links = document.activeElement.parentElement.queryAll("a");
 					links[document.activeElement == links[0] ? 1 : 0].focus();
-				} else if (document.activeElement.parentElement.hasClass("comment-meta")) {
-					let links = document.activeElement.parentElement.queryAll("a.date, a.permalink");
+				} else if (document.activeElement.closest(".comment-meta") != null) {
+					let links = document.activeElement.closest(".comment-meta").queryAll("a.date, a.permalink");
 					links[document.activeElement == links[0] ? 1 : 0].focus();
 					document.activeElement.closest(".comment-item").addClasses([ "focused", "expanded" ]);
 				}
