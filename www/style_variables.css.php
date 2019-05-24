@@ -112,6 +112,9 @@
 	--GW-comment-compact-height-mobile: auto;
 	--GW-comment-minimized-height: auto;
 	--GW-comment-minimized-height-mobile: auto;
+
+	--GW-comment-listings-date-focused-adjust-x: 0px;
+	--GW-comment-listings-date-focused-adjust-y: 0px;
 }
 @media only screen and (max-width: 900px) {
 	:root {

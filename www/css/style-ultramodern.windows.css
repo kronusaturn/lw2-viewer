@@ -117,6 +117,9 @@
 	--GW-comment-compact-height-mobile: auto;
 	--GW-comment-minimized-height: auto;
 	--GW-comment-minimized-height-mobile: auto;
+
+	--GW-comment-listings-date-focused-adjust-x: 0px;
+	--GW-comment-listings-date-focused-adjust-y: 0px;
 }
 @media only screen and (max-width: 900px) {
 	:root {
@@ -3827,14 +3830,23 @@ ul.comment-thread {
 .listings .comment-thread:first-child > .comment-item {
 	margin-top: 0;
 }
-.listings .comment-thread .comment-meta a.date:focus,
-.listings .comment-thread .comment-meta a.permalink:focus {
-	position: relative;
-}
 
 .listings .comment-item-focused .comment {
 	background-color: var(--GW-comment-item-focused-background-color);
 	outline: var(--GW-comment-item-focused-outline);
+}
+
+.listings .comment-thread .comment-meta a.date {
+	line-height: 1;
+	position: relative;
+}
+.listings .comment-thread .comment-meta a.date:focus::after {
+	content: "";
+	position: absolute;
+	width: calc(100% + 12px - var(--GW-comment-listings-date-focused-adjust-x));
+	height: calc(100% + 8px - var(--GW-comment-listings-date-focused-adjust-y));
+	left: calc(-6px + var(--GW-comment-listings-date-focused-adjust-x));
+	top: calc(-4px + var(--GW-comment-listings-date-focused-adjust-y));
 }
 
 /**********************************/
@@ -3898,6 +3910,8 @@ ul.comment-thread {
 
 .comment-meta .nav-links-container {
 	display: flex;
+	position: relative;
+	top: 2px;
 }
 .comment-meta .nav-links-container > * {
 	margin: inherit;
@@ -4135,8 +4149,8 @@ a.comment-child-link::before {
 .post .post-meta .lw2-link::before {
 	content: "";
 	display: inline-block;
-	width: 1rem;
-	height: 1rem;
+	width: 100%;
+	height: 100%;
 	border-radius: 3px;
 	box-shadow: 
 		0 0 0 1px #fff,
@@ -4144,7 +4158,6 @@ a.comment-child-link::before {
 		0 0 0 3px transparent;
 	background-size: auto 16px;
 	position: relative;
-	top: 2px;
 	opacity: 0.5;
 }
 
@@ -4166,7 +4179,11 @@ a.comment-child-link::before {
 .comment-meta .permalink:hover::before,
 .comment-meta .lw2-link:hover::before,
 .comment-meta .comment-parent-link:hover span::before,
-.post .post-meta .lw2-link:hover::before {
+.post .post-meta .lw2-link:hover::before,
+.comment-meta .permalink:focus::before,
+.comment-meta .lw2-link:focus::before,
+.comment-meta .comment-parent-link:focus span::before,
+.post .post-meta .lw2-link:focus::before {
 	background-color: #00e;
 	background-image: var(--GW-comment-meta-icons-hover-sprites);
 	box-shadow: 
@@ -4188,21 +4205,33 @@ a.comment-child-link::before {
 .post .post-meta .lw2-link {
 	position: relative;
 	opacity: 1.0;
+	line-height: 1;
+	width: 1rem;
+	height: 1rem;
 }
 .comment-meta .permalink::after,
 .comment-meta .lw2-link::after,
 .comment-meta .comment-parent-link span::after,
 .post .post-meta .lw2-link::after {
 	content: "";
-	width: 30px;
-	height: 30px;
+	width: 32px;
+	height: 32px;
 	display: block;
 	position: absolute;
-	top: -2px;
-	left: -7px;
+	top: -8px;
+	left: -8px;
 	box-shadow: none;
 	pointer-events: auto;
 	visibility: visible;
+}
+.comment-meta .permalink:focus::after,
+.comment-meta .lw2-link:focus::after,
+.comment-meta .comment-parent-link:focus span::after,
+.post .post-meta .lw2-link:focus::after {
+	width: 26px;
+	height: 26px;
+	left: -5px;
+	top: -5px;
 }
 .comment-meta .comment-parent-link span::after {
 	top: -5px;
@@ -6723,6 +6752,8 @@ th.mathjax-inline-container {
 	--GW-comment-compact-height-mobile: 104px;
 	--GW-comment-minimized-height: 36px;
 	--GW-comment-minimized-height-mobile: 61px;
+
+	--GW-comment-listings-date-focused-adjust-y: -1px;
 }
 
 /*	Color scheme.
@@ -8112,7 +8143,7 @@ article > .post-meta > *,
 	margin-left: -12px;
 }
 .listings .comment-thread .comment-meta a.permalink:focus {
-	padding: 2px 5px 3px 5px;
+	padding: 3px 5px;
 	left: -5px;
 }
 .listings .comment-thread .comment-meta a.permalink:focus::before {

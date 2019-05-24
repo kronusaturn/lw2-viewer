@@ -31,6 +31,8 @@
 	--GW-comment-compact-height-mobile: 104px;
 	--GW-comment-minimized-height: 36px;
 	--GW-comment-minimized-height-mobile: 61px;
+
+	--GW-comment-listings-date-focused-adjust-y: -1px;
 }
 
 /*	Color scheme.
@@ -1420,7 +1422,7 @@ article > .post-meta > *,
 	margin-left: -12px;
 }
 .listings .comment-thread .comment-meta a.permalink:focus {
-	padding: 2px 5px 3px 5px;
+	padding: 3px 5px;
 	left: -5px;
 }
 .listings .comment-thread .comment-meta a.permalink:focus::before {
