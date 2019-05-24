@@ -1187,7 +1187,6 @@ h1.post-title {
 .post .post-meta {
 	font-size: 0.875rem;
 	justify-content: flex-start;
-	padding-left: 30px;
 }
 article > .post-meta > *,
 .post .post-meta > * {
@@ -1220,7 +1219,7 @@ article > .post-meta > *,
 .post .post-meta .post-section::before {
 	position: absolute;
 	top: 1px;
-	left: 0;
+	left: -2em;
 }
 .post .bottom-post-meta .post-section::before {
 	top: 22px;
@@ -1264,18 +1263,22 @@ a.post-section.alignment-forum:hover::before {
 	*/
 .post .post-meta .karma {
 	order: -1;
+	margin-left: 0;
 }
 .post .post-meta .karma-value {
-	display: flex;
+	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	min-width: 2.125em;
-	height: 2.125em;
-	border-radius: 1.125em;
-	font-size: 0.875rem;
+	min-width: 2.25em;
+	height: 2.25em;
+	border-radius: 1.25em;
+	font-size: 0.8125rem;
 	font-weight: bold;
 	background-color: #538d4d;
 	color: #fff;
+	line-height: 1;
+	float: left;
+	margin: 0 0.5em 0 0;
 }
 
 /*=----------------------------=*/
