@@ -8150,17 +8150,16 @@ article > .post-meta a:visited,
 /*==================*/
 
 .listings .comment-thread .comment-meta a.date:focus::after,
-.listings .comment-thread .comment-meta a.permalink:focus::after {
+.listings .comment-thread .comment-meta .nav-links-container a:focus::after {
 	outline: 2px dotted #aaa;
 	box-shadow:
 		0 0 0 3px #fff inset;
 }
-#content.compact .listings .comment-thread .comment-meta a.permalink:focus::after {
+#content.compact .listings .comment-meta .nav-links-container a.permalink:focus::after {
 	box-shadow:
 		0 0 0 2px #fff inset;
 }
-.listings .comment-thread .comment-meta a.date:focus,
-.listings .comment-thread .comment-meta a.permalink:focus {
+.listings .comment-thread .comment-meta a.date:focus {
 	color: #999;
 	background-color: #fff;
 	box-shadow:
@@ -8194,6 +8193,10 @@ a.comment-parent-link:hover::before {
 	color: #222;
 }
 
+.comment-post-title a:focus {
+	border-bottom: 1px dotted currentColor;
+}
+
 /*	Comment author.
 	*/
 .comment-meta .author {
@@ -8202,7 +8205,13 @@ a.comment-parent-link:hover::before {
 }
 .comment-meta .author:hover {
 	text-decoration: none;
+}
+.comment-meta .author:hover,
+.comment-meta .author:focus {
 	color: #090;
+}
+.comment-meta .author:focus {
+	text-decoration: dotted underline;
 }
 .comment-item .author:not(.redacted).original-poster::after {
 	opacity: 0.8;

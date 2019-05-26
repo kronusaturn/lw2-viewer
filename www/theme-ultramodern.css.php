@@ -1406,15 +1406,15 @@ article > .post-meta > *,
 /*==================*/
 
 .listings .comment-thread .comment-meta a.date:focus,
-.listings .comment-thread .comment-meta a.permalink:focus {
+.listings .comment-thread .comment-meta .nav-links-container a:focus {
 	filter: invert(100%) contrast(150%);
 }
 .listings .comment-thread .comment-meta a.date:focus::after,
-.listings .comment-thread .comment-meta a.permalink:focus::after {
+.listings .comment-thread .comment-meta .nav-links-container a:focus::after {
 	outline: 2px dotted #222;
 }
 
-.listings .comment-thread .comment-meta a.permalink:focus::before {
+.listings .comment-thread .comment-meta .nav-links-container a:focus::before {
 	filter: invert(100%);
 }
 
@@ -1460,6 +1460,10 @@ a.comment-parent-link:hover::before {
 /* COMMENT-META */
 /*==============*/
 
+.comment-meta .comment-post-title a:focus {
+	border-bottom: 1px dotted currentColor;
+}
+
 /*	Comment author.
 	*/
 .comment-meta .author {
@@ -1467,6 +1471,10 @@ a.comment-parent-link:hover::before {
 }
 .comment-item .author:not(.redacted).original-poster::after {
 	opacity: 0.8;
+}
+.comment-meta .author:focus {
+	border-bottom: 2px dotted currentColor;
+	line-height: 1;
 }
 
 /*	Karma controls.

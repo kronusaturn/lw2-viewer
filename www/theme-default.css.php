@@ -1439,7 +1439,7 @@ h1.post-title .post-type-prefix {
 	box-shadow:
 		0 0 0 3px #fff inset;
 }
-#content.compact .listings .comment-thread .comment-meta a.permalink:focus::after {
+#content.compact .listings .comment-meta .nav-links-container a.permalink:focus::after {
 	box-shadow:
 		0 0 0 2px #fff inset;
 }
