@@ -19,7 +19,7 @@
 (defmethod print-tagged-element ((tag (eql :arbital-link)) stream rest)
   (destructuring-bind (tag text) rest
     (if-let (page-alias (cdr (assoc :alias (cdr (assoc (json:json-intern (json:camel-case-to-lisp tag)) *arbital-context*)))))
-	    (format stream "<a href=\"/arbital?id=~A&page-alias=~A\">~A</a>" tag page-alias text)
+	    (format stream "<a href=\"/p/~A~@[?l=~A~]\">~A</a>" page-alias tag text)
 	    (format stream "[unrecognized: ~A ~A]" tag text))))
 
 (define-extension-inline *arbital-markdown* arbital-dollar-sign
@@ -28,7 +28,9 @@
 
 (define-extension-inline *arbital-markdown* arbital-math
   (and "$"
-       (* (and (! "$") character))
+       (and (! "$")
+	    (* (or "\\$"
+		   (and (! "$") character))))
        "$")
   (:destructure (start text end)
 		(declare (ignore start end))
@@ -36,29 +38,55 @@
 
 (defmethod print-tagged-element ((tag (eql :arbital-math)) stream rest)
   (destructuring-bind (text) rest
-    (format stream "$$~A$$" text)))
+    (format stream "\\(~A\\)" text)))
+
+(in-package #:lw2.backend)
+
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (export 'get-page-body))
+
+(define-backend-operation decode-graphql-json backend-arbital (json-string)
+  (json:decode-json-from-string json-string))
+
+(define-backend-function get-page-body (params page-type)
+  (backend-arbital
+    (let* ((query (json:encode-json-to-string params))
+	   (fn (lambda () (block nil
+			    (loop
+			       (handler-case
+				   (return
+				     (sb-ext:octets-to-string
+				      (drakma:http-request (case page-type
+							     (:explore "https://arbital.com/json/explore/")
+							     (t "https://arbital.com/json/primaryPage/"))
+							   :method :post
+							   :content query)
+				      :external-format :utf-8))
+				 (t () nil)))))))
+      (lw2-graphql-query-timeout-cached fn "post-body-json" query :revalidate t))))
 
 (in-package #:lw2-viewer)
 
 (named-readtables:in-readtable html-reader)
 
-(define-component view-arbital-page (id page-alias)
-  (:http-args '())
-  (let* ((all-data (block nil
-		     (loop
-			(handler-case
-			    (return
-			      (json:decode-json-from-string
-			       (sb-ext:octets-to-string
-				(drakma:http-request "https://arbital.com/json/primaryPage/"
-						     :method :post
-						     :content (json:encode-json-to-string (alist :page-alias page-alias :lens-id id)))
-				:external-format :utf-8)))
-			  (t () nil)))))
-	 (page-data (cdr (assoc (json:json-intern (json:camel-case-to-lisp (or id page-alias))) (cdr (assoc :pages all-data))))))
+(define-component view-arbital-page (id page-alias page-type)
+  (:http-args '((l :type (or string null))))
+  (let* ((id (or id l))
+	 (all-data (lw2.backend:get-page-body (list-cond
+					       (page-alias (cons :page-alias page-alias))
+					       (id (cons :lens-id id)))
+					      page-type))
+	 (page-data (cdr (assoc
+			  (json:json-intern
+			   (json:camel-case-to-lisp
+			    (or id
+				(cdr (assoc :page-id (cdr (assoc :result all-data))))
+				(cdr (assoc :primary-page-id (cdr (assoc :result all-data)))))))
+			  (cdr (assoc :pages all-data))))))
     (renderer ()
       (emit-page (*html-output*)
-        <main class="post">
+	<main class="post">
+	  <h1 class="post-title">(cdr (assoc :title page-data))</h1>
           <div class="body-text post-body">
 	    (with-html-stream-output
 	        (let ((3bmd-arbital:*arbital-markdown* t)
@@ -69,12 +97,14 @@
 	      <ul>
 	        (dolist (c (cdr (assoc :child-ids page-data)))
 	          (let ((page-data (cdr (assoc (json:json-intern (json:camel-case-to-lisp c)) (cdr (assoc :pages all-data))))))
-	            <li><a href=("/arbital?id=~A&page-alias=~A" c (cdr (assoc :alias page-data)))>(cdr (assoc :title page-data))</a></li>))
+	            <li><a href=("/p/~A~@[?l=~A~]" (cdr (assoc :alias page-data)) c)>(cdr (assoc :title page-data))</a></li>))
 	      </ul>
 	    </p>
 	  </div>
         </main>))))
 
-(define-route 'arbital-site 'standard-route :name 'view-root :uri "/" :handler (route-component view-arbital-page nil "84c"))
-;(define-route 'arbital-site 'standard-route :name 'view-root :uri "/" :handler (route-component view-arbital-page "1rf" "probability"))
+(define-route 'arbital-site 'standard-route :name 'view-arbital-root :uri "/" :handler (route-component view-arbital-page () nil "84c" :primary-page))
+(define-route 'arbital-site 'regex-route :name 'view-arbital-page :regex "/p/([^/]+)" :handler (route-component view-arbital-page (page-alias) nil page-alias :primary-page))
+(define-route 'arbital-site 'regex-route :name 'view-arbital-explore :regex "/explore/([^/]+)" :handler (route-component view-arbital-page (page-alias) nil page-alias :explore))
+;(define-route 'arbital-site 'regex-route :name 'view-root :uri "/p/([^/]+)" :handler (route-component view-arbital-page (page-alias) "1rf" "probability"))
 ;(define-route 'arbital-site 'standard-route :name 'view-root :uri "/" :handler (route-component view-arbital-page "7hh" "expected_utility_formalism"))

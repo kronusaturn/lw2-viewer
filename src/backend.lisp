@@ -249,7 +249,7 @@
                  (t (error (make-condition 'lw2-unknown-error :message message))))))))
 
 (define-backend-function fixup-lw2-return-value (value)
-  (backend-lw2-legacy
+  (backend-base
    value)
   (backend-lw2-modernized
    (values-list
@@ -260,11 +260,12 @@
                x))
          value))))
 
-(defun decode-graphql-json (json-string)
-  (let* ((decoded (json:decode-json-from-string json-string))
-	 (errors (cdr (assoc :errors decoded))))
-    (signal-lw2-errors errors)
-    (fixup-lw2-return-value (cdadr (assoc :data decoded)))))
+(define-backend-function decode-graphql-json (json-string)
+  (backend-lw2-legacy
+   (let* ((decoded (json:decode-json-from-string json-string))
+	  (errors (cdr (assoc :errors decoded))))
+     (signal-lw2-errors errors)
+     (fixup-lw2-return-value (cdadr (assoc :data decoded))))))
 
 (defun lw2-graphql-query-map (fn data &key auth-token postprocess)
   (multiple-value-bind (map-values queries)

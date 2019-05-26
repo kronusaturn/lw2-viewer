@@ -877,16 +877,16 @@ signaled condition to OUT-STREAM."
 					       (if (member view '(:frontpage :all))
 						   (funcall sort-widget out-stream)))))))))
 
-(defmacro route-component (name &rest args)
-  `(lambda ()
+(defmacro route-component (name lambda-list &rest args)
+  `(lambda ,lambda-list
      (with-error-page
 	 (component-value-bind ((() (,name ,@args)))
 			       (when ,name
 				 (funcall ,name))))))
 
-(define-route 'forum-site 'standard-route :name 'view-root :uri "/" :handler (route-component view-index))
+(define-route 'forum-site 'standard-route :name 'view-root :uri "/" :handler (route-component view-index ()))
 
-(define-route 'forum-site 'standard-route :name 'view-index :uri "/index" :handler (route-component view-index))
+(define-route 'forum-site 'standard-route :name 'view-index :uri "/index" :handler (route-component view-index ()))
 
 (hunchentoot:define-easy-handler
     (view-site-routes
