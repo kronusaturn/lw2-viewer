@@ -1282,7 +1282,9 @@ h1.listing.own-post-listing {
 }
 
 .post-meta a:hover,
-.comment-meta a:hover {
+.post-meta a:focus,
+.comment-meta a:hover,
+.comment-meta a:focus {
 	color: var(--GW-C6);
 }
 
@@ -1403,7 +1405,7 @@ article > .post-meta > *,
 /*==================*/
 
 .listings .comment-thread .comment-meta a.date:focus::after,
-.listings .comment-thread .comment-meta a.permalink:focus::after {
+.listings .comment-thread .comment-meta .nav-links-container a:focus::after {
 	outline: 2px dotted var(--GW-C1);
 }
 
@@ -1445,8 +1447,15 @@ a.comment-parent-link:hover::before {
 .comment-meta .author {
 	font-size: 1.25em;
 }
+.comment-meta .author:focus {
+	text-decoration: dotted underline;
+}
 .comment-item .author:not(.redacted).original-poster::after {
 	opacity: 0.6;
+}
+
+.comment-meta .comment-post-title a:focus {
+	border-bottom: 1px dotted currentColor;
 }
 
 .comment-item .karma.active-controls::after,
