@@ -8064,11 +8064,11 @@ h1.post-title .post-type-prefix {
 	}
 }
 
-.listings .comment-thread .comment-meta a.date:focus::after,
-.listings .comment-thread .comment-meta .nav-links-container a:focus::after {
+.listings .comment-meta a.date:focus::after,
+.listings .comment-meta .nav-links-container a:focus::after {
 	outline: 2px dotted #000;
 }
-.listings .comment-thread .comment-meta a.date:focus {
+.listings .comment-meta a.date:focus {
 	color: #000;
 	text-shadow: 0 0 0 currentColor;
 }

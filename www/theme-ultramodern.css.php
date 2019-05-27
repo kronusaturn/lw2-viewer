@@ -1405,16 +1405,16 @@ article > .post-meta > *,
 /* COMMENT LISTINGS */
 /*==================*/
 
-.listings .comment-thread .comment-meta a.date:focus,
-.listings .comment-thread .comment-meta .nav-links-container a:focus {
+.listings .comment-meta a.date:focus,
+.listings .comment-meta .nav-links-container a:focus {
 	filter: invert(100%) contrast(150%);
 }
-.listings .comment-thread .comment-meta a.date:focus::after,
-.listings .comment-thread .comment-meta .nav-links-container a:focus::after {
+.listings .comment-meta a.date:focus::after,
+.listings .comment-meta .nav-links-container a:focus::after {
 	outline: 2px dotted #222;
 }
 
-.listings .comment-thread .comment-meta .nav-links-container a:focus::before {
+.listings .comment-meta .nav-links-container a:focus::before {
 	filter: invert(100%);
 }
 

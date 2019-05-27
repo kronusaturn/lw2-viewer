@@ -6756,8 +6756,6 @@ th.mathjax-inline-container {
 	--GW-comment-compact-height-mobile: 95px;
 	--GW-comment-minimized-height: 30px;
 	--GW-comment-minimized-height-mobile: 52px;
-
-	--GW-comment-listings-date-focused-adjust-y: 2px;
 }
 
 /*	Color scheme.
@@ -8100,18 +8098,17 @@ a.comment-parent-link::after {
 /* COMMENT LISTINGS */
 /*==================*/
 
-.listings .comment-thread .comment-meta a.date:focus::after,
-.listings .comment-thread .comment-meta a.permalink:focus::after {
+.listings .comment-meta a.date:focus::after,
+.listings .comment-meta .nav-links-container a:focus::after {
 	outline: 2px dotted #444;
 	box-shadow:
 		0 0 0 3px #fff inset;
 }
-#content.compact .listings .comment-thread .comment-meta a.permalink:focus::after {
+#content.compact .listings .comment-meta .nav-links-container a:focus::after {
 	box-shadow:
 		0 0 0 2px #fff inset;
 }
-.listings .comment-thread .comment-meta a.date:focus,
-.listings .comment-thread .comment-meta a.permalink:focus {
+.listings .comment-meta a.date:focus {
 	color: #444;
 	background-color: #fff;
 	box-shadow:
@@ -8144,14 +8141,23 @@ a.comment-parent-link:hover::before {
 	font-size: 0.9375rem;
 }
 
+.comment-meta .comment-post-title a:focus {
+	border-bottom: 1px dotted currentColor;
+}
+
 /*	Comment author.
 	*/
 .comment-meta .author {
 	font-weight: bold;
 	color: #538d4d;
 }
-.comment-meta .author:hover {
+.comment-meta .author:hover,
+.comment-meta .author:focus {
 	color: #444;
+}
+.comment-meta .author:focus {
+	border-bottom: 2px dotted currentColor;
+	line-height: 1;
 }
 .comment-item .author:not(.redacted).original-poster::after {
 	opacity: 0.8;

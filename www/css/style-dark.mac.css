@@ -8164,8 +8164,8 @@ h1.post-title .post-type-prefix {
 /* COMMENT LISTINGS */
 /*==================*/
 
-.listings .comment-thread .comment-meta a.date:focus::after,
-.listings .comment-thread .comment-meta .nav-links-container a:focus::after {
+.listings .comment-meta a.date:focus::after,
+.listings .comment-meta .nav-links-container a:focus::after {
 	outline: 2px dotted #575756;
 	box-shadow:
 		0 0 0 3px #000 inset;
@@ -8174,7 +8174,7 @@ h1.post-title .post-type-prefix {
 	box-shadow:
 		0 0 0 2px #000 inset;
 }
-.listings .comment-thread .comment-meta a.date:focus {
+.listings .comment-meta a.date:focus {
 	color: #666;
 	background-color: #000;
 	box-shadow:

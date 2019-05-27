@@ -1404,8 +1404,8 @@ article > .post-meta > *,
 /* COMMENT LISTINGS */
 /*==================*/
 
-.listings .comment-thread .comment-meta a.date:focus::after,
-.listings .comment-thread .comment-meta .nav-links-container a:focus::after {
+.listings .comment-meta a.date:focus::after,
+.listings .comment-meta .nav-links-container a:focus::after {
 	outline: 2px dotted var(--GW-C1);
 }
 

@@ -8149,17 +8149,17 @@ article > .post-meta a:visited,
 /* COMMENT LISTINGS */
 /*==================*/
 
-.listings .comment-thread .comment-meta a.date:focus::after,
-.listings .comment-thread .comment-meta .nav-links-container a:focus::after {
+.listings .comment-meta a.date:focus::after,
+.listings .comment-meta .nav-links-container a:focus::after {
 	outline: 2px dotted #aaa;
 	box-shadow:
 		0 0 0 3px #fff inset;
 }
-#content.compact .listings .comment-meta .nav-links-container a.permalink:focus::after {
+#content.compact .listings .comment-meta .nav-links-container a:focus::after {
 	box-shadow:
 		0 0 0 2px #fff inset;
 }
-.listings .comment-thread .comment-meta a.date:focus {
+.listings .comment-meta a.date:focus {
 	color: #999;
 	background-color: #fff;
 	box-shadow:

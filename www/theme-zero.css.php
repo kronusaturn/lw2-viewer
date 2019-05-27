@@ -1174,17 +1174,17 @@ article > .post-meta > *,
 /* COMMENT LISTINGS */
 /*==================*/
 
-.listings .comment-thread .comment-meta a.date:focus::after,
-.listings .comment-thread .comment-meta .nav-links-container a:focus::after {
+.listings .comment-meta a.date:focus::after,
+.listings .comment-meta .nav-links-container a:focus::after {
 	outline: 2px dotted #999;
 	box-shadow:
 		0 0 0 3px #fff inset;
 }
-#content.compact .listings .comment-thread .nav-links-container a.permalink:focus::after {
+#content.compact .listings .nav-links-container a.permalink:focus::after {
 	box-shadow:
 		0 0 0 2px #fff inset;
 }
-.listings .comment-thread .comment-meta a.date:focus {
+.listings .comment-meta a.date:focus {
 	color: #888;
 	background-color: #fff;
 	box-shadow:
