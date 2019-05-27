@@ -63,7 +63,7 @@
 							   :content query)
 				      :external-format :utf-8))
 				 (t () nil)))))))
-      (lw2-graphql-query-timeout-cached fn "post-body-json" query :revalidate t))))
+      (lw2-graphql-query-timeout-cached fn "post-body-json" (format nil "~A~@[~A~]" query page-type) :revalidate t))))
 
 (in-package #:lw2-viewer)
 
@@ -89,17 +89,28 @@
 	  <h1 class="post-title">(cdr (assoc :title page-data))</h1>
           <div class="body-text post-body">
 	    (with-html-stream-output
-	        (let ((3bmd-arbital:*arbital-markdown* t)
-		      (3bmd-arbital:*arbital-context* (cdr (assoc :pages all-data))))
-		  (3bmd:parse-string-and-print-to-stream (cdr (assoc :text page-data))
-						         *html-output*)))
-	    <p>Children:
-	      <ul>
-	        (dolist (c (cdr (assoc :child-ids page-data)))
-	          (let ((page-data (cdr (assoc (json:json-intern (json:camel-case-to-lisp c)) (cdr (assoc :pages all-data))))))
-	            <li><a href=("/p/~A~@[?l=~A~]" (cdr (assoc :alias page-data)) c)>(cdr (assoc :title page-data))</a></li>))
-	      </ul>
-	    </p>
+	        (when (assoc :text page-data)
+	          (let ((3bmd-arbital:*arbital-markdown* t)
+		        (3bmd-arbital:*arbital-context* (cdr (assoc :pages all-data))))
+		    (3bmd:parse-string-and-print-to-stream (cdr (assoc :text page-data))
+						           *html-output*))))
+	    (dolist (page-list-data '((:child-ids "Children")
+				      (:parent-ids "Parents")))
+	      (destructuring-bind (page-list-id page-list-name) page-list-data
+	        <p>(progn page-list-name):
+		  (labels
+		      ((list-pages (page-list)
+	                 <ul>
+	                   (dolist (c page-list)
+	                     (let ((page-data (cdr (assoc (json:json-intern (json:camel-case-to-lisp c)) (cdr (assoc :pages all-data))))))
+	                       <li><a href=("/p/~A~@[?l=~A~]" (cdr (assoc :alias page-data)) c)>(cdr (assoc :title page-data))</a>
+			         (when-let (page-list (cdr (assoc page-list-id page-data)))
+					   (list-pages page-list))
+			       </li>))
+			   </ul>))
+		    (when-let (page-list (cdr (assoc page-list-id page-data)))
+			      (list-pages page-list)))
+	        </p>))
 	  </div>
         </main>))))
 
