@@ -14,7 +14,8 @@
     #:user-nav-bar #:*primary-nav* #:*secondary-nav* #:*nav-bars*
     #:begin-html #:end-html
     #:*fonts-stylesheet-uris* #:*fonts-redirect-data* #:*fonts-redirect-lock* #:*fonts-redirect-thread*
-    #:postprocess-conversation-title)
+    #:postprocess-conversation-title
+    #:map-output)
   (:recycle #:lw2-viewer #:lw2.backend))
 
 (in-package #:lw2-viewer) 
@@ -583,9 +584,6 @@ signaled condition to OUT-STREAM."
   (if-let (ignore-json (and user-id (cache-get "user-ignore-list" user-id)))
 	  (decode-json-as-hash-table ignore-json)
 	  (make-hash-table :test 'equal)))
-
-(defun map-output (out-stream fn list)
-  (loop for item in list do (write-string (funcall fn item) out-stream))) 
 
 (defmacro with-outputs ((out-stream) &body body) 
   (alexandria:with-gensyms (stream-sym) 
