@@ -7906,17 +7906,16 @@ article > .post-meta > *,
 /*==================*/
 
 .listings .comment-thread .comment-meta a.date:focus::after,
-.listings .comment-thread .comment-meta a.permalink:focus::after {
+.listings .comment-thread .comment-meta .nav-links-container a:focus::after {
 	outline: 2px dotted #999;
 	box-shadow:
 		0 0 0 3px #fff inset;
 }
-#content.compact .listings .comment-thread .comment-meta a.permalink:focus::after {
+#content.compact .listings .comment-thread .nav-links-container a.permalink:focus::after {
 	box-shadow:
 		0 0 0 2px #fff inset;
 }
-.listings .comment-thread .comment-meta a.date:focus,
-.listings .comment-thread .comment-meta a.permalink:focus {
+.listings .comment-thread .comment-meta a.date:focus {
 	color: #888;
 	background-color: #fff;
 	box-shadow:
@@ -7942,21 +7941,33 @@ a.comment-parent-link:hover::before {
 /* COMMENT-META */
 /*==============*/
 
+.comment-meta a:hover {
+	text-decoration: underline;
+}
+
+.comment-meta .comment-post-title a:focus {
+	border-bottom: 1px dotted currentColor;
+}
+
+/*	Date.
+	*/
+.comment-meta .date {
+	color: #666;
+}
+
+/*	Author.
+	*/
 .comment-meta .author {
 	font-size: 1.125em;
 	color: #3e9535;
 	text-shadow: 0 0 0 currentColor;
 }
+.comment-meta .author:focus {
+	border-bottom: 2px dotted currentColor;
+	line-height: 1;
+}
 .comment-item .author:not(.redacted).original-poster::after {
 	filter: brightness(60%) opacity(60%);
-}
-
-.comment-meta .date {
-	color: #666;
-}
-
-.comment-meta a:hover {
-	text-decoration: underline;
 }
 
 /*	Karma controls.
