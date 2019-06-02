@@ -18,9 +18,13 @@
 
 (defmethod print-tagged-element ((tag (eql :arbital-link)) stream rest)
   (destructuring-bind (tag text) rest
-    (if-let (page-alias (cdr (assoc :alias (cdr (assoc (json:json-intern (json:camel-case-to-lisp tag)) *arbital-context*)))))
-	    (format stream "<a href=\"/p/~A~@[?l=~A~]\">~A</a>" page-alias tag text)
-	    (format stream "[unrecognized: ~A ~A]" tag text))))
+    (cond
+      ((ppcre:scan "^http" tag)
+       (format stream "<a href=\"~A\">~A</a>" tag text))
+      (t
+       (if-let (page-alias (cdr (assoc :alias (cdr (assoc tag *arbital-context* :test #'string=)))))
+	       (format stream "<a href=\"/p/~A~@[?l=~A~]\">~A</a>" page-alias tag text)
+	       (format stream "[unrecognized: ~A ~A]" tag text))))))
 
 (define-extension-inline *arbital-markdown* arbital-dollar-sign
   (and "\\$")
@@ -45,6 +49,10 @@
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (export 'get-page-body))
 
+(defun string-to-existing-keyword (string)
+  (or (find-symbol (json:camel-case-to-lisp string) (find-package '#:keyword))
+      string))
+
 (define-backend-operation decode-graphql-json backend-arbital (json-string)
   (json:decode-json-from-string json-string))
 
@@ -62,7 +70,9 @@
 							   :method :post
 							   :content query)
 				      :external-format :utf-8))
-				 (t () nil)))))))
+				 (t () nil))))))
+	   (json:*json-identifier-name-to-lisp* #'identity)
+	   (json:*identifier-name-to-key* #'string-to-existing-keyword))
       (lw2-graphql-query-timeout-cached fn "post-body-json" (format nil "~A~@[~A~]" query page-type) :revalidate t))))
 
 (in-package #:lw2-viewer)
@@ -77,12 +87,11 @@
 					       (id (cons :lens-id id)))
 					      page-type))
 	 (page-data (cdr (assoc
-			  (json:json-intern
-			   (json:camel-case-to-lisp
-			    (or id
-				(cdr (assoc :page-id (cdr (assoc :result all-data))))
-				(cdr (assoc :primary-page-id (cdr (assoc :result all-data)))))))
-			  (cdr (assoc :pages all-data))))))
+			  (or id
+			      (cdr (assoc :page-id (cdr (assoc :result all-data))))
+			      (cdr (assoc :primary-page-id (cdr (assoc :result all-data)))))
+			  (cdr (assoc :pages all-data))
+			  :test #'string=))))
     (renderer ()
       (emit-page (*html-output*)
 	<main class="post">
@@ -102,7 +111,7 @@
 		      ((list-pages (page-list)
 	                 <ul>
 	                   (dolist (c page-list)
-	                     (let ((page-data (cdr (assoc (json:json-intern (json:camel-case-to-lisp c)) (cdr (assoc :pages all-data))))))
+	                     (let ((page-data (cdr (assoc c (cdr (assoc :pages all-data)) :test #'string=))))
 	                       <li><a href=("/p/~A~@[?l=~A~]" (cdr (assoc :alias page-data)) c)>(cdr (assoc :title page-data))</a>
 			         (when-let (page-list (cdr (assoc page-list-id page-data)))
 					   (list-pages page-list))
