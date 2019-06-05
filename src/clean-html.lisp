@@ -389,7 +389,7 @@
 				(ppcre:scan
 				 (load-time-value
 				  (ppcre:create-scanner
-				   "(?:https?://[-a-zA-Z0-9]+\\.[-a-zA-Z0-9.]+|[-a-zA-Z0-9.]+\\.(?:com|edu|gov|mil|net|org|int|biz|info|name|museum|us|ca|uk|io|ly))(?:\\:[0-9]+){0,1}(?:/(?:(?:(\\()|[-a-zA-Z0-9.,;:?'\\\\+&%$#=~_/])*(?(1)\\)|[-a-zA-Z0-9\\\\+&%$#=~_/]))?)?"
+				   "(?:https?://[-a-zA-Z0-9]+\\.[-a-zA-Z0-9.]+|[-a-zA-Z0-9.]+\\.(?:com|edu|gov|mil|net|org|int|biz|info|name|museum|us|ca|uk|io|ly))(?:\\:[0-9]+){0,1}(?:/(?:(?:(\\()|[-\\w\\d.,;:?'\\\\+&%$#=~_/])*(?(1)\\)|[-\\w\\d\\\\+&%$#=~_/]))?)?"
 				   :single-line-mode t))
 				 text)
                               (declare (type simple-string text)
