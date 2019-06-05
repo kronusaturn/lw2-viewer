@@ -1729,6 +1729,10 @@ article {
 	text-decoration: line-through;
 }
 
+.redlink {
+	color: #00bbf5;
+}
+
 .bare-url {
 	word-break: break-all;
 	hyphens: auto;

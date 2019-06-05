@@ -9,10 +9,11 @@
 (define-extension-inline *arbital-markdown* arbital-link
   (and "["
        (* (and (! "]") (! " ") character))
-       " "
-       (* (and (! "]") character))
-       (and (! "](") "]"))
-  (:destructure (start tag sep text end)
+       (? (and
+	   " "
+	   (* (and (! "]") character))))
+       (and "]" (! "(")))
+  (:destructure (start tag (sep text) end)
 		(declare (ignore start sep end))
 		(list :arbital-link (text tag) (text text))))
 
@@ -21,10 +22,12 @@
     (cond
       ((ppcre:scan "^http" tag)
        (format stream "<a href=\"~A\">~A</a>" tag text))
+      ((ppcre:scan ":$" tag)
+       nil)
       (t
        (if-let (page-alias (cdr (assoc :alias (cdr (assoc tag *arbital-context* :test #'string=)))))
 	       (format stream "<a href=\"/p/~A~@[?l=~A~]\">~A</a>" page-alias tag text)
-	       (format stream "[unrecognized: ~A ~A]" tag text))))))
+	       (format stream "<span class=\"redlink\" title=\"~A\">~A</span>" tag text))))))
 
 (define-extension-inline *arbital-markdown* arbital-dollar-sign
   (and "\\$")
