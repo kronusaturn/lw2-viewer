@@ -493,6 +493,11 @@
 	     do (loop for c across (plump:children root) do (setf (plump:parent c) root))
 	     do (when-let (fc (plump:first-child root))
 			  (when (and (plump:element-p fc) (tag-is fc "head")) (plump:remove-child fc))))
+	  (loop for c across (plump:children root) do
+	       (when (and (plump:element-p c)
+			  (tag-is c "span")
+			  (string-is-whitespace (plump:text c)))
+		 (move-children-out-of-node c)))
 	  (plump:traverse
 	   root
 	   (lambda (node)
