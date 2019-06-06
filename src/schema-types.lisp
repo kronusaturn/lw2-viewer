@@ -9,6 +9,7 @@
    (title string)
    (user-id string)
    (url (or null string))
+   (feed-link (or null string) :backend-type backend-feed-crossposts)
    (posted-at string)
    (base-score fixnum)
    (comment-count (or null fixnum))
