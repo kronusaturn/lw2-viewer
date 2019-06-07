@@ -41,8 +41,15 @@
   (ppcre:scan "https?://(?:www\\.)?(?:effective-altruism\\.com|forum\\.effectivealtruism\\.org)" link))
 
 (defun find-link-site (link)
-  (loop for s in *sites*
-        when (link-for-site-p s link) return s))
+  (if (ppcre:scan "^/" link)
+      *current-site*
+      (loop for s in *sites*
+	 when (link-for-site-p s link) return s)))
+
+(defun site-link-prefix (site)
+  (if (eq site *current-site*)
+      "/"
+      (site-uri site)))
 
 (defun match-lw1-link (link) (match-values "(?:^https?://(?:www.)?less(?:er|est)?wrong.com|^)(?:/r/discussion|/r/lesswrong)?(/lw/.*)" link (0)))
 
@@ -54,9 +61,12 @@
 
 (defun match-lw2-slug-link (link) (match-values "^(?:https?://(?:www.)?less(?:er|est)?wrong.com)?/(?:codex|hpmor)/([^/#]+)(?:/?#?([^/#]+)?)?" link (0 1)))
 
-(defun match-lw2-sequence-link (link) (match-values "^(?:https?://(?:www.)?less(?:er|est)?wrong.com)?/s/([^/#]+)(?:/p/([^/#]+))?(?:#([^/#]+)?)?" link (0 1 2)))
+(defun match-lw2-sequence-link (link) (match-values "^(?:https?://[^/]+)?/s/([^/#]+)(?:/p/([^/#]+))?(?:#([^/#]+)?)?" link (0 1 2)))
 
-(defun convert-lw2-user-link (link) (match-values "^(?:https?://(?:www.)?less(?:er|est)?wrong.com)(/users/[^/#]+)" link (0)))
+(defun convert-lw2-user-link (link)
+  (when-let ((site (find-link-site link))
+	     (matched-link (match-values "^(?:https?://[^/]+)?/(users/[^/#]+)" link (0))))
+    (concatenate 'string (site-link-prefix site) matched-link)))
 
 (defmacro with-direct-link-restart ((direct-link) &body body)
   (once-only (direct-link)
@@ -122,7 +132,7 @@
   (convert-redirect-link link #'match-agentfoundations-link #'get-agentfoundations-link "https://www.lesswrong.com"))
 
 (defun gen-internal (post-id slug comment-id &optional absolute-uri)
-  (format nil "~Aposts/~A/~A~@[#comment-~A~]" (or absolute-uri "/") post-id (or slug "-") comment-id))
+  (format nil "~Aposts/~A/~A~:[~@[#~A~]~;~@[#comment-~A~]~]" (or absolute-uri "/") post-id (or slug "-") (and comment-id (= (length comment-id) 17)) comment-id))
 
 (defun convert-lw2-slug-link (link)
   (multiple-value-bind (slug comment-id) (match-lw2-slug-link link)
@@ -139,7 +149,7 @@
   (multiple-value-bind (post-id comment-id slug) (match-lw2-link link)
     (when post-id
       (if-let (site (find-link-site link))
-              (gen-internal post-id slug comment-id (site-uri site))))))
+              (gen-internal post-id slug comment-id (site-link-prefix site))))))
 
 (defun generate-post-link (story &optional comment-id absolute-uri)
   (let ((absolute-uri (if (eq absolute-uri t) (site-uri *current-site*) absolute-uri)))

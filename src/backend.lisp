@@ -316,15 +316,20 @@
         (cache-put meta-db key (prin1-to-string `((:last-checked . ,current-time) (:last-modified . ,last-mod) (:city-128-hash . ,new-hash))))
         (cache-put cache-db key data)))))
 
-(declaim (type (and fixnum (integer 1)) *cache-stale-factor*))
-(defparameter *cache-stale-factor* 20)
+(declaim (type (and fixnum (integer 1)) *cache-stale-factor* *cache-skip-factor*))
+(defparameter *cache-stale-factor* 100)
+(defparameter *cache-skip-factor* 5000)
 
 (defun cache-is-fresh (cache-db key)
   (let ((metadata (if-let (m-str (cache-get (format nil "~A-meta" cache-db) key)) (read-from-string m-str)))
         (current-time (get-unix-time)))
     (if-let ((last-mod (cdr (assoc :last-modified metadata)))
-             (last-checked (cdr (assoc :last-checked metadata))))
-            (> (- last-checked last-mod) (* *cache-stale-factor* (- current-time last-checked))))))
+	     (last-checked (cdr (assoc :last-checked metadata))))
+	    (let ((unmodified-time (- last-checked last-mod))
+		  (last-checked-time (- current-time last-checked)))
+	      (if (> unmodified-time (* *cache-skip-factor* last-checked-time))
+		  :skip
+		  (> unmodified-time (* *cache-stale-factor* last-checked-time)))))))
 
 (defun run-query (query)
   (etypecase query
@@ -360,7 +365,8 @@
 
 (defun lw2-graphql-query-timeout-cached (query cache-db cache-key &key (revalidate t) force-revalidate)
     (multiple-value-bind (cached-result is-fresh) (with-cache-readonly-transaction (values (cache-get cache-db cache-key) (cache-is-fresh cache-db cache-key)))
-      (if (and cached-result (not revalidate))
+      (if (and cached-result (or (not revalidate)
+				 (and (not force-revalidate) (eq is-fresh :skip))))
           (decode-graphql-json cached-result)
           (let ((timeout (if cached-result
 			     (if force-revalidate nil 3)

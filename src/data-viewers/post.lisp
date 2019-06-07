@@ -6,8 +6,17 @@
 
 (named-readtables:in-readtable html-reader)
 
+(defgeneric rectify-post* (backend post) ; TODO this should go in a more generic postprocessing method
+  (:method ((backend t) post) post)
+  (:method ((backend backend-feed-crossposts) post)
+    (if (cdr (assoc :url post))
+	post
+	(acons :url (cdr (assoc :feed-link post)) post))))
+
+(defun rectify-post (post) (rectify-post* *current-backend* post))
+
 (defun post-section-to-html (post &key skip-section)
-  (schema-bind (:post post (user-id frontpage-date curated-date meta af draft))
+  (schema-bind (:post (rectify-post post) (user-id frontpage-date curated-date meta af draft))
     (multiple-value-bind (class title href)
 	(cond (af (if (eq skip-section :alignment-forum) nil (values "alignment-forum" "View Alignment Forum posts" "/index?view=alignment-forum")))
 	      ; show alignment forum even if skip-section is t
@@ -20,7 +29,7 @@
       <a class=("post-section ~A" class) title=title href=href></a>)))
 
 (defun post-meta-to-html (post context skip-section)
-  (schema-bind (:post post :auto)
+  (schema-bind (:post (rectify-post post) :auto)
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
       <div class="post-meta">
         <a class=("author~{ ~A~}" (list-cond
@@ -50,7 +59,7 @@
       </div>)))
 
 (defun post-headline-to-html (post &key skip-section need-auth)
-  (schema-bind (:post post (post-id user-id url question title))
+  (schema-bind (:post (rectify-post post) (post-id user-id url question title))
     <h1 class=("listing~{ ~A~}" (list-cond
 				 (url "link-post-listing")
 				 (question "question-post-listing")
@@ -65,7 +74,7 @@
     (post-meta-to-html post :listing skip-section)))
 
 (defun post-body-to-html (post)
-  (schema-bind (:post post (post-id url question title html-body) :qualifier :body)
+  (schema-bind (:post (rectify-post post) (post-id url question title html-body) :qualifier :body)
     <main class=("post~{ ~A~}" (list-cond
 				(url "link-post")
 				(question "question-post")))>

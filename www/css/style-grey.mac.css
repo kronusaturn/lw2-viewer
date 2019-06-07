@@ -3250,50 +3250,50 @@ li {
 	margin: 0.5em 0;
 }
 
-.post-body ol {
+.body-text ol {
 	list-style: none;
 	padding: 0;
 	counter-reset: ol;
 }
-.post-body ol > li {
+.body-text ol > li {
 	position: relative;
 	counter-increment: ol;
 	padding: 0 0 0 2.5em;
 	margin: 0.25em 0 0 0;
 }
-.post-body ol > li::before {
+.body-text ol > li::before {
 	content: counter(ol) ".";
 	position: absolute;
 	width: 2em;
 	text-align: right;
 	left: 0;
 }
-.post-body ul {
+.body-text ul {
 	list-style: none;
 	padding: 0;
 }
-.post-body ul:not(.contents-list) > li {
+.body-text ul:not(.contents-list) > li {
 	position: relative;
 	padding: 0 0 0 1.75em;
 	margin: 0.25em 0 0 0;
 }
-.post-body ul:not(.contents-list) > li ul > li {
+.body-text ul:not(.contents-list) > li ul > li {
 	padding: 0 0 0 2em;
 }
-.post-body ul:not(.contents-list) > li::before {
+.body-text ul:not(.contents-list) > li::before {
 	content: "•";
 	position: absolute;
 	width: 1.25em;
 	text-align: right;
 	left: 0;
 }
-.post-body ul:not(.contents-list) > li ul > li::before {
+.body-text ul:not(.contents-list) > li ul > li::before {
 	width: 1.5em;
 }
-.post-body li > ul:first-child > li {
+.body-text li > ul:first-child > li {
 	padding-left: 0;
 }
-.post-body li > ul:first-child > li::before {
+.body-text li > ul:first-child > li::before {
 	content: none;
 }
 
