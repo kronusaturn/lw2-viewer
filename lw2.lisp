@@ -9,6 +9,7 @@
 	#:lw2.data-viewers.comment)
   (:import-from #:alexandria #:ensure-list #:when-let #:if-let)
   (:import-from #:collectors #:with-collector)
+  (:import-from #:ppcre #:regex-replace-all)
   (:unintern
     #:define-regex-handler #:*fonts-stylesheet-uri* #:generate-fonts-link
     #:user-nav-bar #:*primary-nav* #:*secondary-nav* #:*nav-bars*
@@ -759,17 +760,13 @@ signaled condition to OUT-STREAM."
 
 (defun postprocess-markdown (markdown)
   (if (typep *current-site* 'alternate-frontend-site)
-      (ppcre:regex-replace-all
-       (concatenate 'string (ppcre:regex-replace-all "\\." (site-uri *current-site*) "\\.") "posts/([^/ ]{17})/([^/# ]*)(?:#comment-([^/ ]{17})|/comment/([^/ ]{17}))?")
-       markdown
-       (lambda (target-string start end match-start match-end reg-starts reg-ends)
-	 (declare (ignore start end match-start match-end))
-	 (labels ((reg (n) (if (and (> (length reg-starts) n) (aref reg-starts n))
-			       (substring target-string (aref reg-starts n) (aref reg-ends n)))))
-	   (quri:render-uri
-	    (quri:merge-uris
-	     (format nil "/posts/~A/~A~@[#~A~]" (reg 0) (reg 1) (or (reg 2) (reg 3)))
-	     (main-site-uri *current-site*))))))
+      (regex-replace-body
+       ((concatenate 'string (regex-replace-all "\\." (site-uri *current-site*) "\\.") "posts/([^/ ]{17})/([^/# ]*)(?:#comment-([^/ ]{17})|/comment/([^/ ]{17}))?")
+	markdown)
+       (quri:render-uri
+	(quri:merge-uris
+	 (format nil "/posts/~A/~A~@[#~A~]" (reg 0) (reg 1) (or (reg 2) (reg 3)))
+	 (main-site-uri *current-site*))))
       markdown))
 
 (defun redirect (uri &key (type :see-other))

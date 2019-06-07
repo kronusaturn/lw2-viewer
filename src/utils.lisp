@@ -1,6 +1,6 @@
 (uiop:define-package #:lw2.utils
   (:use #:cl #:alexandria)
-  (:export #:alist #:get-unix-time #:substring #:to-boolean #:map-plist #:alist-bind #:list-cond)
+  (:export #:alist #:get-unix-time #:substring #:regex-replace-body #:reg #:match #:to-boolean #:map-plist #:alist-bind #:list-cond)
   (:recycle #:lw2-viewer))
 
 (in-package #:lw2.utils)
@@ -17,6 +17,17 @@
          (ftype (function (string array-dimension-type &optional array-dimension-type) string) substring))
 (defun substring (string start &optional (end (length string)))
   (make-array (- end start) :element-type 'character :displaced-to string :displaced-index-offset start))
+
+(defmacro regex-replace-body ((regex target &rest args) &body body)
+  `(ppcre:regex-replace-all
+    ,regex ,target
+    (lambda (target-string start end match-start match-end reg-starts reg-ends)
+	 (declare (ignore start end))
+	 (labels ((reg (n) (if (and (> (length reg-starts) n) (aref reg-starts n))
+			       (substring target-string (aref reg-starts n) (aref reg-ends n))))
+		  (match () (substring target-string match-start match-end)))
+	   ,@body))
+    ,@args))
 
 (declaim (inline to-boolean))
 (defun to-boolean (value)
