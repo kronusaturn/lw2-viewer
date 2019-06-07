@@ -54,7 +54,7 @@
 			(format nil "<a href=\"/p/~A~@[?l=~A~]\">~A</a>" page-alias tag (or text (cdr (assoc :title page-data))))
 			(format nil "<span class=\"redlink\" title=\"~A\">~A</span>" tag (or text tag)))))))))
        (markdown (regex-replace-all "(?<!\\\\)\\$(.*?)(?<!\\\\)\\$" markdown "\\\\(\\1\\\\)")))
-    (write-string (markdown:parse markdown) stream)))
+    (write-sequence (clean-html* (markdown:parse markdown)) stream)))
 
 (define-component view-arbital-page (id page-alias page-type)
   (:http-args '((l :type (or string null))))
