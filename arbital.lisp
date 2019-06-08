@@ -80,8 +80,7 @@
 		    (arbital-markdown-to-html (cdr (assoc :text page-data))
 					      *html-output*))))
 	    (dolist (page-list-data '((:child-ids "Children")
-				      (:parent-ids "Parents")
-				      (:comment-ids "Comments")))
+				      (:parent-ids "Parents")))
 	      (destructuring-bind (page-list-id page-list-name) page-list-data
 	        <p>(progn page-list-name):
 		  (labels
@@ -98,7 +97,26 @@
 			      (list-pages page-list)))
 	        </p>))
 	  </div>
-        </main>))))
+	</main>
+	<div class="comments" id="comments">
+	  (labels ((arbital-comments (comment-list)
+		     <ul class="comment-thread">
+		       (dolist (c comment-list)
+		         (let ((comment-data (cdr (assoc c (cdr (assoc :pages all-data)) :test #'string=))))
+			   <li class="comment-item">
+			     <div class="comment">
+			       <div class="comment-body body-text">
+			         (with-html-stream-output
+				     (arbital-markdown-to-html (cdr (assoc :text comment-data)) *html-output*))
+			       </div>
+			     </div>
+			     (when-let (comment-list (cdr (assoc :comment-ids comment-data)))
+				       (arbital-comments comment-list))
+			   </li>))
+		     </ul>))
+	    (when-let (comment-list (cdr (assoc :comment-ids page-data)))
+		      (arbital-comments comment-list)))
+	</div>))))
 
 (define-route 'arbital-site 'standard-route :name 'view-arbital-root :uri "/" :handler (route-component view-arbital-page () nil "84c" :primary-page))
 (define-route 'arbital-site 'regex-route :name 'view-arbital-page :regex "/p/([^/]+)" :handler (route-component view-arbital-page (page-alias) nil page-alias :primary-page))
