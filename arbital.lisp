@@ -57,6 +57,22 @@
        (markdown (regex-replace-all "(?<!\\\\)\\$(.*?)(?<!\\\\)\\$" markdown "\\\\(\\1\\\\)")))
     (write-sequence (clean-html* (markdown:parse markdown)) stream)))
 
+(defun arbital-meta-block (page-data all-data type)
+ (let ((creator-id (cdr (assoc :page-creator-id page-data))))
+   <a class="author" href=("/p/~A" creator-id) data-userid=creator-id>
+     (cdr (assoc :title (cdr (assoc creator-id (cdr (assoc :pages all-data)) :test #'string=))))
+   </a>)
+ (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :page-created-at page-data)) :loose-parsing t)
+   (cond
+     ((eq type :comment)
+      <a class="date" href=("#comment-~A" (cdr (assoc :page-id page-data))) data-js-date=js-time>
+        (progn pretty-time)
+      </a>)
+     (t
+      <span class="date" data-js-date=js-time>
+        (progn pretty-time)
+      </span>))))
+
 (define-component view-arbital-page (id page-alias page-type)
   (:http-args '((l :type (or string null))))
   (let* ((id (or id l))
@@ -74,6 +90,9 @@
       (emit-page (*html-output*)
 	<main class="post">
 	  <h1 class="post-title">(cdr (assoc :title page-data))</h1>
+	  <div class="post-meta">
+	    (arbital-meta-block page-data all-data :page)
+	  </div>
           <div class="body-text post-body">
 	    (with-html-stream-output
 	        (when (assoc :text page-data)
@@ -100,23 +119,26 @@
 	  </div>
 	</main>
 	<div class="comments" id="comments">
-	  (labels ((arbital-comments (comment-list)
+	  (labels ((arbital-comments (comment-list depth)
 		     <ul class="comment-thread">
 		       (dolist (c comment-list)
 		         (let ((comment-data (cdr (assoc c (cdr (assoc :pages all-data)) :test #'string=))))
-			   <li class="comment-item">
+			   <li class=("comment-item ~A" (if (evenp depth) "depth-odd" "depth-even")) id=("#comment-~A" (cdr (assoc :page-id comment-data)))>
 			     <div class="comment">
+			       <div class="comment-meta">
+			         (arbital-meta-block comment-data all-data :comment)
+			       </div>
 			       <div class="comment-body body-text">
 			         (with-html-stream-output
 				     (arbital-markdown-to-html (cdr (assoc :text comment-data)) *html-output*))
 			       </div>
 			     </div>
 			     (when-let (comment-list (cdr (assoc :comment-ids comment-data)))
-				       (arbital-comments comment-list))
+				       (arbital-comments comment-list (1+ depth)))
 			   </li>))
 		     </ul>))
 	    (when-let (comment-list (cdr (assoc :comment-ids page-data)))
-		      (arbital-comments comment-list)))
+		      (arbital-comments comment-list 0)))
 	</div>))))
 
 (define-route 'arbital-site 'standard-route :name 'view-arbital-root :uri "/" :handler (route-component view-arbital-page () nil "84c" :primary-page))
