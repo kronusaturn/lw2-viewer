@@ -630,7 +630,9 @@ signaled condition to OUT-STREAM."
 
 (defun call-with-response-stream (fn)
   (let ((*html-output* (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8)))
-    (funcall fn *html-output*)))
+    (unwind-protect
+	 (funcall fn *html-output*)
+      (finish-output *html-output*))))
 
 (defmacro emit-page ((out-stream &rest args &key (return-code 200) &allow-other-keys) &body body)
   (alexandria:once-only (return-code)
