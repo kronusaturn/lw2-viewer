@@ -17,17 +17,18 @@
 			    (loop
 			       (handler-case
 				   (return
-				     (sb-ext:octets-to-string
-				      (drakma:http-request (case page-type
-							     (:explore "https://arbital.com/json/explore/")
-							     (t "https://arbital.com/json/primaryPage/"))
-							   :method :post
-							   :content query)
-				      :external-format :utf-8))
+				     (sb-sys:with-deadline (:seconds 600)
+				       (sb-ext:octets-to-string
+					(drakma:http-request (case page-type
+							       (:explore "https://arbital.com/json/explore/")
+							       (t "https://arbital.com/json/primaryPage/"))
+							     :method :post
+							     :content query)
+					:external-format :utf-8)))
 				 (t () nil))))))
 	   (json:*json-identifier-name-to-lisp* #'identity)
 	   (json:*identifier-name-to-key* #'string-to-existing-keyword))
-      (lw2-graphql-query-timeout-cached fn "post-body-json" (format nil "~A~@[~A~]" query page-type) :revalidate t))))
+      (lw2-graphql-query-timeout-cached fn "post-body-json" (format nil "~A~@[~A~]" query page-type) :revalidate nil))))
 
 (in-package #:lw2-viewer)
 
