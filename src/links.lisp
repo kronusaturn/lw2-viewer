@@ -38,7 +38,10 @@
   (ppcre:scan "^https?://(?:www\\.)?(?:less(?:er|est)?wrong\\.com|alignmentforum\\.org)" link))
 
 (defmethod link-for-site-p ((s ea-forum-viewer-site) link)
-  (ppcre:scan "https?://(?:www\\.)?(?:effective-altruism\\.com|forum\\.effectivealtruism\\.org)" link))
+  (ppcre:scan "^https?://(?:www\\.)?(?:effective-altruism\\.com|forum\\.effectivealtruism\\.org)" link))
+
+(defmethod link-for-site-p ((s arbital-site) link)
+  (ppcre:scan "^https?://(?:www\\.)?(?:arbital\\.com)" link))
 
 (defun find-link-site (link)
   (if (ppcre:scan "^/" link)
@@ -66,6 +69,11 @@
 (defun convert-lw2-user-link (link)
   (when-let ((site (find-link-site link))
 	     (matched-link (match-values "^(?:https?://[^/]+)?/(users/[^/#]+)" link (0))))
+    (concatenate 'string (site-link-prefix site) matched-link)))
+
+(defun convert-arbital-link (link)
+  (when-let ((site (find-link-site link))
+	     (matched-link (match-values "^(?:https?://[^/]+)?/(.*)" link (0))))
     (concatenate 'string (site-link-prefix site) matched-link)))
 
 (defmacro with-direct-link-restart ((direct-link) &body body)
@@ -169,7 +177,8 @@
 	(convert-ea1-link url)
 	(convert-agentfoundations-link url)
 	(convert-overcomingbias-link url)
-	(convert-lw2-user-link url))))
+	(convert-lw2-user-link url)
+	(convert-arbital-link url))))
 
 (defun convert-any-link (url)
   (or (convert-any-link* url) url))
