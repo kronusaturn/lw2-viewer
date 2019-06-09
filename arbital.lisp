@@ -94,7 +94,7 @@
 			  :test #'string=))))
     (renderer ()
       (let ((*arbital-context* (cdr (assoc :pages all-data))))
-	(emit-page (*html-output* :title (cdr (assoc :title page-data)))
+	(emit-page (*html-output* :title (format nil "~:[~;Explore: ~]~A" (eq page-type :explore) (cdr (assoc :title page-data))))
 	    <main class="post">
 	    <h1 class="post-title">(cdr (assoc :title page-data))</h1>
 	    <div class="post-meta">
