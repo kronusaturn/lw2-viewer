@@ -40,7 +40,7 @@
   (labels ((markdown-protect (x)
 	     (regex-replace-all "[_*]" x "\\\\\\&")))
     (let*
-	((markdown (regex-replace-all "(?<=\\S\\s)\\*(?=\\s)" markdown "\\\\*"))
+	((markdown (regex-replace-all (ppcre:create-scanner "(?<=\\S\\s)\\*(?=\\s)" :single-line-mode t) markdown "\\\\*"))
 	 (markdown (regex-replace-all "\\[summary(?:\\(.*?\\))?:.*\\].?\\n" markdown ""))
 	 (markdown (regex-replace-body (#'url-scanner markdown)
 				       (markdown-protect (match))))
