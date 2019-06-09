@@ -36,6 +36,13 @@
 
 (defvar *arbital-context*)
 
+(defmethod site-nav-bars ((site arbital-site))
+  '((:secondary-bar (("about" "/about" "About" :accesskey "t")))
+    (:primary-bar (("home" "/" "Home" :accesskey "h")
+		   ("math" "/explore/math/" "Math")
+		   ("ai-alignment" "/explore/ai_alignment/" "AI Alignment")
+		   ("arbital" "/explore/Arbital/" "Arbital")))))
+
 (defun arbital-markdown-to-html (markdown stream)
   (labels ((markdown-protect (x)
 	     (regex-replace-all "[_*]" x "\\\\\\&")))
