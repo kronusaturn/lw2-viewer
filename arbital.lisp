@@ -37,27 +37,29 @@
 (defvar *arbital-context*)
 
 (defun arbital-markdown-to-html (markdown stream)
-  (let*
-      ((markdown (regex-replace-all "\\[summary(?:\\(.*?\\))?:(?:[^][]|\\[.*\\])*\\]" markdown ""))
-       (markdown (regex-replace-body (#'url-scanner markdown)
-				     (regex-replace-all "[_*]" (match) "\\\\\\&")))
-       (markdown (regex-replace-body ("\\[[-+]?([^] ]*)(?: ([^]]*?))?\\](?!\\()" markdown)
-	 (let ((tag (reg 0))
-	       (text (reg 1)))
-	   (cond
-	     ((ppcre:scan "^http" tag)
-	      (format nil "<a href=\"~A\">~A</a>" (encode-entities tag) text))
-	     ((ppcre:scan ":$" tag)
-	      (match))
-	     (t
-	      (let ((page-data (cdr (assoc tag *arbital-context* :test #'string=))))
-		(if-let (page-alias (cdr (assoc :alias page-data)))
-			(format nil "<a href=\"/p/~A~@[?l=~A~]\">~A</a>" (encode-entities page-alias) (encode-entities tag) (or text (cdr (assoc :title page-data))))
-			(format nil "<span class=\"redlink\" title=\"~A\">~A</span>" tag (or text tag)))))))))
-       (markdown (regex-replace-body ("(?<!\\\\)\\$(.*?)(?<!\\\\)\\$" markdown)
-				     (format nil "\\(~A\\)"
-					     (regex-replace-all "[_*]" (reg 0) "\\\\\\&")))))
-    (write-sequence (clean-html* (markdown:parse markdown)) stream)))
+  (labels ((markdown-protect (x)
+	     (regex-replace-all "[_*]" x "\\\\\\&")))
+    (let*
+	((markdown (regex-replace-all "\\[summary(?:\\(.*?\\))?:(?:[^][]|\\[.*\\])*\\]" markdown ""))
+	 (markdown (regex-replace-body (#'url-scanner markdown)
+				       (markdown-protect (match))))
+	 (markdown (regex-replace-body ("\\[[-+]?([^] ]*)(?: ([^]]*?))?\\](?!\\()" markdown)
+		     (let ((tag (reg 0))
+			   (text (reg 1)))
+		       (cond
+			 ((ppcre:scan "^http" tag)
+			  (format nil "<a href=\"~A\">~A</a>" (encode-entities tag) text))
+			 ((ppcre:scan ":$" tag)
+			  text)
+			 (t
+			  (let ((page-data (cdr (assoc tag *arbital-context* :test #'string=))))
+			    (if-let (page-alias (cdr (assoc :alias page-data)))
+				    (format nil "<a href=\"/p/~A~@[?l=~A~]\">~A</a>" (encode-entities page-alias) (encode-entities tag) (or text (cdr (assoc :title page-data))))
+				    (format nil "<span class=\"redlink\" title=\"~A\">~A</span>" (markdown-protect tag) (or text (markdown-protect tag))))))))))
+	 (markdown (regex-replace-body ("(?<!\\\\)\\$(.*?)(?<!\\\\)\\$" markdown)
+				       (format nil " <span class=\"arbital-math\">\\(~A\\)</span>"
+					       (markdown-protect (reg 0))))))
+      (write-sequence (clean-html* (markdown:parse markdown)) stream))))
 
 (defun arbital-meta-block (page-data all-data type)
   (let* ((creator-id (cdr (assoc :page-creator-id page-data)))

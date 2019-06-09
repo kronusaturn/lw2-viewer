@@ -138,7 +138,7 @@
        (cleanablep (node)
          (and (plump:text-node-p node)
 	      (plump:parent node)
-              (text-class-is-not node "mjx-math")))
+              (text-class-is-not node "mjx-math" "arbital-math")))
        (traverse (node main-fn &optional recurse-fn)
          (when (cleanablep node) (funcall main-fn node))
          (when (plump:nesting-node-p node)
