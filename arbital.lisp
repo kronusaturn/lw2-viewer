@@ -57,9 +57,14 @@
 			    (if-let (page-alias (cdr (assoc :alias page-data)))
 				    (format nil " <a href=\"/p/~A~@[?l=~A~]\">~A</a>" (encode-entities page-alias) (encode-entities tag) (or text (cdr (assoc :title page-data))))
 				    (format nil " <span class=\"redlink\" title=\"~A\">~A</span>" (markdown-protect tag) (or text (markdown-protect tag))))))))))
-	 (markdown (regex-replace-body ("(?<!\\\\)\\$(.*?)(?<!\\\\)\\$" markdown)
-				       (format nil " <span class=\"arbital-math\">\\(~A\\)</span>"
-					       (markdown-protect (reg 0))))))
+	 (markdown (regex-replace-body ("(?<!\\\\)(\\$\\$?)(.+?)(?<!\\\\)\\1" markdown)
+				       (let ((block (= (length (reg 0)) 2)))
+					 (format nil " <~A class=\"arbital-math\">~A~A~A</~A>"
+						 (if block "div" "span")
+						 (if block "$$" "\\(")
+						 (markdown-protect (reg 1))
+						 (if block "$$" "\\)")
+						 (if block "div" "span"))))))
       (write-sequence (clean-html* (markdown:parse markdown)) stream))))
 
 (defun arbital-meta-block (page-data all-data type)
