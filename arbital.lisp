@@ -40,7 +40,8 @@
   (labels ((markdown-protect (x)
 	     (regex-replace-all "[_*]" x "\\\\\\&")))
     (let*
-	((markdown (regex-replace-all "\\[summary(?:\\(.*?\\))?:(?:[^][]|\\[.*\\])*\\]" markdown ""))
+	((markdown (regex-replace-all "(?<=\\s)\\*(?=\\s)" markdown "\\\\*"))
+	 (markdown (regex-replace-all "\\[summary(?:\\(.*?\\))?:(?:[^][]|\\[.*\\])*\\]" markdown ""))
 	 (markdown (regex-replace-body (#'url-scanner markdown)
 				       (markdown-protect (match))))
 	 (markdown (regex-replace-body ("\\[[-+]?([^] ]*)(?: ([^]]*?))?\\](?!\\()" markdown)
