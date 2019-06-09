@@ -109,10 +109,11 @@
 (defun tag-is (node &rest args)
   (declare (type plump:node node)
            (dynamic-extent args))
-  (let ((tag (plump:tag-name node)))
-    (to-boolean
-      (some (lambda (x) (string= tag x))
-            args))))
+  (when (plump:element-p node)
+    (let ((tag (plump:tag-name node)))
+      (to-boolean
+       (some (lambda (x) (string= tag x))
+	     args)))))
 
 (defun class-is-not (node &rest args)
   (declare (type plump:node node)
