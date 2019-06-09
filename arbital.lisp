@@ -41,7 +41,7 @@
 	     (regex-replace-all "[_*]" x "\\\\\\&")))
     (let*
 	((markdown (regex-replace-all "(?<=\\S\\s)\\*(?=\\s)" markdown "\\\\*"))
-	 (markdown (regex-replace-all "\\[summary(?:\\(.*?\\))?:(?:[^][]|\\[.*\\])*\\]" markdown ""))
+	 (markdown (regex-replace-all "\\[summary(?:\\(.*?\\))?:.*\\].?\\n" markdown ""))
 	 (markdown (regex-replace-body (#'url-scanner markdown)
 				       (markdown-protect (match))))
 	 (markdown (regex-replace-body ("\\[[-+]?([^] ]*)(?: ([^]]*?))?\\](?!\\()" markdown)
