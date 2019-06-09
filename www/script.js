@@ -3579,7 +3579,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 // 	injectCommentsViewModeSelector();
 
 	// Add the comments sort mode selector (top, hot, new, old).
-	injectCommentsSortModeSelector();
+	if (GW.useFancyFeatures) injectCommentsSortModeSelector();
 
 	// Add the toggle for the post nav UI elements on mobile.
 	if (GW.isMobile) injectPostNavUIToggle();
@@ -3588,7 +3588,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	if (GW.isMobile) injectAppearanceAdjustUIToggle();
 
 	// Add the antikibitzer.
-	injectAntiKibitzer();
+	if (GW.useFancyFeatures) injectAntiKibitzer();
 
 	// Add comment parent popups.
 	addCommentParentPopups();

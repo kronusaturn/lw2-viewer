@@ -495,10 +495,11 @@ signaled condition to OUT-STREAM."
   (let* ((session-token (hunchentoot:cookie-in "session-token"))
          (csrf-token (and session-token (make-csrf-token session-token))))
     (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head>")
-    (format out-stream "<script>window.GW = { }; loggedInUserId=\"~A\"; loggedInUserDisplayName=\"~A\"; loggedInUserSlug=\"~A\"; ~@[GW.csrfToken=\"~A\"; ~]~A</script>~A"
+    (format out-stream "<script>window.GW = { }; loggedInUserId=\"~A\"; loggedInUserDisplayName=\"~A\"; loggedInUserSlug=\"~A\"; GW.useFancyFeatures=~A; ~@[GW.csrfToken=\"~A\"; ~]~A</script>~A"
             (or (logged-in-userid) "")
             (or (logged-in-username) "")
             (or (logged-in-user-slug) "")
+	    (if (typep *current-site* 'arbital-site) "false" "true")
             csrf-token
             (load-time-value (with-open-file (s "www/head.js") (uiop:slurp-stream-string s)) t)
             *extra-inline-scripts*)
