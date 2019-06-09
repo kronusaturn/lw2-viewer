@@ -38,23 +38,25 @@
 
 (defun arbital-markdown-to-html (markdown stream)
   (let*
-      ((markdown (regex-replace-all "\\[summary:(?:[^][]|\\[.*\\])*\\]" markdown ""))
+      ((markdown (regex-replace-all "\\[summary(?:\\(.*?\\))?:(?:[^][]|\\[.*\\])*\\]" markdown ""))
        (markdown (regex-replace-body (#'url-scanner markdown)
 				     (regex-replace-all "[_*]" (match) "\\\\\\&")))
-       (markdown (regex-replace-body ("\\[-?([^] ]*)(?: (.*?))?\\](?!\\()" markdown)
+       (markdown (regex-replace-body ("\\[[-+]?([^] ]*)(?: ([^]]*?))?\\](?!\\()" markdown)
 	 (let ((tag (reg 0))
 	       (text (reg 1)))
 	   (cond
 	     ((ppcre:scan "^http" tag)
-	      (format nil "<a href=\"~A\">~A</a>" tag text))
+	      (format nil "<a href=\"~A\">~A</a>" (encode-entities tag) text))
 	     ((ppcre:scan ":$" tag)
 	      (match))
 	     (t
 	      (let ((page-data (cdr (assoc tag *arbital-context* :test #'string=))))
 		(if-let (page-alias (cdr (assoc :alias page-data)))
-			(format nil "<a href=\"/p/~A~@[?l=~A~]\">~A</a>" page-alias tag (or text (cdr (assoc :title page-data))))
+			(format nil "<a href=\"/p/~A~@[?l=~A~]\">~A</a>" (encode-entities page-alias) (encode-entities tag) (or text (cdr (assoc :title page-data))))
 			(format nil "<span class=\"redlink\" title=\"~A\">~A</span>" tag (or text tag)))))))))
-       (markdown (regex-replace-all "(?<!\\\\)\\$(.*?)(?<!\\\\)\\$" markdown "\\\\(\\1\\\\)")))
+       (markdown (regex-replace-body ("(?<!\\\\)\\$(.*?)(?<!\\\\)\\$" markdown)
+				     (format nil "\\(~A\\)"
+					     (regex-replace-all "[_*]" (reg 0) "\\\\\\&")))))
     (write-sequence (clean-html* (markdown:parse markdown)) stream)))
 
 (defun arbital-meta-block (page-data all-data type)
@@ -89,7 +91,7 @@
 			  :test #'string=))))
     (renderer ()
       (let ((*arbital-context* (cdr (assoc :pages all-data))))
-	(emit-page (*html-output*)
+	(emit-page (*html-output* :title (cdr (assoc :title page-data)))
 	    <main class="post">
 	    <h1 class="post-title">(cdr (assoc :title page-data))</h1>
 	    <div class="post-meta">
