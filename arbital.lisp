@@ -49,14 +49,14 @@
 			   (text (reg 1)))
 		       (cond
 			 ((ppcre:scan "^http" tag)
-			  (format nil "<a href=\"~A\">~A</a>" (encode-entities tag) text))
+			  (format nil " <a href=\"~A\">~A</a>" (encode-entities tag) (or text tag)))
 			 ((ppcre:scan ":$" tag)
-			  text)
+			  (or text ""))
 			 (t
 			  (let ((page-data (cdr (assoc tag *arbital-context* :test #'string=))))
 			    (if-let (page-alias (cdr (assoc :alias page-data)))
-				    (format nil "<a href=\"/p/~A~@[?l=~A~]\">~A</a>" (encode-entities page-alias) (encode-entities tag) (or text (cdr (assoc :title page-data))))
-				    (format nil "<span class=\"redlink\" title=\"~A\">~A</span>" (markdown-protect tag) (or text (markdown-protect tag))))))))))
+				    (format nil " <a href=\"/p/~A~@[?l=~A~]\">~A</a>" (encode-entities page-alias) (encode-entities tag) (or text (cdr (assoc :title page-data))))
+				    (format nil " <span class=\"redlink\" title=\"~A\">~A</span>" (markdown-protect tag) (or text (markdown-protect tag))))))))))
 	 (markdown (regex-replace-body ("(?<!\\\\)\\$(.*?)(?<!\\\\)\\$" markdown)
 				       (format nil " <span class=\"arbital-math\">\\(~A\\)</span>"
 					       (markdown-protect (reg 0))))))
