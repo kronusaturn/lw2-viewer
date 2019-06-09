@@ -40,7 +40,7 @@
   (labels ((markdown-protect (x)
 	     (regex-replace-all "[_*]" x "\\\\\\&")))
     (let*
-	((markdown (regex-replace-all (ppcre:create-scanner "(?<=\\S\\s)\\*(?=\\s)" :single-line-mode t) markdown "\\\\*"))
+	((markdown (regex-replace-all (ppcre:create-scanner "(?<=\\S )\\*(?= )" :single-line-mode t) markdown "\\\\*"))
 	 (markdown (regex-replace-all (ppcre:create-scanner "\\[.?summary(?:\\(.*?\\))?:.*\\].?$" :single-line-mode t :multi-line-mode t) markdown ""))
 	 (markdown (regex-replace-body (#'url-scanner markdown)
 				       (markdown-protect (match))))
@@ -57,7 +57,7 @@
 			    (if-let (page-alias (cdr (assoc :alias page-data)))
 				    (format nil " <a href=\"/p/~A~@[?l=~A~]\">~A</a>" (encode-entities page-alias) (encode-entities tag) (or text (cdr (assoc :title page-data))))
 				    (format nil " <span class=\"redlink\" title=\"~A\">~A</span>" (markdown-protect tag) (or text (markdown-protect tag))))))))))
-	 (markdown (regex-replace-body ("(?<!\\\\)(\\$\\$?)(.+?)(?<!\\\\)\\1" markdown)
+	 (markdown (regex-replace-body ((ppcre:create-scanner "(?<!\\\\)(\\$\\$?)(.+?)(?<!\\\\)\\1" :single-line-mode t :multi-line-mode t) markdown)
 				       (let ((block (= (length (reg 0)) 2)))
 					 (format nil " <~A class=\"arbital-math\">~A~A~A</~A>"
 						 (if block "div" "span")
