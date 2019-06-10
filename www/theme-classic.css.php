@@ -69,6 +69,10 @@
 		0 0 30px #fff,
 		0 0 40px #fff;
 
+	--GW-vote-button-color: #c8c8c8;
+	--GW-upvote-button-color: #0b0;
+	--GW-downvote-button-color: #f00;
+
 	--GW-theme-selector-outline-color: #aaa;
 }
 
@@ -1294,9 +1298,9 @@ a.post-section.alignment-forum:hover::before {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	min-width: 2.25em;
-	height: 2.25em;
-	border-radius: 1.25em;
+	min-width: 1.8125rem;
+	height: 1.8125rem;
+	border-radius: 1rem;
 	font-size: 0.8125rem;
 	font-weight: bold;
 	background-color: #538d4d;
@@ -1545,7 +1549,6 @@ a.comment-parent-link:hover::before {
 
 .upvote,
 .downvote {
-	color: #c8c8c8;	
 	padding: 0 5px;
 	position: relative;
 }
