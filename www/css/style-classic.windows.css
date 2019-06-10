@@ -7139,7 +7139,7 @@ body {
 			0 0 0 1px #aaa inset;
 	}
 }
-@media only screen and (max-width: 1000px) {
+@media only screen and (max-width: 960px) {
 	#theme-tweaker-toggle {
 		box-shadow: none;
 		background-color: transparent;
@@ -8088,6 +8088,18 @@ a.comment-parent-link::after {
 	display: none;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 900px) {
+	.comment-item .comment-item,
+	.comment-item .comment-item + .comment-item {
+		margin-bottom: 3px;
+		margin-left: 6px;
+	}
+}
+
 /*=========*/
 /* ANSWERS */
 /*=========*/
@@ -8525,6 +8537,39 @@ h1.listing .edit-post-link:hover,
 	background-color: #ffa;
 }
 
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 520px) {
+	.textarea-container:focus-within textarea {
+		background-color: #fff;
+	}
+	.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
+		padding: 6px;
+		font-weight: bold;
+	}
+	.textarea-container:focus-within .guiedit-mobile-help-button.active {
+		box-shadow:
+			0 0 0 2px #c00;
+		color: #c00;
+	}
+	.textarea-container:focus-within .guiedit-buttons-container {
+		background-color: #fff;
+		border-top: 1px solid #ddf;
+	}
+	.posting-controls .textarea-container:focus-within .guiedit-buttons-container {
+		box-shadow: none;
+	}
+	#content.conversation-page .textarea-container:focus-within::after {
+		background-color: #fff;
+	}
+	.textarea-container:focus-within button.guiedit {
+		border: 1px solid #6a8a6b;
+		border-radius: 6px;
+	}
+}
+
 /*================*/
 /* EDIT POST FORM */
 /*================*/
@@ -8582,6 +8627,23 @@ h1.listing .edit-post-link:hover,
 }
 #edit-post-form #markdown-hints-checkbox + label {
 	padding: 3px 0 0 14px;
+}
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
+@media only screen and (max-width: 520px) {
+	#edit-post-form .post-meta-fields input[type='checkbox'] + label {
+		top: 1px;
+	}
+	#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
+		top: 1px;
+	}
+	
+	#edit-post-form textarea {
+		min-height: calc(100vh - 345px);
+	}
 }
 
 /*=======*/
@@ -8801,62 +8863,6 @@ select {
 	#content.alignment-forum-index-page h1.listing a:focus {
 		background-color: rgba(244, 245, 255, 0.85);
 	}	
-}
-
-/*========*/
-/* MOBILE */
-/*========*/
-
-@media only screen and (max-width: 900px) {
-	.comment-item .comment-item {
-		margin: 0.75em 0 3px 6px;
-	}
-	.comment-item .comment-item + .comment-item {
-		margin: 1.5em 0 3px 6px;
-	}
-}
-@media only screen and (max-width: 520px) {
-	#content.compact > .comment-thread .comment-item {
-		max-height: 104px;
-	}
-
-	.textarea-container:focus-within textarea {
-		background-color: #fff;
-	}
-	.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
-		padding: 6px;
-		font-weight: bold;
-	}
-	.textarea-container:focus-within .guiedit-mobile-help-button.active {
-		box-shadow:
-			0 0 0 2px #c00;
-		color: #c00;
-	}
-	.textarea-container:focus-within .guiedit-buttons-container {
-		background-color: #fff;
-		border-top: 1px solid #ddf;
-	}
-	.posting-controls .textarea-container:focus-within .guiedit-buttons-container {
-		box-shadow: none;
-	}
-	#content.conversation-page .textarea-container:focus-within::after {
-		background-color: #fff;
-	}
-	.textarea-container:focus-within button.guiedit {
-		border: 1px solid #6a8a6b;
-		border-radius: 6px;
-	}
-
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label {
-		top: 1px;
-	}
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
-		top: 1px;
-	}
-	
-	#edit-post-form textarea {
-		min-height: calc(100vh - 345px);
-	}
 }
 
 /*%%%%%%%%%%%%%%%*/

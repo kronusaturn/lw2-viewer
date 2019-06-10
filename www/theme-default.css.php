@@ -475,7 +475,7 @@ body {
 			0 0 0 1px #999 inset;
 	}
 }
-@media only screen and (max-width: 1000px) {
+@media only screen and (max-width: 960px) {
 	#theme-tweaker-toggle {
 		box-shadow: none;
 		background-color: transparent;
