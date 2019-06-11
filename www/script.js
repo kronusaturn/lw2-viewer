@@ -841,7 +841,8 @@ function injectTextSizeAdjustmentUI() {
 	if (query("#text-size-adjustment-ui") != null) return;
 	if (query("#content.post-page") != null) injectTextSizeAdjustmentUIReal();
 	else document.addEventListener("DOMContentLoaded", () => {
-		if (!(query(".post-body") == null && query(".comment-body") == null)) injectTextSizeAdjustmentUIReal();
+		if (!(query(".post-body") == null && query(".comment-body") == null)) 
+			injectTextSizeAdjustmentUIReal();
 	}, {once: true});
 }
 
@@ -950,7 +951,12 @@ function injectPostNavUIToggle() {
 		localStorage.setItem("post-nav-ui-toggle-engaged", localStorage.getItem("post-nav-ui-toggle-engaged") != "true");
 	});
 
-	GW.postNavUIToggleTargetsSelector = "#quick-nav-ui, #new-comment-nav-ui, #hns-date-picker, #post-nav-ui-toggle button";
+	GW.postNavUIToggleTargetsSelector = [ 
+		"#quick-nav-ui",
+		"#new-comment-nav-ui",
+		"#hns-date-picker",
+		"#post-nav-ui-toggle button" 
+	].join(", ");
 
 	// Prevent “flashing” of elements when resizing window.
 	doWhenMatchMedia(GW.mediaQueries.mobileMax, "preventPostNavUIFlashingWhenWindowResized", () => {
@@ -1213,7 +1219,7 @@ function toggleAntiKibitzerMode() {
 			return;
 		}
 
-		// Individual comment page title and header
+		// Individual comment page title and header.
 		if (query(".individual-thread-page")) {
 			let replacer = (node) => {
 				if (!node) return;
@@ -1245,6 +1251,7 @@ function toggleAntiKibitzerMode() {
 
 			author.addClass("redacted");
 		});
+
 		// Post/comment karma values.
 		queryAll(".karma-value").forEach(karmaValue => {
 			// Skip own posts/comments.
@@ -1257,6 +1264,7 @@ function toggleAntiKibitzerMode() {
 
 			karmaValue.addClass("redacted");
 		});
+
 		// Link post domains.
 		queryAll(".link-post-domain").forEach(linkPostDomain => {
 			// Skip own posts/comments.
