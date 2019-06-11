@@ -1724,6 +1724,8 @@ a.comment-parent-link:hover::before {
 	text-shadow: 
 		0 0 1px #fff,
 		0 0 2px #fff;
+}
+.comment-controls .cancel-comment-button {
 	max-width: 1.2em;
 	overflow: hidden;
 	margin-right: 0.375em;
@@ -1896,24 +1898,12 @@ button.guiedit:hover {
 	.textarea-container:focus-within textarea {
 		background-color: #fff;
 	}
-	.textarea-container:focus-within .guiedit-mobile-auxiliary-button {
-		padding: 6px;
-		font-weight: bold;
-	}
 	.textarea-container:focus-within .guiedit-mobile-help-button.active {
-		box-shadow:
-			0 0 0 2px #c00;
 		color: #c00;
 	}
 	.textarea-container:focus-within .guiedit-buttons-container {
 		background-color: #fff;
 		border-top: 1px solid #ddf;
-	}
-	.posting-controls .textarea-container:focus-within .guiedit-buttons-container {
-		box-shadow: none;
-	}
-	#content.conversation-page .textarea-container:focus-within::after {
-		background-color: #fff;
 	}
 	.textarea-container:focus-within button.guiedit {
 		border: 1px solid #6a8a6b;
@@ -1925,28 +1915,6 @@ button.guiedit:hover {
 /* EDIT POST FORM */
 /*================*/
 
-#edit-post-form .post-meta-fields input[type='checkbox'] + label::before {
-	border-radius: 3px;
-	border: 1px solid #ddd;
-	color: #777;
-	top: 2px;
-}
-@media only screen and (hover:hover) and (pointer:fine) {
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover,
-	#edit-post-form .post-meta-fields input[type='checkbox']:focus + label {
-		text-shadow: 
-			0 0 1px #fff,
-			0 0 2px #fff,
-			0 0 2.5px #aaa;
-	}
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover::before,
-	#edit-post-form .post-meta-fields input[type='checkbox']:focus + label::before {
-		border-color: #aaa;
-	}
-}
-#edit-post-form .post-meta-fields input[type='checkbox']:checked + label::before {
-	content: "\F00C";
-}
 #edit-post-form input[type='radio'] + label {
 	color: #777;
 	border-color: #ddd;
@@ -1978,6 +1946,12 @@ button.guiedit:hover {
 }
 #edit-post-form #markdown-hints-checkbox + label {
 	padding: 3px 0 0 14px;
+}
+
+#edit-post-form .submit-form-controls input[type='submit'], 
+#edit-post-form .submit-form-controls .button {
+	line-height: 1.6;
+	display: inline-block;
 }
 
 /*=----------------------------=*/
@@ -2127,6 +2101,32 @@ input[type='password']:focus {
 
 select {
 	color: #000;
+}
+
+/*=------------=*/
+/*= Checkboxes =*/
+/*=------------=*/
+
+input[type='checkbox'] + label::before {
+	border-radius: 3px;
+	border: 1px solid #ddd;
+	color: #777;
+}
+input[type='checkbox']:checked + label::before {
+	content: "\F00C";
+}
+
+input[type='checkbox'] + label:hover,
+input[type='checkbox']:focus + label {
+	text-shadow: 
+		0 0 1px #fff,
+		0 0 2px #fff,
+		0 0 2.5px #aaa;
+}
+input[type='checkbox'] + label:hover::before,
+input[type='checkbox']:focus + label::before {
+	background-color: #ffd;
+	border-color: #aaa;
 }
 
 /*============*/
