@@ -4,7 +4,8 @@ $directories = [
 	"www/",
 	"www/accordius/",
 	"www/ea/",
-	"www/js-components"
+	"www/js-components/modules",
+	"www/js-components/parts"
 ];
 $patterns = [ 
 	"*.js",
