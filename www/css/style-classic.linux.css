@@ -8034,16 +8034,18 @@ a.post-section.alignment-forum:hover::before {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	min-width: 1.8125rem;
-	height: 1.8125rem;
+	min-width: 1.875rem;
+	height: 1.875rem;
 	border-radius: 1rem;
-	font-size: 0.8125rem;
+	font-size: 0.875rem;
 	font-weight: bold;
 	background-color: #538d4d;
 	color: #fff;
 	line-height: 1;
 	float: left;
 	margin: 0 0.5em 0 0;
+	position: relative;
+	top: -1px;
 }
 
 /*=----------------------------=*/
@@ -8449,7 +8451,6 @@ a.comment-parent-link:hover::before {
 
 .comment-controls .cancel-comment-button,
 .posting-controls .cancel-post-editing-button {
-	font-weight: 600;
 	color: #c00;
 	text-shadow: 
 		0 0 1px #fff,
@@ -8470,10 +8471,6 @@ a.comment-parent-link:hover::before {
 /*=----------------=*/
 /*= Action buttons =*/
 /*=----------------=*/
-
-.new-comment-button {
-	font-weight: 600;
-}
 
 .comment-controls .action-button::before {
 	font-size: 1em;
@@ -8526,7 +8523,7 @@ a.comment-parent-link:hover::before {
 .comment-item .comment-controls .action-button:hover::before {
 	color: #f00;
 	text-shadow:
-		0.5px 0.5px 0.5px #f77;
+		0.5px 0.5px 0.5px #faa;
 }
 
 /*=----------=*/
@@ -8550,23 +8547,62 @@ a.comment-parent-link:hover::before {
 		0 0 0 2px var(--GW-hyperlink-color);
 }
 
+/*=-------------=*/
+/*= Scroll bars =*/
+/*=-------------=*/
+
+.posting-controls textarea::-webkit-scrollbar {
+	width: 12px;
+	background-color: transparent;
+}
+.posting-controls textarea::-webkit-scrollbar-track {
+	background-color: #eee;
+	border-left: 1px solid #aaa;
+	border-top: 1px solid #eee;
+}
+.posting-controls textarea:focus::-webkit-scrollbar-track {
+	border-left: 1px solid var(--GW-hyperlink-color);
+	border-top: 1px solid #ddf;
+}
+.posting-controls textarea::-webkit-scrollbar-thumb {
+	background-color: #aaa;
+	box-shadow: 0 0 0 1px #eee inset;
+	border-left: 1px solid #aaa;
+}
+.posting-controls textarea:focus::-webkit-scrollbar-thumb {
+	border-left: 1px solid var(--GW-hyperlink-color);
+	background-color: #abbdab;
+	box-shadow: 
+		0 1px 0 0 #ddf inset,
+		0 0 0 1px #eee inset;
+}
+.posting-controls textarea:focus::-webkit-scrollbar-thumb:hover {
+	background-color: #8da28e;
+}
+.posting-controls textarea:focus::-webkit-scrollbar-thumb:active {
+	background-color: #7e977f;
+}
+
 /*=-----------------=*/
 /*= GUIEdit buttons =*/
 /*=-----------------=*/
 
-.guiedit-buttons-container {
-	background-image: linear-gradient(to bottom, #fff 0%, #ddf 50%, #ccf 75%, #aaf 100%);
+button.guiedit {
+	color: #070;
+}
+button.guiedit:hover {
+	color: #c00;
+	text-shadow: var(--GW-shadow-white-glow);
 }
 
-.posting-controls.edit-existing-post .guiedit-buttons-container button,
-.posting-controls form.edit-existing-comment .guiedit-buttons-container button {
-    color: #050;
+.guiedit-buttons-container {
+	background-image: linear-gradient(to bottom, #fff 0%, #d7e3d3 50%, #c5d7bf 75%, #99b990 100%);
 }
 
 .guiedit::after {
 	color: #777;
 	text-shadow: none;
-	top: 4px;
+	top: 2px;
 }
 
 /*=----------------=*/
@@ -8576,6 +8612,11 @@ a.comment-parent-link:hover::before {
 #markdown-hints {
 	border: 1px solid #c00;
 	background-color: #ffa;
+	line-height: 1.7;
+}
+#markdown-hints .markdown-hints-row code {
+	line-height: 1;
+	padding-top: 8px;
 }
 
 /*=----------------------------=*/
@@ -8787,6 +8828,7 @@ code {
 	background-color: #eff6ed;
 	border: 1px solid #c5debd;
 	border-radius: 4px;
+	padding: 4px 4px 2px 5px;
 }
 
 pre > code {
