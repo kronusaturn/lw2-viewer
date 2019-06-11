@@ -1192,6 +1192,12 @@ EOT;
 #keyboard-help-overlay .keyboard-help-container .keys code {
 	margin: 0 6px 0 0;
 }
+#keyboard-help-overlay .keyboard-help-container .keys code:not(:only-child) {
+	font-family: var(--GW-Font-Awesome);
+	font-size: 0.75em;
+	padding: 6px 8px 5px 8px;
+	font-weight: 400;
+}
 #keyboard-help-overlay .keyboard-help-container code {
 	display: inline-block;
 	padding: 3px 8px 4px 8px;

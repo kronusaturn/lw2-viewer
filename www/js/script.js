@@ -2391,8 +2391,8 @@ function keyboardHelpSetup() {
 			"Slide shows",
 			[ [ 'ak-l' ], "Start/resume slideshow" ],
 			[ [ 'Esc' ], "Exit slideshow" ],
-			[ [ '&#x2192;', '&#x2193;' ], "Next slide" ],
-			[ [ '&#x2190;', '&#x2191;' ], "Previous slide" ],
+			[ [ '&#xf061;', '&#xf063;' ], "Next slide" ],
+			[ [ '&#xf060;', '&#xf062;' ], "Previous slide" ],
 			[ [ 'Space' ], "Reset slide zoom" ]
 		] ].map(section => 
 		`<ul><li class='section'>${section[0]}</li>` + section.slice(1).map(entry =>
