@@ -69,7 +69,7 @@
 		0 0 30px #fff,
 		0 0 40px #fff;
 
-	--GW-vote-button-color: #c8c8c8;
+	--GW-vote-button-color: #ddd;
 	--GW-upvote-button-color: #0b0;
 	--GW-downvote-button-color: #f00;
 
@@ -1009,17 +1009,20 @@ h1.listing.own-post-listing {
 	padding: 3px 8px;
 	border-width: 0 1px 1px 1px;
 }
-#content.user-page h1.listing + .post-meta .karma-value {
+#content.user-page h1.listing + .post-meta .karma-value,
+#content.search-results-page h1.listing + .post-meta .karma-value {
 	right: calc(100% - 2.75em);
-	top: -2em;
+	top: calc(-2em + 1px);
 }
-#content.user-page h1.listing + .post-meta .post-section {
+#content.user-page h1.listing + .post-meta .post-section,
+#content.search-results-page h1.listing + .post-meta .post-section {
 	overflow: visible;
 	order: -2;
 	margin: 0 2em 0 0;
 	text-decoration: none;
 }
-#content.user-page h1.listing + .post-meta .post-section::before {
+#content.user-page h1.listing + .post-meta .post-section::before,
+#content.search-results-page h1.listing + .post-meta .post-section::before {
 	position: unset;
 }
 
@@ -1258,8 +1261,7 @@ article > .post-meta > *,
 .post .bottom-post-meta .post-section::before {
 	top: 22px;
 }
-.post-meta .post-section::before,
-.comment-meta .alignment-forum {
+.post-meta .post-section::before, {
 	color: #fff;
 	text-shadow: 
 		1px 1px 0 #538d4d, 
@@ -1269,7 +1271,9 @@ article > .post-meta > *,
 a.post-section:hover::before {
     color: #538d4d;
 }
-.post-meta .post-section.alignment-forum::before {
+.post-meta .post-section.alignment-forum::before,
+.comment-meta .alignment-forum {
+	color: #fff;
 	text-shadow:
 		1px 1px 0   #626dd7,
 		0   1px 0   #626dd7,
@@ -1592,52 +1596,52 @@ a.comment-parent-link:hover::before {
 
 .vote {
 	text-shadow: 
-		 1px  1px 0 #aaa,
-		-1px  1px 0 #aaa,
-		 1px -1px 0 #aaa,
-		-1px -1px 0 #aaa;
+		 1px  1px #bbb,
+		-1px  1px #bbb,
+		 1px -1px #bbb,
+		-1px -1px #bbb;
 }
 .upvote.selected,
 .upvote:hover {
 	text-shadow: 
-		 1px  1px 0 #080,
-		-1px  1px 0 #080,
-		 1px -1px 0 #080,
-		-1px -1px 0 #080;
+		 1px  1px #080,
+		-1px  1px #080,
+		 1px -1px #080,
+		-1px -1px #080;
 }
 
 .downvote.selected,
 .downvote:hover {
 	text-shadow: 
-		 1px  1px 0 #b00,
-		-1px  1px 0 #a00,
-		 1px -1px 0 #b00,
-		-1px -1px 0 #b00;
+		 1px  1px #b00,
+		-1px  1px #a00,
+		 1px -1px #b00,
+		-1px -1px #b00;
 }
 @media only screen and (min-resolution: 192dpi) {
 	.vote {
 		text-shadow: 
-			 0.5px  0.5px 0 #aaa,
-			-0.5px  0.5px 0 #aaa,
-			 0.5px -0.5px 0 #aaa,
-			-0.5px -0.5px 0 #aaa;
+			 0.5px  0.5px #bbb,
+			-0.5px  0.5px #bbb,
+			 0.5px -0.5px #bbb,
+			-0.5px -0.5px #bbb;
 	}
 	.upvote.selected,
 	.upvote:hover {
 		text-shadow: 
-			 0.5px  0.5px 0 #060,
-			-0.5px  0.5px 0 #060,
-			 0.5px -0.5px 0 #060,
-			-0.5px -0.5px 0 #060;
+			 0.5px  0.5px #060,
+			-0.5px  0.5px #060,
+			 0.5px -0.5px #060,
+			-0.5px -0.5px #060;
 	}
 
 	.downvote.selected,
 	.downvote:hover {
 		text-shadow: 
-			 0.5px  0.5px 0 #900,
-			-0.5px  0.5px 0 #900,
-			 0.5px -0.5px 0 #900,
-			-0.5px -0.5px 0 #900;
+			 0.5px  0.5px #900,
+			-0.5px  0.5px #900,
+			 0.5px -0.5px #900,
+			-0.5px -0.5px #900;
 	}
 }
 
