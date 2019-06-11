@@ -965,7 +965,15 @@ function injectAppearanceAdjustUIToggle() {
 	query("#theme-selector").appendChild(themeSelectorCloseButton);
 	themeSelectorCloseButton.addActivateEvent(GW.appearanceAdjustUIToggleButtonClicked);
 
-	GW.appearanceAdjustUIToggleTargetsSelector = "#comments-view-mode-selector, #theme-selector, #width-selector, #text-size-adjustment-ui, #theme-tweaker-toggle, #appearance-adjust-ui-toggle, #appearance-adjust-ui-toggle button";
+	GW.appearanceAdjustUIToggleTargetsSelector = [ 
+		"#comments-view-mode-selector",
+		"#theme-selector",
+		"#width-selector",
+		"#text-size-adjustment-ui",
+		"#theme-tweaker-toggle",
+		"#appearance-adjust-ui-toggle",
+		"#appearance-adjust-ui-toggle button"
+	].join(", ");
 
 	// Prevent “flashing” of elements when resizing window.
 	doWhenMatchMedia(GW.mediaQueries.mobileMax, "preventAppearanceAdjustUIFlashingWhenWindowResized", () => {
@@ -1080,7 +1088,7 @@ function injectAntiKibitzer() {
 	GWLog("injectAntiKibitzer");
 
 	// Inject anti-kibitzer toggle controls.
-	let antiKibitzerToggle = addUIElement("<div id='anti-kibitzer-toggle'><button type='button' tabindex='-1' accesskey='g' title='Toggle anti-kibitzer (show/hide authors & karma values) [g]'></button>");
+	let antiKibitzerToggle = addUIElement({{{antikibitzer_toggle}}});
 	antiKibitzerToggle.query("button").addActivateEvent(GW.antiKibitzerToggleButtonClicked = (event) => {
 		GWLog("GW.antiKibitzerToggleButtonClicked");
 		if (query("#anti-kibitzer-toggle").hasClass("engaged") && 
@@ -1323,9 +1331,7 @@ function injectCommentsSortModeSelector() {
 		// Do not show sort mode selector if there is no branching in comment tree.
 		if (topThread.query(".comment-item + .comment-item") == null) return;
 
-		let sortModeSelectorHTML = `<div id='${section}-sort-mode-selector' class='sublevel-nav sort'>` + 
-			Object.values(CommentSortMode).map(sortMode => `<button type='button' class='sublevel-item sort-mode-${sortMode}' tabindex='-1' title='Sort by ${sortMode}'>${sortMode}</button>`).join("") +  
-			"</div>";
+		let sortModeSelectorHTML = {{{sort_mode_selector}}};
 		topThread.insertAdjacentHTML("beforebegin", sortModeSelectorHTML);
 
 		queryAll(`#${section}-sort-mode-selector button`).forEach(button => {
