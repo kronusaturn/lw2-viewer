@@ -1261,7 +1261,7 @@ signaled condition to OUT-STREAM."
 						        <span class="karma-total af-karma-total">(if user-slug (pretty-number (or af-karma 0)) "##")</span> \(AF\)
 						      </span>)
 						  </div>
-						  <div class="body-text">
+						  <div class="body-text user-bio">
 						    (with-html-stream-output (write-sequence (clean-html* (cdr (assoc :html-bio user-info))) *html-output*))
 						  </div>)
                                                 (sublevel-nav-to-html out-stream
