@@ -287,6 +287,26 @@ function copyTextToClipboard(string) {
 	document.execCommand("copy");
 }
 
+/*	Returns the next element sibling of the element, wrapping around to the 
+	first child of the parent if the element is the last child.
+	Returns the element itself, if it has no siblings or no parent.
+	*/
+Element.prototype.nextElementSiblingCyclical = function() {
+	if (this.parentElement == null) return this;
+	
+	return this.parentElement.children[(Array.prototype.indexOf.call(this.parentElement.children, this) + 1) % this.parentElement.children.length];
+}
+
+/*	Returns the previous element sibling of the element, wrapping around to the 
+	last child of the parent if the element is the first child.
+	Returns the element itself, if it has no siblings or no parent.
+	*/
+Element.prototype.previousElementSiblingCyclical = function() {
+	if (this.parentElement == null) return this;
+	
+	return this.parentElement.children[(Array.prototype.indexOf.call(this.parentElement.children, this) - 1) % this.parentElement.children.length];
+}
+
 /********************/
 /* DEBUGGING OUTPUT */
 /********************/
@@ -603,8 +623,8 @@ function injectContentWidthSelector() {
 			// Make sure the accesskey (to cycle to the next width) is on the right button.
 			setWidthAdjustButtonsAccesskey();
 
-			// Recompute position & styling of images in overlay.
-			recomputeImagesOverlayLayout();
+			// Recompute position & styling of images in overlay, if any.
+			if (GW.contentContainsImages) recomputeImagesOverlayLayout();
 
 			// Realign hash.
 			realignHash();
@@ -630,14 +650,17 @@ function setWidthAdjustButtonsAccesskey() {
 	GWLog("setWidthAdjustButtonsAccesskey");
 
 	let widthSelector = query("#width-selector");
+
+	// Remove accesskey, and mention of accesskey from title, from all buttons.
 	widthSelector.queryAll("button").forEach(button => {
 		button.removeAttribute("accesskey");
 		button.title = /(.+?)( \['\])?$/.exec(button.title)[1];
 	});
-	let selectedButton = widthSelector.query("button.selected");
-	let nextButtonInCycle = (selectedButton == selectedButton.parentElement.lastChild) ? selectedButton.parentElement.firstChild : selectedButton.nextSibling;
-	nextButtonInCycle.accessKey = "'";
-	nextButtonInCycle.title += " [']";
+
+	// Add accesskey to next button, and append it to the button’s title.
+	let nextButton = widthSelector.query("button.selected").nextElementSiblingCyclical();
+	nextButton.accessKey = "'";
+	nextButton.title += " [']";
 }
 
 /*******************/

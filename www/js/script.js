@@ -112,19 +112,19 @@ function addScrollListener(fn, name) {
 /************************/
 
 /*	This function provides two slightly different versions of its functionality,
-	depending on whether it gets two arguments or three.
+	depending on how many arguments it gets.
 
-	If two arguments are given (a media query and a function), then the function 
+	If one function is given (in addition to the media query and its name), it
 	is called whenever the media query changes (in either direction).
 
-	If three arguments are given (a media query and two functions), then the 
-	first function is called whenever the media query starts matching, and the 
-	second function is called whenever the media query stops matching.
+	If two functions are given (in addition to the media query and its name), 
+	then the first function is called whenever the media query starts matching, 
+	and the second function is called whenever the media query stops matching.
 
 	If you want to call a function for a change in one direction only, pass an
 	empty closure (NOT null!) as one of the function arguments.
 
-	There is also an optional fourth argument. This should be a function to be 
+	There is also an optional fifth argument. This should be a function to be 
 	called when the active media query is canceled.
 	*/
 function doWhenMatchMedia(mediaQuery, name, ifMatchesOrAlwaysDo, otherwiseDo = null, whenCanceledDo = null) {
@@ -152,6 +152,10 @@ function doWhenMatchMedia(mediaQuery, name, ifMatchesOrAlwaysDo, otherwiseDo = n
 	GW.mediaQueryResponders[name] = mediaQueryResponder;
 }
 
+/*	Deactivates and discards an active media query, after calling the function
+	that was passed as the whenCanceledDo parameter when the media query was
+	added.
+	*/
 function cancelDoWhenMatchMedia(name) {
 	GW.mediaQueryResponders[name](null, true);
 
@@ -281,6 +285,26 @@ function copyTextToClipboard(string) {
 	scratchpad.value = string;
 	scratchpad.select();
 	document.execCommand("copy");
+}
+
+/*	Returns the next element sibling of the element, wrapping around to the 
+	first child of the parent if the element is the last child.
+	Returns the element itself, if it has no siblings or no parent.
+	*/
+Element.prototype.nextElementSiblingCyclical = function() {
+	if (this.parentElement == null) return this;
+	
+	return this.parentElement.children[(Array.prototype.indexOf.call(this.parentElement.children, this) + 1) % this.parentElement.children.length];
+}
+
+/*	Returns the previous element sibling of the element, wrapping around to the 
+	last child of the parent if the element is the first child.
+	Returns the element itself, if it has no siblings or no parent.
+	*/
+Element.prototype.previousElementSiblingCyclical = function() {
+	if (this.parentElement == null) return this;
+	
+	return this.parentElement.children[(Array.prototype.indexOf.call(this.parentElement.children, this) - 1) % this.parentElement.children.length];
 }
 
 /********************/
@@ -566,6 +590,8 @@ function badgePostsWithNewComments() {
 /* CONTENT COLUMN WIDTH ADJUSTMENT */
 /***********************************/
 
+/*	Injects the content width selector widget.
+	*/
 function injectContentWidthSelector() {
 	GWLog("injectContentWidthSelector");
 
@@ -604,8 +630,8 @@ function injectContentWidthSelector() {
 			// Make sure the accesskey (to cycle to the next width) is on the right button.
 			setWidthAdjustButtonsAccesskey();
 
-			// Recompute position & styling of images in overlay.
-			recomputeImagesOverlayLayout();
+			// Recompute position & styling of images in overlay, if any.
+			if (GW.contentContainsImages) recomputeImagesOverlayLayout();
 
 			// Realign hash.
 			realignHash();
@@ -627,18 +653,28 @@ function injectContentWidthSelector() {
 </style>`);
 	}
 }
+
+/*	Causes the button next after the currently selected width setting button,
+	to have the “cycle width settings” accesskey assigned to it.
+
+	(Called whenever the width is set, so that the accesskey always selects the 
+	 next width setting.)
+	*/
 function setWidthAdjustButtonsAccesskey() {
 	GWLog("setWidthAdjustButtonsAccesskey");
 
 	let widthSelector = query("#width-selector");
+
+	// Remove accesskey, and mention of accesskey from title, from all buttons.
 	widthSelector.queryAll("button").forEach(button => {
 		button.removeAttribute("accesskey");
 		button.title = /(.+?)( \['\])?$/.exec(button.title)[1];
 	});
-	let selectedButton = widthSelector.query("button.selected");
-	let nextButtonInCycle = (selectedButton == selectedButton.parentElement.lastChild) ? selectedButton.parentElement.firstChild : selectedButton.nextSibling;
-	nextButtonInCycle.accessKey = "'";
-	nextButtonInCycle.title += " [']";
+
+	// Add accesskey to next button, and append it to the button’s title.
+	let nextButton = widthSelector.query("button.selected").nextElementSiblingCyclical();
+	nextButton.accessKey = "'";
+	nextButton.title += " [']";
 }
 
 /*******************/
