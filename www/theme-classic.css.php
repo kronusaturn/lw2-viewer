@@ -1509,6 +1509,14 @@ a.comment-parent-link:hover::before {
 .post .post-meta .lw2-link {
 	filter: hue-rotate(270deg);
 }
+.comment-meta .permalink,
+.comment-meta .lw2-link,
+.comment-meta .comment-parent-link span {
+	top: 3px;
+}
+.post .post-meta .lw2-link {
+	top: 5px;
+}
 
 /*====================*/
 /* ANTI-KIBITZER MODE */
@@ -2007,11 +2015,19 @@ hr {
 	border-bottom: 1px solid #999;
 }
 
+/*=------=*/
+/*= Code =*/
+/*=------=*/
+
 code {
 	background-color: #f6f6ff;
 	border: 1px solid #ddf;
 	border-radius: 4px;
 }
+
+/*=---------------=*/
+/*= Form elements =*/
+/*=---------------=*/
 
 input[type='text'],
 input[type='search'],
@@ -2055,27 +2071,23 @@ select {
 	text-shadow:
 		0 0 1px #fff,
 		0 0 3px #fff,
-		0 0 5px #00e;
+		0 0 5px currentColor;
 }
 
 .qualified-linking-toolbar {
 	border: 1px solid #000;
 	background-color: #fff;
 }
-.qualified-linking-toolbar a {
+.qualified-linking-toolbar a,
+.qualified-linking-toolbar button {
 	background-color: #eee;
 	border: 1px solid #ccc;
 	border-radius: 4px;
-	padding: 2px 12px;
-	white-space: nowrap;
 }
-.qualified-linking-toolbar a:hover {
+.qualified-linking-toolbar a:hover,
+.qualified-linking-toolbar button:hover {
 	text-decoration: none;
 	background-color: #ddd;
-}
-.qualified-linking label::after {
-	background-color: #d8d8d8;
-	opacity: 0.8;
 }
 
 /*======*/
