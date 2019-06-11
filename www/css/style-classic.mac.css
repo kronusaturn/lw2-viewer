@@ -8426,18 +8426,21 @@ a.comment-parent-link:hover::before {
 	left: -1px;
 }
 
-.posting-controls input[type='submit'] {
+.posting-controls input[type='submit'],
+.posting-controls .cancel-post-editing-button {
 	background-color: #fff;
 	border: 1px solid #aaa;
-	font-weight: bold;
 }
 .posting-controls input[type='submit']:hover,
-.posting-controls input[type='submit']:focus {
+.posting-controls input[type='submit']:focus,
+.posting-controls .cancel-post-editing-button:hover,
+.posting-controls .cancel-post-editing-button:focus {
 	background-color: #ddd;
 	border: 1px solid #999;
 }
 
-.comment-controls .cancel-comment-button {
+.comment-controls .cancel-comment-button,
+.posting-controls .cancel-post-editing-button {
 	font-weight: 600;
 	color: #c00;
 	text-shadow: 
@@ -8447,10 +8450,12 @@ a.comment-parent-link:hover::before {
 	overflow: hidden;
 	margin-right: 0.375em;
 }
-.comment-controls .cancel-comment-button::before {
+.comment-controls .cancel-comment-button::before,
+.posting-controls .cancel-post-editing-button::before {
 	font-size: 1.25em;
 }
-.comment-controls .cancel-comment-button:hover {
+.comment-controls .cancel-comment-button:hover,
+.posting-controls .cancel-post-editing-button:hover {
 	color: #f00;
 }
 
