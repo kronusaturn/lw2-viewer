@@ -1471,6 +1471,9 @@ button.guiedit sup {
 	text-shadow: var(--GW-shadow-white-glow);
 	box-shadow: none;
 }
+#markdown-hints-checkbox:focus {
+	outline: none;
+}
 #markdown-hints {
 	border: 1px solid #c00;
 	background-color: #ffa;
