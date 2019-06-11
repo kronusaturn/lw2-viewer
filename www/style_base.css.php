@@ -212,6 +212,10 @@ input[type='checkbox'] + label::before {
 	left: 0;
 	top: 0;
 }
+input[type='checkbox']:disabled + label {
+	pointer-events: none;
+	opacity: 0.5;
+}
 
 /**************/
 /* SCRATCHPAD */
