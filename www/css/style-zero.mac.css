@@ -5986,11 +5986,16 @@ th.mathjax-inline-container {
 
 #content.user-page .user-bio {
 	font-size: 1.25rem;
+	margin:
+		0
+		var(--GW-current-page-content-right-side-padding)
+		0
+		var(--GW-current-page-content-left-side-padding);
 	padding: 
 		0 
-		calc(var(--GW-current-page-content-right-side-padding) + var(--GW-post-right-side-padding))
+		var(--GW-post-right-side-padding)
 		0 
-		calc(var(--GW-current-page-content-left-side-padding) + var(--GW-post-left-side-padding));
+		var(--GW-post-left-side-padding);
 }
 
 /*=--------------------=*/

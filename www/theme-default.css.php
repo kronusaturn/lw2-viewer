@@ -1145,6 +1145,17 @@ h1.listing.own-post-listing {
 	padding: 5px 6px 5px 8px;
 }
 
+/*=------------=*/
+/*= User’s bio =*/
+/*=------------=*/
+
+#content.user-page .user-bio {
+	border-bottom: 1px solid #000;
+	box-shadow: 
+		0 -4px 0    3px #fff,
+		0  0   3px -1px #000;
+}
+
 /*============*/
 /* LOGIN PAGE */
 /*============*/

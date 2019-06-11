@@ -5986,11 +5986,16 @@ th.mathjax-inline-container {
 
 #content.user-page .user-bio {
 	font-size: 1.25rem;
+	margin:
+		0
+		var(--GW-current-page-content-right-side-padding)
+		0
+		var(--GW-current-page-content-left-side-padding);
 	padding: 
 		0 
-		calc(var(--GW-current-page-content-right-side-padding) + var(--GW-post-right-side-padding))
+		var(--GW-post-right-side-padding)
 		0 
-		calc(var(--GW-current-page-content-left-side-padding) + var(--GW-post-left-side-padding));
+		var(--GW-post-left-side-padding);
 }
 
 /*=--------------------=*/
@@ -7916,6 +7921,17 @@ h1.listing.own-post-listing {
 
 #content.user-page.conversations-user-page h1.listing + .post-meta {
 	padding: 5px 6px 5px 8px;
+}
+
+/*=------------=*/
+/*= User’s bio =*/
+/*=------------=*/
+
+#content.user-page .user-bio {
+	border-bottom: 1px solid #000;
+	box-shadow: 
+		0 -4px 0    3px #fff,
+		0  0   3px -1px #000;
 }
 
 /*============*/
