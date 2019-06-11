@@ -1608,7 +1608,7 @@ function injectTextSizeAdjustmentUIReal() {
 
 	let textSizeAdjustmentUIContainer = addUIElement(`<div id='text-size-adjustment-ui'>
 	<button type='button' class='text-size-adjust-button decrease' title="Decrease text size [-]" tabindex='-1' accesskey='-'>&#xf068;</button>
-	<button type='button' class='text-size-adjust-button default' title="Reset to default text size [0]" tabindex='-1' accesskey='0'>A</button>
+	<button type='button' class='text-size-adjust-button default' title="Reset to default text size [0]" tabindex='-1' accesskey='0'>&#xf031;</button>
 	<button type='button' class='text-size-adjust-button increase' title="Increase text size [=]" tabindex='-1' accesskey='='>&#xf067;</button>
 </div>`);
 
@@ -1788,7 +1788,15 @@ function injectAppearanceAdjustUIToggle() {
 	query("#theme-selector").appendChild(themeSelectorCloseButton);
 	themeSelectorCloseButton.addActivateEvent(GW.appearanceAdjustUIToggleButtonClicked);
 
-	GW.appearanceAdjustUIToggleTargetsSelector = "#comments-view-mode-selector, #theme-selector, #width-selector, #text-size-adjustment-ui, #theme-tweaker-toggle, #appearance-adjust-ui-toggle, #appearance-adjust-ui-toggle button";
+	GW.appearanceAdjustUIToggleTargetsSelector = [ 
+		"#comments-view-mode-selector",
+		"#theme-selector",
+		"#width-selector",
+		"#text-size-adjustment-ui",
+		"#theme-tweaker-toggle",
+		"#appearance-adjust-ui-toggle",
+		"#appearance-adjust-ui-toggle button"
+	].join(", ");
 
 	// Prevent “flashing” of elements when resizing window.
 	doWhenMatchMedia(GW.mediaQueries.mobileMax, "preventAppearanceAdjustUIFlashingWhenWindowResized", () => {
@@ -1903,7 +1911,7 @@ function injectAntiKibitzer() {
 	GWLog("injectAntiKibitzer");
 
 	// Inject anti-kibitzer toggle controls.
-	let antiKibitzerToggle = addUIElement("<div id='anti-kibitzer-toggle'><button type='button' tabindex='-1' accesskey='g' title='Toggle anti-kibitzer (show/hide authors & karma values) [g]'></button>");
+	let antiKibitzerToggle = addUIElement(`<div id='anti-kibitzer-toggle'><button type='button' tabindex='-1' accesskey='g' title='Toggle anti-kibitzer (show/hide authors & karma values) [g]'></button>`);
 	antiKibitzerToggle.query("button").addActivateEvent(GW.antiKibitzerToggleButtonClicked = (event) => {
 		GWLog("GW.antiKibitzerToggleButtonClicked");
 		if (query("#anti-kibitzer-toggle").hasClass("engaged") && 
@@ -2147,8 +2155,10 @@ function injectCommentsSortModeSelector() {
 		if (topThread.query(".comment-item + .comment-item") == null) return;
 
 		let sortModeSelectorHTML = `<div id='${section}-sort-mode-selector' class='sublevel-nav sort'>` + 
-			Object.values(CommentSortMode).map(sortMode => `<button type='button' class='sublevel-item sort-mode-${sortMode}' tabindex='-1' title='Sort by ${sortMode}'>${sortMode}</button>`).join("") +  
-			"</div>";
+	Object.values(CommentSortMode).map(sortMode => 
+		`<button type='button' class='sublevel-item sort-mode-${sortMode}' tabindex='-1' title='Sort by ${sortMode}'>${sortMode}</button>`
+	).join("") +  
+`</div>`;
 		topThread.insertAdjacentHTML("beforebegin", sortModeSelectorHTML);
 
 		queryAll(`#${section}-sort-mode-selector button`).forEach(button => {

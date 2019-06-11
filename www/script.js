@@ -1088,7 +1088,7 @@ function injectAntiKibitzer() {
 	GWLog("injectAntiKibitzer");
 
 	// Inject anti-kibitzer toggle controls.
-	let antiKibitzerToggle = addUIElement({{{antikibitzer_toggle}}});
+	let antiKibitzerToggle = addUIElement({{{parts/antikibitzer_toggle}}});
 	antiKibitzerToggle.query("button").addActivateEvent(GW.antiKibitzerToggleButtonClicked = (event) => {
 		GWLog("GW.antiKibitzerToggleButtonClicked");
 		if (query("#anti-kibitzer-toggle").hasClass("engaged") && 
@@ -1331,7 +1331,7 @@ function injectCommentsSortModeSelector() {
 		// Do not show sort mode selector if there is no branching in comment tree.
 		if (topThread.query(".comment-item + .comment-item") == null) return;
 
-		let sortModeSelectorHTML = {{{sort_mode_selector}}};
+		let sortModeSelectorHTML = {{{parts/sort_mode_selector}}};
 		topThread.insertAdjacentHTML("beforebegin", sortModeSelectorHTML);
 
 		queryAll(`#${section}-sort-mode-selector button`).forEach(button => {
