@@ -2110,6 +2110,11 @@ function rectifyMarkup() {
 
 	let content = query("#content");
 
+	// Remove yet more spurious underlining.
+	content.queryAll(".body-text u > em > a").forEach(u_em_a => {
+		u_em_a.closest("u").outerHTML = u_em_a.closest("u").innerHTML;
+	});
+
 	// Unwrap <pre> blocks from extraneous divs.
 	content.queryAll(".body-text div > pre").forEach(pre => {
 		pre.parentElement.outerHTML = pre.parentElement.innerHTML;
