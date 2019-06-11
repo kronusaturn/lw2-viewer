@@ -7377,11 +7377,10 @@ body {
 }
 #text-size-adjustment-ui button {
 	font-weight: 400;
-	padding: 1px 0 0 1px;
+	padding: 1px 0 0 0;
 }
 #text-size-adjustment-ui button.default {
-	padding: 0 0 0 2px;
-	font-weight: var(--GW-UI-font-weight-light);
+	font-weight: 300;
 }
 #text-size-adjustment-ui button:hover,
 #text-size-adjustment-ui button:focus {

@@ -644,12 +644,11 @@ body {
 	background-color: #e4e4e4;
 	box-shadow: 0 0 0 1px var(--GW-body-background-color) inset;
 }
-#text-size-adjustment-ui button.decrease,
-#text-size-adjustment-ui button.increase {
+#text-size-adjustment-ui button {
 	padding-top: 1px;
 }
 #text-size-adjustment-ui button.default {
-	font-size: 1em;
+	font-weight: 300;
 }
 #text-size-adjustment-ui button:hover {
 	text-shadow: none;

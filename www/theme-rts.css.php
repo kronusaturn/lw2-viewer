@@ -702,7 +702,7 @@ body {
 	font-weight: 400;
 }
 #text-size-adjustment-ui button.default {
-	font-weight: var(--GW-UI-font-weight-light);
+	font-weight: 300;
 }
 #text-size-adjustment-ui button:disabled:hover {
 	text-shadow: none;
