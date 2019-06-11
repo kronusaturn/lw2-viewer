@@ -112,19 +112,19 @@ function addScrollListener(fn, name) {
 /************************/
 
 /*	This function provides two slightly different versions of its functionality,
-	depending on whether it gets two arguments or three.
+	depending on how many arguments it gets.
 
-	If two arguments are given (a media query and a function), then the function 
+	If one function is given (in addition to the media query and its name), it
 	is called whenever the media query changes (in either direction).
 
-	If three arguments are given (a media query and two functions), then the 
-	first function is called whenever the media query starts matching, and the 
-	second function is called whenever the media query stops matching.
+	If two functions are given (in addition to the media query and its name), 
+	then the first function is called whenever the media query starts matching, 
+	and the second function is called whenever the media query stops matching.
 
 	If you want to call a function for a change in one direction only, pass an
 	empty closure (NOT null!) as one of the function arguments.
 
-	There is also an optional fourth argument. This should be a function to be 
+	There is also an optional fifth argument. This should be a function to be 
 	called when the active media query is canceled.
 	*/
 function doWhenMatchMedia(mediaQuery, name, ifMatchesOrAlwaysDo, otherwiseDo = null, whenCanceledDo = null) {
@@ -152,6 +152,10 @@ function doWhenMatchMedia(mediaQuery, name, ifMatchesOrAlwaysDo, otherwiseDo = n
 	GW.mediaQueryResponders[name] = mediaQueryResponder;
 }
 
+/*	Deactivates and discards an active media query, after calling the function
+	that was passed as the whenCanceledDo parameter when the media query was
+	added.
+	*/
 function cancelDoWhenMatchMedia(name) {
 	GW.mediaQueryResponders[name](null, true);
 
@@ -566,6 +570,8 @@ function badgePostsWithNewComments() {
 /* CONTENT COLUMN WIDTH ADJUSTMENT */
 /***********************************/
 
+/*	Injects the content width selector widget.
+	*/
 function injectContentWidthSelector() {
 	GWLog("injectContentWidthSelector");
 
@@ -613,6 +619,13 @@ function injectContentWidthSelector() {
 		query("head").insertAdjacentHTML("beforeend", {{{parts/width_adjustment_transition}}});
 	}
 }
+
+/*	Causes the button next after the currently selected width setting button,
+	to have the “cycle width settings” accesskey assigned to it.
+
+	(Called whenever the width is set, so that the accesskey always selects the 
+	 next width setting.)
+	*/
 function setWidthAdjustButtonsAccesskey() {
 	GWLog("setWidthAdjustButtonsAccesskey");
 
