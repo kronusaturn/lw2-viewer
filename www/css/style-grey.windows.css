@@ -1615,10 +1615,8 @@ input[type='checkbox'] + label::before {
 	padding: 0;
 }
 #text-size-adjustment-ui button.default {
-	font-family: inherit;
-	font-size: 1.125rem;
-
-	font-weight: var(--GW-UI-font-weight-heavy);
+	font-size: 0.9375rem;
+	font-weight: 400;
 }
 #text-size-adjustment-ui button:disabled {
 	opacity: 0.5;
