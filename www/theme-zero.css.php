@@ -1396,8 +1396,8 @@ a.comment-parent-link:hover::before {
 	color: #f00;
 }
 
-h1.listing .edit-post-link,
-h1.listing .edit-post-link:visited,
+h1.listing a.edit-post-link,
+h1.listing a.edit-post-link:visited,
 .post-controls .edit-post-link,
 .post-controls .edit-post-link:visited {
 	color: #090;
