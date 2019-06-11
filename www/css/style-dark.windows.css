@@ -8328,9 +8328,21 @@ a.comment-parent-link:hover::before {
 /* COMMENTING AND POSTING UI */
 /*===========================*/
 
+/*=------------------=*/
+/*= Edit post button =*/
+/*=------------------=*/
+
 .post-controls {
 	font-weight: var(--GW-UI-font-weight-heavy);
 }
+
+.button.edit-post-link:not(:hover) {
+	color: #9740cb;
+}
+
+/*=-----------------------------------------------=*/
+/*= Submit [post/comment] & Cancel [post] buttons =*/
+/*=-----------------------------------------------=*/
 
 .posting-controls input[type='submit'],
 .posting-controls .cancel-post-editing-button {
@@ -8358,6 +8370,10 @@ a.comment-parent-link:hover::before {
 	text-shadow: var(--GW-shadow-white-glow);
 }
 
+/*=----------------=*/
+/*= Action buttons =*/
+/*=----------------=*/
+
 .comment-controls .delete-button,
 .comment-controls .retract-button {
 	color: #00bbf5;
@@ -8372,9 +8388,9 @@ a.comment-parent-link:hover::before {
 	opacity: 1.0;
 }
 
-.button.edit-post-link:not(:hover) {
-	color: #9740cb;
-}
+/*=----------=*/
+/*= Textarea =*/
+/*=----------=*/
 
 .posting-controls textarea {
 	color: #fff;
@@ -8394,7 +8410,9 @@ a.comment-parent-link:hover::before {
 		0 0 0 2px #0cc800;
 }
 
+/*=-------------=*/
 /*= Scroll bars =*/
+/*=-------------=*/
 
 .posting-controls textarea::-webkit-scrollbar {
 	width: 16px;
@@ -8422,7 +8440,9 @@ a.comment-parent-link:hover::before {
 		0 0 0 1px #131313 inset;
 }
 
-/* GUIEdit buttons */
+/*=-----------------=*/
+/*= GUIEdit buttons =*/
+/*=-----------------=*/
 
 .guiedit-buttons-container {
 	background-image: linear-gradient(to bottom, #000 0%, #1d1f00 50%, #252c00 75%, #344700 100%);
@@ -8433,7 +8453,9 @@ a.comment-parent-link:hover::before {
 	text-shadow: none;
 }
 
-/* Markdown hints */
+/*=----------------=*/
+/*= Markdown hints =*/
+/*=----------------=*/
 
 #markdown-hints-checkbox + label:hover {
 	text-shadow: var(--GW-shadow-white-glow);

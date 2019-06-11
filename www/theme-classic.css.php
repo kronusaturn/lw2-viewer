@@ -1681,6 +1681,10 @@ a.comment-parent-link:hover::before {
 /* COMMENTING AND POSTING UI */
 /*===========================*/
 
+/*=------------------=*/
+/*= Edit post button =*/
+/*=------------------=*/
+
 .post-controls .edit-post-link,
 .post-controls .edit-post-link:visited {
 	font-size: 1.25em;
@@ -1694,6 +1698,10 @@ a.comment-parent-link:hover::before {
 	top: -2px;
 	left: -1px;
 }
+
+/*=-----------------------------------------------=*/
+/*= Submit [post/comment] & Cancel [post] buttons =*/
+/*=-----------------------------------------------=*/
 
 .posting-controls input[type='submit'],
 .posting-controls .cancel-post-editing-button {
@@ -1727,6 +1735,10 @@ a.comment-parent-link:hover::before {
 .posting-controls .cancel-post-editing-button:hover {
 	color: #f00;
 }
+
+/*=----------------=*/
+/*= Action buttons =*/
+/*=----------------=*/
 
 .new-comment-button {
 	font-weight: 600;
@@ -1786,6 +1798,10 @@ a.comment-parent-link:hover::before {
 		0.5px 0.5px 0.5px #f77;
 }
 
+/*=----------=*/
+/*= Textarea =*/
+/*=----------=*/
+
 .posting-controls textarea {
 	font-size: 1rem;
 	color: #000;
@@ -1803,7 +1819,9 @@ a.comment-parent-link:hover::before {
 		0 0 0 2px var(--GW-hyperlink-color);
 }
 
-/* GUIEdit buttons */
+/*=-----------------=*/
+/*= GUIEdit buttons =*/
+/*=-----------------=*/
 
 .guiedit-buttons-container {
 	background-image: linear-gradient(to bottom, #fff 0%, #ddf 50%, #ccf 75%, #aaf 100%);
@@ -1820,7 +1838,9 @@ a.comment-parent-link:hover::before {
 	top: 4px;
 }
 
-/* Markdown hints */
+/*=----------------=*/
+/*= Markdown hints =*/
+/*=----------------=*/
 
 #markdown-hints {
 	border: 1px solid #c00;
