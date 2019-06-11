@@ -32,7 +32,7 @@
 (defparameter *comments-index-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id (:parent-comment :--id :user-id :post-id) :base-score :page-url :vote-count :retracted :deleted-public :html-body))
 (defparameter *post-comments-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id :base-score :page-url :vote-count :retracted :deleted-public :html-body))
 (defparameter *messages-index-fields* '(:--id :user-id :created-at (:contents :html) (:conversation :--id :title) :----typename))
-(defparameter *user-fields* '(:--id :slug :display-name :karma :groups))
+(defparameter *user-fields* '(:--id :slug :display-name :karma :groups :html-bio))
 
 (defparameter *notifications-base-terms* (alist :view "userNotifications" :created-at :null :viewed :null))
 
