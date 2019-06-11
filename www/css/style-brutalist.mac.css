@@ -5018,8 +5018,29 @@ button.guiedit {
 	display: flex;
 }
 #markdown-hints .markdown-hints-row span {
-	min-width: 7em;
 	padding: 0 1em 0 0;
+}
+#markdown-hints .markdown-hints-row span.guiedit {
+	font-family: var(--GW-Font-Awesome);
+	font-weight: 900;
+	font-size: 0.875em;
+	display: flex;
+	align-items: center;
+	width: 3.5em;
+	justify-content: center;
+	padding: 0 1.5em 0 0;
+	position: relative;
+}
+#markdown-hints .markdown-hints-row span.guiedit sup {
+	position: absolute;
+	left: unset;
+	right: 1.875em;
+	top: 0;
+	font-family: var(--GW-UI-font);
+	font-weight: bold;
+}
+#markdown-hints .markdown-hints-row span:nth-of-type(2) {
+	min-width: 7em;
 }
 #markdown-hints .markdown-hints-row code {
 	padding: 0;
