@@ -805,8 +805,13 @@ h1.listing a[href^="http"] {
 /*= In-listing edit link =*/
 /*=----------------------=*/
 
-h1.listing .edit-post-link:hover {
-	text-decoration: none;
+h1.listing a.edit-post-link,
+h1.listing a.edit-post-link:visited {
+	color: #090;
+}
+h1.listing a.edit-post-link:hover {
+	color: #d00;
+	border: none;
 }
 
 /*=------------------=*/
@@ -1676,6 +1681,20 @@ a.comment-parent-link:hover::before {
 /* COMMENTING AND POSTING UI */
 /*===========================*/
 
+.post-controls .edit-post-link,
+.post-controls .edit-post-link:visited {
+	font-size: 1.25em;
+	font-weight: bold;
+	color: #090;
+}
+.post-controls .edit-post-link:hover {
+	color: #d00;
+}
+.post-controls .edit-post-link::before {
+	top: -2px;
+	left: -1px;
+}
+
 .posting-controls input[type='submit'] {
 	background-color: #fff;
 	border: 1px solid #aaa;
@@ -1760,17 +1779,6 @@ a.comment-parent-link:hover::before {
 	color: #f00;
 	text-shadow:
 		0.5px 0.5px 0.5px #f77;
-}
-
-h1.listing .edit-post-link,
-h1.listing .edit-post-link:visited,
-.post-controls .edit-post-link,
-.post-controls .edit-post-link:visited {
-	color: #090;
-}
-h1.listing .edit-post-link:hover,
-.post-controls .edit-post-link:hover {
-	color: #d00;
 }
 
 .posting-controls textarea {
