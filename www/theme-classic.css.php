@@ -2020,9 +2020,15 @@ hr {
 /*=------=*/
 
 code {
-	background-color: #f6f6ff;
-	border: 1px solid #ddf;
+	background-color: #eff6ed;
+	border: 1px solid #c5debd;
 	border-radius: 4px;
+}
+
+pre > code {
+	box-shadow: 
+		0 0 4px 0 #aca inset;
+	padding: 8px 6px 6px 12px;
 }
 
 /*=---------------=*/
@@ -2094,27 +2100,54 @@ select {
 /* MATH */
 /*======*/
 
-.mathjax-block-container .mjx-chtml::-webkit-scrollbar {
+.mathjax-block-container .mjx-chtml {
+	margin: 0;
+	padding: 0;
+	overflow: visible;
+	display: inline;
+}
+.mathjax-block-container {
+	border: 1px solid #7e977f;
+	display: block;
+	margin: 2em 0 1.75em 0;
+	padding: 1em;
+	overflow-x: scroll;
+	box-shadow: 
+		0 0 4px 0 #aca inset;
+}
+
+.mathjax-block-container::-webkit-scrollbar {
 	height: 12px;
-	background-color: #f6f6ff;
-	border-radius: 6px;
-	border: 1px solid #ddf;
 }
-.mathjax-block-container .mjx-chtml::-webkit-scrollbar-thumb {
-	background-color: #dde;
-	border-radius: 6px;
-	border: 1px solid #cce;
+.mathjax-block-container::-webkit-scrollbar:disabled {
+	height: 0;
 }
+.mathjax-block-container::-webkit-scrollbar-track {
+	background-color: #eff6ed;
+	border-top: 1px solid #7e977f;
+}
+.mathjax-block-container::-webkit-scrollbar-thumb {
+	background-color: #abbdab;
+	border-top: 1px solid #7e977f;
+	box-shadow: 0 0 0 1px #eff6ed inset;
+}
+.mathjax-block-container::-webkit-scrollbar-thumb:hover {
+	background-color: #8da28e;
+}
+.mathjax-block-container::-webkit-scrollbar-thumb:active {
+	background-color: #7e977f;
+}
+
 .mathjax-inline-container .mjx-chtml::-webkit-scrollbar {
 	height: 8px;
-	background-color: #f6f6ff;
+	background-color: #eff6ed;
 	border-radius: 4px;
-	border: 1px solid #ddf;
+	border: 1px solid #cee7c5;
 }
 .mathjax-inline-container .mjx-chtml::-webkit-scrollbar-thumb {
-	background-color: #dde;
+	background-color: #d4e0d0;
 	border-radius: 4px;
-	border: 1px solid #cce;
+	border: 1px solid #c5debd;
 }
 
 /*===============*/
