@@ -36,6 +36,9 @@
 
 (defvar *arbital-context*)
 
+(defmethod site-stylesheets append ((site arbital-site))
+  (list (generate-versioned-link "/arbital.css")))
+
 (defmethod site-nav-bars ((site arbital-site))
   '((:secondary-bar (("about" "/about" "About" :accesskey "t")))
     (:primary-bar (("home" "/" "Home" :accesskey "h")
@@ -130,28 +133,35 @@
 	    <div class="post-meta">
 		(arbital-meta-block page-data all-data :page)
 	    </div>
-	    <div class="body-text post-body">
+	    (when (and (cdr (assoc :text page-data)) (> (length (cdr (assoc :text page-data))) 0))
+	      <div class="body-text post-body">
 		(with-html-stream-output
-		    (when (assoc :text page-data)
-		    (arbital-markdown-to-html (cdr (assoc :text page-data))
-						*html-output*)))
-		(dolist (page-list-data '((:child-ids "Children")
+		  (when (assoc :text page-data)
+		  (arbital-markdown-to-html (cdr (assoc :text page-data))
+					    *html-output*)))
+	      </div>)
+	    <div class="arbital-nav">
+	      (dolist (page-list-data '((:child-ids "Children")
 					(:parent-ids "Parents")))
 		(destructuring-bind (page-list-id page-list-name) page-list-data
-		    <p>(progn page-list-name):
-		    (labels
-			((list-pages (page-list)
-			    <ul>
-			    (dolist (c page-list)
-				(let ((page-data (cdr (assoc c (cdr (assoc :pages all-data)) :test #'string=))))
-				<li><a href=("/p/~A~@[?l=~A~]" (cdr (assoc :alias page-data)) c)>(cdr (assoc :title page-data))</a>
-				    (when-let (page-list (cdr (assoc page-list-id page-data)))
-					    (list-pages page-list))
-				</li>))
-			    </ul>))
-			(when-let (page-list (cdr (assoc page-list-id page-data)))
-				(list-pages page-list)))
-		    </p>))
+		  (labels
+		      ((list-pages (page-list)
+			 <ul>
+			   (dolist (c page-list)
+			     (let ((page-data (cdr (assoc c (cdr (assoc :pages all-data)) :test #'string=))))
+			       <li>
+				 <a href=("/p/~A~@[?l=~A~]" (cdr (assoc :alias page-data)) c)>(cdr (assoc :title page-data))</a>
+				 (with-html-stream-output
+				     (when-let (clickbait (cdr (assoc :clickbait page-data)))
+					       (arbital-markdown-to-html clickbait *html-output*)))
+				 (when-let (page-list (cdr (assoc page-list-id page-data)))
+					   (list-pages page-list))
+			       </li>))
+			 </ul>))
+		    (when-let (page-list (cdr (assoc page-list-id page-data)))
+			      (unless (eq page-type :explore)
+				<p>(progn page-list-name):</p>)
+			      (list-pages page-list)))))
 	    </div>
 	    </main>
 	    <div class="comments" id="comments">

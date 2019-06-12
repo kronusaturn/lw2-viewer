@@ -480,16 +480,32 @@ signaled condition to OUT-STREAM."
     (assert (ironclad:constant-time-equal csrf-token correct-token) nil "CSRF check failed.")
     t)) 
 
-(defun generate-css-link ()
-  (labels ((gen-inner (theme os)
-             (generate-versioned-link (format nil "/css/style~@[-~A~].~A.css" (if (and theme (> (length theme) 0)) theme) os))))
-    (let* ((ua (hunchentoot:header-in* :user-agent))
-           (theme (hunchentoot:cookie-in "theme"))
-           (os (cond ((search "Windows" ua) "windows")
-                     ((search "Mac OS" ua) "mac")
-                     (t "linux"))))
-      (handler-case (gen-inner theme os)
-        (serious-condition () (gen-inner nil os))))))
+(defgeneric site-stylesheets (site)
+  (:method-combination append :most-specific-last)
+  (:method append ((s site))
+    (labels ((gen-inner (theme os)
+	       (list (generate-versioned-link (format nil "/css/style~@[-~A~].~A.css" (if (and theme (> (length theme) 0)) theme) os)))))
+      (let* ((ua (hunchentoot:header-in* :user-agent))
+	     (theme (hunchentoot:cookie-in "theme"))
+	     (os (cond ((search "Windows" ua) "windows")
+		       ((search "Mac OS" ua) "mac")
+		       (t "linux"))))
+	(handler-case (gen-inner theme os)
+	  (serious-condition () (gen-inner nil os)))))))
+
+(defgeneric site-inline-scripts (site)
+  (:method-combination append :most-specific-last)
+  (:method append ((s site))
+	   (list (load-time-value (with-open-file (s "www/head.js") (uiop:slurp-stream-string s)) t))))
+
+(defgeneric site-external-scripts (site)
+  (:method-combination append :most-specific-last)
+  (:method append ((s site))
+	   (list (generate-versioned-link "/script.js"))))
+
+(defgeneric site-head-elements (site)
+  (:method-combination append :most-specific-last)
+  (:method append ((s site)) nil))
 
 (defun html-body (out-stream fn &key title description current-uri content-class robots)
   (let* ((session-token (hunchentoot:cookie-in "session-token"))
@@ -501,22 +517,24 @@ signaled condition to OUT-STREAM."
             (or (logged-in-user-slug) "")
 	    (if (typep *current-site* 'arbital-site) "false" "true")
             csrf-token
-            (load-time-value (with-open-file (s "www/head.js") (uiop:slurp-stream-string s)) t)
+	    (site-inline-scripts *current-site*)
             *extra-inline-scripts*)
-    (format out-stream "~A<link rel=\"stylesheet\" href=\"~A\">"
+    (format out-stream "~A~{<link rel=\"stylesheet\" href=\"~A\">~}"
             *html-head*
-            (generate-css-link))
+	    (site-stylesheets *current-site*))
     (generate-fonts-html-headers (site-fonts-source *current-site*))
     (format out-stream "<link rel=\"shortcut icon\" href=\"~A\">"
 	    (generate-versioned-link "/assets/favicon.ico"))
-    (format out-stream "<script src=\"~A\" async></script>~A"
-            (generate-versioned-link "/script.js")
+    (format out-stream "~{<script src=\"~A\" async>~}</script>~A"
+            (site-external-scripts *current-site*)
             *extra-external-scripts*)
     (format out-stream "<title>~@[~A - ~]~A</title>~@[<meta name=\"description\" content=\"~A\">~]~@[<meta name=\"robots\" content=\"~A\">~]"
             (if title (encode-entities title))
             (site-title *current-site*)
             description
             robots)
+    (format out-stream "~{~A~}"
+	    (site-head-elements *current-site*))
     (format out-stream "</head>"))
   (unwind-protect
     (progn
@@ -1528,8 +1546,9 @@ signaled condition to OUT-STREAM."
                                                                                       (loop for theme in '(nil "dark" "grey" "ultramodern" "zero" "brutalist" "rts" "classic" "less")
                                                                                             collect (defres (format nil "/css/style~@[-~A~].~A.css" theme system) "text/css")))
                                                                                     (loop for (uri content-type) in
-                                                                                      '(("/script.js" "text/javascript")
-                                                                                        ("/assets/favicon.ico" "image/x-icon"))
+										      '(("/arbital.css" "text/css")
+											("/script.js" "text/javascript")
+											("/assets/favicon.ico" "image/x-icon"))
                                                                                       collect (defres uri content-type))))
                                                                    (when file
                                                                      (when (assoc "v" (hunchentoot:get-parameters r) :test #'string=)

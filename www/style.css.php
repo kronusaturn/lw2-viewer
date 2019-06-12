@@ -1740,10 +1740,6 @@ article {
 	text-decoration: line-through;
 }
 
-.redlink {
-	color: #a00;
-}
-
 .bare-url {
 	word-break: break-all;
 	hyphens: auto;
