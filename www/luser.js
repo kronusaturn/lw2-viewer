@@ -116,9 +116,7 @@ Element.prototype.addTextareaFeatures = function() {
 
 	// Inject markdown hints box (hidden unless user clicks to show).
 	textareaContainer.query("span").insertAdjacentHTML("afterend", {{{parts/markdown_hints}}});
-	textareaContainer.query("#markdown-hints-checkbox").addEventListener("change", (event) => {
-		event.target.blur();
-	});
+	textareaContainer.query("#markdown-hints-checkbox").addEventListener("change", (event) => { event.target.blur(); });
 
 	// Hide markdown hints box when transitioning to/from narrow-mobile.
 	doWhenMatchMedia(GW.mediaQueries.mobileNarrow, "hideMarkdownHintsBox", () => {

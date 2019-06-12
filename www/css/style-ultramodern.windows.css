@@ -7886,6 +7886,18 @@ h1.listing.own-post-listing {
 	padding: 0.5em 6px 2px 8px;
 }
 
+/*=------------=*/
+/*= User’s bio =*/
+/*=------------=*/
+
+#content.user-page .user-bio {
+	border-bottom: 1px solid #666;
+	box-shadow: 
+		0 -4px   0      3px var(--GW-content-background-color),
+		0  1.5px 1.5px -1.5px #bbb,
+		0  1.5px 1.5px -1.5px #777;
+}
+
 /*=----------------------------=*/
 /*= Viewport width adjustments =*/
 /*=----------------------------=*/

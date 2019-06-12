@@ -7933,7 +7933,7 @@ h1.listing.own-post-listing {
 #content.user-page .user-bio {
 	border-bottom: 1px solid #fff;
 	box-shadow: 
-		0 -4px 0    3px #000,
+		0 -4px 0    3px var(--GW-content-background-color),
 		0  0   3px -1px #fff;
 }
 

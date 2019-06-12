@@ -7693,9 +7693,13 @@ h1.listing.own-post-listing {
 	margin: 0 1em 0 0;
 }
 
-/*===============*/
-/* CONVERSATIONS */
-/*===============*/
+/*=------------=*/
+/*= User’s bio =*/
+/*=------------=*/
+
+#content.user-page .user-bio {
+	border-bottom: 1px solid #000;
+}
 
 /*============*/
 /* LOGIN PAGE */

@@ -7916,6 +7916,14 @@ h1.listing.own-post-listing {
 	padding: 10px 8px 4px 10px;
 }
 
+/*=------------=*/
+/*= User’s bio =*/
+/*=------------=*/
+
+#content.user-page .user-bio {
+	border-bottom: 2px solid var(--GW-C1);
+}
+
 /*===============*/
 /* CONVERSATIONS */
 /*===============*/

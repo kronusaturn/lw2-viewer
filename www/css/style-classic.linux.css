@@ -7819,6 +7819,17 @@ h1.listing.own-post-listing {
 	margin: 0 0 0 0.75em;
 }
 
+/*=------------=*/
+/*= User’s bio =*/
+/*=------------=*/
+
+#content.user-page .user-bio {
+	border-bottom: 1px solid #777;
+	box-shadow: 
+		0 -4px 0    3px var(--GW-content-background-color),
+		0  0   3px -1px #444;
+}
+
 /*===============*/
 /* CONVERSATIONS */
 /*===============*/

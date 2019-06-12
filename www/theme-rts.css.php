@@ -965,6 +965,14 @@ h1.listing.own-post-listing {
 	font-size: 1.75rem;
 }
 
+/*=------------=*/
+/*= User’s bio =*/
+/*=------------=*/
+
+#content.user-page .user-bio {
+	border-bottom: 1px solid #ddd;
+}
+
 /*===============*/
 /* CONVERSATIONS */
 /*===============*/
