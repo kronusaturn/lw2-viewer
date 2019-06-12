@@ -1552,7 +1552,8 @@ signaled condition to OUT-STREAM."
                                                                                     (loop for (uri content-type) in
 										      '(("/arbital.css" "text/css")
 											("/script.js" "text/javascript")
-											("/assets/favicon.ico" "image/x-icon"))
+											("/assets/favicon.ico" "image/x-icon")
+											("/assets/telegraph.jpg" "image/jpeg"))
                                                                                       collect (defres uri content-type))))
                                                                    (when file
                                                                      (when (assoc "v" (hunchentoot:get-parameters r) :test #'string=)

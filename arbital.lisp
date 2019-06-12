@@ -130,9 +130,10 @@
 			  :test #'string=))))
     (renderer ()
       (unless all-data
-	(emit-page (*html-output* :title "Loading"
+	(emit-page (*html-output* :title "Loading" :content-class "loading-page"
 				  :extra-head (lambda () (format *html-output* "<meta http-equiv=\"refresh\" content=\"5\">")))
-	  <h1>Loading</h1>
+	  <h1>One moment...</h1>
+	  <img src="/assets/telegraph.jpg">
 	  <p>Loading data from Arbital, please be patient...</p>)
 	(return nil))
       (let ((*arbital-context* (cdr (assoc :pages all-data))))
