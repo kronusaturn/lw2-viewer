@@ -48,7 +48,7 @@
 	     (regex-replace-all "[_*]" x "\\\\\\&")))
     (let*
 	((markdown (regex-replace-all (ppcre:create-scanner "(?<=\\S )\\*(?= )" :single-line-mode t) markdown "\\\\*"))
-	 (markdown (regex-replace-all (ppcre:create-scanner "\\[.?summary(?:\\(.*?\\))?:.*\\].?$" :single-line-mode t :multi-line-mode t) markdown ""))
+	 (markdown (regex-replace-all (ppcre:create-scanner "\\[.?summary(?:\\(.*?\\))?:.*?\\]$" :single-line-mode t :multi-line-mode t) markdown ""))
 	 (markdown (regex-replace-body (#'url-scanner markdown)
 				       (markdown-protect (match))))
 	 (markdown (regex-replace-body ("\\[[-+]?([^] ]*)(?: ([^]]*?))?\\](?!\\()" markdown)
