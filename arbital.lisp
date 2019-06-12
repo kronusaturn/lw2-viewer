@@ -43,36 +43,54 @@
 		   ("ai-alignment" "/explore/ai_alignment/" "AI Alignment")
 		   ("arbital" "/explore/Arbital/" "Arbital")))))
 
+(defparameter *markdown-replace-string* "ouNi5iej")
+
 (defun arbital-markdown-to-html (markdown stream)
-  (labels ((markdown-protect (x)
-	     (regex-replace-all "[_*]" x "\\\\\\&")))
-    (let*
-	((markdown (regex-replace-all (ppcre:create-scanner "(?<=\\S )\\*(?= )" :single-line-mode t) markdown "\\\\*"))
-	 (markdown (regex-replace-all (ppcre:create-scanner "\\[.?summary(?:\\(.*?\\))?:.*?\\]$" :single-line-mode t :multi-line-mode t) markdown ""))
-	 (markdown (regex-replace-body (#'url-scanner markdown)
-				       (markdown-protect (match))))
-	 (markdown (regex-replace-body ("\\[[-+]?([^] ]*)(?: ([^]]*?))?\\](?!\\()" markdown)
-		     (let ((tag (reg 0))
-			   (text (reg 1)))
-		       (cond
-			 ((ppcre:scan "^http" tag)
-			  (format nil " <a href=\"~A\">~A</a>" (encode-entities tag) (or text tag)))
-			 ((ppcre:scan ":$" tag)
-			  (or text ""))
-			 (t
-			  (let ((page-data (cdr (assoc tag *arbital-context* :test #'string=))))
-			    (if-let (page-alias (cdr (assoc :alias page-data)))
-				    (format nil " <a href=\"/p/~A~@[?l=~A~]\">~A</a>" (encode-entities page-alias) (encode-entities tag) (or text (cdr (assoc :title page-data))))
-				    (format nil " <span class=\"redlink\" title=\"~A\">~A</span>" (markdown-protect tag) (or text (markdown-protect tag))))))))))
-	 (markdown (regex-replace-body ((ppcre:create-scanner "(?<!\\\\)(\\$\\$?)(.+?)(?<!\\\\)\\1" :single-line-mode t :multi-line-mode t) markdown)
-				       (let ((block (= (length (reg 0)) 2)))
-					 (format nil " <~A class=\"arbital-math\">~A~A~A</~A>"
-						 (if block "div" "span")
-						 (if block "$$" "\\(")
-						 (markdown-protect (reg 1))
-						 (if block "$$" "\\)")
-						 (if block "div" "span"))))))
-      (write-sequence (clean-html* (markdown:parse markdown)) stream))))
+  (let ((replacements (make-array 0 :adjustable t :fill-pointer t)))
+    (labels ((markdown-protect (x)
+	       (prog1 (format nil "~A-~A-" *markdown-replace-string* (fill-pointer replacements))
+		 (vector-push-extend x replacements)))
+	     (markdown-protect-wrap (a b c)
+	       (concatenate 'string (markdown-protect a) b (markdown-protect c))))
+      (let*
+	  ((markdown (regex-replace-all (ppcre:create-scanner "(?<=\\S )\\*(?= )" :single-line-mode t) markdown "\\\\*"))
+	   (markdown (regex-replace-all (ppcre:create-scanner "\\[.?summary(?:\\(.*?\\))?:.*?\\]$" :single-line-mode t :multi-line-mode t) markdown ""))
+	   (markdown (regex-replace-body (#'url-scanner markdown)
+		       (markdown-protect (match))))
+	   (markdown (regex-replace-body ("\\[[-+]?([^] ]*)(?: ([^]]*?))?\\](?!\\()" markdown)
+		       (let ((tag (reg 0))
+			     (text (reg 1)))
+			 (cond
+			   ((ppcre:scan "^http" tag)
+			    (markdown-protect-wrap
+			     (format nil "<a href=\"~A\">" (encode-entities tag))
+			     (or text tag)
+			     "</a>"))
+			   ((ppcre:scan ":$" tag)
+			    (or text ""))
+			   (t
+			    (let ((page-data (cdr (assoc tag *arbital-context* :test #'string=))))
+			      (if-let (page-alias (cdr (assoc :alias page-data)))
+				      (markdown-protect-wrap
+				       (format nil "<a href=\"/p/~A~@[?l=~A~]\">" (encode-entities page-alias) (encode-entities tag))
+				       (or text (cdr (assoc :title page-data)))
+				       "</a>")
+				      (markdown-protect-wrap
+				       (format nil "<span class=\"redlink\" title=\"~A\">" (encode-entities tag))
+				       (or text tag)
+				       "</span>"))))))))
+	   (markdown (regex-replace-body ((ppcre:create-scanner "(?<!\\\\)(\\$\\$?)(.+?)(?<!\\\\)\\1" :single-line-mode t :multi-line-mode t) markdown)
+		       (markdown-protect
+			(let ((block (= (length (reg 0)) 2)))
+			  (format nil "<~A class=\"arbital-math\">~A~A~A</~A>"
+				  (if block "div" "span")
+				  (if block "$$" "\\(")
+				  (reg 1)
+				  (if block "$$" "\\)")
+				  (if block "div" "span"))))))
+	   (html (regex-replace-body ((load-time-value (format nil "~A-(\\d+)-" *markdown-replace-string*)) (markdown:parse markdown))
+		   (aref replacements (parse-integer (reg 0))))))
+	(write-sequence (clean-html* html) stream)))))
 
 (defun arbital-meta-block (page-data all-data type)
   (let* ((creator-id (cdr (assoc :page-creator-id page-data)))
