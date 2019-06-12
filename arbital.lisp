@@ -115,10 +115,13 @@
 (define-component view-arbital-page (id page-alias page-type)
   (:http-args '((l :type (or string null))))
   (let* ((id (or id l))
-	 (all-data (lw2.backend:get-page-body (list-cond
-					       (page-alias (cons :page-alias page-alias))
-					       (id (cons :lens-id id)))
-					      page-type))
+	 (all-data (handler-case
+		       (sb-sys:with-deadline (:seconds 0.3)
+			 (lw2.backend:get-page-body (list-cond
+						     (page-alias (cons :page-alias page-alias))
+						     (id (cons :lens-id id)))
+						    page-type))
+		     (serious-condition () nil)))
 	 (page-data (cdr (assoc
 			  (or id
 			      (cdr (assoc :page-id (cdr (assoc :result all-data))))
@@ -126,6 +129,12 @@
 			  (cdr (assoc :pages all-data))
 			  :test #'string=))))
     (renderer ()
+      (unless all-data
+	(emit-page (*html-output* :title "Loading"
+				  :extra-head (lambda () (format *html-output* "<meta http-equiv=\"refresh\" content=\"5\">")))
+	  <h1>Loading</h1>
+	  <p>Loading data from Arbital, please be patient...</p>)
+	(return nil))
       (let ((*arbital-context* (cdr (assoc :pages all-data))))
 	(emit-page (*html-output* :title (format nil "~:[~;Explore: ~]~A" (eq page-type :explore) (cdr (assoc :title page-data))))
 	    <main class="post">

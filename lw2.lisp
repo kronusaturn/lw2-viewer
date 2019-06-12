@@ -507,7 +507,7 @@ signaled condition to OUT-STREAM."
   (:method-combination append :most-specific-last)
   (:method append ((s site)) nil))
 
-(defun html-body (out-stream fn &key title description current-uri content-class robots)
+(defun html-body (out-stream fn &key title description current-uri content-class robots extra-head)
   (let* ((session-token (hunchentoot:cookie-in "session-token"))
          (csrf-token (and session-token (make-csrf-token session-token))))
     (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head>")
@@ -535,6 +535,7 @@ signaled condition to OUT-STREAM."
             robots)
     (format out-stream "~{~A~}"
 	    (site-head-elements *current-site*))
+    (when extra-head (funcall extra-head))
     (format out-stream "</head>"))
   (unwind-protect
     (progn
@@ -616,7 +617,7 @@ signaled condition to OUT-STREAM."
 			     `(let ((,stream-sym ,out-stream)) 
 				,.out-body)))) 
 
-(defun call-with-emit-page (out-stream fn &key title description current-uri content-class (return-code 200) robots (pagination (pagination-nav-bars)) top-nav)
+(defun call-with-emit-page (out-stream fn &key title description current-uri content-class (return-code 200) robots (pagination (pagination-nav-bars)) top-nav extra-head)
   (declare (ignore return-code))
   (when (eq (hunchentoot:request-method*) :head)
     (return-from call-with-emit-page))
@@ -626,7 +627,7 @@ signaled condition to OUT-STREAM."
                  (lambda ()
                    (when top-nav (funcall top-nav out-stream))
                    (funcall pagination out-stream fn))
-                 :title title :description description :current-uri current-uri :content-class content-class :robots robots)
+                 :title title :description description :current-uri current-uri :content-class content-class :robots robots :extra-head extra-head)
       (force-output out-stream))))
 
 (defun set-cookie (key value &key (max-age (- (expt 2 31) 1)) (path "/"))
