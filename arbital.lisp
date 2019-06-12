@@ -25,7 +25,8 @@
 							     :method :post
 							     :content query)
 					:external-format :utf-8)))
-				 (t () nil))))))
+				 (t () nil))
+			       (sleep 2)))))
 	   (json:*json-identifier-name-to-lisp* #'identity)
 	   (json:*identifier-name-to-key* #'string-to-existing-keyword))
       (lw2-graphql-query-timeout-cached fn "post-body-json" (format nil "~A~@[~A~]" query page-type) :revalidate nil))))
@@ -130,7 +131,7 @@
 			  :test #'string=))))
     (renderer ()
       (unless all-data
-	(emit-page (*html-output* :title "Loading" :content-class "loading-page"
+	(emit-page (*html-output* :title "Loading" :content-class "loading-page" :return-code 504
 				  :extra-head (lambda () (format *html-output* "<meta http-equiv=\"refresh\" content=\"5\">")))
 	  <h1>One moment...</h1>
 	  <img src="/assets/telegraph.jpg">
