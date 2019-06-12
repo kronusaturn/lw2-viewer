@@ -637,8 +637,11 @@ signaled condition to OUT-STREAM."
     (setf (hunchentoot:content-type*) "text/html; charset=utf-8"
           (hunchentoot:return-code*) return-code
           (hunchentoot:header-out :link) (format nil "~:{<~A>;rel=preload;type=~A;as=~A~@{;~A~}~:^,~}"
-                                                 `((,(generate-css-link) "text/css" "style" ,.push-option)
-                                                   (,(generate-versioned-link "/script.js") "text/javascript" "script" ,.push-option))))
+						 (append
+						  (loop for link in (site-stylesheets *current-site*)
+						     collect (list* link "text/css" "style" push-option))
+						  (loop for link in (site-external-scripts *current-site*)
+						       collect (list* link "text/javascript" "script" push-option)))))
     (unless push-option (set-cookie "push" "t" :max-age (* 4 60 60)))))
 
 (defun user-pref (key)
