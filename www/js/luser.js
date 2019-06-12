@@ -131,6 +131,9 @@ Element.prototype.addTextareaFeatures = function() {
 		[ '&#xf0cb;', 'Numbered list', '1. List item', '' ],
 	].map(row => `<div class='markdown-hints-row'><span class='guiedit'>${row[0]}</span><span${row[3] ? " style='" + row[3] + "'" : ""}>${row[1]}</span><code>${row[2]}</code></div>`).join('')
 + `</div>`);
+	textareaContainer.query("#markdown-hints-checkbox").addEventListener("change", (event) => {
+		event.target.blur();
+	});
 
 	// Hide markdown hints box when transitioning to/from narrow-mobile.
 	doWhenMatchMedia(GW.mediaQueries.mobileNarrow, "hideMarkdownHintsBox", () => {

@@ -50,6 +50,9 @@
 		0 
 		var(--GW-post-left-side-padding);
 }
+#content.user-page .user-bio:empty {
+	display: none;
+}
 
 /*=--------------------=*/
 /*= User’s karma total =*/
@@ -164,7 +167,7 @@
 }
 #conversation-form .post-meta-fields label {
 	text-align: right;
-	padding: 2px 6px;
+	padding: 0.25em 0.375em;
 	border: 1px solid transparent;
 }
 #conversation-form input[type='text'] {

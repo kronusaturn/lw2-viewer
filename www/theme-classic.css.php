@@ -87,7 +87,7 @@ body {
 	line-height: 1.5;
 }
 #content::before {
-	box-shadow: 0px 0px 10px #555;
+	box-shadow: 0px 0px 7px #555;
 }
 
 /*=----------------------------=*/
@@ -1899,6 +1899,9 @@ button.guiedit:hover {
 #markdown-hints .markdown-hints-row code {
 	line-height: 1;
 	padding-top: 8px;
+}
+#markdown-hints-checkbox + label::before {
+	top: 0;
 }
 
 /*=----------------------------=*/

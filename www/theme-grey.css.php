@@ -103,7 +103,7 @@ body {
 	line-height: 1.55;
 }
 #content::before {
-	box-shadow: 0px 0px 10px #bbb;
+	box-shadow: 0px 0px 7px #bbb;
 }
 
 /*=----------------------------=*/

@@ -5997,6 +5997,9 @@ th.mathjax-inline-container {
 		0 
 		var(--GW-post-left-side-padding);
 }
+#content.user-page .user-bio:empty {
+	display: none;
+}
 
 /*=--------------------=*/
 /*= User’s karma total =*/
@@ -6111,7 +6114,7 @@ th.mathjax-inline-container {
 }
 #conversation-form .post-meta-fields label {
 	text-align: right;
-	padding: 2px 6px;
+	padding: 0.25em 0.375em;
 	border: 1px solid transparent;
 }
 #conversation-form input[type='text'] {
@@ -6879,7 +6882,7 @@ body {
 	line-height: 1.55;
 }
 #content::before {
-	box-shadow: 0px 0px 10px #9b9b9b;
+	box-shadow: 0px 0px 7px #9b9b9b;
 }
 
 /*=----------------------------=*/
