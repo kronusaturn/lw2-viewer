@@ -602,8 +602,7 @@ signaled condition to OUT-STREAM."
                  (lambda ()
                    (when top-nav (funcall top-nav out-stream))
                    (funcall pagination out-stream fn))
-                 :title title :description description :current-uri current-uri :content-class content-class :robots robots)
-      (force-output out-stream))))
+                 :title title :description description :current-uri current-uri :content-class content-class :robots robots))))
 
 (defun set-cookie (key value &key (max-age (- (expt 2 31) 1)) (path "/"))
   (hunchentoot:set-cookie key :value value :path path :max-age max-age :secure (site-secure *current-site*)))
