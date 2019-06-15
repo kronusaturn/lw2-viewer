@@ -491,7 +491,12 @@
 	     do (setf (plump:children root) (plump:children (plump:first-child root)))
 	     do (loop for c across (plump:children root) do (setf (plump:parent c) root))
 	     do (when-let (fc (plump:first-child root))
-			  (when (and (plump:element-p fc) (tag-is fc "head")) (plump:remove-child fc))))
+		  (when (and (plump:element-p fc) (tag-is fc "head"))
+		    (loop for c across (plump:children fc) do
+			 (when (and (plump:element-p c) (tag-is c "style"))
+			   (setf (plump:parent c) (plump:parent fc))
+			   (plump:insert-after fc c)))
+		    (plump:remove-child fc))))
 	  (loop for c across (plump:children root) do
 	       (when (and (plump:element-p c)
 			  (tag-is c "span")
