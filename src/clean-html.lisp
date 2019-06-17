@@ -502,6 +502,9 @@
 			  (tag-is c "span")
 			  (string-is-whitespace (plump:text c)))
 		 (move-children-out-of-node c)))
+	  (loop for lc = (plump:last-child root)
+	     while (and (plump:element-p lc) (tag-is lc "br"))
+	     do (plump:remove-child lc))
 	  (plump:traverse
 	   root
 	   (lambda (node)
