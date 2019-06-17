@@ -140,10 +140,11 @@
       (gen-internal (get-slug-postid slug) slug comment-id))))
 
 (defun convert-lw2-sequence-link (link)
-  (multiple-value-bind (sequence-id post-id comment-id) (match-lw2-sequence-link link)
-    (cond
-      (post-id (gen-internal post-id (get-post-slug post-id) comment-id))
-      (sequence-id (format nil "/s/~A" sequence-id)))))
+  (if-let (site (find-link-site link))
+	  (multiple-value-bind (sequence-id post-id comment-id) (match-lw2-sequence-link link)
+	    (cond
+	      (post-id (gen-internal post-id (get-post-slug post-id) comment-id (site-link-prefix site)))
+	      (sequence-id (format nil "~As/~A" (site-link-prefix site) sequence-id))))))
 
 (defun convert-lw2-link (link)
   (multiple-value-bind (post-id comment-id slug) (match-lw2-link link)
