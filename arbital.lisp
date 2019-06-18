@@ -92,6 +92,22 @@
 				  (reg 1)
 				  (if block "$$" "\\)")
 				  (if block "div" "span"))))))
+	   (markdown (regex-replace-body ((ppcre:create-scanner "(%+)([^ ]*?)(?:\\(([^)]*)\\))?: ?(.*?)\\1" :single-line-mode t) markdown)
+		       (let ((type (reg 1))
+			     (param (reg 2))
+			     (text (reg 3)))
+			 (alexandria:switch (type :test #'string=)
+			   ("note"
+			    (markdown-protect-wrap
+			     "<span class=\"arbital-note-marker\">note<span class=\"arbital-note\">"
+			     text
+			     "</span></span>"))
+			   (t
+			    (markdown-protect-wrap
+			     (format nil "<div class=\"arbital-special-block\"><span class=\"arbital-block-type\">~A~@[(~A)~]</span>: "
+				     (encode-entities type) (and param (encode-entities param)))
+			     text
+			     "</div>"))))))
 	   (html (regex-replace-body ((load-time-value (format nil "~A-(\\d+)-" *markdown-replace-string*)) (markdown:parse markdown))
 		   (aref replacements (parse-integer (reg 0))))))
 	(write-sequence (clean-html* html) stream)))))
