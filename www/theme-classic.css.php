@@ -1221,6 +1221,10 @@ h1.post-title {
 	line-height: 1.2;
 }
 
+h1.post-title .post-type-prefix {
+	opacity: 0.4;
+}
+
 /*===========*/
 /* POST-META */
 /*===========*/
