@@ -601,8 +601,7 @@ signaled condition to OUT-STREAM."
                  (lambda ()
                    (when top-nav (funcall top-nav out-stream))
                    (funcall pagination out-stream fn))
-                 :title title :description description :current-uri current-uri :content-class content-class :robots robots)
-      (force-output out-stream))))
+                 :title title :description description :current-uri current-uri :content-class content-class :robots robots))))
 
 (defun set-cookie (key value &key (max-age (- (expt 2 31) 1)) (path "/"))
   (hunchentoot:set-cookie key :value value :path path :max-age max-age :secure (site-secure *current-site*)))
@@ -629,7 +628,9 @@ signaled condition to OUT-STREAM."
 
 (defun call-with-response-stream (fn)
   (let ((*html-output* (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8)))
-    (funcall fn *html-output*)))
+    (unwind-protect
+	 (funcall fn *html-output*)
+      (finish-output *html-output*))))
 
 (defmacro emit-page ((out-stream &rest args &key (return-code 200) &allow-other-keys) &body body)
   (alexandria:once-only (return-code)

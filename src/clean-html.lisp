@@ -389,7 +389,7 @@
 				(ppcre:scan
 				 (load-time-value
 				  (ppcre:create-scanner
-				   "(?:https?://[-a-zA-Z0-9]+\\.[-a-zA-Z0-9.]+|[-a-zA-Z0-9.]+\\.(?:com|edu|gov|mil|net|org|int|biz|info|name|museum|us|ca|uk|io|ly))(?:\\:[0-9]+){0,1}(?:/(?:(?:(\\()|[-a-zA-Z0-9.,;:?'\\\\+&%$#=~_/])*(?(1)\\)|[-a-zA-Z0-9\\\\+&%$#=~_/]))?)?"
+				   "(?:https?://[-a-zA-Z0-9]+\\.[-a-zA-Z0-9.]+|[-a-zA-Z0-9.]+\\.(?:com|edu|gov|mil|net|org|int|biz|info|name|museum|us|ca|uk|io|ly))(?:\\:[0-9]+){0,1}(?:/(?:(?:(\\()|[-\\w\\d.,;:?'\\\\+@&%$#=~_/])*(?(1)\\)|[-\\w\\d\\\\+@&%$#=~_/]))?)?"
 				   :single-line-mode t))
 				 text)
                               (declare (type simple-string text)
@@ -414,19 +414,18 @@
 				     do (plump:append-child (plump:parent text-node) item))
 				  (when (= url-start 0)
 				    (plump:remove-child text-node)))))))
-	   (contents-to-html (contents min-header-level)
+	   (contents-to-html (contents min-header-level out-stream)
 			     (declare (type cons contents)) 
-			     (format nil "<nav class=\"contents\"><div class=\"contents-head\">Contents</div><ul class=\"contents-list\">~{~A~}</ul></nav>"
-				     (map 'list (lambda (x) (destructuring-bind (elem-level text id) x
-							      (format nil "<li class=\"toc-item-~A\"><a href=\"#~A\">~A</a></li>"
-								      (- elem-level (- min-header-level 1)) id (clean-text-to-html text))))
-					  contents)))
-	   (style-hash-to-html (style-hash)
+			     (format out-stream "<nav class=\"contents\"><div class=\"contents-head\">Contents</div><ul class=\"contents-list\">")
+			     (loop for (elem-level text id) in contents do
+				  (format out-stream "<li class=\"toc-item-~A\"><a href=\"#~A\">~A</a></li>"
+					  (- elem-level (- min-header-level 1)) id (clean-text-to-html text)))
+			     (format out-stream "</ul></nav>"))
+	   (style-hash-to-html (style-hash out-stream)
 			       (declare (type hash-table style-hash))
 			       (let ((style-list (alexandria:hash-table-keys style-hash)))
 				 (if style-list
-				   (format nil "<style>~{~A~}</style>" style-list)
-				   ""))))
+				   (format out-stream "<style>~{~A~}</style>" style-list)))))
     (declare (ftype (function (plump:node &rest simple-string) boolean) only-child-is is-child-of-tag text-node-is-not))
     (handler-bind
       (((or plump:invalid-xml-character plump:discouraged-xml-character) #'abort))
@@ -492,7 +491,20 @@
 	     do (setf (plump:children root) (plump:children (plump:first-child root)))
 	     do (loop for c across (plump:children root) do (setf (plump:parent c) root))
 	     do (when-let (fc (plump:first-child root))
-			  (when (and (plump:element-p fc) (tag-is fc "head")) (plump:remove-child fc))))
+		  (when (and (plump:element-p fc) (tag-is fc "head"))
+		    (loop for c across (plump:children fc) do
+			 (when (and (plump:element-p c) (tag-is c "style"))
+			   (setf (plump:parent c) (plump:parent fc))
+			   (plump:insert-after fc c)))
+		    (plump:remove-child fc))))
+	  (loop for c across (plump:children root) do
+	       (when (and (plump:element-p c)
+			  (tag-is c "span")
+			  (string-is-whitespace (plump:text c)))
+		 (move-children-out-of-node c)))
+	  (loop for lc = (plump:last-child root)
+	     while (and (plump:element-p lc) (tag-is lc "br"))
+	     do (plump:remove-child lc))
 	  (plump:traverse
 	   root
 	   (lambda (node)
@@ -637,6 +649,13 @@
 		    ((tag-is node "script")
 		     (plump:remove-child node))))))))
 	  (clean-dom-text root)
-	  (concatenate 'string (if (>= section-count 3) (contents-to-html (nreverse contents) min-header-level) "") 
-		       (style-hash-to-html style-hash) 
-		       (plump:serialize root nil)))))))
+	  (let ((with-toc (>= section-count 3)))
+	    (with-output-to-string (out-stream)
+	      (style-hash-to-html style-hash out-stream)
+	      (loop for c across (plump:children root)
+		 when (and with-toc
+			   (not (string-is-whitespace (plump:text c))))
+		 do (progn
+		      (contents-to-html (nreverse contents) min-header-level out-stream)
+		      (setf with-toc nil))
+		 do (plump:serialize c out-stream)))))))))
