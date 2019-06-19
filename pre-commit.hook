@@ -25,3 +25,12 @@ if [[ "$1" = "--force" ]] || ! git diff-index --quiet --cached HEAD -- www/style
 	git show :www/theme_tweaker.css.php | (cd www; php >css/theme_tweaker.css)
 	git add www/css/theme_tweaker.css
 fi
+
+if [[ "$1" = "--force" ]] || ! git diff-index --quiet --cached HEAD -- assemble_js.php www/*.js www/js-components/{parts,modules}/*.js; then
+	if ! git diff-files --quiet -- assemble_js.php www/*.js www/js-components/{parts,modules}/*.js; then
+	    >&2 echo "Can't assemble javascript components: you have unstaged changes."
+	    exit 1
+	fi
+	./assemble_js.php
+	git add www/js/*
+fi
