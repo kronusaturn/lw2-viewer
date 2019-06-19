@@ -17,9 +17,9 @@
 ;;;; obormot-fonts-source
 
 (defparameter *obormot-fonts-stylesheet-uris*
-  '("https://fonts.greaterwrong.com/?fonts=ConsolasGW,CharterGW,Concourse,Whitney,MundoSans,SourceSansPro,Raleway,ProximaNova,TiredOfCourier,AnonymousPro,InputSans,InputSansNarrow,InputSansCondensed,GaramondPremierPro,TriplicateCode,TradeGothic,NewsGothicBT,Caecilia,SourceSerifPro,SourceCodePro"
+  '("https://fonts.greaterwrong.com/?fonts=AnonymousPro,Caecilia,Charter,Concourse,GaramondPremierPro,GaramondPremierProSubhead,InputSans,InputSansNarrow,InputSansCondensed,LiberationMono,LiberationSans,MundoSans,NewsGothicBT,ProximaNova,Raleway,SourceCodePro,SourceSansPro,SourceSerifPro,TiredOfCourier,TradeGothic,Triplicate,Whitney"
     "https://fonts.greaterwrong.com/?fonts=BitmapFonts,FontAwesomeGW&base64encode=1"))
-(defparameter *obormot-fonts-stylesheet-uris* '("https://fonts.greaterwrong.com/?fonts=*"))
+;(defparameter *obormot-fonts-stylesheet-uris* '("https://fonts.greaterwrong.com/?fonts=*"))
 
 (defvar *fonts-redirect-data* nil)
 (sb-ext:defglobal *fonts-redirect-lock* (make-mutex))
