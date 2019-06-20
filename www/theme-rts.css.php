@@ -166,9 +166,6 @@ body {
 	background-color: #f0f0eb;
 }
 
-.nav-current .nav-inner {
-	font-weight: var(--GW-UI-font-weight-heavy);
-}
 .nav-bar a:hover,
 .nav-bar a:focus,
 .nav-bar button:hover,

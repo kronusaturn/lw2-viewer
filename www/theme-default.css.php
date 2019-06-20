@@ -143,10 +143,6 @@ body {
 	background-color: #d8d8d8;
 }
 
-.nav-current .nav-inner {
-	font-weight: var(--GW-UI-font-weight-heavy);
-}
-
 .nav-bar a:hover,
 .nav-bar a:focus {
 	text-decoration: none;

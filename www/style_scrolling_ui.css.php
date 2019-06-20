@@ -44,6 +44,9 @@
 
 	font-weight: var(--GW-nav-item-font-weight);
 }
+.nav-current .nav-inner {
+	font-weight: var(--GW-nav-item-current-font-weight);
+}
 #primary-bar .nav-inner,
 #bottom-bar .nav-inner {
 	padding: 12px 30px;

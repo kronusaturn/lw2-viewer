@@ -14,6 +14,8 @@
 	--GW-UI-font-weight-light: 400;
 	--GW-UI-font-weight-heavy: 600;
 
+	--GW-nav-item-font-weight: var(--GW-UI-font-weight-light);
+
 	--GW-post-listings-font-weight: 400;
 
 	--GW-body-text-font: 'Source Sans Pro', var(--GW-sans-serif-fallback-font-stack);
@@ -133,10 +135,6 @@ body {
 }
 #secondary-bar .nav-inner {
 	font-size: 0.9375em;
-}
-
-.nav-item:not(.nav-current) .nav-inner {
-	font-weight: var(--GW-UI-font-weight-light);
 }
 
 .nav-bar .nav-item:not(.nav-current):not(#nav-item-search):hover,

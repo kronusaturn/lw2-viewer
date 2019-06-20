@@ -14,6 +14,7 @@
 	--GW-UI-font-weight-heavy: 400;
 
 	--GW-nav-item-font-weight: var(--GW-UI-font-weight-light);
+	--GW-nav-item-current-font-weight: 500;
 
 	--GW-monospaced-font: 'Source Code Pro', var(--GW-monospaced-fallback-font-stack);
 

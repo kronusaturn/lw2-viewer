@@ -141,7 +141,6 @@ p {
 }
 .nav-current .nav-inner {
 	filter: invert(100%) contrast(175%);
-	font-weight: var(--GW-UI-font-weight-heavy);
 }
 
 /*= Decorative bottom bar =*/
