@@ -13,6 +13,8 @@
 	--GW-UI-font-weight-light: 300;
 	--GW-UI-font-weight-heavy: 400;
 
+	--GW-nav-item-font-weight: var(--GW-UI-font-weight-light);
+
 	--GW-monospaced-font: 'Tired of Courier', var(--GW-monospaced-fallback-font-stack);
 
 	--GW-post-listings-font: 'Raleway', var(--GW-sans-serif-fallback-font-stack);
@@ -136,9 +138,6 @@ p {
 		0 1.5px 1.5px -1.5px #777;
 }
 
-.nav-inner {
-	font-weight: var(--GW-UI-font-weight-light);
-}
 .nav-current .nav-inner {
 	filter: invert(100%) contrast(175%);
 }
@@ -158,13 +157,13 @@ p {
 	font-weight: 200;
 }
 
-/* Accesskey hints */
+/*= Accesskey hints =*/
 
 .nav-inner::after {
 	display: none;
 }
 
-/* Search tab */
+/*= Search tab =*/
 
 #nav-item-search form::before {
 	font-weight: 400;
