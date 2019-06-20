@@ -256,7 +256,9 @@ body {
 
 @media only screen and (min-width: 961px) {
 	#nav-item-about button.open-keyboard-help {
+		font-size: 0.9375rem;
 		font-weight: 300;
+		right: 3.25em;
 	}
 }
 
@@ -992,11 +994,6 @@ body {
 }
 #keyboard-help-overlay .keyboard-help-container h1 {
 	padding: 15px 20px 5px 20px;
-}
-#nav-item-about button.open-keyboard-help {
-	font-size: 0.875em;
-	left: 0;
-	top: -1px;
 }
 
 /*==========*/
