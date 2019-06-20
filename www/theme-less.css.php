@@ -178,12 +178,30 @@ body {
 	font-weight: 300;
 }
 
+#bottom-bar .nav-item a::before,
+#top-nav-bar a::before {
+	bottom: 0;
+}
+
 .nav-bar a,
 .nav-bar a:visited {
 	color: #acd2af;
 }
 .nav-bar a:hover {
 	color: #79a97e;
+}
+
+/*= Decorative bottom bar =*/
+
+#bottom-bar.decorative {
+	margin-top: 0.25em;
+}
+#bottom-bar.decorative::before {
+	filter: opacity(0.5);
+}
+#bottom-bar.decorative::after {
+	color: #eee;
+	background-color: #fff;
 }
 
 /*= Accesskey hints =*/
@@ -252,19 +270,6 @@ body {
 	color: #eaeaea;
 	top: 3px;
 	font-size: 1.125em;
-}
-
-/*= Decorative bottom bar =*/
-
-#bottom-bar.decorative {
-	margin-top: 0.25em;
-}
-#bottom-bar.decorative::before {
-	filter: opacity(0.5);
-}
-#bottom-bar.decorative::after {
-	color: #eee;
-	background-color: #fff;
 }
 
 /*= Top pagination UI hover tooltips =*/
