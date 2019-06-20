@@ -6909,15 +6909,18 @@ body {
 	#primary-bar,
 	#secondary-bar {
 		flex-flow: column;
-		line-height: 1.15;
 	}
 	#primary-bar {
+		line-height: 1.15;
 		position: fixed;
 		max-width: inherit;
 		left: 0;
 		right: 0;
 		margin: auto;
 		pointer-events: none;
+	}
+	#secondary-bar {
+		line-height: 1;
 	}
 	#primary-bar > * {
 		right: calc(var(--GW-less-theme-nav-bar-width) - 65px);
@@ -6999,30 +7002,24 @@ body {
 }
 #nav-item-search .nav-inner {
 	padding: 1px;
-	display: flex;
 }
 #nav-item-search form::before {
-	font-size: 1.125em;
+	font-size: 1.25em;
 	color: #e6e6e6;
-	font-weight: 400;
-	padding: 5px;
+	font-weight: 300;
+	padding: 5px 5px 3px 5px;
 	transition: color 0.15s ease;
 }
 #nav-item-search form:focus-within::before {
 	color: #92c396;
 }
 #nav-item-search button {
-	border: none;
-	font-weight: 300;
-	padding: 6px;
-	height: 23px;
+	padding: 7px 5px 4px 5px;
 }
 #nav-item-search form:not(:focus-within) button:not(:hover) {
 	color: #ddd;
 }
 #nav-item-search input {
-	width: unset;
-	flex: 1 0 auto;
 	padding: 2px 1px;
 	margin: 0 0 0 2px;
 }
@@ -7060,11 +7057,13 @@ body {
 
 #inbox-indicator::before {
 	color: #eaeaea;
-	top: 3px;
-	font-size: 1.125em;
+	top: 0;
+	font-size: 1.0625rem;
 }
 
-/*= Top pagination UI hover tooltips =*/
+/*===============*/
+/* PAGINATION UI */
+/*===============*/
 
 #top-nav-bar a::after,
 #bottom-bar a::after {
