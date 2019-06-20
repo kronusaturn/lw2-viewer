@@ -9,8 +9,10 @@
 /*	Typography.
 	*/
 :root {
-	--GW-UI-font: 'Mundo Sans', var(--GW-sans-serif-fallback-font-stack);
+	--GW-UI-font: 'Open Sans', var(--GW-sans-serif-fallback-font-stack);
 	--GW-UI-font-weight-light: 300;
+
+	--GW-monospaced-font: 'Source Code Pro', var(--GW-monospaced-fallback-font-stack);
 
 	--GW-post-listings-font: 'Caecilia', var(--GW-sans-serif-fallback-font-stack);
 
@@ -242,7 +244,6 @@ body {
 #nav-item-search input {
 	width: unset;
 	flex: 1 0 auto;
-	font-family: Inconsolata, monospace;
 	padding: 2px 1px;
 	margin: 0 0 0 2px;
 }
@@ -460,7 +461,6 @@ body {
 	#site-nav-ui-toggle button,
 	#post-nav-ui-toggle button,
 	#appearance-adjust-ui-toggle button {
-		font-family: Font Awesome;
 		font-weight: 400;
 		font-size: 32px;
 		padding: 10px;
@@ -2303,7 +2303,6 @@ hr::before {
 
 code,
 pre {
-	font-family: 'Source Code Pro', Inconsolata, monospace;
 	font-size: 0.9375em;
 	font-feature-settings: 'ss04';
 }
@@ -2440,7 +2439,6 @@ strong, b {
 #content.alignment-forum-index-page::after {
 	margin: -0.25em 0 0.25em 0;
 	text-align: center;
-	font-family: "Concourse SmallCaps";
 	font-weight: 600;
 	background-color: #7f85b2;
 	color: transparent;
