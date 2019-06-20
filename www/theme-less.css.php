@@ -22,7 +22,14 @@
 /*	Layout.
 	*/
 :root {
-
+	--GW-content-side-padding: 0px;
+	--GW-sequence-page-content-side-padding: 0px;
+	--GW-user-page-content-side-padding: 0px;
+	--GW-recent-comments-page-content-side-padding: 0px;
+	--GW-conversation-page-content-side-padding: 0px;
+	--GW-post-page-content-side-padding: 0px;
+	--GW-edit-post-page-content-side-padding: 0px;
+	--GW-individual-thread-page-content-side-padding: 0px;
 }
 
 /*	Color scheme.
@@ -55,9 +62,6 @@ body {
 }
 #content.comment-thread-page {
 	padding: 0 0 0 60px;
-}
-#ui-elements-container {
-	visibility: hidden;
 }
 
 /* Compensating for Linux/Windows being terrible. */
