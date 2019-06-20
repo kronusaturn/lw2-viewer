@@ -6798,6 +6798,8 @@ th.mathjax-inline-container {
 	--GW-UI-font-weight-light: 400;
 	--GW-UI-font-weight-heavy: 400;
 
+	--GW-nav-item-current-font-weight: 700;
+
 	--GW-body-text-font: 'News Gothic BT', 'Clear Sans', var(--GW-sans-serif-fallback-font-stack);
 
 	--GW-post-listings-font-weight: 700;

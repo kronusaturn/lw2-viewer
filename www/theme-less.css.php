@@ -200,10 +200,6 @@ body {
 
 /*= ‘Tabs’ =*/
 
-.nav-current .nav-inner {
-	font-weight: var(--GW-UI-font-weight-heavy);
-}
-
 #nav-item-recent-comments .nav-inner span {
 	display: none;
 }
