@@ -127,7 +127,7 @@ body {
 	#primary-bar,
 	#secondary-bar {
 		flex-flow: column;
-		line-height: 1;
+		line-height: 1.15;
 	}
 	#primary-bar {
 		position: fixed;
@@ -141,9 +141,6 @@ body {
 		right: calc(var(--GW-less-theme-nav-bar-width) - 65px);
 		width: var(--GW-less-theme-nav-bar-width);
 		pointer-events: auto;
-	}
-	#nav-item-sequences .nav-inner::before {
-		content: unset;
 	}
 	#secondary-bar #nav-item-about {
 		padding-right: unset;
@@ -159,6 +156,9 @@ body {
 	#nav-item-sequences .nav-inner,
 	#nav-item-about .nav-inner {
 		justify-content: flex-end;
+	}
+	.nav-bar #nav-item-sequences .nav-inner {
+		font-size: 0.8125em;
 	}
 	#content.comment-thread-page #nav-item-archive,
 	#content.comment-thread-page #nav-item-sequences,

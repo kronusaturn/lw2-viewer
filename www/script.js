@@ -1833,12 +1833,9 @@ registerInitializer('initialize', false, () => (document.readyState != 'loading'
 			});
 		});
 	}
-
-	/*	On desktop, replace the “Sequences” tab name with the book icon.
-		*/
-	doWhenMatchMedia(GW.mediaQueries.mobileWide, "setSequencesNavTabText", (mediaQuery) => {
-		query("#nav-item-sequences .nav-inner").innerHTML = mediaQuery.matches ? "Sequences" : "&#xf5db;";
-	});
+	
+	// Make the sequences tab icon-only on desktop.
+	adjustSequencesTab();
 
 	// Add error message (as placeholder) if user tries to click Search with
 	// an empty search field.
@@ -2228,6 +2225,20 @@ function recomputeUIElementsContainerHeight(force = false) {
 															query("#content").clientHeight + "px" :
 															"";
 		}
+	}
+}
+
+/*	On desktop, replace the “Sequences” tab name with the book icon.
+	*/
+function adjustSequencesTab(shorten = true) {
+	if (shorten) {
+		doWhenMatchMedia(GW.mediaQueries.mobileWide, "setSequencesNavTabText", (mediaQuery) => {
+			query("#nav-item-sequences .nav-inner").innerHTML = mediaQuery.matches ? "Sequences" : "&#xf5db;";
+		}, null, (mediaQuery) => {
+			query("#nav-item-sequences .nav-inner").innerHTML = "Sequences";
+		});
+	} else {
+		cancelDoWhenMatchMedia("setSequencesNavTabText");
 	}
 }
 

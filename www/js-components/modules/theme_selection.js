@@ -176,6 +176,9 @@ GW.themeLoadCallback_less = (fromTheme = "") => {
 		applyFilters(GW.currentFilters);
 	}
 
+	// Leave the “Sequences” tab as a word.
+	adjustSequencesTab(false);
+
 	// We pre-query the relevant elements, so we don’t have to run queryAll on
 	// every firing of the scroll listener.
 	GW.scrollState = {
@@ -266,6 +269,9 @@ GW.themeUnloadCallback_less = (toTheme = "") => {
 	}
 
 	(query(".top-post-meta .date")||{}).innerHTML = (query(".bottom-post-meta .date")||{}).innerHTML;
+
+	// Put the “Sequences” tab back.
+	adjustSequencesTab();
 
 	// Reset filtered elements selector to default.
 	delete GW.themeTweaker.filtersExclusionPaths.themeLess;
