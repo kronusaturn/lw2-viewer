@@ -883,6 +883,12 @@ GW.themeLoadCallback_less = (fromTheme = "") => {
 	// Leave the “Sequences” tab as a word.
 	adjustSequencesTab(false);
 
+	// Change theme tweaker toggle icon.
+	queryAll("#theme-tweaker-toggle button").forEach(button => {
+		button.dataset.defaultIcon = button.innerHTML;
+		button.innerHTML = "&#xf1de;";
+	});
+
 	// We pre-query the relevant elements, so we don’t have to run queryAll on
 	// every firing of the scroll listener.
 	GW.scrollState = {
@@ -976,6 +982,12 @@ GW.themeUnloadCallback_less = (toTheme = "") => {
 
 	// Put the “Sequences” tab back.
 	adjustSequencesTab();
+
+	// Change theme tweaker toggle icon back.
+	queryAll("#theme-tweaker-toggle button").forEach(button => {
+		button.innerHTML = button.dataset.defaultIcon;
+		button.dataset.defaultIcon = "";
+	});
 
 	// Reset filtered elements selector to default.
 	delete GW.themeTweaker.filtersExclusionPaths.themeLess;
