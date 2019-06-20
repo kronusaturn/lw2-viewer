@@ -11,6 +11,7 @@
 :root {
 	--GW-UI-font: 'Open Sans', var(--GW-sans-serif-fallback-font-stack);
 	--GW-UI-font-weight-light: 300;
+	--GW-UI-font-weight-heavy: 400;
 
 	--GW-monospaced-font: 'Source Code Pro', var(--GW-monospaced-fallback-font-stack);
 
@@ -107,32 +108,28 @@ body {
 	#bottom-bar .nav-inner {
 		font-size: 1.125em;
 	}
+	#primary-bar .nav-inner,
+	#secondary-bar .nav-inner {
+		padding: 0.5rem 0.75rem;
+	}
+	#primary-bar .nav-inner {
+		justify-content: flex-end;
+	}
 	#secondary-bar .nav-inner {
 		font-size: 0.875em;
 	}
 
-	.nav-inner {
-		padding: 0.5rem 0.75rem;
-		text-align: right;
-	}
-	#secondary-bar .nav-inner {
-		padding: 0.5rem 0.75rem;
-	}
 	#primary-bar,
 	#secondary-bar {
-		margin: 0;
 		flex-flow: column;
 		line-height: 1;
 	}
 	#primary-bar {
 		position: fixed;
-		width: inherit;
-		min-width: inherit;
 		max-width: inherit;
 		left: 0;
 		right: 0;
 		margin: auto;
-		align-items: flex-start;
 		pointer-events: none;
 	}
 	#primary-bar > * {
