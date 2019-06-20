@@ -37,7 +37,7 @@
 	--GW-post-listings-font: var(--GW-UI-font);
 	--GW-post-listings-font-weight: var(--GW-UI-font-weight-heavy);
 	--GW-listings-post-meta-font: var(--GW-UI-font);
-	--GW-listings-post-meta-font-weight: 400;
+	--GW-listings-post-meta-font-weight: var(--GW-UI-font-weight-light);
 	
 	--GW-post-title-font: var(--GW-post-listings-font);
 	--GW-post-title-font-weight: var(--GW-post-listings-font-weight);

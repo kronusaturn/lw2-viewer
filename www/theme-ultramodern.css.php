@@ -18,6 +18,8 @@
 	--GW-post-listings-font: 'Raleway', var(--GW-sans-serif-fallback-font-stack);
 	--GW-post-listings-font-weight: 200;
 
+	--GW-listings-post-meta-font-weight: 400;
+
 	--GW-body-text-font: 'Raleway', var(--GW-sans-serif-fallback-font-stack);
 	--GW-body-text-font-weight: <?php echo ($platform == 'Mac' ? '300' : '400'); ?>;
 
