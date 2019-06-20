@@ -14,7 +14,7 @@
 	--GW-UI-font-weight-heavy: 400;
 
 	--GW-nav-item-font-weight: var(--GW-UI-font-weight-light);
-	--GW-nav-item-current-font-weight: 500;
+	--GW-nav-item-current-font-weight: 700;
 
 	--GW-monospaced-font: 'Source Code Pro', var(--GW-monospaced-fallback-font-stack);
 
@@ -34,6 +34,8 @@
 	--GW-post-page-content-side-padding: 0px;
 	--GW-edit-post-page-content-side-padding: 0px;
 	--GW-individual-thread-page-content-side-padding: 0px;
+
+	--GW-less-theme-nav-bar-width: 112px;
 }
 
 /*	Color scheme.
@@ -136,15 +138,9 @@ body {
 		pointer-events: none;
 	}
 	#primary-bar > * {
-		position: relative;
-		right: 47px;
-		width: 112px;
+		right: calc(var(--GW-less-theme-nav-bar-width) - 65px);
+		width: var(--GW-less-theme-nav-bar-width);
 		pointer-events: auto;
-	}
-	#secondary-bar #nav-item-sequences .nav-inner {
-		font-size: 0.875em;
-		line-height: unset;
-		text-overflow: unset;
 	}
 	#nav-item-sequences .nav-inner::before {
 		content: unset;
@@ -152,20 +148,22 @@ body {
 	#secondary-bar #nav-item-about {
 		padding-right: unset;
 	}
-	#secondary-bar #nav-item-about .nav-inner {
-		margin-right: unset;
-	}
 	#nav-item-archive,
 	#nav-item-sequences,
 	#nav-item-about {
 		position: fixed;
-		transform: translateX(-111px);
-		width: 85px;
+		transform: translateX(calc(-1 * (var(--GW-less-theme-nav-bar-width) + 25px)));
+		width: var(--GW-less-theme-nav-bar-width);
+	}
+	#nav-item-archive .nav-inner,
+	#nav-item-sequences .nav-inner,
+	#nav-item-about .nav-inner {
+		justify-content: flex-end;
 	}
 	#content.comment-thread-page #nav-item-archive,
 	#content.comment-thread-page #nav-item-sequences,
 	#content.comment-thread-page #nav-item-about {
-		transform: translateX(-81px);
+		transform: translateX(calc(-1 * (var(--GW-less-theme-nav-bar-width) - 30px)));
 	}
 
 	#nav-item-home {
