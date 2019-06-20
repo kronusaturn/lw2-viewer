@@ -19,7 +19,7 @@
 (defparameter *obormot-fonts-stylesheet-uris*
   '("https://fonts.greaterwrong.com/?fonts=AnonymousPro,Caecilia,Charter,Concourse,GaramondPremierPro,GaramondPremierProSubhead,InputSans,InputSansNarrow,InputSansCondensed,LiberationMono,LiberationSans,MundoSans,NewsGothicBT,ProximaNova,Raleway,SourceCodePro,SourceSansPro,SourceSerifPro,TiredOfCourier,TradeGothic,Triplicate,Whitney"
     "https://fonts.greaterwrong.com/?fonts=BitmapFonts,FontAwesomeGW&base64encode=1"))
-;(defparameter *obormot-fonts-stylesheet-uris* '("https://fonts.greaterwrong.com/?fonts=*"))
+(defparameter *obormot-fonts-stylesheet-uris* '("https://fonts.greaterwrong.com/?fonts=*"))
 
 (defvar *fonts-redirect-data* nil)
 (sb-ext:defglobal *fonts-redirect-lock* (make-mutex))

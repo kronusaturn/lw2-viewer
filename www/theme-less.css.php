@@ -1,11 +1,3 @@
-<?php
-	$UI_font = "'Mundo Sans', 'Helvetica', sans-serif";
-	$headings_font = "'Caecilia', 'Helvetica', sans-serif";
-	$text_font = "'Source Serif Pro', 'Helvetica', sans-serif";
-	$hyperlink_color = "#92c396";
-	$white_glow = "0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff";
-?>
-
 /**************/
 /* THEME LESS */
 /**************/
@@ -14,9 +6,35 @@
 /* VARIABLES */
 /*===========*/
 
+/*	Typography.
+	*/
+:root {
+	--GW-UI-font: 'Mundo Sans', var(--GW-sans-serif-fallback-font-stack);
+	--GW-UI-font-weight-light: 300;
+
+	--GW-post-listings-font: 'Caecilia', var(--GW-sans-serif-fallback-font-stack);
+
+	--GW-body-text-font: 'Source Serif Pro', var(--GW-serif-fallback-font-stack);
+}
+
+/*	Layout.
+	*/
+:root {
+
+}
+
 /*	Color scheme.
 	*/
 :root {
+	--GW-body-background-color: #fff;
+
+	--GW-hyperlink-color: #92c396;
+
+	--GW-shadow-white-glow:
+		0 0 1px #fff,
+		0 0 3px #fff,
+		0 0 5px #fff;
+
 	--GW-comment-background-color-odd: #f6f6f6;
 	--GW-comment-background-color-even: #fff;
 	--GW-comment-background-color-target: #ffd;
@@ -28,9 +46,6 @@
 
 body {
 	color: #000;
-	font-family: <?php echo $UI_font; ?>;
-	font-weight: 300;
-	background-color: #fff;
 }
 #content {
 	line-height: 1.55;
@@ -55,7 +70,7 @@ body {
 .page-toolbar > *,
 #top-nav-bar > *,
 .body-text a {
-	text-shadow: <?php global $platform; echo ($platform == 'Mac' ? 'none' : '0 0 0 #aaa'); ?>;
+	text-shadow: <?php echo ($platform == 'Mac' ? 'none' : '0 0 0 #aaa'); ?>;
 }
 
 /* Compensating for Safari being terrible. */
@@ -674,7 +689,7 @@ body {
 		transition:
 			opacity 0.35s ease;
 	}
-	<?php fit_content("#theme-tweaker-toggle"); ?>
+	<?php fit_content("#theme-tweaker-toggle", "width", "\t"); ?>
 	#comments-view-mode-selector::after,
 	#theme-selector::after,
 	#theme-selector::before,
@@ -984,7 +999,6 @@ body {
 	padding: 0;
 }
 .archive-nav *[class^='archive-nav-item'] {
-	color: <?php echo $hyperlink_color; ?>;
 	border-style: solid;
 	border-color: #c4dbc4;
 	border-width: 1px 0 1px 1px;
@@ -1005,10 +1019,6 @@ body {
 	color: #fff;
 }
 
-.archive-nav a:active {
-	background-color: <?php echo $hyperlink_color; ?>;
-}
-
 /*==========*/
 /* LISTINGS */
 /*==========*/
@@ -1017,7 +1027,6 @@ h1.listing,
 #content.search-results-page h1.listing {
 	margin: 0.7em 20px 0.1em 0;
 	max-width: calc(100% - 20px);
-	font-family: <?php echo $headings_font; ?>, 'Font Awesome';
 	font-size: 1.25rem;
 	line-height: 1.2;
 }
@@ -1030,8 +1039,8 @@ h1.listing a[href^="http"] {
 }
 h1.listing a[href^="/posts"] {
 	font-weight: 300;
-	text-shadow: <?php global $platform; echo ($platform == 'Mac' ? 'none' : '0 0 0 #444'); ?>;
-	color: <?php global $platform; echo ($platform == 'Mac' ? '#444' : '#000'); ?>;
+	text-shadow: <?php echo ($platform == 'Mac' ? 'none' : '0 0 0 #444'); ?>;
+	color: <?php echo ($platform == 'Mac' ? '#444' : '#000'); ?>;
 }
 <?php echo $firefox_exclusive; ?> {
 	h1.listing a[href^="/posts"] {
@@ -1150,7 +1159,6 @@ h1.listing + .post-meta .post-section::before {
 
 #content.user-page h1.page-main-heading,
 #content.conversation-page h1.page-main-heading {
-	font-family: <?php echo $headings_font; ?>;
 	font-weight: normal;
 	margin: 0.5em 0 0 0;
 }
@@ -1208,7 +1216,6 @@ h1.listing.own-post-listing {
 /*============*/
 
 .login-container form h1 {
-	font-family: <?php echo $headings_font; ?>;
 	font-weight: 300;
 }
 
@@ -1257,7 +1264,6 @@ h1.listing.own-post-listing {
 /*===================*/
 
 .contents {
-	font-family: <?php echo $UI_font; ?>;
 	padding-top: 0;
 	margin-top: 1em;
 	background-color: #fff;
@@ -1274,9 +1280,8 @@ h1.listing.own-post-listing {
 /*==================*/
 
 .body-text {
-	font-family: <?php echo $text_font; ?>;
-	text-shadow: <?php global $platform; echo ($platform == 'Mac' ? '0 0 0 rgba(0,0,0,0.7)' : 'none'); ?>;
-	font-weight: <?php global $platform; echo ($platform == 'Mac' ? '300' : '400'); ?>;
+	text-shadow: <?php echo ($platform == 'Mac' ? '0 0 0 rgba(0,0,0,0.7)' : 'none'); ?>;
+	font-weight: <?php echo ($platform == 'Mac' ? '300' : '400'); ?>;
 }
 
 /*=======*/
@@ -1294,7 +1299,6 @@ h1.listing.own-post-listing {
 
 h1.post-title {
 	font-size: 2.75rem;
-	font-family: <?php echo $headings_font; ?>;
 	font-weight: 300;
 	line-height: 1.1;
 	margin: 1.375em 0 0.5em 0;
@@ -1497,9 +1501,6 @@ a.post-section.alignment-forum:hover::before {
 /* LINK POSTS */
 /*============*/
 
-.post.link-post a.link-post-link {
-	font-family: <?php echo $UI_font; ?>;
-}
 .post.link-post a.link-post-link::before {
 	opacity: 0.6;
 }
@@ -1724,10 +1725,6 @@ div.comment-child-links a {
 #content.compact > .comment-thread .comment-item {
 	max-height: 53px;
 }
-#content.compact > .comment-thread .comment-item::after {
-	color: <?php echo $hyperlink_color; ?>;
-	background: linear-gradient(to right, transparent 0%, #fff 50%, #fff 100%);
-}
 
 @media only screen and (hover: hover) {
 	#content.compact > .comment-thread .comment-item:hover .comment,
@@ -1813,7 +1810,6 @@ div.comment-child-links a {
 	text-shadow: <?php echo $white_glow; ?>;
 }
 .comment-minimize-button::after {
-	font-family: <?php echo $UI_font; ?>;
 	color: #999;
 }
 .comment-minimize-button.maximized::after {
@@ -1827,7 +1823,6 @@ div.comment-child-links a {
 .individual-thread-page > h1 {
 	margin: 2em 0 0 30px;
 	font-weight: 300;
-	font-family: <?php echo $headings_font; ?>;
 }
 .individual-thread-page > .comments {
 	padding: 0 0 0 30px;
@@ -1982,7 +1977,6 @@ div.comment-child-links a {
 }
 
 .posting-controls textarea {
-	font-family: <?php echo $text_font; ?>;
 	font-weight: 300;
 	color: #000;
 	text-shadow: 0 0 0 #000;
@@ -2028,12 +2022,10 @@ div.comment-child-links a {
     color: #050;
 }
 .guiedit-buttons-container button {
-	font-family: Font Awesome, <?php echo $text_font; ?>;
 	border: 1px solid transparent;
 }
 
 .guiedit::after {
-	font-family: <?php echo $UI_font; ?>;
 	color: #999;
 	font-weight: 300;
 	text-shadow: 0 0 0 #999;
@@ -2049,9 +2041,6 @@ div.comment-child-links a {
 
 /* Markdown hints */
 
-#markdown-hints-checkbox + label {
-	color: <?php echo $hyperlink_color; ?>;
-}
 #markdown-hints-checkbox + label:hover {
 	color: #79a97e;
 }
@@ -2165,7 +2154,6 @@ div.comment-child-links a {
 
 a {
 	text-decoration: none;
-	color: <?php echo $hyperlink_color; ?>;
 	transition: color 0.15s ease;
 }
 a:visited {
@@ -2234,7 +2222,6 @@ button:focus:not(:hover),
 .body-text h4, 
 .body-text h5, 
 .body-text h6 {
-	font-family: <?php echo $headings_font; ?>;
 	font-weight: 300;
 }
 .body-text h1 {
@@ -2358,7 +2345,6 @@ strong, b {
 }
 
 #content.about-page .accesskey-table {
-	font-family: <?php echo $UI_font; ?>;
 	border-color: #ddd;
 }
 
@@ -2597,7 +2583,6 @@ strong, b {
 	}
 	#quick-nav-ui a::after,
 	#new-comment-nav-ui::before {
-		font-family: <?php echo $UI_font; ?>;
 		font-weight: bold;
 		box-shadow:
 			0 0 1px 0 #fff,
@@ -2633,9 +2618,6 @@ strong, b {
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-next {
 		border-radius: 0 7px 7px 0;
-	}
-	#new-comment-nav-ui button::after {
-		font-family: <?php echo $UI_font; ?>;
 	}
 	#hns-date-picker {
 		background-color: #fff;
