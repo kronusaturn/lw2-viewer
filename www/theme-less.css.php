@@ -13,6 +13,8 @@
 	--GW-UI-font-weight-light: 300;
 	--GW-UI-font-weight-heavy: 400;
 
+	--GW-nav-item-font-weight: var(--GW-UI-font-weight-light);
+
 	--GW-monospaced-font: 'Source Code Pro', var(--GW-monospaced-fallback-font-stack);
 
 	--GW-post-listings-font: 'Caecilia', var(--GW-sans-serif-fallback-font-stack);
@@ -106,7 +108,7 @@ body {
 @media only screen and (min-width: 901px) {
 	#primary-bar .nav-inner,
 	#bottom-bar .nav-inner {
-		font-size: 1.125em;
+		font-size: 1em;
 	}
 	#primary-bar .nav-inner,
 	#secondary-bar .nav-inner {
@@ -116,7 +118,7 @@ body {
 		justify-content: flex-end;
 	}
 	#secondary-bar .nav-inner {
-		font-size: 0.875em;
+		font-size: 0.8125em;
 	}
 
 	#primary-bar,
@@ -197,8 +199,8 @@ body {
 
 /*= ‘Tabs’ =*/
 
-.nav-current {
-	font-weight: 500;
+.nav-current .nav-inner {
+	font-weight: var(--GW-UI-font-weight-heavy);
 }
 
 #nav-item-recent-comments .nav-inner span {
