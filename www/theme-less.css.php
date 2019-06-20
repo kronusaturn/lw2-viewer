@@ -194,32 +194,14 @@ body {
 /*= Decorative bottom bar =*/
 
 #bottom-bar.decorative {
-	margin-top: 0.25em;
-}
-#bottom-bar.decorative::before {
-	filter: opacity(0.5);
-}
-#bottom-bar.decorative::after {
-	color: #eee;
-	background-color: #fff;
+	position: relative;
+	color: #ddd;
 }
 
 /*= Accesskey hints =*/
 
 .nav-inner::after {
 	display: none;
-}
-
-/*= ‘Tabs’ =*/
-
-#nav-item-recent-comments .nav-inner span {
-	display: none;
-}
-#nav-item-login {
-	position: absolute;
-	top: 0;
-	right: 0;
-	padding-right: 1.5em;
 }
 
 /*= Search tab =*/
@@ -262,6 +244,29 @@ body {
 #nav-item-search input::placeholder {
 	color: #d00;
 	font-weight: normal;
+}
+
+/*= Recent Comments tab =*/
+
+#nav-item-recent-comments .nav-inner span {
+	display: none;
+}
+
+/*= Keyboard help button =*/
+
+@media only screen and (min-width: 961px) {
+	#nav-item-about button.open-keyboard-help {
+		font-weight: 300;
+	}
+}
+
+/*= User/Login tab =*/
+
+#nav-item-login {
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding-right: 1.5em;
 }
 
 /*= Inbox indicator =*/
