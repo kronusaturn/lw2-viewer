@@ -90,20 +90,26 @@ body {
 	}
 }}
 
-/*=========*/
-/* NAV BAR */
-/*=========*/
+/*==========*/
+/* NAV BARS */
+/*==========*/
 
 /*= Layout (desktop) =*/
 
-@media not screen and (hover: none) {
-	.nav-inner {
+@media only screen and (min-width: 901px) {
+	#primary-bar .nav-inner,
+	#bottom-bar .nav-inner {
 		font-size: 1.125em;
+	}
+	#secondary-bar .nav-inner {
+		font-size: 0.875em;
+	}
+
+	.nav-inner {
 		padding: 0.5rem 0.75rem;
 		text-align: right;
 	}
 	#secondary-bar .nav-inner {
-		font-size: 0.875em;
 		padding: 0.5rem 0.75rem;
 	}
 	#primary-bar,
@@ -180,13 +186,13 @@ body {
 	color: #79a97e;
 }
 
-/* Accesskey hints */
+/*= Accesskey hints =*/
 
 .nav-inner::after {
 	display: none;
 }
 
-/* "Tabs" */
+/*= ‘Tabs’ =*/
 
 .nav-current {
 	font-weight: 500;
@@ -202,7 +208,7 @@ body {
 	padding-right: 1.5em;
 }
 
-/* Search tab */
+/*= Search tab =*/
 
 #nav-item-search {
 	position: absolute;
@@ -245,7 +251,7 @@ body {
 	font-weight: normal;
 }
 
-/* Inbox indicator */
+/*= Inbox indicator =*/
 
 #inbox-indicator::before {
 	color: #eaeaea;
@@ -253,7 +259,7 @@ body {
 	font-size: 1.125em;
 }
 
-/* Decorative bottom bar */
+/*= Decorative bottom bar =*/
 
 #bottom-bar.decorative {
 	margin-top: 0.25em;
@@ -1807,7 +1813,7 @@ div.comment-child-links a {
 }
 .comment-minimize-button:hover {
 	color: #bbb;
-	text-shadow: <?php echo $white_glow; ?>;
+	text-shadow: var(--GW-shadow-white-glow);
 }
 .comment-minimize-button::after {
 	color: #999;
