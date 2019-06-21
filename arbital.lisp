@@ -57,7 +57,8 @@
 	     (markdown-protect-wrap (a b c)
 	       (concatenate 'string (markdown-protect a) b (markdown-protect c))))
       (let*
-	  ((markdown (regex-replace-all (ppcre:create-scanner "(?<=\\S )\\*(?= )" :single-line-mode t) markdown "\\\\*"))
+	  ((expand-counter 0)
+	   (markdown (regex-replace-all (ppcre:create-scanner "(?<=\\S )\\*(?= )" :single-line-mode t) markdown "\\\\*"))
 	   (markdown (regex-replace-all (ppcre:create-scanner "\\[.?summary(?:\\(.*?\\))?:.*?\\]$" :single-line-mode t :multi-line-mode t) markdown ""))
 	   (markdown (regex-replace-body (#'url-scanner markdown)
 		       (markdown-protect (match))))
@@ -102,6 +103,14 @@
 			     "<span class=\"arbital-note-marker\">note<span class=\"arbital-note\">"
 			     text
 			     "</span></span>"))
+			   ("hidden"
+			    (prog1
+				(markdown-protect-wrap
+				 (format nil "<div class=\"arbital-hidden\"><input type=\"checkbox\" id=\"expand-~A\"><label for=\"expand-~@*~A\">~A</label><div>"
+					 expand-counter (encode-entities param))
+				 text
+				 "</div></div>")
+			      (incf expand-counter)))
 			   (t
 			    (markdown-protect-wrap
 			     (format nil "<div class=\"arbital-special-block\"><span class=\"arbital-block-type\">~A~@[(~A)~]</span>: "

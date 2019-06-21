@@ -63,6 +63,30 @@
 	position: absolute;
 }
 
+.arbital-hidden > input,
+.arbital-hidden > div {
+	display: none;
+}
+
+.arbital-hidden > label {
+	display: block;
+	box-shadow: 0 12px 20px -6px #dfd inset, -1px -1px 0 0 #282 inset;
+	background-color: #afa;
+	border-radius: 12px;
+	border: 1px solid #6e6;
+	width: max-content;
+	padding: 1px 10px 3px;
+}
+
+.arbital-hidden > input:checked ~ label {
+	box-shadow: 0 1px 1.5px 1.5px black inset, 0 8px 20px -6px #dfd inset;
+	padding: 3px 10px 1px;
+}
+
+.arbital-hidden > input:checked ~ div {
+	display: block;
+}
+
 #content.loading-page {
 	text-align: center;
 }
