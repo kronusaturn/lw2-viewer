@@ -829,21 +829,36 @@ GW.themeLoadCallback_less = (fromTheme = "") => {
 		postDate.innerHTML = dtf.format(new Date(+ postDate.dataset.jsDate));
 	});
 
-	doWhenMatchMedia(GW.mediaQueries.mobileNarrow, "themeLessMobileFirstRowPlaceholder", () => {
+	// First row placeholder on mobile (smartphone width).
+	doWhenMatchMedia(GW.mediaQueries.mobileNarrow, "themeLessMobileFirstRowPlaceholder", (mediaQuery) => {
 		query("#content").insertAdjacentHTML("beforeend", "<div id='theme-less-mobile-first-row-placeholder'></div>");
-	}, () => {
+	}, (mediaQuery) => {
 		removeElement("#theme-less-mobile-first-row-placeholder");
-	}, () => {
+	}, (mediaQuery) => {
 		removeElement("#theme-less-mobile-first-row-placeholder");
 	});
 
-	if (!GW.isMobile) {
-		registerInitializer('addSpans', true, () => (query(".top-post-meta") != null), () => {
-			queryAll(".top-post-meta .date, .top-post-meta .comment-count").forEach(element => {
+	// Spans (to make post-meta date & comment count fixed on desktop).
+	let elementsToFloatWithSpans = queryAll(".top-post-meta .date, .top-post-meta .comment-count");
+	function removeSpansIfNeeded() {
+		if (query(".top-post-meta .date span") == null) return;
+		elementsToFloatWithSpans.forEach(element => {
+			element.innerHTML = element.firstChild.innerHTML;
+		});
+	}
+	registerInitializer('less_addSpansActiveMediaQuery', true, () => (query(".top-post-meta") != null), () => {
+		doWhenMatchMedia(GW.mediaQueries.mobileWide, "themeLessAddSpans", (mediaQuery) => {
+			removeSpansIfNeeded();
+		}, (mediaQuery) => {
+			elementsToFloatWithSpans.forEach(element => {
 				element.innerHTML = "<span>" + element.innerHTML + "</span>";
 			});
+		}, (mediaQuery) => {
+			removeSpansIfNeeded();
 		});
+	});
 
+	if (!GW.isMobile) {
 		if (localStorage.getItem("appearance-adjust-ui-toggle-engaged") == null) {
 			// If state is not set (user has never clicked on the Less theme’s appearance
 			// adjustment UI toggle) then show it, but then hide it after a short time.
@@ -970,13 +985,7 @@ GW.themeUnloadCallback_less = (toTheme = "") => {
 	document.removeEventListener("scroll", GW["updateSiteNavUIStateScrollListener"]);
 
 	cancelDoWhenMatchMedia("themeLessMobileFirstRowPlaceholder");
-
-	if (!GW.isMobile) {
-		// Remove spans.
-		queryAll(".top-post-meta .date, .top-post-meta .comment-count").forEach(element => {
-			element.innerHTML = element.firstChild.innerHTML;
-		});
-	}
+	cancelDoWhenMatchMedia("themeLessAddSpans");
 
 	(query(".top-post-meta .date")||{}).innerHTML = (query(".bottom-post-meta .date")||{}).innerHTML;
 

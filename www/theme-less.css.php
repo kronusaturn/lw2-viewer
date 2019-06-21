@@ -67,7 +67,7 @@ body {
 	padding: 30px 20px 0 90px;
 }
 #content.comment-thread-page {
-	padding: 0 0 0 60px;
+	padding: 0 0 0 70px;
 }
 
 /* Compensating for Linux/Windows being terrible. */
@@ -163,7 +163,7 @@ body {
 	#content.comment-thread-page #nav-item-archive,
 	#content.comment-thread-page #nav-item-sequences,
 	#content.comment-thread-page #nav-item-about {
-		transform: translateX(calc(-1 * (var(--GW-less-theme-nav-bar-width) - 30px)));
+		transform: translateX(calc(-1 * (var(--GW-less-theme-nav-bar-width) - 5px)));
 	}
 
 	#nav-item-home {
@@ -253,9 +253,9 @@ body {
 
 @media only screen and (min-width: 961px) {
 	#nav-item-about button.open-keyboard-help {
-		font-size: 0.9375rem;
+		font-size: 0.875rem;
 		font-weight: 300;
-		right: 3.25em;
+		right: 3.5em;
 	}
 }
 
@@ -275,6 +275,11 @@ body {
 	top: 0;
 	font-size: 1.0625rem;
 }
+
+/*=----------------------------=*/
+/*= Viewport width adjustments =*/
+/*=----------------------------=*/
+
 
 /*===============*/
 /* PAGINATION UI */
@@ -1296,7 +1301,7 @@ h1.listing.own-post-listing {
 
 .post {
 	overflow: visible;
-	padding: 2em 0 0 0;
+	padding-top: 2em;
 }
 
 .post-body {
@@ -1472,7 +1477,7 @@ a.post-section.alignment-forum:hover::before {
 .post .top-post-meta .date > span,
 .post .top-post-meta .comment-count > span {
 	position: fixed;
-	transform: translateX(-100%);
+	transform: translateX(calc(-1 * (100% + 32px)));
 }
 
 .post .bottom-post-meta {
@@ -1526,9 +1531,6 @@ a.post-section.alignment-forum:hover::before {
 	border-top: 1px solid #ddd;
 }
 
-.comments {
-	padding: 0 0 0 10px;
-}
 #content > .comment-thread .comment-meta a.date:focus,
 #content > .comment-thread .comment-meta a.permalink:focus {
 	color: #888;
@@ -2469,8 +2471,6 @@ strong, b {
 			height: unset;
 		}
 	}
-	@media only screen and (max-width: 1020px) {
-	}
 	@media only screen and (max-width: 1000px) {
 		#site-nav-ui-toggle button.engaged {
 			left: -56px;
@@ -2488,7 +2488,7 @@ strong, b {
 /* MOBILE */
 /*========*/
 
-@media only screen and (hover: none) {
+@media only screen and (max-width: 960px) {
 	#site-nav-ui-toggle {
 		top: 10px;
 		left: 10px;
