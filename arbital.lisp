@@ -60,8 +60,6 @@
 	  ((expand-counter 0)
 	   (markdown (regex-replace-all (ppcre:create-scanner "(?<=\\S )\\*(?= )" :single-line-mode t) markdown "\\\\*"))
 	   (markdown (regex-replace-all (ppcre:create-scanner "\\[.?summary(?:\\(.*?\\))?:.*?\\]$" :single-line-mode t :multi-line-mode t) markdown ""))
-	   (markdown (regex-replace-body (#'url-scanner markdown)
-		       (markdown-protect (match))))
 	   (markdown (regex-replace-body ("\\[[-+]?([^] ]*)(?: ([^]]*?))?\\](?!\\()" markdown)
 		       (let ((tag (reg 0))
 			     (text (reg 1)))
@@ -84,6 +82,8 @@
 				       (format nil "<span class=\"redlink\" title=\"~A\">" (encode-entities tag))
 				       (or text tag)
 				       "</span>"))))))))
+	   (markdown (regex-replace-body (#'url-scanner markdown)
+		       (markdown-protect (match))))
 	   (markdown (regex-replace-body ((ppcre:create-scanner "(?<!\\\\)(\\$\\$?)(.+?)(?<!\\\\)\\1" :single-line-mode t :multi-line-mode t) markdown)
 		       (markdown-protect
 			(let ((block (= (length (reg 0)) 2)))
