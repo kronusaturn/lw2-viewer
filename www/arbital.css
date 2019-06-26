@@ -47,11 +47,12 @@
 
 .arbital-note {
 	display: none;
-	width: 500px;
+	float: right;
+	margin-top: 1.25em;
+	margin-left: -100%;
+	width: 90%;
 	font-size: 1.333em;
 	background-color: #fff;
-	top: -0.35em;
-	left: 2.5em;
 	padding: 3px 16px 8px 16px;
 	border: 1px solid #ccc;
 	font-family: Charter;
@@ -59,8 +60,8 @@
 }
 
 .arbital-note-marker:hover .arbital-note {
-	display: inline-block;
-	position: absolute;
+	display: block;
+	position: relative;
 }
 
 .arbital-hidden > input,
