@@ -43,6 +43,7 @@
 	vertical-align: top;
 	position: relative;
 	font-family: Whitney;
+	user-select: none;
 }
 
 .arbital-note {
@@ -57,6 +58,8 @@
 	border: 1px solid #ccc;
 	font-family: Charter;
 	box-shadow: 2px 6px 20px -4px #000;
+	z-index: 5000;
+	user-select: auto;
 }
 
 .arbital-note-marker:hover .arbital-note {
