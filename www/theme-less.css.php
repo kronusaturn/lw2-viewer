@@ -1324,7 +1324,7 @@ h1.post-title {
 	padding: 0 0 0 10px;
 }
 
-@media only screen and (max-width: 900px) {
+@media only screen and (max-width: 1080px) {
 	.post-nav-item {
 		padding: 0;
 	}
@@ -2645,7 +2645,7 @@ strong, b {
 	}
 
 	/*****************************************/
-	@media only screen and (max-width: 900px) {
+	@media only screen and (max-width: 1080px) {
 	/*****************************************/
 		#theme-less-mobile-first-row-placeholder {
 			grid-row: 1;
