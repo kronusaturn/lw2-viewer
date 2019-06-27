@@ -911,19 +911,26 @@ function injectCommentsListModeSelector() {
 function injectSiteNavUIToggle() {
 	GWLog("injectSiteNavUIToggle");
 
-	let siteNavUIToggle = addUIElement("<div id='site-nav-ui-toggle'><button type='button' tabindex='-1'>&#xf0c9;</button></div>");
+	let siteNavUIToggle = addUIElement({{{parts/site_nav_ui_toggle}}});
 	siteNavUIToggle.query("button").addActivateEvent(GW.siteNavUIToggleButtonClicked = (event) => {
 		GWLog("GW.siteNavUIToggleButtonClicked");
 		toggleSiteNavUI();
 		localStorage.setItem("site-nav-ui-toggle-engaged", event.target.hasClass("engaged"));
 	});
+	
+	GW.siteNavUIToggleTargetsSelector = [
+		"#primary-bar",
+		"#secondary-bar",
+		".page-toolbar",
+		"#site-nav-ui-toggle button"
+	].join(", ");
 
 	if (!GW.isMobile && localStorage.getItem("site-nav-ui-toggle-engaged") == "true") toggleSiteNavUI();
 }
 function removeSiteNavUIToggle() {
 	GWLog("removeSiteNavUIToggle");
 
-	queryAll("#primary-bar, #secondary-bar, .page-toolbar, #site-nav-ui-toggle button").forEach(element => {
+	queryAll(GW.siteNavUIToggleTargetsSelector).forEach(element => {
 		element.removeClass("engaged");
 	});
 	removeElement("#site-nav-ui-toggle");
@@ -931,7 +938,7 @@ function removeSiteNavUIToggle() {
 function toggleSiteNavUI() {
 	GWLog("toggleSiteNavUI");
 
-	queryAll("#primary-bar, #secondary-bar, .page-toolbar, #site-nav-ui-toggle button").forEach(element => {
+	queryAll(GW.siteNavUIToggleTargetsSelector).forEach(element => {
 		element.toggleClass("engaged");
 		element.removeClass("translucent-on-scroll");
 	});
