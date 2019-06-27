@@ -818,6 +818,13 @@ function pageFadeTransition(fadeIn) {
 GW.themeLoadCallback_less = (fromTheme = "") => {
 	GWLog("themeLoadCallback_less");
 
+	// We trigger “mobile max” width at wider in Less than in other themes.
+	if (GW.mediaQueries.mobileMaxLess == null) {
+		GW.mediaQueries.mobileMaxDefault = GW.mediaQueries.mobileMax;
+		GW.mediaQueries.mobileMaxLess = matchMedia("(max-width: 1080px)");
+	}
+	GW.mediaQueries.mobileMax = GW.mediaQueries.mobileMaxLess;
+
 	injectSiteNavUIToggle();
 
 	registerInitializer('shortenDate', true, () => (query(".top-post-meta") != null), () => {
@@ -829,36 +836,21 @@ GW.themeLoadCallback_less = (fromTheme = "") => {
 		postDate.innerHTML = dtf.format(new Date(+ postDate.dataset.jsDate));
 	});
 
-	// First row placeholder on mobile (smartphone width).
-	doWhenMatchMedia(GW.mediaQueries.mobileNarrow, "themeLessMobileFirstRowPlaceholder", (mediaQuery) => {
+	doWhenMatchMedia(GW.mediaQueries.mobileNarrow, "themeLessMobileFirstRowPlaceholder", () => {
 		query("#content").insertAdjacentHTML("beforeend", "<div id='theme-less-mobile-first-row-placeholder'></div>");
-	}, (mediaQuery) => {
+	}, () => {
 		removeElement("#theme-less-mobile-first-row-placeholder");
-	}, (mediaQuery) => {
+	}, () => {
 		removeElement("#theme-less-mobile-first-row-placeholder");
-	});
-
-	// Spans (to make post-meta date & comment count fixed on desktop).
-	let elementsToFloatWithSpans = queryAll(".top-post-meta .date, .top-post-meta .comment-count");
-	function removeSpansIfNeeded() {
-		if (query(".top-post-meta .date span") == null) return;
-		elementsToFloatWithSpans.forEach(element => {
-			element.innerHTML = element.firstChild.innerHTML;
-		});
-	}
-	registerInitializer('less_addSpansActiveMediaQuery', true, () => (query(".top-post-meta") != null), () => {
-		doWhenMatchMedia(GW.mediaQueries.mobileWide, "themeLessAddSpans", (mediaQuery) => {
-			removeSpansIfNeeded();
-		}, (mediaQuery) => {
-			elementsToFloatWithSpans.forEach(element => {
-				element.innerHTML = "<span>" + element.innerHTML + "</span>";
-			});
-		}, (mediaQuery) => {
-			removeSpansIfNeeded();
-		});
 	});
 
 	if (!GW.isMobile) {
+		registerInitializer('addSpans', true, () => (query(".top-post-meta") != null), () => {
+			queryAll(".top-post-meta .date, .top-post-meta .comment-count").forEach(element => {
+				element.innerHTML = "<span>" + element.innerHTML + "</span>";
+			});
+		});
+
 		if (localStorage.getItem("appearance-adjust-ui-toggle-engaged") == null) {
 			// If state is not set (user has never clicked on the Less theme’s appearance
 			// adjustment UI toggle) then show it, but then hide it after a short time.
@@ -894,15 +886,6 @@ GW.themeLoadCallback_less = (fromTheme = "") => {
 		];
 		applyFilters(GW.currentFilters);
 	}
-
-	// Leave the “Sequences” tab as a word.
-	adjustSequencesTab(false);
-
-	// Change theme tweaker toggle icon.
-	queryAll("#theme-tweaker-toggle button").forEach(button => {
-		button.dataset.defaultIcon = button.innerHTML;
-		button.innerHTML = "&#xf1de;";
-	});
 
 	// We pre-query the relevant elements, so we don’t have to run queryAll on
 	// every firing of the scroll listener.
@@ -980,23 +963,23 @@ function updateSiteNavUIState(event) {
 
 GW.themeUnloadCallback_less = (toTheme = "") => {
 	GWLog("themeUnloadCallback_less");
+	
+	// Reset to the default “mobile max” media query.
+	GW.mediaQueries.mobileMax = GW.mediaQueries.mobileMaxDefault;
 
 	removeSiteNavUIToggle();
 	document.removeEventListener("scroll", GW["updateSiteNavUIStateScrollListener"]);
 
 	cancelDoWhenMatchMedia("themeLessMobileFirstRowPlaceholder");
-	cancelDoWhenMatchMedia("themeLessAddSpans");
+
+	if (!GW.isMobile) {
+		// Remove spans.
+		queryAll(".top-post-meta .date, .top-post-meta .comment-count").forEach(element => {
+			element.innerHTML = element.firstChild.innerHTML;
+		});
+	}
 
 	(query(".top-post-meta .date")||{}).innerHTML = (query(".bottom-post-meta .date")||{}).innerHTML;
-
-	// Put the “Sequences” tab back.
-	adjustSequencesTab();
-
-	// Change theme tweaker toggle icon back.
-	queryAll("#theme-tweaker-toggle button").forEach(button => {
-		button.innerHTML = button.dataset.defaultIcon;
-		button.dataset.defaultIcon = "";
-	});
 
 	// Reset filtered elements selector to default.
 	delete GW.themeTweaker.filtersExclusionPaths.themeLess;
@@ -1775,7 +1758,7 @@ function injectSiteNavUIToggle() {
 		"#site-nav-ui-toggle button"
 	].join(", ");
 
-	if (!GW.isMobile && localStorage.getItem("site-nav-ui-toggle-engaged") == "true") toggleSiteNavUI();
+	if (!GW.mediaQueries.mobileMax.matches && localStorage.getItem("site-nav-ui-toggle-engaged") == "true") toggleSiteNavUI();
 }
 function removeSiteNavUIToggle() {
 	GWLog("removeSiteNavUIToggle");

@@ -7273,7 +7273,7 @@ body {
 
 /*= Layout (desktop) =*/
 
-@media only screen and (min-width: 901px) {
+@media only screen and (min-width: 1081px) {
 	#primary-bar .nav-inner {
 		font-size: 1em;
 		justify-content: flex-end;
@@ -9291,7 +9291,7 @@ strong, b {
 /* MOBILE */
 /*========*/
 
-@media only screen and (max-width: 960px) {
+@media only screen and (max-width: 1080px) {
 	#site-nav-ui-toggle {
 		top: 10px;
 		left: 10px;

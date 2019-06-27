@@ -925,7 +925,7 @@ function injectSiteNavUIToggle() {
 		"#site-nav-ui-toggle button"
 	].join(", ");
 
-	if (!GW.isMobile && localStorage.getItem("site-nav-ui-toggle-engaged") == "true") toggleSiteNavUI();
+	if (!GW.mediaQueries.mobileMax.matches && localStorage.getItem("site-nav-ui-toggle-engaged") == "true") toggleSiteNavUI();
 }
 function removeSiteNavUIToggle() {
 	GWLog("removeSiteNavUIToggle");
