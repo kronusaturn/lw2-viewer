@@ -1,6 +1,6 @@
 (uiop:define-package #:lw2.clean-html
   (:use #:cl #:alexandria #:iterate #:split-sequence #:lw2.lmdb #:lw2.links #:lw2.utils #:lw2.context #:lw2.sites)
-  (:export #:clean-text #:clean-text-to-html #:clean-html #:clean-html*)
+  (:export #:url-scanner #:clean-text #:clean-text-to-html #:clean-html #:clean-html*)
   (:unintern #:*text-clean-regexps* #:*html-clean-regexps*))
 
 (in-package #:lw2.clean-html)
@@ -72,6 +72,12 @@
 
 (define-cleaner clean-text (read-regexp-file "text-clean-regexps.js"))
 (define-cleaner clean-html-regexps (read-regexp-file "html-clean-regexps.js"))
+
+(declaim (ftype function url-scanner))
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (setf (fdefinition 'url-scanner) (ppcre:create-scanner
+				    "(?:https?://[-a-zA-Z0-9]+\\.[-a-zA-Z0-9.]+|[-a-zA-Z0-9.]+\\.(?:com|edu|gov|mil|net|org|int|biz|info|name|museum|us|ca|uk|io|ly))(?:\\:[0-9]+){0,1}(?:/(?:(?:(\\()|[-\\w\\d.,;:?'\\\\+@!&%$#=~_/])*(?(1)\\)|[-\\w\\d\\\\+@&%$#=~_/]))?)?"
+				    :single-line-mode t)))
 
 (defun hyphenate-string (string)
  (let ((hyphenation-list (cl-typesetting::hyphenate-string string)))
@@ -386,13 +392,8 @@
 			  (declare (type plump:text-node text-node)) 
 			  (let ((text (plump:text text-node)))
 			    (multiple-value-bind (url-start url-end)
-				(ppcre:scan
-				 (load-time-value
-				  (ppcre:create-scanner
-				   "(?:https?://[-a-zA-Z0-9]+\\.[-a-zA-Z0-9.]+|[-a-zA-Z0-9.]+\\.(?:com|edu|gov|mil|net|org|int|biz|info|name|museum|us|ca|uk|io|ly))(?:\\:[0-9]+){0,1}(?:/(?:(?:(\\()|[-\\w\\d.,;:?'\\\\+@&%$#=~_/])*(?(1)\\)|[-\\w\\d\\\\+@&%$#=~_/]))?)?"
-				   :single-line-mode t))
-				 text)
-                              (declare (type simple-string text)
+				(ppcre:scan #'url-scanner text)
+			      (declare (type simple-string text)
                                        (type (or null fixnum) url-start url-end))
 			      (when url-start
 				(let* ((url-raw (subseq text url-start url-end))
