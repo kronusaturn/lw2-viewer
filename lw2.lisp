@@ -345,10 +345,7 @@ signaled condition to OUT-STREAM."
 "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
 <meta name=\"HandheldFriendly\" content=\"True\" />"))
 
-(defparameter *extra-external-scripts* "
-<script type=\"text/javascript\" async
-  src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML\">
-</script>")
+(defparameter *extra-external-scripts* "")
 (defparameter *extra-inline-scripts* "")
 
 (defun generate-versioned-link (file)
@@ -526,7 +523,7 @@ signaled condition to OUT-STREAM."
     (generate-fonts-html-headers (site-fonts-source *current-site*))
     (format out-stream "<link rel=\"shortcut icon\" href=\"~A\">"
 	    (generate-versioned-link "/assets/favicon.ico"))
-    (format out-stream "~{<script src=\"~A\" async>~}</script>~A"
+    (format out-stream "~{<script src=\"~A\" async></script>~}~A"
             (site-external-scripts *current-site*)
             *extra-external-scripts*)
     (format out-stream "<title>~@[~A - ~]~A</title>~@[<meta name=\"description\" content=\"~A\">~]~@[<meta name=\"robots\" content=\"~A\">~]"

@@ -82,6 +82,9 @@
 (defmethod site-stylesheets append ((site arbital-site))
   (list (generate-versioned-link "/arbital.css")))
 
+(defmethod site-external-scripts append ((site arbital-site))
+  (list "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"))
+
 (defmethod site-nav-bars ((site arbital-site))
   '((:secondary-bar (("about" "/about" "About" :accesskey "t")))
     (:primary-bar (("home" "/" "Home" :accesskey "h")
