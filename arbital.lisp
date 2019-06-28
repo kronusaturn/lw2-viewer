@@ -87,7 +87,7 @@
     (:primary-bar (("home" "/" "Home" :accesskey "h")
 		   ("math" "/explore/math/" "Math")
 		   ("ai-alignment" "/explore/ai_alignment/" "AI Alignment")
-		   ("arbital" "/explore/Arbital/" "Arbital")))))
+		   ("meta" "/explore/Arbital/" "Arbital")))))
 
 (defparameter *markdown-replace-string* "ouNi5iej")
 

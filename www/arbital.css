@@ -105,3 +105,16 @@
 	max-height: calc(100vh - 360px);
     }
 }
+
+/***********
+ * NAV BAR *
+ ***********/
+
+@media only screen and (max-width: 900px) {
+	#nav-item-math .nav-inner::before {
+		content: "\F698";
+	}
+	#nav-item-ai-alignment .nav-inner::before {
+		content: "\F544";
+	}
+}
