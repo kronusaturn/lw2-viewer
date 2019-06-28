@@ -1,6 +1,6 @@
 (in-package #:lw2.backend)
 
-(define-cache-database 'backend-arbital "page-body-json")
+(define-cache-database 'backend-arbital "page-body-json" "page-body-json-meta" "alias-to-lens-id")
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (export 'get-page-body))
@@ -9,29 +9,69 @@
   (or (find-symbol (json:camel-case-to-lisp string) (find-package '#:keyword))
       string))
 
+(defun call-with-arbital-json-options (fn)
+  (let ((json:*json-identifier-name-to-lisp* #'identity)
+	(json:*identifier-name-to-key* #'string-to-existing-keyword))
+    (funcall fn)))
+
+(defun decode-arbital-json (json-string)
+  (call-with-arbital-json-options
+   (lambda () (json:decode-json-from-string json-string))))
+
 (define-backend-operation decode-graphql-json backend-arbital (json-string)
   (json:decode-json-from-string json-string))
 
+(defun update-arbital-aliases (data)
+  (with-cache-transaction
+      (dolist (page-data (cdr (assoc :pages data)))
+	(let* ((lens-id (car page-data))
+	       (lens-id (typecase lens-id
+			  (symbol (string-downcase lens-id))
+			  (t lens-id)))
+	       (page-alias (cdr (assoc :alias (cdr page-data)))))
+	  (when (and (> (length lens-id) 0) (> (length page-alias) 0))
+	    (cache-put "alias-to-lens-id" page-alias lens-id))))))
+
 (define-backend-function get-page-body (params page-type)
   (backend-arbital
-    (let* ((query (json:encode-json-to-string params))
-	   (fn (lambda () (block nil
-			    (loop
-			       (handler-case
-				   (return
-				     (sb-sys:with-deadline (:seconds 600)
-				       (sb-ext:octets-to-string
-					(drakma:http-request (case page-type
-							       (:explore "https://arbital.com/json/explore/")
-							       (t "https://arbital.com/json/primaryPage/"))
-							     :method :post
-							     :content query)
-					:external-format :utf-8)))
-				 (t () nil))
-			       (sleep 2)))))
-	   (json:*json-identifier-name-to-lisp* #'identity)
-	   (json:*identifier-name-to-key* #'string-to-existing-keyword))
-      (lw2-graphql-query-timeout-cached fn "page-body-json" (format nil "~A~@[~A~]" query page-type) :revalidate nil))))
+   (let* ((query (json:encode-json-to-string params))
+	  (page-key (case page-type
+		      (:explore (cdr (assoc :page-alias params)))
+		      (t (or (cdr (assoc :lens-id params))
+			     (cache-get "alias-to-lens-id" (cdr (assoc :page-alias params)))
+			     (cdr (assoc :page-alias params))))))
+	   (fn (lambda ()
+		 (let* ((json-string
+			 (block nil
+			   (loop
+			      (handler-case
+				  (return
+				    (sb-sys:with-deadline (:seconds 600)
+				      (sb-ext:octets-to-string
+				       (drakma:http-request (case page-type
+							      (:explore "https://arbital.com/json/explore/")
+							      (t "https://arbital.com/json/primaryPage/"))
+							    :method :post
+							    :content query)
+				       :external-format :utf-8)))
+				(t (c) (print c)))
+			      (sleep 2))))
+			(data (decode-arbital-json json-string)))
+		   (update-arbital-aliases data)
+		   json-string))))
+      (call-with-arbital-json-options
+       (lambda ()
+	 (lw2-graphql-query-timeout-cached fn "page-body-json" (format nil "~@[~A ~]~A" (unless (eq page-type :primary-page) page-type) page-key) :revalidate nil))))))
+
+(defun add-arbital-scrape-files (directory)
+  (with-cache-transaction
+      (dolist (filename (uiop:directory-files directory))
+	(let* ((file-string (uiop:read-file-string filename))
+	       (file-data (decode-arbital-json file-string)))
+	  (cache-put "page-body-json"
+		     (ppcre:regex-replace "^.*/([^/]+).json$" (namestring filename) "\\1")
+		     file-string)
+	  (update-arbital-aliases file-data)))))
 
 (in-package #:lw2-viewer)
 
