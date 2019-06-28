@@ -122,14 +122,14 @@
 	  (if-let (existing-environment (find-environment-with-path (backend-cache-db-path (site-backend site)) *db-environments*))
 		  (progn
 		    (setf (backend-lmdb-environment (site-backend site)) existing-environment)
-		    (prepare-environment existing-environment backend))
+		    (prepare-environment existing-environment (site-backend site)))
 		  (let ((new-environment
 			 (make-environment-container
 			  :semaphore (make-semaphore :name (format nil "LMDB environment semaphore for ~A" (site-host site)) :count (expt 2 20))
 			  :environment (lmdb:make-environment (backend-cache-db-path (site-backend site))
 							      :max-databases 1024 :max-readers 126 :open-flags 0 :mapsize *lmdb-mapsize*))))
 		    (lmdb:open-environment (environment-container-environment new-environment) :create t)
-		    (prepare-environment new-environment backend)
+		    (prepare-environment new-environment (site-backend site))
 		    (setf (backend-lmdb-environment (site-backend site)) new-environment)
 		    (push new-environment *db-environments*)))))))
   (backend-lmdb-environment backend))
