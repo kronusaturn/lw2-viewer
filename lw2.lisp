@@ -1054,8 +1054,12 @@ signaled condition to OUT-STREAM."
 				    :tags-supported (typep *current-backend* 'backend-accordius)
 				    :tags (when (and post-id (typep *current-backend* 'backend-accordius)) (do-wl-rest-query (format nil "posts/~a/update_tagset/" post-id) '()))
                                     :post-id post-id
-                                    :section-list (loop for (name desc) in '(("all" "All") ("meta" "Meta") ("drafts" "Drafts"))
-                                                        collect (alist :name name :desc desc :selected (string= name section)))
+                                    :section-list (loop for (name desc) in (append (list-cond
+										    ((or (cdr (assoc :frontpage-date post-body))
+											 (member "trustLevel1" (cdr (assoc :groups (get-user :user-id (logged-in-userid)))) :test #'string=))
+										     '("frontpage" "Frontpage")))
+										   '(("all" "All") ("meta" "Meta") ("drafts" "Drafts")))
+							collect (alist :name name :desc desc :selected (string= name section)))
                                     :markdown-source (or (and post-id (cache-get "post-markdown-source" post-id)) (cdr (assoc :html-body post-body)) "")))))
     (:post (text question)
      (let ((lw2-auth-token *current-auth-token*)
