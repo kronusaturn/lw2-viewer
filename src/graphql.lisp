@@ -6,7 +6,7 @@
 
 (in-package #:lw2.graphql)
 
-(defconstant +graphql-timestamp-format+ (if (boundp '+graphql-timestamp-format+) +graphql-timestamp-format+
+(defconstant +graphql-timestamp-format+ (if (boundp '+graphql-timestamp-format+) (symbol-value '+graphql-timestamp-format+)
                                             (substitute-if '(:msec 3) (lambda (x) (and (listp x) (eq (car x) :usec))) local-time:+iso-8601-format+)))
 
 (defun graphql-query-string* (query-type terms fields)

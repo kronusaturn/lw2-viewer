@@ -1,0 +1,120 @@
+.redlink {
+	color: #a00;
+}
+
+.arbital-nav {
+	margin: 1em 30px;
+	line-height: 1.2;
+}
+
+.arbital-nav > p {
+	font-weight: bold;
+	font-size: 1.2em;
+}
+
+.arbital-nav > ul * {
+	margin: 0;
+}
+
+.arbital-nav ul {
+	padding-left: 1.5em;
+}
+
+.arbital-nav li {
+	margin-top: 0.67em;
+}
+
+.arbital-nav li > a {
+	display: block;
+	font-size: 1.1em;
+	font-weight: bold;
+	margin: 0.33em 0;
+}
+
+.arbital-nav li > a:last-child {
+	margin-bottom: 1em;
+}
+
+.arbital-note-marker {
+	background-color: #a5f9ac;
+	border-radius: 0.75em;
+	font-size: 0.75em;
+	padding: 2px 7px;
+	vertical-align: top;
+	position: relative;
+	font-family: Whitney;
+	user-select: none;
+}
+
+.arbital-note {
+	display: none;
+	float: right;
+	margin-top: 1.25em;
+	margin-left: -100%;
+	width: 90%;
+	font-size: 1.333em;
+	background-color: #fff;
+	padding: 3px 16px 8px 16px;
+	border: 1px solid #ccc;
+	font-family: Charter;
+	box-shadow: 2px 6px 20px -4px #000;
+	z-index: 5000;
+	user-select: auto;
+}
+
+.arbital-note-marker:hover .arbital-note {
+	display: block;
+	position: relative;
+}
+
+.arbital-hidden > input,
+.arbital-hidden > div {
+	display: none;
+}
+
+.arbital-hidden > label {
+	display: block;
+	box-shadow: 0 12px 20px -6px #dfd inset, -1px -1px 0 0 #282 inset;
+	background-color: #afa;
+	border-radius: 12px;
+	border: 1px solid #6e6;
+	width: max-content;
+	padding: 1px 10px 3px;
+}
+
+.arbital-hidden > input:checked ~ label {
+	box-shadow: 0 1px 1.5px 1.5px black inset, 0 8px 20px -6px #dfd inset;
+	padding: 3px 10px 1px;
+}
+
+.arbital-hidden > input:checked ~ div {
+	display: block;
+}
+
+#content.loading-page {
+	text-align: center;
+}
+
+#content.loading-page img {
+	max-height: calc(100vh - 285px);
+	margin: auto;
+}
+
+@media only screen and (max-width: 520px) {
+    #content.loading-page img {
+	max-height: calc(100vh - 360px);
+    }
+}
+
+/***********
+ * NAV BAR *
+ ***********/
+
+@media only screen and (max-width: 900px) {
+	#nav-item-math .nav-inner::before {
+		content: "\F698";
+	}
+	#nav-item-ai-alignment .nav-inner::before {
+		content: "\F544";
+	}
+}

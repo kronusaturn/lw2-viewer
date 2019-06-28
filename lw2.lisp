@@ -1,6 +1,7 @@
 (uiop:define-package #:lw2-viewer
   (:use #:cl #:sb-thread #:flexi-streams #:djula
 	#:lw2-viewer.config #:lw2.utils #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login #:lw2.context #:lw2.sites #:lw2.components #:lw2.html-reader #:lw2.fonts
+	#:lw2.routes
 	#:lw2.schema-type #:lw2.schema-types
 	#:lw2.interface-utils
 	#:lw2.user-context
@@ -8,6 +9,7 @@
 	#:lw2.data-viewers.comment)
   (:import-from #:alexandria #:ensure-list #:when-let #:if-let)
   (:import-from #:collectors #:with-collector)
+  (:import-from #:ppcre #:regex-replace-all)
   (:unintern
     #:define-regex-handler #:*fonts-stylesheet-uri* #:generate-fonts-link
     #:user-nav-bar #:*primary-nav* #:*secondary-nav* #:*nav-bars*
@@ -23,7 +25,8 @@
 
 (add-template-directory (asdf:system-relative-pathname "lw2-viewer" "templates/"))
 
-(define-cache-database "auth-token-to-userid" "auth-token-to-username" "comment-markdown-source" "post-markdown-source" "user-ignore-list")
+(define-cache-database 'backend-lw2-legacy
+    "auth-token-to-userid" "auth-token-to-username" "comment-markdown-source" "post-markdown-source" "user-ignore-list")
 
 (defvar *read-only-mode* nil)
 (defvar *read-only-default-message* "Due to a system outage, you cannot log in or post at this time.")
@@ -342,7 +345,10 @@ signaled condition to OUT-STREAM."
 "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
 <meta name=\"HandheldFriendly\" content=\"True\" />"))
 
-(defparameter *extra-external-scripts* "")
+(defparameter *extra-external-scripts* "
+<script type=\"text/javascript\" async
+  src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML\">
+</script>")
 (defparameter *extra-inline-scripts* "")
 
 (defun generate-versioned-link (file)
@@ -475,42 +481,62 @@ signaled condition to OUT-STREAM."
     (assert (ironclad:constant-time-equal csrf-token correct-token) nil "CSRF check failed.")
     t)) 
 
-(defun generate-css-link ()
-  (labels ((gen-inner (theme os)
-             (generate-versioned-link (format nil "/css/style~@[-~A~].~A.css" (if (and theme (> (length theme) 0)) theme) os))))
-    (let* ((ua (hunchentoot:header-in* :user-agent))
-           (theme (hunchentoot:cookie-in "theme"))
-           (os (cond ((search "Windows" ua) "windows")
-                     ((search "Mac OS" ua) "mac")
-                     (t "linux"))))
-      (handler-case (gen-inner theme os)
-        (serious-condition () (gen-inner nil os))))))
+(defgeneric site-stylesheets (site)
+  (:method-combination append :most-specific-last)
+  (:method append ((s site))
+    (labels ((gen-inner (theme os)
+	       (list (generate-versioned-link (format nil "/css/style~@[-~A~].~A.css" (if (and theme (> (length theme) 0)) theme) os)))))
+      (let* ((ua (hunchentoot:header-in* :user-agent))
+	     (theme (hunchentoot:cookie-in "theme"))
+	     (os (cond ((search "Windows" ua) "windows")
+		       ((search "Mac OS" ua) "mac")
+		       (t "linux"))))
+	(handler-case (gen-inner theme os)
+	  (serious-condition () (gen-inner nil os)))))))
 
-(defun html-body (out-stream fn &key title description current-uri content-class robots)
+(defgeneric site-inline-scripts (site)
+  (:method-combination append :most-specific-last)
+  (:method append ((s site))
+	   (list (load-time-value (with-open-file (s "www/head.js") (uiop:slurp-stream-string s)) t))))
+
+(defgeneric site-external-scripts (site)
+  (:method-combination append :most-specific-last)
+  (:method append ((s site))
+	   (list (generate-versioned-link "/script.js"))))
+
+(defgeneric site-head-elements (site)
+  (:method-combination append :most-specific-last)
+  (:method append ((s site)) nil))
+
+(defun html-body (out-stream fn &key title description current-uri content-class robots extra-head)
   (let* ((session-token (hunchentoot:cookie-in "session-token"))
          (csrf-token (and session-token (make-csrf-token session-token))))
     (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head>")
-    (format out-stream "<script>window.GW = { }; loggedInUserId=\"~A\"; loggedInUserDisplayName=\"~A\"; loggedInUserSlug=\"~A\"; ~@[GW.csrfToken=\"~A\"; ~]~A</script>~A"
+    (format out-stream "<script>window.GW = { }; loggedInUserId=\"~A\"; loggedInUserDisplayName=\"~A\"; loggedInUserSlug=\"~A\"; GW.useFancyFeatures=~A; ~@[GW.csrfToken=\"~A\"; ~]~{~A~}</script>~A"
             (or (logged-in-userid) "")
             (or (logged-in-username) "")
             (or (logged-in-user-slug) "")
+	    (if (typep *current-site* 'arbital-site) "false" "true")
             csrf-token
-            (load-time-value (with-open-file (s "www/head.js") (uiop:slurp-stream-string s)) t)
+	    (site-inline-scripts *current-site*)
             *extra-inline-scripts*)
-    (format out-stream "~A<link rel=\"stylesheet\" href=\"~A\">"
+    (format out-stream "~A~{<link rel=\"stylesheet\" href=\"~A\">~}"
             *html-head*
-            (generate-css-link))
+	    (site-stylesheets *current-site*))
     (generate-fonts-html-headers (site-fonts-source *current-site*))
     (format out-stream "<link rel=\"shortcut icon\" href=\"~A\">"
 	    (generate-versioned-link "/assets/favicon.ico"))
-    (format out-stream "<script src=\"~A\" async></script>~A"
-            (generate-versioned-link "/script.js")
+    (format out-stream "~{<script src=\"~A\" async>~}</script>~A"
+            (site-external-scripts *current-site*)
             *extra-external-scripts*)
     (format out-stream "<title>~@[~A - ~]~A</title>~@[<meta name=\"description\" content=\"~A\">~]~@[<meta name=\"robots\" content=\"~A\">~]"
             (if title (encode-entities title))
             (site-title *current-site*)
             description
             robots)
+    (format out-stream "~{~A~}"
+	    (site-head-elements *current-site*))
+    (when extra-head (funcall extra-head))
     (format out-stream "</head>"))
   (unwind-protect
     (progn
@@ -592,7 +618,7 @@ signaled condition to OUT-STREAM."
 			     `(let ((,stream-sym ,out-stream)) 
 				,.out-body)))) 
 
-(defun call-with-emit-page (out-stream fn &key title description current-uri content-class (return-code 200) robots (pagination (pagination-nav-bars)) top-nav)
+(defun call-with-emit-page (out-stream fn &key title description current-uri content-class (return-code 200) robots (pagination (pagination-nav-bars)) top-nav extra-head)
   (declare (ignore return-code))
   (when (eq (hunchentoot:request-method*) :head)
     (return-from call-with-emit-page))
@@ -602,7 +628,7 @@ signaled condition to OUT-STREAM."
                  (lambda ()
                    (when top-nav (funcall top-nav out-stream))
                    (funcall pagination out-stream fn))
-                 :title title :description description :current-uri current-uri :content-class content-class :robots robots))))
+                 :title title :description description :current-uri current-uri :content-class content-class :robots robots :extra-head extra-head))))
 
 (defun set-cookie (key value &key (max-age (- (expt 2 31) 1)) (path "/"))
   (hunchentoot:set-cookie key :value value :path path :max-age max-age :secure (site-secure *current-site*)))
@@ -612,8 +638,11 @@ signaled condition to OUT-STREAM."
     (setf (hunchentoot:content-type*) "text/html; charset=utf-8"
           (hunchentoot:return-code*) return-code
           (hunchentoot:header-out :link) (format nil "~:{<~A>;rel=preload;type=~A;as=~A~@{;~A~}~:^,~}"
-                                                 `((,(generate-css-link) "text/css" "style" ,.push-option)
-                                                   (,(generate-versioned-link "/script.js") "text/javascript" "script" ,.push-option))))
+						 (append
+						  (loop for link in (site-stylesheets *current-site*)
+						     collect (list* link "text/css" "style" push-option))
+						  (loop for link in (site-external-scripts *current-site*)
+						       collect (list* link "text/javascript" "script" push-option)))))
     (unless push-option (set-cookie "push" "t" :max-age (* 4 60 60)))))
 
 (defun user-pref (key)
@@ -758,17 +787,13 @@ signaled condition to OUT-STREAM."
 
 (defun postprocess-markdown (markdown)
   (if (typep *current-site* 'alternate-frontend-site)
-      (ppcre:regex-replace-all
-       (concatenate 'string (ppcre:regex-replace-all "\\." (site-uri *current-site*) "\\.") "posts/([^/ ]{17})/([^/# ]*)(?:#comment-([^/ ]{17})|/comment/([^/ ]{17}))?")
-       markdown
-       (lambda (target-string start end match-start match-end reg-starts reg-ends)
-	 (declare (ignore start end match-start match-end))
-	 (labels ((reg (n) (if (and (> (length reg-starts) n) (aref reg-starts n))
-			       (substring target-string (aref reg-starts n) (aref reg-ends n)))))
-	   (quri:render-uri
-	    (quri:merge-uris
-	     (format nil "/posts/~A/~A~@[#~A~]" (reg 0) (reg 1) (or (reg 2) (reg 3)))
-	     (main-site-uri *current-site*))))))
+      (regex-replace-body
+       ((concatenate 'string (regex-replace-all "\\." (site-uri *current-site*) "\\.") "posts/([^/ ]{17})/([^/# ]*)(?:#comment-([^/ ]{17})|/comment/([^/ ]{17}))?")
+	markdown)
+       (quri:render-uri
+	(quri:merge-uris
+	 (format nil "/posts/~A/~A~@[#~A~]" (reg 0) (reg 1) (or (reg 2) (reg 3)))
+	 (main-site-uri *current-site*))))
       markdown))
 
 (defun redirect (uri &key (type :see-other))
@@ -854,39 +879,48 @@ signaled condition to OUT-STREAM."
 			    :extra-class html-class))
     (or sort-string (user-pref pref))))
 
-(define-page view-root "/" ((offset :type fixnum)
-                            (limit :type fixnum))
-  (component-value-bind ((sort-string sort-widget))
-    (multiple-value-bind (posts total)
-      (get-posts-index :offset offset :limit (or limit (user-pref :items-per-page)) :sort sort-string)
-      (view-items-index posts
-                        :section :frontpage :title "Frontpage posts" :hide-title t
-                        :pagination (pagination-nav-bars :offset (or offset 0) :total total :with-next (not total))
-                        :top-nav (lambda (out-stream)
-                                   (page-toolbar-to-html out-stream
-                                                         :title "Frontpage posts"
-                                                         :new-post t)
-                                   (funcall sort-widget out-stream))))))
-
-(define-page view-index "/index" ((view :member '(:all :new :frontpage :featured :meta :community :alignment-forum :questions) :default :all)
-                                  before after
-                                  (offset :type fixnum)
-                                  (limit :type fixnum))
+(define-component view-index ()
+  (:http-args '((view :member '(:all :new :frontpage :featured :meta :community :alignment-forum :questions) :default :frontpage)
+		before after
+		(offset :type fixnum)
+		(limit :type fixnum)))
   (when (eq view :new) (redirect (replace-query-params (hunchentoot:request-uri*) "view" "all" "all" nil) :type :permanent) (return))
   (component-value-bind ((sort-string sort-widget))
     (multiple-value-bind (posts total)
       (get-posts-index :view (string-downcase view) :before before :after after :offset offset :limit (or limit (user-pref :items-per-page)) :sort sort-string)
       (let ((page-title (format nil "~@(~A posts~)" view)))
-        (view-items-index posts
-                          :section view :title page-title
-                          :pagination (pagination-nav-bars :offset (or offset 0) :total total :with-next (not total))
-                          :content-class (format nil "index-page ~(~A~)-index-page" view)
-                          :top-nav (lambda (out-stream)
-                                     (page-toolbar-to-html out-stream
-                                                           :title page-title
-                                                           :new-post (if (eq view :meta) "meta" t))
-                                     (if (member view '(:all))
-                                         (funcall sort-widget out-stream))))))))
+	(renderer ()
+		  (view-items-index posts
+				    :section view :title page-title :hide-title (eq view :frontpage)
+				    :pagination (pagination-nav-bars :offset (or offset 0) :total total :with-next (not total))
+				    :content-class (format nil "index-page ~(~A~)-index-page" view)
+				    :top-nav (lambda (out-stream)
+					       (page-toolbar-to-html out-stream
+								     :title page-title
+								     :new-post (if (eq view :meta) "meta" t))
+					       (if (member view '(:frontpage :all))
+						   (funcall sort-widget out-stream)))))))))
+
+(defmacro route-component (name lambda-list &rest args)
+  `(lambda ,lambda-list
+     (with-error-page
+	 (component-value-bind ((() (,name ,@args)))
+			       (when ,name
+				 (funcall ,name))))))
+
+(define-route 'forum-site 'standard-route :name 'view-root :uri "/" :handler (route-component view-index ()))
+
+(define-route 'forum-site 'standard-route :name 'view-index :uri "/index" :handler (route-component view-index ()))
+
+(hunchentoot:define-easy-handler
+    (view-site-routes
+     :uri (lambda (req)
+	    (declare (ignore req))
+	    (with-site-context ((let ((host (or (hunchentoot:header-in* :x-forwarded-host) (hunchentoot:header-in* :host))))
+				  (or (find-site host)
+				      (error "Unknown site: ~A" host))))
+	      (call-route-handler *current-site* (hunchentoot:script-name*)))))
+    nil)
 
 (define-page view-post "/post" ((id :required t))
   (redirect (generate-post-link id) :type :permanent))
@@ -1518,8 +1552,10 @@ signaled condition to OUT-STREAM."
                                                                                       (loop for theme in '(nil "dark" "grey" "ultramodern" "zero" "brutalist" "rts" "classic" "less")
                                                                                             collect (defres (format nil "/css/style~@[-~A~].~A.css" theme system) "text/css")))
                                                                                     (loop for (uri content-type) in
-                                                                                      '(("/script.js" "text/javascript")
-                                                                                        ("/assets/favicon.ico" "image/x-icon"))
+										      '(("/arbital.css" "text/css")
+											("/script.js" "text/javascript")
+											("/assets/favicon.ico" "image/x-icon")
+											("/assets/telegraph.jpg" "image/jpeg"))
                                                                                       collect (defres uri content-type))))
                                                                    (when file
                                                                      (when (assoc "v" (hunchentoot:get-parameters r) :test #'string=)

@@ -2,6 +2,7 @@
   (:use #:cl)
   (:import-from #:alexandria #:symbolicate)
   (:export
+    #:backend-class #:class-cached-databases #:class-own-databases #:class-databases-epoch
     #:backend-base
     #:backend-lmdb-cache #:backend-lmdb-environment #:backend-cache-db-path
     #:backend-graphql
@@ -11,43 +12,67 @@
     #:backend-q-and-a
     #:backend-alignment-forum
     #:backend-lw2-legacy #:backend-lw2-modernized #:backend-lw2 #:backend-algolia-search #:backend-ea-forum #:backend-accordius
+    #:backend-arbital
     #:make-backend #:define-backend-function #:define-backend-operation #:backend)
   (:unintern #:declare-backend-function)
   (:recycle #:lw2.backend #:lw2.login))
 
 (in-package #:lw2.backend-modules)
 
-(defclass backend-base () ())
+(defclass backend-class (standard-class)
+  ((cached-databases :accessor class-cached-databases :initform nil)
+   (own-databases :accessor class-own-databases :initform nil)
+   (databases-epoch :accessor class-databases-epoch :initform 0)))
+
+(defmethod closer-mop:validate-superclass ((c backend-class) (sc standard-class))
+  t)
+
+(defclass backend-base () () (:metaclass backend-class))
 
 (defclass backend-lmdb-cache (backend-base)
   ((lmdb-environment :accessor backend-lmdb-environment :initform nil)
-   (cache-db-path :accessor backend-cache-db-path :initarg :cache-db-path :type simple-string)))
+   (cache-db-path :accessor backend-cache-db-path :initarg :cache-db-path :type simple-string))
+  (:metaclass backend-class))
 
 (defclass backend-graphql (backend-lmdb-cache)
-  ((graphql-uri :accessor graphql-uri :initarg :graphql-uri :type simple-string)))
+  ((graphql-uri :accessor graphql-uri :initarg :graphql-uri :type simple-string))
+  (:metaclass backend-class))
 
 (defclass backend-websocket-login (backend-base)
-  ((websocket-uri :accessor websocket-uri :initarg :websocket-uri :type simple-string)))
+  ((websocket-uri :accessor websocket-uri :initarg :websocket-uri :type simple-string))
+  (:metaclass backend-class))
 
 (defclass backend-algolia-search (backend-base)
-  ((algolia-search-uri :accessor algolia-search-uri :initarg :algolia-search-uri :type simple-string)))
+  ((algolia-search-uri :accessor algolia-search-uri :initarg :algolia-search-uri :type simple-string))
+  (:metaclass backend-class))
 
-(defclass backend-feed-crossposts (backend-graphql) ())
+(defclass backend-feed-crossposts (backend-graphql) ()
+  (:metaclass backend-class))
 
-(defclass backend-q-and-a (backend-graphql) ())
+(defclass backend-q-and-a (backend-graphql) ()
+  (:metaclass backend-class))
 
-(defclass backend-alignment-forum (backend-graphql) ())
+(defclass backend-alignment-forum (backend-graphql) ()
+  (:metaclass backend-class))
 
-(defclass backend-lw2-legacy (backend-graphql) ())
+(defclass backend-lw2-legacy (backend-graphql) ()
+  (:metaclass backend-class))
 
-(defclass backend-lw2-modernized (backend-graphql) ())
+(defclass backend-lw2-modernized (backend-graphql) ()
+  (:metaclass backend-class))
 
-(defclass backend-lw2 (backend-websocket-login backend-lw2-modernized backend-lw2-legacy backend-algolia-search backend-q-and-a backend-alignment-forum backend-feed-crossposts) ())
+(defclass backend-lw2 (backend-websocket-login backend-lw2-modernized backend-lw2-legacy backend-algolia-search backend-q-and-a backend-alignment-forum backend-feed-crossposts) ()
+  (:metaclass backend-class))
 
-(defclass backend-ea-forum (backend-websocket-login backend-lw2-modernized backend-lw2-legacy backend-algolia-search backend-q-and-a backend-feed-crossposts) ())
+(defclass backend-ea-forum (backend-websocket-login backend-lw2-modernized backend-lw2-legacy backend-algolia-search backend-q-and-a backend-feed-crossposts) ()
+  (:metaclass backend-class))
 
 (defclass backend-accordius (backend-lw2-legacy backend-lw2-modernized)
-  ((rest-api-uri :accessor rest-api-uri :initarg :rest-api-uri :type simple-string)))
+  ((rest-api-uri :accessor rest-api-uri :initarg :rest-api-uri :type simple-string))
+  (:metaclass backend-class))
+
+(defclass backend-arbital (backend-lmdb-cache) ()
+  (:metaclass backend-class))
 
 (defun make-backend (type-string &rest args)
   (apply #'make-instance (symbolicate "BACKEND-" (string-upcase type-string)) args))

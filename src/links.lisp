@@ -38,7 +38,10 @@
   (ppcre:scan "^https?://(?:www\\.)?(?:less(?:er|est)?wrong\\.com|alignmentforum\\.org)" link))
 
 (defmethod link-for-site-p ((s ea-forum-viewer-site) link)
-  (ppcre:scan "https?://(?:www\\.)?(?:effective-altruism\\.com|forum\\.effectivealtruism\\.org)" link))
+  (ppcre:scan "^https?://(?:www\\.)?(?:effective-altruism\\.com|forum\\.effectivealtruism\\.org)" link))
+
+(defmethod link-for-site-p ((s arbital-site) link)
+  (ppcre:scan "^https?://(?:www\\.)?(?:arbital\\.com)" link))
 
 (defun find-link-site (link)
   (if (ppcre:scan "^/" link)
@@ -68,6 +71,11 @@
 	     (matched-link (match-values "^(?:https?://[^/]+)?/(users/[^/#]+)" link (0))))
     (concatenate 'string (site-link-prefix site) matched-link)))
 
+(defun convert-arbital-link (link)
+  (when-let ((site (find-link-site link))
+	     (matched-link (match-values "^(?:https?://[^/]+)?/(.*)" link (0))))
+    (concatenate 'string (site-link-prefix site) matched-link)))
+
 (defmacro with-direct-link-restart ((direct-link) &body body)
   (once-only (direct-link)
     `(restart-case (progn ,@body)
@@ -95,13 +103,13 @@
         (quri:merge-uris (quri:uri (funcall get-fn matched-link))
                          (quri:uri (site-uri (find-link-site base-uri))))))))
 
-(simple-cacheable ("lw1-link" "lw1-link" link :catch-errors nil)
+(simple-cacheable ("lw1-link" 'backend-lmdb-cache "lw1-link" link :catch-errors nil)
   (process-redirect-link link "https://www.lesswrong.com" "LessWrong 1.0"))
 
 (defun convert-lw1-link (link)
   (convert-redirect-link link #'match-lw1-link #'get-lw1-link "https://www.lesswrong.com"))
 
-(simple-cacheable ("ea1-link" "ea1-link" link :catch-errors nil)
+(simple-cacheable ("ea1-link" 'backend-lmdb-cache "ea1-link" link :catch-errors nil)
   (process-redirect-link link "https://forum.effectivealtruism.org" "EA Forum 1.0"))
 
 (defun convert-ea1-link (link)
@@ -112,7 +120,7 @@
       link
       nil))
 
-(simple-cacheable ("overcomingbias-link" "overcomingbias-link" link :catch-errors nil)
+(simple-cacheable ("overcomingbias-link" 'backend-lmdb-cache "overcomingbias-link" link :catch-errors nil)
   (if-let ((location (get-redirect link)))
           (match-lw1-link location)
           ""))
@@ -125,7 +133,7 @@
             nil
             (convert-lw1-link lw1-link))))))
 
-(simple-cacheable ("agentfoundations-link" "agentfoundations-link" link :catch-errors nil)
+(simple-cacheable ("agentfoundations-link" 'backend-lmdb-cache "agentfoundations-link" link :catch-errors nil)
   (process-redirect-link link "https://www.lesswrong.com" "Agent Foundations"))
 
 (defun convert-agentfoundations-link (link)
@@ -170,7 +178,8 @@
 	(convert-ea1-link url)
 	(convert-agentfoundations-link url)
 	(convert-overcomingbias-link url)
-	(convert-lw2-user-link url))))
+	(convert-lw2-user-link url)
+	(convert-arbital-link url))))
 
 (defun convert-any-link (url)
   (or (convert-any-link* url) url))

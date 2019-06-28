@@ -9,7 +9,7 @@
 
 (in-package #:lw2.lmdb) 
 
-(defglobal *cache-databases-list* nil)
+(defglobal *cache-databases-epoch* 0)
 
 (defglobal *db-environments-lock* (make-mutex :name "DB environments mutex"))
 
@@ -17,10 +17,29 @@
 
 (defglobal *environments-sites* nil)
 
-(defun define-cache-database (&rest names)
+(defun define-cache-database (class-name &rest names)
   (with-mutex (*db-environments-lock*)
-    (dolist (name names)
-      (setf *cache-databases-list* (adjoin name *cache-databases-list* :test #'string=)))))
+    (let* ((class (find-class class-name))
+	   (old-list (class-own-databases class))
+	   (new-list (union old-list names :test #'string=)))
+      (unless (equal old-list new-list)
+	(incf *cache-databases-epoch*)
+	(setf (class-own-databases class) new-list)))))
+
+(defmethod class-databases ((class t)) nil)
+
+(defmethod class-databases ((class backend-class))
+  (if (eq *cache-databases-epoch* (class-databases-epoch class))
+      (class-cached-databases class)
+      (let ((new-list (append (class-own-databases class)
+			      (loop for superclass in (closer-mop:class-direct-superclasses class)
+				 append (class-databases superclass)))))
+	(setf (class-cached-databases class) new-list
+	      (class-databases-epoch class) *cache-databases-epoch*)
+	new-list)))
+
+(defun backend-databases (backend)
+  (class-databases (class-of backend)))
 
 (defstruct environment-container
   (semaphore nil :type semaphore)
@@ -53,17 +72,17 @@
              open-databases))
   (lmdb:close-environment environment))
 
-(defun prepare-environment (environment-container)
+(defun prepare-environment (environment-container backend)
   (let ((environment (environment-container-environment environment-container))
         (open-databases (environment-container-open-databases environment-container)))
     (assert (not lmdb:*transaction*) () "The transaction in which a database is created must be closed before that database may be used in another thread.")
     (with-environment-transaction (environment)
-      (dolist (db-name *cache-databases-list*)
+      (dolist (db-name (backend-databases backend))
 	(unless (gethash db-name open-databases)
 	  (let ((db (lmdb:make-database db-name)))
 	    (lmdb:open-database db :create t)
 	    (setf (gethash db-name open-databases) db)))))
-    (setf (environment-container-databases-list environment-container) *cache-databases-list*)))
+    (setf (environment-container-databases-list environment-container) (backend-databases backend))))
 
 (defun find-environment-with-path (path environment-list)
   (find-if
@@ -91,26 +110,28 @@
 (define-backend-operation get-current-environment backend-lmdb-cache ()
   (with-mutex (*db-environments-lock*)
     (unless (and (backend-lmdb-environment backend) (eq *sites* *environments-sites*)
-		 (eq *cache-databases-list* (environment-container-databases-list (backend-lmdb-environment backend))))
+		 (eq (backend-databases backend) (environment-container-databases-list (backend-lmdb-environment backend))))
       (setf *environments-sites* *sites*)
-      (uiop:ensure-all-directories-exist (map 'list
-					      (lambda (site)
-						(backend-cache-db-path (site-backend site)))
-					      *environments-sites*))
-      (dolist (site *environments-sites*)
-	(if-let (existing-environment (find-environment-with-path (backend-cache-db-path (site-backend site)) *db-environments*))
-		(progn
-		  (setf (backend-lmdb-environment (site-backend site)) existing-environment)
-		  (prepare-environment existing-environment))
-		(let ((new-environment
-		       (make-environment-container
-			:semaphore (make-semaphore :name (format nil "LMDB environment semaphore for ~A" (site-host site)) :count (expt 2 20))
-			:environment (lmdb:make-environment (backend-cache-db-path (site-backend site))
-							    :max-databases 1024 :max-readers 126 :open-flags 0 :mapsize *lmdb-mapsize*))))
-		  (lmdb:open-environment (environment-container-environment new-environment) :create t)
-		  (prepare-environment new-environment)
-		  (setf (backend-lmdb-environment (site-backend site)) new-environment)
-		  (push new-environment *db-environments*))))))
+      (let ((lmdb-cache-sites (remove-if (lambda (x) (not (typep (site-backend x) 'backend-lmdb-cache)))
+					 *environments-sites*)))
+	(uiop:ensure-all-directories-exist (map 'list
+						(lambda (site)
+						  (backend-cache-db-path (site-backend site)))
+						lmdb-cache-sites))
+	(dolist (site lmdb-cache-sites)
+	  (if-let (existing-environment (find-environment-with-path (backend-cache-db-path (site-backend site)) *db-environments*))
+		  (progn
+		    (setf (backend-lmdb-environment (site-backend site)) existing-environment)
+		    (prepare-environment existing-environment (site-backend site)))
+		  (let ((new-environment
+			 (make-environment-container
+			  :semaphore (make-semaphore :name (format nil "LMDB environment semaphore for ~A" (site-host site)) :count (expt 2 20))
+			  :environment (lmdb:make-environment (backend-cache-db-path (site-backend site))
+							      :max-databases 1024 :max-readers 126 :open-flags 0 :mapsize *lmdb-mapsize*))))
+		    (lmdb:open-environment (environment-container-environment new-environment) :create t)
+		    (prepare-environment new-environment (site-backend site))
+		    (setf (backend-lmdb-environment (site-backend site)) new-environment)
+		    (push new-environment *db-environments*)))))))
   (backend-lmdb-environment backend))
 
 (uiop:chdir (asdf:system-source-directory "lw2-viewer"))
@@ -118,8 +139,8 @@
 (defun get-open-database (db-name)
   (let ((env (get-current-environment)))
     (with-mutex (*db-environments-lock*)
-      (unless (eq *cache-databases-list* (environment-container-databases-list env))
-	(prepare-environment env))
+      (unless (eq (backend-databases *current-backend*) (environment-container-databases-list env))
+	(prepare-environment env *current-backend*))
       (or (gethash db-name (environment-container-open-databases env))
 	  (error "The database '~A' is not defined." db-name)))))
 
@@ -182,12 +203,12 @@
 	  (assert data)
 	  (funcall cache-fn key data)))))) 
 
-(defmacro simple-cacheable ((base-name cache-db key &key (catch-errors t)) &body body)
+(defmacro simple-cacheable ((base-name class-name cache-db key &key (catch-errors t)) &body body)
   (let ((get-real (intern (format nil "~:@(get-~A-real~)" base-name)))
 	(cache (intern (format nil "~:@(cache-~A~)" base-name)))
 	(get (intern (format nil "~:@(get-~A~)" base-name))))
     `(progn
-       (define-cache-database ,cache-db)
+       (define-cache-database ,class-name ,cache-db)
        (declaim (ftype (function (string) string) ,get-real ,get)
 		(ftype (function (string string) string) ,cache))
        (setf (fdefinition (quote ,get-real)) (lambda (,key) ,@body)
@@ -205,14 +226,14 @@
             (with-db (db db-name) (lmdb:put db hash octets-value))
             (ecase return-type (:string new-value) (:byte-vector octets-value)))))))
 
-(defmacro define-lmdb-memoized (name (&key sources) lambda &body body)
+(defmacro define-lmdb-memoized (name class-name (&key sources) lambda &body body)
   (let ((db-name (concatenate 'string (string-downcase (symbol-name name)) "-memo"))
         (alt-name (intern (format nil "~A*" name)))
 	(version-octets (string-to-octets "version" :external-format :utf-8))
         (now-hash (hash-file-list (list* "src/hash-utils.lisp" sources))))
     (alexandria:once-only (db-name version-octets now-hash)
 			  `(progn
-                             (define-cache-database ,db-name)
+                             (define-cache-database ,class-name ,db-name)
                              (dolist (site *sites*)
                                (let ((*current-backend* (site-backend site)))
                                  (when (typep *current-backend* 'backend-lmdb-cache)

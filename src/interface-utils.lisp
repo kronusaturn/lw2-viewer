@@ -4,8 +4,10 @@
 
 (in-package #:lw2.interface-utils)
 
-(defun pretty-time (timestring &key format)
-  (let ((time (local-time:parse-timestring timestring)))
+(defun pretty-time (timestring &key format loose-parsing)
+  (let ((time (if loose-parsing
+		  (chronicity:parse timestring)
+		  (local-time:parse-timestring timestring))))
   (values (local-time:format-timestring nil time :timezone local-time:+utc-zone+ :format (or format '(:day #\  :short-month #\  :year #\  :hour #\: (:min 2) #\  :timezone)))
 	  (* (local-time:timestamp-to-unix time) 1000))))
 

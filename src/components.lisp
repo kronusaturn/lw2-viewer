@@ -56,7 +56,10 @@
 		   (push `(type (or null simple-string) ,name) additional-declarations)))
 	   (when inner-form
 	     (push `(,name ,inner-form) var-bindings)))))
-  `(let ,(nreverse var-bindings) (declare ,.(nreverse additional-declarations)) ,.(nreverse additional-preamble) ,@body))
+  `(let ,(nreverse var-bindings)
+     (declare ,.(nreverse additional-declarations))
+     ,.(nreverse additional-preamble)
+     (block nil ,@body)))
 
 (defmethod wrap-http-bindings ((component standard-component) body)
   (make-binding-form (http-args component) body))
@@ -64,7 +67,7 @@
 (defmethod wrap-prepare-code ((component standard-component) lambda-list body)
   (with-gensyms (renderer-callback)
     `(lambda (,renderer-callback ,@lambda-list)
-       (macrolet ((renderer ((&rest lambda-list) &body body) `(funcall ,',renderer-callback (lambda ,lambda-list ,@body))))
+       (macrolet ((renderer ((&rest lambda-list) &body body) `(funcall ,',renderer-callback (lambda ,lambda-list (block nil ,@body)))))
          ,(wrap-http-bindings component body)))))
 
 (defun find-component (name)

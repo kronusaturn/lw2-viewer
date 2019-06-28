@@ -109,10 +109,11 @@
 (defun tag-is (node &rest args)
   (declare (type plump:node node)
            (dynamic-extent args))
-  (let ((tag (plump:tag-name node)))
-    (to-boolean
-      (some (lambda (x) (string= tag x))
-            args))))
+  (when (plump:element-p node)
+    (let ((tag (plump:tag-name node)))
+      (to-boolean
+       (some (lambda (x) (string= tag x))
+	     args)))))
 
 (defun class-is-not (node &rest args)
   (declare (type plump:node node)
@@ -138,7 +139,7 @@
        (cleanablep (node)
          (and (plump:text-node-p node)
 	      (plump:parent node)
-              (text-class-is-not node "mjx-math")))
+              (text-class-is-not node "mjx-math" "arbital-math")))
        (traverse (node main-fn &optional recurse-fn)
          (when (cleanablep node) (funcall main-fn node))
          (when (plump:nesting-node-p node)
@@ -244,7 +245,8 @@
             (lambda (node) (declare (ignore node))))))))
   root)
 
-(define-lmdb-memoized clean-html (:sources ("src/clean-html.lisp" "src/links.lisp" "text-clean-regexps.js" "html-clean-regexps.js")) (in-html &key with-toc post-id)
+(define-lmdb-memoized clean-html 'lw2.backend-modules:backend-lmdb-cache
+  (:sources ("src/clean-html.lisp" "src/links.lisp" "text-clean-regexps.js" "html-clean-regexps.js")) (in-html &key with-toc post-id)
   (declare (ftype (function (plump:node) fixnum) plump:child-position)
            (ftype (function (plump:node) (and vector (not simple-array))) plump:family)
            (ftype (function (plump:node) simple-string) plump:text plump:tag-name))
