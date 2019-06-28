@@ -103,13 +103,13 @@
         (quri:merge-uris (quri:uri (funcall get-fn matched-link))
                          (quri:uri (site-uri (find-link-site base-uri))))))))
 
-(simple-cacheable ("lw1-link" "lw1-link" link :catch-errors nil)
+(simple-cacheable ("lw1-link" 'backend-lmdb-cache "lw1-link" link :catch-errors nil)
   (process-redirect-link link "https://www.lesswrong.com" "LessWrong 1.0"))
 
 (defun convert-lw1-link (link)
   (convert-redirect-link link #'match-lw1-link #'get-lw1-link "https://www.lesswrong.com"))
 
-(simple-cacheable ("ea1-link" "ea1-link" link :catch-errors nil)
+(simple-cacheable ("ea1-link" 'backend-lmdb-cache "ea1-link" link :catch-errors nil)
   (process-redirect-link link "https://forum.effectivealtruism.org" "EA Forum 1.0"))
 
 (defun convert-ea1-link (link)
@@ -120,7 +120,7 @@
       link
       nil))
 
-(simple-cacheable ("overcomingbias-link" "overcomingbias-link" link :catch-errors nil)
+(simple-cacheable ("overcomingbias-link" 'backend-lmdb-cache "overcomingbias-link" link :catch-errors nil)
   (if-let ((location (get-redirect link)))
           (match-lw1-link location)
           ""))
@@ -133,7 +133,7 @@
             nil
             (convert-lw1-link lw1-link))))))
 
-(simple-cacheable ("agentfoundations-link" "agentfoundations-link" link :catch-errors nil)
+(simple-cacheable ("agentfoundations-link" 'backend-lmdb-cache "agentfoundations-link" link :catch-errors nil)
   (process-redirect-link link "https://www.lesswrong.com" "Agent Foundations"))
 
 (defun convert-agentfoundations-link (link)

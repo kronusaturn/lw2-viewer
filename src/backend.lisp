@@ -68,7 +68,7 @@
   (backend-graphql (load-time-value *user-fields*))
   (backend-alignment-forum (load-time-value (append *user-fields* '(:af-karma :full-name)))))
 
-(define-cache-database
+(define-cache-database 'backend-lw2-legacy
     "index-json"
     "post-comments-json" "post-comments-json-meta" "post-answers-json" "post-answers-json-meta"
     "post-body-json" "post-body-json-meta"
@@ -717,32 +717,32 @@
          ,@outer-body)))
 
 (with-rate-limit
-  (simple-cacheable ("post-title" "postid-to-title" post-id)
+  (simple-cacheable ("post-title" 'backend-lw2-legacy "postid-to-title" post-id)
     (rate-limit (post-id) (cdr (first (lw2-graphql-query (lw2-query-string :post :single (alist :document-id post-id) '(:title)))))))) 
 
 (with-rate-limit
-  (simple-cacheable ("post-slug" "postid-to-slug" post-id)
+  (simple-cacheable ("post-slug" 'backend-lw2-legacy "postid-to-slug" post-id)
     (rate-limit (post-id) (cdr (first (lw2-graphql-query (lw2-query-string :post :single (alist :document-id post-id) '(:slug))))))))
 
 (with-rate-limit
-  (simple-cacheable ("slug-postid" "slug-to-postid" slug)
+  (simple-cacheable ("slug-postid" 'backend-lw2-legacy "slug-to-postid" slug)
     (rate-limit (slug) (cdr (first (lw2-graphql-query (lw2-query-string :post :single (alist :slug slug) '(:--id))))))))
 
 (with-rate-limit
-  (simple-cacheable ("username" "userid-to-displayname" user-id)
+  (simple-cacheable ("username" 'backend-lw2-legacy "userid-to-displayname" user-id)
     (rate-limit (user-id) (cdr (first (lw2-graphql-query (lw2-query-string :user :single (alist :document-id user-id) '(:display-name)))))))) 
 
 (with-rate-limit
-  (simple-cacheable ("user-slug" "userid-to-slug" user-id)
+  (simple-cacheable ("user-slug" 'backend-lw2-legacy "userid-to-slug" user-id)
     (rate-limit (user-id) (cdr (first (lw2-graphql-query (lw2-query-string :user :single (alist :document-id user-id) '(:slug))))))))
 
 (with-rate-limit
-  (simple-cacheable ("user-full-name" "userid-to-full-name" user-id)
+  (simple-cacheable ("user-full-name" 'backend-lw2-legacy "userid-to-full-name" user-id)
     (rate-limit (user-id) (or (cdr (first (lw2-graphql-query (lw2-query-string :user :single (alist :document-id user-id) '(:full-name)))))
 			      ""))))
 
 (with-rate-limit
-  (simple-cacheable ("slug-userid" "slug-to-userid" slug)
+  (simple-cacheable ("slug-userid" 'backend-lw2-legacy "slug-to-userid" slug)
     (rate-limit (slug) (cdr (first (lw2-graphql-query (lw2-query-string :user :single (alist :slug slug) '(:--id))))))))
 
 (defun preload-username-cache ()

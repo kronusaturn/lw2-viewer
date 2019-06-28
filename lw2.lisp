@@ -25,7 +25,8 @@
 
 (add-template-directory (asdf:system-relative-pathname "lw2-viewer" "templates/"))
 
-(define-cache-database "auth-token-to-userid" "auth-token-to-username" "comment-markdown-source" "post-markdown-source" "user-ignore-list")
+(define-cache-database 'backend-lw2-legacy
+    "auth-token-to-userid" "auth-token-to-username" "comment-markdown-source" "post-markdown-source" "user-ignore-list")
 
 (defvar *read-only-mode* nil)
 (defvar *read-only-default-message* "Due to a system outage, you cannot log in or post at this time.")

@@ -2,7 +2,7 @@
   (:use #:cl)
   (:import-from #:alexandria #:symbolicate)
   (:export
-    #:backend-class
+    #:backend-class #:class-cached-databases #:class-own-databases #:class-databases-epoch
     #:backend-base
     #:backend-lmdb-cache #:backend-lmdb-environment #:backend-cache-db-path
     #:backend-graphql
@@ -19,7 +19,10 @@
 
 (in-package #:lw2.backend-modules)
 
-(defclass backend-class (standard-class) ())
+(defclass backend-class (standard-class)
+  ((cached-databases :accessor class-cached-databases :initform nil)
+   (own-databases :accessor class-own-databases :initform nil)
+   (databases-epoch :accessor class-databases-epoch :initform 0)))
 
 (defmethod closer-mop:validate-superclass ((c backend-class) (sc standard-class))
   t)

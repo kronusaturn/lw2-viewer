@@ -1,5 +1,7 @@
 (in-package #:lw2.backend)
 
+(define-cache-database 'backend-arbital "page-body-json")
+
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (export 'get-page-body))
 
@@ -29,7 +31,7 @@
 			       (sleep 2)))))
 	   (json:*json-identifier-name-to-lisp* #'identity)
 	   (json:*identifier-name-to-key* #'string-to-existing-keyword))
-      (lw2-graphql-query-timeout-cached fn "post-body-json" (format nil "~A~@[~A~]" query page-type) :revalidate nil))))
+      (lw2-graphql-query-timeout-cached fn "page-body-json" (format nil "~A~@[~A~]" query page-type) :revalidate nil))))
 
 (in-package #:lw2-viewer)
 
