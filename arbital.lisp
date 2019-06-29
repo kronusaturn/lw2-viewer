@@ -114,7 +114,7 @@
 				  (reg 1)
 				  (if block "$$" "\\)")
 				  (if block "div" "span"))))))
-	   (markdown (regex-replace-body ("\\[[-+]?([^] ]*)(?: ([^]]*?))?\\](?!\\()" markdown)
+	   (markdown (regex-replace-body ("(?<!\\\\)\\[[-+]?([^] ]*)(?: ([^]]*?))?\\](?!\\()" markdown)
 		       (let ((tag (reg 0))
 			     (text (reg 1)))
 			 (cond
