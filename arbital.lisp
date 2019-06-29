@@ -162,11 +162,13 @@
 				 "</div></div>")
 			      (incf expand-counter)))
 			   (t
-			    (markdown-protect-wrap
-			     (format nil "<div class=\"arbital-special-block\"><span class=\"arbital-block-type\">~A~@[(~A)~]</span>: "
-				     (encode-entities type) (and param (encode-entities param)))
+			    (concatenate 'string
+			     (markdown-protect "<div class=\"arbital-special-block\"><span class=\"arbital-block-type\">")
+			     type
+			     (if param (format nil "(~A)" param) "")
+			     (markdown-protect ": </span>")
 			     text
-			     "</div>"))))))
+			     (markdown-protect "</div>")))))))
 	   (html (regex-replace-body ((load-time-value (format nil "~A-(\\d+)-" *markdown-replace-string*)) (markdown:parse markdown))
 		   (aref replacements (parse-integer (reg 0))))))
 	(write-sequence (clean-html* html) stream)))))
