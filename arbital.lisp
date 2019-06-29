@@ -104,7 +104,7 @@
       (let*
 	  ((expand-counter 0)
 	   (markdown (regex-replace-all (ppcre:create-scanner "(?<=\\S )\\*(?= )" :single-line-mode t) markdown "\\\\*"))
-	   (markdown (regex-replace-all (ppcre:create-scanner "\\[.?summary(?:\\(.*?\\))?:.*?\\]$" :single-line-mode t :multi-line-mode t) markdown ""))
+	   (markdown (regex-replace-all (ppcre:create-scanner "^\\[.?summary(?:\\(.*?\\))?:.*?\\]$" :single-line-mode t :multi-line-mode t) markdown ""))
 	   (markdown (regex-replace-body ((ppcre:create-scanner "(?<!\\\\)(\\$\\$?)(.+?)(?<!\\\\)\\1" :single-line-mode t :multi-line-mode t) markdown)
 		       (markdown-protect
 			(let ((block (= (length (reg 0)) 2)))
