@@ -114,28 +114,33 @@
 				  (reg 1)
 				  (if block "$$" "\\)")
 				  (if block "div" "span"))))))
-	   (markdown (regex-replace-body ("(?<!\\\\)\\[[-+]?([^] ]*)(?: ([^]]*?))?\\](?!\\()" markdown)
-		       (let ((tag (reg 0))
-			     (text (reg 1)))
-			 (cond
-			   ((ppcre:scan "^http" tag)
-			    (markdown-protect-wrap
-			     (format nil "<a href=\"~A\">" (encode-entities tag))
-			     (or text tag)
-			     "</a>"))
-			   ((ppcre:scan ":$" tag)
-			    (or text ""))
-			   (t
-			    (let ((page-data (cdr (assoc tag *arbital-context* :test #'string=))))
-			      (if-let (page-alias (cdr (assoc :alias page-data)))
-				      (markdown-protect-wrap
-				       (format nil "<a href=\"/p/~A~@[?l=~A~]\">" (encode-entities page-alias) (encode-entities tag))
-				       (or text (cdr (assoc :title page-data)))
-				       "</a>")
-				      (markdown-protect-wrap
-				       (format nil "<span class=\"redlink\" title=\"~A\">" (encode-entities tag))
-				       (or text tag)
-				       "</span>"))))))))
+	   (markdown (regex-replace-body ("(?<!\\\\)\\[([-+]?)([^] ]*)(?: ([^]]*?))?\\](?!\\()" markdown)
+		       (let ((capitalization-char (reg 0))
+			     (tag (reg 1))
+			     (text (reg 2)))
+			 (labels ((recapitalize (string)
+				    (cond ((string= capitalization-char "+") (string-upcase string :end 1))
+					  ((string= capitalization-char "-") (string-downcase string))
+					  (t string))))
+			   (cond
+			     ((ppcre:scan "^http" tag)
+			      (markdown-protect-wrap
+			       (format nil "<a href=\"~A\">" (encode-entities tag))
+			       (or text (recapitalize tag))
+			       "</a>"))
+			     ((ppcre:scan ":$" tag)
+			      (or text ""))
+			     (t
+			      (let ((page-data (cdr (assoc tag *arbital-context* :test #'string=))))
+				(if-let (page-alias (cdr (assoc :alias page-data)))
+					(markdown-protect-wrap
+					 (format nil "<a href=\"/p/~A~@[?l=~A~]\">" (encode-entities page-alias) (encode-entities tag))
+					 (or text (recapitalize (cdr (assoc :title page-data))))
+					 "</a>")
+					(markdown-protect-wrap
+					 (format nil "<span class=\"redlink\" title=\"~A\">" (encode-entities tag))
+					 (or text (recapitalize (regex-replace-all "_" tag " ")))
+					 "</span>")))))))))
 	   (markdown (regex-replace-body (#'url-scanner markdown)
 		       (markdown-protect (match))))
 	   (markdown (regex-replace-body ((ppcre:create-scanner "(%+)([^ ]*?)(?:\\(([^)]*)\\))?: ?(.*?)\\1" :single-line-mode t) markdown)
