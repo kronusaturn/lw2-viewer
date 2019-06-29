@@ -105,6 +105,15 @@
 	  ((expand-counter 0)
 	   (markdown (regex-replace-all (ppcre:create-scanner "(?<=\\S )\\*(?= )" :single-line-mode t) markdown "\\\\*"))
 	   (markdown (regex-replace-all (ppcre:create-scanner "\\[.?summary(?:\\(.*?\\))?:.*?\\]$" :single-line-mode t :multi-line-mode t) markdown ""))
+	   (markdown (regex-replace-body ((ppcre:create-scanner "(?<!\\\\)(\\$\\$?)(.+?)(?<!\\\\)\\1" :single-line-mode t :multi-line-mode t) markdown)
+		       (markdown-protect
+			(let ((block (= (length (reg 0)) 2)))
+			  (format nil "<~A class=\"arbital-math\">~A~A~A</~A>"
+				  (if block "div" "span")
+				  (if block "$$" "\\(")
+				  (reg 1)
+				  (if block "$$" "\\)")
+				  (if block "div" "span"))))))
 	   (markdown (regex-replace-body ("\\[[-+]?([^] ]*)(?: ([^]]*?))?\\](?!\\()" markdown)
 		       (let ((tag (reg 0))
 			     (text (reg 1)))
@@ -129,15 +138,6 @@
 				       "</span>"))))))))
 	   (markdown (regex-replace-body (#'url-scanner markdown)
 		       (markdown-protect (match))))
-	   (markdown (regex-replace-body ((ppcre:create-scanner "(?<!\\\\)(\\$\\$?)(.+?)(?<!\\\\)\\1" :single-line-mode t :multi-line-mode t) markdown)
-		       (markdown-protect
-			(let ((block (= (length (reg 0)) 2)))
-			  (format nil "<~A class=\"arbital-math\">~A~A~A</~A>"
-				  (if block "div" "span")
-				  (if block "$$" "\\(")
-				  (reg 1)
-				  (if block "$$" "\\)")
-				  (if block "div" "span"))))))
 	   (markdown (regex-replace-body ((ppcre:create-scanner "(%+)([^ ]*?)(?:\\(([^)]*)\\))?: ?(.*?)\\1" :single-line-mode t) markdown)
 		       (let ((type (reg 1))
 			     (param (reg 2))
