@@ -169,7 +169,9 @@
 			     (markdown-protect ": </span>")
 			     text
 			     (markdown-protect "</div>")))))))
-	   (html (regex-replace-body ((load-time-value (format nil "~A-(\\d+)-" *markdown-replace-string*)) (markdown:parse markdown))
+	   (html (regex-replace-body ((load-time-value (format nil "~A-(\\d+)-" *markdown-replace-string*))
+				      (nth-value 1
+					(cl-markdown:markdown markdown :stream nil)))
 		   (aref replacements (parse-integer (reg 0))))))
 	(write-sequence (clean-html* html) stream)))))
 

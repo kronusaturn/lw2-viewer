@@ -1333,7 +1333,7 @@ signaled condition to OUT-STREAM."
 
 (defun search-result-markdown-to-html (item)
   (cons (cons :html-body
-              (handler-case (markdown:parse (cdr (assoc :body item)))
+              (handler-case (nth-value 1 (cl-markdown:markdown (cdr (assoc :body item)) :stream nil))
                 (serious-condition () "[Error while processing search result]")))
         item))
 
