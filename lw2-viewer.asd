@@ -12,6 +12,7 @@
 			     (:file "user-context")
 			     (:file "schema-type" :depends-on ("utils"))
 			     (:file "schema-types" :depends-on ("schema-type"))
+			     (:file "dnsbl")
                              (:file "backend-modules")
                              (:module "backends"
                               :components ((:file "accordius"))

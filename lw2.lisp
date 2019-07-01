@@ -1396,7 +1396,8 @@ signaled condition to OUT-STREAM."
       (login-username
         (check-csrf-token csrf-token)
         (cond
-          ((or (string= login-username "") (string= login-password "")) (emit-login-page :error-message "Please enter a username and password")) 
+          ((or (string= login-username "") (string= login-password "")) (emit-login-page :error-message "Please enter a username and password"))
+	  ((lw2.dnsbl:dnsbl-check (hunchentoot:real-remote-addr)) (emit-login-page :error-message "Your IP address is blacklisted."))
           (t (multiple-value-call #'finish-login login-username (do-login "username" login-username login-password))))) 
       (signup-username
         (check-csrf-token csrf-token)
@@ -1405,6 +1406,7 @@ signaled condition to OUT-STREAM."
            (emit-login-page :error-message "Please fill in all fields"))
           ((not (string= signup-password signup-password2))
            (emit-login-page :error-message "Passwords do not match"))
+	  ((lw2.dnsbl:dnsbl-check (hunchentoot:real-remote-addr)) (emit-login-page :error-message "Your IP address is blacklisted."))
           (t (multiple-value-call #'finish-login signup-username (do-lw2-create-user signup-username signup-email signup-password)))))
       (t
        (emit-login-page))))) 
