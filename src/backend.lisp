@@ -82,7 +82,7 @@
 (define-condition lw2-client-error (lw2-error) ((http-return-code :allocation :class :initform 400)))
 
 (define-condition lw2-not-found-error (lw2-client-error) ((http-return-code :allocation :class :initform 404))
-  (:report "LW server reports: document not found."))
+  (:report "Document not found."))
 
 (define-condition lw2-user-not-found-error (lw2-not-found-error) ()
   (:report "User not found."))

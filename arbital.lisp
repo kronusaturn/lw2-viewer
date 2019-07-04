@@ -15,8 +15,14 @@
     (funcall fn)))
 
 (defun decode-arbital-json (json-string)
-  (call-with-arbital-json-options
-   (lambda () (json:decode-json-from-string json-string))))
+  (let ((result
+	 (call-with-arbital-json-options
+	  (lambda () (json:decode-json-from-string json-string)))))
+    (typecase result
+      (string (if (string= result "not-found")
+		  (error (make-condition 'lw2-not-found-error))
+		  (error "Unknown error.")))
+      (t result))))
 
 (define-backend-operation decode-graphql-json backend-arbital (json-string)
   (json:decode-json-from-string json-string))
@@ -45,15 +51,17 @@
 			 (block nil
 			   (loop
 			      (handler-case
-				  (return
-				    (sb-sys:with-deadline (:seconds 600)
-				      (sb-ext:octets-to-string
-				       (drakma:http-request (case page-type
-							      (:explore "https://arbital.com/json/explore/")
-							      (t "https://arbital.com/json/primaryPage/"))
-							    :method :post
-							    :content query)
-				       :external-format :utf-8)))
+				  (sb-sys:with-deadline (:seconds 600)
+				    (let ((result
+					   (drakma:http-request (case page-type
+								  (:explore "https://arbital.com/json/explore/")
+								  (t "https://arbital.com/json/primaryPage/"))
+								:method :post
+								:content query)))
+				      (typecase result
+					(string (when (string= result "Couldn't find page")
+						  (return "\"not-found\"")))
+					(vector (return (sb-ext:octets-to-string result :external-format :utf-8))))))
 				(t (c) (print c)))
 			      (sleep 2))))
 			(data (decode-arbital-json json-string)))
@@ -201,7 +209,7 @@
 						     (page-alias (cons :page-alias page-alias))
 						     (id (cons :lens-id id)))
 						    page-type))
-		     (serious-condition () nil)))
+		     (sb-ext:timeout () nil)))
 	 (page-data (cdr (assoc
 			  (or id
 			      (cdr (assoc :page-id (cdr (assoc :result all-data))))
