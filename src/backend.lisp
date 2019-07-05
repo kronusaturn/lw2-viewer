@@ -245,6 +245,7 @@
              (unless (and path (> (length path) 1))
                (cond
                  ((search "document_not_found" message) (error (make-condition 'lw2-not-found-error)))
+                 ((search "app.missing_document" message) (error (make-condition 'lw2-not-found-error)))
                  ((search "not_allowed" message) (error (make-condition 'lw2-not-allowed-error)))
                  (t (error (make-condition 'lw2-unknown-error :message message))))))))
 
