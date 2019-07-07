@@ -220,8 +220,11 @@
     (declare (ignore status-code headers final-uri reuse-stream))
     (setf (flexi-stream-external-format req-stream) :utf-8)
     (unwind-protect
-      (json:decode-json req-stream)
-      (if want-close (close req-stream)))))
+	 (json:decode-json req-stream)
+      (let ((buf (make-array 4096 :element-type '(unsigned-byte 8))))
+	(loop until (< (read-sequence buf (flexi-stream-stream req-stream)) 4096)))
+      (if want-close
+	  (close req-stream)))))
 
 (defun lw2-graphql-query-noparse (query &key auth-token)
   (do-graphql-debug query)
