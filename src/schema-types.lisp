@@ -21,6 +21,21 @@
    (af boolean :backend-type backend-alignment-forum)
    (draft boolean)
    (question boolean :backend-type backend-q-and-a)
+   ;; todo: allow recursive schema types and clean this up
+   (target-post-relations list
+			  :qualifier :body
+			  :backend-type backend-related-questions
+			  :subfields ((:target-post :--id :slug :title :user-id :url :feed-link
+						    :posted-at :base-score :comment-count :page-url
+						    :word-count :frontpage-date :curated-date :meta
+						    :af :question :vote-count)))
+   (source-post-relations list
+			  :qualifier :body
+			  :backend-type backend-related-questions
+			  :subfields ((:source-post :--id :slug :title :user-id :url :feed-link
+						    :posted-at :base-score :comment-count :page-url
+						    :word-count :frontpage-date :curated-date :meta
+						    :af :question :vote-count)))
    (vote-count (or null fixnum))
    (tags list :graphql-ignore t)
    (html-body (or null string) :qualifier :body)))

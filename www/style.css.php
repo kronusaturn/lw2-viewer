@@ -1503,7 +1503,8 @@ article {
 /******************/
 
 #content.search-results-page h1.listing,
-#content.sequence-page h1.listing {
+#content.sequence-page h1.listing,
+#content.post-page h1.listing {
 	font-size: 1.625em;
 }
 
@@ -1981,6 +1982,9 @@ h1.post-title {
 	vertical-align: text-bottom;
 	opacity: 0.75;
 }
+.post-nav-links {
+	max-width: 100%;
+}
 
 @media only screen and (max-width: 900px) {
 	.post-nav-item {
@@ -2007,6 +2011,26 @@ h1.post-title {
 	.post-nav-links + .comments {
 		padding: 1em 0 0 0;
 	}
+}
+
+.related-posts, .related-post-group {
+	padding-bottom: 1em;
+}
+.related-post-type {
+	font-size: 1.2em;
+	font-weight: 600;
+	margin-top: 0.5em;
+	margin-bottom: -0.5em;
+	list-style-type: disc;
+	margin-left: -0.5em;
+	opacity: 0.7;
+}
+.related-post-type::before {
+	content: "\269c";
+	margin-right: 0.15em;
+}
+.related-posts .post-type-prefix {
+	display: none;
 }
 
 /**************/

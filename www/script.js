@@ -3429,7 +3429,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	if (loggedInUserId) {
 		// Add upvote/downvote buttons.
 		if (typeof postVote != 'undefined') {
-			queryAll(".post-meta .karma-value").forEach(karmaValue => {
+			queryAll(".post .post-meta .karma-value").forEach(karmaValue => {
 				addVoteButtons(karmaValue, postVote, 'Posts');
 				karmaValue.parentElement.addClass("active-controls");
 			});

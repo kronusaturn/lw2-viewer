@@ -9,7 +9,7 @@
     #:backend-websocket-login
     #:graphql-uri #:websocket-uri #:algolia-search-uri #:rest-api-uri
     #:backend-feed-crossposts
-    #:backend-q-and-a
+    #:backend-q-and-a #:backend-related-questions
     #:backend-alignment-forum
     #:backend-lw2-legacy #:backend-lw2-modernized #:backend-lw2 #:backend-algolia-search #:backend-ea-forum #:backend-accordius
     #:backend-arbital
@@ -52,6 +52,9 @@
 (defclass backend-q-and-a (backend-graphql) ()
   (:metaclass backend-class))
 
+(defclass backend-related-questions (backend-graphql) ()
+  (:metaclass backend-class))
+
 (defclass backend-alignment-forum (backend-graphql) ()
   (:metaclass backend-class))
 
@@ -61,10 +64,10 @@
 (defclass backend-lw2-modernized (backend-graphql) ()
   (:metaclass backend-class))
 
-(defclass backend-lw2 (backend-websocket-login backend-lw2-modernized backend-lw2-legacy backend-algolia-search backend-q-and-a backend-alignment-forum backend-feed-crossposts) ()
+(defclass backend-lw2 (backend-websocket-login backend-lw2-modernized backend-lw2-legacy backend-algolia-search backend-q-and-a backend-related-questions backend-alignment-forum backend-feed-crossposts) ()
   (:metaclass backend-class))
 
-(defclass backend-ea-forum (backend-websocket-login backend-lw2-modernized backend-lw2-legacy backend-algolia-search backend-q-and-a backend-feed-crossposts) ()
+(defclass backend-ea-forum (backend-websocket-login backend-lw2-modernized backend-lw2-legacy backend-algolia-search backend-q-and-a backend-related-questions backend-feed-crossposts) ()
   (:metaclass backend-class))
 
 (defclass backend-accordius (backend-lw2-legacy backend-lw2-modernized)

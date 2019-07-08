@@ -57,10 +57,12 @@
        (backend-graphql ',main-fields)
        ,@(mapcar (lambda (fitem)
 		   (destructuring-bind (backend-name . fields) fitem
-		   `(,(intern (string backend-name) *package*) (list* ,@fields (call-next-method)))))
+		   `(,(intern (string backend-name) *package*) (list* ,@(mapcar (lambda (x) `',x) fields) (call-next-method)))))
 		 backend-specific-fields))))
 
 (define-index-fields posts-index-fields :post)
+(define-index-fields post-body-fields :post :qualifier :body)
+
 (define-index-fields comments-index-fields :comment :qualifier :index)
 (define-index-fields post-comments-fields :comment)
 
@@ -444,7 +446,7 @@
                        ("meta" (alist :view "new" :meta t :all t))
                        ("community" (alist :view "new" :meta t :all t))
                        ("alignment-forum" (alist :view "new" :af t))
-		       ("questions" (alist :view "questions"))
+		       ("questions" (alist :view "new" :question t))
                        (t (values (alist :view (if (string= sort "hot") "frontpage" "frontpage-rss")) (if (not (or (string/= sort "new") (/= limit 20) offset before after)) "new-not-meta"))))
     (let* ((extra-terms
              (remove-if (lambda (x) (null (cdr x)))
@@ -484,7 +486,7 @@
 
 (define-backend-function get-post-body (post-id &key (revalidate t) force-revalidate auth-token)
   (backend-graphql
-   (let ((query-string (lw2-query-string :post :single (alist :document-id post-id) (cons :html-body (posts-index-fields)))))
+   (let ((query-string (lw2-query-string :post :single (alist :document-id post-id) (post-body-fields))))
      (if auth-token
 	 (lw2-graphql-query query-string :auth-token auth-token)
 	 (lw2-graphql-query-timeout-cached query-string "post-body-json" post-id :revalidate revalidate :force-revalidate force-revalidate)))))

@@ -51,8 +51,22 @@
 			 (and next (get-sequence-post sequence next))))))))
       (col))))
 
-(defun post-nav-links (post-sequences)
+(defun post-nav-links (post post-sequences)
   <nav class="post-nav-links">
+    (schema-bind (:post post (target-post-relations source-post-relations) :qualifier :body)
+      (when (or target-post-relations source-post-relations)
+        <div class="related-posts">
+	  (dolist (relations `((,source-post-relations "Parent question")
+			       (,target-post-relations "Sub-question")))
+	     (destructuring-bind (related-posts relation-type) relations
+		  (when related-posts
+		    <div class="related-post-group">
+		      <div class="related-post-type">("~A~A" relation-type (if (second related-posts) "s" ""))</div>
+		      (dolist (post-relation related-posts)
+		        (post-headline-to-html (or (cdr (assoc :source-post post-relation))
+						   (cdr (assoc :target-post post-relation)))))
+		    </div>)))
+        </div>))
     (loop for (sequence prev next) in post-sequences do
       (progn 
 	<div class="post-nav-item sequence">
@@ -1014,7 +1028,7 @@ signaled condition to OUT-STREAM."
 			    (when (and lw2-auth-token (equal (logged-in-userid) (cdr (assoc :user-id post))))
 			      (format out-stream "<div class=\"post-controls\"><a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\" accesskey=\"e\" title=\"Edit post [e]\">Edit post</a></div>"
 				      (cdr (assoc :--id post))))
-			    (post-nav-links post-sequences)
+			    (post-nav-links post post-sequences)
 			    (force-output out-stream)
 			    (handler-case
 				(let* ((question (cdr (assoc :question post)))
