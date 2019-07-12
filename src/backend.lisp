@@ -264,7 +264,9 @@
            (if (member (car x) '(:result :results :total-count))
                (cdr x)
                x))
-         value))))
+         value)))
+  (backend-accordius
+   value))
 
 (define-backend-function decode-graphql-json (json-string)
   (backend-lw2-legacy
