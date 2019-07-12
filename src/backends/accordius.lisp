@@ -11,7 +11,7 @@
    (json:decode-json-from-string (octets-to-string response-body :external-format :utf-8))))
 
 (define-backend-operation get-post-body backend-accordius (post-id &key &allow-other-keys)
-  (acons :tags (do-wl-rest-query "tags" `(("document_id" . ,post-id))) (call-next-method)))
+  (acons :tags (do-wl-rest-query "tags/" `(("document_id" . ,post-id))) (call-next-method)))
 
 (define-backend-operation lw2-search-query backend-accordius (query)
   (values
