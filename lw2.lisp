@@ -1178,7 +1178,7 @@ signaled condition to OUT-STREAM."
              (let* ((auth-token (if (eq show :inbox) *current-auth-token*))
 		    (user-info
 		     (let ((ui (get-user (cond (user-slug :user-slug) (id :user-id)) (or user-slug id) :auth-token auth-token)))
-		       (if (cdr (assoc :--id ui))
+		       (if (and (not (cdr (assoc :deleted ui))) (cdr (assoc :--id ui)))
 			   ui
 			   (error (make-condition 'lw2-user-not-found-error)))))
 		    (user-id (cdr (assoc :--id user-info)))

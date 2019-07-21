@@ -32,7 +32,7 @@
 (defparameter *comments-index-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id (:parent-comment :--id :user-id :post-id) :base-score :page-url :vote-count :retracted :deleted-public :html-body))
 (defparameter *post-comments-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id :base-score :page-url :vote-count :retracted :deleted-public :html-body))
 (defparameter *messages-index-fields* '(:--id :user-id :created-at (:contents :html) (:conversation :--id :title) :----typename))
-(defparameter *user-fields* '(:--id :slug :display-name :karma :groups))
+(defparameter *user-fields* '(:--id :slug :display-name :karma))
 
 (defparameter *notifications-base-terms* (alist :view "userNotifications" :created-at :null :viewed :null))
 
@@ -67,8 +67,9 @@
 (define-index-fields post-comments-fields :comment)
 
 (define-backend-function user-fields ()
-  (backend-graphql (load-time-value *user-fields*))
-  (backend-alignment-forum (load-time-value (append *user-fields* '(:af-karma :full-name)))))
+  (backend-lw2-legacy (load-time-value *user-fields*))
+  (backend-lw2-modernized (append (call-next-method) '(:groups :deleted)))
+  (backend-alignment-forum (append (call-next-method) '(:af-karma :full-name))))
 
 (define-cache-database 'backend-lw2-legacy
     "index-json"
@@ -76,6 +77,9 @@
     "post-body-json" "post-body-json-meta"
     "sequence-json" "sequence-json-meta" "post-sequence"
     "user-json" "user-json-meta")
+
+(define-cache-database 'backend-lw2-modernized
+    "user-deleted")
 
 (defmethod condition-http-return-code ((c condition)) 500)
 
@@ -609,6 +613,17 @@
     (format t "Retrieved ~A sequences." (length sequences)))
   (values))
 
+(define-backend-function user-deleted (user-id &optional (status nil set))
+  (backend-base
+   (declare (ignore user-id status set))
+   nil)
+  (backend-lw2-modernized
+   (if set
+       (if status
+	   (cache-put "user-deleted" user-id "1")
+	   (cache-del "user-deleted" user-id))
+       (cache-get "user-deleted" user-id))))
+
 (define-backend-function get-user (user-identifier-type user-identifier &key (revalidate t) force-revalidate auth-token)
   (backend-graphql
    (let* ((user-id (ccase user-identifier-type
@@ -621,7 +636,8 @@
      (alist-bind ((user-id (or simple-string null) :--id)
 		  (display-name (or simple-string null))
 		  (full-name (or simple-string null))
-		  (slug (or simple-string null)))
+		  (slug (or simple-string null))
+		  (deleted boolean))
 		 result
 		 (when user-id
 	 (with-cache-transaction
@@ -631,7 +647,8 @@
 	     (cache-user-full-name user-id full-name))
 	   (when slug
 	     (cache-user-slug user-id slug)
-	     (cache-slug-userid slug user-id)))))
+	     (cache-slug-userid slug user-id))
+	   (user-deleted user-id deleted))))
      result)))
 
 (define-backend-function get-notifications (&key user-id offset auth-token)
