@@ -201,15 +201,19 @@
       (funcall fn key)
       (t () "[Error communicating with LW2 server]"))))
 
-(defun make-simple-get (cache-db cache-fn get-real-fn)
-  (lambda (key) 
-    (let ((val (cache-get cache-db key)))
-      (if val val
-	(let ((data (funcall get-real-fn key)))
-	  (assert data)
-	  (funcall cache-fn key data)))))) 
+(defun make-simple-get (cache-db cache-fn get-real-fn get-wrapper-fn)
+  (lambda (key)
+    (labels ((inner (key)
+	       (let ((val (cache-get cache-db key)))
+		 (if val val
+		     (let ((data (funcall get-real-fn key)))
+		       (assert data)
+		       (funcall cache-fn key data))))))
+      (if get-wrapper-fn
+	  (funcall get-wrapper-fn key #'inner)
+	  (inner key)))))
 
-(defmacro simple-cacheable ((base-name class-name cache-db key &key (catch-errors t)) &body body)
+(defmacro simple-cacheable ((base-name class-name cache-db key &key (catch-errors t) get-wrapper) &body body)
   (let ((get-real (intern (format nil "~:@(get-~A-real~)" base-name)))
 	(cache (intern (format nil "~:@(cache-~A~)" base-name)))
 	(get (intern (format nil "~:@(get-~A~)" base-name))))
@@ -219,7 +223,8 @@
 		(ftype (function (string string) string) ,cache))
        (setf (fdefinition (quote ,get-real)) (lambda (,key) ,@body)
 	     (fdefinition (quote ,cache)) (make-simple-cache ,cache-db)
-	     (fdefinition (quote ,get)) (,(if catch-errors 'wrap-handler 'identity) (make-simple-get ,cache-db (fdefinition (quote ,cache)) (fdefinition (quote ,get-real)))))))) 
+	     (fdefinition (quote ,get)) (,(if catch-errors 'wrap-handler 'identity)
+					  (make-simple-get ,cache-db (fdefinition (quote ,cache)) (fdefinition (quote ,get-real)) ,get-wrapper)))))) 
 
 (defun make-lmdb-memoized-wrapper (db-name fn return-type)
   (lambda (&rest args)

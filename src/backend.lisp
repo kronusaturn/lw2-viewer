@@ -720,6 +720,14 @@
 			 collect (cdr (assoc :hits r))))
       (if want-close (close req-stream))))))
 
+(define-backend-function get-username-wrapper (user-id fn)
+  (backend-base
+   (funcall fn user-id))
+  (backend-lw2-modernized
+   (if (user-deleted user-id)
+       "[deleted]"
+       (funcall fn user-id))))
+
 (defun make-rate-limiter (delay)
   (let ((rl-hash (make-hash-table :test 'equal :synchronized t)))
     (lambda (datum fn)
@@ -754,7 +762,7 @@
     (rate-limit (slug) (cdr (first (lw2-graphql-query (lw2-query-string :post :single (alist :slug slug) '(:--id))))))))
 
 (with-rate-limit
-  (simple-cacheable ("username" 'backend-lw2-legacy "userid-to-displayname" user-id)
+  (simple-cacheable ("username" 'backend-lw2-legacy "userid-to-displayname" user-id :get-wrapper #'get-username-wrapper)
     (rate-limit (user-id) (cdr (first (lw2-graphql-query (lw2-query-string :user :single (alist :document-id user-id) '(:display-name)))))))) 
 
 (with-rate-limit
