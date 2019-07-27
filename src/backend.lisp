@@ -228,7 +228,7 @@
     (unwind-protect
 	 (json:decode-json req-stream)
       (let ((buf (make-array 4096 :element-type '(unsigned-byte 8))))
-	(loop until (< (read-sequence buf (flexi-stream-stream req-stream)) 4096)))
+	(loop until (< (read-sequence buf req-stream) 4096)))
       (if want-close
 	  (close req-stream)))))
 
