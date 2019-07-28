@@ -631,8 +631,6 @@ signaled condition to OUT-STREAM."
 
 (defun call-with-emit-page (out-stream fn &key title description current-uri content-class (return-code 200) robots (pagination (pagination-nav-bars)) top-nav extra-head)
   (declare (ignore return-code))
-  (when (eq (hunchentoot:request-method*) :head)
-    (return-from call-with-emit-page))
   (ignore-errors
     (log-conditions
       (html-body out-stream
@@ -668,10 +666,12 @@ signaled condition to OUT-STREAM."
 (defmacro with-response-stream ((out-stream) &body body) `(call-with-response-stream (lambda (,out-stream) ,.body)))
 
 (defun call-with-response-stream (fn)
-  (let ((*html-output* (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8)))
-    (unwind-protect
-	 (funcall fn *html-output*)
-      (finish-output *html-output*))))
+  (unless (eq (hunchentoot:request-method*) :head)
+    (let ((*html-output* (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8)))
+      (handler-case
+	  (funcall fn *html-output*)
+	(serious-condition () (close *html-output*))
+	(:no-error (&rest x) (declare (ignore x)) (finish-output *html-output*))))))
 
 (defmacro emit-page ((out-stream &rest args &key (return-code 200) &allow-other-keys) &body body)
   (alexandria:once-only (return-code)
