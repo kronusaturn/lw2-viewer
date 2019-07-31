@@ -665,12 +665,11 @@
 (define-backend-function check-notifications (user-id auth-token)
   (backend-lw2-legacy
    (multiple-value-bind (notifications user-info)
-       (sb-sys:with-deadline (:seconds 5)
-	 (lw2-graphql-query-multi (list
-				   (lw2-query-string* :notification :list (nconc (alist :user-id user-id :limit 1) *notifications-base-terms*)
-						      '(:created-at))
-				   (lw2-query-string* :user :single (alist :document-id user-id) '(:last-notifications-check)))
-				  :auth-token auth-token))
+       (lw2-graphql-query-multi (list
+				 (lw2-query-string* :notification :list (nconc (alist :user-id user-id :limit 1) *notifications-base-terms*)
+						    '(:created-at))
+				 (lw2-query-string* :user :single (alist :document-id user-id) '(:last-notifications-check)))
+				:auth-token auth-token)
      (when (and notifications user-info)
        (local-time:timestamp> (local-time:parse-timestring (cdr (assoc :created-at (first notifications)))) (local-time:parse-timestring (cdr (assoc :last-notifications-check user-info)))))))
   (backend-lw2-modernized
