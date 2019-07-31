@@ -503,8 +503,9 @@
      (loop for offset from 0 by 500
 	as items-next = (lw2-graphql-query (lw2-query-string query-type :list (nconc (alist :limit 500 :offset offset) terms) fields)
 					   :auth-token auth-token)
-	while items-next
-	do (setf items-list (nconc items-list items-next)))
+	as length = (length items-next)
+	do (setf items-list (nconc items-list items-next))
+	while (>= length 500))
      items-list))
   (backend-accordius
    (lw2-graphql-query (lw2-query-string query-type :list terms fields) :auth-token auth-token)))
@@ -514,6 +515,16 @@
     (when parent-answer-id
       (setf terms (acons :parent-answer-id parent-answer-id terms)))
     (lw2-query-list-limit-workaround :comment terms fields :auth-token auth-token)))
+
+(defun get-post-answer-replies (post-id answers &key auth-token (fields (post-comments-fields)))
+  ;; todo: support more than 500 answers per question
+  (let* ((terms (alist :view "repliesToAnswer" :post-id post-id :limit 500))
+	 (result (lw2-graphql-query-map
+		  #'identity
+		  (mapcar (lambda (answer) (lw2-query-string* :comment :list (acons :parent-answer-id (cdr (assoc :--id answer)) terms) fields))
+			  answers)
+		  :auth-token auth-token)))
+    (apply #'nconc result)))
 
 (define-backend-function get-post-comments-votes (post-id auth-token)
   (backend-graphql
@@ -525,9 +536,7 @@
      (process-votes-result
       (nconc
        (get-post-comments-list post-id "postCommentsTop" :auth-token auth-token :fields fields)
-       (loop
-	  for a in answers
-	  nconc (get-post-comments-list post-id "repliesToAnswer" :parent-answer-id (cdr (assoc :--id a)) :auth-token auth-token :fields fields))
+       (get-post-answer-replies post-id answers :auth-token auth-token :fields fields)
        answers)))))
 
 (define-backend-function get-post-comments (post-id &key (revalidate t) force-revalidate)
@@ -551,10 +560,9 @@
   (let ((fn (lambda ()
 	      (let ((answers (get-post-comments-list post-id "questionAnswers")))
 		(comments-list-to-graphql-json
-		 (append answers
-			 (loop
-			    for a in answers
-			    nconc (get-post-comments-list post-id "repliesToAnswer" :parent-answer-id (cdr (assoc :--id a))))))))))
+		 (nconc
+		  answers
+		  (get-post-answer-replies post-id answers)))))))
     (lw2-graphql-query-timeout-cached fn "post-answers-json" post-id :revalidate revalidate :force-revalidate force-revalidate)))
 
 (defun sequence-iterate (sequence fn)
