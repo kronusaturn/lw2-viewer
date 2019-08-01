@@ -554,7 +554,7 @@ signaled condition to OUT-STREAM."
       (format out-stream "<body><div id=\"content\"~@[ class=\"~A\"~]>"
               content-class)
       (nav-bar-to-html out-stream (or current-uri (replace-query-params (hunchentoot:request-uri*) "offset" nil "sort" nil)))
-      (force-output out-stream)
+      (finish-output out-stream)
       (funcall fn))
     (format out-stream "</div></body></html>")))
 
@@ -1012,7 +1012,7 @@ signaled condition to OUT-STREAM."
 				    (clean-text-to-html title :hyphenation nil))
 			    (output-comments out-stream "comments" comments target-comment)
 			    (when lw2-auth-token
-			      (force-output out-stream)
+			      (finish-output out-stream)
 			      (output-comments-votes out-stream)
 			      (output-alignment-forum out-stream post))))
 	       (let ((post-sequences (get-post-sequences post-id)))
@@ -1029,7 +1029,7 @@ signaled condition to OUT-STREAM."
 			      (format out-stream "<div class=\"post-controls\"><a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\" accesskey=\"e\" title=\"Edit post [e]\">Edit post</a></div>"
 				      (cdr (assoc :--id post))))
 			    (post-nav-links post post-sequences)
-			    (force-output out-stream)
+			    (finish-output out-stream)
 			    (handler-case
 				(let* ((question (cdr (assoc :question post)))
 				       (answers (when question
@@ -1040,7 +1040,7 @@ signaled condition to OUT-STREAM."
 				  (output-comments out-stream "comments" comments nil))
 			      (serious-condition (c) (error-to-html out-stream c)))
 			    (when lw2-auth-token
-			      (force-output out-stream)
+			      (finish-output out-stream)
 			      (output-post-vote out-stream)
 			      (output-comments-votes out-stream)
 			      (output-alignment-forum out-stream post)))))))))
