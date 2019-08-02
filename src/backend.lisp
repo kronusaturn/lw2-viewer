@@ -151,7 +151,7 @@
 		   (with-db (db "postid-to-slug")
 		     (dolist (post posts-list)
 		       (lmdb-put-string db (cdr (assoc :--id post)) (cdr (assoc :slug post)))))))))
-	  (t (condition) (values nil condition)))
+	  (serious-condition (condition) (log-condition condition) nil))
 	(handler-case
 	    (log-conditions
 	     (let ((recent-comments-json (sb-sys:with-deadline (:seconds 120) (get-recent-comments-json))))
@@ -171,7 +171,7 @@
 								  #'> :key (lambda (c) (cdr (assoc :base-score c))))))
 				    (cache-update cache-database post-id (comments-list-to-graphql-json new-post-comments)))))
 			 (setf last-comment-processed (cdr (assoc :--id (first recent-comments)))))))
-	  (t (condition) (values nil condition)))))))
+	  (serious-condition (condition) (log-condition condition) nil))))))
 
 (defun background-loader ()
   (let (sites loader-functions)
