@@ -3,8 +3,7 @@
   (:import-from #:collectors #:with-collector)
   (:reexport #:lw2.backend-modules)
   (:export #:*graphql-debug-output*
-           #:posts-index-fields #:*messages-index-fields*
-	   #:comments-index-fields 
+           #:*messages-index-fields*
            #:*notifications-base-terms*
            #:condition-http-return-code
            #:lw2-error #:lw2-client-error #:lw2-not-found-error #:lw2-user-not-found-error #:lw2-not-allowed-error #:lw2-server-error #:lw2-connection-error #:lw2-unknown-error
@@ -21,7 +20,10 @@
 	   #:do-wl-rest-mutate #:do-wl-rest-query #:do-wl-create-tag)
   (:recycle #:lw2-viewer)
   (:unintern #:get-posts #:make-posts-list-query #:define-backend-fields
-	     #:*posts-index-fields*))
+	     #:*posts-index-fields* #:posts-index-fields #:post-body-fields
+	     #:*comments-index-fields* #:comments-index-fields
+	     #:*post-comments-fields* #:post-comments-fields
+	     #:define-index-fields))
 
 (in-package #:lw2.backend)
 
@@ -29,42 +31,31 @@
 
 (defvar *graphql-debug-output* nil)
 
-(defparameter *comments-index-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id (:parent-comment :--id :user-id :post-id) :base-score :page-url :vote-count :retracted :deleted-public :html-body))
-(defparameter *post-comments-fields* '(:--id :user-id :post-id :posted-at :parent-comment-id :base-score :page-url :vote-count :retracted :deleted-public :html-body))
 (defparameter *messages-index-fields* '(:--id :user-id :created-at (:contents :html) (:conversation :--id :title) :----typename))
 (defparameter *user-fields* '(:--id :slug :display-name :karma))
 
 (defparameter *notifications-base-terms* (alist :view "userNotifications" :created-at :null :viewed :null))
 
-(defmacro define-index-fields (function-name schema-type-name &key qualifier)
-  (let (main-fields
-	backend-specific-fields
-	(schema-type (find-schema-type schema-type-name)))
-    (dolist (field (cdr (assoc :fields schema-type)))
-      (destructuring-bind (field-name field-type &key alias backend-type graphql-ignore subfields ((:qualifier field-qualifier)) &allow-other-keys) field
-	(declare (ignore field-type))
-	(let* ((field-name (intern (string (or alias field-name)) '#:keyword))
-	       (field-designator (if subfields
-				     (list* field-name subfields)
-				     field-name)))
-	  (when (and (not graphql-ignore) (or (not field-qualifier) (string= qualifier field-qualifier)))
-	    (if backend-type
-		(let ((cons (or (assoc backend-type backend-specific-fields)
-				(first (push (cons backend-type nil) backend-specific-fields)))))
-		  (push field-designator (cdr cons)))
-		(push field-designator main-fields))))))
-    `(define-backend-function ,function-name ()
-       (backend-graphql ',main-fields)
-       ,@(mapcar (lambda (fitem)
-		   (destructuring-bind (backend-name . fields) fitem
-		   `(,(intern (string backend-name) *package*) (list* ,@(mapcar (lambda (x) `',x) fields) (call-next-method)))))
-		 backend-specific-fields))))
-
-(define-index-fields posts-index-fields :post)
-(define-index-fields post-body-fields :post :qualifier :body)
-
-(define-index-fields comments-index-fields :comment :qualifier :index)
-(define-index-fields post-comments-fields :comment)
+(defun request-fields (query-type return-type context)
+  "Returns the desired fields for a given type of request."
+  (case return-type
+    (:total nil)
+    (t
+     (with-collector (col)
+       (let ((backend *current-backend*)
+	     (schema-type (find-schema-type query-type)))
+	 (dolist (field (cdr (assoc :fields schema-type)) (col))
+	   (destructuring-bind (field-name field-type &key alias backend-type graphql-ignore subfields ((:context field-context)) context-not &allow-other-keys) field
+	     (declare (ignore field-type))
+	     (when (and (not graphql-ignore)
+			(or (not backend-type) (typep backend backend-type))
+			(or (not field-context) (eq context field-context))
+			(or (not context-not) (not (eq context context-not))))
+	       (col
+		(let ((result-name (or alias field-name)))
+		  (if subfields
+		      (list* result-name subfields)
+		      result-name)))))))))))
 
 (define-backend-function user-fields ()
   (backend-lw2-legacy (load-time-value *user-fields*))
@@ -396,9 +387,9 @@
 		     (or cached-result
 			 (error "Failed to load ~A ~A and no cached version available: ~A" cache-db cache-key c))))))))))
 
-(define-backend-function lw2-query-string* (query-type return-type args fields &key with-total))
+(define-backend-function lw2-query-string* (query-type return-type args &key context fields with-total))
 
-(define-backend-operation lw2-query-string* backend-lw2-legacy (query-type return-type args fields &key with-total)
+(define-backend-operation lw2-query-string* backend-lw2-legacy (query-type return-type args &key context (fields (request-fields query-type return-type context)) with-total)
   (declare (ignore with-total))
   (graphql-query-string*
     (concatenate 'string (string-capitalize query-type)
@@ -409,7 +400,7 @@
         (alist :terms args))
     fields))
 
-(define-backend-operation lw2-query-string* backend-lw2-modernized (query-type return-type args fields &key with-total)
+(define-backend-operation lw2-query-string* backend-lw2-modernized (query-type return-type args &key context (fields (request-fields query-type return-type context)) with-total)
   (graphql-query-string*
     (if (eq return-type :single)
         (string-downcase query-type)
@@ -423,10 +414,11 @@
         (:list (nconc (list (cons :results fields)) (if with-total '(:total-count))))
         (:single (list (cons :result fields))))))
 
-(define-backend-function lw2-query-string (query-type return-type args fields &key with-total))
+(define-backend-function lw2-query-string (query-type return-type args &key context fields with-total))
 
-(define-backend-operation lw2-query-string backend-lw2-legacy (query-type return-type args fields &key with-total)
-  (format nil "{~A}" (lw2-query-string* query-type return-type args fields :with-total with-total)))
+(define-backend-operation lw2-query-string backend-lw2-legacy (query-type return-type args &rest rest &key context fields with-total)
+  (declare (ignore context fields with-total))
+  (format nil "{~A}" (apply 'lw2-query-string* query-type return-type args rest)))
 
 (defun get-cached-index-query (cache-id query)
   (labels ((query-and-put ()
@@ -457,7 +449,7 @@
     (let* ((extra-terms
              (remove-if (lambda (x) (null (cdr x)))
                         (alist :before before :after after :limit limit :offset offset)))
-           (query-string (lw2-query-string :post :list (nconc view-terms extra-terms) (posts-index-fields))))
+           (query-string (lw2-query-string :post :list (nconc view-terms extra-terms))))
       (values query-string cache-key)))))
 
 (define-backend-function get-posts-index (&rest args &key &allow-other-keys)
@@ -473,10 +465,10 @@
   (lw2-graphql-query-noparse (get-posts-index-query-string)))
 
 (defun get-recent-comments (&key with-total)
-  (get-cached-index-query "recent-comments" (lw2-query-string :comment :list '((:view . "allRecentComments") (:limit . 20)) (comments-index-fields) :with-total with-total)))
+  (get-cached-index-query "recent-comments" (lw2-query-string :comment :list '((:view . "allRecentComments") (:limit . 20)) :context :index :with-total with-total)))
 
 (defun get-recent-comments-json ()
-  (lw2-graphql-query-noparse (lw2-query-string :comment :list '((:view . "allRecentComments") (:limit . 20)) (comments-index-fields))))
+  (lw2-graphql-query-noparse (lw2-query-string :comment :list '((:view . "allRecentComments") (:limit . 20)) :context :index)))
 
 (defun process-vote-result (res)
   (let ((id (cdr (assoc :--id res)))
@@ -492,36 +484,39 @@
 
 (define-backend-function get-post-body (post-id &key (revalidate t) force-revalidate auth-token)
   (backend-graphql
-   (let ((query-string (lw2-query-string :post :single (alist :document-id post-id) (post-body-fields))))
+   (let ((query-string (lw2-query-string :post :single (alist :document-id post-id) :context :body)))
      (if auth-token
 	 (lw2-graphql-query query-string :auth-token auth-token)
 	 (lw2-graphql-query-timeout-cached query-string "post-body-json" post-id :revalidate revalidate :force-revalidate force-revalidate)))))
 
-(define-backend-function lw2-query-list-limit-workaround (query-type terms fields &key auth-token)
+(define-backend-function lw2-query-list-limit-workaround (query-type terms &rest rest &key fields context auth-token)
   (backend-graphql
+   (declare (ignore fields context))
    (let (items-list)
      (loop for offset from 0 by 500
-	as items-next = (lw2-graphql-query (lw2-query-string query-type :list (nconc (alist :limit 500 :offset offset) terms) fields)
+	as items-next = (lw2-graphql-query (apply 'lw2-query-string query-type :list (nconc (alist :limit 500 :offset offset) terms) (filter-plist rest :fields :context))
 					   :auth-token auth-token)
 	as length = (length items-next)
 	do (setf items-list (nconc items-list items-next))
 	while (>= length 500))
      items-list))
   (backend-accordius
-   (lw2-graphql-query (lw2-query-string query-type :list terms fields) :auth-token auth-token)))
+   (declare (ignore fields context))
+   (lw2-graphql-query (apply 'lw2-query-string query-type :list terms (filter-plist rest :fields :context)) :auth-token auth-token)))
 
-(defun get-post-comments-list (post-id view &key auth-token parent-answer-id (fields (post-comments-fields)))
+(defun get-post-comments-list (post-id view &rest rest &key auth-token parent-answer-id fields context)
+  (declare (ignore fields context auth-token))
   (let ((terms (alist :view view :post-id post-id)))
     (when parent-answer-id
       (setf terms (acons :parent-answer-id parent-answer-id terms)))
-    (lw2-query-list-limit-workaround :comment terms fields :auth-token auth-token)))
+    (apply 'lw2-query-list-limit-workaround :comment terms (filter-plist rest :fields :context :auth-token))))
 
-(defun get-post-answer-replies (post-id answers &key auth-token (fields (post-comments-fields)))
+(defun get-post-answer-replies (post-id answers &key auth-token fields context)
   ;; todo: support more than 500 answers per question
   (let* ((terms (alist :view "repliesToAnswer" :post-id post-id :limit 500))
 	 (result (lw2-graphql-query-map
 		  #'identity
-		  (mapcar (lambda (answer) (lw2-query-string* :comment :list (acons :parent-answer-id (cdr (assoc :--id answer)) terms) fields))
+		  (mapcar (lambda (answer) (lw2-query-string* :comment :list (acons :parent-answer-id (cdr (assoc :--id answer)) terms) :fields fields :context context))
 			  answers)
 		  :auth-token auth-token)))
     (apply #'nconc result)))
@@ -591,10 +586,10 @@
 		       (lw2-graphql-query-noparse
 			(lw2-query-string :sequence :single
 					  (alist :document-id sequence-id)
-					  `(:--id :title :created-at :user-id
-						  (:contents :html)
-						  (:chapters :title :subtitle :number (:contents :html) (:posts ,@(posts-index-fields)))
-						  :grid-image-id :----typename))))
+					  :fields `(:--id :title :created-at :user-id
+							  (:contents :html)
+							  (:chapters :title :subtitle :number (:contents :html) (:posts ,@(request-fields :post :list nil)))
+							  :grid-image-id :----typename))))
 		      (sequence (decode-graphql-json sequence-json))
 		      (posts (sequence-post-ids sequence)))
 		 (with-cache-transaction
@@ -615,7 +610,7 @@
   (declare (optimize space (compilation-speed 2) (speed 0)))
   (let ((sequences (apply #'append
 			  (loop for view in '("curatedSequences" "communitySequences")
-			     collect (lw2-graphql-query (lw2-query-string :sequence :list (alist :view view) '(:--id)))))))
+			     collect (lw2-graphql-query (lw2-query-string :sequence :list (alist :view view) :fields '(:--id)))))))
     (dolist (sequence sequences)
       (get-sequence (cdr (assoc :--id sequence))))
     (format t "Retrieved ~A sequences." (length sequences)))
@@ -637,7 +632,7 @@
    (let* ((user-id (ccase user-identifier-type
 		     (:user-id user-identifier)
 		     (:user-slug (get-slug-userid user-identifier))))
-	  (query-string (lw2-query-string :user :single (alist :document-id user-id) (if auth-token (cons :last-notifications-check (user-fields)) (user-fields))))
+	  (query-string (lw2-query-string :user :single (alist :document-id user-id) :fields (if auth-token (cons :last-notifications-check (user-fields)) (user-fields))))
 	  (result (if auth-token
 		      (lw2-graphql-query query-string :auth-token auth-token)
 		      (lw2-graphql-query-timeout-cached query-string "user-json" user-id :revalidate revalidate :force-revalidate force-revalidate))))
@@ -663,7 +658,7 @@
   (backend-lw2-legacy
    (lw2-graphql-query (lw2-query-string :notification :list
 					(nconc (alist :user-id user-id :limit 21 :offset offset) *notifications-base-terms*)
-					'(:--id :document-type :document-id :link :title :message :type :viewed))
+					:fields '(:--id :document-type :document-id :link :title :message :type :viewed))
 		      :auth-token auth-token))
   (backend-lw2-modernized
    (declare (ignore user-id offset auth-token))
@@ -675,8 +670,8 @@
    (multiple-value-bind (notifications user-info)
        (lw2-graphql-query-multi (list
 				 (lw2-query-string* :notification :list (nconc (alist :user-id user-id :limit 1) *notifications-base-terms*)
-						    '(:created-at))
-				 (lw2-query-string* :user :single (alist :document-id user-id) '(:last-notifications-check)))
+						    :fields '(:created-at))
+				 (lw2-query-string* :user :single (alist :document-id user-id) :fields '(:last-notifications-check)))
 				:auth-token auth-token)
      (when (and notifications user-info)
        (local-time:timestamp> (local-time:parse-timestring (cdr (assoc :created-at (first notifications)))) (local-time:parse-timestring (cdr (assoc :last-notifications-check user-info)))))))
@@ -698,16 +693,15 @@
 	       posts-base-terms
 	       (cons '(:meta . :null) posts-base-terms))))
      (lw2-graphql-query (lw2-query-string :post :list
-					  (nconc (remove nil (alist :offset offset :limit limit :user-id user-id) :key #'cdr) posts-base-terms)
-					  (posts-index-fields))
+					  (nconc (remove nil (alist :offset offset :limit limit :user-id user-id) :key #'cdr) posts-base-terms))
 			:auth-token auth-token))))
 
 (define-backend-function get-conversation-messages (conversation-id auth-token)
   (backend-lw2-legacy
    (lw2-graphql-query-multi
     (list
-     (lw2-query-string* :conversation :single (alist :document-id conversation-id) '(:title (:participants :display-name :slug)))
-     (lw2-query-string* :message :list (alist :view "messagesConversation" :conversation-id conversation-id) *messages-index-fields*))
+     (lw2-query-string* :conversation :single (alist :document-id conversation-id) :fields '(:title (:participants :display-name :slug)))
+     (lw2-query-string* :message :list (alist :view "messagesConversation" :conversation-id conversation-id) :fields *messages-index-fields*))
     :auth-token auth-token)))
 
 (define-backend-function lw2-search-query (query)
@@ -758,36 +752,36 @@
 
 (with-rate-limit
   (simple-cacheable ("post-title" 'backend-lw2-legacy "postid-to-title" post-id)
-    (rate-limit (post-id) (cdr (first (lw2-graphql-query (lw2-query-string :post :single (alist :document-id post-id) '(:title)))))))) 
+    (rate-limit (post-id) (cdr (first (lw2-graphql-query (lw2-query-string :post :single (alist :document-id post-id) :fields '(:title)))))))) 
 
 (with-rate-limit
   (simple-cacheable ("post-slug" 'backend-lw2-legacy "postid-to-slug" post-id)
-    (rate-limit (post-id) (cdr (first (lw2-graphql-query (lw2-query-string :post :single (alist :document-id post-id) '(:slug))))))))
+    (rate-limit (post-id) (cdr (first (lw2-graphql-query (lw2-query-string :post :single (alist :document-id post-id) :fields '(:slug))))))))
 
 (with-rate-limit
   (simple-cacheable ("slug-postid" 'backend-lw2-legacy "slug-to-postid" slug)
-    (rate-limit (slug) (cdr (first (lw2-graphql-query (lw2-query-string :post :single (alist :slug slug) '(:--id))))))))
+    (rate-limit (slug) (cdr (first (lw2-graphql-query (lw2-query-string :post :single (alist :slug slug) :fields '(:--id))))))))
 
 (with-rate-limit
   (simple-cacheable ("username" 'backend-lw2-legacy "userid-to-displayname" user-id :get-wrapper #'get-username-wrapper)
-    (rate-limit (user-id) (cdr (first (lw2-graphql-query (lw2-query-string :user :single (alist :document-id user-id) '(:display-name)))))))) 
+    (rate-limit (user-id) (cdr (first (lw2-graphql-query (lw2-query-string :user :single (alist :document-id user-id) :fields '(:display-name)))))))) 
 
 (with-rate-limit
   (simple-cacheable ("user-slug" 'backend-lw2-legacy "userid-to-slug" user-id)
-    (rate-limit (user-id) (cdr (first (lw2-graphql-query (lw2-query-string :user :single (alist :document-id user-id) '(:slug))))))))
+    (rate-limit (user-id) (cdr (first (lw2-graphql-query (lw2-query-string :user :single (alist :document-id user-id) :fields '(:slug))))))))
 
 (with-rate-limit
   (simple-cacheable ("user-full-name" 'backend-lw2-legacy "userid-to-full-name" user-id)
-    (rate-limit (user-id) (or (cdr (first (lw2-graphql-query (lw2-query-string :user :single (alist :document-id user-id) '(:full-name)))))
+    (rate-limit (user-id) (or (cdr (first (lw2-graphql-query (lw2-query-string :user :single (alist :document-id user-id) :fields '(:full-name)))))
 			      ""))))
 
 (with-rate-limit
   (simple-cacheable ("slug-userid" 'backend-lw2-legacy "slug-to-userid" slug)
-    (rate-limit (slug) (cdr (first (lw2-graphql-query (lw2-query-string :user :single (alist :slug slug) '(:--id))))))))
+    (rate-limit (slug) (cdr (first (lw2-graphql-query (lw2-query-string :user :single (alist :slug slug) :fields '(:--id))))))))
 
 (defun preload-username-cache ()
   (declare (optimize space (compilation-speed 2) (speed 0)))
-  (let ((user-list (lw2-graphql-query (lw2-query-string :user :list '() '(:--id :slug :display-name)))))
+  (let ((user-list (lw2-graphql-query (lw2-query-string :user :list '() :fields '(:--id :slug :display-name)))))
     (with-cache-transaction
 	(loop for user in user-list
 	   do (alist-bind ((user-id (or simple-string null) :--id)

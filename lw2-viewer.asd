@@ -10,7 +10,7 @@
 			     (:file "html-reader")
 			     (:file "interface-utils" :depends-on ("links"))
 			     (:file "user-context")
-			     (:file "schema-type" :depends-on ("utils"))
+			     (:file "schema-type" :depends-on ("utils" "backend-modules"))
 			     (:file "schema-types" :depends-on ("schema-type"))
 			     (:file "dnsbl")
                              (:file "backend-modules")

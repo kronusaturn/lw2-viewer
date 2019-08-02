@@ -76,7 +76,7 @@
     (post-meta-to-html post :listing skip-section)))
 
 (defun post-body-to-html (post)
-  (schema-bind (:post (rectify-post post) (post-id url question title html-body) :qualifier :body)
+  (schema-bind (:post (rectify-post post) (post-id url question title html-body) :context :body)
     <main class=("post~{ ~A~}" (list-cond
 				(url "link-post")
 				(question "question-post")))>

@@ -27,14 +27,14 @@
 	(cdr c)
 	(error "Undefined schema-type: ~A" schema-type-name))))
 
-(defmacro schema-bind ((schema-type-name datum bindings &key qualifier) &body body)
+(defmacro schema-bind ((schema-type-name datum bindings &key context) &body body)
   (let* ((schema-type (find-schema-type schema-type-name))
 	 (fields (cdr (assoc :fields schema-type))))
     `(alist-bind
       ,(loop for type-field in fields
-	  nconc (destructuring-bind (binding-sym type &key alias ((:qualifier field-qualifier)) &allow-other-keys) type-field
+	  nconc (destructuring-bind (binding-sym type &key alias ((:context field-context)) &allow-other-keys) type-field
 		  (if (if (eq bindings :auto)
-			  (or (not field-qualifier) (eq field-qualifier qualifier))
+			  (or (not field-context) (eq field-context context))
 			  (member binding-sym bindings :test #'string=))
 		      (list (list* (intern (string binding-sym) *package*) type (if alias (list alias)))))))
       ,datum

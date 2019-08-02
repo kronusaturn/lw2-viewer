@@ -11,7 +11,7 @@
 (defun comment-to-html (out-stream comment &key with-post-title)
   (if (or (cdr (assoc :deleted comment)) (cdr (assoc :deleted-public comment)))
       (format out-stream "<div class=\"comment deleted-comment\"><div class=\"comment-meta\"><span class=\"deleted-meta\">[ ]</span></div><div class=\"body-text comment-body\">[deleted]</div></div>")
-      (schema-bind (:comment comment :auto :qualifier :index)
+      (schema-bind (:comment comment :auto :context :index)
         (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
 	  <div class=("comment~{ ~A~}"
 		      (list-cond

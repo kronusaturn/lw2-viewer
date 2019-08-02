@@ -1,6 +1,6 @@
 (uiop:define-package #:lw2.utils
   (:use #:cl #:alexandria)
-  (:export #:alist #:get-unix-time #:substring #:regex-replace-body #:reg #:match #:to-boolean #:map-plist #:alist-bind #:list-cond)
+  (:export #:alist #:get-unix-time #:substring #:regex-replace-body #:reg #:match #:to-boolean #:map-plist #:filter-plist #:alist-bind #:list-cond)
   (:recycle #:lw2-viewer))
 
 (in-package #:lw2.utils)
@@ -37,6 +37,10 @@
   (loop for (key val . rest) = plist then rest
         while key
         nconc (funcall fn key val)))
+
+(defun filter-plist (plist &rest args)
+  (declare (dynamic-extent args))
+  (map-plist (lambda (key val) (when (member key args) (list key val))) plist))
 
 (defmacro alist-bind (bindings alist &body body)
   "Binds elements of ALIST so they can be used as if they were lexical variables.

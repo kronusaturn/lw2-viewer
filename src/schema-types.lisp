@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.schema-types
-    (:use #:cl #:lw2.schema-type))
+    (:use #:cl #:lw2.schema-type #:lw2.backend-modules))
 
 (in-package #:lw2.schema-types)
 
@@ -23,14 +23,14 @@
    (question boolean :backend-type backend-q-and-a)
    ;; todo: allow recursive schema types and clean this up
    (target-post-relations list
-			  :qualifier :body
+			  :context :body
 			  :backend-type backend-related-questions
 			  :subfields ((:target-post :--id :slug :title :user-id :url :feed-link
 						    :posted-at :base-score :comment-count :page-url
 						    :word-count :frontpage-date :curated-date :meta
 						    :af :question :vote-count)))
    (source-post-relations list
-			  :qualifier :body
+			  :context :body
 			  :backend-type backend-related-questions
 			  :subfields ((:source-post :--id :slug :title :user-id :url :feed-link
 						    :posted-at :base-score :comment-count :page-url
@@ -38,7 +38,7 @@
 						    :af :question :vote-count)))
    (vote-count (or null fixnum))
    (tags list :graphql-ignore t)
-   (html-body (or null string) :qualifier :body)))
+   (html-body (or null string) :context :body)))
 
 (define-schema-type :comment ()
   ((comment-id string :alias :--id)
@@ -47,8 +47,8 @@
    (highlight-new boolean :graphql-ignore t)
    (post-id string)
    (base-score fixnum)
-   (page-url (or null string))
-   (parent-comment list :qualifier :index :subfields (:--id :user-id :post-id))
+   (page-url (or null string) :context-not :user-index)
+   (parent-comment list :context :index :subfields (:--id :user-id :post-id))
    (parent-comment-id (or null string))
    (child-count (or null fixnum) :graphql-ignore t)
    (children list :graphql-ignore t)

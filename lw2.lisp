@@ -53,7 +53,7 @@
 
 (defun post-nav-links (post post-sequences)
   <nav class="post-nav-links">
-    (schema-bind (:post post (target-post-relations source-post-relations) :qualifier :body)
+    (schema-bind (:post post (target-post-relations source-post-relations) :context :body)
       (when (or target-post-relations source-post-relations)
         <div class="related-posts">
 	  (dolist (relations `((,source-post-relations "Parent question")
@@ -826,10 +826,7 @@ signaled condition to OUT-STREAM."
 (defmacro define-page (name path-specifier additional-vars &body body)
   (labels ((make-lambda (args)
              (loop for a in args
-                   collect (if (atom a) a (first a))))
-           (filter-plist (plist &rest args)
-             (declare (dynamic-extent args))
-             (map-plist (lambda (key val) (when (member key args) (list key val))) plist)))
+                   collect (if (atom a) a (first a)))))
    (multiple-value-bind (path-specifier-form path-bindings-wrapper specifier-vars)
     (if (stringp path-specifier)
 	(values path-specifier #'identity)
@@ -1166,7 +1163,7 @@ signaled condition to OUT-STREAM."
           (lw2-graphql-query (lw2-query-string :comment :list
                                                (remove nil (alist :view "allRecentComments" :limit (or limit (user-pref :items-per-page)) :offset offset)
                                                        :key #'cdr)
-                                               (comments-index-fields)
+                                               :context :index
                                                :with-total want-total))
           (get-recent-comments :with-total want-total))
       (view-items-index recent-comments :title "Recent comments" :pagination (pagination-nav-bars :offset (or offset 0) :with-next (not want-total) :total (if want-total total))))))
@@ -1183,7 +1180,6 @@ signaled condition to OUT-STREAM."
 			   (error (make-condition 'lw2-user-not-found-error)))))
 		    (user-id (cdr (assoc :--id user-info)))
 		    (own-user-page (logged-in-userid user-id))
-                    (comments-index-fields (remove :page-url (comments-index-fields))) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
                     (display-name (if user-slug (cdr (assoc :display-name user-info)) user-id))
                     (show-text (if (not (eq show :all)) (string-capitalize show)))
                     (title (format nil "~A~@['s ~A~]" display-name show-text))
@@ -1197,18 +1193,18 @@ signaled condition to OUT-STREAM."
                      (lw2-graphql-query (lw2-query-string :comment :list
                                                           (nconc (alist :offset offset :limit (+ 1 (user-pref :items-per-page)) :user-id user-id)
                                                                  comments-base-terms)
-                                                          comments-index-fields)))
+                                                          :context :user-index)))
                    (:drafts
                      (get-user-posts user-id :drafts t :offset offset :limit (+ 1 (user-pref :items-per-page)) :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
                    (:conversations
                      (let ((conversations
                              (lw2-graphql-query (lw2-query-string :conversation :list
                                                                   (alist :view "userConversations" :limit (+ 1 (user-pref :items-per-page)) :offset offset :user-id user-id)
-                                                                  '(:--id :created-at :title (:participants :display-name :slug) :----typename))
+                                                                  :fields '(:--id :created-at :title (:participants :display-name :slug) :----typename))
                                                 :auth-token (hunchentoot:cookie-in "lw2-auth-token"))))
                        (lw2-graphql-query-map
                          (lambda (c)
-                           (lw2-query-string* :message :total (alist :view "messagesConversation" :conversation-id (cdr (assoc :--id c))) nil))
+                           (lw2-query-string* :message :total (alist :view "messagesConversation" :conversation-id (cdr (assoc :--id c)))))
                          conversations
                          :postprocess (lambda (c result)
                                         (acons :messages-total result c))
@@ -1227,13 +1223,12 @@ signaled condition to OUT-STREAM."
                                                   ("comment"
                                                    (lw2-query-string* :comment :single
                                                                       (alist :document-id (cdr (assoc :document-id n)))
-                                                                      (comments-index-fields)))
+                                                                      :context :index))
                                                   ("post"
-                                                   (lw2-query-string* :post :single (alist :document-id (cdr (assoc :document-id n)))
-                                                                      (posts-index-fields)))
+                                                   (lw2-query-string* :post :single (alist :document-id (cdr (assoc :document-id n)))))
                                                   ("message"
                                                    (lw2-query-string* :message :single (alist :document-id (cdr (assoc :document-id n)))
-                                                                      *messages-index-fields*))
+                                                                      :fields *messages-index-fields*))
                                                   (t
                                                     (values n t))))
                              notifications
@@ -1257,7 +1252,7 @@ signaled condition to OUT-STREAM."
 		   (t
 		     (let ((user-posts (get-user-posts user-id :limit (+ 1 (user-pref :items-per-page) offset)))
 			   (user-comments (lw2-graphql-query (lw2-query-string :comment :list (nconc (alist :limit (+ 1 (user-pref :items-per-page) offset) :user-id user-id) comments-base-terms) 
-                                                                               comments-index-fields))))
+                                                                               :context :index))))
                        (concatenate 'list user-posts user-comments))))
                  (let ((with-next (> (length items) (+ (if (eq show :all) offset 0) (user-pref :items-per-page))))
                        (interleave (if (eq show :all) (comment-post-interleave items :limit (user-pref :items-per-page) :offset (if (eq show :all) offset nil) :sort-by sort-type) (firstn items (user-pref :items-per-page))))) ; this destructively sorts items
@@ -1340,7 +1335,7 @@ signaled condition to OUT-STREAM."
 				     :csrf-token (make-csrf-token))))))
    (:post ((text :required t))
      (let* ((id (or id
-		    (let ((participant-ids (list (logged-in-userid) (cdar (lw2-graphql-query (lw2-query-string :user :single (alist :slug to) '(:--id)))))))
+		    (let ((participant-ids (list (logged-in-userid) (cdar (lw2-graphql-query (lw2-query-string :user :single (alist :slug to) :fields '(:--id)))))))
 		      (do-create-conversation (hunchentoot:cookie-in "lw2-auth-token") (alist :participant-ids participant-ids :title subject))))))
        (do-create-message (hunchentoot:cookie-in "lw2-auth-token") id text)
        (redirect (format nil "/conversation?id=~A" id))))))
@@ -1478,7 +1473,7 @@ signaled condition to OUT-STREAM."
 			    (alist :view (case view
 					   (:featured "curatedSequences")
 					   (:community "communitySequences")))
-			    '(:--id :created-at :user-id :title :----typename)))))
+			    :fields '(:--id :created-at :user-id :title :----typename)))))
     (view-items-index
      sequences
      :title "Sequences Library"
@@ -1543,8 +1538,7 @@ signaled condition to OUT-STREAM."
                                                (alist :view (if day "new" "top") :limit 51 :offset offset
                                                       :after (if (and year (not day)) (format nil "~A-~A-~A" (or year earliest-year) (or month 1) (or day 1)))
                                                       :before (if year (format nil "~A-~A-~A" (or year current-year) (or month 12)
-                                                                               (or day (local-time:days-in-month (or month 12) (or year current-year))))))
-                                               (posts-index-fields)))
+                                                                               (or day (local-time:days-in-month (or month 12) (or year current-year))))))))
           (emit-page (out-stream :title "Archive" :current-uri "/archive" :content-class "archive-page"
                                  :top-nav #'archive-nav
                                  :pagination (pagination-nav-bars :items-per-page 50 :offset offset :total total :with-next (if total nil (> (length posts) 50))))
