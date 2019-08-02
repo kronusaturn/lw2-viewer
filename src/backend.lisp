@@ -480,7 +480,7 @@
 	collect (multiple-value-bind (votetype id) (process-vote-result v) (cons id votetype))))
 
 (defun get-post-vote (post-id auth-token)
-  (process-vote-result (lw2-graphql-query (lw2-query-string :post :single (alist :document-id post-id) '(:--id (:current-user-votes :vote-type))) :auth-token auth-token))) 
+  (process-vote-result (lw2-graphql-query (lw2-query-string :post :single (alist :document-id post-id) :fields '(:--id (:current-user-votes :vote-type))) :auth-token auth-token)))
 
 (define-backend-function get-post-body (post-id &key (revalidate t) force-revalidate auth-token)
   (backend-graphql
