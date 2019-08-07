@@ -113,12 +113,10 @@
 (define-backend-function comments-list-to-graphql-json (comments-list)
   (backend-lw2-legacy
    (json:encode-json-to-string
-    (json:with-local-class-registry ()
-      (json:make-object `((data . ,(json:make-object `((*comments-list . ,comments-list)) nil))) nil))))
+    (plist-hash-table (list :data (plist-hash-table (list :*comments-list comments-list))))))
   (backend-lw2-modernized
    (json:encode-json-to-string
-    (json:with-local-class-registry ()
-      (json:make-object `((data . ,(json:make-object `((*comments-list . ,(json:make-object `((results . ,comments-list)) nil))) nil))) nil)))))
+    (plist-hash-table (list :data (plist-hash-table (list :*comments-list (plist-hash-table (list :results comments-list)))))))))
 
 (defvar *background-loader-thread* nil)
 (defvar *background-loader-semaphore* (make-semaphore :count 1))
