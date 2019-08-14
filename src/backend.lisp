@@ -509,12 +509,15 @@
       (setf terms (acons :parent-answer-id parent-answer-id terms)))
     (apply 'lw2-query-list-limit-workaround :comment terms (filter-plist rest :fields :context :auth-token))))
 
-(defun get-post-answer-replies (post-id answers &key auth-token fields context)
+(defun get-post-answer-replies (post-id answers &rest rest &key auth-token fields context)
   ;; todo: support more than 500 answers per question
+  (declare (ignore fields context))
   (let* ((terms (alist :view "repliesToAnswer" :post-id post-id :limit 500))
 	 (result (lw2-graphql-query-map
 		  #'identity
-		  (mapcar (lambda (answer) (lw2-query-string* :comment :list (acons :parent-answer-id (cdr (assoc :--id answer)) terms) :fields fields :context context))
+		  (mapcar (lambda (answer) (apply 'lw2-query-string* :comment :list
+						  (acons :parent-answer-id (cdr (assoc :--id answer)) terms)
+						  (filter-plist rest :fields :context)))
 			  answers)
 		  :auth-token auth-token)))
     (apply #'nconc result)))
