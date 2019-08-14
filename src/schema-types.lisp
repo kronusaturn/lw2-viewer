@@ -47,7 +47,7 @@
    (highlight-new boolean :graphql-ignore t)
    (post-id string)
    (base-score fixnum)
-   (page-url (or null string) :context-not :user-index)
+   (page-url (or null string) :context-not :user-index) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
    (parent-comment list :context :index :subfields (:--id :user-id :post-id))
    (parent-comment-id (or null string))
    (child-count (or null fixnum) :graphql-ignore t)
