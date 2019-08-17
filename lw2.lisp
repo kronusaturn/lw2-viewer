@@ -1027,15 +1027,13 @@ signaled condition to OUT-STREAM."
 				      (cdr (assoc :--id post))))
 			    (post-nav-links post post-sequences)
 			    (force-output out-stream)
-			    (handler-case
-				(let* ((question (cdr (assoc :question post)))
-				       (answers (when question
-						  (get-post-answers post-id)))
-				       (comments (get-post-comments post-id)))
-				  (when question
-				    (output-comments out-stream "answers" answers nil))
-				  (output-comments out-stream "comments" comments nil))
-			      (serious-condition (c) (error-to-html out-stream c)))
+			    (loop for (name fn) in (if (cdr (assoc :question post))
+						       '(("answers" get-post-answers) ("comments" get-post-comments))
+						       '(("comments" get-post-comments)))
+			       do (handler-case
+				      (let* ((comments (funcall fn post-id)))
+					(output-comments out-stream name comments nil))
+				    (serious-condition (c) (error-to-html out-stream c))))
 			    (when lw2-auth-token
 			      (force-output out-stream)
 			      (output-post-vote out-stream)
