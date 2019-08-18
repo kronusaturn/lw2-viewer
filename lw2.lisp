@@ -1,6 +1,7 @@
 (uiop:define-package #:lw2-viewer
   (:use #:cl #:sb-thread #:flexi-streams #:djula
 	#:lw2-viewer.config #:lw2.utils #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login #:lw2.context #:lw2.sites #:lw2.components #:lw2.html-reader #:lw2.fonts
+	#:lw2.conditions
 	#:lw2.routes
 	#:lw2.schema-type #:lw2.schema-types
 	#:lw2.interface-utils
@@ -190,17 +191,14 @@
 	        (chapter-to-html chapter))))
       </article>))))
 
-(defun error-to-html (out-stream condition)
-  (format out-stream "<div class=\"gw-error\"><h1>Error</h1><p>~A</p></div>"
-          (encode-entities (princ-to-string condition))))
-
 (defmacro with-error-html-block ((out-stream) &body body)
   "If an error occurs within BODY, write an HTML representation of the
 signaled condition to OUT-STREAM."
-  `(handler-case
-       (log-conditions (progn ,@body))
-     (serious-condition (c)
-       (error-to-html ,out-stream c))))
+  `(block with-error-html-block
+     (handler-bind ((serious-condition (lambda (c)
+					 (error-to-html c)
+					 (return-from with-error-html-block nil))))
+       (log-conditions (progn ,@body)))))
 
 (defun make-comment-parent-hash (comments)
   (let ((existing-comment-hash (make-hash-table :test 'equal))
@@ -307,7 +305,7 @@ signaled condition to OUT-STREAM."
 	(with-error-html-block (out-stream)
 	  (ecase (identify-item x)
 	    (:condition
-	     (error-to-html out-stream x))
+	     (error-to-html x))
 	    (:notification
 	     (format out-stream "<p>~A</p>" (cdr (assoc :message x))))
 	    (:message
@@ -711,25 +709,27 @@ signaled condition to OUT-STREAM."
                   (cache-get "auth-token-to-username" auth-token)))))
         (let ((*current-user-slug* (and *current-userid* (get-user-slug *current-userid*)))
 	      (*current-ignore-hash* (get-ignore-hash)))
-          (handler-case
-	      (log-conditions
-	       (if (or (eq (hunchentoot:request-method*) :post)
-		       (not (and (boundp '*test-acceptor*) (boundp '*hunchentoot-taskmaster*)))) ; TODO fix this hack
-		   (funcall fn)
-		   (sb-sys:with-deadline (:seconds (expt 1.3
-							 (min (round (log 30 1.3))
-							      (- (hunchentoot:taskmaster-max-thread-count (symbol-value '*hunchentoot-taskmaster*))
-								 (hunchentoot::accessor-requests-in-progress (symbol-value '*test-acceptor*))))))
-		     (funcall fn))))
-	    (serious-condition (condition)
-              (emit-page (out-stream :title "Error" :return-code (condition-http-return-code condition) :content-class "error-page")
-                         (error-to-html out-stream condition)
-			 (when (eq (hunchentoot:request-method*) :post)
-			   <form method="post" class="error-retry-form">
-  			     (loop for (key . value) in (hunchentoot:post-parameters*)
-				do <input type="hidden" name=key value=value>)
-			     <input type="submit" value="Retry">
-			   </form>)))))))))
+	  (handler-bind
+	      ((serious-condition (lambda (condition)
+				    (let ((error-html (with-output-to-string (*html-output*) (error-to-html condition))))
+				      (emit-page (out-stream :title "Error" :return-code (condition-http-return-code condition) :content-class "error-page")
+						 (write-string error-html out-stream)
+						 (when (eq (hunchentoot:request-method*) :post)
+						   <form method="post" class="error-retry-form">
+						     (loop for (key . value) in (hunchentoot:post-parameters*)
+						        do <input type="hidden" name=key value=value>)
+						     <input type="submit" value="Retry">
+						   </form>))
+				      (return-from call-with-error-page)))))
+	    (log-conditions
+	     (if (or (eq (hunchentoot:request-method*) :post)
+		     (not (and (boundp '*test-acceptor*) (boundp '*hunchentoot-taskmaster*)))) ; TODO fix this hack
+		 (funcall fn)
+		 (sb-sys:with-deadline (:seconds (expt 1.3
+						       (min (round (log 30 1.3))
+							    (- (hunchentoot:taskmaster-max-thread-count (symbol-value '*hunchentoot-taskmaster*))
+							       (hunchentoot::accessor-requests-in-progress (symbol-value '*test-acceptor*))))))
+		   (funcall fn))))))))))
 
 (defmacro with-error-page (&body body)
   `(call-with-error-page (lambda () ,@body)))
@@ -1019,7 +1019,7 @@ signaled condition to OUT-STREAM."
 									  (post-sequences "in-sequence"))))
 			    (cond
 			      (condition
-			       (error-to-html out-stream condition))
+			       (error-to-html condition))
 			      (t
 			       (post-body-to-html post)))
 			    (when (and lw2-auth-token (equal (logged-in-userid) (cdr (assoc :user-id post))))
@@ -1033,7 +1033,7 @@ signaled condition to OUT-STREAM."
 			       do (handler-case
 				      (let* ((comments (funcall fn post-id)))
 					(output-comments out-stream name comments nil))
-				    (serious-condition (c) (error-to-html out-stream c))))
+				    (serious-condition (c) (error-to-html c))))
 			    (when lw2-auth-token
 			      (force-output out-stream)
 			      (output-post-vote out-stream)

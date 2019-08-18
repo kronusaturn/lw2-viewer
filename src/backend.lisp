@@ -1,13 +1,12 @@
 (uiop:define-package #:lw2.backend
-  (:use #:cl #:sb-thread #:flexi-streams #:alexandria #:lw2-viewer.config #:lw2.sites #:lw2.context #:lw2.graphql #:lw2.lmdb #:lw2.utils #:lw2.hash-utils #:lw2.backend-modules #:lw2.schema-type)
+  (:use #:cl #:sb-thread #:flexi-streams #:alexandria #:lw2-viewer.config #:lw2.sites #:lw2.context #:lw2.graphql #:lw2.lmdb
+	#:lw2.utils #:lw2.hash-utils #:lw2.backend-modules #:lw2.schema-type #:lw2.conditions)
   (:import-from #:collectors #:with-collector)
   (:reexport #:lw2.backend-modules)
   (:export #:*graphql-debug-output*
            #:*messages-index-fields*
            #:*notifications-base-terms*
-           #:condition-http-return-code
-           #:lw2-error #:lw2-client-error #:lw2-not-found-error #:lw2-user-not-found-error #:lw2-not-allowed-error #:lw2-server-error #:lw2-connection-error #:lw2-unknown-error
-	   #:log-condition #:log-conditions #:start-background-loader #:stop-background-loader #:background-loader-running-p
+           #:start-background-loader #:stop-background-loader #:background-loader-running-p
 	   #:lw2-graphql-query-streamparse #:lw2-graphql-query-noparse #:decode-graphql-json #:lw2-graphql-query
            #:lw2-query-string* #:lw2-query-string
            #:lw2-graphql-query-map #:lw2-graphql-query-multi
@@ -71,44 +70,6 @@
 
 (define-cache-database 'backend-lw2-modernized
     "user-deleted")
-
-(defmethod condition-http-return-code ((c condition)) 500)
-
-(define-condition lw2-error (error) ((http-return-code :allocation :class :reader condition-http-return-code :initform 503)))
-
-(define-condition lw2-client-error (lw2-error) ((http-return-code :allocation :class :initform 400)))
-
-(define-condition lw2-not-found-error (lw2-client-error) ((http-return-code :allocation :class :initform 404))
-  (:report "Document not found."))
-
-(define-condition lw2-user-not-found-error (lw2-not-found-error) ()
-  (:report "User not found."))
-
-(define-condition lw2-not-allowed-error (lw2-client-error) ((http-return-code :allocation :class :initform 403))
-  (:report "LW server reports: not allowed."))
-
-(define-condition lw2-server-error (lw2-error) ())
-
-(define-condition lw2-connection-error (lw2-server-error)
-  ((message :initarg :message :reader lw2-server-error-message))
-  (:report (lambda (c s)
-             (format s "Unable to connect to LW server: ~A" (lw2-server-error-message c)))))
-
-(define-condition lw2-unknown-error (lw2-server-error)
-  ((message :initarg :message :reader lw2-unknown-error-message))
-  (:report (lambda (c s)
-             (format s "Unrecognized LW server error: ~A" (lw2-unknown-error-message c)))))
-
-(defun log-condition (condition)
-  (with-open-file (outstream "./logs/error.log" :direction :output :if-exists :append :if-does-not-exist :create)
-    (format outstream "~%~A: ~S ~A~%" (local-time:format-timestring nil (local-time:now)) condition condition)
-    (sb-debug:print-backtrace :stream outstream :from :interrupted-frame :print-frame-source t))) 
-
-(defmacro log-conditions (&body body)
-  `(block log-conditions
-     (handler-bind
-       (((or warning serious-condition) (lambda (c) (log-condition c))))
-       (progn ,@body))))
 
 (define-backend-function comments-list-to-graphql-json (comments-list)
   (backend-lw2-legacy
