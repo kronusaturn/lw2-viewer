@@ -259,8 +259,9 @@
 (defun lw2-graphql-query-multi (query-list &key auth-token)
   (values-list (lw2-graphql-query-map #'identity query-list :auth-token auth-token)))
 
-(defun lw2-graphql-query (query &key auth-token)
-  (decode-graphql-json (lw2-graphql-query-noparse query :auth-token auth-token))) 
+(define-backend-function lw2-graphql-query (query &key auth-token)
+  (backend-graphql
+   (decode-graphql-json (lw2-graphql-query-noparse query :auth-token auth-token))))
 
 (defvar *background-cache-update-threads* (make-hash-table :test 'equal
 							   :weakness :value
@@ -325,7 +326,8 @@
 					 (setf (gethash key *background-cache-update-threads*)
 					       (make-thread-with-current-backend #'background-fn))))))))
 
-(defun lw2-graphql-query-timeout-cached (query cache-db cache-key &key (revalidate t) force-revalidate)
+(define-backend-function lw2-graphql-query-timeout-cached (query cache-db cache-key &key (revalidate t) force-revalidate)
+  (backend-graphql
     (multiple-value-bind (cached-result is-fresh) (with-cache-readonly-transaction (values (cache-get cache-db cache-key) (cache-is-fresh cache-db cache-key)))
       (if (and cached-result (or (not revalidate)
 				 (and (not force-revalidate) (eq is-fresh :skip))))
@@ -344,7 +346,7 @@
 			 (t new-result)))
 		   (condition (c)
 		     (or cached-result
-			 (error "Failed to load ~A ~A and no cached version available: ~A" cache-db cache-key c))))))))))
+			 (error "Failed to load ~A ~A and no cached version available: ~A" cache-db cache-key c)))))))))))
 
 (define-backend-function lw2-query-string* (query-type return-type args &key context fields with-total))
 

@@ -10,6 +10,19 @@
    (declare (ignore status-code headers final-uri reuse-stream want-close status-string))
    (json:decode-json-from-string (octets-to-string response-body :external-format :utf-8))))
 
+(define-backend-operation lw2-query-string backend-accordius (query-type return-type args &rest rest)
+  (declare (ignore rest))
+  (lambda ()
+    (do-wl-rest-query
+      (format nil "~(~A~)s/~@[~A/~]" query-type (if (eq return-type :single) (cdr (assoc :document-id args))))
+      (loop for arg in args
+	 unless (eq (car arg) :document-id)
+	   collect (cons (json:lisp-to-camel-case (string (car arg))) (cdr arg))))))
+
+(define-backend-operation lw2-graphql-query backend-accordius (query &rest rest)
+  (declare (ignore rest))
+  (funcall query))
+
 (define-backend-operation get-post-body backend-accordius (post-id &key &allow-other-keys)
   (acons :tags (do-wl-rest-query "tags/" `(("document_id" . ,post-id))) (call-next-method)))
 
