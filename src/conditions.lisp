@@ -59,7 +59,7 @@
 
 (defmethod error-to-html ((condition lw2-server-error))
   <p>(condition-introduction condition):</p>
-  <code><pre>(lw2-unknown-error-message condition)</pre></code>)
+  <code><pre>(lw2-server-error-message condition)</pre></code>)
 
 (defun log-condition (condition)
   (with-open-file (outstream "./logs/error.log" :direction :output :if-exists :append :if-does-not-exist :create)

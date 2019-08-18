@@ -191,7 +191,7 @@
 	        (chapter-to-html chapter))))
       </article>))))
 
-(defmacro with-error-html-block ((out-stream) &body body)
+(defmacro with-error-html-block (() &body body)
   "If an error occurs within BODY, write an HTML representation of the
 signaled condition to OUT-STREAM."
   `(block with-error-html-block
@@ -235,7 +235,7 @@ signaled condition to OUT-STREAM."
   (format out-stream "</ul>"))
 
 (defun comment-item-to-html (out-stream comment &key extra-html-fn with-post-title level)
-  (with-error-html-block (out-stream)
+  (with-error-html-block ()
     (let ((c-id (cdr (assoc :--id comment)))
 	  (user-id (cdr (assoc :user-id comment))))
       (format out-stream "<li id=\"comment-~A\" class=\"comment-item~{ ~A~}\">"
@@ -302,7 +302,7 @@ signaled condition to OUT-STREAM."
 (defun write-index-items-to-html (out-stream items &key need-auth (empty-message "No entries.") skip-section)
   (if items
       (dolist (x items)
-	(with-error-html-block (out-stream)
+	(with-error-html-block ()
 	  (ecase (identify-item x)
 	    (:condition
 	     (error-to-html x))
@@ -951,7 +951,7 @@ signaled condition to OUT-STREAM."
      (let ((lw2-auth-token *current-auth-token*))
        (labels ((output-comments (out-stream id comments target)
                   (format out-stream "<div id=\"~A\" class=\"comments\">" id)
-                  (with-error-html-block (out-stream)
+                  (with-error-html-block ()
                     (if target
                         (comment-thread-to-html out-stream
                                                 (lambda ()
