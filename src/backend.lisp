@@ -7,7 +7,7 @@
            #:*messages-index-fields*
            #:*notifications-base-terms*
            #:start-background-loader #:stop-background-loader #:background-loader-running-p
-	   #:lw2-graphql-query-streamparse #:lw2-graphql-query-noparse #:decode-graphql-json #:lw2-graphql-query
+	   #:lw2-graphql-query-streamparse #:lw2-graphql-query-noparse #:lw2-graphql-query
            #:lw2-query-string* #:lw2-query-string
            #:lw2-graphql-query-map #:lw2-graphql-query-multi
 	   #:get-posts-index #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-answers #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
@@ -22,7 +22,7 @@
 	     #:*posts-index-fields* #:posts-index-fields #:post-body-fields
 	     #:*comments-index-fields* #:comments-index-fields
 	     #:*post-comments-fields* #:post-comments-fields
-	     #:define-index-fields))
+	     #:define-index-fields #:decode-graphql-json))
 
 (in-package #:lw2.backend)
 
@@ -100,7 +100,7 @@
 	(handler-case
 	    (log-conditions
 	     (let* ((posts-json (sb-sys:with-deadline (:seconds 120) (get-posts-json)))
-		    (posts-list (decode-graphql-json posts-json)))
+		    (posts-list (decode-query-result posts-json)))
 	       (when posts-list
 		 (with-cache-transaction
 		   (cache-put "index-json" "new-not-meta" posts-json)
@@ -114,7 +114,7 @@
 	(handler-case
 	    (log-conditions
 	     (let ((recent-comments-json (sb-sys:with-deadline (:seconds 120) (get-recent-comments-json))))
-	       (when-let (recent-comments (ignore-errors (decode-graphql-json recent-comments-json)))
+	       (when-let (recent-comments (ignore-errors (decode-query-result recent-comments-json)))
 			 (cache-put "index-json" "recent-comments" recent-comments-json)
 			 (loop for comment in recent-comments
 			    as comment-id = (cdr (assoc :--id comment))
@@ -125,7 +125,7 @@
 			    do
 			      (with-cache-transaction
 				  (let* ((post-id (cdr (assoc :post-id comment)))
-					 (post-comments (ignore-errors (decode-graphql-json (cache-get cache-database post-id))))
+					 (post-comments (ignore-errors (decode-query-result (cache-get cache-database post-id))))
 					 (new-post-comments (sort (cons comment (delete-if (lambda (c) (string= comment-id (cdr (assoc :--id c)))) post-comments))
 								  #'> :key (lambda (c) (cdr (assoc :base-score c))))))
 				    (cache-update cache-database post-id (comments-list-to-graphql-json new-post-comments)))))
@@ -193,7 +193,7 @@
       ((= status-code 200)
        (octets-to-string response-body :external-format :utf-8))
       ((= status-code 400)
-       (decode-graphql-json (octets-to-string response-body :external-format :utf-8)))
+       (decode-query-result (octets-to-string response-body :external-format :utf-8)))
       (t
 	(error "Error while contacting LW2: ~A ~A" status-code status-string)))))
 
@@ -222,12 +222,38 @@
   (backend-accordius
    value))
 
-(define-backend-function decode-graphql-json (json-string)
+(define-backend-function deserialize-query-result (result-source)
+  (backend-base
+   (let ((string-source (typecase result-source
+			  (string
+			   result-source)
+			  (vector
+			   (flexi-streams:make-in-memory-input-stream result-source))
+			  ((or flexi-stream in-memory-stream)
+			   (setf (flexi-stream-external-format result-source) :utf-8)
+			   result-source)
+			  (stream
+			   (if (subtypep (stream-element-type result-source) 'character)
+			       result-source
+			       (flexi-streams:make-flexi-stream result-source :external-format :utf-8))))))
+     (json:decode-json-from-source string-source))))
+
+(define-backend-function postprocess-query-result (result)
+  (backend-base
+   result)
   (backend-lw2-legacy
-   (let* ((decoded (json:decode-json-from-string json-string))
-	  (errors (cdr (assoc :errors decoded))))
-     (signal-lw2-errors errors)
-     (fixup-lw2-return-value (cdadr (assoc :data decoded))))))
+   (signal-lw2-errors (cdr (assoc :errors result)))
+   (fixup-lw2-return-value (cdadr (assoc :data result)))))
+
+(define-backend-function decode-query-result (result-source)
+  (backend-base
+   (postprocess-query-result
+    (deserialize-query-result result-source))))
+
+(define-backend-function lw2-graphql-query (query &key auth-token)
+  (backend-graphql
+   (decode-query-result
+    (lw2-graphql-query-noparse query :auth-token auth-token))))
 
 (defun lw2-graphql-query-map (fn data &key auth-token postprocess)
   (multiple-value-bind (map-values queries)
@@ -258,10 +284,6 @@
 
 (defun lw2-graphql-query-multi (query-list &key auth-token)
   (values-list (lw2-graphql-query-map #'identity query-list :auth-token auth-token)))
-
-(define-backend-function lw2-graphql-query (query &key auth-token)
-  (backend-graphql
-   (decode-graphql-json (lw2-graphql-query-noparse query :auth-token auth-token))))
 
 (defvar *background-cache-update-threads* (make-hash-table :test 'equal
 							   :weakness :value
@@ -331,12 +353,12 @@
     (multiple-value-bind (cached-result is-fresh) (with-cache-readonly-transaction (values (cache-get cache-db cache-key) (cache-is-fresh cache-db cache-key)))
       (if (and cached-result (or (not revalidate)
 				 (and (not force-revalidate) (eq is-fresh :skip))))
-          (decode-graphql-json cached-result)
+          (decode-query-result cached-result)
           (let ((timeout (if cached-result
 			     (if force-revalidate nil 3)
 			     nil))
                 (thread (ensure-cache-update-thread query cache-db cache-key)))
-            (decode-graphql-json
+            (decode-query-result
 	     (if (and cached-result (if force-revalidate (not revalidate) (or is-fresh (not revalidate))))
 		 cached-result
 		 (handler-case
@@ -384,16 +406,16 @@
 (defun get-cached-index-query (cache-id query)
   (labels ((query-and-put ()
              (let* ((result (lw2-graphql-query-noparse query))
-                    (decoded-result (multiple-value-list (decode-graphql-json result))))
+                    (decoded-result (multiple-value-list (decode-query-result result))))
                (cache-put "index-json" cache-id result)
                (values-list decoded-result))))
     (let ((cached-result (cache-get "index-json" cache-id)))
       (if (and cached-result (background-loader-ready-p))
-        (decode-graphql-json cached-result)
+        (decode-query-result cached-result)
         (if cached-result
             (handler-case
               (query-and-put)
-              (t () (decode-graphql-json cached-result)))
+              (t () (decode-query-result cached-result)))
             (query-and-put))))))
 
 (define-backend-function get-posts-index-query-string (&key view (sort "new") (limit 20) offset before after)
@@ -554,7 +576,7 @@
 							  (:contents :html)
 							  (:chapters :title :subtitle :number (:contents :html) (:posts ,@(request-fields :post :list nil)))
 							  :grid-image-id :----typename))))
-		      (sequence (decode-graphql-json sequence-json))
+		      (sequence (decode-query-result sequence-json))
 		      (posts (sequence-post-ids sequence)))
 		 (with-cache-transaction
 		     (dolist (post-id posts)
