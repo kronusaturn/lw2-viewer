@@ -100,6 +100,11 @@
 		   ("ai-alignment" "/explore/ai_alignment/" "AI Alignment")
 		   ("meta" "/explore/Arbital/" "Arbital")))))
 
+(define-lmdb-memoized markdown-to-html 'lw2.backend-modules:backend-arbital
+  (:sources ("arbital-showdown/convert.js" "arbital-showdown/package-lock.json")) (markdown-string)
+  (with-input-from-string (stream markdown-string)
+    (uiop:run-program "node arbital-showdown/convert.js" :input stream :output :string)))
+
 (defparameter *markdown-replace-string* "ouNi5iej")
 
 (defun arbital-markdown-to-html (markdown stream)
@@ -178,8 +183,7 @@
 			     text
 			     (markdown-protect "</div>")))))))
 	   (html (regex-replace-body ((load-time-value (format nil "~A-(\\d+)-" *markdown-replace-string*))
-				      (nth-value 1
-					(cl-markdown:markdown markdown :stream nil)))
+				      (markdown-to-html markdown))
 		   (aref replacements (parse-integer (reg 0))))))
 	(write-sequence (clean-html* html) stream)))))
 
