@@ -327,7 +327,7 @@
 					       (make-thread-with-current-backend #'background-fn))))))))
 
 (define-backend-function lw2-graphql-query-timeout-cached (query cache-db cache-key &key (revalidate t) force-revalidate)
-  (backend-graphql
+  (backend-base
     (multiple-value-bind (cached-result is-fresh) (with-cache-readonly-transaction (values (cache-get cache-db cache-key) (cache-is-fresh cache-db cache-key)))
       (if (and cached-result (or (not revalidate)
 				 (and (not force-revalidate) (eq is-fresh :skip))))
