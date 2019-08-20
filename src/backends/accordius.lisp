@@ -2,16 +2,55 @@
 
 ;;; REST API
 
-(defun do-wl-rest-query (endpoint filters &key auth-token)
-  (multiple-value-bind (response-body status-code headers final-uri reuse-stream want-close status-string)
+#|
+(defun do-wl-rest-query (endpoint filters &key auth-token result-type)
+  (multiple-value-bind (response status-code headers final-uri reuse-stream want-close status-string)
    (drakma:http-request
      (quri:render-uri (quri:merge-uris (quri:make-uri :path endpoint :query filters) (quri:uri (rest-api-uri *current-backend*))))
-     :additional-headers (if auth-token `(("authorization" . ,auth-token)) nil))
+     :additional-headers (if auth-token `(("authorization" . ,auth-token)) nil)
+     :want-close t :want-stream (null result-type))
    (declare (ignore status-code headers final-uri reuse-stream want-close status-string))
    (json:decode-json-from-string (octets-to-string response-body :external-format :utf-8))))
+|#
+
+(defun do-wl-rest-query (endpoint filters &key auth-token)
+  (lw2-graphql-query (lambda () (values endpoint filters)) :auth-token auth-token))
+
+(defclass accordius-query (closer-mop:funcallable-standard-object) ()
+  (:metaclass closer-mop:funcallable-standard-class))
+
+(defmethod run-query ((query accordius-query))
+  (lw2-graphql-query query :return-type :string))
+
+(define-backend-operation lw2-query-string backend-accordius (query-type return-type args &rest rest)
+  (declare (ignore rest))
+  (let ((obj (make-instance 'accordius-query)))
+    (closer-mop:set-funcallable-instance-function
+     obj
+     (lambda ()
+       (values
+	(format nil "~(~A~)s/~@[~A/~]" query-type (if (eq return-type :single) (cdr (assoc :document-id args))))
+	(loop for arg in args
+	   unless (member (car arg) '(:document-id :limit :view))
+	   collect (cons (json:lisp-to-camel-case (string (car arg))) (cdr arg))))))
+    obj))
+
+(define-backend-operation postprocess-query-result backend-accordius (result)
+  (if-let (data (assoc :data result))
+	  (cdadr data)
+	  result))
+
+(define-backend-operation call-with-backend-response backend-accordius (fn query &key auth-token)
+   (multiple-value-bind (endpoint filters)
+       (funcall query)
+     (call-with-http-response
+      fn
+      (quri:render-uri (quri:merge-uris (quri:make-uri :path endpoint :query filters) (quri:uri (rest-api-uri *current-backend*))))
+      :additional-headers (if auth-token `(("authorization" . ,auth-token)) nil)
+      :want-stream t)))
 
 (define-backend-operation get-post-body backend-accordius (post-id &key &allow-other-keys)
-  (acons :tags (do-wl-rest-query "tags/" `(("document_id" . ,post-id))) (call-next-method)))
+  (acons :tags (lw2-graphql-query (lambda () (values "tags/" `(("document_id" . ,post-id))))) (call-next-method)))
 
 (define-backend-operation lw2-search-query backend-accordius (query)
   (values

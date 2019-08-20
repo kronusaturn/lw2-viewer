@@ -24,9 +24,6 @@
 		  (error "Unknown error.")))
       (t result))))
 
-(define-backend-operation decode-graphql-json backend-arbital (json-string)
-  (json:decode-json-from-string json-string))
-
 (defun update-arbital-aliases (data)
   (with-cache-transaction
       (dolist (page-data (cdr (assoc :pages data)))

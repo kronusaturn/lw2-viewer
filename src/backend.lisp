@@ -7,7 +7,7 @@
            #:*messages-index-fields*
            #:*notifications-base-terms*
            #:start-background-loader #:stop-background-loader #:background-loader-running-p
-	   #:lw2-graphql-query-streamparse #:lw2-graphql-query-noparse #:decode-graphql-json #:lw2-graphql-query
+	   #:lw2-graphql-query-streamparse #:lw2-graphql-query-noparse #:lw2-graphql-query
            #:lw2-query-string* #:lw2-query-string
            #:lw2-graphql-query-map #:lw2-graphql-query-multi
 	   #:get-posts-index #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-answers #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
@@ -22,7 +22,7 @@
 	     #:*posts-index-fields* #:posts-index-fields #:post-body-fields
 	     #:*comments-index-fields* #:comments-index-fields
 	     #:*post-comments-fields* #:post-comments-fields
-	     #:define-index-fields))
+	     #:define-index-fields #:decode-graphql-json))
 
 (in-package #:lw2.backend)
 
@@ -100,7 +100,7 @@
 	(handler-case
 	    (log-conditions
 	     (let* ((posts-json (sb-sys:with-deadline (:seconds 120) (get-posts-json)))
-		    (posts-list (decode-graphql-json posts-json)))
+		    (posts-list (decode-query-result posts-json)))
 	       (when posts-list
 		 (with-cache-transaction
 		   (cache-put "index-json" "new-not-meta" posts-json)
@@ -114,7 +114,7 @@
 	(handler-case
 	    (log-conditions
 	     (let ((recent-comments-json (sb-sys:with-deadline (:seconds 120) (get-recent-comments-json))))
-	       (when-let (recent-comments (ignore-errors (decode-graphql-json recent-comments-json)))
+	       (when-let (recent-comments (ignore-errors (decode-query-result recent-comments-json)))
 			 (cache-put "index-json" "recent-comments" recent-comments-json)
 			 (loop for comment in recent-comments
 			    as comment-id = (cdr (assoc :--id comment))
@@ -125,7 +125,7 @@
 			    do
 			      (with-cache-transaction
 				  (let* ((post-id (cdr (assoc :post-id comment)))
-					 (post-comments (ignore-errors (decode-graphql-json (cache-get cache-database post-id))))
+					 (post-comments (ignore-errors (decode-query-result (cache-get cache-database post-id))))
 					 (new-post-comments (sort (cons comment (delete-if (lambda (c) (string= comment-id (cdr (assoc :--id c)))) post-comments))
 								  #'> :key (lambda (c) (cdr (assoc :base-score c))))))
 				    (cache-update cache-database post-id (comments-list-to-graphql-json new-post-comments)))))
@@ -167,35 +167,23 @@
   (when *graphql-debug-output*
     (format *graphql-debug-output* "~&GraphQL query: ~A~%" query)))
 
-(defun lw2-graphql-query-streamparse (query &key auth-token)
-  (do-graphql-debug query)
-  (multiple-value-bind (req-stream status-code headers final-uri reuse-stream want-close)
-    (drakma:http-request (graphql-uri *current-backend*) :parameters (list (cons "query" query))
-			 :cookie-jar *cookie-jar* :additional-headers (if auth-token `(("authorization" . ,auth-token)) nil)
-			 :want-stream t :close t)
-    (declare (ignore status-code headers final-uri reuse-stream))
-    (setf (flexi-stream-external-format req-stream) :utf-8)
+(defun call-with-http-response (fn uri &rest args &key want-stream &allow-other-keys)
+  (multiple-value-bind (response status-code headers final-uri reuse-stream want-close status-string)
+      (apply 'drakma:http-request uri :close t args)
+    (declare (ignore headers final-uri reuse-stream))
     (unwind-protect
-	 (json:decode-json req-stream)
-      (let ((buf (make-array 4096 :element-type '(unsigned-byte 8))))
-	(loop until (< (read-sequence buf req-stream) 4096)))
-      (if want-close
-	  (close req-stream)))))
-
-(defun lw2-graphql-query-noparse (query &key auth-token)
-  (do-graphql-debug query)
-  (multiple-value-bind (response-body status-code headers final-uri reuse-stream want-close status-string)
-    (drakma:http-request (graphql-uri *current-backend*) :parameters (list (cons "query" query))
-                         :cookie-jar *cookie-jar* :additional-headers (if auth-token `(("authorization" . ,auth-token)) nil)
-                         :want-stream nil :close t)
-    (declare (ignore headers final-uri reuse-stream want-close))
-    (cond
-      ((= status-code 200)
-       (octets-to-string response-body :external-format :utf-8))
-      ((= status-code 400)
-       (decode-graphql-json (octets-to-string response-body :external-format :utf-8)))
-      (t
-	(error "Error while contacting LW2: ~A ~A" status-code status-string)))))
+	 (cond
+	   ((= status-code 200)
+	    (funcall fn response))
+	   ((= status-code 400)
+	    (decode-query-result response))
+	   (t
+	    (error "Error while contacting LW2: ~A ~A" status-code status-string)))
+      (when want-stream
+	(if want-close
+	    (close response)
+	    (let ((buf (make-array 4096 :element-type '(unsigned-byte 8))))
+	      (loop until (< (read-sequence buf response) 4096))))))))
 
 (defun signal-lw2-errors (errors)
   (loop for error in errors
@@ -222,12 +210,58 @@
   (backend-accordius
    value))
 
-(define-backend-function decode-graphql-json (json-string)
+(defun ensure-character-stream (stream)
+  (etypecase stream
+    ((or flexi-stream in-memory-stream)
+     (setf (flexi-stream-external-format stream) :utf-8)
+     stream)
+    (stream
+     (if (subtypep (stream-element-type stream) 'character)
+	 stream
+	 (flexi-streams:make-flexi-stream stream :external-format :utf-8)))))
+
+(define-backend-function deserialize-query-result (result-source)
+  (backend-base
+   (let ((string-source (typecase result-source
+			  (string
+			   result-source)
+			  (vector
+			   (flexi-streams:make-in-memory-input-stream result-source))
+			  (stream
+			   (ensure-character-stream result-source)))))
+     (json:decode-json-from-source string-source))))
+
+(define-backend-function postprocess-query-result (result)
+  (backend-base
+   result)
   (backend-lw2-legacy
-   (let* ((decoded (json:decode-json-from-string json-string))
-	  (errors (cdr (assoc :errors decoded))))
-     (signal-lw2-errors errors)
-     (fixup-lw2-return-value (cdadr (assoc :data decoded))))))
+   (signal-lw2-errors (cdr (assoc :errors result)))
+   (fixup-lw2-return-value (cdadr (assoc :data result)))))
+
+(define-backend-function decode-query-result (result-source)
+  (backend-base
+   (postprocess-query-result
+    (deserialize-query-result result-source))))
+
+(define-backend-function call-with-backend-response (fn query &key auth-token)
+  (backend-graphql
+   (call-with-http-response
+    fn
+    (graphql-uri *current-backend*)
+    :parameters (acons "query" query nil)
+    :cookie-jar *cookie-jar* :additional-headers (if auth-token `(("authorization" . ,auth-token)) nil)
+    :want-stream t)))
+
+(define-backend-function lw2-graphql-query (query &key auth-token return-type (decoder 'decode-query-result))
+  (backend-base
+   (call-with-backend-response
+    (ecase return-type
+      ((nil) decoder)
+      (:string (lambda (r) (uiop:slurp-stream-string (ensure-character-stream r))))
+      (:both (lambda (r) (let ((s (uiop:slurp-stream-string (ensure-character-stream r))))
+			   (values (funcall decoder s) s)))))
+    query
+    :auth-token auth-token)))
 
 (defun lw2-graphql-query-map (fn data &key auth-token postprocess)
   (multiple-value-bind (map-values queries)
@@ -244,7 +278,7 @@
                      for q in queries
                      do (format stream "g~6,'0D:~A " n q))
                (format stream "}")))
-           (query-result-data (when queries (lw2-graphql-query-streamparse query-string :auth-token auth-token)))
+           (query-result-data (when queries (lw2-graphql-query query-string :decoder 'deserialize-query-result :auth-token auth-token)))
            (errors (cdr (assoc :errors query-result-data))))
       (signal-lw2-errors errors)
       (values
@@ -258,9 +292,6 @@
 
 (defun lw2-graphql-query-multi (query-list &key auth-token)
   (values-list (lw2-graphql-query-map #'identity query-list :auth-token auth-token)))
-
-(defun lw2-graphql-query (query &key auth-token)
-  (decode-graphql-json (lw2-graphql-query-noparse query :auth-token auth-token))) 
 
 (defvar *background-cache-update-threads* (make-hash-table :test 'equal
 							   :weakness :value
@@ -293,10 +324,11 @@
 		  :skip
 		  (> unmodified-time (* *cache-stale-factor* last-checked-time)))))))
 
-(defun run-query (query)
-  (etypecase query
-    (string (lw2-graphql-query-noparse query))
-    (function (funcall query))))
+(defgeneric run-query (query)
+  (:method ((query string))
+    (lw2-graphql-query query :return-type :string))
+  (:method ((query function))
+    (funcall query)))
 
 (declaim (inline make-thread-with-current-backend))
 
@@ -325,16 +357,17 @@
 					 (setf (gethash key *background-cache-update-threads*)
 					       (make-thread-with-current-backend #'background-fn))))))))
 
-(defun lw2-graphql-query-timeout-cached (query cache-db cache-key &key (revalidate t) force-revalidate)
+(define-backend-function lw2-graphql-query-timeout-cached (query cache-db cache-key &key (revalidate t) force-revalidate)
+  (backend-base
     (multiple-value-bind (cached-result is-fresh) (with-cache-readonly-transaction (values (cache-get cache-db cache-key) (cache-is-fresh cache-db cache-key)))
       (if (and cached-result (or (not revalidate)
 				 (and (not force-revalidate) (eq is-fresh :skip))))
-          (decode-graphql-json cached-result)
+          (decode-query-result cached-result)
           (let ((timeout (if cached-result
 			     (if force-revalidate nil 3)
 			     nil))
                 (thread (ensure-cache-update-thread query cache-db cache-key)))
-            (decode-graphql-json
+            (decode-query-result
 	     (if (and cached-result (if force-revalidate (not revalidate) (or is-fresh (not revalidate))))
 		 cached-result
 		 (handler-case
@@ -344,7 +377,7 @@
 			 (t new-result)))
 		   (condition (c)
 		     (or cached-result
-			 (error "Failed to load ~A ~A and no cached version available: ~A" cache-db cache-key c))))))))))
+			 (error "Failed to load ~A ~A and no cached version available: ~A" cache-db cache-key c)))))))))))
 
 (define-backend-function lw2-query-string* (query-type return-type args &key context fields with-total))
 
@@ -381,17 +414,17 @@
 
 (defun get-cached-index-query (cache-id query)
   (labels ((query-and-put ()
-             (let* ((result (lw2-graphql-query-noparse query))
-                    (decoded-result (multiple-value-list (decode-graphql-json result))))
+             (let* ((result (lw2-graphql-query query :return-type :string))
+                    (decoded-result (multiple-value-list (decode-query-result result))))
                (cache-put "index-json" cache-id result)
                (values-list decoded-result))))
     (let ((cached-result (cache-get "index-json" cache-id)))
       (if (and cached-result (background-loader-ready-p))
-        (decode-graphql-json cached-result)
+        (decode-query-result cached-result)
         (if cached-result
             (handler-case
               (query-and-put)
-              (t () (decode-graphql-json cached-result)))
+              (t () (decode-query-result cached-result)))
             (query-and-put))))))
 
 (define-backend-function get-posts-index-query-string (&key view (sort "new") (limit 20) offset before after)
@@ -421,13 +454,13 @@
 	 (lw2-graphql-query query-string)))))
 
 (defun get-posts-json ()
-  (lw2-graphql-query-noparse (get-posts-index-query-string)))
+  (lw2-graphql-query (get-posts-index-query-string) :return-type :string))
 
 (defun get-recent-comments (&key with-total)
   (get-cached-index-query "recent-comments" (lw2-query-string :comment :list '((:view . "allRecentComments") (:limit . 20)) :context :index :with-total with-total)))
 
 (defun get-recent-comments-json ()
-  (lw2-graphql-query-noparse (lw2-query-string :comment :list '((:view . "allRecentComments") (:limit . 20)) :context :index)))
+  (lw2-graphql-query (lw2-query-string :comment :list '((:view . "allRecentComments") (:limit . 20)) :context :index) :return-type :string))
 
 (defun process-vote-result (res)
   (let ((id (cdr (assoc :--id res)))
@@ -544,23 +577,23 @@
 (define-backend-function get-sequence (sequence-id)
   (backend-graphql
    (let ((fn (lambda ()
-	       (let* ((sequence-json
-		       (lw2-graphql-query-noparse
-			(lw2-query-string :sequence :single
-					  (alist :document-id sequence-id)
-					  :fields `(:--id :title :created-at :user-id
-							  (:contents :html)
-							  (:chapters :title :subtitle :number (:contents :html) (:posts ,@(request-fields :post :list nil)))
-							  :grid-image-id :----typename))))
-		      (sequence (decode-graphql-json sequence-json))
-		      (posts (sequence-post-ids sequence)))
-		 (with-cache-transaction
-		     (dolist (post-id posts)
-		       (let ((old-seqs (if-let (json (cache-get "post-sequence" post-id))
-					       (json:decode-json-from-string json))))
-			 (unless (member sequence-id old-seqs :test #'string=)
-			   (cache-put "post-sequence" post-id (json:encode-json-to-string (cons sequence-id old-seqs)))))))
-		 sequence-json))))
+	       (multiple-value-bind (sequence sequence-json)
+		   (lw2-graphql-query
+		    (lw2-query-string :sequence :single
+				      (alist :document-id sequence-id)
+				      :fields `(:--id :title :created-at :user-id
+						      (:contents :html)
+						      (:chapters :title :subtitle :number (:contents :html) (:posts ,@(request-fields :post :list nil)))
+						      :grid-image-id :----typename))
+		    :return-type :both)
+		 (let ((posts (sequence-post-ids sequence)))
+		   (with-cache-transaction
+		       (dolist (post-id posts)
+			 (let ((old-seqs (if-let (json (cache-get "post-sequence" post-id))
+						 (json:decode-json-from-string json))))
+			   (unless (member sequence-id old-seqs :test #'string=)
+			     (cache-put "post-sequence" post-id (json:encode-json-to-string (cons sequence-id old-seqs)))))))
+		   sequence-json)))))
      (lw2-graphql-query-timeout-cached fn "sequence-json" sequence-id))))
 
 (define-backend-function get-post-sequence-ids (post-id)
