@@ -2,17 +2,6 @@
 
 ;;; REST API
 
-#|
-(defun do-wl-rest-query (endpoint filters &key auth-token result-type)
-  (multiple-value-bind (response status-code headers final-uri reuse-stream want-close status-string)
-   (drakma:http-request
-     (quri:render-uri (quri:merge-uris (quri:make-uri :path endpoint :query filters) (quri:uri (rest-api-uri *current-backend*))))
-     :additional-headers (if auth-token `(("authorization" . ,auth-token)) nil)
-     :want-close t :want-stream (null result-type))
-   (declare (ignore status-code headers final-uri reuse-stream want-close status-string))
-   (json:decode-json-from-string (octets-to-string response-body :external-format :utf-8))))
-|#
-
 (defun do-wl-rest-query (endpoint filters &key auth-token)
   (lw2-graphql-query (lambda () (values endpoint filters)) :auth-token auth-token))
 

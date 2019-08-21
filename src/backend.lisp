@@ -7,8 +7,7 @@
            #:*messages-index-fields*
            #:*notifications-base-terms*
            #:start-background-loader #:stop-background-loader #:background-loader-running-p
-	   #:lw2-graphql-query-streamparse #:lw2-graphql-query-noparse #:lw2-graphql-query
-           #:lw2-query-string* #:lw2-query-string
+	   #:lw2-graphql-query #:lw2-query-string* #:lw2-query-string
            #:lw2-graphql-query-map #:lw2-graphql-query-multi
 	   #:get-posts-index #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-answers #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
 	   #:sequence-post-ids #:get-sequence #:get-post-sequence-ids #:get-sequence-post
@@ -22,7 +21,8 @@
 	     #:*posts-index-fields* #:posts-index-fields #:post-body-fields
 	     #:*comments-index-fields* #:comments-index-fields
 	     #:*post-comments-fields* #:post-comments-fields
-	     #:define-index-fields #:decode-graphql-json))
+	     #:define-index-fields #:decode-graphql-json
+	     #:lw2-graphql-query-noparse #:lw2-graphql-query-streamparse))
 
 (in-package #:lw2.backend)
 
