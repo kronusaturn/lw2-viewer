@@ -191,11 +191,35 @@
 	        (chapter-to-html chapter))))
       </article>))))
 
+(defgeneric unwrap-stream (s)
+  (:method ((s stream)) nil)
+  (:method ((s flexi-stream)) (flexi-stream-stream s))
+  (:method ((s chunga:chunked-stream)) (chunga:chunked-stream-stream s)))
+
+(defun compare-streams (a b)
+  (if (eq a b)
+      t
+      (or
+       (if-let (u-a (unwrap-stream a))
+	       (compare-streams u-a b))
+       (if-let (u-b (unwrap-stream b))
+	       (compare-streams a u-b)))))
+
+(defun abort-response ()
+  (throw 'abort-response nil))
+
+(defun abort-response-if-unrecoverable (condition)
+  (when (and (typep condition 'stream-error)
+	     (boundp '*html-output*)
+	     (compare-streams (stream-error-stream condition) *html-output*))
+    (abort-response)))
+
 (defmacro with-error-html-block (() &body body)
   "If an error occurs within BODY, write an HTML representation of the
 signaled condition to OUT-STREAM."
   `(block with-error-html-block
      (handler-bind ((serious-condition (lambda (c)
+					 (abort-response-if-unrecoverable c)
 					 (error-to-html c)
 					 (return-from with-error-html-block nil))))
        (log-conditions (progn ,@body)))))
@@ -709,27 +733,29 @@ signaled condition to OUT-STREAM."
                   (cache-get "auth-token-to-username" auth-token)))))
         (let ((*current-user-slug* (and *current-userid* (get-user-slug *current-userid*)))
 	      (*current-ignore-hash* (get-ignore-hash)))
-	  (handler-bind
-	      ((serious-condition (lambda (condition)
-				    (let ((error-html (with-output-to-string (*html-output*) (error-to-html condition))))
-				      (emit-page (out-stream :title "Error" :return-code (condition-http-return-code condition) :content-class "error-page")
-						 (write-string error-html out-stream)
-						 (when (eq (hunchentoot:request-method*) :post)
-						   <form method="post" class="error-retry-form">
-						     (loop for (key . value) in (hunchentoot:post-parameters*)
-						        do <input type="hidden" name=key value=value>)
-						     <input type="submit" value="Retry">
-						   </form>))
-				      (return-from call-with-error-page)))))
-	    (log-conditions
-	     (if (or (eq (hunchentoot:request-method*) :post)
-		     (not (and (boundp '*test-acceptor*) (boundp '*hunchentoot-taskmaster*)))) ; TODO fix this hack
-		 (funcall fn)
-		 (sb-sys:with-deadline (:seconds (expt 1.3
-						       (min (round (log 30 1.3))
-							    (- (hunchentoot:taskmaster-max-thread-count (symbol-value '*hunchentoot-taskmaster*))
-							       (hunchentoot::accessor-requests-in-progress (symbol-value '*test-acceptor*))))))
-		   (funcall fn))))))))))
+	  (catch 'abort-response
+	    (handler-bind
+		((serious-condition (lambda (condition)
+				      (abort-response-if-unrecoverable condition)
+				      (let ((error-html (with-output-to-string (*html-output*) (error-to-html condition))))
+					(emit-page (out-stream :title "Error" :return-code (condition-http-return-code condition) :content-class "error-page")
+						   (write-string error-html out-stream)
+						   (when (eq (hunchentoot:request-method*) :post)
+						     <form method="post" class="error-retry-form">
+							(loop for (key . value) in (hunchentoot:post-parameters*)
+							    do <input type="hidden" name=key value=value>)
+							<input type="submit" value="Retry">
+						     </form>))
+					(return-from call-with-error-page)))))
+	      (log-conditions
+	       (if (or (eq (hunchentoot:request-method*) :post)
+		       (not (and (boundp '*test-acceptor*) (boundp '*hunchentoot-taskmaster*)))) ; TODO fix this hack
+		   (funcall fn)
+		   (sb-sys:with-deadline (:seconds (expt 1.3
+							 (min (round (log 30 1.3))
+							      (- (hunchentoot:taskmaster-max-thread-count (symbol-value '*hunchentoot-taskmaster*))
+								 (hunchentoot::accessor-requests-in-progress (symbol-value '*test-acceptor*))))))
+		     (funcall fn)))))))))))
 
 (defmacro with-error-page (&body body)
   `(call-with-error-page (lambda () ,@body)))
