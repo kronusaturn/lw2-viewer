@@ -417,6 +417,17 @@
 				     do (plump:append-child (plump:parent text-node) item))
 				  (when (= url-start 0)
 				    (plump:remove-child text-node)))))))
+	   (title-to-anchor (text used-anchors)
+	     ;; This should match LW behavior in packages/lesswrong/lib/collections/posts/tableOfContents.js
+	     (let* ((chars-to-use "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789")
+		    (base-anchor (with-output-to-string (stream)
+				   (loop for c across text
+				      do (write-char (if (find c chars-to-use) c #\_) stream)))))
+		   (loop for suffix from 0
+		      for anchor = base-anchor then (format nil "~A~A" base-anchor suffix)
+		      when (not (gethash anchor used-anchors))
+		      return (progn (setf (gethash anchor used-anchors) t)
+				    anchor))))
 	   (contents-to-html (contents min-header-level out-stream)
 			     (declare (type cons contents)) 
 			     (format out-stream "<nav class=\"contents\"><div class=\"contents-head\">Contents</div><ul class=\"contents-list\">")
@@ -440,7 +451,8 @@
 	      (section-count 0)
 	      (min-header-level 6) 
 	      (aggressive-deformat nil)
-	      (style-hash (make-hash-table :test 'equal)))
+	      (style-hash (make-hash-table :test 'equal))
+	      (used-anchors (make-hash-table :test 'equal)))
           (declare (type fixnum section-count min-header-level))
           (let ((wayward-li-container nil))
             (plump:traverse
@@ -636,13 +648,24 @@
 		       (when (and (not (eql fc lc)) (plump:element-p lc) (tag-is lc "br")) (plump:remove-child lc)))
 		     (when with-toc
 		       (incf section-count) 
-		       (unless (plump:attribute node "id") (setf (plump:attribute node "id") (format nil "section-~A" section-count))) 
-		       (let ((header-level (parse-integer (subseq (plump:tag-name node) 1))))
-			 (setf min-header-level (min min-header-level header-level)) 
+		       (unless (plump:attribute node "id") (setf (plump:attribute node "id") (format nil "section-~A" section-count)))
+		       (let* ((header-level (parse-integer (subseq (plump:tag-name node) 1)))
+			      (header-text (with-output-to-string (stream)
+					     (plump:traverse node
+							     (lambda (n)
+							       (typecase n
+								 (plump:text-node
+								  (when (text-node-is-not n "style" "script")
+								    (write-string (plump:text n) stream))))))))
+			      (anchor-old (or (plump:attribute node "id") (format nil "section-~A" section-count)))
+			      (anchor-new (title-to-anchor header-text used-anchors))
+			      (wrapper (wrap-children node "span")))
+			 (setf min-header-level (min min-header-level header-level)
+			       (plump:attribute node "id") anchor-new
+			       (plump:attribute wrapper "id") anchor-old)
 			 (push (list header-level
-				     (with-output-to-string (stream)
-				       (plump:traverse node (lambda (n) (typecase n (plump:text-node (when (text-node-is-not n "style" "script") (write-string (plump:text n) stream)))))))
-				     (plump:attribute node "id"))
+				     header-text
+				     anchor-new)
 			       contents))))
 		    ((tag-is node "style")
 		     (let ((text (plump:text node)))
