@@ -900,7 +900,7 @@ signaled condition to OUT-STREAM."
 			  (make-binding-form (append (mapcar (lambda (x) (append (ensure-list x) '(:passthrough t))) specifier-vars) additional-vars)
 					     rewritten-body)))))))))
 
-(define-component sort-widget (&key (sort-options '(:new :hot)) (pref :default-sort) (param-name "sort") (html-class "sort"))
+(define-component sort-widget (&key (sort-options '(:new :hot :activity)) (pref :default-sort) (param-name "sort") (html-class "sort"))
   (:http-args '((sort :real-name param-name :member sort-options)))
   (let ((sort-string (if sort (string-downcase sort))))
     (if sort-string
