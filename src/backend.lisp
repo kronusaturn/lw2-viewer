@@ -432,7 +432,7 @@
    (let ((sort-key (alexandria:switch (sort :test #'string=)
 				      ("new" "new")
 				      ("hot" "magic")
-				      ("activity" "recentComments"))))
+				      ("active" "recentComments"))))
      (multiple-value-bind (view-terms cache-key)
 	 (alexandria:switch (view :test #'string=)
 			    ("featured" (alist :view "curated"))
