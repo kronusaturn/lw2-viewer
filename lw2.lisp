@@ -492,14 +492,13 @@ signaled condition to OUT-STREAM."
   (declare (type (or null string) extra-class))
   (format out-stream "<nav class=\"sublevel-nav~@[ ~A~]\">" extra-class)
   (loop for item in options
-        do (multiple-value-bind (param-value text) (if (atom item)
-                                                       (values (string-downcase item) (string-capitalize item))
-                                                       (values-list item))
-             (let* ((selected (string-equal current param-value))
-                    (class (if selected "sublevel-item selected" "sublevel-item")))
-               (link-if-not out-stream selected (apply #'replace-query-params base-uri param-name (unless (string-equal param-value default) param-value)
-                                                       (loop for x in remove-params nconc (list x nil)))
-                            class text))))
+        do (destructuring-bind (param-value &key (text (string-capitalize param-value)) description) (if (atom item) (list item) item)
+	     (let* ((param-value (string-downcase param-value))
+		    (selected (string-equal current param-value))
+		    (class (if selected "sublevel-item selected" "sublevel-item")))
+	       (link-if-not out-stream selected (apply #'replace-query-params base-uri param-name (unless (string-equal param-value default) param-value)
+						       (loop for x in remove-params nconc (list x nil)))
+			    class text :title description))))
   (format out-stream "</nav>"))
 
 (defun make-csrf-token (&optional (session-token (hunchentoot:cookie-in "session-token")) (nonce (ironclad:make-random-salt)))
@@ -816,11 +815,11 @@ signaled condition to OUT-STREAM."
                                                              :need-auth need-auth
                                                              :skip-section section)))))
 
-(defun link-if-not (stream linkp url class text &key accesskey nofollow)
+(defun link-if-not (stream linkp url class text &key accesskey nofollow title)
   (declare (dynamic-extent linkp url text))
   (if (not linkp)
-      (format stream "<a href=\"~A\" class=\"~A\"~@[ accesskey=\"~A\"~]~:[~; rel=\"nofollow\"~]>~A</a>" url class accesskey nofollow text)
-      (format stream "<span class=\"~A\">~A</span>" class text)))
+      (format stream "<a href=\"~A\" class=\"~A\"~@[ accesskey=\"~A\"~]~:[~; rel=\"nofollow\"~]~@[ title=\"~A\"~]>~A</a>" url class accesskey nofollow title text)
+      (format stream "<span class=\"~A\"~@[ title=\"~A\"~]>~A</span>" class title text)))
 
 (defun postprocess-markdown (markdown)
   (if (typep *current-site* 'alternate-frontend-site)
@@ -904,8 +903,11 @@ signaled condition to OUT-STREAM."
 			  (make-binding-form (append (mapcar (lambda (x) (append (ensure-list x) '(:passthrough t))) specifier-vars) additional-vars)
 					     rewritten-body)))))))))
 
-(define-component sort-widget (&key (sort-options '(:new :hot :active)) (pref :default-sort) (param-name "sort") (html-class "sort"))
-  (:http-args '((sort :real-name param-name :member sort-options)))
+(define-component sort-widget (&key (sort-options '((:new :description "Sort by date posted")
+						    (:hot :description "Sort by time-weighted score")
+						    (:active :description "Sort by date posted or last comment")))
+				    (pref :default-sort) (param-name "sort") (html-class "sort"))
+  (:http-args '((sort :real-name param-name :member (mapcar (lambda (x) (if (listp x) (first x) x)) sort-options))))
   (let ((sort-string (if sort (string-downcase sort))))
     (if sort-string
 	(set-user-pref :default-sort sort-string))
