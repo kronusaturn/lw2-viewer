@@ -825,12 +825,16 @@ signaled condition to OUT-STREAM."
 (defun postprocess-markdown (markdown)
   (if (typep *current-site* 'alternate-frontend-site)
       (regex-replace-body
-       ((concatenate 'string (regex-replace-all "\\." (site-uri *current-site*) "\\.") "posts/([^/ ]{17})/([^/# ]*)(?:#comment-([^/ ]{17})|/comment/([^/ ]{17}))?")
+       ((concatenate 'string (regex-replace-all "\\." (site-uri *current-site*) "\\.") "posts/([^/ ]{17})/([^/# ]*)(?:(#comment-|/comment/|/answer/)([^/ ]{17}))?")
 	markdown)
-       (quri:render-uri
-	(quri:merge-uris
-	 (format nil "/posts/~A/~A~@[#~A~]" (reg 0) (reg 1) (or (reg 2) (reg 3)))
-	 (main-site-uri *current-site*))))
+       (let* ((post-id (reg 0))
+	      (slug (reg 1))
+	      (comment-id (reg 3))
+	      (direct-comment-link (and comment-id (reg 2) (string= "/" (reg 2) :end2 1))))
+	 (quri:render-uri
+	  (quri:merge-uris
+	   (format nil "/posts/~A/~A~[~;#~A~;?commentId=~A~]" post-id slug (if comment-id (if direct-comment-link 2 1) 0) comment-id)
+	   (main-site-uri *current-site*)))))
       markdown))
 
 (defun redirect (uri &key (type :see-other))
