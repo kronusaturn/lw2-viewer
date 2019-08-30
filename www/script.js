@@ -133,20 +133,24 @@ Element.prototype.getCommentId = function() {
 	}
 }
 
+function urlEncodeQuery(params) {
+	return params.keys().map((x) => {return "" + x + "=" + encodeURIComponent(params[x])}).join("&");
+}
+
 function doAjax(params) {
 	let req = new XMLHttpRequest();
 	req.addEventListener("load", (event) => {
 		if(event.target.status < 400) {
-			if(params["onSuccess"]) params.onSuccess();
+			if(params["onSuccess"]) params.onSuccess(event);
 		} else {
-			if(params["onFailure"]) params.onFailure();
+			if(params["onFailure"]) params.onFailure(event);
 		}
 	});
-	req.open((params["method"] || "GET"), (params.location || document.location));
+	req.open((params["method"] || "GET"), (params.location || document.location) + (params.params ? "?" + urlEncodeQuery(params.params) : ""));
 	if(params["method"] == "POST") {
 		req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 		params["params"]["csrf-token"] = GW.csrfToken;
-		req.send(params.params.keys().map((x) => {return "" + x + "=" + encodeURIComponent(params.params[x])}).join("&"));
+		req.send(urlEncodeQuery(params.params));
 	} else {
 		req.send();
 	}
@@ -3434,38 +3438,48 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	// If client is logged in...
 	if (loggedInUserId) {
 		// Add upvote/downvote buttons.
-		if (typeof postVote != 'undefined') {
-			queryAll(".post .post-meta .karma-value").forEach(karmaValue => {
-				addVoteButtons(karmaValue, postVote, 'Posts');
-				karmaValue.parentElement.addClass("active-controls");
+		let postKarma = query(".post .karma");
+		if(postKarma) {
+			doAjax({ location: "/karma-vote",
+				 params: { "post-id": postKarma.dataset["postId"] },
+				 onSuccess: (event) => {
+					 let response = JSON.parse(event.target.responseText);
+					 postVote = response.postVote;
+					 commentVotes = response.commentVotes;
+					 alignmentForumAllowed = response.alignmentForumAllowed;
+
+					 queryAll(".post .post-meta .karma-value").forEach(karmaValue => {
+						 addVoteButtons(karmaValue, postVote, 'Posts');
+						 karmaValue.parentElement.addClass("active-controls");
+					 });
+
+					 queryAll(".comment-meta .karma-value").forEach(karmaValue => {
+						 let commentID = karmaValue.getCommentId();
+						 addVoteButtons(karmaValue, commentVotes[commentID], 'Comments');
+						 karmaValue.parentElement.addClass("active-controls");
+					 });
+				 }
+			       });
+
+			// Color the upvote/downvote buttons with an embedded style sheet.
+			query("head").insertAdjacentHTML("beforeend","<style id='vote-buttons'>" + 
+							 `.upvote:hover,
+							 .upvote:focus,
+							 .upvote.selected {
+								 color: #00d800;
+							 }
+							 .downvote:hover,
+							 .downvote:focus,
+							 .downvote.selected {
+								 color: #eb4c2a;
+							 }` +
+							 "</style>");
+
+			// Activate the vote buttons.
+			queryAll("button.vote").forEach(voteButton => {
+				voteButton.addActivateEvent(voteButtonClicked);
 			});
 		}
-		if (typeof commentVotes != 'undefined') {
-			queryAll(".comment-meta .karma-value").forEach(karmaValue => {
-				let commentID = karmaValue.getCommentId();
-				addVoteButtons(karmaValue, commentVotes[commentID], 'Comments');
-				karmaValue.parentElement.addClass("active-controls");
-			});
-		}
-
-		// Color the upvote/downvote buttons with an embedded style sheet.
-		query("head").insertAdjacentHTML("beforeend","<style id='vote-buttons'>" + 
-		`.upvote:hover,
-		.upvote:focus,
-		.upvote.selected {
-			color: #00d800;
-		}
-		.downvote:hover,
-		.downvote:focus,
-		.downvote.selected {
-			color: #eb4c2a;
-		}` +
-		"</style>");
-
-		// Activate the vote buttons.
-		queryAll("button.vote").forEach(voteButton => {
-			voteButton.addActivateEvent(voteButtonClicked);
-		});
 
 		// For all comment containers...
 		queryAll(".comments").forEach((commentsContainer) => {

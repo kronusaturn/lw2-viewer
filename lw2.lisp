@@ -1000,23 +1000,7 @@ signaled condition to OUT-STREAM."
 				(comment-chrono-to-html out-stream comments)
 				(comment-tree-to-html out-stream (make-comment-parent-hash comments)))
 			    <div class="comments-empty-message">(if (string= id "answers") "No answers." "No comments.")</div>)))
-		  (format out-stream "</div>"))
-		(output-comments-votes (out-stream)
-                  (handler-case
-                    (when lw2-auth-token
-                      (format out-stream "<script>commentVotes=~A</script>"
-                              (json:encode-json-to-string (get-post-comments-votes post-id lw2-auth-token))))
-                    (t () nil)))
-                (output-post-vote (out-stream)
-                  (handler-case
-                    (format out-stream "<script>postVote=~A</script>"
-                            (json:encode-json-to-string (get-post-vote post-id lw2-auth-token)))
-                    (t () nil)))
-		(output-alignment-forum (out-stream post)
-		  (if-let (liu (logged-in-userid))
-			  (let ((with-af-option (and (cdr (assoc :af post))
-						     (member "alignmentForum" (cdr (assoc :groups (get-user :user-id liu))) :test #'string=))))
-			    (format out-stream "<script>alignmentForumAllowed=~:[false~;true~]</script>" with-af-option)))))
+		  (format out-stream "</div>")))
 	 (multiple-value-bind (post title condition)
            (handler-case (nth-value 0 (get-post-body post-id :auth-token (and need-auth lw2-auth-token)))
              (serious-condition (c) (values nil "Error" c))
@@ -1041,11 +1025,7 @@ signaled condition to OUT-STREAM."
 				    verb-phrase
 				    (generate-post-link post-id)
 				    (clean-text-to-html title :hyphenation nil))
-			    (output-comments out-stream "comments" comments target-comment)
-			    (when lw2-auth-token
-			      (force-output out-stream)
-			      (output-comments-votes out-stream)
-			      (output-alignment-forum out-stream post))))
+			    (output-comments out-stream "comments" comments target-comment)))
 	       (let ((post-sequences (get-post-sequences post-id)))
 		 (emit-page (out-stream :title title
 					:content-class (format nil "post-page comment-thread-page~{ ~A~}"
@@ -1067,12 +1047,7 @@ signaled condition to OUT-STREAM."
 			       do (handler-case
 				      (let* ((comments (funcall fn post-id)))
 					(output-comments out-stream name comments nil))
-				    (serious-condition (c) (error-to-html c))))
-			    (when lw2-auth-token
-			      (force-output out-stream)
-			      (output-post-vote out-stream)
-			      (output-comments-votes out-stream)
-			      (output-alignment-forum out-stream post)))))))))
+				    (serious-condition (c) (error-to-html c)))))))))))
     (:post (csrf-token text answer af parent-answer-id parent-comment-id edit-comment-id retract-comment-id unretract-comment-id delete-comment-id)
      (let ((lw2-auth-token *current-auth-token*))
        (check-csrf-token csrf-token)
@@ -1160,18 +1135,34 @@ signaled condition to OUT-STREAM."
 		       (concatenate 'string (generate-post-link new-post-data) "?need-auth=y")
 		       (generate-post-link new-post-data))))))))
 
-(hunchentoot:define-easy-handler (view-karma-vote :uri "/karma-vote") ((csrf-token :request-type :post) (target :request-type :post) (target-type :request-type :post) (vote-type :request-type :post))
+(hunchentoot:define-easy-handler (view-karma-vote :uri "/karma-vote") ((post-id :request-type :get)
+								       (csrf-token :request-type :post)
+								       (target :request-type :post)
+								       (target-type :request-type :post)
+								       (vote-type :request-type :post))
   (with-error-page
-    (check-csrf-token csrf-token)
-    (let ((lw2-auth-token (hunchentoot:cookie-in "lw2-auth-token")))
-      (multiple-value-bind (points vote-type) (do-lw2-vote lw2-auth-token target target-type vote-type)
-        (json:encode-json-to-string (list (pretty-number points "point") vote-type))))))
+      (let ((auth-token *current-auth-token*))
+	(with-response-stream (out-stream)
+	(cond
+	  (post-id
+	   (json:encode-json-alist
+	    (list (cons "postVote" (get-post-vote post-id auth-token))
+		  (cons "commentVotes" (get-post-comments-votes post-id auth-token))
+		  (cons "alignmentForumAllowed"
+			(member "alignmentForum" (cdr (assoc :groups (get-user :user-id (logged-in-userid)))) :test #'string=)))
+	    out-stream))
+	  (csrf-token
+	   (check-csrf-token csrf-token)
+	   (multiple-value-bind (points vote-type) (do-lw2-vote auth-token target target-type vote-type)
+	     (json:encode-json
+	      (list (pretty-number points "point") vote-type)
+	      out-stream))))))))
 
 (hunchentoot:define-easy-handler (view-check-notifications :uri "/check-notifications") ()
-                                 (with-error-page
-                                   (if *current-auth-token*
-                                       (let ((notifications-status (check-notifications (logged-in-userid) *current-auth-token*)))
-                                         (json:encode-json-to-string notifications-status)))))
+  (with-error-page
+      (if *current-auth-token*
+	  (let ((notifications-status (check-notifications (logged-in-userid) *current-auth-token*)))
+	    (json:encode-json-to-string notifications-status)))))
 
 (hunchentoot:define-easy-handler (view-ignore-user :uri "/ignore-user") ((csrf-token :request-type :post) (target-id :request-type :post) (state :request-type :post) return)
   (with-error-page
