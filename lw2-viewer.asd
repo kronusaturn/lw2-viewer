@@ -8,7 +8,7 @@
                              (:file "hash-utils")
                              (:file "context")
 			     (:file "html-reader")
-			     (:file "interface-utils" :depends-on ("links"))
+			     (:file "interface-utils" :depends-on ("links" "html-reader"))
 			     (:file "user-context")
 			     (:file "conditions" :depends-on ("html-reader"))
 			     (:file "schema-type" :depends-on ("utils" "backend-modules"))

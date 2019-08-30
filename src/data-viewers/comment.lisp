@@ -30,9 +30,7 @@
 		    (get-username user-id)
 	          </a>)
 	      <a class="date" href=(generate-post-link post-id comment-id) data-js-date=js-time> (safe pretty-time) </a>
-	      <div class="karma">
-		<span class="karma-value" title=(votes-to-tooltip vote-count)> (safe (pretty-number base-score "point")) </span>
-	      </div>
+	      (vote-buttons base-score :vote-count vote-count)
 	      (when af <span class="alignment-forum">AF</span>)     
 	      <a class="permalink" href=("~A/~A/~A"
 					 (generate-post-link post-id)

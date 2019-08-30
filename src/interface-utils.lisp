@@ -1,8 +1,10 @@
 (uiop:define-package #:lw2.interface-utils
-  (:use #:cl #:lw2.links)
-  (:export #:pretty-time #:pretty-number #:generate-post-auth-link #:clean-lw-link #:votes-to-tooltip))
+  (:use #:cl #:lw2.links #:lw2.html-reader)
+  (:export #:pretty-time #:pretty-number #:generate-post-auth-link #:clean-lw-link #:votes-to-tooltip #:vote-buttons))
 
 (in-package #:lw2.interface-utils)
+
+(named-readtables:in-readtable html-reader)
 
 (defun pretty-time (timestring &key format loose-parsing)
   (let ((time (if loose-parsing
@@ -31,3 +33,8 @@
       (format nil "~A vote~:*~P"
               (typecase votes (integer votes) (list (length votes))))
       ""))
+
+(defun vote-buttons (base-score &key vote-count post-id)
+  <div class="karma" data-post-id=post-id>
+    <span class="karma-value" title=(votes-to-tooltip vote-count)>(safe (pretty-number base-score "point"))</span>
+  </div>)

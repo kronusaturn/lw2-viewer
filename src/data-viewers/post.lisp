@@ -42,9 +42,7 @@
               (get-username user-id)
 	    </a>)
         <div class="date" data-js-date=js-time>(progn pretty-time)</div>
-        <div class="karma" data-post-id=post-id>
-          <span class="karma-value" title=(votes-to-tooltip vote-count)>(safe (pretty-number base-score "point"))</span>
-        </div>
+	(vote-buttons base-score :vote-count vote-count :post-id post-id)
         <a class="comment-count" href=("~A#comments" (if (eq context :body) "" (generate-post-link post)))>
 	  (safe (pretty-number (or comment-count 0) "comment"))
 	</a>
