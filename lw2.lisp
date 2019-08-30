@@ -1000,7 +1000,8 @@ signaled condition to OUT-STREAM."
 				(comment-chrono-to-html out-stream comments)
 				(comment-tree-to-html out-stream (make-comment-parent-hash comments)))
 			    <div class="comments-empty-message">(if (string= id "answers") "No answers." "No comments.")</div>)))
-		  (format out-stream "</div>")))
+		  (format out-stream "</div>"))
+		(extra-head () <script>postId=(progn post-id)</script>))
 	 (multiple-value-bind (post title condition)
            (handler-case (nth-value 0 (get-post-body post-id :auth-token (and need-auth lw2-auth-token)))
              (serious-condition (c) (values nil "Error" c))
@@ -1019,7 +1020,8 @@ signaled condition to OUT-STREAM."
 				      "answers")
 				     (t "comments on"))))
 		 (emit-page (out-stream :title (format nil "~A ~A ~A" display-name verb-phrase title)
-					:content-class "individual-thread-page comment-thread-page")
+					:content-class "individual-thread-page comment-thread-page"
+					:extra-head #'extra-head)
 			    (format out-stream "<h1 class=\"post-title\">~A ~A <a href=\"~A\">~A</a></h1>"
 				    (encode-entities display-name)
 				    verb-phrase
@@ -1030,7 +1032,8 @@ signaled condition to OUT-STREAM."
 		 (emit-page (out-stream :title title
 					:content-class (format nil "post-page comment-thread-page~{ ~A~}"
 							       (list-cond ((cdr (assoc :question post)) "question-post-page")
-									  (post-sequences "in-sequence"))))
+									  (post-sequences "in-sequence")))
+					:extra-head #'extra-head)
 			    (cond
 			      (condition
 			       (error-to-html condition))

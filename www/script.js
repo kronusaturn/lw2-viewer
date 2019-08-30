@@ -3438,10 +3438,9 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	// If client is logged in...
 	if (loggedInUserId) {
 		// Add upvote/downvote buttons.
-		let postKarma = query(".post .karma");
-		if(postKarma) {
+		if(typeof postId != 'undefined') {
 			doAjax({ location: "/karma-vote",
-				 params: { "post-id": postKarma.dataset["postId"] },
+				 params: { "post-id": postId },
 				 onSuccess: (event) => {
 					 let response = JSON.parse(event.target.responseText);
 					 postVote = response.postVote;
