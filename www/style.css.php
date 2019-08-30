@@ -2625,10 +2625,12 @@ a.comment-parent-link:hover::after {
 	font-weight: 900;
 	border: none;
 }
+
 .vote:disabled {
 	visibility: hidden;
 	cursor: default;
 }
+
 .karma.waiting {
 	opacity: 0.5;
 }
