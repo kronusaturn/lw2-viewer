@@ -3453,7 +3453,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 						 karmaValue.parentElement.addClass("active-controls");
 					 });
 
-					 queryAll(".comment-meta .karma-value").forEach(karmaValue => {
+					 queryAll(".comment-meta .karma-value, .comment-controls .karma-value").forEach(karmaValue => {
 						 let commentID = karmaValue.getCommentId();
 						 addVoteButtons(karmaValue, commentVotes[commentID], 'Comments');
 						 karmaValue.parentElement.addClass("active-controls");
