@@ -8,7 +8,7 @@
 	#:lw2.user-context
 	#:lw2.data-viewers.post
 	#:lw2.data-viewers.comment)
-  (:import-from #:alexandria #:ensure-list #:when-let #:if-let)
+  (:import-from #:alexandria #:ensure-list #:when-let #:if-let #:alist-hash-table)
   (:import-from #:collectors #:with-collector)
   (:import-from #:ppcre #:regex-replace-all)
   (:unintern
@@ -1147,7 +1147,7 @@ signaled condition to OUT-STREAM."
 	  (post-id
 	   (json:encode-json-alist
 	    (list (cons "postVote" (get-post-vote post-id auth-token))
-		  (cons "commentVotes" (get-post-comments-votes post-id auth-token))
+		  (cons "commentVotes" (alist-hash-table (delete-if (lambda (x) (null (cdr x))) (get-post-comments-votes post-id auth-token))))
 		  (cons "alignmentForumAllowed"
 			(member "alignmentForum" (cdr (assoc :groups (get-user :user-id (logged-in-userid)))) :test #'string=)))
 	    out-stream))
