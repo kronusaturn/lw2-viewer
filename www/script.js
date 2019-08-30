@@ -644,8 +644,14 @@ function addVoteButtons(element, voteType, targetType) {
 	GWLog("addVoteButtons");
 	let vote = parseVoteType(voteType);
 	let voteClass = makeVoteClass(vote);
-	element.insertAdjacentHTML('beforebegin', "<button type='button' class='vote upvote"+(vote.up ?' '+voteClass:'')+"' data-vote-type='upvote' data-target-type='"+targetType+"' tabindex='-1'></button>");
-	element.insertAdjacentHTML('afterend', "<button type='button' class='vote downvote"+(vote.down ?' '+voteClass:'')+"' data-vote-type='downvote' data-target-type='"+targetType+"' tabindex='-1'></button>");
+
+	element.parentElement.queryAll("button").forEach((button) => {
+		button.disabled = false;
+		if(voteType) {
+			if(button.dataset["voteType"] === (vote.up ? "upvote" : "downvote"))
+				button.addClass(voteClass);
+		}
+	});
 }
 
 function makeVoteCompleteEvent(target) {

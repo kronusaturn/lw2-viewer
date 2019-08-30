@@ -568,6 +568,8 @@ signaled condition to OUT-STREAM."
             robots)
     (format out-stream "~{~A~}"
 	    (site-head-elements *current-site*))
+    (unless (logged-in-userid)
+      <style>button.vote { display: none }</style>)
     (when extra-head (funcall extra-head))
     (format out-stream "</head>"))
   (unwind-protect

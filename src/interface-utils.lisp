@@ -34,7 +34,12 @@
               (typecase votes (integer votes) (list (length votes))))
       ""))
 
-(defun vote-buttons (base-score &key vote-count post-id)
-  <div class="karma" data-post-id=post-id>
-    <span class="karma-value" title=(votes-to-tooltip vote-count)>(safe (pretty-number base-score "point"))</span>
-  </div>)
+(defun vote-buttons (base-score &key (with-buttons t) vote-count post-id)
+  (labels ((button (vote-type)
+	     (when with-buttons
+	       <button type="button" class=("vote ~A" vote-type) data-vote-type=vote-type data-target-type=(if post-id "Posts" "Comments") tabindex="-1" disabled></button>)))
+    <div class="karma" data-post-id=post-id>
+      (button "upvote")
+      <span class="karma-value" title=(votes-to-tooltip vote-count)>(safe (pretty-number base-score "point"))</span>
+      (button "downvote")
+    </div>))
