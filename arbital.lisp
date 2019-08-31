@@ -179,6 +179,7 @@
 			     (markdown-protect ": </span>")
 			     text
 			     (markdown-protect "</div>")))))))
+	   (markdown (regex-replace-all "\\\\\\$" markdown "$"))
 	   (html (regex-replace-body ((load-time-value (format nil "~A-(\\d+)-" *markdown-replace-string*))
 				      (markdown-to-html markdown))
 		   (aref replacements (parse-integer (reg 0))))))
