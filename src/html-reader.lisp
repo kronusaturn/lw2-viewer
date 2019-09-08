@@ -64,6 +64,7 @@
 	    (loop
 	       with need-whitespace = t
 	       with in-leading-whitespace = nil
+	       with in-tag = t
 	       for c = (read-char stream)
 	       when (eq c #\Newline) do (setf in-leading-whitespace t)
 	       else when (not (member c '(#\Space #\Tab))) do (setf in-leading-whitespace nil)
@@ -73,8 +74,9 @@
 		    (if (member element '("area" "base" "br" "col" "embed" "hr" "img" "input" "link" "meta" "param" "source" "track" "wbr")
 				:test #'string-equal)
 			(return nil)
-			(setf need-whitespace nil)))
-	       else when (eq c #\=)
+			(setf need-whitespace nil
+			      in-tag nil)))
+	       else when (and in-tag (eq c #\=))
 	       do (progn
 		    (output-strings "=\"")
 		    (let ((*readtable* (find-readtable 'html-reader-inner)))

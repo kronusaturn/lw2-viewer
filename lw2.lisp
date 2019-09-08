@@ -1001,7 +1001,7 @@ signaled condition to OUT-STREAM."
 				(comment-tree-to-html out-stream (make-comment-parent-hash comments)))
 			    <div class="comments-empty-message">(if (string= id "answers") "No answers." "No comments.")</div>)))
 		  (format out-stream "</div>"))
-		(extra-head () <script>postId=(progn post-id)</script>))
+		(extra-head () <script>postId=(with-html-stream-output (json:encode-json post-id *html-output*))</script>))
 	 (multiple-value-bind (post title condition)
            (handler-case (nth-value 0 (get-post-body post-id :auth-token (and need-auth lw2-auth-token)))
              (serious-condition (c) (values nil "Error" c))
