@@ -2326,7 +2326,9 @@ function toggleAntiKibitzerMode() {
 			if (author.hasClass("own-user-author"))
 				return;
 
-			let userid = author.dataset["userid"] || query(`${author.hash} .author`).dataset["userid"];
+			let userid = author.dataset["userid"] || author.hash && query(`${author.hash} .author`).dataset["userid"];
+
+			if(!userid) return;
 
 			author.dataset["trueName"] = author.textContent;
 			author.textContent = userFakeName[userid] || (userFakeName[userid] = appellation + " " + numToAlpha(userCount++));
