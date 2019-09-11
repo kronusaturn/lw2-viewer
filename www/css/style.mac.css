@@ -4149,7 +4149,7 @@ li {
 
 /* Hide the mobile elements on desktop screens: */
 
-@media not screen and (hover: none), not screen and (-moz-touch-enabled) {
+@media only screen and (max-width: 1160px) {
 	#post-nav-ui-toggle,
 	#appearance-adjust-ui-toggle,
 	#theme-selector .theme-selector-close-button {
@@ -4157,7 +4157,7 @@ li {
 	}
 }
 
-@media only screen and (hover: none), only screen and (-moz-touch-enabled) {
+@media only screen and (max-width: 1160px) {
 
 /*====================*/
 /* MOBILE UI ELEMENTS */
@@ -7270,8 +7270,9 @@ select {
 /*========*/
 
 /**************************************************************************/
-@media only screen and (hover: none), only screen and (-moz-touch-enabled) {
+@media only screen and (max-width: 1160px) {
 /**************************************************************************/
+
 	#ui-elements-container > div[id$='-ui-toggle'] button  {
 		color: #888;
 		text-shadow:

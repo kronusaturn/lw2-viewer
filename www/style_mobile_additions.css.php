@@ -4,7 +4,7 @@
 
 /* Hide the mobile elements on desktop screens: */
 
-@media not screen and (hover: none), not screen and (-moz-touch-enabled) {
+@media only screen and (max-width: 1160px) {
 	#post-nav-ui-toggle,
 	#appearance-adjust-ui-toggle,
 	#theme-selector .theme-selector-close-button {
@@ -12,7 +12,7 @@
 	}
 }
 
-@media only screen and (hover: none), only screen and (-moz-touch-enabled) {
+@media only screen and (max-width: 1160px) {
 
 /*====================*/
 /* MOBILE UI ELEMENTS */

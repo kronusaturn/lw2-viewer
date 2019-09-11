@@ -1936,8 +1936,9 @@ EOT;
 /*========*/
 
 /**************************************************************************/
-@media only screen and (hover: none), only screen and (-moz-touch-enabled) {
+@media only screen and (max-width: 1160px) {
 /**************************************************************************/
+
 	#ui-elements-container > div[id$='-ui-toggle'] button  {
 		color: #888;
 		text-shadow:
