@@ -510,7 +510,8 @@ signaled condition to OUT-STREAM."
   (let* ((session-token (base64:base64-string-to-usb8-array session-token))
 	 (csrf-token (base64:base64-string-to-usb8-array csrf-token))
 	 (correct-token (nth-value 1 (make-csrf-token session-token (subseq csrf-token 0 16)))))
-    (assert (ironclad:constant-time-equal csrf-token correct-token) nil "CSRF check failed.")
+    (unless (ironclad:constant-time-equal csrf-token correct-token)
+      (error "CSRF check failed."))
     t)) 
 
 (defgeneric site-stylesheets (site)
@@ -1051,9 +1052,8 @@ signaled condition to OUT-STREAM."
 				      (let* ((comments (funcall fn post-id)))
 					(output-comments out-stream name comments nil))
 				    (serious-condition (c) (error-to-html c)))))))))))
-    (:post (csrf-token text answer af parent-answer-id parent-comment-id edit-comment-id retract-comment-id unretract-comment-id delete-comment-id)
+    (:post (text answer af parent-answer-id parent-comment-id edit-comment-id retract-comment-id unretract-comment-id delete-comment-id)
      (let ((lw2-auth-token *current-auth-token*))
-       (check-csrf-token csrf-token)
        (assert lw2-auth-token)
        (let ((question (cdr (assoc :question (get-post-body post-id :auth-token lw2-auth-token))))
 	     (new-comment-id
