@@ -28,10 +28,12 @@
 (defmethod site-class-routes ((c t))
   nil)
 
-(defmethod call-route-handler ((original-class site-class) request-uri)
+(defgeneric call-route-handler (site-class request-method request-uri))
+
+(defmethod call-route-handler ((original-class site-class) request-method request-uri)
   (dolist (class (closer-mop:class-precedence-list original-class))
     (dolist (route (site-class-routes class))
-      (when (execute-route route request-uri)
+      (when (execute-route route request-method request-uri)
 	(return-from call-route-handler t)))))
 
 (defclass site ()
@@ -49,8 +51,8 @@
 
 (defmethod main-site-abbreviation ((s site)) nil)
 
-(defmethod call-route-handler ((s site) request-uri)
-  (call-route-handler (class-of s) request-uri))
+(defmethod call-route-handler ((s site) request-method request-uri)
+  (call-route-handler (class-of s) request-method request-uri))
 
 (defclass forum-site (site) ()
   (:metaclass site-class))

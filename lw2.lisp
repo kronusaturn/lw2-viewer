@@ -962,7 +962,7 @@ signaled condition to OUT-STREAM."
 	    (with-site-context ((let ((host (or (hunchentoot:header-in* :x-forwarded-host) (hunchentoot:header-in* :host))))
 				  (or (find-site host)
 				      (error "Unknown site: ~A" host))))
-	      (call-route-handler *current-site* (hunchentoot:script-name*)))))
+	      (call-route-handler *current-site* (hunchentoot:request-method*) (hunchentoot:script-name*)))))
     nil)
 
 (define-page view-post "/post" ((id :required t))
