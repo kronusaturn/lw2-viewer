@@ -816,6 +816,24 @@ h1.listing {
 /* POSTS & COMMENTS */
 /*==================*/
 
+@media only screen and (max-width: 720px) {
+	.body-text ol > li {
+		padding: 0 0 0 1.5em;
+	}
+	.body-text ol > li::before {
+		width: 1em;
+	}
+	.body-text ul:not(.contents-list) > li,
+	.body-text ul:not(.contents-list) > li ul > li {
+		padding: 0 0 0 0.75em;
+	}
+	.body-text ul:not(.contents-list) > li::before,
+	.body-text ul:not(.contents-list) > li ul > li::before {
+		width: 0.125em;
+		margin-left: -0.06em;
+	}
+}
+
 /*===========*/
 /* POST-META */
 /*===========*/
@@ -855,19 +873,6 @@ h1.listing {
 	}
 	h1.post-title {
 		font-size: 2em;
-	}
-}
-
-/*==========*/
-/* COMMENTS */
-/*==========*/
-
-@media only screen and (max-width: 900px) {
-	.comment-body ul {
-		padding-left: 30px;
-	}
-	.comment-body ol {
-		padding-left: 30px;
 	}
 }
 
