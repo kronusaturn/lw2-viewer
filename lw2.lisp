@@ -1156,9 +1156,10 @@ signaled condition to OUT-STREAM."
 	    out-stream))
 	  (csrf-token
 	   (check-csrf-token csrf-token)
-	   (multiple-value-bind (points vote-type) (do-lw2-vote auth-token target target-type vote-type)
+	   (multiple-value-bind (points vote-type vote-data) (do-lw2-vote auth-token target target-type vote-type)
 	     (json:encode-json
-	      (list (pretty-number points "point") vote-type)
+	      (alist-bind (af af-base-score) vote-data
+		(list (vote-buttons points :as-text t :af-score (and af af-base-score)) vote-type))
 	      out-stream))))))))
 
 (hunchentoot:define-easy-handler (view-check-notifications :uri "/check-notifications") ()

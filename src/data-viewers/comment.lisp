@@ -31,7 +31,7 @@
 	          </a>)
 	      <a class="date" href=(generate-post-link post-id comment-id) data-js-date=js-time> (safe pretty-time) </a>
 	      (when replied <span class="replied" title="You have replied to this comment"></span>)
-	      (vote-buttons base-score :with-buttons (not with-post-title) :vote-count vote-count)
+	      (vote-buttons base-score :with-buttons (not with-post-title) :vote-count vote-count :af-score (and af af-base-score))
 	      (when af <span class="alignment-forum">AF</span>)     
 	      <a class="permalink" href=("~A/~A/~A"
 					 (generate-post-link post-id)

@@ -42,7 +42,7 @@
               (get-username user-id)
 	    </a>)
         <div class="date" data-js-date=js-time>(progn pretty-time)</div>
-	(vote-buttons base-score :with-buttons (eq context :body) :vote-count vote-count :post-id post-id)
+	(vote-buttons base-score :with-buttons (eq context :body) :vote-count vote-count :post-id post-id :af-score (and af af-base-score))
         <a class="comment-count" href=("~A#comments" (if (eq context :body) "" (generate-post-link post)))>
 	  (safe (pretty-number (or comment-count 0) "comment"))
 	</a>

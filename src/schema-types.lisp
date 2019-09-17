@@ -12,6 +12,7 @@
    (feed-link (or null string) :backend-type backend-feed-crossposts)
    (posted-at string)
    (base-score fixnum)
+   (af-base-score (or null fixnum))
    (comment-count (or null fixnum))
    (page-url (or null string))
    (word-count (or null fixnum))
@@ -48,6 +49,7 @@
    (replied boolean :graphql-ignore t)
    (post-id string)
    (base-score fixnum)
+   (af-base-score (or null fixnum))
    (page-url (or null string) :context-not :user-index) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
    (parent-comment list :context :index :subfields (:--id :user-id :post-id))
    (parent-comment-id (or null string))
