@@ -1242,8 +1242,24 @@ signaled condition to OUT-STREAM."
                          (labels ((check-new (key obj)
                                     (if (ignore-errors (local-time:timestamp< last-check (local-time:parse-timestring (cdr (assoc key obj)))))
                                         (acons :highlight-new t obj)
-                                        obj)))
-                           (lw2-graphql-query-map
+                                        obj))
+				  (check-replied (comment)
+				    (if
+				     (let* ((post-id (cdr (assoc :post-id comment)))
+					    (comment-id (cdr (assoc :--id comment)))
+					    (comments (funcall (if (or (cdr (assoc :answer comment))
+								       (cdr (assoc :parent-answer-id comment)))
+								   'get-post-answers
+								   'get-post-comments)
+							       post-id
+							       :revalidate nil)))
+				       (find-if (lambda (c)
+						  (and (string= (cdr (assoc :parent-comment-id c)) comment-id)
+						       (string= (cdr (assoc :user-id c)) user-id)))
+						comments))
+				     (acons :replied t comment)
+				     comment)))
+			   (lw2-graphql-query-map
                              (lambda (n)
                                (alexandria:switch ((cdr (assoc :document-type n)) :test #'string=)
                                                   ("comment"
@@ -1260,14 +1276,15 @@ signaled condition to OUT-STREAM."
                              notifications
                              :postprocess (lambda (n result)
                                             (if result
-                                                (check-new
-                                                  (alexandria:switch ((cdr (assoc :document-type n)) :test #'string=)
-                                                                     ("comment" :posted-at)
-                                                                     ("post" :posted-at)
-                                                                     ("message" :created-at))
-                                                  result)
-                                                n))
-                             :auth-token auth-token)))
+						(funcall (if (string= (cdr (assoc :document-type n)) "comment") #'check-replied #'identity)
+							 (check-new
+							  (alexandria:switch ((cdr (assoc :document-type n)) :test #'string=)
+									     ("comment" :posted-at)
+									     ("post" :posted-at)
+									     ("message" :created-at))
+							  result))
+						n))
+			     :auth-token auth-token)))
 		       (do-user-edit
 			 (hunchentoot:cookie-in "lw2-auth-token")
 			 user-id

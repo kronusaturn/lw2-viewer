@@ -2708,6 +2708,14 @@ a.comment-parent-link:hover::after {
 	font-size: 0.9em;
 	opacity: 0.6;
 }
+.comment-meta .replied::before {
+	content: '\F3E5';
+	font-family: "Font Awesome", "Font Awesome 5 Free";
+	color: #090;
+	font-weight: 900;
+	font-size: 0.9em;
+	opacity: 0.6;
+}
 
 .post-controls {
 	text-align: right;

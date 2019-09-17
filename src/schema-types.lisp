@@ -45,6 +45,7 @@
    (user-id string)
    (posted-at string)
    (highlight-new boolean :graphql-ignore t)
+   (replied boolean :graphql-ignore t)
    (post-id string)
    (base-score fixnum)
    (page-url (or null string) :context-not :user-index) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
