@@ -46,7 +46,7 @@
    (user-id string)
    (posted-at string)
    (highlight-new boolean :graphql-ignore t)
-   (replied boolean :graphql-ignore t)
+   (replied list :graphql-ignore t)
    (post-id string)
    (base-score fixnum)
    (af-base-score (or null fixnum))

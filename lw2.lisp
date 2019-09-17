@@ -1240,26 +1240,26 @@ signaled condition to OUT-STREAM."
                      (prog1
                        (let ((notifications (get-notifications :user-id user-id :offset offset :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
                              (last-check (ignore-errors (local-time:parse-timestring (cdr (assoc :last-notifications-check user-info))))))
-                         (labels ((check-new (key obj)
-                                    (if (ignore-errors (local-time:timestamp< last-check (local-time:parse-timestring (cdr (assoc key obj)))))
-                                        (acons :highlight-new t obj)
-                                        obj))
+			 (labels ((check-new (key obj)
+				    (if (ignore-errors (local-time:timestamp< last-check (local-time:parse-timestring (cdr (assoc key obj)))))
+					(acons :highlight-new t obj)
+					obj))
 				  (check-replied (comment)
-				    (if
-				     (let* ((post-id (cdr (assoc :post-id comment)))
-					    (comment-id (cdr (assoc :--id comment)))
-					    (comments (funcall (if (or (cdr (assoc :answer comment))
-								       (cdr (assoc :parent-answer-id comment)))
-								   'get-post-answers
-								   'get-post-comments)
-							       post-id
-							       :revalidate nil)))
-				       (find-if (lambda (c)
-						  (and (string= (cdr (assoc :parent-comment-id c)) comment-id)
-						       (string= (cdr (assoc :user-id c)) user-id)))
-						comments))
-				     (acons :replied t comment)
-				     comment)))
+				    (let* ((post-id (cdr (assoc :post-id comment)))
+					   (comment-id (cdr (assoc :--id comment)))
+					   (comments (funcall (if (or (cdr (assoc :answer comment))
+								      (cdr (assoc :parent-answer-id comment)))
+								  'get-post-answers
+								  'get-post-comments)
+							      post-id
+							      :revalidate nil))
+					   (reply-comment (find-if (lambda (c)
+								     (and (string= (cdr (assoc :parent-comment-id c)) comment-id)
+									  (string= (cdr (assoc :user-id c)) user-id)))
+								   comments)))
+				      (if reply-comment
+					  (acons :replied (list post-id (cdr (assoc :--id reply-comment))) comment)
+					  comment))))
 			   (lw2-graphql-query-map
                              (lambda (n)
                                (alexandria:switch ((cdr (assoc :document-type n)) :test #'string=)
