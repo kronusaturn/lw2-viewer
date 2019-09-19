@@ -982,76 +982,78 @@ signaled condition to OUT-STREAM."
 
 (define-page view-post-lw2-link (:function #'match-lw2-link post-id comment-id * comment-link-type) (need-auth chrono)
   (request-method
-    (:get ()
+   (:get ()
      (let ((lw2-auth-token *current-auth-token*))
        (labels ((output-comments (out-stream id comments target)
-                  (format out-stream "<div id=\"~A\" class=\"comments\">" id)
-                  (with-error-html-block ()
-                    (if target
-                        (comment-thread-to-html out-stream
-                                                (lambda ()
-                                                  (comment-item-to-html
-                                                    out-stream
-                                                    target
-                                                    :extra-html-fn (lambda (c-id)
-                                                                     (let ((*comment-individual-link* nil))
-                                                                       (comment-tree-to-html out-stream (make-comment-parent-hash comments) c-id))))))
-                        (if comments
+		  (format out-stream "<div id=\"~A\" class=\"comments\">" id)
+		  (with-error-html-block ()
+		    (if target
+			(comment-thread-to-html out-stream
+						(lambda ()
+						  (comment-item-to-html
+						   out-stream
+						   target
+						   :extra-html-fn (lambda (c-id)
+								    (let ((*comment-individual-link* nil))
+								      (comment-tree-to-html out-stream (make-comment-parent-hash comments) c-id))))))
+			(if comments
 			    (if chrono
 				(comment-chrono-to-html out-stream comments)
 				(comment-tree-to-html out-stream (make-comment-parent-hash comments)))
 			    <div class="comments-empty-message">(if (string= id "answers") "No answers." "No comments.")</div>)))
-		  (format out-stream "</div>"))
-		(extra-head () <script>postId=(with-html-stream-output (json:encode-json post-id *html-output*))</script>))
+		  (format out-stream "</div>")))
 	 (multiple-value-bind (post title condition)
-           (handler-case (nth-value 0 (get-post-body post-id :auth-token (and need-auth lw2-auth-token)))
-             (serious-condition (c) (values nil "Error" c))
-             (:no-error (post) (values post (cdr (assoc :title post)) nil)))
-           (if comment-id
-	       (let* ((*comment-individual-link* t)
-		      (comment-thread-type (if (string= comment-link-type "answer") :answer :comment))
-		      (comments (case comment-thread-type
-				  (:comment (get-post-comments post-id))
-				  (:answer (get-post-answers post-id))))
-		      (target-comment (find comment-id comments :key (lambda (c) (cdr (assoc :--id c))) :test #'string=))
-		      (display-name (get-username (cdr (assoc :user-id target-comment))))
-		      (verb-phrase (cond
-				     ((and (eq comment-thread-type :answer)
-					   (not (cdr (assoc :parent-comment-id target-comment))))
-				      "answers")
-				     (t "comments on"))))
-		 (emit-page (out-stream :title (format nil "~A ~A ~A" display-name verb-phrase title)
-					:content-class "individual-thread-page comment-thread-page"
-					:extra-head #'extra-head)
-			    (format out-stream "<h1 class=\"post-title\">~A ~A <a href=\"~A\">~A</a></h1>"
-				    (encode-entities display-name)
-				    verb-phrase
-				    (generate-post-link post-id)
-				    (clean-text-to-html title :hyphenation nil))
-			    (output-comments out-stream "comments" comments target-comment)))
-	       (let ((post-sequences (get-post-sequences post-id)))
-		 (emit-page (out-stream :title title
-					:content-class (format nil "post-page comment-thread-page~{ ~A~}"
-							       (list-cond ((cdr (assoc :question post)) "question-post-page")
-									  (post-sequences "in-sequence")))
-					:extra-head #'extra-head)
-			    (cond
-			      (condition
-			       (error-to-html condition))
-			      (t
-			       (post-body-to-html post)))
-			    (when (and lw2-auth-token (equal (logged-in-userid) (cdr (assoc :user-id post))))
-			      (format out-stream "<div class=\"post-controls\"><a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\" accesskey=\"e\" title=\"Edit post [e]\">Edit post</a></div>"
-				      (cdr (assoc :--id post))))
-			    (post-nav-links post post-sequences)
-			    (force-output out-stream)
-			    (loop for (name fn) in (if (cdr (assoc :question post))
-						       '(("answers" get-post-answers) ("comments" get-post-comments))
-						       '(("comments" get-post-comments)))
-			       do (handler-case
-				      (let* ((comments (funcall fn post-id)))
-					(output-comments out-stream name comments nil))
-				    (serious-condition (c) (error-to-html c)))))))))))
+	     (handler-case (nth-value 0 (get-post-body post-id :auth-token (and need-auth lw2-auth-token)))
+	       (serious-condition (c) (values nil "Error" c))
+	       (:no-error (post) (values post (cdr (assoc :title post)) nil)))
+	   (labels ((extra-head ()
+		      <script>postId=(with-html-stream-output (json:encode-json post-id *html-output*))</script>
+		      <script>alignmentForumPost=(if (cdr (assoc :af post)) "true" "false")</script>))
+	     (if comment-id
+		 (let* ((*comment-individual-link* t)
+			(comment-thread-type (if (string= comment-link-type "answer") :answer :comment))
+			(comments (case comment-thread-type
+				    (:comment (get-post-comments post-id))
+				    (:answer (get-post-answers post-id))))
+			(target-comment (find comment-id comments :key (lambda (c) (cdr (assoc :--id c))) :test #'string=))
+			(display-name (get-username (cdr (assoc :user-id target-comment))))
+			(verb-phrase (cond
+				       ((and (eq comment-thread-type :answer)
+					     (not (cdr (assoc :parent-comment-id target-comment))))
+					"answers")
+				       (t "comments on"))))
+		   (emit-page (out-stream :title (format nil "~A ~A ~A" display-name verb-phrase title)
+					  :content-class "individual-thread-page comment-thread-page"
+					  :extra-head #'extra-head)
+			      (format out-stream "<h1 class=\"post-title\">~A ~A <a href=\"~A\">~A</a></h1>"
+				      (encode-entities display-name)
+				      verb-phrase
+				      (generate-post-link post-id)
+				      (clean-text-to-html title :hyphenation nil))
+			      (output-comments out-stream "comments" comments target-comment)))
+		 (let ((post-sequences (get-post-sequences post-id)))
+		   (emit-page (out-stream :title title
+					  :content-class (format nil "post-page comment-thread-page~{ ~A~}"
+								 (list-cond ((cdr (assoc :question post)) "question-post-page")
+									    (post-sequences "in-sequence")))
+					  :extra-head #'extra-head)
+			      (cond
+				(condition
+				 (error-to-html condition))
+				(t
+				 (post-body-to-html post)))
+			      (when (and lw2-auth-token (equal (logged-in-userid) (cdr (assoc :user-id post))))
+				(format out-stream "<div class=\"post-controls\"><a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\" accesskey=\"e\" title=\"Edit post [e]\">Edit post</a></div>"
+					(cdr (assoc :--id post))))
+			      (post-nav-links post post-sequences)
+			      (force-output out-stream)
+			      (loop for (name fn) in (if (cdr (assoc :question post))
+							 '(("answers" get-post-answers) ("comments" get-post-comments))
+							 '(("comments" get-post-comments)))
+				 do (handler-case
+					(let* ((comments (funcall fn post-id)))
+					  (output-comments out-stream name comments nil))
+				      (serious-condition (c) (error-to-html c))))))))))))
     (:post (text answer af parent-answer-id parent-comment-id edit-comment-id retract-comment-id unretract-comment-id delete-comment-id)
      (let ((lw2-auth-token *current-auth-token*))
        (assert lw2-auth-token)
