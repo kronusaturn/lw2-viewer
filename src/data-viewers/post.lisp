@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.data-viewers.post
-  (:use #:cl #:lw2.schema-types #:lw2.utils #:lw2.sites #:lw2.backend #:lw2.context #:lw2.clean-html #:lw2.schema-type #:lw2.html-reader #:lw2.interface-utils #:lw2.user-context #:lw2.links)
+  (:use #:cl #:lw2.schema-types #:lw2.utils #:lw2.sites #:lw2.backend #:lw2.context #:lw2.clean-html #:lw2.schema-type #:lw2.html-reader #:lw2.interface-utils #:lw2.user-context #:lw2.links #:lw2.backlinks)
   (:export #:post-headline-to-html #:post-body-to-html))
 
 (in-package #:lw2.data-viewers.post)
@@ -86,7 +86,10 @@
       <div class="body-text post-body">
         (if url <p><a class="link-post-link" href=(convert-any-link (string-trim " " url))>Link post</a></p>)
 	(with-html-stream-output
-	    (write-sequence (clean-html* (or html-body "") :with-toc t :post-id post-id) *html-output*))
+	    (let ((*link-hook* (lambda (link)
+				 (add-backlink link post-id))))
+	      (write-sequence (clean-html* (or html-body "") :with-toc t :post-id post-id) *html-output*)))
       </div>
+      (backlinks-to-html (get-backlinks post-id) post-id)
       (with-html-stream-output #|(post-meta-to-html post :body nil) TODO: don't use js to insert bottom-post-meta|#)
     </main>))

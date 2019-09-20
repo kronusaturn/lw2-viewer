@@ -60,7 +60,7 @@
 
 (defun match-agentfoundations-link (link) (match-values "^(?:https?://(?:www\\.)?agentfoundations\\.org)?(/item\\?id=.*)" link (0)))
 
-(defun match-lw2-link (link) (match-values "^(?:https?://[^/]+)?/posts/([^/]+)/([^/#?]*)(?:/(comment|answer)/([^/#?]+)|/?(?:#|\\?commentId=)?([^/#]+)?)?" link (0 (or 3 4) 1 2)))
+(defun match-lw2-link (link) (match-values "^(?:https?://[^/]+)?/posts/([^/]+)/([^/#?]*)(?:/(comment|answer)/([^/#?]+)|/?(?:#(?:comment-)?|\\?commentId=)?([^/#]+)?)?" link (0 (or 3 4) 1 2)))
 
 (defun match-lw2-slug-link (link) (match-values "^(?:https?://(?:www.)?less(?:er|est)?wrong.com)?/(?:codex|hpmor)/([^/#]+)(?:/?#?([^/#]+)?)?" link (0 1)))
 

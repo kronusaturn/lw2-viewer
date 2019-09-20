@@ -1,6 +1,6 @@
 (uiop:define-package #:lw2.clean-html
   (:use #:cl #:alexandria #:iterate #:split-sequence #:lw2.lmdb #:lw2.links #:lw2.utils #:lw2.context #:lw2.sites)
-  (:export #:url-scanner #:clean-text #:clean-text-to-html #:clean-html #:clean-html*)
+  (:export #:*link-hook* #:url-scanner #:clean-text #:clean-text-to-html #:clean-html #:clean-html*)
   (:unintern #:*text-clean-regexps* #:*html-clean-regexps*))
 
 (in-package #:lw2.clean-html)
@@ -9,6 +9,8 @@
 (setf cl-typesetting-hyphen::*language-hyphen-file-list* '((:en-us . "hyph_en_US")))
 (cl-typesetting-hyphen:load-language :en-us)
 (setf cl-typesetting::*default-hyphen-language* :en-us)
+
+(defvar *link-hook* nil)
 
 (defun file-get-contents (filename)
   (with-open-file (stream filename)
@@ -575,7 +577,9 @@
 			 (let* ((href (if (ppcre:scan "^(?:(?:[a-z]+:)?//|/|#)" href) href (format nil "http://~A" href)))
 				(href (or (with-direct-link (convert-any-link href)) href)))
 			   (when href
-			     (setf (plump:attribute node "href") href))))))
+			     (setf (plump:attribute node "href") href)
+			     (when *link-hook*
+			       (funcall *link-hook* href)))))))
 		    ((tag-is node "img")
 		     (when
 			 (every (lambda (a) (if-let (attr (plump:attribute node a)) (ignore-errors (<= (parse-integer attr) 1)))) (list "width" "height"))

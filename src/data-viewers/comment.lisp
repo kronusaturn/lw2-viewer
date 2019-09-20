@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.data-viewers.comment
-  (:use #:cl #:lw2.html-reader #:lw2.utils #:lw2.schema-type #:lw2.schema-types #:lw2.context #:lw2.user-context #:lw2.backend #:lw2.links #:lw2.interface-utils #:lw2.sites #:lw2.clean-html #:lw2.lmdb)
+  (:use #:cl #:lw2.html-reader #:lw2.utils #:lw2.schema-type #:lw2.schema-types #:lw2.context #:lw2.user-context #:lw2.backend #:lw2.links #:lw2.interface-utils #:lw2.sites #:lw2.clean-html #:lw2.lmdb #:lw2.backlinks)
   (:export #:*comment-individual-link* #:comment-to-html))
 
 (in-package #:lw2.data-viewers.comment)
@@ -78,10 +78,14 @@
 		</div>)
 	      </div>
 	      <div class="body-text comment-body" (safe ("~@[ data-markdown-source=\"~A\"~]"
-					       (if (logged-in-userid user-id)
-						   (encode-entities
-						    (or (cache-get "comment-markdown-source" comment-id)
-							html-body)))))>
-		(with-html-stream-output (write-sequence (clean-html* html-body) out-stream))
-              </div>
+							 (if (logged-in-userid user-id)
+							     (encode-entities
+							      (or (cache-get "comment-markdown-source" comment-id)
+								  html-body)))))>
+		(with-html-stream-output
+		    (let ((*link-hook* (lambda (link)
+					 (add-backlink link post-id comment-id))))
+		      (write-sequence (clean-html* html-body) out-stream)))
+	      </div>
+	      (backlinks-to-html (get-backlinks post-id comment-id) (format nil "~A-~A" post-id comment-id))
 	    </div>))))

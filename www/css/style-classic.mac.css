@@ -2112,16 +2112,16 @@ ul.comment-thread {
 /* DEEP COMMENT THREAD COLLAPSING */
 /**********************************/
 
-.comment-item input[id^="expand"] {
+.comment-item > input[id^="expand"] {
 	display: none;
 }
-.comment-item input[id^="expand"] + label {
+.comment-item > input[id^="expand"] + label {
 	display: block;
 	visibility: hidden;
 	position: relative;
 	margin: 8px 9px;
 }
-.comment-item input[id^="expand"] + label::after {
+.comment-item > input[id^="expand"] + label::after {
 	content: "(Expand " attr(data-child-count) "	below)";
 	visibility: visible;
 	position: absolute;
@@ -2129,25 +2129,76 @@ ul.comment-thread {
 	white-space: nowrap;
 	cursor: pointer;
 }
-.comment-item input[id^="expand"]:checked + label::after {
+.comment-item > input[id^="expand"]:checked + label::after {
 	content: "(Collapse " attr(data-child-count) "	below)";
 }
-.comment-item input[id^="expand"] ~ .comment-thread {
+.comment-item > input[id^="expand"] ~ .comment-thread {
 	max-height: 34px;
 	overflow: hidden;
 }
-.comment-item input[id^="expand"] ~ .comment-thread > li:first-child {
+.comment-item > input[id^="expand"] ~ .comment-thread > li:first-child {
 	margin-top: 0;
 }
-.comment-item input[id^="expand"]:checked ~ .comment-thread {
+.comment-item > input[id^="expand"]:checked ~ .comment-thread {
 	max-height: 1000000px;
 }
 
-.comment-item input[id^="expand"]:checked ~ .comment-thread .comment-thread .comment-item {
+.comment-item > input[id^="expand"]:checked ~ .comment-thread .comment-thread .comment-item {
 	margin: 0;
 }
-.comment-item input[id^="expand"]:checked ~ .comment-thread .comment-thread .comment-item a.comment-parent-link:hover::after {
+.comment-item > input[id^="expand"]:checked ~ .comment-thread .comment-thread .comment-item a.comment-parent-link:hover::after {
 	display: none;
+}
+
+/*************/
+/* BACKLINKS */
+/*************/
+
+.backlinks > input {
+	display: none;
+}
+
+.backlinks > label {
+	margin-left: 10px;
+	display: block;
+	color: #00f;
+	cursor: pointer;
+}
+
+.backlinks > label::before {
+	content: " ";
+	border-left: 5px solid currentColor;
+	border-top: 5px solid transparent;
+	border-bottom: 5px solid transparent;
+	transition: transform 0.25s ease-out;
+	transform-origin: 29% 55%;
+	display: inline-block;
+	padding-right: 0.5em;
+}
+
+.backlinks > input:checked + label::before {
+	transform: rotate(90deg);
+}
+
+.backlinks li {
+	margin-top: 0;
+}
+
+.backlinks > ul {
+	height: 0;
+	perspective-origin: top;
+	transform: perspective(100em) rotateX(-90deg);
+	transform-origin: center top;
+	opacity: 0;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.backlinks > input:checked ~ ul {
+	height: auto;
+	transform: perspective(100em) rotateX(0deg);
+	transition: transform 0.25s ease-in, opacity 0.25s ease-in;
+	opacity: 1;
 }
 
 /****************/

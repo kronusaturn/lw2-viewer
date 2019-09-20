@@ -39,10 +39,12 @@
 			     (:static-file "../html-clean-regexps.js")
                              (:file "clean-html" :depends-on ("utils" "links" "lmdb" "context" "sites" "../text-clean-regexps.js" "../html-clean-regexps.js"))
                              (:file "lw2-login" :depends-on ("utils" "backend" "backend-modules" "context"))
+			     (:file "backlinks" :depends-on ("html-reader" "lmdb" "backend" "backend-modules" "sites" "links" "context" "clean-html"))
+			     (:file "admin" :depends-on ("lmdb" "clean-html" "backend"))
 			     (:module "data-viewers"
 				      :components ((:file "post")
 						   (:file "comment"))
-				      :depends-on ("schema-type" "schema-types" "utils" "backend" "context" "user-context" "sites" "clean-html" "html-reader" "interface-utils" "links" "lmdb")))
+				      :depends-on ("schema-type" "schema-types" "utils" "backend" "context" "user-context" "sites" "clean-html" "html-reader" "interface-utils" "links" "lmdb" "backlinks")))
                 :depends-on ())
                (:module "templates"
                 :components ((:static-file "conversation.html")

@@ -3,6 +3,7 @@
   (:export
    #:close-unused-environments
    #:define-cache-database #:with-cache-mutex #:with-cache-transaction #:with-cache-readonly-transaction #:with-db #:lmdb-put-string #:cache-put #:cache-get #:cache-del
+   #:count-database-entries #:truncate-database
    #:call-with-cursor
    #:simple-cacheable #:define-lmdb-memoized)
   (:unintern #:lmdb-clear-db #:*db-mutex* #:*cache-environment-databases-list*))
@@ -21,7 +22,7 @@
   (with-mutex (*db-environments-lock*)
     (let* ((class (find-class class-name))
 	   (old-list (class-own-databases class))
-	   (new-list (union old-list names :test #'string=)))
+	   (new-list (union old-list names :test #'string= :key (lambda (x) (if (atom x) x (first x))))))
       (unless (equal old-list new-list)
 	(incf *cache-databases-epoch*)
 	(setf (class-own-databases class) new-list)))))
@@ -77,11 +78,12 @@
         (open-databases (environment-container-open-databases environment-container)))
     (assert (not lmdb:*transaction*) () "The transaction in which a database is created must be closed before that database may be used in another thread.")
     (with-environment-transaction (environment)
-      (dolist (db-name (backend-databases backend))
-	(unless (gethash db-name open-databases)
-	  (let ((db (lmdb:make-database db-name)))
-	    (lmdb:open-database db :create t)
-	    (setf (gethash db-name open-databases) db)))))
+      (dolist (db-args (backend-databases backend))
+	(destructuring-bind (db-name &key (flags 0)) (ensure-list db-args)
+	  (unless (gethash db-name open-databases)
+	    (let ((db (lmdb:make-database db-name :flags flags)))
+	      (lmdb:open-database db :create t)
+	      (setf (gethash db-name open-databases) db))))))
     (setf (environment-container-databases-list environment-container) (backend-databases backend))))
 
 (defun find-environment-with-path (path environment-list)
@@ -185,6 +187,15 @@
     (lmdb:del db
 	      (string-to-octets key :external-format :utf-8)
 	      (and data (string-to-octets data :external-format :utf-8)))))
+
+(defun count-database-entries (db-name)
+  (with-db (db db-name :read-only t)
+    (getf (lmdb:database-statistics db)
+	  :entries)))
+
+(defun truncate-database (db-name)
+  (with-db (db db-name)
+    (lmdb:drop-database db :delete 0)))
 
 (defun call-with-cursor (db-name fn &key read-only)
   (with-db (db db-name :read-only read-only)
