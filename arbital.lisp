@@ -98,9 +98,9 @@
 		   ("meta" "/explore/Arbital/" "Arbital")))))
 
 (define-lmdb-memoized markdown-to-html 'lw2.backend-modules:backend-arbital
-  (:sources ("arbital-showdown/convert.js" "arbital-showdown/package-lock.json")) (markdown-string)
+  (:sources ("js-foreign-lib/convert.js")) (markdown-string)
   (with-input-from-string (stream markdown-string)
-    (uiop:run-program "node arbital-showdown/convert.js" :input stream :output :string)))
+    (uiop:run-program "node js-foreign-lib/convert.js" :input stream :output :string)))
 
 (defparameter *markdown-replace-string* "ouNi5iej")
 
