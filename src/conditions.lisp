@@ -3,7 +3,8 @@
   (:export #:*debug-mode* #:condition-http-return-code
 	   #:error-to-html
            #:lw2-error #:lw2-client-error #:lw2-not-found-error #:lw2-user-not-found-error #:lw2-not-allowed-error #:lw2-server-error #:lw2-connection-error #:lw2-unknown-error
-	   #:log-condition #:log-conditions)
+	   #:log-condition #:log-conditions
+	   #:log-and-ignore-errors)
   (:recycle #:lw2.backend #:lw2-viewer))
 
 (in-package #:lw2.conditions)
@@ -69,6 +70,13 @@
 (defmacro log-conditions (&body body)
   `(block log-conditions
      (handler-bind
-       (((or warning serious-condition) (lambda (c) (log-condition c))))
-       (progn ,@body))))
+	 (((or warning serious-condition) (lambda (c) (log-condition c))))
+       ,@body)))
 
+(defmacro log-and-ignore-errors (&body body)
+  `(block log-and-ignore-errors
+     (handler-bind
+	 ((serious-condition (lambda (c)
+			       (log-condition c)
+			       (return-from log-and-ignore-errors (values nil c)))))
+       ,@body)))

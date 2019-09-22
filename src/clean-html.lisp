@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.clean-html
-  (:use #:cl #:alexandria #:iterate #:split-sequence #:lw2.lmdb #:lw2.links #:lw2.utils #:lw2.context #:lw2.sites)
+  (:use #:cl #:alexandria #:iterate #:split-sequence #:lw2.lmdb #:lw2.links #:lw2.utils #:lw2.context #:lw2.sites #:lw2.conditions)
   (:export #:*link-hook* #:url-scanner #:clean-text #:clean-text-to-html #:clean-html #:clean-html*)
   (:unintern #:*text-clean-regexps* #:*html-clean-regexps*))
 
@@ -579,7 +579,8 @@
 			   (when href
 			     (setf (plump:attribute node "href") href)
 			     (when *link-hook*
-			       (funcall *link-hook* href)))))))
+			       (log-and-ignore-errors
+				(funcall *link-hook* href))))))))
 		    ((tag-is node "img")
 		     (when
 			 (every (lambda (a) (if-let (attr (plump:attribute node a)) (ignore-errors (<= (parse-integer attr) 1)))) (list "width" "height"))
