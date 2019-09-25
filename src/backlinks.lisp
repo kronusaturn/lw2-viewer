@@ -1,6 +1,6 @@
 (uiop:define-package #:lw2.backlinks
   (:use #:cl #:alexandria #:split-sequence
-	#:lw2.html-reader #:lw2.lmdb #:lw2.backend-modules #:lw2.backend #:lw2.sites #:lw2.links #:lw2.context #:lw2.clean-html)
+	#:lw2.html-reader #:lw2.lmdb #:lw2.backend-modules #:lw2.backend #:lw2.sites #:lw2.links #:lw2.context #:lw2.clean-html #:lw2.conditions)
   (:export #:add-backlink #:get-backlinks #:backlinks-to-html))
 
 (in-package #:lw2.backlinks)
@@ -48,20 +48,21 @@
       <ul>
       (let ((original-site *current-site*))
 	(loop for (site-host post-id comment-id) in backlinks do
-	     (with-site-context ((find-site site-host))
-	       (let* ((post (get-post-body post-id :revalidate nil))
-		      (comment (when comment-id
-				 (find-if (lambda (c) (string= comment-id (cdr (assoc :--id c))))
-					  (get-post-comments post-id))))
-		      (title (clean-text-to-html (cdr (assoc :title post)))))
-		 <li>
-		 <a href=(generate-post-link post comment-id t)>
-		 (safe
-		  (format nil "~@[~A's comment on ~]~A~@[ (~A)~]"
-			  (if comment (get-username (cdr (assoc :user-id comment))))
-			  title
-			  (if (not (eq *current-site* original-site)) (main-site-title *current-site*))))
-		 </a>
-		 </li>))))
+	     (log-and-ignore-errors
+	      (with-site-context ((find-site site-host))
+		(let* ((post (get-post-body post-id :revalidate nil))
+		       (comment (when comment-id
+				  (find-if (lambda (c) (string= comment-id (cdr (assoc :--id c))))
+					   (get-post-comments post-id))))
+		       (title (clean-text-to-html (cdr (assoc :title post)))))
+		  <li>
+		    <a href=(generate-post-link post comment-id t)>
+		    (safe
+		     (format nil "~@[~A's comment on ~]~A~@[ (~A)~]"
+			     (if comment (get-username (cdr (assoc :user-id comment))))
+			     title
+			     (if (not (eq *current-site* original-site)) (main-site-title *current-site*))))
+		    </a>
+		  </li>)))))
       </ul>
     </div>))
