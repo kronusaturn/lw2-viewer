@@ -35,7 +35,8 @@
 		       (loop for raw-data = (lmdb:cursor-get cursor :set (format nil "~A~@[ ~A~]" post-id comment-id))
 			  then (lmdb:cursor-get cursor :next-dup)
 			    while raw-data
-			  collect (split-sequence #\Space (flexi-streams:octets-to-string raw-data :external-format :utf-8))))))
+			  collect (split-sequence #\Space (flexi-streams:octets-to-string raw-data :external-format :utf-8))))
+		     :read-only t))
   (backend-base
    (declare (ignore post-id comment-id))
    nil))
