@@ -12,6 +12,7 @@
     #:backend-q-and-a #:backend-related-questions
     #:backend-alignment-forum
     #:backend-backlinks
+    #:backend-push-notifications
     #:backend-lw2-legacy #:backend-lw2-modernized #:backend-lw2 #:backend-algolia-search #:backend-ea-forum #:backend-accordius
     #:backend-arbital
     #:make-backend #:define-backend-function #:define-backend-operation #:backend)
@@ -59,6 +60,9 @@
 (defclass backend-backlinks (backend-lmdb-cache) ()
   (:metaclass backend-class))
 
+(defclass backend-push-notifications (backend-lmdb-cache) ()
+  (:metaclass backend-class))
+
 (defclass backend-alignment-forum (backend-graphql) ()
   (:metaclass backend-class))
 
@@ -68,10 +72,10 @@
 (defclass backend-lw2-modernized (backend-graphql) ()
   (:metaclass backend-class))
 
-(defclass backend-lw2 (backend-websocket-login backend-lw2-modernized backend-lw2-legacy backend-algolia-search backend-q-and-a backend-related-questions backend-alignment-forum backend-feed-crossposts backend-backlinks) ()
+(defclass backend-lw2 (backend-websocket-login backend-lw2-modernized backend-lw2-legacy backend-algolia-search backend-q-and-a backend-related-questions backend-alignment-forum backend-feed-crossposts backend-backlinks backend-push-notifications) ()
   (:metaclass backend-class))
 
-(defclass backend-ea-forum (backend-websocket-login backend-lw2-modernized backend-lw2-legacy backend-algolia-search backend-q-and-a backend-related-questions backend-feed-crossposts backend-backlinks) ()
+(defclass backend-ea-forum (backend-websocket-login backend-lw2-modernized backend-lw2-legacy backend-algolia-search backend-q-and-a backend-related-questions backend-feed-crossposts backend-backlinks backend-push-notifications) ()
   (:metaclass backend-class))
 
 (defclass backend-accordius (backend-lw2-legacy backend-lw2-modernized)

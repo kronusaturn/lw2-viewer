@@ -3205,6 +3205,97 @@ function toggleKeyboardHelpOverlay(show) {
 	setSearchBoxTabSelectable(!show);
 }
 
+/**********************/
+/* PUSH NOTIFICATIONS */
+/**********************/
+
+try {
+	navigator.serviceWorker.register('/service-worker.js');
+} catch(e) { }
+
+function pushNotificationsSetup() {
+	let pushNotificationsButton = query("#enable-push-notifications");
+	if(pushNotificationsButton && (pushNotificationsButton.dataset.enabled || (navigator.serviceWorker && window.Notification && window.PushManager))) {
+		pushNotificationsButton.onclick = pushNotificationsButtonClicked;
+		pushNotificationsButton.style.display = 'unset';
+	}
+}
+
+function urlBase64ToUint8Array(base64String) {
+	const padding = '='.repeat((4 - base64String.length % 4) % 4);
+	const base64 = (base64String + padding)
+	      .replace(/-/g, '+')
+	      .replace(/_/g, '/');
+	
+	const rawData = window.atob(base64);
+	const outputArray = new Uint8Array(rawData.length);
+	
+	for (let i = 0; i < rawData.length; ++i) {
+		outputArray[i] = rawData.charCodeAt(i);
+	}
+	return outputArray;
+}
+
+function pushNotificationsButtonClicked(event) {
+	event.target.style.opacity = 0.33;
+	event.target.style.pointerEvents = "none";
+
+	let reEnable = (message) => {
+		if(message) alert(message);
+		event.target.style.opacity = 1;
+		event.target.style.pointerEvents = "unset";
+	}
+
+	if(event.target.dataset.enabled) {
+		fetch('/push/register', {
+			method: 'post',
+			headers: { 'Content-type': 'application/json' },
+			body: JSON.stringify({
+				cancel: true
+			}),
+		}).then(() => {
+			event.target.innerHTML = "Enable push notifications";
+			event.target.dataset.enabled = "";
+			reEnable();
+		});
+	} else {
+		Notification.requestPermission().then((permission) => {
+			navigator.serviceWorker.ready
+				.then((registration) => {
+					return registration.pushManager.getSubscription()
+						.then(async function(subscription) {
+							if (subscription) {
+								return subscription;
+							}
+							return registration.pushManager.subscribe({
+								userVisibleOnly: true,
+								applicationServerKey: urlBase64ToUint8Array(applicationServerKey)
+							});
+						})
+						.catch((err) => reEnable(err.message));
+				})
+				.then((subscription) => {
+					fetch('/push/register', {
+						method: 'post',
+						headers: {
+							'Content-type': 'application/json'
+						},
+						body: JSON.stringify({
+							subscription: subscription
+						}),
+					});
+				})
+				.then(() => {
+					event.target.innerHTML = "Disable push notifications";
+					event.target.dataset.enabled = "true";
+					reEnable();
+				})
+				.catch(function(err){ reEnable(err.message) });
+			
+		});
+	}
+}
+
 /*******************************/
 /* HTML TO MARKDOWN CONVERSION */
 /*******************************/
@@ -3772,6 +3863,12 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 	// Set up keyboard shortcuts guide overlay.
 	keyboardHelpSetup();
+
+	// Show push notifications button if supported
+	pushNotificationsSetup();
+
+	// Show elements now that javascript is ready.
+	removeElement("#hide-until-init");
 });
 
 /*************************/

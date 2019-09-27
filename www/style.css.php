@@ -417,6 +417,10 @@ a#inbox-indicator.new-messages:hover::before {
 	content: '\F2F5';
 	font-weight: 900;
 }
+#enable-push-notifications::before {
+	content: '\F0F3';
+	font-weight: 400;
+}
 .ignore-button::before {
 	content: "\F070";
 	font-weight: 400;

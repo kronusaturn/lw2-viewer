@@ -32,7 +32,7 @@
                                                               (copy-file "config-example.lisp" "config.lisp"))))
                              (:file "../config" :depends-on ("config-copy" "config-package"))
                              (:file "lmdb" :depends-on ("hash-utils" "sites" "context" "../config"))
-                             (:file "backend" :depends-on ("utils" "backend-modules" "lmdb" "graphql" "context" "sites" "schema-type" "schema-types" "conditions"))
+                             (:file "backend" :depends-on ("utils" "backend-modules" "lmdb" "graphql" "context" "sites" "schema-type" "schema-types" "conditions" "web-push"))
                              (:file "components" :depends-on ("utils"))
                              (:file "links" :depends-on ("lmdb" "backend" "sites" "context"))
 			     (:static-file "../text-clean-regexps.js")
@@ -40,6 +40,8 @@
                              (:file "clean-html" :depends-on ("utils" "links" "lmdb" "context" "sites" "conditions" "../text-clean-regexps.js" "../html-clean-regexps.js"))
                              (:file "lw2-login" :depends-on ("utils" "backend" "backend-modules" "context"))
 			     (:file "backlinks" :depends-on ("html-reader" "lmdb" "backend" "backend-modules" "sites" "links" "context" "clean-html" "conditions"))
+			     (:file "web-push" :depends-on ("utils"))
+			     (:file "push-notifications" :depends-on ("backend"))
 			     (:file "admin" :depends-on ("lmdb" "clean-html" "backend"))
 			     (:module "data-viewers"
 				      :components ((:file "post")

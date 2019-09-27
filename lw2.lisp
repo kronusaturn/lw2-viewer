@@ -1,11 +1,13 @@
 (uiop:define-package #:lw2-viewer
   (:use #:cl #:sb-thread #:flexi-streams #:djula
 	#:lw2-viewer.config #:lw2.utils #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login #:lw2.context #:lw2.sites #:lw2.components #:lw2.html-reader #:lw2.fonts
+	#:lw2.graphql
 	#:lw2.conditions
 	#:lw2.routes
 	#:lw2.schema-type #:lw2.schema-types
 	#:lw2.interface-utils
 	#:lw2.user-context
+	#:lw2.web-push
 	#:lw2.data-viewers.post
 	#:lw2.data-viewers.comment)
   (:import-from #:alexandria #:ensure-list #:when-let #:if-let #:alist-hash-table)
@@ -545,7 +547,9 @@ signaled condition to OUT-STREAM."
   (let* ((session-token (hunchentoot:cookie-in "session-token"))
          (csrf-token (and session-token (make-csrf-token session-token))))
     (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head>")
-    (format out-stream "<script>window.GW = { }; loggedInUserId=\"~A\"; loggedInUserDisplayName=\"~A\"; loggedInUserSlug=\"~A\"; GW.useFancyFeatures=~A; ~@[GW.csrfToken=\"~A\"; ~]~{~A~}</script>~A"
+    (format out-stream "<style id=\"js-status-style\">.only-with-js { display: none; }</style>")
+    (format out-stream "<script>window.GW = { }; applicationServerKey=\"~A\"; loggedInUserId=\"~A\"; loggedInUserDisplayName=\"~A\"; loggedInUserSlug=\"~A\"; GW.useFancyFeatures=~A; ~@[GW.csrfToken=\"~A\"; ~]~{~A~}</script>~A"
+	    (get-vapid-public-key)
             (or (logged-in-userid) "")
             (or (logged-in-username) "")
             (or (logged-in-user-slug) "")
@@ -707,7 +711,7 @@ signaled condition to OUT-STREAM."
                               ,@args)))))
 
 (defun call-with-error-page (fn)
-  (let* ((lw2-status
+  (let* ((*current-auth-status*
            (if-let (status-string (hunchentoot:cookie-in "lw2-status"))
 		   (if (string= status-string "") nil
 		       (let ((json:*identifier-name-to-key* #'json:safe-json-intern))
@@ -726,7 +730,7 @@ signaled condition to OUT-STREAM."
               (auth-token
                 (if-let
                   (at (hunchentoot:cookie-in "lw2-auth-token"))
-                  (if (or (string= at "") (not lw2-status) (> (get-unix-time) (- (cdr (assoc :expires lw2-status)) (* 60 60 24))))
+                  (if (or (string= at "") (not *current-auth-status*) (> (get-unix-time) (- (cdr (assoc :expires *current-auth-status*)) (* 60 60 24))))
                       nil at)))
               (with-cache-readonly-transaction
                 (values
@@ -783,14 +787,17 @@ signaled condition to OUT-STREAM."
   (format out-stream "<input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><input type=\"submit\" value=\"~A\">~@[~A~]</form>"
 	  csrf-token button-label end-html))
 
-(defun page-toolbar-to-html (out-stream &key title new-post new-conversation logout (rss t) ignore)
+(defun page-toolbar-to-html (out-stream &key title new-post new-conversation logout (rss t) ignore enable-push-notifications)
   (let ((liu (logged-in-userid)))
-    (format out-stream "<div class=\"page-toolbar\">")
+    (format out-stream "<div class=\"page-toolbar~@[ hide-until-init~]\">" enable-push-notifications)
     (when logout
       (format out-stream "<form method=\"post\" action=\"/logout\"><button class=\"logout-button button\" name=\"logout\" value=\"~A\">Log out</button></form>"
               (make-csrf-token)))
     (when ignore
       (funcall ignore))
+    (when enable-push-notifications
+      (format out-stream "<button id=\"enable-push-notifications\" class=\"button only-with-js\" style=\"display: none\" data-enabled=\"~:[~;true~]\">~:*~:[En~;Dis~]able push notifications</button>"
+	      (find-subscription *current-auth-token*)))
     (when (and new-conversation liu)
       (multiple-value-bind (text to)
         (typecase new-conversation (string (values "Send private message" new-conversation)) (t "New conversation"))
@@ -1164,10 +1171,10 @@ signaled condition to OUT-STREAM."
 		(list (vote-buttons points :as-text t :af-score (and af af-base-score)) vote-type))
 	      out-stream))))))))
 
-(hunchentoot:define-easy-handler (view-check-notifications :uri "/check-notifications") ()
+(hunchentoot:define-easy-handler (view-check-notifications :uri "/check-notifications") (format)
   (with-error-page
       (if *current-auth-token*
-	  (let ((notifications-status (check-notifications (logged-in-userid) *current-auth-token*)))
+	  (let ((notifications-status (check-notifications (logged-in-userid) *current-auth-token* :full (string= format "push"))))
 	    (json:encode-json-to-string notifications-status)))))
 
 (hunchentoot:define-easy-handler (view-ignore-user :uri "/ignore-user") ((csrf-token :request-type :post) (target-id :request-type :post) (state :request-type :post) return)
@@ -1196,6 +1203,27 @@ signaled condition to OUT-STREAM."
                                                :with-total want-total))
           (get-recent-comments :with-total want-total))
       (view-items-index recent-comments :title "Recent comments" :pagination (pagination-nav-bars :offset (or offset 0) :with-next (not want-total) :total (if want-total total))))))
+
+(hunchentoot:define-easy-handler (view-push-register :uri "/push/register") ()
+  (with-error-page
+      (let* ((data (call-with-safe-json (lambda ()
+					  (json:decode-json-from-string
+					   (hunchentoot:raw-post-data :force-text t :external-format :utf-8)))))
+	     (subscription (cdr (assoc :subscription data)))
+	     (cancel (cdr (assoc :cancel data))))
+	(cond
+	  (subscription
+	   (make-subscription *current-auth-token*
+			      (cdr (assoc :endpoint subscription))
+			      (cdr (assoc :expires *current-auth-status*)))
+	   (send-notification (cdr (assoc :endpoint subscription)) :ttl 120))
+	  (cancel
+	   (delete-subscription *current-auth-token*)))
+	nil)))
+
+(hunchentoot:define-easy-handler (view-inbox-redirect :uri "/push/go-inbox") ()
+  (with-error-page
+      (redirect (format nil "/users/~A?show=inbox" *current-user-slug*))))
 
 (define-page view-user (:regex "^/users/(.*?)(?:$|\\?)|^/user" user-slug) (id
                                                                              (offset :type fixnum :default 0)
@@ -1291,10 +1319,7 @@ signaled condition to OUT-STREAM."
 		       (do-user-edit
 			 (hunchentoot:cookie-in "lw2-auth-token")
 			 user-id
-			 (alist :last-notifications-check
-				(local-time:format-timestring nil (local-time:now)
-							      :format lw2.graphql:+graphql-timestamp-format+
-							      :timezone local-time:+utc-zone+)))))
+			 (alist :last-notifications-check (timestamp-to-graphql (local-time:now))))))
 		   (t
 		     (let ((user-posts (get-user-posts user-id :limit (+ 1 (user-pref :items-per-page) offset)))
 			   (user-comments (lw2-graphql-query (lw2-query-string :comment :list (nconc (alist :limit (+ 1 (user-pref :items-per-page) offset) :user-id user-id) comments-base-terms) 
@@ -1311,6 +1336,7 @@ signaled condition to OUT-STREAM."
                                      :top-nav (lambda (out-stream)
                                                 (page-toolbar-to-html out-stream
                                                                       :title title
+								      :enable-push-notifications (eq show :inbox)
                                                                       :rss (not (member show '(:drafts :conversations :inbox)))
                                                                       :new-post (if (eq show :drafts) "drafts" t)
                                                                       :new-conversation (if own-user-page t user-slug)

@@ -32,10 +32,10 @@
    (call-with-cursor "backlinks"
 		     (lambda (db cursor)
 		       (declare (ignore db))
-		       (loop for raw-data = (lmdb:cursor-get cursor :set (format nil "~A~@[ ~A~]" post-id comment-id))
-			  then (lmdb:cursor-get cursor :next-dup)
-			    while raw-data
-			  collect (split-sequence #\Space (flexi-streams:octets-to-string raw-data :external-format :utf-8))))
+		       (loop for backlink-data = (cursor-get cursor :set (format nil "~A~@[ ~A~]" post-id comment-id))
+			  then (cursor-get cursor :next-dup)
+			  while backlink-data
+			  collect (split-sequence #\Space backlink-data)))
 		     :read-only t))
   (backend-base
    (declare (ignore post-id comment-id))

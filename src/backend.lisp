@@ -1,6 +1,6 @@
 (uiop:define-package #:lw2.backend
   (:use #:cl #:sb-thread #:flexi-streams #:alexandria #:lw2-viewer.config #:lw2.sites #:lw2.context #:lw2.graphql #:lw2.lmdb
-	#:lw2.utils #:lw2.hash-utils #:lw2.backend-modules #:lw2.schema-type #:lw2.conditions)
+	#:lw2.utils #:lw2.hash-utils #:lw2.backend-modules #:lw2.schema-type #:lw2.conditions #:lw2.web-push)
   (:import-from #:collectors #:with-collector)
   (:reexport #:lw2.backend-modules)
   (:export #:*graphql-debug-output*
@@ -130,7 +130,8 @@
 								  #'> :key (lambda (c) (cdr (assoc :base-score c))))))
 				    (cache-update cache-database post-id (comments-list-to-graphql-json new-post-comments)))))
 			 (setf last-comment-processed (cdr (assoc :--id (first recent-comments)))))))
-	  (serious-condition (condition) (log-condition condition) nil))))))
+	  (serious-condition (condition) (log-condition condition) nil))
+	(send-all-notifications)))))
 
 (defun background-loader ()
   (let (sites loader-functions)
@@ -656,29 +657,36 @@
 	   (user-deleted user-id deleted))))
      result)))
 
-(define-backend-function get-notifications (&key user-id offset auth-token)
+(define-backend-function get-notifications (&key user-id (offset 0) (limit 21) auth-token)
   (backend-lw2-legacy
    (lw2-graphql-query (lw2-query-string :notification :list
-					(nconc (alist :user-id user-id :limit 21 :offset offset) *notifications-base-terms*)
+					(nconc (alist :user-id user-id :limit limit :offset offset) *notifications-base-terms*)
 					:fields '(:--id :document-type :document-id :link :title :message :type :viewed))
 		      :auth-token auth-token))
   (backend-lw2-modernized
-   (declare (ignore user-id offset auth-token))
+   (declare (ignore user-id offset limit auth-token))
    (let ((*notifications-base-terms* (remove :null *notifications-base-terms* :key #'cdr)))
      (call-next-method))))
 
-(define-backend-function check-notifications (user-id auth-token)
+(define-backend-function check-notifications (user-id auth-token &key full since)
   (backend-lw2-legacy
    (multiple-value-bind (notifications user-info)
        (lw2-graphql-query-multi (list
-				 (lw2-query-string* :notification :list (nconc (alist :user-id user-id :limit 1) *notifications-base-terms*)
-						    :fields '(:created-at))
+				 (lw2-query-string* :notification :list (nconc (alist :user-id user-id :limit (if full 3 1)) *notifications-base-terms*)
+						    :fields (if full '(:--id :message :created-at) '(:created-at)))
 				 (lw2-query-string* :user :single (alist :document-id user-id) :fields '(:last-notifications-check)))
 				:auth-token auth-token)
      (when (and notifications user-info)
-       (local-time:timestamp> (local-time:parse-timestring (cdr (assoc :created-at (first notifications)))) (local-time:parse-timestring (cdr (assoc :last-notifications-check user-info)))))))
+       (let ((last-check (or since (local-time:parse-timestring (cdr (assoc :last-notifications-check user-info))))))
+	 (labels ((unread-p (notification)
+		    (local-time:timestamp>
+		     (local-time:parse-timestring (cdr (assoc :created-at notification)))
+		     last-check)))
+	   (if full
+	       (remove-if-not #'unread-p notifications)
+	       (unread-p (first notifications))))))))
   (backend-lw2-modernized
-   (declare (ignore user-id auth-token))
+   (declare (ignore user-id auth-token full since))
    (let ((*notifications-base-terms* (remove :null *notifications-base-terms* :key #'cdr)))
      (call-next-method))))
 

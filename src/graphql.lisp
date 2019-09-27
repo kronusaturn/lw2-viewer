@@ -1,7 +1,7 @@
 (uiop:define-package #:lw2.graphql
   (:documentation "Contains generic GraphQL client functionality required by lw2-viewer.")
   (:use #:cl #:alexandria)
-  (:export #:+graphql-timestamp-format+ #:graphql-query-string* #:graphql-query-string #:graphql-mutation-string)
+  (:export #:+graphql-timestamp-format+ #:graphql-query-string* #:graphql-query-string #:graphql-mutation-string #:timestamp-to-graphql)
   (:recycle #:lw2.backend #:lw2.login))
 
 (in-package #:lw2.graphql)
@@ -38,3 +38,8 @@
 
 (defun graphql-mutation-string (mutation-type terms fields)
   (format nil "mutation ~A{~A}" mutation-type (graphql-query-string* mutation-type terms fields)))
+
+(defun timestamp-to-graphql (timestamp)
+  (local-time:format-timestring nil timestamp
+				:format lw2.graphql:+graphql-timestamp-format+
+				:timezone local-time:+utc-zone+))

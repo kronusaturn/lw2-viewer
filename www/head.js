@@ -253,3 +253,9 @@ if (localStorage.getItem("antikibitzer") == "true") {
 		query("head").insertAdjacentHTML("beforeend", "<"+"title class='fake-title'></title>");
 	}
 }
+
+// Allow display of elements that require javascript and hide replacements.
+query("#js-status-style").innerHTML = ".only-without-js { display: none; }";
+
+// Hide elements that require javascript until ready.
+query("head").insertAdjacentHTML("beforeend", "<style id='hide-until-init'>.hide-until-init { visibility: hidden; }</style>");

@@ -1,6 +1,7 @@
 (uiop:define-package #:lw2.utils
   (:use #:cl #:alexandria)
-  (:export #:alist #:get-unix-time #:substring #:regex-replace-body #:reg #:match #:to-boolean #:map-plist #:filter-plist #:alist-bind #:list-cond)
+  (:export #:alist #:get-unix-time #:substring #:regex-replace-body #:reg #:match #:to-boolean #:map-plist #:filter-plist #:alist-bind #:list-cond
+	   #:string-to-existing-keyword #:call-with-safe-json)
   (:recycle #:lw2-viewer))
 
 (in-package #:lw2.utils)
@@ -83,3 +84,12 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
 			  (cons ,value ,rest)
 			  ,rest)))))))
     (expand clauses)))
+
+(defun string-to-existing-keyword (string)
+  (or (find-symbol (json:camel-case-to-lisp string) (find-package '#:keyword))
+      string))
+
+(defun call-with-safe-json (fn)
+  (let ((json:*json-identifier-name-to-lisp* #'identity)
+	(json:*identifier-name-to-key* #'string-to-existing-keyword))
+    (funcall fn)))

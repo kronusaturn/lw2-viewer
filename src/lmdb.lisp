@@ -4,7 +4,7 @@
    #:close-unused-environments
    #:define-cache-database #:with-cache-mutex #:with-cache-transaction #:with-cache-readonly-transaction #:with-db #:lmdb-put-string #:cache-put #:cache-get #:cache-del
    #:count-database-entries #:truncate-database
-   #:call-with-cursor
+   #:call-with-cursor #:cursor-get
    #:simple-cacheable #:define-lmdb-memoized)
   (:unintern #:lmdb-clear-db #:*db-mutex* #:*cache-environment-databases-list*))
 
@@ -202,6 +202,9 @@
     (let ((cursor (lmdb:make-cursor db)))
       (lmdb:with-cursor (cursor)
 	(funcall fn db cursor)))))
+
+(defun cursor-get (cursor operation &optional key value)
+  (lmdb:cursor-get cursor operation key value :return-type :string))
 
 (defun make-simple-cache (cache-db)
   (lambda (key value) (cache-put cache-db key value))) 

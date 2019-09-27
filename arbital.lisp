@@ -5,18 +5,9 @@
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (export 'get-page-body))
 
-(defun string-to-existing-keyword (string)
-  (or (find-symbol (json:camel-case-to-lisp string) (find-package '#:keyword))
-      string))
-
-(defun call-with-arbital-json-options (fn)
-  (let ((json:*json-identifier-name-to-lisp* #'identity)
-	(json:*identifier-name-to-key* #'string-to-existing-keyword))
-    (funcall fn)))
-
 (defun decode-arbital-json (json-string)
   (let ((result
-	 (call-with-arbital-json-options
+	 (call-with-safe-json
 	  (lambda () (json:decode-json-from-string json-string)))))
     (typecase result
       (string (if (string= result "not-found")

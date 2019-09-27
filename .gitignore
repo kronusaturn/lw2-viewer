@@ -5,4 +5,5 @@ local
 *#
 post-commit.hook
 config.lisp
+webpush.vapid.key
 www/robots.txt

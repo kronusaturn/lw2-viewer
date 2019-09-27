@@ -1,11 +1,12 @@
 (uiop:define-package #:lw2.user-context
   (:use #:cl)
-  (:export #:*current-auth-token* #:*current-userid* #:*current-username* #:*current-user-slug* #:*current-ignore-hash*
+  (:export #:*current-auth-token* #:*current-auth-status* #:*current-userid* #:*current-username* #:*current-user-slug* #:*current-ignore-hash*
 	   #:logged-in-userid #:logged-in-username #:logged-in-user-slug))
 
 (in-package #:lw2.user-context)
 
 (defvar *current-auth-token*)
+(defvar *current-auth-status*)
 (defvar *current-userid*)
 (defvar *current-username*)
 (defvar *current-user-slug*)
