@@ -3209,10 +3209,6 @@ function toggleKeyboardHelpOverlay(show) {
 /* PUSH NOTIFICATIONS */
 /**********************/
 
-try {
-	navigator.serviceWorker.register('/service-worker.js');
-} catch(e) { }
-
 function pushNotificationsSetup() {
 	let pushNotificationsButton = query("#enable-push-notifications");
 	if(pushNotificationsButton && (pushNotificationsButton.dataset.enabled || (navigator.serviceWorker && window.Notification && window.PushManager))) {
@@ -3257,8 +3253,10 @@ function pushNotificationsButtonClicked(event) {
 			event.target.innerHTML = "Enable push notifications";
 			event.target.dataset.enabled = "";
 			reEnable();
-		});
+		}).catch((err) => reEnable(err.message));
 	} else {
+		navigator.serviceWorker.register('/service-worker.js');
+
 		Notification.requestPermission().then((permission) => {
 			navigator.serviceWorker.ready
 				.then((registration) => {
