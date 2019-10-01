@@ -76,7 +76,8 @@
 (defmacro log-and-ignore-errors (&body body)
   `(block log-and-ignore-errors
      (handler-bind
-	 ((serious-condition (lambda (c)
+	 (((or serious-condition usocket:ns-condition usocket:socket-condition)
+	   (lambda (c)
 			       (log-condition c)
 			       (return-from log-and-ignore-errors (values nil c)))))
        ,@body)))
