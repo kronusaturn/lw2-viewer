@@ -55,7 +55,7 @@
 			(data (decode-arbital-json json-string)))
 		   (update-arbital-aliases data)
 		   json-string))))
-      (call-with-arbital-json-options
+      (call-with-safe-json
        (lambda ()
 	 (lw2-graphql-query-timeout-cached fn "page-body-json" (format nil "~@[~A ~]~A" (unless (eq page-type :primary-page) page-type) page-key) :revalidate nil))))))
 
