@@ -7,10 +7,10 @@
 
 (defvar *html-output* nil)
 
-(defun encode-entities (text)
+(defun encode-entities (text &optional stream)
   (handler-bind
     (((or plump:invalid-xml-character plump:discouraged-xml-character) #'abort))
-    (plump:encode-entities (princ-to-string text))))
+    (plump:encode-entities (princ-to-string text) stream)))
 
 (defmacro with-html-stream-output (&body body)
   `(progn ,@body))
@@ -42,7 +42,7 @@
 		      (appendf out-body
 			       (if safe
 				   `((format *html-output* ,@object))
-				   `((write-string (encode-entities (format nil ,@object)) *html-output*)))))
+				   `((encode-entities (format nil ,@object) *html-output*)))))
 		     ((and (consp object) (eq (first object) 'with-html-stream-output))
 		      (flush-output)
 		      (appendf out-body (rest object)))
@@ -53,7 +53,7 @@
 		      (appendf out-body
 			       (if safe
 				   `((princ ,object *html-output*))
-				   `((write-string (encode-entities (or ,object "")) *html-output*))))))))))
+				   `((encode-entities (or ,object "") *html-output*))))))))))
 	    (loop for c = (peek-char nil stream)
 		  while (not (member c '(#\Space #\Newline #\>)))
 	       do (vector-push-extend (read-char stream) buffer))
