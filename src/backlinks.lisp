@@ -48,21 +48,37 @@
       <label for=("expand-~A" id)>What links here?</label>
       <ul>
       (let ((original-site *current-site*))
-	(loop for (site-host post-id comment-id) in backlinks do
+	(loop for (site-host post comment)
+	   in (sort
+	       (mapcar (lambda (bl)
+			 (destructuring-bind (&optional site-host post-id comment-id) bl
+			   (or
+			    (log-and-ignore-errors
+			     (when site-host
+			       (with-site-context ((find-site site-host))
+				 (list site-host
+				       (get-post-body post-id :revalidate nil)
+				       (when comment-id
+					 (find-if (lambda (c) (string= comment-id (cdr (assoc :--id c))))
+						  (get-post-comments post-id)))))))
+			    (list nil nil nil))))
+		       backlinks)
+	       (lambda (x y) (> (or x 0) (or y 0)))
+	       :key (lambda (bl)
+		      (destructuring-bind (&optional site-host post comment) bl
+			(declare (ignore site-host))
+			(cdr (assoc :base-score (or comment post))))))
+	   do
 	     (log-and-ignore-errors
-	      (with-site-context ((find-site site-host))
-		(let* ((post (get-post-body post-id :revalidate nil))
-		       (comment (when comment-id
-				  (find-if (lambda (c) (string= comment-id (cdr (assoc :--id c))))
-					   (get-post-comments post-id))))
-		       (title (clean-text-to-html (cdr (assoc :title post)))))
+	      (when site-host
+		(with-site-context ((find-site site-host))
 		  <li>
-		    <a href=(generate-post-link post comment-id t)>
+		    <a href=(generate-post-link post (cdr (assoc :--id comment)) t)>
 		      (with-html-stream-output
 			  (when comment
 			    <span class="author">(get-username (cdr (assoc :user-id comment)))</span>
 			    (format *html-output* "'s comment on ")))
-		      (safe title)
+		      (safe (clean-text-to-html (cdr (assoc :title post))))
 		      (" (")
 		      (when (not (eq *current-site* original-site))
 			(format *html-output* "~A; " (main-site-title *current-site*)))
