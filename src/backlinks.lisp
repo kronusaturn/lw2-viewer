@@ -76,7 +76,8 @@
 		    <a href=(generate-post-link post (cdr (assoc :--id comment)) t)>
 		      (with-html-stream-output
 			  (when comment
-			    <span class="author">(get-username (cdr (assoc :user-id comment)))</span>
+			    (let ((user-id (cdr (assoc :user-id comment))))
+			      <span class="inline-author" data-userid=user-id>(get-username user-id)</span>)
 			    (format *html-output* "'s comment on ")))
 		      (safe (clean-text-to-html (cdr (assoc :title post))))
 		      (" (")
