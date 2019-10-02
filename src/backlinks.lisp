@@ -1,6 +1,6 @@
 (uiop:define-package #:lw2.backlinks
   (:use #:cl #:alexandria #:split-sequence
-	#:lw2.html-reader #:lw2.lmdb #:lw2.backend-modules #:lw2.backend #:lw2.sites #:lw2.links #:lw2.context #:lw2.clean-html #:lw2.conditions)
+	#:lw2.html-reader #:lw2.lmdb #:lw2.backend-modules #:lw2.backend #:lw2.sites #:lw2.links #:lw2.context #:lw2.clean-html #:lw2.conditions #:lw2.interface-utils)
   (:export #:add-backlink #:get-backlinks #:backlinks-to-html))
 
 (in-package #:lw2.backlinks)
@@ -58,11 +58,17 @@
 		       (title (clean-text-to-html (cdr (assoc :title post)))))
 		  <li>
 		    <a href=(generate-post-link post comment-id t)>
-		    (safe
-		     (format nil "~@[~A's comment on ~]~A~@[ (~A)~]"
-			     (if comment (get-username (cdr (assoc :user-id comment))))
-			     title
-			     (if (not (eq *current-site* original-site)) (main-site-title *current-site*))))
+		      (with-html-stream-output
+			  (when comment
+			    <span class="author">(get-username (cdr (assoc :user-id comment)))</span>
+			    (format *html-output* "'s comment on ")))
+		      (safe title)
+		      (" (")
+		      (when (not (eq *current-site* original-site))
+			(format *html-output* "~A; " (main-site-title *current-site*)))
+		      (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :posted-at (or comment post))))
+			<span class="date" data-js-date=js-time>(progn pretty-time)</span>)
+		      ("; ~A point~:*~P)" (cdr (assoc :base-score (or comment post))))
 		    </a>
 		  </li>)))))
       </ul>
