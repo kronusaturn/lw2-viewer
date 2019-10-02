@@ -80,6 +80,10 @@
 			      <span class="inline-author" data-userid=user-id>(get-username user-id)</span>)
 			    (format *html-output* "'s comment on ")))
 		      (safe (clean-text-to-html (cdr (assoc :title post))))
+		      (" by ")
+		      (with-html-stream-output
+			  (let ((user-id (cdr (assoc :user-id post))))
+			    <span class="inline-author" data-userid=user-id>(get-username user-id)</span>))
 		      (" (")
 		      (when (not (eq *current-site* original-site))
 			(format *html-output* "~A; " (main-site-title *current-site*)))
