@@ -547,7 +547,6 @@ signaled condition to OUT-STREAM."
   (let* ((session-token (hunchentoot:cookie-in "session-token"))
          (csrf-token (and session-token (make-csrf-token session-token))))
     (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head>")
-    (format out-stream "<style id=\"js-status-style\">.only-with-js { display: none; }</style>")
     (format out-stream "<script>window.GW = { }; applicationServerKey=\"~A\"; loggedInUserId=\"~A\"; loggedInUserDisplayName=\"~A\"; loggedInUserSlug=\"~A\"; GW.useFancyFeatures=~A; ~@[GW.csrfToken=\"~A\"; ~]~{~A~}</script>~A"
 	    (get-vapid-public-key)
             (or (logged-in-userid) "")
@@ -796,7 +795,7 @@ signaled condition to OUT-STREAM."
     (when ignore
       (funcall ignore))
     (when enable-push-notifications
-      (format out-stream "<button id=\"enable-push-notifications\" class=\"button only-with-js\" style=\"display: none\" data-enabled=\"~:[~;true~]\">~:*~:[En~;Dis~]able push notifications</button>"
+      (format out-stream "<script>document.currentScript.outerHTML='<button id=\"enable-push-notifications\" class=\"button\" style=\"display: none\" data-enabled=\"~:[~;true~]\">~:*~:[En~;Dis~]able push notifications</button>'</script>"
 	      (find-subscription *current-auth-token*)))
     (when (and new-conversation liu)
       (multiple-value-bind (text to)

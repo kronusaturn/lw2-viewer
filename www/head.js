@@ -254,8 +254,5 @@ if (localStorage.getItem("antikibitzer") == "true") {
 	}
 }
 
-// Allow display of elements that require javascript and hide replacements.
-query("#js-status-style").innerHTML = ".only-without-js { display: none; }";
-
 // Hide elements that require javascript until ready.
-query("head").insertAdjacentHTML("beforeend", "<style id='hide-until-init'>.hide-until-init { visibility: hidden; }</style>");
+query("head").insertAdjacentHTML("beforeend", "<style>.only-without-js { display: none; }</style><style id='hide-until-init'>.hide-until-init { visibility: hidden; }</style>");

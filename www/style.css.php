@@ -42,6 +42,9 @@ html {
 *, *::before, *::after {
 	box-sizing: inherit;
 }
+script {
+	display: none !important;
+}
 
 /*=------=*/
 /*= Body =*/
