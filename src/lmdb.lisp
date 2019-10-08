@@ -5,7 +5,7 @@
    #:define-cache-database #:with-cache-mutex #:with-cache-transaction #:with-cache-readonly-transaction #:with-db #:lmdb-put-string #:cache-put #:cache-get #:cache-del
    #:count-database-entries #:truncate-database
    #:call-with-cursor #:cursor-get
-   #:simple-cacheable #:define-lmdb-memoized)
+   #:simple-cacheable #:define-lmdb-memoized #:*memoized-output-stream*)
   (:unintern #:lmdb-clear-db #:*db-mutex* #:*cache-environment-databases-list*))
 
 (in-package #:lw2.lmdb) 
@@ -240,6 +240,15 @@
 	     (fdefinition (quote ,get)) (,(if catch-errors 'wrap-handler 'identity)
 					  (make-simple-get ,cache-db (fdefinition (quote ,cache)) (fdefinition (quote ,get-real)) ,get-wrapper)))))) 
 
+(defvar *memoized-output-stream*)
+
+(defun write-memoized-data (array size)
+  (let ((out-stream *memoized-output-stream*))
+    (loop for i from 0 to (1- size)
+       do (write-byte (cffi:mem-aref array :unsigned-char i)
+		      out-stream)))
+  t)
+
 (defun make-lmdb-memoized-wrapper (db-name fn return-type)
   (lambda (&rest args)
     (let* ((hash (hash-printable-object args))
@@ -249,7 +258,10 @@
           (let* ((new-value (apply fn args))
                  (octets-value (string-to-octets new-value :external-format :utf-8)))
             (with-db (db db-name) (lmdb:put db hash octets-value))
-            (ecase return-type (:string new-value) (:byte-vector octets-value)))))))
+            (case return-type
+	      (:string new-value)
+	      (:byte-vector octets-value)
+	      ('write-memoized-data (write-sequence octets-value *memoized-output-stream*))))))))
 
 (defmacro define-lmdb-memoized (name class-name (&key sources) lambda &body body)
   (let ((db-name (concatenate 'string (string-downcase (symbol-name name)) "-memo"))
@@ -268,8 +280,7 @@
                                               (lmdb:drop-database db :delete 0)
                                               (lmdb:put db ,version-octets ,now-hash))))))
                              (declaim (ftype (function * string) ,name)
-                                      (ftype (function * (vector (unsigned-byte 8))) ,alt-name))
+                                      (ftype (function * (values &optional t)) ,alt-name))
                              (let ((real-fn (lambda ,lambda ,@body)))
                                (setf (fdefinition (quote ,name)) (make-lmdb-memoized-wrapper ,db-name real-fn :string)
-                                     (fdefinition (quote ,alt-name)) (make-lmdb-memoized-wrapper ,db-name real-fn :byte-vector)))))))
-
+                                     (fdefinition (quote ,alt-name)) (make-lmdb-memoized-wrapper ,db-name real-fn 'write-memoized-data)))))))

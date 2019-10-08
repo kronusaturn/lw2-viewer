@@ -84,8 +84,9 @@
 								  html-body)))))>
 		(with-html-stream-output
 		    (let ((*link-hook* (lambda (link)
-					 (add-backlink link post-id comment-id))))
-		      (write-sequence (clean-html* html-body) out-stream)))
+					 (add-backlink link post-id comment-id)))
+			  (lw2.lmdb:*memoized-output-stream* out-stream))
+		      (clean-html* html-body)))
 	      </div>
 	      (backlinks-to-html (get-backlinks post-id comment-id) (format nil "~A-~A" post-id comment-id))
 	    </div>))))

@@ -174,7 +174,7 @@
 	   (html (regex-replace-body ((load-time-value (format nil "~A-(\\d+)-" *markdown-replace-string*))
 				      (markdown-to-html markdown))
 		   (aref replacements (parse-integer (reg 0))))))
-	(write-sequence (clean-html* html) stream)))))
+	(let ((*memoized-output-stream* stream)) (clean-html* html))))))
 
 (defun arbital-meta-block (page-data all-data type)
   (let* ((creator-id (cdr (assoc :page-creator-id page-data)))

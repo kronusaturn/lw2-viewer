@@ -113,7 +113,7 @@
 		pretty-time
 		(encode-entities (cdr (assoc :--id conversation)))
 		(encode-entities (cdr (assoc :title conversation)))))
-      (labels ((ws (html-body) (write-sequence (clean-html* html-body) out-stream)))
+      (labels ((ws (html-body) (let ((*memoized-output-stream* out-stream)) (clean-html* html-body))))
 	(cond
 	  (contents (ws (cdr (assoc :html contents))))
 	  (html-body (ws html-body))
@@ -148,7 +148,7 @@
 		     <div class="sequence-subtitle">(clean-text-to-html subtitle)</div>)
 		   (with-html-stream-output
 		       (when html-body
-			 (write-sequence (clean-html* html-body) *html-output*)))
+			 (let ((*memoized-output-stream* *html-output*)) (clean-html* html-body))))
 		 </div>)))
 	   (chapter-to-html (chapter)
 	     (alist-bind ((title (or string null))

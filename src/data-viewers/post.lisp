@@ -87,8 +87,9 @@
         (if url <p><a class="link-post-link" href=(convert-any-link (string-trim " " url))>Link post</a></p>)
 	(with-html-stream-output
 	    (let ((*link-hook* (lambda (link)
-				 (add-backlink link post-id))))
-	      (write-sequence (clean-html* (or html-body "") :with-toc t :post-id post-id) *html-output*)))
+				 (add-backlink link post-id)))
+		  (lw2.lmdb:*memoized-output-stream* *html-output*))
+	      (clean-html* (or html-body "") :with-toc t :post-id post-id) *html-output*))
       </div>
       (backlinks-to-html (get-backlinks post-id) post-id)
       (with-html-stream-output #|(post-meta-to-html post :body nil) TODO: don't use js to insert bottom-post-meta|#)
