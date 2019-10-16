@@ -1,6 +1,7 @@
 (uiop:define-package #:lw2.backlinks
   (:use #:cl #:alexandria #:split-sequence
-	#:lw2.html-reader #:lw2.lmdb #:lw2.backend-modules #:lw2.backend #:lw2.sites #:lw2.links #:lw2.context #:lw2.clean-html #:lw2.conditions #:lw2.interface-utils)
+	#:lw2.html-reader #:lw2.lmdb #:lw2.backend-modules #:lw2.backend #:lw2.sites #:lw2.links #:lw2.context #:lw2.clean-html #:lw2.conditions #:lw2.utils #:lw2.interface-utils)
+  (:import-from #:collectors #:with-collector)
   (:export #:add-backlink #:get-backlinks #:backlinks-to-html))
 
 (in-package #:lw2.backlinks)
@@ -8,7 +9,8 @@
 (named-readtables:in-readtable html-reader)
 
 (define-cache-database 'backend-backlinks
-    (list "backlinks" :flags liblmdb:+dupsort+))
+  (list "backlinks" :flags liblmdb:+dupsort+)
+  "backlinks-cache")
 
 (define-backend-function add-backlink (link post-id &optional comment-id)
   (backend-backlinks
@@ -27,7 +29,7 @@
    (declare (ignore link post-id comment-id))
    nil))
 
-(define-backend-function get-backlinks (post-id &optional comment-id)
+(define-backend-function get-backlink-pointers (post-id &optional comment-id)
   (backend-backlinks
    (call-with-cursor "backlinks"
 		     (lambda (db cursor)
@@ -41,6 +43,52 @@
    (declare (ignore post-id comment-id))
    nil))
 
+(define-backend-function process-backlink (current-post-id current-comment-id source-site-host source-post-id &optional source-comment-id)
+  (backend-backlinks
+   (let* ((source-db (if source-comment-id "post-comments-json-meta" "post-body-json-meta"))
+	  (metadata (if-let (m-str (cache-get source-db source-post-id)) (read-from-string m-str)))
+	  (cache-key (format nil "~@{~S~^ ~}" current-post-id current-comment-id source-site-host source-post-id source-comment-id))
+	  (cached-data (if-let (m-str (cache-get "backlinks-cache" cache-key)) (read-from-string m-str)))
+	  (last-modified (cdr (assoc :last-modified metadata)))
+	  (if-modified-since (cdr (assoc :if-modified-since cached-data))))
+     (if (and last-modified if-modified-since (= last-modified if-modified-since))
+	 cached-data
+	 (log-and-ignore-errors
+	  (handler-case
+	      (with-site-context ((find-site source-site-host))
+		(let* ((source-post (get-post-body source-post-id :revalidate nil))
+		       (source-comment (when source-comment-id
+					 (find-if (lambda (c) (string= source-comment-id (cdr (assoc :--id c))))
+						  (get-post-comments source-post-id :revalidate nil))))
+		       (result
+			(alist :if-modified-since last-modified
+			       :site-host source-site-host
+			       :link (generate-post-link source-post source-comment-id t)
+			       :post-title (cdr (assoc :title source-post))
+			       :post-user-id (cdr (assoc :user-id source-post))
+			       :comment-user-id (cdr (assoc :user-id source-comment))
+			       :posted-at (cdr (assoc :posted-at (or source-comment source-post)))
+			       :score (cdr (assoc :base-score (or source-comment source-post))))))
+		  (cache-put "backlinks-cache" cache-key (prin1-to-string result))
+		  result))
+	    (lw2-client-error ()
+	      (with-cache-transaction
+		(cache-del "backlinks-cache" cache-key)
+		(cache-del "backlinks"
+			   (format nil "~A~@[ ~A~]" current-post-id current-comment-id)
+			   (format nil "~A ~A~@[ ~A~]" source-site-host source-post-id source-comment-id)))
+	      nil)))))))
+
+(define-backend-function get-backlinks (post-id &optional comment-id)
+  (backend-backlinks
+   (loop
+      for bp in (get-backlink-pointers post-id comment-id)
+      for backlink-data = (apply 'process-backlink post-id comment-id bp)
+      when backlink-data collect backlink-data))
+  (backend-base
+   (declare (ignore post-id comment-id))
+   nil))
+
 (defun backlinks-to-html (backlinks id)
   (when backlinks
     <div class="backlinks">
@@ -48,48 +96,28 @@
       <label for=("expand-~A" id)>What links here?</label>
       <ul>
       (let ((original-site *current-site*))
-	(loop for (site-host post comment)
-	   in (sort
-	       (mapcar (lambda (bl)
-			 (destructuring-bind (&optional site-host post-id comment-id) bl
-			   (or
-			    (log-and-ignore-errors
-			     (when site-host
-			       (with-site-context ((find-site site-host))
-				 (list site-host
-				       (get-post-body post-id :revalidate nil)
-				       (when comment-id
-					 (find-if (lambda (c) (string= comment-id (cdr (assoc :--id c))))
-						  (get-post-comments post-id)))))))
-			    (list nil nil nil))))
-		       backlinks)
-	       (lambda (x y) (> (or x 0) (or y 0)))
-	       :key (lambda (bl)
-		      (destructuring-bind (&optional site-host post comment) bl
-			(declare (ignore site-host))
-			(cdr (assoc :base-score (or comment post))))))
+	(loop for backlink-alist in (sort backlinks
+					  (lambda (x y) (> (or x 0) (or y 0)))
+					  :key (lambda (bl) (cdr (assoc :score bl))))
 	   do
 	     (log-and-ignore-errors
-	      (when site-host
+	      (alist-bind (site-host link post-title post-user-id comment-user-id posted-at score) backlink-alist
 		(with-site-context ((find-site site-host))
 		  <li>
-		    <a href=(generate-post-link post (cdr (assoc :--id comment)) t)>
+		    <a href=link>
 		      (with-html-stream-output
-			  (when comment
-			    (let ((user-id (cdr (assoc :user-id comment))))
-			      <span class="inline-author" data-userid=user-id>(get-username user-id)</span>)
+			  (when comment-user-id
+			    <span class="inline-author" data-userid=comment-user-id>(get-username comment-user-id)</span>
 			    (format *html-output* "'s comment on ")))
-		      (safe (clean-text-to-html (cdr (assoc :title post))))
+		      (safe (clean-text-to-html post-title))
 		      (" by ")
-		      (with-html-stream-output
-			  (let ((user-id (cdr (assoc :user-id post))))
-			    <span class="inline-author" data-userid=user-id>(get-username user-id)</span>))
+		      <span class="inline-author" data-userid=post-user-id>(get-username post-user-id)</span>
 		      (" (")
 		      (when (not (eq *current-site* original-site))
 			(format *html-output* "~A; " (main-site-title *current-site*)))
-		      (multiple-value-bind (pretty-time js-time) (pretty-time (cdr (assoc :posted-at (or comment post))))
+		      (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
 			<span class="date" data-js-date=js-time>(progn pretty-time)</span>)
-		      ("; ~A point~:*~P)" (cdr (assoc :base-score (or comment post))))
+		      ("; ~A point~:*~P)" score)
 		    </a>
 		  </li>)))))
       </ul>
