@@ -629,10 +629,16 @@
 			 (t
 			  (move-children-out-of-node node)))))
 		    ((tag-is node "ol")
+		     (when-let (old-style (plump:attribute node "style"))
+		       (setf (plump:attribute node "style")
+			     (ppcre:regex-replace-all
+			      (load-time-value (ppcre:create-scanner "list-style-type\\s*:\\s*decimal\\s*;?" :single-line-mode t :case-insensitive-mode t))
+			      old-style
+			      "")))
 		     (when-let (start-string (plump:attribute node "start"))
-			       (when-let (start (ignore-errors (parse-integer start-string)))
-					 (plump:remove-attribute node "start")
-					 (add-element-style node "counter-reset" (format nil "ol ~A" (- start 1))))))
+		       (when-let (start (ignore-errors (parse-integer start-string)))
+			 (plump:remove-attribute node "start")
+			 (add-element-style node "counter-reset" (format nil "ol ~A" (- start 1))))))
 		    ((tag-is node "li")
 		     (when (let ((c (plump:first-child node))) (and c (if (plump:text-node-p c) (not (string-is-whitespace (plump:text c))) (not (tag-is c "p" "ul" "ol")))))
 		       (wrap-children node "p")))
