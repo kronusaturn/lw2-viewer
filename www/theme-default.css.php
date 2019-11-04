@@ -2225,11 +2225,11 @@ EOT;
 
 		h1.listing + .post-meta .karma-value {
 			bottom: 28px;
-			right: 0;
+			right: 56px;
 		}
 		h1.listing + .post-meta .comment-count {
 			bottom: 28px;
-			right: 56px;
+			right: 0;
 		}
 		h1.listing + .post-meta .read-time {
 			right: 56px;
