@@ -71,11 +71,11 @@ body.no-scroll {
 /*= Immediate children of body =*/
 /*=----------------------------=*/
 
-body > * {
+/*body > * {
 	width: calc(100% - 300px);
-	min-width: 900px;
+	//min-width: 900px;
 	max-width: 900px;
-}
+}*/
 #content {
 	margin: 0 auto;
 	padding: 0 30px;
