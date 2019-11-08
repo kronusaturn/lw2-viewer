@@ -10,6 +10,7 @@
    (user-id string)
    (url (or null string))
    (feed-link (or null string) :backend-type backend-feed-crossposts)
+   (canonical-source (or null string) :backend-type backend-feed-crossposts)
    (posted-at string)
    (base-score fixnum)
    (af-base-score (or null fixnum))

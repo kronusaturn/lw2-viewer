@@ -1013,6 +1013,9 @@ signaled condition to OUT-STREAM."
 	       (serious-condition (c) (values nil "Error" c))
 	       (:no-error (post) (values post (cdr (assoc :title post)) nil)))
 	   (labels ((extra-head ()
+		      (when-let (canonical-source (and (not comment-id)
+						       (cdr (assoc :canonical-source post))))
+			<link rel="canonical" href=canonical-source>)
 		      <script>postId=(with-html-stream-output (json:encode-json post-id *html-output*))</script>
 		      <script>alignmentForumPost=(if (cdr (assoc :af post)) "true" "false")</script>))
 	     (if comment-id
