@@ -1,6 +1,6 @@
 (uiop:define-package #:lw2.clean-html
   (:use #:cl #:alexandria #:iterate #:split-sequence #:lw2.lmdb #:lw2.links #:lw2.utils #:lw2.context #:lw2.sites #:lw2.conditions)
-  (:export #:*link-hook* #:url-scanner #:clean-text #:clean-text-to-html #:clean-html #:clean-html*)
+  (:export #:*link-hook* #:url-scanner #:clean-text #:clean-text-to-html #:clean-html #:clean-html* #:extract-excerpt #:extract-excerpt*)
   (:unintern #:*text-clean-regexps* #:*html-clean-regexps*))
 
 (in-package #:lw2.clean-html)
@@ -246,6 +246,28 @@
                       offset-list (cdr offset-list))))
             (lambda (node) (declare (ignore node))))))))
   root)
+
+(define-lmdb-memoized extract-excerpt 'lw2.backend-modules:backend-lmdb-cache
+  (:sources ("src/clean-html.lisp")) (in-html)
+  (let ((root (plump:parse (string-trim '(#\Space #\Newline #\Tab #\Return #\Linefeed #\Page) in-html)))
+	(chars 0)
+	(need-space nil))
+    (with-output-to-string (out-stream)
+      (block nil
+	(plump:traverse
+	 root
+	 (lambda (node)
+	   (when (or (> (length (plump:children node)) 1)
+		     (plump:text-node-p (plump:first-child node)))
+	     (let ((text (plump:text node)))
+	       (when need-space
+		 (write-char #\Space out-stream))
+	       (write-string text out-stream)
+	       (setf chars (+ chars (length text))
+		     need-space t)
+	       (when (> chars 480)
+		 (return nil)))))
+	 :test (lambda (node) (tag-is node "p")))))))
 
 (define-lmdb-memoized clean-html 'lw2.backend-modules:backend-lmdb-cache
   (:sources ("src/clean-html.lisp" "src/links.lisp" "text-clean-regexps.js" "html-clean-regexps.js")) (in-html &key with-toc post-id)
