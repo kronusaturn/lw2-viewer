@@ -86,8 +86,8 @@
       <div class="body-text post-body">
         (if url <p><a class="link-post-link" href=(convert-any-link (string-trim " " url))>Link post</a></p>)
 	(with-html-stream-output
-	    (let ((*link-hook* (lambda (link)
-				 (add-backlink link post-id)))
+	  (let ((*before-clean-hook* (lambda () (clear-backlinks post-id)))
+		(*link-hook* (lambda (link) (add-backlink link post-id)))
 		  (lw2.lmdb:*memoized-output-stream* *html-output*))
 	      (clean-html* (or html-body "") :with-toc t :post-id post-id) *html-output*))
       </div>

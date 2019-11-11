@@ -42,7 +42,7 @@
 			     (:file "backlinks" :depends-on ("html-reader" "lmdb" "backend" "backend-modules" "sites" "links" "context" "clean-html" "conditions" "utils" "interface-utils"))
 			     (:file "web-push" :depends-on ("utils"))
 			     (:file "push-notifications" :depends-on ("backend"))
-			     (:file "admin" :depends-on ("lmdb" "clean-html" "backend"))
+			     (:file "admin" :depends-on ("lmdb" "clean-html" "backend" "backlinks"))
 			     (:module "data-viewers"
 				      :components ((:file "post")
 						   (:file "comment"))

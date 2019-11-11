@@ -82,8 +82,9 @@
 							     (encode-entities
 							      (or (cache-get "comment-markdown-source" comment-id)
 								  html-body)))))>
-		(with-html-stream-output
-		    (let ((*link-hook* (lambda (link)
+		  (with-html-stream-output
+		    (let ((*before-clean-hook* (lambda () (clear-backlinks post-id comment-id)))
+			  (*link-hook* (lambda (link)
 					 (add-backlink link post-id comment-id)))
 			  (lw2.lmdb:*memoized-output-stream* out-stream))
 		      (clean-html* html-body)))

@@ -2,7 +2,7 @@
   (:use #:cl #:alexandria #:split-sequence
 	#:lw2.html-reader #:lw2.lmdb #:lw2.backend-modules #:lw2.backend #:lw2.sites #:lw2.links #:lw2.context #:lw2.clean-html #:lw2.conditions #:lw2.utils #:lw2.interface-utils)
   (:import-from #:collectors #:with-collector)
-  (:export #:add-backlink #:get-backlinks #:backlinks-to-html))
+  (:export #:clear-backlinks #:add-backlink #:get-backlinks #:backlinks-to-html))
 
 (in-package #:lw2.backlinks)
 
@@ -10,7 +10,12 @@
 
 (define-cache-database 'backend-backlinks
   (list "backlinks" :flags liblmdb:+dupsort+)
+  (list "frontlinks" :flags liblmdb:+dupsort+)
   "backlinks-cache")
+
+(define-backend-function clear-backlinks (post-id &optional comment-id)
+  (backend-backlinks
+   (cache-del "frontlinks" (format nil "~A~@[ ~A~]" post-id comment-id))))
 
 (define-backend-function add-backlink (link post-id &optional comment-id)
   (backend-backlinks
@@ -21,6 +26,9 @@
        (multiple-value-bind (link-post-id link-comment-id) (match-lw2-link link)
 	 (when link-post-id
 	   (ignore-errors
+	     (cache-put "frontlinks"
+			(format nil "~A~@[ ~A~]" post-id comment-id)
+			(format nil "~A ~A~@[ ~A~]" link-host link-post-id link-comment-id))
 	     (with-site-context (link-site)
 	       (cache-put "backlinks"
 			  (format nil "~A~@[ ~A~]" link-post-id link-comment-id)
@@ -28,6 +36,15 @@
   (backend-base
    (declare (ignore link post-id comment-id))
    nil))
+
+(define-backend-function link-exists-p (source-post-id source-comment-id target-host target-post-id target-comment-id)
+  (backend-backlinks
+   (call-with-cursor "frontlinks"
+		     (lambda (db cursor)
+		       (declare (ignore db))
+		       (to-boolean (cursor-get cursor :get-both
+					       (format nil "~A~@[ ~A~]" source-post-id source-comment-id)
+					       (format nil "~A ~A~@[ ~A~]" target-host target-post-id target-comment-id)))))))
 
 (define-backend-function get-backlink-pointers (post-id &optional comment-id)
   (backend-backlinks
@@ -54,30 +71,35 @@
      (if (and last-modified if-modified-since (= last-modified if-modified-since))
 	 cached-data
 	 (log-and-ignore-errors
-	  (handler-case
-	      (with-site-context ((find-site source-site-host))
-		(let* ((source-post (get-post-body source-post-id :revalidate nil))
-		       (source-comment (when source-comment-id
-					 (find-if (lambda (c) (string= source-comment-id (cdr (assoc :--id c))))
-						  (get-post-comments source-post-id :revalidate nil))))
-		       (result
-			(alist :if-modified-since last-modified
-			       :site-host source-site-host
-			       :link (generate-post-link source-post source-comment-id t)
-			       :post-title (cdr (assoc :title source-post))
-			       :post-user-id (cdr (assoc :user-id source-post))
-			       :comment-user-id (cdr (assoc :user-id source-comment))
-			       :posted-at (cdr (assoc :posted-at (or source-comment source-post)))
-			       :score (cdr (assoc :base-score (or source-comment source-post))))))
-		  (cache-put "backlinks-cache" cache-key (prin1-to-string result))
-		  result))
-	    (lw2-client-error ()
-	      (with-cache-transaction
-		(cache-del "backlinks-cache" cache-key)
-		(cache-del "backlinks"
-			   (format nil "~A~@[ ~A~]" current-post-id current-comment-id)
-			   (format nil "~A ~A~@[ ~A~]" source-site-host source-post-id source-comment-id)))
-	      nil)))))))
+	  (let ((current-site-host (site-host *current-site*)))
+	    (labels ((cleanup-stale-backlink ()
+		       (with-cache-transaction
+			   (cache-del "backlinks-cache" cache-key)
+			 (cache-del "backlinks"
+				    (format nil "~A~@[ ~A~]" current-post-id current-comment-id)
+				    (format nil "~A ~A~@[ ~A~]" source-site-host source-post-id source-comment-id)))
+		       nil))
+	      (handler-case
+		  (with-site-context ((find-site source-site-host))
+		    (if (not (link-exists-p source-post-id source-comment-id current-site-host current-post-id current-comment-id))
+			(cleanup-stale-backlink)
+			(let* ((source-post (get-post-body source-post-id :revalidate nil))
+			       (source-comment (when source-comment-id
+						 (find-if (lambda (c) (string= source-comment-id (cdr (assoc :--id c))))
+							  (get-post-comments source-post-id :revalidate nil))))
+			       (result
+				(alist :if-modified-since last-modified
+				       :site-host source-site-host
+				       :link (generate-post-link source-post source-comment-id t)
+				       :post-title (cdr (assoc :title source-post))
+				       :post-user-id (cdr (assoc :user-id source-post))
+				       :comment-user-id (cdr (assoc :user-id source-comment))
+				       :posted-at (cdr (assoc :posted-at (or source-comment source-post)))
+				       :score (cdr (assoc :base-score (or source-comment source-post))))))
+			  (cache-put "backlinks-cache" cache-key (prin1-to-string result))
+			  result)))
+		(lw2-client-error ()
+		  (cleanup-stale-backlink))))))))))
 
 (define-backend-function get-backlinks (post-id &optional comment-id)
   (backend-backlinks

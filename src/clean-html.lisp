@@ -1,6 +1,6 @@
 (uiop:define-package #:lw2.clean-html
   (:use #:cl #:alexandria #:iterate #:split-sequence #:lw2.lmdb #:lw2.links #:lw2.utils #:lw2.context #:lw2.sites #:lw2.conditions)
-  (:export #:*link-hook* #:url-scanner #:clean-text #:clean-text-to-html #:clean-html #:clean-html* #:extract-excerpt #:extract-excerpt*)
+  (:export #:*before-clean-hook* #:*link-hook* #:url-scanner #:clean-text #:clean-text-to-html #:clean-html #:clean-html* #:extract-excerpt #:extract-excerpt*)
   (:unintern #:*text-clean-regexps* #:*html-clean-regexps*))
 
 (in-package #:lw2.clean-html)
@@ -10,6 +10,7 @@
 (cl-typesetting-hyphen:load-language :en-us)
 (setf cl-typesetting::*default-hyphen-language* :en-us)
 
+(defvar *before-clean-hook* nil)
 (defvar *link-hook* nil)
 
 (defun file-get-contents (filename)
@@ -478,6 +479,8 @@
 	      (style-hash (make-hash-table :test 'equal))
 	      (used-anchors (make-hash-table :test 'equal)))
           (declare (type fixnum section-count min-header-level))
+	  (when *before-clean-hook*
+	    (funcall *before-clean-hook*))
           (let ((wayward-li-container nil))
             (plump:traverse
 	     root
