@@ -42,9 +42,10 @@
    (call-with-cursor "frontlinks"
 		     (lambda (db cursor)
 		       (declare (ignore db))
-		       (to-boolean (cursor-get cursor :get-both
-					       (format nil "~A~@[ ~A~]" source-post-id source-comment-id)
-					       (format nil "~A ~A~@[ ~A~]" target-host target-post-id target-comment-id)))))))
+		       (cursor-get cursor :get-both
+				   (format nil "~A~@[ ~A~]" source-post-id source-comment-id)
+				   (format nil "~A ~A~@[ ~A~]" target-host target-post-id target-comment-id)
+				   'existence)))))
 
 (define-backend-function get-backlink-pointers (post-id &optional comment-id)
   (backend-backlinks
