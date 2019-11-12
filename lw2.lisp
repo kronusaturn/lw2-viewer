@@ -573,7 +573,8 @@ signaled condition to OUT-STREAM."
     (when title
       <meta property="og:title" content=title>)
     (when social-description
-      <meta property="og:description" content=social-description>)
+      <meta property="og:description" content=social-description>
+      <meta property="og:type" content="article">)
     (format out-stream "~{~A~}"
 	    (site-head-elements *current-site*))
     (unless (logged-in-userid)
