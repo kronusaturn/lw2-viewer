@@ -13,7 +13,7 @@
 			     (:file "conditions" :depends-on ("html-reader"))
 			     (:file "schema-type" :depends-on ("utils" "backend-modules"))
 			     (:file "schema-types" :depends-on ("schema-type"))
-			     (:file "dnsbl")
+			     (:file "dnsbl" :depends-on ("../config"))
                              (:file "backend-modules")
                              (:module "backends"
                               :components ((:file "accordius"))
