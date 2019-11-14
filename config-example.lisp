@@ -28,3 +28,6 @@
 ; On platforms that don't support sparse files, you may want to reduce this
 ; to conserve disk space. Default is 2^34 or 16GB.
 (defparameter *lmdb-mapsize* (expt 2 34))
+
+; List of DNSBLs to check before allowing users to log in.
+;(defparameter *dnsbl-list* (list "dnsbl.example.com"))
