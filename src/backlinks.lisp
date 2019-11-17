@@ -13,9 +13,14 @@
   (list "frontlinks" :flags liblmdb:+dupsort+)
   "backlinks-cache")
 
+(declaim (ftype (function (string (or null string) &optional string) string) item-reference-string))
+
+(defun item-reference-string (post-id comment-id &optional host)
+  (format nil "~@[~A ~]~A~@[ ~A~]" host post-id comment-id))
+
 (define-backend-function clear-backlinks (post-id &optional comment-id)
   (backend-backlinks
-   (cache-del "frontlinks" (format nil "~A~@[ ~A~]" post-id comment-id))))
+   (cache-del "frontlinks" (item-reference-string post-id comment-id))))
 
 (define-backend-function add-backlink (link post-id &optional comment-id)
   (backend-backlinks
@@ -27,12 +32,12 @@
 	 (when link-post-id
 	   (ignore-errors
 	     (cache-put "frontlinks"
-			(format nil "~A~@[ ~A~]" post-id comment-id)
-			(format nil "~A ~A~@[ ~A~]" link-host link-post-id link-comment-id))
+			(item-reference-string post-id comment-id)
+			(item-reference-string link-post-id link-comment-id link-host))
 	     (with-site-context (link-site)
 	       (cache-put "backlinks"
-			  (format nil "~A~@[ ~A~]" link-post-id link-comment-id)
-			  (format nil "~A ~A~@[ ~A~]" current-host post-id comment-id)))))))))
+			  (item-reference-string link-post-id link-comment-id)
+			  (item-reference-string post-id comment-id current-host)))))))))
   (backend-base
    (declare (ignore link post-id comment-id))
    nil))
@@ -43,8 +48,8 @@
 		     (lambda (db cursor)
 		       (declare (ignore db))
 		       (cursor-get cursor :get-both
-				   (format nil "~A~@[ ~A~]" source-post-id source-comment-id)
-				   (format nil "~A ~A~@[ ~A~]" target-host target-post-id target-comment-id)
+				   (item-reference-string source-post-id source-comment-id)
+				   (item-reference-string target-post-id target-comment-id target-host)
 				   'existence)))))
 
 (define-backend-function get-backlink-pointers (post-id &optional comment-id)
@@ -52,7 +57,7 @@
    (call-with-cursor "backlinks"
 		     (lambda (db cursor)
 		       (declare (ignore db))
-		       (loop for backlink-data = (cursor-get cursor :set (format nil "~A~@[ ~A~]" post-id comment-id))
+		       (loop for backlink-data = (cursor-get cursor :set (item-reference-string post-id comment-id))
 			  then (cursor-get cursor :next-dup)
 			  while backlink-data
 			  collect (split-sequence #\Space backlink-data)))
@@ -77,8 +82,8 @@
 		       (with-cache-transaction
 			   (cache-del "backlinks-cache" cache-key)
 			 (cache-del "backlinks"
-				    (format nil "~A~@[ ~A~]" current-post-id current-comment-id)
-				    (format nil "~A ~A~@[ ~A~]" source-site-host source-post-id source-comment-id)))
+				    (item-reference-string current-post-id current-comment-id)
+				    (item-reference-string source-post-id source-comment-id source-site-host)))
 		       nil))
 	      (handler-case
 		  (with-site-context ((find-site source-site-host))
