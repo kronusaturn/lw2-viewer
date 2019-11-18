@@ -49,6 +49,10 @@ body.no-scroll {
 /*= Immediate children of body =*/
 /*=----------------------------=*/
 
+body > * {
+	max-width: 900px;
+}
+
 #content {
 	margin: 0 auto;
 	padding: 0 30px;
