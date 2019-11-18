@@ -1568,7 +1568,7 @@ signaled condition to OUT-STREAM."
 				      :param-name "view"
 				      :extra-class "sequences-view")))))
 
-(define-page view-sequence (:regex "^/s(?:equences)?/([^/]+)" sequence-id) ()
+(define-page view-sequence (:regex "^/s(?:equences)?/([^/]+)/?$" sequence-id) ()
   (let ((sequence (get-sequence sequence-id)))
     (alist-bind ((title string))
 		sequence
