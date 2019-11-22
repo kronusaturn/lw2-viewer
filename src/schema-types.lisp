@@ -62,4 +62,5 @@
    (deleted-public boolean)
    (answer boolean :backend-type backend-q-and-a)
    (parent-answer-id (or null string) :backend-type backend-q-and-a)
+   (nominated-for-review t :backend-type backend-lw2)
    (html-body string)))

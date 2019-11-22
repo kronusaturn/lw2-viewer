@@ -406,6 +406,7 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 		(withParentAnswer ? "<input type='hidden' name='parent-answer-id' value='" + withParentAnswer + "'>" : "") +
 		(editCommentId ? "<input type='hidden' name='edit-comment-id' value='" + editCommentId + "'>" : "") +
 		(answer ? "<input type='hidden' name='answer' value='t'>" : "") +
+		(commentControls.parentElement.id == "nominations" ? "<input type='hidden' name='nomination' value='t'>" : "") +
 		(alignmentForum ? "<input type='hidden' name='af' value='t'>" : "") +
 		"<span class='markdown-reference-link'>You can use <a href='http://commonmark.org/help/' target='_blank'>Markdown</a> here.</span>" + 
 		`<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-help-button">Help</button>` + 
