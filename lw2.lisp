@@ -1066,7 +1066,8 @@ signaled condition to OUT-STREAM."
 			      ;; Temporary hack to support nominations
 			      (let ((real-comments (get-post-comments post-id))
 				    (nomination-p (lambda (comment)
-						    (cdr (assoc :nominated-for-review comment)))))
+						    (or (cdr (assoc :nominated-for-review comment))
+							(cdr (assoc :nominated-for-review (cdr (assoc :top-level-comment comment))))))))
 				(loop for (name fn) in (list-cond ((and (typep *current-backend* 'backend-lw2)
 									(let ((ts (local-time:parse-timestring (cdr (assoc :posted-at post)))))
 									  (and (local-time:timestamp> ts (load-time-value (local-time:parse-timestring "2018-01-01")))
