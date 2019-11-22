@@ -921,17 +921,22 @@ signaled condition to OUT-STREAM."
 						    (:hot :description "Sort by time-weighted score")
 						    (:active :description "Sort by date posted or last comment")))
 				    (pref :default-sort) (param-name "sort") (html-class "sort"))
-  (:http-args '((sort :real-name param-name :member (mapcar (lambda (x) (if (listp x) (first x) x)) sort-options))))
-  (let ((sort-string (if sort (string-downcase sort))))
-    (if sort-string
-	(set-user-pref :default-sort sort-string))
-    (renderer (out-stream)
-      (sublevel-nav-to-html out-stream
-			    sort-options
-			    (user-pref pref)
-			    :param-name param-name
-			    :extra-class html-class))
-    (or sort-string (user-pref pref))))
+  (:http-args '((sort :real-name param-name :member (mapcar (lambda (x) (if (listp x) (first x) x)) sort-options))
+		(sortedby :real-name "sortedBy" :type string)))
+  (if sortedby
+      (progn
+	(renderer (out-stream) (progn out-stream nil)) ;todo: support declarations so we don't need this dirty trick
+	sortedby)
+      (let ((sort-string (if sort (string-downcase sort))))
+	(if sort-string
+	    (set-user-pref :default-sort sort-string))
+	(renderer (out-stream)
+		  (sublevel-nav-to-html out-stream
+					sort-options
+					(user-pref pref)
+					:param-name param-name
+					:extra-class html-class))
+	(or sort-string (user-pref pref)))))
 
 (define-component view-index ()
   (:http-args '((view :member '(:all :new :frontpage :featured :meta :community :alignment-forum :questions :nominations) :default :frontpage)
@@ -990,6 +995,9 @@ signaled condition to OUT-STREAM."
 
 (define-page view-feed "/feed" ()
   (redirect "/?format=rss" :type :permanent))
+
+(define-page view-allposts "/allPosts" ()
+  (redirect (format nil "/index~@[?~A~]" (hunchentoot:query-string*)) :type :see-other))
 
 (define-page view-post-lw2-link (:function #'match-lw2-link post-id comment-id * comment-link-type) (need-auth chrono)
   (request-method
