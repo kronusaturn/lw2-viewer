@@ -439,6 +439,7 @@
 			    ("community" (alist :view "new" :meta t :all t))
 			    ("alignment-forum" (alist :view "new" :af t))
 			    ("questions" (alist :view "new" :question t))
+			    ("nominations" (alist :view "nominations2018"))
 			    (t (values
 				(alist :filter "frontpage" :sorted-by sort-key)
 				(if (not (or (string/= sort "new") (/= limit 20) offset before after)) "new-not-meta"))))

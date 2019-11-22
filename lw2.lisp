@@ -934,7 +934,7 @@ signaled condition to OUT-STREAM."
     (or sort-string (user-pref pref))))
 
 (define-component view-index ()
-  (:http-args '((view :member '(:all :new :frontpage :featured :meta :community :alignment-forum :questions) :default :frontpage)
+  (:http-args '((view :member '(:all :new :frontpage :featured :meta :community :alignment-forum :questions :nominations) :default :frontpage)
 		before after
 		(offset :type fixnum)
 		(limit :type fixnum)))
