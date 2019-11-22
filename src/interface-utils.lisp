@@ -42,10 +42,11 @@
 	     (if (and af-score (/= af-score 0))
 		 (format nil "LW: ~A AF: ~A" base-score af-score)
 		 (pretty-number base-score "point"))))
-    (if as-text
-	(text)
-	<div class="karma" data-post-id=post-id>
-          (button "upvote")
-          <span class="karma-value" title=(votes-to-tooltip vote-count)>(safe (text))</span>
-          (button "downvote")
-        </div>)))
+    (when base-score
+      (if as-text
+	  (text)
+	  <div class="karma" data-post-id=post-id>
+            (button "upvote")
+            <span class="karma-value" title=(votes-to-tooltip vote-count)>(safe (text))</span>
+            (button "downvote")
+          </div>))))
