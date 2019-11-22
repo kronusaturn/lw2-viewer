@@ -463,7 +463,7 @@ Element.prototype.updateCommentControlButton = function() {
 Element.prototype.constructCommentControls = function() {
 	GWLog("constructCommentControls");
 	let commentControls = this;
-	let commentType = (commentControls.parentElement.id == "answers" ? "answer" : "comment");
+	let commentType = commentControls.parentElement.id.replace(/s$/, "");
 	commentControls.innerHTML = "";
 	let replyButton = document.createElement("button");
 	if (commentControls.parentElement.hasClass("comments")) {
