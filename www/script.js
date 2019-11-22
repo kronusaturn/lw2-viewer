@@ -469,7 +469,7 @@ Element.prototype.constructCommentControls = function() {
 	let replyButton = document.createElement("button");
 	if (commentControls.parentElement.hasClass("comments")) {
 		replyButton.className = "new-comment-button action-button";
-		replyButton.innerHTML = "Post new " + commentType;
+		replyButton.innerHTML = (commentType == "nomination" ? "Add nomination" : "Post new " + commentType);
 		replyButton.setAttribute("accesskey", (commentType == "comment" ? "n" : ""));
 		replyButton.setAttribute("title", "Post new " + commentType + (commentType == "comment" ? " [n]" : ""));
 	} else {
