@@ -424,7 +424,7 @@
               (t () (decode-query-result cached-result)))
             (query-and-put))))))
 
-(define-backend-function get-posts-index-query-string (&key view (sort "new") (limit 20) offset before after)
+(define-backend-function get-posts-index-query-string (&key view (sort "new") (limit 21) offset before after)
   (backend-lw2-legacy
    (let ((sort-key (alexandria:switch (sort :test #'string=)
 				      ("new" "new")
@@ -443,7 +443,7 @@
 			    ("nominations" (alist :view "nominations2018"))
 			    (t (values
 				(alist :filter "frontpage" :sorted-by sort-key)
-				(if (not (or (string/= sort "new") (/= limit 20) offset before after)) "new-not-meta"))))
+				(if (not (or (string/= sort "new") (/= limit 21) offset before after)) "new-not-meta"))))
        (let* ((extra-terms
 	       (remove-if (lambda (x) (null (cdr x)))
 			  (alist :before before :after after :limit limit :offset offset)))

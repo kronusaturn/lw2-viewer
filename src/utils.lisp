@@ -34,6 +34,11 @@
 (defun to-boolean (value)
   (and value t))
 
+(defun firstn (list n)
+  (loop for x in list
+	for i from 1 to n
+	collect x))
+
 (defun map-plist (fn plist)
   (loop for (key val . rest) = plist then rest
         while key

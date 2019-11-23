@@ -942,16 +942,16 @@ signaled condition to OUT-STREAM."
   (:http-args '((view :member '(:all :new :frontpage :featured :meta :community :alignment-forum :questions :nominations) :default :frontpage)
 		before after
 		(offset :type fixnum)
-		(limit :type fixnum)))
+		(limit :type fixnum :default (user-pref :items-per-page))))
   (when (eq view :new) (redirect (replace-query-params (hunchentoot:request-uri*) "view" "all" "all" nil) :type :permanent) (return))
   (component-value-bind ((sort-string sort-widget))
     (multiple-value-bind (posts total)
-      (get-posts-index :view (string-downcase view) :before before :after after :offset offset :limit (or limit (user-pref :items-per-page)) :sort sort-string)
+	(get-posts-index :view (string-downcase view) :before before :after after :offset offset :limit (1+ limit) :sort sort-string)
       (let ((page-title (format nil "~@(~A posts~)" view)))
 	(renderer ()
-		  (view-items-index posts
+		  (view-items-index (firstn posts limit)
 				    :section view :title page-title :hide-title (eq view :frontpage)
-				    :pagination (pagination-nav-bars :offset (or offset 0) :total total :with-next (not total))
+				    :pagination (pagination-nav-bars :offset (or offset 0) :total total :with-next (and (not total) (> (length posts) limit)))
 				    :content-class (format nil "index-page ~(~A~)-index-page" view)
 				    :top-nav (lambda (out-stream)
 					       (page-toolbar-to-html out-stream
@@ -1599,11 +1599,6 @@ signaled condition to OUT-STREAM."
 		  :title title
 		  :content-class "sequence-page")
 		 (sequence-to-html sequence)))))
-
-(defun firstn (list n)
-  (loop for x in list
-	for i from 1 to n
-	collect x)) 
 
 (defparameter *earliest-post* (local-time:parse-timestring "2005-01-01")) 
 
