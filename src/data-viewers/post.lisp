@@ -49,8 +49,10 @@
         (when (and (eq context :listing) word-count)
 	  <span class="read-time" title=(safe (pretty-number word-count "word"))>(max 1 (round word-count 300))<span> min read</span></span>)
 	(if page-url <a class="lw2-link" href=(clean-lw-link page-url)>(main-site-abbreviation *current-site*)<span> link</span></a>)
-	(when nomination-count-2018
+	(when (nonzero-number-p nomination-count-2018)
 	  <a href=("~A#nominations" (if (eq context :body) "" (generate-post-link post))) class="nomination-count">(safe (pretty-number nomination-count-2018 "nomination"))</a>)
+	(when (nonzero-number-p review-count-2018)
+	  <a href=("~A#reviews" (if (eq context :body) "" (generate-post-link post))) class="review-count">(safe (pretty-number review-count-2018 "review"))</a>)
         (with-html-stream-output (post-section-to-html post :skip-section skip-section))
         (when (and (eq context :body) tags)
           <div id="tags">

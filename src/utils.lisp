@@ -1,6 +1,7 @@
 (uiop:define-package #:lw2.utils
   (:use #:cl #:alexandria)
-  (:export #:alist #:get-unix-time #:substring #:regex-replace-body #:reg #:match #:to-boolean #:map-plist #:filter-plist #:alist-bind #:list-cond
+  (:export #:alist #:get-unix-time #:substring #:regex-replace-body #:reg #:match
+	   #:to-boolean #:nonzero-number-p #:map-plist #:filter-plist #:alist-bind #:list-cond
 	   #:string-to-existing-keyword #:call-with-safe-json)
   (:recycle #:lw2-viewer))
 
@@ -33,6 +34,11 @@
 (declaim (inline to-boolean))
 (defun to-boolean (value)
   (and value t))
+
+(declaim (inline nonzero-number-p))
+(defun nonzero-number-p (value)
+  (and (typep value 'number)
+       (/= 0 value)))
 
 (defun firstn (list n)
   (loop for x in list

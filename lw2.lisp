@@ -1007,7 +1007,7 @@ signaled condition to OUT-STREAM."
    (:get ()
      (let ((lw2-auth-token *current-auth-token*))
        (labels ((output-comments (out-stream id comments target)
-		  (format out-stream "<div id=\"~A\" class=\"comments\">" id)
+		  (format out-stream "<div id=\"~As\" class=\"comments\">" id)
 		  (with-error-html-block ()
 		    (if target
 			(comment-thread-to-html out-stream
@@ -1019,10 +1019,11 @@ signaled condition to OUT-STREAM."
 								    (let ((*comment-individual-link* nil))
 								      (comment-tree-to-html out-stream (make-comment-parent-hash comments) c-id))))))
 			(if comments
-			    (if chrono
-				(comment-chrono-to-html out-stream comments)
-				(comment-tree-to-html out-stream (make-comment-parent-hash comments)))
-			    <div class="comments-empty-message">("No ~A." id)</div>)))
+			    (progn #|<div class="comments-empty-message">(safe (pretty-number (length comments) id))</div>|#
+				   (if chrono
+				       (comment-chrono-to-html out-stream comments)
+				       (comment-tree-to-html out-stream (make-comment-parent-hash comments))))
+			    <div class="comments-empty-message">("No ~As." id)</div>)))
 		  (format out-stream "</div>")))
 	 (multiple-value-bind (post title condition)
 	     (handler-case (nth-value 0 (get-post-body post-id :auth-token (and need-auth lw2-auth-token)))
@@ -1056,7 +1057,7 @@ signaled condition to OUT-STREAM."
 				      verb-phrase
 				      (generate-post-link post-id)
 				      (clean-text-to-html title :hyphenation nil))
-			      (output-comments out-stream "comments" comments target-comment)))
+			      (output-comments out-stream "comment" comments target-comment)))
 		 (let ((post-sequences (get-post-sequences post-id)))
 		   (emit-page (out-stream :title title
 					  :content-class (format nil "post-page comment-thread-page~{ ~A~}"
@@ -1076,26 +1077,35 @@ signaled condition to OUT-STREAM."
 			      (force-output out-stream)
 			      ;; Temporary hack to support nominations
 			      (let ((real-comments (get-post-comments post-id))
-				    (nomination-p (lambda (comment)
-						    (or (cdr (assoc :nominated-for-review comment))
-							(cdr (assoc :nominated-for-review (cdr (assoc :top-level-comment comment))))))))
-				(loop for (name fn) in (list-cond ((and (typep *current-backend* 'backend-lw2)
-									(let ((ts (local-time:parse-timestring (cdr (assoc :posted-at post)))))
-									  (and (local-time:timestamp> ts (load-time-value (local-time:parse-timestring "2018-01-01")))
-									       (local-time:timestamp< ts (load-time-value (local-time:parse-timestring "2019-01-01"))))))
-								   (list "nominations" (lambda (ign)
-											 (declare (ignore ign))
-											 (remove-if-not nomination-p real-comments))))
-								  ((cdr (assoc :question post))
-								   '("answers" get-post-answers))
-								  (t
-								   (list "comments" (lambda (ign)
-										      (declare (ignore ign))
-										      (remove-if nomination-p real-comments)))))
-				   do (with-error-html-block ()
-					(let* ((comments (funcall fn post-id)))
-					  (output-comments out-stream name comments nil)))))))))))))
-    (:post (text answer nomination af parent-answer-id parent-comment-id edit-comment-id retract-comment-id unretract-comment-id delete-comment-id)
+				    (answers (when (cdr (assoc :question post))
+					       (get-post-answers post-id)))
+				    (nominations-eligible (and (typep *current-backend* 'backend-lw2)
+							       (let ((ts (local-time:parse-timestring (cdr (assoc :posted-at post)))))
+								 (and (local-time:timestamp> ts (load-time-value (local-time:parse-timestring "2018-01-01")))
+								      (local-time:timestamp< ts (load-time-value (local-time:parse-timestring "2019-01-01"))))))))
+				(labels ((top-level-property (comment property)
+					   (or (cdr (assoc property comment))
+					       (cdr (assoc property (cdr (assoc :top-level-comment comment)))))))
+				  (multiple-value-bind (normal-comments nominations reviews)
+				      (loop for comment in real-comments
+					 if (top-level-property comment :nominated-for-review)
+					 collect comment into nominations
+					 else if (top-level-property comment :reviewing-for-review)
+					 collect comment into reviews
+					 else
+					 collect comment into normal-comments
+					 finally (return (values normal-comments nominations reviews)))
+				    (loop for (name comments) in (list-cond (nominations-eligible
+									     (list "nomination" nominations))
+									    (nominations-eligible
+									     (list "review" reviews))
+									    ((cdr (assoc :question post))
+									     (list "answer" answers))
+									    (t
+									     (list "comment" normal-comments)))
+				       do (with-error-html-block ()
+					    (output-comments out-stream name comments nil))))))))))))))
+    (:post (text answer nomination nomination-review af parent-answer-id parent-comment-id edit-comment-id retract-comment-id unretract-comment-id delete-comment-id)
      (let ((lw2-auth-token *current-auth-token*))
        (assert lw2-auth-token)
        (let ((question (cdr (assoc :question (get-post-body post-id :auth-token lw2-auth-token))))
@@ -1109,6 +1119,7 @@ signaled condition to OUT-STREAM."
 			 (parent-comment-id :parent-comment-id parent-comment-id)
 			 (answer :answer t)
 			 (nomination :nominated-for-review "2018")
+			 (nomination-review :reviewing-for-review "2018")
 			 (parent-answer-id :parent-answer-id parent-answer-id)
 			 (af :af t))))
 		   (if edit-comment-id

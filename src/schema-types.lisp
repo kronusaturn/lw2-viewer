@@ -40,6 +40,7 @@
 						    :af :question :vote-count)))
    (vote-count (or null fixnum))
    (nomination-count-2018 (or null fixnum) :backend-type backend-lw2)
+   (review-count-2018 (or null fixnum) :backend-type backend-lw2)
    (tags list :graphql-ignore t)
    (html-body (or null string) :context :body)))
 
@@ -64,5 +65,6 @@
    (answer boolean :backend-type backend-q-and-a)
    (parent-answer-id (or null string) :backend-type backend-q-and-a)
    (nominated-for-review t :backend-type backend-lw2)
-   (top-level-comment list :backend-type backend-lw2 :subfields (:nominated-for-review))
+   (reviewing-for-review t :backend-type backend-lw2)
+   (top-level-comment list :backend-type backend-lw2 :subfields (:nominated-for-review :reviewing-for-review))
    (html-body string)))

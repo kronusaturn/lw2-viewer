@@ -407,6 +407,7 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 		(editCommentId ? "<input type='hidden' name='edit-comment-id' value='" + editCommentId + "'>" : "") +
 		(answer ? "<input type='hidden' name='answer' value='t'>" : "") +
 		(commentControls.parentElement.id == "nominations" ? "<input type='hidden' name='nomination' value='t'>" : "") +
+		(commentControls.parentElement.id == "reviews" ? "<input type='hidden' name='nomination-review' value='t'>" : "") +
 		(alignmentForum ? "<input type='hidden' name='af' value='t'>" : "") +
 		"<span class='markdown-reference-link'>You can use <a href='http://commonmark.org/help/' target='_blank'>Markdown</a> here.</span>" + 
 		`<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-help-button">Help</button>` + 
@@ -464,6 +465,11 @@ Element.prototype.updateCommentControlButton = function() {
 Element.prototype.constructCommentControls = function() {
 	GWLog("constructCommentControls");
 	let commentControls = this;
+
+	if(commentControls.parentElement.id == "nominations") {
+		return; // Too late to add nominations.
+	}
+	
 	let commentType = commentControls.parentElement.id.replace(/s$/, "");
 	commentControls.innerHTML = "";
 	let replyButton = document.createElement("button");
