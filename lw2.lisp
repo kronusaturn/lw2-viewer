@@ -1080,6 +1080,7 @@ signaled condition to OUT-STREAM."
 				    (answers (when (cdr (assoc :question post))
 					       (get-post-answers post-id)))
 				    (nominations-eligible (and (typep *current-backend* 'backend-lw2)
+							       (cdr (assoc :posted-at post))
 							       (let ((ts (local-time:parse-timestring (cdr (assoc :posted-at post)))))
 								 (and (local-time:timestamp> ts (load-time-value (local-time:parse-timestring "2018-01-01")))
 								      (local-time:timestamp< ts (load-time-value (local-time:parse-timestring "2019-01-01"))))))))
