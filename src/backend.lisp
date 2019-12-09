@@ -245,7 +245,9 @@
    (call-with-http-response
     fn
     (graphql-uri *current-backend*)
-    :parameters (acons "query" query nil)
+    :method :post
+    :content-type "application/json"
+    :content (json:encode-json-to-string (acons "query" query nil))
     :cookie-jar *cookie-jar* :additional-headers (if auth-token `(("authorization" . ,auth-token)) nil)
     :want-stream t)))
 
