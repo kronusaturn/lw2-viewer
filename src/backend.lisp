@@ -342,14 +342,13 @@
 (defun ensure-cache-update-thread (query cache-db cache-key)
   (let ((key (format nil "~A-~A" cache-db cache-key))) 
     (labels ((background-fn ()
-			    (handler-case 
-			      (prog1
-				(cache-update cache-db cache-key (run-query query))
-				(remhash key *background-cache-update-threads*))
-			      (serious-condition (c)
-				 (remhash key *background-cache-update-threads*)
-				 (log-condition c)
-				 (sb-thread:return-from-thread c))))) 
+	       (unwind-protect
+		    (multiple-value-bind (value error)
+			(log-and-ignore-errors
+			 (nth-value 0
+				    (cache-update cache-db cache-key (run-query query))))
+		      (or value error))
+		 (remhash key *background-cache-update-threads*))))
       (sb-ext:with-locked-hash-table (*background-cache-update-threads*)
 				     (let ((thread (gethash key *background-cache-update-threads*)))
 				       (if thread thread
