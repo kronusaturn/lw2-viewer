@@ -579,6 +579,8 @@ signaled condition to OUT-STREAM."
 	    (site-head-elements *current-site*))
     (unless (logged-in-userid)
       <style>button.vote { display: none }</style>)
+    (when *memoized-output-without-hyphens*
+      <style>.body-text { hyphens: auto }</style>)
     (when extra-head (funcall extra-head))
     (format out-stream "</head>"))
   (unwind-protect
@@ -742,7 +744,8 @@ signaled condition to OUT-STREAM."
                   (cache-get "auth-token-to-userid" auth-token)
                   (cache-get "auth-token-to-username" auth-token)))))
         (let ((*current-user-slug* (and *current-userid* (get-user-slug *current-userid*)))
-	      (*current-ignore-hash* (get-ignore-hash)))
+	      (*current-ignore-hash* (get-ignore-hash))
+	      (*memoized-output-without-hyphens* (search "X11" (hunchentoot:header-in* :user-agent))))
 	  (catch 'abort-response
 	    (handler-bind
 		((serious-condition (lambda (condition)

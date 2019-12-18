@@ -6,7 +6,7 @@
    #:count-database-entries #:truncate-database
    #:call-with-cursor #:cursor-get
    #:existence
-   #:simple-cacheable #:define-lmdb-memoized #:*memoized-output-stream*)
+   #:simple-cacheable #:define-lmdb-memoized #:*memoized-output-stream* #:*memoized-output-without-hyphens*)
   (:unintern #:lmdb-clear-db #:*db-mutex* #:*cache-environment-databases-list*))
 
 (in-package #:lw2.lmdb) 
@@ -246,18 +246,34 @@
 					  (make-simple-get ,cache-db (fdefinition (quote ,cache)) (fdefinition (quote ,get-real)) ,get-wrapper)))))) 
 
 (defvar *memoized-output-stream*)
+(defvar *memoized-output-without-hyphens*) ;todo there's probably a better way to do this...
 
 (defun write-memoized-data (array size)
   (let ((out-stream *memoized-output-stream*))
-    (loop for i from 0 to (1- size)
-       do (write-byte (cffi:mem-aref array :unsigned-char i)
-		      out-stream)))
+    (if *memoized-output-without-hyphens*
+	(let ((hyphen-bytes (load-time-value (string-to-octets (string #\SOFT_HYPHEN) :external-format :utf-8)))
+	      (hi 0))
+	  (declare (type fixnum hi))
+	  (loop for i from 0 to (1- size)
+	     do (let ((in-byte (cffi:mem-aref array :unsigned-char i)))
+		  (if (= in-byte (aref hyphen-bytes hi))
+		      (if (= (1+ hi) (length hyphen-bytes))
+			  (setf hi 0)
+			  (incf hi))
+		      (progn
+			(when (/= hi 0)
+			  (write-sequence hyphen-bytes out-stream :end hi)
+			  (setf hi 0))
+			(write-byte in-byte out-stream))))))
+	(loop for i from 0 to (1- size)
+	   do (write-byte (cffi:mem-aref array :unsigned-char i)
+			  out-stream))))
   t)
 
 (defun make-lmdb-memoized-wrapper (db-name fn return-type)
   (lambda (&rest args)
     (let* ((hash (hash-printable-object args))
-           (cached-value (with-db (db db-name) (lmdb:get db hash :return-type return-type))))
+           (cached-value (with-db (db db-name :read-only t) (lmdb:get db hash :return-type return-type))))
       (if cached-value
           cached-value
           (let* ((new-value (apply fn args))
@@ -266,7 +282,7 @@
             (case return-type
 	      (:string new-value)
 	      (:byte-vector octets-value)
-	      ('write-memoized-data (write-sequence octets-value *memoized-output-stream*))))))))
+	      ('write-memoized-data (with-db (db db-name :read-only t) (lmdb:get db hash :return-type return-type)))))))))
 
 (defmacro define-lmdb-memoized (name class-name (&key sources) lambda &body body)
   (let ((db-name (concatenate 'string (string-downcase (symbol-name name)) "-memo"))
