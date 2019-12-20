@@ -580,6 +580,8 @@ signaled condition to OUT-STREAM."
     (unless (logged-in-userid)
       <style>button.vote { display: none }</style>)
     (when *memoized-output-without-hyphens*
+      ;; The browser has been detected as having bugs related to soft-hyphen characters.
+      ;; But there is some hope that it could still do hyphenation by itself.
       <style>.body-text { hyphens: auto }</style>)
     (when extra-head (funcall extra-head))
     (format out-stream "</head>"))
@@ -745,7 +747,11 @@ signaled condition to OUT-STREAM."
                   (cache-get "auth-token-to-username" auth-token)))))
         (let ((*current-user-slug* (and *current-userid* (get-user-slug *current-userid*)))
 	      (*current-ignore-hash* (get-ignore-hash))
-	      (*memoized-output-without-hyphens* (search "X11" (hunchentoot:header-in* :user-agent))))
+	      (*memoized-output-without-hyphens*
+	       ;; Soft hyphen characters mess up middle-click paste, so try to identify whether that exists on the user's platform.
+	       (let ((ua (hunchentoot:header-in* :user-agent)))
+		 (or (search "X11" ua)
+		     (search "Ubuntu" ua)))))
 	  (catch 'abort-response
 	    (handler-bind
 		((serious-condition (lambda (condition)

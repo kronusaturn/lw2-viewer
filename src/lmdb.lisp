@@ -249,8 +249,13 @@
 (defvar *memoized-output-without-hyphens*) ;todo there's probably a better way to do this...
 
 (defun write-memoized-data (array size)
+  ;; This is unsafe anyway thanks to mem-aref, and it's pretty speed-critical
+  (declare (optimize (safety 0) (debug 0)))
   (let ((out-stream *memoized-output-stream*))
     (if *memoized-output-without-hyphens*
+	;; Filter out soft hyphens while writing to the output stream.
+	;; Thanks to UTF-8's prefix-free property, we don't need to decode characters to
+	;; do this, just search for the soft-hyphen byte sequence.
 	(let ((hyphen-bytes (load-time-value (string-to-octets (string #\SOFT_HYPHEN) :external-format :utf-8)))
 	      (hi 0))
 	  (declare (type fixnum hi))
@@ -265,6 +270,7 @@
 			  (write-sequence hyphen-bytes out-stream :end hi)
 			  (setf hi 0))
 			(write-byte in-byte out-stream))))))
+	;; In this case, keep the soft hyphens.
 	(loop for i from 0 to (1- size)
 	   do (write-byte (cffi:mem-aref array :unsigned-char i)
 			  out-stream))))
