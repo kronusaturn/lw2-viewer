@@ -2175,7 +2175,7 @@ function markOriginalPosterComments() {
 
 	queryAll(".comment-item .author, .comment-item .inline-author").forEach(author => {
 		if (author.dataset.userid == postAuthor.dataset.userid ||
-			(author.hash != "" && query(`${author.hash} .author`).dataset.userid == postAuthor.dataset.userid)) {
+			(author.tagName == "A" && author.hash != "" && query(`${author.hash} .author`).dataset.userid == postAuthor.dataset.userid)) {
 			author.addClass("original-poster");
 			author.title += "Original poster";
 		}
