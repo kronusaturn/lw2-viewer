@@ -1,6 +1,8 @@
 (uiop:define-package #:lw2.conditions
   (:use #:cl #:alexandria #:lw2.html-reader)
-  (:export #:*debug-mode* #:condition-http-return-code
+  (:export #:*debug-mode*
+	   #:fatal-error
+	   #:condition-http-return-code
 	   #:error-to-html
            #:lw2-error #:lw2-client-error #:lw2-not-found-error #:lw2-user-not-found-error #:lw2-not-allowed-error #:lw2-server-error #:lw2-connection-error #:lw2-unknown-error
 	   #:log-condition #:log-conditions
@@ -12,6 +14,8 @@
 (named-readtables:in-readtable html-reader)
 
 (defvar *debug-mode* nil)
+
+(deftype fatal-error () `(or serious-condition usocket:ns-condition usocket:socket-condition))
 
 (defmethod condition-http-return-code ((c condition)) 500)
 
@@ -76,8 +80,8 @@
 (defmacro log-and-ignore-errors (&body body)
   `(block log-and-ignore-errors
      (handler-bind
-	 (((or serious-condition usocket:ns-condition usocket:socket-condition)
+	 ((fatal-error
 	   (lambda (c)
-			       (log-condition c)
-			       (return-from log-and-ignore-errors (values nil c)))))
+	     (log-condition c)
+	     (return-from log-and-ignore-errors (values nil c)))))
        ,@body)))

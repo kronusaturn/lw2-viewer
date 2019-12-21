@@ -357,21 +357,27 @@
 
 (define-backend-function lw2-graphql-query-timeout-cached (query cache-db cache-key &key (revalidate t) force-revalidate)
   (backend-base
-    (multiple-value-bind (cached-result is-fresh) (with-cache-readonly-transaction (values (cache-get cache-db cache-key) (cache-is-fresh cache-db cache-key)))
-      (if (and cached-result (or (not revalidate)
-				 (and (not force-revalidate) (eq is-fresh :skip))))
-          (decode-query-result cached-result)
-          (let ((timeout (if cached-result
-			     (if force-revalidate nil 3)
-			     nil))
-                (thread (ensure-cache-update-thread query cache-db cache-key)))
-            (decode-query-result
-	     (if (and cached-result (if force-revalidate (not revalidate) (or is-fresh (not revalidate))))
-		 cached-result
-		 (let ((new-result (sb-thread:join-thread thread :timeout timeout)))
-		   (typecase new-result
-		     (condition (or cached-result (error new-result)))
-		     (t new-result))))))))))
+   (multiple-value-bind (cached-result is-fresh) (with-cache-readonly-transaction (values (cache-get cache-db cache-key) (cache-is-fresh cache-db cache-key)))
+     (if (and cached-result (or (not revalidate)
+				(and (not force-revalidate) (eq is-fresh :skip))))
+	 (decode-query-result cached-result)
+	 (let ((timeout (if cached-result
+			    (if force-revalidate nil 3)
+			    nil))
+	       (thread (ensure-cache-update-thread query cache-db cache-key)))
+	   (decode-query-result
+	    (block retrieve-result
+	      (if (and cached-result (if force-revalidate (not revalidate) (or is-fresh (not revalidate))))
+		  cached-result
+		  (handler-bind
+		      ((fatal-error (lambda (c)
+				      (declare (ignore c))
+				      (if cached-result
+					  (return-from retrieve-result cached-result)))))
+		    (let ((new-result (sb-thread:join-thread thread :timeout timeout)))
+		      (typecase new-result
+			(condition (error new-result))
+			(t new-result))))))))))))
 
 (define-backend-function lw2-query-string* (query-type return-type args &key context fields with-total))
 
