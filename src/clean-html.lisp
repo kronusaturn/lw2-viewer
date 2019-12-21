@@ -599,7 +599,8 @@
 		     (vacuum-whitespace node)
 		     (let ((href (plump:attribute node "href")))
 		       (when href
-			 (let* ((href (if (ppcre:scan "^(?:(?:[a-z]+:)?//|/|#)" href) href (format nil "http://~A" href)))
+			 (let* ((href (string-trim '(#\Space #\Newline #\Tab #\Return #\Linefeed #\Page) href))
+				(href (if (ppcre:scan "^(?:(?:[a-z]+:)?//|/|#)" href) href (format nil "http://~A" href)))
 				(href (or (with-direct-link (convert-any-link href)) href)))
 			   (when href
 			     (setf (plump:attribute node "href") href)
