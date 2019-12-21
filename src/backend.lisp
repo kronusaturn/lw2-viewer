@@ -675,12 +675,18 @@
 						    :fields (if full '(:--id :message :created-at) '(:created-at)))
 				 (lw2-query-string* :user :single (alist :document-id user-id) :fields '(:last-notifications-check)))
 				:auth-token auth-token)
-     (when (and notifications user-info)
-       (let ((last-check (or since (local-time:parse-timestring (cdr (assoc :last-notifications-check user-info))))))
+     (let ((last-check (or since
+			   (let ((last-check-string (cdr (assoc :last-notifications-check user-info))))
+			     (when (and (stringp last-check-string) (not (equal last-check-string "")))
+			       (local-time:parse-timestring last-check-string))))))
+       (when notifications
 	 (labels ((unread-p (notification)
-		    (local-time:timestamp>
-		     (local-time:parse-timestring (cdr (assoc :created-at notification)))
-		     last-check)))
+		    (if last-check
+			(local-time:timestamp>
+			 (local-time:parse-timestring (cdr (assoc :created-at notification)))
+			 last-check)
+			;; User has never checked notifications before -- all are unread
+			t)))
 	   (if full
 	       (remove-if-not #'unread-p notifications)
 	       (unread-p (first notifications))))))))
