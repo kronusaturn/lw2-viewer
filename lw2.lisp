@@ -1084,37 +1084,38 @@ signaled condition to OUT-STREAM."
 					(cdr (assoc :--id post))))
 			      (post-nav-links post post-sequences)
 			      (force-output out-stream)
-			      ;; Temporary hack to support nominations
-			      (let ((real-comments (get-post-comments post-id))
-				    (answers (when (cdr (assoc :question post))
-					       (get-post-answers post-id)))
-				    (nominations-eligible (and (typep *current-backend* 'backend-lw2)
-							       (cdr (assoc :posted-at post))
-							       (let ((ts (local-time:parse-timestring (cdr (assoc :posted-at post)))))
-								 (and (local-time:timestamp> ts (load-time-value (local-time:parse-timestring "2018-01-01")))
-								      (local-time:timestamp< ts (load-time-value (local-time:parse-timestring "2019-01-01"))))))))
-				(labels ((top-level-property (comment property)
-					   (or (cdr (assoc property comment))
-					       (cdr (assoc property (cdr (assoc :top-level-comment comment)))))))
-				  (multiple-value-bind (normal-comments nominations reviews)
-				      (loop for comment in real-comments
-					 if (top-level-property comment :nominated-for-review)
-					 collect comment into nominations
-					 else if (top-level-property comment :reviewing-for-review)
-					 collect comment into reviews
-					 else
-					 collect comment into normal-comments
-					 finally (return (values normal-comments nominations reviews)))
-				    (loop for (name comments) in (list-cond (nominations-eligible
-									     (list "nomination" nominations))
-									    (nominations-eligible
-									     (list "review" reviews))
-									    ((cdr (assoc :question post))
-									     (list "answer" answers))
-									    (t
-									     (list "comment" normal-comments)))
-				       do (with-error-html-block ()
-					    (output-comments out-stream name comments nil))))))))))))))
+			      (with-error-html-block ()
+				;; Temporary hack to support nominations
+				(let ((real-comments (get-post-comments post-id))
+				      (answers (when (cdr (assoc :question post))
+						 (get-post-answers post-id)))
+				      (nominations-eligible (and (typep *current-backend* 'backend-lw2)
+								 (cdr (assoc :posted-at post))
+								 (let ((ts (local-time:parse-timestring (cdr (assoc :posted-at post)))))
+								   (and (local-time:timestamp> ts (load-time-value (local-time:parse-timestring "2018-01-01")))
+									(local-time:timestamp< ts (load-time-value (local-time:parse-timestring "2019-01-01"))))))))
+				  (labels ((top-level-property (comment property)
+					     (or (cdr (assoc property comment))
+						 (cdr (assoc property (cdr (assoc :top-level-comment comment)))))))
+				    (multiple-value-bind (normal-comments nominations reviews)
+					(loop for comment in real-comments
+					   if (top-level-property comment :nominated-for-review)
+					   collect comment into nominations
+					   else if (top-level-property comment :reviewing-for-review)
+					   collect comment into reviews
+					   else
+					   collect comment into normal-comments
+					   finally (return (values normal-comments nominations reviews)))
+				      (loop for (name comments) in (list-cond (nominations-eligible
+									       (list "nomination" nominations))
+									      (nominations-eligible
+									       (list "review" reviews))
+									      ((cdr (assoc :question post))
+									       (list "answer" answers))
+									      (t
+									       (list "comment" normal-comments)))
+					 do (with-error-html-block ()
+					      (output-comments out-stream name comments nil)))))))))))))))
     (:post (text answer nomination nomination-review af parent-answer-id parent-comment-id edit-comment-id retract-comment-id unretract-comment-id delete-comment-id)
      (let ((lw2-auth-token *current-auth-token*))
        (assert lw2-auth-token)
