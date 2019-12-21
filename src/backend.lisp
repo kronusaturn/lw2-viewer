@@ -370,7 +370,7 @@
 		 cached-result
 		 (let ((new-result (sb-thread:join-thread thread :timeout timeout)))
 		   (typecase new-result
-		     (condition (error new-result))
+		     (condition (or cached-result (error new-result)))
 		     (t new-result))))))))))
 
 (define-backend-function lw2-query-string* (query-type return-type args &key context fields with-total))
