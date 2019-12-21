@@ -368,14 +368,10 @@
             (decode-query-result
 	     (if (and cached-result (if force-revalidate (not revalidate) (or is-fresh (not revalidate))))
 		 cached-result
-		 (handler-case
-		     (let ((new-result (sb-thread:join-thread thread :timeout timeout)))
-		       (typecase new-result
-			 (condition (signal new-result))
-			 (t new-result)))
-		   (condition (c)
-		     (or cached-result
-			 (error "Failed to load ~A ~A and no cached version available: ~A" cache-db cache-key c)))))))))))
+		 (let ((new-result (sb-thread:join-thread thread :timeout timeout)))
+		   (typecase new-result
+		     (condition (error new-result))
+		     (t new-result))))))))))
 
 (define-backend-function lw2-query-string* (query-type return-type args &key context fields with-total))
 
