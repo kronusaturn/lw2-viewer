@@ -111,6 +111,14 @@ function addScrollListener(fn, name) {
 /* MISC HELPERS */
 /****************/
 
+// Workaround for Firefox bug https://bugzilla.mozilla.org/show_bug.cgi?id=325942
+Element.prototype.scrollIntoView = function(realSIV) {
+	return function(bottom) {
+		realSIV.call(this, bottom);
+		(this.closest("input[id^='expand'] ~ .comment-thread")||{}).scrollTop = 0;
+	}
+}(Element.prototype.scrollIntoView);
+
 /*	If top of element is not at or above the top of the screen, scroll it into
 	view. */
 Element.prototype.scrollIntoViewIfNeeded = function() {
