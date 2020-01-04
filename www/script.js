@@ -115,7 +115,10 @@ function addScrollListener(fn, name) {
 Element.prototype.scrollIntoView = function(realSIV) {
 	return function(bottom) {
 		realSIV.call(this, bottom);
-		(this.closest("input[id^='expand'] ~ .comment-thread")||{}).scrollTop = 0;
+		if(fixTarget = this.closest("input[id^='expand'] ~ .comment-thread")) {
+			window.scrollBy(0, fixTarget.scrollTop);
+			fixTarget.scrollTop = 0;
+		}
 	}
 }(Element.prototype.scrollIntoView);
 
