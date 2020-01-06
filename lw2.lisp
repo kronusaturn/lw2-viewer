@@ -1152,7 +1152,9 @@ signaled condition to OUT-STREAM."
 	     (get-post-answers post-id :force-revalidate t)))
 	 (when text
 	   (cache-put "comment-markdown-source" new-comment-id text)
-	   (redirect (generate-post-link (match-lw2-link (hunchentoot:request-uri*)) new-comment-id))))))))
+	   (redirect (quri:render-uri
+		      (quri:merge-uris (quri:make-uri :fragment (format nil "comment-~A" new-comment-id))
+				       (hunchentoot:request-uri*))))))))))
 
 (defparameter *edit-post-template* (compile-template* "edit-post.html"))
 
