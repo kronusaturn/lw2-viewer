@@ -928,7 +928,8 @@ signaled condition to OUT-STREAM."
 
 (define-component sort-widget (&key (sort-options '((:new :description "Sort by date posted")
 						    (:hot :description "Sort by time-weighted score")
-						    (:active :description "Sort by date posted or last comment")))
+						    (:active :description "Sort by date posted or last comment")
+						    (:old :description "Sort by date posted, oldest first")))
 				    (pref :default-sort) (param-name "sort") (html-class "sort"))
   (:http-args '((sort :real-name param-name :member (mapcar (lambda (x) (if (listp x) (first x) x)) sort-options))
 		(sortedby :real-name "sortedBy" :type string)))
