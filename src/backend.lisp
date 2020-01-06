@@ -705,6 +705,7 @@
 	   (cond
 	     (drafts (alist :view "drafts"))
 	     ((eq sort-type :score) (alist :view "top"))
+	     ((eq sort-type :date-reverse) (alist :view "old"))
 	     (t (alist :view "userPosts"))))
 	  (posts-base-terms
 	   (if (or drafts (boundp '*graphql-correct*))

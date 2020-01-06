@@ -303,6 +303,7 @@ signaled condition to OUT-STREAM."
   (multiple-value-bind (sort-fn sort-key)
     (ecase sort-by
       (:date (values #'local-time:timestamp> (lambda (x) (local-time:parse-timestring (cdr (assoc :posted-at x))))))
+      (:date-reverse (values #'local-time:timestamp< (lambda (x) (local-time:parse-timestring (cdr (assoc :posted-at x))))))
       (:score (values #'> (lambda (x) (cdr (assoc :base-score x))))))
     (let ((sorted (sort list sort-fn :key sort-key)))
       (loop for end = (if (or limit offset) (+ (or limit 0) (or offset 0)))
@@ -1286,7 +1287,7 @@ signaled condition to OUT-STREAM."
 (define-page view-user (:regex "^/users/(.*?)(?:$|\\?)|^/user" user-slug) (id
                                                                              (offset :type fixnum :default 0)
                                                                              (show :member '(:all :posts :comments :drafts :conversations :inbox) :default :all)
-                                                                             (sort :member '(:top :new) :default :new))
+                                                                             (sort :member '(:top :new :old) :default :new))
              (let* ((auth-token (if (eq show :inbox) *current-auth-token*))
 		    (user-info
 		     (let ((ui (get-user (cond (user-slug :user-slug) (id :user-id)) (or user-slug id) :auth-token auth-token)))
@@ -1298,9 +1299,12 @@ signaled condition to OUT-STREAM."
                     (display-name (if user-slug (cdr (assoc :display-name user-info)) user-id))
                     (show-text (if (not (eq show :all)) (string-capitalize show)))
                     (title (format nil "~A~@['s ~A~]" display-name show-text))
-                    (sort-type (case sort (:top :score) (:new :date)))
-                    (comments-base-terms (ecase sort-type (:score (load-time-value (alist :view "postCommentsTop"))) (:date (load-time-value (alist :view "allRecentComments"))))))
-               (multiple-value-bind (items total)
+                    (sort-type (case sort (:top :score) (:new :date) (:old :date-reverse)))
+		    (comments-base-terms #.`(ecase sort-type ,.(loop for (key value) in '((:score "postCommentsTop")
+											  (:date "allRecentComments")
+											  (:date-reverse "postCommentsOld"))
+								  collect `(,key (load-time-value (alist :view ,value)))))))
+	       (multiple-value-bind (items total)
                  (case show
                    (:posts
                      (get-user-posts user-id :offset offset :limit (+ 1 (user-pref :items-per-page)) :sort-type sort-type))
@@ -1379,7 +1383,7 @@ signaled condition to OUT-STREAM."
 			 user-id
 			 (alist :last-notifications-check (timestamp-to-graphql (local-time:now))))))
 		   (t
-		     (let ((user-posts (get-user-posts user-id :limit (+ 1 (user-pref :items-per-page) offset)))
+		     (let ((user-posts (get-user-posts user-id :offset offset :limit (+ 1 (user-pref :items-per-page) offset) :sort-type sort-type))
 			   (user-comments (lw2-graphql-query (lw2-query-string :comment :list (nconc (alist :limit (+ 1 (user-pref :items-per-page) offset) :user-id user-id) comments-base-terms) 
                                                                                :context :index))))
                        (concatenate 'list user-posts user-comments))))
@@ -1438,7 +1442,7 @@ signaled condition to OUT-STREAM."
                                                                       :default :all)
                                                 (when (member show '(:all :posts :comments))
                                                   (sublevel-nav-to-html out-stream
-                                                                        '(:new :top)
+                                                                        '(:new :top :old)
                                                                         sort
                                                                         :default :new
                                                                         :param-name "sort"
