@@ -445,6 +445,7 @@
 			    ("alignment-forum" (alist :view "new" :af t))
 			    ("questions" (alist :view "new" :question t))
 			    ("nominations" (alist :view "nominations2018"))
+			    ("reviews" (alist :view "reviews2018"))
 			    (t (values
 				(alist :filter "frontpage" :sorted-by sort-key)
 				(if (not (or (string/= sort "new") (/= limit 21) offset before after)) "new-not-meta"))))
