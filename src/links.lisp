@@ -1,6 +1,7 @@
 (defpackage #:lw2.links
   (:use #:cl #:alexandria #:lw2.lmdb #:lw2.backend #:lw2.sites #:lw2.context #:lw2-viewer.config)
   (:export #:match-lw1-link #:convert-lw1-link
+	   #:match-ea1-link #:convert-ea1-link
            #:match-overcomingbias-link #:convert-overcomingbias-link
            #:direct-link #:with-direct-link
            #:match-lw2-link #:match-lw2-slug-link #:match-lw2-sequence-link #:convert-lw2-link #:convert-lw2-slug-link #:convert-lw2-sequence-link #:convert-lw2-user-link

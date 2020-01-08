@@ -998,6 +998,9 @@ signaled condition to OUT-STREAM."
 (define-page view-post-lw1-link (:function #'match-lw1-link) ()
   (redirect (convert-lw1-link (hunchentoot:request-uri*)) :type :permanent))
 
+(define-page view-post-ea1-link (:function #'match-ea1-link) ()
+  (redirect (convert-ea1-link (hunchentoot:request-uri*)) :type :permanent))
+
 (define-page view-post-lw2-slug-link (:function #'match-lw2-slug-link) ()
   (redirect (convert-lw2-slug-link (hunchentoot:request-uri*)) :type :see-other))
 
