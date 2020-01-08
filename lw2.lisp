@@ -1013,6 +1013,12 @@ signaled condition to OUT-STREAM."
 (define-page view-nominations "/nominations" ()
   (redirect "/index?view=nominations" :type :see-other))
 
+(define-page view-reviews "/reviews" ()
+  (redirect "/index?view=reviews" :type :see-other))
+
+(define-page view-review-voting "/reviewVoting" ()
+  (redirect "https://www.lesswrong.com/reviewVoting" :type :see-other))
+
 (define-page view-post-lw2-link (:function #'match-lw2-link post-id comment-id * comment-link-type) (need-auth chrono)
   (request-method
    (:get ()
