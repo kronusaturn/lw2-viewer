@@ -82,7 +82,6 @@ body > * {
 	overflow: visible;
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
-	grid-auto-flow: dense;
 }
 #content::before {
 	content: "";
@@ -141,9 +140,8 @@ body > * {
 
 .nav-bar {
 	margin: 0 -30px;
-}
-.nav-bar {
 	display: flex;
+	order: -11;
 }
 
 /*=---------------=*/
@@ -190,6 +188,9 @@ body > * {
 /*= Bottom bar =*/
 /*=------------=*/
 
+#bottom-bar {
+	order: 11;
+}
 h1.listing ~ #bottom-bar {
 	margin-top: 1.25em;
 }
@@ -387,6 +388,7 @@ a#inbox-indicator.new-messages:hover::before {
 }
 #content.user-page > .page-toolbar {
 	grid-column: 2 / span 2;
+	order: -4;
 }
 
 /*=--------------------------=*/
@@ -489,12 +491,8 @@ a#inbox-indicator.new-messages:hover::before {
 	margin: 1em 0 0 0;
 }
 #content > .sublevel-nav:not(.sort) {
-	grid-row: 5;
 	grid-column: 2;
 	align-self: start;
-}
-#content.sequences-page > .sublevel-nav {
-	grid-row: unset;
 }
 .sublevel-nav .sublevel-item {
 	flex: 0 0 6em;
@@ -519,14 +517,13 @@ a#inbox-indicator.new-messages:hover::before {
 }
 #content > .sublevel-nav.sort {
 	grid-column: 3;
-	grid-row: 5 / span 2;
+	grid-row: span 2;
 	justify-self: end;
 	align-self: start;
 	flex-flow: column;
 }
 #content.index-page > .sublevel-nav.sort {
 	grid-column: 1;
-	grid-row: 3 / span 1;
 	justify-self: start;
 	flex-flow: row;
 }
@@ -1355,14 +1352,6 @@ article {
 /* USER PAGES */
 /**************/
 
-/*=------------=*/
-/*= Pagination =*/
-/*=------------=*/
-
-#content.user-page > #top-nav-bar {
-	grid-row: 6;
-}
-
 /*=---------------------=*/
 /*= User's display name =*/
 /*=---------------------=*/
@@ -1370,7 +1359,8 @@ article {
 #content.user-page h1.page-main-heading {
 	margin: 0.25em 0 0 0;
 	line-height: 1.1;
-	grid-row: 4;
+	grid-column: 1 / span 2;
+	order: -2;
 }
 
 #content.user-page h1.page-main-heading .user-full-name {
@@ -1385,7 +1375,7 @@ article {
 
 #content.user-page .user-stats {
 	grid-column: 3;
-	grid-row: 4;
+	order: -2;
 	text-align: right;
 	align-self: end;
 }
@@ -1399,7 +1389,8 @@ article {
 /*=----------------------=*/
 
 #content.user-page #comments-list-mode-selector {
-	grid-row: 5 / span 2;
+	grid-row: span 2;
+	order: -1;
 }
 #content.user-page #comments-list-mode-selector button {
 	display: block;
@@ -1431,11 +1422,12 @@ article {
 
 #content.conversation-page .conversation-participants {
 	grid-column: 2 / span 2;
-	grid-row: 3;
 	text-align: right;
 	margin: 0.5em 0 0 0;
 }
-
+.post-meta > .conversation-participants {
+	white-space: normal;
+}
 .conversation-participants ul,
 .conversation-participants li {
 	list-style-type: none;
@@ -2817,7 +2809,6 @@ a.comment-parent-link:hover::after {
 .post-controls {
 	text-align: right;
 	margin: 0.75em 0 0 0;
-	grid-row: 3;
 	align-self: start;
 	justify-self: end;
 }
@@ -3925,11 +3916,7 @@ li {
 #content.preview.individual-thread-page > .comment-thread > .comment-item {
 	border: none;
 }
-#content.preview.user-page > * {
-	margin: 0.5em 0;
-}
 #content.preview.user-page .page-main-heading, #content.preview.user-page .user-stats {
-	grid-row: 1;
 	padding: 0 8px;
 }
 #content.preview.user-page .page-main-heading {
@@ -3943,6 +3930,12 @@ li {
 }
 #content.preview button.vote {
 	display: none;
+}
+#content.preview > h1.listing {
+	max-height: unset;
+}
+#content.preview.user-page > .comment-thread {
+	margin: 0.5em 0;
 }
 #content.preview > .post {
 	margin: 0 18px;
@@ -4108,7 +4101,6 @@ li {
 
 #content.alignment-forum-index-page::after {
 	content: "Alignment Forum";
-	grid-row: 3;
 	font-size: 1.5rem;
 	margin: 0.375em 0 0 -0.375em;
 }

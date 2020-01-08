@@ -757,12 +757,8 @@ h1.listing {
 }
 @media only screen and (max-width: 520px) {
 	#content.user-page h1.page-main-heading {
-		padding-right: 100px;
 		overflow: hidden;
 		text-overflow: ellipsis;
-	}
-	#content.user-page .user-stats {
-		grid-column: 2 / span 2;
 	}
 	#content.user-page .user-stats .karma-type {
 		display: block;

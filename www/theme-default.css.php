@@ -142,7 +142,7 @@ body {
 }
 
 /* For Webkit: */
-.active-bar {
+.nav-bar:not(#bottom-bar) {
 	box-shadow: 0 -3px 8px -2px #ccc;
 }
 .active-bar .nav-inactive {
@@ -169,7 +169,7 @@ body {
 }
 /* And for Gecko: */
 @-moz-document url-prefix() {
-	.active-bar {
+	.nav-bar:not(#bottom-bar) {
 		box-shadow: 0 -3px 4px -2px #ccc;
 	}
 
@@ -738,7 +738,8 @@ h1.listing + .post-meta::after {
 /* USER PAGES */
 /*============*/
 
-#content.user-page h1.page-main-heading {
+#content.user-page h1.page-main-heading,
+#content.user-page .user-stats {
 	border-bottom: 1px solid #ccc;
 }
 
@@ -2220,7 +2221,7 @@ EOT;
 		#content.user-page h1.link-post-listing::after {
 			height: calc(100% + 3.125em);
 		}
-		#content.user-page h1.listing + .post-meta {
+		#content.user-page:not(.conversations-user-page) h1.listing + .post-meta {
 			padding: 0.25em 144px 0.5em 36px;
 		}
 		#content.conversations-user-page h1.listing + .post-meta .date {
