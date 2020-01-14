@@ -3365,6 +3365,9 @@ li {
 	list-style: none;
 	padding: 0;
 }
+.body-text ul:not(.contents-list) > li:empty {
+	padding-bottom: 1.25em;
+}
 .body-text ul:not(.contents-list) > li {
 	position: relative;
 	padding: 0 0 0 1.75em;
