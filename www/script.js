@@ -537,7 +537,8 @@ GW.commentActionButtonClicked = (event) => {
 		event.target.hasClass("reply-button") ||
 		event.target.hasClass("new-comment-button")) {
 		queryAll("textarea").forEach(textarea => {
-			hideReplyForm(textarea.closest(".comment-controls"));
+			let commentControls = textarea.closest(".comment-controls");
+			if(commentControls) hideReplyForm(commentControls);
 		});
 	}
 
