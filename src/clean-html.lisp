@@ -675,36 +675,37 @@
 			 (when (>= nchildren 2)
 			   (remove-if-whitespace (plump:last-child node))))))
 		    ((ppcre:scan "^h[1-6]$" (plump:tag-name node))
+		     (when (plump:get-elements-by-tag-name node "p")
+		       (move-children-out-of-node node))
 		     (cond
 		       ((string-is-whitespace (plump:text node))
 			(plump:remove-child node))
-		       ((plump:get-elements-by-tag-name node "p")
-			(move-children-out-of-node node)))
-		     (let ((fc (plump:first-child node))
-			   (lc (plump:last-child node)))
-		       (when (and (plump:element-p fc) (tag-is fc "br")) (plump:remove-child fc))
-		       (when (and (not (eql fc lc)) (plump:element-p lc) (tag-is lc "br")) (plump:remove-child lc)))
-		     (when with-toc
-		       (incf section-count) 
-		       (unless (plump:attribute node "id") (setf (plump:attribute node "id") (format nil "section-~A" section-count)))
-		       (let* ((header-level (parse-integer (subseq (plump:tag-name node) 1)))
-			      (header-text (with-output-to-string (stream)
-					     (plump:traverse node
-							     (lambda (n)
-							       (typecase n
-								 (plump:text-node
-								  (when (text-node-is-not n "style" "script")
-								    (write-string (plump:text n) stream))))))))
-			      (anchor-old (or (plump:attribute node "id") (format nil "section-~A" section-count)))
-			      (anchor-new (title-to-anchor header-text used-anchors))
-			      (wrapper (wrap-children node "span")))
-			 (setf min-header-level (min min-header-level header-level)
-			       (plump:attribute node "id") anchor-new
-			       (plump:attribute wrapper "id") anchor-old)
-			 (push (list header-level
-				     header-text
-				     anchor-new)
-			       contents))))
+		       (t
+			(let ((fc (plump:first-child node))
+			      (lc (plump:last-child node)))
+			  (when (and (plump:element-p fc) (tag-is fc "br")) (plump:remove-child fc))
+			  (when (and (not (eql fc lc)) (plump:element-p lc) (tag-is lc "br")) (plump:remove-child lc)))
+			(when with-toc
+			  (incf section-count) 
+			  (unless (plump:attribute node "id") (setf (plump:attribute node "id") (format nil "section-~A" section-count)))
+			  (let* ((header-level (parse-integer (subseq (plump:tag-name node) 1)))
+				 (header-text (with-output-to-string (stream)
+						(plump:traverse node
+								(lambda (n)
+								  (typecase n
+								    (plump:text-node
+								     (when (text-node-is-not n "style" "script")
+								       (write-string (plump:text n) stream))))))))
+				 (anchor-old (or (plump:attribute node "id") (format nil "section-~A" section-count)))
+				 (anchor-new (title-to-anchor header-text used-anchors))
+				 (wrapper (wrap-children node "span")))
+			    (setf min-header-level (min min-header-level header-level)
+				  (plump:attribute node "id") anchor-new
+				  (plump:attribute wrapper "id") anchor-old)
+			    (push (list header-level
+					header-text
+					anchor-new)
+				  contents))))))
 		    ((tag-is node "style")
 		     (let ((text (plump:text node)))
 		       (when (search ".mjx-math" text)
