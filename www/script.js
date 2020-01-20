@@ -2528,31 +2528,68 @@ function setCommentsSortModeSelectButtonsAccesskey() {
 
 function addCommentParentPopups() {
 	GWLog("addCommentParentPopups");
-	if (!query("#content").hasClass("comment-thread-page")) return;
+	//if (!query("#content").hasClass("comment-thread-page")) return;
 
-	queryAll(".comment-meta a.comment-parent-link, .comment-meta a.comment-child-link").forEach(commentParentLink => {
-		commentParentLink.addEventListener("mouseover", GW.commentParentLinkMouseOver = (event) => {
-			GWLog("GW.commentParentLinkMouseOver");
-			let parentID = commentParentLink.getAttribute("href");
-			var parent, popup;
-			if (!(parent = (query(parentID)||{}).firstChild)) return;
-			var highlightClassName;
-			if (parent.getBoundingClientRect().bottom < 10 || parent.getBoundingClientRect().top > window.innerHeight + 10) {
-				parentHighlightClassName = "comment-item-highlight-faint";
-				popup = parent.cloneNode(true);
-				popup.addClasses([ "comment-popup", "comment-item-highlight" ]);
-				commentParentLink.addEventListener("mouseout", (event) => {
-					removeElement(popup);
-				}, {once: true});
-				commentParentLink.closest(".comments > .comment-thread").appendChild(popup);
-			} else {
-				parentHighlightClassName = "comment-item-highlight";
+	queryAll("a[href]").forEach(linkTag => {
+		let linkHref = linkTag.getAttribute("href");
+		let url = new URL(linkHref, window.location.href);
+
+		if(window.location.origin === url.origin) {
+			let linkCommentId = (/\/(?:comment|answer)\/([^\/#]+)$/.exec(url.pathname)||[])[1] || (/#comment-(.+)/.exec(url.hash)||[])[1];
+			
+			if(url.hash && linkTag.hasClass("comment-parent-link") || linkTag.hasClass("comment-child-link")) {
+				linkTag.addEventListener("mouseover", GW.commentParentLinkMouseOver = (event) => {
+					GWLog("GW.commentParentLinkMouseOver");
+					let parentID = linkHref;
+					var parent, popup;
+					if (!(parent = (query(parentID)||{}).firstChild)) return;
+					var highlightClassName;
+					if (parent.getBoundingClientRect().bottom < 10 || parent.getBoundingClientRect().top > window.innerHeight + 10) {
+						parentHighlightClassName = "comment-item-highlight-faint";
+						popup = parent.cloneNode(true);
+						popup.addClasses([ "comment-popup", "comment-item-highlight" ]);
+						linkTag.addEventListener("mouseout", (event) => {
+							removeElement(popup);
+						}, {once: true});
+						linkTag.closest(".comments > .comment-thread").appendChild(popup);
+					} else {
+						parentHighlightClassName = "comment-item-highlight";
+					}
+					parent.parentNode.addClass(parentHighlightClassName);
+					linkTag.addEventListener("mouseout", (event) => {
+						parent.parentNode.removeClass(parentHighlightClassName);
+					}, {once: true});
+				});
 			}
-			parent.parentNode.addClass(parentHighlightClassName);
-			commentParentLink.addEventListener("mouseout", (event) => {
-				parent.parentNode.removeClass(parentHighlightClassName);
-			}, {once: true});
-		});
+			else if(url.pathname.match(/^\/(users|posts)\//)
+				&& !linkTag.closest("nav")
+				&& (!url.hash || linkCommentId)
+				&& linkTag.getCommentId() !== linkCommentId) {
+				linkTag.addEventListener("mouseover", event => {
+					let popup = document.createElement("iframe");
+					
+					let popupTarget;
+					if(linkHref.match(/#comment-/)) {
+						linkHref = linkHref.replace(/#comment-/, "/comment/");
+					}
+					// 'theme' attribute is not actually used, but is needed for proper caching
+					popup.setAttribute("src", linkHref + (linkHref.match(/\?/) ? '&' : '?') + "format=preview&theme=" + (readCookie('theme') || 'default'));
+					popup.addClasses(["preview-popup", "comment-popup"]);
+					popup.style.width = "700px";
+					popup.style.height = "500px";
+					popup.addEventListener("load", event => {
+						popup.style.height = (popup.contentDocument.querySelector("#content").clientHeight + 2) + "px";
+					});
+					query('#content').insertAdjacentElement("beforeend", popup);
+					linkTag.addEventListener("mouseout", event => {
+						removeElement(popup);
+					}, {once: true});
+				});
+			}
+		}
+	});
+	queryAll(".comment-meta a.comment-parent-link, .comment-meta a.comment-child-link").forEach(commentParentLink => {
+		
 	});
 
 	// Due to filters vs. fixed elements, we need to be smarter about selecting which elements to filter...

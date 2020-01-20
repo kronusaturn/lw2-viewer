@@ -2308,6 +2308,10 @@ a.comment-parent-link:hover::after {
 	margin: 0 2px 0 0;
 }
 
+.preview-popup {
+	border: 1px solid #ccc;
+	box-shadow: 2px 6px 20px -4px #000;
+}
 .comment-popup {
 	position: fixed;
 	top: 10%;
@@ -3859,6 +3863,49 @@ li {
 }
 .qualified-linking-toolbar a::selection {
 	background-color: transparent;
+}
+
+/*****************/
+/* HOVER PREVIEW */
+/*****************/
+
+#content.preview:not(not) {
+	padding: 0;
+}
+#content.preview > .comment-thread {
+	margin: 2px;
+}
+#content.preview.individual-thread-page > .comment-thread > .comment-item {
+	border: none;
+}
+#content.preview.user-page > * {
+	margin: 0.5em 0;
+}
+#content.preview.user-page .page-main-heading, #content.preview.user-page .user-stats {
+	grid-row: 1;
+	padding: 0 8px;
+}
+#content.preview.user-page .page-toolbar, #content.preview.user-page nav {
+	display: none;
+}
+#content.preview button.vote {
+	display: none;
+}
+#content.preview > .post {
+	margin: 0 18px;
+}
+#content.preview .post-title {
+	margin-top: 0.5em;
+}
+#content.preview .post-meta {
+	line-height: 1.0;
+}
+#content.preview .body-text {
+	font-size: 1em;
+}
+#content.preview nav.contents,
+#content.preview .lw2-link {
+	display: none;
 }
 
 /********/
