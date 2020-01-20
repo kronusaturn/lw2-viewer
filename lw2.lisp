@@ -546,31 +546,32 @@ signaled condition to OUT-STREAM."
 
 (defun html-body (out-stream fn &key title description social-description current-uri content-class robots extra-head)
   (let* ((session-token (hunchentoot:cookie-in "session-token"))
-         (csrf-token (and session-token (make-csrf-token session-token))))
+	 (csrf-token (and session-token (make-csrf-token session-token)))
+	 (hide-nav-bars (truthy-string-p (hunchentoot:get-parameter "hide-nav-bars"))))
     (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head>")
     (format out-stream "<script>window.GW = { }; applicationServerKey=\"~A\"; loggedInUserId=\"~A\"; loggedInUserDisplayName=\"~A\"; loggedInUserSlug=\"~A\"; GW.useFancyFeatures=~A; ~@[GW.csrfToken=\"~A\"; ~]~{~A~}</script>~A"
 	    (get-vapid-public-key)
-            (or (logged-in-userid) "")
-            (or (logged-in-username) "")
-            (or (logged-in-user-slug) "")
+	    (or (logged-in-userid) "")
+	    (or (logged-in-username) "")
+	    (or (logged-in-user-slug) "")
 	    (if (typep *current-site* 'arbital-site) "false" "true")
-            csrf-token
+	    csrf-token
 	    (site-inline-scripts *current-site*)
-            *extra-inline-scripts*)
+	    *extra-inline-scripts*)
     (format out-stream "~A~{<link rel=\"stylesheet\" href=\"~A\">~}"
-            *html-head*
+	    *html-head*
 	    (site-stylesheets *current-site*))
     (generate-fonts-html-headers (site-fonts-source *current-site*))
     (format out-stream "<link rel=\"shortcut icon\" href=\"~A\">"
 	    (generate-versioned-link "/assets/favicon.ico"))
     (format out-stream "~{<script src=\"~A\" async></script>~}~A"
-            (site-external-scripts *current-site*)
-            *extra-external-scripts*)
+	    (site-external-scripts *current-site*)
+	    *extra-external-scripts*)
     (format out-stream "<title>~@[~A - ~]~A</title>~@[<meta name=\"description\" content=\"~A\">~]~@[<meta name=\"robots\" content=\"~A\">~]"
-            (if title (encode-entities title))
-            (site-title *current-site*)
-            description
-            robots)
+	    (if title (encode-entities title))
+	    (site-title *current-site*)
+	    description
+	    robots)
     (when title
       <meta property="og:title" content=title>)
     (when social-description
@@ -585,15 +586,17 @@ signaled condition to OUT-STREAM."
       ;; But there is some hope that it could still do hyphenation by itself.
       <style>.body-text { hyphens: auto }</style>)
     (when extra-head (funcall extra-head))
-    (format out-stream "</head>"))
-  (unwind-protect
-    (progn
-      (format out-stream "<body><div id=\"content\"~@[ class=\"~A\"~]>"
-              content-class)
-      (nav-bar-to-html out-stream (or current-uri (replace-query-params (hunchentoot:request-uri*) "offset" nil "sort" nil)))
-      (force-output out-stream)
-      (funcall fn))
-    (format out-stream "</div></body></html>")))
+    (format out-stream "</head>")
+    (unwind-protect
+	 (progn
+	   (format out-stream "<body><div id=\"content\"~@[ class=\"~{~A~^ ~}\"~]>"
+		   (list-cond (content-class content-class)
+			      (hide-nav-bars "no-nav-bars")))
+	   (unless hide-nav-bars
+	     (nav-bar-to-html out-stream (or current-uri (replace-query-params (hunchentoot:request-uri*) "offset" nil "sort" nil))))
+	   (force-output out-stream)
+	   (funcall fn))
+      (format out-stream "</div></body></html>"))))
 
 (defun replace-query-params (uri &rest params)
   (let* ((quri (quri:uri uri))
@@ -1022,7 +1025,7 @@ signaled condition to OUT-STREAM."
 (define-page view-review-voting "/reviewVoting" ()
   (redirect "https://www.lesswrong.com/reviewVoting" :type :see-other))
 
-(define-page view-post-lw2-link (:function #'match-lw2-link post-id comment-id * comment-link-type) (need-auth chrono)
+(define-page view-post-lw2-link (:function #'match-lw2-link post-id comment-id * comment-link-type) (need-auth chrono (show-comments :real-name "comments" :type boolean :default t))
   (request-method
    (:get ()
      (let ((lw2-auth-token *current-auth-token*))
@@ -1082,7 +1085,8 @@ signaled condition to OUT-STREAM."
 		   (emit-page (out-stream :title title
 					  :content-class (format nil "post-page comment-thread-page~{ ~A~}"
 								 (list-cond ((cdr (assoc :question post)) "question-post-page")
-									    (post-sequences "in-sequence")))
+									    (post-sequences "in-sequence")
+									    ((not show-comments) "no-comments")))
 					  :social-description (when-let (x (cdr (assoc :html-body post))) (extract-excerpt x))
 					  :extra-head #'extra-head)
 			      (cond
@@ -1094,39 +1098,40 @@ signaled condition to OUT-STREAM."
 				(format out-stream "<div class=\"post-controls\"><a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\" accesskey=\"e\" title=\"Edit post [e]\">Edit post</a></div>"
 					(cdr (assoc :--id post))))
 			      (post-nav-links post post-sequences)
-			      (force-output out-stream)
-			      (with-error-html-block ()
-				;; Temporary hack to support nominations
-				(let ((real-comments (get-post-comments post-id))
-				      (answers (when (cdr (assoc :question post))
-						 (get-post-answers post-id)))
-				      (nominations-eligible (and (typep *current-backend* 'backend-lw2)
-								 (cdr (assoc :posted-at post))
-								 (let ((ts (local-time:parse-timestring (cdr (assoc :posted-at post)))))
-								   (and (local-time:timestamp> ts (load-time-value (local-time:parse-timestring "2018-01-01")))
-									(local-time:timestamp< ts (load-time-value (local-time:parse-timestring "2019-01-01"))))))))
-				  (labels ((top-level-property (comment property)
-					     (or (cdr (assoc property comment))
-						 (cdr (assoc property (cdr (assoc :top-level-comment comment)))))))
-				    (multiple-value-bind (normal-comments nominations reviews)
-					(loop for comment in real-comments
-					   if (top-level-property comment :nominated-for-review)
-					   collect comment into nominations
-					   else if (top-level-property comment :reviewing-for-review)
-					   collect comment into reviews
-					   else
-					   collect comment into normal-comments
-					   finally (return (values normal-comments nominations reviews)))
-				      (loop for (name comments) in (list-cond (nominations-eligible
-									       (list "nomination" nominations))
-									      (nominations-eligible
-									       (list "review" reviews))
-									      ((cdr (assoc :question post))
-									       (list "answer" answers))
-									      (t
-									       (list "comment" normal-comments)))
-					 do (with-error-html-block ()
-					      (output-comments out-stream name comments nil)))))))))))))))
+			      (when show-comments
+				(force-output out-stream)
+				(with-error-html-block ()
+				  ;; Temporary hack to support nominations
+				  (let ((real-comments (get-post-comments post-id))
+					(answers (when (cdr (assoc :question post))
+						   (get-post-answers post-id)))
+					(nominations-eligible (and (typep *current-backend* 'backend-lw2)
+								   (cdr (assoc :posted-at post))
+								   (let ((ts (local-time:parse-timestring (cdr (assoc :posted-at post)))))
+								     (and (local-time:timestamp> ts (load-time-value (local-time:parse-timestring "2018-01-01")))
+									  (local-time:timestamp< ts (load-time-value (local-time:parse-timestring "2019-01-01"))))))))
+				    (labels ((top-level-property (comment property)
+					       (or (cdr (assoc property comment))
+						   (cdr (assoc property (cdr (assoc :top-level-comment comment)))))))
+				      (multiple-value-bind (normal-comments nominations reviews)
+					  (loop for comment in real-comments
+					     if (top-level-property comment :nominated-for-review)
+					     collect comment into nominations
+					     else if (top-level-property comment :reviewing-for-review)
+					     collect comment into reviews
+					     else
+					     collect comment into normal-comments
+					     finally (return (values normal-comments nominations reviews)))
+					(loop for (name comments) in (list-cond (nominations-eligible
+										 (list "nomination" nominations))
+										(nominations-eligible
+										 (list "review" reviews))
+										((cdr (assoc :question post))
+										 (list "answer" answers))
+										(t
+										 (list "comment" normal-comments)))
+					   do (with-error-html-block ()
+						(output-comments out-stream name comments nil))))))))))))))))
     (:post (text answer nomination nomination-review af parent-answer-id parent-comment-id edit-comment-id retract-comment-id unretract-comment-id delete-comment-id)
      (let ((lw2-auth-token *current-auth-token*))
        (assert lw2-auth-token)

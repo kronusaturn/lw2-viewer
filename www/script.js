@@ -3474,10 +3474,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 	// This is for "qualified hyperlinking", i.e. "link without comments" and/or
 	// "link without nav bars".
-	if (getQueryVariable("comments") == "false")
-		query("#content").addClass("no-comments");
 	if (getQueryVariable("hide-nav-bars") == "true") {
-		query("#content").addClass("no-nav-bars");
 		let auxAboutLink = addUIElement("<div id='aux-about-link'><a href='/about' accesskey='t' target='_new'>&#xf129;</a></div>");
 	}
 

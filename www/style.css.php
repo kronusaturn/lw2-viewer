@@ -2781,9 +2781,6 @@ a.comment-parent-link:hover::after {
 	align-self: start;
 	justify-self: end;
 }
-.post {
-	grid-row: 3;
-}
 .edit-post-link {
 	display: inline-block;
 	margin-bottom: 0.25em;

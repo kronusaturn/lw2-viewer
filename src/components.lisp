@@ -42,9 +42,14 @@
 		       (if ,name (parse-integer ,name))))
 		   (t inner-form)))
 		(inner-form
-		 (if default
-		     `(or ,inner-form ,default)
-		     inner-form)))
+		 (if (eq type 'boolean)
+		     `(let ((,name ,inner-form))
+			(if ,name
+			    (truthy-string-p ,name)
+			    ,default))
+		     (if default
+			 `(or ,inner-form ,default)
+			 inner-form))))
 	   (when required
 	     (push `(unless (and ,name (not (equal ,name ""))) (error "Missing required parameter: ~A" ,real-name))
 		   additional-preamble))
