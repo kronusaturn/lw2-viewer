@@ -2,7 +2,7 @@
   (:use #:cl #:alexandria)
   (:export #:alist #:get-unix-time #:substring #:regex-replace-body #:reg #:match
 	   #:to-boolean #:nonzero-number-p #:truthy-string-p
-	   #:map-plist #:filter-plist #:alist-bind #:list-cond
+	   #:firstn #:map-plist #:filter-plist #:alist-bind #:list-cond
 	   #:string-to-existing-keyword #:call-with-safe-json)
   (:recycle #:lw2-viewer))
 
