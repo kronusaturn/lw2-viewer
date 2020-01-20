@@ -608,6 +608,8 @@
 			       (log-and-ignore-errors
 				(funcall *link-hook* href))))))))
 		    ((tag-is node "img")
+		     (setf (plump:attribute node "style") nil
+			   (plump:attribute node "class") nil)
 		     (when
 			 (every (lambda (a) (if-let (attr (plump:attribute node a)) (ignore-errors (<= (parse-integer attr) 1)))) (list "width" "height"))
 		       (plump:remove-child node))

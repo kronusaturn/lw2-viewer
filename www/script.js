@@ -3923,9 +3923,6 @@ function generateImagesOverlay() {
 	let imagesOverlay = query("#images-overlay");
 	let imagesOverlayLeftOffset = imagesOverlay.getBoundingClientRect().left;
 	queryAll(".post-body img").forEach(image => {
-		image.style = "";
-		image.className = "";
-
 		let clonedImageContainer = document.createElement("div");
 
 		let clonedImage = image.cloneNode(true);
