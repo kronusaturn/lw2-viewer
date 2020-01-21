@@ -907,9 +907,13 @@ function getPostHash() {
 }
 function getLastVisitedDate() {
 	// Get the last visited date (or, if posting a comment, the previous last visited date).
+	let historyVisited = (window.history.state||{})['lastVisited'];
+	if(historyVisited) return historyVisited;
 	let aCommentHasJustBeenPosted = (query(".just-posted-comment") != null);
 	let storageName = (aCommentHasJustBeenPosted ? "previous-last-visited-date_" : "last-visited-date_") + getPostHash();
-	return localStorage.getItem(storageName);
+	let currentVisited = localStorage.getItem(storageName);
+	window.history.replaceState({ lastVisited: currentVisited }, "");
+	return currentVisited;
 }
 function setLastVisitedDate(date) {
 	GWLog("setLastVisitedDate");
