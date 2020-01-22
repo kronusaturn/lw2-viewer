@@ -2566,6 +2566,7 @@ function addCommentParentPopups() {
 				&& (!url.hash || linkCommentId)
 				&& linkTag.getCommentId() !== linkCommentId) {
 				linkTag.addEventListener("mouseover", event => {
+					let wrapper = document.createElement("div");
 					let popup = document.createElement("iframe");
 					
 					let popupTarget;
@@ -2574,15 +2575,36 @@ function addCommentParentPopups() {
 					}
 					// 'theme' attribute is not actually used, but is needed for proper caching
 					popup.setAttribute("src", linkHref + (linkHref.match(/\?/) ? '&' : '?') + "format=preview&theme=" + (readCookie('theme') || 'default'));
-					popup.addClasses(["preview-popup", "comment-popup"]);
+					popup.addClass("preview-popup");
+					
 					popup.style.width = "700px";
 					popup.style.height = "500px";
+
+					let linkRect = linkTag.getBoundingClientRect();
+
+					wrapper.style.position = 'fixed';
+					wrapper.style.top = linkRect.top - 5 + 'px';
+					wrapper.style.left = linkRect.left + 'px';
+					wrapper.style.height = linkRect.height + 5 + 'px';
+					wrapper.style.width = linkRect.width + 15 + 'px';
+					wrapper.style.zIndex = 10002;
+					
+					if(linkRect.right + 710 < window.innerWidth)
+						popup.style.left = linkRect.right + 10 + "px";
+					
 					popup.addEventListener("load", event => {
-						popup.style.height = (popup.contentDocument.querySelector("#content").clientHeight + 2) + "px";
+						popupContent = popup.contentDocument.querySelector("#content");
+						popup.style.height = (popupContent.clientHeight + 2) + "px";
+						let hideButton = popup.contentDocument.createElement("div");
+						hideButton.className = "popup-hide-button";
+						hideButton.insertAdjacentText('beforeend', "\uF070");
+						hideButton.onclick = (event) => removeElement(wrapper);
+						popupContent.appendChild(hideButton);
 					});
-					query('#content').insertAdjacentElement("beforeend", popup);
-					linkTag.addEventListener("mouseout", event => {
-						removeElement(popup);
+					query('#content').insertAdjacentElement("beforeend", wrapper);
+					wrapper.appendChild(popup);
+					wrapper.addEventListener("mouseleave", event => {
+						removeElement(wrapper);
 					}, {once: true});
 				});
 			}

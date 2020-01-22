@@ -592,6 +592,8 @@ signaled condition to OUT-STREAM."
       ;; The browser has been detected as having bugs related to soft-hyphen characters.
       ;; But there is some hope that it could still do hyphenation by itself.
       <style>.body-text { hyphens: auto }</style>)
+    (when preview
+      (format out-stream "<base target='_top'>"))
     (when extra-head (funcall extra-head))
     (format out-stream "</head>")
     (unwind-protect
