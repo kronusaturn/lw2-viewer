@@ -907,8 +907,7 @@ function getPostHash() {
 }
 function getLastVisitedDate() {
 	// Get the last visited date (or, if posting a comment, the previous last visited date).
-	let historyVisited = (window.history.state||{})['lastVisited'];
-	if(historyVisited) return historyVisited;
+	if(window.history.state) return (window.history.state||{})['lastVisited'];
 	let aCommentHasJustBeenPosted = (query(".just-posted-comment") != null);
 	let storageName = (aCommentHasJustBeenPosted ? "previous-last-visited-date_" : "last-visited-date_") + getPostHash();
 	let currentVisited = localStorage.getItem(storageName);
