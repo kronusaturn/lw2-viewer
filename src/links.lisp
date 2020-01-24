@@ -61,7 +61,7 @@
 
 (defun match-agentfoundations-link (link) (match-values "^(?:https?://(?:www\\.)?agentfoundations\\.org)?(/item\\?id=.*)" link (0)))
 
-(defun match-lw2-link (link) (match-values "^(?:https?://[^/]+)?/posts/([^/]+)/([^/#?]*)(?:/(comment|answer)/([^/#?]+)|/?(?:#(?:comment-)?|\\?commentId=)([^/#]+))?" link (0 (or 3 4) 1 2)))
+(defun match-lw2-link (link) (match-values "^(?:https?://[^/]+)?/posts/([^/]+)(?:/([^/#?]*)(?:/(comment|answer)/([^/#?]+)|/?(?:#(?:comment-)?|\\?commentId=)([^/#]+))?)?" link (0 (or 3 4) 1 2)))
 
 (defun match-lw2-slug-link (link) (match-values "^(?:https?://(?:www.)?less(?:er|est)?wrong.com)?/(?:codex|hpmor)/([^/#]+)(?:/?#?([^/#]+)?)?" link (0 1)))
 
@@ -141,7 +141,7 @@
   (convert-redirect-link link #'match-agentfoundations-link #'get-agentfoundations-link "https://www.lesswrong.com"))
 
 (defun gen-internal (post-id slug comment-id &optional absolute-uri)
-  (format nil "~Aposts/~A/~A~:[~@[#~A~]~;~@[#comment-~A~]~]" (or absolute-uri "/") post-id (or slug "-") (and comment-id (= (length comment-id) 17)) comment-id))
+  (format nil "~Aposts/~A/~A~:[~@[#~A~]~;~@[#comment-~A~]~]" (or absolute-uri "/") post-id (or slug (get-post-slug post-id) "-") (and comment-id (= (length comment-id) 17)) comment-id))
 
 (defun convert-lw2-slug-link (link)
   (multiple-value-bind (slug comment-id) (match-lw2-slug-link link)
