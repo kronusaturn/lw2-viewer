@@ -1373,6 +1373,12 @@ article {
 	grid-row: 4;
 }
 
+#content.user-page h1.page-main-heading .user-full-name {
+	font-size: 1rem;
+	font-weight: normal;
+	padding-left: 0.5em;
+}
+
 /*=--------------------=*/
 /*= User's karma total =*/
 /*=--------------------=*/
@@ -3859,6 +3865,123 @@ li {
 }
 .qualified-linking-toolbar a::selection {
 	background-color: transparent;
+}
+
+/*****************/
+/* HOVER PREVIEW */
+/*****************/
+
+#preview-popup-toggle {
+	position: absolute;
+	right: -67px;
+	bottom: 285px;
+	cursor: pointer;
+	color: #888;
+}
+#preview-popup-toggle:hover {
+	color: #444;
+}
+
+#content.preview:not(not) {
+	padding: 0;
+}
+#content.preview > .comment-thread {
+	margin: 2px;
+}
+#content.preview.individual-thread-page > .comment-thread > .comment-item {
+	border: none;
+}
+#content.preview.user-page > * {
+	margin: 0.5em 0;
+}
+#content.preview.user-page .page-main-heading, #content.preview.user-page .user-stats {
+	grid-row: 1;
+	padding: 0 8px;
+}
+#content.preview.user-page .page-main-heading {
+	margin-left: 8px;
+}
+#content.preview.user-page .user-stats {
+	margin-right: 32px;
+}
+#content.preview.user-page .page-toolbar, #content.preview.user-page nav {
+	display: none;
+}
+#content.preview button.vote {
+	display: none;
+}
+#content.preview > .post {
+	margin: 0 18px;
+}
+#content.preview .post-title {
+	margin-top: 0.5em;
+}
+#content.preview .post-meta {
+	line-height: 1.0;
+}
+#content.preview .body-text {
+	font-size: 1em;
+}
+#content.preview nav.contents,
+#content.preview .lw2-link {
+	display: none;
+}
+
+@keyframes fadein {
+	from {
+		opacity: 0;
+		transform: translateY(200px);
+		transform-origin: top;
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+.preview-popup {
+	position: fixed;
+	top: 10%;
+	right: 10%;
+	max-width: 700px;
+	z-index: 10001;
+	background-color: #eee;
+	max-height: 87.5vh;
+	border: 1px solid #ccc;
+	box-shadow: 2px 6px 20px -4px #000;
+	animation: fadein 0.1s ease;
+	transition: height 0.2s ease, top 0.2s ease;
+}
+.popup-hide-button {
+	position: fixed;
+	top: 4px;
+	right: 4px;
+	background:
+	white;
+	width: 28px;
+	height: 28px;
+	display: flex;
+	font-family: "Font Awesome";
+	font-size: 14px;
+	line-height: 1;
+	border: 1px solid #bbb;
+	border-radius: 28px;
+	align-items: center;
+	justify-content: center;
+	//padding-bottom: 2px;
+	padding-left: 1.5px;
+	font-family: "Font Awesome", "Font Awesome 5 Free";
+	cursor: pointer;
+}
+.popup-hide-button:hover::before {
+	content: "Turn off preview popups";
+	display: block;
+	position: absolute;
+	width: max-content;
+	right: 32px;
+	background-color: #fff;
+	border: 1px solid #eee;
+	border-radius: 2px;
+	padding: 4px;
 }
 
 /********/

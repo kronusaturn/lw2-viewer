@@ -2529,33 +2529,159 @@ function setCommentsSortModeSelectButtonsAccesskey() {
 /* COMMENT PARENT POPUPS */
 /*************************/
 
+function previewPopupsEnabled() {
+	return !JSON.parse(localStorage.getItem("preview-popups-disabled") || "false");
+}
+
+function setPreviewPopupsEnabled(state) {
+	localStorage.setItem("preview-popups-disabled", !state);
+	updatePreviewPopupToggle();
+}
+
+function updatePreviewPopupToggle() {
+	let style = (previewPopupsEnabled() ? "--display-slash: none" : "");
+	query("#preview-popup-toggle use").setAttribute("style", style);
+}
+
+function injectPreviewPopupToggle() {
+	GWLog("injectPreviewPopupToggle");
+
+	let toggle = addUIElement("<div id='preview-popup-toggle' title='Toggle link preview popups'><svg width=40 height=50><use href='"+GW.assets["popup.svg"]+"#svg8' /></svg>");
+	updatePreviewPopupToggle();
+	toggle.addActivateEvent(event => setPreviewPopupsEnabled(!previewPopupsEnabled()))
+}
+
+var currentPreviewPopup = null;
+var currentPreviewPopupTimeout = null;
+
+function removePreviewPopup() {
+	if(currentPreviewPopup) {
+		removeElement(currentPreviewPopup);
+		currentPreviewPopup = null;
+	}
+	if(currentPreviewPopupTimeout) {
+		clearTimeout(currentPreviewPopupTimeout);
+		currentPreviewPopupTimeout = null;
+	}
+}
+
 function addCommentParentPopups() {
 	GWLog("addCommentParentPopups");
-	if (!query("#content").hasClass("comment-thread-page")) return;
+	//if (!query("#content").hasClass("comment-thread-page")) return;
 
-	queryAll(".comment-meta a.comment-parent-link, .comment-meta a.comment-child-link").forEach(commentParentLink => {
-		commentParentLink.addEventListener("mouseover", GW.commentParentLinkMouseOver = (event) => {
-			GWLog("GW.commentParentLinkMouseOver");
-			let parentID = commentParentLink.getAttribute("href");
-			var parent, popup;
-			if (!(parent = (query(parentID)||{}).firstChild)) return;
-			var highlightClassName;
-			if (parent.getBoundingClientRect().bottom < 10 || parent.getBoundingClientRect().top > window.innerHeight + 10) {
-				parentHighlightClassName = "comment-item-highlight-faint";
-				popup = parent.cloneNode(true);
-				popup.addClasses([ "comment-popup", "comment-item-highlight" ]);
-				commentParentLink.addEventListener("mouseout", (event) => {
-					removeElement(popup);
-				}, {once: true});
-				commentParentLink.closest(".comments > .comment-thread").appendChild(popup);
-			} else {
-				parentHighlightClassName = "comment-item-highlight";
+	queryAll("a[href]").forEach(linkTag => {
+		let linkHref = linkTag.getAttribute("href");
+		let url = new URL(linkHref, window.location.href);
+
+		if(window.location.origin === url.origin) {
+			let linkCommentId = (/\/(?:comment|answer)\/([^\/#]+)$/.exec(url.pathname)||[])[1] || (/#comment-(.+)/.exec(url.hash)||[])[1];
+			
+			if(url.hash && linkTag.hasClass("comment-parent-link") || linkTag.hasClass("comment-child-link")) {
+				linkTag.addEventListener("pointerover", GW.commentParentLinkMouseOver = (event) => {
+					if(event.pointerType == "touch") return;
+					GWLog("GW.commentParentLinkMouseOver");
+					removePreviewPopup();
+					let parentID = linkHref;
+					var parent, popup;
+					if (!(parent = (query(parentID)||{}).firstChild)) return;
+					var highlightClassName;
+					if (parent.getBoundingClientRect().bottom < 10 || parent.getBoundingClientRect().top > window.innerHeight + 10) {
+						parentHighlightClassName = "comment-item-highlight-faint";
+						popup = parent.cloneNode(true);
+						popup.addClasses([ "comment-popup", "comment-item-highlight" ]);
+						linkTag.addEventListener("mouseout", (event) => {
+							removeElement(popup);
+						}, {once: true});
+						linkTag.closest(".comments > .comment-thread").appendChild(popup);
+					} else {
+						parentHighlightClassName = "comment-item-highlight";
+					}
+					parent.parentNode.addClass(parentHighlightClassName);
+					linkTag.addEventListener("mouseout", (event) => {
+						parent.parentNode.removeClass(parentHighlightClassName);
+					}, {once: true});
+				});
 			}
-			parent.parentNode.addClass(parentHighlightClassName);
-			commentParentLink.addEventListener("mouseout", (event) => {
-				parent.parentNode.removeClass(parentHighlightClassName);
-			}, {once: true});
-		});
+			else if(url.pathname.match(/^\/(users|posts)\//)
+				&& !linkTag.closest("nav")
+				&& (!url.hash || linkCommentId)
+				&& linkTag.getCommentId() !== linkCommentId) {
+				linkTag.addEventListener("pointerover", event => {
+					if(event.buttons != 0 || event.pointerType == "touch" || !previewPopupsEnabled()) return;
+					removePreviewPopup();
+					
+					let wrapper = document.createElement("a");
+					let popup = document.createElement("iframe");
+
+					wrapper.setAttribute("href", linkHref.toString());
+					
+					let popupTarget;
+					if(linkHref.match(/#comment-/)) {
+						linkHref = linkHref.replace(/#comment-/, "/comment/");
+					}
+					// 'theme' attribute is not actually used, but is needed for proper caching
+					popup.setAttribute("src", linkHref + (linkHref.match(/\?/) ? '&' : '?') + "format=preview&theme=" + (readCookie('theme') || 'default'));
+					popup.addClass("preview-popup");
+					
+					popup.style.width = "700px";
+					popup.style.height = "500px";
+					popup.style.visibility = "hidden";
+					query('#content').insertAdjacentElement("beforeend", popup);
+					currentPreviewPopup = popup;
+
+					let linkRect = linkTag.getBoundingClientRect();
+
+					wrapper.style.position = 'fixed';
+					wrapper.style.top = linkRect.top - 5 + 'px';
+					wrapper.style.left = linkRect.left + 'px';
+					wrapper.style.height = linkRect.height + 5 + 'px';
+					wrapper.style.width = linkRect.width + 15 + 'px';
+					wrapper.style.zIndex = 10002;
+					
+					if(linkRect.right + 710 < window.innerWidth)
+						popup.style.left = linkRect.right + 10 + "px";
+					else
+						popup.style.right = "10px";
+
+					let recenter = function(popupHeight) {
+						popup.style.top = (window.innerHeight - popupHeight) * (linkRect.top / (window.innerHeight - linkRect.height)) + 'px';
+					}
+					recenter(500);
+					
+					popup.addEventListener("load", event => {
+						popupContent = popup.contentDocument.querySelector("#content");
+						let popupHeight = popupContent.clientHeight + 2;
+						if(popupHeight > (window.innerHeight * 0.875)) popupHeight = window.innerHeight * 0.875;
+						popup.style.height = popupHeight + "px";
+						recenter(popupHeight);
+						let hideButton = popup.contentDocument.createElement("div");
+						hideButton.className = "popup-hide-button";
+						hideButton.insertAdjacentText('beforeend', "\uF070");
+						hideButton.onclick = (event) => {
+							removePreviewPopup();
+							setPreviewPopupsEnabled(false);
+						}
+						popupContent.appendChild(hideButton);
+					});
+					wrapper.addEventListener("mouseleave", event => {
+						removePreviewPopup();
+					}, {once: true});
+
+					currentPreviewPopupTimeout = setTimeout(() => {
+						linkTag.removeEventListener("mouseleave", removePreviewPopup);
+						popup.style.visibility = "unset"
+						wrapper.appendChild(popup);
+						query('#content').insertAdjacentElement("beforeend", wrapper);
+						currentPreviewPopup = wrapper;
+					}, 150);
+					
+					linkTag.addEventListener("mouseleave", removePreviewPopup, {once: true});
+				});
+			}
+		}
+	});
+	queryAll(".comment-meta a.comment-parent-link, .comment-meta a.comment-child-link").forEach(commentParentLink => {
+		
 	});
 
 	// Due to filters vs. fixed elements, we need to be smarter about selecting which elements to filter...
@@ -3721,6 +3847,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	if (GW.useFancyFeatures) injectAntiKibitzer();
 
 	// Add comment parent popups.
+	if (GW.useFancyFeatures) injectPreviewPopupToggle();
 	addCommentParentPopups();
 
 	// Mark original poster's comments with a special class.

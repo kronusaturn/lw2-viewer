@@ -4,6 +4,7 @@
   (:import-from #:collectors #:with-collector)
   (:reexport #:lw2.backend-modules)
   (:export #:*graphql-debug-output*
+	   #:*revalidate-default* #:*force-revalidate-default*
            #:*messages-index-fields*
            #:*notifications-base-terms*
            #:start-background-loader #:stop-background-loader #:background-loader-running-p
@@ -29,6 +30,9 @@
 (defvar *cookie-jar* (make-instance 'drakma:cookie-jar))
 
 (defvar *graphql-debug-output* nil)
+
+(defvar *revalidate-default* t)
+(defvar *force-revalidate-default* nil)
 
 (defparameter *messages-index-fields* '(:--id :user-id :created-at (:contents :html) (:conversation :--id :title) :----typename))
 (defparameter *user-fields* '(:--id :slug :display-name :karma))
@@ -355,7 +359,7 @@
 					 (setf (gethash key *background-cache-update-threads*)
 					       (make-thread-with-current-backend #'background-fn))))))))
 
-(define-backend-function lw2-graphql-query-timeout-cached (query cache-db cache-key &key (revalidate t) force-revalidate)
+(define-backend-function lw2-graphql-query-timeout-cached (query cache-db cache-key &key (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*))
   (backend-base
    (multiple-value-bind (cached-result is-fresh) (with-cache-readonly-transaction (values (cache-get cache-db cache-key) (cache-is-fresh cache-db cache-key)))
      (if (and cached-result (or (not revalidate)
@@ -485,7 +489,7 @@
 (defun get-post-vote (post-id auth-token)
   (process-vote-result (lw2-graphql-query (lw2-query-string :post :single (alist :document-id post-id) :fields '(:--id (:current-user-votes :vote-type))) :auth-token auth-token)))
 
-(define-backend-function get-post-body (post-id &key (revalidate t) force-revalidate auth-token)
+(define-backend-function get-post-body (post-id &key (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*) auth-token)
   (backend-graphql
    (let ((query-string (lw2-query-string :post :single (alist :document-id post-id) :context :body)))
      (if auth-token
@@ -540,7 +544,7 @@
        (get-post-answer-replies post-id answers :auth-token auth-token :fields fields)
        answers)))))
 
-(define-backend-function get-post-comments (post-id &key (revalidate t) force-revalidate)
+(define-backend-function get-post-comments (post-id &key (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*))
   (backend-graphql
    (let ((fn (lambda ()
 	       (comments-list-to-graphql-json
@@ -557,7 +561,7 @@
 		   (setf (cdr parent-id-cons) nil))))
      comments)))
 
-(defun get-post-answers (post-id &key (revalidate t) force-revalidate)
+(defun get-post-answers (post-id &key (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*))
   (let ((fn (lambda ()
 	      (let ((answers (get-post-comments-list post-id "questionAnswers")))
 		(comments-list-to-graphql-json
@@ -633,7 +637,7 @@
 	   (cache-del "user-deleted" user-id))
        (cache-get "user-deleted" user-id))))
 
-(define-backend-function get-user (user-identifier-type user-identifier &key (revalidate t) force-revalidate auth-token)
+(define-backend-function get-user (user-identifier-type user-identifier &key (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*) auth-token)
   (backend-graphql
    (let* ((user-id (ccase user-identifier-type
 		     (:user-id user-identifier)

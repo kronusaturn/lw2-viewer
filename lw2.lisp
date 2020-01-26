@@ -260,21 +260,23 @@ signaled condition to OUT-STREAM."
   (funcall emit-comment-item-fn)
   (format out-stream "</ul>"))
 
-(defun comment-item-to-html (out-stream comment &key extra-html-fn with-post-title level)
+(defun comment-item-to-html (out-stream comment &key extra-html-fn with-post-title level level-invert)
   (with-error-html-block ()
     (let ((c-id (cdr (assoc :--id comment)))
 	  (user-id (cdr (assoc :user-id comment))))
       (format out-stream "<li id=\"comment-~A\" class=\"comment-item~{ ~A~}\">"
 	      c-id
 	      (list-cond
-	       (t (if (or (not level) (evenp level)) "depth-odd" "depth-even")) ;inverted because level counts from 0
+	       (t (if (let ((is-odd (or (not level) (evenp level)))) ;inverted because level counts from 0
+			(if level-invert (not is-odd) is-odd))
+		      "depth-odd" "depth-even"))
 	       ((and *current-ignore-hash* (gethash user-id *current-ignore-hash*)) "ignored")))
       (unwind-protect
         (comment-to-html out-stream comment :with-post-title with-post-title)
         (if extra-html-fn (funcall extra-html-fn c-id))
         (format out-stream "</li>")))))
 
-(defun comment-tree-to-html (out-stream comment-hash &optional (target nil) (level (if target 1 0)))
+(defun comment-tree-to-html (out-stream comment-hash &key (target nil) (level (if target 1 0)) level-invert)
   (let ((comments (gethash target comment-hash)))
     (when comments
       (comment-thread-to-html out-stream
@@ -282,12 +284,13 @@ signaled condition to OUT-STREAM."
           (loop for c in comments do
 	       (comment-item-to-html out-stream c
 		 :level level
+		 :level-invert level-invert
                  :extra-html-fn (lambda (c-id)
 				  (if (and (= level 10) (gethash c-id comment-hash))
 				      (format out-stream "<input type=\"checkbox\" id=\"expand-~A\"><label for=\"expand-~:*~A\" data-child-count=\"~A comment~:P\">Expand this thread</label>"
 					      c-id
 					      (cdr (assoc :child-count c))))
-				  (comment-tree-to-html out-stream comment-hash c-id (1+ level))))))))))
+				  (comment-tree-to-html out-stream comment-hash :target c-id :level (1+ level) :level-invert level-invert)))))))))
 
 (defun comment-chrono-to-html (out-stream comments)
   (let ((comment-hash (make-comment-parent-hash comments)) 
@@ -547,36 +550,43 @@ signaled condition to OUT-STREAM."
 (defun html-body (out-stream fn &key title description social-description current-uri content-class robots extra-head)
   (let* ((session-token (hunchentoot:cookie-in "session-token"))
 	 (csrf-token (and session-token (make-csrf-token session-token)))
-	 (hide-nav-bars (truthy-string-p (hunchentoot:get-parameter "hide-nav-bars"))))
+	 (hide-nav-bars (truthy-string-p (hunchentoot:get-parameter "hide-nav-bars")))
+	 (preview (string-equal (hunchentoot:get-parameter "format") "preview")))
     (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head>")
-    (format out-stream "<script>window.GW = { }; applicationServerKey=\"~A\"; loggedInUserId=\"~A\"; loggedInUserDisplayName=\"~A\"; loggedInUserSlug=\"~A\"; GW.useFancyFeatures=~A; ~@[GW.csrfToken=\"~A\"; ~]~{~A~}</script>~A"
-	    (get-vapid-public-key)
-	    (or (logged-in-userid) "")
-	    (or (logged-in-username) "")
-	    (or (logged-in-user-slug) "")
-	    (if (typep *current-site* 'arbital-site) "false" "true")
-	    csrf-token
-	    (site-inline-scripts *current-site*)
-	    *extra-inline-scripts*)
+    (unless preview
+      (format out-stream "<script>window.GW = { }; applicationServerKey=\"~A\"; loggedInUserId=\"~A\"; loggedInUserDisplayName=\"~A\"; loggedInUserSlug=\"~A\"; GW.useFancyFeatures=~A; ~@[GW.csrfToken=\"~A\"; ~]GW.assets="
+	      (get-vapid-public-key)
+	      (or (logged-in-userid) "")
+	      (or (logged-in-username) "")
+	      (or (logged-in-user-slug) "")
+	      (if (typep *current-site* 'arbital-site) "false" "true")
+	      csrf-token)
+      (json:encode-json (alist "popup.svg" (generate-versioned-link "/assets/popup.svg"))
+			out-stream)
+      (format out-stream ";~{~A~}</script>~A"
+	      (site-inline-scripts *current-site*)
+	      *extra-inline-scripts*))
     (format out-stream "~A~{<link rel=\"stylesheet\" href=\"~A\">~}"
 	    *html-head*
 	    (site-stylesheets *current-site*))
     (generate-fonts-html-headers (site-fonts-source *current-site*))
     (format out-stream "<link rel=\"shortcut icon\" href=\"~A\">"
 	    (generate-versioned-link "/assets/favicon.ico"))
-    (format out-stream "~{<script src=\"~A\" async></script>~}~A"
-	    (site-external-scripts *current-site*)
-	    *extra-external-scripts*)
+    (unless preview
+      (format out-stream "~{<script src=\"~A\" async></script>~}~A"
+	      (site-external-scripts *current-site*)
+	      *extra-external-scripts*))
     (format out-stream "<title>~@[~A - ~]~A</title>~@[<meta name=\"description\" content=\"~A\">~]~@[<meta name=\"robots\" content=\"~A\">~]"
 	    (if title (encode-entities title))
 	    (site-title *current-site*)
 	    description
 	    robots)
-    (when title
-      <meta property="og:title" content=title>)
-    (when social-description
-      <meta property="og:description" content=social-description>
-      <meta property="og:type" content="article">)
+    (unless preview
+      (when title
+	<meta property="og:title" content=title>)
+      (when social-description
+	<meta property="og:description" content=social-description>
+	<meta property="og:type" content="article">))
     (format out-stream "~{~A~}"
 	    (site-head-elements *current-site*))
     (unless (logged-in-userid)
@@ -585,14 +595,17 @@ signaled condition to OUT-STREAM."
       ;; The browser has been detected as having bugs related to soft-hyphen characters.
       ;; But there is some hope that it could still do hyphenation by itself.
       <style>.body-text { hyphens: auto }</style>)
+    (when preview
+      (format out-stream "<base target='_top'>"))
     (when extra-head (funcall extra-head))
     (format out-stream "</head>")
     (unwind-protect
 	 (progn
 	   (format out-stream "<body><div id=\"content\"~@[ class=\"~{~A~^ ~}\"~]>"
 		   (list-cond (content-class content-class)
-			      (hide-nav-bars "no-nav-bars")))
-	   (unless hide-nav-bars
+			      (hide-nav-bars "no-nav-bars")
+			      (preview "preview")))
+	   (unless (or hide-nav-bars preview)
 	     (nav-bar-to-html out-stream (or current-uri (replace-query-params (hunchentoot:request-uri*) "offset" nil "sort" nil))))
 	   (force-output out-stream)
 	   (funcall fn))
@@ -615,37 +628,41 @@ signaled condition to OUT-STREAM."
     (quri:render-uri quri)))
 
 (defun pagination-nav-bars (&key offset total with-next (items-per-page (user-pref :items-per-page)))
-  (lambda (out-stream fn)
-    (labels ((pages-to-end (n) (< (+ offset (* items-per-page n)) total)))
-      (let* ((with-next (if total (pages-to-end 1) with-next))
-             (next (if (and offset with-next) (+ offset items-per-page)))
-             (prev (if (and offset (>= offset items-per-page)) (- offset items-per-page)))
-             (request-uri (hunchentoot:request-uri*))
-             (first-uri (if (and prev (> prev 0)) (replace-query-params request-uri "offset" nil)))
-             (prev-uri (if prev (replace-query-params request-uri "offset" (if (= prev 0) nil prev))))
-             (next-uri (if next (replace-query-params request-uri "offset" next)))
-             (last-uri (if (and total offset (pages-to-end 2))
-                           (replace-query-params request-uri "offset" (- total (mod (- total 1) items-per-page) 1)))))
-        (if (or next prev last-uri)
-          (labels ((write-item (uri class title accesskey)
-                     (format out-stream "<a href=\"~A\" class=\"button nav-item-~A~:[ disabled~;~]\" title=\"~A [~A]\" accesskey=\"~A\"></a>"
-                             (or uri "#") class uri title accesskey accesskey)))
-            (format out-stream "<div id='top-nav-bar'>")
-            (write-item first-uri "first" "First page" "\\")
-            (write-item prev-uri "prev" "Previous page" "[")
-            (format out-stream "<span class='page-number'><span class='page-number-label'>Page</span> ~A</span>" (+ 1 (/ (or offset 0) items-per-page)))
-            (write-item next-uri "next" "Next page" "]")
-            (write-item last-uri "last" "Last page" "/")
-            (format out-stream "</div>")))
-        (funcall fn)
-	(nav-bar-outer out-stream nil (list :bottom-bar
-					    (list-cond
-					     (first-uri `("first" ,first-uri "Back to first"))
-					     (prev-uri `("prev" ,prev-uri "Previous" :nofollow t))
-					     (t `("top" "#top" "Back to top"))
-					     (next-uri `("next" ,next-uri "Next" :nofollow t))
-					     (last-uri `("last" ,last-uri "Last" :nofollow t)))))
-	(format out-stream "<script>document.querySelectorAll('#bottom-bar').forEach(bb => { bb.classList.add('decorative'); });</script>")))))
+  (if (string-equal (hunchentoot:get-parameter "format") "preview")
+      (lambda (out-stream fn)
+	(declare (ignore out-stream))
+	(funcall fn))
+      (lambda (out-stream fn)
+	(labels ((pages-to-end (n) (< (+ offset (* items-per-page n)) total)))
+	  (let* ((with-next (if total (pages-to-end 1) with-next))
+		 (next (if (and offset with-next) (+ offset items-per-page)))
+		 (prev (if (and offset (>= offset items-per-page)) (- offset items-per-page)))
+		 (request-uri (hunchentoot:request-uri*))
+		 (first-uri (if (and prev (> prev 0)) (replace-query-params request-uri "offset" nil)))
+		 (prev-uri (if prev (replace-query-params request-uri "offset" (if (= prev 0) nil prev))))
+		 (next-uri (if next (replace-query-params request-uri "offset" next)))
+		 (last-uri (if (and total offset (pages-to-end 2))
+			       (replace-query-params request-uri "offset" (- total (mod (- total 1) items-per-page) 1)))))
+	    (if (or next prev last-uri)
+		(labels ((write-item (uri class title accesskey)
+			   (format out-stream "<a href=\"~A\" class=\"button nav-item-~A~:[ disabled~;~]\" title=\"~A [~A]\" accesskey=\"~A\"></a>"
+				   (or uri "#") class uri title accesskey accesskey)))
+		  (format out-stream "<nav id='top-nav-bar'>")
+		  (write-item first-uri "first" "First page" "\\")
+		  (write-item prev-uri "prev" "Previous page" "[")
+		  (format out-stream "<span class='page-number'><span class='page-number-label'>Page</span> ~A</span>" (+ 1 (/ (or offset 0) items-per-page)))
+		  (write-item next-uri "next" "Next page" "]")
+		  (write-item last-uri "last" "Last page" "/")
+		  (format out-stream "</nav>")))
+	    (funcall fn)
+	    (nav-bar-outer out-stream nil (list :bottom-bar
+						(list-cond
+						 (first-uri `("first" ,first-uri "Back to first"))
+						 (prev-uri `("prev" ,prev-uri "Previous" :nofollow t))
+						 (t `("top" "#top" "Back to top"))
+						 (next-uri `("next" ,next-uri "Next" :nofollow t))
+						 (last-uri `("last" ,last-uri "Last" :nofollow t)))))
+	    (format out-stream "<script>document.querySelectorAll('#bottom-bar').forEach(bb => { bb.classList.add('decorative'); });</script>"))))))
 
 (defun decode-json-as-hash-table (json-source)
   (let (current-hash-table current-key)
@@ -731,7 +748,11 @@ signaled condition to OUT-STREAM."
 	 (*current-prefs*
 	   (if-let (prefs-string (hunchentoot:cookie-in "prefs"))
 		   (let ((json:*identifier-name-to-key* 'json:safe-json-intern))
-		     (ignore-errors (json:decode-json-from-string (quri:url-decode prefs-string)))))))
+		     (ignore-errors (json:decode-json-from-string (quri:url-decode prefs-string))))))
+	 (*revalidate-default*
+	  (not (string-equal (hunchentoot:get-parameter "format") "preview"))))
+    (when (not *revalidate-default*)
+      (setf (hunchentoot:header-out :cache-control) (format nil "public, max-age=~A" (* 5 60))))
     (with-site-context ((let ((host (or (hunchentoot:header-in* :x-forwarded-host) (hunchentoot:header-in* :host))))
                           (or (find-site host)
                               (error "Unknown site: ~A" host))))
@@ -1025,29 +1046,42 @@ signaled condition to OUT-STREAM."
 (define-page view-review-voting "/reviewVoting" ()
   (redirect "https://www.lesswrong.com/reviewVoting" :type :see-other))
 
-(define-page view-post-lw2-link (:function #'match-lw2-link post-id comment-id * comment-link-type) (need-auth chrono (show-comments :real-name "comments" :type boolean :default t))
+(define-page view-post-lw2-link (:function #'match-lw2-link post-id comment-id * comment-link-type)
+                                (need-auth
+                                 chrono
+				 (show-comments :real-name "comments" :type boolean :default t)
+				 (format :type string))
   (request-method
    (:get ()
-     (let ((lw2-auth-token *current-auth-token*))
+     (let* ((lw2-auth-token *current-auth-token*)
+	    (preview (string-equal format "preview"))
+	    (show-comments (and (not preview) show-comments)))
        (labels ((output-comments (out-stream id comments target)
-		  (format out-stream "<div id=\"~As\" class=\"comments\">" id)
-		  (with-error-html-block ()
-		    (if target
-			(comment-thread-to-html out-stream
-						(lambda ()
-						  (comment-item-to-html
-						   out-stream
-						   target
-						   :extra-html-fn (lambda (c-id)
-								    (let ((*comment-individual-link* nil))
-								      (comment-tree-to-html out-stream (make-comment-parent-hash comments) c-id))))))
-			(if comments
-			    (progn #|<div class="comments-empty-message">(safe (pretty-number (length comments) id))</div>|#
-				   (if chrono
-				       (comment-chrono-to-html out-stream comments)
-				       (comment-tree-to-html out-stream (make-comment-parent-hash comments))))
-			    <div class="comments-empty-message">("No ~As." id)</div>)))
-		  (format out-stream "</div>")))
+		  (labels ((output-comments-inner ()
+			     (with-error-html-block ()
+			       (if target
+				   (comment-thread-to-html out-stream
+							   (lambda ()
+							     (comment-item-to-html
+							      out-stream
+							      target
+							      :level-invert preview
+							      :extra-html-fn (lambda (c-id)
+									       (let ((*comment-individual-link* nil))
+										 (comment-tree-to-html out-stream (make-comment-parent-hash comments)
+												       :target c-id
+												       :level-invert preview))))))
+				   (if comments
+				       (progn #|<div class="comments-empty-message">(safe (pretty-number (length comments) id))</div>|#
+					 (if chrono
+					     (comment-chrono-to-html out-stream comments)
+					     (comment-tree-to-html out-stream (make-comment-parent-hash comments))))
+				       <div class="comments-empty-message">("No ~As." id)</div>)))))
+		    (if preview
+			(output-comments-inner)
+			(progn (format out-stream "<div id=\"~As\" class=\"comments\">" id)
+			       (output-comments-inner)
+			       (format out-stream "</div>"))))))
 	 (multiple-value-bind (post title condition)
 	     (handler-case (nth-value 0 (get-post-body post-id :auth-token (and need-auth lw2-auth-token)))
 	       (serious-condition (c) (values nil "Error" c))
@@ -1075,11 +1109,12 @@ signaled condition to OUT-STREAM."
 					  :content-class "individual-thread-page comment-thread-page"
 					  :social-description (when-let (x (cdr (assoc :html-body target-comment))) (extract-excerpt x))
 					  :extra-head #'extra-head)
-			      (format out-stream "<h1 class=\"post-title\">~A ~A <a href=\"~A\">~A</a></h1>"
-				      (encode-entities display-name)
-				      verb-phrase
-				      (generate-post-link post-id)
-				      (clean-text-to-html title :hyphenation nil))
+			      (unless preview
+				(format out-stream "<h1 class=\"post-title\">~A ~A <a href=\"~A\">~A</a></h1>"
+					(encode-entities display-name)
+					verb-phrase
+					(generate-post-link post-id)
+					(clean-text-to-html title :hyphenation nil)))
 			      (output-comments out-stream "comment" comments target-comment)))
 		 (let ((post-sequences (get-post-sequences post-id)))
 		   (emit-page (out-stream :title title
@@ -1438,7 +1473,10 @@ signaled condition to OUT-STREAM."
 						      (when (not own-user-page)
 						        (format nil "data-~:[~;anti-~]~:*kibitzer-redirect=~:[/users/~*~A~;/user?id=~A~]"
 								user-slug actual-id actual-slug))>
-						    (progn display-name)
+						      (progn display-name)
+						      (let ((full-name (get-user-full-name user-id)))
+							(when (and user-slug (stringp full-name) (> (length full-name) 0))
+								  <span class="user-full-name">\((progn full-name)\)</span>))
 						  </h1>
 						  <div class="user-stats">
 						    Karma:
@@ -1707,7 +1745,8 @@ signaled condition to OUT-STREAM."
 										      '(("/arbital.css" "text/css")
 											("/script.js" "text/javascript")
 											("/assets/favicon.ico" "image/x-icon")
-											("/assets/telegraph.jpg" "image/jpeg"))
+											("/assets/telegraph.jpg" "image/jpeg")
+											("/assets/popup.svg" "image/svg+xml"))
                                                                                       collect (defres uri content-type))))
                                                                    (when file
                                                                      (when (assoc "v" (hunchentoot:get-parameters r) :test #'string=)
