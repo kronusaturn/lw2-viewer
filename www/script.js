@@ -2613,15 +2613,14 @@ function addCommentParentPopups() {
 					let wrapper = document.createElement("a");
 					let popup = document.createElement("iframe");
 
-					let originalHref = linkHref.toString();
-					wrapper.setAttribute("href", originalHref);
+					wrapper.setAttribute("href", linkHref);
 					
-					let popupTarget;
-					if(linkHref.match(/#comment-/)) {
-						linkHref = linkHref.replace(/#comment-/, "/comment/");
+					let popupTarget = linkHref;
+					if(popupTarget.match(/#comment-/)) {
+						popupTarget = popupTarget.replace(/#comment-/, "/comment/");
 					}
 					// 'theme' attribute is not actually used, but is needed for proper caching
-					popup.setAttribute("src", linkHref + (linkHref.match(/\?/) ? '&' : '?') + "format=preview&theme=" + (readCookie('theme') || 'default'));
+					popup.setAttribute("src", popupTarget + (popupTarget.match(/\?/) ? '&' : '?') + "format=preview&theme=" + (readCookie('theme') || 'default'));
 					popup.addClass("preview-popup");
 					
 					popup.style.width = "700px";
@@ -2648,7 +2647,7 @@ function addCommentParentPopups() {
 
 					let clickListener = event => {
 						if(event.target.tagName.toLowerCase() !== "a") {
-							window.location.href = originalHref;
+							window.location = linkHref;
 						}
 					};
 					
@@ -2677,15 +2676,13 @@ function addCommentParentPopups() {
 					currentPreviewPopup = popup;
 					recenter(500);
 					
-					wrapper.addEventListener("mouseleave", event => {
-						removePreviewPopup();
-					}, {once: true});
+					wrapper.addEventListener("mouseleave", removePreviewPopup, {once: true});
 
 					currentPreviewPopupTimeout = setTimeout(() => {
 						linkTag.removeEventListener("mouseleave", removePreviewPopup);
 						popup.style.visibility = "unset"
-						wrapper.appendChild(popup);
 						query('#content').insertAdjacentElement("beforeend", wrapper);
+						wrapper.appendChild(popup);
 						currentPreviewPopup = wrapper;
 					}, 150);
 					
