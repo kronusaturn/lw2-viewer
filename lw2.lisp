@@ -554,13 +554,16 @@ signaled condition to OUT-STREAM."
 	 (preview (string-equal (hunchentoot:get-parameter "format") "preview")))
     (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head>")
     (unless preview
-      (format out-stream "<script>window.GW = { }; applicationServerKey=\"~A\"; loggedInUserId=\"~A\"; loggedInUserDisplayName=\"~A\"; loggedInUserSlug=\"~A\"; GW.useFancyFeatures=~A; ~@[GW.csrfToken=\"~A\"; ~]~{~A~}</script>~A"
+      (format out-stream "<script>window.GW = { }; applicationServerKey=\"~A\"; loggedInUserId=\"~A\"; loggedInUserDisplayName=\"~A\"; loggedInUserSlug=\"~A\"; GW.useFancyFeatures=~A; ~@[GW.csrfToken=\"~A\"; ~]GW.assets="
 	      (get-vapid-public-key)
 	      (or (logged-in-userid) "")
 	      (or (logged-in-username) "")
 	      (or (logged-in-user-slug) "")
 	      (if (typep *current-site* 'arbital-site) "false" "true")
-	      csrf-token
+	      csrf-token)
+      (json:encode-json (alist "popup.svg" (generate-versioned-link "/assets/popup.svg"))
+			out-stream)
+      (format out-stream ";~{~A~}</script>~A"
 	      (site-inline-scripts *current-site*)
 	      *extra-inline-scripts*))
     (format out-stream "~A~{<link rel=\"stylesheet\" href=\"~A\">~}"
@@ -1470,7 +1473,10 @@ signaled condition to OUT-STREAM."
 						      (when (not own-user-page)
 						        (format nil "data-~:[~;anti-~]~:*kibitzer-redirect=~:[/users/~*~A~;/user?id=~A~]"
 								user-slug actual-id actual-slug))>
-						    (progn display-name)
+						      (progn display-name)
+						      (let ((full-name (get-user-full-name user-id)))
+							(when (and user-slug (stringp full-name) (> (length full-name) 0))
+								  <span class="user-full-name">\((progn full-name)\)</span>))
 						  </h1>
 						  <div class="user-stats">
 						    Karma:
@@ -1739,7 +1745,8 @@ signaled condition to OUT-STREAM."
 										      '(("/arbital.css" "text/css")
 											("/script.js" "text/javascript")
 											("/assets/favicon.ico" "image/x-icon")
-											("/assets/telegraph.jpg" "image/jpeg"))
+											("/assets/telegraph.jpg" "image/jpeg")
+											("/assets/popup.svg" "image/svg+xml"))
                                                                                       collect (defres uri content-type))))
                                                                    (when file
                                                                      (when (assoc "v" (hunchentoot:get-parameters r) :test #'string=)

@@ -2526,6 +2526,42 @@ function setCommentsSortModeSelectButtonsAccesskey() {
 /* COMMENT PARENT POPUPS */
 /*************************/
 
+function previewPopupsEnabled() {
+	return !JSON.parse(localStorage.getItem("preview-popups-disabled") || "false");
+}
+
+function setPreviewPopupsEnabled(state) {
+	localStorage.setItem("preview-popups-disabled", !state);
+	updatePreviewPopupToggle();
+}
+
+function updatePreviewPopupToggle() {
+	let style = (previewPopupsEnabled() ? "--display-slash: none" : "");
+	query("#preview-popup-toggle use").setAttribute("style", style);
+}
+
+function injectPreviewPopupToggle() {
+	GWLog("injectPreviewPopupToggle");
+
+	let toggle = addUIElement("<div id='preview-popup-toggle' title='Toggle link preview popups'><svg width=40 height=50><use href='"+GW.assets["popup.svg"]+"#svg8' /></svg>");
+	updatePreviewPopupToggle();
+	toggle.addActivateEvent(event => setPreviewPopupsEnabled(!previewPopupsEnabled()))
+}
+
+var currentPreviewPopup = null;
+var currentPreviewPopupTimeout = null;
+
+function removePreviewPopup() {
+	if(currentPreviewPopup) {
+		removeElement(currentPreviewPopup);
+		currentPreviewPopup = null;
+	}
+	if(currentPreviewPopupTimeout) {
+		clearTimeout(currentPreviewPopupTimeout);
+		currentPreviewPopupTimeout = null;
+	}
+}
+
 function addCommentParentPopups() {
 	GWLog("addCommentParentPopups");
 	//if (!query("#content").hasClass("comment-thread-page")) return;
@@ -2538,8 +2574,10 @@ function addCommentParentPopups() {
 			let linkCommentId = (/\/(?:comment|answer)\/([^\/#]+)$/.exec(url.pathname)||[])[1] || (/#comment-(.+)/.exec(url.hash)||[])[1];
 			
 			if(url.hash && linkTag.hasClass("comment-parent-link") || linkTag.hasClass("comment-child-link")) {
-				linkTag.addEventListener("mouseover", GW.commentParentLinkMouseOver = (event) => {
+				linkTag.addEventListener("pointerover", GW.commentParentLinkMouseOver = (event) => {
+					if(event.pointerType == "touch") return;
 					GWLog("GW.commentParentLinkMouseOver");
+					removePreviewPopup();
 					let parentID = linkHref;
 					var parent, popup;
 					if (!(parent = (query(parentID)||{}).firstChild)) return;
@@ -2565,9 +2603,14 @@ function addCommentParentPopups() {
 				&& !linkTag.closest("nav")
 				&& (!url.hash || linkCommentId)
 				&& linkTag.getCommentId() !== linkCommentId) {
-				linkTag.addEventListener("mouseover", event => {
-					let wrapper = document.createElement("div");
+				linkTag.addEventListener("pointerover", event => {
+					if(event.buttons != 0 || event.pointerType == "touch" || !previewPopupsEnabled()) return;
+					removePreviewPopup();
+					
+					let wrapper = document.createElement("a");
 					let popup = document.createElement("iframe");
+
+					wrapper.setAttribute("href", linkHref.toString());
 					
 					let popupTarget;
 					if(linkHref.match(/#comment-/)) {
@@ -2579,6 +2622,9 @@ function addCommentParentPopups() {
 					
 					popup.style.width = "700px";
 					popup.style.height = "500px";
+					popup.style.visibility = "hidden";
+					query('#content').insertAdjacentElement("beforeend", popup);
+					currentPreviewPopup = popup;
 
 					let linkRect = linkTag.getBoundingClientRect();
 
@@ -2591,21 +2637,42 @@ function addCommentParentPopups() {
 					
 					if(linkRect.right + 710 < window.innerWidth)
 						popup.style.left = linkRect.right + 10 + "px";
+					else
+						popup.style.right = "10px";
+
+					let recenter = function(popupHeight) {
+						popup.style.top = (window.innerHeight - popupHeight) * (linkRect.top / (window.innerHeight - linkRect.height)) + 'px';
+					}
+					recenter(500);
 					
 					popup.addEventListener("load", event => {
 						popupContent = popup.contentDocument.querySelector("#content");
-						popup.style.height = (popupContent.clientHeight + 2) + "px";
+						let popupHeight = popupContent.clientHeight + 2;
+						if(popupHeight > (window.innerHeight * 0.875)) popupHeight = window.innerHeight * 0.875;
+						popup.style.height = popupHeight + "px";
+						recenter(popupHeight);
 						let hideButton = popup.contentDocument.createElement("div");
 						hideButton.className = "popup-hide-button";
 						hideButton.insertAdjacentText('beforeend', "\uF070");
-						hideButton.onclick = (event) => removeElement(wrapper);
+						hideButton.onclick = (event) => {
+							removePreviewPopup();
+							setPreviewPopupsEnabled(false);
+						}
 						popupContent.appendChild(hideButton);
 					});
-					query('#content').insertAdjacentElement("beforeend", wrapper);
-					wrapper.appendChild(popup);
 					wrapper.addEventListener("mouseleave", event => {
-						removeElement(wrapper);
+						removePreviewPopup();
 					}, {once: true});
+
+					currentPreviewPopupTimeout = setTimeout(() => {
+						linkTag.removeEventListener("mouseleave", removePreviewPopup);
+						popup.style.visibility = "unset"
+						wrapper.appendChild(popup);
+						query('#content').insertAdjacentElement("beforeend", wrapper);
+						currentPreviewPopup = wrapper;
+					}, 150);
+					
+					linkTag.addEventListener("mouseleave", removePreviewPopup, {once: true});
 				});
 			}
 		}
@@ -3777,6 +3844,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	if (GW.useFancyFeatures) injectAntiKibitzer();
 
 	// Add comment parent popups.
+	if (GW.useFancyFeatures) injectPreviewPopupToggle();
 	addCommentParentPopups();
 
 	// Mark original poster's comments with a special class.

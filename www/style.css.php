@@ -1373,6 +1373,12 @@ article {
 	grid-row: 4;
 }
 
+#content.user-page h1.page-main-heading .user-full-name {
+	font-size: 1rem;
+	font-weight: normal;
+	padding-left: 0.5em;
+}
+
 /*=--------------------=*/
 /*= User's karma total =*/
 /*=--------------------=*/
@@ -3865,6 +3871,17 @@ li {
 /* HOVER PREVIEW */
 /*****************/
 
+#preview-popup-toggle {
+	position: absolute;
+	right: -67px;
+	bottom: 285px;
+	cursor: pointer;
+	color: #888;
+}
+#preview-popup-toggle:hover {
+	color: #444;
+}
+
 #content.preview:not(not) {
 	padding: 0;
 }
@@ -3913,7 +3930,7 @@ li {
 @keyframes fadein {
 	from {
 		opacity: 0;
-		transform: translateY(50px);
+		transform: translateY(200px);
 		transform-origin: top;
 	}
 	to {
@@ -3932,7 +3949,7 @@ li {
 	border: 1px solid #ccc;
 	box-shadow: 2px 6px 20px -4px #000;
 	animation: fadein 0.1s ease;
-	transition: height 0.2s ease;
+	transition: height 0.2s ease, top 0.2s ease;
 }
 .popup-hide-button {
 	position: fixed;
@@ -3956,7 +3973,7 @@ li {
 	cursor: pointer;
 }
 .popup-hide-button:hover::before {
-	content: "Turn off hover popups";
+	content: "Turn off preview popups";
 	display: block;
 	position: absolute;
 	width: max-content;
