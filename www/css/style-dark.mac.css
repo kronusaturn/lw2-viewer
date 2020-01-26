@@ -3971,8 +3971,8 @@ li {
 	position: fixed;
 	top: 4px;
 	right: 4px;
-	background:
-	white;
+	color: #fff;
+	background-color: #000;
 	width: 28px;
 	height: 28px;
 	display: flex;
@@ -3994,6 +3994,7 @@ li {
 	position: absolute;
 	width: max-content;
 	right: 32px;
+	color #fff;
 	background-color: #000;
 	border: 1px solid #131313;
 	border-radius: 2px;
