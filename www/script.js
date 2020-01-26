@@ -2613,7 +2613,8 @@ function addCommentParentPopups() {
 					let wrapper = document.createElement("a");
 					let popup = document.createElement("iframe");
 
-					wrapper.setAttribute("href", linkHref.toString());
+					let originalHref = linkHref.toString();
+					wrapper.setAttribute("href", originalHref);
 					
 					let popupTarget;
 					if(linkHref.match(/#comment-/)) {
@@ -2626,8 +2627,6 @@ function addCommentParentPopups() {
 					popup.style.width = "700px";
 					popup.style.height = "500px";
 					popup.style.visibility = "hidden";
-					query('#content').insertAdjacentElement("beforeend", popup);
-					currentPreviewPopup = popup;
 
 					let linkRect = linkTag.getBoundingClientRect();
 
@@ -2646,7 +2645,12 @@ function addCommentParentPopups() {
 					let recenter = function(popupHeight) {
 						popup.style.top = (window.innerHeight - popupHeight) * (linkRect.top / (window.innerHeight - linkRect.height)) + 'px';
 					}
-					recenter(500);
+
+					let clickListener = event => {
+						if(event.target.tagName.toLowerCase() !== "a") {
+							window.location.href = originalHref;
+						}
+					};
 					
 					popup.addEventListener("load", event => {
 						popupContent = popup.contentDocument.querySelector("#content");
@@ -2661,8 +2665,18 @@ function addCommentParentPopups() {
 							removePreviewPopup();
 							setPreviewPopupsEnabled(false);
 						}
+						
+						let body = popup.contentDocument.querySelector("body");
+						body.addEventListener("click", clickListener);
+						body.style.cursor = "pointer";
 						popupContent.appendChild(hideButton);
 					});
+
+					query('#content').insertAdjacentElement("beforeend", popup);
+					popup.contentDocument.addEventListener("click", clickListener);
+					currentPreviewPopup = popup;
+					recenter(500);
+					
 					wrapper.addEventListener("mouseleave", event => {
 						removePreviewPopup();
 					}, {once: true});
