@@ -318,7 +318,7 @@ body {
 #quick-nav-ui a[href='#bottom-bar'] {
 	line-height: 1.8;
 }
-@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover) {
 	#quick-nav-ui a:hover {
 		box-shadow: 
 			0 0 0 1px #fff inset,
@@ -437,7 +437,7 @@ h1.listing a[href^="http"] {
 		 0 0 2px #000;
 }
 
-@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover) {
 	h1.listing a:hover,
 	h1.listing a:focus {
 		color: #777;
@@ -548,7 +548,7 @@ h1.listing + .post-meta .read-time {
 h1.listing.own-post-listing {
 	padding-right: 36px;
 }
-@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover) {
 	#content.user-page h1.listing:focus-within::before {
 		left: -0.625em;
 	}
@@ -962,7 +962,7 @@ div.comment-child-links a {
 	background: linear-gradient(to right, transparent 0%, #fff 50%, #fff 100%);
 }
 
-@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover) {
 	#content.compact > .comment-thread .comment-item:hover .comment,
 	#content.compact > .comment-thread .comment-item.expanded .comment {
 		background-color: #fff;
@@ -981,7 +981,7 @@ div.comment-child-links a {
 			0 0 40px #fff;
 	}
 }
-@media only screen and (hover: none), only screen and (-moz-touch-enabled) {
+@media only screen and (hover: none) {
 	#content.compact > .comment-thread.expanded .comment-item .comment {
 		background-color: #fff;
 		outline: 3px solid #000;
@@ -1235,7 +1235,7 @@ button.guiedit::after {
 	border: 1px solid #000;
 	top: 2px;
 }
-@media only screen and (hover:hover), not screen and (-moz-touch-enabled) {
+@media only screen and (hover:hover) {
 	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover::before,
 	#edit-post-form .post-meta-fields input[type='checkbox']:focus + label::before {
 		box-shadow: 
@@ -1532,7 +1532,7 @@ select {
 	text-shadow: 
 		rgba(255,255,255,0.5) 0px 3px 3px;
 }
-@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover) {
 	#content.alignment-forum-index-page h1.listing a:hover,
 	#content.alignment-forum-index-page h1.listing a:focus {
 		background-color: rgba(242,246,255,0.85);
@@ -1658,7 +1658,7 @@ select {
 /* MOBILE */
 /*========*/
 
-@media only screen and (hover: none), only screen and (-moz-touch-enabled) {
+@media only screen and (hover: none) {
 	#ui-elements-container > div[id$='-ui-toggle'] button,
 	#theme-selector .theme-selector-close-button  {
 		color: #000;

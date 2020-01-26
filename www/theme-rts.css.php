@@ -391,7 +391,7 @@ a.nav-inner,
 	opacity: 0.4;
 	color: #bbb;
 }
-@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover) {
 	#quick-nav-ui a:hover {
 		background-color: #f0f0eb;
 		color: #333;
@@ -422,7 +422,7 @@ a.nav-inner,
 	color: #e6e6e6;
 	text-shadow: none;
 }
-@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover) {
 	#new-comment-nav-ui .new-comments-count:hover {
 		text-shadow: 
 			0 0 1px #fff,
@@ -584,7 +584,7 @@ h1.listing a[href^='/posts'] {
 	padding: 0 2px 1px 1px;
 }
 
-@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover) {
 	h1.listing a[href^='/posts'] {
 		max-width: calc(100% - 60px);
 		padding: 2px 2px 1px 1px;
@@ -686,7 +686,7 @@ h1.listing + .post-meta .link-post-domain {
 h1.listing.own-post-listing {
 	padding-right: 36px;
 }
-@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover) {
 	#content.user-page h1.listing:focus-within::before {
 		top: -2px;
 	}
@@ -1220,7 +1220,7 @@ a.comment-parent-link:hover::before {
 	background: linear-gradient(to right, transparent 0%, #fff 50%, #fff 100%);
 }
 
-@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover) {
 	#content.compact > .comment-thread .comment-item:hover .comment,
 	#content.compact > .comment-thread .comment-item.expanded .comment {
 		background-color: #fff;
@@ -1239,7 +1239,7 @@ a.comment-parent-link:hover::before {
 			0 0 40px #fff;
 	}
 }
-@media only screen and (hover: none), only screen and (-moz-touch-enabled) {
+@media only screen and (hover: none) {
 	#content.compact > .comment-thread.expanded .comment-item .comment {
 		background-color: #fff;
 		outline: 3px solid #888;
@@ -1523,7 +1523,7 @@ a.comment-parent-link:hover::before {
 	border: 1px solid #ddd;
 	color: #777;
 }
-@media only screen and (hover:hover), not screen and (-moz-touch-enabled) {
+@media only screen and (hover:hover) {
 	#edit-post-form .post-meta-fields input[type='checkbox'] + label:hover,
 	#edit-post-form .post-meta-fields input[type='checkbox']:focus + label {
 		text-shadow: 
@@ -1606,7 +1606,7 @@ input[type='submit']:active {
 		transform: none;
 	}
 }
-@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover) {
 	button:hover,
 	input[type='submit']:hover,
 	button:focus,
@@ -1868,7 +1868,7 @@ select {
 	text-shadow: 
 		rgba(255,255,255,0.5) 0px 3px 3px;
 }
-@media only screen and (hover: hover), not screen and (-moz-touch-enabled) {
+@media only screen and (hover: hover) {
 	#content.alignment-forum-index-page h1.listing a:hover,
 	#content.alignment-forum-index-page h1.listing a:focus {
 		background-color: rgba(244,245,255,0.85);
@@ -1931,7 +1931,7 @@ select {
 /* MOBILE */
 /*========*/
 
-@media only screen and (hover: none), only screen and (-moz-touch-enabled) {
+@media only screen and (hover: none) {
 	#ui-elements-container > div[id$='-ui-toggle'] button  {
 		color: #bbb;
 		text-shadow:
