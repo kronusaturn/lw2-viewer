@@ -2646,7 +2646,8 @@ function addCommentParentPopups() {
 					}
 
 					let clickListener = event => {
-						if(event.target.tagName.toLowerCase() !== "a") {
+						if(event.target.tagName.toLowerCase() !== "a"
+						   && !event.target.closest("popup-hide-button")) {
 							window.location = linkHref;
 						}
 					};
@@ -2663,6 +2664,7 @@ function addCommentParentPopups() {
 						hideButton.onclick = (event) => {
 							removePreviewPopup();
 							setPreviewPopupsEnabled(false);
+							event.stopPropagation();
 						}
 						
 						let body = popup.contentDocument.querySelector("body");
