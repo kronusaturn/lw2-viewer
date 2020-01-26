@@ -15,6 +15,8 @@
 /*	Color scheme.
 	*/
 :root {
+	--GW-toggle-widget-color: #bbb;
+	--GW-toggle-widget-hover-color: #777;
 }
 
 /*======*/
@@ -464,14 +466,14 @@ a.nav-inner,
 
 #anti-kibitzer-toggle button::before,
 #anti-kibitzer-toggle button::after {
-	background-color: #bbb;
+	background-color: var(--GW-toggle-widget-color);
 	-webkit-background-clip: text;
 	color: transparent;
 	text-shadow: rgba(255,255,255,0.5) 0px 1px 1px;
 }
 #anti-kibitzer-toggle button:hover::before,
 #anti-kibitzer-toggle button:hover::after {
-	background-color: #777;
+	background-color: var(--GW-toggle-widget-hover-color);
 }
 
 /*======================*/

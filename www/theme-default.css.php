@@ -21,6 +21,10 @@
 	--GW-comment-background-color-odd: #eee;
 	--GW-comment-background-color-even: #fff;
 	--GW-comment-background-color-target: #ffd;
+
+	--GW-toggle-widget-color: #888;
+	--GW-toggle-widget-hover-color: #444;
+	--GW-toggle-widget-shadow-color: rgba(255, 255, 255, 0.5);
 }
 
 /*======*/
@@ -430,14 +434,14 @@ body {
 
 #anti-kibitzer-toggle button::before,
 #anti-kibitzer-toggle button::after {
-	background-color: #888;
+	background-color: var(--GW-toggle-widget-color);
 	-webkit-background-clip: text;
 	color: transparent;
-	text-shadow: rgba(255,255,255,0.5) 0px 1px 1px;
+	text-shadow: var(--GW-toggle-widget-shadow-color) 0px 1px 1px;
 }
 #anti-kibitzer-toggle button:hover::before,
 #anti-kibitzer-toggle button:hover::after {
-	background-color: #444;
+	background-color: var(--GW-toggle-widget-hover-color);
 }
 
 /*======================*/

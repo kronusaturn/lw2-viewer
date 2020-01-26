@@ -3892,10 +3892,10 @@ li {
 	right: -67px;
 	bottom: 285px;
 	cursor: pointer;
-	color: #888;
+	color: var(--GW-toggle-widget-color, #888);
 }
 #preview-popup-toggle:hover {
-	color: #444;
+	color: var(--GW-toggle-widget-hover-color, #444);
 }
 
 #content.preview:not(not) {

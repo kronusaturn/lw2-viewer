@@ -3892,10 +3892,10 @@ li {
 	right: -67px;
 	bottom: 285px;
 	cursor: pointer;
-	color: #666;
+	color: var(--GW-toggle-widget-color, #888);
 }
 #preview-popup-toggle:hover {
-	color: #aeaeae;
+	color: var(--GW-toggle-widget-hover-color, #444);
 }
 
 #content.preview:not(not) {
@@ -5559,6 +5559,10 @@ a.comment-parent-link::after {
 	--GW-comment-background-color-odd: #131313;
 	--GW-comment-background-color-even: #000;
 	--GW-comment-background-color-target: #00001e;
+
+	--GW-toggle-widget-color: #666;
+	--GW-toggle-widget-hover-color: #aeaeae;
+	--GW-toggle-widget-shadow-color: rgba(0, 0, 0, 0.5);
 }
 
 /*======*/
@@ -5977,14 +5981,14 @@ body {
 
 #anti-kibitzer-toggle button::before,
 #anti-kibitzer-toggle button::after {
-	background-color: #666;
+	background-color: var(--GW-toggle-widget-color);
 	-webkit-background-clip: text;
 	color: transparent;
-	text-shadow: rgba(0, 0, 0, 0.5) 0px 1px 1px;
+	text-shadow: var(--GW-toggle-widget-shadow-color) 0px 1px 1px;
 }
 #anti-kibitzer-toggle button:hover::before,
 #anti-kibitzer-toggle button:hover::after {
-	background-color: #aeaeae;
+	background-color: var(--GW-toggle-widget-hover-color);
 }
 
 /*======================*/
