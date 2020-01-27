@@ -19,7 +19,7 @@
 /*====================*/
 
 #ui-elements-container {
-	height: unset;
+	height: unset !important;
 	position: unset;
 }
 #ui-elements-container > * {

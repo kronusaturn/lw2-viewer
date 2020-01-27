@@ -1230,7 +1230,7 @@ h1.listing a[href^="http"] {
 /*=----------------------=*/
 /*	(On desktops, hover over a multi-line listing to reveal all of it) */
 
-@media only screen and (hover: hover) {
+@media only screen and (min-width: 1160px) {
 	h1.listing a {
 		max-width: 100%;
 		display: inline-block;
