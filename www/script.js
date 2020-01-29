@@ -2622,7 +2622,7 @@ function addCommentParentPopups() {
 				&& linkTag.getCommentId() !== linkCommentId) {
 				linkTag.addEventListener("pointerover", event => {
 					if(event.buttons != 0 || event.pointerType == "touch" || !previewPopupsEnabled()) return;
-					if(currentPreviewPopupLinkTag === linkTag) return;
+					if(currentPreviewPopupLinkTag) return;
 					removePreviewPopup();
 
 					currentPreviewPopupLinkTag = linkTag;
