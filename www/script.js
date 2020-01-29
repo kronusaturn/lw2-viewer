@@ -2647,14 +2647,6 @@ function addCommentParentPopups() {
 
 					let linkRect = linkTag.getBoundingClientRect();
 
-					/*
-					wrapper.style.position = 'fixed';
-					wrapper.style.top = linkRect.top - 5 + 'px';
-					wrapper.style.left = linkRect.left + 'px';
-					wrapper.style.height = linkRect.height + 5 + 'px';
-					wrapper.style.width = linkRect.width + 15 + 'px';
-					wrapper.style.zIndex = 10002; */
-					
 					if(linkRect.right + 710 < window.innerWidth)
 						popup.style.left = linkRect.right + 10 + "px";
 					else
