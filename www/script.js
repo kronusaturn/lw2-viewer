@@ -2623,6 +2623,9 @@ function addCommentParentPopups() {
 				linkTag.addEventListener("pointerover", event => {
 					if(event.buttons != 0 || event.pointerType == "touch" || !previewPopupsEnabled()) return;
 					if(currentPreviewPopupLinkTag) return;
+					linkTag.createPreviewPopup();
+				});
+				linkTag.createPreviewPopup = function() {
 					removePreviewPopup();
 
 					currentPreviewPopupLinkTag = linkTag;
@@ -2698,16 +2701,26 @@ function addCommentParentPopups() {
 						query('#content').appendChild(popup);
 					}, 150);
 
-					let pointerX, pointerY;
+					let pointerX, pointerY, mousePauseTimeout = null;
 
 					currentPreviewPopupPointerListener = (event) => {
 						pointerX = event.clientX;
 						pointerY = event.clientY;
+
+						if(mousePauseTimeout) clearTimeout(mousePauseTimeout);
+
 						let overElement = document.elementFromPoint(pointerX, pointerY);
-						if(overElement === linkTag || overElement === popup) return;
-						if(event.clientX < popup.getBoundingClientRect().left
-						   && event.movementX >= 0) return;
-						removePreviewPopup();
+
+						if(overElement === linkTag || overElement === popup
+						   || (event.clientX < popup.getBoundingClientRect().left
+						       && event.movementX >= 0)) {
+							if(overElement !== linkTag && overElement !== popup && overElement['createPreviewPopup']) {
+								mousePauseTimeout = setTimeout(overElement.createPreviewPopup, 500);
+							}
+						} else {
+							removePreviewPopup();
+							if(overElement['createPreviewPopup']) overElement.createPreviewPopup();
+						}
 					};
 					window.addEventListener("pointermove", currentPreviewPopupPointerListener);
 
@@ -2717,7 +2730,7 @@ function addCommentParentPopups() {
 						removePreviewPopup();
 					};
 					window.addEventListener("scroll", currentPreviewPopupScrollListener, {passive: true});
-				});
+				};
 			}
 		}
 	});
