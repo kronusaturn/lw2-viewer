@@ -2552,16 +2552,30 @@ function injectPreviewPopupToggle() {
 }
 
 var currentPreviewPopup = null;
+var currentPreviewPopupLinkTag = null;
 var currentPreviewPopupTimeout = null;
+var currentPreviewPopupPointerListener = null;
+var currentPreviewPopupScrollListener = null;
 
 function removePreviewPopup() {
 	if(currentPreviewPopup) {
 		removeElement(currentPreviewPopup);
 		currentPreviewPopup = null;
 	}
+
+	currentPreviewPopupLinkTag = null;
+	
 	if(currentPreviewPopupTimeout) {
 		clearTimeout(currentPreviewPopupTimeout);
 		currentPreviewPopupTimeout = null;
+	}
+	if(currentPreviewPopupPointerListener) {
+		window.removeEventListener("pointermove", currentPreviewPopupPointerListener);
+		currentPreviewPopupPointerListener = null;
+	}
+	if(currentPreviewPopupScrollListener) {
+		window.removeEventListener("scroll", currentPreviewPopupScrollListener);
+		currentPreviewPopupScrollListener = null;
 	}
 }
 
@@ -2608,13 +2622,14 @@ function addCommentParentPopups() {
 				&& linkTag.getCommentId() !== linkCommentId) {
 				linkTag.addEventListener("pointerover", event => {
 					if(event.buttons != 0 || event.pointerType == "touch" || !previewPopupsEnabled()) return;
+					if(currentPreviewPopupLinkTag === linkTag) return;
 					removePreviewPopup();
-					
-					let wrapper = document.createElement("a");
-					let popup = document.createElement("iframe");
 
-					wrapper.setAttribute("href", linkHref);
+					currentPreviewPopupLinkTag = linkTag;
 					
+					let popup = document.createElement("iframe");
+					currentPreviewPopup = popup;
+
 					let popupTarget = linkHref;
 					if(popupTarget.match(/#comment-/)) {
 						popupTarget = popupTarget.replace(/#comment-/, "/comment/");
@@ -2629,12 +2644,13 @@ function addCommentParentPopups() {
 
 					let linkRect = linkTag.getBoundingClientRect();
 
+					/*
 					wrapper.style.position = 'fixed';
 					wrapper.style.top = linkRect.top - 5 + 'px';
 					wrapper.style.left = linkRect.left + 'px';
 					wrapper.style.height = linkRect.height + 5 + 'px';
 					wrapper.style.width = linkRect.width + 15 + 'px';
-					wrapper.style.zIndex = 10002;
+					wrapper.style.zIndex = 10002; */
 					
 					if(linkRect.right + 710 < window.innerWidth)
 						popup.style.left = linkRect.right + 10 + "px";
@@ -2675,20 +2691,32 @@ function addCommentParentPopups() {
 
 					query('#content').insertAdjacentElement("beforeend", popup);
 					popup.contentDocument.addEventListener("click", clickListener);
-					currentPreviewPopup = popup;
 					recenter(500);
 					
-					wrapper.addEventListener("mouseleave", removePreviewPopup, {once: true});
-
 					currentPreviewPopupTimeout = setTimeout(() => {
-						linkTag.removeEventListener("mouseleave", removePreviewPopup);
 						popup.style.visibility = "unset"
-						query('#content').insertAdjacentElement("beforeend", wrapper);
-						wrapper.appendChild(popup);
-						currentPreviewPopup = wrapper;
+						query('#content').appendChild(popup);
 					}, 150);
-					
-					linkTag.addEventListener("mouseleave", removePreviewPopup, {once: true});
+
+					let pointerX, pointerY;
+
+					currentPreviewPopupPointerListener = (event) => {
+						pointerX = event.clientX;
+						pointerY = event.clientY;
+						let overElement = document.elementFromPoint(pointerX, pointerY);
+						if(overElement === linkTag || overElement === popup) return;
+						if(event.clientX < popup.getBoundingClientRect().left
+						   && event.movementX >= 0) return;
+						removePreviewPopup();
+					};
+					window.addEventListener("pointermove", currentPreviewPopupPointerListener);
+
+					currentPreviewPopupScrollListener = (event) => {
+						let overElement = document.elementFromPoint(pointerX, pointerY);
+						if(overElement === linkTag || overElement === popup) return;
+						removePreviewPopup();
+					};
+					window.addEventListener("scroll", currentPreviewPopupScrollListener, {passive: true});
 				});
 			}
 		}
