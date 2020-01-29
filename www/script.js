@@ -2644,6 +2644,9 @@ function addCommentParentPopups() {
 					popup.style.width = "700px";
 					popup.style.height = "500px";
 					popup.style.visibility = "hidden";
+					popup.style.transition = "initial";
+
+					query('#content').insertAdjacentElement("beforeend", popup);
 
 					let linkRect = linkTag.getBoundingClientRect();
 
@@ -2652,7 +2655,16 @@ function addCommentParentPopups() {
 					else
 						popup.style.right = "10px";
 
-					let recenter = function(popupHeight) {
+					let recenter = function() {
+						let popupHeight = 500;
+						if(popup.contentDocument && popup.contentDocument.readyState !== "loading") {
+							let popupContent = popup.contentDocument.querySelector("#content");
+							if(popupContent) {
+								popupHeight = popupContent.clientHeight + 2;
+								if(popupHeight > (window.innerHeight * 0.875)) popupHeight = window.innerHeight * 0.875;
+								popup.style.height = popupHeight + "px";
+							}
+						}
 						popup.style.top = (window.innerHeight - popupHeight) * (linkRect.top / (window.innerHeight - linkRect.height)) + 'px';
 					}
 
@@ -2662,13 +2674,8 @@ function addCommentParentPopups() {
 							window.location = linkHref;
 						}
 					};
-					
-					popup.addEventListener("load", event => {
-						popupContent = popup.contentDocument.querySelector("#content");
-						let popupHeight = popupContent.clientHeight + 2;
-						if(popupHeight > (window.innerHeight * 0.875)) popupHeight = window.innerHeight * 0.875;
-						popup.style.height = popupHeight + "px";
-						recenter(popupHeight);
+
+					popup.addEventListener("load", () => {
 						let hideButton = popup.contentDocument.createElement("div");
 						hideButton.className = "popup-hide-button";
 						hideButton.insertAdjacentText('beforeend', "\uF070");
@@ -2677,20 +2684,32 @@ function addCommentParentPopups() {
 							setPreviewPopupsEnabled(false);
 							event.stopPropagation();
 						}
+						popup.contentDocument.body.appendChild(hideButton);
 						
-						let body = popup.contentDocument.querySelector("body");
+						let body = popup.contentDocument.body;
 						body.addEventListener("click", clickListener);
 						body.style.cursor = "pointer";
-						popupContent.appendChild(hideButton);
+
+						recenter();
 					});
 
-					query('#content').insertAdjacentElement("beforeend", popup);
-					popup.contentDocument.addEventListener("click", clickListener);
-					recenter(500);
+					popup.contentDocument.body.addEventListener("click", clickListener);
 					
 					currentPreviewPopupTimeout = setTimeout(() => {
-						popup.style.visibility = "unset"
-						query('#content').appendChild(popup);
+						recenter();
+
+						requestIdleCallback(() => {
+							if(currentPreviewPopup === popup) {
+								popup.scrolling = "";
+								popup.style.visibility = "unset";
+								popup.style.transition = null;
+
+								popup.animate([
+									{ opacity: 0, transform: "translateY(20%)" },
+									{ opacity: 1, transform: "none" }
+								], { duration: 150, easing: "ease-out" });
+							}
+						});
 					}, 150);
 
 					let pointerX, pointerY, mousePauseTimeout = null;

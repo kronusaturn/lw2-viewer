@@ -3927,28 +3927,16 @@ li {
 	display: none;
 }
 
-@keyframes fadein {
-	from {
-		opacity: 0;
-		transform: translateY(200px);
-		transform-origin: top;
-	}
-	to {
-		opacity: 1;
-		transform: none;
-	}
-}
 .preview-popup {
 	position: fixed;
+	transform-origin: top;
 	top: 10%;
 	right: 10%;
 	max-width: 700px;
 	z-index: 10001;
 	background-color: #eee;
-	max-height: 87.5vh;
 	border: 1px solid #ccc;
 	box-shadow: 2px 6px 20px -4px #000;
-	animation: fadein 0.1s ease;
 	transition: height 0.2s ease, top 0.2s ease;
 }
 .popup-hide-button {
