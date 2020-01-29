@@ -138,7 +138,7 @@ Element.prototype.scrollIntoViewIfNeeded = function() {
 Element.prototype.getCommentId = function() {
 	let item = (this.className == "comment-item" ? this : this.closest(".comment-item"));
 	if (item) {
-		return /^comment-(.*)/.exec(item.id)[1];
+		return (/^comment-(.*)/.exec(item.id)||[])[1];
 	} else {
 		return false;
 	}
@@ -2619,7 +2619,7 @@ function addCommentParentPopups() {
 			else if(url.pathname.match(/^\/(users|posts)\//)
 				&& !linkTag.closest("nav")
 				&& (!url.hash || linkCommentId)
-				&& linkTag.getCommentId() !== linkCommentId) {
+				&& (!linkCommentId || linkTag.getCommentId() !== linkCommentId)) {
 				linkTag.addEventListener("pointerover", event => {
 					if(event.buttons != 0 || event.pointerType == "touch" || !previewPopupsEnabled()) return;
 					if(currentPreviewPopupLinkTag) return;
