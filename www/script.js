@@ -2641,19 +2641,17 @@ function addCommentParentPopups() {
 					popup.setAttribute("src", popupTarget + (popupTarget.match(/\?/) ? '&' : '?') + "format=preview&theme=" + (readCookie('theme') || 'default'));
 					popup.addClass("preview-popup");
 					
-					popup.style.width = "700px";
-					popup.style.height = "500px";
-					popup.style.visibility = "hidden";
-					popup.style.transition = "initial";
-
-					query('#content').insertAdjacentElement("beforeend", popup);
-
 					let linkRect = linkTag.getBoundingClientRect();
 
 					if(linkRect.right + 710 < window.innerWidth)
 						popup.style.left = linkRect.right + 10 + "px";
 					else
 						popup.style.right = "10px";
+
+					popup.style.width = "700px";
+					popup.style.height = "500px";
+					popup.style.visibility = "hidden";
+					popup.style.transition = "none";
 
 					let recenter = function() {
 						let popupHeight = 500;
@@ -2667,6 +2665,10 @@ function addCommentParentPopups() {
 						}
 						popup.style.top = (window.innerHeight - popupHeight) * (linkRect.top / (window.innerHeight - linkRect.height)) + 'px';
 					}
+
+					recenter();
+
+					query('#content').insertAdjacentElement("beforeend", popup);
 
 					let clickListener = event => {
 						if(event.target.tagName.toLowerCase() !== "a"
@@ -2705,7 +2707,7 @@ function addCommentParentPopups() {
 								popup.style.transition = null;
 
 								popup.animate([
-									{ opacity: 0, transform: "translateY(20%)" },
+									{ opacity: 0, transform: "translateY(10%)" },
 									{ opacity: 1, transform: "none" }
 								], { duration: 150, easing: "ease-out" });
 							}
@@ -2726,7 +2728,7 @@ function addCommentParentPopups() {
 						   || (event.clientX < popup.getBoundingClientRect().left
 						       && event.movementX >= 0)) {
 							if(overElement !== linkTag && overElement !== popup && overElement['createPreviewPopup']) {
-								mousePauseTimeout = setTimeout(overElement.createPreviewPopup, 500);
+								mousePauseTimeout = setTimeout(overElement.createPreviewPopup, 150);
 							}
 						} else {
 							removePreviewPopup();
