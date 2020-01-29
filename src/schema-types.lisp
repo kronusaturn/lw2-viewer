@@ -8,6 +8,7 @@
    (slug string)
    (title string)
    (user-id string)
+   (coauthors (or null list) :backend-type backend-lw2 :subfields (:--id))
    (url (or null string))
    (feed-link (or null string) :backend-type backend-feed-crossposts)
    (canonical-source (or null string) :backend-type backend-feed-crossposts)
