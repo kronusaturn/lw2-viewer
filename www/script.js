@@ -2671,7 +2671,7 @@ function addCommentParentPopups() {
 					query('#content').insertAdjacentElement("beforeend", popup);
 
 					let clickListener = event => {
-						if(event.target.tagName.toLowerCase() !== "a"
+						if(!event.target.closest("a, input, label")
 						   && !event.target.closest("popup-hide-button")) {
 							window.location = linkHref;
 						}
