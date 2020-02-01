@@ -818,10 +818,10 @@ h1.listing {
 
 @media only screen and (max-width: 720px) {
 	.body-text ol > li {
-		padding: 0 0 0 1.5em;
+		padding: 0 0 0 2.25em;
 	}
 	.body-text ol > li::before {
-		width: 1em;
+		width: 1.75em;
 	}
 	.body-text ul:not(.contents-list) > li,
 	.body-text ul:not(.contents-list) > li ul > li {
