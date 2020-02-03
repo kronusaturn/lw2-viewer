@@ -1961,6 +1961,7 @@ h1.post-title {
 
 .event-info ul {
 	list-style: none;
+	padding: 0;
 	text-align: center;
 }
 
