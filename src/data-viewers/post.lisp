@@ -16,7 +16,7 @@
 (defun rectify-post (post) (rectify-post* *current-backend* post))
 
 (defun post-section-to-html (post &key skip-section)
-  (schema-bind (:post (rectify-post post) (user-id frontpage-date curated-date meta af draft))
+  (schema-bind (:post (rectify-post post) (user-id frontpage-date curated-date meta is-event af draft))
     (multiple-value-bind (class title href)
 	(cond (af (if (eq skip-section :alignment-forum) nil (values "alignment-forum" "View Alignment Forum posts" "/index?view=alignment-forum")))
 	      ; show alignment forum even if skip-section is t
@@ -25,6 +25,7 @@
 	      (curated-date (if (eq skip-section :featured) nil (values "featured" "View Featured posts" "/index?view=featured")))
 	      (frontpage-date (if (eq skip-section :frontpage) nil (values "frontpage" "View Frontpage posts" "/")))
 	      (meta (if (eq skip-section :meta) nil (values "meta" "View Meta posts" "/index?view=meta")))
+	      (is-event (values "events" "View Events" "/index?view=events"))
 	      (t (if (eq skip-section :personal) nil (values "personal" (format nil "View posts by ~A" (get-username user-id)) (format nil "/users/~A?show=posts" (get-user-slug user-id))))))
       <a class=("post-section ~A" class) title=title href=href></a>)))
 

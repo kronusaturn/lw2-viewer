@@ -1804,6 +1804,9 @@ article {
 .post-section.meta::before {
 	content: "\F077";
 }
+.post-section.events::before {
+	content: "\F5A0";
+}
 .post-section.personal::before {
 	content: "\F007";
 }

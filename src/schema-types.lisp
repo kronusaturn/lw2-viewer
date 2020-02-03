@@ -42,6 +42,7 @@
    (vote-count (or null fixnum))
    (nomination-count-2018 (or null fixnum) :backend-type backend-lw2)
    (review-count-2018 (or null fixnum) :backend-type backend-lw2)
+   (is-event boolean :backend-type backend-lw2)
    (tags list :graphql-ignore t)
    (html-body (or null string) :context :body)))
 
