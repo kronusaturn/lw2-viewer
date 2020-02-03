@@ -1934,6 +1934,36 @@ h1.post-title {
 	border-width: 1px 0;
 }
 
+/**********/
+/* EVENTS */
+/**********/
+
+.event-info .map {
+	position: relative;
+	width: 100%;
+	margin: 2em 0 1em;
+}
+
+.event-info .map::before {
+	content: "";
+	display: block;
+	padding-bottom: 50%;
+}
+
+.event-info .map iframe {
+	width: 100%;
+	height: 100%;
+	border: 1px solid #000;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.event-info ul {
+	list-style: none;
+	text-align: center;
+}
+
 /*******************/
 /* POST NAVIGATION */
 /*******************/

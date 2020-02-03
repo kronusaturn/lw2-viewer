@@ -448,7 +448,7 @@
 			    ("community" (alist :view "new" :meta t :all t))
 			    ("alignment-forum" (alist :view "new" :af t))
 			    ("questions" (alist :view "new" :question t))
-			    ("events" (alist :view "new" :filter "events"))
+			    ("events" (alist :view "events"))
 			    ("nominations" (alist :view "nominations2018"))
 			    ("reviews" (alist :view "reviews2018"))
 			    (t (values

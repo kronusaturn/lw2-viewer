@@ -42,7 +42,12 @@
    (vote-count (or null fixnum))
    (nomination-count-2018 (or null fixnum) :backend-type backend-lw2)
    (review-count-2018 (or null fixnum) :backend-type backend-lw2)
-   (is-event boolean :backend-type backend-lw2)
+   (is-event boolean :backend-type backend-events)
+   (local-start-time (or null string) :backend-type backend-events)
+   (local-end-time (or null string) :backend-type backend-events)
+   (location (or null string) :backend-type backend-events)
+   (google-location (or null list) :backend-type backend-events)
+   (contact-info (or null string) :backend-type backend-events)
    (tags list :graphql-ignore t)
    (html-body (or null string) :context :body)))
 
