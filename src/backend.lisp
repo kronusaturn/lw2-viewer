@@ -10,6 +10,7 @@
            #:start-background-loader #:stop-background-loader #:background-loader-running-p
 	   #:lw2-graphql-query #:lw2-query-string* #:lw2-query-string
            #:lw2-graphql-query-map #:lw2-graphql-query-multi
+	   #:earliest-post-time
 	   #:get-posts-index #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-answers #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
 	   #:sequence-post-ids #:get-sequence #:get-post-sequence-ids #:get-sequence-post
 	   #:get-conversation-messages
@@ -196,6 +197,10 @@
                  ((search "app.missing_document" message) (error (make-condition 'lw2-not-found-error)))
                  ((search "not_allowed" message) (error (make-condition 'lw2-not-allowed-error)))
                  (t (error (make-condition 'lw2-unknown-error :message message))))))))
+
+(define-backend-function earliest-post-time ()
+  (backend-lw2 (load-time-value (local-time:parse-timestring "2005-01-01")))
+  (backend-ea-forum (load-time-value (local-time:parse-timestring "2011-11-24"))))
 
 (define-backend-function fixup-lw2-return-value (value)
   (backend-base

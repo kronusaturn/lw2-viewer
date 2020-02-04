@@ -19,7 +19,8 @@
     #:begin-html #:end-html
     #:*fonts-stylesheet-uris* #:*fonts-redirect-data* #:*fonts-redirect-lock* #:*fonts-redirect-thread*
     #:postprocess-conversation-title
-    #:map-output)
+    #:map-output
+    #:*earliest-post*)
   (:recycle #:lw2-viewer #:lw2.backend))
 
 (in-package #:lw2-viewer) 
@@ -1684,15 +1685,13 @@ signaled condition to OUT-STREAM."
 		  :content-class "sequence-page")
 		 (sequence-to-html sequence)))))
 
-(defparameter *earliest-post* (local-time:parse-timestring "2005-01-01")) 
-
 (define-page view-archive (:regex "^/archive(?:/(\\d{4})|/?(?:$|\\?.*$))(?:/(\\d{1,2})|/?(?:$|\\?.*$))(?:/(\\d{1,2})|/?(?:$|\\?.*$))"
                            (year :type (mod 10000))
                            (month :type (integer 1 12))
                            (day :type (integer 1 31)))
              ((offset :type fixnum :default 0))
-  (local-time:with-decoded-timestamp (:day current-day :month current-month :year current-year) (local-time:now)
-    (local-time:with-decoded-timestamp (:day earliest-day :month earliest-month :year earliest-year) *earliest-post*
+  (local-time:with-decoded-timestamp (:day current-day :month current-month :year current-year :timezone local-time:+utc-zone+) (local-time:now)
+    (local-time:with-decoded-timestamp (:day earliest-day :month earliest-month :year earliest-year :timezone local-time:+utc-zone+) (earliest-post-time)
       (labels ((url-elements (&rest url-elements)
                  (declare (dynamic-extent url-elements))
                  (format nil "/~{~A~^/~}" url-elements))
