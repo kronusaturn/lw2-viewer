@@ -1057,7 +1057,7 @@ signaled condition to OUT-STREAM."
      (let* ((lw2-auth-token *current-auth-token*)
 	    (preview (string-equal format "preview"))
 	    (show-comments (and (not preview) show-comments)))
-       (labels ((output-comments (out-stream id comments target)
+       (labels ((output-comments (out-stream id comments target &key overcomingbias-sort)
 		  (labels ((output-comments-inner ()
 			     (with-error-html-block ()
 			       (if target
@@ -1076,7 +1076,11 @@ signaled condition to OUT-STREAM."
 				       (progn #|<div class="comments-empty-message">(safe (pretty-number (length comments) id))</div>|#
 					 (if chrono
 					     (comment-chrono-to-html out-stream comments)
-					     (comment-tree-to-html out-stream (make-comment-parent-hash comments))))
+					     (let ((parent-hash (make-comment-parent-hash comments)))
+					       (when overcomingbias-sort
+						 (setf (gethash nil parent-hash)
+						       (sort (gethash nil parent-hash) #'local-time:timestamp< :key (lambda (c) (local-time:parse-timestring (cdr (assoc :posted-at c)))))))
+					       (comment-tree-to-html out-stream parent-hash))))
 				       <div class="comments-empty-message">("No ~As." id)</div>)))))
 		    (if preview
 			(output-comments-inner)
@@ -1167,7 +1171,7 @@ signaled condition to OUT-STREAM."
 										(t
 										 (list "comment" normal-comments)))
 					   do (with-error-html-block ()
-						(output-comments out-stream name comments nil))))))))))))))))
+						(output-comments out-stream name comments nil :overcomingbias-sort (cdr (assoc :comment-sort-order post))))))))))))))))))
     (:post (text answer nomination nomination-review af parent-answer-id parent-comment-id edit-comment-id retract-comment-id unretract-comment-id delete-comment-id)
      (let ((lw2-auth-token *current-auth-token*))
        (assert lw2-auth-token)

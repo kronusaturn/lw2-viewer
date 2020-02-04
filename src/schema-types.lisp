@@ -48,6 +48,7 @@
    (location (or null string) :backend-type backend-events)
    (google-location (or null list) :backend-type backend-events)
    (contact-info (or null string) :backend-type backend-events)
+   (comment-sort-order (or null string) :backend-type backend-lw2)
    (tags list :graphql-ignore t)
    (html-body (or null string) :context :body)))
 
