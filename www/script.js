@@ -2618,7 +2618,7 @@ function addCommentParentPopups() {
 					}, {once: true});
 				});
 			}
-			else if(url.pathname.match(/^\/(users|posts)\//)
+			else if(url.pathname.match(/^\/(users|posts|s|p|explore)\//)
 				&& !linkTag.closest("nav")
 				&& (!url.hash || linkCommentId)
 				&& (!linkCommentId || linkTag.getCommentId() !== linkCommentId)) {
@@ -3920,7 +3920,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	if (GW.useFancyFeatures) injectAntiKibitzer();
 
 	// Add comment parent popups.
-	if (GW.useFancyFeatures) injectPreviewPopupToggle();
+	injectPreviewPopupToggle();
 	addCommentParentPopups();
 
 	// Mark original poster's comments with a special class.
