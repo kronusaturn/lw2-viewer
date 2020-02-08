@@ -1724,24 +1724,26 @@ function updateThemeTweakerSampleText() {
 	let sampleText = query("#theme-tweaker-ui #theme-tweak-section-sample-text .sample-text");
 
 	// This causes the sample text to take on the properties of the body text of a post.
-	sampleText.removeClass("post-body");
+	sampleText.removeClass("body-text");
 	let bodyTextElement = query(".post-body") || query(".comment-body");
-	sampleText.addClass("post-body");
+	sampleText.addClass("body-text");
 	sampleText.style.color = bodyTextElement ? 
 								getComputedStyle(bodyTextElement).color : 
 									getComputedStyle(query("#content")).color;
 
 	// Here we find out what is the actual background color that will be visible behind
 	// the body text of posts, and set the sample text’s background to that.
-	var backgroundElement = query("#content");
-	let searchField = query("#nav-item-search input");
-	if (!(getComputedStyle(searchField).backgroundColor == "" || 
-		  getComputedStyle(searchField).backgroundColor == "rgba(0, 0, 0, 0)"))
-		backgroundElement = searchField;
-	else while (getComputedStyle(backgroundElement).backgroundColor == "" || 
-				getComputedStyle(backgroundElement).backgroundColor == "rgba(0, 0, 0, 0)")
-				backgroundElement = backgroundElement.parentElement;
-	sampleText.parentElement.style.backgroundColor = getComputedStyle(backgroundElement).backgroundColor;
+	let backgroundElement = query("#content");
+
+	let goodColor = color => !(color == "" || color == "rgba(0, 0, 0, 0)");
+
+	let elementBackground = element => {
+		let computedBackgroundColor = getComputedStyle(element).backgroundColor;
+		if(goodColor(computedBackgroundColor)) return computedBackgroundColor;
+		computedBackgroundColor = getComputedStyle(element, "::before").backgroundColor;
+		if(goodColor(computedBackgroundColor)) return computedBackgroundColor;
+	};
+	sampleText.parentElement.style.backgroundColor = elementBackground(query("#content")) || elementBackground(query("body")) || "#fff";
 }
 
 /*********************/
@@ -3848,19 +3850,23 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 	// Add error message (as placeholder) if user tries to click Search with
 	// an empty search field.
-	query("#nav-item-search form").addEventListener("submit", GW.siteSearchFormSubmitted = (event) => {
-		let searchField = event.target.query("input");
-		if (searchField.value == "") {
-			event.preventDefault();
-			event.target.blur();
-			searchField.placeholder = "Enter a search string!";
-			searchField.focus();
-		}
-	});
-	// Remove the placeholder / error on any input.
-	query("#nav-item-search input").addEventListener("input", GW.siteSearchFieldValueChanged = (event) => {
-		event.target.placeholder = "";
-	});
+	searchForm: {
+		let searchForm = query("#nav-item-search form");
+		if(!searchForm) break searchForm;
+		searchForm.addEventListener("submit", GW.siteSearchFormSubmitted = (event) => {
+			let searchField = event.target.query("input");
+			if (searchField.value == "") {
+				event.preventDefault();
+				event.target.blur();
+				searchField.placeholder = "Enter a search string!";
+				searchField.focus();
+			}
+		});
+		// Remove the placeholder / error on any input.
+		query("#nav-item-search input").addEventListener("input", GW.siteSearchFieldValueChanged = (event) => {
+			event.target.placeholder = "";
+		});
+	}
 
 	// Prevent conflict between various single-hotkey listeners and text fields
 	queryAll("input[type='text'], input[type='search'], input[type='password']").forEach(inputField => {
