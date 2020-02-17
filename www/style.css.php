@@ -4103,6 +4103,7 @@ li {
 	content: "Alignment Forum";
 	font-size: 1.5rem;
 	margin: 0.375em 0 0 -0.375em;
+	order: -1;
 }
 
 /**********************/
