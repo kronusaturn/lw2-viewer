@@ -3,7 +3,8 @@
 	#:lw2.utils #:lw2.hash-utils #:lw2.backend-modules #:lw2.schema-type #:lw2.conditions #:lw2.web-push)
   (:import-from #:collectors #:with-collector)
   (:reexport #:lw2.backend-modules)
-  (:export #:*graphql-debug-output*
+  (:export #:*use-alignment-forum*
+	   #:*graphql-debug-output*
 	   #:*revalidate-default* #:*force-revalidate-default*
            #:*messages-index-fields*
            #:*notifications-base-terms*
@@ -29,6 +30,7 @@
 (in-package #:lw2.backend)
 
 (defvar *cookie-jar* (make-instance 'drakma:cookie-jar))
+(defvar *use-alignment-forum* nil)
 
 (defvar *graphql-debug-output* nil)
 
@@ -249,6 +251,11 @@
    (postprocess-query-result
     (deserialize-query-result result-source))))
 
+(defmethod graphql-uri ((backend backend-alignment-forum))
+  (if *use-alignment-forum*
+      "https://www.alignmentforum.org/graphql"
+      (call-next-method)))
+
 (define-backend-function call-with-backend-response (fn query &key auth-token)
   (backend-graphql
    (call-with-http-response
@@ -257,7 +264,8 @@
     :method :post
     :content-type "application/json"
     :content (json:encode-json-to-string (acons "query" query nil))
-    :cookie-jar *cookie-jar* :additional-headers (if auth-token `(("authorization" . ,auth-token)) nil)
+    :cookie-jar *cookie-jar*
+    :additional-headers (list-cond (auth-token "authorization" auth-token))
     :want-stream t)))
 
 (define-backend-function lw2-graphql-query (query &key auth-token return-type (decoder 'decode-query-result))

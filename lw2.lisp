@@ -1307,16 +1307,18 @@ signaled condition to OUT-STREAM."
 	(redirect return))))
 
 (define-page view-recent-comments "/recentcomments" ((offset :type fixnum)
-                                                     (limit :type fixnum))
+                                                     (limit :type fixnum)
+						     (view :member '(nil :alignment-forum)))
   (let ((want-total (not (or (typep *current-backend* 'backend-lw2) (typep *current-backend* 'backend-ea-forum))))) ; LW2/EAF can't handle total queries. TODO: handle this in backend.
     (multiple-value-bind (recent-comments total)
-      (if (or offset limit (/= (user-pref :items-per-page) 20))
-          (lw2-graphql-query (lw2-query-string :comment :list
-                                               (remove nil (alist :view "allRecentComments" :limit (or limit (user-pref :items-per-page)) :offset offset)
-                                                       :key #'cdr)
-                                               :context :index
-                                               :with-total want-total))
-          (get-recent-comments :with-total want-total))
+	(if (or offset limit view (/= (user-pref :items-per-page) 20))
+	    (let ((*use-alignment-forum* (eq view :alignment-forum)))
+	      (lw2-graphql-query (lw2-query-string :comment :list
+						   (remove nil (alist :view "allRecentComments" :limit (or limit (user-pref :items-per-page)) :offset offset)
+							   :key #'cdr)
+						   :context :index
+						   :with-total want-total)))
+	    (get-recent-comments :with-total want-total))
       (view-items-index recent-comments :title "Recent comments" :pagination (pagination-nav-bars :offset (or offset 0) :with-next (not want-total) :total (if want-total total))))))
 
 (hunchentoot:define-easy-handler (view-push-register :uri "/push/register") ()
