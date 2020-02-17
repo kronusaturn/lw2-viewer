@@ -79,6 +79,10 @@ body {
 /* NAV BAR */
 /*=========*/
 
+#tertiary-bar {
+	display: none; /* FIXME */
+}
+
 /*= Layout (desktop) =*/
 
 @media not screen and (hover: none) {

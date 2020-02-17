@@ -444,8 +444,7 @@
 }
 
 @media only screen and (max-width: 900px) {
-	#primary-bar,
-	#secondary-bar {
+	.nav-bar-top {
 		font-size: 0.75rem;
 	}
 	.nav-bar {
@@ -459,16 +458,14 @@
 	#primary-bar .nav-item {
 		flex: 1 1 100%;
 	}
-	#secondary-bar .nav-item:not(#nav-item-search) {
+	.nav-bar-top:not(#primary-bar) .nav-item:not(#nav-item-search) {
 		flex: 1 1 60px;
 	}
-	#primary-bar .nav-inner,
-	#secondary-bar .nav-inner {
+	.nav-bar-top:not(#anything) .nav-inner {
 		text-transform: uppercase;
 		padding: 6px;
 	}
-	#primary-bar .nav-inner::before, 
-	#secondary-bar .nav-inner::before {
+	.nav-bar-top .nav-inner::before {
 		display: block;
 		font-family: "Font Awesome";
 		font-size: 2em;
@@ -490,8 +487,20 @@
 	#nav-item-recent-comments > * > span {
 		display: none;
 	}
-	#nav-item-recent-comments .nav-inner::before {
+	#nav-item-recent-comments .nav-inner::before,
+	#nav-item-alignment-forum-comments .nav-inner::before {
 		content: "\F036";
+	}
+	#nav-item-alignment-forum .nav-inner::before {
+		content: "AF";
+		font-family: Concourse, 'Changa One';
+	}
+	#nav-item-questions .nav-inner::before {
+		content: "?";
+		font-family: Concourse, 'Changa One';
+	}
+	#nav-item-events .nav-inner::before {
+		content: "\F5A0";
 	}
 	#nav-item-archive .nav-inner::before {
 		content: "\F187";
@@ -535,11 +544,11 @@
 	}
 }
 @media only screen and (max-width: 520px) {
-	#primary-bar,
-	#secondary-bar {
+	.nav-bar-top {
 		font-size: 0.5rem;
 	}
 
+	#nav-item-search,
 	#nav-item-search .nav-inner {
 		padding: 0;
 	}
@@ -757,12 +766,8 @@ h1.listing {
 }
 @media only screen and (max-width: 520px) {
 	#content.user-page h1.page-main-heading {
-		padding-right: 100px;
 		overflow: hidden;
 		text-overflow: ellipsis;
-	}
-	#content.user-page .user-stats {
-		grid-column: 2 / span 2;
 	}
 	#content.user-page .user-stats .karma-type {
 		display: block;

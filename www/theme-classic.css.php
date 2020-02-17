@@ -49,10 +49,10 @@ body {
 #primary-bar.inactive-bar .nav-inner {
 	padding: 13px 30px 11px 30px;
 }
-#secondary-bar .nav-inner {
+.nav-bar-top:not(#primary-bar) .nav-inner {
 	font-size: 0.875em;
 }
-#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
+.nav-bar-top:not(#primary-bar) .nav-item:not(#nav-item-search) .nav-inner {
 	padding: 6px 0 4px 0;
 }
 @media only screen and (min-width: 901px) {
@@ -2103,10 +2103,10 @@ select {
 		#primary-bar .nav-inner {
 			font-size: 1.25em;
 		}
-		#secondary-bar .nav-inner {
+		.nav-bar-top:not(#primary-bar) .nav-inner {
 			font-size: 1.125em;
 		}
-		#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
+		.nav-bar-top:not(#primary-bar) .nav-item:not(#nav-item-search) .nav-inner {
 			padding: 6px 10px;
 		}
 

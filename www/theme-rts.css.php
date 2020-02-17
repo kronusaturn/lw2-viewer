@@ -40,7 +40,7 @@ body {
 	font-size: 1.375em;
 	font-weight: 600;
 }
-#secondary-bar .nav-inner {
+.nav-bar-top:not(#primary-bar) .nav-inner {
 	font-size: 1em;
 }
 
@@ -200,7 +200,6 @@ a.nav-inner,
 /*==============*/
 
 .page-toolbar {
-	grid-row: 3;
 	z-index: 1;
 }
 .page-toolbar * {
@@ -222,8 +221,8 @@ a.nav-inner,
 #top-nav-bar {
 	margin: 0;
 	flex-wrap: wrap;
-	grid-column: 1 / span 3;
-	grid-row: 3;
+	grid-column: 2;
+	min-width: 240px;
 }
 #top-nav-bar .page-number {
 	font-family: <?php echo $text_font; ?>;
@@ -2050,10 +2049,10 @@ select {
 			overflow: visible;
 		}
 
-		#secondary-bar .nav-inner {
+		.nav-bar-top:not(#primary-bar) .nav-inner {
 			font-size: 1.125em;
 		}
-		#secondary-bar .nav-item:not(#nav-item-search) .nav-inner {
+		.nav-bar-top:not(#primary-bar) .nav-item:not(#nav-item-search) .nav-inner {
 			padding: 6px 10px;
 		}
 
