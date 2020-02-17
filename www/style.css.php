@@ -162,7 +162,7 @@ body > * {
 	display: block;
 	position: relative;
 }
-#secondary-bar .nav-inner {
+.nav-bar-top:not(#primary-bar) .nav-inner {
 	padding: 4px 0;
 }
 
@@ -385,6 +385,7 @@ a#inbox-indicator.new-messages:hover::before {
 }
 #content > .page-toolbar {
 	grid-column: 3;
+	grid-row: span 2;
 }
 #content.user-page > .page-toolbar {
 	grid-column: 2 / span 2;
@@ -3783,19 +3784,6 @@ li {
 /* QUALIFIED HYPERLINKING */
 /**************************/
 
-#content.no-comments .comments, 
-#content.no-comments .post-meta .comment-count,
-#content.no-comments .post-meta .karma,
-#content.no-comments + #ui-elements-container #new-comment-nav-ui,
-#content.no-comments + #ui-elements-container #hns-date-picker,
-#content.no-comments + #ui-elements-container #quick-nav-ui {
-	display: none;
-}
-
-#content.no-nav-bars #primary-bar,
-#content.no-nav-bars #secondary-bar {
-	display: none;
-}
 #content.no-nav-bars {
 	margin: 8px auto;
 }

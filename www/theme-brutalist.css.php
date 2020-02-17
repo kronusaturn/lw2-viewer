@@ -59,7 +59,7 @@ body {
 	border-color: transparent;
 	border-width: 0 2px;
 }
-#secondary-bar .nav-inner {
+.nav-bar-top:not(#primary-bar) .nav-inner {
 	font-size: 1em;
 }
 

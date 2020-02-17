@@ -53,7 +53,7 @@ body {
 	font-size: 1.375em;
 	font-weight: 600;
 }
-#secondary-bar .nav-inner {
+.nav-bar-top:not(#primary-bar) .nav-inner {
 	font-size: 1em;
 }
 
