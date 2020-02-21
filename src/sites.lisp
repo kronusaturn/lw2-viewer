@@ -73,7 +73,7 @@
 (defclass lesswrong-viewer-site (forum-site alternate-frontend-site shortform-site) ()
   (:metaclass site-class))
 
-(defclass ea-forum-viewer-site (forum-site alternate-frontend-site) ()
+(defclass ea-forum-viewer-site (forum-site alternate-frontend-site shortform-site) ()
   (:metaclass site-class))
 
 (defclass arbital-site (wiki-site alternate-frontend-site) ()
