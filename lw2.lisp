@@ -1310,20 +1310,30 @@ signaled condition to OUT-STREAM."
       (when return
 	(redirect return))))
 
-(define-page view-recent-comments "/recentcomments" ((offset :type fixnum)
-                                                     (limit :type fixnum)
-						     (view :member '(nil :alignment-forum)))
+(define-component view-comments-index (index-type)
+  (:http-args '((offset :type fixnum)
+		(limit :type fixnum)
+		(view :member '(nil :alignment-forum))))
   (let ((want-total (not (or (typep *current-backend* 'backend-lw2) (typep *current-backend* 'backend-ea-forum))))) ; LW2/EAF can't handle total queries. TODO: handle this in backend.
     (multiple-value-bind (recent-comments total)
-	(if (or offset limit view (/= (user-pref :items-per-page) 20))
+	(if (or (not (eq index-type :recent-comments)) offset limit view (/= (user-pref :items-per-page) 20))
 	    (let ((*use-alignment-forum* (eq view :alignment-forum)))
 	      (lw2-graphql-query (lw2-query-string :comment :list
-						   (remove nil (alist :view "allRecentComments" :limit (or limit (user-pref :items-per-page)) :offset offset)
+						   (remove nil (alist :view (case index-type
+									      (:recent-comments "allRecentComments")
+									      (:shortform "shortform"))
+								      :limit (or limit (user-pref :items-per-page)) :offset offset)
 							   :key #'cdr)
 						   :context :index
 						   :with-total want-total)))
 	    (get-recent-comments :with-total want-total))
-      (view-items-index recent-comments :title "Recent comments" :pagination (pagination-nav-bars :offset (or offset 0) :with-next (not want-total) :total (if want-total total))))))
+      (renderer ()
+	(view-items-index recent-comments :title "Recent comments" :pagination (pagination-nav-bars :offset (or offset 0) :with-next (not want-total) :total (if want-total total)))))))
+
+(define-route 'forum-site 'standard-route :name 'view-recent-comments :uri "/recentcomments" :handler (route-component view-comments-index () :recent-comments))
+(define-route 'shortform-site 'standard-route :name 'view-shortform :uri "/shortform" :handler (route-component view-comments-index () :shortform))
+
+(delete-easy-handler 'view-recent-comments)
 
 (hunchentoot:define-easy-handler (view-push-register :uri "/push/register") ()
   (with-error-page

@@ -4,6 +4,7 @@
   (:export
     #:*sites*
     #:site #:forum-site #:wiki-site
+    #:shortform-site
     #:alternate-frontend-site #:lesswrong-viewer-site #:ea-forum-viewer-site
     #:arbital-site
     #:site-class #:call-route-handler #:site-class-routes
@@ -60,13 +61,16 @@
 (defclass wiki-site (site) ()
   (:metaclass site-class))
 
+(defclass shortform-site (site) ()
+  (:metaclass site-class))
+
 (defclass alternate-frontend-site (site)
   ((main-site-title :accessor main-site-title :initarg :main-site-title :type simple-string)
    (main-site-abbreviation :accessor main-site-abbreviation :initarg :main-site-abbreviation :type simple-string)
    (main-site-uri :accessor main-site-uri :initarg :main-site-uri :type simple-string))
   (:metaclass site-class))
 
-(defclass lesswrong-viewer-site (forum-site alternate-frontend-site) ()
+(defclass lesswrong-viewer-site (forum-site alternate-frontend-site shortform-site) ()
   (:metaclass site-class))
 
 (defclass ea-forum-viewer-site (forum-site alternate-frontend-site) ()

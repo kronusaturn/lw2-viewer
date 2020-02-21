@@ -3,7 +3,8 @@
   (:export #:alist #:get-unix-time #:substring #:regex-replace-body #:reg #:match
 	   #:to-boolean #:nonzero-number-p #:truthy-string-p
 	   #:firstn #:map-plist #:filter-plist #:alist-bind #:list-cond
-	   #:string-to-existing-keyword #:call-with-safe-json)
+	   #:string-to-existing-keyword #:call-with-safe-json
+	   #:delete-easy-handler)
   (:recycle #:lw2-viewer))
 
 (in-package #:lw2.utils)
@@ -109,3 +110,7 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
   (let ((json:*json-identifier-name-to-lisp* #'identity)
 	(json:*identifier-name-to-key* #'string-to-existing-keyword))
     (funcall fn)))
+
+(defun delete-easy-handler (name)
+  (setf hunchentoot::*easy-handler-alist*
+	(remove name hunchentoot::*easy-handler-alist* :key #'third)))
