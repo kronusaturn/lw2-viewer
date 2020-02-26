@@ -1,6 +1,7 @@
 (uiop:define-package #:lw2.conditions
   (:use #:cl #:alexandria #:lw2.html-reader)
   (:export #:*debug-mode*
+	   #:*error-explanation-hook*
 	   #:fatal-error
 	   #:condition-http-return-code
 	   #:error-to-html
@@ -14,6 +15,7 @@
 (named-readtables:in-readtable html-reader)
 
 (defvar *debug-mode* nil)
+(defvar *error-explanation-hook*)
 
 (deftype fatal-error () `(or serious-condition usocket:ns-condition usocket:socket-condition))
 
@@ -23,6 +25,8 @@
   <div class="gw-error">
     <h1>Error</h1>
     (call-next-method)
+    (when (boundp '*error-explanation-hook*)
+      (funcall *error-explanation-hook* condition))
     (when *debug-mode*
       <h2>Backtrace</h2>
       <code><pre>

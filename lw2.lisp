@@ -1135,7 +1135,11 @@ signaled condition to OUT-STREAM."
 					  :extra-head #'extra-head)
 			      (cond
 				(condition
-				 (error-to-html condition))
+				 (let ((*error-explanation-hook* (lambda (c)
+								   (typecase c
+								     (lw2-not-allowed-error
+								      <p>This probably means the post has been deleted or moved back to the author's drafts.</p>)))))
+				   (error-to-html condition)))
 				(t
 				 (post-body-to-html post)))
 			      (when (and lw2-auth-token (equal (logged-in-userid) (cdr (assoc :user-id post))))
