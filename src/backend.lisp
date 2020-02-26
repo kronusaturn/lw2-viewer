@@ -155,7 +155,7 @@
       (warn "Background loader already running.")
       (progn
         (wait-on-semaphore *background-loader-semaphore*)
-        (setf *background-loader-thread* (sb-thread:make-thread #'background-loader)))))
+        (setf *background-loader-thread* (sb-thread:make-thread #'background-loader :name "background loader")))))
 
 (defun stop-background-loader ()
   (if (background-loader-running-p)
@@ -362,15 +362,16 @@
 	       (unwind-protect
 		    (multiple-value-bind (value error)
 			(log-and-ignore-errors
-			 (nth-value 0
-				    (cache-update cache-db cache-key (run-query query))))
+			 (sb-sys:with-deadline (:seconds 60)
+			   (nth-value 0
+				      (cache-update cache-db cache-key (run-query query)))))
 		      (or value error))
 		 (remhash key *background-cache-update-threads*))))
       (sb-ext:with-locked-hash-table (*background-cache-update-threads*)
 				     (let ((thread (gethash key *background-cache-update-threads*)))
 				       (if thread thread
 					 (setf (gethash key *background-cache-update-threads*)
-					       (make-thread-with-current-backend #'background-fn))))))))
+					       (make-thread-with-current-backend #'background-fn :name "background cache update"))))))))
 
 (define-backend-function lw2-graphql-query-timeout-cached (query cache-db cache-key &key (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*))
   (backend-base
