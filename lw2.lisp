@@ -1319,25 +1319,46 @@ signaled condition to *HTML-OUTPUT*."
       (when return
 	(redirect return))))
 
+(defun standalone-comment-controls ()
+  <div class="posting-controls standalone with-markdown-editor" onsubmit="disableBeforeUnload();">
+    <form method="post" id="conversation-form" class="aligned-form">
+      <div class="textarea-container">
+	<textarea name="text" oninput="enableBeforeUnload();"></textarea>
+	<span class="markdown-reference-link">You can use <a href="http://commonmark.org/help/" target="_blank">Markdown</a> here.</span>
+	<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-help-button">Help</button>
+	<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-exit-button">Exit</button>
+      </div>
+      <div>
+	<input name="csrf-token" value=(make-csrf-token) type="hidden">
+	<input value="Submit" type="submit">
+      </div>
+    </form>
+  </div>)
+
 (define-component view-comments-index (index-type)
   (:http-args '((offset :type fixnum)
 		(limit :type fixnum)
 		(view :member '(nil :alignment-forum))))
   (let ((want-total (not (or (typep *current-backend* 'backend-lw2) (typep *current-backend* 'backend-ea-forum))))) ; LW2/EAF can't handle total queries. TODO: handle this in backend.
-    (multiple-value-bind (recent-comments total)
-	(if (or (not (eq index-type :recent-comments)) offset limit view (/= (user-pref :items-per-page) 20))
-	    (let ((*use-alignment-forum* (eq view :alignment-forum)))
-	      (lw2-graphql-query (lw2-query-string :comment :list
-						   (remove nil (alist :view (case index-type
-									      (:recent-comments "allRecentComments")
-									      (:shortform "shortform"))
-								      :limit (or limit (user-pref :items-per-page)) :offset offset)
-							   :key #'cdr)
-						   :context :index
-						   :with-total want-total)))
-	    (get-recent-comments :with-total want-total))
-      (renderer ()
-	(view-items-index recent-comments :title "Recent comments" :pagination (pagination-nav-bars :offset (or offset 0) :with-next (not want-total) :total (if want-total total)))))))
+    (multiple-value-bind (title query-view top-nav)
+	(case index-type
+	  (:shortform (values "Shortform" "shortform" 'standalone-comment-controls))
+	  (t (values (case view (:alignment-forum "Alignment Forum recent comments") (t "Recent comments")) "allRecentComments" nil)))
+      (multiple-value-bind (recent-comments total)
+	  (if (or (not (eq index-type :recent-comments)) offset limit view (/= (user-pref :items-per-page) 20))
+	      (let ((*use-alignment-forum* (eq view :alignment-forum)))
+		(lw2-graphql-query (lw2-query-string :comment :list
+						     (remove nil (alist :view query-view
+									:limit (or limit (user-pref :items-per-page)) :offset offset)
+							     :key #'cdr)
+						     :context :index
+						     :with-total want-total)))
+	      (get-recent-comments :with-total want-total))
+	(renderer ()
+		  (view-items-index recent-comments
+				    :title title
+				    :pagination (pagination-nav-bars :offset (or offset 0) :with-next (not want-total) :total (if want-total total))
+				    :top-nav (lambda () (page-toolbar-to-html :title title) (when top-nav (funcall top-nav)))))))))
 
 (define-route 'forum-site 'standard-route :name 'view-recent-comments :uri "/recentcomments" :handler (route-component view-comments-index () :recent-comments))
 (define-route 'shortform-site 'standard-route :name 'view-shortform :uri "/shortform" :handler (route-component view-comments-index () :shortform))

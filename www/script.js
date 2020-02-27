@@ -1994,7 +1994,11 @@ function injectCommentsListModeSelector() {
 	+ `<button type='button' class='expanded' title='Expanded comments view' tabindex='-1'></button>`
 	+ `<button type='button' class='compact' title='Compact comments view' tabindex='-1'></button>`
 	+ "</div>";
-	(query("#content.user-page .user-stats") || query(".page-toolbar") || query(".active-bar")).insertAdjacentHTML("afterend", commentsListModeSelectorHTML);
+	if(query("#top-nav-bar")) {
+		query("#top-nav-bar").insertAdjacentHTML("beforebegin", commentsListModeSelectorHTML);
+	} else {
+		(query("#content.user-page .user-stats") || query(".page-toolbar") || query(".active-bar")).insertAdjacentHTML("afterend", commentsListModeSelectorHTML);
+	}
 	let commentsListModeSelector = query("#comments-list-mode-selector");
 
 	commentsListModeSelector.queryAll("button").forEach(button => {
