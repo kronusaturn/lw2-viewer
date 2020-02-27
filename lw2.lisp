@@ -219,7 +219,7 @@
 
 (defmacro with-error-html-block (() &body body)
   "If an error occurs within BODY, write an HTML representation of the
-signaled condition to OUT-STREAM."
+signaled condition to *HTML-OUTPUT*."
   `(block with-error-html-block
      (handler-bind ((serious-condition (lambda (c)
 					 (abort-response-if-unrecoverable c)
@@ -499,18 +499,19 @@ signaled condition to OUT-STREAM."
 			  :trailing-html ,(lambda (out-stream) (inbox-to-html out-stream user-slug))))
 	      `("login" ,(format nil "/login?return=~A" (url-rewrite:url-encode current-uri)) "Log In" :accesskey "u" :nofollow t :override-uri "/login"))))
 
-(defun sublevel-nav-to-html (out-stream options current &key default (base-uri (hunchentoot:request-uri*)) (param-name "show") (remove-params '("offset")) extra-class)
+(defun sublevel-nav-to-html (options current &key default (base-uri (hunchentoot:request-uri*)) (param-name "show") (remove-params '("offset")) extra-class)
   (declare (type (or null string) extra-class))
-  (format out-stream "<nav class=\"sublevel-nav~@[ ~A~]\">" extra-class)
-  (loop for item in options
-        do (destructuring-bind (param-value &key (text (string-capitalize param-value)) description) (if (atom item) (list item) item)
-	     (let* ((param-value (string-downcase param-value))
-		    (selected (string-equal current param-value))
-		    (class (if selected "sublevel-item selected" "sublevel-item")))
-	       (link-if-not out-stream selected (apply #'replace-query-params base-uri param-name (unless (string-equal param-value default) param-value)
-						       (loop for x in remove-params nconc (list x nil)))
-			    class text :title description))))
-  (format out-stream "</nav>"))
+  (let ((out-stream *html-output*))
+    (format out-stream "<nav class=\"sublevel-nav~@[ ~A~]\">" extra-class)
+    (loop for item in options
+       do (destructuring-bind (param-value &key (text (string-capitalize param-value)) description) (if (atom item) (list item) item)
+	    (let* ((param-value (string-downcase param-value))
+		   (selected (string-equal current param-value))
+		   (class (if selected "sublevel-item selected" "sublevel-item")))
+	      (link-if-not out-stream selected (apply #'replace-query-params base-uri param-name (unless (string-equal param-value default) param-value)
+						      (loop for x in remove-params nconc (list x nil)))
+			   class text :title description))))
+    (format out-stream "</nav>")))
 
 (defun make-csrf-token (&optional (session-token (hunchentoot:cookie-in "session-token")) (nonce (ironclad:make-random-salt)))
   (if (typep session-token 'string) (setf session-token (base64:base64-string-to-usb8-array session-token)))
@@ -697,7 +698,7 @@ signaled condition to OUT-STREAM."
     (log-conditions
       (html-body out-stream
                  (lambda ()
-                   (when top-nav (funcall top-nav out-stream))
+                   (when top-nav (funcall top-nav))
                    (funcall pagination out-stream fn))
                  :title title :description description :social-description social-description :current-uri current-uri :content-class content-class :robots robots :extra-head extra-head))))
 
@@ -830,8 +831,9 @@ signaled condition to OUT-STREAM."
   (format out-stream "<input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><input type=\"submit\" value=\"~A\">~@[~A~]</form>"
 	  csrf-token button-label end-html))
 
-(defun page-toolbar-to-html (out-stream &key title new-post new-conversation logout (rss t) ignore enable-push-notifications)
-  (let ((liu (logged-in-userid)))
+(defun page-toolbar-to-html (&key title new-post new-conversation logout (rss t) ignore enable-push-notifications)
+  (let ((out-stream *html-output*)
+	(liu (logged-in-userid)))
     (format out-stream "<div class=\"page-toolbar~@[ hide-until-init~]\">" enable-push-notifications)
     (when logout
       (format out-stream "<form method=\"post\" action=\"/logout\"><button class=\"logout-button button\" name=\"logout\" value=\"~A\">Log out</button></form>"
@@ -854,7 +856,7 @@ signaled condition to OUT-STREAM."
               title (replace-query-params (hunchentoot:request-uri*) "offset" nil "format" "rss")))
     (format out-stream "</div>")))
 
-(defun view-items-index (items &key section title current-uri hide-title need-auth (pagination (pagination-nav-bars)) (top-nav (lambda (s) (page-toolbar-to-html s :title title))) (content-class "index-page"))
+(defun view-items-index (items &key section title current-uri hide-title need-auth (pagination (pagination-nav-bars)) (top-nav (lambda () (page-toolbar-to-html :title title))) (content-class "index-page"))
   (alexandria:switch ((hunchentoot:get-parameter "format") :test #'string=)
                      ("rss" 
                       (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
@@ -970,9 +972,8 @@ signaled condition to OUT-STREAM."
       (let ((sort-string (if sort (string-downcase sort))))
 	(if sort-string
 	    (set-user-pref :default-sort sort-string))
-	(renderer (out-stream)
-		  (sublevel-nav-to-html out-stream
-					sort-options
+	(renderer ()
+		  (sublevel-nav-to-html sort-options
 					(user-pref pref)
 					:param-name param-name
 					:extra-class html-class))
@@ -993,12 +994,11 @@ signaled condition to OUT-STREAM."
 				    :section view :title page-title :hide-title (eq view :frontpage)
 				    :pagination (pagination-nav-bars :offset (or offset 0) :total total :with-next (and (not total) (> (length posts) limit)))
 				    :content-class (format nil "index-page ~(~A~)-index-page" view)
-				    :top-nav (lambda (out-stream)
-					       (page-toolbar-to-html out-stream
-								     :title page-title
+				    :top-nav (lambda ()
+					       (page-toolbar-to-html :title page-title
 								     :new-post (if (eq view :meta) "meta" t))
 					       (if (member view '(:frontpage :all))
-						   (funcall sort-widget out-stream)))))))))
+						   (funcall sort-widget)))))))))
 
 (defmacro route-component (name lambda-list &rest args)
   `(lambda ,lambda-list
@@ -1471,9 +1471,8 @@ signaled condition to OUT-STREAM."
                                      :section :personal
                                      :pagination (pagination-nav-bars :offset offset :total total :with-next (if (not total) with-next))
                                      :need-auth (eq show :drafts) :section (if (eq show :drafts) "drafts" nil)
-                                     :top-nav (lambda (out-stream)
-                                                (page-toolbar-to-html out-stream
-                                                                      :title title
+                                     :top-nav (lambda ()
+                                                (page-toolbar-to-html :title title
 								      :enable-push-notifications (eq show :inbox)
                                                                       :rss (not (member show '(:drafts :conversations :inbox)))
                                                                       :new-post (if (eq show :drafts) "drafts" t)
@@ -1513,15 +1512,13 @@ signaled condition to OUT-STREAM."
 						        <span class="karma-total af-karma-total">(if user-slug (pretty-number (or af-karma 0)) "##")</span> \(AF\)
 						      </span>)
 						  </div>)
-                                                (sublevel-nav-to-html out-stream
-                                                                      `(:all :posts :comments
-                                                                        ,@(if own-user-page
-                                                                              '(:drafts :conversations :inbox)))
-                                                                      show
-                                                                      :default :all)
-                                                (when (member show '(:all :posts :comments))
-                                                  (sublevel-nav-to-html out-stream
-                                                                        '(:new :top :old)
+						(sublevel-nav-to-html `(:all :posts :comments
+									     ,@(if own-user-page
+										   '(:drafts :conversations :inbox)))
+								      show
+								      :default :all)
+						(when (member show '(:all :posts :comments))
+						  (sublevel-nav-to-html '(:new :top :old)
                                                                         sort
                                                                         :default :new
                                                                         :param-name "sort"
@@ -1539,8 +1536,8 @@ signaled condition to OUT-STREAM."
 	    (get-conversation-messages id (hunchentoot:cookie-in "lw2-auth-token"))
 	  (let ((conversation (rectify-conversation conversation)))
 	    (view-items-index (nreverse messages) :content-class "conversation-page" :need-auth t :title (encode-entities (cdr (assoc :title conversation)))
-			      :top-nav (lambda (out-stream) (render-template* *conversation-template* out-stream
-									      :conversation conversation :csrf-token (make-csrf-token)))))))
+			      :top-nav (lambda () (render-template* *conversation-template* *html-output*
+								    :conversation conversation :csrf-token (make-csrf-token)))))))
        (t
 	(emit-page (out-stream :title "New conversation" :content-class "conversation-page")
 		   (render-template* *conversation-template* out-stream
@@ -1692,9 +1689,8 @@ signaled condition to OUT-STREAM."
      :title "Sequences Library"
      :content-class "sequences-page"
      :current-uri "/library"
-     :top-nav (lambda (out-stream)
-		(sublevel-nav-to-html out-stream
-				      '(:featured :community)
+     :top-nav (lambda ()
+		(sublevel-nav-to-html '(:featured :community)
 				      view
 				      :default :featured
 				      :param-name "view"
@@ -1719,30 +1715,31 @@ signaled condition to OUT-STREAM."
       (labels ((url-elements (&rest url-elements)
                  (declare (dynamic-extent url-elements))
                  (format nil "/~{~A~^/~}" url-elements))
-               (archive-nav (out-stream)
-                 (with-outputs (out-stream) "<div class=\"archive-nav\"><div class=\"archive-nav-years\">")
-                 (link-if-not out-stream (not (or year month day)) (url-elements "archive") "archive-nav-item-year" "All") 
-                 (loop for y from earliest-year to current-year
-                       do (link-if-not out-stream (eq y year) (url-elements "archive" y) "archive-nav-item-year" y))
-                 (format out-stream "</div>")
-                 (when year
-                   (format out-stream "<div class=\"archive-nav-months\">")
-                   (link-if-not out-stream (not month) (url-elements "archive" year) "archive-nav-item-month" "All") 
-                   (loop for m from (if (= (or year current-year) earliest-year) earliest-month 1) to (if (= (or year current-year) current-year) current-month 12)
-                         do (link-if-not out-stream (eq m month) (url-elements "archive" (or year current-year) m) "archive-nav-item-month" (elt local-time:+short-month-names+ m)))
-                   (format out-stream "</div>"))
-                 (when month
-                   (format out-stream "<div class=\"archive-nav-days\">")
-                   (link-if-not out-stream (not day) (url-elements "archive" year month) "archive-nav-item-day" "All")
-                   (loop for d from (if (and (= (or year current-year) earliest-year) (= (or month current-month) earliest-month)) earliest-day 1)
-                         to (if (and (= (or year current-year) current-year) (= (or month current-month) current-month)) current-day (local-time:days-in-month (or month current-month) (or year current-year)))
-                         do (link-if-not out-stream (eq d day) (url-elements "archive" (or year current-year) (or month current-month) d) "archive-nav-item-day" d))
-                   (format out-stream "</div>")) 
-                 (format out-stream "</div>")))
-        (multiple-value-bind (posts total)
-          (lw2-graphql-query (lw2-query-string :post :list
-                                               (alist :view (if day "new" "top") :limit 51 :offset offset
-                                                      :after (if (and year (not day)) (format nil "~A-~A-~A" (or year earliest-year) (or month 1) (or day 1)))
+	       (archive-nav ()
+		 (let ((out-stream *html-output*))
+		   (with-outputs (out-stream) "<div class=\"archive-nav\"><div class=\"archive-nav-years\">")
+		   (link-if-not out-stream (not (or year month day)) (url-elements "archive") "archive-nav-item-year" "All") 
+		   (loop for y from earliest-year to current-year
+		      do (link-if-not out-stream (eq y year) (url-elements "archive" y) "archive-nav-item-year" y))
+		   (format out-stream "</div>")
+		   (when year
+		     (format out-stream "<div class=\"archive-nav-months\">")
+		     (link-if-not out-stream (not month) (url-elements "archive" year) "archive-nav-item-month" "All") 
+		     (loop for m from (if (= (or year current-year) earliest-year) earliest-month 1) to (if (= (or year current-year) current-year) current-month 12)
+			do (link-if-not out-stream (eq m month) (url-elements "archive" (or year current-year) m) "archive-nav-item-month" (elt local-time:+short-month-names+ m)))
+		     (format out-stream "</div>"))
+		   (when month
+		     (format out-stream "<div class=\"archive-nav-days\">")
+		     (link-if-not out-stream (not day) (url-elements "archive" year month) "archive-nav-item-day" "All")
+		     (loop for d from (if (and (= (or year current-year) earliest-year) (= (or month current-month) earliest-month)) earliest-day 1)
+			to (if (and (= (or year current-year) current-year) (= (or month current-month) current-month)) current-day (local-time:days-in-month (or month current-month) (or year current-year)))
+			do (link-if-not out-stream (eq d day) (url-elements "archive" (or year current-year) (or month current-month) d) "archive-nav-item-day" d))
+		     (format out-stream "</div>")) 
+		   (format out-stream "</div>"))))
+	(multiple-value-bind (posts total)
+	  (lw2-graphql-query (lw2-query-string :post :list
+					       (alist :view (if day "new" "top") :limit 51 :offset offset
+						      :after (if (and year (not day)) (format nil "~A-~A-~A" (or year earliest-year) (or month 1) (or day 1)))
                                                       :before (if year (format nil "~A-~A-~A" (or year current-year) (or month 12)
                                                                                (or day (local-time:days-in-month (or month 12) (or year current-year))))))))
           (emit-page (out-stream :title "Archive" :current-uri "/archive" :content-class "archive-page"
