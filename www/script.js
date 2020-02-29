@@ -3968,7 +3968,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 	// Add event listener for . , ; (for navigating listings pages).
 	let listings = queryAll("h1.listing a[href^='/posts'], #content > .comment-thread .comment-meta a.date");
-	if (listings.length > 0) {
+	if (!query(".comments") && listings.length > 0) {
 		document.addEventListener("keyup", GW.postListingsNavKeyPressed = (event) => { 
 			if (event.ctrlKey || event.shiftKey || event.altKey || !(event.key == "," || event.key == "." || event.key == ';' || event.key == "Escape")) return;
 
