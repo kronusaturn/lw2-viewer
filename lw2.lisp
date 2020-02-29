@@ -55,22 +55,27 @@
 			 (and next (get-sequence-post sequence next))))))))
       (col))))
 
+(defun rectify-post-relations (post-relations)
+  (remove-if-not (lambda (pr) (cdr (assoc :--id (cdr (first pr))))) post-relations))
+
 (defun post-nav-links (post post-sequences)
   <nav class="post-nav-links">
     (schema-bind (:post post (target-post-relations source-post-relations) :context :body)
-      (when (or target-post-relations source-post-relations)
-        <div class="related-posts">
+      (let ((target-post-relations (rectify-post-relations target-post-relations))
+	    (source-post-relations (rectify-post-relations source-post-relations)))
+	(when (or target-post-relations source-post-relations)
+	  <div class="related-posts">
 	  (dolist (relations `((,source-post-relations "Parent question")
 			       (,target-post-relations "Sub-question")))
-	     (destructuring-bind (related-posts relation-type) relations
-		  (when related-posts
-		    <div class="related-post-group">
-		      <div class="related-post-type">("~A~A" relation-type (if (second related-posts) "s" ""))</div>
-		      (dolist (post-relation related-posts)
-		        (post-headline-to-html (or (cdr (assoc :source-post post-relation))
-						   (cdr (assoc :target-post post-relation)))))
-		    </div>)))
-        </div>))
+	    (destructuring-bind (related-posts relation-type) relations
+	      (when related-posts
+		<div class="related-post-group">
+		  <div class="related-post-type">("~A~A" relation-type (if (second related-posts) "s" ""))</div>
+		  (dolist (post-relation related-posts)
+		    (post-headline-to-html (or (cdr (assoc :source-post post-relation))
+					       (cdr (assoc :target-post post-relation)))))
+		</div>)))
+	  </div>)))
     (loop for (sequence prev next) in post-sequences do
       (progn 
 	<div class="post-nav-item sequence">
