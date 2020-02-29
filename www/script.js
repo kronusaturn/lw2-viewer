@@ -2619,7 +2619,7 @@ function addCommentParentPopups() {
 				});
 			}
 			else if(url.pathname.match(/^\/(users|posts|s|p|explore)\//)
-				&& !linkTag.closest("nav")
+				&& !linkTag.closest("nav:not(.post-nav-links)")
 				&& (!url.hash || linkCommentId)
 				&& (!linkCommentId || linkTag.getCommentId() !== linkCommentId)) {
 				linkTag.addEventListener("pointerover", event => {
