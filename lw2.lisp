@@ -803,6 +803,8 @@ signaled condition to *HTML-OUTPUT*."
 						     </form>))
 					(return-from call-with-error-page)))))
 	      (log-conditions
+	       (unless (member (hunchentoot:request-method*) '(:get :head))
+		 (check-csrf-token (hunchentoot:post-parameter "csrf-token")))
 	       (if (or (eq (hunchentoot:request-method*) :post)
 		       (not (and (boundp '*test-acceptor*) (boundp '*hunchentoot-taskmaster*)))) ; TODO fix this hack
 		   (funcall fn)
@@ -841,7 +843,7 @@ signaled condition to *HTML-OUTPUT*."
 	(liu (logged-in-userid)))
     (format out-stream "<div class=\"page-toolbar~@[ hide-until-init~]\">" enable-push-notifications)
     (when logout
-      (format out-stream "<form method=\"post\" action=\"/logout\"><button class=\"logout-button button\" name=\"logout\" value=\"~A\">Log out</button></form>"
+      (format out-stream "<form method=\"post\" action=\"/logout\"><input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><button class=\"logout-button button\" name=\"logout\">Log out</button></form>"
               (make-csrf-token)))
     (when ignore
       (funcall ignore))
@@ -948,10 +950,6 @@ signaled condition to *HTML-OUTPUT*."
 			 (cond
 			   ,.(loop for method-body in (cdar body)
 				collect (destructuring-bind (method args &body inner-body) method-body
-					  (unless (eq method :get)
-					    (alexandria:with-gensyms (csrf-token)
-					      (push `(,csrf-token :real-name "csrf-token" :required t) args)
-					      (push `(check-csrf-token ,csrf-token) inner-body)))
 					  `(,(if (eq method :get) `(member ,request-method '(:get :head)) `(eq ,request-method ,method))
 					     ,(make-binding-form (mapcar (lambda (x) (append (ensure-list x) `(:request-type ,method))) args)
 								 inner-body)))))))))
@@ -1595,7 +1593,7 @@ signaled condition to *HTML-OUTPUT*."
                             :title (format nil "~@[~A - ~]Search" q))))))
 
 (define-page view-login "/login" (return cookie-check
-                                         (csrf-token :request-type :post) (login-username :request-type :post) (login-password :request-type :post)
+                                         (login-username :request-type :post) (login-password :request-type :post)
                                          (signup-username :request-type :post) (signup-email :request-type :post) (signup-password :request-type :post) (signup-password2 :request-type :post))
   (labels
     ((emit-login-page (&key error-message)
@@ -1639,13 +1637,11 @@ signaled condition to *HTML-OUTPUT*."
             (emit-page (out-stream :title "Log in" :current-uri "/login")
                        (format out-stream "<h1>Enable cookies</h1><p>Please enable cookies in your browser and <a href=\"/login~@[?return=~A~]\">try again</a>.</p>" (if return (url-rewrite:url-encode return)))))) 
       (login-username
-        (check-csrf-token csrf-token)
         (cond
           ((or (string= login-username "") (string= login-password "")) (emit-login-page :error-message "Please enter a username and password"))
 	  ((lw2.dnsbl:dnsbl-check (hunchentoot:real-remote-addr)) (emit-login-page :error-message "Your IP address is blacklisted."))
           (t (multiple-value-call #'finish-login login-username (do-login "username" login-username login-password))))) 
       (signup-username
-        (check-csrf-token csrf-token)
         (cond
           ((not (every (lambda (x) (not (string= x ""))) (list signup-username signup-email signup-password signup-password2)))
            (emit-login-page :error-message "Please fill in all fields"))
@@ -1656,14 +1652,15 @@ signaled condition to *HTML-OUTPUT*."
       (t
        (emit-login-page))))) 
 
-(define-page view-logout "/logout" ((logout :request-type :post))
-  (check-csrf-token logout)
-  (set-cookie "lw2-auth-token" "" :max-age 0)
-  (redirect "/"))
+(define-page view-logout "/logout" ()
+  (request-method
+   (:post ()
+     (set-cookie "lw2-auth-token" "" :max-age 0)
+     (redirect "/"))))
 
 (defparameter *reset-password-template* (compile-template* "reset-password.html"))
 
-(define-page view-reset-password "/reset-password" ((csrf-token :request-type :post) (email :request-type :post) (reset-link :request-type :post) (password :request-type :post) (password2 :request-type :post))
+(define-page view-reset-password "/reset-password" ((email :request-type :post) (reset-link :request-type :post) (password :request-type :post) (password2 :request-type :post))
   (labels ((emit-rpw-page (&key message message-type step)
              (let ((csrf-token (make-csrf-token)))
                (emit-page (out-stream :title "Reset password" :content-class "reset-password" :robots "noindex, nofollow")
@@ -1675,7 +1672,6 @@ signaled condition to *HTML-OUTPUT*."
                                             :step step)))))
     (cond
       (email
-        (check-csrf-token csrf-token)
         (multiple-value-bind (ret error)
           (do-lw2-forgot-password email)
           (declare (ignore ret))
@@ -1690,7 +1686,6 @@ signaled condition to *HTML-OUTPUT*."
                                       ((not (string= password password2))
                                        (emit-rpw-page :step 2 :message "Passwords do not match." :message-type "error"))
                                       (t
-                                       (check-csrf-token csrf-token)
                                        (multiple-value-bind (user-id auth-token error-message) (do-lw2-reset-password reset-token password)
                                          (declare (ignore user-id auth-token))
                                          (cond
