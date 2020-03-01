@@ -1050,6 +1050,48 @@ signaled condition to *HTML-OUTPUT*."
 (define-page view-review-voting "/reviewVoting" ()
   (redirect "https://www.lesswrong.com/reviewVoting" :type :see-other))
 
+(defun post-comment (post-id &key shortform)
+  (request-method
+   (:post (text answer nomination nomination-review af parent-answer-id parent-comment-id edit-comment-id retract-comment-id unretract-comment-id delete-comment-id)
+     (let ((lw2-auth-token *current-auth-token*))
+       (assert lw2-auth-token)
+       (let ((question (when post-id (cdr (assoc :question (get-post-body post-id :auth-token lw2-auth-token)))))
+	     (new-comment-id
+	      (cond
+		(text
+		 (let ((comment-data
+			(list-cond
+			 (t :body (postprocess-markdown text))
+			 ((not (or edit-comment-id shortform)) :post-id post-id)
+			 (parent-comment-id :parent-comment-id parent-comment-id)
+			 (answer :answer t)
+			 (nomination :nominated-for-review "2018")
+			 (nomination-review :reviewing-for-review "2018")
+			 (parent-answer-id :parent-answer-id parent-answer-id)
+			 (af :af t)
+			 (shortform :shortform t))))
+		   (if edit-comment-id
+		       (prog1 edit-comment-id
+			 (do-lw2-comment-edit lw2-auth-token edit-comment-id comment-data))
+		       (do-lw2-comment lw2-auth-token comment-data))))
+		(retract-comment-id
+		 (do-lw2-comment-edit lw2-auth-token retract-comment-id '((:retracted . t))))
+		(unretract-comment-id
+		 (do-lw2-comment-edit lw2-auth-token unretract-comment-id '((:retracted . nil))))
+		(delete-comment-id
+		 (do-lw2-comment-remove lw2-auth-token delete-comment-id :reason "Comment deleted by its author.")
+		 nil))))
+	 (when post-id
+	   (ignore-errors
+	     (get-post-comments post-id :force-revalidate t)
+	     (when question
+	       (get-post-answers post-id :force-revalidate t))))
+	 (when text
+	   (cache-put "comment-markdown-source" new-comment-id text)
+	   (redirect (quri:render-uri
+		      (quri:merge-uris (quri:make-uri :fragment (format nil "comment-~A" new-comment-id))
+				       (hunchentoot:request-uri*))))))))))
+
 (define-page view-post-lw2-link (:function #'match-lw2-link post-id comment-id * comment-link-type)
                                 (need-auth
                                  chrono
@@ -1179,43 +1221,8 @@ signaled condition to *HTML-OUTPUT*."
 										 (list "comment" normal-comments)))
 					   do (with-error-html-block ()
 						(output-comments out-stream name comments nil :overcomingbias-sort (cdr (assoc :comment-sort-order post))))))))))))))))))
-    (:post (text answer nomination nomination-review af parent-answer-id parent-comment-id edit-comment-id retract-comment-id unretract-comment-id delete-comment-id)
-     (let ((lw2-auth-token *current-auth-token*))
-       (assert lw2-auth-token)
-       (let ((question (cdr (assoc :question (get-post-body post-id :auth-token lw2-auth-token))))
-	     (new-comment-id
-	      (cond
-		(text
-		 (let ((comment-data
-			(list-cond
-			 (t :body (postprocess-markdown text))
-			 ((not edit-comment-id) :post-id post-id)
-			 (parent-comment-id :parent-comment-id parent-comment-id)
-			 (answer :answer t)
-			 (nomination :nominated-for-review "2018")
-			 (nomination-review :reviewing-for-review "2018")
-			 (parent-answer-id :parent-answer-id parent-answer-id)
-			 (af :af t))))
-		   (if edit-comment-id
-		       (prog1 edit-comment-id
-			 (do-lw2-comment-edit lw2-auth-token edit-comment-id comment-data))
-		       (do-lw2-comment lw2-auth-token comment-data))))
-		(retract-comment-id
-		 (do-lw2-comment-edit lw2-auth-token retract-comment-id '((:retracted . t))))
-		(unretract-comment-id
-		 (do-lw2-comment-edit lw2-auth-token unretract-comment-id '((:retracted . nil))))
-		(delete-comment-id
-		 (do-lw2-comment-remove lw2-auth-token delete-comment-id :reason "Comment deleted by its author.")
-		 nil))))
-	 (ignore-errors
-	   (get-post-comments post-id :force-revalidate t)
-	   (when question
-	     (get-post-answers post-id :force-revalidate t)))
-	 (when text
-	   (cache-put "comment-markdown-source" new-comment-id text)
-	   (redirect (quri:render-uri
-		      (quri:merge-uris (quri:make-uri :fragment (format nil "comment-~A" new-comment-id))
-				       (hunchentoot:request-uri*))))))))))
+   (:post ()
+     (post-comment post-id))))
 
 (defparameter *edit-post-template* (compile-template* "edit-post.html"))
 
@@ -1333,26 +1340,30 @@ signaled condition to *HTML-OUTPUT*."
   (:http-args '((offset :type fixnum)
 		(limit :type fixnum)
 		(view :member '(nil :alignment-forum))))
-  (let ((want-total (not (or (typep *current-backend* 'backend-lw2) (typep *current-backend* 'backend-ea-forum))))) ; LW2/EAF can't handle total queries. TODO: handle this in backend.
-    (multiple-value-bind (title query-view top-nav)
-	(case index-type
-	  (:shortform (values "Shortform" "shortform" 'standalone-comment-controls))
-	  (t (values (case view (:alignment-forum "Alignment Forum recent comments") (t "Recent comments")) "allRecentComments" nil)))
-      (multiple-value-bind (recent-comments total)
-	  (if (or (not (eq index-type :recent-comments)) offset limit view (/= (user-pref :items-per-page) 20))
-	      (let ((*use-alignment-forum* (eq view :alignment-forum)))
-		(lw2-graphql-query (lw2-query-string :comment :list
-						     (remove nil (alist :view query-view
-									:limit (or limit (user-pref :items-per-page)) :offset offset)
-							     :key #'cdr)
-						     :context :index
-						     :with-total want-total)))
-	      (get-recent-comments :with-total want-total))
-	(renderer ()
-		  (view-items-index recent-comments
-				    :title title
-				    :pagination (pagination-nav-bars :offset (or offset 0) :with-next (not want-total) :total (if want-total total))
-				    :top-nav (lambda () (page-toolbar-to-html :title title) (when top-nav (funcall top-nav)))))))))
+  (request-method
+   (:get ()
+     (let ((want-total (not (or (typep *current-backend* 'backend-lw2) (typep *current-backend* 'backend-ea-forum))))) ; LW2/EAF can't handle total queries. TODO: handle this in backend.
+       (multiple-value-bind (title query-view top-nav)
+	   (case index-type
+	     (:shortform (values "Shortform" "shortform" 'standalone-comment-controls))
+	     (t (values (case view (:alignment-forum "Alignment Forum recent comments") (t "Recent comments")) "allRecentComments" nil)))
+	 (multiple-value-bind (recent-comments total)
+	     (if (or (not (eq index-type :recent-comments)) offset limit view (/= (user-pref :items-per-page) 20))
+		 (let ((*use-alignment-forum* (eq view :alignment-forum)))
+		   (lw2-graphql-query (lw2-query-string :comment :list
+							(remove nil (alist :view query-view
+									   :limit (or limit (user-pref :items-per-page)) :offset offset)
+								:key #'cdr)
+							:context :index
+							:with-total want-total)))
+		 (get-recent-comments :with-total want-total))
+	   (renderer ()
+	     (view-items-index recent-comments
+			       :title title
+			       :pagination (pagination-nav-bars :offset (or offset 0) :with-next (not want-total) :total (if want-total total))
+			       :top-nav (lambda () (page-toolbar-to-html :title title) (when top-nav (funcall top-nav)))))))))
+   (:post ()
+     (post-comment nil :shortform t))))
 
 (define-route 'forum-site 'standard-route :name 'view-recent-comments :uri "/recentcomments" :handler (route-component view-comments-index () :recent-comments))
 (define-route 'shortform-site 'standard-route :name 'view-shortform :uri "/shortform" :handler (route-component view-comments-index () :shortform))
