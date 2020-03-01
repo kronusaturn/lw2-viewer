@@ -914,6 +914,16 @@ signaled condition to *HTML-OUTPUT*."
 	 (declare (ignore ,.ignores))
        ,@body)))
 
+(defmacro request-method (&body method-clauses)
+  (alexandria:with-gensyms (request-method)
+    `(let ((,request-method (hunchentoot:request-method*)))
+       (cond
+	 ,.(loop for method-body in method-clauses
+	      collect (destructuring-bind (method args &body inner-body) method-body
+			`(,(if (eq method :get) `(member ,request-method '(:get :head)) `(eq ,request-method ,method))
+			   ,(make-binding-form (mapcar (lambda (x) (append (ensure-list x) `(:request-type ,method))) args)
+					       inner-body))))))))
+
 (defmacro define-page (name path-specifier additional-vars &body body)
   (labels ((make-lambda (args)
              (loop for a in args
@@ -940,26 +950,12 @@ signaled condition to *HTML-OUTPUT*."
                                  ,(loop for v in (make-lambda specifier-args) as x from 0 collecting `(,v (if (> (length ,result-vector) ,x) (aref ,result-vector ,x)))) 
                                  ,body))))
                         specifier-args))))))
-     (let* ((rewritten-body
-	     (if (eq (ignore-errors (caar body)) 'request-method)
-		 (progn
-		   (unless (= (length body) 1)
-		     (error "REQUEST-METHOD must be the only form when it appears in DEFINE-PAGE."))
-		   (alexandria:with-gensyms (request-method)
-		     `((let ((,request-method (hunchentoot:request-method*)))
-			 (cond
-			   ,.(loop for method-body in (cdar body)
-				collect (destructuring-bind (method args &body inner-body) method-body
-					  `(,(if (eq method :get) `(member ,request-method '(:get :head)) `(eq ,request-method ,method))
-					     ,(make-binding-form (mapcar (lambda (x) (append (ensure-list x) `(:request-type ,method))) args)
-								 inner-body)))))))))
-		 body)))
-       `(hunchentoot:define-easy-handler (,name :uri ,path-specifier-form) ()
-	  (with-error-page
-	      (block nil
-		,(funcall path-bindings-wrapper
-			  (make-binding-form (append (mapcar (lambda (x) (append (ensure-list x) '(:passthrough t))) specifier-vars) additional-vars)
-					     rewritten-body)))))))))
+     `(hunchentoot:define-easy-handler (,name :uri ,path-specifier-form) ()
+	(with-error-page
+	    (block nil
+	      ,(funcall path-bindings-wrapper
+			(make-binding-form (append (mapcar (lambda (x) (append (ensure-list x) '(:passthrough t))) specifier-vars) additional-vars)
+					   body))))))))
 
 (define-component sort-widget (&key (sort-options '((:new :description "Sort by date posted")
 						    (:hot :description "Sort by time-weighted score")
