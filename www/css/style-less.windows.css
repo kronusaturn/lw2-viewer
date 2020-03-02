@@ -1444,33 +1444,36 @@ article {
 	display: flex;
 	flex-flow: row wrap;
 }
-#content.conversation-page textarea {
+.posting-controls.standalone textarea {
 	margin-top: 0.375em;
 }
-#conversation-form {
+.posting-controls.standalone form {
+	padding: 0 1em;
+}
+#content.conversation-page .posting-controls.standalone form {
 	padding: 0 1em 3em 1em;
 }
-#conversation-form input[type='text'],
-#conversation-form label {
+.posting-controls.standalone input[type='text'],
+.posting-controls.standalone label {
 	margin: 0.25em 0;
 }
-#conversation-form label {
+.posting-controls.standalone label {
 	width: 4em;
 	text-align: right;
 	padding: 2px 6px;
 	border: 1px solid transparent;
 }
-#conversation-form input[type='text'] {
+.posting-controls.standalone input[type='text'] {
 	width: calc(100% - 4em);
 	padding: 0.25em;
 }
-#conversation-form input[type='submit'] {
+.posting-controls.standalone input[type='submit'] {
 	float: right;
 }
-#content.conversation-page #markdown-hints-checkbox ~ label {
+.posting-controls.standalone #markdown-hints-checkbox ~ label {
 	white-space: nowrap;
 }
-#content.conversation-page #markdown-hints {
+.posting-controls.standalone #markdown-hints {
 	top: calc(100% + 2em);
 }
 
@@ -2690,6 +2693,19 @@ a.comment-parent-link:hover::after {
 }
 .individual-thread-page .comments {
 	border: none;
+}
+
+/*************/
+/* SHORTFORM */
+/*************/
+
+.shortform-index-page .comments::before {
+	border: none;
+	box-shadow: none;
+}
+
+.shortform-index-page .comments > .comment-thread > .comment-item:first-child {
+	margin-top: 0;
 }
 
 /****************/
@@ -4865,6 +4881,9 @@ li {
 	}
 	#nav-item-events .nav-inner::before {
 		content: "\F5A0";
+	}
+	#nav-item-shortform .nav-inner::before {
+		content: "\F2F2";
 	}
 	#nav-item-archive .nav-inner::before {
 		content: "\F187";

@@ -75,4 +75,9 @@
    (nominated-for-review t :backend-type backend-lw2)
    (reviewing-for-review t :backend-type backend-lw2)
    (top-level-comment list :backend-type backend-lw2 :subfields (:nominated-for-review :reviewing-for-review))
+   (latest-children list
+		    :backend-type backend-shortform
+		    :context :shortform
+		    :subfields (:--id :user-id :posted-at :post-id :base-score :af-base-score :page-url
+				:parent-comment-id :af :vote-count :retracted :deleted-public :html-body))
    (html-body string)))

@@ -1994,7 +1994,11 @@ function injectCommentsListModeSelector() {
 	+ `<button type='button' class='expanded' title='Expanded comments view' tabindex='-1'></button>`
 	+ `<button type='button' class='compact' title='Compact comments view' tabindex='-1'></button>`
 	+ "</div>";
-	(query("#content.user-page .user-stats") || query(".page-toolbar") || query(".active-bar")).insertAdjacentHTML("afterend", commentsListModeSelectorHTML);
+	if(query("#top-nav-bar")) {
+		query("#top-nav-bar").insertAdjacentHTML("beforebegin", commentsListModeSelectorHTML);
+	} else {
+		(query("#content.user-page .user-stats") || query(".page-toolbar") || query(".active-bar")).insertAdjacentHTML("afterend", commentsListModeSelectorHTML);
+	}
 	let commentsListModeSelector = query("#comments-list-mode-selector");
 
 	commentsListModeSelector.queryAll("button").forEach(button => {
@@ -3744,9 +3748,10 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	// If client is logged in...
 	if (loggedInUserId) {
 		// Add upvote/downvote buttons.
-		if(typeof postId != 'undefined') {
+		if(typeof postId != 'undefined' || query(".shortform-index-page")) {
+			let params = ( typeof postId != 'undefined' ? { "post-id": postId } : { "shortform": true } );
 			doAjax({ location: "/karma-vote",
-				 params: { "post-id": postId },
+				 params: params,
 				 onSuccess: (event) => {
 					 let response = JSON.parse(event.target.responseText);
 					 postVote = response.postVote;
@@ -3795,7 +3800,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 			});
 
 			// Add top-level new comment form.
-			if (!query(".individual-thread-page")) {
+			if (!(query(".individual-thread-page") || query(".shortform-index-page"))) {
 				commentsContainer.insertAdjacentHTML("afterbegin", "<div class='comment-controls posting-controls'></div>");
 				commentsContainer.query(".comment-controls").constructCommentControls();
 			}

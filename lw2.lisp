@@ -428,6 +428,7 @@ signaled condition to *HTML-OUTPUT*."
                      user-nav-item))
     (:tertiary-bar (("questions" "/index?view=questions" "Questions")
 		    ("events" "/index?view=events" "Events")
+		    ("shortform" "/shortform" "Shortform" :description "Latest Shortform posts")
 		    ("alignment-forum" "/index?view=alignment-forum" "Alignment Forum")
 		    ("alignment-forum-comments" "/recentcomments?view=alignment-forum" "AF Comments")))
     (:primary-bar (("home" "/" "Home" :description "Latest frontpage posts" :accesskey "h")
@@ -444,6 +445,7 @@ signaled condition to *HTML-OUTPUT*."
     (:primary-bar (("home" "/" "Home" :description "Latest frontpage posts" :accesskey "h")
                    ("all" "/index?view=all" "All" :description "Latest posts from all sections" :accesskey "a")
                    ("meta" "/index?view=community" "Community" :description "Latest community posts" :accesskey "m")
+		   ("shortform" "/shortform" "Shortform" :description "Latest Shortform posts")
                    ("recent-comments" "/recentcomments" "<span>Recent </span>Comments" :description "Latest comments" :accesskey "c")))))
 
 (defun prepare-nav-bar (nav-bar current-uri)
@@ -803,6 +805,8 @@ signaled condition to *HTML-OUTPUT*."
 						     </form>))
 					(return-from call-with-error-page)))))
 	      (log-conditions
+	       (unless (member (hunchentoot:request-method*) '(:get :head))
+		 (check-csrf-token (hunchentoot:post-parameter "csrf-token")))
 	       (if (or (eq (hunchentoot:request-method*) :post)
 		       (not (and (boundp '*test-acceptor*) (boundp '*hunchentoot-taskmaster*)))) ; TODO fix this hack
 		   (funcall fn)
@@ -841,7 +845,7 @@ signaled condition to *HTML-OUTPUT*."
 	(liu (logged-in-userid)))
     (format out-stream "<div class=\"page-toolbar~@[ hide-until-init~]\">" enable-push-notifications)
     (when logout
-      (format out-stream "<form method=\"post\" action=\"/logout\"><button class=\"logout-button button\" name=\"logout\" value=\"~A\">Log out</button></form>"
+      (format out-stream "<form method=\"post\" action=\"/logout\"><input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><button class=\"logout-button button\" name=\"logout\">Log out</button></form>"
               (make-csrf-token)))
     (when ignore
       (funcall ignore))
@@ -861,7 +865,7 @@ signaled condition to *HTML-OUTPUT*."
               title (replace-query-params (hunchentoot:request-uri*) "offset" nil "format" "rss")))
     (format out-stream "</div>")))
 
-(defun view-items-index (items &key section title current-uri hide-title need-auth (pagination (pagination-nav-bars)) (top-nav (lambda () (page-toolbar-to-html :title title))) (content-class "index-page"))
+(defun view-items-index (items &key section title current-uri hide-title need-auth (pagination (pagination-nav-bars)) (top-nav (lambda () (page-toolbar-to-html :title title))) (content-class "index-page") alternate-html)
   (alexandria:switch ((hunchentoot:get-parameter "format") :test #'string=)
                      ("rss" 
                       (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
@@ -871,9 +875,11 @@ signaled condition to *HTML-OUTPUT*."
                        (emit-page (out-stream :title (if hide-title nil title) :description (site-description *current-site*) :content-class content-class
                                               :current-uri current-uri :robots (if (hunchentoot:get-parameter :offset) "noindex, nofollow")
                                               :pagination pagination :top-nav top-nav)
-                                  (write-index-items-to-html out-stream items
-                                                             :need-auth need-auth
-                                                             :skip-section section)))))
+				  (if alternate-html
+				      (funcall alternate-html)
+				      (write-index-items-to-html out-stream items
+								 :need-auth need-auth
+								 :skip-section section))))))
 
 (defun link-if-not (stream linkp url class text &key accesskey nofollow title)
   (declare (dynamic-extent linkp url text))
@@ -912,6 +918,16 @@ signaled condition to *HTML-OUTPUT*."
 	 (declare (ignore ,.ignores))
        ,@body)))
 
+(defmacro request-method (&body method-clauses)
+  (alexandria:with-gensyms (request-method)
+    `(let ((,request-method (hunchentoot:request-method*)))
+       (cond
+	 ,.(loop for method-body in method-clauses
+	      collect (destructuring-bind (method args &body inner-body) method-body
+			`(,(if (eq method :get) `(member ,request-method '(:get :head)) `(eq ,request-method ,method))
+			   ,(make-binding-form (mapcar (lambda (x) (append (ensure-list x) `(:request-type ,method))) args)
+					       inner-body))))))))
+
 (defmacro define-page (name path-specifier additional-vars &body body)
   (labels ((make-lambda (args)
              (loop for a in args
@@ -938,30 +954,12 @@ signaled condition to *HTML-OUTPUT*."
                                  ,(loop for v in (make-lambda specifier-args) as x from 0 collecting `(,v (if (> (length ,result-vector) ,x) (aref ,result-vector ,x)))) 
                                  ,body))))
                         specifier-args))))))
-     (let* ((rewritten-body
-	     (if (eq (ignore-errors (caar body)) 'request-method)
-		 (progn
-		   (unless (= (length body) 1)
-		     (error "REQUEST-METHOD must be the only form when it appears in DEFINE-PAGE."))
-		   (alexandria:with-gensyms (request-method)
-		     `((let ((,request-method (hunchentoot:request-method*)))
-			 (cond
-			   ,.(loop for method-body in (cdar body)
-				collect (destructuring-bind (method args &body inner-body) method-body
-					  (unless (eq method :get)
-					    (alexandria:with-gensyms (csrf-token)
-					      (push `(,csrf-token :real-name "csrf-token" :required t) args)
-					      (push `(check-csrf-token ,csrf-token) inner-body)))
-					  `(,(if (eq method :get) `(member ,request-method '(:get :head)) `(eq ,request-method ,method))
-					     ,(make-binding-form (mapcar (lambda (x) (append (ensure-list x) `(:request-type ,method))) args)
-								 inner-body)))))))))
-		 body)))
-       `(hunchentoot:define-easy-handler (,name :uri ,path-specifier-form) ()
-	  (with-error-page
-	      (block nil
-		,(funcall path-bindings-wrapper
-			  (make-binding-form (append (mapcar (lambda (x) (append (ensure-list x) '(:passthrough t))) specifier-vars) additional-vars)
-					     rewritten-body)))))))))
+     `(hunchentoot:define-easy-handler (,name :uri ,path-specifier-form) ()
+	(with-error-page
+	    (block nil
+	      ,(funcall path-bindings-wrapper
+			(make-binding-form (append (mapcar (lambda (x) (append (ensure-list x) '(:passthrough t))) specifier-vars) additional-vars)
+					   body))))))))
 
 (define-component sort-widget (&key (sort-options '((:new :description "Sort by date posted")
 						    (:hot :description "Sort by time-weighted score")
@@ -1023,7 +1021,7 @@ signaled condition to *HTML-OUTPUT*."
 	    (with-site-context ((let ((host (or (hunchentoot:header-in* :x-forwarded-host) (hunchentoot:header-in* :host))))
 				  (or (find-site host)
 				      (error "Unknown site: ~A" host))))
-	      (call-route-handler *current-site* (hunchentoot:request-method*) (hunchentoot:script-name*)))))
+	      (call-route-handler *current-site* (hunchentoot:script-name*)))))
     nil)
 
 (define-page view-post "/post" ((id :required t))
@@ -1055,6 +1053,48 @@ signaled condition to *HTML-OUTPUT*."
 
 (define-page view-review-voting "/reviewVoting" ()
   (redirect "https://www.lesswrong.com/reviewVoting" :type :see-other))
+
+(defun post-comment (post-id &key shortform)
+  (request-method
+   (:post (text answer nomination nomination-review af parent-answer-id parent-comment-id edit-comment-id retract-comment-id unretract-comment-id delete-comment-id)
+     (let ((lw2-auth-token *current-auth-token*))
+       (assert lw2-auth-token)
+       (let ((question (when post-id (cdr (assoc :question (get-post-body post-id :auth-token lw2-auth-token)))))
+	     (new-comment-id
+	      (cond
+		(text
+		 (let ((comment-data
+			(list-cond
+			 (t :body (postprocess-markdown text))
+			 ((not (or edit-comment-id shortform)) :post-id post-id)
+			 (parent-comment-id :parent-comment-id parent-comment-id)
+			 (answer :answer t)
+			 (nomination :nominated-for-review "2018")
+			 (nomination-review :reviewing-for-review "2018")
+			 (parent-answer-id :parent-answer-id parent-answer-id)
+			 (af :af t)
+			 (shortform :shortform t))))
+		   (if edit-comment-id
+		       (prog1 edit-comment-id
+			 (do-lw2-comment-edit lw2-auth-token edit-comment-id comment-data))
+		       (do-lw2-comment lw2-auth-token comment-data))))
+		(retract-comment-id
+		 (do-lw2-comment-edit lw2-auth-token retract-comment-id '((:retracted . t))))
+		(unretract-comment-id
+		 (do-lw2-comment-edit lw2-auth-token unretract-comment-id '((:retracted . nil))))
+		(delete-comment-id
+		 (do-lw2-comment-remove lw2-auth-token delete-comment-id :reason "Comment deleted by its author.")
+		 nil))))
+	 (when post-id
+	   (ignore-errors
+	     (get-post-comments post-id :force-revalidate t)
+	     (when question
+	       (get-post-answers post-id :force-revalidate t))))
+	 (when text
+	   (cache-put "comment-markdown-source" new-comment-id text)
+	   (redirect (quri:render-uri
+		      (quri:merge-uris (quri:make-uri :fragment (format nil "comment-~A" new-comment-id))
+				       (hunchentoot:request-uri*))))))))))
 
 (define-page view-post-lw2-link (:function #'match-lw2-link post-id comment-id * comment-link-type)
                                 (need-auth
@@ -1185,43 +1225,8 @@ signaled condition to *HTML-OUTPUT*."
 										 (list "comment" normal-comments)))
 					   do (with-error-html-block ()
 						(output-comments out-stream name comments nil :overcomingbias-sort (cdr (assoc :comment-sort-order post))))))))))))))))))
-    (:post (text answer nomination nomination-review af parent-answer-id parent-comment-id edit-comment-id retract-comment-id unretract-comment-id delete-comment-id)
-     (let ((lw2-auth-token *current-auth-token*))
-       (assert lw2-auth-token)
-       (let ((question (cdr (assoc :question (get-post-body post-id :auth-token lw2-auth-token))))
-	     (new-comment-id
-	      (cond
-		(text
-		 (let ((comment-data
-			(list-cond
-			 (t :body (postprocess-markdown text))
-			 ((not edit-comment-id) :post-id post-id)
-			 (parent-comment-id :parent-comment-id parent-comment-id)
-			 (answer :answer t)
-			 (nomination :nominated-for-review "2018")
-			 (nomination-review :reviewing-for-review "2018")
-			 (parent-answer-id :parent-answer-id parent-answer-id)
-			 (af :af t))))
-		   (if edit-comment-id
-		       (prog1 edit-comment-id
-			 (do-lw2-comment-edit lw2-auth-token edit-comment-id comment-data))
-		       (do-lw2-comment lw2-auth-token comment-data))))
-		(retract-comment-id
-		 (do-lw2-comment-edit lw2-auth-token retract-comment-id '((:retracted . t))))
-		(unretract-comment-id
-		 (do-lw2-comment-edit lw2-auth-token unretract-comment-id '((:retracted . nil))))
-		(delete-comment-id
-		 (do-lw2-comment-remove lw2-auth-token delete-comment-id :reason "Comment deleted by its author.")
-		 nil))))
-	 (ignore-errors
-	   (get-post-comments post-id :force-revalidate t)
-	   (when question
-	     (get-post-answers post-id :force-revalidate t)))
-	 (when text
-	   (cache-put "comment-markdown-source" new-comment-id text)
-	   (redirect (quri:render-uri
-		      (quri:merge-uris (quri:make-uri :fragment (format nil "comment-~A" new-comment-id))
-				       (hunchentoot:request-uri*))))))))))
+   (:post ()
+     (post-comment post-id))))
 
 (defparameter *edit-post-template* (compile-template* "edit-post.html"))
 
@@ -1275,29 +1280,26 @@ signaled condition to *HTML-OUTPUT*."
 		       (concatenate 'string (generate-post-link new-post-data) "?need-auth=y")
 		       (generate-post-link new-post-data))))))))
 
-(hunchentoot:define-easy-handler (view-karma-vote :uri "/karma-vote") ((post-id :request-type :get)
-								       (csrf-token :request-type :post)
-								       (target :request-type :post)
-								       (target-type :request-type :post)
-								       (vote-type :request-type :post))
+(hunchentoot:define-easy-handler (view-karma-vote :uri "/karma-vote") ()
   (with-error-page
       (let ((auth-token *current-auth-token*))
 	(with-response-stream (out-stream)
-	(cond
-	  (post-id
-	   (json:encode-json-alist
-	    (list (cons "postVote" (get-post-vote post-id auth-token))
-		  (cons "commentVotes" (alist-hash-table (delete-if (lambda (x) (null (cdr x))) (get-post-comments-votes post-id auth-token))))
-		  (cons "alignmentForumAllowed"
-			(member "alignmentForum" (cdr (assoc :groups (get-user :user-id (logged-in-userid)))) :test #'string=)))
-	    out-stream))
-	  (csrf-token
-	   (check-csrf-token csrf-token)
-	   (multiple-value-bind (points vote-type vote-data) (do-lw2-vote auth-token target target-type vote-type)
-	     (json:encode-json
-	      (alist-bind (af af-base-score) vote-data
-		(list (vote-buttons points :as-text t :af-score (and af af-base-score)) vote-type))
-	      out-stream))))))))
+	  (request-method
+	    (:get (post-id shortform)
+	      (json:encode-json-alist
+	       (list-cond
+		(post-id "postVote" (get-post-vote post-id auth-token))
+		(post-id "commentVotes" (alist-hash-table (delete-if (lambda (x) (null (cdr x))) (get-post-comments-votes post-id auth-token))))
+		(shortform "commentVotes" (alist-hash-table (delete-if (lambda (x) (null (cdr x))) (get-shortform-votes auth-token))))
+		(t "alignmentForumAllowed"
+		   (member "alignmentForum" (cdr (assoc :groups (get-user :user-id (logged-in-userid)))) :test #'string=)))
+	       out-stream))
+	    (:post (target target-type vote-type)
+	      (multiple-value-bind (points vote-type vote-data) (do-lw2-vote auth-token target target-type vote-type)
+		(json:encode-json
+		 (alist-bind (af af-base-score) vote-data
+			     (list (vote-buttons points :as-text t :af-score (and af af-base-score)) vote-type))
+		 out-stream))))))))
 
 (hunchentoot:define-easy-handler (view-check-notifications :uri "/check-notifications") (format)
   (with-error-page
@@ -1319,25 +1321,59 @@ signaled condition to *HTML-OUTPUT*."
       (when return
 	(redirect return))))
 
+(defun standalone-comment-controls ()
+  <div class="posting-controls standalone with-markdown-editor" onsubmit="disableBeforeUnload();">
+    <form method="post" id="conversation-form" class="aligned-form">
+      <div class="textarea-container">
+	<textarea name="text" oninput="enableBeforeUnload();"></textarea>
+	<span class="markdown-reference-link">You can use <a href="http://commonmark.org/help/" target="_blank">Markdown</a> here.</span>
+	<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-help-button">Help</button>
+	<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-exit-button">Exit</button>
+      </div>
+      <div>
+	<input name="csrf-token" value=(make-csrf-token) type="hidden">
+	<input value="Submit" type="submit">
+      </div>
+    </form>
+  </div>)
+
 (define-component view-comments-index (index-type)
   (:http-args '((offset :type fixnum)
 		(limit :type fixnum)
 		(view :member '(nil :alignment-forum))))
-  (let ((want-total (not (or (typep *current-backend* 'backend-lw2) (typep *current-backend* 'backend-ea-forum))))) ; LW2/EAF can't handle total queries. TODO: handle this in backend.
-    (multiple-value-bind (recent-comments total)
-	(if (or (not (eq index-type :recent-comments)) offset limit view (/= (user-pref :items-per-page) 20))
-	    (let ((*use-alignment-forum* (eq view :alignment-forum)))
-	      (lw2-graphql-query (lw2-query-string :comment :list
-						   (remove nil (alist :view (case index-type
-									      (:recent-comments "allRecentComments")
-									      (:shortform "shortform"))
-								      :limit (or limit (user-pref :items-per-page)) :offset offset)
-							   :key #'cdr)
-						   :context :index
-						   :with-total want-total)))
-	    (get-recent-comments :with-total want-total))
-      (renderer ()
-	(view-items-index recent-comments :title "Recent comments" :pagination (pagination-nav-bars :offset (or offset 0) :with-next (not want-total) :total (if want-total total)))))))
+  (request-method
+   (:get ()
+     (let ((want-total (not (or (typep *current-backend* 'backend-lw2) (typep *current-backend* 'backend-ea-forum)))) ; LW2/EAF can't handle total queries. TODO: handle this in backend.
+	   (shortform (eq index-type :shortform)))
+       (multiple-value-bind (title query-view top-nav)
+	   (cond
+	     (shortform (values "Shortform" "shortform" 'standalone-comment-controls))
+	     (t (values (case view (:alignment-forum "Alignment Forum recent comments") (t "Recent comments")) "allRecentComments" nil)))
+	 (multiple-value-bind (recent-comments total)
+	     (if (or (not (eq index-type :recent-comments)) offset limit view (/= (user-pref :items-per-page) 20))
+		 (let ((*use-alignment-forum* (eq view :alignment-forum)))
+		   (lw2-graphql-query (lw2-query-string :comment :list
+							(remove nil (alist :view query-view
+									   :limit (or limit (user-pref :items-per-page)) :offset offset)
+								:key #'cdr)
+							:context (if shortform :shortform :index)
+							:with-total want-total)))
+		 (get-recent-comments :with-total want-total))
+	   (renderer ()
+	     (view-items-index recent-comments
+			       :title title
+			       :content-class (if shortform "shortform-index-page comment-thread-page")
+			       :pagination (pagination-nav-bars :offset (or offset 0) :with-next (not want-total) :total (if want-total total))
+			       :top-nav (lambda () (page-toolbar-to-html :title title) (when top-nav (funcall top-nav)))
+			       :alternate-html (if (eq index-type :shortform)
+						   (lambda ()
+						     <div class="comments">
+						       (comment-tree-to-html *html-output*
+									     (make-comment-parent-hash
+									      (flatten-shortform-comments recent-comments)))
+						     </div>))))))))
+   (:post ()
+     (post-comment nil :shortform t))))
 
 (define-route 'forum-site 'standard-route :name 'view-recent-comments :uri "/recentcomments" :handler (route-component view-comments-index () :recent-comments))
 (define-route 'shortform-site 'standard-route :name 'view-shortform :uri "/shortform" :handler (route-component view-comments-index () :shortform))
@@ -1574,7 +1610,7 @@ signaled condition to *HTML-OUTPUT*."
                             :title (format nil "~@[~A - ~]Search" q))))))
 
 (define-page view-login "/login" (return cookie-check
-                                         (csrf-token :request-type :post) (login-username :request-type :post) (login-password :request-type :post)
+                                         (login-username :request-type :post) (login-password :request-type :post)
                                          (signup-username :request-type :post) (signup-email :request-type :post) (signup-password :request-type :post) (signup-password2 :request-type :post))
   (labels
     ((emit-login-page (&key error-message)
@@ -1618,13 +1654,11 @@ signaled condition to *HTML-OUTPUT*."
             (emit-page (out-stream :title "Log in" :current-uri "/login")
                        (format out-stream "<h1>Enable cookies</h1><p>Please enable cookies in your browser and <a href=\"/login~@[?return=~A~]\">try again</a>.</p>" (if return (url-rewrite:url-encode return)))))) 
       (login-username
-        (check-csrf-token csrf-token)
         (cond
           ((or (string= login-username "") (string= login-password "")) (emit-login-page :error-message "Please enter a username and password"))
 	  ((lw2.dnsbl:dnsbl-check (hunchentoot:real-remote-addr)) (emit-login-page :error-message "Your IP address is blacklisted."))
           (t (multiple-value-call #'finish-login login-username (do-login "username" login-username login-password))))) 
       (signup-username
-        (check-csrf-token csrf-token)
         (cond
           ((not (every (lambda (x) (not (string= x ""))) (list signup-username signup-email signup-password signup-password2)))
            (emit-login-page :error-message "Please fill in all fields"))
@@ -1635,14 +1669,15 @@ signaled condition to *HTML-OUTPUT*."
       (t
        (emit-login-page))))) 
 
-(define-page view-logout "/logout" ((logout :request-type :post))
-  (check-csrf-token logout)
-  (set-cookie "lw2-auth-token" "" :max-age 0)
-  (redirect "/"))
+(define-page view-logout "/logout" ()
+  (request-method
+   (:post ()
+     (set-cookie "lw2-auth-token" "" :max-age 0)
+     (redirect "/"))))
 
 (defparameter *reset-password-template* (compile-template* "reset-password.html"))
 
-(define-page view-reset-password "/reset-password" ((csrf-token :request-type :post) (email :request-type :post) (reset-link :request-type :post) (password :request-type :post) (password2 :request-type :post))
+(define-page view-reset-password "/reset-password" ((email :request-type :post) (reset-link :request-type :post) (password :request-type :post) (password2 :request-type :post))
   (labels ((emit-rpw-page (&key message message-type step)
              (let ((csrf-token (make-csrf-token)))
                (emit-page (out-stream :title "Reset password" :content-class "reset-password" :robots "noindex, nofollow")
@@ -1654,7 +1689,6 @@ signaled condition to *HTML-OUTPUT*."
                                             :step step)))))
     (cond
       (email
-        (check-csrf-token csrf-token)
         (multiple-value-bind (ret error)
           (do-lw2-forgot-password email)
           (declare (ignore ret))
@@ -1669,7 +1703,6 @@ signaled condition to *HTML-OUTPUT*."
                                       ((not (string= password password2))
                                        (emit-rpw-page :step 2 :message "Passwords do not match." :message-type "error"))
                                       (t
-                                       (check-csrf-token csrf-token)
                                        (multiple-value-bind (user-id auth-token error-message) (do-lw2-reset-password reset-token password)
                                          (declare (ignore user-id auth-token))
                                          (cond
