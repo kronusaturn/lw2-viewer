@@ -1347,7 +1347,7 @@ signaled condition to *HTML-OUTPUT*."
 	   (shortform (eq index-type :shortform)))
        (multiple-value-bind (title query-view top-nav)
 	   (cond
-	     (shortform (values "Shortform" "shortform" 'standalone-comment-controls))
+	     (shortform (values "Shortform" "shortform" (if (logged-in-userid) 'standalone-comment-controls)))
 	     (t (values (case view (:alignment-forum "Alignment Forum recent comments") (t "Recent comments")) "allRecentComments" nil)))
 	 (multiple-value-bind (recent-comments total)
 	     (if (or (not (eq index-type :recent-comments)) offset limit view (/= (user-pref :items-per-page) 20))
