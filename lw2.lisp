@@ -1285,12 +1285,12 @@ signaled condition to *HTML-OUTPUT*."
       (let ((auth-token *current-auth-token*))
 	(with-response-stream (out-stream)
 	  (request-method
-	    (:get (post-id shortform)
+	    (:get (post-id shortform (offset :type fixnum :default 0))
 	      (json:encode-json-alist
 	       (list-cond
 		(post-id "postVote" (get-post-vote post-id auth-token))
 		(post-id "commentVotes" (alist-hash-table (delete-if (lambda (x) (null (cdr x))) (get-post-comments-votes post-id auth-token))))
-		(shortform "commentVotes" (alist-hash-table (delete-if (lambda (x) (null (cdr x))) (get-shortform-votes auth-token))))
+		(shortform "commentVotes" (alist-hash-table (delete-if (lambda (x) (null (cdr x))) (get-shortform-votes auth-token :offset offset))))
 		(t "alignmentForumAllowed"
 		   (member "alignmentForum" (cdr (assoc :groups (get-user :user-id (logged-in-userid)))) :test #'string=)))
 	       out-stream))

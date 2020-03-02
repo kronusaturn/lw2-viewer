@@ -3749,7 +3749,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	if (loggedInUserId) {
 		// Add upvote/downvote buttons.
 		if(typeof postId != 'undefined' || query(".shortform-index-page")) {
-			let params = ( typeof postId != 'undefined' ? { "post-id": postId } : { "shortform": true } );
+			let params = ( typeof postId != 'undefined' ? { "post-id": postId } : { "shortform": true, "offset": (getQueryVariable("offset")||0) } );
 			doAjax({ location: "/karma-vote",
 				 params: params,
 				 onSuccess: (event) => {
