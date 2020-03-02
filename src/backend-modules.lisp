@@ -12,6 +12,7 @@
     #:backend-q-and-a #:backend-related-questions
     #:backend-alignment-forum
     #:backend-events
+    #:backend-shortform
     #:backend-backlinks
     #:backend-push-notifications
     #:backend-lw2-legacy #:backend-lw2-modernized #:backend-lw2 #:backend-algolia-search #:backend-ea-forum #:backend-accordius
@@ -70,6 +71,9 @@
 (defclass backend-events (backend-graphql) ()
   (:metaclass backend-class))
 
+(defclass backend-shortform (backend-graphql) ()
+  (:metaclass backend-class))
+
 (defclass backend-lw2-legacy (backend-graphql) ()
   (:metaclass backend-class))
 
@@ -86,7 +90,8 @@
 		       backend-events
 		       backend-feed-crossposts
 		       backend-backlinks
-		       backend-push-notifications) ()
+		       backend-push-notifications
+		       backend-shortform) ()
   (:metaclass backend-class))
 
 (defclass backend-ea-forum (backend-websocket-login
@@ -97,7 +102,8 @@
 			    backend-related-questions
 			    backend-feed-crossposts
 			    backend-backlinks
-			    backend-push-notifications) ()
+			    backend-push-notifications
+			    backend-shortform) ()
   (:metaclass backend-class))
 
 (defclass backend-accordius (backend-lw2-legacy backend-lw2-modernized)

@@ -502,6 +502,9 @@
 	#nav-item-events .nav-inner::before {
 		content: "\F5A0";
 	}
+	#nav-item-shortform .nav-inner::before {
+		content: "\F2F2";
+	}
 	#nav-item-archive .nav-inner::before {
 		content: "\F187";
 	}

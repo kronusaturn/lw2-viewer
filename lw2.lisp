@@ -428,6 +428,7 @@ signaled condition to *HTML-OUTPUT*."
                      user-nav-item))
     (:tertiary-bar (("questions" "/index?view=questions" "Questions")
 		    ("events" "/index?view=events" "Events")
+		    ("shortform" "/shortform" "Shortform" :description "Latest Shortform posts")
 		    ("alignment-forum" "/index?view=alignment-forum" "Alignment Forum")
 		    ("alignment-forum-comments" "/recentcomments?view=alignment-forum" "AF Comments")))
     (:primary-bar (("home" "/" "Home" :description "Latest frontpage posts" :accesskey "h")
@@ -444,6 +445,7 @@ signaled condition to *HTML-OUTPUT*."
     (:primary-bar (("home" "/" "Home" :description "Latest frontpage posts" :accesskey "h")
                    ("all" "/index?view=all" "All" :description "Latest posts from all sections" :accesskey "a")
                    ("meta" "/index?view=community" "Community" :description "Latest community posts" :accesskey "m")
+		   ("shortform" "/shortform" "Shortform" :description "Latest Shortform posts")
                    ("recent-comments" "/recentcomments" "<span>Recent </span>Comments" :description "Latest comments" :accesskey "c")))))
 
 (defun prepare-nav-bar (nav-bar current-uri)
@@ -863,7 +865,7 @@ signaled condition to *HTML-OUTPUT*."
               title (replace-query-params (hunchentoot:request-uri*) "offset" nil "format" "rss")))
     (format out-stream "</div>")))
 
-(defun view-items-index (items &key section title current-uri hide-title need-auth (pagination (pagination-nav-bars)) (top-nav (lambda () (page-toolbar-to-html :title title))) (content-class "index-page"))
+(defun view-items-index (items &key section title current-uri hide-title need-auth (pagination (pagination-nav-bars)) (top-nav (lambda () (page-toolbar-to-html :title title))) (content-class "index-page") alternate-html)
   (alexandria:switch ((hunchentoot:get-parameter "format") :test #'string=)
                      ("rss" 
                       (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
@@ -873,9 +875,11 @@ signaled condition to *HTML-OUTPUT*."
                        (emit-page (out-stream :title (if hide-title nil title) :description (site-description *current-site*) :content-class content-class
                                               :current-uri current-uri :robots (if (hunchentoot:get-parameter :offset) "noindex, nofollow")
                                               :pagination pagination :top-nav top-nav)
-                                  (write-index-items-to-html out-stream items
-                                                             :need-auth need-auth
-                                                             :skip-section section)))))
+				  (if alternate-html
+				      (funcall alternate-html)
+				      (write-index-items-to-html out-stream items
+								 :need-auth need-auth
+								 :skip-section section))))))
 
 (defun link-if-not (stream linkp url class text &key accesskey nofollow title)
   (declare (dynamic-extent linkp url text))
@@ -1276,29 +1280,26 @@ signaled condition to *HTML-OUTPUT*."
 		       (concatenate 'string (generate-post-link new-post-data) "?need-auth=y")
 		       (generate-post-link new-post-data))))))))
 
-(hunchentoot:define-easy-handler (view-karma-vote :uri "/karma-vote") ((post-id :request-type :get)
-								       (csrf-token :request-type :post)
-								       (target :request-type :post)
-								       (target-type :request-type :post)
-								       (vote-type :request-type :post))
+(hunchentoot:define-easy-handler (view-karma-vote :uri "/karma-vote") ()
   (with-error-page
       (let ((auth-token *current-auth-token*))
 	(with-response-stream (out-stream)
-	(cond
-	  (post-id
-	   (json:encode-json-alist
-	    (list (cons "postVote" (get-post-vote post-id auth-token))
-		  (cons "commentVotes" (alist-hash-table (delete-if (lambda (x) (null (cdr x))) (get-post-comments-votes post-id auth-token))))
-		  (cons "alignmentForumAllowed"
-			(member "alignmentForum" (cdr (assoc :groups (get-user :user-id (logged-in-userid)))) :test #'string=)))
-	    out-stream))
-	  (csrf-token
-	   (check-csrf-token csrf-token)
-	   (multiple-value-bind (points vote-type vote-data) (do-lw2-vote auth-token target target-type vote-type)
-	     (json:encode-json
-	      (alist-bind (af af-base-score) vote-data
-		(list (vote-buttons points :as-text t :af-score (and af af-base-score)) vote-type))
-	      out-stream))))))))
+	  (request-method
+	    (:get (post-id shortform)
+	      (json:encode-json-alist
+	       (list-cond
+		(post-id "postVote" (get-post-vote post-id auth-token))
+		(post-id "commentVotes" (alist-hash-table (delete-if (lambda (x) (null (cdr x))) (get-post-comments-votes post-id auth-token))))
+		(shortform "commentVotes" (alist-hash-table (delete-if (lambda (x) (null (cdr x))) (get-shortform-votes auth-token))))
+		(t "alignmentForumAllowed"
+		   (member "alignmentForum" (cdr (assoc :groups (get-user :user-id (logged-in-userid)))) :test #'string=)))
+	       out-stream))
+	    (:post (target target-type vote-type)
+	      (multiple-value-bind (points vote-type vote-data) (do-lw2-vote auth-token target target-type vote-type)
+		(json:encode-json
+		 (alist-bind (af af-base-score) vote-data
+			     (list (vote-buttons points :as-text t :af-score (and af af-base-score)) vote-type))
+		 out-stream))))))))
 
 (hunchentoot:define-easy-handler (view-check-notifications :uri "/check-notifications") (format)
   (with-error-page
@@ -1342,10 +1343,11 @@ signaled condition to *HTML-OUTPUT*."
 		(view :member '(nil :alignment-forum))))
   (request-method
    (:get ()
-     (let ((want-total (not (or (typep *current-backend* 'backend-lw2) (typep *current-backend* 'backend-ea-forum))))) ; LW2/EAF can't handle total queries. TODO: handle this in backend.
+     (let ((want-total (not (or (typep *current-backend* 'backend-lw2) (typep *current-backend* 'backend-ea-forum)))) ; LW2/EAF can't handle total queries. TODO: handle this in backend.
+	   (shortform (eq index-type :shortform)))
        (multiple-value-bind (title query-view top-nav)
-	   (case index-type
-	     (:shortform (values "Shortform" "shortform" 'standalone-comment-controls))
+	   (cond
+	     (shortform (values "Shortform" "shortform" 'standalone-comment-controls))
 	     (t (values (case view (:alignment-forum "Alignment Forum recent comments") (t "Recent comments")) "allRecentComments" nil)))
 	 (multiple-value-bind (recent-comments total)
 	     (if (or (not (eq index-type :recent-comments)) offset limit view (/= (user-pref :items-per-page) 20))
@@ -1354,14 +1356,22 @@ signaled condition to *HTML-OUTPUT*."
 							(remove nil (alist :view query-view
 									   :limit (or limit (user-pref :items-per-page)) :offset offset)
 								:key #'cdr)
-							:context :index
+							:context (if shortform :shortform :index)
 							:with-total want-total)))
 		 (get-recent-comments :with-total want-total))
 	   (renderer ()
 	     (view-items-index recent-comments
 			       :title title
+			       :content-class (if shortform "shortform-index-page comment-thread-page")
 			       :pagination (pagination-nav-bars :offset (or offset 0) :with-next (not want-total) :total (if want-total total))
-			       :top-nav (lambda () (page-toolbar-to-html :title title) (when top-nav (funcall top-nav)))))))))
+			       :top-nav (lambda () (page-toolbar-to-html :title title) (when top-nav (funcall top-nav)))
+			       :alternate-html (if (eq index-type :shortform)
+						   (lambda ()
+						     <div class="comments">
+						       (comment-tree-to-html *html-output*
+									     (make-comment-parent-hash
+									      (flatten-shortform-comments recent-comments)))
+						     </div>))))))))
    (:post ()
      (post-comment nil :shortform t))))
 

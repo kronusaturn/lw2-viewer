@@ -2706,6 +2706,19 @@ a.comment-parent-link:hover::after {
 	border: none;
 }
 
+/*************/
+/* SHORTFORM */
+/*************/
+
+.shortform-index-page .comments::before {
+	border: none;
+	box-shadow: none;
+}
+
+.shortform-index-page .comments > .comment-thread > .comment-item:first-child {
+	margin-top: 0;
+}
+
 /****************/
 /* VOTE BUTTONS */
 /****************/

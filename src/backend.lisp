@@ -12,6 +12,7 @@
 	   #:lw2-graphql-query #:lw2-query-string* #:lw2-query-string
            #:lw2-graphql-query-map #:lw2-graphql-query-multi
 	   #:earliest-post-time
+	   #:flatten-shortform-comments #:get-shortform-votes
 	   #:get-posts-index #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-answers #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
 	   #:sequence-post-ids #:get-sequence #:get-post-sequence-ids #:get-sequence-post
 	   #:get-conversation-messages
@@ -500,6 +501,19 @@
 (defun process-votes-result (res)
   (loop for v in res
 	collect (multiple-value-bind (votetype id) (process-vote-result v) (cons id votetype))))
+
+(defun flatten-shortform-comments (comments)
+  (let ((output comments))
+    (loop for comment in comments do
+	 (setf output (append (cdr (assoc :latest-children comment)) output)))
+    output))
+
+(defun get-shortform-votes (auth-token &key (offset 0) (limit 20))
+  (process-votes-result
+   (flatten-shortform-comments
+    (lw2-graphql-query (lw2-query-string :comment :list (alist :view "shortform" :offset offset :limit limit)
+					 :fields '(:--id (:current-user-votes :vote-type) (:latest-children :--id (:current-user-votes :vote-type))))
+		       :auth-token auth-token))))
 
 (defun get-post-vote (post-id auth-token)
   (process-vote-result (lw2-graphql-query (lw2-query-string :post :single (alist :document-id post-id) :fields '(:--id (:current-user-votes :vote-type))) :auth-token auth-token)))
