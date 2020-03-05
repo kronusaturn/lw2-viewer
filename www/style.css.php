@@ -3049,6 +3049,13 @@ a.comment-parent-link:hover::after {
 	margin-left: 1.5em;
 }
 
+#edit-post-form .post-meta-fields label[for="submit-to-frontpage"] {
+	grid-row: 4;
+	grid-column: 2 / span 4;
+	text-align: left;
+	margin-top: 8px;
+}
+
 #edit-post-form .post-meta-fields input[type='checkbox'] {
 	height: 0;
 	opacity: 0;

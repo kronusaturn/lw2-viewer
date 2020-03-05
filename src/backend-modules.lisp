@@ -15,6 +15,7 @@
     #:backend-shortform
     #:backend-backlinks
     #:backend-push-notifications
+    #:backend-lw2-misc-features
     #:backend-lw2-legacy #:backend-lw2-modernized #:backend-lw2 #:backend-algolia-search #:backend-ea-forum #:backend-accordius
     #:backend-arbital
     #:make-backend #:define-backend-function #:define-backend-operation #:backend)
@@ -74,6 +75,9 @@
 (defclass backend-shortform (backend-graphql) ()
   (:metaclass backend-class))
 
+(defclass backend-lw2-misc-features (backend-graphql) ()
+  (:metaclass backend-class))
+
 (defclass backend-lw2-legacy (backend-graphql) ()
   (:metaclass backend-class))
 
@@ -83,6 +87,7 @@
 (defclass backend-lw2 (backend-websocket-login
 		       backend-lw2-modernized
 		       backend-lw2-legacy
+		       backend-lw2-misc-features
 		       backend-algolia-search
 		       backend-q-and-a
 		       backend-related-questions
@@ -97,6 +102,7 @@
 (defclass backend-ea-forum (backend-websocket-login
 			    backend-lw2-modernized
 			    backend-lw2-legacy
+			    backend-lw2-misc-features
 			    backend-algolia-search
 			    backend-q-and-a
 			    backend-related-questions

@@ -1114,7 +1114,7 @@ a.comment-parent-link::after {
 	#edit-post-form label[for='title'] {
 		padding-left: 0;
 	}
-	#edit-post-form .post-meta-fields input[type='checkbox'] + label {
+	#edit-post-form .post-meta-fields input[type='checkbox'] + label.iconify {
 		white-space: normal;
 		line-height: 0.9;
 		top: -1px;

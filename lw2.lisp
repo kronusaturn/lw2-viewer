@@ -1248,9 +1248,11 @@ signaled condition to *HTML-OUTPUT*."
 				    :tags (when (and post-id (typep *current-backend* 'backend-accordius)) (do-wl-rest-query (format nil "posts/~a/update_tagset/" post-id) '()))
                                     :post-id post-id
                                     :section-list (loop for (name desc) in '(("all" "All") ("meta" "Meta") ("drafts" "Drafts"))
-                                                        collect (alist :name name :desc desc :selected (string= name section)))
+						     collect (alist :name name :desc desc :selected (string= name section)))
+				    :lesswrong-misc (typep *current-backend* 'backend-lw2-misc-features)
+				    :submit-to-frontpage (if post-id (cdr (assoc :submit-to-frontpage post-body)) t)
                                     :markdown-source (or (and post-id (cache-get "post-markdown-source" post-id)) (cdr (assoc :html-body post-body)) "")))))
-    (:post (text question)
+    (:post (text question submit-to-frontpage)
      (let ((lw2-auth-token *current-auth-token*)
            (url (if (string= url "") nil url)))
        (assert lw2-auth-token)
@@ -1261,8 +1263,12 @@ signaled condition to *HTML-OUTPUT*."
 		(link-post :url url)
 		(t :meta (string= section "meta"))
 		(t :draft (string= section "drafts"))
+		((typep *current-backend* 'backend-lw2-misc-features) :submit-to-frontpage (and submit-to-frontpage t))
 		((not post-id) :question (and question t))))
-	      (post-unset (if link-post nil (alist :url t)))
+	      (post-unset
+	       (list-cond
+		((not link-post) :url t)
+		((and (typep *current-backend* 'backend-lw2-misc-features) (not submit-to-frontpage)) :submit-to-frontpage t)))
 	      (new-post-data
 	       (if post-id
 		   (do-lw2-post-edit lw2-auth-token post-id post-data post-unset)

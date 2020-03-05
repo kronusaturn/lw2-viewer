@@ -50,6 +50,7 @@
    (contact-info (or null string) :backend-type backend-events)
    (comment-sort-order (or null string) :backend-type backend-lw2)
    (tags list :graphql-ignore t)
+   (submit-to-frontpage boolean :backend-type backend-lw2-misc-features)
    (html-body (or null string) :context :body)))
 
 (define-schema-type :comment ()

@@ -4,7 +4,7 @@
 		<label for="title">Title:</label>
 		<input name="title" autocomplete="off" type="text" value="{{ title }}">
 		<input type="checkbox" class="link-post-checkbox" name="link-post" id="link-post"{% if url %} checked{% endif %}>
-		<label for="link-post">Link post</label>
+		<label for="link-post" class="iconify">Link post</label>
 		<label for="url">URL:</label>
 		<input name="url" autocomplete="off" type="text" value="{{ url }}">
 		{% if tags-supported %}
@@ -12,7 +12,13 @@
 		<input type="text" name="tags" id="tags-input" value="{{ tags }}">
 		{% endif %}
 		<input type="checkbox" class="question-checkbox" name="question" id="question"{% if question %} checked{% endif %}>
-		<label for="question">Question post</label>
+		<label for="question" class="iconify">Question post</label>
+		
+		{% if lesswrong-misc %}
+		<input type="checkbox" name="submit-to-frontpage" id="submit-to-frontpage"{% if submit-to-frontpage %} checked{% endif %}>
+		<label for="submit-to-frontpage">Moderators may promote to frontpage</label>
+		{% endif %}
+		
 		<label for="section">Section:</label>
 		{% for section in section-list %}
 		<input type="radio" name="section" id="{{ section.name }}" value="{{ section.name }}"{% if section.selected %} checked{% endif %}><label for="{{ section.name }}">{{ section.desc }}</label>
