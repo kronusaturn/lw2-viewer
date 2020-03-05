@@ -792,18 +792,18 @@ signaled condition to *HTML-OUTPUT*."
 		     (search "Ubuntu" ua)))))
 	  (catch 'abort-response
 	    (handler-bind
-		((serious-condition (lambda (condition)
-				      (abort-response-if-unrecoverable condition)
-				      (let ((error-html (with-output-to-string (*html-output*) (error-to-html condition))))
-					(emit-page (out-stream :title "Error" :return-code (condition-http-return-code condition) :content-class "error-page")
-						   (write-string error-html out-stream)
-						   (when (eq (hunchentoot:request-method*) :post)
-						     <form method="post" class="error-retry-form">
-							(loop for (key . value) in (hunchentoot:post-parameters*)
-							    do <input type="hidden" name=key value=value>)
-							<input type="submit" value="Retry">
-						     </form>))
-					(return-from call-with-error-page)))))
+		((fatal-error (lambda (condition)
+				(abort-response-if-unrecoverable condition)
+				(let ((error-html (with-output-to-string (*html-output*) (error-to-html condition))))
+				  (emit-page (out-stream :title "Error" :return-code (condition-http-return-code condition) :content-class "error-page")
+					     (write-string error-html out-stream)
+					     (when (eq (hunchentoot:request-method*) :post)
+					       <form method="post" class="error-retry-form">
+					       (loop for (key . value) in (hunchentoot:post-parameters*)
+						  do <input type="hidden" name=key value=value>)
+					       <input type="submit" value="Retry">
+					       </form>))
+				  (return-from call-with-error-page)))))
 	      (log-conditions
 	       (unless (member (hunchentoot:request-method*) '(:get :head))
 		 (check-csrf-token (hunchentoot:post-parameter "csrf-token")))
