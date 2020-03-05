@@ -1267,8 +1267,7 @@ signaled condition to *HTML-OUTPUT*."
 		((not post-id) :question (and question t))))
 	      (post-unset
 	       (list-cond
-		((not link-post) :url t)
-		((and (typep *current-backend* 'backend-lw2-misc-features) (not submit-to-frontpage)) :submit-to-frontpage t)))
+		((not link-post) :url t)))
 	      (new-post-data
 	       (if post-id
 		   (do-lw2-post-edit lw2-auth-token post-id post-data post-unset)
