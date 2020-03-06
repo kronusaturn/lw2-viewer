@@ -1,10 +1,11 @@
 (in-package :asdf)
 
 (asdf:defsystem :lw2-viewer
-  :depends-on ("uiop" "flexi-streams" "hunchentoot" "drakma" "cl-json" "lmdb" "local-time" "plump" "clss" "cl-ppcre" "xml-emitter" "city-hash" "bit-smasher" "cl-unicode" "parse-js" "cl-markdown" "websocket-driver-client" "ironclad" "cl-base64" "djula" "split-sequence" "cl-typesetting" "named-readtables" "collectors" "closer-mop" "chronicity" "parenscript")
+  :depends-on ("uiop" "flexi-streams" "hunchentoot" "drakma" "cl-json" "lmdb" "local-time" "plump" "clss" "cl-ppcre" "xml-emitter" "city-hash" "bit-smasher" "cl-unicode" "parse-js" "cl-markdown" "websocket-driver-client" "ironclad" "cl-base64" "djula" "split-sequence" "cl-typesetting" "named-readtables" "collectors" "closer-mop" "chronicity" "parenscript" "trivial-gray-streams")
   :components ((:module "src"
-                :components ((:file "utils")
-                             (:file "graphql")
+		:components ((:file "utils")
+			     (:file "raw-memory-streams")
+			     (:file "graphql")
                              (:file "hash-utils")
                              (:file "context")
 			     (:file "html-reader")
@@ -32,7 +33,7 @@
                                                               (mark-operation-done o c)
                                                               (copy-file "config-example.lisp" "config.lisp"))))
                              (:file "../config" :depends-on ("config-copy" "config-package"))
-                             (:file "lmdb" :depends-on ("hash-utils" "sites" "context" "../config"))
+                             (:file "lmdb" :depends-on ("raw-memory-streams" "hash-utils" "sites" "context" "../config"))
                              (:file "backend" :depends-on ("utils" "backend-modules" "lmdb" "graphql" "context" "sites" "schema-type" "schema-types" "conditions" "web-push"))
                              (:file "components" :depends-on ("utils"))
                              (:file "links" :depends-on ("lmdb" "backend" "sites" "context"))

@@ -377,11 +377,9 @@
 (define-backend-function lw2-graphql-query-timeout-cached (query cache-db cache-key &key (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*))
   (backend-base
    (multiple-value-bind (cached-result is-fresh) (with-cache-readonly-transaction
-						     (values (cache-get cache-db cache-key :return-type (lambda (array size)
-													  (declare (ignore array size))
-													  t))
+						     (values (cache-get cache-db cache-key :return-type 'existence)
 							     (cache-is-fresh cache-db cache-key)))
-     (labels ((get-cached-result () (cache-get cache-db cache-key)))
+     (labels ((get-cached-result () (cache-get cache-db cache-key :return-type 'binary-stream)))
        (if (and cached-result (or (not revalidate)
 				  (and (not force-revalidate) (eq is-fresh :skip))))
 	   (decode-query-result (get-cached-result))
@@ -441,14 +439,15 @@
              (let* ((result (lw2-graphql-query query :return-type :string))
                     (decoded-result (multiple-value-list (decode-query-result result))))
                (cache-put "index-json" cache-id result)
-               (values-list decoded-result))))
-    (let ((cached-result (cache-get "index-json" cache-id)))
+               (values-list decoded-result)))
+	   (get-cached-result () (cache-get "index-json" cache-id :return-type 'binary-stream)))
+    (let ((cached-result (cache-get "index-json" cache-id :return-type 'existence)))
       (if (and cached-result (background-loader-ready-p))
-        (decode-query-result cached-result)
+        (decode-query-result (get-cached-result))
         (if cached-result
             (handler-case
               (query-and-put)
-              (t () (decode-query-result cached-result)))
+              (t () (decode-query-result (get-cached-result))))
             (query-and-put))))))
 
 (define-backend-function get-posts-index-query-string (&key view (sort "new") (limit 21) offset before after)

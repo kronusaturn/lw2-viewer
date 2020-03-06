@@ -1,11 +1,12 @@
 (uiop:define-package #:lw2.lmdb
-  (:use #:cl #:sb-ext #:sb-thread #:alexandria #:lw2.sites #:lw2.context #:lw2.backend-modules #:lw2-viewer.config #:lw2.hash-utils)
+  (:use #:cl #:sb-ext #:sb-thread #:alexandria #:lw2.raw-memory-streams #:lw2.sites #:lw2.context #:lw2.backend-modules #:lw2-viewer.config #:lw2.hash-utils)
   (:export
    #:close-unused-environments
    #:define-cache-database #:with-cache-mutex #:with-cache-transaction #:with-cache-readonly-transaction #:with-db #:lmdb-put-string #:cache-put #:cache-get #:cache-del
    #:count-database-entries #:truncate-database
    #:call-with-cursor #:cursor-get
    #:existence
+   #:binary-stream
    #:simple-cacheable #:define-lmdb-memoized #:*memoized-output-stream* #:*memoized-output-without-hyphens*)
   (:unintern #:lmdb-clear-db #:*db-mutex* #:*cache-environment-databases-list*))
 
@@ -210,6 +211,9 @@
 (defun existence (array size)
   (declare (ignore array size))
   t)
+
+(defun binary-stream (array size)
+  (make-instance 'raw-memory-stream :pointer array :length size))
 
 (defun make-simple-cache (cache-db)
   (lambda (key value) (cache-put cache-db key value))) 
