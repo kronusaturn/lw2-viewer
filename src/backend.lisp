@@ -379,27 +379,27 @@
    (multiple-value-bind (cached-result is-fresh) (with-cache-readonly-transaction
 						     (values (cache-get cache-db cache-key :return-type 'existence)
 							     (cache-is-fresh cache-db cache-key)))
-     (labels ((get-cached-result () (cache-get cache-db cache-key :return-type 'binary-stream)))
+     (labels ((get-cached-result ()
+		(with-cache-readonly-transaction (decode-query-result (cache-get cache-db cache-key :return-type 'binary-stream)))))
        (if (and cached-result (or (not revalidate)
 				  (and (not force-revalidate) (eq is-fresh :skip))))
-	   (decode-query-result (get-cached-result))
+	   (get-cached-result)
 	   (let ((timeout (if cached-result
 			      (if force-revalidate nil 3)
 			      nil))
 		 (thread (ensure-cache-update-thread query cache-db cache-key)))
-	     (decode-query-result
-	      (block retrieve-result
-		(if (and cached-result (if force-revalidate (not revalidate) (or is-fresh (not revalidate))))
-		    (get-cached-result)
-		    (handler-bind
-			((fatal-error (lambda (c)
-					(declare (ignore c))
-					(if cached-result
-					    (return-from retrieve-result (get-cached-result))))))
-		      (let ((new-result (sb-thread:join-thread thread :timeout timeout)))
-			(typecase new-result
-			  (condition (error new-result))
-			  (t new-result)))))))))))))
+	     (block retrieve-result
+	       (if (and cached-result (if force-revalidate (not revalidate) (or is-fresh (not revalidate))))
+		   (get-cached-result)
+		   (handler-bind
+		       ((fatal-error (lambda (c)
+				       (declare (ignore c))
+				       (if cached-result
+					   (return-from retrieve-result (get-cached-result))))))
+		     (let ((new-result (sb-thread:join-thread thread :timeout timeout)))
+		       (typecase new-result
+			 (condition (error new-result))
+			 (t (decode-query-result new-result)))))))))))))
 
 (define-backend-function lw2-query-string* (query-type return-type args &key context fields with-total))
 
@@ -436,19 +436,20 @@
 
 (defun get-cached-index-query (cache-id query)
   (labels ((query-and-put ()
-             (let* ((result (lw2-graphql-query query :return-type :string))
-                    (decoded-result (multiple-value-list (decode-query-result result))))
-               (cache-put "index-json" cache-id result)
-               (values-list decoded-result)))
-	   (get-cached-result () (cache-get "index-json" cache-id :return-type 'binary-stream)))
+	     (let* ((result (lw2-graphql-query query :return-type :string))
+		    (decoded-result (multiple-value-list (decode-query-result result))))
+	       (cache-put "index-json" cache-id result)
+	       (values-list decoded-result)))
+	   (get-cached-result ()
+	     (with-cache-readonly-transaction (decode-query-result (cache-get "index-json" cache-id :return-type 'binary-stream)))))
     (let ((cached-result (cache-get "index-json" cache-id :return-type 'existence)))
       (if (and cached-result (background-loader-ready-p))
-        (decode-query-result (get-cached-result))
-        (if cached-result
-            (handler-case
-              (query-and-put)
-              (t () (decode-query-result (get-cached-result))))
-            (query-and-put))))))
+	  (get-cached-result)
+	  (if cached-result
+	      (handler-case
+		  (query-and-put)
+		(t () (get-cached-result)))
+	      (query-and-put))))))
 
 (define-backend-function get-posts-index-query-string (&key view (sort "new") (limit 21) offset before after)
   (backend-lw2-legacy
