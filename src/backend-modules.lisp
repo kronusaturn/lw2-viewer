@@ -15,6 +15,7 @@
     #:backend-shortform
     #:backend-backlinks
     #:backend-push-notifications
+    #:backend-lw2-tags
     #:backend-lw2-misc-features
     #:backend-lw2-legacy #:backend-lw2-modernized #:backend-lw2 #:backend-algolia-search #:backend-ea-forum #:backend-accordius
     #:backend-arbital
@@ -75,6 +76,9 @@
 (defclass backend-shortform (backend-graphql) ()
   (:metaclass backend-class))
 
+(defclass backend-lw2-tags (backend-graphql) ()
+  (:metaclass backend-class))
+
 (defclass backend-lw2-misc-features (backend-graphql) ()
   (:metaclass backend-class))
 
@@ -96,7 +100,8 @@
 		       backend-feed-crossposts
 		       backend-backlinks
 		       backend-push-notifications
-		       backend-shortform) ()
+		       backend-shortform
+		       backend-lw2-tags) ()
   (:metaclass backend-class))
 
 (defclass backend-ea-forum (backend-websocket-login

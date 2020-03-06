@@ -13,6 +13,7 @@
            #:lw2-graphql-query-map #:lw2-graphql-query-multi
 	   #:earliest-post-time
 	   #:flatten-shortform-comments #:get-shortform-votes
+	   #:get-tag-posts
 	   #:get-posts-index #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-answers #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
 	   #:sequence-post-ids #:get-sequence #:get-post-sequence-ids #:get-sequence-post
 	   #:get-conversation-messages
@@ -405,28 +406,30 @@
 
 (define-backend-operation lw2-query-string* backend-lw2-legacy (query-type return-type args &key context (fields (request-fields query-type return-type context)) with-total)
   (declare (ignore with-total))
-  (graphql-query-string*
-    (concatenate 'string (string-capitalize query-type)
-                         "s"
-                         (string-capitalize return-type))
-    (if (eq return-type :single)
-        args
-        (alist :terms args))
-    fields))
+  (labels ((lisp-to-lw2-case (x) (json:lisp-to-camel-case (format nil "*~A" x))))
+    (graphql-query-string*
+     (concatenate 'string
+		  (lisp-to-lw2-case query-type)
+		  "s"
+		  (lisp-to-lw2-case return-type))
+     (if (eq return-type :single)
+	 args
+	 (alist :terms args))
+     fields)))
 
 (define-backend-operation lw2-query-string* backend-lw2-modernized (query-type return-type args &key context (fields (request-fields query-type return-type context)) with-total)
   (graphql-query-string*
     (if (eq return-type :single)
-        (string-downcase query-type)
-        (concatenate 'string (string-downcase query-type) "s"))
+	(json:lisp-to-camel-case (string query-type))
+	(concatenate 'string (json:lisp-to-camel-case (string query-type)) "s"))
     (alist :input (case return-type
-                      (:single (alist :selector args))
-                      (:list (alist :enable-total with-total :terms args))
-                      (:total (alist :enable-total t :terms args))))
+		    (:single (alist :selector args))
+		    (:list (alist :enable-total with-total :terms args))
+		    (:total (alist :enable-total t :terms args))))
     (case return-type
-        (:total '(:total-count))
-        (:list (nconc (list (cons :results fields)) (if with-total '(:total-count))))
-        (:single (list (cons :result fields))))))
+      (:total '(:total-count))
+      (:list (nconc (list (cons :results fields)) (if with-total '(:total-count))))
+      (:single (list (cons :result fields))))))
 
 (define-backend-function lw2-query-string (query-type return-type args &key context fields with-total))
 
@@ -523,12 +526,34 @@
 (defun get-post-vote (post-id auth-token)
   (process-vote-result (lw2-graphql-query (lw2-query-string :post :single (alist :document-id post-id) :fields '(:--id (:current-user-votes :vote-type))) :auth-token auth-token)))
 
+(define-cache-database 'backend-lw2-tags "tag-posts" "tag-posts-meta" "post-tags" "post-tags-meta")
+
+(define-backend-function get-tag-posts (slug &key (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*))
+  (backend-base (declare (ignore revalidate force-revalidate)) nil)
+  (backend-lw2-tags
+   (let* ((tagid (get-slug-tagid slug))
+	  (query-string (lw2-query-string :tag-rel :list
+					  (alist :view "postsWithTag" :tag-id tagid)
+					  :fields (list (list* :post (request-fields :post :list :index))))))
+     (map 'list
+	  (lambda (x) (cdr (assoc :post x)))
+	  (lw2-graphql-query-timeout-cached query-string "tag-posts" tagid :revalidate revalidate :force-revalidate force-revalidate)))))
+
+(define-backend-function get-post-tags (post-id &key (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*))
+  (backend-base (declare (ignore revalidate force-revalidate)) nil)
+  (backend-lw2-tags
+   (let ((query-string (lw2-query-string :tag-rel :list (alist :view "tagsOnPost" :post-id post-id) :fields '((:tag :name :slug)))))
+     (lw2-graphql-query-timeout-cached query-string "post-tags" post-id :revalidate revalidate :force-revalidate force-revalidate))))
+
 (define-backend-function get-post-body (post-id &key (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*) auth-token)
   (backend-graphql
    (let ((query-string (lw2-query-string :post :single (alist :document-id post-id) :context :body)))
      (if auth-token
 	 (lw2-graphql-query query-string :auth-token auth-token)
-	 (lw2-graphql-query-timeout-cached query-string "post-body-json" post-id :revalidate revalidate :force-revalidate force-revalidate)))))
+	 (lw2-graphql-query-timeout-cached query-string "post-body-json" post-id :revalidate revalidate :force-revalidate force-revalidate))))
+  (backend-lw2-tags
+   (declare (ignore auth-token))
+   (acons :tags (get-post-tags post-id :revalidate revalidate :force-revalidate force-revalidate) (call-next-method))))
 
 (define-backend-function lw2-query-list-limit-workaround (query-type terms &rest rest &key fields context auth-token)
   (backend-graphql
@@ -836,6 +861,10 @@
 (with-rate-limit
   (simple-cacheable ("slug-userid" 'backend-lw2-legacy "slug-to-userid" slug)
     (rate-limit (slug) (cdr (first (lw2-graphql-query (lw2-query-string :user :single (alist :slug slug) :fields '(:--id))))))))
+
+(with-rate-limit
+  (simple-cacheable ("slug-tagid" 'backend-lw2-tags "slug-to-tagid" slug)
+    (rate-limit (slug) (cdr (first (lw2-graphql-query (lw2-query-string :tag :single (alist :slug slug) :fields '(:--id))))))))
 
 (defun preload-username-cache ()
   (declare (optimize space (compilation-speed 2) (speed 0)))

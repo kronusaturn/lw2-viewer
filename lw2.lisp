@@ -1383,6 +1383,16 @@ signaled condition to *HTML-OUTPUT*."
 (define-route 'forum-site 'standard-route :name 'view-recent-comments :uri "/recentcomments" :handler (route-component view-comments-index () :recent-comments))
 (define-route 'shortform-site 'standard-route :name 'view-shortform :uri "/shortform" :handler (route-component view-comments-index () :shortform))
 
+(define-component view-tag (slug)
+  (:http-args '())
+  (let ((posts (get-tag-posts slug)))
+    (renderer ()
+      (view-items-index posts
+			:title "Tag page"
+			:content-class "tag-index-page"))))
+
+(define-route 'forum-site 'regex-route :name 'view-tag :regex "/tag/([^/?]+)" :handler (route-component view-tag (slug) slug))
+
 (delete-easy-handler 'view-recent-comments)
 
 (hunchentoot:define-easy-handler (view-push-register :uri "/push/register") ()

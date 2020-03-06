@@ -15,6 +15,12 @@
 
 (defun rectify-post (post) (rectify-post* *current-backend* post))
 
+(defgeneric tag-list-to-html (backend tags)
+  (:method ((backend backend-accordius) tags)
+    (dolist (tag tags) (alist-bind ((text string)) tag <a href=("/tags/~A" text)>(progn text)</a>)))
+  (:method ((backend backend-lw2-tags) tags)
+    (dolist (tag tags) (alist-bind ((name string) (slug string)) (cdr (assoc :tag tag)) <a href=("/tag/~A" slug)>(progn name)</a>))))
+
 (defun post-section-to-html (post &key skip-section)
   (schema-bind (:post (rectify-post post) (user-id frontpage-date curated-date meta is-event af draft))
     (multiple-value-bind (class title href)
@@ -69,8 +75,8 @@
 	  <a href=("~A#reviews" (if (eq context :body) "" (generate-post-link post))) class="review-count">(safe (pretty-number review-count-2018 "review"))</a>)
         (with-html-stream-output (post-section-to-html post :skip-section skip-section))
         (when (and (eq context :body) tags)
-          <div id="tags">
-            (dolist (tag tags) (alist-bind ((text string)) tag <a href=("/tags/~A" text)>(progn text)</a>))
+	  <div id="tags">
+	    (tag-list-to-html *current-backend* tags)
 	  </div>)
         (when (and (eq context :listing) url)
 	  <div class="link-post-domain">("(~A)" (puri:uri-host (puri:parse-uri (string-trim " " url))))</div>)
