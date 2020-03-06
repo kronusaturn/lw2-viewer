@@ -92,7 +92,7 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
   (labels ((expand (clauses)
 	     (when clauses
 	       (destructuring-bind (predicate-form data-form &optional value-form) (first clauses)
-		 (with-gensyms (predicate value rest)
+		 (with-gensyms (predicate rest)
 		   `(let* ((,predicate ,predicate-form)
 			   (,rest ,(expand (rest clauses))))
 		      (declare (dynamic-extent ,predicate))
