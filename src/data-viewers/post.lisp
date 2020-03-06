@@ -125,6 +125,7 @@
 		    <iframe src=("https://www.openstreetmap.org/export/embed.html?bbox=~F,~F,~F,~F&layer=mapnik&marker=~F,~F" west south east north lat lng)></iframe>
 		  </div>
 		  <ul>
+		    <li><a href=("https://www.google.com/maps/place/~F,~F" lat lng)>[Open in Google Maps]</a> <a href=("geo:~F,~F" lat lng)>[Open in local app]</a></li>
 		    (when start-timestamp
 		      <li>(brief-date start-timestamp), (brief-time start-timestamp)
 		        (when end-timestamp
