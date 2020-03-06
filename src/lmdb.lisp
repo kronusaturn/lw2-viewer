@@ -179,9 +179,9 @@
   (with-db (db db-name) 
 	   (lmdb-put-string db key value)))
 
-(defun cache-get (db-name key)
+(defun cache-get (db-name key &key (return-type :string))
   (with-db (db db-name :read-only t)
-	   (lmdb:get db (string-to-octets key :external-format :utf-8) :return-type :string)))
+	   (lmdb:get db (string-to-octets key :external-format :utf-8) :return-type return-type)))
 
 (defun cache-del (db-name key &optional data)
   (with-db (db db-name)
