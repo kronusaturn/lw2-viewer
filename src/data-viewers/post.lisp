@@ -108,35 +108,37 @@
       </h1>
       (with-html-stream-output (post-meta-to-html post :body nil))
       (when is-event
-	(alist-bind ((geometry list)
-		     (google-maps-url (or null string) :url))
-		    google-location
-	  (alist-bind ((lat real) (lng real)) (cdr (assoc :location geometry))
-	    (let* ((north (+ lat 0.125)) (south (- lat 0.125)) (east (+ lng 0.25)) (west (- lng 0.25))
-		   (start-timestamp (and local-start-time (local-time:parse-timestring local-start-time)))
-		   (end-timestamp (and local-end-time (local-time:parse-timestring local-end-time)))
-		   (same-day (and start-timestamp end-timestamp (= (local-time:day-of start-timestamp) (local-time:day-of end-timestamp)))))
-	      (labels ((brief-date (timestamp)
-			 (local-time:format-timestring nil timestamp :timezone local-time:+utc-zone+ :format '(:day #\Space :long-month #\Space :year)))
-		       (brief-time (timestamp)
-			 (local-time:format-timestring nil timestamp :timezone local-time:+utc-zone+ :format '(:hour12 #\: (:min 2) #\Space :ampm))))
-	        <div class="event-info">
-		  <div class="map">
-		    <iframe src=("https://www.openstreetmap.org/export/embed.html?bbox=~F,~F,~F,~F&layer=mapnik&marker=~F,~F" west south east north lat lng)></iframe>
-		  </div>
+	(labels ((brief-date (timestamp)
+		   (local-time:format-timestring nil timestamp :timezone local-time:+utc-zone+ :format '(:day #\Space :long-month #\Space :year)))
+		 (brief-time (timestamp)
+		   (local-time:format-timestring nil timestamp :timezone local-time:+utc-zone+ :format '(:hour12 #\: (:min 2) #\Space :ampm))))
+	  <div class="event-info">
+	    (alist-bind ((geometry list)
+			 (google-maps-url (or null string) :url))
+			google-location
+	      (alist-bind ((lat (or null real)) (lng (or null real))) (cdr (assoc :location geometry))
+		(when (and lat lng)
+		  (let* ((north (+ lat 0.125)) (south (- lat 0.125)) (east (+ lng 0.25)) (west (- lng 0.25)))
+		    <div class="map">
+		      <iframe src=("https://www.openstreetmap.org/export/embed.html?bbox=~F,~F,~F,~F&layer=mapnik&marker=~F,~F" west south east north lat lng)></iframe>
+		    </div>))
+		(let* ((start-timestamp (and local-start-time (local-time:parse-timestring local-start-time)))
+		       (end-timestamp (and local-end-time (local-time:parse-timestring local-end-time)))
+		       (same-day (and start-timestamp end-timestamp (= (local-time:day-of start-timestamp) (local-time:day-of end-timestamp)))))
 		  <ul>
-		    <li><a href=("https://www.google.com/maps/place/~F,~F" lat lng)>[Open in Google Maps]</a> <a href=("geo:~F,~F" lat lng)>[Open in local app]</a></li>
+		    (when (and lat lng)
+		      <li><a href=("https://www.google.com/maps/place/~F,~F" lat lng)>[Open in Google Maps]</a> <a href=("geo:~F,~F" lat lng)>[Open in local app]</a></li>)
 		    (when start-timestamp
 		      <li>(brief-date start-timestamp), (brief-time start-timestamp)
 		        (when end-timestamp
-		          <span>—(unless same-day (format nil "~A, " (brief-date end-timestamp)))(brief-time end-timestamp)</span>)
+			  <span>—(unless same-day (format nil "~A, " (brief-date end-timestamp)))(brief-time end-timestamp)</span>)
 		      </li>)
 		    (when location
 		      <li>(safe (clean-text-to-html location))</li>)
 		    (when contact-info
 		      <li>Contact: (safe (clean-text-to-html contact-info))</li>)
-		  </ul>
-	        </div>)))))
+		    </ul>)))
+	</div>))
       <div class="body-text post-body">
         (if url <p><a class="link-post-link" href=(convert-any-link (string-trim " " url))>Link post</a></p>)
 	(with-html-stream-output
