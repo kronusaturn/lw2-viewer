@@ -94,11 +94,11 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
 	       (destructuring-bind (predicate-form data-form &optional value-form) (first clauses)
 		 (with-gensyms (predicate value rest)
 		   `(let* ((,predicate ,predicate-form)
-			   (,value (if ,predicate ,(if value-form `(cons ,data-form ,value-form) data-form)))
 			   (,rest ,(expand (rest clauses))))
 		      (declare (dynamic-extent ,predicate))
 		      (if ,predicate
-			  (cons ,value ,rest)
+			  (cons ,(if value-form `(cons ,data-form ,value-form) data-form)
+				,rest)
 			  ,rest)))))))
     (expand clauses)))
 
