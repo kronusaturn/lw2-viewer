@@ -21,6 +21,18 @@
   (:method ((backend backend-lw2-tags) tags)
     (dolist (tag tags) (alist-bind ((name string) (slug string)) (cdr (assoc :tag tag)) <a href=("/tag/~A" slug)>(progn name)</a>))))
 
+(defun qualified-linking (url meta-location)
+  <nav class="qualified-linking">
+    <input type="checkbox" tabindex="-1" id=("qualified-linking-toolbar-toggle-checkbox-~(~A~)" meta-location)>
+    <label for=("qualified-linking-toolbar-toggle-checkbox-~(~A~)" meta-location)><span>&#xf141\;</span></label>
+    <div class="qualified-linking-toolbar">
+      <a href=url>Post permalink</a>
+      <a href=("~A?comments=false" url)>Link without comments</a>
+      <a href=("~A?hide-nav-bars=true" url)>Link without top nav bars</a>
+      <a href=("~A?comments=false&hide-nav-bars=true" url)>Link without comments or top nav bars</a>
+    </div>
+  </nav>)
+
 (defun post-section-to-html (post &key skip-section)
   (schema-bind (:post (rectify-post post) (user-id frontpage-date curated-date meta is-event af draft))
     (multiple-value-bind (class title href)
@@ -35,10 +47,10 @@
 	      (t (if (eq skip-section :personal) nil (values "personal" (format nil "View posts by ~A" (get-username user-id)) (format nil "/users/~A?show=posts" (get-user-slug user-id))))))
       <a class=("post-section ~A" class) title=title href=href></a>)))
 
-(defun post-meta-to-html (post context skip-section)
+(defun post-meta-to-html (post context skip-section meta-location)
   (schema-bind (:post (rectify-post post) :auto)
     (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      <div class="post-meta">
+      <div class=("post-meta~@[ ~(~A~)-post-meta~]" meta-location)>
         (labels ((emit-author (user-id)
 		   (if (user-deleted user-id)
 		       <span class="author">[deleted]</span>
@@ -80,6 +92,8 @@
 	  </div>)
         (when (and (eq context :listing) url)
 	  <div class="link-post-domain">("(~A)" (puri:uri-host (puri:parse-uri (string-trim " " url))))</div>)
+	(when (eq context :body)
+	  (qualified-linking (generate-post-link post) meta-location))
       </div>)))
 
 (defun post-headline-to-html (post &key skip-section need-auth)
@@ -95,7 +109,7 @@
       </a>
       (if (logged-in-userid user-id) <a class="edit-post-link button" href=("/edit-post?post-id=~A" post-id)></a>)
     </h1>
-    (post-meta-to-html post :listing skip-section)))
+    (post-meta-to-html post :listing skip-section nil)))
 
 (defun post-body-to-html (post)
   (schema-bind (:post (rectify-post post) (post-id url question title html-body is-event local-start-time local-end-time location google-location contact-info) :context :body)
@@ -106,7 +120,7 @@
         (if question <span class="post-type-prefix">[Question] </span>)
         (safe (clean-text-to-html title :hyphenation nil))
       </h1>
-      (with-html-stream-output (post-meta-to-html post :body nil))
+      (with-html-stream-output (post-meta-to-html post :body nil :top))
       (when is-event
 	(labels ((brief-date (timestamp)
 		   (local-time:format-timestring nil timestamp :timezone local-time:+utc-zone+ :format '(:day #\Space :long-month #\Space :year)))
@@ -148,5 +162,5 @@
 	      (clean-html* (or html-body "") :with-toc t :post-id post-id) *html-output*))
       </div>
       (backlinks-to-html (get-backlinks post-id) post-id)
-      (with-html-stream-output #|(post-meta-to-html post :body nil) TODO: don't use js to insert bottom-post-meta|#)
+      (with-html-stream-output (post-meta-to-html post :body nil :bottom))
     </main>))

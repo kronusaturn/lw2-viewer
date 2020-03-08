@@ -222,7 +222,7 @@
 				  :social-description (cdr (assoc :clickbait page-data)))
 	    <main class="post">
 	    <h1 class="post-title">(cdr (assoc :title page-data))</h1>
-	    <div class="post-meta">
+	    <div class="post-meta top-post-meta">
 		(arbital-meta-block page-data all-data :page)
 	    </div>
 	    (when (and (cdr (assoc :text page-data)) (> (length (cdr (assoc :text page-data))) 0))
@@ -231,6 +231,9 @@
 		  (when (assoc :text page-data)
 		  (arbital-markdown-to-html (cdr (assoc :text page-data))
 					    *html-output*)))
+	      </div>
+	      <div class="post-meta bottom-post-meta">
+		(arbital-meta-block page-data all-data :page)
 	      </div>)
 	    <div class="arbital-nav">
 	      (dolist (page-list-data '((:child-ids "Children")
