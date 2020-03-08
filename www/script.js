@@ -850,6 +850,9 @@ function injectContentWidthSelector() {
 			if (selectedWidth == "normal") localStorage.removeItem("selected-width");
 			else localStorage.setItem("selected-width", selectedWidth);
 
+			// Save current visible comment
+			let visibleComment = getCurrentVisibleComment();
+
 			// Actually change the content width.
 			setContentWidth(selectedWidth);
 			event.target.parentElement.childNodes.forEach(button => {
@@ -864,6 +867,8 @@ function injectContentWidthSelector() {
 
 			// Regenerate images overlay.
 			generateImagesOverlay();
+
+			if(visibleComment) visibleComment.scrollIntoView();
 		});
 	});
 
