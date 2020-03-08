@@ -548,8 +548,12 @@ signaled condition to *HTML-OUTPUT*."
 
 (defgeneric site-inline-scripts (site)
   (:method-combination append :most-specific-last)
+  (:method append ((s site)) nil))
+
+(defgeneric site-scripts (site)
+  (:method-combination append :most-specific-last)
   (:method append ((s site))
-	   (list (load-time-value (with-open-file (s "www/head.js") (uiop:slurp-stream-string s)) t))))
+	   (list (generate-versioned-link "/head.js"))))
 
 (defgeneric site-external-scripts (site)
   (:method-combination append :most-specific-last)
@@ -586,6 +590,8 @@ signaled condition to *HTML-OUTPUT*."
     (format out-stream "<link rel=\"shortcut icon\" href=\"~A\">"
 	    (generate-versioned-link "/assets/favicon.ico"))
     (unless preview
+      (format out-stream "~{<script src=\"~A\"></script>~}"
+	      (site-scripts *current-site*))
       (format out-stream "~{<script src=\"~A\" async></script>~}~A"
 	      (site-external-scripts *current-site*)
 	      *extra-external-scripts*))
@@ -720,7 +726,8 @@ signaled condition to *HTML-OUTPUT*."
 						 (append
 						  (loop for link in (site-stylesheets *current-site*)
 						     collect (list* link "text/css" "style" push-option))
-						  (loop for link in (site-external-scripts *current-site*)
+						  (loop for link in (append (site-scripts *current-site*)
+									    (site-external-scripts *current-site*))
 						       collect (list* link "text/javascript" "script" push-option)))))
     (unless push-option (set-cookie "push" "t" :max-age (* 4 60 60)))))
 
@@ -1818,6 +1825,7 @@ signaled condition to *HTML-OUTPUT*."
                                                                                             collect (defres (format nil "/css/style~@[-~A~].~A.css" theme system) "text/css")))
                                                                                     (loop for (uri content-type) in
 										      '(("/arbital.css" "text/css")
+											("/head.js" "text/javascript")
 											("/script.js" "text/javascript")
 											("/assets/favicon.ico" "image/x-icon")
 											("/assets/telegraph.jpg" "image/jpeg")
