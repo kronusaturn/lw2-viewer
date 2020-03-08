@@ -391,6 +391,7 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 	GWLog("injectReplyForm");
 	let commentControls = this;
 	let editCommentId = (editMarkdownSource ? commentControls.getCommentId() : false);
+	let postId = commentControls.parentElement.dataset["postId"];
 	let withparent = (!editMarkdownSource && commentControls.getCommentId());
 	let answer = commentControls.parentElement.id == "answers";
 	let parentAnswer = commentControls.closest("#answers > .comment-thread > .comment-item");
@@ -405,6 +406,7 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 		(withparent ? "<input type='hidden' name='parent-comment-id' value='" + commentControls.getCommentId() + "'>" : "") +
 		(withParentAnswer ? "<input type='hidden' name='parent-answer-id' value='" + withParentAnswer + "'>" : "") +
 		(editCommentId ? "<input type='hidden' name='edit-comment-id' value='" + editCommentId + "'>" : "") +
+		(postId ? "<input type='hidden' name='post-id' value='" + postId + "'>" : "") +
 		(answer ? "<input type='hidden' name='answer' value='t'>" : "") +
 		(commentControls.parentElement.id == "nominations" ? "<input type='hidden' name='nomination' value='t'>" : "") +
 		(commentControls.parentElement.id == "reviews" ? "<input type='hidden' name='nomination-review' value='t'>" : "") +

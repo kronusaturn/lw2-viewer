@@ -19,7 +19,8 @@
 			     (< (* 1000 (local-time:timestamp-to-unix (local-time:now))) (+ js-time 15000)))
 			"just-posted-comment")
 		       (highlight-new "comment-item-highlight")
-		       (retracted "retracted")))>
+		       (retracted "retracted")))
+	       data-post-id=post-id>
 	    <div class="comment-meta">
 	      (if (user-deleted user-id)
 		  <span class="author">[deleted]</span>

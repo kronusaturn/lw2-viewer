@@ -1061,37 +1061,38 @@ signaled condition to *HTML-OUTPUT*."
 (define-page view-review-voting "/reviewVoting" ()
   (redirect "https://www.lesswrong.com/reviewVoting" :type :see-other))
 
-(defun post-comment (post-id &key shortform)
+(defun post-comment (post-id-real &key shortform)
   (request-method
-   (:post (text answer nomination nomination-review af parent-answer-id parent-comment-id edit-comment-id retract-comment-id unretract-comment-id delete-comment-id)
+   (:post (text answer nomination nomination-review af post-id parent-answer-id parent-comment-id edit-comment-id retract-comment-id unretract-comment-id delete-comment-id)
      (let ((lw2-auth-token *current-auth-token*))
        (assert lw2-auth-token)
-       (let ((question (when post-id (cdr (assoc :question (get-post-body post-id :auth-token lw2-auth-token)))))
-	     (new-comment-id
-	      (cond
-		(text
-		 (let ((comment-data
-			(list-cond
-			 (t :body (postprocess-markdown text))
-			 ((not (or edit-comment-id shortform)) :post-id post-id)
-			 (parent-comment-id :parent-comment-id parent-comment-id)
-			 (answer :answer t)
-			 (nomination :nominated-for-review "2018")
-			 (nomination-review :reviewing-for-review "2018")
-			 (parent-answer-id :parent-answer-id parent-answer-id)
-			 (af :af t)
-			 (shortform :shortform t))))
-		   (if edit-comment-id
-		       (prog1 edit-comment-id
-			 (do-lw2-comment-edit lw2-auth-token edit-comment-id comment-data))
-		       (do-lw2-comment lw2-auth-token comment-data))))
-		(retract-comment-id
-		 (do-lw2-comment-edit lw2-auth-token retract-comment-id '((:retracted . t))))
-		(unretract-comment-id
-		 (do-lw2-comment-edit lw2-auth-token unretract-comment-id '((:retracted . nil))))
-		(delete-comment-id
-		 (do-lw2-comment-remove lw2-auth-token delete-comment-id :reason "Comment deleted by its author.")
-		 nil))))
+       (let* ((post-id (or post-id-real post-id))
+	      (question (when post-id (cdr (assoc :question (get-post-body post-id :auth-token lw2-auth-token)))))
+	      (new-comment-id
+	       (cond
+		 (text
+		  (let ((comment-data
+			 (list-cond
+			  (t :body (postprocess-markdown text))
+			  ((not (or edit-comment-id (and shortform (not parent-comment-id)))) :post-id post-id)
+			  (parent-comment-id :parent-comment-id parent-comment-id)
+			  (answer :answer t)
+			  (nomination :nominated-for-review "2018")
+			  (nomination-review :reviewing-for-review "2018")
+			  (parent-answer-id :parent-answer-id parent-answer-id)
+			  (af :af t)
+			  ((and shortform (not parent-comment-id)) :shortform t))))
+		    (if edit-comment-id
+			(prog1 edit-comment-id
+			  (do-lw2-comment-edit lw2-auth-token edit-comment-id comment-data))
+			(do-lw2-comment lw2-auth-token comment-data))))
+		 (retract-comment-id
+		  (do-lw2-comment-edit lw2-auth-token retract-comment-id '((:retracted . t))))
+		 (unretract-comment-id
+		  (do-lw2-comment-edit lw2-auth-token unretract-comment-id '((:retracted . nil))))
+		 (delete-comment-id
+		  (do-lw2-comment-remove lw2-auth-token delete-comment-id :reason "Comment deleted by its author.")
+		  nil))))
 	 (when post-id
 	   (ignore-errors
 	     (get-post-comments post-id :force-revalidate t)
