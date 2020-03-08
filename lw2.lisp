@@ -1134,6 +1134,8 @@ signaled condition to *HTML-OUTPUT*."
 		    (if preview
 			(output-comments-inner)
 			(progn (format out-stream "<div id=\"~As\" class=\"comments\">" id)
+			       (unless target
+				 <script>initializeCommentControls\(\)</script>)
 			       (output-comments-inner)
 			       (format out-stream "</div>"))))))
 	 (multiple-value-bind (post title condition)

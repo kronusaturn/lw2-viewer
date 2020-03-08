@@ -90,4 +90,6 @@
 		      (clean-html* html-body)))
 	      </div>
 	      (backlinks-to-html (get-backlinks post-id comment-id) (format nil "~A-~A" post-id comment-id))
+	      (unless with-post-title
+	        <script>initializeCommentControls\(\)</script>)
 	    </div>))))

@@ -254,5 +254,145 @@ if (localStorage.getItem("antikibitzer") == "true") {
 	}
 }
 
+/********************/
+/* COMMENT CONTROLS */
+/********************/
+
+/*	Adds an event listener to a button (or other clickable element), attaching 
+	it to both "click" and "keyup" events (for use with keyboard navigation).
+	Optionally also attaches the listener to the 'mousedown' event, making the 
+	element activate on mouse down instead of mouse up. */
+Element.prototype.addActivateEvent = function(func, includeMouseDown) {
+	let ael = this.activateEventListener = (event) => { if (event.button === 0 || event.key === ' ') func(event) };
+	if (includeMouseDown) this.addEventListener("mousedown", ael);
+	this.addEventListener("click", ael);
+	this.addEventListener("keyup", ael);
+}
+
+Element.prototype.updateCommentControlButton = function() {
+	let retractFn = () => {
+		if(this.closest(".comment-item").firstChild.hasClass("retracted"))
+			return [ "unretract-button", "Un-retract", "Un-retract this comment" ];
+		else
+			return [ "retract-button", "Retract", "Retract this comment (without deleting)" ];
+	};
+	let classMap = {
+		"delete-button": () => { return [ "delete-button", "Delete", "Delete this comment" ] },
+		"retract-button": retractFn,
+		"unretract-button": retractFn,
+		"edit-button": () => { return [ "edit-button", "Edit", "Edit this comment" ] }
+	};
+	classMap.keys().forEach((testClass) => {
+		if (this.hasClass(testClass)) {
+			let [ buttonClass, buttonLabel, buttonAltText ] = classMap[testClass]();
+			this.className = "";
+			this.addClasses([ buttonClass, "action-button" ]);
+			if (this.innerHTML || !this.dataset.label) this.innerHTML = buttonLabel;
+			this.dataset.label = buttonLabel;
+			this.title = buttonAltText;
+			this.tabIndex = '-1';
+			return;
+		}
+	});
+}
+
+Element.prototype.constructCommentControls = function() {
+	let commentControls = this;
+
+	if(commentControls.parentElement.id == "nominations" || commentControls.parentElement.id == "reviews") {
+		return; // Too late to add nominations or reviews.
+	}
+	
+	let commentType = commentControls.parentElement.id.replace(/s$/, "");
+	commentControls.innerHTML = "";
+	let replyButton = document.createElement("button");
+	if (commentControls.parentElement.hasClass("comments")) {
+		replyButton.className = "new-comment-button action-button";
+		replyButton.innerHTML = (commentType == "nomination" ? "Add nomination" : "Post new " + commentType);
+		replyButton.setAttribute("accesskey", (commentType == "comment" ? "n" : ""));
+		replyButton.setAttribute("title", "Post new " + commentType + (commentType == "comment" ? " [n]" : ""));
+	} else {
+		if (commentControls.parentElement.query(".comment-body").hasAttribute("data-markdown-source")) {
+			let buttonsList = [];
+			if(!commentControls.parentElement.query(".comment-thread"))
+				buttonsList.push("delete-button");
+			buttonsList.push("retract-button", "edit-button");
+			buttonsList.forEach(buttonClass => {
+				let button = commentControls.appendChild(document.createElement("button"));
+				button.addClass(buttonClass);
+				button.updateCommentControlButton();
+			});
+		}
+		replyButton.className = "reply-button action-button";
+		replyButton.innerHTML = "Reply";
+		replyButton.dataset.label = "Reply";
+	}
+	commentControls.appendChild(replyButton);
+	replyButton.tabIndex = '-1';
+
+	// On mobile, hide labels for all but the Reply button.
+	if (GW.isMobile && window.innerWidth <= 900) {
+		commentControls.queryAll(".delete-button, .retract-button, .unretract-button, .edit-button").forEach(button => {
+			button.innerHTML = "";
+		});
+	}
+
+	// Activate buttons.
+	commentControls.queryAll(".action-button").forEach(button => {
+		button.addActivateEvent(GW.commentActionButtonClicked);
+	});
+
+	// Replicate karma controls at the bottom of comments.
+	if (commentControls.parentElement.hasClass("comments")) return;
+	let karmaControls = commentControls.parentElement.query(".comment-meta .karma");
+	if (!karmaControls) return;
+	let karmaControlsCloned = karmaControls.cloneNode(true);
+	commentControls.appendChild(karmaControlsCloned);
+	if(commentControls.query(".active-controls")) {
+		commentControls.queryAll("button.vote").forEach(voteButton => {
+			voteButton.addActivateEvent(voteButtonClicked);
+		});
+	}
+}
+
+GW.commentActionButtonClicked = (event) => {
+	if (event.target.hasClass("edit-button") ||
+		event.target.hasClass("reply-button") ||
+		event.target.hasClass("new-comment-button")) {
+		queryAll("textarea").forEach(textarea => {
+			let commentControls = textarea.closest(".comment-controls");
+			if(commentControls) hideReplyForm(commentControls);
+		});
+	}
+
+	if (event.target.hasClass("delete-button")) {
+		let commentItem = event.target.closest(".comment-item");
+		if (confirm("Are you sure you want to delete this comment?" + "\n\n" +
+					"COMMENT DATE: " + commentItem.query(".date.").innerHTML + "\n" + 
+					"COMMENT ID: " + /comment-(.+)/.exec(commentItem.id)[1] + "\n\n" + 
+					"COMMENT TEXT:" + "\n" + commentItem.query(".comment-body").dataset.markdownSource))
+			doCommentAction("delete", commentItem);
+	} else if (event.target.hasClass("retract-button")) {
+		doCommentAction("retract", event.target.closest(".comment-item"));
+	} else if (event.target.hasClass("unretract-button")) {
+		doCommentAction("unretract", event.target.closest(".comment-item"));
+	} else if (event.target.hasClass("edit-button")) {
+		showCommentEditForm(event.target.closest(".comment-item"));
+	} else if (event.target.hasClass("reply-button")) {
+		showReplyForm(event.target.closest(".comment-item"));
+	} else if (event.target.hasClass("new-comment-button")) {
+		showReplyForm(event.target.closest(".comments"));
+	}
+
+	event.target.blur();
+};
+
+function initializeCommentControls() {
+	e = document.createElement("div");
+	e.className = "comment-controls posting-controls";
+	document.currentScript.insertAdjacentElement("afterend", e);
+	e.constructCommentControls();
+}
+
 // Hide elements that require javascript until ready.
 query("head").insertAdjacentHTML("beforeend", "<style>.only-without-js { display: none; }</style><style id='hide-until-init'>.hide-until-init { visibility: hidden; }</style>");
