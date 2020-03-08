@@ -477,8 +477,8 @@ Element.prototype.constructCommentControls = function() {
 	GWLog("constructCommentControls");
 	let commentControls = this;
 
-	if(commentControls.parentElement.id == "nominations") {
-		return; // Too late to add nominations.
+	if(commentControls.parentElement.id == "nominations" || commentControls.parentElement.id == "reviews") {
+		return; // Too late to add nominations or reviews.
 	}
 	
 	let commentType = commentControls.parentElement.id.replace(/s$/, "");
