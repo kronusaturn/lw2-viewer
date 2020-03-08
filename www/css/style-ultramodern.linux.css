@@ -5284,7 +5284,7 @@ a.comment-parent-link::after {
 	}
 }
 @media only screen and (max-width: 720px) {
-	.comment-meta .karma-value span {
+	.comment .karma-value span {
 		display: none;
 	}
 	.comment-meta .comment-parent-link {
@@ -5365,13 +5365,19 @@ a.comment-parent-link::after {
 /*===========================*/
 
 @media only screen and (max-width: 900px) {
+	.comment-controls .delete-button, .comment-controls .retract-button, .comment-controls .unretract-button, .comment-controls .edit-button {
+		font-size: 0;
+	}
+	.comment-controls .delete-button::before, .comment-controls .retract-button::before, .comment-controls .unretract-button::before, .comment-controls .edit-button::before {
+		font-size: 0.9rem;
+	}
 	.comment-controls .cancel-comment-button {
 		max-width: 1.3em;
 		overflow: hidden;
 		margin-right: 0.125em;
 	}
 	.comment-controls .edit-button::before {
-		font-size: 0.9375em;
+		font-size: 0.9375rem;
 	}
 	.comments > .comment-controls .cancel-comment-button {
 		right: 8px;	
