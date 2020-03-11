@@ -2440,7 +2440,11 @@ function addCommentParentPopups() {
 
 	queryAll("a[href]").forEach(linkTag => {
 		let linkHref = linkTag.getAttribute("href");
-		let url = new URL(linkHref, window.location.href);
+
+		let url;
+		try { url = new URL(linkHref, window.location.href); }
+		catch(e) { }
+		if(!url) return;
 
 		if(window.location.origin === url.origin) {
 			let linkCommentId = (/\/(?:comment|answer)\/([^\/#]+)$/.exec(url.pathname)||[])[1] || (/#comment-(.+)/.exec(url.hash)||[])[1];
