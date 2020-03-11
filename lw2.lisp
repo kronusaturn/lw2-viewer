@@ -1155,31 +1155,40 @@ signaled condition to *HTML-OUTPUT*."
 						       (cdr (assoc :canonical-source post))))
 			<link rel="canonical" href=canonical-source>)
 		      <script>postId=(with-html-stream-output (json:encode-json post-id *html-output*))</script>
-		      <script>alignmentForumPost=(if (cdr (assoc :af post)) "true" "false")</script>))
+		      <script>alignmentForumPost=(if (cdr (assoc :af post)) "true" "false")</script>)
+		    (retrieve-individual-comment (comment-thread-type)
+		      (let* ((comments (case comment-thread-type
+					 (:comment (get-post-comments post-id))
+					 (:answer (get-post-answers post-id))))
+			     (target-comment (find comment-id comments :key (lambda (c) (cdr (assoc :--id c))) :test #'string=)))
+			(values comments target-comment))))
 	     (if comment-id
-		 (let* ((*comment-individual-link* t)
-			(comment-thread-type (if (string= comment-link-type "answer") :answer :comment))
-			(comments (case comment-thread-type
-				    (:comment (get-post-comments post-id))
-				    (:answer (get-post-answers post-id))))
-			(target-comment (find comment-id comments :key (lambda (c) (cdr (assoc :--id c))) :test #'string=))
-			(display-name (get-username (cdr (assoc :user-id target-comment))))
-			(verb-phrase (cond
-				       ((and (eq comment-thread-type :answer)
-					     (not (cdr (assoc :parent-comment-id target-comment))))
-					"answers")
-				       (t "comments on"))))
-		   (emit-page (out-stream :title (format nil "~A ~A ~A" display-name verb-phrase title)
-					  :content-class "individual-thread-page comment-thread-page"
-					  :social-description (when-let (x (cdr (assoc :html-body target-comment))) (extract-excerpt x))
-					  :extra-head #'extra-head)
-			      (unless preview
-				(format out-stream "<h1 class=\"post-title\">~A ~A <a href=\"~A\">~A</a></h1>"
-					(encode-entities display-name)
-					verb-phrase
-					(generate-post-link post-id)
-					(clean-text-to-html title :hyphenation nil)))
-			      (output-comments out-stream "comment" comments target-comment)))
+		 (let ((comment-thread-type (if (string= comment-link-type "answer") :answer :comment)))
+		   (multiple-value-bind (comments target-comment) (retrieve-individual-comment comment-thread-type)
+		     (unless target-comment
+		       ;; If the comment was not found, try as an answer, or vice versa.
+		       (setf comment-thread-type (if (eq comment-thread-type :comment) :answer :comment)
+			     (values comments target-comment) (retrieve-individual-comment comment-thread-type))
+		       (unless target-comment
+			 (error (make-condition 'lw2-not-found-error))))
+		     (let* ((*comment-individual-link* t)
+			    (display-name (get-username (cdr (assoc :user-id target-comment))))
+			    (verb-phrase (cond
+					   ((and (eq comment-thread-type :answer)
+						 (not (cdr (assoc :parent-comment-id target-comment))))
+					    "answers")
+					   (t "comments on"))))
+		       (emit-page (out-stream :title (format nil "~A ~A ~A" display-name verb-phrase title)
+					      :content-class "individual-thread-page comment-thread-page"
+					      :social-description (when-let (x (cdr (assoc :html-body target-comment))) (extract-excerpt x))
+					      :extra-head #'extra-head)
+				  (unless preview
+				    (format out-stream "<h1 class=\"post-title\">~A ~A <a href=\"~A\">~A</a></h1>"
+					    (encode-entities display-name)
+					    verb-phrase
+					    (generate-post-link post-id)
+					    (clean-text-to-html title :hyphenation nil)))
+				  (output-comments out-stream "comment" comments target-comment)))))
 		 (let ((post-sequences (get-post-sequences post-id)))
 		   (emit-page (out-stream :title title
 					  :content-class (format nil "post-page comment-thread-page~{ ~A~}"
