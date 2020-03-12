@@ -761,67 +761,72 @@ signaled condition to *HTML-OUTPUT*."
 
 (defun call-with-error-page (fn)
   (let* ((*current-auth-status*
-           (if-let (status-string (hunchentoot:cookie-in "lw2-status"))
-		   (if (string= status-string "") nil
-		       (let ((json:*identifier-name-to-key* #'json:safe-json-intern))
-			 (json:decode-json-from-string status-string)))))
+	  (if-let (status-string (hunchentoot:cookie-in "lw2-status"))
+		  (if (string= status-string "") nil
+		      (let ((json:*identifier-name-to-key* #'json:safe-json-intern))
+			(json:decode-json-from-string status-string)))))
 	 (*current-prefs*
-	   (if-let (prefs-string (hunchentoot:cookie-in "prefs"))
-		   (let ((json:*identifier-name-to-key* 'json:safe-json-intern))
-		     (ignore-errors (json:decode-json-from-string (quri:url-decode prefs-string))))))
-	 (*revalidate-default*
-	  (not (string-equal (hunchentoot:get-parameter "format") "preview"))))
-    (when (not *revalidate-default*)
-      (setf (hunchentoot:header-out :cache-control) (format nil "public, max-age=~A" (* 5 60))))
-    (with-site-context ((let ((host (or (hunchentoot:header-in* :x-forwarded-host) (hunchentoot:header-in* :host))))
-                          (or (find-site host)
-                              (error "Unknown site: ~A" host))))
-      (multiple-value-bind (*current-auth-token* *current-userid* *current-username*)
-        (if *read-only-mode*
-            (values)
-            (if-let
-              (auth-token
-                (if-let
-                  (at (hunchentoot:cookie-in "lw2-auth-token"))
-                  (if (or (string= at "") (not *current-auth-status*) (> (get-unix-time) (- (cdr (assoc :expires *current-auth-status*)) (* 60 60 24))))
-                      nil at)))
-              (with-cache-readonly-transaction
-                (values
-                  auth-token
-                  (cache-get "auth-token-to-userid" auth-token)
-                  (cache-get "auth-token-to-username" auth-token)))))
-        (let ((*current-user-slug* (and *current-userid* (get-user-slug *current-userid*)))
-	      (*current-ignore-hash* (get-ignore-hash))
-	      (*memoized-output-without-hyphens*
-	       ;; Soft hyphen characters mess up middle-click paste, so try to identify whether that exists on the user's platform.
-	       (let ((ua (hunchentoot:header-in* :user-agent)))
-		 (or (search "X11" ua)
-		     (search "Ubuntu" ua)))))
-	  (catch 'abort-response
-	    (handler-bind
-		((fatal-error (lambda (condition)
-				(abort-response-if-unrecoverable condition)
-				(let ((error-html (with-output-to-string (*html-output*) (error-to-html condition))))
-				  (emit-page (out-stream :title "Error" :return-code (condition-http-return-code condition) :content-class "error-page")
-					     (write-string error-html out-stream)
-					     (when (eq (hunchentoot:request-method*) :post)
-					       <form method="post" class="error-retry-form">
-					       (loop for (key . value) in (hunchentoot:post-parameters*)
-						  do <input type="hidden" name=key value=value>)
-					       <input type="submit" value="Retry">
-					       </form>))
-				  (return-from call-with-error-page)))))
-	      (log-conditions
-	       (unless (member (hunchentoot:request-method*) '(:get :head))
-		 (check-csrf-token (hunchentoot:post-parameter "csrf-token")))
-	       (if (or (eq (hunchentoot:request-method*) :post)
-		       (not (and (boundp '*test-acceptor*) (boundp '*hunchentoot-taskmaster*)))) ; TODO fix this hack
-		   (funcall fn)
-		   (sb-sys:with-deadline (:seconds (expt 1.3
-							 (min (round (log 30 1.3))
-							      (- (hunchentoot:taskmaster-max-thread-count (symbol-value '*hunchentoot-taskmaster*))
-								 (hunchentoot::accessor-requests-in-progress (symbol-value '*test-acceptor*))))))
-		     (funcall fn)))))))))))
+	  (if-let (prefs-string (hunchentoot:cookie-in "prefs"))
+		  (let ((json:*identifier-name-to-key* 'json:safe-json-intern))
+		    (ignore-errors (json:decode-json-from-string (quri:url-decode prefs-string)))))))
+    (multiple-value-bind (*revalidate-default* *force-revalidate-default*)
+	(cond ((ppcre:scan "(?:^|,?)\\s*(?:no-cache|max-age=0)(?:$|,)" (hunchentoot:header-in* :cache-control))
+	       (values t t))
+	      ((string-equal (hunchentoot:get-parameter "format") "preview")
+	       (values nil nil))
+	      (t
+	       (values t nil)))
+      (when (not *revalidate-default*)
+	(setf (hunchentoot:header-out :cache-control) (format nil "public, max-age=~A" (* 5 60))))
+      (with-site-context ((let ((host (or (hunchentoot:header-in* :x-forwarded-host) (hunchentoot:header-in* :host))))
+			    (or (find-site host)
+				(error "Unknown site: ~A" host))))
+	(multiple-value-bind (*current-auth-token* *current-userid* *current-username*)
+	    (if *read-only-mode*
+		(values)
+		(if-let
+		 (auth-token
+		  (if-let
+		   (at (hunchentoot:cookie-in "lw2-auth-token"))
+		   (if (or (string= at "") (not *current-auth-status*) (> (get-unix-time) (- (cdr (assoc :expires *current-auth-status*)) (* 60 60 24))))
+		       nil at)))
+		 (with-cache-readonly-transaction
+		     (values
+		      auth-token
+		      (cache-get "auth-token-to-userid" auth-token)
+		      (cache-get "auth-token-to-username" auth-token)))))
+	  (let ((*current-user-slug* (and *current-userid* (get-user-slug *current-userid*)))
+		(*current-ignore-hash* (get-ignore-hash))
+		(*memoized-output-without-hyphens*
+		 ;; Soft hyphen characters mess up middle-click paste, so try to identify whether that exists on the user's platform.
+		 (let ((ua (hunchentoot:header-in* :user-agent)))
+		   (or (search "X11" ua)
+		       (search "Ubuntu" ua)))))
+	    (catch 'abort-response
+	      (handler-bind
+		  ((fatal-error (lambda (condition)
+				  (abort-response-if-unrecoverable condition)
+				  (let ((error-html (with-output-to-string (*html-output*) (error-to-html condition))))
+				    (emit-page (out-stream :title "Error" :return-code (condition-http-return-code condition) :content-class "error-page")
+					       (write-string error-html out-stream)
+					       (when (eq (hunchentoot:request-method*) :post)
+						 <form method="post" class="error-retry-form">
+						 (loop for (key . value) in (hunchentoot:post-parameters*)
+						    do <input type="hidden" name=key value=value>)
+						 <input type="submit" value="Retry">
+						 </form>))
+				    (return-from call-with-error-page)))))
+		(log-conditions
+		 (unless (member (hunchentoot:request-method*) '(:get :head))
+		   (check-csrf-token (hunchentoot:post-parameter "csrf-token")))
+		 (if (or (eq (hunchentoot:request-method*) :post)
+			 (not (and (boundp '*test-acceptor*) (boundp '*hunchentoot-taskmaster*)))) ; TODO fix this hack
+		     (funcall fn)
+		     (sb-sys:with-deadline (:seconds (expt 1.3
+							   (min (round (log 30 1.3))
+								(- (hunchentoot:taskmaster-max-thread-count (symbol-value '*hunchentoot-taskmaster*))
+								   (hunchentoot::accessor-requests-in-progress (symbol-value '*test-acceptor*))))))
+		       (funcall fn))))))))))))
 
 (defmacro with-error-page (&body body)
   `(call-with-error-page (lambda () ,@body)))
