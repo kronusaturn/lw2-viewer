@@ -79,7 +79,7 @@
 (declaim (ftype function url-scanner))
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (setf (fdefinition 'url-scanner) (ppcre:create-scanner
-				    "(?:https?://[-a-zA-Z0-9]+\\.[-a-zA-Z0-9.]+|[-a-zA-Z0-9.]+\\.(?:com|edu|gov|mil|net|org|int|biz|info|name|museum|us|ca|uk|io|ly))(?:\\:[0-9]+){0,1}(?:/(?:(?:(\\()|[-\\w\\d.,;:?'\\\\+@!&%$#=~_/])*(?(1)\\)|[-\\w\\d\\\\+@&%$#=~_/]))?)?"
+				    "(?:https?://[-a-zA-Z0-9]+\\.[-a-zA-Z0-9.]+|[-a-zA-Z0-9.]+\\.(?:com|edu|gov|mil|net|org|int|biz|info|name|museum|us|ca|uk|io|ly))(?:\\:[0-9]+){0,1}(?:/(?:(?:(\\()|\\)(?![.,;:?!]?(?:$|\\s))|[-\\w\\d.,;:?'\\\\+@!&%$#=~–_/])*(?(1)[-\\w\\d\\\\+@&%$#=~_/)]|[-\\w\\d\\\\+@&%$#=~_/]))?)?"
 				    :single-line-mode t)))
 
 (defun hyphenate-string (string)
