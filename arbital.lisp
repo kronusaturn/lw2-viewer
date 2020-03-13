@@ -106,15 +106,12 @@
 	  ((expand-counter 0)
 	   (markdown (regex-replace-all (ppcre:create-scanner "(?<=\\S )\\*(?= )" :single-line-mode t) markdown "\\\\*"))
 	   (markdown (regex-replace-all (ppcre:create-scanner "^\\[.?summary(?:\\(.*?\\))?:.*?\\]$" :single-line-mode t :multi-line-mode t) markdown ""))
-	   (markdown (regex-replace-body ((ppcre:create-scanner "(?<!\\\\)(\\$\\$?)(.+?)(?<!\\\\)\\1" :single-line-mode t :multi-line-mode t) markdown)
+	   (markdown (regex-replace-body ((ppcre:create-scanner "^\\$\\$(.+?)\\$\\$$" :single-line-mode t :multi-line-mode t) markdown)
 		       (markdown-protect
-			(let ((block (= (length (reg 0)) 2)))
-			  (format nil "<~A class=\"arbital-math\">~A~A~A</~A>"
-				  (if block "div" "span")
-				  (if block "$$" "\\(")
-				  (reg 1)
-				  (if block "$$" "\\)")
-				  (if block "div" "span"))))))
+			(format nil "<div class=\"arbital-math\">$$~A$$</div>" (reg 0)))))
+	   (markdown (regex-replace-body ((ppcre:create-scanner "(?:(?<=\\s)|^)\\$(.+?)(?<!\\\\)\\$" :multi-line-mode t) markdown)
+		       (markdown-protect
+			(format nil "<span class=\"arbital-math\">\\(~A\\)</span>" (reg 0)))))
 	   (markdown (regex-replace-body ("(?<!\\\\)\\[([-+]?)([^] ]*)(?: ([^]]*?))?\\](?!\\()" markdown)
 		       (let ((capitalization-char (reg 0))
 			     (tag (reg 1))
