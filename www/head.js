@@ -260,6 +260,74 @@ if (localStorage.getItem("antikibitzer") == "true") {
 	}
 }
 
+/****************/
+/* DEBUG OUTPUT */
+/****************/
+
+function GWLog (string) {
+	if (GW.loggingEnabled || localStorage.getItem("logging-enabled") == "true")
+		console.log(string);
+}
+
+/****************/
+/* MISC HELPERS */
+/****************/
+
+/*	Return the value of a GET (i.e., URL) parameter.
+	*/
+function getQueryVariable(variable) {
+	var query = window.location.search.substring(1);
+	var vars = query.split("&");
+	for (var i = 0; i < vars.length; i++) {
+		var pair = vars[i].split("=");
+		if (pair[0] == variable)
+			return pair[1];
+	}
+
+	return false;
+}
+
+/*	Get the comment ID of the item (if it's a comment) or of its containing 
+	comment (if it's a child of a comment).
+	*/
+Element.prototype.getCommentId = function() {
+	let item = (this.className == "comment-item" ? this : this.closest(".comment-item"));
+	if (item) {
+		return (/^comment-(.*)/.exec(item.id)||[])[1];
+	} else {
+		return false;
+	}
+}
+
+/***********************************/
+/* COMMENT THREAD MINIMIZE BUTTONS */
+/***********************************/
+
+Element.prototype.setCommentThreadMaximized = function(toggle, userOriginated = true, force) {
+	GWLog("setCommentThreadMaximized");
+	let commentItem = this;
+	let storageName = "thread-minimized-" + commentItem.getCommentId();
+	let minimize_button = commentItem.query(".comment-minimize-button");
+	let maximize = force || (toggle ? /minimized/.test(minimize_button.className) : !(localStorage.getItem(storageName) || commentItem.hasClass("ignored")));
+	if (userOriginated) {
+		if (maximize) {
+			localStorage.removeItem(storageName);
+		} else {
+			localStorage.setItem(storageName, true);
+		}
+	}
+
+	commentItem.style.height = maximize ? 'auto' : '38px';
+	commentItem.style.overflow = maximize ? 'visible' : 'hidden';
+
+	minimize_button.className = "comment-minimize-button " + (maximize ? "maximized" : "minimized");
+	minimize_button.innerHTML = maximize ? "&#xf146;" : "&#xf0fe;";
+	minimize_button.title = `${(maximize ? "Collapse" : "Expand")} comment`;
+	if (getQueryVariable("chrono") != "t") {
+		minimize_button.title += ` thread (${minimize_button.dataset["childCount"]} child comments)`;
+	}
+}
+
 /*****************************/
 /* MINIMIZED THREAD HANDLING */
 /*****************************/
@@ -300,6 +368,7 @@ Element.prototype.addActivateEvent = function(func, includeMouseDown) {
 }
 
 Element.prototype.updateCommentControlButton = function() {
+	GWLog("updateCommentControlButton");
 	let retractFn = () => {
 		if(this.closest(".comment-item").firstChild.hasClass("retracted"))
 			return [ "unretract-button", "Un-retract", "Un-retract this comment" ];
@@ -327,6 +396,7 @@ Element.prototype.updateCommentControlButton = function() {
 }
 
 Element.prototype.constructCommentControls = function() {
+	GWLog("constructCommentControls");
 	let commentControls = this;
 
 	if(commentControls.parentElement.id == "nominations" || commentControls.parentElement.id == "reviews") {
@@ -379,6 +449,7 @@ Element.prototype.constructCommentControls = function() {
 }
 
 GW.commentActionButtonClicked = (event) => {
+	GWLog("commentActionButtonClicked");
 	if (event.target.hasClass("edit-button") ||
 		event.target.hasClass("reply-button") ||
 		event.target.hasClass("new-comment-button")) {

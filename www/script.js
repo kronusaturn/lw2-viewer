@@ -121,18 +121,6 @@ Element.prototype.scrollIntoViewIfNeeded = function() {
 	}
 }
 
-/*	Get the comment ID of the item (if it's a comment) or of its containing 
-	comment (if it's a child of a comment).
-	*/
-Element.prototype.getCommentId = function() {
-	let item = (this.className == "comment-item" ? this : this.closest(".comment-item"));
-	if (item) {
-		return (/^comment-(.*)/.exec(item.id)||[])[1];
-	} else {
-		return false;
-	}
-}
-
 function urlEncodeQuery(params) {
 	return params.keys().map((x) => {return "" + x + "=" + encodeURIComponent(params[x])}).join("&");
 }
@@ -162,20 +150,6 @@ function getSelectionHTML() {
 	var container = document.createElement("div");
 	container.appendChild(window.getSelection().getRangeAt(0).cloneContents());
 	return container.innerHTML;
-}
-
-/*	Return the value of a GET (i.e., URL) parameter.
-	*/
-function getQueryVariable(variable) {
-	var query = window.location.search.substring(1);
-	var vars = query.split("&");
-	for (var i = 0; i < vars.length; i++) {
-		var pair = vars[i].split("=");
-		if (pair[0] == variable)
-			return pair[1];
-	}
-
-	return false;
 }
 
 /*	Given an HTML string, creates an element from that HTML, adds it to 
@@ -228,10 +202,6 @@ function togglePageScrolling(enable) {
 /* DEBUGGING OUTPUT */
 /********************/
 
-function GWLog (string) {
-	if (GW.loggingEnabled || localStorage.getItem("logging-enabled") == "true")
-		console.log(string);
-}
 GW.enableLogging = (permanently = false) => {
 	if (permanently)
 		localStorage.setItem("logging-enabled", "true");
@@ -654,35 +624,6 @@ function voteEvent(voteButton, numClicks) {
 	}
 }
 
-/***********************************/
-/* COMMENT THREAD MINIMIZE BUTTONS */
-/***********************************/
-
-Element.prototype.setCommentThreadMaximized = function(toggle, userOriginated = true, force) {
-	GWLog("setCommentThreadMaximized");
-	let commentItem = this;
-	let storageName = "thread-minimized-" + commentItem.getCommentId();
-	let minimize_button = commentItem.query(".comment-minimize-button");
-	let maximize = force || (toggle ? /minimized/.test(minimize_button.className) : !(localStorage.getItem(storageName) || commentItem.hasClass("ignored")));
-	if (userOriginated) {
-		if (maximize) {
-			localStorage.removeItem(storageName);
-		} else {
-			localStorage.setItem(storageName, true);
-		}
-	}
-
-	commentItem.style.height = maximize ? 'auto' : '38px';
-	commentItem.style.overflow = maximize ? 'visible' : 'hidden';
-
-	minimize_button.className = "comment-minimize-button " + (maximize ? "maximized" : "minimized");
-	minimize_button.innerHTML = maximize ? "&#xf146;" : "&#xf0fe;";
-	minimize_button.title = `${(maximize ? "Collapse" : "Expand")} comment`;
-	if (getQueryVariable("chrono") != "t") {
-		minimize_button.title += ` thread (${minimize_button.dataset["childCount"]} child comments)`;
-	}
-}
-
 /*****************************************/
 /* NEW COMMENT HIGHLIGHTING & NAVIGATION */
 /*****************************************/
@@ -713,6 +654,7 @@ function highlightCommentsSince(date) {
 	let prevNewComment;
 	queryAll(".comment-item").forEach(commentItem => {
 		commentItem.prevNewComment = prevNewComment;
+		commentItem.nextNewComment = null;
 		if (commentItem.getCommentDate() > date) {
 			commentItem.addClass("new-comment");
 			newCommentsCount++;
@@ -767,7 +709,7 @@ function scrollToNewComment(next) {
 	}
 	if (targetComment) {
 		expandAncestorsOf(targetCommentID);
-		history.replaceState(null, null, "#comment-" + targetCommentID);
+		history.replaceState(window.history.state, null, "#comment-" + targetCommentID);
 		targetComment.scrollIntoView();
 	}
 
@@ -778,13 +720,16 @@ function getPostHash() {
 	let postHash = /^\/posts\/([^\/]+)/.exec(location.pathname);
 	return (postHash ? postHash[1] : false);
 }
+function setHistoryLastVisitedDate(date) {
+	window.history.replaceState({ lastVisited: date }, null);
+}
 function getLastVisitedDate() {
 	// Get the last visited date (or, if posting a comment, the previous last visited date).
 	if(window.history.state) return (window.history.state||{})['lastVisited'];
 	let aCommentHasJustBeenPosted = (query(".just-posted-comment") != null);
 	let storageName = (aCommentHasJustBeenPosted ? "previous-last-visited-date_" : "last-visited-date_") + getPostHash();
 	let currentVisited = localStorage.getItem(storageName);
-	window.history.replaceState({ lastVisited: currentVisited }, "");
+	setHistoryLastVisitedDate(currentVisited);
 	return currentVisited;
 }
 function setLastVisitedDate(date) {
@@ -1667,8 +1612,11 @@ function injectNewCommentNavUI(newCommentsCount) {
 	hnsDatePicker.query("input").addEventListener("input", GW.hnsDatePickerValueChanged = (event) => {
 		GWLog("GW.hnsDatePickerValueChanged");
 		let hnsDate = time_fromHuman(event.target.value);
-		let newCommentsCount = highlightCommentsSince(hnsDate);
-		updateNewCommentNavUI(newCommentsCount);
+		if(hnsDate) {
+			setHistoryLastVisitedDate(hnsDate);
+			let newCommentsCount = highlightCommentsSince(hnsDate);
+			updateNewCommentNavUI(newCommentsCount);
+		}
 	}, false);
 
 	newCommentUIContainer.query(".new-comments-count").addActivateEvent(GW.newCommentsCountClicked = (event) => {
@@ -2930,7 +2878,7 @@ function focusImage(imageToFocus) {
 		query("#image-focus-overlay .image-number").textContent = (indexOfFocusedImage + 1);
 
 		// Replace the hash.
-		history.replaceState(null, null, "#if_slide_" + (indexOfFocusedImage + 1));
+		history.replaceState(window.history.state, null, "#if_slide_" + (indexOfFocusedImage + 1));
 	} else {
 		imageFocusOverlay.removeClass("slideshow");
 	}
@@ -3023,7 +2971,7 @@ function unfocusImageOverlay() {
 
 	// Reset the hash, if needed.
 	if (location.hash.hasPrefix("#if_slide_"))
-		history.replaceState(null, null, "#");
+		history.replaceState(window.history.state, null, "#");
 }
 
 function getIndexOfFocusedImage() {
@@ -3070,7 +3018,7 @@ function focusNextImage(next = true) {
 	// Set the caption.
 	setImageFocusCaption();
 	// Replace the hash.
-	history.replaceState(null, null, "#if_slide_" + (indexOfFocusedImage + 1));
+	history.replaceState(window.history.state, null, "#if_slide_" + (indexOfFocusedImage + 1));
 }
 
 function setImageFocusCaption() {
