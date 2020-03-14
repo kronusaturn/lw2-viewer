@@ -53,6 +53,13 @@ body > * {
 	max-width: 900px;
 }
 
+/*	Special styles for special browsers.
+	(This one is a fix for Firefox’s built-in screenshot feature.)
+	*/
+body > iframe[id^='firefox-screenshots'] {
+	max-width: unset;
+}
+
 #content {
 	margin: 0 auto;
 	padding: 0 30px;
