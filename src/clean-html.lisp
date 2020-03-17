@@ -107,6 +107,112 @@
           (funcall (if hyphenation #'hyphenate-string #'identity) (clean-text text))
           'simple-string)))))
 
+(defun rot13-char (char)
+  (let ((char-code (char-code char)))
+    (labels ((translate-char (base)
+	       (code-char (+ base (mod (+ 13 (- char-code base)) 26)))))
+      (declare (dynamic-extent #'translate-char))
+      (cond
+	((<= (char-code #\A) char-code (char-code #\Z))
+	 (translate-char (char-code #\A)))
+	((<= (char-code #\a) char-code (char-code #\z))
+	 (translate-char (char-code #\a)))
+	(t char)))))
+
+(declaim (inline letter-index))
+(defun letter-index (char)
+  (let ((char-code (char-code char)))
+    (cond
+      ((<= (char-code #\A) char-code (char-code #\Z))
+       (- char-code (char-code #\A)))
+      ((<= (char-code #\a) char-code (char-code #\z))
+       (- char-code (char-code #\a))))))
+
+(defparameter *letter-frequencies*
+  '((#\A . 8.167) (#\B . 1.492) (#\C . 2.782) (#\D . 4.253) (#\E . 12.702)
+    (#\F . 2.228) (#\G . 2.015) (#\H . 6.094) (#\I . 6.966) (#\J . 0.153)
+    (#\K . 0.772) (#\L . 4.025) (#\M . 2.406) (#\N . 6.749) (#\O . 7.507)
+    (#\P . 1.929) (#\Q . 0.095) (#\R . 5.987) (#\S . 6.327) (#\T . 9.056)
+    (#\U . 2.758) (#\V . 0.978) (#\W . 2.36) (#\X . 0.15) (#\Y . 1.974)
+    (#\Z . 0.074)))
+
+(defparameter *letter-rot13-log-odds*
+  (let ((array (make-array 26 :element-type 'single-float)))
+    (loop
+       for letter-freq in *letter-frequencies*
+       for rot13-freq in (concatenate 'list (subseq *letter-frequencies* 13 26) (subseq *letter-frequencies* 0 13))
+       for i from 0
+       do (setf (aref array i) (log (/ (cdr letter-freq) (cdr rot13-freq)) 2)))
+    array))
+
+(defparameter *bigram-rot13-log-odds*
+  (let ((bigram-data (with-open-file (stream (asdf:system-relative-pathname "lw2-viewer" "data/bigrams.lisp"))
+		       (read stream)))
+	(bigram-table (make-array '(26 26) :element-type 'single-float :initial-element 1.0))
+	(bigram-log-odds (make-array '(26 26) :element-type 'single-float)))
+    (loop
+       for (bigram count) in bigram-data
+       do (setf (aref bigram-table
+		      (letter-index (aref bigram 0))
+		      (letter-index (aref bigram 1)))
+		(float (+ count 1))))
+    (dotimes (i 26)
+      (dotimes (j 26)
+       (setf (aref bigram-log-odds i j)
+	     (log (/ (aref bigram-table i j)
+		     (aref bigram-table
+			   (mod (+ 13 i) 26)
+			   (mod (+ 13 j) 26)))
+		  2))))
+    bigram-log-odds))
+
+(defun rot13-text-p (text &optional (start 0) (end (length text)))
+  (declare (type simple-string text))
+  (let ((log-odds
+	 (cond
+	   ((= 0 (- end start))
+	    0.0)
+	   ((= 1 (- end start))
+	    (let ((odds-table (load-time-value *letter-rot13-log-odds*)))
+	      (declare (type (simple-array single-float (26)) odds-table))
+	      (if-let ((letter-index (letter-index (aref text start))))
+		      (aref odds-table letter-index)
+		      0.0)))
+	   (t
+	    (let ((odds-table (load-time-value *bigram-rot13-log-odds*)))
+	      (declare (type (simple-array single-float (26 26)) odds-table))
+	      (loop
+		 with sum = 0.0
+		 for i from (1+ start) to (1- end)
+		 do (when-let ((a (letter-index (aref text (1- i))))
+			       (b (letter-index (aref text i))))
+			      (setf sum (+ sum (aref odds-table a b))))
+		 finally (return sum)))))))
+    (values
+     (< log-odds (log 0.0001 2))
+     log-odds)))
+
+(defun rot13-inplace (text &optional (start 0) (end (1- (length text))))
+  (declare (type simple-string text))
+  (loop
+     for i from start to end
+     do (setf (aref text i) (rot13-char (aref text i))))
+  text)
+
+(defun unrot13-by-words (text)
+  (declare (type simple-string text))
+  (loop
+     with word-start = 0
+     for i from 0
+     for char across text
+     when (or (= i (1- (length text)))
+	      (position char ",.:;?! "))
+     do (progn
+	  (when (< (nth-value 1 (rot13-text-p text word-start i)) (+ 0 (- i word-start 0)))
+	    (rot13-inplace text word-start i))
+	  (setf word-start i)))
+  text)
+
 (declaim (ftype (function (plump:node &rest simple-string) boolean) tag-is class-is-not text-class-is-not))
 
 (defun tag-is (node &rest args)
@@ -628,6 +734,11 @@
 				 (labels ((spoilerp (n)
 					    (if-let (a (and (plump:element-p n) (plump:attribute n "class")))
 						    (ppcre:scan "(?:^| )spoiler\\S*(?: |$)" a))))
+				   (when (and (tag-is node "p") (rot13-text-p (plump:text node)))
+				     (setf (plump:attribute node "class") "spoiler")
+				     (plump:traverse node
+						     (lambda (n) (unrot13-by-words (plump:text n)))
+						     :test #'plump:text-node-p))
 				   (cond
 				     ((and (tag-is node "p")
 					   (spoilerp node)
@@ -639,18 +750,23 @@
 				     ((and (spoilerp node)
 					   (tag-is node "p")
 					   (not (spoilerp parent)))
-				      (let ((new-container (plump:make-element parent "div")))
-					(setf (plump:attribute new-container "class") "spoiler")
-					(plump:remove-child new-container)
-					(setf (plump:parent new-container) (plump:parent node))
-					(plump:insert-before node new-container)
-					(loop for e = node then ns
-					   while (and (plump:element-p e) (spoilerp e))
-					   for ns = (plump:next-sibling e)
-					   do (progn
-						(plump:remove-attribute e "class")
-						(plump:remove-child e)
-						(plump:append-child new-container e))))))))))
+				      (let ((previous-sibling (plump:previous-sibling node)))
+					(if (and previous-sibling (spoilerp previous-sibling))
+					    (progn (plump:remove-child node)
+						   (plump:append-child previous-sibling node)
+						   (plump:remove-attribute node "class"))
+					    (let ((new-container (plump:make-element parent "div")))
+					      (setf (plump:attribute new-container "class") "spoiler")
+					      (plump:remove-child new-container)
+					      (setf (plump:parent new-container) (plump:parent node))
+					      (plump:insert-before node new-container)
+					      (loop for e = node then ns
+						 while (and (plump:element-p e) (spoilerp e))
+						 for ns = (plump:next-sibling e)
+						 do (progn
+						      (plump:remove-attribute e "class")
+						      (plump:remove-child e)
+						      (plump:append-child new-container e))))))))))))
 		    ((tag-is node "u")
 		     (let ((parent (plump:parent node)))
 		       (cond
