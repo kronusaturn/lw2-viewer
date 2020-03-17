@@ -1548,22 +1548,21 @@ function updateThemeTweakerSampleText() {
 	let bodyTextElement = query(".post-body") || query(".comment-body");
 	sampleText.addClass("body-text");
 	sampleText.style.color = bodyTextElement ? 
-								getComputedStyle(bodyTextElement).color : 
-									getComputedStyle(query("#content")).color;
+		getComputedStyle(bodyTextElement).color : 
+		getComputedStyle(query("#content")).color;
 
 	// Here we find out what is the actual background color that will be visible behind
 	// the body text of posts, and set the sample text’s background to that.
-	let backgroundElement = query("#content");
-
-	let goodColor = color => !(color == "" || color == "rgba(0, 0, 0, 0)" || color == "#00000000");
-
-	let elementBackground = element => {
-		let computedBackgroundColor = getComputedStyle(element).backgroundColor;
-		if(goodColor(computedBackgroundColor)) return computedBackgroundColor;
-		computedBackgroundColor = getComputedStyle(element, "::before").backgroundColor;
-		if(goodColor(computedBackgroundColor)) return computedBackgroundColor;
+	let findStyleBackground = (selector) => {
+		let x;
+		Array.from(document.styleSheets[0].cssRules).forEach(rule => {
+			if(rule.selectorText == selector)
+				x = rule;
+		});
+		return x.style.backgroundColor;
 	};
-	sampleText.parentElement.style.backgroundColor = elementBackground(query("#content")) || elementBackground(query("body")) || "#fff";
+
+	sampleText.parentElement.style.backgroundColor = findStyleBackground("#content::before") || findStyleBackground("body") || "#fff";
 }
 
 /*********************/
