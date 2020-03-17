@@ -1981,7 +1981,9 @@ select {
 /* MOBILE */
 /*========*/
 
-@media only screen and (hover: none) {
+/*******************************************************/
+@media not screen and (hover:hover) and (pointer:fine) {
+/*******************************************************/
 	#ui-elements-container > div[id$='-ui-toggle'] button  {
 		color: #aaa;
 		text-shadow:

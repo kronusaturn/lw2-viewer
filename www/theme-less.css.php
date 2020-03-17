@@ -2561,7 +2561,9 @@ strong, b {
 /* MOBILE */
 /*========*/
 
-@media only screen and (hover: none) {
+/*******************************************************/
+@media not screen and (hover:hover) and (pointer:fine) {
+/*******************************************************/
 	#site-nav-ui-toggle {
 		top: 10px;
 		left: 10px;
