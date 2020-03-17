@@ -1555,7 +1555,7 @@ function updateThemeTweakerSampleText() {
 	// the body text of posts, and set the sample text’s background to that.
 	let backgroundElement = query("#content");
 
-	let goodColor = color => !(color == "" || color == "rgba(0, 0, 0, 0)");
+	let goodColor = color => !(color == "" || color == "rgba(0, 0, 0, 0)" || color == "#00000000");
 
 	let elementBackground = element => {
 		let computedBackgroundColor = getComputedStyle(element).backgroundColor;
