@@ -138,11 +138,10 @@
          (response-json (progn (check-type response-data (vector (unsigned-byte 8)))
                                (octets-to-string response-data)))
 	 (response-alist (json:decode-json-from-string response-json))
-	 (res-error (first (cdr (assoc :errors response-alist))))
+	 (res-errors (cdr (assoc :errors response-alist)))
 	 (res-data (rest (first (cdr (assoc :data response-alist)))))) 
     (cond
-      (res-error (if (search "not_allowed" (cdr (assoc :message res-error))) (error "LW2 server reports: not allowed.")
-		   (error "Unknown LW2 error: ~A" res-error)))
+      (res-errors (lw2.backend:signal-lw2-errors res-errors))
       (res-data res-data) 
       (t (error "Unknown response from LW2 server: ~A" response-json))))) 
 

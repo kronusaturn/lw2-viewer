@@ -1,7 +1,7 @@
 (uiop:define-package #:lw2.conditions
   (:use #:cl #:alexandria #:lw2.html-reader)
   (:export #:*debug-mode*
-	   #:*error-explanation-hook*
+	   #:*error-explanation-hook* #:error-explanation-case
 	   #:fatal-error
 	   #:condition-http-return-code
 	   #:error-to-html
@@ -69,6 +69,13 @@
 (defmethod error-to-html ((condition lw2-server-error))
   <p>(condition-introduction condition):</p>
   <code><pre>(lw2-server-error-message condition)</pre></code>)
+
+(defmacro error-explanation-case (expression &rest clauses)
+  (with-gensyms (condition)
+    `(let ((*error-explanation-hook* (lambda (,condition)
+				       (typecase ,condition ,@clauses))))
+       (declare (dynamic-extent *error-explanation-hook*))
+       ,expression)))
 
 (defun log-condition (condition)
   (with-open-file (outstream "./logs/error.log" :direction :output :if-exists :append :if-does-not-exist :create)

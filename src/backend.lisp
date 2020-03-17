@@ -11,6 +11,7 @@
            #:start-background-loader #:stop-background-loader #:background-loader-running-p
 	   #:lw2-graphql-query #:lw2-query-string* #:lw2-query-string
            #:lw2-graphql-query-map #:lw2-graphql-query-multi
+	   #:signal-lw2-errors
 	   #:earliest-post-time
 	   #:flatten-shortform-comments #:get-shortform-votes
 	   #:get-tag-posts

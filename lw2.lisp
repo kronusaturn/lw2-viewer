@@ -1204,11 +1204,9 @@ signaled condition to *HTML-OUTPUT*."
 					  :extra-head #'extra-head)
 			      (cond
 				(condition
-				 (let ((*error-explanation-hook* (lambda (c)
-								   (typecase c
-								     (lw2-not-allowed-error
-								      <p>This probably means the post has been deleted or moved back to the author's drafts.</p>)))))
-				   (error-to-html condition)))
+				 (error-explanation-case (error-to-html condition)
+							 (lw2-not-allowed-error
+							  <p>This probably means the post has been deleted or moved back to the author's drafts.</p>)))
 				(t
 				 (post-body-to-html post)))
 			      (when (and lw2-auth-token (equal (logged-in-userid) (cdr (assoc :user-id post))))
@@ -1485,6 +1483,7 @@ signaled condition to *HTML-OUTPUT*."
                                         (acons :messages-total result c))
                          :auth-token (hunchentoot:cookie-in "lw2-auth-token"))))
                    (:inbox
+		    (error-explanation-case
                      (prog1
                        (let ((notifications (get-notifications :user-id user-id :offset offset :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
                              (last-check (ignore-errors (local-time:parse-timestring (cdr (assoc :last-notifications-check user-info))))))
@@ -1537,7 +1536,9 @@ signaled condition to *HTML-OUTPUT*."
 		       (do-user-edit
 			 (hunchentoot:cookie-in "lw2-auth-token")
 			 user-id
-			 (alist :last-notifications-check (timestamp-to-graphql (local-time:now))))))
+			 (alist :last-notifications-check (timestamp-to-graphql (local-time:now)))))
+		     (lw2-not-allowed-error
+		      <p>This may mean your login token has expired or become invalid. You can try <a href="/login">logging in again</a>.</p>)))
 		   (t
 		     (let ((user-posts (get-user-posts user-id :offset offset :limit (+ 1 (user-pref :items-per-page) offset) :sort-type sort-type))
 			   (user-comments (lw2-graphql-query (lw2-query-string :comment :list (nconc (alist :limit (+ 1 (user-pref :items-per-page) offset) :user-id user-id) comments-base-terms) 
