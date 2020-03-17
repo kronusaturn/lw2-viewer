@@ -5759,10 +5759,15 @@ a.nav-inner,
 	margin-left: -1em;
 	left: 2.85em;
 }
-.active-bar {
+.nav-bar + .nav-bar {
 	position: relative;
 	border-style: solid;
 	border-color: #bbb;
+}
+.nav-bar {
+	border-width: 1px 0 0 0;
+}
+.active-bar {
 	border-width: 1px 0;
 }
 

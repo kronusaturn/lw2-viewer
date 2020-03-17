@@ -110,7 +110,7 @@ body {
 
 /* This makes the navbar items look like tabs: */
 
-.active-bar {
+.nav-bar + .nav-bar {
 	position: relative;
 }
 .nav-bar {

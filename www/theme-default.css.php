@@ -137,7 +137,7 @@ body {
 .active-bar .nav-inactive {
 	background-color: #eee;
 }
-.active-bar {
+.nav-bar + .nav-bar {
 	position: relative;
 }
 

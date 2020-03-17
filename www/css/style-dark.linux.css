@@ -5732,7 +5732,7 @@ body {
 .active-bar .nav-inactive {
 	background-color: #131313;
 }
-.active-bar {
+.nav-bar + .nav-bar {
 	position: relative;
 }
 
