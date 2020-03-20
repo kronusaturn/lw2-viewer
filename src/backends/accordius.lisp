@@ -60,8 +60,8 @@
 
 ;;;; BACKEND SPECIFIC GRAPHQL
 
-(define-backend-operation get-user-posts backend-accordius (user-id &key offset limit (sort-type :date) drafts auth-token)
-  (declare (ignore user-id offset limit sort-type drafts auth-token))
+(define-backend-operation get-user-page-items backend-accordius (user-id request-type &key &allow-other-keys)
+  (declare (ignore user-id request-type))
   (let ((*graphql-correct* t))
     (declare (special *graphql-correct*))
     (call-next-method)))

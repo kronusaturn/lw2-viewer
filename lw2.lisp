@@ -1453,23 +1453,16 @@ signaled condition to *HTML-OUTPUT*."
                     (display-name (if user-slug (cdr (assoc :display-name user-info)) user-id))
                     (show-text (if (not (eq show :all)) (string-capitalize show)))
                     (title (format nil "~A~@['s ~A~]" display-name show-text))
-                    (sort-type (case sort (:top :score) (:new :date) (:old :date-reverse)))
-		    (comments-base-terms #.`(ecase sort-type ,.(loop for (key value) in '((:score "postCommentsTop")
-											  (:date "allRecentComments")
-											  (:date-reverse "postCommentsOld"))
-								  collect `(,key (load-time-value (alist :view ,value)))))))
+                    (sort-type (case sort (:top :score) (:new :date) (:old :date-reverse))))
 	       (multiple-value-bind (items total)
                  (case show
                    (:posts
-                     (get-user-posts user-id :offset offset :limit (+ 1 (user-pref :items-per-page)) :sort-type sort-type))
+		    (get-user-page-items user-id :posts :offset offset :limit (+ 1 (user-pref :items-per-page)) :sort-type sort-type))
                    (:comments
-                     (lw2-graphql-query (lw2-query-string :comment :list
-                                                          (nconc (alist :offset offset :limit (+ 1 (user-pref :items-per-page)) :user-id user-id)
-                                                                 comments-base-terms)
-                                                          :context :user-index)))
+		    (get-user-page-items user-id :comments :offset offset :limit (+ 1 (user-pref :items-per-page)) :sort-type sort-type))
                    (:drafts
-                     (get-user-posts user-id :drafts t :offset offset :limit (+ 1 (user-pref :items-per-page)) :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
-                   (:conversations
+		    (get-user-page-items user-id :posts :drafts t :offset offset :limit (+ 1 (user-pref :items-per-page)) :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
+		   (:conversations
                      (let ((conversations
                              (lw2-graphql-query (lw2-query-string :conversation :list
                                                                   (alist :view "userConversations" :limit (+ 1 (user-pref :items-per-page)) :offset offset :user-id user-id)
@@ -1540,10 +1533,7 @@ signaled condition to *HTML-OUTPUT*."
 		     (lw2-not-allowed-error
 		      <p>This may mean your login token has expired or become invalid. You can try <a href="/login">logging in again</a>.</p>)))
 		   (t
-		     (let ((user-posts (get-user-posts user-id :offset offset :limit (+ 1 (user-pref :items-per-page) offset) :sort-type sort-type))
-			   (user-comments (lw2-graphql-query (lw2-query-string :comment :list (nconc (alist :limit (+ 1 (user-pref :items-per-page) offset) :user-id user-id) comments-base-terms) 
-                                                                               :context :index))))
-                       (concatenate 'list user-posts user-comments))))
+		    (get-user-page-items user-id :both :offset offset :limit (+ 1 (user-pref :items-per-page)) :sort-type sort-type)))
                  (let ((with-next (> (length items) (+ (if (eq show :all) offset 0) (user-pref :items-per-page))))
                        (interleave (if (eq show :all) (comment-post-interleave items :limit (user-pref :items-per-page) :offset (if (eq show :all) offset nil) :sort-by sort-type) (firstn items (user-pref :items-per-page))))) ; this destructively sorts items
                    (view-items-index interleave :title title

@@ -76,7 +76,8 @@
     "post-comments-json" "post-comments-json-meta" "post-answers-json" "post-answers-json-meta"
     "post-body-json" "post-body-json-meta"
     "sequence-json" "sequence-json-meta" "post-sequence"
-    "user-json" "user-json-meta")
+    "user-json" "user-json-meta"
+    "user-page-items" "user-page-items-meta")
 
 (define-cache-database 'backend-lw2-modernized
     "user-deleted")
@@ -376,13 +377,14 @@
 					 (setf (gethash key *background-cache-update-threads*)
 					       (make-thread-with-current-backend #'background-fn :name "background cache update"))))))))
 
-(define-backend-function lw2-graphql-query-timeout-cached (query cache-db cache-key &key (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*))
+(define-backend-function lw2-graphql-query-timeout-cached (query cache-db cache-key &key (decoder 'decode-query-result)
+								 (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*))
   (backend-base
    (multiple-value-bind (cached-result is-fresh) (with-cache-readonly-transaction
 						     (values (cache-get cache-db cache-key :return-type 'existence)
 							     (cache-is-fresh cache-db cache-key)))
      (labels ((get-cached-result ()
-		(with-cache-readonly-transaction (decode-query-result (cache-get cache-db cache-key :return-type 'binary-stream)))))
+		(with-cache-readonly-transaction (funcall decoder (cache-get cache-db cache-key :return-type 'binary-stream)))))
        (if (and cached-result (or (not revalidate)
 				  (and (not force-revalidate) (eq is-fresh :skip))))
 	   (get-cached-result)
@@ -401,7 +403,7 @@
 		     (let ((new-result (sb-thread:join-thread thread :timeout timeout)))
 		       (typecase new-result
 			 (condition (error new-result))
-			 (t (decode-query-result new-result)))))))))))))
+			 (t (funcall decoder new-result)))))))))))))
 
 (define-backend-function lw2-query-string* (query-type return-type args &key context fields with-total))
 
@@ -763,22 +765,55 @@
    (let ((*notifications-base-terms* (remove :null *notifications-base-terms* :key #'cdr)))
      (call-next-method))))
 
-(define-backend-function get-user-posts (user-id &key offset limit (sort-type :date) drafts auth-token)
+(define-backend-function get-user-page-items (user-id request-type &key offset limit (sort-type :date) drafts
+						      (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*)auth-token)
   (backend-lw2-legacy
    (declare (special *graphql-correct*))
-   (let* ((posts-base-terms
-	   (cond
-	     (drafts (alist :view "drafts"))
-	     ((eq sort-type :score) (alist :view "top"))
-	     ((eq sort-type :date-reverse) (alist :view "old"))
-	     (t (alist :view "userPosts"))))
-	  (posts-base-terms
-	   (if (or drafts (boundp '*graphql-correct*))
-	       posts-base-terms
-	       (cons '(:meta . :null) posts-base-terms))))
-     (lw2-graphql-query (lw2-query-string :post :list
-					  (nconc (remove nil (alist :offset offset :limit limit :user-id user-id) :key #'cdr) posts-base-terms))
-			:auth-token auth-token))))
+   (multiple-value-bind (real-offset real-limit) (if (eq request-type :both)
+						     (values 0 (+ offset limit))
+						     (values offset limit))
+     (let* ((graphql-correct (boundp '*graphql-correct*))
+	    (cache-database (when (and (eq request-type :both)
+				       (or (not offset) (= offset 0))
+				       (= limit 21)
+				       (eq sort-type :date)
+				       (not drafts)
+				       (not auth-token))
+			      "user-page-items"))
+	    (return-type (if cache-database :string nil))
+	    (fn (lambda ()
+		  (labels ((posts-query-string ()
+			     (let* ((posts-base-terms
+				     (cond
+				       (drafts (alist :view "drafts"))
+				       ((eq sort-type :score) (alist :view "top"))
+				       ((eq sort-type :date-reverse) (alist :view "old"))
+				       (t (alist :view "userPosts"))))
+				    (posts-base-terms
+				     (if (or drafts graphql-correct)
+					 posts-base-terms
+					 (cons '(:meta . :null) posts-base-terms))))
+			       (lw2-query-string* :post :list
+						  (nconc (remove nil (alist :offset real-offset :limit real-limit :user-id user-id) :key #'cdr) posts-base-terms))))
+			   (comments-query-string ()
+			     (let ((comments-base-terms #.`(ecase sort-type ,.(loop for (key value) in '((:score "postCommentsTop")
+													 (:date "allRecentComments")
+													 (:date-reverse "postCommentsOld"))
+										 collect `(,key (load-time-value (alist :view ,value)))))))
+			       (lw2-query-string* :comment :list (nconc (alist :offset real-offset :limit real-limit :user-id user-id) comments-base-terms)
+						  :context :index))))
+		    (declare (dynamic-extent #'posts-query-string #'comments-query-string))
+		    (case request-type
+		      (:both (let ((result (multiple-value-call #'concatenate 'list
+								(lw2-graphql-query-multi (list (posts-query-string) (comments-query-string))))))
+			       (ecase return-type
+				 (:string (json:encode-json-to-string result))
+				 ((nil) result))))
+		      (:posts (lw2-graphql-query (format nil "{~A}" (posts-query-string)) :auth-token auth-token :return-type return-type))
+		      (:comments (lw2-graphql-query (format nil "{~A}" (comments-query-string)) :auth-token auth-token :return-type return-type)))))))
+       (if cache-database
+	   (lw2-graphql-query-timeout-cached fn cache-database user-id :decoder 'deserialize-query-result :revalidate revalidate :force-revalidate force-revalidate)
+	   (funcall fn))))))
 
 (define-backend-function get-conversation-messages (conversation-id auth-token)
   (backend-lw2-legacy
