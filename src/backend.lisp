@@ -457,7 +457,7 @@
 		(t () (get-cached-result)))
 	      (query-and-put))))))
 
-(define-backend-function get-posts-index-query-string (&key view (sort "new") (limit 21) offset before after)
+(define-backend-function get-posts-index-query-terms (&key view (sort "new") (limit 21) offset before after &allow-other-keys)
   (backend-lw2-legacy
    (let ((sort-key (alexandria:switch (sort :test #'string=)
 				      ("new" "new")
@@ -482,15 +482,31 @@
 				(if (not (or (string/= sort "new") (/= limit 21) offset before after)) "new-not-meta"))))
        (let* ((extra-terms
 	       (remove-if (lambda (x) (null (cdr x)))
-			  (alist :before before :after after :limit limit :offset offset)))
-	      (query-string (lw2-query-string :post :list (nconc view-terms extra-terms))))
-	 (values query-string cache-key))))))
+			  (alist :before before :after after :limit limit :offset offset))))
+	 (values (nconc view-terms extra-terms) cache-key))))))
+
+(define-backend-operation get-posts-index-query-terms backend-lw2-tags :around (&key hidden-tags &allow-other-keys)
+  (multiple-value-bind (query-terms cache-key) (call-next-method)
+    (if hidden-tags
+	(values (acons :filter-settings (alist :tags (list* :list (map 'list (lambda (tagid) (alist :tag-id tagid :filter-mode "Hidden"))
+								       hidden-tags)))
+		       query-terms)
+		nil)
+	(values query-terms cache-key))))
+
+(define-backend-function get-posts-index-query-string (&rest args &key &allow-other-keys)
+  (backend-lw2-legacy
+   (declare (dynamic-extent args))
+   (multiple-value-bind (query-terms cache-key)
+       (apply #'%get-posts-index-query-terms backend args)
+     (values (lw2-query-string :post :list query-terms)
+	     cache-key))))
 
 (define-backend-function get-posts-index (&rest args &key &allow-other-keys)
   (backend-lw2-legacy
    (declare (dynamic-extent args))
    (multiple-value-bind (query-string cache-key)
-       (apply #'%get-posts-index-query-string (list* backend args))
+       (apply #'%get-posts-index-query-string backend args)
      (if cache-key
 	 (get-cached-index-query cache-key query-string)
 	 (lw2-graphql-query query-string)))))

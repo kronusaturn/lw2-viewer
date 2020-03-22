@@ -20,6 +20,7 @@
 					  ((member nil) "false")
 					  ((member :null) "null")
 					  ((member :undefined) "undefined")
+					  ((cons (member :list) list) (format nil "[~{{~{~A~^,~}}~^,~}]" (map 'list #'terms (rest v))))
 					  ((cons list list) (format nil "{~{~A~^,~}}" (terms v)))
 					  (t (json:encode-json-to-string v))))))
 	   (fields (flist)
