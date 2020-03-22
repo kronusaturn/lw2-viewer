@@ -15,6 +15,7 @@
 	   #:earliest-post-time
 	   #:flatten-shortform-comments #:get-shortform-votes
 	   #:get-tag-posts
+	   #:get-slug-tagid
 	   #:get-posts-index #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-answers #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
 	   #:sequence-post-ids #:get-sequence #:get-post-sequence-ids #:get-sequence-post
 	   #:get-conversation-messages
@@ -485,11 +486,11 @@
 			  (alist :before before :after after :limit limit :offset offset))))
 	 (values (nconc view-terms extra-terms) cache-key))))))
 
-(define-backend-operation get-posts-index-query-terms backend-lw2-tags :around (&key hidden-tags &allow-other-keys)
+(define-backend-operation get-posts-index-query-terms backend-lw2-tags :around (&key hide-tags &allow-other-keys)
   (multiple-value-bind (query-terms cache-key) (call-next-method)
-    (if hidden-tags
+    (if hide-tags
 	(values (acons :filter-settings (alist :tags (list* :list (map 'list (lambda (tagid) (alist :tag-id tagid :filter-mode "Hidden"))
-								       hidden-tags)))
+								       hide-tags)))
 		       query-terms)
 		nil)
 	(values query-terms cache-key))))

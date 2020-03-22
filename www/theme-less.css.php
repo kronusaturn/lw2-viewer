@@ -136,7 +136,7 @@ body {
 	#nav-item-sequences,
 	#nav-item-about {
 		position: fixed;
-		transform: translateX(-111px);
+		transform: translateX(-121px);
 		width: 85px;
 	}
 	#content.comment-thread-page #nav-item-archive,
@@ -289,7 +289,6 @@ body {
 .page-toolbar {
 	padding: 0 0 0 0;
 	margin: 0;
-	white-space: nowrap;
 	position: fixed;
 	width: 120px;
 }

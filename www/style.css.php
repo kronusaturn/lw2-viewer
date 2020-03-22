@@ -88,7 +88,7 @@ body > iframe[id^='firefox-screenshots'] {
 	position: relative;
 	overflow: visible;
 	display: grid;
-	grid-template-columns: repeat(3, 1fr);
+	grid-template-columns: 2fr 1fr 2fr;
 }
 #content::before {
 	content: "";
@@ -392,7 +392,7 @@ a#inbox-indicator.new-messages:hover::before {
 }
 #content > .page-toolbar {
 	grid-column: 3;
-	grid-row: span 2;
+	grid-row: span 3;
 }
 #content.user-page > .page-toolbar {
 	grid-column: 2 / span 2;
@@ -406,6 +406,14 @@ a#inbox-indicator.new-messages:hover::before {
 .page-toolbar > * {
 	display: inline-block;
 	margin-left: 1.5em;
+}
+.page-toolbar > form button {
+	padding: 0;
+	text-align: right;
+	white-space: unset;
+}
+.page-toolbar > form button::before {
+	text-align: center;
 }
 .page-toolbar .button::before {
 	font-family: "Font Awesome", "Font Awesome 5 Free";

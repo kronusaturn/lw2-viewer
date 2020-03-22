@@ -737,7 +737,9 @@ signaled condition to *HTML-OUTPUT*."
 
 (defun set-user-pref (key value)
   (assert (boundp 'hunchentoot:*reply*))
-  (setf *current-prefs* (remove-duplicates (acons key value *current-prefs*) :key #'car :from-end t))
+  (if value
+      (setf *current-prefs* (remove-duplicates (acons key value *current-prefs*) :key #'car :from-end t))
+      (setf *current-prefs* (remove key *current-prefs* :key #'car)))
   (set-cookie "prefs" (quri:url-encode (json:encode-json-to-string *current-prefs*))))
 
 (defmacro with-response-stream ((out-stream) &body body) `(call-with-response-stream (lambda (,out-stream) ,.body)))
@@ -768,6 +770,7 @@ signaled condition to *HTML-OUTPUT*."
 	 (*current-prefs*
 	  (if-let (prefs-string (hunchentoot:cookie-in "prefs"))
 		  (let ((json:*identifier-name-to-key* 'json:safe-json-intern))
+		    (print prefs-string)
 		    (ignore-errors (json:decode-json-from-string (quri:url-decode prefs-string)))))))
     (multiple-value-bind (*revalidate-default* *force-revalidate-default*)
 	(cond ((ppcre:scan "(?:^|,?)\\s*(?:no-cache|max-age=0)(?:$|,)" (hunchentoot:header-in* :cache-control))
@@ -819,6 +822,8 @@ signaled condition to *HTML-OUTPUT*."
 		(log-conditions
 		 (unless (member (hunchentoot:request-method*) '(:get :head))
 		   (check-csrf-token (hunchentoot:post-parameter "csrf-token")))
+		 (when-let (set-cov-pref (hunchentoot:post-parameter "set-cov-pref"))
+		   (set-user-pref :hide-cov (string= set-cov-pref "1")))
 		 (if (or (eq (hunchentoot:request-method*) :post)
 			 (not (and (boundp '*test-acceptor*) (boundp '*hunchentoot-taskmaster*)))) ; TODO fix this hack
 		     (funcall fn)
@@ -852,7 +857,7 @@ signaled condition to *HTML-OUTPUT*."
   (format out-stream "<input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><input type=\"submit\" value=\"~A\">~@[~A~]</form>"
 	  csrf-token button-label end-html))
 
-(defun page-toolbar-to-html (&key title new-post new-conversation logout (rss t) ignore enable-push-notifications)
+(defun page-toolbar-to-html (&key title new-post new-conversation logout (rss t) ignore enable-push-notifications hide-cov)
   (let ((out-stream *html-output*)
 	(liu (logged-in-userid)))
     (format out-stream "<div class=\"page-toolbar~@[ hide-until-init~]\">" enable-push-notifications)
@@ -869,6 +874,12 @@ signaled condition to *HTML-OUTPUT*."
         (typecase new-conversation (string (values "Send private message" new-conversation)) (t "New conversation"))
         (format out-stream "<a class=\"new-private-message button\" href=\"/conversation~@[?to=~A~]\">~A</a>"
                 to text)))
+    (when hide-cov
+      (let ((cov-pref (user-pref :hide-cov)))
+        <form method="post">
+          <input type="hidden" name="csrf-token" value=(make-csrf-token)>
+          <button name="set-cov-pref" value=(if cov-pref 0 1)>("~:[Hide~;Show~] coronavirus posts" cov-pref)</button>
+        </form>))
     (when (and new-post liu)
       (format out-stream "<a class=\"new-post button\" href=\"/edit-post~@[?section=~A~]\" accesskey=\"n\" title=\"Create new post [n]\">New post</a>"
               (typecase new-post (string new-post) (t nil))))
@@ -1002,7 +1013,8 @@ signaled condition to *HTML-OUTPUT*."
   (when (eq view :new) (redirect (replace-query-params (hunchentoot:request-uri*) "view" "all" "all" nil) :type :permanent) (return))
   (component-value-bind ((sort-string sort-widget))
     (multiple-value-bind (posts total)
-	(get-posts-index :view (string-downcase view) :before before :after after :offset offset :limit (1+ limit) :sort sort-string)
+	(get-posts-index :view (string-downcase view) :before before :after after :offset offset :limit (1+ limit) :sort sort-string
+			 :hide-tags (if (user-pref :hide-cov) (list (get-slug-tagid "coronavirus"))))
       (let ((page-title (format nil "~@(~A posts~)" view)))
 	(renderer ()
 		  (view-items-index (firstn posts limit)
@@ -1011,7 +1023,8 @@ signaled condition to *HTML-OUTPUT*."
 				    :content-class (format nil "index-page ~(~A~)-index-page" view)
 				    :top-nav (lambda ()
 					       (page-toolbar-to-html :title page-title
-								     :new-post (if (eq view :meta) "meta" t))
+								     :new-post (if (eq view :meta) "meta" t)
+								     :hide-cov (typep *current-site* 'lesswrong-viewer-site))
 					       (if (member view '(:frontpage :all))
 						   (funcall sort-widget)))))))))
 
