@@ -1415,6 +1415,25 @@ signaled condition to *HTML-OUTPUT*."
 
 (define-route 'forum-site 'regex-route :name 'view-tag :regex "/tag/([^/?]+)" :handler (route-component view-tag (slug) slug))
 
+(define-component view-tags-index ()
+  (:http-args '())
+  (let ((tags (lw2-graphql-query (lw2-query-string :tag :list (alist :view "allTagsAlphabetical") :fields '(:name :slug :post-count (:description :html))))))
+    (renderer ()
+      (emit-page (out-stream :title "All tags")
+        <div class="tags-index page-list-index">
+	  <ul>
+	    (dolist (tag tags)
+	      (alist-bind ((name simple-string) (slug simple-string) (post-count (or null integer)) (description list)) tag
+	        <li>
+	          <a href=("/tag/~A" slug)>(progn name) \((or post-count 0)\)</a>
+	          (when-let (description-html (cdr (assoc :html description)))
+		    <div>(with-html-stream-output (let ((*memoized-output-stream* out-stream)) (clean-html* description-html)))</div>)
+		</li>))
+	  </ul>
+	</div>))))
+
+(define-route 'forum-site 'standard-route :name 'view-tags-index :uri "/tags" :handler (route-component view-tags-index ()))
+
 (delete-easy-handler 'view-recent-comments)
 
 (hunchentoot:define-easy-handler (view-push-register :uri "/push/register") ()

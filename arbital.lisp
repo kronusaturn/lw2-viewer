@@ -232,7 +232,7 @@
 	      <div class="post-meta bottom-post-meta">
 		(arbital-meta-block page-data all-data :page)
 	      </div>)
-	    <div class="arbital-nav">
+	    <div class="arbital-nav page-list-index">
 	      (dolist (page-list-data '((:child-ids "Children")
 					(:parent-ids "Parents")))
 		(destructuring-bind (page-list-id page-list-name) page-list-data

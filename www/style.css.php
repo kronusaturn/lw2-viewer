@@ -4114,6 +4114,43 @@ li {
 }
 
 /*******************/
+/* PAGE LIST INDEX */
+/*******************/
+
+.page-list-index {
+	margin: 1em 30px;
+	line-height: 1.2;
+}
+
+.page-list-index > p {
+	font-weight: bold;
+	font-size: 1.2em;
+}
+
+.page-list-index > ul * {
+	margin: 0;
+}
+
+.page-list-index ul {
+	padding-left: 1.5em;
+}
+
+.page-list-index li {
+	margin-top: 0.67em;
+}
+
+.page-list-index li > a {
+	display: block;
+	font-size: 1.1em;
+	font-weight: bold;
+	margin: 0.33em 0;
+}
+
+.page-list-index li > a:last-child {
+	margin-bottom: 1em;
+}
+
+/*******************/
 /* ALIGNMENT FORUM */
 /*******************/
 
