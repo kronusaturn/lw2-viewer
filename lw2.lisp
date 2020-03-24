@@ -770,7 +770,6 @@ signaled condition to *HTML-OUTPUT*."
 	 (*current-prefs*
 	  (if-let (prefs-string (hunchentoot:cookie-in "prefs"))
 		  (let ((json:*identifier-name-to-key* 'json:safe-json-intern))
-		    (print prefs-string)
 		    (ignore-errors (json:decode-json-from-string (quri:url-decode prefs-string)))))))
     (multiple-value-bind (*revalidate-default* *force-revalidate-default*)
 	(cond ((ppcre:scan "(?:^|,?)\\s*(?:no-cache|max-age=0)(?:$|,)" (hunchentoot:header-in* :cache-control))
