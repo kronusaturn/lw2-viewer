@@ -1078,6 +1078,9 @@ signaled condition to *HTML-OUTPUT*."
 (define-page view-review-voting "/reviewVoting" ()
   (redirect "https://www.lesswrong.com/reviewVoting" :type :see-other))
 
+(define-page view-coronavirus-link-database "/coronavirus-link-database" ()
+  (redirect "https://www.lesswrong.com/coronavirus-link-database" :type :see-other))
+
 (defun post-comment (post-id-real &key shortform)
   (request-method
    (:post (text answer nomination nomination-review af post-id parent-answer-id parent-comment-id edit-comment-id retract-comment-id unretract-comment-id delete-comment-id)
