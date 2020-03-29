@@ -726,8 +726,7 @@ signaled condition to *HTML-OUTPUT*."
 						 (append
 						  (loop for link in (site-stylesheets *current-site*)
 						     collect (list* link "text/css" "style" push-option))
-						  (loop for link in (append (site-scripts *current-site*)
-									    (site-external-scripts *current-site*))
+						  (loop for link in (site-scripts *current-site*)
 						       collect (list* link "text/javascript" "script" push-option)))))
     (unless push-option (set-cookie "push" "t" :max-age (* 4 60 60)))))
 
