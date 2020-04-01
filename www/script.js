@@ -276,6 +276,9 @@ Element.prototype.addTextareaFeatures = function() {
 	textarea.addEventListener("keyup", (event) => { event.stopPropagation(); });
 	textarea.addEventListener("keypress", (event) => { event.stopPropagation(); });
 
+	let form = textarea.closest("form");
+	if(form) form.addEventListener("submit", event => { textarea.value = MarkdownFromHTML(textarea.value)});
+
 	textarea.insertAdjacentHTML("beforebegin", "<div class='guiedit-buttons-container'></div>");
 	let textareaContainer = textarea.closest(".textarea-container");
 	var buttons_container = textareaContainer.query(".guiedit-buttons-container");
