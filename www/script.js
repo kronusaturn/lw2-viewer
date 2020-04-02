@@ -3446,9 +3446,8 @@ function MarkdownFromHTML(text) {
 
 registerInitializer('earlyInitialize', true, () => query("#content") != null, function () {
 	GWLog("INITIALIZER earlyInitialize");
-	// Check to see whether we're on a mobile device (which we define as a touchscreen)
-// 	GW.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-	GW.isMobile = ('ontouchstart' in document.documentElement);
+	// Check to see whether we're on a mobile device (which we define as a narrow screen)
+	GW.isMobile = (window.innerWidth <= 1160);
 	GW.isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
 
 	// Backward compatibility
