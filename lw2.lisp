@@ -820,8 +820,6 @@ signaled condition to *HTML-OUTPUT*."
 		(log-conditions
 		 (unless (member (hunchentoot:request-method*) '(:get :head))
 		   (check-csrf-token (hunchentoot:post-parameter "csrf-token")))
-		 (when-let (set-cov-pref (hunchentoot:post-parameter "set-cov-pref"))
-		   (set-user-pref :hide-cov (string= set-cov-pref "1")))
 		 (if (or (eq (hunchentoot:request-method*) :post)
 			 (not (and (boundp '*test-acceptor*) (boundp '*hunchentoot-taskmaster*)))) ; TODO fix this hack
 		     (funcall fn)
@@ -1007,7 +1005,10 @@ signaled condition to *HTML-OUTPUT*."
   (:http-args '((view :member '(:all :new :frontpage :featured :meta :community :alignment-forum :questions :nominations :reviews :events) :default :frontpage)
 		before after
 		(offset :type fixnum)
-		(limit :type fixnum :default (user-pref :items-per-page))))
+		(limit :type fixnum :default (user-pref :items-per-page))
+		(set-cov-pref :request-type :post)))
+  (when set-cov-pref
+    (set-user-pref :hide-cov (string= set-cov-pref "1")))
   (when (eq view :new) (redirect (replace-query-params (hunchentoot:request-uri*) "view" "all" "all" nil) :type :permanent) (return))
   (component-value-bind ((sort-string sort-widget))
     (multiple-value-bind (posts total)
