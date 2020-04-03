@@ -2337,7 +2337,8 @@ function setCommentsSortModeSelectButtonsAccesskey() {
 /*************************/
 
 function previewPopupsEnabled() {
-	return !JSON.parse(localStorage.getItem("preview-popups-disabled") || GW.isMobile);
+	let isDisabled = localStorage.getItem("preview-popups-disabled");
+	return (typeof(isDisabled) == "string" ? !JSON.parse(isDisabled) : !GW.isMobile);
 }
 
 function setPreviewPopupsEnabled(state) {
