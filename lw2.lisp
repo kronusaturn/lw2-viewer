@@ -1,6 +1,7 @@
 (uiop:define-package #:lw2-viewer
   (:use #:cl #:sb-thread #:flexi-streams #:djula
 	#:lw2-viewer.config #:lw2.utils #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login #:lw2.context #:lw2.sites #:lw2.components #:lw2.html-reader #:lw2.fonts
+	#:lw2.csrf
 	#:lw2.graphql
 	#:lw2.conditions
 	#:lw2.routes
@@ -520,19 +521,6 @@ signaled condition to *HTML-OUTPUT*."
 			   class text :title description))))
     (format out-stream "</nav>")))
 
-(defun make-csrf-token (&optional (session-token (hunchentoot:cookie-in "session-token")) (nonce (ironclad:make-random-salt)))
-  (if (typep session-token 'string) (setf session-token (base64:base64-string-to-usb8-array session-token)))
-  (let ((csrf-token (concatenate '(vector (unsigned-byte 8)) nonce (ironclad:digest-sequence :sha256 (concatenate '(vector (unsigned-byte 8)) nonce session-token)))))
-    (values (base64:usb8-array-to-base64-string csrf-token) csrf-token))) 
-
-(defun check-csrf-token (csrf-token &optional (session-token (hunchentoot:cookie-in "session-token")))
-  (let* ((session-token (base64:base64-string-to-usb8-array session-token))
-	 (csrf-token (base64:base64-string-to-usb8-array csrf-token))
-	 (correct-token (nth-value 1 (make-csrf-token session-token (subseq csrf-token 0 16)))))
-    (unless (ironclad:constant-time-equal csrf-token correct-token)
-      (error "CSRF check failed."))
-    t)) 
-
 (defgeneric site-stylesheets (site)
   (:method-combination append :most-specific-last)
   (:method append ((s site))
@@ -818,8 +806,6 @@ signaled condition to *HTML-OUTPUT*."
 						 </form>))
 				    (return-from call-with-error-page)))))
 		(log-conditions
-		 (unless (member (hunchentoot:request-method*) '(:get :head))
-		   (check-csrf-token (hunchentoot:post-parameter "csrf-token")))
 		 (if (or (eq (hunchentoot:request-method*) :post)
 			 (not (and (boundp '*test-acceptor*) (boundp '*hunchentoot-taskmaster*)))) ; TODO fix this hack
 		     (funcall fn)
@@ -873,7 +859,6 @@ signaled condition to *HTML-OUTPUT*."
     (when hide-cov
       (let ((cov-pref (user-pref :hide-cov)))
         <form method="post">
-          <input type="hidden" name="csrf-token" value=(make-csrf-token)>
           <button name="set-cov-pref" value=(if cov-pref 0 1)>("~:[Hide~;Show~] coronavirus posts" cov-pref)</button>
         </form>))
     (when (and new-post liu)
@@ -986,7 +971,8 @@ signaled condition to *HTML-OUTPUT*."
 						    (:old :description "Sort by date posted, oldest first")))
 				    (pref :default-sort) (param-name "sort") (html-class "sort"))
   (:http-args '((sort :real-name param-name :member (mapcar (lambda (x) (if (listp x) (first x) x)) sort-options))
-		(sortedby :real-name "sortedBy" :type string)))
+		(sortedby :real-name "sortedBy" :type string)
+		&without-csrf-check))
   (if sortedby
       (progn
 	(renderer (out-stream) (progn out-stream nil)) ;todo: support declarations so we don't need this dirty trick
@@ -1006,7 +992,8 @@ signaled condition to *HTML-OUTPUT*."
 		before after
 		(offset :type fixnum)
 		(limit :type fixnum :default (user-pref :items-per-page))
-		(set-cov-pref :request-type :post)))
+		(set-cov-pref :request-type :post)
+		&without-csrf-check))
   (when set-cov-pref
     (set-user-pref :hide-cov (string= set-cov-pref "1")))
   (when (eq view :new) (redirect (replace-query-params (hunchentoot:request-uri*) "view" "all" "all" nil) :type :permanent) (return))

@@ -1,8 +1,9 @@
 (uiop:define-package #:lw2.components
-  (:use #:cl #:alexandria #:lw2.utils)
+  (:use #:cl #:alexandria #:lw2.utils #:lw2.csrf)
   (:export
    #:standard-component #:http-args #:prepare-function
    #:make-binding-form
+   #:&without-csrf-check
    #:wrap-http-bindings #:wrap-prepare-code
    #:find-component #:delete-component #:define-component #:renderer
    #:component-value-bind))
@@ -17,9 +18,10 @@
 
 (defun make-binding-form (additional-vars body &aux var-bindings additional-declarations additional-preamble)
   (loop for x in additional-vars
-     when (not (eq (first (ensure-list x)) '*))
+     when (not (member (first (ensure-list x)) '(* &without-csrf-check)))
      do
-       (destructuring-bind (name &key member type default required (request-type '(:post :get)) (real-name (string-downcase name)) passthrough) (ensure-list x)
+       (destructuring-bind (name &key member type default required (request-type '(:post :get)) (real-name (string-downcase name)) passthrough)
+	   (ensure-list x)
 	 (let* ((inner-form
 		 (if passthrough
 		     name
@@ -61,10 +63,13 @@
 		   (push `(type (or null simple-string) ,name) additional-declarations)))
 	   (when inner-form
 	     (push `(,name ,inner-form) var-bindings)))))
-  `(let ,(nreverse var-bindings)
-     (declare ,.(nreverse additional-declarations))
-     ,.(nreverse additional-preamble)
-     (block nil ,@body)))
+  `(progn
+     ,@(unless (member '&without-csrf-check additional-vars)
+	 '((check-csrf)))
+     (let ,(nreverse var-bindings)
+       (declare ,.(nreverse additional-declarations))
+       ,.(nreverse additional-preamble)
+       (block nil ,@body))))
 
 (defmethod wrap-http-bindings ((component standard-component) body)
   (make-binding-form (http-args component) body))

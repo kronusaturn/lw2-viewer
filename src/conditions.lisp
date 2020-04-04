@@ -5,7 +5,9 @@
 	   #:fatal-error
 	   #:condition-http-return-code
 	   #:error-to-html
-           #:lw2-error #:lw2-client-error #:lw2-not-found-error #:lw2-user-not-found-error #:lw2-not-allowed-error #:lw2-server-error #:lw2-connection-error #:lw2-unknown-error
+           #:lw2-error
+	   #:csrf-check-failed
+	   #:lw2-client-error #:lw2-not-found-error #:lw2-user-not-found-error #:lw2-not-allowed-error #:lw2-server-error #:lw2-connection-error #:lw2-unknown-error
 	   #:log-condition #:log-conditions
 	   #:log-and-ignore-errors)
   (:recycle #:lw2.backend #:lw2-viewer))
@@ -44,6 +46,13 @@
   <p>(princ-to-string condition)</p>)
 
 (define-condition lw2-client-error (lw2-error) ((http-return-code :allocation :class :initform 400)))
+
+(define-condition csrf-check-failed (lw2-error) ()
+  (:report "CSRF check failed."))
+
+(defmethod error-to-html ((condition csrf-check-failed))
+  <p>CSRF check failed.</p>
+  <p>You may need to adjust your browser settings to allow cookies.</p>)
 
 (define-condition lw2-not-found-error (lw2-client-error) ((http-return-code :allocation :class :initform 404))
   (:report "Document not found."))
