@@ -763,9 +763,9 @@ function badgePostsWithNewComments() {
 	queryAll("h1.listing a[href^='/posts']").forEach(postLink => {
 		let postHash = /posts\/(.+?)\//.exec(postLink.href)[1];
 
-		let savedCommentCount = localStorage.getItem("comment-count_" + postHash);
+		let savedCommentCount = parseInt(localStorage.getItem("comment-count_" + postHash), 10) || 0;
 		let commentCountDisplay = postLink.parentElement.nextSibling.query(".comment-count");
-		let currentCommentCount = /([0-9]+)/.exec(commentCountDisplay.textContent)[1];
+		let currentCommentCount = parseInt(/([0-9]+)/.exec(commentCountDisplay.textContent)[1], 10) || 0;
 
 		if (currentCommentCount > savedCommentCount)
 			commentCountDisplay.addClass("new-comments");
