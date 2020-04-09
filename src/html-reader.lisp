@@ -1,5 +1,6 @@
 (uiop:define-package #:lw2.html-reader
-  (:use #:cl #:alexandria #:named-readtables)
+  (:use #:cl #:alexandria #:named-readtables
+	#:lw2.client-script)
   (:export #:*html-output* #:with-html-stream-output #:safe #:encode-entities #:html-reader)
   (:recycle #:lw2-viewer))
 
@@ -7,13 +8,39 @@
 
 (defvar *html-output* nil)
 
-(defun encode-entities (text &optional stream)
-  (handler-bind
+(client-defun encode-entities (text &optional stream)
+  (if-client
+   (ps:chain text (replace (ps:regex "/[<>\"'&]/g")
+			   (lambda (match)
+			     (concatenate 'string
+					  "&"
+					  (ps:getprop (ps:create "<" "lt"
+								 ">" "gt"
+								 "\"" "quot"
+								 "'" "apos"
+								 "&" "amp")
+						      match)
+					  ";"))))
+   (handler-bind
     (((or plump:invalid-xml-character plump:discouraged-xml-character) #'abort))
-    (plump:encode-entities (princ-to-string text) stream)))
+    (plump:encode-entities (princ-to-string text) stream))))
 
 (defmacro with-html-stream-output (&body body)
-  `(progn ,@body))
+  `(let ((html-output *html-output*))
+     (declare (ignorable html-output))
+     ,@body
+     nil))
+
+(ps:defpsmacro with-html-stream-output (&body body)
+  `(let ((html-output (make-array)))
+     (macrolet ((write-string (string stream)
+		  (declare (ignore stream))
+		  `(ps:chain html-output (push ,string)))
+		(princ (string stream)
+		  (declare (ignore stream))
+		  `(ps:chain html-output (push ,string))))
+       ,@body)
+     (ps:chain html-output (join ""))))
 
 (defun html-reader (stream char)
   (declare (ignore char))
@@ -28,7 +55,7 @@
 	       (setf string-output (apply #'concatenate 'simple-string string-output strings)))
 	     (flush-output ()
 	       (unless (string= string-output "")
-		 (appendf out-body `((write-string ,string-output *html-output*)))
+		 (appendf out-body `((write-string ,string-output html-output)))
 		 (setf string-output "")))
 	     (output-read-object ()
 	       (let ((object (read-preserving-whitespace stream)))
@@ -41,8 +68,8 @@
 		      (flush-output)
 		      (appendf out-body
 			       (if safe
-				   `((format *html-output* ,@object))
-				   `((encode-entities (format nil ,@object) *html-output*)))))
+				   `((format html-output ,@object))
+				   `((encode-entities (format nil ,@object) html-output)))))
 		     ((and (consp object) (eq (first object) 'with-html-stream-output))
 		      (flush-output)
 		      (appendf out-body (rest object)))
@@ -52,8 +79,8 @@
 		      (flush-output)
 		      (appendf out-body
 			       (if safe
-				   `((princ ,object *html-output*))
-				   `((encode-entities (or ,object "") *html-output*))))))))))
+				   `((princ ,object html-output))
+				   `((encode-entities (or ,object "") html-output))))))))))
 	    (loop for c = (peek-char nil stream)
 		  while (not (member c '(#\Space #\Newline #\>)))
 	       do (vector-push-extend (read-char stream) buffer))
@@ -112,7 +139,7 @@
 			 (output-strings (string c))
 			 (setf need-whitespace t)))
 	    (flush-output)
-	    `(with-html-stream-output ,.out-body nil))))
+	    `(with-html-stream-output ,.out-body))))
 
 (defreadtable html-reader
   (:merge :standard)

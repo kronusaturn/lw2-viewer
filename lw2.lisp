@@ -10,7 +10,8 @@
 	#:lw2.user-context
 	#:lw2.web-push
 	#:lw2.data-viewers.post
-	#:lw2.data-viewers.comment)
+	#:lw2.data-viewers.comment
+	#:lw2.client-script)
   (:import-from #:alexandria #:ensure-list #:when-let #:if-let #:alist-hash-table)
   (:import-from #:collectors #:with-collector)
   (:import-from #:ppcre #:regex-replace-all)
@@ -21,7 +22,9 @@
     #:*fonts-stylesheet-uris* #:*fonts-redirect-data* #:*fonts-redirect-lock* #:*fonts-redirect-thread*
     #:postprocess-conversation-title
     #:map-output
-    #:*earliest-post*)
+    #:*earliest-post*
+    #:*extra-external-scripts* #:*extra-inline-scripts*
+    #:site-stylesheets #:site-inline-scripts #:site-scripts #:site-external-scripts #:site-head-elements)
   (:recycle #:lw2-viewer #:lw2.backend))
 
 (in-package #:lw2-viewer) 
@@ -399,8 +402,10 @@ signaled condition to *HTML-OUTPUT*."
 "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
 <meta name=\"HandheldFriendly\" content=\"True\" />"))
 
-(defparameter *extra-external-scripts* "")
-(defparameter *extra-inline-scripts* "")
+(defparameter *page-resources* nil)
+
+(defun require-resource (type &rest args)
+  (push (list* type args) *page-resources*))
 
 (defun generate-versioned-link (file)
   (format nil "~A?v=~A" file (sb-posix:stat-mtime (sb-posix:stat (format nil "www~A" file))))) 
@@ -526,103 +531,93 @@ signaled condition to *HTML-OUTPUT*."
 			   class text :title description))))
     (format out-stream "</nav>")))
 
-(defgeneric site-stylesheets (site)
-  (:method-combination append :most-specific-last)
+(defgeneric site-resources (site)
+  (:method-combination append :most-specific-first)
   (:method append ((s site))
-    (labels ((gen-inner (theme os)
-	       (list (generate-versioned-link (format nil "/css/style~@[-~A~].~A.css" (if (and theme (> (length theme) 0)) theme) os)))))
-      (let* ((ua (hunchentoot:header-in* :user-agent))
-	     (theme (hunchentoot:cookie-in "theme"))
-	     (os (cond ((search "Windows" ua) "windows")
-		       ((search "Mac OS" ua) "mac")
-		       (t "linux"))))
-	(handler-case (gen-inner theme os)
-	  (serious-condition () (gen-inner nil os)))))))
-
-(defgeneric site-inline-scripts (site)
-  (:method-combination append :most-specific-last)
-  (:method append ((s site)) nil))
-
-(defgeneric site-scripts (site)
-  (:method-combination append :most-specific-last)
-  (:method append ((s site))
-	   (list (generate-versioned-link "/head.js"))))
-
-(defgeneric site-external-scripts (site)
-  (:method-combination append :most-specific-last)
-  (:method append ((s site))
-	   (list (generate-versioned-link "/script.js"))))
-
-(defgeneric site-head-elements (site)
-  (:method-combination append :most-specific-last)
-  (:method append ((s site)) nil))
+    (list
+     (labels ((gen-inner (theme os)
+		(list :stylesheet (generate-versioned-link (format nil "/css/style~@[-~A~].~A.css" (if (and theme (> (length theme) 0)) theme) os)))))
+       (let* ((ua (hunchentoot:header-in* :user-agent))
+	      (theme (hunchentoot:cookie-in "theme"))
+	      (os (cond ((search "Windows" ua) "windows")
+			((search "Mac OS" ua) "mac")
+			(t "linux"))))
+	 (handler-case (gen-inner theme os)
+	   (serious-condition () (gen-inner nil os)))))
+     (list :script (generate-versioned-link "/head.js"))
+     (list :async-script (generate-versioned-link "/script.js")))))
 
 (defun html-body (out-stream fn &key title description social-description current-uri content-class robots extra-head)
-  (let* ((session-token (hunchentoot:cookie-in "session-token"))
-	 (csrf-token (and session-token (make-csrf-token session-token)))
-	 (hide-nav-bars (truthy-string-p (hunchentoot:get-parameter "hide-nav-bars")))
-	 (preview (string-equal (hunchentoot:get-parameter "format") "preview")))
-    (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head>")
-    (unless preview
-      (format out-stream "<script>window.GW = { }; applicationServerKey=\"~A\"; loggedInUserId=\"~A\"; loggedInUserDisplayName=\"~A\"; loggedInUserSlug=\"~A\"; GW.useFancyFeatures=~A; ~@[GW.csrfToken=\"~A\"; ~]GW.assets="
-	      (get-vapid-public-key)
-	      (or (logged-in-userid) "")
-	      (or (logged-in-username) "")
-	      (or (logged-in-user-slug) "")
-	      (if (typep *current-site* 'arbital-site) "false" "true")
-	      csrf-token)
-      (json:encode-json (alist "popup.svg" (generate-versioned-link "/assets/popup.svg"))
-			out-stream)
-      (format out-stream ";~{~A~}</script>~A"
-	      (site-inline-scripts *current-site*)
-	      *extra-inline-scripts*))
-    (unless preview
-      (format out-stream "~{<script src=\"~A\"></script>~}"
-	      (site-scripts *current-site*))
-      (format out-stream "~{<script src=\"~A\" async></script>~}~A"
-	      (site-external-scripts *current-site*)
-	      *extra-external-scripts*))
-    (format out-stream "~A~{<link rel=\"stylesheet\" href=\"~A\">~}"
-	    *html-head*
-	    (site-stylesheets *current-site*))
-    (generate-fonts-html-headers (site-fonts-source *current-site*))
-    (format out-stream "<link rel=\"shortcut icon\" href=\"~A\">"
-	    (generate-versioned-link "/assets/favicon.ico"))
-    (format out-stream "<title>~@[~A - ~]~A</title>~@[<meta name=\"description\" content=\"~A\">~]~@[<meta name=\"robots\" content=\"~A\">~]"
-	    (if title (encode-entities title))
-	    (site-title *current-site*)
-	    description
-	    robots)
-    (unless preview
-      (when title
-	<meta property="og:title" content=title>)
-      (when social-description
-	<meta property="og:description" content=social-description>
-	<meta property="og:type" content="article">))
-    (format out-stream "~{~A~}"
-	    (site-head-elements *current-site*))
-    (unless (logged-in-userid)
-      <style>button.vote { display: none }</style>)
-    (when *memoized-output-without-hyphens*
-      ;; The browser has been detected as having bugs related to soft-hyphen characters.
-      ;; But there is some hope that it could still do hyphenation by itself.
-      <style>.body-text { hyphens: auto }</style>)
-    (when preview
-      (format out-stream "<base target='_top'>"))
-    (when extra-head (funcall extra-head))
-    (format out-stream "</head>")
-    (unwind-protect
-	 (progn
-	   (format out-stream "<body><div id=\"content\"~@[ class=\"~{~A~^ ~}\"~]>"
-		   (list-cond (content-class content-class)
-			      (hide-nav-bars "no-nav-bars")
-			      (preview "preview")))
-	   (unless (or hide-nav-bars preview)
-	     (nav-bar-to-html out-stream "nav-bar-top" (or current-uri (replace-query-params (hunchentoot:request-uri*) "offset" nil "sort" nil))))
-	   (write-string "<script> </script>" out-stream)
-	   (force-output out-stream)
-	   (funcall fn))
-      (format out-stream "</div></body></html>"))))
+  (macrolet ((for-resource-type ((resource-type &rest args) &body body)
+	       (alexandria:with-gensyms (resource)
+		 `(dolist (,resource page-resources)
+		    (when (eq (first ,resource) ,resource-type)
+		      (destructuring-bind ,args (rest ,resource)
+			,@body))))))
+    (let* ((session-token (hunchentoot:cookie-in "session-token"))
+	   (csrf-token (and session-token (make-csrf-token session-token)))
+	   (hide-nav-bars (truthy-string-p (hunchentoot:get-parameter "hide-nav-bars")))
+	   (preview (string-equal (hunchentoot:get-parameter "format") "preview"))
+	   (page-resources (nreverse *page-resources*)))
+      (setf *page-resources* nil)
+      (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head>")
+      (unless preview
+	(format out-stream "<script>window.GW = { }; applicationServerKey=\"~A\"; loggedInUserId=\"~A\"; loggedInUserDisplayName=\"~A\"; loggedInUserSlug=\"~A\"; GW.useFancyFeatures=~A; ~@[GW.csrfToken=\"~A\"; ~]GW.assets="
+		(get-vapid-public-key)
+		(or (logged-in-userid) "")
+		(or (logged-in-username) "")
+		(or (logged-in-user-slug) "")
+		(if (typep *current-site* 'arbital-site) "false" "true")
+		csrf-token)
+	(json:encode-json (alist "popup.svg" (generate-versioned-link "/assets/popup.svg"))
+			  out-stream)
+	(for-resource-type (:inline-script script-text)
+			   (write-string ";" out-stream)
+			   (write-string script-text out-stream))
+	(write-string "</script>" out-stream)
+	(for-resource-type (:script uri)
+			   (format out-stream "<script src=\"~A\"></script>" uri))
+	(for-resource-type (:async-script uri)
+			   (format out-stream "<script src=\"~A\" async></script>" uri)))
+      (write-string *html-head* out-stream)
+      (for-resource-type (:stylesheet uri)
+			 (format out-stream "<link rel=\"stylesheet\" href=\"~A\">" uri))
+      (generate-fonts-html-headers (site-fonts-source *current-site*))
+      (format out-stream "<link rel=\"shortcut icon\" href=\"~A\">"
+	      (generate-versioned-link "/assets/favicon.ico"))
+      (format out-stream "<title>~@[~A - ~]~A</title>~@[<meta name=\"description\" content=\"~A\">~]~@[<meta name=\"robots\" content=\"~A\">~]"
+	      (if title (encode-entities title))
+	      (site-title *current-site*)
+	      description
+	      robots)
+      (unless preview
+	(when title
+	  <meta property="og:title" content=title>)
+	(when social-description
+	  <meta property="og:description" content=social-description>
+	  <meta property="og:type" content="article">))
+      (unless (logged-in-userid)
+	<style>button.vote { display: none }</style>)
+      (when *memoized-output-without-hyphens*
+	;; The browser has been detected as having bugs related to soft-hyphen characters.
+	;; But there is some hope that it could still do hyphenation by itself.
+	<style>.body-text { hyphens: auto }</style>)
+      (when preview
+	(format out-stream "<base target='_top'>"))
+      (when extra-head (funcall extra-head))
+      (format out-stream "</head>")
+      (unwind-protect
+	   (progn
+	     (format out-stream "<body><div id=\"content\"~@[ class=\"~{~A~^ ~}\"~]>"
+		     (list-cond (content-class content-class)
+				(hide-nav-bars "no-nav-bars")
+				(preview "preview")))
+	     (unless (or hide-nav-bars preview)
+	       (nav-bar-to-html out-stream "nav-bar-top" (or current-uri (replace-query-params (hunchentoot:request-uri*) "offset" nil "sort" nil))))
+	     (write-string "<script> </script>" out-stream)
+	     (force-output out-stream)
+	     (funcall fn))
+	(format out-stream "</div></body></html>")))))
 
 (defun replace-query-params (uri &rest params)
   (let* ((quri (quri:uri uri))
@@ -718,11 +713,12 @@ signaled condition to *HTML-OUTPUT*."
     (setf (hunchentoot:content-type*) "text/html; charset=utf-8"
           (hunchentoot:return-code*) return-code
           (hunchentoot:header-out :link) (format nil "~:{<~A>;rel=preload;type=~A;as=~A~@{;~A~}~:^,~}"
-						 (append
-						  (loop for link in (site-stylesheets *current-site*)
-						     collect (list* link "text/css" "style" push-option))
-						  (loop for link in (site-scripts *current-site*)
-						       collect (list* link "text/javascript" "script" push-option)))))
+						 (loop for (type . args) in *page-resources*
+						    for link = (first args)
+						    when (eq type :stylesheet)
+						    collect (list* link "text/css" "style" push-option)
+						    when (eq type :script)
+						    collect (list* link "text/javascript" "script" push-option))))
     (unless push-option (set-cookie "push" "t" :max-age (* 4 60 60)))))
 
 (defun user-pref (key)
@@ -797,7 +793,8 @@ signaled condition to *HTML-OUTPUT*."
 		 ;; Soft hyphen characters mess up middle-click paste, so try to identify whether that exists on the user's platform.
 		 (let ((ua (hunchentoot:header-in* :user-agent)))
 		   (or (search "X11" ua)
-		       (search "Ubuntu" ua)))))
+		       (search "Ubuntu" ua))))
+		(*page-resources* (append *page-resources* (site-resources *current-site*))))
 	    (catch 'abort-response
 	      (handler-bind
 		  ((fatal-error (lambda (condition)
@@ -1357,7 +1354,7 @@ signaled condition to *HTML-OUTPUT*."
       (when return
 	(redirect return))))
 
-(defun standalone-comment-controls ()
+(client-defun standalone-comment-controls ()
   <div class="posting-controls standalone with-markdown-editor" onsubmit="disableBeforeUnload();">
     <form method="post" id="conversation-form" class="aligned-form">
       <div class="textarea-container">
@@ -1870,4 +1867,10 @@ signaled condition to *HTML-OUTPUT*."
                                                                        (setf (hunchentoot:header-out "Cache-Control") (format nil "public, max-age=~A, immutable" (- (expt 2 31) 1))))
                                                                      (hunchentoot:handle-static-file file content-type)
                                                                      t))))
-                                 nil)
+    nil)
+
+(define-page view-generated-script (:regex "^/generated/([^/]+)\\.js" (name :type string)) ()
+  (when-let ((package (find-package (string-upcase name))))
+    (setf (hunchentoot:header-out "Content-Type") "text/javascript")
+    (let ((stream (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8)))
+      (write-package-client-scripts package stream))))
