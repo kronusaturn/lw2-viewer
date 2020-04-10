@@ -7,16 +7,10 @@
 (defclass raw-memory-stream (fundamental-binary-input-stream)
   ((pointer :initarg :pointer)
    (length :initarg :length)
-   (position :initform 0)))
+   (position :initform 0 :accessor stream-file-position)))
 
 (defmethod stream-element-type ((self raw-memory-stream))
   '(unsigned-byte 8))
-
-(defmethod stream-file-position ((self raw-memory-stream))
-  (slot-value self 'position))
-
-(defmethod (setf stream-file-position) (position (self raw-memory-stream))
-  (setf (slot-value self 'position) position))
 
 (defmethod stream-read-byte ((self raw-memory-stream))
   (declare (optimize (safety 0) (debug 0)))
@@ -42,4 +36,5 @@
 	    ((simple-array (unsigned-byte 8) (*)) (inner))
 	    ((array (unsigned-byte 8) (*)) (inner))
 	    (sequence (inner))))
+      (incf position actual-length)
       (+ start actual-length))))
