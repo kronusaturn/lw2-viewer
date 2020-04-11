@@ -1558,7 +1558,7 @@ function updateThemeTweakerSampleText() {
 	// the body text of posts, and set the sample text’s background to that.
 	let findStyleBackground = (selector) => {
 		let x;
-		Array.from(document.styleSheets[0].cssRules).forEach(rule => {
+		Array.from(query("link[rel=stylesheet]").sheet.cssRules).forEach(rule => {
 			if(rule.selectorText == selector)
 				x = rule;
 		});

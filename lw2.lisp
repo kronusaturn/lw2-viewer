@@ -571,18 +571,18 @@ signaled condition to *HTML-OUTPUT*."
       (format out-stream ";~{~A~}</script>~A"
 	      (site-inline-scripts *current-site*)
 	      *extra-inline-scripts*))
-    (format out-stream "~A~{<link rel=\"stylesheet\" href=\"~A\">~}"
-	    *html-head*
-	    (site-stylesheets *current-site*))
-    (generate-fonts-html-headers (site-fonts-source *current-site*))
-    (format out-stream "<link rel=\"shortcut icon\" href=\"~A\">"
-	    (generate-versioned-link "/assets/favicon.ico"))
     (unless preview
       (format out-stream "~{<script src=\"~A\"></script>~}"
 	      (site-scripts *current-site*))
       (format out-stream "~{<script src=\"~A\" async></script>~}~A"
 	      (site-external-scripts *current-site*)
 	      *extra-external-scripts*))
+    (format out-stream "~A~{<link rel=\"stylesheet\" href=\"~A\">~}"
+	    *html-head*
+	    (site-stylesheets *current-site*))
+    (generate-fonts-html-headers (site-fonts-source *current-site*))
+    (format out-stream "<link rel=\"shortcut icon\" href=\"~A\">"
+	    (generate-versioned-link "/assets/favicon.ico"))
     (format out-stream "<title>~@[~A - ~]~A</title>~@[<meta name=\"description\" content=\"~A\">~]~@[<meta name=\"robots\" content=\"~A\">~]"
 	    (if title (encode-entities title))
 	    (site-title *current-site*)
