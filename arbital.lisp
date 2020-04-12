@@ -39,18 +39,19 @@
 			 (block nil
 			   (loop
 			      (handler-case
-				  (sb-sys:with-deadline (:seconds 600)
-				    (let ((result
-					   (dex:request (case page-type
-							  (:explore "https://arbital.com/json/explore/")
-							  (t "https://arbital.com/json/primaryPage/"))
-							:headers (alist "content-type" "application/json")
-							:method :post
-							:content query)))
-				      (typecase result
-					(string (when (string= result "Couldn't find page")
-						  (return "\"not-found\"")))
-					(vector (return (sb-ext:octets-to-string result :external-format :utf-8))))))
+				  (sb-sys:with-deadline (:seconds 600 :override t)
+				    (multiple-value-bind (result status headers uri)
+					(dex:request (case page-type
+						       (:explore "https://arbital.com/json/explore/")
+						       (t "https://arbital.com/json/primaryPage/"))
+						     :headers (alist "content-type" "application/json")
+						     :method :post
+						     :content query)
+				      (declare (ignore status uri))
+				      (cond ((string= (gethash "content-type" headers) "application/json")
+					     (return result))
+					    ((string= result "Couldn't find page")
+					     (return "\"not-found\"")))))
 				(t (c) (print c)))
 			      (sleep 2))))
 			(data (decode-arbital-json json-string)))
@@ -58,7 +59,7 @@
 		   json-string))))
       (call-with-safe-json
        (lambda ()
-	 (lw2-graphql-query-timeout-cached fn "page-body-json" (format nil "~@[~A ~]~A" (unless (eq page-type :primary-page) page-type) page-key) :revalidate nil))))))
+	 (lw2-graphql-query-timeout-cached fn "page-body-json" (format nil "~@[~A ~]~A" (unless (eq page-type :primary-page) page-type) page-key)))))))
 
 (defun add-arbital-scrape-files (directory)
   (with-cache-transaction
