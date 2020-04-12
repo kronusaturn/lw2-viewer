@@ -9,6 +9,7 @@
            #:*messages-index-fields*
            #:*notifications-base-terms*
            #:start-background-loader #:stop-background-loader #:background-loader-running-p
+	   #:call-with-connection-pool
 	   #:lw2-graphql-query #:lw2-query-string* #:lw2-query-string
            #:lw2-graphql-query-map #:lw2-graphql-query-multi
 	   #:signal-lw2-errors
@@ -29,11 +30,11 @@
 	     #:*comments-index-fields* #:comments-index-fields
 	     #:*post-comments-fields* #:post-comments-fields
 	     #:define-index-fields #:decode-graphql-json
-	     #:lw2-graphql-query-noparse #:lw2-graphql-query-streamparse))
+	     #:lw2-graphql-query-noparse #:lw2-graphql-query-streamparse
+	     #:*cookie-jar*))
 
 (in-package #:lw2.backend)
 
-(defvar *cookie-jar* (make-instance 'drakma:cookie-jar))
 (defvar *use-alignment-forum* nil)
 
 (defvar *graphql-debug-output* nil)
@@ -176,23 +177,33 @@
   (when *graphql-debug-output*
     (format *graphql-debug-output* "~&GraphQL query: ~A~%" query)))
 
-(defun call-with-http-response (fn uri &rest args &key want-stream &allow-other-keys)
-  (multiple-value-bind (response status-code headers final-uri reuse-stream want-close status-string)
-      (apply 'drakma:http-request uri :close t args)
-    (declare (ignore headers final-uri reuse-stream))
-    (unwind-protect
-	 (cond
-	   ((= status-code 200)
-	    (funcall fn response))
-	   ((= status-code 400)
-	    (decode-query-result response))
-	   (t
-	    (error "Error while contacting LW2: ~A ~A" status-code status-string)))
-      (when want-stream
-	(if want-close
-	    (close response)
-	    (let ((buf (make-array 4096 :element-type '(unsigned-byte 8))))
-	      (loop until (< (read-sequence buf response) 4096))))))))
+(define-backend-function call-with-connection-pool (fn)
+  (backend-dexador-connection-pool
+   (with-accessors ((pools backend-dexador-connection-pools)
+		    (lock backend-dexador-connection-pools-lock))
+       backend
+     (let* ((pool (or (sb-thread:with-mutex (lock)
+			(pop pools))
+		      (dex:make-connection-pool)))
+	    (dex:*connection-pool* pool))
+       (unwind-protect
+	    (funcall fn)
+	 (sb-thread:with-mutex (lock)
+	   (push pool pools)))))))
+
+(defun call-with-http-response (fn uri &rest args &key &allow-other-keys)
+  (call-with-connection-pool
+   (lambda ()
+     (multiple-value-prog1
+	 (multiple-value-bind (response status-code)
+	     (apply 'dex:request uri args)
+	   (cond
+	     ((= status-code 200)
+	      (funcall fn response))
+	     ((= status-code 400)
+	      (decode-query-result response))
+	     (t
+	      (error "Error while contacting LW2: ~A" status-code))))))))
 
 (defun signal-lw2-errors (errors)
   (loop for error in errors
@@ -261,27 +272,26 @@
       "https://www.alignmentforum.org/graphql"
       (call-next-method)))
 
-(define-backend-function call-with-backend-response (fn query &key auth-token)
+(define-backend-function call-with-backend-response (fn query &key return-type auth-token)
   (backend-graphql
    (call-with-http-response
     fn
     (graphql-uri *current-backend*)
     :method :post
-    :content-type "application/json"
+    :headers (list-cond (t :content-type "application/json")
+			(auth-token :authorization auth-token))
     :content (json:encode-json-to-string (acons "query" query nil))
-    :cookie-jar *cookie-jar*
-    :additional-headers (list-cond (auth-token "authorization" auth-token))
-    :want-stream t)))
+    :want-stream (not return-type))))
 
 (define-backend-function lw2-graphql-query (query &key auth-token return-type (decoder 'decode-query-result))
   (backend-base
    (call-with-backend-response
     (ecase return-type
       ((nil) decoder)
-      (:string (lambda (r) (uiop:slurp-stream-string (ensure-character-stream r))))
-      (:both (lambda (r) (let ((s (uiop:slurp-stream-string (ensure-character-stream r))))
-			   (values (funcall decoder s) s)))))
+      (:string #'identity)
+      (:both (lambda (string) (values (funcall decoder string) string))))
     query
+    :return-type return-type
     :auth-token auth-token)))
 
 (defun lw2-graphql-query-map (fn data &key auth-token postprocess)
@@ -842,20 +852,22 @@
 
 (define-backend-function lw2-search-query (query)
   (backend-algolia-search
-   (multiple-value-bind (req-stream req-status req-headers req-uri req-reuse-stream want-close)
-    (drakma:http-request (algolia-search-uri *current-backend*)
-			 :method :post :additional-headers '(("Origin" . "https://www.greaterwrong.com") ("Referer" . "https://www.greaterwrong.com/"))
-			 :content (json:encode-json-alist-to-string `(("requests" . ,(loop for index in '("test_posts" "test_comments")
-											   collect `(("indexName" . ,index)
-												     ("params" . ,(format nil "query=~A&hitsPerPage=20&page=0"
-															  (url-rewrite:url-encode query)))))))) 
-			 :want-stream t :close t)
-    (declare (ignore req-status req-headers req-uri req-reuse-stream))
-    (setf (flexi-stream-external-format req-stream) :utf-8)
-    (unwind-protect
-      (values-list (loop for r in (cdr (assoc :results (json:decode-json req-stream)))
-			 collect (cdr (assoc :hits r))))
-      (if want-close (close req-stream))))))
+   (multiple-value-bind (req-stream req-status req-headers req-uri)
+       (call-with-connection-pool
+	(lambda ()
+	  (dex:request (algolia-search-uri *current-backend*)
+		       :method :post :headers '(("Origin" . "https://www.greaterwrong.com")
+						("Referer" . "https://www.greaterwrong.com/")
+						("Content-Type" . "application/json"))
+		       :content (json:encode-json-alist-to-string `(("requests" . ,(loop for index in '("test_posts" "test_comments")
+										      collect `(("indexName" . ,index)
+												("params" . ,(format nil "query=~A&hitsPerPage=20&page=0"
+														     (url-rewrite:url-encode query)))))))) 
+		       :want-stream t)))
+     (declare (ignore req-status req-headers req-uri))
+     (let ((req-stream (ensure-character-stream req-stream)))
+       (values-list (loop for r in (cdr (assoc :results (json:decode-json req-stream)))
+		       collect (cdr (assoc :hits r))))))))
 
 (define-backend-function get-username-wrapper (user-id fn)
   (backend-base

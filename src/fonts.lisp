@@ -30,7 +30,7 @@
     (labels ((get-redirects (uri-list)
                (loop for request-uri in uri-list collect
                      (multiple-value-bind (body status headers uri)
-                       (drakma:http-request request-uri :method :head :close t :redirect nil :additional-headers (alist :referer (lw2.sites::site-uri (first lw2.sites::*sites*)) :accept "text/css,*/*;q=0.1"))
+                       (dex:request request-uri :method :head :redirect nil :headers (alist "referer" (lw2.sites::site-uri (first lw2.sites::*sites*)) "accept" "text/css,*/*;q=0.1"))
                        (declare (ignore body uri))
                        (let ((location (cdr (assoc :location headers))))
                          (if (and (typep status 'integer) (< 300 status 400) location)

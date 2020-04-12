@@ -15,7 +15,7 @@
 
 (defun get-redirect (uri)
   (multiple-value-bind (body status headers uri)
-    (drakma:http-request uri :method :head :close t :redirect nil)
+    (dex:request uri :method :head :max-redirects 0)
     (declare (ignore body uri))
     (let ((location (cdr (assoc :location headers))))
       (if (and (typep status 'integer) (< 300 status 400) location)

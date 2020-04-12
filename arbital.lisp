@@ -41,11 +41,12 @@
 			      (handler-case
 				  (sb-sys:with-deadline (:seconds 600)
 				    (let ((result
-					   (drakma:http-request (case page-type
-								  (:explore "https://arbital.com/json/explore/")
-								  (t "https://arbital.com/json/primaryPage/"))
-								:method :post
-								:content query)))
+					   (dex:request (case page-type
+							  (:explore "https://arbital.com/json/explore/")
+							  (t "https://arbital.com/json/primaryPage/"))
+							:headers (alist "content-type" "application/json")
+							:method :post
+							:content query)))
 				      (typecase result
 					(string (when (string= result "Couldn't find page")
 						  (return "\"not-found\"")))

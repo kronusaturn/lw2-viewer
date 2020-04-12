@@ -29,14 +29,14 @@
 	  (cdadr data)
 	  result))
 
-(define-backend-operation call-with-backend-response backend-accordius (fn query &key auth-token)
+(define-backend-operation call-with-backend-response backend-accordius (fn query &key return-type auth-token)
    (multiple-value-bind (endpoint filters)
        (funcall query)
      (call-with-http-response
       fn
       (quri:render-uri (quri:merge-uris (quri:make-uri :path endpoint :query filters) (quri:uri (rest-api-uri *current-backend*))))
       :additional-headers (if auth-token `(("authorization" . ,auth-token)) nil)
-      :want-stream t)))
+      :want-stream (not return-type))))
 
 (define-backend-operation get-post-body backend-accordius (post-id &key &allow-other-keys)
   (acons :tags (lw2-graphql-query (lambda () (values "tags/" `(("document_id" . ,post-id))))) (call-next-method)))
@@ -47,12 +47,11 @@
    (do-wl-rest-query "comment_search/" `(("query" . ,query)))))
 
 (defun do-wl-rest-mutate (mutation-type endpoint post-params auth-token)
-  (drakma:http-request
+  (dex:request
    (quri:render-uri (quri:merge-uris (quri:make-uri :path endpoint :query "") (quri:uri (rest-api-uri *current-backend*))))
    :method mutation-type
-   :parameters post-params
-   :additional-headers `(("authorization" . ,auth-token)))
-  )
+   :content post-params
+   :headers (alist "authorization" auth-token)))
 
 (defun do-wl-create-tag (document-id text auth-token)
   (do-wl-rest-mutate :post "tags/" `((:DOCUMENT-ID . ,document-id) (:TEXT . ,text)) auth-token))
