@@ -769,6 +769,8 @@ function badgePostsWithNewComments() {
 
 		if (currentCommentCount > savedCommentCount)
 			commentCountDisplay.addClass("new-comments");
+		else
+			commentCountDisplay.removeClass("new-comments");
 		commentCountDisplay.title = `${currentCommentCount} comments (${currentCommentCount - savedCommentCount} new)`;
 	});
 }
@@ -3845,6 +3847,8 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 /*************************/
 /* POST-LOAD ADJUSTMENTS */
 /*************************/
+
+window.addEventListener("pageshow", badgePostsWithNewComments);
 
 registerInitializer('pageLayoutFinished', false, () => document.readyState == "complete", function () {
 	GWLog("INITIALIZER pageLayoutFinished");
