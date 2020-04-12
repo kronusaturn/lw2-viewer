@@ -17,7 +17,7 @@
   (multiple-value-bind (body status headers uri)
     (dex:request uri :method :head :max-redirects 0)
     (declare (ignore body uri))
-    (let ((location (cdr (assoc :location headers))))
+    (let ((location (gethash "location" headers)))
       (if (and (typep status 'integer) (< 300 status 400) location)
           location
           nil))))
