@@ -19,14 +19,14 @@
 
 (defun grab-from-rts (url)
   (declare (optimize (speed 0) (space 3)))
-  (let* ((root (plump:parse (drakma:http-request url :close t)))
+  (let* ((root (plump:parse (dex:get url)))
 	 (post-body (plump:get-element-by-id root "wikitext")))
     (loop for cls in '("div.nav_menu" "div.imgonly" "div.bottom_nav") do
 	  (loop for e across (clss:select cls post-body)
 		do (plump:remove-child e))) 
     (plump:remove-child (elt (clss:select "h1" post-body) 0))
     (plump:remove-child (elt (clss:select "p" post-body) 0))
-    (with-open-file (stream (merge-pathnames "./rts-content/" (subseq (puri:uri-path (puri:parse-uri url)) 1)) :direction :output :if-does-not-exist :create :external-format :utf-8) 
+    (with-open-file (stream (merge-pathnames "./rts-content/" (subseq (quri:uri-path (quri:uri url)) 1)) :direction :output :if-does-not-exist :create :external-format :utf-8) 
 		 (plump:serialize post-body stream))))
 
 (defun rts-to-html (file)

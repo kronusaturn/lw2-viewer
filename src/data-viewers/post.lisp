@@ -91,7 +91,7 @@
 	    (tag-list-to-html *current-backend* tags)
 	  </div>)
         (when (and (eq context :listing) url)
-	  <div class="link-post-domain">("(~A)" (puri:uri-host (puri:parse-uri (string-trim " " url))))</div>)
+	  <div class="link-post-domain">("(~A)" (quri:uri-host (quri:uri (string-trim " " url))))</div>)
 	(when (eq context :body)
 	  (qualified-linking (generate-post-link post) meta-location))
       </div>)))

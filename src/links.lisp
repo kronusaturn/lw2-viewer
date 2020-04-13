@@ -94,7 +94,7 @@
 
 (defun process-redirect-link (link base-uri site-name)
   (if-let ((location (get-redirect (concatenate 'string base-uri link))))
-          (let ((loc-uri (puri:parse-uri location))) (format nil "~A~@[#comment-~A~]" (puri:uri-path loc-uri) (puri:uri-fragment loc-uri)))
+          (let ((loc-uri (quri:uri location))) (format nil "~A~@[#comment-~A~]" (quri:uri-path loc-uri) (quri:uri-fragment loc-uri)))
           (error "<p>Could not retrieve ~A link.</p><p>You may wish to try <a href='~A'>~:*~A</a>" site-name (concatenate 'string base-uri link))))
 
 (defun convert-redirect-link (link match-fn get-fn base-uri)
