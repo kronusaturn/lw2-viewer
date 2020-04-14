@@ -3496,18 +3496,6 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 		query("#quick-nav-ui a[href='#comments']").addClass("no-comments");
 	}
 
-	// If the viewport is wide enough to fit the desktop-size content column,
-	// use a long date format; otherwise, a short one.
-	let useLongDate = window.innerWidth > 900;
-	let dtf = new Intl.DateTimeFormat([], 
-		( useLongDate ? 
-			{ month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' }
-				: { month: 'numeric', day: 'numeric', year: '2-digit', hour: 'numeric', minute: 'numeric' } ));
-	queryAll(".date").forEach(date => {
-		let d = date.dataset.jsDate;
-		if (d) { date.innerHTML = dtf.format(new Date(+ d)); }
-	});
-
 	// On edit post pages and conversation pages, add GUIEdit buttons to the 
 	// textarea, expand it, and markdownify the existing text, if any (this is
 	// needed if a post was last edited on LW).

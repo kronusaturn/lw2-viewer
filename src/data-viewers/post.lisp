@@ -49,52 +49,51 @@
 
 (defun post-meta-to-html (post context skip-section meta-location)
   (schema-bind (:post (rectify-post post) :auto)
-    (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-      <div class=("post-meta~@[ ~(~A~)-post-meta~]" meta-location)>
-        (labels ((emit-author (user-id)
-		   (if (user-deleted user-id)
-		       <span class="author">[deleted]</span>
-                       <a class=("author~{ ~A~}" (list-cond
-						  ((logged-in-userid user-id) "own-user-author")))
-	                  href=("/users/~A" (get-user-slug user-id))
-			  data-userid=user-id
-			  data-full-name=(get-user-full-name user-id)>
-	                 (get-username user-id)
-		       </a>)))
-	  (if coauthors
-	      <div class="coauthors">
-	        (emit-author user-id)
-	        (do ((remaining-coauthors coauthors (rest remaining-coauthors))) ((not remaining-coauthors))
-		  (with-html-stream-output
-		      (write-string
-		       (cond ((second remaining-coauthors) ", ")
-			     (t " and "))
-		       *html-output*))
-		  (emit-author (cdr (assoc :--id (first remaining-coauthors)))))
-	      </div>
-	      (emit-author user-id)))
-	<div class="date" data-js-date=js-time>(progn pretty-time)</div>
-	(vote-buttons base-score :with-buttons (eq context :body) :vote-count vote-count :post-id post-id :af-score (and (eq context :body) af af-base-score))
-        <a class="comment-count" href=("~A#comments" (if (eq context :body) "" (generate-post-link post)))>
-	  (safe (pretty-number (or comment-count 0) "comment"))
-	</a>
-        (when (and (eq context :listing) word-count)
-	  <span class="read-time" title=(safe (pretty-number word-count "word"))>(max 1 (round word-count 300))<span> min read</span></span>)
-	(if page-url <a class="lw2-link" href=(clean-lw-link page-url)>(main-site-abbreviation *current-site*)<span> link</span></a>)
-	(when (nonzero-number-p nomination-count-2018)
-	  <a href=("~A#nominations" (if (eq context :body) "" (generate-post-link post))) class="nomination-count">(safe (pretty-number nomination-count-2018 "nomination"))</a>)
-	(when (nonzero-number-p review-count-2018)
-	  <a href=("~A#reviews" (if (eq context :body) "" (generate-post-link post))) class="review-count">(safe (pretty-number review-count-2018 "review"))</a>)
-        (with-html-stream-output (post-section-to-html post :skip-section skip-section))
-        (when (and (eq context :body) tags)
-	  <div id="tags">
-	    (tag-list-to-html *current-backend* tags)
-	  </div>)
-        (when (and (eq context :listing) url)
-	  <div class="link-post-domain">("(~A)" (quri:uri-host (quri:uri (string-trim " " url))))</div>)
-	(when (eq context :body)
-	  (qualified-linking (generate-post-link post) meta-location))
-      </div>)))
+    <div class=("post-meta~@[ ~(~A~)-post-meta~]" meta-location)>
+      (labels ((emit-author (user-id)
+		 (if (user-deleted user-id)
+		     <span class="author">[deleted]</span>
+                     <a class=("author~{ ~A~}" (list-cond
+						((logged-in-userid user-id) "own-user-author")))
+	                href=("/users/~A" (get-user-slug user-id))
+			data-userid=user-id
+			data-full-name=(get-user-full-name user-id)>
+	               (get-username user-id)
+		     </a>)))
+	(if coauthors
+	    <div class="coauthors">
+	      (emit-author user-id)
+	      (do ((remaining-coauthors coauthors (rest remaining-coauthors))) ((not remaining-coauthors))
+		(with-html-stream-output
+		    (write-string
+		     (cond ((second remaining-coauthors) ", ")
+			   (t " and "))
+		     *html-output*))
+		(emit-author (cdr (assoc :--id (first remaining-coauthors)))))
+	    </div>
+	    (emit-author user-id)))
+      (pretty-time-html posted-at)
+      (vote-buttons base-score :with-buttons (eq context :body) :vote-count vote-count :post-id post-id :af-score (and (eq context :body) af af-base-score))
+      <a class="comment-count" href=("~A#comments" (if (eq context :body) "" (generate-post-link post)))>
+	(safe (pretty-number (or comment-count 0) "comment"))
+      </a>
+      (when (and (eq context :listing) word-count)
+	<span class="read-time" title=(safe (pretty-number word-count "word"))>(max 1 (round word-count 300))<span> min read</span></span>)
+      (if page-url <a class="lw2-link" href=(clean-lw-link page-url)>(main-site-abbreviation *current-site*)<span> link</span></a>)
+      (when (nonzero-number-p nomination-count-2018)
+	<a href=("~A#nominations" (if (eq context :body) "" (generate-post-link post))) class="nomination-count">(safe (pretty-number nomination-count-2018 "nomination"))</a>)
+      (when (nonzero-number-p review-count-2018)
+	<a href=("~A#reviews" (if (eq context :body) "" (generate-post-link post))) class="review-count">(safe (pretty-number review-count-2018 "review"))</a>)
+      (with-html-stream-output (post-section-to-html post :skip-section skip-section))
+      (when (and (eq context :body) tags)
+	<div id="tags">
+	  (tag-list-to-html *current-backend* tags)
+	</div>)
+      (when (and (eq context :listing) url)
+	<div class="link-post-domain">("(~A)" (quri:uri-host (quri:uri (string-trim " " url))))</div>)
+      (when (eq context :body)
+	(qualified-linking (generate-post-link post) meta-location))
+    </div>))
 
 (defun post-headline-to-html (post &key skip-section need-auth)
   (schema-bind (:post (rectify-post post) (post-id user-id url question title))

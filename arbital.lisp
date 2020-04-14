@@ -185,11 +185,13 @@
     (cond
       ((eq type :comment)
        <a class="date" href=("#comment-~A" (cdr (assoc :page-id page-data))) data-js-date=js-time>
-         (progn pretty-time)
+         (safe pretty-time)
+         (safe (pretty-time-js))
        </a>)
       (t
        <span class="date" data-js-date=js-time>
          (progn pretty-time)
+         (safe (pretty-time-js))
        </span>))))
 
 (define-component view-arbital-page (id page-alias page-type)

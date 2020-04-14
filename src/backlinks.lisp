@@ -144,7 +144,10 @@
 		      (when (not (eq *current-site* original-site))
 			(format *html-output* "~A; " (main-site-title *current-site*)))
 		      (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
-			<span class="date" data-js-date=js-time>(progn pretty-time)</span>)
+			<span class="date" data-js-date=js-time>
+			  (safe pretty-time)
+			  (safe (pretty-time-js))
+			</span>)
 		      ("; ~A point~:*~P)" score)
 		    </a>
 		  </li>)))))

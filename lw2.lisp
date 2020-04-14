@@ -112,12 +112,13 @@
 	      message
     (let ((conversation (rectify-conversation conversation)))
       (multiple-value-bind (pretty-time js-time) (pretty-time created-at)
-	(format out-stream "<div class=\"comment private-message~A\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <span class=\"date\" data-js-date=\"~A\">~A</span><div class=\"comment-post-title\">Private message in: <a href=\"/conversation?id=~A\">~A</a></div></div><div class=\"body-text comment-body\">"
+	(format out-stream "<div class=\"comment private-message~A\"><div class=\"comment-meta\"><a class=\"author\" href=\"/users/~A\">~A</a> <span class=\"date\" data-js-date=\"~A\">~A~A</span><div class=\"comment-post-title\">Private message in: <a href=\"/conversation?id=~A\">~A</a></div></div><div class=\"body-text comment-body\">"
 		(if highlight-new " comment-item-highlight" "")
 		(encode-entities (get-user-slug user-id))
 		(encode-entities (get-username user-id))
 		js-time
 		pretty-time
+		(pretty-time-js)
 		(encode-entities (cdr (assoc :--id conversation)))
 		(encode-entities (cdr (assoc :title conversation)))))
       (labels ((ws (html-body) (let ((*memoized-output-stream* out-stream)) (clean-html* html-body))))
@@ -135,14 +136,15 @@
                (messages-total fixnum))
     (rectify-conversation conversation)
     (multiple-value-bind (pretty-time js-time) (if created-at (pretty-time created-at) (values "[Error]" 0))
-      (format out-stream "<h1 class=\"listing\"><a href=\"/conversation?id=~A\">~A</a></h1><div class=\"post-meta\"><div class=\"conversation-participants\"><ul>~:{<li><a href=\"/users/~A\">~A</a></li>~}</ul></div><div class=\"messages-count\">~A</div><div class=\"date\" data-js-date=\"~A\">~A</div></div>"
+      (format out-stream "<h1 class=\"listing\"><a href=\"/conversation?id=~A\">~A</a></h1><div class=\"post-meta\"><div class=\"conversation-participants\"><ul>~:{<li><a href=\"/users/~A\">~A</a></li>~}</ul></div><div class=\"messages-count\">~A</div><div class=\"date\" data-js-date=\"~A\">~A~A</div></div>"
               (encode-entities conversation-id)
               (encode-entities title)
               (loop for p in participants
                     collect (list (encode-entities (cdr (assoc :slug p))) (encode-entities (cdr (assoc :display-name p)))))
               (pretty-number messages-total "message")
               js-time
-              pretty-time))))
+              pretty-time
+	      (pretty-time-js)))))
 
 (defun sequence-to-html (sequence)
   (labels ((contents-to-html (contents &key title subtitle number)
@@ -191,7 +193,10 @@
 	     data-userid=user-id>
 	    (get-username user-id)
           </a>
-          <div class="date" data-js-date=js-time>(progn pretty-time)</div>
+          <div class="date" data-js-date=js-time>
+	    (safe pretty-time)
+	    (safe (pretty-time-js))
+	  </div>
         </div>
         (with-html-stream-output
 	    (when chapters
@@ -614,6 +619,7 @@ signaled condition to *HTML-OUTPUT*."
 			      (preview "preview")))
 	   (unless (or hide-nav-bars preview)
 	     (nav-bar-to-html out-stream "nav-bar-top" (or current-uri (replace-query-params (hunchentoot:request-uri*) "offset" nil "sort" nil))))
+	   (write-string "<script> </script>" out-stream)
 	   (force-output out-stream)
 	   (funcall fn))
       (format out-stream "</div></body></html>"))))

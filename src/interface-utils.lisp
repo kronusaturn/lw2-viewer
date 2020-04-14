@@ -1,6 +1,7 @@
 (uiop:define-package #:lw2.interface-utils
   (:use #:cl #:lw2.links #:lw2.html-reader)
-  (:export #:pretty-time #:pretty-number #:generate-post-auth-link #:clean-lw-link #:votes-to-tooltip #:vote-buttons))
+  (:export #:pretty-time #:pretty-time-js #:pretty-time-html
+	   #:pretty-number #:generate-post-auth-link #:clean-lw-link #:votes-to-tooltip #:vote-buttons))
 
 (in-package #:lw2.interface-utils)
 
@@ -10,8 +11,18 @@
   (let ((time (if loose-parsing
 		  (chronicity:parse timestring)
 		  (local-time:parse-timestring timestring))))
-  (values (local-time:format-timestring nil time :timezone local-time:+utc-zone+ :format (or format '(:day #\  :short-month #\  :year #\  :hour #\: (:min 2) #\  :timezone)))
-	  (* (local-time:timestamp-to-unix time) 1000))))
+    (values (local-time:format-timestring nil time :timezone local-time:+utc-zone+ :format (or format '(:day #\  :short-month #\  :year #\  :hour #\: (:min 2) #\  :timezone)))
+	    (* (local-time:timestamp-to-unix time) 1000))))
+
+(defun pretty-time-js ()
+  "<script>prettyDate()</script>")
+
+(defun pretty-time-html (timestring)
+  (multiple-value-bind (pretty-time js-time) (pretty-time timestring)
+    <div class="date" data-js-date=js-time>
+      (safe pretty-time)
+      (safe (pretty-time-js))
+    </div>))
 
 (defun pretty-number (number &optional object)
   (let ((str (coerce (format nil "~:D~@[<span> ~A~P</span>~]" number object number) '(vector character))))

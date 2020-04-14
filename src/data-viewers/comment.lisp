@@ -30,7 +30,7 @@
 		     data-full-name=(get-user-full-name user-id)>
 		    (get-username user-id)
 	          </a>)
-	      <a class="date" href=(generate-post-link post-id comment-id) data-js-date=js-time> (safe pretty-time) </a>
+	      <a class="date" href=(generate-post-link post-id comment-id) data-js-date=js-time> (safe pretty-time) (safe (pretty-time-js))</a>
 	      (when replied <a class="replied" title="You have replied to this comment" href=(apply 'generate-post-link replied)></a>)
 	      (vote-buttons base-score :with-buttons (not with-post-title) :vote-count vote-count :af-score (and af af-base-score))
 	      (when af <span class="alignment-forum">AF</span>)     
