@@ -3285,8 +3285,6 @@ function pushNotificationsButtonClicked(event) {
 			reEnable();
 		}).catch((err) => reEnable(err.message));
 	} else {
-		navigator.serviceWorker.register('/service-worker.js');
-
 		Notification.requestPermission().then((permission) => {
 			navigator.serviceWorker.ready
 				.then((registration) => {
@@ -4059,3 +4057,5 @@ function hyperlink(text, startpos) {
 
 	return [ "[" + link_text + "](" + url + ")", startpos, endpos ];
 }
+
+navigator.serviceWorker.register('/service-worker.js');

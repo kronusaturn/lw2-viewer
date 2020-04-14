@@ -1,3 +1,43 @@
+let cache = null;
+
+self.addEventListener('fetch', function(event) {
+	if(event.request.url.match(/\/([a-z]*\.js|css\/|assets\/)/)) {
+		let responder = cache => {
+			return cache.match(event.request).then(match => {
+				if(match) {
+					return match;
+				} else {
+					return cache.match(event.request, {ignoreSearch: true}).then(match => {
+						if(match) cache.delete(match);
+						
+						return fetch(event.request).then(response => {
+							cache.put(event.request, response.clone());
+							return response;
+						});
+					});
+				}
+			});
+		};
+
+		if(cache) {
+			event.respondWith(responder(cache));
+		} else {
+			event.respondWith(
+				caches.open("v1").then(openedCache => {
+					cache = openedCache;
+					return responder(cache);
+				})
+			);
+		}
+	} else {
+		if(event.request.method == "GET" && event.request.destination == "document") {
+			let headers = new Headers(event.request.headers);
+			headers.append("x-nopush", "t");
+			event.respondWith(fetch(new Request(event.request, {headers: headers})));
+		}
+	}
+})
+
 let lastNotification = null;
 
 self.addEventListener('push', function(event) {
@@ -21,4 +61,9 @@ self.addEventListener('notificationclick', function(event) {
 	event.waitUntil(clients.openWindow("/push/go-inbox"));
 });
 
-self.addEventListener('install', (event) => { self.skipWaiting() });
+self.addEventListener('install', (event) => {
+	self.skipWaiting()
+	event.waitUntil(
+		caches.open("v1").then(openedCache => { cache = openedCache; })
+	);
+});
