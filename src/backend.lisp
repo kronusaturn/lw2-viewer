@@ -9,7 +9,7 @@
            #:*messages-index-fields*
            #:*notifications-base-terms*
            #:start-background-loader #:stop-background-loader #:background-loader-running-p
-	   #:call-with-connection-pool
+	   #:with-connection-pool
 	   #:lw2-graphql-query #:lw2-query-string* #:lw2-query-string
            #:lw2-graphql-query-map #:lw2-graphql-query-multi
 	   #:signal-lw2-errors
@@ -192,19 +192,21 @@
 	 (sb-thread:with-mutex (lock)
 	   (push pool pools)))))))
 
+(defmacro with-connection-pool (&body body)
+  `(call-with-connection-pool (lambda () ,.body)))
+
 (defun call-with-http-response (fn uri &rest args &key &allow-other-keys)
-  (call-with-connection-pool
-   (lambda ()
-     (multiple-value-prog1
-	 (multiple-value-bind (response status-code)
-	     (apply 'dex:request uri args)
-	   (cond
-	     ((= status-code 200)
-	      (funcall fn response))
-	     ((= status-code 400)
-	      (decode-query-result response))
-	     (t
-	      (error "Error while contacting LW2: ~A" status-code))))))))
+  (with-connection-pool
+      (multiple-value-prog1
+	  (multiple-value-bind (response status-code)
+	      (apply 'dex:request uri args)
+	    (cond
+	      ((= status-code 200)
+	       (funcall fn response))
+	      ((= status-code 400)
+	       (decode-query-result response))
+	      (t
+	       (error "Error while contacting LW2: ~A" status-code)))))))
 
 (defun signal-lw2-errors (errors)
   (loop for error in errors
@@ -854,17 +856,16 @@
 (define-backend-function lw2-search-query (query)
   (backend-algolia-search
    (multiple-value-bind (req-stream req-status req-headers req-uri)
-       (call-with-connection-pool
-	(lambda ()
-	  (dex:request (algolia-search-uri *current-backend*)
-		       :method :post :headers '(("Origin" . "https://www.greaterwrong.com")
-						("Referer" . "https://www.greaterwrong.com/")
-						("Content-Type" . "application/json"))
-		       :content (json:encode-json-alist-to-string `(("requests" . ,(loop for index in '("test_posts" "test_comments")
-										      collect `(("indexName" . ,index)
-												("params" . ,(format nil "query=~A&hitsPerPage=20&page=0"
-														     (url-rewrite:url-encode query)))))))) 
-		       :want-stream t)))
+       (with-connection-pool
+	   (dex:request (algolia-search-uri *current-backend*)
+			:method :post :headers '(("Origin" . "https://www.greaterwrong.com")
+						 ("Referer" . "https://www.greaterwrong.com/")
+						 ("Content-Type" . "application/json"))
+			:content (json:encode-json-alist-to-string `(("requests" . ,(loop for index in '("test_posts" "test_comments")
+										       collect `(("indexName" . ,index)
+												 ("params" . ,(format nil "query=~A&hitsPerPage=20&page=0"
+														      (url-rewrite:url-encode query)))))))) 
+			:want-stream t))
      (declare (ignore req-status req-headers req-uri))
      (let ((req-stream (ensure-character-stream req-stream)))
        (values-list (loop for r in (cdr (assoc :results (json:decode-json req-stream)))

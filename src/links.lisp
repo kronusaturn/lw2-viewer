@@ -15,7 +15,8 @@
 
 (defun get-redirect (uri)
   (multiple-value-bind (body status headers uri)
-    (dex:request uri :method :head :max-redirects 0)
+      (with-connection-pool
+	  (dex:request uri :method :head :max-redirects 0))
     (declare (ignore body uri))
     (let ((location (gethash "location" headers)))
       (if (and (typep status 'integer) (< 300 status 400) location)

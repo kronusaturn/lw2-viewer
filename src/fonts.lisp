@@ -29,16 +29,17 @@
   (let ((current-time (get-unix-time)))
     (labels ((get-redirects (uri-list)
                (loop for request-uri in uri-list collect
-                     (multiple-value-bind (body status headers uri)
-                       (dex:request request-uri :method :head :max-redirects 0 :headers (alist "referer" (lw2.sites::site-uri (first lw2.sites::*sites*)) "accept" "text/css,*/*;q=0.1"))
-                       (declare (ignore body uri))
-                       (let ((location (gethash "location" headers)))
-                         (if (and (typep status 'integer) (< 300 status 400) location)
-                             location
-                             nil)))))
-             (update-redirects ()
-               (handler-case
-                 (let* ((new-redirects (get-redirects *obormot-fonts-stylesheet-uris*))
+		    (multiple-value-bind (body status headers uri)
+			(with-connection-pool
+			    (dex:request request-uri :method :head :max-redirects 0 :headers (alist "referer" (lw2.sites::site-uri (first lw2.sites::*sites*)) "accept" "text/css,*/*;q=0.1")))
+		      (declare (ignore body uri))
+		      (let ((location (gethash "location" headers)))
+			(if (and (typep status 'integer) (< 300 status 400) location)
+			    location
+			    nil)))))
+	     (update-redirects ()
+	       (handler-case
+		 (let* ((new-redirects (get-redirects *obormot-fonts-stylesheet-uris*))
                         (new-redirects (loop for new-redirect in new-redirects
                                              for original-uri in *obormot-fonts-stylesheet-uris*
                                              collect (if new-redirect (quri:render-uri (quri:merge-uris (quri:uri new-redirect) (quri:uri original-uri))) original-uri))))

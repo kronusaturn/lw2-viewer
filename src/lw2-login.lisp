@@ -129,12 +129,12 @@
 (defun do-lw2-post-query (auth-token data)
   (lw2.backend::do-graphql-debug data)
   (let* ((response-json
-	  (call-with-connection-pool
-	   (lambda () (dex:request (graphql-uri *current-backend*) :method :post
-				   :headers (nconc (list-cond (t "Content-Type" "application/json")
-							      (auth-token "authorization" auth-token))
-						   (forwarded-header))
-				   :content (encode-json-to-string data)))))
+	  (with-connection-pool
+	      (dex:request (graphql-uri *current-backend*) :method :post
+			   :headers (nconc (list-cond (t "Content-Type" "application/json")
+						      (auth-token "authorization" auth-token))
+					   (forwarded-header))
+			   :content (encode-json-to-string data))))
 	 (response-alist (json:decode-json-from-string response-json))
 	 (res-errors (cdr (assoc :errors response-alist)))
 	 (res-data (rest (first (cdr (assoc :data response-alist)))))) 

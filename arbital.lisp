@@ -41,12 +41,13 @@
 			      (handler-case
 				  (sb-sys:with-deadline (:seconds 600 :override t)
 				    (multiple-value-bind (result status headers uri)
-					(dex:request (case page-type
-						       (:explore "https://arbital.com/json/explore/")
-						       (t "https://arbital.com/json/primaryPage/"))
-						     :headers (alist "content-type" "application/json")
-						     :method :post
-						     :content query)
+					(with-connection-pool
+					    (dex:request (case page-type
+							   (:explore "https://arbital.com/json/explore/")
+							   (t "https://arbital.com/json/primaryPage/"))
+							 :headers (alist "content-type" "application/json")
+							 :method :post
+							 :content query))
 				      (declare (ignore status uri))
 				      (cond ((string= (gethash "content-type" headers) "application/json")
 					     (return result))
