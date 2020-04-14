@@ -185,7 +185,8 @@
      (let* ((pool (or (sb-thread:with-mutex (lock)
 			(pop pools))
 		      (dex:make-connection-pool)))
-	    (dex:*connection-pool* pool))
+	    (dex:*connection-pool* pool)
+	    (dex:*use-connection-pool* t))
        (unwind-protect
 	    (funcall fn)
 	 (sb-thread:with-mutex (lock)
