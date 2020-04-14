@@ -72,9 +72,8 @@
 
 (defun send-notification (endpoint &key (ttl (* 60 60 24)))
   ;; we don't support content yet since it requires encryption
-  (with-connection-pool
-      (dex:request endpoint
-		   :method :post
-		   :headers (list* (cons :ttl ttl)
-				   (cons :content-encoding "identity")
-				   (get-vapid-headers (quri:render-uri (quri:merge-uris "/" endpoint)))))))
+  (dex:request endpoint
+	       :method :post
+	       :headers (list* (cons :ttl ttl)
+			       (cons :content-encoding "identity")
+			       (get-vapid-headers (quri:render-uri (quri:merge-uris "/" endpoint))))))
