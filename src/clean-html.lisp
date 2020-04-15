@@ -733,15 +733,15 @@
 				  (setf (plump:attribute container "style") (format nil "--aspect-ratio: ~F; max-width: ~Dpx"
 										    (/ (float width)
 										       (float height))
-										    width)))))
-			 (dolist (attr '("style" "class" "width" "height"))
-			   (plump:remove-attribute node attr))
-			 (when (typep *current-site* 'alternate-frontend-site)
-			   (let ((src (plump:attribute node "src")))
-			     (when
-				 (and (> (length src) 0) (string= "/" src :end2 1))
-			       (setf (plump:attribute node "src") (quri:render-uri
-								   (quri:merge-uris src (main-site-uri *current-site*))))))))))
+										    width))))))
+		       (dolist (attr '("style" "class" "width" "height"))
+			 (plump:remove-attribute node attr))
+		       (when (typep *current-site* 'alternate-frontend-site)
+			 (let ((src (plump:attribute node "src")))
+			   (when
+			       (and (> (length src) 0) (string= "/" src :end2 1))
+			     (setf (plump:attribute node "src") (quri:render-uri
+								 (quri:merge-uris src (main-site-uri *current-site*)))))))))
 		    ((tag-is node "figure")
 		     (dolist (attr '("style" "class" "width" "height"))
 		       (plump:remove-attribute node attr)))
