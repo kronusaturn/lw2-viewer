@@ -35,6 +35,11 @@
 
 (in-package #:lw2.backend)
 
+;; Dexador settings required for the system to work properly.
+(setf dex:*default-connect-timeout* nil
+      dex:*default-read-timeout* nil
+      dex:*use-connection-pool* nil)
+
 (defvar *use-alignment-forum* nil)
 
 (defvar *graphql-debug-output* nil)
