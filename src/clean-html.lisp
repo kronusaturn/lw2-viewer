@@ -720,7 +720,7 @@
 			 (cond ((and (<= width 1) (<= height 1))
 				(plump:remove-child node)
 				(return-from abort))
-			       ((> width 325)
+			       (t
 				(let ((container
 				       (if nil ;(and (tag-is (plump:parent node) "div" "p")
 						;(only-child-is (plump:parent node) "img"))
@@ -733,9 +733,9 @@
 				  (setf (plump:attribute container "style") (format nil "--aspect-ratio: ~F; max-width: ~Dpx"
 										    (/ (float width)
 										       (float height))
-										    width))
-				  (dolist (attr '("style" "class" "width" "height"))
-				    (plump:remove-attribute node attr)))))
+										    width)))))
+			 (dolist (attr '("style" "class" "width" "height"))
+			   (plump:remove-attribute node attr))
 			 (when (typep *current-site* 'alternate-frontend-site)
 			   (let ((src (plump:attribute node "src")))
 			     (when
