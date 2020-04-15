@@ -714,17 +714,37 @@
 			       (log-and-ignore-errors
 				(funcall *link-hook* href))))))))
 		    ((tag-is node "img")
-		     (plump:remove-attribute node "style")
-		     (plump:remove-attribute node "class")
-		     (when
-			 (every (lambda (a) (if-let (attr (plump:attribute node a)) (ignore-errors (<= (parse-integer attr) 1)))) (list "width" "height"))
-		       (plump:remove-child node))
-		     (when (typep *current-site* 'alternate-frontend-site)
-		       (let ((src (plump:attribute node "src")))
-			 (when
-			     (and (> (length src) 0) (string= "/" src :end2 1))
-			   (setf (plump:attribute node "src") (quri:render-uri
-							       (quri:merge-uris src (main-site-uri *current-site*))))))))
+		     (block abort
+		       (when-let ((width (ignore-errors (parse-integer (plump:attribute node "width"))))
+				  (height (ignore-errors (parse-integer (plump:attribute node "height")))))
+			 (cond ((and (<= width 1) (<= height 1))
+				(plump:remove-child node)
+				(return-from abort))
+			       ((> width 325)
+				(let ((container
+				       (if nil ;(and (tag-is (plump:parent node) "div" "p")
+						;(only-child-is (plump:parent node) "img"))
+					   (plump:parent node)
+					   (let ((container (make-element-before node "div")))
+					     (plump:remove-child node)
+					     (plump:append-child container node)
+					     (add-class container "imgonly")
+					     container))))
+				  (setf (plump:attribute container "style") (format nil "--aspect-ratio: ~F; max-width: ~Dpx"
+										    (/ (float width)
+										       (float height))
+										    width))
+				  (dolist (attr '("style" "class" "width" "height"))
+				    (plump:remove-attribute node attr)))))
+			 (when (typep *current-site* 'alternate-frontend-site)
+			   (let ((src (plump:attribute node "src")))
+			     (when
+				 (and (> (length src) 0) (string= "/" src :end2 1))
+			       (setf (plump:attribute node "src") (quri:render-uri
+								   (quri:merge-uris src (main-site-uri *current-site*))))))))))
+		    ((tag-is node "figure")
+		     (dolist (attr '("style" "class" "width" "height"))
+		       (plump:remove-attribute node attr)))
 		    ((tag-is node "p" "blockquote" "div")
 		     (if (string-is-whitespace (plump:text node))
 			 (if (plump:get-elements-by-tag-name node "img")
