@@ -30,7 +30,11 @@
     (labels ((get-redirects (uri-list)
                (loop for request-uri in uri-list collect
 		    (multiple-value-bind (body status headers uri)
-			(dex:request request-uri :method :head :max-redirects 0 :headers (alist "referer" (lw2.sites::site-uri (first lw2.sites::*sites*)) "accept" "text/css,*/*;q=0.1"))
+			(dex:request request-uri
+				     :method :head
+				     :max-redirects 0
+				     :headers (alist "referer" (lw2.sites::site-uri (first lw2.sites::*sites*)) "accept" "text/css,*/*;q=0.1")
+				     :keep-alive nil)
 		      (declare (ignore body uri))
 		      (let ((location (gethash "location" headers)))
 			(if (and (typep status 'integer) (< 300 status 400) location)

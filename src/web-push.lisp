@@ -76,4 +76,5 @@
 	       :method :post
 	       :headers (list* (cons :ttl ttl)
 			       (cons :content-encoding "identity")
-			       (get-vapid-headers (quri:render-uri (quri:merge-uris "/" endpoint))))))
+			       (get-vapid-headers (quri:render-uri (quri:merge-uris "/" endpoint))))
+	       :keep-alive nil))

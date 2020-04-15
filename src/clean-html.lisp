@@ -19,7 +19,7 @@
 
 (defun grab-from-rts (url)
   (declare (optimize (speed 0) (space 3)))
-  (let* ((root (plump:parse (dex:get url)))
+  (let* ((root (plump:parse (dex:get url :keep-alive nil)))
 	 (post-body (plump:get-element-by-id root "wikitext")))
     (loop for cls in '("div.nav_menu" "div.imgonly" "div.bottom_nav") do
 	  (loop for e across (clss:select cls post-body)
