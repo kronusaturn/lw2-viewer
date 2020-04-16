@@ -717,7 +717,6 @@ signaled condition to *HTML-OUTPUT*."
 			 '("nopush"))))
     (setf (hunchentoot:content-type*) "text/html; charset=utf-8"
           (hunchentoot:return-code*) return-code
-	  (hunchentoot:header-out :access-control-alow-headers) "x-nopush"
           (hunchentoot:header-out :link) (format nil "~:{<~A>;rel=preload;type=~A;as=~A~@{;~A~}~:^,~}"
 						 (append
 						  (loop for link in (site-stylesheets *current-site*)
