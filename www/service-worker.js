@@ -29,12 +29,6 @@ self.addEventListener('fetch', function(event) {
 				})
 			);
 		}
-	} else {
-		if(event.request.method == "GET" && event.request.destination == "document") {
-			let headers = new Headers(event.request.headers);
-			headers.append("x-nopush", "t");
-			event.respondWith(fetch(new Request(event.request, {headers: headers})));
-		}
 	}
 })
 
@@ -62,8 +56,11 @@ self.addEventListener('notificationclick', function(event) {
 });
 
 self.addEventListener('install', (event) => {
-	self.skipWaiting()
 	event.waitUntil(
-		caches.open("v1").then(openedCache => { cache = openedCache; })
+		caches.open("v1").then(openedCache => { cache = openedCache; }).then(self.skipWaiting())
 	);
+});
+
+self.addEventListener('activate', (event) => {
+	event.waitUntil(clients.claim());
 });

@@ -4046,4 +4046,7 @@ function hyperlink(text, startpos) {
 	return [ "[" + link_text + "](" + url + ")", startpos, endpos ];
 }
 
-navigator.serviceWorker.register('/service-worker.js');
+if(navigator.serviceWorker) {
+	navigator.serviceWorker.register('/service-worker.js');
+	setCookie("push", "t");
+}

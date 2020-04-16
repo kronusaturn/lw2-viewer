@@ -713,8 +713,7 @@ signaled condition to *HTML-OUTPUT*."
   (hunchentoot:set-cookie key :value value :path path :max-age max-age :secure (site-secure *current-site*)))
 
 (defun set-default-headers (return-code)
-  (let ((push-option (if (or (hunchentoot:cookie-in "push")
-			     (hunchentoot:header-in* :nopush))
+  (let ((push-option (if (hunchentoot:cookie-in "push")
 			 '("nopush"))))
     (setf (hunchentoot:content-type*) "text/html; charset=utf-8"
           (hunchentoot:return-code*) return-code
