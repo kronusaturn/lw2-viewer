@@ -53,7 +53,7 @@
 					     (return result))
 					    ((string= result "Couldn't find page")
 					     (return "\"not-found\"")))))
-				(t (c) (print c)))
+				(t () nil))
 			      (sleep 2))))
 			(data (decode-arbital-json json-string)))
 		   (update-arbital-aliases data)
