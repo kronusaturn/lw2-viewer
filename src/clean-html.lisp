@@ -722,8 +722,8 @@
 				(return-from abort))
 			       (t
 				(let ((container
-				       (if nil ;(and (tag-is (plump:parent node) "div" "p")
-						;(only-child-is (plump:parent node) "img"))
+				       (if (and (tag-is (plump:parent node) "div" "p")
+						(only-child-is (plump:parent node) "img"))
 					   (plump:parent node)
 					   (let ((container (make-element-before node "div")))
 					     (plump:remove-child node)
