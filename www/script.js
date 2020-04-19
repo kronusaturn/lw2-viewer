@@ -2350,13 +2350,15 @@ function setPreviewPopupsEnabled(state) {
 
 function updatePreviewPopupToggle() {
 	let style = (previewPopupsEnabled() ? "--display-slash: none" : "");
-	query("#preview-popup-toggle use").setAttribute("style", style);
+	query("#preview-popup-toggle").setAttribute("style", style);
 }
 
 function injectPreviewPopupToggle() {
 	GWLog("injectPreviewPopupToggle");
 
-	let toggle = addUIElement("<div id='preview-popup-toggle' title='Toggle link preview popups'><svg width=40 height=50><use href='"+GW.assets["popup.svg"]+"#svg8' /></svg>");
+	let toggle = addUIElement("<div id='preview-popup-toggle' title='Toggle link preview popups'><svg width=40 height=50 id='popup-svg'></svg>");
+	// This is required because Chrome can't use filters on an externally used SVG element.
+	fetch(GW.assets["popup.svg"]).then(response => response.text().then(text => { query("#popup-svg").outerHTML = text }))
 	updatePreviewPopupToggle();
 	toggle.addActivateEvent(event => setPreviewPopupsEnabled(!previewPopupsEnabled()))
 }
