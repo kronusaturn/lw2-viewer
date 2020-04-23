@@ -20,6 +20,7 @@
    (word-count (or null fixnum))
    (frontpage-date (or null string))
    (curated-date (or null string))
+   (legacy-id t :backend-type backend-lw2)
    (meta boolean)
    (af boolean :backend-type backend-alignment-forum)
    (draft boolean)

@@ -1,7 +1,7 @@
 (in-package :asdf)
 
 (asdf:defsystem :lw2-viewer
-  :depends-on ("uiop" "flexi-streams" "hunchentoot" "dexador" "cl-json" "lmdb" "local-time" "plump" "clss" "cl-ppcre" "xml-emitter" "city-hash" "bit-smasher" "cl-unicode" "parse-js" "cl-markdown" "websocket-driver-client" "ironclad" "cl-base64" "djula" "split-sequence" "cl-typesetting" "named-readtables" "collectors" "closer-mop" "chronicity" "parenscript" "trivial-gray-streams")
+  :depends-on ("uiop" "flexi-streams" "hunchentoot" "dexador" "cl-json" "lmdb" "local-time" "plump" "clss" "cl-ppcre" "xml-emitter" "city-hash" "bit-smasher" "cl-unicode" "parse-js" "cl-markdown" "websocket-driver-client" "ironclad" "cl-base64" "djula" "split-sequence" "cl-typesetting" "named-readtables" "collectors" "closer-mop" "chronicity" "parenscript" "trivial-gray-streams" "trivia")
   :components ((:module "src"
 		:components ((:file "utils")
 			     (:file "raw-memory-streams")
@@ -38,6 +38,7 @@
 			     (:file "csrf" :depends-on ("conditions"))
                              (:file "components" :depends-on ("utils" "csrf"))
                              (:file "links" :depends-on ("lmdb" "backend" "sites" "context"))
+			     (:file "legacy-archive" :depends-on ("utils" "backend"))
 			     (:static-file "../text-clean-regexps.js")
 			     (:static-file "../html-clean-regexps.js")
                              (:file "clean-html" :depends-on ("utils" "links" "lmdb" "context" "sites" "conditions" "../text-clean-regexps.js" "../html-clean-regexps.js"))
