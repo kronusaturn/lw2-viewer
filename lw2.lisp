@@ -982,7 +982,7 @@ signaled condition to *HTML-OUTPUT*."
 		&without-csrf-check))
   (if sortedby
       (progn
-	(renderer (out-stream) (progn out-stream nil)) ;todo: support declarations so we don't need this dirty trick
+	(renderer () nil)
 	sortedby)
       (let ((sort-string (if sort (string-downcase sort))))
 	(if sort-string
