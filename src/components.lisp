@@ -77,7 +77,8 @@
 (defmethod wrap-prepare-code ((component standard-component) lambda-list body)
   (with-gensyms (renderer-callback)
     `(lambda (,renderer-callback ,@lambda-list)
-       (macrolet ((renderer ((&rest lambda-list) &body body) `(funcall ,',renderer-callback (lambda ,lambda-list (block nil ,@body)))))
+       (macrolet ((renderer ((&rest lambda-list) &body body)
+		    `(funcall ,',renderer-callback (lambda ,lambda-list (block nil (locally ,@body))))))
          ,(wrap-http-bindings component body)))))
 
 (defun find-component (name)
@@ -106,7 +107,7 @@
          (push (list ',name component) *components*)))))
 
 (defmacro component-value-bind ((&rest binding-forms) &body body)
-  (let ((output-form `(progn ,@body)))
+  (let ((output-form `(locally ,@body)))
     (dolist (b (reverse binding-forms))
       (destructuring-bind (binding-vars prepare-form &key as) b
         (destructuring-bind (name &rest args) (ensure-list prepare-form)
