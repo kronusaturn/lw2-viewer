@@ -266,14 +266,7 @@ h1.listing ~ #bottom-bar {
 	bottom: calc(100% - 3px);
 	content: attr(data-target-page);
 }
-#bottom-bar a:not([href='#top'])::after {
-	content: "Page " attr(data-target-page);
-	top: unset;
-	left: 0;
-	bottom: 4px;
-}
-#top-nav-bar a::after,
-#bottom-bar a:not([href='#top'])::after {
+#top-nav-bar a::after {
 	display: block;
 	position: absolute;
 	font-size: 0.75rem;
