@@ -393,7 +393,14 @@
 /*=========*/
 
 #bottom-bar { 
-	padding: 0 4.5rem;
+	margin-left: auto;
+	margin-right: auto;
+	width: calc(100% - 9rem + 8px);
+	background: rgba(255,255,255,0.85);
+	backdrop-filter: blur(1px);
+}
+#content.index-page #bottom-bar {
+	z-index: 10001;
 }
 #bottom-bar .nav-item {
 	box-shadow: none;

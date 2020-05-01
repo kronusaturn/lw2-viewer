@@ -1398,7 +1398,7 @@ signaled condition to *HTML-OUTPUT*."
 	   (renderer ()
 	     (view-items-index recent-comments
 			       :title title
-			       :content-class (if shortform "shortform-index-page comment-thread-page")
+			       :content-class (if shortform "index-page shortform-index-page comment-thread-page" "index-page comment-index-page")
 			       :pagination (pagination-nav-bars :offset (or offset 0) :with-next (not want-total) :total (if want-total total))
 			       :top-nav (lambda () (page-toolbar-to-html :title title) (when top-nav (funcall top-nav)))
 			       :alternate-html (if (eq index-type :shortform)
