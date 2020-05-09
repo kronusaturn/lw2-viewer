@@ -504,7 +504,7 @@ let useLongDate = window.innerWidth > 900;
 let dtf = new Intl.DateTimeFormat([], 
 				  ( useLongDate ? 
 				    { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' }
-				    : { month: 'numeric', day: 'numeric', year: '2-digit', hour: 'numeric', minute: 'numeric' } ));
+				    : { month: 'numeric', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' } ));
 
 function prettyDate() {
 	let date = document.currentScript.parentElement;
