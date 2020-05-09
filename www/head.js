@@ -500,7 +500,7 @@ function initializeCommentControls() {
 
 // If the viewport is wide enough to fit the desktop-size content column,
 // use a long date format; otherwise, a short one.
-let useLongDate = window.clientWidth > 900;
+let useLongDate = window.innerWidth > 900;
 let dtf = new Intl.DateTimeFormat([], 
 				  ( useLongDate ? 
 				    { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' }
