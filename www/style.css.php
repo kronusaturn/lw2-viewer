@@ -1744,7 +1744,6 @@ article {
 	display: inline-block;
 	margin-right: 1em;
 	font-size: 1.0625em;
-	white-space: nowrap;
 }
 .body-text {
 	overflow-wrap: break-word;
