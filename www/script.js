@@ -3812,6 +3812,7 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 	// Add copy listener to strip soft hyphens (inserted by server-side hyphenator).
 	query("#content").addEventListener("copy", GW.textCopied = (event) => {
+		if(event.target.matches("input, textarea")) return;
 		event.preventDefault();
 		const selectedHTML = getSelectionHTML();
 		const selectedText = getSelection().toString();
