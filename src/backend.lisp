@@ -534,6 +534,16 @@
 	 (get-cached-index-query cache-key query-string)
 	 (lw2-graphql-query query-string)))))
 
+(define-backend-operation get-posts-index backend-lw2-tags :around (&rest args &key hide-tags offset (limit 21) &allow-other-keys)
+  ;; Workaround for https://github.com/LessWrong2/Lesswrong2/issues/3099
+  (declare (dynamic-extent args))
+  (if hide-tags
+      (let ((offset (or offset 0)))
+	(subseq
+	 (apply #'call-next-method backend :offset 0 :limit (+ limit offset) args)
+	 offset))
+      (call-next-method)))
+
 (defun get-posts-json ()
   (lw2-graphql-query (get-posts-index-query-string) :return-type :string))
 
