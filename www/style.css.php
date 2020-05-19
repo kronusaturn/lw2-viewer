@@ -3263,7 +3263,8 @@ img.inline-latex {
 }
 
 p.imgonly,
-div.imgonly {
+div.imgonly,
+figure {
 	text-align: center;
 	margin: auto;
 }

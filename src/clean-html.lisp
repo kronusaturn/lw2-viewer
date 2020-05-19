@@ -731,7 +731,7 @@
 			       (t
 				;; Apply responsive image scaling CSS.
 				(let ((container
-				       (if (and (tag-is (plump:parent node) "div" "p")
+				       (if (and (tag-is (plump:parent node) "div" "p" "figure")
 						(only-child-is (plump:parent node) "img"))
 					   (plump:parent node) ; Should already have imgonly class.
 					   (let ((container (wrap-element node "div")))
@@ -750,6 +750,8 @@
 								 (quri:merge-uris src (main-site-uri *current-site*)))))))))
 		    ((tag-is node "figure")
 		     (remove-attributes node "style" "class" "width" "height"))
+		    ((and (tag-is node "p") (only-child-is node "figure"))
+		     (move-children-out-of-node node))
 		    ((tag-is node "p" "blockquote" "div")
 		     (if (string-is-whitespace (plump:text node))
 			 (if (plump:get-elements-by-tag-name node "img")
