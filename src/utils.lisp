@@ -4,7 +4,7 @@
 	   #:to-boolean #:nonzero-number-p #:truthy-string-p
 	   #:firstn #:map-plist #:filter-plist #:alist-bind #:list-cond
 	   #:string-to-existing-keyword #:call-with-safe-json
-	   #:delete-easy-handler)
+	   #:delete-easy-handler #:abnormal-unwind-protect)
   (:recycle #:lw2-viewer))
 
 (in-package #:lw2.utils)
@@ -114,3 +114,13 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
 (defun delete-easy-handler (name)
   (setf hunchentoot::*easy-handler-alist*
 	(remove name hunchentoot::*easy-handler-alist* :key #'third)))
+
+(defmacro abnormal-unwind-protect (protected-form &body body)
+  (alexandria:with-gensyms (normal-return)
+    `(let ((,normal-return nil))
+       (unwind-protect
+	    (multiple-value-prog1
+		,protected-form
+	      (setf ,normal-return t))
+	 (unless ,normal-return
+	   ,@body)))))

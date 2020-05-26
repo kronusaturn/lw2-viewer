@@ -206,16 +206,13 @@
 
 (defun call-with-http-response (fn uri &rest args &key &allow-other-keys)
   (with-connection-pool
-      (multiple-value-prog1
-	  (multiple-value-bind (response status-code)
-	      (apply 'dex:request uri args)
-	    (cond
-	      ((= status-code 200)
-	       (funcall fn response))
-	      ((= status-code 400)
-	       (decode-query-result response))
-	      (t
-	       (error "Error while contacting LW2: ~A" status-code)))))))
+      (multiple-value-bind (response status-code headers response-uri stream)
+	  (apply 'dex:request uri args)
+	(declare (ignore status-code headers response-uri))
+	(abnormal-unwind-protect
+	     (funcall fn response)
+	  (when stream
+	    (close stream :abort t))))))
 
 (defun signal-lw2-errors (errors)
   (loop for error in errors
