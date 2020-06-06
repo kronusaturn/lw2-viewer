@@ -43,9 +43,11 @@
 	      (cond
 		((> current-time-unix (cdr (assoc :expires subscription)))
 		 (delete-subscription auth-token))
-		((check-notifications (cache-get "auth-token-to-userid" auth-token) auth-token :since since)
+		((sb-sys:with-deadline (:seconds 30)
+		   (check-notifications (cache-get "auth-token-to-userid" auth-token) auth-token :since since))
 		 (handler-case
-		     (send-notification (cdr (assoc :endpoint subscription)))
+		     (sb-sys:with-deadline (:seconds 30)
+		       (send-notification (cdr (assoc :endpoint subscription))))
 		   (dex:http-request-gone ()
 		     (delete-subscription auth-token))
 		   (:no-error (&rest args)
