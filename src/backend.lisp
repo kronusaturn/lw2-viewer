@@ -9,7 +9,7 @@
            #:*messages-index-fields*
            #:*notifications-base-terms*
            #:start-background-loader #:stop-background-loader #:background-loader-running-p
-	   #:with-connection-pool
+	   #:with-connection-pool #:call-with-http-response
 	   #:lw2-graphql-query #:lw2-query-string* #:lw2-query-string
            #:lw2-graphql-query-map #:lw2-graphql-query-multi
 	   #:signal-lw2-errors
@@ -871,21 +871,20 @@
 
 (define-backend-function lw2-search-query (query)
   (backend-algolia-search
-   (multiple-value-bind (req-stream req-status req-headers req-uri)
-       (with-connection-pool
-	   (dex:request (algolia-search-uri *current-backend*)
-			:method :post :headers '(("Origin" . "https://www.greaterwrong.com")
-						 ("Referer" . "https://www.greaterwrong.com/")
-						 ("Content-Type" . "application/json"))
-			:content (json:encode-json-alist-to-string `(("requests" . ,(loop for index in '("test_posts" "test_comments")
-										       collect `(("indexName" . ,index)
-												 ("params" . ,(format nil "query=~A&hitsPerPage=20&page=0"
-														      (url-rewrite:url-encode query)))))))) 
-			:want-stream t))
-     (declare (ignore req-status req-headers req-uri))
-     (let ((req-stream (ensure-character-stream req-stream)))
-       (values-list (loop for r in (cdr (assoc :results (json:decode-json req-stream)))
-		       collect (cdr (assoc :hits r))))))))
+   (call-with-http-response
+    (lambda (req-stream)
+      (values-list (loop for r in (cdr (assoc :results (json:decode-json req-stream)))
+		      collect (cdr (assoc :hits r)))))
+    (algolia-search-uri *current-backend*)
+    :method :post
+    :headers '(("Origin" . "https://www.greaterwrong.com")
+	       ("Referer" . "https://www.greaterwrong.com/")
+	       ("Content-Type" . "application/json"))
+    :content (json:encode-json-alist-to-string `(("requests" . ,(loop for index in '("test_posts" "test_comments")
+								   collect `(("indexName" . ,index)
+									     ("params" . ,(format nil "query=~A&hitsPerPage=20&page=0"
+												  (url-rewrite:url-encode query))))))))
+    :want-stream t)))
 
 (define-backend-function get-username-wrapper (user-id fn)
   (backend-base
