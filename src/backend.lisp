@@ -194,12 +194,15 @@
 	    (dex:*use-connection-pool* t))
        (unwind-protect
 	    (funcall fn)
-	 (unless
-	     (sb-thread:with-mutex (lock)
-	       (when (< (length pools) 4)
-		 (push pool pools)
-		 t))
-	   (dex:clear-connection-pool)))))))
+	 (let ((excess-pools
+		(sb-thread:with-mutex (lock)
+		  (let ((x (nthcdr 3 pools)))
+		    (prog1
+			(rest x)
+		      (when (rest x) (setf (rest x) nil))
+		      (push pool pools))))))
+	   (dolist (dex:*connection-pool* excess-pools)
+	     (dex:clear-connection-pool))))))))
 
 (defmacro with-connection-pool (&body body)
   `(call-with-connection-pool (lambda () ,.body)))
