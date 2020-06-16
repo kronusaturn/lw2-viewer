@@ -1399,7 +1399,6 @@ article {
 
 #content.user-page #comments-list-mode-selector {
 	grid-row: span 2;
-	order: -1;
 }
 #content.user-page #comments-list-mode-selector button {
 	display: block;
@@ -1419,6 +1418,10 @@ article {
 
 #content.user-page h1.listing {
 	margin: 0.5em 0 0 0;
+}
+
+#content.user-page .user-bio :first-child {
+	margin-top: 0.5em;
 }
 
 /*****************/
@@ -3966,6 +3969,10 @@ li {
 }
 #content.preview.user-page .page-main-heading {
 	margin-left: 8px;
+}
+#content.preview.user-page .user-bio {
+	margin-left: 8px;
+	margin-right: 8px;
 }
 #content.preview.user-page .user-stats {
 	margin-right: 32px;

@@ -1609,7 +1609,7 @@ signaled condition to *HTML-OUTPUT*."
 						      </span>)
 						  </div>
 						  (when-let (html-bio (cdr (assoc :html-bio user-info)))
-						    <div class="body-text">
+						    <div class="user-bio body-text">
 						      (with-html-stream-output
 						        (let ((*memoized-output-stream* *html-output*))
 							  (clean-html* html-bio)))
