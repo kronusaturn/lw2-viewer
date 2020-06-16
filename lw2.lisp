@@ -1607,7 +1607,13 @@ signaled condition to *HTML-OUTPUT*."
 						      <span class="karma-type">
 						        <span class="karma-total af-karma-total">(if user-slug (pretty-number (or af-karma 0)) "##")</span> \(AF\)
 						      </span>)
-						  </div>)
+						  </div>
+						  (when-let (html-bio (cdr (assoc :html-bio user-info)))
+						    <div class="body-text">
+						      (with-html-stream-output
+						        (let ((*memoized-output-stream* *html-output*))
+							  (clean-html* html-bio)))
+						    </div>))
 						(sublevel-nav-to-html `(:all :posts :comments
 									     ,@(if own-user-page
 										   '(:drafts :conversations :inbox)))

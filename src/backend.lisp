@@ -75,7 +75,7 @@
 
 (define-backend-function user-fields ()
   (backend-lw2-legacy (load-time-value *user-fields*))
-  (backend-lw2-modernized (append (call-next-method) '(:groups :deleted)))
+  (backend-lw2-modernized (append (call-next-method) '(:groups :deleted :html-bio)))
   (backend-alignment-forum (append (call-next-method) '(:af-karma :full-name))))
 
 (define-cache-database 'backend-lw2-legacy
