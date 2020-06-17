@@ -209,18 +209,28 @@
 
 (defun call-with-http-response (fn uri &rest args &key &allow-other-keys)
   (with-connection-pool
-      (multiple-value-bind (response status-code headers response-uri stream)
-	  (apply 'dex:request uri args)
-	(declare (ignore status-code headers response-uri))
-	(unwind-protect
-	     (funcall fn response)
-	  (when (streamp response)
-	    (if stream ; the connection is reusable
-		(handler-case
-		    (let ((buf (make-array 4096 :element-type (stream-element-type response))))
-		      (loop while (plusp (read-sequence buf response))))
-		  (serious-condition () (ignore-errors (close response))))
-		(ignore-errors (close response))))))))
+      (let ((remaining-retries 3))
+	(handler-bind ((dex:http-request-failed (lambda (condition)
+						  (let ((body (dex:response-body condition)))
+						    (when (streamp body)
+						      (ignore-errors (close body))))
+						  (when (and (> remaining-retries 0)
+							     (<= 500 (dex:response-status condition) 599))
+						    (decf remaining-retries)
+						    (sleep 0.2)
+						    (dex:retry-request condition)))))
+	  (multiple-value-bind (response status-code headers response-uri stream)
+	      (apply 'dex:request uri args)
+	    (declare (ignore status-code headers response-uri))
+	    (unwind-protect
+		 (funcall fn response)
+	      (when (streamp response)
+		(if stream ; the connection is reusable
+		    (handler-case
+			(let ((buf (make-array 4096 :element-type (stream-element-type response))))
+			  (loop while (plusp (read-sequence buf response))))
+		      (serious-condition () (ignore-errors (close response))))
+		    (ignore-errors (close response))))))))))
 
 (defun signal-lw2-errors (errors)
   (loop for error in errors
