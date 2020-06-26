@@ -48,4 +48,4 @@
   nil)
 
 (defmacro when-server (&body body)
-  body)
+  `(progn ,@body))
