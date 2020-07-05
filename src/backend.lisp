@@ -238,34 +238,37 @@
 	 (uri-dest (concatenate 'string (quri:uri-host uri) ":" (format nil "~d" (quri:uri-port uri))))
 	 (orig-stream (connection-pop uri-dest))
 	 (remaining-retries 3))
-	(multiple-value-bind (response status-code headers response-uri stream)
-	    (block nil
-	      (tagbody retry
-		 (handler-bind ((dex:http-request-failed
-				 (lambda (condition)
-				   (let ((body (dex:response-body condition)))
-				     (when (streamp body)
-				       (ignore-errors (close body)))
-				     (when orig-stream
-				       (ignore-errors (close orig-stream))))
-				   (when (and (> remaining-retries 0)
-					      (<= 500 (dex:response-status condition) 599))
-				     (decf remaining-retries)
-				     (sleep 0.2)
-				     (go retry)))))
-		   (return (apply 'dex:request uri :use-connection-pool nil :stream orig-stream args)))))
-	  (declare (ignore status-code headers response-uri))
-	  (unwind-protect
-	       (funcall fn response)
-	    (unless (eq stream orig-stream)
-	      (ignore-errors (close orig-stream)))
-	    (if stream ; the connection is reusable
-		(progn
-		  (when (streamp response)
-		    (finish-reading-stream response))
-		  (connection-push uri-dest stream))
-		(when (streamp response)
-		  (ignore-errors (close response))))))))
+    (multiple-value-bind (response status-code headers response-uri stream)
+	(abnormal-unwind-protect
+	 (block nil
+	   (tagbody retry
+	      (handler-bind ((dex:http-request-failed
+			      (lambda (condition)
+				(let ((body (dex:response-body condition)))
+				  (when (streamp body)
+				    (ignore-errors (close body)))
+				  (when orig-stream
+				    (ignore-errors (close orig-stream))))
+				(when (and (> remaining-retries 0)
+					   (<= 500 (dex:response-status condition) 599))
+				  (decf remaining-retries)
+				  (sleep 0.2)
+				  (go retry)))))
+		(return (apply 'dex:request uri :use-connection-pool nil :stream orig-stream args)))))
+	 (when orig-stream
+	   (ignore-errors (close orig-stream))))
+      (declare (ignore status-code headers response-uri))
+      (unwind-protect
+	   (funcall fn response)
+	(unless (eq stream orig-stream)
+	  (ignore-errors (close orig-stream)))
+	(if stream ; the connection is reusable
+	    (progn
+	      (when (streamp response)
+		(finish-reading-stream response))
+	      (connection-push uri-dest stream))
+	    (when (streamp response)
+	      (ignore-errors (close response))))))))
 
 (defun signal-lw2-errors (errors)
   (loop for error in errors
