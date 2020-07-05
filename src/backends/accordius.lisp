@@ -47,12 +47,12 @@
    (do-wl-rest-query "comment_search/" `(("query" . ,query)))))
 
 (defun do-wl-rest-mutate (mutation-type endpoint post-params auth-token)
-  (with-connection-pool
-      (dex:request
-       (quri:render-uri (quri:merge-uris (quri:make-uri :path endpoint :query "") (quri:uri (rest-api-uri *current-backend*))))
-       :method mutation-type
-       :content post-params
-       :headers (alist "authorization" auth-token))))
+  (call-with-http-response
+   #'identity
+   (quri:render-uri (quri:merge-uris (quri:make-uri :path endpoint :query "") (quri:uri (rest-api-uri *current-backend*))))
+   :method mutation-type
+   :content post-params
+   :headers (alist "authorization" auth-token)))
 
 (defun do-wl-create-tag (document-id text auth-token)
   (do-wl-rest-mutate :post "tags/" `((:DOCUMENT-ID . ,document-id) (:TEXT . ,text)) auth-token))

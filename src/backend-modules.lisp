@@ -4,7 +4,6 @@
   (:export
     #:backend-class #:class-cached-databases #:class-own-databases #:class-databases-epoch
     #:backend-base
-    #:backend-dexador-connection-pool #:backend-dexador-connection-pools #:backend-dexador-connection-pools-lock
     #:backend-lmdb-cache #:backend-lmdb-environment #:backend-cache-db-path
     #:backend-graphql
     #:backend-websocket-login
@@ -36,17 +35,12 @@
 
 (defclass backend-base () () (:metaclass backend-class))
 
-(defclass backend-dexador-connection-pool (backend-base)
-  ((dexador-connection-pools :accessor backend-dexador-connection-pools :initform nil)
-   (dexador-connection-pools-lock :accessor backend-dexador-connection-pools-lock :initform (sb-thread:make-mutex :name "Dexador connection pools mutex")))
-  (:metaclass backend-class))
-
 (defclass backend-lmdb-cache (backend-base)
   ((lmdb-environment :accessor backend-lmdb-environment :initform nil)
    (cache-db-path :accessor backend-cache-db-path :initarg :cache-db-path :type simple-string))
   (:metaclass backend-class))
 
-(defclass backend-graphql (backend-lmdb-cache backend-dexador-connection-pool)
+(defclass backend-graphql (backend-lmdb-cache)
   ((graphql-uri :accessor graphql-uri :initarg :graphql-uri :type simple-string))
   (:metaclass backend-class))
 
@@ -127,7 +121,7 @@
   ((rest-api-uri :accessor rest-api-uri :initarg :rest-api-uri :type simple-string))
   (:metaclass backend-class))
 
-(defclass backend-arbital (backend-lmdb-cache backend-dexador-connection-pool) ()
+(defclass backend-arbital (backend-lmdb-cache) ()
   (:metaclass backend-class))
 
 (defun make-backend (type-string &rest args)
