@@ -30,9 +30,9 @@
 	(first response)
 	(error "Unsupported sockjs message.")))))
 
-(defun password-digest (password)
+(defun password-digest (password &key (algorithm :sha256))
   (byte-array-to-hex-string
-    (digest-sequence :sha256
+    (digest-sequence algorithm
       (string-to-octets password :external-format :utf8))))
 
 (defun random-string (length)
@@ -83,14 +83,26 @@
   (let ((result (do-lw2-sockjs-method "login" `((("resume" . ,auth-token))))))
     (parse-login-result result)))
 
-(define-backend-function do-login (user-designator-type user-designator password)
+(define-backend-function do-login (user-designator-type user-designator password &key (try-legacy t))
   (backend-websocket-login
    (let ((result (do-lw2-sockjs-method "login"
 		   `((("user" (,user-designator-type . ,user-designator))
 		      ("password"
 		       (digest . ,(password-digest password))
 		       ("algorithm" . "sha-256")))))))
-     (parse-login-result result))))
+     (trivia:match result
+		   ((assoc :error (trivia:alist (:error . "legacy-account")
+						(:details . (trivia:alist (:salt . legacy-salt)
+									  (:username . legacy-username)))))
+		    (if try-legacy
+			(do-login user-designator-type user-designator
+				  (format nil "~A~A" legacy-salt
+					  (password-digest (format nil "~A~A ~A" legacy-salt legacy-username password)
+							   :algorithm :sha1))
+				  :try-legacy nil)
+			(values nil nil "Incorrect password")))
+		   (_
+		    (parse-login-result result))))))
 
 (define-backend-function do-lw2-create-user (username email password)
   (backend-websocket-login

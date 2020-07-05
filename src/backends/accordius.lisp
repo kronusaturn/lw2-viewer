@@ -93,7 +93,7 @@
       (t (call-next-method)))))
    
 
-(define-backend-operation do-login backend-accordius (user-designator-type user-designator password)
+(define-backend-operation do-login backend-accordius (user-designator-type user-designator password &key &allow-other-keys)
   (declare (ignore user-designator-type))
   (let* ((response
            (do-lw2-post-query nil `(("query" . "mutation Login($username: String, $password: String) { Login(username: $username, password: $password) {userId, sessionKey, expiration}}")
