@@ -213,9 +213,31 @@
 (defmacro with-connection-pool (&body body)
   `(call-with-connection-pool (lambda () ,.body)))
 
-(defun call-with-http-response (fn uri &rest args &key &allow-other-keys)
-  (with-connection-pool
-      (let ((remaining-retries 3))
+(sb-ext:defglobal *connection-pool* (make-hash-table :test 'equal))
+(sb-ext:defglobal *connection-pool-lock* (sb-thread:make-mutex :name "*connection-pool-lock*"))
+
+(defun connection-push (dest connection)
+  (let ((connection-pool *connection-pool*))
+    (sb-thread:with-mutex (*connection-pool-lock*)
+      (let ((vector (or (gethash dest connection-pool)
+			(setf (gethash dest connection-pool)
+			      (make-array 4 :fill-pointer 0)))))
+	(unless (vector-push connection vector)
+	  (ignore-errors (close (vector-pop vector)))
+	  (vector-push connection vector))))))
+
+(defun connection-pop (dest)
+  (let ((connection-pool *connection-pool*))
+    (sb-thread:with-mutex (*connection-pool-lock*)
+      (when-let (vector (gethash dest connection-pool))
+		(when (> (fill-pointer vector) 0)
+		  (vector-pop vector))))))
+
+(defun call-with-http-response (fn uri-string &rest args &key &allow-other-keys)
+  (let* ((uri (quri:uri uri-string))
+	 (uri-dest (concatenate 'string (quri:uri-host uri) ":" (format nil "~d" (quri:uri-port uri))))
+	 (orig-stream (connection-pop uri-dest))
+	 (remaining-retries 3))
 	(multiple-value-bind (response status-code headers response-uri stream)
 	    (block nil
 	      (tagbody retry
@@ -223,20 +245,27 @@
 				 (lambda (condition)
 				   (let ((body (dex:response-body condition)))
 				     (when (streamp body)
-				       (ignore-errors (close body))))
+				       (ignore-errors (close body)))
+				     (when orig-stream
+				       (ignore-errors (close orig-stream))))
 				   (when (and (> remaining-retries 0)
 					      (<= 500 (dex:response-status condition) 599))
 				     (decf remaining-retries)
 				     (sleep 0.2)
 				     (go retry)))))
-		   (return (apply 'dex:request uri args)))))
+		   (return (apply 'dex:request uri :use-connection-pool nil :stream orig-stream args)))))
 	  (declare (ignore status-code headers response-uri))
 	  (unwind-protect
 	       (funcall fn response)
-	    (when (streamp response)
-	      (if stream ; the connection is reusable
-		  (finish-reading-stream response)
-		  (ignore-errors (close response)))))))))
+	    (unless (eq stream orig-stream)
+	      (ignore-errors (close orig-stream)))
+	    (if stream ; the connection is reusable
+		(progn
+		  (when (streamp response)
+		    (finish-reading-stream response))
+		  (connection-push uri-dest stream))
+		(when (streamp response)
+		  (ignore-errors (close response))))))))
 
 (defun signal-lw2-errors (errors)
   (loop for error in errors
