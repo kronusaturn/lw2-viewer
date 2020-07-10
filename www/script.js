@@ -861,7 +861,13 @@ function setWidthAdjustButtonsAccesskey() {
 
 function injectThemeSelector() {
 	GWLog("injectThemeSelector");
-	let currentTheme = readCookie("theme") || "default";
+	let currentTheme = readCookie("theme");
+	if (!currentTheme) {
+		currentTheme = "default";
+		if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+			currentTheme = "dark";
+		}
+	}
 	let themeSelector = addUIElement(
 		"<div id='theme-selector' class='theme-selector'>" +
 		String.prototype.concat.apply("", GW.themeOptions.map(themeOption => {
