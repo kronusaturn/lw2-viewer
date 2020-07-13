@@ -44,7 +44,7 @@
                              (:file "clean-html" :depends-on ("utils" "links" "lmdb" "context" "sites" "conditions" "../text-clean-regexps.js" "../html-clean-regexps.js"))
                              (:file "lw2-login" :depends-on ("utils" "backend" "backend-modules" "context"))
 			     (:file "backlinks" :depends-on ("html-reader" "lmdb" "backend" "backend-modules" "sites" "links" "context" "clean-html" "conditions" "utils" "interface-utils"))
-			     (:file "web-push" :depends-on ("utils"))
+			     (:file "web-push" :depends-on ("utils" "conditions"))
 			     (:file "push-notifications" :depends-on ("backend"))
 			     (:file "admin" :depends-on ("lmdb" "clean-html" "backend" "backlinks"))
 			     (:module "data-viewers"

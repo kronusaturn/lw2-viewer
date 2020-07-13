@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.web-push
-  (:use #:cl #:alexandria #:lw2.utils)
+  (:use #:cl #:alexandria #:lw2.utils #:lw2.conditions)
   (:export #:get-vapid-public-key #:send-notification))
 
 (in-package #:lw2.web-push)
@@ -18,20 +18,24 @@
       (when fd (sb-posix:close fd)))))
 
 (defun invoke-node-process (command &optional (output #'json:decode-json))
-  (uiop:run-program "node js-foreign-lib/web-push.js" :input (list command) :output output))
+  (uiop:run-program "node js-foreign-lib/web-push.js"
+		    :input (list command)
+		    :output output
+		    :error-output *error-output*))
 
 (defun ensure-vapid-key ()
   (unless *vapid-key*
     (labels ((read-vapid-key (stream)
 	       (setf *vapid-key* (json:decode-json stream))))
-      (with-open-file (stream *vapid-key-filename* :direction :input :if-does-not-exist nil)
-	(if stream
-	    (read-vapid-key stream)
-	    (call-with-private-file (lambda (stream)
-				      (invoke-node-process "webPush.generateVAPIDKeys()" stream)
-				      (file-position stream 0)
-				      (read-vapid-key stream))
-				    *vapid-key-filename*))))))
+      (log-and-ignore-errors
+       (with-open-file (stream *vapid-key-filename* :direction :input :if-does-not-exist nil)
+	 (if stream
+	     (read-vapid-key stream)
+	     (call-with-private-file (lambda (stream)
+				       (invoke-node-process "webPush.generateVAPIDKeys()" stream)
+				       (file-position stream 0)
+				       (read-vapid-key stream))
+				     *vapid-key-filename*)))))))
 
 (ensure-vapid-key)
 
