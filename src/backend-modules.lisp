@@ -134,21 +134,49 @@
 	 (body (rest latter-args)))
     (values method-qualifiers method-args body)))
 
+(defun operation-name-and-lambda-list-translator (name)
+  (labels ((setf-lambda-list (backend lambda-list)
+	     `(,(first lambda-list) (backend ,backend) ,@(rest lambda-list)))
+	   (ordinary-lambda-list (backend lambda-list)
+	     `((backend ,backend) ,@lambda-list)))
+    (trivia:match name
+		  ((list 'setf (and (type symbol) bare-name))
+		   (let* ((inner-bare-name (symbolicate "%" bare-name))
+			  (inner-name (list 'setf inner-bare-name)))
+		     (values inner-name
+			     #'setf-lambda-list
+			     `(defun ,name (set-value &rest args) (setf (apply #',inner-bare-name lw2.context:*current-backend* args) set-value))
+			     bare-name
+			     inner-bare-name)))
+		  ((type symbol)
+		   (let ((inner-name (symbolicate "%" name)))
+		     (values inner-name
+			     #'ordinary-lambda-list
+			     `(defun ,name (&rest args) (apply #',inner-name lw2.context:*current-backend* args))
+			     name
+			     inner-name)))
+		  (_
+		   (error "Invalid function name: ~A" name)))))
+
+(defun names-only-lambda-list (lambda-list)
+  (map 'list (lambda (x) (if (atom x) x (first x))) lambda-list))
+
 (defmacro define-backend-function (name lambda-list &rest operations)
-  (let ((inner-name (symbolicate "%" name))
-        (lambda-list (map 'list (lambda (x) (if (atom x) x (first x))) lambda-list))
+  (multiple-value-bind (inner-name lambda-list-translator wrapper-defun bare-name inner-bare-name)
+      (operation-name-and-lambda-list-translator name)
+  (let ((lambda-list (names-only-lambda-list lambda-list))
 	(method-definitions
 	 (mapcar (lambda (op)
 		   (destructuring-bind (backend &rest body) op
-		     `(:method ((backend ,backend) ,@lambda-list) ,@body)))
+		     `(:method ,(funcall lambda-list-translator backend lambda-list) ,@body)))
 		 operations)))
    `(progn
-      (export '(,name ,inner-name))
-      (defgeneric ,inner-name (backend ,@lambda-list) ,.method-definitions)
+      (export '(,bare-name ,inner-bare-name))
+      (defgeneric ,inner-name ,(names-only-lambda-list (funcall lambda-list-translator t lambda-list)) ,.method-definitions)
       (declaim (inline ,name))
-      (defun ,name (&rest args) (apply ',inner-name lw2.context:*current-backend* args)))))
+      ,wrapper-defun))))
 
 (defmacro define-backend-operation (name backend &rest args)
-  (let* ((inner-name (symbolicate "%" name)))
+  (multiple-value-bind (inner-name lambda-list-translator) (operation-name-and-lambda-list-translator name)
     (multiple-value-bind (method-qualifiers method-args body) (process-operation-definition args)
-      `(defmethod ,inner-name ,.method-qualifiers ((backend ,backend) ,@method-args) ,@body))))
+      `(defmethod ,inner-name ,.method-qualifiers ,(funcall lambda-list-translator backend method-args) ,@body))))
