@@ -20,6 +20,7 @@
 	   #:get-posts-index #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-answers #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
 	   #:sequence-post-ids #:get-sequence #:get-post-sequence-ids #:get-sequence-post
 	   #:get-conversation-messages
+	   #:markdown-source
 	   #:get-user
            #:get-notifications #:check-notifications
 	   #:lw2-search-query #:get-post-title #:get-post-slug #:get-slug-postid #:get-username #:get-user-full-name #:get-user-slug
@@ -925,6 +926,38 @@
    (if (user-deleted user-id)
        "[deleted]"
        (funcall fn user-id))))
+
+(define-cache-database 'backend-lw2-legacy "comment-markdown-source" "post-markdown-source")
+
+(defun markdown-source-db-name (target-type)
+  (ecase target-type (:comment "comment-markdown-source") (:post "post-markdown-source")))
+
+(define-backend-function markdown-source (target-type id version)
+  (backend-lw2-modernized
+   (let ((db-name (markdown-source-db-name target-type))
+	 (version (base64:usb8-array-to-base64-string (hash-string version))))
+     (or
+      (if-let ((cache-data (when-let ((x (cache-get db-name id))) (read-from-string x))))
+	      (alist-bind ((cached-version simple-string :version)
+			   (markdown simple-string))
+			  cache-data
+			  (when (string= version cached-version)
+			    markdown)))
+      (trivia:ematch (lw2-graphql-query (lw2-query-string target-type :single
+							  (alist :document-id id)
+							  :fields '(:html-body (:contents :markdown)))
+					:auth-token lw2.user-context:*current-auth-token*)
+		     ((trivia:alist (:html-body . html-body)
+				    (:contents . (assoc :markdown markdown)))
+		      (cache-put db-name id (prin1-to-string (alist :version (base64:usb8-array-to-base64-string (hash-string html-body)) :markdown markdown)))
+		      markdown))))))
+
+(define-backend-function (setf markdown-source) (markdown target-type id version)
+  (backend-lw2-modernized
+   (let ((version (base64:usb8-array-to-base64-string (hash-string version))))
+     (cache-put (markdown-source-db-name target-type)
+		id
+		(prin1-to-string (alist :version version :markdown markdown))))))
 
 (defun make-rate-limiter (delay)
   (let ((rl-hash (make-hash-table :test 'equal :synchronized t)))

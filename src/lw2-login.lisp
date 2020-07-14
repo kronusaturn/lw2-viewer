@@ -220,21 +220,21 @@ fields - The return values we want to get from the server after it completes our
    (cdr (assoc :data (call-next-method)))))
 
 (defun do-lw2-post (auth-token data)
-  (do-lw2-mutation auth-token :post :create (alist :document data) '(:--id :slug)))
+  (do-lw2-mutation auth-token :post :create (alist :document data) '(:--id :slug :html-body)))
 
 (defun do-lw2-post-edit (auth-token post-id set &optional unset)
   (let* ((terms (alist :document-id post-id :set set))
          (terms (if unset (acons :unset unset terms) terms)))
-    (do-lw2-mutation auth-token :post :update terms '(:--id :slug))))
+    (do-lw2-mutation auth-token :post :update terms '(:--id :slug :html-body))))
 
 (defun do-lw2-post-remove (auth-token post-id)
   (do-lw2-mutation auth-token :post :delete (alist :document-id post-id) '(:----typename)))
 
 (defun do-lw2-comment (auth-token data)
-  (cdr (assoc :--id (do-lw2-mutation auth-token :comment :create (alist :document data) '(:--id)))))
+  (do-lw2-mutation auth-token :comment :create (alist :document data) '(:--id :html-body)))
 
 (defun do-lw2-comment-edit (auth-token comment-id set)
-  (cdr (assoc :--id (do-lw2-mutation auth-token :comment :update (alist :document-id comment-id :set set) '(:--id)))))
+  (do-lw2-mutation auth-token :comment :update (alist :document-id comment-id :set set) '(:--id :html-body)))
 
 (define-backend-function do-lw2-comment-remove (auth-token comment-id &key reason)
   (backend-lw2-legacy

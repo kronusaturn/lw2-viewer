@@ -34,7 +34,7 @@
 (add-template-directory (asdf:system-relative-pathname "lw2-viewer" "templates/"))
 
 (define-cache-database 'backend-lw2-legacy
-    "auth-token-to-userid" "auth-token-to-username" "comment-markdown-source" "post-markdown-source" "user-ignore-list")
+    "auth-token-to-userid" "auth-token-to-username" "user-ignore-list")
 
 (defvar *read-only-mode* nil)
 (defvar *read-only-default-message* "Due to a system outage, you cannot log in or post at this time.")
@@ -1079,7 +1079,7 @@ signaled condition to *HTML-OUTPUT*."
        (assert lw2-auth-token)
        (let* ((post-id (or post-id-real post-id))
 	      (question (when post-id (cdr (assoc :question (get-post-body post-id :auth-token lw2-auth-token)))))
-	      (new-comment-id
+	      (new-comment-result
 	       (cond
 		 (text
 		  (let ((comment-data
@@ -1094,8 +1094,7 @@ signaled condition to *HTML-OUTPUT*."
 			  (af :af t)
 			  ((and shortform (not parent-comment-id)) :shortform t))))
 		    (if edit-comment-id
-			(prog1 edit-comment-id
-			  (do-lw2-comment-edit lw2-auth-token edit-comment-id comment-data))
+			(do-lw2-comment-edit lw2-auth-token edit-comment-id comment-data)
 			(do-lw2-comment lw2-auth-token comment-data))))
 		 (retract-comment-id
 		  (do-lw2-comment-edit lw2-auth-token retract-comment-id '((:retracted . t))))
@@ -1110,10 +1109,13 @@ signaled condition to *HTML-OUTPUT*."
 	     (when question
 	       (get-post-answers post-id :force-revalidate t))))
 	 (when text
-	   (cache-put "comment-markdown-source" new-comment-id text)
-	   (redirect (quri:render-uri
-		      (quri:merge-uris (quri:make-uri :fragment (format nil "comment-~A" new-comment-id))
-				       (hunchentoot:request-uri*))))))))))
+	   (alist-bind ((new-comment-id simple-string :--id)
+			(new-comment-html simple-string :html-body))
+		       new-comment-result
+		       (setf (markdown-source :comment new-comment-id new-comment-html) text)
+		       (redirect (quri:render-uri
+				  (quri:merge-uris (quri:make-uri :fragment (format nil "comment-~A" new-comment-id))
+						   (hunchentoot:request-uri*)))))))))))
 
 (define-page view-post-lw2-link (:function #'match-lw2-link post-id comment-id * comment-link-type)
                                 (need-auth
@@ -1279,7 +1281,7 @@ signaled condition to *HTML-OUTPUT*."
 						     collect (alist :name name :desc desc :selected (string= name section)))
 				    :lesswrong-misc (typep *current-backend* 'backend-lw2-misc-features)
 				    :submit-to-frontpage (if post-id (cdr (assoc :submit-to-frontpage post-body)) t)
-                                    :markdown-source (or (and post-id (cache-get "post-markdown-source" post-id)) (cdr (assoc :html-body post-body)) "")))))
+                                    :markdown-source (or (and post-id (markdown-source :post post-id (cdr (assoc :html-body post-body)))) "")))))
     (:post (text question submit-to-frontpage)
      (let ((lw2-auth-token *current-auth-token*)
            (url (if (string= url "") nil url)))
@@ -1307,7 +1309,7 @@ signaled condition to *HTML-OUTPUT*."
 	     (format nil "posts/~a/update_tagset/" post-id)
 	     (alist "tags" tags)
 	     lw2-auth-token))
-	 (cache-put "post-markdown-source" new-post-id text)
+	 (setf (markdown-source :post new-post-id (cdr (assoc :html-body new-post-data))) text)
 	 (ignore-errors (get-post-body post-id :force-revalidate t))
 	 (redirect (if (cdr (assoc :draft post-data))
 		       (concatenate 'string (generate-post-link new-post-data) "?need-auth=y")

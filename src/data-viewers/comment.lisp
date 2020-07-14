@@ -81,7 +81,7 @@
 	      <div class="body-text comment-body" (safe ("~@[ data-markdown-source=\"~A\"~]"
 							 (if (logged-in-userid user-id)
 							     (encode-entities
-							      (or (cache-get "comment-markdown-source" comment-id)
+							      (or (markdown-source :comment comment-id html-body)
 								  html-body)))))>
 		  (with-html-stream-output
 		    (let ((*before-clean-hook* (lambda () (clear-backlinks post-id comment-id)))
