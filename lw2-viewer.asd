@@ -34,7 +34,7 @@
                                                               (copy-file "config-example.lisp" "config.lisp"))))
                              (:file "../config" :depends-on ("config-copy" "config-package"))
                              (:file "lmdb" :depends-on ("raw-memory-streams" "hash-utils" "sites" "context" "../config"))
-                             (:file "backend" :depends-on ("utils" "backend-modules" "lmdb" "graphql" "context" "sites" "schema-type" "schema-types" "conditions" "web-push"))
+                             (:file "backend" :depends-on ("utils" "hash-utils" "backend-modules" "lmdb" "graphql" "context" "user-context" "sites" "schema-type" "schema-types" "conditions" "web-push"))
 			     (:file "csrf" :depends-on ("conditions"))
                              (:file "components" :depends-on ("utils" "csrf"))
                              (:file "links" :depends-on ("lmdb" "backend" "sites" "context"))
