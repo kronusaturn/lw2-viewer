@@ -580,6 +580,7 @@ signaled condition to *HTML-OUTPUT*."
 	 ("loggedInUserDisplayName" (or (logged-in-username) ""))
 	 ("loggedInUserSlug" (or (logged-in-user-slug) ""))
 	 ("GW" (alist "useFancyFeatures" (not (typep *current-site* 'arbital-site))
+		      "secureCookies" (to-boolean (site-secure *current-site*))
 		      "csrfToken" csrf-token
 		      "assets" (alist "popup.svg" (generate-versioned-link "/assets/popup.svg")))))
 	(for-resource-type (:inline-script script-text)
