@@ -149,6 +149,7 @@ body > iframe[id^='firefox-screenshots'] {
 	margin: 0 -30px;
 	display: flex;
 	order: -11;
+	z-index: 1;
 }
 
 /*=---------------=*/
