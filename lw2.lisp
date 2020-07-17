@@ -547,6 +547,17 @@ signaled condition to *HTML-OUTPUT*."
      (list :script (generate-versioned-link "/head.js"))
      (list :async-script (generate-versioned-link "/script.js")))))
 
+(defmacro set-script-variables (&rest clauses)
+  (alexandria:with-gensyms (out-stream)
+    `(let ((,out-stream *html-output*))
+       ,.(loop for clause in clauses
+	    collect (destructuring-bind (name value) clause
+		      `(progn
+			 (write-string ,name ,out-stream)
+			 (write-string "=" ,out-stream)
+			 (json:encode-json ,value ,out-stream)
+			 (write-string #.(format nil ";~%") ,out-stream)))))))
+
 (defun html-body (out-stream fn &key title description social-description current-uri content-class robots extra-head)
   (macrolet ((for-resource-type ((resource-type &rest args) &body body)
 	       (alexandria:with-gensyms (resource)
@@ -562,15 +573,15 @@ signaled condition to *HTML-OUTPUT*."
       (setf *page-resources* nil)
       (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head>")
       (unless preview
-	(format out-stream "<script>window.GW = { }; applicationServerKey=\"~A\"; loggedInUserId=\"~A\"; loggedInUserDisplayName=\"~A\"; loggedInUserSlug=\"~A\"; GW.useFancyFeatures=~A; ~@[GW.csrfToken=\"~A\"; ~]GW.assets="
-		(get-vapid-public-key)
-		(or (logged-in-userid) "")
-		(or (logged-in-username) "")
-		(or (logged-in-user-slug) "")
-		(if (typep *current-site* 'arbital-site) "false" "true")
-		csrf-token)
-	(json:encode-json (alist "popup.svg" (generate-versioned-link "/assets/popup.svg"))
-			  out-stream)
+	(write-string "<script>" out-stream)
+	(set-script-variables
+	 ("applicationServerKey" (get-vapid-public-key))
+	 ("loggedInUserId" (or (logged-in-userid) ""))
+	 ("loggedInUserDisplayName" (or (logged-in-username) ""))
+	 ("loggedInUserSlug" (or (logged-in-user-slug) ""))
+	 ("GW" (alist "useFancyFeatures" (not (typep *current-site* 'arbital-site))
+		      "csrfToken" csrf-token
+		      "assets" (alist "popup.svg" (generate-versioned-link "/assets/popup.svg")))))
 	(for-resource-type (:inline-script script-text)
 			   (write-string ";" out-stream)
 			   (write-string script-text out-stream))
