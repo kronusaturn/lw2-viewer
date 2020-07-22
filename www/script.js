@@ -927,24 +927,39 @@ function setTheme(newThemeName) {
 	}
 	if (themeUnloadCallback != null) themeUnloadCallback(newThemeName);
 
-	let styleSheetNameSuffix = (newThemeName == 'default') ? '' : ('-' + newThemeName);
-	let currentStyleSheetNameComponents = /style[^\.]*(\..+)$/.exec(query("head link[href*='.css']").href);
+	let makeNewStyle = function(newThemeName, colorSchemePreference) {
+		let styleSheetNameSuffix = (newThemeName == 'default') ? '' : ('-' + newThemeName);
+		let currentStyleSheetNameComponents = /style[^\.]*(\..+)$/.exec(query("head link[href*='.css']").href);
 
-	let newStyle = document.createElement('link');
-	newStyle.setAttribute('rel', 'stylesheet');
-	newStyle.setAttribute('href', '/css/style' + styleSheetNameSuffix + currentStyleSheetNameComponents[1]);
+		let newStyle = document.createElement('link');
+		newStyle.setAttribute('class', 'theme');
+		if(colorSchemePreference)
+			newStyle.setAttribute('media', '(prefers-color-scheme: ' + colorSchemePreference + ')');
+		newStyle.setAttribute('rel', 'stylesheet');
+		newStyle.setAttribute('href', '/css/style' + styleSheetNameSuffix + currentStyleSheetNameComponents[1]);
+		return newStyle;
+	}
 
-	let oldStyle = query("head link[href*='.css']");
-	newStyle.addEventListener('load', () => { removeElement(oldStyle); });
-	newStyle.addEventListener('load', () => { postSetThemeHousekeeping(oldThemeName, newThemeName); });
+	let newMainStyle, newStyles;
+	if(newThemeName === 'default') {
+		newStyles = [makeNewStyle('dark', 'dark'), makeNewStyle('default', 'light')];
+		newMainStyle = (window.matchMedia('prefers-color-scheme: dark').matches ? newStyles[0] : newStyles[1]);
+	} else {
+		newStyles = [makeNewStyle(newThemeName)];
+		newMainStyle = newStyles[0];
+	}
+
+	let oldStyles = queryAll("head link.theme");
+	newMainStyle.addEventListener('load', () => { oldStyles.forEach(x => removeElement(x)); });
+	newMainStyle.addEventListener('load', () => { postSetThemeHousekeeping(oldThemeName, newThemeName); });
 
 	if (GW.adjustmentTransitions) {
 		pageFadeTransition(false);
 		setTimeout(() => {
-			query('head').insertBefore(newStyle, oldStyle.nextSibling);
+			newStyles.forEach(newStyle => query('head').insertBefore(newStyle, oldStyles[0].nextSibling));
 		}, 500);
 	} else {
-		query('head').insertBefore(newStyle, oldStyle.nextSibling);
+		newStyles.forEach(newStyle => query('head').insertBefore(newStyle, oldStyles[0].nextSibling));
 	}
 }
 function postSetThemeHousekeeping(oldThemeName = "", newThemeName = (readCookie('theme') || 'default')) {
