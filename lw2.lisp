@@ -828,7 +828,7 @@ signaled condition to *HTML-OUTPUT*."
 		     (sb-sys:with-deadline (:seconds (expt 1.3
 							   (min (round (log 30 1.3))
 								(- (hunchentoot:taskmaster-max-thread-count (symbol-value '*hunchentoot-taskmaster*))
-								   (hunchentoot::accessor-requests-in-progress (symbol-value '*test-acceptor*))))))
+								   (hunchentoot:acceptor-requests-in-progress (symbol-value '*test-acceptor*))))))
 		       (funcall fn))))))))))))
 
 (defmacro with-error-page (&body body)
