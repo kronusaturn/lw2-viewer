@@ -2379,32 +2379,22 @@ function injectPreviewPopupToggle() {
 	toggle.addActivateEvent(event => setPreviewPopupsEnabled(!previewPopupsEnabled()))
 }
 
-var currentPreviewPopup = null;
-var currentPreviewPopupLinkTag = null;
-var currentPreviewPopupTimeout = null;
-var currentPreviewPopupPointerListener = null;
-var currentPreviewPopupScrollListener = null;
+var currentPreviewPopup = { };
 
-function removePreviewPopup() {
-	if(currentPreviewPopup) {
-		removeElement(currentPreviewPopup);
-		currentPreviewPopup = null;
-	}
+function removePreviewPopup(previewPopup) {
+	if(previewPopup.element)
+		removeElement(previewPopup.element);
 
-	currentPreviewPopupLinkTag = null;
-	
-	if(currentPreviewPopupTimeout) {
-		clearTimeout(currentPreviewPopupTimeout);
-		currentPreviewPopupTimeout = null;
-	}
-	if(currentPreviewPopupPointerListener) {
-		window.removeEventListener("pointermove", currentPreviewPopupPointerListener);
-		currentPreviewPopupPointerListener = null;
-	}
-	if(currentPreviewPopupScrollListener) {
-		window.removeEventListener("scroll", currentPreviewPopupScrollListener);
-		currentPreviewPopupScrollListener = null;
-	}
+	if(previewPopup.timeout)
+		clearTimeout(previewPopup.timeout);
+
+	if(currentPreviewPopup.pointerListener)
+		window.removeEventListener("pointermove", previewPopup.pointerListener);
+
+	if(currentPreviewPopup.scrollListener)
+		window.removeEventListener("scroll", previewPopup.scrollListener);
+
+	currentPreviewPopup = { };
 }
 
 function addCommentParentPopups() {
@@ -2426,7 +2416,7 @@ function addCommentParentPopups() {
 				linkTag.addEventListener("pointerover", GW.commentParentLinkMouseOver = (event) => {
 					if(event.pointerType == "touch") return;
 					GWLog("GW.commentParentLinkMouseOver");
-					removePreviewPopup();
+					removePreviewPopup(currentPreviewPopup);
 					let parentID = linkHref;
 					var parent, popup;
 					if (!(parent = (query(parentID)||{}).firstChild)) return;
@@ -2455,16 +2445,16 @@ function addCommentParentPopups() {
 				&& (!linkCommentId || linkTag.getCommentId() !== linkCommentId)) {
 				linkTag.addEventListener("pointerover", event => {
 					if(event.buttons != 0 || event.pointerType == "touch" || !previewPopupsEnabled()) return;
-					if(currentPreviewPopupLinkTag) return;
+					if(currentPreviewPopup.linkTag) return;
 					linkTag.createPreviewPopup();
 				});
 				linkTag.createPreviewPopup = function() {
-					removePreviewPopup();
+					removePreviewPopup(currentPreviewPopup);
 
-					currentPreviewPopupLinkTag = linkTag;
+					currentPreviewPopup = {linkTag: linkTag};
 					
 					let popup = document.createElement("iframe");
-					currentPreviewPopup = popup;
+					currentPreviewPopup.element = popup;
 
 					let popupTarget = linkHref;
 					if(popupTarget.match(/#comment-/)) {
@@ -2515,7 +2505,7 @@ function addCommentParentPopups() {
 						hideButton.className = "popup-hide-button";
 						hideButton.insertAdjacentText('beforeend', "\uF070");
 						hideButton.onclick = (event) => {
-							removePreviewPopup();
+							removePreviewPopup(currentPreviewPopup);
 							setPreviewPopupsEnabled(false);
 							event.stopPropagation();
 						}
@@ -2530,11 +2520,11 @@ function addCommentParentPopups() {
 
 					popup.contentDocument.body.addEventListener("click", clickListener);
 					
-					currentPreviewPopupTimeout = setTimeout(() => {
+					currentPreviewPopup.timeout = setTimeout(() => {
 						recenter();
 
 						requestIdleCallback(() => {
-							if(currentPreviewPopup === popup) {
+							if(currentPreviewPopup.element === popup) {
 								popup.scrolling = "";
 								popup.style.visibility = "unset";
 								popup.style.transition = null;
@@ -2549,7 +2539,7 @@ function addCommentParentPopups() {
 
 					let pointerX, pointerY, mousePauseTimeout = null;
 
-					currentPreviewPopupPointerListener = (event) => {
+					currentPreviewPopup.pointerListener = (event) => {
 						pointerX = event.clientX;
 						pointerY = event.clientY;
 
@@ -2564,18 +2554,18 @@ function addCommentParentPopups() {
 								mousePauseTimeout = setTimeout(overElement.createPreviewPopup, 150);
 							}
 						} else {
-							removePreviewPopup();
+							removePreviewPopup(currentPreviewPopup);
 							if(overElement['createPreviewPopup']) overElement.createPreviewPopup();
 						}
 					};
-					window.addEventListener("pointermove", currentPreviewPopupPointerListener);
+					window.addEventListener("pointermove", currentPreviewPopup.pointerListener);
 
-					currentPreviewPopupScrollListener = (event) => {
+					currentPreviewPopup.scrollListener = (event) => {
 						let overElement = document.elementFromPoint(pointerX, pointerY);
 						if(overElement === linkTag || overElement === popup) return;
-						removePreviewPopup();
+						removePreviewPopup(currentPreviewPopup);
 					};
-					window.addEventListener("scroll", currentPreviewPopupScrollListener, {passive: true});
+					window.addEventListener("scroll", currentPreviewPopup.scrollListener, {passive: true});
 				};
 			}
 		}
