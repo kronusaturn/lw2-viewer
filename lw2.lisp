@@ -577,9 +577,14 @@ signaled condition to *HTML-OUTPUT*."
 	   (csrf-token (and session-token (make-csrf-token session-token)))
 	   (hide-nav-bars (truthy-string-p (hunchentoot:get-parameter "hide-nav-bars")))
 	   (preview (string-equal (hunchentoot:get-parameter "format") "preview"))
-	   (page-resources (nreverse *page-resources*)))
+	   (page-resources (nreverse *page-resources*))
+	   (site-domain (site-domain *current-site*)))
       (setf *page-resources* nil)
       (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head>")
+      (when site-domain
+	(write-string "<script>" out-stream)
+	(set-script-variables ("document.domain" site-domain))
+	(write-string "</script>" out-stream))
       (unless preview
 	(write-string "<script>" out-stream)
 	(set-script-variables
@@ -590,7 +595,12 @@ signaled condition to *HTML-OUTPUT*."
 	 ("GW" (alist "useFancyFeatures" (not (typep *current-site* 'arbital-site))
 		      "secureCookies" (to-boolean (site-secure *current-site*))
 		      "csrfToken" csrf-token
-		      "assets" (alist "popup.svg" (generate-versioned-link "/assets/popup.svg")))))
+		      "assets" (alist "popup.svg" (generate-versioned-link "/assets/popup.svg"))
+		      "sites" (if site-domain
+				  (loop for site in *sites*
+				     when (let ((sd (site-domain site))) (and sd (string-equal sd site-domain)))
+				     collect (cons (site-host site) t))
+				  (alist (site-host *current-site*) t)))))
 	(for-resource-type (:inline-script script-text)
 			   (write-string ";" out-stream)
 			   (write-string script-text out-stream))

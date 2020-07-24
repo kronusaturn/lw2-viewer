@@ -8,7 +8,7 @@
     #:alternate-frontend-site #:lesswrong-viewer-site #:ea-forum-viewer-site
     #:arbital-site
     #:site-class #:call-route-handler #:site-class-routes
-    #:site-uri #:site-host #:site-secure #:site-backend #:site-title #:site-description #:background-loader-enabled #:site-fonts-source
+    #:site-uri #:site-host #:site-domain #:site-secure #:site-backend #:site-title #:site-description #:background-loader-enabled #:site-fonts-source
     #:main-site-title #:main-site-abbreviation #:main-site-uri
     #:host-matches #:find-site
     #:call-with-site-context #:with-site-context
@@ -38,6 +38,7 @@
 (defclass site ()
   ((uri :accessor site-uri :initarg :uri :type simple-string)
    (host :accessor site-host :initarg :host :type simple-string)
+   (domain :accessor site-domain :initarg :domain :initform nil)
    (secure :accessor site-secure :initarg :secure)
    (backend :accessor site-backend :initarg :backend :type backend-base)
    (title :accessor site-title :initarg :title :type simple-string)

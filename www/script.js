@@ -2409,7 +2409,7 @@ function addCommentParentPopups() {
 		catch(e) { }
 		if(!url) return;
 
-		if(window.location.origin === url.origin) {
+		if(GW.sites[url.host]) {
 			let linkCommentId = (/\/(?:comment|answer)\/([^\/#]+)$/.exec(url.pathname)||[])[1] || (/#comment-(.+)/.exec(url.hash)||[])[1];
 			
 			if(url.hash && linkTag.hasClass("comment-parent-link") || linkTag.hasClass("comment-child-link")) {
