@@ -213,32 +213,36 @@
 (defun call-with-http-response (fn uri-string &rest args &key &allow-other-keys)
   (let* ((uri (quri:uri uri-string))
 	 (uri-dest (concatenate 'string (quri:uri-host uri) ":" (format nil "~d" (quri:uri-port uri))))
-	 (orig-stream (connection-pop uri-dest))
+	 (stream (connection-pop uri-dest))
 	 (remaining-retries 3))
-    (multiple-value-bind (response status-code headers response-uri stream)
-	(abnormal-unwind-protect
-	 (block nil
-	   (tagbody retry
-	      (handler-bind ((dex:http-request-failed
-			      (lambda (condition)
-				(let ((body (dex:response-body condition)))
-				  (when (streamp body)
-				    (ignore-errors (close body)))
-				  (when orig-stream
-				    (ignore-errors (close orig-stream))))
-				(when (and (> remaining-retries 0)
-					   (<= 500 (dex:response-status condition) 599))
-				  (decf remaining-retries)
-				  (sleep 0.2)
-				  (go retry)))))
-		(return (apply 'dex:request uri :use-connection-pool nil :stream orig-stream args)))))
-	 (when orig-stream
-	   (ignore-errors (close orig-stream))))
-      (declare (ignore status-code headers response-uri))
+    (let (response status-code headers response-uri new-stream)
+      (abnormal-unwind-protect
+       (tagbody retry
+	  (labels ((maybe-retry ()
+		     (when stream (ignore-errors (close stream)))
+		     (setf stream nil)
+		     (when (> remaining-retries 0)
+		       (decf remaining-retries)
+		       (sleep 0.2)
+		       (go retry))))
+	    (handler-bind ((dex:http-request-failed
+			    (lambda (condition)
+			      (if-let ((r (find-restart 'dex:ignore-and-continue condition)))
+				      (invoke-restart r)
+				      (maybe-retry)))))
+	      (setf (values response status-code headers response-uri new-stream)
+		    (apply 'dex:request uri :use-connection-pool nil :stream stream args))
+	      (unless (eq stream new-stream)
+		(when stream (ignore-errors (close stream)))
+		(setf stream new-stream
+		      new-stream nil))
+	      (when (<= 500 status-code 599)
+		(maybe-retry)
+		(error (make-condition 'lw2-connection-error :message (format nil "HTTP status ~A" status-code)))))))
+       (when stream
+	 (ignore-errors (close stream))))
       (unwind-protect
 	   (funcall fn response)
-	(unless (eq stream orig-stream)
-	  (ignore-errors (close orig-stream)))
 	(if stream ; the connection is reusable
 	    (progn
 	      (when (streamp response)
