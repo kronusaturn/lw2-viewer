@@ -184,6 +184,18 @@
   (when *graphql-debug-output*
     (format *graphql-debug-output* "~&GraphQL query: ~A~%" query)))
 
+(defmacro with-retrying ((maybe-retry-fn-name &key retries before-maybe-retry before-retry) &body body)
+  (with-gensyms (remaining-retries retry)
+    `(let ((,remaining-retries ,retries))
+       (tagbody ,retry
+	  (labels ((,maybe-retry-fn-name ()
+		     ,before-maybe-retry
+		     (when (> ,remaining-retries 0)
+		       (decf ,remaining-retries)
+		       ,before-retry
+		       (go ,retry))))
+	    ,@body)))))
+
 (defun finish-reading-stream (stream)
   (handler-case
       (let ((buf (make-array 4096 :element-type (stream-element-type stream))))
@@ -213,32 +225,27 @@
 (defun call-with-http-response (fn uri-string &rest args &key &allow-other-keys)
   (let* ((uri (quri:uri uri-string))
 	 (uri-dest (concatenate 'string (quri:uri-host uri) ":" (format nil "~d" (quri:uri-port uri))))
-	 (stream (connection-pop uri-dest))
-	 (remaining-retries 3))
+	 (stream (connection-pop uri-dest)))
     (let (response status-code headers response-uri new-stream)
       (abnormal-unwind-protect
-       (tagbody retry
-	  (labels ((maybe-retry ()
-		     (when stream (ignore-errors (close stream)))
-		     (setf stream nil)
-		     (when (> remaining-retries 0)
-		       (decf remaining-retries)
-		       (sleep 0.2)
-		       (go retry))))
-	    (handler-bind ((dex:http-request-failed
-			    (lambda (condition)
-			      (if-let ((r (find-restart 'dex:ignore-and-continue condition)))
-				      (invoke-restart r)
-				      (maybe-retry)))))
-	      (setf (values response status-code headers response-uri new-stream)
-		    (apply 'dex:request uri :use-connection-pool nil :stream stream args))
-	      (unless (eq stream new-stream)
-		(when stream (ignore-errors (close stream)))
-		(setf stream new-stream
-		      new-stream nil))
-	      (when (<= 500 status-code 599)
-		(maybe-retry)
-		(error (make-condition 'lw2-connection-error :message (format nil "HTTP status ~A" status-code)))))))
+       (with-retrying (maybe-retry :retries 3
+				   :before-maybe-retry (progn (when stream (ignore-errors (close stream)))
+							      (setf stream nil))
+				   :before-retry (sleep 0.2))
+	 (handler-bind ((dex:http-request-failed
+			 (lambda (condition)
+			   (if-let ((r (find-restart 'dex:ignore-and-continue condition)))
+				   (invoke-restart r)
+				   (maybe-retry)))))
+	   (setf (values response status-code headers response-uri new-stream)
+		 (apply 'dex:request uri :use-connection-pool nil :stream stream args))
+	   (unless (eq stream new-stream)
+	     (when stream (ignore-errors (close stream)))
+	     (setf stream new-stream
+		   new-stream nil))
+	   (when (<= 500 status-code 599)
+	     (maybe-retry)
+	     (error (make-condition 'lw2-connection-error :message (format nil "HTTP status ~A" status-code))))))
        (when stream
 	 (ignore-errors (close stream))))
       (unwind-protect
