@@ -174,6 +174,8 @@
      (values (graphql-mutation-string mutation-name terms fields) mutation-name)))
   (backend-lw2-modernized
    (let* ((mutation-name (concatenate 'string (string-downcase mutation-type) (string-capitalize target-type)))
+	  (selector-type (concatenate 'string (string-capitalize target-type) "SelectorUniqueInput"))
+	  (data-type (concatenate 'string (string-capitalize mutation-type) (string-capitalize target-type) "DataInput"))
 	  (data (append
 		 (cdr (assoc :document terms))
 		 (cdr (assoc :set terms))
@@ -182,21 +184,27 @@
 					 (if (eq k :body)
 					     (cons :contents
 						   (alist :update-type "minor"
+							  :commit-message ""
 							  :original-contents (alist :type "markdown" :data v)))
 					     x)))
 		     data))
 	  (terms (nconc
-		  (loop for (k . v) in terms collect
+		  (loop for (k . v) in terms nconc
 		       (case k
-			 (:document (values))
-			 (:set (values))
-			 (:unset (values))
-			 (:document-id (cons :selector (alist :document-id v)))
-			 (t (cons k v))))
+			 (:document nil)
+			 (:set nil)
+			 (:unset nil)
+			 (:document-id (list (cons :selector (alist :document-id v))))
+			 (t (list (cons k v)))))
 		  (when data
-		    (list (cons :data data)))))
-	  (fields (list (list* :data fields))))
-     (values (graphql-mutation-string mutation-name terms fields) mutation-name))))
+		    (list (cons :data data))))))
+     (values (format nil "mutation ~A(~@[$selector: ~A!, ~]$data: ~A!)~3:*{~A(~:[~;selector: $selector, ~]data: $data)~*{data{~{~A~^, ~}}}}"
+		     mutation-name
+		     (if (cdr (assoc :selector terms)) selector-type)
+		     data-type
+		     (map 'list (lambda (x) (json:lisp-to-camel-case (string x))) fields))
+	     mutation-name
+	     terms))))
 #|
 do-lw2-mutation:
 
@@ -212,9 +220,10 @@ fields - The return values we want to get from the server after it completes our
 |#
 (define-backend-function do-lw2-mutation (auth-token target-type mutation-type terms fields)
   (backend-lw2-legacy
-   (multiple-value-bind (mutation-string operation-name)
+   (multiple-value-bind (mutation-string operation-name variables)
        (lw2-mutation-string target-type mutation-type terms fields)
      (do-lw2-post-query auth-token `(("query" . ,mutation-string)
+				     ("variables" . ,variables)
 				     ("operationName" . ,operation-name)))))
   (backend-lw2-modernized
    (cdr (assoc :data (call-next-method)))))
