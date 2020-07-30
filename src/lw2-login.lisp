@@ -198,11 +198,13 @@
 			 (t (list (cons k v)))))
 		  (when data
 		    (list (cons :data data))))))
-     (values (format nil "mutation ~A(~@[$selector: ~A!, ~]$data: ~A!)~3:*{~A(~:[~;selector: $selector, ~]data: $data)~*{data{~{~A~^, ~}}}}"
+     (values (with-output-to-string (stream)
+	       (format stream "mutation ~A(~@[$selector: ~A!, ~]$data: ~A!)~3:*{~A(~:[~;selector: $selector, ~]data: $data)"
 		     mutation-name
 		     (if (cdr (assoc :selector terms)) selector-type)
-		     data-type
-		     (map 'list (lambda (x) (json:lisp-to-camel-case (string x))) fields))
+		     data-type)
+	       (write-graphql-simple-field-list (list (list* :data fields)) stream)
+	       (write-string "}" stream))
 	     mutation-name
 	     terms))))
 #|
