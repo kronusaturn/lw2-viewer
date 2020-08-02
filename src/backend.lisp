@@ -1021,7 +1021,7 @@
     (rate-limit (slug) (cdr (first (lw2-graphql-query (lw2-query-string :user :single (alist :slug slug) :fields '(:--id))))))))
 
 (with-rate-limit
-  (simple-cacheable ("slug-tagid" 'backend-lw2-tags "slug-to-tagid" slug)
+  (simple-cacheable ("slug-tagid" 'backend-lw2-tags "slug-to-tagid" slug :catch-errors nil)
     (rate-limit (slug) (cdr (first (lw2-graphql-query (lw2-query-string :tag :single (alist :slug slug) :fields '(:--id))))))))
 
 (defun preload-username-cache ()
