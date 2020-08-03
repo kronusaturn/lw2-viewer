@@ -1,8 +1,8 @@
 (uiop:define-package #:lw2.graphql
   (:documentation "Contains generic GraphQL client functionality required by lw2-viewer.")
-  (:use #:cl #:alexandria #:iterate)
+  (:use #:cl #:alexandria #:iterate #:lw2.macro-utils)
   (:import-from #:trivial-macroexpand-all #:macroexpand-all)
-  (:import-from #:trivial-cltl2 #:parse-macro #:enclose #:augment-environment)
+  (:import-from #:trivial-cltl2 #:enclose #:augment-environment)
   (:export #:+graphql-timestamp-format+ #:write-graphql-simple-field-list #:graphql-query-string* #:graphql-query-string #:graphql-mutation-string #:timestamp-to-graphql)
   (:recycle #:lw2.backend #:lw2.login))
 
@@ -11,61 +11,67 @@
 (defconstant +graphql-timestamp-format+ (if (boundp '+graphql-timestamp-format+) (symbol-value '+graphql-timestamp-format+)
                                             (substitute-if '(:msec 3) (lambda (x) (and (listp x) (eq (car x) :usec))) local-time:+iso-8601-format+)))
 
-(defun compiler-constantp (form &optional environment)
-  (or (constantp form environment)
-      (constantp (introspect-environment:compiler-macroexpand form environment) environment)))
-
-(defun augment-macros (environment macro-bindings)
-  (let ((macro-list (iter (for (name args . body) in macro-bindings)
-			  (for macro-lambda = (parse-macro name args body))
-			  (for macro-fn = (enclose macro-lambda environment))
-			  (collect (list name macro-fn)))))
-    (augment-environment environment :macro macro-list)))
-
-(defvar *grammars* nil)
-
 (defmacro declaim-grammar (name)
-  `(declaim (ftype function ,(symbolicate '#:write- name))))
+  ;; Forward declare a grammar form so it can be used before it is defined.
+  `(eval-when (:compile-toplevel :load-toplevel :execute)
+     (declaim (ftype function ,(symbolicate '#:write- name)))
+     (pushnew ',name *grammars*)))
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
+
+  (defvar *grammars* nil)
+
+  (defun writer-macros (stream)
+    ;; Return the list of macro expanders that should be active to create a writer.
+    (labels ((grammar-writer-macro (grammar)
+	       (list grammar
+		     (macro-as-lambda grammar (&rest args) `(,(symbolicate '#:write- grammar) ,@args ,stream)))))
+      (append (macro-list-as-lambdas
+	       (to-string (&body body)
+		 `(write-string (progn ,@body) ,stream))
+	       (sequence (&body body)
+		 `(progn ,@(map 'list (lambda (f) (gen-writer f stream)) body)))
+	       (separated-list (type separator list)
+		 `(iter (for x in ,list)
+			(unless (first-time-p)
+			  ,(gen-writer separator stream))
+			,(gen-writer `(,type x) stream)))
+	       (with-stream ((stream-binding) &body body)
+		 `(let ((,stream-binding ,stream))
+		    ,@body)))
+	      (iter (for grammar in *grammars*)
+		    (collect (grammar-writer-macro grammar))))))
+  
   (defun gen-writer (form stream &optional env)
+    ;; Convert a defgrammar form to a lisp form.
     (etypecase form
       (string `(write-string ,form ,stream))
       (list
        (macroexpand-all
 	form
-	(augment-macros
-	 env
-	 (append
-	  `((to-string (&body body)
-		       `(write-string (progn ,@body) ,',stream))
-	    (sequence (&body body)
-		      `(progn ,@(map 'list (lambda (f) (gen-writer f ',stream)) body)))
-	    (separated-list (type separator list)
-			    `(iter (for x in ,list)
-				   (unless (first-time-p)
-				     ,(gen-writer separator ',stream))
-				   ,(gen-writer `(,type x) ',stream)))
-	    (with-stream ((stream-binding) &body body)
-	      `(let ((,stream-binding ,',stream))
-		 ,@body)))
-	  (iter (for grammar in *grammars*)
-		(collect `(,grammar (&rest args) `(,(symbolicate '#:write- ',grammar) ,@args ,',stream)))))))))))
+	(augment-environment env :macro (writer-macros stream)))))))
 
 (defmacro defgrammar (name args &body body)
   (with-gensyms (stream)
-    `(eval-when (:compile-toplevel :load-toplevel :execute)
-       (setf *grammars* (adjoin ',name *grammars*))
-       (defun ,(symbolicate '#:write- name) (,@args ,stream)
-	 ,(gen-writer (cons 'progn body) stream)
-	 nil)
-       (define-compiler-macro ,(symbolicate '#:write- name) (&whole whole ,@args ,stream &environment env)
-	 (if (every (lambda (x) (compiler-constantp x env)) (list ,@args))
-	     `(write-string
-	       ,(with-output-to-string (c-stream)
-				       (funcall (trivial-cltl2:enclose `(lambda (c-stream) (funcall (symbol-function ',(symbolicate '#:write- ',name)) ,,@args c-stream)) env) c-stream))
-	       ,,stream)
-	     whole)))))
+    (let ((write-function (symbolicate '#:write- name)))
+      (pushnew name *grammars*)
+      `(eval-when (:compile-toplevel :load-toplevel :execute)
+	 (pushnew ',name *grammars*)
+	 (defun ,write-function (,@args ,stream)
+	   ,(gen-writer (cons 'progn body) stream)
+	   nil)
+	 (define-compiler-macro ,write-function (&whole whole ,@args ,stream &environment env)
+	   (if (every (lambda (x) (compiler-constantp x env)) (list ,@args))
+	       `(write-string
+		 ,(with-output-to-string (c-stream)
+					 (funcall (enclose `(lambda (c-stream)
+							      (declare (notinline ,',write-function))
+							      (,',write-function ,,@args c-stream)) env)
+						  c-stream))
+		 ,,stream)
+	       whole))))))
+
+;;; See the GraphQL spec, https://spec.graphql.org/June2018/
 
 (defgrammar graphql-name (obj)
   (to-string (etypecase obj
