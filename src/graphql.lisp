@@ -27,9 +27,9 @@
 	       (list grammar
 		     (macro-as-lambda grammar (&rest args) `(,(symbolicate '#:write- grammar) ,@args ,stream)))))
       (append (macro-list-as-lambdas
-	       (to-string (&body body)
+	       (emit-string (&body body)
 		 `(write-string (progn ,@body) ,stream))
-	       (sequence (&body body)
+	       (emit (&body body)
 		 `(progn ,@(map 'list (lambda (f) (gen-writer f stream)) body)))
 	       (separated-list (type separator list)
 		 `(iter (for x in ,list)
@@ -74,67 +74,67 @@
 ;;; See the GraphQL spec, https://spec.graphql.org/June2018/
 
 (defgrammar graphql-name (obj)
-  (to-string (etypecase obj
-	       (string obj)
-	       (symbol (json:lisp-to-camel-case (string obj))))))
+  (emit-string (etypecase obj
+		 (string obj)
+		 (symbol (json:lisp-to-camel-case (string obj))))))
 
 (declaim-grammar graphql-simple-field-list)
 
 (defgrammar graphql-simple-field (field)
   (typecase field
     (atom (graphql-name field))
-    (list (sequence (graphql-name (first field))
-		    (graphql-simple-field-list (rest field))))))
+    (list (emit (graphql-name (first field))
+		(graphql-simple-field-list (rest field))))))
 
 (defgrammar graphql-simple-field-list (fields)
-  (sequence "{" (separated-list graphql-simple-field "," fields) "}"))
+  (emit "{" (separated-list graphql-simple-field "," fields) "}"))
 
 (declaim-grammar graphql-argument)
 
 (defgrammar graphql-value (value)
   (typecase value
-	      ((member t) (sequence "true"))
-	      ((member nil) (sequence "false"))
-	      ((member :null) (sequence "null"))
-	      ((member :undefined) (sequence "undefined"))
+	      ((member t) (emit "true"))
+	      ((member nil) (emit "false"))
+	      ((member :null) (emit "null"))
+	      ((member :undefined) (emit "undefined"))
 	      (symbol (graphql-name value))
 	      ((cons (member :list) list)
-	       (sequence "[" (separated-list graphql-value "," (rest value)) "]"))
+	       (emit "[" (separated-list graphql-value "," (rest value)) "]"))
 	      ((cons list list)
-	       (sequence "{" (separated-list graphql-argument "," value) "}"))
+	       (emit "{" (separated-list graphql-argument "," value) "}"))
 	      (t (with-stream (stream) (json:encode-json value stream)))))
 
 (defgrammar graphql-argument (cons)
-  (sequence (graphql-name (car cons))
-	    ":"
-	    (graphql-value (cdr cons))))
+  (emit (graphql-name (car cons))
+	":"
+	(graphql-value (cdr cons))))
 
 (defgrammar graphql-argument-alist (list)
-  (sequence "(" (separated-list graphql-argument "," list) ")"))
+  (emit "(" (separated-list graphql-argument "," list) ")"))
 
 (declaim-grammar graphql-field)
 
 (defgrammar graphql-combined-fields (fields simple-fields)
   (when (or fields simple-fields)
-    (sequence "{" (separated-list graphql-field "," fields))
-    (when (and fields simple-fields) (sequence ","))
-    (sequence (separated-list graphql-simple-field "," simple-fields) "}")))
+    (emit "{" (separated-list graphql-field "," fields))
+    (when (and fields simple-fields) (emit ","))
+    (emit (separated-list graphql-simple-field "," simple-fields) "}")))
 
 (defgrammar graphql-field (field)
   (destructuring-bind (name &key args fields simple-fields) field
-    (sequence (graphql-name name))
+    (emit (graphql-name name))
     (when args
       (graphql-argument-alist args))
     (graphql-combined-fields fields simple-fields)))
 
 (defgrammar graphql-field-list (fields)
-  (sequence "{" (separated-list graphql-field "," fields) "}"))
+  (emit "{" (separated-list graphql-field "," fields) "}"))
 
 (defgrammar graphql-operation (operation-type name variable-definitions fields simple-fields)
-  (sequence (graphql-name operation-type) " "
-	    (graphql-name name)
-	    (graphql-argument-alist variable-definitions)
-	    (graphql-combined-fields fields simple-fields)))
+  (emit (graphql-name operation-type) " "
+	(graphql-name name)
+	(graphql-argument-alist variable-definitions)
+	(graphql-combined-fields fields simple-fields)))
 
 (defun graphql-query-string* (query-type terms fields)
   (with-output-to-string (stream)
