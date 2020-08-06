@@ -307,9 +307,16 @@ signaled condition to *HTML-OUTPUT*."
 					      (cdr (assoc :child-count c))))
 				  (comment-tree-to-html out-stream comment-hash :target c-id :level (1+ level) :level-invert level-invert)))))))))
 
+(defun sort-comments (comments sort-by)
+  (multiple-value-bind (sort-fn key-fn)
+      (ecase sort-by
+	(:old (values (lambda (a b) (ignore-errors (local-time:timestamp< a b)))
+		      (lambda (c) (ignore-errors (local-time:parse-timestring (cdr (assoc :posted-at c))))))))
+    (sort comments sort-fn :key key-fn)))
+
 (defun comment-chrono-to-html (out-stream comments)
   (let ((comment-hash (make-comment-parent-hash comments)) 
-	(comments-sorted (sort comments #'local-time:timestamp< :key (lambda (c) (local-time:parse-timestring (cdr (assoc :posted-at c)))))))
+	(comments-sorted (sort-comments comments :old)))
     (comment-thread-to-html out-stream
       (lambda ()
         (loop for c in comments-sorted do
@@ -1179,7 +1186,7 @@ signaled condition to *HTML-OUTPUT*."
 					     (let ((parent-hash (make-comment-parent-hash comments)))
 					       (when overcomingbias-sort
 						 (setf (gethash nil parent-hash)
-						       (sort (gethash nil parent-hash) #'local-time:timestamp< :key (lambda (c) (local-time:parse-timestring (cdr (assoc :posted-at c)))))))
+						       (sort-comments (gethash nil parent-hash) :old)))
 					       (comment-tree-to-html out-stream parent-hash))))
 				       <div class="comments-empty-message">("No ~As." id)</div>)))))
 		    (if preview
