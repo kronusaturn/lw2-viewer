@@ -338,6 +338,7 @@
 
 (define-backend-function lw2-graphql-query (query &key auth-token return-type (decoder 'decode-query-result))
   (backend-base
+   (do-graphql-debug query)
    (call-with-backend-response
     (ecase return-type
       ((nil) decoder)
