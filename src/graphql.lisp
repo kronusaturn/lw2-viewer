@@ -136,15 +136,20 @@
 	(graphql-argument-alist variable-definitions)
 	(graphql-combined-fields fields simple-fields)))
 
+(defgrammar graphql-simple-query (query-type terms fields)
+  (emit (graphql-name query-type)
+	(graphql-argument-alist terms)
+	(graphql-simple-field-list fields)))
+
 (defun graphql-query-string* (query-type terms fields)
   (with-output-to-string (stream)
-    (write-graphql-name query-type stream)
-    (write-graphql-argument-alist terms stream)
-    (when fields
-      (write-graphql-simple-field-list fields stream))))
+    (write-graphql-simple-query query-type terms fields stream)))
 
 (defun graphql-query-string (query-type terms fields)
-  (format nil "{~A}" (graphql-query-string* query-type terms fields)))
+  (with-output-to-string (stream)
+    (write-string "{" stream)
+    (write-graphql-simple-query query-type terms fields stream)
+    (write-string "}" stream)))
 
 (defun graphql-mutation-string (mutation-type terms fields)
   (format nil "mutation ~A{~A}" mutation-type (graphql-query-string* mutation-type terms fields)))
