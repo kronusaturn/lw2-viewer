@@ -36,6 +36,9 @@
 		  (if (if (eq bindings :auto)
 			  (or (not field-context) (eq field-context context))
 			  (member binding-sym bindings :test #'string=))
-		      (list (list* (intern (string binding-sym) *package*) type (if alias (list alias)))))))
+		      (list (list* (intern (string binding-sym) *package*)
+				   (if (eq type 'string) 'simple-string type) ; Optimization, assuming strings coming from the backend
+				                                              ; can never be displaced etc.
+				   (if alias (list alias)))))))
       ,datum
       ,@body)))
