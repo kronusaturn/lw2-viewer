@@ -1336,13 +1336,17 @@ h1.listing + .post-meta .read-time {
 	cursor: default;
 }
 
-/*************/
-/* SEQUENCES */
-/*************/
+/********************/
+/* SEQUENCES & TAGS */
+/********************/
 
-.sequence-text {
+.sequence-text, .tag-description {
 	font-size: 1.2rem;
 	padding: 0 22px;
+}
+
+#content.tag-index-page .tag-description {
+	margin: 1em 0 -1em;
 }
 
 section {
@@ -3971,7 +3975,7 @@ li {
 #content.preview.user-page .page-main-heading {
 	margin-left: 8px;
 }
-#content.preview.user-page .user-bio {
+#content.preview.not(not) .body-text {
 	margin-left: 8px;
 	margin-right: 8px;
 }

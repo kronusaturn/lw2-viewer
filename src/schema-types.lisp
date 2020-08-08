@@ -83,3 +83,12 @@
 		    :subfields (:--id :user-id :posted-at :post-id :base-score :af-base-score :page-url
 				:parent-comment-id :af :vote-count :retracted :deleted-public :html-body))
    (html-body string)))
+
+(define-schema-type :tag ()
+  ((tag-id string :alias :--id)
+   (name string)
+   (slug string)
+   (post-count (or null fixnum))
+   (description list
+		:context :body
+		:subfields (:html))))

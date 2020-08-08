@@ -871,13 +871,15 @@ h1.listing {
 	}
 }
 
-/*=======*/
-/* POSTS */
-/*=======*/
+/*===================*/
+/* POSTS & BODY TEXT */
+/*===================*/
 
 @media only screen and (max-width: 900px) {
 	.post-body,
-	h1.post-title {
+	h1.post-title,
+	.tag-description,
+	.sequence-text {
 		padding: 0 6px;
 	}
 }
