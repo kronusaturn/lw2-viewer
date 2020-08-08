@@ -491,6 +491,9 @@
 	#nav-item-meta .nav-inner::before {
 		content: "\F077";
 	}
+	#nav-item-tags .nav-inner::before {
+		content: "\F02C";
+	}
 	#nav-item-recent-comments > * > span {
 		display: none;
 	}

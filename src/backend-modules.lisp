@@ -114,7 +114,8 @@
 			    backend-feed-crossposts
 			    backend-backlinks
 			    backend-push-notifications
-			    backend-shortform) ()
+			    backend-shortform
+			    backend-lw2-tags) ()
   (:metaclass backend-class))
 
 (defclass backend-accordius (backend-lw2-legacy backend-lw2-modernized)

@@ -3102,6 +3102,7 @@ function keyboardHelpSetup() {
 				[ [ 'ak-f' ], "Go to Featured (a.k.a. “Curated”) view" ],
 				[ [ 'ak-a' ], "Go to All (a.k.a. “Community”) view" ],
 				[ [ 'ak-m' ], "Go to Meta view" ],
+				[ [ 'ak-v' ], "Go to Tags view"],
 				[ [ 'ak-c' ], "Go to Recent Comments view" ],
 				[ [ 'ak-r' ], "Go to Archive view" ],
 				[ [ 'ak-q' ], "Go to Sequences view" ],

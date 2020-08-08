@@ -452,7 +452,7 @@ signaled condition to *HTML-OUTPUT*."
     (:primary-bar (("home" "/" "Home" :description "Latest frontpage posts" :accesskey "h")
                    ("featured" "/index?view=featured" "Featured" :description "Latest featured posts" :accesskey "f")
                    ("all" "/index?view=all" "All" :description "Latest posts from all sections" :accesskey "a")
-                   ("meta" "/index?view=meta" "Meta" :description "Latest meta posts" :accesskey "m")
+                   ("tags" "/tags" "Tags" :description "All tags" :accesskey "v")
                    ("recent-comments" "/recentcomments" "<span>Recent </span>Comments" :description "Latest comments" :accesskey "c")))))
 
 (defmethod site-nav-bars ((site ea-forum-viewer-site))
@@ -463,6 +463,7 @@ signaled condition to *HTML-OUTPUT*."
     (:primary-bar (("home" "/" "Home" :description "Latest frontpage posts" :accesskey "h")
                    ("all" "/index?view=all" "All" :description "Latest posts from all sections" :accesskey "a")
                    ("meta" "/index?view=community" "Community" :description "Latest community posts" :accesskey "m")
+		   ("tags" "/tags" "Tags" :description "All tags" :accesskey "v")
 		   ("shortform" "/shortform" "Shortform" :description "Latest Shortform posts")
                    ("recent-comments" "/recentcomments" "<span>Recent </span>Comments" :description "Latest comments" :accesskey "c")))))
 
