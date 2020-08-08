@@ -3165,7 +3165,8 @@ function keyboardHelpSetup() {
 				"Miscellaneous",
 				[ [ 'ak-x' ], "Switch to next view on user page" ],
 				[ [ 'ak-z' ], "Switch to previous view on user page" ],
-				[ [ 'ak-`&nbsp;' ], "Toggle compact comment list view" ]
+				[ [ 'ak-`&nbsp;' ], "Toggle compact comment list view" ],
+				[ [ 'ak-g' ], "Toggle anti-kibitzer" ]
 			] ].map(section => 
 			`<ul><li class='section'>${section[0]}</li>` + section.slice(1).map(entry =>
 				`<li>
