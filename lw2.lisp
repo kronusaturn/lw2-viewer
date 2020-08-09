@@ -42,6 +42,8 @@
 (defparameter *default-prefs* (alist :items-per-page 20 :default-sort "new"))
 (defvar *current-prefs* nil)
 
+(defparameter *preview* nil)
+
 (defun get-post-sequences (post-id)
   (when-let (sequence-ids (get-post-sequence-ids post-id))
     (with-collector (col)
@@ -584,7 +586,7 @@ signaled condition to *HTML-OUTPUT*."
     (let* ((session-token (hunchentoot:cookie-in "session-token"))
 	   (csrf-token (and session-token (make-csrf-token session-token)))
 	   (hide-nav-bars (truthy-string-p (hunchentoot:get-parameter "hide-nav-bars")))
-	   (preview (string-equal (hunchentoot:get-parameter "format") "preview"))
+	   (preview *preview*)
 	   (page-resources (nreverse *page-resources*))
 	   (site-domain (site-domain *current-site*)))
       (setf *page-resources* nil)
@@ -674,7 +676,7 @@ signaled condition to *HTML-OUTPUT*."
     (quri:render-uri quri)))
 
 (defun pagination-nav-bars (&key offset total with-next (items-per-page (user-pref :items-per-page)))
-  (if (string-equal (hunchentoot:get-parameter "format") "preview")
+  (if *preview*
       (lambda (out-stream fn)
 	(declare (ignore out-stream))
 	(funcall fn))
@@ -798,11 +800,12 @@ signaled condition to *HTML-OUTPUT*."
 	 (*current-prefs*
 	  (if-let (prefs-string (hunchentoot:cookie-in "prefs"))
 		  (let ((json:*identifier-name-to-key* 'json:safe-json-intern))
-		    (ignore-errors (json:decode-json-from-string (quri:url-decode prefs-string)))))))
+		    (ignore-errors (json:decode-json-from-string (quri:url-decode prefs-string))))))
+	 (*preview* (string-equal (hunchentoot:get-parameter "format") "preview")))
     (multiple-value-bind (*revalidate-default* *force-revalidate-default*)
 	(cond ((ppcre:scan "(?:^|,?)\\s*(?:no-cache|max-age=0)(?:$|,)" (hunchentoot:header-in* :cache-control))
 	       (values t t))
-	      ((string-equal (hunchentoot:get-parameter "format") "preview")
+	      (*preview*
 	       (values nil nil))
 	      (t
 	       (values t nil)))
@@ -882,34 +885,35 @@ signaled condition to *HTML-OUTPUT*."
 	  csrf-token button-label end-html))
 
 (defun page-toolbar-to-html (&key title new-post new-conversation logout (rss t) ignore enable-push-notifications hide-cov)
-  (let ((out-stream *html-output*)
-	(liu (logged-in-userid)))
-    (format out-stream "<div class=\"page-toolbar~@[ hide-until-init~]\">" enable-push-notifications)
-    (when logout
-      (format out-stream "<form method=\"post\" action=\"/logout\"><input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><button class=\"logout-button button\" name=\"logout\">Log out</button></form>"
-              (make-csrf-token)))
-    (when ignore
-      (funcall ignore))
-    (when enable-push-notifications
-      (format out-stream "<script>document.currentScript.outerHTML='<button id=\"enable-push-notifications\" class=\"button\" style=\"display: none\" data-enabled=\"~:[~;true~]\">~:*~:[En~;Dis~]able push notifications</button>'</script>"
-	      (find-subscription *current-auth-token*)))
-    (when (and new-conversation liu)
-      (multiple-value-bind (text to)
-        (typecase new-conversation (string (values "Send private message" new-conversation)) (t "New conversation"))
-        (format out-stream "<a class=\"new-private-message button\" href=\"/conversation~@[?to=~A~]\">~A</a>"
-                to text)))
-    (when hide-cov
-      (let ((cov-pref (user-pref :hide-cov)))
-        <form method="post">
-          <button name="set-cov-pref" value=(if cov-pref 0 1)>("~:[Hide~;Show~] coronavirus posts" cov-pref)</button>
-        </form>))
-    (when (and new-post liu)
-      (format out-stream "<a class=\"new-post button\" href=\"/edit-post~@[?section=~A~]\" accesskey=\"n\" title=\"Create new post [n]\">New post</a>"
-              (typecase new-post (string new-post) (t nil))))
-    (when (and title rss)
-      (format out-stream "<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" title=\"~A RSS feed\" href=\"~A\">RSS</a>"
-              title (replace-query-params (hunchentoot:request-uri*) "offset" nil "format" "rss")))
-    (format out-stream "</div>")))
+  (unless *preview*
+    (let ((out-stream *html-output*)
+	  (liu (logged-in-userid)))
+      (format out-stream "<div class=\"page-toolbar~@[ hide-until-init~]\">" enable-push-notifications)
+      (when logout
+	(format out-stream "<form method=\"post\" action=\"/logout\"><input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><button class=\"logout-button button\" name=\"logout\">Log out</button></form>"
+		(make-csrf-token)))
+      (when ignore
+	(funcall ignore))
+      (when enable-push-notifications
+	(format out-stream "<script>document.currentScript.outerHTML='<button id=\"enable-push-notifications\" class=\"button\" style=\"display: none\" data-enabled=\"~:[~;true~]\">~:*~:[En~;Dis~]able push notifications</button>'</script>"
+		(find-subscription *current-auth-token*)))
+      (when (and new-conversation liu)
+	(multiple-value-bind (text to)
+	    (typecase new-conversation (string (values "Send private message" new-conversation)) (t "New conversation"))
+	  (format out-stream "<a class=\"new-private-message button\" href=\"/conversation~@[?to=~A~]\">~A</a>"
+		  to text)))
+      (when hide-cov
+	(let ((cov-pref (user-pref :hide-cov)))
+	  <form method="post">
+	  <button name="set-cov-pref" value=(if cov-pref 0 1)>("~:[Hide~;Show~] coronavirus posts" cov-pref)</button>
+	  </form>))
+      (when (and new-post liu)
+	(format out-stream "<a class=\"new-post button\" href=\"/edit-post~@[?section=~A~]\" accesskey=\"n\" title=\"Create new post [n]\">New post</a>"
+		(typecase new-post (string new-post) (t nil))))
+      (when (and title rss)
+	(format out-stream "<a class=\"rss\" rel=\"alternate\" type=\"application/rss+xml\" title=\"~A RSS feed\" href=\"~A\">RSS</a>"
+		title (replace-query-params (hunchentoot:request-uri*) "offset" nil "format" "rss")))
+      (format out-stream "</div>"))))
 
 (defun view-items-index (items &key section title current-uri hide-title need-auth (pagination (pagination-nav-bars)) (top-nav (lambda () (page-toolbar-to-html :title title))) (content-class "index-page") alternate-html)
   (alexandria:switch ((hunchentoot:get-parameter "format") :test #'string=)
@@ -1460,6 +1464,7 @@ signaled condition to *HTML-OUTPUT*."
 	(view-items-index posts
 			  :title (format nil "~A tag" name)
 			  :top-nav (lambda ()
+				     (page-toolbar-to-html :title name)
 				     <h1 class="post-title">(clean-text-to-html name)</h1>
 				     (when-let (description-html (cdr (assoc :html description)))
 					       <div class="tag-description body-text">(with-html-stream-output (let ((*memoized-output-stream* *html-output*)) (clean-html* description-html)))</div>))
