@@ -340,7 +340,7 @@ signaled condition to *HTML-OUTPUT*."
 
 (defun identify-item (x)
   (typecase x
-    (list
+    (cons
      (if-let (typename (cdr (assoc :----typename x)))
 	     (find-symbol (string-upcase typename) (find-package :keyword))
 	     (cond

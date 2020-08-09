@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.backend
-  (:use #:cl #:sb-thread #:flexi-streams #:alexandria #:lw2-viewer.config #:lw2.sites #:lw2.context #:lw2.graphql #:lw2.lmdb
+  (:use #:cl #:sb-thread #:flexi-streams #:alexandria #:iterate #:lw2-viewer.config #:lw2.sites #:lw2.context #:lw2.graphql #:lw2.lmdb
 	#:lw2.utils #:lw2.hash-utils #:lw2.backend-modules #:lw2.schema-type #:lw2.conditions #:lw2.web-push)
   (:import-from #:collectors #:with-collector)
   (:reexport #:lw2.backend-modules)
@@ -629,9 +629,10 @@
 	  (query-string (lw2-query-string :tag-rel :list
 					  (alist :view "postsWithTag" :tag-id tagid)
 					  :fields (list (list* :post (request-fields :post :list :index))))))
-     (map 'list
-	  (lambda (x) (cdr (assoc :post x)))
-	  (lw2-graphql-query-timeout-cached query-string "tag-posts" tagid :revalidate revalidate :force-revalidate force-revalidate)))))
+     (iter
+      (for x in (lw2-graphql-query-timeout-cached query-string "tag-posts" tagid :revalidate revalidate :force-revalidate force-revalidate))
+      (when-let (post (cdr (assoc :post x)))
+	(collect post))))))
 
 (define-backend-function get-post-tags (post-id &key (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*))
   (backend-base (declare (ignore revalidate force-revalidate)) nil)
