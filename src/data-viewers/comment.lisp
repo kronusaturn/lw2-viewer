@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.data-viewers.comment
-  (:use #:cl #:lw2.html-reader #:lw2.utils #:lw2.schema-type #:lw2.schema-types #:lw2.context #:lw2.user-context #:lw2.backend #:lw2.links #:lw2.interface-utils #:lw2.sites #:lw2.clean-html #:lw2.lmdb #:lw2.backlinks)
+  (:use #:cl #:lw2.html-reader #:lw2.utils #:lw2.schema-type #:lw2.context #:lw2.user-context #:lw2.backend #:lw2.links #:lw2.interface-utils #:lw2.sites #:lw2.clean-html #:lw2.lmdb #:lw2.backlinks)
   (:export #:*comment-individual-link* #:comment-to-html))
 
 (in-package #:lw2.data-viewers.comment)
@@ -7,6 +7,36 @@
 (named-readtables:in-readtable html-reader)
 
 (defparameter *comment-individual-link* nil)
+
+(define-schema-type :comment ()
+  ((comment-id string :alias :--id)
+   (user-id string)
+   (posted-at string)
+   (highlight-new boolean :graphql-ignore t)
+   (replied list :graphql-ignore t)
+   (post-id string)
+   (base-score (or null fixnum))
+   (af-base-score (or null fixnum))
+   (page-url (or null string) :context-not :user-index) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
+   (parent-comment list :context :index :subfields (:--id :user-id :post-id))
+   (parent-comment-id (or null string))
+   (child-count (or null fixnum) :graphql-ignore t)
+   (children list :graphql-ignore t)
+   (af boolean :backend-type backend-alignment-forum)
+   (vote-count (or null fixnum))
+   (retracted boolean)
+   (deleted-public boolean)
+   (answer boolean :backend-type backend-q-and-a)
+   (parent-answer-id (or null string) :backend-type backend-q-and-a)
+   (nominated-for-review t :backend-type backend-lw2)
+   (reviewing-for-review t :backend-type backend-lw2)
+   (top-level-comment list :backend-type backend-lw2 :subfields (:nominated-for-review :reviewing-for-review))
+   (latest-children list
+		    :backend-type backend-shortform
+		    :context :shortform
+		    :subfields (:--id :user-id :posted-at :post-id :base-score :af-base-score :page-url
+				:parent-comment-id :af :vote-count :retracted :deleted-public :html-body))
+   (html-body string)))
 
 (defun comment-to-html (out-stream comment &key with-post-title)
   (if (or (cdr (assoc :deleted comment)) (cdr (assoc :deleted-public comment)))

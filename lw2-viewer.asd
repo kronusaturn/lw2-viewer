@@ -15,7 +15,6 @@
 			     (:file "user-context")
 			     (:file "conditions" :depends-on ("html-reader"))
 			     (:file "schema-type" :depends-on ("utils" "backend-modules"))
-			     (:file "schema-types" :depends-on ("schema-type"))
 			     (:file "dnsbl" :depends-on ("../config"))
                              (:file "backend-modules")
                              (:module "backends"
@@ -35,7 +34,7 @@
                                                               (copy-file "config-example.lisp" "config.lisp"))))
                              (:file "../config" :depends-on ("config-copy" "config-package"))
                              (:file "lmdb" :depends-on ("raw-memory-streams" "hash-utils" "sites" "context" "../config"))
-                             (:file "backend" :depends-on ("utils" "hash-utils" "backend-modules" "lmdb" "graphql" "context" "user-context" "sites" "schema-type" "schema-types" "conditions" "web-push"))
+                             (:file "backend" :depends-on ("utils" "hash-utils" "backend-modules" "lmdb" "graphql" "context" "user-context" "sites" "schema-type" "conditions" "web-push"))
 			     (:file "csrf" :depends-on ("conditions"))
                              (:file "components" :depends-on ("utils" "csrf"))
                              (:file "links" :depends-on ("lmdb" "backend" "sites" "context"))
@@ -50,8 +49,9 @@
 			     (:file "admin" :depends-on ("lmdb" "clean-html" "backend" "backlinks"))
 			     (:module "data-viewers"
 				      :components ((:file "post")
-						   (:file "comment"))
-				      :depends-on ("schema-type" "schema-types" "utils" "backend" "context" "user-context" "sites" "clean-html" "html-reader" "interface-utils" "links" "lmdb" "backlinks")))
+						   (:file "comment")
+						   (:file "tag"))
+				      :depends-on ("schema-type" "utils" "backend" "context" "user-context" "sites" "clean-html" "html-reader" "interface-utils" "links" "lmdb" "backlinks")))
                 :depends-on ())
                (:module "templates"
                 :components ((:static-file "conversation.html")

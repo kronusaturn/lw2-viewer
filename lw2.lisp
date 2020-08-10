@@ -5,7 +5,7 @@
 	#:lw2.graphql
 	#:lw2.conditions
 	#:lw2.routes
-	#:lw2.schema-type #:lw2.schema-types
+	#:lw2.schema-type
 	#:lw2.interface-utils
 	#:lw2.user-context
 	#:lw2.web-push
