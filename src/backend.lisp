@@ -496,7 +496,8 @@
 		    (:total (alist :enable-total t :terms args))))
     (case return-type
       (:total '(:total-count))
-      (:list (nconc (list (cons :results fields)) (if with-total '(:total-count))))
+      (:list (list-cond (t :results fields)
+			(with-total :total-count)))
       (:single (list (cons :result fields))))))
 
 (define-backend-function lw2-query-string (query-type return-type args &key context fields with-total))
@@ -655,7 +656,7 @@
    (declare (ignore fields context))
    (let (items-list)
      (loop for offset from 0 by 500
-	as items-next = (lw2-graphql-query (apply 'lw2-query-string query-type :list (nconc (alist :limit 500 :offset offset) terms) (filter-plist rest :fields :context))
+	as items-next = (lw2-graphql-query (apply 'lw2-query-string query-type :list (alist* :limit 500 :offset offset terms) (filter-plist rest :fields :context))
 					   :auth-token auth-token)
 	as length = (length items-next)
 	do (setf items-list (nconc items-list items-next))
@@ -821,7 +822,7 @@
 (define-backend-function get-notifications (&key user-id (offset 0) (limit 21) auth-token)
   (backend-lw2-legacy
    (lw2-graphql-query (lw2-query-string :notification :list
-					(nconc (alist :user-id user-id :limit limit :offset offset) *notifications-base-terms*)
+					(alist* :user-id user-id :limit limit :offset offset *notifications-base-terms*)
 					:fields '(:--id :document-type :document-id :link :title :message :type :viewed))
 		      :auth-token auth-token))
   (backend-lw2-modernized
@@ -833,7 +834,7 @@
   (backend-lw2-legacy
    (multiple-value-bind (notifications user-info)
        (lw2-graphql-query-multi (list
-				 (lw2-query-string* :notification :list (nconc (alist :user-id user-id :limit (if full 3 1)) *notifications-base-terms*)
+				 (lw2-query-string* :notification :list (alist* :user-id user-id :limit (if full 3 1) *notifications-base-terms*)
 						    :fields (if full '(:--id :message :created-at) '(:created-at)))
 				 (lw2-query-string* :user :single (alist :document-id user-id) :fields '(:last-notifications-check)))
 				:auth-token auth-token)
@@ -892,7 +893,7 @@
 													 (:date "allRecentComments")
 													 (:date-reverse "postCommentsOld"))
 										 collect `(,key (load-time-value (alist :view ,value)))))))
-			       (lw2-query-string* :comment :list (nconc (alist :offset real-offset :limit real-limit :user-id user-id) comments-base-terms)
+			       (lw2-query-string* :comment :list (alist* :offset real-offset :limit real-limit :user-id user-id comments-base-terms)
 						  :context :index))))
 		    (declare (dynamic-extent #'posts-query-string #'comments-query-string))
 		    (case request-type

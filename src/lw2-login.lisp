@@ -56,17 +56,19 @@
 					    ("result"
 					     (setf result message)
 					     (sb-thread:signal-semaphore result-semaphore)))))) 
-	(wsd:send client (maybe-output debug-output "sockjs sent" (sockjs-encode-alist `(("msg" . "connect") ("version" . "1") ("support" . ("1"))))))
-        (unless (sb-thread:wait-on-semaphore result-semaphore :timeout 10)
+	(wsd:send client (maybe-output debug-output "sockjs sent" (sockjs-encode-alist (alist "msg" "connect"
+											      "version" "1"
+											      "support" '("1")))))
+	(unless (sb-thread:wait-on-semaphore result-semaphore :timeout 10)
           (error "Timeout while waiting for LW2 server.")))
       (wsd:close-connection client))
     result))
 
-(defun do-lw2-sockjs-method (method params)
-  (do-lw2-sockjs-operation `(("msg" . "method")
-                             ("method" . ,method)
-                             ("params" . ,params)
-                             ("id" . "3"))))
+(defun do-lw2-sockjs-method (method &rest params)
+  (do-lw2-sockjs-operation (alist :msg "method"
+				  :method method
+				  :params params
+				  :id "3")))
 
 (defun parse-login-result (result)
   (let* ((result-inner (cdr (assoc :result result)))
@@ -80,16 +82,15 @@
 	      (error "Unknown response from LW2: ~A" result)))))
 
 (defun do-lw2-resume (auth-token)
-  (let ((result (do-lw2-sockjs-method "login" `((("resume" . ,auth-token))))))
+  (let ((result (do-lw2-sockjs-method "login" (alist :resume auth-token))))
     (parse-login-result result)))
 
 (define-backend-function do-login (user-designator-type user-designator password &key (try-legacy t))
   (backend-websocket-login
    (let ((result (do-lw2-sockjs-method "login"
-		   `((("user" (,user-designator-type . ,user-designator))
-		      ("password"
-		       (digest . ,(password-digest password))
-		       ("algorithm" . "sha-256")))))))
+		   (alist :user (alist user-designator-type user-designator)
+			  :password (alist :digest (password-digest password)
+					   :algorithm "sha-256")))))
      (trivia:match result
 		   ((assoc :error (trivia:alist (:error . "legacy-account")
 						(:details . (trivia:alist (:salt . legacy-salt)
@@ -107,17 +108,16 @@
 (define-backend-function do-lw2-create-user (username email password)
   (backend-websocket-login
    (let ((result (do-lw2-sockjs-method "createUser"
-		   `((("username" . ,username)
-		      ("email" . ,email)
-		      ("password"
-		       (digest . ,(password-digest password))
-		       ("algorithm" . "sha-256")))))))
+		   (alist :username username
+			  :email email
+			  :password (alist :digest (password-digest password)
+					   :algorithm "sha-256")))))
      (parse-login-result result)))) 
 
 (define-backend-function do-lw2-forgot-password (email)
   (backend-websocket-login
    (let ((result (do-lw2-sockjs-method "forgotPassword"
-		   `((("email" . ,email))))))
+		   (alist :email email))))
      (if-let (error-data (cdr (assoc :error result)))
 	     (values nil (cdr (assoc :reason error-data)))
 	     t))))
@@ -125,9 +125,9 @@
 (define-backend-function do-lw2-reset-password (auth-token password)
   (backend-websocket-login
    (let ((result (do-lw2-sockjs-method "resetPassword"
-		   `(,auth-token
-		     ((digest . ,(password-digest password))
-		      ("algorithm" . "sha-256"))))))
+		   auth-token
+		   (alist :digest (password-digest password)
+			  :algorithm "sha-256"))))
      (parse-login-result result))))
 
 ; resume session ["{\"msg\":\"connect\",\"session\":\"mKvhev8p2f4WfKd6k\",\"version\":\"1\",\"support\":[\"1\",\"pre2\",\"pre1\"]}"]
@@ -194,7 +194,7 @@
 			 (:document nil)
 			 (:set nil)
 			 (:unset nil)
-			 (:document-id (list (cons :selector (alist :document-id v))))
+			 (:document-id (alist :selector (alist :document-id v)))
 			 (t (list (cons k v)))))
 		  (when data
 		    (list (cons :data data))))))
@@ -224,9 +224,9 @@ fields - The return values we want to get from the server after it completes our
   (backend-lw2-legacy
    (multiple-value-bind (mutation-string operation-name variables)
        (lw2-mutation-string target-type mutation-type terms fields)
-     (do-lw2-post-query auth-token `(("query" . ,mutation-string)
-				     ("variables" . ,variables)
-				     ("operationName" . ,operation-name)))))
+     (do-lw2-post-query auth-token (alist "query" mutation-string
+					  "variables" variables
+					  "operationName" operation-name))))
   (backend-lw2-modernized
    (cdr (assoc :data (call-next-method)))))
 
@@ -257,8 +257,11 @@ fields - The return values we want to get from the server after it completes our
 
 (defun do-lw2-vote (auth-token target target-type vote-type)
   (let ((ret (do-lw2-post-query auth-token
-	       `(("query" . "mutation vote($documentId: String, $voteType: String, $collectionName: String) { vote(documentId: $documentId, voteType: $voteType, collectionName: $collectionName) { ... on Post { baseScore, af, afBaseScore, currentUserVotes { _id, voteType, power } } ... on Comment { baseScore, af, afBaseScore, currentUserVotes { _id, voteType, power } } } }")
-		  ("variables" ("documentId" . ,target) ("voteType" . ,vote-type) ("collectionName" . ,target-type)) ("operationName" . "vote")))))
+	       (alist "query" "mutation vote($documentId: String, $voteType: String, $collectionName: String) { vote(documentId: $documentId, voteType: $voteType, collectionName: $collectionName) { ... on Post { baseScore, af, afBaseScore, currentUserVotes { _id, voteType, power } } ... on Comment { baseScore, af, afBaseScore, currentUserVotes { _id, voteType, power } } } }"
+		      "variables" (alist "documentId" target
+					 "voteType" vote-type
+					 "collectionName" target-type)
+		      "operationName" "vote"))))
     (values (cdr (assoc :base-score ret)) (cdr (assoc :vote-type (first (cdr (assoc :current-user-votes ret))))) ret)))
 
 (defun do-user-edit (auth-token user-id data)

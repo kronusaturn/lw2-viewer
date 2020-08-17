@@ -1,6 +1,6 @@
 (uiop:define-package #:lw2.utils
-  (:use #:cl #:alexandria)
-  (:export #:alist #:get-unix-time #:substring #:regex-replace-body #:reg #:match
+  (:use #:cl #:alexandria #:iterate)
+  (:export #:alist #:alist* #:get-unix-time #:substring #:regex-replace-body #:reg #:match
 	   #:to-boolean #:nonzero-number-p #:truthy-string-p
 	   #:firstn #:map-plist #:filter-plist #:alist-bind #:list-cond
 	   #:string-to-existing-keyword #:call-with-safe-json
@@ -9,8 +9,24 @@
 
 (in-package #:lw2.utils)
 
-(declaim (inline alist))
-(defun alist (&rest parms) (plist-alist parms))
+(defun alist (&rest params) (plist-alist params))
+
+(defun alist* (&rest params)
+  (nconc (plist-alist (butlast params))
+	 (car (last params))))
+
+(defun inner-make-alist (params)
+  (iter
+   (for (key val) on params by #'cddr)
+   (collect `(cons ,key ,val))))
+
+(define-compiler-macro alist (&rest params)
+  `(list ,.(inner-make-alist params)))
+
+(define-compiler-macro alist* (&rest params)
+  `(list*
+    ,.(inner-make-alist (butlast params))
+    ,(car (last params))))
 
 (defun get-unix-time ()
   (- (get-universal-time) #.(encode-universal-time 0 0 0 1 1 1970 0)))
