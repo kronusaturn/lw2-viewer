@@ -15,7 +15,6 @@
    (highlight-new boolean :graphql-ignore t)
    (replied list :graphql-ignore t)
    (post-id (or null simple-string))
-   (tag-id (or null simple-string))
    (base-score (or null fixnum))
    (af-base-score (or null fixnum))
    (page-url (or null string) :context-not :user-index) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
@@ -52,8 +51,7 @@
 			"just-posted-comment")
 		       (highlight-new "comment-item-highlight")
 		       (retracted "retracted")))
-	       data-post-id=post-id
-	       data-tag-id=tag-id>
+	       data-post-id=post-id>
 	    <div class="comment-meta">
 	      (if (user-deleted user-id)
 		  <span class="author">[deleted]</span>
