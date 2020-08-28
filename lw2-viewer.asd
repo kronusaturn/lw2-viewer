@@ -35,7 +35,7 @@
                              (:file "../config" :depends-on ("config-copy" "config-package"))
                              (:file "lmdb" :depends-on ("raw-memory-streams" "hash-utils" "sites" "context" "../config"))
                              (:file "backend" :depends-on ("utils" "hash-utils" "backend-modules" "lmdb" "graphql" "context" "user-context" "sites" "schema-type" "conditions" "web-push"))
-			     (:file "csrf" :depends-on ("conditions"))
+			     (:file "csrf" :depends-on ("conditions" "client-script"))
                              (:file "components" :depends-on ("utils" "csrf"))
                              (:file "links" :depends-on ("lmdb" "backend" "sites" "context"))
 			     (:file "legacy-archive" :depends-on ("utils" "backend"))

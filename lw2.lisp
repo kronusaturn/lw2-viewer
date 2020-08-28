@@ -1400,21 +1400,28 @@ signaled condition to *HTML-OUTPUT*."
       (when return
 	(redirect return))))
 
-(client-defun standalone-comment-controls ()
-  <div class="posting-controls standalone with-markdown-editor" onsubmit="disableBeforeUnload();">
-    <form method="post" id="conversation-form" class="aligned-form">
-      <div class="textarea-container">
-	<textarea name="text" oninput="enableBeforeUnload();"></textarea>
-	<span class="markdown-reference-link">You can use <a href="http://commonmark.org/help/" target="_blank">Markdown</a> here.</span>
-	<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-help-button">Help</button>
-	<button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-exit-button">Exit</button>
-      </div>
-      <div>
-	<input name="csrf-token" value=(make-csrf-token) type="hidden">
-	<input value="Submit" type="submit">
-      </div>
-    </form>
-  </div>)
+(client-defun comment-controls (&key standalone parent-comment-id parent-answer-id edit-comment-id)
+  (flet ((inner ()
+	   <form method="post" id="conversation-form" class="aligned-form">
+	     <div class="textarea-container">
+	       <textarea name="text" oninput="enableBeforeUnload();"></textarea>
+	       <span class="markdown-reference-link">You can use <a href="http://commonmark.org/help/" target="_blank">Markdown</a> here.</span>
+	       <button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-help-button">Help</button>
+	       <button type="button" class="guiedit-mobile-auxiliary-button guiedit-mobile-exit-button">Exit</button>
+             </div>
+             <div>
+	       (macrolet ((hidden-var (name)
+			    `(when ,name <input type="hidden" name=,(string-downcase name) value=,name>)))
+		 (hidden-var parent-comment-id)
+		 (hidden-var parent-answer-id)
+		 (hidden-var edit-comment-id))
+	       <input name="csrf-token" value=(make-csrf-token) type="hidden">
+	       <input value="Submit" type="submit">
+             </div>
+	     </form>))
+    (if standalone
+	<div class="posting-controls standalone with-markdown-editor" onsubmit="disableBeforeUnload();">(with-html-stream-output (inner))</div>
+	(inner))))
 
 (define-component view-comments-index (index-type)
   (:http-args '((offset :type fixnum)
@@ -1426,7 +1433,7 @@ signaled condition to *HTML-OUTPUT*."
 	   (shortform (eq index-type :shortform)))
        (multiple-value-bind (title query-view top-nav)
 	   (cond
-	     (shortform (values "Shortform" "shortform" (if (logged-in-userid) 'standalone-comment-controls)))
+	     (shortform (values "Shortform" "shortform" (if (logged-in-userid) (lambda () (comment-controls :standalone t)))))
 	     (t (values (case view (:alignment-forum "Alignment Forum recent comments") (t "Recent comments")) "allRecentComments" nil)))
 	 (multiple-value-bind (recent-comments total)
 	     (if (or (not (eq index-type :recent-comments)) offset limit view (/= (user-pref :items-per-page) 20))

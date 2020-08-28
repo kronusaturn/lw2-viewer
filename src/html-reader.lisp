@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.html-reader
-  (:use #:cl #:alexandria #:named-readtables
+  (:use #:cl #:alexandria #:iterate #:named-readtables
 	#:lw2.client-script)
   (:export #:*html-output* #:with-html-stream-output #:safe #:encode-entities #:html-reader)
   (:recycle #:lw2-viewer))
@@ -10,17 +10,21 @@
 
 (client-defun encode-entities (text &optional stream)
   (if-client
-   (ps:chain text (replace (ps:regex "/[<>\"'&]/g")
-			   (lambda (match)
-			     (concatenate 'string
-					  "&"
-					  (ps:getprop (ps:create "<" "lt"
-								 ">" "gt"
-								 "\"" "quot"
-								 "'" "apos"
-								 "&" "amp")
-						      match)
-					  ";"))))
+   (let ((output
+	  (ps:chain text (replace (ps:regex "/[<>\"'&]/g")
+				  (lambda (match)
+				    (concatenate 'string
+						 "&"
+						 (ps:getprop (ps:create "<" "lt"
+									">" "gt"
+									"\"" "quot"
+									"'" "apos"
+									"&" "amp")
+							     match)
+						 ";"))))))
+     (if stream
+	 (progn (ps:chain stream (push output)) nil)
+	 output))
    (handler-bind
     (((or plump:invalid-xml-character plump:discouraged-xml-character) #'abort))
     (plump:encode-entities (princ-to-string text) stream))))
@@ -31,6 +35,14 @@
      ,@body
      nil))
 
+(defun process-html-stream-output-forms (forms)
+  (iter (for form in forms)
+	(collect (trivia:match form
+			       ((list* (or 'write-string 'princ) string _) `(ps:chain html-output (push ,string)))
+			       ((list* 'encode-entities _) form)
+			       ((list* 'with-html-stream-output forms) `(progn ,@(process-html-stream-output-forms forms)))
+			       (_ `(ps:chain html-output (push ,form)))))))
+
 (ps:defpsmacro with-html-stream-output (&body body)
   `(let ((html-output (make-array)))
      (macrolet ((write-string (string stream)
@@ -38,8 +50,10 @@
 		  `(ps:chain html-output (push ,string)))
 		(princ (string stream)
 		  (declare (ignore stream))
-		  `(ps:chain html-output (push ,string))))
-       ,@body)
+		  `(ps:chain html-output (push ,string)))
+		(with-html-stream-output (&body body)
+		  `(progn ,@(process-html-stream-output-forms body) nil)))
+       ,@(process-html-stream-output-forms body))
      (ps:chain html-output (join ""))))
 
 (defun html-reader (stream char)
@@ -73,7 +87,7 @@
 		     ((and (consp object) (eq (first object) 'with-html-stream-output))
 		      (flush-output)
 		      (appendf out-body (rest object)))
-		     ((constantp object)
+		     ((and (constantp object) (or (stringp object) (numberp object)))
 		      (output-strings (princ-to-string (eval object))))
 		     (t
 		      (flush-output)

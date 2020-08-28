@@ -19,8 +19,8 @@
 	     `(macrolet ((if-client (client server)
 			   (declare (ignorable client server))
 			   ,(if client-p 'client 'server))
-			 (when-client (&body body) `(if-client ,body nil))
-			 (when-server (&body body) `(if-client nil ,body)))
+			 (when-client (&body body) `(if-client (progn ,@body) nil))
+			 (when-server (&body body) `(if-client nil (progn ,@body))))
 		,body)))
     `(progn
        (declaim (ftype function ,name))
