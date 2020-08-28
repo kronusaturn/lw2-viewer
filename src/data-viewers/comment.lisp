@@ -14,7 +14,8 @@
    (posted-at string)
    (highlight-new boolean :graphql-ignore t)
    (replied list :graphql-ignore t)
-   (post-id string)
+   (post-id (or null simple-string))
+   (tag-id (or null simple-string))
    (base-score (or null fixnum))
    (af-base-score (or null fixnum))
    (page-url (or null string) :context-not :user-index) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
@@ -42,6 +43,7 @@
   (if (or (cdr (assoc :deleted comment)) (cdr (assoc :deleted-public comment)))
       (format out-stream "<div class=\"comment deleted-comment\"><div class=\"comment-meta\"><span class=\"deleted-meta\">[ ]</span></div><div class=\"body-text comment-body\">[deleted]</div></div>")
       (schema-bind (:comment comment :auto :context :index)
+	(unless post-id (return-from comment-to-html)) ; XXX fixme
         (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
 	  <div class=("comment~{ ~A~}"
 		      (list-cond
@@ -50,7 +52,8 @@
 			"just-posted-comment")
 		       (highlight-new "comment-item-highlight")
 		       (retracted "retracted")))
-	       data-post-id=post-id>
+	       data-post-id=post-id
+	       data-tag-id=tag-id>
 	    <div class="comment-meta">
 	      (if (user-deleted user-id)
 		  <span class="author">[deleted]</span>

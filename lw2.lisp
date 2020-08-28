@@ -401,10 +401,12 @@ signaled condition to *HTML-OUTPUT*."
 			  :link (generate-post-auth-link item nil t need-auth)
 			  :body (clean-html (or (cdr (assoc :html-body (get-post-body (cdr (assoc :--id item)) :revalidate nil))) "") :post-id (cdr (assoc :--id item))))))
 	    (:comment
-	     (emit-item item
-			:title (format nil "Comment by ~A on ~A" (get-username (cdr (assoc :user-id item))) (get-post-title (cdr (assoc :post-id item))))
-			:link (generate-post-link (cdr (assoc :post-id item)) (cdr (assoc :--id item)) t)
-			:body (clean-html (cdr (assoc :html-body item)))))))))))
+	     (schema-bind (:comment item (comment-id post-id user-id html-body))
+	       (when post-id ; XXX fixme
+		 (emit-item item
+			    :title (format nil "Comment by ~A on ~A" (get-username user-id) (get-post-title post-id))
+			    :link (generate-post-link post-id comment-id t)
+			    :body (clean-html html-body)))))))))))
 
 (defparameter *html-head*
   (format nil
