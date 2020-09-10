@@ -12,10 +12,6 @@
 
 (defvar *components* nil)
 
-(defclass standard-component ()
-  ((http-args :accessor http-args :initarg :http-args)
-   (prepare-function :accessor prepare-function :initarg :prepare-function :type function)))
-
 (defun make-binding-form (additional-vars body &aux var-bindings additional-declarations additional-preamble)
   (loop for x in additional-vars
      when (not (member (first (ensure-list x)) '(* &without-csrf-check)))
@@ -71,15 +67,12 @@
        ,.(nreverse additional-preamble)
        (block nil ,@body))))
 
-(defmethod wrap-http-bindings ((component standard-component) body)
-  (make-binding-form (http-args component) body))
-
-(defmethod wrap-prepare-code ((component standard-component) lambda-list body)
+(defun wrap-prepare-code (http-args lambda-list body)
   (with-gensyms (renderer-callback)
     `(lambda (,renderer-callback ,@lambda-list)
        (macrolet ((renderer ((&rest lambda-list) &body body)
 		    `(funcall ,',renderer-callback (lambda ,lambda-list (block nil (locally ,@body))))))
-         ,(wrap-http-bindings component body)))))
+         ,(make-binding-form http-args body)))))
 
 (defun find-component (name)
   (or (second (find name *components* :key #'car))
@@ -88,23 +81,15 @@
 (defun delete-component (name)
   (setf *components* (delete name *components* :key #'car)))
 
-(defmacro define-component (name lambda-list options &body body)
-  (let* ((class 'standard-component)
-         (instance-args
-           (map-plist (lambda (key val)
-                        (case key
-                          (:class
-                            (setf class val)
-                            nil)
-                          (t (list key val))))
-                      options)))
-    `(progn
-       (let ((component
-               (make-instance ',class
-                              ,@instance-args)))
-         (setf (prepare-function component) (compile nil (wrap-prepare-code component ',lambda-list ',body)))
-         (delete-component ',name)
-         (push (list ',name component) *components*)))))
+(defmacro define-component (name lambda-list (&key http-args) &body body)
+  `(progn
+     (let ((component
+	    (alist :prepare-function ,(wrap-prepare-code http-args lambda-list body))))
+       (delete-component ',name)
+       (push (list ',name component) *components*))))
+
+(defun prepare-function (component)
+  (cdr (assoc :prepare-function component)))
 
 (defmacro component-value-bind ((&rest binding-forms) &body body)
   (let ((output-form `(locally ,@body)))

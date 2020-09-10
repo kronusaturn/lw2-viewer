@@ -1018,9 +1018,9 @@ signaled condition to *HTML-OUTPUT*."
 						    (:active :description "Sort by date posted or last comment")
 						    (:old :description "Sort by date posted, oldest first")))
 				    (pref :default-sort) (param-name "sort") (html-class "sort"))
-  (:http-args '((sort :real-name param-name :member (mapcar (lambda (x) (if (listp x) (first x) x)) sort-options))
-		(sortedby :real-name "sortedBy" :type string)
-		&without-csrf-check))
+  (:http-args ((sort :real-name param-name :member (mapcar (lambda (x) (if (listp x) (first x) x)) sort-options))
+	       (sortedby :real-name "sortedBy" :type string)
+	       &without-csrf-check))
   (if sortedby
       (progn
 	(renderer () nil)
@@ -1036,12 +1036,12 @@ signaled condition to *HTML-OUTPUT*."
 	(or sort-string (user-pref pref)))))
 
 (define-component view-index ()
-  (:http-args '((view :member '(:all :new :frontpage :featured :meta :community :alignment-forum :questions :nominations :reviews :events) :default :frontpage)
-		before after
-		(offset :type fixnum)
-		(limit :type fixnum :default (user-pref :items-per-page))
-		(set-cov-pref :request-type :post)
-		&without-csrf-check))
+  (:http-args ((view :member '(:all :new :frontpage :featured :meta :community :alignment-forum :questions :nominations :reviews :events) :default :frontpage)
+	       before after
+	       (offset :type fixnum)
+	       (limit :type fixnum :default (user-pref :items-per-page))
+	       (set-cov-pref :request-type :post)
+	       &without-csrf-check))
   (when set-cov-pref
     (set-user-pref :hide-cov (string= set-cov-pref "1")))
   (when (eq view :new) (redirect (replace-query-params (hunchentoot:request-uri*) "view" "all" "all" nil) :type :permanent) (return))
@@ -1424,9 +1424,9 @@ signaled condition to *HTML-OUTPUT*."
 	(inner))))
 
 (define-component view-comments-index (index-type)
-  (:http-args '((offset :type fixnum)
-		(limit :type fixnum)
-		(view :member '(nil :alignment-forum))))
+  (:http-args ((offset :type fixnum)
+	       (limit :type fixnum)
+	       (view :member '(nil :alignment-forum))))
   (request-method
    (:get ()
      (let ((want-total (not (or (typep *current-backend* 'backend-lw2) (typep *current-backend* 'backend-ea-forum)))) ; LW2/EAF can't handle total queries. TODO: handle this in backend.
@@ -1465,7 +1465,7 @@ signaled condition to *HTML-OUTPUT*."
 (define-route 'shortform-site 'standard-route :name 'view-shortform :uri "/shortform" :handler (route-component view-comments-index () :shortform))
 
 (define-component view-tag (slug)
-  (:http-args '())
+  (:http-args ())
   (let ((tag (first (lw2-graphql-query (lw2-query-string :tag :list (alist :view "tagBySlug" :slug slug) :context :body))))
 	(posts (get-tag-posts slug)))
     (schema-bind (:tag tag :auto :context :body)
@@ -1482,7 +1482,7 @@ signaled condition to *HTML-OUTPUT*."
 (define-route 'forum-site 'regex-route :name 'view-tag :regex "/tag/([^/?]+)" :handler (route-component view-tag (slug) slug))
 
 (define-component view-tags-index ()
-  (:http-args '())
+  (:http-args ())
   (let ((tags (lw2-graphql-query (lw2-query-string :tag :list (alist :view "allTagsAlphabetical")))))
     (renderer ()
       (emit-page (out-stream :title "All tags")

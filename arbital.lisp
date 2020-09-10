@@ -195,7 +195,7 @@
        </span>))))
 
 (define-component view-arbital-page (id page-alias page-type)
-  (:http-args '((l :type (or string null))))
+  (:http-args ((l :type (or string null))))
   (let* ((id (or id l))
 	 (all-data (handler-case
 		       (sb-sys:with-deadline (:seconds 0.3)
