@@ -1168,6 +1168,9 @@ signaled condition to *HTML-OUTPUT*."
 				 (format :type string))
   (request-method
    (:get ()
+     (when (hunchentoot:get-parameter "commentId")
+       (redirect (format nil "~A/comment/~A" (generate-post-link post-id) comment-id))
+       (return))
      (let* ((lw2-auth-token *current-auth-token*)
 	    (preview (string-equal format "preview"))
 	    (show-comments (and (not preview) show-comments)))
