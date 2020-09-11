@@ -172,7 +172,10 @@
 	   (markdown (regex-replace-all "\\\\\\$" markdown "$"))
 	   (html (regex-replace-body ((load-time-value (format nil "~A-(\\d+)-" *markdown-replace-string*))
 				      (markdown-to-html markdown))
-		   (aref replacements (parse-integer (reg 0))))))
+		   (let ((replacement-index-string (reg 0)))
+		     (if replacement-index-string
+			 (aref replacements (parse-integer replacement-index-string))
+			 "")))))
 	(let ((*memoized-output-stream* stream)) (clean-html* html :with-toc t))))))
 
 (defun arbital-meta-block (page-data all-data type)

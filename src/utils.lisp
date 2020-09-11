@@ -34,7 +34,7 @@
 (deftype array-dimension-type () `(integer 0 ,(- array-dimension-limit 1)))
 
 (declaim (inline substring)
-         (ftype (function (string array-dimension-type &optional array-dimension-type) string) substring))
+         (ftype (function (string array-dimension-type &optional array-dimension-type) (and string (not simple-string))) substring))
 (defun substring (string start &optional (end (length string)))
   (make-array (- end start) :element-type 'character :displaced-to string :displaced-index-offset start))
 
@@ -42,11 +42,17 @@
   `(ppcre:regex-replace-all
     ,regex ,target
     (lambda (target-string start end match-start match-end reg-starts reg-ends)
-	 (declare (ignore start end))
-	 (labels ((reg (n) (if (and (> (length reg-starts) n) (aref reg-starts n))
-			       (substring target-string (aref reg-starts n) (aref reg-ends n))))
-		  (match () (substring target-string match-start match-end)))
-	   ,@body))
+      (declare (ignore start end)
+	       (type string target-string)
+	       (type array-dimension-type match-start match-end)
+	       (type vector reg-starts reg-ends))
+      (let ((reg-count (length reg-starts)))
+	(labels ((reg (n) (when (> reg-count n)
+			    (when-let ((start (aref reg-starts n)))
+			      (substring target-string start (aref reg-ends n)))))
+		 (match () (substring target-string match-start match-end)))
+	  (declare (dynamic-extent #'reg #'match))
+	  ,@body)))
     ,@args))
 
 (declaim (inline to-boolean))
