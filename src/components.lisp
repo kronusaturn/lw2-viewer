@@ -1,12 +1,14 @@
 (uiop:define-package #:lw2.components
   (:use #:cl #:alexandria #:lw2.utils #:lw2.csrf)
   (:export
-   #:standard-component #:http-args #:prepare-function
+   #:standard-component #:prepare-function
    #:make-binding-form
    #:&without-csrf-check
-   #:wrap-http-bindings #:wrap-prepare-code
+   #:wrap-prepare-code
    #:find-component #:delete-component #:define-component #:renderer
-   #:component-value-bind))
+   #:component-value-bind)
+  (:unintern
+   #:standard-component #:wrap-http-bindings))
 
 (in-package #:lw2.components)
 
