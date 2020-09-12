@@ -351,7 +351,8 @@ signaled condition to *HTML-OUTPUT*."
 	       ((assoc :comment-count x)
 		:post)
 	       (t
-		:comment))))))
+		:comment))))
+    (condition :condition)))
 
 (defun write-index-items-to-html (out-stream items &key need-auth (empty-message "No entries.") skip-section)
   (if items
