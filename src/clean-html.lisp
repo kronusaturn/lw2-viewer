@@ -867,7 +867,8 @@
 	      (style-hash-to-html style-hash out-stream)
 	      (loop for c across (plump:children root)
 		 when (and with-toc
-			   (not (string-is-whitespace (plump:text c))))
+			   (not (or (string-is-whitespace (plump:text c))
+				    (tag-is c "figure"))))
 		 do (progn
 		      (contents-to-html (nreverse contents) min-header-level out-stream)
 		      (setf with-toc nil))
