@@ -140,13 +140,14 @@
 						"post-comments-json")
 			if (string= comment-id last-comment-processed) return nil
 			do
-			  (with-cache-transaction
-			      (let* ((post-id (cdr (assoc :post-id comment)))
-				     (post-comments (ignore-errors (decode-query-result (cache-get cache-database post-id))))
-				     (new-post-comments (sort (cons comment (delete-if (lambda (c) (string= comment-id (cdr (assoc :--id c)))) post-comments))
-							      #'> :key (lambda (c) (cdr (assoc :base-score c))))))
-				(cache-update cache-database post-id (comments-list-to-graphql-json new-post-comments)))))
-		     (setf last-comment-processed (cdr (assoc :--id (first recent-comments)))))))
+			  (log-and-ignore-errors
+			   (with-cache-transaction
+			       (when-let ((post-id (cdr (assoc :post-id comment))))
+				 (let* ((post-comments (when-let ((x (cache-get cache-database post-id))) (decode-query-result x)))
+					(new-post-comments (sort (cons comment (delete-if (lambda (c) (string= comment-id (cdr (assoc :--id c)))) post-comments))
+								 #'> :key (lambda (c) (cdr (assoc :base-score c))))))
+				   (cache-update cache-database post-id (comments-list-to-graphql-json new-post-comments))))))
+			  (setf last-comment-processed (cdr (assoc :--id (first recent-comments))))))))
 	(send-all-notifications)))))
 
 (defun background-loader ()
