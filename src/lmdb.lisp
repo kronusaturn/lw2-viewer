@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.lmdb
-  (:use #:cl #:sb-ext #:sb-thread #:alexandria #:lw2.raw-memory-streams #:lw2.sites #:lw2.context #:lw2.backend-modules #:lw2-viewer.config #:lw2.hash-utils)
+  (:use #:cl #:sb-ext #:sb-thread #:alexandria #:iterate #:lw2.raw-memory-streams #:lw2.sites #:lw2.context #:lw2.backend-modules #:lw2-viewer.config #:lw2.hash-utils)
   (:export
    #:close-unused-environments
    #:define-cache-database #:with-cache-mutex #:with-cache-transaction #:with-cache-readonly-transaction #:with-db #:lmdb-put-string #:cache-put #:cache-get #:cache-del
@@ -207,6 +207,19 @@
 
 (defun cursor-get (cursor operation &optional key value (return-type :string))
   (lmdb:cursor-get cursor operation key value :return-type return-type))
+
+(defun truncate-database-nicely (db-name)
+  (iter
+   (until
+     (call-with-cursor
+      db-name
+      (lambda (db cursor)
+	(declare (ignore db))
+	(iter
+	 (for limit from 100 above 0)
+	 (if (cursor-get cursor :first nil nil 'existence)
+	     (lmdb:cursor-del cursor)
+	     (leave t))))))))
 
 (defun existence (array size)
   (declare (ignore array size))
