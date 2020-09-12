@@ -754,14 +754,15 @@ signaled condition to *HTML-OUTPUT*."
   (let ((push-option (if (hunchentoot:cookie-in "push")
 			 '("nopush"))))
     (setf (hunchentoot:content-type*) "text/html; charset=utf-8"
-          (hunchentoot:return-code*) return-code
-          (hunchentoot:header-out :link) (format nil "~:{<~A>;rel=preload;type=~A;as=~A~@{;~A~}~:^,~}"
-						 (loop for (type . args) in *page-resources*
-						    for link = (first args)
-						    when (eq type :stylesheet)
-						    collect (list* link "text/css" "style" push-option)
-						    when (eq type :script)
-						    collect (list* link "text/javascript" "script" push-option))))
+	  (hunchentoot:return-code*) return-code
+	  (hunchentoot:header-out :link) (when *page-resources*
+					   (format nil "~:{<~A>;rel=preload;type=~A;as=~A~@{;~A~}~:^,~}"
+						   (loop for (type . args) in *page-resources*
+						      for link = (first args)
+						      when (eq type :stylesheet)
+						      collect (list* link "text/css" "style" push-option)
+						      when (eq type :script)
+						      collect (list* link "text/javascript" "script" push-option)))))
     (unless push-option (set-cookie "push" "t" :max-age (* 4 60 60)))))
 
 (defun user-pref (key)
