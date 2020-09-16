@@ -960,18 +960,6 @@ signaled condition to *HTML-OUTPUT*."
   (setf (hunchentoot:return-code*) (ecase type (:see-other 303) (:permanent 301))
 	(hunchentoot:header-out "Location") uri))
 
-(defmacro ignorable-multiple-value-bind ((&rest bindings) value-form &body body)
-  (let (new-bindings ignores)
-    (dolist (binding (reverse bindings))
-      (if (eq binding '*)
-	  (let ((gensym (gensym)))
-	    (push gensym new-bindings)
-	    (push gensym ignores))
-	  (push binding new-bindings)))
-    `(multiple-value-bind ,new-bindings ,value-form
-	 (declare (ignore ,.ignores))
-       ,@body)))
-
 (defmacro request-method (&body method-clauses)
   (alexandria:with-gensyms (request-method)
     `(let ((,request-method (hunchentoot:request-method*)))

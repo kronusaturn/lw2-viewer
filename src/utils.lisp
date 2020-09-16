@@ -4,7 +4,8 @@
 	   #:to-boolean #:nonzero-number-p #:truthy-string-p
 	   #:firstn #:map-plist #:filter-plist #:alist-bind #:list-cond
 	   #:string-to-existing-keyword #:call-with-safe-json
-	   #:delete-easy-handler #:abnormal-unwind-protect)
+	   #:delete-easy-handler #:abnormal-unwind-protect
+	   #:ignorable-multiple-value-bind)
   (:recycle #:lw2-viewer))
 
 (in-package #:lw2.utils)
@@ -150,3 +151,15 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
 	      (setf ,normal-return t))
 	 (unless ,normal-return
 	   ,@body)))))
+
+(defmacro ignorable-multiple-value-bind ((&rest bindings) value-form &body body)
+  (let (new-bindings ignores)
+    (dolist (binding (reverse bindings))
+      (if (eq binding '*)
+	  (let ((gensym (gensym)))
+	    (push gensym new-bindings)
+	    (push gensym ignores))
+	  (push binding new-bindings)))
+    `(multiple-value-bind ,new-bindings ,value-form
+	 (declare (ignore ,.ignores))
+       ,@body)))
