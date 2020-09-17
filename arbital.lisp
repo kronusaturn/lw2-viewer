@@ -286,8 +286,7 @@
 			(arbital-comments comment-list 0)))
 	    </div>)))))
 
-(define-route 'arbital-site 'standard-route :name 'view-arbital-root :uri "/" :handler (route-component view-arbital-page () nil "84c" :primary-page))
-(define-route 'arbital-site 'regex-route :name 'view-arbital-page :regex "/p/([^/]+)" :handler (route-component view-arbital-page (page-alias) nil page-alias :primary-page))
-(define-route 'arbital-site 'regex-route :name 'view-arbital-explore :regex "/explore/([^/]+)" :handler (route-component view-arbital-page (page-alias) nil page-alias :explore))
-;(define-route 'arbital-site 'regex-route :name 'view-root :uri "/p/([^/]+)" :handler (route-component view-arbital-page (page-alias) "1rf" "probability"))
-;(define-route 'arbital-site 'standard-route :name 'view-root :uri "/" :handler (route-component view-arbital-page "7hh" "expected_utility_formalism"))
+(define-component-routes arbital-site
+  (view-arbital-root (standard-route :uri "/") () (view-arbital-page nil "84c" :primary-page))
+  (view-arbital-page (regex-route :regex "/p/([^/]+)") (page-alias) (view-arbital-page nil page-alias :primary-page))
+  (view-arbital-explore (regex-route :regex "/explore/([^/]+)") (page-alias) (view-arbital-page nil page-alias :explore)))

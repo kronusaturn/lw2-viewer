@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2-viewer
-  (:use #:cl #:sb-thread #:flexi-streams #:djula
+  (:use #:cl #:sb-thread #:flexi-streams #:djula #:iterate
 	#:lw2-viewer.config #:lw2.utils #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login #:lw2.context #:lw2.sites #:lw2.components #:lw2.html-reader #:lw2.fonts
 	#:lw2.csrf
 	#:lw2.graphql
@@ -1059,9 +1059,18 @@ signaled condition to *HTML-OUTPUT*."
 			       (when ,name
 				 (funcall ,name))))))
 
-(define-route 'forum-site 'standard-route :name 'view-root :uri "/" :handler (route-component view-index ()))
+(defmacro define-component-routes (site-class &rest clauses)
+  `(progn
+     ,@(iter
+	(for clause in clauses)
+	(destructuring-bind (name (route-class &rest route-args) route-bindings (component-name &rest component-args)) clause
+	  (collect `(define-route ',site-class ',route-class
+		      :name ',name ,@route-args
+		      :handler (route-component ,component-name ,route-bindings ,@component-args)))))))
 
-(define-route 'forum-site 'standard-route :name 'view-index :uri "/index" :handler (route-component view-index ()))
+(define-component-routes forum-site
+  (view-root (standard-route :uri "/") () (view-index))
+  (view-index (standard-route :uri "/index") () (view-index)))
 
 (hunchentoot:define-easy-handler
     (view-site-routes
@@ -1454,8 +1463,8 @@ signaled condition to *HTML-OUTPUT*."
    (:post ()
      (post-comment nil :shortform t))))
 
-(define-route 'forum-site 'standard-route :name 'view-recent-comments :uri "/recentcomments" :handler (route-component view-comments-index () :recent-comments))
-(define-route 'shortform-site 'standard-route :name 'view-shortform :uri "/shortform" :handler (route-component view-comments-index () :shortform))
+(define-component-routes forum-site (view-recent-comments (standard-route :uri "/recentcomments") () (view-comments-index :recent-comments)))
+(define-component-routes shortform-site (view-shortform (standard-route :uri "/shortform") () (view-comments-index :shortform)))
 
 (define-component view-tag (slug)
   (:http-args ())
@@ -1472,7 +1481,7 @@ signaled condition to *HTML-OUTPUT*."
 					       <div class="tag-description body-text">(with-html-stream-output (let ((*memoized-output-stream* *html-output*)) (clean-html* description-html)))</div>))
 			  :content-class "tag-index-page")))))
 
-(define-route 'forum-site 'regex-route :name 'view-tag :regex "/tag/([^/?]+)" :handler (route-component view-tag (slug) slug))
+(define-component-routes forum-site (view-tag (regex-route :regex "/tag/([^/?]+)") (slug) (view-tag slug)))
 
 (define-component view-tags-index ()
   (:http-args ())
@@ -1489,7 +1498,7 @@ signaled condition to *HTML-OUTPUT*."
 	  </ul>
 	</div>))))
 
-(define-route 'forum-site 'standard-route :name 'view-tags-index :uri "/tags" :handler (route-component view-tags-index ()))
+(define-component-routes forum-site (view-tags-index (standard-route :uri "/tags") () (view-tags-index)))
 
 (define-route 'forum-site 'standard-route :name 'view-tags-index-redirect :uri "/tags/all" :handler (lambda () (redirect "/tags")))
 
