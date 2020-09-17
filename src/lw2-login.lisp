@@ -145,13 +145,13 @@
 	   #'identity
 	   (graphql-uri *current-backend*)
 	   :method :post
-	   :headers (nconc (list-cond (t "Content-Type" "application/json")
-				      (auth-token "authorization" auth-token))
-			   (forwarded-header))
+	   :headers (alist-without-null* "Content-Type" "application/json"
+					 "authorization" auth-token
+					 (forwarded-header))
 	   :content (encode-json-to-string data)))
 	 (response-alist (json:decode-json-from-string response-json))
 	 (res-errors (cdr (assoc :errors response-alist)))
-	 (res-data (rest (first (cdr (assoc :data response-alist)))))) 
+	 (res-data (rest (first (cdr (assoc :data response-alist))))))
     (cond
       (res-errors (lw2.backend:signal-lw2-errors res-errors))
       (res-data res-data) 
@@ -183,9 +183,9 @@
 	  (data (map 'list (lambda (x) (destructuring-bind (k . v) x
 					 (if (eq k :body)
 					     (cons :contents
-						   (alist :update-type "minor"
-							  :commit-message ""
-							  :original-contents (alist :type "markdown" :data v)))
+						   (alist :original-contents (alist :data v :type "markdown")
+							  :update-type "minor"
+							  :commit-message ""))
 					     x)))
 		     data))
 	  (terms (nconc
@@ -197,7 +197,7 @@
 			 (:document-id (alist :selector (alist :document-id v)))
 			 (t (list (cons k v)))))
 		  (when data
-		    (list (cons :data data))))))
+		    (nalist :data data)))))
      (values (with-output-to-string (stream)
 	       (format stream "mutation ~A(~@[$selector: ~A!, ~]$data: ~A!)~3:*{~A(~:[~;selector: $selector, ~]data: $data)"
 		     mutation-name
@@ -234,8 +234,9 @@ fields - The return values we want to get from the server after it completes our
   (do-lw2-mutation auth-token :post :create (alist :document data) '(:--id :slug :html-body)))
 
 (defun do-lw2-post-edit (auth-token post-id set &optional unset)
-  (let* ((terms (alist :document-id post-id :set set))
-         (terms (if unset (acons :unset unset terms) terms)))
+  (let* ((terms (alist* :document-id post-id :set set
+			(alist-without-null :unset unset))))
+    (declare (dynamic-extent terms))
     (do-lw2-mutation auth-token :post :update terms '(:--id :slug :html-body))))
 
 (defun do-lw2-post-remove (auth-token post-id)

@@ -334,7 +334,7 @@
     :method :post
     :headers (list-cond (t :content-type "application/json")
 			(auth-token :authorization auth-token))
-    :content (json:encode-json-to-string (acons "query" query nil))
+    :content (dynamic-let ((q (alist :query query))) (json:encode-json-to-string q))
     :want-stream (not return-type))))
 
 (define-backend-function lw2-graphql-query (query &key auth-token return-type (decoder 'decode-query-result))
@@ -499,7 +499,7 @@
       (:total '(:total-count))
       (:list (list-cond (t :results fields)
 			(with-total :total-count)))
-      (:single (list (cons :result fields))))))
+      (:single (alist :result fields)))))
 
 (define-backend-function lw2-query-string (query-type return-type args &key context fields with-total))
 
@@ -535,8 +535,7 @@
      (multiple-value-bind (view-terms cache-key)
 	 (alexandria:switch (view :test #'string=)
 			    ("featured" (alist :view "curated"))
-			    ("all" (alist :filter "all" :meta :null
-					  :sorted-by sort-key))
+			    ("all" (alist :sorted-by sort-key :filter "all" :meta :null))
 			    ("meta" (alist :view "new" :meta t :all t))
 			    ("community" (alist :view "new" :meta t :all t))
 			    ("alignment-forum" (alist :view "new" :af t))
@@ -545,12 +544,15 @@
 			    ("nominations" (alist :view "nominations2018"))
 			    ("reviews" (alist :view "reviews2018"))
 			    (t (values
-				(alist :filter "frontpage" :sorted-by sort-key)
+				(alist :sorted-by sort-key :filter "frontpage")
 				(if (not (or (string/= sort "new") (/= limit 21) offset before after)) "new-not-meta"))))
-       (let* ((extra-terms
-	       (remove-if (lambda (x) (null (cdr x)))
-			  (alist :before before :after after :limit limit :offset offset))))
-	 (values (nconc view-terms extra-terms) cache-key))))))
+       (let ((terms
+	      (alist-without-null* :before before
+				   :after after
+				   :limit limit
+				   :offset offset
+				   view-terms)))
+	 (values terms cache-key))))))
 
 (define-backend-operation get-posts-index-query-terms backend-lw2-tags :around (&key hide-tags &allow-other-keys)
   (multiple-value-bind (query-terms cache-key) (call-next-method)
@@ -798,7 +800,7 @@
    (let* ((user-id (ccase user-identifier-type
 		     (:user-id user-identifier)
 		     (:user-slug (get-slug-userid user-identifier))))
-	  (query-string (lw2-query-string :user :single (alist :document-id user-id) :fields (if auth-token (cons :last-notifications-check (user-fields)) (user-fields))))
+	  (query-string (lw2-query-string :user :single (alist :document-id user-id) :fields (list-cond* (auth-token :last-notifications-check) (user-fields))))
 	  (result (if auth-token
 		      (lw2-graphql-query query-string :auth-token auth-token)
 		      (lw2-graphql-query-timeout-cached query-string "user-json" user-id :revalidate revalidate :force-revalidate force-revalidate))))
@@ -859,8 +861,8 @@
    (let ((*notifications-base-terms* (remove :null *notifications-base-terms* :key #'cdr)))
      (call-next-method))))
 
-(define-backend-function get-user-page-items (user-id request-type &key offset limit (sort-type :date) drafts
-						      (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*)auth-token)
+(define-backend-function get-user-page-items (user-id request-type &key (offset 0) (limit 21) (sort-type :date) drafts
+						      (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*) auth-token)
   (backend-lw2-legacy
    (declare (special *graphql-correct*))
    (multiple-value-bind (real-offset real-limit) (if (eq request-type :both)
@@ -877,24 +879,30 @@
 	    (return-type (if cache-database :string nil))
 	    (fn (lambda ()
 		  (labels ((posts-query-string ()
-			     (let* ((posts-base-terms
+			     (let* ((base-terms1
 				     (cond
 				       (drafts (alist :view "drafts"))
 				       ((eq sort-type :score) (alist :view "top"))
 				       ((eq sort-type :date-reverse) (alist :view "old"))
 				       (t (alist :view "userPosts"))))
-				    (posts-base-terms
+				    (base-terms2
 				     (if (or drafts graphql-correct)
-					 posts-base-terms
-					 (cons '(:meta . :null) posts-base-terms))))
-			       (lw2-query-string* :post :list
-						  (nconc (remove nil (alist :offset real-offset :limit real-limit :user-id user-id) :key #'cdr) posts-base-terms))))
+					 base-terms1
+					 (alist* :meta :null base-terms1)))
+				    (terms (alist* :offset real-offset :limit real-limit :user-id user-id base-terms2)))
+			       (declare (dynamic-extent base-terms1 base-terms2 terms))
+			       (lw2-query-string* :post :list terms)))
 			   (comments-query-string ()
-			     (let ((comments-base-terms #.`(ecase sort-type ,.(loop for (key value) in '((:score "postCommentsTop")
-													 (:date "allRecentComments")
-													 (:date-reverse "postCommentsOld"))
-										 collect `(,key (load-time-value (alist :view ,value)))))))
-			       (lw2-query-string* :comment :list (alist* :offset real-offset :limit real-limit :user-id user-id comments-base-terms)
+			     (let* ((view (ecase sort-type
+						    (:score "postCommentsTop")
+						    (:date "allRecentComments")
+						    (:date-reverse "postCommentsOld")))
+				    (terms (alist :offset real-offset
+						  :limit real-limit
+						  :user-id user-id
+						  :view view)))
+			       (declare (dynamic-extent view terms))
+			       (lw2-query-string* :comment :list terms
 						  :context :index))))
 		    (declare (dynamic-extent #'posts-query-string #'comments-query-string))
 		    (case request-type

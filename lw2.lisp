@@ -1727,7 +1727,7 @@ signaled condition to *HTML-OUTPUT*."
     (if link
         (redirect link)
         (multiple-value-bind (posts comments) (lw2-search-query q)
-          (view-items-index (nconc (map 'list (lambda (p) (if (cdr (assoc :comment-count p)) p (cons (cons :comment-count 0) p))) posts)
+          (view-items-index (nconc (map 'list (lambda (p) (if (cdr (assoc :comment-count p)) p (alist* :comment-count 0 p))) posts)
                                    (map 'list #'search-result-markdown-to-html comments))
                             :content-class "search-results-page" :current-uri "/search"
                             :title (format nil "~@[~A - ~]Search" q))))))

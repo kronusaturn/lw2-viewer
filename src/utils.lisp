@@ -1,8 +1,13 @@
 (uiop:define-package #:lw2.utils
-  (:use #:cl #:alexandria #:iterate)
-  (:export #:alist #:alist* #:get-unix-time #:substring #:regex-replace-body #:reg #:match
+  (:use #:cl #:alexandria #:iterate
+	#:lw2.macro-utils)
+  (:export #:nalist #:nalist* #:alist #:alist*
+	   #:alist-without-null #:alist-without-null*
+	   #:dynamic-let #:dynamic-let* #:dynamic-flet #:dynamic-labels
+	   #:get-unix-time #:substring #:regex-replace-body #:reg #:match
 	   #:to-boolean #:nonzero-number-p #:truthy-string-p
-	   #:firstn #:map-plist #:filter-plist #:alist-bind #:list-cond
+	   #:firstn #:map-plist #:filter-plist #:alist-bind
+	   #:list-cond #:list-cond*
 	   #:string-to-existing-keyword #:call-with-safe-json
 	   #:delete-easy-handler #:abnormal-unwind-protect
 	   #:ignorable-multiple-value-bind)
@@ -10,24 +15,87 @@
 
 (in-package #:lw2.utils)
 
-(defun alist (&rest params) (plist-alist params))
+(defun nalist (&rest params) (plist-alist params))
 
-(defun alist* (&rest params)
+(defun nalist* (&rest params)
   (nconc (plist-alist (butlast params))
 	 (car (last params))))
 
-(defun inner-make-alist (params)
+(defun inner-make-alist (params &optional (env nil env-p))
   (iter
    (for (key val) on params by #'cddr)
-   (collect `(cons ,key ,val))))
+   (collect (if (and env-p (compiler-constantp key env) (compiler-constantp val env))
+		`'(,(eval-in-environment key env) . ,(eval-in-environment val env))
+		`(cons ,key ,val)))))
 
-(define-compiler-macro alist (&rest params)
+(define-compiler-macro nalist (&rest params)
   `(list ,.(inner-make-alist params)))
 
-(define-compiler-macro alist* (&rest params)
+(define-compiler-macro nalist* (&rest params)
   `(list*
     ,.(inner-make-alist (butlast params))
     ,(car (last params))))
+
+(declaim (ftype function alist alist*))
+(setf (fdefinition 'alist) (fdefinition 'nalist)
+      (fdefinition 'alist*) (fdefinition 'nalist*))
+
+(define-compiler-macro alist* (&rest params &environment env)
+  `(list*
+    ,.(inner-make-alist (butlast params) env)
+    ,(car (last params))))
+
+(define-compiler-macro alist (&rest params &environment env)
+  (let ((count (length params))
+	(reverse (reverse params))
+	(constant-list nil)
+	(constant-count 0))
+    (iter (for (val key) on reverse by #'cddr)
+	  (cond ((and (compiler-constantp key env) (compiler-constantp val env))
+		 (push (cons (eval-in-environment key env) (eval-in-environment val env)) constant-list)
+		 (incf constant-count))
+		(t (finish))))
+    (if (= (* constant-count 2) count)
+	`(quote ,constant-list)
+	`(alist* ,@(butlast params (* constant-count 2)) (quote ,constant-list)))))
+
+(defun remove-alist-nulls (alist)
+  (remove-if (lambda (x) (null (cdr x))) alist))
+
+(defun alist-without-null (&rest params)
+  (remove-alist-nulls (plist-alist params)))
+
+(defun alist-without-null* (&rest params)
+  (list* (remove-alist-nulls (plist-alist (butlast params))) (car (last params))))
+
+(define-compiler-macro alist-without-null (&rest params)
+  `(list-cond
+    ,@(iter (for (key val) on params by #'cddr)
+	    (collect `(,val ,key ,val)))))
+
+(define-compiler-macro alist-without-null* (&rest params)
+  `(list-cond*
+    ,@(iter (for (key val) on (butlast params) by #'cddr)
+	    (collect `(,val ,key ,val)))
+    ,(car (last params))))
+
+(defun dynamic-let-inner (initial functionp clauses body)
+  `(,initial ,clauses
+	     (declare (dynamic-extent ,@(iter (for c in clauses)
+					      (collect (if functionp `(function ,(first c)) (first c))))))
+     ,@body))
+
+(defmacro dynamic-let ((&rest clauses) &body body)
+  (dynamic-let-inner 'let nil clauses body))
+
+(defmacro dynamic-let* ((&rest clauses) &body body)
+  (dynamic-let-inner 'let* nil clauses body))
+
+(defmacro dynamic-flet ((&rest clauses) &body body)
+  (dynamic-let-inner 'flet t clauses body))
+
+(defmacro dynamic-labels ((&rest clauses) &body body)
+  (dynamic-let-inner 'labels t clauses body))
 
 (defun get-unix-time ()
   (- (get-universal-time) #.(encode-universal-time 0 0 0 1 1 1970 0)))
@@ -110,24 +178,28 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
 	   (let (,@(inner-loop `(,value-gensym (cdr ,cons-gensym))))
 	     (declare ,@(inner-loop `(type ,type ,value-gensym)))
 	     (flet (,@(inner-loop `(,fn-gensym () ,value-gensym))
-		    ,@(inner-loop `((setf ,fn-gensym) (new) (setf (cdr ,cons-gensym) new ,value-gensym new))))
+		    ,@(inner-loop `((setf ,fn-gensym) (new) (setf ,value-gensym new ,cons-gensym (cons ,key new) ,alist (cons ,cons-gensym ,alist)))))
 	       (declare (inline ,@(inner-loop fn-gensym)))
 	       (symbol-macrolet ,(inner-loop `(,bind (,fn-gensym)))
 		 ,@body))))))))
 
-(defmacro list-cond (&body clauses)
+(defmacro list-cond* (&body clauses)
   (labels ((expand (clauses)
-	     (when clauses
-	       (destructuring-bind (predicate-form data-form &optional value-form) (first clauses)
-		 (with-gensyms (predicate rest)
-		   `(let* ((,predicate ,predicate-form)
-			   (,rest ,(expand (rest clauses))))
-		      (declare (dynamic-extent ,predicate))
-		      (if ,predicate
-			  (cons ,(if value-form `(cons ,data-form ,value-form) data-form)
-				,rest)
-			  ,rest)))))))
+	     (if (endp (rest clauses))
+		 (first clauses)
+		 (destructuring-bind (predicate-form data-form &optional value-form) (first clauses)
+		   (with-gensyms (predicate rest)
+		     `(let* ((,predicate ,predicate-form)
+			     (,rest ,(expand (rest clauses))))
+			(declare (dynamic-extent ,predicate))
+			(if ,predicate
+			    (cons ,(if value-form `(cons ,data-form ,value-form) data-form)
+				  ,rest)
+			    ,rest)))))))
     (expand clauses)))
+
+(defmacro list-cond (&body clauses)
+  `(list-cond* ,@clauses nil))
 
 (defun string-to-existing-keyword (string)
   (or (find-symbol (json:camel-case-to-lisp string) (find-package '#:keyword))
