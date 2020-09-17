@@ -24,7 +24,8 @@
     #:map-output
     #:*earliest-post*
     #:*extra-external-scripts* #:*extra-inline-scripts*
-    #:site-stylesheets #:site-inline-scripts #:site-scripts #:site-external-scripts #:site-head-elements)
+    #:site-stylesheets #:site-inline-scripts #:site-scripts #:site-external-scripts #:site-head-elements
+    #:unwrap-stream)
   (:recycle #:lw2-viewer #:lw2.backend))
 
 (in-package #:lw2-viewer) 
@@ -210,27 +211,11 @@
 	        (chapter-to-html chapter))))
       </article>))))
 
-(defgeneric unwrap-stream (s)
-  (:method ((s stream)) nil)
-  (:method ((s flexi-stream)) (flexi-stream-stream s))
-  (:method ((s chunga:chunked-stream)) (chunga:chunked-stream-stream s)))
-
-(defun compare-streams (a b)
-  (if (eq a b)
-      t
-      (or
-       (if-let (u-a (unwrap-stream a))
-	       (compare-streams u-a b))
-       (if-let (u-b (unwrap-stream b))
-	       (compare-streams a u-b)))))
-
 (defun abort-response ()
   (throw 'abort-response nil))
 
 (defun abort-response-if-unrecoverable (condition)
-  (when (and (typep condition 'stream-error)
-	     (boundp '*html-output*)
-	     (compare-streams (stream-error-stream condition) *html-output*))
+  (when (html-output-stream-error-p condition)
     (abort-response)))
 
 (defmacro with-error-html-block (() &body body)

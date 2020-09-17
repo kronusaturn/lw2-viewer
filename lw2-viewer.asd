@@ -13,7 +13,7 @@
 			     (:file "html-reader" :depends-on ("client-script"))
 			     (:file "interface-utils" :depends-on ("links" "html-reader"))
 			     (:file "user-context")
-			     (:file "conditions" :depends-on ("html-reader"))
+			     (:file "conditions" :depends-on ("utils" "html-reader"))
 			     (:file "schema-type" :depends-on ("utils" "backend-modules"))
 			     (:file "dnsbl" :depends-on ("../config"))
                              (:file "backend-modules")

@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.conditions
-  (:use #:cl #:alexandria #:lw2.html-reader)
+  (:use #:cl #:alexandria #:lw2.utils #:lw2.html-reader)
   (:export #:*debug-mode*
 	   #:*error-explanation-hook* #:error-explanation-case
 	   #:fatal-error
@@ -8,6 +8,7 @@
            #:lw2-error
 	   #:csrf-check-failed
 	   #:lw2-client-error #:lw2-not-found-error #:lw2-user-not-found-error #:lw2-not-allowed-error #:lw2-server-error #:lw2-connection-error #:lw2-unknown-error
+	   #:html-output-stream-error-p
 	   #:log-condition #:log-conditions
 	   #:log-and-ignore-errors)
   (:recycle #:lw2.backend #:lw2-viewer))
@@ -86,6 +87,15 @@
        (declare (dynamic-extent *error-explanation-hook*))
        ,expression)))
 
+(defun html-output-stream-error-p (condition)
+  (and (typep condition 'stream-error)
+       *html-output*
+       (compare-streams (stream-error-stream condition) *html-output*)))
+
+(defun interesting-condition-p (condition)
+  (not (or (typep condition 'lw2-client-error)
+	   (html-output-stream-error-p condition))))
+
 (defun log-condition (condition)
   (with-open-file (outstream "./logs/error.log" :direction :output :if-exists :append :if-does-not-exist :create)
     (format outstream "~%~A: ~S ~A~%" (local-time:format-timestring nil (local-time:now)) condition condition)
@@ -94,7 +104,7 @@
 (defmacro log-conditions (&body body)
   `(block log-conditions
      (handler-bind
-	 (((or warning serious-condition) (lambda (c) (log-condition c))))
+	 (((or warning serious-condition) (lambda (c) (when (interesting-condition-p c) (log-condition c)))))
        ,@body)))
 
 (defmacro log-and-ignore-errors (&body body)
@@ -102,6 +112,6 @@
      (handler-bind
 	 ((fatal-error
 	   (lambda (c)
-	     (log-condition c)
+	     (when (interesting-condition-p c) (log-condition c))
 	     (return-from log-and-ignore-errors (values nil c)))))
        ,@body)))

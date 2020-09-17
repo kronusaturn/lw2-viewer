@@ -10,7 +10,8 @@
 	   #:list-cond #:list-cond*
 	   #:string-to-existing-keyword #:call-with-safe-json
 	   #:delete-easy-handler #:abnormal-unwind-protect
-	   #:ignorable-multiple-value-bind)
+	   #:ignorable-multiple-value-bind
+	   #:compare-streams)
   (:recycle #:lw2-viewer))
 
 (in-package #:lw2.utils)
@@ -235,3 +236,17 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
     `(multiple-value-bind ,new-bindings ,value-form
 	 (declare (ignore ,.ignores))
        ,@body)))
+
+(defgeneric unwrap-stream (s)
+  (:method ((s stream)) nil)
+  (:method ((s flex:flexi-stream)) (flex:flexi-stream-stream s))
+  (:method ((s chunga:chunked-stream)) (chunga:chunked-stream-stream s)))
+
+(defun compare-streams (a b)
+  (if (eq a b)
+      t
+      (or
+       (if-let (u-a (unwrap-stream a))
+	       (compare-streams u-a b))
+       (if-let (u-b (unwrap-stream b))
+	       (compare-streams a u-b)))))
