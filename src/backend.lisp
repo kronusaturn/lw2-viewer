@@ -142,11 +142,13 @@
 			do
 			  (log-and-ignore-errors
 			   (with-cache-transaction
-			       (when-let ((post-id (cdr (assoc :post-id comment))))
-				 (let* ((post-comments (when-let ((x (cache-get cache-database post-id))) (decode-query-result x)))
-					(new-post-comments (sort (cons comment (delete-if (lambda (c) (string= comment-id (cdr (assoc :--id c)))) post-comments))
-								 #'> :key (lambda (c) (cdr (assoc :base-score c))))))
-				   (cache-update cache-database post-id (comments-list-to-graphql-json new-post-comments))))))
+			     (when-let ((post-id (cdr (assoc :post-id comment))))
+			       (let* ((post-comments (when-let ((x (cache-get cache-database post-id))) (decode-query-result x)))
+				      (new-post-comments (sort (cons comment (delete-if (lambda (c) (string= comment-id (cdr (assoc :--id c)))) post-comments))
+							       #'> :key (lambda (c) (cdr (assoc :base-score c))))))
+				 (cache-update cache-database post-id (comments-list-to-graphql-json new-post-comments))))
+			     (when-let ((user-id (cdr (assoc :user-id comment))))
+				 (cache-mark-stale "user-page-items" user-id))))
 			  (setf last-comment-processed (cdr (assoc :--id (first recent-comments))))))))
 	(send-all-notifications)))))
 
@@ -394,6 +396,14 @@
                            current-time)))
         (cache-put meta-db key (prin1-to-string `((:last-checked . ,current-time) (:last-modified . ,last-mod) (:city-128-hash . ,new-hash))))
         (cache-put cache-db key data)))))
+
+(defun cache-mark-stale (cache-db key)
+  (let ((meta-db (format nil "~A-meta" cache-db))
+	(current-time (get-unix-time)))
+    (with-cache-transaction
+	(let* ((metadata (if-let (m-str (cache-get meta-db key)) (read-from-string m-str)))
+	       (metadata (alist* :last-modified current-time (delete :last-modified metadata :key #'car))))
+	  (cache-put meta-db key (prin1-to-string metadata))))))
 
 (declaim (type (and fixnum (integer 1)) *cache-stale-factor* *cache-skip-factor*))
 (defparameter *cache-stale-factor* 100)
