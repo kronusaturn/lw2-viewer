@@ -1378,8 +1378,8 @@ signaled condition to *HTML-OUTPUT*."
 	    (:post (target target-type vote-type)
 	      (multiple-value-bind (points vote-type vote-data) (do-lw2-vote auth-token target target-type vote-type)
 		(json:encode-json
-		 (alist-bind (af af-base-score) vote-data
-			     (list (vote-buttons points :as-text t :af-score (and af af-base-score)) vote-type))
+		 (alist-bind (vote-count af af-base-score) vote-data
+			     (list (vote-buttons points :as-text t :af-score (and af af-base-score)) vote-type (votes-to-tooltip vote-count)))
 		 out-stream))))))))
 
 (hunchentoot:define-easy-handler (view-check-notifications :uri "/check-notifications") (format)

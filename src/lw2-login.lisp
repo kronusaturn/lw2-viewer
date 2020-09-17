@@ -258,7 +258,7 @@ fields - The return values we want to get from the server after it completes our
 
 (defun do-lw2-vote (auth-token target target-type vote-type)
   (let ((ret (do-lw2-post-query auth-token
-	       (alist "query" "mutation vote($documentId: String, $voteType: String, $collectionName: String) { vote(documentId: $documentId, voteType: $voteType, collectionName: $collectionName) { ... on Post { baseScore, af, afBaseScore, currentUserVotes { _id, voteType, power } } ... on Comment { baseScore, af, afBaseScore, currentUserVotes { _id, voteType, power } } } }"
+	       (alist "query" "mutation vote($documentId: String, $voteType: String, $collectionName: String) { vote(documentId: $documentId, voteType: $voteType, collectionName: $collectionName) { ... on Post { baseScore, voteCount, af, afBaseScore, currentUserVotes { _id, voteType, power } } ... on Comment { baseScore, voteCount, af, afBaseScore, currentUserVotes { _id, voteType, power } } } }"
 		      "variables" (alist "documentId" target
 					 "voteType" vote-type
 					 "collectionName" target-type)

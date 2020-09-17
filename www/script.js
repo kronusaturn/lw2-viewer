@@ -542,7 +542,7 @@ function makeVoteCompleteEvent(target) {
 		});
 		if (event.target.status == 200) {
 			let response = JSON.parse(event.target.responseText);
-			let karmaText = response[0], voteType = response[1];
+			let karmaText = response[0], voteType = response[1], voteCount = response[2];
 
 			let vote = parseVoteType(voteType);
 			let voteUpDown = (vote.up ? 'upvote' : (vote.down ? 'downvote' : ''));
@@ -550,6 +550,7 @@ function makeVoteCompleteEvent(target) {
 
 			karmaTargets.forEach(karmaTarget => {
 				karmaTarget.innerHTML = karmaText;
+				karmaTarget.setAttribute("title", voteCount);
 				if (karmaTarget.hasClass("redacted")) {
 					karmaTarget.dataset["trueValue"] = karmaTarget.firstChild.textContent;
 					karmaTarget.firstChild.textContent = "##";
