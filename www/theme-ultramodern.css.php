@@ -492,7 +492,7 @@ h1.listing {
 	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
 	font-size: 1.5rem;
 }
-h1.listing a[href^='/posts'] {
+h1.listing .post-title-link {
 	font-family: <?php echo $text_font; ?>;
 	font-weight: <?php global $platform; echo ($platform == 'Mac' ? '100' : '200'); ?>;
 	text-shadow: 
@@ -500,7 +500,7 @@ h1.listing a[href^='/posts'] {
 		0.5px 0.5px 1px #aaa,
 		0.5px 0.5px 1px #bbb;
 }
-h1.listing a[href^="http"] {
+h1.listing .link-post-link {
 	color: #aaa;
 }
 
@@ -522,7 +522,7 @@ h1.listing a[href^="http"] {
 		left: -0.625em;
 		top: 1px;
 	}
-	h1.listing a[href^="http"]:hover {
+	h1.listing .link-post-link:hover {
 		color: #4879ec;
 		text-shadow: 
 			 0.5px 0.5px 0 #fff,
@@ -2071,7 +2071,7 @@ input::selection {
 		h1.listing + .post-meta > * {
 			line-height: 1.5;
 		}
-		h1.listing a[href^='http'] {
+		h1.listing .link-post-link {
 			top: 3px;
 		}
 

@@ -154,8 +154,8 @@
 				 (url "link-post-listing")
 				 (question "question-post-listing")
 				 ((logged-in-userid user-id) "own-post-listing")))>
-      (if url <a href=(convert-any-link (string-trim " " url))>&#xf0c1;</a>)
-      <a href=(generate-post-auth-link post nil nil need-auth)>
+      (if url <a class="link-post-link" href=(convert-any-link (string-trim " " url))>&#xf0c1;</a>)
+      <a class="post-title-link" href=(generate-post-auth-link post nil nil need-auth)>
 	(if question <span class="post-type-prefix">[Question] </span>)
 	(safe (clean-text-to-html title))
       </a>

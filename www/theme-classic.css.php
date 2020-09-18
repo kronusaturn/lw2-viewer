@@ -500,15 +500,15 @@ h1.listing {
 	max-height: unset;
 }
 
-h1.listing a[href^='/posts'] {
+h1.listing .post-title-link {
 	color: #538d4d;
 	white-space: unset;
 	display: inline;
 }
-h1.listing a[href^='/posts']:visited {
+h1.listing .post-title:visited {
 	color: #5a5a5b;
 }
-h1.listing a[href^="http"] {
+h1.listing .link-post-link {
 	top: 2px;
 }
 
@@ -529,8 +529,8 @@ h1.listing a[href^="http"] {
 			0 0 0 3px #fff,
 			0 0 0 6px #3d3d3e;
 	}
-	h1.listing a[href^="http"]:hover,
-	h1.listing a[href^="http"]:focus {
+	h1.listing .link-post-link:hover,
+	h1.listing .link-post-link:focus {
 		color: #4879ec;
 		text-shadow: 
 			 0.5px 0.5px 0 #fff,
@@ -2154,7 +2154,7 @@ select {
 			max-width: calc(100% - 12px);
 			padding: 0;
 		}
-		h1.listing a[href^='http'] {
+		h1.listing .link-post-link {
 			top: 2px;
 		}
 		h1.listing + .post-meta {

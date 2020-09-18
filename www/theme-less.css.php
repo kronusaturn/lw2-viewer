@@ -1047,24 +1047,24 @@ h1.listing,
 	line-height: 1.2;
 }
 
-h1.listing a[href^="http"] {
+h1.listing .link-post-link {
 	color: #bbb;
 	font-weight: 400;
 	font-size: 0.8125em;
 	top: 3px;
 }
-h1.listing a[href^="/posts"] {
+h1.listing .post-title-link {
 	font-weight: 300;
 	text-shadow: <?php global $platform; echo ($platform == 'Mac' ? 'none' : '0 0 0 #444'); ?>;
 	color: <?php global $platform; echo ($platform == 'Mac' ? '#444' : '#000'); ?>;
 }
 @-moz-document url-prefix() {
-	h1.listing a[href^="/posts"] {
+	h1.listing .post-title-link {
 		text-shadow: none;
 	}
 }
 @media not all and (min-resolution:.001dpcm) { @media {
-	h1.listing a[href^="/posts"] {
+	h1.listing .post-title-link {
 		color: #000;
 	}
 }}
@@ -1080,10 +1080,10 @@ h1.listing a[href^="/posts"] {
 		font-weight: 400;
 		left: -0.625em;
 	}
-	h1.listing a[href^="http"]:hover {
+	h1.listing .link-post-link:hover {
 		color: #79a97e;
 	}
-	h1.listing a[href^="http"]:focus {
+	h1.listing .link-post-link:focus {
 		color: #a0d3a2;
 		text-decoration: none;
 		border-bottom: 2px dotted #a0d3a2;

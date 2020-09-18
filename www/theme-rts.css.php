@@ -574,12 +574,12 @@ h1.listing {
 	text-align: center;
 }
 
-h1.listing a[href^="http"] {
+h1.listing .link-post-link {
 	font-size: 0.6875em;
 	top: 6px;
 	color: #888;
 }
-h1.listing a[href^='/posts'] {
+h1.listing .post-title-link {
 	font-family: <?php echo $text_font; ?>;
 	text-decoration: none;
 	color: #690010;
@@ -589,7 +589,7 @@ h1.listing a[href^='/posts'] {
 }
 
 @media only screen and (hover: hover) {
-	h1.listing a[href^='/posts'] {
+	h1.listing .post-title-link {
 		max-width: calc(100% - 60px);
 		padding: 2px 2px 1px 1px;
 	}
@@ -609,7 +609,7 @@ h1.listing a[href^='/posts'] {
 		top: 1px;
 		color: #690010;
 	}
-	h1.listing a[href^="http"]:hover {
+	h1.listing .link-post-link:hover {
 		color: #690010;
 		text-shadow: 
 			 0.5px 0.5px 0 #fff,
@@ -2112,7 +2112,7 @@ select {
 		h1.listing + .post-meta > * {
 			line-height: 1.4;
 		}
-		h1.listing a[href^='http'] {
+		h1.listing .link-post-link {
 			top: 4px;
 		}
 

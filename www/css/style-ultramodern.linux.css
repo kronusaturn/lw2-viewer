@@ -1210,11 +1210,11 @@ h1.listing a {
 }
 
 /* Links to link-posts (not the link-post links themselves; that's below) */
-h1.listing a[href^='http'] + a {
+h1.listing .link-post-link + a {
 	margin-left: 0.25em;
 }
-/* Link-post links */
-h1.listing a[href^="http"] {
+
+h1.listing .link-post-link {
 	font-size: 0.8em;
 	display: inline;
 	vertical-align: top;
@@ -1242,7 +1242,7 @@ h1.listing a[href^="http"] {
 		z-index: 1;
 		padding: 0 0 1px 1px;
 	}
-	h1.listing a[href^='http'] + a {
+	h1.listing .link-post-link + a {
 		max-width: calc(100% - 33px);
 	}
 	h1.listing a:hover,
@@ -1272,7 +1272,7 @@ h1.listing a[href^="http"] {
 		left: -10px;
 		z-index: -1;
 	}
-	h1.listing a[href^="http"]:hover {
+	h1.listing .link-post-link:hover {
 		text-decoration: none;
 	}
 }
@@ -6177,7 +6177,7 @@ h1.listing {
 	font-family: 'Proxima Nova', 'Font Awesome';
 	font-size: 1.5rem;
 }
-h1.listing a[href^='/posts'] {
+h1.listing .post-title-link {
 	font-family: 'Raleway', 'Helvetica', 'Arial', 'Verdana', sans-serif;;
 	font-weight: 200;
 	text-shadow: 
@@ -6185,7 +6185,7 @@ h1.listing a[href^='/posts'] {
 		0.5px 0.5px 1px #aaa,
 		0.5px 0.5px 1px #bbb;
 }
-h1.listing a[href^="http"] {
+h1.listing .link-post-link {
 	color: #aaa;
 }
 
@@ -6207,7 +6207,7 @@ h1.listing a[href^="http"] {
 		left: -0.625em;
 		top: 1px;
 	}
-	h1.listing a[href^="http"]:hover {
+	h1.listing .link-post-link:hover {
 		color: #4879ec;
 		text-shadow: 
 			 0.5px 0.5px 0 #fff,
@@ -7756,7 +7756,7 @@ input::selection {
 		h1.listing + .post-meta > * {
 			line-height: 1.5;
 		}
-		h1.listing a[href^='http'] {
+		h1.listing .link-post-link {
 			top: 3px;
 		}
 

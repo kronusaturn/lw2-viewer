@@ -468,11 +468,11 @@ h1.listing {
 	line-height: 1.2;
 }
 
-h1.listing a[href^="http"] {
+h1.listing .link-post-link {
 	color: #00c;
 	font-size: 0.75em;
 }
-h1.listing a[href^="/posts"] {
+h1.listing .post-title-link {
 	color: #000;
 	font-weight: bold;
 }
@@ -488,7 +488,7 @@ h1.listing a[href^="/posts"] {
 		left: -0.625em;
 		top: 1px;
 	}
-	h1.listing a[href^="http"]:hover {
+	h1.listing .link-post-link:hover {
 		color: #4879ec;
 		text-shadow: 
 			 0.5px 0.5px 0 #fff,
@@ -1842,7 +1842,7 @@ select {
 		h1.listing + .post-meta {
 			margin: 4px 6px;
 		}
-		h1.listing a[href^='http'] {
+		h1.listing .link-post-link {
 			top: 2px;
 		}
 		#content.conversations-user-page h1.listing::after {

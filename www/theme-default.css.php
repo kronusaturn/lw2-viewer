@@ -529,10 +529,10 @@ h1.listing {
 	top: <?php echo ($platform == 'Mac') ? "0" : "0.125em"; ?>; ;
 }
 
-h1.listing a[href^='/'] {
+h1.listing .post-title-link {
 	color: #000;
 }
-h1.listing a[href^="http"] {
+h1.listing .link-post-link {
 	color: #00c;
 }
 
@@ -546,7 +546,7 @@ h1.listing a[href^="http"] {
 		color: #00f;
 		left: -0.625em;
 	}
-	h1.listing a[href^="http"]:hover {
+	h1.listing .link-post-link:hover {
 		color: #4879ec;
 		text-shadow: 
 			 0.5px 0.5px 0 #fff,
@@ -2051,7 +2051,7 @@ EOT;
 			font-size: 1.75rem;
 			line-height: 1;
 		}
-		h1.listing a[href^='http'] {
+		h1.listing .link-post-link {
 			top: 2px;
 		}
 		h1.listing + .post-meta .karma-value,

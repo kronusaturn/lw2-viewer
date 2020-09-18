@@ -552,10 +552,10 @@ h1.listing {
 	font-family: <?php echo $UI_font; ?>, 'Font Awesome';
 	font-size: 1.5rem;
 }
-h1.listing a[href^='/posts'] {
+h1.listing .post-title-link {
 	font-weight: normal;
 }
-h1.listing a[href^="http"] {
+h1.listing .link-post-link {
 	color: #ccc;
 	top: 3px;
 }
@@ -570,7 +570,7 @@ h1.listing a[href^="http"] {
 		color: #00f;
 		left: -0.625em;
 	}
-	h1.listing a[href^="http"]:hover {
+	h1.listing .link-post-link:hover {
 		color: #4879ec;
 		text-shadow: 
 			 0.5px 0.5px 0 #fff,
@@ -2115,7 +2115,7 @@ select {
 		h1.listing + .post-meta {
 			margin: 4px 6px;
 		}
-		h1.listing a[href^='http'] {
+		h1.listing .link-post-link {
 			top: 2px;
 		}
 

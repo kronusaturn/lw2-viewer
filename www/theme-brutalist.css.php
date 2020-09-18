@@ -427,7 +427,7 @@ h1.listing {
 	font-size: 1.625rem;
 }
 
-h1.listing a[href^="http"] {
+h1.listing .link-post-link {
 	font-size: 0.7em;
 	top: 6px;
 	color: #fff;
@@ -447,7 +447,7 @@ h1.listing a[href^="http"] {
 		color: #000;
 		left: -0.625em;
 	}
-	h1.listing a[href^="http"]:hover {
+	h1.listing .link-post-link:hover {
 		color: #fff;
 		text-shadow: 
 			 0.5px 0.5px 0 #000, 
@@ -1835,7 +1835,7 @@ select {
 			margin: 18px 6px 4px 6px;
 			max-width: calc(100% - 12px);
 		}
-		h1.listing a[href^='http'] {
+		h1.listing .link-post-link {
 			top: 4px;
 		}
 		h1.listing + .post-meta {

@@ -1210,11 +1210,11 @@ h1.listing a {
 }
 
 /* Links to link-posts (not the link-post links themselves; that's below) */
-h1.listing a[href^='http'] + a {
+h1.listing .link-post-link + a {
 	margin-left: 0.25em;
 }
-/* Link-post links */
-h1.listing a[href^="http"] {
+
+h1.listing .link-post-link {
 	font-size: 0.8em;
 	display: inline;
 	vertical-align: top;
@@ -1242,7 +1242,7 @@ h1.listing a[href^="http"] {
 		z-index: 1;
 		padding: 0 0 1px 1px;
 	}
-	h1.listing a[href^='http'] + a {
+	h1.listing .link-post-link + a {
 		max-width: calc(100% - 33px);
 	}
 	h1.listing a:hover,
@@ -1272,7 +1272,7 @@ h1.listing a[href^="http"] {
 		left: -10px;
 		z-index: -1;
 	}
-	h1.listing a[href^="http"]:hover {
+	h1.listing .link-post-link:hover {
 		text-decoration: none;
 	}
 }
@@ -6114,7 +6114,7 @@ h1.listing {
 	font-size: 1.625rem;
 }
 
-h1.listing a[href^="http"] {
+h1.listing .link-post-link {
 	font-size: 0.7em;
 	top: 6px;
 	color: #fff;
@@ -6134,7 +6134,7 @@ h1.listing a[href^="http"] {
 		color: #000;
 		left: -0.625em;
 	}
-	h1.listing a[href^="http"]:hover {
+	h1.listing .link-post-link:hover {
 		color: #fff;
 		text-shadow: 
 			 0.5px 0.5px 0 #000, 
@@ -7531,7 +7531,7 @@ select {
 			margin: 18px 6px 4px 6px;
 			max-width: calc(100% - 12px);
 		}
-		h1.listing a[href^='http'] {
+		h1.listing .link-post-link {
 			top: 4px;
 		}
 		h1.listing + .post-meta {

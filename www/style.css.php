@@ -1220,11 +1220,11 @@ h1.listing a {
 }
 
 /* Links to link-posts (not the link-post links themselves; that's below) */
-h1.listing a[href^='http'] + a {
+h1.listing .link-post-link + a {
 	margin-left: 0.25em;
 }
-/* Link-post links */
-h1.listing a[href^="http"] {
+
+h1.listing .link-post-link {
 	font-size: 0.8em;
 	display: inline;
 	vertical-align: top;
@@ -1252,7 +1252,7 @@ h1.listing a[href^="http"] {
 		z-index: 1;
 		padding: 0 0 1px 1px;
 	}
-	h1.listing a[href^='http'] + a {
+	h1.listing .link-post-link + a {
 		max-width: calc(100% - 33px);
 	}
 	h1.listing a:hover,
@@ -1283,7 +1283,7 @@ h1.listing a[href^="http"] {
 		left: -<?php echo $margin_of_hover_error; ?>;
 		z-index: -1;
 	}
-	h1.listing a[href^="http"]:hover {
+	h1.listing .link-post-link:hover {
 		text-decoration: none;
 	}
 }
