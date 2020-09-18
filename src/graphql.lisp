@@ -51,7 +51,21 @@
       (list
        (macroexpand-all
 	form
-	(augment-environment env :macro (writer-macros stream)))))))
+	(augment-environment env :macro (writer-macros stream))))))
+
+  (defun writer-compiler-form (write-function args stream env whole)
+    (if (every (lambda (x) (compiler-constantp x env)) args)
+	(let ((out-string
+	       (with-output-to-string (c-stream)
+		 (funcall (enclose `(lambda (c-stream)
+				      (declare (notinline ,write-function))
+				      (,write-function ,@args c-stream))
+				   env)
+			  c-stream))))
+	  `(write-string
+	    ,out-string
+	    ,stream))
+	whole)))
 
 (defmacro defgrammar (name args &body body)
   (with-gensyms (stream)
@@ -64,15 +78,7 @@
 	   ,(gen-writer (cons 'progn body) stream)
 	   nil)
 	 (define-compiler-macro ,write-function (&whole whole ,@args ,stream &environment env)
-	   (if (every (lambda (x) (compiler-constantp x env)) (list ,@args))
-	       `(write-string
-		 ,(with-output-to-string (c-stream)
-					 (funcall (enclose `(lambda (c-stream)
-							      (declare (notinline ,',write-function))
-							      (,',write-function ,,@args c-stream)) env)
-						  c-stream))
-		 ,,stream)
-	       whole))))))
+	   (writer-compiler-form ',write-function (list ,@args) ,stream env whole))))))
 
 ;;; See the GraphQL spec, https://spec.graphql.org/June2018/
 
