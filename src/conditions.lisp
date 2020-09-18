@@ -22,7 +22,8 @@
 
 (deftype fatal-error () `(or serious-condition usocket:ns-condition usocket:socket-condition))
 
-(defmethod condition-http-return-code ((c condition)) 500)
+(defgeneric condition-http-return-code (c)
+  (:method ((c condition)) 500))
 
 (defmethod error-to-html :around ((condition condition))
   <div class="gw-error">

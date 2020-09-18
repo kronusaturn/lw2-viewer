@@ -173,9 +173,9 @@
 		 operations)))
    `(progn
       (export '(,bare-name ,inner-bare-name))
-      (defgeneric ,inner-name ,(names-only-lambda-list (funcall lambda-list-translator t lambda-list)) ,.method-definitions)
       (declaim (inline ,name))
-      ,wrapper-defun))))
+      ,wrapper-defun
+      (defgeneric ,inner-name ,(names-only-lambda-list (funcall lambda-list-translator t lambda-list)) ,.method-definitions)))))
 
 (defmacro define-backend-operation (name backend &rest args)
   (multiple-value-bind (inner-name lambda-list-translator) (operation-name-and-lambda-list-translator name)

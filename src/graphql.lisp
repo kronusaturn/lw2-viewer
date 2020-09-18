@@ -13,9 +13,11 @@
 
 (defmacro declaim-grammar (name)
   ;; Forward declare a grammar form so it can be used before it is defined.
-  `(eval-when (:compile-toplevel :load-toplevel :execute)
-     (declaim (ftype function ,(symbolicate '#:write- name)))
-     (pushnew ',name *grammars*)))
+  (let ((write-function (symbolicate '#:write- name)))
+    `(eval-when (:compile-toplevel :load-toplevel :execute)
+       (declaim (ftype function ,write-function)
+		(notinline ,write-function))
+       (pushnew ',name *grammars*))))
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
 
@@ -58,6 +60,7 @@
       `(eval-when (:compile-toplevel :load-toplevel :execute)
 	 (pushnew ',name *grammars*)
 	 (defun ,write-function (,@args ,stream)
+	   (declare (notinline ,write-function))
 	   ,(gen-writer (cons 'progn body) stream)
 	   nil)
 	 (define-compiler-macro ,write-function (&whole whole ,@args ,stream &environment env)
