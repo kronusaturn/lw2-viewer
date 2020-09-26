@@ -25,7 +25,8 @@
     #:*earliest-post*
     #:*extra-external-scripts* #:*extra-inline-scripts*
     #:site-stylesheets #:site-inline-scripts #:site-scripts #:site-external-scripts #:site-head-elements
-    #:unwrap-stream)
+    #:unwrap-stream
+    #:sort-comments)
   (:recycle #:lw2-viewer #:lw2.backend))
 
 (in-package #:lw2-viewer) 
@@ -294,19 +295,22 @@ signaled condition to *HTML-OUTPUT*."
 					      (cdr (assoc :child-count c))))
 				  (comment-tree-to-html out-stream comment-hash :target c-id :level (1+ level) :level-invert level-invert)))))))))
 
-(defun sort-comments (comments sort-by)
+(defun sort-items (items sort-by)
   (multiple-value-bind (sort-fn key-fn)
       (ecase sort-by
-	(:old (values (lambda (a b) (ignore-errors (local-time:timestamp< a b)))
-		      (lambda (c) (ignore-errors (local-time:parse-timestring (cdr (assoc :posted-at c))))))))
-    (sort comments sort-fn :key key-fn)))
+	((:old :new) (values (if (eq sort-by :old)
+				 (lambda (a b) (ignore-errors (local-time:timestamp< a b)))
+				 (lambda (a b) (ignore-errors (local-time:timestamp> a b))))
+			     (lambda (c) (ignore-errors (local-time:parse-timestring (or (cdr (assoc :posted-at c))
+											 (cdr (assoc :created-at c)))))))))
+    (sort items sort-fn :key key-fn)))
 
 (defun comment-chrono-to-html (out-stream comments)
   (let ((comment-hash (make-comment-parent-hash comments)) 
-	(comments-sorted (sort-comments comments :old)))
+	(comments (sort-items comments :old)))
     (comment-thread-to-html out-stream
       (lambda ()
-        (loop for c in comments-sorted do
+        (loop for c in comments do
               (let* ((c-id (cdr (assoc :--id c)))
                      (new-c (acons :children (gethash c-id comment-hash) c)))
                 (comment-item-to-html out-stream new-c)))))))
@@ -365,7 +369,8 @@ signaled condition to *HTML-OUTPUT*."
       (format out-stream "<div class=\"listing-message\">~A</div>" empty-message)))
 
 (defun write-index-items-to-rss (out-stream items &key title need-auth)
-  (let ((full-title (format nil "~@[~A - ~]~A" title (site-title *current-site*))))
+  (let ((full-title (format nil "~@[~A - ~]~A" title (site-title *current-site*)))
+	(items (firstn (sort-items items :new) 20)))
     (xml-emitter:with-rss2 (out-stream :encoding "UTF-8")
       (xml-emitter:rss-channel-header full-title (site-uri *current-site*) :description full-title)
       (labels ((emit-item (item &key title link (guid (cdr (assoc :--id item))) (author (get-username (cdr (assoc :user-id item))))
@@ -1167,7 +1172,7 @@ signaled condition to *HTML-OUTPUT*."
 			     (let ((parent-hash (make-comment-parent-hash comments)))
 			       (when overcomingbias-sort
 				 (setf (gethash nil parent-hash)
-				       (sort-comments (gethash nil parent-hash) :old)))
+				       (sort-items (gethash nil parent-hash) :old)))
 			       (comment-tree-to-html out-stream parent-hash))))
 		       <div class="comments-empty-message">("No ~As." id)</div>)))))
     (if preview
