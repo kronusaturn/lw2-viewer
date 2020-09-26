@@ -433,6 +433,21 @@
   (declare (ignore context fields with-total))
   (format nil "{~A}" (apply 'lw2-query-string* query-type return-type args rest)))
 
+(define-backend-function lw2-query-list-limit-workaround (query-type terms &rest rest &key fields context auth-token)
+  (backend-graphql
+   (declare (ignore fields context))
+   (let (items-list)
+     (loop for offset from 0 by 500
+	as items-next = (lw2-graphql-query (apply 'lw2-query-string query-type :list (alist* :limit 500 :offset offset terms) (filter-plist rest :fields :context))
+					   :auth-token auth-token)
+	as length = (length items-next)
+	do (setf items-list (nconc items-list items-next))
+	while (>= length 500))
+     items-list))
+  (backend-accordius
+   (declare (ignore fields context))
+   (lw2-graphql-query (apply 'lw2-query-string query-type :list terms (filter-plist rest :fields :context)) :auth-token auth-token)))
+
 (defun get-cached-index-query (cache-id query)
   (labels ((query-and-put ()
 	     (let* ((result (lw2-graphql-query query :return-type :string))
@@ -556,11 +571,14 @@
   (backend-base (declare (ignore revalidate force-revalidate)) nil)
   (backend-lw2-tags
    (let* ((tagid (get-slug-tagid slug))
-	  (query-string (lw2-query-string :tag-rel :list
-					  (alist :view "postsWithTag" :tag-id tagid)
-					  :fields (list (list* :post (request-fields :post :list :index))))))
+	  (query-fn (lambda ()
+		      (comments-list-to-graphql-json
+		       (lw2-query-list-limit-workaround
+			:tag-rel
+			(alist :view "postsWithTag" :tag-id tagid)
+			:fields (list (list* :post (request-fields :post :list :index))))))))
      (iter
-      (for x in (lw2-graphql-query-timeout-cached query-string "tag-posts" tagid :revalidate revalidate :force-revalidate force-revalidate))
+      (for x in (lw2-graphql-query-timeout-cached query-fn "tag-posts" tagid :revalidate revalidate :force-revalidate force-revalidate))
       (when-let (post (cdr (assoc :post x)))
 	(collect post))))))
 
@@ -579,21 +597,6 @@
   (backend-lw2-tags
    (declare (ignore auth-token))
    (acons :tags (get-post-tags post-id :revalidate revalidate :force-revalidate force-revalidate) (call-next-method))))
-
-(define-backend-function lw2-query-list-limit-workaround (query-type terms &rest rest &key fields context auth-token)
-  (backend-graphql
-   (declare (ignore fields context))
-   (let (items-list)
-     (loop for offset from 0 by 500
-	as items-next = (lw2-graphql-query (apply 'lw2-query-string query-type :list (alist* :limit 500 :offset offset terms) (filter-plist rest :fields :context))
-					   :auth-token auth-token)
-	as length = (length items-next)
-	do (setf items-list (nconc items-list items-next))
-	while (>= length 500))
-     items-list))
-  (backend-accordius
-   (declare (ignore fields context))
-   (lw2-graphql-query (apply 'lw2-query-string query-type :list terms (filter-plist rest :fields :context)) :auth-token auth-token)))
 
 (defun get-post-comments-list (post-id view &rest rest &key auth-token parent-answer-id fields context)
   (declare (ignore fields context auth-token))
