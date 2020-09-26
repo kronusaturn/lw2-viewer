@@ -1,12 +1,13 @@
-(defpackage #:lw2.links
-  (:use #:cl #:alexandria #:lw2.lmdb #:lw2.backend #:lw2.sites #:lw2.context #:lw2-viewer.config)
+(uiop:define-package #:lw2.links
+  (:use #:cl #:alexandria #:lw2.utils #:lw2.lmdb #:lw2.backend #:lw2.sites #:lw2.context #:lw2-viewer.config)
   (:export #:match-lw1-link #:convert-lw1-link
 	   #:match-ea1-link #:convert-ea1-link
            #:match-overcomingbias-link #:convert-overcomingbias-link
            #:direct-link #:with-direct-link
            #:match-lw2-link #:match-lw2-slug-link #:match-lw2-sequence-link #:convert-lw2-link #:convert-lw2-slug-link #:convert-lw2-sequence-link #:convert-lw2-user-link
-           #:generate-post-link
-           #:convert-any-link* #:convert-any-link))
+           #:generate-item-link
+           #:convert-any-link* #:convert-any-link)
+  (:unintern #:generate-post-link))
 
 (in-package #:lw2.links)
 
@@ -140,8 +141,8 @@
 (defun convert-agentfoundations-link (link)
   (convert-redirect-link link #'match-agentfoundations-link #'get-agentfoundations-link "https://www.lesswrong.com"))
 
-(defun gen-internal (post-id slug comment-id &optional absolute-uri)
-  (format nil "~Aposts/~A/~A~:[~@[#~A~]~;~@[#comment-~A~]~]" (or absolute-uri "/") post-id (or slug (get-post-slug post-id) "-") (and comment-id (= (length comment-id) 17)) comment-id))
+(defun gen-internal (post-id slug comment-id &optional absolute-uri stream)
+  (format stream "~Aposts/~A/~A~:[~@[#~A~]~;~@[#comment-~A~]~]" (or absolute-uri "/") post-id (or slug (get-post-slug post-id) "-") (and comment-id (= (length comment-id) 17)) comment-id))
 
 (defun convert-lw2-slug-link (link)
   (multiple-value-bind (slug comment-id) (match-lw2-slug-link link)
@@ -161,14 +162,19 @@
       (if-let (site (find-link-site link))
               (gen-internal post-id slug comment-id (site-link-prefix site))))))
 
-(defun generate-post-link (story &optional comment-id absolute-uri)
-  (let ((absolute-uri (if (eq absolute-uri t) (site-uri *current-site*) absolute-uri)))
-    (typecase story
-      (string 
-        (gen-internal story (get-post-slug story) comment-id absolute-uri))
-      (cons
-        (let ((story-id (cdr (assoc :--id story)))) 
-          (gen-internal story-id (or (cdr (assoc :slug story)) (get-post-slug story-id)) comment-id absolute-uri))))))
+(defun generate-item-link (item-type item-designator &key comment-id absolute stream)
+  (let ((absolute (if (eq absolute t) (site-uri *current-site*) absolute)))
+    (ecase item-type
+      (:post
+       (typecase item-designator
+	 (string
+	  (gen-internal item-designator (get-post-slug item-designator) comment-id absolute stream))
+	 (cons
+	  (let ((post-id (cdr (assoc :--id item-designator))))
+	    (gen-internal post-id (or (cdr (assoc :slug item-designator)) (get-post-slug post-id)) comment-id absolute stream)))))
+      (:tag
+       (with-output-to-designator (out stream)
+	 (format out "~Atag/~A~@[#comment-~A~]" (or absolute "/") item-designator comment-id))))))
 
 (defun convert-any-link* (url)
   (let ((url (sanitize-link url)))

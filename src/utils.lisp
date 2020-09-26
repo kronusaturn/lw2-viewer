@@ -11,7 +11,8 @@
 	   #:string-to-existing-keyword #:call-with-safe-json
 	   #:delete-easy-handler #:abnormal-unwind-protect
 	   #:ignorable-multiple-value-bind
-	   #:compare-streams)
+	   #:compare-streams
+	   #:with-output-to-designator)
   (:recycle #:lw2-viewer))
 
 (in-package #:lw2.utils)
@@ -250,3 +251,12 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
 	       (compare-streams u-a b))
        (if-let (u-b (unwrap-stream b))
 	       (compare-streams a u-b)))))
+
+(defmacro with-output-to-designator ((stream designator) &body body)
+  (with-gensyms (body-fn)
+    (once-only (designator)
+      `(flet ((,body-fn (,stream) ,@body))
+	 (if ,designator
+	     (progn (,body-fn ,designator) nil)
+	     (with-output-to-string (,stream)
+	       (,body-fn ,stream)))))))

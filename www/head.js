@@ -482,6 +482,7 @@ GW.commentActionButtonClicked = (event) => {
 };
 
 function initializeCommentControls() {
+	if(query(".tag-index-page")) return; // FIXME
 	e = document.createElement("div");
 	e.className = "comment-controls posting-controls";
 	document.currentScript.insertAdjacentElement("afterend", e);

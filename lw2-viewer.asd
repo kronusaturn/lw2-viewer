@@ -37,7 +37,7 @@
                              (:file "backend" :depends-on ("utils" "hash-utils" "backend-modules" "lmdb" "graphql" "context" "user-context" "sites" "schema-type" "conditions" "web-push"))
 			     (:file "csrf" :depends-on ("conditions" "client-script"))
                              (:file "components" :depends-on ("utils" "csrf"))
-                             (:file "links" :depends-on ("lmdb" "backend" "sites" "context"))
+                             (:file "links" :depends-on ("utils" "lmdb" "backend" "sites" "context"))
 			     (:file "legacy-archive" :depends-on ("utils" "backend"))
 			     (:static-file "../text-clean-regexps.js")
 			     (:static-file "../html-clean-regexps.js")

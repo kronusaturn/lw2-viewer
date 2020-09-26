@@ -32,8 +32,8 @@
 
 (defun generate-post-auth-link (post &optional comment-id absolute need-auth)
   (if need-auth
-      (concatenate 'string (generate-post-link post comment-id absolute) "?need-auth=y")
-      (generate-post-link post comment-id absolute)))
+      (concatenate 'string (generate-item-link :post post :comment-id comment-id :absolute absolute) "?need-auth=y")
+      (generate-item-link :post post :comment-id comment-id :absolute absolute)))
 
 (defun clean-lw-link (url)
   (when url

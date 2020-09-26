@@ -125,7 +125,7 @@
 	    (emit-author user-id)))
       (pretty-time-html posted-at)
       (vote-buttons base-score :with-buttons (eq context :body) :vote-count vote-count :post-id post-id :af-score (and (eq context :body) af af-base-score))
-      <a class="comment-count" href=("~A#comments" (if (eq context :body) "" (generate-post-link post)))>
+      <a class="comment-count" href=("~A#comments" (if (eq context :body) "" (generate-item-link :post post)))>
 	(safe (pretty-number (or comment-count 0) "comment"))
       </a>
       (when (and (eq context :listing) word-count)
@@ -134,9 +134,9 @@
       (when (and legacy-id (eq context :body))
 	<a class="archive-link" href=("https://web.archive.org/web/*/~A" (lw2.legacy-archive:lw-legacy-url legacy-id title))>Archive</a>)
       (when (nonzero-number-p nomination-count-2018)
-	<a href=("~A#nominations" (if (eq context :body) "" (generate-post-link post))) class="nomination-count">(safe (pretty-number nomination-count-2018 "nomination"))</a>)
+	<a href=("~A#nominations" (if (eq context :body) "" (generate-item-link :post post))) class="nomination-count">(safe (pretty-number nomination-count-2018 "nomination"))</a>)
       (when (nonzero-number-p review-count-2018)
-	<a href=("~A#reviews" (if (eq context :body) "" (generate-post-link post))) class="review-count">(safe (pretty-number review-count-2018 "review"))</a>)
+	<a href=("~A#reviews" (if (eq context :body) "" (generate-item-link :post post))) class="review-count">(safe (pretty-number review-count-2018 "review"))</a>)
       (with-html-stream-output (post-section-to-html post :skip-section skip-section))
       (when (and (eq context :body) tags)
 	<div id="tags">
@@ -145,7 +145,7 @@
       (when (and (eq context :listing) url)
 	<div class="link-post-domain">("(~A)" (quri:uri-host (quri:uri (string-trim " " url))))</div>)
       (when (eq context :body)
-	(qualified-linking (generate-post-link post) meta-location))
+	(qualified-linking (generate-item-link :post post) meta-location))
     </div>))
 
 (defun post-headline-to-html (post &key skip-section need-auth)

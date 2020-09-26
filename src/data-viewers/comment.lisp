@@ -15,10 +15,11 @@
    (highlight-new boolean :graphql-ignore t)
    (replied list :graphql-ignore t)
    (post-id (or null simple-string))
+   (tag list :subfields (:--id :name :slug))
    (base-score (or null fixnum))
    (af-base-score (or null fixnum))
    (page-url (or null string) :context-not :user-index) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
-   (parent-comment list :context :index :subfields (:--id :user-id :post-id))
+   (parent-comment list :context :index :subfields (:--id :user-id :post-id (:tag :--id :name :slug)))
    (parent-comment-id (or null string))
    (child-count (or null fixnum) :graphql-ignore t)
    (children list :graphql-ignore t)
@@ -38,11 +39,13 @@
 				:parent-comment-id :af :vote-count :retracted :deleted-public :html-body))
    (html-body string)))
 
+(defun comment-link (post-id tag &optional comment-id)
+  (generate-item-link (if post-id :post :tag) (or post-id (cdr (assoc :slug tag))) :comment-id comment-id))
+
 (defun comment-to-html (out-stream comment &key with-post-title)
   (if (or (cdr (assoc :deleted comment)) (cdr (assoc :deleted-public comment)))
       (format out-stream "<div class=\"comment deleted-comment\"><div class=\"comment-meta\"><span class=\"deleted-meta\">[ ]</span></div><div class=\"body-text comment-body\">[deleted]</div></div>")
       (schema-bind (:comment comment :auto :context :index)
-	(unless post-id (return-from comment-to-html)) ; XXX fixme
         (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
 	  <div class=("comment~{ ~A~}"
 		      (list-cond
@@ -51,7 +54,8 @@
 			"just-posted-comment")
 		       (highlight-new "comment-item-highlight")
 		       (retracted "retracted")))
-	       data-post-id=post-id>
+	       data-post-id=post-id
+	       data-tag-id=(cdr (assoc :--id tag))>
 	    <div class="comment-meta">
 	      (if (user-deleted user-id)
 		  <span class="author">[deleted]</span>
@@ -61,15 +65,16 @@
 		     data-full-name=(get-user-full-name user-id)>
 		    (get-username user-id)
 	          </a>)
-	      <a class="date" href=(generate-post-link post-id comment-id) data-js-date=js-time> (safe pretty-time) (safe (pretty-time-js))</a>
-	      (when replied <a class="replied" title="You have replied to this comment" href=(apply 'generate-post-link replied)></a>)
+	      <a class="date" href=(comment-link post-id tag comment-id) data-js-date=js-time> (safe pretty-time) (safe (pretty-time-js))</a>
+	      (when replied <a class="replied" title="You have replied to this comment" href=(apply 'generate-item-link replied)></a>)
 	      (vote-buttons base-score :with-buttons (not with-post-title) :vote-count vote-count :af-score (and af af-base-score))
-	      (when af <span class="alignment-forum">AF</span>)     
-	      <a class="permalink" href=("~A/~A/~A"
-					 (generate-post-link post-id)
-					 (cond ((or answer parent-answer-id) "answer") (t "comment"))
-					 comment-id)
-		 title="Permalink"></a>
+	      (when af <span class="alignment-forum">AF</span>)
+	      (when post-id
+	        <a class="permalink" href=("~A/~A/~A"
+					   (generate-item-link :post post-id)
+					   (cond ((or answer parent-answer-id) "answer") (t "comment"))
+					   comment-id)
+		   title="Permalink"></a>)
 	      (with-html-stream-output
 		(when page-url
 		  <a class="lw2-link" href=(clean-lw-link page-url) title=(main-site-abbreviation *current-site*)></a>)
@@ -77,19 +82,22 @@
 		    <div class="comment-post-title">
 		      (with-html-stream-output
 			  (when parent-comment
-			    (alist-bind ((user-id string)
-					 (post-id string)
-					 (parent-id string :--id))
+			    (alist-bind ((user-id simple-string)
+					 (post-id (or null simple-string))
+					 (tag list)
+					 (parent-id simple-string :--id))
 					parent-comment
 			      <span class="comment-in-reply-to">in reply to:
 				<a href=("/users/~A" (get-user-slug user-id))
 				   class=("inline-author~:[~; own-user-author~]" (logged-in-userid user-id))
 				   data-userid=(progn user-id)>
 				   (get-username user-id)</a>’s
-				<a href=(generate-post-link post-id parent-id)>comment</a>
+				<a href=(comment-link post-id tag parent-id)>comment</a>
 				(progn " ")
 			      </span>)))
-			<span class="comment-post-title2">on: <a href=(generate-post-link post-id)>(safe (clean-text-to-html (get-post-title post-id)))</a></span>
+		        <span class="comment-post-title2">on: <a href=(comment-link post-id tag)>(safe (clean-text-to-html (if post-id
+															       (get-post-title post-id)
+															       (cdr (assoc :name tag)))))</a></span>
 		      </div>
 		  (when parent-comment-id
 		    (if *comment-individual-link*
@@ -114,14 +122,17 @@
 							     (encode-entities
 							      (or (markdown-source :comment comment-id html-body)
 								  html-body)))))>
-		  (with-html-stream-output
-		    (let ((*before-clean-hook* (lambda () (clear-backlinks post-id comment-id)))
-			  (*link-hook* (lambda (link)
-					 (add-backlink link post-id comment-id)))
-			  (lw2.lmdb:*memoized-output-stream* out-stream))
-		      (clean-html* html-body)))
+		(with-html-stream-output
+		    (if post-id
+			(let ((*before-clean-hook* (lambda () (clear-backlinks post-id comment-id)))
+			      (*link-hook* (lambda (link)
+					     (add-backlink link post-id comment-id)))
+			      (lw2.lmdb:*memoized-output-stream* out-stream))
+			  (clean-html* html-body))
+			(let ((lw2.lmdb:*memoized-output-stream* out-stream))
+			  (clean-html* html-body))))
 	      </div>
-	      (backlinks-to-html (get-backlinks post-id comment-id) (format nil "~A-~A" post-id comment-id))
+	      (when post-id (backlinks-to-html (get-backlinks post-id comment-id) (format nil "~A-~A" post-id comment-id)))
 	      (when (and (not with-post-title) (logged-in-userid))
 	        <script>initializeCommentControls\(\)</script>)
 	    </div>))))

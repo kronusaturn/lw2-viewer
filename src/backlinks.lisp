@@ -96,7 +96,7 @@
 			       (result
 				(alist :if-modified-since last-modified
 				       :site-host source-site-host
-				       :link (generate-post-link source-post source-comment-id t)
+				       :link (generate-item-link :post source-post :comment-id source-comment-id :absolute t)
 				       :post-title (cdr (assoc :title source-post))
 				       :post-user-id (cdr (assoc :user-id source-post))
 				       :comment-user-id (cdr (assoc :user-id source-comment))

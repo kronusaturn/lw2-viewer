@@ -91,7 +91,7 @@
 	    <span class="post-nav-title">(safe (clean-text-to-html (cdr (assoc :title sequence))))</span>
 	  </a>
 	  (labels ((post-nav-link (direction post)
-		     <a class=("post-nav ~A" (string-downcase direction)) href=(generate-post-link post)>
+		     <a class=("post-nav ~A" (string-downcase direction)) href=(generate-item-link :post post)>
 		       <span class="post-nav-label">(case direction (:prev "Previous: ") (:next "Next: "))</span>
 		       <span class="post-nav-title">(safe (clean-text-to-html (cdr (assoc :title post))))</span>
 		     </a>))
@@ -391,7 +391,7 @@ signaled condition to *HTML-OUTPUT*."
 	       (when post-id ; XXX fixme
 		 (emit-item item
 			    :title (format nil "Comment by ~A on ~A" (get-username user-id) (get-post-title post-id))
-			    :link (generate-post-link post-id comment-id t)
+			    :link (generate-item-link :post post-id :comment-id comment-id :absolute t)
 			    :body (clean-html html-body)))))))))))
 
 (defparameter *html-head*
@@ -1068,7 +1068,7 @@ signaled condition to *HTML-OUTPUT*."
     nil)
 
 (define-page view-post "/post" ((id :required t))
-  (redirect (generate-post-link id) :type :permanent))
+  (redirect (generate-item-link :post id) :type :permanent))
 
 (define-page view-post-lw1-link (:function #'match-lw1-link) ()
   (redirect (convert-lw1-link (hunchentoot:request-uri*)) :type :permanent))
@@ -1145,6 +1145,39 @@ signaled condition to *HTML-OUTPUT*."
 				  (quri:merge-uris (quri:make-uri :fragment (format nil "comment-~A" new-comment-id))
 						   (hunchentoot:request-uri*)))))))))))
 
+(defun output-comments (out-stream id comments target &key overcomingbias-sort preview chrono)
+  (labels ((output-comments-inner ()
+	     (with-error-html-block ()
+	       (if target
+		   (comment-thread-to-html out-stream
+					   (lambda ()
+					     (comment-item-to-html
+					      out-stream
+					      target
+					      :level-invert preview
+					      :extra-html-fn (lambda (c-id)
+							       (let ((*comment-individual-link* nil))
+								 (comment-tree-to-html out-stream (make-comment-parent-hash comments)
+										       :target c-id
+										       :level-invert preview))))))
+		   (if comments
+		       (progn #|<div class="comments-empty-message">(safe (pretty-number (length comments) id))</div>|#
+			 (if chrono
+			     (comment-chrono-to-html out-stream comments)
+			     (let ((parent-hash (make-comment-parent-hash comments)))
+			       (when overcomingbias-sort
+				 (setf (gethash nil parent-hash)
+				       (sort-comments (gethash nil parent-hash) :old)))
+			       (comment-tree-to-html out-stream parent-hash))))
+		       <div class="comments-empty-message">("No ~As." id)</div>)))))
+    (if preview
+	(output-comments-inner)
+	(progn (format out-stream "<div id=\"~As\" class=\"comments\">" id)
+	       (unless target
+		 <script>initializeCommentControls\(\)</script>)
+	       (output-comments-inner)
+	       (format out-stream "</div>")))))
+
 (define-page view-post-lw2-link (:function #'match-lw2-link post-id comment-id * comment-link-type)
                                 (need-auth
                                  chrono
@@ -1153,141 +1186,109 @@ signaled condition to *HTML-OUTPUT*."
   (request-method
    (:get ()
      (when (hunchentoot:get-parameter "commentId")
-       (redirect (format nil "~A/comment/~A" (generate-post-link post-id) comment-id))
+       (redirect (format nil "~A/comment/~A" (generate-item-link :post post-id) comment-id))
        (return))
      (let* ((lw2-auth-token *current-auth-token*)
 	    (preview (string-equal format "preview"))
 	    (show-comments (and (not preview) show-comments)))
-       (labels ((output-comments (out-stream id comments target &key overcomingbias-sort)
-		  (labels ((output-comments-inner ()
-			     (with-error-html-block ()
-			       (if target
-				   (comment-thread-to-html out-stream
-							   (lambda ()
-							     (comment-item-to-html
-							      out-stream
-							      target
-							      :level-invert preview
-							      :extra-html-fn (lambda (c-id)
-									       (let ((*comment-individual-link* nil))
-										 (comment-tree-to-html out-stream (make-comment-parent-hash comments)
-												       :target c-id
-												       :level-invert preview))))))
-				   (if comments
-				       (progn #|<div class="comments-empty-message">(safe (pretty-number (length comments) id))</div>|#
-					 (if chrono
-					     (comment-chrono-to-html out-stream comments)
-					     (let ((parent-hash (make-comment-parent-hash comments)))
-					       (when overcomingbias-sort
-						 (setf (gethash nil parent-hash)
-						       (sort-comments (gethash nil parent-hash) :old)))
-					       (comment-tree-to-html out-stream parent-hash))))
-				       <div class="comments-empty-message">("No ~As." id)</div>)))))
-		    (if preview
-			(output-comments-inner)
-			(progn (format out-stream "<div id=\"~As\" class=\"comments\">" id)
-			       (unless target
-				 <script>initializeCommentControls\(\)</script>)
-			       (output-comments-inner)
-			       (format out-stream "</div>"))))))
-	 (multiple-value-bind (post title condition)
-	     (handler-case (nth-value 0 (get-post-body post-id :auth-token (and need-auth lw2-auth-token)))
-	       (serious-condition (c) (values nil "Error" c))
-	       (:no-error (post) (values post (cdr (assoc :title post)) nil)))
-	   (labels ((extra-head ()
-		      (when-let (canonical-source (and (not comment-id)
-						       (cdr (assoc :canonical-source post))))
-			<link rel="canonical" href=canonical-source>)
-		      <script>postId=(with-html-stream-output (json:encode-json post-id *html-output*))</script>
-		      <script>alignmentForumPost=(if (cdr (assoc :af post)) "true" "false")</script>)
-		    (retrieve-individual-comment (comment-thread-type)
-		      (let* ((comments (case comment-thread-type
-					 (:comment (get-post-comments post-id))
-					 (:answer (get-post-answers post-id))))
-			     (target-comment (find comment-id comments :key (lambda (c) (cdr (assoc :--id c))) :test #'string=)))
-			(values comments target-comment))))
-	     (if comment-id
-		 (let ((comment-thread-type (if (string= comment-link-type "answer") :answer :comment)))
-		   (multiple-value-bind (comments target-comment) (retrieve-individual-comment comment-thread-type)
+       (multiple-value-bind (post title condition)
+	   (handler-case (nth-value 0 (get-post-body post-id :auth-token (and need-auth lw2-auth-token)))
+	     (serious-condition (c) (values nil "Error" c))
+	     (:no-error (post) (values post (cdr (assoc :title post)) nil)))
+	 (labels ((extra-head ()
+		    (when-let (canonical-source (and (not comment-id)
+						     (cdr (assoc :canonical-source post))))
+			      <link rel="canonical" href=canonical-source>)
+		    <script>postId=(with-html-stream-output (json:encode-json post-id *html-output*))</script>
+		    <script>alignmentForumPost=(if (cdr (assoc :af post)) "true" "false")</script>)
+		  (retrieve-individual-comment (comment-thread-type)
+		    (let* ((comments (case comment-thread-type
+				       (:comment (get-post-comments post-id))
+				       (:answer (get-post-answers post-id))))
+			   (target-comment (find comment-id comments :key (lambda (c) (cdr (assoc :--id c))) :test #'string=)))
+		      (values comments target-comment))))
+	   (if comment-id
+	       (let ((comment-thread-type (if (string= comment-link-type "answer") :answer :comment)))
+		 (multiple-value-bind (comments target-comment) (retrieve-individual-comment comment-thread-type)
+		   (unless target-comment
+		     ;; If the comment was not found, try as an answer, or vice versa.
+		     (setf comment-thread-type (if (eq comment-thread-type :comment) :answer :comment)
+			   (values comments target-comment) (retrieve-individual-comment comment-thread-type))
 		     (unless target-comment
-		       ;; If the comment was not found, try as an answer, or vice versa.
-		       (setf comment-thread-type (if (eq comment-thread-type :comment) :answer :comment)
-			     (values comments target-comment) (retrieve-individual-comment comment-thread-type))
-		       (unless target-comment
-			 (error (make-condition 'lw2-not-found-error))))
-		     (let* ((*comment-individual-link* t)
-			    (display-name (get-username (cdr (assoc :user-id target-comment))))
-			    (verb-phrase (cond
-					   ((and (eq comment-thread-type :answer)
-						 (not (cdr (assoc :parent-comment-id target-comment))))
-					    "answers")
-					   (t "comments on"))))
-		       (emit-page (out-stream :title (format nil "~A ~A ~A" display-name verb-phrase title)
-					      :content-class "individual-thread-page comment-thread-page"
-					      :social-description (when-let (x (cdr (assoc :html-body target-comment))) (extract-excerpt x))
-					      :extra-head #'extra-head)
-				  (unless preview
-				    (format out-stream "<h1 class=\"post-title\">~A ~A <a href=\"~A\">~A</a></h1>"
-					    (encode-entities display-name)
-					    verb-phrase
-					    (generate-post-link post-id)
-					    (clean-text-to-html title :hyphenation nil)))
-				  (output-comments out-stream "comment" comments target-comment)))))
-		 (let ((post-sequences (get-post-sequences post-id)))
-		   (emit-page (out-stream :title title
-					  :content-class (format nil "post-page comment-thread-page~{ ~A~}"
-								 (list-cond ((cdr (assoc :question post)) "question-post-page")
-									    (post-sequences "in-sequence")
-									    ((not show-comments) "no-comments")))
-					  :social-description (when-let (x (cdr (assoc :html-body post))) (extract-excerpt x))
-					  :extra-head #'extra-head)
-			      (cond
-				(condition
-				 (error-explanation-case (error-to-html condition)
-							 (lw2-not-allowed-error
-							  <p>This probably means the post has been deleted or moved back to the author's drafts.</p>)))
-				(t
-				 (post-body-to-html post)))
-			      (when (and lw2-auth-token (equal (logged-in-userid) (cdr (assoc :user-id post))))
-				(format out-stream "<div class=\"post-controls\"><a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\" accesskey=\"e\" title=\"Edit post [e]\">Edit post</a></div>"
-					(cdr (assoc :--id post))))
-			      (post-nav-links post post-sequences)
-			      (when show-comments
-				(force-output out-stream)
-				(with-error-html-block ()
-				  ;; Temporary hack to support nominations
-				  (let ((real-comments (get-post-comments post-id))
-					(answers (when (cdr (assoc :question post))
-						   (get-post-answers post-id)))
-					(nominations-eligible (and (typep *current-backend* 'backend-lw2)
-								   (cdr (assoc :posted-at post))
-								   (let ((ts (local-time:parse-timestring (cdr (assoc :posted-at post)))))
-								     (and (local-time:timestamp> ts (load-time-value (local-time:parse-timestring "2018-01-01")))
-									  (local-time:timestamp< ts (load-time-value (local-time:parse-timestring "2019-01-01"))))))))
-				    (labels ((top-level-property (comment property)
-					       (or (cdr (assoc property comment))
-						   (cdr (assoc property (cdr (assoc :top-level-comment comment)))))))
-				      (multiple-value-bind (normal-comments nominations reviews)
-					  (loop for comment in real-comments
-					     if (top-level-property comment :nominated-for-review)
-					     collect comment into nominations
-					     else if (top-level-property comment :reviewing-for-review)
-					     collect comment into reviews
-					     else
-					     collect comment into normal-comments
-					     finally (return (values normal-comments nominations reviews)))
-					(loop for (name comments) in (list-cond (nominations-eligible
-										 (list "nomination" nominations))
-										(nominations-eligible
-										 (list "review" reviews))
-										((cdr (assoc :question post))
-										 (list "answer" answers))
-										(t
-										 (list "comment" normal-comments)))
-					   do (with-error-html-block ()
-						(output-comments out-stream name comments nil :overcomingbias-sort (cdr (assoc :comment-sort-order post))))))))))))))))))
+		       (error (make-condition 'lw2-not-found-error))))
+		   (let* ((*comment-individual-link* t)
+			  (display-name (get-username (cdr (assoc :user-id target-comment))))
+			  (verb-phrase (cond
+					 ((and (eq comment-thread-type :answer)
+					       (not (cdr (assoc :parent-comment-id target-comment))))
+					  "answers")
+					 (t "comments on"))))
+		     (emit-page (out-stream :title (format nil "~A ~A ~A" display-name verb-phrase title)
+					    :content-class "individual-thread-page comment-thread-page"
+					    :social-description (when-let (x (cdr (assoc :html-body target-comment))) (extract-excerpt x))
+					    :extra-head #'extra-head)
+				(unless preview
+				  (format out-stream "<h1 class=\"post-title\">~A ~A <a href=\"~A\">~A</a></h1>"
+					  (encode-entities display-name)
+					  verb-phrase
+					  (generate-item-link :post post-id)
+					  (clean-text-to-html title :hyphenation nil)))
+				(output-comments out-stream "comment" comments target-comment :chrono chrono :preview preview)))))
+	       (let ((post-sequences (get-post-sequences post-id)))
+		 (emit-page (out-stream :title title
+					:content-class (format nil "post-page comment-thread-page~{ ~A~}"
+							       (list-cond ((cdr (assoc :question post)) "question-post-page")
+									  (post-sequences "in-sequence")
+									  ((not show-comments) "no-comments")))
+					:social-description (when-let (x (cdr (assoc :html-body post))) (extract-excerpt x))
+					:extra-head #'extra-head)
+			    (cond
+			      (condition
+			       (error-explanation-case (error-to-html condition)
+						       (lw2-not-allowed-error
+							<p>This probably means the post has been deleted or moved back to the author's drafts.</p>)))
+			      (t
+			       (post-body-to-html post)))
+			    (when (and lw2-auth-token (equal (logged-in-userid) (cdr (assoc :user-id post))))
+			      (format out-stream "<div class=\"post-controls\"><a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\" accesskey=\"e\" title=\"Edit post [e]\">Edit post</a></div>"
+				      (cdr (assoc :--id post))))
+			    (post-nav-links post post-sequences)
+			    (when show-comments
+			      (finish-output out-stream)
+			      (with-error-html-block ()
+				;; Temporary hack to support nominations
+				(let ((real-comments (get-post-comments post-id))
+				      (answers (when (cdr (assoc :question post))
+						 (get-post-answers post-id)))
+				      (nominations-eligible (and (typep *current-backend* 'backend-lw2)
+								 (cdr (assoc :posted-at post))
+								 (let ((ts (local-time:parse-timestring (cdr (assoc :posted-at post)))))
+								   (and (local-time:timestamp> ts (load-time-value (local-time:parse-timestring "2018-01-01")))
+									(local-time:timestamp< ts (load-time-value (local-time:parse-timestring "2019-01-01"))))))))
+				  (labels ((top-level-property (comment property)
+					     (or (cdr (assoc property comment))
+						 (cdr (assoc property (cdr (assoc :top-level-comment comment)))))))
+				    (multiple-value-bind (normal-comments nominations reviews)
+					(loop for comment in real-comments
+					   if (top-level-property comment :nominated-for-review)
+					   collect comment into nominations
+					   else if (top-level-property comment :reviewing-for-review)
+					   collect comment into reviews
+					   else
+					   collect comment into normal-comments
+					   finally (return (values normal-comments nominations reviews)))
+				      (loop for (name comments) in (list-cond (nominations-eligible
+									       (list "nomination" nominations))
+									      (nominations-eligible
+									       (list "review" reviews))
+									      ((cdr (assoc :question post))
+									       (list "answer" answers))
+									      (t
+									       (list "comment" normal-comments)))
+					 do (output-comments out-stream name comments nil
+							     :overcomingbias-sort (cdr (assoc :comment-sort-order post)) :chrono chrono :preview preview))))))))))))))
    (:post ()
-     (post-comment post-id))))
+	  (post-comment post-id))))
 
 (defparameter *edit-post-template* (compile-template* "edit-post.html"))
 
@@ -1343,8 +1344,8 @@ signaled condition to *HTML-OUTPUT*."
 	 (setf (markdown-source :post new-post-id (cdr (assoc :html-body new-post-data))) text)
 	 (ignore-errors (get-post-body post-id :force-revalidate t))
 	 (redirect (if (cdr (assoc :draft post-data))
-		       (concatenate 'string (generate-post-link new-post-data) "?need-auth=y")
-		       (generate-post-link new-post-data))))))))
+		       (concatenate 'string (generate-item-link :post new-post-data) "?need-auth=y")
+		       (generate-item-link :post new-post-data))))))))
 
 (hunchentoot:define-easy-handler (view-karma-vote :uri "/karma-vote") ()
   (with-error-page
@@ -1464,7 +1465,12 @@ signaled condition to *HTML-OUTPUT*."
 				     <h1 class="post-title">(clean-text-to-html name)</h1>
 				     (when-let (description-html (cdr (assoc :html description)))
 					       <div class="tag-description body-text">(with-html-stream-output (let ((*memoized-output-stream* *html-output*)) (clean-html* description-html)))</div>))
-			  :content-class "tag-index-page")))))
+			  :content-class "tag-index-page"
+			  :alternate-html (lambda ()
+					    (write-index-items-to-html *html-output* posts)
+					    (finish-output *html-output*)
+					    (let ((comments (lw2-graphql-query (lw2-query-string :comment :list (alist :view "commentsOnTag" :tag-id tag-id)))))
+					      (output-comments *html-output* "comment" comments nil))))))))
 
 (define-component-routes forum-site (view-tag (regex-route :regex "/tag/([^/?]+)") (slug) (view-tag slug)))
 
@@ -1570,7 +1576,7 @@ signaled condition to *HTML-OUTPUT*."
 									  (string= (cdr (assoc :user-id c)) user-id)))
 								   comments)))
 				      (if reply-comment
-					  (acons :replied (list post-id (cdr (assoc :--id reply-comment))) comment)
+					  (acons :replied (list :post post-id :comment-id (cdr (assoc :--id reply-comment))) comment)
 					  comment))))
 			   (lw2-graphql-query-map
                              (lambda (n)
