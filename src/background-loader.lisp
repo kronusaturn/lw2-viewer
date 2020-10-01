@@ -23,13 +23,11 @@
 		(posts-list (decode-query-result posts-json)))
 	   (when posts-list
 	     (with-cache-transaction
-		 (cache-put "index-json" "new-not-meta" posts-json)
-	       (with-db (db "postid-to-title")
-		 (dolist (post posts-list)
-		   (lmdb-put-string db (cdr (assoc :--id post)) (cdr (assoc :title post)))))
-	       (with-db (db "postid-to-slug")
-		 (dolist (post posts-list)
-		   (lmdb-put-string db (cdr (assoc :--id post)) (cdr (assoc :slug post)))))))))
+	       (cache-put "index-json" "new-not-meta" posts-json)
+	       (dolist (post posts-list)
+		 (cache-put "postid-to-title" (cdr (assoc :--id post)) (cdr (assoc :title post))))
+	       (dolist (post posts-list)
+		 (cache-put "postid-to-slug" (cdr (assoc :--id post)) (cdr (assoc :slug post))))))))
 	(log-and-ignore-errors
 	 (let ((recent-comments-json (sb-sys:with-deadline (:seconds 120) (get-recent-comments-json))))
 	   (when-let (recent-comments (ignore-errors (decode-query-result recent-comments-json)))

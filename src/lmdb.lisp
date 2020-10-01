@@ -8,7 +8,7 @@
    #:existence
    #:binary-stream
    #:simple-cacheable #:define-lmdb-memoized #:*memoized-output-stream* #:*memoized-output-without-hyphens*)
-  (:unintern #:lmdb-clear-db #:*db-mutex* #:*cache-environment-databases-list*))
+  (:unintern #:lmdb-clear-db #:lmdb-put-string #:*db-mutex* #:*cache-environment-databases-list*))
 
 (in-package #:lw2.lmdb) 
 
@@ -170,17 +170,13 @@
        (lambda () ,@body)
        :read-only ,read-only)))
 
-(defun lmdb-put-string (db key value)
-  (if
-    (lmdb:put db
-	      (string-to-octets key :external-format :utf-8)
-	      (string-to-octets value :external-format :utf-8))
-    value
-    nil))
-
 (defun cache-put (db-name key value)
-  (with-db (db db-name) 
-	   (lmdb-put-string db key value)))
+  (with-db (db db-name)
+    (if (lmdb:put db
+		  (string-to-octets key :external-format :utf-8)
+		  (string-to-octets value :external-format :utf-8))
+	value
+	nil)))
 
 (defun cache-get (db-name key &key (return-type :string))
   (with-db (db db-name :read-only t)
