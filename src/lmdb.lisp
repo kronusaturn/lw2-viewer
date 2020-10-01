@@ -149,12 +149,14 @@
 	  (error "The database '~A' is not defined." db-name)))))
 
 (defun call-with-cache-transaction (fn &key read-only)
-  (let ((env (get-current-environment)))
-    (unwind-protect
-      (progn
-        (wait-on-semaphore (environment-container-semaphore env))
-        (call-with-environment-transaction fn (environment-container-environment env) :read-only read-only))
-      (signal-semaphore (environment-container-semaphore env)))))
+  (if lmdb:*transaction*
+      (funcall fn)
+      (let ((env (get-current-environment)))
+	(unwind-protect
+	     (progn
+	       (wait-on-semaphore (environment-container-semaphore env))
+	       (call-with-environment-transaction fn (environment-container-environment env) :read-only read-only))
+	  (signal-semaphore (environment-container-semaphore env))))))
 
 (defmacro with-cache-transaction (&body body)
   `(call-with-cache-transaction (lambda () ,@body)))
