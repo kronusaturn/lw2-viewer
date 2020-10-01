@@ -3279,6 +3279,7 @@ div.imgonly,
 figure {
 	text-align: center;
 	margin: auto;
+	clear: both;
 }
 
 // Aspect ratio trick from https://css-tricks.com/aspect-ratio-boxes/
