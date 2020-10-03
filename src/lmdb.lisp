@@ -2,7 +2,8 @@
   (:use #:cl #:sb-ext #:sb-thread #:alexandria #:iterate #:lw2.raw-memory-streams #:lw2.sites #:lw2.context #:lw2.backend-modules #:lw2-viewer.config #:lw2.hash-utils)
   (:export
    #:close-unused-environments
-   #:define-cache-database #:with-cache-mutex #:with-cache-transaction #:with-cache-readonly-transaction #:with-db #:lmdb-put-string #:cache-put #:cache-get #:cache-del
+   #:define-cache-database #:with-cache-mutex #:with-cache-transaction #:with-cache-readonly-transaction
+   #:cache-put #:cache-get #:cache-exists #:cache-del
    #:count-database-entries #:truncate-database
    #:call-with-cursor #:cursor-get
    #:existence
@@ -170,23 +171,55 @@
        (lambda () ,@body)
        :read-only ,read-only)))
 
-(defun cache-put (db-name key value)
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (defparameter *type-accessors*
+    '((:byte-vector (vector (unsigned-byte 8)) x x :byte-vector)
+      (:string string (and x (string-to-octets x :external-format :utf-8)) x :string)
+      (:json t (and x (string-to-octets (json:encode-json-to-string x) :external-format :utf-8)) (and x (json:decode-json (flex:make-flexi-stream x))) 'binary-stream)
+      (:lisp t (and x (string-to-octets (write-to-string x :pretty nil :readably t :circle nil) :external-format :utf-8)) (and x (read (flex:make-flexi-stream x))) 'binary-stream)))
+
+  (defun map-type-accessors (fn)
+    (map 'list (lambda (accessor) (apply fn accessor)) *type-accessors*))
+
+  (defun type-accessor-fn (form)
+    (coerce
+     `(lambda (key type encoder decoder lmdb-type)
+	(declare (ignorable key type encoder decoder lmdb-type))
+	,form)
+     'function)))
+
+(defmacro type-accessor-case (type form)
+  `(case ,type
+     ,@(map-type-accessors (type-accessor-fn ``(,key ,,form)))))
+
+(defun encode-value (x type)
+  (type-accessor-case type encoder))
+
+(defun accessor-decoder (return-type value-type)
+  (if return-type (values return-type #'identity) (type-accessor-case value-type `(values ,lmdb-type (lambda (x) ,decoder)))))
+
+(defun cache-put (db-name key value &key (key-type :string) (value-type :string))
   (with-db (db db-name)
     (if (lmdb:put db
-		  (string-to-octets key :external-format :utf-8)
-		  (string-to-octets value :external-format :utf-8))
+		  (encode-value key key-type)
+		  (encode-value value value-type))
 	value
 	nil)))
 
-(defun cache-get (db-name key &key (return-type :string))
-  (with-db (db db-name :read-only t)
-	   (lmdb:get db (string-to-octets key :external-format :utf-8) :return-type return-type)))
+(defun cache-get (db-name key &key (key-type :string) (value-type :string) return-type)
+  (multiple-value-bind (lmdb-type decoder) (accessor-decoder return-type value-type)
+    (with-db (db db-name :read-only t)
+      (funcall decoder (lmdb:get db (encode-value key key-type) :return-type lmdb-type)))))
 
-(defun cache-del (db-name key &optional data)
+(defun cache-exists (db-name key &key (key-type :string))
+  (with-db (db db-name :read-only t)
+    (lmdb:get db (encode-value key key-type) :return-type 'existence)))
+
+(defun cache-del (db-name key &key value (key-type :string) (value-type :string))
   (with-db (db db-name)
     (lmdb:del db
-	      (string-to-octets key :external-format :utf-8)
-	      (and data (string-to-octets data :external-format :utf-8)))))
+	      (encode-value key key-type)
+	      (and value (encode-value value value-type)))))
 
 (defun count-database-entries (db-name)
   (with-db (db db-name :read-only t)
@@ -203,8 +236,14 @@
       (lmdb:with-cursor (cursor)
 	(funcall fn db cursor)))))
 
-(defun cursor-get (cursor operation &optional key value (return-type :string))
-  (lmdb:cursor-get cursor operation key value :return-type return-type))
+(defun cursor-get (cursor operation &key key value (key-type :string) (value-type :string) return-type)
+  (multiple-value-bind (key-lmdb-type key-decoder) (accessor-decoder return-type key-type)
+    (multiple-value-bind (value-lmdb-type value-decoder) (accessor-decoder return-type value-type)
+      (multiple-value-bind (return-value return-key)
+	  (lmdb:cursor-get cursor operation (encode-value key key-type) (encode-value value value-type)
+			   :return-type value-lmdb-type :key-return-type key-lmdb-type)
+	(values (funcall value-decoder return-value)
+		(funcall key-decoder return-key))))))
 
 (defun truncate-database-nicely (db-name)
   (iter
@@ -215,7 +254,7 @@
 	(declare (ignore db))
 	(iter
 	 (for limit from 100 above 0)
-	 (if (cursor-get cursor :first nil nil 'existence)
+	 (if (cursor-get cursor :first :return-type 'existence)
 	     (lmdb:cursor-del cursor)
 	     (leave t))))))))
 
@@ -310,12 +349,12 @@
     (let ((*current-backend* (site-backend site)))
       (when (and (typep *current-backend* 'backend-lmdb-cache)
 		 (typep *current-backend* class-name))
-	(unless (equalp now-hash (cache-get db-name "version" :return-type :byte-vector))
+	(unless (equalp now-hash (cache-get db-name "version" :value-type :byte-vector))
 	  (cache-del db-name "version")
 	  (truncate-database-nicely db-name)
 	  (with-cache-transaction
 	    (truncate-database db-name)
-	    (with-db (db db-name) (lmdb:put db (string-to-octets "version" :external-format :utf-8) now-hash))))))))
+	    (cache-put db-name "version" now-hash :value-type :byte-vector)))))))
 
 (defmacro define-lmdb-memoized (name class-name (&key sources) lambda &body body)
   (let ((db-name (concatenate 'string (string-downcase (symbol-name name)) "-memo"))

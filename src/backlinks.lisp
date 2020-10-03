@@ -48,16 +48,16 @@
 		     (lambda (db cursor)
 		       (declare (ignore db))
 		       (cursor-get cursor :get-both
-				   (item-reference-string source-post-id source-comment-id)
-				   (item-reference-string target-post-id target-comment-id target-host)
-				   'existence)))))
+				   :key (item-reference-string source-post-id source-comment-id)
+				   :value (item-reference-string target-post-id target-comment-id target-host)
+				   :return-type 'existence)))))
 
 (define-backend-function get-backlink-pointers (post-id &optional comment-id)
   (backend-backlinks
    (call-with-cursor "backlinks"
 		     (lambda (db cursor)
 		       (declare (ignore db))
-		       (loop for backlink-data = (cursor-get cursor :set (item-reference-string post-id comment-id))
+		       (loop for backlink-data = (cursor-get cursor :set :key (item-reference-string post-id comment-id))
 			  then (cursor-get cursor :next-dup)
 			  while backlink-data
 			  collect (split-sequence #\Space backlink-data)))
@@ -69,9 +69,9 @@
 (define-backend-function process-backlink (current-post-id current-comment-id source-site-host source-post-id &optional source-comment-id)
   (backend-backlinks
    (let* ((source-db (if source-comment-id "post-comments-json-meta" "post-body-json-meta"))
-	  (metadata (if-let (m-str (cache-get source-db source-post-id)) (read-from-string m-str)))
+	  (metadata (cache-get source-db source-post-id :value-type :lisp))
 	  (cache-key (format nil "~@{~S~^ ~}" current-post-id current-comment-id source-site-host source-post-id source-comment-id))
-	  (cached-data (if-let (m-str (cache-get "backlinks-cache" cache-key)) (read-from-string m-str)))
+	  (cached-data (cache-get "backlinks-cache" cache-key :value-type :lisp))
 	  (last-modified (cdr (assoc :last-modified metadata)))
 	  (if-modified-since (cdr (assoc :if-modified-since cached-data))))
      (if (and last-modified if-modified-since (= last-modified if-modified-since))
@@ -83,7 +83,7 @@
 			   (cache-del "backlinks-cache" cache-key)
 			 (cache-del "backlinks"
 				    (item-reference-string current-post-id current-comment-id)
-				    (item-reference-string source-post-id source-comment-id source-site-host)))
+				    :value (item-reference-string source-post-id source-comment-id source-site-host)))
 		       nil))
 	      (handler-case
 		  (with-site-context ((find-site source-site-host))

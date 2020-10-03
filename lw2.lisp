@@ -1389,7 +1389,7 @@ signaled condition to *HTML-OUTPUT*."
 	      (if (string= state "ignore")
 		  (setf (gethash target-id ignore-hash) t)
 		  (remhash target-id ignore-hash))
-	      (cache-put "user-ignore-list" user-id (json:encode-json-to-string ignore-hash)))))
+	      (cache-put "user-ignore-list" user-id ignore-hash :value-type :json))))
       (when return
 	(redirect return))))
 

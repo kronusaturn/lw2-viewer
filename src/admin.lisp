@@ -15,16 +15,15 @@
 		 (format t "Finished ~A of ~A posts.~A" done-count total-count (string #\Return))
 		 (force-output))))
       (loop
-	 for (post-json post-id) = (mapcar (lambda (x) (and x (flexi-streams:octets-to-string x :external-format :utf-8)))
-					   (call-with-cursor "post-body-json"
-							     (lambda (db cursor)
-							       (declare (ignore db))
-							       (multiple-value-list
-								(if last-done
-								    (progn
-								      (lmdb:cursor-get cursor :set-range last-done)
-								      (lmdb:cursor-get cursor :next))
-								    (lmdb:cursor-get cursor :first))))))
+	 for (post-json post-id) = (call-with-cursor "post-body-json"
+						     (lambda (db cursor)
+						       (declare (ignore db))
+						       (multiple-value-list
+							(if last-done
+							    (progn
+							      (cursor-get cursor :set-range :key last-done :value-type :json)
+							      (cursor-get cursor :next :value-type :json))
+							    (cursor-get cursor :first :value-type :json)))))
 	 while post-json
 	 do (when (read-char-no-hang)
 	      (format t "Aborted.~%")

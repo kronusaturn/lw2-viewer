@@ -42,7 +42,7 @@
 			  (log-and-ignore-errors
 			   (with-cache-transaction
 			     (when-let ((post-id (cdr (assoc :post-id comment))))
-			       (let* ((post-comments (when-let ((x (cache-get cache-database post-id))) (decode-query-result x)))
+			       (let* ((post-comments (when-let ((x (cache-get cache-database post-id :return-type 'binary-stream))) (decode-query-result x)))
 				      (new-post-comments (sort (cons comment (delete-if (lambda (c) (string= comment-id (cdr (assoc :--id c)))) post-comments))
 							       #'> :key (lambda (c) (cdr (assoc :base-score c))))))
 				 (cache-update cache-database post-id (comments-list-to-graphql-json new-post-comments))))

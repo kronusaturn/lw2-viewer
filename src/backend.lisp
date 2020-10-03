@@ -306,27 +306,27 @@
         (new-hash (hash-string data))
         (current-time (get-unix-time)))
     (with-cache-transaction
-      (let* ((metadata (if-let (m-str (cache-get meta-db key)) (read-from-string m-str)))
+      (let* ((metadata (cache-get meta-db key :value-type :lisp))
              (last-mod (if (equalp new-hash (cdr (assoc :city-128-hash metadata)))
                            (or (cdr (assoc :last-modified metadata)) current-time)
                            current-time)))
-        (cache-put meta-db key (prin1-to-string `((:last-checked . ,current-time) (:last-modified . ,last-mod) (:city-128-hash . ,new-hash))))
+        (cache-put meta-db key (alist :last-checked current-time :last-modified last-mod :city-128-hash new-hash) :value-type :lisp)
         (cache-put cache-db key data)))))
 
 (defun cache-mark-stale (cache-db key)
   (let ((meta-db (format nil "~A-meta" cache-db))
 	(current-time (get-unix-time)))
     (with-cache-transaction
-	(let* ((metadata (if-let (m-str (cache-get meta-db key)) (read-from-string m-str)))
+	(let* ((metadata (cache-get meta-db key :value-type :lisp))
 	       (metadata (alist* :last-modified current-time (delete :last-modified metadata :key #'car))))
-	  (cache-put meta-db key (prin1-to-string metadata))))))
+	  (cache-put meta-db key metadata :value-type :lisp)))))
 
 (declaim (type (and fixnum (integer 1)) *cache-stale-factor* *cache-skip-factor*))
 (defparameter *cache-stale-factor* 100)
 (defparameter *cache-skip-factor* 5000)
 
 (defun cache-is-fresh (cache-db key)
-  (let ((metadata (if-let (m-str (cache-get (format nil "~A-meta" cache-db) key)) (read-from-string m-str)))
+  (let ((metadata (cache-get (format nil "~A-meta" cache-db) key :value-type :lisp))
         (current-time (get-unix-time)))
     (if-let ((last-mod (cdr (assoc :last-modified metadata)))
 	     (last-checked (cdr (assoc :last-checked metadata))))
@@ -373,7 +373,7 @@
 								 (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*))
   (backend-base
    (multiple-value-bind (cached-result is-fresh) (with-cache-readonly-transaction
-						     (values (cache-get cache-db cache-key :return-type 'existence)
+						     (values (cache-exists cache-db cache-key)
 							     (cache-is-fresh cache-db cache-key)))
      (labels ((get-cached-result ()
 		(with-cache-readonly-transaction (funcall decoder (cache-get cache-db cache-key :return-type 'binary-stream)))))
@@ -691,17 +691,15 @@
 		 (let ((posts (sequence-post-ids sequence)))
 		   (with-cache-transaction
 		       (dolist (post-id posts)
-			 (let ((old-seqs (if-let (json (cache-get "post-sequence" post-id))
-						 (json:decode-json-from-string json))))
+			 (let ((old-seqs (cache-get "post-sequence" post-id :value-type :json)))
 			   (unless (member sequence-id old-seqs :test #'string=)
-			     (cache-put "post-sequence" post-id (json:encode-json-to-string (cons sequence-id old-seqs)))))))
+			     (cache-put "post-sequence" post-id (cons sequence-id old-seqs) :value-type :json)))))
 		   sequence-json)))))
      (lw2-graphql-query-timeout-cached fn "sequence-json" sequence-id))))
 
 (define-backend-function get-post-sequence-ids (post-id)
   (backend-graphql
-   (if-let (json (cache-get "post-sequence" post-id))
-	   (json:decode-json-from-string json))))
+   (cache-get "post-sequence" post-id :value-type :json)))
 
 (defun preload-sequences-cache ()
   (declare (optimize space (compilation-speed 2) (speed 0)))
@@ -722,7 +720,7 @@
        (if status
 	   (cache-put "user-deleted" user-id "1")
 	   (cache-del "user-deleted" user-id))
-       (cache-get "user-deleted" user-id))))
+       (cache-get "user-deleted" user-id :return-type 'existence))))
 
 (define-backend-function get-user (user-identifier-type user-identifier &key (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*) auth-token)
   (backend-graphql
@@ -889,7 +887,7 @@
    (let ((db-name (markdown-source-db-name target-type))
 	 (version (base64:usb8-array-to-base64-string (hash-string version))))
      (or
-      (if-let ((cache-data (when-let ((x (cache-get db-name id))) (read-from-string x))))
+      (if-let ((cache-data (cache-get db-name id :value-type :lisp)))
 	      (alist-bind ((cached-version simple-string :version)
 			   (markdown simple-string))
 			  cache-data
@@ -901,7 +899,7 @@
 					:auth-token lw2.user-context:*current-auth-token*)
 		     ((trivia:alist (:html-body . html-body)
 				    (:contents . (assoc :markdown markdown)))
-		      (cache-put db-name id (prin1-to-string (alist :version (base64:usb8-array-to-base64-string (hash-string html-body)) :markdown markdown)))
+		      (cache-put db-name id (alist :version (base64:usb8-array-to-base64-string (hash-string html-body)) :markdown markdown) :value-type :lisp)
 		      markdown))))))
 
 (define-backend-function (setf markdown-source) (markdown target-type id version)
@@ -909,7 +907,8 @@
    (let ((version (base64:usb8-array-to-base64-string (hash-string version))))
      (cache-put (markdown-source-db-name target-type)
 		id
-		(prin1-to-string (alist :version version :markdown markdown))))))
+		(alist :version version :markdown markdown)
+		:value-type :lisp))))
 
 (defun make-rate-limiter (delay)
   (let ((rl-hash (make-hash-table :test 'equal :synchronized t)))

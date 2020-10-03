@@ -6,14 +6,13 @@
 (defun make-subscription (auth-token endpoint expires)
   (cache-put "push-subscriptions"
 	     auth-token
-	     (json:encode-json-to-string
-	      (alist :endpoint endpoint
-		     :expires expires))))
+	     (alist :endpoint endpoint
+		    :expires expires)
+	     :value-type :json))
 
 (export 'find-subscription)
 (defun find-subscription (auth-token)
-  (if-let (json (cache-get "push-subscriptions" auth-token))
-	  (json:decode-json-from-string json)))
+  (cache-get "push-subscriptions" auth-token :value-type :json))
 
 (export 'delete-subscription)
 (defun delete-subscription (auth-token)
@@ -53,5 +52,5 @@
 		   (:no-error (&rest args)
 		     (declare (ignore args))
 		     (setf (cdr last-check-cons) (local-time:timestamp-to-unix current-time))
-		     (cache-put "push-subscriptions" auth-token (json:encode-json-to-string (adjoin last-check-cons subscription))))))))))))
+		     (cache-put "push-subscriptions" auth-token (adjoin last-check-cons subscription) :value-type :json))))))))))
   (backend-base nil))
