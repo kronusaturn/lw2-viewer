@@ -31,14 +31,17 @@
   (let* ((schema-type (find-schema-type schema-type-name))
 	 (fields (cdr (assoc :fields schema-type))))
     `(alist-bind
-      ,(loop for type-field in fields
+      ,(loop with added = (make-hash-table :test 'eq)
+	  for type-field in fields
 	  nconc (destructuring-bind (binding-sym type &key alias ((:context field-context)) &allow-other-keys) type-field
-		  (if (if (eq bindings :auto)
-			  (or (not field-context) (eq field-context context))
-			  (member binding-sym bindings :test #'string=))
-		      (list (list* (intern (string binding-sym) *package*)
-				   (if (eq type 'string) 'simple-string type) ; Optimization, assuming strings coming from the backend
-				                                              ; can never be displaced etc.
-				   (if alias (list alias)))))))
+		  (when (and (not (gethash binding-sym added))
+			     (if (eq bindings :auto)
+				 (or (not field-context) (eq field-context context))
+				 (member binding-sym bindings :test #'string=)))
+		    (setf (gethash binding-sym added) t)
+		    (list (list* (intern (string binding-sym) *package*)
+				 (if (eq type 'string) 'simple-string type) ; Optimization, assuming strings coming from the backend
+					                                    ; can never be displaced etc.
+				 (if alias (list alias)))))))
       ,datum
       ,@body)))

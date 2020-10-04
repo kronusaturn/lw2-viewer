@@ -1473,9 +1473,10 @@ signaled condition to *HTML-OUTPUT*."
 			  :content-class "tag-index-page"
 			  :alternate-html (lambda ()
 					    (write-index-items-to-html *html-output* posts)
-					    (finish-output *html-output*)
-					    (let ((comments (lw2-graphql-query (lw2-query-string :comment :list (alist :view "commentsOnTag" :tag-id tag-id)))))
-					      (output-comments *html-output* "comment" comments nil))))))))
+					    (when (typep *current-backend* 'backend-lw2-tags-comments)
+					      (finish-output *html-output*)
+					      (let ((comments (lw2-graphql-query (lw2-query-string :comment :list (alist :view "commentsOnTag" :tag-id tag-id)))))
+						(output-comments *html-output* "comment" comments nil)))))))))
 
 (define-component-routes forum-site (view-tag (regex-route :regex "/tag/([^/?]+)") (slug) (view-tag slug)))
 

@@ -61,14 +61,17 @@
     (t
      (with-collector (col)
        (let ((backend *current-backend*)
-	     (schema-type (find-schema-type query-type)))
+	     (schema-type (find-schema-type query-type))
+	     (added (make-hash-table :test 'eq)))
 	 (dolist (field (cdr (assoc :fields schema-type)) (col))
 	   (destructuring-bind (field-name field-type &key alias backend-type graphql-ignore subfields ((:context field-context)) context-not &allow-other-keys) field
 	     (declare (ignore field-type))
-	     (when (and (not graphql-ignore)
+	     (when (and (not (gethash field-name added))
+			(not graphql-ignore)
 			(or (not backend-type) (typep backend backend-type))
 			(or (not field-context) (eq context field-context))
 			(or (not context-not) (not (eq context context-not))))
+	       (setf (gethash field-name added) t)
 	       (col
 		(let ((result-name (or alias field-name)))
 		  (if subfields
