@@ -744,8 +744,7 @@
 		       (remove-attributes node "style" "class" "width" "height")
 		       (when (typep *current-site* 'alternate-frontend-site)
 			 (let ((src (plump:attribute node "src")))
-			   (when
-			       (and (> (length src) 0) (string= "/" src :end2 1))
+			   (when (and src (ppcre:scan "^/(?!/)" src))
 			     (setf (plump:attribute node "src") (quri:render-uri
 								 (quri:merge-uris src (main-site-uri *current-site*)))))))))
 		    ((tag-is node "figure")
