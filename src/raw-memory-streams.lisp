@@ -6,8 +6,8 @@
 
 (defclass raw-memory-stream (fundamental-binary-input-stream)
   ((pointer :initarg :pointer)
-   (length :initarg :length)
-   (position :initform 0 :accessor stream-file-position)))
+   (length :initarg :length :initform (error "No length parameter supplied when creating raw-memory-stream") :type (and fixnum (integer 0)))
+   (position :initform 0 :type fixnum :accessor stream-file-position)))
 
 (defmethod stream-element-type ((self raw-memory-stream))
   '(unsigned-byte 8))
@@ -15,6 +15,8 @@
 (defmethod stream-read-byte ((self raw-memory-stream))
   (declare (optimize (safety 0) (debug 0)))
   (with-slots (pointer length position) self
+    (declare (type (and fixnum (integer 0)) length position)
+	     (type cffi:foreign-pointer pointer))
     (if (>= position length)
 	:eof
 	(prog1
@@ -22,11 +24,15 @@
 	  (incf position)))))
 
 (defmethod stream-read-sequence ((self raw-memory-stream) sequence start end &key)
-  (declare (optimize (safety 0) (debug 0)))
+  (declare (optimize (safety 0) (debug 0))
+	   (type (and fixnum (integer 0)) start end))
   (with-slots (pointer length position) self
+    (declare (type (and fixnum (integer 0)) length position)
+	     (type cffi:foreign-pointer pointer))
     (let* ((remaining-length (- length position))
 	   (requested-length (- end start))
 	   (actual-length (min remaining-length requested-length)))
+      (declare (type (and fixnum (integer 0)) remaining-length requested-length actual-length))
       (macrolet ((inner ()
 		   `(loop for mem-index from position to (+ position actual-length)
 		       for sequence-index from start
