@@ -7404,9 +7404,9 @@ blockquote {
 /* TABLES */
 /*========*/
 
-.body-text table,
-.body-text table th,
-.body-text table td {
+#content:not(.tag-index-page) .body-text table,
+#content:not(.tag-index-page) .body-text table th,
+#content:not(.tag-index-page) .body-text table td {
 	border: 1px solid #ddd;
 }
 
