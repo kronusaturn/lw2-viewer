@@ -185,19 +185,32 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
 	       (symbol-macrolet ,(inner-loop `(,bind (,fn-gensym)))
 		 ,@body))))))))
 
-(defmacro list-cond* (&body clauses)
+(defmacro list-cond* (&body clauses &environment env)
   (labels ((expand (clauses)
 	     (if (endp (rest clauses))
 		 (first clauses)
 		 (destructuring-bind (predicate-form data-form &optional value-form) (first clauses)
-		   (with-gensyms (predicate rest)
-		     `(let* ((,predicate ,predicate-form)
-			     (,rest ,(expand (rest clauses))))
-			(declare (dynamic-extent ,predicate))
-			(if ,predicate
-			    (cons ,(if value-form `(cons ,data-form ,value-form) data-form)
-				  ,rest)
-			    ,rest)))))))
+		   (with-gensyms (predicate data rest)
+		     (let* ((data-constant (and (compiler-constantp data-form env) (compiler-constantp value-form env)))
+			    (data-pure (or data-constant (and (symbolp data-form) (symbolp value-form))))
+			    (data-expansion
+			     (if value-form
+				 (if data-constant
+				     `'(,data-form . ,value-form)
+				     `(cons ,data-form ,value-form))
+				 data-form)))
+		       (if (compiler-constantp predicate-form env)
+			   (if (eval-in-environment predicate-form env)
+			       `(list* ,data-expansion ,(expand (rest clauses)))
+			       (expand (rest clauses)))
+			   `(let* ((,predicate (and ,predicate-form t))
+				   (,data ,(if data-pure
+					       data-expansion
+					       `(when ,predicate ,data-expansion)))
+				   (,rest ,(expand (rest clauses))))
+			      (if ,predicate
+				  (cons ,data ,rest)
+				  ,rest)))))))))
     (expand clauses)))
 
 (defmacro list-cond (&body clauses)
