@@ -866,10 +866,11 @@
     :headers '(("Origin" . "https://www.greaterwrong.com")
 	       ("Referer" . "https://www.greaterwrong.com/")
 	       ("Content-Type" . "application/json"))
-    :content (json:encode-json-alist-to-string `(("requests" . ,(loop for index in '("test_posts" "test_comments")
-								   collect `(("indexName" . ,index)
-									     ("params" . ,(format nil "query=~A&hitsPerPage=20&page=0"
-												  (url-rewrite:url-encode query))))))))
+    :content (json:encode-json-alist-to-string
+	      (alist "requests" (loop for index in '("test_tags" "test_posts" "test_comments")
+				   collect (alist "indexName" index
+						  "params" (format nil "query=~A&hitsPerPage=20&page=0"
+								   (url-rewrite:url-encode query))))))
     :want-stream t)))
 
 (define-backend-function get-username-wrapper (user-id fn)

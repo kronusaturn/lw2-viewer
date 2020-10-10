@@ -950,6 +950,9 @@ signaled condition to *HTML-OUTPUT*."
   (setf (hunchentoot:return-code*) (ecase type (:see-other 303) (:permanent 301))
 	(hunchentoot:header-out "Location") uri))
 
+(defun main-site-redirect (uri &key (type :see-other))
+  (redirect (quri:render-uri (quri:merge-uris uri (main-site-uri *current-site*))) :type type))
+
 (defmacro request-method (&body method-clauses)
   (alexandria:with-gensyms (request-method)
     `(let ((,request-method (hunchentoot:request-method*)))
@@ -1457,6 +1460,31 @@ signaled condition to *HTML-OUTPUT*."
 (define-component-routes forum-site (view-recent-comments (standard-route :uri "/recentcomments") () (view-comments-index :recent-comments)))
 (define-component-routes shortform-site (view-shortform (standard-route :uri "/shortform") () (view-comments-index :shortform)))
 
+(delete-easy-handler 'view-recent-comments)
+
+(defun tag-to-html (tag &key skip-headline)
+  (schema-bind (:tag tag :auto :context :body)
+    (alist-bind (edited-at html user-id) description
+      (unless skip-headline
+        <h1 class="post-title">(safe (clean-text-to-html name))</h1>
+        <div class="post-meta">
+          <span>(if core "Core ")(if wiki-only "Wiki" "Tag")</span>
+          <span>Last edit: (pretty-time-html edited-at :inline t)
+                \ by <a class="author" href=("/users/~A" (get-user-slug user-id))>(get-username user-id)</a>
+          </span>
+        </div>)
+      (when html
+	<div class="tag-description body-text">(with-html-stream-output (let ((*memoized-output-stream* *html-output*)) (clean-html* html)))</div>))))
+
+(defun tag-list-to-html (tags)
+  <ul class="tag-list">
+    (iter (for tag in tags)
+	  (schema-bind (:tag tag :auto :context :index)
+		       <li><a class="post-title-link" href=("/tag/~A" slug)>(safe (clean-text-to-html name))(if wiki-only
+														" (wiki)"
+														(if post-count (format nil " (~A)" post-count)))</a></li>))
+  </ul>)
+
 (define-component view-tag (slug)
   (:http-args ())
   (let ((tag (first (lw2-graphql-query (lw2-query-string :tag :list (alist :view "tagBySlug" :slug slug) :context :body))))
@@ -1466,13 +1494,12 @@ signaled condition to *HTML-OUTPUT*."
 	(view-items-index posts
 			  :title (format nil "~A tag" name)
 			  :top-nav (lambda ()
-				     (page-toolbar-to-html :title name)
-				     <h1 class="post-title">(clean-text-to-html name)</h1>
-				     (when-let (description-html (cdr (assoc :html description)))
-					       <div class="tag-description body-text">(with-html-stream-output (let ((*memoized-output-stream* *html-output*)) (clean-html* description-html)))</div>))
+				     (page-toolbar-to-html :title name :rss (not wiki-only))
+				     (tag-to-html tag))
 			  :content-class "tag-index-page"
 			  :alternate-html (lambda ()
-					    (write-index-items-to-html *html-output* posts)
+					    (unless wiki-only
+					      (write-index-items-to-html *html-output* posts))
 					    (when (typep *current-backend* 'backend-lw2-tags-comments)
 					      (finish-output *html-output*)
 					      (let ((comments (lw2-graphql-query (lw2-query-string :comment :list (alist :view "commentsOnTag" :tag-id tag-id)))))
@@ -1482,24 +1509,32 @@ signaled condition to *HTML-OUTPUT*."
 
 (define-component view-tags-index ()
   (:http-args ())
-  (let ((tags (lw2-graphql-query (lw2-query-string :tag :list (alist :view "allTagsAlphabetical")))))
-    (renderer ()
-      (emit-page (out-stream :title "All tags")
-        <div class="tags-index page-list-index">
-	  <ul>
-	    (dolist (tag tags)
-	      (schema-bind (:tag tag :auto)
-	        <li>
-	          <a href=("/tag/~A" slug)>(progn name) \((or post-count 0)\)</a>
-		</li>))
-	  </ul>
-	</div>))))
+  (multiple-value-bind (all-tags portal)
+      (lw2-graphql-query-multi
+       (list (lw2-query-string* :tag :list (alist :view "allTagsAlphabetical"))
+	     (lw2-query-string* :tag :list (alist :view "tagBySlug" :slug "portal") :context :body)))
+    (let ((core-tags
+	   (iter (for tag in all-tags)
+		 (schema-bind (:tag tag (core))
+			      (when core (collect tag)))))
+	  (title (if (typep *current-site* 'lesswrong-viewer-site) "Concepts Portal" "Tags Portal")))
+      (renderer ()
+	(emit-page (out-stream :title title)
+	  <article>
+	    <h1 class="post-title">(safe title)</h1>
+	    (tag-to-html (first portal) :skip-headline t)
+	  </article>
+	  (iter (for (title . tags) in (alist "Core Tags" core-tags "All Tags" all-tags))
+		(progn
+		  <h1>(safe title)</h1>
+		  (tag-list-to-html tags))))))))
 
 (define-component-routes forum-site (view-tags-index (standard-route :uri "/tags") () (view-tags-index)))
 
 (define-route 'forum-site 'standard-route :name 'view-tags-index-redirect :uri "/tags/all" :handler (lambda () (redirect "/tags")))
 
-(delete-easy-handler 'view-recent-comments)
+(define-route 'alternate-frontend-site 'standard-route :name 'view-tags-voting-redirect :uri "/tagVoting" :handler (lambda () (main-site-redirect "/tagVoting")))
+(define-route 'alternate-frontend-site 'standard-route :name 'view-tags-dashboard-redirect :uri "/tags/dashboard" :handler (lambda () (main-site-redirect "/tags/dashboard")))
 
 (hunchentoot:define-easy-handler (view-push-register :uri "/push/register") ()
   (with-error-page
@@ -1719,15 +1754,28 @@ signaled condition to *HTML-OUTPUT*."
 
 (define-page view-search "/search" ((q :required t))
   (let ((*current-search-query* q)
-        (link (convert-any-link* q)))
+        (link (convert-any-link* q))
+	(title (format nil "~@[~A - ~]Search" q)))
     (declare (special *current-search-query*))
     (if link
         (redirect link)
-        (multiple-value-bind (posts comments) (lw2-search-query q)
-          (view-items-index (nconc (map 'list (lambda (p) (if (cdr (assoc :comment-count p)) p (alist* :comment-count 0 p))) posts)
-                                   (map 'list #'search-result-markdown-to-html comments))
-                            :content-class "search-results-page" :current-uri "/search"
-                            :title (format nil "~@[~A - ~]Search" q))))))
+        (multiple-value-bind (tags posts comments) (lw2-search-query q)
+	  (let ((tags (map 'list (lambda (tag)
+				   (let ((description (cdr (assoc :description tag))))
+				     (alist* :----typename "Tag"
+					     :description (alist :html (nth-value 1 (cl-markdown:markdown description :stream nil)))
+					     tag)))
+			   tags)))
+	    (view-items-index (nconc
+			       (map 'list (lambda (post) (if (cdr (assoc :comment-count post)) post (alist* :comment-count 0 post))) posts)
+			       (map 'list #'search-result-markdown-to-html comments))
+			      :top-nav (lambda ()
+					 (page-toolbar-to-html :title title :rss t)
+					 (when tags
+					   <h1>Tags</h1>
+					   (tag-list-to-html tags)))
+			      :content-class "search-results-page" :current-uri "/search"
+			      :title title))))))
 
 (define-page view-login "/login" (return cookie-check
                                          (login-username :request-type :post) (login-password :request-type :post)

@@ -17,12 +17,13 @@
 (defun pretty-time-js ()
   "<script>prettyDate()</script>")
 
-(defun pretty-time-html (timestring)
+(defun pretty-time-html (timestring &key inline)
   (multiple-value-bind (pretty-time js-time) (pretty-time timestring)
-    <div class="date" data-js-date=js-time>
-      (safe pretty-time)
-      (safe (pretty-time-js))
-    </div>))
+    (format *html-output* "<~A class=\"date\" data-js-date=~A>~A~A</~@*~A>"
+	    (if inline "span" "tag")
+	    js-time
+	    pretty-time
+	    (pretty-time-js))))
 
 (defun pretty-number (number &optional object)
   (let ((str (coerce (format nil "~:D~@[<span> ~A~P</span>~]" number object number) '(vector character))))

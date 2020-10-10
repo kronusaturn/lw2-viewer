@@ -8,6 +8,8 @@
    (name string)
    (slug string)
    (post-count (or null fixnum))
+   (core boolean)
+   (wiki-only boolean :backend-type backend-lw2-wiki-tags)
    (description list
 		:context :body
-		:subfields (:html))))
+		:subfields (:edited-at :user-id :html))))

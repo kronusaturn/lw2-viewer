@@ -1366,6 +1366,15 @@ article {
 	margin-top: 3em;
 }
 
+.tag-list {
+	column-count: auto;
+	column-width: 15em;
+	margin-top: 0;
+	border-bottom: 1px solid #999;
+	padding-bottom: 1em;
+	margin-bottom: 0;
+}
+
 /**************/
 /* USER PAGES */
 /**************/
