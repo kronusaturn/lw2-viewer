@@ -56,7 +56,7 @@
       "/"
       (site-uri site)))
 
-(defun match-lw1-link (link) (match-values "(?:^https?://(?:www.)?less(?:er|est)?wrong.com|^)(?:/r/discussion|/r/lesswrong)?(/lw/.*)" link (0)))
+(defun match-lw1-link (link) (match-values "(?:^https?://(?:www.)?less(?:er|est)?wrong.com|^)(?:/r/discussion|/r/lesswrong|/r/all)?(/lw/.*)" link (0)))
 
 (defun match-ea1-link (link) (match-values "^(?:https?://(?:www\\.)?(?:effective-altruism\\.com|forum\\.effectivealtruism\\.org))?(/ea/.*)" link (0)))
 
