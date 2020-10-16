@@ -4163,6 +4163,18 @@ li {
 	padding-bottom: 0.5em;
 }
 
+.spoiler:not(:hover) pre,
+.spoiler:not(:hover) code {
+	background-color: inherit;
+	box-shadow: none;
+}
+#content .spoiler pre {
+	border-color: currentColor;
+	border-style: solid;
+	border-width: 0 1px;
+	border-radius: 0;
+}
+
 /*******************/
 /* PAGE LIST INDEX */
 /*******************/
