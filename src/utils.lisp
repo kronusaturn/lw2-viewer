@@ -189,12 +189,12 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
   (labels ((expand (clauses)
 	     (if (endp (rest clauses))
 		 (first clauses)
-		 (destructuring-bind (predicate-form data-form &optional value-form) (first clauses)
+		 (destructuring-bind (predicate-form data-form &optional (value-form nil value-form-p)) (first clauses)
 		   (with-gensyms (predicate data rest)
 		     (let* ((data-constant (and (compiler-constantp data-form env) (compiler-constantp value-form env)))
 			    (data-pure (or data-constant (and (symbolp data-form) (symbolp value-form))))
 			    (data-expansion
-			     (if value-form
+			     (if value-form-p
 				 (if data-constant
 				     `'(,data-form . ,value-form)
 				     `(cons ,data-form ,value-form))
