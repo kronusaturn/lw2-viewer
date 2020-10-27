@@ -8,7 +8,7 @@
 	   #:to-boolean #:nonzero-number-p #:truthy-string-p
 	   #:firstn #:map-plist #:filter-plist #:alist-bind
 	   #:list-cond #:list-cond*
-	   #:string-to-existing-keyword #:call-with-safe-json
+	   #:string-to-existing-keyword #:call-with-safe-json #:js-true
 	   #:delete-easy-handler #:abnormal-unwind-protect
 	   #:ignorable-multiple-value-bind
 	   #:compare-streams
@@ -223,6 +223,11 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
 
 (defmethod json:encode-json ((object (eql :null)) &optional stream)
   (write-string "null" stream))
+
+(defun js-true (value)
+  (not (or (null value)
+	   (eql value :false)
+	   (eql value :null))))
 
 (defun string-to-existing-keyword (string)
   (or (find-symbol (json:camel-case-to-lisp string) (find-package '#:keyword))

@@ -1352,7 +1352,7 @@ signaled condition to *HTML-OUTPUT*."
 	     lw2-auth-token))
 	 (setf (markdown-source :post new-post-id (cdr (assoc :html-body new-post-data))) text)
 	 (ignore-errors (get-post-body post-id :force-revalidate t))
-	 (redirect (if (cdr (assoc :draft post-data))
+	 (redirect (if (js-true (cdr (assoc :draft post-data)))
 		       (concatenate 'string (generate-item-link :post new-post-data) "?need-auth=y")
 		       (generate-item-link :post new-post-data))))))))
 
