@@ -1331,10 +1331,11 @@ signaled condition to *HTML-OUTPUT*."
 		(t :body (postprocess-markdown text))
 		(t :title title)
 		(link-post :url url)
-		(t :meta (string= section "meta"))
-		(t :draft (string= section "drafts"))
+		(t :meta (or (string= section "meta") :false))
+		((not post-id) :is-event nil)
+		(t :draft (or (string= section "drafts") :false))
 		((typep *current-backend* 'backend-lw2-misc-features) :submit-to-frontpage (and submit-to-frontpage t))
-		((not post-id) :question (and question t))))
+		((not post-id) :question (if question t :false))))
 	      (post-unset
 	       (list-cond
 		((not link-post) :url t)))

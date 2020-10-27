@@ -216,6 +216,14 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
 (defmacro list-cond (&body clauses)
   `(list-cond* ,@clauses nil))
 
+;; GraphQL and LW2 are picky about false/null distinctions, so make them explicit
+
+(defmethod json:encode-json ((object (eql :false)) &optional stream)
+  (write-string "false" stream))
+
+(defmethod json:encode-json ((object (eql :null)) &optional stream)
+  (write-string "null" stream))
+
 (defun string-to-existing-keyword (string)
   (or (find-symbol (json:camel-case-to-lisp string) (find-package '#:keyword))
       string))
