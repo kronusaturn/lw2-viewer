@@ -61,7 +61,7 @@
     (with-mutex (*fonts-redirect-lock*)
       (let ((last-update *fonts-redirect-last-update*))
 	(if last-update
-	    (when (>= current-time (+ last-update 60))
+	    (when (>= current-time (+ last-update (* 60 60)))
 	      (update-obormot-fonts-async))
 	    (update-obormot-fonts))))))
 
