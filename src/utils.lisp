@@ -11,10 +11,10 @@
 	   #:string-to-existing-keyword #:call-with-safe-json #:js-true
 	   #:delete-easy-handler #:abnormal-unwind-protect
 	   #:ignorable-multiple-value-bind
-	   #:compare-streams
+	   #:compare-streams #:ensure-character-stream
 	   #:with-output-to-designator
 	   #:with-atomic-file-replacement)
-  (:recycle #:lw2-viewer))
+  (:recycle #:lw2-viewer #:lw2.backend))
 
 (in-package #:lw2.utils)
 
@@ -278,6 +278,16 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
 	       (compare-streams u-a b))
        (if-let (u-b (unwrap-stream b))
 	       (compare-streams a u-b)))))
+
+(defun ensure-character-stream (stream)
+  (etypecase stream
+    ((or flex:flexi-stream flex:in-memory-stream)
+     (setf (flex:flexi-stream-external-format stream) :utf-8)
+     stream)
+    (stream
+     (if (subtypep (stream-element-type stream) 'character)
+	 stream
+	 (flex:make-flexi-stream stream :external-format :utf-8)))))
 
 (defmacro with-output-to-designator ((stream designator) &body body)
   (with-gensyms (body-fn)

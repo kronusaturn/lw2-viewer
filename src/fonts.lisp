@@ -33,17 +33,18 @@
 (defun update-obormot-fonts ()
   (with-atomic-file-replacement (out-stream (asdf:system-relative-pathname :lw2-viewer "www/fonts.css") :element-type 'character)
     (dynamic-flet ((with-response (in-stream)
-		     (iter (for line in-stream in-stream using #'read-line)
-			   (for replaced = (ppcre:regex-replace "url\\(['\"](?!data:)" line "\\&https://fonts.greaterwrong.com/"))
-			   (write-string replaced out-stream)
-			   (terpri out-stream))))
+		     (let ((in-stream (ensure-character-stream in-stream)))
+		       (iter (for line in-stream in-stream using #'read-line)
+			     (for replaced = (ppcre:regex-replace "url\\(['\"](?!data:)" line "\\&https://fonts.greaterwrong.com/"))
+			     (write-string replaced out-stream)
+			     (terpri out-stream)))))
       (iter
        (for uri in *obormot-fonts-stylesheet-uris*)
        (lw2.backend:call-with-http-response
 	#'with-response uri
 	:headers (alist "referer" (lw2.sites::site-uri (first lw2.sites::*sites*)) "accept" "text/css,*/*;q=0.1")
 	:want-stream t
-	:force-string t
+	:force-binary t
 	:keep-alive nil))))
   (setf *fonts-redirect-last-update* (get-unix-time)))
 

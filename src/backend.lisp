@@ -209,16 +209,6 @@
   (backend-accordius
    value))
 
-(defun ensure-character-stream (stream)
-  (etypecase stream
-    ((or flexi-stream in-memory-stream)
-     (setf (flexi-stream-external-format stream) :utf-8)
-     stream)
-    (stream
-     (if (subtypep (stream-element-type stream) 'character)
-	 stream
-	 (flexi-streams:make-flexi-stream stream :external-format :utf-8)))))
-
 (define-backend-function deserialize-query-result (result-source)
   (backend-base
    (let ((string-source (typecase result-source
