@@ -12,7 +12,8 @@
 	   #:delete-easy-handler #:abnormal-unwind-protect
 	   #:ignorable-multiple-value-bind
 	   #:compare-streams
-	   #:with-output-to-designator)
+	   #:with-output-to-designator
+	   #:with-atomic-file-replacement)
   (:recycle #:lw2-viewer))
 
 (in-package #:lw2.utils)
@@ -286,3 +287,33 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
 	     (progn (,body-fn ,designator) nil)
 	     (with-output-to-string (,stream)
 	       (,body-fn ,stream)))))))
+
+(defun file-equal (file1 file2)
+  (with-open-file (stream1 file1 :direction :input :element-type '(unsigned-byte 8))
+    (with-open-file (stream2 file2 :direction :input :element-type '(unsigned-byte 8))
+      (loop
+	 (let ((b1 (read-byte stream1 nil))
+	       (b2 (read-byte stream2 nil)))
+	   (unless (eq b1 b2) (return nil))
+	   (when (eq b1 nil) (return t)))))))
+
+(defun call-with-atomic-file-replacement (fn filename open-fn)
+  (let* ((normal-return nil)
+	 (temp-filename (make-pathname :name (concatenate 'string (pathname-name filename) ".new")
+				       :defaults filename))
+	 (stream (funcall open-fn temp-filename)))
+    (unwind-protect
+	 (multiple-value-prog1 (funcall fn stream)
+	   (setf normal-return t))
+      (close stream)
+      (if (and normal-return
+	       (or (not (probe-file filename))
+		   (not (file-equal filename temp-filename))))
+	  (uiop:rename-file-overwriting-target temp-filename filename)
+	  (uiop:delete-file-if-exists temp-filename)))))
+
+(defmacro with-atomic-file-replacement ((stream filename &rest open-options) &body body)
+  (with-gensyms (body-fn open-fn)
+    `(dynamic-flet ((,open-fn (filename) (open filename :direction :output :if-exists :supersede ,@open-options))
+		    (,body-fn (,stream) ,@body))
+		   (call-with-atomic-file-replacement #',body-fn ,filename #',open-fn))))

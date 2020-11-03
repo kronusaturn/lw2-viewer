@@ -552,11 +552,13 @@ signaled condition to *HTML-OUTPUT*."
 	     (os (cond ((search "Windows" ua) "windows")
 		       ((search "Mac OS" ua) "mac")
 		       (t "linux"))))
-	(list*
-	 (list :script (generate-versioned-link "/head.js"))
-	 (list :async-script (generate-versioned-link "/script.js"))
-	 (handler-case (gen-theme theme os)
-	   (serious-condition () (gen-theme nil os))))))))
+	(append
+	 (fonts-source-resources (site-fonts-source s))
+	 (list*
+	  (list :script (generate-versioned-link "/head.js"))
+	  (list :async-script (generate-versioned-link "/script.js"))
+	  (handler-case (gen-theme theme os)
+	    (serious-condition () (gen-theme nil os)))))))))
 
 (defmacro set-script-variables (&rest clauses)
   (alexandria:with-gensyms (out-stream)
@@ -742,17 +744,26 @@ signaled condition to *HTML-OUTPUT*."
 
 (defun set-default-headers (return-code)
   (let ((push-option (if (hunchentoot:cookie-in "push")
-			 '("nopush"))))
+			 "nopush")))
     (setf (hunchentoot:content-type*) "text/html; charset=utf-8"
 	  (hunchentoot:return-code*) return-code
-	  (hunchentoot:header-out :link) (when *page-resources*
-					   (format nil "~:{<~A>;rel=preload;type=~A;as=~A~@{;~A~}~:^,~}"
-						   (loop for (type . args) in *page-resources*
-						      for link = (first args)
-						      when (eq type :stylesheet)
-						      collect (list* link "text/css" "style" push-option)
-						      when (eq type :script)
-						      collect (list* link "text/javascript" "script" push-option)))))
+	  (hunchentoot:header-out :link) (let ((output
+						(with-output-to-string (stream)
+						  (flet ((output-link (uri rel &optional type as push-option)
+							   (format stream "<~A>;rel=~A~@[;type=~A~]~@[;as=~A~]~@[;~A~]" uri rel type as push-option)))
+						    (declare (dynamic-extent #'output-link))
+						    (iter
+						     (for (type . args) in *page-resources*)
+						     (for link = (first args))
+						     (when (member type '(:preconnect :stylesheet :script))
+						       (unless (first-time-p)
+							 (write-string "," stream))
+						       (case type
+							 (:preconnect (output-link link "preconnect"))
+							 (:stylesheet (output-link link "preload" "text/css" "style" push-option))
+							 (:script (output-link link "preload" "text/javascript" "script" push-option)))))))))
+					   (when (> (length output) 0)
+					     output)))
     (unless push-option (set-cookie "push" "t" :max-age (* 4 60 60)))))
 
 (defun user-pref (key)
@@ -1969,7 +1980,8 @@ signaled condition to *HTML-OUTPUT*."
                                                                                       (loop for theme in '(nil "dark" "grey" "ultramodern" "zero" "brutalist" "rts" "classic" "less")
                                                                                             collect (defres (format nil "/css/style~@[-~A~].~A.css" theme system) "text/css")))
                                                                                     (loop for (uri content-type) in
-										      '(("/arbital.css" "text/css")
+										      '(("/fonts.css" "text/css")
+											("/arbital.css" "text/css")
 											("/head.js" "text/javascript")
 											("/script.js" "text/javascript")
 											("/assets/favicon.ico" "image/x-icon")
@@ -1988,3 +2000,11 @@ signaled condition to *HTML-OUTPUT*."
     (setf (hunchentoot:header-out "Content-Type") "text/javascript")
     (let ((stream (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8)))
       (write-package-client-scripts package stream))))
+
+(defmethod fonts-source-resources ((fonts-source obormot-fonts-source))
+  (lw2.fonts::maybe-update-obormot-fonts)
+  (list (list :preconnect "https://fonts.greaterwrong.com/")
+	(list :stylesheet (generate-versioned-link "/fonts.css"))))
+
+(defmethod generate-fonts-html-headers ((fonts-source obormot-fonts-source))
+  nil) 

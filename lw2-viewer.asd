@@ -23,7 +23,7 @@
 			     (:file "routes")
                              (:file "sites" :depends-on ("utils" "routes" "backend-modules" "fonts-modules"))
 			     (:file "fonts-modules")
-			     (:file "fonts" :depends-on ("html-reader" "utils" "sites" "fonts-modules"))
+			     (:file "fonts" :depends-on ("html-reader" "utils" "sites" "fonts-modules" "backend"))
                              (:file "config-package" :depends-on ("sites" "backend-modules" "fonts-modules"))
                              (module "config-copy"
                                      :pathname "../"

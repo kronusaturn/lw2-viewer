@@ -1,7 +1,7 @@
 (uiop:define-package #:lw2.fonts
-  (:use #:cl #:sb-thread #:lw2.fonts-modules #:lw2.html-reader #:lw2.utils)
+  (:use #:cl #:iterate #:sb-thread #:lw2.fonts-modules #:lw2.html-reader #:lw2.utils)
   (:export #:fonts-source #:google-fonts-source #:obormot-fonts-source
-	   #:generate-fonts-html-headers)
+	   #:fonts-source-resources #:generate-fonts-html-headers)
   (:recycle #:lw2-viewer))
 
 (in-package #:lw2.fonts)
@@ -9,6 +9,9 @@
 (named-readtables:in-readtable html-reader)
 
 ;;;; google-fonts-source
+
+(defmethod fonts-source-resources ((fonts-source google-fonts-source))
+  nil)
 
 (defmethod generate-fonts-html-headers ((fonts-source google-fonts-source))
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
@@ -22,46 +25,42 @@
 ;(defparameter *obormot-fonts-stylesheet-uris* '("https://fonts.greaterwrong.com/?fonts=*"))
 
 (defvar *fonts-redirect-data* nil)
+(declaim (type (or null (unsigned-byte 63)) *fonts-redirect-last-update*))
+(sb-ext:defglobal *fonts-redirect-last-update* nil)
 (sb-ext:defglobal *fonts-redirect-lock* (make-mutex))
 (sb-ext:defglobal *fonts-redirect-thread* nil)
 
-(defun generate-fonts-links ()
-  (let ((current-time (get-unix-time)))
-    (labels ((get-redirects (uri-list)
-               (loop for request-uri in uri-list collect
-		    (multiple-value-bind (body status headers uri)
-			(dex:request request-uri
-				     :method :head
-				     :max-redirects 0
-				     :headers (alist "referer" (lw2.sites::site-uri (first lw2.sites::*sites*)) "accept" "text/css,*/*;q=0.1")
-				     :keep-alive nil)
-		      (declare (ignore body uri))
-		      (let ((location (gethash "location" headers)))
-			(if (and (typep status 'integer) (< 300 status 400) location)
-			    location
-			    nil)))))
-	     (update-redirects ()
-	       (handler-case
-		 (let* ((new-redirects (get-redirects *obormot-fonts-stylesheet-uris*))
-                        (new-redirects (loop for new-redirect in new-redirects
-                                             for original-uri in *obormot-fonts-stylesheet-uris*
-                                             collect (if new-redirect (quri:render-uri (quri:merge-uris (quri:uri new-redirect) (quri:uri original-uri))) original-uri))))
-                   (with-mutex (*fonts-redirect-lock*) (setf *fonts-redirect-data* (list *obormot-fonts-stylesheet-uris* new-redirects current-time)
-                                                             *fonts-redirect-thread* nil))
-                   new-redirects)
-                 (serious-condition () *obormot-fonts-stylesheet-uris*)))
-             (ensure-update-thread ()
-               (with-mutex (*fonts-redirect-lock*)
-                 (or *fonts-redirect-thread*
-                     (setf *fonts-redirect-thread* (make-thread #'update-redirects :name "obormot fonts redirect update"))))))
-      (destructuring-bind (&optional base-uris redirect-uris timestamp) (with-mutex (*fonts-redirect-lock*) *fonts-redirect-data*)
-        (if (and (eq base-uris *obormot-fonts-stylesheet-uris*) timestamp)
-          (progn
-            (if (>= current-time (+ timestamp 60))
-                (ensure-update-thread))
-            (or redirect-uris *obormot-fonts-stylesheet-uris*))
-          (update-redirects))))))
+(defun update-obormot-fonts ()
+  (with-atomic-file-replacement (out-stream (asdf:system-relative-pathname :lw2-viewer "www/fonts.css") :element-type 'character)
+    (dynamic-flet ((with-response (in-stream)
+		     (iter (for line in-stream in-stream using #'read-line)
+			   (for replaced = (ppcre:regex-replace "url\\(['\"](?!data:)" line "\\&https://fonts.greaterwrong.com/"))
+			   (write-string replaced out-stream)
+			   (terpri out-stream))))
+      (iter
+       (for uri in *obormot-fonts-stylesheet-uris*)
+       (lw2.backend:call-with-http-response
+	#'with-response uri
+	:headers (alist "referer" (lw2.sites::site-uri (first lw2.sites::*sites*)) "accept" "text/css,*/*;q=0.1")
+	:want-stream t
+	:force-string t
+	:keep-alive nil))))
+  (setf *fonts-redirect-last-update* (get-unix-time)))
 
-(defmethod generate-fonts-html-headers ((fonts-source obormot-fonts-source))
-  (dolist (stylesheet (generate-fonts-links))
-    <link rel="stylesheet" href=stylesheet>))
+(defun update-obormot-fonts-async ()
+  (unless *fonts-redirect-thread*
+    (setf *fonts-redirect-thread*
+	  (make-thread (lambda ()
+			 (update-obormot-fonts)
+			 (setf *fonts-redirect-thread* nil))
+		       :name "obormot fonts update"))))
+
+(defun maybe-update-obormot-fonts ()
+  (let ((current-time (get-unix-time)))
+    (with-mutex (*fonts-redirect-lock*)
+      (let ((last-update *fonts-redirect-last-update*))
+	(if last-update
+	    (when (>= current-time (+ last-update 60))
+	      (update-obormot-fonts-async))
+	    (update-obormot-fonts))))))
+
