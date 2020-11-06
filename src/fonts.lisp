@@ -32,20 +32,17 @@
 
 (defun update-obormot-fonts ()
   (with-atomic-file-replacement (out-stream (asdf:system-relative-pathname :lw2-viewer "www/fonts.css") :element-type 'character)
-    (dynamic-flet ((with-response (in-stream)
-		     (let ((in-stream (ensure-character-stream in-stream)))
-		       (iter (for line in-stream in-stream using #'read-line)
-			     (for replaced = (ppcre:regex-replace "url\\(['\"](?!data:)" line "\\&https://fonts.greaterwrong.com/"))
-			     (write-string replaced out-stream)
-			     (terpri out-stream)))))
-      (iter
-       (for uri in *obormot-fonts-stylesheet-uris*)
-       (lw2.backend:call-with-http-response
-	#'with-response uri
-	:headers (alist "referer" (lw2.sites::site-uri (first lw2.sites::*sites*)) "accept" "text/css,*/*;q=0.1")
-	:want-stream t
-	:force-binary t
-	:keep-alive nil))))
+    (iter
+     (for uri in *obormot-fonts-stylesheet-uris*)
+     (for response = (dex:get uri
+			      :headers (alist "referer" (lw2.sites::site-uri (first lw2.sites::*sites*)) "accept" "text/css,*/*;q=0.1")
+			      :force-string t
+			      :keep-alive nil))
+     (with-input-from-string (in-stream response)
+       (iter (for line in-stream in-stream using #'read-line)
+	     (for replaced = (ppcre:regex-replace "url\\(['\"](?!data:)" line "\\&https://fonts.greaterwrong.com/"))
+	     (write-string replaced out-stream)
+	     (terpri out-stream)))))
   (setf *fonts-redirect-last-update* (get-unix-time)))
 
 (defun update-obormot-fonts-async ()
