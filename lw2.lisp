@@ -409,8 +409,13 @@ signaled condition to *HTML-OUTPUT*."
 (defun require-resource (type &rest args)
   (push (list* type args) *page-resources*))
 
+(sb-ext:defglobal *posix-stat-lock* (sb-thread:make-mutex :name "*posix-stat-lock*"))
+
 (defun generate-versioned-link (file)
-  (format nil "~A?v=~A" file (sb-posix:stat-mtime (sb-posix:stat (format nil "www~A" file))))) 
+  (let* ((filename (format nil "www~A" file))
+	 (stat (sb-thread:with-mutex (*posix-stat-lock*)
+		 (sb-posix:stat filename))))
+    (format nil "~A?v=~A" file (sb-posix:stat-mtime stat))))
 
 (defun search-bar-to-html (out-stream)
   (declare (special *current-search-query*))
