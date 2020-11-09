@@ -558,6 +558,7 @@ signaled condition to *HTML-OUTPUT*."
 		       ((search "Mac OS" ua) "mac")
 		       (t "linux"))))
 	(append
+	 *html-global-resources*
 	 (fonts-source-resources (site-fonts-source s))
 	 (list*
 	  (list :script (generate-versioned-link "/head.js"))

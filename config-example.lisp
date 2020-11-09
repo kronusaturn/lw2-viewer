@@ -31,3 +31,6 @@
 
 ; List of DNSBLs to check before allowing users to log in.
 ;(defparameter *dnsbl-list* (list "dnsbl.example.com"))
+
+; List of extra resources to include on every page on every site.
+;(defparameter *html-global-resources* '())
