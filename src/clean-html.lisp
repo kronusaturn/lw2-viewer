@@ -784,7 +784,8 @@
 				 (labels ((spoilerp (n)
 					    (if-let (a (and (plump:element-p n) (plump:attribute n "class")))
 						    (ppcre:scan "(?:^| )spoiler\\S*(?: |$)" a))))
-				   (when (and (tag-is node "p") (rot13-text-p (plump:text node)))
+				   (when (and nil (tag-is node "p") ;; FIXME: disabled until we can fix math and code false positives
+					      (rot13-text-p (plump:text node)))
 				     (setf (plump:attribute node "class") "spoiler")
 				     (plump:traverse node
 						     (lambda (n) (unrot13-by-words (plump:text n)))
