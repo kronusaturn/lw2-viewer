@@ -11,7 +11,8 @@
 	#:lw2.web-push
 	#:lw2.data-viewers.post
 	#:lw2.data-viewers.comment
-	#:lw2.client-script)
+	#:lw2.client-script
+	#:lw2.resources)
   (:import-from #:alexandria #:ensure-list #:when-let #:if-let #:alist-hash-table)
   (:import-from #:collectors #:with-collector)
   (:import-from #:ppcre #:regex-replace-all)
@@ -404,19 +405,6 @@ signaled condition to *HTML-OUTPUT*."
 "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
 <meta name=\"HandheldFriendly\" content=\"True\" />"))
 
-(defparameter *page-resources* nil)
-
-(defun require-resource (type &rest args)
-  (push (list* type args) *page-resources*))
-
-(sb-ext:defglobal *posix-stat-lock* (sb-thread:make-mutex :name "*posix-stat-lock*"))
-
-(defun generate-versioned-link (file)
-  (let* ((filename (format nil "www~A" file))
-	 (stat (sb-thread:with-mutex (*posix-stat-lock*)
-		 (sb-posix:stat filename))))
-    (format nil "~A?v=~A" file (sb-posix:stat-mtime stat))))
-
 (defun search-bar-to-html (out-stream)
   (declare (special *current-search-query*))
   (let ((query (and (boundp '*current-search-query*) (hunchentoot:escape-for-html *current-search-query*))))
@@ -538,33 +526,6 @@ signaled condition to *HTML-OUTPUT*."
 						      (loop for x in remove-params nconc (list x nil)))
 			   class text :title description))))
     (format out-stream "</nav>")))
-
-(defgeneric site-resources (site)
-  (:method-combination append :most-specific-first)
-  (:method append ((s site))
-    (labels ((gen-inner (theme os &optional dark-preference)
-	       (list :stylesheet (generate-versioned-link (format nil "/css/style~@[-~A~].~A.css" theme os))
-		     :media (if dark-preference "(prefers-color-scheme: dark)")
-		     :class "theme"))
-	     (gen-theme (theme os)
-	       (if theme
-		   (list (gen-inner theme os))
-		   (list (gen-inner "dark" os t)
-			 (gen-inner nil os)))))
-      (let* ((ua (hunchentoot:header-in* :user-agent))
-	     (theme (hunchentoot:cookie-in "theme"))
-	     (theme (if (and theme (> (length theme) 0)) theme))
-	     (os (cond ((search "Windows" ua) "windows")
-		       ((search "Mac OS" ua) "mac")
-		       (t "linux"))))
-	(append
-	 *html-global-resources*
-	 (fonts-source-resources (site-fonts-source s))
-	 (list*
-	  (list :script (generate-versioned-link "/head.js"))
-	  (list :async-script (generate-versioned-link "/script.js"))
-	  (handler-case (gen-theme theme os)
-	    (serious-condition () (gen-theme nil os)))))))))
 
 (defmacro set-script-variables (&rest clauses)
   (alexandria:with-gensyms (out-stream)
@@ -1976,41 +1937,9 @@ signaled condition to *HTML-OUTPUT*."
              (alexandria:with-input-from-file (in-stream "www/about.html" :element-type '(unsigned-byte 8))
                                               (alexandria:copy-stream in-stream out-stream))))
 
-(hunchentoot:define-easy-handler (view-versioned-resource :uri (lambda (r)
-                                                                 (multiple-value-bind (file content-type)
-                                                                   #.(labels ((defres (uri content-type)
-                                                                                `(,uri (values (concatenate 'string "www" ,uri) ,content-type))))
-                                                                       (concatenate 'list
-                                                                                    '(alexandria:switch ((hunchentoot:script-name r) :test #'string=))
-                                                                                    (loop for system in '("mac" "windows" "linux") nconc
-                                                                                      (loop for theme in '(nil "dark" "grey" "ultramodern" "zero" "brutalist" "rts" "classic" "less")
-                                                                                            collect (defres (format nil "/css/style~@[-~A~].~A.css" theme system) "text/css")))
-                                                                                    (loop for (uri content-type) in
-										      '(("/fonts.css" "text/css")
-											("/arbital.css" "text/css")
-											("/head.js" "text/javascript")
-											("/script.js" "text/javascript")
-											("/assets/favicon.ico" "image/x-icon")
-											("/assets/telegraph.jpg" "image/jpeg")
-											("/assets/popup.svg" "image/svg+xml"))
-                                                                                      collect (defres uri content-type))))
-                                                                   (when file
-                                                                     (when (assoc "v" (hunchentoot:get-parameters r) :test #'string=)
-                                                                       (setf (hunchentoot:header-out "Cache-Control") (format nil "public, max-age=~A, immutable" (- (expt 2 31) 1))))
-                                                                     (hunchentoot:handle-static-file file content-type)
-                                                                     t))))
-    nil)
-
 (define-page view-generated-script (:regex "^/generated/([^/]+)\\.js" (name :type string)) ()
   (when-let ((package (find-package (string-upcase name))))
     (setf (hunchentoot:header-out "Content-Type") "text/javascript")
     (let ((stream (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8)))
       (write-package-client-scripts package stream))))
 
-(defmethod fonts-source-resources ((fonts-source obormot-fonts-source))
-  (lw2.fonts::maybe-update-obormot-fonts)
-  (list (list :preconnect "https://fonts.greaterwrong.com/")
-	(list :stylesheet (generate-versioned-link "/fonts.css"))))
-
-(defmethod generate-fonts-html-headers ((fonts-source obormot-fonts-source))
-  nil) 

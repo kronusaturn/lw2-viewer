@@ -1,7 +1,7 @@
 (uiop:define-package #:lw2.fonts
-  (:use #:cl #:iterate #:sb-thread #:lw2.fonts-modules #:lw2.html-reader #:lw2.utils)
+  (:use #:cl #:iterate #:sb-thread #:lw2.fonts-modules #:lw2.html-reader #:lw2.utils #:lw2.resources)
   (:export #:fonts-source #:google-fonts-source #:obormot-fonts-source
-	   #:fonts-source-resources #:generate-fonts-html-headers)
+	   #:generate-fonts-html-headers)
   (:recycle #:lw2-viewer))
 
 (in-package #:lw2.fonts)
@@ -62,3 +62,10 @@
 	      (update-obormot-fonts-async))
 	    (update-obormot-fonts))))))
 
+(defmethod fonts-source-resources ((fonts-source obormot-fonts-source))
+  (maybe-update-obormot-fonts)
+  (list (list :preconnect "https://fonts.greaterwrong.com/")
+	(list :stylesheet (generate-versioned-link "/fonts.css"))))
+
+(defmethod generate-fonts-html-headers ((fonts-source obormot-fonts-source))
+  nil) 
