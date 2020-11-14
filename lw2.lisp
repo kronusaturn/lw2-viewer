@@ -27,7 +27,8 @@
     #:*extra-external-scripts* #:*extra-inline-scripts*
     #:site-stylesheets #:site-inline-scripts #:site-scripts #:site-external-scripts #:site-head-elements
     #:unwrap-stream
-    #:sort-comments)
+    #:sort-comments
+    #:*html-head*)
   (:recycle #:lw2-viewer #:lw2.backend))
 
 (in-package #:lw2-viewer) 
@@ -400,11 +401,6 @@ signaled condition to *HTML-OUTPUT*."
 			    :link (generate-item-link :post post-id :comment-id comment-id :absolute t)
 			    :body (clean-html html-body)))))))))))
 
-(defparameter *html-head*
-  (format nil
-"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
-<meta name=\"HandheldFriendly\" content=\"True\" />"))
-
 (defun search-bar-to-html (out-stream)
   (declare (special *current-search-query*))
   (let ((query (and (boundp '*current-search-query*) (hunchentoot:escape-for-html *current-search-query*))))
@@ -552,7 +548,10 @@ signaled condition to *HTML-OUTPUT*."
 	   (page-resources (nreverse *page-resources*))
 	   (site-domain (site-domain *current-site*)))
       (setf *page-resources* nil)
-      (format out-stream "<!DOCTYPE html><html lang=\"en-US\"><head>")
+      (write-string "<!DOCTYPE html><html lang=\"en-US\"><head>
+<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
+<meta name=\"HandheldFriendly\" content=\"True\" />"
+		    out-stream)
       (when site-domain
 	(write-string "<script>" out-stream)
 	(set-script-variables ("document.domain" site-domain))
@@ -581,7 +580,6 @@ signaled condition to *HTML-OUTPUT*."
 			   (format out-stream "<script src=\"~A\"></script>" uri))
 	(for-resource-type (:async-script uri)
 			   (format out-stream "<script src=\"~A\" async></script>" uri)))
-      (write-string *html-head* out-stream)
       (for-resource-type (:stylesheet uri &key media class)
 			 (format out-stream "<link rel=\"stylesheet\" href=\"~A\"~@[ media=\"~A\"~]~@[ class=\"~A\"~]>" uri media class))
       (generate-fonts-html-headers (site-fonts-source *current-site*))
