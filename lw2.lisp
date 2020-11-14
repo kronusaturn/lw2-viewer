@@ -524,11 +524,13 @@ signaled condition to *HTML-OUTPUT*."
     (format out-stream "</nav>")))
 
 (defmacro set-script-variables (&rest clauses)
-  (alexandria:with-gensyms (out-stream)
+  (alexandria:with-gensyms (out-stream name value)
     `(let ((,out-stream *html-output*))
        ,.(loop for clause in clauses
-	    collect (destructuring-bind (name value) clause
-		      `(progn
+	    collect (destructuring-bind (name-form value-form) clause
+		      `(let ((,name ,name-form)
+			     (,value ,value-form))
+			 (declare (dynamic-extent ,name ,value))
 			 (write-string ,name ,out-stream)
 			 (write-string "=" ,out-stream)
 			 (json:encode-json ,value ,out-stream)
