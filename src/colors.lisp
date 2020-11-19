@@ -69,12 +69,17 @@
 (defun safe-color-name (r g b a)
   (format nil "~6,'0X~2,'0X" (dufy/core:rgb-to-rgbpack r g b) (round (* a 255))))
 
+(defun gamma-invert-lightness (l)
+  (if (>= l 100d0)
+      0d0
+      (* 100d0 (expt (- 1d0 (/ l 100d0)) (/ 1.25d0)))))
+
 (defun perceptual-invert-rgba (r g b alpha)
   (multiple-value-bind (l a b)
       (multiple-value-call #'dufy/core:xyz-to-lab (dufy/core:rgb-to-xyz r g b))
     (multiple-value-bind (nr ng nb)
 	(multiple-value-call #'dufy/core:xyz-to-rgb
-	  (dufy/core:lab-to-xyz (- 100.0d0 l) a b))
+	  (dufy/core:lab-to-xyz (gamma-invert-lightness l) a b))
       (values nr ng nb alpha))))
 
 (defun perceptual-invert-color-string (color-string)
