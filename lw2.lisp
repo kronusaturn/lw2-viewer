@@ -610,7 +610,11 @@ signaled condition to *HTML-OUTPUT*."
       (format out-stream "</head>")
       (unwind-protect
 	   (progn
-	     (format out-stream "<body><div id=\"content\"~@[ class=\"~{~A~^ ~}\"~]>"
+	     (format out-stream "<body class=\"theme-~A\"><div id=\"content\"~@[ class=\"~{~A~^ ~}\"~]>"
+		     (let ((theme (hunchentoot:cookie-in "theme")))
+		       (if (and theme (> (length theme) 0))
+			   theme
+			   "default"))
 		     (list-cond (content-class content-class)
 				(hide-nav-bars "no-nav-bars")
 				(preview "preview")))

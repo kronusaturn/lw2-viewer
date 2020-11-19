@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.clean-html
-  (:use #:cl #:alexandria #:iterate #:split-sequence #:lw2.lmdb #:lw2.links #:lw2.utils #:lw2.context #:lw2.sites #:lw2.conditions)
+  (:use #:cl #:alexandria #:iterate #:split-sequence #:lw2.lmdb #:lw2.links #:lw2.utils #:lw2.context #:lw2.sites #:lw2.conditions #:lw2.colors)
   (:export #:*before-clean-hook* #:*link-hook* #:url-scanner #:clean-text #:clean-text-to-html #:clean-html #:clean-html* #:extract-excerpt #:extract-excerpt*)
   (:unintern #:*text-clean-regexps* #:*html-clean-regexps*))
 
@@ -377,7 +377,7 @@
 	 :test (lambda (node) (tag-is node "p")))))))
 
 (define-lmdb-memoized clean-html 'lw2.backend-modules:backend-lmdb-cache
-  (:sources ("src/clean-html.lisp" "src/links.lisp" "text-clean-regexps.js" "html-clean-regexps.js")) (in-html &key with-toc post-id)
+  (:sources ("src/clean-html.lisp" "src/links.lisp" "src/colors.lisp" "text-clean-regexps.js" "html-clean-regexps.js")) (in-html &key with-toc post-id)
   (declare (ftype (function (plump:node) fixnum) plump:child-position)
            (ftype (function (plump:node) (and vector (not simple-array))) plump:family)
            (ftype (function (plump:node) simple-string) plump:text plump:tag-name))
@@ -512,9 +512,9 @@
 			 (format nil "~A~:[;~;~] ~A: ~A;" old-style (ppcre:scan ";\s*$" old-style) attribute value)
 			 (format nil "~A: ~A;" attribute value)))))
 	   (style-string-to-alist (string)
-	     (let ((rules (ppcre:split "\s*;\s*" string :sharedp t)))
+	     (let ((rules (ppcre:split "\\s*;\\s*" string :sharedp t)))
 	       (iter (for rule in rules)
-		     (let ((parts (ppcre:split "\s*:\s*" rule :sharedp t)))
+		     (let ((parts (ppcre:split "\\s*:\\s*" rule :sharedp t)))
 		       (when (= 2 (length parts))
 			 (collect (cons (first parts) (second parts))))))))
 	   (alist-to-style-string (alist)
@@ -607,6 +607,7 @@
 	      (min-header-level 6) 
 	      (aggressive-deformat nil)
 	      (style-hash (make-hash-table :test 'equal))
+	      (used-colors (make-hash-table :test 'equal))
 	      (used-anchors (make-hash-table :test 'equal)))
           (declare (type fixnum section-count min-header-level))
 	  (when *before-clean-hook*
@@ -703,12 +704,27 @@
 			 do (plump:append-child (plump:parent node) item)))))
 		 (plump:element
 		  (alexandria:when-let (style (plump:attribute node "style"))
-				       (cond ((or aggressive-deformat (search "font-family" style) (search "font-style: inherit" style)
-						  (search "MsoNormal" (plump:attribute node "class")))
-					      (setf aggressive-deformat t)
-					      (plump:remove-attribute node "style"))
-					     ((ppcre:scan "(?:^|;)\\s*(?:color:\\s*\\#000000|line-height:[^;]+in)\\s*(?:;|$)" style)
-					      (plump:remove-attribute node "style"))))
+		    (let ((style-list (style-string-to-alist style)))
+		      (cond ((or aggressive-deformat
+				 (cdr (assoc "font-family" style-list :test #'string-equal))
+				 (search "font-style: inherit" style)
+				 (search "MsoNormal" (plump:attribute node "class")))
+			     (setf aggressive-deformat t)
+			     (plump:remove-attribute node "style"))
+			    ((ppcre:scan "(?:^|;)\\s*(?:line-height:[^;]+in)\\s*(?:;|$)" style)
+			     (plump:remove-attribute node "style"))
+			    (t
+			     (let (updated)
+			       (iter (for style-item in style-list)
+				     (when (member (car style-item) '("color" "background-color") :test #'string-equal)
+				       (multiple-value-bind (r g b a) (decode-css-color (cdr style-item))
+					 (when (and r g b a)
+					   (let ((color-name (safe-color-name r g b a)))
+					     (setf updated t
+						   (gethash color-name used-colors) (list r g b a)
+						   (cdr style-item) (format nil "var(--user-color-~A)" color-name)))))))
+			       (when updated
+				 (setf (plump:attribute node "style") (alist-to-style-string style-list))))))))
 		  (when (and aggressive-deformat (tag-is node "div"))
 		    (setf (plump:tag-name node) "p"))
 		  (when (let ((class (plump:attribute node "class")))
@@ -821,7 +837,7 @@
 						      (plump:remove-child e)
 						      (plump:append-child new-container e))))))))))))
 		    ((tag-is node "table" "tbody" "tr" "td")
-		     (remove-style-rules node "background-color" "border-top" "border-bottom" "border-left" "border-right" "padding"))
+		     (remove-style-rules node "border-top" "border-bottom" "border-left" "border-right" "padding"))
 		    ((tag-is node "u")
 		     (let ((parent (plump:parent node)))
 		       (cond
@@ -893,6 +909,24 @@
 	  (let ((with-toc (>= section-count 3)))
 	    (with-output-to-string (out-stream)
 	      (style-hash-to-html style-hash out-stream)
+	      (when (> (hash-table-count used-colors) 0)
+		(format out-stream "<style>~%:root {~%")
+		(maphash (lambda (name rgba-list)
+			   (declare (ignore rgba-list))
+			   (format out-stream "  --user-color-~A: #~A;~%" name name))
+			 used-colors)
+		(flet ((write-inverted-colors (theme)
+			 (format out-stream "body.theme-~A {~%" theme)
+			 (maphash (lambda (name rgba-list)
+				    (format out-stream "  --user-color-~A: ~A;~%" name
+					    (multiple-value-call #'encode-css-color (apply #'perceptual-invert-rgba rgba-list))))
+				  used-colors)
+			 (format out-stream "}~%")))
+		  (format out-stream "}~%@media (prefers-color-scheme: dark) {~%")
+		  (write-inverted-colors "default")
+		  (format out-stream "}~%")
+		  (write-inverted-colors "dark"))
+		(format out-stream "</style>"))
 	      (loop for c across (plump:children root)
 		 when (and with-toc
 			   (not (or (string-is-whitespace (plump:text c))

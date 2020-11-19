@@ -964,6 +964,9 @@ function setTheme(newThemeName) {
 	}
 }
 function postSetThemeHousekeeping(oldThemeName = "", newThemeName = (readCookie('theme') || 'default')) {
+	document.body.className = document.body.className.replace(new RegExp("(^|\\s+)theme-\\w+(\\s+|$)"), "$1").trim();
+	document.body.addClass("theme-" + newThemeName);
+
 	recomputeUIElementsContainerHeight(true);
 
 	let themeLoadCallback = GW['themeLoadCallback_' + newThemeName];

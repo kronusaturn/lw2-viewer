@@ -1,7 +1,7 @@
 (in-package :asdf)
 
 (asdf:defsystem :lw2-viewer
-  :depends-on ("uiop" "flexi-streams" "hunchentoot" "dexador" "cl-json" "lmdb" "local-time" "plump" "clss" "cl-ppcre" "xml-emitter" "city-hash" "bit-smasher" "cl-unicode" "parse-js" "cl-markdown" "websocket-driver-client" "ironclad" "cl-base64" "djula" "split-sequence" "cl-typesetting" "named-readtables" "collectors" "closer-mop" "chronicity" "parenscript" "trivial-gray-streams" "trivia" "iterate" "introspect-environment" "trivial-macroexpand-all" "trivial-cltl2")
+  :depends-on ("uiop" "flexi-streams" "hunchentoot" "dexador" "cl-json" "lmdb" "local-time" "plump" "clss" "cl-ppcre" "xml-emitter" "city-hash" "bit-smasher" "cl-unicode" "parse-js" "cl-markdown" "websocket-driver-client" "ironclad" "cl-base64" "djula" "split-sequence" "cl-typesetting" "named-readtables" "collectors" "closer-mop" "chronicity" "parenscript" "trivial-gray-streams" "trivia" "iterate" "introspect-environment" "trivial-macroexpand-all" "trivial-cltl2" "dufy/core")
   :components ((:module "src"
 		:components ((:file "utils" :depends-on ("macro-utils"))
 			     (:file "macro-utils")
@@ -42,7 +42,8 @@
 			     (:file "legacy-archive" :depends-on ("utils" "backend"))
 			     (:static-file "../text-clean-regexps.js")
 			     (:static-file "../html-clean-regexps.js")
-                             (:file "clean-html" :depends-on ("utils" "links" "lmdb" "context" "sites" "conditions" "../text-clean-regexps.js" "../html-clean-regexps.js"))
+			     (:file "colors" :depends-on ("utils"))
+                             (:file "clean-html" :depends-on ("utils" "links" "lmdb" "context" "sites" "conditions" "colors" "../text-clean-regexps.js" "../html-clean-regexps.js"))
                              (:file "lw2-login" :depends-on ("utils" "backend" "backend-modules" "context"))
 			     (:file "backlinks" :depends-on ("html-reader" "lmdb" "backend" "backend-modules" "sites" "links" "context" "clean-html" "conditions" "utils" "interface-utils"))
 			     (:file "web-push" :depends-on ("utils" "conditions"))

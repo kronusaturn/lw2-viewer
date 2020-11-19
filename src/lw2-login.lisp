@@ -5,7 +5,8 @@
   (:export #:do-lw2-resume #:do-login #:do-lw2-create-user #:do-lw2-forgot-password #:do-lw2-reset-password
 	   #:do-lw2-post-query #:do-lw2-post-query*
            #:do-lw2-post #:do-lw2-post-edit #:do-lw2-post-remove #:do-lw2-comment #:do-lw2-comment-edit #:do-lw2-comment-remove
-           #:do-lw2-vote #:do-user-edit #:do-create-conversation #:do-create-message))
+           #:do-lw2-vote #:do-user-edit #:do-create-conversation #:do-create-message)
+  (:recycle #:lw2.utils))
 
 (in-package #:lw2.login) 
 
@@ -34,9 +35,6 @@
   (byte-array-to-hex-string
     (digest-sequence algorithm
       (string-to-octets password :external-format :utf8))))
-
-(defun random-string (length)
-  (coerce (loop repeat length collecting (code-char (+ (char-code #\a) (ironclad:strong-random 26)))) 'string)) 
 
 (defun do-lw2-sockjs-operation (operation)
   (let ((client (wsd:make-client (concatenate 'string (websocket-uri *current-backend*) "sockjs/329/" (random-string 8) "/websocket")

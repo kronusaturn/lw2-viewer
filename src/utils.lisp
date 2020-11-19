@@ -4,7 +4,7 @@
   (:export #:nalist #:nalist* #:alist #:alist*
 	   #:alist-without-null #:alist-without-null*
 	   #:dynamic-let #:dynamic-let* #:dynamic-flet #:dynamic-labels
-	   #:get-unix-time #:substring #:regex-replace-body #:reg #:match
+	   #:get-unix-time #:substring #:regex-replace-body #:regex-case #:reg #:match
 	   #:to-boolean #:nonzero-number-p #:truthy-string-p
 	   #:firstn #:map-plist #:filter-plist #:alist-bind
 	   #:list-cond #:list-cond*
@@ -13,7 +13,9 @@
 	   #:ignorable-multiple-value-bind
 	   #:compare-streams #:ensure-character-stream
 	   #:with-output-to-designator
-	   #:with-atomic-file-replacement)
+	   #:with-atomic-file-replacement
+	   #:random-string
+	   #:values*)
   (:recycle #:lw2-viewer #:lw2.backend))
 
 (in-package #:lw2.utils)
@@ -110,6 +112,15 @@
 (defun substring (string start &optional (end (length string)))
   (make-array (- end start) :element-type 'character :displaced-to string :displaced-index-offset start))
 
+(defmacro with-regex-accessors (&body body)
+  `(let ((reg-count (length reg-starts)))
+     (labels ((reg (n) (when (> reg-count n)
+			 (when-let ((start (aref reg-starts n)))
+				   (substring target-string start (aref reg-ends n)))))
+	      (match () (substring target-string match-start match-end)))
+       (declare (dynamic-extent #'reg #'match))
+       ,@body)))
+
 (defmacro regex-replace-body ((regex target &rest args) &body body)
   `(ppcre:regex-replace-all
     ,regex ,target
@@ -117,15 +128,24 @@
       (declare (ignore start end)
 	       (type string target-string)
 	       (type array-dimension-type match-start match-end)
-	       (type vector reg-starts reg-ends))
-      (let ((reg-count (length reg-starts)))
-	(labels ((reg (n) (when (> reg-count n)
-			    (when-let ((start (aref reg-starts n)))
-			      (substring target-string start (aref reg-ends n)))))
-		 (match () (substring target-string match-start match-end)))
-	  (declare (dynamic-extent #'reg #'match))
-	  ,@body)))
+	       (type simple-vector reg-starts reg-ends))
+      (with-regex-accessors ,@body))
     ,@args))
+
+(defmacro regex-case (target &rest clauses)
+  `(let ((target-string ,target)
+	 match-start match-end reg-starts reg-ends)
+     (declare (type string target-string)
+	      (type (or null array-dimension-type) match-start match-end)
+	      (type (or null simple-vector) reg-starts reg-ends))
+     (cond
+       ,.(iter (for (regex . body) in clauses)
+	       (collect
+		(if (member regex '(t :otherwise))
+		    `(t ,@body)
+		    `((multiple-value-setq (match-start match-end reg-starts reg-ends)
+			(ppcre:scan ,regex target-string))
+		      (with-regex-accessors ,@body))))))))
 
 (declaim (inline to-boolean))
 (defun to-boolean (value)
@@ -141,9 +161,10 @@
        (to-boolean (member string '("t" "true" "y" "yes" "1") :test #'string-equal))))
 
 (defun firstn (list n)
-  (loop for x in list
-	for i from 1 to n
-	collect x))
+  (iter (for i from 1 to n)
+	(for x on list)
+	(collect (car x) into out)
+	(finally (return (values out (rest x))))))
 
 (defun map-plist (fn plist)
   (loop for (key val . rest) = plist then rest
@@ -327,3 +348,12 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
     `(dynamic-flet ((,open-fn (filename) (open filename :direction :output :if-exists :supersede ,@open-options))
 		    (,body-fn (,stream) ,@body))
 		   (call-with-atomic-file-replacement #',body-fn ,filename #',open-fn))))
+
+(defun random-string (length)
+  (let ((string (make-array length :element-type 'character :initial-element #\Space)))
+    (iter (for i from 0 below length)
+	  (setf (aref string i) (code-char (+ (char-code #\a) (ironclad:strong-random 26)))))
+    string))
+
+(defmacro values* (&rest multiple-value-forms)
+  `(multiple-value-call #'values ,@multiple-value-forms))
