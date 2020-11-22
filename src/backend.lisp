@@ -904,6 +904,10 @@
 		(alist :version version :markdown markdown)
 		:value-type :lisp))))
 
+(defun get-elicit-question-title (question-id)
+  (cdr
+   (lw2-graphql-query (graphql-query-string "ElicitBlockData" (alist :question-id question-id) '(:title)))))
+
 (defun make-rate-limiter (delay)
   (let ((rl-hash (make-hash-table :test 'equal :synchronized t)))
     (lambda (datum fn)
