@@ -3291,6 +3291,13 @@ figure {
 	clear: both;
 }
 
+.imgonly iframe {
+	display: block;
+	width: 100%;
+	height: 250px;
+	border: 0;
+}
+
 // Aspect ratio trick from https://css-tricks.com/aspect-ratio-boxes/
 
 [style*="--aspect-ratio"] > :first-child {
