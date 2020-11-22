@@ -6,8 +6,7 @@
 
 @media only screen and (max-width: 1160px) {
 	#post-nav-ui-toggle,
-	#appearance-adjust-ui-toggle,
-	#theme-selector .theme-selector-close-button {
+	#appearance-adjust-ui-toggle {
 		display: none;
 	}
 }
