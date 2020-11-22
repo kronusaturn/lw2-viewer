@@ -224,14 +224,21 @@
        (some (lambda (x) (string= tag x))
 	     args)))))
 
+(defun every-ancestor (node test)
+  (declare (type plump:node node)
+	   (type function test))
+  (iter (for target first node then (plump:parent target))
+	(cond ((or (plump:root-p target) (null target)) (return t))
+	      ((not (funcall test node)) (return nil)))))
+
 (defun class-is-not (node &rest args)
   (declare (type plump:node node)
            (dynamic-extent args))
-  (to-boolean
-    (or
-      (plump:root-p node)
-      (and (not (intersection (split-sequence #\Space (or (plump:attribute node "class") "")) args :test #'string=))
-           (or (null (plump:parent node)) (apply #'class-is-not (plump:parent node) args))))))
+  (every-ancestor node (lambda (n)
+			 (not (intersection
+			       (split-sequence #\Space (or (plump:attribute n "class") ""))
+			       args
+			       :test #'string=)))))
 
 (defun text-class-is-not (node &rest args)
   (declare (type plump:node node)
@@ -248,7 +255,8 @@
        (cleanablep (node)
          (and (plump:text-node-p node)
 	      (plump:parent node)
-              (text-class-is-not node "mjx-math" "arbital-math")))
+              (text-class-is-not node "mjx-math" "arbital-math")
+	      (not (tag-is (plump:parent node) "code"))))
        (traverse (node main-fn &optional recurse-fn)
          (when (cleanablep node) (funcall main-fn node))
          (when (plump:nesting-node-p node)
