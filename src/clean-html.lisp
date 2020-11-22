@@ -229,7 +229,7 @@
 	   (type function test))
   (iter (for target first node then (plump:parent target))
 	(cond ((or (plump:root-p target) (null target)) (return t))
-	      ((not (funcall test node)) (return nil)))))
+	      ((not (funcall test target)) (return nil)))))
 
 (defun class-is-not (node &rest args)
   (declare (type plump:node node)
@@ -736,8 +736,10 @@
 		  (when (and aggressive-deformat (tag-is node "div"))
 		    (setf (plump:tag-name node) "p"))
 		  (when (let ((class (plump:attribute node "class")))
-			  (or (search "mjx-math" class)
-			      (search "mjpage" class)))
+			  (and
+			   (or (search "mjx-math" class)
+			       (search "mjpage" class))
+			   (class-is-not node "mjx-math" "mjpage")))
 		    (loop for current = node then (plump:parent current)
 		       for parent = (plump:parent current)
 		       when (loop for s across (plump:family current)
