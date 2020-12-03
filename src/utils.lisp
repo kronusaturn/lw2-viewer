@@ -4,7 +4,7 @@
   (:export #:nalist #:nalist* #:alist #:alist*
 	   #:alist-without-null #:alist-without-null*
 	   #:dynamic-let #:dynamic-let* #:dynamic-flet #:dynamic-labels
-	   #:get-unix-time #:substring #:regex-replace-body #:regex-case #:reg #:match
+	   #:get-unix-time #:as-timestamp #:substring #:regex-replace-body #:regex-case #:reg #:match
 	   #:to-boolean #:nonzero-number-p #:truthy-string-p
 	   #:firstn #:map-plist #:filter-plist #:alist-bind
 	   #:list-cond #:list-cond*
@@ -104,6 +104,19 @@
 
 (defun get-unix-time ()
   (- (get-universal-time) #.(encode-universal-time 0 0 0 1 1 1970 0)))
+
+(defun as-timestamp (value)
+  (etypecase value
+    (string (local-time:parse-timestring value))
+    (local-time:timestamp value)))
+
+(define-compiler-macro as-timestamp (&whole whole &environment env value)
+  (if (compiler-constantp value env)
+      (let ((real-value (eval-in-environment value env)))
+	(typecase real-value
+	  (string `(load-time-value (local-time:parse-timestring ,real-value)))
+	  (t whole)))
+      whole))
 
 (deftype array-dimension-type () `(integer 0 ,(- array-dimension-limit 1)))
 

@@ -1135,7 +1135,7 @@ signaled condition to *HTML-OUTPUT*."
 				  (quri:merge-uris (quri:make-uri :fragment (format nil "comment-~A" new-comment-id))
 						   (hunchentoot:request-uri*)))))))))))
 
-(defun output-comments (out-stream id comments target &key overcomingbias-sort preview chrono)
+(defun output-comments (out-stream id comments target &key overcomingbias-sort preview chrono replies-open)
   (labels ((output-comments-inner ()
 	     (with-error-html-block ()
 	       (if target
@@ -1162,7 +1162,7 @@ signaled condition to *HTML-OUTPUT*."
 		       <div class="comments-empty-message">("No ~As." id)</div>)))))
     (if preview
 	(output-comments-inner)
-	(progn (format out-stream "<div id=\"~As\" class=\"comments\">" id)
+	(progn (format out-stream "<div id=\"~As\" class=\"comments~:[~; replies-open~]\">" id replies-open)
 	       (unless target
 		 <script>initializeCommentControls\(\)</script>)
 	       (output-comments-inner)
@@ -1247,14 +1247,15 @@ signaled condition to *HTML-OUTPUT*."
 			      (finish-output out-stream)
 			      (with-error-html-block ()
 				;; Temporary hack to support nominations
-				(let ((real-comments (get-post-comments post-id))
-				      (answers (when (cdr (assoc :question post))
-						 (get-post-answers post-id)))
-				      (nominations-eligible (and (typep *current-backend* 'backend-lw2)
-								 (cdr (assoc :posted-at post))
-								 (let ((ts (local-time:parse-timestring (cdr (assoc :posted-at post)))))
-								   (and (local-time:timestamp> ts (load-time-value (local-time:parse-timestring "2018-01-01")))
-									(local-time:timestamp< ts (load-time-value (local-time:parse-timestring "2019-01-01"))))))))
+				(let* ((real-comments (get-post-comments post-id))
+				       (answers (when (cdr (assoc :question post))
+						  (get-post-answers post-id)))
+				       (posted-at (and (typep *current-backend* 'backend-lw2)
+						       (cdr (assoc :posted-at post))))
+				       (posted-timestamp (and posted-at (local-time:parse-timestring posted-at)))
+				       (nominations-eligible (local-time:timestamp< (as-timestamp "2018-01-01") posted-timestamp (as-timestamp "2020-01-01")))
+				       (nominations-open (and nominations-eligible (local-time:timestamp< (as-timestamp "2019-01-01") posted-timestamp)))
+				       (reviews-open nil))
 				  (labels ((top-level-property (comment property)
 					     (or (cdr (assoc property comment))
 						 (cdr (assoc property (cdr (assoc :top-level-comment comment)))))))
@@ -1267,15 +1268,16 @@ signaled condition to *HTML-OUTPUT*."
 					   else
 					   collect comment into normal-comments
 					   finally (return (values normal-comments nominations reviews)))
-				      (loop for (name comments) in (list-cond (nominations-eligible
-									       (list "nomination" nominations))
-									      (nominations-eligible
-									       (list "review" reviews))
-									      ((cdr (assoc :question post))
-									       (list "answer" answers))
-									      (t
-									       (list "comment" normal-comments)))
+				      (loop for (name comments open) in (list-cond (nominations-eligible
+										    (list "nomination" nominations nominations-open))
+										   (nominations-eligible
+										    (list "review" reviews reviews-open))
+										   ((cdr (assoc :question post))
+										    (list "answer" answers t))
+										   (t
+										    (list "comment" normal-comments t)))
 					 do (output-comments out-stream name comments nil
+							     :replies-open open
 							     :overcomingbias-sort (cdr (assoc :comment-sort-order post)) :chrono chrono :preview preview))))))))))))))
    (:post ()
 	  (post-comment post-id))))
