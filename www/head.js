@@ -399,7 +399,7 @@ Element.prototype.constructCommentControls = function() {
 	GWLog("constructCommentControls");
 	let commentControls = this;
 
-	if(!commentControls.parentElement.hasClass("replies-open")) {
+	if(commentControls.parentElement.hasClass("comments") && !commentControls.parentElement.hasClass("replies-open")) {
 		return;
 	}
 	
