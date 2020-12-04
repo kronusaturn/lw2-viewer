@@ -1253,7 +1253,7 @@ signaled condition to *HTML-OUTPUT*."
 				       (posted-at (and (typep *current-backend* 'backend-lw2)
 						       (cdr (assoc :posted-at post))))
 				       (posted-timestamp (and posted-at (local-time:parse-timestring posted-at)))
-				       (nominations-eligible (local-time:timestamp< (as-timestamp "2018-01-01") posted-timestamp (as-timestamp "2020-01-01")))
+				       (nominations-eligible (and posted-timestamp (local-time:timestamp< (as-timestamp "2018-01-01") posted-timestamp (as-timestamp "2020-01-01"))))
 				       (nominations-open (and nominations-eligible (local-time:timestamp< (as-timestamp "2019-01-01") posted-timestamp)))
 				       (reviews-open nil))
 				  (labels ((top-level-property (comment property)
