@@ -4,7 +4,8 @@
   (:export #:nalist #:nalist* #:alist #:alist*
 	   #:alist-without-null #:alist-without-null*
 	   #:dynamic-let #:dynamic-let* #:dynamic-flet #:dynamic-labels
-	   #:get-unix-time #:as-timestamp #:substring #:regex-replace-body #:regex-case #:reg #:match
+	   #:get-unix-time #:as-timestamp #:timerange
+	   #:substring #:regex-replace-body #:regex-case #:reg #:match
 	   #:to-boolean #:nonzero-number-p #:truthy-string-p
 	   #:firstn #:map-plist #:filter-plist #:alist-bind
 	   #:list-cond #:list-cond*
@@ -117,6 +118,25 @@
 	  (string `(load-time-value (local-time:parse-timestring ,real-value)))
 	  (t whole)))
       whole))
+
+(defun timerange (&rest args)
+  (declare (dynamic-extent args))
+  (and (every #'to-boolean args)
+       (apply #'local-time:timestamp< (map 'list #'as-timestamp args))))
+
+(define-compiler-macro timerange (&environment env &rest args)
+  (iter (for arg in args)
+	(cond ((compiler-constantp arg env)
+	       (collect `(as-timestamp ,arg) into compare-args))
+	      (t
+	       (let ((var (gensym)))
+		 (collect `(,var ,arg) into let-args)
+		 (collect var into test-args)
+		 (collect `(as-timestamp ,var) into compare-args))))
+	(finally
+	 (return
+	   `(let ,let-args
+	      (and ,@test-args (local-time:timestamp< ,@compare-args)))))))
 
 (deftype array-dimension-type () `(integer 0 ,(- array-dimension-limit 1)))
 
