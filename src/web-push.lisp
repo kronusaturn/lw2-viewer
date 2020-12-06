@@ -76,9 +76,12 @@
 
 (defun send-notification (endpoint &key (ttl (* 60 60 24)))
   ;; we don't support content yet since it requires encryption
-  (dex:request endpoint
-	       :method :post
-	       :headers (list* (cons :ttl ttl)
-			       (cons :content-encoding "identity")
-			       (get-vapid-headers (quri:render-uri (quri:merge-uris "/" endpoint))))
-	       :keep-alive nil))
+  (let* ((endpoint-uri (quri:uri endpoint))
+	 (origin (concatenate 'string (quri:uri-scheme endpoint-uri) "://" (quri:uri-authority endpoint-uri)))
+	 (headers (alist* :ttl ttl
+			  :content-encoding "identity"
+			  (get-vapid-headers origin))))
+    (dex:request endpoint
+		 :method :post
+		 :headers headers
+		 :keep-alive nil)))
