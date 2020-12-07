@@ -1,6 +1,6 @@
 (uiop:define-package #:lw2.hash-utils
   (:use #:cl #:iter)
-  (:import-from #:flexi-streams #:string-to-octets #:octets-to-string)
+  (:import-from #:flexi-streams #:string-to-octets #:octets-to-string #:with-output-to-sequence)
   (:export #:city-hash-128-vector #:hash-string #:hash-printable-object #:hash-file-list)
   (:recycle #:lw2.lmdb))
 
@@ -21,7 +21,7 @@
 
 (defun hash-file-list (file-list)
   (city-hash-128-vector
-   (with-output-to-string (out-stream)
+   (with-output-to-sequence (out-stream)
      (iter (for f in file-list)
-	   (with-open-file (in-stream (asdf:system-relative-pathname :lw2-viewer f) :direction :input :element-type 'character)
-	     (uiop:copy-stream-to-stream in-stream out-stream :element-type 'character))))))
+	   (with-open-file (in-stream (asdf:system-relative-pathname :lw2-viewer f) :direction :input :element-type '(unsigned-byte 8))
+	     (uiop:copy-stream-to-stream in-stream out-stream :element-type '(unsigned-byte 8)))))))
