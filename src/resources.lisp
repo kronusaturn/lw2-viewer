@@ -10,12 +10,9 @@
 (defun require-resource (type &rest args)
   (push (list* type args) *page-resources*))
 
-(sb-ext:defglobal *posix-stat-lock* (sb-thread:make-mutex :name "*posix-stat-lock*"))
-
 (defun generate-versioned-link (file)
   (let* ((filename (format nil "www~A" file))
-	 (stat (sb-thread:with-mutex (*posix-stat-lock*)
-		 (sb-posix:stat filename))))
+	 (stat (sb-posix:stat filename)))
     (format nil "~A?v=~A" file (sb-posix:stat-mtime stat))))
 
 (defgeneric fonts-source-resources (site))
