@@ -1,11 +1,15 @@
 (uiop:define-package #:lw2.resources
-  (:use #:cl #:lw2-viewer.config #:lw2.sites)
-  (:export #:*page-resources* #:require-resource #:generate-versioned-link #:fonts-source-resources #:site-resources)
+  (:use #:cl #:lw2-viewer.config #:lw2.sites #:lw2.context)
+  (:export #:*page-resources* #:with-page-resources #:require-resource #:generate-versioned-link #:fonts-source-resources #:site-resources)
   (:recycle #:lw2-viewer))
 
 (in-package #:lw2.resources)
 
 (defparameter *page-resources* nil)
+
+(defmacro with-page-resources (&body body)
+  `(let ((*page-resources* (site-resources *current-site*)))
+     ,@body))
 
 (defun require-resource (type &rest args)
   (push (list* type args) *page-resources*))

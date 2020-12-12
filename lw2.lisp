@@ -810,31 +810,31 @@ signaled condition to *HTML-OUTPUT*."
 		 ;; Soft hyphen characters mess up middle-click paste, so try to identify whether that exists on the user's platform.
 		 (let ((ua (hunchentoot:header-in* :user-agent)))
 		   (or (search "X11" ua)
-		       (search "Ubuntu" ua))))
-		(*page-resources* (append *page-resources* (site-resources *current-site*))))
-	    (catch 'abort-response
-	      (handler-bind
-		  ((fatal-error (lambda (condition)
-				  (abort-response-if-unrecoverable condition)
-				  (let ((error-html (with-output-to-string (*html-output*) (error-to-html condition))))
-				    (emit-page (out-stream :title "Error" :return-code (condition-http-return-code condition) :content-class "error-page")
-					       (write-string error-html out-stream)
-					       (when (eq (hunchentoot:request-method*) :post)
-						 <form method="post" class="error-retry-form">
-						 (loop for (key . value) in (hunchentoot:post-parameters*)
-						    do <input type="hidden" name=key value=value>)
-						 <input type="submit" value="Retry">
-						 </form>))
-				    (return-from call-with-error-page)))))
-		(log-conditions
-		 (if (or (eq (hunchentoot:request-method*) :post)
-			 (not (and (boundp '*test-acceptor*) (boundp '*hunchentoot-taskmaster*)))) ; TODO fix this hack
-		     (funcall fn)
-		     (sb-sys:with-deadline (:seconds (expt 1.3
-							   (min (round (log 30 1.3))
-								(- (hunchentoot:taskmaster-max-thread-count (symbol-value '*hunchentoot-taskmaster*))
-								   (hunchentoot:acceptor-requests-in-progress (symbol-value '*test-acceptor*))))))
-		       (funcall fn))))))))))))
+		       (search "Ubuntu" ua)))))
+	    (with-page-resources
+	      (catch 'abort-response
+		(handler-bind
+		    ((fatal-error (lambda (condition)
+				    (abort-response-if-unrecoverable condition)
+				    (let ((error-html (with-output-to-string (*html-output*) (error-to-html condition))))
+				      (emit-page (out-stream :title "Error" :return-code (condition-http-return-code condition) :content-class "error-page")
+						 (write-string error-html out-stream)
+						 (when (eq (hunchentoot:request-method*) :post)
+						   <form method="post" class="error-retry-form">
+						   (loop for (key . value) in (hunchentoot:post-parameters*)
+						      do <input type="hidden" name=key value=value>)
+						   <input type="submit" value="Retry">
+						   </form>))
+				      (return-from call-with-error-page)))))
+		  (log-conditions
+		   (if (or (eq (hunchentoot:request-method*) :post)
+			   (not (and (boundp '*test-acceptor*) (boundp '*hunchentoot-taskmaster*)))) ; TODO fix this hack
+		       (funcall fn)
+		       (sb-sys:with-deadline (:seconds (expt 1.3
+							     (min (round (log 30 1.3))
+								  (- (hunchentoot:taskmaster-max-thread-count (symbol-value '*hunchentoot-taskmaster*))
+								     (hunchentoot:acceptor-requests-in-progress (symbol-value '*test-acceptor*))))))
+			 (funcall fn)))))))))))))
 
 (defmacro with-error-page (&body body)
   `(call-with-error-page (lambda () ,@body)))
