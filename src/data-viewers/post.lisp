@@ -59,6 +59,12 @@
 
 (defgeneric rectify-post* (backend post) ; TODO this should go in a more generic postprocessing method
   (:method ((backend t) post) post)
+  (:method ((backend backend-lw2-misc-workarounds) post)
+    (let* ((post (if (next-method-p) (call-next-method) post))
+	   (url (cdr (assoc :url post))))
+      (cond ((null url) post)
+	    ((or (uiop:string-prefix-p "http" url) (uiop:string-prefix-p "/" url)) post)
+	    (t (acons :url (concatenate 'string "http://" url) post)))))
   (:method ((backend backend-feed-crossposts) post)
     (if (cdr (assoc :url post))
 	post

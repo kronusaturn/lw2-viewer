@@ -18,6 +18,7 @@
     #:backend-lw2-tags
     #:backend-lw2-tags-comments
     #:backend-lw2-wiki-tags
+    #:backend-lw2-misc-workarounds
     #:backend-lw2-misc-features
     #:backend-lw2-legacy #:backend-lw2-modernized #:backend-lw2 #:backend-algolia-search #:backend-ea-forum #:backend-accordius
     #:backend-arbital
@@ -87,6 +88,9 @@
 (defclass backend-lw2-wiki-tags (backend-lw2-tags) ()
   (:metaclass backend-class))
 
+(defclass backend-lw2-misc-workarounds (backend-graphql) ()
+  (:metaclass backend-class))
+
 (defclass backend-lw2-misc-features (backend-graphql) ()
   (:metaclass backend-class))
 
@@ -99,6 +103,7 @@
 (defclass backend-lw2 (backend-websocket-login
 		       backend-lw2-modernized
 		       backend-lw2-legacy
+		       backend-lw2-misc-workarounds
 		       backend-lw2-misc-features
 		       backend-algolia-search
 		       backend-q-and-a
