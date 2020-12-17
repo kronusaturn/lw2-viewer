@@ -26,16 +26,16 @@
 			     (:file "fonts-modules")
 			     (:file "fonts" :depends-on ("html-reader" "utils" "sites" "fonts-modules" "backend" "resources"))
                              (:file "config-package" :depends-on ("sites" "backend-modules" "fonts-modules"))
-                             (module "config-copy"
-                                     :pathname "../"
-                                     :output-files (compile-op (o c) (if (file-exists-p "config.lisp") nil (list "config.lisp")))
-                                     :perform (compile-op :before (o c)
-                                                          (if (file-exists-p "config.lisp")
-                                                              (mark-operation-done o c)
-                                                              (copy-file "config-example.lisp" "config.lisp"))))
-                             (:file "../config" :depends-on ("config-copy" "config-package"))
-                             (:file "lmdb" :depends-on ("raw-memory-streams" "hash-utils" "sites" "context" "../config"))
-                             (:file "backend" :depends-on ("utils" "hash-utils" "backend-modules" "lmdb" "graphql" "context" "user-context" "sites" "schema-type" "conditions" "web-push"))
+                             (:module "config-copy"
+				      :pathname "../"
+				      :output-files (compile-op (o c) (if (file-exists-p "config.lisp") nil (list "config.lisp")))
+				      :perform (compile-op :before (o c)
+							   (if (file-exists-p "config.lisp")
+							       (mark-operation-done o c)
+							       (copy-file "config-example.lisp" "config.lisp"))))
+			     (:file "../config" :depends-on ("config-copy" "config-package"))
+			     (:file "lmdb" :depends-on ("raw-memory-streams" "hash-utils" "sites" "context" "../config"))
+			     (:file "backend" :depends-on ("utils" "hash-utils" "backend-modules" "lmdb" "graphql" "context" "user-context" "sites" "schema-type" "conditions" "web-push"))
 			     (:file "csrf" :depends-on ("conditions" "client-script"))
                              (:file "components" :depends-on ("utils" "csrf"))
                              (:file "links" :depends-on ("utils" "lmdb" "backend" "sites" "context"))
