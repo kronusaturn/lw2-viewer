@@ -720,17 +720,16 @@ signaled condition to *HTML-OUTPUT*."
 	  (hunchentoot:return-code*) return-code
 	  (hunchentoot:header-out :link) (let ((output
 						(with-output-to-string (stream)
-						  (flet ((output-link (uri rel &optional type as push-option)
-							   (format stream "<~A>;rel=~A~@[;type=~A~]~@[;as=~A~]~@[;~A~]" uri rel type as push-option)))
-						    (declare (dynamic-extent #'output-link))
-						    (iter
-						     (for (type . args) in *page-resources*)
-						     (for link = (first args))
-						     (when (member type '(:preconnect :stylesheet :script))
-						       (unless (first-time-p)
-							 (write-string "," stream))
+						  (iter
+						   (for (type . args) in *page-resources*)
+						   (for link = (first args))
+						   (when (member type '(:preconnect :stylesheet :script))
+						     (dynamic-flet ((output-link (uri rel &optional type as push-option)
+								      (unless (first-time-p)
+									(write-string "," stream))
+								      (format stream "<~A>;rel=~A~@[;type=~A~]~@[;as=~A~]~@[;~A~]" uri rel type as push-option)))
 						       (case type
-							 (:preconnect (output-link link "preconnect"))
+							 (:preconnect (unless push-option (output-link link "preconnect")))
 							 (:stylesheet (output-link link "preload" "text/css" "style" push-option))
 							 (:script (output-link link "preload" "text/javascript" "script" push-option)))))))))
 					   (when (> (length output) 0)
