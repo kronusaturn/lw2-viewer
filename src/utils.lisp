@@ -147,7 +147,7 @@
   (values (make-array (- end start) :element-type 'character :displaced-to string :displaced-index-offset start)))
 
 (declaim (inline nonempty-string)
-	 (ftype (function (t) (values (or null string) &optional))))
+	 (ftype (function (t) (values (or null string) &optional)) nonempty-string))
 (defun nonempty-string (obj)
   (when (and (stringp obj) (> (length obj) 0))
     obj))
