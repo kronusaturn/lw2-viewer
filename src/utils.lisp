@@ -5,7 +5,8 @@
 	   #:alist-without-null #:alist-without-null*
 	   #:dynamic-let #:dynamic-let* #:dynamic-flet #:dynamic-labels
 	   #:get-unix-time #:as-timestamp #:timerange
-	   #:substring #:regex-replace-body #:regex-case #:reg #:match
+	   #:substring #:nonempty-string
+	   #:regex-replace-body #:regex-case #:reg #:match
 	   #:to-boolean #:nonzero-number-p #:truthy-string-p
 	   #:firstn #:map-plist #:filter-plist #:alist-bind
 	   #:list-cond #:list-cond*
@@ -141,9 +142,15 @@
 (deftype array-dimension-type () `(integer 0 ,(- array-dimension-limit 1)))
 
 (declaim (inline substring)
-         (ftype (function (string array-dimension-type &optional array-dimension-type) (and string (not simple-string))) substring))
+         (ftype (function (string array-dimension-type &optional array-dimension-type) (values (and string (not simple-string)) &optional)) substring))
 (defun substring (string start &optional (end (length string)))
-  (make-array (- end start) :element-type 'character :displaced-to string :displaced-index-offset start))
+  (values (make-array (- end start) :element-type 'character :displaced-to string :displaced-index-offset start)))
+
+(declaim (inline nonempty-string)
+	 (ftype (function (t) (values (or null string) &optional))))
+(defun nonempty-string (obj)
+  (when (and (stringp obj) (> (length obj) 0))
+    obj))
 
 (defmacro with-regex-accessors (&body body)
   `(let ((reg-count (length reg-starts)))

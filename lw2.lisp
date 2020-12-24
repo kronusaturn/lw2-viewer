@@ -46,8 +46,6 @@
 (defparameter *default-prefs* (alist :items-per-page 20 :default-sort "new"))
 (defvar *current-prefs* nil)
 
-(defparameter *preview* nil)
-
 (defun get-post-sequences (post-id)
   (when-let (sequence-ids (get-post-sequence-ids post-id))
     (with-collector (col)

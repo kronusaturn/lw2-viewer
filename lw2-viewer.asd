@@ -21,7 +21,7 @@
                               :components ((:file "accordius"))
                               :depends-on ("backend-modules" "backend" "lw2-login"))
 			     (:file "routes")
-			     (:file "resources" :depends-on ("config-package" "sites" "context"))
+			     (:file "resources" :depends-on ("config-package" "utils" "sites" "context"))
                              (:file "sites" :depends-on ("utils" "routes" "backend-modules" "fonts-modules"))
 			     (:file "fonts-modules")
 			     (:file "fonts" :depends-on ("html-reader" "utils" "sites" "fonts-modules" "backend" "resources"))

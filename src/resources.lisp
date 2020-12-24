@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.resources
-  (:use #:cl #:lw2-viewer.config #:lw2.sites #:lw2.context)
+  (:use #:cl #:lw2-viewer.config #:lw2.utils #:lw2.sites #:lw2.context)
   (:export #:*page-resources* #:with-page-resources #:require-resource #:generate-versioned-link #:fonts-source-resources #:site-resources)
   (:recycle #:lw2-viewer))
 
@@ -34,8 +34,8 @@
 		   (list (gen-inner "dark" os t)
 			 (gen-inner nil os)))))
       (let* ((ua (hunchentoot:header-in* :user-agent))
-	     (theme (hunchentoot:cookie-in "theme"))
-	     (theme (if (and theme (> (length theme) 0)) theme))
+	     (theme (or (and *preview* (nonempty-string (hunchentoot:get-parameter "theme")))
+			(nonempty-string (hunchentoot:cookie-in "theme"))))
 	     (os (cond ((search "Windows" ua) "windows")
 		       ((search "Mac OS" ua) "mac")
 		       (t "linux"))))

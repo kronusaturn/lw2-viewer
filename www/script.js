@@ -2465,7 +2465,7 @@ function addCommentParentPopups() {
 					if(popupTarget.match(/#comment-/)) {
 						popupTarget = popupTarget.replace(/#comment-/, "/comment/");
 					}
-					// 'theme' attribute is not actually used, but is needed for proper caching
+					// 'theme' attribute is required for proper caching
 					popup.setAttribute("src", popupTarget + (popupTarget.match(/\?/) ? '&' : '?') + "format=preview&theme=" + (readCookie('theme') || 'default'));
 					popup.addClass("preview-popup");
 					
