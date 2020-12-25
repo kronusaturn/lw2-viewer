@@ -925,9 +925,11 @@ signaled condition to *HTML-OUTPUT*."
 	   (main-site-uri *current-site*)))))
       markdown))
 
-(defun redirect (uri &key (type :see-other))
+(defun redirect (uri &key (type :see-other) preserve-query)
   (setf (hunchentoot:return-code*) (ecase type (:see-other 303) (:permanent 301))
-	(hunchentoot:header-out "Location") uri))
+	(hunchentoot:header-out "Location") (if-let ((query (and preserve-query (hunchentoot:query-string*))))
+						    (quri:render-uri (quri:make-uri :defaults uri :query query))
+						    uri)))
 
 (defun main-site-redirect (uri &key (type :see-other))
   (redirect (quri:render-uri (quri:merge-uris uri (main-site-uri *current-site*))) :type type))
@@ -1058,10 +1060,10 @@ signaled condition to *HTML-OUTPUT*."
   (redirect (generate-item-link :post id) :type :permanent))
 
 (define-page view-post-lw1-link (:function #'match-lw1-link) ()
-  (redirect (convert-lw1-link (hunchentoot:request-uri*)) :type :permanent))
+  (redirect (convert-lw1-link (hunchentoot:script-name*)) :preserve-query t :type :permanent))
 
 (define-page view-post-ea1-link (:function #'match-ea1-link) ()
-  (redirect (convert-ea1-link (hunchentoot:request-uri*)) :type :permanent))
+  (redirect (convert-ea1-link (hunchentoot:script-name*)) :preserve-query t :type :permanent))
 
 (define-page view-post-lw2-slug-link (:function #'match-lw2-slug-link) ()
   (redirect (convert-lw2-slug-link (hunchentoot:request-uri*)) :type :see-other))
