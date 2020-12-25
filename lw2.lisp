@@ -727,7 +727,7 @@ signaled condition to *HTML-OUTPUT*."
 									(write-string "," stream))
 								      (format stream "<~A>;rel=~A~@[;type=~A~]~@[;as=~A~]~@[;~A~]" uri rel type as push-option)))
 						       (case type
-							 (:preconnect (unless push-option (output-link link "preconnect")))
+							 (:preconnect (output-link link "preconnect"))
 							 (:stylesheet (output-link link "preload" "text/css" "style" push-option))
 							 (:script (output-link link "preload" "text/javascript" "script" push-option)))))))))
 					   (when (> (length output) 0)
