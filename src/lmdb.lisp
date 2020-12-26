@@ -309,29 +309,44 @@
 (defun write-memoized-data (array size)
   ;; This is unsafe anyway thanks to mem-aref, and it's pretty speed-critical
   (declare (optimize (safety 0) (debug 0)))
-  (let ((out-stream *memoized-output-stream*))
-    (if *memoized-output-without-hyphens*
-	;; Filter out soft hyphens while writing to the output stream.
-	;; Thanks to UTF-8's prefix-free property, we don't need to decode characters to
-	;; do this, just search for the soft-hyphen byte sequence.
-	(let ((hyphen-bytes (load-time-value (string-to-octets (string #\SOFT_HYPHEN) :external-format :utf-8)))
-	      (hi 0))
-	  (declare (type fixnum hi))
+  (let ((out-stream *memoized-output-stream*)
+	(buffer (make-array 2048 :element-type '(unsigned-byte 8) :initial-element 0))
+	(buffer-index 0))
+    (declare (dynamic-extent buffer)
+	     (type (integer 0 2048) buffer-index))
+    (flet ((output-byte (byte)
+	     (setf (aref buffer buffer-index) byte)
+	     (incf buffer-index)
+	     (when (= buffer-index 2048)
+	       (write-sequence buffer out-stream)
+	       (setf buffer-index 0)))
+	   (flush-buffer ()
+	     (when (> buffer-index 0)
+	       (write-sequence buffer out-stream :end buffer-index)
+	       (setf buffer-index 0))))
+      (declare (dynamic-extent #'output-byte #'flush-buffer))
+      (if *memoized-output-without-hyphens*
+	  ;; Filter out soft hyphens while writing to the output stream.
+	  ;; Thanks to UTF-8's prefix-free property, we don't need to decode characters to
+	  ;; do this, just search for the soft-hyphen byte sequence.
+	  (let ((hyphen-bytes (load-time-value (string-to-octets (string #\SOFT_HYPHEN) :external-format :utf-8)))
+		(hi 0))
+	    (declare (type fixnum hi))
+	    (loop for i from 0 to (1- size)
+	       do (let ((in-byte (cffi:mem-aref array :unsigned-char i)))
+		    (if (= in-byte (aref hyphen-bytes hi))
+			(if (= (1+ hi) (length hyphen-bytes))
+			    (setf hi 0)
+			    (incf hi))
+			(progn
+			  (when (/= hi 0)
+			    (iter (for i from 0 below hi) (output-byte (aref hyphen-bytes i)))
+			    (setf hi 0))
+			  (output-byte in-byte))))))
+	  ;; In this case, keep the soft hyphens.
 	  (loop for i from 0 to (1- size)
-	     do (let ((in-byte (cffi:mem-aref array :unsigned-char i)))
-		  (if (= in-byte (aref hyphen-bytes hi))
-		      (if (= (1+ hi) (length hyphen-bytes))
-			  (setf hi 0)
-			  (incf hi))
-		      (progn
-			(when (/= hi 0)
-			  (write-sequence hyphen-bytes out-stream :end hi)
-			  (setf hi 0))
-			(write-byte in-byte out-stream))))))
-	;; In this case, keep the soft hyphens.
-	(loop for i from 0 to (1- size)
-	   do (write-byte (cffi:mem-aref array :unsigned-char i)
-			  out-stream))))
+	     do (output-byte (cffi:mem-aref array :unsigned-char i))))
+      (flush-buffer)))
   t)
 
 (defun make-lmdb-memoized-wrapper (db-name fn return-type)
