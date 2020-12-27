@@ -162,9 +162,9 @@
 		     <h1 class="sequence-chapter">(safe (format nil "~@[~A. ~]~A" number (clean-text-to-html title :hyphenation nil)))</h1>)
 		   (when subtitle
 		     <div class="sequence-subtitle">(clean-text-to-html subtitle)</div>)
-		   (with-html-stream-output
-		       (when html-body
-			 (let ((*memoized-output-stream* *html-output*)) (clean-html* html-body))))
+		   (with-html-stream-output (:stream stream)
+		     (when html-body
+		       (let ((*memoized-output-stream* stream)) (clean-html* html-body))))
 		 </div>)))
 	   (chapter-to-html (chapter)
 	     (alist-bind ((title (or string null))
@@ -541,87 +541,88 @@ signaled condition to *HTML-OUTPUT*."
 		    (when (eq (first ,resource) ,resource-type)
 		      (destructuring-bind ,args (rest ,resource)
 			,@body))))))
-    (let* ((session-token (hunchentoot:cookie-in "session-token"))
-	   (csrf-token (and session-token (make-csrf-token session-token)))
-	   (hide-nav-bars (truthy-string-p (hunchentoot:get-parameter "hide-nav-bars")))
-	   (preview *preview*)
-	   (page-resources (nreverse *page-resources*))
-	   (site-domain (site-domain *current-site*)))
-      (setf *page-resources* nil)
-      (write-string "<!DOCTYPE html><html lang=\"en-US\"><head>
+    (with-html-stream-output
+	(let* ((session-token (hunchentoot:cookie-in "session-token"))
+	       (csrf-token (and session-token (make-csrf-token session-token)))
+	       (hide-nav-bars (truthy-string-p (hunchentoot:get-parameter "hide-nav-bars")))
+	       (preview *preview*)
+	       (page-resources (nreverse *page-resources*))
+	       (site-domain (site-domain *current-site*)))
+	  (setf *page-resources* nil)
+	  (write-string "<!DOCTYPE html><html lang=\"en-US\"><head>
 <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
 <meta name=\"HandheldFriendly\" content=\"True\" />"
-		    out-stream)
-      (when site-domain
-	(write-string "<script>" out-stream)
-	(set-script-variables ("document.domain" site-domain))
-	(write-string "</script>" out-stream))
-      (unless preview
-	(write-string "<script>" out-stream)
-	(set-script-variables
-	 ("applicationServerKey" (get-vapid-public-key))
-	 ("loggedInUserId" (or (logged-in-userid) ""))
-	 ("loggedInUserDisplayName" (or (logged-in-username) ""))
-	 ("loggedInUserSlug" (or (logged-in-user-slug) ""))
-	 ("GW" (alist "useFancyFeatures" (not (typep *current-site* 'arbital-site))
-		      "secureCookies" (to-boolean (site-secure *current-site*))
-		      "csrfToken" csrf-token
-		      "assets" (alist "popup.svg" (generate-versioned-link "/assets/popup.svg"))
-		      "sites" (if site-domain
-				  (loop for site in *sites*
-				     when (let ((sd (site-domain site))) (and sd (string-equal sd site-domain)))
-				     collect (cons (site-host site) t))
-				  (alist (site-host *current-site*) t)))))
-	(for-resource-type (:inline-script script-text)
-			   (write-string ";" out-stream)
-			   (write-string script-text out-stream))
-	(write-string "</script>" out-stream)
-	(for-resource-type (:script uri)
-			   (format out-stream "<script src=\"~A\"></script>" uri))
-	(for-resource-type (:async-script uri)
-			   (format out-stream "<script src=\"~A\" async></script>" uri)))
-      (for-resource-type (:stylesheet uri &key media class)
-			 (format out-stream "<link rel=\"stylesheet\" href=\"~A\"~@[ media=\"~A\"~]~@[ class=\"~A\"~]>" uri media class))
-      (generate-fonts-html-headers (site-fonts-source *current-site*))
-      (format out-stream "<link rel=\"shortcut icon\" href=\"~A\">"
-	      (generate-versioned-link "/assets/favicon.ico"))
-      (format out-stream "<title>~@[~A - ~]~A</title>~@[<meta name=\"description\" content=\"~A\">~]~@[<meta name=\"robots\" content=\"~A\">~]"
-	      (if title (encode-entities title))
-	      (site-title *current-site*)
-	      description
-	      robots)
-      (unless preview
-	(when title
-	  <meta property="og:title" content=title>)
-	(when social-description
-	  <meta property="og:description" content=social-description>
-	  <meta property="og:type" content="article">))
-      (unless (logged-in-userid)
-	<style>button.vote { display: none }</style>)
-      (when *memoized-output-without-hyphens*
-	;; The browser has been detected as having bugs related to soft-hyphen characters.
-	;; But there is some hope that it could still do hyphenation by itself.
-	<style>.body-text { hyphens: auto }</style>)
-      (when preview
-	(format out-stream "<base target='_top'>"))
-      (when extra-head (funcall extra-head))
-      (format out-stream "</head>")
-      (unwind-protect
-	   (progn
-	     (format out-stream "<body class=\"theme-~A\"><div id=\"content\"~@[ class=\"~{~A~^ ~}\"~]>"
-		     (let ((theme (hunchentoot:cookie-in "theme")))
-		       (if (and theme (> (length theme) 0))
-			   theme
-			   "default"))
-		     (list-cond (content-class content-class)
-				(hide-nav-bars "no-nav-bars")
-				(preview "preview")))
-	     (unless (or hide-nav-bars preview)
-	       (nav-bar-to-html out-stream "nav-bar-top" (or current-uri (replace-query-params (hunchentoot:request-uri*) "offset" nil "sort" nil))))
-	     (write-string "<script> </script>" out-stream)
-	     (force-output out-stream)
-	     (funcall fn))
-	(format out-stream "</div></body></html>")))))
+			out-stream)
+	  (when site-domain
+	    (write-string "<script>" out-stream)
+	    (set-script-variables ("document.domain" site-domain))
+	    (write-string "</script>" out-stream))
+	  (unless preview
+	    (write-string "<script>" out-stream)
+	    (set-script-variables
+	     ("applicationServerKey" (get-vapid-public-key))
+	     ("loggedInUserId" (or (logged-in-userid) ""))
+	     ("loggedInUserDisplayName" (or (logged-in-username) ""))
+	     ("loggedInUserSlug" (or (logged-in-user-slug) ""))
+	     ("GW" (alist "useFancyFeatures" (not (typep *current-site* 'arbital-site))
+			  "secureCookies" (to-boolean (site-secure *current-site*))
+			  "csrfToken" csrf-token
+			  "assets" (alist "popup.svg" (generate-versioned-link "/assets/popup.svg"))
+			  "sites" (if site-domain
+				      (loop for site in *sites*
+					 when (let ((sd (site-domain site))) (and sd (string-equal sd site-domain)))
+					 collect (cons (site-host site) t))
+				      (alist (site-host *current-site*) t)))))
+	    (for-resource-type (:inline-script script-text)
+			       (write-string ";" out-stream)
+			       (write-string script-text out-stream))
+	    (write-string "</script>" out-stream)
+	    (for-resource-type (:script uri)
+			       (format out-stream "<script src=\"~A\"></script>" uri))
+	    (for-resource-type (:async-script uri)
+			       (format out-stream "<script src=\"~A\" async></script>" uri)))
+	  (for-resource-type (:stylesheet uri &key media class)
+			     (format out-stream "<link rel=\"stylesheet\" href=\"~A\"~@[ media=\"~A\"~]~@[ class=\"~A\"~]>" uri media class))
+	  (generate-fonts-html-headers (site-fonts-source *current-site*))
+	  (format out-stream "<link rel=\"shortcut icon\" href=\"~A\">"
+		  (generate-versioned-link "/assets/favicon.ico"))
+	  (format out-stream "<title>~@[~A - ~]~A</title>~@[<meta name=\"description\" content=\"~A\">~]~@[<meta name=\"robots\" content=\"~A\">~]"
+		  (if title (encode-entities title))
+		  (site-title *current-site*)
+		  description
+		  robots)
+	  (unless preview
+	    (when title
+	      <meta property="og:title" content=title>)
+	    (when social-description
+	      <meta property="og:description" content=social-description>
+	      <meta property="og:type" content="article">))
+	  (unless (logged-in-userid)
+	    <style>button.vote { display: none }</style>)
+	  (when *memoized-output-without-hyphens*
+	    ;; The browser has been detected as having bugs related to soft-hyphen characters.
+	    ;; But there is some hope that it could still do hyphenation by itself.
+	    <style>.body-text { hyphens: auto }</style>)
+	  (when preview
+	    (format out-stream "<base target='_top'>"))
+	  (when extra-head (funcall extra-head))
+	  (format out-stream "</head>")
+	  (unwind-protect
+	       (progn
+		 (format out-stream "<body class=\"theme-~A\"><div id=\"content\"~@[ class=\"~{~A~^ ~}\"~]>"
+			 (let ((theme (hunchentoot:cookie-in "theme")))
+			   (if (and theme (> (length theme) 0))
+			       theme
+			       "default"))
+			 (list-cond (content-class content-class)
+				    (hide-nav-bars "no-nav-bars")
+				    (preview "preview")))
+		 (unless (or hide-nav-bars preview)
+		   (nav-bar-to-html out-stream "nav-bar-top" (or current-uri (replace-query-params (hunchentoot:request-uri*) "offset" nil "sort" nil))))
+		 (write-string "<script> </script>" out-stream)
+		 (force-output out-stream)
+		 (funcall fn))
+	    (format out-stream "</div></body></html>"))))))
 
 (defun replace-query-params (uri &rest params)
   (let* ((quri (quri:uri uri))
@@ -1188,7 +1189,7 @@ signaled condition to *HTML-OUTPUT*."
 		    (when-let (canonical-source (and (not comment-id)
 						     (cdr (assoc :canonical-source post))))
 			      <link rel="canonical" href=canonical-source>)
-		    <script>postId=(with-html-stream-output (json:encode-json post-id *html-output*))</script>
+		    <script>postId=(with-html-stream-output (:stream stream) (json:encode-json post-id stream))</script>
 		    <script>alignmentForumPost=(if (cdr (assoc :af post)) "true" "false")</script>)
 		  (retrieve-individual-comment (comment-thread-type)
 		    (let* ((comments (case comment-thread-type
@@ -1460,7 +1461,7 @@ signaled condition to *HTML-OUTPUT*."
           </span>
         </div>)
       (when html
-	<div class="tag-description body-text">(with-html-stream-output (let ((*memoized-output-stream* *html-output*)) (clean-html* html)))</div>))))
+	<div class="tag-description body-text">(with-html-stream-output (:stream stream) (let ((*memoized-output-stream* stream)) (clean-html* html)))</div>))))
 
 (defun tag-list-to-html (tags)
   <ul class="tag-list">
@@ -1690,8 +1691,8 @@ signaled condition to *HTML-OUTPUT*."
 						  </div>
 						  (when-let (html-bio (cdr (assoc :html-bio user-info)))
 						    <div class="user-bio body-text">
-						      (with-html-stream-output
-						        (let ((*memoized-output-stream* *html-output*))
+						      (with-html-stream-output (:stream stream)
+						        (let ((*memoized-output-stream* stream))
 							  (clean-html* html-bio)))
 						    </div>))
 						(sublevel-nav-to-html `(:all :posts :comments

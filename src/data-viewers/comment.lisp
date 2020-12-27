@@ -123,14 +123,14 @@
 							     (encode-entities
 							      (or (markdown-source :comment comment-id html-body)
 								  html-body)))))>
-		(with-html-stream-output
+		(with-html-stream-output (:stream stream)
 		    (if post-id
 			(let ((*before-clean-hook* (lambda () (clear-backlinks post-id comment-id)))
 			      (*link-hook* (lambda (link)
 					     (add-backlink link post-id comment-id)))
-			      (lw2.lmdb:*memoized-output-stream* out-stream))
+			      (lw2.lmdb:*memoized-output-stream* stream))
 			  (clean-html* html-body))
-			(let ((lw2.lmdb:*memoized-output-stream* out-stream))
+			(let ((lw2.lmdb:*memoized-output-stream* stream))
 			  (clean-html* html-body))))
 	      </div>
 	      (when post-id (backlinks-to-html (get-backlinks post-id comment-id) (format nil "~A-~A" post-id comment-id)))

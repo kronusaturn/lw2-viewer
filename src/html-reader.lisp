@@ -29,15 +29,23 @@
     (((or plump:invalid-xml-character plump:discouraged-xml-character) #'abort))
     (plump:encode-entities (princ-to-string text) stream))))
 
-(defmacro with-html-stream-output (&body body)
-  `(let ((html-output *html-output*))
-     (declare (ignorable html-output))
-     ,@body
-     nil))
+(trivial-cltl2:define-declaration html-output (decl env) (declare (ignore decl env)) (values :declare '(html-output . html-output)))
+
+(defmacro with-html-stream-output (&environment env &body body)
+  (let ((body (if (and (consp (first body)) (eq (first (first body)) :stream))
+		  `((let ((,(second (first body)) html-output)) ,@(rest body)))
+		  body)))
+    (if (trivial-cltl2:declaration-information 'html-output env)
+	`(progn ,@body nil)
+	`(let ((html-output *html-output*))
+	   (declare (ignorable html-output))
+	   ,@body
+	   nil))))
 
 (defun process-html-stream-output-forms (forms)
   (iter (for form in forms)
 	(collect (trivia:match form
+			       ((list* :stream _) nil)
 			       ((list* (or 'write-string 'princ) string _) `(ps:chain html-output (push ,string)))
 			       ((list* 'encode-entities _) form)
 			       ((list* 'with-html-stream-output forms) `(progn ,@(process-html-stream-output-forms forms)))
@@ -86,7 +94,7 @@
 				   `((encode-entities (format nil ,@object) html-output)))))
 		     ((and (consp object) (eq (first object) 'with-html-stream-output))
 		      (flush-output)
-		      (appendf out-body (rest object)))
+		      (appendf out-body (list object)))
 		     ((and (constantp object) (or (stringp object) (numberp object)))
 		      (output-strings (princ-to-string (eval object))))
 		     (t

@@ -121,11 +121,11 @@
 	    <div class="coauthors">
 	      (emit-author user-id)
 	      (do ((remaining-coauthors coauthors (rest remaining-coauthors))) ((not remaining-coauthors))
-		(with-html-stream-output
-		    (write-string
-		     (cond ((second remaining-coauthors) ", ")
-			   (t " and "))
-		     *html-output*))
+		(with-html-stream-output (:stream stream)
+		  (write-string
+		   (cond ((second remaining-coauthors) ", ")
+			 (t " and "))
+		   stream))
 		(emit-author (cdr (assoc :--id (first remaining-coauthors)))))
 	    </div>
 	    (emit-author user-id)))
@@ -213,11 +213,11 @@
 	</div>))
       <div class="body-text post-body">
         (if url <p><a class="link-post-link" href=(convert-any-link (string-trim " " url))>Link post</a></p>)
-	(with-html-stream-output
+	(with-html-stream-output (:stream stream)
 	  (let ((*before-clean-hook* (lambda () (clear-backlinks post-id)))
 		(*link-hook* (lambda (link) (add-backlink link post-id)))
-		  (lw2.lmdb:*memoized-output-stream* *html-output*))
-	      (clean-html* (or html-body "") :with-toc t :post-id post-id) *html-output*))
+		(lw2.lmdb:*memoized-output-stream* stream))
+	    (clean-html* (or html-body "") :with-toc t :post-id post-id)))
       </div>
       (backlinks-to-html (get-backlinks post-id) post-id)
       (with-html-stream-output (post-meta-to-html post :body nil :bottom))
