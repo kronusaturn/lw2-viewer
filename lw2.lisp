@@ -523,7 +523,7 @@ signaled condition to *HTML-OUTPUT*."
 
 (defmacro set-script-variables (&rest clauses)
   (alexandria:with-gensyms (out-stream name value)
-    `(let ((,out-stream *html-output*))
+    `(with-html-stream-output (:stream ,out-stream)
        ,.(loop for clause in clauses
 	    collect (destructuring-bind (name-form value-form) clause
 		      `(let ((,name ,name-form)
