@@ -8,7 +8,8 @@
 
 (defun city-hash-128-vector (data)
   (let ((array (make-array 16 :element-type '(unsigned-byte 8))))
-    (multiple-value-bind (r1 r2) (city-hash:city-hash-128 data)
+    (multiple-value-bind (r1 r2) (city-hash:city-hash-128
+				  (coerce data '(simple-array (unsigned-byte 8) (*))))
       (setf (nibbles:ub64ref/be array 0) r1
 	    (nibbles:ub64ref/be array 8) r2))
     array))
