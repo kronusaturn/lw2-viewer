@@ -2555,8 +2555,12 @@ function addCommentParentPopups() {
 						if(overElement === linkTag || overElement === popup
 						   || (event.clientX < popup.getBoundingClientRect().left
 						       && event.movementX >= 0)) {
-							if(overElement !== linkTag && overElement !== popup && overElement['createPreviewPopup']) {
-								mousePauseTimeout = setTimeout(overElement.createPreviewPopup, 150);
+							if(overElement !== linkTag && overElement !== popup) {
+								if(overElement['createPreviewPopup']) {
+									mousePauseTimeout = setTimeout(overElement.createPreviewPopup, 150);
+								} else {
+									mousePauseTimeout = setTimeout(() => removePreviewPopup(currentPreviewPopup), 500);
+								}
 							}
 						} else {
 							removePreviewPopup(currentPreviewPopup);
