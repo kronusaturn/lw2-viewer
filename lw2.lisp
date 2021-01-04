@@ -1473,17 +1473,24 @@ signaled condition to *HTML-OUTPUT*."
   </ul>)
 
 (define-component view-tag (slug)
-  (:http-args ())
-  (let ((tag (first (lw2-graphql-query (lw2-query-string :tag :list (alist :view "tagBySlug" :slug slug) :context :body))))
-	(posts (get-tag-posts slug)))
+  (:http-args ((sort :default :relevant :member '(:relevant :new :old))))
+  (let* ((tag (first (lw2-graphql-query (lw2-query-string :tag :list (alist :view "tagBySlug" :slug slug) :context :body))))
+	 (posts (get-tag-posts slug))
+	 (posts (if (eq sort :relevant) posts (sort-items posts sort))))
     (schema-bind (:tag tag :auto :context :body)
       (renderer ()
 	(view-items-index posts
 			  :title (format nil "~A tag" name)
 			  :top-nav (lambda ()
 				     (page-toolbar-to-html :title name :rss (not wiki-only))
-				     (tag-to-html tag))
-			  :content-class "tag-index-page"
+				     (tag-to-html tag)
+		                     (when posts
+				       (sublevel-nav-to-html '(:relevant :new :old)
+							     sort
+							     :default :relevant
+							     :param-name "sort"
+							     :extra-class "sort")))
+			  :content-class "index-page tag-index-page"
 			  :alternate-html (lambda ()
 					    (unless wiki-only
 					      (write-index-items-to-html *html-output* posts))

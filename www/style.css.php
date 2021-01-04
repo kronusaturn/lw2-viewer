@@ -1346,7 +1346,7 @@ h1.listing + .post-meta .read-time {
 }
 
 #content.tag-index-page .tag-description {
-	margin: 1em 0 -1em;
+	margin: 1em 0 0;
 }
 
 section {
