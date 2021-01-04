@@ -1484,7 +1484,7 @@ signaled condition to *HTML-OUTPUT*."
 			  :top-nav (lambda ()
 				     (page-toolbar-to-html :title name :rss (not wiki-only))
 				     (tag-to-html tag)
-		                     (when posts
+		                     (when (and posts (not *preview*))
 				       (sublevel-nav-to-html '(:relevant :new :old)
 							     sort
 							     :default :relevant
