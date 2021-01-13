@@ -602,7 +602,7 @@ signaled condition to *HTML-OUTPUT*."
 	  (when *memoized-output-without-hyphens*
 	    ;; The browser has been detected as having bugs related to soft-hyphen characters.
 	    ;; But there is some hope that it could still do hyphenation by itself.
-	    <style>.body-text { hyphens: auto }</style>)
+	    <style>(progn ".body-text { hyphens: auto; -ms-hyphens: auto; -webkit-hyphens: auto; }")</style>)
 	  (when preview
 	    (format out-stream "<base target='_top'>"))
 	  (when extra-head (funcall extra-head))
@@ -805,10 +805,17 @@ signaled condition to *HTML-OUTPUT*."
 	  (let ((*current-user-slug* (and *current-userid* (get-user-slug *current-userid*)))
 		(*current-ignore-hash* (get-ignore-hash))
 		(*memoized-output-without-hyphens*
-		 ;; Soft hyphen characters mess up middle-click paste, so try to identify whether that exists on the user's platform.
-		 (let ((ua (hunchentoot:header-in* :user-agent)))
-		   (or (search "X11" ua)
-		       (search "Ubuntu" ua)))))
+		 ;; Soft hyphen characters mess up middle-click paste and screen readers, so try to identify whether they are necessary.
+		 ;; See https://caniuse.com/?search=hyphens
+		 (if-let ((ua (hunchentoot:header-in* :user-agent)))
+		   (regex-case ua
+		     (" Chrome/(\\d+)"
+		      (or (> (parse-integer (reg 0)) 87)
+			  (ppcre:scan "Macintosh|Android" ua)))
+		     (" Edge/(\\d+)"
+		      (> 19 (parse-integer (reg 0))))
+		     (t t))
+		   t)))
 	    (with-page-resources
 	      (catch 'abort-response
 		(handler-bind
