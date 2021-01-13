@@ -2395,6 +2395,9 @@ function removePreviewPopup(previewPopup) {
 	if(currentPreviewPopup.pointerListener)
 		window.removeEventListener("pointermove", previewPopup.pointerListener);
 
+	if(currentPreviewPopup.mouseoutListener)
+		document.body.removeEventListener("mouseout", currentPreviewPopup.mouseoutListener);
+
 	if(currentPreviewPopup.scrollListener)
 		window.removeEventListener("scroll", previewPopup.scrollListener);
 
@@ -2549,6 +2552,7 @@ function addCommentParentPopups() {
 						pointerY = event.clientY;
 
 						if(mousePauseTimeout) clearTimeout(mousePauseTimeout);
+						mousePauseTimeout = null;
 
 						let overElement = document.elementFromPoint(pointerX, pointerY);
 
@@ -2568,6 +2572,12 @@ function addCommentParentPopups() {
 						}
 					};
 					window.addEventListener("pointermove", currentPreviewPopup.pointerListener);
+
+					currentPreviewPopup.mouseoutListener = (event) => {
+						clearTimeout(mousePauseTimeout);
+						mousePauseTimeout = null;
+					}
+					document.body.addEventListener("mouseout", currentPreviewPopup.mouseoutListener);
 
 					currentPreviewPopup.scrollListener = (event) => {
 						let overElement = document.elementFromPoint(pointerX, pointerY);
