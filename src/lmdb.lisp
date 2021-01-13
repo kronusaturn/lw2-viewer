@@ -308,7 +308,8 @@
 
 (defun write-memoized-data (array size)
   ;; This is unsafe anyway thanks to mem-aref, and it's pretty speed-critical
-  (declare (optimize (safety 0) (debug 0)))
+  (declare (optimize (safety 0) (debug 0))
+	   (type (and fixnum (integer 0)) size))
   (let ((out-stream *memoized-output-stream*)
 	(buffer (make-array 2048 :element-type '(unsigned-byte 8) :initial-element 0))
 	(buffer-index 0))
@@ -331,7 +332,7 @@
 	  ;; do this, just search for the soft-hyphen byte sequence.
 	  (let ((hyphen-bytes (load-time-value (string-to-octets (string #\SOFT_HYPHEN) :external-format :utf-8)))
 		(hi 0))
-	    (declare (type fixnum hi))
+	    (declare (type (unsigned-byte 8) hi))
 	    (loop for i from 0 to (1- size)
 	       do (let ((in-byte (cffi:mem-aref array :unsigned-char i)))
 		    (if (= in-byte (aref hyphen-bytes hi))
