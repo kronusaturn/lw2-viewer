@@ -810,9 +810,11 @@ signaled condition to *HTML-OUTPUT*."
 		 (if-let ((ua (hunchentoot:header-in* :user-agent)))
 		   (regex-case ua
 		     (" Chrome/(\\d+)"
+		      (declare (regex-groups-min 1))
 		      (or (> (parse-integer (reg 0)) 87)
 			  (ppcre:scan "Macintosh|Android" ua)))
 		     (" Edge/(\\d+)"
+		      (declare (regex-groups-min 1))
 		      (> 19 (parse-integer (reg 0))))
 		     (t t))
 		   t)))

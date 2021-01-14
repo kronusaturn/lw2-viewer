@@ -6,6 +6,7 @@
 	   #:dynamic-let #:dynamic-let* #:dynamic-flet #:dynamic-labels
 	   #:get-unix-time #:as-timestamp #:timerange
 	   #:substring #:nonempty-string
+	   #:regex-groups-min
 	   #:regex-replace-body #:regex-case #:reg #:match
 	   #:to-boolean #:nonzero-number-p #:truthy-string-p
 	   #:firstn #:map-plist #:filter-plist #:alist-bind
@@ -152,14 +153,20 @@
   (when (and (stringp obj) (> (length obj) 0))
     obj))
 
+(trivial-cltl2:define-declaration regex-groups-min (decl env) (declare (ignore env)) (values :declare (cons 'regex-groups-min (second decl))))
+
 (defmacro with-regex-accessors (&body body)
   `(let ((reg-count (length reg-starts)))
-     (labels ((reg (n) (when (> reg-count n)
-			 (when-let ((start (aref reg-starts n)))
-				   (substring target-string start (aref reg-ends n)))))
+     (labels ((dynamic-reg (n) (when (> reg-count n)
+				 (when-let ((start (aref reg-starts n)))
+					   (substring target-string start (aref reg-ends n)))))
 	      (match () (substring target-string match-start match-end)))
-       (declare (dynamic-extent #'reg #'match))
-       ,@body)))
+       (declare (dynamic-extent #'dynamic-reg #'match))
+       (macrolet ((reg (n &environment env) (let ((static-reg-count (trivial-cltl2:declaration-information 'regex-groups-min env)))
+					      (if (and static-reg-count (< n static-reg-count))
+						  `(substring target-string (aref reg-starts ,n) (aref reg-ends ,n))
+						  `(dynamic-reg ,n)))))
+	 ,@body))))
 
 (defmacro regex-replace-body ((regex target &rest args) &body body)
   `(ppcre:regex-replace-all
