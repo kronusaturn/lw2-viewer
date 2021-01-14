@@ -1764,10 +1764,7 @@ signaled condition to *HTML-OUTPUT*."
         (redirect link)
         (multiple-value-bind (tags posts comments) (lw2-search-query q)
 	  (let ((tags (map 'list (lambda (tag)
-				   (let ((description (cdr (assoc :description tag))))
-				     (alist* :----typename "Tag"
-					     :description (alist :html (nth-value 1 (cl-markdown:markdown description :stream nil)))
-					     tag)))
+				   (alist* :----typename "Tag" tag))
 			   tags)))
 	    (view-items-index (nconc
 			       (map 'list (lambda (post) (if (cdr (assoc :comment-count post)) post (alist* :comment-count 0 post))) posts)
