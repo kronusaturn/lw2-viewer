@@ -13,7 +13,7 @@
 	#:lw2.data-viewers.comment
 	#:lw2.client-script
 	#:lw2.resources)
-  (:import-from #:alexandria #:ensure-list #:when-let #:if-let #:alist-hash-table)
+  (:import-from #:alexandria #:with-gensyms #:ensure-list #:when-let #:if-let #:alist-hash-table)
   (:import-from #:collectors #:with-collector)
   (:import-from #:ppcre #:regex-replace-all)
   (:unintern
@@ -521,8 +521,24 @@ signaled condition to *HTML-OUTPUT*."
 			   class text :title description))))
     (format out-stream "</nav>")))
 
+(defmacro with-open-tag ((tag-name) &body body)
+  (with-gensyms (out-stream)
+    `(with-html-stream-output (:stream ,out-stream)
+       (let ((tag-open-p nil))
+	 (labels ((begin-tag ()
+		    (unless tag-open-p
+		      (write-string ,(format nil "<~A>" tag-name) ,out-stream)
+		      (setf tag-open-p t)))
+		  (write-tag-content (string)
+		    (begin-tag)
+		    (write-string string ,out-stream)))
+	   (declare (dynamic-extent #'begin-tag #'write-tag-content))
+	   ,@body)
+	 (when tag-open-p
+	   (write-string ,(format nil "</~A>" tag-name) ,out-stream))))))
+
 (defmacro set-script-variables (&rest clauses)
-  (alexandria:with-gensyms (out-stream name value)
+  (with-gensyms (out-stream name value)
     `(with-html-stream-output (:stream ,out-stream)
        ,.(loop for clause in clauses
 	    collect (destructuring-bind (name-form value-form) clause
@@ -536,7 +552,7 @@ signaled condition to *HTML-OUTPUT*."
 
 (defun html-body (out-stream fn &key title description social-description current-uri content-class robots extra-head)
   (macrolet ((for-resource-type ((resource-type &rest args) &body body)
-	       (alexandria:with-gensyms (resource)
+	       (with-gensyms (resource)
 		 `(dolist (,resource page-resources)
 		    (when (eq (first ,resource) ,resource-type)
 		      (destructuring-bind ,args (rest ,resource)
@@ -553,30 +569,30 @@ signaled condition to *HTML-OUTPUT*."
 <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
 <meta name=\"HandheldFriendly\" content=\"True\" />"
 			out-stream)
-	  (when site-domain
-	    (write-string "<script>" out-stream)
-	    (set-script-variables ("document.domain" site-domain))
-	    (write-string "</script>" out-stream))
+	  (with-open-tag ("script")
+	    (when site-domain
+	      (begin-tag)
+	      (set-script-variables ("document.domain" site-domain)))
+	    (unless preview
+	      (begin-tag)
+	      (set-script-variables
+	       ("applicationServerKey" (get-vapid-public-key))
+	       ("loggedInUserId" (or (logged-in-userid) ""))
+	       ("loggedInUserDisplayName" (or (logged-in-username) ""))
+	       ("loggedInUserSlug" (or (logged-in-user-slug) ""))
+	       ("GW" (alist "useFancyFeatures" (not (typep *current-site* 'arbital-site))
+			    "secureCookies" (to-boolean (site-secure *current-site*))
+			    "csrfToken" csrf-token
+			    "assets" (alist "popup.svg" (generate-versioned-link "/assets/popup.svg"))
+			    "sites" (if site-domain
+					(loop for site in *sites*
+					   when (let ((sd (site-domain site))) (and sd (string-equal sd site-domain)))
+					   collect (cons (site-host site) t))
+					(alist (site-host *current-site*) t)))))
+	      (for-resource-type (:inline-script script-text)
+				 (write-string ";" out-stream)
+				 (write-string script-text out-stream))))
 	  (unless preview
-	    (write-string "<script>" out-stream)
-	    (set-script-variables
-	     ("applicationServerKey" (get-vapid-public-key))
-	     ("loggedInUserId" (or (logged-in-userid) ""))
-	     ("loggedInUserDisplayName" (or (logged-in-username) ""))
-	     ("loggedInUserSlug" (or (logged-in-user-slug) ""))
-	     ("GW" (alist "useFancyFeatures" (not (typep *current-site* 'arbital-site))
-			  "secureCookies" (to-boolean (site-secure *current-site*))
-			  "csrfToken" csrf-token
-			  "assets" (alist "popup.svg" (generate-versioned-link "/assets/popup.svg"))
-			  "sites" (if site-domain
-				      (loop for site in *sites*
-					 when (let ((sd (site-domain site))) (and sd (string-equal sd site-domain)))
-					 collect (cons (site-host site) t))
-				      (alist (site-host *current-site*) t)))))
-	    (for-resource-type (:inline-script script-text)
-			       (write-string ";" out-stream)
-			       (write-string script-text out-stream))
-	    (write-string "</script>" out-stream)
 	    (for-resource-type (:script uri)
 			       (format out-stream "<script src=\"~A\"></script>" uri))
 	    (for-resource-type (:async-script uri)
@@ -597,12 +613,13 @@ signaled condition to *HTML-OUTPUT*."
 	    (when social-description
 	      <meta property="og:description" content=social-description>
 	      <meta property="og:type" content="article">))
-	  (unless (logged-in-userid)
-	    <style>button.vote { display: none }</style>)
-	  (when *memoized-output-without-hyphens*
-	    ;; The browser has been detected as having bugs related to soft-hyphen characters.
-	    ;; But there is some hope that it could still do hyphenation by itself.
-	    <style>(progn ".body-text { hyphens: auto; -ms-hyphens: auto; -webkit-hyphens: auto; }")</style>)
+	  (with-open-tag ("style")
+	    (unless (logged-in-userid)
+	      (write-tag-content "button.vote { display: none }"))
+	    (when *memoized-output-without-hyphens*
+	      ;; The browser has been detected as having bugs related to soft-hyphen characters.
+	      ;; But there is some hope that it could still do hyphenation by itself.
+	      (write-tag-content ".body-text { hyphens: auto; -ms-hyphens: auto; -webkit-hyphens: auto; }")))
 	  (when preview
 	    (format out-stream "<base target='_top'>"))
 	  (when extra-head (funcall extra-head))
@@ -694,10 +711,10 @@ signaled condition to *HTML-OUTPUT*."
 	  (make-hash-table :test 'equal)))
 
 (defmacro with-outputs ((out-stream) &body body) 
-  (alexandria:with-gensyms (stream-sym) 
-			   (let ((out-body (map 'list (lambda (x) `(princ ,x ,stream-sym)) body)))
-			     `(let ((,stream-sym ,out-stream)) 
-				,.out-body)))) 
+  (with-gensyms (stream-sym) 
+    (let ((out-body (map 'list (lambda (x) `(princ ,x ,stream-sym)) body)))
+      `(let ((,stream-sym ,out-stream)) 
+	 ,.out-body)))) 
 
 (defun call-with-emit-page (out-stream fn &key title description social-description current-uri content-class (return-code 200) robots (pagination (pagination-nav-bars)) top-nav extra-head)
   (declare (ignore return-code))
@@ -945,7 +962,7 @@ signaled condition to *HTML-OUTPUT*."
   (redirect (quri:render-uri (quri:merge-uris uri (main-site-uri *current-site*))) :type type))
 
 (defmacro request-method (&body method-clauses)
-  (alexandria:with-gensyms (request-method)
+  (with-gensyms (request-method)
     `(let ((,request-method (hunchentoot:request-method*)))
        (cond
 	 ,.(loop for method-body in method-clauses
@@ -973,7 +990,7 @@ signaled condition to *HTML-OUTPUT*."
               (let ((fn `(lambda (r) (ppcre:scan-to-strings ,specifier-body (hunchentoot:request-uri r)))))
                 (values fn
                         (lambda (body)
-                          (alexandria:with-gensyms (result-vector)
+                          (with-gensyms (result-vector)
                             `(let ((,result-vector (nth-value 1 (funcall ,fn hunchentoot:*request*))))
                                (declare (type simple-vector ,result-vector)) 
                                (let
