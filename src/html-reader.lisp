@@ -29,7 +29,7 @@
     (((or plump:invalid-xml-character plump:discouraged-xml-character) #'abort))
     (plump:encode-entities (princ-to-string text) stream))))
 
-(trivial-cltl2:define-declaration html-output (decl env) (declare (ignore decl env)) (values :declare '(html-output . html-output)))
+(trivial-cltl2:define-declaration html-output (decl env) (declare (ignore env)) (values :declare (cons 'html-output (second decl))))
 
 (defmacro with-html-stream-output (&environment env &body body)
   (let ((body (if (and (consp (first body)) (eq (first (first body)) :stream))
@@ -38,7 +38,8 @@
     (if (trivial-cltl2:declaration-information 'html-output env)
 	`(progn ,@body nil)
 	`(let ((html-output *html-output*))
-	   (declare (ignorable html-output))
+	   (declare (ignorable html-output)
+		    (html-output html-output))
 	   ,@body
 	   nil))))
 
