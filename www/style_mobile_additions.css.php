@@ -104,6 +104,7 @@
 #theme-selector {
 	display: flex;
 	flex-flow: column;
+	background-color: #fff;
 	width: calc(100vw - 20px);
 	max-width: 360px;
 	padding: 0 0 3px 0;
@@ -143,6 +144,7 @@
 }
 #theme-selector button::after {
 	content: attr(data-theme-description);
+	color: #000;
 	white-space: nowrap;
 	position: absolute;
 	text-align: left;
