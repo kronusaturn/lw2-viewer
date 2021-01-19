@@ -32,9 +32,10 @@
 (trivial-cltl2:define-declaration html-output (decl env) (declare (ignore env)) (values :declare (cons 'html-output (second decl))))
 
 (defmacro with-html-stream-output (&environment env &body body)
-  (let ((body (if (and (consp (first body)) (eq (first (first body)) :stream))
-		  `((let ((,(second (first body)) html-output)) ,@(rest body)))
-		  body)))
+  (let ((body (trivia:match (first body)
+			    ((list :stream stream-var)
+			     `((let ((,stream-var html-output)) ,@(rest body))))
+			    (_ body))))
     (if (trivial-cltl2:declaration-information 'html-output env)
 	`(progn ,@body nil)
 	`(let ((html-output *html-output*))
