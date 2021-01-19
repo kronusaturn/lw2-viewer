@@ -630,7 +630,7 @@
 		  (cond
 		    ((not (plump:attribute node "href"))
 		     (move-children-out-of-node node :keep t))
-		    ((and (ppcre:scan "https?://" (plump:text node))
+		    ((and (ppcre:scan "^\s*https?://" (plump:text node))
 			  (not (find #\HORIZONTAL_ELLIPSIS (plump:text node))))
 		     (flatten-element node))
 		    (t (tagbody start
