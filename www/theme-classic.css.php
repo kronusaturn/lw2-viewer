@@ -1908,9 +1908,26 @@ select {
 	}
 }
 @media only screen and (max-width: 1160px) {
+	#theme-selector {
+		background-color: #d8d8d8;
+		box-shadow: 
+			0 0 0 1px #999,
+			0 0 0 2px transparent;
+	}
 	#theme-selector:hover::after {
-		background-color: #999;
-		width: calc(6em - 13px);
+		width: calc(6em - 9px);
+		height: calc(100% - 5px);
+		top: 3px;
+		left: 100%;
+	}	
+	#text-size-adjustment-ui button {
+		background-color: #ddd;
+	}
+	#text-size-adjustment-ui button:hover {
+		background-color: #eee;
+	}
+	#theme-tweaker-toggle button {
+		background-color: #ddd;
 	}
 }
 @media only screen and (max-width: 1080px) {
@@ -1951,29 +1968,6 @@ select {
 			0 0 0 2px transparent;
 		border-radius: 6px;
 		overflow: hidden;
-	}
-}
-@media only screen and (max-width: 1000px) {
-	#theme-selector {
-		background-color: #d8d8d8;
-		box-shadow: 
-			0 0 0 1px #999,
-			0 0 0 2px transparent;
-	}
-	#theme-selector:hover::after {
-		width: calc(6em - 9px);
-		height: calc(100% - 5px);
-		top: 3px;
-		left: 100%;
-	}	
-	#text-size-adjustment-ui button {
-		background-color: #ddd;
-	}
-	#text-size-adjustment-ui button:hover {
-		background-color: #eee;
-	}
-	#theme-tweaker-toggle button {
-		background-color: #ddd;
 	}
 }
 

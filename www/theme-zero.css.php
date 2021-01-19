@@ -1645,7 +1645,7 @@ select {
 		border-radius: 8px;
 	}
 }
-@media only screen and (max-width: 1000px) {
+@media only screen and (max-width: 1160px) {
 	#theme-selector {
 		background-color: #eee;
 		box-shadow: 

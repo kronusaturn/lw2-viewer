@@ -4577,6 +4577,7 @@ li {
 #theme-selector {
 	display: flex;
 	flex-flow: column;
+	background-color: #fff;
 	width: calc(100vw - 20px);
 	max-width: 360px;
 	padding: 0 0 3px 0;
@@ -4616,6 +4617,7 @@ li {
 }
 #theme-selector button::after {
 	content: attr(data-theme-description);
+	color: #000;
 	white-space: nowrap;
 	position: absolute;
 	text-align: left;
@@ -7591,7 +7593,26 @@ select {
 	}
 }
 @media only screen and (max-width: 1160px) {
+	#theme-selector {
+		background-color: #eee;
+		box-shadow: 
+			0 0 0 1px #999,
+			0 0 0 2px transparent;
+	}
 	#theme-selector:hover::after {
+		background-color: #999;
+		width: calc(6em - 3px);
+		height: calc(100% - 5px);
+		top: 3px;
+		left: 100%;
+	}	
+	#text-size-adjustment-ui button {
+		background-color: #ddd;
+	}
+	#text-size-adjustment-ui button:hover {
+		background-color: #eee;
+	}
+	#theme-tweaker-toggle button {
 		background-color: #ddd;
 	}
 }
@@ -7633,30 +7654,6 @@ select {
 		background-color: #eee;
 		border-radius: 6px;
 		overflow: hidden;
-	}
-}
-@media only screen and (max-width: 1000px) {
-	#theme-selector {
-		background-color: #eee;
-		box-shadow: 
-			0 0 0 1px #999,
-			0 0 0 2px transparent;
-	}
-	#theme-selector:hover::after {
-		background-color: #999;
-		width: calc(6em - 3px);
-		height: calc(100% - 5px);
-		top: 3px;
-		left: 100%;
-	}	
-	#text-size-adjustment-ui button {
-		background-color: #ddd;
-	}
-	#text-size-adjustment-ui button:hover {
-		background-color: #eee;
-	}
-	#theme-tweaker-toggle button {
-		background-color: #ddd;
 	}
 }
 

@@ -1851,6 +1851,14 @@ input::selection {
 		bottom: 204px;
 		right: -30px;
 	}
+	#theme-tweaker-toggle {
+		left: -19px;
+	}
+	#quick-nav-ui,
+	#new-comment-nav-ui,
+	#new-comment-nav-ui + #hns-date-picker {
+		opacity: 1.0;
+	}
 }
 @media only screen and (max-width: 1080px) {
 	#text-size-adjustment-ui button {
@@ -1873,16 +1881,6 @@ input::selection {
 @media only screen and (max-width: 1020px) {
 	#hns-date-picker {
 		right: 15px;
-	}
-}
-@media only screen and (max-width: 1000px) {
-	#theme-tweaker-toggle {
-		left: -19px;
-	}
-	#quick-nav-ui,
-	#new-comment-nav-ui,
-	#new-comment-nav-ui + #hns-date-picker {
-		opacity: 1.0;
 	}
 }
 

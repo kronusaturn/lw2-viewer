@@ -4577,6 +4577,7 @@ li {
 #theme-selector {
 	display: flex;
 	flex-flow: column;
+	background-color: #fff;
 	width: calc(100vw - 20px);
 	max-width: 360px;
 	padding: 0 0 3px 0;
@@ -4616,6 +4617,7 @@ li {
 }
 #theme-selector button::after {
 	content: attr(data-theme-description);
+	color: #000;
 	white-space: nowrap;
 	position: absolute;
 	text-align: left;
@@ -7359,7 +7361,7 @@ select {
 		border-radius: 8px;
 	}
 }
-@media only screen and (max-width: 1000px) {
+@media only screen and (max-width: 1160px) {
 	#theme-selector {
 		background-color: #eee;
 		box-shadow: 
