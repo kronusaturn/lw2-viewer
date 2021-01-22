@@ -13,7 +13,7 @@
 	#:lw2.data-viewers.comment
 	#:lw2.client-script
 	#:lw2.resources)
-  (:import-from #:alexandria #:with-gensyms #:ensure-list #:when-let #:if-let #:alist-hash-table)
+  (:import-from #:alexandria #:with-gensyms #:once-only #:ensure-list #:when-let #:if-let #:alist-hash-table)
   (:import-from #:collectors #:with-collector)
   (:import-from #:ppcre #:regex-replace-all)
   (:unintern
@@ -28,7 +28,8 @@
     #:site-stylesheets #:site-inline-scripts #:site-scripts #:site-external-scripts #:site-head-elements
     #:unwrap-stream
     #:sort-comments
-    #:*html-head*)
+    #:*html-head*
+    #:with-open-tag)
   (:recycle #:lw2-viewer #:lw2.backend))
 
 (in-package #:lw2-viewer) 
@@ -521,21 +522,31 @@ signaled condition to *HTML-OUTPUT*."
 			   class text :title description))))
     (format out-stream "</nav>")))
 
-(defmacro with-open-tag ((tag-name) &body body)
-  (with-gensyms (out-stream)
-    `(with-html-stream-output (:stream ,out-stream)
-       (let ((tag-open-p nil))
-	 (labels ((begin-tag ()
-		    (unless tag-open-p
-		      (write-string ,(format nil "<~A>" tag-name) ,out-stream)
-		      (setf tag-open-p t)))
-		  (write-tag-content (string)
-		    (begin-tag)
-		    (write-string string ,out-stream)))
-	   (declare (dynamic-extent #'begin-tag #'write-tag-content))
-	   ,@body)
-	 (when tag-open-p
-	   (write-string ,(format nil "</~A>" tag-name) ,out-stream))))))
+(defun call-with-delimited-writer (begin between end fn)
+  (let (begun)
+    (flet ((delimit ()
+	     (if begun
+		 (funcall between)
+		 (funcall begin))
+	     (setf begun t)))
+      (declare (dynamic-extent #'delimit))
+      (funcall fn #'delimit)
+      (when begun (funcall end)))))
+
+(defmacro with-delimited-writer ((stream delimit &key begin between end) &body body)
+  (once-only (stream)
+    (flet ((as-writer-function (x)
+	     (typecase x
+	       (string `(lambda () (write-string ,x ,stream)))
+	       (t `(lambda () ,x)))))
+      `(dynamic-let ((begin-fn ,(as-writer-function begin))
+		     (between-fn ,(as-writer-function between))
+		     (end-fn ,(as-writer-function end))
+		     (fn (lambda (,delimit)
+			   (flet ((,delimit () (funcall ,delimit)))
+			     (declare (inline delimit))
+			     ,@body))))
+	 (call-with-delimited-writer begin-fn between-fn end-fn fn)))))
 
 (defmacro set-script-variables (&rest clauses)
   (with-gensyms (out-stream name value)
@@ -569,12 +580,12 @@ signaled condition to *HTML-OUTPUT*."
 <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
 <meta name=\"HandheldFriendly\" content=\"True\" />"
 			out-stream)
-	  (with-open-tag ("script")
+	  (with-delimited-writer (out-stream delimit :begin "<script>" :end "</script>")
 	    (when site-domain
-	      (begin-tag)
+	      (delimit)
 	      (set-script-variables ("document.domain" site-domain)))
 	    (unless preview
-	      (begin-tag)
+	      (delimit)
 	      (set-script-variables
 	       ("applicationServerKey" (get-vapid-public-key))
 	       ("loggedInUserId" (or (logged-in-userid) ""))
@@ -613,13 +624,15 @@ signaled condition to *HTML-OUTPUT*."
 	    (when social-description
 	      <meta property="og:description" content=social-description>
 	      <meta property="og:type" content="article">))
-	  (with-open-tag ("style")
+	  (with-delimited-writer (out-stream delimit :begin "<style>" :between #.(format nil "~%") :end "</style>")
 	    (unless (logged-in-userid)
-	      (write-tag-content "button.vote { display: none }"))
+	      (delimit)
+	      (write-string "button.vote { display: none }" out-stream))
 	    (when *memoized-output-without-hyphens*
 	      ;; The browser has been detected as having bugs related to soft-hyphen characters.
 	      ;; But there is some hope that it could still do hyphenation by itself.
-	      (write-tag-content ".body-text { hyphens: auto; -ms-hyphens: auto; -webkit-hyphens: auto; }")))
+	      (delimit)
+	      (write-string ".body-text { hyphens: auto; -ms-hyphens: auto; -webkit-hyphens: auto; }" out-stream)))
 	  (when preview
 	    (format out-stream "<base target='_top'>"))
 	  (when extra-head (funcall extra-head))
@@ -736,18 +749,19 @@ signaled condition to *HTML-OUTPUT*."
 	  (hunchentoot:return-code*) return-code
 	  (hunchentoot:header-out :link) (let ((output
 						(with-output-to-string (stream)
-						  (iter
-						   (for (type . args) in *page-resources*)
-						   (for link = (first args))
-						   (when (member type '(:preconnect :stylesheet :script))
-						     (dynamic-flet ((output-link (uri rel &optional type as push-option)
-								      (unless (first-time-p)
-									(write-string "," stream))
-								      (format stream "<~A>;rel=~A~@[;type=~A~]~@[;as=~A~]~@[;~A~]" uri rel type as push-option)))
-						       (case type
-							 (:preconnect (output-link link "preconnect"))
-							 (:stylesheet (output-link link "preload" "text/css" "style" push-option))
-							 (:script (output-link link "preload" "text/javascript" "script" push-option)))))))))
+						  (with-delimited-writer (stream delimit :between ",")
+						    (iter
+						     (for (type . args) in *page-resources*)
+						     (for link = (first args))
+						     (when (member type '(:preconnect :stylesheet :script))
+						       (flet ((output-link (uri rel &optional type as push-option)
+								(delimit)
+								(format stream "<~A>;rel=~A~@[;type=~A~]~@[;as=~A~]~@[;~A~]" uri rel type as push-option)))
+							 (declare (dynamic-extent #'output-link))
+							 (case type
+							   (:preconnect (output-link link "preconnect"))
+							   (:stylesheet (output-link link "preload" "text/css" "style" push-option))
+							   (:script (output-link link "preload" "text/javascript" "script" push-option))))))))))
 					   (when (> (length output) 0)
 					     output)))
     (unless push-option (set-cookie "push" "t" :max-age (* 4 60 60)))))
@@ -774,7 +788,7 @@ signaled condition to *HTML-OUTPUT*."
 	(:no-error (&rest x) (declare (ignore x)) (finish-output *html-output*))))))
 
 (defmacro emit-page ((out-stream &rest args &key (return-code 200) &allow-other-keys) &body body)
-  (alexandria:once-only (return-code)
+  (once-only (return-code)
     `(progn
        (set-default-headers ,return-code)
        (with-response-stream (,out-stream)
