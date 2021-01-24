@@ -777,7 +777,7 @@ signaled condition to *HTML-OUTPUT*."
       (setf *current-prefs* (remove key *current-prefs* :key #'car)))
   (set-cookie "prefs" (quri:url-encode (json:encode-json-to-string *current-prefs*))))
 
-(defmacro with-response-stream ((out-stream) &body body) `(call-with-response-stream (lambda (,out-stream) ,.body)))
+(defmacro with-response-stream ((out-stream) &body body) `(dynamic-flet ((fn (,out-stream) ,@body)) (call-with-response-stream #'fn)))
 
 (defun call-with-response-stream (fn)
   (unless (eq (hunchentoot:request-method*) :head)
@@ -792,9 +792,10 @@ signaled condition to *HTML-OUTPUT*."
     `(progn
        (set-default-headers ,return-code)
        (with-response-stream (,out-stream)
-         (call-with-emit-page ,out-stream
-                              (lambda () ,@body)
-                              ,@args)))))
+	 (dynamic-flet ((fn () ,@body))
+	   (call-with-emit-page ,out-stream
+				#'fn
+				,@args))))))
 
 (defun call-with-error-page (fn)
   (let* ((*current-auth-status*
@@ -875,7 +876,7 @@ signaled condition to *HTML-OUTPUT*."
 			 (funcall fn)))))))))))))
 
 (defmacro with-error-page (&body body)
-  `(call-with-error-page (lambda () ,@body)))
+  `(dynamic-flet ((fn () ,@body)) (call-with-error-page #'fn)))
 
 (defun output-form (out-stream method action id heading csrf-token fields button-label &key textarea end-html)
   (format out-stream "<form method=\"~A\" action=\"~A\" id=\"~A\"><h1>~A</h1>" method action id heading)
