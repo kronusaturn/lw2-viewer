@@ -15,9 +15,8 @@
   (push (list* type args) *page-resources*))
 
 (defun generate-versioned-link (file)
-  (let* ((filename (format nil "www~A" file))
-	 (stat (sb-posix:stat filename)))
-    (format nil "~A?v=~A" file (sb-posix:stat-mtime stat))))
+  (let* ((filename (format nil "www~A" file)))
+    (format nil "~A?v=~A" file (universal-time-to-unix (file-write-date filename)))))
 
 (defgeneric fonts-source-resources (site))
 

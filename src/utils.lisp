@@ -4,7 +4,7 @@
   (:export #:nalist #:nalist* #:alist #:alist*
 	   #:alist-without-null #:alist-without-null*
 	   #:dynamic-let #:dynamic-let* #:dynamic-flet #:dynamic-labels
-	   #:get-unix-time #:as-timestamp #:timerange
+	   #:universal-time-to-unix #:get-unix-time #:as-timestamp #:timerange
 	   #:substring #:nonempty-string
 	   #:regex-groups-min
 	   #:regex-replace-body #:regex-case #:reg #:match
@@ -105,8 +105,11 @@
 (defmacro dynamic-labels ((&rest clauses) &body body)
   (dynamic-let-inner 'labels t clauses body))
 
+(defun universal-time-to-unix (time)
+  (- time #.(encode-universal-time 0 0 0 1 1 1970 0)))
+
 (defun get-unix-time ()
-  (- (get-universal-time) #.(encode-universal-time 0 0 0 1 1 1970 0)))
+  (universal-time-to-unix (get-universal-time)))
 
 (defun as-timestamp (value)
   (etypecase value
