@@ -604,10 +604,13 @@ signaled condition to *HTML-OUTPUT*."
 				 (write-string ";" out-stream)
 				 (write-string script-text out-stream))))
 	  (unless preview
+	    (funcall lw2.resources::*script-tags* out-stream)
 	    (for-resource-type (:script uri)
 			       (format out-stream "<script src=\"~A\"></script>" uri))
+	    (funcall lw2.resources::*async-script-tags* out-stream)
 	    (for-resource-type (:async-script uri)
 			       (format out-stream "<script src=\"~A\" async></script>" uri)))
+	  (funcall lw2.resources::*style-tags* out-stream)
 	  (for-resource-type (:stylesheet uri &key media class)
 			     (format out-stream "<link rel=\"stylesheet\" href=\"~A\"~@[ media=\"~A\"~]~@[ class=\"~A\"~]>" uri media class))
 	  (generate-fonts-html-headers (site-fonts-source *current-site*))
@@ -743,28 +746,15 @@ signaled condition to *HTML-OUTPUT*."
   (hunchentoot:set-cookie key :value value :path path :max-age max-age :secure (site-secure *current-site*)))
 
 (defun set-default-headers (return-code)
-  (let ((push-option (if (hunchentoot:cookie-in "push")
-			 "nopush")))
-    (setf (hunchentoot:content-type*) "text/html; charset=utf-8"
-	  (hunchentoot:return-code*) return-code
-	  (hunchentoot:header-out :link) (let ((output
-						(with-output-to-string (stream)
-						  (with-delimited-writer (stream delimit :between ",")
-						    (iter
-						     (for (type . args) in *page-resources*)
-						     (for link = (first args))
-						     (when (member type '(:preconnect :stylesheet :script))
-						       (flet ((output-link (uri rel &optional type as push-option)
-								(delimit)
-								(format stream "<~A>;rel=~A~@[;type=~A~]~@[;as=~A~]~@[;~A~]" uri rel type as push-option)))
-							 (declare (dynamic-extent #'output-link))
-							 (case type
-							   (:preconnect (output-link link "preconnect"))
-							   (:stylesheet (output-link link "preload" "text/css" "style" push-option))
-							   (:script (output-link link "preload" "text/javascript" "script" push-option))))))))))
-					   (when (> (length output) 0)
-					     output)))
-    (unless push-option (set-cookie "push" "t" :max-age (* 4 60 60)))))
+  (setf (hunchentoot:content-type*) "text/html; charset=utf-8"
+	(hunchentoot:return-code*) return-code
+	(hunchentoot:header-out :link) (let ((output
+					      (with-output-to-string (stream)
+						(with-delimited-writer (stream delimit :between ",")
+						  (funcall lw2.resources::*link-header* stream delimit)))))
+					 (when (> (length output) 0)
+					   output)))
+  (unless lw2.resources::*push-option* (set-cookie "push" "t" :max-age (* 4 60 60))))
 
 (defun user-pref (key)
   (or (cdr (assoc key *current-prefs*))

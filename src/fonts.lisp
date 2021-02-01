@@ -10,8 +10,8 @@
 
 ;;;; google-fonts-source
 
-(defmethod fonts-source-resources ((fonts-source google-fonts-source))
-  nil)
+(defmethod call-with-fonts-source-resources ((fonts-source google-fonts-source) fn)
+  (funcall fn))
 
 (defmethod generate-fonts-html-headers ((fonts-source google-fonts-source))
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
@@ -62,10 +62,11 @@
 	      (update-obormot-fonts-async))
 	    (update-obormot-fonts))))))
 
-(defmethod fonts-source-resources ((fonts-source obormot-fonts-source))
+(defmethod call-with-fonts-source-resources ((fonts-source obormot-fonts-source) fn)
   (maybe-update-obormot-fonts)
-  (list (list :preconnect "https://fonts.greaterwrong.com/")
-	(list :stylesheet (generate-versioned-link "/fonts.css"))))
+  (with-resource-bindings ((:preconnect "https://fonts.greaterwrong.com/")
+			   (:style "/fonts.css"))
+    (funcall fn)))
 
 (defmethod generate-fonts-html-headers ((fonts-source obormot-fonts-source))
   nil) 
