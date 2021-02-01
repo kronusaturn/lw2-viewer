@@ -16,12 +16,10 @@
 (defparameter *push-option* nil)
 
 (defmacro with-page-resources (&body body)
-  `(let* ((*response-stage* :prelude)
-	  (*link-header* *link-header*)
+  `(let* ((*link-header* *link-header*)
 	  (*style-tags* *style-tags*)
 	  (*script-tags* *script-tags*)
 	  (*async-script-tags* *async-script-tags*)
-	  (*supplied-resources* (make-hash-table :test 'eq))
 	  (*push-option* (when (hunchentoot:cookie-in "push") "nopush"))
 	  (*page-resources* (site-resources *current-site*)))
      (dynamic-flet ((fn () ,@body))
