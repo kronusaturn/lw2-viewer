@@ -198,6 +198,10 @@ function togglePageScrolling(enable) {
 	}
 }
 
+DOMRectReadOnly.prototype.isInside = function (x, y) {
+	return (this.left <= x && this.right >= x && this.top <= y && this.bottom >= y);
+}
+
 /********************/
 /* DEBUGGING OUTPUT */
 /********************/
@@ -2555,11 +2559,12 @@ function addCommentParentPopups() {
 						mousePauseTimeout = null;
 
 						let overElement = document.elementFromPoint(pointerX, pointerY);
+						let mouseIsOverLink = linkRect.isInside(pointerX, pointerY);
 
-						if(overElement === linkTag || overElement === popup
-						   || (event.clientX < popup.getBoundingClientRect().left
+						if(mouseIsOverLink || overElement === popup
+						   || (pointerX < popup.getBoundingClientRect().left
 						       && event.movementX >= 0)) {
-							if(overElement !== linkTag && overElement !== popup) {
+							if(!mouseIsOverLink && overElement !== popup) {
 								if(overElement['createPreviewPopup']) {
 									mousePauseTimeout = setTimeout(overElement.createPreviewPopup, 150);
 								} else {
@@ -2581,7 +2586,8 @@ function addCommentParentPopups() {
 
 					currentPreviewPopup.scrollListener = (event) => {
 						let overElement = document.elementFromPoint(pointerX, pointerY);
-						if(overElement === linkTag || overElement === popup) return;
+						linkRect = linkTag.getBoundingClientRect();
+						if(linkRect.isInside(pointerX, pointerY) || overElement === popup) return;
 						removePreviewPopup(currentPreviewPopup);
 					};
 					window.addEventListener("scroll", currentPreviewPopup.scrollListener, {passive: true});
