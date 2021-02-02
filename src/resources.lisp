@@ -113,8 +113,8 @@
 	     (gen-theme (theme os)
 	       (if theme
 		   (gen-inner theme os)
-		   (progn (gen-inner "dark" os t)
-			  (gen-inner nil os)))))
+		   (progn (gen-inner nil os)
+			  (gen-inner "dark" os t)))))
       (let* ((ua (hunchentoot:header-in* :user-agent))
 	     (theme (or (and *preview* (nonempty-string (hunchentoot:get-parameter "theme")))
 			(nonempty-string (hunchentoot:cookie-in "theme"))))
