@@ -152,7 +152,7 @@
 	      (let ((file (svref asset-data 0))
 		    (content-type (svref asset-data 1)))
 		(when (assoc "v" (hunchentoot:get-parameters r) :test #'string=)
-		  (setf (hunchentoot:header-out "Cache-Control") (format nil "public, max-age=~A, immutable" (- (expt 2 31) 1))))
+		  (setf (hunchentoot:header-out "Cache-Control") #.(format nil "public, max-age=~A, immutable" (- (expt 2 31) 1))))
 		(hunchentoot:handle-static-file file content-type))
 	      t)))
     nil)
