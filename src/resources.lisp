@@ -125,27 +125,34 @@
 	  (serious-condition () (gen-theme nil os)))
 	*html-global-resources*))))
 
-(hunchentoot:define-easy-handler (view-versioned-resource :uri (lambda (r)
-                                                                 (multiple-value-bind (file content-type)
-                                                                   #.(labels ((defres (uri content-type)
-                                                                                `(,uri (values (concatenate 'string "www" ,uri) ,content-type))))
-                                                                       (concatenate 'list
-                                                                                    '(alexandria:switch ((hunchentoot:script-name r) :test #'string=))
-                                                                                    (loop for system in '("mac" "windows" "linux") nconc
-                                                                                      (loop for theme in '(nil "dark" "grey" "ultramodern" "zero" "brutalist" "rts" "classic" "less")
-                                                                                            collect (defres (format nil "/css/style~@[-~A~].~A.css" theme system) "text/css")))
-                                                                                    (loop for (uri content-type) in
-										      '(("/fonts.css" "text/css")
-											("/arbital.css" "text/css")
-											("/head.js" "text/javascript")
-											("/script.js" "text/javascript")
-											("/assets/favicon.ico" "image/x-icon")
-											("/assets/telegraph.jpg" "image/jpeg")
-											("/assets/popup.svg" "image/svg+xml"))
-                                                                                      collect (defres uri content-type))))
-                                                                   (when file
-                                                                     (when (assoc "v" (hunchentoot:get-parameters r) :test #'string=)
-                                                                       (setf (hunchentoot:header-out "Cache-Control") (format nil "public, max-age=~A, immutable" (- (expt 2 31) 1))))
-                                                                     (hunchentoot:handle-static-file file content-type)
-                                                                     t))))
+(sb-ext:defglobal *static-assets* nil)
+
+(let ((new-static-assets (make-hash-table :test 'equal)))
+  (flet ((defres (uri content-type)
+	   (vector (concatenate 'string "www" uri) content-type)))
+    (loop for system in '("mac" "windows" "linux") nconc
+	 (loop for theme in '(nil "dark" "grey" "ultramodern" "zero" "brutalist" "rts" "classic" "less")
+	    do (let ((uri (format nil "/css/style~@[-~A~].~A.css" theme system)))
+		 (setf (gethash uri new-static-assets) (defres uri "text/css")))))
+    (loop for (uri content-type) in
+	 '(("/fonts.css" "text/css")
+	   ("/arbital.css" "text/css")
+	   ("/head.js" "text/javascript")
+	   ("/script.js" "text/javascript")
+	   ("/assets/favicon.ico" "image/x-icon")
+	   ("/assets/telegraph.jpg" "image/jpeg")
+	   ("/assets/popup.svg" "image/svg+xml"))
+       do (setf (gethash uri new-static-assets) (defres uri content-type))))
+  (setf *static-assets* new-static-assets))
+
+(hunchentoot:define-easy-handler
+    (view-versioned-resource
+     :uri (lambda (r)
+	    (when-let ((asset-data (gethash (hunchentoot:script-name r) *static-assets*)))
+	      (let ((file (svref asset-data 0))
+		    (content-type (svref asset-data 1)))
+		(when (assoc "v" (hunchentoot:get-parameters r) :test #'string=)
+		  (setf (hunchentoot:header-out "Cache-Control") (format nil "public, max-age=~A, immutable" (- (expt 2 31) 1))))
+		(hunchentoot:handle-static-file file content-type))
+	      t)))
     nil)
