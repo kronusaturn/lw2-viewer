@@ -766,32 +766,31 @@
 			       (log-and-ignore-errors
 				(funcall *link-hook* href))))))))
 		    ((tag-is node "img")
-		     (block abort
-		       (when-let ((width (ignore-errors (parse-integer (plump:attribute node "width"))))
-				  (height (ignore-errors (parse-integer (plump:attribute node "height")))))
-			 (cond ((and (<= width 1) (<= height 1))
-				;; Remove probable tracking pixel and abort further processing.
-				(plump:remove-child node)
-				(return-from abort))
-			       (t
-				;; Apply responsive image scaling CSS.
-				(let ((container
-				       (if (and (tag-is (plump:parent node) "div" "p" "figure")
-						(only-child-is (plump:parent node) "img"))
-					   (plump:parent node) ; Should already have imgonly class.
-					   (let ((container (wrap-element node "div")))
-					     (add-class container "imgonly")
-					     container))))
-				  (setf (plump:attribute container "style") (format nil "--aspect-ratio: ~F; max-width: ~Dpx"
-										    (/ (float width)
-										       (float height))
-										    width))))))
-		       (remove-attributes node "style" "class" "width" "height")
-		       (when (typep *current-site* 'alternate-frontend-site)
-			 (let ((src (plump:attribute node "src")))
-			   (when (and src (ppcre:scan "^/(?!/)" src))
-			     (setf (plump:attribute node "src") (quri:render-uri
-								 (quri:merge-uris src (main-site-uri *current-site*)))))))))
+		     (let ((width (ignore-errors (parse-integer (plump:attribute node "width"))))
+			   (height (ignore-errors (parse-integer (plump:attribute node "height")))))
+		       (if (and width height (<= width 1) (<= height 1))
+			   ;; Remove probable tracking pixel.
+			   (plump:remove-child node)
+			   (progn
+			     (when (and width height)
+			       ;; Apply responsive image scaling CSS.
+			       (let ((container
+				      (if (and (tag-is (plump:parent node) "div" "p" "figure")
+					       (only-child-is (plump:parent node) "img"))
+					  (plump:parent node) ; Should already have imgonly class.
+					  (let ((container (wrap-element node "div")))
+					    (add-class container "imgonly")
+					    container))))
+				 (setf (plump:attribute container "style") (format nil "--aspect-ratio: ~F; max-width: ~Dpx"
+										   (/ (float width)
+										      (float height))
+										   width))))
+			     (remove-attributes node "style" "class" "width" "height")
+			     (when (typep *current-site* 'alternate-frontend-site)
+			       (let ((src (plump:attribute node "src")))
+				 (when (and src (ppcre:scan "^/(?!/)" src))
+				   (setf (plump:attribute node "src") (quri:render-uri
+								       (quri:merge-uris src (main-site-uri *current-site*)))))))))))
 		    ((tag-is node "figure")
 		     (remove-attributes node "style" "class" "width" "height"))
 		    ((and (tag-is node "p") (only-child-is node "figure"))
