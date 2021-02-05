@@ -6,6 +6,7 @@
 	   #:dynamic-let #:dynamic-let* #:dynamic-flet #:dynamic-labels
 	   #:universal-time-to-unix #:get-unix-time #:as-timestamp #:timerange
 	   #:substring #:nonempty-string
+	   #:with-delimited-writer
 	   #:regex-groups-min
 	   #:regex-replace-body #:regex-case #:reg #:match
 	   #:to-boolean #:nonzero-number-p #:truthy-string-p
@@ -155,6 +156,32 @@
 (defun nonempty-string (obj)
   (when (and (stringp obj) (> (length obj) 0))
     obj))
+
+(defun call-with-delimited-writer (begin between end fn)
+  (let (begun)
+    (flet ((delimit ()
+	     (if begun
+		 (funcall between)
+		 (funcall begin))
+	     (setf begun t)))
+      (declare (dynamic-extent #'delimit))
+      (funcall fn #'delimit)
+      (when begun (funcall end)))))
+
+(defmacro with-delimited-writer ((stream delimit &key begin between end) &body body)
+  (once-only (stream)
+    (flet ((as-writer-function (x)
+	     (typecase x
+	       (string `(lambda () (write-string ,x ,stream)))
+	       (t `(lambda () ,x)))))
+      `(dynamic-let ((begin-fn ,(as-writer-function begin))
+		     (between-fn ,(as-writer-function between))
+		     (end-fn ,(as-writer-function end))
+		     (fn (lambda (,delimit)
+			   (flet ((,delimit () (funcall ,delimit)))
+			     (declare (inline ,delimit))
+			     ,@body))))
+	 (call-with-delimited-writer begin-fn between-fn end-fn fn)))))
 
 (trivial-cltl2:define-declaration regex-groups-min (decl env) (declare (ignore env)) (values :declare (cons 'regex-groups-min (second decl))))
 

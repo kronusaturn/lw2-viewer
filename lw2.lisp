@@ -522,32 +522,6 @@ signaled condition to *HTML-OUTPUT*."
 			   class text :title description))))
     (format out-stream "</nav>")))
 
-(defun call-with-delimited-writer (begin between end fn)
-  (let (begun)
-    (flet ((delimit ()
-	     (if begun
-		 (funcall between)
-		 (funcall begin))
-	     (setf begun t)))
-      (declare (dynamic-extent #'delimit))
-      (funcall fn #'delimit)
-      (when begun (funcall end)))))
-
-(defmacro with-delimited-writer ((stream delimit &key begin between end) &body body)
-  (once-only (stream)
-    (flet ((as-writer-function (x)
-	     (typecase x
-	       (string `(lambda () (write-string ,x ,stream)))
-	       (t `(lambda () ,x)))))
-      `(dynamic-let ((begin-fn ,(as-writer-function begin))
-		     (between-fn ,(as-writer-function between))
-		     (end-fn ,(as-writer-function end))
-		     (fn (lambda (,delimit)
-			   (flet ((,delimit () (funcall ,delimit)))
-			     (declare (inline delimit))
-			     ,@body))))
-	 (call-with-delimited-writer begin-fn between-fn end-fn fn)))))
-
 (defmacro set-script-variables (&rest clauses)
   (with-gensyms (out-stream name value)
     `(with-html-stream-output (:stream ,out-stream)

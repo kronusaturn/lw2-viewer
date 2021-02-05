@@ -43,6 +43,7 @@
 			     (:static-file "../text-clean-regexps.js")
 			     (:static-file "../html-clean-regexps.js")
 			     (:file "colors" :depends-on ("utils"))
+			     (:file "images" :depends-on ("html-reader" "utils"))
                              (:file "clean-html" :depends-on ("utils" "links" "lmdb" "backend" "context" "sites" "conditions" "colors" "../text-clean-regexps.js" "../html-clean-regexps.js"))
                              (:file "lw2-login" :depends-on ("utils" "backend" "backend-modules" "context"))
 			     (:file "backlinks" :depends-on ("html-reader" "lmdb" "backend" "backend-modules" "sites" "links" "context" "clean-html" "conditions" "utils" "interface-utils"))

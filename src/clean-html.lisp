@@ -362,6 +362,50 @@
             (lambda (node) (declare (ignore node))))))))
   root)
 
+;;;; Dynamic content blocks.
+
+(define-cache-database 'lw2.backend-modules:backend-lmdb-cache "dynamic-content-blocks")
+
+(defparameter *dynamic-content-block-callback* nil)
+
+(defclass dynamic-element (plump:element)
+  ((dynamic-call-form :initarg :dynamic-call-form :accessor dynamic-call-form)))
+
+(defmethod plump:serialize-object :around ((node dynamic-element))
+  (funcall *dynamic-content-block-callback* :start node)
+  (call-next-method)
+  (funcall *dynamic-content-block-callback* :end node))
+
+(defun create-dynamic-call (node function-name &rest args)
+  (change-class node 'dynamic-element :dynamic-call-form (list* function-name args)))
+
+(defun call-with-dynamic-block-serialization (fn hash output-string)
+  (let* ((current-start nil)
+	 (last-string-pos 0)
+	 (last-octet-pos 0))
+    (flet ((current-octet-pos ()
+	     (psetf last-string-pos (length output-string)
+		    last-octet-pos (+ last-octet-pos (babel:string-size-in-octets output-string :start last-string-pos)))
+	     last-octet-pos))
+      (declare (dynamic-extent #'current-octet-pos))
+      (let* ((dynamic-call-list nil)
+	     (*dynamic-content-block-callback*
+	      (lambda (phase node)
+		(case phase
+		  (:start (setf current-start (current-octet-pos)))
+		  (:end (let ((current-end (current-octet-pos)))
+			  (push (list* current-start current-end (dynamic-call-form node))
+				dynamic-call-list)))))))
+	(declare (dynamic-extent *dynamic-content-block-callback*))
+	(funcall fn)
+	(when dynamic-call-list
+	  (cache-put "dynamic-content-blocks" hash (nreverse dynamic-call-list) :key-type :byte-vector :value-type :lisp))))))
+
+(defmacro with-dynamic-block-serialization ((hash output-string) &body body)
+  `(dynamic-flet ((fn () ,@body)) (call-with-dynamic-block-serialization #'fn ,hash ,output-string)))
+
+;;;;
+
 (define-lmdb-memoized extract-excerpt 'lw2.backend-modules:backend-lmdb-cache
   (:sources ("src/clean-html.lisp")) (in-html)
   (let ((root (plump:parse (string-trim '(#\Space #\Newline #\Tab #\Return #\Linefeed #\Page) in-html)))
@@ -771,26 +815,28 @@
 		       (if (and width height (<= width 1) (<= height 1))
 			   ;; Remove probable tracking pixel.
 			   (plump:remove-child node)
-			   (progn
+			   (let ((container
+				  (if (and (tag-is (plump:parent node) "div" "p" "figure")
+					   (only-child-is (plump:parent node) "img"))
+				      (plump:parent node) ; Should already have imgonly class.
+				      (let ((container (wrap-element node "div")))
+					(add-class container "imgonly")
+					container))))
+			     (when-let ((src (plump:attribute node "src")))
+			       (when (and (typep *current-site* 'alternate-frontend-site)
+					  (ppcre:scan "^/(?!/)" src))
+				 (setf src (quri:render-uri
+					    (quri:merge-uris src (main-site-uri *current-site*)))
+				       (plump:attribute node "src") src))
+			       (create-dynamic-call container 'lw2.images::dynamic-image
+						    src (plump:tag-name container) (alexandria:hash-table-alist (plump:attributes container))))
 			     (when (and width height)
 			       ;; Apply responsive image scaling CSS.
-			       (let ((container
-				      (if (and (tag-is (plump:parent node) "div" "p" "figure")
-					       (only-child-is (plump:parent node) "img"))
-					  (plump:parent node) ; Should already have imgonly class.
-					  (let ((container (wrap-element node "div")))
-					    (add-class container "imgonly")
-					    container))))
-				 (setf (plump:attribute container "style") (format nil "--aspect-ratio: ~F; max-width: ~Dpx"
-										   (/ (float width)
-										      (float height))
-										   width))))
-			     (remove-attributes node "style" "class" "width" "height")
-			     (when (typep *current-site* 'alternate-frontend-site)
-			       (let ((src (plump:attribute node "src")))
-				 (when (and src (ppcre:scan "^/(?!/)" src))
-				   (setf (plump:attribute node "src") (quri:render-uri
-								       (quri:merge-uris src (main-site-uri *current-site*)))))))))))
+			       (setf (plump:attribute container "style") (format nil "--aspect-ratio: ~F; max-width: ~Dpx"
+										 (/ (float width)
+										    (float height))
+										 width)))
+			     (remove-attributes node "style" "class" "width" "height")))))
 		    ((tag-is node "figure")
 		     (remove-attributes node "style" "class" "width" "height"))
 		    ((and (tag-is node "p") (only-child-is node "figure"))
@@ -921,8 +967,9 @@
 		    ((tag-is node "script")
 		     (plump:remove-child node))))))))
 	  (clean-dom-text root)
-	  (let ((with-toc (>= section-count 3)))
-	    (with-output-to-string (out-stream)
+	  (let ((with-toc (>= section-count 3))
+		(out-string (make-array 0 :element-type 'character :fill-pointer 0 :adjustable t)))
+	    (with-output-to-string (out-stream out-string)
 	      (style-hash-to-html style-hash out-stream)
 	      (when (> (hash-table-count used-colors) 0)
 		(format out-stream "<style>~%:root {~%")
@@ -949,4 +996,6 @@
 		 do (progn
 		      (contents-to-html (nreverse contents) min-header-level out-stream)
 		      (setf with-toc nil))
-		 do (plump:serialize c out-stream)))))))))
+		 do (with-dynamic-block-serialization (current-memo-hash out-string)
+		      (plump:serialize c out-stream)))
+	      out-string)))))))
