@@ -87,13 +87,14 @@
 		     (setf (gethash uri *image-threads*)
 			   (lw2.backend::make-thread-with-current-backend
 			    (lambda ()
-			      (unwind-protect
-				   (let ((result (process-image uri)))
-				     (cache-put "dynamic-content-images" key result :key-type :byte-vector :value-type :json)
-				     (alist-bind ((filename string) (mime-type string)) result
-				       (cache-put "cached-images" filename (alist :mime-type mime-type) :value-type :json))
-				     result)
-				(remhash uri *image-threads*)))
+			      (ignore-errors ; FIXME figure out how to handle errors here
+				(unwind-protect
+				     (let ((result (process-image uri)))
+				       (cache-put "dynamic-content-images" key result :key-type :byte-vector :value-type :json)
+				       (alist-bind ((filename string) (mime-type string)) result
+						   (cache-put "cached-images" filename (alist :mime-type mime-type) :value-type :json))
+				       result)
+				  (remhash uri *image-threads*))))
 			    :name "image processing thread"))))))
 	  (sb-thread:join-thread thread)))))
 
