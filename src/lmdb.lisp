@@ -310,70 +310,59 @@
 (defun write-memoized-data (array size)
   ;; This is unsafe anyway thanks to mem-aref, and it's pretty speed-critical
   (declare (optimize (safety 0) (debug 0))
-	   (type (and fixnum (integer 0)) size))
+	   (type (and fixnum (integer 0)) size)
+	   (type cffi:foreign-pointer array))
   (let ((out-stream *memoized-output-stream*)
 	(dynamic-blocks *memoized-output-dynamic-blocks*)
-	(i 0)
-	(next-stop 0)
+	(index 0)
 	(buffer (make-array 2048 :element-type '(unsigned-byte 8) :initial-element 0))
 	(buffer-index 0))
     (declare (dynamic-extent buffer)
-	     (type (and fixnum (integer 0)) i next-stop)
+	     (type (and fixnum (integer 0)) index)
 	     (type (integer 0 2048) buffer-index))
-    (labels ((output-byte (byte)
-	       (setf (aref buffer buffer-index) byte)
-	       (incf buffer-index)
-	       (when (= buffer-index 2048)
-		 (write-sequence buffer out-stream)
-		 (setf buffer-index 0)))
-	     (flush-buffer ()
+    (labels ((flush-buffer ()
 	       (when (> buffer-index 0)
 		 (write-sequence buffer out-stream :end buffer-index)
 		 (setf buffer-index 0)))
-	     (terminate ()
-	       (flush-buffer)
-	       (return-from write-memoized-data t))
-	     (process-stop ()
-	       (cond ((= next-stop size)
-		      (terminate))
-		     (dynamic-blocks
-		      (destructuring-bind (start end fn &rest args) (first dynamic-blocks)
-			(cond ((= i start)
-			       (flush-buffer)
-			       (apply fn args)
-			       (pop dynamic-blocks)
-			       (setf i end)
-			       (cond ((= end size) (terminate))
-				     (dynamic-blocks (setf next-stop (min size (first (first dynamic-blocks)))))
-				     (t (setf next-stop size))))
-			      (t (setf next-stop (min size start))))))
-		     (t (setf next-stop size)))))
-      (declare (dynamic-extent #'output-byte #'flush-buffer #'terminate #'process-stop))
-      (if *memoized-output-without-hyphens*
-	  ;; Filter out soft hyphens while writing to the output stream.
-	  ;; Thanks to UTF-8's prefix-free property, we don't need to decode characters to
-	  ;; do this, just search for the soft-hyphen byte sequence.
-	  (let ((hyphen-bytes (load-time-value (string-to-octets (string #\SOFT_HYPHEN) :external-format :utf-8)))
-		(hi 0))
-	    (declare (type (unsigned-byte 8) hi))
-	    (loop
-	       (when (= i next-stop) (process-stop))
-	       (let ((in-byte (cffi:mem-aref array :unsigned-char i)))
-		 (if (= in-byte (aref hyphen-bytes hi))
-		     (if (= (1+ hi) (length hyphen-bytes))
-			 (setf hi 0)
-			 (incf hi))
-		     (progn
-		       (when (/= hi 0)
-			 (iter (for i from 0 below hi) (output-byte (aref hyphen-bytes i)))
-			 (setf hi 0))
-		       (output-byte in-byte))))
-	       (incf i)))
-	  ;; In this case, keep the soft hyphens.
-	  (loop
-	     (when (= i next-stop) (process-stop))
-	     (output-byte (cffi:mem-aref array :unsigned-char i))
-	     (incf i))))))
+	     (output-byte (byte)
+	       (when (= buffer-index 2048)
+		 (flush-buffer))
+	       (setf (aref buffer buffer-index) byte)
+	       (incf buffer-index))
+	     (process-span (start end)
+	       (declare (type (and fixnum (integer 0)) start end))
+	       (if *memoized-output-without-hyphens*
+		   ;; Filter out soft hyphens while writing to the output stream.
+		   ;; Thanks to UTF-8's prefix-free property, we don't need to decode characters to
+		   ;; do this, just search for the soft-hyphen byte sequence.
+		   (let ((hyphen-bytes (load-time-value (string-to-octets (string #\SOFT_HYPHEN) :external-format :utf-8)))
+			 (hi 0))
+		     (declare (type (unsigned-byte 3) hi))
+		     (iter (for i from start below end)
+			(let ((in-byte (cffi:mem-aref array :unsigned-char i)))
+			  (if (= in-byte (aref hyphen-bytes hi))
+			      (if (= (1+ hi) (length hyphen-bytes))
+				  (setf hi 0)
+				  (incf hi))
+			      (progn
+				(when (/= hi 0)
+				  (iter (for i from 0 below hi) (output-byte (aref hyphen-bytes i)))
+				  (setf hi 0))
+				(output-byte in-byte))))))
+		   ;; In this case, keep the soft hyphens.
+		   (iter (for i from start below end)
+			 (output-byte (cffi:mem-aref array :unsigned-char i))))
+	       (flush-buffer)))
+      (declare (dynamic-extent #'output-byte #'flush-buffer #'process-span))
+      (iter (for dynamic-block in dynamic-blocks)
+	    (destructuring-bind (start end fn &rest args) dynamic-block
+	      (process-span index start)
+	      (handler-case
+		  (progn (apply fn args) (values))
+		(:no-error () (setf index end))))
+	    (finally
+	     (process-span index size)))))
+  t)
 
 (defun make-lmdb-memoized-wrapper (db-name fn return-type)
   (lambda (&rest args)
@@ -384,8 +373,10 @@
           cached-value
           (let* ((new-value (apply fn hash args))
                  (octets-value (string-to-octets new-value :external-format :utf-8)))
-            (with-db (db db-name) (lmdb:put db hash octets-value))
-            (case return-type
+	    (with-cache-transaction
+	      (with-db (db db-name) (lmdb:put db hash octets-value))
+	      (setf *memoized-output-dynamic-blocks* (cache-get "dynamic-content-blocks" hash :key-type :byte-vector :value-type :lisp)))
+	    (case return-type
 	      (:string new-value)
 	      (:byte-vector octets-value)
 	      ('write-memoized-data (with-db (db db-name :read-only t) (lmdb:get db hash :return-type return-type)))))))))

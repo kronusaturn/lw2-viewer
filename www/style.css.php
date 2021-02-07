@@ -29,6 +29,8 @@
 	--GW-comment-background-color-odd: transparent;
 	--GW-comment-background-color-even: transparent;
 	--GW-comment-background-color-target: transparent;
+
+	--inverted-display: none;
 }
 
 /***************/
@@ -3300,7 +3302,7 @@ figure {
 
 // Aspect ratio trick from https://css-tricks.com/aspect-ratio-boxes/
 
-[style*="--aspect-ratio"] > :first-child {
+[style*="--aspect-ratio"] > * {
 	width: 100%;
 }
 [style*="--aspect-ratio"] > img {  
@@ -3315,7 +3317,7 @@ figure {
 		display: block;
 		padding-bottom: calc(100% / (var(--aspect-ratio)));
 	}  
-	[style*="--aspect-ratio"] > :first-child {
+	[style*="--aspect-ratio"] > * {
 		position: absolute;
 		top: 0;
 		left: 0;

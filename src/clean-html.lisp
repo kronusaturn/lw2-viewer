@@ -397,9 +397,10 @@
 			  (push (list* current-start current-end (dynamic-call-form node))
 				dynamic-call-list)))))))
 	(declare (dynamic-extent *dynamic-content-block-callback*))
-	(funcall fn)
-	(when dynamic-call-list
-	  (cache-put "dynamic-content-blocks" hash (nreverse dynamic-call-list) :key-type :byte-vector :value-type :lisp))))))
+	(multiple-value-prog1
+	    (funcall fn)
+	  (when dynamic-call-list
+	    (cache-put "dynamic-content-blocks" hash (nreverse dynamic-call-list) :key-type :byte-vector :value-type :lisp)))))))
 
 (defmacro with-dynamic-block-serialization ((hash output-string) &body body)
   `(dynamic-flet ((fn () ,@body)) (call-with-dynamic-block-serialization #'fn ,hash ,output-string)))
@@ -989,13 +990,13 @@
 		  (format out-stream "}~%")
 		  (write-inverted-colors "dark"))
 		(format out-stream "</style>"))
-	      (loop for c across (plump:children root)
-		 when (and with-toc
-			   (not (or (string-is-whitespace (plump:text c))
-				    (tag-is c "figure"))))
-		 do (progn
-		      (contents-to-html (nreverse contents) min-header-level out-stream)
-		      (setf with-toc nil))
-		 do (with-dynamic-block-serialization (current-memo-hash out-string)
-		      (plump:serialize c out-stream)))
+	      (with-dynamic-block-serialization (current-memo-hash out-string)
+		(loop for c across (plump:children root)
+		   when (and with-toc
+			     (not (or (string-is-whitespace (plump:text c))
+				      (tag-is c "figure"))))
+		   do (progn
+			(contents-to-html (nreverse contents) min-header-level out-stream)
+			(setf with-toc nil))
+		   do (plump:serialize c out-stream)))
 	      out-string)))))))

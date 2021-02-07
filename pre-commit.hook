@@ -19,7 +19,8 @@ if [[ "$1" = "--force" ]] || ! git diff-index --quiet --cached HEAD -- www/style
 		done
 	done
 	for N in ${!SYSTEMS[*]}; do
-		php color-scheme-convert.php www/css/style${SUFFIXES[N]} 3 >www/css/style-dark${SUFFIXES[N]}
+	        cp www/style-dark-preamble.css www/css/style-dark${SUFFIXES[N]}
+		php color-scheme-convert.php www/css/style${SUFFIXES[N]} 3 >>www/css/style-dark${SUFFIXES[N]}
 		git add www/css/style${SUFFIXES[N]} www/css/style-dark${SUFFIXES[N]}
 	done
 	git show :www/theme_tweaker.css.php | (cd www; php >css/theme_tweaker.css)

@@ -4,6 +4,7 @@
   (:export #:nalist #:nalist* #:alist #:alist*
 	   #:alist-without-null #:alist-without-null*
 	   #:dynamic-let #:dynamic-let* #:dynamic-flet #:dynamic-labels
+	   #:with-semaphore
 	   #:universal-time-to-unix #:get-unix-time #:as-timestamp #:timerange
 	   #:substring #:nonempty-string
 	   #:with-delimited-writer
@@ -105,6 +106,13 @@
 
 (defmacro dynamic-labels ((&rest clauses) &body body)
   (dynamic-let-inner 'labels t clauses body))
+
+(defmacro with-semaphore ((sem &rest args) &body body)
+  (once-only (sem)
+	     `(progn
+		(sb-thread:wait-on-semaphore ,sem ,@args)
+		(unwind-protect (progn ,@body)
+		  (sb-thread:signal-semaphore ,sem)))))
 
 (defun universal-time-to-unix (time)
   (- time #.(encode-universal-time 0 0 0 1 1 1970 0)))

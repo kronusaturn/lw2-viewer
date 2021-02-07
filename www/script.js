@@ -3892,6 +3892,7 @@ function generateImagesOverlay() {
 	GWLog("generateImagesOverlay");
 	// Don't do this on the about page.
 	if (query(".about-page") != null) return;
+	return;
 
 	// Remove existing, if any.
 	removeElement("#images-overlay");
