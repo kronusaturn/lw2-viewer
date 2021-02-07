@@ -137,16 +137,3 @@
 		      (or proxy-uri encoded-uri) encoded-uri)))
 	(format stream "</~A>" container-tag-name)))))
 
-(hunchentoot:define-easy-handler
-    (view-proxy-asset
-     :uri (lambda (r)
-	    (multiple-value-bind (match? strings) (ppcre:scan-to-strings "^/proxy-assets/([0-9A-Za-z]+)(-inverted)?$" (hunchentoot:script-name r) :sharedp t)
-	      (when-let* ((base-filename (and match? (svref strings 0)))
-			  (image-data (cache-get "cached-images" base-filename :value-type :json)))
-		  (let ((inverted (svref strings 1)))
-		    (alist-bind ((mime-type simple-string)) image-data
-		      (setf (hunchentoot:header-out "X-Content-Type-Options") "nosniff"
-			    (hunchentoot:header-out "Cache-Control") #.(format nil "public, max-age=~A, immutable" 600))
-		      (hunchentoot:handle-static-file (concatenate 'string "www/proxy-assets/" base-filename (if inverted "-inverted" "")) mime-type)
-		      t))))))
-    nil)
