@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.lmdb
-  (:use #:cl #:sb-ext #:sb-thread #:alexandria #:iterate #:lw2.raw-memory-streams #:lw2.sites #:lw2.context #:lw2.backend-modules #:lw2-viewer.config #:lw2.hash-utils)
+  (:use #:cl #:sb-ext #:sb-thread #:alexandria #:iterate #:lw2.raw-memory-streams #:lw2.conditions #:lw2.sites #:lw2.context #:lw2.backend-modules #:lw2-viewer.config #:lw2.hash-utils)
   (:export
    #:close-unused-environments
    #:define-cache-database #:with-cache-mutex #:with-cache-transaction #:with-cache-readonly-transaction
@@ -357,9 +357,11 @@
       (iter (for dynamic-block in dynamic-blocks)
 	    (destructuring-bind (start end fn &rest args) dynamic-block
 	      (process-span index start)
-	      (handler-case
-		  (progn (apply fn args) (values))
-		(:no-error () (setf index end))))
+	      (setf index start)
+	      (log-and-ignore-errors
+	       (handler-case
+		   (progn (apply fn args) (values))
+		 (:no-error () (setf index end)))))
 	    (finally
 	     (process-span index size)))))
   t)
