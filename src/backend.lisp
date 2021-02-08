@@ -154,7 +154,7 @@
 				   :before-maybe-retry (progn (when stream (ignore-errors (close stream)))
 							      (setf stream nil))
 				   :before-retry (sleep 0.2))
-	 (handler-bind ((dex:http-request-failed
+	 (handler-bind (((or dex:http-request-failed usocket:ns-condition usocket:socket-condition)
 			 (lambda (condition)
 			   (if-let ((r (find-restart 'dex:ignore-and-continue condition)))
 				   (invoke-restart r)
