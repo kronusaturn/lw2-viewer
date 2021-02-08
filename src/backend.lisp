@@ -148,8 +148,10 @@
   (let* ((uri (quri:uri uri-string))
 	 (uri-dest (concatenate 'string (quri:uri-host uri) ":" (format nil "~d" (quri:uri-port uri))))
 	 (stream (connection-pop uri-dest)))
-    (let (response status-code headers response-uri new-stream)
-      (abnormal-unwind-protect
+    (let ((dex:*connection-pool* (dex:make-connection-pool))
+	  (dex:*use-connection-pool* t)
+	  response status-code headers response-uri new-stream success)
+      (unwind-protect
        (with-retrying (maybe-retry :retries 3
 				   :before-maybe-retry (progn (when stream (ignore-errors (close stream)))
 							      (setf stream nil))
@@ -167,9 +169,16 @@
 		   new-stream nil))
 	   (when (<= 500 status-code 599)
 	     (maybe-retry)
-	     (error (make-condition 'lw2-connection-error :message (format nil "HTTP status ~A" status-code))))))
-       (when stream
-	 (ignore-errors (close stream))))
+	     (error (make-condition 'lw2-connection-error :message (format nil "HTTP status ~A" status-code))))
+	   (setf success t)))
+	(progn
+	  (maphash (lambda (dest conn)
+		     (declare (ignore dest))
+		     (unless (eq stream conn)
+		       (ignore-errors (close conn))))
+		   *connection-pool*)
+	  (when (and stream (not success))
+	    (ignore-errors (close stream)))))
       (unwind-protect
 	   (funcall fn response)
 	(if stream ; the connection is reusable
