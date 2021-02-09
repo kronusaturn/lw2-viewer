@@ -52,11 +52,12 @@
     (uiop:run-program (list "convert" input "-colorspace" "Lab" "-channel" "R" "-negate" "-gamma" "2.2" "-colorspace" "sRGB" output))))
 
 (defun download-file (uri target)
-  (with-open-file (out-stream target :direction :output :if-exists :supersede :element-type '(unsigned-byte 8))
-    (let ((in-stream (drakma:http-request uri :want-stream t :force-binary t :accept "image/*,*/*")))
-      (unwind-protect
-	   (alexandria:copy-stream in-stream out-stream)
-	(close in-stream)))))
+  (sb-sys:with-deadline (:seconds 60)
+    (with-open-file (out-stream target :direction :output :if-exists :supersede :element-type '(unsigned-byte 8))
+      (let ((in-stream (drakma:http-request uri :want-stream t :force-binary t :accept "image/*,*/*")))
+	(unwind-protect
+	     (alexandria:copy-stream in-stream out-stream)
+	  (close in-stream))))))
 
 (define-cache-database 'lw2.backend-modules:backend-lmdb-cache "dynamic-content-images" "cached-images")
 
