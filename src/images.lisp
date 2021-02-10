@@ -89,7 +89,7 @@
 		     (setf (gethash uri *image-threads*)
 			   (lw2.backend::make-thread-with-current-backend
 			    (lambda ()
-			      (ignore-errors ; FIXME figure out how to handle errors here
+			      (log-and-ignore-errors ; FIXME figure out how to handle errors here
 				(unwind-protect
 				     (let ((result (process-image uri)))
 				       (cache-put "dynamic-content-images" key result :key-type :byte-vector :value-type :json)
