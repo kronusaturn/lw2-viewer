@@ -62,17 +62,20 @@
 (define-cache-database 'lw2.backend-modules:backend-lmdb-cache "dynamic-content-images" "cached-images")
 
 (sb-ext:defglobal *image-threads* (make-hash-table :test 'equal :synchronized t))
+(defparameter *current-version* 2)
 
 (defun process-image (uri)
   (let* ((filename (multiple-value-bind (r1 r2) (city-hash:city-hash-128 (babel:string-to-octets uri)) (format nil "~32R" (dpb r1 (byte 64 64) r2))))
 	 (proxy-uri (format nil "/proxy-assets/~A" filename))
 	 (pathname (format nil "www~A" proxy-uri)))
-    (download-file uri pathname)
+    (unless (probe-file pathname)
+      (download-file uri pathname))
     (multiple-value-bind (width height mime-type) (image-statistics pathname)
       (let* ((inverted-uri (and (image-invertable pathname) (format nil "~A-inverted" proxy-uri)))
 	     (inverted-pathname (and inverted-uri (format nil "www~A" inverted-uri))))
 	(when inverted-uri (invert-image pathname inverted-pathname))
-	(alist :uri uri
+	(alist :version *current-version*
+	       :uri uri
 	       :filename filename
 	       :mime-type mime-type
 	       :proxy-uri proxy-uri
@@ -82,23 +85,27 @@
 
 (defun image-uri-data (uri)
   (let ((key (hash-string uri)))
-    (or (cache-get "dynamic-content-images" key :key-type :byte-vector :value-type :json)
-	(let ((thread
-	       (sb-ext:with-locked-hash-table (*image-threads*)
-		 (or (gethash uri *image-threads*)
-		     (setf (gethash uri *image-threads*)
-			   (lw2.backend::make-thread-with-current-backend
-			    (lambda ()
-			      (log-and-ignore-errors ; FIXME figure out how to handle errors here
-				(unwind-protect
-				     (let ((result (process-image uri)))
-				       (cache-put "dynamic-content-images" key result :key-type :byte-vector :value-type :json)
-				       (alist-bind ((filename string) (mime-type string)) result
-						   (cache-put "cached-images" filename (alist :mime-type mime-type) :value-type :json))
-				       result)
-				  (remhash uri *image-threads*))))
-			    :name "image processing thread"))))))
-	  (sb-thread:join-thread thread)))))
+    (labels ((make-image-thread ()
+	       (let ((thread
+		      (sb-ext:with-locked-hash-table (*image-threads*)
+			(or (gethash uri *image-threads*)
+			    (setf (gethash uri *image-threads*)
+				  (lw2.backend::make-thread-with-current-backend
+				   (lambda ()
+				     (log-and-ignore-errors ; FIXME figure out how to handle errors here
+				      (unwind-protect
+					   (let ((result (process-image uri)))
+					     (cache-put "dynamic-content-images" key result :key-type :byte-vector :value-type :json)
+					     (alist-bind ((filename string) (mime-type string)) result
+							 (cache-put "cached-images" filename (alist :mime-type mime-type) :value-type :json))
+					     result)
+					(remhash uri *image-threads*))))
+				   :name "image processing thread"))))))
+		 (sb-thread:join-thread thread))))
+      (let ((cached-data (cache-get "dynamic-content-images" key :key-type :byte-vector :value-type :json)))
+	(if (and cached-data (eql (cdr (assoc :version cached-data)) *current-version*))
+	    cached-data
+	    (make-image-thread))))))
 
 (defun dynamic-image (uri container-tag-name container-attributes)
   (declare (simple-string uri container-tag-name))
