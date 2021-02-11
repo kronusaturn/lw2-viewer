@@ -35,7 +35,7 @@
 						       (let* ((color-string (svref strings 0))
 							      (color-value (parse-integer color-string :radix 16)))
 							 (cond ((= (length color-string) 8)
-								(setf background-brightness (* 3 (ldb (byte 8 0) color-value))))
+								(setf background-brightness (* 3 (ldb (byte 8 24) color-value))))
 							       ((= (length color-string) 6)
 								(setf background-brightness (+ (ldb (byte 8 0) color-value)
 											       (ldb (byte 8 8) color-value)
