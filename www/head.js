@@ -508,9 +508,14 @@ let dtf = new Intl.DateTimeFormat([],
 				    : { month: 'numeric', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' } ));
 
 function prettyDate() {
-	let date = document.currentScript.parentElement;
-	let d = date.dataset.jsDate;
-	if (d) { date.innerHTML = dtf.format(new Date(+ d)); }
+	let dateElement = document.currentScript.parentElement;
+	let jsDate = date.dataset.jsDate;
+	let pretty = dtf.format(new Date(+ jsDate));
+	if (d) {
+		window.requestAnimationFrame(() => {
+			date.innerHTML = pretty;
+		});
+	}
 }
 
 
