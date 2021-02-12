@@ -54,7 +54,7 @@
 (defun download-file (uri target)
   (sb-sys:with-deadline (:seconds 60)
     (with-open-file (out-stream target :direction :output :if-exists :supersede :element-type '(unsigned-byte 8))
-      (let ((in-stream (drakma:http-request uri :want-stream t :force-binary t :accept "image/*,*/*")))
+      (let ((in-stream (drakma:http-request uri :want-stream t :force-binary t :connection-timeout 30 :accept "image/*,*/*")))
 	(unwind-protect
 	     (alexandria:copy-stream in-stream out-stream)
 	  (close in-stream))))))
