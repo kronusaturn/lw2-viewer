@@ -509,11 +509,11 @@ let dtf = new Intl.DateTimeFormat([],
 
 function prettyDate() {
 	let dateElement = document.currentScript.parentElement;
-	let jsDate = date.dataset.jsDate;
-	let pretty = dtf.format(new Date(+ jsDate));
-	if (d) {
+	let jsDate = dateElement.dataset.jsDate;
+	if (jsDate) {
+		let pretty = dtf.format(new Date(+ jsDate));
 		window.requestAnimationFrame(() => {
-			date.innerHTML = pretty;
+			dateElement.innerHTML = pretty;
 		});
 	}
 }
