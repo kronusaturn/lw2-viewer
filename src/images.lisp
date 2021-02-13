@@ -8,7 +8,7 @@
 
 (defun image-statistics (image-filename)
   (let* ((result-string (with-semaphore (*image-convert-semaphore*)
-			  (uiop:run-program (list "convert" image-filename "-format" "%w %h" "info:")
+			  (uiop:run-program (list "choom" "-n" "1000" "--" "convert" image-filename "-format" "%w %h" "info:")
 					    :output :string)))
 	 (result-list (split-sequence:split-sequence #\Space result-string))
 	 (mime-type (uiop:run-program (list "file" "--brief" "--mime-type" image-filename) :output (lambda (stream) (read-line stream)))))
@@ -20,7 +20,7 @@
 	(background-pixels 0)
 	(background-brightness 0))
     (with-semaphore (*image-convert-semaphore*)
-      (uiop:run-program (list "convert" image-filename "-format" "%c" "histogram:info:")
+      (uiop:run-program (list "choom" "-n" "1000" "--" "convert" image-filename "-format" "%c" "histogram:info:")
 			:output (lambda (stream)
 				  (iterate (for line next (read-line stream nil))
 					   (while line)
@@ -49,7 +49,7 @@
 
 (defun invert-image (input output)
   (with-semaphore (*image-convert-semaphore*)
-    (uiop:run-program (list "convert" input "-colorspace" "Lab" "-channel" "R" "-negate" "-gamma" "2.2" "-colorspace" "sRGB" output))))
+    (uiop:run-program (list "choom" "-n" "1000" "--" "convert" input "-colorspace" "Lab" "-channel" "R" "-negate" "-gamma" "2.2" "-colorspace" "sRGB" output))))
 
 (defun download-file (uri target)
   (sb-sys:with-deadline (:seconds 60)
