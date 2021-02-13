@@ -1839,7 +1839,7 @@ article {
 
 /*= Karma controls hover tooltips =*/
 
-@media only screen and (hover: hover) {
+@media only screen and (pointer: fine) {
 	.post .karma,
 	.comment-item .karma {
 		position: relative;
@@ -7028,7 +7028,6 @@ div.comment-child-links a {
 .vote:active {
 	transform: none;
 }
-.vote:hover::before,
 .vote.selected::before,
 .vote.clicked-once::before,
 .vote.clicked-twice::before {

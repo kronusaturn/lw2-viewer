@@ -1309,7 +1309,6 @@ div.comment-child-links a {
 .vote:active {
 	transform: none;
 }
-.vote:hover::before,
 .vote.selected::before,
 .vote.clicked-once::before,
 .vote.clicked-twice::before {

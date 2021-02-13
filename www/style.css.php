@@ -1847,7 +1847,7 @@ article {
 
 /*= Karma controls hover tooltips =*/
 
-@media only screen and (hover: hover) {
+@media only screen and (pointer: fine) {
 	.post .karma,
 	.comment-item .karma {
 		position: relative;
