@@ -138,22 +138,22 @@
 
 (defun do-lw2-post-query (auth-token data)
   (lw2.backend::do-graphql-debug data)
-  (let* ((response-json
+  (let* ((response-alist
 	  (call-with-http-response
-	   #'identity
+	   #'json:decode-json
 	   (graphql-uri *current-backend*)
 	   :method :post
+	   :want-stream t
 	   :headers (alist-without-null* "Content-Type" "application/json"
 					 "authorization" auth-token
 					 (forwarded-header))
 	   :content (encode-json-to-string data)))
-	 (response-alist (json:decode-json-from-string response-json))
 	 (res-errors (cdr (assoc :errors response-alist)))
 	 (res-data (rest (first (cdr (assoc :data response-alist))))))
     (cond
       (res-errors (lw2.backend:signal-lw2-errors res-errors))
       (res-data res-data) 
-      (t (error "Unknown response from LW2 server: ~A" response-json))))) 
+      (t (error "Unknown response from LW2 server: ~A" response-alist)))))
 
 (defun do-lw2-post-query* (auth-token data)
   (cdr (assoc :--id (do-lw2-post-query auth-token data))))
