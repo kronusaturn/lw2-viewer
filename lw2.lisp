@@ -1787,7 +1787,8 @@ signaled condition to *HTML-OUTPUT*."
                                  '(("login-username" "Username" "text" "username")
                                    ("login-password" "Password" "password" "current-password"))
                                  "Log in"
-                                 :end-html "<a href=\"/reset-password\">Forgot password</a>")
+                                 :end-html (when (typep *current-backend* 'backend-websocket-login) ;other backends not supported yet
+					     "<a href=\"/reset-password\">Forgot password</a>"))
                     (output-form out-stream "post" (format nil "/login~@[?return=~A~]" (if return (url-rewrite:url-encode return))) "signup-form" "Create account" csrf-token
                                  '(("signup-username" "Username" "text" "username")
                                    ("signup-email" "Email" "text" "email")
@@ -1821,7 +1822,7 @@ signaled condition to *HTML-OUTPUT*."
         (cond
           ((or (string= login-username "") (string= login-password "")) (emit-login-page :error-message "Please enter a username and password"))
 	  ((lw2.dnsbl:dnsbl-check (hunchentoot:real-remote-addr)) (emit-login-page :error-message "Your IP address is blacklisted."))
-          (t (multiple-value-call #'finish-login login-username (do-login "username" login-username login-password))))) 
+          (t (multiple-value-call #'finish-login login-username (do-login login-username login-password)))))
       (signup-username
         (cond
           ((not (every (lambda (x) (not (string= x ""))) (list signup-username signup-email signup-password signup-password2)))
@@ -1837,6 +1838,7 @@ signaled condition to *HTML-OUTPUT*."
   (request-method
    (:post ()
      (set-cookie "lw2-auth-token" "" :max-age 0)
+     (do-logout *current-auth-token*)
      (redirect "/"))))
 
 (defparameter *reset-password-template* (compile-template* "reset-password.html"))

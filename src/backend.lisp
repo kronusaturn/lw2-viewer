@@ -10,6 +10,7 @@
            #:*notifications-base-terms*
            #:start-background-loader #:stop-background-loader #:background-loader-running-p
 	   #:call-with-http-response
+	   #:forwarded-header #:backend-request-headers
 	   #:lw2-graphql-query #:lw2-query-string* #:lw2-query-string
            #:lw2-graphql-query-map #:lw2-graphql-query-multi
 	   #:signal-lw2-errors
@@ -189,6 +190,10 @@
 	    (when (streamp response)
 	      (ignore-errors (close response))))))))
 
+(defun forwarded-header ()
+  (let ((addr (and (boundp 'hunchentoot:*request*) (hunchentoot:real-remote-addr))))
+    (list-cond (addr "X-Forwarded-For" addr))))
+
 (defun signal-lw2-errors (errors)
   (loop for error in errors
         do (let ((message (cdr (assoc :message error)))
@@ -246,14 +251,24 @@
       "https://www.alignmentforum.org/graphql"
       (call-next-method)))
 
+(define-backend-function backend-request-headers (auth-token forwarded)
+  (backend-websocket-login
+   (list-cond* (auth-token :authorization auth-token)
+	       (call-next-method)))
+  (backend-passport-js-login
+   (list-cond* (auth-token :cookie (concatenate 'string "loginToken=" auth-token))
+	       (call-next-method)))
+  (backend-graphql
+   (alist* :content-type "application/json"
+	   (if forwarded (forwarded-header)))))
+
 (define-backend-function call-with-backend-response (fn query &key return-type auth-token)
   (backend-graphql
    (call-with-http-response
     fn
     (graphql-uri *current-backend*)
     :method :post
-    :headers (list-cond (t :content-type "application/json")
-			(auth-token :authorization auth-token))
+    :headers (backend-request-headers auth-token nil)
     :content (dynamic-let ((q (alist :query query))) (json:encode-json-to-string q))
     :want-stream (not return-type))))
 

@@ -3,7 +3,7 @@
   (:use #:cl #:alexandria #:iterate #:lw2.macro-utils)
   (:import-from #:trivial-macroexpand-all #:macroexpand-all)
   (:import-from #:trivial-cltl2 #:enclose #:augment-environment)
-  (:export #:+graphql-timestamp-format+ #:write-graphql-simple-field-list #:graphql-query-string* #:graphql-query-string #:graphql-mutation-string #:timestamp-to-graphql)
+  (:export #:+graphql-timestamp-format+ #:write-graphql-simple-field-list #:graphql-query-string* #:graphql-query-string #:graphql-operation-string #:graphql-mutation-string #:timestamp-to-graphql)
   (:recycle #:lw2.backend #:lw2.login))
 
 (in-package #:lw2.graphql)
@@ -119,7 +119,8 @@
 	(graphql-value (cdr cons))))
 
 (defgrammar graphql-argument-alist (list)
-  (emit "(" (separated-list graphql-argument "," list) ")"))
+  (when list
+    (emit "(" (separated-list graphql-argument "," list) ")")))
 
 (declaim-grammar graphql-field)
 
@@ -156,6 +157,13 @@
 
 (defun graphql-query-string (query-type terms fields)
   (with-output-to-string (stream)
+    (write-string "{" stream)
+    (write-graphql-simple-query query-type terms fields stream)
+    (write-string "}" stream)))
+
+(defun graphql-operation-string (operation-type query-type terms fields)
+  (with-output-to-string (stream)
+    (write-graphql-name operation-type stream)
     (write-string "{" stream)
     (write-graphql-simple-query query-type terms fields stream)
     (write-string "}" stream)))

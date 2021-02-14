@@ -2,10 +2,11 @@
   (:use #:cl #:lw2-viewer.config #:lw2.utils #:lw2.graphql #:lw2.backend #:lw2.backend-modules #:alexandria #:cl-json #:flexi-streams #:websocket-driver-client)
   (:import-from #:ironclad #:byte-array-to-hex-string #:digest-sequence)
   (:import-from #:lw2.context #:*current-backend*)
-  (:export #:do-lw2-resume #:do-login #:do-lw2-create-user #:do-lw2-forgot-password #:do-lw2-reset-password
+  (:export #:do-lw2-resume #:do-login #:do-lw2-create-user #:do-lw2-forgot-password #:do-lw2-reset-password #:do-logout
 	   #:do-lw2-post-query #:do-lw2-post-query*
            #:do-lw2-post #:do-lw2-post-edit #:do-lw2-post-remove #:do-lw2-comment #:do-lw2-comment-edit #:do-lw2-comment-remove
            #:do-lw2-vote #:do-user-edit #:do-create-conversation #:do-create-message)
+  (:unintern #:parse-login-result)
   (:recycle #:lw2.utils))
 
 (in-package #:lw2.login) 
@@ -16,10 +17,6 @@
 (defun maybe-output (stream prefix message)
   (if stream (format stream "~&~A: ~A~%" prefix message))
   message)
-
-(defun forwarded-header ()
-  (let ((addr (and (boundp 'hunchentoot:*request*) (hunchentoot:real-remote-addr))))
-    (list-cond (addr "X-Forwarded-For" addr))))
 
 (defun sockjs-encode-alist (alist)
   (encode-json-to-string (list (encode-json-alist-to-string alist)))) 
@@ -68,7 +65,7 @@
 				  :params params
 				  :id "3")))
 
-(defun parse-login-result (result)
+(defun parse-websocket-login-result (result)
   (let* ((result-inner (cdr (assoc :result result)))
 	 (userid (cdr (assoc :id result-inner))) 
 	 (token (cdr (assoc :token result-inner)))
@@ -79,14 +76,23 @@
 	      (values nil nil error-message)
 	      (error "Unknown response from LW2: ~A" result)))))
 
+(defun do-graphql-post-query (auth-token data)
+  (call-with-http-response
+   #'json:decode-json
+   (graphql-uri *current-backend*)
+   :method :post
+   :want-stream t
+   :headers (backend-request-headers auth-token t)
+   :content (encode-json-to-string data)))
+
 (defun do-lw2-resume (auth-token)
   (let ((result (do-lw2-sockjs-method "login" (alist :resume auth-token))))
-    (parse-login-result result)))
+    (parse-websocket-login-result result)))
 
-(define-backend-function do-login (user-designator-type user-designator password &key (try-legacy t))
+(define-backend-function do-login (user-designator password &key (try-legacy t))
   (backend-websocket-login
    (let ((result (do-lw2-sockjs-method "login"
-		   (alist :user (alist user-designator-type user-designator)
+		   (alist :user (alist "username" user-designator)
 			  :password (alist :digest (password-digest password)
 					   :algorithm "sha-256")))))
      (trivia:match result
@@ -94,14 +100,14 @@
 						(:details . (trivia:alist (:salt . legacy-salt)
 									  (:username . legacy-username)))))
 		    (if try-legacy
-			(do-login user-designator-type user-designator
+			(do-login user-designator
 				  (format nil "~A~A" legacy-salt
 					  (password-digest (format nil "~A~A ~A" legacy-salt legacy-username password)
 							   :algorithm :sha1))
 				  :try-legacy nil)
 			(values nil nil "Incorrect password")))
 		   (_
-		    (parse-login-result result))))))
+		    (parse-websocket-login-result result))))))
 
 (define-backend-function do-lw2-create-user (username email password)
   (backend-websocket-login
@@ -110,7 +116,7 @@
 			  :email email
 			  :password (alist :digest (password-digest password)
 					   :algorithm "sha-256")))))
-     (parse-login-result result)))) 
+     (parse-websocket-login-result result))))
 
 (define-backend-function do-lw2-forgot-password (email)
   (backend-websocket-login
@@ -126,28 +132,56 @@
 		   auth-token
 		   (alist :digest (password-digest password)
 			  :algorithm "sha-256"))))
-     (parse-login-result result))))
+     (parse-websocket-login-result result))))
 
-; resume session ["{\"msg\":\"connect\",\"session\":\"mKvhev8p2f4WfKd6k\",\"version\":\"1\",\"support\":[\"1\",\"pre2\",\"pre1\"]}"]
-;
-; logout ["{\"msg\":\"method\",\"method\":\"logout\",\"params\":[],\"id\":\"7\"}"]
-;
-; new user ["{\"msg\":\"method\",\"method\":\"createUser\",\"params\":[{\"username\":\"test2\",\"email\":\"test@example.com\",\"password\":{\"digest\":\"37268335dd6931045bdcdf92623ff819a64244b53d0e746d438797349d4da578\",\"algorithm\":\"sha-256\"}}],\"id\":\"8\"}"]
+(define-backend-function do-logout (auth-token)
+  (backend-websocket-login
+   (declare (ignore auth-token))))
+
+(defun parse-passport-js-login-result (result)
+  (let* ((res-errors (first (cdr (assoc :errors result))))
+	 (res-data (cdr (first (cdr (assoc :data result)))))
+	 (token (cdr (assoc :token res-data))))
+    (if res-errors
+	(values nil nil (cdr (assoc :message res-errors)))
+	(let ((user-id (cdr (first (do-lw2-post-query
+				       token (alist "query"
+						    (graphql-query-string :current-user nil '(:--id))))))))
+	  (values user-id token nil)))))
+
+(define-backend-operation do-login backend-passport-js-login (user-designator password &key try-legacy)
+  (declare (ignore try-legacy))
+  (let ((result
+	 (do-graphql-post-query
+	     nil (alist :query
+			(graphql-operation-string
+			 :mutation :login
+			 (alist :username user-designator
+				:password password)
+			 '(:token))))))
+    (print result)
+    (parse-passport-js-login-result result)))
+
+(define-backend-operation do-lw2-create-user backend-passport-js-login (username email password)
+  (let ((result
+	 (do-graphql-post-query
+	     nil (alist :query
+			(graphql-operation-string
+			 :mutation :signup
+			 (alist :username username
+				:email email
+				:password password)
+			 '(:token))))))
+    (parse-passport-js-login-result result)))
+
+(define-backend-operation do-logout backend-passport-js-login (auth-token)
+  (do-graphql-post-query auth-token (alist :query (graphql-operation-string :mutation :logout nil nil))))
 
 ; (do-lw2-post-query "OCP7NeJEW9fPpYGG_nCN3g0felGTTNd0eg5uiLNQqBR" `((("query" . "mutation vote($documentId: String, $voteType: String, $collectionName: String) { vote(documentId: $documentId, voteType: $voteType, collectionName: $collectionName) { ... on Post { currentUserVotes { _id, voteType, power } } } }") ("variables" ("documentId" . "sqhAntEGpYgFXXH2H") ("voteType" . "upvote") ("collectionName" . "Posts")) ("operationName" . "vote"))))
 
 (defun do-lw2-post-query (auth-token data)
   (lw2.backend::do-graphql-debug data)
-  (let* ((response-alist
-	  (call-with-http-response
-	   #'json:decode-json
-	   (graphql-uri *current-backend*)
-	   :method :post
-	   :want-stream t
-	   :headers (alist-without-null* "Content-Type" "application/json"
-					 "authorization" auth-token
-					 (forwarded-header))
-	   :content (encode-json-to-string data)))
+  (let* ((response-alist (do-graphql-post-query auth-token data))
 	 (res-errors (cdr (assoc :errors response-alist)))
 	 (res-data (rest (first (cdr (assoc :data response-alist))))))
     (cond

@@ -7,6 +7,7 @@
     #:backend-lmdb-cache #:backend-lmdb-environment #:backend-cache-db-path
     #:backend-graphql
     #:backend-websocket-login
+    #:backend-passport-js-login
     #:graphql-uri #:websocket-uri #:algolia-search-uri #:rest-api-uri
     #:backend-feed-crossposts
     #:backend-q-and-a #:backend-related-questions
@@ -49,6 +50,9 @@
 
 (defclass backend-websocket-login (backend-base)
   ((websocket-uri :accessor websocket-uri :initarg :websocket-uri :type simple-string))
+  (:metaclass backend-class))
+
+(defclass backend-passport-js-login (backend-base) ()
   (:metaclass backend-class))
 
 (defclass backend-algolia-search (backend-base)
@@ -100,7 +104,7 @@
 (defclass backend-lw2-modernized (backend-graphql) ()
   (:metaclass backend-class))
 
-(defclass backend-lw2 (backend-websocket-login
+(defclass backend-lw2 (backend-passport-js-login
 		       backend-lw2-modernized
 		       backend-lw2-legacy
 		       backend-lw2-misc-workarounds
