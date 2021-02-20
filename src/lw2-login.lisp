@@ -159,7 +159,6 @@
 			 (alist :username user-designator
 				:password password)
 			 '(:token))))))
-    (print result)
     (parse-passport-js-login-result result)))
 
 (define-backend-operation do-lw2-create-user backend-passport-js-login (username email password)
