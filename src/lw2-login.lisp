@@ -149,29 +149,19 @@
 						    (graphql-query-string :current-user nil '(:--id))))))))
 	  (values user-id token nil)))))
 
+(defun do-passport-js-login-operation (operation params)
+  (parse-passport-js-login-result
+   (do-graphql-post-query nil (alist :query (graphql-operation-string :mutation operation params '(:token))))))
+
 (define-backend-operation do-login backend-passport-js-login (user-designator password &key try-legacy)
   (declare (ignore try-legacy))
-  (let ((result
-	 (do-graphql-post-query
-	     nil (alist :query
-			(graphql-operation-string
-			 :mutation :login
-			 (alist :username user-designator
-				:password password)
-			 '(:token))))))
-    (parse-passport-js-login-result result)))
+  (do-passport-js-login-operation :login (alist :username user-designator
+						:password password)))
 
 (define-backend-operation do-lw2-create-user backend-passport-js-login (username email password)
-  (let ((result
-	 (do-graphql-post-query
-	     nil (alist :query
-			(graphql-operation-string
-			 :mutation :signup
-			 (alist :username username
-				:email email
-				:password password)
-			 '(:token))))))
-    (parse-passport-js-login-result result)))
+  (do-passport-js-login-operation :signup (alist :username username
+						 :email email
+						 :password password)))
 
 (define-backend-operation do-logout backend-passport-js-login (auth-token)
   (do-graphql-post-query auth-token (alist :query (graphql-operation-string :mutation :logout nil nil))))
