@@ -1,5 +1,6 @@
 (uiop:define-package #:lw2.data-viewers.post
   (:use #:cl #:lw2.utils #:lw2.sites #:lw2.backend #:lw2.context #:lw2.clean-html #:lw2.schema-type #:lw2.html-reader #:lw2.interface-utils #:lw2.user-context #:lw2.links #:lw2.backlinks)
+  (:import-from #:alexandria #:when-let)
   (:export #:post-headline-to-html #:post-body-to-html))
 
 (in-package #:lw2.data-viewers.post)
@@ -149,8 +150,8 @@
 	<div id="tags">
 	  (tag-list-to-html *current-backend* tags)
 	</div>)
-      (when (and (eq context :listing) url)
-	<div class="link-post-domain">("(~A)" (quri:uri-host (quri:uri (string-trim " " url))))</div>)
+      (when-let ((url-host (and (eq context :listing) url (ignore-errors (quri:uri-host (quri:uri (string-trim " " url)))))))
+	<div class="link-post-domain">("(~A)" url-host)</div>)
       (when (eq context :body)
 	(qualified-linking (generate-item-link :post post) meta-location))
     </div>))
