@@ -3270,7 +3270,12 @@ blockquote blockquote {
 /* IMAGES */
 /**********/
 
-#content img {
+#content img, #content figure {
+	max-width: 100%;
+}
+
+.prediction-poll > svg {
+	width: 700px;
 	max-width: 100%;
 }
 
