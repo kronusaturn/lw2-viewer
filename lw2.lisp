@@ -626,8 +626,6 @@ signaled condition to *HTML-OUTPUT*."
 				    (preview "preview")))
 		 (unless (or hide-nav-bars preview)
 		   (nav-bar-to-html out-stream "nav-bar-top" (or current-uri (replace-query-params (hunchentoot:request-uri*) "offset" nil "sort" nil))))
-		 (write-string "<script> </script>" out-stream)
-		 (force-output out-stream)
 		 (funcall fn))
 	    (format out-stream "</div></body></html>"))))))
 
@@ -1249,7 +1247,8 @@ signaled condition to *HTML-OUTPUT*."
 				      (cdr (assoc :--id post))))
 			    (post-nav-links post post-sequences)
 			    (when show-comments
-			      (finish-output out-stream)
+			      (write-string "<script> </script>" out-stream)
+			      (force-output out-stream)
 			      (with-error-html-block ()
 				;; Temporary hack to support nominations
 				(let* ((real-comments (get-post-comments post-id))
