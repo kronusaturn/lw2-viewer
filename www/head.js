@@ -514,6 +514,7 @@ function prettyDate() {
 		let pretty = dtf.format(new Date(+ jsDate));
 		window.requestAnimationFrame(() => {
 			dateElement.innerHTML = pretty;
+			dateElement.removeClass('hide-until-init');
 		});
 	}
 }
