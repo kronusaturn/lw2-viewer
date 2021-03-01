@@ -789,7 +789,9 @@ signaled condition to *HTML-OUTPUT*."
 		 (auth-token
 		  (if-let
 		   (at (hunchentoot:cookie-in "lw2-auth-token"))
-		   (if (or (string= at "") (not *current-auth-status*) (> (get-unix-time) (- (cdr (assoc :expires *current-auth-status*)) (* 60 60 24))))
+		   (if (or (string= at "")
+			   (when-let ((expires (cdr (assoc :expires *current-auth-status*))))
+			     (> (get-unix-time) (- expires (* 60 60 24)))))
 		       nil at)))
 		 (with-cache-readonly-transaction
 		     (values
@@ -1801,7 +1803,7 @@ signaled condition to *HTML-OUTPUT*."
      (finish-login (username user-id auth-token error-message &optional expires)
        (cond
          (auth-token
-           (set-cookie "lw2-auth-token" auth-token :max-age (and expires (+ (- expires (get-unix-time)) (* 24 60 60))))
+           (set-cookie "lw2-auth-token" auth-token :max-age (if expires (+ (- expires (get-unix-time)) (* 24 60 60)) (1- (expt 2 31))))
            (if expires (set-cookie "lw2-status" (json:encode-json-to-string (alist :expires expires))))
            (cache-put "auth-token-to-userid" auth-token user-id)
            (cache-put "auth-token-to-username" auth-token username)
