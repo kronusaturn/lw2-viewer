@@ -760,15 +760,8 @@ signaled condition to *HTML-OUTPUT*."
 				,@args))))))
 
 (defun call-with-error-page (fn)
-  (let* ((*current-auth-status*
-	  (if-let (status-string (hunchentoot:cookie-in "lw2-status"))
-		  (if (string= status-string "") nil
-		      (let ((json:*identifier-name-to-key* #'json:safe-json-intern))
-			(json:decode-json-from-string status-string)))))
-	 (*current-prefs*
-	  (if-let (prefs-string (hunchentoot:cookie-in "prefs"))
-		  (let ((json:*identifier-name-to-key* 'json:safe-json-intern))
-		    (ignore-errors (json:decode-json-from-string (quri:url-decode prefs-string))))))
+  (let* ((*current-auth-status* (safe-decode-json (hunchentoot:cookie-in "lw2-status")))
+	 (*current-prefs* (safe-decode-json (hunchentoot:cookie-in "prefs")))
 	 (*preview* (string-equal (hunchentoot:get-parameter "format") "preview")))
     (multiple-value-bind (*revalidate-default* *force-revalidate-default*)
 	(cond ((ppcre:scan "(?:^|,?)\\s*(?:no-cache|max-age=0)(?:$|,)" (hunchentoot:header-in* :cache-control))
@@ -783,21 +776,17 @@ signaled condition to *HTML-OUTPUT*."
 			    (or (find-site host)
 				(error "Unknown site: ~A" host))))
 	(multiple-value-bind (*current-auth-token* *current-userid* *current-username*)
-	    (if *read-only-mode*
-		(values)
-		(if-let
-		 (auth-token
-		  (if-let
-		   (at (hunchentoot:cookie-in "lw2-auth-token"))
-		   (if (or (string= at "")
-			   (when-let ((expires (cdr (assoc :expires *current-auth-status*))))
-			     (> (get-unix-time) (- expires (* 60 60 24)))))
-		       nil at)))
-		 (with-cache-readonly-transaction
-		     (values
-		      auth-token
-		      (cache-get "auth-token-to-userid" auth-token)
-		      (cache-get "auth-token-to-username" auth-token)))))
+	    (let* ((auth-token (hunchentoot:cookie-in "lw2-auth-token"))
+		   (expires (cdr (assoc :expires *current-auth-status*))))
+	      (when (and (nonempty-string auth-token)
+			 (not *read-only-mode*)
+			 (or (null expires)
+			     (and (integerp expires) (<= (get-unix-time) (- expires (* 60 60 24))))))
+		(with-cache-readonly-transaction
+		    (values
+		     auth-token
+		     (cache-get "auth-token-to-userid" auth-token)
+		     (cache-get "auth-token-to-username" auth-token)))))
 	  (let ((*current-user-slug* (and *current-userid* (get-user-slug *current-userid*)))
 		(*current-ignore-hash* (get-ignore-hash))
 		(*memoized-output-without-hyphens*

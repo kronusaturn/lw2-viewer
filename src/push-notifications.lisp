@@ -40,7 +40,7 @@
 		   (last-check-cons (or (assoc :last-check subscription) (cons :last-check nil)))
 		   (since (if-let (unix (cdr last-check-cons)) (local-time:unix-to-timestamp unix))))
 	      (cond
-		((> current-time-unix (cdr (assoc :expires subscription)))
+		((let ((expires (cdr (assoc :expires subscription)))) (and expires (> current-time-unix expires)))
 		 (delete-subscription auth-token))
 		((sb-sys:with-deadline (:seconds 30)
 		   (check-notifications (cache-get "auth-token-to-userid" auth-token) auth-token :since since))

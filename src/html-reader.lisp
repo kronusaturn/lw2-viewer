@@ -108,8 +108,9 @@
 	    (loop for c = (peek-char nil stream)
 		  while (not (member c '(#\Space #\Newline #\>)))
 	       do (vector-push-extend (read-char stream) buffer))
-	    (if (string= buffer "")
-		(return-from html-reader (find-symbol "<" *package*)))
+	    (when-let ((symbol (find-symbol (concatenate 'string "<" buffer) *package*)))
+	      (unless (eq (symbol-package symbol) *package*)
+		(return-from html-reader symbol)))
 	    (setf element (coerce buffer 'simple-string))
 	    (output-strings "<" element)
 	    (loop
