@@ -1339,6 +1339,7 @@ signaled condition to *HTML-OUTPUT*."
 
 (hunchentoot:define-easy-handler (view-karma-vote :uri "/karma-vote") ()
   (with-error-page
+      (setf (hunchentoot:content-type*) "application/json")
       (let ((auth-token *current-auth-token*))
 	(with-response-stream (out-stream)
 	  (request-method
@@ -1360,6 +1361,7 @@ signaled condition to *HTML-OUTPUT*."
 
 (hunchentoot:define-easy-handler (view-check-notifications :uri "/check-notifications") (format)
   (with-error-page
+      (setf (hunchentoot:content-type*) "application/json")
       (if *current-auth-token*
 	  (let ((notifications-status (check-notifications (logged-in-userid) *current-auth-token* :full (string= format "push"))))
 	    (json:encode-json-to-string notifications-status)))))
