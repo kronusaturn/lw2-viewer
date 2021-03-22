@@ -15,7 +15,7 @@
     (destructuring-bind (width height) result-list
       (values (parse-integer width) (parse-integer height) mime-type))))
 
-(defun image-invertable (image-filename)
+(defun image-invertible (image-filename)
   (let ((histogram-list nil)
 	(background-pixels 0)
 	(background-brightness 0))
@@ -71,7 +71,7 @@
     (unless (probe-file pathname)
       (download-file uri pathname))
     (multiple-value-bind (width height mime-type) (image-statistics pathname)
-      (let* ((inverted-uri (and (image-invertable pathname) (format nil "~A-inverted" proxy-uri)))
+      (let* ((inverted-uri (and (image-invertible pathname) (format nil "~A-inverted" proxy-uri)))
 	     (inverted-pathname (and inverted-uri (format nil "www~A" inverted-uri))))
 	(when inverted-uri (invert-image pathname inverted-pathname))
 	(alist :version *current-version*
