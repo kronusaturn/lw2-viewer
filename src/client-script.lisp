@@ -1,6 +1,6 @@
 (uiop:define-package #:lw2.client-script
   (:documentation "Facilities for code that runs on both web browsers and the server.")
-  (:use #:cl #:parenscript)
+  (:use #:cl #:parenscript #:lw2.html-reader)
   (:import-from #:alexandria #:assoc-value)
   (:export #:client-script-function #:client-script #:client-defun
 	   #:write-package-client-scripts
@@ -49,3 +49,9 @@
 
 (defmacro when-server (&body body)
   `(progn ,@body))
+
+(defmacro call-with-server-data (client-function &key server-endpoint-name enclosed-variables server-data-form)
+  `(with-html-stream-output (:stream stream)
+     (write-string ,(format nil "<script async src=\"data:text/javascript,callWithServerData(~A,'~A?p=" (json:lisp-to-camel-case (string client-function)) server-endpoint-name) stream)
+     (write-string (quri:url-encode (json:encode-json-to-string (list ,@enclosed-variables))) stream)
+     (write-string "')\"></script>")))
