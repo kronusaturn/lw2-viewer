@@ -25,11 +25,18 @@
 	    pretty-time
 	    (pretty-time-js))))
 
-(defun pretty-number (number &optional object)
-  (let ((str (coerce (format nil "~:D~@[<span> ~A~P</span>~]" number object number) '(vector character))))
-    (if (eq (aref str 0) #\-)
-      (setf (aref str 0) #\MINUS_SIGN))
-    str))
+(defun pretty-number (number &optional object (output-format :html))
+  (with-output-to-string (*standard-output*)
+    (when (minusp number)
+      (write-char #\MINUS_SIGN))
+    (format t "~:D" (abs number))
+    (when object
+      (flet ((write-object () (format t " ~A~P" object number)))
+	(cond ((eq output-format :html)
+	       (write-string "<span>")
+	       (write-object)
+	       (write-string "</span>"))
+	      (t (write-object)))))))
 
 (defun generate-post-auth-link (post &optional comment-id absolute need-auth)
   (if need-auth
