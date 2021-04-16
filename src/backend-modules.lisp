@@ -205,6 +205,6 @@
     (multiple-value-bind (method-qualifiers method-args body) (process-operation-definition args)
       `(defmethod ,inner-name ,.method-qualifiers ,(funcall lambda-list-translator backend method-args) ,@body))))
 
-(defgeneric call-with-backend-context (backend fn)
-  (:method ((backend backend-base) fn)
+(defgeneric call-with-backend-context (backend request fn)
+  (:method ((backend backend-base) (request t) fn)
     (funcall fn)))

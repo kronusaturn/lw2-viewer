@@ -17,7 +17,7 @@
 (defun make-site-background-loader-fn (site)
   (let (last-post-processed last-comment-processed)
     (lambda ()
-      (with-site-context (site)
+      (with-site-context (site :request nil)
 	(log-and-ignore-errors
 	 (let* ((posts-json (sb-sys:with-deadline (:seconds 120) (get-posts-json)))
 		(posts-list (decode-query-result posts-json)))

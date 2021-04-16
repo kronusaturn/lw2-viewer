@@ -754,7 +754,7 @@ signaled condition to *HTML-OUTPUT*."
 				#'fn
 				,@args))))))
 
-(defmethod call-with-backend-context ((backend backend-token-login) fn)
+(defmethod call-with-backend-context ((backend backend-token-login) (request (eql t)) fn)
   (let ((*current-auth-status* (safe-decode-json (hunchentoot:cookie-in "lw2-status"))))
     (multiple-value-bind (*current-auth-token* *current-userid* *current-username*)
 	(let* ((auth-token (hunchentoot:cookie-in "lw2-auth-token"))
@@ -771,9 +771,9 @@ signaled condition to *HTML-OUTPUT*."
       (let ((*current-user-slug* (and *current-userid* (get-user-slug *current-userid*))))
 	(funcall fn)))))
 
-(defmethod call-with-site-context ((site ignore-list-site) fn)
+(defmethod call-with-site-context ((site ignore-list-site) (request (eql t)) fn)
   (call-next-method
-   site
+   site request
    (lambda ()
      (let ((*current-ignore-hash* (get-ignore-hash)))
        (funcall fn)))))
