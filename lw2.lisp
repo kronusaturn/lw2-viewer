@@ -5,6 +5,7 @@
 	#:lw2.graphql
 	#:lw2.conditions
 	#:lw2.routes
+	#:lw2.response
 	#:lw2.schema-type
 	#:lw2.interface-utils
 	#:lw2.user-context
@@ -560,11 +561,13 @@ signaled condition to *HTML-OUTPUT*."
 	      (set-script-variables ("document.domain" site-domain)))
 	    (unless preview
 	      (delimit)
+	      (when (typep *current-site* 'login-site)
+		(set-script-variables
+		 ("loggedInUserId" (or (logged-in-userid) ""))
+		 ("loggedInUserDisplayName" (or (logged-in-username) ""))
+		 ("loggedInUserSlug" (or (logged-in-user-slug) ""))))
 	      (set-script-variables
 	       ("applicationServerKey" (get-vapid-public-key))
-	       ("loggedInUserId" (or (logged-in-userid) ""))
-	       ("loggedInUserDisplayName" (or (logged-in-username) ""))
-	       ("loggedInUserSlug" (or (logged-in-user-slug) ""))
 	       ("GW" (alist "useFancyFeatures" (not (typep *current-site* 'arbital-site))
 			    "secureCookies" (to-boolean (site-secure *current-site*))
 			    "csrfToken" csrf-token
@@ -585,6 +588,8 @@ signaled condition to *HTML-OUTPUT*."
 	    (for-resource-type (:async-script uri)
 			       (format out-stream "<script src=\"~A\" async></script>" uri)))
 	  (funcall lw2.resources::*style-tags* out-stream)
+	  (when (and (typep *current-site* 'login-site) (logged-in-userid))
+	    (call-with-server-data 'process-user-status "/current-user-status"))
 	  (for-resource-type (:stylesheet uri &key media class)
 			     (format out-stream "<link rel=\"stylesheet\" href=\"~A\"~@[ media=\"~A\"~]~@[ class=\"~A\"~]>" uri media class))
 	  (generate-fonts-html-headers (site-fonts-source *current-site*))
@@ -602,7 +607,7 @@ signaled condition to *HTML-OUTPUT*."
 	      <meta property="og:description" content=social-description>
 	      <meta property="og:type" content="article">))
 	  (with-delimited-writer (out-stream delimit :begin "<style>" :between #.(format nil "~%") :end "</style>")
-	    (unless (logged-in-userid)
+	    (unless (and (typep *current-site* 'login-site) (logged-in-userid))
 	      (delimit)
 	      (write-string "button.vote { display: none }" out-stream))
 	    (when *memoized-output-without-hyphens*
@@ -739,16 +744,6 @@ signaled condition to *HTML-OUTPUT*."
       (setf *current-prefs* (remove key *current-prefs* :key #'car)))
   (set-cookie "prefs" (quri:url-encode (json:encode-json-to-string *current-prefs*))))
 
-(defmacro with-response-stream ((out-stream) &body body) `(dynamic-flet ((fn (,out-stream) ,@body)) (call-with-response-stream #'fn)))
-
-(defun call-with-response-stream (fn)
-  (unless (eq (hunchentoot:request-method*) :head)
-    (let ((*html-output* (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8)))
-      (handler-case
-	  (funcall fn *html-output*)
-	(serious-condition () (close *html-output*))
-	(:no-error (&rest x) (declare (ignore x)) (finish-output *html-output*))))))
-
 (defmacro emit-page ((out-stream &rest args &key (return-code 200) &allow-other-keys) &body body)
   (once-only (return-code)
     `(progn
@@ -759,51 +754,58 @@ signaled condition to *HTML-OUTPUT*."
 				#'fn
 				,@args))))))
 
+(defmethod call-with-backend-context ((backend backend-token-login) fn)
+  (let ((*current-auth-status* (safe-decode-json (hunchentoot:cookie-in "lw2-status"))))
+    (multiple-value-bind (*current-auth-token* *current-userid* *current-username*)
+	(let* ((auth-token (hunchentoot:cookie-in "lw2-auth-token"))
+	       (expires (cdr (assoc :expires *current-auth-status*))))
+	  (when (and (nonempty-string auth-token)
+		     (not *read-only-mode*)
+		     (or (null expires)
+			 (and (integerp expires) (<= (get-unix-time) (- expires (* 60 60 24))))))
+	    (with-cache-readonly-transaction
+		(values
+		 auth-token
+		 (cache-get "auth-token-to-userid" auth-token)
+		 (cache-get "auth-token-to-username" auth-token)))))
+      (let ((*current-user-slug* (and *current-userid* (get-user-slug *current-userid*))))
+	(funcall fn)))))
+
+(defmethod call-with-site-context ((site ignore-list-site) fn)
+  (call-next-method
+   site
+   (lambda ()
+     (let ((*current-ignore-hash* (get-ignore-hash)))
+       (funcall fn)))))
+
 (defun call-with-error-page (fn)
-  (let* ((*current-auth-status* (safe-decode-json (hunchentoot:cookie-in "lw2-status")))
-	 (*current-prefs* (safe-decode-json (hunchentoot:cookie-in "prefs")))
-	 (*preview* (string-equal (hunchentoot:get-parameter "format") "preview")))
-    (multiple-value-bind (*revalidate-default* *force-revalidate-default*)
-	(cond ((ppcre:scan "(?:^|,?)\\s*(?:no-cache|max-age=0)(?:$|,)" (hunchentoot:header-in* :cache-control))
-	       (values t t))
-	      (*preview*
-	       (values nil nil))
-	      (t
-	       (values t nil)))
-      (when (not *revalidate-default*)
-	(setf (hunchentoot:header-out :cache-control) (format nil "public, max-age=~A" (* 5 60))))
-      (with-site-context ((let ((host (or (hunchentoot:header-in* :x-forwarded-host) (hunchentoot:header-in* :host))))
-			    (or (find-site host)
-				(error "Unknown site: ~A" host))))
-	(multiple-value-bind (*current-auth-token* *current-userid* *current-username*)
-	    (let* ((auth-token (hunchentoot:cookie-in "lw2-auth-token"))
-		   (expires (cdr (assoc :expires *current-auth-status*))))
-	      (when (and (nonempty-string auth-token)
-			 (not *read-only-mode*)
-			 (or (null expires)
-			     (and (integerp expires) (<= (get-unix-time) (- expires (* 60 60 24))))))
-		(with-cache-readonly-transaction
-		    (values
-		     auth-token
-		     (cache-get "auth-token-to-userid" auth-token)
-		     (cache-get "auth-token-to-username" auth-token)))))
-	  (let ((*current-user-slug* (and *current-userid* (get-user-slug *current-userid*)))
-		(*current-ignore-hash* (get-ignore-hash))
-		(*memoized-output-without-hyphens*
-		 ;; Soft hyphen characters mess up middle-click paste and screen readers, so try to identify whether they are necessary.
-		 ;; See https://caniuse.com/?search=hyphens
-		 (if-let ((ua (hunchentoot:header-in* :user-agent)))
-		   (regex-case ua
-		     (" Chrome/(\\d+)"
-		      (declare (regex-groups-min 1))
-		      (or (> (parse-integer (reg 0)) 87)
-			  (ppcre:scan "Macintosh|Android" ua)))
-		     (" Edge/(\\d+)"
-		      (declare (regex-groups-min 1))
-		      (> 19 (parse-integer (reg 0))))
-		     (t t))
-		   t)))
-	    (with-page-resources
+  (with-response-context ()
+    (let* ((*current-prefs* (safe-decode-json (hunchentoot:cookie-in "prefs")))
+	   (*preview* (string-equal (hunchentoot:get-parameter "format") "preview")))
+      (multiple-value-bind (*revalidate-default* *force-revalidate-default*)
+	  (cond ((ppcre:scan "(?:^|,?)\\s*(?:no-cache|max-age=0)(?:$|,)" (hunchentoot:header-in* :cache-control))
+		 (values t t))
+		(*preview*
+		 (values nil nil))
+		(t
+		 (values t nil)))
+	(when (not *revalidate-default*)
+	  (setf (hunchentoot:header-out :cache-control) (format nil "public, max-age=~A" (* 5 60))))
+	(let ((*memoized-output-without-hyphens*
+	       ;; Soft hyphen characters mess up middle-click paste and screen readers, so try to identify whether they are necessary.
+	       ;; See https://caniuse.com/?search=hyphens
+	       (if-let ((ua (hunchentoot:header-in* :user-agent)))
+		       (regex-case ua
+				   (" Chrome/(\\d+)"
+				    (declare (regex-groups-min 1))
+				    (or (> (parse-integer (reg 0)) 87)
+					(ppcre:scan "Macintosh|Android" ua)))
+				   (" Edge/(\\d+)"
+				    (declare (regex-groups-min 1))
+				    (> 19 (parse-integer (reg 0))))
+				   (t t))
+		       t)))
+	  (with-page-resources
 	      (catch 'abort-response
 		(handler-bind
 		    ((fatal-error (lambda (condition)
@@ -826,7 +828,7 @@ signaled condition to *HTML-OUTPUT*."
 							     (min (round (log 30 1.3))
 								  (- (hunchentoot:taskmaster-max-thread-count (symbol-value '*hunchentoot-taskmaster*))
 								     (hunchentoot:acceptor-requests-in-progress (symbol-value '*test-acceptor*))))))
-			 (funcall fn)))))))))))))
+			 (funcall fn))))))))))))
 
 (defmacro with-error-page (&body body)
   `(dynamic-flet ((fn () ,@body)) (call-with-error-page #'fn)))
@@ -883,7 +885,7 @@ signaled condition to *HTML-OUTPUT*."
 		title (replace-query-params (hunchentoot:request-uri*) "offset" nil "format" "rss")))
       (format out-stream "</div>"))))
 
-(defun view-items-index (items &key section title current-uri hide-title need-auth (pagination (pagination-nav-bars)) (top-nav (lambda () (page-toolbar-to-html :title title))) (content-class "index-page") alternate-html)
+(defun view-items-index (items &key section title current-uri hide-title need-auth extra-head (pagination (pagination-nav-bars)) (top-nav (lambda () (page-toolbar-to-html :title title))) (content-class "index-page") alternate-html)
   (alexandria:switch ((hunchentoot:get-parameter "format") :test #'string=)
                      ("rss" 
                       (setf (hunchentoot:content-type*) "application/rss+xml; charset=utf-8")
@@ -892,7 +894,7 @@ signaled condition to *HTML-OUTPUT*."
                      (t
                        (emit-page (out-stream :title (if hide-title nil title) :description (site-description *current-site*) :content-class content-class
                                               :current-uri current-uri :robots (if (hunchentoot:get-parameter :offset) "noindex, nofollow")
-                                              :pagination pagination :top-nav top-nav)
+                                              :pagination pagination :top-nav top-nav :extra-head extra-head)
 				  (if alternate-html
 				      (funcall alternate-html)
 				      (write-index-items-to-html out-stream items
@@ -1162,6 +1164,15 @@ signaled condition to *HTML-OUTPUT*."
 	       (output-comments-inner)
 	       (format out-stream "</div>")))))
 
+(define-json-endpoint (view-karma-vote-post forum-site "/karma-vote/post")
+  (let ((auth-token *current-auth-token*))
+    (request-method
+     (:get (post-id)
+       (hash-cond (make-hash-table)
+	 (post-id "postVotes" (alist post-id (get-post-vote post-id auth-token)))
+	 (post-id "commentVotes" (get-post-comments-votes post-id auth-token))
+	 (post-id "tagVotes" (get-post-tag-votes post-id auth-token)))))))
+
 (define-page view-post-lw2-link (:function #'match-lw2-link post-id comment-id * comment-link-type)
                                 (need-auth
                                  chrono
@@ -1275,7 +1286,8 @@ signaled condition to *HTML-OUTPUT*."
 										    (list "comment" normal-comments t)))
 					 do (output-comments out-stream name comments nil
 							     :replies-open open
-							     :overcomingbias-sort (cdr (assoc :comment-sort-order post)) :chrono chrono :preview preview))))))))))))))
+							     :overcomingbias-sort (cdr (assoc :comment-sort-order post)) :chrono chrono :preview preview)))))))
+			    (call-with-server-data 'process-vote-data (format nil "/karma-vote/post?post-id=~A" post-id)))))))))
    (:post ()
 	  (post-comment post-id))))
 
@@ -1337,27 +1349,27 @@ signaled condition to *HTML-OUTPUT*."
 		       (concatenate 'string (generate-item-link :post new-post-data) "?need-auth=y")
 		       (generate-item-link :post new-post-data))))))))
 
-(hunchentoot:define-easy-handler (view-karma-vote :uri "/karma-vote") ()
-  (with-error-page
-      (setf (hunchentoot:content-type*) "application/json")
-      (let ((auth-token *current-auth-token*))
-	(with-response-stream (out-stream)
-	  (request-method
-	    (:get (post-id shortform (offset :type fixnum :default 0))
-	      (json:encode-json-alist
-	       (list-cond
-		(post-id "postVote" (get-post-vote post-id auth-token))
-		(post-id "commentVotes" (alist-hash-table (delete-if (lambda (x) (null (cdr x))) (get-post-comments-votes post-id auth-token))))
-		(shortform "commentVotes" (alist-hash-table (delete-if (lambda (x) (null (cdr x))) (get-shortform-votes auth-token :offset offset))))
-		(t "alignmentForumAllowed"
-		   (member "alignmentForum" (cdr (assoc :groups (get-user :user-id (logged-in-userid)))) :test #'string=)))
-	       out-stream))
-	    (:post (target target-type vote-type)
-	      (multiple-value-bind (points vote-type vote-data) (do-lw2-vote auth-token target target-type vote-type)
-		(json:encode-json
-		 (alist-bind (vote-count af af-base-score) vote-data
-			     (list (vote-buttons points :as-text t :af-score (and af af-base-score)) vote-type (votes-to-tooltip vote-count)))
-		 out-stream))))))))
+(define-json-endpoint (view-karma-vote forum-site "/karma-vote")
+    (let ((auth-token *current-auth-token*))
+	(request-method
+	 (:post (target target-type vote-type)
+		(multiple-value-bind (points vote-type vote-data) (do-lw2-vote auth-token target target-type vote-type)
+		   (alist-bind (vote-count af af-base-score) vote-data
+			       (list (vote-buttons points :as-text t :af-score (and af af-base-score)) vote-type (votes-to-tooltip vote-count))))))))
+
+(delete-easy-handler 'view-karma-vote)
+
+(define-json-endpoint (view-user-status login-site "/current-user-status")
+    (let ((auth-token *current-auth-token*))
+      (request-method
+       (:get ()
+	     (if (lw2-graphql-query (graphql-query-string "currentUser" nil '(:--id)) :auth-token auth-token)
+		 (sethash (make-hash-table)
+			  "notifications" (check-notifications (logged-in-userid) auth-token)
+			  "alignmentForumAllowed" (member "alignmentForum" (cdr (assoc :groups (get-user :user-id (logged-in-userid)))) :test #'string=))
+		 (with-cache-transaction
+		   (cache-del "auth-token-to-userid" auth-token)
+		   (cache-del "auth-token-to-username" auth-token)))))))
 
 (hunchentoot:define-easy-handler (view-check-notifications :uri "/check-notifications") (format)
   (with-error-page
@@ -1403,6 +1415,13 @@ signaled condition to *HTML-OUTPUT*."
 	<div class="posting-controls standalone with-markdown-editor" onsubmit="disableBeforeUnload();">(with-html-stream-output (inner))</div>
 	(inner))))
 
+(define-json-endpoint (view-karma-vote-shortform shortform-site "/karma-vote/shortform")
+  (let ((auth-token *current-auth-token*))
+    (request-method
+     (:get ((offset :type fixnum :default 0))
+	   (sethash (make-hash-table)
+		    "commentVotes" (get-shortform-votes auth-token :offset offset))))))
+
 (define-component view-comments-index (index-type)
   (:http-args ((offset :type fixnum)
 	       (limit :type fixnum)
@@ -1437,7 +1456,8 @@ signaled condition to *HTML-OUTPUT*."
 						       (comment-tree-to-html *html-output*
 									     (make-comment-parent-hash
 									      (flatten-shortform-comments recent-comments)))
-						     </div>))))))))
+						       </div>
+						       (call-with-server-data 'process-vote-data (format nil "/karma-vote/shortform?offset=~A" (or offset 0)))))))))))
    (:post ()
      (post-comment nil :shortform t))))
 
@@ -1469,6 +1489,15 @@ signaled condition to *HTML-OUTPUT*."
 														(if post-count (format nil " (~A)" post-count)))</a></li>))
   </ul>)
 
+(define-json-endpoint (view-karma-vote-tag forum-site "/karma-vote/tag")
+  (let ((auth-token *current-auth-token*))
+    (request-method
+     (:get (tag-id post-id)
+       (hash-cond (make-hash-table)
+	 (tag-id "postVotes" (get-tag-post-votes tag-id auth-token))
+	 (tag-id "commentVotes" (get-tag-comments-votes tag-id auth-token))
+	 (post-id "tagVotes" (get-post-tag-votes post-id auth-token)))))))
+
 (define-component view-tag (slug)
   (:http-args ((sort :default :relevant :member '(:relevant :new :old))))
   (let* ((tag (first (lw2-graphql-query (lw2-query-string :tag :list (alist :view "tagBySlug" :slug slug) :context :body))))
@@ -1478,6 +1507,7 @@ signaled condition to *HTML-OUTPUT*."
       (renderer ()
 	(view-items-index posts
 			  :title (format nil "~A tag" name)
+			  :extra-head (lambda () (call-with-server-data 'process-vote-data (format nil "/karma-vote/tag?tag-id=~A" tag-id)))
 			  :top-nav (lambda ()
 				     (page-toolbar-to-html :title name :rss (not wiki-only))
 				     (tag-to-html tag)

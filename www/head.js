@@ -482,7 +482,6 @@ GW.commentActionButtonClicked = (event) => {
 };
 
 function initializeCommentControls() {
-	if(query(".tag-index-page")) return; // FIXME
 	e = document.createElement("div");
 	e.className = "comment-controls posting-controls";
 	document.currentScript.insertAdjacentElement("afterend", e);
@@ -522,3 +521,13 @@ function prettyDate() {
 
 // Hide elements that require javascript until ready.
 query("head").insertAdjacentHTML("beforeend", "<style>.only-without-js { display: none; }</style><style id='hide-until-init'>.hide-until-init { visibility: hidden; }</style>");
+
+/****************/
+/* SERVER CALLS */
+/****************/
+
+let deferredCalls = [];
+
+function callWithServerData(fname, uri) {
+	deferredCalls.push([fname, uri]);
+}

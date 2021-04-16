@@ -6,6 +6,7 @@
     #:backend-base
     #:backend-lmdb-cache #:backend-lmdb-environment #:backend-cache-db-path
     #:backend-graphql
+    #:backend-token-login
     #:backend-websocket-login
     #:backend-passport-js-login
     #:graphql-uri #:websocket-uri #:algolia-search-uri #:rest-api-uri
@@ -23,7 +24,8 @@
     #:backend-lw2-misc-features
     #:backend-lw2-legacy #:backend-lw2-modernized #:backend-lw2 #:backend-algolia-search #:backend-ea-forum #:backend-accordius
     #:backend-arbital
-    #:make-backend #:define-backend-function #:define-backend-operation #:backend)
+    #:make-backend #:define-backend-function #:define-backend-operation #:backend
+    #:call-with-backend-context)
   (:unintern #:declare-backend-function)
   (:recycle #:lw2.backend #:lw2.login))
 
@@ -48,11 +50,14 @@
   ((graphql-uri :accessor graphql-uri :initarg :graphql-uri :type simple-string))
   (:metaclass backend-class))
 
-(defclass backend-websocket-login (backend-base)
+(defclass backend-token-login (backend-base) ()
+  (:metaclass backend-class))
+
+(defclass backend-websocket-login (backend-token-login)
   ((websocket-uri :accessor websocket-uri :initarg :websocket-uri :type simple-string))
   (:metaclass backend-class))
 
-(defclass backend-passport-js-login (backend-base) ()
+(defclass backend-passport-js-login (backend-token-login) ()
   (:metaclass backend-class))
 
 (defclass backend-algolia-search (backend-base)
@@ -199,3 +204,7 @@
   (multiple-value-bind (inner-name lambda-list-translator) (operation-name-and-lambda-list-translator name)
     (multiple-value-bind (method-qualifiers method-args body) (process-operation-definition args)
       `(defmethod ,inner-name ,.method-qualifiers ,(funcall lambda-list-translator backend method-args) ,@body))))
+
+(defgeneric call-with-backend-context (backend fn)
+  (:method ((backend backend-base) fn)
+    (funcall fn)))

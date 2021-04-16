@@ -4,7 +4,7 @@
   (:export
     #:*sites*
     #:site #:forum-site #:wiki-site
-    #:shortform-site
+    #:login-site #:shortform-site #:ignore-list-site
     #:alternate-frontend-site #:lesswrong-viewer-site #:ea-forum-viewer-site
     #:arbital-site
     #:site-class #:call-route-handler #:site-class-routes
@@ -40,10 +40,8 @@
    (host :accessor site-host :initarg :host :type simple-string)
    (domain :accessor site-domain :initarg :domain :initform nil)
    (secure :accessor site-secure :initarg :secure)
-   (backend :accessor site-backend :initarg :backend :type backend-base)
    (title :accessor site-title :initarg :title :type simple-string)
    (description :accessor site-description :initarg :description :type simple-string)
-   (background-loader-enabled :accessor background-loader-enabled :initarg :use-background-loader :initform nil :type boolean)
    (fonts-source :accessor site-fonts-source :initarg :fonts-source :initform (make-instance 'google-fonts-source) :type fonts-source))
   (:metaclass site-class))
 
@@ -54,25 +52,36 @@
 (defmethod call-route-handler ((s site) request-uri)
   (call-route-handler (class-of s) request-uri))
 
-(defclass forum-site (site) ()
+(defclass backend-site (site)
+  ((backend :accessor site-backend :initarg :backend :type backend-base)
+   (background-loader-enabled :accessor background-loader-enabled :initarg :use-background-loader :initform nil :type boolean))
   (:metaclass site-class))
 
-(defclass wiki-site (site) ()
+(defclass login-site (backend-site) ()
   (:metaclass site-class))
 
-(defclass shortform-site (site) ()
+(defclass forum-site (backend-site) ()
   (:metaclass site-class))
 
-(defclass alternate-frontend-site (site)
+(defclass wiki-site (backend-site) ()
+  (:metaclass site-class))
+
+(defclass shortform-site (backend-site) ()
+  (:metaclass site-class))
+
+(defclass ignore-list-site (login-site) ()
+  (:metaclass site-class))
+
+(defclass alternate-frontend-site (backend-site)
   ((main-site-title :accessor main-site-title :initarg :main-site-title :type simple-string)
    (main-site-abbreviation :accessor main-site-abbreviation :initarg :main-site-abbreviation :type simple-string)
    (main-site-uri :accessor main-site-uri :initarg :main-site-uri :type simple-string))
   (:metaclass site-class))
 
-(defclass lesswrong-viewer-site (forum-site alternate-frontend-site shortform-site) ()
+(defclass lesswrong-viewer-site (forum-site ignore-list-site login-site alternate-frontend-site shortform-site) ()
   (:metaclass site-class))
 
-(defclass ea-forum-viewer-site (forum-site alternate-frontend-site shortform-site) ()
+(defclass ea-forum-viewer-site (forum-site ignore-list-site login-site alternate-frontend-site shortform-site) ()
   (:metaclass site-class))
 
 (defclass arbital-site (wiki-site alternate-frontend-site) ()
@@ -86,10 +95,16 @@
   (find-if (lambda (site) (host-matches site host))
            *sites*))
 
-(defmethod call-with-site-context ((site site) fn)
-  (let ((*current-site* site)
-        (*current-backend* (site-backend site)))
-    (funcall fn)))
+(defgeneric call-with-site-context (site fn)
+  (:method :around ((site site) fn)
+    (let ((*current-site* site))
+      (call-next-method)))
+  (:method ((site site) fn)
+    (funcall fn))
+  (:method ((site backend-site) fn)
+    (let* ((backend (site-backend site))
+	   (*current-backend* backend))
+      (call-with-backend-context backend #'call-next-method))))
 
 (defmacro with-site-context ((site) &body body)
   `(call-with-site-context ,site (lambda () ,@body)))
