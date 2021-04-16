@@ -13,6 +13,7 @@
 	   #:to-boolean #:nonzero-number-p #:truthy-string-p
 	   #:firstn #:map-plist #:filter-plist #:alist-bind
 	   #:list-cond #:list-cond*
+	   #:hash-cond #:sethash
 	   #:safe-decode-json
 	   #:string-to-existing-keyword #:call-with-safe-json #:js-true
 	   #:delete-easy-handler #:abnormal-unwind-protect
@@ -323,6 +324,20 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
 
 (defmacro list-cond (&body clauses)
   `(list-cond* ,@clauses nil))
+
+(defmacro hash-cond (hash &body clauses)
+  (once-only (hash)
+    `(progn
+       ,@(iter (for (predicate-form key-form value-form) in clauses)
+	       (collect `(when ,predicate-form (setf (gethash ,key-form ,hash) ,value-form))))
+       ,hash)))
+
+(defmacro sethash (hash &rest pairs)
+  (once-only (hash)
+	     `(progn
+		,@(iter (for (key value) on pairs by #'cddr)
+			(collect `(setf (gethash ,key ,hash) ,value)))
+		,hash)))
 
 (defun safe-decode-json (source)
   (when (or (streamp source) (nonempty-string source))

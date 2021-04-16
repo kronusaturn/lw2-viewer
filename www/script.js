@@ -144,6 +144,27 @@ function doAjax(params) {
 	}
 }
 
+function callWhenDOMReady(fn) {
+	if(document.readyState == "loading") {
+		document.addEventListener("readystatechange", () => callWhenDOMReady(fn));
+	} else {
+		window.requestIdleCallback(fn, {timeout: 3000});
+	}
+}
+
+function callWithServerData(fname, uri) {
+	doAjax({
+		location: uri,
+		onSuccess: (event) => {
+			let response = JSON.parse(event.target.responseText);
+			window[fname](response);
+		}
+	});
+}
+
+deferredCalls.forEach((x) => callWithServerData.apply(null, x));
+deferredCalls = null;
+
 /*	Return the currently selected text, as HTML (rather than unstyled text).
 	*/
 function getSelectionHTML() {
@@ -223,24 +244,21 @@ GW.disableLogging = (permanently = false) => {
 /* INBOX INDICATOR */
 /*******************/
 
-function updateInbox() {
-	GWLog("updateInbox");
-	if (!loggedInUserId) return;
-
-	let request = new XMLHttpRequest();
-	request.addEventListener("load", GW.updateInboxRequestLoaded = (event) => {
-		GWLog("GW.updateInboxRequestLoaded");
-		if (event.target.status != 200) return;
-
-		let response = JSON.parse(event.target.responseText);
-		if (response) {
+function processUserStatus(userStatus) {
+	window.userStatus = userStatus;
+	if(userStatus) {
+		if(userStatus.notifications) {
 			let element = query('#inbox-indicator');
-			element.className = 'new-messages';
-			element.title = 'New messages [o]';
+			let fn = (element) => {
+				element.className = 'new-messages';
+				element.title = 'New messages [o]';
+			};
+			if(element) fn(element);
+			else callWhenDomReady(() => fn(query('#inbox-indicator')));
 		}
-	});
-	request.open("GET", "/check-notifications");
-	request.send();
+	} else {
+		location.reload();
+	}
 }
 
 /**************/
@@ -618,11 +636,11 @@ function voteEvent(voteButton, numClicks) {
 	let voteType = makeVoteType(vote);
 	let oldVoteType;
 	if (targetType == "Posts") {
-		oldVoteType = postVote;
-		postVote = ((voteType == oldVoteType) ? null : voteType);
+		oldVoteType = voteData.postVotes[targetId];
+		voteData.postVotes[targetId] = ((voteType == oldVoteType) ? null : voteType);
 	} else {
-		oldVoteType = commentVotes[targetId];
-		commentVotes[targetId] = ((voteType == oldVoteType) ? null : voteType);
+		oldVoteType = voteData.commentVotes[targetId];
+		voteData.commentVotes[targetId] = ((voteType == oldVoteType) ? null : voteType);
 	}
 	let f = () => { sendVoteRequest(targetId, targetType, voteType, makeVoteCompleteEvent((targetType == 'Comments' ? voteButton.parentNode : null))) };
 	if (oldVoteType && (oldVoteType != voteType)) {
@@ -630,6 +648,47 @@ function voteEvent(voteButton, numClicks) {
 	} else {
 		f();
 	}
+}
+
+function initializeVoteButtons() {
+	// Color the upvote/downvote buttons with an embedded style sheet.
+	query("head").insertAdjacentHTML("beforeend","<style id='vote-buttons'>" + 
+					 `.upvote:hover,
+					 .upvote:focus,
+					 .upvote.selected {
+						 color: #00d800;
+					 }
+					 .downvote:hover,
+					 .downvote:focus,
+					 .downvote.selected {
+						 color: #eb4c2a;
+					 }` +
+					 "</style>");
+
+	// Activate the vote buttons.
+	queryAll("button.vote").forEach(voteButton => {
+		voteButton.addActivateEvent(voteButtonClicked);
+	});
+}
+
+function processVoteData(voteData) {
+	window.voteData = voteData;
+	
+	callWhenDOMReady(() => {
+		queryAll(".post .post-meta .karma-value").forEach(karmaValue => {
+			let postID = karmaValue.parentNode.dataset.postId;
+			addVoteButtons(karmaValue, voteData.postVotes[postId], 'Posts');
+			karmaValue.parentElement.addClass("active-controls");
+		});
+		
+		queryAll(".comment-meta .karma-value, .comment-controls .karma-value").forEach(karmaValue => {
+			let commentID = karmaValue.getCommentId();
+			addVoteButtons(karmaValue, voteData.commentVotes[commentID], 'Comments');
+			karmaValue.parentElement.addClass("active-controls");
+		});
+
+		initializeVoteButtons();
+	});
 }
 
 /*****************************************/
@@ -3507,8 +3566,6 @@ registerInitializer('earlyInitialize', true, () => query("#content") != null, fu
 	injectThemeTweaker();
 	// Add the quick-nav UI.
 	injectQuickNavUI();
-
-	setTimeout(() => { updateInbox(); }, 0);
 });
 
 registerInitializer('initialize', false, () => document.readyState != 'loading', function () {
@@ -3541,53 +3598,6 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 	});
 	// Focus the textarea.
 	queryAll(((getQueryVariable("post-id")) ? "#edit-post-form textarea" : "#edit-post-form input[name='title']") + (GW.isMobile ? "" : ", .conversation-page textarea")).forEach(field => { field.focus(); });
-
-	// If client is logged in...
-	if (loggedInUserId) {
-		// Add upvote/downvote buttons.
-		if(typeof postId != 'undefined' || query(".shortform-index-page")) {
-			let params = ( typeof postId != 'undefined' ? { "post-id": postId } : { "shortform": true, "offset": (getQueryVariable("offset")||0) } );
-			doAjax({ location: "/karma-vote",
-				 params: params,
-				 onSuccess: (event) => {
-					 let response = JSON.parse(event.target.responseText);
-					 postVote = response.postVote;
-					 commentVotes = response.commentVotes;
-					 alignmentForumAllowed = response.alignmentForumAllowed;
-
-					 queryAll(".post .post-meta .karma-value").forEach(karmaValue => {
-						 addVoteButtons(karmaValue, postVote, 'Posts');
-						 karmaValue.parentElement.addClass("active-controls");
-					 });
-
-					 queryAll(".comment-meta .karma-value, .comment-controls .karma-value").forEach(karmaValue => {
-						 let commentID = karmaValue.getCommentId();
-						 addVoteButtons(karmaValue, commentVotes[commentID], 'Comments');
-						 karmaValue.parentElement.addClass("active-controls");
-					 });
-				 }
-			       });
-
-			// Color the upvote/downvote buttons with an embedded style sheet.
-			query("head").insertAdjacentHTML("beforeend","<style id='vote-buttons'>" + 
-							 `.upvote:hover,
-							 .upvote:focus,
-							 .upvote.selected {
-								 color: #00d800;
-							 }
-							 .downvote:hover,
-							 .downvote:focus,
-							 .downvote.selected {
-								 color: #eb4c2a;
-							 }` +
-							 "</style>");
-
-			// Activate the vote buttons.
-			queryAll("button.vote").forEach(voteButton => {
-				voteButton.addActivateEvent(voteButtonClicked);
-			});
-		}
-	}
 
 	// Clean up ToC
 	queryAll(".contents-list li a").forEach(tocLink => {

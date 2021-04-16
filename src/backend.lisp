@@ -17,8 +17,12 @@
 	   #:earliest-post-time
 	   #:flatten-shortform-comments #:get-shortform-votes
 	   #:get-tag-posts
+	   #:get-post-tag-votes #:get-tag-post-votes
 	   #:get-slug-tagid
-	   #:get-posts-index #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-answers #:get-post-comments-votes #:get-recent-comments #:get-recent-comments-json
+	   #:get-posts-index #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-answers
+	   #:get-post-comments-votes
+	   #:get-tag-comments-votes
+	   #:get-recent-comments #:get-recent-comments-json
 	   #:sequence-post-ids #:get-sequence #:get-post-sequence-ids #:get-sequence-post
 	   #:get-conversation-messages
 	   #:markdown-source
@@ -563,8 +567,10 @@
     (values votetype id)))
 
 (defun process-votes-result (res)
-  (loop for v in res
-	collect (multiple-value-bind (votetype id) (process-vote-result v) (cons id votetype))))
+  (let ((hash (make-hash-table)))
+    (dolist (v res hash)
+      (multiple-value-bind (votetype id) (process-vote-result v)
+	(setf (gethash id hash) votetype)))))
 
 (defun flatten-shortform-comments (comments)
   (let ((output comments))
@@ -599,11 +605,29 @@
       (when-let (post (cdr (assoc :post x)))
 	(collect post))))))
 
+(define-backend-function get-tag-post-votes (tag-id auth-token)
+  (backend-base (progn tag-id auth-token nil))
+  (backend-lw2-tags
+   (process-votes-result
+    (map 'list #'cdr
+	 (lw2-query-list-limit-workaround
+	  :tag-rel
+	  (alist :view "postsWithTag" :tag-id tag-id)
+	  :fields '(:--id (:current-user-votes :vote-type))
+	  :auth-token auth-token)))))
+
 (define-backend-function get-post-tags (post-id &key (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*))
   (backend-base (declare (ignore revalidate force-revalidate)) nil)
   (backend-lw2-tags
    (let ((query-string (lw2-query-string :tag-rel :list (alist :view "tagsOnPost" :post-id post-id) :fields '((:tag :name :slug)))))
      (lw2-graphql-query-timeout-cached query-string "post-tags" post-id :revalidate revalidate :force-revalidate force-revalidate))))
+
+(define-backend-function get-post-tag-votes (post-id auth-token)
+  (backend-base (progn post-id auth-token nil))
+  (backend-lw2-tags
+   (process-votes-result
+    (lw2-graphql-query (lw2-query-string :tag-rel :list (alist :view "tagsOnPost" :post-id post-id) :fields '(:--id (:current-user-votes :vote-type)))
+		       :auth-token auth-token))))
 
 (define-backend-function get-post-body (post-id &key (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*) auth-token)
   (backend-graphql
@@ -647,6 +671,11 @@
        (get-post-comments-list post-id "postCommentsTop" :auth-token auth-token :fields fields)
        (get-post-answer-replies post-id answers :auth-token auth-token :fields fields)
        answers)))))
+
+(define-backend-function get-tag-comments-votes (tag-id auth-token)
+  (backend-lw2-tags-comments
+   (process-votes-result (lw2-graphql-query (lw2-query-string :comment :list (alist :tag-id tag-id :view "commentsOnTag") :fields '(:--id (:current-user-votes :vote-type)))
+					    :auth-token auth-token))))
 
 (define-backend-function get-post-comments (post-id &key (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*))
   (backend-graphql

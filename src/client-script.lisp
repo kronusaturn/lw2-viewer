@@ -4,7 +4,8 @@
   (:import-from #:alexandria #:assoc-value)
   (:export #:client-script-function #:client-script #:client-defun
 	   #:write-package-client-scripts
-	   #:if-client #:when-client #:when-server))
+	   #:if-client #:when-client #:when-server
+	   #:call-with-server-data))
 
 (in-package #:lw2.client-script)
 
@@ -50,8 +51,6 @@
 (defmacro when-server (&body body)
   `(progn ,@body))
 
-(defmacro call-with-server-data (client-function &key server-endpoint-name enclosed-variables server-data-form)
-  `(with-html-stream-output (:stream stream)
-     (write-string ,(format nil "<script async src=\"data:text/javascript,callWithServerData(~A,'~A?p=" (json:lisp-to-camel-case (string client-function)) server-endpoint-name) stream)
-     (write-string (quri:url-encode (json:encode-json-to-string (list ,@enclosed-variables))) stream)
-     (write-string "')\"></script>")))
+(defun call-with-server-data (client-function server-endpoint-uri)
+  (with-html-stream-output (:stream stream)
+    (format stream "<script async src=\"data:text/javascript,callWithServerData('~A','~A');\"></script>" (json:lisp-to-camel-case (string client-function)) server-endpoint-uri)))
