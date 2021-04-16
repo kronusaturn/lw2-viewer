@@ -392,7 +392,7 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 	let parentAnswer = commentControls.closest("#answers > .comment-thread > .comment-item");
 	let withParentAnswer = (!editMarkdownSource && parentAnswer && parentAnswer.getCommentId());
 	let parentCommentItem = commentControls.closest(".comment-item");
-	let alignmentForum = alignmentForumAllowed && alignmentForumPost &&
+	let alignmentForum = userStatus.alignmentForumAllowed && alignmentForumPost &&
 	    (!parentCommentItem || parentCommentItem.firstChild.querySelector(".comment-meta .alignment-forum"));
 	commentControls.innerHTML = "<button class='cancel-comment-button' tabindex='-1'>Cancel</button>" +
 		"<form method='post'>" + 
