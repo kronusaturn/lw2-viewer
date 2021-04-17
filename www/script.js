@@ -249,12 +249,8 @@ function processUserStatus(userStatus) {
 	if(userStatus) {
 		if(userStatus.notifications) {
 			let element = query('#inbox-indicator');
-			let fn = (element) => {
-				element.className = 'new-messages';
-				element.title = 'New messages [o]';
-			};
-			if(element) fn(element);
-			else callWhenDomReady(() => fn(query('#inbox-indicator')));
+			element.className = 'new-messages';
+			element.title = 'New messages [o]';
 		}
 	} else {
 		location.reload();
