@@ -1287,7 +1287,8 @@ signaled condition to *HTML-OUTPUT*."
 					 do (output-comments out-stream name comments nil
 							     :replies-open open
 							     :overcomingbias-sort (cdr (assoc :comment-sort-order post)) :chrono chrono :preview preview)))))))
-			    (call-with-server-data 'process-vote-data (format nil "/karma-vote/post?post-id=~A" post-id)))))))))
+			    (when (logged-in-userid)
+			      (call-with-server-data 'process-vote-data (format nil "/karma-vote/post?post-id=~A" post-id))))))))))
    (:post ()
 	  (post-comment post-id))))
 
@@ -1457,7 +1458,8 @@ signaled condition to *HTML-OUTPUT*."
 									     (make-comment-parent-hash
 									      (flatten-shortform-comments recent-comments)))
 						       </div>
-						       (call-with-server-data 'process-vote-data (format nil "/karma-vote/shortform?offset=~A" (or offset 0)))))))))))
+						       (when (logged-in-userid)
+							 (call-with-server-data 'process-vote-data (format nil "/karma-vote/shortform?offset=~A" (or offset 0))))))))))))
    (:post ()
      (post-comment nil :shortform t))))
 
@@ -1507,7 +1509,7 @@ signaled condition to *HTML-OUTPUT*."
       (renderer ()
 	(view-items-index posts
 			  :title (format nil "~A tag" name)
-			  :extra-head (lambda () (call-with-server-data 'process-vote-data (format nil "/karma-vote/tag?tag-id=~A" tag-id)))
+			  :extra-head (lambda () (when (logged-in-userid) (call-with-server-data 'process-vote-data (format nil "/karma-vote/tag?tag-id=~A" tag-id))))
 			  :top-nav (lambda ()
 				     (page-toolbar-to-html :title name :rss (not wiki-only))
 				     (tag-to-html tag)
