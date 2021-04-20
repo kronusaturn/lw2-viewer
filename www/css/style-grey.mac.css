@@ -1332,7 +1332,7 @@ h1.listing + .post-meta .read-time {
 /********************/
 
 .sequence-text, .tag-description {
-	font-size: 1.2rem;
+	font-size: 1.125rem;
 	padding: 0 22px;
 }
 
@@ -1920,8 +1920,8 @@ article {
 .post-body {
 	min-height: 8em;
 	padding: 0 30px;
-	line-height: 1.5;
-	font-size: 1.3rem;
+	line-height: 1.6;
+	font-size: 1.125rem;
 	overflow: auto;
 	margin: 0.5em 0 0 0;
 }
@@ -2160,7 +2160,7 @@ ul.comment-thread {
 
 .comment-body {
 	line-height: 1.45;
-	font-size: 1.2rem;
+	font-size: 1.0625rem;
 	padding: 10px;
 }
 .comment-body ul {
