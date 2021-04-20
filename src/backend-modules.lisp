@@ -138,7 +138,8 @@
 			    backend-backlinks
 			    backend-push-notifications
 			    backend-shortform
-			    backend-lw2-tags) ()
+			    backend-lw2-tags-comments
+			    backend-lw2-wiki-tags) ()
   (:metaclass backend-class))
 
 (defclass backend-accordius (backend-lw2-legacy backend-lw2-modernized)
