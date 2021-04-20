@@ -1195,7 +1195,9 @@ signaled condition to *HTML-OUTPUT*."
 						     (cdr (assoc :canonical-source post))))
 			      <link rel="canonical" href=canonical-source>)
 		    <script>postId=(with-html-stream-output (:stream stream) (json:encode-json post-id stream))</script>
-		    <script>alignmentForumPost=(if (cdr (assoc :af post)) "true" "false")</script>)
+		    <script>alignmentForumPost=(if (cdr (assoc :af post)) "true" "false")</script>
+		    (when (logged-in-userid)
+			      (call-with-server-data 'process-vote-data (format nil "/karma-vote/post?post-id=~A" post-id))))
 		  (retrieve-individual-comment (comment-thread-type)
 		    (let* ((comments (case comment-thread-type
 				       (:comment (get-post-comments post-id))
@@ -1286,9 +1288,7 @@ signaled condition to *HTML-OUTPUT*."
 										    (list "comment" normal-comments t)))
 					 do (output-comments out-stream name comments nil
 							     :replies-open open
-							     :overcomingbias-sort (cdr (assoc :comment-sort-order post)) :chrono chrono :preview preview)))))))
-			    (when (logged-in-userid)
-			      (call-with-server-data 'process-vote-data (format nil "/karma-vote/post?post-id=~A" post-id))))))))))
+							     :overcomingbias-sort (cdr (assoc :comment-sort-order post)) :chrono chrono :preview preview))))))))))))))
    (:post ()
 	  (post-comment post-id))))
 
