@@ -164,7 +164,7 @@
 						 :password password)))
 
 (define-backend-operation do-logout backend-passport-js-login (auth-token)
-  (do-graphql-post-query auth-token (alist :query (graphql-operation-string :mutation :logout nil nil))))
+  (do-graphql-post-query auth-token (alist :query (graphql-operation-string :mutation :logout nil '(:token)))))
 
 ; (do-lw2-post-query "OCP7NeJEW9fPpYGG_nCN3g0felGTTNd0eg5uiLNQqBR" `((("query" . "mutation vote($documentId: String, $voteType: String, $collectionName: String) { vote(documentId: $documentId, voteType: $voteType, collectionName: $collectionName) { ... on Post { currentUserVotes { _id, voteType, power } } } }") ("variables" ("documentId" . "sqhAntEGpYgFXXH2H") ("voteType" . "upvote") ("collectionName" . "Posts")) ("operationName" . "vote"))))
 
