@@ -1,6 +1,5 @@
 (uiop:define-package #:lw2.html-reader
-  (:use #:cl #:alexandria #:iterate #:named-readtables
-	#:lw2.client-script)
+  (:use #:cl #:alexandria #:iterate #:named-readtables)
   (:export #:*html-output* #:with-html-stream-output #:safe #:encode-entities #:html-reader)
   (:recycle #:lw2-viewer))
 
@@ -8,8 +7,8 @@
 
 (defvar *html-output* nil)
 
-(client-defun encode-entities (text &optional stream)
-  (if-client
+(defun encode-entities (text &optional stream)
+  #||(if-client
    (let ((output
 	  (ps:chain text (replace (ps:regex "/[<>\"'&]/g")
 				  (lambda (match)
@@ -24,10 +23,10 @@
 						 ";"))))))
      (if stream
 	 (progn (ps:chain stream (push output)) nil)
-	 output))
+	 output))|#
    (handler-bind
     (((or plump:invalid-xml-character plump:discouraged-xml-character) #'abort))
-    (plump:encode-entities (princ-to-string text) stream))))
+    (plump:encode-entities (princ-to-string text) stream)));)
 
 (trivial-cltl2:define-declaration html-output (decl env) (declare (ignore env)) (values :declare (cons 'html-output (second decl))))
 
