@@ -68,7 +68,7 @@
 	          </a>)
 	      <a class="date" href=(comment-link post-id tag comment-id) data-js-date=js-time> (safe pretty-time) (safe (pretty-time-js))</a>
 	      (when replied <a class="replied" title="You have replied to this comment" href=(apply 'generate-item-link replied)></a>)
-	      (vote-buttons base-score :with-buttons (not with-post-title) :vote-count vote-count :af-score (and af af-base-score))
+	      (vote-buttons base-score :with-buttons *enable-voting* :vote-count vote-count :af-score (and af af-base-score))
 	      (when af <span class="alignment-forum">AF</span>)
 	      (when post-id
 	        <a class="permalink" href=("~A/~A/~A"
@@ -134,6 +134,6 @@
 			  (clean-html* html-body))))
 	      </div>
 	      (when post-id (backlinks-to-html (get-backlinks post-id comment-id) (format nil "~A-~A" post-id comment-id)))
-	      (when (and (not with-post-title) (logged-in-userid))
+	      (when *enable-voting*
 	        <script>initializeCommentControls\(\)</script>)
 	    </div>))))
