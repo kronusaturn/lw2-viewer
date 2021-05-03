@@ -1189,7 +1189,7 @@ signaled condition to *HTML-OUTPUT*."
 	    (show-comments (and (not preview) show-comments)))
        (multiple-value-bind (post title condition)
 	   (handler-case (nth-value 0 (get-post-body post-id :auth-token (and need-auth lw2-auth-token)))
-	     (serious-condition (c) (values nil "Error" c))
+	     (serious-condition (c) (values nil "[missing post]" c))
 	     (:no-error (post) (values post (cdr (assoc :title post)) nil)))
 	 (labels ((extra-head ()
 		    (when-let (canonical-source (and (not comment-id)
