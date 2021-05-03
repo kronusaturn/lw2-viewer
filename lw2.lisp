@@ -631,6 +631,7 @@ signaled condition to *HTML-OUTPUT*."
 		   (nav-bar-to-html out-stream "nav-bar-top" (or current-uri (replace-query-params (hunchentoot:request-uri*) "offset" nil "sort" nil)))
 		   (when (and (typep *current-site* 'login-site) (logged-in-userid))
 		     (call-with-server-data 'process-user-status "/current-user-status")))
+		 (activate-client-trigger "navBarLoaded")
 		 (funcall fn))
 	    (format out-stream "</div></body></html>"))))))
 
@@ -1250,6 +1251,7 @@ signaled condition to *HTML-OUTPUT*."
 			      (format out-stream "<div class=\"post-controls\"><a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\" accesskey=\"e\" title=\"Edit post [e]\">Edit post</a></div>"
 				      (cdr (assoc :--id post))))
 			    (post-nav-links post post-sequences)
+			    (activate-client-trigger "postLoaded")
 			    (when show-comments
 			      (write-string "<script> </script>" out-stream)
 			      (force-output out-stream)

@@ -2,11 +2,6 @@
 /* INITIALIZATION REGISTRY */
 /***************************/
 
-/*	Polyfill for requestIdleCallback in Apple and Microsoft browsers. */
-if (!window.requestIdleCallback) {
-	window.requestIdleCallback = (fn) => { setTimeout(fn, 0) };
-}
-
 /*	TBC. */
 GW.initializersDone = { };
 GW.initializers = { };
@@ -144,13 +139,17 @@ function doAjax(params) {
 	}
 }
 
-function callWhenDOMReady(fn) {
-	if(document.readyState == "loading") {
-		document.addEventListener("readystatechange", () => callWhenDOMReady(fn));
-	} else {
-		window.requestIdleCallback(fn, {timeout: 3000});
+function activateReadyStateTriggers() {
+	if(document.readyState == 'interactive') {
+		activateTrigger('DOMReady');
+	} else if(document.readyState == 'complete') {
+		activateTrigger('DOMReady');
+		activateTrigger('DOMComplete');
 	}
 }
+
+document.addEventListener('readystatechange', activateReadyStateTriggers);
+activateReadyStateTriggers();
 
 function callWithServerData(fname, uri) {
 	doAjax({
@@ -539,6 +538,7 @@ function addVoteButtons(element, voteType, targetType) {
 			if(button.dataset["voteType"] === (vote.up ? "upvote" : "downvote"))
 				button.addClass(voteClass);
 		}
+		button.addActivateEvent(voteButtonClicked);
 	});
 }
 
@@ -660,30 +660,26 @@ function initializeVoteButtons() {
 						 color: #eb4c2a;
 					 }` +
 					 "</style>");
-
-	// Activate the vote buttons.
-	queryAll("button.vote").forEach(voteButton => {
-		voteButton.addActivateEvent(voteButtonClicked);
-	});
 }
 
 function processVoteData(voteData) {
 	window.voteData = voteData;
+	initializeVoteButtons();
 	
-	callWhenDOMReady(() => {
+	addTriggerListener("postLoaded", () => {
 		queryAll(".post .post-meta .karma-value").forEach(karmaValue => {
 			let postID = karmaValue.parentNode.dataset.postId;
 			addVoteButtons(karmaValue, voteData.postVotes[postId], 'Posts');
 			karmaValue.parentElement.addClass("active-controls");
 		});
-		
+	});
+
+	addTriggerListener("DOMReady", () => {
 		queryAll(".comment-meta .karma-value, .comment-controls .karma-value").forEach(karmaValue => {
 			let commentID = karmaValue.getCommentId();
 			addVoteButtons(karmaValue, voteData.commentVotes[commentID], 'Comments');
 			karmaValue.parentElement.addClass("active-controls");
 		});
-
-		initializeVoteButtons();
 	});
 }
 
@@ -3536,7 +3532,7 @@ function MarkdownFromHTML(text) {
 /* INITIALIZATION */
 /******************/
 
-registerInitializer('earlyInitialize', true, () => query("#content") != null, function () {
+addTriggerListener('navBarLoaded', function () {
 	GWLog("INITIALIZER earlyInitialize");
 	// Check to see whether we're on a mobile device (which we define as a narrow screen)
 	GW.isMobile = (window.innerWidth <= 1160);
@@ -3564,9 +3560,8 @@ registerInitializer('earlyInitialize', true, () => query("#content") != null, fu
 	injectQuickNavUI();
 });
 
-registerInitializer('initialize', false, () => document.readyState != 'loading', function () {
+addTriggerListener('DOMReady', function () {
 	GWLog("INITIALIZER initialize");
-	forceInitializer('earlyInitialize');
 
 	// This is for "qualified hyperlinking", i.e. "link without comments" and/or
 	// "link without nav bars".
@@ -3878,9 +3873,8 @@ registerInitializer('initialize', false, () => document.readyState != 'loading',
 
 window.addEventListener("pageshow", badgePostsWithNewComments);
 
-registerInitializer('pageLayoutFinished', false, () => document.readyState == "complete", function () {
+addTriggerListener('DOMComplete', function () {
 	GWLog("INITIALIZER pageLayoutFinished");
-	forceInitializer('initialize');
 
 	postSetThemeHousekeeping();
 

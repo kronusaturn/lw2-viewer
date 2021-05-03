@@ -531,3 +531,37 @@ let deferredCalls = [];
 function callWithServerData(fname, uri) {
 	deferredCalls.push([fname, uri]);
 }
+
+/************/
+/* TRIGGERS */
+/************/
+
+/*	Polyfill for requestIdleCallback in Apple and Microsoft browsers. */
+if (!window.requestIdleCallback) {
+	window.requestIdleCallback = (fn) => { setTimeout(fn, 0) };
+}
+
+GW.triggers = {};
+
+function addTriggerListener(name, fn) {
+	if(typeof(GW.triggers[name])=="string") return requestIdleCallback(fn, {timeout: 3000});
+	if(!GW.triggers[name]) GW.triggers[name] = [];
+	GW.triggers[name].push(fn);
+}
+
+function activateTrigger(name) {
+	if(Array.isArray(GW.triggers[name])) {
+		GW.triggers[name].forEach((fn) => requestIdleCallback(fn, {timeout: 3000}));
+	}
+	GW.triggers[name] = "done";
+}
+
+function addMultiTriggerListener(triggers, fn) {
+	if(triggers.length == 1) {
+		addTriggerListener(triggers[0], fn);
+	} else {
+		let trigger = triggers.pop();
+		addMultiTriggerListener(triggers, () => addTriggerListener(trigger, fn));
+	}
+}
+

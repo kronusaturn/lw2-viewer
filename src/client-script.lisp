@@ -5,7 +5,8 @@
   (:export #:client-script-function #:client-script #:client-defun
 	   #:write-package-client-scripts
 	   #:if-client #:when-client #:when-server
-	   #:call-with-server-data))
+	   #:call-with-server-data
+	   #:activate-client-trigger))
 
 (in-package #:lw2.client-script)
 
@@ -54,3 +55,7 @@
 (defun call-with-server-data (client-function server-endpoint-uri)
   (with-html-stream-output (:stream stream)
     (format stream "<script async src=\"data:text/javascript,callWithServerData('~A','~A');\"></script>" (json:lisp-to-camel-case (string client-function)) server-endpoint-uri)))
+
+(defun activate-client-trigger (trigger-name)
+  (with-html-stream-output (:stream stream)
+    (format stream "<script async src=\"data:text/javascript,activateTrigger('~A');\"></script>" trigger-name)))
