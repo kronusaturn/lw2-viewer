@@ -2598,7 +2598,7 @@ function addCommentParentPopups() {
 								], { duration: 150, easing: "ease-out" });
 							}
 						});
-					}, 150);
+					}, 1000);
 
 					let pointerX, pointerY, mousePauseTimeout = null;
 
