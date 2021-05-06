@@ -1,18 +1,19 @@
 (uiop:define-package #:lw2.links
   (:use #:cl #:alexandria #:lw2.utils #:lw2.lmdb #:lw2.backend #:lw2.sites #:lw2.context #:lw2-viewer.config)
-  (:export #:match-lw1-link #:convert-lw1-link
+  (:export #:sanitize-link
+	   #:match-lw1-link #:convert-lw1-link
 	   #:match-ea1-link #:convert-ea1-link
            #:match-overcomingbias-link #:convert-overcomingbias-link
            #:direct-link #:with-direct-link
-           #:match-lw2-link #:match-lw2-slug-link #:match-lw2-sequence-link #:convert-lw2-link #:convert-lw2-slug-link #:convert-lw2-sequence-link #:convert-lw2-user-link
+           #:match-lw2-link #:match-lw2-slug-link #:match-lw2-sequence-link #:convert-lw2-link #:convert-lw2-slug-link #:convert-lw2-sequence-link #:convert-lw2-misc-link
            #:generate-item-link
-           #:convert-any-link* #:convert-any-link)
-  (:unintern #:generate-post-link))
+           #:convert-any-link* #:convert-any-link #:presentable-link)
+  (:unintern #:generate-post-link #:convert-lw2-user-link))
 
 (in-package #:lw2.links)
 
 (defun sanitize-link (link)
-  (substitute #\+ #\Space (string-trim '(#\Space) link)))
+  (substitute #\+ #\Space (string-trim " " link)))
 
 (defun get-redirect (uri)
   (multiple-value-bind (body status headers uri)
@@ -46,7 +47,7 @@
   (ppcre:scan "^https?://(?:www\\.)?(?:arbital\\.com)" link))
 
 (defun find-link-site (link)
-  (if (ppcre:scan "^/" link)
+  (if (ppcre:scan "^/(?!/)" link)
       *current-site*
       (loop for s in *sites*
 	 when (link-for-site-p s link) return s)))
@@ -68,14 +69,14 @@
 
 (defun match-lw2-sequence-link (link) (match-values "^(?:https?://[^/]+)?/s/([^/#]+)(?:/p/([^/#]+))?(?:#([^/#]+)?)?" link (0 1 2)))
 
-(defun convert-lw2-user-link (link)
-  (when-let ((site (find-link-site link))
-	     (matched-link (match-values "^(?:https?://[^/]+)?/(users/[^/#]+)" link (0))))
+(defun convert-lw2-misc-link (link)
+  (when-let* ((site (find-link-site link))
+	      (matched-link (and (typep site '(or lesswrong-viewer-site ea-forum-viewer-site)) (match-values "^(?:https?://[^/]+)?/((?:users/|tags|tag/|s/|sequences/|library).*)" link (0)))))
     (concatenate 'string (site-link-prefix site) matched-link)))
 
 (defun convert-arbital-link (link)
-  (when-let ((site (find-link-site link))
-	     (matched-link (match-values "^(?:https?://[^/]+)?/(.*)" link (0))))
+  (when-let* ((site (find-link-site link))
+	      (matched-link (and (typep site 'arbital-site) (match-values "^(?:https?://[^/]+)?/(.*)" link (0)))))
     (concatenate 'string (site-link-prefix site) matched-link)))
 
 (defmacro with-direct-link-restart ((direct-link) &body body)
@@ -185,8 +186,18 @@
 	(convert-ea1-link url)
 	(convert-agentfoundations-link url)
 	(convert-overcomingbias-link url)
-	(convert-lw2-user-link url)
+	(convert-lw2-misc-link url)
 	(convert-arbital-link url))))
 
 (defun convert-any-link (url)
   (or (convert-any-link* url) url))
+
+(defun presentable-link (link &optional context)
+  (or (and (ppcre:scan "^#" link) link)
+      (and (not (eq context :image)) (convert-any-link* link))
+      (and (not (eq context :search))
+	   (puri:render-uri
+	    (puri:merge-uris
+	     (sanitize-link link)
+	     (site-link-base *current-site*))
+	    nil))))

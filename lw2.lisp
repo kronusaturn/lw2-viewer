@@ -1784,7 +1784,7 @@ signaled condition to *HTML-OUTPUT*."
 
 (define-page view-search "/search" ((q :required t))
   (let ((*current-search-query* q)
-        (link (convert-any-link* q))
+        (link (presentable-link q :search))
 	(title (format nil "~@[~A - ~]Search" q)))
     (declare (special *current-search-query*))
     (if link

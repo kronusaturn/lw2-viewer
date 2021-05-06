@@ -8,7 +8,7 @@
     #:alternate-frontend-site #:lesswrong-viewer-site #:ea-forum-viewer-site
     #:arbital-site
     #:site-class #:call-route-handler #:site-class-routes
-    #:site-uri #:site-host #:site-domain #:site-secure #:site-backend #:site-title #:site-description #:background-loader-enabled #:site-fonts-source
+    #:site-uri #:site-host #:site-domain #:site-link-base #:site-secure #:site-backend #:site-title #:site-description #:background-loader-enabled #:site-fonts-source
     #:main-site-title #:main-site-abbreviation #:main-site-uri
     #:host-matches #:find-site
     #:call-with-site-context #:with-site-context
@@ -49,6 +49,8 @@
 
 (defmethod main-site-abbreviation ((s site)) nil)
 
+(defmethod site-link-base ((s site)) (site-uri s))
+
 (defmethod call-route-handler ((s site) request-uri)
   (call-route-handler (class-of s) request-uri))
 
@@ -77,6 +79,8 @@
    (main-site-abbreviation :accessor main-site-abbreviation :initarg :main-site-abbreviation :type simple-string)
    (main-site-uri :accessor main-site-uri :initarg :main-site-uri :type simple-string))
   (:metaclass site-class))
+
+(defmethod site-link-base ((s alternate-frontend-site)) (main-site-uri s))
 
 (defclass lesswrong-viewer-site (forum-site ignore-list-site login-site alternate-frontend-site shortform-site) ()
   (:metaclass site-class))

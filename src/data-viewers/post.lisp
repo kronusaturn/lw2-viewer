@@ -162,7 +162,7 @@
 				 (url "link-post-listing")
 				 (question "question-post-listing")
 				 ((logged-in-userid user-id) "own-post-listing")))>
-      (if url <a class="link-post-link" href=(convert-any-link (string-trim " " url))>&#xf0c1;</a>)
+      (if url <a class="link-post-link" href=(presentable-link url)>&#xf0c1;</a>)
       <a class="post-title-link" href=(generate-post-auth-link post nil nil need-auth)>
 	(if question <span class="post-type-prefix">[Question] </span>)
 	(safe (clean-text-to-html title))
@@ -215,7 +215,7 @@
 	</div>))
       (when (or url (nonempty-string html-body))
         <div class="body-text post-body">
-          (if url <p><a class="link-post-link" href=(convert-any-link (string-trim " " url))>Link post</a></p>)
+          (if url <p><a class="link-post-link" href=(presentable-link url)>Link post</a></p>)
   	  (with-html-stream-output (:stream stream)
 	    (let ((*before-clean-hook* (lambda () (clear-backlinks post-id)))
 		  (*link-hook* (lambda (link) (add-backlink link post-id)))

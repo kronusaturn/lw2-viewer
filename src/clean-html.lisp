@@ -615,7 +615,7 @@
 				       (new-a (plump:make-element (plump:parent text-node) "a"))
 				       (new-text (unless (= url-end (length text)) (plump:make-text-node (plump:parent text-node) (subseq text url-end))))) 
 				  (setf (plump:text text-node) (subseq text 0 url-start)
-                                        (plump:attribute new-a "href") (with-direct-link (convert-any-link url))
+                                        (plump:attribute new-a "href") (with-direct-link (presentable-link url))
 					(plump:attribute new-a "class") "bare-url")
 				  (plump:make-text-node new-a (clean-text url-raw))
 				  (when new-text
@@ -804,7 +804,7 @@
 		       (when href
 			 (let* ((href (string-trim '(#\Space #\Newline #\Tab #\Return #\Linefeed #\Page) href))
 				(href (if (ppcre:scan "^(?:(?:[a-z]+:)?//|/|#)" href) href (format nil "http://~A" href)))
-				(href (or (with-direct-link (convert-any-link href)) href)))
+				(href (or (with-direct-link (presentable-link href)) href)))
 			   (when href
 			     (setf (plump:attribute node "href") href)
 			     (when *link-hook*
@@ -824,11 +824,8 @@
 					(add-class container "imgonly")
 					container))))
 			     (when-let ((src (plump:attribute node "src")))
-			       (when (and (typep *current-site* 'alternate-frontend-site)
-					  (ppcre:scan "^/(?!/)" src))
-				 (setf src (quri:render-uri
-					    (quri:merge-uris src (main-site-uri *current-site*)))
-				       (plump:attribute node "src") src))
+			       (setf src (presentable-link src :image)
+				     (plump:attribute node "src") src)
 			       (create-dynamic-call container 'lw2.images::dynamic-image
 						    src (plump:tag-name container) (alexandria:hash-table-alist (plump:attributes container))))
 			     (when (and width height)
