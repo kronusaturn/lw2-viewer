@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.images
-  (:use #:cl #:iterate #:lw2.conditions #:lw2.html-reader #:lw2.utils #:lw2.hash-utils #:lw2.lmdb)
+  (:use #:cl #:iterate #:split-sequence #:lw2.conditions #:lw2.html-reader #:lw2.utils #:lw2.hash-utils #:lw2.lmdb)
   (:import-from #:alexandria #:when-let #:when-let*))
 
 (in-package #:lw2.images)
@@ -7,10 +7,10 @@
 (sb-ext:defglobal *image-convert-semaphore* (sb-thread:make-semaphore :count 2))
 
 (defun image-statistics (image-filename)
-  (let* ((result-string (with-semaphore (*image-convert-semaphore*)
-			  (uiop:run-program (list "choom" "-n" "1000" "--" "convert" image-filename "-format" "%w %h" "info:")
-					    :output :string)))
-	 (result-list (split-sequence:split-sequence #\Space result-string))
+  (let* ((result-list (with-semaphore (*image-convert-semaphore*)
+			(uiop:run-program (list "choom" "-n" "1000" "--" "convert" image-filename "-format" "%w %h\\n" "info:")
+					  :output (lambda (stream)
+						    (split-sequence #\Space (read-line stream))))))
 	 (mime-type (uiop:run-program (list "file" "--brief" "--mime-type" image-filename) :output (lambda (stream) (read-line stream)))))
     (destructuring-bind (width height) result-list
       (values (parse-integer width) (parse-integer height) mime-type))))
