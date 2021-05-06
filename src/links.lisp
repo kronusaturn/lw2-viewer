@@ -196,8 +196,11 @@
   (or (and (ppcre:scan "^#" link) link)
       (and (not (eq context :image)) (convert-any-link* link))
       (and (not (eq context :search))
-	   (puri:render-uri
-	    (puri:merge-uris
-	     (sanitize-link link)
-	     (site-link-base *current-site*))
-	    nil))))
+	   (let ((sanitized-link (sanitize-link link)))
+	     (handler-case
+		 (puri:render-uri
+		  (puri:merge-uris
+		   sanitized-link
+		   (site-link-base *current-site*))
+		  nil)
+	       (error () sanitized-link))))))
