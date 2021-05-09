@@ -22,10 +22,21 @@
 	     :animation-frames animation-frames
 	     :mime-type mime-type))))
 
+(defun string-to-brightness (color-string)
+  (let ((color-value (parse-integer color-string :radix 16)))
+    (cond ((= (length color-string) 8)
+	   (* 3 (ldb (byte 8 24) color-value)))
+	  ((= (length color-string) 6)
+	   (+ (ldb (byte 8 0) color-value)
+	      (ldb (byte 8 8) color-value)
+	      (ldb (byte 8 16) color-value))))))
+
 (defun image-invertible (image-filename)
   (let ((histogram-list nil)
 	(background-pixels 0)
-	(background-brightness 0))
+	(background-brightness 0)
+	(total-pixels 0)
+	(total-brightness 0.0d0))
     (with-semaphore (*image-convert-semaphore*)
       (uiop:run-program (list "choom" "-n" "1000" "--" "convert" image-filename "-format" "%c" "histogram:info:")
 			:output (lambda (stream)
@@ -35,22 +46,20 @@
 					     (when match?
 					       (let ((pixel-count (parse-integer (svref strings 0))))
 						 (push pixel-count histogram-list)
-						 (when (> pixel-count background-pixels)
-						   (multiple-value-bind (match? strings) (ppcre:scan-to-strings "#([0-9a-fA-F]+)" line :sharedp t)
-						     (when match?
-						       (setf background-pixels pixel-count)
-						       (let* ((color-string (svref strings 0))
-							      (color-value (parse-integer color-string :radix 16)))
-							 (cond ((= (length color-string) 8)
-								(setf background-brightness (* 3 (ldb (byte 8 24) color-value))))
-							       ((= (length color-string) 6)
-								(setf background-brightness (+ (ldb (byte 8 0) color-value)
-											       (ldb (byte 8 8) color-value)
-											       (ldb (byte 8 16) color-value))))))))))))))))
+						 (incf total-pixels pixel-count)
+						 (multiple-value-bind (match? strings) (ppcre:scan-to-strings "#([0-9a-fA-F]+)" line :sharedp t)
+						   (when match?
+						     (let ((brightness (string-to-brightness (svref strings 0))))
+						       (incf total-brightness (* pixel-count (/ brightness (* 3 255.0d0))))
+						       (when (> pixel-count background-pixels)
+							 (setf background-pixels pixel-count
+							       background-brightness brightness))))))))))))
     (setf histogram-list (sort histogram-list #'>))
     (let ((tenth (first (nthcdr 10 histogram-list))))
       (and histogram-list
-	   (> background-brightness (* 3 127))
+	   (> (/ (float background-pixels) (float total-pixels)) 0.3333333)
+	   (> (/ total-brightness total-pixels) 0.5d0)
+	   (> background-brightness (* 3 192))
 	   (or (not tenth)
 	       (> (first histogram-list) (* 10 tenth)))))))
 
@@ -69,7 +78,7 @@
 (define-cache-database 'lw2.backend-modules:backend-lmdb-cache "dynamic-content-images" "cached-images")
 
 (sb-ext:defglobal *image-threads* (make-hash-table :test 'equal :synchronized t))
-(defparameter *current-version* 2)
+(defparameter *current-version* 3)
 
 (defun process-image (uri)
   (let* ((filename (multiple-value-bind (r1 r2) (city-hash:city-hash-128 (babel:string-to-octets uri)) (format nil "~32R" (dpb r1 (byte 64 64) r2))))
