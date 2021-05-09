@@ -10,10 +10,17 @@
   (let* ((result-list (with-semaphore (*image-convert-semaphore*)
 			(uiop:run-program (list "choom" "-n" "1000" "--" "convert" image-filename "-format" "%w %h\\n" "info:")
 					  :output (lambda (stream)
-						    (split-sequence #\Space (read-line stream))))))
+						    (let ((width-height (split-sequence #\Space (read-line stream)))
+							  (animation-frames 1))
+						      (iter (while (read-line stream nil))
+							    (incf animation-frames))
+						      (list* animation-frames width-height))))))
 	 (mime-type (uiop:run-program (list "file" "--brief" "--mime-type" image-filename) :output (lambda (stream) (read-line stream)))))
-    (destructuring-bind (width height) result-list
-      (values (parse-integer width) (parse-integer height) mime-type))))
+    (destructuring-bind (animation-frames width height) result-list
+      (alist :width (parse-integer width)
+	     :height (parse-integer height)
+	     :animation-frames animation-frames
+	     :mime-type mime-type))))
 
 (defun image-invertible (image-filename)
   (let ((histogram-list nil)
@@ -70,18 +77,18 @@
 	 (pathname (format nil "www~A" proxy-uri)))
     (unless (probe-file pathname)
       (download-file uri pathname))
-    (multiple-value-bind (width height mime-type) (image-statistics pathname)
-      (let* ((inverted-uri (and (image-invertible pathname) (format nil "~A-inverted" proxy-uri)))
-	     (inverted-pathname (and inverted-uri (format nil "www~A" inverted-uri))))
-	(when inverted-uri (invert-image pathname inverted-pathname))
-	(alist :version *current-version*
-	       :uri uri
-	       :filename filename
-	       :mime-type mime-type
-	       :proxy-uri proxy-uri
-	       :inverted-uri inverted-uri
-	       :width width
-	       :height height)))))
+    (let* ((image-statistics (image-statistics pathname))
+	   (inverted-uri (and (eq 1 (cdr (assoc :animation-frames image-statistics)))
+			      (image-invertible pathname)
+			      (format nil "~A-inverted" proxy-uri)))
+	   (inverted-pathname (and inverted-uri (format nil "www~A" inverted-uri))))
+      (when inverted-uri (invert-image pathname inverted-pathname))
+      (alist* :version *current-version*
+	      :uri uri
+	      :filename filename
+	      :proxy-uri proxy-uri
+	      :inverted-uri inverted-uri
+	      image-statistics))))
 
 (defun image-uri-data (uri)
   (let ((key (hash-string uri)))
