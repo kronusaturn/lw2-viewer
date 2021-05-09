@@ -127,7 +127,7 @@
 		       backend-lw2-wiki-tags) ()
   (:metaclass backend-class))
 
-(defclass backend-ea-forum (backend-websocket-login
+(defclass backend-ea-forum (backend-passport-js-login
 			    backend-lw2-modernized
 			    backend-lw2-legacy
 			    backend-lw2-misc-features
