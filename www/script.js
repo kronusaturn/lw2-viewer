@@ -3558,9 +3558,12 @@ addTriggerListener('navBarLoaded', function () {
 	injectThemeTweaker();
 	// Add the quick-nav UI.
 	injectQuickNavUI();
+
+	// Finish initializing when ready.
+	addTriggerListener('DOMReady', mainInitializer);
 });
 
-addTriggerListener('DOMReady', function () {
+function mainInitializer() {
 	GWLog("INITIALIZER initialize");
 
 	// This is for "qualified hyperlinking", i.e. "link without comments" and/or
@@ -3865,7 +3868,7 @@ addTriggerListener('DOMReady', function () {
 
 	// Show elements now that javascript is ready.
 	removeElement("#hide-until-init");
-});
+}
 
 /*************************/
 /* POST-LOAD ADJUSTMENTS */
