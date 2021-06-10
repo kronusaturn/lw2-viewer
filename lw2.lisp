@@ -1454,6 +1454,9 @@ signaled condition to *HTML-OUTPUT*."
 	   (renderer ()
 	     (view-items-index recent-comments
 			       :title title
+			       :extra-head (lambda ()
+					     (when (logged-in-userid)
+					       (call-with-server-data 'process-vote-data (format nil "/karma-vote/shortform?offset=~A" (or offset 0)))))
 			       :content-class (if shortform "index-page shortform-index-page comment-thread-page" "index-page comment-index-page")
 			       :pagination (pagination-nav-bars :offset (or offset 0) :with-next (not want-total) :total (if want-total total))
 			       :top-nav (lambda () (page-toolbar-to-html :title title) (when top-nav (funcall top-nav)))
@@ -1464,9 +1467,7 @@ signaled condition to *HTML-OUTPUT*."
 						         (comment-tree-to-html *html-output*
 									       (make-comment-parent-hash
 										(flatten-shortform-comments recent-comments)))
-						       </div>
-						       (when (logged-in-userid)
-							 (call-with-server-data 'process-vote-data (format nil "/karma-vote/shortform?offset=~A" (or offset 0)))))))))))))
+						       </div>)))))))))
    (:post ()
      (post-comment nil :shortform t))))
 
