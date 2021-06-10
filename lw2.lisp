@@ -1459,13 +1459,14 @@ signaled condition to *HTML-OUTPUT*."
 			       :top-nav (lambda () (page-toolbar-to-html :title title) (when top-nav (funcall top-nav)))
 			       :alternate-html (if (eq index-type :shortform)
 						   (lambda ()
-						     <div class="comments">
-						       (comment-tree-to-html *html-output*
-									     (make-comment-parent-hash
-									      (flatten-shortform-comments recent-comments)))
+						     (let ((*enable-voting* (and shortform (not (null (logged-in-userid))))))
+						       <div class="comments">
+						         (comment-tree-to-html *html-output*
+									       (make-comment-parent-hash
+										(flatten-shortform-comments recent-comments)))
 						       </div>
 						       (when (logged-in-userid)
-							 (call-with-server-data 'process-vote-data (format nil "/karma-vote/shortform?offset=~A" (or offset 0))))))))))))
+							 (call-with-server-data 'process-vote-data (format nil "/karma-vote/shortform?offset=~A" (or offset 0)))))))))))))
    (:post ()
      (post-comment nil :shortform t))))
 
