@@ -1435,8 +1435,9 @@ signaled condition to *HTML-OUTPUT*."
 	       (view :member '(nil :alignment-forum))))
   (request-method
    (:get ()
-     (let ((want-total (not (or (typep *current-backend* 'backend-lw2) (typep *current-backend* 'backend-ea-forum)))) ; LW2/EAF can't handle total queries. TODO: handle this in backend.
-	   (shortform (eq index-type :shortform)))
+     (let* ((want-total (not (or (typep *current-backend* 'backend-lw2) (typep *current-backend* 'backend-ea-forum)))) ; LW2/EAF can't handle total queries. TODO: handle this in backend.
+	    (shortform (eq index-type :shortform))
+	    (with-voting (not (null (and shortform (logged-in-userid))))))
        (multiple-value-bind (title query-view top-nav)
 	   (cond
 	     (shortform (values "Shortform" "shortform" (if (logged-in-userid) (lambda () (comment-controls :standalone t)))))
@@ -1455,14 +1456,14 @@ signaled condition to *HTML-OUTPUT*."
 	     (view-items-index recent-comments
 			       :title title
 			       :extra-head (lambda ()
-					     (when (logged-in-userid)
+					     (when with-voting
 					       (call-with-server-data 'process-vote-data (format nil "/karma-vote/shortform?offset=~A" (or offset 0)))))
 			       :content-class (if shortform "index-page shortform-index-page comment-thread-page" "index-page comment-index-page")
 			       :pagination (pagination-nav-bars :offset (or offset 0) :with-next (not want-total) :total (if want-total total))
 			       :top-nav (lambda () (page-toolbar-to-html :title title) (when top-nav (funcall top-nav)))
 			       :alternate-html (if (eq index-type :shortform)
 						   (lambda ()
-						     (let ((*enable-voting* (and shortform (not (null (logged-in-userid))))))
+						     (let ((*enable-voting* with-voting))
 						       <div class="comments">
 						         (comment-tree-to-html *html-output*
 									       (make-comment-parent-hash
