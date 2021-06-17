@@ -1258,7 +1258,7 @@ signaled condition to *HTML-OUTPUT*."
 			    (activate-client-trigger "postLoaded")
 			    (when show-comments
 			      (write-string "<script> </script>" out-stream)
-			      (force-output out-stream)
+			      (finish-output out-stream)
 			      (with-error-html-block ()
 				;; Temporary hack to support nominations
 				(let* ((real-comments (get-post-comments post-id))
