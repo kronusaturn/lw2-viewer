@@ -65,11 +65,10 @@
 	(read-unlock-slowpath rwlock)))
     (values nil)))
 
-(defun write-lock (rwlock &optional upgrade)
+(defun write-lock (rwlock)
   (with-rwlock-accessors (rwlock)
     (grab-mutex write-mutex)
-    (let ((orig-readers (atomic-incf readers (if upgrade -1 1))))
-      (when upgrade (decf orig-readers 2))
+    (let ((orig-readers (atomic-incf readers 1)))
       (unless (= orig-readers 0)
 	(with-mutex (write-waitqueue-mutex)
 	  (incf (the (signed-byte 61) draining-readers) (the (signed-byte 61) (ash orig-readers -1)))
@@ -91,9 +90,9 @@
 				       (:write (values 'write-lock 'write-unlock)))
     `(without-interrupts
 	 (allow-with-interrupts
+	  (,lock ,rwlock)
 	  (unwind-protect
-	       (progn (,lock ,rwlock)
-		      (with-interrupts ,@body))
+	       (with-interrupts ,@body)
 	    (,unlock ,rwlock))))))
 
 (defmacro with-read-lock ((rwlock &key upgrade-fn) &body body)
@@ -103,7 +102,8 @@
 	   (flet ((,upgrade-fn ()
 		    (without-interrupts
 			(allow-with-interrupts
-			 (write-lock ,rwlock t)
+			 (read-unlock ,rwlock)
+			 (write-lock ,rwlock)
 			 (setf ,upgraded t)))))
 	     (read-lock ,rwlock)
 	     (unwind-protect
