@@ -1217,7 +1217,7 @@ signaled condition to *HTML-OUTPUT*."
 		     (setf comment-thread-type (if (eq comment-thread-type :comment) :answer :comment)
 			   (values comments target-comment) (retrieve-individual-comment comment-thread-type))
 		     (unless target-comment
-		       (error (make-condition 'lw2-not-found-error))))
+		       (error 'lw2-not-found-error)))
 		   (let* ((*comment-individual-link* t)
 			  (display-name (get-username (cdr (assoc :user-id target-comment))))
 			  (verb-phrase (cond
@@ -1599,7 +1599,7 @@ signaled condition to *HTML-OUTPUT*."
 		     (let ((ui (get-user (cond (user-slug :user-slug) (id :user-id)) (or user-slug id) :auth-token auth-token)))
 		       (if (and (not (cdr (assoc :deleted ui))) (cdr (assoc :--id ui)))
 			   ui
-			   (error (make-condition 'lw2-user-not-found-error)))))
+			   (error 'lw2-user-not-found-error))))
 		    (user-id (cdr (assoc :--id user-info)))
 		    (own-user-page (logged-in-userid user-id))
                     (display-name (if user-slug (cdr (assoc :display-name user-info)) user-id))

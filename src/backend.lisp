@@ -174,7 +174,7 @@
 		   new-stream nil))
 	   (when (<= 500 status-code 599)
 	     (maybe-retry)
-	     (error (make-condition 'lw2-connection-error :message (format nil "HTTP status ~A" status-code))))
+	     (error 'lw2-connection-error :message (format nil "HTTP status ~A" status-code)))
 	   (setf success t)))
 	(progn
 	  (maphash (lambda (dest conn)
@@ -204,10 +204,10 @@
                  (path (cdr (assoc :path error))))
              (unless (and path (> (length path) 1))
                (cond
-                 ((search "document_not_found" message) (error (make-condition 'lw2-not-found-error)))
-                 ((search "app.missing_document" message) (error (make-condition 'lw2-not-found-error)))
-                 ((search "not_allowed" message) (error (make-condition 'lw2-not-allowed-error)))
-                 (t (error (make-condition 'lw2-unknown-error :message message))))))))
+                 ((search "document_not_found" message) (error 'lw2-not-found-error))
+                 ((search "app.missing_document" message) (error 'lw2-not-found-error))
+                 ((search "not_allowed" message) (error 'lw2-not-allowed-error))
+                 (t (error 'lw2-unknown-error :message message)))))))
 
 (define-backend-function earliest-post-time ()
   (backend-lw2 (load-time-value (local-time:parse-timestring "2005-01-01")))

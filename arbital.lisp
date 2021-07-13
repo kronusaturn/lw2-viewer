@@ -11,7 +11,7 @@
 	  (lambda () (json:decode-json-from-string json-string)))))
     (typecase result
       (string (if (string= result "not-found")
-		  (error (make-condition 'lw2-not-found-error))
+		  (error 'lw2-not-found-error)
 		  (error "Unknown error.")))
       (t result))))
 
