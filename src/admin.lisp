@@ -20,7 +20,7 @@
 						  (multiple-value-list
 						   (if last-done
 						       (progn
-							 (cursor-get cursor :set-range :key last-done :value-type :json)
+							 (cursor-get cursor :set-range :key last-done :return-type 'existence)
 							 (cursor-get cursor :next :value-type :json))
 						       (cursor-get cursor :first :value-type :json)))))
 	 while post
