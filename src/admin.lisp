@@ -4,37 +4,32 @@
 
 (in-package #:lw2.admin)
 
-(defun reclean-html ()
+(defun map-posts-and-comments (fn)
   (let ((total-count (count-database-entries "post-body-json"))
 	(done-count 0)
 	(last-done nil))
-    (truncate-database "clean-html-memo")
-    (format t "Press Enter to abort.~%")
+    (format *error-output* "Press Enter to abort.~%")
     (labels ((report-progress ()
 	       (when (= 0 (mod done-count 1))
-		 (format t "Finished ~A of ~A posts.~A" done-count total-count (string #\Return))
-		 (force-output))))
+		 (format *error-output* "Finished ~A of ~A posts.~A" done-count total-count (string #\Return))
+		 (force-output *error-output*))))
       (loop
-	 for (post-json post-id) = (call-with-cursor "post-body-json"
-						     (lambda (db cursor)
-						       (declare (ignore db))
-						       (multiple-value-list
-							(if last-done
-							    (progn
-							      (cursor-get cursor :set-range :key last-done :value-type :json)
-							      (cursor-get cursor :next :value-type :json))
-							    (cursor-get cursor :first :value-type :json)))))
-	 while post-json
+	 for (post post-id) = (call-with-cursor "post-body-json"
+						(lambda (db cursor)
+						  (declare (ignore db))
+						  (multiple-value-list
+						   (if last-done
+						       (progn
+							 (cursor-get cursor :set-range :key last-done :value-type :json)
+							 (cursor-get cursor :next :value-type :json))
+						       (cursor-get cursor :first :value-type :json)))))
+	 while post
 	 do (when (read-char-no-hang)
-	      (format t "Aborted.~%")
-	      (return-from reclean-html (values)))
+	      (format *error-output* "Aborted.~%")
+	      (return-from map-posts-and-comments (values)))
 	 do (report-progress)
-	 do (let ((post (json:decode-json-from-string post-json)))
-	      (ignore-errors
-		(let ((*before-clean-hook* (lambda () (clear-backlinks post-id)))
-		      (*link-hook* (lambda (link)
-				     (add-backlink link post-id))))
-		  (clean-html (or (cdr (assoc :html-body post)) "") :with-toc t :post-id post-id)))
+	 do (progn
+	      (funcall fn post post-id)
 	      (ignore-errors
 		(let ((comments (if (cdr (assoc :question post))
 				    (append (get-post-comments post-id :revalidate nil)
@@ -42,13 +37,32 @@
 				    (get-post-comments post-id :revalidate nil))))
 		  (loop for comment in comments
 		     for comment-id = (cdr (assoc :--id comment))
-		     do (ignore-errors
-			  (let ((*before-clean-hook* (lambda () (clear-backlinks post-id comment-id)))
-				(*link-hook* (lambda (link)
-					       (add-backlink link post-id comment-id))))
-			    (clean-html (or (cdr (assoc :html-body comment)) ""))))))))
+		     do (funcall fn comment post-id comment-id)))))
 	   (incf done-count)
 	   (setf last-done post-id))
       (report-progress)
-      (format t "~%Done.~%")
+      (format *error-output* "~%Done.~%")
       (values))))
+
+(defun reclean-html ()
+  (map-posts-and-comments
+   (lambda (item post-id &optional comment-id)
+     (if (not comment-id)
+	 (ignore-errors
+	   (let ((*before-clean-hook* (lambda () (clear-backlinks post-id)))
+		 (*link-hook* (lambda (link)
+				(add-backlink link post-id))))
+	     (clean-html (or (cdr (assoc :html-body item)) "") :with-toc t :post-id post-id)))
+	 (ignore-errors
+	   (let ((*before-clean-hook* (lambda () (clear-backlinks post-id comment-id)))
+		 (*link-hook* (lambda (link)
+				(add-backlink link post-id comment-id))))
+	     (clean-html (or (cdr (assoc :html-body item)) ""))))))))
+
+(defun grep-posts-and-comments (regex)
+  (let ((scanner (ppcre:create-scanner regex)))
+    (map-posts-and-comments
+     (lambda (item post-id &optional comment-id)
+       (declare (ignore post-id comment-id))
+       (ppcre:do-matches-as-strings (match scanner (or (cdr (assoc :html-body item)) ""))
+	 (write-line match))))))
