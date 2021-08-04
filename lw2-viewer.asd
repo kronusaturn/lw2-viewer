@@ -45,7 +45,7 @@
 			     (:static-file "../text-clean-regexps.js")
 			     (:static-file "../html-clean-regexps.js")
 			     (:file "colors" :depends-on ("utils"))
-			     (:file "images" :depends-on ("conditions" "html-reader" "utils" "lmdb" "backend"))
+			     (:file "images" :depends-on ("conditions" "html-reader" "utils" "lmdb" "backend" "legacy-archive"))
 			     (:file "elicit-predictions" :depends-on ("utils" "html-reader" "backend" "graphql"))
                              (:file "clean-html" :depends-on ("utils" "links" "lmdb" "backend" "context" "sites" "conditions" "colors" "images" "elicit-predictions" "../text-clean-regexps.js" "../html-clean-regexps.js"))
                              (:file "lw2-login" :depends-on ("utils" "backend" "backend-modules" "context"))

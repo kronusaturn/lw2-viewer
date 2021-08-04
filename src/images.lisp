@@ -70,10 +70,20 @@
 (defun download-file (uri target)
   (sb-sys:with-deadline (:seconds 60)
     (with-open-file (out-stream target :direction :output :if-exists :supersede :element-type '(unsigned-byte 8))
-      (let ((in-stream (drakma:http-request uri :want-stream t :force-binary t :connection-timeout 30 :accept "image/*,*/*")))
+      (multiple-value-bind (in-stream status) (drakma:http-request uri :want-stream t :force-binary t :connection-timeout 30 :accept "image/*,*/*")
+	(unless (= status 200) (error "HTTP error ~A" status))
 	(unwind-protect
 	     (alexandria:copy-stream in-stream out-stream)
 	  (close in-stream))))))
+
+(defun download-file-with-wayback-fallback (uri target)
+  (handler-case
+      (download-file uri target)
+    (error (c)
+      (let ((wayback-uri (lw2.legacy-archive:wayback-unmodified-url uri)))
+	(if wayback-uri
+	    (download-file wayback-uri target)
+	    (error c))))))
 
 (define-cache-database 'lw2.backend-modules:backend-lmdb-cache "dynamic-content-images" "cached-images")
 
@@ -84,8 +94,7 @@
   (let* ((filename (multiple-value-bind (r1 r2) (city-hash:city-hash-128 (babel:string-to-octets uri)) (format nil "~32R" (dpb r1 (byte 64 64) r2))))
 	 (proxy-uri (format nil "/proxy-assets/~A" filename))
 	 (pathname (format nil "www~A" proxy-uri)))
-    (unless (probe-file pathname)
-      (download-file uri pathname))
+    (download-file-with-wayback-fallback uri pathname)
     (let* ((image-statistics (image-statistics pathname))
 	   (inverted-uri (and (eq 1 (cdr (assoc :animation-frames image-statistics)))
 			      (image-invertible pathname)

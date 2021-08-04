@@ -1,7 +1,7 @@
 (uiop:define-package #:lw2.legacy-archive
   (:use #:cl #:lw2.utils #:lw2.backend)
   (:import-from #:cl-ppcre #:regex-replace-all)
-  (:export #:lw-legacy-url))
+  (:export #:lw-legacy-url #:check-wayback-availability #:wayback-unmodified-url))
 
 (in-package #:lw2.legacy-archive)
 
@@ -46,4 +46,9 @@
 			  (assoc :timestamp timestamp)))
 	    timestamp))))
     (and timestamp
-	 (nth-value 0 (parse-integer timestamp)))))
+	 (values (parse-integer timestamp)))))
+
+(defun wayback-unmodified-url (url)
+  (let ((timestamp (check-wayback-availability url)))
+    (when timestamp
+      (format nil "https://web.archive.org/web/~Aid_/~A" timestamp url))))
