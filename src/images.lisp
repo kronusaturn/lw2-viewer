@@ -33,13 +33,13 @@
 	  ((= (length color-string) 16) ; 16-bit rgba
 	   (floor
 	    (* 3 (ldb (byte 16 48) color-value))
-	    (* 3 256)))
+	    256))
 	  ((= (length color-string) 12) ; 16-bit rgb
 	   (floor
 	    (+ (ldb (byte 16 0) color-value)
 	       (ldb (byte 16 16) color-value)
 	       (ldb (byte 16 32) color-value))
-	    (* 3 256))))))
+	    256)))))
 
 (defun image-invertible (image-filename)
   (let ((histogram-list nil)
