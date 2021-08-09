@@ -24,12 +24,22 @@
 
 (defun string-to-brightness (color-string)
   (let ((color-value (parse-integer color-string :radix 16)))
-    (cond ((= (length color-string) 8)
+    (cond ((= (length color-string) 8) ; 8-bit rgba
 	   (* 3 (ldb (byte 8 24) color-value)))
-	  ((= (length color-string) 6)
+	  ((= (length color-string) 6) ; 8-bit rgb
 	   (+ (ldb (byte 8 0) color-value)
 	      (ldb (byte 8 8) color-value)
-	      (ldb (byte 8 16) color-value))))))
+	      (ldb (byte 8 16) color-value)))
+	  ((= (length color-string) 16) ; 16-bit rgba
+	   (floor
+	    (* 3 (ldb (byte 16 48) color-value))
+	    (* 3 256)))
+	  ((= (length color-string) 12) ; 16-bit rgb
+	   (floor
+	    (+ (ldb (byte 16 0) color-value)
+	       (ldb (byte 16 16) color-value)
+	       (ldb (byte 16 32) color-value))
+	    (* 3 256))))))
 
 (defun image-invertible (image-filename)
   (let ((histogram-list nil)
