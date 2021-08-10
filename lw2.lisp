@@ -1946,68 +1946,71 @@ signaled condition to *HTML-OUTPUT*."
 			      :content-class "search-results-page" :current-uri "/search"
 			      :title title))))))
 
-(define-page view-login "/login" (return cookie-check
-                                         (login-username :request-type :post) (login-password :request-type :post)
-                                         (signup-username :request-type :post) (signup-email :request-type :post) (signup-password :request-type :post) (signup-password2 :request-type :post))
-  (labels
-    ((emit-login-page (&key error-message)
-       (let ((csrf-token (make-csrf-token)))
-         (emit-page (out-stream :title "Log in" :current-uri "/login" :content-class "login-page" :robots "noindex, nofollow")
-                    (when error-message
-                      (format out-stream "<div class=\"error-box\">~A</div>" error-message)) 
-                    (with-outputs (out-stream) "<div class=\"login-container\">")
-                    (output-form out-stream "post" (format nil "/login~@[?return=~A~]" (if return (url-rewrite:url-encode return))) "login-form" "Log in" csrf-token
-                                 '(("login-username" "Username" "text" "username")
-                                   ("login-password" "Password" "password" "current-password"))
-                                 "Log in"
-                                 :end-html (when (typep *current-backend* 'backend-websocket-login) ;other backends not supported yet
-					     "<a href=\"/reset-password\">Forgot password</a>"))
-                    (output-form out-stream "post" (format nil "/login~@[?return=~A~]" (if return (url-rewrite:url-encode return))) "signup-form" "Create account" csrf-token
-                                 '(("signup-username" "Username" "text" "username")
-                                   ("signup-email" "Email" "text" "email")
-                                   ("signup-password" "Password" "password" "new-password")
-                                   ("signup-password2" "Confirm password" "password" "new-password"))
-                                 "Create account")
-                    (if-let (main-site-title (main-site-title *current-site*))
-			    (format out-stream "<div class=\"login-tip\"><span>Tip:</span> You can log in with the same username and password that you use on ~A~:*. Creating an account here also creates one on ~A.</div>"
-				    main-site-title))
-		    (format out-stream "</div>"))))
-     (finish-login (username user-id auth-token error-message &optional expires)
-       (cond
-         (auth-token
-           (set-cookie "lw2-auth-token" auth-token :max-age (if expires (+ (- expires (get-unix-time)) (* 24 60 60)) (1- (expt 2 31))))
-           (if expires (set-cookie "lw2-status" (json:encode-json-to-string (alist :expires expires))))
-           (cache-put "auth-token-to-userid" auth-token user-id)
-           (cache-put "auth-token-to-username" auth-token username)
-           (redirect (if (and return (ppcre:scan "^/[^/]" return)) return "/")))
-         (t
-          (emit-login-page :error-message error-message)))))
-    (cond
-      ((not (or cookie-check (hunchentoot:cookie-in "session-token")))
-        (set-cookie "session-token" (base64:usb8-array-to-base64-string (ironclad:make-random-salt)))
-        (redirect (format nil "/login?~@[return=~A&~]cookie-check=y" (if return (url-rewrite:url-encode return))))) 
-      (cookie-check
-        (if (hunchentoot:cookie-in "session-token")
-            (redirect (format nil "/login~@[?return=~A~]" (if return (url-rewrite:url-encode return))))
-            (emit-page (out-stream :title "Log in" :current-uri "/login")
-                       (format out-stream "<h1>Enable cookies</h1><p>Please enable cookies in your browser and <a href=\"/login~@[?return=~A~]\">try again</a>.</p>" (if return (url-rewrite:url-encode return)))))) 
-      (login-username
-        (cond
-          ((or (string= login-username "") (string= login-password "")) (emit-login-page :error-message "Please enter a username and password"))
-	  ((lw2.dnsbl:dnsbl-check (hunchentoot:real-remote-addr)) (emit-login-page :error-message "Your IP address is blacklisted."))
-          (t (multiple-value-call #'finish-login login-username (do-login login-username login-password)))))
-      (signup-username
-        (cond
-          ((not (every (lambda (x) (not (string= x ""))) (list signup-username signup-email signup-password signup-password2)))
-           (emit-login-page :error-message "Please fill in all fields"))
-          ((not (string= signup-password signup-password2))
-           (emit-login-page :error-message "Passwords do not match"))
-	  ((lw2.dnsbl:dnsbl-check (hunchentoot:real-remote-addr)) (emit-login-page :error-message "Your IP address is blacklisted."))
-          (t (multiple-value-call #'finish-login signup-username (do-lw2-create-user signup-username signup-email signup-password)))))
-      (t
-       (emit-login-page))))) 
+(defgeneric view-login (backend))
 
-(define-page view-logout "/logout" ()
+(defmethod view-login ((backend backend-password-login))
+  (with-http-args (return cookie-check
+		      (login-username :request-type :post) (login-password :request-type :post)
+		      (signup-username :request-type :post) (signup-email :request-type :post) (signup-password :request-type :post) (signup-password2 :request-type :post))
+    (labels
+	((emit-login-page (&key error-message)
+	   (let ((csrf-token (make-csrf-token)))
+	     (emit-page (out-stream :title "Log in" :current-uri "/login" :content-class "login-page" :robots "noindex, nofollow")
+	       (when error-message
+		 (format out-stream "<div class=\"error-box\">~A</div>" error-message)) 
+	       (with-outputs (out-stream) "<div class=\"login-container\">")
+	       (output-form out-stream "post" (format nil "/login~@[?return=~A~]" (if return (url-rewrite:url-encode return))) "login-form" "Log in" csrf-token
+			    '(("login-username" "Username" "text" "username")
+			      ("login-password" "Password" "password" "current-password"))
+			    "Log in"
+			    :end-html (when (typep *current-backend* 'backend-websocket-login) ;other backends not supported yet
+					"<a href=\"/reset-password\">Forgot password</a>"))
+	       (output-form out-stream "post" (format nil "/login~@[?return=~A~]" (if return (url-rewrite:url-encode return))) "signup-form" "Create account" csrf-token
+			    '(("signup-username" "Username" "text" "username")
+			      ("signup-email" "Email" "text" "email")
+			      ("signup-password" "Password" "password" "new-password")
+			      ("signup-password2" "Confirm password" "password" "new-password"))
+			    "Create account")
+	       (if-let (main-site-title (main-site-title *current-site*))
+		       (format out-stream "<div class=\"login-tip\"><span>Tip:</span> You can log in with the same username and password that you use on ~A~:*. Creating an account here also creates one on ~A.</div>"
+			       main-site-title))
+	       (format out-stream "</div>"))))
+	 (finish-login (username user-id auth-token error-message &optional expires)
+	   (cond
+	     (auth-token
+	      (set-cookie "lw2-auth-token" auth-token :max-age (if expires (+ (- expires (get-unix-time)) (* 24 60 60)) (1- (expt 2 31))))
+	      (if expires (set-cookie "lw2-status" (json:encode-json-to-string (alist :expires expires))))
+	      (cache-put "auth-token-to-userid" auth-token user-id)
+	      (cache-put "auth-token-to-username" auth-token username)
+	      (redirect (if (and return (ppcre:scan "^/[^/]" return)) return "/")))
+	     (t
+	      (emit-login-page :error-message error-message)))))
+      (cond
+	((not (or cookie-check (hunchentoot:cookie-in "session-token")))
+	 (set-cookie "session-token" (base64:usb8-array-to-base64-string (ironclad:make-random-salt)))
+	 (redirect (format nil "/login?~@[return=~A&~]cookie-check=y" (if return (url-rewrite:url-encode return))))) 
+	(cookie-check
+	 (if (hunchentoot:cookie-in "session-token")
+	     (redirect (format nil "/login~@[?return=~A~]" (if return (url-rewrite:url-encode return))))
+	     (emit-page (out-stream :title "Log in" :current-uri "/login")
+			(format out-stream "<h1>Enable cookies</h1><p>Please enable cookies in your browser and <a href=\"/login~@[?return=~A~]\">try again</a>.</p>" (if return (url-rewrite:url-encode return)))))) 
+	(login-username
+	 (cond
+	   ((or (string= login-username "") (string= login-password "")) (emit-login-page :error-message "Please enter a username and password"))
+	   ((lw2.dnsbl:dnsbl-check (hunchentoot:real-remote-addr)) (emit-login-page :error-message "Your IP address is blacklisted."))
+	   (t (multiple-value-call #'finish-login login-username (do-login login-username login-password)))))
+	(signup-username
+	 (cond
+	   ((not (every (lambda (x) (not (string= x ""))) (list signup-username signup-email signup-password signup-password2)))
+	    (emit-login-page :error-message "Please fill in all fields"))
+	   ((not (string= signup-password signup-password2))
+	    (emit-login-page :error-message "Passwords do not match"))
+	   ((lw2.dnsbl:dnsbl-check (hunchentoot:real-remote-addr)) (emit-login-page :error-message "Your IP address is blacklisted."))
+	   (t (multiple-value-call #'finish-login signup-username (do-lw2-create-user signup-username signup-email signup-password)))))
+	(t
+	 (emit-login-page))))))
+
+(defmethod view-logout ((backend backend-password-login))
   (request-method
    (:post ()
      (set-cookie "lw2-auth-token" "" :max-age 0)
@@ -2016,41 +2019,100 @@ signaled condition to *HTML-OUTPUT*."
 
 (defparameter *reset-password-template* (compile-template* "reset-password.html"))
 
-(define-page view-reset-password "/reset-password" ((email :request-type :post) (reset-link :request-type :post) (password :request-type :post) (password2 :request-type :post))
-  (labels ((emit-rpw-page (&key message message-type step)
-             (let ((csrf-token (make-csrf-token)))
-               (emit-page (out-stream :title "Reset password" :content-class "reset-password" :robots "noindex, nofollow")
-                          (render-template* *reset-password-template* out-stream
-                                            :csrf-token csrf-token
-                                            :reset-link reset-link
-                                            :message message
-                                            :message-type message-type
-                                            :step step)))))
-    (cond
-      (email
-        (multiple-value-bind (ret error)
-          (do-lw2-forgot-password email)
-          (declare (ignore ret))
-          (if error
-              (emit-rpw-page :step 1 :message error :message-type "error")
-              (emit-rpw-page :step 1 :message "Password reset email sent." :message-type "success"))))
-      (reset-link
-        (ppcre:register-groups-bind (reset-token) ("(?:reset-password/|^)([^/#]+)$" reset-link)
-                                    (cond
-                                      ((not reset-token)
-                                       (emit-rpw-page :step 2 :message "Invalid password reset link." :message-type "error"))
-                                      ((not (string= password password2))
-                                       (emit-rpw-page :step 2 :message "Passwords do not match." :message-type "error"))
-                                      (t
-                                       (multiple-value-bind (user-id auth-token error-message) (do-lw2-reset-password reset-token password)
-                                         (declare (ignore user-id auth-token))
-                                         (cond
-                                           (error-message (emit-rpw-page :step 2 :message error-message :message-type "error"))
-                                           (t
-                                            (with-error-page (emit-page (out-stream :title "Reset password" :content-class "reset-password")
-                                                                        (format out-stream "<h1>Password reset complete</h1><p>You can now <a href=\"/login\">log in</a> with your new password.</p>"))))))))))
-      (t
-       (emit-rpw-page)))))
+(define-component basic-reset-password ()
+  (:http-args ((email :request-type :post) (reset-link :request-type :post) (password :request-type :post) (password2 :request-type :post)))
+  (renderer ()
+    (labels ((emit-rpw-page (&key message message-type step)
+	       (let ((csrf-token (make-csrf-token)))
+		 (emit-page (out-stream :title "Reset password" :content-class "reset-password" :robots "noindex, nofollow")
+			    (render-template* *reset-password-template* out-stream
+					      :csrf-token csrf-token
+					      :reset-link reset-link
+					      :message message
+					      :message-type message-type
+					      :step step)))))
+      (cond
+	(email
+	 (multiple-value-bind (ret error)
+	     (do-lw2-forgot-password email)
+	   (declare (ignore ret))
+	   (if error
+	       (emit-rpw-page :step 1 :message error :message-type "error")
+	       (emit-rpw-page :step 1 :message "Password reset email sent." :message-type "success"))))
+	(reset-link
+	 (ppcre:register-groups-bind (reset-token) ("(?:reset-password/|^)([^/#]+)$" reset-link)
+				     (cond
+				       ((not reset-token)
+					(emit-rpw-page :step 2 :message "Invalid password reset link." :message-type "error"))
+				       ((not (string= password password2))
+					(emit-rpw-page :step 2 :message "Passwords do not match." :message-type "error"))
+				       (t
+					(multiple-value-bind (user-id auth-token error-message) (do-lw2-reset-password reset-token password)
+					  (declare (ignore user-id auth-token))
+					  (cond
+					    (error-message (emit-rpw-page :step 2 :message error-message :message-type "error"))
+					    (t
+					     (with-error-page (emit-page (out-stream :title "Reset password" :content-class "reset-password")
+									 (format out-stream "<h1>Password reset complete</h1><p>You can now <a href=\"/login\">log in</a> with your new password.</p>"))))))))))
+	(t
+	 (emit-rpw-page))))))
+
+(define-route 'login-site 'standard-route :name 'view-login :uri "/login" :handler (lambda () (with-error-page (view-login *current-backend*))))
+(define-route 'login-site 'standard-route :name 'view-login-oauth2.0-callback :uri "/auth/ea" :handler (lambda () (with-error-page (view-login-oauth2.0-callback *current-backend*))))
+
+(define-route 'login-site 'standard-route :name 'view-logout :uri "/logout" :handler (lambda () (with-error-page (view-logout *current-backend*))))
+
+(define-component-routes login-site
+    (basic-logout (standard-route :uri "/logout") () (basic-logout))
+    (basic-reset-password (standard-route :uri "/reset-password") () (basic-reset-password)))
+
+(defmethod view-login ((backend backend-oauth2.0-login))
+  (with-http-args (return)
+    (redirect
+     (quri:render-uri
+      (quri:merge-uris
+       (quri:make-uri :path "authorize"
+		      :query (alist "response_type" "code"
+				    "client_id" (oauth2.0-client-id backend)
+				    "redirect_uri" "http://localhost:4242/auth/ea"
+				    "scope" "openid"
+				    "state" return))
+       (oauth2.0-login-uri backend))))))
+
+(defmethod view-login-oauth2.0-callback ((backend backend-oauth2.0-login))
+  (with-http-args (code state)
+    (alist-bind ((auth-token (or null simple-string) :access--token))
+		(call-with-http-response #'json:decode-json
+					    (quri:merge-uris "oauth/token" (oauth2.0-login-uri backend))
+					    :method :post
+					    :content (alist "grant_type" "authorization_code"
+							    "client_id" (oauth2.0-client-id backend)
+							    "client_secret" (oauth2.0-client-secret backend)
+							    "code" code
+							    "redirect_uri" "http://localhost:4242/auth/ea")
+					    :want-stream t :force-string t)
+		(unless auth-token
+		  (error "Login error"))
+		(set-cookie "lw2-auth-token" auth-token :max-age (1- (expt 2 31)))
+		(alist-bind ((user-id simple-string :--id)
+			     (username simple-string :display-name))
+			    (do-lw2-post-query
+				auth-token (alist "query"
+						  (graphql-query-string :current-user nil '(:--id :display-name))))
+			    (cache-put "auth-token-to-userid" auth-token user-id)
+			    (cache-put "auth-token-to-username" auth-token username))
+		(redirect (if (and state (ppcre:scan "^/[^/]" state)) state "/")))))
+
+(defmethod view-logout ((backend backend-oauth2.0-login))
+  (request-method
+   (:post ()
+	  (set-cookie "lw2-auth-token" "" :max-age 0)
+	  (redirect (quri:merge-uris (quri:make-uri :path "v2/logout" :query (alist "client_id" (oauth2.0-client-id backend)))
+				     (oauth2.0-login-uri backend))))))
+
+(delete-easy-handler 'view-login)
+(delete-easy-handler 'view-logout)
+(delete-easy-handler 'view-reset-password)
 
 (define-page view-library "/library"
                             ((view :member '(:featured :community) :default :featured))

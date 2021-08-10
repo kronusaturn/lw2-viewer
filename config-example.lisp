@@ -19,6 +19,12 @@
   :backend ("lw2" ; Supported backends: lw2 ea-forum lw2-legacy arbital accordius
             :graphql-uri "https://www.lesswrong.com/graphql"
 	    ;:magnum-crosspost-site "ea.example.com" ; set this to the hostname of another defined site to enable crosspost retrieval.
+
+	    ; Uncomment the following for EA Forum OAuth 2.0 support.
+	    ;:oauth2.0-login-uri "https://login.effectivealtruism.org/"
+	    ;:oauth2.0-client-id "foo"
+	    ;:oauth2.0-client-secret "bar"
+	    
             :algolia-search-uri "https://z0gr6exqhd-dsn.algolia.net/1/indexes/*/queries?x-algolia-agent=Algolia%20for%20vanilla%20JavaScript%203.24.5%3Breact-instantsearch%204.1.3%3BJS%20Helper%202.23.0&x-algolia-application-id=Z0GR6EXQHD&x-algolia-api-key=0b1d20b957917dbb5e1c2f3ad1d04ee2"
             :cache-db-path "./cache/")) ; Location of the cache database. Be sure to include the trailing slash.
 

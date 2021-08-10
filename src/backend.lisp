@@ -333,6 +333,9 @@
   (backend-passport-js-login
    (list-cond* (auth-token :cookie (concatenate 'string "loginToken=" auth-token))
 	       (call-next-method)))
+  (backend-oauth2.0-login
+   (list-cond* (auth-token :cookie (concatenate 'string "clientId=" (oauth2.0-client-id backend) "; loginToken=" auth-token))
+	       (call-next-method)))
   (backend-graphql
    (alist* :content-type "application/json"
 	   (if forwarded (forwarded-header)))))
