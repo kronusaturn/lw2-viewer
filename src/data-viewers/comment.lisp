@@ -41,7 +41,8 @@
    (html-body string)))
 
 (defun comment-link (post-id tag &optional comment-id)
-  (generate-item-link (if post-id :post :tag) (or post-id (cdr (assoc :slug tag))) :comment-id comment-id))
+  (when (or post-id tag)
+    (generate-item-link (if post-id :post :tag) (or post-id (cdr (assoc :slug tag))) :comment-id comment-id)))
 
 (defun comment-to-html (out-stream comment &key with-post-title)
   (if (or (cdr (assoc :deleted comment)) (cdr (assoc :deleted-public comment)))
@@ -96,9 +97,11 @@
 				<a href=(comment-link post-id tag parent-id)>comment</a>
 				(progn " ")
 			      </span>)))
-		        <span class="comment-post-title2">on: <a href=(comment-link post-id tag)>(safe (clean-text-to-html (if post-id
-															       (get-post-title post-id)
-															       (cdr (assoc :name tag)))))</a></span>
+		      <span class="comment-post-title2">on: <a href=(comment-link post-id tag)>(safe (if (or post-id tag)
+													 (clean-text-to-html (if post-id
+																 (get-post-title post-id)
+																 (cdr (assoc :name tag))))
+													 "[unknown]"))</a></span>
 		      </div>
 		  (when parent-comment-id
 		    (if *comment-individual-link*
