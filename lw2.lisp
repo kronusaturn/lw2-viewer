@@ -1161,7 +1161,7 @@ signaled condition to *HTML-OUTPUT*."
 		       <div class="comments-empty-message">("No ~As." id)</div>)))))
     (if preview
 	(output-comments-inner)
-	(progn (format out-stream "<div id=\"~As\" class=\"comments~:[~; replies-open~]\">" id replies-open)
+	(progn (format out-stream "<div id=\"~As\" class=\"comments~:[~; replies-open~]\">" id (and *enable-voting* replies-open))
 	       (unless target
 		 <script>initializeCommentControls\(\)</script>)
 	       (output-comments-inner)
