@@ -1087,12 +1087,13 @@ signaled condition to *HTML-OUTPUT*."
 (define-page view-coronavirus-link-database "/coronavirus-link-database" ()
   (redirect "https://www.lesswrong.com/coronavirus-link-database" :type :see-other))
 
-(defun post-comment (post-id-real &key shortform)
+(defun post-comment (&key ((:post-id post-id-real)) ((:tag-id tag-id-real)) shortform)
   (request-method
-   (:post (text answer nomination nomination-review af post-id parent-answer-id parent-comment-id edit-comment-id retract-comment-id unretract-comment-id delete-comment-id)
+   (:post (text answer nomination nomination-review af post-id tag-id parent-answer-id parent-comment-id edit-comment-id retract-comment-id unretract-comment-id delete-comment-id)
      (let ((lw2-auth-token *current-auth-token*))
        (assert lw2-auth-token)
        (let* ((post-id (or post-id-real post-id))
+	      (tag-id (or tag-id-real tag-id))
 	      (question (when post-id (cdr (assoc :question (get-post-body post-id :auth-token lw2-auth-token)))))
 	      (new-comment-result
 	       (cond
@@ -1100,7 +1101,8 @@ signaled condition to *HTML-OUTPUT*."
 		  (let ((comment-data
 			 (list-cond
 			  (t :body (postprocess-markdown text))
-			  ((not (or edit-comment-id (and shortform (not parent-comment-id)))) :post-id post-id)
+			  ((and post-id (not (or edit-comment-id (and shortform (not parent-comment-id))))) :post-id post-id)
+			  ((and tag-id (not edit-comment-id)) :tag-id tag-id)
 			  (parent-comment-id :parent-comment-id parent-comment-id)
 			  (answer :answer t)
 			  (nomination :nominated-for-review "2019")
@@ -1296,7 +1298,7 @@ signaled condition to *HTML-OUTPUT*."
 							     :replies-open open
 							     :overcomingbias-sort (cdr (assoc :comment-sort-order post)) :chrono chrono :preview preview))))))))))))))
    (:post ()
-	  (post-comment post-id))))
+	  (post-comment :post-id post-id))))
 
 (defparameter *edit-post-template* (compile-template* "edit-post.html"))
 
@@ -1470,7 +1472,7 @@ signaled condition to *HTML-OUTPUT*."
 										(flatten-shortform-comments recent-comments)))
 						       </div>)))))))))
    (:post ()
-     (post-comment nil :shortform t))))
+     (post-comment :shortform t))))
 
 (define-component-routes forum-site (view-recent-comments (standard-route :uri "/recentcomments") () (view-comments-index :recent-comments)))
 (define-component-routes shortform-site (view-shortform (standard-route :uri "/shortform") () (view-comments-index :shortform)))
@@ -1511,32 +1513,38 @@ signaled condition to *HTML-OUTPUT*."
 
 (define-component view-tag (slug)
   (:http-args ((sort :default :relevant :member '(:relevant :new :old))))
-  (let* ((tag (first (lw2-graphql-query (lw2-query-string :tag :list (alist :view "tagBySlug" :slug slug) :context :body))))
-	 (posts (get-tag-posts slug))
-	 (posts (if (eq sort :relevant) posts (sort-items posts sort))))
-    (schema-bind (:tag tag :auto :context :body)
-      (renderer ()
-	(view-items-index posts
-			  :title (format nil "~A tag" name)
-			  :extra-head (lambda () (when (logged-in-userid) (call-with-server-data 'process-vote-data (format nil "/karma-vote/tag?tag-id=~A" tag-id))))
-			  :top-nav (lambda ()
-				     (page-toolbar-to-html :title name :rss (not wiki-only))
-				     (tag-to-html tag)
-		                     (when (and posts (not *preview*))
-				       (sublevel-nav-to-html '(:relevant :new :old)
-							     sort
-							     :default :relevant
-							     :param-name "sort"
-							     :extra-class "sort")))
-			  :content-class "index-page tag-index-page"
-			  :alternate-html (lambda ()
-					    (unless wiki-only
-					      (write-index-items-to-html *html-output* posts))
-					    (when (typep *current-backend* 'backend-lw2-tags-comments)
-					      (finish-output *html-output*)
-					      (let ((*enable-voting* (not (null (logged-in-userid))))
-						    (comments (lw2-graphql-query (lw2-query-string :comment :list (alist :view "commentsOnTag" :tag-id tag-id)))))
-						(output-comments *html-output* "comment" comments nil)))))))))
+  (let ((tag (first (lw2-graphql-query (lw2-query-string :tag :list (alist :view "tagBySlug" :slug slug) :context :body)))))
+    (request-method
+     (:get ()
+       (let* ((posts (get-tag-posts slug))
+	      (posts (if (eq sort :relevant) posts (sort-items posts sort))))
+	 (schema-bind (:tag tag :auto :context :body)
+	   (renderer ()
+	     (view-items-index posts
+			       :title (format nil "~A tag" name)
+			       :extra-head (lambda () (when (logged-in-userid) (call-with-server-data 'process-vote-data (format nil "/karma-vote/tag?tag-id=~A" tag-id))))
+			       :top-nav (lambda ()
+					  (page-toolbar-to-html :title name :rss (not wiki-only))
+					  (tag-to-html tag)
+					  (when (and posts (not *preview*))
+					    (sublevel-nav-to-html '(:relevant :new :old)
+								  sort
+								  :default :relevant
+								  :param-name "sort"
+								  :extra-class "sort")))
+			       :content-class "index-page tag-index-page"
+			       :alternate-html (lambda ()
+						 (unless wiki-only
+						   (write-index-items-to-html *html-output* posts))
+						 (when (typep *current-backend* 'backend-lw2-tags-comments)
+						   (finish-output *html-output*)
+						   (let ((*enable-voting* (not (null (logged-in-userid))))
+							 (comments (lw2-graphql-query (lw2-query-string :comment :list (alist :view "commentsOnTag" :tag-id tag-id)))))
+						     (output-comments *html-output* "comment" comments nil :replies-open t)))))))))
+     (:post ()
+       (schema-bind (:tag tag (tag-id))
+	 (renderer ()
+	   (post-comment :tag-id tag-id)))))))
 
 (define-component-routes forum-site (view-tag (regex-route :regex "/tag/([^/?]+)") (slug) (view-tag slug)))
 
