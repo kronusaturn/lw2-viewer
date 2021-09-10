@@ -497,9 +497,7 @@
      (multiple-value-bind (view-terms cache-key)
 	 (alexandria:switch (view :test #'string=)
 			    ("featured" (alist :view "curated"))
-			    ("all" (alist :sorted-by sort-key :filter "all" :meta :null))
-			    ("meta" (alist :view "new" :meta t :all t))
-			    ("community" (alist :view "new" :meta t :all t))
+			    ("all" (alist :sorted-by sort-key :filter "all"))
 			    ("alignment-forum" (alist :view "new" :af t))
 			    ("questions" (alist :view "new" :question t))
 			    ("events" (alist :view "events"))
@@ -837,12 +835,10 @@
 (define-backend-function get-user-page-items (user-id request-type &key (offset 0) (limit 21) (sort-type :date) drafts
 						      (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*) auth-token)
   (backend-lw2-legacy
-   (declare (special *graphql-correct*))
    (multiple-value-bind (real-offset real-limit) (if (eq request-type :both)
 						     (values 0 (+ offset limit))
 						     (values offset limit))
-     (let* ((graphql-correct (boundp '*graphql-correct*))
-	    (cache-database (when (and (eq request-type :both)
+     (let* ((cache-database (when (and (eq request-type :both)
 				       (or (not offset) (= offset 0))
 				       (= limit 21)
 				       (eq sort-type :date)
@@ -852,18 +848,14 @@
 	    (return-type (if cache-database :string nil))
 	    (fn (lambda ()
 		  (labels ((posts-query-string ()
-			     (let* ((base-terms1
+			     (let* ((base-terms
 				     (cond
 				       (drafts (alist :view "drafts"))
 				       ((eq sort-type :score) (alist :view "top"))
 				       ((eq sort-type :date-reverse) (alist :view "old"))
 				       (t (alist :view "userPosts"))))
-				    (base-terms2
-				     (if (or drafts graphql-correct)
-					 base-terms1
-					 (alist* :meta :null base-terms1)))
-				    (terms (alist* :offset real-offset :limit real-limit :user-id user-id base-terms2)))
-			       (declare (dynamic-extent base-terms1 base-terms2 terms))
+				    (terms (alist* :offset real-offset :limit real-limit :user-id user-id base-terms)))
+			       (declare (dynamic-extent base-terms terms))
 			       (lw2-query-string* :post :list terms)))
 			   (comments-query-string ()
 			     (let* ((view (ecase sort-type

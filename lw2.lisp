@@ -446,8 +446,7 @@ signaled condition to *HTML-OUTPUT*."
                      user-nav-item))
     (:primary-bar (("home" "/" "Home" :description "Latest frontpage posts" :accesskey "h")
                    ("all" "/index?view=all" "All" :description "Latest posts from all sections" :accesskey "a")
-                   ("meta" "/index?view=community" "Community" :description "Latest community posts" :accesskey "m")
-		   ("tags" "/tags" "Tags" :description "All tags" :accesskey "v")
+		   ("tags" "/tags" "Wiki" :description "Wiki pages and tags" :accesskey "v")
 		   ("shortform" "/shortform" "Shortform" :description "Latest Shortform posts")
                    ("recent-comments" "/recentcomments" "<span>Recent </span>Comments" :description "Latest comments" :accesskey "c")))))
 
@@ -998,7 +997,7 @@ signaled condition to *HTML-OUTPUT*."
 	(or sort-string (user-pref pref)))))
 
 (define-component view-index ()
-  (:http-args ((view :member '(:all :new :frontpage :featured :meta :community :alignment-forum :questions :nominations :reviews :events) :default :frontpage)
+  (:http-args ((view :member '(:all :new :frontpage :featured :alignment-forum :questions :nominations :reviews :events) :default :frontpage)
 	       before after
 	       (offset :type fixnum)
 	       (limit :type fixnum :default (user-pref :items-per-page))
