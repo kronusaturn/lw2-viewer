@@ -2066,24 +2066,27 @@ signaled condition to *HTML-OUTPUT*."
     (basic-logout (standard-route :uri "/logout") () (basic-logout))
     (basic-reset-password (standard-route :uri "/reset-password") () (basic-reset-password)))
 
+(defun oauth2.0-login-request-uri (backend path &optional query)
+  (quri:render-uri
+   (quri:merge-uris
+    (quri:make-uri :path path :query query)
+    (oauth2.0-login-uri backend))))
+
 (defmethod view-login ((backend backend-oauth2.0-login))
   (with-http-args (return)
     (redirect
-     (quri:render-uri
-      (quri:merge-uris
-       (quri:make-uri :path "authorize"
-		      :query (alist "response_type" "code"
-				    "client_id" (oauth2.0-client-id backend)
-				    "redirect_uri" "http://localhost:4242/auth/ea"
-				    "scope" "openid"
-				    "state" return))
-       (oauth2.0-login-uri backend))))))
+     (oauth2.0-login-request-uri backend "authorize"
+				 (alist "response_type" "code"
+					"client_id" (oauth2.0-client-id backend)
+					"redirect_uri" "http://localhost:4242/auth/ea"
+					"scope" "openid"
+					"state" return)))))
 
 (defmethod view-login-oauth2.0-callback ((backend backend-oauth2.0-login))
   (with-http-args (code state)
     (alist-bind ((auth-token (or null simple-string) :access--token))
 		(call-with-http-response #'json:decode-json
-					    (quri:merge-uris "oauth/token" (oauth2.0-login-uri backend))
+					    (oauth2.0-login-request-uri backend "oauth/token")
 					    :method :post
 					    :content (alist "grant_type" "authorization_code"
 							    "client_id" (oauth2.0-client-id backend)
@@ -2107,8 +2110,8 @@ signaled condition to *HTML-OUTPUT*."
   (request-method
    (:post ()
 	  (set-cookie "lw2-auth-token" "" :max-age 0)
-	  (redirect (quri:merge-uris (quri:make-uri :path "v2/logout" :query (alist "client_id" (oauth2.0-client-id backend)))
-				     (oauth2.0-login-uri backend))))))
+	  (redirect
+	   (oauth2.0-login-request-uri backend "v2/logout" (alist "client_id" (oauth2.0-client-id backend)))))))
 
 (delete-easy-handler 'view-login)
 (delete-easy-handler 'view-logout)
