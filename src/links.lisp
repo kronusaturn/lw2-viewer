@@ -198,9 +198,8 @@
       (and (not (eq context :search))
 	   (let ((sanitized-link (sanitize-link link)))
 	     (handler-case
-		 (puri:render-uri
-		  (puri:merge-uris
+		 (quri:render-uri
+		  (quri:merge-uris
 		   sanitized-link
-		   (site-link-base *current-site*))
-		  nil)
+		   (site-link-base *current-site*)))
 	       (error () sanitized-link))))))
