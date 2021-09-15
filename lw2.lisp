@@ -2063,7 +2063,6 @@ signaled condition to *HTML-OUTPUT*."
 (define-route 'login-site 'standard-route :name 'view-logout :uri "/logout" :handler (lambda () (with-error-page (view-logout *current-backend*))))
 
 (define-component-routes login-site
-    (basic-logout (standard-route :uri "/logout") () (basic-logout))
     (basic-reset-password (standard-route :uri "/reset-password") () (basic-reset-password)))
 
 (defun oauth2.0-login-request-uri (backend path &optional query)
