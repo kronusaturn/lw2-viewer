@@ -2058,7 +2058,7 @@ signaled condition to *HTML-OUTPUT*."
 	 (emit-rpw-page))))))
 
 (define-route 'login-site 'standard-route :name 'view-login :uri "/login" :handler (lambda () (with-error-page (view-login *current-backend*))))
-(define-route 'login-site 'standard-route :name 'view-login-oauth2.0-callback :uri "/auth/ea" :handler (lambda () (with-error-page (view-login-oauth2.0-callback *current-backend*))))
+(define-route 'login-site 'standard-route :name 'view-login-oauth2.0-callback :uri "/auth/callback" :handler (lambda () (with-error-page (view-login-oauth2.0-callback *current-backend*))))
 
 (define-route 'login-site 'standard-route :name 'view-logout :uri "/logout" :handler (lambda () (with-error-page (view-logout *current-backend*))))
 
@@ -2078,7 +2078,7 @@ signaled condition to *HTML-OUTPUT*."
      (oauth2.0-login-request-uri backend "authorize"
 				 (alist "response_type" "code"
 					"client_id" (oauth2.0-client-id backend)
-					"redirect_uri" "http://localhost:4242/auth/ea"
+					"redirect_uri" (quri:render-uri (quri:merge-uris "/auth/callback" (site-uri *current-site*)))
 					"scope" "openid"
 					"state" return)))))
 
@@ -2092,7 +2092,7 @@ signaled condition to *HTML-OUTPUT*."
 							    "client_id" (oauth2.0-client-id backend)
 							    "client_secret" (oauth2.0-client-secret backend)
 							    "code" code
-							    "redirect_uri" "http://localhost:4242/auth/ea")
+							    "redirect_uri" (quri:render-uri (quri:merge-uris "/auth/callback" (site-uri *current-site*))))
 					    :want-stream t :force-string t)
 		(unless auth-token
 		  (error "Login error"))
