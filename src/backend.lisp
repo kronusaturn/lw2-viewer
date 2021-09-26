@@ -123,12 +123,6 @@
 		       (go ,retry))))
 	    ,@body)))))
 
-(defun finish-reading-stream (stream)
-  (handler-case
-      (let ((buf (make-array 4096 :element-type (stream-element-type stream))))
-	(loop while (plusp (read-sequence buf stream))))
-    (serious-condition () (ignore-errors (close stream)))))
-
 (sb-ext:defglobal *connection-pool* (make-hash-table :test 'equal))
 (sb-ext:defglobal *connection-pool-lock* (sb-thread:make-mutex :name "*connection-pool-lock*"))
 
@@ -186,13 +180,10 @@
 	    (ignore-errors (close stream)))))
       (unwind-protect
 	   (funcall fn response)
-	(if stream ; the connection is reusable
-	    (progn
-	      (when (streamp response)
-		(finish-reading-stream response))
-	      (connection-push uri-dest stream))
-	    (when (streamp response)
-	      (ignore-errors (close response))))))))
+	(when (streamp response)
+	  (ignore-errors (close response)))
+	(when stream ; the connection is reusable
+	    (connection-push uri-dest stream))))))
 
 (defun forwarded-header ()
   (let ((addr (and (boundp 'hunchentoot:*request*) (hunchentoot:real-remote-addr))))
