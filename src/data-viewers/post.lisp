@@ -157,13 +157,13 @@
     </div>))
 
 (defun post-headline-to-html (post &key skip-section need-auth)
-  (schema-bind (:post (rectify-post post) (post-id user-id url question title))
+  (schema-bind (:post (rectify-post post) (post-id user-id url question title is-event))
     <h1 class=("listing~{ ~A~}" (list-cond
 				 (url "link-post-listing")
 				 (question "question-post-listing")
 				 ((logged-in-userid user-id) "own-post-listing")))>
       (if url <a class="link-post-link" href=(presentable-link url)>&#xf0c1;</a>)
-      <a class="post-title-link" href=(generate-post-auth-link post nil nil need-auth)>
+      <a class="post-title-link" href=(generate-post-auth-link post :need-auth need-auth :item-subtype (if is-event "event" "post"))>
 	(if question <span class="post-type-prefix">[Question] </span>)
 	(safe (clean-text-to-html title))
       </a>

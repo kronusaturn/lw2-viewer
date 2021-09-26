@@ -387,11 +387,12 @@ signaled condition to *HTML-OUTPUT*."
 	(dolist (item items)
 	  (ecase (identify-item item)
 	    (:post
-	     (let ((author (get-username (cdr (assoc :user-id item)))))
+	     (let ((author (get-username (cdr (assoc :user-id item))))
+		   (is-event (cdr (assoc :is-event item))))
 	       (emit-item item
 			  :title (clean-text (format nil "~A by ~A" (cdr (assoc :title item)) author))
 			  :author author
-			  :link (generate-post-auth-link item nil t need-auth)
+			  :link (generate-post-auth-link item :absolute t :need-auth need-auth :item-subtype (if is-event "event" "post"))
 			  :body (clean-html (or (cdr (assoc :html-body (get-post-body (cdr (assoc :--id item)) :revalidate nil))) "") :post-id (cdr (assoc :--id item))))))
 	    (:comment
 	     (schema-bind (:comment item (comment-id post-id user-id html-body))
@@ -1175,7 +1176,7 @@ signaled condition to *HTML-OUTPUT*."
 	 (post-id "commentVotes" (get-post-comments-votes post-id auth-token))
 	 (post-id "tagVotes" (get-post-tag-votes post-id auth-token)))))))
 
-(define-page view-post-lw2-link (:function #'match-lw2-link post-id comment-id * comment-link-type)
+(define-page view-post-lw2-link (:function #'match-lw2-link post-id comment-id * comment-link-type post-type)
                                 (need-auth
                                  chrono
 				 (show-comments :real-name "comments" :type boolean :default t)
@@ -1196,6 +1197,11 @@ signaled condition to *HTML-OUTPUT*."
 	       (values nil "[missing post]" c))
 	     (:no-error (post)
 	       (values post (cdr (assoc :title post)) nil)))
+	 (let* ((is-event (cdr (assoc :is-event post)))
+		(correct-subtype (if is-event "event" "post")))
+	   (when (string/= post-type correct-subtype)
+	     (redirect (generate-item-link :post post :comment-id comment-id :item-subtype correct-subtype))
+	     (return)))
 	 (labels ((extra-head ()
 		    (when-let (canonical-source (and (not comment-id)
 						     (cdr (assoc :canonical-source post))))

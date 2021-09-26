@@ -2502,7 +2502,7 @@ function addCommentParentPopups() {
 					}, {once: true});
 				});
 			}
-			else if(url.pathname.match(/^\/(users|posts|tag|s|p|explore)\//)
+			else if(url.pathname.match(/^\/(users|posts|events|tag|s|p|explore)\//)
 				&& !(url.pathname.match(/^\/(p|explore)\//) && url.hash.match(/^#comment-/)) // Arbital comment links not supported yet.
 				&& !(url.searchParams.get('format'))
 				&& !linkTag.closest("nav:not(.post-nav-links)")

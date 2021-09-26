@@ -38,10 +38,16 @@
 	       (write-string "</span>"))
 	      (t (write-object)))))))
 
-(defun generate-post-auth-link (post &optional comment-id absolute need-auth)
+(defun maybe-need-auth (link need-auth)
   (if need-auth
-      (concatenate 'string (generate-item-link :post post :comment-id comment-id :absolute absolute) "?need-auth=y")
-      (generate-item-link :post post :comment-id comment-id :absolute absolute)))
+      (concatenate 'string link "?need-auth=y")
+      link))
+
+(define-compiler-macro generate-post-auth-link (post &rest args &key need-auth &allow-other-keys)
+  `(maybe-need-auth (generate-item-link :post ,post ,@(alexandria:remove-from-plist args :need-auth)) ,need-auth))
+
+(defun generate-post-auth-link (post &optional comment-id absolute need-auth post-type)
+  (maybe-need-auth (apply #'generate-item-link :post post :allow-other-keys t args) need-auth))
 
 (defun clean-lw-link (url)
   (when url

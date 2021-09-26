@@ -63,7 +63,7 @@
 
 (defun match-agentfoundations-link (link) (match-values "^(?:https?://(?:www\\.)?agentfoundations\\.org)?(/item\\?id=.*)" link (0)))
 
-(defun match-lw2-link (link) (match-values "^(?:https?://[^/]+)?/posts/([^/]+)(?:/([^/#?]*)(?:/(comment|answer)/([^/#?]+)|/?(?:#(?:comment-)?|\\?commentId=)([^/#]+))?)?" link (0 (or 3 4) 1 2)))
+(defun match-lw2-link (link) (match-values "^(?:https?://[^/]+)?/(post|event)s/([^/]+)(?:/([^/#?]*)(?:/(comment|answer)/([^/#?]+)|/?(?:#(?:comment-)?|\\?commentId=)([^/#]+))?)?" link (1 (or 4 5) 2 3 0)))
 
 (defun match-lw2-slug-link (link) (match-values "^(?:https?://(?:www.)?less(?:er|est)?wrong.com)?/(?:codex|hpmor)/([^/#]+)(?:/?#?([^/#]+)?)?" link (0 1)))
 
@@ -142,8 +142,8 @@
 (defun convert-agentfoundations-link (link)
   (convert-redirect-link link #'match-agentfoundations-link #'get-agentfoundations-link "https://www.lesswrong.com"))
 
-(defun gen-internal (post-id slug comment-id &optional absolute-uri stream)
-  (format stream "~Aposts/~A/~A~:[~@[#~A~]~;~@[#comment-~A~]~]" (or absolute-uri "/") post-id (or slug (get-post-slug post-id) "-") (and comment-id (= (length comment-id) 17)) comment-id))
+(defun gen-internal (post-id slug comment-id &optional absolute-uri stream item-subtype)
+  (format stream "~A~As/~A/~A~:[~@[#~A~]~;~@[#comment-~A~]~]" (or absolute-uri "/") (or item-subtype "post") post-id (or slug (get-post-slug post-id) "-") (and comment-id (= (length comment-id) 17)) comment-id))
 
 (defun convert-lw2-slug-link (link)
   (multiple-value-bind (slug comment-id) (match-lw2-slug-link link)
@@ -163,16 +163,16 @@
       (if-let (site (find-link-site link))
               (gen-internal post-id slug comment-id (site-link-prefix site))))))
 
-(defun generate-item-link (item-type item-designator &key comment-id absolute stream)
+(defun generate-item-link (item-type item-designator &key comment-id absolute stream item-subtype)
   (let ((absolute (if (eq absolute t) (site-uri *current-site*) absolute)))
     (ecase item-type
       (:post
        (typecase item-designator
 	 (string
-	  (gen-internal item-designator (get-post-slug item-designator) comment-id absolute stream))
+	  (gen-internal item-designator (get-post-slug item-designator) comment-id absolute stream (or item-subtype "post")))
 	 (cons
 	  (let ((post-id (cdr (assoc :--id item-designator))))
-	    (gen-internal post-id (or (cdr (assoc :slug item-designator)) (get-post-slug post-id)) comment-id absolute stream)))))
+	    (gen-internal post-id (or (cdr (assoc :slug item-designator)) (get-post-slug post-id)) comment-id absolute stream (or item-subtype "post"))))))
       (:tag
        (with-output-to-designator (out stream)
 	 (format out "~Atag/~A~@[#comment-~A~]" (or absolute "/") item-designator comment-id))))))
