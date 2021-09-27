@@ -133,7 +133,7 @@
 			(setf (gethash dest connection-pool)
 			      (make-array 4 :fill-pointer 0)))))
 	(unless (vector-push connection vector)
-	  (ignore-errors (close (vector-pop vector)))
+	  (ignore-errors (close (vector-pop vector) :abort t))
 	  (vector-push connection vector))))))
 
 (defun connection-pop (dest)
@@ -163,7 +163,7 @@
 	   (setf (values response status-code headers response-uri new-stream)
 		 (apply 'dex:request uri :stream stream args))
 	   (unless (eq stream new-stream)
-	     (when stream (ignore-errors (close stream)))
+	     (when stream (ignore-errors (close stream :abort t)))
 	     (setf stream new-stream
 		   new-stream nil))
 	   (when (<= 500 status-code 599)
@@ -174,14 +174,14 @@
 	  (maphash (lambda (dest conn)
 		     (declare (ignore dest))
 		     (unless (eq stream conn)
-		       (ignore-errors (close conn))))
+		       (ignore-errors (close conn :abort t))))
 		   *connection-pool*)
 	  (when (and stream (not success))
-	    (ignore-errors (close stream)))))
+	    (ignore-errors (close stream :abort t)))))
       (unwind-protect
 	   (funcall fn response)
 	(when (streamp response)
-	  (ignore-errors (close response)))
+	  (ignore-errors (close response :abort t)))
 	(when stream ; the connection is reusable
 	    (connection-push uri-dest stream))))))
 
