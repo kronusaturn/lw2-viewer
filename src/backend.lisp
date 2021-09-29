@@ -150,7 +150,7 @@
     (let (response status-code headers response-uri new-stream success)
       (unwind-protect
        (with-retrying (maybe-retry :retries 3
-				   :before-maybe-retry (progn (when stream (ignore-errors (close stream)))
+				   :before-maybe-retry (progn (when stream (ignore-errors (close stream :abort t)))
 							      (setf stream nil))
 				   :before-retry (sleep 0.2))
 	 (handler-bind (((or dex:http-request-failed usocket:ns-condition usocket:socket-condition)
