@@ -147,9 +147,7 @@
   (let* ((uri (quri:uri uri-string))
 	 (uri-dest (concatenate 'string (quri:uri-host uri) ":" (format nil "~d" (quri:uri-port uri))))
 	 (stream (connection-pop uri-dest)))
-    (let ((dex:*connection-pool* (dex:make-connection-pool))
-	  (dex:*use-connection-pool* t)
-	  response status-code headers response-uri new-stream success)
+    (let (response status-code headers response-uri new-stream success)
       (unwind-protect
        (with-retrying (maybe-retry :retries 3
 				   :before-maybe-retry (progn (when stream (ignore-errors (close stream)))
@@ -161,7 +159,7 @@
 				   (invoke-restart r)
 				   (maybe-retry)))))
 	   (setf (values response status-code headers response-uri new-stream)
-		 (apply 'dex:request uri :stream stream args))
+		 (apply 'dex:request uri :use-connection-pool nil :stream stream args))
 	   (unless (eq stream new-stream)
 	     (when stream (ignore-errors (close stream :abort t)))
 	     (setf stream new-stream
@@ -170,20 +168,14 @@
 	     (maybe-retry)
 	     (error 'lw2-connection-error :message (format nil "HTTP status ~A" status-code)))
 	   (setf success t)))
-	(progn
-	  (maphash (lambda (dest conn)
-		     (declare (ignore dest))
-		     (unless (eq stream conn)
-		       (ignore-errors (close conn :abort t))))
-		   *connection-pool*)
-	  (when (and stream (not success))
-	    (ignore-errors (close stream :abort t)))))
+	(when (and stream (not success))
+	  (ignore-errors (close stream :abort t))))
       (unwind-protect
 	   (funcall fn response)
 	(when (streamp response)
 	  (ignore-errors (close response :abort t)))
 	(when stream ; the connection is reusable
-	    (connection-push uri-dest stream))))))
+	  (connection-push uri-dest stream))))))
 
 (defun forwarded-header ()
   (let ((addr (and (boundp 'hunchentoot:*request*) (hunchentoot:real-remote-addr))))
