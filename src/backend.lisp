@@ -165,6 +165,8 @@
 	     (setf stream new-stream
 		   new-stream nil))
 	   (when (<= 500 status-code 599)
+	     (when (streamp response)
+	       (ignore-errors (close response :abort t)))
 	     (maybe-retry)
 	     (error 'lw2-connection-error :message (format nil "HTTP status ~A" status-code)))
 	   (setf success t)))
