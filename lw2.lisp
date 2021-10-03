@@ -1519,6 +1519,8 @@ signaled condition to *HTML-OUTPUT*."
 (define-component view-tag (slug)
   (:http-args ((sort :default :relevant :member '(:relevant :new :old))))
   (let ((tag (first (lw2-graphql-query (lw2-query-string :tag :list (alist :view "tagBySlug" :slug slug) :context :body)))))
+    (unless tag
+      (error 'lw2-not-found-error))
     (request-method
      (:get ()
        (let* ((posts (get-tag-posts slug))
