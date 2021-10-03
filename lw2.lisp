@@ -1516,8 +1516,11 @@ signaled condition to *HTML-OUTPUT*."
 	 (tag-id "commentVotes" (get-tag-comments-votes tag-id auth-token))
 	 (post-id "tagVotes" (get-post-tag-votes post-id auth-token)))))))
 
-(define-component view-tag (slug)
+(define-component view-tag (slug tail)
   (:http-args ((sort :default :relevant :member '(:relevant :new :old))))
+  (when (nonempty-string tail)
+    (redirect (format nil "/tag/~A" slug))
+    (return))
   (let ((tag (first (lw2-graphql-query (lw2-query-string :tag :list (alist :view "tagBySlug" :slug slug) :context :body)))))
     (unless tag
       (error 'lw2-not-found-error))
@@ -1553,7 +1556,7 @@ signaled condition to *HTML-OUTPUT*."
 	 (renderer ()
 	   (post-comment :tag-id tag-id)))))))
 
-(define-component-routes forum-site (view-tag (regex-route :regex "/tag/([^/?]+)") (slug) (view-tag slug)))
+(define-component-routes forum-site (view-tag (regex-route :regex "/tag/([^/?]+)(/[^/?]*)?") (slug tail) (view-tag slug tail)))
 
 (define-component view-tags-index ()
   (:http-args ())
