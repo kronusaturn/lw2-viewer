@@ -159,7 +159,7 @@
 				   (invoke-restart r)
 				   (maybe-retry)))))
 	   (setf (values response status-code headers response-uri new-stream)
-		 (apply 'dex:request uri :use-connection-pool nil :stream stream args))
+		 (apply 'dex:request uri :use-connection-pool nil :keep-alive t :stream stream args))
 	   (unless (eq stream new-stream)
 	     (when stream (ignore-errors (close stream :abort t)))
 	     (setf stream new-stream
