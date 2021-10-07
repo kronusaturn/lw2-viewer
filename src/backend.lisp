@@ -123,6 +123,9 @@
 		       (go ,retry))))
 	    ,@body)))))
 
+(defun force-close (stream)
+  (ignore-errors (close stream :abort t)))
+
 (sb-ext:defglobal *connection-pool* (make-hash-table :test 'equal))
 (sb-ext:defglobal *connection-pool-lock* (sb-thread:make-mutex :name "*connection-pool-lock*"))
 
@@ -133,7 +136,7 @@
 			(setf (gethash dest connection-pool)
 			      (make-array 4 :fill-pointer 0)))))
 	(unless (vector-push connection vector)
-	  (ignore-errors (close (vector-pop vector) :abort t))
+	  (force-close (vector-pop vector))
 	  (vector-push connection vector))))))
 
 (defun connection-pop (dest)
@@ -148,34 +151,34 @@
 	 (uri-dest (concatenate 'string (quri:uri-host uri) ":" (format nil "~d" (quri:uri-port uri))))
 	 (stream (connection-pop uri-dest)))
     (let (response status-code headers response-uri new-stream success)
-      (unwind-protect
-       (with-retrying (maybe-retry :retries 3
-				   :before-maybe-retry (progn (when stream (ignore-errors (close stream :abort t)))
-							      (setf stream nil))
-				   :before-retry (sleep 0.2))
-	 (handler-bind (((or dex:http-request-failed usocket:ns-condition usocket:socket-condition)
-			 (lambda (condition)
-			   (if-let ((r (find-restart 'dex:ignore-and-continue condition)))
-				   (invoke-restart r)
-				   (maybe-retry)))))
-	   (setf (values response status-code headers response-uri new-stream)
-		 (apply 'dex:request uri :use-connection-pool nil :keep-alive t :stream stream args))
-	   (unless (eq stream new-stream)
-	     (when stream (ignore-errors (close stream :abort t)))
-	     (setf stream new-stream
-		   new-stream nil))
-	   (when (<= 500 status-code 599)
-	     (when (streamp response)
-	       (ignore-errors (close response :abort t)))
-	     (maybe-retry)
-	     (error 'lw2-connection-error :message (format nil "HTTP status ~A" status-code)))
-	   (setf success t)))
-	(when (and stream (not success))
-	  (ignore-errors (close stream :abort t))))
+      (with-retrying (maybe-retry :retries 3
+				  :before-retry (sleep 0.2))
+	(unwind-protect
+	     (handler-bind (((or dex:http-request-failed usocket:ns-condition usocket:socket-condition)
+			     (lambda (condition)
+			       (if-let ((r (find-restart 'dex:ignore-and-continue condition)))
+				       (invoke-restart r)
+				       (maybe-retry)))))
+	       (setf (values response status-code headers response-uri new-stream)
+		     (apply 'dex:request uri :use-connection-pool nil :keep-alive t :stream stream args))
+	       (unless (eq stream new-stream)
+		 (when stream (force-close stream))
+		 (setf stream new-stream
+		       new-stream nil))
+	       (when (<= 500 status-code 599)
+		 (maybe-retry)
+		 (error 'lw2-connection-error :message (format nil "HTTP status ~A" status-code)))
+	       (setf success t))
+	  (when (not success)
+	    (when (streamp response)
+	      (force-close response))
+	    (when stream
+	      (force-close stream))
+	    (setf stream nil))))
       (unwind-protect
 	   (funcall fn response)
 	(when (streamp response)
-	  (ignore-errors (close response :abort t)))
+	  (close response))
 	(when stream ; the connection is reusable
 	  (connection-push uri-dest stream))))))
 
