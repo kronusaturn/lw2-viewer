@@ -130,14 +130,17 @@
 (sb-ext:defglobal *connection-pool-lock* (sb-thread:make-mutex :name "*connection-pool-lock*"))
 
 (defun connection-push (dest connection)
-  (let ((connection-pool *connection-pool*))
+  (let ((connection-pool *connection-pool*)
+	old-connection)
     (sb-thread:with-mutex (*connection-pool-lock*)
       (let ((vector (or (gethash dest connection-pool)
 			(setf (gethash dest connection-pool)
 			      (make-array 4 :fill-pointer 0)))))
 	(unless (vector-push connection vector)
-	  (force-close (vector-pop vector))
-	  (vector-push connection vector))))))
+	  (setf old-connection (vector-pop vector))
+	  (vector-push connection vector))))
+    (when old-connection
+      (force-close old-connection))))
 
 (defun connection-pop (dest)
   (let ((connection-pool *connection-pool*))
