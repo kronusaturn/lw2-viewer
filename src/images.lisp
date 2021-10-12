@@ -81,9 +81,10 @@
   (sb-sys:with-deadline (:seconds 60)
     (with-open-file (out-stream target :direction :output :if-exists :supersede :element-type '(unsigned-byte 8))
       (multiple-value-bind (in-stream status) (drakma:http-request uri :want-stream t :force-binary t :connection-timeout 30 :accept "image/*,*/*")
-	(unless (= status 200) (error "HTTP error ~A" status))
 	(unwind-protect
-	     (alexandria:copy-stream in-stream out-stream)
+	     (progn
+	       (unless (= status 200) (error "HTTP error ~A" status))
+	       (alexandria:copy-stream in-stream out-stream))
 	  (close in-stream))))))
 
 (defun download-file-with-wayback-fallback (uri target)
