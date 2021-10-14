@@ -1,7 +1,7 @@
 (in-package :asdf)
 
 (asdf:defsystem :lw2-viewer
-  :depends-on ("uiop" "flexi-streams" "hunchentoot" "dexador" "drakma" "cl-json" "lmdb" "local-time" "plump" "clss" "cl-ppcre" "xml-emitter" "city-hash" "bit-smasher" "cl-unicode" "parse-js" "cl-markdown" "websocket-driver-client" "ironclad" "cl-base64" "djula" "split-sequence" "cl-typesetting" "named-readtables" "collectors" "closer-mop" "chronicity" "parenscript" "trivial-gray-streams" "trivia" "iterate" "introspect-environment" "trivial-macroexpand-all" "trivial-cltl2" "dufy/core")
+  :depends-on ("uiop" "flexi-streams" "hunchentoot" "dexador" "cl-json" "lmdb" "local-time" "plump" "clss" "cl-ppcre" "xml-emitter" "city-hash" "bit-smasher" "cl-unicode" "parse-js" "cl-markdown" "websocket-driver-client" "ironclad" "cl-base64" "djula" "split-sequence" "cl-typesetting" "named-readtables" "collectors" "closer-mop" "chronicity" "parenscript" "trivial-gray-streams" "trivia" "iterate" "introspect-environment" "trivial-macroexpand-all" "trivial-cltl2" "dufy/core")
   :components ((:module "src"
 		:components ((:file "utils" :depends-on ("macro-utils"))
 			     (:file "macro-utils")
