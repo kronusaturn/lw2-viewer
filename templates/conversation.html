@@ -12,7 +12,7 @@
 		<label for="to">To:</label>
 		<input name="to" autocomplete="off" value="{{to}}" type="text">
 		<label for="subject">Subject:</label>
-		<input name="subject" autocomplete="off" type="text">
+		<input name="subject" autocomplete="off" value="{{subject}}" type="text">
 	</div>{% endif %}
 	<div class="textarea-container">
 		<textarea name="text" oninput="enableBeforeUnload();">{{ markdown-source }}</textarea>

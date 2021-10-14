@@ -1789,6 +1789,7 @@ signaled condition to *HTML-OUTPUT*."
 	(emit-page (out-stream :title "New conversation" :content-class "conversation-page")
 		   (render-template* *conversation-template* out-stream
 				     :to to
+				     :subject subject
 				     :csrf-token (make-csrf-token))))))
    (:post ((text :required t))
      (let* ((id (or id
