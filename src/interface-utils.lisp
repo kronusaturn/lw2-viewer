@@ -17,10 +17,9 @@
 (defun pretty-time-js ()
   "<script async src='data:text/javascript,prettyDate()'></script>")
 
-(defun pretty-time-html (timestring &key inline)
+(defun pretty-time-html (timestring)
   (multiple-value-bind (pretty-time js-time) (pretty-time timestring)
-    (format *html-output* "<~A class=\"date hide-until-init\" data-js-date=~A>~A~A</~@*~A>"
-	    (if inline "span" "tag")
+    (format *html-output* "<span class=\"date hide-until-init\" data-js-date=~A>~A~A</span>"
 	    js-time
 	    pretty-time
 	    (pretty-time-js))))
