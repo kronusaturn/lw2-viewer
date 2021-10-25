@@ -1324,7 +1324,8 @@ signaled condition to *HTML-OUTPUT*."
 				    :tags-supported (typep *current-backend* 'backend-accordius)
 				    :tags (when (and post-id (typep *current-backend* 'backend-accordius)) (do-wl-rest-query (format nil "posts/~a/update_tagset/" post-id) '()))
                                     :post-id post-id
-                                    :section-list (loop for (name desc) in '(("all" "All") ("meta" "Meta") ("drafts" "Drafts"))
+                                    :section-list (loop for (name desc) in '(("all" "All") ("meta" "Meta") ("frontpage" "Frontpage") ("drafts" "Drafts"))
+						     when (or (string= name section) (member name '("drafts" "all") :test #'string=))
 						     collect (alist :name name :desc desc :selected (string= name section)))
 				    :lesswrong-misc (typep *current-backend* 'backend-lw2-misc-features)
 				    :submit-to-frontpage (if post-id (cdr (assoc :submit-to-frontpage post-body)) t)
