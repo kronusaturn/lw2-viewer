@@ -1021,8 +1021,7 @@ signaled condition to *HTML-OUTPUT*."
 					       (page-toolbar-to-html :title page-title
 								     :new-post (if (eq view :meta) "meta" t)
 								     :hide-cov (typep *current-site* 'lesswrong-viewer-site))
-					       (if (member view '(:frontpage :all))
-						   (funcall sort-widget)))))))))
+					       (funcall sort-widget))))))))
 
 (defmacro route-component (name lambda-list &rest args)
   `(lambda ,lambda-list
