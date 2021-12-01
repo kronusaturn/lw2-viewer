@@ -780,11 +780,13 @@
 				 (setf (plump:attribute node "style") (alist-to-style-string style-list))))))))
 		  (when (and aggressive-deformat (tag-is node "div"))
 		    (setf (plump:tag-name node) "p"))
-		  (when (let ((class (plump:attribute node "class")))
+		  (when (let ((class (plump:attribute node "class"))
+			      (parent (plump:parent node)))
 			  (and
 			   (or (search "mjx-math" class)
 			       (search "mjpage" class))
-			   (class-is-not node "mjx-math" "mjpage")))
+			   (and parent
+				(class-is-not parent "mjx-math" "mjpage"))))
 		    (loop for current = node then (plump:parent current)
 		       for parent = (plump:parent current)
 		       when (loop for s across (plump:family current)
