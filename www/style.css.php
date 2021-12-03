@@ -3336,7 +3336,6 @@ figure {
 
 .body-text table {
 	border-collapse: collapse;
-	font-family: Inconsolata, Menlo, monospace;
 	font-size: 0.875em;
 }
 .body-text table th,
