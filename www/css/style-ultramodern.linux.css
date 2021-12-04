@@ -3342,6 +3342,10 @@ figure {
 	padding: 4px 6px;
 	line-height: 1.3;
 }
+.body-text table .numeric {
+	text-align: right;
+	font-family: Inconsolata, Menlo, monospace;
+}
 .body-text table caption {
 	margin: 0 0 0.25em 0;
 	font-weight: bold;
