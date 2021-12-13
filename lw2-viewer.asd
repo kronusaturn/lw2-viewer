@@ -1,7 +1,7 @@
 (in-package :asdf)
 
 (asdf:defsystem :lw2-viewer
-  :depends-on ("uiop" "flexi-streams" "hunchentoot" "dexador" "cl-json" "lmdb" "local-time" "plump" "clss" "cl-ppcre" "xml-emitter" "city-hash" "bit-smasher" "cl-unicode" "parse-js" "cl-markdown" "websocket-driver-client" "ironclad" "cl-base64" "djula" "split-sequence" "cl-typesetting" "named-readtables" "collectors" "closer-mop" "chronicity" "parenscript" "trivial-gray-streams" "trivia" "iterate" "introspect-environment" "trivial-macroexpand-all" "trivial-cltl2" "dufy/core")
+  :depends-on ("uiop" "flexi-streams" "hunchentoot" "dexador" "cl-json" "yason" "lmdb" "local-time" "plump" "clss" "cl-ppcre" "xml-emitter" "city-hash" "bit-smasher" "cl-unicode" "parse-js" "cl-markdown" "websocket-driver-client" "ironclad" "cl-base64" "djula" "split-sequence" "cl-typesetting" "named-readtables" "collectors" "closer-mop" "chronicity" "parenscript" "trivial-gray-streams" "trivia" "iterate" "introspect-environment" "trivial-macroexpand-all" "trivial-cltl2" "dufy/core")
   :components ((:module "src"
 		:components ((:file "utils" :depends-on ("macro-utils"))
 			     (:file "macro-utils")
@@ -11,6 +11,7 @@
                              (:file "hash-utils")
                              (:file "context")
 			     (:file "html-reader")
+			     (:file "json")
 			     (:file "client-script" :depends-on ("html-reader"))
 			     (:file "interface-utils" :depends-on ("links" "html-reader"))
 			     (:file "user-context")
@@ -37,7 +38,7 @@
 							       (copy-file "config-example.lisp" "config.lisp"))))
 			     (:file "../config" :depends-on ("config-copy" "config-package"))
 			     (:file "lmdb" :depends-on ("rwlock" "conditions" "raw-memory-streams" "hash-utils" "sites" "context" "../config"))
-			     (:file "backend" :depends-on ("utils" "hash-utils" "backend-modules" "lmdb" "graphql" "context" "user-context" "sites" "schema-type" "conditions" "web-push"))
+			     (:file "backend" :depends-on ("utils" "hash-utils" "backend-modules" "json" "lmdb" "graphql" "context" "user-context" "sites" "schema-type" "conditions" "web-push"))
 			     (:file "csrf" :depends-on ("conditions" "client-script"))
                              (:file "components" :depends-on ("utils" "csrf"))
                              (:file "links" :depends-on ("utils" "lmdb" "backend" "sites" "context"))

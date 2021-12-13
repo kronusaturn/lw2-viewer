@@ -14,7 +14,7 @@
    (posted-at string)
    (highlight-new boolean :graphql-ignore t)
    (replied list :graphql-ignore t)
-   (post-id (or null simple-string))
+   (post-id (or null string))
    (tag list :backend-type backend-lw2-tags-comments :subfields (:--id :name :slug))
    (base-score (or null fixnum))
    (af-base-score (or null fixnum))
@@ -84,10 +84,10 @@
 		    <div class="comment-post-title">
 		      (with-html-stream-output
 			  (when parent-comment
-			    (alist-bind ((user-id simple-string)
-					 (post-id (or null simple-string))
+			    (alist-bind ((user-id string)
+					 (post-id (or null string))
 					 (tag list)
-					 (parent-id simple-string :--id))
+					 (parent-id string :--id))
 					parent-comment
 			      <span class="comment-in-reply-to">in reply to:
 				<a href=("/users/~A" (get-user-slug user-id))

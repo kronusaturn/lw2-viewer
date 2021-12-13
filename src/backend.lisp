@@ -101,11 +101,11 @@
 
 (define-backend-function comments-list-to-graphql-json (comments-list)
   (backend-lw2-legacy
-   (json:encode-json-to-string
-    (plist-hash-table (list :data (plist-hash-table (list :*comments-list comments-list))))))
+   (lw2.json:encode-to-string
+    (plist-hash-table (list "data" (plist-hash-table (list "CommentsList" comments-list))))))
   (backend-lw2-modernized
-   (json:encode-json-to-string
-    (plist-hash-table (list :data (plist-hash-table (list :*comments-list (plist-hash-table (list :results comments-list)))))))))
+   (lw2.json:encode-to-string
+    (plist-hash-table (list "data" (plist-hash-table (list "CommentsList" (plist-hash-table (list "results" comments-list)))))))))
 
 (defun do-graphql-debug (query)
   (when *graphql-debug-output*
@@ -227,7 +227,7 @@
 			   (flexi-streams:make-in-memory-input-stream result-source))
 			  (stream
 			   (ensure-character-stream result-source)))))
-     (json:decode-json-from-source string-source))))
+     (lw2.json:decode string-source))))
 
 (define-backend-function postprocess-query-result (result)
   (backend-base
@@ -264,7 +264,7 @@
     (graphql-uri *current-backend*)
     :method :post
     :headers (backend-request-headers auth-token nil)
-    :content (dynamic-let ((q (alist :query query))) (json:encode-json-to-string q))
+    :content (dynamic-let ((q (alist :query query))) (lw2.json:encode-to-string q))
     :want-stream (not return-type))))
 
 (define-backend-function lw2-graphql-query (query &key auth-token return-type (decoder 'decode-query-result))
@@ -865,7 +865,7 @@
 		      (:both (let ((result (multiple-value-call #'concatenate 'list
 								(lw2-graphql-query-multi (list (posts-query-string) (comments-query-string))))))
 			       (ecase return-type
-				 (:string (json:encode-json-to-string result))
+				 (:string (lw2.json:encode-to-string result))
 				 ((nil) result))))
 		      (:posts (lw2-graphql-query (format nil "{~A}" (posts-query-string)) :auth-token auth-token :return-type return-type))
 		      (:comments (lw2-graphql-query (format nil "{~A}" (comments-query-string)) :auth-token auth-token :return-type return-type)))))))
@@ -885,7 +885,7 @@
   (backend-algolia-search
    (call-with-http-response
     (lambda (req-stream)
-      (values-list (loop for r in (cdr (assoc :results (json:decode-json req-stream)))
+      (values-list (loop for r in (cdr (assoc :results (lw2.json:decode req-stream)))
 		      collect (cdr (assoc :hits r)))))
     (algolia-search-uri *current-backend*)
     :method :post
