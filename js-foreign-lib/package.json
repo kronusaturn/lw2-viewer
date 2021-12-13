@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "showdown": "^1.9.1",
+    "web-push": "^3.4.5"
+  }
+}
