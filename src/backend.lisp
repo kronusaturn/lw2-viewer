@@ -227,7 +227,7 @@
 			   (flexi-streams:make-in-memory-input-stream result-source))
 			  (stream
 			   (ensure-character-stream result-source)))))
-     (lw2.json:decode string-source))))
+     (lw2.json:safe-decode string-source))))
 
 (define-backend-function postprocess-query-result (result)
   (backend-base
@@ -766,10 +766,10 @@
 	  (result (if auth-token
 		      (lw2-graphql-query query-string :auth-token auth-token)
 		      (lw2-graphql-query-timeout-cached query-string "user-json" user-id :revalidate revalidate :force-revalidate force-revalidate))))
-     (alist-bind ((user-id (or simple-string null) :--id)
-		  (display-name (or simple-string null))
-		  (full-name (or simple-string null))
-		  (slug (or simple-string null))
+     (alist-bind ((user-id (or string null) :--id)
+		  (display-name (or string null))
+		  (full-name (or string null))
+		  (slug (or string null))
 		  (deleted boolean))
 		 result
 		 (when user-id
@@ -892,7 +892,7 @@
     :headers '(("Origin" . "https://www.greaterwrong.com")
 	       ("Referer" . "https://www.greaterwrong.com/")
 	       ("Content-Type" . "application/json"))
-    :content (json:encode-json-alist-to-string
+    :content (lw2.json:encode-to-string
 	      (alist "requests" (loop for index in '("test_tags" "test_posts" "test_comments")
 				   collect (alist "indexName" index
 						  "params" (format nil "query=~A&hitsPerPage=20&page=0"
@@ -918,8 +918,8 @@
 	 (version (base64:usb8-array-to-base64-string (hash-string version))))
      (or
       (if-let ((cache-data (cache-get db-name id :value-type :lisp)))
-	      (alist-bind ((cached-version simple-string :version)
-			   (markdown simple-string))
+	      (alist-bind ((cached-version string :version)
+			   (markdown string))
 			  cache-data
 			  (when (string= version cached-version)
 			    markdown)))
@@ -1003,9 +1003,9 @@
   (let ((user-list (lw2-graphql-query (lw2-query-string :user :list '() :fields '(:--id :slug :display-name)))))
     (with-cache-transaction
 	(loop for user in user-list
-	   do (alist-bind ((user-id (or simple-string null) :--id)
-			   (slug (or simple-string null))
-			   (display-name (or simple-string null)))
+	   do (alist-bind ((user-id (or string null) :--id)
+			   (slug (or string null))
+			   (display-name (or string null)))
 			  user
 		(when user-id
 		  (when display-name

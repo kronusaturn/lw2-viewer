@@ -35,7 +35,7 @@
 			  #|todo (*debug-mode* :backtrace ...)|#)))))
       (setf (hunchentoot:content-type*) "application/json")
       (with-response-stream (out-stream)
-	(json:encode-json result out-stream)))))
+	(lw2.json:encode result out-stream)))))
 
 (defmacro define-json-endpoint ((name site-class uri) &body body)
   `(define-route ',site-class 'standard-route :name ',name :uri ,uri

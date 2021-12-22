@@ -40,7 +40,7 @@
 				       "timestamp" "2009")))
 	 (timestamp
 	  (trivia:match
-	     (call-with-http-response #'json:decode-json wayback-api-url :want-stream t :force-string t)
+	     (call-with-http-response #'lw2.json:decode wayback-api-url :want-stream t :force-string t)
 	   ((assoc :archived--snapshots
 		   (assoc :closest
 			  (assoc :timestamp timestamp)))

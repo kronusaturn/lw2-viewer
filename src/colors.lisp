@@ -13,7 +13,7 @@
 	 (lambda (color-data)
 	   (cons (cdr (assoc :name color-data))
 		 (map 'list (lambda (x) (/ (the (integer 0 255) (cdr x)) 255.0d0)) (cdr (assoc :rgb color-data)))))
-	 (json:decode-json stream))))
+	 (lw2.json:decode stream))))
 
 (defun parse-multi-hex (string count length &key (start 0) (key #'identity))
   (values-list

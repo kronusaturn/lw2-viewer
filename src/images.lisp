@@ -140,13 +140,13 @@
 	    (make-image-thread))))))
 
 (defun dynamic-image (uri container-tag-name container-attributes)
-  (declare (simple-string uri container-tag-name))
+  (declare (string uri container-tag-name))
   (let ((image-data
 	 (log-and-ignore-errors
 	  (sb-sys:with-deadline (:seconds 5)
 	    (image-uri-data uri)))))
-    (alist-bind ((proxy-uri (or null simple-string))
-		 (inverted-uri (or null simple-string))
+    (alist-bind ((proxy-uri (or null string))
+		 (inverted-uri (or null string))
 		 (width (or null fixnum))
 		 (height (or null fixnum)))
 		image-data
@@ -161,7 +161,7 @@
 		       (float height))
 		    width))
 	  (iter (for (attr . value) in container-attributes)
-		(declare (type (or null simple-string) attr value))
+		(declare (type (or null string) attr value))
 		(unless (string-equal attr "style")
 		  (delimit)
 		  (write-string attr stream)

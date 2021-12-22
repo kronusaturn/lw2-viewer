@@ -17,7 +17,7 @@
 	   (funcall fn (sb-sys:make-fd-stream fd :input t :output t)))
       (when fd (sb-posix:close fd)))))
 
-(defun invoke-node-process (command &optional (output #'json:decode-json))
+(defun invoke-node-process (command &optional (output #'lw2.json:decode))
   (uiop:run-program "node js-foreign-lib/web-push.js"
 		    :input (list command)
 		    :output output
@@ -26,7 +26,7 @@
 (defun ensure-vapid-key ()
   (unless *vapid-key*
     (labels ((read-vapid-key (stream)
-	       (setf *vapid-key* (json:decode-json stream))))
+	       (setf *vapid-key* (lw2.json:decode stream))))
       (log-and-ignore-errors
        (with-open-file (stream *vapid-key-filename* :direction :input :if-does-not-exist nil)
 	 (if stream
@@ -46,7 +46,7 @@
   (let* ((result-json
 	  (invoke-node-process
 	   (format nil "webPush.getVapidHeaders(~{~A~^,~});"
-		   (mapcar #'json:encode-json-to-string
+		   (mapcar #'lw2.json:encode-to-string
 			   (list origin "mailto:test@example.com"
 				 (cdr (assoc :public-key *vapid-key*)) (cdr (assoc :private-key *vapid-key*)) "aes128gcm")))))
 	 (result-string (cdar result-json))

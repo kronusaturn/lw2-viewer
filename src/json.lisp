@@ -1,19 +1,21 @@
 (uiop:define-package #:lw2.json
   (:use #:cl)
-  (:export #:encode #:encode-to-string #:decode))
+  (:export #:encode #:encode-to-string #:decode #:safe-decode))
 
 (in-package #:lw2.json)
 
+(defun string-to-existing-keyword (string)
+  (or (find-symbol (json:camel-case-to-lisp string) (find-package '#:keyword))
+      string))
+
 (defun alistp (list)
-  (loop with dotted = nil
+  (loop
      for elem in list
      unless (consp elem)
      return nil
      unless (atom (car elem))
      return nil
-     when (atom (cdr elem))
-     do (setf dotted t)
-     finally (return dotted)))
+     finally (return t)))
 
 (defun encode-list-guessing (object stream)
   (if (alistp object)
@@ -31,5 +33,10 @@
 
 (defun decode (source)
   (let ((yason:*parse-object-as* :alist)
-	(yason:*parse-object-key-fn* (lambda (x) (intern (json:camel-case-to-lisp x) (find-package '#:keyword)))))
+	(yason:*parse-object-key-fn* #'string-to-existing-keyword))
     (yason:parse source)))
+
+(defun safe-decode (source)
+  (values
+   (ignore-errors
+     (decode source))))
