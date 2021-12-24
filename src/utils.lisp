@@ -14,7 +14,8 @@
 	   #:firstn #:map-plist #:filter-plist #:alist-bind
 	   #:list-cond #:list-cond*
 	   #:hash-cond #:sethash
-	   #:js-true
+	   #:safe-decode-json
+	   #:string-to-existing-keyword #:call-with-safe-json #:js-true
 	   #:delete-easy-handler #:abnormal-unwind-protect
 	   #:ignorable-multiple-value-bind
 	   #:compare-streams #:ensure-character-stream
@@ -338,12 +339,14 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
 			(collect `(setf (gethash ,key ,hash) ,value)))
 		,hash)))
 
+(defun safe-decode-json (source)
+  (when (or (streamp source) (nonempty-string source))
+    (let ((json:*identifier-name-to-key* #'json:safe-json-intern))
+      (ignore-errors (json:decode-json-from-source source)))))
+
 ;; GraphQL and LW2 are picky about false/null distinctions, so make them explicit
 
 (defmethod json:encode-json ((object (eql :false)) &optional stream)
-  (write-string "false" stream))
-
-(defmethod json:encode-json ((object (eql 'yason:false)) &optional stream) ; just in case someone uses the wrong encoder...
   (write-string "false" stream))
 
 (defmethod json:encode-json ((object (eql :null)) &optional stream)
@@ -351,9 +354,17 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
 
 (defun js-true (value)
   (not (or (null value)
-	   (eql value 'yason:false)
 	   (eql value :false)
 	   (eql value :null))))
+
+(defun string-to-existing-keyword (string)
+  (or (find-symbol (json:camel-case-to-lisp string) (find-package '#:keyword))
+      string))
+
+(defun call-with-safe-json (fn)
+  (let ((json:*json-identifier-name-to-lisp* #'identity)
+	(json:*identifier-name-to-key* #'string-to-existing-keyword))
+    (funcall fn)))
 
 (defun delete-easy-handler (name)
   (setf hunchentoot::*easy-handler-alist*

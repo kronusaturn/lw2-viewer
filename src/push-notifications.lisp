@@ -36,7 +36,7 @@
 	  (current-time-unix (local-time:timestamp-to-unix current-time)))
      (loop for (auth-token . subscription-json) in all-subscriptions
 	do (log-and-ignore-errors
-	    (let* ((subscription (lw2.json:decode subscription-json))
+	    (let* ((subscription (json:decode-json-from-string subscription-json))
 		   (last-check-cons (or (assoc :last-check subscription) (cons :last-check nil)))
 		   (since (if-let (unix (cdr last-check-cons)) (local-time:unix-to-timestamp unix))))
 	      (cond

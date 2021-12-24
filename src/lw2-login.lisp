@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.login
-  (:use #:cl #:lw2-viewer.config #:lw2.utils #:lw2.graphql #:lw2.backend #:lw2.backend-modules #:alexandria #:flexi-streams #:websocket-driver-client)
+  (:use #:cl #:lw2-viewer.config #:lw2.utils #:lw2.graphql #:lw2.backend #:lw2.backend-modules #:alexandria #:cl-json #:flexi-streams #:websocket-driver-client)
   (:import-from #:ironclad #:byte-array-to-hex-string #:digest-sequence)
   (:import-from #:lw2.context #:*current-backend*)
   (:export #:do-lw2-resume #:do-login #:do-lw2-create-user #:do-lw2-forgot-password #:do-lw2-reset-password #:do-logout
@@ -19,11 +19,11 @@
   message)
 
 (defun sockjs-encode-alist (alist)
-  (lw2.json:encode-to-string (list (lw2.json:encode-to-string alist))))
+  (encode-json-to-string (list (encode-json-alist-to-string alist)))) 
 
 (defun sockjs-decode (msg)
   (if (eq (elt msg 0) #\a) 
-    (let ((response (map 'list #'lw2.json:decode (lw2.json:decode (subseq msg 1)))))
+    (let ((response (map 'list #'decode-json-from-string (decode-json-from-string (subseq msg 1)))))
       (if (= (length response) 1)
 	(first response)
 	(error "Unsupported sockjs message.")))))
@@ -78,12 +78,12 @@
 
 (defun do-graphql-post-query (auth-token data)
   (call-with-http-response
-   #'lw2.json:decode
+   #'json:decode-json
    (graphql-uri *current-backend*)
    :method :post
    :want-stream t
    :headers (backend-request-headers auth-token t)
-   :content (lw2.json:encode-to-string data)))
+   :content (encode-json-to-string data)))
 
 (defun do-lw2-resume (auth-token)
   (let ((result (do-lw2-sockjs-method "login" (alist :resume auth-token))))

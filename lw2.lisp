@@ -533,7 +533,7 @@ signaled condition to *HTML-OUTPUT*."
 			 (declare (dynamic-extent ,name ,value))
 			 (write-string ,name ,out-stream)
 			 (write-string "=" ,out-stream)
-			 (lw2.json:encode ,value ,out-stream)
+			 (json:encode-json ,value ,out-stream)
 			 (write-string #.(format nil ";~%") ,out-stream)))))))
 
 (defun html-body (out-stream fn &key title description social-description current-uri content-class robots extra-head)
@@ -688,9 +688,20 @@ signaled condition to *HTML-OUTPUT*."
 						 (last-uri `("last" ,last-uri "Last" :nofollow t)))))
 	    (format out-stream "<script>document.querySelectorAll('#bottom-bar').forEach(bb => { bb.classList.add('decorative'); });</script>"))))))
 
+(defun decode-json-as-hash-table (json-source)
+  (let (current-hash-table current-key)
+    (declare (special current-hash-table current-key))
+    (json:bind-custom-vars
+     (:beginning-of-object (lambda () (setf current-hash-table (make-hash-table :test 'equal)))
+      :object-key (lambda (x) (setf current-key x))
+      :object-value (lambda (x) (setf (gethash current-key current-hash-table) x))
+      :end-of-object (lambda () current-hash-table)
+      :aggregate-scope '(current-hash-table current-key))
+     (json:decode-json-from-source json-source))))
+
 (defun get-ignore-hash (&optional (user-id (logged-in-userid)))
   (if-let (ignore-json (and user-id (cache-get "user-ignore-list" user-id)))
-	  (yason:parse ignore-json)
+	  (decode-json-as-hash-table ignore-json)
 	  (make-hash-table :test 'equal)))
 
 (defmacro with-outputs ((out-stream) &body body) 
@@ -732,7 +743,7 @@ signaled condition to *HTML-OUTPUT*."
   (if value
       (setf *current-prefs* (remove-duplicates (acons key value *current-prefs*) :key #'car :from-end t))
       (setf *current-prefs* (remove key *current-prefs* :key #'car)))
-  (set-cookie "prefs" (quri:url-encode (lw2.json:encode-to-string *current-prefs*))))
+  (set-cookie "prefs" (quri:url-encode (json:encode-json-to-string *current-prefs*))))
 
 (defmacro emit-page ((out-stream &rest args &key (return-code 200) &allow-other-keys) &body body)
   (once-only (return-code)
@@ -745,7 +756,7 @@ signaled condition to *HTML-OUTPUT*."
 				,@args))))))
 
 (defmethod call-with-backend-context ((backend backend-token-login) (request (eql t)) fn)
-  (let ((*current-auth-status* (lw2.json:safe-decode (hunchentoot:cookie-in "lw2-status"))))
+  (let ((*current-auth-status* (safe-decode-json (hunchentoot:cookie-in "lw2-status"))))
     (multiple-value-bind (*current-auth-token* *current-userid* *current-username*)
 	(let* ((auth-token (hunchentoot:cookie-in "lw2-auth-token"))
 	       (expires (cdr (assoc :expires *current-auth-status*))))
@@ -770,7 +781,7 @@ signaled condition to *HTML-OUTPUT*."
 
 (defun call-with-error-page (fn)
   (with-response-context ()
-    (let* ((*current-prefs* (lw2.json:safe-decode (hunchentoot:cookie-in "prefs")))
+    (let* ((*current-prefs* (safe-decode-json (hunchentoot:cookie-in "prefs")))
 	   (*preview* (string-equal (hunchentoot:get-parameter "format") "preview")))
       (multiple-value-bind (*revalidate-default* *force-revalidate-default*)
 	  (cond ((ppcre:scan "(?:^|,?)\\s*(?:no-cache|max-age=0)(?:$|,)" (hunchentoot:header-in* :cache-control))
@@ -1114,8 +1125,8 @@ signaled condition to *HTML-OUTPUT*."
 	     (when question
 	       (get-post-answers post-id :force-revalidate t))))
 	 (when text
-	   (alist-bind ((new-comment-id string :--id)
-			(new-comment-html string :html-body))
+	   (alist-bind ((new-comment-id simple-string :--id)
+			(new-comment-html simple-string :html-body))
 		       new-comment-result
 		       (setf (markdown-source :comment new-comment-id new-comment-html) text)
 		       (redirect (quri:render-uri
@@ -1194,7 +1205,7 @@ signaled condition to *HTML-OUTPUT*."
 		    (when-let (canonical-source (and (not comment-id)
 						     (cdr (assoc :canonical-source post))))
 			      <link rel="canonical" href=canonical-source>)
-		    <script>postId=(with-html-stream-output (:stream stream) (lw2.json:encode post-id stream))</script>
+		    <script>postId=(with-html-stream-output (:stream stream) (json:encode-json post-id stream))</script>
 		    <script>alignmentForumPost=(if (cdr (assoc :af post)) "true" "false")</script>
 		    (when (logged-in-userid)
 			      (call-with-server-data 'process-vote-data (format nil "/karma-vote/post?post-id=~A" post-id))))
@@ -1327,11 +1338,11 @@ signaled condition to *HTML-OUTPUT*."
 		(t :body (postprocess-markdown text))
 		(t :title title)
 		(link-post :url url)
-		(t :meta (or (string= section "meta") 'yason:false))
+		(t :meta (or (string= section "meta") :false))
 		((not post-id) :is-event nil)
-		(t :draft (or (string= section "drafts") 'yason:false))
+		(t :draft (or (string= section "drafts") :false))
 		((typep *current-backend* 'backend-lw2-misc-features) :submit-to-frontpage (and submit-to-frontpage t))
-		((not post-id) :question (if question t 'yason:false))))
+		((not post-id) :question (if question t :false))))
 	      (post-unset
 	       (list-cond
 		((not link-post) :url t)))
@@ -1379,7 +1390,7 @@ signaled condition to *HTML-OUTPUT*."
       (setf (hunchentoot:content-type*) "application/json")
       (if *current-auth-token*
 	  (let ((notifications-status (check-notifications (logged-in-userid) *current-auth-token* :full (string= format "push"))))
-	    (lw2.json:encode-to-string notifications-status)))))
+	    (json:encode-json-to-string notifications-status)))))
 
 (hunchentoot:define-easy-handler (view-ignore-user :uri "/ignore-user") ((csrf-token :request-type :post) (target-id :request-type :post) (state :request-type :post) return)
   (with-error-page
@@ -1578,8 +1589,9 @@ signaled condition to *HTML-OUTPUT*."
 
 (hunchentoot:define-easy-handler (view-push-register :uri "/push/register") ()
   (with-error-page
-      (let* ((data (lw2.json:safe-decode
-		    (hunchentoot:raw-post-data :force-text t :external-format :utf-8)))
+      (let* ((data (call-with-safe-json (lambda ()
+					  (json:decode-json-from-string
+					   (hunchentoot:raw-post-data :force-text t :external-format :utf-8)))))
 	     (subscription (cdr (assoc :subscription data)))
 	     (cancel (cdr (assoc :cancel data))))
 	(cond
@@ -1844,7 +1856,7 @@ signaled condition to *HTML-OUTPUT*."
        (cond
          (auth-token
            (set-cookie "lw2-auth-token" auth-token :max-age (if expires (+ (- expires (get-unix-time)) (* 24 60 60)) (1- (expt 2 31))))
-           (if expires (set-cookie "lw2-status" (lw2.json:encode-to-string (alist :expires expires))))
+           (if expires (set-cookie "lw2-status" (json:encode-json-to-string (alist :expires expires))))
            (cache-put "auth-token-to-userid" auth-token user-id)
            (cache-put "auth-token-to-username" auth-token username)
            (redirect (if (and return (ppcre:scan "^/[^/]" return)) return "/")))
@@ -2011,7 +2023,7 @@ signaled condition to *HTML-OUTPUT*."
 	        (when-let* ((base-filename (and match? (svref strings 0)))
 			    (image-data (cache-get "cached-images" base-filename :value-type :json)))
 		  (let ((inverted (svref strings 1)))
-		    (alist-bind ((mime-type string)) image-data
+		    (alist-bind ((mime-type simple-string)) image-data
 		      (setf (hunchentoot:header-out "X-Content-Type-Options") "nosniff"
 			    (hunchentoot:header-out "Cache-Control") #.(format nil "public, max-age=~A, immutable" 600))
 		      (hunchentoot:handle-static-file (concatenate 'string "www/proxy-assets/" base-filename (if inverted "-inverted" "")) mime-type)

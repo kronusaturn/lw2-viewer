@@ -40,7 +40,8 @@
 				 (member binding-sym bindings :test #'string=)))
 		    (setf (gethash binding-sym added) t)
 		    (list (list* (intern (string binding-sym) *package*)
-				 type
+				 (if (eq type 'string) 'simple-string type) ; Optimization, assuming strings coming from the backend
+					                                    ; can never be displaced etc.
 				 (if alias (list alias)))))))
       ,datum
       ,@body)))

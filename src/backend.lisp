@@ -101,11 +101,11 @@
 
 (define-backend-function comments-list-to-graphql-json (comments-list)
   (backend-lw2-legacy
-   (lw2.json:encode-to-string
-    (plist-hash-table (list "data" (plist-hash-table (list "CommentsList" comments-list))))))
+   (json:encode-json-to-string
+    (plist-hash-table (list :data (plist-hash-table (list :*comments-list comments-list))))))
   (backend-lw2-modernized
-   (lw2.json:encode-to-string
-    (plist-hash-table (list "data" (plist-hash-table (list "CommentsList" (plist-hash-table (list "results" comments-list)))))))))
+   (json:encode-json-to-string
+    (plist-hash-table (list :data (plist-hash-table (list :*comments-list (plist-hash-table (list :results comments-list)))))))))
 
 (defun do-graphql-debug (query)
   (when *graphql-debug-output*
@@ -227,7 +227,7 @@
 			   (flexi-streams:make-in-memory-input-stream result-source))
 			  (stream
 			   (ensure-character-stream result-source)))))
-     (lw2.json:safe-decode string-source))))
+     (json:decode-json-from-source string-source))))
 
 (define-backend-function postprocess-query-result (result)
   (backend-base
@@ -264,7 +264,7 @@
     (graphql-uri *current-backend*)
     :method :post
     :headers (backend-request-headers auth-token nil)
-    :content (dynamic-let ((q (alist :query query))) (lw2.json:encode-to-string q))
+    :content (dynamic-let ((q (alist :query query))) (json:encode-json-to-string q))
     :want-stream (not return-type))))
 
 (define-backend-function lw2-graphql-query (query &key auth-token return-type (decoder 'decode-query-result))
@@ -766,10 +766,10 @@
 	  (result (if auth-token
 		      (lw2-graphql-query query-string :auth-token auth-token)
 		      (lw2-graphql-query-timeout-cached query-string "user-json" user-id :revalidate revalidate :force-revalidate force-revalidate))))
-     (alist-bind ((user-id (or string null) :--id)
-		  (display-name (or string null))
-		  (full-name (or string null))
-		  (slug (or string null))
+     (alist-bind ((user-id (or simple-string null) :--id)
+		  (display-name (or simple-string null))
+		  (full-name (or simple-string null))
+		  (slug (or simple-string null))
 		  (deleted boolean))
 		 result
 		 (when user-id
@@ -865,7 +865,7 @@
 		      (:both (let ((result (multiple-value-call #'concatenate 'list
 								(lw2-graphql-query-multi (list (posts-query-string) (comments-query-string))))))
 			       (ecase return-type
-				 (:string (lw2.json:encode-to-string result))
+				 (:string (json:encode-json-to-string result))
 				 ((nil) result))))
 		      (:posts (lw2-graphql-query (format nil "{~A}" (posts-query-string)) :auth-token auth-token :return-type return-type))
 		      (:comments (lw2-graphql-query (format nil "{~A}" (comments-query-string)) :auth-token auth-token :return-type return-type)))))))
@@ -885,14 +885,14 @@
   (backend-algolia-search
    (call-with-http-response
     (lambda (req-stream)
-      (values-list (loop for r in (cdr (assoc :results (lw2.json:decode req-stream)))
+      (values-list (loop for r in (cdr (assoc :results (json:decode-json req-stream)))
 		      collect (cdr (assoc :hits r)))))
     (algolia-search-uri *current-backend*)
     :method :post
     :headers '(("Origin" . "https://www.greaterwrong.com")
 	       ("Referer" . "https://www.greaterwrong.com/")
 	       ("Content-Type" . "application/json"))
-    :content (lw2.json:encode-to-string
+    :content (json:encode-json-alist-to-string
 	      (alist "requests" (loop for index in '("test_tags" "test_posts" "test_comments")
 				   collect (alist "indexName" index
 						  "params" (format nil "query=~A&hitsPerPage=20&page=0"
@@ -918,8 +918,8 @@
 	 (version (base64:usb8-array-to-base64-string (hash-string version))))
      (or
       (if-let ((cache-data (cache-get db-name id :value-type :lisp)))
-	      (alist-bind ((cached-version string :version)
-			   (markdown string))
+	      (alist-bind ((cached-version simple-string :version)
+			   (markdown simple-string))
 			  cache-data
 			  (when (string= version cached-version)
 			    markdown)))
@@ -1003,9 +1003,9 @@
   (let ((user-list (lw2-graphql-query (lw2-query-string :user :list '() :fields '(:--id :slug :display-name)))))
     (with-cache-transaction
 	(loop for user in user-list
-	   do (alist-bind ((user-id (or string null) :--id)
-			   (slug (or string null))
-			   (display-name (or string null)))
+	   do (alist-bind ((user-id (or simple-string null) :--id)
+			   (slug (or simple-string null))
+			   (display-name (or simple-string null)))
 			  user
 		(when user-id
 		  (when display-name

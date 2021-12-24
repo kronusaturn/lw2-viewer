@@ -111,7 +111,7 @@
 	       (emit "[" (separated-list graphql-value "," (rest value)) "]"))
 	      ((cons list list)
 	       (emit "{" (separated-list graphql-argument "," value) "}"))
-	      (t (with-stream (stream) (lw2.json:encode value stream)))))
+	      (t (with-stream (stream) (json:encode-json value stream)))))
 
 (defgrammar graphql-argument (cons)
   (emit (graphql-name (car cons))

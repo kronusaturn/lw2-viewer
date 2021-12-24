@@ -176,8 +176,8 @@
     '((:byte-vector (vector (unsigned-byte 8)) x x :byte-vector)
       (:string string (and x (string-to-octets x :external-format :utf-8)) x :string)
       (:json t
-       (and x (string-to-octets (lw2.json:encode-to-string x) :external-format :utf-8))
-       (and x (lw2.json:decode (flex:make-flexi-stream x :external-format :utf-8))) 'binary-stream)
+       (and x (string-to-octets (json:encode-json-to-string x) :external-format :utf-8))
+       (and x (json:decode-json (flex:make-flexi-stream x :external-format :utf-8))) 'binary-stream)
       (:lisp t
        (and x (string-to-octets (write-to-string x :pretty nil :readably t :circle nil) :external-format :utf-8))
        (and x (read (flex:make-flexi-stream x :external-format :utf-8))) 'binary-stream)))

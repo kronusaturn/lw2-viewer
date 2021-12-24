@@ -6,7 +6,9 @@
   (export 'get-page-body))
 
 (defun decode-arbital-json (json-string)
-  (let ((result (lw2.json:safe-decode json-string)))
+  (let ((result
+	 (call-with-safe-json
+	  (lambda () (json:decode-json-from-string json-string)))))
     (typecase result
       (string (if (string= result "not-found")
 		  (error 'lw2-not-found-error)
@@ -26,7 +28,7 @@
 
 (define-backend-function get-page-body (params page-type)
   (backend-arbital
-   (let* ((query (lw2.json:encode-to-string params))
+   (let* ((query (json:encode-json-to-string params))
 	  (page-key (case page-type
 		      (:explore (cdr (assoc :page-alias params)))
 		      (t (or (cdr (assoc :lens-id params))
@@ -56,7 +58,9 @@
 			(data (decode-arbital-json json-string)))
 		   (update-arbital-aliases data)
 		   json-string))))
-     (lw2-graphql-query-timeout-cached fn "page-body-json" (format nil "~@[~A ~]~A" (unless (eq page-type :primary-page) page-type) page-key)))))
+      (call-with-safe-json
+       (lambda ()
+	 (lw2-graphql-query-timeout-cached fn "page-body-json" (format nil "~@[~A ~]~A" (unless (eq page-type :primary-page) page-type) page-key)))))))
 
 (defun add-arbital-scrape-files (directory)
   (with-cache-transaction
