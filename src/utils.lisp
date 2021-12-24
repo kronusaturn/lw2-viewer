@@ -343,6 +343,9 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
 (defmethod json:encode-json ((object (eql :false)) &optional stream)
   (write-string "false" stream))
 
+(defmethod json:encode-json ((object (eql 'yason:false)) &optional stream) ; just in case someone uses the wrong encoder...
+  (write-string "false" stream))
+
 (defmethod json:encode-json ((object (eql :null)) &optional stream)
   (write-string "null" stream))
 
