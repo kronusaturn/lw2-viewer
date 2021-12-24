@@ -1114,8 +1114,8 @@ signaled condition to *HTML-OUTPUT*."
 	     (when question
 	       (get-post-answers post-id :force-revalidate t))))
 	 (when text
-	   (alist-bind ((new-comment-id simple-string :--id)
-			(new-comment-html simple-string :html-body))
+	   (alist-bind ((new-comment-id string :--id)
+			(new-comment-html string :html-body))
 		       new-comment-result
 		       (setf (markdown-source :comment new-comment-id new-comment-html) text)
 		       (redirect (quri:render-uri
