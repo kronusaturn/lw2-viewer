@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.raw-memory-streams
-  (:use :cl :trivial-gray-streams)
+  (:use #:cl #:trivial-gray-streams)
   (:export #:raw-memory-stream))
 
 (in-package #:lw2.raw-memory-streams)
@@ -21,7 +21,7 @@
 	:eof
 	(prog1
 	    (cffi:mem-aref pointer :unsigned-char position)
-	  (incf position)))))
+	  (setf position (the fixnum (+ 1 position)))))))
 
 (defmethod stream-read-sequence ((self raw-memory-stream) sequence start end &key)
   (declare (optimize (safety 0) (debug 0))
@@ -42,5 +42,5 @@
 	    ((simple-array (unsigned-byte 8) (*)) (inner))
 	    ((array (unsigned-byte 8) (*)) (inner))
 	    (sequence (inner))))
-      (incf position actual-length)
-      (+ start actual-length))))
+      (setf position (the fixnum (+ position actual-length)))
+      (the fixnum (+ start actual-length)))))
