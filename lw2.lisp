@@ -1336,7 +1336,7 @@ signaled condition to *HTML-OUTPUT*."
        (let* ((post-data
 	       (list-cond
 		(t :body (postprocess-markdown text))
-		(t :title title)
+		(t :title (or (nonempty-string title) "Untitled"))
 		(link-post :url url)
 		(t :meta (or (string= section "meta") :false))
 		((not post-id) :is-event nil)

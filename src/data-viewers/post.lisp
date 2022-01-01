@@ -165,7 +165,7 @@
       (if url <a class="link-post-link" href=(presentable-link url)>&#xf0c1;</a>)
       <a class="post-title-link" href=(generate-post-auth-link post :need-auth need-auth :item-subtype (if is-event "event" "post"))>
 	(if question <span class="post-type-prefix">[Question] </span>)
-	(safe (clean-text-to-html title))
+	(safe (clean-text-to-html (or (nonempty-string title) "[untitled post]")))
       </a>
       (if (logged-in-userid user-id) <a class="edit-post-link button" href=("/edit-post?post-id=~A" post-id)></a>)
     </h1>
