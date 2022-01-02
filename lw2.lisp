@@ -1656,17 +1656,19 @@ signaled condition to *HTML-OUTPUT*."
 					obj))
 				  (check-replied (comment)
 				    (let* ((post-id (cdr (assoc :post-id comment)))
-					   (comment-id (cdr (assoc :--id comment)))
-					   (comments (funcall (if (or (cdr (assoc :answer comment))
-								      (cdr (assoc :parent-answer-id comment)))
-								  'get-post-answers
-								  'get-post-comments)
-							      post-id
-							      :revalidate nil))
-					   (reply-comment (find-if (lambda (c)
-								     (and (string= (cdr (assoc :parent-comment-id c)) comment-id)
-									  (string= (cdr (assoc :user-id c)) user-id)))
-								   comments)))
+					   (reply-comment
+					    (when post-id ; FIXME - handle non-post comments here
+					      (let ((comment-id (cdr (assoc :--id comment)))
+						    (comments (funcall (if (or (cdr (assoc :answer comment))
+									       (cdr (assoc :parent-answer-id comment)))
+									   'get-post-answers
+									   'get-post-comments)
+								       post-id
+								       :revalidate nil)))
+						(find-if (lambda (c)
+							   (and (string= (cdr (assoc :parent-comment-id c)) comment-id)
+								(string= (cdr (assoc :user-id c)) user-id)))
+							 comments)))))
 				      (if reply-comment
 					  (acons :replied (list :post post-id :comment-id (cdr (assoc :--id reply-comment))) comment)
 					  comment))))
