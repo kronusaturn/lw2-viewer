@@ -1104,8 +1104,8 @@ signaled condition to *HTML-OUTPUT*."
 			  ((and tag-id (not edit-comment-id)) :tag-id tag-id)
 			  (parent-comment-id :parent-comment-id parent-comment-id)
 			  (answer :answer t)
-			  (nomination :nominated-for-review "2019")
-			  (nomination-review :reviewing-for-review "2019")
+			  (nomination :nominated-for-review "2020")
+			  (nomination-review :reviewing-for-review "2020")
 			  (parent-answer-id :parent-answer-id parent-answer-id)
 			  (af :af t)
 			  ((and shortform (not parent-comment-id)) :shortform t))))
@@ -1276,8 +1276,10 @@ signaled condition to *HTML-OUTPUT*."
 				       (nominations-eligible (timerange "2018-01-01" posted-timestamp "2020-01-01"))
 				       (nominations-current (and nominations-eligible (timerange "2019-01-01" posted-timestamp)))
 				       (now (local-time:now))
-				       (nominations-open (and nominations-current (timerange "2020-12-01" now "2020-12-14")))
-				       (reviews-open (and nominations-current (timerange "2020-12-14" now "2021-01-11"))))
+				       (nominations-open nil)
+				       (reviews-eligible (or nominations-eligible (timerange "2018-01-01" posted-timestamp "2021-01-01")))
+				       (reviews-current (and reviews-eligible (timerange "2020-01-01" posted-timestamp)))
+				       (reviews-open (and reviews-current (timerange "2021-12-14" now "2022-01-11"))))
 				  (labels ((top-level-property (comment property)
 					     (or (cdr (assoc property comment))
 						 (cdr (assoc property (cdr (assoc :top-level-comment comment)))))))
@@ -1292,7 +1294,7 @@ signaled condition to *HTML-OUTPUT*."
 					   finally (return (values normal-comments nominations reviews)))
 				      (loop for (name comments open) in (list-cond (nominations-eligible
 										    (list "nomination" nominations nominations-open))
-										   (nominations-eligible
+										   (reviews-eligible
 										    (list "review" reviews reviews-open))
 										   ((cdr (assoc :question post))
 										    (list "answer" answers t))
