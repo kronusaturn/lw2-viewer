@@ -1274,7 +1274,6 @@ signaled condition to *HTML-OUTPUT*."
 						       (cdr (assoc :posted-at post))))
 				       (posted-timestamp (and posted-at (local-time:parse-timestring posted-at)))
 				       (nominations-eligible (timerange "2018-01-01" posted-timestamp "2020-01-01"))
-				       (nominations-current (and nominations-eligible (timerange "2019-01-01" posted-timestamp)))
 				       (now (local-time:now))
 				       (nominations-open nil)
 				       (reviews-eligible (or nominations-eligible (timerange "2018-01-01" posted-timestamp "2021-01-01")))
