@@ -45,8 +45,7 @@
 						    :word-count :frontpage-date :curated-date :meta
 						    :af :question :vote-count)))
    (vote-count (or null fixnum))
-   (nomination-count-2019 (or null fixnum) :backend-type backend-lw2)
-   (review-count-2019 (or null fixnum) :backend-type backend-lw2)
+   (review-count (or null fixnum) :backend-type backend-lw2)
    (is-event boolean :backend-type backend-events)
    (local-start-time (or null string) :backend-type backend-events)
    (local-end-time (or null string) :backend-type backend-events)
@@ -141,10 +140,8 @@
       (if page-url <a class="lw2-link" href=(clean-lw-link page-url)>(main-site-abbreviation *current-site*)<span> link</span></a>)
       (when (and legacy-id (eq context :body))
 	<a class="archive-link" href=("https://web.archive.org/web/*/~A" (lw2.legacy-archive:lw-legacy-url legacy-id title))>Archive</a>)
-      (when (nonzero-number-p nomination-count-2019)
-	<a href=("~A#nominations" (if (eq context :body) "" (generate-item-link :post post))) class="nomination-count">(safe (pretty-number nomination-count-2019 "nomination"))</a>)
-      (when (nonzero-number-p review-count-2019)
-	<a href=("~A#reviews" (if (eq context :body) "" (generate-item-link :post post))) class="review-count">(safe (pretty-number review-count-2019 "review"))</a>)
+      (when (nonzero-number-p review-count)
+	<a href=("~A#reviews" (if (eq context :body) "" (generate-item-link :post post))) class="review-count">(safe (pretty-number review-count "review"))</a>)
       (with-html-stream-output (post-section-to-html post :skip-section skip-section))
       (when (and (eq context :body) tags)
 	<div id="tags">

@@ -1273,12 +1273,10 @@ signaled condition to *HTML-OUTPUT*."
 				       (posted-at (and (typep *current-backend* 'backend-lw2)
 						       (cdr (assoc :posted-at post))))
 				       (posted-timestamp (and posted-at (local-time:parse-timestring posted-at)))
-				       (nominations-eligible (timerange "2018-01-01" posted-timestamp "2020-01-01"))
 				       (now (local-time:now))
 				       (nominations-open nil)
-				       (reviews-eligible (or nominations-eligible (timerange "2018-01-01" posted-timestamp "2021-01-01")))
-				       (reviews-current (and reviews-eligible (timerange "2020-01-01" posted-timestamp)))
-				       (reviews-open (and reviews-current (timerange "2021-12-14" now "2022-01-11"))))
+				       (reviews-eligible (timerange "2020-01-01" posted-timestamp "2021-01-01"))
+				       (reviews-open (and reviews-eligible (timerange "2021-12-14" now "2022-01-11"))))
 				  (labels ((top-level-property (comment property)
 					     (or (cdr (assoc property comment))
 						 (cdr (assoc property (cdr (assoc :top-level-comment comment)))))))
@@ -1291,9 +1289,9 @@ signaled condition to *HTML-OUTPUT*."
 					   else
 					   collect comment into normal-comments
 					   finally (return (values normal-comments nominations reviews)))
-				      (loop for (name comments open) in (list-cond (nominations-eligible
+				      (loop for (name comments open) in (list-cond ((or nominations nominations-open)
 										    (list "nomination" nominations nominations-open))
-										   (reviews-eligible
+										   ((or reviews reviews-open)
 										    (list "review" reviews reviews-open))
 										   ((cdr (assoc :question post))
 										    (list "answer" answers t))
