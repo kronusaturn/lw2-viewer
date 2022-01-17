@@ -177,7 +177,7 @@
 	      (predicate (lambda (attr) (string-equal attr "alt"))))
 	  (cond
 	    (inverted-uri
-	     (format stream "<picture style='display: var(--invertible-display)' data-original-src='~A'><source srcset='~A' media='(prefers-color-scheme: dark)'><img src='~A'"
+	     (format stream "<picture style='display: var(--invertible-display)' data-original-src='~A'><source srcset='~A' media='(prefers-color-scheme: dark)'><img src='~A' loading='lazy'"
 		      encoded-uri
 		      inverted-uri
 		      (or proxy-uri encoded-uri))
@@ -186,7 +186,7 @@
 		     inverted-uri)
 	     (finish-tag img-attributes predicate stream))
 	    (:otherwise
-	      (format stream "<img src='~A' data-original-src='~A'"
+	      (format stream "<img src='~A' data-original-src='~A' loading='lazy'"
 		      (or proxy-uri encoded-uri) encoded-uri)
 	      (finish-tag img-attributes predicate stream))))
 	(format stream "</~A>" container-tag-name))))))
