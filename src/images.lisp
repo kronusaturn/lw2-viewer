@@ -139,7 +139,7 @@
 	    cached-data
 	    (make-image-thread))))))
 
-(defun dynamic-image (uri container-tag-name container-attributes)
+(defun dynamic-image (uri container-tag-name container-attributes img-attributes)
   (declare (simple-string uri container-tag-name))
   (let ((image-data
 	 (log-and-ignore-errors
@@ -150,32 +150,44 @@
 		 (width (or null fixnum))
 		 (height (or null fixnum)))
 		image-data
+      (labels ((write-attributes (attrs predicate stream)
+		 (iter (for (attr . value) in attrs)
+		       (declare (type (or null simple-string) attr value))
+		       (when (and attr (funcall predicate attr))
+			 (write-char #\Space stream)
+			 (write-string attr stream)
+			 (when value
+			   (write-string "='" stream)
+			   (plump:encode-entities value stream)
+			   (write-char #\' stream)))))
+	       (finish-tag (attrs predicate stream)
+		 (write-attributes attrs predicate stream)
+		 (write-char #\> stream)))
       (with-html-stream-output (:stream stream)
 	(write-char #\< stream)
 	(write-string container-tag-name stream)
-	(with-delimited-writer (stream delimit :begin " " :between " ")
-	  (when (and width height)
-	    (delimit)
-	    (format stream "style='--aspect-ratio: ~F; max-width: ~Dpx'"
-		    (/ (float width)
-		       (float height))
-		    width))
-	  (iter (for (attr . value) in container-attributes)
-		(declare (type (or null simple-string) attr value))
-		(unless (string-equal attr "style")
-		  (delimit)
-		  (write-string attr stream)
-		  (write-string "='" stream)
-		  (plump:encode-entities value stream)
-		  (write-char #\' stream))))
-	(let ((encoded-uri (plump:encode-entities uri)))
-	  (if inverted-uri
-	      (format stream "><picture style='display: var(--invertible-display)' data-original-src='~A'><source srcset='~A' media='(prefers-color-scheme: dark)'><img src='~A'></picture><img style='display: var(--inverted-display)' src='~A'>"
+	(when (and width height)
+	  (write-char #\Space stream)
+	  (format stream "style='--aspect-ratio: ~F; max-width: ~Dpx'"
+		  (/ (float width)
+		     (float height))
+		  width))
+	(finish-tag container-attributes (lambda (attr) (not (string-equal attr "style"))) stream)
+	(let ((encoded-uri (plump:encode-entities uri))
+	      (predicate (lambda (attr) (string-equal attr "alt"))))
+	  (cond
+	    (inverted-uri
+	     (format stream "<picture style='display: var(--invertible-display)' data-original-src='~A'><source srcset='~A' media='(prefers-color-scheme: dark)'><img src='~A'"
 		      encoded-uri
 		      inverted-uri
-		      (or proxy-uri encoded-uri)
-		      inverted-uri)
-	      (format stream "><img src='~A' data-original-src='~A'>"
-		      (or proxy-uri encoded-uri) encoded-uri)))
-	(format stream "</~A>" container-tag-name)))))
+		      (or proxy-uri encoded-uri))
+	     (finish-tag img-attributes predicate stream)
+	     (format stream "</picture><img style='display: var(--inverted-display)' src='~A'"
+		     inverted-uri)
+	     (finish-tag img-attributes predicate stream))
+	    (:otherwise
+	      (format stream "<img src='~A' data-original-src='~A'"
+		      (or proxy-uri encoded-uri) encoded-uri)
+	      (finish-tag img-attributes predicate stream))))
+	(format stream "</~A>" container-tag-name))))))
 

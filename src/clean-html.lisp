@@ -839,7 +839,10 @@
 			       (setf src (presentable-link src :image)
 				     (plump:attribute node "src") src)
 			       (create-dynamic-call container 'lw2.images::dynamic-image
-						    src (plump:tag-name container) (alexandria:hash-table-alist (plump:attributes container))))
+						    src
+						    (plump:tag-name container)
+						    (alexandria:hash-table-alist (plump:attributes container))
+						    (alexandria:hash-table-alist (plump:attributes node))))
 			     (when (and width height)
 			       ;; Apply responsive image scaling CSS.
 			       (setf (plump:attribute container "style") (format nil "--aspect-ratio: ~F; max-width: ~Dpx"
