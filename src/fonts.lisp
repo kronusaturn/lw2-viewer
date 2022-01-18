@@ -40,7 +40,7 @@
 			      :keep-alive nil))
      (with-input-from-string (in-stream response)
        (iter (for line in-stream in-stream using #'read-line)
-	     (for replaced = (ppcre:regex-replace "url\\(['\"](?!data:)" line "\\&https://fonts.greaterwrong.com/"))
+	     (for replaced = (ppcre:regex-replace "url\\(['\"](?=https?://fonts.obormot.net/)" line "\\&https://fonts.greaterwrong.com/"))
 	     (write-string replaced out-stream)
 	     (terpri out-stream)))))
   (setf *fonts-redirect-last-update* (get-unix-time)))
