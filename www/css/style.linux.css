@@ -3450,6 +3450,46 @@ ol {
 	width: 2em;
 }
 
+/*= LW Docs footnotes =*/
+
+.footnote-item {
+	display: flex;
+}
+
+.footnote-item > :not(.nothing) {
+	margin: 0 0.2em;
+}
+
+.footnote-item > :first-child {
+	margin-left: -0.2em;
+	margin-right: 0;
+}
+
+.footnote-back-link a:not(.nothing) {
+	font-size: 0;
+	text-decoration: none;
+	border: none;
+}
+
+.footnote-back-link a:not(.nothing):hover {
+	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #00e;
+	border: none;
+	text-decoration: none;
+}
+
+.footnote-back-link a::after {
+	content: '\F106';
+	font-family: Font Awesome;
+	font-size: 1rem;
+	padding: 0.2em;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+.footnote-content > :first-child {
+	margin-top: 0;
+}
+
 /*********/
 /* LISTS */
 /*********/

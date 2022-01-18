@@ -213,6 +213,12 @@
 	  (setf word-start i)))
   text)
 
+(declaim (ftype (function (plump:node) list) class-list))
+
+(defun class-list (node)
+  (let ((class (plump:attribute node "class")))
+    (and class (split-sequence #\Space class))))
+
 (declaim (ftype (function (plump:node &rest simple-string) boolean) tag-is class-is-not text-class-is-not))
 
 (defun tag-is (node &rest args)
@@ -236,7 +242,7 @@
            (dynamic-extent args))
   (every-ancestor node (lambda (n)
 			 (not (intersection
-			       (split-sequence #\Space (or (plump:attribute n "class") ""))
+			       (class-list n)
 			       args
 			       :test #'string=)))))
 
@@ -976,6 +982,8 @@
 					header-text
 					anchor-new)
 				  contents))))))
+		    ((and (tag-is node "span") (find "footnote-back-link" (class-list node) :test #'string-equal))
+		     (plump:traverse node #'move-children-out-of-node :test (lambda (n) (tag-is n "sup" "strong"))))
 		    ((tag-is node "style")
 		     (let ((text (plump:text node)))
 		       (when (search ".mjx-math" text)
