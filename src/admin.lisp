@@ -30,7 +30,8 @@
 	      (return-from map-posts-and-comments (values)))
 	 do (report-progress)
 	 do (progn
-	      (funcall fn post post-id)
+	      (with-simple-restart (continue "Ignore this post and continue.")
+		(funcall fn post post-id))
 	      (unless skip-comments
 		(ignore-errors
 		  (let ((comments (if (cdr (assoc :question post))
@@ -39,7 +40,8 @@
 				      (get-post-comments post-id :revalidate nil))))
 		    (loop for comment in comments
 		       for comment-id = (cdr (assoc :--id comment))
-		       do (funcall fn comment post-id comment-id)))))
+		       do (with-simple-restart (continue "Ignore this comment and continue.")
+			    (funcall fn comment post-id comment-id))))))
 	      (incf done-count)
 	      (setf last-done post-id)))
       (report-progress)
