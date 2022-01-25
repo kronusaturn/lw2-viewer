@@ -2010,6 +2010,14 @@ signaled condition to *HTML-OUTPUT*."
              (alexandria:with-input-from-file (in-stream "www/about.html" :element-type '(unsigned-byte 8))
                                               (alexandria:copy-stream in-stream out-stream))))
 
+(define-page misc-pages (:regex "^/misc-pages/.+") ()
+  (let ((pathname (hunchentoot:request-pathname)))
+    (unless (probe-file pathname)
+      (error 'lw2-not-found-error))
+    (emit-page (out-stream :title "Misc page" :content-class "misc-page")
+	       (alexandria:with-input-from-file (in-stream pathname :element-type '(unsigned-byte 8))
+		 (alexandria:copy-stream in-stream out-stream)))))
+
 (define-page view-generated-script (:regex "^/generated/([^/]+)\\.js" (name :type string)) ()
   (when-let ((package (find-package (string-upcase name))))
     (setf (hunchentoot:header-out "Content-Type") "text/javascript")
