@@ -65,7 +65,7 @@
   (let* ((scanner (ppcre:create-scanner regex))
 	 (printer (if print-ids
 		      (lambda (item post-id &optional comment-id)
-			(when (ppcre:scan scanner (or (cdr (assoc :html-body item))))
+			(when (ppcre:scan scanner (or (cdr (assoc :html-body item)) ""))
 			  (format t "~A~@[/~A~]~%" post-id comment-id)))
 		      (lambda (item post-id &optional comment-id)
 			(declare (ignore post-id comment-id))
