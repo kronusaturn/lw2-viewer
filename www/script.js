@@ -569,12 +569,12 @@ function makeVoteCompleteEvent(target) {
 			let voteClass = makeVoteClass(vote);
 
 			karmaTargets.forEach(karmaTarget => {
-				karmaTarget.innerHTML = karmaText;
-				karmaTarget.setAttribute("title", voteCount);
 				if (karmaTarget.hasClass("redacted")) {
-					karmaTarget.dataset["trueValue"] = karmaTarget.firstChild.textContent;
-					karmaTarget.firstChild.textContent = "##";
+					karmaTarget.dataset["trueValue"] = karmaText;
+				} else {
+					karmaTarget.innerHTML = karmaText;
 				}
+				karmaTarget.setAttribute("title", voteCount);
 			});
 			buttonTargets.forEach(buttonTarget => {
 				buttonTarget.queryAll("button.vote").forEach(button => {
@@ -2193,8 +2193,7 @@ function toggleAntiKibitzerMode() {
 		});
 		// Post/comment karma values.
 		queryAll(".karma-value.redacted").forEach(karmaValue => {
-			karmaValue.innerHTML = karmaValue.dataset["trueValue"] + karmaValue.lastChild.outerHTML;
-			karmaValue.lastChild.textContent = (parseInt(karmaValue.dataset["trueValue"]) == 1) ? " point" : " points";
+			karmaValue.innerHTML = karmaValue.dataset["trueValue"];
 
 			karmaValue.removeClass("redacted");
 		});
@@ -2255,9 +2254,8 @@ function toggleAntiKibitzerMode() {
 			if ((karmaValue.closest(".comment-item") || karmaValue.closest(".post-meta")).query(".author").hasClass("own-user-author"))
 				return;
 
-			karmaValue.dataset["trueValue"] = karmaValue.firstChild.textContent;
-			karmaValue.innerHTML = "##" + karmaValue.lastChild.outerHTML;
-			karmaValue.lastChild.textContent = " points";
+			karmaValue.dataset["trueValue"] = karmaValue.innerHTML;
+			karmaValue.innerHTML = "##<span> points</span>";
 
 			karmaValue.addClass("redacted");
 		});
