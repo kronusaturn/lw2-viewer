@@ -2,6 +2,7 @@
   (:use #:cl #:sb-thread #:flexi-streams #:alexandria #:iterate #:lw2-viewer.config #:lw2.sites #:lw2.context #:lw2.graphql #:lw2.lmdb
 	#:lw2.utils #:lw2.hash-utils #:lw2.backend-modules #:lw2.schema-type #:lw2.conditions #:lw2.web-push)
   (:import-from #:collectors #:with-collector)
+  (:import-from #:lw2.user-context #:*current-auth-token*)
   (:reexport #:lw2.backend-modules)
   (:export #:*use-alignment-forum*
 	   #:*graphql-debug-output*
@@ -197,6 +198,7 @@
                (cond
                  ((search "document_not_found" message) (error 'lw2-not-found-error))
                  ((search "app.missing_document" message) (error 'lw2-not-found-error))
+		 ((search "only visible to logged-in users" message) (error 'lw2-login-required-error))
                  ((search "not_allowed" message) (error 'lw2-not-allowed-error))
                  (t (error 'lw2-unknown-error :message message)))))))
 
@@ -621,9 +623,18 @@
 (define-backend-function get-post-body (post-id &key (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*) auth-token)
   (backend-graphql
    (let ((query-string (lw2-query-string :post :single (alist :document-id post-id) :context :body)))
-     (if auth-token
-	 (lw2-graphql-query query-string :auth-token auth-token)
-	 (lw2-graphql-query-timeout-cached query-string "post-body-json" post-id :revalidate revalidate :force-revalidate force-revalidate))))
+     (block nil
+       (tagbody retry
+	  (handler-bind ((lw2-login-required-error (lambda (&rest args)
+						     (declare (ignore args))
+						     (let ((current-auth-token *current-auth-token*))
+						       (when (and (not auth-token) current-auth-token)
+							 (setf auth-token current-auth-token)
+							 (go retry))))))
+	    (return
+	      (if auth-token
+		  (lw2-graphql-query query-string :auth-token auth-token)
+		  (lw2-graphql-query-timeout-cached query-string "post-body-json" post-id :revalidate revalidate :force-revalidate force-revalidate))))))))
   (backend-lw2-tags
    (declare (ignore auth-token))
    (acons :tags (get-post-tags post-id :revalidate revalidate :force-revalidate force-revalidate) (call-next-method))))
@@ -926,7 +937,7 @@
       (trivia:ematch (lw2-graphql-query (lw2-query-string target-type :single
 							  (alist :document-id id)
 							  :fields '(:html-body (:contents :markdown)))
-					:auth-token lw2.user-context:*current-auth-token*)
+					:auth-token *current-auth-token*)
 		     ((trivia:alist (:html-body . html-body)
 				    (:contents . (assoc :markdown markdown)))
 		      (cache-put db-name id (alist :version (base64:usb8-array-to-base64-string (hash-string html-body)) :markdown markdown) :value-type :lisp)

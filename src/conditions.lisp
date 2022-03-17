@@ -7,7 +7,7 @@
 	   #:error-to-html
            #:lw2-error
 	   #:csrf-check-failed
-	   #:lw2-client-error #:lw2-not-found-error #:lw2-user-not-found-error #:lw2-not-allowed-error #:lw2-server-error #:lw2-connection-error #:lw2-unknown-error
+	   #:lw2-client-error #:lw2-not-found-error #:lw2-user-not-found-error #:lw2-not-allowed-error #:lw2-login-required-error #:lw2-server-error #:lw2-connection-error #:lw2-unknown-error
 	   #:html-output-stream-error-p
 	   #:log-condition #:log-conditions
 	   #:log-and-ignore-errors)
@@ -64,6 +64,9 @@
 
 (define-condition lw2-not-allowed-error (lw2-client-error) ((http-return-code :allocation :class :initform 403))
   (:report "LW server reports: not allowed."))
+
+(define-condition lw2-login-required-error (lw2-client-error) ((http-return-code :allocation :class :initform 403))
+  (:report "This document is only visible to logged-in users."))
 
 (define-condition lw2-server-error (lw2-error)
   ((message :initarg :message :reader lw2-server-error-message)
