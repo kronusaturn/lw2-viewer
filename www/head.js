@@ -543,25 +543,33 @@ if (!window.requestIdleCallback) {
 
 GW.triggers = {};
 
-function addTriggerListener(name, fn) {
-	if(typeof(GW.triggers[name])=="string") return requestIdleCallback(fn, {timeout: 3000});
+function invokeTrigger(args) {
+	if(args["immediate"]) {
+		args.fn();
+	} else {
+		requestIdleCallback(args.fn, {timeout: 3000});
+	}
+}
+
+function addTriggerListener(name, args) {
+	if(typeof(GW.triggers[name])=="string") return invokeTrigger(args);
 	if(!GW.triggers[name]) GW.triggers[name] = [];
-	GW.triggers[name].push(fn);
+	GW.triggers[name].push(args);
 }
 
 function activateTrigger(name) {
 	if(Array.isArray(GW.triggers[name])) {
-		GW.triggers[name].forEach((fn) => requestIdleCallback(fn, {timeout: 3000}));
+		GW.triggers[name].forEach(invokeTrigger);
 	}
 	GW.triggers[name] = "done";
 }
 
-function addMultiTriggerListener(triggers, fn) {
+function addMultiTriggerListener(triggers, args) {
 	if(triggers.length == 1) {
-		addTriggerListener(triggers[0], fn);
+		addTriggerListener(triggers[0], args);
 	} else {
 		let trigger = triggers.pop();
-		addMultiTriggerListener(triggers, () => addTriggerListener(trigger, fn));
+		addMultiTriggerListener(triggers, {immediate: args["immediate"], fn: () => addTriggerListener(trigger, args)});
 	}
 }
 

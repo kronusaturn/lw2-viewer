@@ -668,21 +668,21 @@ function processVoteData(voteData) {
 	window.voteData = voteData;
 	initializeVoteButtons();
 	
-	addTriggerListener("postLoaded", () => {
+	addTriggerListener("postLoaded", {fn: () => {
 		queryAll(".post .post-meta .karma-value").forEach(karmaValue => {
 			let postID = karmaValue.parentNode.dataset.postId;
 			addVoteButtons(karmaValue, voteData.postVotes[postId], 'Posts');
 			karmaValue.parentElement.addClass("active-controls");
 		});
-	});
+	}});
 
-	addTriggerListener("DOMReady", () => {
+	addTriggerListener("DOMReady", {fn: () => {
 		queryAll(".comment-meta .karma-value, .comment-controls .karma-value").forEach(karmaValue => {
 			let commentID = karmaValue.getCommentId();
 			addVoteButtons(karmaValue, voteData.commentVotes[commentID], 'Comments');
 			karmaValue.parentElement.addClass("active-controls");
 		});
-	});
+	}});
 }
 
 /*****************************************/
@@ -3528,11 +3528,25 @@ function MarkdownFromHTML(text) {
 	return text;
 }
 
+/************************************/
+/* ANCHOR LINK SCROLLING WORKAROUND */
+/************************************/
+
+addTriggerListener('navBarLoaded', {immediate: true, fn: () => {
+	let hash = location.hash;
+	if(hash && !document.query(hash)) {
+		let content = document.query("#content");
+		content.style.display = "none";
+		console.log("Hiding content");
+		document.addEventListener("DOMContentLoaded", () => {content.style.display = null});
+	}
+}});
+
 /******************/
 /* INITIALIZATION */
 /******************/
 
-addTriggerListener('navBarLoaded', function () {
+addTriggerListener('navBarLoaded', {fn: function () {
 	GWLog("INITIALIZER earlyInitialize");
 	// Check to see whether we're on a mobile device (which we define as a narrow screen)
 	GW.isMobile = (window.innerWidth <= 1160);
@@ -3560,8 +3574,8 @@ addTriggerListener('navBarLoaded', function () {
 	injectQuickNavUI();
 
 	// Finish initializing when ready.
-	addTriggerListener('DOMReady', mainInitializer);
-});
+	addTriggerListener('DOMReady', {fn: mainInitializer});
+}});
 
 function mainInitializer() {
 	GWLog("INITIALIZER initialize");
@@ -3876,7 +3890,7 @@ function mainInitializer() {
 
 window.addEventListener("pageshow", badgePostsWithNewComments);
 
-addTriggerListener('DOMComplete', function () {
+addTriggerListener('DOMComplete', {fn: function () {
 	GWLog("INITIALIZER pageLayoutFinished");
 
 	postSetThemeHousekeeping();
@@ -3889,7 +3903,7 @@ addTriggerListener('DOMComplete', function () {
 // 		`@media only screen and (hover:none) { #nav-item-search input { background-color: red; }}` + 
 // 		`@media only screen and (hover:hover) { #nav-item-search input { background-color: LightGreen; }}` + 
 // 		"</style>");
-});
+}});
 
 function generateImagesOverlay() {
 	GWLog("generateImagesOverlay");
