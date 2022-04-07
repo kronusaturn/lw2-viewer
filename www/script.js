@@ -3537,7 +3537,11 @@ addTriggerListener('navBarLoaded', {immediate: true, fn: () => {
 	if(hash && !document.query(hash)) {
 		let content = document.query("#content");
 		content.style.display = "none";
-		document.addEventListener("DOMContentLoaded", () => {content.style.display = null});
+		document.addEventListener("DOMContentLoaded", () => {
+			content.style.visibility = "hidden";
+			content.style.display = null;
+			requestIdleCallback(() => {content.style.visibility = null});
+		});
 	}
 }});
 
