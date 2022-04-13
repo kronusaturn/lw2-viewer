@@ -4,7 +4,7 @@
 
 (in-package #:lw2.admin)
 
-(defun map-posts-and-comments (fn &key skip-comments)
+(defun map-posts-and-comments (fn &key skip-comments skip-posts)
   (let ((total-count (count-database-entries "post-body-json"))
 	(done-count 0)
 	(last-done nil))
@@ -14,24 +14,26 @@
 		 (format *error-output* "Finished ~A of ~A posts.~A" done-count total-count (string #\Return))
 		 (force-output *error-output*))))
       (loop
-	 for (post post-id) = (call-with-cursor "post-body-json"
-						(lambda (db cursor)
-						  (declare (ignore db))
-						  (multiple-value-bind (post post-id)
-						      (if last-done
-							  (progn
-							    (cursor-get cursor :set-range :key last-done :return-type 'existence)
-							    (cursor-get cursor :next :value-type :json))
-							  (cursor-get cursor :first :value-type :json))
-						    (list (ignore-errors (postprocess-query-result post)) post-id))))
+	 for (post post-id) = (with-cache-readonly-transaction
+				  (call-with-cursor "post-body-json"
+						    (lambda (db cursor)
+						      (declare (ignore db))
+						      (multiple-value-bind (post post-id)
+							  (if last-done
+							      (progn
+								(cursor-get cursor :set-range :key last-done :return-type 'existence)
+								(cursor-get cursor :next :value-type :json))
+							      (cursor-get cursor :first :value-type :json))
+							(list (ignore-errors (postprocess-query-result post)) post-id)))))
 	 while post-id
 	 do (when (read-char-no-hang)
 	      (format *error-output* "Aborted.~%")
 	      (return-from map-posts-and-comments (values)))
 	 do (report-progress)
 	 do (progn
-	      (with-simple-restart (continue "Ignore this post and continue.")
-		(funcall fn post post-id))
+	      (unless skip-posts
+		(with-simple-restart (continue "Ignore this post and continue.")
+		  (funcall fn post post-id)))
 	      (unless skip-comments
 		(ignore-errors
 		  (let ((comments (if (cdr (assoc :question post))
