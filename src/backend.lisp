@@ -29,6 +29,7 @@
 	   #:markdown-source
 	   #:get-user
            #:get-notifications #:check-notifications
+	   #:mark-comment-replied #:check-comment-replied
 	   #:lw2-search-query #:get-post-title #:get-post-slug #:get-slug-postid #:get-username #:get-user-full-name #:get-user-slug
 	   #:do-wl-rest-mutate #:do-wl-rest-query #:do-wl-create-tag)
   (:recycle #:lw2-viewer)
@@ -833,6 +834,19 @@
    (declare (ignore user-id auth-token full since))
    (let ((*notifications-base-terms* (remove :null *notifications-base-terms* :key #'cdr)))
      (call-next-method))))
+
+(define-cache-database 'backend-lw2-legacy "comment-reply-by-user")
+
+(define-backend-function mark-comment-replied (reply)
+  (backend-lw2-legacy
+   (alexandria:when-let* ((parent-comment-id (cdr (assoc :parent-comment-id reply)))
+			  (reply-id (cdr (assoc :--id reply)))
+			  (user-id (cdr (assoc :user-id reply))))
+     (cache-put "comment-reply-by-user" (concatenate 'string parent-comment-id " " user-id) reply-id))))
+
+(define-backend-function check-comment-replied (comment-id user-id)
+  (backend-lw2-legacy
+   (cache-get "comment-reply-by-user" (concatenate 'string comment-id " " user-id))))
 
 (define-backend-function get-user-page-items (user-id request-type &key (offset 0) (limit 21) (sort-type :date) drafts
 						      (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*) auth-token)

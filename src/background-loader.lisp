@@ -52,7 +52,8 @@
 							  #'> :key (lambda (c) (cdr (assoc :base-score c))))))
 			    (cache-update cache-database post-id (comments-list-to-graphql-json new-post-comments))))
 		      (when-let ((user-id (cdr (assoc :user-id comment))))
-			(cache-mark-stale "user-page-items" user-id))))
+			(cache-mark-stale "user-page-items" user-id))
+		      (mark-comment-replied comment)))
 		do (log-and-ignore-errors
 		    (lw2.clean-html:clean-html (cdr (assoc :html-body comment)))))
 	     (setf last-comment-processed (cdr (assoc :--id (first recent-comments)))))))
