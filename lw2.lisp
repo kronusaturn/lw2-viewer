@@ -1491,9 +1491,10 @@ signaled condition to *HTML-OUTPUT*."
         <h1 class="post-title">(safe (clean-text-to-html name))</h1>
         <div class="post-meta">
           <span>(if core "Core ")(if wiki-only "Wiki" "Tag")</span>
-          <span>Last edit: (pretty-time-html edited-at)
-                \ by <a class="author" href=("/users/~A" (get-user-slug user-id))>(get-username user-id)</a>
-          </span>
+	  (when (and (nonempty-string edited-at) (nonempty-string user-id))
+            <span>Last edit: (pretty-time-html edited-at)
+                  \ by <a class="author" href=("/users/~A" (get-user-slug user-id))>(get-username user-id)</a>
+            </span>)
         </div>)
       (when html
 	<div class="tag-description body-text">(with-html-stream-output (:stream stream) (let ((*memoized-output-stream* stream)) (clean-html* html)))</div>))))
