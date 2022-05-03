@@ -3534,7 +3534,7 @@ function MarkdownFromHTML(text) {
 
 addTriggerListener('navBarLoaded', {immediate: true, fn: () => {
 	let hash = location.hash;
-	if(hash && !document.query(hash)) {
+	if(hash && hash !== "#top" && !document.query(hash)) {
 		let content = document.query("#content");
 		content.style.display = "none";
 		document.addEventListener("DOMContentLoaded", () => {
