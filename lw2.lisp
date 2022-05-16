@@ -1840,9 +1840,12 @@ signaled condition to *HTML-OUTPUT*."
                                    ("signup-password" "Password" "password" "new-password")
                                    ("signup-password2" "Confirm password" "password" "new-password"))
                                  "Create account")
-                    (if-let (main-site-title (main-site-title *current-site*))
-			    (format out-stream "<div class=\"login-tip\"><span>Tip:</span> You can log in with the same username and password that you use on ~A~:*. Creating an account here also creates one on ~A.</div>"
-				    main-site-title))
+                    (when-let (main-site-title (main-site-title *current-site*))
+		      (when (typep *current-site* 'ea-forum-viewer-site)
+			<div class="error-box"><span style="font-weight:bold">WARNING:</span> EA Forum recently switched to a new single sign-on system. Accounts created with the new system do not currently work with GreaterWrong.\
+			      Accounts created before the new system and accounts created through GreaterWrong continue to work.</div>)
+		      (format out-stream "<div class=\"login-tip\"><span>Tip:</span> You can log in with the same username and password that you use on ~A~:*. Creating an account here also creates one on ~A.</div>"
+			      main-site-title))
 		    (format out-stream "</div>"))))
      (finish-login (username user-id auth-token error-message &optional expires)
        (cond
