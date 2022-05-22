@@ -558,7 +558,7 @@ signaled condition to *HTML-OUTPUT*."
 	  (with-delimited-writer (out-stream delimit :begin "<script>" :end "</script>")
 	    (when site-domain
 	      (delimit)
-	      (set-script-variables ("document.domain" site-domain)))
+	      (set-script-variables ("document.domain" site-domain))) ; Requires origin-agent-cluster header, see below
 	    (unless preview
 	      (delimit)
 	      (when (typep *current-site* 'login-site)
@@ -792,6 +792,8 @@ signaled condition to *HTML-OUTPUT*."
 		 (values t nil)))
 	(when (not *revalidate-default*)
 	  (setf (hunchentoot:header-out :cache-control) (format nil "public, max-age=~A" (* 5 60))))
+	(when (site-domain *current-site*)
+	  (setf (hunchentoot:header-out :origin-agent-cluster) "?0")) ; Allow document.domain in Chrome: https://developer.chrome.com/blog/immutable-document-domain/
 	(let ((*memoized-output-without-hyphens*
 	       ;; Soft hyphen characters mess up middle-click paste and screen readers, so try to identify whether they are necessary.
 	       ;; See https://caniuse.com/?search=hyphens
