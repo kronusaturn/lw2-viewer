@@ -889,7 +889,7 @@ function injectContentWidthSelector() {
 
 	// Inject transitions CSS, if animating changes is enabled.
 	if (GW.adjustmentTransitions) {
-		query("head").insertAdjacentHTML("beforeend", 
+		insertHeadHTML(
 			"<style id='width-transition'>" + 
 			`#content,
 			#ui-elements-container,
@@ -940,7 +940,7 @@ function injectThemeSelector() {
 
 	// Inject transitions CSS, if animating changes is enabled.
 	if (GW.adjustmentTransitions) {
-		query("head").insertAdjacentHTML("beforeend", 
+		insertHeadHTML(
 			"<style id='theme-fade-transition'>" + 
 			`body {
 				transition:
@@ -1212,7 +1212,7 @@ GW.themeUnloadCallback_less = (toTheme = "") => {
 
 GW.themeLoadCallback_dark = (fromTheme = "") => {
 	GWLog("themeLoadCallback_dark");
-	query("head").insertAdjacentHTML("beforeend", 
+	insertHeadHTML(
 		"<style id='dark-theme-adjustments'>" + 
 		`.markdown-reference-link a { color: #d200cf; filter: invert(100%); }` + 
 		`#bottom-bar.decorative::before { filter: invert(100%); }` +
@@ -3636,7 +3636,7 @@ function mainInitializer() {
 		}
 	}
 	if (getQueryVariable("chrono") == "t") {
-		query("head").insertAdjacentHTML("beforeend", "<style>.comment-minimize-button::after { display: none; }</style>");
+		insertHeadHTML("<style>.comment-minimize-button::after { display: none; }</style>");
 	}
 
 	// On mobile, replace the labels for the checkboxes on the edit post form
@@ -3850,7 +3850,7 @@ function mainInitializer() {
 		removeElement("style", styleTag.parentElement);
 	});
 	if (aggregatedStyles != "") {
-		query("head").insertAdjacentHTML("beforeend", "<style id='mathjax-styles'>" + aggregatedStyles + "</style>");
+		insertHeadHTML("<style id='mathjax-styles'>" + aggregatedStyles + "</style>");
 	}
 
 	// Add listeners to switch between word count and read time.
@@ -3902,7 +3902,7 @@ addTriggerListener('DOMComplete', {fn: function () {
 
 	// FOR TESTING ONLY, COMMENT WHEN DEPLOYING.
 // 	query("input[type='search']").value = GW.isMobile;
-// 	query("head").insertAdjacentHTML("beforeend", "<style>" + 
+// 	insertHeadHTML("<style>" +
 // 		`@media only screen and (hover:none) { #nav-item-search input { background-color: red; }}` + 
 // 		`@media only screen and (hover:hover) { #nav-item-search input { background-color: LightGreen; }}` + 
 // 		"</style>");

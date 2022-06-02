@@ -46,6 +46,12 @@ Element.prototype.toggleClass = function(className) {
 		this.addClass(className);
 }
 
+/* DOM helpers */
+
+function insertHeadHTML(html) {
+	document.head.insertAdjacentHTML("beforeend", html);
+}
+
 /********************/
 /* QUERYING THE DOM */
 /********************/
@@ -187,7 +193,7 @@ function applyFilters(filters) {
 	// Update the style tag (if it’s already been loaded).
 	(query("#theme-tweak")||{}).innerHTML = fullStyleString;
 }
-query("head").insertAdjacentHTML("beforeend", "<style id='theme-tweak'></style>");	
+insertHeadHTML("<style id='theme-tweak'></style>");
 GW.currentFilters = JSON.parse(localStorage.getItem("theme-tweaks") || "{ }");
 applyFilters(GW.currentFilters);
 
@@ -195,7 +201,7 @@ applyFilters(GW.currentFilters);
 /* TEXT SIZE ADJUSTMENT */
 /************************/
 
-query("head").insertAdjacentHTML("beforeend", "<style id='text-zoom'></style>");
+insertHeadHTML("<style id='text-zoom'></style>");
 function setTextZoom(zoomFactor) {
 	if (!zoomFactor) return;
 
@@ -251,12 +257,12 @@ GW.themeOptions = [
 
 // While everything's being loaded, hide the authors and karma values.
 if (localStorage.getItem("antikibitzer") == "true") {
-	query("head").insertAdjacentHTML("beforeend", "<style id='antikibitzer-temp'>" +
+	insertHeadHTML("<style id='antikibitzer-temp'>" +
 	`.author, .inline-author, .karma-value, .individual-thread-page > h1 { visibility: hidden; }` + 
 	"</style>");
 
 	if(document.location.pathname.match(new RegExp("/posts/.*/comment/"))) {
-		query("head").insertAdjacentHTML("beforeend", "<"+"title class='fake-title'></title>");
+		insertHeadHTML("<"+"title class='fake-title'></title>");
 	}
 }
 
@@ -520,7 +526,7 @@ function prettyDate() {
 
 
 // Hide elements that require javascript until ready.
-query("head").insertAdjacentHTML("beforeend", "<style>.only-without-js { display: none; }</style><style id='hide-until-init'>.hide-until-init { visibility: hidden; }</style>");
+insertHeadHTML("<style>.only-without-js { display: none; }</style><style id='hide-until-init'>.hide-until-init { visibility: hidden; }</style>");
 
 /****************/
 /* SERVER CALLS */
