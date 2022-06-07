@@ -97,16 +97,22 @@
 (sb-ext:defglobal *image-threads* (make-hash-table :test 'equal :synchronized t))
 (defparameter *current-version* 3)
 
+(defun filename-to-uri (filename)
+  (concatenate 'base-string "/proxy-assets/" filename))
+
+(defun uri-to-pathname (uri)
+  (concatenate 'base-string "www" uri))
+
 (defun process-image (uri)
   (let* ((filename (multiple-value-bind (r1 r2) (city-hash:city-hash-128 (babel:string-to-octets uri)) (format nil "~32R" (dpb r1 (byte 64 64) r2))))
-	 (proxy-uri (format nil "/proxy-assets/~A" filename))
-	 (pathname (format nil "www~A" proxy-uri)))
+	 (proxy-uri (filename-to-uri filename))
+	 (pathname (uri-to-pathname proxy-uri)))
     (download-file-with-wayback-fallback uri pathname)
     (let* ((image-statistics (image-statistics pathname))
 	   (inverted-uri (and (eq 1 (cdr (assoc :animation-frames image-statistics)))
 			      (image-invertible pathname)
-			      (format nil "~A-inverted" proxy-uri)))
-	   (inverted-pathname (and inverted-uri (format nil "www~A" inverted-uri))))
+			      (concatenate 'base-string proxy-uri "-inverted")))
+	   (inverted-pathname (and inverted-uri (uri-to-pathname inverted-uri))))
       (when inverted-uri (invert-image pathname inverted-pathname))
       (alist* :version *current-version*
 	      :uri uri
@@ -135,9 +141,15 @@
 				   :name "image processing thread"))))))
 		 (sb-thread:join-thread thread))))
       (let ((cached-data (cache-get "dynamic-content-images" key :key-type :byte-vector :value-type :json)))
-	(if (and cached-data (eql (cdr (assoc :version cached-data)) *current-version*))
-	    cached-data
-	    (make-image-thread))))))
+	(alist-bind ((proxy-uri (or null simple-string))
+		     (inverted-uri (or null simple-string))
+		     (version))
+		    cached-data
+	  (if (and cached-data (eql version *current-version*)
+		   proxy-uri (probe-file (uri-to-pathname proxy-uri))
+		   (or (not inverted-uri) (probe-file (uri-to-pathname inverted-uri))))
+	      cached-data
+	      (make-image-thread)))))))
 
 (defun dynamic-image (uri container-tag-name container-attributes img-attributes)
   (declare (simple-string uri container-tag-name))
