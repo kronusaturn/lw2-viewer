@@ -58,19 +58,46 @@
               (typecase votes (integer votes) (list (length votes))))
       ""))
 
-(defun vote-buttons (base-score &key (with-buttons t) vote-count post-id af-score as-text)
+(defun vote-buttons (base-score &key (with-buttons t) vote-count post-id af-score as-text extended-score all-votes)
   (labels ((button (vote-type)
 	     (when with-buttons
 	       <button type="button" class=("vote ~A" vote-type) data-vote-type=vote-type data-target-type=(if post-id "Posts" "Comments") tabindex="-1" disabled></button>))
 	   (text ()
 	     (if (and af-score (/= af-score 0))
 		 (format nil "LW: ~A AF: ~A" base-score af-score)
-		 (pretty-number base-score "point"))))
-    (when base-score
+		 (pretty-number base-score "point")))
+	   (score-counts ()
+	     (let ((hash (make-hash-table :test 'equal)))
+	       (loop for vote in all-votes
+		  for agreement = (cdr (assoc :agreement (cdr (assoc :extended-vote-type vote))))
+		  do (when agreement
+		       (incf (gethash agreement hash 0))))
+	       hash))
+	   (extended-text (agree-count disagree-count)
+	     (format nil "~D : ~D" agree-count disagree-count))
+	   (extended-tooltip (score-counts agree-count disagree-count)
+	     (format nil "~D agree (~D strongly), ~D disagree (~D strongly); meaningless number: ~D"
+		     agree-count
+		     (gethash "bigUpvote" score-counts 0)
+		     disagree-count
+		     (gethash "bigDownvote" score-counts 0)
+		     (cdr (assoc :agreement extended-score))))
+	   (voting (class tooltip text)
+	     <div class=class data-post-id=post-id>
+	       (button "upvote")
+	       <span class="karma-value" title=tooltip>(safe text)</span>
+	       (button "downvote")
+	     </div>))
+    (when (or base-score extended-score)
       (if as-text
 	  (text)
-	  <div class="karma" data-post-id=post-id>
-            (button "upvote")
-            <span class="karma-value" title=(votes-to-tooltip vote-count)>(safe (text))</span>
-            (button "downvote")
-          </div>))))
+	  (progn
+	    (when base-score
+	      (voting "karma" (votes-to-tooltip vote-count) (text)))
+	    (when extended-score
+	      (let* ((score-counts (score-counts))
+		     (agree-count (+ (gethash "smallUpvote" score-counts 0) (gethash "bigUpvote" score-counts 0)))
+		     (disagree-count (+ (gethash "smallDownvote" score-counts 0) (gethash "bigDownvote" score-counts 0))))
+		(voting "agreement"
+			(extended-tooltip score-counts agree-count disagree-count)
+			(extended-text agree-count disagree-count)))))))))
