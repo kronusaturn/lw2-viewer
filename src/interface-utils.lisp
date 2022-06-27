@@ -74,7 +74,7 @@
 		       (incf (gethash agreement hash 0))))
 	       hash))
 	   (extended-text (agree-count disagree-count)
-	     (format nil "~D : ~D" agree-count disagree-count))
+	     (format nil "~D ∶ ~D" agree-count disagree-count))
 	   (extended-tooltip (score-counts agree-count disagree-count)
 	     (format nil "~D agree (~D strongly), ~D disagree (~D strongly); meaningless number: ~D"
 		     agree-count
