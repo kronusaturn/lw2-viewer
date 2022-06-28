@@ -691,8 +691,10 @@
 		  (cond
 		    ((not (plump:attribute node "href"))
 		     (move-children-out-of-node node :keep t))
-		    ((and (ppcre:scan "^\s*https?://" (plump:text node))
-			  (not (find #\HORIZONTAL_ELLIPSIS (plump:text node))))
+		    ((or
+		      (and (ppcre:scan "^\s*https?://" (plump:text node))
+			   (not (find #\HORIZONTAL_ELLIPSIS (plump:text node))))
+		      (notany (lambda (attr) (nonempty-string (plump:attribute node attr))) '("href" "name" "id")))
 		     (flatten-element node))
 		    (t (tagbody start
 			  (let* ((next-sibling (plump:next-sibling node))
