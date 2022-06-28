@@ -684,7 +684,7 @@ function processVoteData(voteData) {
 	window.voteData = voteData;
 	initializeVoteButtons();
 	
-	addTriggerListener("postLoaded", {fn: () => {
+	addTriggerListener("postLoaded", {priority: 3000, fn: () => {
 		queryAll(".post .post-meta .karma-value").forEach(karmaValue => {
 			let postID = karmaValue.parentNode.dataset.postId;
 			addVoteButtons(karmaValue, voteData.Post[postId], 'Post');
@@ -692,7 +692,7 @@ function processVoteData(voteData) {
 		});
 	}});
 
-	addTriggerListener("DOMReady", {fn: () => {
+	addTriggerListener("DOMReady", {priority: 3000, fn: () => {
 		queryAll(".comment-meta .karma-value, .comment-controls .karma-value").forEach(karmaValue => {
 			let commentID = karmaValue.getCommentId();
 			addVoteButtons(karmaValue, voteData.Comment[commentID], 'Comment');
@@ -3548,7 +3548,7 @@ function MarkdownFromHTML(text) {
 /* ANCHOR LINK SCROLLING WORKAROUND */
 /************************************/
 
-addTriggerListener('navBarLoaded', {immediate: true, fn: () => {
+addTriggerListener('navBarLoaded', {priority: -1, fn: () => {
 	let hash = location.hash;
 	if(hash && hash !== "#top" && !document.query(hash)) {
 		let content = document.query("#content");
@@ -3556,7 +3556,7 @@ addTriggerListener('navBarLoaded', {immediate: true, fn: () => {
 		document.addEventListener("DOMContentLoaded", () => {
 			content.style.visibility = "hidden";
 			content.style.display = null;
-			requestIdleCallback(() => {content.style.visibility = null});
+			requestAnimationFrame(() => {content.style.visibility = null});
 		});
 	}
 }});
@@ -3565,7 +3565,7 @@ addTriggerListener('navBarLoaded', {immediate: true, fn: () => {
 /* INITIALIZATION */
 /******************/
 
-addTriggerListener('navBarLoaded', {fn: function () {
+addTriggerListener('navBarLoaded', {priority: 3000, fn: function () {
 	GWLog("INITIALIZER earlyInitialize");
 	// Check to see whether we're on a mobile device (which we define as a narrow screen)
 	GW.isMobile = (window.innerWidth <= 1160);
@@ -3593,7 +3593,7 @@ addTriggerListener('navBarLoaded', {fn: function () {
 	injectQuickNavUI();
 
 	// Finish initializing when ready.
-	addTriggerListener('DOMReady', {fn: mainInitializer});
+	addTriggerListener('DOMReady', {priority: 100, fn: mainInitializer});
 }});
 
 function mainInitializer() {
@@ -3901,6 +3901,8 @@ function mainInitializer() {
 
 	// Show elements now that javascript is ready.
 	removeElement("#hide-until-init");
+
+	activateTrigger("pageLayoutFinished");
 }
 
 /*************************/
@@ -3909,7 +3911,7 @@ function mainInitializer() {
 
 window.addEventListener("pageshow", badgePostsWithNewComments);
 
-addTriggerListener('DOMComplete', {fn: function () {
+addTriggerListener('pageLayoutFinished', {priority: 100, fn: function () {
 	GWLog("INITIALIZER pageLayoutFinished");
 
 	postSetThemeHousekeeping();

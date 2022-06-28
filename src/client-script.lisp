@@ -58,4 +58,4 @@
 
 (defun activate-client-trigger (trigger-name)
   (with-html-stream-output (:stream stream)
-    (format stream "<script async src=\"data:text/javascript,activateTrigger('~A');\"></script>" trigger-name)))
+    (format stream "<script>activateTrigger('~A');</script>" trigger-name)))

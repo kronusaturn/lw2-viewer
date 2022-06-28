@@ -553,10 +553,12 @@ if (!window.requestIdleCallback) {
 GW.triggers = {};
 
 function invokeTrigger(args) {
-	if(args["immediate"]) {
+	if(args.priority < 0) {
 		args.fn();
+	} else if(args.priority > 0) {
+		requestIdleCallback(args.fn, {timeout: args.priority});
 	} else {
-		requestIdleCallback(args.fn, {timeout: 3000});
+		setTimeout(args.fn, 0);
 	}
 }
 
