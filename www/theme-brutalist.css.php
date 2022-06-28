@@ -1,5 +1,5 @@
 <?php
-	$UI_font = "'Anonymous Pro', monospace";
+	$UI_font = "'Anonymous Pro', 'GW-Symbols', monospace";
 	$text_font = "'Input Sans', sans-serif"
 ?>
 

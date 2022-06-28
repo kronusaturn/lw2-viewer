@@ -5785,7 +5785,7 @@ a.comment-parent-link::after {
 body {
 	color: #444;
 	background-color: #888;
-	font-family: 'Proxima Nova';
+	font-family: 'Proxima Nova', 'GW-Symbols', sans-serif;
 	font-weight: 300;
 }
 #content {
@@ -5987,7 +5987,7 @@ body {
 /*=====================*/
 
 .sublevel-nav.sort .sublevel-item {
-	font-family: 'Proxima Nova';
+	font-family: 'Proxima Nova', 'GW-Symbols', sans-serif;
 	padding: 8px 8px 6px 8px;
 	text-transform: uppercase;
 	pointer-events: auto;
@@ -6258,7 +6258,7 @@ body {
 h1.listing {
 	margin: 0.7em 20px 0.1em 20px;
 	max-width: calc(100% - 40px);
-	font-family: 'Proxima Nova', 'Font Awesome';
+	font-family: 'Proxima Nova', 'GW-Symbols', sans-serif, 'Font Awesome';
 	font-size: 1.5rem;
 }
 h1.listing .post-title-link {
@@ -6730,7 +6730,7 @@ a.post-section.alignment-forum:hover::before {
 
 .post.link-post a.link-post-link {
 	text-decoration: none;
-	font-family: 'Proxima Nova';
+	font-family: 'Proxima Nova', 'GW-Symbols', sans-serif;
 	font-weight: 600;
 }
 .post.link-post a.link-post-link:hover {
@@ -7028,7 +7028,7 @@ div.comment-child-links a {
 	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
 }
 .comment-minimize-button::after {
-	font-family: 'Proxima Nova';
+	font-family: 'Proxima Nova', 'GW-Symbols', sans-serif;
 	color: #777;
 }
 .comment-minimize-button.maximized::after {
@@ -7507,7 +7507,7 @@ input::selection {
 }
 
 #content.about-page .accesskey-table {
-	font-family: 'Proxima Nova';
+	font-family: 'Proxima Nova', 'GW-Symbols', sans-serif;
 	border-color: #ddd;
 }
 
@@ -7727,7 +7727,7 @@ input::selection {
 	}
 	#quick-nav-ui a::after,
 	#new-comment-nav-ui::before {
-		font-family: 'Proxima Nova';
+		font-family: 'Proxima Nova', 'GW-Symbols', sans-serif;
 		font-weight: bold;
 		box-shadow:
 			0 0 1px 0 #999,
@@ -7770,7 +7770,7 @@ input::selection {
 		border-radius: 0 7px 7px 0;
 	}
 	#new-comment-nav-ui button::after {
-		font-family: 'Proxima Nova';
+		font-family: 'Proxima Nova', 'GW-Symbols', sans-serif;
 	}
 
 	#hns-date-picker.engaged {

@@ -1,5 +1,5 @@
 <?php
-	$UI_font = "'Mundo Sans', 'Helvetica', sans-serif";
+	$UI_font = "'Mundo Sans', 'Helvetica', 'GW-Symbols', sans-serif";
 	$headings_font = "'Caecilia', 'Helvetica', sans-serif";
 	$text_font = "'Source Serif Pro', 'Helvetica', sans-serif";
 	$hyperlink_color = "#92c396";

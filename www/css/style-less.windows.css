@@ -5787,7 +5787,7 @@ a.comment-parent-link::after {
 
 body {
 	color: #000;
-	font-family: 'Mundo Sans', 'Helvetica', sans-serif;
+	font-family: 'Mundo Sans', 'Helvetica', 'GW-Symbols', sans-serif;
 	font-weight: 300;
 	background-color: #fff;
 }
@@ -7059,7 +7059,7 @@ h1.listing.own-post-listing {
 /*===================*/
 
 .contents {
-	font-family: 'Mundo Sans', 'Helvetica', sans-serif;
+	font-family: 'Mundo Sans', 'Helvetica', 'GW-Symbols', sans-serif;
 	padding-top: 0;
 	margin-top: 1em;
 	background-color: #fff;
@@ -7309,7 +7309,7 @@ a.post-section.alignment-forum:hover::before {
 /*============*/
 
 .post.link-post a.link-post-link {
-	font-family: 'Mundo Sans', 'Helvetica', sans-serif;
+	font-family: 'Mundo Sans', 'Helvetica', 'GW-Symbols', sans-serif;
 }
 .post.link-post a.link-post-link::before {
 	opacity: 0.6;
@@ -7660,7 +7660,7 @@ div.comment-child-links a {
 	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
 }
 .comment-minimize-button::after {
-	font-family: 'Mundo Sans', 'Helvetica', sans-serif;
+	font-family: 'Mundo Sans', 'Helvetica', 'GW-Symbols', sans-serif;
 	color: #999;
 }
 .comment-minimize-button.maximized::after {
@@ -7880,7 +7880,7 @@ div.comment-child-links a {
 }
 
 .guiedit::after {
-	font-family: 'Mundo Sans', 'Helvetica', sans-serif;
+	font-family: 'Mundo Sans', 'Helvetica', 'GW-Symbols', sans-serif;
 	color: #999;
 	font-weight: 300;
 	text-shadow: 0 0 0 #999;
@@ -8205,7 +8205,7 @@ strong, b {
 }
 
 #content.about-page .accesskey-table {
-	font-family: 'Mundo Sans', 'Helvetica', sans-serif;
+	font-family: 'Mundo Sans', 'Helvetica', 'GW-Symbols', sans-serif;
 	border-color: #ddd;
 }
 
@@ -8447,7 +8447,7 @@ strong, b {
 	}
 	#quick-nav-ui a::after,
 	#new-comment-nav-ui::before {
-		font-family: 'Mundo Sans', 'Helvetica', sans-serif;
+		font-family: 'Mundo Sans', 'Helvetica', 'GW-Symbols', sans-serif;
 		font-weight: bold;
 		box-shadow:
 			0 0 1px 0 #fff,
@@ -8485,7 +8485,7 @@ strong, b {
 		border-radius: 0 7px 7px 0;
 	}
 	#new-comment-nav-ui button::after {
-		font-family: 'Mundo Sans', 'Helvetica', sans-serif;
+		font-family: 'Mundo Sans', 'Helvetica', 'GW-Symbols', sans-serif;
 	}
 	#hns-date-picker {
 		background-color: #fff;

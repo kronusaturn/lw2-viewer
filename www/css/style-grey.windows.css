@@ -5788,7 +5788,7 @@ a.comment-parent-link::after {
 body {
 	color: #000;
 	background-color: #eee;
-	font-family: 'Concourse', 'a_Avante', Arial, sans-serif;
+	font-family: 'Concourse', 'a_Avante', Arial, 'GW-Symbols', sans-serif;
 	font-feature-settings: 'ss07';
 }
 #content {
@@ -6051,7 +6051,7 @@ body {
 /*=====================*/
 
 .sublevel-nav.sort .sublevel-item {
-	font-family: 'Concourse', 'a_Avante', Arial, sans-serif;
+	font-family: 'Concourse', 'a_Avante', Arial, 'GW-Symbols', sans-serif;
 	letter-spacing: 0.5px;
 	padding: 6px 7px;
 	text-transform: uppercase;
@@ -6317,7 +6317,7 @@ h1.listing {
 	margin: 0.6em 20px 0 20px;
 	max-width: calc(100% - 40px);
 	line-height: 1.1;
-	font-family: 'Concourse', 'a_Avante', Arial, sans-serif, 'Font Awesome';
+	font-family: 'Concourse', 'a_Avante', Arial, 'GW-Symbols', sans-serif, 'Font Awesome';
 	font-size: 1.5rem;
 }
 h1.listing .post-title-link {
@@ -6555,7 +6555,7 @@ h1.listing.own-post-listing {
 /*===================*/
 
 .contents {
-	font-family: 'Concourse', 'a_Avante', Arial, sans-serif;
+	font-family: 'Concourse', 'a_Avante', Arial, 'GW-Symbols', sans-serif;
 	border: 1px solid #ddd;
 	background-color: #eee;
 }
@@ -6764,7 +6764,7 @@ a.post-section.alignment-forum:hover::before {
 
 .post.link-post a.link-post-link {
 	text-decoration: none;
-	font-family: 'Concourse', 'a_Avante', Arial, sans-serif;
+	font-family: 'Concourse', 'a_Avante', Arial, 'GW-Symbols', sans-serif;
 	font-weight: 600;
 }
 .post.link-post a.link-post-link:hover {
@@ -7045,7 +7045,7 @@ div.comment-child-links a {
 	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
 }
 .comment-minimize-button::after {
-	font-family: 'Concourse', 'a_Avante', Arial, sans-serif;
+	font-family: 'Concourse', 'a_Avante', Arial, 'GW-Symbols', sans-serif;
 	color: #777;
 }
 .comment-minimize-button.maximized::after {
@@ -7264,7 +7264,7 @@ button.guiedit {
 }
 
 button.guiedit::after {
-	font-family: 'Concourse', 'a_Avante', Arial, sans-serif;
+	font-family: 'Concourse', 'a_Avante', Arial, 'GW-Symbols', sans-serif;
 	color: #777;
 	text-shadow: none;
 }
@@ -7407,7 +7407,7 @@ input[type='submit']:active {
 .body-text h1,
 .body-text h2,
 .body-text h4 {
-	font-family: 'Concourse', 'a_Avante', Arial, sans-serif;
+	font-family: 'Concourse', 'a_Avante', Arial, 'GW-Symbols', sans-serif;
 }
 .body-text h3,
 .body-text h5,
@@ -7528,7 +7528,7 @@ select {
 }
 
 #content.about-page .accesskey-table {
-	font-family: 'Concourse', 'a_Avante', Arial, sans-serif;
+	font-family: 'Concourse', 'a_Avante', Arial, 'GW-Symbols', sans-serif;
 	border-color: #ddd;
 }
 
@@ -7780,7 +7780,7 @@ select {
 	}
 	#quick-nav-ui a::after,
 	#new-comment-nav-ui::before {
-		font-family: 'Concourse', 'a_Avante', Arial, sans-serif;
+		font-family: 'Concourse', 'a_Avante', Arial, 'GW-Symbols', sans-serif;
 		font-weight: 600;
 		box-shadow:
 			0 0 1px 0 #fff,
@@ -7816,7 +7816,7 @@ select {
 		border-radius: 7px 0 0 7px;
 	}
 	#new-comment-nav-ui button::after {
-		font-family: 'Concourse', 'a_Avante', Arial, sans-serif;
+		font-family: 'Concourse', 'a_Avante', Arial, 'GW-Symbols', sans-serif;
 	}
 	#new-comment-nav-ui .new-comment-sequential-nav-button.new-comment-next {
 		border-radius: 0 7px 7px 0;

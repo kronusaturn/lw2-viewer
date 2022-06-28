@@ -5785,7 +5785,7 @@ a.comment-parent-link::after {
 body {
 	color: #000;
 	background-color: #fff;
-	font-family: 'Anonymous Pro', monospace;
+	font-family: 'Anonymous Pro', 'GW-Symbols', monospace;
 }
 #content {
 	line-height: 1.55;
@@ -6194,7 +6194,7 @@ body {
 h1.listing {
 	margin: 0.7em 20px 0.1em 20px;
 	max-width: calc(100% - 40px);
-	font-family: 'Anonymous Pro', monospace, 'Font Awesome';
+	font-family: 'Anonymous Pro', 'GW-Symbols', monospace, 'Font Awesome';
 	font-size: 1.625rem;
 }
 
@@ -6424,7 +6424,7 @@ h1.listing.own-post-listing {
 /*===================*/
 
 .contents {
-	font-family: 'Anonymous Pro', monospace;
+	font-family: 'Anonymous Pro', 'GW-Symbols', monospace;
 	border: 2px solid #000;
 	background-color: #fff;
 }
@@ -6494,7 +6494,7 @@ a.post-section:hover::before {
 /*============*/
 
 .post.link-post a.link-post-link {
-	font-family: 'Anonymous Pro', monospace;
+	font-family: 'Anonymous Pro', 'GW-Symbols', monospace;
 	font-weight: 600;
 	font-size: 1.25em;
 	border: none;
@@ -6803,7 +6803,7 @@ div.comment-child-links a {
 
 .comment-minimize-button {
 	color: #ccc;
-	font-family: Font Awesome, 'Anonymous Pro', monospace;
+	font-family: Font Awesome, 'Anonymous Pro', 'GW-Symbols', monospace;
 }
 .comment-minimize-button:hover {
 	color: #aaa;
@@ -6979,7 +6979,7 @@ div.comment-child-links a {
 }
 
 button.guiedit {
-	font-family: Font Awesome, 'Anonymous Pro', monospace;
+	font-family: Font Awesome, 'Anonymous Pro', 'GW-Symbols', monospace;
 	color: #fff;
 	border: none;
 }
@@ -7123,7 +7123,7 @@ input[type='submit']:active {
 .body-text h1,
 .body-text h2,
 .body-text h4 {
-	font-family: 'Anonymous Pro', monospace;
+	font-family: 'Anonymous Pro', 'GW-Symbols', monospace;
 }
 .body-text h3,
 .body-text h5,
@@ -7232,7 +7232,7 @@ select {
 }
 
 #content.about-page .accesskey-table {
-	font-family: 'Anonymous Pro', monospace;
+	font-family: 'Anonymous Pro', 'GW-Symbols', monospace;
 	border-color: #ddd;
 }
 
@@ -7494,7 +7494,7 @@ select {
 	}
 	#quick-nav-ui a::after,
 	#new-comment-nav-ui::before {
-		font-family: 'Anonymous Pro', monospace;
+		font-family: 'Anonymous Pro', 'GW-Symbols', monospace;
 		font-weight: bold;
 		font-size: 0.5rem;
 		background-color: #fff;
@@ -7522,7 +7522,7 @@ select {
 		color: #bbb;
 	}
 	#new-comment-nav-ui button::after {
-		font-family: 'Anonymous Pro', monospace;
+		font-family: 'Anonymous Pro', 'GW-Symbols', monospace;
 	}
 
 	#hns-date-picker {

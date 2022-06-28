@@ -5795,7 +5795,7 @@ a.comment-parent-link::after {
 body {
 	color: #fff;
 	background-color: #232323;
-	font-family: 'Concourse', 'a_Avante', 'Assistant', Arial, sans-serif;
+	font-family: 'Concourse', 'a_Avante', 'Assistant', Arial, 'GW-Symbols', sans-serif;
 	font-feature-settings: 'ss07';
 }
 #content {
@@ -6039,7 +6039,7 @@ body {
 /*=====================*/
 
 .sublevel-nav.sort .sublevel-item {
-	font-family: 'Concourse', 'a_Avante', 'Assistant', Arial, sans-serif;
+	font-family: 'Concourse', 'a_Avante', 'Assistant', Arial, 'GW-Symbols', sans-serif;
 	letter-spacing: 0.5px;
 	padding: 7px 7px 5px 7px;
 	text-transform: uppercase;
@@ -6292,7 +6292,7 @@ body {
 /*==========*/
 
 h1.listing {
-	font-family: 'Concourse', 'a_Avante', 'Assistant', Arial, sans-serif, 'Font Awesome', 'Font Awesome 5 Free';
+	font-family: 'Concourse', 'a_Avante', 'Assistant', Arial, 'GW-Symbols', sans-serif, 'Font Awesome', 'Font Awesome 5 Free';
 	font-weight: 700;
 	margin: 0.7em 20px 0 20px;
 	max-width: calc(100% - 40px);
@@ -6638,7 +6638,7 @@ h1.listing.own-post-listing {
 /*===================*/
 
 .contents {
-	font-family: 'Concourse', 'a_Avante', 'Assistant', Arial, sans-serif;
+	font-family: 'Concourse', 'a_Avante', 'Assistant', Arial, 'GW-Symbols', sans-serif;
 	border: 1px solid #1f1f1f;
 	background-color: #131313;
 }
@@ -6678,7 +6678,7 @@ h1.listing.own-post-listing {
 /*=======*/
 
 h1.post-title {
-	font-family: 'Concourse', 'a_Avante', 'Assistant', Arial, sans-serif;
+	font-family: 'Concourse', 'a_Avante', 'Assistant', Arial, 'GW-Symbols', sans-serif;
 	font-weight: 700;
 }
 
@@ -6764,7 +6764,7 @@ a.post-section.alignment-forum:hover::before {
 
 .post.link-post a.link-post-link {
 	text-decoration: none;
-	font-family: 'Concourse', 'a_Avante', 'Assistant', Arial, sans-serif;
+	font-family: 'Concourse', 'a_Avante', 'Assistant', Arial, 'GW-Symbols', sans-serif;
 	font-weight: 600;
 }
 .post.link-post a.link-post-link:hover {
@@ -7042,7 +7042,7 @@ div.comment-child-links a {
 	text-shadow: 0 0 1px #000, 0 0 3px #000, 0 0 5px #000;
 }
 .comment-minimize-button::after {
-	font-family: 'Concourse', 'a_Avante', 'Assistant', Arial, sans-serif;
+	font-family: 'Concourse', 'a_Avante', 'Assistant', Arial, 'GW-Symbols', sans-serif;
 	color: #777;
 }
 .comment-minimize-button.maximized::after {
@@ -7253,7 +7253,7 @@ div.comment-child-links a {
 }
 
 .guiedit::after {
-	font-family: 'Concourse', 'a_Avante', 'Assistant', Arial, sans-serif;
+	font-family: 'Concourse', 'a_Avante', 'Assistant', Arial, 'GW-Symbols', sans-serif;
 	color: #777;
 	text-shadow: none;
 }
@@ -7400,13 +7400,13 @@ input[type='submit']:active {
 .body-text h1,
 .body-text h2,
 .body-text h4 {
-	font-family: 'Concourse', 'a_Avante', 'Assistant', Arial, sans-serif;
+	font-family: 'Concourse', 'a_Avante', 'Assistant', Arial, 'GW-Symbols', sans-serif;
 }
 .body-text h3,
 .body-text h5,
 .body-text h6 {
 	font-weight: 600;
-	font-family: 'Concourse Smallcaps', 'a_Avante', 'Assistant', Arial, sans-serif;
+	font-family: 'Concourse Smallcaps', 'a_Avante', 'Assistant', Arial, 'GW-Symbols', sans-serif;
 }
 .body-text h6 {
 	color: #9b9b9b;
@@ -7500,7 +7500,7 @@ select {
 }
 
 #content.about-page .accesskey-table {
-	font-family: 'Concourse', 'a_Avante', 'Assistant', Arial, sans-serif;
+	font-family: 'Concourse', 'a_Avante', 'Assistant', Arial, 'GW-Symbols', sans-serif;
 	border-color: #1f1f1f;
 }
 
@@ -7752,7 +7752,7 @@ select {
 	}
 	#quick-nav-ui a::after,
 	#new-comment-nav-ui::before {
-		font-family: 'Concourse', 'a_Avante', 'Assistant', Arial, sans-serif;
+		font-family: 'Concourse', 'a_Avante', 'Assistant', Arial, 'GW-Symbols', sans-serif;
 		font-weight: 600;
 		box-shadow:
 			0 0 1px 0 #000,
@@ -7790,7 +7790,7 @@ select {
 		border-radius: 0 7px 7px 0;
 	}
 	#new-comment-nav-ui button::after {
-		font-family: 'Concourse', 'a_Avante', 'Assistant', Arial, sans-serif;
+		font-family: 'Concourse', 'a_Avante', 'Assistant', Arial, 'GW-Symbols', sans-serif;
 	}
 	
 	/*****************************************/

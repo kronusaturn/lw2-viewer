@@ -1,5 +1,5 @@
 <?php
-	$UI_font = "'Proxima Nova'";
+	$UI_font = "'Proxima Nova', 'GW-Symbols', sans-serif";
 	$text_font = "'Raleway', 'Helvetica', 'Arial', 'Verdana', sans-serif;";
 	$hyperlink_color = "#f60";
 	$white_glow = "0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff";

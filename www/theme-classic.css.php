@@ -1,5 +1,5 @@
 <?php
-	$UI_font = "'Arial', sans-serif";
+	$UI_font = "'Arial', 'GW-Symbols', sans-serif";
 	$text_font = "'Arial', sans-serif";
 	$hyperlink_color = "#6a8a6b";
 ?>

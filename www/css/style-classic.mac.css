@@ -5788,7 +5788,7 @@ a.comment-parent-link::after {
 body {
 	color: #000;
 	background-color: #d8d8d8;
-	font-family: 'Arial', sans-serif;
+	font-family: 'Arial', 'GW-Symbols', sans-serif;
 }
 #content {
 	line-height: 1.5;
@@ -6264,7 +6264,7 @@ body {
 h1.listing {
 	margin: 1.125em 20px 0.25em 20px;
 	max-width: calc(100% - 40px);
-	font-family: 'Arial', sans-serif, 'Font Awesome';
+	font-family: 'Arial', 'GW-Symbols', sans-serif, 'Font Awesome';
 	font-size: 1.125rem;
 	padding-left: 30px;
 	max-height: unset;
@@ -6567,7 +6567,7 @@ h1.listing.own-post-listing {
 /*===================*/
 
 .contents {
-	font-family: 'Arial', sans-serif;
+	font-family: 'Arial', 'GW-Symbols', sans-serif;
 	border: 1px solid #ddd;
 	background-color: #eee;
 	padding: 0.75em 0.5em 0.5em 0.5em;
@@ -6735,7 +6735,7 @@ a.post-section.alignment-forum:hover::before {
 }
 .post.link-post a.link-post-link {
 	text-decoration: none;
-	font-family: 'Arial', sans-serif;
+	font-family: 'Arial', 'GW-Symbols', sans-serif;
 	font-weight: 600;
 }
 .post.link-post a.link-post-link:hover {
@@ -7065,7 +7065,7 @@ div.comment-child-links a {
 	color: #aaa;
 }
 .comment-minimize-button::after {
-	font-family: 'Arial', sans-serif;
+	font-family: 'Arial', 'GW-Symbols', sans-serif;
 	color: #777;
 }
 .comment-minimize-button.maximized::after {
@@ -7324,7 +7324,7 @@ h1.listing .edit-post-link:hover,
 }
 
 .guiedit::after {
-	font-family: 'Arial', sans-serif;
+	font-family: 'Arial', 'GW-Symbols', sans-serif;
 	color: #777;
 	text-shadow: none;
 	top: 4px;
@@ -7463,7 +7463,7 @@ input[type='submit']:active {
 .body-text h1,
 .body-text h2,
 .body-text h4 {
-	font-family: 'Arial', sans-serif;
+	font-family: 'Arial', 'GW-Symbols', sans-serif;
 }
 .body-text h3,
 .body-text h5,
@@ -7561,7 +7561,7 @@ select {
 }
 
 #content.about-page .accesskey-table {
-	font-family: 'Arial', sans-serif;
+	font-family: 'Arial', 'GW-Symbols', sans-serif;
 	border-color: #ddd;
 }
 
@@ -7808,7 +7808,7 @@ select {
 	}
 	#quick-nav-ui a::after,
 	#new-comment-nav-ui::before {
-		font-family: 'Arial', sans-serif;
+		font-family: 'Arial', 'GW-Symbols', sans-serif;
 		font-weight: bold;
 		box-shadow:
 			0 0 1px 0 #fff,
@@ -7847,7 +7847,7 @@ select {
 		border-radius: 0 7px 7px 0;
 	}
 	#new-comment-nav-ui button::after {
-		font-family: 'Arial', sans-serif;
+		font-family: 'Arial', 'GW-Symbols', sans-serif;
 	}
 	#hns-date-picker {
 		background-color: #e4e4e4;

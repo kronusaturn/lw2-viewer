@@ -1,5 +1,5 @@
 <?php
-	$UI_font = "Trade Gothic, Helvetica, sans-serif";
+	$UI_font = "Trade Gothic, Helvetica, 'GW-Symbols', sans-serif";
 	$text_font = "'News Gothic BT', 'Helvetica', sans-serif";
 	$hyperlink_color = "#00e";
 	$white_glow = "0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff";

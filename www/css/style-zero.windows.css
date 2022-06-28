@@ -5787,7 +5787,7 @@ a.comment-parent-link::after {
 
 body {
 	color: #000;
-	font-family: Trade Gothic, Helvetica, sans-serif;
+	font-family: Trade Gothic, Helvetica, 'GW-Symbols', sans-serif;
 	background-color: #eee;
 }
 #content {
@@ -6232,7 +6232,7 @@ body {
 h1.listing {
 	margin: 0.7em 20px 0.1em 20px;
 	max-width: calc(100% - 40px);
-	font-family: Trade Gothic, Helvetica, sans-serif, 'Font Awesome';
+	font-family: Trade Gothic, Helvetica, 'GW-Symbols', sans-serif, 'Font Awesome';
 	font-size: 1.375rem;
 	line-height: 1.2;
 }
@@ -6425,7 +6425,7 @@ h1.listing.own-post-listing {
 /*===================*/
 
 .contents {
-	font-family: Trade Gothic, Helvetica, sans-serif;
+	font-family: Trade Gothic, Helvetica, 'GW-Symbols', sans-serif;
 	background-color: #eee;
 }
 .contents-head {
@@ -6553,7 +6553,7 @@ a.post-section.alignment-forum:hover::before {
 
 .post.link-post a.link-post-link {
 	text-decoration: none;
-	font-family: Trade Gothic, Helvetica, sans-serif;
+	font-family: Trade Gothic, Helvetica, 'GW-Symbols', sans-serif;
 	font-weight: 600;
 }
 .post.link-post a.link-post-link:hover {
@@ -6824,7 +6824,7 @@ div.comment-child-links a {
 	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
 }
 .comment-minimize-button::after {
-	font-family: Trade Gothic, Helvetica, sans-serif;
+	font-family: Trade Gothic, Helvetica, 'GW-Symbols', sans-serif;
 	color: #777;
 }
 .comment-minimize-button.maximized::after {
@@ -7026,7 +7026,7 @@ h1.listing .edit-post-link:hover,
 }
 
 .guiedit::after {
-	font-family: Trade Gothic, Helvetica, sans-serif;
+	font-family: Trade Gothic, Helvetica, 'GW-Symbols', sans-serif;
 	color: #777;
 	text-shadow: none;
 }
@@ -7169,7 +7169,7 @@ input[type='submit']:active {
 .body-text h4, 
 .body-text h5, 
 .body-text h6 {
-	font-family: Trade Gothic, Helvetica, sans-serif;
+	font-family: Trade Gothic, Helvetica, 'GW-Symbols', sans-serif;
 }
 .body-text h6 {
 	color: #555;
@@ -7258,7 +7258,7 @@ select {
 }
 
 #content.about-page .accesskey-table {
-	font-family: Trade Gothic, Helvetica, sans-serif;
+	font-family: Trade Gothic, Helvetica, 'GW-Symbols', sans-serif;
 	border-color: #ddd;
 }
 
@@ -7506,7 +7506,7 @@ select {
 	}
 	#quick-nav-ui a::after,
 	#new-comment-nav-ui::before {
-		font-family: Trade Gothic, Helvetica, sans-serif;
+		font-family: Trade Gothic, Helvetica, 'GW-Symbols', sans-serif;
 		font-weight: bold;
 		box-shadow:
 			0 0 1px 0 #fff,
@@ -7545,7 +7545,7 @@ select {
 		border-radius: 0 7px 7px 0;
 	}
 	#new-comment-nav-ui button::after {
-		font-family: Trade Gothic, Helvetica, sans-serif;
+		font-family: Trade Gothic, Helvetica, 'GW-Symbols', sans-serif;
 	}
 	#hns-date-picker {
 		background-color: #fff;

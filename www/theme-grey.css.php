@@ -1,5 +1,5 @@
 <?php
-	$UI_font = (1 || ($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Whitney', 'a_Avante'") . ", Arial, sans-serif";
+	$UI_font = (1 || ($platform == 'Mac') ? "'Concourse', 'a_Avante'" : "'Whitney', 'a_Avante'") . ", Arial, 'GW-Symbols', sans-serif";
 	$UI_font_smallcaps = (1 || ($platform == 'Mac') ? "'Concourse Smallcaps', 'a_Avante'" : "'Whitney Smallcaps', 'a_Avante'") . ", Arial, sans-serif";
 	$text_font = "'Source Sans Pro', 'Trebuchet MS', 'Helvetica', 'Arial', 'Verdana', sans-serif";
 	$hyperlink_color = "#f60";

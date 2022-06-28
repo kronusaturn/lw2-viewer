@@ -5787,7 +5787,7 @@ a.comment-parent-link::after {
 body {
 	color: #000;
 	background-color: #fffffa;
-	font-family: 'Proxima Nova', sans-serif;
+	font-family: 'Proxima Nova', 'GW-Symbols', sans-serif;
 }
 #content {
 	line-height: 1.55;
@@ -6004,7 +6004,7 @@ a.nav-inner,
 	padding-top: 7px;
 }
 #top-nav-bar .page-number-label {
-	font-family: 'Proxima Nova', sans-serif;
+	font-family: 'Proxima Nova', 'GW-Symbols', sans-serif;
 	bottom: 70%;
 }
 #top-nav-bar::after {
@@ -6340,7 +6340,7 @@ a.nav-inner,
 h1.listing {
 	margin: 0.7em 20px 0.1em 20px;
 	max-width: calc(100% - 40px);
-	font-family: 'Proxima Nova', sans-serif, 'Font Awesome';
+	font-family: 'Proxima Nova', 'GW-Symbols', sans-serif, 'Font Awesome';
 	text-align: center;
 }
 
@@ -6568,7 +6568,7 @@ h1.listing.own-post-listing {
 /*===================*/
 
 .contents {
-	font-family: 'Proxima Nova', sans-serif;
+	font-family: 'Proxima Nova', 'GW-Symbols', sans-serif;
 	margin-left: 1.5em;
 	font-family: Garamond Premier Pro;
 	min-width: unset;
@@ -6696,7 +6696,7 @@ a.post-section.alignment-forum:hover::before {
 
 .post.link-post a.link-post-link {
 	text-decoration: none;
-	font-family: 'Proxima Nova', sans-serif;
+	font-family: 'Proxima Nova', 'GW-Symbols', sans-serif;
 	font-weight: 600;
 	color: #77121a;
 }
@@ -7061,7 +7061,7 @@ a.comment-parent-link:hover::before {
 	color: #aaa;
 }
 .comment-minimize-button::after {
-	font-family: 'Proxima Nova', sans-serif;
+	font-family: 'Proxima Nova', 'GW-Symbols', sans-serif;
 	color: #777;
 }
 .comment-minimize-button.maximized::after {
@@ -7270,7 +7270,7 @@ a.comment-parent-link:hover::before {
 }
 
 .guiedit::after {
-	font-family: 'Proxima Nova', sans-serif;
+	font-family: 'Proxima Nova', 'GW-Symbols', sans-serif;
 	color: #777;
 	text-shadow: none;
 }
@@ -7547,7 +7547,7 @@ select {
 }
 
 #content.about-page .accesskey-table {
-	font-family: 'Proxima Nova', sans-serif;
+	font-family: 'Proxima Nova', 'GW-Symbols', sans-serif;
 	border-color: #ddd;
 }
 
@@ -7768,7 +7768,7 @@ select {
 	}
 	#quick-nav-ui a::after,
 	#new-comment-nav-ui::before {
-		font-family: 'Proxima Nova', sans-serif;
+		font-family: 'Proxima Nova', 'GW-Symbols', sans-serif;
 		font-weight: bold;
 		box-shadow:
 			0 0 1px 0 #fffffa,
@@ -7804,7 +7804,7 @@ select {
 		border-radius: 0 7px 7px 0;
 	}
 	#new-comment-nav-ui button::after {
-		font-family: 'Proxima Nova', sans-serif;
+		font-family: 'Proxima Nova', 'GW-Symbols', sans-serif;
 	}
 
 	/*****************************************/
