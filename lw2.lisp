@@ -965,7 +965,8 @@ signaled condition to *HTML-OUTPUT*."
                         (lambda (body)
                           (with-gensyms (result-vector)
                             `(let ((,result-vector (nth-value 1 (funcall ,fn hunchentoot:*request*))))
-                               (declare (type simple-vector ,result-vector)) 
+                               (declare (type simple-vector ,result-vector)
+					(ignorable ,result-vector))
                                (let
                                  ,(loop for v in (make-lambda specifier-args) as x from 0 collecting `(,v (if (> (length ,result-vector) ,x) (aref ,result-vector ,x)))) 
                                  ,body))))
