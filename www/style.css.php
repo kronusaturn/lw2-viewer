@@ -2,7 +2,7 @@
 	header ('Content-type: text/css; charset=utf-8');
 	
 	$platform = @$argv[1] ?: 'Mac';
-	$UI_font = (0 && $platform == 'Windows') ? "'Whitney', 'a_Avante'" : "'Concourse', 'a_Avante'";
+	$UI_font = ((0 && $platform == 'Windows') ? "'Whitney', 'a_Avante'" : "'Concourse', 'a_Avante'") . ", 'GW-Symbols'";
 	
 	$content_width_settings = [
 		'normal' => '900px',
