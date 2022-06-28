@@ -2088,7 +2088,12 @@ h1.post-title {
 }
 .related-post-type::before {
 	content: "\269c";
+	font-size: 1.375em;
+	font-weight: normal;
 	margin-right: 0.15em;
+	position: relative;
+	vertical-align: baseline;
+	top: 0.05em;
 }
 .related-posts .post-type-prefix {
 	display: none;
