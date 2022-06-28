@@ -84,7 +84,7 @@
 	       (let ((object (read-preserving-whitespace stream)))
 		 (multiple-value-bind (safe object)
 		     (if (and (consp object) (eq (first object) 'safe))
-			 (values t (cadr object))
+			 (values t (second object))
 			 (values nil object))
 		   (cond
 		     ((and (consp object) (stringp (first object)))
