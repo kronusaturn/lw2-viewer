@@ -845,24 +845,24 @@ h1.post-title {
 	opacity: 0.6;
 }
 
-.comment-item .karma.active-controls::after,
-.comment-item .karma .karma-value::after,
-.post .karma.active-controls::after,
-.post .karma .karma-value::after,
+.comment-item .voting-controls.active-controls::after,
+.comment-item .voting-controls .karma-value::after,
+.post .voting-controls.active-controls::after,
+.post .voting-controls .karma-value::after,
 .author::before {
 	background-color: #fff;
 	color: #000;
 	box-shadow: 0 0 0 1px #000 inset;
 }
-.comment-item .karma.active-controls::after,
-.post .karma.active-controls::after {
+.comment-item .voting-controls.active-controls::after,
+.post .voting-controls.active-controls::after {
 	padding: 6px;
 	bottom: -46px;
 	max-width: unset;
 	transform: translateX(-2px);
 }
-.comment-item .karma .karma-value::after,
-.post .karma .karma-value::after {
+.comment-item .voting-controls .karma-value::after,
+.post .voting-controls .karma-value::after {
 	padding: 2px 8px;
 	top: -26px;
 	min-width: 80px;

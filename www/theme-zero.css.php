@@ -871,23 +871,23 @@ a.post-section.alignment-forum:hover::before {
 	filter: brightness(60%);
 }
 
-.comment-item .karma.active-controls::after,
-.comment-item .karma .karma-value::after,
-.post .karma.active-controls::after,
-.post .karma .karma-value::after,
+.comment-item .voting-controls.active-controls::after,
+.comment-item .voting-controls .karma-value::after,
+.post .voting-controls.active-controls::after,
+.post .voting-controls .karma-value::after,
 .author::before {
 	background-color: #eee;
 	color: #777;
 	border-radius: 4px;
 	box-shadow: 0 0 0 1px #bbb inset;
 }
-.comment-item .karma.active-controls::after,
-.post .karma.active-controls::after {
+.comment-item .voting-controls.active-controls::after,
+.post .voting-controls.active-controls::after {
 	padding: 6px;
 	bottom: -46px;
 }
-.comment-item .karma .karma-value::after,
-.post .karma .karma-value::after {
+.comment-item .voting-controls .karma-value::after,
+.post .voting-controls .karma-value::after {
 	padding: 2px 8px;
 	top: -26px;
 	min-width: 60px;

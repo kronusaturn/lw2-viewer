@@ -1848,8 +1848,8 @@ article {
 /*= Karma controls hover tooltips =*/
 
 @media only screen and (pointer: fine) {
-	.post .karma,
-	.comment-item .karma {
+	.post .voting-controls,
+	.comment-item .voting-controls {
 		position: relative;
 	}
 	.post .karma.active-controls::after,
@@ -1859,7 +1859,7 @@ article {
 		pointer-events: none;
 		display: block;
 		left: 6px;
-		max-width: calc(100% - 12px);
+		width: 100%;
 		line-height: 1.15;
 		white-space: normal;
 		text-align: center;
@@ -1867,13 +1867,13 @@ article {
 		opacity: 0;
 		transition: opacity 0.2s ease;
 	}
-	.post .karma.active-controls:hover::after,
-	.comment-item .karma.active-controls:hover::after {
+	.post .voting-controls.active-controls:hover::after,
+	.comment-item .voting-controls.active-controls:hover::after {
 		opacity: 1.0;
 	}
 
-	.post .karma .karma-value::after,
-	.comment-item .karma .karma-value::after {
+	.post .voting-controls .karma-value::after,
+	.comment-item .voting-controls .karma-value::after {
 		content: attr(title);
 		position: absolute;
 		pointer-events: none;
@@ -1887,11 +1887,11 @@ article {
 		opacity: 0;
 		transition: opacity 0.2s ease;
 	}
-	.post .karma .karma-value:hover::after,
-	.comment-item .karma .karma-value:hover::after {
+	.post .voting-controls .karma-value:hover::after,
+	.comment-item .voting-controls .karma-value:hover::after {
 		opacity: 1.0;
 	}
-	.comment-item .karma .karma-value:hover::after {
+	.comment-item .voting-controls .karma-value:hover::after {
 		z-index: 5001;
 	}
 
@@ -2599,7 +2599,7 @@ a.comment-parent-link:hover::after {
 #content.compact > .comment-thread .comment-item .comment-meta .comment-post-title {
 	display: inline;
 }
-#content.compact > .comment-thread .comment-item .comment-meta .karma + .comment-post-title {
+#content.compact > .comment-thread .comment-item .comment-meta .voting-controls + .comment-post-title {
 	margin-left: 0.75em;
 }
 @media only screen and (hover: hover) {
@@ -2767,18 +2767,21 @@ a.comment-parent-link:hover::after {
 	cursor: default;
 }
 
-.karma.waiting {
+.voting-controls.waiting {
 	opacity: 0.5;
 }
-.karma.waiting button {
+.voting-controls.waiting button {
 	pointer-events: none;
 }
 
 /* Replicated karma controls at bottom of comments. */
-.comment-controls .karma {
+.comment-controls .voting-controls {
 	float: left;
-	margin-left: -14px;
 	font-size: 0.9375em;
+}
+
+.comment-controls .voting-controls:first-of-type {
+	margin-left: -14px;
 }
 
 /*****************************/

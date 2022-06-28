@@ -1101,10 +1101,10 @@ a.post-section.alignment-forum:hover::before {
 	opacity: 0.8;
 }
 
-.comment-item .karma.active-controls::after,
-.comment-item .karma .karma-value::after,
-.post .karma.active-controls::after,
-.post .karma .karma-value::after,
+.comment-item .voting-controls.active-controls::after,
+.comment-item .voting-controls .karma-value::after,
+.post .voting-controls.active-controls::after,
+.post .voting-controls .karma-value::after,
 .author::before {
 	background-color: #fff;
 	color: #777;
@@ -1112,13 +1112,13 @@ a.post-section.alignment-forum:hover::before {
 	text-shadow: none;
 	border-radius: 4px;
 }
-.comment-item .karma.active-controls::after,
-.post .karma.active-controls::after {
+.comment-item .voting-controls.active-controls::after,
+.post .voting-controls.active-controls::after {
 	padding: 6px;
 	bottom: -46px;
 }
-.comment-item .karma .karma-value::after,
-.post .karma .karma-value::after {
+.comment-item .voting-controls .karma-value::after,
+.post .voting-controls .karma-value::after {
 	padding: 2px 8px;
 	top: -26px;
 	min-width: 64px;
@@ -1358,14 +1358,14 @@ a.comment-parent-link:hover::before {
 .vote:not(:hover)::after {
 	text-shadow: none;
 }
-.karma.waiting .vote.big-vote::after {
+.voting-controls.waiting .vote.big-vote::after {
 	color: transparent;
 }
 .vote.big-vote::after,
 .vote:not(.big-vote).clicked-twice::after {
 	color: inherit;
 }
-.karma:not(.waiting) .vote.clicked-once::after {
+.voting-controls:not(.waiting) .vote.clicked-once::after {
 	color: #bbb;
 }
 

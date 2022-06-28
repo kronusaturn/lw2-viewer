@@ -1,5 +1,6 @@
 (uiop:define-package #:lw2.interface-utils
   (:use #:cl #:lw2.links #:lw2.html-reader)
+  (:import-from #:lw2.utils #:hash-cond)
   (:export #:pretty-time #:pretty-time-js #:pretty-time-html
 	   #:pretty-number #:generate-post-auth-link #:clean-lw-link #:votes-to-tooltip #:vote-buttons))
 
@@ -61,43 +62,50 @@
 (defun vote-buttons (base-score &key (with-buttons t) vote-count post-id af-score as-text extended-score all-votes)
   (labels ((button (vote-type)
 	     (when with-buttons
-	       <button type="button" class=("vote ~A" vote-type) data-vote-type=vote-type data-target-type=(if post-id "Posts" "Comments") tabindex="-1" disabled></button>))
+	       <button type="button" class=("vote ~A" vote-type) data-vote-type=vote-type data-target-type=(if post-id "Post" "Comment") tabindex="-1" disabled></button>))
 	   (text ()
 	     (if (and af-score (/= af-score 0))
 		 (format nil "LW: ~A AF: ~A" base-score af-score)
 		 (pretty-number base-score "point")))
-	   (score-counts ()
-	     (let ((hash (make-hash-table :test 'equal)))
+	   (compute-score-counts ()
+	     (let ((score-counts (make-hash-table :test 'equal)))
 	       (loop for vote in all-votes
 		  for agreement = (cdr (assoc :agreement (cdr (assoc :extended-vote-type vote))))
 		  do (when agreement
-		       (incf (gethash agreement hash 0))))
-	       hash))
+		       (incf (gethash agreement score-counts 0))))
+	       (values score-counts
+		       (+ (gethash "smallUpvote" score-counts 0) (gethash "bigUpvote" score-counts 0))
+		       (+ (gethash "smallDownvote" score-counts 0) (gethash "bigDownvote" score-counts 0)))))
 	   (extended-text (agree-count disagree-count)
-	     (format nil "~D ∶ ~D" agree-count disagree-count))
+	     (format nil "~D∶~D" agree-count disagree-count))
 	   (extended-tooltip (score-counts agree-count disagree-count)
-	     (format nil "~D agree (~D strongly), ~D disagree (~D strongly); meaningless number: ~D"
+	     (format nil "~D agree (~D strongly), ~D disagree (~D strongly); Epistemic Status: ~D"
 		     agree-count
 		     (gethash "bigUpvote" score-counts 0)
 		     disagree-count
 		     (gethash "bigDownvote" score-counts 0)
 		     (cdr (assoc :agreement extended-score))))
 	   (voting (class tooltip text)
-	     <div class=class data-post-id=post-id>
+	     <div class=(safe ("~A voting-controls" class))
+	          (with-html-stream-output (:stream stream)
+		    (when post-id (format stream "data-post-id='~A' " post-id))
+		    (unless (string-equal class "karma")
+		      (format stream "data-vote-axis='~A' " class)))>
 	       (button "upvote")
 	       <span class="karma-value" title=tooltip>(safe text)</span>
 	       (button "downvote")
 	     </div>))
-    (when (or base-score extended-score)
+    (multiple-value-bind (score-counts agree-count disagree-count)
+	(if extended-score (compute-score-counts))
       (if as-text
-	  (text)
+	  (hash-cond (make-hash-table)
+		     (base-score :karma (list (text) (votes-to-tooltip vote-count)))
+		     (extended-score :agreement (list (extended-text agree-count disagree-count)
+						      (extended-tooltip score-counts agree-count disagree-count))))
 	  (progn
 	    (when base-score
 	      (voting "karma" (votes-to-tooltip vote-count) (text)))
 	    (when extended-score
-	      (let* ((score-counts (score-counts))
-		     (agree-count (+ (gethash "smallUpvote" score-counts 0) (gethash "bigUpvote" score-counts 0)))
-		     (disagree-count (+ (gethash "smallDownvote" score-counts 0) (gethash "bigDownvote" score-counts 0))))
-		(voting "agreement"
-			(extended-tooltip score-counts agree-count disagree-count)
-			(extended-text agree-count disagree-count)))))))))
+	      (voting "agreement"
+		      (extended-tooltip score-counts agree-count disagree-count)
+		      (extended-text agree-count disagree-count))))))))

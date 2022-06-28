@@ -1623,23 +1623,23 @@ a.post-section.alignment-forum:hover::before {
 	font-weight: normal;
 }
 
-.comment-controls .karma {
+.comment-controls .voting-controls {
 	color: #bbb;
 }
 
-.comment-item .karma.active-controls::after,
-.comment-item .karma .karma-value::after,
+.comment-item .voting-controls.active-controls::after,
+.comment-item .voting-controls .karma-value::after,
 .author::before {
 	background-color: #fff;
 	color: #bbb;
 	border-radius: 4px;
 	box-shadow: 0 0 0 1px #eee inset;
 }
-.comment-item .karma.active-controls::after {
+.comment-item .voting-controls.active-controls::after {
 	padding: 6px 4px 4px 4px;
 	bottom: -42px;
 }
-.comment-item .karma .karma-value::after {
+.comment-item .voting-controls .karma-value::after {
 	padding: 4px 8px 0 8px;
 	top: -30px;
 }
@@ -1939,14 +1939,14 @@ div.comment-child-links a {
 .vote:not(:hover)::after {
 	text-shadow: none;
 }
-.karma.waiting .vote.big-vote::after {
+.voting-controls.waiting .vote.big-vote::after {
 	color: transparent;
 }
 .vote.big-vote::after,
 .vote:not(.big-vote).clicked-twice::after {
 	color: inherit;
 }
-.karma:not(.waiting) .vote.clicked-once::after {
+.voting-controls:not(.waiting) .vote.clicked-once::after {
 	color: #ddd;
 }
 

@@ -277,14 +277,28 @@ fields - The return values we want to get from the server after it completes our
    (do-lw2-comment-edit auth-token comment-id (alist :deleted t :deleted-public t
 						     :deleted-reason reason))))
 
-(defun do-lw2-vote (auth-token target target-type vote-type)
-  (let ((ret (do-lw2-post-query auth-token
-	       (alist "query" "mutation vote($documentId: String, $voteType: String, $collectionName: String) { vote(documentId: $documentId, voteType: $voteType, collectionName: $collectionName) { ... on Post { baseScore, voteCount, af, afBaseScore, currentUserVotes { _id, voteType, power } } ... on Comment { baseScore, voteCount, af, afBaseScore, currentUserVotes { _id, voteType, power } } } }"
-		      "variables" (alist "documentId" target
-					 "voteType" vote-type
-					 "collectionName" target-type)
-		      "operationName" "vote"))))
-    (values (cdr (assoc :base-score ret)) (cdr (assoc :vote-type (first (cdr (assoc :current-user-votes ret))))) ret)))
+(defun do-lw2-vote (auth-token target-collection target-id vote)
+  (let* ((mutation (format nil "setVote~:(~A~)" target-collection))
+	 (karma-vote (or (nonempty-string vote)
+			 (cdr (assoc :karma vote))))
+	 (extended-vote (remove :karma vote :key #'car))
+	 (ret (do-lw2-post-query auth-token
+		(alist "query" (graphql-mutation-string mutation
+							(remove-if #'null
+								   (alist :document-id target-id
+									  :vote-type karma-vote
+									  :extended-vote extended-vote)
+								   :key #'cdr)
+							'(:--id :base-score :af :af-base-score :vote-count :extended-score (:all-votes :vote-type :extended-vote-type)
+							  :current-user-vote :current-user-extended-vote))
+		       "variables" nil
+		       "operationName" mutation)))
+	 (confirmed-vote (block nil
+			   (alist-bind (current-user-vote current-user-extended-vote) ret
+				       (return (list-cond* (current-user-vote :karma current-user-vote)
+							   current-user-extended-vote))))))
+    (values confirmed-vote ret)))
+    
 
 (defun do-user-edit (auth-token user-id data)
   (do-lw2-mutation auth-token :user :update (alist :document-id user-id :set data) '(--id)))

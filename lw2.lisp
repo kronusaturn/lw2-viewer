@@ -1175,9 +1175,9 @@ signaled condition to *HTML-OUTPUT*."
     (request-method
      (:get (post-id)
        (hash-cond (make-hash-table)
-	 (post-id "postVotes" (alist post-id (get-post-vote post-id auth-token)))
-	 (post-id "commentVotes" (get-post-comments-votes post-id auth-token))
-	 (post-id "tagVotes" (get-post-tag-votes post-id auth-token)))))))
+	 (post-id "Post" (sethash (make-hash-table) post-id (get-post-vote post-id auth-token)))
+	 (post-id "Comment" (get-post-comments-votes post-id auth-token))
+	 (post-id "Tag" (get-post-tag-votes post-id auth-token)))))))
 
 (define-page view-post-lw2-link (:function #'match-lw2-link post-id comment-id * comment-link-type post-type)
                                 (need-auth
@@ -1368,11 +1368,24 @@ signaled condition to *HTML-OUTPUT*."
 
 (define-json-endpoint (view-karma-vote forum-site "/karma-vote")
     (let ((auth-token *current-auth-token*))
-	(request-method
-	 (:post (target target-type vote-type)
-		(multiple-value-bind (points vote-type vote-data) (do-lw2-vote auth-token target target-type vote-type)
-		   (alist-bind (vote-count af af-base-score) vote-data
-			       (list (vote-buttons points :as-text t :af-score (and af af-base-score)) vote-type (votes-to-tooltip vote-count))))))))
+      (request-method
+       (:post (target target-type (vote-json :real-name "vote"))
+	      (let ((vote (safe-decode-json vote-json)))
+		(multiple-value-bind (current-vote result)
+		    (do-lw2-vote auth-token target-type target vote)
+		  (alist-bind (vote-count base-score af af-base-score extended-score all-votes) result
+			      (let ((vote-buttons (vote-buttons base-score
+								:as-text t
+								:af-score (and af af-base-score)
+								:vote-count (+ vote-count (if (member (cdr (assoc :karma current-vote)) '(nil "neutral") :test #'equal)
+											      0
+											      1))
+								:extended-score extended-score
+								:all-votes all-votes))
+				    (out (make-hash-table)))
+				(loop for (axis . axis-vote) in current-vote
+				   do (setf (gethash axis out) (list* axis-vote (gethash axis vote-buttons))))
+				out))))))))
 
 (delete-easy-handler 'view-karma-vote)
 
@@ -1437,7 +1450,7 @@ signaled condition to *HTML-OUTPUT*."
     (request-method
      (:get ((offset :type fixnum :default 0))
 	   (sethash (make-hash-table)
-		    "commentVotes" (get-shortform-votes auth-token :offset offset))))))
+		    "Comment" (get-shortform-votes auth-token :offset offset))))))
 
 (define-component view-comments-index (index-type)
   (:http-args ((offset :type fixnum)
@@ -1516,9 +1529,9 @@ signaled condition to *HTML-OUTPUT*."
     (request-method
      (:get (tag-id post-id)
        (hash-cond (make-hash-table)
-	 (tag-id "postVotes" (get-tag-post-votes tag-id auth-token))
-	 (tag-id "commentVotes" (get-tag-comments-votes tag-id auth-token))
-	 (post-id "tagVotes" (get-post-tag-votes post-id auth-token)))))))
+	 (tag-id "Post" (get-tag-post-votes tag-id auth-token))
+	 (tag-id "Comment" (get-tag-comments-votes tag-id auth-token))
+	 (post-id "Tag" (get-post-tag-votes post-id auth-token)))))))
 
 (define-component view-tag (slug tail)
   (:http-args ((sort :default :relevant :member '(:relevant :new :old))))

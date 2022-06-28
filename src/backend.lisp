@@ -554,15 +554,23 @@
   (lw2-graphql-query (lw2-query-string :comment :list '((:view . "allRecentComments") (:limit . 20)) :context :index) :return-type :string))
 
 (defun process-vote-result (res)
-  (let ((id (cdr (assoc :--id res)))
-	(votetype (cdr (assoc :vote-type (first (cdr (assoc :current-user-votes res)))))))
-    (values votetype id)))
+  (alist-bind ((id simple-string :--id)
+	       current-user-votes
+	       current-user-vote
+	       current-user-extended-vote)
+	      res
+	      (let ((karma-vote (or (nonempty-string current-user-vote)
+				    (cdr (assoc :vote-type (first current-user-votes))))))
+		(values (list-cond* (karma-vote :karma karma-vote)
+				    current-user-extended-vote)
+			id))))
 
 (defun process-votes-result (res)
   (let ((hash (make-hash-table)))
     (dolist (v res hash)
-      (multiple-value-bind (votetype id) (process-vote-result v)
-	(setf (gethash id hash) votetype)))))
+      (multiple-value-bind (vote id) (process-vote-result v)
+	(when vote
+	  (setf (gethash id hash) vote))))))
 
 (defun flatten-shortform-comments (comments)
   (let ((output comments))
@@ -574,11 +582,11 @@
   (process-votes-result
    (flatten-shortform-comments
     (lw2-graphql-query (lw2-query-string :comment :list (alist :view "shortform" :offset offset :limit limit)
-					 :fields '(:--id (:current-user-votes :vote-type) (:latest-children :--id (:current-user-votes :vote-type))))
+					 :fields '(:--id :current-user-vote :current-user-extended-vote (:latest-children :--id :current-user-vote :current-user-extended-vote)))
 		       :auth-token auth-token))))
 
 (defun get-post-vote (post-id auth-token)
-  (process-vote-result (lw2-graphql-query (lw2-query-string :post :single (alist :document-id post-id) :fields '(:--id (:current-user-votes :vote-type))) :auth-token auth-token)))
+  (process-vote-result (lw2-graphql-query (lw2-query-string :post :single (alist :document-id post-id) :fields '(:--id :current-user-vote :current-user-extended-vote)) :auth-token auth-token)))
 
 (define-cache-database 'backend-lw2-tags "tag-posts" "tag-posts-meta" "post-tags" "post-tags-meta")
 
@@ -605,7 +613,7 @@
 	 (lw2-query-list-limit-workaround
 	  :tag-rel
 	  (alist :view "postsWithTag" :tag-id tag-id)
-	  :fields '(:--id (:current-user-votes :vote-type))
+	  :fields '(:--id :current-user-vote :current-user-extended-vote)
 	  :auth-token auth-token)))))
 
 (define-backend-function get-post-tags (post-id &key (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*))
@@ -618,7 +626,7 @@
   (backend-base (progn post-id auth-token nil))
   (backend-lw2-tags
    (process-votes-result
-    (lw2-graphql-query (lw2-query-string :tag-rel :list (alist :view "tagsOnPost" :post-id post-id) :fields '(:--id (:current-user-votes :vote-type)))
+    (lw2-graphql-query (lw2-query-string :tag-rel :list (alist :view "tagsOnPost" :post-id post-id) :fields '(:--id :current-user-vote :current-user-extended-vote))
 		       :auth-token auth-token))))
 
 (define-backend-function get-post-body (post-id &key (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*) auth-token)
@@ -662,10 +670,11 @@
 
 (define-backend-function get-post-comments-votes (post-id auth-token)
   (backend-graphql
-   (let ((fields '(:--id (:current-user-votes :vote-type))))
-     (get-post-comments-list post-id "postCommentsTop" :auth-token auth-token :fields fields)))
+   (let ((fields '(:--id :current-user-vote :current-user-extended-vote)))
+     (process-votes-result
+      (get-post-comments-list post-id "postCommentsTop" :auth-token auth-token :fields fields))))
   (backend-q-and-a
-   (let* ((fields '(:--id (:current-user-votes :vote-type)))
+   (let* ((fields '(:--id :current-user-vote :current-user-extended-vote))
 	  (answers (get-post-comments-list post-id "questionAnswers" :auth-token auth-token :fields fields)))
      (process-votes-result
       (nconc
@@ -675,7 +684,7 @@
 
 (define-backend-function get-tag-comments-votes (tag-id auth-token)
   (backend-lw2-tags-comments
-   (process-votes-result (lw2-graphql-query (lw2-query-string :comment :list (alist :tag-id tag-id :view "commentsOnTag") :fields '(:--id (:current-user-votes :vote-type)))
+   (process-votes-result (lw2-graphql-query (lw2-query-string :comment :list (alist :tag-id tag-id :view "commentsOnTag") :fields '(:--id :current-user-vote :current-user-extended-vote))
 					    :auth-token auth-token))))
 
 (define-backend-function get-post-comments (post-id &key (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*))

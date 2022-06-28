@@ -127,7 +127,10 @@ function doAjax(params) {
 			if(params["onSuccess"]) params.onSuccess(event);
 		} else {
 			if(params["onFailure"]) params.onFailure(event);
+			else if(event.target.getResponseHeader("Content-Type") === "application/json") alert("Error: " + JSON.parse(event.target.responseText)["error"]);
+			else alert("Error: Something bad happened :(");
 		}
+		if(params["onFinish"]) params.onFinish(event);
 	});
 	req.open((params["method"] || "GET"), (params.location || document.location) + (params.params ? "?" + urlEncodeQuery(params.params) : ""));
 	if(params["method"] == "POST") {
@@ -529,15 +532,17 @@ function makeVoteClass(vote) {
 	}
 }
 
-function addVoteButtons(element, voteType, targetType) {
+function addVoteButtons(element, vote, targetType) {
 	GWLog("addVoteButtons");
-	let vote = parseVoteType(voteType);
-	let voteClass = makeVoteClass(vote);
-
+	vote = vote || {};
+	let voteAxis = element.parentElement.dataset.voteAxis || "karma";
+	let voteType = parseVoteType(vote[voteAxis]);
+	let voteClass = makeVoteClass(voteType);
+	
 	element.parentElement.queryAll("button").forEach((button) => {
 		button.disabled = false;
 		if(voteType) {
-			if(button.dataset["voteType"] === (vote.up ? "upvote" : "downvote"))
+			if(button.dataset["voteType"] === (voteType.up ? "upvote" : "downvote"))
 				button.addClass(voteClass);
 		}
 		button.addActivateEvent(voteButtonClicked);
@@ -548,51 +553,64 @@ function makeVoteCompleteEvent(target) {
 	GWLog("makeVoteCompleteEvent");
 	return (GW.voteComplete = (event) => {
 		GWLog("GW.voteComplete");
-		var buttonTargets, karmaTargets;
+		var controls;
+		var controlsByAxis = new Object;
 		if (target === null) {
-			buttonTargets = queryAll(".post-meta .karma");
-			karmaTargets = queryAll(".post-meta .karma-value");
+			controls = queryAll(".post-meta .voting-controls");
 		} else {
-			let commentItem = target.closest(".comment-item")
-			buttonTargets = [ commentItem.query(".comment-meta .karma"), commentItem.query(".comment-controls .karma") ];
-			karmaTargets = [ commentItem.query(".comment-meta .karma-value"), commentItem.query(".comment-controls .karma-value") ];
+			let comment = target.closest(".comment");
+			controls = comment.queryAll(".comment-meta .voting-controls, .comment-controls .voting-controls");
 		}
-		buttonTargets.forEach(buttonTarget => {
-			buttonTarget.removeClass("waiting");
+		controls.forEach(control => {
+			control.removeClass("waiting");
+			var voteAxis = (control.dataset.voteAxis || "karma");
+			if(!controlsByAxis[voteAxis]) controlsByAxis[voteAxis] = new Array;
+			controlsByAxis[voteAxis].push(control);
 		});
 		if (event.target.status == 200) {
 			let response = JSON.parse(event.target.responseText);
-			let karmaText = response[0], voteType = response[1], voteCount = response[2];
+			for (const voteAxis of response.keys()) {
+				const [voteType, displayText, titleText] = response[voteAxis];
+				const axisControls = controlsByAxis[voteAxis];
+				
+				let vote = parseVoteType(voteType);
+				let voteUpDown = (vote.up ? 'upvote' : (vote.down ? 'downvote' : ''));
+				let voteClass = makeVoteClass(vote);
 
-			let vote = parseVoteType(voteType);
-			let voteUpDown = (vote.up ? 'upvote' : (vote.down ? 'downvote' : ''));
-			let voteClass = makeVoteClass(vote);
+				axisControls.forEach(control => {
+					const displayTarget = control.query(".karma-value");
+					if (displayTarget.hasClass("redacted")) {
+						displayTarget.dataset["trueValue"] = displayText;
+					} else {
+						displayTarget.innerHTML = displayText;
+					}
+					displayTarget.setAttribute("title", titleText);
 
-			karmaTargets.forEach(karmaTarget => {
-				if (karmaTarget.hasClass("redacted")) {
-					karmaTarget.dataset["trueValue"] = karmaText;
-				} else {
-					karmaTarget.innerHTML = karmaText;
-				}
-				karmaTarget.setAttribute("title", voteCount);
-			});
-			buttonTargets.forEach(buttonTarget => {
-				buttonTarget.queryAll("button.vote").forEach(button => {
-					button.removeClasses([ "clicked-once", "clicked-twice", "selected", "big-vote" ]);
-					if (button.dataset.voteType == voteUpDown) button.addClass(voteClass);
+					control.queryAll("button.vote").forEach(button => {
+						button.removeClasses([ "clicked-once", "clicked-twice", "selected", "big-vote" ]);
+						if (button.dataset.voteType == voteUpDown) button.addClass(voteClass);
+					});
 				});
-			});
+			}
 		}
 	});
 }
 
-function sendVoteRequest(targetId, targetType, voteType, onFinish) {
+function sendVoteRequest(targetType, targetId, vote, onFinish) {
 	GWLog("sendVoteRequest");
-	let req = new XMLHttpRequest();
+	/*let req = new XMLHttpRequest();
 	req.addEventListener("load", onFinish);
 	req.open("POST", "/karma-vote");
 	req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	req.send("csrf-token="+encodeURIComponent(GW.csrfToken)+"&target="+encodeURIComponent(targetId)+"&target-type="+encodeURIComponent(targetType)+"&vote-type="+encodeURIComponent(voteType));
+	req.send("csrf-token="+encodeURIComponent(GW.csrfToken)+"&target="+encodeURIComponent(targetId)+"&target-type="+encodeURIComponent(targetType)+"&vote="+encodeURIComponent(JSON.stringify(vote)));
+	*/
+	doAjax({
+		method: "POST",
+		location: "/karma-vote",
+		params: { "target": targetId,
+			  "target-type": targetType,
+			  "vote": JSON.stringify(vote) },
+		onFinish: onFinish });
 }
 
 function voteButtonClicked(event) {
@@ -625,27 +643,25 @@ function voteButtonClicked(event) {
 function voteEvent(voteButton, numClicks) {
 	GWLog("voteEvent");
 	voteButton.blur();
-	voteButton.parentNode.addClass("waiting");
+	let voteControl = voteButton.parentNode;
+	voteControl.addClass("waiting");
+	let voteAxis = voteControl.dataset.voteAxis || "karma";
 	let targetType = voteButton.dataset.targetType;
-	let targetId = ((targetType == 'Comments') ? voteButton.getCommentId() : voteButton.parentNode.dataset.postId);
+	let targetId = ((targetType == 'Comment') ? voteButton.getCommentId() : voteButton.parentNode.dataset.postId);
 	let voteUpDown = voteButton.dataset.voteType;
-	let vote = parseVoteType(voteUpDown);
-	vote.big = (numClicks == 2);
-	let voteType = makeVoteType(vote);
-	let oldVoteType;
-	if (targetType == "Posts") {
-		oldVoteType = voteData.postVotes[targetId];
-		voteData.postVotes[targetId] = ((voteType == oldVoteType) ? null : voteType);
+	let voteType;
+	if(numClicks == 1 && voteButton.hasClass("selected")) {
+		voteType = "neutral";
 	} else {
-		oldVoteType = voteData.commentVotes[targetId];
-		voteData.commentVotes[targetId] = ((voteType == oldVoteType) ? null : voteType);
+		let vote = parseVoteType(voteUpDown);
+		vote.big = (numClicks == 2);
+		voteType = makeVoteType(vote);
 	}
-	let f = () => { sendVoteRequest(targetId, targetType, voteType, makeVoteCompleteEvent((targetType == 'Comments' ? voteButton.parentNode : null))) };
-	if (oldVoteType && (oldVoteType != voteType)) {
-		sendVoteRequest(targetId, targetType, oldVoteType, f);
-	} else {
-		f();
-	}
+	let voteObject = voteData[targetType][targetId] || new Object;
+	voteObject[voteAxis] = voteType;
+	voteData[targetType][targetId] = voteObject;
+	
+	sendVoteRequest(targetType, targetId, voteObject, makeVoteCompleteEvent((targetType == 'Comment' ? voteButton.parentNode : null)));
 }
 
 function initializeVoteButtons() {
@@ -671,7 +687,7 @@ function processVoteData(voteData) {
 	addTriggerListener("postLoaded", {fn: () => {
 		queryAll(".post .post-meta .karma-value").forEach(karmaValue => {
 			let postID = karmaValue.parentNode.dataset.postId;
-			addVoteButtons(karmaValue, voteData.postVotes[postId], 'Posts');
+			addVoteButtons(karmaValue, voteData.Post[postId], 'Post');
 			karmaValue.parentElement.addClass("active-controls");
 		});
 	}});
@@ -679,7 +695,7 @@ function processVoteData(voteData) {
 	addTriggerListener("DOMReady", {fn: () => {
 		queryAll(".comment-meta .karma-value, .comment-controls .karma-value").forEach(karmaValue => {
 			let commentID = karmaValue.getCommentId();
-			addVoteButtons(karmaValue, voteData.commentVotes[commentID], 'Comments');
+			addVoteButtons(karmaValue, voteData.Comment[commentID], 'Comment');
 			karmaValue.parentElement.addClass("active-controls");
 		});
 	}});

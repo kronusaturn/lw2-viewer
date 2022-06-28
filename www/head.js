@@ -441,12 +441,15 @@ Element.prototype.constructCommentControls = function() {
 		button.addActivateEvent(GW.commentActionButtonClicked);
 	});
 
-	// Replicate karma controls at the bottom of comments.
+	// Replicate voting controls at the bottom of comments.
 	if (commentControls.parentElement.hasClass("comments")) return;
-	let karmaControls = commentControls.parentElement.query(".comment-meta .karma");
-	if (!karmaControls) return;
-	let karmaControlsCloned = karmaControls.cloneNode(true);
-	commentControls.appendChild(karmaControlsCloned);
+	let votingControls = commentControls.parentElement.queryAll(".comment-meta .voting-controls");
+	if (!votingControls) return;
+	votingControls.forEach(control => {
+		let controlCloned = control.cloneNode(true);
+		commentControls.appendChild(controlCloned);
+	});
+	
 	if(commentControls.query(".active-controls")) {
 		commentControls.queryAll("button.vote").forEach(voteButton => {
 			voteButton.addActivateEvent(voteButtonClicked);

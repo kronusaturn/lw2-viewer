@@ -927,7 +927,7 @@ h1.post-title {
 .post .post-meta .lw2-link {
 	margin: 0 1em 0 0.5em;
 }
-.post .post-meta .karma {
+.post .post-meta .voting-controls {
 	margin: 0 0.5em 0 1em;
 }
 
@@ -1077,23 +1077,23 @@ a.comment-parent-link::before {
 	opacity: 0.8;
 }
 
-.comment-item .karma.active-controls::after,
-.comment-item .karma .karma-value::after,
-.post .karma.active-controls::after,
-.post .karma .karma-value::after,
+.comment-item .voting-controls.active-controls::after,
+.comment-item .voting-controls .karma-value::after,
+.post .voting-controls.active-controls::after,
+.post .voting-controls .karma-value::after,
 .author::before {
 	background-color: #888;
 	color: #ccc;
 	border-radius: 4px;
 	box-shadow: 0 0 0 1px #bbb inset;
 }
-.comment-item .karma.active-controls::after,
-.post .karma.active-controls::after {
+.comment-item .voting-controls.active-controls::after,
+.post .voting-controls.active-controls::after {
 	padding: 6px;
 	bottom: -46px;
 }
-.comment-item .karma .karma-value::after,
-.post .karma .karma-value::after {
+.comment-item .voting-controls .karma-value::after,
+.post .voting-controls .karma-value::after {
 	padding: 2px 8px;
 	top: -28px;
 	min-width: 64px;
@@ -1334,14 +1334,14 @@ div.comment-child-links a {
 .vote:not(:hover)::after {
 	text-shadow: none;
 }
-.karma.waiting .vote.big-vote::after {
+.voting-controls.waiting .vote.big-vote::after {
 	color: #888;
 }
 .vote.big-vote::after,
 .vote:not(.big-vote).clicked-twice::after {
 	color: inherit;
 }
-.karma:not(.waiting) .vote.clicked-once::after {
+.voting-controls:not(.waiting) .vote.clicked-once::after {
 	color: #666;
 }
 
