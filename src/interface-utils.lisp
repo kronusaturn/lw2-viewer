@@ -79,7 +79,7 @@
 	   (extended-text (agree-count disagree-count)
 	     (format nil #.(uiop:strcat "~D" #\HAIR_SPACE #\RATIO #\HAIR_SPACE "~D") agree-count disagree-count))
 	   (extended-tooltip (score-counts agree-count disagree-count)
-	     (format nil "~D agree (~D strongly), ~D disagree (~D strongly); Epistemic Status: ~D"
+	     (format nil "~D agree (~D strongly)~%~D disagree (~D strongly)~%Epistemic Status: ~D"
 		     agree-count
 		     (gethash "bigUpvote" score-counts 0)
 		     disagree-count
