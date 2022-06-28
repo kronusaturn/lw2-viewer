@@ -4,18 +4,23 @@
 
 (in-package #:lw2.images)
 
+(defparameter *wrapper-program* #+linux '("choom" "-n" "1000" "--") #-linux nil)
+
 (sb-ext:defglobal *image-convert-semaphore* (sb-thread:make-semaphore :count 2))
+
+(defmacro run-program (program-args &rest lisp-args)
+  `(uiop:run-program (append *wrapper-program* (list ,@program-args)) ,@lisp-args))
 
 (defun image-statistics (image-filename)
   (let* ((result-list (with-semaphore (*image-convert-semaphore*)
-			(uiop:run-program (list "choom" "-n" "1000" "--" "convert" image-filename "-format" "%w %h\\n" "info:")
-					  :output (lambda (stream)
-						    (let ((width-height (split-sequence #\Space (read-line stream)))
-							  (animation-frames 1))
-						      (iter (while (read-line stream nil))
-							    (incf animation-frames))
-						      (list* animation-frames width-height))))))
-	 (mime-type (uiop:run-program (list "file" "--brief" "--mime-type" image-filename) :output (lambda (stream) (read-line stream)))))
+			(run-program ("convert" image-filename "-format" "%w %h\\n" "info:")
+				     :output (lambda (stream)
+					       (let ((width-height (split-sequence #\Space (read-line stream)))
+						     (animation-frames 1))
+						 (iter (while (read-line stream nil))
+						       (incf animation-frames))
+						 (list* animation-frames width-height))))))
+	 (mime-type (run-program ("file" "--brief" "--mime-type" image-filename) :output (lambda (stream) (read-line stream)))))
     (destructuring-bind (animation-frames width height) result-list
       (alist :width (parse-integer width)
 	     :height (parse-integer height)
@@ -48,22 +53,22 @@
 	(total-pixels 0)
 	(total-brightness 0.0d0))
     (with-semaphore (*image-convert-semaphore*)
-      (uiop:run-program (list "choom" "-n" "1000" "--" "convert" image-filename "-format" "%c" "histogram:info:")
-			:output (lambda (stream)
-				  (iterate (for line next (read-line stream nil))
-					   (while line)
-					   (multiple-value-bind (match? strings) (ppcre:scan-to-strings "^\\s*(\\d+):" line :sharedp t)
-					     (when match?
-					       (let ((pixel-count (parse-integer (svref strings 0))))
-						 (push pixel-count histogram-list)
-						 (incf total-pixels pixel-count)
-						 (multiple-value-bind (match? strings) (ppcre:scan-to-strings "#([0-9a-fA-F]+)" line :sharedp t)
-						   (when match?
-						     (let ((brightness (string-to-brightness (svref strings 0))))
-						       (incf total-brightness (* pixel-count (/ brightness (* 3 255.0d0))))
-						       (when (> pixel-count background-pixels)
-							 (setf background-pixels pixel-count
-							       background-brightness brightness))))))))))))
+      (run-program ("convert" image-filename "-format" "%c" "histogram:info:")
+		   :output (lambda (stream)
+			     (iterate (for line next (read-line stream nil))
+				      (while line)
+				      (multiple-value-bind (match? strings) (ppcre:scan-to-strings "^\\s*(\\d+):" line :sharedp t)
+					(when match?
+					  (let ((pixel-count (parse-integer (svref strings 0))))
+					    (push pixel-count histogram-list)
+					    (incf total-pixels pixel-count)
+					    (multiple-value-bind (match? strings) (ppcre:scan-to-strings "#([0-9a-fA-F]+)" line :sharedp t)
+					      (when match?
+						(let ((brightness (string-to-brightness (svref strings 0))))
+						  (incf total-brightness (* pixel-count (/ brightness (* 3 255.0d0))))
+						  (when (> pixel-count background-pixels)
+						    (setf background-pixels pixel-count
+							  background-brightness brightness))))))))))))
     (setf histogram-list (sort histogram-list #'>))
     (let ((tenth (first (nthcdr 10 histogram-list))))
       (and histogram-list
@@ -75,7 +80,7 @@
 
 (defun invert-image (input output)
   (with-semaphore (*image-convert-semaphore*)
-    (uiop:run-program (list "choom" "-n" "1000" "--" "convert" input "-colorspace" "Lab" "-channel" "R" "-negate" "-gamma" "2.2" "-colorspace" "sRGB" output))))
+    (run-program ("convert" input "-colorspace" "Lab" "-channel" "R" "-negate" "-gamma" "2.2" "-colorspace" "sRGB" output))))
 
 (defun download-file (uri target)
   (sb-sys:with-deadline (:seconds 60)
