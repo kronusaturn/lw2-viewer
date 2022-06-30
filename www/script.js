@@ -650,7 +650,8 @@ function voteEvent(voteButton, numClicks) {
 	let targetId = ((targetType == 'Comment') ? voteButton.getCommentId() : voteButton.parentNode.dataset.postId);
 	let voteUpDown = voteButton.dataset.voteType;
 	let voteType;
-	if(numClicks == 1 && voteButton.hasClass("selected")) {
+	if (   (numClicks == 2 && voteButton.hasClass("big-vote"))
+		|| (numClicks == 1 && voteButton.hasClass("selected") && !voteButton.hasClass("big-vote"))) {
 		voteType = "neutral";
 	} else {
 		let vote = parseVoteType(voteUpDown);
