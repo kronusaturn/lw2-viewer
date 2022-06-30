@@ -84,19 +84,19 @@
 
 (defun hyphenate-string (string)
  (let ((hyphenation-list (cl-typesetting::hyphenate-string string)))
-   (declare (type (and string (not base-string)) string)
-            (type list hyphenation-list))
+   (declare (type string string)
+	    (type list hyphenation-list))
    (if hyphenation-list
-     (let ((new-string (make-array (+ (length string) (length hyphenation-list)) :element-type 'character :fill-pointer 0)))
-       (loop for char across string
-             for orig-offset of-type fixnum from 0
-             with current-hyphenation = hyphenation-list
-             do (when (and current-hyphenation (= orig-offset (the fixnum (first current-hyphenation))))
-                  (vector-push #\SOFT_HYPHEN new-string)
-                  (setf current-hyphenation (rest current-hyphenation)))
-             do (vector-push char new-string))
-       (values new-string hyphenation-list))
-     (values string nil))))
+       (let ((new-string (make-array (+ (length string) (length hyphenation-list)) :element-type 'character :fill-pointer 0)))
+	 (loop for char across string
+	    for orig-offset of-type fixnum from 0
+	    with current-hyphenation = hyphenation-list
+	    do (when (and current-hyphenation (= orig-offset (the fixnum (first current-hyphenation))))
+		 (vector-push #\SOFT_HYPHEN new-string)
+		 (setf current-hyphenation (rest current-hyphenation)))
+	    do (vector-push char new-string))
+	 (values (coerce new-string '(simple-array character 1)) hyphenation-list))
+       (values string nil))))
 
 (defun clean-text-to-html (text &key (hyphenation t))
   (handler-bind

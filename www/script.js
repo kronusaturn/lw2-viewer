@@ -598,12 +598,6 @@ function makeVoteCompleteEvent(target) {
 
 function sendVoteRequest(targetType, targetId, vote, onFinish) {
 	GWLog("sendVoteRequest");
-	/*let req = new XMLHttpRequest();
-	req.addEventListener("load", onFinish);
-	req.open("POST", "/karma-vote");
-	req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	req.send("csrf-token="+encodeURIComponent(GW.csrfToken)+"&target="+encodeURIComponent(targetId)+"&target-type="+encodeURIComponent(targetType)+"&vote="+encodeURIComponent(JSON.stringify(vote)));
-	*/
 	doAjax({
 		method: "POST",
 		location: "/karma-vote",
@@ -3554,11 +3548,11 @@ addTriggerListener('navBarLoaded', {priority: -1, fn: () => {
 	if(hash && hash !== "#top" && !document.query(hash)) {
 		let content = document.query("#content");
 		content.style.display = "none";
-		document.addEventListener("DOMContentLoaded", () => {
+		addTriggerListener("DOMReady", {priority: -1, fn: () => {
 			content.style.visibility = "hidden";
 			content.style.display = null;
-			requestAnimationFrame(() => {content.style.visibility = null});
-		});
+			requestIdleCallback(() => {content.style.visibility = null}, {timeout: 500});
+		}});
 	}
 }});
 

@@ -1089,7 +1089,7 @@ signaled condition to *HTML-OUTPUT*."
 (define-page view-coronavirus-link-database "/coronavirus-link-database" ()
   (redirect "https://www.lesswrong.com/coronavirus-link-database" :type :see-other))
 
-(defun post-comment (&key ((:post-id post-id-real)) ((:tag-id tag-id-real)) shortform)
+(defun post-comment (&key need-auth ((:post-id post-id-real)) ((:tag-id tag-id-real)) shortform)
   (request-method
    (:post (text answer nomination nomination-review af post-id tag-id parent-answer-id parent-comment-id edit-comment-id retract-comment-id unretract-comment-id delete-comment-id)
      (let ((lw2-auth-token *current-auth-token*))
@@ -1134,7 +1134,8 @@ signaled condition to *HTML-OUTPUT*."
 		       (mark-comment-replied (alist* :parent-comment-id parent-comment-id :user-id *current-userid* new-comment-result))
 		       (setf (markdown-source :comment new-comment-id new-comment-html) text)
 		       (redirect (quri:render-uri
-				  (quri:merge-uris (quri:make-uri :fragment (format nil "comment-~A" new-comment-id))
+				  (quri:merge-uris (quri:make-uri :fragment (format nil "comment-~A" new-comment-id)
+								  :query (list-cond (need-auth "need-auth" "y")))
 						   (hunchentoot:request-uri*)))))))))))
 
 (defun output-comments (out-stream id comments target &key overcomingbias-sort preview chrono replies-open)
@@ -1305,7 +1306,7 @@ signaled condition to *HTML-OUTPUT*."
 							     :replies-open open
 							     :overcomingbias-sort (cdr (assoc :comment-sort-order post)) :chrono chrono :preview preview))))))))))))))
    (:post ()
-	  (post-comment :post-id post-id))))
+	  (post-comment :post-id post-id :need-auth need-auth))))
 
 (defparameter *edit-post-template* (compile-template* "edit-post.html"))
 
