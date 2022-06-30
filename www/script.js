@@ -3553,11 +3553,11 @@ addTriggerListener('navBarLoaded', {priority: -1, fn: () => {
 	if(hash && hash !== "#top" && !document.query(hash)) {
 		let content = document.query("#content");
 		content.style.display = "none";
-		document.addEventListener("DOMContentLoaded", () => {
+		addTriggerListener("DOMReady", {priority: -1, fn: () => {
 			content.style.visibility = "hidden";
 			content.style.display = null;
-			requestAnimationFrame(() => {content.style.visibility = null});
-		});
+			requestIdleCallback(() => {content.style.visibility = null}, {timeout: 500});
+		}});
 	}
 }});
 
