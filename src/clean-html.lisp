@@ -84,10 +84,10 @@
 
 (defun hyphenate-string (string)
  (let ((hyphenation-list (cl-typesetting::hyphenate-string string)))
-   (declare (type list hyphenation-list))
+   (declare (type string string)
+	    (type list hyphenation-list))
    (if hyphenation-list
-       (let ((string (coerce string '(simple-array character 1)))
-	     (new-string (make-array (+ (length string) (length hyphenation-list)) :element-type 'character :fill-pointer 0)))
+       (let ((new-string (make-array (+ (length string) (length hyphenation-list)) :element-type 'character :fill-pointer 0)))
 	 (loop for char across string
 	    for orig-offset of-type fixnum from 0
 	    with current-hyphenation = hyphenation-list
