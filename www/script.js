@@ -598,12 +598,6 @@ function makeVoteCompleteEvent(target) {
 
 function sendVoteRequest(targetType, targetId, vote, onFinish) {
 	GWLog("sendVoteRequest");
-	/*let req = new XMLHttpRequest();
-	req.addEventListener("load", onFinish);
-	req.open("POST", "/karma-vote");
-	req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	req.send("csrf-token="+encodeURIComponent(GW.csrfToken)+"&target="+encodeURIComponent(targetId)+"&target-type="+encodeURIComponent(targetType)+"&vote="+encodeURIComponent(JSON.stringify(vote)));
-	*/
 	doAjax({
 		method: "POST",
 		location: "/karma-vote",
