@@ -6,6 +6,7 @@ $directories = [
 	"www/ea/"
 ];
 $files = [ 
+	"head.js",
 	"script.js",
 	"style.css.php",
 	"style_mobile_additions.css.php",
@@ -20,7 +21,11 @@ $files = [
 	"theme-zero.css.php",
 ];
 $additional_files = [
-	"lw2.lisp"
+	"www/about.html",
+	"lw2.lisp",
+	"src/data-viewers/comment.lisp",
+	"src/data-viewers/post.lisp",
+	"src/data-viewers/tag.lisp",
 ];
 $characters = [ ];
 
@@ -35,7 +40,7 @@ function process_file($filename) {
 	preg_match_all('/&#x(.{4})/', $contents, $matches);	
 	$characters = array_merge($characters, $matches[1]);
 
-	preg_match_all('/\\\(F.{3})/', $contents, $matches);
+	preg_match_all('/\\\([FE].{3})/i', $contents, $matches);
 	$characters = array_merge($characters, $matches[1]);
 }
 
