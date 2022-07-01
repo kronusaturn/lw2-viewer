@@ -1932,12 +1932,12 @@ div.comment-child-links a {
 }
 @-moz-document url-prefix() {
 	.karma .upvote::after {
-		bottom: 2px;
-		left: 8px;
+		left: 4px;
+		bottom: 4px;
 	}
 	.karma .downvote::after {
-		top: 3px;
-		left: 6px;
+		left: 2px;
+		top: 5px;
 	}
 }
 
@@ -1961,12 +1961,12 @@ div.comment-child-links a {
 }
 @-moz-document url-prefix() {
 	.agreement .upvote::after {
+		left: 4px;
 		bottom: 2px;
-		left: 8px;
 	}
 	.agreement .downvote::after {
-		top: 3px;
-		left: 6px;
+		left: 0;
+		top: 1px;
 	}
 }
 
