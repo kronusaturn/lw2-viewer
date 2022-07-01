@@ -1412,6 +1412,16 @@ div.comment-child-links a {
 	text-shadow: none;
 }
 
+/*	Disabled.
+ */
+.vote:disabled {
+	visibility: unset;
+	color: #e6e6e6;
+}
+.vote:disabled:hover {
+	text-shadow: none;
+}
+
 /*===========================*/
 /* COMMENTING AND POSTING UI */
 /*===========================*/

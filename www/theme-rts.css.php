@@ -1436,6 +1436,16 @@ a.comment-parent-link:hover::before {
 	text-shadow: none;
 }
 
+/*	Disabled.
+ */
+.vote:disabled {
+	visibility: unset;
+	color: #eee;
+}
+.vote:disabled:hover {
+	text-shadow: none;
+}
+
 /*===========================*/
 /* COMMENTING AND POSTING UI */
 /*===========================*/

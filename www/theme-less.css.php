@@ -2018,6 +2018,19 @@ div.comment-child-links a {
 	text-shadow: none;
 }
 
+/*	Disabled.
+ */
+.vote:disabled {
+	visibility: unset;
+	color: #e6e6e6;
+}
+.post .vote:disabled {
+	color: #f4f4f4;
+}
+.vote:disabled:hover {
+	text-shadow: none;
+}
+
 .post .top-post-meta .downvote::before {
 	left: 0;
 }

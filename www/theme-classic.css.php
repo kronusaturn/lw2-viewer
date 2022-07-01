@@ -1424,6 +1424,29 @@ div.comment-child-links a {
 	color: inherit;
 }
 
+/*	Disabled.
+ */
+.vote:disabled,
+.vote:disabled:hover {
+	visibility: unset;
+	color: #eee;
+	text-shadow: 
+		 1px  1px 0 #d8d8d8,
+		-1px  1px 0 #d8d8d8,
+		 1px -1px 0 #d8d8d8,
+		-1px -1px 0 #d8d8d8;
+}
+@media only screen and (min-resolution: 192dpi) {
+	.vote:disabled,
+	.vote:disabled:hover {
+		text-shadow: 
+			 0.5px  0.5px 0 #d8d8d8,
+			-0.5px  0.5px 0 #d8d8d8,
+			 0.5px -0.5px 0 #d8d8d8,
+			-0.5px -0.5px 0 #d8d8d8;
+	}
+}
+
 .comment-controls .voting-controls:first-of-type {
 	margin-left: -6px;
 }
