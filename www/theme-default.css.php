@@ -1293,67 +1293,90 @@ div.comment-child-links a {
 	position: relative;
 	top: 2.5px;
 }
-
-.vote:disabled {
-	visibility: unset;
-}
-.voting-controls button.downvote:disabled::before {
-	background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHBhdGggZD0iTTI1NiA4QzExOSA4IDggMTE5IDggMjU2czExMSAyNDggMjQ4IDI0OCAyNDgtMTExIDI0OC0yNDhTMzkzIDggMjU2IDh6TTEyNCAyOTZjLTYuNiAwLTEyLTUuNC0xMi0xMnYtNTZjMC02LjYgNS40LTEyIDEyLTEyaDI2NGM2LjYgMCAxMiA1LjQgMTIgMTJ2NTZjMCA2LjYtNS40IDEyLTEyIDEySDEyNHoiIHN0cm9rZT0iI0Q4RDhEOCIgc3Ryb2tlLXdpZHRoPSI0JSIgZmlsbD0idHJhbnNwYXJlbnQiLz48L3N2Zz4=');
-	filter: brightness(50%);
-}
-.voting-controls button.upvote:disabled::before {
-	background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHBhdGggZD0iTTI1NiA4QzExOSA4IDggMTE5IDggMjU2czExMSAyNDggMjQ4IDI0OCAyNDgtMTExIDI0OC0yNDhTMzkzIDggMjU2IDh6bTE0NCAyNzZjMCA2LjYtNS40IDEyLTEyIDEyaC05MnY5MmMwIDYuNi01LjQgMTItMTIgMTJoLTU2Yy02LjYgMC0xMi01LjQtMTItMTJ2LTkyaC05MmMtNi42IDAtMTItNS40LTEyLTEydi01NmMwLTYuNiA1LjQtMTIgMTItMTJoOTJ2LTkyYzAtNi42IDUuNC0xMiAxMi0xMmg1NmM2LjYgMCAxMiA1LjQgMTIgMTJ2OTJoOTJjNi42IDAgMTIgNS40IDEyIDEydjU2eiIgc3Ryb2tlPSIjRDhEOEQ4IiBzdHJva2Utd2lkdGg9IjQlIiBmaWxsPSJ0cmFuc3BhcmVudCIvPjwvc3ZnPg==');
-	filter: brightness(50%);
-}
-
 .vote:active {
 	transform: none;
 }
-.vote.selected::before,
-.vote.clicked-once::before,
-.vote.clicked-twice::before {
-	filter: drop-shadow(0 0 1px #fff);
-}
 
-.upvote::before,
-.waiting .upvote.big-vote.clicked-twice::before {
-	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/upvote-green-circle-plus.svg")) ?>');
+/**********/
+/*	States.
+ */
+
+/*	_ 1
+ */
+.upvote {
 	filter: grayscale(100%) brightness(128%);
 }
-.downvote::before,
-.waiting .downvote.big-vote.clicked-twice::before {
-	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/downvote-red-circle-minus.svg")) ?>');
+.downvote {
 	filter: grayscale(100%) brightness(188%);
 }
 
-.vote.clicked-once::before,
-.vote.big-vote.clicked-once::before {
+/*	_ 2
+ */
+.vote:not(.none) {
+	filter: drop-shadow(0 0 1px #fff);
+}
+
+/*	1 _
+ */
+.vote.two-temp::before {
 	box-shadow:
 		0 0 0 1px #fff,
 		0 0 0 4px #c8c8c8,
 		0 0 0 5px transparent;
 }
 
-.vote.big-vote.clicked-twice::before,
-.waiting .vote.big-vote:not(.clicked-twice)::before,
-.waiting .vote:not(.big-vote).clicked-once::before {
-	box-shadow: none;
-}
-
-.upvote.clicked-twice::before,
-.upvote.big-vote::before {
+/*	2 _
+ */
+.upvote.two::before {
 	box-shadow:
 		0 0 0 1px #fff,
-		0 0 0 4px #00d800,
+		0 0 0 4px var(--GW-upvote-button-color),
+		0 0 0 5px transparent;
+}
+.downvote.two::before {
+	box-shadow:
+		0 0 0 1px #fff,
+		0 0 0 4px var(--GW-downvote-button-color),
 		0 0 0 5px transparent;
 }
 
-.downvote.clicked-twice::before,
-.downvote.big-vote::before {
-	box-shadow:
-		0 0 0 1px #fff,
-		0 0 0 4px #eb4c2a,
-		0 0 0 5px transparent;
+/*	Disabled.
+ */
+.vote:disabled {
+	visibility: unset;
+	filter: brightness(50%);
+}
+
+/*********/
+/*	Icons.
+ */
+
+.karma .upvote::before {
+	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/vote_button_icons/upvote-green-circle-plus.svg")) ?>');
+}
+.karma .downvote::before {
+	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/vote_button_icons/downvote-red-circle-minus.svg")) ?>');
+}
+
+.karma .upvote:disabled::before {
+	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/vote_button_icons/upvote-disabled-grey-circle-plus.svg")) ?>');
+}
+.karma .downvote:disabled::before {
+	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/vote_button_icons/downvote-disabled-grey-circle-minus.svg")) ?>');
+}
+
+.agreement .upvote::before {
+	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/vote_button_icons/agree-green-circle-check.svg")) ?>');
+}
+.agreement .downvote::before {
+	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/vote_button_icons/disagree-red-circle-x.svg")) ?>');
+}
+
+.agreement .upvote:disabled::before {
+	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/vote_button_icons/agree-disabled-grey-circle-check.svg")) ?>');
+}
+.agreement .downvote:disabled::before {
+	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/vote_button_icons/disagree-disabled-grey-circle-x.svg")) ?>');
 }
 
 /*===========================*/

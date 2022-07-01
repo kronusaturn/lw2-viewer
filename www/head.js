@@ -39,12 +39,50 @@ Element.prototype.removeClasses = function(classNames) {
 Element.prototype.hasClass = function(className) {
 	return (new RegExp("(^|\\s+)" + className + "(\\s+|$)")).test(this.className);
 }
+/*	True if the element has _all_ of the classes in the argument (which may be
+	a space-separated string or an array); false otherwise.
+ */
+Element.prototype.hasClasses = function (classes) {
+	if (typeof classes == "string")
+		classes = classes.split(" ");
+
+	for (let aClass of classes)
+		if (false == this.hasClass(aClass))
+			return false;
+
+	return true;
+};
 Element.prototype.toggleClass = function(className) {
 	if (this.hasClass(className))
 		this.removeClass(className);
 	else
 		this.addClass(className);
 }
+
+/*  Swap classes on the given element.
+
+    First argument is an array with two string elements (the classes).
+    Second argument is 0 or 1 (index of class to add; the other is removed).
+
+    Note that the first class in the array is always removed/added first, and 
+    then the second class in the array is added/removed; thus these two calls 
+    have different effects:
+    
+    anElement.swapClasses([ "foo", "bar" ], 1);
+    anElement.swapClasses([ "bar", "foo" ], 0);
+
+	The first call removes "foo" and then adds "bar"; the second call adds "bar"
+	and then removes "foo". (This can have different visual or other side 
+	effects in many circumstances. It also results in a different end state in 
+	the cases where the two classes are the same.)
+ */
+Element.prototype.swapClasses = function (classes, whichToAdd) {
+	let op1 = whichToAdd ? "removeClass" : "addClass";
+	let op2 = whichToAdd ? "addClass" : "removeClass";
+	
+	this[op1](classes[0]);
+	this[op2](classes[1]);
+};
 
 /* DOM helpers */
 

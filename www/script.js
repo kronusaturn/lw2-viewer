@@ -541,12 +541,105 @@ function addVoteButtons(element, vote, targetType) {
 	
 	element.parentElement.queryAll("button").forEach((button) => {
 		button.disabled = false;
-		if(voteType) {
-			if(button.dataset["voteType"] === (voteType.up ? "upvote" : "downvote"))
+		if (voteType) {
+			if (button.dataset["voteType"] === (voteType.up ? "upvote" : "downvote"))
 				button.addClass(voteClass);
 		}
+		updateVoteButtonVisualState(button);
 		button.addActivateEvent(voteButtonClicked);
 	});
+}
+
+function updateVoteButtonVisualState(button) {
+	GWLog("updateVoteButtonVisualState");
+
+	button.removeClasses([ "none", "one", "two-temp", "two" ]);
+
+	if (button.disabled)
+		button.addClass("none");
+	else if (button.hasClass("big-vote"))
+		button.addClass("two");
+	else if (button.hasClass("selected"))
+		button.addClass("one");
+	else
+		button.addClass("none");
+}
+
+function changeVoteButtonVisualState(button) {
+	GWLog("changeVoteButtonVisualState");
+
+	/*	Interaction states are:
+
+		0  0·  0··  0·w  0··w    (neutral; +1/2 clicks; +1/2 clicks, waiting)
+		1  1·  1··  1·w  1··w    (small vote; +1/2 clicks; +1/2 clicks, waiting)
+		2  2·  2··  2·w  2··w    (big vote; +1/2 clicks; +1/2 clicks, waiting)
+
+		Visual states are (with their state classes in [brackets]) are:
+
+		01    (no vote) [none]
+		02    (small vote active) [one]
+		12    (small vote active, temporary indicator of big vote) [two-temp]
+		22    (big vote active) [two]
+
+		The following are the 24 possible interaction state transitions (and
+		the visual state transitions associated with them):
+
+						VIS.	VIS.
+		FROM	TO		FROM	TO		NOTES
+		====	====	====	====	=====
+		0		0·		01		12		first click
+		0·		0··		12		22		second click
+		0·		0·w		12		02		one click without second; waiting
+		0··		0··w	22		22		two clicks; waiting
+		0·w		1		02		02		small vote from neutral, success
+		0·w		0		02		01		small vote from neutral, failure
+		0··w	2		22		22		big vote from neutral, success
+		0··w	0		22		01		big vote from neutral, failure
+
+		1		1·		02		12		first click
+		1·		1··		12		22		second click
+		1·		1·w		12		01		one click without second; waiting
+		1··		1··w	22		22		two clicks; waiting
+		1·w		0		01		01		removal of small vote, success
+		1·w		1		01		02		removal of small vote, failure
+		1··w	2		22		22		big vote from small vote, success
+		1··w	1		22		02		big vote from small vote, failure
+
+		2		2·		22		12		first click
+		2·		2··		12		01		second click
+		2·		2·w		12		02		one click without second; waiting
+		2··		2··w	01		01		two clicks; waiting
+		2·w		1		02		02		downgrade of big vote to small, success
+		2·w		2		02		22		downgrade of big vote to small, failure
+		2··w	0		01		01		removal of big vote, success
+		2··w	2		01		22		removal of big vote, failure
+
+		(Note that the transitions _from_ the waiting states are done by the 
+		 updateVoteButtonVisualState() function, not by this one.)
+	 */
+	let currentStateClass = ([ "none", "one", "two-temp", "two" ].find(stateClass => button.classList.contains(stateClass)) || "none");
+	let transitions = [
+		[ "big-vote waiting clicked-twice", "none none" 		], // 2·· => 2··w
+		[ "big-vote waiting clicked-once", 	"two-temp one" 		], // 2·  => 2·w
+		[ "big-vote clicked-twice", 		"two-temp none"		], // 2·  => 2··
+		[ "big-vote clicked-once", 			"two two-temp"	 	], // 2   => 2·
+
+		[ "selected waiting clicked-twice", "two two"	 		], // 1·· => 1··w
+		[ "selected waiting clicked-once", 	"two-temp none" 	], // 1·  => 1·w
+		[ "selected clicked-twice", 		"two-temp two" 		], // 1·  => 1··
+		[ "selected clicked-once", 			"one two-temp" 		], // 1   => 1·
+
+		[ "waiting clicked-twice", 			"two two"	 		], // 0·· => 0··w
+		[ "waiting clicked-once", 			"two-temp one" 		], // 0·  => 0·w
+		[ "clicked-twice", 					"two-temp two" 		], // 0·  => 0··
+		[ "clicked-once", 					"none two-temp" 	], // 0   => 0·
+	];
+	for ([ interactionClasses, visualStateClassesToSwap ] of transitions) {
+		if (button.hasClasses(interactionClasses.split(" "))) {
+			button.swapClasses(visualStateClassesToSwap.split(" "), 1);
+			break;
+		}
+	}
 }
 
 function makeVoteCompleteEvent(target) {
@@ -563,6 +656,7 @@ function makeVoteCompleteEvent(target) {
 		}
 		controls.forEach(control => {
 			control.removeClass("waiting");
+			control.querySelectorAll("button").forEach(button => button.removeClass("waiting"));
 			var voteAxis = (control.dataset.voteAxis || "karma");
 			if(!controlsByAxis[voteAxis]) controlsByAxis[voteAxis] = new Array;
 			controlsByAxis[voteAxis].push(control);
@@ -589,6 +683,7 @@ function makeVoteCompleteEvent(target) {
 					control.queryAll("button.vote").forEach(button => {
 						button.removeClasses([ "clicked-once", "clicked-twice", "selected", "big-vote" ]);
 						if (button.dataset.voteType == voteUpDown) button.addClass(voteClass);
+						updateVoteButtonVisualState(button);
 					});
 				});
 			}
@@ -617,6 +712,7 @@ function voteButtonClicked(event) {
 	if (!voteButton.clickedOnce) {
 		voteButton.clickedOnce = true;
 		voteButton.addClass("clicked-once");
+		changeVoteButtonVisualState(voteButton);
 
 		setTimeout(GW.vbDoubleClickTimeoutCallback = (voteButton) => {
 			if (!voteButton.clickedOnce) return;
@@ -629,16 +725,20 @@ function voteButtonClicked(event) {
 		voteButton.clickedOnce = false;
 
 		// Do double-click code.
-		voteEvent(voteButton, 2);
 		voteButton.removeClass("clicked-once");
 		voteButton.addClass("clicked-twice");
+		changeVoteButtonVisualState(voteButton);
+		voteEvent(voteButton, 2);
 	}
 }
+
 function voteEvent(voteButton, numClicks) {
 	GWLog("voteEvent");
 	voteButton.blur();
+	voteButton.addClass("waiting");
 	let voteControl = voteButton.parentNode;
 	voteControl.addClass("waiting");
+	changeVoteButtonVisualState(voteButton);
 	let voteAxis = voteControl.dataset.voteAxis || "karma";
 	let targetType = voteButton.dataset.targetType;
 	let targetId = ((targetType == 'Comment') ? voteButton.getCommentId() : voteButton.parentNode.dataset.postId);
@@ -655,24 +755,17 @@ function voteEvent(voteButton, numClicks) {
 	let voteObject = voteData[targetType][targetId] || new Object;
 	voteObject[voteAxis] = voteType;
 	voteData[targetType][targetId] = voteObject;
-	
+
 	sendVoteRequest(targetType, targetId, voteObject, makeVoteCompleteEvent((targetType == 'Comment' ? voteButton.parentNode : null)));
 }
 
 function initializeVoteButtons() {
 	// Color the upvote/downvote buttons with an embedded style sheet.
-	query("head").insertAdjacentHTML("beforeend","<style id='vote-buttons'>" + 
-					 `.upvote:hover,
-					 .upvote:focus,
-					 .upvote.selected {
-						 color: #00d800;
-					 }
-					 .downvote:hover,
-					 .downvote:focus,
-					 .downvote.selected {
-						 color: #eb4c2a;
-					 }` +
-					 "</style>");
+	query("head").insertAdjacentHTML("beforeend", "<style id='vote-buttons'>" + `
+		:root {
+			--GW-upvote-button-color: #00d800;
+			--GW-downvote-button-color: #eb4c2a;
+		}\n` + "</style>");
 }
 
 function processVoteData(voteData) {

@@ -1068,44 +1068,80 @@ div.comment-child-links a {
 .vote:active {
 	transform: none;
 }
-.vote:hover,
-.vote:active,
-.vote:focus {
+
+.vote:hover {
 	box-shadow: none;
 }
-.vote:hover::before,
-.vote.selected::before,
-.vote.clicked-once::before,
-.vote.clicked-twice::before {
-	filter: drop-shadow(0 0 1px #fff);
-}
-.vote::before,
-.waiting .vote.big-vote.clicked-twice::before {
+
+/**********/
+/*	States.
+ */
+
+/*	_ 1
+ */
+.vote {
 	filter: contrast(5%) brightness(182%);
 }
-.vote.clicked-once::before,
-.vote.big-vote.clicked-once::before {
+
+/*	_ 2
+ */
+.vote:not(.none) {
+	filter: drop-shadow(0 0 1px #fff);
+}
+
+/*	1 _
+ */
+.vote.two-temp::before {
 	box-shadow:
 		0 0 0 3px #ccc,
 		0 0 0 4px transparent;
 }
-.vote.big-vote.clicked-twice::before,
-.waiting .vote.big-vote:not(.clicked-twice)::before,
-.waiting .vote:not(.big-vote).clicked-once::before {
-	box-shadow: none;
-}
-.vote.clicked-twice::before,
-.vote.big-vote::before {
+
+/*	2 _
+ */
+.vote.two::before {
 	box-shadow:
 		0 0 0 3px #000,
 		0 0 0 4px transparent;
 }
 
-.upvote::before {
-	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/upvote-black-square-plus.svg")) ?>');
+/*	Disabled.
+ */
+.vote:disabled {
+	visibility: unset;
+	filter: brightness(50%);
 }
-.downvote::before {
-	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/downvote-black-square-minus.svg")) ?>');
+
+/*********/
+/*	Icons.
+ */
+
+.karma .upvote::before {
+	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/vote_button_icons/upvote-black-square-plus.svg")) ?>');
+}
+.karma .downvote::before {
+	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/vote_button_icons/downvote-black-square-minus.svg")) ?>');
+}
+
+.karma .upvote:disabled::before {
+	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/vote_button_icons/upvote-disabled-grey-square-plus.svg")) ?>');
+}
+.karma .downvote:disabled::before {
+	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/vote_button_icons/downvote-disabled-grey-square-minus.svg")) ?>');
+}
+
+.agreement .upvote::before {
+	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/vote_button_icons/agree-black-square-check.svg")) ?>');
+}
+.agreement .downvote::before {
+	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/vote_button_icons/disagree-black-square-x.svg")) ?>');
+}
+
+.agreement .upvote:disabled::before {
+	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/vote_button_icons/agree-disabled-grey-square-check.svg")) ?>');
+}
+.agreement .downvote:disabled::before {
+	background-image: url('data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents("assets/vote_button_icons/disagree-disabled-grey-square-x.svg")) ?>');
 }
 
 /*===========================*/

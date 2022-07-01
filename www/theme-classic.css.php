@@ -1306,46 +1306,49 @@ div.comment-child-links a {
 /* VOTE BUTTONS */
 /*==============*/
 
-.upvote,
-.downvote {
-	color: #c8c8c8;	
+.vote {
 	padding: 0 5px;
 	position: relative;
 }
 .vote::before {
 	position: relative;
+	z-index: 1;
 }
-.upvote::before {
+.vote::after {
+	position: absolute;
+}
+
+.karma .upvote::before {
 	content: '\F164';
 }
-.downvote::before {
+.karma .downvote::before {
 	content: '\F165';
 	top: 2px;
 }
+.karma .upvote::after {
+	content: "\F164";
+	left: -1px;
+	top: -3px;
+}
+.karma .downvote::after {
+	content: "\F165";
+	left: -1px;
+	top: 5px;
+}
 
+/**********/
+/*	States.
+ */
+
+/*	_ 1
+ */
 .vote {
+	color: #c8c8c8;
 	text-shadow: 
 		 1px  1px 0 #aaa,
 		-1px  1px 0 #aaa,
 		 1px -1px 0 #aaa,
 		-1px -1px 0 #aaa;
-}
-.upvote.selected,
-.upvote:hover {
-	text-shadow: 
-		 1px  1px 0 #080,
-		-1px  1px 0 #080,
-		 1px -1px 0 #080,
-		-1px -1px 0 #080;
-}
-
-.downvote.selected,
-.downvote:hover {
-	text-shadow: 
-		 1px  1px 0 #b00,
-		-1px  1px 0 #a00,
-		 1px -1px 0 #b00,
-		-1px -1px 0 #b00;
 }
 @media only screen and (min-resolution: 192dpi) {
 	.vote {
@@ -1355,17 +1358,39 @@ div.comment-child-links a {
 			 0.5px -0.5px 0 #aaa,
 			-0.5px -0.5px 0 #aaa;
 	}
-	.upvote.selected,
-	.upvote:hover {
+}
+
+/*	_ 2
+ */
+.upvote:hover,
+.upvote:not(.none) {
+	color: var(--GW-upvote-button-color);
+	text-shadow: 
+		 1px  1px 0 #080,
+		-1px  1px 0 #080,
+		 1px -1px 0 #080,
+		-1px -1px 0 #080;
+}
+.downvote:hover,
+.downvote:not(.none) {
+	color: var(--GW-downvote-button-color);
+	text-shadow: 
+		 1px  1px 0 #b00,
+		-1px  1px 0 #a00,
+		 1px -1px 0 #b00,
+		-1px -1px 0 #b00;
+}
+@media only screen and (min-resolution: 192dpi) {
+	.upvote:hover,
+	.upvote:not(.none) {
 		text-shadow: 
 			 0.5px  0.5px 0 #060,
 			-0.5px  0.5px 0 #060,
 			 0.5px -0.5px 0 #060,
 			-0.5px -0.5px 0 #060;
 	}
-
-	.downvote.selected,
-	.downvote:hover {
+	.downvote:hover,
+	.downvote:not(.none) {
 		text-shadow: 
 			 0.5px  0.5px 0 #900,
 			-0.5px  0.5px 0 #900,
@@ -1374,42 +1399,36 @@ div.comment-child-links a {
 	}
 }
 
-.vote::before {
-	z-index: 1;
-}
-
+/*	0 _
+ */
 .vote::after {
-	position: absolute;
-	color: #fff;
 	visibility: hidden;
 }
-.vote:hover::after,
-.vote.big-vote::after,
-.vote:not(.big-vote).clicked-twice::after {
+
+/*	1,2 _
+ */
+.vote.two-temp::after,
+.vote.two::after {
 	visibility: visible;
 }
-.vote.big-vote::after,
-.vote:not(.big-vote).clicked-twice::after {
+
+/*	1 _
+ */
+.vote.two-temp::after {
+	color: #c8c8c8;
+}
+
+/*	2 _
+ */
+.vote.two::after {
 	color: inherit;
 }
-.voting-controls:not(.waiting) .vote.clicked-once::after {
-	color: #c8c8c8;	
-}
 
-.upvote::after {
-	content: "\F164";
-	left: -1px;
-	top: -3px;
-}
-
-.downvote::after {
-	content: "\F165";
-	left: -1px;
-	top: 5px;
-}
-
-.comment-controls .voting-controls {
+.comment-controls .voting-controls:first-of-type {
 	margin-left: -6px;
+}
+.comment-controls .voting-controls {
+	margin-right: 1em;
 }
 
 /*===========================*/

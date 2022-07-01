@@ -1296,72 +1296,120 @@ div.comment-child-links a {
 /* VOTE BUTTONS */
 /*==============*/
 
-.upvote,
-.downvote {
-	color: #c8c8c8;
+.vote {
 	position: relative;	
 }
 .vote::before {
 	position: relative;
 	z-index: 1;
 }
-.upvote::before {
+.vote::after {
+	position: absolute;
+}
+
+.karma .upvote::before {
 	content: "\F077";
 	top: 1px;
 }
-.downvote::before {
+.karma .downvote::before {
 	content: "\F078";
-	position: relative;
 	left: -2px;
 }
+.karma .upvote::after {
+	content: "\F325";
+	left: 6px;
+	bottom: 4px;
+}
+.karma .downvote::after {
+	content: "\F322";
+	left: 4px;
+	top: 4px;
+}
+@-moz-document url-prefix() {
+	.karma .upvote::after {
+		bottom: 2px;
+		left: 8px;
+	}
+	.karma .downvote::after {
+		top: 3px;
+		left: 6px;
+	}
+}
+
+.agreement .upvote::before {
+	content: "\F00C";
+	top: 1px;
+}
+.agreement .downvote::before {
+	content: "\F00D";
+	left: -2px;
+}
+.agreement .upvote::after {
+	content: "\F560";
+	left: 6px;
+	bottom: 2px;
+}
+.agreement .downvote::after {
+	content: "\E59B";
+	left: 2px;
+	top: 1px;
+}
+@-moz-document url-prefix() {
+	.agreement .upvote::after {
+		bottom: 2px;
+		left: 8px;
+	}
+	.agreement .downvote::after {
+		top: 3px;
+		left: 6px;
+	}
+}
+
+/**********/
+/*	States.
+ */
+
+/*	_ 1
+ */
+.vote {
+	color: #c8c8c8;
+}
+
+/*	_ 2
+ */
 .upvote:hover,
-.upvote.selected {
+.upvote:not(.none) {
+	color: var(--GW-upvote-button-color);
 	text-shadow:
 		0 0 0.5px #fff, 
 		0 0 8px #0f0;
 }
 .downvote:hover,
-.downvote.selected {
+.downvote:not(.none) {
+	color: var(--GW-downvote-button-color);
 	text-shadow:
 		0 0 0.5px #fff, 
 		0 0 8px #f00;
 }
 
+/*	0 _
+ */
 .vote::after {
-	position: absolute;
 	visibility: hidden;
 }
-.vote.big-vote::after,
-.voting-controls:not(.waiting) .vote.clicked-once::after,
-.voting-controls:not(.waiting) .vote.clicked-twice::after {
+
+/*	1,2 _
+ */
+.vote.two-temp::after,
+.vote.two::after {
 	visibility: visible;
 }
-.vote.big-vote.clicked-twice::after {
-	visibility: hidden;
-}
-.vote.clicked-once::after {
+
+/*	1 _
+ */
+.vote.two-temp::after {
 	color: #c8c8c8;
 	text-shadow: none;
-}
-.upvote::after {
-	content: "\F325";
-	left: 7px;
-	bottom: 4px;
-}
-.downvote::after {
-	content: "\F322";
-	left: 5px;
-	top: 4px;
-}
-@-moz-document url-prefix() {
-	.upvote::after {
-		bottom: 2px;
-		left: 8px;
-	}
-	.downvote::after {
-		top: 3px;
-		left: 6px;
-	}
 }
 
 /*===========================*/
