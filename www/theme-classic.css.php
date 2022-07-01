@@ -1336,6 +1336,24 @@ div.comment-child-links a {
 	top: 5px;
 }
 
+.agreement .upvote::before {
+	content: '\F0A6';
+}
+.agreement .downvote::before {
+	content: '\F0A7';
+	top: 2px;
+}
+.agreement .upvote::after {
+	content: "\F0A6";
+	left: -1px;
+	top: -3px;
+}
+.agreement .downvote::after {
+	content: "\F0A7";
+	left: -1px;
+	top: 5px;
+}
+
 /**********/
 /*	States.
  */
