@@ -1245,7 +1245,7 @@ h1.listing .link-post-link {
 		padding: 0 0 1px 1px;
 	}
 	h1.listing .link-post-link + a {
-		max-width: calc(100% - 33px);
+		max-width: calc(100% - 40px);
 	}
 	h1.listing a:hover,
 	h1.listing a:focus {
