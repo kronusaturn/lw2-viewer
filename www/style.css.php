@@ -2772,14 +2772,9 @@ a.comment-parent-link:hover::after {
 	cursor: default;
 }
 
-/* 
-.voting-controls.waiting {
+.voting-controls.waiting .karma-value {
 	opacity: 0.5;
 }
-.voting-controls.waiting button {
-	pointer-events: none;
-}
- */
 
 /* Replicated karma controls at bottom of comments. */
 .comment-controls .voting-controls {
